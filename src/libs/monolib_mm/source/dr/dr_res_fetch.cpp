@@ -20,11 +20,11 @@ void DrResFetch::setDefVertexParam(int type) { (this->*s_callDefVertex[type])();
 
 void DrResFetch::setLgtVertexParam() {
   grlib::CGLibVtxAttr attributes[2];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[1].unknown00 = unknown073_22;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 12;
   attributes[1].unknown0c = 0;
@@ -33,11 +33,11 @@ void DrResFetch::setLgtVertexParam() {
 
 void DrResFetch::setupTexture2D() {
   grlib::CGLibVtxAttr attributes[2];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[1].unknown00 = unknown073_22;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 12;
   attributes[1].unknown0c = 0;
@@ -46,7 +46,7 @@ void DrResFetch::setupTexture2D() {
 
 void DrResFetch::setupPositionOnly() {
   grlib::CGLibVtxAttr attributes[1];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
@@ -55,11 +55,11 @@ void DrResFetch::setupPositionOnly() {
 
 void DrResFetch::setupSkinWeightCalc() {
   grlib::CGLibVtxAttr attributes[2];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGBA8UI;
+  attributes[1].unknown00 = unknown073_39;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 12;
   attributes[1].unknown0c = 0;
@@ -68,11 +68,11 @@ void DrResFetch::setupSkinWeightCalc() {
 
 void DrResFetch::setupWeightVtx() {
   grlib::CGLibVtxAttr attributes[2];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGBA16;
+  attributes[0].unknown00 = unknown073_42;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGBA8UI;
+  attributes[1].unknown00 = unknown073_39;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 8;
   attributes[1].unknown0c = 0;
@@ -81,7 +81,7 @@ void DrResFetch::setupWeightVtx() {
 
 void DrResFetch::setupZBuffObj() {
   grlib::CGLibVtxAttr attributes[1];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
@@ -90,11 +90,11 @@ void DrResFetch::setupZBuffObj() {
 
 void DrResFetch::setupZBuffObjTex() {
   grlib::CGLibVtxAttr attributes[2];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[1].unknown00 = unknown073_22;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 12;
   attributes[1].unknown0c = 0;
@@ -103,11 +103,11 @@ void DrResFetch::setupZBuffObjTex() {
 
 void DrResFetch::setupZBuffObjAL() {
   grlib::CGLibVtxAttr attributes[2];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_R32F;
+  attributes[1].unknown00 = unknown073_10;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 1;
@@ -116,15 +116,15 @@ void DrResFetch::setupZBuffObjAL() {
 
 void DrResFetch::setupZBuffObjTexAL() {
   grlib::CGLibVtxAttr attributes[3];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[1].unknown00 = unknown073_22;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 12;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_R32F;
+  attributes[2].unknown00 = unknown073_10;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 0;
   attributes[2].unknown0c = 1;
@@ -133,11 +133,11 @@ void DrResFetch::setupZBuffObjTexAL() {
 
 void DrResFetch::setupZBuffMot() {
   grlib::CGLibVtxAttr attributes[2];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG16UI;
+  attributes[1].unknown00 = unknown073_20;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 12;
   attributes[1].unknown0c = 0;
@@ -146,15 +146,15 @@ void DrResFetch::setupZBuffMot() {
 
 void DrResFetch::setupZBuffMotTex() {
   grlib::CGLibVtxAttr attributes[3];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG16UI;
+  attributes[1].unknown00 = unknown073_20;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 12;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[2].unknown00 = unknown073_22;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 16;
   attributes[2].unknown0c = 0;
@@ -163,15 +163,15 @@ void DrResFetch::setupZBuffMotTex() {
 
 void DrResFetch::setupZBuffMotAL() {
   grlib::CGLibVtxAttr attributes[3];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG16UI;
+  attributes[1].unknown00 = unknown073_20;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 12;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_R32F;
+  attributes[2].unknown00 = unknown073_10;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 0;
   attributes[2].unknown0c = 1;
@@ -180,19 +180,19 @@ void DrResFetch::setupZBuffMotAL() {
 
 void DrResFetch::setupZBuffMotTexAL() {
   grlib::CGLibVtxAttr attributes[4];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG16UI;
+  attributes[1].unknown00 = unknown073_20;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 12;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[2].unknown00 = unknown073_22;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 16;
   attributes[2].unknown0c = 0;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_R32F;
+  attributes[3].unknown00 = unknown073_10;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 0;
   attributes[3].unknown0c = 1;
@@ -201,19 +201,19 @@ void DrResFetch::setupZBuffMotTexAL() {
 
 void DrResFetch::setupZBuffInst() {
   grlib::CGLibVtxAttr attributes[4];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[1].unknown00 = unknown073_46;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 1;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[2].unknown00 = unknown073_46;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 16;
   attributes[2].unknown0c = 1;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[3].unknown00 = unknown073_46;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 32;
   attributes[3].unknown0c = 1;
@@ -222,23 +222,23 @@ void DrResFetch::setupZBuffInst() {
 
 void DrResFetch::setupZBuffInstTex() {
   grlib::CGLibVtxAttr attributes[5];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[1].unknown00 = unknown073_22;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 12;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[2].unknown00 = unknown073_46;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 0;
   attributes[2].unknown0c = 1;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[3].unknown00 = unknown073_46;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 16;
   attributes[3].unknown0c = 1;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[4].unknown00 = unknown073_46;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 32;
   attributes[4].unknown0c = 1;
@@ -247,19 +247,19 @@ void DrResFetch::setupZBuffInstTex() {
 
 void DrResFetch::setupZBuffFw() {
   grlib::CGLibVtxAttr attributes[4];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[1].unknown00 = unknown073_22;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 12;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[2].unknown00 = unknown073_37;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 20;
   attributes[2].unknown0c = 0;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA8SN;
+  attributes[3].unknown00 = unknown073_38;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 24;
   attributes[3].unknown0c = 0;
@@ -268,23 +268,23 @@ void DrResFetch::setupZBuffFw() {
 
 void DrResFetch::setupZBuffFwAL() {
   grlib::CGLibVtxAttr attributes[5];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[1].unknown00 = unknown073_22;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 12;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[2].unknown00 = unknown073_37;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 20;
   attributes[2].unknown0c = 0;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA8SN;
+  attributes[3].unknown00 = unknown073_38;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 24;
   attributes[3].unknown0c = 0;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_R32F;
+  attributes[4].unknown00 = unknown073_10;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 0;
   attributes[4].unknown0c = 1;
@@ -293,7 +293,7 @@ void DrResFetch::setupZBuffFwAL() {
 
 void DrResFetch::setupShadowObj() {
   grlib::CGLibVtxAttr attributes[1];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
@@ -302,11 +302,11 @@ void DrResFetch::setupShadowObj() {
 
 void DrResFetch::setupShadowObjTex() {
   grlib::CGLibVtxAttr attributes[2];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[1].unknown00 = unknown073_22;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 12;
   attributes[1].unknown0c = 0;
@@ -315,11 +315,11 @@ void DrResFetch::setupShadowObjTex() {
 
 void DrResFetch::setupShadowMot() {
   grlib::CGLibVtxAttr attributes[2];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG16UI;
+  attributes[1].unknown00 = unknown073_20;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 12;
   attributes[1].unknown0c = 0;
@@ -328,15 +328,15 @@ void DrResFetch::setupShadowMot() {
 
 void DrResFetch::setupShadowMotTex() {
   grlib::CGLibVtxAttr attributes[3];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG16UI;
+  attributes[1].unknown00 = unknown073_20;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 12;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[2].unknown00 = unknown073_22;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 16;
   attributes[2].unknown0c = 0;
@@ -345,23 +345,23 @@ void DrResFetch::setupShadowMotTex() {
 
 void DrResFetch::setupShadowMotInst() {
   grlib::CGLibVtxAttr attributes[5];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG16UI;
+  attributes[1].unknown00 = unknown073_20;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 12;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[2].unknown00 = unknown073_46;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 0;
   attributes[2].unknown0c = 1;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[3].unknown00 = unknown073_46;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 16;
   attributes[3].unknown0c = 1;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[4].unknown00 = unknown073_46;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 32;
   attributes[4].unknown0c = 1;
@@ -370,27 +370,27 @@ void DrResFetch::setupShadowMotInst() {
 
 void DrResFetch::setupShadowMotInstTex() {
   grlib::CGLibVtxAttr attributes[6];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG16UI;
+  attributes[1].unknown00 = unknown073_20;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 12;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[2].unknown00 = unknown073_22;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 16;
   attributes[2].unknown0c = 0;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[3].unknown00 = unknown073_46;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 0;
   attributes[3].unknown0c = 1;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[4].unknown00 = unknown073_46;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 16;
   attributes[4].unknown0c = 1;
-  attributes[5].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[5].unknown00 = unknown073_46;
   attributes[5].unknown04 = 5;
   attributes[5].unknown08 = 32;
   attributes[5].unknown0c = 1;
@@ -399,19 +399,19 @@ void DrResFetch::setupShadowMotInstTex() {
 
 void DrResFetch::setupShadowFw() {
   grlib::CGLibVtxAttr attributes[4];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[1].unknown00 = unknown073_22;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 12;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[2].unknown00 = unknown073_37;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 20;
   attributes[2].unknown0c = 0;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA8SN;
+  attributes[3].unknown00 = unknown073_38;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 24;
   attributes[3].unknown0c = 0;
@@ -420,11 +420,11 @@ void DrResFetch::setupShadowFw() {
 
 void DrResFetch::setupMpf_Stm_Bill() {
   grlib::CGLibVtxAttr attributes[2];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[1].unknown00 = unknown073_22;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 1;
@@ -433,19 +433,19 @@ void DrResFetch::setupMpf_Stm_Bill() {
 
 void DrResFetch::setupMpf_Stm_Bill_Wind() {
   grlib::CGLibVtxAttr attributes[4];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[1].unknown00 = unknown073_34;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 20;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[2].unknown00 = unknown073_22;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 0;
   attributes[2].unknown0c = 1;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_R32UI;
+  attributes[3].unknown00 = unknown073_11;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 8;
   attributes[3].unknown0c = 1;
@@ -454,15 +454,15 @@ void DrResFetch::setupMpf_Stm_Bill_Wind() {
 
 void DrResFetch::setupMpf_Stm_Mdl_Wind() {
   grlib::CGLibVtxAttr attributes[3];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[1].unknown00 = unknown073_34;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 36;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_R32UI;
+  attributes[2].unknown00 = unknown073_11;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 0;
   attributes[2].unknown0c = 1;
@@ -471,15 +471,15 @@ void DrResFetch::setupMpf_Stm_Mdl_Wind() {
 
 void DrResFetch::setupMpf_Stm_Mdl_Wind_NoNom() {
   grlib::CGLibVtxAttr attributes[3];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[1].unknown00 = unknown073_34;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 24;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_R32UI;
+  attributes[2].unknown00 = unknown073_11;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 0;
   attributes[2].unknown0c = 1;
@@ -488,15 +488,15 @@ void DrResFetch::setupMpf_Stm_Mdl_Wind_NoNom() {
 
 void DrResFetch::setupMpf_Stm_Mdl_NormalMap_Wind() {
   grlib::CGLibVtxAttr attributes[3];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[1].unknown00 = unknown073_34;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 44;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_R32UI;
+  attributes[2].unknown00 = unknown073_11;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 0;
   attributes[2].unknown0c = 1;
@@ -505,23 +505,23 @@ void DrResFetch::setupMpf_Stm_Mdl_NormalMap_Wind() {
 
 void DrResFetch::setupMpf_Stm_Mdl_NormalMap_Wind_VNom() {
   grlib::CGLibVtxAttr attributes[5];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[1].unknown00 = unknown073_34;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 20;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA16SN;
+  attributes[2].unknown00 = unknown073_43;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 32;
   attributes[2].unknown0c = 0;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[3].unknown00 = unknown073_34;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 44;
   attributes[3].unknown0c = 0;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_R32UI;
+  attributes[4].unknown00 = unknown073_11;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 0;
   attributes[4].unknown0c = 1;
@@ -530,11 +530,11 @@ void DrResFetch::setupMpf_Stm_Mdl_NormalMap_Wind_VNom() {
 
 void DrResFetch::setupMpf_Pre_Bill() {
   grlib::CGLibVtxAttr attributes[2];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 1;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[1].unknown00 = unknown073_34;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 2;
@@ -543,15 +543,15 @@ void DrResFetch::setupMpf_Pre_Bill() {
 
 void DrResFetch::setupMpf_Pre_Bill_Nuki() {
   grlib::CGLibVtxAttr attributes[3];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[0].unknown00 = unknown073_22;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 12;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[1].unknown00 = unknown073_34;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 1;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[2].unknown00 = unknown073_34;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 0;
   attributes[2].unknown0c = 2;
@@ -560,19 +560,19 @@ void DrResFetch::setupMpf_Pre_Bill_Nuki() {
 
 void DrResFetch::setupMpf_Pre_Bill_Nuki_Layer() {
   grlib::CGLibVtxAttr attributes[4];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[0].unknown00 = unknown073_22;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 12;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[1].unknown00 = unknown073_34;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 1;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[2].unknown00 = unknown073_34;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 0;
   attributes[2].unknown0c = 2;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RG16F;
+  attributes[3].unknown00 = unknown073_17;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 16;
   attributes[3].unknown0c = 2;
@@ -581,19 +581,19 @@ void DrResFetch::setupMpf_Pre_Bill_Nuki_Layer() {
 
 void DrResFetch::setupMpf_Pre_Mdl() {
   grlib::CGLibVtxAttr attributes[4];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 1;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[1].unknown00 = unknown073_46;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 2;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[2].unknown00 = unknown073_46;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 16;
   attributes[2].unknown0c = 2;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[3].unknown00 = unknown073_46;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 32;
   attributes[3].unknown0c = 2;
@@ -602,23 +602,23 @@ void DrResFetch::setupMpf_Pre_Mdl() {
 
 void DrResFetch::setupMpf_Pre_Mdl_Nuki() {
   grlib::CGLibVtxAttr attributes[5];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[0].unknown00 = unknown073_22;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 12;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[1].unknown00 = unknown073_34;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 1;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[2].unknown00 = unknown073_46;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 0;
   attributes[2].unknown0c = 2;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[3].unknown00 = unknown073_46;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 16;
   attributes[3].unknown0c = 2;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[4].unknown00 = unknown073_46;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 32;
   attributes[4].unknown0c = 2;
@@ -627,27 +627,27 @@ void DrResFetch::setupMpf_Pre_Mdl_Nuki() {
 
 void DrResFetch::setupMpf_Pre_Mdl_Nuki_Layer() {
   grlib::CGLibVtxAttr attributes[6];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[0].unknown00 = unknown073_22;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 12;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[1].unknown00 = unknown073_34;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 1;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[2].unknown00 = unknown073_46;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 0;
   attributes[2].unknown0c = 2;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[3].unknown00 = unknown073_46;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 16;
   attributes[3].unknown0c = 2;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[4].unknown00 = unknown073_46;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 32;
   attributes[4].unknown0c = 2;
-  attributes[5].unknown00 = GRL_VTX_FORMAT_RG16F;
+  attributes[5].unknown00 = unknown073_17;
   attributes[5].unknown04 = 5;
   attributes[5].unknown08 = 52;
   attributes[5].unknown0c = 2;
@@ -656,23 +656,23 @@ void DrResFetch::setupMpf_Pre_Mdl_Nuki_Layer() {
 
 void DrResFetch::setupMpf_Pre_Mdl_Layer() {
   grlib::CGLibVtxAttr attributes[5];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 1;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[1].unknown00 = unknown073_46;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 2;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[2].unknown00 = unknown073_46;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 16;
   attributes[2].unknown0c = 2;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[3].unknown00 = unknown073_46;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 32;
   attributes[3].unknown0c = 2;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RG16F;
+  attributes[4].unknown00 = unknown073_17;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 52;
   attributes[4].unknown0c = 2;
@@ -681,19 +681,19 @@ void DrResFetch::setupMpf_Pre_Mdl_Layer() {
 
 void DrResFetch::setupMpf_Pre_Mdl_Def() {
   grlib::CGLibVtxAttr attributes[4];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[1].unknown00 = unknown073_46;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 1;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[2].unknown00 = unknown073_46;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 16;
   attributes[2].unknown0c = 1;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[3].unknown00 = unknown073_46;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 32;
   attributes[3].unknown0c = 1;
@@ -702,23 +702,23 @@ void DrResFetch::setupMpf_Pre_Mdl_Def() {
 
 void DrResFetch::setupMpf_Pre_Mdl_Def_Nuki() {
   grlib::CGLibVtxAttr attributes[5];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[1].unknown00 = unknown073_22;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 12;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[2].unknown00 = unknown073_46;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 0;
   attributes[2].unknown0c = 1;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[3].unknown00 = unknown073_46;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 16;
   attributes[3].unknown0c = 1;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[4].unknown00 = unknown073_46;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 32;
   attributes[4].unknown0c = 1;
@@ -727,27 +727,27 @@ void DrResFetch::setupMpf_Pre_Mdl_Def_Nuki() {
 
 void DrResFetch::setupMpf_Pre_Mdl_Def_Nuki_Layer() {
   grlib::CGLibVtxAttr attributes[6];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[0].unknown00 = unknown073_22;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 12;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[1].unknown00 = unknown073_34;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[2].unknown00 = unknown073_46;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 0;
   attributes[2].unknown0c = 1;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[3].unknown00 = unknown073_46;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 16;
   attributes[3].unknown0c = 1;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[4].unknown00 = unknown073_46;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 32;
   attributes[4].unknown0c = 1;
-  attributes[5].unknown00 = GRL_VTX_FORMAT_RG16F;
+  attributes[5].unknown00 = unknown073_17;
   attributes[5].unknown04 = 5;
   attributes[5].unknown08 = 52;
   attributes[5].unknown0c = 1;
@@ -756,15 +756,15 @@ void DrResFetch::setupMpf_Pre_Mdl_Def_Nuki_Layer() {
 
 void DrResFetch::setupMpf_Pre_Dithe_Bill() {
   grlib::CGLibVtxAttr attributes[3];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 1;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[1].unknown00 = unknown073_34;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 2;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[2].unknown00 = unknown073_37;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 12;
   attributes[2].unknown0c = 2;
@@ -773,19 +773,19 @@ void DrResFetch::setupMpf_Pre_Dithe_Bill() {
 
 void DrResFetch::setupMpf_Pre_Dithe_Bill_Nuki() {
   grlib::CGLibVtxAttr attributes[4];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[0].unknown00 = unknown073_22;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 12;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[1].unknown00 = unknown073_34;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 1;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[2].unknown00 = unknown073_34;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 0;
   attributes[2].unknown0c = 2;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[3].unknown00 = unknown073_37;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 12;
   attributes[3].unknown0c = 2;
@@ -794,23 +794,23 @@ void DrResFetch::setupMpf_Pre_Dithe_Bill_Nuki() {
 
 void DrResFetch::setupMpf_Pre_Dithe_Bill_Nuki_Layer() {
   grlib::CGLibVtxAttr attributes[5];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[0].unknown00 = unknown073_22;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 12;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[1].unknown00 = unknown073_34;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 1;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[2].unknown00 = unknown073_34;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 0;
   attributes[2].unknown0c = 2;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RG16F;
+  attributes[3].unknown00 = unknown073_17;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 16;
   attributes[3].unknown0c = 2;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[4].unknown00 = unknown073_37;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 12;
   attributes[4].unknown0c = 2;
@@ -819,23 +819,23 @@ void DrResFetch::setupMpf_Pre_Dithe_Bill_Nuki_Layer() {
 
 void DrResFetch::setupMpf_Pre_Dithe_Mdl() {
   grlib::CGLibVtxAttr attributes[5];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 1;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[1].unknown00 = unknown073_46;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 2;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[2].unknown00 = unknown073_46;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 16;
   attributes[2].unknown0c = 2;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[3].unknown00 = unknown073_46;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 32;
   attributes[3].unknown0c = 2;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[4].unknown00 = unknown073_37;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 48;
   attributes[4].unknown0c = 2;
@@ -844,27 +844,27 @@ void DrResFetch::setupMpf_Pre_Dithe_Mdl() {
 
 void DrResFetch::setupMpf_Pre_Dithe_Mdl_Nuki() {
   grlib::CGLibVtxAttr attributes[6];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[0].unknown00 = unknown073_22;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 12;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[1].unknown00 = unknown073_34;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 1;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[2].unknown00 = unknown073_46;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 0;
   attributes[2].unknown0c = 2;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[3].unknown00 = unknown073_46;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 16;
   attributes[3].unknown0c = 2;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[4].unknown00 = unknown073_46;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 32;
   attributes[4].unknown0c = 2;
-  attributes[5].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[5].unknown00 = unknown073_37;
   attributes[5].unknown04 = 5;
   attributes[5].unknown08 = 48;
   attributes[5].unknown0c = 2;
@@ -873,31 +873,31 @@ void DrResFetch::setupMpf_Pre_Dithe_Mdl_Nuki() {
 
 void DrResFetch::setupMpf_Pre_Dithe_Mdl_Nuki_Layer() {
   grlib::CGLibVtxAttr attributes[7];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[0].unknown00 = unknown073_22;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 12;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[1].unknown00 = unknown073_34;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 1;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[2].unknown00 = unknown073_46;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 0;
   attributes[2].unknown0c = 2;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[3].unknown00 = unknown073_46;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 16;
   attributes[3].unknown0c = 2;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[4].unknown00 = unknown073_46;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 32;
   attributes[4].unknown0c = 2;
-  attributes[5].unknown00 = GRL_VTX_FORMAT_RG16F;
+  attributes[5].unknown00 = unknown073_17;
   attributes[5].unknown04 = 5;
   attributes[5].unknown08 = 52;
   attributes[5].unknown0c = 2;
-  attributes[6].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[6].unknown00 = unknown073_37;
   attributes[6].unknown04 = 6;
   attributes[6].unknown08 = 48;
   attributes[6].unknown0c = 2;
@@ -906,27 +906,27 @@ void DrResFetch::setupMpf_Pre_Dithe_Mdl_Nuki_Layer() {
 
 void DrResFetch::setupMpf_Pre_Dithe_Mdl_Layer() {
   grlib::CGLibVtxAttr attributes[6];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 1;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[1].unknown00 = unknown073_46;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 2;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[2].unknown00 = unknown073_46;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 16;
   attributes[2].unknown0c = 2;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[3].unknown00 = unknown073_46;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 32;
   attributes[3].unknown0c = 2;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RG16F;
+  attributes[4].unknown00 = unknown073_17;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 52;
   attributes[4].unknown0c = 2;
-  attributes[5].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[5].unknown00 = unknown073_37;
   attributes[5].unknown04 = 5;
   attributes[5].unknown08 = 48;
   attributes[5].unknown0c = 2;
@@ -935,23 +935,23 @@ void DrResFetch::setupMpf_Pre_Dithe_Mdl_Layer() {
 
 void DrResFetch::setupMpf_Pre_Dithe_Mdl_Def() {
   grlib::CGLibVtxAttr attributes[5];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[1].unknown00 = unknown073_46;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 1;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[2].unknown00 = unknown073_46;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 16;
   attributes[2].unknown0c = 1;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[3].unknown00 = unknown073_46;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 32;
   attributes[3].unknown0c = 1;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[4].unknown00 = unknown073_37;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 48;
   attributes[4].unknown0c = 1;
@@ -960,27 +960,27 @@ void DrResFetch::setupMpf_Pre_Dithe_Mdl_Def() {
 
 void DrResFetch::setupMpf_Pre_Dithe_Mdl_Def_Nuki() {
   grlib::CGLibVtxAttr attributes[6];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[1].unknown00 = unknown073_22;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 12;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[2].unknown00 = unknown073_46;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 0;
   attributes[2].unknown0c = 1;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[3].unknown00 = unknown073_46;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 16;
   attributes[3].unknown0c = 1;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[4].unknown00 = unknown073_46;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 32;
   attributes[4].unknown0c = 1;
-  attributes[5].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[5].unknown00 = unknown073_37;
   attributes[5].unknown04 = 5;
   attributes[5].unknown08 = 48;
   attributes[5].unknown0c = 1;
@@ -989,31 +989,31 @@ void DrResFetch::setupMpf_Pre_Dithe_Mdl_Def_Nuki() {
 
 void DrResFetch::setupMpf_Pre_Dithe_Mdl_Def_Nuki_Layer() {
   grlib::CGLibVtxAttr attributes[7];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[0].unknown00 = unknown073_22;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 12;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[1].unknown00 = unknown073_34;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[2].unknown00 = unknown073_46;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 0;
   attributes[2].unknown0c = 1;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[3].unknown00 = unknown073_46;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 16;
   attributes[3].unknown0c = 1;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[4].unknown00 = unknown073_46;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 32;
   attributes[4].unknown0c = 1;
-  attributes[5].unknown00 = GRL_VTX_FORMAT_RG16F;
+  attributes[5].unknown00 = unknown073_17;
   attributes[5].unknown04 = 5;
   attributes[5].unknown08 = 52;
   attributes[5].unknown0c = 1;
-  attributes[6].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[6].unknown00 = unknown073_37;
   attributes[6].unknown04 = 6;
   attributes[6].unknown08 = 48;
   attributes[6].unknown0c = 1;
@@ -1022,23 +1022,23 @@ void DrResFetch::setupMpf_Pre_Dithe_Mdl_Def_Nuki_Layer() {
 
 void DrResFetch::setupMpf_Drw_Bill() {
   grlib::CGLibVtxAttr attributes[5];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[0].unknown00 = unknown073_22;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 12;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[1].unknown00 = unknown073_34;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 1;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[2].unknown00 = unknown073_34;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 12;
   attributes[2].unknown0c = 1;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[3].unknown00 = unknown073_34;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 0;
   attributes[3].unknown0c = 2;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[4].unknown00 = unknown073_37;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 12;
   attributes[4].unknown0c = 2;
@@ -1047,31 +1047,31 @@ void DrResFetch::setupMpf_Drw_Bill() {
 
 void DrResFetch::setupMpf_Drw_Bill_Layer() {
   grlib::CGLibVtxAttr attributes[7];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[0].unknown00 = unknown073_22;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 12;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[1].unknown00 = unknown073_34;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 1;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[2].unknown00 = unknown073_34;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 12;
   attributes[2].unknown0c = 1;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[3].unknown00 = unknown073_34;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 0;
   attributes[3].unknown0c = 2;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[4].unknown00 = unknown073_37;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 12;
   attributes[4].unknown0c = 2;
-  attributes[5].unknown00 = GRL_VTX_FORMAT_RG16F;
+  attributes[5].unknown00 = unknown073_17;
   attributes[5].unknown04 = 5;
   attributes[5].unknown08 = 16;
   attributes[5].unknown0c = 2;
-  attributes[6].unknown00 = GRL_VTX_FORMAT_RGBA8SN;
+  attributes[6].unknown00 = unknown073_38;
   attributes[6].unknown04 = 6;
   attributes[6].unknown08 = 20;
   attributes[6].unknown0c = 2;
@@ -1080,39 +1080,39 @@ void DrResFetch::setupMpf_Drw_Bill_Layer() {
 
 void DrResFetch::setupMpf_Drw_Mdl() {
   grlib::CGLibVtxAttr attributes[9];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[0].unknown00 = unknown073_22;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 12;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[1].unknown00 = unknown073_34;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 20;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[2].unknown00 = unknown073_37;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 32;
   attributes[2].unknown0c = 0;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[3].unknown00 = unknown073_34;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 0;
   attributes[3].unknown0c = 1;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[4].unknown00 = unknown073_34;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 12;
   attributes[4].unknown0c = 1;
-  attributes[5].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[5].unknown00 = unknown073_46;
   attributes[5].unknown04 = 5;
   attributes[5].unknown08 = 0;
   attributes[5].unknown0c = 2;
-  attributes[6].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[6].unknown00 = unknown073_46;
   attributes[6].unknown04 = 6;
   attributes[6].unknown08 = 16;
   attributes[6].unknown0c = 2;
-  attributes[7].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[7].unknown00 = unknown073_46;
   attributes[7].unknown04 = 7;
   attributes[7].unknown08 = 32;
   attributes[7].unknown0c = 2;
-  attributes[8].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[8].unknown00 = unknown073_37;
   attributes[8].unknown04 = 8;
   attributes[8].unknown08 = 48;
   attributes[8].unknown0c = 2;
@@ -1121,43 +1121,43 @@ void DrResFetch::setupMpf_Drw_Mdl() {
 
 void DrResFetch::setupMpf_Drw_Mdl_Layer() {
   grlib::CGLibVtxAttr attributes[10];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[0].unknown00 = unknown073_22;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 12;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[1].unknown00 = unknown073_34;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 20;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[2].unknown00 = unknown073_37;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 32;
   attributes[2].unknown0c = 0;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[3].unknown00 = unknown073_34;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 0;
   attributes[3].unknown0c = 1;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[4].unknown00 = unknown073_34;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 12;
   attributes[4].unknown0c = 1;
-  attributes[5].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[5].unknown00 = unknown073_46;
   attributes[5].unknown04 = 5;
   attributes[5].unknown08 = 0;
   attributes[5].unknown0c = 2;
-  attributes[6].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[6].unknown00 = unknown073_46;
   attributes[6].unknown04 = 6;
   attributes[6].unknown08 = 16;
   attributes[6].unknown0c = 2;
-  attributes[7].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[7].unknown00 = unknown073_46;
   attributes[7].unknown04 = 7;
   attributes[7].unknown08 = 32;
   attributes[7].unknown0c = 2;
-  attributes[8].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[8].unknown00 = unknown073_37;
   attributes[8].unknown04 = 8;
   attributes[8].unknown08 = 48;
   attributes[8].unknown0c = 2;
-  attributes[9].unknown00 = GRL_VTX_FORMAT_RG16F;
+  attributes[9].unknown00 = unknown073_17;
   attributes[9].unknown04 = 9;
   attributes[9].unknown08 = 52;
   attributes[9].unknown0c = 2;
@@ -1166,35 +1166,35 @@ void DrResFetch::setupMpf_Drw_Mdl_Layer() {
 
 void DrResFetch::setupMpf_Drw_Mdl_NoNom() {
   grlib::CGLibVtxAttr attributes[8];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[0].unknown00 = unknown073_22;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 12;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[1].unknown00 = unknown073_37;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 20;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[2].unknown00 = unknown073_34;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 0;
   attributes[2].unknown0c = 1;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[3].unknown00 = unknown073_34;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 12;
   attributes[3].unknown0c = 1;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[4].unknown00 = unknown073_46;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 0;
   attributes[4].unknown0c = 2;
-  attributes[5].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[5].unknown00 = unknown073_46;
   attributes[5].unknown04 = 5;
   attributes[5].unknown08 = 16;
   attributes[5].unknown0c = 2;
-  attributes[6].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[6].unknown00 = unknown073_46;
   attributes[6].unknown04 = 6;
   attributes[6].unknown08 = 32;
   attributes[6].unknown0c = 2;
-  attributes[7].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[7].unknown00 = unknown073_37;
   attributes[7].unknown04 = 7;
   attributes[7].unknown08 = 48;
   attributes[7].unknown0c = 2;
@@ -1203,39 +1203,39 @@ void DrResFetch::setupMpf_Drw_Mdl_NoNom() {
 
 void DrResFetch::setupMpf_Drw_Mdl_NoNom_Layer() {
   grlib::CGLibVtxAttr attributes[9];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[0].unknown00 = unknown073_22;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 12;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[1].unknown00 = unknown073_37;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 20;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[2].unknown00 = unknown073_34;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 0;
   attributes[2].unknown0c = 1;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[3].unknown00 = unknown073_34;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 12;
   attributes[3].unknown0c = 1;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[4].unknown00 = unknown073_46;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 0;
   attributes[4].unknown0c = 2;
-  attributes[5].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[5].unknown00 = unknown073_46;
   attributes[5].unknown04 = 5;
   attributes[5].unknown08 = 16;
   attributes[5].unknown0c = 2;
-  attributes[6].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[6].unknown00 = unknown073_46;
   attributes[6].unknown04 = 6;
   attributes[6].unknown08 = 32;
   attributes[6].unknown0c = 2;
-  attributes[7].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[7].unknown00 = unknown073_37;
   attributes[7].unknown04 = 7;
   attributes[7].unknown08 = 48;
   attributes[7].unknown0c = 2;
-  attributes[8].unknown00 = GRL_VTX_FORMAT_RG16F;
+  attributes[8].unknown00 = unknown073_17;
   attributes[8].unknown04 = 8;
   attributes[8].unknown08 = 52;
   attributes[8].unknown0c = 2;
@@ -1244,35 +1244,35 @@ void DrResFetch::setupMpf_Drw_Mdl_NoNom_Layer() {
 
 void DrResFetch::setupMpf_Drw_Mdl_Def() {
   grlib::CGLibVtxAttr attributes[8];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[1].unknown00 = unknown073_22;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 12;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[2].unknown00 = unknown073_34;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 20;
   attributes[2].unknown0c = 0;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[3].unknown00 = unknown073_37;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 32;
   attributes[3].unknown0c = 0;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[4].unknown00 = unknown073_46;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 0;
   attributes[4].unknown0c = 1;
-  attributes[5].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[5].unknown00 = unknown073_46;
   attributes[5].unknown04 = 5;
   attributes[5].unknown08 = 16;
   attributes[5].unknown0c = 1;
-  attributes[6].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[6].unknown00 = unknown073_46;
   attributes[6].unknown04 = 6;
   attributes[6].unknown08 = 32;
   attributes[6].unknown0c = 1;
-  attributes[7].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[7].unknown00 = unknown073_37;
   attributes[7].unknown04 = 7;
   attributes[7].unknown08 = 48;
   attributes[7].unknown0c = 1;
@@ -1281,39 +1281,39 @@ void DrResFetch::setupMpf_Drw_Mdl_Def() {
 
 void DrResFetch::setupMpf_Drw_Mdl_Def_Layer() {
   grlib::CGLibVtxAttr attributes[9];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[1].unknown00 = unknown073_22;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 12;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[2].unknown00 = unknown073_34;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 20;
   attributes[2].unknown0c = 0;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[3].unknown00 = unknown073_37;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 32;
   attributes[3].unknown0c = 0;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[4].unknown00 = unknown073_46;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 0;
   attributes[4].unknown0c = 1;
-  attributes[5].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[5].unknown00 = unknown073_46;
   attributes[5].unknown04 = 5;
   attributes[5].unknown08 = 16;
   attributes[5].unknown0c = 1;
-  attributes[6].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[6].unknown00 = unknown073_46;
   attributes[6].unknown04 = 6;
   attributes[6].unknown08 = 32;
   attributes[6].unknown0c = 1;
-  attributes[7].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[7].unknown00 = unknown073_37;
   attributes[7].unknown04 = 7;
   attributes[7].unknown08 = 48;
   attributes[7].unknown0c = 1;
-  attributes[8].unknown00 = GRL_VTX_FORMAT_RG16F;
+  attributes[8].unknown00 = unknown073_17;
   attributes[8].unknown04 = 8;
   attributes[8].unknown08 = 52;
   attributes[8].unknown0c = 1;
@@ -1322,31 +1322,31 @@ void DrResFetch::setupMpf_Drw_Mdl_Def_Layer() {
 
 void DrResFetch::setupMpf_Drw_Mdl_Def_NoNom() {
   grlib::CGLibVtxAttr attributes[7];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[1].unknown00 = unknown073_22;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 12;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[2].unknown00 = unknown073_37;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 20;
   attributes[2].unknown0c = 0;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[3].unknown00 = unknown073_46;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 0;
   attributes[3].unknown0c = 1;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[4].unknown00 = unknown073_46;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 16;
   attributes[4].unknown0c = 1;
-  attributes[5].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[5].unknown00 = unknown073_46;
   attributes[5].unknown04 = 5;
   attributes[5].unknown08 = 32;
   attributes[5].unknown0c = 1;
-  attributes[6].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[6].unknown00 = unknown073_37;
   attributes[6].unknown04 = 6;
   attributes[6].unknown08 = 48;
   attributes[6].unknown0c = 1;
@@ -1355,35 +1355,35 @@ void DrResFetch::setupMpf_Drw_Mdl_Def_NoNom() {
 
 void DrResFetch::setupMpf_Drw_Mdl_Def_NoNom_Layer() {
   grlib::CGLibVtxAttr attributes[8];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[1].unknown00 = unknown073_22;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 12;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[2].unknown00 = unknown073_37;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 20;
   attributes[2].unknown0c = 0;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[3].unknown00 = unknown073_46;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 0;
   attributes[3].unknown0c = 1;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[4].unknown00 = unknown073_46;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 16;
   attributes[4].unknown0c = 1;
-  attributes[5].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[5].unknown00 = unknown073_46;
   attributes[5].unknown04 = 5;
   attributes[5].unknown08 = 32;
   attributes[5].unknown0c = 1;
-  attributes[6].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[6].unknown00 = unknown073_37;
   attributes[6].unknown04 = 6;
   attributes[6].unknown08 = 48;
   attributes[6].unknown0c = 1;
-  attributes[7].unknown00 = GRL_VTX_FORMAT_RG16F;
+  attributes[7].unknown00 = unknown073_17;
   attributes[7].unknown04 = 7;
   attributes[7].unknown08 = 52;
   attributes[7].unknown0c = 1;
@@ -1392,39 +1392,39 @@ void DrResFetch::setupMpf_Drw_Mdl_Def_NoNom_Layer() {
 
 void DrResFetch::setupMpf_Drw_Mdl_NormalMap() {
   grlib::CGLibVtxAttr attributes[9];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[1].unknown00 = unknown073_22;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 12;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[2].unknown00 = unknown073_34;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 20;
   attributes[2].unknown0c = 0;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA16SN;
+  attributes[3].unknown00 = unknown073_43;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 32;
   attributes[3].unknown0c = 0;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[4].unknown00 = unknown073_37;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 40;
   attributes[4].unknown0c = 0;
-  attributes[5].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[5].unknown00 = unknown073_46;
   attributes[5].unknown04 = 5;
   attributes[5].unknown08 = 0;
   attributes[5].unknown0c = 1;
-  attributes[6].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[6].unknown00 = unknown073_46;
   attributes[6].unknown04 = 6;
   attributes[6].unknown08 = 16;
   attributes[6].unknown0c = 1;
-  attributes[7].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[7].unknown00 = unknown073_46;
   attributes[7].unknown04 = 7;
   attributes[7].unknown08 = 32;
   attributes[7].unknown0c = 1;
-  attributes[8].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[8].unknown00 = unknown073_37;
   attributes[8].unknown04 = 8;
   attributes[8].unknown08 = 48;
   attributes[8].unknown0c = 1;
@@ -1433,43 +1433,43 @@ void DrResFetch::setupMpf_Drw_Mdl_NormalMap() {
 
 void DrResFetch::setupMpf_Drw_Mdl_NormalMap_Wind() {
   grlib::CGLibVtxAttr attributes[10];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[0].unknown00 = unknown073_22;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 12;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[1].unknown00 = unknown073_34;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 20;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA16SN;
+  attributes[2].unknown00 = unknown073_43;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 32;
   attributes[2].unknown0c = 0;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[3].unknown00 = unknown073_37;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 40;
   attributes[3].unknown0c = 0;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[4].unknown00 = unknown073_34;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 0;
   attributes[4].unknown0c = 1;
-  attributes[5].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[5].unknown00 = unknown073_34;
   attributes[5].unknown04 = 5;
   attributes[5].unknown08 = 12;
   attributes[5].unknown0c = 1;
-  attributes[6].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[6].unknown00 = unknown073_46;
   attributes[6].unknown04 = 6;
   attributes[6].unknown08 = 0;
   attributes[6].unknown0c = 2;
-  attributes[7].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[7].unknown00 = unknown073_46;
   attributes[7].unknown04 = 7;
   attributes[7].unknown08 = 16;
   attributes[7].unknown0c = 2;
-  attributes[8].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[8].unknown00 = unknown073_46;
   attributes[8].unknown04 = 8;
   attributes[8].unknown08 = 32;
   attributes[8].unknown0c = 2;
-  attributes[9].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[9].unknown00 = unknown073_37;
   attributes[9].unknown04 = 9;
   attributes[9].unknown08 = 48;
   attributes[9].unknown0c = 2;
@@ -1478,47 +1478,47 @@ void DrResFetch::setupMpf_Drw_Mdl_NormalMap_Wind() {
 
 void DrResFetch::setupMpf_Drw_Mdl_NormalMap_Wind_Layer() {
   grlib::CGLibVtxAttr attributes[11];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[0].unknown00 = unknown073_22;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 12;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[1].unknown00 = unknown073_34;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 20;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA16SN;
+  attributes[2].unknown00 = unknown073_43;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 32;
   attributes[2].unknown0c = 0;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[3].unknown00 = unknown073_37;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 40;
   attributes[3].unknown0c = 0;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[4].unknown00 = unknown073_34;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 0;
   attributes[4].unknown0c = 1;
-  attributes[5].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[5].unknown00 = unknown073_34;
   attributes[5].unknown04 = 5;
   attributes[5].unknown08 = 12;
   attributes[5].unknown0c = 1;
-  attributes[6].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[6].unknown00 = unknown073_46;
   attributes[6].unknown04 = 6;
   attributes[6].unknown08 = 0;
   attributes[6].unknown0c = 2;
-  attributes[7].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[7].unknown00 = unknown073_46;
   attributes[7].unknown04 = 7;
   attributes[7].unknown08 = 16;
   attributes[7].unknown0c = 2;
-  attributes[8].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[8].unknown00 = unknown073_46;
   attributes[8].unknown04 = 8;
   attributes[8].unknown08 = 32;
   attributes[8].unknown0c = 2;
-  attributes[9].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[9].unknown00 = unknown073_37;
   attributes[9].unknown04 = 9;
   attributes[9].unknown08 = 48;
   attributes[9].unknown0c = 2;
-  attributes[10].unknown00 = GRL_VTX_FORMAT_RG16F;
+  attributes[10].unknown00 = unknown073_17;
   attributes[10].unknown04 = 10;
   attributes[10].unknown08 = 52;
   attributes[10].unknown0c = 2;
@@ -1527,43 +1527,43 @@ void DrResFetch::setupMpf_Drw_Mdl_NormalMap_Wind_Layer() {
 
 void DrResFetch::setupMpf_Drw_Mdl_NormalMap_Wind_VNom() {
   grlib::CGLibVtxAttr attributes[10];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[0].unknown00 = unknown073_22;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 12;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[1].unknown00 = unknown073_34;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 24;
   attributes[1].unknown0c = 1;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[2].unknown00 = unknown073_46;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 36;
   attributes[2].unknown0c = 1;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[3].unknown00 = unknown073_37;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 40;
   attributes[3].unknown0c = 0;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[4].unknown00 = unknown073_34;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 0;
   attributes[4].unknown0c = 1;
-  attributes[5].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[5].unknown00 = unknown073_34;
   attributes[5].unknown04 = 5;
   attributes[5].unknown08 = 12;
   attributes[5].unknown0c = 1;
-  attributes[6].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[6].unknown00 = unknown073_46;
   attributes[6].unknown04 = 6;
   attributes[6].unknown08 = 0;
   attributes[6].unknown0c = 2;
-  attributes[7].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[7].unknown00 = unknown073_46;
   attributes[7].unknown04 = 7;
   attributes[7].unknown08 = 16;
   attributes[7].unknown0c = 2;
-  attributes[8].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[8].unknown00 = unknown073_46;
   attributes[8].unknown04 = 8;
   attributes[8].unknown08 = 32;
   attributes[8].unknown0c = 2;
-  attributes[9].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[9].unknown00 = unknown073_37;
   attributes[9].unknown04 = 9;
   attributes[9].unknown08 = 48;
   attributes[9].unknown0c = 2;
@@ -1572,43 +1572,43 @@ void DrResFetch::setupMpf_Drw_Mdl_NormalMap_Wind_VNom() {
 
 void DrResFetch::setupMpf_Drw_Mdl_NormalMap_Layer() {
   grlib::CGLibVtxAttr attributes[10];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[0].unknown00 = unknown073_22;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 12;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[1].unknown00 = unknown073_34;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 20;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA16SN;
+  attributes[2].unknown00 = unknown073_43;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 32;
   attributes[2].unknown0c = 0;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[3].unknown00 = unknown073_37;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 40;
   attributes[3].unknown0c = 0;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[4].unknown00 = unknown073_34;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 0;
   attributes[4].unknown0c = 0;
-  attributes[5].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[5].unknown00 = unknown073_46;
   attributes[5].unknown04 = 5;
   attributes[5].unknown08 = 0;
   attributes[5].unknown0c = 1;
-  attributes[6].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[6].unknown00 = unknown073_46;
   attributes[6].unknown04 = 6;
   attributes[6].unknown08 = 16;
   attributes[6].unknown0c = 1;
-  attributes[7].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[7].unknown00 = unknown073_46;
   attributes[7].unknown04 = 7;
   attributes[7].unknown08 = 32;
   attributes[7].unknown0c = 1;
-  attributes[8].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[8].unknown00 = unknown073_37;
   attributes[8].unknown04 = 8;
   attributes[8].unknown08 = 48;
   attributes[8].unknown0c = 1;
-  attributes[9].unknown00 = GRL_VTX_FORMAT_RG16F;
+  attributes[9].unknown00 = unknown073_17;
   attributes[9].unknown04 = 9;
   attributes[9].unknown08 = 52;
   attributes[9].unknown0c = 1;
@@ -1617,19 +1617,19 @@ void DrResFetch::setupMpf_Drw_Mdl_NormalMap_Layer() {
 
 void DrResFetch::setupMpf_Cull_Fade_Mdl() {
   grlib::CGLibVtxAttr attributes[4];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[0].unknown00 = unknown073_46;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[1].unknown00 = unknown073_46;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 16;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[2].unknown00 = unknown073_46;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 32;
   attributes[2].unknown0c = 0;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA32UI;
+  attributes[3].unknown00 = unknown073_47;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 48;
   attributes[3].unknown0c = 0;
@@ -1638,23 +1638,23 @@ void DrResFetch::setupMpf_Cull_Fade_Mdl() {
 
 void DrResFetch::setupZBuffInstDith() {
   grlib::CGLibVtxAttr attributes[5];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[1].unknown00 = unknown073_46;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 1;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[2].unknown00 = unknown073_46;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 16;
   attributes[2].unknown0c = 1;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[3].unknown00 = unknown073_46;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 32;
   attributes[3].unknown0c = 1;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_R32F;
+  attributes[4].unknown00 = unknown073_10;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 48;
   attributes[4].unknown0c = 1;
@@ -1663,27 +1663,27 @@ void DrResFetch::setupZBuffInstDith() {
 
 void DrResFetch::setupZBuffInstDithTex() {
   grlib::CGLibVtxAttr attributes[6];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[1].unknown00 = unknown073_22;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 12;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[2].unknown00 = unknown073_46;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 0;
   attributes[2].unknown0c = 1;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[3].unknown00 = unknown073_46;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 16;
   attributes[3].unknown0c = 1;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[4].unknown00 = unknown073_46;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 32;
   attributes[4].unknown0c = 1;
-  attributes[5].unknown00 = GRL_VTX_FORMAT_R32F;
+  attributes[5].unknown00 = unknown073_10;
   attributes[5].unknown04 = 5;
   attributes[5].unknown08 = 48;
   attributes[5].unknown0c = 1;
@@ -1692,27 +1692,27 @@ void DrResFetch::setupZBuffInstDithTex() {
 
 void DrResFetch::setupZBuffInstBillDith() {
   grlib::CGLibVtxAttr attributes[6];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG16UI;
+  attributes[1].unknown00 = unknown073_20;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 12;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[2].unknown00 = unknown073_46;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 0;
   attributes[2].unknown0c = 1;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[3].unknown00 = unknown073_46;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 16;
   attributes[3].unknown0c = 1;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[4].unknown00 = unknown073_46;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 32;
   attributes[4].unknown0c = 1;
-  attributes[5].unknown00 = GRL_VTX_FORMAT_R32F;
+  attributes[5].unknown00 = unknown073_10;
   attributes[5].unknown04 = 5;
   attributes[5].unknown08 = 48;
   attributes[5].unknown0c = 1;
@@ -1721,31 +1721,31 @@ void DrResFetch::setupZBuffInstBillDith() {
 
 void DrResFetch::setupZBuffInstBillDithTex() {
   grlib::CGLibVtxAttr attributes[7];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG16UI;
+  attributes[1].unknown00 = unknown073_20;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 12;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[2].unknown00 = unknown073_22;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 16;
   attributes[2].unknown0c = 0;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[3].unknown00 = unknown073_46;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 0;
   attributes[3].unknown0c = 1;
-  attributes[4].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[4].unknown00 = unknown073_46;
   attributes[4].unknown04 = 4;
   attributes[4].unknown08 = 16;
   attributes[4].unknown0c = 1;
-  attributes[5].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[5].unknown00 = unknown073_46;
   attributes[5].unknown04 = 5;
   attributes[5].unknown08 = 32;
   attributes[5].unknown0c = 1;
-  attributes[6].unknown00 = GRL_VTX_FORMAT_R32F;
+  attributes[6].unknown00 = unknown073_10;
   attributes[6].unknown04 = 6;
   attributes[6].unknown08 = 52;
   attributes[6].unknown0c = 1;
@@ -1754,11 +1754,11 @@ void DrResFetch::setupZBuffInstBillDithTex() {
 
 void DrResFetch::setupDebugPosColor() {
   grlib::CGLibVtxAttr attributes[2];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[1].unknown00 = unknown073_37;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 12;
   attributes[1].unknown0c = 0;
@@ -1767,7 +1767,7 @@ void DrResFetch::setupDebugPosColor() {
 
 void DrResFetch::setupXYZW() {
   grlib::CGLibVtxAttr attributes[1];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[0].unknown00 = unknown073_46;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
@@ -1776,15 +1776,15 @@ void DrResFetch::setupXYZW() {
 
 void DrResFetch::setupOutLineObj() {
   grlib::CGLibVtxAttr attributes[3];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGBA8SN;
+  attributes[1].unknown00 = unknown073_38;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 1;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[2].unknown00 = unknown073_37;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 4;
   attributes[2].unknown0c = 1;
@@ -1793,11 +1793,11 @@ void DrResFetch::setupOutLineObj() {
 
 void DrResFetch::setupGlassBrObj() {
   grlib::CGLibVtxAttr attributes[2];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGBA16I;
+  attributes[0].unknown00 = unknown073_45;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGBA8SN;
+  attributes[1].unknown00 = unknown073_38;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 8;
   attributes[1].unknown0c = 0;
@@ -1806,11 +1806,11 @@ void DrResFetch::setupGlassBrObj() {
 
 void DrResFetch::setupMofSetObj() {
   grlib::CGLibVtxAttr attributes[2];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[0].unknown00 = unknown073_46;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGBA32UI;
+  attributes[1].unknown00 = unknown073_47;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 16;
   attributes[1].unknown0c = 0;
@@ -1819,11 +1819,11 @@ void DrResFetch::setupMofSetObj() {
 
 void DrResFetch::setupMeshVtxObj() {
   grlib::CGLibVtxAttr attributes[2];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGBA16I;
+  attributes[0].unknown00 = unknown073_45;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGBA8SN;
+  attributes[1].unknown00 = unknown073_38;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 8;
   attributes[1].unknown0c = 0;
@@ -1832,15 +1832,15 @@ void DrResFetch::setupMeshVtxObj() {
 
 void DrResFetch::setupMeshVtxAdd() {
   grlib::CGLibVtxAttr attributes[3];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[1].unknown00 = unknown073_37;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 12;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[2].unknown00 = unknown073_46;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 16;
   attributes[2].unknown0c = 0;
@@ -1849,19 +1849,19 @@ void DrResFetch::setupMeshVtxAdd() {
 
 void DrResFetch::setupOutMeshVtx() {
   grlib::CGLibVtxAttr attributes[4];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[0].unknown00 = unknown073_22;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[1].unknown00 = unknown073_37;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 8;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[2].unknown00 = unknown073_34;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 0;
   attributes[2].unknown0c = 1;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[3].unknown00 = unknown073_37;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 12;
   attributes[3].unknown0c = 1;
@@ -1870,7 +1870,7 @@ void DrResFetch::setupOutMeshVtx() {
 
 void DrResFetch::setupMofZBuffObj() {
   grlib::CGLibVtxAttr attributes[1];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 2;
@@ -1879,11 +1879,11 @@ void DrResFetch::setupMofZBuffObj() {
 
 void DrResFetch::setupMofZBuffObjTex() {
   grlib::CGLibVtxAttr attributes[2];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 2;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[1].unknown00 = unknown073_22;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 0;
@@ -1892,11 +1892,11 @@ void DrResFetch::setupMofZBuffObjTex() {
 
 void DrResFetch::setupMofZBuffObjAL() {
   grlib::CGLibVtxAttr attributes[2];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 2;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_R32F;
+  attributes[1].unknown00 = unknown073_10;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 1;
@@ -1905,15 +1905,15 @@ void DrResFetch::setupMofZBuffObjAL() {
 
 void DrResFetch::setupMofZBuffObjTexAL() {
   grlib::CGLibVtxAttr attributes[3];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 2;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[1].unknown00 = unknown073_22;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_R32F;
+  attributes[2].unknown00 = unknown073_10;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 0;
   attributes[2].unknown0c = 1;
@@ -1922,11 +1922,11 @@ void DrResFetch::setupMofZBuffObjTexAL() {
 
 void DrResFetch::setupMofZBuffMot() {
   grlib::CGLibVtxAttr attributes[2];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 2;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG16UI;
+  attributes[1].unknown00 = unknown073_20;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 0;
@@ -1935,15 +1935,15 @@ void DrResFetch::setupMofZBuffMot() {
 
 void DrResFetch::setupMofZBuffMotTex() {
   grlib::CGLibVtxAttr attributes[3];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 2;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG16UI;
+  attributes[1].unknown00 = unknown073_20;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[2].unknown00 = unknown073_22;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 4;
   attributes[2].unknown0c = 0;
@@ -1952,15 +1952,15 @@ void DrResFetch::setupMofZBuffMotTex() {
 
 void DrResFetch::setupMofZBuffMotAL() {
   grlib::CGLibVtxAttr attributes[3];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 2;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG16UI;
+  attributes[1].unknown00 = unknown073_20;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_R32F;
+  attributes[2].unknown00 = unknown073_10;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 0;
   attributes[2].unknown0c = 1;
@@ -1969,19 +1969,19 @@ void DrResFetch::setupMofZBuffMotAL() {
 
 void DrResFetch::setupMofZBuffMotTexAL() {
   grlib::CGLibVtxAttr attributes[4];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 2;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG16UI;
+  attributes[1].unknown00 = unknown073_20;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[2].unknown00 = unknown073_22;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 4;
   attributes[2].unknown0c = 0;
-  attributes[3].unknown00 = GRL_VTX_FORMAT_R32F;
+  attributes[3].unknown00 = unknown073_10;
   attributes[3].unknown04 = 3;
   attributes[3].unknown08 = 0;
   attributes[3].unknown0c = 1;
@@ -1990,7 +1990,7 @@ void DrResFetch::setupMofZBuffMotTexAL() {
 
 void DrResFetch::setupMofShadowObj() {
   grlib::CGLibVtxAttr attributes[1];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 2;
@@ -1999,11 +1999,11 @@ void DrResFetch::setupMofShadowObj() {
 
 void DrResFetch::setupMofShadowObjTex() {
   grlib::CGLibVtxAttr attributes[2];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 2;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[1].unknown00 = unknown073_22;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 0;
@@ -2012,11 +2012,11 @@ void DrResFetch::setupMofShadowObjTex() {
 
 void DrResFetch::setupMofShadowMot() {
   grlib::CGLibVtxAttr attributes[2];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 2;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG16UI;
+  attributes[1].unknown00 = unknown073_20;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 0;
@@ -2025,15 +2025,15 @@ void DrResFetch::setupMofShadowMot() {
 
 void DrResFetch::setupMofShadowMotTex() {
   grlib::CGLibVtxAttr attributes[3];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 2;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RG16UI;
+  attributes[1].unknown00 = unknown073_20;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 0;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[2].unknown00 = unknown073_22;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 4;
   attributes[2].unknown0c = 0;
@@ -2042,11 +2042,11 @@ void DrResFetch::setupMofShadowMotTex() {
 
 void DrResFetch::setupDepthCheck() {
   grlib::CGLibVtxAttr attributes[2];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attributes[0].unknown00 = unknown073_34;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[1].unknown00 = unknown073_46;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 1;
@@ -2055,15 +2055,15 @@ void DrResFetch::setupDepthCheck() {
 
 void DrResFetch::setupDebTexStm() {
   grlib::CGLibVtxAttr attributes[3];
-  attributes[0].unknown00 = GRL_VTX_FORMAT_RG32F;
+  attributes[0].unknown00 = unknown073_22;
   attributes[0].unknown04 = 0;
   attributes[0].unknown08 = 0;
   attributes[0].unknown0c = 0;
-  attributes[1].unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attributes[1].unknown00 = unknown073_46;
   attributes[1].unknown04 = 1;
   attributes[1].unknown08 = 0;
   attributes[1].unknown0c = 1;
-  attributes[2].unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attributes[2].unknown00 = unknown073_37;
   attributes[2].unknown04 = 2;
   attributes[2].unknown08 = 16;
   attributes[2].unknown0c = 1;
@@ -2071,154 +2071,154 @@ void DrResFetch::setupDebTexStm() {
 }
 
 void DrResFetch::vert_set_VEC3(int offset, u32 location, grlib::CGLibVtxAttr &attribute) {
-  attribute.unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attribute.unknown00 = unknown073_34;
   attribute.unknown04 = location;
   attribute.unknown08 = offset;
   attribute.unknown0c = 0;
 }
 
 void DrResFetch::vert_set_BYTE(int offset, u32 location, grlib::CGLibVtxAttr &attribute) {
-  attribute.unknown00 = GRL_VTX_FORMAT_RGBA8UI;
+  attribute.unknown00 = unknown073_39;
   attribute.unknown04 = location;
   attribute.unknown08 = offset;
   attribute.unknown0c = 0;
 }
 
 void DrResFetch::vert_set_USHORT2(int offset, u32 location, grlib::CGLibVtxAttr &attribute) {
-  attribute.unknown00 = GRL_VTX_FORMAT_RG16UI;
+  attribute.unknown00 = unknown073_20;
   attribute.unknown04 = location;
   attribute.unknown08 = offset;
   attribute.unknown0c = 0;
 }
 
 void DrResFetch::vert_set_VEC2(int offset, u32 location, grlib::CGLibVtxAttr &attribute) {
-  attribute.unknown00 = GRL_VTX_FORMAT_RG32F;
+  attribute.unknown00 = unknown073_22;
   attribute.unknown04 = location;
   attribute.unknown08 = offset;
   attribute.unknown0c = 0;
 }
 
 void DrResFetch::vert_set_U32(int offset, u32 location, grlib::CGLibVtxAttr &attribute) {
-  attribute.unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attribute.unknown00 = unknown073_37;
   attribute.unknown04 = location;
   attribute.unknown08 = offset;
   attribute.unknown0c = 0;
 }
 
 void DrResFetch::vert_set_SHORT4(int offset, u32 location, grlib::CGLibVtxAttr &attribute) {
-  attribute.unknown00 = GRL_VTX_FORMAT_RGBA16SN;
+  attribute.unknown00 = unknown073_43;
   attribute.unknown04 = location;
   attribute.unknown08 = offset;
   attribute.unknown0c = 0;
 }
 
 void DrResFetch::vert_set_GmPos4(int offset, u32 location, grlib::CGLibVtxAttr &attribute) {
-  attribute.unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attribute.unknown00 = unknown073_34;
   attribute.unknown04 = location;
   attribute.unknown08 = offset;
   attribute.unknown0c = 1;
 }
 
 void DrResFetch::vert_set_GmScl2(int offset, u32 location, grlib::CGLibVtxAttr &attribute) {
-  attribute.unknown00 = GRL_VTX_FORMAT_RG32F;
+  attribute.unknown00 = unknown073_22;
   attribute.unknown04 = location;
   attribute.unknown08 = offset;
   attribute.unknown0c = 1;
 }
 
 void DrResFetch::vert_set_GmCol4(int offset, u32 location, grlib::CGLibVtxAttr &attribute) {
-  attribute.unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attribute.unknown00 = unknown073_37;
   attribute.unknown04 = location;
   attribute.unknown08 = offset;
   attribute.unknown0c = 1;
 }
 
 void DrResFetch::vert_set_GmCal1(int offset, u32 location, grlib::CGLibVtxAttr &attribute) {
-  attribute.unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attribute.unknown00 = unknown073_46;
   attribute.unknown04 = location;
   attribute.unknown08 = offset;
   attribute.unknown0c = 1;
 }
 
 void DrResFetch::vert_set_GmCal2(int offset, u32 location, grlib::CGLibVtxAttr &attribute) {
-  attribute.unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attribute.unknown00 = unknown073_46;
   attribute.unknown04 = location;
   attribute.unknown08 = offset;
   attribute.unknown0c = 1;
 }
 
 void DrResFetch::vert_set_GmCal3(int offset, u32 location, grlib::CGLibVtxAttr &attribute) {
-  attribute.unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attribute.unknown00 = unknown073_46;
   attribute.unknown04 = location;
   attribute.unknown08 = offset;
   attribute.unknown0c = 1;
 }
 
 void DrResFetch::vert_set_GmInt(int offset, u32 location, grlib::CGLibVtxAttr &attribute) {
-  attribute.unknown00 = GRL_VTX_FORMAT_R32UI;
+  attribute.unknown00 = unknown073_11;
   attribute.unknown04 = location;
   attribute.unknown08 = offset;
   attribute.unknown0c = 1;
 }
 
 void DrResFetch::vert_set_S32(int offset, u32 location, grlib::CGLibVtxAttr &attribute) {
-  attribute.unknown00 = GRL_VTX_FORMAT_RGBA8SN;
+  attribute.unknown00 = unknown073_38;
   attribute.unknown04 = location;
   attribute.unknown08 = offset;
   attribute.unknown0c = 0;
 }
 
 void DrResFetch::vert_set_GmFloat(int offset, u32 location, grlib::CGLibVtxAttr &attribute) {
-  attribute.unknown00 = GRL_VTX_FORMAT_R32F;
+  attribute.unknown00 = unknown073_10;
   attribute.unknown04 = location;
   attribute.unknown08 = offset;
   attribute.unknown0c = 1;
 }
 
 void DrResFetch::vert_set_OutLineNom(int offset, u32 location, grlib::CGLibVtxAttr &attribute) {
-  attribute.unknown00 = GRL_VTX_FORMAT_RGBA8SN;
+  attribute.unknown00 = unknown073_38;
   attribute.unknown04 = location;
   attribute.unknown08 = offset;
   attribute.unknown0c = 1;
 }
 
 void DrResFetch::vert_set_OutLineCol(int offset, u32 location, grlib::CGLibVtxAttr &attribute) {
-  attribute.unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attribute.unknown00 = unknown073_37;
   attribute.unknown04 = location;
   attribute.unknown08 = offset;
   attribute.unknown0c = 1;
 }
 
 void DrResFetch::vert_set_MofPos(int offset, u32 location, grlib::CGLibVtxAttr &attribute) {
-  attribute.unknown00 = GRL_VTX_FORMAT_RGB32F;
+  attribute.unknown00 = unknown073_34;
   attribute.unknown04 = location;
   attribute.unknown08 = offset;
   attribute.unknown0c = 2;
 }
 
 void DrResFetch::vert_set_MofNom(int offset, u32 location, grlib::CGLibVtxAttr &attribute) {
-  attribute.unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attribute.unknown00 = unknown073_37;
   attribute.unknown04 = location;
   attribute.unknown08 = offset;
   attribute.unknown0c = 2;
 }
 
 void DrResFetch::vert_set_MofTan(int offset, u32 location, grlib::CGLibVtxAttr &attribute) {
-  attribute.unknown00 = GRL_VTX_FORMAT_RGBA32F;
+  attribute.unknown00 = unknown073_46;
   attribute.unknown04 = location;
   attribute.unknown08 = offset;
   attribute.unknown0c = 2;
 }
 
 void DrResFetch::vert_set_MofNewTan(int offset, u32 location, grlib::CGLibVtxAttr &attribute) {
-  attribute.unknown00 = GRL_VTX_FORMAT_RGBA8;
+  attribute.unknown00 = unknown073_37;
   attribute.unknown04 = location;
   attribute.unknown08 = offset;
   attribute.unknown0c = 2;
 }
 
 void DrResFetch::vert_set_SHORT2(int offset, u32 location, grlib::CGLibVtxAttr &attribute) {
-  attribute.unknown00 = GRL_VTX_FORMAT_RG16SN;
+  attribute.unknown00 = unknown073_19;
   attribute.unknown04 = location;
   attribute.unknown08 = offset;
   attribute.unknown0c = 0;

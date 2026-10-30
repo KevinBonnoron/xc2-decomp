@@ -11,9 +11,10 @@ class DrLightObjSpt;
 class DrMan;
 class DrShdLgtMan;
 
-enum DrShdLgtDynamicType {
-  DR_SHD_LGT_DYNAMIC_TILE_BASED,
-  DR_SHD_LGT_DYNAMIC_CLUSTERED,
+// Inferred role: shd lgt dynamic type; original type name unknown.
+enum unknown063 {
+  unknown063_0, // Inferred role: tile based; original name unknown.
+  unknown063_1, // Inferred role: clustered; original name unknown.
 };
 
 class DrShdLgtDynamic {

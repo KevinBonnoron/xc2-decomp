@@ -20,7 +20,8 @@ public:
   static const u32 CALL_MAX = 135;
   static const u32 CONTEXT_MAX = 256;
 
-  struct CallInfo {
+  // Inferred role: call info; original type name unknown.
+  struct unknown001 {
     GfMenuCallContext *unknown00; // Inferred role: context; original member name unknown.
     u32 unknown08;                // Inferred role: handler; original member name unknown.
   };
@@ -42,9 +43,9 @@ public:
   void nextCallContext(GfMenuCallContext *context, u32 menu);
   void setCallContextEventHandler(GfMenuCallContext *context, u32 handler);
 
-  u32 unknown08[CALL_MAX];                                 // Inferred role: calls; original member name unknown.
-  GfMenuStrLinker unknown228;                              // Inferred role: str linker; original member name unknown.
-  mm::mtl::FixedVector<CallInfo, CONTEXT_MAX> unknown1108; // Inferred role: contexts; original member name unknown.
+  u32 unknown08[CALL_MAX];                                   // Inferred role: calls; original member name unknown.
+  GfMenuStrLinker unknown228;                                // Inferred role: str linker; original member name unknown.
+  mm::mtl::FixedVector<unknown001, CONTEXT_MAX> unknown1108; // Inferred role: contexts; original member name unknown.
 };
 
 static_assert(offsetof(GfMenuCallManager, unknown08) == 0x08, "");

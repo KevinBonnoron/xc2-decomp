@@ -11,8 +11,8 @@
 namespace gf {
 
 static GfMenuZoneMapAdapter::TypeInfo TYPE_INFOS[] = {
-    {&GfMenuZoneMapAdapter::update_ZoneMapName, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
-    {&GfMenuZoneMapAdapter::update_ZonePointName, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
+    {&GfMenuZoneMapAdapter::update_ZoneMapName, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuZoneMapAdapter::update_ZonePointName, {GfMenuAdapter::unknown004_2, 0, 0}},
 };
 
 GfMenuZoneMapAdapter::GfMenuZoneMapAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways)

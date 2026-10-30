@@ -524,8 +524,8 @@ EffectData *EffectManager::searchData(const char *name) {
     return found->second;
   }
 
-  CommonEffect *end = unknown1fb8.end();
-  for (CommonEffect *it = unknown1fb8.begin(); it != end; ++it) {
+  unknown008 *end = unknown1fb8.end();
+  for (unknown008 *it = unknown1fb8.begin(); it != end; ++it) {
     if (it->unknown08 != nullptr) {
       EffectData *data = it->unknown08->searchData(name);
       if (data != nullptr) {
@@ -538,8 +538,8 @@ EffectData *EffectManager::searchData(const char *name) {
 }
 
 void *EffectManager::seachAssetEffectHandle(const char *name) {
-  CommonEffect *end = unknown1fb8.end();
-  for (CommonEffect *it = unknown1fb8.begin(); it != end; ++it) {
+  unknown008 *end = unknown1fb8.end();
+  for (unknown008 *it = unknown1fb8.begin(); it != end; ++it) {
     if (it->unknown08 != nullptr) {
       void *data = it->unknown08->searchEfb(name);
       if (data != nullptr) {

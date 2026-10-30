@@ -14,11 +14,11 @@ void DrCalcStmListObj::setHeaderInfo(const u8 *header) {
   }
 }
 
-DrCalcStmRes *DrCalcStmListObj::getResObj(u32 index) { return unknown30[DrMan::s_nDblStockIdx] + index; }
+unknown035 *DrCalcStmListObj::getResObj(u32 index) { return unknown30[DrMan::s_nDblStockIdx] + index; }
 
-DrCalcStmRes *DrCalcStmListObj::getResVertexObj() { return &unknown30[DrMan::s_nDblStockIdx][unknown74]; }
+unknown035 *DrCalcStmListObj::getResVertexObj() { return &unknown30[DrMan::s_nDblStockIdx][unknown74]; }
 
-DrCalcStmRes *DrCalcStmListObj::getResShaderObj() { return &unknown30[DrMan::s_nDblStockIdx][unknown76]; }
+unknown035 *DrCalcStmListObj::getResShaderObj() { return &unknown30[DrMan::s_nDblStockIdx][unknown76]; }
 
 bool DrCalcStmListObj::isResChange() const { return (unknown80 & (0x400000 << DrMan::s_nDblStockIdx)) != 0; }
 
@@ -46,7 +46,7 @@ void *DrCalcStmListObj::getAdder() {
   return nullptr;
 }
 
-DrCalcStmRes *DrCalcStmListObj::getResLowTexObj() { return &unknown30[DrMan::s_nDblStockIdx][unknown78]; }
+unknown035 *DrCalcStmListObj::getResLowTexObj() { return &unknown30[DrMan::s_nDblStockIdx][unknown78]; }
 
 bool DrCalcStmListObj::texstm_requestWait() {
   unknown88 = 0x13;

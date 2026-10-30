@@ -8,8 +8,8 @@
 namespace gf {
 
 static GfMenuFlagAdapter::TypeInfo TYPE_INFOS[] = {
-    {&GfMenuFlagAdapter::update_FlagDisp, {GfMenuAdapter::PLUGIN_TYPE_DISP, 0, 0}},
-    {&GfMenuFlagAdapter::update_FlagNum, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 1, 99}},
+    {&GfMenuFlagAdapter::update_FlagDisp, {GfMenuAdapter::unknown004_3, 0, 0}},
+    {&GfMenuFlagAdapter::update_FlagNum, {GfMenuAdapter::unknown004_0, 1, 99}},
 };
 
 GfMenuFlagAdapter::GfMenuFlagAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(0), unknown52(0), unknown54(0) {}

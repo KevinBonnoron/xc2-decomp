@@ -204,12 +204,12 @@ void FrameManager::setSkipAbleFrame(f32 frame) {
 }
 
 void FrameManager::addKeyFrame(f32 frame, bool isCut) {
-  KeyFrame key;
+  unknown001 key;
   key.unknown00 = frame;
   key.unknown04 = isCut;
   if (!unknown168.empty() && !(unknown168.back().unknown00 < frame)) {
     for (size_t i = 0; i < unknown168.size(); i++) {
-      KeyFrame &keyFrame = unknown168[i];
+      unknown001 &keyFrame = unknown168[i];
       if (key.unknown00 == keyFrame.unknown00) {
         if (isCut) {
           keyFrame.unknown04 = true;

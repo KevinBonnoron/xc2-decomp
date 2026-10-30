@@ -17,8 +17,8 @@ const GfBdatLookAt::CharactorInfo *GfBdatLookAt::Impl::getCharactorInfo(u32 cate
   return nullptr;
 }
 
-const GfBdatLookAt::LookInfo *GfBdatLookAt::Impl::getLookInfo(u32 category, u32 charaCategory) const {
-  const LookInfo *info = nullptr;
+const GfBdatLookAt::unknown001 *GfBdatLookAt::Impl::getLookInfo(u32 category, u32 charaCategory) const {
+  const unknown001 *info = nullptr;
   if (charaCategory < 5 && category < 3) {
     info = &unknown300[category][charaCategory];
   }
@@ -37,13 +37,13 @@ const GfBdatLookAt::CharactorInfo &GfBdatLookAt::getCharactorInfo(u32 category, 
   return defaultInfo;
 }
 
-const GfBdatLookAt::LookInfo &GfBdatLookAt::getLookInfo(u32 category, u32 charaCategory, u32 target, u32 targetRefId) const {
-  static const LookInfo defaultInfo;
-  const LookInfo *result = &defaultInfo;
+const GfBdatLookAt::unknown001 &GfBdatLookAt::getLookInfo(u32 category, u32 charaCategory, u32 target, u32 targetRefId) const {
+  static const unknown001 defaultInfo;
+  const unknown001 *result = &defaultInfo;
   if (target != 8) {
     const CharactorInfo &character = getCharactorInfo(category, charaCategory);
     const CharactorInfo &targetCharacter = getCharactorInfo(target, targetRefId);
-    const LookInfo *info = nullptr;
+    const unknown001 *info = nullptr;
     if (unknown28) {
       info = unknown28->getLookInfo(character.unknown00, targetCharacter.unknown02);
     }

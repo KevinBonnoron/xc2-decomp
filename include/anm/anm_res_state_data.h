@@ -35,7 +35,8 @@ struct InterpolateInfo {
   InterpolateCurve unknown08; // Inferred role: interpolate curve; original member name unknown.
 };
 
-struct ResLoopCount {
+// Inferred role: res loop count; original type name unknown.
+struct unknown102 {
   const char *unknown00; // Inferred role: name of the next state; original member name unknown.
   s32 min;
   u32 range;
@@ -43,14 +44,15 @@ struct ResLoopCount {
   InterpolateInfo unknown1c; // Inferred role: interpolation to the next state; original member name unknown.
 };
 
-static_assert(offsetof(ResLoopCount, unknown10) == 0x10, "");
-static_assert(offsetof(ResLoopCount, unknown1c) == 0x1c, "");
-static_assert(sizeof(ResLoopCount) == 0x28, "");
+static_assert(offsetof(unknown102, unknown10) == 0x10, "");
+static_assert(offsetof(unknown102, unknown1c) == 0x1c, "");
+static_assert(sizeof(unknown102) == 0x28, "");
 
-enum StateType {
-  STATE_TYPE_SIMPLE,
-  STATE_TYPE_FROZEN,
-  STATE_TYPE_COMPLEX,
+// Inferred role: state type; original type name unknown.
+enum unknown103 {
+  unknown103_0, // Inferred role: simple; original name unknown.
+  unknown103_1, // Inferred role: frozen; original name unknown.
+  unknown103_2, // Inferred role: complex; original name unknown.
 };
 
 // Inferred element of the target list of a command of kind 1 (stride 0x38); original name unknown.
@@ -104,14 +106,14 @@ struct unknown00c {
 };
 
 struct ResState {
-  StateType type;
+  unknown103 type;
   u8 _04[0x8 - 0x4];
   const char *name;
   u64 attribute;
   u32 unknown18; // Inferred role: layer; original member name unknown.
   u8 _1c[0x20 - 0x1c];
   Array<ResCmd *> unknown20; // Inferred role: commands; original member name unknown.
-  const ResLoopCount *loopCount;
+  const unknown102 *loopCount;
   u8 _38[0x68 - 0x38];
   const unknown00c *unknown68; // Inferred role: p resource of a complex state; original member name unknown.
 };

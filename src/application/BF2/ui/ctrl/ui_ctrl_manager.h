@@ -41,25 +41,25 @@ public:
   };
 
   struct CtrlSlot {
-    UICtrlMethodPos unknown00;       // Inferred role: pos; original member name unknown.
-    UICtrlMethodScale unknown10;     // Inferred role: scale; original member name unknown.
-    UICtrlMethodAlpha unknown40;     // Inferred role: alpha; original member name unknown.
-    UICtrlMethodBright unknown50;    // Inferred role: bright; original member name unknown.
-    UICtrlMethodRot unknown60;       // Inferred role: rot; original member name unknown.
-    UICtrlMethodMulColor unknown70;  // Inferred role: mul color; original member name unknown.
-    UICtrlMethodAddColor unknown90;  // Inferred role: add color; original member name unknown.
-    UICtrlMethodMotion unknownb0;    // Inferred role: motion; original member name unknown.
-    UICtrl unknownf0;                // Inferred role: ctrl; original member name unknown.
-    UICtrl::MethodList unknown178;   // Inferred role: methods; original member name unknown.
-    f32 unknown1d0;                  // Inferred role: delay; original member name unknown.
-    u32 unknown1d4;                  // Inferred role: object; original member name unknown.
-    UIObject *unknown1d8;            // Inferred role: object ptr; original member name unknown.
-    bool unknown1e0;                 // Inferred role: loop; original member name unknown.
-    mm::mtl::BitFlag<32> unknown1e4; // Inferred role: flags; original member name unknown.
-    u32 unknown1e8;                  // Inferred role: handler; original member name unknown.
-    u32 unknown1ec;                  // Inferred role: id; original member name unknown.
-    UITransform unknown1f0;          // Inferred role: default transform; original member name unknown.
-    UIDisplayInfo unknown220;        // Inferred role: default display info; original member name unknown.
+    UICtrlMethodPos unknown00;          // Inferred role: pos; original member name unknown.
+    UICtrlMethodScale unknown10;        // Inferred role: scale; original member name unknown.
+    UICtrlMethodAlpha unknown40;        // Inferred role: alpha; original member name unknown.
+    UICtrlMethodBright unknown50;       // Inferred role: bright; original member name unknown.
+    UICtrlMethodRot unknown60;          // Inferred role: rot; original member name unknown.
+    UICtrlMethodMulColor unknown70;     // Inferred role: mul color; original member name unknown.
+    UICtrlMethodAddColor unknown90;     // Inferred role: add color; original member name unknown.
+    UICtrlMethodMotion unknownb0;       // Inferred role: motion; original member name unknown.
+    UICtrl unknownf0;                   // Inferred role: ctrl; original member name unknown.
+    UICtrl::MethodList unknown178;      // Inferred role: methods; original member name unknown.
+    f32 unknown1d0;                     // Inferred role: delay; original member name unknown.
+    u32 unknown1d4;                     // Inferred role: object; original member name unknown.
+    UIObject *unknown1d8;               // Inferred role: object ptr; original member name unknown.
+    bool unknown1e0;                    // Inferred role: loop; original member name unknown.
+    mm::mtl::unknown027<32> unknown1e4; // Inferred role: flags; original member name unknown.
+    u32 unknown1e8;                     // Inferred role: handler; original member name unknown.
+    u32 unknown1ec;                     // Inferred role: id; original member name unknown.
+    UITransform unknown1f0;             // Inferred role: default transform; original member name unknown.
+    UIDisplayInfo unknown220;           // Inferred role: default display info; original member name unknown.
   };
 
   UICtrlManager();

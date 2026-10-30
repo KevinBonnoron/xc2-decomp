@@ -97,7 +97,7 @@ void CGLibAccUtilTexture::setup1DTexutreInfo(CGLibTextureBuffer &texture) {
   unknown40 = getCalcChanel(texture.getFormat());
   unknown48 = unknown40 - 1 > 2 ? 2 : unknown40 - 1;
   unknown44 = texture.get1PixelImageSize();
-  AccCalcType calcType = getCalcType(texture.getFormat());
+  unknown013 calcType = getCalcType(texture.getFormat());
   unknown00 = s_pReadF32Call[calcType];
   unknown10 = s_pReadIntCall[calcType];
   unknown20 = s_pWriteF32Call[calcType];
@@ -147,7 +147,7 @@ void CGLibAccUtilTexture::setup2DTexutreInfo(CGLibTextureBuffer &texture, u32 mi
   unknown40 = getCalcChanel(texture.getFormat());
   unknown48 = unknown40 - 1 > 2 ? 2 : unknown40 - 1;
   unknown44 = texture.get1PixelImageSize();
-  AccCalcType calcType = getCalcType(texture.getFormat());
+  unknown013 calcType = getCalcType(texture.getFormat());
   unknown00 = s_pReadF32Call[calcType];
   unknown10 = s_pReadIntCall[calcType];
   unknown20 = s_pWriteF32Call[calcType];
@@ -206,7 +206,7 @@ void CGLibAccUtilTexture::setupCubeTexutreInfo(CGLibTextureBuffer &texture, u32 
   unknown40 = getCalcChanel(texture.getFormat());
   unknown48 = unknown40 - 1 > 2 ? 2 : unknown40 - 1;
   unknown44 = texture.get1PixelImageSize();
-  AccCalcType calcType = getCalcType(texture.getFormat());
+  unknown013 calcType = getCalcType(texture.getFormat());
   unknown00 = s_pReadF32Call[calcType];
   unknown10 = s_pReadIntCall[calcType];
   unknown20 = s_pWriteF32Call[calcType];
@@ -362,7 +362,7 @@ void CGLibAccUtilTexture::setup3DTexutreInfo(CGLibTextureBuffer &texture) {
   unknown40 = getCalcChanel(texture.getFormat());
   unknown48 = unknown40 - 1 > 2 ? 2 : unknown40 - 1;
   unknown44 = texture.get1PixelImageSize();
-  AccCalcType calcType = getCalcType(texture.getFormat());
+  unknown013 calcType = getCalcType(texture.getFormat());
   unknown00 = s_pReadF32Call[calcType];
   unknown10 = s_pReadIntCall[calcType];
   unknown20 = s_pWriteF32Call[calcType];
@@ -379,7 +379,7 @@ void CGLibAcc3DTexture::unlock() {
   }
 }
 
-AccCalcType CGLibAccUtilTexture::getCalcType(GrlSurfaceFormat format) const {
+unknown013 CGLibAccUtilTexture::getCalcType(GrlSurfaceFormat format) const {
   switch (format) {
   case GRL_SURFACE_FORMAT_R8:
   case GRL_SURFACE_FORMAT_R8SN:
@@ -394,42 +394,42 @@ AccCalcType CGLibAccUtilTexture::getCalcType(GrlSurfaceFormat format) const {
   case GRL_SURFACE_FORMAT_RGBA8UI:
   case GRL_SURFACE_FORMAT_RGBA8I:
   case GRL_SURFACE_FORMAT_RGBA8_SRGB:
-    return ACC_CALC_TYPE_8;
+    return unknown013_0;
   case GRL_SURFACE_FORMAT_R16F:
   case GRL_SURFACE_FORMAT_RG16F:
   case GRL_SURFACE_FORMAT_RGBA16F:
   case GRL_SURFACE_FORMAT_DEPTH24_STENCIL8:
   case GRL_SURFACE_FORMAT_DEPTH32F_STENCIL8:
-    return ACC_CALC_TYPE_16_FLOAT;
+    return unknown013_1;
   case GRL_SURFACE_FORMAT_R16:
   case GRL_SURFACE_FORMAT_R16SN:
   case GRL_SURFACE_FORMAT_RG16:
   case GRL_SURFACE_FORMAT_RG16SN:
   case GRL_SURFACE_FORMAT_RGBA16:
   case GRL_SURFACE_FORMAT_RGBA16SN:
-    return ACC_CALC_TYPE_16_UNORM;
+    return unknown013_4;
   case GRL_SURFACE_FORMAT_R16UI:
   case GRL_SURFACE_FORMAT_RG16UI:
   case GRL_SURFACE_FORMAT_RGBA16UI:
-    return ACC_CALC_TYPE_16_UINT;
+    return unknown013_3;
   case GRL_SURFACE_FORMAT_R16I:
   case GRL_SURFACE_FORMAT_RG16I:
   case GRL_SURFACE_FORMAT_RGBA16I:
-    return ACC_CALC_TYPE_16_INT;
+    return unknown013_2;
   case GRL_SURFACE_FORMAT_R32F:
   case GRL_SURFACE_FORMAT_RG32F:
   case GRL_SURFACE_FORMAT_RGBA32F:
-    return ACC_CALC_TYPE_32_FLOAT;
+    return unknown013_5;
   case GRL_SURFACE_FORMAT_R32UI:
   case GRL_SURFACE_FORMAT_RG32UI:
   case GRL_SURFACE_FORMAT_RGBA32UI:
-    return ACC_CALC_TYPE_32_UINT;
+    return unknown013_7;
   case GRL_SURFACE_FORMAT_R32I:
   case GRL_SURFACE_FORMAT_RG32I:
   case GRL_SURFACE_FORMAT_RGBA32I:
-    return ACC_CALC_TYPE_32_INT;
+    return unknown013_6;
   default:
-    return ACC_CALC_TYPE_ERROR;
+    return unknown013_8;
   }
 }
 

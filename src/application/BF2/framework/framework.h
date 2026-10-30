@@ -36,7 +36,8 @@ struct UpdateState {
   bool isPause;
 };
 
-class ILauncher {
+// Inferred role: launcher interface; original type name unknown.
+class unknown076 {
 public:
   virtual void setDebugPause(bool isPause) = 0;
   virtual void stepDebugPause() = 0;
@@ -44,7 +45,8 @@ public:
   virtual bool resetApp() = 0;
 };
 
-struct LayerUpdateInfo {
+// Inferred role: layer update info; original type name unknown.
+struct unknown077 {
   f32 unknown00;  // Inferred role: speed; original member name unknown.
   f32 unknown04;  // Inferred role: scaled speed; original member name unknown.
   f32 unknown08;  // Inferred role: frame speed; original member name unknown.
@@ -52,7 +54,7 @@ struct LayerUpdateInfo {
   bool unknown0d; // Inferred role: frame pause; original member name unknown.
 };
 
-static_assert(sizeof(LayerUpdateInfo) == 0x10, "");
+static_assert(sizeof(unknown077) == 0x10, "");
 
 class Framework : public mm::mtl::PtrSingleton<Framework> {
 public:
@@ -113,13 +115,13 @@ public:
   ml::Scn *unknown58;     // Inferred role: scn; original member name unknown.
   u8 _60[0x68 - 0x60];
   mtl::ALLOC_HANDLE unknown68; // Inferred role: mem handle; original member name unknown.
-  ILauncher *unknown70;        // Inferred role: launcher; original member name unknown.
+  unknown076 *unknown70;       // Inferred role: launcher; original member name unknown.
   UpdateInfo unknown78;        // Inferred role: update info; original member name unknown.
   u32 unknown84;               // Inferred role: state; original member name unknown.
   u8 _88[0x8c - 0x88];
   f32 unknown8c; // Inferred role: update speed; original member name unknown.
   u8 _90[0x98 - 0x90];
-  LayerUpdateInfo unknown98[LAYER_MAX];                                // Inferred role: layers; original member name unknown.
+  unknown077 unknown98[LAYER_MAX];                                     // Inferred role: layers; original member name unknown.
   mm::mtl::FixedVector<IPauseTrigger *, PAUSE_TRIGGER_MAX> unknown298; // Inferred role: pause triggers; original member name unknown.
   MemHandlebaseAllocator unknown3a0;                                   // Inferred role: allocator; original member name unknown.
 };

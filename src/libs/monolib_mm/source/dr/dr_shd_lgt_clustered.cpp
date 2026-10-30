@@ -9,7 +9,7 @@
 
 namespace ml {
 
-const DrShdLgtClustered::ClusterSetting *DrShdLgtClustered::getClusterSetting(u32 cate) const { return &c_ClusterSettings[(unknown18 << 1) | (cate != 0)]; }
+const DrShdLgtClustered::unknown001 *DrShdLgtClustered::getClusterSetting(u32 cate) const { return &c_ClusterSettings[(unknown18 << 1) | (cate != 0)]; }
 
 void DrShdLgtClustered::convertToViewProj(mm::Vec3 &result, const mm::Vec2 &position) {
   DrMan *man = unknown10;
@@ -24,7 +24,7 @@ void DrShdLgtClustered::convertToViewProj(mm::Vec3 &result, const mm::Vec2 &posi
   result.z = out[2] / out[3];
 }
 void DrShdLgtClustered::ssboBiteSwap() {
-  ViewInfo &view = unknown20[unknown08];
+  unknown002 &view = unknown20[unknown08];
   for (int i = 0; i < view.unknown150; i++) {
     view.unknown00.getBuff();
   }

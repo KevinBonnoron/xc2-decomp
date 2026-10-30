@@ -21,7 +21,8 @@ struct LgtAnimInf {
 static_assert(offsetof(LgtAnimInf, unknown0e) == 0x0e, "");
 static_assert(sizeof(LgtAnimInf) == 0x10, "");
 
-struct LgtHermiteKey {
+// Inferred role: light hermite key; original type name unknown.
+struct unknown086 {
   f32 unknown00; // Inferred role: out slope; original member name unknown.
   f32 unknown04; // Inferred role: in slope; original member name unknown.
   f32 unknown08; // Inferred role: value; original member name unknown.
@@ -29,7 +30,7 @@ struct LgtHermiteKey {
   u8 _0e[0x10 - 0x0e];
 };
 
-static_assert(sizeof(LgtHermiteKey) == 0x10, "");
+static_assert(sizeof(unknown086) == 0x10, "");
 
 struct LgtObjData {
   u8 _00[0x28];
@@ -57,7 +58,8 @@ struct unknown001 {
 static_assert(offsetof(unknown001, unknown0c) == 0x0c, "");
 static_assert(sizeof(unknown001) == 0x10, "");
 
-struct LgtBitKey {
+// Inferred role: light bit key; original type name unknown.
+struct unknown087 {
   u16 frame;
   u16 value;
 };
@@ -135,18 +137,18 @@ public:
   void envfog_parm_color_sunB(DrFogObjGbl *fog, const LgtAnimInf *inf, f32 frame);
   u16 getBitAttr(const LgtAnimInf *inf, f32 frame);
 
-  const unknown001 *unknown00;    // Inferred role: animation ranges; original member name unknown.
-  const u8 *unknown08;            // Inferred role: animation commands; original member name unknown.
-  const LgtHermiteKey *unknown10; // Inferred role: hermite keys; original member name unknown.
-  const LgtBitKey *unknown18;     // Inferred role: bit keys; original member name unknown.
-  const u8 *unknown20;            // Inferred role: rotation values; original member name unknown.
-  int unknown28;                  // Inferred role: anim num; original member name unknown.
-  f32 *unknown30;                 // Inferred role: frames; original member name unknown.
-  mm::Col3 unknown38;             // Inferred role: color; original member name unknown.
-  mm::Col3 unknown44;             // Inferred role: side color; original member name unknown.
-  mm::Col3 unknown50;             // Inferred role: sun color; original member name unknown.
-  f32 unknown5c;                  // Inferred role: intensity; original member name unknown.
-  f32 unknown60[3];               // Inferred role: anm val; original member name unknown.
+  const unknown001 *unknown00; // Inferred role: animation ranges; original member name unknown.
+  const u8 *unknown08;         // Inferred role: animation commands; original member name unknown.
+  const unknown086 *unknown10; // Inferred role: hermite keys; original member name unknown.
+  const unknown087 *unknown18; // Inferred role: bit keys; original member name unknown.
+  const u8 *unknown20;         // Inferred role: rotation values; original member name unknown.
+  int unknown28;               // Inferred role: anim num; original member name unknown.
+  f32 *unknown30;              // Inferred role: frames; original member name unknown.
+  mm::Col3 unknown38;          // Inferred role: color; original member name unknown.
+  mm::Col3 unknown44;          // Inferred role: side color; original member name unknown.
+  mm::Col3 unknown50;          // Inferred role: sun color; original member name unknown.
+  f32 unknown5c;               // Inferred role: intensity; original member name unknown.
+  f32 unknown60[3];            // Inferred role: anm val; original member name unknown.
 };
 
 static_assert(offsetof(DrEnvironmentAnim, unknown08) == 0x08, "");

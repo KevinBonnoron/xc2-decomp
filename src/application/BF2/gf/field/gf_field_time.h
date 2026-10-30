@@ -61,14 +61,15 @@ struct RealTime {
 
 static_assert(sizeof(RealTime) == 8, "");
 
-struct TimeRangeData {
+// Inferred role: time range data; original type name unknown.
+struct unknown131 {
   u16 unknown00; // Inferred role: start hour; original member name unknown.
   u16 unknown02; // Inferred role: start minute; original member name unknown.
   u16 unknown04; // Inferred role: end hour; original member name unknown.
   u16 unknown06; // Inferred role: end minute; original member name unknown.
 };
 
-static_assert(sizeof(TimeRangeData) == 8, "");
+static_assert(sizeof(unknown131) == 8, "");
 
 class GfFieldTime : public mm::mtl::PtrSingleton<GfFieldTime> {
 public:
@@ -120,7 +121,7 @@ public:
   void setTimeSpeed(f32 timeSpeed);
   f32 toRealTime(f32 gameTime) const;
   f32 toGameTime(f32 realTime) const;
-  const TimeRangeData *getRangeData(u32 timeRange) const;
+  const unknown131 *getRangeData(u32 timeRange) const;
   void setTimeRange(u32 timeRange);
   void setTimeRangeBit(u32 timeRangeBits);
   u32 getTimeRangeBits(u32 timeRange) const;

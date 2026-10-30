@@ -3,7 +3,7 @@
 namespace ml {
 
 void DrMdoCtlMpf::callZPrepassRender() {
-  if ((unknownf8 & MDL_FLAG_UNKNOWN_0) == 0) {
+  if ((unknownf8 & unknown028_0) == 0) {
     return;
   }
   defMpfZPreRender();

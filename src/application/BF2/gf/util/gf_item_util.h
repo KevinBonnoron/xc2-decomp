@@ -91,11 +91,11 @@ struct ItemProperty {
 
   bool isAcceEquipDriver(u32 driver) const;
 
-  mm::mtl::BitFlag<32> unknown00; // Inferred role: flags; original member name unknown.
-  u16 unknown04;                  // Inferred role: id; original member name unknown.
-  u16 unknown06;                  // Inferred role: index; original member name unknown.
-  ItemType::Type unknown08;       // Inferred role: type; original member name unknown.
-  u16 unknown0c;                  // Inferred role: count; original member name unknown.
+  mm::mtl::unknown027<32> unknown00; // Inferred role: flags; original member name unknown.
+  u16 unknown04;                     // Inferred role: id; original member name unknown.
+  u16 unknown06;                     // Inferred role: index; original member name unknown.
+  ItemType::Type unknown08;          // Inferred role: type; original member name unknown.
+  u16 unknown0c;                     // Inferred role: count; original member name unknown.
   u16 _0e;
   u16 unknown10;         // Inferred role: enable stock; original member name unknown.
   u16 unknown12;         // Inferred role: zone; original member name unknown.

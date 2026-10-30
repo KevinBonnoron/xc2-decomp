@@ -96,9 +96,10 @@ enum ShapeType {
   SHAPE_TYPE_CAPSULE = 4,
 };
 
-enum InterestType {
-  INTEREST_TYPE_PLAYER = 0,
-  INTEREST_TYPE_CAMERA = 1,
+// Inferred role: interest type; original type name unknown.
+enum unknown080 {
+  unknown080_0 = 0, // Inferred role: player; original name unknown.
+  unknown080_1 = 1, // Inferred role: camera; original name unknown.
 };
 
 class AGmkBase;
@@ -136,10 +137,10 @@ public:
   int findFirstBdatId_RSC_GmkSetList(GmkType type, int bdatId) const;
   bool isBdatIdOfGmkInstExist(int gmkSetId, GmkType type, int bdatId) const;
 
-  CreateInfo unknown08;    // Inferred role: create info; original member name unknown.
-  GmkBdat unknown58;       // Inferred role: res def bdat; original member name unknown.
-  u8 *unknown190;          // Inferred role: gmk set list bdat; original member name unknown.
-  InterestType unknown198; // Inferred role: interest type; original member name unknown.
+  CreateInfo unknown08;  // Inferred role: create info; original member name unknown.
+  GmkBdat unknown58;     // Inferred role: res def bdat; original member name unknown.
+  u8 *unknown190;        // Inferred role: gmk set list bdat; original member name unknown.
+  unknown080 unknown198; // Inferred role: interest type; original member name unknown.
   u8 _19c[0xf358 - 0x19c];
   mm::mtl::Vector<GmkSet *> unknownf358; // Inferred role: sets; original member name unknown.
   void (GmkManager::*unknownf380)(f32);  // Inferred role: seq; original member name unknown.

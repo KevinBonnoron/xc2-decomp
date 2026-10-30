@@ -39,9 +39,9 @@ public:
 
   bool isEvent() const {
     switch (unknown1c) {
-    case CHARACTER_TYPE_EVENT:
-    case CHARACTER_TYPE_EVENT_CS:
-    case CHARACTER_TYPE_ACT_VIEWER_EVENT:
+    case unknown030_2:
+    case unknown030_3:
+    case unknown030_11:
       return true;
     default:
       return false;

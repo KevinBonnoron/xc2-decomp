@@ -161,7 +161,7 @@ bool Util::getVariableMinMax(const ResASM &resAsm, const char *stateName, const 
     ArrayIterartor<ResState *const> it = std::lower_bound(states->unknown18.begin(), states->unknown18.end(), stateName, CompResState());
     if (it != states->unknown18.end()) {
       const ResState *resState = *it;
-      if (strcmp(resState->name, stateName) == 0 && resState->type == STATE_TYPE_COMPLEX) {
+      if (strcmp(resState->name, stateName) == 0 && resState->type == unknown103_2) {
         const unknown00c *resTree = resState->unknown68;
         switch (resTree->unknown00) {
         case 0: {
@@ -317,7 +317,7 @@ void Util::queryVariableInt(const ResASM &resAsm, mm::mtl::Set<StringPtr> *pDst)
   const ResStateArray *states = resAsm.unknown20;
   if (states != nullptr) {
     for (ArrayIterartor<const ResVariable> it = states->unknown28.begin(), last = states->unknown28.end(); it != last; ++it) {
-      if (it->type == VAR_INT) {
+      if (it->type == unknown132_0) {
         pDst->insert(it->name);
       }
     }
@@ -392,7 +392,7 @@ const ResState *Util::getStateResource(const ResASM &resAsm, const char *name) {
 
 const ResState *Util::getSimpleStateResource(const ResASM &resAsm, const char *name) {
   const ResState *resState = getStateResource(resAsm, name);
-  if (resState == nullptr || resState->type != STATE_TYPE_SIMPLE) {
+  if (resState == nullptr || resState->type != unknown103_0) {
     return nullptr;
   }
   return resState;
@@ -400,7 +400,7 @@ const ResState *Util::getSimpleStateResource(const ResASM &resAsm, const char *n
 
 const ResState *Util::getComplexStateResource(const ResASM &resAsm, const char *name) {
   const ResState *resState = getStateResource(resAsm, name);
-  if (resState == nullptr || resState->type != STATE_TYPE_COMPLEX) {
+  if (resState == nullptr || resState->type != unknown103_2) {
     return nullptr;
   }
   return resState;
@@ -408,7 +408,7 @@ const ResState *Util::getComplexStateResource(const ResASM &resAsm, const char *
 
 const ResState *Util::getFrozenStateResource(const ResASM &resAsm, const char *name) {
   const ResState *resState = getStateResource(resAsm, name);
-  if (resState == nullptr || resState->type != STATE_TYPE_FROZEN) {
+  if (resState == nullptr || resState->type != unknown103_1) {
     return nullptr;
   }
   return resState;

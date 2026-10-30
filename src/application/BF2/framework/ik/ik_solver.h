@@ -40,10 +40,11 @@ static_assert(offsetof(IkSolver, unknown18) == 0x18, "");
 
 class IkFadeSolver : public IkSolver {
 public:
-  enum FadeState {
-    FADE_STATE_NONE = 0,
-    FADE_STATE_IN = 1,
-    FADE_STATE_OUT = 2,
+  // Inferred role: fade state; original type name unknown.
+  enum unknown002 {
+    unknown002_0 = 0, // Inferred role: none; original name unknown.
+    unknown002_1 = 1, // Inferred role: in; original name unknown.
+    unknown002_2 = 2, // Inferred role: out; original name unknown.
   };
 
   static mm::mtl::RTTI m_rtti;
@@ -59,11 +60,11 @@ public:
   virtual void onDisable() {}
   virtual void calcIK(const UpdateInfo &info) = 0;
 
-  f32 unknown20;       // Inferred role: weight; original member name unknown.
-  FadeState unknown24; // Inferred role: fade state; original member name unknown.
-  f32 unknown28;       // Inferred role: fade time; original member name unknown.
-  f32 unknown2c;       // Inferred role: fade elapsed; original member name unknown.
-  f32 unknown30;       // Inferred role: fade start weight; original member name unknown.
+  f32 unknown20;        // Inferred role: weight; original member name unknown.
+  unknown002 unknown24; // Inferred role: fade state; original member name unknown.
+  f32 unknown28;        // Inferred role: fade time; original member name unknown.
+  f32 unknown2c;        // Inferred role: fade elapsed; original member name unknown.
+  f32 unknown30;        // Inferred role: fade start weight; original member name unknown.
 };
 
 static_assert(offsetof(IkFadeSolver, unknown20) == 0x20, "");

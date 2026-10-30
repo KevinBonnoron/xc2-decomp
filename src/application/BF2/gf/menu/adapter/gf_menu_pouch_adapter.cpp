@@ -9,7 +9,7 @@
 namespace gf {
 
 static GfMenuPouchAdapter::TypeInfo TYPE_INFOS[] = {
-    {&GfMenuPouchAdapter::update_PouchRemainTime, {GfMenuAdapter::PLUGIN_TYPE_TIME, 3, 0}},
+    {&GfMenuPouchAdapter::update_PouchRemainTime, {GfMenuAdapter::unknown004_7, 3, 0}},
 };
 
 GfMenuPouchAdapter::GfMenuPouchAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(nullptr), _58(), unknown5c(0.0f), unknown60(0) {}

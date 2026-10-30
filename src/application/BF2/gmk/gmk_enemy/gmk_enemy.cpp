@@ -228,7 +228,7 @@ bool GmkEnemyInsts::PopInfo::hasTypeGenus(u8 genus, bool flag) const {
 }
 
 bool GmkEnemyInsts::isPopFinished() const {
-  if (!isGfObjNumFull(gf::OBJECT_TYPE_ENEMY) && (unknown178 & MATCHED_UNKNOWN_0) && (unknown178 & MATCHED_UNKNOWN_1)) {
+  if (!isGfObjNumFull(gf::OBJECT_TYPE_ENEMY) && (unknown178 & unknown004_0) && (unknown178 & unknown004_1)) {
     return unknown98.isPopFinished();
   }
   return true;
@@ -263,7 +263,7 @@ int GmkEnemyInsts::getGobInstCapa() const {
 void GmkEnemyInsts::disposeSquad() { mm::mtl::safeRelease(unknown150); }
 
 void GmkEnemyInsts::dispose() {
-  unknown178 &= ~(MATCHED_UNKNOWN_0 | MATCHED_UNKNOWN_1 | MATCHED_UNKNOWN_2);
+  unknown178 &= ~(unknown004_0 | unknown004_1 | unknown004_2);
   disposeGobInsts(false, false);
   disposeSquad();
   unknown00 = CreateInfo();
@@ -278,7 +278,7 @@ void GmkEnemyInsts::validateDisp() const {
 
 bool GmkEnemyInsts::reqForcePopGobInst(const ForcePopEnemyInfo &info) const {
   if (unknown98.getGobInstNum() == 0) {
-    if (unknown38.unknown03 && !(unknown178 & MATCHED_UNKNOWN_2)) {
+    if (unknown38.unknown03 && !(unknown178 & unknown004_2)) {
       return false;
     }
     unknown141 = true;

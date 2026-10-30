@@ -30,7 +30,7 @@ u32 GfMenuLocation::getLocatorDataNum(u32 type) {
 }
 
 void GfMenuLocation::updateDataNum(u32 type) {
-  LocatorGroup &group = unknown10[type];
+  unknown001 &group = unknown10[type];
   if (type >= LOCATOR_TYPE_COUNT) {
     return;
   }

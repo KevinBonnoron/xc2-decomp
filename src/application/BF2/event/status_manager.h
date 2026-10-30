@@ -23,7 +23,8 @@ public:
     FLAG_CHANGE_FROM_BDAT = 1 << 0,
   };
 
-  struct Change {
+  // Inferred role: change; original type name unknown.
+  struct unknown003 {
     EVT_change unknown00;  // Inferred role: type; original member name unknown.
     int unknown04;         // Inferred role: id; original member name unknown.
     int unknown08;         // Inferred role: value0; original member name unknown.
@@ -56,8 +57,8 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  u32 unknown18;                                        // Inferred role: flags; original member name unknown.
-  mm::mtl::FixedVector<Change, CHANGE_COUNT> unknown20; // Inferred role: changes; original member name unknown.
+  u32 unknown18;                                            // Inferred role: flags; original member name unknown.
+  mm::mtl::FixedVector<unknown003, CHANGE_COUNT> unknown20; // Inferred role: changes; original member name unknown.
 };
 
 static_assert(sizeof(StatusManager) == 0x428, "");

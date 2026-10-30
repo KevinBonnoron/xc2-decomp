@@ -97,23 +97,26 @@ public:
     u32 unknown08;  // Inferred role: max damage; original member name unknown.
   };
 
-  struct DamageCharacter {
-    DamageCharacter() : unknown00(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown08(0.0f) {}
+  // Inferred role: damage character; original type name unknown.
+  struct unknown004 {
+    unknown004() : unknown00(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown08(0.0f) {}
 
     GF_OBJ_HANDLE *unknown00; // Inferred role: handle; original member name unknown.
     f32 unknown08;            // Inferred role: heal time; original member name unknown.
   };
 
-  struct MoveAchievement {
-    MoveAchievement(AMOVE moveType, u32 achievement, bool (*isMove)()) : unknown00(moveType), unknown04(achievement), unknown08(isMove) {}
+  // Inferred role: move achievement; original type name unknown.
+  struct unknown005 {
+    unknown005(AMOVE moveType, u32 achievement, bool (*isMove)()) : unknown00(moveType), unknown04(achievement), unknown08(isMove) {}
 
     AMOVE unknown00;     // Inferred role: move type; original member name unknown.
     u32 unknown04;       // Inferred role: achievement; original member name unknown.
     bool (*unknown08)(); // Inferred role: is move; original member name unknown.
   };
 
-  struct PartyState {
-    PartyState() : unknown00(-1), unknown04(MOVER_STATE_NONE), unknown08(0), unknown0c(false), unknown0d(false) {}
+  // Inferred role: party state; original type name unknown.
+  struct unknown006 {
+    unknown006() : unknown00(-1), unknown04(MOVER_STATE_NONE), unknown08(0), unknown0c(false), unknown0d(false) {}
 
     u32 unknown00;         // Inferred role: party id; original member name unknown.
     MOVER_STATE unknown04; // Inferred role: mover state; original member name unknown.
@@ -122,8 +125,9 @@ public:
     bool unknown0d;        // Inferred role: floating; original member name unknown.
   };
 
-  struct SavePos {
-    SavePos() : unknown00(mm::Vec3::zero), unknown10(false) {}
+  // Inferred role: save pos; original type name unknown.
+  struct unknown007 {
+    unknown007() : unknown00(mm::Vec3::zero), unknown10(false) {}
 
     mm::Vec3 unknown00; // Inferred role: position; original member name unknown.
     bool unknown10;     // Inferred role: enable; original member name unknown.
@@ -273,10 +277,10 @@ public:
   void update(const fw::UpdateInfo &info);
 
   bool m_initialized;
-  u32 unknown0c[3];             // Inferred role: blade change requests; original member name unknown.
-  f32 unknown18;                // Inferred role: field blade change time; original member name unknown.
-  DamageCharacter unknown20[3]; // Inferred role: damage characters; original member name unknown.
-  bool unknown50;               // Inferred role: owner bonus dirty; original member name unknown.
+  u32 unknown0c[3];        // Inferred role: blade change requests; original member name unknown.
+  f32 unknown18;           // Inferred role: field blade change time; original member name unknown.
+  unknown004 unknown20[3]; // Inferred role: damage characters; original member name unknown.
+  bool unknown50;          // Inferred role: owner bonus dirty; original member name unknown.
   mutable OwnerBonus m_ownerBonus;
   mm::mtl::FixedList<GfAppendWire *, 8> unknown70; // Inferred role: append wires; original member name unknown.
   f32 unknown118;                                  // Inferred role: money log time; original member name unknown.
@@ -293,16 +297,16 @@ public:
   u32 unknown140; // Inferred role: player pause bits; original member name unknown.
   u32 unknown144; // Inferred role: flags; original member name unknown.
   u8 _148[0x150 - 0x148];
-  mm::Vec3 unknown150;                                 // Inferred role: move position; original member name unknown.
-  mm::mtl::FixedVector<MoveAchievement, 4> unknown160; // Inferred role: move achievements; original member name unknown.
+  mm::Vec3 unknown150;                            // Inferred role: move position; original member name unknown.
+  mm::mtl::FixedVector<unknown005, 4> unknown160; // Inferred role: move achievements; original member name unknown.
   bool m_autoBattle;
-  bool unknown1a9;                // Inferred role: request auto flag; original member name unknown.
-  u32 unknown1ac[3];              // Inferred role: wait return field state; original member name unknown.
-  mm::mtl::BitFlag<5> unknown1b8; // Inferred role: player stop flags; original member name unknown.
-  bool unknown1bc;                // Inferred role: display rex crystal; original member name unknown.
-  bool unknown1bd;                // Inferred role: display homura crystal; original member name unknown.
-  int unknown1c0;                 // Inferred role: control free frames; original member name unknown.
-  u32 unknown1c4;                 // Inferred role: player control; original member name unknown.
+  bool unknown1a9;                   // Inferred role: request auto flag; original member name unknown.
+  u32 unknown1ac[3];                 // Inferred role: wait return field state; original member name unknown.
+  mm::mtl::unknown027<5> unknown1b8; // Inferred role: player stop flags; original member name unknown.
+  bool unknown1bc;                   // Inferred role: display rex crystal; original member name unknown.
+  bool unknown1bd;                   // Inferred role: display homura crystal; original member name unknown.
+  int unknown1c0;                    // Inferred role: control free frames; original member name unknown.
+  u32 unknown1c4;                    // Inferred role: player control; original member name unknown.
   u8 _1c8[0x1c9 - 0x1c8];
   bool unknown1c9;                                     // Inferred role: start game; original member name unknown.
   bool unknown1ca;                                     // Inferred role: enable room for hikari lv4; original member name unknown.
@@ -311,12 +315,12 @@ public:
   bool unknown1d0;                                     // Inferred role: stop main menu open for gimmick; original member name unknown.
   mm::mtl::FixedQueue<u8, 64> unknown1d8;              // Inferred role: player stop flag queue; original member name unknown.
   size_t unknown228[3];                                // Inferred role: battle start counts; original member name unknown.
-  PartyState unknown240[3];                            // Inferred role: party states; original member name unknown.
+  unknown006 unknown240[3];                            // Inferred role: party states; original member name unknown.
   bool unknown270;                                     // Inferred role: valid collision velocity; original member name unknown.
   mm::Vec3 unknown280;                                 // Inferred role: listening point; original member name unknown.
   mm::Vec3 unknown290;                                 // Inferred role: request listening point; original member name unknown.
   bool unknown2a0;                                     // Inferred role: request listening point flag; original member name unknown.
-  SavePos unknown2b0[8];                               // Inferred role: save positions; original member name unknown.
+  unknown007 unknown2b0[8];                            // Inferred role: save positions; original member name unknown.
   mm::mtl::FixedVector<GF_OBJ_HANDLE *, 8> unknown3b0; // Inferred role: hana js objects; original member name unknown.
   mm::mtl::FixedArray<GF_OBJ_HANDLE *, 3> unknown3f8;  // Inferred role: party movers; original member name unknown.
   bool m_maskMainMenu;

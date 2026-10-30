@@ -16,7 +16,7 @@ void GfMenuObjPartyGauge::close() {
   if (acc.isValid() && !acc.isTerm()) {
     ui::UIObjectAcc child(acc.unknown10, "LAY_gauge");
     ui::EventData event;
-    event.unknown00 = GfMenuTypes::UI_EVENT_CLOSE;
+    event.unknown00 = GfMenuTypes::unknown003_34;
     GfMenuObject::sendEvent(child.unknown10, event, 0.0f);
   }
 }

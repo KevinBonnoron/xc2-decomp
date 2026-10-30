@@ -68,7 +68,7 @@ bool ResourceManager::isLoaded() {
 }
 
 void ResourceManager::updateSafeReleaseList(bool isForce) {
-  SafeObject *it = unknown4540.begin();
+  unknown001 *it = unknown4540.begin();
   while (it != unknown4540.end()) {
     it->unknown08--;
     if (isForce || it->unknown08 < 1) {
@@ -122,7 +122,7 @@ ResourceObject *ResourceManager::searchResource(u32 type, mm::mtl::IAllocator *a
 }
 
 void ResourceManager::addSafeObject(mm::mtl::ReferenceObject *object, eResourceType type) {
-  SafeObject *it = unknown538.begin();
+  unknown001 *it = unknown538.begin();
   while (it != unknown538.end()) {
     if (it->unknown00 == object) {
       it->unknown08++;
@@ -132,7 +132,7 @@ void ResourceManager::addSafeObject(mm::mtl::ReferenceObject *object, eResourceT
   }
   if (it == unknown538.end()) {
     object->addRef();
-    SafeObject safeObject;
+    unknown001 safeObject;
     safeObject.unknown00 = object;
     safeObject.unknown08 = 1;
     safeObject.unknown0c = type;

@@ -14,12 +14,12 @@ enum {
 };
 
 struct GameFlag {
-  mm::mtl::BitFlag<0x10000> unknown00; // Inferred role: one bit flags; original member name unknown.
-  u32 unknown2000[0x1000];             // Inferred role: two bit flags; original member name unknown.
-  u32 unknown6000[0x400];              // Inferred role: four bit flags; original member name unknown.
-  u8 unknown7000[0x2000];              // Inferred role: byte flags; original member name unknown.
-  u16 unknown9000[0xc00];              // Inferred role: short flags; original member name unknown.
-  u32 unknowna800[0xd08];              // Inferred role: word flags; original member name unknown.
+  mm::mtl::unknown027<0x10000> unknown00; // Inferred role: one bit flags; original member name unknown.
+  u32 unknown2000[0x1000];                // Inferred role: two bit flags; original member name unknown.
+  u32 unknown6000[0x400];                 // Inferred role: four bit flags; original member name unknown.
+  u8 unknown7000[0x2000];                 // Inferred role: byte flags; original member name unknown.
+  u16 unknown9000[0xc00];                 // Inferred role: short flags; original member name unknown.
+  u32 unknowna800[0xd08];                 // Inferred role: word flags; original member name unknown.
 };
 
 static_assert(offsetof(GameFlag, unknown2000) == 0x2000, "");

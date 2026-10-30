@@ -10,7 +10,7 @@ IDColiGrandWork::IDColiGrandWork() {}
 
 IDColiObjGrand::IDColiObjGrand() {
   unknown50.unknowna8 = nullptr;
-  unknown24 = OBJ_TYPE_GRAND;
+  unknown24 = unknown098_3;
 }
 
 IDColiObjGrand::~IDColiObjGrand() { workClear(); }

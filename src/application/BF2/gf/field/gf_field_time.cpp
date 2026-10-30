@@ -27,7 +27,7 @@ constexpr f32 GAME_TIME_PER_MINUTE = 30.0f;
 constexpr f32 GAME_TIME_PER_DAY = 43200.0f;
 constexpr f32 GAME_TIME_SCALE = 60.0f;
 
-static TimeRangeData s_rangeData[TIME_RANGE_COUNT] = {
+static unknown131 s_rangeData[TIME_RANGE_COUNT] = {
     {7, 0, 11, 59},
     {12, 0, 15, 59},
     {16, 0, 18, 59},
@@ -67,7 +67,7 @@ void GfFieldTime::clear() {
 
 u32 GfFieldTime::getTimeRange(u32 hour, u32 minute) const {
   for (u32 i = 0; i < TIME_RANGE_COUNT; i++) {
-    const TimeRangeData &rangeData = s_rangeData[i];
+    const unknown131 &rangeData = s_rangeData[i];
     if (rangeData.unknown00 <= hour && hour <= rangeData.unknown04 && rangeData.unknown02 <= minute && minute <= rangeData.unknown06) {
       return i;
     }
@@ -267,10 +267,10 @@ f32 GfFieldTime::toRealTime(f32 gameTime) const { return gameTime / GAME_TIME_SC
 
 f32 GfFieldTime::toGameTime(f32 realTime) const { return realTime * GAME_TIME_SCALE; }
 
-const TimeRangeData *GfFieldTime::getRangeData(u32 timeRange) const { return &s_rangeData[timeRange]; }
+const unknown131 *GfFieldTime::getRangeData(u32 timeRange) const { return &s_rangeData[timeRange]; }
 
 void GfFieldTime::setTimeRange(u32 timeRange) {
-  const TimeRangeData *rangeData = getRangeData(timeRange);
+  const unknown131 *rangeData = getRangeData(timeRange);
   setTime(rangeData->unknown00, rangeData->unknown02);
 }
 

@@ -127,7 +127,8 @@ static_assert(offsetof(ScnCamMan, unknown40) == 0x40, "");
 
 class Scn : public IWorkEvent, public mm::mtl::PtrSingleton<Scn> {
 public:
-  struct DebDrawInfo {
+  // Inferred role: deb draw info; original type name unknown.
+  struct unknown004 {
     SCNPRIO_CB unknown00; // Inferred role: priority; original member name unknown.
     s32 unknown04;        // Inferred role: screen; original member name unknown.
   };
@@ -194,7 +195,7 @@ public:
   bool unknowndf8;                                  // Inferred role: pause; original member name unknown.
   bool unknowndf9;                                  // Inferred role: render stop; original member name unknown.
   u8 _dfa[0xe00 - 0xdfa];
-  DebDrawInfo unknowne00[2]; // Inferred role: deb draw infos; original member name unknown.
+  unknown004 unknowne00[2]; // Inferred role: deb draw infos; original member name unknown.
 };
 
 static_assert(offsetof(Scn, unknown20) == 0x20, "");

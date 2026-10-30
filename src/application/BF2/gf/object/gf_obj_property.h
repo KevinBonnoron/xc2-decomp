@@ -44,7 +44,8 @@ enum {
   PROPERTY_MOVE_ACTION = 4,
 };
 
-struct GfObjPropertyMove {
+// Inferred role: obj property move; original type name unknown.
+struct unknown070 {
   u32 unknown00; // Inferred role: type; original member name unknown.
   u8 _04[0x34 - 0x04];
   f32 unknown34; // Inferred role: height; original member name unknown.
@@ -57,11 +58,11 @@ struct GfObjPropertyMove {
   f32 unknownc8;            // Inferred role: float time; original member name unknown.
 };
 
-static_assert(offsetof(GfObjPropertyMove, unknown34) == 0x34, "");
-static_assert(offsetof(GfObjPropertyMove, unknown7d) == 0x7d, "");
-static_assert(offsetof(GfObjPropertyMove, unknown80) == 0x80, "");
-static_assert(offsetof(GfObjPropertyMove, unknownc0) == 0xc0, "");
-static_assert(offsetof(GfObjPropertyMove, unknownc8) == 0xc8, "");
+static_assert(offsetof(unknown070, unknown34) == 0x34, "");
+static_assert(offsetof(unknown070, unknown7d) == 0x7d, "");
+static_assert(offsetof(unknown070, unknown80) == 0x80, "");
+static_assert(offsetof(unknown070, unknownc0) == 0xc0, "");
+static_assert(offsetof(unknown070, unknownc8) == 0xc8, "");
 
 class GfObjProperty {
 public:
@@ -82,7 +83,7 @@ public:
 
   GF_OBJ_HANDLE *unknown08;          // Inferred role: handle; original member name unknown.
   GfObjPropertyCharacter *unknown10; // Inferred role: character; original member name unknown.
-  GfObjPropertyMove *unknown18;      // Inferred role: move; original member name unknown.
+  unknown070 *unknown18;             // Inferred role: move; original member name unknown.
   mm::Vec3 unknown20;                // Inferred role: cached world position written by GfGameUtil::flushProperty; original member name unknown.
   mm::Quat unknown30;                // Inferred role: cached world rotation written by GfGameUtil::flushProperty; original member name unknown.
 };
@@ -117,7 +118,7 @@ public:
   u8 _40[0x88 - 0x40];
   GfObjPropertyCharacter unknown88; // Inferred role: character, pointed to by unknown10; original member name unknown.
   u8 _bc[0x190 - 0xbc];
-  mm::mtl::FixedArray<SDataBladeSkill, 3> unknown190; // Inferred role: field skills copied from SDataBlade::unknownae by GfGameUtil::flushProperty; original member name unknown.
+  mm::mtl::FixedArray<unknown109, 3> unknown190; // Inferred role: field skills copied from SDataBlade::unknownae by GfGameUtil::flushProperty; original member name unknown.
 };
 
 static_assert(offsetof(GfObjPropertyBlade, unknown88) == 0x88, "");

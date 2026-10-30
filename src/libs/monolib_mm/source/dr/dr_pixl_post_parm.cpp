@@ -78,7 +78,7 @@ void DrPixlPostParm::calcReductionBuffer(int &width, int &height) {
 }
 
 void DrPixlPostParm::setOverrideToneMap(f32 overrideToneMap) {
-  DrPixlPostDblParm &parm = unknown518[DrMan::s_nDblIdx];
+  unknown039 &parm = unknown518[DrMan::s_nDblIdx];
   parm.unknown00 = true;
   parm.unknown04 = overrideToneMap;
 }

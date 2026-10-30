@@ -20,7 +20,7 @@ GfMenuPosAdapter::~GfMenuPosAdapter() {
 
 GfMenuPosAdapter *GfMenuPosAdapter::create(u32 handle, GF_OBJ_HANDLE *objHandle, const MenuOffset *menuOffset) {
   PluginSetup setup;
-  setup.unknown00 = PLUGIN_TYPE_POS;
+  setup.unknown00 = unknown004_4;
   ui::UIObjectPlugin *plugin = createPlugin(handle, setup);
   if (plugin == nullptr) {
     return nullptr;
@@ -55,7 +55,7 @@ void GfMenuPosAdapter::setup(GF_OBJ_HANDLE *objHandle, const MenuOffset *menuOff
 
 GfMenuPosAdapter *GfMenuPosAdapter::createDiffOffset(u32 handle, GF_OBJ_HANDLE *objHandle, const MenuOffset *menuOffset, u16 limitX, u16 limitY) {
   PluginSetup setup;
-  setup.unknown00 = PLUGIN_TYPE_OFFSET;
+  setup.unknown00 = unknown004_6;
   ui::UIObjectPlugin *plugin = createPlugin(handle, setup);
   if (plugin == nullptr) {
     return nullptr;
@@ -84,7 +84,7 @@ GfMenuPosAdapter *GfMenuPosAdapter::createFromPartyDriver(u32 handle, u8 partyIn
 
 GfMenuPosAdapter *GfMenuPosAdapter::createWorld(u32 handle, GF_OBJ_HANDLE *objHandle, const MenuOffset *menuOffset) {
   PluginSetup setup;
-  setup.unknown00 = PLUGIN_TYPE_WORLD_POS;
+  setup.unknown00 = unknown004_5;
   ui::UIObjectPlugin *plugin = createPlugin(handle, setup);
   if (plugin == nullptr) {
     return nullptr;
@@ -103,7 +103,7 @@ GfMenuPosAdapter *GfMenuPosAdapter::createWorld(u32 handle, GF_OBJ_HANDLE *objHa
 
 GfMenuPosAdapter *GfMenuPosAdapter::createFixedPoint(u32 handle, const mm::Vec3 &pos, bool isWorld) {
   PluginSetup setup;
-  setup.unknown00 = isWorld ? PLUGIN_TYPE_WORLD_POS : PLUGIN_TYPE_POS;
+  setup.unknown00 = isWorld ? unknown004_5 : unknown004_4;
   ui::UIObjectPlugin *plugin = createPlugin(handle, setup);
   if (plugin == nullptr) {
     return nullptr;

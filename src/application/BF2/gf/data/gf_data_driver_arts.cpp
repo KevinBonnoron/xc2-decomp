@@ -63,7 +63,7 @@ void GfDataDriverArts::addWp(u32 driver, u32 weaponType, int wp) {
 }
 
 void GfDataDriverArts::initializeWp(u32 driver, u32 weaponType) {
-  SDataDriverWeapon &weapon = GfDataDriver::getSDataDriver(driver)->unknownc0[weaponType];
+  unknown114 &weapon = GfDataDriver::getSDataDriver(driver)->unknownc0[weaponType];
   weapon.unknown0c = 0;
   weapon.unknown10 = 0;
 }

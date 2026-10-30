@@ -73,12 +73,12 @@ void AttachActorCS::setEffectMount(bool isSet, u32 effect, const char *bone, con
     if (unknown4b0.size() >= EFFECT_COUNT) {
       return;
     }
-    Mount *mount = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) Mount(effect, bone, offset, isRotate, type);
+    unknown001 *mount = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) unknown001(effect, bone, offset, isRotate, type);
     AttachUtil::setMount(true, unknowna0, effect, bone, offset, isRotate, type);
     unknown4b0.push_back(mount);
   } else {
-    for (Mount **it = unknown4b0.begin(); it != unknown4b0.end(); ++it) {
-      Mount *mount = *it;
+    for (unknown001 **it = unknown4b0.begin(); it != unknown4b0.end(); ++it) {
+      unknown001 *mount = *it;
       if (mount->unknown0 == effect) {
         unknown4b0.erase(it);
         AttachUtil::setMount(false, unknowna0, effect, bone, offset, isRotate, type);

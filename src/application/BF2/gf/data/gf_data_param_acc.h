@@ -176,7 +176,8 @@ static_assert(sizeof(DataParamAcc) == 0x18, "");
 
 struct SDataIdea;
 
-struct IdeaRatio {
+// Inferred role: idea ratio; original type name unknown.
+struct unknown079 {
   s16 unknown00; // Inferred role: ratio; original member name unknown.
   u16 unknown02; // Inferred role: rate; original member name unknown.
 };
@@ -192,7 +193,7 @@ public:
   bool addPoint(u32 idea, u32 point);
   void setPointForDebug(u32 idea, u32 point);
   u32 getPoint(u32 idea) const;
-  IdeaRatio getRatio(u32 level0, u32 level1, u32 level2, u32 level3, int offset0, int offset1, int offset2, int offset3) const;
+  unknown079 getRatio(u32 level0, u32 level1, u32 level2, u32 level3, int offset0, int offset1, int offset2, int offset3) const;
   f32 getSubRatio(u32 level, int offset, u32 idea) const;
 
   SDataIdea *unknown00; // Inferred role: idea; original member name unknown.

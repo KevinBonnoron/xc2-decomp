@@ -27,33 +27,33 @@ constexpr u32 KEY_ACHIEVEMENT_LINK_FIVE = 7;
 constexpr u32 POUCH_MSG_HIDDEN = 1;
 constexpr u32 POUCH_MSG_HANA = 3;
 
-static GfMenuAchievementAdapter::TypeInfo TYPE_INFOS[] = {
-    {&GfMenuAchievementAdapter::update_AchievementReleaseFlagIcon, {GfMenuAdapter::PLUGIN_TYPE_IMAGE, 0, 0}},
-    {&GfMenuAchievementAdapter::update_AchievementCategory, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 99}},
-    {&GfMenuAchievementAdapter::update_AchievementTitle, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
-    {&GfMenuAchievementAdapter::update_AchievementResult, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
-    {&GfMenuAchievementAdapter::update_AchievementIcon, {GfMenuAdapter::PLUGIN_TYPE_IMAGE, 0, 0}},
-    {&GfMenuAchievementAdapter::update_AchievementVoiceCategory, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 99}},
-    {&GfMenuAchievementAdapter::update_AchievementVoiceAfter, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 99}},
-    {&GfMenuAchievementAdapter::update_AchievementDifficulty, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 1, 5}},
-    {&GfMenuAchievementAdapter::update_AchievementQuest, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 99}},
-    {&GfMenuAchievementAdapter::update_AchievementSetCategory, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 12}},
-    {&GfMenuAchievementAdapter::update_AchievementSetAbilityLevel, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 1, 5}},
-    {&GfMenuAchievementAdapter::update_AchievementTypeIcon, {GfMenuAdapter::PLUGIN_TYPE_IMAGE, 0, 0}},
-    {&GfMenuAchievementAdapter::update_AchievementCategoryIcon, {GfMenuAdapter::PLUGIN_TYPE_IMAGE, 0, 0}},
-    {&GfMenuAchievementAdapter::update_AchievementReleaseFlagColor, {GfMenuAdapter::PLUGIN_TYPE_COLOR, 0, 0}},
-    {&GfMenuAchievementAdapter::update_AchievementReleaseFlagIcon, {GfMenuAdapter::PLUGIN_TYPE_IMAGE, 0, 0}},
-    {&GfMenuAchievementAdapter::update_AchievementSkillName, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
-    {&GfMenuAchievementAdapter::update_LearnNum, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 99}},
-    {&GfMenuAchievementAdapter::update_LearnMax, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 99}},
-    {&GfMenuAchievementAdapter::update_QuestNum, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 9999999}},
-    {&GfMenuAchievementAdapter::update_QuestMax, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 9999999}},
-    {&GfMenuAchievementAdapter::update_IdeaText, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
-    {&GfMenuAchievementAdapter::update_IdeaIcon, {GfMenuAdapter::PLUGIN_TYPE_IMAGE, 0, 0}},
-    {&GfMenuAchievementAdapter::update_QuestCaptionText, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
-    {&GfMenuAchievementAdapter::update_QuestResultText, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
-    {&GfMenuAchievementAdapter::update_KeyIcon, {GfMenuAdapter::PLUGIN_TYPE_IMAGE, 0, 0}},
-    {&GfMenuAchievementAdapter::update_NetabareOkDisp, {GfMenuAdapter::PLUGIN_TYPE_DISP, 0, 0}},
+static GfMenuAchievementAdapter::unknown001 TYPE_INFOS[] = {
+    {&GfMenuAchievementAdapter::update_AchievementReleaseFlagIcon, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuAchievementAdapter::update_AchievementCategory, {GfMenuAdapter::unknown004_0, 0, 99}},
+    {&GfMenuAchievementAdapter::update_AchievementTitle, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuAchievementAdapter::update_AchievementResult, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuAchievementAdapter::update_AchievementIcon, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuAchievementAdapter::update_AchievementVoiceCategory, {GfMenuAdapter::unknown004_0, 0, 99}},
+    {&GfMenuAchievementAdapter::update_AchievementVoiceAfter, {GfMenuAdapter::unknown004_0, 0, 99}},
+    {&GfMenuAchievementAdapter::update_AchievementDifficulty, {GfMenuAdapter::unknown004_0, 1, 5}},
+    {&GfMenuAchievementAdapter::update_AchievementQuest, {GfMenuAdapter::unknown004_0, 0, 99}},
+    {&GfMenuAchievementAdapter::update_AchievementSetCategory, {GfMenuAdapter::unknown004_0, 0, 12}},
+    {&GfMenuAchievementAdapter::update_AchievementSetAbilityLevel, {GfMenuAdapter::unknown004_0, 1, 5}},
+    {&GfMenuAchievementAdapter::update_AchievementTypeIcon, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuAchievementAdapter::update_AchievementCategoryIcon, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuAchievementAdapter::update_AchievementReleaseFlagColor, {GfMenuAdapter::unknown004_8, 0, 0}},
+    {&GfMenuAchievementAdapter::update_AchievementReleaseFlagIcon, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuAchievementAdapter::update_AchievementSkillName, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuAchievementAdapter::update_LearnNum, {GfMenuAdapter::unknown004_0, 0, 99}},
+    {&GfMenuAchievementAdapter::update_LearnMax, {GfMenuAdapter::unknown004_0, 0, 99}},
+    {&GfMenuAchievementAdapter::update_QuestNum, {GfMenuAdapter::unknown004_0, 0, 9999999}},
+    {&GfMenuAchievementAdapter::update_QuestMax, {GfMenuAdapter::unknown004_0, 0, 9999999}},
+    {&GfMenuAchievementAdapter::update_IdeaText, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuAchievementAdapter::update_IdeaIcon, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuAchievementAdapter::update_QuestCaptionText, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuAchievementAdapter::update_QuestResultText, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuAchievementAdapter::update_KeyIcon, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuAchievementAdapter::update_NetabareOkDisp, {GfMenuAdapter::unknown004_3, 0, 0}},
 };
 
 GfMenuAchievementAdapter::GfMenuAchievementAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways)
@@ -69,7 +69,7 @@ GfMenuAchievementAdapter::~GfMenuAchievementAdapter() {
 GfMenuAchievementAdapter *GfMenuAchievementAdapter::create(u32 handle, u32 type, u32 blade, u16 line, u16 level, bool isUpdateAlways) {
   ui::UIObjectAcc acc(handle);
   if (acc.isValid()) {
-    TypeInfo &info = TYPE_INFOS[type];
+    unknown001 &info = TYPE_INFOS[type];
     ui::UIObjectPlugin *plugin = createPlugin(handle, info.setup);
     if (plugin != nullptr) {
       // __LINE__ must be 190 as in the original source: it is the line argument of operator new.

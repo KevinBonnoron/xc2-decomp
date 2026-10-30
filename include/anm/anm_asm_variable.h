@@ -4,13 +4,14 @@
 
 namespace anm {
 
-enum VarType {
-  VAR_INT,
+// Inferred role: var type; original type name unknown.
+enum unknown132 {
+  unknown132_0, // Inferred role: int; original name unknown.
   VAR_FLOAT,
 };
 
 struct ResVariable {
-  VarType type;
+  unknown132 type;
   const char *name;
 };
 
@@ -24,7 +25,7 @@ public:
   bool getValue(f32 *value) const;
   const char *getName() const;
 
-  VarType getVarType() const { return m_pResVariable->type; }
+  unknown132 getVarType() const { return m_pResVariable->type; }
 
   const ResVariable *m_pResVariable;
   union {

@@ -102,7 +102,7 @@ public:
   u64 unknown698;        // Inferred role: play position limit; original member name unknown.
   unknown001 unknown6a0; // Inferred role: play position request value; original member name unknown.
   u8 _6a4[0x6d0 - 0x6a4];
-  SoundHandle::Fade unknown6d0; // Inferred role: stop fade; original member name unknown.
+  SoundHandle::unknown003 unknown6d0; // Inferred role: stop fade; original member name unknown.
   u8 _6e8[0x6f0 - 0x6e8];
   f32 unknown6f0; // Inferred role: distance volume; original member name unknown.
   u8 _6f4[0x710 - 0x6f4];

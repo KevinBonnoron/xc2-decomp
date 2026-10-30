@@ -44,13 +44,13 @@ AsmState *StateMachine::createState(const ResStateData &resStateData) {
   AsmState *state;
   const ResState *resState = resStateData.unknown00;
   switch (resState->type) {
-  case STATE_TYPE_SIMPLE:
+  case unknown103_0:
     state = new (unknown68->allocate(sizeof(SimplexState), 8)) SimplexState(&resStateData, *unknown68);
     break;
-  case STATE_TYPE_FROZEN:
+  case unknown103_1:
     state = new (unknown68->allocate(sizeof(FrozenState), 8)) FrozenState(&resStateData, *unknown68);
     break;
-  case STATE_TYPE_COMPLEX: {
+  case unknown103_2: {
     const unknown00c *resTree = resState->unknown68;
     switch (resTree->unknown00) {
     case 0:

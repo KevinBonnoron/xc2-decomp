@@ -291,7 +291,7 @@ bool DrMdlMan::shadowRender(DrPixlShadowObj *shadow) {
     pixlMan->setShadowObj(shadow);
     shadow->unknown50 &= ~1u;
     for (DrMdlBase *mdl = unknown220->unknown00; mdl != nullptr; mdl = mdl->unknown10) {
-      if ((mdl->unknown20 & DrMdlBase::UPDATE_FLAG_DISP) && (unknown23c & (1 << mdl->unknown18))) {
+      if ((mdl->unknown20 & DrMdlBase::unknown038_0) && (unknown23c & (1 << mdl->unknown18))) {
         mdl->shadowRender();
       }
     }
@@ -310,7 +310,7 @@ void DrMdlMan::occRender(bool isFirst) {
   DrPixlMan *pixlMan = unknown000->unknown78;
   pixlMan->occRenderBegin(isFirst);
   for (DrMdlBase *mdl = unknown220->unknown00; mdl != nullptr; mdl = mdl->unknown10) {
-    if ((mdl->unknown20 & DrMdlBase::UPDATE_FLAG_DISP) && (unknown23c & (1 << mdl->unknown18))) {
+    if ((mdl->unknown20 & DrMdlBase::unknown038_0) && (unknown23c & (1 << mdl->unknown18))) {
       mdl->occRender();
     }
   }

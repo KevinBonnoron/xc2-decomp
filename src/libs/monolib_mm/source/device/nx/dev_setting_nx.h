@@ -3,7 +3,7 @@
 
 namespace ml {
 
-class DevSettingNx : public IDevSetting {
+class DevSettingNx : public unknown075 {
 public:
   DevSettingNx();
   ~DevSettingNx() override;

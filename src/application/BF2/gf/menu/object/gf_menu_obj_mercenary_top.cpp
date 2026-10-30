@@ -23,7 +23,7 @@ void GfMenuObjMercenaryTop::sendOpenEvent(u32 handle, int type) {
   ui::EventData event;
   event.unknown08 = type;
   event.unknown0c = 0;
-  event.unknown00 = GfMenuTypes::UI_EVENT_OPEN;
+  event.unknown00 = GfMenuTypes::unknown003_33;
   GfMenuObject::sendEvent(handle, event, 0.0f);
 }
 
@@ -34,7 +34,7 @@ void GfMenuObjMercenaryTop::sendCloseEvent(u32 handle, int type) {
   ui::EventData event;
   event.unknown08 = type;
   event.unknown0c = 0;
-  event.unknown00 = GfMenuTypes::UI_EVENT_CLOSE;
+  event.unknown00 = GfMenuTypes::unknown003_34;
   GfMenuObject::sendEvent(handle, event, 0.0f);
 }
 

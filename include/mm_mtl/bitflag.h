@@ -5,11 +5,12 @@
 namespace mm {
 namespace mtl {
 
-template <unsigned int Size> class BitFlag {
+// Inferred role: fixed size bit flag set; original type name unknown.
+template <unsigned int Size> class unknown027 {
 public:
-  BitFlag() { clear(); }
+  unknown027() { clear(); }
 
-  BitFlag &operator=(const BitFlag &other) {
+  unknown027 &operator=(const unknown027 &other) {
     if (&other != this) {
       copy(other.mBits, WORD_COUNT, mBits);
     }

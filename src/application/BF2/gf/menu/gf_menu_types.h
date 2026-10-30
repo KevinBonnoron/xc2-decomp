@@ -4,9 +4,10 @@
 namespace gf {
 namespace GfMenuTypes {
 
-enum UIEvent {
-  UI_EVENT_OPEN = 0x21,
-  UI_EVENT_CLOSE = 0x22,
+// Inferred role: menu UI event ids; original type name unknown.
+enum unknown003 {
+  unknown003_33 = 0x21, // Inferred role: open; original name unknown.
+  unknown003_34 = 0x22, // Inferred role: close; original name unknown.
 };
 
 struct Param {

@@ -32,19 +32,20 @@ constexpr u32 PARTY_MEMBER_NUM = 3;
 constexpr u32 WEAPON_HANDLE_NUM = 10;
 
 struct GfPartyPosInfo {
-  struct Position {
-    Position() : unknown00(mm::Vec3::zero), unknown10(0.0f), unknown14(false) {}
+  // Inferred role: position; original type name unknown.
+  struct unknown004 {
+    unknown004() : unknown00(mm::Vec3::zero), unknown10(0.0f), unknown14(false) {}
 
     mm::Vec3 unknown00; // Inferred role: position; original member name unknown.
     f32 unknown10;      // Inferred role: rotation; original member name unknown.
     bool unknown14;     // Inferred role: valid; original member name unknown.
   };
 
-  Position unknown00[6]; // Inferred role: positions; original member name unknown.
+  unknown004 unknown00[6]; // Inferred role: positions; original member name unknown.
 };
 
-static_assert(offsetof(GfPartyPosInfo::Position, unknown10) == 0x10, "");
-static_assert(offsetof(GfPartyPosInfo::Position, unknown14) == 0x14, "");
+static_assert(offsetof(GfPartyPosInfo::unknown004, unknown10) == 0x10, "");
+static_assert(offsetof(GfPartyPosInfo::unknown004, unknown14) == 0x14, "");
 static_assert(sizeof(GfPartyPosInfo) == 0xc0, "");
 
 class GfMemberInfo {
@@ -66,7 +67,8 @@ static_assert(sizeof(GfMemberInfo) == 0x40, "");
 
 class GfSelectBlade {
 public:
-  struct Member {
+  // Inferred role: member; original type name unknown.
+  struct unknown005 {
     u8 unknown00;    // Inferred role: current index; original member name unknown.
     u8 unknown01[2]; // Inferred role: change indices; original member name unknown.
     u8 unknown03[3]; // Inferred role: default indices; original member name unknown.
@@ -90,8 +92,8 @@ public:
 
   static GfSelectBlade *s_pThis;
 
-  Member unknown00[3]; // Inferred role: members; original member name unknown.
-  int unknown14[3];    // Inferred role: start battle set ids; original member name unknown.
+  unknown005 unknown00[3]; // Inferred role: members; original member name unknown.
+  int unknown14[3];        // Inferred role: start battle set ids; original member name unknown.
 };
 
 static_assert(offsetof(GfSelectBlade, unknown14) == 0x14, "");

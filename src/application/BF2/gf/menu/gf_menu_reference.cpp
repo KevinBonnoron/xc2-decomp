@@ -25,7 +25,7 @@ bool GfMenuReference::isInitialized() {
 void GfMenuReference::initReferenceNumber(u32 index) {
   GfMenuReference *reference = get();
   if (index < 8 && reference != nullptr) {
-    ReferenceNumber &number = reference->unknown4cc38[index];
+    unknown004 &number = reference->unknown4cc38[index];
     number.unknown08 = 0;
     number.unknown00 = 0;
     number.unknown04 = 9999;

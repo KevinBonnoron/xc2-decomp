@@ -27,10 +27,11 @@ struct CLLineWork;
 struct CLSphereWork;
 struct IDColiInput;
 
-enum ObjType {
-  OBJ_TYPE_CHARACTER = 1,
-  OBJ_TYPE_PHANTOM = 2,
-  OBJ_TYPE_GRAND = 3,
+// Inferred role: obj type; original type name unknown.
+enum unknown098 {
+  unknown098_1 = 1, // Inferred role: character; original name unknown.
+  unknown098_2 = 2, // Inferred role: phantom; original name unknown.
+  unknown098_3 = 3, // Inferred role: grand; original name unknown.
 };
 
 enum ShapeType : unsigned int {
@@ -144,7 +145,7 @@ public:
   u32 unknown18;        // Inferred role: state; original member name unknown.
   u32 unknown1c;        // Inferred role: update flags; original member name unknown.
   u32 unknown20;        // Inferred role: attr; original member name unknown.
-  ObjType unknown24;    // Inferred role: type; original member name unknown.
+  unknown098 unknown24; // Inferred role: type; original member name unknown.
   u32 unknown28;        // Inferred role: material data; original member name unknown.
   u32 unknown2c;        // Inferred role: material bit; original member name unknown.
   u64 _30;

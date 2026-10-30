@@ -44,8 +44,8 @@ public:
   void setAddWeight(f32 weight, WeightLayer layer);
 
 private:
-  mm::mtl::BitFlag<FLAG_MAX> unknown08; // Inferred role: flags; original member name unknown.
-  gf::AnimLayer unknown0c;              // Inferred role: layer; original member name unknown.
+  mm::mtl::unknown027<FLAG_MAX> unknown08; // Inferred role: flags; original member name unknown.
+  gf::AnimLayer unknown0c;                 // Inferred role: layer; original member name unknown.
   const char *m_stat;
   AnmF32 unknown18[WEIGHT_LAYER_MAX]; // Inferred role: weight anms; original member name unknown.
   f32 unknown238;                     // Inferred role: weight; original member name unknown.

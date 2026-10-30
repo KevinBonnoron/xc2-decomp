@@ -48,9 +48,9 @@ public:
 
   const FadeParam *getParam() const { return unknown18 != nullptr ? static_cast<const FadeParam *>(unknown18->param) : nullptr; }
 
-  Mode unknown0c;                        // Inferred role: mode; original member name unknown.
-  f32 unknown10;                         // Inferred role: timer; original member name unknown.
-  const fw::ParamList::Entry *unknown18; // Inferred role: param entry; original member name unknown.
+  Mode unknown0c;                             // Inferred role: mode; original member name unknown.
+  f32 unknown10;                              // Inferred role: timer; original member name unknown.
+  const fw::ParamList::unknown005 *unknown18; // Inferred role: param entry; original member name unknown.
 };
 
 static_assert(offsetof(FadePlugin, unknown0c) == 0x0c, "");

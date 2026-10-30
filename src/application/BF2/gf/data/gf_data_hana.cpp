@@ -205,7 +205,7 @@ void GfDataHana::setEquipAttributeParts(u32 blade, u32 parts, GfItemHandle handl
 void GfDataHana::setEquipArtsParts(u32 blade, u32 slot, u32 parts, GfItemHandle handle) {
   SDataBlade *dataBlade = GfDataBlade::getSDataBlade(blade);
   GfItemHandle artsHandle = handle;
-  EquipHanaArts &arts = dataBlade->unknown68c.unknown04[slot];
+  unknown066 &arts = dataBlade->unknown68c.unknown04[slot];
   arts.unknown04 = parts;
   arts.unknown0a = artsHandle.value;
   arts.unknown00 = GfBdatItem::get()->getITM_HanaArtsEnhEnhance(parts);

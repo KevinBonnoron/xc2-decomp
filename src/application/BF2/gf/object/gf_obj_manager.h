@@ -56,8 +56,8 @@ struct GFOBJ_INFO {
   GF_ASSET_HANDLE *unknown10; // Inferred role: asset handle; original member name unknown.
   GfObj *unknown18;           // Inferred role: object; original member name unknown.
   u8 _20[0x30 - 0x20];
-  GfObjSetup *unknown30;          // Inferred role: setup; original member name unknown.
-  mm::mtl::BitFlag<64> unknown38; // Inferred role: flags; original member name unknown.
+  GfObjSetup *unknown30;             // Inferred role: setup; original member name unknown.
+  mm::mtl::unknown027<64> unknown38; // Inferred role: flags; original member name unknown.
   u8 _40[0x48 - 0x40];
   u32 unknown48; // Inferred role: disp flags; original member name unknown.
   u8 _4c[0x70 - 0x4c];

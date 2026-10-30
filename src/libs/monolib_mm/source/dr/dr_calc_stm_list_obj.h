@@ -12,15 +12,16 @@ namespace ml {
 class DrCalcTexStmObj;
 class EventFileTh;
 
-struct DrCalcStmRes {
+// Inferred role: calc stm res; original type name unknown.
+struct unknown035 {
   const u8 *unknown00; // Inferred role: data; original member name unknown.
   u8 _08[0x10 - 0x08];
   u8 unknown10; // Inferred role: flags; original member name unknown.
   u8 _11[0x18 - 0x11];
 };
 
-static_assert(offsetof(DrCalcStmRes, unknown10) == 0x10, "");
-static_assert(sizeof(DrCalcStmRes) == 0x18, "");
+static_assert(offsetof(unknown035, unknown10) == 0x10, "");
+static_assert(sizeof(unknown035) == 0x18, "");
 
 class DrCalcStmListObj {
 public:
@@ -34,16 +35,16 @@ public:
   void setupInfo(const u8 *header, bool isSetup);
   void setHeaderInfo(const u8 *header);
   bool isResSafe() const;
-  DrCalcStmRes *getResObj(u32 index);
-  DrCalcStmRes *getResVertexObj();
-  DrCalcStmRes *getResShaderObj();
+  unknown035 *getResObj(u32 index);
+  unknown035 *getResVertexObj();
+  unknown035 *getResShaderObj();
   bool isResChange() const;
   bool isResSub() const;
   bool isResTex() const;
   void setUseMode(DrTexUseMode mode);
   grlib::CGLibTextureBuffer *getTexObj(u32 index);
   void *getAdder();
-  DrCalcStmRes *getResLowTexObj();
+  unknown035 *getResLowTexObj();
   bool texstm_requestWait();
   bool texstm_size_Wait();
   void setupReadCheck();
@@ -63,7 +64,7 @@ public:
 
   u8 _00[0x28];
   DrCalcTexStmObj **unknown28; // Inferred role: tex stream objects; original member name unknown.
-  DrCalcStmRes *unknown30[2];  // Inferred role: res; original member name unknown.
+  unknown035 *unknown30[2];    // Inferred role: res; original member name unknown.
   void *unknown40;             // Inferred role: file handle; original member name unknown.
   DrCalcTexStmObj *unknown48;  // Inferred role: tex stream object; original member name unknown.
   DrCalcTexStmObj *unknown50;  // Inferred role: read check tex stream object; original member name unknown.

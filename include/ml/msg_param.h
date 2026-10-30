@@ -8,15 +8,16 @@ namespace ml {
 
 template <int N> class MsgParam {
 public:
-  enum ParamType {
-    PARAM_TYPE_NONE = 0,
-    PARAM_TYPE_STRING = 16,
+  // Inferred role: param type; original type name unknown.
+  enum unknown001 {
+    unknown001_0 = 0,   // Inferred role: none; original name unknown.
+    unknown001_16 = 16, // Inferred role: string; original name unknown.
   };
 
   struct Param {
     Param(int msg) : msg(msg) {
       data[0] = 0;
-      type = PARAM_TYPE_NONE;
+      type = unknown001_0;
     }
 
     int msg;
@@ -34,7 +35,7 @@ public:
   }
 
   void set(const char *string) {
-    m_queue[m_index].type = PARAM_TYPE_STRING;
+    m_queue[m_index].type = unknown001_16;
     strcpy(m_queue[m_index].data, string);
   }
 

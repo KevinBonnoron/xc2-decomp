@@ -80,7 +80,8 @@ struct DR_MODEL_TEXTURE {
 
 static_assert(sizeof(DR_MODEL_TEXTURE) == 0x10, "");
 
-struct DrScreenInfo {
+// Inferred role: screen info; original type name unknown.
+struct unknown057 {
   u8 _00[0x18 - 0x00];
   s32 unknown18; // Inferred role: width; original member name unknown.
   s32 unknown1c; // Inferred role: height; original member name unknown.
@@ -90,10 +91,10 @@ struct DrScreenInfo {
   s32 unknown2c; // Inferred role: screen height; original member name unknown.
 };
 
-static_assert(offsetof(DrScreenInfo, unknown18) == 0x18, "");
-static_assert(offsetof(DrScreenInfo, unknown20) == 0x20, "");
-static_assert(offsetof(DrScreenInfo, unknown28) == 0x28, "");
-static_assert(offsetof(DrScreenInfo, unknown2c) == 0x2c, "");
+static_assert(offsetof(unknown057, unknown18) == 0x18, "");
+static_assert(offsetof(unknown057, unknown20) == 0x20, "");
+static_assert(offsetof(unknown057, unknown28) == 0x28, "");
+static_assert(offsetof(unknown057, unknown2c) == 0x2c, "");
 
 class DrMan : public IWorkBackground {
 public:
@@ -214,7 +215,7 @@ public:
   DrEnvironmentMan *unknown598; // Inferred role: environment man; original member name unknown.
   u8 _05a0[0x05b0 - 0x05a0];
   DrCalcTexStreamMan *unknown5b0; // Inferred role: tex stream man; original member name unknown.
-  DrScreenInfo *unknown5b8;       // Inferred role: screen info; original member name unknown.
+  unknown057 *unknown5b8;         // Inferred role: screen info; original member name unknown.
   DrAPCache *unknown5c0;          // Inferred role: ap cache; original member name unknown.
   DrCalcGpuCost *unknown5c8;      // Inferred role: gpu cost; original member name unknown.
   u8 _05d0[0x05d8 - 0x05d0];

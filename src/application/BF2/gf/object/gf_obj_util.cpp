@@ -737,7 +737,7 @@ bool GfObjUtil::isEnemyBlade(GF_OBJ_HANDLE *handle) {
   }
 
   GfObjSetup *setup = getObjSetup(handle);
-  return setup != nullptr && setup->unknown1c == CHARACTER_TYPE_ENEMY_BLADE;
+  return setup != nullptr && setup->unknown1c == unknown030_5;
 }
 
 bool GfObjUtil::testFlag(GF_OBJ_HANDLE *handle, u32 flag) {
@@ -950,7 +950,7 @@ GfAppend *GfObjUtil::getAppend(GF_OBJ_HANDLE *handle, GFATTACH attach) {
 
 bool GfObjUtil::isTrinityBlade(GF_OBJ_HANDLE *handle) {
   GfObjSetup *setup = getObjSetup(handle);
-  return setup != nullptr && setup->unknown1c == CHARACTER_TYPE_TRINITY_BLADE;
+  return setup != nullptr && setup->unknown1c == unknown030_8;
 }
 
 bool GfObjUtil::isUpdateComponent(const GfObj *obj) {

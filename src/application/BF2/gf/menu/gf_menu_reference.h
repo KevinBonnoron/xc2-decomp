@@ -31,16 +31,18 @@ public:
   struct ElemComboRoot {
     ElemComboRoot() : unknown00(0), unknown04() {}
 
-    u32 unknown00;                  // Inferred role: id; original member name unknown.
-    mm::mtl::BitFlag<32> unknown04; // Inferred role: flags; original member name unknown.
+    u32 unknown00;                     // Inferred role: id; original member name unknown.
+    mm::mtl::unknown027<32> unknown04; // Inferred role: flags; original member name unknown.
   };
 
-  struct ElementComboParty {
+  // Inferred role: element combo party; original type name unknown.
+  struct unknown003 {
     u32 unknown00; // Inferred role: id; original member name unknown.
     f32 unknown04; // Inferred role: time left; original member name unknown.
   };
 
-  struct ReferenceNumber {
+  // Inferred role: reference number; original type name unknown.
+  struct unknown004 {
     int unknown00; // Inferred role: min; original member name unknown.
     int unknown04; // Inferred role: max; original member name unknown.
     int unknown08; // Inferred role: value; original member name unknown.
@@ -54,7 +56,8 @@ public:
     f32 unknown04; // Inferred role: recast; original member name unknown.
   };
 
-  struct ArtsPalette {
+  // Inferred role: arts palette; original type name unknown.
+  struct unknown005 {
     ArtsPaletteInfo unknown00;             // Inferred role: info; original member name unknown.
     GfMenuObjUtil::ArtsIconInfo unknown08; // Inferred role: icon info; original member name unknown.
     u32 unknown1c;                         // Inferred role: element type; original member name unknown.
@@ -161,7 +164,7 @@ public:
   mm::threading::CriticalSection unknown4ca18;           // Inferred role: critical section; original member name unknown.
   bool unknown4ca40;                                     // Inferred role: initialized; original member name unknown.
   mm::mtl::FixedVector<FieldSkillInfo, 28> unknown4ca48; // Inferred role: field skills; original member name unknown.
-  ArtsPalette unknown4cac0[ARTS_PALETTE_COUNT];          // Inferred role: arts palettes; original member name unknown.
+  unknown005 unknown4cac0[ARTS_PALETTE_COUNT];           // Inferred role: arts palettes; original member name unknown.
   u8 _4cb38[0x4cb3c - 0x4cb38];
   bool unknown4cb3c;   // Inferred role: just range; original member name unknown.
   f32 unknown4cb40;    // Inferred role: awakening rest time ratio; original member name unknown.
@@ -176,39 +179,39 @@ public:
   u8 _4cb68[0x4cb6c - 0x4cb68];
   u16 unknown4cb6c; // Inferred role: chain num; original member name unknown.
   u8 _4cb6e[0x4cb74 - 0x4cb6e];
-  u32 unknown4cb74;                    // Inferred role: target enemy debuff; original member name unknown.
-  u32 unknown4cb78;                    // Inferred role: target enemy weak attr; original member name unknown.
-  HOMURA_MODE unknown4cb7c;            // Inferred role: homura mode; original member name unknown.
-  bool unknown4cb80;                   // Inferred role: palette reverse; original member name unknown.
-  mm::mtl::BitFlag<8> unknown4cb84[4]; // Inferred role: reverse palette btn states; original member name unknown.
+  u32 unknown4cb74;                       // Inferred role: target enemy debuff; original member name unknown.
+  u32 unknown4cb78;                       // Inferred role: target enemy weak attr; original member name unknown.
+  HOMURA_MODE unknown4cb7c;               // Inferred role: homura mode; original member name unknown.
+  bool unknown4cb80;                      // Inferred role: palette reverse; original member name unknown.
+  mm::mtl::unknown027<8> unknown4cb84[4]; // Inferred role: reverse palette btn states; original member name unknown.
   u8 _4cb94[0x4cb98 - 0x4cb94];
   ui::UIListInfo<MenuEnemyInfo> *unknown4cb98; // Inferred role: enemy links; original member name unknown.
   ui::UIListInfo<MenuItemInfo> *unknown4cba0;  // Inferred role: item links; original member name unknown.
   ElemComboRoot unknown4cba8[7];               // Inferred role: element combo roots; original member name unknown.
-  ElementComboParty unknown4cbe0[2];           // Inferred role: element combo parties; original member name unknown.
+  unknown003 unknown4cbe0[2];                  // Inferred role: element combo parties; original member name unknown.
   u32 unknown4cbf0;                            // Inferred role: element combo request; original member name unknown.
   u8 _4cbf4[0x4cbf8 - 0x4cbf4];
-  u32 unknown4cbf8[8];             // Inferred role: reference driver ids; original member name unknown.
-  u32 unknown4cc18[8];             // Inferred role: reference blade ids; original member name unknown.
-  ReferenceNumber unknown4cc38[8]; // Inferred role: reference numbers; original member name unknown.
-  u32 unknown4cc98;                // Inferred role: reference team id; original member name unknown.
-  u32 unknown4cc9c;                // Inferred role: reference zone id; original member name unknown.
-  u32 unknown4cca0;                // Inferred role: reference mission id; original member name unknown.
-  u32 unknown4cca4;                // Inferred role: reference shop id; original member name unknown.
-  u32 unknown4cca8;                // Inferred role: reference world map id; original member name unknown.
-  u32 unknown4ccac;                // Inferred role: driver virtual level; original member name unknown.
-  u32 unknown4ccb0;                // Inferred role: driver virtual blade id; original member name unknown.
-  u32 unknown4ccb4;                // Inferred role: driver virtual blade slot; original member name unknown.
-  u32 unknown4ccb8;                // Inferred role: driver virtual equip acc; original member name unknown.
-  u32 unknown4ccbc;                // Inferred role: driver virtual equip acc slot; original member name unknown.
-  int unknown4ccc0[4];             // Inferred role: driver add idea lvs; original member name unknown.
-  u32 unknown4ccd0;                // Inferred role: blade virtual equip wpn chip; original member name unknown.
-  u32 unknown4ccd4;                // Inferred role: blade virtual equip orb; original member name unknown.
-  u32 unknown4ccd8;                // Inferred role: blade virtual equip orb slot; original member name unknown.
+  u32 unknown4cbf8[8];        // Inferred role: reference driver ids; original member name unknown.
+  u32 unknown4cc18[8];        // Inferred role: reference blade ids; original member name unknown.
+  unknown004 unknown4cc38[8]; // Inferred role: reference numbers; original member name unknown.
+  u32 unknown4cc98;           // Inferred role: reference team id; original member name unknown.
+  u32 unknown4cc9c;           // Inferred role: reference zone id; original member name unknown.
+  u32 unknown4cca0;           // Inferred role: reference mission id; original member name unknown.
+  u32 unknown4cca4;           // Inferred role: reference shop id; original member name unknown.
+  u32 unknown4cca8;           // Inferred role: reference world map id; original member name unknown.
+  u32 unknown4ccac;           // Inferred role: driver virtual level; original member name unknown.
+  u32 unknown4ccb0;           // Inferred role: driver virtual blade id; original member name unknown.
+  u32 unknown4ccb4;           // Inferred role: driver virtual blade slot; original member name unknown.
+  u32 unknown4ccb8;           // Inferred role: driver virtual equip acc; original member name unknown.
+  u32 unknown4ccbc;           // Inferred role: driver virtual equip acc slot; original member name unknown.
+  int unknown4ccc0[4];        // Inferred role: driver add idea lvs; original member name unknown.
+  u32 unknown4ccd0;           // Inferred role: blade virtual equip wpn chip; original member name unknown.
+  u32 unknown4ccd4;           // Inferred role: blade virtual equip orb; original member name unknown.
+  u32 unknown4ccd8;           // Inferred role: blade virtual equip orb slot; original member name unknown.
   u8 _4ccdc[0x4cce0 - 0x4ccdc];
-  ui::UIStr unknown4cce0[8];                        // Inferred role: reference strings; original member name unknown.
-  ArtsPalette unknown4cda0[ALL_ARTS_PALETTE_COUNT]; // Inferred role: all arts palettes; original member name unknown.
-  mm::mtl::BitFlag<32> unknown4cf08;                // Inferred role: party status lock; original member name unknown.
+  ui::UIStr unknown4cce0[8];                       // Inferred role: reference strings; original member name unknown.
+  unknown005 unknown4cda0[ALL_ARTS_PALETTE_COUNT]; // Inferred role: all arts palettes; original member name unknown.
+  mm::mtl::unknown027<32> unknown4cf08;            // Inferred role: party status lock; original member name unknown.
   u8 _4cf0c[0x4cf10 - 0x4cf0c];
 };
 

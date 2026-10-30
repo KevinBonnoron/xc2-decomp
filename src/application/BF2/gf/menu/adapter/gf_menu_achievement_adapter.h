@@ -14,7 +14,8 @@ namespace gf {
 
 class GfMenuAchievementAdapter : public GfMenuAdapter {
 public:
-  struct TypeInfo {
+  // Inferred role: type info; original type name unknown.
+  struct unknown001 {
     bool (GfMenuAchievementAdapter::*update)();
     PluginSetup setup;
   };

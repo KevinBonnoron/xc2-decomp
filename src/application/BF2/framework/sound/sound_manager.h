@@ -25,7 +25,8 @@ enum SoundCategory : int;
 enum SoundOutputType : int;
 enum SoundVolumeType : int;
 
-struct SoundVolumeFade {
+// Inferred role: sound volume fade; original type name unknown.
+struct unknown129 {
   void start(f32 target, f32 fadeTime) {
     if (fadeTime > 0.0f) {
       unknown08 = unknown00;
@@ -59,7 +60,8 @@ struct SoundVolumeFade {
 
 class SoundManager : public ManagerObject, public mm::mtl::PtrSingleton<SoundManager> {
 public:
-  struct UniqueID {
+  // Inferred role: unique id; original type name unknown.
+  struct unknown130 {
     u32 unknown00; // Inferred role: current; original member name unknown.
     u32 unknown04; // Inferred role: min; original member name unknown.
     u32 unknown08; // Inferred role: max; original member name unknown.
@@ -67,7 +69,7 @@ public:
 
   static const u32 BATTLE_RESOURCE_MAX = 3;
 
-  static UniqueID m_uniqueID;
+  static unknown130 m_uniqueID;
 
   ~SoundManager();
   bool initialize() override;
@@ -142,10 +144,10 @@ public:
 
   ISoundDriver *unknown18; // Inferred role: driver; original member name unknown.
   u8 _20[0x6c - 0x20];
-  SoundVolumeFade m_masterVolumeOrg;
-  SoundVolumeFade unknown80; // Inferred role: mute fade; original member name unknown.
-  int unknown94;             // Inferred role: pause count; original member name unknown.
-  bool unknown98;            // Inferred role: sound enable; original member name unknown.
+  unknown129 m_masterVolumeOrg;
+  unknown129 unknown80; // Inferred role: mute fade; original member name unknown.
+  int unknown94;        // Inferred role: pause count; original member name unknown.
+  bool unknown98;       // Inferred role: sound enable; original member name unknown.
   u8 _99[0xa0 - 0x99];
   mm::mtl::List<SoundPack *> unknowna0;           // Inferred role: packs; original member name unknown.
   ResourceObject *unknowne0;                      // Inferred role: common resource; original member name unknown.

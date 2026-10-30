@@ -11,12 +11,13 @@ class UIObjectPlugin;
 
 namespace gf {
 
-class GfMenuBladeDataReceiver {
+// Inferred role: menu blade data receiver; original type name unknown.
+class unknown069 {
 public:
   virtual void changeBladeData(u32 blade, u32 driver) = 0;
 };
 
-class GfMenuBladeDataAdapter : public GfMenuAdapter, public GfMenuBladeDataReceiver {
+class GfMenuBladeDataAdapter : public GfMenuAdapter, public unknown069 {
 public:
   struct TypeInfo {
     bool (GfMenuBladeDataAdapter::*update)();

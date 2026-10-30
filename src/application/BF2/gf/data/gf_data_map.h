@@ -32,7 +32,8 @@ enum {
   MAP_ELPIS = 15,
 };
 
-struct SDataMap {
+// Inferred role: save data map; original type name unknown.
+struct unknown118 {
   mm::Vec3 unknown00[3]; // Inferred role: driver save pos; original member name unknown.
   mm::Vec3 unknown30[3]; // Inferred role: blade save pos; original member name unknown.
   mm::Vec3 unknown60[3]; // Inferred role: driver save rot; original member name unknown.
@@ -40,11 +41,11 @@ struct SDataMap {
   u32 unknownc0;         // Inferred role: skip travel id; original member name unknown.
 };
 
-static_assert(offsetof(SDataMap, unknown30) == 0x030, "");
-static_assert(offsetof(SDataMap, unknown60) == 0x060, "");
-static_assert(offsetof(SDataMap, unknown90) == 0x090, "");
-static_assert(offsetof(SDataMap, unknownc0) == 0x0c0, "");
-static_assert(sizeof(SDataMap) == 0x0d0, "");
+static_assert(offsetof(unknown118, unknown30) == 0x030, "");
+static_assert(offsetof(unknown118, unknown60) == 0x060, "");
+static_assert(offsetof(unknown118, unknown90) == 0x090, "");
+static_assert(offsetof(unknown118, unknownc0) == 0x0c0, "");
+static_assert(sizeof(unknown118) == 0x0d0, "");
 
 struct WeatherParam {
   char unknown00[8];   // Inferred role: resource; original member name unknown.
@@ -57,13 +58,14 @@ struct WeatherParam {
 
 static_assert(sizeof(WeatherParam) == 0x1c, "");
 
-struct SDataMapInfo {
+// Inferred role: save data map info; original type name unknown.
+struct unknown119 {
   WeatherParam unknown00; // Inferred role: weather param; original member name unknown.
   u32 unknown1c;          // Inferred role: cloud type; original member name unknown.
 };
 
-static_assert(offsetof(SDataMapInfo, unknown1c) == 0x1c, "");
-static_assert(sizeof(SDataMapInfo) == 0x20, "");
+static_assert(offsetof(unknown119, unknown1c) == 0x1c, "");
+static_assert(sizeof(unknown119) == 0x20, "");
 
 class GfDataMap {
 public:
@@ -77,7 +79,7 @@ public:
   static bool isMapCompleteFlag(u32 map);
   static void setMapCompleteFlag(u32 map);
   static bool isZoneCompleteFlag(u32 zone);
-  static SDataMap *getSDataMap();
+  static unknown118 *getSDataMap();
   static const char *getMapResourceName(u32 mapJump);
   static u32 getMapID(u32 mapJump);
   static const char *getMapResourceNameByMapID(u32 map);

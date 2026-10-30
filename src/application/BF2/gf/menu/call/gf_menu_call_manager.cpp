@@ -14,7 +14,7 @@ void GfMenuCallManager::reset() {
 }
 
 GfMenuCallManager::~GfMenuCallManager() {
-  for (CallInfo *info = unknown1108.begin(); info != unknown1108.end(); ++info) {
+  for (unknown001 *info = unknown1108.begin(); info != unknown1108.end(); ++info) {
     if (info->unknown00 != nullptr) {
       info->unknown00->release();
       info->unknown00 = nullptr;
@@ -68,7 +68,7 @@ void GfMenuCallManager::startCallContext(GfMenuCallContext *context, u32 menu, u
   if (context->isActive() && !context->isTerm()) {
     return;
   }
-  for (CallInfo *info = unknown1108.begin(); info != unknown1108.end(); ++info) {
+  for (unknown001 *info = unknown1108.begin(); info != unknown1108.end(); ++info) {
     if (info->unknown00->unknown0c == context->unknown0c) {
       context->setup(object, menu);
       return;
@@ -76,7 +76,7 @@ void GfMenuCallManager::startCallContext(GfMenuCallContext *context, u32 menu, u
   }
   context->setup(object, menu);
   context->addRef();
-  CallInfo info;
+  unknown001 info;
   info.unknown00 = context;
   info.unknown08 = 0;
   unknown1108.push_back(info);
@@ -89,7 +89,7 @@ void GfMenuCallManager::nextCallContext(GfMenuCallContext *context, u32 menu) {
 }
 
 void GfMenuCallManager::setCallContextEventHandler(GfMenuCallContext *context, u32 handler) {
-  for (CallInfo *info = unknown1108.begin(); info != unknown1108.end(); ++info) {
+  for (unknown001 *info = unknown1108.begin(); info != unknown1108.end(); ++info) {
     if (info->unknown00->unknown0c == context->unknown0c) {
       info->unknown08 = handler;
       return;

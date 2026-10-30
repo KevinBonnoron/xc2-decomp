@@ -27,13 +27,13 @@ class DrResMdoShdObj;
 class DrResMdoVtxMeshObj;
 class DrStmReadObj;
 class ScnObjModel;
-struct DrSeamEtcPos;
-struct DrSeamEtcPosList;
+struct unknown059;
+struct unknown060;
 struct MdlVtxParticle;
-struct MdoWrkAvatar;
+struct unknown023;
 class DrResMdoMat;
-struct MdoWrkShaderParm;
-struct MdsMeshPartsInfo;
+struct unknown024;
+struct unknown020;
 struct MdsMatInfoHeader;
 struct VolumeFadeParams;
 
@@ -177,7 +177,7 @@ public:
   u8 getExtVolumeFadeEffect(int index) const;
 
 private:
-  const MdsMeshPartsInfo *m_partsInfos;
+  const unknown020 *m_partsInfos;
   DrResMdoMeshObj *m_meshObj;
 };
 
@@ -222,7 +222,7 @@ public:
   void resetAvatarTexture();
 
 private:
-  MdoWrkAvatar *m_avatar;
+  unknown023 *m_avatar;
   DrMdlObj *m_drMdl;
 };
 
@@ -237,7 +237,7 @@ public:
   f32 getVal(int index) const;
 
 private:
-  MdoWrkShaderParm *m_shaderParm;
+  unknown024 *m_shaderParm;
 };
 
 class ScnObjAccVolumeFade {
@@ -380,7 +380,7 @@ private:
 
 class ScnObjAccPartsEtcPos {
 public:
-  explicit ScnObjAccPartsEtcPos(DrSeamEtcPos *etcPos) : m_etcPos(etcPos) {}
+  explicit ScnObjAccPartsEtcPos(unknown059 *etcPos) : m_etcPos(etcPos) {}
   ~ScnObjAccPartsEtcPos() {}
   const char *getObjName() const;
   const char *getEffName() const;
@@ -392,7 +392,7 @@ public:
   bool isDisp(u32 index) const;
 
 private:
-  DrSeamEtcPos *m_etcPos;
+  unknown059 *m_etcPos;
 };
 
 class ScnObjAccSeamEtcPos {
@@ -404,7 +404,7 @@ public:
   ScnObjAccPartsEtcPos getObj(u32 index);
 
 private:
-  DrSeamEtcPosList *m_etcPosList;
+  unknown060 *m_etcPosList;
 };
 
 } // namespace ml

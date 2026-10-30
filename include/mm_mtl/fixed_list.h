@@ -7,16 +7,17 @@
 namespace mm {
 namespace mtl {
 
-template <size_t N, bool IsSmall = (N < 256)> struct FixedListIndex {
+// Inferred role: index type selected by the list capacity; original type name unknown.
+template <size_t N, bool IsSmall = (N < 256)> struct unknown068 {
   typedef u16 Type;
 };
 
-template <size_t N> struct FixedListIndex<N, true> {
+template <size_t N> struct unknown068<N, true> {
   typedef u8 Type;
 };
 
 template <typename T, size_t N> class FixedList {
-  typedef typename FixedListIndex<N>::Type Index;
+  typedef typename unknown068<N>::Type Index;
 
 public:
   struct ListNode {
@@ -149,15 +150,16 @@ private:
   ListNode *head() { return node(0); }
   const ListNode *head() const { return node(0); }
 
-  template <size_t Align, bool IsWord = (Align == 8)> struct Storage {
+  // Inferred role: storage unit selected by the node alignment; original type name unknown.
+  template <size_t Align, bool IsWord = (Align == 8)> struct unknown069 {
     typedef u8 Unit;
   };
 
-  template <size_t Align> struct Storage<Align, true> {
+  template <size_t Align> struct unknown069<Align, true> {
     typedef u64 Unit;
   };
 
-  typedef typename Storage<alignof(ListNode)>::Unit Unit;
+  typedef typename unknown069<alignof(ListNode)>::Unit Unit;
 
   alignas(ListNode) Unit mBuffer[sizeof(ListNode) * (N + 1) / sizeof(Unit)];
   Index mFreeIndices[N + 1];

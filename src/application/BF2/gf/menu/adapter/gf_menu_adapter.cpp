@@ -53,7 +53,7 @@ ui::UIObjectPlugin *GfMenuAdapter::createPlugin(u32 handle, const PluginSetup &s
   ui::UIObjectPlugin *plugin = nullptr;
   if (acc.isValid()) {
     switch (setup.unknown00) {
-    case PLUGIN_TYPE_NUMBER: {
+    case unknown004_0: {
       ui::UIObjectNumberPlugin *numberPlugin = ui::UIObjectNumberPlugin::create(handle);
       if (numberPlugin != nullptr) {
         numberPlugin->setMin(setup.unknown04);
@@ -62,7 +62,7 @@ ui::UIObjectPlugin *GfMenuAdapter::createPlugin(u32 handle, const PluginSetup &s
       plugin = numberPlugin;
       break;
     }
-    case PLUGIN_TYPE_IMAGE:
+    case unknown004_1:
       if (acc.isImage()) {
         ui::UIObjectNumberPlugin *numberPlugin = ui::UIObjectNumberPlugin::create(handle);
         if (numberPlugin != nullptr) {
@@ -74,28 +74,28 @@ ui::UIObjectPlugin *GfMenuAdapter::createPlugin(u32 handle, const PluginSetup &s
         plugin = numberPlugin;
       }
       break;
-    case PLUGIN_TYPE_TEXT:
+    case unknown004_2:
       plugin = ui::UIObjectTextPlugin::create(handle);
       break;
-    case PLUGIN_TYPE_DISP:
+    case unknown004_3:
       plugin = ui::UIObjectDispPlugin::create(handle);
       break;
-    case PLUGIN_TYPE_POS:
+    case unknown004_4:
       plugin = ui::UIObjectPosPlugin::create(handle, 0, 0);
       break;
-    case PLUGIN_TYPE_WORLD_POS:
+    case unknown004_5:
       plugin = ui::UIObjectWorldPosPlugin::create(handle);
       break;
-    case PLUGIN_TYPE_OFFSET:
+    case unknown004_6:
       plugin = ui::UIObjectOffsetPlugin::create(handle);
       break;
-    case PLUGIN_TYPE_TIME:
+    case unknown004_7:
       plugin = ui::UIObjectTimePlugin::create(handle, setup.unknown04);
       break;
-    case PLUGIN_TYPE_COLOR:
+    case unknown004_8:
       plugin = ui::UIObjectColorPlugin::create(handle);
       break;
-    case PLUGIN_TYPE_PATTERN:
+    case unknown004_9:
       plugin = ui::UIObjectPatternPlugin::create(handle);
       break;
     }
@@ -103,43 +103,43 @@ ui::UIObjectPlugin *GfMenuAdapter::createPlugin(u32 handle, const PluginSetup &s
   return plugin;
 }
 
-GfMenuAdapter::CompareResult GfMenuAdapter::compare(GfMenuAdapter *adapter, GfMenuAdapter *other) {
+GfMenuAdapter::unknown005 GfMenuAdapter::compare(GfMenuAdapter *adapter, GfMenuAdapter *other) {
   ui::UIObjectNumberPlugin *number = adapter->unknown18 != nullptr ? mm::mtl::dynamicCast<ui::UIObjectNumberPlugin>(adapter->unknown18) : nullptr;
   if (other->unknown18 != nullptr) {
     ui::UIObjectNumberPlugin *otherNumber = mm::mtl::dynamicCast<ui::UIObjectNumberPlugin>(other->unknown18);
     if (number != nullptr && otherNumber != nullptr) {
       if (number->unknown7c == otherNumber->unknown7c) {
-        return COMPARE_RESULT_SAME;
+        return unknown005_0;
       }
       if (number->unknown7c < otherNumber->unknown7c) {
-        return COMPARE_RESULT_LESS;
+        return unknown005_1;
       }
       if (number->unknown7c > otherNumber->unknown7c) {
-        return COMPARE_RESULT_GREATER;
+        return unknown005_2;
       }
     }
   }
 
   ui::UIObjectTextPlugin *text = adapter->unknown18 != nullptr ? mm::mtl::dynamicCast<ui::UIObjectTextPlugin>(adapter->unknown18) : nullptr;
   if (other->unknown18 == nullptr) {
-    return COMPARE_RESULT_SAME;
+    return unknown005_0;
   }
   ui::UIObjectTextPlugin *otherText = mm::mtl::dynamicCast<ui::UIObjectTextPlugin>(other->unknown18);
   if (text == nullptr || otherText == nullptr) {
-    return COMPARE_RESULT_SAME;
+    return unknown005_0;
   }
 
   int result = strcmp(text->unknown80.c_str(), otherText->unknown80.c_str());
   if (result == 0) {
-    return COMPARE_RESULT_SAME;
+    return unknown005_0;
   }
   if (result < 0) {
-    return COMPARE_RESULT_LESS;
+    return unknown005_1;
   }
   if (result > 0) {
-    return COMPARE_RESULT_GREATER;
+    return unknown005_2;
   }
-  return COMPARE_RESULT_SAME;
+  return unknown005_0;
 }
 
 void GfMenuAdapter::attachPlugin(ui::UIObjectPlugin *plugin) {

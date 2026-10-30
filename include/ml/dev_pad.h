@@ -10,7 +10,8 @@ namespace ml {
 
 struct PadVibrationInfo;
 
-struct DevPadRepeat {
+// Inferred role: dev pad repeat; original type name unknown.
+struct unknown034 {
   f32 unknown00; // Inferred role: time; original member name unknown.
   u8 _04[0xc - 0x4];
 };
@@ -78,7 +79,7 @@ public:
   u32 unknown270[11]; // Inferred role: dbl; original member name unknown.
   u32 unknown29c[11]; // Inferred role: repeat; original member name unknown.
   u8 _2c8[0x4b0 - 0x2c8];
-  DevPadRepeat unknown4b0[11]; // Inferred role: repeats; original member name unknown.
+  unknown034 unknown4b0[11]; // Inferred role: repeats; original member name unknown.
   u8 _534[0x540 - 0x534];
   f32 unknown540; // Inferred role: low analog; original member name unknown.
 };

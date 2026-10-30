@@ -43,16 +43,16 @@ struct GfTargetProperty {
   GF_OBJ_HANDLE *handle;
 };
 
-struct GfPropertyAlpha {
+struct GfAlphaProperty {
   f32 unknown00[OBJ_ALPHA_MAX]; // Inferred role: alphas; original member name unknown.
   f32 unknown18;                // Inferred role: total alpha; original member name unknown.
   bool unknown1c;               // Inferred role: changed; original member name unknown.
 };
 
-static_assert(offsetof(GfPropertyAlpha, unknown18) == 0x18, "");
-static_assert(offsetof(GfPropertyAlpha, unknown1c) == 0x1c, "");
+static_assert(offsetof(GfAlphaProperty, unknown18) == 0x18, "");
+static_assert(offsetof(GfAlphaProperty, unknown1c) == 0x1c, "");
 
-struct GfPropertyDebugFlags {
+struct GfDebugStatusProperty {
   bool invincible;
   bool disableFallDead;
 };
@@ -75,11 +75,11 @@ public:
   void procMsgObjectStopAutoHeal(fw::MessageObject *object, MsgObjectStopAutoHeal &message);
   void procMsgObjectLimitHP(fw::MessageObject *object, MsgObjectLimitHP &message);
 
-  GfStatusProperty *unknown10;     // Inferred role: status; original member name unknown.
-  GfTargetProperty *unknown18;     // Inferred role: target; original member name unknown.
-  GfPropertyAlpha *unknown20;      // Inferred role: alpha; original member name unknown.
-  GfEnvProperty *unknown28;        // Inferred role: environment; original member name unknown.
-  GfPropertyDebugFlags *unknown30; // Inferred role: debug flags; original member name unknown.
+  GfStatusProperty *unknown10;      // Inferred role: status; original member name unknown.
+  GfTargetProperty *unknown18;      // Inferred role: target; original member name unknown.
+  GfAlphaProperty *unknown20;       // Inferred role: alpha; original member name unknown.
+  GfEnvProperty *unknown28;         // Inferred role: environment; original member name unknown.
+  GfDebugStatusProperty *unknown30; // Inferred role: debug flags; original member name unknown.
 };
 
 static_assert(offsetof(GfComProperty, unknown10) == 0x10, "");
@@ -194,8 +194,8 @@ struct MsgObjectSetHp : fw::Message {
   u32 hp;
 };
 
-struct MsgObjectChangeAttribute : fw::Message {
-  MsgObjectChangeAttribute() : fw::Message(0x1000042, 0x20) {}
+struct MsgObjectNotifyChangeAttribute : fw::Message {
+  MsgObjectNotifyChangeAttribute() : fw::Message(0x1000042, 0x20) {}
 
   u32 unknown08; // Inferred role: attribute; original member name unknown.
   u32 unknown0c; // Inferred role: old attribute; original member name unknown.

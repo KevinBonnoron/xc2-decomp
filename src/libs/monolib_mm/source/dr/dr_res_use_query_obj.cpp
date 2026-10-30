@@ -20,7 +20,7 @@ void DrResUseQueryObj::update() {
     m_pixel = 0;
     return;
   }
-  m_pixel = (m_query->unknown38 & (QUERY_FLAG_RESULT << DrMan::s_nDblNowIdx)) ? m_query->unknown10.getQueryPixel() : 0;
+  m_pixel = (m_query->unknown38 & (unknown001_4 << DrMan::s_nDblNowIdx)) ? m_query->unknown10.getQueryPixel() : 0;
 }
 
 void DrResUseQueryObj::begin(DrPixlOccQuery *occQuery) {
@@ -33,9 +33,9 @@ void DrResUseQueryObj::begin(DrPixlOccQuery *occQuery) {
     m_query = query;
     query->unknown28 = this;
   }
-  query->unknown38 |= QUERY_FLAG_BEGIN;
+  query->unknown38 |= unknown001_1;
   query->unknown10.beginQuery();
-  query->unknown38 |= QUERY_FLAG_RESULT << DrMan::s_nDblNowIdx;
+  query->unknown38 |= unknown001_4 << DrMan::s_nDblNowIdx;
 }
 
 void DrResUseQueryObj::end() {

@@ -13,7 +13,7 @@
 namespace gf {
 
 static GfMenuExcTaskAdapter::TypeInfo TYPE_INFOS[] = {
-    {&GfMenuExcTaskAdapter::update_Name, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
+    {&GfMenuExcTaskAdapter::update_Name, {GfMenuAdapter::unknown004_2, 0, 0}},
 };
 
 GfMenuExcTaskAdapter::GfMenuExcTaskAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), unknown30(0), unknown58(nullptr) {}

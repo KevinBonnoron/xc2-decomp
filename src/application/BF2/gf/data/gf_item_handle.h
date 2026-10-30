@@ -5,7 +5,8 @@ namespace gf {
 
 class GfItemHandle {
 public:
-  struct Bits {
+  // Inferred role: bit fields of the item handle; original type name unknown.
+  struct unknown002 {
     u32 unknown00_0 : 6;  // Inferred role: type; original member name unknown.
     u32 unknown00_6 : 26; // Inferred role: serial; original member name unknown.
   };
@@ -16,7 +17,7 @@ public:
 
   union {
     u32 value;
-    Bits bits;
+    unknown002 bits;
   };
 };
 

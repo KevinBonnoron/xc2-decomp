@@ -73,7 +73,7 @@ void GfMenuObjQuestLog::closeLog() {
   if (acc.isValid()) {
     ui::UIObjectAcc child(acc.searchChild("LAY_log"));
     ui::EventData event;
-    event.unknown00 = GfMenuTypes::UI_EVENT_CLOSE;
+    event.unknown00 = GfMenuTypes::unknown003_34;
     GfMenuObject::sendEvent(child.unknown10, event, 0.0f);
   }
 }
@@ -83,7 +83,7 @@ void GfMenuObjQuestLog::openLog() {
   if (acc.isValid()) {
     ui::UIObjectAcc child(acc.searchChild("LAY_log"));
     ui::EventData event;
-    event.unknown00 = GfMenuTypes::UI_EVENT_OPEN;
+    event.unknown00 = GfMenuTypes::unknown003_33;
     GfMenuObject::sendEvent(child.unknown10, event, 0.0f);
   }
 }

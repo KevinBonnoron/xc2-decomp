@@ -59,7 +59,7 @@ public:
 
   GF_OBJ_HANDLE *unknown10;                          // Inferred role: target; original member name unknown.
   mm::mtl::IntrusivePtr<fw::LookIkSolver> unknown18; // Inferred role: look ik solver; original member name unknown.
-  const fw::ParamList::Entry *unknown20;             // Inferred role: param entry; original member name unknown.
+  const fw::ParamList::unknown005 *unknown20;        // Inferred role: param entry; original member name unknown.
   u8 _28[0x30 - 0x28];
   mm::Vec3 unknown30; // Inferred role: look axis; original member name unknown.
   f32 unknown40;      // Inferred role: target up ratio; original member name unknown.

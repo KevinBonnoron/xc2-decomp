@@ -209,7 +209,7 @@ void GfGameUtil::flushProperty(GF_OBJ_HANDLE *handle) {
     driver->unknown19c = paramAcc.getSkillPoint();
     driver->unknown194 = paramAcc.getExpNext(false);
   } else if (acc.getType() == OBJECT_TYPE_BLADE) {
-    mm::mtl::FixedArray<SDataBladeSkill, 3> &skills = property->getBlade()->unknown190;
+    mm::mtl::FixedArray<unknown109, 3> &skills = property->getBlade()->unknown190;
     SDataBlade *sdata = GfDataBlade::getSDataBlade(paramAcc.isValid() ? paramAcc.getBdatId() : 0);
     skills = sdata->unknownae;
   }
@@ -308,48 +308,48 @@ void GfGameUtil::execDriverArtsLevelUp(u32 driver, u32 arts, u32 level) {
   }
 }
 
-DriverSkillLevelUpResult GfGameUtil::execDriverSkillLevelUp(u32 driver, u32 row, u32 level, bool isHidden) {
+unknown064 GfGameUtil::execDriverSkillLevelUp(u32 driver, u32 row, u32 level, bool isHidden) {
   u32 skillLevel = GfDataDriverSkill::getSkillLevel(driver, row, isHidden);
   if (skillLevel >= DRIVER_SKILL_LEVEL_MAX) {
-    return DRIVER_SKILL_LEVEL_UP_MAX_LEVEL;
+    return unknown064_1;
   }
 
   if (skillLevel + 1 != level) {
-    return DRIVER_SKILL_LEVEL_UP_INVALID_LEVEL;
+    return unknown064_2;
   }
 
   if (!GfDataDriverSkill::isSkillUnlock(driver, row, level, isHidden)) {
-    return DRIVER_SKILL_LEVEL_UP_LOCKED;
+    return unknown064_4;
   }
 
   if (GfDataDriverSkill::getNextSkillPoint(driver, row, isHidden) > GfDataDriver::getSkillPoint(driver)) {
-    return DRIVER_SKILL_LEVEL_UP_NOT_ENOUGH_POINT;
+    return unknown064_3;
   }
 
   GfDataDriver::addSkillPoint(driver, -GfDataDriverSkill::getNextSkillPoint(driver, row, isHidden));
   GfDataDriverSkill::setSkillLevel(driver, row, level, isHidden);
-  return DRIVER_SKILL_LEVEL_UP_OK;
+  return unknown064_0;
 }
 
-DriverSkillLevelUpResult GfGameUtil::checkDriverSkillLevelUp(u32 driver, u32 row, u32 level, bool isHidden) {
+unknown064 GfGameUtil::checkDriverSkillLevelUp(u32 driver, u32 row, u32 level, bool isHidden) {
   u32 skillLevel = GfDataDriverSkill::getSkillLevel(driver, row, isHidden);
   if (skillLevel >= DRIVER_SKILL_LEVEL_MAX) {
-    return DRIVER_SKILL_LEVEL_UP_MAX_LEVEL;
+    return unknown064_1;
   }
 
   if (skillLevel + 1 != level) {
-    return DRIVER_SKILL_LEVEL_UP_INVALID_LEVEL;
+    return unknown064_2;
   }
 
   if (!GfDataDriverSkill::isSkillUnlock(driver, row, level, isHidden)) {
-    return DRIVER_SKILL_LEVEL_UP_LOCKED;
+    return unknown064_4;
   }
 
   if (GfDataDriverSkill::getNextSkillPoint(driver, row, isHidden) > GfDataDriver::getSkillPoint(driver)) {
-    return DRIVER_SKILL_LEVEL_UP_NOT_ENOUGH_POINT;
+    return unknown064_3;
   }
 
-  return DRIVER_SKILL_LEVEL_UP_OK;
+  return unknown064_0;
 }
 
 void GfGameUtil::addWp(u32 driver, u32 weaponType, int weaponPoint) {
@@ -963,7 +963,7 @@ void GfGameUtil::setBladeSelect(GF_OBJ_HANDLE *handle, int slot) {
   dataParamAcc.setBladeSet(slot);
   GfObj *obj = GfObjUtil::getObj(handle);
   if (obj != nullptr) {
-    MsgObjectChangeAttribute message;
+    MsgObjectNotifyChangeAttribute message;
     message.unknown08 = dataParamAcc.getAttribute(-1, false);
     message.unknown0c = oldAttribute;
     obj->sendMessage(obj, message);
@@ -1557,7 +1557,7 @@ bool GfGameUtil::setupSaveAchievementPopup(u32 blade, u32 achievement, u32 level
 
   SDataGame *dataGame = GfDataManager::getDataGame();
   if (dataGame->unknown117688 < ACHIEVEMENT_POPUP_MAX) {
-    SDataAchievementPopup &popup = dataGame->unknown1171d8[dataGame->unknown117688++];
+    unknown107 &popup = dataGame->unknown1171d8[dataGame->unknown117688++];
     popup.unknown00 = blade;
     popup.unknown02 = achievement;
     popup.unknown03 = level;
@@ -1570,7 +1570,7 @@ void GfGameUtil::execSaveAchievementPopup(u32 blade) {
   SDataGame *dataGame = GfDataManager::getDataGame();
   u32 &popupNum = dataGame->unknown117688;
   for (u32 index = 0; index < popupNum;) {
-    SDataAchievementPopup &popup = dataGame->unknown1171d8[index];
+    unknown107 &popup = dataGame->unknown1171d8[index];
     if (popup.unknown00 != blade) {
       index++;
       continue;

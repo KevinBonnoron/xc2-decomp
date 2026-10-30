@@ -248,7 +248,7 @@ GF_OBJ_HANDLE *GfGameParty::getHandleByHierarchy(u32 hierarchy) {
   }
 
   for (u32 partyId = 0; partyId < PARTY_MEMBER_NUM; partyId++) {
-    SDataPartyMember *partyMember = GfDataParty::getPartyMember(partyId);
+    unknown123 *partyMember = GfDataParty::getPartyMember(partyId);
     if (partyMember->unknown02 == hierarchy) {
       return getHandleDriver(partyId);
     }
@@ -354,7 +354,7 @@ u32 GfGameParty::getBladeBdatId(u32 partyId, int slot) {
 u32 GfGameParty::getHierarchyMax() {
   u32 hierarchyMax = 0;
   for (u32 partyId = 0; partyId < PARTY_MEMBER_NUM; partyId++) {
-    SDataPartyMember *partyMember = GfDataParty::getPartyMember(partyId);
+    unknown123 *partyMember = GfDataParty::getPartyMember(partyId);
     if (hierarchyMax < partyMember->unknown02) {
       hierarchyMax = partyMember->unknown02;
     }
@@ -672,7 +672,7 @@ void GfGameParty::gevGameObjEnter(GF_OBJ_HANDLE *handle) {
     break;
   }
 
-  if (GfObjUtil::getObjType(handle) == OBJECT_TYPE_DRIVER && GfObjUtil::getObjSetup(handle)->unknown1c == CHARACTER_TYPE_PARTY) {
+  if (GfObjUtil::getObjType(handle) == OBJECT_TYPE_DRIVER && GfObjUtil::getObjSetup(handle)->unknown1c == unknown030_1) {
     GfEvent::callPartyDriver(handle, GfObjUtil::getObjSetup(handle)->unknown14, true);
   }
 }
@@ -692,7 +692,7 @@ void GfGameParty::createdObject(GF_OBJ_HANDLE *handle) {
 }
 
 void GfGameParty::gevGameObjLeave(GF_OBJ_HANDLE *handle) {
-  if (GfObjUtil::getObjType(handle) == OBJECT_TYPE_DRIVER && GfObjUtil::getObjSetup(handle)->unknown1c == CHARACTER_TYPE_PARTY) {
+  if (GfObjUtil::getObjType(handle) == OBJECT_TYPE_DRIVER && GfObjUtil::getObjSetup(handle)->unknown1c == unknown030_1) {
     GfEvent::callPartyDriver(handle, GfObjUtil::getObjSetup(handle)->unknown14, false);
   }
 }
@@ -898,7 +898,7 @@ void GfGameParty::getCurrentPartyInfo(RQ_SETUP_PARTY &info) {
     }
   }
 
-  SDataParty *dataParty = GfDataParty::getSDataParty();
+  unknown124 *dataParty = GfDataParty::getSDataParty();
   info.unknownc8 = dataParty->unknown3c;
   info.unknownd0 = dataParty->unknown44;
   info.unknowncc = dataParty->unknown40;
@@ -935,7 +935,7 @@ void GfGameParty::gevChangeBlade(GF_OBJ_HANDLE *handle, int, int) {
 }
 
 void GfGameParty::setPartyLeader(GF_OBJ_HANDLE *handle) {
-  SDataParty *dataParty = GfDataParty::getSDataParty();
+  unknown124 *dataParty = GfDataParty::getSDataParty();
   for (u32 partyId = 0; partyId < PARTY_MEMBER_NUM; partyId++) {
     GF_OBJ_HANDLE *driver = getHandleDriver(partyId);
     GF_OBJ_HANDLE *blade = getHandleBlade(partyId, -1);
@@ -951,9 +951,9 @@ void GfGameParty::setPartyLeader(GF_OBJ_HANDLE *handle) {
 }
 
 void GfGameParty::recalcHierarchy() {
-  SDataParty *dataParty = GfDataParty::getSDataParty();
+  unknown124 *dataParty = GfDataParty::getSDataParty();
   for (u32 partyId = 0; partyId < PARTY_MEMBER_NUM; partyId++) {
-    SDataPartyMember *partyMember = GfDataParty::getPartyMember(partyId);
+    unknown123 *partyMember = GfDataParty::getPartyMember(partyId);
     partyMember->unknown02 = 0;
     partyMember->unknown04 = 0;
   }
@@ -962,7 +962,7 @@ void GfGameParty::recalcHierarchy() {
   switch (dataParty->unknown3c) {
   case OBJECT_TYPE_DRIVER:
     for (u32 partyId = 0; partyId < PARTY_MEMBER_NUM; partyId++) {
-      SDataPartyMember *partyMember = GfDataParty::getPartyMember(partyId);
+      unknown123 *partyMember = GfDataParty::getPartyMember(partyId);
       if (getDriverBdatId(partyId) == dataParty->unknown40) {
         partyMember->unknown02 = 1;
         leaderPartyId = partyId;
@@ -972,7 +972,7 @@ void GfGameParty::recalcHierarchy() {
     break;
   case OBJECT_TYPE_BLADE:
     for (u32 partyId = 0; partyId < PARTY_MEMBER_NUM; partyId++) {
-      SDataPartyMember *partyMember = GfDataParty::getPartyMember(partyId);
+      unknown123 *partyMember = GfDataParty::getPartyMember(partyId);
       if (getBladeSetId(partyId, -1) >= 0 && getBladeBdatId(partyId, -1) == dataParty->unknown40) {
         partyMember->unknown04 = 1;
         leaderPartyId = partyId;
@@ -986,7 +986,7 @@ void GfGameParty::recalcHierarchy() {
         dataParty->unknown3c = OBJECT_TYPE_DRIVER;
         dataParty->unknown40 = getDriverBdatId(partyId);
         for (u32 hierarchyPartyId = 0; hierarchyPartyId < PARTY_MEMBER_NUM; hierarchyPartyId++) {
-          SDataPartyMember *partyMember = GfDataParty::getPartyMember(hierarchyPartyId);
+          unknown123 *partyMember = GfDataParty::getPartyMember(hierarchyPartyId);
           if (partyMember->unknown02 == 0) {
             partyMember->unknown02 = 1;
             leaderPartyId = hierarchyPartyId;
@@ -1000,7 +1000,7 @@ void GfGameParty::recalcHierarchy() {
   }
 
   u32 hierarchy = 1;
-  SDataPartyMember *leaderMember = GfDataParty::getPartyMember(leaderPartyId);
+  unknown123 *leaderMember = GfDataParty::getPartyMember(leaderPartyId);
   if (leaderMember->unknown00 != 0) {
     if (leaderMember->unknown02 == 0) {
       if (leaderMember->unknown04 == 0) {
@@ -1024,7 +1024,7 @@ void GfGameParty::recalcHierarchy() {
   }
 
   for (u32 partyId = 0; partyId < PARTY_MEMBER_NUM; partyId++) {
-    SDataPartyMember *partyMember = GfDataParty::getPartyMember(partyId);
+    unknown123 *partyMember = GfDataParty::getPartyMember(partyId);
     if (partyMember->unknown00 == 0) {
       continue;
     }
@@ -1101,7 +1101,7 @@ bool GfGameParty::isExistMismatchScenarioMask(u32 partyId) {
 }
 
 u32 GfGameParty::getLeaderLevel() {
-  SDataParty *dataParty = GfDataParty::getSDataParty();
+  unknown124 *dataParty = GfDataParty::getSDataParty();
   u32 driver = 0;
   if (dataParty->unknown3c == OBJECT_TYPE_DRIVER) {
     driver = dataParty->unknown40;
@@ -1310,7 +1310,7 @@ int GfSelectBlade::resetCurrentBlade(GF_OBJ_HANDLE *handle) {
     return -1;
   }
 
-  Member &member = s_pThis->unknown00[partyId];
+  unknown005 &member = s_pThis->unknown00[partyId];
   member.unknown00 = member.unknown03[0];
   member.unknown01[0] = member.unknown03[1];
   member.unknown01[1] = member.unknown03[2];
@@ -1324,7 +1324,7 @@ void GfSelectBlade::resetDefaultBladeForDebug(GF_OBJ_HANDLE *handle) {
     return;
   }
 
-  Member &member = selectBlade->unknown00[partyId];
+  unknown005 &member = selectBlade->unknown00[partyId];
   int bladeSet = GfGameParty::getBladeSetId(partyId, -1);
   if (bladeSet < 0) {
     return;

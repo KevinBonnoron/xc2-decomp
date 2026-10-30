@@ -17,7 +17,8 @@ namespace irrvol {
 class DrIrrVolCascade;
 } // namespace irrvol
 
-struct DrIrrVolSetting {
+// Inferred role: irr vol setting; original type name unknown.
+struct unknown036 {
   // Inferred role: sector area; original type name unknown.
   struct unknown001 {
     f32 unknown00; // Inferred role: min x; original member name unknown.
@@ -38,11 +39,11 @@ struct DrIrrVolSetting {
   unknown001 *unknown28; // Inferred role: sector areas; original member name unknown.
 };
 
-static_assert(sizeof(DrIrrVolSetting::unknown001) == 0x30, "");
-static_assert(offsetof(DrIrrVolSetting::unknown001, unknown24) == 0x24, "");
-static_assert(offsetof(DrIrrVolSetting, unknown28) == 0x28, "");
+static_assert(sizeof(unknown036::unknown001) == 0x30, "");
+static_assert(offsetof(unknown036::unknown001, unknown24) == 0x24, "");
+static_assert(offsetof(unknown036, unknown28) == 0x28, "");
 
-static_assert(offsetof(DrIrrVolSetting, unknown20) == 0x20, "");
+static_assert(offsetof(unknown036, unknown20) == 0x20, "");
 
 class DrIrrVolMan {
 public:
@@ -61,7 +62,7 @@ public:
   const mm::Vec3 &getIrrVolUVOffset(u32 cascade) const;
 
   u8 _000[0x008 - 0x000];
-  DrIrrVolSetting *unknown08; // Inferred role: setting; original member name unknown.
+  unknown036 *unknown08; // Inferred role: setting; original member name unknown.
   u8 _010[0x098 - 0x010];
   irrvol::DrIrrVolCascade **unknown98; // Inferred role: cascades; original member name unknown.
   u8 _0a0[0x0b4 - 0x0a0];

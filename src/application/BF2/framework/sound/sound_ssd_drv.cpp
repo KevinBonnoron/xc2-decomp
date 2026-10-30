@@ -58,8 +58,8 @@ int SoundReferenceObject::release() {
   return count;
 }
 
-SoundCategoryData *SoundSsdDriver::findCategory(SoundCategory category) {
-  SoundCategoryData *found = &unknowne8[static_cast<u32>(category)];
+unknown126 *SoundSsdDriver::findCategory(SoundCategory category) {
+  unknown126 *found = &unknowne8[static_cast<u32>(category)];
   if (found->unknown08 != static_cast<u32>(category)) {
     found = &unknowne8[CATEGORY_COUNT];
   }
@@ -67,8 +67,8 @@ SoundCategoryData *SoundSsdDriver::findCategory(SoundCategory category) {
   return found;
 }
 
-const SoundCategoryData *SoundSsdDriver::findCategory(SoundCategory category) const {
-  const SoundCategoryData *found = &unknowne8[static_cast<u32>(category)];
+const unknown126 *SoundSsdDriver::findCategory(SoundCategory category) const {
+  const unknown126 *found = &unknowne8[static_cast<u32>(category)];
   if (found->unknown08 != static_cast<u32>(category)) {
     found = &unknowne8[CATEGORY_COUNT];
   }
@@ -77,9 +77,9 @@ const SoundCategoryData *SoundSsdDriver::findCategory(SoundCategory category) co
 }
 
 void SoundSsdDriver::removeCategory(SoundCategory category) {
-  SoundCategoryData *found = findCategory(category);
+  unknown126 *found = findCategory(category);
   if (found != &unknowne8[CATEGORY_COUNT]) {
-    SoundCategoryData &data = unknowne8[static_cast<u32>(category)];
+    unknown126 &data = unknowne8[static_cast<u32>(category)];
     data.unknown08 = 0;
     data.unknown0c = 1.0f;
     data.unknown48 = 0;
@@ -92,7 +92,7 @@ u32 SoundSsdDriver::registPlayer(SoundSsdPlayer *player, SoundType type) { retur
 f32 SoundSsdDriver::getCategoryVolume(SoundCategory category) const {
   f32 volume = 0.0f;
   if (unknown10 != nullptr) {
-    const SoundCategoryData *found = findCategory(category);
+    const unknown126 *found = findCategory(category);
     if (found != &unknowne8[CATEGORY_COUNT]) {
       volume = found->unknown14;
     }
@@ -322,7 +322,7 @@ bool SoundSsdPlayer::is3D() const {
 
 bool SoundSsdPlayer::isLoop() const {
   if (isValid()) {
-    SoundSsdSourceData *data = unknown80->unknown10;
+    unknown127 *data = unknown80->unknown10;
     if (data != nullptr) {
       return data->isLoop;
     }
@@ -739,7 +739,7 @@ void SoundSsdDriver::setCategoryPitch(SoundCategory category, f32 pitch, f32 tim
       }
     }
 
-    SoundCategoryData *found = findCategory(category);
+    unknown126 *found = findCategory(category);
     if (found != &unknowne8[CATEGORY_COUNT]) {
       found->unknown44 = pitch;
     }

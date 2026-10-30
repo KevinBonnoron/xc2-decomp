@@ -17,7 +17,7 @@ static_assert(offsetof(unknown004, unknown02) == 0x02, "");
 
 } // namespace
 
-u32 LayerActLayout::calcLayoutActionWorkSize(const u8 *data) { return sizeof(LayerActWork) + reinterpret_cast<const LyrActionHeader *>(data)->actionNum * sizeof(u32); }
+u32 LayerActLayout::calcLayoutActionWorkSize(const u8 *data) { return sizeof(unknown084) + reinterpret_cast<const unknown083 *>(data)->actionNum * sizeof(u32); }
 
 void LayerActLayout::setupLayoutAction(u8 *work, const u8 *data) { setupAction(work, data); }
 

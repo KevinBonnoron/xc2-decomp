@@ -28,7 +28,8 @@ public:
     TYPE_MAX,
   };
 
-  struct Timer {
+  // Inferred role: timer; original type name unknown.
+  struct unknown005 {
     bool unknown00; // Inferred role: active; original member name unknown.
     f32 unknown04;  // Inferred role: time; original member name unknown.
   };
@@ -40,7 +41,7 @@ public:
   virtual void cleanup(GfComBehaviorPc &) {}
   virtual void update(GfComBehaviorPc &behavior, const fw::UpdateInfo &info);
 
-  Timer unknown0c[TYPE_MAX]; // Inferred role: timers; original member name unknown.
+  unknown005 unknown0c[TYPE_MAX]; // Inferred role: timers; original member name unknown.
 };
 
 static_assert(offsetof(TimerPlugin, unknown0c) == 0x0c, "");

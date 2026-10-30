@@ -237,13 +237,13 @@ bool LayerAccAction::isRunning() const {
 const char *LayerAccAction::getRunningActName() const {
   const LayerActBase *layer = m_layer;
   if (layer->unknowna8 & 0x40) {
-    const LayerActWork *work = layer->unknown250;
+    const unknown084 *work = layer->unknown250;
     const LyrActionData *action = work->unknown08 + work->unknown20;
     return reinterpret_cast<const char *>(work->unknown00 + (action->unknown0c + action->unknown14));
   }
 
   if (layer->getStateFlags(LayerManager::s_nDebIdx) & 0x10000) {
-    const LayerActWork *work = layer->unknown250;
+    const unknown084 *work = layer->unknown250;
     const LyrActionData *action = work->unknown08 + layer->unknown1d8[LayerManager::s_nDebIdx];
     return reinterpret_cast<const char *>(work->unknown00 + (action->unknown0c + action->unknown14));
   }
@@ -254,13 +254,13 @@ const char *LayerAccAction::getRunningActName() const {
 u32 LayerAccAction::getRunningActID() const {
   const LayerActBase *layer = m_layer;
   if (layer->unknowna8 & 0x40) {
-    const LayerActWork *work = layer->unknown250;
+    const unknown084 *work = layer->unknown250;
     const LyrActionData *action = work->unknown08 + work->unknown20;
     return action->unknown08;
   }
 
   if (layer->getStateFlags(LayerManager::s_nDebIdx) & 0x10000) {
-    const LayerActWork *work = layer->unknown250;
+    const unknown084 *work = layer->unknown250;
     const LyrActionData *action = work->unknown08 + layer->unknown1d8[LayerManager::s_nDebIdx];
     return action->unknown08;
   }
@@ -298,7 +298,7 @@ void LayerAccAction::setRunningActSec(f32 sec) {
 }
 
 u32 LayerAccAction::getActionMax() const {
-  const LayerActWork *work = m_layer->unknown250;
+  const unknown084 *work = m_layer->unknown250;
   if (work == nullptr) {
     return 0;
   }
@@ -307,7 +307,7 @@ u32 LayerAccAction::getActionMax() const {
 }
 
 u32 LayerAccAction::getActionID(u32 index) const {
-  const LayerActWork *work = m_layer->unknown250;
+  const unknown084 *work = m_layer->unknown250;
   if (work == nullptr) {
     return -1;
   }
@@ -320,7 +320,7 @@ u32 LayerAccAction::getActionID(u32 index) const {
 }
 
 const char *LayerAccAction::getActionName(u32 index) const {
-  const LayerActWork *work = m_layer->unknown250;
+  const unknown084 *work = m_layer->unknown250;
   if (work == nullptr) {
     return nullptr;
   }
@@ -334,7 +334,7 @@ const char *LayerAccAction::getActionName(u32 index) const {
 }
 
 f32 LayerAccAction::getActionSec(u32 index) const {
-  const LayerActWork *work = m_layer->unknown250;
+  const unknown084 *work = m_layer->unknown250;
   if (work == nullptr) {
     return 0.0f;
   }
@@ -347,7 +347,7 @@ f32 LayerAccAction::getActionSec(u32 index) const {
 }
 
 bool LayerAccAction::actionIdx(u32 index) {
-  const LayerActWork *work = m_layer->unknown250;
+  const unknown084 *work = m_layer->unknown250;
   if (work == nullptr) {
     return false;
   }
@@ -361,7 +361,7 @@ bool LayerAccAction::actionIdx(u32 index) {
 }
 
 bool LayerAccAction::actionID(u32 id) {
-  const LayerActWork *work = m_layer->unknown250;
+  const unknown084 *work = m_layer->unknown250;
   if (work == nullptr) {
     return false;
   }
@@ -377,7 +377,7 @@ bool LayerAccAction::actionID(u32 id) {
 }
 
 bool LayerAccAction::actionName(const char *name) {
-  const LayerActWork *work = m_layer->unknown250;
+  const unknown084 *work = m_layer->unknown250;
   if (work != nullptr) {
     for (s32 i = 0; i < work->unknown10; i++) {
       const LyrActionData &action = work->unknown08[i];
@@ -682,8 +682,8 @@ LayerAccFontStyle::LayerAccFontStyle(LayerBase *layer) : m_style(static_cast<Lay
 
 u32 LayerAccFontStyle::getStyleDataMax() const { return m_style->unknown28; }
 
-LayerStyleInfo LayerAccFontStyle::getStyleInfo(u32 index) const {
-  LayerStyleInfo info;
+unknown085 LayerAccFontStyle::getStyleInfo(u32 index) const {
+  unknown085 info;
   u32 max = m_style->unknown28;
   info.unknown00 = m_style->unknown20;
   info.unknown08 = m_style->unknown30;

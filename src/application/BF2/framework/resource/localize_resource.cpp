@@ -8,9 +8,9 @@
 namespace fw {
 enum LOAD_PRIO : int;
 
-LocalizeResource::LocalizeResource(mtl::ALLOC_HANDLE handle, LOAD_PRIO priority) : CommonResource(handle, priority, 0, 0), unknown154(CHECK_STATE_NONE) {}
+LocalizeResource::LocalizeResource(mtl::ALLOC_HANDLE handle, LOAD_PRIO priority) : CommonResource(handle, priority, 0, 0), unknown154(unknown001_0) {}
 
-LocalizeResource::LocalizeResource(mm::mtl::IAllocator *allocator, LOAD_PRIO priority) : CommonResource(allocator, priority, 0, 0), unknown154(CHECK_STATE_NONE) {}
+LocalizeResource::LocalizeResource(mm::mtl::IAllocator *allocator, LOAD_PRIO priority) : CommonResource(allocator, priority, 0, 0), unknown154(unknown001_0) {}
 
 LocalizeResource::~LocalizeResource() { ; }
 
@@ -53,7 +53,7 @@ LocalizeResource *LocalizeResource::request(mm::mtl::IAllocator *allocator, cons
 const char *LocalizeResource::getAssetName() const { return unknownd0.empty() ? nullptr : unknownd0.c_str(); }
 
 void LocalizeResource::update() {
-  if (unknown154 == CHECK_STATE_DONE) {
+  if (unknown154 == unknown001_4) {
     bool wasValid = valid();
     CommonResource::update();
     if (!unknownd0.empty() && wasValid != valid()) {
@@ -64,21 +64,21 @@ void LocalizeResource::update() {
   }
 
   if (LangUtil::getLangType() == 0) {
-    unknown154 = CHECK_STATE_DONE;
+    unknown154 = unknown001_4;
     return;
   }
 
   mm::mtl::FixStr<128> filePath;
   switch (unknown154) {
-  case CHECK_STATE_NONE:
+  case unknown001_0:
     makeLocalizeFilePath(filePath, LangUtil::getLangFolder());
     ml::DevFileTh::checkValidFile(filePath.c_str(), this);
-    unknown154 = CHECK_STATE_LANG;
+    unknown154 = unknown001_2;
     break;
-  case CHECK_STATE_RETRY:
+  case unknown001_1:
     makeLocalizeFilePath(filePath, mm::mtl::FixStr<16>("us"));
     ml::DevFileTh::checkValidFile(filePath.c_str(), this);
-    unknown154 = CHECK_STATE_DEFAULT;
+    unknown154 = unknown001_3;
     break;
   default:
     break;
@@ -93,10 +93,10 @@ bool LocalizeResource::OnFileEvent(ml::EventFileTh *event) {
   if (event->type == ml::EventFileTh::TYPE_VALID) {
     mm::mtl::FixStr<128> filePath;
     switch (unknown154) {
-    case CHECK_STATE_LANG:
+    case unknown001_2:
       makeLocalizeFilePath(filePath, LangUtil::getLangFolder());
       break;
-    case CHECK_STATE_DEFAULT:
+    case unknown001_3:
       makeLocalizeFilePath(filePath, mm::mtl::FixStr<16>("us"));
       break;
     default:
@@ -104,12 +104,12 @@ bool LocalizeResource::OnFileEvent(ml::EventFileTh *event) {
     }
 
     unknown2c = filePath;
-  } else if (unknown154 == CHECK_STATE_LANG && LangUtil::getLangType() != 1 && LangUtil::getLangType() != 6 && LangUtil::getLangType() != 11) {
-    unknown154 = CHECK_STATE_RETRY;
+  } else if (unknown154 == unknown001_2 && LangUtil::getLangType() != 1 && LangUtil::getLangType() != 6 && LangUtil::getLangType() != 11) {
+    unknown154 = unknown001_1;
     return true;
   }
 
-  unknown154 = CHECK_STATE_DONE;
+  unknown154 = unknown001_4;
   return true;
 }
 

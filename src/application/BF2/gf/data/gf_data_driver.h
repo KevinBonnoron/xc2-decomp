@@ -17,13 +17,15 @@ constexpr u32 DRIVER_LEVEL_MAX = 99;
 constexpr u32 DRIVER_ARTS_LEVEL_MAX = 5;
 constexpr u32 SET_BLADE_NUM_MAX = 5;
 
-struct SDataDriverWeapon {
+// Inferred role: save data driver weapon; original type name unknown.
+struct unknown114 {
   mm::mtl::FixedArray<u32, 3> unknown00; // Inferred role: slot arts; original member name unknown.
   u32 unknown0c;                         // Inferred role: wp; original member name unknown.
   u32 unknown10;                         // Inferred role: total wp; original member name unknown.
 };
 
-struct SDataDriverAccessory {
+// Inferred role: save data driver accessory; original type name unknown.
+struct unknown115 {
   GfItemHandle unknown00; // Inferred role: handle; original member name unknown.
   u16 unknown04;          // Inferred role: item; original member name unknown.
   u8 _06[0x08 - 0x06];
@@ -35,47 +37,48 @@ struct SDataPouch {
   u8 _06;
 };
 
-struct SDataDriverSkillRow {
+// Inferred role: save data driver skill row; original type name unknown.
+struct unknown116 {
   u16 unknown00[3]; // Inferred role: skills; original member name unknown.
   u8 _06[0x08 - 0x06];
   u16 unknown08; // Inferred role: level; original member name unknown.
 };
 
-static_assert(offsetof(SDataDriverSkillRow, unknown08) == 0x08, "");
-static_assert(sizeof(SDataDriverSkillRow) == 0x0a, "");
+static_assert(offsetof(unknown116, unknown08) == 0x08, "");
+static_assert(sizeof(unknown116) == 0x0a, "");
 
 struct SDataDriver {
   u8 _000[0x020 - 0x000];
-  u16 unknown20;                    // Inferred role: activate; original member name unknown.
-  u16 unknown22;                    // Inferred role: id; original member name unknown.
-  s16 unknown24;                    // Inferred role: blade set; original member name unknown.
-  u16 unknown26[5];                 // Inferred role: blades; original member name unknown.
-  SDataDriverSkillRow unknown30[5]; // Inferred role: skill rows; original member name unknown.
-  SDataDriverSkillRow unknown62[5]; // Inferred role: hidden skill rows; original member name unknown.
-  u16 unknown94;                    // Inferred role: level; original member name unknown.
-  u16 unknown96;                    // Inferred role: hp max; original member name unknown.
-  u16 unknown98;                    // Inferred role: strength; original member name unknown.
-  u16 unknown9a;                    // Inferred role: power ether; original member name unknown.
-  u16 unknown9c;                    // Inferred role: dex; original member name unknown.
-  u16 unknown9e;                    // Inferred role: agility; original member name unknown.
-  u16 unknowna0;                    // Inferred role: luck; original member name unknown.
-  u16 unknowna2;                    // Inferred role: p armor; original member name unknown.
-  u16 unknowna4;                    // Inferred role: e armor; original member name unknown.
-  u8 unknowna6;                     // Inferred role: critical rate; original member name unknown.
-  u8 unknowna7;                     // Inferred role: guard rate; original member name unknown.
+  u16 unknown20;           // Inferred role: activate; original member name unknown.
+  u16 unknown22;           // Inferred role: id; original member name unknown.
+  s16 unknown24;           // Inferred role: blade set; original member name unknown.
+  u16 unknown26[5];        // Inferred role: blades; original member name unknown.
+  unknown116 unknown30[5]; // Inferred role: skill rows; original member name unknown.
+  unknown116 unknown62[5]; // Inferred role: hidden skill rows; original member name unknown.
+  u16 unknown94;           // Inferred role: level; original member name unknown.
+  u16 unknown96;           // Inferred role: hp max; original member name unknown.
+  u16 unknown98;           // Inferred role: strength; original member name unknown.
+  u16 unknown9a;           // Inferred role: power ether; original member name unknown.
+  u16 unknown9c;           // Inferred role: dex; original member name unknown.
+  u16 unknown9e;           // Inferred role: agility; original member name unknown.
+  u16 unknowna0;           // Inferred role: luck; original member name unknown.
+  u16 unknowna2;           // Inferred role: p armor; original member name unknown.
+  u16 unknowna4;           // Inferred role: e armor; original member name unknown.
+  u8 unknowna6;            // Inferred role: critical rate; original member name unknown.
+  u8 unknowna7;            // Inferred role: guard rate; original member name unknown.
   u8 _0a8[0x0b0 - 0x0a8];
   u32 unknownb0;                      // Inferred role: exp; original member name unknown.
   u32 unknownb4;                      // Inferred role: battle exp; original member name unknown.
   u32 unknownb8;                      // Inferred role: skill point; original member name unknown.
   u32 unknownbc;                      // Inferred role: total skill point; original member name unknown.
-  SDataDriverWeapon unknownc0[28];    // Inferred role: weapons; original member name unknown.
+  unknown114 unknownc0[28];           // Inferred role: weapons; original member name unknown.
   u8 unknown2f0[0x570 - 0x2f0];       // Inferred role: arts level; original member name unknown.
   u8 unknown570;                      // Inferred role: scenario mask; original member name unknown.
   u8 unknown571;                      // Inferred role: attached party; original member name unknown.
   u8 unknown572;                      // Inferred role: equip default acce; original member name unknown.
-  SDataDriverAccessory unknown574[2]; // Inferred role: accessories; original member name unknown.
+  unknown115 unknown574[2];           // Inferred role: accessories; original member name unknown.
   SDataPouch unknown584[3];           // Inferred role: pouches; original member name unknown.
-  mm::mtl::BitFlag<28> unknown59c;    // Inferred role: activate weapon types; original member name unknown.
+  mm::mtl::unknown027<28> unknown59c; // Inferred role: activate weapon types; original member name unknown.
 };
 
 enum DBSLOT {};
@@ -86,8 +89,8 @@ enum FAVORITE {
   FAVORITE_ITEM_1,
 };
 
-static_assert(sizeof(SDataDriverWeapon) == 0x14, "");
-static_assert(sizeof(SDataDriverAccessory) == 0x08, "");
+static_assert(sizeof(unknown114) == 0x14, "");
+static_assert(sizeof(unknown115) == 0x08, "");
 static_assert(offsetof(SDataDriver, unknown20) == 0x020, "");
 static_assert(offsetof(SDataDriver, unknown22) == 0x022, "");
 static_assert(offsetof(SDataDriver, unknown24) == 0x024, "");

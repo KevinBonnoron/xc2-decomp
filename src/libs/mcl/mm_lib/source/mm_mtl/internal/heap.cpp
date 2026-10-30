@@ -22,7 +22,8 @@ const size_t block_header_overhead = sizeof(size_t);
 const size_t block_start_offset = offsetof(HeapAllocUtil::block_header_t, size) + sizeof(size_t);
 const size_t block_size_max = static_cast<size_t>(1) << HeapAllocUtil::FL_INDEX_MAX;
 
-struct integrity_t {
+// Inferred role: heap integrity walk counters; original type name unknown.
+struct unknown133 {
   int prev_status;
   int status;
 };
@@ -385,7 +386,7 @@ void HeapAllocUtil::control_construct(control_t *control) {
 
 void HeapAllocUtil::integrity_walker(void *ptr, size_t size, bool used, void *user, size_t index) {
   block_header_t *block = block_from_ptr(ptr);
-  integrity_t *integ = static_cast<integrity_t *>(user);
+  unknown133 *integ = static_cast<unknown133 *>(user);
   const int this_prev_status = block_is_prev_free(block) ? 1 : 0;
   const int this_status = block_is_free(block) ? 1 : 0;
   const size_t this_block_size = block_size(block);
@@ -469,7 +470,7 @@ size_t HeapAllocUtil::heap_block_size(const void *ptr) {
 }
 
 int HeapAllocUtil::heap_check_pool(void *pool) {
-  integrity_t integ = {0, 0};
+  unknown133 integ = {0, 0};
   heap_walk_pool(pool, integrity_walker, &integ);
   return integ.status;
 }

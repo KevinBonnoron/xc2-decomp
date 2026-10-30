@@ -44,22 +44,22 @@ public:
   void playAfterImage(int id, int count, f32 interval, f32 alpha, f32 life);
 
 private:
-  mm::mtl::BitFlag<FLAG_MAX> unknown08; // Inferred role: flags; original member name unknown.
-  gf::GF_OBJ_HANDLE *unknown10;         // Inferred role: handle; original member name unknown.
-  int unknown18[VF_TYPE_MAX];           // Inferred role: volume fade ids; original member name unknown.
-  mm::Vec3 unknown20[VF_TYPE_MAX];      // Inferred role: volume fade positions; original member name unknown.
-  mm::Vec3 unknown40[VF_TYPE_MAX];      // Inferred role: volume fade scales; original member name unknown.
-  f32 unknown60[VF_TYPE_MAX];           // Inferred role: volume fade frames; original member name unknown.
-  f32 unknown68[VF_TYPE_MAX];           // Inferred role: volume fade rates; original member name unknown.
-  int unknown70[VF_TYPE_MAX];           // Inferred role: volume fade modes; original member name unknown.
-  f32 unknown78[VF_TYPE_MAX];           // Inferred role: volume fade speeds; original member name unknown.
-  AnmF32 unknown80[VF_TYPE_MAX];        // Inferred role: volume fade anms; original member name unknown.
-  int unknown2a0;                       // Inferred role: rim bloom id; original member name unknown.
-  int unknown2a4;                       // Inferred role: after image id; original member name unknown.
-  int unknown2a8;                       // Inferred role: after image count; original member name unknown.
-  f32 unknown2ac;                       // Inferred role: after image interval; original member name unknown.
-  f32 unknown2b0;                       // Inferred role: after image alpha; original member name unknown.
-  f32 unknown2b4;                       // Inferred role: after image life; original member name unknown.
+  mm::mtl::unknown027<FLAG_MAX> unknown08; // Inferred role: flags; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown10;            // Inferred role: handle; original member name unknown.
+  int unknown18[VF_TYPE_MAX];              // Inferred role: volume fade ids; original member name unknown.
+  mm::Vec3 unknown20[VF_TYPE_MAX];         // Inferred role: volume fade positions; original member name unknown.
+  mm::Vec3 unknown40[VF_TYPE_MAX];         // Inferred role: volume fade scales; original member name unknown.
+  f32 unknown60[VF_TYPE_MAX];              // Inferred role: volume fade frames; original member name unknown.
+  f32 unknown68[VF_TYPE_MAX];              // Inferred role: volume fade rates; original member name unknown.
+  int unknown70[VF_TYPE_MAX];              // Inferred role: volume fade modes; original member name unknown.
+  f32 unknown78[VF_TYPE_MAX];              // Inferred role: volume fade speeds; original member name unknown.
+  AnmF32 unknown80[VF_TYPE_MAX];           // Inferred role: volume fade anms; original member name unknown.
+  int unknown2a0;                          // Inferred role: rim bloom id; original member name unknown.
+  int unknown2a4;                          // Inferred role: after image id; original member name unknown.
+  int unknown2a8;                          // Inferred role: after image count; original member name unknown.
+  f32 unknown2ac;                          // Inferred role: after image interval; original member name unknown.
+  f32 unknown2b0;                          // Inferred role: after image alpha; original member name unknown.
+  f32 unknown2b4;                          // Inferred role: after image life; original member name unknown.
 };
 
 static_assert(sizeof(CharaEffectPlayer) == 0x2c0, "");

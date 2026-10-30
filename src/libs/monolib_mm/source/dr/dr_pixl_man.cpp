@@ -224,7 +224,7 @@ DrPixlMan::~DrPixlMan() { releaseColorBuffer(); }
 
 void DrPixlMan::resetLightBuffOnly() {}
 
-void DrPixlMan::createShadowParmDisplayList(wkPixlManRes *res) { res->unknown1d8 &= ~RES_FLAG_SHADOW_DISPLAY_LIST; }
+void DrPixlMan::createShadowParmDisplayList(wkPixlManRes *res) { res->unknown1d8 &= ~unknown001_32; }
 
 void DrPixlMan::setupCate(int cate) {
   unknown7f0 = &unknown10[cate];
@@ -232,7 +232,7 @@ void DrPixlMan::setupCate(int cate) {
 }
 
 void DrPixlMan::updateShadowDisplayList() {
-  if (unknown7f0->unknown1d8 & RES_FLAG_SHADOW_DISPLAY_LIST) {
+  if (unknown7f0->unknown1d8 & unknown001_32) {
     createShadowParmDisplayList(unknown7f0);
   }
 }

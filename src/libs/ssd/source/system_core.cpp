@@ -41,7 +41,7 @@ f32 SystemCore::GetSpeedOfSound() const { return m_speedOfSound; }
 void SystemCore::SetSpeedOfSound(f32 speed) { m_speedOfSound = speed; }
 
 f64 SystemCore::GetAudioCpuLoad() const {
-  const CpuLoad &cpuLoad = unknown9f8[1 - unknowna20];
+  const unknown002 &cpuLoad = unknown9f8[1 - unknowna20];
   if (cpuLoad.unknown08 != 0.0) {
     return cpuLoad.unknown00 / cpuLoad.unknown08;
   }

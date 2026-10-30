@@ -9,12 +9,13 @@ namespace ml {
 
 class DrCalcStmListObj;
 
-struct MdsTexInfo {
+// Inferred role: model data tex info; original type name unknown.
+struct unknown092 {
   u8 _00[0x0c - 0x00];
   u32 unknown0c; // Inferred role: name offset; original member name unknown.
 };
 
-static_assert(sizeof(MdsTexInfo) == 0x10, "");
+static_assert(sizeof(unknown092) == 0x10, "");
 
 struct MdsTexHeader {
   s32 texNum;

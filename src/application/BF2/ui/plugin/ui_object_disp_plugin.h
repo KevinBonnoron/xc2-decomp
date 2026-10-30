@@ -52,9 +52,9 @@ public:
   virtual const mm::mtl::RTTI *getRTTI() const;
   virtual bool isNeedUpdate(UIObjectAcc &acc);
 
-  bool unknown1c;                 // Inferred role: disp control; original member name unknown.
-  bool unknown1d;                 // Inferred role: disp; original member name unknown.
-  mm::mtl::BitFlag<32> unknown20; // Inferred role: mode flags; original member name unknown.
+  bool unknown1c;                    // Inferred role: disp control; original member name unknown.
+  bool unknown1d;                    // Inferred role: disp; original member name unknown.
+  mm::mtl::unknown027<32> unknown20; // Inferred role: mode flags; original member name unknown.
   u32 m_followObjHandle;
   UIObjectAlphaParam *unknown28;                  // Inferred role: alpha param; original member name unknown.
   UICtrlSimple<1> unknown30;                      // Inferred role: fade; original member name unknown.

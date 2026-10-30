@@ -44,8 +44,9 @@ class GfAssetSetup {
 public:
   static mm::mtl::RTTI m_rtti;
 
-  struct RefResource {
-    RefResource() : unknown88(nullptr), unknown90(0), unknown94(0) {}
+  // Inferred role: ref resource; original type name unknown.
+  struct unknown002 {
+    unknown002() : unknown88(nullptr), unknown90(0), unknown94(0) {}
 
     mm::mtl::FixStr<128> unknown00; // Inferred role: name; original member name unknown.
     void *unknown88;                // Inferred role: data; original member name unknown.
@@ -102,23 +103,23 @@ public:
   bool setupReference(GfAssetPack *pack, const char *name, GfFileIdx index);
   static void makeAssetNamePrefix(mm::mtl::FixStr<128> &name, GfAssetType type, const char *file, const char *suffix);
   bool checkValidResource();
-  RefResource *getRefResource(u32 index);
+  unknown002 *getRefResource(u32 index);
   void setRefResource(u32 index, const char *name, void *data, u32 size);
   static void makeAssetName(mm::mtl::FixStr<128> &name, GfAssetType type, const char *file);
   static void requestFootStepSePackFile(GfAssetFilesInfo &info, u32 footStep, GfFileIdx firstIndex, GfFileIdx secondIndex);
   static void requestWpnSePackFile(GfAssetFilesInfo &info, u32 weaponType, GfFileIdx index);
 
-  u32 unknown08;                                                   // Inferred role: id; original member name unknown.
-  GF_ASSET_HANDLE *unknown10;                                      // Inferred role: handle; original member name unknown.
-  CBdatWrapper *unknown18;                                         // Inferred role: bdat; original member name unknown.
-  mm::mtl::FixedVector<RefResource *, REF_RESOURCE_MAX> unknown20; // Inferred role: ref resources; original member name unknown.
-  const GfInitParam *unknowne8;                                    // Inferred role: init param; original member name unknown.
-  bool unknownf0;                                                  // Inferred role: has ref resource; original member name unknown.
-  mm::mtl::FixStr<128> unknownf4;                                  // Inferred role: debug model name; original member name unknown.
-  mm::mtl::FixStr<128> unknown178;                                 // Inferred role: debug motion name; original member name unknown.
+  u32 unknown08;                                                  // Inferred role: id; original member name unknown.
+  GF_ASSET_HANDLE *unknown10;                                     // Inferred role: handle; original member name unknown.
+  CBdatWrapper *unknown18;                                        // Inferred role: bdat; original member name unknown.
+  mm::mtl::FixedVector<unknown002 *, REF_RESOURCE_MAX> unknown20; // Inferred role: ref resources; original member name unknown.
+  const GfInitParam *unknowne8;                                   // Inferred role: init param; original member name unknown.
+  bool unknownf0;                                                 // Inferred role: has ref resource; original member name unknown.
+  mm::mtl::FixStr<128> unknownf4;                                 // Inferred role: debug model name; original member name unknown.
+  mm::mtl::FixStr<128> unknown178;                                // Inferred role: debug motion name; original member name unknown.
 };
 
-static_assert(sizeof(GfAssetSetup::RefResource) == 0x98, "");
+static_assert(sizeof(GfAssetSetup::unknown002) == 0x98, "");
 static_assert(offsetof(GfAssetSetup, unknown08) == 0x08, "");
 static_assert(offsetof(GfAssetSetup, unknown10) == 0x10, "");
 static_assert(offsetof(GfAssetSetup, unknown18) == 0x18, "");

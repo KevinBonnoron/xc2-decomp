@@ -90,8 +90,9 @@ public:
     bool isLocalSpace;
   };
 
-  struct CallBack {
-    CallBack() : unknown00(nullptr) {}
+  // Inferred role: call back; original type name unknown.
+  struct unknown008 {
+    unknown008() : unknown00(nullptr) {}
 
     const char *unknown00;      // Inferred role: name; original member name unknown.
     CallBackDelegate unknown08; // Inferred role: delegate; original member name unknown.
@@ -164,7 +165,7 @@ public:
   anm::ASMControl *unknown10;                // Inferred role: asm control; original member name unknown.
   fw::AnimAsmUpdater unknown18;              // Inferred role: updater; original member name unknown.
   fw::AnimAsmPoseSampler unknown38;          // Inferred role: pose sampler; original member name unknown.
-  CallBack unknown70[CALLBACK_MAX];          // Inferred role: callbacks; original member name unknown.
+  unknown008 unknown70[CALLBACK_MAX];        // Inferred role: callbacks; original member name unknown.
   AsmLisener unknown138;                     // Inferred role: listener; original member name unknown.
   mm::mtl::Vector<CallBackCache> unknown148; // Inferred role: callback caches; original member name unknown.
   ViewerListener unknown170;                 // Inferred role: viewer listener; original member name unknown.

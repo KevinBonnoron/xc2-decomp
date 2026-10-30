@@ -19,7 +19,7 @@ void DrIrrVolMan::getVolumeArea(u32 cascade, mm::Aabb &area) const {
 }
 
 int DrIrrVolMan::getSectorMax(u32 index) const {
-  const DrIrrVolSetting::unknown001 &area = unknown08->unknown28[index];
+  const unknown036::unknown001 &area = unknown08->unknown28[index];
   f32 width = area.unknown10 - area.unknown00;
   f32 depth = area.unknown18 - area.unknown08;
   return static_cast<u32>(width / area.unknown24 + 0.5f) * static_cast<u32>(depth / area.unknown24 + 0.5f);

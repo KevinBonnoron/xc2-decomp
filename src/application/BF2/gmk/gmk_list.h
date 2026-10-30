@@ -16,10 +16,11 @@ namespace gmk {
 
 class GmkSet;
 class AGmkBase;
-struct GobInfo;
+struct unknown072;
 struct Xform;
 
-struct LvbChunk {
+// Inferred role: LVB chunk; original type name unknown.
+struct unknown089 {
   u32 unknown00; // Inferred role: magic; original member name unknown.
   u32 unknown04; // Inferred role: size; original member name unknown.
   u32 unknown08; // Inferred role: version; original member name unknown.
@@ -30,9 +31,10 @@ struct LvbChunk {
   u8 _19[0x20 - 0x19];
 };
 
-static_assert(sizeof(LvbChunk) == 0x20, "");
+static_assert(sizeof(unknown089) == 0x20, "");
 
-struct LvbHeader {
+// Inferred role: LVB header; original type name unknown.
+struct unknown090 {
   u32 unknown00; // Inferred role: magic; original member name unknown.
   u32 unknown04; // Inferred role: size; original member name unknown.
   u32 unknown08; // Inferred role: version; original member name unknown.
@@ -41,7 +43,7 @@ struct LvbHeader {
   u8 _14[0x20 - 0x14];
 };
 
-static_assert(sizeof(LvbHeader) == 0x20, "");
+static_assert(sizeof(unknown090) == 0x20, "");
 
 class IGmkList {
 public:
@@ -255,11 +257,11 @@ protected:
   CreateInfo createInfo;
   fw::CommonResource *resource;
   void *data;
-  const LvbChunk *xformChunk;
+  const unknown089 *xformChunk;
   Xform *xforms;
-  const LvbChunk *gobInfoChunk;
-  GobInfo *gobInfos;
-  const LvbChunk *gmkChunk;
+  const unknown089 *gobInfoChunk;
+  unknown072 *gobInfos;
+  const unknown089 *gmkChunk;
   u8 *gmkData;
   const char *strings;
   u8 *bdatFp;

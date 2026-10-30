@@ -23,9 +23,10 @@ LangType convertLangType(const char *code);
 
 } // namespace setting_detail
 
-class IDevSetting {
+// Inferred role: device interface setting; original type name unknown.
+class unknown075 {
 public:
-  virtual ~IDevSetting() {}
+  virtual ~unknown075() {}
   virtual void initialize() = 0;
   virtual void finalize() = 0;
   virtual LangType getLang() const = 0;
@@ -48,7 +49,7 @@ public:
 
   static LangType m_defaultLang;
 
-  IDevSetting *unknown08; // Inferred role: impl; original member name unknown.
+  unknown075 *unknown08; // Inferred role: impl; original member name unknown.
 };
 
 static_assert(offsetof(DevSetting, unknown08) == 0x08, "");

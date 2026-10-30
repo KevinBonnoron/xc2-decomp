@@ -60,7 +60,7 @@ void GfComCollider::enter(const EnterInfo &info) {
     return;
   }
 
-  MsgObjectColiEnter message;
+  unknown095 message;
   message.unknown08 = static_cast<GfObj *>(static_cast<UserData *>(userData)->unknown08->unknown08)->unknownf8;
   message.unknown10 = &info;
   GfObj *obj = static_cast<GfObj *>(unknown08);
@@ -73,7 +73,7 @@ void GfComCollider::leave(const LeaveInfo &info) {
     return;
   }
 
-  MsgObjectColiLeave message;
+  unknown096 message;
   message.unknown08 = static_cast<GfObj *>(static_cast<UserData *>(userData)->unknown08->unknown08)->unknownf8;
   message.unknown10 = &info;
   GfObj *obj = static_cast<GfObj *>(unknown08);
@@ -86,7 +86,7 @@ void GfComCollider::contact(const EnterInfo &info) {
     return;
   }
 
-  MsgObjectColiContact message;
+  unknown097 message;
   message.unknown08 = static_cast<GfObj *>(static_cast<UserData *>(userData)->unknown08->unknown08)->unknownf8;
   message.unknown10 = &info;
   GfObj *obj = static_cast<GfObj *>(unknown08);

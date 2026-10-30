@@ -398,7 +398,7 @@ void GfGameObj::destroyGameObjWithAttribute(GF_OBJ_HANDLE *handle, f32 fadeTime,
   }
   GfGameObj *gameObj = get();
   if (attribute != 0) {
-    DestroyAttribute destroyAttribute = {handle, attribute};
+    unknown004 destroyAttribute = {handle, attribute};
     gameObj->unknown54240.push_back(destroyAttribute);
   }
   if (!gameObj->addOutObj(handle, fadeTime, true)) {

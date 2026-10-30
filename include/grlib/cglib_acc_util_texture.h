@@ -6,16 +6,17 @@
 
 namespace grlib {
 
-enum AccCalcType {
-  ACC_CALC_TYPE_8,
-  ACC_CALC_TYPE_16_FLOAT,
-  ACC_CALC_TYPE_16_INT,
-  ACC_CALC_TYPE_16_UINT,
-  ACC_CALC_TYPE_16_UNORM,
-  ACC_CALC_TYPE_32_FLOAT,
-  ACC_CALC_TYPE_32_INT,
-  ACC_CALC_TYPE_32_UINT,
-  ACC_CALC_TYPE_ERROR,
+// Inferred role: acc calc type; original type name unknown.
+enum unknown013 {
+  unknown013_0, // Inferred role: 8; original name unknown.
+  unknown013_1, // Inferred role: 16 float; original name unknown.
+  unknown013_2, // Inferred role: 16 int; original name unknown.
+  unknown013_3, // Inferred role: 16 uint; original name unknown.
+  unknown013_4, // Inferred role: 16 unorm; original name unknown.
+  unknown013_5, // Inferred role: 32 float; original name unknown.
+  unknown013_6, // Inferred role: 32 int; original name unknown.
+  unknown013_7, // Inferred role: 32 uint; original name unknown.
+  unknown013_8, // Inferred role: error; original name unknown.
 };
 
 class CGLibAccUtilTexture {
@@ -44,7 +45,7 @@ public:
   void getInt(int *values, u32 x, u32 y, u32 z);
   void setF32(const f32 *values, u32 x, u32 y, u32 z);
   void setInt(const int *values, u32 x, u32 y, u32 z);
-  AccCalcType getCalcType(GrlSurfaceFormat format) const;
+  unknown013 getCalcType(GrlSurfaceFormat format) const;
   u32 getCalcChanel(GrlSurfaceFormat format) const;
   void setupFormatParam();
   u32 getSquaringPixel(u32 pixel) const;

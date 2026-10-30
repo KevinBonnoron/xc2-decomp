@@ -841,7 +841,7 @@ void GfDataBlade::setAttributeForDebug(u32 blade, u8 attribute) {
   }
 }
 
-SDataBladeArts *GfDataBlade::getArts(u32 blade, u32 slot) { return &getSDataBlade(blade)->unknown3c[slot]; }
+unknown108 *GfDataBlade::getArts(u32 blade, u32 slot) { return &getSDataBlade(blade)->unknown3c[slot]; }
 
 u32 GfDataBlade::getArtsEnhance(u32 blade, u32 slot) {
   if (blade - BLADE_HANA_JS < BLADE_HANA_COUNT) {
@@ -851,7 +851,7 @@ u32 GfDataBlade::getArtsEnhance(u32 blade, u32 slot) {
   return 0;
 }
 
-SDataBladeSkill *GfDataBlade::getSkill(u32 blade, u32 slot) { return &getSDataBlade(blade)->unknown9c[slot]; }
+unknown109 *GfDataBlade::getSkill(u32 blade, u32 slot) { return &getSDataBlade(blade)->unknown9c[slot]; }
 
 bool GfDataBlade::getListRegular(mm::mtl::FixedVector<u16, BLADE_COUNT> &blades) {
   for (u32 blade = BLADE_REGULAR_FIRST; blade < BLADE_REGULAR_END; blade++) {

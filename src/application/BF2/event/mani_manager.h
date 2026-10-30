@@ -69,8 +69,8 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  mm::mtl::BitFlag<32> unknown18;                   // Inferred role: flags; original member name unknown.
-  mm::mtl::BitFlag<32> unknown1c;                   // Inferred role: debug flags; original member name unknown.
+  mm::mtl::unknown027<32> unknown18;                // Inferred role: flags; original member name unknown.
+  mm::mtl::unknown027<32> unknown1c;                // Inferred role: debug flags; original member name unknown.
   mm::mtl::FixedVector<Item, ITEM_COUNT> unknown20; // Inferred role: items; original member name unknown.
   u8 _22028[0x22030 - 0x22028];
   MANI_TYPE unknown22030; // Inferred role: type; original member name unknown.

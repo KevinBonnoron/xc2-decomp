@@ -182,15 +182,15 @@ void ShdU32SetUVec4(u32 *destination, const u32 *source) {
 
 static const CGLibShader *getCurrentShader(const CGLibDecShader *decShader) { return decShader->unknown38 + decShader->unknown58; }
 
-static const CGLibShaderBlockInfo *getUniformBlocks(const CGLibShader *shader) { return reinterpret_cast<const CGLibShaderBlockInfo *>(shader->m_data + shader->unknown08->unknown24); }
+static const unknown028 *getUniformBlocks(const CGLibShader *shader) { return reinterpret_cast<const unknown028 *>(shader->m_data + shader->unknown08->unknown24); }
 
-static const CGLibShaderBlockInfo *getStorageBuffers(const CGLibShader *shader) { return reinterpret_cast<const CGLibShaderBlockInfo *>(shader->m_data + shader->unknown08->unknown30); }
+static const unknown028 *getStorageBuffers(const CGLibShader *shader) { return reinterpret_cast<const unknown028 *>(shader->m_data + shader->unknown08->unknown30); }
 
 static u32 findUniformBlockIndex(const CGLibShader *shader, const char *name) {
   u32 index = -1;
   u32 num = shader->unknown08->unknown20;
   if (num != 0) {
-    const CGLibShaderBlockInfo *block = getUniformBlocks(shader);
+    const unknown028 *block = getUniformBlocks(shader);
     for (u32 i = 0; i < num; i++, block++) {
       if (strcmp(reinterpret_cast<const char *>(shader->m_data + block->unknown00), name) == 0) {
         index = block->unknown0c;
@@ -205,7 +205,7 @@ static u32 findStorageBufferIndex(const CGLibShader *shader, const char *name) {
   u32 index = -1;
   u32 num = shader->unknown08->unknown2c;
   if (num != 0) {
-    const CGLibShaderBlockInfo *block = getStorageBuffers(shader);
+    const unknown028 *block = getStorageBuffers(shader);
     for (u32 i = 0; i < num; i++, block++) {
       if (strcmp(reinterpret_cast<const char *>(shader->m_data + block->unknown00), name) == 0) {
         index = block->unknown0c;

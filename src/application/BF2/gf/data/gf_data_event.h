@@ -5,12 +5,13 @@ namespace gf {
 
 struct SDataGame;
 
-struct SDataSavedEvent {
+// Inferred role: save data saved event; original type name unknown.
+struct unknown125 {
   u16 unknown00; // Inferred role: event; original member name unknown.
   u8 _02[0x64 - 0x02];
 };
 
-static_assert(sizeof(SDataSavedEvent) == 0x64, "");
+static_assert(sizeof(unknown125) == 0x64, "");
 
 class GfDataEvent {
 public:

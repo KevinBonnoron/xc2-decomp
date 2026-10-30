@@ -8,31 +8,33 @@
 
 namespace ml {
 
-enum DevKeyboardKey {
-  KEY_LEFT = 0x25,
-  KEY_UP = 0x26,
-  KEY_RIGHT = 0x27,
-  KEY_DOWN = 0x28,
+// Inferred role: dev keyboard key; original type name unknown.
+enum unknown032 {
+  unknown032_37 = 0x25, // Inferred role: left; original name unknown.
+  unknown032_38 = 0x26, // Inferred role: up; original name unknown.
+  unknown032_39 = 0x27, // Inferred role: right; original name unknown.
+  unknown032_40 = 0x28, // Inferred role: down; original name unknown.
 };
 
-enum DevKeyboardVk {
-  VK_ALT = 0x1,
-  VK_CTRL = 0x2,
-  VK_SHIFT = 0x4,
-  VK_DELETE = 0x8,
-  VK_TAB = 0x10,
-  VK_RETURN = 0x20,
-  VK_FUNC_SHIFT = 6,
-  VK_PAGE_UP = 0x80000,
-  VK_PAGE_DOWN = 0x100000,
-  VK_HOME = 0x200000,
-  VK_END = 0x400000,
-  VK_UP = 0x800000,
-  VK_RIGHT = 0x1000000,
-  VK_DOWN = 0x2000000,
-  VK_LEFT = 0x4000000,
-  VK_PAUSE = 0x8000000,
-  VK_SCROLL = 0x10000000,
+// Inferred role: dev keyboard vk; original type name unknown.
+enum unknown033 {
+  unknown033_1 = 0x1,                // Inferred role: alt; original name unknown.
+  unknown033_2 = 0x2,                // Inferred role: ctrl; original name unknown.
+  unknown033_4 = 0x4,                // Inferred role: shift; original name unknown.
+  unknown033_8 = 0x8,                // Inferred role: delete; original name unknown.
+  unknown033_16 = 0x10,              // Inferred role: tab; original name unknown.
+  unknown033_32 = 0x20,              // Inferred role: return; original name unknown.
+  unknown033_6 = 6,                  // Inferred role: func shift; original name unknown.
+  unknown033_524288 = 0x80000,       // Inferred role: page up; original name unknown.
+  unknown033_1048576 = 0x100000,     // Inferred role: page down; original name unknown.
+  unknown033_2097152 = 0x200000,     // Inferred role: home; original name unknown.
+  unknown033_4194304 = 0x400000,     // Inferred role: end; original name unknown.
+  unknown033_8388608 = 0x800000,     // Inferred role: up; original name unknown.
+  unknown033_16777216 = 0x1000000,   // Inferred role: right; original name unknown.
+  unknown033_33554432 = 0x2000000,   // Inferred role: down; original name unknown.
+  unknown033_67108864 = 0x4000000,   // Inferred role: left; original name unknown.
+  unknown033_134217728 = 0x8000000,  // Inferred role: pause; original name unknown.
+  unknown033_268435456 = 0x10000000, // Inferred role: scroll; original name unknown.
 };
 
 class IDevInputKeyboard {

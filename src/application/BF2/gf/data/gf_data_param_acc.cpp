@@ -1069,7 +1069,7 @@ bool DataIdeaAcc::addPoint(u32 idea, u32 point) {
 }
 
 u32 DataIdeaAcc::getPoint(u32 idea) const {
-  const SDataIdea::Idea *ideas = unknown00->unknown00;
+  const SDataIdea::unknown004 *ideas = unknown00->unknown00;
   return ideas[idea].unknown00;
 }
 
@@ -1079,10 +1079,10 @@ void DataIdeaAcc::setPointForDebug(u32 idea, u32 point) {
   }
 }
 
-IdeaRatio DataIdeaAcc::getRatio(u32 level0, u32 level1, u32 level2, u32 level3, int offset0, int offset1, int offset2, int offset3) const {
+unknown079 DataIdeaAcc::getRatio(u32 level0, u32 level1, u32 level2, u32 level3, int offset0, int offset1, int offset2, int offset3) const {
   GfBdatBlade *bdatBlade = GfBdatBlade::get();
   f32 total = getSubRatio(level0, offset0, 0) + getSubRatio(level1, offset1, 1) + getSubRatio(level2, offset2, 2) + getSubRatio(level3, offset3, 3);
-  IdeaRatio result;
+  unknown079 result;
   result.unknown00 = static_cast<int>(total + (total > 0.0f ? 0.5f : -0.5f));
   if (result.unknown00 > 3) {
     result.unknown02 = bdatBlade->getCreateConfigValue(CREATE_CONFIG_RATIO_4);

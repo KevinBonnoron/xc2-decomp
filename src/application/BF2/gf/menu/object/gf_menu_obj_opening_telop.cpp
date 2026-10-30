@@ -18,7 +18,7 @@ void GfMenuObjOpeningTelop::openCenter(u32 telop) {
   ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown001));
   if (acc.isValid()) {
     ui::EventData event;
-    event.unknown00 = GfMenuTypes::UI_EVENT_OPEN;
+    event.unknown00 = GfMenuTypes::unknown003_33;
     event.unknown08 = unknown002_0;
     event.unknown0c = telop;
     GfMenuObject::sendEvent(acc.unknown10, event, 0.0f);
@@ -29,7 +29,7 @@ void GfMenuObjOpeningTelop::closeCenter() {
   ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown001));
   if (acc.isValid()) {
     ui::EventData event;
-    event.unknown00 = GfMenuTypes::UI_EVENT_CLOSE;
+    event.unknown00 = GfMenuTypes::unknown003_34;
     GfMenuObject::sendEvent(acc.unknown10, event, 0.0f);
   }
 }
@@ -38,7 +38,7 @@ void GfMenuObjOpeningTelop::openLeft(u32 telop) {
   ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown001));
   if (acc.isValid()) {
     ui::EventData event;
-    event.unknown00 = GfMenuTypes::UI_EVENT_OPEN;
+    event.unknown00 = GfMenuTypes::unknown003_33;
     event.unknown08 = unknown002_1;
     event.unknown0c = telop;
     GfMenuObject::sendEvent(acc.unknown10, event, 0.0f);
@@ -49,7 +49,7 @@ void GfMenuObjOpeningTelop::openRight(u32 telop) {
   ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown001));
   if (acc.isValid()) {
     ui::EventData event;
-    event.unknown00 = GfMenuTypes::UI_EVENT_OPEN;
+    event.unknown00 = GfMenuTypes::unknown003_33;
     event.unknown08 = unknown002_2;
     event.unknown0c = telop;
     GfMenuObject::sendEvent(acc.unknown10, event, 0.0f);

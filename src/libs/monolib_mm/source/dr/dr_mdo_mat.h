@@ -58,18 +58,20 @@ static_assert(offsetof(MdsMatInfoHeader, unknown64) == 0x64, "");
 
 static_assert(sizeof(MdsMatInfoHeader) == 0x74, "");
 
-struct MdoWrkRimBloom;
+struct unknown091;
 struct MdoWrkVanishEffect;
 
-struct MdsMeshPartsInfo {
+// Inferred role: model data mesh parts info; original type name unknown.
+struct unknown020 {
   u8 _00[0x08 - 0x00];
   u8 unknown08; // Inferred role: flags; original member name unknown.
   u8 _09[0x10 - 0x09];
 };
 
-static_assert(sizeof(MdsMeshPartsInfo) == 0x10, "");
+static_assert(sizeof(unknown020) == 0x10, "");
 
-struct MdsMeshHeader {
+// Inferred role: model data mesh header; original type name unknown.
+struct unknown022 {
   enum Flag {
     FLAG_UNKNOWN_3 = 1 << 3,
     FLAG_VANISH_EFFECT = 1 << 13,
@@ -90,13 +92,13 @@ struct MdsMeshHeader {
   u8 unknown94; // Inferred role: vanish effect num; original member name unknown.
 };
 
-static_assert(offsetof(MdsMeshHeader, unknown1c) == 0x1c, "");
-static_assert(offsetof(MdsMeshHeader, unknown20) == 0x20, "");
-static_assert(offsetof(MdsMeshHeader, unknown30) == 0x30, "");
-static_assert(offsetof(MdsMeshHeader, unknown34) == 0x34, "");
-static_assert(offsetof(MdsMeshHeader, unknown64) == 0x64, "");
-static_assert(offsetof(MdsMeshHeader, unknown78) == 0x78, "");
-static_assert(offsetof(MdsMeshHeader, unknown94) == 0x94, "");
+static_assert(offsetof(unknown022, unknown1c) == 0x1c, "");
+static_assert(offsetof(unknown022, unknown20) == 0x20, "");
+static_assert(offsetof(unknown022, unknown30) == 0x30, "");
+static_assert(offsetof(unknown022, unknown34) == 0x34, "");
+static_assert(offsetof(unknown022, unknown64) == 0x64, "");
+static_assert(offsetof(unknown022, unknown78) == 0x78, "");
+static_assert(offsetof(unknown022, unknown94) == 0x94, "");
 
 // Inferred role: node animation table header; original type name unknown.
 struct unknown001 {
@@ -194,7 +196,8 @@ struct unknown008 {
 
 static_assert(sizeof(unknown008) == 0x0c, "");
 
-struct MdoWrkAvatar {
+// Inferred role: model work avatar; original type name unknown.
+struct unknown023 {
   u32 unknown00; // Inferred role: flags; original member name unknown.
   u8 _04[0x08 - 0x04];
   grlib::CGLibTextureBuffer *unknown08[2]; // Inferred role: base textures; original member name unknown.
@@ -207,23 +210,24 @@ struct MdoWrkAvatar {
   grlib::CGLibOneUniformBlock *unknown48; // Inferred role: doll colors; original member name unknown.
 };
 
-static_assert(offsetof(MdoWrkAvatar, unknown08) == 0x08, "");
-static_assert(offsetof(MdoWrkAvatar, unknown18) == 0x18, "");
-static_assert(offsetof(MdoWrkAvatar, unknown28) == 0x28, "");
-static_assert(offsetof(MdoWrkAvatar, unknown30) == 0x30, "");
-static_assert(offsetof(MdoWrkAvatar, unknown38) == 0x38, "");
-static_assert(offsetof(MdoWrkAvatar, unknown40) == 0x40, "");
-static_assert(offsetof(MdoWrkAvatar, unknown48) == 0x48, "");
+static_assert(offsetof(unknown023, unknown08) == 0x08, "");
+static_assert(offsetof(unknown023, unknown18) == 0x18, "");
+static_assert(offsetof(unknown023, unknown28) == 0x28, "");
+static_assert(offsetof(unknown023, unknown30) == 0x30, "");
+static_assert(offsetof(unknown023, unknown38) == 0x38, "");
+static_assert(offsetof(unknown023, unknown40) == 0x40, "");
+static_assert(offsetof(unknown023, unknown48) == 0x48, "");
 
-struct MdoWrkShaderParm {
+// Inferred role: model work shader parm; original type name unknown.
+struct unknown024 {
   mm::Col3 unknown00[4]; // Inferred role: colors; original member name unknown.
   f32 unknown30[1];      // Inferred role: values; original member name unknown.
 };
 
-static_assert(offsetof(MdoWrkShaderParm, unknown30) == 0x30, "");
+static_assert(offsetof(unknown024, unknown30) == 0x30, "");
 
-// Inferred type: fixed animation data header; the original type name is unknown.
-struct MdsFixedAnimData {
+// Inferred role: fixed animation data header; original type name unknown.
+struct unknown025 {
   u8 _00[0x14];
   u32 unknown14;
   u8 _18[0x1c - 0x18];
@@ -232,9 +236,9 @@ struct MdsFixedAnimData {
   u32 unknown24;
 };
 
-static_assert(offsetof(MdsFixedAnimData, unknown14) == 0x14, "");
-static_assert(offsetof(MdsFixedAnimData, unknown1c) == 0x1c, "");
-static_assert(offsetof(MdsFixedAnimData, unknown24) == 0x24, "");
+static_assert(offsetof(unknown025, unknown14) == 0x14, "");
+static_assert(offsetof(unknown025, unknown1c) == 0x1c, "");
+static_assert(offsetof(unknown025, unknown24) == 0x24, "");
 
 struct MdsMdlInfoHeader {
   u8 _00[0x08 - 0x00];
@@ -248,7 +252,8 @@ static_assert(offsetof(MdsMdlInfoHeader, unknown0a) == 0x0a, "");
 
 static_assert(sizeof(MdsMdlInfoHeader) == 0x30, "");
 
-struct MdsMdlEntry {
+// Inferred role: model data mdl entry; original type name unknown.
+struct unknown026 {
   u32 unknown00; // Inferred role: info offset; original member name unknown.
   s32 unknown04; // Inferred role: info count; original member name unknown.
   u8 _08[0x0c - 0x08];
@@ -257,9 +262,9 @@ struct MdsMdlEntry {
   u8 _24[0x44 - 0x24];
 };
 
-static_assert(offsetof(MdsMdlEntry, unknown0c) == 0x0c, "");
-static_assert(offsetof(MdsMdlEntry, unknown18) == 0x18, "");
-static_assert(sizeof(MdsMdlEntry) == 0x44, "");
+static_assert(offsetof(unknown026, unknown0c) == 0x0c, "");
+static_assert(offsetof(unknown026, unknown18) == 0x18, "");
+static_assert(sizeof(unknown026) == 0x44, "");
 
 // Inferred role: flag wave uniform table; original type name unknown.
 struct unknown009 {
@@ -272,11 +277,11 @@ static_assert(offsetof(unknown009, unknown18) == 0x18, "");
 
 struct MdoWrkMatRes {
   u8 _000[0x010 - 0x000];
-  const u8 *unknown10;            // Inferred role: texture indices; original member name unknown.
-  const u8 *unknown18;            // Inferred role: model data; original member name unknown.
-  const MdsMeshHeader *unknown20; // Inferred role: mesh header; original member name unknown.
-  MdsMatInfoHeader *unknown28;    // Inferred role: mat data; original member name unknown.
-  s32 unknown30;                  // Inferred role: mat count; original member name unknown.
+  const u8 *unknown10;         // Inferred role: texture indices; original member name unknown.
+  const u8 *unknown18;         // Inferred role: model data; original member name unknown.
+  const unknown022 *unknown20; // Inferred role: mesh header; original member name unknown.
+  MdsMatInfoHeader *unknown28; // Inferred role: mat data; original member name unknown.
+  s32 unknown30;               // Inferred role: mat count; original member name unknown.
   u8 _034[0x038 - 0x034];
   f32 *unknown38; // Inferred role: base values; original member name unknown.
   u8 _040[0x050 - 0x040];
@@ -301,18 +306,18 @@ struct MdoWrkMatRes {
   u8 _0f4[0x0f8 - 0x0f4];
   f32 *unknownf8; // Inferred role: values; original member name unknown.
   u8 _100[0x110 - 0x100];
-  MdoWrkAvatar *unknown110;     // Inferred role: avatar; original member name unknown.
-  MdoWrkShaderParm *unknown118; // Inferred role: shader parm; original member name unknown.
+  unknown023 *unknown110; // Inferred role: avatar; original member name unknown.
+  unknown024 *unknown118; // Inferred role: shader parm; original member name unknown.
   u8 _120[0x130 - 0x120];
   unknown003 *unknown130;         // Inferred role: display call; original member name unknown.
   unknown007 *unknown138;         // Inferred role: fur shader; original member name unknown.
   unknown009 *unknown140;         // Inferred role: flag wave uniforms; original member name unknown.
   unknown002 *unknown148;         // Inferred role: node animation; original member name unknown.
   MdoWrkVanishEffect *unknown150; // Inferred role: vanish effects; original member name unknown.
-  MdoWrkRimBloom *unknown158;     // Inferred role: rim blooms; original member name unknown.
+  unknown091 *unknown158;         // Inferred role: rim blooms; original member name unknown.
   u8 _160[0x168 - 0x160];
-  const MdsMdlEntry *unknown168; // Inferred role: mdl entries; original member name unknown.
-  u32 unknown170;                // Inferred role: mdl entry count; original member name unknown.
+  const unknown026 *unknown168; // Inferred role: mdl entries; original member name unknown.
+  u32 unknown170;               // Inferred role: mdl entry count; original member name unknown.
   u8 _174[0x178 - 0x174];
   const u8 *unknown178; // Inferred role: second table; original member name unknown.
 };
@@ -362,44 +367,47 @@ static_assert(sizeof(MdoWrkVanishEffect) == 0xe0, "");
 
 class DrMdoMat : public DrMdlBase {
 public:
-  enum DrawFlag {
-    DRAW_FLAG_ALWAYS_TEX_STM = 1 << 2,
-    DRAW_FLAG_WRITE_STENCIL = 1 << 4,
-    DRAW_FLAG_FLAG_WAVE = 1 << 6,
-    DRAW_FLAG_SIMPLE_SHADOW = 1 << 10,
-    DRAW_FLAG_SP_ALPHA_MODE = 1 << 14,
-    DRAW_FLAG_SP_BLUR_OFF = 1 << 15,
-    DRAW_FLAG_GPU_CLIP_OFF = 1 << 16,
-    DRAW_FLAG_ALWAYS_MIDDLE_TEX_STM = 1 << 17,
-    DRAW_FLAG_OCCLUSION_QUERY_OFF = 1 << 18,
-    DRAW_FLAG_EXPRESS_DRAW_MODE = 1 << 20,
-    DRAW_FLAG_CAM_CHECK_MODE = 1 << 28,
-    DRAW_FLAG_CAM_CHECK_RESL = 1 << 29,
-    DRAW_FLAG_DEBUG_DELETE = 1 << 30,
-    DRAW_FLAG_DEBUG_WINDOW = 1u << 31,
+  // Inferred role: draw flag; original type name unknown.
+  enum unknown027 {
+    unknown027_2 = 1 << 2,    // Inferred role: always tex stm; original name unknown.
+    unknown027_4 = 1 << 4,    // Inferred role: write stencil; original name unknown.
+    unknown027_6 = 1 << 6,    // Inferred role: flag wave; original name unknown.
+    unknown027_10 = 1 << 10,  // Inferred role: simple shadow; original name unknown.
+    unknown027_14 = 1 << 14,  // Inferred role: sp alpha mode; original name unknown.
+    unknown027_15 = 1 << 15,  // Inferred role: sp blur off; original name unknown.
+    unknown027_16 = 1 << 16,  // Inferred role: gpu clip off; original name unknown.
+    unknown027_17 = 1 << 17,  // Inferred role: always middle tex stm; original name unknown.
+    unknown027_18 = 1 << 18,  // Inferred role: occlusion query off; original name unknown.
+    unknown027_20 = 1 << 20,  // Inferred role: express draw mode; original name unknown.
+    unknown027_28 = 1 << 28,  // Inferred role: cam check mode; original name unknown.
+    unknown027_29 = 1 << 29,  // Inferred role: cam check resl; original name unknown.
+    unknown027_30 = 1 << 30,  // Inferred role: debug delete; original name unknown.
+    unknown027_31 = 1u << 31, // Inferred role: debug window; original name unknown.
   };
 
-  enum MdlFlag {
-    MDL_FLAG_UNKNOWN_0 = 1 << 0,
-    MDL_FLAG_UNKNOWN_1 = 1 << 1,
-    MDL_FLAG_UNKNOWN_2 = 1 << 2,
-    MDL_FLAG_UNKNOWN_3 = 1 << 3,
-    MDL_FLAG_UNKNOWN_4 = 1 << 4,
-    MDL_FLAG_UNKNOWN_5 = 1 << 5,
-    MDL_FLAG_UNKNOWN_6 = 1 << 6,
-    MDL_FLAG_UNKNOWN_20 = 1 << 20,
-    MDL_FLAG_BLOOM = 1 << 15,
-    MDL_FLAG_ALPHA_BLOOM = 1 << 16,
-    MDL_FLAG_VOLUME = 1 << 17,
-    MDL_FLAG_FULL_SCREEN_SHADOW = 1 << 18,
-    MDL_FLAG_UNKNOWN_25 = 1 << 25,
-    MDL_FLAG_UNKNOWN_26 = 1 << 26,
-    MDL_FLAG_UNKNOWN_27 = 1 << 27,
+  // Inferred role: mdl flag; original type name unknown.
+  enum unknown028 {
+    unknown028_0 = 1 << 0,
+    unknown028_1 = 1 << 1,
+    unknown028_2 = 1 << 2,
+    unknown028_3 = 1 << 3,
+    unknown028_4 = 1 << 4,
+    unknown028_5 = 1 << 5,
+    unknown028_6 = 1 << 6,
+    unknown028_20 = 1 << 20,
+    unknown028_15 = 1 << 15, // Inferred role: bloom; original name unknown.
+    unknown028_16 = 1 << 16, // Inferred role: alpha bloom; original name unknown.
+    unknown028_17 = 1 << 17, // Inferred role: volume; original name unknown.
+    unknown028_18 = 1 << 18, // Inferred role: full screen shadow; original name unknown.
+    unknown028_25 = 1 << 25,
+    unknown028_26 = 1 << 26,
+    unknown028_27 = 1 << 27,
   };
 
-  enum AlphaFlag {
-    ALPHA_FLAG_UPDATED = 1 << 16,
-    ALPHA_FLAG_SINGLE_BUFFER = 1 << 18,
+  // Inferred role: alpha flag; original type name unknown.
+  enum unknown029 {
+    unknown029_16 = 1 << 16, // Inferred role: updated; original name unknown.
+    unknown029_18 = 1 << 18, // Inferred role: single buffer; original name unknown.
   };
 
   void initMdlInfo(const u8 *data, MdoWrkMatRes *matRes);

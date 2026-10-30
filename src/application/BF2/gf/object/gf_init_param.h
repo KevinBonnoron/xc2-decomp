@@ -12,18 +12,19 @@ namespace gf {
 
 struct GF_OBJ_HANDLE;
 
-enum CharacterType {
-  CHARACTER_TYPE_PARTY = 1,
-  CHARACTER_TYPE_EVENT = 2,
-  CHARACTER_TYPE_EVENT_CS = 3,
-  CHARACTER_TYPE_UNKNOWN_4 = 4,
-  CHARACTER_TYPE_ENEMY_BLADE = 5,
-  CHARACTER_TYPE_EVENT_DRIVER = 6,
-  CHARACTER_TYPE_EVENT_BLADE = 7,
-  CHARACTER_TYPE_TRINITY_BLADE = 8,
-  CHARACTER_TYPE_UNKNOWN_10 = 10,
-  CHARACTER_TYPE_ACT_VIEWER_EVENT = 11,
-  CHARACTER_TYPE_EVENT_NPC = 12,
+// Inferred role: character type; original type name unknown.
+enum unknown030 {
+  unknown030_1 = 1, // Inferred role: party; original name unknown.
+  unknown030_2 = 2, // Inferred role: event; original name unknown.
+  unknown030_3 = 3, // Inferred role: event cs; original name unknown.
+  unknown030_4 = 4,
+  unknown030_5 = 5, // Inferred role: enemy blade; original name unknown.
+  unknown030_6 = 6, // Inferred role: event driver; original name unknown.
+  unknown030_7 = 7, // Inferred role: event blade; original name unknown.
+  unknown030_8 = 8, // Inferred role: trinity blade; original name unknown.
+  unknown030_10 = 10,
+  unknown030_11 = 11, // Inferred role: act viewer event; original name unknown.
+  unknown030_12 = 12, // Inferred role: event npc; original name unknown.
 };
 
 enum VIEWCAM {
@@ -38,9 +39,9 @@ public:
 
   bool isEvent() const {
     switch (unknown08) {
-    case CHARACTER_TYPE_EVENT:
-    case CHARACTER_TYPE_EVENT_CS:
-    case CHARACTER_TYPE_ACT_VIEWER_EVENT:
+    case unknown030_2:
+    case unknown030_3:
+    case unknown030_11:
       return true;
     default:
       return false;
@@ -85,7 +86,8 @@ static_assert(sizeof(GfInitParam) == 0x90, "");
 
 class GfInitParamDriver : public GfInitParam {
 public:
-  struct Weapon {
+  // Inferred role: weapon; original type name unknown.
+  struct unknown031 {
     s8 unknown00; // Inferred role: slot; original member name unknown.
     u8 unknown01; // Inferred role: weapon type; original member name unknown.
     u8 unknown02; // Inferred role: attribute; original member name unknown.
@@ -99,13 +101,13 @@ public:
   bool isAllWeapon() const override;
 
   u8 _90[0x98 - 0x90];
-  mm::mtl::FixedVector<Weapon, WEAPON_MAX> unknown98; // Inferred role: weapons; original member name unknown.
+  mm::mtl::FixedVector<unknown031, WEAPON_MAX> unknown98; // Inferred role: weapons; original member name unknown.
   u8 _1a0[0x1a1 - 0x1a0];
   bool m_allWeapon;
   u8 _1a2[0x1a8 - 0x1a2];
 };
 
-static_assert(sizeof(GfInitParamDriver::Weapon) == 0x08, "");
+static_assert(sizeof(GfInitParamDriver::unknown031) == 0x08, "");
 static_assert(offsetof(GfInitParamDriver, unknown98) == 0x98, "");
 static_assert(offsetof(GfInitParamDriver, m_allWeapon) == 0x1a1, "");
 static_assert(sizeof(GfInitParamDriver) == 0x1a8, "");

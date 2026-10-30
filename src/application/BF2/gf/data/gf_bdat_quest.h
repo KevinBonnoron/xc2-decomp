@@ -41,7 +41,8 @@ struct QIDXINFO {
 
 static_assert(sizeof(QIDXINFO) == 0x14, "");
 
-template <size_t N> struct QuestCategory {
+// Inferred role: quest category; original type name unknown.
+template <size_t N> struct unknown099 {
   CBdatWrapper *getFp(u32 index) const { return index >= secondBegin ? secondFp : fp; }
 
   void clear() {
@@ -61,13 +62,14 @@ template <size_t N> struct QuestCategory {
   u16 secondBegin;
 };
 
-typedef QuestCategory<0x1fa0> QuestListCategory;
-typedef QuestCategory<0x1000> QuestTaskCategory;
+typedef unknown099<0x1fa0> QuestListCategory;
+typedef unknown099<0x1000> QuestTaskCategory;
 
 static_assert(sizeof(QuestListCategory) == 0x3f60, "");
 static_assert(sizeof(QuestTaskCategory) == 0x2020, "");
 
-struct QuestIndexTable {
+// Inferred role: quest index table; original type name unknown.
+struct unknown100 {
   u32 unknown00[QUEST_ID_COUNT]; // Inferred role: indices; original member name unknown.
   u32 unknownfa00;               // Inferred role: count; original member name unknown.
 };
@@ -400,9 +402,9 @@ public:
 
 private:
   QuestListCategory unknown00[QTYPE_COUNT];            // Inferred role: list categories; original member name unknown.
-  QuestIndexTable unknown17c40;                        // Inferred role: list indices; original member name unknown.
+  unknown100 unknown17c40;                             // Inferred role: list indices; original member name unknown.
   QuestTaskCategory unknown27648[QTYPE_COUNT];         // Inferred role: task categories; original member name unknown.
-  QuestIndexTable unknown33708;                        // Inferred role: task indices; original member name unknown.
+  unknown100 unknown33708;                             // Inferred role: task indices; original member name unknown.
   u16 unknown4310c[QUEST_ID_COUNT * QUEST_TASK_COUNT]; // Inferred role: collect flag indices; original member name unknown.
   mm::mtl::FixedVector<u16, 0x400> unknown62510;       // Inferred role: collect flags; original member name unknown.
 

@@ -12,7 +12,7 @@ Variable::Variable() : m_pResVariable(nullptr) {}
 
 void Variable::setup(const ResVariable &resVariable) {
   m_pResVariable = &resVariable;
-  if (resVariable.type == VAR_INT) {
+  if (resVariable.type == unknown132_0) {
     m_intValue = 1;
   } else {
     m_floatValue = 0.0f;
@@ -21,7 +21,7 @@ void Variable::setup(const ResVariable &resVariable) {
 
 bool Variable::setValue(s32 value) {
   MM_ASSERT(m_pResVariable);
-  if (m_pResVariable->type != VAR_INT) {
+  if (m_pResVariable->type != unknown132_0) {
     return false;
   }
   m_intValue = value;
@@ -39,7 +39,7 @@ bool Variable::setValue(f32 value) {
 
 bool Variable::getValue(s32 *value) const {
   MM_ASSERT(m_pResVariable);
-  if (m_pResVariable->type != VAR_INT) {
+  if (m_pResVariable->type != unknown132_0) {
     return false;
   }
   *value = m_intValue;

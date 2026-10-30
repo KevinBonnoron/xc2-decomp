@@ -18,7 +18,8 @@ class AsmClip;
 class Variable;
 class ResStateData;
 
-struct ResAddNode {
+// Inferred role: res add node; original type name unknown.
+struct unknown101 {
   u32 variableIndex;
   u8 _04[0x28 - 0x4];
 };
@@ -27,7 +28,7 @@ struct ResAddTree {
   u8 _00[0x10];
   u32 unknown10; // Inferred role: base clip num; original member name unknown.
   u8 _14[0x18 - 0x14];
-  Array<ResAddNode> unknown18; // Inferred role: nodes; original member name unknown.
+  Array<unknown101> unknown18; // Inferred role: nodes; original member name unknown.
 };
 
 static_assert(offsetof(ResAddTree, unknown18) == 0x18, "");

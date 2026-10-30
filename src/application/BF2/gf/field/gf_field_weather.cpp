@@ -297,7 +297,7 @@ void GfFieldWeather::setupGame() {
   GfBdatMaplist *bdatMaplist = GfBdatMaplist::get();
   for (u32 map = bdatMaplist->getMaplistStart(); map < bdatMaplist->getMaplistEnd(); map++) {
     const char *resource = bdatMaplist->getMaplistresource(map);
-    for (SDataMapInfo &info : dataGame->unknown10a53c) {
+    for (unknown119 &info : dataGame->unknown10a53c) {
       WeatherParam &param = info.unknown00;
       if (__builtin_strcmp(param.unknown00, resource) == 0) {
         break;

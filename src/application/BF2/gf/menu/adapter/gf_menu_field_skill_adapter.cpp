@@ -11,8 +11,8 @@
 namespace gf {
 
 static GfMenuFieldSkillAdapter::TypeInfo TYPE_INFOS[] = {
-    {&GfMenuFieldSkillAdapter::update_Name, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 9999}},
-    {&GfMenuFieldSkillAdapter::update_Lv, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 99}},
+    {&GfMenuFieldSkillAdapter::update_Name, {GfMenuAdapter::unknown004_2, 0, 9999}},
+    {&GfMenuFieldSkillAdapter::update_Lv, {GfMenuAdapter::unknown004_0, 0, 99}},
 };
 
 GfMenuFieldSkillAdapter::GfMenuFieldSkillAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(nullptr) {}

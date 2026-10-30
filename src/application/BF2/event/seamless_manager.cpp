@@ -127,7 +127,7 @@ void SeamlessManager::addSeamPoint(f32 frame, const PosAxis &axis) {
       unknown540.erase(unknown540.begin());
     }
   }
-  unknown540.push_back(SeamPoint(frame, axis.calcPos()));
+  unknown540.push_back(unknown001(frame, axis.calcPos()));
 }
 
 bool SeamlessManager::isActiveSeamPoint() const { return !unknown540.empty(); }

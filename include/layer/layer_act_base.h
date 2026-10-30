@@ -21,7 +21,8 @@ struct LyrActionData {
 
 static_assert(sizeof(LyrActionData) == 0x2c, "");
 
-struct LyrActionHeader {
+// Inferred role: layer action header; original type name unknown.
+struct unknown083 {
   u32 unknown00; // Inferred role: flags; original member name unknown.
   u32 unknown04; // Inferred role: offset of the actions; original member name unknown.
   s32 unknown08; // Inferred role: action count; original member name unknown.
@@ -29,7 +30,8 @@ struct LyrActionHeader {
   u32 unknown10; // Inferred role: first action idx; original member name unknown.
 };
 
-struct LayerActWork {
+// Inferred role: layer act work; original type name unknown.
+struct unknown084 {
   const u8 *unknown00;            // Inferred role: data; original member name unknown.
   const LyrActionData *unknown08; // Inferred role: actions; original member name unknown.
   s32 unknown10;                  // Inferred role: action num; original member name unknown.
@@ -41,8 +43,8 @@ struct LayerActWork {
   u32 *unknown28;                 // Inferred role: action works; original member name unknown.
 };
 
-static_assert(offsetof(LayerActWork, unknown20) == 0x20, "");
-static_assert(sizeof(LayerActWork) == 0x30, "");
+static_assert(offsetof(unknown084, unknown20) == 0x20, "");
+static_assert(sizeof(unknown084) == 0x30, "");
 
 class LayerActBase : public LayerObj {
 public:
@@ -63,7 +65,7 @@ public:
 
   static bool (LayerActBase::*s_pCallActEnd[])(const LyrActionData *action, bool isCmdEnd);
 
-  LayerActWork *unknown250; // Inferred role: act work; original member name unknown.
+  unknown084 *unknown250; // Inferred role: act work; original member name unknown.
 };
 
 static_assert(offsetof(LayerActBase, unknown250) == 0x250, "");

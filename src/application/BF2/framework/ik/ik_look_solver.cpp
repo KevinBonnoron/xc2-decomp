@@ -96,7 +96,7 @@ void LookIkSolver::setEnableSpine(bool enable) {
     if (!isSpineEnable && unknown28->isEnable()) {
       unknown20->fadeIn(unknown30.unknown04);
     }
-  } else if (isSpineEnable || unknown20->unknown24 == IkFadeSolver::FADE_STATE_IN) {
+  } else if (isSpineEnable || unknown20->unknown24 == IkFadeSolver::unknown002_1) {
     unknown20->fadeOut(unknown30.unknown00);
   }
 

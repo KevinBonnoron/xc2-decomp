@@ -20,7 +20,8 @@ public:
     FLAG_SYNC = 1 << 0,
   };
 
-  struct Flags {
+  // Inferred role: flags; original type name unknown.
+  struct unknown001 {
     bool test(u16 flag) const { return m_bits & flag; }
     void set(u16 flag) { m_bits |= flag; }
 
@@ -50,7 +51,7 @@ public:
   T *m_front;
   T *m_back;
   T m_buffers[2];
-  Flags m_flags;
+  unknown001 m_flags;
   u8 m_bank;
   u8 m_cpuBank;
 };

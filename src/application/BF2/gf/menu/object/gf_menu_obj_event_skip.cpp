@@ -41,7 +41,7 @@ void GfMenuObjEventSkip::close() {
   if (ui::UIObjectAcc(object).isValid()) {
     if (!ui::UIObjectAcc(object).isTerm()) {
       ui::EventData event;
-      event.unknown00 = GfMenuTypes::UI_EVENT_CLOSE;
+      event.unknown00 = GfMenuTypes::unknown003_34;
       sendEvent(object, event, 0.0f);
     }
   }
@@ -55,7 +55,7 @@ void GfMenuObjEventSkip::open(GfMenuCallContext *context) {
     if (!ui::UIObjectAcc(object).isTerm()) {
       startCallContext(context, CALL_EVENT_SKIP, object);
       ui::EventData event;
-      event.unknown00 = GfMenuTypes::UI_EVENT_OPEN;
+      event.unknown00 = GfMenuTypes::unknown003_33;
       sendEvent(object, event, 0.0f);
       GfMenuObjUtil::playSE(3);
     }

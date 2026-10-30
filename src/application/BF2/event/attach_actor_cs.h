@@ -22,8 +22,9 @@ class AttachActorCS : public AttachActorBase {
 public:
   static constexpr u32 EFFECT_COUNT = 128;
 
-  struct Mount {
-    Mount(u32 effect, const char *bone, mm::Vec3 offset, bool isRotate, ATTACH_TYPE type) : unknown0(effect), unknown8(bone), unknown30(offset), unknown40(isRotate), unknown44(type) {}
+  // Inferred role: mount; original type name unknown.
+  struct unknown001 {
+    unknown001(u32 effect, const char *bone, mm::Vec3 offset, bool isRotate, ATTACH_TYPE type) : unknown0(effect), unknown8(bone), unknown30(offset), unknown40(isRotate), unknown44(type) {}
 
     // Inferred record layout; original type and member names are unknown.
     u32 unknown0;                 // Effect identifier.
@@ -46,13 +47,13 @@ public:
 
 private:
   // Inferred roles from access offsets; original member names are unknown.
-  gf::GF_OBJ_HANDLE *unknowna0;                           // Owner handle.
-  mm::mtl::FixedVector<u32 *, EFFECT_COUNT> unknowna8;    // Caster identifiers.
-  mm::mtl::FixedVector<Mount *, EFFECT_COUNT> unknown4b0; // Mount records.
+  gf::GF_OBJ_HANDLE *unknowna0;                                // Owner handle.
+  mm::mtl::FixedVector<u32 *, EFFECT_COUNT> unknowna8;         // Caster identifiers.
+  mm::mtl::FixedVector<unknown001 *, EFFECT_COUNT> unknown4b0; // Mount records.
 };
 
-static_assert(offsetof(AttachActorCS::Mount, unknown30) == 0x30, "");
-static_assert(offsetof(AttachActorCS::Mount, unknown44) == 0x44, "");
+static_assert(offsetof(AttachActorCS::unknown001, unknown30) == 0x30, "");
+static_assert(offsetof(AttachActorCS::unknown001, unknown44) == 0x44, "");
 static_assert(sizeof(AttachActorCS) == 0x8c0, "");
 
 } // namespace event

@@ -8,7 +8,8 @@ namespace gf {
 
 struct SDataBlade;
 
-struct EquipHanaArts {
+// Inferred role: equip hana arts; original type name unknown.
+struct unknown066 {
   u16 unknown00; // Inferred role: enhance; original member name unknown.
   u16 unknown02; // Inferred role: recast reverse of the n arts; original member name unknown.
   u16 unknown04; // Inferred role: parts; original member name unknown.
@@ -16,25 +17,25 @@ struct EquipHanaArts {
   u16 unknown0a; // Inferred role: handle; original member name unknown.
 };
 
-static_assert(offsetof(EquipHanaArts, unknown02) == 0x02, "");
-static_assert(offsetof(EquipHanaArts, unknown04) == 0x04, "");
-static_assert(offsetof(EquipHanaArts, unknown0a) == 0x0a, "");
-static_assert(sizeof(EquipHanaArts) == 0x0c, "");
+static_assert(offsetof(unknown066, unknown02) == 0x02, "");
+static_assert(offsetof(unknown066, unknown04) == 0x04, "");
+static_assert(offsetof(unknown066, unknown0a) == 0x0a, "");
+static_assert(sizeof(unknown066) == 0x0c, "");
 
 struct EquipHana {
   void setArtsParts(u32 parts, u32 handle, u32 index);
   void setNArtsParts(u32 parts, u32 handle, u32 index);
 
-  u16 unknown00;                                   // Inferred role: role; original member name unknown.
-  u16 unknown02;                                   // Inferred role: attribute; original member name unknown.
-  mm::mtl::FixedArray<EquipHanaArts, 3> unknown04; // Inferred role: arts; original member name unknown.
-  mm::mtl::FixedArray<EquipHanaArts, 3> unknown28; // Inferred role: n arts; original member name unknown.
-  mm::mtl::FixedArray<u16, 3> unknown4c;           // Inferred role: condenser; original member name unknown.
-  mm::mtl::FixedArray<u16, 3> unknown52;           // Inferred role: extend condenser; original member name unknown.
-  GfItemHandle unknown58;                          // Inferred role: role handle; original member name unknown.
-  GfItemHandle unknown5c;                          // Inferred role: attribute handle; original member name unknown.
-  GfItemHandle unknown60[3];                       // Inferred role: condenser handles; original member name unknown.
-  GfItemHandle unknown6c[3];                       // Inferred role: extend condenser handles; original member name unknown.
+  u16 unknown00;                                // Inferred role: role; original member name unknown.
+  u16 unknown02;                                // Inferred role: attribute; original member name unknown.
+  mm::mtl::FixedArray<unknown066, 3> unknown04; // Inferred role: arts; original member name unknown.
+  mm::mtl::FixedArray<unknown066, 3> unknown28; // Inferred role: n arts; original member name unknown.
+  mm::mtl::FixedArray<u16, 3> unknown4c;        // Inferred role: condenser; original member name unknown.
+  mm::mtl::FixedArray<u16, 3> unknown52;        // Inferred role: extend condenser; original member name unknown.
+  GfItemHandle unknown58;                       // Inferred role: role handle; original member name unknown.
+  GfItemHandle unknown5c;                       // Inferred role: attribute handle; original member name unknown.
+  GfItemHandle unknown60[3];                    // Inferred role: condenser handles; original member name unknown.
+  GfItemHandle unknown6c[3];                    // Inferred role: extend condenser handles; original member name unknown.
 };
 
 static_assert(offsetof(EquipHana, unknown04) == 0x04, "");

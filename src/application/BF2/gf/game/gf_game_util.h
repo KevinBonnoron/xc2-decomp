@@ -22,12 +22,13 @@ struct SDataGame;
 
 enum GAMELOG_PRIO {};
 
-enum DriverSkillLevelUpResult {
-  DRIVER_SKILL_LEVEL_UP_OK,
-  DRIVER_SKILL_LEVEL_UP_MAX_LEVEL,
-  DRIVER_SKILL_LEVEL_UP_INVALID_LEVEL,
-  DRIVER_SKILL_LEVEL_UP_NOT_ENOUGH_POINT,
-  DRIVER_SKILL_LEVEL_UP_LOCKED,
+// Inferred role: driver skill level up result; original type name unknown.
+enum unknown064 {
+  unknown064_0, // Inferred role: ok; original name unknown.
+  unknown064_1, // Inferred role: max level; original name unknown.
+  unknown064_2, // Inferred role: invalid level; original name unknown.
+  unknown064_3, // Inferred role: not enough point; original name unknown.
+  unknown064_4, // Inferred role: locked; original name unknown.
 };
 
 class GfGameUtil {
@@ -52,8 +53,8 @@ public:
   static void execLevelUp(u32 driver, u32 level);
   static void execLevelUpForDebug(u32 driver, u32 level);
   static void execDriverArtsLevelUp(u32 driver, u32 arts, u32 level);
-  static DriverSkillLevelUpResult execDriverSkillLevelUp(u32 driver, u32 row, u32 level, bool isHidden);
-  static DriverSkillLevelUpResult checkDriverSkillLevelUp(u32 driver, u32 row, u32 level, bool isHidden);
+  static unknown064 execDriverSkillLevelUp(u32 driver, u32 row, u32 level, bool isHidden);
+  static unknown064 checkDriverSkillLevelUp(u32 driver, u32 row, u32 level, bool isHidden);
   static void addWp(u32 driver, u32 weaponType, int weaponPoint);
   static void addWpForReserve(int weaponPoint);
   static void addWpForObject(u32 driver, u32 weaponType, int weaponPoint);

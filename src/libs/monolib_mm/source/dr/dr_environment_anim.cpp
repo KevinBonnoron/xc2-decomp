@@ -22,8 +22,8 @@ f32 DrEnvironmentAnim::setupAnim(void *frames, const u8 *data, u32 offset) {
   unknown30 = static_cast<f32 *>(frames);
   unknown00 = reinterpret_cast<const unknown001 *>(data + header[1]);
   unknown08 = data + header[3];
-  unknown10 = reinterpret_cast<const LgtHermiteKey *>(data + header[5]);
-  unknown18 = reinterpret_cast<const LgtBitKey *>(data + header[7]);
+  unknown10 = reinterpret_cast<const unknown086 *>(data + header[5]);
+  unknown18 = reinterpret_cast<const unknown087 *>(data + header[7]);
   unknown20 = data + header[9];
   unknown28 = static_cast<int>(header[0]);
   f32 maxFrame = 0.0f;
@@ -39,8 +39,8 @@ void DrEnvironmentAnim::changeMemAnim(const u8 *data, u32 offset) {
   const u32 *header = reinterpret_cast<const u32 *>(data + offset);
   unknown00 = reinterpret_cast<const unknown001 *>(data + header[1]);
   unknown08 = data + header[3];
-  unknown10 = reinterpret_cast<const LgtHermiteKey *>(data + header[5]);
-  unknown18 = reinterpret_cast<const LgtBitKey *>(data + header[7]);
+  unknown10 = reinterpret_cast<const unknown086 *>(data + header[5]);
+  unknown18 = reinterpret_cast<const unknown087 *>(data + header[7]);
   unknown20 = data + header[9];
 }
 
@@ -95,11 +95,11 @@ inline f32 DrEnvironmentAnim::getHermiteAttr(const LgtAnimInf *inf, f32 frame) {
   if (inf->unknown08 <= frame) {
     return unknown10[inf->unknown00 + inf->unknown0e - 1].unknown08;
   }
-  const LgtHermiteKey *key = &unknown10[inf->unknown00 + 1];
+  const unknown086 *key = &unknown10[inf->unknown00 + 1];
   for (int i = 1; i < inf->unknown0e; i++, key++) {
     f32 keyFrame = key->unknown0c;
     if (frame < keyFrame) {
-      const LgtHermiteKey *prev = key - 1;
+      const unknown086 *prev = key - 1;
       f32 prevFrame = prev->unknown0c;
       f32 length = keyFrame - prevFrame;
       f32 t = (frame - prevFrame) / length;
@@ -232,7 +232,7 @@ u16 DrEnvironmentAnim::getBitAttr(const LgtAnimInf *inf, f32 frame) {
   if (inf->unknown08 <= frame) {
     return unknown18[inf->unknown00 + inf->unknown0e - 1].value;
   }
-  const LgtBitKey *key = &unknown18[inf->unknown00 + 1];
+  const unknown087 *key = &unknown18[inf->unknown00 + 1];
   for (int i = 1; i < inf->unknown0e; i++, key++) {
     f32 keyFrame = key->frame;
     if (frame < keyFrame) {

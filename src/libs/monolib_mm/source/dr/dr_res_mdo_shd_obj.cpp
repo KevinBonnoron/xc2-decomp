@@ -4,9 +4,9 @@
 
 namespace ml {
 
-static const MdsDecShdHeader *getDecShdHeader(const u8 *resource) { return reinterpret_cast<const MdsDecShdHeader *>(resource + *reinterpret_cast<const u32 *>(resource + 0x88)); }
+static const unknown042 *getDecShdHeader(const u8 *resource) { return reinterpret_cast<const unknown042 *>(resource + *reinterpret_cast<const u32 *>(resource + 0x88)); }
 
-static const MdsDecShdInfo *getDecShdInfos(const MdsDecShdHeader *header) { return reinterpret_cast<const MdsDecShdInfo *>(reinterpret_cast<const u8 *>(header) + header->infoOfs); }
+static const unknown041 *getDecShdInfos(const unknown042 *header) { return reinterpret_cast<const unknown041 *>(reinterpret_cast<const u8 *>(header) + header->infoOfs); }
 
 DrResMdoShdObj::DrResMdoShdObj() : unknown00(nullptr), unknown08(nullptr), unknown10(0) {}
 
@@ -58,13 +58,13 @@ u32 DrResMdoShdObj::getDecShdParmMax(u32 index) const {
 }
 
 int DrResMdoShdObj::calcWorkSize(const u8 *resource) {
-  const MdsDecShdHeader *header = getDecShdHeader(resource);
+  const unknown042 *header = getDecShdHeader(resource);
   int size = 0;
-  const MdsDecShdInfo *info = getDecShdInfos(header);
+  const unknown041 *info = getDecShdInfos(header);
   for (int i = 0; i < header->num; i++, info++) {
     size += info->unknown10;
   }
-  return size + (-size & 3) + header->num * sizeof(DrResMdoDecShd) + sizeof(DrResMdoShdObj);
+  return size + (-size & 3) + header->num * sizeof(unknown043) + sizeof(DrResMdoShdObj);
 }
 
 void DrResMdoShdObj::release(DrResMdoShdObj *&shdObj) {

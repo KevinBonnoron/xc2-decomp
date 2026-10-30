@@ -20,7 +20,8 @@ constexpr int FLAG_BLADE_HOMURI_NAME_HIKARI = 0x89fb;
 
 enum GfIdea {};
 
-struct SDataBladeArts {
+// Inferred role: save data blade arts; original type name unknown.
+struct unknown108 {
   u16 unknown00; // Inferred role: id; original member name unknown.
   u16 unknown02; // Inferred role: arts h; original member name unknown.
   u8 _04[0x06 - 0x04];
@@ -30,13 +31,14 @@ struct SDataBladeArts {
   u8 _09[0x0c - 0x09];
 };
 
-static_assert(offsetof(SDataBladeArts, unknown02) == 0x02, "");
-static_assert(offsetof(SDataBladeArts, unknown06) == 0x06, "");
-static_assert(offsetof(SDataBladeArts, unknown07) == 0x07, "");
-static_assert(offsetof(SDataBladeArts, unknown08) == 0x08, "");
-static_assert(sizeof(SDataBladeArts) == 0x0c, "");
+static_assert(offsetof(unknown108, unknown02) == 0x02, "");
+static_assert(offsetof(unknown108, unknown06) == 0x06, "");
+static_assert(offsetof(unknown108, unknown07) == 0x07, "");
+static_assert(offsetof(unknown108, unknown08) == 0x08, "");
+static_assert(sizeof(unknown108) == 0x0c, "");
 
-struct SDataBladeSkill {
+// Inferred role: save data blade skill; original type name unknown.
+struct unknown109 {
   u16 unknown00; // Inferred role: id; original member name unknown.
   u8 unknown02;  // Inferred role: achiev release level; original member name unknown.
   u8 unknown03;  // Inferred role: level; original member name unknown.
@@ -44,10 +46,10 @@ struct SDataBladeSkill {
   u8 _05[0x06 - 0x05];
 };
 
-static_assert(offsetof(SDataBladeSkill, unknown02) == 0x02, "");
-static_assert(offsetof(SDataBladeSkill, unknown03) == 0x03, "");
-static_assert(offsetof(SDataBladeSkill, unknown04) == 0x04, "");
-static_assert(sizeof(SDataBladeSkill) == 0x06, "");
+static_assert(offsetof(unknown109, unknown02) == 0x02, "");
+static_assert(offsetof(unknown109, unknown03) == 0x03, "");
+static_assert(offsetof(unknown109, unknown04) == 0x04, "");
+static_assert(sizeof(unknown109) == 0x06, "");
 
 struct AchievInfo {
   u16 unknown00; // Inferred role: achievement; original member name unknown.
@@ -61,17 +63,18 @@ static_assert(sizeof(AchievInfo) == 0x090, "");
 
 typedef AchievInfo SDataBladeAchievement;
 
-struct SDataBladeFavorite {
+// Inferred role: save data blade favorite; original type name unknown.
+struct unknown112 {
   u16 unknown00; // Inferred role: category; original member name unknown.
   u16 unknown02; // Inferred role: item; original member name unknown.
   u16 unknown04; // Inferred role: used category; original member name unknown.
   u16 unknown06; // Inferred role: used item; original member name unknown.
 };
 
-static_assert(offsetof(SDataBladeFavorite, unknown02) == 0x02, "");
-static_assert(offsetof(SDataBladeFavorite, unknown04) == 0x04, "");
-static_assert(offsetof(SDataBladeFavorite, unknown06) == 0x06, "");
-static_assert(sizeof(SDataBladeFavorite) == 0x08, "");
+static_assert(offsetof(unknown112, unknown02) == 0x02, "");
+static_assert(offsetof(unknown112, unknown04) == 0x04, "");
+static_assert(offsetof(unknown112, unknown06) == 0x06, "");
+static_assert(sizeof(unknown112) == 0x08, "");
 
 enum ActivateType {
   ACTIVATE_TYPE_UNUSE,
@@ -106,25 +109,25 @@ struct SDataBlade {
   u32 unknown08;       // Inferred role: born time; original member name unknown.
   SDataIdea unknown0c; // Inferred role: idea; original member name unknown.
   u8 _02c[0x034 - 0x02c];
-  u32 unknown34;                                    // Inferred role: trust point; original member name unknown.
-  GfIdea unknown38;                                 // Inferred role: trust rank; original member name unknown.
-  mm::mtl::FixedArray<SDataBladeArts, 3> unknown3c; // Inferred role: arts; original member name unknown.
-  mm::mtl::FixedArray<SDataBladeArts, 3> unknown60; // Inferred role: n arts; original member name unknown.
-  u16 unknown84;                                    // Inferred role: arts ex; original member name unknown.
-  u16 unknown86;                                    // Inferred role: arts ex h; original member name unknown.
+  u32 unknown34;                                // Inferred role: trust point; original member name unknown.
+  GfIdea unknown38;                             // Inferred role: trust rank; original member name unknown.
+  mm::mtl::FixedArray<unknown108, 3> unknown3c; // Inferred role: arts; original member name unknown.
+  mm::mtl::FixedArray<unknown108, 3> unknown60; // Inferred role: n arts; original member name unknown.
+  u16 unknown84;                                // Inferred role: arts ex; original member name unknown.
+  u16 unknown86;                                // Inferred role: arts ex h; original member name unknown.
   u8 _088[0x090 - 0x088];
   u16 unknown90; // Inferred role: arts ex2; original member name unknown.
   u16 unknown92; // Inferred role: arts ex2 h; original member name unknown.
   u8 _094[0x09c - 0x094];
-  mm::mtl::FixedArray<SDataBladeSkill, 3> unknown9c;        // Inferred role: skills; original member name unknown.
-  mm::mtl::FixedArray<SDataBladeSkill, 3> unknownae;        // Inferred role: field skills; original member name unknown.
+  mm::mtl::FixedArray<unknown109, 3> unknown9c;             // Inferred role: skills; original member name unknown.
+  mm::mtl::FixedArray<unknown109, 3> unknownae;             // Inferred role: field skills; original member name unknown.
   mm::mtl::FixedArray<u8, 4> unknownc0;                     // Inferred role: extra parts; original member name unknown.
   mm::mtl::FixedArray<SDataBladeAchievement, 3> unknownc4;  // Inferred role: arts achievements; original member name unknown.
   mm::mtl::FixedArray<SDataBladeAchievement, 3> unknown274; // Inferred role: skill achievements; original member name unknown.
   mm::mtl::FixedArray<SDataBladeAchievement, 3> unknown424; // Inferred role: field skill achievements; original member name unknown.
   SDataBladeAchievement unknown5d4;                         // Inferred role: key achievement; original member name unknown.
   u16 unknown664;                                           // Inferred role: key release level; original member name unknown.
-  mm::mtl::FixedArray<SDataBladeFavorite, 2> unknown666;    // Inferred role: favorites; original member name unknown.
+  mm::mtl::FixedArray<unknown112, 2> unknown666;            // Inferred role: favorites; original member name unknown.
   u8 _676[0x678 - 0x676];
   mm::mtl::FixedArray<u16, 3> unknown678; // Inferred role: equip orbs; original member name unknown.
   mm::mtl::FixedArray<u32, 3> unknown680; // Inferred role: equip orb handles; original member name unknown.
@@ -415,10 +418,10 @@ public:
   static u32 getBladeWeaponRank(u32 blade);
   static void setBladeWeapon(u32 blade, u32 weapon);
   static void setAttributeForDebug(u32 blade, u8 attribute);
-  static SDataBladeArts *getArts(u32 blade, u32 slot);
-  static SDataBladeArts *getNArts(u32 blade, u32 slot);
+  static unknown108 *getArts(u32 blade, u32 slot);
+  static unknown108 *getNArts(u32 blade, u32 slot);
   static u32 getArtsEnhance(u32 blade, u32 slot);
-  static SDataBladeSkill *getSkill(u32 blade, u32 slot);
+  static unknown109 *getSkill(u32 blade, u32 slot);
   static u32 getCreateEvent(u32 blade);
   static u16 getNormalTalk(u32 blade);
   static u32 getActBlade2CommonBlade(u32 blade);

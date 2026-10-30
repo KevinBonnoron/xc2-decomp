@@ -62,7 +62,7 @@ public:
 private:
   bool isActive(u32 target) const { return (m_target & target) != 0 && (unknown10 & target) == 0; }
 
-  mm::mtl::BitFlag<32> unknown08; // Inferred role: flags; original member name unknown.
+  mm::mtl::unknown027<32> unknown08; // Inferred role: flags; original member name unknown.
   u32 m_target;
   u32 unknown10;                                          // Inferred role: mask; original member name unknown.
   mm::mtl::FixedArray<f32, RESET_VOLUME_COUNT> unknown14; // Inferred role: reset volumes; original member name unknown.

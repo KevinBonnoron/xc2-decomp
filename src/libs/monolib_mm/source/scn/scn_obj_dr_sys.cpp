@@ -241,7 +241,7 @@ void ScnObjModelDrSysStandard::createScnMdl(int screen) {
   if (unknown3d8 == nullptr) {
     DrCreator creator;
     unknown3d8 = creator.createMdl(m_data, unknown350.c_str(), screen);
-    if (unknown3d8->unknown1c == DR_MDL_TYPE_SEAM) {
+    if (unknown3d8->unknown1c == unknown037_3) {
       unknown34c |= FLAG_SEAM;
     }
   }

@@ -15,7 +15,7 @@
 namespace gf {
 
 static GfMenuEnhanceAdapter::TypeInfo TYPE_INFOS[] = {
-    {&GfMenuEnhanceAdapter::update_Caption, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
+    {&GfMenuEnhanceAdapter::update_Caption, {GfMenuAdapter::unknown004_2, 0, 0}},
 };
 
 GfMenuEnhanceAdapter::GfMenuEnhanceAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(nullptr), unknown58(0), _5c() {}

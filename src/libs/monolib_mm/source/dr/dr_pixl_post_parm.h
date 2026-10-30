@@ -5,14 +5,16 @@
 
 namespace ml {
 
-struct GBuffDebugRange {
+// Inferred role: g buff debug range; original type name unknown.
+struct unknown038 {
   f32 unknown00; // Inferred role: min; original member name unknown.
   f32 unknown04; // Inferred role: max; original member name unknown.
 };
 
-static_assert(sizeof(GBuffDebugRange) == 0x8, "");
+static_assert(sizeof(unknown038) == 0x8, "");
 
-struct DrPixlPostDblParm {
+// Inferred role: pixl post dbl parm; original type name unknown.
+struct unknown039 {
   bool unknown00; // Inferred role: override tone map; original member name unknown.
   u8 _001[0x004 - 0x001];
   f32 unknown04; // Inferred role: tone map; original member name unknown.
@@ -47,16 +49,16 @@ struct DrPixlPostDblParm {
   u8 _280[0x520 - 0x280];
 };
 
-static_assert(offsetof(DrPixlPostDblParm, unknown04) == 0x004, "");
-static_assert(offsetof(DrPixlPostDblParm, unknown200) == 0x200, "");
-static_assert(offsetof(DrPixlPostDblParm, unknown21c) == 0x21c, "");
-static_assert(offsetof(DrPixlPostDblParm, unknown21f) == 0x21f, "");
-static_assert(offsetof(DrPixlPostDblParm, unknown224) == 0x224, "");
-static_assert(offsetof(DrPixlPostDblParm, unknown248) == 0x248, "");
-static_assert(offsetof(DrPixlPostDblParm, unknown26e) == 0x26e, "");
-static_assert(offsetof(DrPixlPostDblParm, unknown270) == 0x270, "");
-static_assert(offsetof(DrPixlPostDblParm, unknown27c) == 0x27c, "");
-static_assert(sizeof(DrPixlPostDblParm) == 0x520, "");
+static_assert(offsetof(unknown039, unknown04) == 0x004, "");
+static_assert(offsetof(unknown039, unknown200) == 0x200, "");
+static_assert(offsetof(unknown039, unknown21c) == 0x21c, "");
+static_assert(offsetof(unknown039, unknown21f) == 0x21f, "");
+static_assert(offsetof(unknown039, unknown224) == 0x224, "");
+static_assert(offsetof(unknown039, unknown248) == 0x248, "");
+static_assert(offsetof(unknown039, unknown26e) == 0x26e, "");
+static_assert(offsetof(unknown039, unknown270) == 0x270, "");
+static_assert(offsetof(unknown039, unknown27c) == 0x27c, "");
+static_assert(sizeof(unknown039) == 0x520, "");
 
 class DrPixlPostParm {
 public:
@@ -238,7 +240,7 @@ public:
   u8 _02a4[0x0304 - 0x02a4];
   bool unknown304; // Inferred role: deffered color; original member name unknown.
   u8 _0305[0x0320 - 0x0305];
-  GBuffDebugRange unknown320[5]; // Inferred role: g buff debug ranges; original member name unknown.
+  unknown038 unknown320[5]; // Inferred role: g buff debug ranges; original member name unknown.
   u8 _0348[0x0360 - 0x0348];
   f32 unknown360; // Inferred role: shadow str; original member name unknown.
   u8 _0364[0x037c - 0x0364];
@@ -265,7 +267,7 @@ public:
   u8 _048b[0x04d0 - 0x048b];
   bool unknown4d0; // Inferred role: glass br; original member name unknown.
   u8 _04d1[0x0518 - 0x04d1];
-  DrPixlPostDblParm unknown518[2]; // Inferred role: dbl parms; original member name unknown.
+  unknown039 unknown518[2]; // Inferred role: dbl parms; original member name unknown.
   u8 _0f58[0x0f72 - 0x0f58];
   bool unknownf72; // Inferred role: blm 2 pass; original member name unknown.
   u8 _0f73[0x0fb2 - 0x0f73];

@@ -9,7 +9,7 @@ namespace gf {
 namespace {
 
 // Original name unknown: common start of the GfInitParamEnemy setup functions.
-void unknown001(GfInitParamEnemy &param, CharacterType type, u32 enArrange) {
+void unknown001(GfInitParamEnemy &param, unknown030 type, u32 enArrange) {
   param.unknown08 = type;
   param.m_enArrangeID = enArrange;
   param.unknown98 = GfBdatChrEnArrange::get()->getChrEnArrangeParamID(enArrange);
@@ -23,7 +23,7 @@ u32 GfInitParam::getEnArrangeID() const { return 0; }
 bool GfInitParamBlade::isAllWeapon() const { return m_allWeapon; }
 
 void GfInitParamBlade::setupForParty(u32 blade, int slot, u32 driver, GF_OBJ_HANDLE *owner, bool isVirtual) {
-  unknown08 = CHARACTER_TYPE_PARTY;
+  unknown08 = unknown030_1;
   unknown90 = true;
   unknown20 = blade;
   m_bladeID = driver;
@@ -34,7 +34,7 @@ void GfInitParamBlade::setupForParty(u32 blade, int slot, u32 driver, GF_OBJ_HAN
 }
 
 void GfInitParamBlade::setupForEvent(u32 blade, bool isFirst) {
-  unknown08 = CHARACTER_TYPE_EVENT;
+  unknown08 = unknown030_2;
   m_bladeID = blade;
   unknown40 = 7;
   unknown4c = GfDataBlade::getScale(blade);
@@ -44,7 +44,7 @@ void GfInitParamBlade::setupForEvent(u32 blade, bool isFirst) {
 }
 
 void GfInitParamBlade::setupForEventWithWeapon(u32 blade) {
-  unknown08 = CHARACTER_TYPE_EVENT;
+  unknown08 = unknown030_2;
   m_bladeID = blade;
   unknown40 = 7;
   unknown4c = GfDataBlade::getScale(blade);
@@ -55,7 +55,7 @@ void GfInitParamBlade::setupForEventWithWeapon(u32 blade) {
 }
 
 void GfInitParamBlade::setupForActViewer(u32 blade, u32 weapon) {
-  unknown08 = CHARACTER_TYPE_UNKNOWN_10;
+  unknown08 = unknown030_10;
   m_bladeID = blade;
   unknown94 = weapon;
   unknown4c = GfDataBlade::getScale(blade);
@@ -63,7 +63,7 @@ void GfInitParamBlade::setupForActViewer(u32 blade, u32 weapon) {
 }
 
 void GfInitParamBlade::setupForActViewerEvent(u32 blade, u32 weapon) {
-  unknown08 = CHARACTER_TYPE_ACT_VIEWER_EVENT;
+  unknown08 = unknown030_11;
   m_bladeID = blade;
   unknown94 = weapon;
   unknown40 = 7;
@@ -71,14 +71,14 @@ void GfInitParamBlade::setupForActViewerEvent(u32 blade, u32 weapon) {
 }
 
 void GfInitParamBlade::setupForActViewerUI(u32 blade, u32 weapon) {
-  unknown08 = CHARACTER_TYPE_EVENT_NPC;
+  unknown08 = unknown030_12;
   m_bladeID = blade;
   unknown94 = weapon;
   unknown4c = GfDataBlade::getScale(blade);
 }
 
 void GfInitParamBlade::setupForUi(u32 blade, VIEWCAM camera) {
-  unknown08 = CHARACTER_TYPE_EVENT_DRIVER;
+  unknown08 = unknown030_6;
   m_bladeID = blade;
   unknown24 = camera;
   unknown40 = 10;
@@ -93,7 +93,7 @@ u32 GfInitParamEnemy::getBladeID() const { return m_bladeID; }
 u32 GfInitParamEnemy::getEnArrangeID() const { return m_enArrangeID; }
 
 void GfInitParamEnemy::setupForEvent(u32 enArrange) {
-  unknown001(*this, CHARACTER_TYPE_EVENT, enArrange);
+  unknown001(*this, unknown030_2, enArrange);
   unknowna4 = GfBdatChrEnParam::get()->getChrEnParamResourceID(unknown98);
   unknown40 = 8;
   unknown81 = false;
@@ -101,14 +101,14 @@ void GfInitParamEnemy::setupForEvent(u32 enArrange) {
 }
 
 void GfInitParamEnemy::setupEnArrangeId(u32 enArrange) {
-  unknown001(*this, CHARACTER_TYPE_UNKNOWN_4, enArrange);
+  unknown001(*this, unknown030_4, enArrange);
   unknowna4 = GfBdatChrEnParam::get()->getChrEnParamResourceID(unknown98);
   unknown40 = 5;
 }
 
 void GfInitParamEnemy::setupBlade(const GfInitParamEnemy &enemy) {
   GfBdatChrEnArrange *arrange = GfBdatChrEnArrange::get();
-  unknown08 = CHARACTER_TYPE_ENEMY_BLADE;
+  unknown08 = unknown030_5;
   m_enArrangeID = arrange->getChrEnArrangeEnemyBladeID(enemy.m_enArrangeID);
   unknown98 = arrange->getChrEnArrangeParamID(m_enArrangeID);
   unknowna8 = 1;
@@ -118,14 +118,14 @@ void GfInitParamEnemy::setupBlade(const GfInitParamEnemy &enemy) {
 }
 
 void GfInitParamEnemy::setupForUi(u32 enArrange, VIEWCAM camera) {
-  unknown001(*this, CHARACTER_TYPE_EVENT_DRIVER, enArrange);
+  unknown001(*this, unknown030_6, enArrange);
   unknown40 = 11;
   unknown24 = camera;
   unknown81 = false;
 }
 
 void GfInitParamEnemy::setupForActViewer(u32 resource, const CBdatWrapper *bdat) {
-  unknown08 = CHARACTER_TYPE_UNKNOWN_10;
+  unknown08 = unknown030_10;
   GfInitParam::m_bladeID = resource;
   unknowna4 = resource;
   m_enArrangeID = 0;
@@ -151,7 +151,7 @@ void GfInitParamEnemy::setupForActViewer(u32 resource, const CBdatWrapper *bdat)
 }
 
 void GfInitParamEnemy::setupForActViewerEvent(u32 resource, const CBdatWrapper *bdat) {
-  unknown08 = CHARACTER_TYPE_ACT_VIEWER_EVENT;
+  unknown08 = unknown030_11;
   GfInitParam::m_bladeID = resource;
   unknowna4 = resource;
   m_enArrangeID = 0;

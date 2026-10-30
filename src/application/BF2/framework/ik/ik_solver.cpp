@@ -26,27 +26,27 @@ void IkSolver::bind(mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pos
   pose.addRef();
 }
 
-IkFadeSolver::IkFadeSolver() : unknown20(0.0f), unknown24(FADE_STATE_NONE), unknown28(0.0f), unknown2c(0.0f), unknown30(0.0f) {}
+IkFadeSolver::IkFadeSolver() : unknown20(0.0f), unknown24(unknown002_0), unknown28(0.0f), unknown2c(0.0f), unknown30(0.0f) {}
 
 void IkFadeSolver::solve(const UpdateInfo &info) {
   switch (unknown24) {
-  case FADE_STATE_IN: {
+  case unknown002_1: {
     unknown2c += info.unknown04;
     f32 rate = unknown2c / unknown28;
     if (rate >= 1.0f) {
       unknown20 = 1.0f;
-      unknown24 = FADE_STATE_NONE;
+      unknown24 = unknown002_0;
     } else {
       unknown20 = calcBezier(rate, unknown30, 1.0f);
     }
     break;
   }
-  case FADE_STATE_OUT: {
+  case unknown002_2: {
     unknown2c += info.unknown04;
     f32 rate = unknown2c / unknown28;
     if (rate >= 1.0f) {
       unknown20 = 0.0f;
-      unknown24 = FADE_STATE_NONE;
+      unknown24 = unknown002_0;
       onDisable();
     } else {
       unknown20 = calcBezier(rate, unknown30, 0.0f);
@@ -73,12 +73,12 @@ void IkFadeSolver::fadeIn(f32 time) {
   if (time > 0.0f) {
     unknown28 = time;
     unknown30 = unknown20;
-    unknown24 = FADE_STATE_IN;
+    unknown24 = unknown002_1;
   } else {
     unknown20 = 1.0f;
     unknown30 = 0.0f;
     unknown28 = 0.0f;
-    unknown24 = FADE_STATE_NONE;
+    unknown24 = unknown002_0;
   }
 
   unknown2c = 0.0f;
@@ -91,12 +91,12 @@ void IkFadeSolver::fadeOut(f32 time) {
   if (time > 0.0f) {
     unknown30 = unknown20;
     unknown28 = time;
-    unknown24 = FADE_STATE_OUT;
+    unknown24 = unknown002_2;
   } else {
     unknown28 = 0.0f;
     unknown30 = 0.0f;
     unknown20 = 0.0f;
-    unknown24 = FADE_STATE_NONE;
+    unknown24 = unknown002_0;
     onDisable();
   }
 

@@ -6,7 +6,7 @@
 
 namespace ml {
 
-class DevPerfNx : public IDevPerf, public IWorkInfomation {
+class DevPerfNx : public unknown074, public IWorkInfomation {
 public:
   DevPerfNx();
   ~DevPerfNx() override;

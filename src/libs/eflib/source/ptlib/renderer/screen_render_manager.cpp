@@ -149,8 +149,8 @@ void ScreenRenderManager::InitTexture() {
 void ScreenRenderManager::InitFetchVertex() {
   void *memory = unknown0e0->sysAlloc(0x100, 0x10, nullptr, 0);
   grlib::CGLibVtxAttr attributes[2];
-  attributes[0] = {GRL_VTX_FORMAT_RGB32F, 0, 0, 0};
-  attributes[1] = {GRL_VTX_FORMAT_RG32F, 1, 0xc, 0};
+  attributes[0] = {unknown073_34, 0, 0, 0};
+  attributes[1] = {unknown073_22, 1, 0xc, 0};
   unknownd0.createMemFetchObj(memory, attributes, 2);
 }
 

@@ -30,10 +30,10 @@ public:
   virtual void term();
 
 private:
-  mm::mtl::BitFlag<FLAG_MAX> unknown08; // Inferred role: flags; original member name unknown.
-  gf::GF_OBJ_HANDLE *unknown10;         // Inferred role: handle; original member name unknown.
-  CharaPlayAction *unknown18;           // Inferred role: action; original member name unknown.
-  f32 unknown20;                        // Inferred role: life; original member name unknown.
+  mm::mtl::unknown027<FLAG_MAX> unknown08; // Inferred role: flags; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown10;            // Inferred role: handle; original member name unknown.
+  CharaPlayAction *unknown18;              // Inferred role: action; original member name unknown.
+  f32 unknown20;                           // Inferred role: life; original member name unknown.
 };
 
 static_assert(sizeof(CharaPlayTalkAuto) == 0x28, "");

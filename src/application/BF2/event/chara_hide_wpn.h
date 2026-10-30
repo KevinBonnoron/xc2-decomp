@@ -19,9 +19,9 @@ public:
   virtual void term();
 
 private:
-  mm::mtl::BitFlag<FLAG_MAX> unknown08; // Inferred role: flags; original member name unknown.
-  u32 unknown0c;                        // Inferred role: npc id; original member name unknown.
-  f32 unknown10;                        // Inferred role: time; original member name unknown.
+  mm::mtl::unknown027<FLAG_MAX> unknown08; // Inferred role: flags; original member name unknown.
+  u32 unknown0c;                           // Inferred role: npc id; original member name unknown.
+  f32 unknown10;                           // Inferred role: time; original member name unknown.
 };
 
 static_assert(sizeof(CharaHideWpn) == 0x18, "");

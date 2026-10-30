@@ -135,9 +135,9 @@ void DrResMdoInstPartsAnm::updateSwitch() {
       break;
     }
   }
-  const MdsInstAnmSwitch &entry = unknown68[index == -1 ? 0 : index];
-  unknown08.unknown00 = (entry.unknown00 & MdsInstAnmSwitch::FLAG_LOOP) == 0 ? unknown08.unknown00 & ~FLAG_LOOP : unknown08.unknown00 | FLAG_LOOP;
-  if (entry.unknown00 & MdsInstAnmSwitch::FLAG_FRAME) {
+  const unknown044 &entry = unknown68[index == -1 ? 0 : index];
+  unknown08.unknown00 = (entry.unknown00 & unknown044::FLAG_LOOP) == 0 ? unknown08.unknown00 & ~FLAG_LOOP : unknown08.unknown00 | FLAG_LOOP;
+  if (entry.unknown00 & unknown044::FLAG_FRAME) {
     u16 startFrame = entry.unknown04_0;
     u16 maxFrame = entry.unknown06_0 - entry.unknown04_0;
     if (unknown18->flags & MdsInstObjPosData::FLAG_NODE_ANM) {
@@ -227,7 +227,7 @@ namespace ml {
 DrResMdoInstAnmObj::DrResMdoInstAnmObj() { release(); }
 
 int DrResMdoInstAnmObj::getWorkSize(const u8 *data) {
-  const DrResMdoInstAnmHeader *header = reinterpret_cast<const DrResMdoInstAnmHeader *>(data);
+  const unknown045 *header = reinterpret_cast<const unknown045 *>(data);
   u32 size = header->unknown08 * 0x78 + header->unknown04 * 8 + (header->unknown28 + header->unknown34) * 0x30 + header->unknown18 * 0x28;
   u32 align = (0x10 - (size & 0xf)) & 0xf;
   return size + header->unknown18 * 0x160 + align;

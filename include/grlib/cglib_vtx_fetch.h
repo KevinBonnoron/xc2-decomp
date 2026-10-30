@@ -5,32 +5,33 @@
 
 struct NVNvertexAttribState;
 
-enum GrlVtxFormat {
-  GRL_VTX_FORMAT_R32F = 10,
-  GRL_VTX_FORMAT_R32UI = 11,
-  GRL_VTX_FORMAT_UNKNOWN_13 = 13,
-  GRL_VTX_FORMAT_RG16F = 17,
-  GRL_VTX_FORMAT_RG16SN = 19,
-  GRL_VTX_FORMAT_RG16UI = 20,
-  GRL_VTX_FORMAT_RG32F = 22,
-  GRL_VTX_FORMAT_RGB32F = 34,
-  GRL_VTX_FORMAT_RGBA8 = 37,
-  GRL_VTX_FORMAT_RGBA8SN = 38,
-  GRL_VTX_FORMAT_RGBA8UI = 39,
-  GRL_VTX_FORMAT_RGBA16 = 42,
-  GRL_VTX_FORMAT_RGBA16SN = 43,
-  GRL_VTX_FORMAT_RGBA16I = 45,
-  GRL_VTX_FORMAT_RGBA32F = 46,
-  GRL_VTX_FORMAT_RGBA32UI = 47,
+// Inferred role: vtx format; original type name unknown.
+enum unknown073 {
+  unknown073_10 = 10, // Inferred role: r32f; original name unknown.
+  unknown073_11 = 11, // Inferred role: r32ui; original name unknown.
+  unknown073_13 = 13,
+  unknown073_17 = 17, // Inferred role: rg16f; original name unknown.
+  unknown073_19 = 19, // Inferred role: rg16sn; original name unknown.
+  unknown073_20 = 20, // Inferred role: rg16ui; original name unknown.
+  unknown073_22 = 22, // Inferred role: rg32f; original name unknown.
+  unknown073_34 = 34, // Inferred role: rgb32f; original name unknown.
+  unknown073_37 = 37, // Inferred role: rgba8; original name unknown.
+  unknown073_38 = 38, // Inferred role: rgba8sn; original name unknown.
+  unknown073_39 = 39, // Inferred role: rgba8ui; original name unknown.
+  unknown073_42 = 42, // Inferred role: rgba16; original name unknown.
+  unknown073_43 = 43, // Inferred role: rgba16sn; original name unknown.
+  unknown073_45 = 45, // Inferred role: rgba16i; original name unknown.
+  unknown073_46 = 46, // Inferred role: rgba32f; original name unknown.
+  unknown073_47 = 47, // Inferred role: rgba32ui; original name unknown.
 };
 
 namespace grlib {
 
 struct CGLibVtxAttr {
-  GrlVtxFormat unknown00; // Inferred role: format; original member name unknown.
-  u32 unknown04;          // Inferred role: location; original member name unknown.
-  u32 unknown08;          // Inferred role: offset; original member name unknown.
-  u32 unknown0c;          // Inferred role: buffer index; original member name unknown.
+  unknown073 unknown00; // Inferred role: format; original member name unknown.
+  u32 unknown04;        // Inferred role: location; original member name unknown.
+  u32 unknown08;        // Inferred role: offset; original member name unknown.
+  u32 unknown0c;        // Inferred role: buffer index; original member name unknown.
 };
 
 class CGLibVtxFetch {

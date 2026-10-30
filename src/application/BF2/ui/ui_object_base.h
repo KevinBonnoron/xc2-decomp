@@ -39,11 +39,11 @@ public:
 
   bool isTerm() const { return unknown98.test(UI_OBJECT_FLAG_TERM); }
 
-  UITransform unknown20;          // Inferred role: transform; original member name unknown.
-  UIDisplayInfo unknown50;        // Inferred role: display info; original member name unknown.
-  mm::mtl::BitFlag<32> unknown98; // Inferred role: flags; original member name unknown.
-  u16 unknown9c;                  // Inferred role: duplicate index; original member name unknown.
-  mm::mtl::FixStr<32> unknowna0;  // Inferred role: name; original member name unknown.
+  UITransform unknown20;             // Inferred role: transform; original member name unknown.
+  UIDisplayInfo unknown50;           // Inferred role: display info; original member name unknown.
+  mm::mtl::unknown027<32> unknown98; // Inferred role: flags; original member name unknown.
+  u16 unknown9c;                     // Inferred role: duplicate index; original member name unknown.
+  mm::mtl::FixStr<32> unknowna0;     // Inferred role: name; original member name unknown.
 };
 
 static_assert(offsetof(UIObjectBase, unknown20) == 0x20, "");

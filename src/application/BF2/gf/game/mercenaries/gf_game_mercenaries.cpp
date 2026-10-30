@@ -103,7 +103,7 @@ void GfGameMercenaries::addPoint(u32 point) {
 }
 
 void GfGameMercenaries::setMissionCompleteForce(u32 mission) {
-  SDataMercenariesTeam *team = GfDataMercenaries::getTeamByMissionID(mission);
+  unknown120 *team = GfDataMercenaries::getTeamByMissionID(mission);
   if (team != nullptr) {
     team->unknown1c = ElapseTime();
     team->unknown20 = ElapseTime();
@@ -112,7 +112,7 @@ void GfGameMercenaries::setMissionCompleteForce(u32 mission) {
 }
 
 void GfGameMercenaries::setMissionTimeForDebug(u32 mission, u32 time) {
-  SDataMercenariesTeam *team = GfDataMercenaries::getTeamByMissionID(mission);
+  unknown120 *team = GfDataMercenaries::getTeamByMissionID(mission);
   if (team != nullptr && (team->unknown1c.unknown00_0 != 0 || team->unknown1c.unknown00_6 != 0 || team->unknown1c.unknown01_4 != 0)) {
     ElapseTime elapseTime = ElapseTime();
     elapseTime.unknown00_0 = time;
@@ -121,7 +121,7 @@ void GfGameMercenaries::setMissionTimeForDebug(u32 mission, u32 time) {
 }
 
 bool GfGameMercenaries::isAddTeamMember(u32 team) {
-  SDataMercenariesTeam *members = GfDataMercenaries::getTeamMember(team);
+  unknown120 *members = GfDataMercenaries::getTeamMember(team);
   for (u32 i = 0; i < 6; i++) {
     if (members->unknown00[i] == 0) {
       return true;
@@ -153,7 +153,7 @@ bool GfGameMercenaries::orderMission(u32 mission) {
 }
 
 bool GfGameMercenaries::addTeamMember(u32 team, u32 blade) {
-  SDataMercenariesTeam *members = GfDataMercenaries::getTeamMember(team);
+  unknown120 *members = GfDataMercenaries::getTeamMember(team);
   for (u32 i = 0; i < 6; i++) {
     if (members->unknown00[i] == 0) {
       members->unknown00[i] = blade;
@@ -167,7 +167,7 @@ bool GfGameMercenaries::addTeamMember(u32 team, u32 blade) {
 
 bool GfGameMercenaries::isRemoveTeamMember(u32 team, u32 blade) {
   if (blade != 0) {
-    SDataMercenariesTeam *members = GfDataMercenaries::getTeamMember(team);
+    unknown120 *members = GfDataMercenaries::getTeamMember(team);
     for (u32 i = 0; i < 6; i++) {
       if (members->unknown00[i] == blade) {
         return GfDataMercenaries::getReserverNum() < GfDataMercenaries::getReserverMax();
@@ -178,7 +178,7 @@ bool GfGameMercenaries::isRemoveTeamMember(u32 team, u32 blade) {
 }
 
 void GfGameMercenaries::clearTeamMember(u32 team) {
-  SDataMercenariesTeam *members = GfDataMercenaries::getTeamMember(team);
+  unknown120 *members = GfDataMercenaries::getTeamMember(team);
   if (members != nullptr) {
     for (u32 i = 0; i < 6; i++) {
       if (members->unknown00[i] != 0) {
@@ -304,7 +304,7 @@ void GfGameMercenaries::applyDestroyMission() {
 void GfGameMercenaries::execMissionAchievementForBlade(u32 mission) {
   SCOM_ACHIEV_INC::addTotalCount(0x14, 1);
   SCOM_ACHIEV_INC::create(0x14, 1, 0);
-  SDataMercenariesTeam *team = GfDataMercenaries::getTeamByMissionID(mission);
+  unknown120 *team = GfDataMercenaries::getTeamByMissionID(mission);
   if (team != nullptr) {
     for (u32 i = 0; i < 6; i++) {
       if (team->unknown00[i] != 0) {

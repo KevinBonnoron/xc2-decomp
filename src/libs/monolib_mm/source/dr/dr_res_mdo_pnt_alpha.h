@@ -7,10 +7,11 @@ namespace ml {
 
 class DrResMdoPntAlpha {
 public:
-  enum PntAlphaFlag {
-    PNT_ALPHA_FLAG_UNKNOWN_1 = 0x1,
-    PNT_ALPHA_FLAG_UNKNOWN_2 = 0x2,
-    PNT_ALPHA_FLAG_UNKNOWN_4 = 0x4,
+  // Inferred role: pnt alpha flag; original type name unknown.
+  enum unknown004 {
+    unknown004_1 = 0x1,
+    unknown004_2 = 0x2,
+    unknown004_4 = 0x4,
   };
 
   void init();

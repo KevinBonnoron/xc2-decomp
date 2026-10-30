@@ -19,7 +19,8 @@ namespace ml {
 class DrCalcStmListObj;
 struct MdsMdlVertexFmt;
 
-struct MdsVertexBuffInfo {
+// Inferred role: model data vertex buff info; original type name unknown.
+struct unknown046 {
   u32 unknown00; // Inferred role: offset; original member name unknown.
   u32 unknown04; // Inferred role: count; original member name unknown.
   u32 unknown08; // Inferred role: stride; original member name unknown.
@@ -28,9 +29,10 @@ struct MdsVertexBuffInfo {
   u8 _14[0x20 - 0x14];
 };
 
-static_assert(sizeof(MdsVertexBuffInfo) == 0x20, "");
+static_assert(sizeof(unknown046) == 0x20, "");
 
-struct MdsIndexBuffInfo {
+// Inferred role: model data index buff info; original type name unknown.
+struct unknown047 {
   u32 unknown00; // Inferred role: offset; original member name unknown.
   u32 unknown04; // Inferred role: count; original member name unknown.
   u16 unknown08; // Inferred role: primitive; original member name unknown.
@@ -38,40 +40,45 @@ struct MdsIndexBuffInfo {
   u8 _0b[0x14 - 0x0b];
 };
 
-static_assert(sizeof(MdsIndexBuffInfo) == 0x14, "");
+static_assert(sizeof(unknown047) == 0x14, "");
 
-struct MdsEtcVertexBuffInfo {
+// Inferred role: model data etc vertex buff info; original type name unknown.
+struct unknown048 {
   u32 unknown00; // Inferred role: offset; original member name unknown.
   u32 unknown04; // Inferred role: count; original member name unknown.
   u32 unknown08; // Inferred role: stride; original member name unknown.
   u8 _0c[0x10 - 0x0c];
 };
 
-static_assert(sizeof(MdsEtcVertexBuffInfo) == 0x10, "");
+static_assert(sizeof(unknown048) == 0x10, "");
 
-struct MdsEtcVertexInfo {
+// Inferred role: model data etc vertex info; original type name unknown.
+struct unknown049 {
   u8 unknown00;  // Inferred role: flags; original member name unknown.
   u16 unknown02; // Inferred role: etc vertex idx; original member name unknown.
   u16 unknown04; // Inferred role: mof blend idx; original member name unknown.
   u8 _06[0xc - 0x6];
 };
 
-static_assert(sizeof(MdsEtcVertexInfo) == 0xc, "");
+static_assert(sizeof(unknown049) == 0xc, "");
 
-struct MdsMofBlendInfo {
+// Inferred role: model data mof blend info; original type name unknown.
+struct unknown050 {
   u8 _00[0x8 - 0x0];
   s32 unknown08; // Inferred role: stride; original member name unknown.
   u8 _0c[0x10 - 0xc];
 };
 
-static_assert(sizeof(MdsMofBlendInfo) == 0x10, "");
+static_assert(sizeof(unknown050) == 0x10, "");
 
-struct MdsMofBlendHeader {
+// Inferred role: model data mof blend header; original type name unknown.
+struct unknown051 {
   u8 _00[0xc - 0x0];
   u32 infoOffset;
 };
 
-struct MdsUniformVertexInfo {
+// Inferred role: model data uniform vertex info; original type name unknown.
+struct unknown052 {
   u8 _00[0x4 - 0x0];
   u32 vertexOffset;
   u32 vertexSize;
@@ -81,21 +88,24 @@ struct MdsUniformVertexInfo {
   u32 vertexStride;
 };
 
-struct MdsWeightInfo {
+// Inferred role: model data weight info; original type name unknown.
+struct unknown053 {
   u8 _00[0x4 - 0x0];
   u32 unknown04; // Inferred role: vertex info offset; original member name unknown.
   u16 unknown08; // Inferred role: vertex idx; original member name unknown.
   u32 unknown0c; // Inferred role: vertex info idx offset; original member name unknown.
 };
 
-static_assert(offsetof(MdsWeightInfo, unknown08) == 0x8, "");
-static_assert(offsetof(MdsWeightInfo, unknown0c) == 0xc, "");
+static_assert(offsetof(unknown053, unknown08) == 0x8, "");
+static_assert(offsetof(unknown053, unknown0c) == 0xc, "");
 
-struct MdsWeightVertexInfo {
+// Inferred role: model data weight vertex info; original type name unknown.
+struct unknown054 {
   u8 _00[0x28 - 0x00];
 };
 
-struct MdsVertexHeader {
+// Inferred role: model data vertex header; original type name unknown.
+struct unknown055 {
   u32 unknown00;    // Inferred role: vertex offset; original member name unknown.
   u32 unknown04;    // Inferred role: vertex num; original member name unknown.
   u32 unknown08;    // Inferred role: index offset; original member name unknown.
@@ -111,10 +121,11 @@ struct MdsVertexHeader {
   u32 unknown38;    // Inferred role: weight offset; original member name unknown.
 };
 
-static_assert(offsetof(MdsVertexHeader, unknown1c) == 0x1c, "");
-static_assert(offsetof(MdsVertexHeader, unknown38) == 0x38, "");
+static_assert(offsetof(unknown055, unknown1c) == 0x1c, "");
+static_assert(offsetof(unknown055, unknown38) == 0x38, "");
 
-struct DrResUniformVertex {
+// Inferred role: resource uniform vertex; original type name unknown.
+struct unknown056 {
   grlib::CGLibVtxVertex *unknown00;       // Inferred role: vertex; original member name unknown.
   grlib::CGLibOneUniformBlock *unknown08; // Inferred role: uniform block; original member name unknown.
 };
@@ -134,7 +145,7 @@ public:
   u32 getVertexMax(int index) const;
   void setVertexBind(int index);
   u32 setWeightVertexBind(int index);
-  const MdsWeightVertexInfo *getWeightVertexInfo(int index, int pass);
+  const unknown054 *getWeightVertexInfo(int index, int pass);
   grlib::CGLibVtxVertex *getWeightVertex();
   void setEtcVertexBind(int index, int stream);
   void setMofBlendVertexBind(grlib::CGLibOneUniformArray *uniforms, int index, int stream);
@@ -150,10 +161,10 @@ public:
   const u8 *unknown10;       // Inferred role: resource key; original member name unknown.
   s32 unknown18;             // Inferred role: ref count; original member name unknown.
   u8 *m_buffer;
-  const MdsVertexHeader *unknown28;  // Inferred role: header; original member name unknown.
-  const MdsEtcVertexInfo *unknown30; // Inferred role: etc infos; original member name unknown.
-  const MdsMofBlendInfo *unknown38;  // Inferred role: mof blend infos; original member name unknown.
-  const MdsWeightInfo *unknown40;    // Inferred role: weight info; original member name unknown.
+  const unknown055 *unknown28;       // Inferred role: header; original member name unknown.
+  const unknown049 *unknown30;       // Inferred role: etc infos; original member name unknown.
+  const unknown050 *unknown38;       // Inferred role: mof blend infos; original member name unknown.
+  const unknown053 *unknown40;       // Inferred role: weight info; original member name unknown.
   u16 unknown48;                     // Inferred role: vertex num; original member name unknown.
   u16 unknown4a;                     // Inferred role: index num; original member name unknown.
   u16 unknown4c;                     // Inferred role: etc vertex num; original member name unknown.
@@ -162,7 +173,7 @@ public:
   grlib::CGLibVtxIndex *unknown58;   // Inferred role: indices; original member name unknown.
   grlib::CGLibVtxVertex *unknown60;  // Inferred role: etc vertices; original member name unknown.
   grlib::CGLibVtlMemPool *unknown68; // Inferred role: mem pool; original member name unknown.
-  DrResUniformVertex *unknown70;     // Inferred role: uniform vertex; original member name unknown.
+  unknown056 *unknown70;             // Inferred role: uniform vertex; original member name unknown.
   DrCalcStmListObj *unknown78;       // Inferred role: stm list; original member name unknown.
 };
 
@@ -175,41 +186,41 @@ static_assert(offsetof(DrResMdoVertex, unknown78) == 0x78, "");
 static_assert(sizeof(DrResMdoVertex) == 0x80, "");
 
 inline void DrResMdoVertex::changeMemVertex(const u8 *resource) {
-  const MdsVertexHeader *header = reinterpret_cast<const MdsVertexHeader *>(resource);
+  const unknown055 *header = reinterpret_cast<const unknown055 *>(resource);
   unknown28 = header;
   unknown68->delayRelease();
   unknown68->setupBuffer(const_cast<u8 *>(reinterpret_cast<const u8 *>(unknown28)) + header->unknown30, header->unknown2c);
-  const MdsVertexBuffInfo *vertexInfos = reinterpret_cast<const MdsVertexBuffInfo *>(reinterpret_cast<const u8 *>(unknown28) + header->unknown00);
+  const unknown046 *vertexInfos = reinterpret_cast<const unknown046 *>(reinterpret_cast<const u8 *>(unknown28) + header->unknown00);
   for (int i = 0; i < unknown48; i++) {
     unknown50[i].resetVertexBuff(unknown68, vertexInfos[i].unknown00);
   }
-  const MdsEtcVertexBuffInfo *etcVertexInfos = reinterpret_cast<const MdsEtcVertexBuffInfo *>(reinterpret_cast<const u8 *>(unknown28) + header->unknown20);
+  const unknown048 *etcVertexInfos = reinterpret_cast<const unknown048 *>(reinterpret_cast<const u8 *>(unknown28) + header->unknown20);
   for (int i = 0; i < unknown4c; i++) {
     unknown60[i].resetVertexBuff(unknown68, etcVertexInfos[i].unknown00);
   }
-  const MdsIndexBuffInfo *indexInfos = reinterpret_cast<const MdsIndexBuffInfo *>(reinterpret_cast<const u8 *>(unknown28) + header->unknown08);
+  const unknown047 *indexInfos = reinterpret_cast<const unknown047 *>(reinterpret_cast<const u8 *>(unknown28) + header->unknown08);
   for (int i = 0; i < unknown4a; i++) {
     unknown58[i].resetIndexBuff(unknown68, indexInfos[i].unknown00);
   }
   if (header->unknown34 != 0) {
-    const MdsUniformVertexInfo *uniformInfo = reinterpret_cast<const MdsUniformVertexInfo *>(reinterpret_cast<const u8 *>(unknown28) + header->unknown34);
+    const unknown052 *uniformInfo = reinterpret_cast<const unknown052 *>(reinterpret_cast<const u8 *>(unknown28) + header->unknown34);
     unknown70->unknown00->resetVertexBuff(unknown68, uniformInfo->vertexOffset);
     unknown70->unknown08->setup(unknown68, uniformInfo->uniformSize, uniformInfo->uniformOffset);
     unknown70->unknown08->updateData();
   }
   if (header->unknown1c != 0) {
-    unknown30 = reinterpret_cast<const MdsEtcVertexInfo *>(reinterpret_cast<const u8 *>(unknown28) + header->unknown1c);
+    unknown30 = reinterpret_cast<const unknown049 *>(reinterpret_cast<const u8 *>(unknown28) + header->unknown1c);
   } else {
     unknown30 = nullptr;
   }
   if (header->unknown28 != 0) {
     const u8 *base = reinterpret_cast<const u8 *>(unknown28);
-    unknown38 = reinterpret_cast<const MdsMofBlendInfo *>(base + reinterpret_cast<const MdsMofBlendHeader *>(base + header->unknown28)->infoOffset);
+    unknown38 = reinterpret_cast<const unknown050 *>(base + reinterpret_cast<const unknown051 *>(base + header->unknown28)->infoOffset);
   } else {
     unknown38 = nullptr;
   }
   if (header->unknown38 != 0) {
-    unknown40 = reinterpret_cast<const MdsWeightInfo *>(reinterpret_cast<const u8 *>(unknown28) + header->unknown38);
+    unknown40 = reinterpret_cast<const unknown053 *>(reinterpret_cast<const u8 *>(unknown28) + header->unknown38);
   } else {
     unknown40 = nullptr;
   }

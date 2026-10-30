@@ -21,8 +21,9 @@ public:
     u16 unknown02; // Inferred role: chara type; original member name unknown.
   };
 
-  struct LookInfo {
-    LookInfo() : unknown00(50.0f), unknown04(5.0f), unknown08(5.0f), unknown0c(3.0f), unknown10(5.0f), unknown14(0) {}
+  // Inferred role: look info; original type name unknown.
+  struct unknown001 {
+    unknown001() : unknown00(50.0f), unknown04(5.0f), unknown08(5.0f), unknown0c(3.0f), unknown10(5.0f), unknown14(0) {}
 
     f32 unknown00; // Inferred role: radius; original member name unknown.
     f32 unknown04; // Inferred role: upper height; original member name unknown.
@@ -37,7 +38,7 @@ public:
   GfBdatLookAt();
   void bdatRefresh() override;
   const CharactorInfo &getCharactorInfo(u32 category, u32 refId) const;
-  const LookInfo &getLookInfo(u32 category, u32 charaCategory, u32 target, u32 targetRefId) const;
+  const unknown001 &getLookInfo(u32 category, u32 charaCategory, u32 target, u32 targetRefId) const;
   f32 getMaxRadius();
   f32 getMaxUpper();
   f32 getMaxLower();
@@ -63,10 +64,10 @@ public:
   ~Impl();
   void build();
   const CharactorInfo *getCharactorInfo(u32 category, u32 refId) const;
-  const LookInfo *getLookInfo(u32 category, u32 charaCategory) const;
+  const unknown001 *getLookInfo(u32 category, u32 charaCategory) const;
 
   mm::mtl::FixedArray<CategoryTable, 16> unknown000; // Inferred role: tables per category; original member name unknown.
-  LookInfo unknown300[3][5];                         // Inferred role: look infos; original member name unknown.
+  unknown001 unknown300[3][5];                       // Inferred role: look infos; original member name unknown.
   f32 unknown468;                                    // Inferred role: max radius; original member name unknown.
   f32 unknown46c;                                    // Inferred role: max upper height; original member name unknown.
   f32 unknown470;                                    // Inferred role: max lower height; original member name unknown.
@@ -74,7 +75,7 @@ public:
 
 static_assert(sizeof(CategoryTable) == 0x30, "");
 static_assert(sizeof(GfBdatLookAt::CharactorInfo) == 0x4, "");
-static_assert(sizeof(GfBdatLookAt::LookInfo) == 0x18, "");
+static_assert(sizeof(GfBdatLookAt::unknown001) == 0x18, "");
 static_assert(offsetof(GfBdatLookAt::Impl, unknown300) == 0x300, "");
 static_assert(offsetof(GfBdatLookAt::Impl, unknown468) == 0x468, "");
 static_assert(offsetof(GfBdatLookAt::Impl, unknown470) == 0x470, "");

@@ -22,8 +22,8 @@ static_assert(offsetof(LyrFontStyleData, unknown04) == 0x04, "");
 static_assert(offsetof(LyrFontStyleData, unknown08) == 0x08, "");
 static_assert(sizeof(LyrFontStyleData) == 0x28, "");
 
-// Inferred layout of the pair returned by LayerAccFontStyle::getStyleInfo; original type name unknown.
-struct LayerStyleInfo {
+// Inferred role: pair returned by LayerAccFontStyle::getStyleInfo; original type name unknown.
+struct unknown085 {
   const void *unknown00;
   const LyrFontStyleData *unknown08;
 };
@@ -32,7 +32,7 @@ class LayerAccFontStyle {
 public:
   LayerAccFontStyle(LayerBase *layer);
   u32 getStyleDataMax() const;
-  LayerStyleInfo getStyleInfo(u32 index) const;
+  unknown085 getStyleInfo(u32 index) const;
   s32 getStyleIndex(const char *name) const;
   const char *getStyleName(u32 index) const;
   const char *getFontName(u32 index) const;

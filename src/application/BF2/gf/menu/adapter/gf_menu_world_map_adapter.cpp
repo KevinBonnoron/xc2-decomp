@@ -30,10 +30,10 @@ static const unknown001 unknown002[] = {
 };
 
 static GfMenuWorldMapAdapter::TypeInfo TYPE_INFOS[] = {
-    {&GfMenuWorldMapAdapter::update_WorldMapName, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
-    {&GfMenuWorldMapAdapter::update_DevelopPoint, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 20000}},
-    {&GfMenuWorldMapAdapter::update_DevelopLvIcon, {GfMenuAdapter::PLUGIN_TYPE_IMAGE, 0, 0}},
-    {&GfMenuWorldMapAdapter::update_CurrentDisp, {GfMenuAdapter::PLUGIN_TYPE_DISP, 0, 0}},
+    {&GfMenuWorldMapAdapter::update_WorldMapName, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuWorldMapAdapter::update_DevelopPoint, {GfMenuAdapter::unknown004_0, 0, 20000}},
+    {&GfMenuWorldMapAdapter::update_DevelopLvIcon, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuWorldMapAdapter::update_CurrentDisp, {GfMenuAdapter::unknown004_3, 0, 0}},
 };
 
 GfMenuWorldMapAdapter::GfMenuWorldMapAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(nullptr), unknown58(0), unknown5c(0) {}

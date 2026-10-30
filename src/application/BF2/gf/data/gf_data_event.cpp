@@ -27,12 +27,13 @@ constexpr u32 EVENT_BLADE_CREATE_COUNT = 58;
 constexpr u32 EVENT_BLADE_QUEST_COUNT = 504;
 constexpr int EVENT_PLAY_FLAG_COUNT = 2000;
 
-struct EventListBdat {
+// Inferred role: event list bdat; original type name unknown.
+struct unknown067 {
   u32 bdat;
   int playFlagCount;
 };
 
-static const EventListBdat eventListBdats[] = {
+static const unknown067 eventListBdats[] = {
     {BDAT_EVT_LIST_BF, 100},
     {BDAT_EVT_LIST_BL, 100},
     {BDAT_EVT_LIST_QST01, 100},
@@ -53,7 +54,7 @@ static const u16 saveScenarioEvents[] = {
 
 // Inferred role: bdat id of the event list holding the event; original name unknown.
 static u32 unknown001(u32 event) {
-  for (const EventListBdat *list = eventListBdats; list != eventListBdats + sizeof(eventListBdats) / sizeof(eventListBdats[0]); list++) {
+  for (const unknown067 *list = eventListBdats; list != eventListBdats + sizeof(eventListBdats) / sizeof(eventListBdats[0]); list++) {
     u8 *bdat = GfDataBdat::getFP(list->bdat);
     u32 top = Bdat::getIdTop(bdat);
     u32 end = top + Bdat::getIdCount(bdat);

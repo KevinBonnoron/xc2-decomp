@@ -78,7 +78,7 @@ void GfMenuItemList::sort(u32 type, bool ascending) {
   }
   std::function<bool(const MenuItemInfo &, const MenuItemInfo &)> compare;
   switch (type) {
-  case SORT_TIME: {
+  case unknown093_1: {
     u32 *times = new (getAllocator(ALLOCATOR_DEFAULT), nullptr, 0, 8) u32[getSize()];
     for (u32 i = 0; i < getSize(); i++) {
       times[i] = GfItemUtil::getItemTime(getContents(i).unknown04, getContents(i).unknown0c);
@@ -106,19 +106,19 @@ void GfMenuItemList::sort(u32 type, bool ascending) {
     delete[] times;
     return;
   }
-  case SORT_NAME:
+  case unknown093_2:
     compare = ascending ? sortNameDescending : sortNameAscending;
     break;
-  case SORT_RARITY:
+  case unknown093_3:
     compare = ascending ? sortRareAscending : sortRareDescending;
     break;
-  case SORT_SELL_PRICE:
+  case unknown093_7:
     compare = ascending ? sortSellPriceAscending : sortSellPriceDescending;
     break;
-  case SORT_FAVORITE_TIME:
+  case unknown093_8:
     compare = ascending ? sortFavoriteTimeAscending : sortFavoriteTimeDescending;
     break;
-  case SORT_TYPE:
+  case unknown093_9:
     switch (GfItemUtil::getType(getContents(0).unknown04)) {
     case ItemType::EQUIP_ORB:
       compare = ascending ? sortTypeAsCoreEquipAscending : sortTypeAsCoreEquipDescending;
@@ -142,13 +142,13 @@ void GfMenuItemList::sort(u32 type, bool ascending) {
       break;
     }
     break;
-  case SORT_WPN_RANK:
+  case unknown093_10:
     compare = ascending ? sortWpnRankAscending : sortWpnRankDescending;
     break;
-  case SORT_GET_AREA:
+  case unknown093_12:
     compare = ascending ? sortGetAreaAscending : sortGetAreaDescending;
     break;
-  case SORT_ID:
+  case unknown093_13:
     compare = ascending ? sortIdAscending : sortIdDescending;
     break;
   default:

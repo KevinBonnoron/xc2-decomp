@@ -20,12 +20,13 @@ enum LOAD_PRIO : int;
 
 class LocalizeResource : public CommonResource, public ml::IWorkEvent {
 public:
-  enum CheckState {
-    CHECK_STATE_NONE = 0,
-    CHECK_STATE_RETRY = 1,
-    CHECK_STATE_LANG = 2,
-    CHECK_STATE_DEFAULT = 3,
-    CHECK_STATE_DONE = 4,
+  // Inferred role: check state; original type name unknown.
+  enum unknown001 {
+    unknown001_0 = 0, // Inferred role: none; original name unknown.
+    unknown001_1 = 1, // Inferred role: retry; original name unknown.
+    unknown001_2 = 2, // Inferred role: lang; original name unknown.
+    unknown001_3 = 3, // Inferred role: default; original name unknown.
+    unknown001_4 = 4, // Inferred role: done; original name unknown.
   };
 
   LocalizeResource(mtl::ALLOC_HANDLE handle, LOAD_PRIO priority);
@@ -39,7 +40,7 @@ public:
   bool OnFileEvent(ml::EventFileTh *event) override;
 
   mm::mtl::FixStr<128> unknownd0; // Inferred role: localized path; original member name unknown.
-  CheckState unknown154;          // Inferred role: check state; original member name unknown.
+  unknown001 unknown154;          // Inferred role: check state; original member name unknown.
 };
 
 static_assert(offsetof(LocalizeResource, unknownd0) == 0xd0, "");

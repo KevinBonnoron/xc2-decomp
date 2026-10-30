@@ -23,7 +23,8 @@ public:
     bool operator()(const OrderInfo &order, const OrderInfo &other) const { return order.unknown04 < other.unknown04; }
   };
 
-  struct LocatorGroup {
+  // Inferred role: locator group; original type name unknown.
+  struct unknown001 {
     mm::mtl::Vector<GfFieldLocator> unknown00;            // Inferred role: locators; original member name unknown.
     u32 unknown28;                                        // Inferred role: data num; original member name unknown.
     mm::mtl::FixedVector<OrderInfo, ORDER_MAX> unknown30; // Inferred role: orders; original member name unknown.
@@ -35,13 +36,13 @@ public:
 
   bool unknown08; // Inferred role: initialized; original member name unknown.
   u8 _09[0x10 - 0x09];
-  LocatorGroup unknown10[LOCATOR_TYPE_COUNT]; // Inferred role: groups; original member name unknown.
+  unknown001 unknown10[LOCATOR_TYPE_COUNT]; // Inferred role: groups; original member name unknown.
 };
 
 static_assert(sizeof(GfMenuLocation::OrderInfo) == 0x8, "");
-static_assert(offsetof(GfMenuLocation::LocatorGroup, unknown28) == 0x28, "");
-static_assert(offsetof(GfMenuLocation::LocatorGroup, unknown30) == 0x30, "");
-static_assert(sizeof(GfMenuLocation::LocatorGroup) == 0x438, "");
+static_assert(offsetof(GfMenuLocation::unknown001, unknown28) == 0x28, "");
+static_assert(offsetof(GfMenuLocation::unknown001, unknown30) == 0x30, "");
+static_assert(sizeof(GfMenuLocation::unknown001) == 0x438, "");
 static_assert(offsetof(GfMenuLocation, unknown10) == 0x10, "");
 
 } // namespace gf

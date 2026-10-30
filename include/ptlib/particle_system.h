@@ -149,7 +149,8 @@ public:
   using ReadEndFunc = void (*)(void *data);
   using OutputStringFunc = void (*)(const char *text);
 
-  struct DrFunc {
+  // Inferred role: func; original type name unknown.
+  struct unknown003 {
     void *(*unknown00)(const void *model, const char *name, int index, const void *texture, int textureIndex); // Inferred role: create mdl; original member name unknown.
     void (*unknown08)(void *model);                                                                            // Inferred role: delete mdl; original member name unknown.
     void *(*unknown10)(u32 type, int index);                                                                   // Inferred role: create lgt; original member name unknown.
@@ -178,7 +179,7 @@ public:
   static ReadEndFunc s_pReadEndFunc;
   static OutputStringFunc s_pOutputDebugStringFunc;
   static OutputStringFunc s_pOutputWarnStringFunc;
-  static DrFunc s_pDrFunc;
+  static unknown003 s_pDrFunc;
 
   static bool isValid();
   static ParticleManager *&getPtr();
@@ -279,7 +280,7 @@ static_assert(offsetof(ParticleManager, unknown169) == 0x169, "");
 static_assert(offsetof(ParticleManager, unknown15c) == 0x15c, "");
 static_assert(offsetof(ParticleManager, unknown160) == 0x160, "");
 static_assert(offsetof(ParticleManager, unknown170) == 0x170, "");
-static_assert(sizeof(ParticleManager::DrFunc) == 0x80, "");
+static_assert(sizeof(ParticleManager::unknown003) == 0x80, "");
 
 void efAstMsg(const char *cond, const char *format, ...);
 void efMsg(const char *format, ...);

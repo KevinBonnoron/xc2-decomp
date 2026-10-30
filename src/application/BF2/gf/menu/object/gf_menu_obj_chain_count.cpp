@@ -42,7 +42,7 @@ void GfMenuObjChainCount::open() {
   ui::UIObjectAcc acc(getAttachedObject(CALL_CHAIN_COUNT));
   if (acc.isValid() && !acc.isTerm()) {
     ui::EventData event;
-    event.unknown00 = GfMenuTypes::UI_EVENT_OPEN;
+    event.unknown00 = GfMenuTypes::unknown003_33;
     sendEvent(acc.unknown10, event, 0.0f);
   }
 }
@@ -51,7 +51,7 @@ void GfMenuObjChainCount::close() {
   ui::UIObjectAcc acc(getAttachedObject(CALL_CHAIN_COUNT));
   if (acc.isValid() && !acc.isTerm()) {
     ui::EventData event;
-    event.unknown00 = GfMenuTypes::UI_EVENT_CLOSE;
+    event.unknown00 = GfMenuTypes::unknown003_34;
     sendEvent(acc.unknown10, event, 0.0f);
   }
 }

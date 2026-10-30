@@ -37,8 +37,9 @@ public:
     UNIT_STATE_REQUEST = 3,
   };
 
-  struct Unit {
-    Unit() : unknown00(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown08(0), unknown0c(UNIT_STATE_NONE), unknown10(0), unknown14(0.0f) {}
+  // Inferred role: unit; original type name unknown.
+  struct unknown001 {
+    unknown001() : unknown00(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown08(0), unknown0c(UNIT_STATE_NONE), unknown10(0), unknown14(0.0f) {}
 
     GF_OBJ_HANDLE *unknown00; // Inferred role: handle; original member name unknown.
     u16 unknown08;            // Inferred role: bdat id; original member name unknown.
@@ -63,7 +64,7 @@ public:
   void gevBattleStart() override;
 
   f32 unknown28;                                                             // Inferred role: elapsed time; original member name unknown.
-  Unit unknown30[UNIT_NUM];                                                  // Inferred role: units; original member name unknown.
+  unknown001 unknown30[UNIT_NUM];                                            // Inferred role: units; original member name unknown.
   mm::mtl::FixedQueue<const GfBdatUniqueMotion::PresetInfo *, 32> unknownc0; // Inferred role: presets; original member name unknown.
   mm::mtl::IntrusivePtr<fw::ParamList> unknown1d0;                           // Inferred role: param list; original member name unknown.
 };

@@ -27,8 +27,8 @@ public:
   bool isReserved() const { return unknown10.test(FLAG_RESERVE) && !unknown10.test(FLAG_ACTIVE); }
 
 private:
-  mm::mtl::BitFlag<32> unknown10; // Inferred role: flags; original member name unknown.
-  mm::mtl::FixStr<128> unknown14; // Inferred role: path; original member name unknown.
+  mm::mtl::unknown027<32> unknown10; // Inferred role: flags; original member name unknown.
+  mm::mtl::FixStr<128> unknown14;    // Inferred role: path; original member name unknown.
 };
 
 static_assert(sizeof(AgelogManager) == 0x98, "");

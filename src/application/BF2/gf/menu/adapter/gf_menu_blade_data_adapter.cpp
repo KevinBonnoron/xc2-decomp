@@ -15,10 +15,10 @@
 namespace gf {
 
 static GfMenuBladeDataAdapter::TypeInfo TYPE_INFOS[] = {
-    {&GfMenuBladeDataAdapter::update_DrArtsName, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
-    {&GfMenuBladeDataAdapter::update_DrArtsIcon, {GfMenuAdapter::PLUGIN_TYPE_IMAGE, 0, 0}},
-    {&GfMenuBladeDataAdapter::update_DrArtsLv, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 9}},
-    {&GfMenuBladeDataAdapter::update_AffinityIcon, {GfMenuAdapter::PLUGIN_TYPE_IMAGE, 0, 0}},
+    {&GfMenuBladeDataAdapter::update_DrArtsName, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuBladeDataAdapter::update_DrArtsIcon, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuBladeDataAdapter::update_DrArtsLv, {GfMenuAdapter::unknown004_0, 0, 9}},
+    {&GfMenuBladeDataAdapter::update_AffinityIcon, {GfMenuAdapter::unknown004_1, 0, 0}},
 };
 
 GfMenuBladeDataAdapter::GfMenuBladeDataAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways)

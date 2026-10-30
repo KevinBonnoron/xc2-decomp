@@ -13,9 +13,10 @@ class IAllocator;
 
 namespace threading {
 
-enum ThreadState {
-  THREAD_STATE_RUNNING = 0,
-  THREAD_STATE_TERMINATED = 2,
+// Inferred role: thread state; original type name unknown.
+enum unknown130 {
+  unknown130_0 = 0, // Inferred role: running; original name unknown.
+  unknown130_2 = 2, // Inferred role: terminated; original name unknown.
 };
 
 class ThreadNx : public Thread {
@@ -43,7 +44,7 @@ public:
   void *unknown250;             // Inferred role: stack; original member name unknown.
   void *unknown258;             // Inferred role: argument; original member name unknown.
   ThreadFunc unknown260;        // Inferred role: func; original member name unknown.
-  ThreadState unknown268;       // Inferred role: state; original member name unknown.
+  unknown130 unknown268;        // Inferred role: state; original member name unknown.
 };
 
 static_assert(offsetof(ThreadNx, m_handle) == 0x18, "");

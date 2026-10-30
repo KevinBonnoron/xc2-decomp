@@ -140,7 +140,7 @@ void IDColiObjBase::updateBaseTree() {
   }
 }
 
-IDColiObjPhantom::IDColiObjPhantom(IDColiTreeTop *tree) : IDColiObjBase(tree) { unknown24 = OBJ_TYPE_PHANTOM; }
+IDColiObjPhantom::IDColiObjPhantom(IDColiTreeTop *tree) : IDColiObjBase(tree) { unknown24 = unknown098_2; }
 
 IDColiObjPhantom::~IDColiObjPhantom() {}
 

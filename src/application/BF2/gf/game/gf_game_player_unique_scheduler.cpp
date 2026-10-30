@@ -41,7 +41,7 @@ void GfGamePlayerUniqueScheduler::update(const fw::UpdateInfo &info) {
 
 void GfGamePlayerUniqueScheduler::executeRequest(const fw::UpdateInfo &info) {
   for (u32 index = 0; index < UNIT_NUM; index++) {
-    Unit &unit = unknown30[index];
+    unknown001 &unit = unknown30[index];
     if (unit.unknown0c != UNIT_STATE_REQUEST) {
       continue;
     }

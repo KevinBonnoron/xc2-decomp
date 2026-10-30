@@ -103,7 +103,7 @@ GfAssetType makeMotionAssetName(mm::mtl::FixStr<128> &name, GfAssetType type, co
 GfAssetSetup::GfAssetSetup() : unknown08(0), unknown10(INVALID_ASSET_HANDLE), unknown18(nullptr), unknownf0(false) { unknowne8 = nullptr; }
 
 GfAssetSetup::~GfAssetSetup() {
-  for (RefResource *&resource : unknown20) {
+  for (unknown002 *&resource : unknown20) {
     if (resource != nullptr) {
       delete resource;
       resource = nullptr;
@@ -226,7 +226,7 @@ void GfAssetSetup::requestCoreResource(GfAssetPack *pack, GF_ASSET_HANDLE *handl
 }
 
 bool GfAssetSetup::setupReference(GfAssetPack *pack, const char *name, GfFileIdx index) {
-  RefResource *resource = getRefResource(index);
+  unknown002 *resource = getRefResource(index);
   if (resource == nullptr || resource->unknown88 == nullptr) {
     return false;
   }
@@ -259,8 +259,8 @@ bool GfAssetSetup::checkValidResource() {
   return false;
 }
 
-GfAssetSetup::RefResource *GfAssetSetup::getRefResource(u32 index) {
-  for (RefResource *resource : unknown20) {
+GfAssetSetup::unknown002 *GfAssetSetup::getRefResource(u32 index) {
+  for (unknown002 *resource : unknown20) {
     if (resource->unknown94 == index) {
       return resource;
     }
@@ -269,11 +269,11 @@ GfAssetSetup::RefResource *GfAssetSetup::getRefResource(u32 index) {
 }
 
 void GfAssetSetup::setRefResource(u32 index, const char *name, void *data, u32 size) {
-  RefResource *resource = getRefResource(index);
+  unknown002 *resource = getRefResource(index);
   if (resource == nullptr) {
     // __LINE__ must be 282 as in the original source: it is the line argument of operator new.
 #line 282
-    resource = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) RefResource();
+    resource = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) unknown002();
     unknown20.push_back(resource);
     resource->unknown94 = index;
   }
@@ -367,7 +367,7 @@ u32 GfAssetSetupDriver::getFootStepId() const {
 }
 
 const char *GfAssetSetupDriver::getMdlFile(GfAssetType type) {
-  RefResource *resource = getRefResource(getMdlSlot());
+  unknown002 *resource = getRefResource(getMdlSlot());
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
@@ -379,7 +379,7 @@ const char *GfAssetSetupDriver::getMdlFile(GfAssetType type) {
 }
 
 const char *GfAssetSetupDriver::getArcFile(GfAssetType type) {
-  RefResource *resource = getRefResource(getArcSlot());
+  unknown002 *resource = getRefResource(getArcSlot());
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
@@ -392,7 +392,7 @@ const char *GfAssetSetupDriver::getArcFile(GfAssetType type) {
 
 const char *GfAssetSetupDriver::getMotFile(GfAssetType type) {
   if (getAssetTypeMot() == type) {
-    RefResource *resource = getRefResource(getMotSlot());
+    unknown002 *resource = getRefResource(getMotSlot());
     if (resource != nullptr && !resource->unknown00.empty()) {
       return resource->unknown00.c_str();
     }
@@ -440,7 +440,7 @@ void GfAssetSetupDriver::changeResoueceEffName(mm::mtl::FixStr<128> &name) {
 
 const char *GfAssetSetupEventDriver::getEvtMotFile(GfAssetType type) {
   if (getAssetTypeEvtMot() == type) {
-    RefResource *resource = getRefResource(getEvtMotSlot());
+    unknown002 *resource = getRefResource(getEvtMotSlot());
     if (resource != nullptr && !resource->unknown00.empty()) {
       return resource->unknown00.c_str();
     }
@@ -596,7 +596,7 @@ u32 GfAssetSetupBlade::getFootStepId() const {
 }
 
 const char *GfAssetSetupBlade::getMdlFile(GfAssetType type) {
-  RefResource *resource = getRefResource(getMdlSlot());
+  unknown002 *resource = getRefResource(getMdlSlot());
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
@@ -608,7 +608,7 @@ const char *GfAssetSetupBlade::getMdlFile(GfAssetType type) {
 }
 
 const char *GfAssetSetupBlade::getArcFile(GfAssetType type) {
-  RefResource *resource = getRefResource(getArcSlot());
+  unknown002 *resource = getRefResource(getArcSlot());
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
@@ -621,7 +621,7 @@ const char *GfAssetSetupBlade::getArcFile(GfAssetType type) {
 
 const char *GfAssetSetupBlade::getRetargetMotFile(GfAssetType type) {
   if (getAssetTypeMot() == type) {
-    RefResource *resource = getRefResource(getMotSlot());
+    unknown002 *resource = getRefResource(getMotSlot());
     if (resource != nullptr && !resource->unknown00.empty()) {
       return resource->unknown00.c_str();
     }
@@ -671,7 +671,7 @@ bool GfAssetSetupBlade::makeAssetNameWpnType(mm::mtl::FixStr<128> &name, u32 bla
 
 const char *GfAssetSetupEventBlade::getEvtMotFile(GfAssetType type) {
   if (getAssetTypeEventMot() == type) {
-    RefResource *resource = getRefResource(getEvtMotSlot());
+    unknown002 *resource = getRefResource(getEvtMotSlot());
     if (resource != nullptr && !resource->unknown00.empty()) {
       return resource->unknown00.c_str();
     }
@@ -695,7 +695,7 @@ const char *GfAssetSetupEventBlade::getEvtStpFile(GfAssetType type) {
 const char *GfAssetSetupEventBlade::getEvtPath() const { return GfAssetPath::getEvt(); }
 
 const char *GfAssetSetupEventBlade::getMdlFile(GfAssetType type) {
-  RefResource *resource = getRefResource(getMdlSlot());
+  unknown002 *resource = getRefResource(getMdlSlot());
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
@@ -707,7 +707,7 @@ const char *GfAssetSetupEventBlade::getMdlFile(GfAssetType type) {
 }
 
 const char *GfAssetSetupEventBlade::getArcFile(GfAssetType type) {
-  RefResource *resource = getRefResource(getArcSlot());
+  unknown002 *resource = getRefResource(getArcSlot());
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
@@ -720,7 +720,7 @@ const char *GfAssetSetupEventBlade::getArcFile(GfAssetType type) {
 
 const char *GfAssetSetupEventBlade::getRetargetMotFile(GfAssetType type) {
   if (getAssetTypeMot() == type) {
-    RefResource *resource = getRefResource(getMotSlot());
+    unknown002 *resource = getRefResource(getMotSlot());
     if (resource != nullptr && !resource->unknown00.empty()) {
       return resource->unknown00.c_str();
     }
@@ -817,7 +817,7 @@ void GfAssetSetupEnemy::getEnemyEabFileName(mm::mtl::FixStr<128> &name, const Gf
   }
 
   u32 blade = param.getBladeID();
-  if (!GfDataBlade::isRegularBlade(blade) || param.unknown08 == CHARACTER_TYPE_ENEMY_BLADE || GfDataHana::isValid(blade)) {
+  if (!GfDataBlade::isRegularBlade(blade) || param.unknown08 == unknown030_5 || GfDataHana::isValid(blade)) {
     name.format("%s%s%s%s", getEffPath(), eab, GfDataBlade::getBaseEabWeaponName(blade), ".wieab");
   } else {
     name.format("%s%s%s%s", getEffPath(), eab, GfDataBlade::getBaseEfbWeaponName(blade), ".wieab");
@@ -827,7 +827,7 @@ void GfAssetSetupEnemy::getEnemyEabFileName(mm::mtl::FixStr<128> &name, const Gf
 void GfAssetSetupEnemy::getEnemyEfbFileName(mm::mtl::FixStr<128> &name, const GfInitParamEnemy &param, GfAssetType type, u32 attribute) {
   u32 blade = param.getBladeID();
   const char *efb = getEfbFile(type);
-  if ((efb == nullptr || strstr(efb, "en/") == nullptr) && (!GfDataBlade::isRegularBlade(blade) || param.unknown08 != CHARACTER_TYPE_ENEMY_BLADE || GfDataHana::isValid(blade))) {
+  if ((efb == nullptr || strstr(efb, "en/") == nullptr) && (!GfDataBlade::isRegularBlade(blade) || param.unknown08 != unknown030_5 || GfDataHana::isValid(blade))) {
     u32 baseAttribute = blade == BLADE_SAIKA ? 0 : attribute;
     name.format("%s%s%s%s%s", getEffPath(), efb, GfDataBlade::getBaseEfbWeaponName(blade), GfDataBlade::getBaseEfbAttributeName(blade, baseAttribute), ".wiefb");
     return;
@@ -862,7 +862,7 @@ u32 GfAssetSetupEnemy::getFootStepId() const {
 }
 
 const char *GfAssetSetupEnemy::getMdlFile(GfAssetType type) {
-  RefResource *resource = getRefResource(getMdlSlot());
+  unknown002 *resource = getRefResource(getMdlSlot());
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
@@ -878,7 +878,7 @@ const char *GfAssetSetupEnemy::getArcFile(GfAssetType type) {
 
 const char *GfAssetSetupEnemy::getMotFile(GfAssetType type) {
   if (getAssetTypeMot() == type) {
-    RefResource *resource = getRefResource(getMotSlot());
+    unknown002 *resource = getRefResource(getMotSlot());
     if (resource != nullptr && !resource->unknown00.empty()) {
       return resource->unknown00.c_str();
     }
@@ -889,7 +889,7 @@ const char *GfAssetSetupEnemy::getMotFile(GfAssetType type) {
 
 const char *GfAssetSetupEnemy::getRetargetMotFile(GfAssetType type) {
   if (getAssetTypeMot() == type) {
-    RefResource *resource = getRefResource(getMotSlot());
+    unknown002 *resource = getRefResource(getMotSlot());
     if (resource != nullptr && !resource->unknown00.empty()) {
       return resource->unknown00.c_str();
     }
@@ -933,7 +933,7 @@ const char *GfAssetSetupEnemy::getPath() const { return "/model/"; }
 GfAssetSetupEnemyBlade::GfAssetSetupEnemyBlade() {}
 
 const char *GfAssetSetupEnemyBlade::getMdlFile(GfAssetType type) {
-  RefResource *resource = getRefResource(getMdlSlot());
+  unknown002 *resource = getRefResource(getMdlSlot());
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
@@ -944,7 +944,7 @@ const char *GfAssetSetupEnemyBlade::getMotFile(GfAssetType type) {
   if (getAssetTypeMot() != type) {
     return nullptr;
   }
-  RefResource *resource = getRefResource(getMotSlot());
+  unknown002 *resource = getRefResource(getMotSlot());
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
@@ -955,7 +955,7 @@ const char *GfAssetSetupEnemyBlade::getRetargetMotFile(GfAssetType type) {
   if (getAssetTypeMot() != type) {
     return nullptr;
   }
-  RefResource *resource = getRefResource(getMotSlot());
+  unknown002 *resource = getRefResource(getMotSlot());
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
@@ -1066,7 +1066,7 @@ void GfAssetSetupEventEnemy::setup(GF_ASSET_HANDLE *handle, const GfInitParamEne
 
 const char *GfAssetSetupEventEnemy::getEvtMotFile(GfAssetType type) {
   if (type == ASSET_TYPE_BASE) {
-    RefResource *resource = getRefResource(getEvtMotSlot());
+    unknown002 *resource = getRefResource(getEvtMotSlot());
     if (resource != nullptr && !resource->unknown00.empty()) {
       return resource->unknown00.c_str();
     }
@@ -1194,7 +1194,7 @@ u32 GfAssetSetupNpc::getFootStepId() const {
 }
 
 const char *GfAssetSetupNpc::getMdlFile(GfAssetType type) {
-  RefResource *resource = getRefResource(getMdlSlot());
+  unknown002 *resource = getRefResource(getMdlSlot());
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
@@ -1214,7 +1214,7 @@ const char *GfAssetSetupNpc::getArcFile(GfAssetType type) {
 
 const char *GfAssetSetupNpc::getMotFile(GfAssetType type) {
   if (getAssetTypeMot() == type) {
-    RefResource *resource = getRefResource(getMotSlot());
+    unknown002 *resource = getRefResource(getMotSlot());
     if (resource != nullptr && !resource->unknown00.empty()) {
       return resource->unknown00.c_str();
     }
@@ -1231,7 +1231,7 @@ const char *GfAssetSetupNpc::getEfpFile(GfAssetType type) { return getMdlFile(ty
 
 const char *GfAssetSetupNpc::getRetargetMotFile(GfAssetType type) {
   if (getAssetTypeMot() == type) {
-    RefResource *resource = getRefResource(getMotSlot());
+    unknown002 *resource = getRefResource(getMotSlot());
     if (resource != nullptr && !resource->unknown00.empty()) {
       return resource->unknown00.c_str();
     }
@@ -1255,7 +1255,7 @@ const char *GfAssetSetupNpc::getPath() const { return "/model/"; }
 
 const char *GfAssetSetupNpc::getEvtMotFile(GfAssetType type) {
   if (type == ASSET_TYPE_BASE && GfDataNpc::isNeedResourceEvent(unknown08)) {
-    RefResource *resource = getRefResource(getEvtMotSlot());
+    unknown002 *resource = getRefResource(getEvtMotSlot());
     if (resource != nullptr && !resource->unknown00.empty()) {
       return resource->unknown00.c_str();
     }
@@ -1379,7 +1379,7 @@ void GfAssetSetupEventNpc::setup(GF_ASSET_HANDLE *handle, const GfInitParamNpc &
 
 const char *GfAssetSetupEventNpc::getMotFile(GfAssetType type) {
   if (type == ASSET_TYPE_BASE) {
-    RefResource *resource = getRefResource(getMotSlot());
+    unknown002 *resource = getRefResource(getMotSlot());
     if (resource != nullptr && !resource->unknown00.empty()) {
       return resource->unknown00.c_str();
     }
@@ -1394,7 +1394,7 @@ const char *GfAssetSetupEventNpc::getMotFile(GfAssetType type) {
 
 const char *GfAssetSetupEventNpc::getEvtMotFile(GfAssetType type) {
   if (type == ASSET_TYPE_BASE) {
-    RefResource *resource = getRefResource(getEvtMotSlot());
+    unknown002 *resource = getRefResource(getEvtMotSlot());
     if (resource != nullptr && !resource->unknown00.empty()) {
       return resource->unknown00.c_str();
     }
@@ -1465,7 +1465,7 @@ u32 GfAssetSetupMob::getFootStepId() const {
 }
 
 const char *GfAssetSetupMob::getMdlFile(GfAssetType type) {
-  RefResource *resource = getRefResource(getMdlSlot());
+  unknown002 *resource = getRefResource(getMdlSlot());
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
@@ -1476,7 +1476,7 @@ const char *GfAssetSetupMob::getArcFile(GfAssetType type) { return getMdlFile(ty
 
 const char *GfAssetSetupMob::getMotFile(GfAssetType type) {
   if (type == ASSET_TYPE_BASE) {
-    RefResource *resource = getRefResource(getMotSlot());
+    unknown002 *resource = getRefResource(getMotSlot());
     if (resource != nullptr && !resource->unknown00.empty()) {
       return resource->unknown00.c_str();
     }
@@ -1487,7 +1487,7 @@ const char *GfAssetSetupMob::getMotFile(GfAssetType type) {
 
 const char *GfAssetSetupMob::getRetargetMotFile(GfAssetType type) {
   if (type == ASSET_TYPE_BASE) {
-    RefResource *resource = getRefResource(getMotSlot());
+    unknown002 *resource = getRefResource(getMotSlot());
     if (resource != nullptr && !resource->unknown00.empty()) {
       return resource->unknown00.c_str();
     }
@@ -1633,7 +1633,7 @@ void GfAssetSetupGimmick::setup(GF_ASSET_HANDLE *handle, const GfInitParamGimmic
 }
 
 const char *GfAssetSetupGimmick::getMdlFile(GfAssetType type) {
-  RefResource *resource = getRefResource(getMdlSlot());
+  unknown002 *resource = getRefResource(getMdlSlot());
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
@@ -1648,7 +1648,7 @@ const char *GfAssetSetupGimmick::getArcFile(GfAssetType type) { return getMdlFil
 
 const char *GfAssetSetupGimmick::getMotFile(GfAssetType type) {
   if (type == ASSET_TYPE_OPTION) {
-    RefResource *resource = getRefResource(getMotSlot());
+    unknown002 *resource = getRefResource(getMotSlot());
     if (resource != nullptr && !resource->unknown00.empty()) {
       return resource->unknown00.c_str();
     }
@@ -1664,7 +1664,7 @@ const char *GfAssetSetupGimmick::getMotFile(GfAssetType type) {
 const char *GfAssetSetupGimmick::getEfpFile(GfAssetType type) { return getMdlFile(type); }
 
 const char *GfAssetSetupGimmick::getEabFile(GfAssetType type) {
-  RefResource *resource = getRefResource(getEabSlot());
+  unknown002 *resource = getRefResource(getEabSlot());
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
@@ -1738,7 +1738,7 @@ void GfAssetSetupMapObj::setup(GF_ASSET_HANDLE *handle, const GfInitParamMapObj 
 }
 
 const char *GfAssetSetupMapObj::getMdlFile(GfAssetType type) {
-  RefResource *resource = getRefResource(getMdlSlot());
+  unknown002 *resource = getRefResource(getMdlSlot());
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
@@ -1753,7 +1753,7 @@ const char *GfAssetSetupMapObj::getArcFile(GfAssetType type) { return getMdlFile
 
 const char *GfAssetSetupMapObj::getMotFile(GfAssetType type) {
   if (type == ASSET_TYPE_ENEMY_MOTION) {
-    RefResource *resource = getRefResource(getMotSlot());
+    unknown002 *resource = getRefResource(getMotSlot());
     if (resource != nullptr && !resource->unknown00.empty()) {
       return resource->unknown00.c_str();
     }
@@ -1790,7 +1790,7 @@ void GfAssetSetupFobj::setup(GF_ASSET_HANDLE *handle, const GfInitParamFobj &par
 }
 
 const char *GfAssetSetupFobj::getMdlFile(GfAssetType type) {
-  RefResource *resource = getRefResource(getMdlSlot());
+  unknown002 *resource = getRefResource(getMdlSlot());
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
@@ -1830,7 +1830,7 @@ void GfAssetSetupWeapon::setup(GF_ASSET_HANDLE *handle, const GfInitParamWeapon 
 
 const char *GfAssetSetupWeapon::getMdlFile(GfAssetType type) {
   static mm::mtl::FixStr<128> s_model;
-  RefResource *resource = getRefResource(getMdlSlot());
+  unknown002 *resource = getRefResource(getMdlSlot());
   if (resource != nullptr) {
     unknown001(s_model, resource->unknown00, unknown200.getModelName(), unknowne8->unknown83);
   } else {
@@ -1842,7 +1842,7 @@ const char *GfAssetSetupWeapon::getMdlFile(GfAssetType type) {
 
 const char *GfAssetSetupWeapon::getArcFile(GfAssetType type) {
   static mm::mtl::FixStr<128> s_arc;
-  RefResource *resource = getRefResource(getMdlSlot());
+  unknown002 *resource = getRefResource(getMdlSlot());
   if (resource != nullptr) {
     unknown001(s_arc, resource->unknown00, unknown200.getModelName(), unknowne8->unknown83);
   } else {
@@ -1854,7 +1854,7 @@ const char *GfAssetSetupWeapon::getArcFile(GfAssetType type) {
 
 const char *GfAssetSetupWeapon::getMotFile(GfAssetType type) {
   static mm::mtl::FixStr<128> s_motion;
-  RefResource *resource = getRefResource(getMotSlot());
+  unknown002 *resource = getRefResource(getMotSlot());
   if (resource != nullptr) {
     unknown001(s_motion, resource->unknown00, unknown200.getMotionName(), unknowne8->unknown83);
   } else {
@@ -1866,7 +1866,7 @@ const char *GfAssetSetupWeapon::getMotFile(GfAssetType type) {
 
 const char *GfAssetSetupWeapon::getEfpFile(GfAssetType type) {
   static mm::mtl::FixStr<128> s_efp;
-  RefResource *resource = getRefResource(getMdlSlot());
+  unknown002 *resource = getRefResource(getMdlSlot());
   if (resource != nullptr) {
     unknown001(s_efp, resource->unknown00, unknown200.getModelName(), unknowne8->unknown83);
   } else {
@@ -1938,7 +1938,7 @@ void GfAssetSetupEnWeapon::setup(GF_ASSET_HANDLE *handle, const GfInitParamEnWea
 }
 
 const char *GfAssetSetupEnWeapon::getMdlFile(GfAssetType type) {
-  RefResource *resource = getRefResource(getMdlSlot());
+  unknown002 *resource = getRefResource(getMdlSlot());
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
@@ -1952,7 +1952,7 @@ const char *GfAssetSetupEnWeapon::getMdlFile(GfAssetType type) {
 const char *GfAssetSetupEnWeapon::getArcFile(GfAssetType type) { return getMdlFile(type); }
 
 const char *GfAssetSetupEnWeapon::getMotFile(GfAssetType type) {
-  RefResource *resource = getRefResource(getMotSlot());
+  unknown002 *resource = getRefResource(getMotSlot());
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
@@ -1990,7 +1990,7 @@ void GfAssetSetupBelonging::setup(GF_ASSET_HANDLE *handle, const GfInitParamBelo
 }
 
 const char *GfAssetSetupBelonging::getMdlFile(GfAssetType type) {
-  RefResource *resource = getRefResource(getMdlSlot());
+  unknown002 *resource = getRefResource(getMdlSlot());
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
@@ -2005,7 +2005,7 @@ const char *GfAssetSetupBelonging::getArcFile(GfAssetType type) { return getMdlF
 
 const char *GfAssetSetupBelonging::getMotFile(GfAssetType type) {
   if (getMotSlot() >= 0) {
-    RefResource *resource = getRefResource(getMotSlot());
+    unknown002 *resource = getRefResource(getMotSlot());
     if (resource != nullptr && !resource->unknown00.empty()) {
       return resource->unknown00.c_str();
     }
@@ -2041,7 +2041,7 @@ void GfAssetSetupExtra::setup(GF_ASSET_HANDLE *handle, const GfInitParamExtra &p
 }
 
 const char *GfAssetSetupExtra::getMdlFile(GfAssetType type) {
-  RefResource *resource = getRefResource(getMdlSlot());
+  unknown002 *resource = getRefResource(getMdlSlot());
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
@@ -2055,7 +2055,7 @@ const char *GfAssetSetupExtra::getMdlFile(GfAssetType type) {
 const char *GfAssetSetupExtra::getArcFile(GfAssetType type) { return getMdlFile(type); }
 
 const char *GfAssetSetupExtra::getMotFile(GfAssetType type) {
-  RefResource *resource = getRefResource(getMotSlot());
+  unknown002 *resource = getRefResource(getMotSlot());
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
@@ -2073,7 +2073,7 @@ const char *GfAssetSetupExtra::getPath() const { return GfAssetPath::getMdoModel
 GfAssetSetupMapSeamless::GfAssetSetupMapSeamless() : unknown1fc(false) {}
 
 const char *GfAssetSetupMapSeamless::getMdlFile(GfAssetType type) {
-  RefResource *resource = getRefResource(getMdlSlot());
+  unknown002 *resource = getRefResource(getMdlSlot());
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
@@ -2228,7 +2228,7 @@ void GfAssetSetupEventObj::setup(GF_ASSET_HANDLE *handle, const GfInitParamEvent
 }
 
 const char *GfAssetSetupEventObj::getMdlFile(GfAssetType type) {
-  RefResource *resource = getRefResource(getMdlSlot());
+  unknown002 *resource = getRefResource(getMdlSlot());
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
@@ -2236,7 +2236,7 @@ const char *GfAssetSetupEventObj::getMdlFile(GfAssetType type) {
 }
 
 const char *GfAssetSetupEventObj::getArcFile(GfAssetType type) {
-  RefResource *resource = getRefResource(getArcSlot());
+  unknown002 *resource = getRefResource(getArcSlot());
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
@@ -2244,7 +2244,7 @@ const char *GfAssetSetupEventObj::getArcFile(GfAssetType type) {
 }
 
 const char *GfAssetSetupEventObj::getEfpFile(GfAssetType type) {
-  RefResource *resource = getRefResource(getEfpSlot());
+  unknown002 *resource = getRefResource(getEfpSlot());
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
@@ -2252,7 +2252,7 @@ const char *GfAssetSetupEventObj::getEfpFile(GfAssetType type) {
 }
 
 const char *GfAssetSetupEventObj::getEabFile(GfAssetType type) {
-  RefResource *resource = getRefResource(getEabSlot());
+  unknown002 *resource = getRefResource(getEabSlot());
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
@@ -2260,7 +2260,7 @@ const char *GfAssetSetupEventObj::getEabFile(GfAssetType type) {
 }
 
 const char *GfAssetSetupEventObj::getEfbFile(GfAssetType type) {
-  RefResource *resource = getRefResource(getEfbSlot());
+  unknown002 *resource = getRefResource(getEfbSlot());
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
@@ -2287,7 +2287,7 @@ void GfAssetSetupUiObj::setup(GF_ASSET_HANDLE *handle, const GfInitParamUiObj &p
 }
 
 const char *GfAssetSetupUiObj::getMdlFile(GfAssetType type) {
-  RefResource *resource = getRefResource(getMdlSlot());
+  unknown002 *resource = getRefResource(getMdlSlot());
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }

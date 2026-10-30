@@ -66,7 +66,8 @@ struct IColiEventListener::LeaveInfo {
   ColiObject *other;
 };
 
-struct ColiShape {
+// Inferred role: coli shape; original type name unknown.
+struct unknown031 {
   enum Type {
     TYPE_SPHERE = 0,
     TYPE_CAPSULE = 1,
@@ -81,7 +82,7 @@ struct ColiShape {
   mm::Vec3 unknown10; // Inferred role: size; original member name unknown.
 };
 
-static_assert(offsetof(ColiShape, unknown10) == 0x10, "");
+static_assert(offsetof(unknown031, unknown10) == 0x10, "");
 
 class ColiUserData {
 public:
@@ -171,13 +172,13 @@ public:
   ColiType unknown30;                              // Inferred role: type; original member name unknown.
   u16 unknown34;                                   // Inferred role: flags; original member name unknown.
   HandlePtr<UpdatableObject> unknown38;            // Inferred role: owner; original member name unknown.
-  mm::mtl::BitFlag<32> unknown48;                  // Inferred role: event flags; original member name unknown.
+  mm::mtl::unknown027<32> unknown48;               // Inferred role: event flags; original member name unknown.
   IColiEventListener *unknown50;                   // Inferred role: listener; original member name unknown.
   ColiUserData *unknown58;                         // Inferred role: coli user data; original member name unknown.
   mm::Mat44 unknown60;                             // Inferred role: offset matrix; original member name unknown.
   mm::Mat44 m_matrix;
   f32 unknowne0;             // Inferred role: scale; original member name unknown.
-  ColiShape *unknowne8;      // Inferred role: shape; original member name unknown.
+  unknown031 *unknowne8;     // Inferred role: shape; original member name unknown.
   ColiObjUserData unknownf0; // Inferred role: user data; original member name unknown.
 };
 

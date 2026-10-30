@@ -19,12 +19,13 @@ struct UpdateInfo;
 namespace gf {
 namespace pc {
 
-struct LookAxisParam {
+// Inferred role: look axis param; original type name unknown.
+struct unknown088 {
   u8 _00[0x14 - 0x00];
   f32 unknown14; // Inferred role: change time; original member name unknown.
 };
 
-static_assert(offsetof(LookAxisParam, unknown14) == 0x14, "");
+static_assert(offsetof(unknown088, unknown14) == 0x14, "");
 
 class LookAxisPlugin : public Plugin {
   GF_PLUGIN(GfComBehaviorPc)
@@ -38,17 +39,17 @@ public:
   void onDeactivate() override;
   void setYaw(f32 yaw);
   virtual void update(GfComBehaviorPc &behavior, const fw::UpdateInfo &info);
-  const LookAxisParam *getParam() const;
+  const unknown088 *getParam() const;
   f32 calcYaw(f32 changeTime) const;
   void changeAxisYaw(f32 yaw);
 
-  GfComBehaviorPc *unknown10;            // Inferred role: behavior; original member name unknown.
-  f32 unknown18;                         // Inferred role: yaw; original member name unknown.
-  f32 unknown1c;                         // Inferred role: start yaw; original member name unknown.
-  f32 unknown20;                         // Inferred role: target yaw; original member name unknown.
-  f32 unknown24;                         // Inferred role: change timer; original member name unknown.
-  bool unknown28;                        // Inferred role: changing; original member name unknown.
-  const fw::ParamList::Entry *unknown30; // Inferred role: param entry; original member name unknown.
+  GfComBehaviorPc *unknown10;                 // Inferred role: behavior; original member name unknown.
+  f32 unknown18;                              // Inferred role: yaw; original member name unknown.
+  f32 unknown1c;                              // Inferred role: start yaw; original member name unknown.
+  f32 unknown20;                              // Inferred role: target yaw; original member name unknown.
+  f32 unknown24;                              // Inferred role: change timer; original member name unknown.
+  bool unknown28;                             // Inferred role: changing; original member name unknown.
+  const fw::ParamList::unknown005 *unknown30; // Inferred role: param entry; original member name unknown.
 };
 
 static_assert(offsetof(LookAxisPlugin, unknown10) == 0x10, "");

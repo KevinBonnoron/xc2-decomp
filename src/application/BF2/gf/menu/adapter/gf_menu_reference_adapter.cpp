@@ -15,7 +15,7 @@ GfMenuReferenceAdapter *GfMenuReferenceAdapter::create(u32 handle, mm::mtl::Intr
   ui::UIObjectAcc acc(handle);
   if (acc.isValid()) {
     PluginSetup setup;
-    setup.unknown00 = PLUGIN_TYPE_NUMBER;
+    setup.unknown00 = unknown004_0;
     setup.unknown04 = reference->unknown10;
     setup.unknown08 = reference->unknown14;
     ui::UIObjectPlugin *plugin = createPlugin(handle, setup);

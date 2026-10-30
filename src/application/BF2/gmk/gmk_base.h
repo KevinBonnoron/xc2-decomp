@@ -19,7 +19,8 @@ namespace gmk {
 
 class IGmkList;
 
-struct GmkInfo {
+// Inferred role: gmk info; original type name unknown.
+struct unknown071 {
   u16 id;
   u16 unknown02; // Role and original member name unknown.
 };
@@ -33,13 +34,14 @@ struct Xform {
 
 static_assert(sizeof(Xform) == 0x40, "");
 
-struct GobInfo {
+// Inferred role: gob info; original type name unknown.
+struct unknown072 {
   const char *unknown00; // Inferred role: name; original member name unknown.
   u32 unknown08;         // Inferred role: xform index; original member name unknown.
   ShapeType unknown0c;   // Inferred role: shape type; original member name unknown.
 };
 
-static_assert(sizeof(GobInfo) == 0x10, "");
+static_assert(sizeof(unknown072) == 0x10, "");
 
 // Inferred helper: matrix of a debug drawing, the identity moved to a position; original name unknown.
 inline void unknown001(mm::Mat44 &matrix, const mm::Vec3 &position) {
@@ -84,18 +86,18 @@ inline void unknown003(gf::GfObjSetup *setup, const Xform *xform) {
 class AGmkBase {
 public:
   struct CreateBaseInfo {
-    IGmkList *unknown00;      // Inferred role: list; original member name unknown.
-    const Xform *unknown08;   // Inferred role: xform; original member name unknown.
-    const GobInfo *unknown10; // Inferred role: gob info; original member name unknown.
+    IGmkList *unknown00;         // Inferred role: list; original member name unknown.
+    const Xform *unknown08;      // Inferred role: xform; original member name unknown.
+    const unknown072 *unknown10; // Inferred role: gob info; original member name unknown.
   };
 
   struct CreateInfo {
     CreateInfo() : unknown00(0), unknown08(nullptr), unknown10(nullptr), unknown18(-1) {}
 
-    u32 unknown00;            // Inferred role: version; original member name unknown.
-    void *unknown08;          // Inferred role: data; original member name unknown.
-    const GmkInfo *unknown10; // Inferred role: info; original member name unknown.
-    int unknown18;            // Inferred role: bdat index; original member name unknown.
+    u32 unknown00;               // Inferred role: version; original member name unknown.
+    void *unknown08;             // Inferred role: data; original member name unknown.
+    const unknown071 *unknown10; // Inferred role: info; original member name unknown.
+    int unknown18;               // Inferred role: bdat index; original member name unknown.
   };
 
   AGmkBase();

@@ -47,7 +47,8 @@ enum SoundCategory : int;
 namespace gf {
 struct GF_OBJ_HANDLE;
 
-struct IconTable {
+// Inferred role: icon table; original type name unknown.
+struct unknown078 {
   u32 unknown00; // Inferred role: key; original member name unknown.
   u32 unknown04; // Inferred role: icon; original member name unknown.
 };
@@ -78,7 +79,7 @@ constexpr u32 ICON_WEAPON_TYPE_NONE = 0x8b;
 constexpr u32 ICON_ATTRIBUTE_BASE = 0x9e;
 constexpr u32 ICON_TRUST_RANK_BASE = 0x83;
 
-static const IconTable s_buttonIcons[] = {
+static const unknown078 s_buttonIcons[] = {
     {0x1000, 26},
     {0x2000, 29},
     {0x4000, 27},
@@ -97,7 +98,7 @@ static const IconTable s_buttonIcons[] = {
     {0x100, 8},
 };
 
-static const IconTable s_padSelectIcons[] = {
+static const unknown078 s_padSelectIcons[] = {
     {1, 30},
     {2, 31},
     {6, 5},

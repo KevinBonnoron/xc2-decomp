@@ -156,7 +156,7 @@ bool GfMenuMissionAdapter::update_MissionProgressDisp() {
 bool GfMenuMissionAdapter::update_MissionFieldSkillColor() {
   int fieldSkill = GfDataMercenaries::getFieldSkill(unknown58, unknown70);
   if (fieldSkill != 0) {
-    SDataMercenariesTeam *team = GfDataMercenaries::getTeamMember(GfMenuReference::getReferenceTeamID());
+    unknown120 *team = GfDataMercenaries::getTeamMember(GfMenuReference::getReferenceTeamID());
     if (team != nullptr) {
       for (u16 blade : team->unknown00) {
         if (blade != 0) {
@@ -179,7 +179,7 @@ bool GfMenuMissionAdapter::update_MemberFieldSkillLv() {
   if (fieldSkill == 0) {
     return false;
   }
-  SDataMercenariesTeam *team = GfDataMercenaries::getTeamMember(GfMenuReference::getReferenceTeamID());
+  unknown120 *team = GfDataMercenaries::getTeamMember(GfMenuReference::getReferenceTeamID());
   if (team == nullptr) {
     return false;
   }
@@ -205,7 +205,7 @@ bool GfMenuMissionAdapter::update_MemberFieldSkillLv() {
 bool GfMenuMissionAdapter::update_MemberFieldSkillColor() {
   int fieldSkill = GfDataMercenaries::getFieldSkill(unknown58, unknown70);
   if (fieldSkill != 0) {
-    SDataMercenariesTeam *team = GfDataMercenaries::getTeamMember(GfMenuReference::getReferenceTeamID());
+    unknown120 *team = GfDataMercenaries::getTeamMember(GfMenuReference::getReferenceTeamID());
     if (team == nullptr) {
       return false;
     }

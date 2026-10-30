@@ -36,8 +36,9 @@ public:
     mm::Vec3 unknown40;            // Inferred role: pos; original member name unknown.
   };
 
-  struct SeamPoint {
-    SeamPoint(f32 frame, const mm::Vec3 &pos) : unknown00(frame), unknown10(pos) {}
+  // Inferred role: seam point; original type name unknown.
+  struct unknown001 {
+    unknown001(f32 frame, const mm::Vec3 &pos) : unknown00(frame), unknown10(pos) {}
 
     f32 unknown00;      // Inferred role: frame; original member name unknown.
     mm::Vec3 unknown10; // Inferred role: pos; original member name unknown.
@@ -58,16 +59,16 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  u32 unknown10;                                                // Inferred role: flags; original member name unknown.
-  u32 unknown14;                                                // Inferred role: disp flags; original member name unknown.
-  mm::mtl::FixedVector<FirstKey, FIRST_KEY_COUNT> unknown20;    // Inferred role: first keys; original member name unknown.
-  mm::Vec3 unknown530;                                          // Inferred role: read pos; original member name unknown.
-  mm::mtl::FixedVector<SeamPoint, SEAM_POINT_COUNT> unknown540; // Inferred role: seam points; original member name unknown.
-  mm::Vec3 unknown2550;                                         // Inferred role: current pos; original member name unknown.
+  u32 unknown10;                                                 // Inferred role: flags; original member name unknown.
+  u32 unknown14;                                                 // Inferred role: disp flags; original member name unknown.
+  mm::mtl::FixedVector<FirstKey, FIRST_KEY_COUNT> unknown20;     // Inferred role: first keys; original member name unknown.
+  mm::Vec3 unknown530;                                           // Inferred role: read pos; original member name unknown.
+  mm::mtl::FixedVector<unknown001, SEAM_POINT_COUNT> unknown540; // Inferred role: seam points; original member name unknown.
+  mm::Vec3 unknown2550;                                          // Inferred role: current pos; original member name unknown.
 };
 
 static_assert(sizeof(SeamlessManager::FirstKey) == 0x50, "");
-static_assert(sizeof(SeamlessManager::SeamPoint) == 0x20, "");
+static_assert(sizeof(SeamlessManager::unknown001) == 0x20, "");
 static_assert(sizeof(SeamlessManager) == 0x2560, "");
 
 } // namespace event

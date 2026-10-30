@@ -85,7 +85,7 @@ grlib::CGLibTextureBuffer *DrResMdoTexList::getStmTexObj(u32 index) {
 
 const char *DrResMdoTexList::getTexName(u32 index) {
   const MdsTexHeader *header = reinterpret_cast<const MdsTexHeader *>(unknown80);
-  const MdsTexInfo *infos = reinterpret_cast<const MdsTexInfo *>(unknown80 + header->infoOffset);
+  const unknown092 *infos = reinterpret_cast<const unknown092 *>(unknown80 + header->infoOffset);
   return reinterpret_cast<const char *>(unknown80 + infos[index].unknown0c);
 }
 

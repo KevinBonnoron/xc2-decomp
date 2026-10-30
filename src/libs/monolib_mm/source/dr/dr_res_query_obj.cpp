@@ -7,7 +7,7 @@
 namespace ml {
 
 u32 DrResQueryObj::getOccZPassCount() {
-  if (unknown38 & (DrResUseQueryObj::QUERY_FLAG_RESULT << DrMan::s_nDblNowIdx)) {
+  if (unknown38 & (DrResUseQueryObj::unknown001_4 << DrMan::s_nDblNowIdx)) {
     return unknown10.getQueryPixel();
   }
   return 0;
@@ -19,19 +19,19 @@ DrResQueryObj::~DrResQueryObj() { unknown10.release(); }
 
 bool DrResQueryObj::update() {
   if (unknown28 == nullptr) {
-    if (unknown38 & DrResUseQueryObj::QUERY_FLAG_BEGIN) {
+    if (unknown38 & DrResUseQueryObj::unknown001_1) {
       unknown38 &= ~3;
       return false;
     }
   } else if (unknown38 & 2) {
-    if (unknown38 & DrResUseQueryObj::QUERY_FLAG_BEGIN) {
-      unknown38 &= ~DrResUseQueryObj::QUERY_FLAG_BEGIN;
+    if (unknown38 & DrResUseQueryObj::unknown001_1) {
+      unknown38 &= ~DrResUseQueryObj::unknown001_1;
       return false;
     }
     unknown28->m_query = nullptr;
   } else {
-    if (unknown38 & DrResUseQueryObj::QUERY_FLAG_BEGIN) {
-      unknown38 &= ~DrResUseQueryObj::QUERY_FLAG_BEGIN;
+    if (unknown38 & DrResUseQueryObj::unknown001_1) {
+      unknown38 &= ~DrResUseQueryObj::unknown001_1;
       return false;
     }
     unknown38 = 2;
@@ -45,7 +45,7 @@ bool DrResQueryObj::update() {
 
 void DrResQueryObj::begin() {
   unknown10.beginQuery();
-  unknown38 |= DrResUseQueryObj::QUERY_FLAG_RESULT << DrMan::s_nDblNowIdx;
+  unknown38 |= DrResUseQueryObj::unknown001_4 << DrMan::s_nDblNowIdx;
 }
 
 void DrResQueryObj::end() { unknown10.endQuery(); }

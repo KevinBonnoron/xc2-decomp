@@ -27,7 +27,8 @@ class Skeleton : public ReferenceObject {
 public:
   static const u16 INVALID_BONE = 0xffff;
 
-  struct Bone {
+  // Inferred role: bone; original type name unknown.
+  struct unknown004 {
     const char *unknown00; // Inferred role: name; original member name unknown.
     u8 _08[0x10 - 0x08];
   };
@@ -43,7 +44,7 @@ public:
   }
 
   // Inferred helper: bone by 16-bit index; original name unknown.
-  const Bone &unknown001(u16 index) const { return unknown30[index]; }
+  const unknown004 &unknown001(u16 index) const { return unknown30[index]; }
   // Inferred helper: parent bone by 16-bit index; original name unknown.
   s16 unknown003(u16 index) const { return unknown20[index]; }
   // Inferred helper: extra truck slot by 16-bit index; original name unknown.
@@ -51,7 +52,7 @@ public:
   u32 getBoneCount() const { return unknown30.size(); }
 
   u16 getExtraTruckSlotID(const char *name) const;
-  const Bone *getBoneFromLabel(LabelType type, u16 id) const;
+  const unknown004 *getBoneFromLabel(LabelType type, u16 id) const;
 
   struct CompTruck;
   struct CompLable;
@@ -63,14 +64,14 @@ public:
 
   const char *unknown18;           // Inferred role: name; original member name unknown.
   Array<s16> unknown20;            // Inferred role: parent bone indices; original member name unknown.
-  Array<Bone> unknown30;           // Inferred role: bones; original member name unknown.
+  Array<unknown004> unknown30;     // Inferred role: bones; original member name unknown.
   Array<QsTransform> unknown40;    // Inferred role: reference pose; original member name unknown.
   Array<ExtraTruckSlot> unknown50; // Inferred role: extra truck slots; original member name unknown.
   u8 _60[0x90 - 0x60];
   Array<SkelLabel> unknown90; // Inferred role: labels, sorted by type then id; original member name unknown.
 };
 
-static_assert(sizeof(Skeleton::Bone) == 0x10, "");
+static_assert(sizeof(Skeleton::unknown004) == 0x10, "");
 static_assert(offsetof(Skeleton, unknown18) == 0x18, "");
 static_assert(offsetof(Skeleton, unknown20) == 0x20, "");
 static_assert(offsetof(Skeleton, unknown30) == 0x30, "");

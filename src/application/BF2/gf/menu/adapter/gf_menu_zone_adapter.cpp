@@ -20,13 +20,13 @@ constexpr u32 MERCENARIES_MSG_QUEST_MISSION = 0x11;
 constexpr u32 MERCENARIES_MSG_NEW_MISSION = 0x12;
 
 static GfMenuZoneAdapter::TypeInfo TYPE_INFOS[] = {
-    {&GfMenuZoneAdapter::update_ZoneName, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
-    {&GfMenuZoneAdapter::update_ZoneLv, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 1, 5}},
-    {&GfMenuZoneAdapter::update_ZoneIcon, {GfMenuAdapter::PLUGIN_TYPE_IMAGE, 0, 0}},
-    {&GfMenuZoneAdapter::update_ZoneLvIcon, {GfMenuAdapter::PLUGIN_TYPE_IMAGE, 0, 0}},
-    {&GfMenuZoneAdapter::update_ZoneStatColor, {GfMenuAdapter::PLUGIN_TYPE_COLOR, 0, 0}},
-    {&GfMenuZoneAdapter::update_ZoneNoticeDisp, {GfMenuAdapter::PLUGIN_TYPE_DISP, 0, 0}},
-    {&GfMenuZoneAdapter::update_ZoneNotice, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
+    {&GfMenuZoneAdapter::update_ZoneName, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuZoneAdapter::update_ZoneLv, {GfMenuAdapter::unknown004_0, 1, 5}},
+    {&GfMenuZoneAdapter::update_ZoneIcon, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuZoneAdapter::update_ZoneLvIcon, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuZoneAdapter::update_ZoneStatColor, {GfMenuAdapter::unknown004_8, 0, 0}},
+    {&GfMenuZoneAdapter::update_ZoneNoticeDisp, {GfMenuAdapter::unknown004_3, 0, 0}},
+    {&GfMenuZoneAdapter::update_ZoneNotice, {GfMenuAdapter::unknown004_2, 0, 0}},
 };
 
 GfMenuZoneAdapter::GfMenuZoneAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(nullptr), unknown58(0), unknown5c(0) {}

@@ -8,7 +8,7 @@ void GfMapjumpInfo::setupForSaveData(u32 mapjumpId, const mm::Vec3 &position, co
   unknown00 = mapjumpId;
   unknown100 = true;
   f32 rotY = rotation.y;
-  GfPartyPosInfo::Position &pos = unknown40.unknown00[0];
+  GfPartyPosInfo::unknown004 &pos = unknown40.unknown00[0];
   pos.unknown00.x = position.x;
   pos.unknown00.y = position.y;
   pos.unknown00.z = position.z;

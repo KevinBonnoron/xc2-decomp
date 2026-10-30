@@ -7,7 +7,7 @@ namespace gf {
 
 struct AchievQuest;
 struct QuestTaskParam;
-struct SDataTaskAchieve;
+struct unknown106;
 
 constexpr u32 ACHIEVEMENT_PER_BLADE = 50;
 constexpr u32 ACHIEVEMENT_LEVEL_COUNT = 5;
@@ -53,7 +53,7 @@ public:
   static QuestID getSelect();
   static AchievQuest *getAchievQuest(QuestID quest);
   static bool getHanyouFlg(u32 &flag, u32 &flagMin, u32 &flagMax, const QuestTaskParam &param);
-  static mm::mtl::FixedVector<SDataTaskAchieve, 128> &getTaskAchieve();
+  static mm::mtl::FixedVector<unknown106, 128> &getTaskAchieve();
 
   static u16 m_achieve2blade[];
 };

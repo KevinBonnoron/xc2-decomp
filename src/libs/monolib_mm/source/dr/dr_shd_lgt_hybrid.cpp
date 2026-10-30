@@ -82,10 +82,10 @@ void DrShdLgtHybrid::stockSptList(DrLightObjSpt *light) {
 
 void DrShdLgtHybrid::debugRender() {
   switch (unknown10->unknown1da4) {
-  case DR_SHD_LGT_DYNAMIC_TILE_BASED:
+  case unknown063_0:
     unknown20->debugRender();
     break;
-  case DR_SHD_LGT_DYNAMIC_CLUSTERED:
+  case unknown063_1:
     unknown18->debugRender();
     break;
   }

@@ -43,16 +43,16 @@ struct wkSeamReadPacDataInf {
 static_assert(offsetof(wkSeamReadPacDataInf, unknown08) == 0x08, "");
 static_assert(offsetof(wkSeamReadPacDataInf, unknown10) == 0x10, "");
 
-// Inferred type: stock entry of an instance map; the original type name is unknown.
-struct DrSeamStockInstEntry {
+// Inferred role: stock entry of an instance map; original type name unknown.
+struct unknown062 {
   DrResMdoSeamWrkInst *unknown00; // Inferred role: work; original member name unknown.
   s16 unknown08;                  // Inferred role: index; original member name unknown.
   s16 unknown0a;                  // Inferred role: kind; original member name unknown.
   u8 _0c[0x10 - 0x0c];
 };
 
-static_assert(offsetof(DrSeamStockInstEntry, unknown08) == 0x08, "");
-static_assert(sizeof(DrSeamStockInstEntry) == 0x10, "");
+static_assert(offsetof(unknown062, unknown08) == 0x08, "");
+static_assert(sizeof(unknown062) == 0x10, "");
 
 class DrResMdoSeamParmRead {
 public:
@@ -82,10 +82,10 @@ public:
   s16 unknown68;    // Inferred role: stock env model; original member name unknown.
   s16 unknown6a[8]; // Inferred role: stock base maps; original member name unknown.
   u8 _7a[0x80 - 0x7a];
-  DrSeamStockInstEntry unknown80[8]; // Inferred role: stock instance maps; original member name unknown.
-  s16 unknown100[8];                 // Inferred role: stock low models; original member name unknown.
-  s16 unknown110[4];                 // Inferred role: stock mpf models; original member name unknown.
-  s16 unknown118[4];                 // Inferred role: stock lights; original member name unknown.
+  unknown062 unknown80[8]; // Inferred role: stock instance maps; original member name unknown.
+  s16 unknown100[8];       // Inferred role: stock low models; original member name unknown.
+  s16 unknown110[4];       // Inferred role: stock mpf models; original member name unknown.
+  s16 unknown118[4];       // Inferred role: stock lights; original member name unknown.
   u8 _120[0x5d0 - 0x120];
   u16 unknown5d0; // Inferred role: stock base map num; original member name unknown.
   u16 unknown5d2; // Inferred role: stock instance map num; original member name unknown.

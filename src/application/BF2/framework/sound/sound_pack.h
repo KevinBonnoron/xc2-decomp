@@ -19,7 +19,8 @@ namespace fw {
 enum SoundCategory : int;
 enum SoundPriority : int;
 
-struct SoundSourceId {
+// Inferred role: sound source id; original type name unknown.
+struct unknown128 {
   u32 unknown00; // Inferred role: id; original member name unknown.
   u32 unknown04; // Inferred role: name hash; original member name unknown.
 };
@@ -51,7 +52,7 @@ public:
   u8 _10[0x178 - 0x10];
   SoundSsdBank *unknown178;                                                    // Inferred role: bank; original member name unknown.
   mm::mtl::FixedVector<mm::mtl::IntrusivePtr<SoundSsdSource>, 256> unknown180; // Inferred role: sources; original member name unknown.
-  mm::mtl::FixedVector<SoundSourceId, 256> unknown988;                         // Inferred role: source ids; original member name unknown.
+  mm::mtl::FixedVector<unknown128, 256> unknown988;                            // Inferred role: source ids; original member name unknown.
 };
 
 static_assert(offsetof(SoundPack, unknown178) == 0x178, "");

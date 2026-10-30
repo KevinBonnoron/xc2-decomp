@@ -9,19 +9,19 @@
 namespace ml {
 
 void DrMdoMat::initMdlInfo(const u8 *data, MdoWrkMatRes *matRes) {
-  const MdsMeshHeader *header = reinterpret_cast<const MdsMeshHeader *>(data);
+  const unknown022 *header = reinterpret_cast<const unknown022 *>(data);
   matRes->unknown18 = data;
   matRes->unknown20 = header;
   matRes->unknown170 = header->unknown20;
-  matRes->unknown168 = reinterpret_cast<const MdsMdlEntry *>(data + header->unknown1c);
+  matRes->unknown168 = reinterpret_cast<const unknown026 *>(data + header->unknown1c);
   if (header->unknown34 != 0) {
     matRes->unknown178 = data + header->unknown30;
   }
 }
 
 int DrMdoMat::getNodeAnmWrkRes(const u8 *data, u8 *work, MdoWrkMatRes *matRes) {
-  const MdsMeshHeader *header = reinterpret_cast<const MdsMeshHeader *>(data);
-  if (!(header->unknown00 & MdsMeshHeader::FLAG_UNKNOWN_3)) {
+  const unknown022 *header = reinterpret_cast<const unknown022 *>(data);
+  if (!(header->unknown00 & unknown022::FLAG_UNKNOWN_3)) {
     return 0;
   }
   if (work != nullptr) {
@@ -38,8 +38,8 @@ int DrMdoMat::getNodeAnmWrkRes(const u8 *data, u8 *work, MdoWrkMatRes *matRes) {
 }
 
 void DrMdoMat::resetNodeAnmWrkRes(const u8 *data, MdoWrkMatRes *matRes) {
-  const MdsMeshHeader *header = reinterpret_cast<const MdsMeshHeader *>(data);
-  if (header->unknown00 & MdsMeshHeader::FLAG_UNKNOWN_3) {
+  const unknown022 *header = reinterpret_cast<const unknown022 *>(data);
+  if (header->unknown00 & unknown022::FLAG_UNKNOWN_3) {
     const unknown001 *table = reinterpret_cast<const unknown001 *>(data + header->unknown78);
     matRes->unknown148->unknown00 = table;
     matRes->unknown148->unknown08 = table;
@@ -146,37 +146,37 @@ void DrMdoMat::matCall_CalcColor(const MdsMatInfoHeader *header, int valueIndex,
 void DrMdoMat::setDrMan(DrMan *drMan) { m_drMan = drMan; }
 
 void DrMdoMat::updateAlphaCall() {
-  if (unknown100 & ALPHA_FLAG_SINGLE_BUFFER) {
-    unknown100 &= ~(ALPHA_FLAG_UPDATED | ALPHA_FLAG_UPDATED << 1);
+  if (unknown100 & unknown029_18) {
+    unknown100 &= ~(unknown029_16 | unknown029_16 << 1);
     return;
   }
   int index = DrMan::s_nDblIdx;
-  u32 flag = ALPHA_FLAG_UPDATED << index;
+  u32 flag = unknown029_16 << index;
   if (unknown100 & flag) {
     unknown100 &= ~flag;
     unknowne0 = unknownd0[index];
   }
 }
 
-bool DrMdoMat::isBloomMdl() const { return (unknownf8 & MDL_FLAG_BLOOM) != 0; }
+bool DrMdoMat::isBloomMdl() const { return (unknownf8 & unknown028_15) != 0; }
 
-bool DrMdoMat::isAlphaBloomMdl() const { return (unknownf8 & MDL_FLAG_ALPHA_BLOOM) != 0; }
+bool DrMdoMat::isAlphaBloomMdl() const { return (unknownf8 & unknown028_16) != 0; }
 
 u32 DrMdoMat::getVanishEffectMax() const {
   if (unknown30 == nullptr) {
     return 0;
   }
-  const MdsMeshHeader *header = unknown30->unknown20;
+  const unknown022 *header = unknown30->unknown20;
   if (header == nullptr) {
     return 0;
   }
-  if (!(header->unknown00 & MdsMeshHeader::FLAG_VANISH_EFFECT)) {
+  if (!(header->unknown00 & unknown022::FLAG_VANISH_EFFECT)) {
     return 0;
   }
   return header->unknown94 > 1 ? header->unknown94 : 1;
 }
 
-bool DrMdoMat::isFullScreenShadowMdl() const { return (unknownf8 & MDL_FLAG_FULL_SCREEN_SHADOW) != 0; }
+bool DrMdoMat::isFullScreenShadowMdl() const { return (unknownf8 & unknown028_18) != 0; }
 
 MdoWrkVanishEffect *DrMdoMat::getVanishEffectWrk(u32 index, u32 bufferIndex) {
   if (unknown30 == nullptr) {
@@ -191,13 +191,13 @@ MdoWrkVanishEffect *DrMdoMat::getVanishEffectWrk(u32 index, u32 bufferIndex) {
   return &unknown30->unknown150[index * 3 + bufferIndex];
 }
 
-bool DrMdoMat::isVolumeMdl() const { return (unknownf8 & MDL_FLAG_VOLUME) != 0; }
+bool DrMdoMat::isVolumeMdl() const { return (unknownf8 & unknown028_17) != 0; }
 
 void DrMdoMat::setFlagWaveOn(bool isOn) {
   if (isOn) {
-    unknownfc |= DRAW_FLAG_FLAG_WAVE;
+    unknownfc |= unknown027_6;
   } else {
-    unknownfc &= ~DRAW_FLAG_FLAG_WAVE;
+    unknownfc &= ~unknown027_6;
   }
 }
 

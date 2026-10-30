@@ -198,7 +198,7 @@ u16 GfDataDriverSkill::getSkill(const SDataDriver &dataDriver, u32 row, u32 colu
     return 0;
   }
 
-  const SDataDriverSkillRow *rows = isHidden ? dataDriver.unknown62 : dataDriver.unknown30;
+  const unknown116 *rows = isHidden ? dataDriver.unknown62 : dataDriver.unknown30;
   return rows[row].unknown00[column - 1];
 }
 
@@ -226,7 +226,7 @@ u16 GfDataDriverSkill::getSkillLevel(const SDataDriver &dataDriver, u32 row, boo
     return 0;
   }
 
-  const SDataDriverSkillRow *rows = isHidden ? dataDriver.unknown62 : dataDriver.unknown30;
+  const unknown116 *rows = isHidden ? dataDriver.unknown62 : dataDriver.unknown30;
   return rows[row].unknown08;
 }
 
@@ -236,7 +236,7 @@ void GfDataDriverSkill::setSkillLevel(u32 driver, u32 row, u32 level, bool isHid
   }
 
   SDataDriver *dataDriver = GfDataDriver::getSDataDriver(driver);
-  SDataDriverSkillRow *rows = isHidden ? dataDriver->unknown62 : dataDriver->unknown30;
+  unknown116 *rows = isHidden ? dataDriver->unknown62 : dataDriver->unknown30;
   rows[row].unknown08 = static_cast<u8>(level);
   for (u32 column = 1; column <= level; column++) {
     rows[row].unknown00[column - 1] = getSkillFromBdat(driver, row, column, isHidden);

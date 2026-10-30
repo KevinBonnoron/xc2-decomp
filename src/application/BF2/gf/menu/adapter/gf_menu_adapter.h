@@ -35,21 +35,22 @@ static_assert(offsetof(GfMenuRewriteNumber, unknown10) == 0x10, "");
 
 class GfMenuAdapter : public mm::mtl::IntrusiveListNode<GfMenuAdapter> {
 public:
-  enum PluginType {
-    PLUGIN_TYPE_NUMBER,
-    PLUGIN_TYPE_IMAGE,
-    PLUGIN_TYPE_TEXT,
-    PLUGIN_TYPE_DISP,
-    PLUGIN_TYPE_POS,
-    PLUGIN_TYPE_WORLD_POS,
-    PLUGIN_TYPE_OFFSET,
-    PLUGIN_TYPE_TIME,
-    PLUGIN_TYPE_COLOR,
-    PLUGIN_TYPE_PATTERN,
+  // Inferred role: plugin type; original type name unknown.
+  enum unknown004 {
+    unknown004_0, // Inferred role: number; original name unknown.
+    unknown004_1, // Inferred role: image; original name unknown.
+    unknown004_2, // Inferred role: text; original name unknown.
+    unknown004_3, // Inferred role: disp; original name unknown.
+    unknown004_4, // Inferred role: pos; original name unknown.
+    unknown004_5, // Inferred role: world pos; original name unknown.
+    unknown004_6, // Inferred role: offset; original name unknown.
+    unknown004_7, // Inferred role: time; original name unknown.
+    unknown004_8, // Inferred role: color; original name unknown.
+    unknown004_9, // Inferred role: pattern; original name unknown.
   };
 
   struct PluginSetup {
-    PluginType unknown00; // Inferred role: type; original member name unknown.
+    unknown004 unknown00; // Inferred role: type; original member name unknown.
     int unknown04;        // Inferred role: param; original member name unknown.
     int unknown08;        // Inferred role: max; original member name unknown.
   };
@@ -59,10 +60,11 @@ public:
     FLAG_UPDATE_ALWAYS = 1 << 1,
   };
 
-  enum CompareResult {
-    COMPARE_RESULT_SAME,
-    COMPARE_RESULT_LESS,
-    COMPARE_RESULT_GREATER,
+  // Inferred role: compare result; original type name unknown.
+  enum unknown005 {
+    unknown005_0, // Inferred role: same; original name unknown.
+    unknown005_1, // Inferred role: less; original name unknown.
+    unknown005_2, // Inferred role: greater; original name unknown.
   };
 
   GfMenuAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAfter, bool isUpdateAlways);
@@ -70,7 +72,7 @@ public:
   void setChange();
   void setUpdateAfter();
   static ui::UIObjectPlugin *createPlugin(u32 handle, const PluginSetup &setup);
-  static CompareResult compare(GfMenuAdapter *adapter, GfMenuAdapter *other);
+  static unknown005 compare(GfMenuAdapter *adapter, GfMenuAdapter *other);
   void attachPlugin(ui::UIObjectPlugin *plugin);
   void setDispAlphaMode(bool isAlphaMode);
   void setDispReverseMode(bool isReverseMode);

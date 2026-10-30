@@ -134,7 +134,7 @@ bool GfDataMap::isZoneCompleteFlag(u32 zone) {
   return false;
 }
 
-SDataMap *GfDataMap::getSDataMap() { return &GfDataManager::getDataGame()->unknown1097f0; }
+unknown118 *GfDataMap::getSDataMap() { return &GfDataManager::getDataGame()->unknown1097f0; }
 
 const char *GfDataMap::getMapResourceName(u32 mapJump) {
   u32 map = getMapID(mapJump);
@@ -318,7 +318,7 @@ void GfDataMap::setCloudType(u32 map, CLOUD_SEA cloudType) {
 
 void GfDataMap::resetCloudType() {
   SDataGame *dataGame = GfDataManager::getDataGame();
-  for (SDataMapInfo &info : dataGame->unknown10a53c) {
+  for (unknown119 &info : dataGame->unknown10a53c) {
     info.unknown1c = 0;
   }
 }

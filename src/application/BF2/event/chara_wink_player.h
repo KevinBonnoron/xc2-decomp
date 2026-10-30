@@ -43,11 +43,11 @@ public:
   void idle_wink();
 
 private:
-  mm::mtl::BitFlag<FLAG_MAX> unknown08; // Inferred role: flags; original member name unknown.
-  CharaWeightPlayer *unknown10;         // Inferred role: weight; original member name unknown.
-  State unknown18;                      // Inferred role: state; original member name unknown.
-  int unknown28;                        // Inferred role: counter; original member name unknown.
-  const char *unknown30;                // Inferred role: status; original member name unknown.
+  mm::mtl::unknown027<FLAG_MAX> unknown08; // Inferred role: flags; original member name unknown.
+  CharaWeightPlayer *unknown10;            // Inferred role: weight; original member name unknown.
+  State unknown18;                         // Inferred role: state; original member name unknown.
+  int unknown28;                           // Inferred role: counter; original member name unknown.
+  const char *unknown30;                   // Inferred role: status; original member name unknown.
 };
 
 static_assert(sizeof(CharaWinkPlayer) == 0x38, "");

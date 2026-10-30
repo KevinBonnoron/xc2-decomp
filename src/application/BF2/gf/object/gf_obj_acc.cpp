@@ -96,7 +96,7 @@ bool GfObjAcc::isAlphaChanged() const {
   if (m_obj != nullptr) {
     GfComProperty *property = m_obj->getComponent<GfComProperty>();
     if (property != nullptr) {
-      GfPropertyAlpha *alpha = property->unknown20;
+      GfAlphaProperty *alpha = property->unknown20;
       if (alpha != nullptr) {
         GfObjAcc parentAcc(GfObjUtil::getParentObj(m_obj));
         if (parentAcc.isAlphaChanged()) {
@@ -458,7 +458,7 @@ u32 GfObjAcc::getBladeId() const {
   GfObjSetup *setup = GfObjUtil::getObjSetup(getHandle());
   if (setup != nullptr) {
     switch (setup->unknown1c) {
-    case CHARACTER_TYPE_ENEMY_BLADE:
+    case unknown030_5:
       return GfDataEnemy::getBladeID(getBdatId());
     default:
       return getBdatId();
@@ -470,7 +470,7 @@ u32 GfObjAcc::getBladeId() const {
 
 bool GfObjAcc::isEnemyBlade() const {
   GfObjSetup *setup = GfObjUtil::getObjSetup(getHandle());
-  return setup != nullptr && setup->unknown1c == CHARACTER_TYPE_ENEMY_BLADE;
+  return setup != nullptr && setup->unknown1c == unknown030_5;
 }
 
 u32 GfObjAcc::getEnArrangeId() const { return getBdatId(); }

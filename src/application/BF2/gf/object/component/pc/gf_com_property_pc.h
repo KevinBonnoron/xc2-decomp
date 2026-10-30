@@ -63,9 +63,9 @@ enum InputID {
 class GfComPropertyPc : public GfComProperty {
 public:
   struct Input {
-    f32 unknown00;                  // Inferred role: x; original member name unknown.
-    f32 unknown04;                  // Inferred role: y; original member name unknown.
-    mm::mtl::BitFlag<32> unknown08; // Inferred role: flags; original member name unknown.
+    f32 unknown00;                     // Inferred role: x; original member name unknown.
+    f32 unknown04;                     // Inferred role: y; original member name unknown.
+    mm::mtl::unknown027<32> unknown08; // Inferred role: flags; original member name unknown.
   };
 
   static mm::mtl::RTTI m_rtti;

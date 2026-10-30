@@ -8,20 +8,22 @@ class DrMdlObj;
 class DrMdoSmlShadowMan;
 class DrPixlShadowCacheObj;
 
-enum DrMdlType {
-  DR_MDL_TYPE_NORMAL,
-  DR_MDL_TYPE_POSITION,
-  DR_MDL_TYPE_MPF,
-  DR_MDL_TYPE_SEAM,
-  DR_MDL_TYPE_CLOUD_MODEL,
+// Inferred role: mdl type; original type name unknown.
+enum unknown037 {
+  unknown037_0, // Inferred role: normal; original name unknown.
+  unknown037_1, // Inferred role: position; original name unknown.
+  unknown037_2, // Inferred role: mpf; original name unknown.
+  unknown037_3, // Inferred role: seam; original name unknown.
+  unknown037_4, // Inferred role: cloud model; original name unknown.
 };
 
 class DrMdlBase {
 public:
-  enum UpdateFlag {
-    UPDATE_FLAG_DISP = 1 << 0,
-    UPDATE_FLAG_CLIP = 1 << 1,
-    UPDATE_FLAG_DELETE_CALL = 1 << 3,
+  // Inferred role: update flag; original type name unknown.
+  enum unknown038 {
+    unknown038_0 = 1 << 0, // Inferred role: disp; original name unknown.
+    unknown038_1 = 1 << 1, // Inferred role: clip; original name unknown.
+    unknown038_3 = 1 << 3, // Inferred role: delete call; original name unknown.
   };
 
   virtual ~DrMdlBase() {}
@@ -43,9 +45,9 @@ public:
 
   void setClip(bool isClip) {
     if (isClip) {
-      unknown20 |= UPDATE_FLAG_CLIP;
+      unknown20 |= unknown038_1;
     } else {
-      unknown20 &= ~UPDATE_FLAG_CLIP;
+      unknown20 &= ~unknown038_1;
     }
   }
 

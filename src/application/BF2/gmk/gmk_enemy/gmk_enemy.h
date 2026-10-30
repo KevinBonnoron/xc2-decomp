@@ -129,10 +129,11 @@ public:
     PopEnemyInfo unknown08[4]; // Inferred role: enemies; original member name unknown.
   };
 
-  enum Matched {
-    MATCHED_UNKNOWN_0 = 1 << 0, // Inferred role: pop condition matched; original name unknown.
-    MATCHED_UNKNOWN_1 = 1 << 1, // Inferred role: pop distance condition matched; original name unknown.
-    MATCHED_UNKNOWN_2 = 1 << 2, // Inferred role: depop distance condition matched; original name unknown.
+  // Inferred role: matched; original type name unknown.
+  enum unknown004 {
+    unknown004_0 = 1 << 0, // Inferred role: pop condition matched; original name unknown.
+    unknown004_1 = 1 << 1, // Inferred role: pop distance condition matched; original name unknown.
+    unknown004_2 = 1 << 2, // Inferred role: depop distance condition matched; original name unknown.
   };
 
   bool isPopFinished() const;

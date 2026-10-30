@@ -40,8 +40,9 @@ class GfGamePlayerFormation : public mm::mtl::PtrSingleton<GfGamePlayerFormation
 public:
   static const u32 PLAYER_NUM = 6;
 
-  struct Player {
-    Player() : unknown00(0xffffffff), unknown08(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown10(true) {}
+  // Inferred role: player; original type name unknown.
+  struct unknown004 {
+    unknown004() : unknown00(0xffffffff), unknown08(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown10(true) {}
 
     u32 unknown00;            // Inferred role: follow index; original member name unknown.
     GF_OBJ_HANDLE *unknown08; // Inferred role: handle; original member name unknown.
@@ -70,7 +71,7 @@ public:
   mm::Vec3 unknown20[PLAYER_NUM];      // Inferred role: target positions; original member name unknown.
   mm::Vec3 unknown80[PLAYER_NUM];      // Inferred role: formation positions; original member name unknown.
   fw::Transform unknowne0[PLAYER_NUM]; // Inferred role: transforms; original member name unknown.
-  Player unknown1a0[PLAYER_NUM];       // Inferred role: players; original member name unknown.
+  unknown004 unknown1a0[PLAYER_NUM];   // Inferred role: players; original member name unknown.
   u32 unknown230;                      // Inferred role: formation; original member name unknown.
   bool unknown234;                     // Inferred role: mirror; original member name unknown.
 };

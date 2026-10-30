@@ -12,9 +12,9 @@
 namespace gf {
 
 static GfMenuHanaPartsAdapter::TypeInfo TYPE_INFOS[] = {
-    {&GfMenuHanaPartsAdapter::update_partsText, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
-    {&GfMenuHanaPartsAdapter::update_partsIcon, {GfMenuAdapter::PLUGIN_TYPE_IMAGE, 0, 0}},
-    {&GfMenuHanaPartsAdapter::update_needEther, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 999999999}},
+    {&GfMenuHanaPartsAdapter::update_partsText, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuHanaPartsAdapter::update_partsIcon, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuHanaPartsAdapter::update_needEther, {GfMenuAdapter::unknown004_0, 0, 999999999}},
 };
 
 GfMenuHanaPartsAdapter::GfMenuHanaPartsAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(nullptr), unknown58(0) {}

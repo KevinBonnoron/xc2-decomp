@@ -7,7 +7,7 @@
 
 namespace gf {
 
-class GfItemInfo : public SDataItemInfo {
+class GfItemInfo : public unknown117 {
 public:
   ItemType::Type getType() const;
   GfItemHandle getHandle() const;
@@ -45,8 +45,9 @@ static_assert(offsetof(item_iterator, unknown14) == 0x14, "");
 static_assert(offsetof(item_iterator, unknown18) == 0x18, "");
 static_assert(sizeof(item_iterator) == 0x20, "");
 
-struct ItemTypeInfo {
-  ItemTypeInfo() : unknown00(nullptr), unknown08(nullptr), unknown10(false), unknown18(nullptr), unknown20(0), unknown22(0), unknown24(0) {}
+// Inferred role: item type info; original type name unknown.
+struct unknown081 {
+  unknown081() : unknown00(nullptr), unknown08(nullptr), unknown10(false), unknown18(nullptr), unknown20(0), unknown22(0), unknown24(0) {}
 
   GfItemInfo *unknown00; // Inferred role: first; original member name unknown.
   GfItemInfo *unknown08; // Inferred role: last; original member name unknown.
@@ -57,11 +58,11 @@ struct ItemTypeInfo {
   u16 unknown24;         // Inferred role: max stock; original member name unknown.
 };
 
-static_assert(offsetof(ItemTypeInfo, unknown10) == 0x10, "");
-static_assert(offsetof(ItemTypeInfo, unknown18) == 0x18, "");
-static_assert(offsetof(ItemTypeInfo, unknown20) == 0x20, "");
-static_assert(offsetof(ItemTypeInfo, unknown24) == 0x24, "");
-static_assert(sizeof(ItemTypeInfo) == 0x28, "");
+static_assert(offsetof(unknown081, unknown10) == 0x10, "");
+static_assert(offsetof(unknown081, unknown18) == 0x18, "");
+static_assert(offsetof(unknown081, unknown20) == 0x20, "");
+static_assert(offsetof(unknown081, unknown24) == 0x24, "");
+static_assert(sizeof(unknown081) == 0x28, "");
 
 class GfItemBoxBase {
 public:
@@ -71,8 +72,8 @@ public:
   void setItemTypeInfo(ItemBox *itemBox, u32 index, GfItemInfo *first, GfItemInfo *last, u32 capacity, u32 itemSize, u32 maxStock, bool isMulti);
   void setupSerial(ItemBox *itemBox);
   void setSerialInfo(ItemBox *itemBox, u32 index);
-  ItemTypeInfo *getItemTypeInfo(ItemType::Type type);
-  const ItemTypeInfo *getItemTypeInfo(ItemType::Type type) const;
+  unknown081 *getItemTypeInfo(ItemType::Type type);
+  const unknown081 *getItemTypeInfo(ItemType::Type type) const;
   item_iterator begin(ItemType::Type type);
   bool isMulti(ItemType::Type type);
   void setEquipFlag(u32 item, GfItemHandle handle, bool isEquip);
@@ -102,8 +103,8 @@ public:
   u32 getFreeStackCount(u32 item);
   virtual ~GfItemBoxBase() {}
 
-  ItemTypeInfo unknown08[ITEM_BOX_INDEX_NUM]; // Inferred role: item type infos; original member name unknown.
-  ItemBox *unknown300;                        // Inferred role: item box; original member name unknown.
+  unknown081 unknown08[ITEM_BOX_INDEX_NUM]; // Inferred role: item type infos; original member name unknown.
+  ItemBox *unknown300;                      // Inferred role: item box; original member name unknown.
 };
 
 static_assert(offsetof(GfItemBoxBase, unknown08) == 0x008, "");

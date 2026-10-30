@@ -59,7 +59,8 @@ public:
     mm::mtl::IntrusiveList<EffectCasterSend> unknown00; // Inferred role: casters; original member name unknown.
   };
 
-  struct CommonEffect {
+  // Inferred role: common effect; original type name unknown.
+  struct unknown008 {
     RenderResource *unknown00; // Inferred role: resource; original member name unknown.
     EffectPack *unknown08;     // Inferred role: pack; original member name unknown.
   };
@@ -235,7 +236,7 @@ public:
   PackMap *unknown348;                                   // Inferred role: pack map; original member name unknown.
   DataMap *unknown350;                                   // Inferred role: data map; original member name unknown.
   u8 _358[0x1fb8 - 0x358];
-  mm::mtl::FixedVector<CommonEffect, COMMON_EFFECT_MAX> unknown1fb8; // Inferred role: common effects; original member name unknown.
+  mm::mtl::FixedVector<unknown008, COMMON_EFFECT_MAX> unknown1fb8; // Inferred role: common effects; original member name unknown.
   u8 _27c0[0x2fd5 - 0x27c0];
   bool unknown2fd5; // Inferred role: master pause; original member name unknown.
   bool unknown2fd6; // Inferred role: finalizing; original member name unknown.

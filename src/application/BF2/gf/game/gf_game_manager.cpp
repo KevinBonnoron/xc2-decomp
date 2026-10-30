@@ -99,9 +99,9 @@ constexpr u32 DEPOP_METER_COUNT = 4;
 
 static bool isEventCharacter(u32 characterType) {
   switch (characterType) {
-  case CHARACTER_TYPE_EVENT_DRIVER:
-  case CHARACTER_TYPE_EVENT_BLADE:
-  case CHARACTER_TYPE_EVENT_NPC:
+  case unknown030_6:
+  case unknown030_7:
+  case unknown030_12:
     return true;
   default:
     return false;

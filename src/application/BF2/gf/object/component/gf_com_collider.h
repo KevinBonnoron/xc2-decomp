@@ -30,29 +30,32 @@ enum {
   MSG_OBJECT_COLI_CONTACT = 0x100003e,
 };
 
-struct MsgObjectColiEnter : fw::Message {
-  MsgObjectColiEnter() : fw::Message(MSG_OBJECT_COLI_ENTER, 0x40), unknown08(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown10(nullptr) {}
+// Inferred role: object collision enter message; original type name unknown.
+struct unknown095 : fw::Message {
+  unknown095() : fw::Message(MSG_OBJECT_COLI_ENTER, 0x40), unknown08(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown10(nullptr) {}
 
   GF_OBJ_HANDLE *unknown08;                           // Inferred role: handle; original member name unknown.
   const fw::IColiEventListener::EnterInfo *unknown10; // Inferred role: info; original member name unknown.
 };
 
-struct MsgObjectColiLeave : fw::Message {
-  MsgObjectColiLeave() : fw::Message(MSG_OBJECT_COLI_LEAVE, 0x40), unknown08(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown10(nullptr) {}
+// Inferred role: object collision leave message; original type name unknown.
+struct unknown096 : fw::Message {
+  unknown096() : fw::Message(MSG_OBJECT_COLI_LEAVE, 0x40), unknown08(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown10(nullptr) {}
 
   GF_OBJ_HANDLE *unknown08;                           // Inferred role: handle; original member name unknown.
   const fw::IColiEventListener::LeaveInfo *unknown10; // Inferred role: info; original member name unknown.
 };
 
-struct MsgObjectColiContact : fw::Message {
-  MsgObjectColiContact() : fw::Message(MSG_OBJECT_COLI_CONTACT, 0x40), unknown08(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown10(nullptr) {}
+// Inferred role: object collision contact message; original type name unknown.
+struct unknown097 : fw::Message {
+  unknown097() : fw::Message(MSG_OBJECT_COLI_CONTACT, 0x40), unknown08(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown10(nullptr) {}
 
   GF_OBJ_HANDLE *unknown08;                           // Inferred role: handle; original member name unknown.
   const fw::IColiEventListener::EnterInfo *unknown10; // Inferred role: info; original member name unknown.
 };
 
-static_assert(offsetof(MsgObjectColiEnter, unknown08) == 0x08, "");
-static_assert(offsetof(MsgObjectColiEnter, unknown10) == 0x10, "");
+static_assert(offsetof(unknown095, unknown08) == 0x08, "");
+static_assert(offsetof(unknown095, unknown10) == 0x10, "");
 
 class GfComCollider : public GfComponent, public fw::IColiEventListener {
 public:

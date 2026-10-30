@@ -27,12 +27,13 @@ static_assert(offsetof(DrResEtcParams, unknown04) == 0x04, "");
 static_assert(offsetof(DrResEtcParams, unknown14) == 0x14, "");
 static_assert(sizeof(DrResEtcParams) == 0x18, "");
 
-struct DrResEtcPamName {
+// Inferred role: resource etc pam name; original type name unknown.
+struct unknown040 {
   u32 unknown00; // Inferred role: name offset; original member name unknown.
   u8 _04[0x10 - 0x04];
 };
 
-static_assert(sizeof(DrResEtcPamName) == 0x10, "");
+static_assert(sizeof(unknown040) == 0x10, "");
 
 class DrResEtcPamObj {
 public:
@@ -52,11 +53,11 @@ public:
   static void release(DrResEtcPamObj *&obj);
   static int calcWorkSize(const u8 *data);
 
-  const char *unknown00;            // Inferred role: names; original member name unknown.
-  const DrResEtcPamName *unknown08; // Inferred role: name table; original member name unknown.
-  DrResEtcParams *unknown10;        // Inferred role: params; original member name unknown.
-  u32 unknown18;                    // Inferred role: params max; original member name unknown.
-  u32 unknown1c;                    // Inferred role: flags; original member name unknown.
+  const char *unknown00;       // Inferred role: names; original member name unknown.
+  const unknown040 *unknown08; // Inferred role: name table; original member name unknown.
+  DrResEtcParams *unknown10;   // Inferred role: params; original member name unknown.
+  u32 unknown18;               // Inferred role: params max; original member name unknown.
+  u32 unknown1c;               // Inferred role: flags; original member name unknown.
 };
 
 static_assert(offsetof(DrResEtcPamObj::unknown001, unknown84) == 0x84, "");

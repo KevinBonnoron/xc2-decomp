@@ -7,11 +7,11 @@
 namespace gf {
 
 static GfMenuDiffAdapter::TypeInfo TYPE_INFOS[] = {
-    {&GfMenuDiffAdapter::update_Icon, {GfMenuAdapter::PLUGIN_TYPE_IMAGE, 0, 0}},
-    {&GfMenuDiffAdapter::update_MulCol, {GfMenuAdapter::PLUGIN_TYPE_COLOR, 0, 0}},
-    {&GfMenuDiffAdapter::update_Sub, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, -9999, 9999}},
-    {&GfMenuDiffAdapter::update_DispSameOn, {GfMenuAdapter::PLUGIN_TYPE_DISP, 0, 0}},
-    {&GfMenuDiffAdapter::update_DispSameOff, {GfMenuAdapter::PLUGIN_TYPE_DISP, 0, 0}},
+    {&GfMenuDiffAdapter::update_Icon, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuDiffAdapter::update_MulCol, {GfMenuAdapter::unknown004_8, 0, 0}},
+    {&GfMenuDiffAdapter::update_Sub, {GfMenuAdapter::unknown004_0, -9999, 9999}},
+    {&GfMenuDiffAdapter::update_DispSameOn, {GfMenuAdapter::unknown004_3, 0, 0}},
+    {&GfMenuDiffAdapter::update_DispSameOff, {GfMenuAdapter::unknown004_3, 0, 0}},
 };
 
 GfMenuDiffAdapter::GfMenuDiffAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways) {}
@@ -40,12 +40,12 @@ GfMenuAdapter *GfMenuDiffAdapter::create(u32 handle, GfMenuAdapter *adapter, GfM
 
 bool GfMenuDiffAdapter::update_Icon(int result) {
   switch (result) {
-  case COMPARE_RESULT_SAME:
+  case unknown005_0:
     return false;
-  case COMPARE_RESULT_LESS:
+  case unknown005_1:
     setNumber(0);
     break;
-  case COMPARE_RESULT_GREATER:
+  case unknown005_2:
     setNumber(1);
     break;
   }
@@ -54,13 +54,13 @@ bool GfMenuDiffAdapter::update_Icon(int result) {
 
 bool GfMenuDiffAdapter::update_MulCol(int result) {
   switch (result) {
-  case COMPARE_RESULT_SAME:
+  case unknown005_0:
     setMulColor("select");
     break;
-  case COMPARE_RESULT_LESS:
+  case unknown005_1:
     setMulColor("diff_high");
     break;
-  case COMPARE_RESULT_GREATER:
+  case unknown005_2:
     setMulColor("diff_low");
     break;
   }
@@ -72,9 +72,9 @@ bool GfMenuDiffAdapter::update_Sub(int result) {
   return true;
 }
 
-bool GfMenuDiffAdapter::update_DispSameOn(int result) { return result == COMPARE_RESULT_SAME; }
+bool GfMenuDiffAdapter::update_DispSameOn(int result) { return result == unknown005_0; }
 
-bool GfMenuDiffAdapter::update_DispSameOff(int result) { return result != COMPARE_RESULT_SAME; }
+bool GfMenuDiffAdapter::update_DispSameOff(int result) { return result != unknown005_0; }
 
 void GfMenuDiffAdapter::update(const fw::UpdateInfo &info) {
   if (unknown30.isValid() && (unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {

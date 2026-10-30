@@ -32,7 +32,7 @@ u16 Skeleton::getExtraTruckSlotID(const char *name) const {
   return 0xffff;
 }
 
-const Skeleton::Bone *Skeleton::getBoneFromLabel(LabelType type, u16 id) const {
+const Skeleton::unknown004 *Skeleton::getBoneFromLabel(LabelType type, u16 id) const {
   u16 bone = 0xffff;
   if (unknown90.size() != 0) {
     LabelKey key = {type, id};

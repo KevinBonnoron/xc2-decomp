@@ -19,7 +19,7 @@ void GfMenuObjOperationInfo::close() {
   if (ui::UIObjectAcc(handle).isValid()) {
     if (!ui::UIObjectAcc(handle).isTerm()) {
       ui::EventData event;
-      event.unknown00 = GfMenuTypes::UI_EVENT_CLOSE;
+      event.unknown00 = GfMenuTypes::unknown003_34;
       ui::UIManager::get()->requestObjectEvent(handle, event, 0.0f);
     }
   }

@@ -66,7 +66,7 @@ void AddBlendTree::adjustWeight() {
     m_baseClip[i].setWeight(unknown24);
   }
   for (u32 i = 0; i < unknown30->unknown18.size(); i++) {
-    const ResAddNode &node = unknown30->unknown18[i];
+    const unknown101 &node = unknown30->unknown18[i];
     f32 value;
     (*unknown48)[node.variableIndex].getValue(&value);
     m_baseClip[baseClipNum + i].setWeight(value * unknown24);

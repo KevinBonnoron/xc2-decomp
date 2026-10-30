@@ -16,7 +16,7 @@ void DrResMdoVtxMeshObj::release(DrResMdoVtxMeshObj *&obj) {
 }
 
 void DrResMdoVtxMeshObj::resourceInit(DrResMdoVertex *vertex) {
-  DrResUniformVertex *uniformVertex = vertex->unknown70;
+  unknown056 *uniformVertex = vertex->unknown70;
   unknown00 = uniformVertex->unknown00;
   unknown08 = uniformVertex->unknown08;
   unknown80 = unknown00->unknown08;

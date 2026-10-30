@@ -20,14 +20,14 @@ namespace gf {
 constexpr int EQUIP_WEAPON_SLOT_CURRENT = -1;
 
 static GfMenuWeaponAdapter::TypeInfo TYPE_INFOS[] = {
-    {&GfMenuWeaponAdapter::update_Name, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
-    {&GfMenuWeaponAdapter::update_Atk, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 1, 999}},
-    {&GfMenuWeaponAdapter::update_Guard, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 100}},
-    {&GfMenuWeaponAdapter::update_Critical, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 100}},
-    {&GfMenuWeaponAdapter::update_Balance, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 1, 999}},
-    {&GfMenuWeaponAdapter::update_TypeName, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
-    {&GfMenuWeaponAdapter::update_Caption, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
-    {&GfMenuWeaponAdapter::update_Image, {GfMenuAdapter::PLUGIN_TYPE_IMAGE, 0, 0}},
+    {&GfMenuWeaponAdapter::update_Name, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuWeaponAdapter::update_Atk, {GfMenuAdapter::unknown004_0, 1, 999}},
+    {&GfMenuWeaponAdapter::update_Guard, {GfMenuAdapter::unknown004_0, 0, 100}},
+    {&GfMenuWeaponAdapter::update_Critical, {GfMenuAdapter::unknown004_0, 0, 100}},
+    {&GfMenuWeaponAdapter::update_Balance, {GfMenuAdapter::unknown004_0, 1, 999}},
+    {&GfMenuWeaponAdapter::update_TypeName, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuWeaponAdapter::update_Caption, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuWeaponAdapter::update_Image, {GfMenuAdapter::unknown004_1, 0, 0}},
 };
 
 GfMenuWeaponAdapter::GfMenuWeaponAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(nullptr), unknown58(0), unknown5c(0) {}

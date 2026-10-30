@@ -5,12 +5,13 @@ namespace ml {
 
 template <typename T> class _reslist_base {
 public:
-  struct NodeBase {
-    NodeBase *next;
-    NodeBase *prev;
+  // Inferred role: node base; original type name unknown.
+  struct unknown001 {
+    unknown001 *next;
+    unknown001 *prev;
   };
 
-  struct Node : NodeBase {
+  struct Node : unknown001 {
     Node *getNext() const { return static_cast<Node *>(this->next); }
     Node *getPrev() const { return static_cast<Node *>(this->prev); }
 
@@ -53,7 +54,7 @@ public:
   }
 
   void push_back(const T &value) {
-    NodeBase *last = end();
+    unknown001 *last = end();
     int index = 0;
     while (index < m_capacity && m_pool[index].next != nullptr) {
       index++;
@@ -68,8 +69,8 @@ public:
   }
 
   void erase(Node *node) {
-    NodeBase *next = node->next;
-    NodeBase *prev = node->prev;
+    unknown001 *next = node->next;
+    unknown001 *prev = node->prev;
     prev->next = next;
     next->prev = prev;
     node->next = nullptr;
@@ -88,7 +89,7 @@ public:
     m_size = 0;
   }
 
-  NodeBase *m_end;
+  unknown001 *m_end;
   Node m_root;
   Node *m_pool;
   int m_capacity;

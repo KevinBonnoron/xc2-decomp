@@ -59,8 +59,9 @@ class DrPixlShadowObj;
 
 class DrPixlMan {
 public:
-  enum ResFlag {
-    RES_FLAG_SHADOW_DISPLAY_LIST = 0x20,
+  // Inferred role: res flag; original type name unknown.
+  enum unknown001 {
+    unknown001_32 = 0x20, // Inferred role: res flag shadow display list; original name unknown.
   };
 
   void debugRender(const grlib::CGLibTextureBuffer &texture, int x, int y, int width, int height, bool isAlpha, bool isDepth, f32 scale, bool isFlip);

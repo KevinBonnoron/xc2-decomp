@@ -10,29 +10,31 @@ struct Vec3;
 
 namespace gf {
 
-struct SDataPartyMember {
+// Inferred role: save data party member; original type name unknown.
+struct unknown123 {
   u16 unknown00; // Inferred role: driver; original member name unknown.
   u16 unknown02; // Inferred role: hierarchy driver; original member name unknown.
   u16 unknown04; // Inferred role: hierarchy blade; original member name unknown.
 };
 
-struct SDataParty {
-  SDataPartyMember unknown00[10]; // Inferred role: members; original member name unknown.
-  u32 unknown3c;                  // Inferred role: leader object type; original member name unknown.
-  u32 unknown40;                  // Inferred role: leader; original member name unknown.
-  u32 unknown44;                  // Inferred role: saved leader object type; original member name unknown.
-  u32 unknown48;                  // Inferred role: saved leader; original member name unknown.
-  u16 unknown4c;                  // Inferred role: party gauge; original member name unknown.
-  u16 unknown4e[2];               // Inferred role: clear rex blades; original member name unknown.
+// Inferred role: save data party; original type name unknown.
+struct unknown124 {
+  unknown123 unknown00[10]; // Inferred role: members; original member name unknown.
+  u32 unknown3c;            // Inferred role: leader object type; original member name unknown.
+  u32 unknown40;            // Inferred role: leader; original member name unknown.
+  u32 unknown44;            // Inferred role: saved leader object type; original member name unknown.
+  u32 unknown48;            // Inferred role: saved leader; original member name unknown.
+  u16 unknown4c;            // Inferred role: party gauge; original member name unknown.
+  u16 unknown4e[2];         // Inferred role: clear rex blades; original member name unknown.
   u8 _052[0x054 - 0x052];
 };
 
-static_assert(sizeof(SDataPartyMember) == 0x06, "");
-static_assert(offsetof(SDataParty, unknown3c) == 0x03c, "");
-static_assert(offsetof(SDataParty, unknown40) == 0x040, "");
-static_assert(offsetof(SDataParty, unknown4c) == 0x04c, "");
-static_assert(offsetof(SDataParty, unknown4e) == 0x04e, "");
-static_assert(sizeof(SDataParty) == 0x054, "");
+static_assert(sizeof(unknown123) == 0x06, "");
+static_assert(offsetof(unknown124, unknown3c) == 0x03c, "");
+static_assert(offsetof(unknown124, unknown40) == 0x040, "");
+static_assert(offsetof(unknown124, unknown4c) == 0x04c, "");
+static_assert(offsetof(unknown124, unknown4e) == 0x04e, "");
+static_assert(sizeof(unknown124) == 0x054, "");
 
 class GfDataParty {
 public:
@@ -40,9 +42,9 @@ public:
   static u32 getDriver(u32 member);
   static int getDriverPartyID(u32 driver);
   static bool setDriver(u32 member, u32 driver);
-  static SDataParty *getSDataParty();
+  static unknown124 *getSDataParty();
   static bool isExistDriver(u32 driver);
-  static SDataPartyMember *getPartyMember(u32 member);
+  static unknown123 *getPartyMember(u32 member);
   static mm::Vec3 *getSavePos(u32 member, bool isDriver);
   static mm::Vec3 *getSaveRot(u32 member, bool isDriver);
   static bool isEmptyDriver();

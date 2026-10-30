@@ -17,7 +17,8 @@ public:
 struct SDataIdea {
   static const u32 IDEA_MAX = 4;
 
-  struct Idea {
+  // Inferred role: idea; original type name unknown.
+  struct unknown004 {
     u32 unknown00; // Inferred role: point; original member name unknown.
     int unknown04; // Inferred role: level; original member name unknown.
   };
@@ -25,7 +26,7 @@ struct SDataIdea {
   void setLevel(u32 idea, int level);
   void setPoint(u32 idea, u32 point);
 
-  Idea unknown00[IDEA_MAX]; // Inferred role: ideas; original member name unknown.
+  unknown004 unknown00[IDEA_MAX]; // Inferred role: ideas; original member name unknown.
 };
 
 static_assert(sizeof(SDataIdea) == 0x20, "");

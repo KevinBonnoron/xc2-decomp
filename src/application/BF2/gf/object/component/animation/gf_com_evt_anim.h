@@ -110,7 +110,7 @@ public:
     void procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message);
     void cacheCallback(anm::AsmListener::CallBackType type, const anm::AsmAnnotetion &annotation);
 
-    mm::mtl::BitFlag<32> unknown00;            // Inferred role: flags; original member name unknown.
+    mm::mtl::unknown027<32> unknown00;         // Inferred role: flags; original member name unknown.
     GfComModel *unknown08;                     // Inferred role: model; original member name unknown.
     anm::ASMControl *unknown10;                // Inferred role: asm control; original member name unknown.
     fw::AnimAsmUpdater unknown18;              // Inferred role: updater; original member name unknown.
@@ -140,7 +140,7 @@ public:
     bool setEaseWeight(const char *state, AnimLayer layer, f32 weight);
     bool setEaseSpeed(const char *state, AnimLayer layer, f32 speed);
 
-    mm::mtl::BitFlag<32> unknown00;                                 // Inferred role: flags; original member name unknown.
+    mm::mtl::unknown027<32> unknown00;                              // Inferred role: flags; original member name unknown.
     GfComModel *unknown08;                                          // Inferred role: model; original member name unknown.
     anm::ResASM *unknown10;                                         // Inferred role: res asm; original member name unknown.
     anm::Blender *unknown18;                                        // Inferred role: blender; original member name unknown.
@@ -186,12 +186,12 @@ public:
   bool setEaseSpeed(const char *name, AnimLayer layer, f32 speed);
   const mm::mtl::RTTI *getRTTI() const override;
 
-  Asm unknown10;                   // Inferred role: anim asm; original member name unknown.
-  Mot unknown198;                  // Inferred role: mot; original member name unknown.
-  anm::ResASM *unknown550;         // Inferred role: res asm; original member name unknown.
-  mm::mtl::FixStr<32> unknown558;  // Inferred role: state; original member name unknown.
-  mm::mtl::BitFlag<32> unknown57c; // Inferred role: flags; original member name unknown.
-  bool unknown580;                 // Inferred role: local space; original member name unknown.
+  Asm unknown10;                      // Inferred role: anim asm; original member name unknown.
+  Mot unknown198;                     // Inferred role: mot; original member name unknown.
+  anm::ResASM *unknown550;            // Inferred role: res asm; original member name unknown.
+  mm::mtl::FixStr<32> unknown558;     // Inferred role: state; original member name unknown.
+  mm::mtl::unknown027<32> unknown57c; // Inferred role: flags; original member name unknown.
+  bool unknown580;                    // Inferred role: local space; original member name unknown.
 };
 
 static_assert(offsetof(GfComEvtAnim::Asm, unknown08) == 0x08, "");

@@ -29,7 +29,8 @@ class GfGameObjEnemy;
 
 class GfGameObj : public mm::mtl::PtrSingleton<GfGameObj> {
 public:
-  struct DestroyAttribute {
+  // Inferred role: destroy attribute; original type name unknown.
+  struct unknown004 {
     GF_OBJ_HANDLE *unknown00; // Inferred role: object handle; original member name unknown.
     u32 unknown08;            // Inferred role: attribute; original member name unknown.
   };
@@ -110,7 +111,7 @@ public:
   mm::mtl::FixedList<INOUT, GAME_OBJ_LIST_CAPACITY> unknown47a00;             // Inferred role: objects leaving the game; original member name unknown.
   mm::mtl::FixedVector<GF_OBJ_HANDLE *, GAME_OBJ_LIST_CAPACITY> unknown50230; // Inferred role: entered objects of the frame; original member name unknown.
   mm::mtl::FixedVector<GF_OBJ_HANDLE *, GAME_OBJ_LIST_CAPACITY> unknown52238; // Inferred role: left objects of the frame; original member name unknown.
-  mm::mtl::FixedList<DestroyAttribute, 256> unknown54240;                     // Inferred role: objects destroyed with an attribute; original member name unknown.
+  mm::mtl::FixedList<unknown004, 256> unknown54240;                           // Inferred role: objects destroyed with an attribute; original member name unknown.
   GfGameObjEnemy *unknown55c68;                                               // Inferred role: enemy manager; original member name unknown.
   bool unknown55c70;                                                          // Inferred role: initialized; original member name unknown.
 };

@@ -48,7 +48,8 @@ public:
   static const u32 SAFE_OBJECT_MAX = 1024;
   static const u32 DELAY_RELEASE_EXTENSION_MAX = 32;
 
-  struct SafeObject {
+  // Inferred role: safe object; original type name unknown.
+  struct unknown001 {
     mm::mtl::ReferenceObject *unknown00; // Inferred role: object; original member name unknown.
     s16 unknown08;                       // Inferred role: remaining frames; original member name unknown.
     eResourceType unknown0c;             // Inferred role: type; original member name unknown.
@@ -61,12 +62,12 @@ public:
   u32 unknown528;                                                              // Role and original member name unknown.
   u32 unknown52c;                                                              // Inferred role: applet state; original member name unknown.
   bool unknown530;                                                             // Inferred role: finalize applet; original member name unknown.
-  mm::mtl::FixedVector<SafeObject, SAFE_OBJECT_MAX> unknown538;                // Inferred role: safe objects; original member name unknown.
-  mm::mtl::FixedVector<SafeObject, SAFE_OBJECT_MAX> unknown4540;               // Inferred role: safe objects to release; original member name unknown.
+  mm::mtl::FixedVector<unknown001, SAFE_OBJECT_MAX> unknown538;                // Inferred role: safe objects; original member name unknown.
+  mm::mtl::FixedVector<unknown001, SAFE_OBJECT_MAX> unknown4540;               // Inferred role: safe objects to release; original member name unknown.
   mm::mtl::FixedVector<const char *, DELAY_RELEASE_EXTENSION_MAX> unknown8548; // Inferred role: delay release extensions; original member name unknown.
 };
 
-static_assert(sizeof(ResourceManager::SafeObject) == 0x10, "");
+static_assert(sizeof(ResourceManager::unknown001) == 0x10, "");
 static_assert(offsetof(ResourceManager, unknown18) == 0x18, "");
 static_assert(offsetof(ResourceManager, unknown518) == 0x518, "");
 static_assert(offsetof(ResourceManager, unknown520) == 0x520, "");

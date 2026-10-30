@@ -10,10 +10,10 @@ void DrResMdoPntAlpha::init() {
 
 f32 DrResMdoPntAlpha::getObjAlpha(bool unknown001) {
   if (unknown001) {
-    unknown00 |= PNT_ALPHA_FLAG_UNKNOWN_2 | PNT_ALPHA_FLAG_UNKNOWN_4;
+    unknown00 |= unknown004_2 | unknown004_4;
   } else {
-    unknown00 &= ~(PNT_ALPHA_FLAG_UNKNOWN_2 | PNT_ALPHA_FLAG_UNKNOWN_4);
-    unknown00 |= PNT_ALPHA_FLAG_UNKNOWN_2;
+    unknown00 &= ~(unknown004_2 | unknown004_4);
+    unknown00 |= unknown004_2;
   }
   return unknown04;
 }
@@ -24,17 +24,17 @@ void DrResMdoPntAlpha::setAlphaReset(bool unknown001) {
     alpha = 0.0f;
   }
   if (unknown001) {
-    unknown00 |= PNT_ALPHA_FLAG_UNKNOWN_2 | PNT_ALPHA_FLAG_UNKNOWN_4;
+    unknown00 |= unknown004_2 | unknown004_4;
   } else {
-    unknown00 &= ~(PNT_ALPHA_FLAG_UNKNOWN_2 | PNT_ALPHA_FLAG_UNKNOWN_4);
-    unknown00 |= PNT_ALPHA_FLAG_UNKNOWN_2;
+    unknown00 &= ~(unknown004_2 | unknown004_4);
+    unknown00 |= unknown004_2;
   }
   unknown04 = alpha;
 }
 
 void DrResMdoPntAlpha::create(const void *unknown001) {
   unknown08 = unknown001;
-  unknown00 = PNT_ALPHA_FLAG_UNKNOWN_1;
+  unknown00 = unknown004_1;
 }
 
 s32 DrResMdoPntAlphaMan::getWrkSize(s32 unknown001) { return unknown001 * (sizeof(DrResMdoPntAlpha) + sizeof(DrResMdoPntAlpha *)) + sizeof(DrResMdoPntAlphaMan); }
@@ -58,7 +58,7 @@ f32 DrResMdoPntAlphaMan::getAlphaObj(const void *unknown001, bool unknown002) {
   }
   for (s32 i = 0; i < unknown10; i++) {
     DrResMdoPntAlpha *item = &unknown00[i];
-    if (!(item->unknown00 & DrResMdoPntAlpha::PNT_ALPHA_FLAG_UNKNOWN_1)) {
+    if (!(item->unknown00 & DrResMdoPntAlpha::unknown004_1)) {
       unknown08[unknown14] = item;
       unknown08[unknown14]->create(unknown001);
       return unknown08[unknown14++]->getObjAlpha(unknown002);
@@ -77,7 +77,7 @@ void DrResMdoPntAlphaMan::setAlphaReset(const void *unknown001, bool unknown002)
   }
   for (s32 i = 0; i < unknown10; i++) {
     DrResMdoPntAlpha *item = &unknown00[i];
-    if (!(item->unknown00 & DrResMdoPntAlpha::PNT_ALPHA_FLAG_UNKNOWN_1)) {
+    if (!(item->unknown00 & DrResMdoPntAlpha::unknown004_1)) {
       unknown08[unknown14] = item;
       unknown08[unknown14]->create(unknown001);
       unknown08[unknown14++]->setAlphaReset(unknown002);

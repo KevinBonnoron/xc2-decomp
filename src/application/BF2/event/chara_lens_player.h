@@ -32,7 +32,7 @@ public:
   const mm::Vec2 &getTarget() const;
 
 private:
-  mm::mtl::BitFlag<FLAG_MAX> unknown08; // Inferred role: flags; original member name unknown.
+  mm::mtl::unknown027<FLAG_MAX> unknown08; // Inferred role: flags; original member name unknown.
   alignas(16) mm::Vec2 m_target;
   u8 _18[0x20 - 0x18];
   mm::Vec2 unknown20; // Inferred role: manual target; original member name unknown.

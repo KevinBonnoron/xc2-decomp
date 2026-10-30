@@ -21,7 +21,8 @@ public:
     TYPE_EXT_PARAM = 2,
   };
 
-  struct Request {
+  // Inferred role: request; original type name unknown.
+  struct unknown001 {
     TYPE unknown00;        // Inferred role: type; original member name unknown.
     const char *unknown08; // Inferred role: name; original member name unknown.
     f32 unknown10;         // Inferred role: value; original member name unknown.
@@ -39,9 +40,9 @@ public:
   void setExtParam(const char *name, f32 value);
 
 private:
-  gf::GF_OBJ_HANDLE *unknown08;                           // Inferred role: handle; original member name unknown.
-  gf::GfEvtModel *unknown10;                              // Inferred role: model; original member name unknown.
-  mm::mtl::FixedVector<Request, REQUEST_COUNT> unknown18; // Inferred role: requests; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown08;                              // Inferred role: handle; original member name unknown.
+  gf::GfEvtModel *unknown10;                                 // Inferred role: model; original member name unknown.
+  mm::mtl::FixedVector<unknown001, REQUEST_COUNT> unknown18; // Inferred role: requests; original member name unknown.
 };
 
 static_assert(sizeof(CharaPartUpdater) == 0xe0, "");

@@ -36,7 +36,8 @@ enum SoundCategory : int;
 struct SoundCategoryDebugInfo;
 struct SoundHandleDebugInfo;
 
-struct SoundCategoryData {
+// Inferred role: sound category data; original type name unknown.
+struct unknown126 {
   u8 _00[8];
   u32 unknown08; // Inferred role: category id; original member name unknown.
   f32 unknown0c; // Inferred role: volume; original member name unknown.
@@ -50,12 +51,12 @@ struct SoundCategoryData {
   u8 _60[0x68 - 0x60];
 };
 
-static_assert(offsetof(SoundCategoryData, unknown08) == 0x08, "");
-static_assert(offsetof(SoundCategoryData, unknown40) == 0x40, "");
-static_assert(offsetof(SoundCategoryData, unknown44) == 0x44, "");
-static_assert(offsetof(SoundCategoryData, unknown48) == 0x48, "");
-static_assert(offsetof(SoundCategoryData, unknown4c) == 0x4c, "");
-static_assert(sizeof(SoundCategoryData) == 0x68, "");
+static_assert(offsetof(unknown126, unknown08) == 0x08, "");
+static_assert(offsetof(unknown126, unknown40) == 0x40, "");
+static_assert(offsetof(unknown126, unknown44) == 0x44, "");
+static_assert(offsetof(unknown126, unknown48) == 0x48, "");
+static_assert(offsetof(unknown126, unknown4c) == 0x4c, "");
+static_assert(sizeof(unknown126) == 0x68, "");
 
 struct SoundPoolMemory {
   void *unknown00; // Inferred role: pool memory address; original member name unknown.
@@ -106,8 +107,8 @@ public:
   const mm::Mat44 &getListeningPoint() const;
   SoundPoolMemory *findPoolMemory(void *pointer, u32 size) const;
   void setListeningPoint(const mm::Mat44 &matrix);
-  SoundCategoryData *findCategory(SoundCategory category);
-  const SoundCategoryData *findCategory(SoundCategory category) const;
+  unknown126 *findCategory(SoundCategory category);
+  const unknown126 *findCategory(SoundCategory category) const;
   void removeCategory(SoundCategory category);
   u32 registPlayer(SoundSsdPlayer *player, SoundType type);
   f32 getCategoryVolume(SoundCategory category) const;
@@ -150,15 +151,15 @@ public:
   void updateDebugInfoLocal(mm::mtl::FixedVector<SoundHandleDebugInfo, 128> &handles);
   void updateDebugInfoLocal(mm::mtl::FixedVector<SoundCategoryDebugInfo, 18> &categories);
 
-  ssd::SoundCore *unknown10;                   // Inferred role: sound device; original member name unknown.
-  SoundAllocator unknown18;                    // Inferred role: allocator; original member name unknown.
-  ssd::SoundListener *unknown28;               // Inferred role: listener; original member name unknown.
-  mm::Mat44 unknown30;                         // Inferred role: listening point; original member name unknown.
-  ml::CriticalSection unknown70;               // Inferred role: lock; original member name unknown.
-  ml::CriticalSectionNC unknown98;             // Inferred role: lock; original member name unknown.
-  ml::CriticalSection unknownc0;               // Inferred role: lock; original member name unknown.
-  SoundCategoryData unknowne8[CATEGORY_COUNT]; // Inferred role: categories; original member name unknown.
-  mm::mtl::List<SoundSsdBank *> unknown838;    // Inferred role: banks; original member name unknown.
+  ssd::SoundCore *unknown10;                // Inferred role: sound device; original member name unknown.
+  SoundAllocator unknown18;                 // Inferred role: allocator; original member name unknown.
+  ssd::SoundListener *unknown28;            // Inferred role: listener; original member name unknown.
+  mm::Mat44 unknown30;                      // Inferred role: listening point; original member name unknown.
+  ml::CriticalSection unknown70;            // Inferred role: lock; original member name unknown.
+  ml::CriticalSectionNC unknown98;          // Inferred role: lock; original member name unknown.
+  ml::CriticalSection unknownc0;            // Inferred role: lock; original member name unknown.
+  unknown126 unknowne8[CATEGORY_COUNT];     // Inferred role: categories; original member name unknown.
+  mm::mtl::List<SoundSsdBank *> unknown838; // Inferred role: banks; original member name unknown.
   u8 _878[0x8b8 - 0x878];
   PointerMap unknown8b8;                                 // Inferred role: players; original member name unknown.
   mm::mtl::FixedList<SoundPoolMemory *, 256> unknown8f0; // Inferred role: pool memories; original member name unknown.
@@ -173,7 +174,7 @@ static_assert(offsetof(SoundSsdDriver, unknown70) == 0x70, "");
 static_assert(offsetof(SoundSsdDriver, unknown98) == 0x98, "");
 static_assert(offsetof(SoundSsdDriver, unknownc0) == 0xc0, "");
 static_assert(offsetof(SoundSsdDriver, unknowne8) == 0xe8, "");
-static_assert(sizeof(SoundCategoryData[SoundSsdDriver::CATEGORY_COUNT]) == 0x750, "");
+static_assert(sizeof(unknown126[SoundSsdDriver::CATEGORY_COUNT]) == 0x750, "");
 static_assert(offsetof(SoundSsdDriver, unknown838) == 0x838, "");
 static_assert(offsetof(SoundSsdDriver, unknown8b8) == 0x8b8, "");
 static_assert(offsetof(SoundSsdDriver, unknown8f0) == 0x8f0, "");
@@ -222,7 +223,8 @@ static_assert(offsetof(SoundSsdBank, unknown25c) == 0x25c, "");
 static_assert(offsetof(SoundSsdBank, unknown270) == 0x270, "");
 static_assert(sizeof(SoundSsdBank) == 0x2b0, "");
 
-struct SoundSsdSourceData {
+// Inferred role: sound ssd source data; original type name unknown.
+struct unknown127 {
   u8 _00[0x50 - 0x00];
   bool isLoop;
   u8 _51[0x6c - 0x51];
@@ -237,8 +239,8 @@ public:
   int getSourceRefCount() const;
 
   u8 _0c[0x10 - 0x0c];
-  SoundSsdSourceData *unknown10; // Inferred role: data; original member name unknown.
-  ssd::SoundEntry *unknown18;    // Inferred role: entry; original member name unknown.
+  unknown127 *unknown10;      // Inferred role: data; original member name unknown.
+  ssd::SoundEntry *unknown18; // Inferred role: entry; original member name unknown.
   u8 _20[0x134 - 0x20];
   mm::mtl::FixStr<256> unknown134; // Inferred role: name; original member name unknown.
   u8 _238[0x240 - 0x238];

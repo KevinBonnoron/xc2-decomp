@@ -20,7 +20,7 @@ void CharaPartUpdater::destroy() {
 void CharaPartUpdater::update(f32 delta) { updateRequest(); }
 
 void CharaPartUpdater::eraseRequest(TYPE type, const char *name) {
-  for (Request *it = unknown18.begin(); it != unknown18.end(); ++it) {
+  for (unknown001 *it = unknown18.begin(); it != unknown18.end(); ++it) {
     if (it->unknown00 == type && __builtin_strcmp(it->unknown08, name) == 0) {
       unknown18.erase(it);
       return;
@@ -33,7 +33,7 @@ void CharaPartUpdater::setExtDisp(const char *name, bool isDisp) {
     unknown18.erase(unknown18.begin());
   }
   eraseRequest(TYPE_EXT_DISP, name);
-  Request request;
+  unknown001 request;
   request.unknown00 = TYPE_EXT_DISP;
   request.unknown08 = name;
   request.unknown10 = isDisp ? 1.0f : 0.0f;
@@ -46,7 +46,7 @@ void CharaPartUpdater::setExtDispWeapon(const char *name, bool isDisp) {
     unknown18.erase(unknown18.begin());
   }
   eraseRequest(TYPE_EXT_DISP, name);
-  Request request;
+  unknown001 request;
   request.unknown00 = TYPE_EXT_DISP_WEAPON;
   request.unknown08 = name;
   request.unknown10 = isDisp ? 1.0f : 0.0f;
@@ -59,7 +59,7 @@ void CharaPartUpdater::setExtParam(const char *name, f32 value) {
     unknown18.erase(unknown18.begin());
   }
   eraseRequest(TYPE_EXT_PARAM, name);
-  Request request;
+  unknown001 request;
   request.unknown00 = TYPE_EXT_PARAM;
   request.unknown08 = name;
   request.unknown10 = value;

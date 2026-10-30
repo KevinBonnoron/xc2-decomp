@@ -142,7 +142,8 @@ class SystemCore : public SystemCorePlatform {
 public:
   struct DebugInfo;
 
-  struct CpuLoad {
+  // Inferred role: cpu load; original type name unknown.
+  struct unknown002 {
     f64 unknown00; // Inferred role: process time; original member name unknown.
     f64 unknown08; // Inferred role: frame time; original member name unknown.
   };
@@ -234,9 +235,9 @@ public:
   List<StreamController> unknown950; // Inferred role: stream controllers; original member name unknown.
   List<BehaviorControl> unknown978;  // Inferred role: behaviors; original member name unknown.
   u8 _9a0[0x9f8 - 0x9a0];
-  CpuLoad unknown9f8[2]; // Inferred role: cpu loads; original member name unknown.
-  f64 unknowna18;        // Inferred role: last cpu load time; original member name unknown.
-  s32 unknowna20;        // Inferred role: cpu load index; original member name unknown.
+  unknown002 unknown9f8[2]; // Inferred role: cpu loads; original member name unknown.
+  f64 unknowna18;           // Inferred role: last cpu load time; original member name unknown.
+  s32 unknowna20;           // Inferred role: cpu load index; original member name unknown.
 
   static DebugInfo debugInfo_;
 };

@@ -20,7 +20,8 @@ static_assert(sizeof(GfRequestBladeData) == 0x10, "");
 
 constexpr u32 MERCENARIES_LEVEL_MAX = 5;
 
-struct SDataMercenariesTeam {
+// Inferred role: save data mercenaries team; original type name unknown.
+struct unknown120 {
   u16 unknown00[6]; // Inferred role: members; original member name unknown.
   u8 _0c[0x10 - 0x0c];
   u32 unknown10;        // Inferred role: team id; original member name unknown.
@@ -31,31 +32,33 @@ struct SDataMercenariesTeam {
   bool _24;
 };
 
-static_assert(offsetof(SDataMercenariesTeam, unknown10) == 0x10, "");
-static_assert(offsetof(SDataMercenariesTeam, unknown14) == 0x14, "");
-static_assert(offsetof(SDataMercenariesTeam, unknown1c) == 0x1c, "");
-static_assert(offsetof(SDataMercenariesTeam, unknown20) == 0x20, "");
-static_assert(sizeof(SDataMercenariesTeam) == 0x28, "");
+static_assert(offsetof(unknown120, unknown10) == 0x10, "");
+static_assert(offsetof(unknown120, unknown14) == 0x14, "");
+static_assert(offsetof(unknown120, unknown1c) == 0x1c, "");
+static_assert(offsetof(unknown120, unknown20) == 0x20, "");
+static_assert(sizeof(unknown120) == 0x28, "");
 
-struct SDataMercenariesPreset {
+// Inferred role: save data mercenaries preset; original type name unknown.
+struct unknown121 {
   u8 _00[0x0c - 0x00];
 };
 
-static_assert(sizeof(SDataMercenariesPreset) == 0x0c, "");
+static_assert(sizeof(unknown121) == 0x0c, "");
 
-struct SDataMercenaries {
-  mm::mtl::FixedVector<SDataMercenariesTeam, 3> unknown00; // Inferred role: teams; original member name unknown.
-  SDataMercenariesPreset unknown80[40];                    // Inferred role: presets; original member name unknown.
+// Inferred role: save data mercenaries; original type name unknown.
+struct unknown122 {
+  mm::mtl::FixedVector<unknown120, 3> unknown00; // Inferred role: teams; original member name unknown.
+  unknown121 unknown80[40];                      // Inferred role: presets; original member name unknown.
 };
 
-static_assert(offsetof(SDataMercenaries, unknown80) == 0x080, "");
-static_assert(sizeof(SDataMercenaries) == 0x260, "");
+static_assert(offsetof(unknown122, unknown80) == 0x080, "");
+static_assert(sizeof(unknown122) == 0x260, "");
 
 class GfDataMercenaries {
 public:
   static u32 getReserverMax();
   static u32 getReserverNum();
-  static SDataMercenaries *getSDataMercenaries();
+  static unknown122 *getSDataMercenaries();
   static u32 getLevel();
   static u32 getLevelMax();
   static void setLevel(u32 level);
@@ -67,14 +70,14 @@ public:
   static u32 getTeamNum();
   static bool getReserver(mm::mtl::FixedVector<u16, 422> &reservers);
   static bool isValidTeamID(u32 teamID);
-  static SDataMercenariesTeam *getTeamByTeamID(u32 teamID);
+  static unknown120 *getTeamByTeamID(u32 teamID);
   static u32 getTeamPower(u32 teamID);
   static u32 getTeamID(u32 blade);
   static u32 getMissionIdByBlade(u32 blade);
-  static SDataMercenariesTeam *getTeamByIndex(u32 index);
-  static SDataMercenariesTeam *getTeamByMissionID(u32 mission);
+  static unknown120 *getTeamByIndex(u32 index);
+  static unknown120 *getTeamByMissionID(u32 mission);
   static u32 getTeamIDByMissionID(u32 mission);
-  static SDataMercenariesTeam *getTeamMember(u32 teamID);
+  static unknown120 *getTeamMember(u32 teamID);
   static u8 getTeamAnimalNum(u32 teamID);
   static int getTeamMaleNum(u32 teamID);
   static int getTeamFemaleNum(u32 teamID);
@@ -134,7 +137,7 @@ public:
   static bool getRequestCondition(GfRequestBladeData &requestBladeData, u32 mission, u32 task);
   static void setFullEnableOrderMissionForDebug();
   static u32 getBladeWithLeader(u32 mission);
-  static SDataMercenariesPreset *getPreset(u32 index);
+  static unknown121 *getPreset(u32 index);
 };
 
 } // namespace gf

@@ -22,7 +22,8 @@ struct UpdateInfo;
 
 class EffectPoint {
 public:
-  struct Point {
+  // Inferred role: point; original type name unknown.
+  struct unknown003 {
     mm::Mat44 unknown00; // Inferred role: offset matrix; original member name unknown.
     mm::Vec3 unknown40;  // Inferred role: scale; original member name unknown.
     u8 _50[0x58 - 0x50];
@@ -44,28 +45,29 @@ public:
   mm::Mat44 getOffset(const char *name);
 
   u8 _00[0x0c - 0x00];
-  u32 unknown0c;                        // Inferred role: layer; original member name unknown.
-  mm::mtl::Vector<Point> unknown10;     // Inferred role: points; original member name unknown.
-  mm::mtl::Vector<mm::Mat44> unknown38; // Inferred role: point transforms; original member name unknown.
+  u32 unknown0c;                         // Inferred role: layer; original member name unknown.
+  mm::mtl::Vector<unknown003> unknown10; // Inferred role: points; original member name unknown.
+  mm::mtl::Vector<mm::Mat44> unknown38;  // Inferred role: point transforms; original member name unknown.
 };
 
-static_assert(sizeof(EffectPoint::Point) == 0xb0, "");
-static_assert(offsetof(EffectPoint::Point, unknown58) == 0x58, "");
-static_assert(offsetof(EffectPoint::Point, unknown7c) == 0x7c, "");
-static_assert(offsetof(EffectPoint::Point, unknown80) == 0x80, "");
-static_assert(offsetof(EffectPoint::Point, unknowna8) == 0xa8, "");
+static_assert(sizeof(EffectPoint::unknown003) == 0xb0, "");
+static_assert(offsetof(EffectPoint::unknown003, unknown58) == 0x58, "");
+static_assert(offsetof(EffectPoint::unknown003, unknown7c) == 0x7c, "");
+static_assert(offsetof(EffectPoint::unknown003, unknown80) == 0x80, "");
+static_assert(offsetof(EffectPoint::unknown003, unknowna8) == 0xa8, "");
 static_assert(offsetof(EffectPoint, unknown0c) == 0x0c, "");
 static_assert(offsetof(EffectPoint, unknown10) == 0x10, "");
 static_assert(offsetof(EffectPoint, unknown38) == 0x38, "");
 
-struct EffectBindData {
+// Inferred role: effect bind data; original type name unknown.
+struct unknown065 {
   u32 unknown00;               // Inferred role: hash; original member name unknown.
   char unknown04[0x20 - 0x04]; // Inferred role: name; original member name unknown.
   mm::Mat44 unknown20;         // Inferred role: matrix; original member name unknown.
 };
 
-static_assert(offsetof(EffectBindData, unknown20) == 0x20, "");
-static_assert(sizeof(EffectBindData) == 0x60, "");
+static_assert(offsetof(unknown065, unknown20) == 0x20, "");
+static_assert(sizeof(unknown065) == 0x60, "");
 
 class EffectCasterBase {
 public:
@@ -86,7 +88,7 @@ public:
   u8 _08[0x10 - 0x08];
   EffectPoint *unknown10;         // Inferred role: point; original member name unknown.
   void *unknown18;                // Inferred role: model; original member name unknown.
-  EffectBindData *unknown20;      // Inferred role: bind datas; original member name unknown.
+  unknown065 *unknown20;          // Inferred role: bind datas; original member name unknown.
   u32 unknown28;                  // Inferred role: bind data count; original member name unknown.
   mm::mtl::IAllocator *unknown30; // Inferred role: allocator; original member name unknown.
   u32 unknown38;                  // Inferred role: point count; original member name unknown.
@@ -106,7 +108,7 @@ public:
   virtual ~EffectCasterSend();
   virtual void *getMdl();
   virtual const char *getStateName();
-  virtual EffectBindData *getBindData(u32 &count);
+  virtual unknown065 *getBindData(u32 &count);
   virtual f32 getMdlFrame();
   virtual f32 getMdlScl();
   virtual void getMdlMat(mm::Mat44 &matrix);
@@ -120,7 +122,7 @@ public:
   void sendDataFrame(f32 frame);
   void sendDataStateName(const char *name);
 
-  mm::mtl::Vector<EffectBindData> unknown18[BUFFER_NUM]; // Inferred role: bind datas; original member name unknown.
+  mm::mtl::Vector<unknown065> unknown18[BUFFER_NUM]; // Inferred role: bind datas; original member name unknown.
   EffectCasterBase *m_caster;
   void *unknown70;                           // Inferred role: point; original member name unknown.
   mm::mtl::IAllocator *unknown78;            // Inferred role: allocator; original member name unknown.

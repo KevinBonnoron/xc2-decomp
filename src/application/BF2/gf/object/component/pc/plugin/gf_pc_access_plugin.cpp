@@ -32,7 +32,7 @@ void AccessPlugin::onDeactivate() {
 
 const AccessParam *AccessPlugin::getParam(u32 index) const {
   const fw::ParamList *list = unknown18.operator->();
-  const fw::ParamList::Entry *entry = index < list->unknown0c ? &list->unknown10[index] : nullptr;
+  const fw::ParamList::unknown005 *entry = index < list->unknown0c ? &list->unknown10[index] : nullptr;
   return entry != nullptr ? static_cast<const AccessParam *>(entry->param) : nullptr;
 }
 

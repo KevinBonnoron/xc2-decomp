@@ -23,7 +23,7 @@ void GfMenuObjChainAttack::closeResult() {
   if (acc.isValid()) {
     ui::UIObjectAcc child(acc.searchChild("LAY_result"));
     ui::EventData event;
-    event.unknown00 = GfMenuTypes::UI_EVENT_CLOSE;
+    event.unknown00 = GfMenuTypes::unknown003_34;
     GfMenuObject::sendEvent(child.unknown10, event, 0.0f);
   }
 }
@@ -33,7 +33,7 @@ void GfMenuObjChainAttack::closeRoundExtend() {
   if (acc.isValid()) {
     ui::UIObjectAcc child(acc.searchChild("LAY_extend"));
     ui::EventData event;
-    event.unknown00 = GfMenuTypes::UI_EVENT_CLOSE;
+    event.unknown00 = GfMenuTypes::unknown003_34;
     GfMenuObject::sendEvent(child.unknown10, event, 0.0f);
   }
 }
@@ -43,7 +43,7 @@ void GfMenuObjChainAttack::openRoundExtend() {
   if (acc.isValid()) {
     ui::UIObjectAcc child(acc.searchChild("LAY_extend"));
     ui::EventData event;
-    event.unknown00 = GfMenuTypes::UI_EVENT_OPEN;
+    event.unknown00 = GfMenuTypes::unknown003_33;
     GfMenuObject::sendEvent(child.unknown10, event, 0.0f);
   }
 }
@@ -53,7 +53,7 @@ void GfMenuObjChainAttack::closeStatus() {
   if (acc.isValid()) {
     ui::UIObjectAcc child(acc.searchChild("LAY_status"));
     ui::EventData event;
-    event.unknown00 = GfMenuTypes::UI_EVENT_CLOSE;
+    event.unknown00 = GfMenuTypes::unknown003_34;
     GfMenuObject::sendEvent(child.unknown10, event, 0.0f);
     GfMenuObjArtsPalette::exitChainAttack();
     GfMenuObjBladeChange::exitChainAttack();

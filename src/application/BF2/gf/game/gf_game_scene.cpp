@@ -301,13 +301,13 @@ void GfGameScene::initialize(const GfSetupParam &) {
   unknown3f8[2] = INVALID_HANDLE;
   unknown3f8[1] = INVALID_HANDLE;
   unknown3f8[0] = INVALID_HANDLE;
-  for (SavePos &savePosition : unknown2b0) {
+  for (unknown007 &savePosition : unknown2b0) {
     savePosition.unknown00 = mm::Vec3::zero;
     savePosition.unknown10 = false;
   }
   clearPartyState();
-  unknown160.push_back(MoveAchievement(AMOVE_SWIM, ACHIEVEMENT_STATS_SWIM, isPlayerSwimOnCloud));
-  unknown160.push_back(MoveAchievement(AMOVE_WALK, ACHIEVEMENT_STATS_WALK, isPlayerWalkAndRun));
+  unknown160.push_back(unknown005(AMOVE_SWIM, ACHIEVEMENT_STATS_SWIM, isPlayerSwimOnCloud));
+  unknown160.push_back(unknown005(AMOVE_WALK, ACHIEVEMENT_STATS_WALK, isPlayerWalkAndRun));
   unknown1ac[0] = 0;
   unknown1ac[1] = 0;
   unknown1ac[2] = 0;
@@ -350,7 +350,7 @@ void GfGameScene::finalize() {
 
 void GfGameScene::clearPartyState() {
   for (int partyId = 0; partyId < 3; partyId++) {
-    unknown240[partyId] = PartyState();
+    unknown240[partyId] = unknown006();
     unknown240[partyId].unknown00 = partyId;
   }
 }
@@ -678,7 +678,7 @@ void GfGameScene::setDeadType(GfPlayerDead dead) { m_deadType = dead; }
 u32 GfGameScene::getDeadType() { return m_deadType; }
 
 void GfGameScene::setDamageCharacter(GF_OBJ_HANDLE *handle) {
-  for (DamageCharacter &character : unknown20) {
+  for (unknown004 &character : unknown20) {
     if (character.unknown00 == handle) {
       character.unknown08 = 0.0f;
       return;
@@ -811,7 +811,7 @@ void GfGameScene::applyMapjumpForStart(const MapjumpCallbackInfo &) {
       }
     }
   }
-  for (SavePos &savePosition : unknown2b0) {
+  for (unknown007 &savePosition : unknown2b0) {
     savePosition.unknown00 = mm::Vec3::zero;
     savePosition.unknown10 = false;
   }
@@ -1040,7 +1040,7 @@ void GfGameScene::playEventSequenceStart(u32 event) {
   }
   }
   m_maskMainMenu = true;
-  for (SavePos &savePosition : unknown2b0) {
+  for (unknown007 &savePosition : unknown2b0) {
     savePosition.unknown00 = mm::Vec3::zero;
     savePosition.unknown10 = false;
   }
@@ -1123,12 +1123,12 @@ void GfGameScene::playEventStartFrame(u32) {
 }
 
 void GfGameScene::updatePlayerState() {
-  for (PartyState &state : unknown240) {
+  for (unknown006 &state : unknown240) {
     state.unknown04 = MOVER_STATE_NONE;
     state.unknown0d = false;
     GfObjProperty *property = GfObjUtil::getProperty(GfGameParty::getHandleMover(state.unknown00));
     if (property != nullptr && property->unknown18 != nullptr) {
-      GfObjPropertyMove *move = property->unknown18;
+      unknown070 *move = property->unknown18;
       state.unknown04 = MOVER_STATE_FIELD;
       switch (move->unknown00) {
       case PROPERTY_MOVE_SWIM:
@@ -1559,7 +1559,7 @@ void GfGameScene::updateColiPrio(const fw::UpdateInfo &) {
 
 void GfGameScene::updateAutoHeal(const fw::UpdateInfo &info) {
   if (!GfGameManager::isControlFree() || GfGameManager::isBattle() || _gfgsc::isPartyMemberGetFieldDamage(0)) {
-    for (DamageCharacter &character : unknown20) {
+    for (unknown004 &character : unknown20) {
       if (character.unknown08 != 0.0f) {
         character.unknown08 = 0.0f;
       }
@@ -1570,7 +1570,7 @@ void GfGameScene::updateAutoHeal(const fw::UpdateInfo &info) {
     return;
   }
   for (u32 partyId = 0; partyId < 3; partyId++) {
-    DamageCharacter &character = unknown20[partyId];
+    unknown004 &character = unknown20[partyId];
     GF_OBJ_HANDLE *driver = GfGameParty::getHandleDriver(partyId);
     if (driver == INVALID_HANDLE) {
       if (character.unknown00 != INVALID_HANDLE) {
@@ -1665,7 +1665,7 @@ void GfGameScene::updateMoveAchievement(const fw::UpdateInfo &) {
     f32 z = position.z - unknown150.z;
     f32 distance = sqrtf(x * x + y * y + z * z);
     if (!(distance < MOVE_DISTANCE_MIN)) {
-      for (MoveAchievement &achievement : unknown160) {
+      for (unknown005 &achievement : unknown160) {
         if (!achievement.unknown08()) {
           continue;
         }

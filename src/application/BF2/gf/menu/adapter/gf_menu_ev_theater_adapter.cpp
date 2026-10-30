@@ -11,8 +11,8 @@
 namespace gf {
 
 static GfMenuEvTherterAdapter::TypeInfo TYPE_INFOS[] = {
-    {&GfMenuEvTherterAdapter::update_Title, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
-    {&GfMenuEvTherterAdapter::update_Thumb, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 0}},
+    {&GfMenuEvTherterAdapter::update_Title, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuEvTherterAdapter::update_Thumb, {GfMenuAdapter::unknown004_0, 0, 0}},
 };
 
 GfMenuEvTherterAdapter::GfMenuEvTherterAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(0), unknown58(nullptr) {}

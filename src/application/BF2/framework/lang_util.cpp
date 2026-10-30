@@ -7,12 +7,13 @@ namespace fw {
 
 namespace {
 
-struct LangFolders {
+// Inferred role: lang folders; original type name unknown.
+struct unknown082 {
   mm::mtl::FixStr<16> unknown00[LangUtil::LANG_TYPE_MAX];  // Inferred role: lang; original member name unknown.
   mm::mtl::FixStr<16> unknown12c[LangUtil::LANG_TYPE_MAX]; // Inferred role: voice; original member name unknown.
 };
 
-LangFolders s_folders;
+unknown082 s_folders;
 
 constexpr LangType FALLBACK_LANG = static_cast<LangType>(1);
 

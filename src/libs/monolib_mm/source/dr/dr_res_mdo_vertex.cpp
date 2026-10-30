@@ -24,7 +24,7 @@ DrResMdoVertex::DrResMdoVertex(const u8 *resource) : unknown00(nullptr), unknown
 
 void DrResMdoVertex::setupVertex(const u8 *resource) {
   vertexRelease();
-  const MdsVertexHeader *header = reinterpret_cast<const MdsVertexHeader *>(resource);
+  const unknown055 *header = reinterpret_cast<const unknown055 *>(resource);
   unknown28 = header;
   u32 vertexOffset = header->unknown00;
   unknown48 = header->unknown04;
@@ -33,27 +33,26 @@ void DrResMdoVertex::setupVertex(const u8 *resource) {
   u32 etcVertexOffset = header->unknown20;
   unknown4c = header->unknown24;
   if (header->unknown1c != 0) {
-    unknown30 = reinterpret_cast<const MdsEtcVertexInfo *>(resource + header->unknown1c);
+    unknown30 = reinterpret_cast<const unknown049 *>(resource + header->unknown1c);
   } else {
     unknown30 = nullptr;
   }
   if (header->unknown28 != 0) {
-    const MdsMofBlendHeader *mofBlendHeader = reinterpret_cast<const MdsMofBlendHeader *>(resource + header->unknown28);
-    unknown38 = reinterpret_cast<const MdsMofBlendInfo *>(resource + mofBlendHeader->infoOffset);
+    const unknown051 *mofBlendHeader = reinterpret_cast<const unknown051 *>(resource + header->unknown28);
+    unknown38 = reinterpret_cast<const unknown050 *>(resource + mofBlendHeader->infoOffset);
   } else {
     unknown38 = nullptr;
   }
 
   u32 uniformVertexOffset = header->unknown34;
-  m_buffer = static_cast<u8 *>(
-      mtl::MemManager::allocate(DrMan::getIns()->unknown10,
-                                (unknown48 + unknown4c + unknown4a) * sizeof(grlib::CGLibVtxVertex) +
-                                    (uniformVertexOffset != 0 ? sizeof(grlib::CGLibVtlMemPool) + sizeof(DrResUniformVertex) + sizeof(grlib::CGLibVtxVertex) + sizeof(grlib::CGLibOneUniformBlock)
-                                                              : sizeof(grlib::CGLibVtlMemPool)),
-                                0x10,
-                                false,
-                                "no name",
-                                0));
+  m_buffer = static_cast<u8 *>(mtl::MemManager::allocate(
+      DrMan::getIns()->unknown10,
+      (unknown48 + unknown4c + unknown4a) * sizeof(grlib::CGLibVtxVertex) +
+          (uniformVertexOffset != 0 ? sizeof(grlib::CGLibVtlMemPool) + sizeof(unknown056) + sizeof(grlib::CGLibVtxVertex) + sizeof(grlib::CGLibOneUniformBlock) : sizeof(grlib::CGLibVtlMemPool)),
+      0x10,
+      false,
+      "no name",
+      0));
   unknown50 = reinterpret_cast<grlib::CGLibVtxVertex *>(m_buffer);
   for (int i = 0; i < unknown48; i++) {
     new (&unknown50[i]) grlib::CGLibVtxVertex;
@@ -67,12 +66,12 @@ void DrResMdoVertex::setupVertex(const u8 *resource) {
     offset += unknown4c * sizeof(grlib::CGLibVtxVertex);
   }
   if (header->unknown34 != 0) {
-    unknown70 = reinterpret_cast<DrResUniformVertex *>(m_buffer + offset);
-    unknown70->unknown00 = reinterpret_cast<grlib::CGLibVtxVertex *>(m_buffer + offset + sizeof(DrResUniformVertex));
+    unknown70 = reinterpret_cast<unknown056 *>(m_buffer + offset);
+    unknown70->unknown00 = reinterpret_cast<grlib::CGLibVtxVertex *>(m_buffer + offset + sizeof(unknown056));
     new (unknown70->unknown00) grlib::CGLibVtxVertex;
-    unknown70->unknown08 = reinterpret_cast<grlib::CGLibOneUniformBlock *>(m_buffer + offset + sizeof(DrResUniformVertex) + sizeof(grlib::CGLibVtxVertex));
+    unknown70->unknown08 = reinterpret_cast<grlib::CGLibOneUniformBlock *>(m_buffer + offset + sizeof(unknown056) + sizeof(grlib::CGLibVtxVertex));
     new (unknown70->unknown08) grlib::CGLibOneUniformBlock;
-    offset += sizeof(DrResUniformVertex) + sizeof(grlib::CGLibVtxVertex) + sizeof(grlib::CGLibOneUniformBlock);
+    offset += sizeof(unknown056) + sizeof(grlib::CGLibVtxVertex) + sizeof(grlib::CGLibOneUniformBlock);
   } else {
     unknown70 = nullptr;
   }
@@ -85,25 +84,25 @@ void DrResMdoVertex::setupVertex(const u8 *resource) {
   new (unknown68) grlib::CGLibVtlMemPool;
   unknown68->setupBuffer(const_cast<u8 *>(reinterpret_cast<const u8 *>(unknown28)) + header->unknown30, header->unknown2c);
 
-  const MdsVertexBuffInfo *vertexInfos = reinterpret_cast<const MdsVertexBuffInfo *>(resource + vertexOffset);
+  const unknown046 *vertexInfos = reinterpret_cast<const unknown046 *>(resource + vertexOffset);
   for (int i = 0; i < unknown48; i++) {
     unknown50[i].createMemVertexBuff(unknown68, vertexInfos[i].unknown00, vertexInfos[i].unknown08 * vertexInfos[i].unknown04, vertexInfos[i].unknown08);
   }
-  const MdsEtcVertexBuffInfo *etcVertexInfos = reinterpret_cast<const MdsEtcVertexBuffInfo *>(resource + etcVertexOffset);
+  const unknown048 *etcVertexInfos = reinterpret_cast<const unknown048 *>(resource + etcVertexOffset);
   for (int i = 0; i < unknown4c; i++) {
     unknown60[i].createMemVertexBuff(unknown68, etcVertexInfos[i].unknown00, etcVertexInfos[i].unknown08 * etcVertexInfos[i].unknown04, etcVertexInfos[i].unknown08);
   }
-  const MdsIndexBuffInfo *indexInfos = reinterpret_cast<const MdsIndexBuffInfo *>(resource + indexOffset);
+  const unknown047 *indexInfos = reinterpret_cast<const unknown047 *>(resource + indexOffset);
   for (int i = 0; i < unknown4a; i++) {
     unknown58[i].createMemIndexBuff(unknown68, indexInfos[i].unknown00, indexInfos[i].unknown04, s_primitiveTbl[indexInfos[i].unknown08], s_indexFormatTbl[indexInfos[i].unknown0a]);
   }
   if (header->unknown38 != 0) {
-    unknown40 = reinterpret_cast<const MdsWeightInfo *>(reinterpret_cast<const u8 *>(unknown28) + header->unknown38);
+    unknown40 = reinterpret_cast<const unknown053 *>(reinterpret_cast<const u8 *>(unknown28) + header->unknown38);
   } else {
     unknown40 = nullptr;
   }
   if (header->unknown34 != 0) {
-    const MdsUniformVertexInfo *uniformInfo = reinterpret_cast<const MdsUniformVertexInfo *>(reinterpret_cast<const u8 *>(unknown28) + header->unknown34);
+    const unknown052 *uniformInfo = reinterpret_cast<const unknown052 *>(reinterpret_cast<const u8 *>(unknown28) + header->unknown34);
     unknown70->unknown00->createMemVertexBuff(unknown68, uniformInfo->vertexOffset, uniformInfo->vertexSize, uniformInfo->vertexStride);
     unknown70->unknown08->setup(unknown68, uniformInfo->uniformSize, uniformInfo->uniformOffset);
     unknown70->unknown08->updateData();
@@ -139,7 +138,7 @@ void DrResMdoVertex::vertexRelease() {
 
 void DrResMdoVertex::update() {
   if (unknown78 != nullptr) {
-    DrCalcStmRes *res = unknown78->getResVertexObj();
+    unknown035 *res = unknown78->getResVertexObj();
     if (res->unknown10 & 1) {
       changeMemVertex(res->unknown00);
     }
@@ -155,7 +154,7 @@ bool DrResMdoVertex::isEtcVertex(int index) {
 
 const u8 *DrResMdoVertex::getVertexTbl(int index) const {
   const u8 *resource = reinterpret_cast<const u8 *>(unknown28);
-  return resource + reinterpret_cast<const MdsVertexBuffInfo *>(resource + unknown28->unknown00)[index].unknown00;
+  return resource + reinterpret_cast<const unknown046 *>(resource + unknown28->unknown00)[index].unknown00;
 }
 
 u32 DrResMdoVertex::getVertexMax(int index) const { return unknown50[index].unknown08; }
@@ -177,12 +176,12 @@ u32 DrResMdoVertex::setWeightVertexBind(int index) {
   return unknown50[vertexIdx].unknown08;
 }
 
-const MdsWeightVertexInfo *DrResMdoVertex::getWeightVertexInfo(int index, int pass) {
+const unknown054 *DrResMdoVertex::getWeightVertexInfo(int index, int pass) {
   const u8 *resource = reinterpret_cast<const u8 *>(unknown28);
   const u16 *infoIdxTbl = reinterpret_cast<const u16 *>(resource + unknown40->unknown0c);
   u32 infoIdx = infoIdxTbl[pass * 9 + index];
   if (infoIdx != 0) {
-    const MdsWeightVertexInfo *infos = reinterpret_cast<const MdsWeightVertexInfo *>(resource + unknown40->unknown04);
+    const unknown054 *infos = reinterpret_cast<const unknown054 *>(resource + unknown40->unknown04);
     return &infos[infoIdx - 1];
   }
   return nullptr;
@@ -218,7 +217,7 @@ grlib::CGLibVtxVertex *DrResMdoVertex::getResEtcVertexObj(int index) {
 bool DrResMdoVertex::getVertexInfo(int index, const MdsMdlVertexFmt **format, int *count) {
   if (index < unknown48) {
     const u8 *resource = reinterpret_cast<const u8 *>(unknown28);
-    const MdsVertexBuffInfo *infos = reinterpret_cast<const MdsVertexBuffInfo *>(resource + unknown28->unknown00);
+    const unknown046 *infos = reinterpret_cast<const unknown046 *>(resource + unknown28->unknown00);
     *format = reinterpret_cast<const MdsMdlVertexFmt *>(resource + infos[index].unknown0c);
     *count = infos[index].unknown10;
     return true;

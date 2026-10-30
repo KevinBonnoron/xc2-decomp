@@ -11,17 +11,17 @@ namespace gf {
 constexpr u32 SKILL_LEVEL_FIRST = 1;
 
 static GfMenuSkillAdapter::TypeInfo TYPE_INFOS[] = {
-    {&GfMenuSkillAdapter::update_SkillName, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
-    {&GfMenuSkillAdapter::update_SkillCaption, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
-    {&GfMenuSkillAdapter::update_SkillPoint, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 99999}},
-    {&GfMenuSkillAdapter::update_SkillReleaseFlagIcon, {GfMenuAdapter::PLUGIN_TYPE_IMAGE, 0, 0}},
-    {&GfMenuSkillAdapter::update_SkillReleaseFlagColor, {GfMenuAdapter::PLUGIN_TYPE_COLOR, 0, 0}},
-    {&GfMenuSkillAdapter::update_SkillReleaseFlagColorIcon, {GfMenuAdapter::PLUGIN_TYPE_IMAGE, 0, 0}},
-    {&GfMenuSkillAdapter::update_SkillLearnDisp, {GfMenuAdapter::PLUGIN_TYPE_COLOR, 0, 0}},
-    {&GfMenuSkillAdapter::update_SkillLevelLockIcon, {GfMenuAdapter::PLUGIN_TYPE_IMAGE, 0, 0}},
-    {&GfMenuSkillAdapter::update_SkillLearnNum, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 15}},
-    {&GfMenuSkillAdapter::update_SkillLearnMax, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 15}},
-    {&GfMenuSkillAdapter::update_SkillLevelUnlockNum, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 15}},
+    {&GfMenuSkillAdapter::update_SkillName, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuSkillAdapter::update_SkillCaption, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuSkillAdapter::update_SkillPoint, {GfMenuAdapter::unknown004_0, 0, 99999}},
+    {&GfMenuSkillAdapter::update_SkillReleaseFlagIcon, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuSkillAdapter::update_SkillReleaseFlagColor, {GfMenuAdapter::unknown004_8, 0, 0}},
+    {&GfMenuSkillAdapter::update_SkillReleaseFlagColorIcon, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuSkillAdapter::update_SkillLearnDisp, {GfMenuAdapter::unknown004_8, 0, 0}},
+    {&GfMenuSkillAdapter::update_SkillLevelLockIcon, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuSkillAdapter::update_SkillLearnNum, {GfMenuAdapter::unknown004_0, 0, 15}},
+    {&GfMenuSkillAdapter::update_SkillLearnMax, {GfMenuAdapter::unknown004_0, 0, 15}},
+    {&GfMenuSkillAdapter::update_SkillLevelUnlockNum, {GfMenuAdapter::unknown004_0, 0, 15}},
 };
 
 GfMenuSkillAdapter::GfMenuSkillAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways)

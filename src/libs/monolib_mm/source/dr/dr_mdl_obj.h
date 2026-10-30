@@ -21,7 +21,8 @@ struct MdsMdlInfoHeader;
 struct MdsMdlVertexFmt;
 class DrResMdoMat;
 
-struct MdoWrkRimBloom {
+// Inferred role: model work rim bloom; original type name unknown.
+struct unknown091 {
   mm::Col3 unknown00; // Inferred role: color; original member name unknown.
   f32 unknown0c;      // Inferred role: power; original member name unknown.
   f32 unknown10;      // Inferred role: black ratio; original member name unknown.
@@ -30,11 +31,11 @@ struct MdoWrkRimBloom {
   u32 unknown1c; // Inferred role: flags; original member name unknown.
 };
 
-static_assert(offsetof(MdoWrkRimBloom, unknown0c) == 0x0c, "");
-static_assert(offsetof(MdoWrkRimBloom, unknown10) == 0x10, "");
-static_assert(offsetof(MdoWrkRimBloom, unknown14) == 0x14, "");
-static_assert(offsetof(MdoWrkRimBloom, unknown1c) == 0x1c, "");
-static_assert(sizeof(MdoWrkRimBloom) == 0x20, "");
+static_assert(offsetof(unknown091, unknown0c) == 0x0c, "");
+static_assert(offsetof(unknown091, unknown10) == 0x10, "");
+static_assert(offsetof(unknown091, unknown14) == 0x14, "");
+static_assert(offsetof(unknown091, unknown1c) == 0x1c, "");
+static_assert(sizeof(unknown091) == 0x20, "");
 
 class DrMdlObj : public DrMdoCtl {
 public:
@@ -46,7 +47,7 @@ public:
   void setMatrix(const mm::Mat44 &matrix);
   void setOffsetPos(const mm::Vec3 &position);
   int getNodeMax() const;
-  MdoWrkRimBloom *getRimBloomWrk(u32 bufferIndex);
+  unknown091 *getRimBloomWrk(u32 bufferIndex);
   int getNodeIdx(const char *name) const;
   const char *getNodeName(int index) const;
   void setResBoneMat(int index, const mm::Mat44 &matrix);

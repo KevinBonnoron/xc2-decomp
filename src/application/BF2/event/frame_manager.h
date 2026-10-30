@@ -73,7 +73,8 @@ public:
 
   static constexpr u32 PAUSE_PRESERVED_BITS = 1 << 14;
 
-  struct KeyFrame {
+  // Inferred role: key frame; original type name unknown.
+  struct unknown001 {
     f32 unknown00;  // Inferred role: frame; original member name unknown.
     bool unknown04; // Inferred role: cut; original member name unknown.
   };
@@ -176,11 +177,11 @@ private:
   ACC_TYPE m_accType;
   f32 unknown160; // Inferred role: acc frame; original member name unknown.
   u8 _164[0x168 - 0x164];
-  mm::mtl::FixedVector<KeyFrame, KEY_FRAME_COUNT> unknown168; // Inferred role: key frames; original member name unknown.
-  FrameInfo unknown1170;                                      // Inferred role: frame info; original member name unknown.
-  int unknown1184;                                            // Inferred role: page disp count; original member name unknown.
-  int unknown1188;                                            // Inferred role: koma count; original member name unknown.
-  PAUSE_TYPE unknown118c;                                     // Inferred role: koma type; original member name unknown.
+  mm::mtl::FixedVector<unknown001, KEY_FRAME_COUNT> unknown168; // Inferred role: key frames; original member name unknown.
+  FrameInfo unknown1170;                                        // Inferred role: frame info; original member name unknown.
+  int unknown1184;                                              // Inferred role: page disp count; original member name unknown.
+  int unknown1188;                                              // Inferred role: koma count; original member name unknown.
+  PAUSE_TYPE unknown118c;                                       // Inferred role: koma type; original member name unknown.
 };
 
 static_assert(sizeof(FrameManager) == 0x1190, "");

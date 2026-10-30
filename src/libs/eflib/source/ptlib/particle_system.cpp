@@ -26,7 +26,7 @@ ParticleManager::ReadFunc ParticleManager::s_pReadFunc;
 ParticleManager::ReadEndFunc ParticleManager::s_pReadEndFunc;
 ParticleManager::OutputStringFunc ParticleManager::s_pOutputDebugStringFunc;
 ParticleManager::OutputStringFunc ParticleManager::s_pOutputWarnStringFunc;
-ParticleManager::DrFunc ParticleManager::s_pDrFunc;
+ParticleManager::unknown003 ParticleManager::s_pDrFunc;
 
 namespace {
 // Inferred role: texture entry of an efb section; original name unknown.

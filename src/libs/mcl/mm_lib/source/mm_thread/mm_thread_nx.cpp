@@ -11,7 +11,7 @@ namespace mm {
 namespace threading {
 
 ThreadNx::ThreadNx(mtl::IAllocator *pAllocator, const char *name, ThreadFunc func, void *argument, u32 stackSize, CPUID cpuId, s32 threadPriority)
-    : Thread(pAllocator), m_CPUID(cpuId), unknown1f0(false, false), unknown250(nullptr), unknown258(argument), unknown260(func), unknown268(THREAD_STATE_RUNNING) {
+    : Thread(pAllocator), m_CPUID(cpuId), unknown1f0(false, false), unknown250(nullptr), unknown258(argument), unknown260(func), unknown268(unknown130_0) {
   MM_ASSERT(pAllocator);
   if (stackSize == 0) {
     stackSize = 0x28000;
@@ -38,11 +38,11 @@ ThreadNx::ThreadNx(mtl::IAllocator *pAllocator, const char *name, ThreadFunc fun
 void ThreadNx::threadCallback(void *param) {
   ThreadNx *pThread = static_cast<ThreadNx *>(param);
   MM_ASSERT(pThread);
-  pThread->unknown268 = THREAD_STATE_RUNNING;
+  pThread->unknown268 = unknown130_0;
   if (pThread->unknown260 != nullptr) {
     pThread->unknown260(pThread->unknown258);
   }
-  pThread->unknown268 = THREAD_STATE_TERMINATED;
+  pThread->unknown268 = unknown130_2;
 }
 
 ThreadNx::~ThreadNx() {
@@ -61,7 +61,7 @@ bool ThreadNx::isTerminated() {
     return true;
   }
 
-  return unknown268 == THREAD_STATE_TERMINATED;
+  return unknown268 == unknown130_2;
 }
 
 s32 ThreadNx::exitThread() {

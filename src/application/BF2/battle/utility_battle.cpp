@@ -1443,7 +1443,7 @@ f32 Utility::GetBladeCoolTime(int blade) {
 
   gf::GfBdatBtl *bdatBtl = gf::GfBdatBtl::get();
   for (int i = 0; i < 3; i++) {
-    gf::SDataBladeSkill *skill = gf::GfDataBlade::getSkill(blade, i);
+    gf::unknown109 *skill = gf::GfDataBlade::getSkill(blade, i);
     if (skill->unknown03 != 0 && skill->unknown00 != 0) {
       int enhance = bdatBtl->getBTL_Skill_BlEnhance(skill->unknown00, skill->unknown03 - 1);
       if (enhance != 0) {

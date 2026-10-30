@@ -13,12 +13,13 @@ namespace gf {
 constexpr u32 MERCENARY_ZONE_FIRST = 1;
 constexpr u32 MERCENARY_ZONE_LAST = 7;
 
-struct MercenaryZone {
+// Inferred role: mercenary zone; original type name unknown.
+struct unknown094 {
   u32 unknown00; // Inferred role: zone; original member name unknown.
   u32 unknown04; // Inferred role: condition; original member name unknown.
 };
 
-static const MercenaryZone MERCENARY_ZONES[] = {
+static const unknown094 MERCENARY_ZONES[] = {
     {1, 25},
     {2, 26},
     {3, 27},

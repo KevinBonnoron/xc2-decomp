@@ -32,7 +32,7 @@ void LookAxisPlugin::update(GfComBehaviorPc &, const fw::UpdateInfo &info) {
     return;
   }
 
-  const LookAxisParam *param = getParam();
+  const unknown088 *param = getParam();
   unknown24 += info.unknown04;
   setYaw(calcYaw(param->unknown14));
   if (unknown24 >= param->unknown14) {
@@ -40,7 +40,7 @@ void LookAxisPlugin::update(GfComBehaviorPc &, const fw::UpdateInfo &info) {
   }
 }
 
-const LookAxisParam *LookAxisPlugin::getParam() const { return unknown30 != nullptr ? static_cast<const LookAxisParam *>(unknown30->param) : nullptr; }
+const unknown088 *LookAxisPlugin::getParam() const { return unknown30 != nullptr ? static_cast<const unknown088 *>(unknown30->param) : nullptr; }
 
 f32 LookAxisPlugin::calcYaw(f32 changeTime) const {
   f32 rate = mm::clamp(unknown24 / changeTime, 0.0f, 1.0f);

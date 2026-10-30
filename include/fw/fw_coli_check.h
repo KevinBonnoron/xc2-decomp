@@ -23,7 +23,8 @@ static_assert(offsetof(ColiCheckConfig, unknown15) == 0x15, "");
 
 template <u32 N> class TColiCheckResult {
 public:
-  struct Hit {
+  // Inferred role: hit; original type name unknown.
+  struct unknown001 {
     mm::Vec3 position;
     mm::Vec3 normal;
     u8 _20[0x40 - 0x20];
@@ -67,12 +68,12 @@ public:
     return 0;
   }
 
-  mm::mtl::FixedVector<Hit, N> hits;
+  mm::mtl::FixedVector<unknown001, N> hits;
   u32 hitCount;
   bool isHit;
 };
 
-static_assert(sizeof(TColiCheckResult<256>::Hit) == 0x50, "");
+static_assert(sizeof(TColiCheckResult<256>::unknown001) == 0x50, "");
 static_assert(offsetof(TColiCheckResult<256>, hitCount) == 0x5010, "");
 static_assert(offsetof(TColiCheckResult<256>, isHit) == 0x5014, "");
 

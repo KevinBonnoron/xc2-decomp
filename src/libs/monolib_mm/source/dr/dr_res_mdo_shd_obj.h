@@ -7,7 +7,8 @@ namespace ml {
 
 class DrShdMdoExtTblObj;
 
-struct MdsDecShdInfo {
+// Inferred role: model data dec shd info; original type name unknown.
+struct unknown041 {
   u32 unknown00; // Inferred role: name ofs; original member name unknown.
   u32 unknown04; // Inferred role: id; original member name unknown.
   u32 unknown08; // Inferred role: parm max; original member name unknown.
@@ -15,21 +16,23 @@ struct MdsDecShdInfo {
   s32 unknown10; // Inferred role: shader num; original member name unknown.
 };
 
-static_assert(sizeof(MdsDecShdInfo) == 0x14, "");
+static_assert(sizeof(unknown041) == 0x14, "");
 
-struct MdsDecShdHeader {
+// Inferred role: model data dec shd header; original type name unknown.
+struct unknown042 {
   s32 num;
   u32 infoOfs;
 };
 
-struct DrResMdoDecShd {
-  const MdsDecShdInfo *unknown00; // Inferred role: info; original member name unknown.
-  u8 *unknown08;                  // Inferred role: decl ofs; original member name unknown.
-  u32 unknown10;                  // Inferred role: parm; original member name unknown.
-  u32 unknown14;                  // Inferred role: prev parm; original member name unknown.
+// Inferred role: resource mdo dec shd; original type name unknown.
+struct unknown043 {
+  const unknown041 *unknown00; // Inferred role: info; original member name unknown.
+  u8 *unknown08;               // Inferred role: decl ofs; original member name unknown.
+  u32 unknown10;               // Inferred role: parm; original member name unknown.
+  u32 unknown14;               // Inferred role: prev parm; original member name unknown.
 };
 
-static_assert(sizeof(DrResMdoDecShd) == 0x18, "");
+static_assert(sizeof(unknown043) == 0x18, "");
 
 class DrResMdoShdObj {
 public:
@@ -48,9 +51,9 @@ public:
   static int create(u8 *work, const u8 *resource);
   static void release(DrResMdoShdObj *&shdObj);
 
-  const MdsDecShdHeader *unknown00; // Inferred role: header; original member name unknown.
-  DrResMdoDecShd *unknown08;        // Inferred role: dec shds; original member name unknown.
-  u32 unknown10;                    // Inferred role: dec shd max; original member name unknown.
+  const unknown042 *unknown00; // Inferred role: header; original member name unknown.
+  unknown043 *unknown08;       // Inferred role: dec shds; original member name unknown.
+  u32 unknown10;               // Inferred role: dec shd max; original member name unknown.
 };
 
 static_assert(offsetof(DrResMdoShdObj, unknown08) == 0x08, "");

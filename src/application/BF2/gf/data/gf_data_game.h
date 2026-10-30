@@ -20,19 +20,21 @@
 
 namespace gf {
 
-struct SDataTaskAchieve {
+// Inferred role: save data task achieve; original type name unknown.
+struct unknown106 {
   u8 _00[0x0c - 0x00];
 };
 
-static_assert(sizeof(SDataTaskAchieve) == 0x0c, "");
+static_assert(sizeof(unknown106) == 0x0c, "");
 
-struct SDataAchievementPopup {
+// Inferred role: save data achievement popup; original type name unknown.
+struct unknown107 {
   u16 unknown00; // Inferred role: blade; original member name unknown.
   u8 unknown02;  // Inferred role: achievement; original member name unknown.
   u8 unknown03;  // Inferred role: level; original member name unknown.
 };
 
-static_assert(sizeof(SDataAchievementPopup) == 0x04, "");
+static_assert(sizeof(unknown107) == 0x04, "");
 
 struct SDataGame {
   u32 unknown00; // Inferred role: money; original member name unknown.
@@ -46,28 +48,28 @@ struct SDataGame {
   u8 _00002a[0x00002c - 0x00002a];
   SDataDriver unknown2c[16];                        // Inferred role: drivers; original member name unknown.
   mm::mtl::FixedArray<SDataBlade, 422> unknown5a2c; // Inferred role: blades; original member name unknown.
-  SDataParty unknowne9884;                          // Inferred role: party; original member name unknown.
+  unknown124 unknowne9884;                          // Inferred role: party; original member name unknown.
   ItemBox unknowne98d8;                             // Inferred role: item box; original member name unknown.
   GameFlag unknownfbbc4;                            // Inferred role: game flag; original member name unknown.
   QuestID unknown1097e4;                            // Inferred role: scenario; original member name unknown.
   QuestID unknown1097e8;                            // Inferred role: select; original member name unknown.
   u8 _1097ec[0x1097f0 - 0x1097ec];
-  SDataMap unknown1097f0;                                    // Inferred role: map; original member name unknown.
-  GameTime unknown1098c0;                                    // Inferred role: game time; original member name unknown.
-  ElapseTime unknown1098c4;                                  // Inferred role: elapse time; original member name unknown.
-  SDataMercenaries unknown1098c8;                            // Inferred role: mercenaries; original member name unknown.
-  f32 unknown109b28;                                         // Inferred role: player camera distance; original member name unknown.
-  u32 unknown109b2c;                                         // Inferred role: game clear count; original member name unknown.
-  mm::mtl::FixedVector<SDataTaskAchieve, 128> unknown109b30; // Inferred role: task achieves; original member name unknown.
-  QuestData unknown10a138[256];                              // Inferred role: order parent quests; original member name unknown.
-  u32 unknown10a538;                                         // Inferred role: order parent quest count; original member name unknown.
-  mm::mtl::FixedArray<SDataMapInfo, 64> unknown10a53c;       // Inferred role: map infos; original member name unknown.
-  u32 unknown10ad3c;                                         // Inferred role: ether; original member name unknown.
-  f32 unknown10ad40;                                         // Inferred role: achievement walk move; original member name unknown.
-  f32 unknown10ad44;                                         // Inferred role: achievement swim move; original member name unknown.
-  u32 unknown10ad48;                                         // Inferred role: assure point; original member name unknown.
-  u32 unknown10ad4c;                                         // Inferred role: assure count; original member name unknown.
-  u16 unknown10ad50;                                         // Inferred role: rare blade appear type; original member name unknown.
+  unknown118 unknown1097f0;                            // Inferred role: map; original member name unknown.
+  GameTime unknown1098c0;                              // Inferred role: game time; original member name unknown.
+  ElapseTime unknown1098c4;                            // Inferred role: elapse time; original member name unknown.
+  unknown122 unknown1098c8;                            // Inferred role: mercenaries; original member name unknown.
+  f32 unknown109b28;                                   // Inferred role: player camera distance; original member name unknown.
+  u32 unknown109b2c;                                   // Inferred role: game clear count; original member name unknown.
+  mm::mtl::FixedVector<unknown106, 128> unknown109b30; // Inferred role: task achieves; original member name unknown.
+  QuestData unknown10a138[256];                        // Inferred role: order parent quests; original member name unknown.
+  u32 unknown10a538;                                   // Inferred role: order parent quest count; original member name unknown.
+  mm::mtl::FixedArray<unknown119, 64> unknown10a53c;   // Inferred role: map infos; original member name unknown.
+  u32 unknown10ad3c;                                   // Inferred role: ether; original member name unknown.
+  f32 unknown10ad40;                                   // Inferred role: achievement walk move; original member name unknown.
+  f32 unknown10ad44;                                   // Inferred role: achievement swim move; original member name unknown.
+  u32 unknown10ad48;                                   // Inferred role: assure point; original member name unknown.
+  u32 unknown10ad4c;                                   // Inferred role: assure count; original member name unknown.
+  u16 unknown10ad50;                                   // Inferred role: rare blade appear type; original member name unknown.
   u8 _10ad52[0x10ad54 - 0x10ad52];
   u32 unknown10ad54;    // Inferred role: coin; original member name unknown.
   u32 unknown10ad58[4]; // Inferred role: saved hp; original member name unknown.
@@ -83,10 +85,10 @@ struct SDataGame {
   u8 unknown10ae81;  // Inferred role: clear save data; original member name unknown.
   u8 unknown10ae82;  // Inferred role: camera side; original member name unknown.
   u8 _10ae83[0x10ae84 - 0x10ae83];
-  SDataSavedEvent unknown10ae84[500];       // Inferred role: saved events; original member name unknown.
-  u32 unknown1171d4;                        // Inferred role: saved event num; original member name unknown.
-  SDataAchievementPopup unknown1171d8[300]; // Inferred role: achievement popups; original member name unknown.
-  u32 unknown117688;                        // Inferred role: achievement popup num; original member name unknown.
+  unknown125 unknown10ae84[500]; // Inferred role: saved events; original member name unknown.
+  u32 unknown1171d4;             // Inferred role: saved event num; original member name unknown.
+  unknown107 unknown1171d8[300]; // Inferred role: achievement popups; original member name unknown.
+  u32 unknown117688;             // Inferred role: achievement popup num; original member name unknown.
   u8 _11768c[0x117690 - 0x11768c];
 
   SDataGame();

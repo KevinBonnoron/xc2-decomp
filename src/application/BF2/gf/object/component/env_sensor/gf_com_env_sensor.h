@@ -149,8 +149,8 @@ public:
   u16 unknown2bc;                                  // Inferred role: root bone index; original member name unknown.
   u32 unknown2c0[6];                               // Inferred role: foot flags; original member name unknown.
   mm::mtl::IntrusivePtr<fw::ParamList> unknown2d8; // Inferred role: param list; original member name unknown.
-  const fw::ParamList::Entry *unknown2e0;          // Inferred role: param entry; original member name unknown.
-  const fw::ParamList::Entry *unknown2e8;          // Inferred role: param entry; original member name unknown.
+  const fw::ParamList::unknown005 *unknown2e0;     // Inferred role: param entry; original member name unknown.
+  const fw::ParamList::unknown005 *unknown2e8;     // Inferred role: param entry; original member name unknown.
   fw::SensorUpdater unknown2f0;                    // Inferred role: updater before the game; original member name unknown.
   fw::SensorUpdater unknown328;                    // Inferred role: updater after the animation; original member name unknown.
   mm::mtl::UniquePtr<GfEnemySensor> unknown360;    // Inferred role: enemy sensor; original member name unknown.

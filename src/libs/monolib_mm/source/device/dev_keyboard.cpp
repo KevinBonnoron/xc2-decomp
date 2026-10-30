@@ -42,9 +42,9 @@ static u8 convertKeyCode(u8 code) {
   const u8 *converted = &s_keyCodeTbl[code];
   DevKeyboard *keyboard = DevKeyboard::get();
   if (keyboard != nullptr) {
-    if (keyboard->unknown1c0 & VK_SHIFT) {
+    if (keyboard->unknown1c0 & unknown033_4) {
       converted = &s_keyCodeShiftTbl[code];
-    } else if (keyboard->unknown1c0 & VK_CTRL) {
+    } else if (keyboard->unknown1c0 & unknown033_2) {
       converted = &s_keyCodeCtrlTbl[code];
     }
   }
@@ -201,121 +201,121 @@ void DevKeyboard::updateKey() {
   unknown1bc = 0;
 }
 
-void DevKeyboard::ikReturnDown() { unknown001(VK_RETURN); }
+void DevKeyboard::ikReturnDown() { unknown001(unknown033_32); }
 
 void DevKeyboard::ikReturnUp() {
-  unknown1bc |= VK_RETURN;
+  unknown1bc |= unknown033_32;
   updateKey();
 }
 
-void DevKeyboard::ikTabDown() { unknown001(VK_TAB); }
+void DevKeyboard::ikTabDown() { unknown001(unknown033_16); }
 
 void DevKeyboard::ikTabUp() {
-  unknown1bc |= VK_TAB;
+  unknown1bc |= unknown033_16;
   updateKey();
 }
 
 void DevKeyboard::ikDeleteDown() {
-  if (!(unknown1c8 & VK_DELETE)) {
-    unknown001(VK_DELETE);
+  if (!(unknown1c8 & unknown033_8)) {
+    unknown001(unknown033_8);
   }
 }
 
 void DevKeyboard::ikDeleteUp() {
-  if (!(unknown1cc & VK_DELETE)) {
-    unknown1bc |= VK_DELETE;
+  if (!(unknown1cc & unknown033_8)) {
+    unknown1bc |= unknown033_8;
     updateKey();
   }
 }
 
-void DevKeyboard::ikShiftDown() { unknown001(VK_SHIFT); }
+void DevKeyboard::ikShiftDown() { unknown001(unknown033_4); }
 
 void DevKeyboard::ikShiftUp() {
-  unknown1bc |= VK_SHIFT;
+  unknown1bc |= unknown033_4;
   updateKey();
 }
 
-void DevKeyboard::ikCtrlDown() { unknown001(VK_CTRL); }
+void DevKeyboard::ikCtrlDown() { unknown001(unknown033_2); }
 
 void DevKeyboard::ikCtrlUp() {
-  unknown1bc |= VK_CTRL;
+  unknown1bc |= unknown033_2;
   updateKey();
 }
 
-void DevKeyboard::ikAltDown() { unknown001(VK_ALT); }
+void DevKeyboard::ikAltDown() { unknown001(unknown033_1); }
 
 void DevKeyboard::ikAltUp() {
-  unknown1bc |= VK_ALT;
+  unknown1bc |= unknown033_1;
   updateKey();
 }
 
-void DevKeyboard::ikFuncDown(u8 index) { unknown001(1 << (index + VK_FUNC_SHIFT)); }
+void DevKeyboard::ikFuncDown(u8 index) { unknown001(1 << (index + unknown033_6)); }
 
 void DevKeyboard::ikFuncUp(u8 index) {
-  unknown1bc |= 1 << (index + VK_FUNC_SHIFT);
+  unknown1bc |= 1 << (index + unknown033_6);
   updateKey();
 }
 
-bool DevKeyboard::ikIsAltDown() const { return (unknown1b8 & VK_ALT) || (unknown1c0 & VK_ALT); }
+bool DevKeyboard::ikIsAltDown() const { return (unknown1b8 & unknown033_1) || (unknown1c0 & unknown033_1); }
 
-bool DevKeyboard::ikIsAltUp() const { return (unknown1bc & VK_ALT) || !(unknown1c0 & VK_ALT); }
+bool DevKeyboard::ikIsAltUp() const { return (unknown1bc & unknown033_1) || !(unknown1c0 & unknown033_1); }
 
-bool DevKeyboard::ikIsHomeDown() const { return (unknown1b8 & VK_HOME) || (unknown1c0 & VK_HOME); }
+bool DevKeyboard::ikIsHomeDown() const { return (unknown1b8 & unknown033_2097152) || (unknown1c0 & unknown033_2097152); }
 
-bool DevKeyboard::ikIsHomeUp() const { return (unknown1bc & VK_HOME) || !(unknown1c0 & VK_HOME); }
+bool DevKeyboard::ikIsHomeUp() const { return (unknown1bc & unknown033_2097152) || !(unknown1c0 & unknown033_2097152); }
 
-bool DevKeyboard::ikIsEndDown() const { return (unknown1b8 & VK_END) || (unknown1c0 & VK_END); }
+bool DevKeyboard::ikIsEndDown() const { return (unknown1b8 & unknown033_4194304) || (unknown1c0 & unknown033_4194304); }
 
-bool DevKeyboard::ikIsEndUp() const { return (unknown1bc & VK_END) || !(unknown1c0 & VK_END); }
+bool DevKeyboard::ikIsEndUp() const { return (unknown1bc & unknown033_4194304) || !(unknown1c0 & unknown033_4194304); }
 
-void DevKeyboard::ikHomeDown() { unknown001(VK_HOME); }
+void DevKeyboard::ikHomeDown() { unknown001(unknown033_2097152); }
 
 void DevKeyboard::ikHomeUp() {
-  unknown1bc |= VK_HOME;
+  unknown1bc |= unknown033_2097152;
   updateKey();
 }
 
-void DevKeyboard::ikEndDown() { unknown001(VK_END); }
+void DevKeyboard::ikEndDown() { unknown001(unknown033_4194304); }
 
 void DevKeyboard::ikEndUp() {
-  unknown1bc |= VK_END;
+  unknown1bc |= unknown033_4194304;
   updateKey();
 }
 
-void DevKeyboard::ikPageUpDown() { unknown001(VK_PAGE_UP); }
+void DevKeyboard::ikPageUpDown() { unknown001(unknown033_524288); }
 
 void DevKeyboard::ikPageUpUp() {
-  unknown1bc |= VK_PAGE_UP;
+  unknown1bc |= unknown033_524288;
   updateKey();
 }
 
-void DevKeyboard::ikPageDownDown() { unknown001(VK_PAGE_DOWN); }
+void DevKeyboard::ikPageDownDown() { unknown001(unknown033_1048576); }
 
 void DevKeyboard::ikPageDownUp() {
-  unknown1bc |= VK_PAGE_DOWN;
+  unknown1bc |= unknown033_1048576;
   updateKey();
 }
 
 void DevKeyboard::ikCharUp(u8 code) {
   switch (code) {
-  case KEY_LEFT:
-    unknown1bc |= VK_LEFT;
-    unknown1b8 &= ~VK_LEFT;
+  case unknown032_37:
+    unknown1bc |= unknown033_67108864;
+    unknown1b8 &= ~unknown033_67108864;
     updateKey();
     break;
-  case KEY_UP:
-    unknown1bc |= VK_UP;
-    unknown1b8 &= ~VK_UP;
+  case unknown032_38:
+    unknown1bc |= unknown033_8388608;
+    unknown1b8 &= ~unknown033_8388608;
     updateKey();
     break;
-  case KEY_RIGHT:
-    unknown1bc |= VK_RIGHT;
-    unknown1b8 &= ~VK_RIGHT;
+  case unknown032_39:
+    unknown1bc |= unknown033_16777216;
+    unknown1b8 &= ~unknown033_16777216;
     updateKey();
     break;
-  case KEY_DOWN:
-    unknown1bc |= VK_DOWN;
-    unknown1b8 &= ~VK_DOWN;
+  case unknown032_40:
+    unknown1bc |= unknown033_33554432;
+    unknown1b8 &= ~unknown033_33554432;
     updateKey();
     break;
   }
@@ -324,17 +324,17 @@ void DevKeyboard::ikCharUp(u8 code) {
   }
 }
 
-void DevKeyboard::ikPauseDown() { unknown001(VK_PAUSE); }
+void DevKeyboard::ikPauseDown() { unknown001(unknown033_134217728); }
 
 void DevKeyboard::ikPauseUp() {
-  unknown1bc |= VK_PAUSE;
+  unknown1bc |= unknown033_134217728;
   updateKey();
 }
 
-void DevKeyboard::ikScrollDown() { unknown001(VK_SCROLL); }
+void DevKeyboard::ikScrollDown() { unknown001(unknown033_268435456); }
 
 void DevKeyboard::ikScrollUp() {
-  unknown1bc |= VK_SCROLL;
+  unknown1bc |= unknown033_268435456;
   updateKey();
 }
 

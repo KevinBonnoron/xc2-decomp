@@ -22,28 +22,28 @@
 namespace gf {
 
 static GfMenuMercenariesAdapter::TypeInfo TYPE_INFOS[] = {
-    {&GfMenuMercenariesAdapter::update_TeamName, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
-    {&GfMenuMercenariesAdapter::update_TeamBlFace, {GfMenuAdapter::PLUGIN_TYPE_IMAGE, 0, 0}},
-    {&GfMenuMercenariesAdapter::update_TeamIcon, {GfMenuAdapter::PLUGIN_TYPE_IMAGE, 0, 0}},
-    {&GfMenuMercenariesAdapter::update_TeamStat, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
-    {&GfMenuMercenariesAdapter::update_TeamStatColor, {GfMenuAdapter::PLUGIN_TYPE_COLOR, 0, 0}},
-    {&GfMenuMercenariesAdapter::update_TeamWait, {GfMenuAdapter::PLUGIN_TYPE_DISP, 0, 0}},
-    {&GfMenuMercenariesAdapter::update_TeamMisInfo, {GfMenuAdapter::PLUGIN_TYPE_DISP, 0, 0}},
-    {&GfMenuMercenariesAdapter::update_TeamMisZone, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
-    {&GfMenuMercenariesAdapter::update_TeamMisZoneIcon, {GfMenuAdapter::PLUGIN_TYPE_IMAGE, 0, 0}},
-    {&GfMenuMercenariesAdapter::update_TeamMisName, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
-    {&GfMenuMercenariesAdapter::update_TeamMisTime, {GfMenuAdapter::PLUGIN_TYPE_TIME, 3, 0}},
-    {&GfMenuMercenariesAdapter::update_TeamMisComplete, {GfMenuAdapter::PLUGIN_TYPE_DISP, 0, 0}},
-    {&GfMenuMercenariesAdapter::update_TeamStrength, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 9999}},
-    {&GfMenuMercenariesAdapter::update_TeamMale, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 18}},
-    {&GfMenuMercenariesAdapter::update_TeamFemale, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 18}},
-    {&GfMenuMercenariesAdapter::update_TeamAnimal, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 18}},
-    {&GfMenuMercenariesAdapter::update_TeamStrengthDiffIcon, {GfMenuAdapter::PLUGIN_TYPE_IMAGE, 0, 0}},
-    {&GfMenuMercenariesAdapter::update_TeamFieldSkillDiffIcon, {GfMenuAdapter::PLUGIN_TYPE_IMAGE, 0, 0}},
-    {&GfMenuMercenariesAdapter::update_TeamNameRes, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
-    {&GfMenuMercenariesAdapter::update_TeamIconRes, {GfMenuAdapter::PLUGIN_TYPE_IMAGE, 0, 0}},
-    {&GfMenuMercenariesAdapter::update_TeamIconResFace, {GfMenuAdapter::PLUGIN_TYPE_IMAGE, 0, 0}},
-    {&GfMenuMercenariesAdapter::update_TeamDispNum1, {GfMenuAdapter::PLUGIN_TYPE_DISP, 0, 0}},
+    {&GfMenuMercenariesAdapter::update_TeamName, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuMercenariesAdapter::update_TeamBlFace, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuMercenariesAdapter::update_TeamIcon, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuMercenariesAdapter::update_TeamStat, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuMercenariesAdapter::update_TeamStatColor, {GfMenuAdapter::unknown004_8, 0, 0}},
+    {&GfMenuMercenariesAdapter::update_TeamWait, {GfMenuAdapter::unknown004_3, 0, 0}},
+    {&GfMenuMercenariesAdapter::update_TeamMisInfo, {GfMenuAdapter::unknown004_3, 0, 0}},
+    {&GfMenuMercenariesAdapter::update_TeamMisZone, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuMercenariesAdapter::update_TeamMisZoneIcon, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuMercenariesAdapter::update_TeamMisName, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuMercenariesAdapter::update_TeamMisTime, {GfMenuAdapter::unknown004_7, 3, 0}},
+    {&GfMenuMercenariesAdapter::update_TeamMisComplete, {GfMenuAdapter::unknown004_3, 0, 0}},
+    {&GfMenuMercenariesAdapter::update_TeamStrength, {GfMenuAdapter::unknown004_0, 0, 9999}},
+    {&GfMenuMercenariesAdapter::update_TeamMale, {GfMenuAdapter::unknown004_0, 0, 18}},
+    {&GfMenuMercenariesAdapter::update_TeamFemale, {GfMenuAdapter::unknown004_0, 0, 18}},
+    {&GfMenuMercenariesAdapter::update_TeamAnimal, {GfMenuAdapter::unknown004_0, 0, 18}},
+    {&GfMenuMercenariesAdapter::update_TeamStrengthDiffIcon, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuMercenariesAdapter::update_TeamFieldSkillDiffIcon, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuMercenariesAdapter::update_TeamNameRes, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuMercenariesAdapter::update_TeamIconRes, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuMercenariesAdapter::update_TeamIconResFace, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuMercenariesAdapter::update_TeamDispNum1, {GfMenuAdapter::unknown004_3, 0, 0}},
 };
 
 GfMenuMercenariesAdapter::GfMenuMercenariesAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways)
@@ -265,7 +265,7 @@ bool GfMenuMercenariesAdapter::update_TeamStrengthDiffIcon() {
 
 bool GfMenuMercenariesAdapter::update_TeamFieldSkillDiffIcon() {
   if (unknown68 != nullptr && GfDataMercenaries::isValidTeamID(unknown58)) {
-    SDataMercenariesTeam *team = GfDataMercenaries::getTeamMember(unknown58);
+    unknown120 *team = GfDataMercenaries::getTeamMember(unknown58);
     if (team != nullptr) {
       GfMenuFieldSkillList *list = GfMenuFieldSkillList::create();
       if (list != nullptr) {

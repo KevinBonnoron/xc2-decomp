@@ -62,14 +62,15 @@ struct EffectAnnotationTbl {
 
 class EffectResData : public mm::mtl::ReferenceObject {
 public:
-  struct SetupTbl {
+  // Inferred role: setup tbl; original type name unknown.
+  struct unknown004 {
     EffectAnnotationTbl *unknown00; // Inferred role: annotation tables; original member name unknown.
     u32 unknown08;                  // Inferred role: tables size in bytes; original member name unknown.
   };
 
   struct SetupInfo {
-    mm::mtl::IAllocator *unknown00;               // Inferred role: allocator; original member name unknown.
-    mm::mtl::FixedVector<SetupTbl, 53> unknown08; // Inferred role: annotation tables; original member name unknown.
+    mm::mtl::IAllocator *unknown00;                 // Inferred role: allocator; original member name unknown.
+    mm::mtl::FixedVector<unknown004, 53> unknown08; // Inferred role: annotation tables; original member name unknown.
   };
 
   explicit EffectResData(mm::mtl::IAllocator *allocator);
@@ -93,7 +94,7 @@ static_assert(offsetof(EffectAnnotationData, unknowne0) == 0xe0, "");
 static_assert(offsetof(EffectAnnotationData, unknownf0) == 0xf0, "");
 static_assert(sizeof(EffectAnnotationData) == 0x120, "");
 static_assert(sizeof(EffectAnnotationTbl) == 0x118, "");
-static_assert(sizeof(EffectResData::SetupTbl) == 0x10, "");
+static_assert(sizeof(EffectResData::unknown004) == 0x10, "");
 static_assert(offsetof(EffectResData::SetupInfo, unknown08) == 0x08, "");
 static_assert(sizeof(EffectResData::SetupInfo) == 0x360, "");
 static_assert(offsetof(EffectResData, unknown10) == 0x10, "");

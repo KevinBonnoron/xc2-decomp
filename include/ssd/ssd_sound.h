@@ -207,7 +207,8 @@ static_assert(sizeof(SoundCategory) == 0x10, "");
 
 class SoundHandle {
 public:
-  struct Fade {
+  // Inferred role: fade; original type name unknown.
+  struct unknown003 {
     void Set(f32 target, f32 time) {
       f32 current = unknown00;
       this->unknown08 = time;
@@ -237,8 +238,8 @@ public:
   };
 
   struct Effect {
-    bool unknown00; // Inferred role: enable; original member name unknown.
-    Fade unknown04; // Inferred role: volume; original member name unknown.
+    bool unknown00;       // Inferred role: enable; original member name unknown.
+    unknown003 unknown04; // Inferred role: volume; original member name unknown.
   };
 
   struct Notify {
@@ -304,21 +305,21 @@ public:
   SoundCategory::unknown001 unknown50; // Inferred role: category parameters; original member name unknown.
   bool unknown58;                      // Inferred role: valid; original member name unknown.
   u8 _59[0x60 - 0x59];
-  u64 unknown60;       // Inferred role: cleared by Init; original member name unknown.
-  f32 unknown68;       // Inferred role: pregap time; original member name unknown.
-  Fade unknown6c;      // Inferred role: pitch; original member name unknown.
-  f32 unknown84;       // Inferred role: volume; original member name unknown.
-  f32 unknown88;       // Inferred role: volume elapsed; original member name unknown.
-  f32 unknown8c;       // Inferred role: volume time; original member name unknown.
-  f32 unknown90;       // Inferred role: volume delta; original member name unknown.
-  f32 unknown94;       // Inferred role: volume start; original member name unknown.
-  f32 unknown98;       // Inferred role: volume target; original member name unknown.
-  Fade unknown9c;      // Inferred role: pan; original member name unknown.
-  f32 unknownb4;       // Inferred role: value set to 1.0 by Init; original member name unknown.
-  f32 unknownb8;       // Inferred role: category volume; original member name unknown.
-  f32 unknownbc;       // Inferred role: value cleared by Init; original member name unknown.
-  Effect unknownc0[2]; // Inferred role: effects; original member name unknown.
-  u32 unknownf8;       // Inferred role: voice handle id; original member name unknown.
+  u64 unknown60;        // Inferred role: cleared by Init; original member name unknown.
+  f32 unknown68;        // Inferred role: pregap time; original member name unknown.
+  unknown003 unknown6c; // Inferred role: pitch; original member name unknown.
+  f32 unknown84;        // Inferred role: volume; original member name unknown.
+  f32 unknown88;        // Inferred role: volume elapsed; original member name unknown.
+  f32 unknown8c;        // Inferred role: volume time; original member name unknown.
+  f32 unknown90;        // Inferred role: volume delta; original member name unknown.
+  f32 unknown94;        // Inferred role: volume start; original member name unknown.
+  f32 unknown98;        // Inferred role: volume target; original member name unknown.
+  unknown003 unknown9c; // Inferred role: pan; original member name unknown.
+  f32 unknownb4;        // Inferred role: value set to 1.0 by Init; original member name unknown.
+  f32 unknownb8;        // Inferred role: category volume; original member name unknown.
+  f32 unknownbc;        // Inferred role: value cleared by Init; original member name unknown.
+  Effect unknownc0[2];  // Inferred role: effects; original member name unknown.
+  u32 unknownf8;        // Inferred role: voice handle id; original member name unknown.
   u8 _fc[0x100 - 0xfc];
   Delegate::MultiCast unknown100;       // Inferred role: delegates; original member name unknown.
   Array<Delegate::Handle *> unknown128; // Inferred role: delegates added internally; original member name unknown.

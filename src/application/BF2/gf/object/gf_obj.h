@@ -55,9 +55,9 @@ public:
   GF_OBJ_HANDLE *unknownf8; // Inferred role: handle; original member name unknown.
   GFOBJ_INFO *unknown100;   // Inferred role: info; original member name unknown.
   u8 _108[0x110 - 0x108];
-  u32 unknown110;                  // Inferred role: attribute; original member name unknown.
-  mm::mtl::BitFlag<32> unknown114; // Inferred role: flags; original member name unknown.
-  bool unknown118;                 // Inferred role: exec update; original member name unknown.
+  u32 unknown110;                     // Inferred role: attribute; original member name unknown.
+  mm::mtl::unknown027<32> unknown114; // Inferred role: flags; original member name unknown.
+  bool unknown118;                    // Inferred role: exec update; original member name unknown.
 };
 
 static_assert(offsetof(GfObj, unknownf8) == 0xf8, "");

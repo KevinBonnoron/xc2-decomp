@@ -24,9 +24,10 @@ enum DevPerfConfig {
   DEV_PERF_CONFIG_HIGH,
 };
 
-class IDevPerf {
+// Inferred role: device interface perf; original type name unknown.
+class unknown074 {
 public:
-  virtual ~IDevPerf() {}
+  virtual ~unknown074() {}
   virtual void update() = 0;
   virtual DevPerfOperationMode getOperationMode() const = 0;
   virtual DevPerfMode getPerformanceMode() const = 0;
@@ -51,7 +52,7 @@ public:
   static void setPerfConfig(DevPerfMode mode, DevPerfConfig config);
   static DevPerfConfig getPerfConfig(DevPerfMode mode);
 
-  IDevPerf *unknown1b0; // Inferred role: impl; original member name unknown.
+  unknown074 *unknown1b0; // Inferred role: impl; original member name unknown.
 };
 
 static_assert(offsetof(DevPerf, unknown1b0) == 0x1b0, "");

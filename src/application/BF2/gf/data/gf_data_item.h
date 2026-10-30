@@ -58,7 +58,8 @@ enum ITEM_BOX_INDEX {
   ITEM_BOX_INDEX_NUM,
 };
 
-struct SDataItemInfo {
+// Inferred role: save data item info; original type name unknown.
+struct unknown117 {
   u32 unknown00_0 : 13; // Inferred role: index; original member name unknown.
   u32 m_type : 6;
   u32 unknown02_3 : 10; // Inferred role: count; original member name unknown.
@@ -70,27 +71,27 @@ struct SDataItemInfo {
   u32 _08_26 : 6;
 };
 
-static_assert(sizeof(SDataItemInfo) == 0x0c, "");
+static_assert(sizeof(unknown117) == 0x0c, "");
 
 struct ItemBox {
-  SDataItemInfo unknown00[200];         // Inferred role: pc wpn chips; original member name unknown.
-  SDataItemInfo unknown960[900];        // Inferred role: pc equips; original member name unknown.
-  SDataItemInfo unknown3390[500];       // Inferred role: equip orbs; original member name unknown.
-  SDataItemInfo unknown4b00[200];       // Inferred role: salvages; original member name unknown.
-  SDataItemInfo unknown5460[500];       // Inferred role: preciouses; original member name unknown.
-  SDataItemInfo unknown6bd0[200];       // Inferred role: infos; original member name unknown.
-  SDataItemInfo unknown7530[100];       // Inferred role: events; original member name unknown.
-  SDataItemInfo unknown79e0[500];       // Inferred role: collection lists; original member name unknown.
-  SDataItemInfo unknown9150[200];       // Inferred role: tresures; original member name unknown.
-  SDataItemInfo unknown9ab0[500];       // Inferred role: empty orbs; original member name unknown.
-  SDataItemInfo unknownb220[500];       // Inferred role: favorites; original member name unknown.
-  SDataItemInfo unknownc990[200];       // Inferred role: crystal lists; original member name unknown.
-  SDataItemInfo unknownd2f0[200];       // Inferred role: boosters; original member name unknown.
-  SDataItemInfo unknowndc50[200];       // Inferred role: hana roles; original member name unknown.
-  SDataItemInfo unknowne5b0[200];       // Inferred role: hana atrs; original member name unknown.
-  SDataItemInfo unknownef10[200];       // Inferred role: hana arts enhs; original member name unknown.
-  SDataItemInfo unknownf870[200];       // Inferred role: hana n arts sets; original member name unknown.
-  SDataItemInfo unknown101d0[700];      // Inferred role: hana assists; original member name unknown.
+  unknown117 unknown00[200];            // Inferred role: pc wpn chips; original member name unknown.
+  unknown117 unknown960[900];           // Inferred role: pc equips; original member name unknown.
+  unknown117 unknown3390[500];          // Inferred role: equip orbs; original member name unknown.
+  unknown117 unknown4b00[200];          // Inferred role: salvages; original member name unknown.
+  unknown117 unknown5460[500];          // Inferred role: preciouses; original member name unknown.
+  unknown117 unknown6bd0[200];          // Inferred role: infos; original member name unknown.
+  unknown117 unknown7530[100];          // Inferred role: events; original member name unknown.
+  unknown117 unknown79e0[500];          // Inferred role: collection lists; original member name unknown.
+  unknown117 unknown9150[200];          // Inferred role: tresures; original member name unknown.
+  unknown117 unknown9ab0[500];          // Inferred role: empty orbs; original member name unknown.
+  unknown117 unknownb220[500];          // Inferred role: favorites; original member name unknown.
+  unknown117 unknownc990[200];          // Inferred role: crystal lists; original member name unknown.
+  unknown117 unknownd2f0[200];          // Inferred role: boosters; original member name unknown.
+  unknown117 unknowndc50[200];          // Inferred role: hana roles; original member name unknown.
+  unknown117 unknowne5b0[200];          // Inferred role: hana atrs; original member name unknown.
+  unknown117 unknownef10[200];          // Inferred role: hana arts enhs; original member name unknown.
+  unknown117 unknownf870[200];          // Inferred role: hana n arts sets; original member name unknown.
+  unknown117 unknown101d0[700];         // Inferred role: hana assists; original member name unknown.
   u32 unknown122a0[ITEM_BOX_INDEX_NUM]; // Inferred role: serials; original member name unknown.
 };
 

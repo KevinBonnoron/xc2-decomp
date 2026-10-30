@@ -141,13 +141,13 @@ public:
   IPadFilter *unknown20[PAD_MAX]; // Inferred role: filters; original member name unknown.
   PadData unknown80[PAD_MAX];     // Inferred role: pads; original member name unknown.
   u8 _3e0[0x2b40 - 0x3e0];
-  PadData unknown2b40[PAD_MAX];       // Inferred role: control pad data; original member name unknown.
-  PadData unknown2ea0[PAD_MAX];       // Inferred role: debug pad data; original member name unknown.
-  PadConfigData unknown3200[PAD_MAX]; // Inferred role: configs; original member name unknown.
-  int unknown35f0[PAD_MAX];           // Inferred role: control pad nos; original member name unknown.
-  int unknown3620[PAD_MAX];           // Inferred role: debug pad nos; original member name unknown.
-  mm::mtl::BitFlag<32> unknown3650;   // Inferred role: enable flags; original member name unknown.
-  bool unknown3654;                   // Inferred role: debug draw enable; original member name unknown.
+  PadData unknown2b40[PAD_MAX];        // Inferred role: control pad data; original member name unknown.
+  PadData unknown2ea0[PAD_MAX];        // Inferred role: debug pad data; original member name unknown.
+  PadConfigData unknown3200[PAD_MAX];  // Inferred role: configs; original member name unknown.
+  int unknown35f0[PAD_MAX];            // Inferred role: control pad nos; original member name unknown.
+  int unknown3620[PAD_MAX];            // Inferred role: debug pad nos; original member name unknown.
+  mm::mtl::unknown027<32> unknown3650; // Inferred role: enable flags; original member name unknown.
+  bool unknown3654;                    // Inferred role: debug draw enable; original member name unknown.
   u8 _3655[0x3660 - 0x3655];
   f32 unknown3660; // Inferred role: repeat time; original member name unknown.
   f32 unknown3664; // Inferred role: repeat time first; original member name unknown.

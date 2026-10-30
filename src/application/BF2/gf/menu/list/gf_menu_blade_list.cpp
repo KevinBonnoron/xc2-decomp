@@ -27,25 +27,25 @@ void GfMenuBladeList::sort(u32 type, bool ascending) {
   }
   std::function<bool(const MenuBladeInfo &, const MenuBladeInfo &)> compare;
   switch (type) {
-  case SORT_TIME:
+  case unknown093_1:
     compare = ascending ? sortTimeAscending : sortTimeDescending;
     break;
-  case SORT_NAME:
+  case unknown093_2:
     compare = ascending ? sortNameDescending : sortNameAscending;
     break;
-  case SORT_RARITY:
+  case unknown093_3:
     compare = ascending ? sortRarityAscending : sortRarityDescending;
     break;
-  case SORT_WEAPON:
+  case unknown093_4:
     compare = ascending ? sortWeaponAscending : sortWeaponDescending;
     break;
-  case SORT_ATTR:
+  case unknown093_5:
     compare = ascending ? sortAttrAscending : sortAttrDescending;
     break;
-  case SORT_CREATOR:
+  case unknown093_6:
     compare = ascending ? sortCreatorAscending : sortCreatorDescending;
     break;
-  case SORT_GENDER:
+  case unknown093_11:
     compare = ascending ? sortGenderDescending : sortGenderAscending;
     break;
   default:

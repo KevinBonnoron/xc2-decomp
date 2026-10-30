@@ -9,13 +9,14 @@ namespace fw {
 
 class ParamList : public mm::mtl::ReferenceObject {
 public:
-  struct Entry {
+  // Inferred role: entry; original type name unknown.
+  struct unknown005 {
     u8 _00[0x08 - 0x00];
     const void *param;
   };
 
-  u32 unknown0c;    // Inferred role: count; original member name unknown.
-  Entry *unknown10; // Inferred role: entries; original member name unknown.
+  u32 unknown0c;         // Inferred role: count; original member name unknown.
+  unknown005 *unknown10; // Inferred role: entries; original member name unknown.
 };
 
 static_assert(offsetof(ParamList, unknown0c) == 0x0c, "");
@@ -25,7 +26,7 @@ class ParamAdapter {
 public:
   template <typename T> const T *get() const { return unknown00 != nullptr ? static_cast<const T *>(unknown00->param) : nullptr; }
 
-  const ParamList::Entry *unknown00; // Inferred role: entry; original member name unknown.
+  const ParamList::unknown005 *unknown00; // Inferred role: entry; original member name unknown.
 };
 
 static_assert(sizeof(ParamAdapter) == 0x08, "");

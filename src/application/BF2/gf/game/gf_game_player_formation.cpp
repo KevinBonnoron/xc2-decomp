@@ -23,7 +23,7 @@ static void notifyChangePlayerID(GfGamePlayerFormation *formation, u32 playerId)
 
 const FormationParam *getFormationParam(u32 formation) {
   const fw::ParamList *paramList = fw::ParamManager::get()->unknown438.operator->();
-  const fw::ParamList::Entry *entry = formation < paramList->unknown0c ? &paramList->unknown10[formation] : nullptr;
+  const fw::ParamList::unknown005 *entry = formation < paramList->unknown0c ? &paramList->unknown10[formation] : nullptr;
   return entry != nullptr ? static_cast<const FormationParam *>(entry->param) : nullptr;
 }
 

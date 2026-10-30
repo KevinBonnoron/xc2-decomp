@@ -343,10 +343,10 @@ f32 LayerObj::getSecondTexBlend() const {
 void LayerActBase::updatePartsAction(const LyrActionData *action) {}
 
 void LayerActBase::setupAction(u8 *work, const u8 *data) {
-  const LyrActionHeader *header = reinterpret_cast<const LyrActionHeader *>(data);
-  unknown250 = reinterpret_cast<LayerActWork *>(work);
+  const unknown083 *header = reinterpret_cast<const unknown083 *>(data);
+  unknown250 = reinterpret_cast<unknown084 *>(work);
   unknown250->unknown00 = data;
-  unknown250->unknown28 = reinterpret_cast<u32 *>(work + sizeof(LayerActWork));
+  unknown250->unknown28 = reinterpret_cast<u32 *>(work + sizeof(unknown084));
   unknown250->unknown10 = header->unknown08;
   unknown250->unknown08 = reinterpret_cast<const LyrActionData *>(data + header->unknown04);
   unknown250->unknown14 = 0.0f;
@@ -426,7 +426,7 @@ void LayerActBase::checkActionEnd(const LyrActionData *action, bool isCmdEnd) {
   unknown250->unknown20 = actions[index].unknown04;
 }
 
-u32 LayerActBase::calcActionWorkSize(const u8 *data) { return sizeof(LayerActWork) + reinterpret_cast<const LyrActionHeader *>(data)->actionNum * sizeof(u32); }
+u32 LayerActBase::calcActionWorkSize(const u8 *data) { return sizeof(unknown084) + reinterpret_cast<const unknown083 *>(data)->actionNum * sizeof(u32); }
 
 void LayerActBase::actionIdx(u32 index) {
   onStateFlags(0x10000);

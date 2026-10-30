@@ -8,7 +8,8 @@ struct NVNcommandBuffer;
 
 namespace grlib {
 
-struct CGLibShaderBlockInfo {
+// Inferred role: shader block info; original type name unknown.
+struct unknown028 {
   u32 unknown00; // Inferred role: name ofs; original member name unknown.
   u16 unknown04; // Inferred role: value num; original member name unknown.
   u16 unknown06; // Inferred role: value idx; original member name unknown.
@@ -18,9 +19,10 @@ struct CGLibShaderBlockInfo {
   u16 unknown0e; // Inferred role: size; original member name unknown.
 };
 
-static_assert(sizeof(CGLibShaderBlockInfo) == 0x10, "");
+static_assert(sizeof(unknown028) == 0x10, "");
 
-struct CGLibShaderInfo {
+// Inferred role: shader info; original type name unknown.
+struct unknown029 {
   u8 _00[0x20 - 0x00];
   s16 unknown20; // Inferred role: uniform block num; original member name unknown.
   u16 unknown22; // Inferred role: uniform block max; original member name unknown.
@@ -42,11 +44,11 @@ struct CGLibShaderInfo {
   u32 unknown5c; // Inferred role: block value ofs; original member name unknown.
 };
 
-static_assert(offsetof(CGLibShaderInfo, unknown20) == 0x20, "");
-static_assert(offsetof(CGLibShaderInfo, unknown34) == 0x34, "");
-static_assert(offsetof(CGLibShaderInfo, unknown38) == 0x38, "");
-static_assert(offsetof(CGLibShaderInfo, unknown4c) == 0x4c, "");
-static_assert(offsetof(CGLibShaderInfo, unknown5c) == 0x5c, "");
+static_assert(offsetof(unknown029, unknown20) == 0x20, "");
+static_assert(offsetof(unknown029, unknown34) == 0x34, "");
+static_assert(offsetof(unknown029, unknown38) == 0x38, "");
+static_assert(offsetof(unknown029, unknown4c) == 0x4c, "");
+static_assert(offsetof(unknown029, unknown5c) == 0x5c, "");
 
 class CGLibShader_plf {
 public:
@@ -70,7 +72,7 @@ public:
   };
 
   const u8 *m_data;
-  const CGLibShaderInfo *unknown08; // Inferred role: info; original member name unknown.
+  const unknown029 *unknown08; // Inferred role: info; original member name unknown.
 };
 
 static_assert(offsetof(CGLibShader_plf, unknown08) == 0x08, "");

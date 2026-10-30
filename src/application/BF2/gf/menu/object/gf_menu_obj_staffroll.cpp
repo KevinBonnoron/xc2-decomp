@@ -14,7 +14,7 @@ void GfMenuObjStaffroll::fadeout() {
   ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown001));
   if (acc.isValid()) {
     ui::EventData event;
-    event.unknown00 = GfMenuTypes::UI_EVENT_CLOSE;
+    event.unknown00 = GfMenuTypes::unknown003_34;
     GfMenuObject::sendEvent(acc.unknown10, event, 0.0f);
   }
 }

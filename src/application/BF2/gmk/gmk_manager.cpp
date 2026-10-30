@@ -614,19 +614,19 @@ void GmkBdat::seqWaitResourceLoaded(f32) {
   unknown128 = nullptr;
 }
 
-static InterestType getInterestType() {
+static unknown080 getInterestType() {
   GmkManager *manager = GmkManager::get();
   if (manager == nullptr) {
-    return INTEREST_TYPE_CAMERA;
+    return unknown080_1;
   }
   return manager->unknown198;
 }
 
 bool isInterestPosExist() {
   switch (getInterestType()) {
-  case INTEREST_TYPE_PLAYER:
+  case unknown080_0:
     return isPlayerExist();
-  case INTEREST_TYPE_CAMERA:
+  case unknown080_1:
     return isCameraExist();
   }
   return false;
@@ -638,9 +638,9 @@ bool isCameraExist() { return ml::Scn::sys() != nullptr && ml::Scn::sys()->getCa
 
 const mm::Vec3 &getInterestPos() {
   switch (getInterestType()) {
-  case INTEREST_TYPE_PLAYER:
+  case unknown080_0:
     return getPlayerPos();
-  case INTEREST_TYPE_CAMERA:
+  case unknown080_1:
     return getCameraPos();
   }
   return mm::Vec3::zero;

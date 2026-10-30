@@ -42,9 +42,9 @@ private:
     }
   }
 
-  mm::mtl::BitFlag<32> unknown08;   // Inferred role: flags; original member name unknown.
-  int unknown0c;                    // Inferred role: result; original member name unknown.
-  gf::GfMenuCallContext *unknown10; // Inferred role: context; original member name unknown.
+  mm::mtl::unknown027<32> unknown08; // Inferred role: flags; original member name unknown.
+  int unknown0c;                     // Inferred role: result; original member name unknown.
+  gf::GfMenuCallContext *unknown10;  // Inferred role: context; original member name unknown.
 };
 
 static_assert(sizeof(SelectWindow) == 0x18, "");

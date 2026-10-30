@@ -19,7 +19,7 @@ void CGLibShader_plf::setUniformBlock(u32 index, NVNcommandBuffer *cmdBuf, u64 a
   if (index < unknown08->unknown22) {
     u8 blockIndex = (m_data + unknown08->unknown28)[index];
     if (blockIndex != 0xff) {
-      const CGLibShaderBlockInfo &block = reinterpret_cast<const CGLibShaderBlockInfo *>(m_data + unknown08->unknown24)[blockIndex];
+      const unknown028 &block = reinterpret_cast<const unknown028 *>(m_data + unknown08->unknown24)[blockIndex];
       u32 bindNum = block.unknown0d;
       const unknown001 *bind = reinterpret_cast<const unknown001 *>(m_data + block.unknown08);
       for (u32 i = 0; i < bindNum; i++, bind++) {
@@ -33,7 +33,7 @@ void CGLibShader_plf::setStorageBuffer(u32 index, NVNcommandBuffer *cmdBuf, u64 
   if (index < unknown08->unknown2e) {
     u8 blockIndex = (m_data + unknown08->unknown34)[index];
     if (blockIndex != 0xff) {
-      const CGLibShaderBlockInfo &block = reinterpret_cast<const CGLibShaderBlockInfo *>(m_data + unknown08->unknown30)[blockIndex];
+      const unknown028 &block = reinterpret_cast<const unknown028 *>(m_data + unknown08->unknown30)[blockIndex];
       u32 bindNum = block.unknown0d;
       const unknown001 *bind = reinterpret_cast<const unknown001 *>(m_data + block.unknown08);
       for (u32 i = 0; i < bindNum; i++, bind++) {
@@ -114,7 +114,7 @@ int CGLibShader::getImageLocation(const char *name) const {
 int CGLibShader::getUniformBlockOfs(const char *name) const {
   u32 num = unknown08->unknown20;
   if (num != 0) {
-    const CGLibShaderBlockInfo *blocks = reinterpret_cast<const CGLibShaderBlockInfo *>(m_data + unknown08->unknown24);
+    const unknown028 *blocks = reinterpret_cast<const unknown028 *>(m_data + unknown08->unknown24);
     for (u32 i = 0; i < num; i++, blocks++) {
       if (strcmp(reinterpret_cast<const char *>(m_data + blocks->unknown00), name) == 0) {
         return blocks->unknown0c;
@@ -130,7 +130,7 @@ u16 CGLibShader::getUniformBlockSize(u32 index) const {
   }
   u8 blockIndex = (m_data + unknown08->unknown28)[index];
   if (blockIndex != 0xff) {
-    return reinterpret_cast<const CGLibShaderBlockInfo *>(m_data + unknown08->unknown24)[blockIndex].unknown0e;
+    return reinterpret_cast<const unknown028 *>(m_data + unknown08->unknown24)[blockIndex].unknown0e;
   }
   return 0;
 }
@@ -141,7 +141,7 @@ u32 CGLibShader::getUniformBlockValOfs(u32 index, const char *name) const {
   }
   u8 blockIndex = (m_data + unknown08->unknown28)[index];
   if (blockIndex != 0xff) {
-    const CGLibShaderBlockInfo &block = reinterpret_cast<const CGLibShaderBlockInfo *>(m_data + unknown08->unknown24)[blockIndex];
+    const unknown028 &block = reinterpret_cast<const unknown028 *>(m_data + unknown08->unknown24)[blockIndex];
     u32 valueNum = block.unknown04;
     if (valueNum != 0) {
       const unknown003 *values = reinterpret_cast<const unknown003 *>(m_data + unknown08->unknown5c) + block.unknown06;
@@ -159,7 +159,7 @@ u32 CGLibShader::getUniformBlockValOfs(u32 index, const char *name) const {
 int CGLibShader::getStorageBufferOfs(const char *name) const {
   u32 num = unknown08->unknown2c;
   if (num != 0) {
-    const CGLibShaderBlockInfo *blocks = reinterpret_cast<const CGLibShaderBlockInfo *>(m_data + unknown08->unknown30);
+    const unknown028 *blocks = reinterpret_cast<const unknown028 *>(m_data + unknown08->unknown30);
     for (u32 i = 0; i < num; i++, blocks++) {
       if (strcmp(reinterpret_cast<const char *>(m_data + blocks->unknown00), name) == 0) {
         return blocks->unknown0c;
@@ -175,7 +175,7 @@ u16 CGLibShader::getStorageBufferSize(u32 index) const {
   }
   u8 blockIndex = (m_data + unknown08->unknown34)[index];
   if (blockIndex != 0xff) {
-    return reinterpret_cast<const CGLibShaderBlockInfo *>(m_data + unknown08->unknown30)[blockIndex].unknown0e;
+    return reinterpret_cast<const unknown028 *>(m_data + unknown08->unknown30)[blockIndex].unknown0e;
   }
   return 0;
 }
@@ -186,7 +186,7 @@ u32 CGLibShader::getStorageBufferValOfs(u32 index, const char *name) const {
   }
   u8 blockIndex = (m_data + unknown08->unknown34)[index];
   if (blockIndex != 0xff) {
-    const CGLibShaderBlockInfo &block = reinterpret_cast<const CGLibShaderBlockInfo *>(m_data + unknown08->unknown30)[blockIndex];
+    const unknown028 &block = reinterpret_cast<const unknown028 *>(m_data + unknown08->unknown30)[blockIndex];
     u32 valueNum = block.unknown04;
     if (valueNum != 0) {
       const unknown003 *values = reinterpret_cast<const unknown003 *>(m_data + unknown08->unknown5c) + block.unknown06;

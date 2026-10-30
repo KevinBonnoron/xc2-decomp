@@ -12,7 +12,8 @@ class DrResMdoSeamWrkInst;
 class DrResMdoSeamWrkLow;
 struct MdoWrkMatRes;
 
-struct MdsSeamEtcPosData {
+// Inferred role: model data seam etc pos data; original type name unknown.
+struct unknown058 {
   u32 unknown00;    // Inferred role: object name offset; original member name unknown.
   u32 unknown04;    // Inferred role: eff name offset; original member name unknown.
   f32 unknown08;    // Inferred role: range; original member name unknown.
@@ -23,25 +24,27 @@ struct MdsSeamEtcPosData {
   u32 unknown24;    // Inferred role: groups offset; original member name unknown.
 };
 
-static_assert(offsetof(MdsSeamEtcPosData, unknown10) == 0x10, "");
-static_assert(offsetof(MdsSeamEtcPosData, unknown14) == 0x14, "");
-static_assert(offsetof(MdsSeamEtcPosData, unknown1c) == 0x1c, "");
-static_assert(offsetof(MdsSeamEtcPosData, unknown24) == 0x24, "");
+static_assert(offsetof(unknown058, unknown10) == 0x10, "");
+static_assert(offsetof(unknown058, unknown14) == 0x14, "");
+static_assert(offsetof(unknown058, unknown1c) == 0x1c, "");
+static_assert(offsetof(unknown058, unknown24) == 0x24, "");
 
-struct DrSeamEtcPos {
-  const MdsSeamEtcPosData *unknown00; // Inferred role: data; original member name unknown.
-  bool unknown08;                     // Inferred role: always disp; original member name unknown.
+// Inferred role: seam etc pos; original type name unknown.
+struct unknown059 {
+  const unknown058 *unknown00; // Inferred role: data; original member name unknown.
+  bool unknown08;              // Inferred role: always disp; original member name unknown.
 };
 
-static_assert(sizeof(DrSeamEtcPos) == 0x10, "");
+static_assert(sizeof(unknown059) == 0x10, "");
 
-struct DrSeamEtcPosList {
-  DrSeamEtcPos *unknown00; // Inferred role: objs; original member name unknown.
-  u32 unknown08;           // Inferred role: object max; original member name unknown.
+// Inferred role: seam etc pos list; original type name unknown.
+struct unknown060 {
+  unknown059 *unknown00; // Inferred role: objs; original member name unknown.
+  u32 unknown08;         // Inferred role: object max; original member name unknown.
 };
 
-// Inferred type: seam resource header; the original type name is unknown.
-struct MdsSeamInfo {
+// Inferred role: seam resource header; original type name unknown.
+struct unknown061 {
   u8 _00[0x18];
   u32 m_seamBaseMdlMax;
   u8 _1c[0x20 - 0x1c];
@@ -62,15 +65,15 @@ struct MdsSeamInfo {
   u32 m_seamMpfPosDataMax;
 };
 
-static_assert(offsetof(MdsSeamInfo, m_seamBaseMdlMax) == 0x18, "");
-static_assert(offsetof(MdsSeamInfo, m_seamInstMdlMax) == 0x20, "");
-static_assert(offsetof(MdsSeamInfo, m_seamColiMax) == 0x28, "");
-static_assert(offsetof(MdsSeamInfo, m_seamShaderMax) == 0x44, "");
-static_assert(offsetof(MdsSeamInfo, m_seamVertexMax) == 0x50, "");
-static_assert(offsetof(MdsSeamInfo, m_seamTextureMax) == 0x58, "");
-static_assert(offsetof(MdsSeamInfo, m_seamMpfMdlMax) == 0x64, "");
-static_assert(offsetof(MdsSeamInfo, m_seamEtcPosDataMax) == 0x6c, "");
-static_assert(offsetof(MdsSeamInfo, m_seamMpfPosDataMax) == 0x74, "");
+static_assert(offsetof(unknown061, m_seamBaseMdlMax) == 0x18, "");
+static_assert(offsetof(unknown061, m_seamInstMdlMax) == 0x20, "");
+static_assert(offsetof(unknown061, m_seamColiMax) == 0x28, "");
+static_assert(offsetof(unknown061, m_seamShaderMax) == 0x44, "");
+static_assert(offsetof(unknown061, m_seamVertexMax) == 0x50, "");
+static_assert(offsetof(unknown061, m_seamTextureMax) == 0x58, "");
+static_assert(offsetof(unknown061, m_seamMpfMdlMax) == 0x64, "");
+static_assert(offsetof(unknown061, m_seamEtcPosDataMax) == 0x6c, "");
+static_assert(offsetof(unknown061, m_seamMpfPosDataMax) == 0x74, "");
 
 class DrMdoCtlSeam : public DrMdlObj {
 public:
@@ -84,7 +87,7 @@ public:
   void seamThicknessPassEnd(bool value);
 
   u8 _190[0x1a8 - 0x190];
-  MdsSeamInfo *unknown1a8; // Inferred role: seam resource header; original member name unknown.
+  unknown061 *unknown1a8; // Inferred role: seam resource header; original member name unknown.
   u8 _1b0[0x2a0 - 0x1b0];
   DrResMdoSeamWrkBase *unknown2a0; // Inferred role: first base map object; original member name unknown.
   u8 _2a8[0x2d8 - 0x2a8];
@@ -98,7 +101,7 @@ public:
   u32 unknown650[2];   // Inferred role: collision list max per buffer; original member name unknown.
   u8 _658[0x698 - 0x658];
   DrResMdoInstAnmObj unknown698; // Inferred role: inst anm object; original member name unknown.
-  DrSeamEtcPosList unknown6c8;   // Inferred role: etc pos list; original member name unknown.
+  unknown060 unknown6c8;         // Inferred role: etc pos list; original member name unknown.
   u8 _6d8[0xb38 - 0x6d8];
   MdoWrkMatRes *unknownb38; // Inferred role: saved mat res; original member name unknown.
   u8 _b40[0xc40 - 0xb40];

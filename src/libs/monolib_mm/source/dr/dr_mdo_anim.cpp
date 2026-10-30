@@ -7,7 +7,7 @@
 namespace ml {
 
 void DrMdoAnim::changeMemFixAnim(MdoWrkMatRes *matRes, const void *data) {
-  const MdsFixedAnimData *anim = static_cast<const MdsFixedAnimData *>(data);
+  const unknown025 *anim = static_cast<const unknown025 *>(data);
   const u8 *base = static_cast<const u8 *>(data);
   matRes->unknown50 = base;
   matRes->unknown58 = base + anim->unknown14;
@@ -16,7 +16,7 @@ void DrMdoAnim::changeMemFixAnim(MdoWrkMatRes *matRes, const void *data) {
 }
 
 void DrMdoAnim::setupFixAnim(const void *data) {
-  const MdsFixedAnimData *anim = static_cast<const MdsFixedAnimData *>(data);
+  const unknown025 *anim = static_cast<const unknown025 *>(data);
   unknown30->unknown50 = static_cast<const u8 *>(data);
   unknown30->unknown58 = unknown30->unknown50 + anim->unknown14;
   unknown30->unknown60 = unknown30->unknown50 + anim->unknown1c;

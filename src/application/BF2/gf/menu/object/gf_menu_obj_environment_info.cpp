@@ -27,7 +27,7 @@ void GfMenuObjEnvironmentInfo::close() {
   if (ui::UIObjectAcc(handle).isValid()) {
     if (!ui::UIObjectAcc(handle).isTerm()) {
       ui::EventData event;
-      event.unknown00 = GfMenuTypes::UI_EVENT_CLOSE;
+      event.unknown00 = GfMenuTypes::unknown003_34;
       GfMenuObject::sendEvent(handle, event, 0.0f);
     }
   }
@@ -38,7 +38,7 @@ void GfMenuObjEnvironmentInfo::open() {
   if (ui::UIObjectAcc(handle).isValid()) {
     if (!ui::UIObjectAcc(handle).isTerm()) {
       ui::EventData event;
-      event.unknown00 = GfMenuTypes::UI_EVENT_OPEN;
+      event.unknown00 = GfMenuTypes::unknown003_33;
       GfMenuObject::sendEvent(handle, event, 0.0f);
     }
   }
