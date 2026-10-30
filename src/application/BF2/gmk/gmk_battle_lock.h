@@ -18,6 +18,11 @@ public:
     void create(CBdatWrapper, int, const AGmkBase &) {}
   };
 
+  // Inferred role: gimmick data; original type name unknown.
+  struct unknown001 {
+    u8 unknown00; // Inferred role: selects the second effect variant when zero; original member name unknown. The size of this structure is unknown.
+  };
+
   static const GmkType GMK_TYPE = GMK_TYPE_BATTLE_LOCK;
 
   ~GmkBattleLock() override { dispose(); }
@@ -31,6 +36,9 @@ public:
   void createGmkCollision();
   void createEffect();
   void disposeEffect(bool isFadeOut);
+
+  // Inferred helper: gimmick data of the create info; original name unknown.
+  const unknown001 *unknown002() const { return static_cast<const unknown001 *>(unknown20.unknown08); }
 
   u8 _48[0x50 - 0x48];
   GmkCollision unknown50; // Inferred role: collision; original member name unknown.

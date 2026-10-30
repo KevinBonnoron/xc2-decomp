@@ -288,6 +288,55 @@ bool GmkEnemyInsts::reqForcePopGobInst(const ForcePopEnemyInfo &info) const {
   return false;
 }
 
+void GmkEnemyInsts::removeGobInst(gf::GF_OBJ_HANDLE *handle) {
+  unknown98.removeGobInst(handle, false);
+  if (unknown98.getGobInstNum() == 0) {
+    unknown159 = false;
+  }
+}
+
+void GmkEnemyInsts::seqUpdateRepopCounter(const UpdateInfo &info) {
+  if (unknown15a) {
+    unknown15a = false;
+    unknown170 = 0.0f;
+  }
+  if (!unknown141) {
+    unknown170 -= info.unknown00;
+    if (unknown170 > 0.0f) {
+      return;
+    }
+  }
+  unknown98.removeDefeatedNamedEnemyInfo();
+  unknown160 = &GmkEnemyInsts::seqUpdatePopDepop;
+}
+
+void GmkEnemyInsts::createGobInsts() {
+  disposeGobInsts(false, false);
+  PopInfo::CreateInfo info;
+  info.unknown00 = unknown00.unknown08;
+  info.unknown08 = unknown00.unknown10;
+  info.unknown0c = unknown144.unknown00;
+  unknown98.create(info);
+  if (unknown141) {
+    unknown141 = false;
+    unknown180 = true;
+  } else {
+    unknown98.removeDefeatedNamedEnemyInfo();
+  }
+}
+
+void GmkEnemyInsts::onEnemyDead(gf::GF_OBJ_HANDLE *handle) {
+  unknown00.unknown00->unbindToGameObj(handle);
+  unknown98.removeGobInst(handle, true);
+  if (unknown98.getGobInstNum() == 0) {
+    unknown159 = false;
+    if (!unknown38.unknown03) {
+      unknown170 = unknown00.unknown24;
+      unknown160 = &GmkEnemyInsts::seqUpdateRepopCounter;
+    }
+  }
+}
+
 bool GmkEnemy::PopXformFinder::isYSnap() const { return unknown08->getData()->unknown04; }
 
 bool GmkEnemy::PopXformFinder::onPopGob(gf::GF_OBJ_HANDLE *handle) const { return true; }

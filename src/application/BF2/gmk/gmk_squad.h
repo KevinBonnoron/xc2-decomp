@@ -85,6 +85,10 @@ public:
   void update(f32 deltaTime);
   void addGmkSquadNavi(GmkSquadNavi *navi);
   void removeGmkSquadNavi(GmkSquadNavi *navi);
+  void seqInit(f32 deltaTime);
+  void updatePosRotY(bool isImmediate);
+  void seqUpdate(f32 deltaTime);
+  void debugDraw() const;
 
   u8 _20[0x68 - 0x20];
   GmkSquadLeader *m_bindedGmkSquadLeader;
@@ -180,6 +184,7 @@ static_assert(sizeof(GmkSquadNavi) == 0x40, "");
 class GmkSquadManager : public mm::mtl::PtrSingleton<GmkSquadManager> {
 public:
   void update(f32 deltaTime);
+  void debugDraw() const;
 
   mm::mtl::IntrusiveList<GmkSquad> unknown08; // Inferred role: squads; original member name unknown.
 };

@@ -25,7 +25,7 @@ class GmkEnemyGob;
 class GmkSquad;
 
 // Layout evidence: gmk::GmkEnemyInsts::reqForcePopGobInst (0x71005efab8) copies these 8 bytes to offset 0x144 of the
-// instances and GfSmnEnemyManager fills them; the first byte is the 4th member of PopInfo::CreateInfo.
+// instances and GfSmnEnemyManager fills them; GmkEnemyInsts::createGobInsts copies the first byte to PopInfo::CreateInfo::unknown0c.
 struct ForcePopEnemyInfo {
   u8 unknown00; // Role and original member name unknown.
   u8 _01[0x04 - 0x01];
@@ -88,6 +88,13 @@ public:
   };
 
   struct PopInfo {
+    // Layout evidence: GmkEnemyInsts::createGobInsts (0x71005efc40) fills it on the stack and PopInfo::create reads it.
+    struct CreateInfo {
+      u8 *unknown00; // Inferred role: bdat; original member name unknown.
+      int unknown08; // Inferred role: bdat id; original member name unknown.
+      u8 unknown0c;  // Inferred role: type genus filter; original member name unknown.
+    };
+
     struct PopEnemyInfo {
       void dispose();
 
@@ -117,8 +124,10 @@ public:
     };
 
     void dispose();
+    void create(const CreateInfo &info);
     int getGobInstNum() const;
     bool isPopFinished() const;
+    void removeGobInst(gf::GF_OBJ_HANDLE *handle, bool isDead);
     void removeDefeatedNamedEnemyInfo();
     bool hasEneID(u16 eneId, bool flag) const;
     bool hasTypeGenus(u8 genus, bool flag) const;
@@ -144,7 +153,12 @@ public:
   int getGobInstCapa() const;
   gf::GF_OBJ_HANDLE *getGobInst(u32 index) const;
   void update(const UpdateInfo &info);
+  void seqUpdatePopDepop(const UpdateInfo &info);
+  void removeGobInst(gf::GF_OBJ_HANDLE *handle);
   void disposeGobInsts(bool isFadeOut, bool isCheckBattle);
+  void seqUpdateRepopCounter(const UpdateInfo &info);
+  void createGobInsts();
+  void onEnemyDead(gf::GF_OBJ_HANDLE *handle);
   void dispose();
   void disposeSquad();
 

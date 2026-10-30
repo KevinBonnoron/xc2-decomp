@@ -1,16 +1,18 @@
 #pragma once
+#include <stddef.h>
+
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_manager.h"
 #include "gmk/gmk_npc/gmk_npc_manager.h"
 #include "mm_math/mm_vec3.h"
 #include "mtl/alloc_handle.h"
 #include "types.h"
-#include <stddef.h>
 
 namespace gmk {
 
 class AGmkBase;
 class IGmkList;
+class IGmkGameObjTraverser;
 
 class GmkSet {
 public:
@@ -33,6 +35,7 @@ public:
   bool updateImmediate();
   const AGmkBase *findFirstGmkInstByBdatId(GmkType type, int bdatId) const;
   const AGmkBase *findGmkInstByGmkInstIndex(GmkType type, u32 index) const;
+  bool traverseGmkGameObj(IGmkGameObjTraverser &traverser) const;
   void update(f32 deltaTime);
   explicit GmkSet(const CreateInfo *info);
   void create(const CreateInfo &info);

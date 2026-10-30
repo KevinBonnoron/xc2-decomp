@@ -197,6 +197,22 @@ const AGmkBase *GmkManager::findFirstGmkInstByBdatId(GmkType type, int bdatId) c
   return nullptr;
 }
 
+bool GmkManager::traverseGmkGameObj(IGmkGameObjTraverser &traverser) const {
+  if (!isGmkSetsReady()) {
+    return false;
+  }
+  for (GmkSet *const *it = unknownf358.begin(); it != unknownf358.end(); ++it) {
+    const GmkSet *set = *it;
+    if (set == nullptr) {
+      continue;
+    }
+    if (!set->traverseGmkGameObj(traverser)) {
+      return false;
+    }
+  }
+  return true;
+}
+
 const AGmkBase *GmkSet::findFirstGmkInstByBdatId(GmkType type, int bdatId) const {
   IGmkList *list = unknown1b8[type];
   if (list == nullptr) {

@@ -119,9 +119,23 @@ bool GmkSquadNavi::isArrived(const mm::Vec3 &position) const {
   return !(unknown20.x * unknown20.x < distSq);
 }
 
+void GmkSquad::seqUpdate(f32 deltaTime) {
+  if (isValid()) {
+    updatePosRotY(false);
+  } else {
+    unknown78 = &GmkSquad::seqInit;
+  }
+}
+
 void GmkSquadManager::update(f32 deltaTime) {
   for (mm::mtl::IntrusiveList<GmkSquad>::iterator it = unknown08.begin(); it != unknown08.end(); ++it) {
     it->update(deltaTime);
+  }
+}
+
+void GmkSquadManager::debugDraw() const {
+  for (mm::mtl::IntrusiveList<GmkSquad>::iterator it = unknown08.begin(); it != unknown08.end(); ++it) {
+    it->debugDraw();
   }
 }
 

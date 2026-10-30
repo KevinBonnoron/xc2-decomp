@@ -1,8 +1,13 @@
 #include "gmk/gmk_battle_lock.h"
+
 #include "framework/effect/effect_manager.h"
 #include "gf/data/gf_data_util.h"
 #include "gf/game/gf_game_manager.h"
 #include "gmk/gmk_list_impl.h" // IWYU pragma: keep
+
+namespace fw {
+enum EF_CATEGORY : int;
+} // namespace fw
 
 namespace gmk {
 
@@ -35,6 +40,28 @@ void GmkBattleLock::disposeEffect(bool isFadeOut) {
       fw::EffectManager::get()->remove(unknownc0);
     }
     unknownc0 = 0;
+  }
+}
+
+void GmkBattleLock::createEffect() {
+  if (!canCreateGameEntity()) {
+    return;
+  }
+  disposeEffect(false);
+  const unknown001 *data = unknown002();
+  switch (unknown08.unknown10->unknown0c) {
+  case SHAPE_TYPE_BOX:
+    unknownc0 = fw::EffectManager::get()->create(data->unknown00 ? "cmn_204_001" : "cmn_204_011", nullptr, true);
+    break;
+  case SHAPE_TYPE_CAPSULE:
+    unknownc0 = fw::EffectManager::get()->create(data->unknown00 ? "cmn_204_000" : "cmn_204_010", nullptr, true);
+    break;
+  default:
+    break;
+  }
+  if (unknownc0 != 0) {
+    fw::EffectManager::get()->setCategory(unknownc0, static_cast<fw::EF_CATEGORY>(1));
+    applyEffectParam();
   }
 }
 

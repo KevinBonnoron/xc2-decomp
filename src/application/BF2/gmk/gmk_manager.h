@@ -104,6 +104,7 @@ enum unknown080 {
 
 class AGmkBase;
 class GmkSet;
+class IGmkGameObjTraverser;
 
 class GmkManager : public mm::mtl::PtrSingleton<GmkManager> {
 public:
@@ -129,6 +130,7 @@ public:
   int getMapBdatId(int gmkSetId) const;
   const AGmkBase *findFirstGmkInstByBdatId(GmkType type, int bdatId) const;
   const AGmkBase *findGmkInstByGmkInstIndex(int gmkSetId, GmkType type, u32 index) const;
+  bool traverseGmkGameObj(IGmkGameObjTraverser &traverser) const;
   GmkSet *findGmkSet(int gmkSetId) const;
   void update(f32 deltaTime);
   void clearGmkSets();
