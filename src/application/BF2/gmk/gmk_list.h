@@ -12,6 +12,10 @@
 #include "mtl/alloc_handle.h"
 #include "types.h"
 
+namespace gf {
+class GfFieldGimmick;
+} // namespace gf
+
 namespace gmk {
 
 class GmkSet;
@@ -194,6 +198,9 @@ public:
       gmk->debugDraw();
     }
   }
+
+  // gf::GfFieldGimmick::gevMapjump indexes gmkInsts of the effect lists directly.
+  friend class gf::GfFieldGimmick;
 
 protected:
   static constexpr f32 DEBUG_DISTANCE = 100.0f;

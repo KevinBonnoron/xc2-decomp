@@ -238,16 +238,16 @@ void EnvManager::setMapWeatherID(gf::WEATHERID weather, f32 frame) {
 
 void EnvManager::startGimmickPopWait() {
   gf::GfFieldGimmick *gimmick = mm::mtl::PtrSingleton<gf::GfFieldGimmick>::get();
-  gimmick->unknownf4ac = true;
-  gimmick->unknownf4ae = false;
-  gimmick->unknownf4ad = false;
-  gimmick->unknownf4b0 = 0;
+  gimmick->unknownf4ac.unknown00 = true;
+  gimmick->unknownf4ac.unknown02 = false;
+  gimmick->unknownf4ac.unknown01 = false;
+  gimmick->unknownf4ac.unknown04 = 0;
   unknown10 |= FLAG_GIMMICK_POP_WAIT;
 }
 
 void EnvManager::endGimmickPopWait() {
   if (unknown10 & FLAG_GIMMICK_POP_WAIT) {
-    mm::mtl::PtrSingleton<gf::GfFieldGimmick>::get()->unknownf4ac = false;
+    mm::mtl::PtrSingleton<gf::GfFieldGimmick>::get()->unknownf4ac.unknown00 = false;
     unknown10 &= ~FLAG_GIMMICK_POP_WAIT;
   }
 }
@@ -256,7 +256,7 @@ bool EnvManager::isGimmickPopWaiting() const {
   if (!(unknown10 & FLAG_GIMMICK_POP_WAIT)) {
     return false;
   }
-  return !mm::mtl::PtrSingleton<gf::GfFieldGimmick>::get()->unknownf4ae;
+  return !mm::mtl::PtrSingleton<gf::GfFieldGimmick>::get()->unknownf4ac.unknown02;
 }
 
 void EnvManager::setWeatherType(gf::WEATYPE type) {

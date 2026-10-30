@@ -115,6 +115,7 @@ public:
     u32 unknown4c;                 // Inferred role: gmk set capacity; original member name unknown.
   };
 
+  GmkManager();
   ~GmkManager() override;
   void create(const CreateInfo &info);
   bool isValid() const;
@@ -131,9 +132,11 @@ public:
   const AGmkBase *findFirstGmkInstByBdatId(GmkType type, int bdatId) const;
   const AGmkBase *findGmkInstByGmkInstIndex(int gmkSetId, GmkType type, u32 index) const;
   bool traverseGmkGameObj(IGmkGameObjTraverser &traverser) const;
+  template <typename T> bool traverseGmkInst(GmkType type, T &traverser) const;
   GmkSet *findGmkSet(int gmkSetId) const;
   void update(f32 deltaTime);
   void clearGmkSets();
+  void createGmkSet(mtl::ALLOC_HANDLE memory, int gmkSetId, const mm::Vec3 &position, f32 rotation);
   void disposeGmkSet(int gmkSetId);
   int findFirstBdatId_RSC_GmkSetList(int map) const;
   int findFirstBdatId_RSC_GmkSetList(GmkType type, int bdatId) const;

@@ -63,6 +63,7 @@ static_assert(sizeof(GmkCtrlVolSe) == 0x80, "");
 
 class GmkCtrlVolSeManager : public mm::mtl::PtrSingleton<GmkCtrlVolSeManager> {
 public:
+  GmkCtrlVolSeManager() : unknown20(false) {}
   ~GmkCtrlVolSeManager() override {}
   void update(f32 deltaTime);
 

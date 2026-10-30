@@ -13,7 +13,10 @@ template <> struct FixedVectorUnit<1> {
   typedef unsigned char type;
 };
 template <> struct FixedVectorUnit<2> {
-  typedef unsigned short type;
+  // A struct unit keeps the buffer address apart from the element addresses, as in the game (gf::GfUnpopBladeIds).
+  struct type {
+    unsigned short unknown00; // Inferred role: storage halfword; original member name unknown.
+  };
 };
 template <> struct FixedVectorUnit<4> {
   typedef unsigned int type;

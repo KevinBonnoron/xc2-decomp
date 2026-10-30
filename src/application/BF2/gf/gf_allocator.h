@@ -37,6 +37,8 @@ enum ALLOCATOR {
   ALLOCATOR_ASSET = 3,
   ALLOCATOR_BDAT = 4,
   ALLOCATOR_ANIMATION = 7,
+  ALLOCATOR_UNKNOWN08 = 8, // Inferred role: gimmick sets (GfFieldGimmick::createGmkSet); original name unknown.
+  ALLOCATOR_UNKNOWN09 = 9, // Inferred role: gimmick manager (GfFieldGimmick::initialize); original name unknown.
   ALLOCATOR_DEBUG = 10,
   ALLOCATOR_UNKNOWN0B = 11, // Inferred role: slot allocator; original name unknown.
   ALLOCATOR_MAX = 12,

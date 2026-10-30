@@ -2,16 +2,17 @@
 #include <stddef.h>
 
 #include "gmk/gmk_bdat.h"
+#include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
 #include "gmk/gmk_npc/gmk_npc_manager.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/vector.h"
 #include "mtl/alloc_handle.h"
 #include "types.h"
 
 namespace gmk {
 
 class AGmkBase;
-class IGmkList;
 class IGmkGameObjTraverser;
 
 class GmkSet {
@@ -64,5 +65,31 @@ static_assert(offsetof(GmkSet, unknown178) == 0x178, "");
 static_assert(offsetof(GmkSet, unknown1b8) == 0x1b8, "");
 static_assert(offsetof(GmkSet, unknown388) == 0x388, "");
 static_assert(sizeof(GmkSet) == 0x3a0, "");
+
+// The game instantiates it for gf::GfGmkBladeTraverser, gf::GfUnpopBladeIds, gf::LocatorPrecious,
+// gmk::GmkInstDispTraverserByBdatId and two lambdas of gf::GfGameInsideBattleLock::updateInfoByGmk.
+template <typename T> bool GmkManager::traverseGmkInst(GmkType type, T &traverser) const {
+  if (!isGmkSetsReady()) {
+    return false;
+  }
+  for (GmkSet *const *it = unknownf358.begin(); it != unknownf358.end(); ++it) {
+    const GmkSet *set = *it;
+    if (set == nullptr) {
+      continue;
+    }
+    const IGmkList *list = set->getGmkList(type);
+    if (list == nullptr) {
+      continue;
+    }
+    u32 num = list->getInstNum();
+    for (u32 index = 0; index < num; index++) {
+      const AGmkBase *gmk = list->getInst(index);
+      if (gmk != nullptr) {
+        traverser.onTraverse(*gmk);
+      }
+    }
+  }
+  return true;
+}
 
 } // namespace gmk
