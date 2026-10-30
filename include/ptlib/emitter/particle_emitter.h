@@ -34,7 +34,9 @@ class ParticleObj;
 
 struct EmitterArg {
   u8 unknown00; // Inferred role: emitter type; original member name unknown.
-  u8 _001[0x014 - 0x001];
+  u8 _001[0x009 - 0x001];
+  u8 unknown09; // Inferred role: follows the fit direction of the parent particle; original member name unknown.
+  u8 _00a[0x014 - 0x00a];
   mm::Vec3NA unknown14; // Inferred role: bound start point; original member name unknown.
   u8 _020[0x044 - 0x020];
   mm::Vec3NA unknown44; // Inferred role: bound end point; original member name unknown.
@@ -47,7 +49,9 @@ struct EmitterArg {
   u8 _095[0x09c - 0x095];
   f32 unknown9c; // Inferred role: bound extent; original member name unknown.
   f32 unknowna0; // Inferred role: bound extent; original member name unknown.
-  u8 _0a4[0x0e0 - 0x0a4];
+  u8 _0a4[0x0c4 - 0x0a4];
+  u8 unknownc4; // Inferred role: fit mode flags, bit 3 set for the fitting modes; original member name unknown.
+  u8 _0c5[0x0e0 - 0x0c5];
   u8 unknowne0; // Inferred role: draw parameter; original member name unknown.
   u8 _0e1[0x0fc - 0x0e1];
   u8 unknownfc; // Inferred role: blend mode; original member name unknown.
@@ -65,11 +69,13 @@ struct EmitterArg {
 };
 
 static_assert(offsetof(EmitterArg, unknown00) == 0x00, "");
+static_assert(offsetof(EmitterArg, unknown09) == 0x09, "");
 static_assert(offsetof(EmitterArg, unknown14) == 0x14, "");
 static_assert(offsetof(EmitterArg, unknown44) == 0x44, "");
 static_assert(offsetof(EmitterArg, unknown8c) == 0x8c, "");
 static_assert(offsetof(EmitterArg, unknown9c) == 0x9c, "");
 static_assert(offsetof(EmitterArg, unknowna0) == 0xa0, "");
+static_assert(offsetof(EmitterArg, unknownc4) == 0xc4, "");
 static_assert(offsetof(EmitterArg, unknown90) == 0x90, "");
 static_assert(offsetof(EmitterArg, unknown94) == 0x94, "");
 static_assert(offsetof(EmitterArg, unknowne0) == 0xe0, "");

@@ -1,6 +1,7 @@
 #include <math.h>
 
 #include "mm_math/mm_vec3.h"
+#include "mm_math/mm_vec3_na.h"
 #include "ptlib/emitter/particle_emitter.h"
 #include "ptlib/emitter/particle_emitter_ext.h"
 #include "ptlib/emitter/particle_emitter_particle.h"
@@ -127,6 +128,19 @@ void ParticleObj::calcNewton(EmitterObj *emitter, mm::Vec3 &result) {
       result.x = m_extParam->unknown90.x + result.x;
       result.y = m_extParam->unknown90.y + result.y;
       result.z = m_extParam->unknown90.z + result.z;
+    }
+  }
+}
+
+void ParticleObj::calcIsFit(int isFit, EmitterObj *emitter, mm::Vec3 &direction) {
+  // The original reads the fit mode of the emitter argument even when the argument is null (original bug, reproduced).
+  if (isFit != 0 && (emitter->unknown98 == nullptr || emitter->unknown98->unknown00 != 4) && (emitter->unknown98->unknownc4 == 8 || emitter->unknown98->unknownc4 == 9)) {
+    if (emitter->unknown98->unknown09 != 0 && emitter->unknown80 != nullptr && emitter->unknown80->getExtParam().getEmParent() != nullptr && emitter->unknown88 == emitter->unknown80->unknown138 &&
+        emitter->unknown80->getExtParam().getEmParent()->unknown98 != nullptr && (emitter->unknown80->getExtParam().getEmParent()->unknown98->unknownc4 & 8) != 0) {
+      unknown94.x = emitter->unknown80->unknown94.x;
+      unknown94.y = emitter->unknown80->unknown94.y;
+    } else {
+      calc_fit(unknown94.x, unknown94.y, &direction);
     }
   }
 }

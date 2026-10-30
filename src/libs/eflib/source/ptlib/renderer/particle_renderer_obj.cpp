@@ -5,6 +5,7 @@
 #include "grlib/cglib_color_ctl.h"
 #include "grlib/cglib_depth_ctl.h"
 #include "grlib/cglib_render_target.h"
+#include "mm/mm_std_base.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
@@ -26,6 +27,23 @@ namespace renderer {
 
 constexpr int ARG_DRAW_TYPE_NONE = 5;
 constexpr int PRIORITY_MAX = 0xff;
+
+namespace {
+// Inferred role: blend functions selected by the packed blend type; original name unknown.
+const GrlBlendFunc unknown003[11] = {GRL_BLEND_FUNC_ZERO,
+                                     GRL_BLEND_FUNC_ONE,
+                                     GRL_BLEND_FUNC_SRC_COLOR,
+                                     GRL_BLEND_FUNC_ONE_MINUS_SRC_COLOR,
+                                     GRL_BLEND_FUNC_SRC_ALPHA,
+                                     GRL_BLEND_FUNC_ONE_MINUS_SRC_ALPHA,
+                                     GRL_BLEND_FUNC_UNKNOWN_7,
+                                     GRL_BLEND_FUNC_UNKNOWN_8,
+                                     GRL_BLEND_FUNC_UNKNOWN_9,
+                                     GRL_BLEND_FUNC_ONE_MINUS_DST_COLOR,
+                                     GRL_BLEND_FUNC_UNKNOWN_11};
+// Inferred role: blend combines selected by the packed blend type; original name unknown.
+const GrlBlendCombine unknown004[5] = {GRL_BLEND_COMBINE_ADD, GRL_BLEND_COMBINE_SUBTRACT, GRL_BLEND_COMBINE_MIN, GRL_BLEND_COMBINE_MAX, GRL_BLEND_COMBINE_UNKNOWN_3};
+} // namespace
 
 void RenderGrObj::fxcore_setup_target_update(int index) {
   if (index == 0) {
@@ -67,6 +85,53 @@ u32 RenderGrObj::changeShader(u32 type, bool isSimple) {
     }
   }
   return type;
+}
+
+void RenderGrObj::myGX2SetBlendControl(int type) {
+  if (type >= 0x80) {
+    // The original indexes the 11-entry function table and the 5-entry combine table with 4-bit fields, so it reads past their ends (original bug, reproduced).
+    GrlBlendFunc source = unknown003[(type >> 8) & 0xf];
+    GrlBlendFunc destination = unknown003[(type >> 12) & 0xf];
+    GrlBlendCombine combine = unknown004[type & 0xf];
+    grlib::CGLibColorCtl::setBlendControl(source, destination, combine, source, destination, combine, GRL_LOGIC_TYPE_COPY);
+    return;
+  }
+  switch (type) {
+  case 0:
+    grlib::CGLibColorCtl::setBlendOffControl(GRL_LOGIC_TYPE_COPY);
+    break;
+  case 1:
+  case 5:
+    grlib::CGLibColorCtl::setBlendControl(
+        GRL_BLEND_FUNC_SRC_ALPHA, GRL_BLEND_FUNC_ONE_MINUS_SRC_ALPHA, GRL_BLEND_COMBINE_ADD, GRL_BLEND_FUNC_ZERO, GRL_BLEND_FUNC_ONE_MINUS_SRC_ALPHA, GRL_BLEND_COMBINE_ADD, GRL_LOGIC_TYPE_COPY);
+    break;
+  case 2:
+    grlib::CGLibColorCtl::setBlendControl(GRL_BLEND_FUNC_SRC_ALPHA, GRL_BLEND_FUNC_ONE, GRL_BLEND_COMBINE_ADD, GRL_BLEND_FUNC_ZERO, GRL_BLEND_FUNC_ONE, GRL_BLEND_COMBINE_ADD, GRL_LOGIC_TYPE_COPY);
+    break;
+  case 3:
+    grlib::CGLibColorCtl::setBlendControl(
+        GRL_BLEND_FUNC_SRC_ALPHA, GRL_BLEND_FUNC_ONE, GRL_BLEND_COMBINE_UNKNOWN_3, GRL_BLEND_FUNC_ZERO, GRL_BLEND_FUNC_ONE, GRL_BLEND_COMBINE_UNKNOWN_3, GRL_LOGIC_TYPE_COPY);
+    break;
+  case 4:
+    grlib::CGLibColorCtl::setBlendControl(
+        GRL_BLEND_FUNC_ONE_MINUS_DST_COLOR, GRL_BLEND_FUNC_ONE, GRL_BLEND_COMBINE_ADD, GRL_BLEND_FUNC_ONE_MINUS_DST_COLOR, GRL_BLEND_FUNC_ONE, GRL_BLEND_COMBINE_ADD, GRL_LOGIC_TYPE_COPY);
+    break;
+  case 6:
+    grlib::CGLibColorCtl::setBlendControl(GRL_BLEND_FUNC_SRC_ALPHA, GRL_BLEND_FUNC_ONE, GRL_BLEND_COMBINE_ADD, GRL_BLEND_FUNC_ONE, GRL_BLEND_FUNC_ONE, GRL_BLEND_COMBINE_ADD, GRL_LOGIC_TYPE_COPY);
+    break;
+  case 7:
+    grlib::CGLibColorCtl::setBlendControl(
+        GRL_BLEND_FUNC_ONE, GRL_BLEND_FUNC_SRC_ALPHA, GRL_BLEND_COMBINE_ADD, GRL_BLEND_FUNC_ZERO, GRL_BLEND_FUNC_SRC_ALPHA, GRL_BLEND_COMBINE_ADD, GRL_LOGIC_TYPE_COPY);
+    break;
+  case 8:
+    grlib::CGLibColorCtl::setBlendControl(
+        GRL_BLEND_FUNC_ONE, GRL_BLEND_FUNC_SRC_ALPHA, GRL_BLEND_COMBINE_UNKNOWN_3, GRL_BLEND_FUNC_ZERO, GRL_BLEND_FUNC_SRC_ALPHA, GRL_BLEND_COMBINE_UNKNOWN_3, GRL_LOGIC_TYPE_COPY);
+    // The original has no break here and asserts after setting the blend (original bug, reproduced).
+  default:
+#line 1570
+    MM_ASSERT(0);
+    break;
+  }
 }
 
 RenderGrObj::RenderGrObj() : unknown40(nullptr), unknown48(nullptr), unknown50(nullptr), unknown60(mm::Vec3::zero), unknown70(nullptr) {

@@ -86,6 +86,7 @@ public:
   void fxcore_setup_target_update(int index);
   void draw_capture();
   u32 changeShader(u32 type, bool isSimple);
+  void myGX2SetBlendControl(int type);
   void *lockStream(emitter::EmitterObj *emitter);
   void unlockStream(emitter::EmitterObj *emitter, int count);
   void draw_common_uconst(f32 *uniform, emitter::EmitterObj *emitter);

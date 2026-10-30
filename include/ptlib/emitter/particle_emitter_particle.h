@@ -82,6 +82,7 @@ public:
     return inRange;
   }
   void calc_fit(f32 &pitch, f32 &yaw, const mm::Vec3 *direction);
+  void calcIsFit(int isFit, EmitterObj *emitter, mm::Vec3 &direction);
   bool move_common_wait(int isMove, f32 speed);
   bool move_common_life(int isMove, f32 speed) {
     if (isMove != 0 && unknownc0 != 0x7fff) {

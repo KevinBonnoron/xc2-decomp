@@ -63,5 +63,32 @@ void EffStateManager::initSampler() {
   unknown3c0.updateData();
 }
 
+void EffStateManager::initVtxFetch() {
+  grlib::CGLibVtxAttr attributes[11];
+  for (u32 i = 0; i < 4; i++) {
+    attributes[i] = {unknown073_46, i, i * 0x10, 0};
+  }
+  for (u32 i = 4; i < 11; i++) {
+    attributes[i] = {unknown073_46, i, i * 0x10, 0};
+    unknown400[i - 4].createFetchObj(attributes, i + 1);
+  }
+  attributes[0] = {unknown073_13, 0, 0, 0};
+  for (u32 i = 1; i < 5; i++) {
+    attributes[i] = {unknown073_46, i, (i - 1) * 0x10, 1};
+  }
+  // The original writes a 12th attribute into the 11-entry array (original bug, reproduced).
+  for (u32 i = 5; i < 12; i++) {
+    attributes[i] = {unknown073_46, i, (i - 1) * 0x10, 1};
+    unknown470[i - 5].createFetchObj(attributes, i + 1);
+  }
+  attributes[0] = {unknown073_46, 0, 0, 0};
+  attributes[1] = {unknown073_22, 1, 0x10, 0};
+  attributes[2] = {unknown073_37, 2, 0x18, 0};
+  unknown4e0.createFetchObj(attributes, 3);
+  attributes[0] = {unknown073_46, 0, 0, 0};
+  attributes[1] = {unknown073_47, 1, 0x10, 0};
+  unknown4f0.createFetchObj(attributes, 2);
+}
+
 } // namespace renderer
 } // namespace ptlib
