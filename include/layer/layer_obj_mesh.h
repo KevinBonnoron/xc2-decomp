@@ -1,7 +1,7 @@
 #pragma once
 #include <stddef.h>
 
-#include "layer/layer_obj_work.h"
+#include "layer/layer_act_def.h"
 #include "types.h"
 
 namespace layer {
@@ -21,8 +21,10 @@ static_assert(offsetof(LayerArgMdlRenInf, unknown10) == 0x10, "");
 static_assert(offsetof(LayerArgMdlRenInf, unknown18) == 0x18, "");
 static_assert(offsetof(LayerArgMdlRenInf, unknown30) == 0x30, "");
 
-class LayerObjMesh : public LayerObjWork {
+// Evidence: the vtable holds LayerActDef::updatePartsAction.
+class LayerObjMesh : public LayerActDef {
 public:
+  LayerObjMesh();
   f32 getWinSclW(const LayerResMatrix &matrix) const;
   f32 getWinSclH(const LayerResMatrix &matrix) const;
   void call_uniform_noImage(LayerArgMdlRenInf &info);

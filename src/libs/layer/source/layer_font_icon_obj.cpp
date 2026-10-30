@@ -7,7 +7,6 @@
 namespace layer {
 
 LayerFontIconObj::LayerFontIconObj(LayerFontManager *manager, const void *data, LAYER_TYPE type) {
-  unknown1c = 0xcc;
   unknown20 = manager;
   unknown28 = 0;
   unknown18 = type;

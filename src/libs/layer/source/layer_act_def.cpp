@@ -30,6 +30,8 @@ static_assert(offsetof(unknown006, unknown06) == 0x06, "");
 
 } // namespace
 
+LayerActDef::LayerActDef() {}
+
 u32 LayerActDef::calcDefActionWorkSize(const u8 *data) { return sizeof(unknown084) + reinterpret_cast<const unknown083 *>(data)->actionNum * sizeof(u32); }
 
 void LayerActDef::setupDefAction(u8 *work, const u8 *data) { setupAction(work, data); }

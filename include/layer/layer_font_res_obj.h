@@ -57,8 +57,6 @@ public:
   void setupResource();
   void release() override;
 
-  u8 unknown1c; // Inferred role: state; original member name unknown.
-  u8 _1d[0x20 - 0x1d];
   LayerFontManager *unknown20; // Inferred role: font manager; original member name unknown.
   u32 unknown28;               // Inferred role: flags; original member name unknown.
   u8 _2c[0x30 - 0x2c];
@@ -75,7 +73,6 @@ public:
   f32 unknown74;                        // Inferred role: double line height; original member name unknown.
 };
 
-static_assert(offsetof(LayerFontResObj, unknown1c) == 0x1c, "");
 static_assert(offsetof(LayerFontResObj, unknown20) == 0x20, "");
 static_assert(offsetof(LayerFontResObj, unknown28) == 0x28, "");
 static_assert(offsetof(LayerFontResObj, unknown30) == 0x30, "");

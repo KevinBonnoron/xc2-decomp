@@ -32,8 +32,6 @@ public:
 
   static const f32 RUBY_SCALE;
 
-  u8 unknown1c; // Inferred role: state; original member name unknown.
-  u8 _1d[0x20 - 0x1d];
   const void *unknown20; // Inferred role: first value of the style info; original member name unknown.
   u32 unknown28;         // Inferred role: style data max; original member name unknown.
   u8 _2c[0x30 - 0x2c];

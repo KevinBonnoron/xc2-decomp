@@ -7,6 +7,8 @@
 
 namespace layer {
 
+LayerObjMesh::LayerObjMesh() {}
+
 f32 LayerObjMesh::getWinSclW(const LayerResMatrix &matrix) const { return sqrtf(matrix.unknown08 * matrix.unknown08 + matrix.unknown10 * matrix.unknown10); }
 
 f32 LayerObjMesh::getWinSclH(const LayerResMatrix &matrix) const { return sqrtf(matrix.unknown0c * matrix.unknown0c + matrix.unknown14 * matrix.unknown14); }

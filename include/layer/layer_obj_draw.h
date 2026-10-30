@@ -1,7 +1,7 @@
 #pragma once
 #include <stddef.h>
 
-#include "layer/layer_obj_work.h"
+#include "layer/layer_act_def.h"
 #include "types.h"
 
 namespace grlib {
@@ -33,8 +33,10 @@ struct LyrMeshData {
 
 static_assert(offsetof(LyrMeshData, unknown1a) == 0x1a, "");
 
-class LayerObjDraw : public LayerObjWork {
+// Evidence: the vtable holds LayerActDef::updatePartsAction.
+class LayerObjDraw : public LayerActDef {
 public:
+  LayerObjDraw();
   void renderMesh(grlib::CGLibDblUniformBlock *uniform, const LyrMeshData *mesh);
   void draw_call_onm_def(grlib::CGLibDblUniformBlock *uniform, const LyrDrawData *draw);
   void draw_call_onm_tex(grlib::CGLibDblUniformBlock *uniform, const LyrDrawData *draw);

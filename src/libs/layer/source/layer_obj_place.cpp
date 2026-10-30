@@ -5,6 +5,8 @@
 
 namespace layer {
 
+LayerObjPlace::LayerObjPlace() {}
+
 void LayerObjPlace::placeReset_Off(LayerResNode *node) {}
 
 void LayerObjPlace::placeReset_Pos(LayerResNode *node) {

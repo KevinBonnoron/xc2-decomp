@@ -17,6 +17,7 @@ class LayerVertexObj;
 
 class LayerObjWork : public LayerActBase {
 public:
+  LayerObjWork();
   f32 getMaxSecond() const;
   f32 getSecond() const;
   void setSecond(f32 second);
@@ -58,7 +59,10 @@ public:
     f32 unknown04; // Inferred role: cleared by calcFrmParm; original member name unknown.
   };
 
-  u8 _258[0x270 - 0x258];
+  u8 unknown258; // Inferred role: cleared by the constructor; original member name unknown.
+  u8 _259[0x268 - 0x259];
+  u32 unknown268; // Inferred role: cleared by the constructor; original member name unknown.
+  u8 _26c[0x270 - 0x26c];
   LayerVertexObj *unknown270;             // Inferred role: vertex object; original member name unknown.
   LayerTextureObj *unknown278;            // Inferred role: texture object; original member name unknown.
   grlib::CGLibTextureBuffer **unknown280; // Inferred role: default texture list; original member name unknown.
@@ -80,6 +84,8 @@ public:
   LayerObjResTex unknown2c0; // Inferred role: additional textures; original member name unknown.
 };
 
+static_assert(offsetof(LayerObjWork, unknown258) == 0x258, "");
+static_assert(offsetof(LayerObjWork, unknown268) == 0x268, "");
 static_assert(offsetof(LayerObjWork, unknown270) == 0x270, "");
 static_assert(offsetof(LayerObjWork, unknown278) == 0x278, "");
 static_assert(offsetof(LayerObjWork, unknown280) == 0x280, "");

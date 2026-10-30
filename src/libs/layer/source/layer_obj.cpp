@@ -39,6 +39,54 @@ const LayerResColor *getColorParm(const LayerObj *layer, u32 flag) {
 
 } // namespace
 
+LayerObj::LayerObj() {
+  unknownc3 = 0;
+  unknownc4 = 5;
+  unknownc5 = 5;
+  unknownc6 = 3;
+  unknowna8 = 0x80;
+  for (s32 i = 0; i < 2; i++) {
+    unknowna0[i] = 0;
+  }
+  unknownc0 = 0;
+  for (s32 i = 0; i < 2; i++) {
+    unknown1d8[i] = 0;
+  }
+  unknownb8 = nullptr;
+  unknown220[0] = unknown220[1] = unknown220[2] = nullptr;
+  for (s32 i = 0; i < 3; i++) {
+    LayerResParmInfo &parm = unknownc8[i];
+    parm.unknown00.unknown00 = parm.unknown00.unknown04 = 0.0f;
+    parm.unknown00.unknown0c = parm.unknown00.unknown10 = 1.0f;
+    parm.unknown00.unknown08 = 0.0f;
+    parm.unknown00.unknown14 = parm.unknown00.unknown18 = 0.0f;
+    parm.unknown1c.unknown00 = mm::Col4(1.0f, 1.0f, 1.0f, 1.0f);
+    parm.unknown1c.unknown10 = mm::Col3(0.0f, 0.0f, 0.0f);
+  }
+  unknownb0 = 0;
+  unknown208[0] = unknown208[1] = unknown208[2] = nullptr;
+  unknown1f4 = unknown1f8 = 1.0f;
+  unknown1fc = 0.0f;
+  unknown200 = 0.0f;
+  unknown180 = unknown184 = unknown188 = unknown18c = 1.0f;
+  unknown190 = 0;
+  unknown192 = 0;
+  unknown194 = unknown196 = 1;
+  unknown198 = 0;
+  unknown170 = 1.0f;
+  unknown174 = 1.0f;
+  unknown178 = mm::Pnt<f32>(0.0f, 0.0f);
+  unknown20[0] = mm::Mat44::identity;
+  unknown20[1] = mm::Mat44::identity;
+  unknownc2 = 0;
+  unknown19c[2].unknown00 = mm::Pnt<f32>(0.0f, 0.0f);
+  unknown248 = nullptr;
+  unknown240 = nullptr;
+  unknown238 = nullptr;
+  unknown19c[2].unknown08 = unknown19c[2].unknown0c = 1.0f;
+  unknown19c[2].unknown10 = 0.0f;
+}
+
 void LayerObj::resourceInit() {}
 
 void LayerObj::applyPartsSetup() {}
@@ -185,8 +233,8 @@ void LayerObj::setMatrix(const mm::Mat44 &matrix) {
 
 void LayerObj::setUVParams(f32 u, f32 v, f32 scaleU, f32 scaleV, f32 rot) {
   LayerResUvParam &uvParam = unknown19c[LayerManager::s_nStkIdx];
-  uvParam.unknown00 = u;
-  uvParam.unknown04 = v;
+  uvParam.unknown00.x = u;
+  uvParam.unknown00.y = v;
   uvParam.unknown08 = scaleU;
   uvParam.unknown0c = scaleV;
   uvParam.unknown10 = rot;
@@ -248,10 +296,10 @@ bool LayerObj::isClip() const {
   if (unknown174 <= 0.0f) {
     return true;
   }
-  if (unknown178 >= 1.0f) {
+  if (unknown178.x >= 1.0f) {
     return true;
   }
-  return unknown17c >= 1.0f;
+  return unknown178.y >= 1.0f;
 }
 
 bool LayerObj::isDisp() const { return (unknowna8 & 0x20000) != 0; }
@@ -339,6 +387,8 @@ f32 LayerObj::getSecondTexBlend() const {
 
   return 0.0f;
 }
+
+LayerActBase::LayerActBase() : unknown250(nullptr) {}
 
 void LayerActBase::updatePartsAction(const LyrActionData *action) {}
 

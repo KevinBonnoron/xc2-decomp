@@ -6,6 +6,8 @@
 
 namespace layer {
 
+LayerObjDraw::LayerObjDraw() {}
+
 void LayerObjDraw::renderMesh(grlib::CGLibDblUniformBlock *uniform, const LyrMeshData *mesh) {
   u32 count = mesh->unknown1a;
   if (count != 0) {

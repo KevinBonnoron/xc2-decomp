@@ -1,7 +1,7 @@
 #pragma once
 #include <stddef.h>
 
-#include "layer/layer_obj_work.h"
+#include "layer/layer_act_def.h"
 #include "types.h"
 
 namespace layer {
@@ -19,8 +19,10 @@ struct LyrPlaceData {
 static_assert(offsetof(LyrPlaceData, unknown28) == 0x28, "");
 static_assert(offsetof(LyrPlaceData, unknown30) == 0x30, "");
 
-class LayerObjPlace : public LayerObjWork {
+// Evidence: the vtable holds LayerActDef::updatePartsAction.
+class LayerObjPlace : public LayerActDef {
 public:
+  LayerObjPlace();
   void updatePlace();
   f32 updateGblFrm();
   void calcNodePos(f32 frame);

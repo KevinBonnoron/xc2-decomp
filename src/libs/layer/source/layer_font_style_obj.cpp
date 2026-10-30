@@ -51,7 +51,6 @@ const char *LayerFontStyleObj::getStyleName(u32 index) const { return static_cas
 const char *LayerFontStyleObj::getFontName(u32 index) const { return static_cast<const char *>(unknown20) + unknown30[index].unknown08; }
 
 LayerFontStyleObj::LayerFontStyleObj(LayerFontManager *manager) {
-  unknown1c = 0xcc;
   unknown38 = manager;
   unknown18 = LAYER_OBJ_TYPE_FONT_STYLE;
   unknown40 = RUBY_SCALE;

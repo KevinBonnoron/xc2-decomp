@@ -1,8 +1,21 @@
 #include "layer/layer_obj_list.h"
 
 #include "layer/layer_manager.h"
+#include "layer/layer_obj.h"
+#include "types.h"
 
 namespace layer {
+
+LayerObjList::LayerObjList() {
+  unknown258.unknown00 = nullptr;
+  unknown258.unknown08 = nullptr;
+  unknown258.unknown10 = 0;
+  for (s32 i = 0; i < 2; i++) {
+    unknown270[i].unknown00 = nullptr;
+    unknown270[i].unknown08 = nullptr;
+    unknown270[i].unknown10 = 0;
+  }
+}
 
 void LayerObjList::workListRelease() {
   unknown258.unknown003();

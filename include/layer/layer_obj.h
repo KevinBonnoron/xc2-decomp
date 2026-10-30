@@ -8,6 +8,7 @@
 #include "mm_math/mm_col3.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_mat44.h"
+#include "mm_math/mm_pnt.h"
 #include "types.h"
 
 namespace grlib {
@@ -50,17 +51,17 @@ struct LayerResParmInfo {
 static_assert(sizeof(LayerResParmInfo) == 0x38, "");
 
 struct LayerResUvParam {
-  f32 unknown00; // Inferred role: u; original member name unknown.
-  f32 unknown04; // Inferred role: v; original member name unknown.
-  f32 unknown08; // Inferred role: scale u; original member name unknown.
-  f32 unknown0c; // Inferred role: scale v; original member name unknown.
-  f32 unknown10; // Inferred role: rot; original member name unknown.
+  mm::Pnt<f32> unknown00; // Inferred role: u and v; original member name unknown.
+  f32 unknown08;          // Inferred role: scale u; original member name unknown.
+  f32 unknown0c;          // Inferred role: scale v; original member name unknown.
+  f32 unknown10;          // Inferred role: rot; original member name unknown.
 };
 
 static_assert(sizeof(LayerResUvParam) == 0x14, "");
 
 class LayerObj : public LayerBase {
 public:
+  LayerObj();
   virtual void resourceInit();
   virtual void setDrawList(LayerSortMan *sortMan, bool is3D) = 0;
   virtual void applyPartsSetup();
@@ -117,12 +118,11 @@ public:
     unknowna0[index] &= ~flags;
   }
 
-  u8 unknown1c; // Inferred role: state marker set by release; original member name unknown.
-  u8 _1d[0x20 - 0x1d];
   mm::Mat44 unknown20[2]; // Inferred role: matrices; original member name unknown.
   u32 unknowna0[2];       // Inferred role: state flags; original member name unknown.
   u32 unknowna8;          // Inferred role: flags; original member name unknown.
-  u8 _ac[0xb8 - 0xac];
+  u8 _ac[0xb0 - 0xac];
+  u64 unknownb0;                 // Inferred role: cleared by the constructor; original member name unknown.
   const void *unknownb8;         // Inferred role: res data; original member name unknown.
   u16 unknownc0;                 // Inferred role: priority; original member name unknown.
   u8 unknownc2;                  // Inferred role: matrix idx; original member name unknown.
@@ -133,8 +133,7 @@ public:
   LayerResParmInfo unknownc8[3]; // Inferred role: parms; original member name unknown.
   f32 unknown170;                // Inferred role: clip value; original member name unknown.
   f32 unknown174;                // Inferred role: clip value; original member name unknown.
-  f32 unknown178;                // Inferred role: clip value; original member name unknown.
-  f32 unknown17c;                // Inferred role: clip value; original member name unknown.
+  mm::Pnt<f32> unknown178;       // Inferred role: clip values; original member name unknown.
   f32 unknown180;                // Inferred role: width; original member name unknown.
   f32 unknown184;                // Inferred role: height; original member name unknown.
   f32 unknown188;                // Inferred role: scale; original member name unknown.
@@ -159,10 +158,10 @@ public:
   const LayerObjTopMaskObj *unknown248;    // Inferred role: mask object used for rendering; original member name unknown.
 };
 
-static_assert(offsetof(LayerObj, unknown1c) == 0x1c, "");
 static_assert(offsetof(LayerObj, unknown20) == 0x20, "");
 static_assert(offsetof(LayerObj, unknowna0) == 0xa0, "");
 static_assert(offsetof(LayerObj, unknowna8) == 0xa8, "");
+static_assert(offsetof(LayerObj, unknownb0) == 0xb0, "");
 static_assert(offsetof(LayerObj, unknownb8) == 0xb8, "");
 static_assert(offsetof(LayerObj, unknownc0) == 0xc0, "");
 static_assert(offsetof(LayerObj, unknownc2) == 0xc2, "");
@@ -172,7 +171,7 @@ static_assert(offsetof(LayerObj, unknownc5) == 0xc5, "");
 static_assert(offsetof(LayerObj, unknownc6) == 0xc6, "");
 static_assert(offsetof(LayerObj, unknownc8) == 0xc8, "");
 static_assert(offsetof(LayerObj, unknown170) == 0x170, "");
-static_assert(offsetof(LayerObj, unknown17c) == 0x17c, "");
+static_assert(offsetof(LayerObj, unknown178) == 0x178, "");
 static_assert(offsetof(LayerObj, unknown180) == 0x180, "");
 static_assert(offsetof(LayerObj, unknown188) == 0x188, "");
 static_assert(offsetof(LayerObj, unknown198) == 0x198, "");

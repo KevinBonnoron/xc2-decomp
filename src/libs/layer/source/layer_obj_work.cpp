@@ -10,6 +10,22 @@
 
 namespace layer {
 
+LayerObjWork::LayerObjWork() : unknown258(0), unknown268(0) {
+  unknown2ac = 0;
+  unknown278 = nullptr;
+  unknown270 = nullptr;
+  unknown298 = nullptr;
+  unknown290 = nullptr;
+  unknown2a0 = 1.0f;
+  unknown2a4 = 0;
+  unknown2a6 = 0;
+  unknown2a8 = 0;
+  unknown2b8 = 0;
+  unknown280 = nullptr;
+  unknown288 = 0;
+  unknown2b0 = nullptr;
+}
+
 f32 LayerObjWork::getMaxSecond() const { return unknown298->unknown00->unknown18 * unknown298->unknown00->unknown1c * LayerManager::get()->unknown7c; }
 
 f32 LayerObjWork::getSecond() const { return unknown2b0->unknown00 * LayerManager::get()->unknown7c; }

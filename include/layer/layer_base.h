@@ -22,7 +22,7 @@ enum LAYER_TYPE {
 
 class LayerBase {
 public:
-  LayerBase() : unknown08(nullptr), unknown10(nullptr) {}
+  LayerBase() : unknown08(nullptr), unknown10(nullptr), unknown1c(0xcc) {}
   virtual ~LayerBase() {}
   virtual void release();
 
@@ -85,11 +85,13 @@ public:
   LayerBase *unknown08; // Inferred role: previous node; original member name unknown.
   LayerBase *unknown10; // Inferred role: next node; original member name unknown.
   int unknown18;        // Inferred role: type; original member name unknown.
+  u8 unknown1c;         // Inferred role: state, 0xcc once constructed and 0x22 once released; original member name unknown.
 };
 
 static_assert(offsetof(LayerBase, unknown08) == 0x08, "");
 static_assert(offsetof(LayerBase, unknown10) == 0x10, "");
 static_assert(offsetof(LayerBase, unknown18) == 0x18, "");
+static_assert(offsetof(LayerBase, unknown1c) == 0x1c, "");
 static_assert(sizeof(LayerBase::unknown001) == 0x18, "");
 
 } // namespace layer

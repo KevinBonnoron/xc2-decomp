@@ -6,6 +6,7 @@ namespace layer {
 
 class LayerActDef : public LayerObjWork {
 public:
+  LayerActDef();
   u32 calcDefActionWorkSize(const u8 *data);
   void setupDefAction(u8 *work, const u8 *data);
   bool actcmd_iconnum(const u8 *&cmd);

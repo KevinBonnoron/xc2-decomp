@@ -48,6 +48,7 @@ static_assert(sizeof(unknown084) == 0x30, "");
 
 class LayerActBase : public LayerObj {
 public:
+  LayerActBase();
   virtual void updatePartsAction(const LyrActionData *action);
   void setupAction(u8 *work, const u8 *data);
   void startSetupAction();
