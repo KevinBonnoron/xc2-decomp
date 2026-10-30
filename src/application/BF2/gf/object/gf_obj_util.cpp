@@ -271,7 +271,11 @@ void GfObjUtil::setEnableLipSync(GF_OBJ_HANDLE *handle, bool isEnable) {
 }
 
 u32 GfObjUtil::getEyeIKType(GF_OBJ_HANDLE *handle) {
-  GfComIK *ik = unknown001(handle);
+  GfObj *obj = getObj(handle);
+  if (obj == nullptr) {
+    return 0;
+  }
+  GfComIK *ik = obj->getComponent<GfComIK>();
   if (ik != nullptr) {
     u32 index = unknown002_6;
     if (ik->unknown10.unknown10[unknown002_6].get() == nullptr) {

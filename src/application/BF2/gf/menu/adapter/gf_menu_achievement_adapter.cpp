@@ -440,7 +440,11 @@ bool GfMenuAchievementAdapter::update_AchievementReleaseFlagDisp() {
   if (release == 0) {
     return false;
   }
-  return (release == 4 || release == 5) != (unknown58 == 0);
+  bool released = release == 4 || release == 5;
+  if (unknown58 == 0) {
+    return !released;
+  }
+  return released;
 }
 
 } // namespace gf

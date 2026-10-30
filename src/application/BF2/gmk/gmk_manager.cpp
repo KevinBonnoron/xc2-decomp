@@ -405,8 +405,10 @@ IGmkList *GmkSet::getGmkList(GmkType type) { return unknown1b8[type]; }
 
 void GmkSetOfSalvageChildren::createGmkLists(int gmkSetId) {
   for (int i = 0; i < GMK_TYPE_NUM; i++) {
-    delete unknown1b8[i];
-    unknown1b8[i] = nullptr;
+    if (unknown1b8[i] != nullptr) {
+      delete unknown1b8[i];
+      unknown1b8[i] = nullptr;
+    }
   }
   u8 *bdat = GmkManager::get()->unknown190;
   if (Bdat::getMember(bdat, "salvage") == nullptr) {
@@ -485,8 +487,10 @@ bool GmkSet::createMapBdat(int map) {
 void GmkSet::createGmkLists(int gmkSetId) {
   unknown178.setUpdateNpcNumPerFrame(32);
   for (int i = 0; i < GMK_TYPE_NUM; i++) {
-    delete unknown1b8[i];
-    unknown1b8[i] = nullptr;
+    if (unknown1b8[i] != nullptr) {
+      delete unknown1b8[i];
+      unknown1b8[i] = nullptr;
+    }
   }
   unknown1b8[GMK_TYPE_ENEMY] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkEnemyList(32);
   unknown1b8[GMK_TYPE_ROUTED_ENEMY] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkRoutedEnemyList(8);

@@ -10,7 +10,7 @@
 namespace mm {
 
 const f32 DEG_TO_RAD = 0.017453292f;
-const f32 RAD_TO_DEG = 57.29578f;
+const f32 RAD_TO_DEG = 180.0f / 3.1415927f;
 
 template <typename T> T clamp(T value, T mi, T ma) {
   MM_ASSERT(mi <= ma);

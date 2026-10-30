@@ -56,22 +56,22 @@ void GfFieldEnemySensor::createByGmkBattleLock() {
 }
 
 void GfFieldEnemySensor::enter(const EnterInfo &info) {
-  if (unknown88.get() != info.object) {
-    if (unknowna0.get() == info.object) {
-      unknownac = true;
-    }
-  } else {
+  if (unknown88.get() == info.object) {
     unknown98 = true;
+    return;
+  }
+  if (unknowna0.get() == info.object) {
+    unknownac = true;
   }
 }
 
 void GfFieldEnemySensor::leave(const LeaveInfo &info) {
-  if (unknown88.get() != info.object) {
-    if (unknowna0.get() == info.object) {
-      unknownac = false;
-    }
-  } else {
+  if (unknown88.get() == info.object) {
     unknown98 = false;
+    return;
+  }
+  if (unknowna0.get() == info.object) {
+    unknownac = false;
   }
 }
 

@@ -54,12 +54,16 @@ void RenderGrObj::draw_capture() {
 
 u32 RenderGrObj::changeShader(u32 type, bool isSimple) {
   if (isSimple) {
-    if (type == 8) {
-      return 7;
-    } else if (type == 3) {
-      return 4;
-    } else if (type == 6) {
-      return 5;
+    switch (type) {
+    case 3:
+      type = 4;
+      break;
+    case 6:
+      type = 5;
+      break;
+    case 8:
+      type = 7;
+      break;
     }
   }
   return type;

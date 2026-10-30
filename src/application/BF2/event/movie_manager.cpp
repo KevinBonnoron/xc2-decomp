@@ -59,8 +59,8 @@ void MovieManager::close() {
   if (unknown10 & FLAG_OPEN) {
     gf::GfMovieManager::get()->stop();
     gf::GfMovieManager::get()->close();
-    unknown10 &= ~(FLAG_OPEN | FLAG_CLOSE_WAIT);
   }
+  unknown10 &= ~(FLAG_OPEN | FLAG_CLOSE_WAIT);
 }
 
 void MovieManager::captureScreen(bool isCapture) {
@@ -148,6 +148,8 @@ void MovieManager::play(const char *path, bool isFullSize, bool isAutoStop) {
   if (!isFullSize) {
     unknown228 = 1;
     unknown10 |= FLAG_DISP_REQUEST | FLAG_DISP_WAIT;
+  } else {
+    dispOff();
   }
 }
 

@@ -146,7 +146,13 @@ void CommonResource::update() {
         return;
       }
 
-      if (unknownb8->unknownd0 != -2 && unknownb8->isExist()) {
+      if (unknownb8->unknownd0 == -2) {
+        unknownb8->Release();
+        unknownb8 = nullptr;
+        break;
+      }
+
+      if (unknownb8->isExist()) {
         unknownb8->unknownf0 = false;
         if (unknown10.isValid()) {
           unknownc0 = AssetData::AssignFromMemory(unknown10, unknownb8->unknownc8, unknownb8->unknownd0, unknownb8->unknown0c.c_str(), unknownb8->unknowne0);

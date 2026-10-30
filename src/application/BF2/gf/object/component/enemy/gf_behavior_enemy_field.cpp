@@ -124,22 +124,20 @@ void GfBehaviorEnemyField::createSquadNavi() {
   gmk::AGmkBase *gmkInst = gmk::getBindedGmkInst(unknown10);
   if (gmkInst != nullptr) {
     gmk::GmkSquadNavi::CreateInfo info;
-    gmk::GmkSquad *squad = nullptr;
     switch (gmkInst->getGmkType()) {
     case gmk::GMK_TYPE_ENEMY:
-      squad = static_cast<gmk::GmkEnemy *>(gmkInst)->unknown48.unknown150;
+      info.unknown00 = static_cast<gmk::GmkEnemy *>(gmkInst)->unknown48.unknown150;
       break;
     case gmk::GMK_TYPE_ROUTED_ENEMY:
-      squad = static_cast<gmk::GmkRoutedEnemy *>(gmkInst)->unknown50.unknown150;
+      info.unknown00 = static_cast<gmk::GmkRoutedEnemy *>(gmkInst)->unknown50.unknown150;
       break;
     default:
       break;
     }
-    info.unknown00 = squad;
     GF_OBJ_HANDLE *handle = unknown10;
     info.unknown08 = handle;
     GfObjUtil::getObjSetup<GfObjSetupEnemy>(handle);
-    if (squad != nullptr && handle != INVALID_HANDLE) {
+    if (info.unknown00 != nullptr && info.unknown08 != INVALID_HANDLE) {
       unknown50.create(info);
     }
   }

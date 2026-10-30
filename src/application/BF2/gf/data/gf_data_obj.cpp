@@ -849,8 +849,11 @@ u32 DataObjBlade::getEquipWeapon(bool isVirtual, int) const { return get(isVirtu
 u32 DataObjDriver::getWeaponType(bool isVirtual, int slot) const {
   u32 blade = getBlade(isVirtual, slot);
   GfObjSetup *setup = GfObjUtil::getObjSetup(unknown18);
-  if (setup != nullptr && setup->unknown54 && setup->unknown58 != 0) {
-    blade = setup->unknown58;
+  if (setup != nullptr) {
+    u32 fixedBlade = setup->unknown54 ? setup->unknown58 : 0;
+    if (fixedBlade != 0) {
+      blade = fixedBlade;
+    }
   }
 
   if (blade == 0) {
@@ -888,8 +891,11 @@ u32 DataObjDriver::getAttribute(bool isVirtual, int slot) const {
 
   u32 blade = slot >= 0 ? unknown10->unknown26[slot] : 0;
   GfObjSetup *setup = GfObjUtil::getObjSetup(unknown18);
-  if (setup != nullptr && setup->unknown54 && setup->unknown58 != 0) {
-    blade = setup->unknown58;
+  if (setup != nullptr) {
+    u32 fixedBlade = setup->unknown54 ? setup->unknown58 : 0;
+    if (fixedBlade != 0) {
+      blade = fixedBlade;
+    }
   }
 
   DataObjBlade dataObjBlade(blade);
@@ -1565,11 +1571,7 @@ u32 DataObjEnemy::getGoldDivideRev() const { return GfBdatRsc::get()->getRscEnGo
 const SDataEnemy *DataObjEnemy::getSDataEnemy() const { return m_SDataEnemy; }
 
 bool DataObjEnemy::isDispInitExtraParts(u32 part) const {
-  if (m_SDataEnemy == nullptr) {
-    return true;
-  }
-
-  if (m_SDataEnemy->unknown42 != 0 && (m_SDataEnemy->unknown42 & 1 << part) != 0) {
+  if (m_SDataEnemy != nullptr && m_SDataEnemy->unknown42 != 0 && (m_SDataEnemy->unknown42 & 1 << part) != 0) {
     return true;
   }
 

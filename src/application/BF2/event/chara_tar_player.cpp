@@ -193,6 +193,7 @@ void CharaTarPlayerMot::setEnable(bool isEnable, f32 frame, bool isNoSpine) {
     } else {
       unknown1c = REQUEST_ENABLE;
       unknown20 = frame;
+      this->unknown24 = isNoSpine;
     }
   } else {
     unknown1c = REQUEST_DISABLE;

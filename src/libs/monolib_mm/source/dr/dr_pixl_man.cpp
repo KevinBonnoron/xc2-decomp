@@ -504,9 +504,7 @@ void DrPixlMan::setMainSRGBAfterRenderTarget() {}
 
 void DrPixlMan::changeColorBuff() {
   unknown7f0->unknown138->setColorInvalidate();
-  if (unknown7f0->unknown138 == unknown7f0->unknown130) {
-    unknown7f0->unknown138 = unknown7f0->unknown140;
-  }
+  unknown7f0->unknown138 = unknown7f0->unknown138 == unknown7f0->unknown130 ? unknown7f0->unknown140 : unknown7f0->unknown130;
 }
 
 void DrPixlMan::changeHDRBuff(DrPixlRenderTarget *hdrBuff) {

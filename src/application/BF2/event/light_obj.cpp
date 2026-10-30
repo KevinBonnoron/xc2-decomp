@@ -11,12 +11,11 @@
 #include "ml/scn.h"
 #include "ml/scn_obj_light.h"
 #include "mm_math/mm_col4.h"
+#include "mm_math/mm_math.h"
 #include "mm_math/mm_rect.h"
 #include "mm_mtl/singleton.h"
 
 namespace event {
-
-constexpr f32 RADIAN_TO_DEGREE = 57.29578f;
 
 LightObj::LightObj(int screenID) : unknown08(0), unknown10(nullptr), unknown18(screenID), unknowna0(nullptr), m_pos(mm::Vec3::zero), unknownc0(mm::Vec3::zero) {}
 
@@ -75,7 +74,7 @@ void LightObj::render(int x, int y) {
   fw::debug::drawFont(x + 100, y + 5, "life(%.2f)", unknowna8);
   fw::debug::drawFont(x + 10, y + 22, "file:    %s", mm::mtl::Singleton<Extend>::getPtr()->filename(unknown1c.c_str()));
   fw::debug::drawFont(x + 10, y + 37, "pos:     %.1f %.1f %.1f", m_pos.x, m_pos.y, m_pos.z);
-  fw::debug::drawFont(x + 10, y + 52, "rot:     %.1f %.1f %.1f", unknownc0.x * RADIAN_TO_DEGREE, unknownc0.y * RADIAN_TO_DEGREE, unknownc0.z * RADIAN_TO_DEGREE);
+  fw::debug::drawFont(x + 10, y + 52, "rot:     %.1f %.1f %.1f", unknownc0.x * mm::RAD_TO_DEG, unknownc0.y * mm::RAD_TO_DEG, unknownc0.z * mm::RAD_TO_DEG);
 }
 
 bool LightObj::isPlaying() const { return unknown10 != nullptr; }

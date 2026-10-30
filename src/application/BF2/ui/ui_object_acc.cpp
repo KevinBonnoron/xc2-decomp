@@ -891,12 +891,6 @@ UIShape *UIObjectAcc::getShape() {
   return polygon->unknown108;
 }
 
-void UIObjectAcc::setParicleActivate(bool activate) {
-  if (isShapeParticle()) {
-    castIfValid<UIShapeParticle>(getShape())->activate(activate);
-  }
-}
-
 bool UIObjectAcc::isParicleActivate() {
   UIShapeParticle *particle = castIfValid<UIShapeParticle>(getShape());
   if (particle == nullptr) {

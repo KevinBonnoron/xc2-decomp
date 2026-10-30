@@ -13,6 +13,7 @@
 #include "fw/fw_debug.h"
 #include "ml/dev_graph.h"
 #include "mm_math/mm_col4.h"
+#include "mm_math/mm_math.h"
 #include "mm_math/mm_rect.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/singleton.h"
@@ -29,8 +30,6 @@ bool CamManager::isOffscrMode() const { return (unknown10 & FLAG_OFFSCR_MODE) !=
 u32 CamManager::getOffscrID() const { return m_offscrID; }
 
 bool CamManager::isFreeCam() const { return (unknown14 & DISP_FLAG_FREE_CAM) != 0; }
-
-constexpr f32 RAD_TO_DEG = 57.29578f;
 
 CamManager::CamManager() : unknown10(0), unknown14(0), unknown88(nullptr), m_freeCam(false), m_offscrID(0) {}
 
@@ -113,7 +112,7 @@ void CamManager::render() {
       fw::debug::drawFont(labelX, y + 35, "tar:");
       fw::debug::drawFont(valueX, y + 35, "%.2f %.2f %.2f", target.x, target.y, target.z);
       fw::debug::drawFont(labelX, y + 50, "rot:");
-      fw::debug::drawFont(valueX, y + 50, "%.2f %.2f %.2f", rot.x * RAD_TO_DEG, rot.y * RAD_TO_DEG, rot.z * RAD_TO_DEG);
+      fw::debug::drawFont(valueX, y + 50, "%.2f %.2f %.2f", rot.x * mm::RAD_TO_DEG, rot.y * mm::RAD_TO_DEG, rot.z * mm::RAD_TO_DEG);
       if (isFocal) {
         fw::debug::drawFont(labelX, y + 65, "foc:");
         fw::debug::drawFont(valueX, y + 65, "%.2f", fov);

@@ -501,7 +501,7 @@ bool BattleGlobal::InputLeverGachaButton(LEVER_GACHA_DATA::BUTTON button) {
       if (i == button) {
         unknown5a88.unknown00[i] = 1.0f / 3.0f;
       } else {
-        unknown5a88.unknown00[i] -= 1.0f / 9.0f;
+        unknown5a88.unknown00[i] -= (1.0f / 3.0f) * (1.0f / 3.0f);
       }
     }
     unknown5a88.unknown15++;

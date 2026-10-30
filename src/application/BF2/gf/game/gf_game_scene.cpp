@@ -157,10 +157,11 @@ void unknown001(const DataParamAcc &paramAcc, bool isDead, bool isSwim) { // Inf
       const char *state = comAsm->getStateName(ANIM_LAYER_BASE);
       isDeadState = state != nullptr && strcmp(state, "S_dead") == 0;
     }
-    if (isDeadState) {
-      coli->setPriority(DEAD_COLI_PRIORITY);
-      coli->clearState(fw::COLI_STATE_ENABLE);
+    if (!isDeadState) {
+      return;
     }
+    coli->setPriority(DEAD_COLI_PRIORITY);
+    coli->clearState(fw::COLI_STATE_ENABLE);
   }
   if (priority != currentPriority && !isDead) {
     coli->setPriority(priority);

@@ -48,13 +48,17 @@ const char *LayerFontStyleObj::getStyleName(u32 index) const { return static_cas
 const char *LayerFontStyleObj::getFontName(u32 index) const { return static_cast<const char *>(unknown20) + unknown30[index].unknown08; }
 
 void LayerFontStyleObj::releaseColorInfo() {
-  delete unknown48;
-  unknown48 = nullptr;
+  if (unknown48 != nullptr) {
+    delete unknown48;
+    unknown48 = nullptr;
+  }
 }
 
 void LayerFontStyleObj::releaseIconInfo() {
-  delete unknown50;
-  unknown50 = nullptr;
+  if (unknown50 != nullptr) {
+    delete unknown50;
+    unknown50 = nullptr;
+  }
 }
 
 } // namespace layer

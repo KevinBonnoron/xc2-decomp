@@ -98,8 +98,10 @@ void LayerObjManager::allRelease() {
 
 LayerObjManager::~LayerObjManager() {
   allRelease();
-  delete unknown10;
-  unknown10 = nullptr;
+  if (unknown10 != nullptr) {
+    delete unknown10;
+    unknown10 = nullptr;
+  }
 }
 
 } // namespace layer

@@ -81,12 +81,13 @@ bool GmkMobInsts::isPopFinished() const {
 }
 
 bool GmkMobInsts::isValid() const {
+  bool valid = false;
   if (unknowna8 != nullptr) {
     if (unknown18.unknown04 == 0 || (unknownb0 != nullptr && unknownb0->isValid())) {
-      return true;
+      valid = true;
     }
   }
-  return false;
+  return valid;
 }
 
 bool GmkMobInsts::isGobInstExist() const {
@@ -247,12 +248,7 @@ void GmkMobInsts::dispose() {
   unknown00 = CreateInfo();
 }
 
-bool GmkMob::isValid() const {
-  if (AGmkBase::isValid() && unknown48.isValid()) {
-    return true;
-  }
-  return false;
-}
+bool GmkMob::isValid() const { return AGmkBase::isValid() && unknown48.isValid(); }
 
 void GmkMob::create(const CreateInfo &info) {
   if (info.unknown10 != nullptr) {

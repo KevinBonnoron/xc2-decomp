@@ -1246,7 +1246,11 @@ const char *GfAssetSetupNpc::getRetargetMotFile(GfAssetType type) {
 
 const char *GfAssetSetupNpc::getStpFile(GfAssetType type) {
   if (getAssetType() == type) {
-    return getValidName(GfDataNpc::getMotionName(unknown08));
+    const char *motion = GfDataNpc::getMotionName(unknown08);
+    if (motion != nullptr && *motion == '\0') {
+      motion = nullptr;
+    }
+    return motion;
   }
   return nullptr;
 }
@@ -1409,7 +1413,11 @@ const char *GfAssetSetupEventNpc::getEvtMotFile(GfAssetType type) {
 
 const char *GfAssetSetupEventNpc::getEvtStpFile(GfAssetType type) {
   if (getAssetType() == type) {
-    return getValidName(GfDataNpc::getMotionName(unknown08));
+    const char *motion = GfDataNpc::getMotionName(unknown08);
+    if (motion != nullptr && *motion == '\0') {
+      motion = nullptr;
+    }
+    return motion;
   }
   return nullptr;
 }
@@ -1679,13 +1687,6 @@ const char *GfAssetSetupGimmick::getEabFile(GfAssetType type) {
 const char *GfAssetSetupGimmick::getEfbFile(GfAssetType type) {
   if (type == ASSET_TYPE_OPTION) {
     return getEabFile(ASSET_TYPE_OPTION);
-  }
-  return nullptr;
-}
-
-const char *GfAssetSetupGimmick::getStpFile(GfAssetType type) {
-  if (getAssetType() == type) {
-    return getValidName(reinterpret_cast<const char *>(unknown18->getValCheck("Motion", unknown08, BDAT_TYPE_STRING)));
   }
   return nullptr;
 }

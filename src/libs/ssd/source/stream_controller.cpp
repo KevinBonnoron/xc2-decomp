@@ -91,12 +91,13 @@ u64 StreamController::SizeToReadPosition(u64 size) {
     return unknown35 * (size & ~0xfULL);
   }
   if (unknown34 == unknown001_4) {
+    int frame = 0;
     if (unknown40 != 0) {
-      int frame = size / unknown40;
-      int index = frame / unknown5c;
-      unknown1ec = index;
-      size = unknown1c0[index];
+      frame = size / unknown40;
     }
+    int index = frame / unknown5c;
+    unknown1ec = index;
+    size = unknown1c0[index];
   }
   return size;
 }

@@ -90,7 +90,10 @@ bool WinViewRoot::isInitialized() {
 }
 
 bool WinViewRoot::wkStandbyLogin() {
-  if (!Device::isAllReady() || !LibMain::isInitialized() || WorkRoot::isWinDestroy() || DevGraph::isIgnore() || DevGraph::getRootWidth() == 0) {
+  if (!Device::isAllReady() || !LibMain::isInitialized()) {
+    return false;
+  }
+  if (!WorkRoot::isWinDestroy() && !DevGraph::isIgnore() && DevGraph::getRootWidth() == 0) {
     return false;
   }
 

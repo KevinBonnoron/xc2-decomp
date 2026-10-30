@@ -28,8 +28,8 @@ void PluginManager::endSetup() {
       if (!unknown28[i]->onSetup(*unknown78)) {
         if (unknown28[i] != nullptr) {
           delete unknown28[i];
+          unknown28[i] = nullptr;
         }
-        unknown28[i] = nullptr;
       }
     }
   }
@@ -44,8 +44,8 @@ void PluginManager::cleanup() {
         unknown28[i]->onCleanup(*unknown78);
         if (unknown28[i] != nullptr) {
           delete unknown28[i];
+          unknown28[i] = nullptr;
         }
-        unknown28[i] = nullptr;
       }
     }
   }

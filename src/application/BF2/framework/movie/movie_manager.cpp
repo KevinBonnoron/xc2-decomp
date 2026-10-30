@@ -48,8 +48,8 @@ bool MovieManager::set_file(const char *path) {
 void MovieManager::stop() {
   if (unknown30 != nullptr) {
     unknown30->stop();
-    unknown38 = false;
   }
+  unknown38 = false;
 }
 
 f32 MovieManager::get_length() {

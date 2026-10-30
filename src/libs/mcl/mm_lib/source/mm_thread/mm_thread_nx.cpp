@@ -86,8 +86,8 @@ Thread *ThreadNx::create(mtl::IAllocator *pAllocator, const char *name, ThreadFu
   Thread *thread = static_cast<Thread *>(pAllocator->allocate(sizeof(ThreadNx), 8));
   if (thread != nullptr) {
     new (thread) ThreadNx(pAllocator, name, func, argument, stackSize, cpuId, threadPriority);
+    thread->addRef();
   }
-  thread->addRef();
   return thread;
 }
 

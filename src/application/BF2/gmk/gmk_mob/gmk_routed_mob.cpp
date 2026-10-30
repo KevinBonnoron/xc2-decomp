@@ -92,10 +92,7 @@ bool GmkRoutedMob::isValid() const {
   if (list->getInstNum() == 0) {
     return false;
   }
-  if (unknown50.isValid()) {
-    return true;
-  }
-  return false;
+  return unknown50.isValid();
 }
 
 void GmkRoutedMob::create(const CreateInfo &info) {

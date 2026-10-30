@@ -432,36 +432,22 @@ u32 GfDataBlade::getEndCommonBlade() { return BLADE_COMMON_END; }
 ActivateType GfDataBlade::getBladeActivateType(u32 blade) { return getBladeActivateType(*getSDataBlade(blade)); }
 
 ActivateType GfDataBlade::getBladeActivateType(const SDataBlade &dataBlade) {
-  if (dataBlade.unknown00 == BLADE_ACTIVATE_MERCENARY_TEAM) {
-    return ACTIVATE_TYPE_MERCENARY_TEAM;
-  }
-
   ActivateType activateType = ACTIVATE_TYPE_UNUSE;
-  if (dataBlade.unknown00 == BLADE_ACTIVATE_DRIVER) {
+  switch (dataBlade.unknown00) {
+  case BLADE_ACTIVATE_DRIVER:
     activateType = ACTIVATE_TYPE_RESERVER;
     if (dataBlade.unknown04 != 0) {
       activateType = ACTIVATE_TYPE_PARTY;
     }
+    break;
+  case BLADE_ACTIVATE_MERCENARY_TEAM:
+    activateType = ACTIVATE_TYPE_MERCENARY_TEAM;
+    break;
+  default:
+    break;
   }
 
   return activateType;
-}
-
-bool GfDataBlade::isBattleMember(u32 blade) {
-  if (blade == 0) {
-    return false;
-  }
-
-  u32 driver = getSDataBlade(blade)->unknown04;
-  if (driver == 0) {
-    return false;
-  }
-
-  if (GfDataDriver::getSDataDriver(driver)->unknown20 != 1) {
-    return false;
-  }
-
-  return static_cast<u32>(GfDataParty::getDriverPartyID(driver)) < 3;
 }
 
 void GfDataBlade::setKizunaringComplete(u32 blade) { getSDataBlade(blade)->unknown8a1 = 1; }

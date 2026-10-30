@@ -43,8 +43,10 @@ void OffscrManager::clear() {
     if (unknown10[i] != nullptr) {
       ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
       parmAcc.deleteAddRenderView(unknown10[i]);
-      delete unknown10[i];
-      unknown10[i] = nullptr;
+      if (unknown10[i] != nullptr) {
+        delete unknown10[i];
+        unknown10[i] = nullptr;
+      }
     }
   }
 }

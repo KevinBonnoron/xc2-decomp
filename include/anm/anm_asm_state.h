@@ -27,7 +27,7 @@ class Binding;
 
 inline f32 rand() {
   static mm::mtl::MTRand sRand(nn::os::GetSystemTick().GetInt64Value());
-  return sRand.generate() * (1.0 / 4294967296.0);
+  return sRand.generate() * (1.0 / 4294967295.0);
 }
 
 class AsmState : public ReferenceObject {

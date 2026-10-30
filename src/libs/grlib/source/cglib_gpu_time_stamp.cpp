@@ -47,6 +47,8 @@ void CGLibGpuTimeStamp::end() {
     } else {
       unknown00 = 0;
     }
+  } else {
+    unknown00 = 0;
   }
   unknown38[index].unknown10 = true;
 }

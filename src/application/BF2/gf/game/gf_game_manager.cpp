@@ -1039,18 +1039,20 @@ u8 GfGameManager::isPlayEventOK() {
   case PROPERTY_MOVE_WALK:
   case PROPERTY_MOVE_SWIM_ON_CLOUD:
   case 5: // Inferred role: move type that allows an event; original name unknown.
-    if (GfGameScene::get() == nullptr || !GfGameScene::get()->isControlFree()) {
-      return false;
-    }
-    if (GfGameState::getStateReserve() == GF_STATE_CONTROL) {
-      return true;
-    }
-    return GfGameState::getStateReserve() == GF_STATE_EVENT;
+    break;
   case PROPERTY_MOVE_SWIM:
     return property->unknown18->unknown7d;
   default:
     return false;
   }
+
+  if (GfGameScene::get() == nullptr || !GfGameScene::get()->isControlFree()) {
+    return false;
+  }
+  if (GfGameState::getStateReserve() == GF_STATE_CONTROL) {
+    return true;
+  }
+  return GfGameState::getStateReserve() == GF_STATE_EVENT;
 }
 
 void GfGameManager::callbackBladeActivateForGimmick() {

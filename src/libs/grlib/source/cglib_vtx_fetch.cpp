@@ -12,9 +12,11 @@ void CGLibVtxFetch::release() {
   if (unknown0a != 0) {
     if (unknown00 != nullptr) {
       mtl::MemManager::deallocate(unknown00, 0, false);
+      unknown00 = nullptr;
     }
+  } else {
+    unknown00 = nullptr;
   }
-  unknown00 = nullptr;
   unknown0a = 0;
 }
 

@@ -66,17 +66,18 @@ bool GfMenuElementComboAdapter::update_ComboRouteCurrentDisp() {
 
 GfObjPropertyEnemy *GfMenuElementComboAdapter::getTargetProperty() {
   GF_OBJ_HANDLE *handle = GfMenuManager::getTargetObjHandle();
-  if (handle != INVALID_HANDLE) {
-    GfObjAcc acc(handle);
-    if (acc.getType() == OBJECT_TYPE_ENEMY) {
-      GfObjProperty *property = GfObjUtil::getProperty(handle);
-      if (property == nullptr) {
-        return nullptr;
-      }
-      return property->getEnemy();
-    }
+  if (handle == INVALID_HANDLE) {
+    return nullptr;
   }
-  return nullptr;
+  GfObjAcc acc(handle);
+  if (acc.getType() != OBJECT_TYPE_ENEMY) {
+    return nullptr;
+  }
+  GfObjProperty *property = GfObjUtil::getProperty(handle);
+  if (property == nullptr) {
+    return nullptr;
+  }
+  return property->getEnemy();
 }
 
 u32 GfMenuElementComboAdapter::getTargetElementComboId() {
@@ -102,12 +103,10 @@ u32 GfMenuElementComboAdapter::ReferenceRouteConverter::getElementComboRouteNo()
 
 u32 GfMenuElementComboAdapter::ReferenceRouteConverter::getElementComboId() {
   const GfMenuReference::ElemComboRoot &root = GfMenuReference::getElementComboRootInfo(routeNo);
-  GfObjPropertyEnemy *enemy = getTargetProperty();
-  u32 id = 0;
-  if (enemy != nullptr && enemy->unknowndc != 0 && enemy->unknowne8 != 0) {
-    id = root.unknown00;
+  if (getTargetElementComboLv() != 0) {
+    return root.unknown00;
   }
-  return id;
+  return 0;
 }
 
 u32 GfMenuElementComboAdapter::TargetEnemyConverter::getElementComboRouteNo() { return ELEMENT_COMBO_ROUTE_NONE; }

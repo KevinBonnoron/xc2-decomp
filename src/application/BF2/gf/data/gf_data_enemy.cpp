@@ -186,11 +186,11 @@ const char *GfDataEnemy::getLoopEffect(u32 resource) {
   }
 
   const char *loopEffect = GfBdatRsc::get()->getRscEnLoopEffect(resource);
-  if (loopEffect != nullptr && loopEffect[0] == '\0') {
-    loopEffect = nullptr;
+  if (loopEffect == nullptr) {
+    return loopEffect;
   }
 
-  return loopEffect;
+  return loopEffect[0] == '\0' ? nullptr : loopEffect;
 }
 
 bool GfDataEnemy::isNamed(u32 arrange) {

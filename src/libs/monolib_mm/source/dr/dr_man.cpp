@@ -182,8 +182,10 @@ void DrMdlMan::addMpfObj() {
 
 void DrMdlMan::delMpfObj() {
   if (unknown020 != nullptr && unknown020->delMpfObj()) {
-    delete unknown020;
-    unknown020 = nullptr;
+    if (unknown020 != nullptr) {
+      delete unknown020;
+      unknown020 = nullptr;
+    }
   }
 }
 

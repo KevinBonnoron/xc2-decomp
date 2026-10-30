@@ -285,7 +285,7 @@ int Utility::GetTrustRank(int blade) { return gf::GfDataBlade::getTrustRank(blad
 
 bool Utility::IsEnableFieldBladeChange() {
   BattleCharacter *leader = CharacterManager::get()->GetCharacterConst(gf::GfGameManager::getPartyLeaderDriver());
-  if (leader == nullptr || !leader->IsBattle() || leader->unknown107c != BattleCharacter::ACTION_ID_PUT_AWAY_WEAPON) {
+  if (leader != nullptr && leader->IsBattle() && leader->unknown107c != BattleCharacter::ACTION_ID_PUT_AWAY_WEAPON) {
     return false;
   }
   return TalkManager::get()->IsEnableFieldBladeChange();

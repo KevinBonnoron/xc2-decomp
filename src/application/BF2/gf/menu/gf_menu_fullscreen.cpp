@@ -163,12 +163,13 @@ void GfMenuFullScreen::registLayerParam(u32 layer, const GfMenuTypes::Param &par
 
 bool GfMenuFullScreen::getLayerParam(u32 layer, GfMenuTypes::Param &param) {
   GfMenuFullScreen *fullScreen = get();
-  if (layer != 0 && fullScreen != nullptr) {
-    for (unknown003 *entry = fullScreen->unknown188.begin(); entry != fullScreen->unknown188.end(); entry++) {
-      if (entry->unknown00 == layer) {
-        param = entry->unknown08;
-        return true;
-      }
+  if (layer == 0 || fullScreen == nullptr) {
+    return false;
+  }
+  for (unknown003 *entry = fullScreen->unknown188.begin(); entry != fullScreen->unknown188.end(); entry++) {
+    if (entry->unknown00 == layer) {
+      param = entry->unknown08;
+      return true;
     }
   }
   return false;

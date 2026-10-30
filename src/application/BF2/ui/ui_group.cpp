@@ -49,8 +49,10 @@ void UIGroup::setup(u32 size) {
   if (size == 0) {
     return;
   }
-  delete unknown08;
-  unknown08 = nullptr;
+  if (unknown08 != nullptr) {
+    delete unknown08;
+    unknown08 = nullptr;
+  }
 // __LINE__ is the line argument of the operator new call.
 #line 60
   unknown08 = new (UIUtil::getProgAllocator(), 16, __FILE__, __LINE__) UIObjectList;

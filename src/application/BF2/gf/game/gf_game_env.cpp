@@ -264,8 +264,6 @@ void GfGameSpeed::setSpeed(GF_SPEED type, f32 speed) {
 f32 GfGameSpeed::getLayerSpeed(u32 layer) {
   GfGameSpeed *gameSpeed = get();
   switch (layer) {
-  case 0:
-    return gameSpeed->getSpeed(GF_SPEED_LAYER_0);
   case 1:
     return gameSpeed->getSpeed(GF_SPEED_LAYER_1);
   case 4:
@@ -274,6 +272,8 @@ f32 GfGameSpeed::getLayerSpeed(u32 layer) {
     return gameSpeed->getSpeed(GF_SPEED_LAYER_7);
   case 10:
     return gameSpeed->getSpeed(GF_SPEED_LAYER_10);
+  case 0:
+    return gameSpeed->getSpeed(GF_SPEED_LAYER_0);
   }
   return 1.0f;
 }
@@ -283,8 +283,6 @@ f32 GfGameSpeed::getSpeed(GF_SPEED type) { return unknown14[type].unknown04; }
 f32 GfGameSpeed::getOriginalLayerSpeed(u32 layer) {
   GfGameSpeed *gameSpeed = get();
   switch (layer) {
-  case 0:
-    return gameSpeed->getOriginalSpeed(GF_SPEED_LAYER_0);
   case 1:
     return gameSpeed->getOriginalSpeed(GF_SPEED_LAYER_1);
   case 4:
@@ -293,6 +291,8 @@ f32 GfGameSpeed::getOriginalLayerSpeed(u32 layer) {
     return gameSpeed->getOriginalSpeed(GF_SPEED_LAYER_7);
   case 10:
     return gameSpeed->getOriginalSpeed(GF_SPEED_LAYER_10);
+  case 0:
+    return gameSpeed->getOriginalSpeed(GF_SPEED_LAYER_0);
   }
   return 1.0f;
 }
