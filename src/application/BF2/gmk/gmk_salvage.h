@@ -101,8 +101,8 @@ public:
   f32 unknown64;                                          // Role and original member name unknown.
   mm::mtl::FixedVector<GmkSalvageLocator *, 3> unknown68; // Role and original member name unknown.
   mm::mtl::FixedVector<GmkSalvageLocator *, 3> unknown88; // Inferred role: treasure box locators; original member name unknown.
-  GmkSalvageLocator *unknownA8;                           // Role and original member name unknown.
-  mm::mtl::FixedVector<GmkSalvageLocator *, 3> unknownB0; // Inferred role: enemy locators; original member name unknown.
+  GmkSalvageLocator *unknowna8;                           // Role and original member name unknown.
+  mm::mtl::FixedVector<GmkSalvageLocator *, 3> unknownb0; // Inferred role: enemy locators; original member name unknown.
   u8 unknownd0;                                           // Role and original member name unknown.
   u8 unknownd1;                                           // Role and original member name unknown.
   u8 _d2[0xd8 - 0xd2];
@@ -120,8 +120,8 @@ static_assert(offsetof(GmkSalvage, unknown60) == 0x60, "");
 static_assert(offsetof(GmkSalvage, unknown64) == 0x64, "");
 static_assert(offsetof(GmkSalvage, unknown68) == 0x68, "");
 static_assert(offsetof(GmkSalvage, unknown88) == 0x88, "");
-static_assert(offsetof(GmkSalvage, unknownA8) == 0xa8, "");
-static_assert(offsetof(GmkSalvage, unknownB0) == 0xb0, "");
+static_assert(offsetof(GmkSalvage, unknowna8) == 0xa8, "");
+static_assert(offsetof(GmkSalvage, unknownb0) == 0xb0, "");
 static_assert(offsetof(GmkSalvage, unknownd0) == 0xd0, "");
 static_assert(offsetof(GmkSalvage, unknownd1) == 0xd1, "");
 static_assert(offsetof(GmkSalvage, unknownd8) == 0xd8, "");
@@ -193,32 +193,32 @@ public:
 
   void (GmkSalvageLocator::*unknown48)(f32); // Inferred role: sequence; original member name unknown.
   u8 _58[0xc0 - 0x58];
-  gf::GF_OBJ_HANDLE *unknownC0; // Inferred role: game object; original member name unknown.
-  u8 unknownC8;                 // Role and original member name unknown.
+  gf::GF_OBJ_HANDLE *unknownc0; // Inferred role: game object; original member name unknown.
+  u8 unknownc8;                 // Role and original member name unknown.
   u8 _c9[0xd0 - 0xc9];
-  GmkSalvage *unknownD0; // Inferred role: owner salvage, set by GmkSalvage; original member name unknown.
-  f32 unknownD8;         // Role and original member name unknown.
-  f32 unknownDC;         // Role and original member name unknown.
-  mutable f32 unknownE0; // Role and original member name unknown.
-  mutable u32 unknownE4; // Role and original member name unknown.
-  int unknownE8;         // Role and original member name unknown.
-  int unknownEC;         // Role and original member name unknown.
-  s8 unknownF0;          // Role and original member name unknown.
-  bool unknownF1;        // Role and original member name unknown.
-  bool unknownF2;        // Role and original member name unknown.
+  GmkSalvage *unknownd0; // Inferred role: owner salvage, set by GmkSalvage; original member name unknown.
+  f32 unknownd8;         // Role and original member name unknown.
+  f32 unknowndc;         // Role and original member name unknown.
+  mutable f32 unknowne0; // Role and original member name unknown.
+  mutable u32 unknowne4; // Role and original member name unknown.
+  int unknowne8;         // Role and original member name unknown.
+  int unknownec;         // Role and original member name unknown.
+  s8 unknownf0;          // Role and original member name unknown.
+  bool unknownf1;        // Role and original member name unknown.
+  bool unknownf2;        // Role and original member name unknown.
   u8 _f3[0x100 - 0xf3];
 };
 
 static_assert(offsetof(GmkSalvageLocator, unknown48) == 0x48, "");
-static_assert(offsetof(GmkSalvageLocator, unknownC0) == 0xc0, "");
-static_assert(offsetof(GmkSalvageLocator, unknownC8) == 0xc8, "");
-static_assert(offsetof(GmkSalvageLocator, unknownD0) == 0xd0, "");
-static_assert(offsetof(GmkSalvageLocator, unknownD8) == 0xd8, "");
-static_assert(offsetof(GmkSalvageLocator, unknownE0) == 0xe0, "");
-static_assert(offsetof(GmkSalvageLocator, unknownE8) == 0xe8, "");
-static_assert(offsetof(GmkSalvageLocator, unknownF0) == 0xf0, "");
-static_assert(offsetof(GmkSalvageLocator, unknownF1) == 0xf1, "");
-static_assert(offsetof(GmkSalvageLocator, unknownF2) == 0xf2, "");
+static_assert(offsetof(GmkSalvageLocator, unknownc0) == 0xc0, "");
+static_assert(offsetof(GmkSalvageLocator, unknownc8) == 0xc8, "");
+static_assert(offsetof(GmkSalvageLocator, unknownd0) == 0xd0, "");
+static_assert(offsetof(GmkSalvageLocator, unknownd8) == 0xd8, "");
+static_assert(offsetof(GmkSalvageLocator, unknowne0) == 0xe0, "");
+static_assert(offsetof(GmkSalvageLocator, unknowne8) == 0xe8, "");
+static_assert(offsetof(GmkSalvageLocator, unknownf0) == 0xf0, "");
+static_assert(offsetof(GmkSalvageLocator, unknownf1) == 0xf1, "");
+static_assert(offsetof(GmkSalvageLocator, unknownf2) == 0xf2, "");
 static_assert(sizeof(GmkSalvageLocator) == 0x100, "");
 
 class GmkSalvageLocatorList : public TGmkList<GmkSalvageLocator, GmkSalvageLocator::BdatInfo, 0x434c4c53, 1, GmkSalvageLocatorGob> {

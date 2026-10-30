@@ -56,18 +56,18 @@ public:
   InOutDoorCond unknown70;           // Inferred role: indoor and outdoor cond; original member name unknown.
   CloudCond unknown80;               // Inferred role: cloud sea cond; original member name unknown.
   void (GmkEffect::*unknown90)(f32); // Inferred role: sequence; original member name unknown.
-  void *unknownA0;                   // Role and original member name unknown.
-  bool unknownA8;                    // Role and original member name unknown.
+  void *unknowna0;                   // Role and original member name unknown.
+  bool unknowna8;                    // Role and original member name unknown.
   u8 _a9[0xac - 0xa9];
-  u32 unknownAC;  // Role and original member name unknown.
-  bool unknownB0; // Role and original member name unknown.
+  u32 unknownac;  // Role and original member name unknown.
+  bool unknownb0; // Role and original member name unknown.
   u8 _b1[0xb8 - 0xb1];
   u64 unknownB8_0 : 1;  // Role and original member name unknown.
   u64 unknownB8_1 : 1;  // Inferred role: can pop; original member name unknown.
   u64 unknownB8_2 : 1;  // Inferred role: can depop; original member name unknown.
   u64 unknownB8_3 : 61; // Role and original member name unknown.
-  bool unknownC0;       // Role and original member name unknown.
-  bool unknownC1;       // Inferred role: fade out inst; original member name unknown.
+  bool unknownc0;       // Role and original member name unknown.
+  bool unknownc1;       // Inferred role: fade out inst; original member name unknown.
   u8 _c2[0xc8 - 0xc2];
 };
 
@@ -78,12 +78,12 @@ static_assert(offsetof(GmkEffect, unknown60) == 0x60, "");
 static_assert(offsetof(GmkEffect, unknown70) == 0x70, "");
 static_assert(offsetof(GmkEffect, unknown80) == 0x80, "");
 static_assert(offsetof(GmkEffect, unknown90) == 0x90, "");
-static_assert(offsetof(GmkEffect, unknownA0) == 0xa0, "");
-static_assert(offsetof(GmkEffect, unknownA8) == 0xa8, "");
-static_assert(offsetof(GmkEffect, unknownAC) == 0xac, "");
-static_assert(offsetof(GmkEffect, unknownB0) == 0xb0, "");
-static_assert(offsetof(GmkEffect, unknownC0) == 0xc0, "");
-static_assert(offsetof(GmkEffect, unknownC1) == 0xc1, "");
+static_assert(offsetof(GmkEffect, unknowna0) == 0xa0, "");
+static_assert(offsetof(GmkEffect, unknowna8) == 0xa8, "");
+static_assert(offsetof(GmkEffect, unknownac) == 0xac, "");
+static_assert(offsetof(GmkEffect, unknownb0) == 0xb0, "");
+static_assert(offsetof(GmkEffect, unknownc0) == 0xc0, "");
+static_assert(offsetof(GmkEffect, unknownc1) == 0xc1, "");
 static_assert(sizeof(GmkEffect) == 0xc8, "");
 
 typedef TGmkList<GmkEffect, GmkEffect::BdatInfo, 0x54434645, 8, GmkEffectGobCustom> GmkEffectList;

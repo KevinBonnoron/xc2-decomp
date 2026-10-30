@@ -50,13 +50,13 @@ public:
   const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
 
   GmkPhantom unknown60; // Inferred role: phantom; original member name unknown.
-  bool unknownF0;       // Inferred role: condition matched; original member name unknown.
-  bool unknownF1;       // Inferred role: event started; original member name unknown.
+  bool unknownf0;       // Inferred role: condition matched; original member name unknown.
+  bool unknownf1;       // Inferred role: event started; original member name unknown.
 };
 
 static_assert(offsetof(GmkLandmark, unknown60) == 0x60, "");
-static_assert(offsetof(GmkLandmark, unknownF0) == 0xf0, "");
-static_assert(offsetof(GmkLandmark, unknownF1) == 0xf1, "");
+static_assert(offsetof(GmkLandmark, unknownf0) == 0xf0, "");
+static_assert(offsetof(GmkLandmark, unknownf1) == 0xf1, "");
 
 static_assert(sizeof(GmkLandmark::BdatInfo) == 0x10, "");
 static_assert(sizeof(GmkLandmark) == 0x100, "");

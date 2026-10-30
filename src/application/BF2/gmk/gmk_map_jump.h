@@ -42,15 +42,15 @@ public:
 
   u8 _48[0x50 - 0x48];
   GmkPhantom unknown50; // Inferred role: phantom; original member name unknown.
-  bool unknownE0;       // Role and original member name unknown.
-  bool unknownE1;       // Role and original member name unknown.
+  bool unknowne0;       // Role and original member name unknown.
+  bool unknowne1;       // Role and original member name unknown.
   u8 _e2[0xf0 - 0xe2];
 };
 
 static_assert(sizeof(GmkMapJump::BdatInfo) == 0xc, "");
 static_assert(offsetof(GmkMapJump, unknown50) == 0x50, "");
-static_assert(offsetof(GmkMapJump, unknownE0) == 0xe0, "");
-static_assert(offsetof(GmkMapJump, unknownE1) == 0xe1, "");
+static_assert(offsetof(GmkMapJump, unknowne0) == 0xe0, "");
+static_assert(offsetof(GmkMapJump, unknowne1) == 0xe1, "");
 static_assert(sizeof(GmkMapJump) == 0xf0, "");
 
 typedef TGmkList<GmkMapJump, GmkMapJump::BdatInfo, 0x504a504d, 2, GmkMapJumpGob> GmkMapJumpList;

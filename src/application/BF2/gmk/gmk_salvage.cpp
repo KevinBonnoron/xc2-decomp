@@ -66,7 +66,7 @@ bool GmkSalvage::BdatInfo::isCondMatched() const {
 }
 
 GmkSalvage::GmkSalvage()
-    : unknown48(nullptr), unknown58(gf::INVALID_HANDLE), unknown60(0.0f), unknown64(0.0f), unknown68(), unknown88(), unknownA8(nullptr), unknownB0(), unknownd0(0), unknownd1(0), unknownd8(),
+    : unknown48(nullptr), unknown58(gf::INVALID_HANDLE), unknown60(0.0f), unknown64(0.0f), unknown68(), unknown88(), unknowna8(nullptr), unknownb0(), unknownd0(0), unknownd1(0), unknownd8(),
       unknown128(true), unknown129(false) {}
 
 GmkType GmkSalvage::getGmkType() const { return GMK_TYPE; }
@@ -119,7 +119,7 @@ void GmkSalvage::seqValidateGmkSalvageLocatorDetails(f32 deltaTime) {
     }
     for (u32 i = 0; i < num; i++) {
       GmkSalvageLocator *locator = getGmkSalvageLocator(i);
-      locator->unknownD0 = this;
+      locator->unknownd0 = this;
       switch (locator->getData()->unknown00) {
       case 1:
         if (unknown68.size() != unknown68.capacity()) {
@@ -132,13 +132,13 @@ void GmkSalvage::seqValidateGmkSalvageLocatorDetails(f32 deltaTime) {
         }
         break;
       case 3:
-        if (unknownA8 == nullptr) {
-          unknownA8 = locator;
+        if (unknowna8 == nullptr) {
+          unknowna8 = locator;
         }
         break;
       case 4:
-        if (unknownB0.size() != unknownB0.capacity()) {
-          unknownB0.push_back(locator);
+        if (unknownb0.size() != unknownb0.capacity()) {
+          unknownb0.push_back(locator);
         }
         break;
       }
@@ -156,10 +156,10 @@ void GmkSalvage::seqUpdatePopDepop(f32 deltaTime) {
     disposeGfObjHandle();
   }
   if (unknownd1) {
-    u32 enemyCount = unknownB0.size();
+    u32 enemyCount = unknownb0.size();
     for (u32 i = 0; i < enemyCount; i++) {
       if ((1ul << i) & unknownd8.unknown30) {
-        GmkSalvageLocator *locator = unknownB0[i];
+        GmkSalvageLocator *locator = unknownb0[i];
         if (locator != nullptr) {
           locator->update(deltaTime);
         }
@@ -184,9 +184,9 @@ void GmkSalvage::seqUpdatePopDepop(f32 deltaTime) {
       }
     }
     if (!gf::GfGameManager::isBattle() && !DistCond::isMatch(unknown64, unknown08.unknown08->unknown00)) {
-      u32 count = unknownB0.size();
+      u32 count = unknownb0.size();
       for (u32 i = 0; i < count; i++) {
-        GmkSalvageLocator *locator = unknownB0[i];
+        GmkSalvageLocator *locator = unknownb0[i];
         if (locator != nullptr) {
           locator->disposeGobInst(true);
         }
@@ -198,14 +198,14 @@ void GmkSalvage::seqUpdatePopDepop(f32 deltaTime) {
 void GmkSalvage::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) {
   AGmkBase::onGobEvent(event, handle);
   if (event == gf::IGfObjListener::OBJEVT_DESTROY) {
-    u32 enemyCount = unknownB0.size();
+    u32 enemyCount = unknownb0.size();
     if (enemyCount != 0) {
       bool isFound = false;
       for (u32 i = 0; i < enemyCount; i++) {
-        GmkSalvageLocator *locator = unknownB0[i];
-        if (locator != nullptr && locator->isValid() && !locator->unknownF1) {
-          isFound |= locator->unknownC0 == handle;
-          if (locator->unknownC0 == handle) {
+        GmkSalvageLocator *locator = unknownb0[i];
+        if (locator != nullptr && locator->isValid() && !locator->unknownf1) {
+          isFound |= locator->unknownc0 == handle;
+          if (locator->unknownc0 == handle) {
             break;
           }
         }
@@ -215,7 +215,7 @@ void GmkSalvage::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE 
         for (u32 i = 0; i < tboxCount; i++) {
           GmkSalvageLocator *locator = unknown88[i];
           if (locator != nullptr) {
-            locator->unknownC8 = false;
+            locator->unknownc8 = false;
             locator->disposeGobInst(true);
           }
         }
@@ -230,16 +230,16 @@ void GmkSalvage::disposeTboxes(bool isFadeOut) {
   for (u32 i = 0; i < count; i++) {
     GmkSalvageLocator *locator = unknown88[i];
     if (locator != nullptr) {
-      locator->unknownC8 = false;
+      locator->unknownc8 = false;
       locator->disposeGobInst(isFadeOut);
     }
   }
 }
 
 void GmkSalvage::disposeEnemies(bool isFadeOut) {
-  u32 count = unknownB0.size();
+  u32 count = unknownb0.size();
   for (u32 i = 0; i < count; i++) {
-    GmkSalvageLocator *locator = unknownB0[i];
+    GmkSalvageLocator *locator = unknownb0[i];
     if (locator != nullptr) {
       locator->disposeGobInst(isFadeOut);
     }
@@ -261,8 +261,8 @@ void GmkSalvage::create(const CreateInfo &info) {
 void GmkSalvage::dispose() {
   disposeRaffle(false);
   unknown48 = nullptr;
-  unknownB0.clear();
-  unknownA8 = nullptr;
+  unknownb0.clear();
+  unknowna8 = nullptr;
   unknown88.clear();
   unknown68.clear();
   disposeGfObjHandle();
@@ -313,38 +313,38 @@ void GmkSalvageLocator::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_
   }
 }
 
-void GmkSalvageLocator::onEnemyDead(gf::GF_OBJ_HANDLE *handle) { unknownF1 = true; }
+void GmkSalvageLocator::onEnemyDead(gf::GF_OBJ_HANDLE *handle) { unknownf1 = true; }
 
-void GmkSalvageLocator::onEnemyHomeToPlayerAccess(gf::GF_OBJ_HANDLE *handle) { unknownF2 = true; }
+void GmkSalvageLocator::onEnemyHomeToPlayerAccess(gf::GF_OBJ_HANDLE *handle) { unknownf2 = true; }
 
-void GmkSalvageLocator::onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) { unknownC8 = true; }
+void GmkSalvageLocator::onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) { unknownc8 = true; }
 
 void GmkSalvageLocator::setEnemyPopInfo(int enemyPopId, int enemyId, s8 flag) {
-  unknownE8 = enemyPopId;
-  unknownEC = enemyId;
-  unknownF0 = flag;
+  unknowne8 = enemyPopId;
+  unknownec = enemyId;
+  unknownf0 = flag;
 }
 
 void GmkSalvageLocator::reqDisposeTboxGobInst(f32 waitTime) const {
-  unknownE0 = waitTime;
-  unknownE4 = 0;
+  unknowne0 = waitTime;
+  unknowne4 = 0;
 }
 
 void GmkSalvageLocator::initWaitPopTime(f32 waitTime) {
-  unknownD8 = waitTime;
-  unknownDC = 0;
+  unknownd8 = waitTime;
+  unknowndc = 0;
   unknown48 = &GmkSalvageLocator::seqWaitPop;
 }
 
 void GmkSalvageLocator::syncDepopTboxes() {
-  if (getData()->unknown00 == 4 && !unknownF1 && !unknownF2 && unknownD0 != nullptr) {
-    unknownD0->unknown129 = true;
+  if (getData()->unknown00 == 4 && !unknownf1 && !unknownf2 && unknownd0 != nullptr) {
+    unknownd0->unknown129 = true;
   }
 }
 
 void GmkSalvageLocator::seqWaitPop(f32 deltaTime) {
-  unknownDC += deltaTime;
-  if (!(unknownDC < unknownD8)) {
+  unknowndc += deltaTime;
+  if (!(unknowndc < unknownd8)) {
     unknown48 = &GmkSalvageLocator::seqPop;
   }
 }
@@ -357,21 +357,21 @@ void GmkSalvageLocator::update(f32 deltaTime) {
 }
 
 void GmkSalvageLocator::disposeGobInst(bool isFadeOut) {
-  if (unknownC0 == gf::INVALID_HANDLE) {
+  if (unknownc0 == gf::INVALID_HANDLE) {
     return;
   }
   syncDepopTboxes();
   if (isFadeOut) {
-    gmk::disposeGobInst(unknownC0, 1.0f);
+    gmk::disposeGobInst(unknownc0, 1.0f);
   } else {
-    unbindToGameObj(unknownC0);
-    gf::GfObjUtil::destroy(unknownC0);
-    unknownC0 = gf::INVALID_HANDLE;
+    unbindToGameObj(unknownc0);
+    gf::GfObjUtil::destroy(unknownc0);
+    unknownc0 = gf::INVALID_HANDLE;
   }
 }
 
 void GmkSalvageLocator::setTargetable(bool isTargetable) const {
-  gf::GF_OBJ_HANDLE *handle = unknownC0;
+  gf::GF_OBJ_HANDLE *handle = unknownc0;
   if (handle == gf::INVALID_HANDLE) {
     return;
   }

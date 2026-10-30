@@ -12,7 +12,7 @@ namespace gmk {
 
 template bool TGmkList<GmkMapJump, GmkMapJump::BdatInfo, 1347047501u, 2u, GmkMapJumpGob>::initGmkBdatInfo(GmkMapJump::BdatInfo &, int &, const AGmkBase &);
 
-GmkMapJump::GmkMapJump() : unknown50(nullptr), unknownE0(false), unknownE1(false) {}
+GmkMapJump::GmkMapJump() : unknown50(nullptr), unknowne0(false), unknowne1(false) {}
 
 void GmkMapJump::debugDraw() const { isValid(); }
 
@@ -55,13 +55,13 @@ void GmkMapJump::update(f32 deltaTime) {
     return;
   }
   bool isCondMatched = getBdatInfo()->isCondMatched();
-  if (unknownE0 != isCondMatched) {
+  if (unknowne0 != isCondMatched) {
     if (isCondMatched) {
       createGmkPhantom();
     } else {
       unknown50.dispose();
     }
-    unknownE0 = isCondMatched;
+    unknowne0 = isCondMatched;
   }
   if (unknown50.unknown83) {
     beginEvent();
@@ -71,16 +71,16 @@ void GmkMapJump::update(f32 deltaTime) {
 }
 
 void GmkMapJump::beginEvent() {
-  if (!unknownE1 && gf::GfGameManager::isMapjumpOK()) {
-    unknownE1 = true;
+  if (!unknowne1 && gf::GfGameManager::isMapjumpOK()) {
+    unknowne1 = true;
     gf::GfMapjumpInfo info(getBdatInfo()->unknown00);
     gf::GfPlayFactory::createMapjump(info);
   }
 }
 
 void GmkMapJump::endEvent() {
-  if (unknownE1) {
-    unknownE1 = false;
+  if (unknowne1) {
+    unknowne1 = false;
   }
 }
 

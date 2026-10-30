@@ -18,8 +18,8 @@ template bool TGmkList<GmkEffect, GmkEffect::BdatInfo, 1413695045u, 8u, GmkEffec
 template bool TGmkList<GmkEffectLocator, GmkEffectLocator::BdatInfo, 1129072197u, 1u, GmkEffectLocatorGob>::initGmkBdatInfo(GmkEffectLocator::BdatInfo &, int &, const AGmkBase &);
 
 GmkEffect::GmkEffect()
-    : unknown48(0), unknown90(nullptr), unknownA0(nullptr), unknownA8(false), unknownAC(0), unknownB0(true), unknownB8_0(false), unknownB8_1(false), unknownB8_2(false), unknownB8_3(0),
-      unknownC0(false), unknownC1(false) {}
+    : unknown48(0), unknown90(nullptr), unknowna0(nullptr), unknowna8(false), unknownac(0), unknownb0(true), unknownB8_0(false), unknownB8_1(false), unknownB8_2(false), unknownB8_3(0),
+      unknownc0(false), unknownc1(false) {}
 
 void GmkEffect::debugDraw() const { isValid(); }
 
@@ -54,13 +54,13 @@ void GmkEffect::dispose() {
   unknownB8_0 = false;
   unknownB8_1 = false;
   unknownB8_2 = false;
-  if (unknownAC != 0) {
-    fw::EffectManager::get()->remove(unknownAC);
-    unknownAC = 0;
+  if (unknownac != 0) {
+    fw::EffectManager::get()->remove(unknownac);
+    unknownac = 0;
   }
   AGmkBase::dispose();
   unknown90 = nullptr;
-  unknownA0 = nullptr;
+  unknowna0 = nullptr;
 }
 
 void GmkEffect::update(f32 deltaTime) {
@@ -78,9 +78,9 @@ void GmkEffect::seqValidateResHandle(f32 deltaTime) {
   fw::EffectPack *pack = gf::GfFieldManager::getEffectPack();
   if (pack != nullptr) {
     const char *name = getData()->unknown00;
-    unknownA0 = fw::EffectManager::get()->search(name, pack);
-    if (unknownA0 != nullptr) {
-      unknownA8 = fw::EffectManager::get()->containsCamAxis(unknownA0);
+    unknowna0 = fw::EffectManager::get()->search(name, pack);
+    if (unknowna0 != nullptr) {
+      unknowna8 = fw::EffectManager::get()->containsCamAxis(unknowna0);
       unknown90 = &GmkEffect::seqUpdate;
     }
   }
@@ -90,21 +90,21 @@ void GmkEffect::createInst() {
   if (!canCreateGameEntity()) {
     return;
   }
-  unknownAC = fw::EffectManager::get()->create(unknownA0, true);
-  fw::EffectManager::get()->setCategory(unknownAC, static_cast<fw::EF_CATEGORY>(1));
+  unknownac = fw::EffectManager::get()->create(unknowna0, true);
+  fw::EffectManager::get()->setCategory(unknownac, static_cast<fw::EF_CATEGORY>(1));
   applyEffectParam(false);
 }
 
 void GmkEffect::validateDisp() const {
-  if (unknownAC == 0) {
+  if (unknownac == 0) {
     return;
   }
-  bool isDisp = unknownB0 && debugIsDispGmkType(getGmkType());
-  fw::EffectManager::get()->setDisp(unknownAC, isDisp);
+  bool isDisp = unknownb0 && debugIsDispGmkType(getGmkType());
+  fw::EffectManager::get()->setDisp(unknownac, isDisp);
 }
 
 bool GmkEffect::canPopInst() const {
-  if (unknownAC != 0) {
+  if (unknownac != 0) {
     return false;
   }
   if (!unknownB8_0) {
@@ -114,7 +114,7 @@ bool GmkEffect::canPopInst() const {
 }
 
 bool GmkEffect::canDepopInst() const {
-  if (unknownAC == 0) {
+  if (unknownac == 0) {
     return false;
   }
   if (!unknownB8_0) {

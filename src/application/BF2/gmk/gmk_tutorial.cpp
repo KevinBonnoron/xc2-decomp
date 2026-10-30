@@ -21,7 +21,7 @@ template bool TGmkList<GmkTutorial, GmkTutorial::BdatInfo, 1330926932u, 4u, GmkT
 
 template class TGmkActiveList<GmkTutorial>;
 
-GmkTutorial::GmkTutorial() : IntrusiveListNode(), unknown60(nullptr), unknownF0(false) {}
+GmkTutorial::GmkTutorial() : IntrusiveListNode(), unknown60(nullptr), unknownf0(false) {}
 
 bool GmkTutorial::isValid() const { return AGmkBase::unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
 
@@ -59,7 +59,7 @@ void GmkTutorial::debugDraw() const {
   if (!isValid()) {
     return;
   }
-  mm::Col4 color = unknownF0 ? mm::Col4::red : mm::Col4::white;
+  mm::Col4 color = unknownf0 ? mm::Col4::red : mm::Col4::white;
   mm::Vec2 screen;
   if (toScreenPos(screen, AGmkBase::unknown08.unknown08->unknown00)) {
     mm::mtl::FixStr<256> text;
@@ -86,7 +86,7 @@ void GmkTutorial::disposeGmkPhantom() {
 void GmkTutorial::create(const CreateInfo &info) { AGmkBase::create(info); }
 
 void GmkTutorial::dispose() {
-  unknownF0 = false;
+  unknownf0 = false;
   disposeGmkPhantom();
   AGmkBase::dispose();
 }
@@ -100,7 +100,7 @@ void GmkTutorial::setBooted() const { gf::GfGameFlag::setLocal(1, getGameFlagId(
 GmkTutorialList::GmkTutorialList(u32 updateGmkNumPerFrame) : TGmkList(updateGmkNumPerFrame) {}
 
 void GmkTutorial::beginTutorial() {
-  if (unknownF0) {
+  if (unknownf0) {
     return;
   }
   const Data *data = getData();
@@ -108,7 +108,7 @@ void GmkTutorial::beginTutorial() {
     static_cast<GmkTutorialList *>(AGmkBase::unknown08.unknown00)->setBootedOthers(*this);
   }
   gf::GfGameFlag::setLocal(1, getGameFlagId(), 1);
-  unknownF0 = true;
+  unknownf0 = true;
   gf::GfPlayFactory::createGmkTutorial(getData()->unknown00, getData()->unknown08);
 }
 

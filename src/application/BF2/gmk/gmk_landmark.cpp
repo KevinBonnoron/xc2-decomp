@@ -34,7 +34,7 @@ bool GmkLandmark::BdatInfo::isCondMatched() const {
   return true;
 }
 
-GmkLandmark::GmkLandmark() : unknown60(nullptr), unknownF0(false), unknownF1(false) {}
+GmkLandmark::GmkLandmark() : unknown60(nullptr), unknownf0(false), unknownf1(false) {}
 
 GmkType GmkLandmark::getGmkType() const { return GMK_TYPE; }
 
@@ -44,13 +44,13 @@ void GmkLandmark::update(f32 deltaTime) {
     return;
   }
   bool isCondMatched = getBdatInfo()->isCondMatched();
-  if (unknownF0 != isCondMatched) {
+  if (unknownf0 != isCondMatched) {
     if (isCondMatched) {
       createGmkPhantom();
     } else {
       disposeGmkPhantom();
     }
-    unknownF0 = isCondMatched;
+    unknownf0 = isCondMatched;
   }
   if (unknown60.unknown83 && gf::GfGameManager::isLandmarkUiOK()) {
     beginEvent();
@@ -95,8 +95,8 @@ void GmkLandmark::disposeGmkPhantom() {
 }
 
 void GmkLandmark::endEvent() {
-  if (unknownF1) {
-    unknownF1 = false;
+  if (unknownf1) {
+    unknownf1 = false;
     gf::GfMenuObjLocationTelop::cancel();
     GmkLandmarkManager::removeGmkLandmark(this);
   }

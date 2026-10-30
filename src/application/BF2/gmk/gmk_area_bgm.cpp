@@ -70,14 +70,14 @@ void GmkAreaBgm::createGmkPhantom() {
 
 void GmkAreaBgm::disposeBgmCondInfos() {
   for (int i = 0; i < 4; i++) {
-    unknownE0[i].dispose();
+    unknowne0[i].dispose();
   }
   unknown160 = nullptr;
 }
 
 void GmkAreaBgm::onLeavePhantom(const IGmkPhantomEventListener::OnLeaveInfo &info) {
   for (int i = 0; i < 4; i++) {
-    unknownE0[i].dispose();
+    unknowne0[i].dispose();
   }
 }
 
@@ -91,7 +91,7 @@ void GmkAreaBgm::dispose() {
 static void unknown002(GmkBgmCondInfo &info, GmkAreaBgm *owner, u8 *bdat, u32 id, const char *conditionName, const char *bgmIdName) {
   info.unknown10 = owner;
   info.unknown18 = Bdat::getValCheck(bdat, conditionName, id, BDAT_TYPE_U16);
-  info.unknown1A = Bdat::getValCheck(bdat, bgmIdName, id, BDAT_TYPE_U16);
+  info.unknown1a = Bdat::getValCheck(bdat, bgmIdName, id, BDAT_TYPE_U16);
 }
 
 void GmkAreaBgm::createBgmCondInfos() {
@@ -101,10 +101,10 @@ void GmkAreaBgm::createBgmCondInfos() {
   }
   u8 *bdat = gf::GfDataBdat::getFP(gf::BDAT_RSC_BGM_CONDITION);
   u32 id = getBdatInfo()->unknown00;
-  unknown002(unknownE0[0], this, bdat, id, "ConditionA", "BgmIDA");
-  unknown002(unknownE0[1], this, bdat, id, "ConditionB", "BgmIDB");
-  unknown002(unknownE0[2], this, bdat, id, "ConditionC", "BgmIDC");
-  unknown002(unknownE0[3], this, bdat, id, "ConditionD", "BgmIDD");
+  unknown002(unknowne0[0], this, bdat, id, "ConditionA", "BgmIDA");
+  unknown002(unknowne0[1], this, bdat, id, "ConditionB", "BgmIDB");
+  unknown002(unknowne0[2], this, bdat, id, "ConditionC", "BgmIDC");
+  unknown002(unknowne0[3], this, bdat, id, "ConditionD", "BgmIDD");
 }
 
 void GmkAreaBgm::update(f32 deltaTime) {
@@ -140,8 +140,8 @@ void GmkAreaBgm::onEnterPhantom(const IGmkPhantomEventListener::OnEnterInfo &inf
 
 GmkBgmCondInfo *GmkAreaBgm::findCondMatched() {
   for (int i = 0; i < 4; i++) {
-    if (unknownE0[i].isCondMatched()) {
-      return &unknownE0[i];
+    if (unknowne0[i].isCondMatched()) {
+      return &unknowne0[i];
     }
   }
   return nullptr;

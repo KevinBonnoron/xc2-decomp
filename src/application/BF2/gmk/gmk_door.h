@@ -136,7 +136,7 @@ public:
   bool unknown2b1; // Inferred role: unknown2b0 of the previous frame; original member name unknown.
   u8 _2b2[0x2b8 - 0x2b2];
   gf::GF_OBJ_HANDLE *unknown2b8; // Inferred role: door game object handle; original member name unknown.
-  f32 unknown2C0;                // Role and original member name unknown.
+  f32 unknown2c0;                // Role and original member name unknown.
   u8 _2c4[0x2c8 - 0x2c4];
   void (GmkDoor::*unknown2c8)(f32); // Inferred role: seq; original member name unknown.
   u8 _2d8[0x2e0 - 0x2d8];
@@ -150,7 +150,7 @@ static_assert(offsetof(GmkDoor, unknown243) == 0x243, "");
 static_assert(offsetof(GmkDoor, unknown2a0) == 0x2a0, "");
 static_assert(offsetof(GmkDoor, unknown2b0) == 0x2b0, "");
 static_assert(offsetof(GmkDoor, unknown2b8) == 0x2b8, "");
-static_assert(offsetof(GmkDoor, unknown2C0) == 0x2c0, "");
+static_assert(offsetof(GmkDoor, unknown2c0) == 0x2c0, "");
 static_assert(offsetof(GmkDoor, unknown2c8) == 0x2c8, "");
 static_assert(offsetof(GmkDoor, unknown2e0) == 0x2e0, "");
 static_assert(sizeof(GmkDoor) == 0x360, "");

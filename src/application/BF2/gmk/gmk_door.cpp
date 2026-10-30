@@ -265,7 +265,7 @@ bool GmkDoor::isGmkFinished() const {
     return false;
   }
   const BdatInfo *info = getBdatInfo();
-  if (unknown2C0 < info->unknown2c) {
+  if (unknown2c0 < info->unknown2c) {
     return false;
   }
   if (info->unknown42.isEnable()) {
@@ -338,8 +338,8 @@ void GmkDoor::pollBootGmk() {
 void GmkDoor::seqDoor_BeforeBoot(f32 deltaTime) { pollBootGmk(); }
 
 void GmkDoor::seqDoor_Booted(f32 deltaTime) {
-  if (unknown2C0 < getBdatInfo()->unknown2c) {
-    unknown2C0 += deltaTime;
+  if (unknown2c0 < getBdatInfo()->unknown2c) {
+    unknown2c0 += deltaTime;
   }
   if (getBdatInfo()->unknown42.isEnable() && getBdatInfo()->unknown42.isMatch() && getProgress() != PROGRESS_UNKNOWN_3) {
     const BdatInfo *info = getBdatInfo();
@@ -349,7 +349,7 @@ void GmkDoor::seqDoor_Booted(f32 deltaTime) {
       openDoor(false);
     }
     createGmkCamera(info->unknown30, info->unknown38, false);
-    unknown2C0 = 0.0f;
+    unknown2c0 = 0.0f;
     setProgress(PROGRESS_UNKNOWN_3);
   }
   pollBootGmk();
@@ -376,7 +376,7 @@ void GmkDoor::bootGmk(bool isImmediate, bool isCamera) {
   }
   createGmkCamera(info->unknown10, info->unknown18, isCamera);
   if (!info->unknown42.isEnable()) {
-    unknown2C0 = isImmediate ? info->unknown2c : 0.0f;
+    unknown2c0 = isImmediate ? info->unknown2c : 0.0f;
   }
   setProgress(PROGRESS_UNKNOWN_1);
 }
@@ -392,7 +392,7 @@ void GmkDoor::spBootGmk(bool isImmediate, bool isCamera) {
     openDoor(isImmediate);
   }
   createGmkCamera(info->unknown30, info->unknown38, isCamera);
-  unknown2C0 = isImmediate ? info->unknown2c : 0.0f;
+  unknown2c0 = isImmediate ? info->unknown2c : 0.0f;
   setProgress(PROGRESS_UNKNOWN_3);
 }
 
@@ -413,8 +413,8 @@ void GmkDoor::shutdownGmk(bool isImmediate, bool isCamera) {
 void GmkDoor::seqDoor_Shutdowned(f32 deltaTime) { seqDoor_Booted(deltaTime); }
 
 void GmkDoor::seqDoor_SpBooted(f32 deltaTime) {
-  if (unknown2C0 < getBdatInfo()->unknown2c) {
-    unknown2C0 += deltaTime;
+  if (unknown2c0 < getBdatInfo()->unknown2c) {
+    unknown2c0 += deltaTime;
   }
 }
 

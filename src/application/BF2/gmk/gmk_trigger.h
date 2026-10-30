@@ -55,11 +55,11 @@ public:
   const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
 
   GmkPhantom unknown50;               // Inferred role: phantom; original member name unknown.
-  void (GmkTrigger::*unknownE0)(f32); // Inferred role: sequence; original member name unknown.
+  void (GmkTrigger::*unknowne0)(f32); // Inferred role: sequence; original member name unknown.
 };
 
 static_assert(offsetof(GmkTrigger, unknown50) == 0x50, "");
-static_assert(offsetof(GmkTrigger, unknownE0) == 0xe0, "");
+static_assert(offsetof(GmkTrigger, unknowne0) == 0xe0, "");
 static_assert(sizeof(GmkTrigger) == 0xf0, "");
 
 typedef TGmkList<GmkTrigger, GmkTrigger::BdatInfo, 0x52475254, 2, GmkTriggerGob> GmkTriggerList;

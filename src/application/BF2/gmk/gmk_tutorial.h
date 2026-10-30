@@ -53,14 +53,14 @@ public:
 
   u8 _58[0x60 - 0x58];
   GmkPhantom unknown60; // Inferred role: phantom; original member name unknown.
-  bool unknownF0;       // Role and original member name unknown.
+  bool unknownf0;       // Role and original member name unknown.
   u8 _f1[0x100 - 0xf1];
 };
 
 static_assert(sizeof(GmkTutorial::BdatInfo) == 0xa, "");
 static_assert(offsetof(GmkTutorial::Data, unknown08) == 0x08, "");
 static_assert(offsetof(GmkTutorial, unknown60) == 0x60, "");
-static_assert(offsetof(GmkTutorial, unknownF0) == 0xf0, "");
+static_assert(offsetof(GmkTutorial, unknownf0) == 0xf0, "");
 static_assert(sizeof(GmkTutorial) == 0x100, "");
 
 class GmkTutorialList : public TGmkList<GmkTutorial, GmkTutorial::BdatInfo, 0x4f545554, 4, GmkTutorialGob> {

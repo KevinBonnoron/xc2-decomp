@@ -14,7 +14,7 @@ template bool TGmkList<GmkEvent, GmkEvent::BdatInfo, 1414420037u, 4u, GmkEventGo
 
 template class TGmkActiveList<GmkEvent>;
 
-GmkEvent::GmkEvent() : IntrusiveListNode(), unknown60(nullptr), unknownF0(false), unknownF1(false), unknownF2(false) {}
+GmkEvent::GmkEvent() : IntrusiveListNode(), unknown60(nullptr), unknownf0(false), unknownf1(false), unknownf2(false) {}
 
 void GmkEvent::debugDraw() const { isValid(); }
 
@@ -40,9 +40,9 @@ bool GmkEvent::BdatInfo::isCondMatched() const {
 }
 
 void GmkEvent::beginEvent() {
-  if (!unknownF1 && gf::GfPlayFactory::createOneEventForGimmick(unknown20.unknown10->unknown02)) {
-    unknownF1 = true;
-    unknownF2 = false;
+  if (!unknownf1 && gf::GfPlayFactory::createOneEventForGimmick(unknown20.unknown10->unknown02)) {
+    unknownf1 = true;
+    unknownf2 = false;
     gf::SCOM_QUEST_REACH::createArrivePlace(unknown20.unknown18);
   }
 }
@@ -57,9 +57,9 @@ void GmkEvent::disposeGmkPhantom() {
 void GmkEvent::create(const CreateInfo &info) { AGmkBase::create(info); }
 
 void GmkEvent::dispose() {
-  unknownF2 = false;
-  unknownF0 = false;
-  unknownF1 = false;
+  unknownf2 = false;
+  unknownf0 = false;
+  unknownf1 = false;
   disposeGmkPhantom();
   AGmkBase::dispose();
 }

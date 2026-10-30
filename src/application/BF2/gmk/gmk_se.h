@@ -71,23 +71,23 @@ public:
   const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
 
   GmkPhantom unknown60; // Inferred role: phantom; original member name unknown.
-  bool unknownF0;       // Role and original member name unknown.
-  bool unknownF1;       // Role and original member name unknown.
+  bool unknownf0;       // Role and original member name unknown.
+  bool unknownf1;       // Role and original member name unknown.
   u8 _f2[0xf4 - 0xf2];
-  int unknownF4;   // Role and original member name unknown.
-  f32 unknownF8;   // Role and original member name unknown.
-  f32 unknownFC;   // Role and original member name unknown.
+  int unknownf4;   // Role and original member name unknown.
+  f32 unknownf8;   // Role and original member name unknown.
+  f32 unknownfc;   // Role and original member name unknown.
   bool unknown100; // Role and original member name unknown.
   u8 _101[0x110 - 0x101];
 };
 
 static_assert(sizeof(GmkSe::BdatInfo) == 0x40, "");
 static_assert(offsetof(GmkSe, unknown60) == 0x60, "");
-static_assert(offsetof(GmkSe, unknownF0) == 0xf0, "");
-static_assert(offsetof(GmkSe, unknownF1) == 0xf1, "");
-static_assert(offsetof(GmkSe, unknownF4) == 0xf4, "");
-static_assert(offsetof(GmkSe, unknownF8) == 0xf8, "");
-static_assert(offsetof(GmkSe, unknownFC) == 0xfc, "");
+static_assert(offsetof(GmkSe, unknownf0) == 0xf0, "");
+static_assert(offsetof(GmkSe, unknownf1) == 0xf1, "");
+static_assert(offsetof(GmkSe, unknownf4) == 0xf4, "");
+static_assert(offsetof(GmkSe, unknownf8) == 0xf8, "");
+static_assert(offsetof(GmkSe, unknownfc) == 0xfc, "");
 static_assert(offsetof(GmkSe, unknown100) == 0x100, "");
 static_assert(sizeof(GmkSe) == 0x110, "");
 
@@ -132,7 +132,7 @@ public:
   bool unknown58; // Role and original member name unknown.
   bool unknown59; // Role and original member name unknown.
   u8 _5a[0x5c - 0x5a];
-  int unknown5C;  // Role and original member name unknown.
+  int unknown5c;  // Role and original member name unknown.
   f32 unknown60;  // Role and original member name unknown.
   f32 unknown64;  // Role and original member name unknown.
   bool unknown68; // Role and original member name unknown.
@@ -140,7 +140,7 @@ public:
 
 static_assert(offsetof(GmkSeLine, unknown58) == 0x58, "");
 static_assert(offsetof(GmkSeLine, unknown59) == 0x59, "");
-static_assert(offsetof(GmkSeLine, unknown5C) == 0x5c, "");
+static_assert(offsetof(GmkSeLine, unknown5c) == 0x5c, "");
 static_assert(offsetof(GmkSeLine, unknown60) == 0x60, "");
 static_assert(offsetof(GmkSeLine, unknown64) == 0x64, "");
 static_assert(offsetof(GmkSeLine, unknown68) == 0x68, "");

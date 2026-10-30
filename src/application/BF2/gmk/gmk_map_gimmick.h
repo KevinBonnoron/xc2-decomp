@@ -60,8 +60,8 @@ public:
   void (GmkMapGimmick::*unknown50)(f32); // Inferred role: sequence; original member name unknown.
   gf::GF_OBJ_HANDLE *unknown60;          // Inferred role: gob instance handle; original member name unknown.
   u8 _68[0xa8 - 0x68];
-  bool unknownA8; // Inferred role: pop condition flag; original member name unknown.
-  bool unknownA9; // Inferred role: pop condition matched; original member name unknown.
+  bool unknowna8; // Inferred role: pop condition flag; original member name unknown.
+  bool unknowna9; // Inferred role: pop condition matched; original member name unknown.
   u8 _aa[0xb0 - 0xaa];
 };
 
@@ -69,8 +69,8 @@ static_assert(sizeof(GmkMapGimmick::BdatInfo) == 0x30, "");
 static_assert(offsetof(GmkMapGimmick, unknown48) == 0x48, "");
 static_assert(offsetof(GmkMapGimmick, unknown50) == 0x50, "");
 static_assert(offsetof(GmkMapGimmick, unknown60) == 0x60, "");
-static_assert(offsetof(GmkMapGimmick, unknownA8) == 0xa8, "");
-static_assert(offsetof(GmkMapGimmick, unknownA9) == 0xa9, "");
+static_assert(offsetof(GmkMapGimmick, unknowna8) == 0xa8, "");
+static_assert(offsetof(GmkMapGimmick, unknowna9) == 0xa9, "");
 static_assert(sizeof(GmkMapGimmick) == 0xb0, "");
 
 class GmkMapGimmickList : public TGmkList<GmkMapGimmick, GmkMapGimmick::BdatInfo, 0x4750414d, 2, GmkMapGimmickGob> {

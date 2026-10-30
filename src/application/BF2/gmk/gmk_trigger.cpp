@@ -10,7 +10,7 @@
 
 namespace gmk {
 
-GmkTrigger::GmkTrigger() : unknown50(nullptr), unknownE0(nullptr) {}
+GmkTrigger::GmkTrigger() : unknown50(nullptr), unknowne0(nullptr) {}
 
 template bool TGmkList<GmkTrigger, GmkTrigger::BdatInfo, 1380405844u, 2u, GmkTriggerGob>::initGmkBdatInfo(GmkTrigger::BdatInfo &, int &, const AGmkBase &);
 
@@ -36,7 +36,7 @@ bool GmkTrigger::isValid() const { return unknown08.unknown00 != nullptr && unkn
 void GmkTrigger::debugDraw() const {}
 
 void GmkTrigger::dispose() {
-  unknownE0 = nullptr;
+  unknowne0 = nullptr;
   unknown50.dispose();
   AGmkBase::dispose();
 }
@@ -54,8 +54,8 @@ void GmkTrigger::applyPopCondMatched(bool matched) {
   for (u32 i = 0; i < mapGimmickNum; i++) {
     GmkMapGimmick *gmk = static_cast<GmkMapGimmick *>(getBindedMapGimmick(i));
     if (gmk != nullptr) {
-      gmk->unknownA8 = true;
-      gmk->unknownA9 = matched;
+      gmk->unknowna8 = true;
+      gmk->unknowna9 = matched;
     }
   }
   u32 enemyNum = getBindedEnemyNum();
@@ -82,7 +82,7 @@ void GmkTrigger::seqWaitToValidLinkGmkList(f32 deltaTime) {
   const GmkSet *set = unknown08.unknown00->getCreateInfo().unknown08;
   if (isGmkListReady(set->unknown1b8[GMK_TYPE_MAP_GIMMICK]) && isGmkListReady(set->unknown1b8[GMK_TYPE_ENEMY]) && isGmkListReady(set->unknown1b8[GMK_TYPE_ROUTED_ENEMY])) {
     applyPopCondMatched(false);
-    unknownE0 = &GmkTrigger::seqUpdate;
+    unknowne0 = &GmkTrigger::seqUpdate;
   }
 }
 
@@ -90,13 +90,13 @@ void GmkTrigger::create(const CreateInfo &info) {
   AGmkBase::create(info);
   createGmkPhantom();
   applyPopCondMatched(false);
-  unknownE0 = &GmkTrigger::seqWaitToValidLinkGmkList;
+  unknowne0 = &GmkTrigger::seqWaitToValidLinkGmkList;
 }
 
 void GmkTrigger::update(f32 deltaTime) {
   debugUpdateMmf();
-  if (unknownE0) {
-    (this->*unknownE0)(deltaTime);
+  if (unknowne0) {
+    (this->*unknowne0)(deltaTime);
   }
 }
 

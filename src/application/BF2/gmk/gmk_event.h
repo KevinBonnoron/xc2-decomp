@@ -42,17 +42,17 @@ public:
 
   u8 _58[0x60 - 0x58];
   GmkPhantom unknown60; // Inferred role: phantom; original member name unknown.
-  bool unknownF0;       // Role and original member name unknown.
-  bool unknownF1;       // Role and original member name unknown.
-  bool unknownF2;       // Role and original member name unknown.
+  bool unknownf0;       // Role and original member name unknown.
+  bool unknownf1;       // Role and original member name unknown.
+  bool unknownf2;       // Role and original member name unknown.
   u8 _f3[0x100 - 0xf3];
 };
 
 static_assert(sizeof(GmkEvent::BdatInfo) == 0xe, "");
 static_assert(offsetof(GmkEvent, unknown60) == 0x60, "");
-static_assert(offsetof(GmkEvent, unknownF0) == 0xf0, "");
-static_assert(offsetof(GmkEvent, unknownF1) == 0xf1, "");
-static_assert(offsetof(GmkEvent, unknownF2) == 0xf2, "");
+static_assert(offsetof(GmkEvent, unknownf0) == 0xf0, "");
+static_assert(offsetof(GmkEvent, unknownf1) == 0xf1, "");
+static_assert(offsetof(GmkEvent, unknownf2) == 0xf2, "");
 static_assert(sizeof(GmkEvent) == 0x100, "");
 
 typedef TGmkList<GmkEvent, GmkEvent::BdatInfo, 0x544e5645, 4, GmkEventGob> GmkEventList;

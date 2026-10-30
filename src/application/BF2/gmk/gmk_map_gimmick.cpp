@@ -73,12 +73,12 @@ void GmkMapGimmick::createGobInst() {
   unknown60 = gf::GfObjFactory::createGmkMapGimmick(bdat, unknown20.unknown18);
   gf::GfObjSetupGimmick *setup = gf::GfObjUtil::getObjSetup<gf::GfObjSetupGimmick>(unknown60);
   unknown003(setup, unknown08.unknown08);
-  unknown002(unknown60, !unknownA8);
+  unknown002(unknown60, !unknowna8);
   if (getBdatInfo()->unknown06) {
     setup->unknown6c |= 8;
   }
   bindToGameObj(unknown60);
-  if (unknownA8) {
+  if (unknowna8) {
     gf::GfPlayFactory::createMapGimmick(unknown60);
   }
 }
@@ -132,7 +132,7 @@ bool GmkMapGimmick::canPopGobInst() const {
   if (!getBdatInfo()->isPopCondMatched()) {
     return false;
   }
-  if (unknownA8 && !unknownA9) {
+  if (unknowna8 && !unknowna9) {
     return false;
   }
   if (unknown48 > 0.0f) {

@@ -65,13 +65,13 @@ public:
   const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
 
   GmkEnemyInsts unknown50;                                                          // Inferred role: enemy instances; original member name unknown.
-  mutable mm::mtl::Vector<std::pair<gf::GF_OBJ_HANDLE *, GmkRouteNavi>> unknown1D8; // Inferred role: route navis with the game object they are bound to; original member name unknown.
+  mutable mm::mtl::Vector<std::pair<gf::GF_OBJ_HANDLE *, GmkRouteNavi>> unknown1d8; // Inferred role: route navis with the game object they are bound to; original member name unknown.
 };
 
 static_assert(sizeof(GmkRoutedEnemy::PopXformFinder) == 0x10, "");
 static_assert(offsetof(GmkRoutedEnemy::Data, unknown14) == 0x14, "");
 static_assert(offsetof(GmkRoutedEnemy, unknown50) == 0x50, "");
-static_assert(offsetof(GmkRoutedEnemy, unknown1D8) == 0x1d8, "");
+static_assert(offsetof(GmkRoutedEnemy, unknown1d8) == 0x1d8, "");
 static_assert(sizeof(GmkRoutedEnemy) == 0x200, "");
 
 class GmkRoutedEnemyList : public TGmkList<GmkRoutedEnemy, GmkEnemy::BdatInfo, 0x4d4e4552, 8, GmkRoutedEnemyGobCustom> {

@@ -140,17 +140,17 @@ bool GmkDmgEffect::isValid() const { return unknown08.unknown00 != nullptr && un
 void GmkDmgEffect::update(f32 deltaTime) { debugUpdateMmf(); }
 
 void GmkDmgEffect::validateDisp() const {
-  if (unknown4C == 0) {
+  if (unknown4c == 0) {
     return;
   }
   bool isDisp = unknown48 && debugIsDispGmkType(getGmkType());
-  fw::EffectManager::get()->setDisp(unknown4C, isDisp);
+  fw::EffectManager::get()->setDisp(unknown4c, isDisp);
 }
 
 void GmkDmgEffect::dispose() {
-  if (unknown4C != 0) {
-    fw::EffectManager::get()->remove(unknown4C);
-    unknown4C = 0;
+  if (unknown4c != 0) {
+    fw::EffectManager::get()->remove(unknown4c);
+    unknown4c = 0;
   }
   AGmkBase::dispose();
 }
@@ -159,24 +159,24 @@ void GmkDmgEffect::createEffectInst(void *const &data) const {
   if (!canCreateGameEntity()) {
     return;
   }
-  if (unknown4C != 0) {
-    fw::EffectManager::get()->remove(unknown4C);
-    unknown4C = 0;
+  if (unknown4c != 0) {
+    fw::EffectManager::get()->remove(unknown4c);
+    unknown4c = 0;
   }
   u32 handle = fw::EffectManager::get()->create(data, true);
-  unknown4C = handle;
+  unknown4c = handle;
   fw::EffectManager::get()->setCategory(handle, static_cast<fw::EF_CATEGORY>(1));
   applyEffectParam();
 }
 
 void GmkDmgEffect::disposeEffectInst(bool isFadeOut) const {
-  if (unknown4C != 0) {
+  if (unknown4c != 0) {
     if (isFadeOut) {
-      fw::EffectManager::get()->dead(unknown4C);
+      fw::EffectManager::get()->dead(unknown4c);
     } else {
-      fw::EffectManager::get()->remove(unknown4C);
+      fw::EffectManager::get()->remove(unknown4c);
     }
-    unknown4C = 0;
+    unknown4c = 0;
   }
 }
 

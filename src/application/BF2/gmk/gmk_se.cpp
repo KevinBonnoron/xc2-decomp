@@ -32,7 +32,7 @@ template bool TGmkList<GmkSeLinePoint, GmkSeLinePoint::BdatInfo, 1414548563u, 1u
 template class TGmkActiveList<GmkSe>;
 template class TGmkActiveList<GmkSeLine>;
 
-GmkSe::GmkSe() : IntrusiveListNode(), unknown60(nullptr), unknownF0(false), unknownF1(false), unknownF4(0), unknownF8(0.0f), unknownFC(0.0f), unknown100(false) {}
+GmkSe::GmkSe() : IntrusiveListNode(), unknown60(nullptr), unknownf0(false), unknownf1(false), unknownf4(0), unknownf8(0.0f), unknownfc(0.0f), unknown100(false) {}
 
 void GmkSe::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   unknown00 = Bdat::getFlagVal(bdat.unknown00, "flag", id, "se_type") != 0;
@@ -95,9 +95,9 @@ void GmkSe::dispose() {
 }
 
 void GmkSe::disposeInst(bool isFadeOut) {
-  if (unknownF4 != 0) {
-    fw::SoundManager::get()->stopSe(unknownF4, isFadeOut ? 1.0f : 0.0f);
-    unknownF4 = 0;
+  if (unknownf4 != 0) {
+    fw::SoundManager::get()->stopSe(unknownf4, isFadeOut ? 1.0f : 0.0f);
+    unknownf4 = 0;
     if (intoNode() && TGmkActiveList<GmkSe>::get() != nullptr) {
       TGmkActiveList<GmkSe>::get()->unknown08.erase(this);
     }
@@ -110,13 +110,13 @@ void GmkSe::update(f32 deltaTime) {
     return;
   }
   bool isPopCondMatched = getBdatInfo()->isPopCondMatched();
-  if (unknownF0 != isPopCondMatched) {
+  if (unknownf0 != isPopCondMatched) {
     if (isPopCondMatched) {
       createGmkPhantom();
     } else {
       unknown60.dispose();
     }
-    unknownF0 = isPopCondMatched;
+    unknownf0 = isPopCondMatched;
   }
   if (canPopInst()) {
     createInst();
@@ -126,11 +126,11 @@ void GmkSe::update(f32 deltaTime) {
 }
 
 void GmkSe::updateInActiveList(f32 deltaTime) {
-  if (unknownF4 == 0) {
+  if (unknownf4 == 0) {
     return;
   }
-  unknownF8 += deltaTime;
-  if (unknownF8 < 1.0f || unknown100) {
+  unknownf8 += deltaTime;
+  if (unknownf8 < 1.0f || unknown100) {
     return;
   }
   const Data *data = getData();
@@ -140,17 +140,17 @@ void GmkSe::updateInActiveList(f32 deltaTime) {
   const mm::Vec3 &playerPos = gf::GfObjUtil::getObj(gf::GfGameManager::getControlMover())->getComponent<gf::GfComTransform>()->getPosition();
   const mm::Vec3 &pos = AGmkBase::unknown08.unknown08->unknown00;
   mm::Vec3 diff = pos - playerPos;
-  unknownFC = sqrtf(diff.x * diff.x + diff.y * diff.y + diff.z * diff.z);
+  unknownfc = sqrtf(diff.x * diff.x + diff.y * diff.y + diff.z * diff.z);
   const BdatInfo *info = getBdatInfo();
   f32 volume;
-  if (data->unknown00 <= unknownFC) {
+  if (data->unknown00 <= unknownfc) {
     volume = info->unknown05 * 0.01f;
-  } else if (unknownFC <= data->unknown04) {
+  } else if (unknownfc <= data->unknown04) {
     volume = info->unknown04 * 0.01f;
   } else {
     f32 rate = 0.0f;
     if (data->unknown04 < data->unknown00) {
-      rate = (data->unknown00 - unknownFC) / (data->unknown00 - data->unknown04);
+      rate = (data->unknown00 - unknownfc) / (data->unknown00 - data->unknown04);
     }
     f32 range = (info->unknown04 - info->unknown05) * 0.01f;
     mm::clampRef(range, 0.0f, 1.0f);
@@ -160,11 +160,11 @@ void GmkSe::updateInActiveList(f32 deltaTime) {
   if (gf::GfGameManager::isRoom()) {
     volume = volume * (info->unknown08 * 0.01f);
   }
-  fw::SoundManager::get()->setVolume(unknownF4, volume, 0.0f);
+  fw::SoundManager::get()->setVolume(unknownf4, volume, 0.0f);
 }
 
 void GmkSe::debugDraw() const {
-  if (!isValid() || !unknownF0) {
+  if (!isValid() || !unknownf0) {
     return;
   }
   mm::Vec3 position = AGmkBase::unknown08.unknown08->unknown00;
@@ -182,10 +182,10 @@ void GmkSe::createGmkPhantom() {
 }
 
 bool GmkSe::canPopInst() const {
-  if (unknownF4 != 0) {
+  if (unknownf4 != 0) {
     return false;
   }
-  if (!unknownF0) {
+  if (!unknownf0) {
     return false;
   }
   if (unknown60.unknown78 != nullptr && !unknown60.unknown83) {
@@ -195,8 +195,8 @@ bool GmkSe::canPopInst() const {
 }
 
 bool GmkSe::canDepopInst() const {
-  if (unknownF4 != 0) {
-    if (!unknownF0) {
+  if (unknownf4 != 0) {
+    if (!unknownf0) {
       return true;
     }
     if (unknown60.unknown78 != nullptr && !unknown60.unknown83) {
@@ -271,9 +271,9 @@ void GmkSeLine::dispose() {
 }
 
 void GmkSeLine::disposeInst(bool isFadeOut) {
-  if (unknown5C != 0) {
-    fw::SoundManager::get()->stopSe(unknown5C, isFadeOut ? 1.0f : 0.0f);
-    unknown5C = 0;
+  if (unknown5c != 0) {
+    fw::SoundManager::get()->stopSe(unknown5c, isFadeOut ? 1.0f : 0.0f);
+    unknown5c = 0;
     if (intoNode() && TGmkActiveList<GmkSeLine>::get() != nullptr) {
       TGmkActiveList<GmkSeLine>::get()->unknown08.erase(this);
     }
@@ -294,7 +294,7 @@ void GmkSeLine::update(f32 deltaTime) {
 }
 
 void GmkSeLine::updateInActiveList(f32 deltaTime) {
-  if (unknown5C == 0) {
+  if (unknown5c == 0) {
     return;
   }
   unknown60 += deltaTime;
@@ -340,10 +340,10 @@ void GmkSeLine::updateInActiveList(f32 deltaTime) {
   if (gf::GfGameManager::isRoom()) {
     volume = volume * (info->unknown08 * 0.01f);
   }
-  fw::SoundManager::get()->setVolume(unknown5C, volume, 0.0f);
+  fw::SoundManager::get()->setVolume(unknown5c, volume, 0.0f);
 }
 
-GmkSeLine::GmkSeLine() : IntrusiveListNode(), unknown58(false), unknown59(false), unknown5C(0), unknown60(0.0f), unknown64(0.0f), unknown68(false) {}
+GmkSeLine::GmkSeLine() : IntrusiveListNode(), unknown58(false), unknown59(false), unknown5c(0), unknown60(0.0f), unknown64(0.0f), unknown68(false) {}
 
 int GmkSeLine::getPointNum() const { return getData()->unknown1c - getData()->unknown0c; }
 
@@ -358,14 +358,14 @@ bool GmkSeLine::isPlayerInsideAabb() const {
 }
 
 bool GmkSeLine::canPopInst() const {
-  if (unknown5C == 0 && unknown58) {
+  if (unknown5c == 0 && unknown58) {
     return isPlayerInsideAabb();
   }
   return false;
 }
 
 bool GmkSeLine::canDepopInst() const {
-  if (unknown5C != 0) {
+  if (unknown5c != 0) {
     if (!unknown58) {
       return true;
     }
