@@ -15,7 +15,8 @@ if [ ${#files[@]} -gt 0 ]; then
     exit 1
   }
 fi
-run check || {
+run check --readme || {
   echo "pre-commit: \`check\` must match every function, with no compile error and nothing NOT IN GAME" >&2
   exit 1
 }
+git add README.md
