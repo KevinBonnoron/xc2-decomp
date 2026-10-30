@@ -7,6 +7,7 @@
 #include "framework/sound/sound_driver.h"
 #include "framework/sound/sound_pack.h"
 #include "ml/critical_section.h"
+#include "ml/micro_thread.h"
 #include "mm/mm_std_base.h"
 #include "mm_math/mm_math.h"
 #include "mm_math/mm_vec3.h"
@@ -777,6 +778,17 @@ void SoundSsdDriver::stopAll() {
   }
 }
 
+void SoundSsdDriver::destroyResourceAll() {
+  while (!unknown838.empty()) {
+    SoundSsdBank *bank = *unknown838.begin();
+    bank->destroy();
+    if (bank != nullptr) {
+      bank->release();
+    }
+    unknown838.erase(unknown838.begin());
+  }
+}
+
 bool SoundSsdDriver::stopBgm(u32 handle, f32 time) {
   ml::CS lock(unknown70);
   return stopSound(handle, time);
@@ -807,6 +819,33 @@ bool SoundSsdBank::canRelease() const {
 }
 
 void SoundSsdBank::stopAll() { unknown10.Stop(0.0f); }
+
+void SoundSsdBank::destroy() {
+  u32 waitCount = 0;
+  while (!unknown270.empty()) {
+    SoundSsdSource *source = *unknown270.begin();
+    if (source->getSourceRefCount() == 0) {
+      unknown270.erase(unknown270.begin());
+      source->release();
+      waitCount = 0;
+    } else {
+      ml::MicroThread::get()->sleep(1, true);
+      if (++waitCount > 90) {
+        unknown270.erase(unknown270.begin());
+        source->release();
+        waitCount = 0;
+      }
+    }
+  }
+
+  while (unknown10.GetReferenceCounter() > 0 && unknown10.NumSoundEntry() != 0) {
+    ml::MicroThread::get()->sleep(1, true);
+  }
+
+  unknown270.unknown001();
+  unknown270.clear();
+  unknown10.Quit();
+}
 
 } // namespace fw
 

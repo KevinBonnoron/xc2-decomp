@@ -71,7 +71,8 @@ public:
   int size() const { return m_size; }
   bool empty() const { return m_size == 0; }
 
-  void clear() {
+  // Inferred role: remove every element but keep the reserved capacity; original name unknown.
+  void unknown001() {
     Node *node = begin().m_node;
     while (node != m_head) {
       Node *next = node->m_next;
@@ -80,8 +81,12 @@ public:
     }
     m_head->m_next = m_head;
     m_head->m_prev = m_head;
-    m_capacity = 0;
     m_size = 0;
+  }
+
+  void clear() {
+    unknown001();
+    m_capacity = 0;
   }
 
   void setAllocator(IAllocator *allocator) {

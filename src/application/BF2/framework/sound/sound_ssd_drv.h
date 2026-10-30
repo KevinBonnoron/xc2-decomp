@@ -32,6 +32,7 @@ namespace fw {
 
 class SoundSsdBank;
 class SoundSsdPlayer;
+class SoundSsdSource;
 enum SoundCategory : int;
 struct SoundCategoryDebugInfo;
 struct SoundHandleDebugInfo;
@@ -104,6 +105,7 @@ public:
   SoundSsdBank *findBank(const char *name) const;
   void applyCategoryVolume(SoundCategory category, f32 volume);
   bool isValid() const;
+  void destroyResourceAll();
   const mm::Mat44 &getListeningPoint() const;
   SoundPoolMemory *findPoolMemory(void *pointer, u32 size) const;
   void setListeningPoint(const mm::Mat44 &matrix);
@@ -190,8 +192,6 @@ public:
   int m_RefCount;
 };
 
-class SoundSsdSource;
-
 class SoundSsdBank : public SoundReferenceObject {
 public:
   void addEntry(ssd::SoundEntry *entry);
@@ -202,6 +202,7 @@ public:
   mm::mtl::List<SoundSsdSource *>::iterator findSource(const char *name);
   void setMaxSound(int maxSound);
   bool canRelease() const;
+  void destroy();
   u32 getActivityRatio() const;
   void stopAll();
 

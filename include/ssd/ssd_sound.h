@@ -173,6 +173,7 @@ public:
   int GetNumber() const;
   const TextRef &GetName() const;
   Result Init(int number, const TextRef &name);
+  Result Quit();
   SoundGroup *GetSoundGroup(int id) const;
   Result Stop(f32 fadeTime);
 
