@@ -5,9 +5,15 @@
 #include "gf/gf_allocator.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/script/gf_script_manager.h"
+#include "gmk/gmk_acc.h"
+#include "gmk/gmk_camera.h"
+#include "gmk/gmk_cond.h"
+#include "gmk/gmk_ctrl_vol_se.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
+
+struct CBdatWrapper;
 
 namespace gmk {
 class AGmkBase;
@@ -69,15 +75,42 @@ static_assert(sizeof(AFieldSeq) == 0x28, "");
 
 class GfFieldMapGimmick : public AFieldSeq, public mm::mtl::PtrSingleton<GfFieldMapGimmick> {
 public:
+  typedef void (GfFieldMapGimmick::*Sequence)(f32 deltaTime);
+
+  struct BdatInfo {
+    BdatInfo() : unknown00(0), unknown02(0), unknown03(false), unknown04(false), unknown06(0, 0) {}
+    void create(CBdatWrapper bdat, int id);
+    bool isCondMatched() const;
+
+    u16 unknown00;                   // Inferred role: condition; original member name unknown.
+    u8 unknown02;                    // Inferred role: camera gimmick attribute; original member name unknown.
+    bool unknown03;                  // Inferred role: gimmick camera position; original member name unknown.
+    bool unknown04;                  // Inferred role: no wait gimmick camera; original member name unknown.
+    gmk::BootedGmkCond unknown06;    // Inferred role: booted gmk; original member name unknown.
+    gmk::ScenarioFlagCond unknown0a; // Inferred role: scenario flag; original member name unknown.
+    gmk::QuestFlagCond unknown0e;    // Inferred role: quest flag; original member name unknown.
+    gmk::TimeCond unknown18;         // Inferred role: time cond; original member name unknown.
+    gmk::WeatherCond unknown28;      // Inferred role: weather cond; original member name unknown.
+  };
+
   GfFieldMapGimmick(const GfSetupParam &param);
+  static void setDispOfParty(bool isDisp, bool isExceptMover);
   void create(GF_OBJ_HANDLE *handle) override;
+  void seqCamera_waitToLoaded(f32 deltaTime);
   void dispose() override;
+  void clearSe();
   void update(f32 deltaTime);
+  void setSolvedMapGimmick();
   void onFsSucceeded() override;
+  void seqLod_init(f32 deltaTime);
+  void seqMapObj_init(f32 deltaTime);
   void onFsFailed() override;
+  void seqCamera_waitToEnd(f32 deltaTime);
+  void seqLod_waitToElapseTime(f32 deltaTime);
+  void seqLod_waitToEndAnim(f32 deltaTime);
+  void seqMapObj_nextwait(f32 deltaTime);
   const char *getIdStr() const override;
   bool isEnd() const override;
-  ~GfFieldMapGimmick();
 
   // __LINE__ must be 208 as in the original header: its value changes the instruction order.
 #line 208
@@ -88,9 +121,38 @@ public:
     delete get();
   }
 
-  u8 _30[0x4e0 - 0x30];
+  BdatInfo unknown30;              // Inferred role: bdat info; original member name unknown.
+  gmk::GmkAcc unknown68;           // Inferred role: map gimmick accessor; original member name unknown.
+  gmk::GmkCamera unknownb0;        // Inferred role: gimmick camera; original member name unknown.
+  Sequence unknown210;             // Inferred role: camera sequence; original member name unknown.
+  Sequence unknown220;             // Inferred role: lod sequence; original member name unknown.
+  u32 unknown230;                  // Inferred role: lod step; original member name unknown.
+  int unknown234;                  // Inferred role: lod bdat id; original member name unknown.
+  Sequence unknown238;             // Inferred role: map object sequence; original member name unknown.
+  f32 unknown248;                  // Inferred role: wait time; original member name unknown.
+  f32 unknown24c;                  // Inferred role: elapsed time; original member name unknown.
+  gmk::GmkCtrlVolSe unknown250[5]; // Inferred role: lod sounds; original member name unknown.
+  u32 unknown4d0;                  // Inferred role: map object sound handle; original member name unknown.
 };
 
+static_assert(sizeof(GfFieldMapGimmick::BdatInfo) == 0x38, "");
+static_assert(offsetof(GfFieldMapGimmick::BdatInfo, unknown06) == 0x06, "");
+static_assert(offsetof(GfFieldMapGimmick::BdatInfo, unknown0a) == 0x0a, "");
+static_assert(offsetof(GfFieldMapGimmick::BdatInfo, unknown0e) == 0x0e, "");
+static_assert(offsetof(GfFieldMapGimmick::BdatInfo, unknown18) == 0x18, "");
+static_assert(offsetof(GfFieldMapGimmick::BdatInfo, unknown28) == 0x28, "");
+static_assert(offsetof(GfFieldMapGimmick, unknown30) == 0x30, "");
+static_assert(offsetof(GfFieldMapGimmick, unknown68) == 0x68, "");
+static_assert(offsetof(GfFieldMapGimmick, unknownb0) == 0xb0, "");
+static_assert(offsetof(GfFieldMapGimmick, unknown210) == 0x210, "");
+static_assert(offsetof(GfFieldMapGimmick, unknown220) == 0x220, "");
+static_assert(offsetof(GfFieldMapGimmick, unknown230) == 0x230, "");
+static_assert(offsetof(GfFieldMapGimmick, unknown234) == 0x234, "");
+static_assert(offsetof(GfFieldMapGimmick, unknown238) == 0x238, "");
+static_assert(offsetof(GfFieldMapGimmick, unknown248) == 0x248, "");
+static_assert(offsetof(GfFieldMapGimmick, unknown24c) == 0x24c, "");
+static_assert(offsetof(GfFieldMapGimmick, unknown250) == 0x250, "");
+static_assert(offsetof(GfFieldMapGimmick, unknown4d0) == 0x4d0, "");
 static_assert(sizeof(GfFieldMapGimmick) == 0x4e0, "");
 
 class GfFieldGrave : public IFieldSeq, public mm::mtl::PtrSingleton<GfFieldGrave> {

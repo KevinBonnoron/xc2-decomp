@@ -95,6 +95,7 @@ public:
   const Xform *getDownLiftSwitchPos() const;
   const Xform *getUpLiftSwitchPos() const;
   bool isLiftStateDown() const;
+  bool getPosForCompass(mm::Vec3 &position) const;
   void clearGobInsts();
   void clearSe();
   void disposeSe(SeType type);

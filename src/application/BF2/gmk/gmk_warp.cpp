@@ -1,5 +1,4 @@
 #include "gmk/gmk_warp.h"
-#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "bdat.h"
 #include "framework/effect/effect_manager.h"
@@ -11,14 +10,11 @@
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_bdat.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 namespace fw {
 enum EF_CATEGORY : int;
 } // namespace fw
-
-namespace mm {
-struct Vec3;
-} // namespace mm
 
 namespace gmk {
 

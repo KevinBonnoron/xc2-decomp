@@ -6,15 +6,13 @@
 #include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
+#include "mm_math/mm_vec3.h"
 #include "types.h"
 
 namespace gf {
 struct GF_OBJ_HANDLE;
 } // namespace gf
 
-namespace mm {
-struct Vec3;
-} // namespace mm
 struct CBdatWrapper;
 
 namespace gmk {
@@ -38,6 +36,11 @@ public:
     DistHvCond unknown10;    // Inferred role: depop dist; original member name unknown.
   };
 
+  // Inferred role: warp gimmick data; original type name unknown.
+  struct unknown001 {
+    mm::Vec3 unknown00; // Inferred role: position; original member name unknown.
+  };
+
   static const GmkType GMK_TYPE = GMK_TYPE_WARP;
 
   static const u32 POINT_NUM = 2;
@@ -45,6 +48,12 @@ public:
   GmkWarp();
   ~GmkWarp() override { dispose(); }
   GmkType getGmkType() const override { return GMK_TYPE; }
+
+  // Inferred helper: bdat info of the warp; original name unknown.
+  const BdatInfo *unknown002() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
+  // Inferred helper: data of the warp; original name unknown.
+  const unknown001 *unknown003() const { return static_cast<const unknown001 *>(unknown20.unknown08); }
+
   void create(const CreateInfo &info) override;
   void dispose() override;
   void clearIcons();

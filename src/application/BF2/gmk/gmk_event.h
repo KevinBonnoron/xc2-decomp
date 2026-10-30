@@ -40,6 +40,9 @@ public:
   void debugDraw() const override;
   void disposeGmkPhantom();
 
+  // Inferred helper: bdat info of the event; original name unknown.
+  const BdatInfo *unknown001() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
+
   u8 _58[0x60 - 0x58];
   GmkPhantom unknown60; // Inferred role: phantom; original member name unknown.
   bool unknownf0;       // Role and original member name unknown.

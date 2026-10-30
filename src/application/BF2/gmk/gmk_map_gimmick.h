@@ -46,6 +46,7 @@ public:
   void dispose() override;
   void createGobInst();
   void disposeGobInst();
+  void validateEffectWithoutLodControl(int lodId, bool isDisp) const;
   void update(f32 deltaTime) override;
   void debugDraw() const override;
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
