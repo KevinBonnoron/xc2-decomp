@@ -4,7 +4,7 @@ namespace ml {
 
 class ControllerApplet {
 public:
-  static void showApplet();
+  static bool showApplet();
 };
 
 } // namespace ml
