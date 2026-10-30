@@ -11,6 +11,7 @@ struct Quat;
 
 namespace anm {
 
+class Binding;
 class Skeleton;
 struct QsTransform;
 
@@ -20,6 +21,7 @@ public:
   void canonicalize(f32 tolerance, mm::Quat *quat);
   void setBonePairTable(s16 *pBonePairTable);
   void mirrorExtractMotion(const QsTransform &source, QsTransform *destination) const;
+  void mirrorPose(const Binding &source, const Binding &destination, const QsTransform *pSource, QsTransform *pDestination) const;
 
   const Skeleton *unknown18;           // Inferred role: p skeleton; original member name unknown.
   mm::mtl::Vector<s16> unknown20;      // Inferred role: bone pair table; original member name unknown.

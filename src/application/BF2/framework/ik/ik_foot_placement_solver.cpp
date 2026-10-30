@@ -54,8 +54,8 @@ f32 FootPlacementIKSolver::getRaycastDown() const {
   }
 
   anm::FootPlacementIKSolver *solver = unknown20;
-  f32 height = unknown18->getBoneModelSpace(solver->unknown2c).unknown00.y;
-  return __builtin_fmaxf(height - solver->unknown74, 0.0f) + 0.1f;
+  f32 height = unknown18->getBoneModelSpace(solver->m_desc.ankleBone).unknown00.y;
+  return __builtin_fmaxf(height - solver->m_desc.minAnkleHeightMS, 0.0f) + 0.1f;
 }
 
 void FootPlacementIKSolver::drawDebug() {
@@ -70,9 +70,9 @@ void FootPlacementIKSolver::drawDebug() {
 void buildDescFromParam(ParamAdapter &param, anm::FootPlacementIKSolver::Description *description) {
   const FootPlacementIKSolver::Param *data = param.get<FootPlacementIKSolver::Param>();
   if (data != nullptr) {
-    description->unknown50 = data->unknown00;
-    description->unknown4c = description->unknown54 + data->unknown04;
-    description->unknown48 = description->unknown54 + data->unknown08;
+    description->maxAnkleHeightMS = data->unknown00;
+    description->raisedAnkleHeightMS = description->minAnkleHeightMS + data->unknown04;
+    description->plantedAnkleHeightMS = description->minAnkleHeightMS + data->unknown08;
   }
 }
 

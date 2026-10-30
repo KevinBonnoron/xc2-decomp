@@ -1,4 +1,6 @@
 #pragma once
+#include <math.h>
+
 #include "types.h"
 
 namespace mm {
@@ -68,6 +70,8 @@ struct alignas(16) Vec3 {
   }
 
   bool isError() const { return !isValidFloat(x) || !isValidFloat(y) || !isValidFloat(z); }
+  // Name from the assertion texts of anm::FootPlacementIKSolver (for example "m_desc.worldUpWS.isUnit()").
+  bool isUnit() const { return fabsf(sqrtf(x * x + y * y + z * z) - 1.0f) <= 0.000001f; }
 
   f32 x;
   f32 y;

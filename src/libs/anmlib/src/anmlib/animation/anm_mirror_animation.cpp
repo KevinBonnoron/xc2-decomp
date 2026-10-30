@@ -7,6 +7,7 @@
 #include "anm/anm_mirror_mapper.h"
 #include "anm/anm_qs_transform.h"
 #include "anm/anm_reference_object.h"
+#include "anm/anm_skeleton.h"
 #include "mm_mtl/allocator.h"
 #include "mm_mtl/vector.h"
 
@@ -35,6 +36,20 @@ MirrorAnimation::MirrorAnimation(const Binding *pOriginal, const MirrorMapper *p
 MirrorAnimation::~MirrorAnimation() {
   unknown001(unknown48);
   unknown001(unknown50);
+}
+
+void MirrorAnimation::sampleTrucks(f32 time, const Binding &binding, QsTransform *transforms) const {
+  mm::mtl::Vector<QsTransform> source(m_pAllocator);
+  u32 boneCount = unknown50->m_indexTable.size();
+  source.resize(boneCount);
+  const Skeleton *pSkeleton = unknown48->unknown18;
+  for (u32 i = 0; i < boneCount; i++) {
+    if (unknown50->m_indexTable[i] < 0) {
+      source[i] = pSkeleton->unknown40[i];
+    }
+  }
+  unknown50->m_pAnimation->sampleTrucks(time, *unknown50, source.m_buffer);
+  unknown48->mirrorPose(*unknown50, binding, source.m_buffer, transforms);
 }
 
 Binding *MirrorAnimation::createBinding() {

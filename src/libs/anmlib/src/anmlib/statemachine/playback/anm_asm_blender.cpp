@@ -1,6 +1,7 @@
 #include "anm/anm_asm_blender.h"
 
 #include "anm/anm_array-inl.h"
+#include "anm/anm_asm_callback_detector.h"
 #include "anm/anm_blender.h"
 #include "anm/anm_control.h"
 #include "anm/anm_extra_truck.h"
@@ -10,6 +11,8 @@
 #include "anm/anm_res_clip_data.h"
 #include "anm/anm_skeleton.h"
 #include "anm/anm_util.h"
+#include "mm_mtl/fixed_array.h"
+#include "mm_mtl/vector.h"
 
 namespace anm {
 
@@ -81,6 +84,33 @@ void AsmClip::destroyControl() {
 void AsmClip::createControl(const ResClipData &resClipData, mm::mtl::IAllocator &allocator) {
   unknown10 = Factory::createControl(resClipData.m_pBinding, &allocator);
   unknown18 = &resClipData;
+}
+
+bool AsmClip::update(f32 deltaTime, AsmListener *listener) {
+  if (unknown10 == nullptr) {
+    return true;
+  }
+
+  PlayMode playMode = Util::getPlayMode(*unknown10->m_pBinding);
+  f32 previousTime = unknown10->unknown48;
+  f32 time = previousTime + unknown10->unknown50 * deltaTime;
+  f32 localTime = Util::calcLocalTime(time, unknown18->unknown10, unknown18->unknown14, playMode);
+  unknown10->setLocalTime(localTime);
+  bool end = time != localTime;
+  bool reverse = unknown18->unknown00->speed < 0.0f;
+  bool looped = playMode == PLAY_MODE_LOOP && end;
+  if (listener != nullptr) {
+    for (u32 i = 0; i < unknown18->unknown18.size(); i++) {
+      if (!unknown18->unknown18[i].empty()) {
+        CallBackDetector::executeFrame(*listener, previousTime, localTime, reverse, looped, unknown18->unknown18[i]);
+      }
+    }
+  }
+
+  if (playMode == PLAY_MODE_ONCE) {
+    end = time >= unknown18->unknown14 - 0.0001f;
+  }
+  return end;
 }
 
 void AsmClip::setLocalTime(f32 time) {
