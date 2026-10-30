@@ -2,6 +2,7 @@
 
 #include "mm/mm_std_base.h"
 #include "nn/time_span.h"
+#include <chrono>
 
 namespace mm {
 namespace threading {
@@ -77,6 +78,22 @@ bool EventWait::waitSignal(u32 milliSeconds) {
 bool EventWait::isSignal() const { return nn::os::TimedWaitEvent(const_cast<nn::os::EventType *>(&unknown08), nn::TimeSpan::FromNanoSeconds(0)); }
 
 SpinLock::SpinLock() : locked(0) {}
+
+void SpinLock::lock(f32 timeout) {
+  std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+  while (__atomic_exchange_n(&locked, 1, __ATOMIC_ACQUIRE) == 1) {
+    std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
+    f32 elapsed = (now - start).count() / 1000.0f / 1000000.0f;
+    if (timeout > 0.0f) {
+      if (elapsed > timeout) {
+        return;
+      }
+    } else if (elapsed > 0.1f) {
+      start = now;
+      nn::os::SleepThread(nn::TimeSpan::FromNanoSeconds(1000000));
+    }
+  }
+}
 
 } // namespace threading
 } // namespace mm

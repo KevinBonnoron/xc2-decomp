@@ -858,3 +858,5 @@ typedef mm::mtl::RedBlackTreeBase<mm::mtl::Map<ssd::SoundHandle *, fw::SoundSsdP
 template void unknown101::free_node(unknown101::node *, bool);
 template unknown101::node *unknown101::insert(const mm::mtl::MapPair<ssd::SoundHandle *, fw::SoundSsdPlayer *> &);
 template void unknown101::rebalance(unknown101::node *);
+template void unknown101::erase(unknown101::node *);
+template void unknown101::rebalance_after_erase(unknown101::node *);

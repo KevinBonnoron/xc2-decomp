@@ -119,3 +119,5 @@ void MovieManager::bkgHomeMenu(bool isEnter) {
 } // namespace fw
 
 template mm::mtl::PtrSingleton<fw::MovieManager>::~PtrSingleton();
+// The game emits it here, next to the inline CMovie destructor: ICMovie has no source file of its own.
+template mm::mtl::PtrSingleton<ICMovie>::~PtrSingleton();
