@@ -15,4 +15,8 @@ void LayerObjTopDef::updateResCheck() {
   }
 }
 
+void LayerObjTopDef::alphaRender() {}
+
+void LayerObjTopDef::lastRender() {}
+
 } // namespace layer

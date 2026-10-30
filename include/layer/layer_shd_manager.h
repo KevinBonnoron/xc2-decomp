@@ -6,6 +6,8 @@
 #include "grlib/cglib_vtx_fetch.h"
 #include "grlib/cglib_vtx_index.h"
 #include "grlib/cglib_vtx_vertex.h"
+#include "layer/layer_obj.h"
+#include "layer/layer_obj_top_mask_obj.h"
 #include "ml/work_event.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_rect.h"
@@ -26,7 +28,6 @@ class IDrDrawWorkInfo;
 
 namespace layer {
 class LayerManager;
-class LayerObjTopMaskObj;
 struct LayerResViewPortInfo;
 class LayerResSecTexture;
 class LayerTextureMan;
@@ -104,6 +105,7 @@ public:
   static grlib::CGLibDecShader *(LayerShdManager::*s_CallSelect[])();
   static const u32 s_eFetchTbl[];
   static void (*s_CallBlend[])();
+  static const u32 s_resDefBlend[];
   void initColor(u32 index);
   void initTex(u32 index);
   void initFont(u32 index);
@@ -115,6 +117,44 @@ public:
   void initGsBlur(u32 index);
   void initTest(u32 index);
   void resetViewPort();
+
+  // Inferred helper repeated by the render functions of the layer objects: sets the mask mode of a visible mask
+  // object, otherwise the view port; returns false when the mask is clipped. Original name unknown.
+  bool unknown002(const LayerObjTopMaskObj *mask, LayerResViewPortInfo *const &viewPort) {
+    if (mask == nullptr || (mask->unknowna8 & 0x90000) != 0) {
+      if (viewPort == nullptr) {
+        setShaderMaskOff();
+        resetViewPort();
+      } else {
+        setViewPort(viewPort);
+      }
+    } else {
+      if (mask->isClip()) {
+        return false;
+      }
+      setShaderMaskMode(mask);
+    }
+    return true;
+  }
+
+  // Inferred helper: calls the blend setup of a blend type when it changes; original name unknown.
+  void unknown003(u32 blend) {
+    if (unknown52c != blend) {
+      s_CallBlend[blend]();
+      unknown52c = blend;
+    }
+  }
+
+  // Inferred helper: selects the depth mode from the flags of a layer object; original name unknown.
+  void unknown004(const LayerObj *layer) {
+    if (!(layer->unknowna8 & 0x400)) {
+      setDepthBufferCheckOff();
+    } else if (!(layer->unknowna8 & 0x800)) {
+      setDepthBufferCheckOn();
+    } else {
+      set3DSpaceMode(layer->unknown238);
+    }
+  }
 
   void *unknown08;       // Inferred role: shader binary data; original member name unknown.
   const void *unknown10; // Inferred role: shader resource data; original member name unknown.

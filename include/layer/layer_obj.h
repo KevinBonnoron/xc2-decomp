@@ -17,6 +17,7 @@ class CGLibDblUniformBlock;
 namespace layer {
 
 class LayerAnimeObj;
+class LayerObjTopMaskObj;
 struct LayerRenderView;
 class LayerResSecTexture;
 class LayerSortMan;
@@ -122,12 +123,12 @@ public:
   u32 unknowna0[2];       // Inferred role: state flags; original member name unknown.
   u32 unknowna8;          // Inferred role: flags; original member name unknown.
   u8 _ac[0xb8 - 0xac];
-  const void *unknownb8; // Inferred role: res data; original member name unknown.
-  u16 unknownc0;         // Inferred role: priority; original member name unknown.
-  u8 unknownc2;          // Inferred role: matrix idx; original member name unknown.
-  u8 unknownc3;          // Inferred role: space; original member name unknown.
-  u8 unknownc4;          // Inferred role: blend type; original member name unknown.
-  u8 _c5[0xc6 - 0xc5];
+  const void *unknownb8;         // Inferred role: res data; original member name unknown.
+  u16 unknownc0;                 // Inferred role: priority; original member name unknown.
+  u8 unknownc2;                  // Inferred role: matrix idx; original member name unknown.
+  u8 unknownc3;                  // Inferred role: space; original member name unknown.
+  u8 unknownc4;                  // Inferred role: blend type; original member name unknown.
+  u8 unknownc5;                  // Inferred role: render blend type, index of s_resDefBlend; original member name unknown.
   u8 unknownc6;                  // Inferred role: tex filter type; original member name unknown.
   LayerResParmInfo unknownc8[3]; // Inferred role: parms; original member name unknown.
   f32 unknown170;                // Inferred role: clip value; original member name unknown.
@@ -155,7 +156,7 @@ public:
   LayerResSecTexture *unknown220[3];       // Inferred role: second texs; original member name unknown.
   grlib::CGLibDblUniformBlock *unknown238; // Inferred role: world matrix uniform; original member name unknown.
   const LayerBase *unknown240;             // Inferred role: mask object; original member name unknown.
-  u8 _248[0x250 - 0x248];
+  const LayerObjTopMaskObj *unknown248;    // Inferred role: mask object used for rendering; original member name unknown.
 };
 
 static_assert(offsetof(LayerObj, unknown1c) == 0x1c, "");
@@ -167,6 +168,7 @@ static_assert(offsetof(LayerObj, unknownc0) == 0xc0, "");
 static_assert(offsetof(LayerObj, unknownc2) == 0xc2, "");
 static_assert(offsetof(LayerObj, unknownc3) == 0xc3, "");
 static_assert(offsetof(LayerObj, unknownc4) == 0xc4, "");
+static_assert(offsetof(LayerObj, unknownc5) == 0xc5, "");
 static_assert(offsetof(LayerObj, unknownc6) == 0xc6, "");
 static_assert(offsetof(LayerObj, unknownc8) == 0xc8, "");
 static_assert(offsetof(LayerObj, unknown170) == 0x170, "");
@@ -183,6 +185,7 @@ static_assert(offsetof(LayerObj, unknown208) == 0x208, "");
 static_assert(offsetof(LayerObj, unknown220) == 0x220, "");
 static_assert(offsetof(LayerObj, unknown238) == 0x238, "");
 static_assert(offsetof(LayerObj, unknown240) == 0x240, "");
+static_assert(offsetof(LayerObj, unknown248) == 0x248, "");
 static_assert(sizeof(LayerObj) == 0x250, "");
 
 } // namespace layer

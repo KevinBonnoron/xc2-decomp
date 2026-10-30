@@ -16,10 +16,13 @@ enum LAYER_TYPE {
   LAYER_OBJ_TYPE_FILTER = 8,
   LAYER_OBJ_TYPE_FONT_STYLE = 9,
   LAYER_OBJ_TYPE_FONT_RES = 10,
+  LAYER_TYPE_UNKNOWN_11 = 11, // Inferred role: font icon object; original enumerator name unknown.
+  LAYER_TYPE_UNKNOWN_12 = 12, // Inferred role: font color map object; original enumerator name unknown.
 };
 
 class LayerBase {
 public:
+  LayerBase() : unknown08(nullptr), unknown10(nullptr) {}
   virtual ~LayerBase() {}
   virtual void release();
 

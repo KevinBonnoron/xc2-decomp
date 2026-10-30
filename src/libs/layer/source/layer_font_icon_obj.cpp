@@ -6,6 +6,19 @@
 
 namespace layer {
 
+LayerFontIconObj::LayerFontIconObj(LayerFontManager *manager, const void *data, LAYER_TYPE type) {
+  unknown1c = 0xcc;
+  unknown20 = manager;
+  unknown28 = 0;
+  unknown18 = type;
+  unknown30 = static_cast<const unknown004 *>(data);
+  unknown40 = nullptr;
+  unknown50 = 0.0f;
+  unknown48 = 0;
+  unknown4c = 0.0f;
+  createIconRes();
+}
+
 LayerFontIconObj::~LayerFontIconObj() {
   if (unknown40 != nullptr) {
     unknown40->release();

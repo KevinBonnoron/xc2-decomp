@@ -6,6 +6,8 @@ namespace layer {
 class LayerObjTopFont : public LayerObjFont {
 public:
   ~LayerObjTopFont() override;
+  void alphaRender();
+  void lastRender();
   void finalRender();
 };
 

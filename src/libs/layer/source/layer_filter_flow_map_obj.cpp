@@ -50,10 +50,7 @@ void LayerFilterFlowMapObj::resourceInit() {
 
 void LayerFilterFlowMapObj::render() {
   LayerShdManager *shader = LayerManager::get()->unknown58;
-  if (shader->unknown52c != 2) {
-    LayerShdManager::s_CallBlend[2]();
-    shader->unknown52c = 2;
-  }
+  shader->unknown003(2);
   shader->setupVertex(static_cast<LayerDefVertType>(3));
   shader->unknown4f0 = 8;
   unknown18.setRenderTarget();

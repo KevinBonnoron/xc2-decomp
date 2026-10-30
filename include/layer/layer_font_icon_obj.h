@@ -46,6 +46,7 @@ public:
 
   static_assert(sizeof(unknown005) == 0x1c, "");
 
+  LayerFontIconObj(LayerFontManager *manager, const void *data, LAYER_TYPE type);
   ~LayerFontIconObj() override;
   void release() override;
   virtual void setupResource();

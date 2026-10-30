@@ -9,6 +9,7 @@
 namespace layer {
 
 class LayerFilterObj;
+struct LayerResViewPortInfo;
 
 class LayerObjTopFilter : public LayerObj {
 public:
@@ -25,18 +26,21 @@ public:
   void resourceInit() override;
   void applyPartsSetup() override;
 
-  u8 _250[0x258 - 0x250];
+  LayerResViewPortInfo *unknown250;       // Inferred role: view port; original member name unknown.
   LayerObjSortFilter unknown258;          // Inferred role: sort object; original member name unknown.
   LayerFilterObj *unknown270;             // Inferred role: first filter object; original member name unknown.
   LayerFilterObj *unknown278[2];          // Inferred role: filter object per buffer; original member name unknown.
   LayerFilterObj *unknown288;             // Inferred role: filter object to release; original member name unknown.
   grlib::CGLibDblUniformBlock unknown290; // Inferred role: uniform block; original member name unknown.
+  bool unknown2c8;                        // Inferred role: set when the color alpha is below 1; original member name unknown.
 };
 
+static_assert(offsetof(LayerObjTopFilter, unknown250) == 0x250, "");
 static_assert(offsetof(LayerObjTopFilter, unknown258) == 0x258, "");
 static_assert(offsetof(LayerObjTopFilter, unknown270) == 0x270, "");
 static_assert(offsetof(LayerObjTopFilter, unknown278) == 0x278, "");
 static_assert(offsetof(LayerObjTopFilter, unknown288) == 0x288, "");
 static_assert(offsetof(LayerObjTopFilter, unknown290) == 0x290, "");
+static_assert(offsetof(LayerObjTopFilter, unknown2c8) == 0x2c8, "");
 
 } // namespace layer

@@ -14,6 +14,7 @@ class CGLibVtxVertex;
 
 namespace layer {
 struct LayerPolyVertex;
+struct LayerResViewPortInfo;
 
 class LayerObjTopPolyObj : public LayerObj {
 public:
@@ -52,7 +53,9 @@ public:
   void finalRender();
 
   u32 unknown250; // Inferred role: update flags; original member name unknown.
-  u8 _254[0x278 - 0x254];
+  u8 _254[0x258 - 0x254];
+  LayerResViewPortInfo *unknown258; // Inferred role: view port; original member name unknown.
+  u8 _260[0x278 - 0x260];
   grlib::CGLibTextureBuffer *unknown278;  // Inferred role: first additional texture; original member name unknown.
   grlib::CGLibDblUniformBlock unknown280; // Inferred role: uniform block; original member name unknown.
   LayerObjResTex unknown2b8;              // Inferred role: textures; original member name unknown.
@@ -63,6 +66,7 @@ public:
 };
 
 static_assert(offsetof(LayerObjTopPolyObj, unknown250) == 0x250, "");
+static_assert(offsetof(LayerObjTopPolyObj, unknown258) == 0x258, "");
 static_assert(offsetof(LayerObjTopPolyObj, unknown278) == 0x278, "");
 static_assert(offsetof(LayerObjTopPolyObj, unknown280) == 0x280, "");
 static_assert(offsetof(LayerObjTopPolyObj, unknown2b8) == 0x2b8, "");

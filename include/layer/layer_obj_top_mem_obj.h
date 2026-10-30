@@ -10,6 +10,8 @@
 
 namespace layer {
 
+struct LayerResViewPortInfo;
+
 class LayerObjTopMemObj : public LayerObj {
 public:
   ~LayerObjTopMemObj() override;
@@ -23,7 +25,8 @@ public:
   void lastRender();
   void finalRender();
 
-  u8 _250[0x270 - 0x250];
+  LayerResViewPortInfo *unknown250; // Inferred role: view port; original member name unknown.
+  u8 _258[0x270 - 0x258];
   u32 unknown270; // Inferred role: flags; original member name unknown.
   u8 _274[0x278 - 0x274];
   grlib::CGLibRenderTarget unknown278;       // Inferred role: render target; original member name unknown.
@@ -38,6 +41,7 @@ public:
   LayerMemType unknown750;                   // Inferred role: memory type; original member name unknown.
 };
 
+static_assert(offsetof(LayerObjTopMemObj, unknown250) == 0x250, "");
 static_assert(offsetof(LayerObjTopMemObj, unknown270) == 0x270, "");
 static_assert(offsetof(LayerObjTopMemObj, unknown278) == 0x278, "");
 static_assert(offsetof(LayerObjTopMemObj, unknown640) == 0x640, "");

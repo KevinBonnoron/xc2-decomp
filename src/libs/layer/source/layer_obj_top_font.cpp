@@ -7,4 +7,8 @@ LayerObjTopFont::~LayerObjTopFont() {
   workRelease();
 }
 
+void LayerObjTopFont::alphaRender() {}
+
+void LayerObjTopFont::lastRender() {}
+
 } // namespace layer

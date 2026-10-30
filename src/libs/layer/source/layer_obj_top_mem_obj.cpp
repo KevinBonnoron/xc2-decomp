@@ -4,6 +4,7 @@
 
 #include "grlib/cglib_texture_buffer.h"
 #include "layer/layer_manager.h"
+#include "layer/layer_shd_manager.h"
 #include "mm_math/mm_col4.h"
 
 namespace layer {
@@ -60,6 +61,22 @@ void LayerObjTopMemObj::setRender(bool render) {
 }
 
 bool LayerObjTopMemObj::isRender() const { return (unknown270 >> 2) & 0x1; }
+
+void LayerObjTopMemObj::lastRender() {
+  LayerShdManager *shader = LayerManager::get()->unknown58;
+  if (!shader->unknown002(unknown248, unknown250)) {
+    return;
+  }
+  shader->unknown003(LayerShdManager::s_resDefBlend[unknownc5]);
+  shader->unknown004(this);
+  shader->unknown4f2 = 1;
+  shader->setSecTexture(unknown220[2]);
+  shader->setupVertex(static_cast<LayerDefVertType>(1));
+  shader->unknown4f0 = 1;
+  shader->setupShader(&unknown640);
+  shader->setupTexture(*unknown278.unknown70, static_cast<LayerSamplerType>(unknownc6), 0);
+  shader->renderQuadsIndex();
+}
 
 void LayerObjTopMemObj::finalRender() {
   setupRender();

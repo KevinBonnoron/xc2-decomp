@@ -1,9 +1,11 @@
 #include "layer/layer_obj_top_filter.h"
 
+#include "grlib/cglib_render_target.h"
 #include "layer/layer_filter_flow_map_obj.h"
 #include "layer/layer_filter_gs_blur_obj.h"
 #include "layer/layer_filter_obj.h"
 #include "layer/layer_manager.h"
+#include "layer/layer_shd_manager.h"
 #include "mtl/alloc_handle.h"
 
 namespace layer {
@@ -153,5 +155,31 @@ void LayerObjTopFilter::createFlowMap(u32 width, u32 height, const void *data) {
 }
 
 void LayerObjTopFilter::setFlowMapParameter(f32 speed, f32 strength) { static_cast<LayerFilterFlowMapObj *>(getFilterObj())->setParameter(speed, strength); }
+
+void LayerObjTopFilter::finalRender() {
+  LayerShdManager *shader = LayerManager::get()->unknown58;
+  shader->setShaderMaskOff();
+  unknown270->render();
+  grlib::CGLibRenderTarget *target = shader->getDefRenderTarget();
+  target->setRenderTarget();
+  if (!shader->unknown002(unknown248, unknown250)) {
+    return;
+  }
+  if (unknown2c8) {
+    shader->unknown4f8 = 3;
+  } else {
+    shader->unknown4f8 = 1;
+  }
+  shader->unknown003(2);
+  shader->unknown004(this);
+  shader->unknown4f2 = 1;
+  shader->setSecTexture(unknown220[2]);
+  shader->setupVertex(static_cast<LayerDefVertType>(1));
+  shader->unknown4f0 = 1;
+  shader->setupShader(&unknown290);
+  shader->setupTexture(*unknown270->getTexture(), static_cast<LayerSamplerType>(unknown270->unknown0c), 0);
+  shader->setupTexture(*target->unknown70, static_cast<LayerSamplerType>(2), 1);
+  shader->renderQuadsIndex();
+}
 
 } // namespace layer

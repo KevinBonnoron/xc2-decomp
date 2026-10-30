@@ -8,11 +8,9 @@
 namespace layer {
 
 LayerFontResObj::LayerFontResObj(LayerFontManager *manager) {
-  unknown10 = nullptr;
   unknown1c = 0xcc;
   unknown20 = manager;
   unknown28 = 0;
-  unknown08 = nullptr;
   unknown18 = LAYER_OBJ_TYPE_FONT_RES;
   unknown30 = nullptr;
   unknown60 = nullptr;

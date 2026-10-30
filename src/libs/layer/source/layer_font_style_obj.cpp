@@ -54,8 +54,6 @@ LayerFontStyleObj::LayerFontStyleObj(LayerFontManager *manager) {
   unknown1c = 0xcc;
   unknown38 = manager;
   unknown18 = LAYER_OBJ_TYPE_FONT_STYLE;
-  unknown08 = nullptr;
-  unknown10 = nullptr;
   unknown40 = RUBY_SCALE;
   unknown48 = nullptr;
   unknown50 = nullptr;

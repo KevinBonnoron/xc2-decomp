@@ -2,12 +2,15 @@
 
 #include <string.h>
 
+#include "grlib/cglib_ctl_vertex.h"
+#include "grlib/cglib_texture_buffer.h"
 #include "grlib/cglib_vtx_index.h"
 #include "grlib/cglib_vtx_vertex.h"
 #include "layer/layer_acc_poly_obj.h"
 #include "layer/layer_link_list.h"
 #include "layer/layer_manager.h"
 #include "layer/layer_res_add_tex_obj.h"
+#include "layer/layer_shd_manager.h"
 #include "mtl/mem_manager.h"
 
 namespace layer {
@@ -128,6 +131,28 @@ void LayerObjTopPolyObj::setIndexInfo(u16 start, u16 num) {
   unknown250 |= 0x40 << index;
   unknown300.unknown44[index] = start;
   unknown300.unknown48[index] = num;
+}
+
+void LayerObjTopPolyObj::finalRender() {
+  LayerShdManager *shader = LayerManager::get()->unknown58;
+  if (!shader->unknown002(unknown248, unknown258)) {
+    return;
+  }
+  shader->unknown003(LayerShdManager::s_resDefBlend[unknownc5]);
+  shader->unknown004(this);
+  if (unknown278 != nullptr && unknown278->isInitialized()) {
+    shader->unknown4f8 = 2;
+  } else {
+    shader->unknown4f8 = 1;
+  }
+  shader->setSecTexture(unknown220[2]);
+  grlib::CGLibCtlVertex::setVertex(*unknown300.unknown00[unknown300.unknown50]);
+  shader->unknown4f0 = 6;
+  shader->setupShader(&unknown280);
+  if (unknown278 != nullptr && unknown278->isInitialized()) {
+    shader->setupTexture(*unknown278, static_cast<LayerSamplerType>(unknownc6), 0);
+  }
+  unknown300.unknown10[unknown300.unknown52]->drawIndex(unknown300.unknown4e, unknown300.unknown4c * 2);
 }
 
 } // namespace layer
