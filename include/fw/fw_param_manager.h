@@ -40,6 +40,8 @@ public:
   u8 _448[0x460 - 0x448];
   mm::mtl::IntrusivePtr<ParamList> unknown460; // Inferred role: eye blink param list; original member name unknown.
   mm::mtl::IntrusivePtr<ParamList> unknown468; // Inferred role: unique motion param list; original member name unknown.
+  u8 _470[0x4a8 - 0x470];
+  mm::mtl::IntrusivePtr<ParamList> unknown4a8; // Inferred role: menu param list; original member name unknown.
 };
 
 static_assert(offsetof(ParamManager, unknown430) == 0x430, "");
@@ -47,5 +49,6 @@ static_assert(offsetof(ParamManager, unknown438) == 0x438, "");
 static_assert(offsetof(ParamManager, unknown440) == 0x440, "");
 static_assert(offsetof(ParamManager, unknown460) == 0x460, "");
 static_assert(offsetof(ParamManager, unknown468) == 0x468, "");
+static_assert(offsetof(ParamManager, unknown4a8) == 0x4a8, "");
 
 } // namespace fw

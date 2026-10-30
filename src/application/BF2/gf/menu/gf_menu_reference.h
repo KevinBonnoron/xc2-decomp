@@ -100,6 +100,7 @@ public:
   static u32 getChainAttackTotalDamage();
   static void setChainAttackBurstCount(u32 count);
   static u32 getChainAttackBurstCount();
+  static void setElemComboRootInfo(u32 index, const ElemComboRoot &root);
   static const ElemComboRoot &getElementComboRootInfo(u32 index);
   static u32 getElementComboRootLevel(u32 index);
   static u32 getElementComboRootCurrent();
@@ -115,11 +116,14 @@ public:
   static bool isReversePaletteBtnState(u32 index, u32 button);
   static ui::UIListInfo<MenuEnemyInfo> *getEnemyLinkList();
   static ui::UIListInfo<MenuItemInfo> *getItemLinkList();
+  static void addEnemyLink(u32 enemy);
   static void addItemLink(const MenuItemInfo &info);
+  static void clearLinkList();
   static void setReferenceDriverID(u32 index, u32 id);
   static u32 getReferenceDriverID(u32 index);
   static void setReferenceBladeID(u32 index, u32 id);
   static u32 getReferenceBladeID(u32 index);
+  static void setReferenceBladeIDFromDriver(u32 driver);
   static void setReferenceNumber(u32 index, int value);
   static void setReferenceNumberMin(u32 index, int min);
   static void setReferenceNumberMax(u32 index, int max);

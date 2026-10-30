@@ -2,6 +2,7 @@
 
 #include "bdat.h"
 #include "framework/sound/sound_manager.h"
+#include "fw/fw_param_manager.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_character_id.h"
 #include "gf/data/gf_data_battle.h"
@@ -34,8 +35,19 @@
 #include "mm_math/mm_pnt.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_vector.h"
+#include "mm_mtl/fixstr.h"
+#include "mm_mtl/intrusive_ptr.h"
+#include "ui/ctrl/ui_ctrl_cursor_select.h"
 #include "ui/ctrl/ui_ctrl_manager.h"
 #include "ui/event/ui_event_manager.h"
+#include "ui/list/ui_select_obj_list.h"
+#include "ui/motion/ui_motion_data.h"
+#include "ui/motion/ui_motion_library.h"
+#include "ui/plugin/ui_object_disp_plugin.h"
+#include "ui/plugin/ui_object_dock_plugin.h"
+#include "ui/plugin/ui_object_number_plugin.h"
+#include "ui/plugin/ui_object_scroll_bar_plugin.h"
+#include "ui/plugin/ui_object_sync_plugin.h"
 #include "ui/ui_object_acc.h"
 #include "ui/ui_str.h"
 #include "ui/ui_util.h"
@@ -814,10 +826,148 @@ bool GfMenuObjUtil::isEnemyNamed(GF_OBJ_HANDLE *handle) {
   return dataEnemy->unknown04_0;
 }
 
+void GfMenuObjUtil::setColMulandAdd(u32 handle, const char *color) {
+  ui::UIObjectAcc objectAcc(handle);
+  if (objectAcc.isValid()) {
+    mm::mtl::FixStr<64> name;
+    name.format("%s_mul", color);
+    objectAcc.setMulColor(name.c_str());
+    name.format("%s_add", color);
+    objectAcc.setAddColor(name.c_str());
+  }
+}
+
 void GfMenuObjUtil::setColDefault(u32 handle) {
   ui::UIObjectAcc objectAcc(handle);
   if (objectAcc.isValid()) {
     objectAcc.loadDefColor();
+  }
+}
+
+void GfMenuObjUtil::createDockPlugin(u32 handle, u32 target, u32 dockType, const mm::Pnt<s16> &offset, u32 alignType) {
+  ui::UIObjectDockPlugin *plugin = ui::UIObjectDockPlugin::create(handle, offset.x, offset.y, target);
+  if (plugin != nullptr) {
+    plugin->unknown24 = dockType;
+    plugin->unknown28 = alignType;
+    plugin->release();
+  }
+}
+
+void GfMenuObjUtil::createDockPluginEx(u32 handle, u32 target, u32 dockType, const DockingOption &option) {
+  ui::UIObjectDockPlugin *plugin = ui::UIObjectDockPlugin::create(handle, option.unknown04.x, option.unknown04.y, target);
+  if (plugin != nullptr) {
+    plugin->unknown24 = dockType;
+    plugin->unknown28 = option.unknown00;
+    plugin->unknown30 = option.unknown08;
+    plugin->release();
+  }
+}
+
+void GfMenuObjUtil::createVScrollBarPlugin(u32 handle, ui::UIListInfoBase *list, const char *barName, bool isScaleEnable) {
+  ui::UIObjectScrollBarPlugin *plugin = ui::UIObjectScrollBarPlugin::create(handle, 0, list, barName);
+  if (plugin != nullptr) {
+    plugin->setScaleEnable(isScaleEnable);
+    plugin->release();
+  }
+}
+
+void GfMenuObjUtil::createHScrollBarPlugin(u32 handle, ui::UIListInfoBase *list, const char *barName) {
+  ui::UIObjectScrollBarPlugin *plugin = ui::UIObjectScrollBarPlugin::create(handle, 1, list, barName);
+  if (plugin != nullptr) {
+    plugin->release();
+  }
+}
+
+void GfMenuObjUtil::createFollowDispPlugin(u32 handle, u32 target) {
+  ui::UIObjectDispPlugin *plugin = ui::UIObjectDispPlugin::create(handle);
+  if (plugin != nullptr) {
+    plugin->setFollowObjHandle(target);
+    plugin->release();
+  }
+}
+
+void GfMenuObjUtil::createSyncPlugin(u32 handle, u32 target, u32 flags) {
+  ui::UIObjectSyncPlugin *plugin = ui::UIObjectSyncPlugin::create(handle);
+  if (plugin != nullptr) {
+    plugin->setTargetObject(target);
+    plugin->setTargetFlag(flags);
+    plugin->release();
+  }
+}
+
+void GfMenuObjUtil::createNumberPlugin(u32 handle, int number) {
+  ui::UIObjectNumberPlugin *plugin = ui::UIObjectNumberPlugin::create(handle);
+  if (plugin != nullptr) {
+    plugin->setMin(number);
+    plugin->setMax(number);
+    plugin->setNumber(number);
+    plugin->release();
+  }
+}
+
+const GfMenuObjUtil::unknown001 *GfMenuObjUtil::getParamMenu() {
+  fw::ParamManager *manager = fw::ParamManager::get();
+  if (manager != nullptr) {
+    const fw::ParamList *list = manager->unknown4a8.operator->();
+    if (list->unknown0c != 0 && list->unknown10 != nullptr) {
+      return static_cast<const unknown001 *>(list->unknown10[0].param);
+    }
+  }
+  return nullptr;
+}
+
+f32 GfMenuObjUtil::getPresetCtrlTime(u32 preset) {
+  const unknown001 *param = getParamMenu();
+  if (param != nullptr) {
+    switch (preset) {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+      return param->unknown00;
+    case 6:
+      return param->unknown04;
+    }
+  }
+  return 0.5f;
+}
+
+f32 GfMenuObjUtil::getCtrlMotionTime(const char *name, const char *motion) {
+  if (name != nullptr && motion != nullptr) {
+    ui::UIMotionData *data = ui::UIMotionLibrary::get()->find(name);
+    if (data != nullptr) {
+      return data->getMotionLength(data->searchMotion(motion));
+    }
+    return -1.0f;
+  }
+  return 0.0f;
+}
+
+void GfMenuObjUtil::changeCursorTarget(ui::UICtrlCursorSelect *cursor, u32 handle, const char *format) {
+  if (cursor != nullptr && cursor->unknown58 != nullptr) {
+    ui::UISelectObjList *list = cursor->unknown58;
+    list->clear();
+    list->pickupObject(handle, format, 1);
+    list->getSize();
+  }
+}
+
+void GfMenuObjUtil::changeCursorTarget(ui::UICtrlCursorSelect *cursor, u32 handle, const char **names, u16 count) {
+  if (cursor != nullptr && cursor->unknown58 != nullptr) {
+    ui::UISelectObjList *list = cursor->unknown58;
+    list->clear();
+    if (names != nullptr) {
+      ui::UIObjectAcc objectAcc(handle);
+      for (u16 i = 0; i < count; i++) {
+        u32 child = objectAcc.searchChild(names[i]);
+        if (child != 0) {
+          list->addContents(child);
+        }
+      }
+    }
+    list->getSize();
   }
 }
 

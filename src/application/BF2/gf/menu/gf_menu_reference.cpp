@@ -1,7 +1,9 @@
 #include "gf/menu/gf_menu_reference.h"
 
+#include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_object_type.h"
 #include "gf/menu/gf_menu_manager.h"
+#include "gf/menu/list/gf_menu_enemy_list.h"
 #include "gf/menu/list/gf_menu_item_list.h"
 #include "gf/menu/object/gf_menu_obj_party_status.h"
 #include "gf/object/gf_obj_acc.h"
@@ -281,6 +283,13 @@ const GfMenuReference::ElemComboRoot &GfMenuReference::getElementComboRootInfo(u
   return empty;
 }
 
+void GfMenuReference::setElemComboRootInfo(u32 index, const ElemComboRoot &root) {
+  GfMenuReference *reference = get();
+  if (index < 7 && reference != nullptr) {
+    reference->unknown4cba8[index] = root;
+  }
+}
+
 u32 GfMenuReference::getElementComboRootCurrent() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
@@ -427,10 +436,31 @@ ui::UIListInfo<MenuItemInfo> *GfMenuReference::getItemLinkList() {
   return nullptr;
 }
 
+void GfMenuReference::addEnemyLink(u32 enemy) {
+  ui::UIListInfo<MenuEnemyInfo> *list = getEnemyLinkList();
+  if (list != nullptr) {
+    MenuEnemyInfo info;
+    info.unknown00 = enemy;
+    list->addContents(info);
+  }
+}
+
 void GfMenuReference::addItemLink(const MenuItemInfo &info) {
   ui::UIListInfo<MenuItemInfo> *list = getItemLinkList();
   if (list != nullptr) {
     list->addContents(info);
+  }
+}
+
+void GfMenuReference::clearLinkList() {
+  GfMenuReference *reference = get();
+  if (reference != nullptr) {
+    if (reference->unknown4cb98 != nullptr) {
+      reference->unknown4cb98->clear();
+    }
+    if (reference->unknown4cba0 != nullptr) {
+      reference->unknown4cba0->clear();
+    }
   }
 }
 
@@ -462,6 +492,18 @@ u32 GfMenuReference::getReferenceBladeID(u32 index) {
     return reference->unknown4cc18[index];
   }
   return 0;
+}
+
+void GfMenuReference::setReferenceBladeIDFromDriver(u32 driver) {
+  GfMenuReference *reference = get();
+  if (reference != nullptr) {
+    DataParamAcc acc(OBJECT_TYPE_DRIVER, driver, GIMMICK_TYPE_NONE);
+    if (acc.isValid()) {
+      reference->unknown4cc18[0] = acc.getBlade(0, false);
+      reference->unknown4cc18[1] = acc.getBlade(1, false);
+      reference->unknown4cc18[2] = acc.getBlade(2, false);
+    }
+  }
 }
 
 void GfMenuReference::setReferenceNumber(u32 index, int value) {

@@ -1,9 +1,15 @@
 #pragma once
+#include <stddef.h>
+
+#include "mm_math/mm_pnt.h"
+#include "mm_math/mm_rect.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_vector.h"
 #include "types.h"
 
 namespace ui {
+class UICtrlCursorSelect;
+class UIListInfoBase;
 class UIStr;
 } // namespace ui
 
@@ -32,6 +38,18 @@ public:
     int unknown10; // Inferred role: range icon; original member name unknown.
   };
 
+  struct DockingOption {
+    u32 unknown00;           // Inferred role: align type; original member name unknown.
+    mm::Pnt<s16> unknown04;  // Inferred role: offset; original member name unknown.
+    mm::Rect<s16> unknown08; // Inferred role: area; original member name unknown.
+  };
+
+  // Inferred role: menu parameters; original type name unknown.
+  struct unknown001 {
+    f32 unknown00; // Inferred role: preset control time; original member name unknown.
+    f32 unknown04; // Inferred role: preset control time of preset 6; original member name unknown.
+  };
+
   static u32 getBtnIconNumber(u32 button);
   static u32 getPadSelectIconNumber(u32 select);
   static u32 getPointerSelectIconNumber();
@@ -55,6 +73,19 @@ public:
   static void setCtrlDefault(int ctrl);
   static void setCtrlSpeedFactor(int ctrl, f32 speedFactor);
   static u32 getPresetCtrlCurve(u32 preset);
+  static f32 getPresetCtrlTime(u32 preset);
+  static void setColMulandAdd(u32 handle, const char *color);
+  static void createDockPlugin(u32 handle, u32 target, u32 dockType, const mm::Pnt<s16> &offset, u32 alignType);
+  static void createDockPluginEx(u32 handle, u32 target, u32 dockType, const DockingOption &option);
+  static void createVScrollBarPlugin(u32 handle, ui::UIListInfoBase *list, const char *barName, bool isScaleEnable);
+  static void createHScrollBarPlugin(u32 handle, ui::UIListInfoBase *list, const char *barName);
+  static void createFollowDispPlugin(u32 handle, u32 target);
+  static void createSyncPlugin(u32 handle, u32 target, u32 flags);
+  static void createNumberPlugin(u32 handle, int number);
+  static const unknown001 *getParamMenu();
+  static f32 getCtrlMotionTime(const char *name, const char *motion);
+  static void changeCursorTarget(ui::UICtrlCursorSelect *cursor, u32 handle, const char *format);
+  static void changeCursorTarget(ui::UICtrlCursorSelect *cursor, u32 handle, const char **names, u16 count);
   static const char *getMenuMS(u32 id);
   static u32 getLeaderPartyID();
   static int getLeaderPartyType();
@@ -143,5 +174,10 @@ public:
   static bool isBladeSelectable(u32 blade, const GfMenuBladeList *list);
   static bool isBladeReleasable(u32 blade, const GfMenuBladeList *list);
 };
+
+static_assert(offsetof(GfMenuObjUtil::DockingOption, unknown04) == 0x04, "");
+static_assert(offsetof(GfMenuObjUtil::DockingOption, unknown08) == 0x08, "");
+static_assert(sizeof(GfMenuObjUtil::DockingOption) == 0x10, "");
+static_assert(offsetof(GfMenuObjUtil::unknown001, unknown04) == 0x04, "");
 
 } // namespace gf

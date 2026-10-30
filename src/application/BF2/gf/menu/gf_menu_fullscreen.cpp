@@ -1,6 +1,8 @@
 #include "gf/menu/gf_menu_fullscreen.h"
 
+#include "ui/input/ui_input_manager.h"
 #include "ui/ui_manager.h"
+#include "ui/ui_util.h"
 
 namespace gf {
 
@@ -30,6 +32,18 @@ void GfMenuFullScreen::destroy() {
   GfMenuFullScreen *fullScreen = get();
   fullScreen->finalize();
   delete fullScreen;
+}
+
+void GfMenuFullScreen::postUpdate(const fw::UpdateInfo &) {
+  GfMenuFullScreen *fullScreen = get();
+  if (fullScreen != nullptr && fullScreen->unknown08) {
+    if (fullScreen->unknown110.isValid()) {
+      fullScreen->unknown110();
+    }
+    if (fullScreen->unknown138.isValid()) {
+      fullScreen->unknown138();
+    }
+  }
 }
 
 bool GfMenuFullScreen::isDisp() {
@@ -127,6 +141,97 @@ bool GfMenuFullScreen::isActiveInput(u32 layer) {
     return get()->unknown160.isActive(layer);
   }
   return false;
+}
+
+void GfMenuFullScreen::registLayerParam(u32 layer, const GfMenuTypes::Param &param) {
+  GfMenuFullScreen *fullScreen = get();
+  if (fullScreen != nullptr) {
+    for (unknown003 *entry = fullScreen->unknown188.begin(); entry != fullScreen->unknown188.end(); entry++) {
+      if (entry->unknown00 == layer) {
+        entry->unknown08 = param;
+        return;
+      }
+    }
+    if (fullScreen->unknown188.size() != fullScreen->unknown188.capacity()) {
+      unknown003 entry;
+      entry.unknown00 = layer;
+      entry.unknown08 = param;
+      fullScreen->unknown188.push_back(entry);
+    }
+  }
+}
+
+bool GfMenuFullScreen::getLayerParam(u32 layer, GfMenuTypes::Param &param) {
+  GfMenuFullScreen *fullScreen = get();
+  if (layer != 0 && fullScreen != nullptr) {
+    for (unknown003 *entry = fullScreen->unknown188.begin(); entry != fullScreen->unknown188.end(); entry++) {
+      if (entry->unknown00 == layer) {
+        param = entry->unknown08;
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+void GfMenuFullScreen::registLayerObject(u32 layer, u32 object) {
+  u16 group = getLayerGroup(layer);
+  if (group < LAYER_COUNT) {
+    get()->unknown18[group].unknown30 = object;
+  }
+}
+
+void GfMenuFullScreen::setShadowLayer(u32 layer, bool shadow) {
+  u16 group = getLayerGroup(layer);
+  if (group < LAYER_COUNT) {
+    get()->unknown18[group].unknown34 = shadow;
+  }
+}
+
+u16 GfMenuFullScreen::getLayerGroup(u32 layer) {
+  GfMenuFullScreen *fullScreen = get();
+  if (layer != 0 && fullScreen != nullptr) {
+    for (u16 i = 0; i < LAYER_COUNT; i++) {
+      if (fullScreen->unknown18[i].unknown00 == layer) {
+        return i;
+      }
+    }
+  }
+  return 0xff;
+}
+
+void GfMenuFullScreen::startProcess() {
+  ui::UIInputManager *inputManager = ui::UIInputManager::get();
+  if (inputManager != nullptr) {
+    inputManager->unknown20 = ui::UIUtil::getGroupPriority(4);
+  }
+}
+
+void GfMenuFullScreen::exitProcess(bool isReset) {
+  ui::UIInputManager *inputManager = ui::UIInputManager::get();
+  if (inputManager != nullptr) {
+    if (isReset) {
+      inputManager->unknown20 = 0;
+    } else if (unknown104 == 0) {
+      inputManager->unknown20 = ui::UIUtil::getGroupPriority(3);
+    } else {
+      inputManager->unknown20 = unknown104;
+      unknown104 = 0;
+    }
+  }
+  if (!unknown110.isValid() && !unknown138.isValid()) {
+    unknownf9 = false;
+  }
+  unknownf8 = true;
+}
+
+void GfMenuFullScreen::terminateLayer(u16 index, bool isImmediate, bool isKeep) {
+  if (index < 5 && unknown18[index].unknown00 != 0) {
+    if (isKeep && unknown18[index].unknown08.size() != unknown18[index].unknown08.capacity()) {
+      unknown18[index].unknown08.push_back(unknown18[index].unknown00);
+    }
+    ui::UIManager::get()->terminateLayer(unknown18[index].unknown00, isImmediate);
+  }
 }
 
 } // namespace gf
