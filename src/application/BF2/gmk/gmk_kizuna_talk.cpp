@@ -124,3 +124,5 @@ template void mm::mtl::Vector<gmk::GmkKizunaTalk::BdatInfo>::expand(size_t, size
 template void mm::mtl::Vector<gmk::GmkKizunaTalk::BdatInfo>::extend(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkKizunaTalk::BdatInfo>::resize(size_t);
 template void mm::mtl::Vector<gmk::GmkKizunaTalk>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkKizunaTalk>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkKizunaTalk>::resize(size_t);

@@ -159,3 +159,6 @@ int GmkTrigger::getBindedRoutedEnemyNum() const { return getData()->unknown1c - 
 template void mm::mtl::Vector<gmk::GmkTrigger::BdatInfo>::expand(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkTrigger::BdatInfo>::extend(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkTrigger::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkTrigger>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkTrigger>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkTrigger>::resize(size_t);

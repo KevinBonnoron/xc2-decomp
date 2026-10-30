@@ -43,12 +43,10 @@ public:
   // Inferred helper: bdat info of the event; original name unknown.
   const BdatInfo *unknown001() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
 
-  u8 _58[0x60 - 0x58];
   GmkPhantom unknown60; // Inferred role: phantom; original member name unknown.
   bool unknownf0;       // Role and original member name unknown.
   bool unknownf1;       // Role and original member name unknown.
   bool unknownf2;       // Role and original member name unknown.
-  u8 _f3[0x100 - 0xf3];
 };
 
 static_assert(sizeof(GmkEvent::BdatInfo) == 0xe, "");

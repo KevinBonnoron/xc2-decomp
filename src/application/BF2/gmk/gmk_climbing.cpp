@@ -101,3 +101,5 @@ template void mm::mtl::Vector<gmk::GmkClimbing>::expand(size_t, size_t);
 
 template void mm::mtl::Vector<gmk::GmkClimbing::BdatInfo>::extend(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkClimbing::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkClimbing>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkClimbing>::resize(size_t);

@@ -79,7 +79,6 @@ public:
   GmkPhantom unknown50;        // Inferred role: phantom; original member name unknown.
   GmkBgmCondInfo unknowne0[4]; // Inferred role: bgm condition infos A to D; original member name unknown.
   GmkBgmCondInfo *unknown160;  // Inferred role: matched condition info; original member name unknown.
-  u8 _168[0x170 - 0x168];
 };
 
 static_assert(sizeof(GmkAreaBgm::BdatInfo) == 0x2, "");

@@ -51,10 +51,8 @@ public:
 
   const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
 
-  u8 _58[0x60 - 0x58];
   GmkPhantom unknown60; // Inferred role: phantom; original member name unknown.
   bool unknownf0;       // Role and original member name unknown.
-  u8 _f1[0x100 - 0xf1];
 };
 
 static_assert(sizeof(GmkTutorial::BdatInfo) == 0xa, "");

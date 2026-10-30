@@ -12,8 +12,10 @@ template <int N> struct int_to_type {
 
 namespace mtl_detail {
 
+// The element loops are declared inline: the game inlines them into construct_n and copy_construct_n, which then stay out of line in their callers.
+
 // Value-initialization: the game zero-fills (memset) elements of class types whose default constructor is not user-provided.
-template <typename T> void construct_n(T *buffer, size_t count, int_to_type<0>) {
+template <typename T> inline void construct_n(T *buffer, size_t count, int_to_type<0>) {
   for (size_t i = 0; i < count; i++) {
     new (&buffer[i]) T();
   }
@@ -21,7 +23,7 @@ template <typename T> void construct_n(T *buffer, size_t count, int_to_type<0>) 
 
 template <typename T> void construct_n(T *, size_t, int_to_type<1>) {}
 
-template <typename T> void copy_construct_n(const T *source, size_t count, T *destination, int_to_type<0>) {
+template <typename T> inline void copy_construct_n(const T *source, size_t count, T *destination, int_to_type<0>) {
   for (size_t i = 0; i < count; i++) {
     new (&destination[i]) T(source[i]);
   }

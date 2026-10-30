@@ -91,6 +91,7 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_ROUTE_POINT;
 
+  GmkRoutePoint() : unknown48(nullptr) {}
   ~GmkRoutePoint() override { dispose(); }
   GmkType getGmkType() const override { return GMK_TYPE; }
   bool isValid() const override { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
@@ -101,7 +102,7 @@ public:
 
   const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
 
-  u8 _48[0x50 - 0x48];
+  void *unknown48; // Inferred role: cleared by the constructor; original member name unknown.
 };
 
 static_assert(offsetof(GmkRoutePoint::Data, unknown1c) == 0x1c, "");

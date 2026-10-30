@@ -37,6 +37,7 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_SQUAD_LEADER;
 
+  GmkSquadLeader() : unknown48(nullptr) {}
   ~GmkSquadLeader() override { dispose(); }
   GmkType getGmkType() const override;
   bool isValid() const override;
@@ -48,7 +49,7 @@ public:
 
   const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
 
-  u8 _48[0x50 - 0x48];
+  void *unknown48; // Inferred role: cleared by the constructor; original member name unknown.
 };
 
 static_assert(sizeof(GmkSquadLeader) == 0x50, "");
@@ -63,6 +64,7 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_SQUAD_MEMBER;
 
+  GmkSquadMember() : unknown48(nullptr) {}
   ~GmkSquadMember() override { dispose(); }
   GmkType getGmkType() const override;
   bool isValid() const override;
@@ -70,7 +72,7 @@ public:
   void dispose() override;
   void debugUpdateMmf() override;
 
-  u8 _48[0x50 - 0x48];
+  void *unknown48; // Inferred role: cleared by the constructor; original member name unknown.
 };
 
 static_assert(sizeof(GmkSquadMember) == 0x50, "");

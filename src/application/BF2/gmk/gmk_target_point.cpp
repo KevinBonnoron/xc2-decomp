@@ -15,3 +15,5 @@ template void mm::mtl::Vector<gmk::GmkTargetPoint::BdatInfo>::expand(size_t, siz
 template void mm::mtl::Vector<gmk::GmkTargetPoint::BdatInfo>::extend(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkTargetPoint::BdatInfo>::resize(size_t);
 template void mm::mtl::Vector<gmk::GmkTargetPoint>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkTargetPoint>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkTargetPoint>::resize(size_t);

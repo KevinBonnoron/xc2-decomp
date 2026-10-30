@@ -152,6 +152,7 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_ELEVATOR_LOCATOR;
 
+  GmkElevatorLocator() {}
   ~GmkElevatorLocator() override { dispose(); }
   GmkType getGmkType() const override;
   bool isValid() const override;

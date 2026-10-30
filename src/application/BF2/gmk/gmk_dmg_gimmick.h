@@ -139,6 +139,7 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_DMG_EFFECT;
 
+  GmkDmgEffect() : unknown48(true), unknown4c(0) {}
   ~GmkDmgEffect() override { dispose(); }
   GmkType getGmkType() const override;
   bool isValid() const override;
@@ -149,8 +150,7 @@ public:
   void applyEffectParam() const;
   void validateDisp() const;
 
-  bool unknown48; // Inferred role: visible; original member name unknown.
-  u8 _49[0x4c - 0x49];
+  bool unknown48;        // Inferred role: visible; original member name unknown.
   mutable u32 unknown4c; // Role and original member name unknown.
 };
 
@@ -173,7 +173,7 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_DMG_SE;
 
-  GmkDmgSe() : unknown50(nullptr) {}
+  GmkDmgSe() : unknown50(nullptr), unknowne0(false), unknowne4(0), unknowne8(1.0f) {}
   ~GmkDmgSe() override { dispose(); }
   GmkType getGmkType() const override { return GMK_TYPE; }
   bool isValid() const override { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
@@ -184,7 +184,6 @@ public:
   void dispose() override;
   void validateMute() const;
 
-  u8 _48[0x50 - 0x48];
   mutable GmkPhantom unknown50; // Inferred role: phantom; original member name unknown.
   bool unknowne0;               // Inferred role: mute; original member name unknown.
   mutable u32 unknowne4;        // Inferred role: se handle; original member name unknown.

@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "gf/object/gf_obj_handle.h"
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
@@ -29,6 +30,7 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_KIZUNA_TALK;
 
+  GmkKizunaTalk() : unknown48(gf::INVALID_HANDLE), unknown50(), unknown54(true) {}
   ~GmkKizunaTalk() override { dispose(); }
   GmkType getGmkType() const override { return GMK_TYPE; }
   int getGameFlagId() const;

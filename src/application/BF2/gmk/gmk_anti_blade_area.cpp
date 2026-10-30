@@ -66,3 +66,5 @@ void GmkAntiBladeAreaManager::dispose() {
 template void mm::mtl::Vector<gmk::GmkAntiBladeArea::BdatInfo>::expand(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkAntiBladeArea::BdatInfo>::extend(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkAntiBladeArea::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkAntiBladeArea>::expand(size_t, size_t);
+template mm::mtl::PtrSingleton<gmk::GmkAntiBladeAreaManager>::~PtrSingleton();

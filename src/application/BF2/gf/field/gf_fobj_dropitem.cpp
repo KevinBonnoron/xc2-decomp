@@ -163,3 +163,4 @@ typedef mm::mtl::RedBlackTreeBase<mm::mtl::Map<unsigned short, float>::MapTraits
 template void unknown101::free_node(unknown101::node *, bool);
 template unknown101::node *unknown101::insert(const mm::mtl::MapPair<unsigned short, float> &);
 template void unknown101::rebalance(unknown101::node *);
+template void mm::mtl::Vector<gf::GfDropitemInfo>::expand(size_t, size_t);

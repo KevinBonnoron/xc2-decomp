@@ -71,3 +71,4 @@ GmkType GmkEvent::getGmkType() const { return GMK_TYPE; }
 template void mm::mtl::Vector<gmk::GmkEvent::BdatInfo>::expand(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkEvent::BdatInfo>::extend(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkEvent::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkEvent>::expand(size_t, size_t);

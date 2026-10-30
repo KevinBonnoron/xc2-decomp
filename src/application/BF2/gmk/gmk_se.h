@@ -156,6 +156,7 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_SE_LINE_POINT;
 
+  GmkSeLinePoint() {}
   GmkType getGmkType() const override;
   bool isValid() const override;
 };

@@ -352,3 +352,8 @@ template void mm::mtl::Vector<gmk::GmkDmgSe::BdatInfo>::resize(size_t);
 
 template void mm::mtl::Vector<gmk::GmkDmgGimmick::BdatInfo>::extend(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkDmgGimmick::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkDmgEffect>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkDmgEffect>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkDmgSe>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkDmgSe>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkDmgSe>::resize(size_t);

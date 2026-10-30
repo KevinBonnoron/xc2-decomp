@@ -65,7 +65,7 @@ public:
   virtual void onLeavePhantom(const OnLeaveInfo &info) = 0;
 };
 
-class GmkPhantom : public fw::ColiUserData, public mm::mtl::IntrusiveListNode<GmkPhantom> {
+class GmkPhantom : public mm::mtl::IntrusiveListNode<GmkPhantom>, public fw::ColiUserData {
 public:
   enum ShapeType {
     SHAPE_TYPE_NONE = 0,

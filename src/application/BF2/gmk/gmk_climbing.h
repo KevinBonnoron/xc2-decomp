@@ -34,6 +34,7 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_CLIMBING;
 
+  GmkClimbing() : unknown48(nullptr), unknown50(mm::Vec3::zero) {}
   ~GmkClimbing() override { dispose(); }
   GmkType getGmkType() const override;
   void create(const CreateInfo &info) override;

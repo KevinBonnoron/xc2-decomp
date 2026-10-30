@@ -152,3 +152,7 @@ GmkBgmCondInfo *GmkAreaBgm::findCondMatched() {
 template void mm::mtl::Vector<gmk::GmkAreaBgm::BdatInfo>::expand(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkAreaBgm::BdatInfo>::extend(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkAreaBgm::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkAreaBgm>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkAreaBgm>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkAreaBgm>::resize(size_t);
+template mm::mtl::PtrSingleton<gmk::GmkBgmCondInfoManager>::~PtrSingleton();

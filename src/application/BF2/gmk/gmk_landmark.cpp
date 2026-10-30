@@ -153,3 +153,4 @@ template void mm::mtl::Vector<gmk::GmkLandmark::BdatInfo>::expand(size_t, size_t
 
 template void mm::mtl::Vector<gmk::GmkLandmark::BdatInfo>::extend(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkLandmark::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkLandmark>::expand(size_t, size_t);

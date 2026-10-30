@@ -347,3 +347,5 @@ template void mm::mtl::Vector<gmk::GmkElevatorLocator>::expand(size_t, size_t);
 
 template void mm::mtl::Vector<gmk::GmkElevator::BdatInfo>::extend(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkElevator::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkElevatorLocator>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkElevatorLocator>::resize(size_t);

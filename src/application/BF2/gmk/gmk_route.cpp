@@ -370,3 +370,5 @@ template void mm::mtl::Vector<gmk::GmkRoutePoint::BdatInfo>::expand(size_t, size
 template void mm::mtl::Vector<gmk::GmkRoutePoint::BdatInfo>::extend(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkRoutePoint::BdatInfo>::resize(size_t);
 template void mm::mtl::Vector<gmk::GmkRoutePoint>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkRoutePoint>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkRoutePoint>::resize(size_t);

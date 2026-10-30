@@ -16,6 +16,7 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_TARGET_POINT;
 
+  GmkTargetPoint() {}
   ~GmkTargetPoint() override { dispose(); }
   GmkType getGmkType() const override;
   bool isValid() const override;

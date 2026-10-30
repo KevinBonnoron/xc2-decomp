@@ -134,3 +134,6 @@ template void mm::mtl::Vector<gmk::GmkTutorial::BdatInfo>::expand(size_t, size_t
 
 template void mm::mtl::Vector<gmk::GmkTutorial::BdatInfo>::extend(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkTutorial::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkTutorial>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkTutorial>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkTutorial>::resize(size_t);

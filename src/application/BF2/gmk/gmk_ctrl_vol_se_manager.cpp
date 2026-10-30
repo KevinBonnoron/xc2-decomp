@@ -21,3 +21,5 @@ void GmkCtrlVolSeManager::update(f32 deltaTime) {
 }
 
 } // namespace gmk
+
+template mm::mtl::PtrSingleton<gmk::GmkCtrlVolSeManager>::~PtrSingleton();

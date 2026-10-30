@@ -128,3 +128,5 @@ u8 *GmkRoutedNpc::getBindedBdatFp() const { return GmkRoute::unknown08.unknown00
 const IGmkList *GmkRoutedNpc::getBindedRoutePointList() const { return GmkRoute::unknown08.unknown00->getCreateInfo().unknown08->unknown1b8[GMK_TYPE_NPC_ROUTE_POINT]; }
 
 } // namespace gmk
+
+template void mm::mtl::Vector<gmk::GmkRoutedNpc>::expand(size_t, size_t);

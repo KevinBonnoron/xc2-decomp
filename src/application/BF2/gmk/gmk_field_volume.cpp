@@ -13,3 +13,5 @@ template void mm::mtl::Vector<gmk::GmkFieldVolume::BdatInfo>::expand(size_t, siz
 template void mm::mtl::Vector<gmk::GmkFieldVolume::BdatInfo>::extend(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkFieldVolume::BdatInfo>::resize(size_t);
 template void mm::mtl::Vector<gmk::GmkFieldVolume>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkFieldVolume>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkFieldVolume>::resize(size_t);

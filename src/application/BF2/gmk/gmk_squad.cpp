@@ -149,3 +149,8 @@ template void mm::mtl::Vector<gmk::GmkSquadMember::BdatInfo>::expand(size_t, siz
 template void mm::mtl::Vector<gmk::GmkSquadMember::BdatInfo>::extend(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkSquadMember::BdatInfo>::resize(size_t);
 template void mm::mtl::Vector<gmk::GmkSquadMember>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkSquadLeader>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkSquadLeader>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkSquadMember>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkSquadMember>::resize(size_t);
+template mm::mtl::PtrSingleton<gmk::GmkSquadManager>::~PtrSingleton();

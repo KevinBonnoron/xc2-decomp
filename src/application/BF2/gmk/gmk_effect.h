@@ -96,6 +96,7 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_EFFECT_LOCATOR;
 
+  GmkEffectLocator() {}
   GmkType getGmkType() const override;
   bool isValid() const override;
 };
