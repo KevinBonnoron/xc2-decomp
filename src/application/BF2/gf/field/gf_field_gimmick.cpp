@@ -1,3 +1,8 @@
+// Same order as in the game executable.
+// clang-format off
+#include "gf/field/gf_mob_slot_manager.cpp"
+// clang-format on
+
 #include "gf/field/gf_field_gimmick.h"
 #include "mm_mtl/map.h" // IWYU pragma: keep
 

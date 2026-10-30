@@ -4,11 +4,15 @@
 #include "dr/dr_man.h"
 #include "framework/script/script_manager.h"
 #include "framework/sound/sound_manager.h"
+#include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_bdat_wrapper.h"
+#include "gf/data/gf_data_bdat.h"
 #include "gf/field/gf_field_lod.h"
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_party.h"
+#include "gf/game/sequential_play/gf_play_factory.h"
+#include "gf/menu/gf_menu_common_window_param.h"
 #include "gf/menu/gf_menu_field_skill.h"
 #include "gf/menu/gf_menu_manager.h"
 #include "gf/object/component/gimmick/gf_com_behavior_gmk.h"
@@ -17,6 +21,7 @@
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
 #include "gf/scom/gf_scom_obj.h"
+#include "gmk/gmk_base.h"
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_grave.h"
 #include "gmk/gmk_manager.h"
@@ -146,10 +151,64 @@ void GfFieldMapGimmick::setDispOfParty(bool isDisp, bool isExceptMover) {
   }
 }
 
+void GfFieldMapGimmick::create(GF_OBJ_HANDLE *handle) {
+  AFieldSeq::create(handle);
+  gmk::AGmkBase *gmk = findBindedGmk();
+  if (gmk != nullptr) {
+    CBdatWrapper bdat = gmk->unknown004();
+    int id = gmk->unknown20.unknown18;
+    unknown30.create(bdat, id);
+    if (!isTargetable() || unknown30.isCondMatched()) {
+      {
+        gmk::GmkAcc::CreateInfo accInfo;
+        accInfo.validate(*gmk);
+        unknown68.create(accInfo);
+      }
+      const char *camName = reinterpret_cast<const char *>(bdat.getValCheck("gmkCamName", id, gmk::BDAT_TYPE_STRING));
+      if (camName == nullptr || *camName == '\0') {
+        return;
+      }
+      gmk::GmkCamera::CreateInfo camInfo;
+      camInfo.unknown00 = camName;
+      if (unknown30.unknown02 != 0) {
+        camInfo.unknown104 = unknown30.unknown02;
+      }
+      camInfo.unknown105 = false;
+      if (unknown30.unknown03) {
+        if (unknown234 > 0) {
+          camInfo.validateTransform(static_cast<u16>(unknown234));
+        } else {
+          camInfo.validateTransform(unknown08);
+        }
+      }
+      unknownb0.create(camInfo);
+      unknown210 = &GfFieldMapGimmick::seqCamera_waitToLoaded;
+      return;
+    }
+    MenuCommonWindowParam param;
+    param.unknown10 = GfDataBdat::getFP(BDAT_FLD_HELPMS);
+    param.unknown18 = static_cast<u16>(bdat.getValCheck("missMSG_ID", id, gmk::BDAT_TYPE_U16));
+    GfPlayFactory::createCommonMessage(param);
+  }
+  dispose();
+  m_end = true;
+}
+
 void GfFieldMapGimmick::seqCamera_waitToLoaded(f32) {
   if (unknownb0.isLoaded()) {
     unknown210 = &GfFieldMapGimmick::seqCamera_waitToEnd;
   }
+}
+
+void GfFieldMapGimmick::dispose() {
+  clearSe();
+  unknown238 = nullptr;
+  unknown230 = 0;
+  unknown234 = 0;
+  unknown220 = nullptr;
+  unknown210 = nullptr;
+  unknownb0.dispose();
+  AFieldSeq::dispose();
 }
 
 void GfFieldMapGimmick::clearSe() {
@@ -163,6 +222,8 @@ void GfFieldMapGimmick::clearSe() {
     unknown4d0 = 0;
   }
 }
+
+bool GfFieldMapGimmick::isEnd() const { return AFieldSeq::isEnd() && !unknown210 && !unknown220 && !unknown238; }
 
 void GfFieldMapGimmick::update(f32 deltaTime) {
   if (unknown08 == INVALID_HANDLE) {
@@ -199,6 +260,17 @@ void GfFieldMapGimmick::setSolvedMapGimmick() {
     }
   }
 }
+
+void GfFieldMapGimmick::onFsSucceeded() {
+  if (unknownb0.unknown10.unknown00.length() > 0) {
+    unknownb0.play();
+  }
+  unknown230 = 1;
+  unknown220 = &GfFieldMapGimmick::seqLod_init;
+  unknown238 = &GfFieldMapGimmick::seqMapObj_init;
+}
+
+void GfFieldMapGimmick::onFsFailed() { unknown210 = nullptr; }
 
 void GfFieldMapGimmick::seqCamera_waitToEnd(f32) {
   if (unknownb0.isEnd()) {

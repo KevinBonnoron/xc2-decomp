@@ -35,6 +35,20 @@ public:
     m_iconBdatId = icon;
   }
 
+  // Inferred helper: binds an accessor to the first gimmick of a type and bdat id when it is not bound yet; original name unknown.
+  static void unknown002(gmk::GmkAcc &acc, gmk::GmkType type, int bdatId) {
+    if (!acc.unknown18.isValid()) {
+      gmk::GmkAcc::CreateInfo info;
+      const gmk::AGmkBase *gmk = gmk::GmkManager::get()->findFirstGmkInstByBdatId(type, bdatId);
+      if (gmk != nullptr) {
+        info.validate(*gmk);
+        if (info.isValid()) {
+          acc.create(info);
+        }
+      }
+    }
+  }
+
   QuestID unknown08; // Inferred role: quest; original member name unknown.
   int m_iconBdatId;
   int m_mapBdatId;

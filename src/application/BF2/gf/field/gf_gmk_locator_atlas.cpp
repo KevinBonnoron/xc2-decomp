@@ -1,5 +1,11 @@
 #include "gf/field/gf_gmk_locator_atlas.h"
 
+#include "bdat.h"
+#include "gf/data/gf_bdat_id.h"
+#include "gf/data/gf_data_bdat.h"
+#include "gf/gf_allocator.h"
+#include "gmk/gmk_bdat.h"
+
 namespace gf {
 
 constexpr f32 AREA_LIMIT = 1.0e12f;
@@ -20,6 +26,22 @@ const GfGmkLocatorAtlas::BdatInfo *GfGmkLocatorAtlas::getBdatInfo(int id) const 
     }
   }
   return nullptr;
+}
+
+void GfGmkLocatorAtlas::createBdatInfos() {
+  disposeBdatInfos();
+  u8 *bdat = GfDataBdat::getFP(BDAT_MNU_MAP_INFO);
+  unknown30.setAllocator(getAllocator(ALLOCATOR_DEFAULT));
+  int count = Bdat::getIdCount(bdat);
+  unknown30.reserve(count);
+  unknown30.resize(count);
+  unknown58 = Bdat::getIdTop(bdat);
+  for (int i = 0; i < count; i++) {
+    BdatInfo &info = unknown30[i];
+    int id = unknown58 + i;
+    info.unknown00 = reinterpret_cast<const char *>(Bdat::getValCheck(bdat, "level_name", id, gmk::BDAT_TYPE_STRING));
+    info.unknown08 = Bdat::getValCheck(bdat, "level_priority", id, gmk::BDAT_TYPE_U16);
+  }
 }
 
 void GfGmkLocatorAtlas::disposeBdatInfos() {

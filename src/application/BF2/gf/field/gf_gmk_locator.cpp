@@ -43,3 +43,5 @@ u32 GfGmkLocator::getFsId() const {
 }
 
 } // namespace gf
+
+template void mm::mtl::Vector<gf::GfGmkLocator>::destroy();

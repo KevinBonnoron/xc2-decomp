@@ -38,6 +38,7 @@ public:
   void create(const CreateInfo &info);
   const BdatInfo *getBdatInfo(int id) const;
   void dispose();
+  void createBdatInfos();
   void disposeBdatInfos();
   void update(f32 deltaTime);
 

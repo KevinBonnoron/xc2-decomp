@@ -109,7 +109,12 @@ public:
   void seqLod_waitToElapseTime(f32 deltaTime);
   void seqLod_waitToEndAnim(f32 deltaTime);
   void seqMapObj_nextwait(f32 deltaTime);
-  const char *getIdStr() const override;
+
+  const char *getIdStr() const override {
+    static const char s_classId[] = "GfFieldMapGimmick";
+    return s_classId;
+  }
+
   bool isEnd() const override;
 
   // __LINE__ must be 208 as in the original header: its value changes the instruction order.

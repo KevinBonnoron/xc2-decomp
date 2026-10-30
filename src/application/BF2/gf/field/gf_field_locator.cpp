@@ -233,6 +233,21 @@ void LocatorTbox::dispose() {
   unknown14 = 0;
 }
 
+void LocatorTbox::update() {
+  if (unknown14 != 0) {
+    m_posNum = 0;
+    unknown002(unknown18, gmk::GmkTbox::GMK_TYPE, unknown14);
+    if (unknown18.isValid()) {
+      const gmk::GmkTbox *tbox = static_cast<const gmk::GmkTbox *>(unknown18.unknown38);
+      if (!tbox->getBdatInfo()->isPopCondMatchedExceptDist() || tbox->getProgress() == gmk::GmkTbox::PROGRESS_OPENED) {
+        return;
+      }
+      m_pos = unknown18.unknown38->unknown08.unknown08->unknown00;
+    }
+    m_posNum = 1;
+  }
+}
+
 LocatorTalk_DummyGroup::LocatorTalk_DummyGroup(QuestID quest, u16 mapId, u16 npcId, u16 dummyGroup) : unknown14(0), unknown18(0), unknown1a(0) {
   if (!quest.empty() && dummyGroup != 0) {
     create(quest, mapId, npcId, dummyGroup);
@@ -451,6 +466,20 @@ void LocatorEventPreorder::dispose() {
   unknown14 = 0;
 }
 
+void LocatorEventPreorder::update() {
+  if (unknown14 != 0) {
+    m_posNum = 0;
+    unknown002(unknown18, gmk::GmkEvent::GMK_TYPE, unknown14);
+    if (unknown18.isValid()) {
+      if (!static_cast<const gmk::GmkEvent *>(unknown18.unknown38)->unknownf0) {
+        return;
+      }
+      m_pos = unknown18.unknown38->unknown08.unknown08->unknown00;
+    }
+    m_posNum = 1;
+  }
+}
+
 LocatorPreciousPreorder::LocatorPreciousPreorder(const gmk::GmkPrecious *gmk) : unknown14(0), m_posNum(0) {
   if (gmk != nullptr) {
     create(*gmk);
@@ -472,6 +501,21 @@ void LocatorPreciousPreorder::create(const gmk::GmkPrecious &gmk) {
 void LocatorPreciousPreorder::dispose() {
   m_posNum = 0;
   unknown14 = 0;
+}
+
+void LocatorPreciousPreorder::update() {
+  if (unknown14 != 0) {
+    m_posNum = 0;
+    unknown002(unknown18, gmk::GmkPrecious::GMK_TYPE, unknown14);
+    if (unknown18.isValid()) {
+      const gmk::GmkPrecious *precious = static_cast<const gmk::GmkPrecious *>(unknown18.unknown38);
+      if (precious->isObtained() || !precious->getBdatInfo()->isPopCondMatched()) {
+        return;
+      }
+      m_pos = unknown18.unknown38->unknown08.unknown08->unknown00;
+    }
+    m_posNum = 1;
+  }
 }
 
 GfFieldLocator::GfFieldLocator(const CreateInfoByQuest *info) : unknown18(nullptr) {
@@ -613,3 +657,6 @@ void GfFieldLocator::update() {
 bool GfFieldLocator::isIconIdPreorder(int iconId) { return Bdat::getValCheck(GfDataBdat::getFP(BDAT_FLD_WILDCARD_DATA), 1, 0x10, gmk::BDAT_TYPE_U16).valueU16 == iconId; }
 
 } // namespace gf
+
+#include "gf/field/gf_gmk_locator.cpp"
+#include "gf/field/gf_gmk_locator_atlas.cpp"

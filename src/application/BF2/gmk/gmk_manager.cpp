@@ -99,6 +99,7 @@
 #include "mm_math/mm_vec2.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/array.h"
+#include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/intrusive_list.h"
 #include "mm_mtl/reference_object.h"
@@ -786,9 +787,7 @@ void resetMobPopDistSq() {
   if (gimmick == nullptr) {
     return;
   }
-  if (gimmick->unknownf910.unknown520 != 0) {
-    gimmick->unknownf910.unknown520 = 0;
-  }
+  gimmick->unknownf910.unknown420.clear();
   gimmick->unknownf910.unknown528 = 1e12f;
 }
 
