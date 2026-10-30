@@ -1051,6 +1051,10 @@ def check_all(demangled, scope=None, verbose=True):
                 rows.append((f"local:{address:#x}:{symbol}", os.path.relpath(source, ROOT), ok, count, obj, symbol, address))
             else:
                 rows.append((symbol, os.path.relpath(defining_file(demangled[symbol], source), ROOT), ok, count, obj, symbol, None))
+    # A function defined in several objects (an inline or template function) is a weak copy: the linker keeps one of
+    # them, so it matches when one copy is the game's; the other copies are dropped from the report.
+    matched_copies = {row[5] for row in rows if row[2] and row[6] is None}
+    rows = [row for row in rows if row[2] or row[6] is not None or row[5] not in matched_copies]
     names = dict(demangled)
     locals_ = [row for row in rows if row[6] is not None]
     readable = demangle(sorted({row[5] for row in locals_})) if locals_ else {}
