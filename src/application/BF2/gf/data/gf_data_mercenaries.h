@@ -106,6 +106,7 @@ public:
   static bool isOrderOnlyOne(u32 mission);
   static u32 getMissionZoneID(u32 mission);
   static bool isMissionOrderTeam(u32 mission);
+  static bool isMissionOrderParty(u32 mission);
   static u32 getMissionByQuestID(QuestID quest);
   static bool isMissionComplete(u32 mission);
   static bool isEnableMissionBlade(u32 blade, u32 requestBlade);
