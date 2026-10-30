@@ -1,9 +1,22 @@
+#include "nn/diag.h"
 #include "ssd/ssd_debug.h"
 #include "ssd/ssd_mutex.h"
 #include "types.h"
 
 namespace ssd {
 enum Result : long;
+
+void abort() { nn::diag::detail::AbortImpl("", "", "", 0); }
+
+const char16_t *get_logfilename(const char16_t *path) {
+  const char16_t *name = path;
+  for (const char16_t *p = path; *p != u'\0'; p++) {
+    if (*p == u'/') {
+      name = p + 1;
+    }
+  }
+  return name;
+}
 
 namespace Debug {
 

@@ -9,6 +9,8 @@
 namespace ssd {
 enum Result : long;
 
+AudioContents::AudioContents() {}
+
 AudioFileBase::AudioFileBase()
     : unknown08(nullptr), unknown10(nullptr), unknown18(false), unknown19(false), unknown1a(false), unknown1b(false), unknown1c(0), unknown20(0), unknown24(0), unknown28(0), unknown2c(48000.0f),
       unknown30(0), unknown34(0), unknown35(0), unknown38(0), unknown3c(0), unknown40(0), unknown44(0), unknown48(0), unknown4c(0), unknown4e(0), unknown50(false) {}
@@ -67,6 +69,11 @@ int AudioFileBase::WriteBySamples(const s16 *buffer, int count) {
   u64 size = static_cast<u64>(unknown40) * count;
   unknown08->Write(size, buffer, nullptr);
   return 0;
+}
+
+AudioMarker *AudioMarkerList::GetMarkerDataByIndex(int index) {
+  // Original bug: indexes the list object itself as an array instead of walking its markers.
+  return this[index].unknown002();
 }
 
 AudioMarker *AudioMarkerList::GetMarkerDataByID(int id) {

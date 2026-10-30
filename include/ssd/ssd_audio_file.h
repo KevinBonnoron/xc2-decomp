@@ -22,10 +22,16 @@ static_assert(sizeof(AudioMarker) == 0x248, "");
 
 class AudioMarkerList : public List<AudioMarker> {
 public:
+  AudioMarker *GetMarkerDataByIndex(int index);
   AudioMarker *GetMarkerDataByID(int id);
 };
 
 static_assert(sizeof(AudioMarkerList) == 0x28, "");
+
+class AudioContents {
+public:
+  AudioContents();
+};
 
 class AudioChunk {
 public:

@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "nn/fs.h"
 #include "ssd/ssd_io_stream.h"
 #include "types.h"
 
@@ -11,6 +12,12 @@ class TextRef;
 class FileStream : public IoStreamBase {
 public:
   FileStream();
+  ~FileStream() override {
+    if (unknown30.handle != nullptr) {
+      nn::fs::CloseFile(unknown30);
+      unknown30.handle = nullptr;
+    }
+  }
   long Close() override;
   static void Initialize();
   static void Finalize();
@@ -26,10 +33,10 @@ public:
   long Tell(u64 *position) override;
   u64 CheckAccessSize(u64 size) override;
 
-  u64 unknown18; // Inferred role: cleared by the constructor; original member name unknown.
-  u64 unknown20; // Inferred role: position; original member name unknown.
-  u64 unknown28; // Inferred role: size; original member name unknown.
-  u64 unknown30; // Inferred role: file handle; original member name unknown.
+  u64 unknown18;                // Inferred role: cleared by the constructor; original member name unknown.
+  u64 unknown20;                // Inferred role: position; original member name unknown.
+  u64 unknown28;                // Inferred role: size; original member name unknown.
+  nn::fs::FileHandle unknown30; // Inferred role: file handle; original member name unknown.
 };
 
 static_assert(offsetof(FileStream, unknown20) == 0x20, "");

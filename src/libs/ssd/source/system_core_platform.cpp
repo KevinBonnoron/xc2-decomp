@@ -1,8 +1,15 @@
+#include <stddef.h>
+
+#include "nn/mem.h"
 #include "ssd/ssd_sound_core.h"
 #include "types.h"
 
 namespace ssd {
 enum Result : long;
+
+void *SystemCorePlatform::AllocAudioDataBuffer(size_t size) { return unknowne8.Allocate(size, 64); }
+
+void SystemCorePlatform::FreeAudioDataBuffer(void *buffer) { unknowne8.Free(buffer); }
 
 Result SystemCorePlatform::InitEffect(u8 bus, SoundEffecter *effecter) {
   if (bus < 2) {

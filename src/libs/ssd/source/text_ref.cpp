@@ -1,7 +1,6 @@
 #include "ssd/ssd_debug.h"
 #include "ssd/ssd_hash.h"
 #include "ssd/ssd_text.h"
-#include "types.h"
 
 namespace ssd {
 enum Result : long;
@@ -42,6 +41,20 @@ void TextRef::Set(const char *text) { log_error(static_cast<Result>(-1), Debug::
 
 void TextRef::Set(const char16_t *text) { log_error(static_cast<Result>(-1), Debug::LogFlag::All, u"TextRef::Set は使用できません。", EmptyText); }
 
+void TextRef::GetText(void *buffer, unsigned long size, TextEncodeType type) const {
+  if (unknown18 != type) {
+    if (unknown18 == TEXT_ENCODE_UTF8) {
+      Utf8ToUTF16(unknown10_utf8, static_cast<char16_t *>(buffer), size);
+    } else {
+      Utf16ToUTF8(unknown10_utf16, static_cast<char *>(buffer), size);
+    }
+  } else if (unknown18 == TEXT_ENCODE_UTF8) {
+    unknown003(static_cast<char *>(buffer), unknown10_utf8, size);
+  } else {
+    unknown003(static_cast<char16_t *>(buffer), unknown10_utf16, size);
+  }
+}
+
 void TextFixedBase::Set(const char *text) {
   Utf8ToUTF16(text, unknown001(), unknown20);
   unknown08 = Hash();
@@ -49,15 +62,7 @@ void TextFixedBase::Set(const char *text) {
 }
 
 void TextFixedBase::Set(const char16_t *text) {
-  char16_t *buffer = unknown001();
-  char16_t *destination = buffer;
-  unsigned long limit = unknown20 - 1;
-  while (*text != u'\0' && static_cast<u32>(destination - buffer) < limit) {
-    *destination = *text;
-    destination++;
-    text++;
-  }
-  *destination = u'\0';
+  unknown003(unknown001(), text, unknown20);
   unknown08 = Hash();
   unknown08.CalcTextHash(static_cast<const char16_t *>(unknown10));
 }
@@ -66,16 +71,7 @@ void TextFixedBase::Set(const TextRef &text) {
   if (text.unknown18 == TEXT_ENCODE_UTF8) {
     Utf8ToUTF16(static_cast<const char *>(text.unknown10), unknown001(), unknown20);
   } else {
-    const char16_t *source = static_cast<const char16_t *>(text.unknown10);
-    char16_t *buffer = unknown001();
-    char16_t *destination = buffer;
-    unsigned long limit = unknown20 - 1;
-    while (*source != u'\0' && static_cast<u32>(destination - buffer) < limit) {
-      *destination = *source;
-      destination++;
-      source++;
-    }
-    *destination = u'\0';
+    unknown003(unknown001(), static_cast<const char16_t *>(text.unknown10), unknown20);
   }
   unknown08 = Hash();
   unknown08.CalcTextHash(static_cast<const char16_t *>(unknown10));

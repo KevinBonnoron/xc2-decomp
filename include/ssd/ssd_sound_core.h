@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "nn/mem.h"
 #include "ssd/ssd_array.h" // IWYU pragma: keep
 #include "ssd/ssd_behavior.h"
 #include "ssd/ssd_debug.h"
@@ -44,6 +45,26 @@ struct OutputMode {
 
 class SoundCore {
 public:
+  struct ThreadParam {
+    ThreadParam();
+
+    u64 unknown00;    // Inferred role: core mask; original member name unknown.
+    int unknown08;    // Inferred role: priority; original member name unknown.
+    int unknown0c;    // Inferred role: ideal core; original member name unknown.
+    size_t unknown10; // Inferred role: stack size; original member name unknown.
+  };
+
+  struct InitParam {
+    InitParam();
+
+    ThreadParam unknown00;        // Inferred role: audio thread parameter; original member name unknown.
+    ThreadParam unknown18;        // Inferred role: stream thread parameter; original member name unknown.
+    int unknown30;                // Inferred role: voice count; original member name unknown.
+    Debug::unknown001 unknown38;  // Inferred role: message method; original member name unknown.
+    LogTimeStamp::Type unknown40; // Inferred role: log time stamp type; original member name unknown.
+    u32 unknown44;                // Inferred role: audio data memory size; original member name unknown.
+  };
+
   SoundCore();
   virtual OutputMode::Type GetOutputMode() const = 0;
   virtual void SetOutputMode(OutputMode::Type mode) = 0;
@@ -107,6 +128,12 @@ public:
 };
 
 static_assert(offsetof(SoundCore, m_init) == 0x10, "");
+static_assert(sizeof(SoundCore::ThreadParam) == 0x18, "");
+static_assert(offsetof(SoundCore::InitParam, unknown18) == 0x18, "");
+static_assert(offsetof(SoundCore::InitParam, unknown30) == 0x30, "");
+static_assert(offsetof(SoundCore::InitParam, unknown38) == 0x38, "");
+static_assert(offsetof(SoundCore::InitParam, unknown44) == 0x44, "");
+static_assert(sizeof(SoundCore::InitParam) == 0x48, "");
 
 class SystemCorePlatform : public SoundCore {
 public:
@@ -125,15 +152,19 @@ public:
   Result InitI3dl2ReverbEffect(u8 bus, SoundI3dl2ReverbEffecter *effecter);
   Result InitDelayEffect(u8 bus, SoundDelayEffecter *effecter);
   Result QuitEffect(SoundEffecter *effecter);
+  void *AllocAudioDataBuffer(size_t size);
   void FreeAudioDataBuffer(void *buffer);
   int GetBusNumberFormEffecter(SoundEffecter *effecter);
   void UpdateEffectVolume(SoundEffecter *effecter);
   void UpdateEffectParam(SoundEffecter *effecter);
 
-  u8 _011[0x1f0 - 0x011];
+  u8 _011[0xe8 - 0x011];
+  nn::mem::StandardAllocator unknowne8; // Inferred role: audio data allocator; original member name unknown.
+  u8 _130[0x1f0 - 0x130];
   EffectBusInfo unknown1f0[2]; // Inferred role: effect buses; original member name unknown.
 };
 
+static_assert(offsetof(SystemCorePlatform, unknowne8) == 0xe8, "");
 static_assert(offsetof(SystemCorePlatform, unknown1f0) == 0x1f0, "");
 static_assert(sizeof(SystemCorePlatform::EffectBusInfo) == 0x38, "");
 static_assert(sizeof(SystemCorePlatform) == 0x260, "");

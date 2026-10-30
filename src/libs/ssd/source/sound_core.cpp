@@ -1,8 +1,8 @@
+#include <new>
 #include <stddef.h>
 
-#include <new>
-
 #include "anm/anm_array-inl.h"
+#include "nn/os.h"
 #include "ssd/ssd_allocator.h"
 #include "ssd/ssd_array_impl.h" // IWYU pragma: keep
 #include "ssd/ssd_behavior.h"
@@ -14,6 +14,10 @@
 #include "types.h"
 
 namespace ssd {
+
+SoundCore::ThreadParam::ThreadParam() : unknown00(nn::os::GetThreadAvailableCoreMask()), unknown08(0), unknown0c(-1), unknown10(0) {}
+
+SoundCore::InitParam::InitParam() : unknown30(128), unknown38(nullptr), unknown40(LogTimeStamp::TYPE_UNKNOWN_1), unknown44(0x2000000) {}
 
 SoundCore *SoundCore::NewInstance(Allocator *allocator) {
   SoundCore *core = instance_;

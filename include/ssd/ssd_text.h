@@ -2,7 +2,6 @@
 #include <stddef.h>
 
 #include "ssd/ssd_hash.h"
-#include "ssd/ssd_result.h"
 #include "types.h"
 
 namespace ssd {
@@ -13,6 +12,8 @@ enum TextEncodeType : u8 {
   TEXT_ENCODE_UTF16 = 3,
 };
 
+struct MemoryBlock;
+
 class TextRef {
 public:
   TextRef() : unknown10(nullptr), unknown18(TEXT_ENCODE_UTF16) {}
@@ -22,21 +23,52 @@ public:
   void Clear();
   void InitImpl(const char *text);
   void InitImpl(const char16_t *text);
+  void GetText(MemoryBlock *block, TextEncodeType type) const;
+  void GetText(void *buffer, unsigned long size, TextEncodeType type) const;
   virtual void Set(const TextRef &text);
   virtual void Set(const char *text);
   virtual void Set(const char16_t *text);
 
+  // Inferred role: length of a text in characters; original name unknown.
+  template <typename T> static unsigned long unknown002(const T *text) {
+    const T *end = text;
+    while (*end != 0) {
+      end++;
+    }
+    return end - text;
+  }
+
+  // Inferred role: copy a text into a buffer of size characters, truncating it; original name unknown.
+  template <typename T> static void unknown003(T *buffer, const T *text, unsigned long size) {
+    T *destination = buffer;
+    unsigned long limit = size - 1;
+    while (*text != 0 && static_cast<u32>(destination - buffer) < limit) {
+      *destination = *text;
+      destination++;
+      text++;
+    }
+    *destination = 0;
+  }
+
   static const char16_t *EmptyText;
 
-  Hash unknown08;           // Inferred role: hash; original member name unknown.
-  const void *unknown10;    // Inferred role: text; original member name unknown.
+  Hash unknown08; // Inferred role: hash; original member name unknown.
+  union {
+    const void *unknown10;           // Inferred role: text; original member name unknown.
+    const char *unknown10_utf8;      // Inferred role: text when unknown18 is TEXT_ENCODE_UTF8; original member name unknown.
+    const char16_t *unknown10_utf16; // Inferred role: text when unknown18 is TEXT_ENCODE_UTF16; original member name unknown.
+  };
   TextEncodeType unknown18; // Inferred role: encode type; original member name unknown.
 };
 
 static_assert(offsetof(TextRef, unknown08) == 0x8, "");
 static_assert(offsetof(TextRef, unknown18) == 0x18, "");
 
-Result Utf8ToUTF16(const char *source, char16_t *destination, unsigned long size);
+void SjisToUTF16(const char *source, char16_t *destination, unsigned long size);
+void Utf8ToUTF16(const char *source, char16_t *destination, unsigned long size);
+void Utf16ToSjis(const char16_t *source, char *destination, unsigned long size);
+void Utf16ToUTF8(const char16_t *source, char *destination, unsigned long size);
+char16_t *SjisToUTF16(const char *source, unsigned long *length);
 
 class TextFixedBase : public TextRef {
 public:
@@ -64,7 +96,8 @@ struct MemoryBlock {
 
 static_assert(sizeof(MemoryBlock) == 0x10, "");
 
-Result Utf8ToUTF16(const char *source, MemoryBlock *block);
+bool Utf8ToUTF16(const char *source, MemoryBlock *block);
+bool Utf16ToUTF8(const char16_t *source, MemoryBlock *block);
 
 class String : public TextRef {
 public:

@@ -22,6 +22,7 @@ struct LogMessage {
 
 struct LogTimeStamp {
   enum Type {
+    TYPE_UNKNOWN_1 = 1,
     TYPE_UNKNOWN_3 = 3,
   };
 };

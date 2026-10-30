@@ -9,6 +9,18 @@ namespace ssd {
 
 class Thread {
 public:
+  struct Param {
+    Param();
+
+    void *unknown00;  // Inferred role: function second argument; original member name unknown.
+    int unknown08;    // Inferred role: priority; original member name unknown.
+    int unknown0c;    // Inferred role: ideal core; original member name unknown.
+    u64 unknown10;    // Inferred role: core mask; original member name unknown.
+    void *unknown18;  // Inferred role: cleared by the constructor; original member name unknown.
+    size_t unknown20; // Inferred role: stack size; original member name unknown.
+    f32 unknown28;    // Inferred role: sleep time; original member name unknown.
+  };
+
   ~Thread();
   static void ThreadEntryProc(void *argument);
   Result Wakeup();
@@ -36,5 +48,8 @@ static_assert(offsetof(Thread, unknown20) == 0x20, "");
 static_assert(offsetof(Thread, unknown48) == 0x48, "");
 static_assert(offsetof(Thread, unknown208) == 0x208, "");
 static_assert(sizeof(Thread) == 0x220, "");
+static_assert(offsetof(Thread::Param, unknown10) == 0x10, "");
+static_assert(offsetof(Thread::Param, unknown28) == 0x28, "");
+static_assert(sizeof(Thread::Param) == 0x30, "");
 
 } // namespace ssd

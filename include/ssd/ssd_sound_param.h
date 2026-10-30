@@ -46,11 +46,14 @@ public:
     bool unknown07; // Inferred role: flag cleared by Init; original member name unknown.
   };
 
+  // unknown00 and unknown0c are integers: Init stores them without merging them with the f32 stores.
   struct Surround {
-    f32 unknown00; // Inferred role: value cleared by Init; original member name unknown.
+    void Init();
+
+    int unknown00; // Inferred role: value cleared by Init; original member name unknown.
     f32 unknown04; // Inferred role: value set to 1.0 by Init; original member name unknown.
     f32 unknown08; // Inferred role: value set to 100.0 by Init; original member name unknown.
-    f32 unknown0c; // Inferred role: value cleared by Init; original member name unknown.
+    int unknown0c; // Inferred role: value cleared by Init; original member name unknown.
     f32 unknown10; // Inferred role: value set to 1.0 by Init; original member name unknown.
   };
 

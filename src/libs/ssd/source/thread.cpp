@@ -6,6 +6,8 @@
 namespace ssd {
 enum Result : long;
 
+Thread::Param::Param() : unknown00(nullptr), unknown08(0), unknown0c(-1), unknown10(nn::os::GetThreadAvailableCoreMask()), unknown18(nullptr), unknown20(0), unknown28(0.0f) {}
+
 Thread::~Thread() {}
 
 void Thread::ThreadEntryProc(void *argument) {
