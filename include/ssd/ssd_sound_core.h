@@ -1,16 +1,19 @@
 #pragma once
 #include <stddef.h>
 
+#include "nn/audio.h"
 #include "nn/mem.h"
+#include "nn/os.h"
+#include "ssd/ssd_allocator.h"
 #include "ssd/ssd_array.h" // IWYU pragma: keep
 #include "ssd/ssd_behavior.h"
 #include "ssd/ssd_debug.h"
 #include "ssd/ssd_mutex.h"
 #include "ssd/ssd_result.h"
+#include "ssd/ssd_text.h"
 #include "types.h"
 
 namespace ssd {
-class Allocator;
 class SoundBank;
 class SoundCategory;
 class SoundActor;
@@ -24,20 +27,55 @@ public:
   enum unknown001 : u8 {
     unknown001_0 = 0,
     unknown001_1 = 1,
+    unknown001_255 = 0xff,
   };
 
   u8 _00[0x18 - 0x00];
   unknown001 unknown18; // Inferred role: effect type; original member name unknown.
-  u8 _19[0x1c - 0x19];
+  bool unknown19;       // Inferred role: attached to a bus; original member name unknown.
+  u8 unknown1a;         // Inferred role: bus number; original member name unknown.
+  u8 _1b[0x1c - 0x1b];
   f32 unknown1c; // Inferred role: effect volume; original member name unknown.
 };
 
 static_assert(offsetof(SoundEffecter, unknown18) == 0x18, "");
+static_assert(offsetof(SoundEffecter, unknown1a) == 0x1a, "");
 static_assert(offsetof(SoundEffecter, unknown1c) == 0x1c, "");
 
-class SoundDelayEffecter : public SoundEffecter {};
+class SoundDelayEffecter : public SoundEffecter {
+public:
+  f32 unknown20; // Inferred role: delay time in seconds; original member name unknown.
+  f32 unknown24; // Inferred role: maximum delay time in seconds; original member name unknown.
+  f32 unknown28; // Inferred role: in gain; original member name unknown.
+  f32 unknown2c; // Inferred role: feedback gain; original member name unknown.
+  f32 unknown30; // Inferred role: dry gain; original member name unknown.
+  f32 unknown34; // Inferred role: channel spread; original member name unknown.
+  f32 unknown38; // Inferred role: low pass amount; original member name unknown.
+};
 
-class SoundI3dl2ReverbEffecter : public SoundEffecter {};
+static_assert(offsetof(SoundDelayEffecter, unknown20) == 0x20, "");
+static_assert(offsetof(SoundDelayEffecter, unknown38) == 0x38, "");
+
+class SoundI3dl2ReverbEffecter : public SoundEffecter {
+public:
+  bool unknown20; // Inferred role: parameter change flag; original member name unknown.
+  f32 unknown24;  // Inferred role: room gain; original member name unknown.
+  f32 unknown28;  // Inferred role: room high frequency gain; original member name unknown.
+  f32 unknown2c;  // Inferred role: late reverb decay time in seconds; original member name unknown.
+  f32 unknown30;  // Inferred role: late reverb high frequency decay ratio; original member name unknown.
+  f32 unknown34;  // Inferred role: reflections gain; original member name unknown.
+  f32 unknown38;  // Inferred role: reflection delay time in seconds; original member name unknown.
+  f32 unknown3c;  // Inferred role: reverb gain; original member name unknown.
+  f32 unknown40;  // Inferred role: late reverb delay time in seconds; original member name unknown.
+  f32 unknown44;  // Inferred role: late reverb diffusion; original member name unknown.
+  f32 unknown48;  // Inferred role: late reverb density; original member name unknown.
+  f32 unknown4c;  // Inferred role: high frequency reference; original member name unknown.
+  f32 unknown50;  // Inferred role: dry gain; original member name unknown.
+};
+
+static_assert(offsetof(SoundI3dl2ReverbEffecter, unknown20) == 0x20, "");
+static_assert(offsetof(SoundI3dl2ReverbEffecter, unknown24) == 0x24, "");
+static_assert(offsetof(SoundI3dl2ReverbEffecter, unknown50) == 0x50, "");
 
 struct OutputMode {
   enum Type {};
@@ -138,36 +176,85 @@ static_assert(sizeof(SoundCore::InitParam) == 0x48, "");
 class SystemCorePlatform : public SoundCore {
 public:
   struct EffectBusInfo {
-    bool unknown00; // Inferred role: effect flag; original member name unknown.
-    bool unknown01; // Inferred role: effect flag; original member name unknown.
-    u8 _02[0x08 - 0x02];
+    bool unknown00;                      // Inferred role: effect enabled; original member name unknown.
+    bool unknown01;                      // Inferred role: effect removal pending; original member name unknown.
+    SoundEffecter::unknown001 unknown02; // Inferred role: effect type; original member name unknown.
+    s8 unknown03[2];                     // Inferred role: effect mix buffer indices; original member name unknown.
+    u8 _05[0x08 - 0x05];
     f32 unknown08; // Inferred role: effect volume; original member name unknown.
     u8 _0c[0x10 - 0x0c];
-    SoundEffecter *unknown10; // Inferred role: effecter; original member name unknown.
-    u8 _18[0x38 - 0x18];
+    SoundEffecter *unknown10;             // Inferred role: effecter; original member name unknown.
+    void *unknown18;                      // Inferred role: effect work buffer; original member name unknown.
+    nn::audio::BufferMixerType unknown20; // Inferred role: effect output mixer; original member name unknown.
+    nn::audio::DelayType unknown28;       // Inferred role: delay effect; original member name unknown.
+    nn::audio::I3dl2ReverbType unknown30; // Inferred role: reverb effect; original member name unknown.
   };
 
+  // Inferred role: allocate a device buffer from the sound allocator; original name unknown.
+  static void *unknown001(size_t size) {
+    Allocator::Block *block = SoundMemory::allocator_->NewBufferImpl(size, 1, 0x1000);
+    if (block != nullptr) {
+      return block->unknown08;
+    }
+    return nullptr;
+  }
+
+  void InitPlatform(const InitParam &param);
+  Result InitAudioDevice(const InitParam &param);
+  Result QuitAudioDevice();
+  void UpdateDevice();
+  static f64 GetSystemTime();
   void *GetPlatformDataImpl(const char *name) override;
-  Result InitEffect(u8 bus, SoundEffecter *effecter);
-  Result InitI3dl2ReverbEffect(u8 bus, SoundI3dl2ReverbEffecter *effecter);
-  Result InitDelayEffect(u8 bus, SoundDelayEffecter *effecter);
-  Result QuitEffect(SoundEffecter *effecter);
   void *AllocAudioDataBuffer(size_t size);
   void FreeAudioDataBuffer(void *buffer);
+  Result InitEffect(u8 bus, SoundEffecter *effecter);
+  Result InitDelayEffect(u8 bus, SoundDelayEffecter *effecter);
+  Result InitI3dl2ReverbEffect(u8 bus, SoundI3dl2ReverbEffecter *effecter);
+  Result QuitEffect(SoundEffecter *effecter);
   int GetBusNumberFormEffecter(SoundEffecter *effecter);
+  Result QuitDelayEffect(u8 bus);
+  Result QuitI3dl2ReverbEffect(u8 bus);
+  void DeleteEffect(EffectBusInfo &info);
   void UpdateEffectVolume(SoundEffecter *effecter);
   void UpdateEffectParam(SoundEffecter *effecter);
 
-  u8 _011[0xe8 - 0x011];
-  nn::mem::StandardAllocator unknowne8; // Inferred role: audio data allocator; original member name unknown.
-  u8 _130[0x1f0 - 0x130];
-  EffectBusInfo unknown1f0[2]; // Inferred role: effect buses; original member name unknown.
+  f64 unknown18;                             // Inferred role: system tick frequency; original member name unknown.
+  MemoryBlock unknown20;                     // Inferred role: audio renderer work memory; original member name unknown.
+  nn::mem::StandardAllocator unknown30;      // Inferred role: audio renderer work allocator; original member name unknown.
+  MemoryBlock unknown78;                     // Inferred role: effect memory; original member name unknown.
+  nn::mem::StandardAllocator unknown88;      // Inferred role: effect allocator; original member name unknown.
+  nn::audio::MemoryPoolType unknownd0;       // Inferred role: effect memory pool; original member name unknown.
+  MemoryBlock unknownd8;                     // Inferred role: audio data memory; original member name unknown.
+  nn::mem::StandardAllocator unknowne8;      // Inferred role: audio data allocator; original member name unknown.
+  nn::audio::MemoryPoolType unknown130;      // Inferred role: audio data memory pool; original member name unknown.
+  nn::os::SystemEvent unknown138;            // Inferred role: audio renderer event; original member name unknown.
+  nn::audio::AudioRendererConfig unknown168; // Inferred role: audio renderer config; original member name unknown.
+  u8 _1c0[0x1d8 - 0x1c0];
+  nn::audio::AudioRendererHandle unknown1d8; // Inferred role: audio renderer; original member name unknown.
+  s8 unknown1e8[6];                          // Inferred role: final mix buffer indices; original member name unknown.
+  EffectBusInfo unknown1f0[2];               // Inferred role: effect buses; original member name unknown.
+  nn::audio::FinalMixType unknown260;        // Inferred role: final mix; original member name unknown.
+  u32 unknown268;                            // Inferred role: sample rate; original member name unknown.
+  u32 unknown26c;                            // Inferred role: sample count; original member name unknown.
 };
 
+static_assert(offsetof(SystemCorePlatform, unknown18) == 0x18, "");
+static_assert(offsetof(SystemCorePlatform, unknown30) == 0x30, "");
+static_assert(offsetof(SystemCorePlatform, unknown88) == 0x88, "");
+static_assert(offsetof(SystemCorePlatform, unknownd0) == 0xd0, "");
 static_assert(offsetof(SystemCorePlatform, unknowne8) == 0xe8, "");
+static_assert(offsetof(SystemCorePlatform, unknown138) == 0x138, "");
+static_assert(offsetof(SystemCorePlatform, unknown168) == 0x168, "");
+static_assert(offsetof(SystemCorePlatform, unknown1d8) == 0x1d8, "");
+static_assert(offsetof(SystemCorePlatform, unknown1e8) == 0x1e8, "");
 static_assert(offsetof(SystemCorePlatform, unknown1f0) == 0x1f0, "");
+static_assert(offsetof(SystemCorePlatform, unknown260) == 0x260, "");
+static_assert(offsetof(SystemCorePlatform, unknown26c) == 0x26c, "");
+static_assert(offsetof(SystemCorePlatform::EffectBusInfo, unknown03) == 0x03, "");
+static_assert(offsetof(SystemCorePlatform::EffectBusInfo, unknown18) == 0x18, "");
+static_assert(offsetof(SystemCorePlatform::EffectBusInfo, unknown30) == 0x30, "");
 static_assert(sizeof(SystemCorePlatform::EffectBusInfo) == 0x38, "");
-static_assert(sizeof(SystemCorePlatform) == 0x260, "");
+static_assert(sizeof(SystemCorePlatform) == 0x270, "");
 
 class SystemCore : public SystemCorePlatform {
 public:
@@ -181,6 +268,7 @@ public:
 
   SystemCore();
   ~SystemCore() override;
+  static void AudioThreadEntry(SystemCore *core, void *argument);
   static void StreamThreadEntry(SystemCore *core, void *argument);
   void SetMasterVolume(f32 volume, f32 fadeTime) override;
   void MasterVolumeBehavior(f32 volume);
@@ -234,12 +322,18 @@ public:
   void ConnectActor(SoundActor *actor);
   void DisconnectActor(SoundActor *actor);
   void UpdateGameFrame(f32 deltaTime);
+  void AudioThreadImpl();
+  void AudioFrameProcess();
 
-  u8 _260[0x270 - 0x260];
   u64 unknown270; // Inferred role: game frame counter; original member name unknown.
   u64 unknown278; // Inferred role: audio frame counter; original member name unknown.
   f64 unknown280; // Inferred role: audio timer counter; original member name unknown.
-  u8 _288[0x300 - 0x288];
+  u8 _288[0x290 - 0x288];
+  f64 unknown290; // Inferred role: audio frames per second; original member name unknown.
+  u8 _298[0x2a0 - 0x298];
+  f64 unknown2a0; // Inferred role: audio frame delta time; original member name unknown.
+  f64 unknown2a8; // Inferred role: last audio frame time; original member name unknown.
+  u8 _2b0[0x300 - 0x2b0];
   OutputMode::Type m_outputMode;
   u8 _304[0x308 - 0x304];
   BehaviorInstance<SystemCore> unknown308; // Inferred role: master volume; original member name unknown.
@@ -257,7 +351,9 @@ public:
   Array<SoundCategory> unknown468; // Inferred role: categories; original member name unknown.
   u8 _480[0x4e0 - 0x480];
   f32 m_speedOfSound;
-  u8 _4e4[0x708 - 0x4e4];
+  u8 _4e4[0x4ea - 0x4e4];
+  bool unknown4ea; // Inferred role: audio thread exit request; original member name unknown.
+  u8 _4eb[0x708 - 0x4eb];
   mutable Mutex unknown708; // Inferred role: audio mutex; original member name unknown.
   u8 _730[0x950 - 0x730];
   List<StreamController> unknown950; // Inferred role: stream controllers; original member name unknown.

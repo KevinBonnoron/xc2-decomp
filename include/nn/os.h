@@ -45,6 +45,35 @@ private:
   s64 value;
 };
 
+// Public SDK names, as in open-ead nnheaders include/nn/os.h (https://github.com/open-ead/nnheaders). The destructor
+// of SystemEvent is the code inlined in the destructor of ssd::SystemCorePlatform (0x710099748c).
+struct SystemEventType {
+  enum State {
+    State_NotInitialized = 0,
+    State_InitializedAsEvent = 1,
+    State_InitializedAsInterProcessEvent = 2,
+  };
+
+  EventType event;
+  u8 state;
+};
+
+static_assert(offsetof(SystemEventType, state) == 0x28, "");
+static_assert(sizeof(SystemEventType) == 0x30, "");
+
+void DestroySystemEvent(SystemEventType *event);
+void WaitSystemEvent(SystemEventType *event);
+
+struct SystemEvent {
+  ~SystemEvent() {
+    if (m_SystemEventType.state != SystemEventType::State_NotInitialized) {
+      DestroySystemEvent(&m_SystemEventType);
+    }
+  }
+
+  SystemEventType m_SystemEventType;
+};
+
 void InitializeMutex(MutexType *mutex, bool recursive, int lockLevel);
 void FinalizeMutex(MutexType *mutex);
 void LockMutex(MutexType *mutex);
@@ -69,12 +98,14 @@ bool TimedWaitEvent(EventType *event, TimeSpan timeout);
 void ClearEvent(EventType *event);
 
 Tick GetSystemTick();
+Tick GetSystemTickFrequency();
 TimeSpan ConvertToTimeSpan(Tick tick);
 Tick ConvertToTick(TimeSpan span);
 
 Result CreateThread(ThreadType *thread, ThreadFunction function, void *argument, void *stack, size_t stackSize, int priority, int idealCore);
 Result CreateThread(ThreadType *thread, ThreadFunction function, void *argument, void *stack, size_t stackSize, int priority);
 void DestroyThread(ThreadType *thread);
+void WaitThread(ThreadType *thread);
 void StartThread(ThreadType *thread);
 void SetThreadName(ThreadType *thread, const char *name);
 void YieldThread();

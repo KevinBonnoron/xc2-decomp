@@ -1,6 +1,8 @@
 #pragma once
 #include <stddef.h>
 
+#include "types.h"
+
 #define NN_LOG(...)                                                                                                                                                                                    \
   do {                                                                                                                                                                                                 \
     ::nn::diag::LogMetaData logMetaData;                                                                                                                                                               \
@@ -85,6 +87,10 @@ namespace detail {
 void LogImpl(const LogMetaData &metaData, const char *format, ...);
 [[noreturn]] void AbortImpl(const char *condition, const char *functionName, const char *fileName, int lineNumber);
 void OnAssertionFailure(AssertionType type, const char *condition, const char *functionName, const char *fileName, int lineNumber);
+// Provenance: imported symbol _ZN2nn4diag6detail11NotNullImplEm (work/syms_base.txt). The prototype is inferred from
+// the calls in ssd::SystemCorePlatform::InitAudioDevice (0x71009967a0): the address of a buffer, tested for a true
+// result before nn::diag::detail::AbortImpl.
+bool NotNullImpl(u64 address);
 
 } // namespace detail
 } // namespace diag

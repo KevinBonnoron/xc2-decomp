@@ -2,7 +2,6 @@
 
 #include "nn/fs.h"
 #include "nn/result.h"
-#include "ssd/ssd_allocator.h"
 #include "ssd/ssd_debug.h"
 #include "ssd/ssd_file_stream.h"
 #include "ssd/ssd_text.h"
@@ -31,11 +30,7 @@ long FileStream::Open(const TextRef &path, OpenMode mode) {
   MemoryBlock text = {nullptr, 0};
   path.GetText(&text, TEXT_ENCODE_UTF8);
   nn::Result result = nn::fs::OpenFile(&unknown30, static_cast<const char *>(text.unknown00), 1);
-  void *address = text.unknown00;
-  Allocator *allocator = SoundMemory::allocator_;
-  allocator->DeleteBufferImpl(allocator->GetMemoryBlock(address));
-  text.unknown00 = nullptr;
-  text.unknown08 = 0;
+  text.unknown004();
   if (!result.IsSuccess()) {
     log_error(static_cast<Result>(-65), static_cast<Debug::LogFlag::Type>(0x30), u"ファイルが開けませんでした。: file=\"%s\"", path.unknown10);
     return -65;

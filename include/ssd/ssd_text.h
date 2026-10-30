@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "ssd/ssd_allocator.h"
 #include "ssd/ssd_hash.h"
 #include "types.h"
 
@@ -90,6 +91,15 @@ public:
 };
 
 struct MemoryBlock {
+  // Inferred role: release the block memory to the sound allocator; original name unknown.
+  void unknown004() {
+    void *address = unknown00;
+    Allocator *allocator = SoundMemory::allocator_;
+    allocator->DeleteBufferImpl(allocator->GetMemoryBlock(address));
+    unknown00 = nullptr;
+    unknown08 = 0;
+  }
+
   void *unknown00;         // Inferred role: block address; original member name unknown.
   unsigned long unknown08; // Inferred role: block size; original member name unknown.
 };

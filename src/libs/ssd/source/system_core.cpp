@@ -1,3 +1,4 @@
+#include "nn/os.h"
 #include "ssd/ssd_array.h"
 #include "ssd/ssd_behavior.h"
 #include "ssd/ssd_mutex.h"
@@ -9,6 +10,8 @@
 #include "types.h"
 
 namespace ssd {
+
+void SystemCore::AudioThreadEntry(SystemCore *core, void *argument) { core->AudioThreadImpl(); }
 
 void SystemCore::StreamThreadEntry(SystemCore *core, void *argument) { core->StreamThreadImpl(); }
 
@@ -444,6 +447,19 @@ Result SystemCore::RemoveSoundEffecter(SoundEffecter *effecter) {
 }
 
 const void *SystemCore::GetDebugInfo() const { return &debugInfo_; }
+
+void SystemCore::AudioThreadImpl() {
+  f64 time = GetSystemTime();
+  unknown2a8 = time;
+  unknowna18 = time;
+  while (!unknown4ea) {
+    nn::os::WaitSystemEvent(&unknown138.m_SystemEventType);
+    unknown280 = unknown278 / unknown290;
+    unknown2a0 = unknown290;
+    AudioFrameProcess();
+    unknown278++;
+  }
+}
 
 template class BehaviorInstance<SystemCore>;
 

@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "nn/audio.h"
 #include "ssd/ssd_behavior.h"
 #include "ssd/ssd_result.h"
 #include "ssd/ssd_sound.h"
@@ -9,6 +10,7 @@
 
 namespace ssd {
 
+class SystemCore;
 class WaveSource;
 
 class VoiceHandle : public Object, public List<VoiceHandle>::Node {
@@ -16,6 +18,13 @@ public:
   union unknown001 {
     s32 unknown00; // Inferred role: sample position; original member name unknown.
     f32 unknown01; // Inferred role: time position; original member name unknown.
+  };
+
+  // Inferred role: hardware voice of one channel; original type name unknown.
+  struct unknown003 {
+    nn::audio::VoiceType unknown00; // Inferred role: voice; original member name unknown.
+    u8 _08[0xb4 - 0x08];
+    int unknownb4; // Inferred role: hardware voice count; original member name unknown.
   };
 
   ~VoiceHandle() override;
@@ -58,6 +67,14 @@ public:
   void NullBufferProcess();
   void LooppingBufferProcess();
   void AddLooppingBuffer();
+  Result EnableBuffer();
+  void UpdateOutputParam(f32 deltaTime);
+  Result ReleaseBuffer();
+  Result DisableBuffer();
+  void StreamingBufferProcess();
+  u64 AddStreamingBuffer();
+  void SetHWVoiceState(nn::audio::VoiceType::PlayState state);
+  void OneShotBufferProcess();
 
   static void *adpcmSplitBuffer_;
 
@@ -89,9 +106,11 @@ public:
   WaveSource *unknown68;       // Inferred role: wave source; original member name unknown.
   StreamController *unknown70; // Inferred role: stream; original member name unknown.
   u8 _78[0x88 - 0x78];
-  int unknown88; // Inferred role: voice queue count; original member name unknown.
-  u8 _8c[0x658 - 0x8c];
-  void *unknown658; // Inferred role: audio data buffer; original member name unknown.
+  int unknown88;           // Inferred role: voice queue count; original member name unknown.
+  int unknown8c;           // Inferred role: free streaming buffer count; original member name unknown.
+  unknown003 unknown90[8]; // Inferred role: channel voices; original member name unknown.
+  SystemCore *unknown650;  // Inferred role: sound core; original member name unknown.
+  void *unknown658;        // Inferred role: audio data buffer; original member name unknown.
   u8 _660[0x668 - 0x660];
   bool unknown668; // Inferred role: play position request; original member name unknown.
   u8 unknown669;   // Inferred role: play position request type; original member name unknown.
@@ -119,6 +138,10 @@ static_assert(offsetof(VoiceHandle, unknown669) == 0x669, "");
 static_assert(offsetof(VoiceHandle, unknown680) == 0x680, "");
 static_assert(offsetof(VoiceHandle, unknown6a0) == 0x6a0, "");
 static_assert(offsetof(VoiceHandle, unknown6d0) == 0x6d0, "");
+static_assert(offsetof(VoiceHandle, unknown90) == 0x90, "");
+static_assert(offsetof(VoiceHandle, unknown650) == 0x650, "");
+static_assert(offsetof(VoiceHandle::unknown003, unknownb4) == 0xb4, "");
+static_assert(sizeof(VoiceHandle::unknown003) == 0xb8, "");
 static_assert(sizeof(VoiceHandle) == 0x710, "");
 
 } // namespace ssd

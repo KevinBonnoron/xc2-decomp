@@ -1,3 +1,4 @@
+#include "nn/audio.h"
 #include "ssd/ssd_allocator.h"
 #include "ssd/ssd_behavior_impl.h" // IWYU pragma: keep
 #include "ssd/ssd_result.h"
@@ -238,7 +239,73 @@ void VoiceHandle::UpdateAudioFrame(f32 deltaTime) {
   }
 }
 
+Result VoiceHandle::EnableBuffer() {
+  UpdateOutputParam(0.0f);
+  if (!unknown33) {
+    for (int i = 0; i < unknown4c; i++) {
+      if (nn::audio::IsVoiceValid(&unknown90[i].unknown00)) {
+        nn::audio::SetVoicePlayState(&unknown90[i].unknown00, nn::audio::VoiceType::PlayState_Start);
+      }
+    }
+  }
+  return static_cast<Result>(0);
+}
+
+Result VoiceHandle::ReleaseBuffer() {
+  if (nn::audio::IsVoiceValid(&unknown90[0].unknown00)) {
+    for (int i = 0; i < unknown4c; i++) {
+      if (nn::audio::IsVoiceValid(&unknown90[i].unknown00)) {
+        nn::audio::ReleaseVoiceSlot(&unknown650->unknown168, &unknown90[i].unknown00);
+        SystemCore *core = static_cast<SystemCore *>(SoundCore::instance_);
+        core->unknown410 -= unknown90[i].unknownb4;
+        unknown90[i].unknownb4 = 0;
+      }
+    }
+  }
+  return static_cast<Result>(0);
+}
+
+Result VoiceHandle::DisableBuffer() {
+  if (nn::audio::IsVoiceValid(&unknown90[0].unknown00)) {
+    SetHWVoiceState(nn::audio::VoiceType::PlayState_Stop);
+    unknown37 = true;
+  }
+  unknown668 = false;
+  return static_cast<Result>(0);
+}
+
+void VoiceHandle::StreamingBufferProcess() {
+  for (int i = 0; i < unknown4c; i++) {
+    nn::audio::WaveBuffer *buffer = nn::audio::GetReleasedWaveBuffer(&unknown90[i].unknown00);
+    if (i == 0 && buffer != nullptr) {
+      unknown690 += buffer->bufferSize;
+      unknown680 = 0;
+      unknown8c++;
+      unknown88--;
+    }
+  }
+  if (unknown8c != 0) {
+    AddStreamingBuffer();
+  }
+  unknown40 |= unknown88 == 0;
+}
+
+void VoiceHandle::SetHWVoiceState(nn::audio::VoiceType::PlayState state) {
+  for (int i = 0; i < unknown4c; i++) {
+    if (nn::audio::IsVoiceValid(&unknown90[i].unknown00)) {
+      // Original game bug: the requested state is ignored and every voice is stopped.
+      nn::audio::SetVoicePlayState(&unknown90[i].unknown00, nn::audio::VoiceType::PlayState_Stop);
+    }
+  }
+}
+
 void VoiceHandle::NullBufferProcess() {}
+
+void VoiceHandle::OneShotBufferProcess() {
+  if (nn::audio::GetReleasedWaveBuffer(&unknown90[0].unknown00) != nullptr) {
+    unknown88--;
+  }
+}
 
 void VoiceHandle::LooppingBufferProcess() {}
 

@@ -1,5 +1,6 @@
 #include "nn/os.h"
 #include "nn/time_span.h"
+#include "ssd/ssd_allocator.h"
 #include "ssd/ssd_thread.h"
 #include "types.h"
 
@@ -15,6 +16,22 @@ void Thread::ThreadEntryProc(void *argument) {
   thread->unknown01 = true;
   thread->unknown210(thread->unknown208, thread->unknown218);
   thread->unknown01 = false;
+}
+
+Result Thread::CloseThread() {
+  unknown02 = true;
+  nn::os::WaitThread(&unknown48);
+  unknown00 = false;
+  unknown01 = false;
+  nn::os::DestroyThread(&unknown48);
+  nn::os::FinalizeEvent(&unknown20);
+  if (unknown08 != nullptr) {
+    Allocator *allocator = SoundMemory::allocator_;
+    allocator->DeleteBufferImpl(allocator->GetMemoryBlock(unknown08));
+    unknown08 = nullptr;
+    unknown10 = 0;
+  }
+  return static_cast<Result>(0);
 }
 
 Result Thread::Wakeup() {

@@ -23,6 +23,7 @@ public:
 
   ~Thread();
   static void ThreadEntryProc(void *argument);
+  Result CloseThread();
   Result Wakeup();
   Result Sleep(f32 time);
   Result TimerSleep();
