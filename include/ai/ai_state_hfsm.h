@@ -20,6 +20,9 @@ public:
   typedef State *(*CreateFunc)(void *buffer);
 
   struct StateInfo {
+    // Decoded from the fill loop of Vector<StateInfo>::resize and extend (null create, parent -1).
+    StateInfo() : unknown00(nullptr), unknown08(-1) {}
+
     CreateFunc unknown00; // Inferred role: create; original member name unknown.
     int unknown08;        // Inferred role: parent; original member name unknown.
   };

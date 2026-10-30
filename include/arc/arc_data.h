@@ -5,7 +5,8 @@ namespace arc {
 
 class CArcData {
 public:
-  CArcData(void *data);
+  // Default argument decoded from Vector<CArcData>::resize and extend, which construct new elements with CArcData(nullptr).
+  CArcData(void *data = nullptr);
   // Reconstructed from symbol arc::CArcData::setData(void*) at 0x7100695320.
   void setData(void *data);
   void *getFileAdr(const char *name) const;
