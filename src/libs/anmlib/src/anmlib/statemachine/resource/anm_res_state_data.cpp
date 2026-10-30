@@ -42,3 +42,5 @@ void ResStateData::clearFrameAnnotation(u32 type) {
 void ResStateData::setFrameAnnotation(u32 type, u32 clip, f32 frame, const AsmAnnotetion &annotation) { unknown08[clip].setFrameAnnotation(type, frame, annotation); }
 
 } // namespace anm
+
+template void mm::mtl::Vector<anm::ResClipData>::resize(size_t);

@@ -38,7 +38,6 @@ public:
   f32 unknown14;                                                            // Inferred role: end frame; original member name unknown.
   mm::mtl::FixedArray<mm::mtl::Vector<AsmKeyframeAnnotation>, 5> unknown18; // Inferred role: frame annotations; original member name unknown.
   bool unknowne0;                                                           // Inferred role: annotation dirty; original member name unknown.
-  u8 _e1[0xe8 - 0xe1];
 };
 
 static_assert(offsetof(ResClipData, unknown18) == 0x18, "");
