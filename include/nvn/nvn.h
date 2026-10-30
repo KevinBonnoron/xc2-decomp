@@ -5,7 +5,12 @@
 
 typedef u8 NVNboolean;
 
-struct NVNcommandBuffer;
+// Provenance: the size is the offset of the first member after the NVNcommandBuffer at the start of
+// grlib::CGLibCmdBuffer (the CGLibMemPool at 0xa0, see CGLibCmdBuffer's constructor and release);
+// the contents are not known.
+struct alignas(8) NVNcommandBuffer {
+  u8 reserved[0xa0];
+};
 struct NVNmemoryPool;
 struct NVNtexture;
 struct NVNvertexAttribState;
@@ -49,6 +54,18 @@ struct alignas(8) NVNdepthStencilState {
 
 struct alignas(8) NVNvertexStreamState {
   u8 reserved[0x8];
+};
+
+// Provenance: the sizes of NVNtexturePool and NVNsamplerPool are the distance between their offset 0x48 member
+// and the end (0x68) of grlib::CGLibTexDescriptor and grlib::CGLibSamplerDescriptor (see their constructors and
+// setup functions); the contents are not known. Both type names follow the public NVN API, as declared in the
+// open-ead nnheaders project (https://github.com/open-ead/nnheaders, include/nvn/nvn.h), where both are 0x20 bytes.
+struct alignas(8) NVNtexturePool {
+  u8 reserved[0x20];
+};
+
+struct alignas(8) NVNsamplerPool {
+  u8 reserved[0x20];
 };
 
 struct NVNtextureView {
@@ -137,6 +154,8 @@ enum NVNindexType {};
 typedef u64 NVNbufferAddress;
 typedef u64 NVNtextureHandle;
 typedef u64 NVNimageHandle;
+// Public NVN API name, as declared in the open-ead nnheaders project (include/nvn/nvn.h).
+typedef u64 NVNcommandHandle;
 
 typedef void (*PFNNVNCOMMANDBUFFERCOPYBUFFERTOBUFFERPROC)(NVNcommandBuffer *cmdBuf, NVNbufferAddress src, NVNbufferAddress dst, size_t size, int copyFlags);
 typedef void (*PFNNVNCOMMANDBUFFERDISPATCHCOMPUTEINDIRECTPROC)(NVNcommandBuffer *cmdBuf, NVNbufferAddress indirectBuffer);
@@ -213,6 +232,41 @@ typedef void (*PFNNVNCOMMANDBUFFERCLEARDEPTHSTENCILPROC)(NVNcommandBuffer *cmdBu
 typedef void (*PFNNVNCOMMANDBUFFERRESETCOUNTERPROC)(NVNcommandBuffer *cmdBuf, NVNcounterType counter);
 typedef void (*PFNNVNCOMMANDBUFFERREPORTCOUNTERPROC)(NVNcommandBuffer *cmdBuf, NVNcounterType counter, NVNbufferAddress buffer);
 typedef NVNbufferAddress (*PFNNVNMEMORYPOOLGETBUFFERADDRESSPROC)(const NVNmemoryPool *pool);
+// Provenance for the command buffer lifecycle declarations below: each name is an imported function pointer
+// symbol of the game (pfnc_nvnCommandBuffer... in work/syms_base.txt), and each prototype is inferred from the
+// call sites in grlib::CGLibCmdBuffer (0x71007b21e4 to 0x71007b2a24).
+typedef void (*PFNNVNCOMMANDBUFFERFINALIZEPROC)(NVNcommandBuffer *cmdBuf);
+typedef void (*PFNNVNCOMMANDBUFFERINITIALIZEPROC)(NVNcommandBuffer *cmdBuf, NVNdevice *device);
+// NVNcommandBufferMemoryEvent and the callback prototype follow the public NVN API, as declared in the open-ead
+// nnheaders project (https://github.com/open-ead/nnheaders, include/nvn/nvn.h); the game's callback compares
+// the event with 2.
+typedef enum {
+  NVN_COMMAND_BUFFER_MEMORY_EVENT_OUT_OF_COMMAND_MEMORY = 0x0,
+  NVN_COMMAND_BUFFER_MEMORY_EVENT_OUT_OF_CONTROL_MEMORY = 0x1,
+  NVN_COMMAND_BUFFER_MEMORY_EVENT_LARGE = 0x7FFFFFFF
+} NVNcommandBufferMemoryEvent;
+typedef void (*PFNNVNCOMMANDBUFFERMEMORYCALLBACKPROC)(NVNcommandBuffer *cmdBuf, NVNcommandBufferMemoryEvent event, size_t minSize, void *callbackData);
+typedef void (*PFNNVNCOMMANDBUFFERSETMEMORYCALLBACKPROC)(NVNcommandBuffer *cmdBuf, PFNNVNCOMMANDBUFFERMEMORYCALLBACKPROC callback);
+typedef void (*PFNNVNCOMMANDBUFFERSETMEMORYCALLBACKDATAPROC)(NVNcommandBuffer *cmdBuf, void *callbackData);
+typedef void (*PFNNVNCOMMANDBUFFERADDCOMMANDMEMORYPROC)(NVNcommandBuffer *cmdBuf, const NVNmemoryPool *pool, size_t offset, size_t size);
+typedef void (*PFNNVNCOMMANDBUFFERADDCONTROLMEMORYPROC)(NVNcommandBuffer *cmdBuf, void *memory, size_t size);
+typedef void (*PFNNVNCOMMANDBUFFERBEGINRECORDINGPROC)(NVNcommandBuffer *cmdBuf);
+typedef NVNcommandHandle (*PFNNVNCOMMANDBUFFERENDRECORDINGPROC)(NVNcommandBuffer *cmdBuf);
+typedef u32 (*PFNNVNCOMMANDBUFFERGETCOMMANDMEMORYUSEDPROC)(const NVNcommandBuffer *cmdBuf);
+typedef u32 (*PFNNVNCOMMANDBUFFERGETCONTROLMEMORYUSEDPROC)(const NVNcommandBuffer *cmdBuf);
+typedef void (*PFNNVNCOMMANDBUFFERCALLCOMMANDSPROC)(NVNcommandBuffer *cmdBuf, int numCommands, const NVNcommandHandle *handles);
+// Provenance for the texture and sampler pool declarations below: each name is an imported function pointer symbol
+// of the game (pfnc_nvnTexturePool..., pfnc_nvnSamplerPool..., pfnc_nvnCommandBufferSet*Pool in
+// work/syms_base.txt) and each prototype is inferred from the call sites in grlib::CGLibTexDescriptor and
+// grlib::CGLibSamplerDescriptor (0x71007b2a24 to 0x71007b31ac).
+typedef void (*PFNNVNTEXTUREPOOLINITIALIZEPROC)(NVNtexturePool *pool, const NVNmemoryPool *memoryPool, size_t offset, int numDescriptors);
+typedef void (*PFNNVNTEXTUREPOOLFINALIZEPROC)(NVNtexturePool *pool);
+typedef void (*PFNNVNTEXTUREPOOLREGISTERTEXTUREPROC)(NVNtexturePool *pool, int id, const NVNtexture *texture, const NVNtextureView *view);
+typedef void (*PFNNVNTEXTUREPOOLREGISTERIMAGEPROC)(NVNtexturePool *pool, int id, const NVNtexture *texture, const NVNtextureView *view);
+typedef void (*PFNNVNCOMMANDBUFFERSETTEXTUREPOOLPROC)(NVNcommandBuffer *cmdBuf, const NVNtexturePool *pool);
+typedef void (*PFNNVNSAMPLERPOOLINITIALIZEPROC)(NVNsamplerPool *pool, const NVNmemoryPool *memoryPool, size_t offset, int numDescriptors);
+typedef void (*PFNNVNSAMPLERPOOLFINALIZEPROC)(NVNsamplerPool *pool);
+typedef void (*PFNNVNCOMMANDBUFFERSETSAMPLERPOOLPROC)(NVNcommandBuffer *cmdBuf, const NVNsamplerPool *pool);
 typedef u64 (*PFNNVNDEVICEGETTIMESTAMPINNANOSECONDSPROC)(const NVNdevice *device, const NVNcounterData *counterData);
 typedef void (*PFNNVNPROGRAMFINALIZEPROC)(NVNprogram *program);
 typedef void (*PFNNVNCOMMANDBUFFERBINDUNIFORMBUFFERPROC)(NVNcommandBuffer *cmdBuf, NVNshaderStage stage, int index, NVNbufferAddress buffer, size_t size);
@@ -302,6 +356,25 @@ extern PFNNVNCOMMANDBUFFERCLEARDEPTHSTENCILPROC pfnc_nvnCommandBufferClearDepthS
 extern PFNNVNCOMMANDBUFFERRESETCOUNTERPROC pfnc_nvnCommandBufferResetCounter;
 extern PFNNVNCOMMANDBUFFERREPORTCOUNTERPROC pfnc_nvnCommandBufferReportCounter;
 extern PFNNVNMEMORYPOOLGETBUFFERADDRESSPROC pfnc_nvnMemoryPoolGetBufferAddress;
+extern PFNNVNCOMMANDBUFFERFINALIZEPROC pfnc_nvnCommandBufferFinalize;
+extern PFNNVNCOMMANDBUFFERINITIALIZEPROC pfnc_nvnCommandBufferInitialize;
+extern PFNNVNCOMMANDBUFFERSETMEMORYCALLBACKPROC pfnc_nvnCommandBufferSetMemoryCallback;
+extern PFNNVNCOMMANDBUFFERSETMEMORYCALLBACKDATAPROC pfnc_nvnCommandBufferSetMemoryCallbackData;
+extern PFNNVNCOMMANDBUFFERADDCOMMANDMEMORYPROC pfnc_nvnCommandBufferAddCommandMemory;
+extern PFNNVNCOMMANDBUFFERADDCONTROLMEMORYPROC pfnc_nvnCommandBufferAddControlMemory;
+extern PFNNVNCOMMANDBUFFERBEGINRECORDINGPROC pfnc_nvnCommandBufferBeginRecording;
+extern PFNNVNCOMMANDBUFFERENDRECORDINGPROC pfnc_nvnCommandBufferEndRecording;
+extern PFNNVNCOMMANDBUFFERGETCOMMANDMEMORYUSEDPROC pfnc_nvnCommandBufferGetCommandMemoryUsed;
+extern PFNNVNCOMMANDBUFFERGETCONTROLMEMORYUSEDPROC pfnc_nvnCommandBufferGetControlMemoryUsed;
+extern PFNNVNCOMMANDBUFFERCALLCOMMANDSPROC pfnc_nvnCommandBufferCallCommands;
+extern PFNNVNTEXTUREPOOLINITIALIZEPROC pfnc_nvnTexturePoolInitialize;
+extern PFNNVNTEXTUREPOOLFINALIZEPROC pfnc_nvnTexturePoolFinalize;
+extern PFNNVNTEXTUREPOOLREGISTERTEXTUREPROC pfnc_nvnTexturePoolRegisterTexture;
+extern PFNNVNTEXTUREPOOLREGISTERIMAGEPROC pfnc_nvnTexturePoolRegisterImage;
+extern PFNNVNCOMMANDBUFFERSETTEXTUREPOOLPROC pfnc_nvnCommandBufferSetTexturePool;
+extern PFNNVNSAMPLERPOOLINITIALIZEPROC pfnc_nvnSamplerPoolInitialize;
+extern PFNNVNSAMPLERPOOLFINALIZEPROC pfnc_nvnSamplerPoolFinalize;
+extern PFNNVNCOMMANDBUFFERSETSAMPLERPOOLPROC pfnc_nvnCommandBufferSetSamplerPool;
 extern PFNNVNDEVICEGETTIMESTAMPINNANOSECONDSPROC pfnc_nvnDeviceGetTimestampInNanoseconds;
 extern PFNNVNPROGRAMFINALIZEPROC pfnc_nvnProgramFinalize;
 extern PFNNVNCOMMANDBUFFERBINDUNIFORMBUFFERPROC pfnc_nvnCommandBufferBindUniformBuffer;
@@ -521,3 +594,45 @@ inline void nvnVertexStreamStateSetStride(NVNvertexStreamState *stream, size_t s
 inline void nvnVertexStreamStateSetDivisor(NVNvertexStreamState *stream, int divisor) { pfnc_nvnVertexStreamStateSetDivisor(stream, divisor); }
 
 inline void nvnCommandBufferBindVertexBuffer(NVNcommandBuffer *cmdBuf, int index, NVNbufferAddress buffer, size_t size) { pfnc_nvnCommandBufferBindVertexBuffer(cmdBuf, index, buffer, size); }
+
+inline void nvnCommandBufferFinalize(NVNcommandBuffer *cmdBuf) { pfnc_nvnCommandBufferFinalize(cmdBuf); }
+
+inline void nvnCommandBufferInitialize(NVNcommandBuffer *cmdBuf, NVNdevice *device) { pfnc_nvnCommandBufferInitialize(cmdBuf, device); }
+
+inline void nvnCommandBufferSetMemoryCallback(NVNcommandBuffer *cmdBuf, PFNNVNCOMMANDBUFFERMEMORYCALLBACKPROC callback) { pfnc_nvnCommandBufferSetMemoryCallback(cmdBuf, callback); }
+
+inline void nvnCommandBufferSetMemoryCallbackData(NVNcommandBuffer *cmdBuf, void *callbackData) { pfnc_nvnCommandBufferSetMemoryCallbackData(cmdBuf, callbackData); }
+
+inline void nvnCommandBufferAddCommandMemory(NVNcommandBuffer *cmdBuf, const NVNmemoryPool *pool, size_t offset, size_t size) { pfnc_nvnCommandBufferAddCommandMemory(cmdBuf, pool, offset, size); }
+
+inline void nvnCommandBufferAddControlMemory(NVNcommandBuffer *cmdBuf, void *memory, size_t size) { pfnc_nvnCommandBufferAddControlMemory(cmdBuf, memory, size); }
+
+inline void nvnCommandBufferBeginRecording(NVNcommandBuffer *cmdBuf) { pfnc_nvnCommandBufferBeginRecording(cmdBuf); }
+
+inline NVNcommandHandle nvnCommandBufferEndRecording(NVNcommandBuffer *cmdBuf) { return pfnc_nvnCommandBufferEndRecording(cmdBuf); }
+
+inline u32 nvnCommandBufferGetCommandMemoryUsed(const NVNcommandBuffer *cmdBuf) { return pfnc_nvnCommandBufferGetCommandMemoryUsed(cmdBuf); }
+
+inline u32 nvnCommandBufferGetControlMemoryUsed(const NVNcommandBuffer *cmdBuf) { return pfnc_nvnCommandBufferGetControlMemoryUsed(cmdBuf); }
+
+inline void nvnCommandBufferCallCommands(NVNcommandBuffer *cmdBuf, int numCommands, const NVNcommandHandle *handles) { pfnc_nvnCommandBufferCallCommands(cmdBuf, numCommands, handles); }
+
+inline void nvnTexturePoolInitialize(NVNtexturePool *pool, const NVNmemoryPool *memoryPool, size_t offset, int numDescriptors) {
+  pfnc_nvnTexturePoolInitialize(pool, memoryPool, offset, numDescriptors);
+}
+
+inline void nvnTexturePoolFinalize(NVNtexturePool *pool) { pfnc_nvnTexturePoolFinalize(pool); }
+
+inline void nvnTexturePoolRegisterTexture(NVNtexturePool *pool, int id, const NVNtexture *texture, const NVNtextureView *view) { pfnc_nvnTexturePoolRegisterTexture(pool, id, texture, view); }
+
+inline void nvnTexturePoolRegisterImage(NVNtexturePool *pool, int id, const NVNtexture *texture, const NVNtextureView *view) { pfnc_nvnTexturePoolRegisterImage(pool, id, texture, view); }
+
+inline void nvnCommandBufferSetTexturePool(NVNcommandBuffer *cmdBuf, const NVNtexturePool *pool) { pfnc_nvnCommandBufferSetTexturePool(cmdBuf, pool); }
+
+inline void nvnSamplerPoolInitialize(NVNsamplerPool *pool, const NVNmemoryPool *memoryPool, size_t offset, int numDescriptors) {
+  pfnc_nvnSamplerPoolInitialize(pool, memoryPool, offset, numDescriptors);
+}
+
+inline void nvnSamplerPoolFinalize(NVNsamplerPool *pool) { pfnc_nvnSamplerPoolFinalize(pool); }
+
+inline void nvnCommandBufferSetSamplerPool(NVNcommandBuffer *cmdBuf, const NVNsamplerPool *pool) { pfnc_nvnCommandBufferSetSamplerPool(cmdBuf, pool); }

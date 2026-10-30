@@ -24,9 +24,11 @@ struct CGLibMemType {
 
   void *m_buffer;
   u32 unknown08; // Inferred role: type; original member name unknown.
+  u32 unknown0c; // Inferred role: unused, copied with the type as one 8 bytes unit by CGLibSystemContext::releaseDelayVertex; original member name unknown.
 };
 
 static_assert(offsetof(CGLibMemType, unknown08) == 0x8, "");
+static_assert(sizeof(CGLibMemType) == 0x10, "");
 
 class CGLibMemHandle {
 public:

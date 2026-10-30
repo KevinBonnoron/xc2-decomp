@@ -3,8 +3,6 @@
 
 #include "nvn/nvn.h"
 
-struct NVNcommandBuffer;
-
 namespace grlib {
 
 class CGLibShader_plf;

@@ -24,6 +24,15 @@
   } while (0)
 
 namespace nn {
+namespace detail {
+
+// Provenance: imported symbol _ZN2nn6detail21UnexpectedDefaultImplEPKcS2_i (work/syms_base.txt). The prototype is
+// inferred from the call in the memory callback of grlib::CGLibCmdBuffer (0x71007b29fc): two string pointers and
+// an integer, with no code after the call.
+[[noreturn]] void UnexpectedDefaultImpl(const char *functionName, const char *fileName, int lineNumber);
+
+} // namespace detail
+
 namespace diag {
 
 enum LogSeverity {

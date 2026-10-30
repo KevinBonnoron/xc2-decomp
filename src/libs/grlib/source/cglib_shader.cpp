@@ -4,8 +4,6 @@
 
 #include "nvn/nvn.h"
 
-struct NVNcommandBuffer;
-
 namespace grlib {
 
 namespace {

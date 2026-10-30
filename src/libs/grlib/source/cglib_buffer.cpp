@@ -1,24 +1,36 @@
+#include <new>
 #include <string.h>
 
 #include "grlib/cglib_buff_fix_alloc.h"
 #include "grlib/cglib_buff_mem_pool_tbl.h"
 #include "grlib/cglib_buff_min_uniform.h"
 #include "grlib/cglib_buff_occlusion.h"
+#include "grlib/cglib_buff_release_tbl.h"
 #include "grlib/cglib_buff_texture.h"
 #include "grlib/cglib_buffer.h"
+#include "grlib/cglib_cmd_buffer.h"
 #include "grlib/cglib_manager.h"
 #include "grlib/cglib_mem_handle.h"
 #include "grlib/cglib_mem_pool.h"
 #include "grlib/cglib_mem_pool_adder.h"
 #include "grlib/cglib_mem_pool_list.h"
 #include "grlib/cglib_parts_mem_pool.h"
+#include "grlib/cglib_pipeline.h"
+#include "grlib/cglib_release_obj.h"
+#include "grlib/cglib_sampler_descriptor.h"
 #include "grlib/cglib_system_context.h"
+#include "grlib/cglib_tex_descriptor.h"
+#include "grlib/cglib_texture_buffer.h"
 #include "grlib/cglib_vtl_mem_pool.h"
 #include "ml/critical_section.h"
 #include "mtl/alloc_handle.h"
 #include "mtl/mem_manager.h"
+#include "nn/diag.h"
 #include "nvn/nvn.h"
 #include "types.h"
+
+struct NVNmemoryPool;
+struct NVNtexture;
 
 namespace grlib {
 
@@ -313,6 +325,230 @@ int CGLibMemPoolList::cntOffset(u32 size, u32 alignment) {
   return offset;
 }
 
+CGLibReleaseObj::CGLibReleaseObj() : unknown20(nullptr) {
+  unknown00.unknown00 = nullptr;
+  unknown00.unknown08 = nullptr;
+  unknown00.unknown10 = 0;
+  unknown00.unknown14 = 0;
+  unknown00.unknown18 = 0;
+  unknown00.unknown1a = 0;
+  unknown00.unknown1c = 0;
+}
+
+CGLibReleaseObj::~CGLibReleaseObj() { release(); }
+
+void CGLibReleaseObj::release() {
+  if (unknown00.unknown18 & 1) {
+    s_callRelease[unknown00.unknown1a](unknown00);
+    unknown00.unknown10 = 0;
+    unknown00.unknown14 = 0;
+    unknown00.unknown18 = 0;
+    unknown00.unknown1a = 0;
+    unknown00.unknown1c = 0;
+    unknown00.unknown00 = nullptr;
+    unknown00.unknown08 = nullptr;
+  }
+}
+
+CGLibBuffReleaseTbl::CGLibBuffReleaseTbl() : unknown00(0), unknown08(nullptr) {
+  unknown20[1].unknown00 = nullptr;
+  unknown20[1].unknown08 = nullptr;
+  unknown20[0].unknown00 = nullptr;
+  unknown20[0].unknown08 = nullptr;
+  unknown10 = nullptr;
+  unknown18 = nullptr;
+}
+
+CGLibBuffReleaseTbl::~CGLibBuffReleaseTbl() { release(); }
+
+void CGLibBuffReleaseTbl::release() {
+  for (int i = 0; i < unknown00; i++) {
+    unknown08[i].release();
+  }
+  if (unknown08 != nullptr) {
+    mtl::MemManager::deallocate(unknown08, 0, false);
+    unknown08 = nullptr;
+  }
+  unknown00 = 0;
+  unknown20[1].unknown00 = nullptr;
+  unknown20[1].unknown08 = nullptr;
+  unknown20[0].unknown00 = nullptr;
+  unknown20[0].unknown08 = nullptr;
+  unknown10 = nullptr;
+  unknown18 = nullptr;
+}
+
+int CGLibBuffReleaseTbl::setup(u32 num) {
+  release();
+  unknown00 = num;
+  u32 size = num * sizeof(CGLibReleaseObj);
+  unknown08 = static_cast<CGLibReleaseObj *>(mtl::MemManager::allocate(CGLibMemHandle::s_hDefHandle, size, 0x10, false, "no name", 0));
+  for (int i = 0; i < unknown00; i++) {
+    new (&unknown08[i]) CGLibReleaseObj();
+    CGLibReleaseObj *obj = &unknown08[i];
+    if (unknown18 == nullptr) {
+      unknown10 = obj;
+    } else {
+      unknown18->unknown20 = obj;
+    }
+    unknown18 = obj;
+    obj->unknown20 = nullptr;
+  }
+  return size;
+}
+
+CGLibReleaseObj *CGLibBuffReleaseTbl::createObj() {
+  CGLibReleaseObj *obj = unknown10;
+  if (obj != nullptr) {
+    CGLibReleaseObj *next = obj->unknown20;
+    unknown10 = next;
+    if (next == nullptr) {
+      unknown18 = nullptr;
+    }
+    obj->unknown20 = nullptr;
+  }
+  unknown001 &list = unknown20[CGLibManager::s_nStkNowIdx];
+  if (list.unknown08 == nullptr) {
+    list.unknown00 = obj;
+  } else {
+    list.unknown08->unknown20 = obj;
+  }
+  list.unknown08 = obj;
+  obj->unknown20 = nullptr;
+  return obj;
+}
+
+void CGLibBuffReleaseTbl::update() {
+  CGLibReleaseObj *obj = unknown20[CGLibManager::s_nDblNowIdx].unknown00;
+  if (obj != nullptr) {
+    do {
+      CGLibReleaseObj *next = obj->unknown20;
+      obj->release();
+      if (unknown18 == nullptr) {
+        unknown10 = obj;
+      } else {
+        unknown18->unknown20 = obj;
+      }
+      unknown18 = obj;
+      obj->unknown20 = nullptr;
+      obj = next;
+    } while (obj != nullptr);
+    unknown20[CGLibManager::s_nDblNowIdx].unknown00 = nullptr;
+    unknown20[CGLibManager::s_nDblNowIdx].unknown08 = nullptr;
+  }
+}
+
+void CGLibReleaseObj_plf::release_mempool(wrkRelease &work) {
+  if (work.unknown18 & 2) {
+    nvnMemoryPoolFinalize(static_cast<NVNmemoryPool *>(work.unknown00));
+    context::CGLibSystemContext::get()->unknowne90.freeBuffer(work.unknown00);
+  }
+  if (work.unknown08 != nullptr) {
+    mtl::MemManager::deallocate(work.unknown08, 0, false);
+    work.unknown08 = nullptr;
+  }
+}
+
+void CGLibReleaseObj_plf::release_textrue(wrkRelease &work) {
+  if (work.unknown18 & 4) {
+    nvnTextureFinalize(static_cast<NVNtexture *>(work.unknown00));
+    context::CGLibSystemContext::get()->unknowne60.freeBuffer(work.unknown00);
+  }
+  if (work.unknown08 != nullptr) {
+    mtl::MemManager::deallocate(work.unknown08, 0, false);
+    work.unknown08 = nullptr;
+  }
+  if (work.unknown10 != -1) {
+    context::CGLibSystemContext::get()->unknown538.freeID(work.unknown10);
+  }
+  if (work.unknown14 != -1) {
+    context::CGLibSystemContext::get()->unknown538.freeID(work.unknown14);
+  }
+}
+
+void CGLibReleaseObj_plf::release_vertex(wrkRelease &work) { CGLibMemHandle::free(reinterpret_cast<CGLibMemType &>(work)); }
+
+CGLibTexDescriptor::CGLibTexDescriptor() {}
+
+CGLibTexDescriptor::~CGLibTexDescriptor() { release(); }
+
+void CGLibTexDescriptor_plf::bindTexture(const CGLibTextureBuffer &texture, int textureId, int imageId) {
+  nvnTexturePoolRegisterTexture(&unknown48, context::CGLibSystemContext::s_nNnumReservedTextures + textureId, texture.unknown18, nullptr);
+  if (imageId != -1) {
+    nvnTexturePoolRegisterImage(&unknown48, context::CGLibSystemContext::s_nNnumReservedTextures + imageId, texture.unknown18, nullptr);
+  }
+}
+
+int CGLibTexDescriptor_plf::setTexture(const CGLibTextureBuffer &texture) { return texture.unknown34 + context::CGLibSystemContext::s_nNnumReservedTextures; }
+
+int CGLibTexDescriptor_plf::setImage(const CGLibTextureBuffer &texture) { return texture.unknown38 + context::CGLibSystemContext::s_nNnumReservedTextures; }
+
+void CGLibTexDescriptor::release() {
+  nvnTexturePoolFinalize(&unknown48);
+  unknown28.release();
+  releaseTbl();
+}
+
+int CGLibTexDescriptor::setup(void *buffer, u32 num) {
+  int size = context::CGLibSystemContext::s_nvTextureSize * num;
+  unknown28.setupBuffer(buffer, size, 0x22);
+  nvnTexturePoolInitialize(&unknown48, unknown28.m_memoryPool, 0, num);
+  return size;
+}
+
+int CGLibTexDescriptor::setup(mtl::ALLOC_HANDLE handle, u32 num) {
+  int size = context::CGLibSystemContext::s_nvTextureSize * num;
+  u32 alignedSize = size + (-size & 0xfff);
+  unknown28.setupHandle(handle, alignedSize, 0x22);
+  nvnTexturePoolInitialize(&unknown48, unknown28.m_memoryPool, 0, num);
+  return size;
+}
+
+int CGLibTexDescriptor::setup(CGLibMemPool &memPool, u32 offset, u32 num) {
+  int size = context::CGLibSystemContext::s_nvTextureSize * num;
+  nvnTexturePoolInitialize(&unknown48, memPool.m_memoryPool, offset, num);
+  return size;
+}
+
+void CGLibTexDescriptor::reset() {}
+
+void CGLibTexDescriptor::bind() { nvnCommandBufferSetTexturePool(context::CGLibSystemContext::get()->unknown1070.unknown00, &unknown48); }
+
+CGLibSamplerDescriptor::CGLibSamplerDescriptor() {}
+
+CGLibSamplerDescriptor::~CGLibSamplerDescriptor() { release(); }
+
+void CGLibSamplerDescriptor::release() {
+  nvnSamplerPoolFinalize(&unknown48);
+  unknown28.release();
+  releaseTbl();
+}
+
+int CGLibSamplerDescriptor::setup(void *buffer, u32 num) {
+  int size = context::CGLibSystemContext::s_nvSamplerSize * num;
+  unknown28.setupBuffer(buffer, size, 0x22);
+  nvnSamplerPoolInitialize(&unknown48, unknown28.m_memoryPool, 0, num);
+  return size;
+}
+
+int CGLibSamplerDescriptor::setup(mtl::ALLOC_HANDLE handle, u32 num) {
+  int size = context::CGLibSystemContext::s_nvSamplerSize * num;
+  u32 alignedSize = size + (-size & 0xfff);
+  unknown28.setupHandle(handle, alignedSize, 0x22);
+  nvnSamplerPoolInitialize(&unknown48, unknown28.m_memoryPool, 0, num);
+  return size;
+}
+
+int CGLibSamplerDescriptor::setup(CGLibMemPool &memPool, u32 offset, u32 num) {
+  int size = context::CGLibSystemContext::s_nvSamplerSize * num;
+  nvnSamplerPoolInitialize(&unknown48, memPool.m_memoryPool, offset, num);
+  return size;
+}
+
+void CGLibSamplerDescriptor::reset() {}
+
+void CGLibSamplerDescriptor::bind() { nvnCommandBufferSetSamplerPool(context::CGLibSystemContext::get()->unknown1070.unknown00, &unknown48); }
+
 CGLibPartsMemPool::~CGLibPartsMemPool() { unknown10.release(); }
 
 void CGLibPartsMemPool::addAdder(void *buffer, u32 size) { unknown10.setupBuffer(buffer, size, 100); }
@@ -383,5 +619,103 @@ void CGLibMemPoolAdder::releaseAdder(void *buffer) {
     }
   }
 }
+
+namespace {
+
+// Inferred role: command buffer memory callback; original name unknown.
+void unknown003(NVNcommandBuffer *cmdBuf, NVNcommandBufferMemoryEvent event, size_t minSize, void *callbackData);
+
+} // namespace
+
+void CGLibCmdBuffer_plf::setCallback() {
+  nvnCommandBufferSetMemoryCallback(&unknown00, unknown003);
+  nvnCommandBufferSetMemoryCallbackData(&unknown00, this);
+}
+
+CGLibCmdBuffer::CGLibCmdBuffer() : unknowne0(0), unknowne4(0), unknowne8(false) {}
+
+CGLibCmdBuffer::~CGLibCmdBuffer() { release(); }
+
+void CGLibCmdBuffer::release() {
+  if (unknowne8) {
+    nvnCommandBufferFinalize(&unknown00);
+    unknowna0.release();
+  }
+}
+
+void CGLibCmdBuffer::setup(mtl::ALLOC_HANDLE handle, u32 size, u32 controlSize) {
+  release();
+  nvnCommandBufferInitialize(&unknown00, &CGLibManager::get()->unknown00);
+  unknowna0.setupHandle(handle, size, 0x11);
+  unknownd8 = &unknowna0;
+  unknownc8 = 0;
+  unknowncc = size - controlSize;
+  unknownd0 = controlSize;
+  setCallback();
+  unknowne8 = true;
+}
+
+void CGLibCmdBuffer::setup(void *buffer, u32 size, u32 controlSize) {
+  release();
+  nvnCommandBufferInitialize(&unknown00, &CGLibManager::get()->unknown00);
+  unknowna0.setupBuffer(buffer, size, 0x11);
+  unknownd8 = &unknowna0;
+  unknownc8 = 0;
+  unknowncc = size - controlSize;
+  unknownd0 = controlSize;
+  setCallback();
+  unknowne8 = true;
+}
+
+void CGLibCmdBuffer::setup(u32 offset, u32 size, CGLibMemPool &memPool, u32 controlSize) {
+  release();
+  nvnCommandBufferInitialize(&unknown00, &CGLibManager::get()->unknown00);
+  unknownd8 = &memPool;
+  unknownc8 = offset;
+  unknowncc = size - controlSize;
+  unknownd0 = controlSize;
+  setCallback();
+  unknowne8 = true;
+}
+
+void CGLibCmdBuffer::begin() {
+  nvnCommandBufferAddCommandMemory(&unknown00, unknownd8->m_memoryPool, unknownc8 + unknownd0, unknowncc);
+  nvnCommandBufferAddControlMemory(&unknown00, static_cast<u8 *>(unknownd8->unknown18) + unknownc8, unknownd0);
+  nvnCommandBufferBeginRecording(&unknown00);
+  unknowne0 = 0;
+  unknowne4 = 0;
+}
+
+void CGLibCmdBuffer::beginResetOff() {
+  nvnCommandBufferBeginRecording(&unknown00);
+  unknowne0 = 0;
+  unknowne4 = 0;
+}
+
+void CGLibCmdBuffer::end() {
+  unknownc0 = nvnCommandBufferEndRecording(&unknown00);
+  unknowne0 = nvnCommandBufferGetCommandMemoryUsed(&unknown00);
+  unknowne4 = nvnCommandBufferGetControlMemoryUsed(&unknown00);
+}
+
+void CGLibCmdBuffer::call() {
+  if ((unknowne0 | unknowne4) != 0) {
+    nvnCommandBufferCallCommands(&context::CGLibSystemContext::get()->unknown08->unknown00, 1, &unknownc0);
+  }
+}
+
+namespace {
+
+void unknown003(NVNcommandBuffer *cmdBuf, NVNcommandBufferMemoryEvent event, size_t minSize, void *callbackData) {
+  switch (event) {
+  case NVN_COMMAND_BUFFER_MEMORY_EVENT_OUT_OF_COMMAND_MEMORY:
+  case NVN_COMMAND_BUFFER_MEMORY_EVENT_OUT_OF_CONTROL_MEMORY:
+    break;
+  default:
+    nn::detail::UnexpectedDefaultImpl("", "", 0);
+  }
+}
+
+} // namespace
 
 } // namespace grlib

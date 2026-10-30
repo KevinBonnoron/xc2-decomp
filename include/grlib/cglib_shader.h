@@ -4,8 +4,6 @@
 #include "nvn/nvn.h"
 #include "types.h"
 
-struct NVNcommandBuffer;
-
 namespace grlib {
 
 // Inferred role: shader block info; original type name unknown.
