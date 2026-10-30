@@ -18,6 +18,7 @@ namespace mm {
 class Cube;
 class PrimBase;
 struct Col3;
+struct Line2;
 } // namespace mm
 
 namespace grlib {
@@ -33,35 +34,48 @@ class CacheDraw {
 public:
   // Inferred role: base of the recorded draw commands, replayed by flush; original name unknown.
   struct unknown001 {
+    unknown001(u8 type, u16 size, u8 mode) {
+      unknown08 = type;
+      unknown0a = size;
+      unknown09 = mode;
+    }
     virtual void flush(DebDraw *draw) = 0;
-    u32 unknown08; // Inferred role: command header; original member name unknown.
+    u8 unknown08;  // Inferred role: command type; original member name unknown.
+    u8 unknown09;  // Inferred role: projection replayed before the command, 1 orthographic and 2 perspective; original member name unknown.
+    u16 unknown0a; // Inferred role: command size; original member name unknown.
   };
 
-#pragma pack(push, 4)
   struct DMAT : unknown001 {
+    DMAT(const mm::Mat44 &matrix) : unknown001(2, sizeof(DMAT), 2), unknown10(matrix) {}
     void flush(DebDraw *draw) override;
     u32 unknown0c;       // Inferred role: padding before the aligned matrix; original member name unknown.
     mm::Mat44 unknown10; // Inferred role: matrix; original member name unknown.
   };
 
   struct DCLEAR : unknown001 {
+    DCLEAR() : unknown001(1, sizeof(DCLEAR), 0) {}
     void flush(DebDraw *draw) override;
   };
 
   struct DEND : unknown001 {
+    DEND() : unknown001(0x33, sizeof(DEND), 0) {}
     void flush(DebDraw *draw) override;
   };
 
   struct DORTHO : unknown001 {
+    DORTHO() : unknown001(4, sizeof(DORTHO), 0) {}
     void flush(DebDraw *draw) override;
   };
 
   struct DBEGIN : unknown001 {
+    DBEGIN(u32 primitive, u32 count) : unknown001(0x32, sizeof(DBEGIN), 0), unknown0c(primitive), unknown10(count) {}
     void flush(DebDraw *draw) override;
     u32 unknown0c; // Inferred role: primitive; original member name unknown.
     u32 unknown10; // Inferred role: count; original member name unknown.
   };
 
+  // The game stores these matrices and positions at 4-byte aligned offsets.
+#pragma pack(push, 4)
   struct DADDV3_1 : unknown001 {
     void flush(DebDraw *draw) override;
     mm::Vec3 unknown0c; // Inferred role: position; original member name unknown.
@@ -76,27 +90,50 @@ public:
     mm::Vec3 unknown58;  // Inferred role: position; original member name unknown.
   };
 
+  struct alignas(8) DRCIRCLE_MAT : unknown001 {
+    DRCIRCLE_MAT(const mm::Mat44 &matrix, f32 radius, u32 division) : unknown001(0x15, sizeof(DRCIRCLE_MAT), 2) {
+      for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+          unknown0c.rows[i][j] = matrix.rows[i][j];
+        }
+      }
+      unknown4c = radius;
+      unknown50 = division;
+    }
+    void flush(DebDraw *draw) override;
+    mm::Mat44 unknown0c; // Inferred role: matrix; original member name unknown.
+    f32 unknown4c;       // Inferred role: radius; original member name unknown.
+    s32 unknown50;       // Inferred role: division; original member name unknown.
+  };
+#pragma pack(pop)
+
   struct DRAXIS : unknown001 {
+    DRAXIS(f32 length) : unknown001(0x18, sizeof(DRAXIS), 2), unknown0c(length) {}
     void flush(DebDraw *draw) override;
     f32 unknown0c; // Inferred role: length; original member name unknown.
   };
 
   struct DRCAMERA : unknown001 {
+    // Same command type as DRGRID in the game.
+    DRCAMERA() : unknown001(0x2a, sizeof(DRCAMERA), 2) {}
     void flush(DebDraw *draw) override;
   };
 
   struct DROBB : unknown001 {
+    DROBB(const mm::Obb &obb) : unknown001(0x29, sizeof(DROBB), 2), unknown10(obb) {}
     void flush(DebDraw *draw) override;
     u32 unknown0c;     // Inferred role: padding before the aligned box; original member name unknown.
     mm::Obb unknown10; // Inferred role: box; original member name unknown.
   };
 
   struct DRRECT : unknown001 {
+    DRRECT(const mm::Rect<int> &rect) : unknown001(10, sizeof(DRRECT), 1), unknown0c(rect) {}
     void flush(DebDraw *draw) override;
     mm::Rect<int> unknown0c; // Inferred role: rectangle; original member name unknown.
   };
 
   struct DRRECT_FILL : unknown001 {
+    DRRECT_FILL(const mm::Rect<int> &rect) : unknown001(0xb, sizeof(DRRECT_FILL), 1), unknown0c(rect) {}
     void flush(DebDraw *draw) override;
     mm::Rect<int> unknown0c; // Inferred role: rectangle; original member name unknown.
   };
@@ -126,6 +163,7 @@ public:
   };
 
   struct DRCAPSULE : unknown001 {
+    DRCAPSULE(f32 radius, f32 height, u32 division) : unknown001(0x24, sizeof(DRCAPSULE), 2), unknown0c(radius), unknown10(height), unknown14(division) {}
     void flush(DebDraw *draw) override;
     f32 unknown0c; // Inferred role: radius; original member name unknown.
     f32 unknown10; // Inferred role: height; original member name unknown.
@@ -133,6 +171,7 @@ public:
   };
 
   struct DRCAPSULE_FILL : unknown001 {
+    DRCAPSULE_FILL(f32 radius, f32 height, u32 division) : unknown001(0x23, sizeof(DRCAPSULE_FILL), 2), unknown0c(radius), unknown10(height), unknown14(division) {}
     void flush(DebDraw *draw) override;
     f32 unknown0c; // Inferred role: radius; original member name unknown.
     f32 unknown10; // Inferred role: height; original member name unknown.
@@ -140,6 +179,7 @@ public:
   };
 
   struct DRCONE : unknown001 {
+    DRCONE(f32 radius, f32 height, u32 division) : unknown001(0x20, sizeof(DRCONE), 2), unknown0c(radius), unknown10(height), unknown14(division) {}
     void flush(DebDraw *draw) override;
     f32 unknown0c; // Inferred role: radius; original member name unknown.
     f32 unknown10; // Inferred role: height; original member name unknown.
@@ -147,6 +187,7 @@ public:
   };
 
   struct DRCONE_FILL : unknown001 {
+    DRCONE_FILL(f32 radius, f32 height, u32 division) : unknown001(0x1f, sizeof(DRCONE_FILL), 2), unknown0c(radius), unknown10(height), unknown14(division) {}
     void flush(DebDraw *draw) override;
     f32 unknown0c; // Inferred role: radius; original member name unknown.
     f32 unknown10; // Inferred role: height; original member name unknown.
@@ -154,6 +195,7 @@ public:
   };
 
   struct DRCYLINDER : unknown001 {
+    DRCYLINDER(f32 radius, f32 height, u32 division) : unknown001(0x22, sizeof(DRCYLINDER), 2), unknown0c(radius), unknown10(height), unknown14(division) {}
     void flush(DebDraw *draw) override;
     f32 unknown0c; // Inferred role: radius; original member name unknown.
     f32 unknown10; // Inferred role: height; original member name unknown.
@@ -161,68 +203,73 @@ public:
   };
 
   struct DRCYLINDER_FILL : unknown001 {
+    DRCYLINDER_FILL(f32 radius, f32 height, u32 division) : unknown001(0x21, sizeof(DRCYLINDER_FILL), 2), unknown0c(radius), unknown10(height), unknown14(division) {}
     void flush(DebDraw *draw) override;
     f32 unknown0c; // Inferred role: radius; original member name unknown.
     f32 unknown10; // Inferred role: height; original member name unknown.
     u32 unknown14; // Inferred role: division; original member name unknown.
   };
 
-  struct DRCIRCLE_MAT : unknown001 {
-    void flush(DebDraw *draw) override;
-    mm::Mat44 unknown0c; // Inferred role: matrix; original member name unknown.
-    f32 unknown4c;       // Inferred role: radius; original member name unknown.
-    s32 unknown50;       // Inferred role: division; original member name unknown.
-  };
-
   struct DRSPHERE_REAL : unknown001 {
+    DRSPHERE_REAL(f32 radius, u32 division) : unknown001(0x1e, sizeof(DRSPHERE_REAL), 2), unknown0c(radius), unknown10(division) {}
     void flush(DebDraw *draw) override;
     f32 unknown0c; // Inferred role: radius; original member name unknown.
     s32 unknown10; // Inferred role: division; original member name unknown.
   };
 
   struct DRSPHERE_REAL_FILL : unknown001 {
+    DRSPHERE_REAL_FILL(f32 radius, u32 division) : unknown001(0x1d, sizeof(DRSPHERE_REAL_FILL), 2), unknown0c(radius), unknown10(division) {}
     void flush(DebDraw *draw) override;
     f32 unknown0c; // Inferred role: radius; original member name unknown.
     s32 unknown10; // Inferred role: division; original member name unknown.
   };
 
   struct DTEX : unknown001 {
+    // Same command type as the color command in the game.
+    DTEX(grlib::CGLibTextureBuffer *texture) : unknown001(5, sizeof(DTEX), 0), unknown10(texture) {}
     void flush(DebDraw *draw) override;
     u32 unknown0c;                        // Inferred role: padding before the aligned pointer; original member name unknown.
     grlib::CGLibTextureBuffer *unknown10; // Inferred role: texture; original member name unknown.
   };
 
   struct DDOUBLESIDE : unknown001 {
+    DDOUBLESIDE(const bool &isEnable) : unknown001(6, sizeof(DDOUBLESIDE), 0), unknown0c(isEnable) {}
     void flush(DebDraw *draw) override;
     bool unknown0c; // Inferred role: enable; original member name unknown.
   };
 
   struct DZCOMP : unknown001 {
+    DZCOMP(const bool &isEnable) : unknown001(7, sizeof(DZCOMP), 0), unknown0c(isEnable) {}
     void flush(DebDraw *draw) override;
     bool unknown0c; // Inferred role: enable; original member name unknown.
   };
 
   struct DZWRITE : unknown001 {
+    DZWRITE(const bool &isEnable) : unknown001(8, sizeof(DZWRITE), 0), unknown0c(isEnable) {}
     void flush(DebDraw *draw) override;
     bool unknown0c; // Inferred role: enable; original member name unknown.
   };
 
   struct DALPHA : unknown001 {
+    DALPHA(f32 alpha) : unknown001(9, sizeof(DALPHA), 0), unknown0c(alpha) {}
     void flush(DebDraw *draw) override;
     f32 unknown0c; // Inferred role: alpha; original member name unknown.
   };
 
   struct DLINE_WIDTH : unknown001 {
+    DLINE_WIDTH(u32 width) : unknown001(0x30, sizeof(DLINE_WIDTH), 0), unknown0c(width) {}
     void flush(DebDraw *draw) override;
     u32 unknown0c; // Inferred role: width; original member name unknown.
   };
 
   struct DALPHA_BLEND : unknown001 {
+    DALPHA_BLEND(bool isEnable) : unknown001(0x31, sizeof(DALPHA_BLEND), 0), unknown0c(isEnable) {}
     void flush(DebDraw *draw) override;
     bool unknown0c; // Inferred role: enable; original member name unknown.
   };
 
   struct DRTRI2D_FILL : unknown001 {
+    DRTRI2D_FILL(const mm::Pnt<int> &first, const mm::Pnt<int> &second, const mm::Pnt<int> &third) : unknown001(0xe, sizeof(DRTRI2D_FILL), 1), unknown0c(first), unknown14(second), unknown1c(third) {}
     void flush(DebDraw *draw) override;
     mm::Pnt<int> unknown0c; // Inferred role: first corner; original member name unknown.
     mm::Pnt<int> unknown14; // Inferred role: second corner; original member name unknown.
@@ -230,12 +277,14 @@ public:
   };
 
   struct DRLINE_PNT : unknown001 {
+    DRLINE_PNT(const mm::Pnt<int> &start, const mm::Pnt<int> &end) : unknown001(0x2d, sizeof(DRLINE_PNT), 1), unknown0c(start), unknown14(end) {}
     void flush(DebDraw *draw) override;
     mm::Pnt<int> unknown0c; // Inferred role: start; original member name unknown.
     mm::Pnt<int> unknown14; // Inferred role: end; original member name unknown.
   };
 
   struct DFONT32 : unknown001 {
+    DFONT32(s16 x, s16 y, const char *text) : unknown001(0x38, sizeof(DFONT32), 0), unknown30(x), unknown32(y) { unknown0c = text; }
     void flush(DebDraw *draw) override;
     mm::mtl::FixStr<32> unknown0c; // Inferred role: text; original member name unknown.
     s16 unknown30;                 // Inferred role: x; original member name unknown.
@@ -243,6 +292,7 @@ public:
   };
 
   struct DFONT64 : unknown001 {
+    DFONT64(s16 x, s16 y, const char *text) : unknown001(0x39, sizeof(DFONT64), 0), unknown50(x), unknown52(y) { unknown0c = text; }
     void flush(DebDraw *draw) override;
     mm::mtl::FixStr<64> unknown0c; // Inferred role: text; original member name unknown.
     s16 unknown50;                 // Inferred role: x; original member name unknown.
@@ -250,6 +300,7 @@ public:
   };
 
   struct DFONT128 : unknown001 {
+    DFONT128(s16 x, s16 y, const char *text) : unknown001(0x3a, sizeof(DFONT128), 0), unknown90(x), unknown92(y) { unknown0c = text; }
     void flush(DebDraw *draw) override;
     mm::mtl::FixStr<128> unknown0c; // Inferred role: text; original member name unknown.
     s16 unknown90;                  // Inferred role: x; original member name unknown.
@@ -257,6 +308,7 @@ public:
   };
 
   struct DFONT256 : unknown001 {
+    DFONT256(s16 x, s16 y, const char *text) : unknown001(0x3b, sizeof(DFONT256), 0), unknown110(x), unknown112(y) { unknown0c = text; }
     void flush(DebDraw *draw) override;
     mm::mtl::FixStr<256> unknown0c; // Inferred role: text; original member name unknown.
     s16 unknown110;                 // Inferred role: x; original member name unknown.
@@ -264,21 +316,25 @@ public:
   };
 
   struct DFONT_COL : unknown001 {
+    DFONT_COL(const mm::Col4 &color) : unknown001(0x3c, sizeof(DFONT_COL), 0), unknown0c(color) {}
     void flush(DebDraw *draw) override;
     mm::Col4 unknown0c; // Inferred role: font color; original member name unknown.
   };
 
   struct DFONT_BACKCOL : unknown001 {
+    DFONT_BACKCOL(const mm::Col4 &color) : unknown001(0x3d, sizeof(DFONT_BACKCOL), 0), unknown0c(color) {}
     void flush(DebDraw *draw) override;
     mm::Col4 unknown0c; // Inferred role: font back color; original member name unknown.
   };
 
   struct DFONT_SHADOW : unknown001 {
+    DFONT_SHADOW(bool isEnable) : unknown001(0x3e, sizeof(DFONT_SHADOW), 0), unknown0c(isEnable) {}
     void flush(DebDraw *draw) override;
     bool unknown0c; // Inferred role: shadow enable; original member name unknown.
   };
 
   struct DFONT_FLUSH : unknown001 {
+    DFONT_FLUSH(bool isEnable) : unknown001(0x3f, sizeof(DFONT_FLUSH), 0), unknown0c(isEnable) {}
     void flush(DebDraw *draw) override;
     bool unknown0c; // Inferred role: flush enable; original member name unknown.
   };
@@ -288,7 +344,6 @@ public:
     f32 unknown0c; // Inferred role: scale x; original member name unknown.
     f32 unknown10; // Inferred role: scale y; original member name unknown.
   };
-#pragma pack(pop)
 
   // Inferred role: range of recorded commands of one priority; original name unknown.
   struct unknown002 {
@@ -309,9 +364,13 @@ public:
   CacheDraw(mtl::ALLOC_HANDLE handle, size_t size);
   virtual ~CacheDraw();
   void clearSystem(bool isOdd);
+  void setSuspendSwap(bool isSuspend);
   void swap();
   unknown003 *getBuf(bool isOdd);
   void setForceRenderQueue(bool isForce);
+  void reset_prim(u32 wid);
+  bool calcCurrentBuf(size_t size);
+  bool clear();
   void flush(int priority, const mm::Mat44 &projection, const mm::Mat44 &view);
   bool setMatrix(const mm::Mat44 &matrix);
   bool setCol(const mm::Col4 &color);
@@ -340,6 +399,7 @@ public:
   bool renderOval(f32 width, f32 height);
   bool renderSquareFill(f32 width, f32 height);
   bool renderSquare(f32 width, f32 height);
+  bool renderOBB(const mm::Obb &obb);
   bool renderGrid(f32 size, f32 step);
   bool renderCamera();
   bool setOrtho();
@@ -359,6 +419,8 @@ public:
   bool fontScale(f32 x, f32 y);
   bool font(s16 x, s16 y, const char *text);
   bool fontShadow(bool isEnable);
+  bool begin(u32 primitive, u32 count);
+  bool end();
 
   unknown003 unknown08[2];       // Inferred role: command buffers, indexed by frame parity; original member name unknown.
   mtl::ALLOC_HANDLE unknown6048; // Inferred role: memory handle; original member name unknown.
@@ -373,6 +435,23 @@ public:
   bool unknown6070; // Inferred role: z write; original member name unknown.
 };
 
+static_assert(offsetof(CacheDraw::unknown001, unknown09) == 0x9, "");
+static_assert(offsetof(CacheDraw::unknown001, unknown0a) == 0xa, "");
+static_assert(sizeof(CacheDraw::DCLEAR) == 0x10, "");
+static_assert(sizeof(CacheDraw::DMAT) == 0x50, "");
+static_assert(sizeof(CacheDraw::DBEGIN) == 0x18, "");
+static_assert(sizeof(CacheDraw::DTEX) == 0x18, "");
+static_assert(sizeof(CacheDraw::DRRECT) == 0x20, "");
+static_assert(sizeof(CacheDraw::DRTRI2D_FILL) == 0x28, "");
+static_assert(sizeof(CacheDraw::DRCIRCLE_MAT) == 0x58, "");
+static_assert(sizeof(CacheDraw::DRCAPSULE) == 0x18, "");
+static_assert(sizeof(CacheDraw::DROBB) == 0x60, "");
+static_assert(sizeof(CacheDraw::DRLINE_PNT) == 0x20, "");
+static_assert(sizeof(CacheDraw::DFONT32) == 0x38, "");
+static_assert(sizeof(CacheDraw::DFONT64) == 0x58, "");
+static_assert(sizeof(CacheDraw::DFONT128) == 0x98, "");
+static_assert(sizeof(CacheDraw::DFONT256) == 0x118, "");
+static_assert(sizeof(CacheDraw::DFONT_COL) == 0x20, "");
 static_assert(offsetof(CacheDraw::DBEGIN, unknown10) == 0x10, "");
 static_assert(offsetof(CacheDraw::DPERS, unknown4c) == 0x4c, "");
 static_assert(offsetof(CacheDraw::DPERS, unknown58) == 0x58, "");
@@ -458,6 +537,8 @@ public:
   void renderPoint(const mm::Vec3 &position);
   void renderLine(const mm::Vec3 &start, const mm::Vec3 &end);
   void renderLine(const mm::Pnt<int> &start, const mm::Pnt<int> &end);
+  void renderLine(int x1, int y1, int x2, int y2);
+  void renderLine(const mm::Line2 &line);
   void renderTriangle(const mm::Vec3 &first, const mm::Vec3 &second, const mm::Vec3 &third);
   void renderTriangleFill(const mm::Vec3 &first, const mm::Vec3 &second, const mm::Vec3 &third);
   void renderRect(int x, int y, int width, int height);
@@ -497,18 +578,20 @@ public:
   u32 unknown24;      // Inferred role: vertex count; original member name unknown.
   u32 unknown28;      // Inferred role: buffered vertex count; original member name unknown.
   u8 _2c[0x30 - 0x2c];
-  mm::Vec3 unknown30; // Inferred role: camera position; original member name unknown.
-  u8 _40[0xc0 - 0x40];
-  mm::Mat44 unknownc0; // Inferred role: model matrix; original member name unknown.
-  u8 _100[0x140 - 0x100];
-  u32 unknown140;  // Inferred role: added vertex count; original member name unknown.
-  u32 unknown144;  // Inferred role: line width; original member name unknown.
-  u32 unknown148;  // Inferred role: unknown, cleared with the draw state; original member name unknown.
-  f32 unknown14c;  // Inferred role: 2D depth; original member name unknown.
-  u32 unknown150;  // Inferred role: requested vertex count; original member name unknown.
-  bool unknown154; // Inferred role: z compare; original member name unknown.
-  bool unknown155; // Inferred role: z write; original member name unknown.
-  u8 _156[0x160 - 0x156];
+  mm::Vec3 unknown30;   // Inferred role: camera position; original member name unknown.
+  mm::Mat44 unknown40;  // Inferred role: inverse view rotation; original member name unknown.
+  mm::Mat44 unknown80;  // Inferred role: view rotation; original member name unknown.
+  mm::Mat44 unknownc0;  // Inferred role: model matrix; original member name unknown.
+  mm::Mat44 unknown100; // Inferred role: projection matrix; original member name unknown.
+  u32 unknown140;       // Inferred role: added vertex count; original member name unknown.
+  u32 unknown144;       // Inferred role: line width; original member name unknown.
+  u32 unknown148;       // Inferred role: unknown, cleared with the draw state; original member name unknown.
+  f32 unknown14c;       // Inferred role: 2D depth; original member name unknown.
+  u32 unknown150;       // Inferred role: requested vertex count; original member name unknown.
+  bool unknown154;      // Inferred role: z compare; original member name unknown.
+  bool unknown155;      // Inferred role: z write; original member name unknown.
+  bool unknown156;      // Inferred role: unknown, cleared with the draw state; original member name unknown.
+  u8 _157[0x160 - 0x157];
   mm::Vec3 unknown160; // Inferred role: perspective position; original member name unknown.
   s32 unknown170;      // Inferred role: draw primitive type; original member name unknown.
   u8 _174[0x178 - 0x174];

@@ -13,6 +13,7 @@
 #include "ml/work_cpu.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_cube.h"
+#include "mm_math/mm_line2.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_pnt.h"
 #include "mm_math/mm_prim_base.h"
@@ -178,6 +179,33 @@ bool DebDraw::isNotRender() {
     return unknown007->m_forceRenderQueue;
   }
   return true;
+}
+
+DebDraw *DebDraw::get(u32 screen) {
+  if (unknown007 != nullptr) {
+    if (WorkCpu::getCurrentThreadId() == WorkCpu::getThreadId(WorkCpu::getRenderCPUID()) && !unknown007->m_forceRenderQueue) {
+      unknown007->clear();
+    } else {
+      unknown007->unknown210->reset_prim(screen);
+    }
+  }
+  return unknown007;
+}
+
+void DebDraw::renderLine(int x1, int y1, int x2, int y2) {
+  if (!unknown210->renderLine(mm::Pnt<int>(x1, y1), mm::Pnt<int>(x2, y2))) {
+    begin(2, 1);
+    add(x1, y1, x2, y2);
+    end();
+  }
+}
+
+void DebDraw::renderLine(const mm::Line2 &line) {
+  if (!unknown210->renderLine(line.start, line.end)) {
+    begin(2, 1);
+    add(line.start, line.end);
+    end();
+  }
 }
 
 void DebDraw::setForceRenderQueue(bool isForce) {
