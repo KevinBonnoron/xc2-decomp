@@ -156,6 +156,38 @@ public:
     }
   }
 
+  // Matches the instantiation for Map<anm::StringPtr, anm::AdditiveInfo> (1.0.0: 0x71009682cc), called by anm::StateMachine::update.
+  // __LINE__ must be 231 as in the original header: it is the line argument of the assert.
+#line 230
+  void erase(node *nodePtr) {
+    MM_ASSERT(m_size > 0);
+    node *target;
+    if (nodePtr->unknown00 == &m_sentinel || nodePtr->unknown10 == &m_sentinel) {
+      target = nodePtr;
+    } else {
+      target = nodePtr->unknown10;
+      while (target->unknown00 != &m_sentinel) {
+        target = target->unknown00;
+      }
+    }
+    node *&childLink = target->unknown00 == &m_sentinel ? target->unknown10 : target->unknown00;
+    node *child = childLink;
+    child->unknown08 = target->unknown08;
+    if (target->unknown08 == &m_sentinel) {
+      m_root = child;
+    } else if (target == target->unknown08->unknown00) {
+      target->unknown08->unknown00 = child;
+    } else {
+      target->unknown08->unknown10 = child;
+    }
+    nodePtr->unknown18 = target->unknown18;
+    if (target->color == unknown001_UNKNOWN_1) {
+      rebalance_after_erase(child);
+    }
+    free_node(target, false);
+    m_size--;
+  }
+
   node *m_root;
   int m_size;
   IAllocator *m_allocator;

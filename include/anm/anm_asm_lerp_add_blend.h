@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "anm/anm_array-inl.h"
 #include "anm/anm_asm_state.h"
 #include "mm_mtl/vector.h"
 #include "types.h"
@@ -17,10 +18,27 @@ class AsmClip;
 class Variable;
 class ResStateData;
 
+struct ResLerpAddNode {
+  f32 unknown00; // Inferred role: variable value of the node; original member name unknown.
+  u8 _04[0x28 - 0x04];
+};
+
+struct CompLerpAddNode {
+  bool operator()(const ResLerpAddNode &node, f32 value) const { return node.unknown00 < value; }
+};
+
 struct ResLerpAddTree {
   u8 _00[0x4];
   u32 variableIndex;
+  u8 _08[0x10 - 0x08];
+  u32 unknown10; // Inferred role: base clip num; original member name unknown.
+  u8 _14[0x18 - 0x14];
+  Array<ResLerpAddNode> unknown18; // Inferred role: additive nodes, sorted by ascending value; original member name unknown.
 };
+
+static_assert(offsetof(ResLerpAddTree, unknown10) == 0x10, "");
+static_assert(offsetof(ResLerpAddTree, unknown18) == 0x18, "");
+static_assert(sizeof(ResLerpAddNode) == 0x28, "");
 
 class LerpAddBlendTree : public AsmState {
 public:

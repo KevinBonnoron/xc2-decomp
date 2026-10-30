@@ -31,7 +31,14 @@ public:
   iterator begin() { return unknown00.begin(); }
   iterator end() { return unknown00.end(); }
   iterator find(const Key &key) { return unknown00.find(key); }
+  int size() const { return unknown00.m_size; }
   void insert(const MapPair<Key, Value> &pair) { unknown00.insert(pair); }
+  void erase(const Key &key) {
+    iterator it = find(key);
+    if (it != end()) {
+      unknown00.erase(it.nodePtr);
+    }
+  }
 
   tree_type unknown00; // Inferred role: the tree; original member name unknown.
 };

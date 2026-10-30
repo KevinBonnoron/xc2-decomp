@@ -96,6 +96,105 @@ void StateMachine::cleanup() {
   unknown38.clear();
 }
 
+void StateMachine::update(f32 deltaTime) {
+  if (unknown00.get() != nullptr && unknown28 != nullptr) {
+    unknown30 += deltaTime;
+    f32 rate = unknown30 / unknown28->unknown00;
+    if (rate >= 1.0f) {
+      unknown08->dettach(unknown58);
+      unknown08 = nullptr;
+      AsmState *current = unknown00.operator->();
+      current->unknown24 = 1.0f;
+      current->onSetWeight();
+      resetInterpolate();
+    } else {
+      if (unknown28->unknown04 == INTERPOLATE_TYPE_UNKNOWN_1) {
+        rate = 3.0f * (1.0f - rate) * rate * rate + rate * rate * rate;
+      }
+      AsmState *current = unknown00.get();
+      current->unknown24 = rate;
+      current->onSetWeight();
+      AsmState *next = unknown08.operator->();
+      next->unknown24 = 1.0f - rate;
+      next->onSetWeight();
+    }
+  }
+  if (unknown10.size() != 0) {
+    StringPtr removed[16];
+    u32 removedNum = 0;
+    for (mm::mtl::Map<StringPtr, AdditiveInfo>::iterator it = unknown10.begin(); it != unknown10.end(); ++it) {
+      it->second.update(deltaTime, unknown58, unknown50);
+      if (it->second.unknown00.get() == nullptr) {
+        removed[removedNum++] = it->first;
+      }
+    }
+    for (u32 i = 0; i < removedNum; i++) {
+      unknown10.erase(removed[i]);
+    }
+  }
+}
+
+bool StateMachine::doTrans(const char *state, const TransInfo &transInfo, const InterpolateInfo &interpolateInfo, f32 currentTime, f32 overTime) {
+  mm::mtl::Map<StringPtr, mm::mtl::IntrusivePtr<AsmState>>::iterator it = unknown38.find(state);
+  if (it == unknown38.end()) {
+    return false;
+  }
+  if (unknown08.get() == nullptr) {
+    unknown00->onLeave(unknown50);
+    unknown08 = unknown00;
+  } else if (unknown08.get()->unknown24 > 0.5f) {
+    unknown00->onLeave(unknown50);
+    unknown00->dettach(unknown58);
+  } else {
+    unknown08.get()->dettach(unknown58);
+    unknown00->onLeave(unknown50);
+    unknown08 = unknown00;
+  }
+  AsmState *pState = it->second.get();
+  if (pState->getRefCount() > 1) {
+    pState = createState(*pState->unknown18);
+  }
+  unknown00 = pState;
+  f32 time;
+  switch (transInfo.unknown00) {
+  case 0:
+    time = transInfo.unknown04 + overTime;
+    break;
+  case 1:
+    time = unknown08->getLocalTime();
+    break;
+  case 2:
+    time = transInfo.unknown04 + transInfo.unknown08 * rand();
+    break;
+  case 3:
+    time = unknown08->getLocalTime() - currentTime;
+    break;
+  default:
+    time = 0.0f;
+  }
+  unknown00->setLocalTime(time);
+  if (interpolateInfo.unknown00 <= 1.1920929e-07f) {
+    unknown08->dettach(unknown58);
+    unknown08 = nullptr;
+    AsmState *current = unknown00.operator->();
+    current->unknown24 = 1.0f;
+    current->onSetWeight();
+    unknown28 = nullptr;
+  } else {
+    AsmState *current = unknown00.operator->();
+    current->unknown24 = 0.0f;
+    current->onSetWeight();
+    AsmState *next = unknown08.operator->();
+    next->unknown24 = 1.0f;
+    next->onSetWeight();
+    unknown28 = &interpolateInfo;
+  }
+  unknown30 = 0.0f;
+  unknown00->attach(unknown58);
+  unknown00->onEnter(unknown50);
+  return true;
+}
+
 void StateMachine::clearState() {
   if (unknown08.get() != nullptr) {
     unknown08.get()->onLeave(unknown50);

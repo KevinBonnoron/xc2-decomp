@@ -38,6 +38,7 @@ public:
   void update(f32 deltaTime);
   void updateFrame(f32 deltaTime);
   void resetInterpolate();
+  bool doTrans(const char *state, const TransInfo &transInfo, const InterpolateInfo &interpolateInfo, f32 currentTime, f32 overTime);
   bool executeCmd(const char *command);
   bool setState(const char *state, StartFrameType startFrame = START_FRAME_TYPE_UNKNOWN_0);
   void clearState();

@@ -16,6 +16,7 @@ public:
   AdditiveInfo();
   void easeOut(AsmBlender *blender, AsmListener *listener, f32 time, InterpolateType type, InterpolateCurve curve);
   void easeIn(AsmBlender *blender, AsmListener *listener, mm::mtl::IntrusivePtr<AsmState> state, f32 time, f32 weight, InterpolateType type, InterpolateCurve curve);
+  void update(f32 deltaTime, AsmBlender *blender, AsmListener *listener);
 
   mm::mtl::IntrusivePtr<AsmState> unknown00; // Inferred role: state; original member name unknown.
   f32 unknown08;                             // Inferred role: ease time; original member name unknown.

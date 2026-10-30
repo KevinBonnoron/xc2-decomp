@@ -1,13 +1,18 @@
 #include "anm/anm_asm_lerp_add_blend.h"
 
+#include <algorithm>
+#include <float.h>
+#include <new>
+
+#include "anm/anm_array.h"
 #include "anm/anm_asm_blender.h"
 #include "anm/anm_asm_variable.h"
 #include "anm/anm_res_clip_data.h"
 #include "anm/anm_res_state_data.h"
 #include "mm/mm_std_base.h"
+#include "mm_math/mm_math.h"
 #include "mm_mtl/allocator.h"
 #include "mm_mtl/vector.h"
-#include <new>
 
 namespace anm {
 
@@ -61,6 +66,26 @@ void LerpAddBlendTree::update(f32 deltaTime, AsmListener *listener) {
   }
 }
 
+void LerpAddBlendTree::adjustWeight() {
+  u32 baseNum = unknown30->unknown10;
+  for (u32 i = 0; i < baseNum; i++) {
+    m_baseClip[i].setWeight(unknown24);
+  }
+  f32 value;
+  m_pVariable->getValue(&value);
+  u32 index = searchIndex(value);
+  f32 nodeValue = unknown30->unknown18[index].unknown00;
+  f32 ratio = mm::fabs(nodeValue) > FLT_EPSILON ? value / nodeValue : 0.0f;
+  u32 nodeNum = unknown30->unknown18.size();
+  for (u32 i = 0; i < nodeNum; i++) {
+    if (i == index) {
+      m_baseClip[baseNum + i].setWeight(ratio * unknown24);
+    } else {
+      m_baseClip[baseNum + i].setWeight(0.0f);
+    }
+  }
+}
+
 void LerpAddBlendTree::setLocalTime(f32 time) {
   for (u32 i = 0; i < unknown40; i++) {
     m_baseClip[i].setLocalTime(time);
@@ -76,6 +101,19 @@ void LerpAddBlendTree::onSetSpeed() {
 }
 
 void LerpAddBlendTree::onSetWeight() { adjustWeight(); }
+
+u32 LerpAddBlendTree::searchIndex(f32 value) const {
+  const Array<ResLerpAddNode> &nodes = unknown30->unknown18;
+  ArrayIterartor<const ResLerpAddNode> it = std::lower_bound(nodes.begin(), nodes.end(), value, CompLerpAddNode());
+  s32 index = mm::min<s32>(it - nodes.begin(), nodes.size() - 1);
+  if (value < 0.0f) {
+    index--;
+    if (index < 0) {
+      index = 0;
+    }
+  }
+  return index;
+}
 
 const AsmClip *LerpAddBlendTree::getBaseClip() const { return &m_baseClip[0]; }
 
