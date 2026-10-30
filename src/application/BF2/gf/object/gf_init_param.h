@@ -11,6 +11,7 @@ struct CBdatWrapper;
 namespace gf {
 
 struct GF_OBJ_HANDLE;
+class GfAssetSetup;
 
 // Inferred role: character type; original type name unknown.
 enum unknown030 {
@@ -48,6 +49,18 @@ public:
     }
   }
 
+  // Inferred role: character types loaded with the UI resources (GfAssetFactory::createAssetPackBlade); original name unknown.
+  bool unknown002() const {
+    switch (unknown08) {
+    case unknown030_6:
+    case unknown030_7:
+    case unknown030_12:
+      return true;
+    default:
+      return false;
+    }
+  }
+
   u32 unknown08; // Inferred role: character type; original member name unknown.
   u8 _0c[0x10 - 0x0c];
   u32 m_bladeID;
@@ -66,7 +79,8 @@ public:
   bool unknown81; // Inferred role: flag; original member name unknown.
   bool unknown82; // Inferred role: flag; original member name unknown.
   bool unknown83; // Inferred role: death blow weapon; original member name unknown.
-  u8 _84[0x90 - 0x84];
+  u8 _84[0x88 - 0x84];
+  GfAssetSetup *unknown88; // Inferred role: asset setup overriding the default one; original member name unknown.
 };
 
 static_assert(offsetof(GfInitParam, unknown08) == 0x08, "");
@@ -82,6 +96,7 @@ static_assert(offsetof(GfInitParam, unknown82) == 0x82, "");
 static_assert(offsetof(GfInitParam, unknown44) == 0x44, "");
 static_assert(offsetof(GfInitParam, unknown48) == 0x48, "");
 static_assert(offsetof(GfInitParam, unknown83) == 0x83, "");
+static_assert(offsetof(GfInitParam, unknown88) == 0x88, "");
 static_assert(sizeof(GfInitParam) == 0x90, "");
 
 class GfInitParamDriver : public GfInitParam {

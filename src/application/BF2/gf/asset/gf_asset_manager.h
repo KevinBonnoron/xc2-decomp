@@ -27,6 +27,7 @@ struct GF_SLOT_HANDLE;
 class GfAssetPack;
 class GfAssetResource;
 class GfSlotMapping;
+class GfInitParam;
 struct GfAssetFilesInfo;
 
 class GfAssetManager : public mm::mtl::PtrSingleton<GfAssetManager> {
@@ -37,6 +38,7 @@ public:
   static void callEventAssetPack(GfAssetPack *pack);
   static void loadStart(GfAssetPack *pack, mm::mtl::IAllocator *allocator);
   static GfAssetPack *createAssetFiles(const GfAssetFilesInfo &info);
+  static GF_ASSET_HANDLE *createAssetHandle(const GfInitParam &param);
   static bool isReload(GF_ASSET_HANDLE *handle);
   static void getSlotHandle(mm::mtl::FixedVector<GF_SLOT_HANDLE *, 88> &slots, GF_ASSET_HANDLE *handle);
   static void setModelInfo(GF_ASSET_HANDLE *handle, const char *name);
