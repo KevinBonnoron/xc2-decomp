@@ -1,5 +1,9 @@
 #include "gf/object/component/enemy/gf_enemy_state_field_area_walk.h"
 
+#include <math.h>
+
+#include "fw/fw_coli_check.h"
+#include "fw/fw_transform.h"
 #include "fw/fw_update_info.h"
 #include "gf/field/gf_field_exec_cmd_turn.h"
 #include "gf/field/gf_field_local_steer.h"
@@ -7,9 +11,13 @@
 #include "gf/object/component/enemy/gf_com_behavior_enemy.h"
 #include "gf/object/component/enemy/gf_enemy_state_id.h"
 #include "gf/object/gf_obj.h"
+#include "gf/object/gf_obj_acc.h"
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_enemy/gmk_enemy.h"
 #include "ml/rand.h"
+#include "mm_math/mm_mat44.h"
+#include "mm_math/mm_quat.h"
+#include "mm_math/mm_vec3.h"
 
 namespace gf {
 namespace enemy {
@@ -21,6 +29,81 @@ bool StateFieldAreaWalk::isCondMatch(const GfComBehaviorEnemy &behavior) {
   }
 
   return !(static_cast<gmk::GmkEnemy *>(gmkInst)->getData()->unknown00 <= behavior.unknown140.unknown08.unknown10);
+}
+
+bool StateFieldAreaWalk::getGoalPosRandom(mm::Vec3 &position, const GfComBehaviorEnemy &behavior) const {
+  gmk::GmkEnemy *gmkInst = static_cast<gmk::GmkEnemy *>(behavior.getBindedGmkInst());
+  if (gmkInst == nullptr) {
+    return false;
+  }
+
+  GfObjAcc acc(static_cast<GfObj *>(behavior.unknown08)->unknownf8);
+  if (!acc.isValidTransform()) {
+    return false;
+  }
+
+  mm::Vec3 current = mm::Vec3::zero;
+  const fw::Transform &transform = acc.getWorldTransformNoSync();
+  current = transform.unknown00;
+  mm::Vec3 front = transform.unknown10.rotate(mm::Vec3::unitZ);
+  f32 rotY = atan2f(front.x, front.z);
+
+  bool isFront = ml::mtRandf1(0.0f, 100.0f) <= behavior.unknown140.unknown28;
+  f32 angleMin = rotY + (isFront ? -1.5707964f : 1.5707964f);
+  f32 angleMax = rotY + (isFront ? 1.5707964f : 4.712389f);
+  f32 distanceMin = behavior.unknown140.unknown34 * 0.01f;
+  f32 distanceMax = behavior.unknown140.unknown35 * 0.01f;
+
+  if (gmkInst->isPointInsideRandomWalk(current)) {
+    mm::Mat44 rotation;
+    rotation.setRotY(ml::mtRandf1(angleMin, angleMax));
+    f32 distance = gmkInst->getData()->unknown00 * ml::mtRandf1(distanceMin, distanceMax);
+    mm::Vec3 offset(0.0f, 0.0f, distance);
+    mm::Vec3 rotated;
+    rotated.x = offset.x * rotation.rows[0][0] + offset.y * rotation.rows[1][0] + offset.z * rotation.rows[2][0];
+    rotated.y = offset.x * rotation.rows[0][1] + offset.y * rotation.rows[1][1] + offset.z * rotation.rows[2][1];
+    rotated.z = offset.x * rotation.rows[0][2] + offset.y * rotation.rows[1][2] + offset.z * rotation.rows[2][2];
+    position = rotated;
+    position += current;
+    if (!gmkInst->isPointInsideRandomWalk(position)) {
+      return false;
+    }
+  } else {
+    gmkInst->getPositionInRandomWalk(position, angleMin, angleMax, distanceMin, distanceMax);
+  }
+
+  return true;
+}
+
+bool StateFieldAreaWalk::getGoalPosWater(mm::Vec3 &position, const GfComBehaviorEnemy &behavior) const {
+  if (!getGoalPosRandom(position, behavior)) {
+    return false;
+  }
+
+  fw::TColiCheckResult<256> result;
+  result.clear();
+  mm::Vec3 start = position;
+  start.y += 5.0f;
+  mm::Vec3 end = position;
+  end.y -= 5.0f;
+  fw::ColiCheckConfig config;
+  config.unknown04 = 0xffffffff;
+  config.unknown00 = 9;
+  config.unknown08 = 0.0f;
+  config.unknown0c = 0.0f;
+  config.unknown14 = false;
+  config.unknown15 = false;
+  config.unknown10 = 1;
+  if (!fw::ColiCheck::testLineChara(result, start, end, config)) {
+    return false;
+  }
+
+  if (result.getMaterial(0).unknown00 != 1) {
+    return false;
+  }
+
+  position = result.getPosition(0);
+  return true;
 }
 
 void StateFieldAreaWalk::enter(GfComBehaviorEnemy *behavior, ai::State *previous) {

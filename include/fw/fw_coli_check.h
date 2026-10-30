@@ -1,5 +1,6 @@
 #pragma once
 #include <stddef.h>
+#include <string.h>
 
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_vector.h"
@@ -23,11 +24,19 @@ static_assert(offsetof(ColiCheckConfig, unknown15) == 0x15, "");
 
 template <u32 N> class TColiCheckResult {
 public:
+  // Inferred role: material of a hit, 0x1c bytes (zeroed as such in getMaterial); original type name unknown.
+  struct unknown002 {
+    u16 unknown00; // Inferred role: material type; original member name unknown.
+    u8 _02[0x1c - 0x02];
+  };
+
   // Inferred role: hit; original type name unknown.
   struct unknown001 {
     mm::Vec3 position;
     mm::Vec3 normal;
-    u8 _20[0x40 - 0x20];
+    u8 _20[0x30 - 0x20];
+    const unknown002 *unknown30; // Inferred role: material; original member name unknown.
+    u8 _38[0x40 - 0x38];
     ColiObject *object;
     u8 _48[0x50 - 0x48];
   };
@@ -68,12 +77,31 @@ public:
     return 0;
   }
 
+  const unknown002 &getMaterial(u32 index) const {
+    if (index < hitCount) {
+      if (hits[index].unknown30 != nullptr) {
+        return *hits[index].unknown30;
+      }
+    }
+
+    static bool bInitialized = false;
+    static unknown002 nullData;
+    if (!bInitialized) {
+      memset(&nullData, 0, sizeof(nullData));
+      bInitialized = true;
+    }
+
+    return nullData;
+  }
+
   mm::mtl::FixedVector<unknown001, N> hits;
   u32 hitCount;
   bool isHit;
 };
 
 static_assert(sizeof(TColiCheckResult<256>::unknown001) == 0x50, "");
+static_assert(offsetof(TColiCheckResult<256>::unknown001, unknown30) == 0x30, "");
+static_assert(sizeof(TColiCheckResult<256>::unknown002) == 0x1c, "");
 static_assert(offsetof(TColiCheckResult<256>, hitCount) == 0x5010, "");
 static_assert(offsetof(TColiCheckResult<256>, isHit) == 0x5014, "");
 
