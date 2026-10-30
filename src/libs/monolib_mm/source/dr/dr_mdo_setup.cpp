@@ -11,6 +11,7 @@
 #include "dr/dr_pixl_post_man.h"
 #include "dr/dr_pixl_post_obj_cube_map_ibl.h"
 #include "dr/dr_pixl_render_target.h"
+#include "dr/dr_res_mdo_mat.h"
 #include "dr/dr_res_mdo_uniform_block.h"
 #include "dr/dr_shd_data_list.h"
 #include "dr/dr_shd_lgt_clustered.h"
@@ -28,6 +29,7 @@
 #include "grlib/cglib_uniform_array.h"
 #include "grlib/cglib_vtx_stm_out.h"
 #include "grlib/shd_util.h"
+#include "mm_math/mm_col4.h"
 
 namespace ml {
 
@@ -164,6 +166,18 @@ void DrMdoSetup::uniformBlock_RimBloomCalc(const MdsMatValShaderCate *cate, int 
 
 void DrMdoSetup::uniformBlock_Toon2(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter, u32 bufferIndex) {
   m_drMan->unknown580->unknown10->unknown890.setUniformBlock(unknown38->getValGlobalParam(paramIndex));
+}
+
+int DrMdoSetup::unimate_alphaInfo(f32 *work, DrResMdoMat *mat, const MdsMatInfoHeader *header, const MdsMatVariableTbl *variable) {
+  work[0] = 1.0f;
+  work[1] = mat->unknown18;
+  f32 alpha = mat->unknown08.a;
+  if ((header->unknown09 & 1) == 0) {
+    alpha *= unknowne0;
+  }
+  work[2] = alpha;
+  work[3] = unknownd8;
+  return DrResMdoUniformBlock::s_nVarSizeTbl[DrResMdoUniformBlock::VAR_TYPE_UNKNOWN_23];
 }
 
 int DrMdoSetup::unimate_texMatrix(f32 *work, DrResMdoMat *mat, const MdsMatInfoHeader *header, const MdsMatVariableTbl *variable) {

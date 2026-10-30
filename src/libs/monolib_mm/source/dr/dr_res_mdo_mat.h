@@ -15,7 +15,7 @@ public:
 
   const char *m_name;
   mm::Col4 unknown08; // Inferred role: color; original member name unknown.
-  u32 unknown18;      // Inferred role: param0; original member name unknown.
+  f32 unknown18;      // Inferred role: param0; original member name unknown.
   u32 unknown1c;      // Inferred role: param1; original member name unknown.
 };
 
