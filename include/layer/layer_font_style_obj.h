@@ -7,6 +7,7 @@
 
 namespace layer {
 
+class LayerFontManager;
 struct LyrFontStyleData;
 
 class LayerFontStyleObj : public LayerBase {
@@ -16,6 +17,8 @@ public:
     u8 _00[0x24];
   };
 
+  LayerFontStyleObj(LayerFontManager *manager);
+  ~LayerFontStyleObj() override;
   void setStyleData(const void *data);
   const LyrFontStyleData *getStyleData(u32 index) const;
   void releaseColorInfo();
@@ -23,16 +26,20 @@ public:
   s32 getStyleIndex(const char *name) const;
   const char *getStyleName(u32 index) const;
   const char *getFontName(u32 index) const;
+  void release() override;
   void createColorInfo(u32 num);
   void createIconInfo(u32 num);
 
-  u8 _1c[0x20 - 0x1c];
+  static const f32 RUBY_SCALE;
+
+  u8 unknown1c; // Inferred role: state; original member name unknown.
+  u8 _1d[0x20 - 0x1d];
   const void *unknown20; // Inferred role: first value of the style info; original member name unknown.
   u32 unknown28;         // Inferred role: style data max; original member name unknown.
   u8 _2c[0x30 - 0x2c];
   const LyrFontStyleData *unknown30; // Inferred role: style data table; original member name unknown.
-  u8 _38[0x40 - 0x38];
-  f32 unknown40; // Inferred role: ruby scale; original member name unknown.
+  LayerFontManager *unknown38;       // Inferred role: font manager; original member name unknown.
+  f32 unknown40;                     // Inferred role: ruby scale; original member name unknown.
   u8 _44[0x48 - 0x44];
   mm::mtl::Vector<unknown001> *unknown48; // Inferred role: color info; original member name unknown.
   mm::mtl::Vector<unknown001> *unknown50; // Inferred role: icon info; original member name unknown.

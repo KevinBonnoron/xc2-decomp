@@ -15,7 +15,7 @@ struct LayerResMatrix;
 
 class LayerFilterObj {
 public:
-  LayerFilterObj() : unknown08(0), unknown0c(3), m_filterType(0) {}
+  LayerFilterObj();
   virtual ~LayerFilterObj() {}
   virtual void resourceInit() = 0;
   virtual void update(const LayerResMatrix &matrix, const LayerResColor &color, const LayerRenderView *view, f32 time) = 0;

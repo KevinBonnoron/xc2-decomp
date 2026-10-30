@@ -535,3 +535,12 @@ void LayerHandleAllocator::deallocate(void *pointer) {
 }
 
 } // namespace layer
+
+// The game builds these files in one unit with this one, in this order.
+// clang-format off
+#include "layer_font_manager.cpp"
+#include "layer_font_icon_obj.cpp"
+#include "layer_font_res_obj.cpp"
+#include "layer_font_style_obj.cpp"
+#include "layer_font_tag.cpp"
+// clang-format on

@@ -2,6 +2,7 @@
 
 #include "layer/layer_manager.h"
 #include "layer/layer_obj.h"
+#include "layer/layer_obj_util.h"
 #include "mm_math/mm_col3.h"
 #include "mm_math/mm_col4.h"
 #include "mtl/mem_manager.h"
@@ -78,3 +79,14 @@ void LayerAnimeObj::calcParm(LayerResParmInfo &parm, const LayerAnimeInfo &info,
 }
 
 } // namespace layer
+
+// The game builds these files in one unit with this one, in this order.
+// clang-format off
+#include "layer_sort_man.cpp"
+#include "layer_texture_obj.cpp"
+#include "layer_vertex_obj.cpp"
+#include "layer_res_add_tex_obj.cpp"
+#include "layer_res_sec_texture.cpp"
+#include "layer_rce_manager.cpp"
+#include "layer_rce_obj.cpp"
+// clang-format on

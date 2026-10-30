@@ -13,7 +13,7 @@ namespace layer {
 
 namespace {
 
-const LayerResMatrix *getMatrixParm(const LayerObj *layer, u32 flag) {
+const LayerBasePos *getMatrixParm(const LayerObj *layer, u32 flag) {
   if (layer->getStateFlags(LayerManager::s_nStkIdx) & flag) {
     return &layer->unknownc8[LayerManager::s_nStkIdx].unknown00;
   }
@@ -138,9 +138,9 @@ void LayerObj::updateSecondTex() {
 }
 
 void LayerObj::setPos(f32 x, f32 y) {
-  LayerResMatrix &matrix = unknownc8[LayerManager::s_nStkIdx].unknown00;
-  matrix.unknown00 = x;
-  matrix.unknown04 = y;
+  LayerBasePos &pos = unknownc8[LayerManager::s_nStkIdx].unknown00;
+  pos.unknown00 = x;
+  pos.unknown04 = y;
   onStateFlags(0x2);
 }
 
@@ -150,16 +150,16 @@ void LayerObj::setRot(f32 rot) {
 }
 
 void LayerObj::setScale(f32 x, f32 y) {
-  LayerResMatrix &matrix = unknownc8[LayerManager::s_nStkIdx].unknown00;
-  matrix.unknown0c = x;
-  matrix.unknown10 = y;
+  LayerBasePos &pos = unknownc8[LayerManager::s_nStkIdx].unknown00;
+  pos.unknown0c = x;
+  pos.unknown10 = y;
   onStateFlags(0x4);
 }
 
 void LayerObj::setAnchor(f32 x, f32 y) {
-  LayerResMatrix &matrix = unknownc8[LayerManager::s_nStkIdx].unknown00;
-  matrix.unknown14 = x;
-  matrix.unknown18 = y;
+  LayerBasePos &pos = unknownc8[LayerManager::s_nStkIdx].unknown00;
+  pos.unknown14 = x;
+  pos.unknown18 = y;
   onStateFlags(0x10);
 }
 
@@ -194,23 +194,23 @@ void LayerObj::setUVParams(f32 u, f32 v, f32 scaleU, f32 scaleV, f32 rot) {
 }
 
 void LayerObj::getPos(f32 &x, f32 &y) const {
-  const LayerResMatrix *matrix = getMatrixParm(this, 0x2);
-  x = matrix->unknown00;
-  y = matrix->unknown04;
+  const LayerBasePos *pos = getMatrixParm(this, 0x2);
+  x = pos->unknown00;
+  y = pos->unknown04;
 }
 
 void LayerObj::getRot(f32 &rot) const { rot = getMatrixParm(this, 0x8)->unknown08; }
 
 void LayerObj::getScale(f32 &x, f32 &y) const {
-  const LayerResMatrix *matrix = getMatrixParm(this, 0x4);
-  x = matrix->unknown0c;
-  y = matrix->unknown10;
+  const LayerBasePos *pos = getMatrixParm(this, 0x4);
+  x = pos->unknown0c;
+  y = pos->unknown10;
 }
 
 void LayerObj::getAnchor(f32 &x, f32 &y) const {
-  const LayerResMatrix *matrix = getMatrixParm(this, 0x10);
-  x = matrix->unknown14;
-  y = matrix->unknown18;
+  const LayerBasePos *pos = getMatrixParm(this, 0x10);
+  x = pos->unknown14;
+  y = pos->unknown18;
 }
 
 const mm::Mat44 *LayerObj::getMatrix() const {
@@ -465,3 +465,27 @@ bool LayerActBase::actend_cmdend(const LyrActionData *action, bool isCmdEnd) { r
 bool LayerActBase::actend_on(const LyrActionData *action, bool isCmdEnd) { return true; }
 
 } // namespace layer
+
+// The game builds these files in one unit with this one, in this order.
+// clang-format off
+#include "layer_act_def.cpp"
+#include "layer_act_layout.cpp"
+#include "layer_obj_draw.cpp"
+#include "layer_obj_font.cpp"
+#include "layer_obj_layout.cpp"
+#include "layer_obj_list.cpp"
+#include "layer_obj_manager.cpp"
+#include "layer_obj_mesh.cpp"
+#include "layer_obj_place.cpp"
+#include "layer_obj_top_def.cpp"
+#include "layer_obj_top_font.cpp"
+#include "layer_obj_top_mem_obj.cpp"
+#include "layer_obj_top_tex_obj.cpp"
+#include "layer_obj_top_poly_obj.cpp"
+#include "layer_obj_top_filter.cpp"
+#include "layer_obj_top_mask_obj.cpp"
+#include "layer_obj_sort.cpp"
+#include "layer_obj_util.cpp"
+#include "layer_obj_res_tex.cpp"
+#include "layer_obj_work.cpp"
+// clang-format on

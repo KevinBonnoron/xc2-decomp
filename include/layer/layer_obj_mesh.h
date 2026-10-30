@@ -7,10 +7,11 @@
 namespace layer {
 
 struct LayerResMatrix;
+struct LayerResNode;
 
 struct LayerArgMdlRenInf {
   u8 _00[0x10];
-  const LayerResMatrix *unknown10; // Inferred role: object matrix; original member name unknown.
+  const LayerResNode *unknown10;   // Inferred role: mesh node (LayerObjTopDef::updateParams stores an element of a 0x38 stride array); original member name unknown.
   const LayerResMatrix *unknown18; // Inferred role: parent matrix; original member name unknown.
   u8 _20[0x30 - 0x20];
   f32 *unknown30; // Inferred role: uniform buffer cursor; original member name unknown.

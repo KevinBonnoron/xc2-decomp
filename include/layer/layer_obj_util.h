@@ -35,6 +35,7 @@ struct LayerBasePos {
 
 static_assert(offsetof(LayerBasePos, unknown00) == 0x00, "");
 static_assert(offsetof(LayerBasePos, unknown18) == 0x18, "");
+static_assert(sizeof(LayerBasePos) == 0x1c, "");
 
 struct LayerResRenderInfo {
   u8 _00[0x08];

@@ -8,7 +8,7 @@ namespace layer {
 
 namespace {
 
-struct unknown004 {
+struct unknown010 {
   u8 _00[0x08];
   u8 unknown08; // Inferred role: flags; original member name unknown.
   u8 _09[0x0c - 0x09];
@@ -19,7 +19,7 @@ struct unknown004 {
   u32 unknown2c; // Inferred role: offset of the icon info; original member name unknown.
 };
 
-struct unknown005 {
+struct unknown011 {
   u8 _00[0x04];
   u32 unknown04; // Inferred role: width; original member name unknown.
   u8 _08[0x0c - 0x08];
@@ -28,7 +28,7 @@ struct unknown005 {
   f32 unknown14; // Inferred role: scale y; original member name unknown.
 };
 
-struct unknown006 {
+struct unknown012 {
   u32 unknown00; // Inferred role: icon max; original member name unknown.
 };
 
@@ -41,18 +41,18 @@ LayerObjTopMaskObj::~LayerObjTopMaskObj() {
 
 void LayerObjTopMaskObj::createWorkBuffer(const void *data) {
   unknownb8 = data;
-  const unknown004 *header = static_cast<const unknown004 *>(data);
+  const unknown010 *header = static_cast<const unknown010 *>(data);
   if (header->unknown24 != 0) {
     unknown2c8 = LayerManager::get()->unknown58->unknown40->createTextureObj(static_cast<const u8 *>(data) + header->unknown24);
   }
   if (header->unknown08 & 0x2) {
-    unknown2d2 = reinterpret_cast<const unknown006 *>(static_cast<const u8 *>(unknownb8) + header->unknown2c)->unknown00;
+    unknown2d2 = reinterpret_cast<const unknown012 *>(static_cast<const u8 *>(unknownb8) + header->unknown2c)->unknown00;
   } else {
     unknown2d2 = 0;
   }
   unknown2d0 = 0;
   unknown290.setup(0x50);
-  const unknown005 *info = reinterpret_cast<const unknown005 *>(static_cast<const u8 *>(unknownb8) + header->unknown0c);
+  const unknown011 *info = reinterpret_cast<const unknown011 *>(static_cast<const u8 *>(unknownb8) + header->unknown0c);
   unknown180 = info->unknown10;
   unknown184 = info->unknown14;
   unknown188 = 1.0f;

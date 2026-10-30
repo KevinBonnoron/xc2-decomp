@@ -16,6 +16,7 @@ class LayerResSecTexture {
 public:
   LayerResSecTexture(const void *data);
   ~LayerResSecTexture();
+  void release();
   grlib::CGLibTextureBuffer *getTexture();
   void resourceInit();
   void update();

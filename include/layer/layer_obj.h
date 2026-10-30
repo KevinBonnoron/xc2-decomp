@@ -4,6 +4,7 @@
 #include "layer/layer_acc_obj_base.h"
 #include "layer/layer_base.h"
 #include "layer/layer_manager.h"
+#include "layer/layer_obj_util.h"
 #include "mm_math/mm_col3.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_mat44.h"
@@ -20,17 +21,18 @@ struct LayerRenderView;
 class LayerResSecTexture;
 class LayerSortMan;
 
+// Evidence: LayerObjUtil::calcLayerMatrix and updateMatrixUniformBlock read six floats, and
+// LayerObjTopDef::update builds one in six stack floats (0x18 bytes).
 struct LayerResMatrix {
-  f32 unknown00; // Inferred role: pos x; original member name unknown.
-  f32 unknown04; // Inferred role: pos y; original member name unknown.
-  f32 unknown08; // Inferred role: rot; original member name unknown.
-  f32 unknown0c; // Inferred role: scl x; original member name unknown.
-  f32 unknown10; // Inferred role: scl y; original member name unknown.
-  f32 unknown14; // Inferred role: anchor x; original member name unknown.
-  f32 unknown18; // Inferred role: anchor y; original member name unknown.
+  f32 unknown00; // Inferred role: translation x; original member name unknown.
+  f32 unknown04; // Inferred role: translation y; original member name unknown.
+  f32 unknown08; // Inferred role: matrix row 0 column 0; original member name unknown.
+  f32 unknown0c; // Inferred role: matrix row 1 column 1; original member name unknown.
+  f32 unknown10; // Inferred role: matrix row 1 column 0; original member name unknown.
+  f32 unknown14; // Inferred role: matrix row 0 column 1; original member name unknown.
 };
 
-static_assert(sizeof(LayerResMatrix) == 0x1c, "");
+static_assert(sizeof(LayerResMatrix) == 0x18, "");
 
 struct LayerResColor {
   mm::Col4 unknown00; // Inferred role: mul col; original member name unknown.
@@ -40,8 +42,8 @@ struct LayerResColor {
 static_assert(sizeof(LayerResColor) == 0x1c, "");
 
 struct LayerResParmInfo {
-  LayerResMatrix unknown00; // Inferred role: matrix; original member name unknown.
-  LayerResColor unknown1c;  // Inferred role: color; original member name unknown.
+  LayerBasePos unknown00;  // Inferred role: pos, rot, scale and anchor; original member name unknown.
+  LayerResColor unknown1c; // Inferred role: color; original member name unknown.
 };
 
 static_assert(sizeof(LayerResParmInfo) == 0x38, "");

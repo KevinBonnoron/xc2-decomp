@@ -9,7 +9,7 @@ namespace layer {
 
 namespace {
 
-struct unknown001 {
+struct unknown002 {
   u8 _00[0x08];
   u8 unknown08; // Inferred role: flags; original member name unknown.
   u8 _09[0x24 - 0x09];
@@ -18,13 +18,13 @@ struct unknown001 {
   u32 unknown2c; // Inferred role: offset of the icon resource; original member name unknown.
 };
 
-struct unknown002 {
+struct unknown003 {
   u32 unknown00; // Inferred role: icon max; original member name unknown.
   u8 _04[0x18 - 0x04];
   u32 unknown18; // Inferred role: offset of the icon table; original member name unknown.
 };
 
-struct unknown003 {
+struct unknown004 {
   u8 _00[0x08];
   f32 unknown08; // Inferred role: uv x; original member name unknown.
   f32 unknown0c; // Inferred role: uv y; original member name unknown.
@@ -37,17 +37,27 @@ struct unknown003 {
 
 LayerResSecTexture::LayerResSecTexture(const void *data) : unknown08(nullptr) {
   unknown00 = data;
-  const unknown001 *header = static_cast<const unknown001 *>(data);
+  const unknown002 *header = static_cast<const unknown002 *>(data);
   if (header->unknown24 != 0) {
     unknown08 = LayerManager::get()->unknown58->unknown40->createTextureObj(static_cast<const u8 *>(data) + header->unknown24);
   }
   if (header->unknown08 & 0x2) {
-    unknown12 = reinterpret_cast<const unknown002 *>(static_cast<const u8 *>(unknown00) + header->unknown2c)->unknown00;
+    unknown12 = reinterpret_cast<const unknown003 *>(static_cast<const u8 *>(unknown00) + header->unknown2c)->unknown00;
   } else {
     unknown12 = 0;
   }
   unknown10 = 0;
   unknown14 = 1.0f;
+}
+
+LayerResSecTexture::~LayerResSecTexture() { release(); }
+
+void LayerResSecTexture::release() {
+  if (unknown08 != nullptr) {
+    LayerManager::get()->unknown58->unknown40->releaseTextureObj(unknown08);
+    unknown08 = nullptr;
+  }
+  unknown18.release();
 }
 
 grlib::CGLibTextureBuffer *LayerResSecTexture::getTexture() { return unknown08->unknown30; }
@@ -62,8 +72,8 @@ void LayerResSecTexture::update() {
     uniform[2] = 0.0f;
     uniform[3] = 0.0f;
   } else {
-    const u8 *icon = static_cast<const u8 *>(unknown00) + static_cast<const unknown001 *>(unknown00)->unknown2c;
-    const unknown003 *entry = reinterpret_cast<const unknown003 *>(icon + reinterpret_cast<const unknown002 *>(icon)->unknown18) + unknown10;
+    const u8 *icon = static_cast<const u8 *>(unknown00) + static_cast<const unknown002 *>(unknown00)->unknown2c;
+    const unknown004 *entry = reinterpret_cast<const unknown004 *>(icon + reinterpret_cast<const unknown003 *>(icon)->unknown18) + unknown10;
     uniform[0] = entry->unknown08;
     uniform[1] = entry->unknown0c;
     uniform[2] = entry->unknown10;

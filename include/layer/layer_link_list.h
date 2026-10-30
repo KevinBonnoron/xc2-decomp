@@ -45,6 +45,19 @@ public:
     unknown10++;
   }
 
+  // Inferred role: deletes every node and empties the list; original name unknown.
+  void unknown003() {
+    T *node = unknown00;
+    while (node != nullptr) {
+      T *next = node->unknown08;
+      delete node;
+      node = next;
+    }
+    unknown10 = 0;
+    unknown00 = nullptr;
+    unknown08 = nullptr;
+  }
+
   T *unknown00;  // Inferred role: first node; original member name unknown.
   T *unknown08;  // Inferred role: last node; original member name unknown.
   s32 unknown10; // Inferred role: node count; original member name unknown.

@@ -1,9 +1,11 @@
 #include "layer/layer_obj_work.h"
 
 #include "layer/layer_manager.h"
+#include "layer/layer_obj_manager.h"
 #include "layer/layer_shd_manager.h"
 #include "layer/layer_texture_obj.h"
 #include "layer/layer_vertex_obj.h"
+#include "ml/critical_section.h"
 #include "mtl/mem_manager.h"
 
 namespace layer {
@@ -14,13 +16,25 @@ f32 LayerObjWork::getSecond() const { return unknown2b0->unknown00 * LayerManage
 
 void LayerObjWork::setSecond(f32 second) { unknown2b0->unknown00 = LayerManager::get()->unknown80 * second; }
 
+void LayerObjWork::setAddTexture(const void *data, u32 index) {
+  ml::CS lock(LayerObjManager::getCriticalSection());
+  resetAddTexutre(index);
+  unknown2c0.setAddTexture(data, index);
+}
+
 void LayerObjWork::resetAddTexutre(u32 index) { unknown2c0.resetAddTexutre(index); }
+
+void LayerObjWork::setAddTexture(grlib::CGLibTextureBuffer &texture, u32 index) {
+  ml::CS lock(LayerObjManager::getCriticalSection());
+  resetAddTexutre(index);
+  unknown2c0.setAddTexture(texture, index);
+}
 
 void LayerObjWork::resetAddAllTexutre() { unknown2c0.resetAddAllTexutre(); }
 
 namespace {
 
-struct unknown004 {
+struct unknown013 {
   u8 _00[0x10];
   u32 unknown10; // Inferred role: offset of the vertex resource; original member name unknown.
 };
@@ -28,7 +42,7 @@ struct unknown004 {
 } // namespace
 
 void LayerObjWork::workCreate() {
-  u32 offset = static_cast<const unknown004 *>(unknownb8)->unknown10;
+  u32 offset = static_cast<const unknown013 *>(unknownb8)->unknown10;
   if (offset != 0) {
     unknown270 = LayerManager::get()->unknown58->unknown38->createVertexObj(static_cast<const u8 *>(unknownb8) + offset);
   }

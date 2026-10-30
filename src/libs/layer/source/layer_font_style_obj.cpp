@@ -3,25 +3,28 @@
 #include <string.h>
 
 #include "layer/layer_acc_font_style.h"
+#include "layer/layer_font_manager.h"
 #include "mm_mtl/vector.h"
 
 namespace layer {
 
 namespace {
 
-struct unknown002 {
+struct unknown005 {
   u8 _00[0x08];
   u32 unknown08; // Inferred role: offset of the style data table; original member name unknown.
   u32 unknown0c; // Inferred role: style data count; original member name unknown.
 };
 
-static_assert(offsetof(unknown002, unknown08) == 0x08, "");
-static_assert(offsetof(unknown002, unknown0c) == 0x0c, "");
+static_assert(offsetof(unknown005, unknown08) == 0x08, "");
+static_assert(offsetof(unknown005, unknown0c) == 0x0c, "");
 
 } // namespace
 
+const f32 LayerFontStyleObj::RUBY_SCALE = 0.4f;
+
 void LayerFontStyleObj::setStyleData(const void *data) {
-  const unknown002 *header = static_cast<const unknown002 *>(data);
+  const unknown005 *header = static_cast<const unknown005 *>(data);
   unknown20 = data;
   unknown28 = header->unknown0c;
   unknown30 = reinterpret_cast<const LyrFontStyleData *>(static_cast<const u8 *>(data) + header->unknown08);
@@ -47,6 +50,22 @@ const char *LayerFontStyleObj::getStyleName(u32 index) const { return static_cas
 
 const char *LayerFontStyleObj::getFontName(u32 index) const { return static_cast<const char *>(unknown20) + unknown30[index].unknown08; }
 
+LayerFontStyleObj::LayerFontStyleObj(LayerFontManager *manager) {
+  unknown1c = 0xcc;
+  unknown38 = manager;
+  unknown18 = LAYER_OBJ_TYPE_FONT_STYLE;
+  unknown08 = nullptr;
+  unknown10 = nullptr;
+  unknown40 = RUBY_SCALE;
+  unknown48 = nullptr;
+  unknown50 = nullptr;
+}
+
+LayerFontStyleObj::~LayerFontStyleObj() {
+  releaseColorInfo();
+  releaseIconInfo();
+}
+
 void LayerFontStyleObj::releaseColorInfo() {
   if (unknown48 != nullptr) {
     delete unknown48;
@@ -59,6 +78,13 @@ void LayerFontStyleObj::releaseIconInfo() {
     delete unknown50;
     unknown50 = nullptr;
   }
+}
+
+void LayerFontStyleObj::release() {
+  unknown1c = 0x22;
+  releaseColorInfo();
+  releaseIconInfo();
+  unknown38->releaseStyleObj(this);
 }
 
 } // namespace layer

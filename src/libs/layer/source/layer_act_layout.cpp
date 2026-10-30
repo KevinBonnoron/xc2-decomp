@@ -8,12 +8,12 @@ namespace layer {
 
 namespace {
 
-struct unknown004 {
+struct unknown009 {
   u8 _00[0x02];
   u16 unknown02; // Inferred role: command value count; original member name unknown.
 };
 
-static_assert(offsetof(unknown004, unknown02) == 0x02, "");
+static_assert(offsetof(unknown009, unknown02) == 0x02, "");
 
 } // namespace
 
@@ -32,7 +32,7 @@ bool LayerActLayout::actcmd_notcmd02(const u8 *&cmd) {
 }
 
 bool LayerActLayout::actcmd_notcmd03(const u8 *&cmd) {
-  cmd += reinterpret_cast<const unknown004 *>(cmd)->unknown02 * 2 + 12;
+  cmd += reinterpret_cast<const unknown009 *>(cmd)->unknown02 * 2 + 12;
   return false;
 }
 

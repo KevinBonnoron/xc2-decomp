@@ -13,6 +13,8 @@
 
 namespace layer {
 
+LayerFilterObj::LayerFilterObj() : unknown08(0), unknown0c(3), m_filterType(0) {}
+
 void LayerFilterObj::render() {}
 
 void LayerFilterObj::releaseCall() { unknown08 |= 1 << LayerManager::s_nStkIdx; }
@@ -73,3 +75,9 @@ f32 LayerFilterObj::gaussianDistribution(f32 x, f32 y, f32 rho) const {
 }
 
 } // namespace layer
+
+// The game builds these files in one unit with this one, in this order.
+// clang-format off
+#include "layer_filter_flow_map_obj.cpp"
+#include "layer_filter_gs_blur_obj.cpp"
+// clang-format on

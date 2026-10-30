@@ -30,19 +30,19 @@ LayerFontManager::LayerFontManager(LayerManager *manager) {
 }
 
 LayerFontManager::~LayerFontManager() {
-  unknown00.unknown002();
-  unknown18[0].unknown002();
-  unknown18[1].unknown002();
-  unknown48.unknown002();
-  unknown78.unknown002();
+  unknown00.unknown003();
+  unknown18[0].unknown003();
+  unknown18[1].unknown003();
+  unknown48.unknown003();
+  unknown78.unknown003();
 }
 
 void LayerFontManager::allRelease() {
-  unknown00.unknown002();
-  unknown18[0].unknown002();
-  unknown18[1].unknown002();
-  unknown48.unknown002();
-  unknown78.unknown002();
+  unknown00.unknown003();
+  unknown18[0].unknown003();
+  unknown18[1].unknown003();
+  unknown48.unknown003();
+  unknown78.unknown003();
 }
 
 void LayerFontManager::releaseResObj(LayerFontResObj *res) { res->unknown28 |= 1 << LayerManager::s_nStkIdx; }
@@ -50,26 +50,7 @@ void LayerFontManager::releaseResObj(LayerFontResObj *res) { res->unknown28 |= 1
 void LayerFontManager::releaseIconObj(LayerFontIconObj *icon) { icon->unknown28 |= 1 << LayerManager::s_nStkIdx; }
 
 void LayerFontManager::releaseStyleObj(LayerFontStyleObj *style) {
-  LayerBase *prev = style->unknown08;
-  LayerBase *next = style->unknown10;
-  if (prev == nullptr) {
-    if (next == nullptr) {
-      unknown78.unknown00 = nullptr;
-      unknown78.unknown08 = nullptr;
-    } else {
-      unknown78.unknown00 = next;
-      next->unknown08 = nullptr;
-    }
-  } else if (next == nullptr) {
-    unknown78.unknown08 = prev;
-    prev->unknown10 = nullptr;
-  } else {
-    prev->unknown10 = next;
-    style->unknown10->unknown08 = style->unknown08;
-  }
-  style->unknown08 = nullptr;
-  style->unknown10 = nullptr;
-  unknown78.unknown10--;
+  unknown78.unknown004(style);
   delete style;
 }
 
