@@ -26,6 +26,8 @@ class StreamObj;
 
 namespace math {
 struct Vec3r;
+class KeyFrameIP;
+struct EPkey;
 } // namespace math
 
 namespace emitter {
@@ -33,6 +35,15 @@ namespace emitter {
 class ParticleObj;
 
 struct EmitterArg {
+  void get_kf(math::KeyFrameIP *ip, u16 offset, int num, f32 frame, s16 &loopFrame, math::EPkey *epkey, f32 **ppKey, f32 *pLoopTop);
+  // Inferred role: keyframe data at an offset of the keyframe block, null for the offset 0; original name unknown.
+  f32 *unknown003(u16 offset) {
+    if (offset == 0) {
+      return nullptr;
+    }
+    return &unknown24c[offset];
+  }
+
   u8 unknown00; // Inferred role: emitter type; original member name unknown.
   u8 _001[0x009 - 0x001];
   u8 unknown09; // Inferred role: follows the fit direction of the parent particle; original member name unknown.
@@ -50,10 +61,14 @@ struct EmitterArg {
   f32 unknown9c; // Inferred role: bound extent; original member name unknown.
   f32 unknowna0; // Inferred role: bound extent; original member name unknown.
   u8 _0a4[0x0c4 - 0x0a4];
-  u8 unknownc4; // Inferred role: fit mode flags, bit 3 set for the fitting modes; original member name unknown.
-  u8 _0c5[0x0e0 - 0x0c5];
+  u8 unknownc4;  // Inferred role: fit mode flags, bit 3 set for the fitting modes; original member name unknown.
+  u8 unknownc5;  // Inferred role: rotation mode, 0 for a set rotation, 1 to add it, 2 to add it with a random sign; original member name unknown.
+  u16 unknownc6; // Inferred role: rotation keyframe offset; original member name unknown.
+  u8 _0c8[0x0e0 - 0x0c8];
   u8 unknowne0; // Inferred role: draw parameter; original member name unknown.
-  u8 _0e1[0x0fc - 0x0e1];
+  u8 _0e1[0x0e2 - 0x0e1];
+  u16 unknowne2; // Inferred role: pivot keyframe offset; original member name unknown.
+  u8 _0e4[0x0fc - 0x0e4];
   u8 unknownfc; // Inferred role: blend mode; original member name unknown.
   u8 unknownfd; // Inferred role: fadeout mode; original member name unknown.
   u8 _0fe[0x100 - 0x0fe];
@@ -65,7 +80,7 @@ struct EmitterArg {
   u8 _124[0x128 - 0x124];
   f32 unknown128; // Inferred role: draw parameter; original member name unknown.
   u8 _12c[0x24c - 0x12c];
-  u8 unknown24c[1]; // Inferred role: keyframe data; original member name unknown.
+  f32 unknown24c[1]; // Inferred role: keyframe data; original member name unknown.
 };
 
 static_assert(offsetof(EmitterArg, unknown00) == 0x00, "");
@@ -76,9 +91,11 @@ static_assert(offsetof(EmitterArg, unknown8c) == 0x8c, "");
 static_assert(offsetof(EmitterArg, unknown9c) == 0x9c, "");
 static_assert(offsetof(EmitterArg, unknowna0) == 0xa0, "");
 static_assert(offsetof(EmitterArg, unknownc4) == 0xc4, "");
+static_assert(offsetof(EmitterArg, unknownc6) == 0xc6, "");
 static_assert(offsetof(EmitterArg, unknown90) == 0x90, "");
 static_assert(offsetof(EmitterArg, unknown94) == 0x94, "");
 static_assert(offsetof(EmitterArg, unknowne0) == 0xe0, "");
+static_assert(offsetof(EmitterArg, unknowne2) == 0xe2, "");
 static_assert(offsetof(EmitterArg, unknownfc) == 0xfc, "");
 static_assert(offsetof(EmitterArg, unknown120) == 0x120, "");
 static_assert(offsetof(EmitterArg, unknown128) == 0x128, "");
@@ -129,6 +146,14 @@ struct unknown005 {
 static_assert(offsetof(unknown005, unknown04) == 0x04, "");
 static_assert(offsetof(unknown005, unknown14) == 0x14, "");
 static_assert(offsetof(unknown005, unknown1c) == 0x1c, "");
+
+// Inferred role: speed parameters of an emitter; original name unknown.
+struct unknown006 {
+  u8 _00[0x0c - 0x00];
+  u16 unknown0c; // Inferred role: speed keyframe offset; original member name unknown.
+};
+
+static_assert(offsetof(unknown006, unknown0c) == 0x0c, "");
 
 class EmitterObj : public IntrusiveListNode {
 public:
@@ -199,7 +224,8 @@ public:
   u8 _183[0x188 - 0x183];
   u32 unknown188; // Inferred role: dead value; original member name unknown.
   f32 unknown18c; // Inferred role: frame; original member name unknown.
-  u8 _190[0x1c8 - 0x190];
+  u8 _190[0x1c0 - 0x190];
+  unknown006 *unknown1c0; // Inferred role: speed; original member name unknown.
   unknown004 *unknown1c8; // Inferred role: gravity; original member name unknown.
   unknown005 *unknown1d0; // Inferred role: newton; original member name unknown.
   u8 _1d8[0x1e0 - 0x1d8];
@@ -218,7 +244,8 @@ public:
   u16 unknown27a; // Inferred role: compute particle offset; original member name unknown.
   u16 unknown27c; // Inferred role: compute particle count; original member name unknown.
   u16 unknown27e; // Inferred role: compute block offset; original member name unknown.
-  u8 _280[0x310 - 0x280];
+  u8 _280[0x2b8 - 0x280];
+  f32 *unknown2b8[11]; // Inferred role: loop start key of each keyframe channel; original member name unknown.
   // Evidence: name from the assertion string "m_pGpuCheck == nullptr" in emitter_alloc01; vtable +0x10 (release) and +0x18 (isRender) called in emitter_free_core and isRenderCheck.
   ml::DrGpuCheckBase *m_pGpuCheck;
   f32 unknown318; // Inferred role: gpu check radius; original member name unknown.
@@ -252,6 +279,8 @@ static_assert(offsetof(EmitterObj, unknown160) == 0x160, "");
 static_assert(offsetof(EmitterObj, unknown16c) == 0x16c, "");
 static_assert(offsetof(EmitterObj, unknown170) == 0x170, "");
 static_assert(offsetof(EmitterObj, unknown174) == 0x174, "");
+static_assert(offsetof(EmitterObj, unknown1c0) == 0x1c0, "");
+static_assert(offsetof(EmitterObj, unknown2b8) == 0x2b8, "");
 static_assert(offsetof(EmitterObj, unknown180) == 0x180, "");
 static_assert(offsetof(EmitterObj, unknown188) == 0x188, "");
 static_assert(offsetof(EmitterObj, unknown18c) == 0x18c, "");

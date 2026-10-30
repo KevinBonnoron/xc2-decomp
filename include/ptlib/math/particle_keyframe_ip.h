@@ -3,7 +3,15 @@
 
 #include "types.h"
 
+namespace mm {
+struct Vec3;
+struct Vec3NA;
+} // namespace mm
+
 namespace ptlib {
+
+struct vec2f;
+
 namespace math {
 
 struct EPkey {
@@ -19,8 +27,17 @@ static_assert(sizeof(EPkey) == 0x0c, "");
 class KeyFrameIP {
 public:
   f32 get_ip1(int index);
+  void get_ip2(vec2f *result, int index);
+  void get_ip3(mm::Vec3NA *result, int index);
+  void get_ip3(mm::Vec3 *result, int index);
+  void mul_ip3(mm::Vec3NA *result, int index);
+  void mul_ip3(mm::Vec3 *result, int index);
   void setup_keyrand(EPkey *epkey, int count, u32 &rand);
   f32 keyrand_get_ip1(EPkey *epkey, u32 &rand);
+  void keyrand_get_ip3(mm::Vec3NA *result, EPkey *epkey, u32 &rand);
+  void keyrand_get_ip3(mm::Vec3 *result, EPkey *epkey, u32 &rand);
+  void keyrand_mul_ip3(mm::Vec3NA *result, EPkey *epkey, u32 &rand);
+  void keyrand_mul_ip3(mm::Vec3 *result, EPkey *epkey, u32 &rand);
 
   const f32 *unknown00; // Inferred role: start key; original member name unknown.
   const f32 *unknown08; // Inferred role: end key; original member name unknown.

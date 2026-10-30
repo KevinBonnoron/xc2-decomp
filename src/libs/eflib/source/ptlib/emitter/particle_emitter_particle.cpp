@@ -5,12 +5,27 @@
 #include "ptlib/emitter/particle_emitter.h"
 #include "ptlib/emitter/particle_emitter_ext.h"
 #include "ptlib/emitter/particle_emitter_particle.h"
+#include "ptlib/math/particle_keyframe_ip.h"
 #include "ptlib/particle_intrusive_list.h"
 #include "ptlib/particle_system.h"
 #include "types.h"
 
 namespace ptlib {
 namespace emitter {
+
+namespace {
+
+// Inferred role: wraps an angle back into [-pi, pi] after one step; original name unknown.
+inline f32 unknown007(f32 angle) {
+  if (angle > 3.1415927f) {
+    angle -= 6.2831855f;
+  } else if (angle < -3.1415927f) {
+    angle += 6.2831855f;
+  }
+  return angle;
+}
+
+} // namespace
 
 f32 EmitterObj::getEmitterScale() {
   f32 scale = 1.0f;
@@ -98,6 +113,49 @@ void ParticleObj::calcGravity(EmitterObj *emitter, f32 speed, mm::Vec3 &result) 
   }
 }
 
+void ParticleObj::calcParRot(math::KeyFrameIP &keyFrame, f32 frame, EmitterObj *emitter, bool isCreate, f32 speed) {
+  EmitterArg *arg = emitter->unknown98;
+  if (arg->unknownc6 == 0) {
+    return;
+  }
+  arg->get_kf(&keyFrame, arg->unknownc6, 6, frame, m_extParam->unknown214[2], &m_extParam->unknown190[2], &unknownd8[2], emitter->unknown2b8[2]);
+  if (arg->unknownc5 == 0 && isCreate) {
+    keyFrame.keyrand_get_ip3(&unknown94, &m_extParam->unknown190[2], emitter->unknown268);
+    return;
+  }
+  mm::Vec3 rotation;
+  keyFrame.keyrand_get_ip3(&rotation, &m_extParam->unknown190[2], emitter->unknown268);
+  rotation.x *= speed;
+  rotation.y *= speed;
+  rotation.z *= speed;
+  if (arg->unknownc5 != 1) {
+    if (arg->unknownc5 != 2) {
+      return;
+    }
+    u8 flip = unknownc2;
+    if (flip & 1) {
+      rotation.x = -rotation.x;
+    }
+    if (flip & 2) {
+      rotation.y = -rotation.y;
+    }
+    if (flip & 4) {
+      rotation.z = -rotation.z;
+    }
+  }
+  unknown94.x = unknown007(rotation.x + unknown94.x);
+  unknown94.y = unknown007(rotation.y + unknown94.y);
+  unknown94.z = unknown007(rotation.z + unknown94.z);
+}
+
+void ParticleObj::calcParPivot(math::KeyFrameIP &keyFrame, f32 frame, EmitterObj *emitter) {
+  u16 offset = emitter->unknown98->unknowne2;
+  if (offset != 0) {
+    emitter->unknown98->get_kf(&keyFrame, offset, 6, frame, m_extParam->unknown214[3], &m_extParam->unknown190[3], &unknownd8[3], emitter->unknown2b8[3]);
+    keyFrame.keyrand_get_ip3(&unknowna0, &m_extParam->unknown190[3], emitter->unknown268);
+  }
+}
+
 void ParticleObj::calcNewton(EmitterObj *emitter, mm::Vec3 &result) {
   unknown005 *newton = emitter->unknown1d0;
   if (newton != nullptr) {
@@ -142,6 +200,19 @@ void ParticleObj::calcIsFit(int isFit, EmitterObj *emitter, mm::Vec3 &direction)
     } else {
       calc_fit(unknown94.x, unknown94.y, &direction);
     }
+  }
+}
+
+void ParticleObj::calcSpeed(EmitterObj *emitter, math::KeyFrameIP &keyFrame, f32 frame) {
+  unknown006 *speed = emitter->unknown1c0;
+  if (speed == nullptr) {
+    return;
+  }
+  if (speed->unknown0c != 0) {
+    emitter->unknown98->get_kf(&keyFrame, speed->unknown0c, 2, frame, m_extParam->unknown214[0], &m_extParam->unknown190[0], &unknownd8[0], emitter->unknown2b8[0]);
+    unknownac.x = keyFrame.keyrand_get_ip1(&m_extParam->unknown190[0], emitter->unknown268) * emitter->getEmitterScale();
+  } else {
+    unknownac.x = unknownac.y * emitter->getEmitterScale();
   }
 }
 

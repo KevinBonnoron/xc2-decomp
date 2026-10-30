@@ -10,6 +10,10 @@
 #include "types.h"
 
 namespace ptlib {
+namespace math {
+class KeyFrameIP;
+} // namespace math
+
 namespace emitter {
 
 class ExtObj;
@@ -64,6 +68,9 @@ public:
   void addCalcTbl(mm::Vec3 &vector, f32 scale);
   void calcGravity(EmitterObj *emitter, f32 speed, mm::Vec3 &result);
   void calcNewton(EmitterObj *emitter, mm::Vec3 &result);
+  void calcParRot(math::KeyFrameIP &keyFrame, f32 frame, EmitterObj *emitter, bool isCreate, f32 speed);
+  void calcParPivot(math::KeyFrameIP &keyFrame, f32 frame, EmitterObj *emitter);
+  void calcSpeed(EmitterObj *emitter, math::KeyFrameIP &keyFrame, f32 frame);
   bool move_common_check_begin_end(EmitterObj *emitter, u16 begin, u16 end, int mode) {
     f32 frame;
     if (static_cast<u32>(mode) < 2) {
@@ -130,7 +137,7 @@ public:
     f32 unknownd4;     // Inferred role: scale multiplier z; original member name unknown.
     int unknownd4_int; // Inferred role: create type, read by createFunc; original member name unknown.
   };
-  u8 unknownd8[0x130 - 0x0d8]; // Inferred role: cleared by the constructor; original member name unknown.
+  f32 *unknownd8[11]; // Inferred role: current key of each keyframe channel, cleared by the constructor; original member name unknown.
   // Evidence: name from the accessor getExtParam in the assertion string "et->getExtParam().getEmParent()" of particleAlloc.
   ExtObj *m_extParam;
   int unknown138; // Inferred role: id; original member name unknown.

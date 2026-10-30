@@ -5,6 +5,14 @@
 
 namespace ptlib {
 
+// Inferred role: two component vector; the name comes from the mangled game symbols of ptlib::math::KeyFrameIP.
+struct vec2f {
+  f32 unknown00; // Inferred role: x; original member name unknown.
+  f32 unknown04; // Inferred role: y; original member name unknown.
+};
+
+static_assert(sizeof(vec2f) == 0x08, "");
+
 namespace math {
 
 // Inferred role: value and random range of each of the three components; the name comes from the mangled game symbols of ptlib::emitter::EmitterObj.

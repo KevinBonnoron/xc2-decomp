@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "mm_math/mm_vec3.h"
+#include "ptlib/math/particle_keyframe_ip.h"
 #include "types.h"
 
 namespace ptlib {
@@ -31,9 +32,11 @@ public:
   };
   void *unknown118; // Inferred role: cleared with the model; original member name unknown.
   void *unknown120; // Inferred role: cleared with the model; original member name unknown.
-  u8 _128[0x22c - 0x128];
-  f32 unknown22c; // Inferred role: flow map position; original member name unknown.
-  u32 unknown230; // Inferred role: flow map active; original member name unknown.
+  u8 _128[0x190 - 0x128];
+  math::EPkey unknown190[11]; // Inferred role: random keys of each keyframe channel; original member name unknown.
+  s16 unknown214[12];         // Inferred role: loop frame of each keyframe channel; original member name unknown.
+  f32 unknown22c;             // Inferred role: flow map position; original member name unknown.
+  u32 unknown230;             // Inferred role: flow map active; original member name unknown.
   u8 _234[0x240 - 0x234];
 };
 
@@ -46,6 +49,8 @@ static_assert(offsetof(ExtObj, unknown108) == 0x108, "");
 static_assert(offsetof(ExtObj, unknown110) == 0x110, "");
 static_assert(offsetof(ExtObj, unknown118) == 0x118, "");
 static_assert(offsetof(ExtObj, unknown120) == 0x120, "");
+static_assert(offsetof(ExtObj, unknown190) == 0x190, "");
+static_assert(offsetof(ExtObj, unknown214) == 0x214, "");
 static_assert(offsetof(ExtObj, unknown22c) == 0x22c, "");
 static_assert(offsetof(ExtObj, unknown230) == 0x230, "");
 static_assert(sizeof(ExtObj) == 0x240, "");

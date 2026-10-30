@@ -5,6 +5,7 @@
 #include "ptlib/emitter/particle_emitter_ext.h"
 #include "ptlib/emitter/particle_emitter_param.h"
 #include "ptlib/emitter/particle_emitter_particle.h"
+#include "ptlib/math/particle_keyframe_ip.h"
 #include "ptlib/particle_intrusive_list.h"
 #include "ptlib/particle_math.h"
 #include "ptlib/particle_system.h"
@@ -17,6 +18,62 @@ class RenderSet;
 } // namespace renderer
 
 namespace emitter {
+
+void EmitterArg::get_kf(math::KeyFrameIP *ip, u16 offset, int num, f32 frame, s16 &loopFrame, math::EPkey *epkey, f32 **ppKey, f32 *pLoopTop) {
+  f32 *key = *ppKey;
+  if (key == nullptr) {
+    ip->unknown00 = nullptr;
+    ip->unknown08 = nullptr;
+    ip->unknown10 = 0.0f;
+    return;
+  }
+  f32 t = loopFrame + frame;
+  if (t < 0.0f) {
+    t += 16384.0f;
+    loopFrame += 0x4000;
+  }
+  if (t >= 0.0f && t < 1.0f) {
+    t = 1.0f;
+  }
+  f32 *next = nullptr;
+  bool isLoop = false;
+  while (*key >= 0.0f) {
+    next = key + num + 1;
+    if (*key <= t && t < *next) {
+      break;
+    }
+    if (*next < 0.0f) {
+      if (*next + *key > 0.0f) {
+        loopFrame += static_cast<s16>(*next);
+        isLoop = true;
+        t += *next;
+        if (pLoopTop != nullptr) {
+          next = pLoopTop;
+        } else {
+          next = unknown003(offset);
+        }
+      } else {
+        break;
+      }
+    }
+    key = next;
+  }
+  if (key != nullptr) {
+    *ppKey = key;
+  }
+  if (isLoop && epkey != nullptr) {
+    epkey->unknown00 = static_cast<int>(*key);
+    epkey->unknown04 = epkey->unknown08;
+  }
+  ip->unknown00 = key + 1;
+  if (*next < 0.0f) {
+    ip->unknown08 = key + 1;
+    ip->unknown10 = 0.0f;
+    return;
+  }
+  ip->unknown08 = next + 1;
+  ip->unknown10 = (t - *key) / (*next - *key);
+}
 
 int EmitterObj::getParentParticleState() const {
   if (unknown80 == nullptr) {
