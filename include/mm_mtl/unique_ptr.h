@@ -19,10 +19,10 @@ public:
   explicit UniquePtr(T *ptr) : _ptr(ptr) {}
   ~UniquePtr() { reset(); }
 
-  void reset() {
-    if (_ptr != nullptr) {
+  void reset(T *ptr = nullptr) {
+    if (_ptr != ptr) {
       delete _ptr;
-      _ptr = nullptr;
+      _ptr = ptr;
     }
   }
 

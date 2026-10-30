@@ -12,6 +12,10 @@
 
 namespace gf {
 
+struct MsgDebugNotifyReloadLookAtBdat : fw::Message {
+  MsgDebugNotifyReloadLookAtBdat() : fw::Message(0x1000004, 0x40) {}
+};
+
 class GfBdatLookAt : public mm::mtl::PtrSingleton<GfBdatLookAt>, public IDataBdat, public fw::MessageObject {
 public:
   struct CharactorInfo {

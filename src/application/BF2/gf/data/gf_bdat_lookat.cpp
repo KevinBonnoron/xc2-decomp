@@ -1,10 +1,36 @@
 #include "gf/data/gf_bdat_lookat.h"
 
+#include "gf/game/gf_game_party.h"
+#include "gf/object/gf_obj.h"
+#include "gf/object/gf_obj_util.h"
+
 namespace gf {
 
 GfBdatLookAt::Impl::Impl() : unknown468(0.0f), unknown46c(0.0f), unknown470(0.0f) {}
 
 GfBdatLookAt::Impl::~Impl() {}
+
+#line 80
+GfBdatLookAt::GfBdatLookAt() {
+  unknown28.reset(new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) Impl());
+  unknown28->build();
+}
+
+#line 90
+void GfBdatLookAt::bdatRefresh() {
+  unknown28.reset(new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) Impl());
+  unknown28->build();
+
+  if (GfGameParty::get() != nullptr) {
+    for (u32 hierarchy = 0; hierarchy < 6; hierarchy++) {
+      GfObj *obj = GfObjUtil::getObj(GfGameParty::getHandleByHierarchy(hierarchy));
+      if (obj != nullptr) {
+        MsgDebugNotifyReloadLookAtBdat message;
+        sendMessage(obj, message);
+      }
+    }
+  }
+}
 
 const GfBdatLookAt::CharactorInfo *GfBdatLookAt::Impl::getCharactorInfo(u32 category, u32 refId) const {
   const CategoryTable &table = unknown000[category];
