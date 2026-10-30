@@ -10,19 +10,6 @@
 
 namespace layer {
 
-struct unknown002 {
-  u8 _00[0x10];
-  u32 unknown10; // Inferred role: res name block offset; original member name unknown.
-  u8 _14[0x1c - 0x14];
-  u32 unknown1c; // Inferred role: pos data table offset; original member name unknown.
-  u32 unknown20; // Inferred role: pos data count; original member name unknown.
-};
-
-struct unknown003 {
-  u32 unknown00; // Inferred role: res name table offset; original member name unknown.
-  u32 unknown04; // Inferred role: res name count; original member name unknown.
-};
-
 LayerAccLayoutBinary::LayerAccLayoutBinary(const void *data) {
   unknown00 = static_cast<const u8 *>(data);
   const unknown002 *header = static_cast<const unknown002 *>(data);

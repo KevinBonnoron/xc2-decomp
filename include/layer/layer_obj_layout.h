@@ -1,7 +1,7 @@
 #pragma once
 #include <stddef.h>
 
-#include "layer/layer_act_base.h"
+#include "layer/layer_obj_list.h"
 #include "mm_math/mm_col4.h"
 #include "types.h"
 
@@ -13,10 +13,11 @@ class CGLibTextureBuffer;
 
 namespace layer {
 
+struct LyrLayoutPosData;
 class LayerObjTopTexObj;
 class LayerSortMan;
 
-class LayerObjLayout : public LayerActBase {
+class LayerObjLayout : public LayerObjList {
 public:
   // Inferred layout of a render target entry; original type and member names unknown.
   struct unknown001 {
@@ -36,6 +37,36 @@ public:
   static_assert(offsetof(unknown001, unknown28) == 0x28, "");
   static_assert(sizeof(unknown001) == 0x38, "");
 
+  // Inferred layout of the layout work data, cleared as one block by the constructor (memset of 0x150 bytes at 0x2a0);
+  // original type and member names unknown.
+  struct unknown002 {
+    const u8 *unknown00;               // Inferred role: layout data block; original member name unknown.
+    const LyrLayoutPosData *unknown08; // Inferred role: pos data table; original member name unknown.
+    f32 unknown10;                     // Inferred role: view port x; original member name unknown.
+    f32 unknown14;                     // Inferred role: view port y; original member name unknown.
+    f32 unknown18;                     // Inferred role: view port width; original member name unknown.
+    f32 unknown1c;                     // Inferred role: view port height; original member name unknown.
+    u32 unknown20;                     // Inferred role: auto anchor mode; original member name unknown.
+    u16 unknown24[2];                  // Inferred role: priority tbls; original member name unknown.
+    u16 unknown28;                     // Inferred role: priority tbl; original member name unknown.
+    u8 _2a[0x30 - 0x2a];
+    LayerSortMan *unknown30; // Inferred role: sort manager; original member name unknown.
+    u8 _38[0x70 - 0x38];
+    unknown001 unknown70[2]; // Inferred role: render targets; original member name unknown.
+    unknown001 unknowne0;    // Inferred role: previous render target; original member name unknown.
+    unknown001 unknown118;   // Inferred role: active render target; original member name unknown.
+  };
+
+  static_assert(offsetof(unknown002, unknown10) == 0x10, "");
+  static_assert(offsetof(unknown002, unknown20) == 0x20, "");
+  static_assert(offsetof(unknown002, unknown28) == 0x28, "");
+  static_assert(offsetof(unknown002, unknown30) == 0x30, "");
+  static_assert(offsetof(unknown002, unknown70) == 0x70, "");
+  static_assert(offsetof(unknown002, unknowne0) == 0xe0, "");
+  static_assert(offsetof(unknown002, unknown118) == 0x118, "");
+  static_assert(sizeof(unknown002) == 0x150, "");
+
+  LayerObjLayout();
   void workLayoutRelease();
   void createRenderTarget(f32 x, f32 y, f32 width, f32 height, mm::Col4 clearColor);
   void releaseRenderTarget();
@@ -43,31 +74,12 @@ public:
   void setRender(bool render);
   bool isRender() const;
 
-  u8 _258[0x2b0 - 0x258];
-  f32 unknown2b0;    // Inferred role: view port x; original member name unknown.
-  f32 unknown2b4;    // Inferred role: view port y; original member name unknown.
-  f32 unknown2b8;    // Inferred role: view port width; original member name unknown.
-  f32 unknown2bc;    // Inferred role: view port height; original member name unknown.
-  u32 unknown2c0;    // Inferred role: auto anchor mode; original member name unknown.
-  u16 unknown2c4[2]; // Inferred role: priority tbls; original member name unknown.
-  u16 unknown2c8;    // Inferred role: priority tbl; original member name unknown.
-  u8 _2ca[0x2d0 - 0x2ca];
-  LayerSortMan *unknown2d0; // Inferred role: sort manager; original member name unknown.
-  u8 _2d8[0x310 - 0x2d8];
-  unknown001 unknown310[2];                // Inferred role: render targets; original member name unknown.
-  unknown001 unknown380;                   // Inferred role: previous render target; original member name unknown.
-  unknown001 unknown3b8;                   // Inferred role: active render target; original member name unknown.
+  unknown002 unknown2a0;                   // Inferred role: layout work data; original member name unknown.
   grlib::CGLibDblUniformBlock *unknown3f0; // Inferred role: uniform block; original member name unknown.
   grlib::CGLibDblUniformBlock *unknown3f8; // Inferred role: uniform block; original member name unknown.
 };
 
-static_assert(offsetof(LayerObjLayout, unknown2b0) == 0x2b0, "");
-static_assert(offsetof(LayerObjLayout, unknown2c0) == 0x2c0, "");
-static_assert(offsetof(LayerObjLayout, unknown2c8) == 0x2c8, "");
-static_assert(offsetof(LayerObjLayout, unknown2d0) == 0x2d0, "");
-static_assert(offsetof(LayerObjLayout, unknown310) == 0x310, "");
-static_assert(offsetof(LayerObjLayout, unknown380) == 0x380, "");
-static_assert(offsetof(LayerObjLayout, unknown3b8) == 0x3b8, "");
+static_assert(offsetof(LayerObjLayout, unknown2a0) == 0x2a0, "");
 static_assert(offsetof(LayerObjLayout, unknown3f0) == 0x3f0, "");
 static_assert(sizeof(LayerObjLayout) == 0x400, "");
 

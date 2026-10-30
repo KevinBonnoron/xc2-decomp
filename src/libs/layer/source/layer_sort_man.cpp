@@ -1,5 +1,6 @@
 #include "layer/layer_sort_man.h"
 
+#include <math.h>
 #include <string.h>
 
 #include "layer/layer_sort_obj.h"
@@ -33,6 +34,24 @@ void LayerSortMan::stock2DObj(LayerSortObj *object, s32 index) {
   }
   object->unknown08 = nullptr;
   unknown18[index] = object;
+}
+
+void LayerSortMan::set3DSpace(LayerSortObj *object, f32 depth) {
+  f32 ratio = depth / unknown64;
+  if (ratio >= 1.0f) {
+    stock3DObj(object, unknown70 - 1);
+  } else if (ratio <= 0.001f) {
+    stock3DObj(object, 0);
+  } else {
+    ratio = powf(ratio, unknown68);
+    s32 index = static_cast<s32>((1.0f - ratio) * unknown70);
+    if (index >= static_cast<s32>(unknown70)) {
+      index = unknown70 - 1;
+    } else if (index < 0) {
+      index = 0;
+    }
+    stock3DObj(object, index);
+  }
 }
 
 void LayerSortMan::stock3DObj(LayerSortObj *object, s32 index) {

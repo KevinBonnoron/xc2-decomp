@@ -819,10 +819,10 @@ void LayerAccLayoutObj::setViewPortMode(bool viewPortMode) {
 
 void LayerAccLayoutObj::setViewPort(f32 x, f32 y, f32 width, f32 height) {
   LayerObjLayout *layout = static_cast<LayerObjLayout *>(unknown00);
-  layout->unknown2b0 = x;
-  layout->unknown2b4 = y;
-  layout->unknown2b8 = width;
-  layout->unknown2bc = height;
+  layout->unknown2a0.unknown10 = x;
+  layout->unknown2a0.unknown14 = y;
+  layout->unknown2a0.unknown18 = width;
+  layout->unknown2a0.unknown1c = height;
 }
 
 void LayerAccLayoutObj::createRenderTarget(f32 x, f32 y, f32 width, f32 height, mm::Col4 clearColor) { static_cast<LayerObjLayout *>(unknown00)->createRenderTarget(x, y, width, height, clearColor); }
@@ -830,28 +830,28 @@ void LayerAccLayoutObj::createRenderTarget(f32 x, f32 y, f32 width, f32 height, 
 void LayerAccLayoutObj::releaseRenderTarget() { static_cast<LayerObjLayout *>(unknown00)->releaseRenderTarget(); }
 
 void LayerAccLayoutObj::createPriorityTbl(u32 num) {
-  static_cast<LayerObjLayout *>(unknown00)->unknown2c4[LayerManager::s_nStkIdx] = num;
+  static_cast<LayerObjLayout *>(unknown00)->unknown2a0.unknown24[LayerManager::s_nStkIdx] = num;
   unknown00->offStateFlags(0x800);
 }
 
 void LayerAccLayoutObj::releasePriorityTbl() {
-  static_cast<LayerObjLayout *>(unknown00)->unknown2c4[LayerManager::s_nStkIdx] = 0;
+  static_cast<LayerObjLayout *>(unknown00)->unknown2a0.unknown24[LayerManager::s_nStkIdx] = 0;
   unknown00->onStateFlags(0x800);
 }
 
 u16 LayerAccLayoutObj::getPriorityTbl() const {
   const LayerObjLayout *layout = static_cast<LayerObjLayout *>(unknown00);
-  u16 priorityTbl = layout->unknown2c4[LayerManager::s_nStkIdx];
+  u16 priorityTbl = layout->unknown2a0.unknown24[LayerManager::s_nStkIdx];
   if (priorityTbl == 0) {
-    priorityTbl = layout->unknown2c8;
+    priorityTbl = layout->unknown2a0.unknown28;
   }
 
   return priorityTbl;
 }
 
-void LayerAccLayoutObj::setAutoAnchorMode(LAYER_ANCHOR mode) { static_cast<LayerObjLayout *>(unknown00)->unknown2c0 = mode; }
+void LayerAccLayoutObj::setAutoAnchorMode(LAYER_ANCHOR mode) { static_cast<LayerObjLayout *>(unknown00)->unknown2a0.unknown20 = mode; }
 
-LAYER_ANCHOR LayerAccLayoutObj::getAutoAnchorMode() const { return static_cast<LAYER_ANCHOR>(static_cast<LayerObjLayout *>(unknown00)->unknown2c0); }
+LAYER_ANCHOR LayerAccLayoutObj::getAutoAnchorMode() const { return static_cast<LAYER_ANCHOR>(static_cast<LayerObjLayout *>(unknown00)->unknown2a0.unknown20); }
 
 grlib::CGLibTextureBuffer *LayerAccLayoutObj::getTexture() { return static_cast<LayerObjLayout *>(unknown00)->getTexture(); }
 

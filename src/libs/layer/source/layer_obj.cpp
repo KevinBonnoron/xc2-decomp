@@ -529,6 +529,7 @@ bool LayerActBase::actend_on(const LyrActionData *action, bool isCmdEnd) { retur
 #include "layer_obj_place.cpp"
 #include "layer_obj_top_def.cpp"
 #include "layer_obj_top_font.cpp"
+#include "layer_obj_top_layout.cpp"
 #include "layer_obj_top_mem_obj.cpp"
 #include "layer_obj_top_tex_obj.cpp"
 #include "layer_obj_top_poly_obj.cpp"

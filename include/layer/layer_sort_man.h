@@ -14,6 +14,7 @@ public:
   ~LayerSortMan();
   void set2DSpace(LayerSortObj *object, u32 index);
   void stock2DObj(LayerSortObj *object, s32 index);
+  void set3DSpace(LayerSortObj *object, f32 depth);
   void stock3DObj(LayerSortObj *object, s32 index);
   void begin(const mm::Vec3 &position);
   void end();
