@@ -1,4 +1,6 @@
 #pragma once
+#include <string.h>
+
 #include "types.h"
 
 namespace ssd {
@@ -14,5 +16,8 @@ public:
   u32 unknown00; // Inferred role: hash; original member name unknown.
   u32 unknown04; // Inferred role: size; original member name unknown.
 };
+
+// Compares the hash and the size at once, as one 64-bit value.
+inline bool operator==(Hash left, Hash right) { return memcmp(&left, &right, sizeof(Hash)) == 0; }
 
 } // namespace ssd

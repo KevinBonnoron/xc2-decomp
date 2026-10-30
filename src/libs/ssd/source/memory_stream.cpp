@@ -9,10 +9,7 @@ namespace ssd {
 bool MemoryStream::IsOpen() const { return unknown20 != nullptr; }
 
 long MemoryStream::GetSize(u64 *size) const {
-  if (size == nullptr) {
-    log_message(u"Assert : \"%s\" = nullptr, %s:%d", u"fileSize", get_logfilename(u"D:/ssd/ssd51/ssd/sources/io/memory_stream.cpp"), 0x76);
-    abort();
-  }
+  SSD_ASSERT(size != nullptr, u"Assert : \"%s\" = nullptr, %s:%d", u"fileSize", u"D:/ssd/ssd51/ssd/sources/io/memory_stream.cpp", 0x76);
   *size = unknown28;
   return 0;
 }

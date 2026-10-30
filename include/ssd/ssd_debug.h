@@ -4,6 +4,15 @@
 #include "ssd/ssd_result.h"
 #include "types.h"
 
+// Probably the library's assert macro; the original name is unknown.
+#define SSD_ASSERT(condition, format, text, file, line, ...)                                                                                                                                           \
+  do {                                                                                                                                                                                                 \
+    if (!(condition)) {                                                                                                                                                                                \
+      ssd::log_message(format, text, ssd::get_logfilename(file), line, ##__VA_ARGS__);                                                                                                                 \
+      ssd::abort();                                                                                                                                                                                    \
+    }                                                                                                                                                                                                  \
+  } while (0)
+
 namespace ssd {
 class Mutex;
 

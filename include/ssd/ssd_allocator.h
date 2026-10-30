@@ -1,6 +1,8 @@
 #pragma once
 #include <stddef.h>
 
+#include <new>
+
 #include "types.h"
 
 namespace ssd {
@@ -42,6 +44,19 @@ public:
       }
       DeleteInstanceImpl(block);
     }
+  }
+
+  // Inferred role: allocate an instance array and construct its elements; original name unknown.
+  template <typename T> T *unknown002(size_t count) {
+    Block *block = NewInstanceImpl(sizeof(T), count, 16);
+    if (block == nullptr) {
+      return nullptr;
+    }
+    T *instance = static_cast<T *>(block->unknown08);
+    for (u64 i = 0; i < count; i++) {
+      new (&instance[i]) T();
+    }
+    return instance;
   }
 };
 

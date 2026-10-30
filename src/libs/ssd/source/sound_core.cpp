@@ -4,18 +4,16 @@
 
 #include "anm/anm_array-inl.h"
 #include "ssd/ssd_allocator.h"
+#include "ssd/ssd_array_impl.h" // IWYU pragma: keep
 #include "ssd/ssd_behavior.h"
 #include "ssd/ssd_debug.h"
 #include "ssd/ssd_memory_manager.h"
 #include "ssd/ssd_result.h"
+#include "ssd/ssd_sound.h" // IWYU pragma: keep
 #include "ssd/ssd_sound_core.h"
 #include "types.h"
 
 namespace ssd {
-class SoundBank;
-class SoundCategory;
-class SoundActor;
-class SoundHandle;
 
 SoundCore *SoundCore::NewInstance(Allocator *allocator) {
   SoundCore *core = instance_;
@@ -132,9 +130,9 @@ void SoundCore::UpdateGameFrame(f32 deltaTime) {
   }
 }
 
-Result SoundCore::StopSound(f32 fadeTime) { return static_cast<SystemCore *>(this)->StopSound(fadeTime); }
+void SoundCore::StopSound(f32 fadeTime) { static_cast<SystemCore *>(this)->StopSound(fadeTime); }
 
-Result SoundCore::PauseSound(bool isPause, f32 fadeTime) { return static_cast<SystemCore *>(this)->PauseSound(isPause, fadeTime); }
+void SoundCore::PauseSound(bool isPause, f32 fadeTime) { static_cast<SystemCore *>(this)->PauseSound(isPause, fadeTime); }
 
 u64 SoundCore::GetGameFrameCounter() const { return static_cast<const SystemCore *>(this)->unknown270; }
 
@@ -161,5 +159,8 @@ u32 SoundCore::GetErrorLogFlag() const { return Debug::log_.m_errorLogFlag; }
 u32 SoundCore::GetWarningLogFlag() const { return Debug::log_.m_warningLogFlag; }
 
 LogTimeStamp::Type SoundCore::GetLogTimeStampType() const { return Debug::log_.m_logTimeStampType; }
+
+template Array<SoundCategory>::~Array();
+template void Array<SoundCategory>::SetSize(int);
 
 } // namespace ssd

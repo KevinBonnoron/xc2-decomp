@@ -197,6 +197,11 @@ public:
     f32 unknown04; // Inferred role: category volume; original member name unknown.
   };
 
+  SoundCategory() {
+    unknown08.unknown00 = 0;
+    unknown08.unknown04 = 1.0f;
+  }
+
   virtual ~SoundCategory() {}
 
   unknown001 unknown08; // Inferred role: category parameters; original member name unknown.

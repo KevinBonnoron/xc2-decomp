@@ -11,7 +11,8 @@ class MemoryManager {
 public:
   class BlockNode : public List<BlockNode>::Node, public Allocator::Block {};
 
-  virtual ~MemoryManager();
+  MemoryManager();
+  virtual ~MemoryManager() { Quit(); }
   static void Init(int size, Allocator *allocator);
   static void Quit();
   Allocator::Block *AcquireBlock(Allocator *allocator, size_t size, size_t count, size_t alignment);
@@ -35,6 +36,7 @@ public:
   int unknown94;             // Inferred role: instance alloc count; original member name unknown.
   int unknown98;             // Inferred role: buffer alloc count; original member name unknown.
   int unknown9c;             // Inferred role: stream alloc count; original member name unknown.
+  bool unknowna0;            // Inferred role: free blocks exhausted; original member name unknown.
 };
 
 static_assert(offsetof(MemoryManager, unknown08) == 0x8, "");
@@ -44,5 +46,6 @@ static_assert(offsetof(MemoryManager, unknown60) == 0x60, "");
 static_assert(offsetof(MemoryManager, unknown88) == 0x88, "");
 static_assert(offsetof(MemoryManager, unknown94) == 0x94, "");
 static_assert(offsetof(MemoryManager, unknown9c) == 0x9c, "");
+static_assert(offsetof(MemoryManager, unknowna0) == 0xa0, "");
 
 } // namespace ssd

@@ -13,10 +13,7 @@ u32 StreamBuffer::GetBufferSize() const { return m_bufferSize; }
 
 int StreamBuffer::Alloc(u64 size, Allocator *allocator) {
   unknown08 = allocator;
-  if (unknown10 != nullptr) {
-    log_message(u"Assert : \"%s\", %s:%d", u"buffer_ == NULL", get_logfilename(u"D:/ssd/ssd51/ssd/sources/stream_buffer.cpp"), 0x1d);
-    abort();
-  }
+  SSD_ASSERT(unknown10 == nullptr, u"Assert : \"%s\", %s:%d", u"buffer_ == NULL", u"D:/ssd/ssd51/ssd/sources/stream_buffer.cpp", 0x1d);
   Allocator::Block *block = allocator->NewStreamImpl(size, 16);
   if (block == nullptr) {
     unknown10 = nullptr;

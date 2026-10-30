@@ -28,6 +28,8 @@ SoundParam::Name &SoundParam::Name::operator=(const TextRef &text) {
   return *this;
 }
 
+bool SoundParam::Name::operator==(const TextRef &text) { return text.unknown08 == unknown40; }
+
 void SoundParam::Base::Init() {
   unknown01 = true;
   unknown02 = true;

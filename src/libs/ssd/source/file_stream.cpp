@@ -29,10 +29,7 @@ long FileStream::GetSize(u64 *size) const {
   if (!IsOpen()) {
     return -1;
   }
-  if (size == nullptr) {
-    log_message(u"Assert : \"%s\" = nullptr, %s:%d", u"fileSize", get_logfilename(u"D:/ssd/ssd51/ssd/sources/io/file_stream.cpp"), 0x1a8);
-    abort();
-  }
+  SSD_ASSERT(size != nullptr, u"Assert : \"%s\" = nullptr, %s:%d", u"fileSize", u"D:/ssd/ssd51/ssd/sources/io/file_stream.cpp", 0x1a8);
   *size = unknown28;
   return 0;
 }

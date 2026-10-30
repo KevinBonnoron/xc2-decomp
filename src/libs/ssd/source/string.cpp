@@ -24,13 +24,13 @@ void String::FreeImpl() {
 
 void String::Set(const char *text) {
   Utf8ToUTF16(text, &unknown20);
+  SSD_ASSERT(unknown20.unknown00 != nullptr,
+             u"Assert : \"%s\", %s:%d, %s",
+             u"data_.GetAdrs() != ssd_null",
+             u"D:/ssd/ssd51/ssd/sources/util/string.cpp",
+             0x41,
+             u"メモリが確保できませんでした。: textBuf == nullptr");
   char16_t *buffer = static_cast<char16_t *>(unknown20.unknown00);
-  if (buffer == nullptr) {
-    log_message(
-        u"Assert : \"%s\", %s:%d, %s", u"data_.GetAdrs() != ssd_null", get_logfilename(u"D:/ssd/ssd51/ssd/sources/util/string.cpp"), 0x41, u"メモリが確保できませんでした。: textBuf == nullptr");
-    abort();
-    buffer = static_cast<char16_t *>(unknown20.unknown00);
-  }
   unknown10 = buffer;
   unknown08 = Hash();
   unknown08.CalcTextHash(buffer);

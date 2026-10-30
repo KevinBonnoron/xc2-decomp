@@ -71,10 +71,34 @@ void SystemCore::AddBank(SoundBank *bank) {
   unknown708.Unlock();
 }
 
+void SystemCore::StopSound(f32 fadeTime) {
+  set_result(static_cast<Result>(0));
+  unknown708.Lock();
+  const VoiceHandle *end = unknown3a0.unknown003();
+  for (VoiceHandle *it = unknown3a0.unknown002(); it != end; it = List<VoiceHandle>::unknown004(it)) {
+    if (it->unknown58 != nullptr) {
+      it->unknown58->Stop(fadeTime);
+    }
+  }
+  unknown708.Unlock();
+}
+
 void SystemCore::RemoveBank(SoundBank *bank) {
   unknown708.Lock();
   unknown418.unknown001(bank);
   set_result(static_cast<Result>(0));
+  unknown708.Unlock();
+}
+
+void SystemCore::PauseSound(bool isPause, f32 fadeTime) {
+  set_result(static_cast<Result>(0));
+  unknown708.Lock();
+  const VoiceHandle *end = unknown3a0.unknown003();
+  for (VoiceHandle *it = unknown3a0.unknown002(); it != end; it = List<VoiceHandle>::unknown004(it)) {
+    if (it->unknown58 != nullptr) {
+      it->unknown58->Pause(isPause, fadeTime);
+    }
+  }
   unknown708.Unlock();
 }
 
@@ -357,16 +381,39 @@ bool SystemCore::IsActiveEffect(u8 bus) {
   return unknown1f0[bus].unknown01;
 }
 
+Result SystemCore::SetCategory(const SoundCategory &category) {
+  if (category.unknown08.unknown00 == 0) {
+    return static_cast<Result>(-1);
+  }
+  for (int i = 1; i < unknown468.unknown08; i++) {
+    if (unknown468.unknown10[i].unknown08.unknown00 == category.unknown08.unknown00) {
+      unknown468.unknown10[i].unknown08 = category.unknown08;
+      ChangeCategoryEvent(category);
+      return set_result(static_cast<Result>(0));
+    }
+  }
+  unknown708.Lock();
+  int count = unknown468.unknown08;
+  if (unknown468.unknown0c <= count) {
+    unknown468.SetSize(unknown468.unknown0c + 16);
+  }
+  unknown468.unknown10[unknown468.unknown08] = category;
+  unknown468.unknown08++;
+  Result result = set_result(static_cast<Result>(0));
+  unknown708.Unlock();
+  return result;
+}
+
 SoundCategory *SystemCore::GetCategory(int id) const {
   if (id != 0) {
-    SoundCategory *end = unknown478 + unknown470;
-    for (SoundCategory *it = unknown478; it != end; it++) {
+    SoundCategory *end = unknown468.unknown10 + unknown468.unknown08;
+    for (SoundCategory *it = unknown468.unknown10; it != end; it++) {
       if (it->unknown08.unknown00 == id) {
         return it;
       }
     }
   }
-  return unknown478;
+  return unknown468.unknown10;
 }
 
 void SystemCore::ChangeCategoryEvent(const SoundCategory &category) {

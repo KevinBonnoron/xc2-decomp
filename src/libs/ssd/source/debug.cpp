@@ -1,4 +1,3 @@
-#include "nn/os.h"
 #include "ssd/ssd_debug.h"
 #include "ssd/ssd_mutex.h"
 #include "types.h"
@@ -30,18 +29,10 @@ void OnErrorFlag(u32 flag) { log_.m_errorLogFlag |= flag; }
 
 } // namespace Debug
 
-void InitDebug() {
-  nn::os::InitializeMutex(&OutStreamLock.unknown00, true, 0);
-  OutStreamLock.unknown20 = true;
-  OutStreamLock.unknown21 = 0;
-}
+Mutex OutStreamLock;
 
-void QuitDebug() {
-  if (OutStreamLock.unknown20) {
-    OutStreamLock.unknown20 = false;
-    OutStreamLock.unknown21 = 0;
-    nn::os::FinalizeMutex(&OutStreamLock.unknown00);
-  }
-}
+void InitDebug() { OutStreamLock.unknown001(); }
+
+void QuitDebug() { OutStreamLock.unknown002(); }
 
 } // namespace ssd

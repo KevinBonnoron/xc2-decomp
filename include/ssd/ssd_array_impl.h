@@ -29,4 +29,18 @@ template <typename T> void Array<T>::SetArraySize(int size) {
   }
 }
 
+template <typename T> void Array<T>::SetSize(int size) {
+  if (unknown0c <= size) {
+    T *old = unknown10;
+    unknown10 = SoundMemory::allocator_->unknown002<T>(size + 1);
+    if (old != nullptr) {
+      for (int i = 0; i < unknown0c; i++) {
+        unknown10[i] = old[i];
+      }
+      SoundMemory::allocator_->unknown001(old);
+    }
+    unknown0c = size;
+  }
+}
+
 } // namespace ssd

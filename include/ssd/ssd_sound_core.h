@@ -84,8 +84,8 @@ public:
   Result NumSoundBank(int *num) const;
   Result NumSoundActor(int *num) const;
   void UpdateGameFrame(f32 deltaTime);
-  Result StopSound(f32 fadeTime);
-  Result PauseSound(bool isPause, f32 fadeTime);
+  void StopSound(f32 fadeTime);
+  void PauseSound(bool isPause, f32 fadeTime);
   u64 GetGameFrameCounter() const;
   f64 GetAudioTimerCounter() const;
   u64 GetAudioFrameCounter() const;
@@ -176,8 +176,8 @@ public:
   Result RemoveSoundEffecter(SoundEffecter *effecter) override;
   bool IsActiveEffect(u8 bus) override;
   Result Quit();
-  Result StopSound(f32 fadeTime);
-  Result PauseSound(bool isPause, f32 fadeTime);
+  void StopSound(f32 fadeTime);
+  void PauseSound(bool isPause, f32 fadeTime);
   void AddStreamController(StreamController *controller);
   void RemoveStreamController(StreamController *controller);
   void AddBank(SoundBank *bank);
@@ -221,12 +221,9 @@ public:
   u8 _3f8[0x410 - 0x3f8];
   int unknown410; // Inferred role: hw alloc voice count; original member name unknown.
   u8 _414[0x418 - 0x414];
-  List<SoundBank> unknown418;  // Inferred role: sound banks; original member name unknown.
-  List<SoundActor> unknown440; // Inferred role: connected sound actors; original member name unknown.
-  u8 _468[0x470 - 0x468];
-  int unknown470; // Inferred role: category count; original member name unknown.
-  u8 _474[0x478 - 0x474];
-  SoundCategory *unknown478; // Inferred role: categories; original member name unknown.
+  List<SoundBank> unknown418;      // Inferred role: sound banks; original member name unknown.
+  List<SoundActor> unknown440;     // Inferred role: connected sound actors; original member name unknown.
+  Array<SoundCategory> unknown468; // Inferred role: categories; original member name unknown.
   u8 _480[0x4e0 - 0x480];
   f32 m_speedOfSound;
   u8 _4e4[0x708 - 0x4e4];
@@ -252,8 +249,7 @@ static_assert(offsetof(SystemCore, unknown440) == 0x440, "");
 static_assert(offsetof(SystemCore, unknown950) == 0x950, "");
 static_assert(offsetof(SystemCore, unknown308) == 0x308, "");
 static_assert(offsetof(SystemCore, unknown350) == 0x350, "");
-static_assert(offsetof(SystemCore, unknown470) == 0x470, "");
-static_assert(offsetof(SystemCore, unknown478) == 0x478, "");
+static_assert(offsetof(SystemCore, unknown468) == 0x468, "");
 static_assert(offsetof(SystemCore, m_speedOfSound) == 0x4e0, "");
 static_assert(offsetof(SystemCore, unknown708) == 0x708, "");
 static_assert(offsetof(SystemCore, unknown978) == 0x978, "");

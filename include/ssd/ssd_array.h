@@ -11,14 +11,11 @@ public:
 
   virtual ~Array();
   void SetArraySize(int size);
+  void SetSize(int size);
   // Inferred role: release the element buffer and reset the counts; original name unknown.
   void unknown001() {
     if (unknown10 != nullptr) {
-      Allocator *allocator = SoundMemory::allocator_;
-      Allocator::Block *block = allocator->GetMemoryBlock(unknown10);
-      if (block != nullptr) {
-        allocator->DeleteInstanceImpl(block);
-      }
+      SoundMemory::allocator_->unknown001(unknown10);
     }
     unknown08 = 0;
     unknown0c = 0;
