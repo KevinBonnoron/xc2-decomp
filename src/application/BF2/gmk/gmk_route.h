@@ -35,6 +35,7 @@ public:
   static const u32 FLAG_CLOSED = 1 << 0;
   static const u32 FLAG_FORWARD = 1 << 1;
   static const u32 FLAG_REVERSE = 1 << 2;
+  static const u32 FLAG_UNKNOWN_3 = 1 << 3; // Inferred role: the routed enemies stop at the end of the route; original name unknown.
 
   static const GmkType GMK_TYPE = GMK_TYPE_ROUTE;
 

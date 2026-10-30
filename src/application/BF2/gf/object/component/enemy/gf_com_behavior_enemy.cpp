@@ -7,6 +7,7 @@
 #include <math.h>
 
 #include "ai/ai_state.h"
+#include "anm/anm_qs_transform.h"
 #include "battle/character/battle_character.h"
 #include "battle/character/character_manager_battle.h"
 #include "battle/character/character_parameter_battle.h"
@@ -17,6 +18,7 @@
 #include "fw/fw_transform.h"
 #include "fw/fw_update_info.h"
 #include "gf/data/gf_bdat_id.h"
+#include "gf/data/gf_bdat_rsc.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_enemy.h"
 #include "gf/data/gf_data_param_acc.h"
@@ -54,6 +56,8 @@
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
 #include "gmk/gmk_set.h"
+#include "mm_math/mm_quat.h"
+#include "mm_math/mm_vec4.h"
 #include "mm_mtl/reference_object.h"
 #include "mm_mtl/rtti.h"
 #include "mm_mtl/vector.h"
@@ -350,6 +354,30 @@ void GfComBehaviorEnemy::validateBattleLock(bool isLock) {
   }
 }
 
+bool GfComBehaviorEnemy::extractLoco() {
+  GfObj *obj;
+  {
+    GfObjAcc acc(static_cast<GfObj *>(unknown08)->unknownf8);
+    obj = acc.getObj();
+  }
+
+  if (obj != nullptr) {
+    GfComTransform *transform = obj->getComponent<GfComTransform>();
+    GfComAsm *comAsm = obj->getComponent<GfComAsm>();
+    if (transform != nullptr && comAsm != nullptr) {
+      const anm::QsTransform &locomotion = comAsm->getLocomotion();
+      mm::Quat rotation = mm::Quat::mul(locomotion.unknown10, transform->getRotation());
+      transform->setRotation(rotation);
+      f32 speed = comAsm->getSpeed(ANIM_LAYER_BASE);
+      mm::Vec3 offset = transform->getRotation().rotate(mm::Vec3(locomotion.unknown00.x, locomotion.unknown00.y, locomotion.unknown00.z)) * speed;
+      transform->setPosition(transform->getPosition() + offset);
+      return true;
+    }
+  }
+
+  return false;
+}
+
 f32 GfComBehaviorEnemy::getCollisionRadius() const {
   GfComCollider *collider = unknown08->getComponent<GfComCollider>();
   mm::Vec3 min;
@@ -362,6 +390,50 @@ f32 GfComBehaviorEnemy::getCollisionRadius() const {
   f32 dy = max.y - min.y;
   f32 dz = max.z - min.z;
   return sqrtf(dx * dx + dy * dy + dz * dz) * 0.5f;
+}
+
+void GfComBehaviorEnemy::createBehField() {
+  unknown140.dispose();
+  GfObjSetupEnemy *setup = GfObjUtil::getObjSetup<GfObjSetupEnemy>(static_cast<GfObj *>(unknown08)->unknownf8);
+  GfBehaviorEnemyField::CreateInfo info;
+  info.unknown00 = this;
+  info.unknown08 = static_cast<GfObj *>(unknown08)->unknownf8;
+  {
+    f32 radius;
+    f32 height;
+    GfComCollider *collider = unknown08->getComponent<GfComCollider>();
+    mm::Vec3 min;
+    mm::Vec3 max;
+    if (collider->unknown18[0]->getAABB(min, max)) {
+      f32 dx = max.x - min.x;
+      f32 dz = max.z - min.z;
+      radius = sqrtf(dx * dx + dz * dz) * 0.5f;
+      height = max.y - min.y;
+    } else {
+      radius = GfBdatRsc::get()->getRscEnCharColli(setup->unknown10);
+      height = radius + radius;
+    }
+
+    info.unknown10 = radius;
+    info.unknown14 = height;
+  }
+
+  if (info.unknown10 < 1.0f) {
+    info.unknown10 = 1.0f;
+  }
+
+  if (info.unknown14 < 2.0f) {
+    info.unknown14 = 2.0f;
+  }
+
+  {
+    DataParamAcc dataParam(static_cast<GfObj *>(unknown08)->unknownf8);
+    info.unknown18 = dataParam.getSDataEnemy()->unknown9a;
+  }
+
+  unknown140.create(info);
+  unknown140.unknown52a0 = setup->unknownac;
+  unknown140.unknown52a4 = 0.0f;
 }
 
 void GfComBehaviorEnemy::createFsm() {

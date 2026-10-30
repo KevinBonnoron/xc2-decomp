@@ -2,9 +2,12 @@
 
 #include <string.h>
 
+#include "bdat.h"
 #include "framework/object/updatable_object.h"
 #include "fw/fw_transform.h"
 #include "fw/fw_update_info.h"
+#include "gf/data/gf_bdat_id.h"
+#include "gf/data/gf_data_bdat.h"
 #include "gf/field/gf_field_exec_cmd_turn.h"
 #include "gf/field/gf_field_local_steer.h"
 #include "gf/field/gf_field_move_speed.h"
@@ -15,12 +18,17 @@
 #include "gf/object/component/enemy/gf_enemy_state_id.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_manager.h"
+#include "gf/object/gf_obj_setup.h"
 #include "gmk/gmk_acc.h"
 #include "gmk/gmk_base.h"
+#include "gmk/gmk_bdat.h"
+#include "gmk/gmk_enemy/gmk_routed_enemy.h"
 #include "gmk/gmk_manager.h"
 #include "gmk/gmk_route.h"
 #include "gmk/gmk_route_navi.h"
 #include "mm_math/mm_math.h"
+#include "mm_mtl/rtti.h"
 
 namespace gf {
 namespace enemy {
@@ -29,6 +37,9 @@ namespace enemy {
 static const struct {
   const char *name[7];
 } unknown002 = {{nullptr, nullptr, "C_uniqueA", "C_uniqueB", "C_specialA_00", "C_specialB_00", nullptr}};
+
+// Inferred role: row of BDAT_FLD_WILDCARD_DATA holding the interval between two move speed lotteries; original name unknown.
+static const int unknown003 = 0x34;
 
 bool StateFieldWalk::isCondMatch(const GfComBehaviorEnemy &behavior) {
   gmk::AGmkBase *gmkInst = behavior.getBindedGmkInst();
@@ -89,6 +100,26 @@ void StateFieldWalk::updateRouteNavi(GfComBehaviorEnemy &behavior, const fw::Upd
     navi->update(updateInfo);
     behavior.unknown140.unknownc0 = navi->unknown90;
   }
+}
+
+void StateFieldWalk::enter(GfComBehaviorEnemy *behavior, ai::State *previous) {
+  u8 *bdat = GfDataBdat::getFP(BDAT_FLD_ENACT_MOVE);
+  GfObjSetupEnemy *setup = mm::mtl::dynamicCast<GfObjSetupEnemy>(GfObjManager::getObjInfo(static_cast<GfObj *>(behavior->unknown08)->unknownf8)->unknown30);
+  unknown18 = Bdat::getValCheck(bdat, "actMove_Atr", setup->unknowna8, 1);
+  void (StateFieldWalk::*seq)(GfComBehaviorEnemy &, const fw::UpdateInfo &) = &StateFieldWalk::seqInitGoalPos;
+  gmk::AGmkBase *gmkInst = behavior->getBindedGmkInst();
+  if (gmkInst != nullptr && gmkInst->getGmkType() == gmk::GMK_TYPE_ROUTED_ENEMY) {
+    gmk::GmkRoutedEnemy *routedEnemy = static_cast<gmk::GmkRoutedEnemy *>(gmkInst);
+    if (!routedEnemy->isClosed() && (routedEnemy->getData()->unknown0c & gmk::GmkRoute::FLAG_UNKNOWN_3)) {
+      unknown19 = true;
+      gmk::GmkRouteNavi *navi = behavior->unknown140.getGmkRouteNavi();
+      seq = navi != nullptr && routedEnemy->isPopPointRouteEnd(*navi) ? &StateFieldWalk::seqIdleInfinit : &StateFieldWalk::seqInitGoalPos;
+    }
+  }
+
+  unknown98 = Bdat::getValCheck(GfDataBdat::getFP(BDAT_FLD_WILDCARD_DATA), 0, unknown003, gmk::BDAT_TYPE_F32).valueF32;
+  validateMoveSpeed(*behavior);
+  unknown58 = seq;
 }
 
 void StateFieldWalk::seqIdleInfinit(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info) { unknown20.update(info.unknown04); }

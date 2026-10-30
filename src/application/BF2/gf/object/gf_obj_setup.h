@@ -196,7 +196,8 @@ public:
   u8 _74[0xa0 - 0x74];
   SDataEnemy *unknowna0; // Inferred role: data enemy; original member name unknown.
   int unknowna8;         // Inferred role: row id of BDAT_FLD_ENACT_MOVE; original member name unknown.
-  u8 _ac[0xb2 - 0xac];
+  f32 unknownac;         // Inferred role: change battle delay, copied by GfComBehaviorEnemy::createBehField; original member name unknown.
+  u8 _b0[0xb2 - 0xb0];
   bool unknownb2; // Role and original member name unknown.
   u8 _b3[0xb4 - 0xb3];
   u32 unknownb4; // Inferred role: saved hp; original member name unknown.
@@ -209,6 +210,7 @@ static_assert(offsetof(GfObjSetupEnemy, unknown6c) == 0x6c, "");
 static_assert(offsetof(GfObjSetupEnemy, m_enArrangeID) == 0x70, "");
 static_assert(offsetof(GfObjSetupEnemy, unknowna0) == 0xa0, "");
 static_assert(offsetof(GfObjSetupEnemy, unknowna8) == 0xa8, "");
+static_assert(offsetof(GfObjSetupEnemy, unknownac) == 0xac, "");
 static_assert(offsetof(GfObjSetupEnemy, unknownb2) == 0xb2, "");
 static_assert(offsetof(GfObjSetupEnemy, unknownb8) == 0xb8, "");
 static_assert(offsetof(GfObjSetupEnemy, unknownc0) == 0xc0, "");
