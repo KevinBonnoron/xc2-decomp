@@ -1,9 +1,7 @@
 #include "gf/menu/object/gf_menu_obj_common_text.h"
+
 #include "gf/menu/gf_menu_types.h"
 #include "types.h"
-#include "ui/event/ui_event_data.h"
-#include "ui/ui_manager.h"
-#include "ui/ui_object_acc.h"
 
 namespace gf {
 
@@ -14,23 +12,8 @@ void GfMenuObjCommonText::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjCommonText::update() { GfMenuObject::update(); }
 
-void GfMenuObjCommonText::sendEvent(u32 handle, u32 type, u32 param, f32 delay) {
-  ui::EventData event;
-  event.unknown08 = param;
-  event.unknown0c = 0;
-  event.unknown00 = type;
-  ui::UIManager::get()->requestObjectEvent(handle, event, delay);
-}
+void GfMenuObjCommonText::sendEvent(u32 handle, u32 type, u32 param, f32 delay) { unknown140(handle, type, param, delay); }
 
-void GfMenuObjCommonText::close() {
-  u32 handle = GfMenuObject::getAttachedObject(unknown001);
-  if (ui::UIObjectAcc(handle).isValid()) {
-    if (!ui::UIObjectAcc(handle).isTerm()) {
-      ui::EventData event;
-      event.unknown00 = GfMenuTypes::unknown003_34;
-      GfMenuObject::sendEvent(handle, event, 0.0f);
-    }
-  }
-}
+void GfMenuObjCommonText::close() { unknown143(unknown001, GfMenuTypes::unknown003_34); }
 
 } // namespace gf

@@ -1,8 +1,6 @@
 #include "gf/menu/object/gf_menu_obj_item_submenu.h"
+
 #include "types.h"
-#include "ui/event/ui_event_data.h"
-#include "ui/ui_manager.h"
-#include "ui/ui_object_acc.h"
 
 namespace gf {
 
@@ -15,23 +13,8 @@ void GfMenuObjItemSubmenu::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjItemSubmenu::update() { GfMenuObject::update(); }
 
-void GfMenuObjItemSubmenu::sendEvent(u32 handle, u32 type, u32 param) {
-  ui::EventData event;
-  event.unknown08 = param;
-  event.unknown0c = 0;
-  event.unknown00 = type;
-  ui::UIManager::get()->requestObjectEvent(handle, event, 0.0f);
-}
+void GfMenuObjItemSubmenu::sendEvent(u32 handle, u32 type, u32 param) { unknown140(handle, type, param, 0.0f); }
 
-void GfMenuObjItemSubmenu::returnItemSubMenu() {
-  u32 handle = GfMenuObject::getAttachedObject(unknown001);
-  if (ui::UIObjectAcc(handle).isValid()) {
-    if (!ui::UIObjectAcc(handle).isTerm()) {
-      ui::EventData event;
-      event.unknown00 = unknown002;
-      ui::UIManager::get()->requestObjectEvent(handle, event, 0.0f);
-    }
-  }
-}
+void GfMenuObjItemSubmenu::returnItemSubMenu() { unknown142(unknown001, unknown002); }
 
 } // namespace gf

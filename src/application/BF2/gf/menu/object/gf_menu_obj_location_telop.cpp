@@ -4,7 +4,6 @@
 #include "gf/menu/gf_menu_order_mgr.h"
 #include "ui/event/ui_event_data.h"
 #include "ui/event/ui_event_manager.h"
-#include "ui/ui_manager.h"
 #include "ui/ui_object_acc.h"
 #include "ui/ui_str.h"
 
@@ -57,14 +56,7 @@ void GfMenuObjLocationTelop::open(const OpenParam &param) {
   }
 }
 
-void GfMenuObjLocationTelop::close() {
-  ui::UIObjectAcc acc(getAttachedObject(CALL_LOCATION_TELOP));
-  if (acc.isValid() && !acc.isTerm()) {
-    ui::EventData event;
-    event.unknown00 = EVENT_CLOSE_TELOP;
-    ui::UIManager::get()->requestObjectEvent(acc.unknown10, event, 0.0f);
-  }
-}
+void GfMenuObjLocationTelop::close() { unknown145(CALL_LOCATION_TELOP, EVENT_CLOSE_TELOP); }
 
 void GfMenuObjLocationTelop::cancel() {
   ui::UIObjectAcc acc(getAttachedObject(CALL_LOCATION_TELOP));

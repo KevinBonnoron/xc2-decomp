@@ -18,35 +18,11 @@ void GfMenuObjChainAttack::update() { GfMenuObject::update(); }
 
 void GfMenuObjChainAttack::changeCharacter(u32) { GfMenuObjUtil::playSE(0x34); }
 
-void GfMenuObjChainAttack::closeResult() {
-  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown001));
-  if (acc.isValid()) {
-    ui::UIObjectAcc child(acc.searchChild("LAY_result"));
-    ui::EventData event;
-    event.unknown00 = GfMenuTypes::unknown003_34;
-    GfMenuObject::sendEvent(child.unknown10, event, 0.0f);
-  }
-}
+void GfMenuObjChainAttack::closeResult() { unknown148(unknown001, "LAY_result", GfMenuTypes::unknown003_34); }
 
-void GfMenuObjChainAttack::closeRoundExtend() {
-  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown001));
-  if (acc.isValid()) {
-    ui::UIObjectAcc child(acc.searchChild("LAY_extend"));
-    ui::EventData event;
-    event.unknown00 = GfMenuTypes::unknown003_34;
-    GfMenuObject::sendEvent(child.unknown10, event, 0.0f);
-  }
-}
+void GfMenuObjChainAttack::closeRoundExtend() { unknown148(unknown001, "LAY_extend", GfMenuTypes::unknown003_34); }
 
-void GfMenuObjChainAttack::openRoundExtend() {
-  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown001));
-  if (acc.isValid()) {
-    ui::UIObjectAcc child(acc.searchChild("LAY_extend"));
-    ui::EventData event;
-    event.unknown00 = GfMenuTypes::unknown003_33;
-    GfMenuObject::sendEvent(child.unknown10, event, 0.0f);
-  }
-}
+void GfMenuObjChainAttack::openRoundExtend() { unknown148(unknown001, "LAY_extend", GfMenuTypes::unknown003_33); }
 
 void GfMenuObjChainAttack::closeStatus() {
   ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown001));

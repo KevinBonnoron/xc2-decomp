@@ -1,9 +1,7 @@
 #include "gf/menu/object/gf_menu_obj_party_status2.h"
+
 #include "gf/menu/gf_menu_types.h"
 #include "types.h"
-#include "ui/event/ui_event_data.h"
-#include "ui/ui_manager.h"
-#include "ui/ui_object_acc.h"
 
 namespace gf {
 
@@ -16,34 +14,12 @@ void GfMenuObjPartyStatus2::update() { GfMenuObject::update(); }
 
 void GfMenuObjPartyStatus2::sendEvent(u32 handle, u32 type, u32 param) {
   if (handle != 0) {
-    ui::EventData event;
-    event.unknown08 = param;
-    event.unknown0c = 0;
-    event.unknown00 = type;
-    ui::UIManager::get()->requestObjectEvent(handle, event, 0.0f);
+    unknown140(handle, type, param, 0.0f);
   }
 }
 
-void GfMenuObjPartyStatus2::close() {
-  u32 handle = GfMenuObject::getAttachedObject(unknown001);
-  if (ui::UIObjectAcc(handle).isValid()) {
-    if (!ui::UIObjectAcc(handle).isTerm()) {
-      ui::EventData event;
-      event.unknown00 = GfMenuTypes::unknown003_34;
-      ui::UIManager::get()->requestObjectEvent(handle, event, 0.0f);
-    }
-  }
-}
+void GfMenuObjPartyStatus2::close() { unknown142(unknown001, GfMenuTypes::unknown003_34); }
 
-void GfMenuObjPartyStatus2::open() {
-  u32 handle = GfMenuObject::getAttachedObject(unknown001);
-  if (ui::UIObjectAcc(handle).isValid()) {
-    if (!ui::UIObjectAcc(handle).isTerm()) {
-      ui::EventData event;
-      event.unknown00 = GfMenuTypes::unknown003_33;
-      ui::UIManager::get()->requestObjectEvent(handle, event, 0.0f);
-    }
-  }
-}
+void GfMenuObjPartyStatus2::open() { unknown142(unknown001, GfMenuTypes::unknown003_33); }
 
 } // namespace gf

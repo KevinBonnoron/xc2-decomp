@@ -1,8 +1,6 @@
 #include "gf/menu/object/gf_menu_obj_help_hud.h"
 
 #include "types.h"
-#include "ui/event/ui_event_data.h"
-#include "ui/ui_object_acc.h"
 
 namespace gf {
 
@@ -15,22 +13,8 @@ constexpr u16 unknown003 = 0x102;
 
 void GfMenuObjHelpHud::finalize() { GfMenuObject::finalize(); }
 
-void GfMenuObjHelpHud::enable() {
-  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown001));
-  if (acc.isValid()) {
-    ui::EventData event;
-    event.unknown00 = unknown002;
-    GfMenuObject::sendEvent(acc.unknown10, event, 0.0f);
-  }
-}
+void GfMenuObjHelpHud::enable() { unknown144(unknown001, unknown002); }
 
-void GfMenuObjHelpHud::disable() {
-  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown001));
-  if (acc.isValid()) {
-    ui::EventData event;
-    event.unknown00 = unknown003;
-    GfMenuObject::sendEvent(acc.unknown10, event, 0.0f);
-  }
-}
+void GfMenuObjHelpHud::disable() { unknown144(unknown001, unknown003); }
 
 } // namespace gf

@@ -1,8 +1,7 @@
 #include "gf/menu/object/gf_menu_obj_battle_telop.h"
+
 #include "gf/menu/gf_menu_types.h"
 #include "types.h"
-#include "ui/event/ui_event_data.h"
-#include "ui/ui_object_acc.h"
 
 namespace gf {
 
@@ -15,22 +14,8 @@ void GfMenuObjBattleTelop::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjBattleTelop::update() { GfMenuObject::update(); }
 
-void GfMenuObjBattleTelop::close() {
-  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown001));
-  if (acc.isValid()) {
-    ui::EventData event;
-    event.unknown00 = GfMenuTypes::unknown003_34;
-    GfMenuObject::sendEvent(acc.searchChild("LAY_telop"), event, 0.0f);
-  }
-}
+void GfMenuObjBattleTelop::close() { unknown147(unknown001, "LAY_telop", GfMenuTypes::unknown003_34); }
 
-void GfMenuObjBattleTelop::closeUniteCombo() {
-  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown001));
-  if (acc.isValid()) {
-    ui::EventData event;
-    event.unknown00 = unknown002;
-    GfMenuObject::sendEvent(acc.searchChild("LAY_fusion_combo"), event, 0.0f);
-  }
-}
+void GfMenuObjBattleTelop::closeUniteCombo() { unknown147(unknown001, "LAY_fusion_combo", unknown002); }
 
 } // namespace gf

@@ -27,26 +27,8 @@ void GfMenuObjMinimap2::changeMap() {
   }
 }
 
-void GfMenuObjMinimap2::close() {
-  u32 handle = GfMenuObject::getAttachedObject(unknown001);
-  if (ui::UIObjectAcc(handle).isValid()) {
-    if (!ui::UIObjectAcc(handle).isTerm()) {
-      ui::EventData event;
-      event.unknown00 = GfMenuTypes::unknown003_34;
-      GfMenuObject::sendEvent(handle, event, 0.0f);
-    }
-  }
-}
+void GfMenuObjMinimap2::close() { unknown143(unknown001, GfMenuTypes::unknown003_34); }
 
-void GfMenuObjMinimap2::open() {
-  u32 handle = GfMenuObject::getAttachedObject(unknown001);
-  if (ui::UIObjectAcc(handle).isValid()) {
-    if (!ui::UIObjectAcc(handle).isTerm()) {
-      ui::EventData event;
-      event.unknown00 = GfMenuTypes::unknown003_33;
-      GfMenuObject::sendEvent(handle, event, 0.0f);
-    }
-  }
-}
+void GfMenuObjMinimap2::open() { unknown143(unknown001, GfMenuTypes::unknown003_33); }
 
 } // namespace gf

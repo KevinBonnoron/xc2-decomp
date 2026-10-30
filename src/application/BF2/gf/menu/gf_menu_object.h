@@ -5,13 +5,15 @@
 #include "mm_math/mm_rect.h"
 #include "mm_mtl/intrusive_list.h"
 #include "types.h"
+#include "ui/event/ui_event_data.h"
 #include "ui/input/ui_input_pointer.h"
+#include "ui/ui_manager.h"
+#include "ui/ui_object_acc.h"
 
 namespace ui {
 class IUIInputSelectionChecker;
 class UIListInfoBase;
 class UIStr;
-struct EventData;
 } // namespace ui
 
 namespace gf {
@@ -116,5 +118,96 @@ static_assert(offsetof(GfMenuObject, unknown18) == 0x18, "");
 static_assert(offsetof(GfMenuObject, unknown1c) == 0x1c, "");
 static_assert(offsetof(GfMenuObject, unknown20) == 0x20, "");
 static_assert(sizeof(GfMenuObject) == 0x28, "");
+
+// Inferred helper: requests an event with a parameter on a UI object after a delay; original name unknown.
+inline void unknown140(u32 handle, u16 type, u32 param, f32 delay) {
+  ui::EventData event;
+  event.unknown08 = param;
+  event.unknown0c = 0;
+  event.unknown00 = type;
+  ui::UIManager::get()->requestObjectEvent(handle, event, delay);
+}
+
+// Inferred helper: sends an event with two parameters to the object attached to a call; original name unknown.
+inline void unknown141(u32 call, u16 type, u32 param0, u32 param1) {
+  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(call));
+  if (acc.isValid()) {
+    ui::EventData event;
+    event.unknown00 = type;
+    event.unknown08 = param0;
+    event.unknown0c = param1;
+    GfMenuObject::sendEvent(acc.unknown10, event, 0.0f);
+  }
+}
+
+// Inferred helper: requests an event on the object attached to a call unless it is terminating; original name unknown.
+inline void unknown142(u32 call, u16 type) {
+  u32 handle = GfMenuObject::getAttachedObject(call);
+  if (ui::UIObjectAcc(handle).isValid()) {
+    if (!ui::UIObjectAcc(handle).isTerm()) {
+      ui::EventData event;
+      event.unknown00 = type;
+      ui::UIManager::get()->requestObjectEvent(handle, event, 0.0f);
+    }
+  }
+}
+
+// Inferred helper: sends an event to the object attached to a call unless it is terminating, true when sent; original name unknown.
+inline bool unknown143(u32 call, u16 type) {
+  u32 handle = GfMenuObject::getAttachedObject(call);
+  if (ui::UIObjectAcc(handle).isValid()) {
+    if (!ui::UIObjectAcc(handle).isTerm()) {
+      ui::EventData event;
+      event.unknown00 = type;
+      GfMenuObject::sendEvent(handle, event, 0.0f);
+      return true;
+    }
+  }
+  return false;
+}
+
+// Inferred helper: sends an event to the object attached to a call; original name unknown.
+inline void unknown144(u32 call, u16 type) { unknown141(call, type, 0, 0); }
+
+// Inferred helper: requests an event on the object attached to a call unless it is terminating; original name unknown.
+inline void unknown145(u32 call, u16 type) {
+  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(call));
+  if (acc.isValid() && !acc.isTerm()) {
+    ui::EventData event;
+    event.unknown00 = type;
+    ui::UIManager::get()->requestObjectEvent(acc.unknown10, event, 0.0f);
+  }
+}
+
+// Inferred helper: sends an event to the object attached to a call unless it is terminating; original name unknown.
+inline void unknown146(u32 call, u16 type) {
+  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(call));
+  if (acc.isValid() && !acc.isTerm()) {
+    ui::EventData event;
+    event.unknown00 = type;
+    GfMenuObject::sendEvent(acc.unknown10, event, 0.0f);
+  }
+}
+
+// Inferred helper: sends an event to a named child of the object attached to a call; original name unknown.
+inline void unknown147(u32 call, const char *name, u16 type) {
+  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(call));
+  if (acc.isValid()) {
+    ui::EventData event;
+    event.unknown00 = type;
+    GfMenuObject::sendEvent(acc.searchChild(name), event, 0.0f);
+  }
+}
+
+// Inferred helper: sends an event to a named child of the object attached to a call through an accessor; original name unknown.
+inline void unknown148(u32 call, const char *name, u16 type) {
+  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(call));
+  if (acc.isValid()) {
+    ui::UIObjectAcc child(acc.searchChild(name));
+    ui::EventData event;
+    event.unknown00 = type;
+    GfMenuObject::sendEvent(child.unknown10, event, 0.0f);
+  }
+}
 
 } // namespace gf

@@ -1,8 +1,7 @@
 #include "gf/menu/object/gf_menu_obj_arts_palette2.h"
+
 #include "gf/menu/gf_menu_types.h"
 #include "types.h"
-#include "ui/event/ui_event_data.h"
-#include "ui/ui_object_acc.h"
 
 namespace gf {
 
@@ -13,31 +12,10 @@ constexpr u16 unknown002 = 0x101;
 
 void GfMenuObjArtsPalette2::finalize() { GfMenuObject::finalize(); }
 
-void GfMenuObjArtsPalette2::close() {
-  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown001));
-  if (acc.isValid() && !acc.isTerm()) {
-    ui::EventData event;
-    event.unknown00 = GfMenuTypes::unknown003_34;
-    GfMenuObject::sendEvent(acc.unknown10, event, 0.0f);
-  }
-}
+void GfMenuObjArtsPalette2::close() { unknown146(unknown001, GfMenuTypes::unknown003_34); }
 
-void GfMenuObjArtsPalette2::open() {
-  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown001));
-  if (acc.isValid() && !acc.isTerm()) {
-    ui::EventData event;
-    event.unknown00 = GfMenuTypes::unknown003_33;
-    GfMenuObject::sendEvent(acc.unknown10, event, 0.0f);
-  }
-}
+void GfMenuObjArtsPalette2::open() { unknown146(unknown001, GfMenuTypes::unknown003_33); }
 
-void GfMenuObjArtsPalette2::resetSelection() {
-  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown001));
-  if (acc.isValid() && !acc.isTerm()) {
-    ui::EventData event;
-    event.unknown00 = unknown002;
-    GfMenuObject::sendEvent(acc.unknown10, event, 0.0f);
-  }
-}
+void GfMenuObjArtsPalette2::resetSelection() { unknown146(unknown001, unknown002); }
 
 } // namespace gf

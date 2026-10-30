@@ -36,16 +36,7 @@ void GfMenuObjEventSkip::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjEventSkip::update() { GfMenuObject::update(); }
 
-void GfMenuObjEventSkip::close() {
-  u32 object = getAttachedObject(CALL_EVENT_SKIP);
-  if (ui::UIObjectAcc(object).isValid()) {
-    if (!ui::UIObjectAcc(object).isTerm()) {
-      ui::EventData event;
-      event.unknown00 = GfMenuTypes::unknown003_34;
-      sendEvent(object, event, 0.0f);
-    }
-  }
-}
+void GfMenuObjEventSkip::close() { unknown143(CALL_EVENT_SKIP, GfMenuTypes::unknown003_34); }
 
 u32 GfMenuObjEventSkip::setupScreen(u32 screen) { return screen; }
 

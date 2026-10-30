@@ -3,7 +3,6 @@
 #include "gf/gf_allocator.h"
 #include "gf/menu/adapter/gf_menu_battle_adapter.h"
 #include "gf/menu/gf_menu_types.h"
-#include "ui/event/ui_event_data.h"
 #include "ui/event/ui_event_manager.h"
 #include "ui/ui_object_acc.h"
 
@@ -38,22 +37,8 @@ void GfMenuObjChainCount::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjChainCount::update() { GfMenuObject::update(); }
 
-void GfMenuObjChainCount::open() {
-  ui::UIObjectAcc acc(getAttachedObject(CALL_CHAIN_COUNT));
-  if (acc.isValid() && !acc.isTerm()) {
-    ui::EventData event;
-    event.unknown00 = GfMenuTypes::unknown003_33;
-    sendEvent(acc.unknown10, event, 0.0f);
-  }
-}
+void GfMenuObjChainCount::open() { unknown146(CALL_CHAIN_COUNT, GfMenuTypes::unknown003_33); }
 
-void GfMenuObjChainCount::close() {
-  ui::UIObjectAcc acc(getAttachedObject(CALL_CHAIN_COUNT));
-  if (acc.isValid() && !acc.isTerm()) {
-    ui::EventData event;
-    event.unknown00 = GfMenuTypes::unknown003_34;
-    sendEvent(acc.unknown10, event, 0.0f);
-  }
-}
+void GfMenuObjChainCount::close() { unknown146(CALL_CHAIN_COUNT, GfMenuTypes::unknown003_34); }
 
 } // namespace gf

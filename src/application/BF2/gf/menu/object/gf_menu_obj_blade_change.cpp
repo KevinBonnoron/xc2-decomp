@@ -1,8 +1,7 @@
 #include "gf/menu/object/gf_menu_obj_blade_change.h"
+
 #include "gf/menu/gf_menu_types.h"
 #include "types.h"
-#include "ui/event/ui_event_data.h"
-#include "ui/ui_object_acc.h"
 
 namespace gf {
 
@@ -17,40 +16,12 @@ void GfMenuObjBladeChange::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjBladeChange::enableAwakening(bool) {}
 
-void GfMenuObjBladeChange::close() {
-  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown001));
-  if (acc.isValid() && !acc.isTerm()) {
-    ui::EventData event;
-    event.unknown00 = GfMenuTypes::unknown003_34;
-    GfMenuObject::sendEvent(acc.unknown10, event, 0.0f);
-  }
-}
+void GfMenuObjBladeChange::close() { unknown146(unknown001, GfMenuTypes::unknown003_34); }
 
-void GfMenuObjBladeChange::exitChainAttack() {
-  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown001));
-  if (acc.isValid() && !acc.isTerm()) {
-    ui::EventData event;
-    event.unknown00 = unknown002;
-    GfMenuObject::sendEvent(acc.unknown10, event, 0.0f);
-  }
-}
+void GfMenuObjBladeChange::exitChainAttack() { unknown146(unknown001, unknown002); }
 
-void GfMenuObjBladeChange::open() {
-  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown001));
-  if (acc.isValid() && !acc.isTerm()) {
-    ui::EventData event;
-    event.unknown00 = GfMenuTypes::unknown003_33;
-    GfMenuObject::sendEvent(acc.unknown10, event, 0.0f);
-  }
-}
+void GfMenuObjBladeChange::open() { unknown146(unknown001, GfMenuTypes::unknown003_33); }
 
-void GfMenuObjBladeChange::pushGroupUp() {
-  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown001));
-  if (acc.isValid() && !acc.isTerm()) {
-    ui::EventData event;
-    event.unknown00 = unknown003;
-    GfMenuObject::sendEvent(acc.unknown10, event, 0.0f);
-  }
-}
+void GfMenuObjBladeChange::pushGroupUp() { unknown146(unknown001, unknown003); }
 
 } // namespace gf

@@ -1,8 +1,7 @@
 #include "gf/menu/object/gf_menu_obj_party_form3.h"
+
 #include "gf/menu/gf_menu_fullscreen.h"
 #include "gf/menu/gf_menu_types.h"
-#include "ui/event/ui_event_data.h"
-#include "ui/ui_manager.h"
 #include "ui/ui_object_acc.h"
 
 namespace gf {
@@ -20,13 +19,7 @@ void GfMenuObjPartyForm3::registOpenParam(const OpenParam &param) {
 
 void GfMenuObjPartyForm3::setupBGLayout(ui::UIObjectAcc &, u32, bool) {}
 
-void GfMenuObjPartyForm3::sendEvent(u32 handle, u32 type, u32 param) {
-  ui::EventData event;
-  event.unknown08 = param;
-  event.unknown0c = 0;
-  event.unknown00 = type;
-  ui::UIManager::get()->requestObjectEvent(handle, event, 0.0f);
-}
+void GfMenuObjPartyForm3::sendEvent(u32 handle, u32 type, u32 param) { unknown140(handle, type, param, 0.0f); }
 
 bool GfMenuObjPartyForm3::seqWaitOpenEnd() {
   ui::UIObjectAcc acc(unknown18, "LAY_dr_select");

@@ -1,7 +1,6 @@
 #include "gf/menu/object/gf_menu_obj_action_window.h"
+
 #include "types.h"
-#include "ui/event/ui_event_data.h"
-#include "ui/ui_manager.h"
 #include "ui/ui_object_acc.h"
 
 namespace gf {
@@ -30,15 +29,6 @@ void GfMenuObjActionWindow::disp(bool disp) {
   }
 }
 
-void GfMenuObjActionWindow::close() {
-  u32 handle = GfMenuObject::getAttachedObject(unknown001);
-  if (ui::UIObjectAcc(handle).isValid()) {
-    if (!ui::UIObjectAcc(handle).isTerm()) {
-      ui::EventData event;
-      event.unknown00 = unknown002;
-      ui::UIManager::get()->requestObjectEvent(handle, event, 0.0f);
-    }
-  }
-}
+void GfMenuObjActionWindow::close() { unknown142(unknown001, unknown002); }
 
 } // namespace gf

@@ -1,9 +1,9 @@
 #include "gf/menu/object/gf_menu_obj_quest_log.h"
+
 #include "gf/menu/gf_menu_flag.h"
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "types.h"
-#include "ui/event/ui_event_data.h"
 #include "ui/ui_object_acc.h"
 
 namespace gf {
@@ -50,42 +50,12 @@ bool GfMenuObjQuestLog::seqOrderWait() {
   return !GfMenuObjUtil::isBusyCtrl(GfMenuObjUtil::getCtrlID(acc.unknown10));
 }
 
-void GfMenuObjQuestLog::changeActiveQuest() {
-  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown001));
-  if (acc.isValid()) {
-    ui::EventData event;
-    event.unknown00 = unknown002;
-    GfMenuObject::sendEvent(acc.searchChild("LAY_log"), event, 0.0f);
-  }
-}
+void GfMenuObjQuestLog::changeActiveQuest() { unknown147(unknown001, "LAY_log", unknown002); }
 
-void GfMenuObjQuestLog::updateTask() {
-  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown001));
-  if (acc.isValid()) {
-    ui::EventData event;
-    event.unknown00 = unknown003;
-    GfMenuObject::sendEvent(acc.searchChild("LAY_log"), event, 0.0f);
-  }
-}
+void GfMenuObjQuestLog::updateTask() { unknown147(unknown001, "LAY_log", unknown003); }
 
-void GfMenuObjQuestLog::closeLog() {
-  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown001));
-  if (acc.isValid()) {
-    ui::UIObjectAcc child(acc.searchChild("LAY_log"));
-    ui::EventData event;
-    event.unknown00 = GfMenuTypes::unknown003_34;
-    GfMenuObject::sendEvent(child.unknown10, event, 0.0f);
-  }
-}
+void GfMenuObjQuestLog::closeLog() { unknown148(unknown001, "LAY_log", GfMenuTypes::unknown003_34); }
 
-void GfMenuObjQuestLog::openLog() {
-  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown001));
-  if (acc.isValid()) {
-    ui::UIObjectAcc child(acc.searchChild("LAY_log"));
-    ui::EventData event;
-    event.unknown00 = GfMenuTypes::unknown003_33;
-    GfMenuObject::sendEvent(child.unknown10, event, 0.0f);
-  }
-}
+void GfMenuObjQuestLog::openLog() { unknown148(unknown001, "LAY_log", GfMenuTypes::unknown003_33); }
 
 } // namespace gf
