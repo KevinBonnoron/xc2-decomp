@@ -99,6 +99,7 @@ public:
   void clearGobInsts();
   void clearSe();
   void disposeSe(SeType type);
+  void createSe(SeType type, const mm::Vec3 &position);
   void sendGfComQuest() const;
   static bool isPlayEnd(u16 lodId);
   void setTargetableByItemType(ItemType type, bool isTargetable);
@@ -106,6 +107,7 @@ public:
   void initDownFloorState();
   void initUpFloorState();
   void startLiftSe();
+  void stopLiftSe();
   void seqInit(f32 deltaTime);
   void seqWaitToValidate_GfFieldLod(f32 deltaTime);
   void seqDownIdle(f32 deltaTime);

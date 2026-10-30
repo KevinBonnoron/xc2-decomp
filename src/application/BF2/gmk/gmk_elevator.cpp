@@ -5,6 +5,7 @@
 #include "gf/data/gf_data_util.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/field/gf_field_lod.h"
+#include "gf/field/gf_field_sound.h"
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/quest/gf_quest_util.h"
@@ -189,6 +190,51 @@ void GmkElevator::clearSe() {
 }
 
 void GmkElevator::disposeSe(SeType type) { unknown2b0[type].dispose(); }
+
+void GmkElevator::createSe(SeType type, const mm::Vec3 &position) {
+  disposeSe(type);
+  const BdatInfo *bdatInfo = getBdatInfo();
+  GmkCtrlVolSe::CreateInfo info;
+  info.unknown00 = gf::GfFieldSound::get()->getCommonPack();
+  switch (type) {
+  case SE_TYPE_UNKNOWN_0:
+    info.unknown08 = bdatInfo->unknown10;
+    break;
+  case SE_TYPE_UNKNOWN_1:
+    info.unknown08 = bdatInfo->unknown12;
+    break;
+  case SE_TYPE_UNKNOWN_2:
+    info.unknown08 = bdatInfo->unknown14;
+    break;
+  case SE_TYPE_UNKNOWN_3:
+    info.unknown08 = bdatInfo->unknown16;
+    info.unknown10 = bdatInfo->unknown1a;
+    info.unknown14 = bdatInfo->unknown1b;
+    info.unknown30 = unknown4b0;
+    break;
+  }
+  info.unknown20 = position;
+  if (info.unknown00 == nullptr || info.unknown08 == 0) {
+    return;
+  }
+  unknown2b0[type].create(info);
+}
+
+void GmkElevator::startLiftSe() {
+  mm::Vec3 position;
+  if (getLiftPos(position)) {
+    createSe(SE_TYPE_UNKNOWN_2, position);
+    createSe(SE_TYPE_UNKNOWN_3, position);
+  }
+}
+
+void GmkElevator::stopLiftSe() {
+  mm::Vec3 position;
+  if (getLiftPos(position)) {
+    createSe(SE_TYPE_UNKNOWN_2, position);
+  }
+  disposeSe(SE_TYPE_UNKNOWN_3);
+}
 
 void GmkElevator::sendGfComQuest() const {
   u32 gimmick = unknown20.unknown18;

@@ -608,6 +608,8 @@ bool isInEvent() { return gf::GfGameManager::isEvent(false); }
 
 } // namespace gmk
 
+template mm::mtl::PtrSingleton<gmk::GmkManager>::~PtrSingleton();
+
 // clang-format off
 #include "gmk/gmk_base.cpp"
 #include "gmk/gmk_gob_event_listener_impl.h" // IWYU pragma: keep
@@ -1092,6 +1094,14 @@ void GmkPhantomManager::removeGmkPhantom(GmkPhantom *phantom) {
 GmkPhantomManager::GmkPhantomManager() {}
 
 GmkPhantomManager::~GmkPhantomManager() {}
+
+} // namespace gmk
+
+// clang-format off
+#include "gmk/gmk_ctrl_vol_se.cpp"
+// clang-format on
+
+namespace gmk {
 
 ScenarioFlagCond::ScenarioFlagCond(const CBdatWrapper &bdat, int id, const AGmkBase &gmk) {
   u16 scenarioFlagMin = bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_U16);

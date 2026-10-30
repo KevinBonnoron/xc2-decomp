@@ -15,6 +15,7 @@
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 #include "gmk/gmk_phantom.h"
+#include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixstr.h"
 #include "scn/scn_obj_acc.h"
 
@@ -306,6 +307,24 @@ bool GmkDoor::isDoorOpened() const {
   const BdatInfo *info = getBdatInfo();
   gf::GfFieldLod *lod = gf::GfFieldLod::get();
   return !lod->isAnimReverse(info->unknown06);
+}
+
+void GmkDoor::createSe(bool isMapPack, u16 seId, u8 distance) {
+  unknown2e0.dispose();
+  GmkCtrlVolSe::CreateInfo info;
+  if (isMapPack) {
+    info.unknown00 = gf::GfFieldSound::get()->getMapPack();
+  } else {
+    info.unknown00 = gf::GfFieldSound::get()->getCommonPack();
+  }
+  if (seId == 0 || info.unknown00 == nullptr) {
+    return;
+  }
+  info.unknown08 = seId;
+  info.unknown10 = distance;
+  info.unknown14 = distance;
+  info.unknown20 = unknown08.unknown08->unknown00;
+  unknown2e0.create(info);
 }
 
 void GmkDoor::isSeLoop(bool isMapPack, u16 seId) const {

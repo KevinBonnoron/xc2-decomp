@@ -105,6 +105,7 @@ public:
   bool isDoorOpened() const;
   bool isLocked() const;
   bool isSpLocked() const;
+  void createSe(bool isMapPack, u16 seId, u8 distance);
   void isSeLoop(bool isMapPack, u16 seId) const;
   void seqDoor_Shutdowned(f32 deltaTime);
   void seqDoor_Booted(f32 deltaTime);
