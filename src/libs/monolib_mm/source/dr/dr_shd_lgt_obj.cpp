@@ -2,6 +2,7 @@
 
 #include "dr/dr_res_fetch.h"
 #include "grlib/cglib_ctl_shader.h"
+#include "grlib/cglib_shd_list.h"
 
 namespace ml {
 
@@ -23,3 +24,5 @@ void DrShdLgtObj::lgtRelease() {
 }
 
 } // namespace ml
+
+template class grlib::CGLibShdListBase<ml::DrShdLgtObj>;

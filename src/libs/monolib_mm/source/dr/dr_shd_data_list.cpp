@@ -5,6 +5,7 @@
 #include "grlib/cglib_ctl_shader.h"
 #include "grlib/cglib_ctl_vertex.h"
 #include "grlib/cglib_one_uniform_block.h"
+#include "grlib/cglib_shd_list.h"
 
 namespace ml {
 
@@ -124,3 +125,5 @@ void DrShdDataObj::setupShader(DrResFetch *fetch) { grlib::CGLibCtlShader::setSh
 void DrShdDataObj::setupComputeShader() { grlib::CGLibCtlShader::setComputeShader(*this); }
 
 } // namespace ml
+
+template class grlib::CGLibShdListBase<ml::DrShdDataObj>;

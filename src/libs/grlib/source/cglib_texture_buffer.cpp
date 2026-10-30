@@ -45,6 +45,72 @@ void CGLibTextureBuffer::delayRelease() {
 
 void CGLibRenderTargetBase::setColorInvalidate() {}
 
+u32 CGLibTextureBuffer::getImageSize() const {
+  NVNtextureBuilder builder;
+  switch (unknown0e) {
+  case 2: {
+    int width = m_width;
+    int height = m_height;
+    GrlSurfaceFormat format = m_format;
+    int depth = m_depth;
+    int mipmap = m_mipmap;
+    CGLibTexture::unknown001(builder, NVN_TEXTURE_TARGET_2D_ARRAY, format, width, height);
+    nvnTextureBuilderSetDepth(&builder, depth);
+    nvnTextureBuilderSetLevels(&builder, mipmap + 1);
+    break;
+  }
+  case 3: {
+    int width = m_width;
+    int height = m_height;
+    GrlSurfaceFormat format = m_format;
+    int mipmap = m_mipmap;
+    CGLibTexture::unknown001(builder, NVN_TEXTURE_TARGET_CUBEMAP, format, width, height);
+    nvnTextureBuilderSetLevels(&builder, mipmap + 1);
+    break;
+  }
+  case 4: {
+    int width = m_width;
+    int height = m_height;
+    GrlSurfaceFormat format = m_format;
+    int slice = m_slice;
+    int mipmap = m_mipmap;
+    CGLibTexture::unknown001(builder, NVN_TEXTURE_TARGET_CUBEMAP_ARRAY, format, width, height);
+    nvnTextureBuilderSetDepth(&builder, slice * 6);
+    nvnTextureBuilderSetLevels(&builder, mipmap + 1);
+    break;
+  }
+  case 5: {
+    int width = m_width;
+    int height = m_height;
+    GrlSurfaceFormat format = m_format;
+    int depth = m_depth;
+    CGLibTexture::unknown001(builder, NVN_TEXTURE_TARGET_3D, format);
+    nvnTextureBuilderSetSize3D(&builder, width, height, depth);
+    break;
+  }
+  default: {
+    int width = m_width;
+    GrlSurfaceFormat format = m_format;
+    if (!isTexture1D()) {
+      int height = m_height;
+      int mipmap = m_mipmap;
+      CGLibTexture::unknown001(builder, NVN_TEXTURE_TARGET_2D, format, width, height);
+      nvnTextureBuilderSetDepth(&builder, 1);
+      nvnTextureBuilderSetLevels(&builder, mipmap + 1);
+    } else {
+      CGLibTexture::unknown001(builder, NVN_TEXTURE_TARGET_1D, format);
+      nvnTextureBuilderSetSize1D(&builder, width);
+      nvnTextureBuilderSetLevels(&builder, 1);
+    }
+    break;
+  }
+  }
+  u32 size;
+  u32 alignment;
+  CGLibTexture::unknown002(builder, NVN_TEXTURE_FLAGS_IMAGE | NVN_TEXTURE_FLAGS_COMPRESSIBLE, size, alignment);
+  return size;
+}
+
 u32 CGLibRenderTargetBase::getImageSize() const { return unknown70->CGLibTextureBuffer::getImageSize(); }
 
 CGLibRenderArray::CGLibRenderArray() : unknown70(this), unknown78(nullptr), unknown80(false), unknown84(0), unknown88(0), unknown8c(0), unknown90(0) {}
