@@ -29,17 +29,19 @@ public:
 
   mm::Vec3 unknown00; // Inferred role: home position; original member name unknown.
   int _10;
-  f32 unknown14; // Inferred role: return home distance; original member name unknown.
-  f32 unknown18; // Inferred role: return home character distance; original member name unknown.
-  u8 unknown1c;  // Inferred role: BatAreaType of the enemy arrange; original member name unknown.
-  u8 unknown1d;  // Inferred role: act type of the enemy resource; original member name unknown.
-  u16 _1e;
+  f32 unknown14;  // Inferred role: return home distance; original member name unknown.
+  f32 unknown18;  // Inferred role: return home character distance; original member name unknown.
+  u8 unknown1c;   // Inferred role: BatAreaType of the enemy arrange; original member name unknown.
+  u8 unknown1d;   // Inferred role: act type of the enemy resource; original member name unknown.
+  bool unknown1e; // Inferred role: the chain attack order attributes are cached; original member name unknown.
+  bool unknown1f; // Inferred role: the battle display data must be cleared out of battle; original member name unknown.
 };
 
 static_assert(offsetof(GfEnemyBattleProperty, _10) == 0x10, "");
 static_assert(offsetof(GfEnemyBattleProperty, unknown14) == 0x14, "");
 static_assert(offsetof(GfEnemyBattleProperty, unknown18) == 0x18, "");
-static_assert(offsetof(GfEnemyBattleProperty, _1e) == 0x1e, "");
+static_assert(offsetof(GfEnemyBattleProperty, unknown1e) == 0x1e, "");
+static_assert(offsetof(GfEnemyBattleProperty, unknown1f) == 0x1f, "");
 static_assert(sizeof(GfEnemyBattleProperty) == 0x20, "");
 
 } // namespace enemy

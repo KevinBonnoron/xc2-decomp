@@ -22,6 +22,8 @@ public:
   bool isFieldDeadCondMatched() const;
   void flush();
   void writeBack();
+  bool getWaterHeight(f32 &height) const;
+  f32 getChestHeight() const;
 
   u8 _38[0x40 - 0x38];
   enemy::GfEnemyBattleProperty unknown40; // Inferred role: battle property; original member name unknown.

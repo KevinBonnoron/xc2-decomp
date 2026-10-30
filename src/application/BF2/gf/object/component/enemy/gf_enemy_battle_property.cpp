@@ -22,7 +22,19 @@ bool registerAsmCallbackBattle(GF_OBJ_HANDLE *handle, anm::ResASM *resAsm) { ret
 
 GfEnemyBattleProperty::GfEnemyBattleProperty() {
   _10 = 0xffffffff;
-  _1e = 0;
+  unknown1e = false;
+  unknown1f = false;
+}
+
+void GfEnemyBattleProperty::Initialize(const GfComPropertyEnemy &property) {
+  _10 = btl::CharacterManager::get()->Register(static_cast<GfObj *>(property.unknown08)->unknownf8, true);
+  unknown00 = mm::Vec3::zero;
+  unknown14 = -1.0f;
+  unknown18 = -1.0f;
+  unknown1c = 0;
+  unknown1d = 0;
+  unknown1e = false;
+  unknown1f = false;
 }
 
 void GfEnemyBattleProperty::Finalize(const GfComPropertyEnemy &property) {

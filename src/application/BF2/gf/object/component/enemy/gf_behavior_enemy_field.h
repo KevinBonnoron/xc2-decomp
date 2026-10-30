@@ -6,6 +6,7 @@
 #include "gf/field/gf_field_move_speed.h"
 #include "gf/field/gf_field_pitch_roll_controller.h"
 #include "gf/object/component/enemy/gf_enemy_state_id.h"
+#include "gf/param/enemy/gf_param_enemy.h"
 #include "gmk/gmk_squad.h"
 #include "mm_math/mm_vec3.h"
 #include "types.h"
@@ -56,7 +57,9 @@ public:
   bool isArrivedToGoal() const;
   fw::ColiMoveObject *getColiObject() const;
   void createSquadNavi();
+  void createNaviMeshObj();
   void disposeSquadNavi();
+  void updateNaviMeshObj(f32 deltaTime);
   void disposeNaviMeshObj();
   void updateSensor(f32 deltaTime);
   void updatePitchRollController();
@@ -66,36 +69,21 @@ public:
   void applyFieldMoveSpeed(enemy::STATE_ID stateId, GfComBehaviorEnemy &behavior);
   void applyFieldMoveSpeed(MoveSpeed currentMoveSpeed, MoveSpeed targetMoveSpeed, GfComBehaviorEnemy &behavior);
 
-  bool isChangeBattleCondMatch() const {
-    if (!unknown52a8) {
-      return false;
+  bool isChangeBattleCondMatch() const;
+  MoveSpeed getFieldMoveSpeedType(enemy::STATE_ID stateId) const;
+
+  // Inferred helper: the speed change rate from one move speed to another; original name unknown.
+  static f32 unknown001(MoveSpeed currentMoveSpeed, MoveSpeed targetMoveSpeed, const EnemyMoveParam &param) {
+    switch (currentMoveSpeed) {
+    case MOVE_SPEED_UNKNOWN_0:
+      return targetMoveSpeed == MOVE_SPEED_UNKNOWN_1 ? param.accel0 : param.accel2;
+    case MOVE_SPEED_UNKNOWN_1:
+      return targetMoveSpeed == MOVE_SPEED_UNKNOWN_0 ? param.brake1 : param.accel1;
+    case MOVE_SPEED_UNKNOWN_2:
+      return targetMoveSpeed == MOVE_SPEED_UNKNOWN_0 ? param.brake2 : param.brake0;
+    default:
+      return 0.0f;
     }
-
-    if (unknown52a4 < unknown52a0) {
-      return false;
-    }
-
-    return unknownd0.isPlayerEnter() || unknownd0.unknown80;
-  }
-
-  MoveSpeed getFieldMoveSpeedType(enemy::STATE_ID stateId) const {
-    if (stateId >= enemy::STATE_ID_UNKNOWN_1 && stateId <= enemy::STATE_ID_UNKNOWN_7) {
-      return MOVE_SPEED_UNKNOWN_0;
-    }
-
-    if (stateId >= enemy::STATE_ID_UNKNOWN_8 && stateId <= enemy::STATE_ID_UNKNOWN_9) {
-      return MOVE_SPEED_UNKNOWN_1;
-    }
-
-    if (stateId >= enemy::STATE_ID_UNKNOWN_10 && stateId <= enemy::STATE_ID_UNKNOWN_11) {
-      return MOVE_SPEED_UNKNOWN_2;
-    }
-
-    if (stateId >= enemy::STATE_ID_UNKNOWN_13 && stateId <= enemy::STATE_ID_UNKNOWN_15) {
-      return MOVE_SPEED_UNKNOWN_1;
-    }
-
-    return MOVE_SPEED_UNKNOWN_0;
   }
 
   IGfBehFieldOwner *unknown08; // Inferred role: owner; original member name unknown.

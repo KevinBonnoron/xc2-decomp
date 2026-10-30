@@ -1,3 +1,7 @@
+// Same order as in the game executable: the field behavior is defined before the enemy behavior component in the same unit.
+// clang-format off
+#include "gf/object/component/enemy/gf_behavior_enemy_field.cpp"
+// clang-format on
 #include "gf/object/component/enemy/gf_com_behavior_enemy.h"
 
 #include <math.h>
@@ -200,17 +204,7 @@ f32 GfComBehaviorEnemy::getMoveSpeedDelta(GfBehaviorEnemyField::MoveSpeed moveSp
     return 0.0f;
   }
 
-  const EnemyMoveParam *param = getEnemeyMoveParam(unknown140.unknown36);
-  switch (current) {
-  case GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_0:
-    return moveSpeed == GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_1 ? param->accel0 : param->accel2;
-  case GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_1:
-    return moveSpeed == GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_0 ? param->brake1 : param->accel1;
-  case GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_2:
-    return moveSpeed == GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_0 ? param->brake2 : param->brake0;
-  default:
-    return 0.0f;
-  }
+  return GfBehaviorEnemyField::unknown001(current, moveSpeed, *getEnemeyMoveParam(unknown140.unknown36));
 }
 
 void GfComBehaviorEnemy::reqChangeBattle() {

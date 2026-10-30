@@ -39,7 +39,9 @@ enum ColiState : int {
   COLI_STATE_INACTIVE = 2,
 };
 
-enum ColiAtrr : int;
+enum ColiAtrr : int {
+  COLI_ATRR_UNKNOWN_0 = 0, // Inferred role: tested by GfBehaviorEnemyField::update before applying gravity; original name unknown.
+};
 
 class IColiEventListener {
 public:

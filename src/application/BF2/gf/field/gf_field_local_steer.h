@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "mm_math/mm_vec3.h"
 #include "types.h"
 
 namespace gmk {
@@ -10,10 +11,6 @@ class GmkRouteNavi;
 namespace navi {
 class NvmshAcObj;
 } // namespace navi
-
-namespace mm {
-struct Vec3;
-} // namespace mm
 
 namespace gf {
 
@@ -46,6 +43,11 @@ public:
     bool operator()(const GfFieldLocalSteer &steer, GF_OBJ_HANDLE *handle) const override;
   };
 
+  struct UpdateInfo {
+    mm::Vec3 unknown00; // Inferred role: goal position; original member name unknown.
+    f32 unknown10;      // Inferred role: delta time; original member name unknown.
+  };
+
   GfFieldLocalSteer(const CreateInfo *info = nullptr);
   ~GfFieldLocalSteer() {
     dispose();
@@ -55,6 +57,7 @@ public:
   }
 
   void dispose();
+  void update(const UpdateInfo &info);
   bool isTimeOutCollide() const;
   f32 getCurAngle() const;
 
