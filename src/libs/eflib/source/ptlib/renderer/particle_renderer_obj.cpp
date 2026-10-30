@@ -1,6 +1,7 @@
 #include "ptlib/renderer/particle_renderer_obj.h"
 
 #include <algorithm>
+#include <string.h>
 
 #include "grlib/cglib_color_ctl.h"
 #include "grlib/cglib_depth_ctl.h"
@@ -8,18 +9,23 @@
 #include "mm/mm_std_base.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_mat44.h"
+#include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_math/mm_vec3_na.h"
 #include "mm_mtl/fixed_vector.h"
 #include "ptlib/emitter/particle_emitter.h"
+#include "ptlib/emitter/particle_emitter_ext.h"
 #include "ptlib/emitter/particle_emitter_manager.h"
 #include "ptlib/emitter/particle_emitter_param.h"
+#include "ptlib/emitter/particle_emitter_particle.h"
 #include "ptlib/material/particle_material_manager.h"
 #include "ptlib/particle_system.h"
 #include "ptlib/renderer/screen_render_manager.h"
-
 // clang-format off
 #include "particle_renderer_back_buffer.cpp"
 #include "particle_renderer_shader.cpp"
+#include "ptlib/particle_intrusive_list.h"
+#include "ptlib/particle_math.h"
 // clang-format on
 
 namespace ptlib {
@@ -43,6 +49,15 @@ const GrlBlendFunc unknown003[11] = {GRL_BLEND_FUNC_ZERO,
                                      GRL_BLEND_FUNC_UNKNOWN_11};
 // Inferred role: blend combines selected by the packed blend type; original name unknown.
 const GrlBlendCombine unknown004[5] = {GRL_BLEND_COMBINE_ADD, GRL_BLEND_COMBINE_SUBTRACT, GRL_BLEND_COMBINE_MIN, GRL_BLEND_COMBINE_MAX, GRL_BLEND_COMBINE_UNKNOWN_3};
+// Inferred role: writes the position, the compute index and the transform of a particle, shared by the screen and string attributes; original name unknown.
+inline void unknown005(f32 *uniform, emitter::ParticleObj *particle) {
+  memcpy(&uniform[0], &particle->unknown10, sizeof(mm::Vec3NA));
+  reinterpret_cast<u32 *>(uniform)[3] = particle->unknown148;
+  memcpy(&uniform[4], &particle->unknown94, sizeof(mm::Vec3NA));
+  uniform[7] = particle->unknownc8;
+  memcpy(&uniform[8], &particle->unknown60, sizeof(mm::Quat));
+  memcpy(&uniform[12], &particle->unknowna0, sizeof(mm::Vec3NA));
+}
 } // namespace
 
 void RenderGrObj::fxcore_setup_target_update(int index) {
@@ -241,6 +256,213 @@ void RenderGrObj::term() {
   unknownb0.term();
 }
 
+bool RenderGrObj::draw_type1_setup(emitter::EmitterObj *emitter, DrawTailWork *work) {
+  work->unknown00 = emitter::EmitterObj::move_type1_sort(nullptr, emitter);
+  if (work->unknown00 == nullptr) {
+    work->unknown00 = emitter->unknown40.m_size != 0 ? &*emitter->unknown40.begin() : nullptr;
+    if (work->unknown00 == nullptr) {
+      return true;
+    }
+  }
+  work->unknown08 = 0;
+  work->unknown14 = 0;
+  work->unknown18 = 0;
+  emitter::EmitterArg *arg = emitter->unknown98;
+  work->unknown14 = arg->unknown106;
+  work->unknown10 = arg->unknown120;
+  return false;
+}
+
+void RenderGrObj::draw_common_atr_wpn_tail(WpnTailShdVtxLayout *layout, mm::Vec3 &position, emitter::ParticleObj *particle, emitter::ParticleObj *top, f32 alpha, u32 drawType, DrawTailWork *work) {
+  layout->unknown00[0] = position.x;
+  layout->unknown00[1] = position.y;
+  layout->unknown00[2] = position.z;
+  layout->unknown0c = particle->unknown148;
+  memcpy(layout->unknown10, &particle->unknown94, sizeof(mm::Vec3NA));
+  layout->unknown1c = particle->unknownc8;
+  memcpy(layout->unknown20, &particle->unknown60, sizeof(mm::Quat));
+  memcpy(layout->unknown30, &particle->unknowna0, sizeof(mm::Vec3NA));
+  layout->unknown3c = 1.0f - (!work->unknown1c ? top->unknown70.y : top->unknown70.z);
+  switch (work->unknown18) {
+  case 0:
+    layout->unknown40[0] = particle->unknown70.x;
+    layout->unknown40[1] = particle->unknown70.y;
+    layout->unknown40[2] = particle->unknown70.z;
+    break;
+  case 1:
+    memset(layout->unknown40, 0, sizeof(layout->unknown40));
+    break;
+  case 2:
+    layout->unknown40[0] = particle->unknown70.x;
+    layout->unknown40[1] = 0.0f;
+    layout->unknown40[2] = 0.0f;
+    break;
+  }
+  layout->unknown50 = particle->getExtParam().unknown17c;
+  layout->unknown54 = particle->getExtParam().unknown180;
+  switch (drawType) {
+  case 1:
+  case 3:
+  case 4:
+  case 6:
+    layout->unknown58 = particle->getExtParam().unknownf8 / static_cast<f32>(unknown258->unknown550);
+    layout->unknown5c = -particle->getExtParam().unknownf8 / static_cast<f32>(unknown258->unknown554);
+    break;
+  case 2:
+  case 5:
+    layout->unknown58 = particle->getExtParam().unknownf8;
+    layout->unknown5c = particle->getExtParam().unknown22c;
+    break;
+  }
+}
+
+void RenderGrObj::draw_common_atr_normal(f32 *uniform, emitter::ParticleObj *particle, f32 alpha, u32 drawType, f32 scaleX, f32 scaleY) {
+  uniform[0] = particle->unknown10.x + particle->unknown50.x;
+  uniform[1] = particle->unknown10.y + particle->unknown50.y;
+  uniform[2] = particle->unknown10.z + particle->unknown50.z;
+  reinterpret_cast<u32 *>(uniform)[3] = particle->unknown148;
+  uniform[4] = particle->unknown94.x;
+  uniform[5] = particle->unknown94.y;
+  uniform[6] = particle->unknown94.z + particle->unknown14c;
+  uniform[7] = particle->unknownc8;
+  memcpy(&uniform[8], &particle->unknown60, sizeof(mm::Quat));
+  memcpy(&uniform[12], &particle->unknowna0, sizeof(mm::Vec3NA));
+  uniform[15] = particle->getExtParam().unknownd0;
+  memcpy(&uniform[16], &particle->unknown70, sizeof(mm::Vec3NA));
+  uniform[19] = particle->getExtParam().unknownf4;
+  memcpy(&uniform[20], &particle->getExtParam().unknownc0, sizeof(vec2f));
+  memcpy(&uniform[22], &particle->getExtParam().unknownc8, sizeof(vec2f));
+  memcpy(&uniform[24], &particle->getExtParam().unknowne4, sizeof(vec2f));
+  memcpy(&uniform[26], &particle->getExtParam().unknownec, sizeof(vec2f));
+  uniform[28] = particle->getExtParam().unknown17c;
+  uniform[29] = particle->getExtParam().unknown180;
+  switch (drawType) {
+  case 1:
+  case 9:
+  case 11:
+  case 12:
+    uniform[30] = 0.0f;
+    uniform[31] = 0.0f;
+    break;
+  case 4:
+  case 5:
+  case 7:
+    uniform[30] = particle->getExtParam().unknownf8;
+    uniform[31] = particle->getExtParam().unknown22c;
+    break;
+  case 6:
+  case 8:
+    uniform[30] = particle->getExtParam().unknownf8;
+    uniform[31] = 1.0f;
+    break;
+  case 10:
+  case 15:
+    uniform[30] = 0.0f;
+    uniform[31] = 0.0f;
+    uniform[32] = particle->getExtParam().unknown108_f32[0];
+    uniform[33] = particle->getExtParam().unknown108_f32[1];
+    uniform[34] = particle->getExtParam().unknown108_f32[2];
+    uniform[35] = particle->getExtParam().unknown108_f32[6];
+    uniform[36] = particle->getExtParam().unknown108_f32[3];
+    uniform[37] = particle->getExtParam().unknown108_f32[4];
+    uniform[38] = particle->getExtParam().unknownf8;
+    uniform[39] = 1.0f;
+    break;
+  case 14:
+    uniform[30] = particle->getExtParam().unknownf8;
+    uniform[31] = 0.0f;
+    uniform[32] = particle->getExtParam().unknownd4;
+    uniform[33] = particle->getExtParam().unknownd8;
+    uniform[34] = particle->getExtParam().unknowndc;
+    uniform[35] = particle->getExtParam().unknowne0;
+    break;
+  default:
+    uniform[30] = particle->getExtParam().unknownf8;
+    uniform[31] = 0.0f;
+    break;
+  }
+}
+
+void RenderGrObj::draw_common_atr_strip(f32 *uniform, emitter::ParticleObj *particle, emitter::ParticleObj *top, f32 alpha, u32 drawType, DrawTailWork *work, mm::Vec3 position, mm::Vec3 direction,
+                                        f32 scaleX, f32 scaleY) {
+  memcpy(&uniform[0], &particle->unknown10, sizeof(mm::Vec3NA));
+  reinterpret_cast<u32 *>(uniform)[3] = particle->unknown148;
+  if (particle->unknownc8 < -2.5f) {
+    memcpy(&uniform[4], &position, sizeof(mm::Vec3NA));
+    uniform[7] = particle->unknownc8;
+    memcpy(&uniform[8], &direction, sizeof(mm::Vec3NA));
+  } else {
+    memcpy(&uniform[4], &particle->unknown94, sizeof(mm::Vec3NA));
+    uniform[7] = particle->unknownc8;
+    memcpy(&uniform[8], &particle->unknown60, sizeof(mm::Quat));
+  }
+  memcpy(&uniform[12], &particle->unknowna0, sizeof(mm::Vec3NA));
+  switch (work->unknown18) {
+  case 0:
+    uniform[16] = particle->unknown70.x;
+    uniform[17] = particle->unknown70.y;
+    uniform[18] = particle->unknown70.z;
+    break;
+  case 1:
+    memset(&uniform[16], 0, sizeof(mm::Vec3NA));
+    break;
+  case 2:
+    uniform[16] = particle->unknown70.x;
+    uniform[17] = 0.0f;
+    uniform[18] = 0.0f;
+    break;
+  case 3:
+    uniform[16] = uniform[17] = uniform[18] = particle->getExtParam().getEmParent()->unknown98->unknown11c;
+    break;
+  }
+  if (work->unknown1c) {
+    uniform[15] = top->unknown70.z;
+  } else {
+    uniform[15] = top->unknown70.y;
+  }
+  uniform[19] = static_cast<f32>(work->unknown08) * top->unknownc4;
+  uniform[20] = particle->getExtParam().unknown17c;
+  uniform[21] = particle->getExtParam().unknown180;
+  uniform[22] = particle->getExtParam().unknownf8 / static_cast<f32>(unknown258->unknown550);
+  uniform[23] = -particle->getExtParam().unknownf8 / static_cast<f32>(unknown258->unknown554);
+}
+
+void RenderGrObj::draw_common_atr_screen(f32 *uniform, emitter::ParticleObj *particle, f32 alpha, u32 drawType, f32 scaleX, f32 scaleY) {
+  unknown005(uniform, particle);
+  uniform[15] = particle->getExtParam().unknownd0;
+  memcpy(&uniform[16], &particle->unknown70, sizeof(mm::Vec3NA));
+  uniform[19] = particle->getExtParam().unknownf4;
+}
+
+void RenderGrObj::draw_common_atr_string(f32 *uniform, emitter::ParticleObj *particle, emitter::ParticleObj *top, f32 alpha, u32 drawType, DrawTailWork *work, f32 scaleX, f32 scaleY) {
+  unknown005(uniform, particle);
+  switch (work->unknown18) {
+  case 0:
+    uniform[16] = particle->unknown70.x;
+    uniform[17] = particle->unknown70.y;
+    uniform[18] = particle->unknown70.z;
+    break;
+  case 1:
+    memset(&uniform[16], 0, sizeof(mm::Vec3NA));
+    break;
+  case 2:
+    uniform[16] = particle->unknown70.x;
+    uniform[17] = 0.0f;
+    uniform[18] = 0.0f;
+    break;
+  }
+  if (work->unknown1c) {
+    uniform[15] = top->unknown70.z;
+  } else {
+    uniform[15] = top->unknown70.y;
+  }
+  uniform[19] = static_cast<f32>(work->unknown08) * top->unknownc4;
+  uniform[20] = particle->getExtParam().unknown17c;
+  uniform[21] = particle->getExtParam().unknown180;
+  uniform[22] = particle->getExtParam().unknownf8 / static_cast<f32>(unknown258->unknown550);
+  uniform[23] = -particle->getExtParam().unknownf8 / static_cast<f32>(unknown258->unknown554);
+}
+
 void RenderGrObj::draw_common_uconst(f32 *uniform, emitter::EmitterObj *emitter) {
   emitter::EmitterArg *arg = emitter->unknown98;
   if (arg == nullptr) {
@@ -270,6 +492,52 @@ void RenderGrObj::draw_common_uconst(f32 *uniform, emitter::EmitterObj *emitter)
   uniform[13] = value128;
   uniform[14] = value120;
   uniform[15] = fade;
+}
+
+void RenderGrObj::draw_common_uparam(f32 *uniform, u32 *flags, emitter::EmitterObj *emitter) {
+  flags[0] = 0;
+  flags[1] = 0;
+  flags[2] = 0;
+  flags[3] = 0;
+  emitter::EmitterArg *arg = emitter->unknown98;
+  f32 value11c = arg->unknown11c;
+  f32 value128 = arg->unknown128;
+  if (arg->unknown104 == 0 || value11c < 0.0f) {
+    value11c = 1000.0f;
+  }
+  if (ParticleManager::get()->getFxParam()->unknown12 != 0 && value128 > 0.0f) {
+    value128 = 0.0f;
+  }
+  if (emitter->unknown260 == 0xff) {
+    value128 = -3.0f;
+  }
+  f32 mode = (arg->unknown104 & 0xf0) == 0x90 || arg->unknown104 == 0xd ? 1.0f : 0.0f;
+  uniform[4] = uniform[5] = uniform[6] = arg->unknown12c;
+  f32 rate = arg->unknown130;
+  f32 scale = 1.0f / unknown258->unknown544;
+  uniform[7] = scale + rate * (1.0f - scale);
+  if ((arg->unknown104 & 0xfe) == 4) {
+    uniform[8] = arg->unknown134;
+  } else {
+    uniform[8] = 0.0f;
+  }
+  uniform[9] = arg->unknown124;
+  uniform[10] = arg->unknown138;
+  uniform[11] = (arg->unknown108 & 4) != 0 ? 1.0f : 0.0f;
+  f32 fade = emitter->calc_fade();
+  uniform[0] = value11c;
+  uniform[1] = value128;
+  uniform[2] = mode;
+  uniform[3] = fade;
+  if (emitter->unknown157 != 0) {
+    *flags |= 1;
+  }
+  if (arg->unknown108 & 0x10) {
+    *flags |= 2;
+  }
+  if (arg->unknown108 & 0x20) {
+    *flags |= 4;
+  }
 }
 
 void RenderGrObj::prioritySort(emitter::EmitterManager &emitterManager, int prioIdx, FxParam &fxParam, mm::mtl::FixedVector<sort::EmitterSort, EMITTER_SORT_MAX> &sorts) {

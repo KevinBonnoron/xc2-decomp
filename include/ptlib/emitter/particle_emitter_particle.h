@@ -10,6 +10,9 @@
 #include "types.h"
 
 namespace ptlib {
+
+struct vec2f;
+
 namespace math {
 class KeyFrameIP;
 } // namespace math
@@ -54,7 +57,7 @@ public:
   ExtObj &getExtParam() { return *m_extParam; }
   void initUtilObj() {
     static u32 idCounter;
-    unknown14c = 0;
+    unknown14c = 0.0f;
     unknown13f = 0;
     unknown138 = idCounter++;
     if (idCounter > 10000) {
@@ -71,6 +74,7 @@ public:
   void calcParRot(math::KeyFrameIP &keyFrame, f32 frame, EmitterObj *emitter, bool isCreate, f32 speed);
   void calcParPivot(math::KeyFrameIP &keyFrame, f32 frame, EmitterObj *emitter);
   void calcSpeed(EmitterObj *emitter, math::KeyFrameIP &keyFrame, f32 frame);
+  void move_common_keyframe_uv23(vec2f *uv0, vec2f *uv1, f32 *rotation, EmitterObj *emitter, int index, f32 frame);
   bool move_common_check_begin_end(EmitterObj *emitter, u16 begin, u16 end, int mode) {
     f32 frame;
     if (static_cast<u32>(mode) < 2) {
@@ -91,23 +95,7 @@ public:
   void calc_fit(f32 &pitch, f32 &yaw, const mm::Vec3 *direction);
   void calcIsFit(int isFit, EmitterObj *emitter, mm::Vec3 &direction);
   bool move_common_wait(int isMove, f32 speed);
-  bool move_common_life(int isMove, f32 speed) {
-    if (isMove != 0 && unknownc0 != 0x7fff) {
-      int step = 1;
-      if (0 < static_cast<int>(speed)) {
-        step = static_cast<int>(speed);
-      }
-      int diff = unknownc0 - step;
-      s16 life = diff;
-      if (life < 1) {
-        unknownc0 = 0;
-      } else {
-        unknownc0 = diff;
-      }
-      return life < 1;
-    }
-    return false;
-  }
+  bool move_common_life(int isMove, f32 speed);
   void move_common_check_begin_end_sub(EmitterObj *emitter, int mode, u16 &begin, u16 &end);
   void moveFlowMap(EmitterObj *emitter, int isMove);
   f32 move_common_keyframe_life(EmitterObj *emitter);
@@ -147,8 +135,10 @@ public:
   u8 _140[0x144 - 0x140];
   u8 unknown144; // Inferred role: light particle; original member name unknown.
   u8 unknown145; // Inferred role: reset by initUtilObj; original member name unknown.
-  u8 _146[0x14c - 0x146];
-  u32 unknown14c; // Inferred role: reset by initUtilObj; original member name unknown.
+  u8 _146[0x148 - 0x146];
+  u16 unknown148; // Inferred role: index in the compute particle buffer, passed to the shader by the draw functions; original member name unknown.
+  u8 _14a[0x14c - 0x14a];
+  f32 unknown14c; // Inferred role: offset added to the z component of unknown94 by the draw functions, reset by initUtilObj; original member name unknown.
 };
 
 static_assert(offsetof(ParticleObj, unknown10) == 0x10, "");
@@ -175,6 +165,7 @@ static_assert(offsetof(ParticleObj, unknown13e) == 0x13e, "");
 static_assert(offsetof(ParticleObj, unknown13f) == 0x13f, "");
 static_assert(offsetof(ParticleObj, unknown144) == 0x144, "");
 static_assert(offsetof(ParticleObj, unknown145) == 0x145, "");
+static_assert(offsetof(ParticleObj, unknown148) == 0x148, "");
 static_assert(offsetof(ParticleObj, unknown14c) == 0x14c, "");
 static_assert(sizeof(ParticleObj) == 0x150, "");
 

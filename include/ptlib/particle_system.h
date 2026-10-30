@@ -44,7 +44,9 @@ struct DrDrawWorkInfoEF {
   f32 unknown1c8; // Inferred role: fxaa ratio z; original member name unknown.
   u8 _1cc[0x1d0 - 0x1cc];
   u32 unknown1d0; // Inferred role: buffer offset; original member name unknown.
-  u8 _1d4[0x550 - 0x1d4];
+  u8 _1d4[0x544 - 0x1d4];
+  f32 unknown544; // Inferred role: resolution scale, its inverse weights the draw parameters; original member name unknown.
+  u8 _548[0x550 - 0x548];
   u32 unknown550; // Inferred role: screen width; original member name unknown.
   u32 unknown554; // Inferred role: screen height; original member name unknown.
   u8 _558[0x560 - 0x558];
@@ -60,6 +62,7 @@ static_assert(offsetof(DrDrawWorkInfoEF, unknown058) == 0x058, "");
 static_assert(offsetof(DrDrawWorkInfoEF, unknown060) == 0x060, "");
 static_assert(offsetof(DrDrawWorkInfoEF, unknown068) == 0x068, "");
 static_assert(offsetof(DrDrawWorkInfoEF, unknown070) == 0x070, "");
+static_assert(offsetof(DrDrawWorkInfoEF, unknown544) == 0x544, "");
 static_assert(offsetof(DrDrawWorkInfoEF, unknown090) == 0x090, "");
 static_assert(offsetof(DrDrawWorkInfoEF, unknown098) == 0x098, "");
 static_assert(offsetof(DrDrawWorkInfoEF, unknown0a0) == 0x0a0, "");

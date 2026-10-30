@@ -1,4 +1,5 @@
 #include <math.h>
+#include <string.h>
 
 #include "mm_math/mm_vec3.h"
 #include "mm_math/mm_vec3_na.h"
@@ -11,6 +12,8 @@
 #include "types.h"
 
 namespace ptlib {
+struct vec2f;
+
 namespace emitter {
 
 namespace {
@@ -92,6 +95,23 @@ void ParticleObj::addCalcTbl(mm::Vec3 &vector, f32 scale) {
   unknown10.x += vector.x * scale;
   unknown10.y += vector.y * scale;
   unknown10.z += vector.z * scale;
+}
+
+void ParticleObj::move_common_keyframe_uv23(vec2f *uv0, vec2f *uv1, f32 *rotation, EmitterObj *emitter, int index, f32 frame) {
+  math::KeyFrameIP keyFrame;
+  // The second and third uv layers use the keyframe channels from 5 on.
+  emitter->unknown98->get_kf(&keyFrame,
+                             emitter->unknown98->unknown18c[index].unknown04,
+                             10,
+                             frame,
+                             m_extParam->unknown214[6 + index],
+                             &m_extParam->unknown190[5] + index,
+                             &unknownd8[5] + index,
+                             (&emitter->unknown2b8[5])[index]);
+  keyFrame.setup_keyrand(&m_extParam->unknown190[5] + index, 5, emitter->unknown268);
+  keyFrame.get_ip2(uv0, 0);
+  keyFrame.get_ip2(uv1, 4);
+  *rotation = keyFrame.get_ip1(8);
 }
 
 void ParticleObj::calcGravity(EmitterObj *emitter, f32 speed, mm::Vec3 &result) {
@@ -238,6 +258,25 @@ bool ParticleObj::move_common_wait(int isMove, f32 speed) {
   return false;
 }
 
+bool ParticleObj::move_common_life(int isMove, f32 speed) {
+  if (isMove == 0) {
+    return false;
+  }
+  if (unknownc0 == 0x7fff) {
+    return false;
+  }
+  int step = static_cast<int>(speed);
+  if (step < 1) {
+    step = 1;
+  }
+  unknownc0 -= step;
+  if (static_cast<s16>(unknownc0) < 1) {
+    unknownc0 = 0;
+    return true;
+  }
+  return false;
+}
+
 bool EmitterObj::localUpdateParticleObjLgt(ParticleObj *&particle, IntrusiveList<ParticleObj>::iterator &it, f32 speed, int isMove, int &count) {
   particle = it.get();
   if (particle->move_common_wait(isMove, speed)) {
@@ -287,6 +326,26 @@ bool EmitterObj::localUpdateParticleObj(ParticleObj *&particle, IntrusiveList<Pa
   count++;
   particle->unknownb8 += speed;
   return false;
+}
+
+ParticleObj *EmitterObj::move_type1_sort(ParticleObj **table, EmitterObj *emitter) {
+  if (table != nullptr) {
+    memset(table, 0, sizeof(ParticleObj *) * 100);
+  }
+  ParticleObj *top = nullptr;
+  for (IntrusiveList<ParticleObj>::iterator it = emitter->unknown40.begin(); it != emitter->unknown40.end(); ++it) {
+    ParticleObj &particle = *it;
+    if (table != nullptr) {
+      if (particle.unknownc0 > 100) {
+        top = &particle;
+      } else {
+        table[static_cast<s16>(particle.unknownc0) - 1] = &particle;
+      }
+    } else if (particle.unknownc0 > 100) {
+      return &particle;
+    }
+  }
+  return top;
 }
 
 void ParticleObj::move_common_check_begin_end_sub(EmitterObj *emitter, int mode, u16 &begin, u16 &end) {

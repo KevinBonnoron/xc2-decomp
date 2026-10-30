@@ -34,6 +34,19 @@ namespace emitter {
 
 class ParticleObj;
 
+// Inferred role: animation parameters of the second and third uv layers of an emitter argument; original name unknown.
+// Evidence: ParticleObj::move01_common_keyframe_uv23 walks two of them with a stride of 0x38 and reads the bytes 3, 4 and 6 of each.
+struct unknown008 {
+  u8 _00[0x03 - 0x00];
+  u8 unknown03;  // Inferred role: accumulates the keyframe values instead of setting them; original member name unknown.
+  u16 unknown04; // Inferred role: uv keyframe offset; original member name unknown.
+  u16 unknown06; // Inferred role: scroll keyframe offset; original member name unknown.
+  u8 _08[0x38 - 0x08];
+};
+
+static_assert(offsetof(unknown008, unknown04) == 0x04, "");
+static_assert(sizeof(unknown008) == 0x38, "");
+
 struct EmitterArg {
   void get_kf(math::KeyFrameIP *ip, u16 offset, int num, f32 frame, s16 &loopFrame, math::EPkey *epkey, f32 **ppKey, f32 *pLoopTop);
   // Inferred role: keyframe data at an offset of the keyframe block, null for the offset 0; original name unknown.
@@ -73,13 +86,24 @@ struct EmitterArg {
   u8 unknownfd; // Inferred role: fadeout mode; original member name unknown.
   u8 _0fe[0x100 - 0x0fe];
   int unknown100; // Inferred role: draw type; original member name unknown.
-  u8 _104[0x109 - 0x104];
+  u8 unknown104;  // Inferred role: shader mode, selects draw parameters in RenderGrObj::draw_common_uparam; original member name unknown.
+  u8 _105[0x106 - 0x105];
+  u8 unknown106; // Inferred role: tail parameter copied by RenderGrObj::draw_type1_setup; original member name unknown.
+  u8 _107[0x108 - 0x107];
+  u8 unknown108; // Inferred role: draw flags; original member name unknown.
   u8 unknown109; // Inferred role: color mode, 0xff for a color block; original member name unknown.
-  u8 _10a[0x120 - 0x10a];
+  u8 _10a[0x11c - 0x10a];
+  f32 unknown11c; // Inferred role: draw parameter, also the tail color of the tail mode 3; original member name unknown.
   f32 unknown120; // Inferred role: draw parameter; original member name unknown.
-  u8 _124[0x128 - 0x124];
+  f32 unknown124; // Inferred role: draw parameter; original member name unknown.
   f32 unknown128; // Inferred role: draw parameter; original member name unknown.
-  u8 _12c[0x24c - 0x12c];
+  f32 unknown12c; // Inferred role: draw parameter; original member name unknown.
+  f32 unknown130; // Inferred role: draw parameter weighted by the resolution scale; original member name unknown.
+  f32 unknown134; // Inferred role: draw parameter of the shader modes 4 and 5; original member name unknown.
+  f32 unknown138; // Inferred role: draw parameter; original member name unknown.
+  u8 _13c[0x18c - 0x13c];
+  unknown008 unknown18c[2]; // Inferred role: animation parameters of the second and third uv layers; original member name unknown.
+  u8 _1fc[0x24c - 0x1fc];
   f32 unknown24c[1]; // Inferred role: keyframe data; original member name unknown.
 };
 
@@ -87,6 +111,7 @@ static_assert(offsetof(EmitterArg, unknown00) == 0x00, "");
 static_assert(offsetof(EmitterArg, unknown09) == 0x09, "");
 static_assert(offsetof(EmitterArg, unknown14) == 0x14, "");
 static_assert(offsetof(EmitterArg, unknown44) == 0x44, "");
+static_assert(offsetof(EmitterArg, unknown18c) == 0x18c, "");
 static_assert(offsetof(EmitterArg, unknown8c) == 0x8c, "");
 static_assert(offsetof(EmitterArg, unknown9c) == 0x9c, "");
 static_assert(offsetof(EmitterArg, unknowna0) == 0xa0, "");
@@ -97,11 +122,18 @@ static_assert(offsetof(EmitterArg, unknown94) == 0x94, "");
 static_assert(offsetof(EmitterArg, unknowne0) == 0xe0, "");
 static_assert(offsetof(EmitterArg, unknowne2) == 0xe2, "");
 static_assert(offsetof(EmitterArg, unknownfc) == 0xfc, "");
+static_assert(offsetof(EmitterArg, unknown106) == 0x106, "");
+static_assert(offsetof(EmitterArg, unknown11c) == 0x11c, "");
 static_assert(offsetof(EmitterArg, unknown120) == 0x120, "");
 static_assert(offsetof(EmitterArg, unknown128) == 0x128, "");
 static_assert(offsetof(EmitterArg, unknownfd) == 0xfd, "");
 static_assert(offsetof(EmitterArg, unknown100) == 0x100, "");
 static_assert(offsetof(EmitterArg, unknown109) == 0x109, "");
+static_assert(offsetof(EmitterArg, unknown104) == 0x104, "");
+static_assert(offsetof(EmitterArg, unknown108) == 0x108, "");
+static_assert(offsetof(EmitterArg, unknown124) == 0x124, "");
+static_assert(offsetof(EmitterArg, unknown12c) == 0x12c, "");
+static_assert(offsetof(EmitterArg, unknown138) == 0x138, "");
 static_assert(offsetof(EmitterArg, unknown24c) == 0x24c, "");
 
 // Inferred role: shared data of an emitter; original name unknown.
@@ -162,6 +194,7 @@ public:
   void remove_particle_free_tbl(ParticleObj *particle);
   void emitter_set_param_sub(EmitterParam *param);
   void emitter_set_param_sub_pos_only(EmitterParam *param);
+  static ParticleObj *move_type1_sort(ParticleObj **table, EmitterObj *emitter);
   void emitter_set_param_sub_pos_only2(EmitterParam *param);
   void emitter_alloc01_set_move(FxHeader *header, EmitterArg *arg);
   int getParentParticleState() const;

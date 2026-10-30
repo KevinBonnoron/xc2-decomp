@@ -23,6 +23,7 @@ struct FxParam;
 namespace emitter {
 class EmitterManager;
 class EmitterObj;
+class ParticleObj;
 } // namespace emitter
 
 namespace material {
@@ -30,6 +31,50 @@ class MaterialBase;
 } // namespace material
 
 namespace renderer {
+
+// Provenance: the name comes from the mangled game symbols of RenderGrObj::draw_type1_setup and the tail draw functions.
+// Evidence: renderEmitter keeps it at sp+0x60 with the next local at sp+0x80.
+struct DrawTailWork {
+  emitter::ParticleObj *unknown00; // Inferred role: first particle of the tail; original member name unknown.
+  int unknown08;                   // Inferred role: tail particle index; original member name unknown.
+  u8 _0c[0x10 - 0x0c];
+  f32 unknown10;  // Inferred role: copied from the emitter argument; original member name unknown.
+  u32 unknown14;  // Inferred role: copied from the emitter argument; original member name unknown.
+  int unknown18;  // Inferred role: tail color mode; original member name unknown.
+  bool unknown1c; // Inferred role: selects the z component of the top particle; original member name unknown.
+};
+
+static_assert(offsetof(DrawTailWork, unknown08) == 0x08, "");
+static_assert(offsetof(DrawTailWork, unknown10) == 0x10, "");
+static_assert(offsetof(DrawTailWork, unknown14) == 0x14, "");
+static_assert(offsetof(DrawTailWork, unknown18) == 0x18, "");
+static_assert(offsetof(DrawTailWork, unknown1c) == 0x1c, "");
+static_assert(sizeof(DrawTailWork) == 0x20, "");
+
+// Provenance: the name comes from the mangled game symbol of RenderGrObj::draw_common_atr_wpn_tail.
+// Evidence: renderEmitter fills two of them per tail particle, 0x60 bytes apart.
+struct WpnTailShdVtxLayout {
+  f32 unknown00[3]; // Inferred role: position; original member name unknown.
+  u32 unknown0c;    // Inferred role: index in the compute particle buffer; original member name unknown.
+  f32 unknown10[3]; // Inferred role: copied from the particle; original member name unknown.
+  f32 unknown1c;    // Inferred role: copied from the particle; original member name unknown.
+  f32 unknown20[4]; // Inferred role: rotation; original member name unknown.
+  f32 unknown30[3]; // Inferred role: copied from the particle; original member name unknown.
+  f32 unknown3c;    // Inferred role: tail coordinate; original member name unknown.
+  f32 unknown40[3]; // Inferred role: tail color; original member name unknown.
+  u8 _4c[0x50 - 0x4c];
+  f32 unknown50; // Inferred role: draw parameter; original member name unknown.
+  f32 unknown54; // Inferred role: draw parameter; original member name unknown.
+  f32 unknown58; // Inferred role: draw size; original member name unknown.
+  f32 unknown5c; // Inferred role: draw size; original member name unknown.
+};
+
+static_assert(offsetof(WpnTailShdVtxLayout, unknown0c) == 0x0c, "");
+static_assert(offsetof(WpnTailShdVtxLayout, unknown20) == 0x20, "");
+static_assert(offsetof(WpnTailShdVtxLayout, unknown3c) == 0x3c, "");
+static_assert(offsetof(WpnTailShdVtxLayout, unknown50) == 0x50, "");
+static_assert(offsetof(WpnTailShdVtxLayout, unknown5c) == 0x5c, "");
+static_assert(sizeof(WpnTailShdVtxLayout) == 0x60, "");
 
 namespace sort {
 
@@ -90,6 +135,14 @@ public:
   void *lockStream(emitter::EmitterObj *emitter);
   void unlockStream(emitter::EmitterObj *emitter, int count);
   void draw_common_uconst(f32 *uniform, emitter::EmitterObj *emitter);
+  void draw_common_uparam(f32 *uniform, u32 *flags, emitter::EmitterObj *emitter);
+  bool draw_type1_setup(emitter::EmitterObj *emitter, DrawTailWork *work);
+  void draw_common_atr_wpn_tail(WpnTailShdVtxLayout *layout, mm::Vec3 &position, emitter::ParticleObj *particle, emitter::ParticleObj *top, f32 alpha, u32 drawType, DrawTailWork *work);
+  void draw_common_atr_normal(f32 *uniform, emitter::ParticleObj *particle, f32 alpha, u32 drawType, f32 scaleX, f32 scaleY);
+  void draw_common_atr_strip(f32 *uniform, emitter::ParticleObj *particle, emitter::ParticleObj *top, f32 alpha, u32 drawType, DrawTailWork *work, mm::Vec3 position, mm::Vec3 direction, f32 scaleX,
+                             f32 scaleY);
+  void draw_common_atr_screen(f32 *uniform, emitter::ParticleObj *particle, f32 alpha, u32 drawType, f32 scaleX, f32 scaleY);
+  void draw_common_atr_string(f32 *uniform, emitter::ParticleObj *particle, emitter::ParticleObj *top, f32 alpha, u32 drawType, DrawTailWork *work, f32 scaleX, f32 scaleY);
   void draw(emitter::EmitterManager &emitterManager, FxParam &fxParam, int viewIndex, int isBlur);
   void prioritySort(emitter::EmitterManager &emitterManager, int prioIdx, FxParam &fxParam, mm::mtl::FixedVector<sort::EmitterSort, EMITTER_SORT_MAX> &sorts);
 
