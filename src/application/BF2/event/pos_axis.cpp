@@ -31,10 +31,10 @@ mm::Vec3 PosAxis::calcPos() const { return mm::mtl::Singleton<DataManager>::getP
 
 mm::Vec3 DataManager::axis2pos(u32 axis, f32 x, f32 y, f32 z) {
   if (axis < PosAxis::AXIS_CHARA) {
-    return transformPos(getPosAxis(axis), x, y, z);
+    return unknown002(getPosAxis(axis), x, y, z);
   }
   if (axis < getCharaNum() + PosAxis::AXIS_CHARA) {
-    return transformPos(getPosAxis(axis), x, y, z);
+    return unknown002(getPosAxis(axis), x, y, z);
   }
   return mm::Vec3(x, y, z);
 }

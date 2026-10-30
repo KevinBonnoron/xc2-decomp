@@ -4,7 +4,7 @@ namespace mm {
 
 Obb::Obb() : matrix(Mat44::identity), size(1.0f, 1.0f, 1.0f) {}
 
-Obb::Obb(const Mat44 &matrix, const Vec3 &size) : matrix(matrix), size(size) {}
+Obb::Obb(const Mat44 &matrix, const Vec3 &size) { setMat(matrix, size); }
 
 Obb::Obb(const Vec3 &position, const Vec3 &axisX, const Vec3 &axisY, const Vec3 &axisZ, const Vec3 &size) {
   Vec3 trans = position;
@@ -23,7 +23,7 @@ Obb::Obb(const Vec3 &position, const Vec3 &axisX, const Vec3 &axisY, const Vec3 
 
 Obb::Obb(const Vec3 *vertices, u32 count) { setVertices(vertices, count); }
 
-Obb::Obb(const Obb &obb) : matrix(obb.matrix), size(obb.size) {}
+Obb::Obb(const Obb &obb) { *this = obb; }
 
 Obb &Obb::operator=(const Obb &obb) {
   matrix = obb.matrix;

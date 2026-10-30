@@ -22,8 +22,9 @@ template <> struct FixedVectorUnit<8> {
   typedef unsigned long type;
 };
 template <> struct FixedVectorUnit<16> {
+  // Two 8-byte words: a byte array lets the compiler fold element member addresses differently from the game.
   struct alignas(16) type {
-    unsigned char bytes[16];
+    unsigned long unknown00[2]; // Inferred role: storage words; original member name unknown.
   };
 };
 

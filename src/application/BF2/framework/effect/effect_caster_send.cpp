@@ -25,13 +25,13 @@ void EffectCasterSend::sendData(mm::Mat44 &matrix, const char *name, int index) 
     return;
   }
 
-  unknown065 *datas;
+  MtxAndName *datas;
   if (effect::SystemManager::getPtr()->unknown7824d == 0) {
     datas = &unknown18[1][0];
   } else {
     datas = &unknown18[0][0];
   }
-  unknown065 &data = datas[index];
+  MtxAndName &data = datas[index];
   data.unknown20 = matrix;
   if (name == nullptr) {
     strcpy(data.unknown04, "root");
@@ -68,16 +68,16 @@ void EffectCasterSend::sendDataStateName(const char *name) {
 const char *EffectCasterSend::getStateName() { return unknown98[effect::SystemManager::getPtr()->unknown7824d == 0].c_str(); }
 
 EffectCasterSend::EffectCasterSend(mm::mtl::IAllocator *allocator)
-    : unknown18{mm::mtl::Vector<unknown065>(allocator), mm::mtl::Vector<unknown065>(allocator)}, m_caster(nullptr), unknown78(allocator), unknown80(nullptr) {}
+    : unknown18{mm::mtl::Vector<MtxAndName>(allocator), mm::mtl::Vector<MtxAndName>(allocator)}, m_caster(nullptr), unknown78(allocator), unknown80(nullptr) {}
 
 EffectCasterSend::~EffectCasterSend() {}
 
-unknown065 *EffectCasterSend::getBindData(u32 &count) {
+EffectCasterSend::MtxAndName *EffectCasterSend::getBindData(u32 &count) {
   if (m_caster == nullptr) {
     return nullptr;
   }
 
-  unknown065 *datas = m_caster->unknown20;
+  MtxAndName *datas = m_caster->unknown20;
   count = m_caster->unknown28;
   return datas;
 }
@@ -95,3 +95,5 @@ void EffectCasterSend::tailCopy() {
 }
 
 } // namespace fw
+
+template void mm::mtl::Vector<fw::EffectCasterSend::MtxAndName>::push_back(const fw::EffectCasterSend::MtxAndName &);

@@ -44,7 +44,10 @@ public:
 
   struct Item {
     IManiCallback *unknown00; // Inferred role: callback; original member name unknown.
-    u8 _08[0x110 - 0x08];
+    mm::Mat44 unknown10;      // Inferred role: callback origin matrix; original member name unknown.
+    mm::Mat44 unknown50;      // Inferred role: inverse of the origin matrix; original member name unknown.
+    mm::Mat44 unknown90;      // Inferred role: local matrix; original member name unknown.
+    mm::Mat44 unknownd0;      // Inferred role: local matrix times the origin matrix; original member name unknown.
   };
 
   ManiManager();
@@ -72,8 +75,7 @@ private:
   mm::mtl::unknown027<32> unknown18;                // Inferred role: flags; original member name unknown.
   mm::mtl::unknown027<32> unknown1c;                // Inferred role: debug flags; original member name unknown.
   mm::mtl::FixedVector<Item, ITEM_COUNT> unknown20; // Inferred role: items; original member name unknown.
-  u8 _22028[0x22030 - 0x22028];
-  MANI_TYPE unknown22030; // Inferred role: type; original member name unknown.
+  MANI_TYPE unknown22030;                           // Inferred role: type; original member name unknown.
   u8 _22034[0x22040 - 0x22034];
   mm::Mat44 unknown22040; // Inferred role: matrix; original member name unknown.
   mm::Mat44 unknown22080; // Inferred role: matrix; original member name unknown.
@@ -91,6 +93,11 @@ struct ManiManagerLayout {
   static_assert(offsetof(ManiManager, unknown22100) == 0x22100, "");
   static_assert(offsetof(ManiManager, unknown22140) == 0x22140, "");
   static_assert(sizeof(ManiManager) == 0x22180, "");
+  static_assert(offsetof(ManiManager::Item, unknown10) == 0x10, "");
+  static_assert(offsetof(ManiManager::Item, unknown50) == 0x50, "");
+  static_assert(offsetof(ManiManager::Item, unknown90) == 0x90, "");
+  static_assert(offsetof(ManiManager::Item, unknownd0) == 0xd0, "");
+  static_assert(sizeof(ManiManager::Item) == 0x110, "");
 };
 
 } // namespace event

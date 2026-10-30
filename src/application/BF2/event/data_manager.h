@@ -52,16 +52,22 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  static mm::Vec3 transformPos(mm::Mat44 mat, f32 x, f32 y, f32 z) {
+  // Inferred helper: transforms the point (x, y, z) by mat; original name unknown.
+  static mm::Vec3 unknown001(const mm::Mat44 &mat, f32 x, f32 y, f32 z) {
     return mm::Vec3(mat.rows[0][0] * x + mat.rows[1][0] * y + mat.rows[2][0] * z + mat.rows[3][0],
                     mat.rows[0][1] * x + mat.rows[1][1] * y + mat.rows[2][1] * z + mat.rows[3][1],
                     mat.rows[0][2] * x + mat.rows[1][2] * y + mat.rows[2][2] * z + mat.rows[3][2]);
   }
 
-  static mm::Vec3 angle2tar(f32 rotX, f32 rotY, const mm::Vec3 &pos) {
+  // Inferred helper: unknown001 on a matrix taken by value (the game keeps each getPosAxis/getTarAxis result in its own
+  // stack slot, which a reference parameter would let the compiler share); original name unknown.
+  static mm::Vec3 unknown002(mm::Mat44 mat, f32 x, f32 y, f32 z) { return unknown001(mat, x, y, z); }
+
+  // Inferred helper: the point one unit along -z of the rotation (rotX, rotY), from pos; original name unknown.
+  static mm::Vec3 unknown003(f32 rotX, f32 rotY, const mm::Vec3 &pos) {
     mm::Mat44 mat;
     mat.setRotXYZ(mm::Vec3(rotX, rotY, 0.0f));
-    return transformPos(mat, 0.0f, 0.0f, -1.0f) + pos;
+    return unknown001(mat, 0.0f, 0.0f, -1.0f) + pos;
   }
 
   mm::mtl::FixedVector<OfsInfo *, SCENE_COUNT> unknown10; // Inferred role: scenes; original member name unknown.

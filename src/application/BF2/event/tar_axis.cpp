@@ -33,15 +33,15 @@ mm::Vec3 DataManager::axis2tar(u32 axis, f32 x, f32 y, f32 z, const mm::Vec3 &po
   if (axis < TarAxis::AXIS_CHARA) {
     switch (axis) {
     case TarAxis::AXIS_ANGLE:
-      return angle2tar(x, unknown120->unknown110.y + y, pos);
+      return unknown003(x, unknown120->unknown110.y + y, pos);
     case TarAxis::AXIS_ANGLE_GLOBAL:
-      return angle2tar(x, unknown120->unknown160.y + y, pos);
+      return unknown003(x, unknown120->unknown160.y + y, pos);
     default:
-      return transformPos(getTarAxis(axis), x, y, z);
+      return unknown002(getTarAxis(axis), x, y, z);
     }
   }
   if (axis < getCharaNum() + TarAxis::AXIS_CHARA) {
-    return transformPos(getTarAxis(axis), x, y, z);
+    return unknown002(getTarAxis(axis), x, y, z);
   }
   return mm::Vec3(x, y, z);
 }

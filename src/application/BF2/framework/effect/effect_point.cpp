@@ -75,16 +75,16 @@ const char *EffectPoint::getParentName(const char *name) {
 }
 
 mm::Mat44 EffectPoint::getOffset(const char *name) {
-  mm::Mat44 matrix;
   for (u32 i = 0; i < unknown10.size(); i++) {
     if (__builtin_strcmp(unknown10[i].unknown58.c_str(), name) == 0) {
-      matrix.unknown006(unknown10[i].unknown00);
-      return matrix;
+      return unknown10[i].unknown00;
     }
   }
 
-  matrix = mm::Mat44::identity;
-  return matrix;
+  return mm::Mat44::identity;
 }
 
 } // namespace fw
+
+template void mm::mtl::Vector<fw::EffectPoint::Param>::push_back(const fw::EffectPoint::Param &);
+template void mm::mtl::Vector<mm::Mat44>::push_back(const mm::Mat44 &);

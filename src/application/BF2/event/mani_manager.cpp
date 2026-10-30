@@ -163,3 +163,6 @@ void ManiManager::OnEventProc(MSG_TYPE type) {
 bool ManiManager::OnMouseButtonDown(ml::EventView *view) { return false; }
 
 } // namespace event
+
+template void mm::mtl::FixedVector<event::ManiManager::Item, event::ManiManager::ITEM_COUNT>::push_back(const event::ManiManager::Item &);
+template void mm::mtl::mtl_detail::copy_construct_n<event::ManiManager::Item>(const event::ManiManager::Item *, size_t, event::ManiManager::Item *, mm::mtl::int_to_type<0>);

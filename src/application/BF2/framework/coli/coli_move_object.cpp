@@ -24,8 +24,7 @@ void ColiMoveObject::postUpdate() {
         unknown110 &= ~FLAG_ACCURACY;
       }
       move.moveColi(m_coliObject, unknown100);
-      mm::Mat44 matrix;
-      matrix.unknown006(getMatrix());
+      mm::Mat44 matrix(getMatrix());
       mm::Vec3 delta = move.unknown130;
       matrix.rows[3][0] = delta.x + matrix.rows[3][0];
       matrix.rows[3][1] = delta.y + matrix.rows[3][1];

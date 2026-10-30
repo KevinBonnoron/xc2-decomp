@@ -180,10 +180,9 @@ struct alignas(16) Mat44 {
     return Vec3(position);
   }
 
-  // Inferred copy with an alignment check of the source (1.0.0: assert at line 195 of the original header); original helper name unknown.
-  // The implicit copy constructor must stay trivial: other matching functions copy matrices without the check.
+  // Copy with an alignment check of the source (1.0.0: assert at line 195 of the original header).
 #line 194
-  void unknown006(const Mat44 &ma) {
+  Mat44(const Mat44 &ma) {
     MM_ASSERT((reinterpret_cast<size_t>(&ma) & size_t(MM_MAT_ALIGN - 1)) == 0);
     memcpy(this, &ma, sizeof(Mat44));
   }

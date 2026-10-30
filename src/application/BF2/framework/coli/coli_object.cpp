@@ -197,8 +197,7 @@ void ColiObject::resetCharacter(f32 radius, f32 height) {
 void ColiObject::setMatrix(const mm::Mat44 &matrix) {
   f32 scale = unknowne0;
   m_matrix = matrix;
-  mm::Mat44 world;
-  world.unknown006(matrix);
+  mm::Mat44 world(matrix);
   for (u32 row = 0; row < 3; row++) {
     for (u32 column = 0; column < 3; column++) {
       world.rows[row][column] = scale * world.rows[row][column];
@@ -219,8 +218,7 @@ void ColiObject::setMatrix(const mm::Mat44 &matrix) {
 void ColiObject::setInstantlyMatrix(const mm::Mat44 &matrix) {
   f32 scale = unknowne0;
   m_matrix = matrix;
-  mm::Mat44 world;
-  world.unknown006(matrix);
+  mm::Mat44 world(matrix);
   for (u32 row = 0; row < 3; row++) {
     for (u32 column = 0; column < 3; column++) {
       world.rows[row][column] = scale * world.rows[row][column];

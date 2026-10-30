@@ -397,8 +397,7 @@ void IDColiPrimitive::calcBaseBoxSetup(CLBoxWork *box, const mm::Mat44 &matrix, 
   box->unknown20.x = matrix.rows[0][2];
   box->unknown20.y = matrix.rows[1][2];
   box->unknown20.z = matrix.rows[2][2];
-  mm::Mat44 rotation;
-  rotation.unknown006(matrix);
+  mm::Mat44 rotation(matrix);
   rotation.rows[3][0] = 0.0f;
   rotation.rows[3][1] = 0.0f;
   rotation.rows[3][2] = 0.0f;
@@ -419,8 +418,7 @@ void IDColiPrimitive::calcPosDataSetup(IDCmfPosData *posData, const mm::Mat44 &m
   posData->unknown00[0][3] = translation.x;
   posData->unknown00[1][3] = translation.y;
   posData->unknown00[2][3] = translation.z;
-  mm::Mat44 rotation;
-  rotation.unknown006(matrix);
+  mm::Mat44 rotation(matrix);
   rotation.rows[3][0] = 0.0f;
   rotation.rows[3][1] = 0.0f;
   rotation.rows[3][2] = 0.0f;
