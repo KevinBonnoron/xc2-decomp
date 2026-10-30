@@ -1,6 +1,10 @@
 #include "ml/dev_graph_cb.h"
 
+#include "ml/dev_graph.h"
+
 namespace ml {
+
+DevGraphCB::DevGraphCB() { DevGraph::entryCb(this); }
 
 void DevGraphCB::viBeginFrame() {}
 

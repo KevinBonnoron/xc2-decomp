@@ -1,25 +1,42 @@
 #include <math.h>
+#include <stdarg.h>
+#include <stdio.h>
 
 #include "grlib/cglib_depth_ctl.h"
 #include "grlib/cglib_polygon.h"
 #include "ml/cache_draw.h"
+#include "ml/dev_font.h"
 #include "ml/dev_graph.h"
+#include "ml/fixed_size_alloc.h"
+#include "ml/ml_mem.h"
+#include "ml/reslist.h"
+#include "ml/work_cpu.h"
+#include "mm_math/mm_col4.h"
 #include "mm_math/mm_cube.h"
+#include "mm_math/mm_mat44.h"
 #include "mm_math/mm_pnt.h"
 #include "mm_math/mm_prim_base.h"
 #include "mm_math/mm_rect.h"
 #include "mm_math/mm_vec3.h"
+#include "mtl/alloc_handle.h"
 #include "types.h"
 
 namespace grlib {
 class CGLibTextureBuffer;
 } // namespace grlib
 
-namespace mm {
-struct Col4;
-} // namespace mm
-
 namespace ml {
+
+namespace {
+
+// Inferred role: top ring of the unit cylinder, filled by the DebDraw constructor; original name unknown.
+mm::Vec3 unknown005[16];
+// Inferred role: bottom ring of the unit cylinder, filled by the DebDraw constructor; original name unknown.
+mm::Vec3 unknown006[16];
+// Inferred role: the DebDraw instance; original name unknown.
+DebDraw *unknown007;
+
+} // namespace
 
 void DebDraw::clrTex() {
   if (unknown08 & 2) {
@@ -56,11 +73,116 @@ void DebDraw::setLineWidth(u32 width) {
   }
 }
 
+void FontLayer::font(int x, int y, const char *format, ...) {
+  char text[512];
+  va_list args;
+  va_start(args, format);
+  vsnprintf(text, sizeof(text), format, args);
+  va_end(args);
+  if (DebDraw::isNotRender()) {
+    DebDraw::getOnly(0)->font(x, y, text);
+    return;
+  }
+  DevFont::fontLayer(this, x, y, text);
+}
+
+void FontLayer::fontColor(const mm::Col4 &color) {
+  if (DebDraw::isNotRender()) {
+    DebDraw::getOnly(0)->fontColor(color);
+    return;
+  }
+  DevFont::fontLayerColor(this, color);
+}
+
+void FontLayer::fontBack(const mm::Col4 &color) {
+  if (DebDraw::isNotRender()) {
+    DebDraw::getOnly(0)->fontBack(color);
+    return;
+  }
+  DevFont::fontLayerBack(this, color);
+}
+
+void FontLayer::fontShadow(bool isShadow) {
+  if (DebDraw::isNotRender()) {
+    DebDraw::getOnly(0)->fontShadow(isShadow);
+    return;
+  }
+  DevFont::fontLayerShadow(this, isShadow);
+}
+
+void FontLayer::fontFlush(bool isFlush) {
+  if (DebDraw::isNotRender()) {
+    DebDraw::getOnly(0)->fontFlush(isFlush);
+    return;
+  }
+  DevFont::fontLayerFlush(this, isFlush);
+}
+
+void FontLayer::fontScale(f32 x, f32 y) {
+  if (DebDraw::isNotRender()) {
+    DebDraw::getOnly(0)->fontScale(x, y);
+    return;
+  }
+  DevFont::fontLayerScale(this, x, y);
+}
+
 void DebDraw::setTex(grlib::CGLibTextureBuffer *texture) {
   if (!unknown210->setTex(texture)) {
     unknown08 |= 2;
     unknown180 = texture;
   }
+}
+
+DebDraw::DebDraw()
+    : unknown08(0), unknown1c(1.0f), unknown20(-1), unknown24(0), unknown28(0), unknown140(0), unknown144(1), unknown148(0), unknown14c(0.0f), unknown150(0), unknown154(true), unknown155(true),
+      unknown170(-1), unknown178(0), unknown1f8(-1), unknown1fc(-1), unknown200(0), unknown208(0), unknown210(nullptr), m_forceRenderQueue(false) {
+  unknown007 = this;
+  unknown210 = new (MlMem::getProductMem()) CacheDraw(MlMem::getDebugMem(), 0x20000);
+  unknown0c = mm::Col4(1.0f, 1.0f, 1.0f, 1.0f);
+  unknownc0 = mm::Mat44::identity;
+  unknown30 = mm::Vec3::zero;
+  unknown160 = mm::Vec3::zero;
+  for (int i = 0; i < 16; i++) {
+    f32 angle = i * 0.3926991f;
+    f32 angleSin = sinf(angle);
+    f32 angleCos = cosf(angle);
+    unknown005[i].x = angleSin;
+    unknown005[i].y = 1.0f;
+    unknown005[i].z = angleCos;
+    unknown006[i] = mm::Vec3(unknown005[i].x, -1.0f, unknown005[i].z);
+  }
+  unknown188.unknown001(MlMem::getDebugMem(), 0x400);
+  unknown1b8.create(0x400, MlMem::getDebugMem());
+}
+
+DebDraw *DebDraw::getOnly(u32 screen) { return unknown007; }
+
+void DebDraw::setup() {
+  if (unknown007 != nullptr) {
+    unknown007->fastSetup();
+  }
+}
+
+void DebDraw::swap() {
+  if (unknown007 != nullptr) {
+    unknown007->unknown210->swap();
+    unknown007->unknown210->clearSystem(false);
+  }
+}
+
+bool DebDraw::isNotRender() {
+  if (unknown007 == nullptr) {
+    return false;
+  }
+  if (WorkCpu::getCurrentThreadId() == WorkCpu::getThreadId(WorkCpu::getRenderCPUID())) {
+    return unknown007->m_forceRenderQueue;
+  }
+  return true;
+}
+
+void DebDraw::setForceRenderQueue(bool isForce) {
+  m_forceRenderQueue = isForce;
+  unknown210->setForceRenderQueue(isForce);
 }
 
 void DebDraw::fontColor(const mm::Col4 &color) { unknown210->fontColor(color); }
@@ -74,6 +196,30 @@ void DebDraw::fontFlush(bool isEnable) { unknown210->fontFlush(isEnable); }
 void DebDraw::fontScale(f32 x, f32 y) { unknown210->fontScale(x, y); }
 
 void DebDraw::font(int x, int y, const char *text) { unknown210->font(x, y, text); }
+
+u32 DebDraw::getCacheDrawWID() {
+  if (unknown007 != nullptr) {
+    return unknown007->unknown210->m_cacheDrawWID;
+  }
+  return 0xffffffff;
+}
+
+CacheDraw *DebDraw::getCacheDraw() {
+  unknown007->unknown210->m_currentPrio = -2;
+  return unknown007->unknown210;
+}
+
+void DebDraw::setCurrentPrio(int priority) {
+  if (unknown007 != nullptr) {
+    unknown007->unknown210->m_currentPrio = priority;
+  }
+}
+
+void DebDraw::flushPrio(int priority, const mm::Mat44 &projection, const mm::Mat44 &view) {
+  if (unknown007 != nullptr) {
+    unknown007->unknown210->flush(priority, projection, view);
+  }
+}
 
 void DebDraw::initialize() {}
 
@@ -376,5 +522,8 @@ void DebDraw::renderCone(f32 radius, f32 height, u32 division) {
     end();
   }
 }
+
+template class fixed_size_alloc<DebDraw::PRM_DATA>;
+template class reslist<DebDraw::PRM_DATA *>;
 
 } // namespace ml

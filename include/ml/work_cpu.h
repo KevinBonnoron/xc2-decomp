@@ -105,6 +105,7 @@ public:
   static u32 getCpuNum();
   static CPUID getSubWorkCPUID();
   static CPUID getCurrentCPUID();
+  static u64 getThreadId(CPUID cpuId);
   static bool getStackInfo(u64 threadId, u64 &address, u64 &size);
   static f32 getJobCost(CPUID cpuId);
   static bool isSuspendThread(CPUID cpuId);
@@ -120,7 +121,7 @@ public:
   static void removeSwap(IThreadValue *value);
   static u32 getFrameCountU32();
   static const unsigned long &getFrameCount();
-  static bool getOdd();
+  static u32 getOdd();
   static bool isBackground();
   static void syncSubCpu();
   static void wakeup(int cpu);

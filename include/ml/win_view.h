@@ -35,6 +35,7 @@ public:
     WinViewFrame unknown48; // Inferred role: frame; original member name unknown.
   };
 
+  static WinView *getView(bool isResetShadow);
   void attachWorkEvent(IWorkEvent *event, bool isFront);
   const mm::Pnt<int> &getFramePos(bool isBack) const;
   void addFramePos(const mm::Pnt<int> &pos);

@@ -177,7 +177,7 @@ u32 WorkCpu::getFrameCountU32() { return get()->unknown2090; }
 
 const unsigned long &WorkCpu::getFrameCount() { return get()->unknown2090; }
 
-bool WorkCpu::getOdd() { return get()->unknown1764 == 0; }
+u32 WorkCpu::getOdd() { return get()->unknown1764 == 0; }
 
 bool WorkCpu::isBackground() { return _mlwcpu::s_bBackGround; }
 

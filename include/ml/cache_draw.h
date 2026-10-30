@@ -2,18 +2,22 @@
 #include <stddef.h>
 
 #include "ml/dev_graph_cb.h"
+#include "ml/fixed_size_alloc.h"
+#include "ml/reslist.h"
+#include "mm_math/mm_col4.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_obb.h"
 #include "mm_math/mm_pnt.h"
 #include "mm_math/mm_rect.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/fixstr.h"
+#include "mtl/alloc_handle.h"
 #include "types.h"
 
 namespace mm {
 class Cube;
 class PrimBase;
 struct Col3;
-struct Col4;
 } // namespace mm
 
 namespace grlib {
@@ -22,6 +26,7 @@ class CGLibTextureBuffer;
 
 namespace ml {
 
+class CriticalSectionNC;
 class DebDraw;
 
 class CacheDraw {
@@ -229,8 +234,85 @@ public:
     mm::Pnt<int> unknown0c; // Inferred role: start; original member name unknown.
     mm::Pnt<int> unknown14; // Inferred role: end; original member name unknown.
   };
+
+  struct DFONT32 : unknown001 {
+    void flush(DebDraw *draw) override;
+    mm::mtl::FixStr<32> unknown0c; // Inferred role: text; original member name unknown.
+    s16 unknown30;                 // Inferred role: x; original member name unknown.
+    s16 unknown32;                 // Inferred role: y; original member name unknown.
+  };
+
+  struct DFONT64 : unknown001 {
+    void flush(DebDraw *draw) override;
+    mm::mtl::FixStr<64> unknown0c; // Inferred role: text; original member name unknown.
+    s16 unknown50;                 // Inferred role: x; original member name unknown.
+    s16 unknown52;                 // Inferred role: y; original member name unknown.
+  };
+
+  struct DFONT128 : unknown001 {
+    void flush(DebDraw *draw) override;
+    mm::mtl::FixStr<128> unknown0c; // Inferred role: text; original member name unknown.
+    s16 unknown90;                  // Inferred role: x; original member name unknown.
+    s16 unknown92;                  // Inferred role: y; original member name unknown.
+  };
+
+  struct DFONT256 : unknown001 {
+    void flush(DebDraw *draw) override;
+    mm::mtl::FixStr<256> unknown0c; // Inferred role: text; original member name unknown.
+    s16 unknown110;                 // Inferred role: x; original member name unknown.
+    s16 unknown112;                 // Inferred role: y; original member name unknown.
+  };
+
+  struct DFONT_COL : unknown001 {
+    void flush(DebDraw *draw) override;
+    mm::Col4 unknown0c; // Inferred role: font color; original member name unknown.
+  };
+
+  struct DFONT_BACKCOL : unknown001 {
+    void flush(DebDraw *draw) override;
+    mm::Col4 unknown0c; // Inferred role: font back color; original member name unknown.
+  };
+
+  struct DFONT_SHADOW : unknown001 {
+    void flush(DebDraw *draw) override;
+    bool unknown0c; // Inferred role: shadow enable; original member name unknown.
+  };
+
+  struct DFONT_FLUSH : unknown001 {
+    void flush(DebDraw *draw) override;
+    bool unknown0c; // Inferred role: flush enable; original member name unknown.
+  };
+
+  struct DFONT_SCALE : unknown001 {
+    void flush(DebDraw *draw) override;
+    f32 unknown0c; // Inferred role: scale x; original member name unknown.
+    f32 unknown10; // Inferred role: scale y; original member name unknown.
+  };
 #pragma pack(pop)
 
+  // Inferred role: range of recorded commands of one priority; original name unknown.
+  struct unknown002 {
+    u8 *unknown00; // Inferred role: begin; original member name unknown.
+    u8 *unknown08; // Inferred role: end; original member name unknown.
+    int unknown10; // Inferred role: priority; original member name unknown.
+  };
+
+  // Inferred role: command buffer of one frame parity; original name unknown.
+  struct unknown003 {
+    u8 *unknown00;               // Inferred role: memory; original member name unknown.
+    u8 *unknown08;               // Inferred role: write position; original member name unknown.
+    size_t unknown10;            // Inferred role: size; original member name unknown.
+    unknown002 unknown18[0x200]; // Inferred role: recorded ranges; original member name unknown.
+    u32 unknown3018;             // Inferred role: current range index; original member name unknown.
+  };
+
+  CacheDraw(mtl::ALLOC_HANDLE handle, size_t size);
+  virtual ~CacheDraw();
+  void clearSystem(bool isOdd);
+  void swap();
+  unknown003 *getBuf(bool isOdd);
+  void setForceRenderQueue(bool isForce);
+  void flush(int priority, const mm::Mat44 &projection, const mm::Mat44 &view);
   bool setMatrix(const mm::Mat44 &matrix);
   bool setCol(const mm::Col4 &color);
   bool setZComp(bool isEnable);
@@ -278,10 +360,16 @@ public:
   bool font(s16 x, s16 y, const char *text);
   bool fontShadow(bool isEnable);
 
-  u8 _00[0x6054 - 0x00];
+  unknown003 unknown08[2];       // Inferred role: command buffers, indexed by frame parity; original member name unknown.
+  mtl::ALLOC_HANDLE unknown6048; // Inferred role: memory handle; original member name unknown.
+  int m_currentPrio;
+  u32 m_cacheDrawWID;
   f32 unknown6054; // Inferred role: font scale x; original member name unknown.
   f32 unknown6058; // Inferred role: font scale y; original member name unknown.
-  u8 _605c[0x6070 - 0x605c];
+  u8 _605c[0x6060 - 0x605c];
+  CriticalSectionNC *unknown6060; // Inferred role: recording lock; original member name unknown.
+  bool m_forceRenderQueue;
+  int m_suspendSwap;
   bool unknown6070; // Inferred role: z write; original member name unknown.
 };
 
@@ -296,30 +384,50 @@ static_assert(offsetof(CacheDraw::DRSPHERE_REAL, unknown10) == 0x10, "");
 static_assert(offsetof(CacheDraw::DRCAPSULE, unknown14) == 0x14, "");
 static_assert(offsetof(CacheDraw::DTEX, unknown10) == 0x10, "");
 static_assert(offsetof(CacheDraw::DALPHA, unknown0c) == 0x0c, "");
+static_assert(offsetof(CacheDraw::DFONT32, unknown30) == 0x30, "");
+static_assert(offsetof(CacheDraw::DFONT64, unknown50) == 0x50, "");
+static_assert(offsetof(CacheDraw::DFONT128, unknown90) == 0x90, "");
+static_assert(offsetof(CacheDraw::DFONT256, unknown110) == 0x110, "");
+static_assert(offsetof(CacheDraw::DFONT_SCALE, unknown10) == 0x10, "");
 static_assert(offsetof(CacheDraw, unknown6054) == 0x6054, "");
 static_assert(offsetof(CacheDraw, unknown6070) == 0x6070, "");
+static_assert(sizeof(CacheDraw::unknown002) == 0x18, "");
+static_assert(offsetof(CacheDraw::unknown003, unknown3018) == 0x3018, "");
+static_assert(sizeof(CacheDraw::unknown003) == 0x3020, "");
+static_assert(offsetof(CacheDraw, unknown6048) == 0x6048, "");
+static_assert(offsetof(CacheDraw, unknown6060) == 0x6060, "");
+static_assert(offsetof(CacheDraw, m_forceRenderQueue) == 0x6068, "");
+static_assert(offsetof(CacheDraw, m_suspendSwap) == 0x606c, "");
+static_assert(sizeof(CacheDraw) == 0x6078, "");
 
 class DebDraw : public DevGraphCB {
 public:
-  virtual void fastSetup();
-  virtual void restoreShader();
-  virtual void begin(u32 primitive, u32 count);
-  virtual void end();
-  virtual void add(const mm::Vec3 &first, const mm::Vec3 &second);
-  virtual void add(const mm::Pnt<int> &first, const mm::Pnt<int> &second);
-  virtual void add(int x1, int y1, int x2, int y2);
-  virtual void add(const mm::Vec3 &position);
-  virtual void add(const mm::Pnt<int> &position);
-  virtual void add(f32 x, f32 y, f32 z);
-  virtual void add(int x, int y, int z);
-  virtual void add(int x, int y);
-  virtual void add(const mm::Vec3 &position, const mm::Col4 &color);
-  virtual void add(const mm::Vec3 &position, const mm::Col3 &color);
-  virtual void add(int x, int y, const mm::Col4 &color);
-  virtual void add(int x, int y, const mm::Col3 &color);
-  virtual void add(const mm::Vec3 &first, const mm::Vec3 &second, const mm::Col4 &color);
-  virtual void add(const mm::Rect<int> &rect);
-  virtual void add(const mm::Vec3 &first, const mm::Vec3 &second, const mm::Vec3 &third);
+  // Inferred role: priority draw entry, 0x10 bytes from the pool allocation size; layout unknown.
+  struct PRM_DATA {
+    u8 _00[0x10];
+  };
+
+  DebDraw();
+  // The game vtable holds __cxa_pure_virtual in these slots and has no complete-object constructor symbol.
+  virtual void fastSetup() = 0;
+  virtual void restoreShader() = 0;
+  virtual void begin(u32 primitive, u32 count) = 0;
+  virtual void end() = 0;
+  virtual void add(const mm::Vec3 &first, const mm::Vec3 &second) = 0;
+  virtual void add(const mm::Pnt<int> &first, const mm::Pnt<int> &second) = 0;
+  virtual void add(int x1, int y1, int x2, int y2) = 0;
+  virtual void add(const mm::Vec3 &position) = 0;
+  virtual void add(const mm::Pnt<int> &position) = 0;
+  virtual void add(f32 x, f32 y, f32 z) = 0;
+  virtual void add(int x, int y, int z) = 0;
+  virtual void add(int x, int y) = 0;
+  virtual void add(const mm::Vec3 &position, const mm::Col4 &color) = 0;
+  virtual void add(const mm::Vec3 &position, const mm::Col3 &color) = 0;
+  virtual void add(int x, int y, const mm::Col4 &color) = 0;
+  virtual void add(int x, int y, const mm::Col3 &color) = 0;
+  virtual void add(const mm::Vec3 &first, const mm::Vec3 &second, const mm::Col4 &color) = 0;
+  virtual void add(const mm::Rect<int> &rect) = 0;
+  virtual void add(const mm::Vec3 &first, const mm::Vec3 &second, const mm::Vec3 &third) = 0;
   virtual void setPerspective(f32 first, f32 second, f32 third, const mm::Mat44 &matrix, const mm::Vec3 *position);
   virtual void setOrtho();
   virtual void clear();
@@ -359,9 +467,14 @@ public:
   void renderPrimFill(const mm::PrimBase *prim);
   void cubeFill(const mm::Cube *cube);
   static DebDraw *get(u32 screen);
+  static DebDraw *getOnly(u32 screen);
+  static void setup();
+  static bool isNotRender();
+  static u32 getCacheDrawWID();
   static void setCurrentPrio(int priority);
   static void flushPrio(int priority, const mm::Mat44 &projection, const mm::Mat44 &view);
   static void swap();
+  void setForceRenderQueue(bool isForce);
   static CacheDraw *getCacheDraw();
   void initialize();
   void release();
@@ -377,26 +490,59 @@ public:
   void fontScale(f32 x, f32 y);
   void font(int x, int y, const char *text);
 
-  u32 unknown08; // Inferred role: state flags; original member name unknown.
-  u8 _0c[0x1c - 0xc];
-  f32 unknown1c; // Inferred role: alpha; original member name unknown.
-  u8 _20[0x144 - 0x20];
-  u32 unknown144; // Inferred role: line width; original member name unknown.
-  u8 _148[0x154 - 0x148];
+  u32 unknown08;      // Inferred role: state flags; original member name unknown.
+  mm::Col4 unknown0c; // Inferred role: color; original member name unknown.
+  f32 unknown1c;      // Inferred role: alpha; original member name unknown.
+  s32 unknown20;      // Inferred role: primitive; original member name unknown.
+  u32 unknown24;      // Inferred role: vertex count; original member name unknown.
+  u32 unknown28;      // Inferred role: buffered vertex count; original member name unknown.
+  u8 _2c[0x30 - 0x2c];
+  mm::Vec3 unknown30; // Inferred role: camera position; original member name unknown.
+  u8 _40[0xc0 - 0x40];
+  mm::Mat44 unknownc0; // Inferred role: model matrix; original member name unknown.
+  u8 _100[0x140 - 0x100];
+  u32 unknown140;  // Inferred role: added vertex count; original member name unknown.
+  u32 unknown144;  // Inferred role: line width; original member name unknown.
+  u32 unknown148;  // Inferred role: unknown, cleared with the draw state; original member name unknown.
+  f32 unknown14c;  // Inferred role: 2D depth; original member name unknown.
+  u32 unknown150;  // Inferred role: requested vertex count; original member name unknown.
   bool unknown154; // Inferred role: z compare; original member name unknown.
   bool unknown155; // Inferred role: z write; original member name unknown.
-  u8 _156[0x180 - 0x156];
+  u8 _156[0x160 - 0x156];
+  mm::Vec3 unknown160; // Inferred role: perspective position; original member name unknown.
+  s32 unknown170;      // Inferred role: draw primitive type; original member name unknown.
+  u8 _174[0x178 - 0x174];
+  u64 unknown178;                        // Inferred role: unknown, cleared by the constructor; original member name unknown.
   grlib::CGLibTextureBuffer *unknown180; // Inferred role: texture; original member name unknown.
-  u8 _188[0x210 - 0x188];
+  fixed_size_alloc<PRM_DATA> unknown188; // Inferred role: priority draw entry pool; original member name unknown.
+  reslist<PRM_DATA *> unknown1b8;        // Inferred role: priority draw entries; original member name unknown.
+  s32 unknown1f8;                        // Inferred role: unknown, -1 when unused; original member name unknown.
+  s32 unknown1fc;                        // Inferred role: unknown, -1 when unused; original member name unknown.
+  u32 unknown200;                        // Inferred role: unknown, cleared by the constructor; original member name unknown.
+  u8 _204[0x208 - 0x204];
+  u64 unknown208;        // Inferred role: unknown, cleared by the constructor; original member name unknown.
   CacheDraw *unknown210; // Inferred role: recorded draw commands; original member name unknown.
+  bool m_forceRenderQueue;
 };
 
 static_assert(offsetof(DebDraw, unknown08) == 0x8, "");
+static_assert(offsetof(DebDraw, unknown0c) == 0xc, "");
 static_assert(offsetof(DebDraw, unknown1c) == 0x1c, "");
+static_assert(offsetof(DebDraw, unknown30) == 0x30, "");
+static_assert(offsetof(DebDraw, unknownc0) == 0xc0, "");
 static_assert(offsetof(DebDraw, unknown144) == 0x144, "");
 static_assert(offsetof(DebDraw, unknown154) == 0x154, "");
 static_assert(offsetof(DebDraw, unknown155) == 0x155, "");
+static_assert(offsetof(DebDraw, unknown160) == 0x160, "");
+static_assert(offsetof(DebDraw, unknown170) == 0x170, "");
 static_assert(offsetof(DebDraw, unknown180) == 0x180, "");
+static_assert(offsetof(DebDraw, unknown188) == 0x188, "");
+static_assert(offsetof(DebDraw, unknown1b8) == 0x1b8, "");
+static_assert(offsetof(DebDraw, unknown1f8) == 0x1f8, "");
+static_assert(offsetof(DebDraw, unknown208) == 0x208, "");
 static_assert(offsetof(DebDraw, unknown210) == 0x210, "");
+static_assert(offsetof(DebDraw, m_forceRenderQueue) == 0x218, "");
+static_assert(sizeof(DebDraw) == 0x220, "");
+static_assert(sizeof(DebDraw::PRM_DATA) == 0x10, "");
 
 } // namespace ml

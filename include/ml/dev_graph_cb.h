@@ -4,6 +4,7 @@ namespace ml {
 
 class DevGraphCB {
 public:
+  DevGraphCB();
   virtual ~DevGraphCB();
   virtual void viBeginFrame();
   virtual void viBeforeDrawDone();
