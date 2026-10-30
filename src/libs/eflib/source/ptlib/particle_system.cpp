@@ -3,7 +3,11 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+#include "idcoli/idcoli.h"
+#include "idcoli/idcoli_util_coli.h"
 #include "mm/mm_std_base.h"
+#include "mm_math/mm_col4.h"
+#include "mm_math/mm_vec3.h"
 #include "ptlib/emitter/particle_emitter.h"
 #include "ptlib/emitter/particle_emitter_ext.h"
 #include "ptlib/emitter/particle_emitter_manager.h"
@@ -56,6 +60,24 @@ struct unknown007 {
 };
 
 static_assert(offsetof(unknown007, unknown04) == 0x04, "");
+
+// Inferred role: material data of a ground polygon; original name unknown.
+struct unknown008 {
+  u8 _00[0x18 - 0x00];
+  u8 unknown18; // Inferred role: red; original member name unknown.
+  u8 unknown19; // Inferred role: green; original member name unknown.
+  u8 unknown1a; // Inferred role: blue; original member name unknown.
+  u8 unknown1b; // Inferred role: alpha; original member name unknown.
+};
+
+static_assert(offsetof(unknown008, unknown18) == 0x18, "");
+
+// Inferred role: sets a collision test of the ground objects only; original name unknown.
+inline void unknown009(idcoli::IDColiDef &def) {
+  def.unknown10.unknown00 = 1;
+  def.unknown00 = false;
+  def.unknown01 = true;
+}
 
 ParticleManager *s_instance;
 f32 s_unknown001;
@@ -418,6 +440,85 @@ void ParticleManager::draw(const DrDrawWorkInfoEF *info, int viewIndex, bool isB
 }
 
 void ParticleManager::setDrInfo(const DrDrawWorkInfoEF *info) { get()->getRenderManager().setDrInfo(info); }
+
+bool ParticleManager::testRayGround(mm::Vec3 &outNormal, mm::Vec3 &outPos, const mm::Vec3 &start, const mm::Vec3 &direction, f32 length, f32 backLength) {
+  if (unknown169) {
+    return false;
+  }
+  idcoli::IDColiDef def;
+  unknown009(def);
+  if (!def.testRay(start, direction, length, backLength)) {
+    return false;
+  }
+  if (def.unknown10.unknownb0) {
+    outNormal = def.unknown10.unknown10.unknown10;
+    outPos = def.unknown10.unknown10.unknown00;
+#line 1584
+    MM_ASSERT(!outPos.isError());
+  } else {
+    outNormal = def.unknown10.unknown50.unknown10;
+    outPos = def.unknown10.unknown50.unknown00;
+#line 1589
+    MM_ASSERT(!outPos.isError());
+  }
+  return true;
+}
+
+bool ParticleManager::testLineGround(mm::Vec3 &outNormal, mm::Vec3 &outPos, const mm::Vec3 &start, const mm::Vec3 &end) {
+  if (unknown169) {
+    return false;
+  }
+  idcoli::IDColiDef def;
+  unknown009(def);
+  if (!def.testLine(start, end)) {
+    return false;
+  }
+  outNormal = def.unknown10.unknown10.unknown10;
+  outPos = def.unknown10.unknown10.unknown00;
+  return true;
+}
+
+bool ParticleManager::testLineGroundColor(mm::Col4 &outColor, const mm::Vec3 &start, const mm::Vec3 &end) {
+  if (unknown169) {
+    return false;
+  }
+  idcoli::IDColiDef def;
+  unknown009(def);
+  if (!def.testLine(start, end)) {
+    return false;
+  }
+  const unknown008 *material = reinterpret_cast<const unknown008 *>(def.unknown10.unknown10.unknown30);
+  if (material == nullptr) {
+    outColor = mm::Col4::white;
+  } else {
+    outColor.r = material->unknown18 / 255.0f;
+    outColor.g = material->unknown19 / 255.0f;
+    outColor.b = material->unknown1a / 255.0f;
+    outColor.a = material->unknown1b / 255.0f;
+  }
+  return true;
+}
+
+bool ParticleManager::testRayChara(mm::Vec3 &outNormal, mm::Vec3 &outPos, const mm::Vec3 &start, const mm::Vec3 &direction, f32 length, f32 backLength) {
+  if (unknown169) {
+    return false;
+  }
+  idcoli::IDColiDef def;
+  def.unknown10.unknown00 = 1;
+  def.unknown00 = true;
+  def.unknown01 = false;
+  if (!def.testRay(start, direction, length, backLength)) {
+    return false;
+  }
+  if (def.unknown10.unknownb0) {
+    outNormal = def.unknown10.unknown10.unknown10;
+    outPos = def.unknown10.unknown10.unknown00;
+  } else {
+    outNormal = def.unknown10.unknown50.unknown10;
+    outPos = def.unknown10.unknown50.unknown00;
+  }
+  return true;
+}
 
 void efMsg(const char *format, ...) {
   va_list args;

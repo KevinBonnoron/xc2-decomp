@@ -3,7 +3,6 @@
 #include "gf/gf_allocator.h"
 #include "gf/util/gf_util.h"
 #include "mm_math/mm_pnt.h"
-#include "mm_math/mm_quat.h"
 #include "mm_math/mm_rect.h"
 #include "mm_mtl/rtti.h"
 #include "ui/plugin/ui_object_pos_plugin.h"

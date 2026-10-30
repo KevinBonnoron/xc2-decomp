@@ -19,12 +19,14 @@
 #include "mm_math/mm_vec2.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_math/mm_vec3_na.h"
+#include "mm_mtl/fixed_vector.h"
 #include "ptlib/emitter/compute/particle_emitter_compute.h"
 #include "ptlib/emitter/particle_emitter.h"
 #include "ptlib/emitter/particle_emitter_ext.h"
 #include "ptlib/emitter/particle_emitter_param.h"
 #include "ptlib/emitter/particle_emitter_particle.h"
 #include "ptlib/emitter/particle_emitter_set_node.h"
+#include "ptlib/forcefield/particle_force_field.h"
 #include "ptlib/particle_math.h"
 #include "ptlib/particle_system.h"
 #include "ptlib/renderer/particle_renderer_eff_state.h"
@@ -443,6 +445,21 @@ EmitterObj *EmitterManager::emitter_free_core(EmitterObj *emitter) {
   removeEmitterActive(emitter);
   addEmitterFree(emitter);
   return next;
+}
+
+void EmitterManager::updateFeedback(mm::mtl::FixedVector<EmitterObj *, 2001> &emitters, f32 speed) {
+  forcefield::FfManager *ffManager = forcefield::FfManager::getPtr();
+  ffManager->update(speed);
+  for (EmitterObj **it = emitters.begin(); it != emitters.end(); ++it) {
+    EmitterObj *emitter = *it;
+    if (emitter->isRenderCheck()) {
+      for (IntrusiveList<ParticleObj>::iterator particle = emitter->unknown40.begin(); particle != emitter->unknown40.end(); ++particle) {
+        if (emitter->unknown274 == 0) {
+          ffManager->moveForce(particle.get());
+        }
+      }
+    }
+  }
 }
 
 void EmitterManager::move() {

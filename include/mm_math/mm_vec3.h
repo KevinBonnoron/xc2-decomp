@@ -3,6 +3,11 @@
 
 namespace mm {
 
+inline bool isValidFloat(f32 value) {
+  u32 bits = *reinterpret_cast<u32 *>(&value);
+  return bits != 0xcccccccc && (bits & 0x7f800000) != 0x7f800000;
+}
+
 struct alignas(16) Vec3 {
   static const Vec3 zero;
   static const Vec3 unit;
@@ -61,6 +66,8 @@ struct alignas(16) Vec3 {
     z = z * scale;
     return *this;
   }
+
+  bool isError() const { return !isValidFloat(x) || !isValidFloat(y) || !isValidFloat(z); }
 
   f32 x;
   f32 y;

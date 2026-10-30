@@ -5,11 +5,6 @@
 
 namespace mm {
 
-inline bool isValidFloat(f32 value) {
-  u32 bits = *reinterpret_cast<u32 *>(&value);
-  return bits != 0xcccccccc && (bits & 0x7f800000) != 0x7f800000;
-}
-
 struct alignas(16) Quat {
   static const Quat zero;
   static const Quat identity;

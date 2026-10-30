@@ -21,9 +21,18 @@ public:
   EmitterObj *m_emParent;
   mm::Vec3 unknown10; // Inferred role: accumulated force; original member name unknown.
   f32 unknown20;      // Inferred role: force rate; original member name unknown.
-  u8 _24[0x90 - 0x24];
+  u8 _24[0x30 - 0x24];
+  mm::Vec3 unknown30; // Inferred role: cleared when a force field hits the particle; original member name unknown.
+  u8 _40[0x50 - 0x40];
+  mm::Vec3 unknown50; // Inferred role: cleared when a force field hits the particle; original member name unknown.
+  u8 _60[0x70 - 0x60];
+  mm::Vec3 unknown70; // Inferred role: cleared when a force field hits the particle; original member name unknown.
+  u8 _80[0x90 - 0x80];
   mm::Vec3 unknown90; // Inferred role: accumulated newton force; original member name unknown.
-  u8 _a0[0xc0 - 0xa0];
+  u8 _a0[0xb2 - 0xa0];
+  u8 unknownb2; // Inferred role: force field timer, counted down by FfManager::moveForce; original member name unknown.
+  u8 unknownb3; // Inferred role: force field timer, set with unknownb2; original member name unknown.
+  u8 _b4[0xc0 - 0xb4];
   vec2f unknownc0; // Inferred role: draw parameter passed to the shader; original member name unknown.
   vec2f unknownc8; // Inferred role: draw parameter passed to the shader; original member name unknown.
   f32 unknownd0;   // Inferred role: draw parameter passed to the shader; original member name unknown.
@@ -64,6 +73,11 @@ public:
 static_assert(offsetof(ExtObj, m_emParent) == 0x08, "");
 static_assert(offsetof(ExtObj, unknown10) == 0x10, "");
 static_assert(offsetof(ExtObj, unknown20) == 0x20, "");
+static_assert(offsetof(ExtObj, unknown30) == 0x30, "");
+static_assert(offsetof(ExtObj, unknown50) == 0x50, "");
+static_assert(offsetof(ExtObj, unknown70) == 0x70, "");
+static_assert(offsetof(ExtObj, unknownb2) == 0xb2, "");
+static_assert(offsetof(ExtObj, unknownb3) == 0xb3, "");
 static_assert(offsetof(ExtObj, unknown90) == 0x90, "");
 static_assert(offsetof(ExtObj, unknownc0) == 0xc0, "");
 static_assert(offsetof(ExtObj, unknownc8) == 0xc8, "");

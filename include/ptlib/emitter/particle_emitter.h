@@ -58,7 +58,8 @@ struct EmitterArg {
   }
 
   u8 unknown00; // Inferred role: emitter type; original member name unknown.
-  u8 _001[0x009 - 0x001];
+  u8 _001[0x008 - 0x001];
+  u8 unknown08; // Inferred role: ignores the force fields; original member name unknown.
   u8 unknown09; // Inferred role: follows the fit direction of the parent particle; original member name unknown.
   u8 _00a[0x014 - 0x00a];
   mm::Vec3NA unknown14; // Inferred role: bound start point; original member name unknown.
@@ -108,6 +109,7 @@ struct EmitterArg {
 };
 
 static_assert(offsetof(EmitterArg, unknown00) == 0x00, "");
+static_assert(offsetof(EmitterArg, unknown08) == 0x08, "");
 static_assert(offsetof(EmitterArg, unknown09) == 0x09, "");
 static_assert(offsetof(EmitterArg, unknown14) == 0x14, "");
 static_assert(offsetof(EmitterArg, unknown44) == 0x44, "");
@@ -198,6 +200,8 @@ public:
   void emitter_set_param_sub_pos_only2(EmitterParam *param);
   void emitter_alloc01_set_move(FxHeader *header, EmitterArg *arg);
   int getParentParticleState() const;
+  static f32 check_ground(const mm::Vec3 &pos, f32 depth, f32 *rotate);
+  static void check_ground_col(EmitterObj *emitter, const mm::Vec3 &pos, int index);
   static void calc_scale(mm::Vec3 *result, math::Vec3r *range, f32 scale, u32 &seed);
   f32 getEmitterScale();
   EmitterObj *emitter_free();

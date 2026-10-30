@@ -1,5 +1,8 @@
+#include <math.h>
 #include <string.h>
 
+#include "mm/mm_std_base.h"
+#include "mm_math/mm_col4.h"
 #include "mm_math/mm_vec3.h"
 #include "ptlib/emitter/particle_emitter.h"
 #include "ptlib/emitter/particle_emitter_ext.h"
@@ -86,6 +89,37 @@ int EmitterObj::getParentParticleState() const {
     return 1;
   }
   return 2;
+}
+
+f32 EmitterObj::check_ground(const mm::Vec3 &pos, f32 depth, f32 *rotate) {
+  mm::Vec3 normal;
+  mm::Vec3 outPos;
+  outPos.y = -80.0f;
+  mm::Vec3 end(pos.x, pos.y - depth, pos.z);
+  bool isHit = ParticleManager::getPtr()->testLineGround(normal, outPos, pos, end);
+  f32 groundY = outPos.y;
+  if (isHit) {
+    if (rotate != nullptr) {
+      f32 x = normal.x;
+      f32 y = normal.y;
+      f32 z = normal.z;
+      rotate[0] = atan2f(sqrtf(x * x + z * z), y);
+      rotate[1] = atan2f(x, z);
+    }
+#line 704 "ptlib/emitter/particle_emitter.cpp"
+    MM_ASSERT(!outPos.isError());
+  } else if (!mm::isValidFloat(groundY)) {
+    groundY = -80.0f;
+  }
+  return groundY;
+}
+
+void EmitterObj::check_ground_col(EmitterObj *emitter, const mm::Vec3 &pos, int index) {
+  mm::Vec3 end(pos.x, pos.y - 10.0f, pos.z);
+  mm::Col4 color;
+  if (ParticleManager::getPtr()->testLineGroundColor(color, pos, end)) {
+    emitter->unknown120 = color;
+  }
 }
 
 EmitterObj *EmitterObj::emitter_free() {

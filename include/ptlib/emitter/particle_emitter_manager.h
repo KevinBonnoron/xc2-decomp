@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "mm_mtl/fixed_vector.h"
 #include "ptlib/emitter/particle_emitter.h"
 #include "ptlib/particle_intrusive_list.h"
 #include "types.h"
@@ -58,6 +59,7 @@ public:
   void emitter_set_fadeout(void *owner, int frame);
   bool emitter_set_check(FxHeader *header);
   EmitterObj *emitter_free_core(EmitterObj *emitter);
+  void updateFeedback(mm::mtl::FixedVector<EmitterObj *, 2001> &emitters, f32 speed);
   void move();
   FxHeader *emitter_set_search(int type, const char *name, void *owner, u32 category);
 

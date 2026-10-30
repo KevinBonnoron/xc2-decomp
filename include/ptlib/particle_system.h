@@ -10,6 +10,11 @@ class CGLibRenderTarget;
 class CGLibTextureBuffer;
 } // namespace grlib
 
+namespace mm {
+struct Col4;
+struct Vec3;
+} // namespace mm
+
 namespace ptlib {
 
 namespace emitter {
@@ -258,6 +263,10 @@ public:
   void move();
   void draw(const DrDrawWorkInfoEF *info, int viewIndex, bool isBlur);
   void setDrInfo(const DrDrawWorkInfoEF *info);
+  bool testRayGround(mm::Vec3 &outNormal, mm::Vec3 &outPos, const mm::Vec3 &start, const mm::Vec3 &direction, f32 length, f32 backLength);
+  bool testLineGround(mm::Vec3 &outNormal, mm::Vec3 &outPos, const mm::Vec3 &start, const mm::Vec3 &end);
+  bool testLineGroundColor(mm::Col4 &outColor, const mm::Vec3 &start, const mm::Vec3 &end);
+  bool testRayChara(mm::Vec3 &outNormal, mm::Vec3 &outPos, const mm::Vec3 &start, const mm::Vec3 &direction, f32 length, f32 backLength);
 
   CamParam m_camParam;
   u8 _040[0x130 - 0x040];

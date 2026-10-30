@@ -8,6 +8,10 @@
 
 namespace ptlib {
 
+namespace emitter {
+class ParticleObj;
+} // namespace emitter
+
 // Inferred role: kind, start and length of a force; original name unknown.
 struct unknown003 {
   s32 unknown00; // Inferred role: kind; original member name unknown.
@@ -59,6 +63,7 @@ public:
   void initSub();
   void termSub();
   void update(f32 speed);
+  void moveForce(emitter::ParticleObj *particle);
   void addForce(const AddForceParam &param);
 
   mm::mtl::FixedVector<unknown002 *, 128> unknown00; // Inferred role: forces; original member name unknown.
