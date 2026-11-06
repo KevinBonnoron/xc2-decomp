@@ -27,13 +27,15 @@ public:
     u8 *unknown18; // Inferred role: bdat; original member name unknown.
   };
 
-  struct StreamContent : mm::mtl::IntrusiveListNodeBase {
+  // Inferred role: streamed object entry; original type name unknown.
+  struct unknown001 : mm::mtl::IntrusiveListNodeBase {
     u32 unknown10;                 // Inferred role: object handle; original member name unknown.
     u32 unknown14;                 // Inferred role: unused; original member name unknown.
     fw::CommonResource *unknown18; // Inferred role: stream resource; original member name unknown.
   };
 
-  struct ImageContent : mm::mtl::IntrusiveListNodeBase {
+  // Inferred role: streamed image entry; original type name unknown.
+  struct unknown002 : mm::mtl::IntrusiveListNodeBase {
     u32 unknown10;                 // Inferred role: object handle; original member name unknown.
     u32 unknown14;                 // Inferred role: child handle; original member name unknown.
     mm::mtl::FixStr<32> unknown18; // Inferred role: child name; original member name unknown.
@@ -44,33 +46,34 @@ public:
   };
 
   UIStreamManager(mm::mtl::IAllocator *allocator);
+  virtual ~UIStreamManager();
   u32 regist(u8 *bdat);
   void start(u32 streamId, u32 handle, u32 index);
   void deleteImage(const mm::mtl::FixStr<32> &name, u32 object);
   u32 getContentsNum(u32 streamId);
 
-  mm::mtl::IAllocator *unknown08;                  // Inferred role: allocator; original member name unknown.
-  mm::mtl::IntrusiveList<Content> unknown10;       // Inferred role: contents; original member name unknown.
-  mm::mtl::IntrusiveList<StreamContent> unknown28; // Inferred role: stream objects; original member name unknown.
-  mm::mtl::IntrusiveList<ImageContent> unknown40;  // Inferred role: stream images; original member name unknown.
-  fw::RenderResource *unknown58;                   // Inferred role: dummy image resource; original member name unknown.
+  mm::mtl::IAllocator *unknown08;               // Inferred role: allocator; original member name unknown.
+  mm::mtl::IntrusiveList<Content> unknown10;    // Inferred role: contents; original member name unknown.
+  mm::mtl::IntrusiveList<unknown001> unknown28; // Inferred role: stream objects; original member name unknown.
+  mm::mtl::IntrusiveList<unknown002> unknown40; // Inferred role: stream images; original member name unknown.
+  fw::RenderResource *unknown58;                // Inferred role: dummy image resource; original member name unknown.
 };
 
 static_assert(offsetof(UIStreamManager::Content, unknown10) == 0x10, "");
 static_assert(offsetof(UIStreamManager::Content, unknown18) == 0x18, "");
 static_assert(sizeof(UIStreamManager::Content) == 0x20, "");
-static_assert(offsetof(UIStreamManager::StreamContent, unknown10) == 0x10, "");
-static_assert(offsetof(UIStreamManager::StreamContent, unknown14) == 0x14, "");
-static_assert(offsetof(UIStreamManager::StreamContent, unknown18) == 0x18, "");
-static_assert(sizeof(UIStreamManager::StreamContent) == 0x20, "");
-static_assert(offsetof(UIStreamManager::ImageContent, unknown10) == 0x10, "");
-static_assert(offsetof(UIStreamManager::ImageContent, unknown14) == 0x14, "");
-static_assert(offsetof(UIStreamManager::ImageContent, unknown18) == 0x18, "");
-static_assert(offsetof(UIStreamManager::ImageContent, unknown3c) == 0x3c, "");
-static_assert(offsetof(UIStreamManager::ImageContent, unknown40) == 0x40, "");
-static_assert(offsetof(UIStreamManager::ImageContent, unknown48) == 0x48, "");
-static_assert(offsetof(UIStreamManager::ImageContent, unknown50) == 0x50, "");
-static_assert(sizeof(UIStreamManager::ImageContent) == 0x58, "");
+static_assert(offsetof(UIStreamManager::unknown001, unknown10) == 0x10, "");
+static_assert(offsetof(UIStreamManager::unknown001, unknown14) == 0x14, "");
+static_assert(offsetof(UIStreamManager::unknown001, unknown18) == 0x18, "");
+static_assert(sizeof(UIStreamManager::unknown001) == 0x20, "");
+static_assert(offsetof(UIStreamManager::unknown002, unknown10) == 0x10, "");
+static_assert(offsetof(UIStreamManager::unknown002, unknown14) == 0x14, "");
+static_assert(offsetof(UIStreamManager::unknown002, unknown18) == 0x18, "");
+static_assert(offsetof(UIStreamManager::unknown002, unknown3c) == 0x3c, "");
+static_assert(offsetof(UIStreamManager::unknown002, unknown40) == 0x40, "");
+static_assert(offsetof(UIStreamManager::unknown002, unknown48) == 0x48, "");
+static_assert(offsetof(UIStreamManager::unknown002, unknown50) == 0x50, "");
+static_assert(sizeof(UIStreamManager::unknown002) == 0x58, "");
 static_assert(offsetof(UIStreamManager, unknown08) == 0x08, "");
 static_assert(offsetof(UIStreamManager, unknown10) == 0x10, "");
 static_assert(offsetof(UIStreamManager, unknown28) == 0x28, "");

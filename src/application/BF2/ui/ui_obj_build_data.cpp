@@ -58,7 +58,8 @@ static const char *unknown001[] = {
     "img_mask",
 };
 static u32 unknown002[48];
-constexpr u32 PARAM_TYPE_NONE = 0xffff;
+// Inferred role: sentinel for a missing parameter type; original constant name unknown.
+constexpr u32 unknown003 = 0xffff;
 
 UIObjBuildData::UIObjBuildData(mm::mtl::IAllocator *allocator) : unknown58(allocator) {
   if (allocator != nullptr) {
@@ -110,7 +111,7 @@ u32 UIObjBuildData::getParamType(const char *name) const {
       return i;
     }
   }
-  return PARAM_TYPE_NONE;
+  return unknown003;
 }
 
 } // namespace ui

@@ -18,7 +18,8 @@
 
 namespace ui {
 
-constexpr f32 COLOR_COMPONENT_MAX = 255.0f;
+// Inferred role: maximum value of a colour component; original constant name unknown.
+constexpr f32 unknown001 = 255.0f;
 
 UIFontManager::UIFontManager() : unknown08(nullptr), m_fontStyle(), unknown68(false), unknown98(nullptr), unknowna0(nullptr) {
   ms::MsWrapper::init(fw::FrameworkMemory::getMem(5));
@@ -60,7 +61,7 @@ void UIFontManager::importMSBP(const void *data, u32 size) {
         continue;
       }
       layer::LayerStrInfo info;
-      info.setCol4(name, mm::Col4(color.unknown00 / COLOR_COMPONENT_MAX, color.unknown01 / COLOR_COMPONENT_MAX, color.unknown02 / COLOR_COMPONENT_MAX, color.unknown03 / COLOR_COMPONENT_MAX));
+      info.setCol4(name, mm::Col4(color.unknown00 / unknown001, color.unknown01 / unknown001, color.unknown02 / unknown001, color.unknown03 / unknown001));
       colorInfo->push_back(info);
     }
   }

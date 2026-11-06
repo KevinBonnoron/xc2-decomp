@@ -19,7 +19,8 @@ namespace ui {
 
 namespace {
 
-constexpr f32 COLOR_COMPONENT_MAX = 255.0f;
+// Inferred role: maximum value of a colour component; original constant name unknown.
+constexpr f32 unknown002 = 255.0f;
 
 // Inferred role: calls an action for each sheet name of a created layer; original helper name unknown.
 template <typename Action> void unknown001(UIManager &manager, u32 layer, Action action) {
@@ -195,9 +196,9 @@ void UIManager::resetData() {
       const char *name = Bdat::getVal(colorBdat, "name", id).valueString;
       if (name != nullptr && *name != '\0') {
         mm::Col4 color;
-        color.r = static_cast<u32>(Bdat::getVal(colorBdat, "col_r", id).valueU8) / COLOR_COMPONENT_MAX;
-        color.g = static_cast<u32>(Bdat::getVal(colorBdat, "col_g", id).valueU8) / COLOR_COMPONENT_MAX;
-        color.b = static_cast<u32>(Bdat::getVal(colorBdat, "col_b", id).valueU8) / COLOR_COMPONENT_MAX;
+        color.r = static_cast<u32>(Bdat::getVal(colorBdat, "col_r", id).valueU8) / unknown002;
+        color.g = static_cast<u32>(Bdat::getVal(colorBdat, "col_g", id).valueU8) / unknown002;
+        color.b = static_cast<u32>(Bdat::getVal(colorBdat, "col_b", id).valueU8) / unknown002;
         color.a = 1.0f;
         UIColorLibrary::get()->add(name, color);
       }

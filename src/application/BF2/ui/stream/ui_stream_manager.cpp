@@ -13,6 +13,12 @@
 
 namespace ui {
 
+UIStreamManager::UIStreamManager(mm::mtl::IAllocator *allocator) : unknown08(allocator), unknown58(nullptr) {
+  mm::mtl::FixStr<128> fileName;
+  UIUtil::makeMenuImageFileName(fileName, "cmn_stream_dummy");
+  unknown58 = fw::RenderResource::request(unknown08, fileName.c_str(), 10);
+}
+
 u32 UIStreamManager::regist(u8 *bdat) {
   for (Content *it = unknown10.begin().get(); it != unknown10.end().get(); it = static_cast<Content *>(it->unknown00)) {
     if (it->unknown18 == bdat) {
@@ -33,8 +39,8 @@ u32 UIStreamManager::regist(u8 *bdat) {
 
 void UIStreamManager::deleteImage(const mm::mtl::FixStr<32> &name, u32 object) {
   ui::UIObjectAcc acc(object);
-  for (mm::mtl::IntrusiveList<ImageContent>::iterator it = unknown40.begin(); it != unknown40.end(); ++it) {
-    ImageContent *content = it.get();
+  for (mm::mtl::IntrusiveList<unknown002>::iterator it = unknown40.begin(); it != unknown40.end(); ++it) {
+    unknown002 *content = it.get();
     if (strcmp(content->unknown18.c_str(), name.c_str()) != 0) {
       continue;
     }
