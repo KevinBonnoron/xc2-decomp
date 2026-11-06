@@ -77,13 +77,15 @@ public:
     UNKNOWN001_UNKNOWN_5 = 5, // reload requests it; _update calls _reload and returns to state 1.
   };
 
-  struct ScriptData {
+  // Inferred role: one script slot; original type name unknown.
+  struct unknown002 {
     const char *unknown00; // Inferred role: script name; original member name unknown.
     int unknown08;         // Inferred role: reference count; original member name unknown.
     int unknown0c;         // Inferred role: state; original member name unknown.
   };
 
-  static const u32 SCRIPT_COUNT = 32;
+  // Inferred role: number of script slots; original name unknown.
+  static const u32 unknown003 = 32;
 
   static void init();
   static void destroy();
@@ -105,7 +107,7 @@ private:
   int _searchEmpty();
 
 public:
-  ScriptData unknown08[SCRIPT_COUNT] = {}; // Inferred role: script slots; original member name unknown.
+  unknown002 unknown08[unknown003] = {}; // Inferred role: script slots; original member name unknown.
 };
 
 static_assert(offsetof(AiScriptManager, unknown08) == 0x08, "");
@@ -116,12 +118,14 @@ static_assert(sizeof(AiScriptManager) == 0x208, "");
 // getScriptName walks that list.
 class AiScriptDataManager : public mm::mtl::Singleton<AiScriptDataManager> {
 public:
-  struct ScriptData {
+  // Inferred role: one bdat script row; original type name unknown.
+  struct unknown001 {
     int unknown00;         // Inferred role: bdat row id; original member name unknown.
     const char *unknown08; // Inferred role: script name; original member name unknown.
   };
 
-  static const u32 SCRIPT_COUNT = 0x200;
+  // Inferred role: maximum number of script rows; original name unknown.
+  static const u32 unknown002 = 0x200;
 
   static void init();
   static void destroy();
@@ -132,10 +136,10 @@ private:
   void _init();
 
 public:
-  mm::mtl::FixedList<ScriptData, SCRIPT_COUNT> unknown08; // Inferred role: script list; original member name unknown.
+  mm::mtl::FixedList<unknown001, unknown002> unknown08; // Inferred role: script list; original member name unknown.
 };
 
-static_assert(sizeof(AiScriptDataManager::ScriptData) == 0x10, "");
+static_assert(sizeof(AiScriptDataManager::unknown001) == 0x10, "");
 static_assert(offsetof(AiScriptDataManager, unknown08) == 0x08, "");
 static_assert(sizeof(AiScriptDataManager) == 0x3430, "");
 
@@ -144,7 +148,8 @@ static_assert(sizeof(AiScriptDataManager) == 0x3430, "");
 // FixedList<AiData *, 128> at 0x10.
 class AiManager : public mm::mtl::Singleton<AiManager>, public gf::IGfObjListener {
 public:
-  static const u32 DATA_COUNT = 128;
+  // Inferred role: maximum number of registered datas; original name unknown.
+  static const u32 unknown001 = 128;
 
   void init();
   void destroy();
@@ -161,7 +166,7 @@ private:
   void _clear();
 
 public:
-  mm::mtl::FixedList<AiData *, DATA_COUNT> unknown10; // Inferred role: registered datas; original member name unknown.
+  mm::mtl::FixedList<AiData *, unknown001> unknown10; // Inferred role: registered datas; original member name unknown.
 };
 
 static_assert(offsetof(AiManager, unknown10) == 0x10, "");

@@ -13,13 +13,13 @@ struct UpdateInfo;
 namespace ai {
 
 void AiScriptManager::_clear() {
-  for (u32 i = 0; i < SCRIPT_COUNT; i++) {
+  for (u32 i = 0; i < unknown003; i++) {
     _end(i);
   }
 }
 
 void AiScriptManager::_update() {
-  for (u32 i = 0; i < SCRIPT_COUNT; i++) {
+  for (u32 i = 0; i < unknown003; i++) {
     switch (unknown08[i].unknown0c) {
     case UNKNOWN001_UNKNOWN_1:
       _start(i);
@@ -86,7 +86,7 @@ void AiScriptManager::_end(int index) {
 int AiScriptManager::_getScriptType(int index) { return index + gf::SCRIPT_SLOT_AI; }
 
 int AiScriptManager::_searchData(const char *name) {
-  for (int i = 0; i < static_cast<int>(SCRIPT_COUNT); i++) {
+  for (int i = 0; i < static_cast<int>(unknown003); i++) {
     if (unknown08[i].unknown0c != UNKNOWN001_UNKNOWN_0 && strcmp(unknown08[i].unknown00, name) == 0) {
       return i;
     }
@@ -97,7 +97,7 @@ int AiScriptManager::_searchData(const char *name) {
 // The game folds the search into one loop (12 instructions); an early return emits 16.
 int AiScriptManager::_searchEmpty() {
   int index = -1;
-  for (int i = 0; i < static_cast<int>(SCRIPT_COUNT); i++) {
+  for (int i = 0; i < static_cast<int>(unknown003); i++) {
     bool isEmpty = unknown08[i].unknown0c == UNKNOWN001_UNKNOWN_0;
     index = isEmpty ? i : index;
     if (isEmpty) {

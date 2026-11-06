@@ -21,7 +21,7 @@ void AiManager::destroy() {
 }
 
 void AiManager::update(const fw::UpdateInfo &info) {
-  for (mm::mtl::FixedList<AiData *, DATA_COUNT>::iterator it = unknown10.begin(); it != unknown10.end(); ++it) {
+  for (mm::mtl::FixedList<AiData *, unknown001>::iterator it = unknown10.begin(); it != unknown10.end(); ++it) {
     (*it)->update(info);
   }
   AiScriptDataManager::update(info);
@@ -40,7 +40,7 @@ void AiManager::regist(gf::GF_OBJ_HANDLE *handle, int id) {
 }
 
 AiData *AiManager::getDataFromHandle(gf::GF_OBJ_HANDLE *handle) {
-  for (mm::mtl::FixedList<AiData *, DATA_COUNT>::iterator it = unknown10.begin(); it != unknown10.end(); ++it) {
+  for (mm::mtl::FixedList<AiData *, unknown001>::iterator it = unknown10.begin(); it != unknown10.end(); ++it) {
     AiData *data = *it;
     if (data->getHandle() == handle) {
       return data;
@@ -51,7 +51,7 @@ AiData *AiManager::getDataFromHandle(gf::GF_OBJ_HANDLE *handle) {
 
 int AiManager::getNumFromId(int id) {
   int num = 0;
-  for (mm::mtl::FixedList<AiData *, DATA_COUNT>::iterator it = unknown10.begin(); it != unknown10.end(); ++it) {
+  for (mm::mtl::FixedList<AiData *, unknown001>::iterator it = unknown10.begin(); it != unknown10.end(); ++it) {
     if ((*it)->getId() == id) {
       num++;
     }
@@ -60,7 +60,7 @@ int AiManager::getNumFromId(int id) {
 }
 
 void AiManager::_clear() {
-  for (mm::mtl::FixedList<AiData *, DATA_COUNT>::iterator it = unknown10.begin(); it != unknown10.end();) {
+  for (mm::mtl::FixedList<AiData *, unknown001>::iterator it = unknown10.begin(); it != unknown10.end();) {
     AiScriptManager::end(AiScriptDataManager::getScriptName((*it)->getId()));
     // The game tests the data pointer after the dereference: it stores the null before erase's argument setup.
     if (*it != nullptr) {
@@ -72,7 +72,7 @@ void AiManager::_clear() {
 }
 
 void AiManager::unregist(gf::GF_OBJ_HANDLE *handle) {
-  for (mm::mtl::FixedList<AiData *, DATA_COUNT>::iterator it = unknown10.begin(); it != unknown10.end();) {
+  for (mm::mtl::FixedList<AiData *, unknown001>::iterator it = unknown10.begin(); it != unknown10.end();) {
     if ((*it)->getHandle() == handle) {
       AiScriptManager::end(AiScriptDataManager::getScriptName((*it)->getId()));
       // As in _clear: the game stores the null before erase's argument setup.

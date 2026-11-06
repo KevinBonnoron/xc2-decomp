@@ -12,7 +12,7 @@ void AiScriptDataManager::_init() {
   u8 *bdat = gf::GfDataBdat::getFP(0);
   int top = Bdat::getIdTop(bdat);
   int count = Bdat::getIdCount(bdat);
-  int num = mm::min(count, static_cast<int>(SCRIPT_COUNT));
+  int num = mm::min(count, static_cast<int>(unknown002));
   for (int i = 0; i < num; i++) {
     int id = top + i;
     // getValCheck type 7 reads a string.
@@ -20,7 +20,7 @@ void AiScriptDataManager::_init() {
     if (name == nullptr || name[0] == '\0') {
       continue;
     }
-    ScriptData data;
+    unknown001 data;
     data.unknown00 = id;
     data.unknown08 = name;
     unknown08.push_back(data);
