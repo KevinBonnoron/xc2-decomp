@@ -2,6 +2,8 @@
 
 #include "bdat.h"
 #include "framework/memory/framework_memory.h"
+#include "fw/fw_render_resource.h" // IWYU pragma: keep
+#include "mm_mtl/fixstr.h"
 #include "mm_mtl/hash.h"
 #include "ui/ui_util.h"
 
