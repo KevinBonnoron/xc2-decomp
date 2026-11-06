@@ -58,6 +58,7 @@ static const char *unknown001[] = {
     "img_mask",
 };
 static u32 unknown002[48];
+constexpr u32 PARAM_TYPE_NONE = 0xffff;
 
 UIObjBuildData::UIObjBuildData(mm::mtl::IAllocator *allocator) : unknown58(allocator) {
   if (allocator != nullptr) {
@@ -96,19 +97,20 @@ u32 UIObjBuildData::searchObject(const char *name) {
 }
 
 void UIObjBuildData::initialize() {
-  for (u32 i = 0; i < 48; i++) {
+  for (u32 i = 0; i < sizeof(unknown001) / sizeof(unknown001[0]); i++) {
     unknown002[i] = mm::mtl::hashStrCrc(unknown001[i]);
   }
 }
 
 u32 UIObjBuildData::getParamType(const char *name) const {
   u32 hash = mm::mtl::hashStrCrc(name);
-  for (s64 i = 0; i < 48; i++) {
+  // The game compares a 64-bit loop counter.
+  for (s64 i = 0; i < static_cast<s64>(sizeof(unknown002) / sizeof(unknown002[0])); i++) {
     if (unknown002[i] == hash) {
       return i;
     }
   }
-  return 0xffff;
+  return PARAM_TYPE_NONE;
 }
 
 } // namespace ui

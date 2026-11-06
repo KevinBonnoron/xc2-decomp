@@ -33,38 +33,38 @@ public:
     f32 unknown44;         // Inferred role: alpha, "alpha" column divided by 255; original member name unknown.
     u16 unknown48;         // Inferred role: priority, "priority" column; original member name unknown.
     u8 unknown4a;          // Inferred role: blend type, "blend_type" column; original member name unknown.
-    bool unknown4b;        // Inferred role: "def_undisp" column; original member name unknown.
-    bool unknown4c;        // Inferred role: "localize" column; original member name unknown.
-    bool unknown4d;        // Inferred role: "save_def_col" column; original member name unknown.
-    bool unknown4e;        // Inferred role: "ignore_sizing" column; original member name unknown.
+    bool unknown4b;        // "def_undisp" column; role and original member name unknown.
+    bool unknown4c;        // "localize" column; role and original member name unknown.
+    bool unknown4d;        // "save_def_col" column; role and original member name unknown.
+    bool unknown4e;        // "ignore_sizing" column; role and original member name unknown.
     const char *unknown50; // Inferred role: color link, "col_link_name" column; original member name unknown.
     const char *unknown58; // Inferred role: mask link, "mask_link_name" column; original member name unknown.
     u8 unknown60;          // Inferred role: input type, "input_type" column; original member name unknown.
     u16 unknown62;         // Inferred role: input id, "input_id" column; original member name unknown.
-    u8 unknown64;          // Inferred role: unknown; original member name unknown.
+    u8 unknown64;          // Role and original member name unknown.
     const char *unknown68; // Inferred role: stream list, "img_stream_list" column; original member name unknown.
     s32 unknown70;         // Inferred role: image index, "img_index" column; original member name unknown.
-    u8 unknown74;          // Inferred role: "img_capture" column; original member name unknown.
-    u32 unknown78;         // Inferred role: "img_capture_w" column; original member name unknown.
-    u32 unknown7c;         // Inferred role: "img_capture_h" column; original member name unknown.
-    bool unknown80;        // Inferred role: "img_hflip" column; original member name unknown.
-    bool unknown81;        // Inferred role: "img_vflip" column; original member name unknown.
-    bool unknown82;        // Inferred role: "img_mask" column; original member name unknown.
+    u8 unknown74;          // "img_capture" column; role and original member name unknown.
+    u32 unknown78;         // "img_capture_w" column; role and original member name unknown.
+    u32 unknown7c;         // "img_capture_h" column; role and original member name unknown.
+    bool unknown80;        // "img_hflip" column; role and original member name unknown.
+    bool unknown81;        // "img_vflip" column; role and original member name unknown.
+    bool unknown82;        // "img_mask" column; role and original member name unknown.
     u32 unknown84;         // Inferred role: text id, "text_id" column; original member name unknown.
-    u8 unknown88;          // Inferred role: "text_align_h" column; original member name unknown.
-    u8 unknown89;          // Inferred role: "text_align_v" column; original member name unknown.
-    u8 unknown8a;          // Inferred role: unknown bdat column; original member name unknown.
-    f32 unknown8c;         // Inferred role: "border_weight" column; original member name unknown.
+    u8 unknown88;          // "text_align_h" column; role and original member name unknown.
+    u8 unknown89;          // "text_align_v" column; role and original member name unknown.
+    u8 unknown8a;          // Inferred role: text property, "text_prop" column; original member name unknown.
+    f32 unknown8c;         // "border_weight" column; role and original member name unknown.
     u32 unknown90;         // Inferred role: slope, "slope" column; original member name unknown.
     const char *unknown98; // Inferred role: text face pattern, "text_face_ptn" column; original member name unknown.
     u32 unknowna0;         // Inferred role: screen width, "screen_w" column; original member name unknown.
     u32 unknowna4;         // Inferred role: screen height, "screen_h" column; original member name unknown.
-    bool unknowna8;        // Inferred role: "screen_on_mem" column; original member name unknown.
-    u16 unknownaa;         // Inferred role: "poly_shape_type" column; original member name unknown.
-    u16 unknownac;         // Inferred role: "poly_face_v_num" column; original member name unknown.
-    u16 unknownae;         // Inferred role: "poly_ring_div" column; original member name unknown.
-    u16 unknownb0;         // Inferred role: "poly_ring_w" column; original member name unknown.
-    const char *unknownb8; // Inferred role: "poly_particle_file" column; original member name unknown.
+    bool unknowna8;        // "screen_on_mem" column; role and original member name unknown.
+    u16 unknownaa;         // "poly_shape_type" column; role and original member name unknown.
+    u16 unknownac;         // "poly_face_v_num" column; role and original member name unknown.
+    u16 unknownae;         // "poly_ring_div" column; role and original member name unknown.
+    u16 unknownb0;         // "poly_ring_w" column; role and original member name unknown.
+    const char *unknownb8; // "poly_particle_file" column; role and original member name unknown.
   };
 
   virtual ~UIBuildInfo() {}

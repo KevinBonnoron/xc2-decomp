@@ -210,14 +210,15 @@ void UICtrlManager::addMotionMethod(int slot, const char *motion, const char *na
 }
 
 void UICtrlManager::startCtrl(int slot, f32 duration, u32 flags, u32 id) {
-  if (unknown10[slot].unknown1d8 == nullptr) {
+  CtrlSlot &ctrlSlot = unknown10[slot];
+  if (ctrlSlot.unknown1d8 == nullptr) {
     return;
   }
-  unknown10[slot].unknownf0.start(unknown10[slot].unknown1d8, duration, unknown10[slot].unknown178, unknown10[slot].unknown1e0);
-  unknown10[slot].unknown178.clear();
-  unknown10[slot].unknown1e4.unknown002(flags);
-  unknown10[slot].unknown1d8->unknown98.set(UI_OBJECT_FLAG_CONTROL);
-  unknown10[slot].unknown1ec = id;
+  ctrlSlot.unknownf0.start(ctrlSlot.unknown1d8, duration, ctrlSlot.unknown178, ctrlSlot.unknown1e0);
+  ctrlSlot.unknown178.clear();
+  ctrlSlot.unknown1e4.unknown002(flags);
+  ctrlSlot.unknown1d8->unknown98.set(UI_OBJECT_FLAG_CONTROL);
+  ctrlSlot.unknown1ec = id;
 }
 
 void UICtrlManager::getDefaultTransfom(int slot, UITransform &transform) {

@@ -28,6 +28,7 @@ UILayoutObject::~UILayoutObject() {
 }
 
 void UILayoutObject::update() {
+  // The game reads the flag word once and reuses it after the parent lookup.
   u32 flags = unknown98.unknown001(0);
   bool term;
   if ((flags & (1 << UI_OBJECT_FLAG_DUPLICATE)) != 0 && getParentPtr() != nullptr) {

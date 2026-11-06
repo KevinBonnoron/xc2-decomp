@@ -67,6 +67,7 @@ public:
   mm::mtl::IAllocator *unknown58;          // Inferred role: allocator; original member name unknown.
 };
 
+static_assert(offsetof(UIMotionData::MotionData, unknown00) == 0x00, "");
 static_assert(offsetof(UIMotionData::MotionData, unknown28) == 0x28, "");
 static_assert(sizeof(UIMotionData::MotionData) == 0x30, "");
 static_assert(sizeof(UIMotionData::Parameter) == 0x08, "");

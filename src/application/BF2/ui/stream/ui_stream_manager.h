@@ -57,10 +57,25 @@ public:
 };
 
 static_assert(offsetof(UIStreamManager::Content, unknown10) == 0x10, "");
+static_assert(offsetof(UIStreamManager::Content, unknown18) == 0x18, "");
+static_assert(sizeof(UIStreamManager::Content) == 0x20, "");
+static_assert(offsetof(UIStreamManager::StreamContent, unknown10) == 0x10, "");
+static_assert(offsetof(UIStreamManager::StreamContent, unknown14) == 0x14, "");
+static_assert(offsetof(UIStreamManager::StreamContent, unknown18) == 0x18, "");
+static_assert(sizeof(UIStreamManager::StreamContent) == 0x20, "");
+static_assert(offsetof(UIStreamManager::ImageContent, unknown10) == 0x10, "");
+static_assert(offsetof(UIStreamManager::ImageContent, unknown14) == 0x14, "");
+static_assert(offsetof(UIStreamManager::ImageContent, unknown18) == 0x18, "");
 static_assert(offsetof(UIStreamManager::ImageContent, unknown3c) == 0x3c, "");
 static_assert(offsetof(UIStreamManager::ImageContent, unknown40) == 0x40, "");
+static_assert(offsetof(UIStreamManager::ImageContent, unknown48) == 0x48, "");
 static_assert(offsetof(UIStreamManager::ImageContent, unknown50) == 0x50, "");
 static_assert(sizeof(UIStreamManager::ImageContent) == 0x58, "");
+static_assert(offsetof(UIStreamManager, unknown08) == 0x08, "");
 static_assert(offsetof(UIStreamManager, unknown10) == 0x10, "");
+static_assert(offsetof(UIStreamManager, unknown28) == 0x28, "");
+static_assert(offsetof(UIStreamManager, unknown40) == 0x40, "");
+static_assert(offsetof(UIStreamManager, unknown58) == 0x58, "");
+static_assert(sizeof(UIStreamManager) == 0x60, "");
 
 } // namespace ui

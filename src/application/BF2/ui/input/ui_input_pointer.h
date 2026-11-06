@@ -73,17 +73,22 @@ public:
 };
 
 static_assert(sizeof(UIInputPointer::SelectionSetup) == 0x18, "");
+static_assert(sizeof(UIInputPointer::PointerSetup) == 0x190, "");
 static_assert(offsetof(UIInputPointer::PointerSetup, unknown188) == 0x188, "");
 static_assert(offsetof(UIInputPointer::PointerSetup, unknown18a) == 0x18a, "");
 static_assert(offsetof(UIInputPointer::PointerSetup, unknown18c) == 0x18c, "");
 static_assert(offsetof(UIInputPointer::PointerSetup, unknown18e) == 0x18e, "");
 static_assert(offsetof(UIInputPointer, unknown1e8) == 0x1e8, "");
+static_assert(offsetof(UIInputPointer, unknown1e0) == 0x1e0, "");
+static_assert(offsetof(UIInputPointer, unknown1e2) == 0x1e2, "");
 static_assert(offsetof(UIInputPointer, unknown204) == 0x204, "");
 static_assert(offsetof(UIInputPointer, unknown224) == 0x224, "");
 static_assert(offsetof(UIInputPointer, unknown228) == 0x228, "");
 static_assert(offsetof(UIInputPointer, unknown242) == 0x242, "");
+static_assert(offsetof(UIInputPointer, unknown240) == 0x240, "");
 static_assert(offsetof(UIInputPointer, unknown248) == 0x248, "");
 static_assert(offsetof(UIInputPointer, unknown24e) == 0x24e, "");
+static_assert(offsetof(UIInputPointer, unknown258) == 0x258, "");
 static_assert(sizeof(UIInputPointer) == 0x260, "");
 
 } // namespace ui

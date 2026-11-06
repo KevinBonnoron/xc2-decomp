@@ -72,6 +72,7 @@ static_assert(offsetof(UIFontManager, m_fontStyle) == 0x58, "");
 static_assert(offsetof(UIFontManager, unknown68) == 0x68, "");
 static_assert(offsetof(UIFontManager, unknown70) == 0x70, "");
 static_assert(offsetof(UIFontManager, unknown98) == 0x98, "");
+static_assert(offsetof(UIFontManager, unknowna0) == 0xa0, "");
 static_assert(sizeof(UIFontManager) == 0xa8, "");
 
 } // namespace ui

@@ -15,7 +15,7 @@ u32 UIBuildInfoBdat::getObjectNum() const { return Bdat::getIdCount(Bdat::getFP(
 
 void UIBuildInfoBdat::getObjectData(u32 index, ObjectData &data) const {
   u8 *bdat = Bdat::getFP(m_name);
-  // The original reads the message bdat before the object columns and does not use the result.
+  // The game calls this and discards the result.
   UIUtil::getBdatFP(UI_BDAT_MENU_MS);
   u32 id = Bdat::getIdTop(bdat) + index;
   data = ObjectData();

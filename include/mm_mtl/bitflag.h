@@ -41,9 +41,8 @@ public:
 
   // Inferred role: replaces the stored words with a raw value; original name unknown.
   void unknown002(unsigned int value) {
-    for (unsigned int i = 0; i < WORD_COUNT; i++) {
-      mBits[i] = i == 0 ? value : 0;
-    }
+    clear();
+    mBits[0] = value;
   }
 
   bool test(unsigned int index) const {

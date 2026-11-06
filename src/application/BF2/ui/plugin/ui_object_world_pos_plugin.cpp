@@ -30,6 +30,7 @@ UIObjectWorldPosPlugin *UIObjectWorldPosPlugin::create(u32 handle) {
 
 void UIObjectWorldPosPlugin::execute(UIObjectAcc &acc) {
   UIObjectPosPlugin::execute(acc);
+  // The game calls this and discards the result.
   UIUtil::getObject(acc.unknown10);
   mm::Mat44 matrix;
   matrix.unknown007(unknowna0);

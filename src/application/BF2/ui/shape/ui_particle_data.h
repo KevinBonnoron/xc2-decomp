@@ -20,7 +20,9 @@ public:
 
 static_assert(offsetof(UIParticleData, unknown08) == 0x08, "");
 static_assert(offsetof(UIParticleData, unknown6c) == 0x6c, "");
+static_assert(offsetof(UIParticleData, unknown70) == 0x70, "");
 static_assert(offsetof(UIParticleData, unknown74) == 0x74, "");
+static_assert(offsetof(UIParticleData, unknown78) == 0x78, "");
 static_assert(sizeof(UIParticleData) == 0xa8, "");
 
 } // namespace ui

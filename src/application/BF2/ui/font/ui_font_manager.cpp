@@ -18,6 +18,8 @@
 
 namespace ui {
 
+constexpr f32 COLOR_COMPONENT_MAX = 255.0f;
+
 UIFontManager::UIFontManager() : unknown08(nullptr), m_fontStyle(), unknown68(false), unknown98(nullptr), unknowna0(nullptr) {
   ms::MsWrapper::init(fw::FrameworkMemory::getMem(5));
   unknown70.setAllocator(UIUtil::getProgAllocator());
@@ -58,7 +60,7 @@ void UIFontManager::importMSBP(const void *data, u32 size) {
         continue;
       }
       layer::LayerStrInfo info;
-      info.setCol4(name, mm::Col4(color.unknown00 / 255.0f, color.unknown01 / 255.0f, color.unknown02 / 255.0f, color.unknown03 / 255.0f));
+      info.setCol4(name, mm::Col4(color.unknown00 / COLOR_COMPONENT_MAX, color.unknown01 / COLOR_COMPONENT_MAX, color.unknown02 / COLOR_COMPONENT_MAX, color.unknown03 / COLOR_COMPONENT_MAX));
       colorInfo->push_back(info);
     }
   }
@@ -67,6 +69,7 @@ void UIFontManager::importMSBP(const void *data, u32 size) {
       continue;
     }
     s32 iconNum = ms::MsWrapper::getTagParamListItemNum(1, i, 0);
+    // The game compares the loop index with -1 here.
     if (i == -1) {
       break;
     }

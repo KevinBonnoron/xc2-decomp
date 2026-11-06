@@ -69,6 +69,7 @@ UIObjectNumberPlugin *UIObjectNumberPlugin::createExt(u32 handle, u32 extType) {
   UIObjectNumberPlugin *plugin = new (UIUtil::getProgAllocator(), 16, __FILE__, __LINE__) UIObjectNumberPlugin();
   plugin->addRef();
   UIObjectAcc acc(handle);
+  // The game returns here without releasing the plugin.
   if (acc.isLayout()) {
     return nullptr;
   }
