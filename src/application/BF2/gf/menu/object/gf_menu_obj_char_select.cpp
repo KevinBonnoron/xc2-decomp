@@ -164,6 +164,12 @@ bool GfMenuObjCharSelect::seqReturn() {
   return true;
 }
 
+bool GfMenuObjCharSelect::seqReturnChange() {
+  ui::UIObjectAcc acc(unknown18, "LAY_char");
+  unknown158(acc.unknown10, 0x107, 1, 0.0f);
+  return true;
+}
+
 bool GfMenuObjCharSelect::seqSpNiaChangeDr() {
   SCOM_NIA_BLADE::create(false);
   return true;
@@ -182,6 +188,8 @@ void GfMenuObjCharSelect::dispOffChar(u32 type) {
     dispOffCopyChar(acc, type);
   }
 }
+
+void GfMenuObjCharSelect::execCharPosScale(u32 type) { unknown159(unknown001, 0x109, type); }
 
 } // namespace gf
 

@@ -63,9 +63,11 @@ public:
   bool seqStreamWaitStatBlBefore();
   bool seqConfSpecialWaitError();
   bool seqReturn();
+  bool seqReturnChange();
   bool seqSpNiaChangeDr();
   static void dispOnChar(u32 type);
   static void dispOffChar(u32 type);
+  static void execCharPosScale(u32 type);
 
   u8 _24[0x430 - 0x24];
   GfMenuSequence<GfMenuObjCharSelect, 8> unknown430; // Inferred role: character select steps; original member name unknown.

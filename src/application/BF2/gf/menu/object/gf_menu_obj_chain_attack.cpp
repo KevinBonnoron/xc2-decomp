@@ -40,6 +40,50 @@ void GfMenuObjChainAttack::closeStatus() {
   }
 }
 
+void GfMenuObjChainAttack::openStatus(GfMenuCallContext *context) {
+  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown001));
+  if (acc.isValid()) {
+    ui::UIObjectAcc child(acc.searchChild("LAY_status"));
+    ui::EventData event;
+    event.unknown00 = GfMenuTypes::unknown003_33;
+    GfMenuObject::sendEvent(child.unknown10, event, 0.0f);
+    GfMenuObjArtsPalette::startChainAttack();
+    GfMenuObjBladeChange::startChainAttack(context);
+  }
+}
+
+void GfMenuObjChainAttack::openStart(GfMenuCallContext *context) {
+  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown001));
+  if (acc.isValid() && GfMenuObjUtil::checkCCStart(context)) {
+    ui::UIObjectAcc child(acc.searchChild("LAY_start"));
+    ui::EventData event;
+    event.unknown00 = GfMenuTypes::unknown003_33;
+    GfMenuObject::sendEvent(child.unknown10, event, 0.0f);
+    GfMenuObject::startCallContext(context, unknown001, child.unknown10);
+  }
+}
+
+void GfMenuObjChainAttack::openFullBurst(GfMenuCallContext *context) {
+  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown001));
+  if (acc.isValid() && GfMenuObjUtil::checkCCStart(context)) {
+    ui::UIObjectAcc child(acc.searchChild("LAY_full_burst"));
+    ui::EventData event;
+    event.unknown00 = GfMenuTypes::unknown003_33;
+    GfMenuObject::sendEvent(child.unknown10, event, 0.0f);
+    GfMenuObject::startCallContext(context, unknown001, child.unknown10);
+  }
+}
+
+void GfMenuObjChainAttack::closeTurnSelect(GfMenuCallContext *context) {
+  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown001));
+  if (acc.isValid() && GfMenuObjUtil::checkCCNext(context, unknown001)) {
+    ui::UIObjectAcc child(acc.searchChild("LAY_turn_sel"));
+    ui::EventData event;
+    event.unknown00 = GfMenuTypes::unknown003_34;
+    GfMenuObject::sendEvent(child.unknown10, event, 0.0f);
+  }
+}
+
 bool GfMenuObjChainAttack::isEnableSelect(u32 handle, int index) {
   ui::UIObjectAcc acc(handle);
   if (strcmp(acc.getName(), "LAY_turn_sel") == 0) {

@@ -21,6 +21,12 @@ void GfMenuObjTutorial::update() {
 
 void GfMenuObjTutorial::closeAll() { unknown144(unknown001, GfMenuTypes::unknown003_34); }
 
+void GfMenuObjTutorial::closeText(u32 param) { unknown156(unknown001, 0x101, param); }
+
+void GfMenuObjTutorial::closeFocus(u32 param) { unknown156(unknown001, 0x102, param); }
+
+void GfMenuObjTutorial::closeIcon(u32 param) { unknown156(unknown001, 0x103, param); }
+
 bool GfMenuObjTutorial::seqTelopStart() {
   ui::UIObjectAcc image(unknown18, "IMG_start");
   bool isEnd;
