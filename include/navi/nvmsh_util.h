@@ -76,7 +76,7 @@ public:
   int unknown78; // Inferred role: -1; original member name unknown.
   u16 unknown7c; // Inferred role: 0xffff; original member name unknown.
   u8 _7e[2];
-  u32 unknown80; // Inferred role: attribute bits changed by setAttr; original member name unknown.
+  u32 m_attr;    // Name from setAttr; original member name unknown.
   u32 unknown84; // Inferred role: unknown; original member name unknown.
   u16 unknown88; // Inferred role: unknown; original member name unknown.
   u16 unknown8a; // Inferred role: unknown; original member name unknown.
@@ -85,7 +85,7 @@ public:
 static_assert(offsetof(NvmshUtilColi, unknown70) == 0x70, "");
 static_assert(offsetof(NvmshUtilColi, unknown78) == 0x78, "");
 static_assert(offsetof(NvmshUtilColi, unknown7c) == 0x7c, "");
-static_assert(offsetof(NvmshUtilColi, unknown80) == 0x80, "");
+static_assert(offsetof(NvmshUtilColi, m_attr) == 0x80, "");
 static_assert(offsetof(NvmshUtilColi, unknown84) == 0x84, "");
 static_assert(offsetof(NvmshUtilColi, unknown88) == 0x88, "");
 static_assert(offsetof(NvmshUtilColi, unknown8a) == 0x8a, "");

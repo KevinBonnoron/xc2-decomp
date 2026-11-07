@@ -21,6 +21,7 @@ NvmshResMemMan::~NvmshResMemMan() {
   unknown00 = nullptr;
 }
 
+// The game calls memcpy here even though the ranges can overlap; keep the same call to reproduce that behavior.
 void NvmshResMemMan::memLcMove(void *destination, void *source, u32 size) { __builtin_memcpy(destination, source, size); }
 
 void NvmshResMemMan::releaseFreeObj(NvmshResMemObj *object) {

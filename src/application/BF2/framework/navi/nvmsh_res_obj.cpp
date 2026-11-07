@@ -2,6 +2,9 @@
 
 #include "navi/nvmsh_res_mem_man.h"
 
+// releaseFreeObj is inlined by the game in releaseNavi; keep its definition visible in this unit.
+#include "nvmsh_res_mem_man.cpp"
+
 namespace navi {
 
 NvmshResObj::NvmshResObj()
@@ -13,8 +16,7 @@ NvmshResObj::~NvmshResObj() {}
 NvmshResData::~NvmshResData() {}
 
 void NvmshResObj::createNavi(const u8 *data) {
-  // Evidence: the game reads the header fields at these offsets directly from the file image.
-  const _NvMhAllReadObj *header = reinterpret_cast<const _NvMhAllReadObj *>(data);
+  const unknown001 *header = reinterpret_cast<const unknown001 *>(data);
   unknown08 = data;
   unknown10 = data;
   unknown18 = data + header->unknown28;
@@ -39,8 +41,34 @@ void NvmshResObj::resetNavi() {
   unknown08 = nullptr;
 }
 
+void NvmshResData::createNavi() {
+  if ((m_readData->unknown00 & 1) != 0) {
+    unknown10.createNavi(static_cast<const u8 *>(unknownc8->unknown18));
+    if ((m_readData->unknown00 & 2) != 0) {
+      unknown68.createNavi(static_cast<const u8 *>(unknownc8->unknown18) + m_readData->unknown0c);
+    }
+  } else if ((m_readData->unknown00 & 2) != 0) {
+    unknown68.createNavi(static_cast<const u8 *>(unknownc8->unknown18));
+  }
+  unknown04 = 0;
+  unknown00 = 0x11;
+}
+
+void NvmshResData::resetNavi() {
+  unknown10.resetNavi();
+  unknown68.resetNavi();
+  if ((m_readData->unknown00 & 1) != 0) {
+    unknown10.createNavi(static_cast<const u8 *>(unknownc8->unknown18));
+    if ((m_readData->unknown00 & 2) != 0) {
+      unknown68.createNavi(static_cast<const u8 *>(unknownc8->unknown18) + m_readData->unknown0c);
+    }
+  } else if ((m_readData->unknown00 & 2) != 0) {
+    unknown68.createNavi(static_cast<const u8 *>(unknownc8->unknown18));
+  }
+}
+
 void NvmshResData::setReadData(const _NvMhAllReadObj *readData, int offset) {
-  unknown08 = readData;
+  m_readData = readData;
   unknownc0 = offset;
 }
 
@@ -48,21 +76,11 @@ void NvmshResData::releaseNavi(NvmshResMemMan *memMan) {
   NvmshResMemObj *object = unknownc8;
   unknown00 = 0;
   unknown04 = 0;
-  unknown10 = 0;
-  unknown18 = nullptr;
-  unknown68 = 0;
-  unknown70 = nullptr;
+  unknown10.releaseNavi();
+  unknown68.releaseNavi();
 
   if (object != nullptr) {
-    // The game inlines releaseFreeObj's scan here and calls clearMemObj directly; calling
-    // releaseFreeObj emits a bl to it instead (checked against the game).
-    for (NvmshResMemObj *entry = memMan->unknown18; entry != nullptr; entry = entry->unknown08) {
-      if (entry == object) {
-        memMan->clearMemObj(object);
-        break;
-      }
-    }
-
+    memMan->releaseFreeObj(object);
     unknownc8 = nullptr;
   }
 }

@@ -9,7 +9,9 @@ class ALLOC_HANDLE;
 
 namespace navi {
 
-// Element of the free and used lists of NvmshResMemMan.
+// Element of the free and used lists of NvmshResMemMan. The constructor allocates 0x5f0 bytes and initialises two
+// 0x28-byte elements per 0x50 step (38 elements); element 0 goes on the used list at +0x18/+0x20 and the other 37
+// go on the spare list at +0x08/+0x10.
 class NvmshResMemObj {
 public:
   NvmshResMemObj();
@@ -20,8 +22,6 @@ public:
   u8 _14[4];
   void *unknown18; // Inferred role: data pointer; original member name unknown.
   u32 unknown20;   // Inferred role: data size; original member name unknown.
-  // The constructor of NvmshResMemMan allocates 19 elements with a 0x50 stride, so the element size is 0x50.
-  u8 _24[0x50 - 0x24];
 };
 
 static_assert(offsetof(NvmshResMemObj, unknown00) == 0x00, "");
@@ -29,7 +29,7 @@ static_assert(offsetof(NvmshResMemObj, unknown08) == 0x08, "");
 static_assert(offsetof(NvmshResMemObj, unknown10) == 0x10, "");
 static_assert(offsetof(NvmshResMemObj, unknown18) == 0x18, "");
 static_assert(offsetof(NvmshResMemObj, unknown20) == 0x20, "");
-static_assert(sizeof(NvmshResMemObj) == 0x50, "");
+static_assert(sizeof(NvmshResMemObj) == 0x28, "");
 
 // Owns the navigation mesh memory block and the lists of its free and used pieces.
 class NvmshResMemMan {

@@ -6,10 +6,10 @@ namespace navi {
 
 NvmshAccUtil::NvmshAccUtil() {
   unknown00 = mm::mtl::PtrSingleton<NvmshManager>::get();
-  unknown08 = false;
+  m_avoidAttr = false;
 }
 
-void NvmshAccUtil::setAvoidAttr(bool value) { unknown08 = value; }
+void NvmshAccUtil::setAvoidAttr(bool value) { m_avoidAttr = value; }
 
 bool NvmshAccUtil::testNaviColi(mm::Vec3 &position, const mm::Vec3 &target, float radius, float height, int layer) { return testNaviColiRange(position, target, 0.01f, radius, height, layer); }
 

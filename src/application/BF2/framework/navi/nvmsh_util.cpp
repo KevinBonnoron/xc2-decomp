@@ -48,9 +48,9 @@ void NvmshUtilSeach::seachAStar(NvmshAStarResult *result) {
 
 void NvmshUtilColi::setAttr(bool enable, u32 attr) {
   if (!enable) {
-    unknown80 |= attr;
+    m_attr |= attr;
   } else {
-    unknown80 &= ~attr;
+    m_attr &= ~attr;
   }
 }
 

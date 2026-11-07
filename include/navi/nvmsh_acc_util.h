@@ -21,12 +21,12 @@ public:
   void setAvoidAttr(bool value);
 
   NvmshManager *unknown00; // Inferred role: manager singleton; original member name unknown.
-  bool unknown08;          // Inferred role: avoid attribute; original member name unknown.
+  bool m_avoidAttr;        // Name from setAvoidAttr; original member name unknown.
   unsigned char _09[0x10 - 0x09];
 };
 
 static_assert(offsetof(NvmshAccUtil, unknown00) == 0x00, "");
-static_assert(offsetof(NvmshAccUtil, unknown08) == 0x08, "");
+static_assert(offsetof(NvmshAccUtil, m_avoidAttr) == 0x08, "");
 static_assert(sizeof(NvmshAccUtil) == 0x10, "");
 
 } // namespace navi
