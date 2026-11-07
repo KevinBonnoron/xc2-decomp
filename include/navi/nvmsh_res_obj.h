@@ -50,6 +50,7 @@ static_assert(offsetof(unknown001, unknown54) == 0x54, "");
 static_assert(offsetof(unknown001, unknown6c) == 0x6c, "");
 static_assert(offsetof(unknown001, unknown70) == 0x70, "");
 static_assert(offsetof(unknown001, unknown74) == 0x74, "");
+static_assert(sizeof(unknown001) == 0x78, "");
 
 // Holds the pointers into one navigation mesh resource file.
 class NvmshResObj {
@@ -109,6 +110,7 @@ public:
   NvmshResMemObj *unknownc8; // Inferred role: allocated memory object; original member name unknown.
 };
 
+static_assert(offsetof(NvmshResData, unknown04) == 0x04, "");
 static_assert(offsetof(NvmshResData, m_readData) == 0x08, "");
 static_assert(offsetof(NvmshResData, unknown10) == 0x10, "");
 static_assert(offsetof(NvmshResData, unknown68) == 0x68, "");
