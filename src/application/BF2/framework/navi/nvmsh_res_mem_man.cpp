@@ -33,6 +33,60 @@ void NvmshResMemMan::releaseFreeObj(NvmshResMemObj *object) {
   }
 }
 
+// Returns the first free piece that fits. A split needs a spare descriptor; when none is left the search returns null
+// instead of continuing to a later exact fit.
+NvmshResMemObj *NvmshResMemMan::createFreeObj(u32 size) {
+  for (NvmshResMemObj *piece = unknown18; piece != nullptr; piece = piece->unknown08) {
+    if ((piece->unknown10 & 1) != 0) {
+      continue;
+    }
+    if (piece->unknown20 < size) {
+      continue;
+    }
+    u32 rest = piece->unknown20 - size;
+    if (rest != 0) {
+      NvmshResMemObj *spare = unknown08;
+      if (spare == nullptr) {
+        return nullptr;
+      }
+      piece->unknown20 = size;
+      spare->unknown18 = static_cast<u8 *>(piece->unknown18) + size;
+      spare->unknown20 = rest;
+      if (spare->unknown00 != nullptr) {
+        if (spare->unknown08 != nullptr) {
+          spare->unknown00->unknown08 = spare->unknown08;
+          spare->unknown08->unknown00 = spare->unknown00;
+        } else {
+          unknown10 = spare->unknown00;
+          unknown10->unknown08 = nullptr;
+        }
+      } else if (spare->unknown08 != nullptr) {
+        unknown08 = spare->unknown08;
+        unknown08->unknown00 = nullptr;
+      } else {
+        unknown08 = nullptr;
+        unknown10 = nullptr;
+      }
+      spare->unknown10 = 0;
+      spare->unknown00 = nullptr;
+      spare->unknown08 = nullptr;
+      NvmshResMemObj *next = piece->unknown08;
+      piece->unknown08 = spare;
+      spare->unknown00 = piece;
+      if (next != nullptr) {
+        spare->unknown08 = next;
+        next->unknown00 = spare;
+      } else {
+        spare->unknown08 = nullptr;
+        unknown20 = spare;
+      }
+    }
+    piece->unknown10 |= 1;
+    return piece;
+  }
+  return nullptr;
+}
+
 void NvmshResMemMan::moveMemoryObject(NvmshResMemObj *destination, NvmshResMemObj *source) {
   memLcMove(destination->unknown18, source->unknown18, source->unknown20);
   source->unknown10 |= 4;
