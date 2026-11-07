@@ -1,6 +1,8 @@
 #pragma once
 #include <stddef.h>
 
+#include "grlib/cglib_dbl_uniform_block.h"
+#include "grlib/cglib_pixl_counter.h"
 #include "grlib/cglib_texture_buffer.h"
 #include "grlib/cglib_vtx_index.h"
 #include "grlib/cglib_vtx_vertex.h"
@@ -19,11 +21,18 @@ public:
   static const int SH_TERM_NUM = 4;
 
   struct MeshData {
+    ~MeshData() { unknown1c0.release(); }
+
     grlib::CGLibVtxVertex unknown00; // Inferred role: vertex; original member name unknown.
     grlib::CGLibVtxIndex unknown28;  // Inferred role: index; original member name unknown.
     u8 _50[0x110 - 0x50];
     DrResUseQueryObj *unknown110; // Inferred role: occlusion query; original member name unknown.
-    u8 _118[0x1e0 - 0x118];
+    bool unknown118;              // Inferred role: flag cleared with the occlusion query; original member name unknown.
+    u8 _119[0x150 - 0x119];
+    grlib::CGLibDblUniformBlock unknown150; // Inferred role: uniform block; original member name unknown.
+    grlib::CGLibDblUniformBlock unknown188; // Inferred role: uniform block; original member name unknown.
+    grlib::CGLibPixlCounter unknown1c0;     // Inferred role: pixel counter; original member name unknown.
+    u8 _1d8[0x1e0 - 0x1d8];
   };
 
   ~DrLightObjGlobalIBL();

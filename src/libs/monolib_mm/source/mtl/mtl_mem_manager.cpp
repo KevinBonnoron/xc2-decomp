@@ -1,5 +1,6 @@
 #include <stddef.h>
 
+#include "mm_mtl/fixed_vector.h" // IWYU pragma: keep
 #include "mm_mtl/fixstr.h"
 #include "mtl/allocator_wrapper.h"
 #include "mtl/mem_allocator.h"
@@ -195,3 +196,5 @@ bool NullAllocator::dummy() const { return m_name.c_str()[0] != '\0'; }
 u32 NullAllocator::getMemSize(const void *pointer) const { return 0; }
 
 } // namespace mtl
+
+template mm::mtl::FixedVector<mtl::MemManager::HandleRegion, 512>::~FixedVector();

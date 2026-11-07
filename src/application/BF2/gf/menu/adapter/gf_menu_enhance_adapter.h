@@ -2,10 +2,10 @@
 #include <stddef.h>
 
 #include "gf/menu/adapter/gf_menu_adapter.h"
+#include "gf/menu/gf_menu_reference_item.h"
 #include "gf/menu/list/gf_menu_item_list.h"
 #include "mm_mtl/delegate.h"
 #include "mm_mtl/intrusive_ptr.h"
-#include "mm_mtl/reference_object.h"
 #include "types.h"
 
 namespace ui {
@@ -14,11 +14,6 @@ class UIStr;
 } // namespace ui
 
 namespace gf {
-
-class IGfMenuReferenceItem : public mm::mtl::ReferenceObject {
-public:
-  virtual void getItem(MenuItemInfo &info) const = 0;
-};
 
 class GfMenuEnhanceAdapter : public GfMenuAdapter {
 public:

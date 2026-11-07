@@ -14,6 +14,12 @@ void GfGameVisible::destroy() {
 
 void GfGameVisible::cleanup() {}
 
+void GfGameVisible::update(const fw::UpdateInfo &info) {
+  if (get() != nullptr) {
+    get()->updateImpl(info);
+  }
+}
+
 } // namespace gf
 
 template mm::mtl::PtrSingleton<gf::GfGameVisible>::~PtrSingleton();

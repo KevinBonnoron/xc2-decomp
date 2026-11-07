@@ -10,6 +10,7 @@
 #include "gf/game/gf_game_util.h"
 #include "gf/object/component/animation/gf_com_asm.h"      // IWYU pragma: keep
 #include "gf/object/component/animation/gf_com_evt_anim.h" // IWYU pragma: keep
+#include "gf/object/component/model/gf_com_model.h"        // IWYU pragma: keep
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_util.h"
 
@@ -197,3 +198,4 @@ template void mm::mtl::Delegate<void(gf::GfComAsm *, const gf::CallBackCache &)>
 template void
 mm::mtl::Delegate<void(gf::GfComEvtAnim *, const gf::CallBackCache &)>::memberFuncInvoker<gf::GfComEffectCaster>(const mm::mtl::Delegate<void(gf::GfComEvtAnim *, const gf::CallBackCache &)> *,
                                                                                                                  gf::GfComEvtAnim *, const gf::CallBackCache &);
+template void mm::mtl::Delegate<void(const char *)>::memberFuncInvoker<gf::GfComModel>(const mm::mtl::Delegate<void(const char *)> *, const char *);

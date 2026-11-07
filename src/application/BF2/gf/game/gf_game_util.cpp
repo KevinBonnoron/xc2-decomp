@@ -55,6 +55,7 @@
 #include "gf/object/component/property/gf_com_property.h"
 #include "gf/object/gf_append.h"
 #include "gf/object/gf_append_info.h"
+#include "gf/object/gf_init_param.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
@@ -1594,7 +1595,7 @@ GF_OBJ_HANDLE *GfGameUtil::getWeaponOwner(GF_OBJ_HANDLE *handle) {
   GfAppendInfo *info = GfObjUtil::getAppendInfo(handle, GFATTACH_WEAPON);
   if (info != nullptr) {
     GfObjSetupWeapon *setup = GfObjUtil::getObjSetup<GfObjSetupWeapon>(handle);
-    if (setup != nullptr && info->unknown00[1].size() != 0 && !setup->unknown118.unknown80) {
+    if (setup != nullptr && info->unknown00[1].size() != 0 && !setup->unknown80.unknown98.unknown80) {
       return GfMountManager::getHandle(owner, GFATTACH_WEAPON, OPTMNT_BLADE);
     }
   }

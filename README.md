@@ -11,7 +11,7 @@ A work-in-progress matching decompilation of *Xenoblade Chronicles 2* (Nintendo 
 ## Progress
 
 <!-- progress -->
-38,226 / 48,739 functions (78.430%), 4,595,128 / 10,024,304 bytes of code (45.840%)
+38,303 / 48,739 functions (78.588%), 4,601,848 / 10,024,304 bytes of code (45.907%)
 <!-- /progress -->
 
 Counted over the named functions of `main`, as reported by `check`. Run `check --readme` to update this section. History and details: [decompilati.onl](https://decompilati.onl/projects/xenoblade-chronicles-2).
