@@ -23,7 +23,8 @@ public:
   virtual const char *getName() const;
   virtual u32 getObjectNum() const;
   virtual void getObjectData(u32 index, ObjectData &data) const;
-  virtual void getObjectDataUIO(UIObjBuildData *buildData, u32 index, ObjectData &data) const;
+  // Not virtual: the game's UIBuildInfoUIO vtable has no slot for it.
+  void getObjectDataUIO(UIObjBuildData *buildData, u32 index, ObjectData &data) const;
 
   const char *m_name;
   fw::CommonResource *unknown10;        // Inferred role: resource; original member name unknown.

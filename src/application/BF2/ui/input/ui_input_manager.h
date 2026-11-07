@@ -22,9 +22,13 @@ public:
     u8 _21[0x28 - 0x21];
   };
 
+  UIInputManager();
+  virtual ~UIInputManager();
+
   void enable();
   void disable();
   void setupInputSelection(u32 input, int index, u32 size);
+  void sendEvent(InputLayerInfo &info);
   void resetInputSelection(u32 input);
   void setSelectionChecker(u32 input, IUIInputSelectionChecker *checker);
   void setInputActionEnable(u32 input, u32 action, bool enable);
