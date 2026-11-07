@@ -141,7 +141,7 @@ EnviromentSensor::GroundInfo *StateUtil::getGroundInfo(GfComBehaviorPc &behavior
 
 EnviromentSensor::unknown003 *StateUtil::getClimbWallInfo(GfComBehaviorPc &behavior) {
   EnviromentSensor *sensor = behavior.unknown08->getComponent<GfComPropertyPc>()->getEnvSensor();
-  EnviromentSensor::unknown003 *info = &sensor->unknown1b0;
+  EnviromentSensor::unknown003 *info = &sensor->unknown150.unknown60;
   if (!sensor->unknown24_6 || !info->unknown24_4) {
     info = nullptr;
   }
@@ -154,7 +154,7 @@ EnviromentSensor::GroundInfo *StateUtil::getClimbEndGroundInfo(GfComBehaviorPc &
   return sensor->unknown25_0 ? &sensor->unknown1f0 : nullptr;
 }
 
-EnviromentSensor::unknown004 *StateUtil::getDescendWallInfo(GfComBehaviorPc &behavior) {
+EnviromentSensor::unknown003 *StateUtil::getDescendWallInfo(GfComBehaviorPc &behavior) {
   EnviromentSensor *sensor = behavior.unknown08->getComponent<GfComPropertyPc>()->getEnvSensor();
   return sensor->unknown24_7 ? &sensor->unknown260 : nullptr;
 }

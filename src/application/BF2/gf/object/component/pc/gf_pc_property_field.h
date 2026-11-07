@@ -161,6 +161,15 @@ public:
     const fw::ParamList *paramList = unknown08.operator->();
     return paramList->unknown0c > 9 ? static_cast<const WaterCommonParam *>(paramList->unknown10[9].param) : nullptr;
   }
+  // Inferred role: field param of the param list entry 0 ("common"), null when the list has no entries; original name unknown.
+  const FieldParam *unknown006() const {
+    const fw::ParamList *paramList = unknown08.operator->();
+    if (paramList->unknown0c == 0 || paramList->unknown10 == nullptr) {
+      return nullptr;
+    }
+
+    return static_cast<const FieldParam *>(paramList->unknown10[0].param);
+  }
 
   mm::mtl::IntrusivePtr<fw::ParamList> unknown08; // Inferred role: param list; original member name unknown.
   u32 unknown10_0 : 1;                            // Inferred role: walk mode; original member name unknown.

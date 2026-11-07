@@ -6,6 +6,10 @@ namespace gf {
 constexpr u32 QUEST_ID_END = 30000;
 
 struct QuestID {
+  // User-provided: the game returns a QuestID as two separately merged halves (and/orr of 32-bit words) as soon as a
+  // constructor zeroes it (GfQuestManager::getOrderQuest, getReduceHpQuest, getListNextQuestA).
+  QuestID() : unknown00(0), unknown02(0) {}
+  QuestID(u16 id, u16 variant) : unknown00(id), unknown02(variant) {}
   bool empty() const;
   bool operator==(const QuestID &other) const { return unknown00 == other.unknown00 && unknown02 == other.unknown02; }
   // User-provided: the game assigns a QuestID member as two halfwords (GfFieldLocator::createByQuest, Locator*::create)

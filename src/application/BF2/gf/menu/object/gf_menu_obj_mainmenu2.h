@@ -4,6 +4,7 @@
 #include "gf/menu/gf_menu_object.h"
 #include "gf/menu/gf_menu_sequence.h"
 #include "types.h"
+#include "ui/input/ui_input_layer.h"
 
 namespace ui {
 class UIObjectNumberPlugin;
@@ -47,5 +48,10 @@ static_assert(offsetof(GfMenuObjMainMenu2, unknown44) == 0x44, "");
 static_assert(offsetof(GfMenuObjMainMenu2, unknown90) == 0x90, "");
 static_assert(offsetof(GfMenuObjMainMenu2, unknown320) == 0x320, "");
 static_assert(sizeof(GfMenuObjMainMenu2) == 0x328, "");
+
+class SelectionChecker : public ui::IUIInputSelectionChecker {
+public:
+  bool isEnableSelect(u32 handle, int index) override;
+};
 
 } // namespace gf

@@ -10,7 +10,8 @@
 
 namespace mm {
 struct Vec3;
-}
+struct Mat44;
+} // namespace mm
 
 namespace gf {
 
@@ -62,6 +63,8 @@ public:
   static u32 getFsLevelSum(u32 fieldSkill);
   static void changeStopLayer(GF_OBJ_HANDLE *handle, bool isStop);
   static void addMoney(int money);
+  static void addExpBattle(u32 driver, u32 exp);
+  static void addExpInn(u32 exp);
   static void addCoin(int coin);
   static void addEther(int ether);
   static void execLevelUp(u32 driver, u32 level);
@@ -89,11 +92,14 @@ public:
   static bool collectGfObjHandleByGmkType(mm::mtl::FixedList<GF_OBJ_HANDLE *, 1024> &handles, gmk::GmkType type);
   static int getAntiBladeAreaBdatId();
   static bool getGmkTargetPointPos(mm::Vec3 &position, u32 gimmick);
+  static bool findNpcMat44(mm::Mat44 &matrix, int bdatId);
   static bool getGmkTargetPointPos(mm::Vec3 &position, GF_OBJ_HANDLE *handle);
   static bool incEnemySuppress(u32 enemy);
   static bool isEnableDeleteObject(GF_OBJ_HANDLE *handle);
   static u32 getFormationPlayerID(GF_OBJ_HANDLE *handle);
+  static void resetFormationParam(GF_OBJ_HANDLE *handle);
   static void setHp(GF_OBJ_HANDLE *handle, u32 hp);
+  static void debugHpRatio(GF_OBJ_HANDLE *handle, f32 ratio);
   static void debugHpZero(GF_OBJ_HANDLE *handle);
   static void debugFallDead(GF_OBJ_HANDLE *handle);
   static bool isDriverRide(GF_OBJ_HANDLE *handle);

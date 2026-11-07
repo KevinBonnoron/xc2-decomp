@@ -22,6 +22,9 @@ class GfVolumeFade {
 public:
   GfVolumeFade(GF_OBJ_HANDLE *handle, ml::ScnObjModel *model);
   void initializeParam();
+  void setEffectType(VFEFF effect);
+  void setFadeRatio(VFACC acc, VFPARTS parts, f32 ratio);
+  void applyFadeRatio();
   f32 getFadeRatio(VFACC acc, VFPARTS parts) const;
   f32 getFadeRatioForParts(VFPARTS parts) const;
 

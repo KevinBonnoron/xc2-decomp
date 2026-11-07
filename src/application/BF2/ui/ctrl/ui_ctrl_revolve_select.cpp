@@ -1,33 +1,62 @@
 #include "ui/ctrl/ui_ctrl_revolve_select.h"
 
+#include "framework/memory/framework_memory.h"
 #include "mm_mtl/reference_object.h"
 #include "ui/list/ui_select_obj_list.h"
+#include "ui/ui_util.h"
 
 namespace ui {
 
 UICtrlRevolveSelect::UICtrlRevolveSelect(u32 object)
     : UICtrlObject(object), unknown2c(), unknown5c(0), unknown60(nullptr), unknown68(0), unknown6c(0.0f), unknown70(0.0f), unknown78(), unknowna0(0, 0), unknowna8(), unknownd8(0) {}
 
+UICtrlRevolveSelect *UICtrlRevolveSelect::create(u32 object, const RevolveSetting &setting, UISelectObjList *list) {
+  if (list == nullptr) {
+    return nullptr;
+  }
+// __LINE__ is the line argument of the operator new call.
+#line 52
+  UICtrlRevolveSelect *ctrl = new (UIUtil::getProgAllocator(), 16, __FILE__, __LINE__) UICtrlRevolveSelect(object);
+  if (ctrl == nullptr) {
+    return nullptr;
+  }
+  list->addRef();
+  ctrl->unknown2c = setting;
+  ctrl->unknown60 = list;
+  ctrl->reset();
+  switch (setting.unknown02) {
+  case 0:
+    ctrl->unknown5c = setting.unknown14;
+    break;
+  case 1:
+  case 2:
+    ctrl->unknown5c = 90;
+    break;
+  }
+  return ctrl;
+}
+
 UICtrlRevolveSelect::~UICtrlRevolveSelect() { mm::mtl::safeRelease(unknown60); }
+
+f32 UICtrlRevolveSelect::getAngleStep() {
+  u32 count = unknown60->getSize();
+  u16 range = unknown2c.unknown00;
+  f32 step;
+  if (count < 2) {
+    step = range;
+  } else if (range == 360) {
+    step = static_cast<f32>(range) / static_cast<f32>(unknown60->getSize());
+  } else {
+    step = static_cast<f32>(range) / static_cast<f32>(unknown60->getSize() - 1);
+  }
+  return unknown2c.unknown03 == 0 ? -step : step;
+}
 
 void UICtrlRevolveSelect::reset() {
   int index = unknown60->getIndex(false);
   if (unknown60->getSize() != 0) {
-    u32 count = unknown60->getSize();
-    u16 range = unknown2c.unknown00;
-    f32 step;
-    if (count < 2) {
-      step = range;
-    } else if (range == 360) {
-      step = static_cast<f32>(range) / static_cast<f32>(unknown60->getSize());
-    } else {
-      step = static_cast<f32>(range) / static_cast<f32>(unknown60->getSize() - 1);
-    }
+    f32 angle = getAngleStep();
     if (index >= 0) {
-      f32 angle = -step;
-      if (unknown2c.unknown03 != 0) {
-        angle = step;
-      }
       unknown6c = -(index * angle);
       unknown70 = -(index * angle);
     }

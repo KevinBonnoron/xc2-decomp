@@ -6,7 +6,9 @@ namespace gf {
 
 class GfMenuQuestList : public ui::UIListInfo<QuestID> {
 public:
+  GfMenuQuestList();
   ~GfMenuQuestList() override;
+  static GfMenuQuestList *create();
 };
 
 static_assert(sizeof(GfMenuQuestList) == 0x68, "");

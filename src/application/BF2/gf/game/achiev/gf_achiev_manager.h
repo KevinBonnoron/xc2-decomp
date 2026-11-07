@@ -1,10 +1,12 @@
 #pragma once
+#include <stddef.h>
+
 #include "gf/data/gf_data_blade.h"
 #include "gf/game/quest/gf_quest_id.h"
 #include "mm_mtl/fixed_queue.h"
+#include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
-#include <stddef.h>
 
 namespace fw {
 struct UpdateInfo;
@@ -45,6 +47,8 @@ public:
   void finalize();
   void update(const fw::UpdateInfo &info);
   void flushEventIncAchiev(const IncQuest &incQuest);
+  void incAchiev(u32 stats, int count);
+  void incAchievWithBlade(u32 stats, int count, const mm::mtl::FixedVector<u16, 422> &blades);
   void incleaseAchievCount(QuestID quest, u32 count, u32 add);
   void gevItemAdd(u32 item, int count);
   void gevBladeActivate(u32 blade, ActivateType activateType, ActivateType oldActivateType);

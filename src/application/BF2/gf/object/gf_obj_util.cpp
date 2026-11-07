@@ -16,6 +16,7 @@
 #include "framework/object/updatable_object.h"
 #include "framework/pointer_map.h"
 #include "framework/reference_frame.h"
+#include "fw/fw_model_object.h"
 #include "fw/fw_transform.h"
 #include "gf/asset/gf_asset_def.h"
 #include "gf/asset/gf_asset_manager.h"
@@ -29,6 +30,7 @@
 #include "gf/game/gf_game_player_formation.h"
 #include "gf/game/gf_game_player_picker.h"
 #include "gf/object/component/behavior/gf_com_behavior.h"
+#include "gf/object/component/behavior/gf_com_behavior_weapon.h"
 #include "gf/object/component/behavior/plugin/gf_eye_blink_plugin.h"
 #include "gf/object/component/behavior/plugin/gf_lip_sync_plugin.h"
 #include "gf/object/component/behavior/plugin/gf_plugin.h"
@@ -38,6 +40,7 @@
 #include "gf/object/component/gf_com_transform.h"
 #include "gf/object/component/gf_component.h"
 #include "gf/object/component/model/gf_com_model.h"
+#include "gf/object/component/pc/gf_com_property_pc.h"
 #include "gf/object/component/property/gf_com_property.h"
 #include "gf/object/gf_append_info.h"
 #include "gf/object/gf_init_param.h"
@@ -45,6 +48,9 @@
 #include "gf/object/gf_obj_factory.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_property.h"
+#include "gf/object/gf_obj_setup.h"
+#include "gf/object/gf_volume_fade.h"
+#include "mm_math/mm_math.h"
 #include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/bitflag.h"
@@ -52,8 +58,10 @@
 #include "mm_mtl/fixed_list.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
+#include "mm_mtl/intrusive_list.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/vector.h"
+#include "scn/scn_obj_acc.h"
 
 namespace fw {
 class IkSolver;
@@ -81,6 +89,78 @@ void GfObjUtil::addGfObj(GF_OBJ_HANDLE *handle, GfObj *obj) {
   if (info != nullptr) {
     info->unknown18 = obj;
   }
+}
+
+bool GfObjUtil::mountToBone(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *parent, const char *bone) {
+  if (parent == INVALID_HANDLE) {
+    return false;
+  }
+
+  GFOBJ_INFO *parentInfo = GfObjManager::getObjInfo(parent);
+  if (parentInfo == nullptr) {
+    return false;
+  }
+
+  if (parentInfo->unknown18 != nullptr) {
+    GfComModel *model = parentInfo->unknown18->getComponent<GfComModel>();
+    if (model != nullptr) {
+      GfComTransform *transform = GfObjManager::getObjInfo(handle)->unknown18->getComponent<GfComTransform>();
+      if (!model->addBoneReferenceFrame(bone, transform->unknown10)) {
+        return false;
+      }
+    }
+
+    GfObj *parentObj = GfObjUtil::getObj(parent);
+    GfObj *childObj = GfObjUtil::getObj(handle);
+    if (parentObj != nullptr && childObj != nullptr) {
+      parentObj->addChild(childObj);
+    }
+
+    GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
+    info->unknown3e0 = bone;
+    return true;
+  }
+
+  return false;
+}
+
+bool GfObjUtil::unmountFromBone(GF_OBJ_HANDLE *handle) {
+  if (handle == INVALID_HANDLE) {
+    return false;
+  }
+
+  GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
+  if (info == nullptr) {
+    return false;
+  }
+
+  GfObj *obj = info->unknown18;
+  if (obj == nullptr) {
+    return false;
+  }
+
+  GfObj *parentObj = getParentObj(obj);
+  if (parentObj == nullptr) {
+    return false;
+  }
+
+  GFOBJ_INFO *mountInfo = GfObjManager::getObjInfo(handle);
+  GfComModel *model = parentObj->getComponent<GfComModel>();
+  if (model != nullptr) {
+    GfComTransform *transform = obj->getComponent<GfComTransform>();
+    if (transform->unknown10->unknowna8 != nullptr) {
+      model->removeBoneReferenceFrame(mountInfo->unknown3e0.c_str(), transform->unknown10);
+    }
+  }
+
+  GfObj *mountedParentObj = getObj(getParentHandle(handle));
+  GfObj *mountedObj = getObj(handle);
+  if (mountedParentObj != nullptr && mountedObj != nullptr) {
+    mountedParentObj->removeChild(mountedObj);
+  }
+
+  mountInfo->unknown3e0 = "";
+  return true;
 }
 
 bool GfObjUtil::attachGfObj(GF_OBJ_HANDLE *parent, GF_OBJ_HANDLE *child) {
@@ -446,6 +526,26 @@ GF_ASSET_HANDLE *GfObjUtil::getAssetHandle(GF_OBJ_HANDLE *handle) {
   return info != nullptr ? info->unknown10 : reinterpret_cast<GF_ASSET_HANDLE *>(-1);
 }
 
+void GfObjUtil::destroy(GF_OBJ_HANDLE *handle) {
+  if (handle != INVALID_HANDLE) {
+    GfObjAcc acc(handle);
+    if (acc.isValid()) {
+      if (acc.setFlag(OBJ_FLAG_DESTROY, true)) {
+        if (GfObjManager::get() != nullptr) {
+          GfObjManager::get()->addDestroyObj(handle, true);
+        }
+        applyExecUpdate(acc.getObj());
+      }
+      if (acc.isValid()) {
+        GfObj *obj = acc.getObj();
+        for (mm::mtl::IntrusiveList<fw::UpdatableObject>::iterator it = obj->unknownb8.begin(), last = obj->unknownb8.end(); it != last; ++it) {
+          destroy(mm::mtl::dynamicCast<GfObj>(it.operator->())->unknownf8);
+        }
+      }
+    }
+  }
+}
+
 void GfObjUtil::applyExecUpdate(GfObj *obj) { obj->unknown118 = isUpdateComponent(obj) && !isFollowObjNotReady(obj->unknownf8); }
 
 GF_OBJ_HANDLE *GfObjUtil::getParentHandle(GF_OBJ_HANDLE *handle) {
@@ -547,6 +647,28 @@ const char *GfObjUtil::getAddResourceName(GF_OBJ_HANDLE *handle) {
   }
 
   return nullptr;
+}
+
+void GfObjUtil::resetWeaponMotion(GF_OBJ_HANDLE *handle, OPTMNT type) {
+  GfGameMount *mount = GfMountManager::getMount(getMountHandle(handle, GFATTACH_WEAPON));
+  if (mount != nullptr) {
+    if (type == OPTMNT_UNKNOWN_FFFFFFFF) {
+      type = mount->unknown20;
+    }
+    GF_OBJ_HANDLE *owner = mount->getHandle(type);
+    if (handle != INVALID_HANDLE) {
+      for (u32 i = 0; i < 10; i++) {
+        GfObj *obj = getObj(handle);
+        if (obj != nullptr) {
+          GfObj *weapon = getObj(mount->unknown18->getCurrentHandles()[i]);
+          if (weapon != nullptr) {
+            MsgObjectForceWeaponMount message(type, owner);
+            obj->sendMessage(weapon, message);
+          }
+        }
+      }
+    }
+  }
 }
 
 GF_MOUNT_HANDLE *GfObjUtil::getMountHandle(GF_OBJ_HANDLE *handle, GFATTACH attach) {
@@ -792,6 +914,27 @@ void GfObjUtil::copyTransformToSetup(GF_OBJ_HANDLE *handle, const mm::Vec3 &posi
   }
 }
 
+void GfObjUtil::saveRebuildInfo(GF_OBJ_HANDLE *handle) {
+  GfObjAcc acc(handle);
+  GfObjSetup *setup = getObjSetup(handle);
+  mm::Vec3 rotation = mm::quatToEuler(acc.getWorldTransform().unknown10);
+  setup->unknown20 = acc.getWorldTransform().unknown00;
+  setup->unknown30 = mm::Vec3(0.0f, rotation.y, 0.0f);
+  if (acc.getType() == OBJECT_TYPE_DRIVER) {
+    GfObjSetupDriver *driver = getObjSetup<GfObjSetupDriver>(handle);
+    GfComPropertyPc *property = acc.getObj()->getComponent<GfComPropertyPc>();
+    if (property != nullptr) {
+      driver->unknown70 = property->unknown38;
+    }
+  } else if (acc.getType() == OBJECT_TYPE_BLADE) {
+    GfObjSetupBlade *blade = getObjSetup<GfObjSetupBlade>(handle);
+    GfComPropertyPc *property = acc.getObj()->getComponent<GfComPropertyPc>();
+    if (property != nullptr) {
+      blade->unknown74 = property->unknown38;
+    }
+  }
+}
+
 void GfObjUtil::rebuild(GF_OBJ_HANDLE *handle) {
   GfObjAcc acc(handle);
   if (acc.isValid()) {
@@ -840,6 +983,44 @@ bool GfObjUtil::isBattle(GF_OBJ_HANDLE *handle) {
   }
 
   return isFound & isBattle;
+}
+
+void GfObjUtil::createVolumeFade(GF_OBJ_HANDLE *handle) {
+  GfObj *obj = getObj(handle);
+  GfComModel *model = obj->getComponent<GfComModel>();
+  if (model != nullptr) {
+    GfObjSetup *setup = getObjSetup(handle);
+    GFOBJ_INFO *info = GfObjManager::getObjInfo(obj->unknownf8);
+    info->createVolumeFade(model);
+    if (info->unknown3d8 != nullptr) {
+      if (setup->unknown64 == VFACC_UNKNOWN_FFFFFFFF) {
+        if (setup->isEvent()) {
+          return;
+        }
+
+        DataParamAcc paramAcc(handle);
+        if (paramAcc.getObjType() == OBJECT_TYPE_BLADE) {
+          u32 attribute = paramAcc.getAttribute(-1, false);
+          if (attribute != 0) {
+            info->unknown3d8->setEffectType(static_cast<VFEFF>(attribute));
+            info->unknown3d8->applyFadeRatio();
+          }
+        }
+      } else {
+        setVolumeFadeUserFlag(handle, true);
+        DataParamAcc paramAcc(handle);
+        info->unknown3d8->setEffectType(static_cast<VFEFF>(paramAcc.getAttribute(-1, false)));
+        info->unknown3d8->setFadeRatio(setup->unknown64, VFPARTS_UNKNOWN_FFFFFFFF, 0.0f);
+        setup->unknown64 = VFACC_UNKNOWN_FFFFFFFF;
+        ml::ScnObjAccEtcParams etcParams(model->unknown18->getInterface());
+        if (etcParams.getMax() != 0) {
+          for (u32 i = 0; i < 6; i++) {
+            etcParams.setInitParams(i, 1.0f);
+          }
+        }
+      }
+    }
+  }
 }
 
 bool GfObjUtil::isVolumeFadeForUser(GF_OBJ_HANDLE *handle) {
@@ -941,6 +1122,131 @@ GfAssetResource *GfObjUtil::getResourceEfb(GF_OBJ_HANDLE *handle) {
   default:
     return nullptr;
   }
+}
+
+// Inferred helper: counts the weapon swt resources of the object; original name unknown.
+static u32 unknown005(GF_OBJ_HANDLE *handle) {
+  DataParamAcc paramAcc(handle);
+  u32 count = 0;
+  if (paramAcc.isValid()) {
+    for (u32 index = 0x65; index < 0x99; index++) {
+      if (GfAssetManager::getResource(GfObjUtil::getAssetHandle(handle), static_cast<GfFileIdx>(index), ASSET_TYPE_BASE) != nullptr) {
+        count++;
+      }
+    }
+  }
+
+  return count;
+}
+
+u32 GfObjUtil::getWeaponResourceSwtNum(GF_OBJ_HANDLE *handle) {
+  GfObjAcc objAcc(handle);
+  if (!objAcc.isValid()) {
+    return 0;
+  }
+
+  u32 count = 0;
+  switch (objAcc.getType()) {
+  case OBJECT_TYPE_DRIVER:
+    count = unknown005(handle);
+    break;
+  case OBJECT_TYPE_BLADE:
+  case OBJECT_TYPE_PC_WEAPON:
+    if (!GfObjManager::getObjInfo(handle)->unknown30->unknown54) {
+      count = unknown005(GfGameParty::getHandleDriver(GfObjManager::getObjInfo(handle)->unknown30->unknown14));
+    } else {
+      count = unknown005(handle);
+    }
+    break;
+  case OBJECT_TYPE_ENEMY:
+    count = GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(3), ASSET_TYPE_BASE) != nullptr;
+    count += GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(0x11), ASSET_TYPE_BASE) != nullptr;
+    break;
+  }
+
+  return count;
+}
+
+// Inferred helper: counts the weapon eab resources of the object; original name unknown.
+static u32 unknown006(GF_OBJ_HANDLE *handle) {
+  DataParamAcc paramAcc(handle);
+  u32 count = 0;
+  if (paramAcc.isValid()) {
+    for (u32 index = 0x9a; index < 0x26e; index++) {
+      if (GfAssetManager::getResource(GfObjUtil::getAssetHandle(handle), static_cast<GfFileIdx>(index), ASSET_TYPE_BASE) != nullptr) {
+        count++;
+      }
+    }
+  }
+
+  return count;
+}
+
+u32 GfObjUtil::getWeaponResourceEabNum(GF_OBJ_HANDLE *handle) {
+  GfObjAcc objAcc(handle);
+  if (!objAcc.isValid()) {
+    return 0;
+  }
+
+  u32 count = 0;
+  switch (objAcc.getType()) {
+  case OBJECT_TYPE_DRIVER:
+    count = unknown006(handle);
+    break;
+  case OBJECT_TYPE_BLADE:
+  case OBJECT_TYPE_PC_WEAPON:
+    getAssetHandle(handle);
+    count = unknown006(handle);
+    break;
+  case OBJECT_TYPE_ENEMY: {
+    u32 enemyCount = GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(0x12), ASSET_TYPE_BASE) != nullptr;
+    count = unknown006(handle);
+    count += enemyCount;
+    break;
+  }
+  }
+
+  return count;
+}
+
+// Inferred helper: counts the weapon efb resources of the asset; original name unknown.
+static u32 unknown007(GF_ASSET_HANDLE *asset) {
+  u32 count = 0;
+  for (u32 index = 0x26f; index < 0x443; index++) {
+    if (GfAssetManager::getResource(asset, static_cast<GfFileIdx>(index), ASSET_TYPE_BASE) != nullptr) {
+      count++;
+    }
+  }
+
+  return count;
+}
+
+u32 GfObjUtil::getWeaponResourceEfbNum(GF_OBJ_HANDLE *handle) {
+  DataParamAcc paramAcc(handle);
+  if (!paramAcc.isValid()) {
+    return 0;
+  }
+
+  u32 count = 0;
+  switch (paramAcc.getObjType()) {
+  case OBJECT_TYPE_DRIVER:
+    count = unknown007(getAssetHandle(handle));
+    break;
+  case OBJECT_TYPE_BLADE:
+  case OBJECT_TYPE_PC_WEAPON:
+    getAssetHandle(handle);
+    count = unknown007(getAssetHandle(handle));
+    break;
+  case OBJECT_TYPE_ENEMY: {
+    u32 enemyCount = GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(0xb), ASSET_TYPE_BASE) != nullptr;
+    enemyCount += GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(0x13), ASSET_TYPE_BASE) != nullptr;
+    count = unknown007(getAssetHandle(handle));
+    count = enemyCount + count;
+    break;
+  }
+  }
+
+  return count;
 }
 
 fw::SoundPack *GfObjUtil::getSePack(GF_OBJ_HANDLE *handle) {

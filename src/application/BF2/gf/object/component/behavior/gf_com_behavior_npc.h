@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "ai/ai_state_hfsm.h"
+#include "gf/field/gf_field_exec_cmd_turn.h"
 #include "gf/field/gf_field_local_steer.h"
 #include "gf/object/component/behavior/gf_com_behavior.h"
 #include "mm_math/mm_vec3.h"
@@ -131,7 +132,8 @@ public:
   mm::mtl::IntrusivePtr<fw::ReferenceFrame> unknown1b8; // Inferred role: look point frame; original member name unknown.
   u8 _1c0[0x240 - 0x1c0];
   bool unknown240; // Inferred role: set when the talk access ends; original member name unknown.
-  u8 _241[0x350 - 0x241];
+  u8 _241[0x2e0 - 0x241];
+  TFieldExecCmdTurn<GfComAsm> unknown2e0;  // Inferred role: turn command; original member name unknown.
   GfFieldLocalSteer unknown350;            // Inferred role: local steer; original member name unknown.
   LocalSteerIsTargetNotPlayer unknown53b0; // Inferred role: predicate of the local steer while approaching the player; original member name unknown.
 };
@@ -152,6 +154,7 @@ static_assert(offsetof(GfComBehaviorNpc, unknown1a0) == 0x1a0, "");
 static_assert(offsetof(GfComBehaviorNpc, unknown1b0) == 0x1b0, "");
 static_assert(offsetof(GfComBehaviorNpc, unknown1b8) == 0x1b8, "");
 static_assert(offsetof(GfComBehaviorNpc, unknown240) == 0x240, "");
+static_assert(offsetof(GfComBehaviorNpc, unknown2e0) == 0x2e0, "");
 static_assert(offsetof(GfComBehaviorNpc, unknown350) == 0x350, "");
 static_assert(offsetof(GfComBehaviorNpc, unknown53b0) == 0x53b0, "");
 

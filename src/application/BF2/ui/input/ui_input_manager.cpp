@@ -11,6 +11,8 @@
 
 namespace ui {
 
+UIInputManager::UIInputManager() : unknown20(0), unknown24(true) {}
+
 void UIInputManager::enable() { unknown24 = true; }
 
 void UIInputManager::disable() { unknown24 = false; }
@@ -172,6 +174,25 @@ void UIInputManager::changeRegionRect(u32 input, const mm::Rect<s16> &rect) {
   }
   pointer->changeRegionRect(rect);
   return;
+}
+
+u32 UIInputManager::searchInputHandle(u32 handle) {
+  if (handle == 0) {
+    return 0;
+  }
+  UIObject *object = UIUtil::getObject(handle);
+  if (object == nullptr || !object->unknown98.test(2)) {
+    return 0;
+  }
+  for (mm::mtl::IntrusiveList<InputLayerInfo>::iterator it = unknown08.begin(); it != unknown08.end(); ++it) {
+    if (it->unknown10->unknown40 == handle) {
+      return it->unknown18;
+    }
+    if (it->unknown1c == handle) {
+      return it->unknown18;
+    }
+  }
+  return 0;
 }
 
 void UIInputManager::releaseInputLayer(u32 handle) {

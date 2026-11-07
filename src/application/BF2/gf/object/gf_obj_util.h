@@ -128,8 +128,8 @@ public:
   static bool isValid(GF_OBJ_HANDLE *handle);
   static bool isLoading(GF_OBJ_HANDLE *handle);
   static bool isUpdate(GF_OBJ_HANDLE *handle);
-  static void mountToBone(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *parent, const char *bone);
-  static void unmountFromBone(GF_OBJ_HANDLE *handle);
+  static bool mountToBone(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *parent, const char *bone);
+  static bool unmountFromBone(GF_OBJ_HANDLE *handle);
   static bool attachGfObj(GF_OBJ_HANDLE *parent, GF_OBJ_HANDLE *child);
   static bool dettachGfObject(GF_OBJ_HANDLE *parent, GF_OBJ_HANDLE *child);
   static void setOwner(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *owner);
@@ -155,6 +155,7 @@ public:
   static GfVolumeFade *getVolumeFade(GF_OBJ_HANDLE *handle);
   static bool isBattle(GF_OBJ_HANDLE *handle);
   static void rebuild(GF_OBJ_HANDLE *handle);
+  static void saveRebuildInfo(GF_OBJ_HANDLE *handle);
   static bool isVolumeFadeForUser(GF_OBJ_HANDLE *handle);
   static void setVolumeFadeUserFlag(GF_OBJ_HANDLE *handle, bool isForUser);
   static bool isStanbyTalkingPlayer(GF_OBJ_HANDLE *handle);
@@ -163,6 +164,9 @@ public:
   static bool isSearchEmptyResource(GF_OBJ_HANDLE *handle);
   static GfAssetResource *getResourceEab(GF_OBJ_HANDLE *handle);
   static GfAssetResource *getResourceEfb(GF_OBJ_HANDLE *handle);
+  static u32 getWeaponResourceSwtNum(GF_OBJ_HANDLE *handle);
+  static u32 getWeaponResourceEabNum(GF_OBJ_HANDLE *handle);
+  static u32 getWeaponResourceEfbNum(GF_OBJ_HANDLE *handle);
   static fw::SoundPack *getSePack(GF_OBJ_HANDLE *handle);
   static fw::SoundPack *getSePackFoot1(GF_OBJ_HANDLE *handle);
   static fw::SoundPack *getSePackFoot2(GF_OBJ_HANDLE *handle);
@@ -171,9 +175,11 @@ public:
   static bool isTrinityBlade(GF_OBJ_HANDLE *handle);
   static bool isUpdateComponent(const GfObj *obj);
   static void applyExecUpdate(GF_OBJ_HANDLE *handle);
+  static void createVolumeFade(GF_OBJ_HANDLE *handle);
   static bool isFollowObjNotReady(GF_OBJ_HANDLE *handle);
   static void setWarpTransform(GF_OBJ_HANDLE *handle, const fw::Transform &transform, bool isResetState);
   static bool parseFadeParam(const char *param, GfFadeInfo *info);
+  static void setDeadParticle(GF_OBJ_HANDLE *handle, bool isActive, u32 attribute, f32 alpha);
 
   template <typename T> static T *getObjSetup(GF_OBJ_HANDLE *handle) {
     GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);

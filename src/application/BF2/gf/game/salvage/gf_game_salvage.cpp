@@ -1,6 +1,7 @@
 #include "gf/game/salvage/gf_game_salvage.h"
 
 #include "bdat.h"
+#include "framework/sound/sound_manager.h"
 #include "fw/fw_camera.h"
 #include "gf/camera/gimmick/gf_camera_gimmick.h"
 #include "gf/data/gf_data_map.h"
@@ -8,6 +9,7 @@
 #include "gf/data/gf_game_flag.h"
 #include "gf/event/gf_event.h"
 #include "gf/event/gf_evt_model.h"
+#include "gf/field/gf_field_sound.h"
 #include "gf/game/event/gf_game_event.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_party.h"
@@ -15,6 +17,7 @@
 #include "gf/game/gf_game_util.h"
 #include "gf/gf_allocator.h"
 #include "gf/object/component/animation/gf_com_asm.h"
+#include "gf/object/component/behavior/gf_com_behavior_salvage.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
@@ -24,10 +27,17 @@
 #include "gmk/gmk_form_pc.h"
 #include "gmk/gmk_manager.h"
 #include "gmk/gmk_salvage.h"
+#include "gmk/gmk_set.h"
+#include "mm_math/mm_vec3.h"
+
+namespace fw {
+enum SoundCategory : int;
+} // namespace fw
 
 namespace gf {
 
 constexpr u32 SALVAGER_POINT_MAX = 0xff;
+constexpr int SE_CLIMB_BASE = 600;
 constexpr u16 SCENARIO_CHASE_KIKU_START = 0xfbd;
 constexpr u16 SCENARIO_CHASE_KIKU_END = 0xfc9;
 
@@ -240,6 +250,84 @@ u8 *GfGameSalvage::getBindedBdatFp() const { return gmk::getBindedGmkInst(get()-
 
 int GfGameSalvage::getBindedBdatId() const { return gmk::getBindedGmkInst(get()->unknowna8)->unknown20.unknown18; }
 
+namespace {
+
+// Inferred role: traverser telling whether a treasure box of a salvage point near a position is waiting to be opened; original name unknown.
+class unknown003 {
+public:
+  explicit unknown003(const mm::Vec3 &position) : unknown08(position), unknown10(false) {}
+
+  void onTraverse(const gmk::AGmkBase &gmk) {
+    const gmk::GmkSalvage &salvage = static_cast<const gmk::GmkSalvage &>(gmk);
+    const mm::Vec3 &position = salvage.unknown08.unknown08->unknown00;
+    f32 x = position.x - unknown08.x;
+    f32 y = position.y - unknown08.y;
+    f32 z = position.z - unknown08.z;
+    if (x * x + y * y + z * z > 1.0f) {
+      return;
+    }
+    u32 count = salvage.unknown88.size();
+    for (u32 index = 0; index < count; index++) {
+      const gmk::GmkSalvageLocator *locator = salvage.unknown88[index];
+      if (locator != nullptr && locator->getData()->unknown00 == 2 && locator->unknownc0 != INVALID_HANDLE && locator->unknownc8 == 0) {
+        unknown10 = true;
+        break;
+      }
+    }
+  }
+
+  const mm::Vec3 &unknown08;
+  bool unknown10;
+};
+
+} // namespace
+
+bool GfGameSalvage::isTboxExist() const {
+  const mm::Vec3 &position = static_cast<gmk::GmkSalvage *>(gmk::getBindedGmkInst(get()->unknowna8))->unknown08.unknown08->unknown00;
+  unknown003 traverser(position);
+  mm::mtl::PtrSingleton<gmk::GmkManager>::get()->traverseGmkInst(gmk::GMK_TYPE_SALVAGE, traverser);
+  return traverser.unknown10;
+}
+
+namespace {
+
+// Inferred role: traverser disposing the treasure boxes of the salvage points near a position; original name unknown.
+class unknown004 {
+public:
+  explicit unknown004(const mm::Vec3 &position) : unknown08(position) {}
+
+  void onTraverse(const gmk::AGmkBase &gmk) {
+    const gmk::GmkSalvage &salvage = static_cast<const gmk::GmkSalvage &>(gmk);
+    const mm::Vec3 &position = salvage.unknown08.unknown08->unknown00;
+    f32 x = position.x - unknown08.x;
+    f32 y = position.y - unknown08.y;
+    f32 z = position.z - unknown08.z;
+    if (x * x + y * y + z * z > 1.0f) {
+      return;
+    }
+    u32 count = salvage.unknown88.size();
+    for (u32 index = 0; index < count; index++) {
+      gmk::GmkSalvageLocator *locator = salvage.unknown88[index];
+      if (locator != nullptr && locator->getData()->unknown00 == 2) {
+        locator->unknownc8 = 0;
+        locator->disposeGobInst(true);
+      }
+    }
+  }
+
+  const mm::Vec3 &unknown08;
+};
+
+} // namespace
+
+void GfGameSalvage::execRaffle(const RaffleInfo &info) {
+  gmk::GmkSalvage *salvage = static_cast<gmk::GmkSalvage *>(gmk::getBindedGmkInst(get()->unknowna8));
+  gmk::GmkSalvage::RaffleInfo raffleInfo = {info.unknown00, info.unknown04, info.unknown08};
+  salvage->createRaffle(raffleInfo);
+  unknown004 traverser(salvage->unknown08.unknown08->unknown00);
+  mm::mtl::PtrSingleton<gmk::GmkManager>::get()->traverseGmkInst(gmk::GMK_TYPE_SALVAGE, traverser);
+}
+
 bool GfGameSalvage::getEventOrigin(mm::Mat44 &matrix) const {
   gmk::GmkSalvage *salvage = static_cast<gmk::GmkSalvage *>(gmk::getBindedGmkInst(get()->unknowna8));
   if (salvage->unknowna8 != nullptr) {
@@ -322,6 +410,21 @@ GfComAsm *GfGameSalvage::getGfComAsm() const {
   return nullptr;
 }
 
+GfComBehaviorSalvage *GfGameSalvage::getGfComBehaviorSalvage() const {
+  if (unknownc0 == nullptr) {
+    return nullptr;
+  }
+  GfObjAcc acc(unknownc0->unknown20);
+  if (acc.isValid()) {
+    GfObj *obj = acc.getObj();
+    if (obj == nullptr) {
+      return nullptr;
+    }
+    return obj->getComponent<GfComBehaviorSalvage>();
+  }
+  return nullptr;
+}
+
 static const char *const unknown002[] = {"BtnChallenge0", "BtnChallenge1", "BtnChallenge2"}; // Inferred role: columns of the button challenges; original name unknown.
 
 u32 GfGameSalvage::getButtonChallengeId(int index) {
@@ -357,6 +460,23 @@ void GfGameSalvage::playClimbReady() {
   if (unknownc0 != nullptr && unknownc0->unknown20 != INVALID_HANDLE) {
     playAnimation(m_climbAnimationType);
     GfGameSpeed::setSalvageCharacterSpeed(0.01f);
+  }
+}
+
+void GfGameSalvage::playSE(SEID id) {
+  if (fw::SoundManager::get() != nullptr && GfFieldSound::get() != nullptr) {
+    fw::SoundManager::get()->playSe(id, GfFieldSound::get()->getCommonPack(), 1.0f, static_cast<fw::SoundCategory>(0));
+  }
+}
+
+void GfGameSalvage::playClimb() {
+  if (unknownc0 != nullptr) {
+    GF_OBJ_HANDLE *handle = unknownc0->unknown20;
+    if (handle != INVALID_HANDLE) {
+      GfGameSpeed::setSalvageCharacterSpeed(1.0f);
+      SCOM_SALVAGE_VOICE::createResult(handle, static_cast<CV_SALVAGE_RESULT>(unknownd4));
+      playSE(static_cast<SEID>(SE_CLIMB_BASE + m_climbAnimationType));
+    }
   }
 }
 

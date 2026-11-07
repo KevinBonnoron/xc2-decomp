@@ -35,6 +35,7 @@ struct MsgPcFieldNotifyChangePlayerID;
 struct MsgPcFieldWarpCancel;
 
 namespace pc {
+struct MoveParam;
 struct SlideParam;
 
 enum InputID {
@@ -98,6 +99,11 @@ public:
     const fw::ParamList *paramList = unknown300.operator->();
     return paramList->unknown0c > 4 ? static_cast<const pc::SlideParam *>(paramList->unknown10[4].param) : nullptr;
   }
+  // Inferred role: move param of the pc param list entry 1 ("move"), null when the list is shorter; original name unknown.
+  const pc::MoveParam *unknown005() const {
+    const fw::ParamList *paramList = unknown300.operator->();
+    return paramList->unknown0c > 1 ? static_cast<const pc::MoveParam *>(paramList->unknown10[1].param) : nullptr;
+  }
 
   // Inferred role: moving, from the velocity or the value at 0xc0 (shared by gf::pc::isMainPcMove and isBuddyPcMove); original
   // name unknown.
@@ -131,7 +137,8 @@ public:
   mm::Vec3 unknownd0; // Inferred role: slide direction, written by StateUtilField::setSlideDirForce; original member name unknown.
   u8 _e0[0xf0 - 0xe0];
   f32 unknownf0; // Role and original member name unknown; compared with the start time of the slide param by StateUtilField::isStartSlidePosuture.
-  u8 _f4[0x110 - 0xf4];
+  u8 _f4[0x100 - 0xf4];
+  mm::Vec3 unknown100;  // Inferred role: offset added to the fall speed; original member name unknown.
   u32 unknown110_0 : 1; // Inferred role: field control; original member name unknown.
   u32 unknown110_1 : 1; // Inferred role: battle control; original member name unknown.
   u32 unknown110_2 : 1; // Inferred role: locomotion set by setLocomotion; original member name unknown.
@@ -166,7 +173,7 @@ public:
   mm::Vec3 unknown1c0; // Inferred role: up axis, unitY rotated by the rotation in syncDirection; original member name unknown.
   u8 _1d0[0x1e0 - 0x1d0];
   mm::Vec3 unknown1e0; // Inferred role: default input direction; original member name unknown.
-  u8 _1f0[0x200 - 0x1f0];
+  mm::Vec3 unknown1f0; // Inferred role: negated unknown1e0, written by syncDirection; original member name unknown.
   mm::Vec3 unknown200; // Inferred role: negated X axis, -unitX rotated by the rotation in syncDirection; original member name unknown.
   u8 _210[0x290 - 0x210];
   mm::Vec3 unknown290; // Inferred role: input Y axis on the wall, read by TaskFieldWallEscape::update; original member name unknown.
@@ -195,6 +202,7 @@ static_assert(offsetof(GfComPropertyPc, m_locomotion) == 0xa0, "");
 static_assert(offsetof(GfComPropertyPc, unknownc0) == 0xc0, "");
 static_assert(offsetof(GfComPropertyPc, unknownd0) == 0xd0, "");
 static_assert(offsetof(GfComPropertyPc, unknownf0) == 0xf0, "");
+static_assert(offsetof(GfComPropertyPc, unknown100) == 0x100, "");
 static_assert(offsetof(GfComPropertyPc, unknown114) == 0x114, "");
 static_assert(offsetof(GfComPropertyPc, unknown118) == 0x118, "");
 static_assert(offsetof(GfComPropertyPc, unknown11c) == 0x11c, "");
@@ -206,6 +214,7 @@ static_assert(offsetof(GfComPropertyPc, unknown170) == 0x170, "");
 static_assert(offsetof(GfComPropertyPc, unknown180) == 0x180, "");
 static_assert(offsetof(GfComPropertyPc, unknown1c0) == 0x1c0, "");
 static_assert(offsetof(GfComPropertyPc, unknown1e0) == 0x1e0, "");
+static_assert(offsetof(GfComPropertyPc, unknown1f0) == 0x1f0, "");
 static_assert(offsetof(GfComPropertyPc, unknown200) == 0x200, "");
 static_assert(offsetof(GfComPropertyPc, unknown290) == 0x290, "");
 static_assert(offsetof(GfComPropertyPc, unknown2b0) == 0x2b0, "");

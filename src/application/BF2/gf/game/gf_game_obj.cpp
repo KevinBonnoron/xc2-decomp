@@ -277,7 +277,7 @@ void GfGameObj::enterStayObjectWithVolumeFade(GF_OBJ_HANDLE *handle) {
   if (setup != nullptr) {
     setup->unknown50 = 1.0f;
     setup->unknown60 = false;
-    setup->unknown64 = VFEFF_UNKNOWN_4;
+    setup->unknown64 = VFACC_UNKNOWN_4;
   }
   GfObjManager::enterStayObject(handle);
 }

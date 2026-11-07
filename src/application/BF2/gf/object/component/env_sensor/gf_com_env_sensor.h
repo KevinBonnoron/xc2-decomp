@@ -60,20 +60,21 @@ public:
     mm::Plane unknown10; // Inferred role: plane; original member name unknown.
   };
 
-  // Inferred role: horizontal wall info, written by searchHorizon with the state bits 4 (+0x150), 5 (+0x180) and 6 (+0x1b0,
-  // climb wall); original type name unknown.
+  // Inferred role: horizontal wall info, written by searchHorizon (and copied from the descend wall packet by
+  // StateUtilField::isWallAdsorptionUnderWall); original type name unknown.
   struct unknown003 {
     mm::Plane unknown00; // Inferred role: wall plane; original member name unknown.
-    u8 _20[0x24 - 0x20];
-    u8 : 4;
-    u8 unknown24_4 : 1; // Inferred role: valid; original member name unknown.
-    u8 : 3;
-    u8 _25[0x28 - 0x25];
-  };
-
-  // Inferred role: descend wall info; original type name unknown.
-  struct unknown004 {
-    u8 _00[0x30];
+    f32 unknown20;       // Inferred role: signed distance of the search position to the plane; original member name unknown.
+    union {
+      u32 unknown24; // Inferred role: flags; original member name unknown.
+      struct {
+        u32 : 4;
+        u32 unknown24_4 : 1; // Inferred role: valid; original member name unknown.
+        u32 : 1;
+        u32 unknown24_6 : 1; // Inferred role: unknown; original member name unknown.
+        u32 : 25;
+      };
+    };
   };
 
   // Inferred role: ceiling info, written by searchVertical with the state bit 3; original type name unknown.
@@ -83,8 +84,74 @@ public:
     u32 unknown30;       // Inferred role: unknown; original member name unknown.
   };
 
-  // Layout evidence: VerticalData::VerticalData() initializes the water info at +0x70 and the ceiling info at +0xe0, and
-  // EnviromentSensor::check() passes +0x150, the end of the VerticalData, to searchHorizon.
+  // Layout evidence: EnviromentSensor::check() passes +0x150 to searchHorizon as the result of the packet, and
+  // searchHorizon writes the planes at +0x00 (bit 4), +0x30 (bit 5) and +0x60 (bit 6, climb wall) and the handle at +0x90;
+  // original type name unknown.
+  struct unknown006 {
+    unknown003 unknown00; // Inferred role: horizontal wall info (search bit 4); original member name unknown.
+    unknown003 unknown30; // Inferred role: horizontal info of the search bit 5; original member name unknown.
+    unknown003 unknown60; // Inferred role: climb wall info (search bit 6); original member name unknown.
+    u64 unknown90;        // Inferred role: climb wall object handle, -1 when none; original member name unknown.
+  };
+
+  // Field names and offsets from the reflection built by gf::EnviromentSensor::Parameter::createReflection; the names are
+  // the reflection strings of the game.
+  struct Parameter {
+    f32 searchVertUp;
+    f32 searchVertDown;
+    f32 obstacleHeightBase;
+    f32 obstacleHeightJump;
+    f32 obstacleSearchLength;
+    f32 wallEndHeight;
+    f32 wallEndMoveDist;
+    f32 wallEndSearchDown;
+    f32 descendWallSearchFront;
+    f32 descendWallSearchDown;
+    f32 descendWallSearchDist;
+  };
+
+  // Layout evidence: StateUtilField::isWallAdsorption fills it and passes it to searchHorizon, whose accesses are the
+  // offsets below.
+  struct HorizonPacket {
+    HorizonPacket() : unknown24(0.0f), unknown34(0), unknown38(nullptr) {}
+
+    u32 unknown00; // Inferred role: requested searches (bits 4, 5 and 6); original member name unknown.
+    u8 _04[0x10 - 0x04];
+    mm::Vec3 unknown10;    // Inferred role: search direction; original member name unknown.
+    f32 unknown20;         // Inferred role: start distance along the direction; original member name unknown.
+    f32 unknown24;         // Inferred role: end distance along the direction; original member name unknown.
+    f32 unknown28;         // Inferred role: height offset of the search bit 4; original member name unknown.
+    f32 unknown2c;         // Inferred role: height offset of the search bit 5; original member name unknown.
+    f32 unknown30;         // Inferred role: height offset of the search bit 6; original member name unknown.
+    u32 unknown34;         // Inferred role: found searches, same bits as the request; original member name unknown.
+    unknown006 *unknown38; // Inferred role: result; original member name unknown.
+  };
+
+  // Layout evidence: StateUtilField::isWallAdsorptionUnderWall fills it and passes it to searchWallUnderGround, whose
+  // accesses are the offsets below.
+  struct WallPacket {
+    WallPacket() : unknown40(0.0f), unknown44(0.0f), unknown48(0.0f), unknown4c(0.0f), unknown50(0) {}
+
+    u32 unknown00; // Inferred role: requested searches (bit 7: descend wall); original member name unknown.
+    u8 _04[0x10 - 0x04];
+    mm::Vec3 unknown10; // Inferred role: wall direction; original member name unknown.
+    mm::Vec3 unknown20; // Inferred role: search direction; original member name unknown.
+    mm::Vec3 unknown30; // Inferred role: search offset; original member name unknown.
+    f32 unknown40;      // Inferred role: start distance along the search direction; original member name unknown.
+    f32 unknown44;      // Inferred role: end distance along the search direction; original member name unknown.
+    f32 unknown48;      // Inferred role: start distance along the wall direction; original member name unknown.
+    f32 unknown4c;      // Inferred role: end distance along the wall direction; original member name unknown.
+    u32 unknown50;      // Inferred role: found searches, same bits as the request; original member name unknown.
+    u8 _54[0x70 - 0x54];
+    mm::Plane unknown70; // Inferred role: found plane; original member name unknown.
+    u32 unknown90;       // Inferred role: flags of the found plane; original member name unknown.
+    u8 _94[0xa0 - 0x94];
+  };
+
+  static void searchHorizon(const mm::Vec3 &position, HorizonPacket *packet);
+  static void searchWallUnderGround(const mm::Vec3 &position, WallPacket *packet);
+
+  // Layout evidence: VerticalData::VerticalData() initializes the water info at +0x70 and the ceiling info at +0xe0.
   struct VerticalData : GroundInfo {
     unknown001 unknown70; // Inferred role: water info; original member name unknown.
     unknown002 unknownb0; // Inferred role: dead plane info; original member name unknown.
@@ -109,14 +176,10 @@ public:
     };
   };
   VerticalData unknown30; // Inferred role: vertical ground data; original member name unknown.
-  unknown003 unknown150;  // Inferred role: horizontal wall info (state bit 4); original member name unknown.
-  unknown003 unknown180;  // Inferred role: horizontal info of the state bit 5; original member name unknown.
-  unknown003 unknown1b0;  // Inferred role: climb wall info (state bit 6); original member name unknown.
-  u64 unknown1e0;         // Inferred role: climb end object handle, -1 when none; original member name unknown.
-  u8 _1e8[0x1f0 - 0x1e8];
-  GroundInfo unknown1f0; // Inferred role: climb end ground; original member name unknown.
-  unknown004 unknown260; // Inferred role: descend wall info; original member name unknown.
-  f32 unknown290;        // Inferred role: unknown scale; original member name unknown.
+  unknown006 unknown150;  // Inferred role: horizontal wall info; original member name unknown.
+  GroundInfo unknown1f0;  // Inferred role: climb end ground; original member name unknown.
+  unknown003 unknown260;  // Inferred role: descend wall info; original member name unknown.
+  f32 unknown290;         // Inferred role: unknown scale; original member name unknown.
   u8 _294[0x2a0 - 0x294];
 };
 
@@ -126,11 +189,23 @@ static_assert(sizeof(EnviromentSensor::unknown001) == 0x40, "");
 static_assert(sizeof(EnviromentSensor::unknown002) == 0x30, "");
 static_assert(sizeof(EnviromentSensor::unknown003) == 0x30, "");
 static_assert(sizeof(EnviromentSensor::unknown005) == 0x40, "");
+static_assert(sizeof(EnviromentSensor::unknown006) == 0xa0, "");
+static_assert(offsetof(EnviromentSensor::unknown006, unknown90) == 0x90, "");
+static_assert(sizeof(EnviromentSensor::Parameter) == 0x2c, "");
+static_assert(offsetof(EnviromentSensor::Parameter, obstacleSearchLength) == 0x10, "");
+static_assert(offsetof(EnviromentSensor::Parameter, descendWallSearchDist) == 0x28, "");
+static_assert(offsetof(EnviromentSensor::HorizonPacket, unknown10) == 0x10, "");
+static_assert(offsetof(EnviromentSensor::HorizonPacket, unknown30) == 0x30, "");
+static_assert(offsetof(EnviromentSensor::HorizonPacket, unknown38) == 0x38, "");
+static_assert(sizeof(EnviromentSensor::HorizonPacket) == 0x40, "");
+static_assert(offsetof(EnviromentSensor::WallPacket, unknown30) == 0x30, "");
+static_assert(offsetof(EnviromentSensor::WallPacket, unknown50) == 0x50, "");
+static_assert(offsetof(EnviromentSensor::WallPacket, unknown70) == 0x70, "");
+static_assert(offsetof(EnviromentSensor::WallPacket, unknown90) == 0x90, "");
 static_assert(sizeof(EnviromentSensor::VerticalData) == 0x120, "");
 static_assert(offsetof(EnviromentSensor, m_envSensorCheckFlags) == 0x20, "");
 static_assert(offsetof(EnviromentSensor, unknown30) == 0x30, "");
 static_assert(offsetof(EnviromentSensor, unknown150) == 0x150, "");
-static_assert(offsetof(EnviromentSensor, unknown1b0) == 0x1b0, "");
 static_assert(offsetof(EnviromentSensor, unknown1f0) == 0x1f0, "");
 static_assert(offsetof(EnviromentSensor, unknown260) == 0x260, "");
 static_assert(offsetof(EnviromentSensor, unknown290) == 0x290, "");
@@ -169,7 +244,7 @@ public:
   u16 unknown2bc;                                  // Inferred role: root bone index; original member name unknown.
   u32 unknown2c0[6];                               // Inferred role: foot flags; original member name unknown.
   mm::mtl::IntrusivePtr<fw::ParamList> unknown2d8; // Inferred role: param list; original member name unknown.
-  const fw::ParamList::unknown005 *unknown2e0;     // Inferred role: param entry; original member name unknown.
+  fw::ParamAdapter unknown2e0;                     // Inferred role: param entry; original member name unknown.
   const fw::ParamList::unknown005 *unknown2e8;     // Inferred role: param entry; original member name unknown.
   fw::SensorUpdater unknown2f0;                    // Inferred role: updater before the game; original member name unknown.
   fw::SensorUpdater unknown328;                    // Inferred role: updater after the animation; original member name unknown.

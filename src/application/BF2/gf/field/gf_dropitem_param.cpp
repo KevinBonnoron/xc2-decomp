@@ -1,15 +1,54 @@
 #include "gf/field/gf_dropitem_param.h"
 
+#include "bdat.h"
 #include "ml/rand.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/vector.h" // IWYU pragma: keep
 
 namespace gf {
+namespace {
+
+f32 getValF32(u8 *bdat, const char *name, int id) {
+  Bdat::Value value;
+  value.valueU32 = Bdat::getValCheck(bdat, name, id, 8);
+  return value.valueF32;
+}
+
+} // namespace
 
 GfDropitemParam::GfDropitemParam()
     : unknown00(2.0f), unknown04(0.0f), unknown08(1.0f), unknown0c(0.0f), unknown10(0.5f), unknown14(0.5f), unknown18(0.0f), unknown1c(5.0f), unknown20(9.0f), unknown24(0.5f), unknown28(0.5f),
       unknown2c(0.2f), unknown30(0.05f), unknown34(0.1f), unknown38(0.0f), unknown3c(0.0f), unknown40(1.0f), unknown44(0.5f), unknown48(false), unknown4c(360.0f), unknown50(0), unknown54(1.0f),
       unknown58(2) {}
+
+void GfDropitemParam::loadFromBdat(int &id) {
+  u8 *bdat = Bdat::getFP("RSC_dropitemParam");
+  if (bdat != nullptr) {
+    unknown00 = getValF32(bdat, "height", id);
+    unknown04 = getValF32(bdat, "heightRand", id);
+    unknown08 = getValF32(bdat, "distance", id);
+    unknown0c = getValF32(bdat, "distanceRand", id);
+    unknown10 = getValF32(bdat, "time", id);
+    unknown14 = getValF32(bdat, "speedAtte", id);
+    unknown18 = getValF32(bdat, "rotYRand", id);
+    unknown1c = getValF32(bdat, "lifeTime", id);
+    unknown20 = getValF32(bdat, "flashTime", id);
+    unknown24 = getValF32(bdat, "flashInterval1", id);
+    unknown28 = getValF32(bdat, "flashInterval2", id);
+    unknown2c = getValF32(bdat, "vanishTime1", id);
+    unknown30 = getValF32(bdat, "vanishTime2", id);
+    unknown34 = getValF32(bdat, "radius", id);
+    unknown38 = getValF32(bdat, "initHeight", id);
+    unknown3c = getValF32(bdat, "startScale", id);
+    unknown40 = getValF32(bdat, "endScale", id);
+    unknown44 = getValF32(bdat, "scaleTime", id);
+    unknown48 = static_cast<u8>(Bdat::getValCheck(bdat, "isSpin", id, 1));
+    unknown4c = getValF32(bdat, "spinSpeed", id);
+    unknown50 = static_cast<u8>(Bdat::getValCheck(bdat, "startSpinBound", id, 1));
+    unknown54 = getValF32(bdat, "startSpinTime", id);
+    unknown58 = static_cast<u8>(Bdat::getValCheck(bdat, "boundNum", id, 1));
+  }
+}
 
 GfDropitemParamInst::GfDropitemParamInst(const GfDropitemParam *param, f32 height) : unknown00(nullptr), unknown08(0.0f), unknown0c(0.0f) {
   if (param != nullptr) {

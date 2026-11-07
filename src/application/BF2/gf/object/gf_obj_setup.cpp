@@ -58,6 +58,40 @@ u32 GfObjSetup::getFootStepEffect() const {
 
 u32 GfObjSetup::getEnArrangeID() const { return 0; }
 
+void GfObjSetupEnemy::validateBy_pop_act_type(u8 popActType) {
+  switch (popActType) {
+  default:
+    unknown74 = "S_idle";
+    break;
+  case 0:
+    unknown74 = "S_idle";
+    break;
+  case 1:
+    unknown74 = "S_specialA_01";
+    break;
+  case 2:
+    unknown74 = "S_specialB_01";
+    break;
+  case 3:
+    unknown74 = "S_specialC_00";
+    break;
+  case 4:
+    unknown74 = "S_specialD_00";
+    break;
+  }
+  unknown98 = popActType != 3 && popActType != 4;
+}
+
+u32 GfObjSetupEnemy::getFootStep() const {
+  DataObjEnemy enemy(getEnArrangeID());
+  return enemy.getFootStep();
+}
+
+u32 GfObjSetupEnemy::getFootStepEffect() const {
+  DataObjEnemy enemy(getEnArrangeID());
+  return enemy.getFootStepEffect();
+}
+
 void GfObjSetup::setInitialScale(f32 scale) {
   unknown40 = scale;
   unknown44 = scale;
@@ -68,46 +102,6 @@ void GfObjSetup::setInitialScale(const mm::Vec3 &scale) {
   unknown40 = scale.x;
   unknown44 = scale.y;
   unknown48 = scale.z;
-}
-
-void setSkelType(u32 type, GfObjSetup *setup) {
-  s32 skelType;
-  switch (type) {
-  case 1:
-    skelType = 0;
-    break;
-  case 2:
-    skelType = 4;
-    break;
-  case 3:
-    skelType = 1;
-    break;
-  case 4:
-    skelType = 3;
-    break;
-  case 5:
-    skelType = 5;
-    break;
-  case 6:
-    skelType = 6;
-    break;
-  case 7:
-    skelType = 7;
-    break;
-  case 8:
-    skelType = 8;
-    break;
-  case 9:
-    skelType = 9;
-    break;
-  case 10:
-    skelType = 10;
-    break;
-  default:
-    skelType = -1;
-    break;
-  }
-  setup->unknown68 = skelType;
 }
 
 } // namespace gf

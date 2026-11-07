@@ -1,13 +1,19 @@
 #include "dr/dr_mdo_mat.h"
 
+#include <math.h>
 #include <string.h>
 
 #include "dr/dr_man.h"
+#include "dr/dr_pixl_man.h"
+#include "dr/dr_pixl_post_man.h"
+#include "dr/dr_pixl_post_parm.h"
 #include "dr/dr_res_mdo_mat.h"
 #include "grlib/cglib_dbl_uniform_block.h" // IWYU pragma: keep
 #include "grlib/cglib_one_uniform_block.h" // IWYU pragma: keep
 #include "grlib/cglib_tri_uniform_block.h" // IWYU pragma: keep
 #include "mm_math/mm_col4.h"
+#include "mm_math/mm_math.h"
+#include "mm_mtl/fixed_array.h"
 
 namespace ml {
 
@@ -193,6 +199,19 @@ void DrMdoMat::matCall_TransVal(const MdsMatInfoHeader *, int valueIndex, int ma
 
 void DrMdoMat::matCall_CalcColor(const MdsMatInfoHeader *header, int valueIndex, int matIndex) {
   unknown30->unknownc0[matIndex].setColor(header->unknown0c * unknownd8, unknownd8 * header->unknown10, unknownd8 * header->unknown14, header->unknown18);
+}
+
+void DrMdoMat::matCall_OutLineVal(const MdsMatInfoHeader *header, int valueIndex, int matIndex) {
+  f32 *values = unknown30->unknownf8;
+  u32 offset = header->unknown40 + valueIndex;
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
+  f32 rangeEnd = postParm->unknown2cc;
+  f32 rangeStart = postParm->unknown2d0;
+  f32 rangeMax = rangeEnd > rangeStart ? rangeEnd : rangeStart;
+  f32 range = fmaxf(rangeMax - rangeStart, 0.01f);
+  f32 ratio = (unknowne4 - rangeStart) / range;
+  ratio = mm::clamp(ratio, 0.0f, 1.0f);
+  values[offset] = postParm->unknown2c4 * ratio;
 }
 
 void DrMdoMat::setDrMan(DrMan *drMan) { m_drMan = drMan; }
@@ -388,6 +407,21 @@ void DrMdoMat::matCall_AccMulVal4(const MdsMatInfoHeader *header, int valueIndex
   value[0] = unknown30->unknown118->unknown30[3] * value[0];
   value[1] = unknown30->unknown118->unknown30[3] * value[1];
   value[2] = unknown30->unknown118->unknown30[3] * value[2];
+}
+
+void DrMdoMat::matCall_WaterFog(const MdsMatInfoHeader *header, int valueIndex, int matIndex) {
+  f32 *value = unknown30->unknownf8 + (header->unknown40 + valueIndex);
+  const f32 *baseValue = unknown30->unknown38 + (header->unknown40 + valueIndex);
+  value[0] = baseValue[0];
+  value[1] = baseValue[1];
+  value[2] = baseValue[2];
+  value[4] = baseValue[4];
+  value[5] = baseValue[5];
+  value[6] = baseValue[6];
+  f32 fog = m_drMan->unknown78->unknown7f0->unknown180->unknown108 + -0.05f;
+  fog = fog > 0.0f ? fog : 0.0f;
+  fog = fog / 0.95f;
+  value[9] = mm::clamp(fog, 0.0f, 1.0f);
 }
 
 void DrMdoMat::matCall_CalcBloom(const MdsMatInfoHeader *header, int valueIndex, int matIndex) {

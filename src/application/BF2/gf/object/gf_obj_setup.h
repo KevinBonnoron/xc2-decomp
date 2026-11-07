@@ -24,9 +24,13 @@ namespace gf {
 struct SDataBlade;
 struct SDataEnemy;
 
+enum VFACC : s32 {
+  VFACC_UNKNOWN_FFFFFFFF = -1, // Inferred role: no pending fade; original enumerator name unknown.
+  VFACC_UNKNOWN_4 = 4,         // Inferred role: fade set by enterStayObjectWithVolumeFade; original enumerator name unknown.
+};
+
 enum VFEFF : u32 {
   VFEFF_UNKNOWN_0 = 0,
-  VFEFF_UNKNOWN_4 = 4,
 };
 
 class GfObjSetup {
@@ -73,7 +77,7 @@ public:
   GimmickType unknown5c; // Inferred role: gimmick type; original member name unknown.
   bool unknown60;        // Inferred role: volume fade for user; original member name unknown.
   u8 _61[0x64 - 0x61];
-  VFEFF unknown64; // Inferred role: volume fade effect; original member name unknown.
+  VFACC unknown64; // Inferred role: pending volume fade; original member name unknown.
   s32 unknown68;   // Inferred role: skeleton type; original member name unknown.
 };
 
@@ -201,11 +205,15 @@ public:
   static const u32 OBJECT_TYPE = OBJECT_TYPE_ENEMY;
 
   u32 getEnArrangeID() const override;
+  u32 getFootStep() const override;
+  u32 getFootStepEffect() const override;
   void validateBy_pop_act_type(u8 popActType);
 
   u32 unknown6c; // Inferred role: en param id; original member name unknown.
   u32 m_enArrangeID;
-  u8 _74[0xa0 - 0x74];
+  mm::mtl::FixStr<32> unknown74; // Inferred role: motion; original member name unknown.
+  bool unknown98;                // Inferred role: set by validateBy_pop_act_type; original member name unknown.
+  u8 _99[0xa0 - 0x99];
   SDataEnemy *unknowna0; // Inferred role: data enemy; original member name unknown.
   int unknowna8;         // Inferred role: row id of BDAT_FLD_ENACT_MOVE; original member name unknown.
   f32 unknownac;         // Inferred role: change battle delay, copied by GfComBehaviorEnemy::createBehField; original member name unknown.
@@ -220,6 +228,8 @@ public:
 
 static_assert(offsetof(GfObjSetupEnemy, unknown6c) == 0x6c, "");
 static_assert(offsetof(GfObjSetupEnemy, m_enArrangeID) == 0x70, "");
+static_assert(offsetof(GfObjSetupEnemy, unknown74) == 0x74, "");
+static_assert(offsetof(GfObjSetupEnemy, unknown98) == 0x98, "");
 static_assert(offsetof(GfObjSetupEnemy, unknowna0) == 0xa0, "");
 static_assert(offsetof(GfObjSetupEnemy, unknowna8) == 0xa8, "");
 static_assert(offsetof(GfObjSetupEnemy, unknownac) == 0xac, "");

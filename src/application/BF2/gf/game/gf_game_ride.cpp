@@ -26,14 +26,6 @@
 
 namespace gf {
 
-constexpr u32 MSG_GAME_RIDE_EVENT = 0x1000030;
-
-enum {
-  RIDE_EVENT_RIDE_ON = 0,
-  RIDE_EVENT_GET_DOWN = 1,
-  RIDE_EVENT_GET_DOWN_FORCE = 2,
-};
-
 void GfGameRide::build(const GfSetupParam &) {
 // __LINE__ of the operator new call is 0x28 in the game.
 #line 40

@@ -49,6 +49,16 @@ public:
   s16 unknown003(u16 index) const { return unknown20[index]; }
   // Inferred helper: extra truck slot by 16-bit index; original name unknown.
   const ExtraTruckSlot &unknown002(u16 index) const { return unknown50[index]; }
+  // Inferred helper: mount by name, INVALID_BONE when absent; original name unknown.
+  u16 unknown005(const char *name) const {
+    for (u32 i = 0; i < unknown70.size(); i++) {
+      if (strcmp(name, unknown70[i]) == 0) {
+        return i;
+      }
+    }
+
+    return INVALID_BONE;
+  }
   u32 getBoneCount() const { return unknown30.size(); }
 
   u16 getExtraTruckSlotID(const char *name) const;
@@ -67,8 +77,10 @@ public:
   Array<unknown004> unknown30;     // Inferred role: bones; original member name unknown.
   Array<QsTransform> unknown40;    // Inferred role: reference pose; original member name unknown.
   Array<ExtraTruckSlot> unknown50; // Inferred role: extra truck slots; original member name unknown.
-  u8 _60[0x90 - 0x60];
-  Array<SkelLabel> unknown90; // Inferred role: labels, sorted by type then id; original member name unknown.
+  Array<u16> unknown60;            // Inferred role: mount parent bone indices; original member name unknown.
+  Array<const char *> unknown70;   // Inferred role: mount names; original member name unknown.
+  Array<QsTransform> unknown80;    // Inferred role: mount transforms; original member name unknown.
+  Array<SkelLabel> unknown90;      // Inferred role: labels, sorted by type then id; original member name unknown.
 };
 
 static_assert(sizeof(Skeleton::unknown004) == 0x10, "");
@@ -77,6 +89,9 @@ static_assert(offsetof(Skeleton, unknown20) == 0x20, "");
 static_assert(offsetof(Skeleton, unknown30) == 0x30, "");
 static_assert(offsetof(Skeleton, unknown40) == 0x40, "");
 static_assert(offsetof(Skeleton, unknown50) == 0x50, "");
+static_assert(offsetof(Skeleton, unknown60) == 0x60, "");
+static_assert(offsetof(Skeleton, unknown70) == 0x70, "");
+static_assert(offsetof(Skeleton, unknown80) == 0x80, "");
 static_assert(offsetof(Skeleton, unknown90) == 0x90, "");
 static_assert(offsetof(Skeleton::LabelKey, unknown04) == 0x04, "");
 

@@ -3,7 +3,18 @@
 
 #include "gf/data/gf_bdat_lookat.h"
 #include "gf/object/component/behavior/plugin/gf_plugin.h"
+#include "gf/object/component/pc/gf_com_behavior_pc.h" // IWYU pragma: keep
 #include "types.h"
+
+namespace fw {
+struct UpdateInfo;
+} // namespace fw
+
+namespace mm {
+namespace mtl {
+class RTTI;
+} // namespace mtl
+} // namespace mm
 
 namespace gf {
 
@@ -15,6 +26,8 @@ namespace pc {
 struct unknown001;
 
 class LookAtPlugin : public Plugin {
+  GF_PLUGIN(GfComBehaviorPc)
+
 public:
   // Layout evidence: updateHoldHandles (0x71005793f4) fills it before Map<GF_OBJ_HANDLE *, TargetInfo>::insert
   // (0x710057a0fc), which copies the 0x28-byte MapPair (key at 0x00, value at 0x08); changeTarget (0x710057997c) reads
@@ -26,6 +39,10 @@ public:
     u32 unknown18;                             // Inferred role: chara type; original member name unknown.
     bool unknown1c;                            // Inferred role: already looked at; original member name unknown.
   };
+
+  virtual bool setup(GfComBehaviorPc &behavior);
+  virtual void cleanup(GfComBehaviorPc &behavior);
+  virtual void update(GfComBehaviorPc &behavior, const fw::UpdateInfo &info);
 };
 
 static_assert(offsetof(LookAtPlugin::TargetInfo, unknown08) == 0x08, "");

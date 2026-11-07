@@ -34,6 +34,7 @@ public:
     unknown002_0 = 0,   // Inferred role: quest title text; original name unknown.
     unknown002_1 = 1,   // Inferred role: quest summary text; original name unknown.
     unknown002_2 = 2,   // Inferred role: quest result text; original name unknown.
+    unknown002_3 = 3,   // Inferred role: first needed character icon; original name unknown.
     unknown002_15 = 15, // Inferred role: first needed field skill text; original name unknown.
     unknown002_16 = 16, // Inferred role: second needed field skill text; original name unknown.
     unknown002_17 = 17, // Inferred role: task condition text; original name unknown.
@@ -49,6 +50,7 @@ public:
     unknown002_50 = 50, // Inferred role: current task time zone; original name unknown.
     unknown002_51 = 51, // Inferred role: first current task time zone icon; original name unknown.
     unknown002_52 = 52, // Inferred role: second current task time zone icon; original name unknown.
+    unknown002_57 = 57, // Inferred role: quest icon; original name unknown.
     unknown002_58 = 58, // Inferred role: cleared child quest number; original name unknown.
   };
 

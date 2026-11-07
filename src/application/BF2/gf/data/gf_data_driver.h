@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "gf/data/gf_data_idea.h"
 #include "gf/data/gf_item_handle.h"
 #include "mm_mtl/bitflag.h"
 #include "mm_mtl/fixed_array.h"
@@ -11,7 +12,6 @@
 namespace gf {
 
 class GfInitParamDriver;
-struct SDataIdea;
 
 constexpr u32 DRIVER_LEVEL_MAX = 99;
 constexpr u32 DRIVER_ARTS_LEVEL_MAX = 5;
@@ -48,7 +48,7 @@ static_assert(offsetof(unknown116, unknown08) == 0x08, "");
 static_assert(sizeof(unknown116) == 0x0a, "");
 
 struct SDataDriver {
-  u8 _000[0x020 - 0x000];
+  SDataIdea unknown00;     // Inferred role: idea; original member name unknown.
   u16 unknown20;           // Inferred role: activate; original member name unknown.
   u16 unknown22;           // Inferred role: id; original member name unknown.
   s16 unknown24;           // Inferred role: blade set; original member name unknown.
@@ -91,6 +91,7 @@ enum FAVORITE {
 
 static_assert(sizeof(unknown114) == 0x14, "");
 static_assert(sizeof(unknown115) == 0x08, "");
+static_assert(offsetof(SDataDriver, unknown00) == 0x000, "");
 static_assert(offsetof(SDataDriver, unknown20) == 0x020, "");
 static_assert(offsetof(SDataDriver, unknown22) == 0x022, "");
 static_assert(offsetof(SDataDriver, unknown24) == 0x024, "");
@@ -132,12 +133,14 @@ public:
   static u32 getExpNextLevel(const SDataDriver &dataDriver);
   static u32 getExpNextLevel(u32 driver);
   static u32 getBattleExpNextLevel(const SDataDriver &dataDriver);
+  static bool setupSDataDriver(SDataDriver &dataDriver, u32 driver);
   static u32 getBattleExpNextLevel(u32 driver);
   static u32 getDummyBlade(u32 driver);
   static u32 getDummyBlade(const SDataDriver &dataDriver);
   static const char *getBelongingModelName(const GfInitParamDriver &param);
   static bool isActivatePartyAll(u32 driver);
   static void setPouchData(u32 driver, u32 slot, const SDataPouch &pouch);
+  static void setUsedFavoriteItemForPouch(u32 driver, u32 item);
   static void calcDriverBaseParamByLevel(SDataDriver &dataDriver);
   static u32 getLevel(u32 driver);
   static bool isActivateParty(u32 driver);
@@ -267,6 +270,7 @@ public:
   static void setActivateWeaponType(u32 driver, u32 weaponType);
   static bool isDriver(u32 driver);
   static u32 getEyeRotControl(u32 driver);
+  static bool isEnableEquipBlade(u32 driver, u32 blade);
   static bool isAttachedParty(u32 driver);
   static bool isEquipDefaultAcce(u32 driver);
 };

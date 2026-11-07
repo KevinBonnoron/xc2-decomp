@@ -275,6 +275,7 @@ class GfDataBlade {
 public:
   static void setCreator(u32 blade, u32 creator);
   static u32 getCreator(u32 blade);
+  static void setUsedFavoriteItemForPouch(u32 blade, u32 item);
   static u32 getMenuCastName(u32 blade);
   static u32 getMenuIlustName(u32 blade);
   static void setActivateDriver(u32 bladeId, int slot, u32 driverId, u32 option);
@@ -311,6 +312,7 @@ public:
   static const char *getCommonBladeName(u32 nameList);
   static bool getCommonBladeName(u8 *&bdat, u32 &textId, u32 nameList);
   static u32 getFavorite(u32 blade, FAVORITE favorite);
+  static const char *getFieldSkillVoice(u32 blade, u32 skill);
   static u32 getAchievementQuestPrefix(u32 blade, u32 line, u32 level);
   static void setupAchievQuest(AchievQuest &achievQuest);
   static u32 getKizunaringCompleteNum(u32 blade);
@@ -326,6 +328,7 @@ public:
   static bool getListPartyAll(mm::mtl::FixedVector<u16, 422> &blades);
   static bool getListReserverAndUnuse(mm::mtl::FixedVector<u16, 422> &blades);
   static bool getListReserver(mm::mtl::FixedVector<u16, 422> &reservers);
+  static void removeSameBlade(mm::mtl::FixedVector<u16, 422> &blades);
   static bool getListUnuse(mm::mtl::FixedVector<u16, 422> &blades);
   static bool getListLeave(mm::mtl::FixedVector<u16, 422> &blades);
   static bool getlistCommon(mm::mtl::FixedVector<u16, 422> &blades);
@@ -371,9 +374,10 @@ public:
   static const char *getResourceNameModel(u32 blade);
   static const char *getResourceNameMotion(u32 blade);
   static const char *getResourceNameAddMotion(u32 blade);
+  static bool getBladeAddAnim(mm::mtl::FixStr<128> &animName, u32 blade, u32 weaponType);
   static const char *getDebugName(u32 blade);
-  static u8 getRace(u32 blade);
-  static u8 getGender(u32 blade);
+  static u32 getRace(u32 blade);
+  static u32 getGender(u32 blade);
   static u32 getQuestRace(u32 blade);
   static bool getCommonBladeName(const char *model);
   static bool isOperable(u32 blade);
