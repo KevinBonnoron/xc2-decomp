@@ -7,6 +7,7 @@
 #include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_math/mm_vec4.h"
+#include "mm_mtl/allocator.h"
 #include "mm_mtl/vector.h"
 #include "skd/skd_packet.h"
 #include "types.h"
@@ -18,12 +19,6 @@ class XmlInterface;
 class JobQueue;
 struct QsTransform;
 } // namespace anm
-
-namespace mm {
-namespace mtl {
-class IAllocator;
-} // namespace mtl
-} // namespace mm
 
 namespace skd {
 
@@ -95,15 +90,25 @@ struct ResCollisionPlane : ResCollision {};
 
 static_assert(sizeof(ResCollisionPlane) == 0x40, "");
 
-// Layout evidence: CollionArray::CollionArray (0x710097bb08) reads the element count at 0x8 and walks the array at 0x0
-// with a stride of 0x50, the size of the largest collision shape.
+// Layout evidence: CollionArray::CollionArray (0x710097bb08) reads three pointer/count pairs from this object:
+// spheres at 0x0/0x8, capsules at 0x10/0x18 and planes at 0x20/0x28. The arrays are indexed with the element sizes
+// (sphere 0x50 at 0x710097bc94, capsule 0x50 at 0x710097bfb4, plane 0x40 at 0x710097c344). No field beyond +0x28 is
+// evidenced; 0x30 is the aligned extent of the declared prefix.
 struct ResCollisionArray {
-  const u8 *unknown00; // Inferred role: collision shapes, 0x50 bytes each; original member name unknown.
-  u32 unknown08;       // Inferred role: shape count; original member name unknown.
-  u8 _0c[0x10 - 0x0c];
+  const ResCollisionShpere *unknown00;  // Inferred role: sphere array; original member name unknown.
+  u32 unknown08;                        // Inferred role: sphere count; original member name unknown.
+  const ResCollisionCapsule *unknown10; // Inferred role: capsule array; original member name unknown.
+  u32 unknown18;                        // Inferred role: capsule count; original member name unknown.
+  const ResCollisionPlane *unknown20;   // Inferred role: plane array; original member name unknown.
+  u32 unknown28;                        // Inferred role: plane count; original member name unknown.
 };
 
 static_assert(offsetof(ResCollisionArray, unknown08) == 0x08, "");
+static_assert(offsetof(ResCollisionArray, unknown10) == 0x10, "");
+static_assert(offsetof(ResCollisionArray, unknown18) == 0x18, "");
+static_assert(offsetof(ResCollisionArray, unknown20) == 0x20, "");
+static_assert(offsetof(ResCollisionArray, unknown28) == 0x28, "");
+static_assert(sizeof(ResCollisionArray) == 0x30, "");
 
 struct ResNode {
   const char *unknown00; // Inferred role: name; original member name unknown.
@@ -224,6 +229,7 @@ static_assert(sizeof(NodeArray) == 0x38, "");
 class DynamicsSolver {
 public:
   DynamicsSolver(mm::mtl::IAllocator *allocator, const ResSolver &resSolver, u32 index);
+  // Inline default; the game has D0/D2, but no standalone symbol is emitted here, so this is not byte-verified.
   virtual ~DynamicsSolver() = default;
   virtual void solve(f32 deltaTime, const CollionArray &collisions, const Packet &packet);
   virtual void solveMT(f32 deltaTime, const CollionArray &collisions, const Packet &packet, anm::ThreadPool &threadPool);
@@ -330,6 +336,7 @@ static_assert(sizeof(DetectPlaneJob) == 0x40, "");
 // vptr (the serialized data keeps its members); DynamicResDynamics's destructor reads the allocator at 0x10 and the
 // collisions and solvers at 0x18 and 0x20.
 struct ResDynamics {
+  // Inline default; the game's D0 is delete-only, but no standalone D1/D2 comparison is made for this default.
   virtual ~ResDynamics() = default;
 
   u8 _08[0x08];
@@ -347,7 +354,14 @@ static_assert(sizeof(ResDynamics) == 0x28, "");
 // ReferenceObject allocator at 0x10, then destroys the vector; the vtable at 0x71011b9ab8 lists the destructor only.
 class DynamicResDynamics : public ResDynamics {
 public:
-  virtual ~DynamicResDynamics() = default;
+  // The game's D0/D2 are emitted out of line; they are not emitted from this inline body without a
+  // vtable-emitting translation unit, so the destructor remains TODO.
+  ~DynamicResDynamics() override {
+    mm::mtl::IAllocator *allocator = unknown10;
+    for (u32 i = 0; i < unknown28.size(); i++) {
+      allocator->deallocate(unknown28[i]);
+    }
+  }
 
   mm::mtl::Vector<void *> unknown28; // Inferred role: owned resources; original member name unknown.
 };

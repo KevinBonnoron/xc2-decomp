@@ -39,11 +39,7 @@ Dynamics::Dynamics(CollisionObject &collisionObject, const anm::Array<ResSolver>
 
 Dynamics::~Dynamics() {
   anm::unknown001(unknown190);
-  u32 count = m_pResSolver->size();
-  for (u32 i = 0; i < count; i++) {
-    delete m_solvers[i];
-  }
-  m_solvers.clear();
+  destroySolver();
 }
 
 void Dynamics::destroySolver() {
@@ -54,6 +50,8 @@ void Dynamics::destroySolver() {
   m_solvers.clear();
 }
 
+// Keep the original line numbers: update has assertions whose line argument is encoded in the game code.
+#line 57 "../../src/skdlib/src/skdlib/skd_dynamics.cpp"
 void Dynamics::update(f32 deltaTime) {
   if (deltaTime < 0.00000011920928955078125f) {
     return;

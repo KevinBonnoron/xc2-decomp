@@ -87,8 +87,9 @@ static_assert(offsetof(PlaneCollObj, unknown40) == 0x40, "");
 static_assert(sizeof(PlaneCollObj) == 0x50, "");
 
 // Layout evidence: CollionArray::CollionArray (0x710097bb08) stores the resource array at 0x0 and builds the sphere,
-// capsule and plane vectors at 0x8, 0x30 and 0x58 with the four flag at 0x80; its destructor (0x7100979a78) destroys
-// the three vectors in reverse order.
+// capsule and plane vectors at 0x8, 0x30 and 0x58 from the three resource arrays; the bool flag at 0x80 marks the bind
+// joints valid (cleared when a bind joint is missing). Its destructor (0x7100979a78) destroys the three vectors in
+// reverse order.
 class CollionArray {
 public:
   CollionArray(mm::mtl::IAllocator *allocator, const ResCollisionArray &collisions, const anm::Pose &pose);
@@ -98,7 +99,7 @@ public:
   mm::mtl::Vector<ShpereCollObj> unknown08;  // Inferred role: spheres; original member name unknown.
   mm::mtl::Vector<CapsuleCollObj> unknown30; // Inferred role: capsules; original member name unknown.
   mm::mtl::Vector<PlaneCollObj> unknown58;   // Inferred role: planes; original member name unknown.
-  bool unknown80;                            // Inferred role: updated once; original member name unknown.
+  bool unknown80;                            // Inferred role: bind-joints-valid flag; original member name unknown.
 };
 
 static_assert(offsetof(CollionArray, unknown08) == 0x08, "");

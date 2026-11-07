@@ -33,7 +33,7 @@ static_assert(offsetof(WindObjectCreateInfo, unknown10) == 0x10, "");
 static_assert(sizeof(WindObjectCreateInfo) == 0x14, "");
 
 struct ProbeCreateInfo : WindObjectCreateInfo {
-  u32 unknown14; // Inferred role: group; original member name unknown.
+  u32 unknown14; // Inferred role: entry count passed to the probe's hit Vector::expand; original member name unknown.
 };
 
 static_assert(offsetof(ProbeCreateInfo, unknown14) == 0x14, "");

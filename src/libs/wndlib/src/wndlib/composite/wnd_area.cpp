@@ -32,7 +32,7 @@ void AreaBlock::destroyChild(u32 index, PoolObjectMemory<AreaBlock> &pool) {
     for (u32 i = 0; i < 8; i++) {
       child->destroyChild(i, pool);
     }
-    // The recursive calls release the block, so the child is read again from the cell.
+    // The game re-reads unknown18[index] after the recursive calls.
     child = unknown18[index];
     pool.m_useList.erase(child);
     pool.m_freeList.push_back(child);

@@ -2,8 +2,8 @@
 #include "anm/anm_job.h"
 #include "anm/anm_job_queue.h"
 #include "mm_math/mm_vec3.h"
-#include "skd/skd_collision_object.h"
-#include "skd/skd_detect_info.h"
+#include "skd/skd_collision_object.h" // IWYU pragma: keep
+#include "skd/skd_detect_info.h"      // IWYU pragma: keep
 #include "skd/skd_dynamics.h"
 #include "skd/skd_packet.h"
 #include "types.h"
@@ -26,8 +26,11 @@ DetectCapsuleJob::DetectCapsuleJob(const CapsuleCollObj *object, const ResNodeCo
 DetectPlaneJob::DetectPlaneJob(const PlaneCollObj *object, const ResNodeCollision *nodeCollision, const mm::Vec3 &position, DetectInfo *unknown30, DetectInfo *unknown38)
     : anm::Job(_TYPE_NAME, sizeof(DetectPlaneJob), 2), unknown10(object), unknown18(nodeCollision), unknown20(position), unknown30(unknown30), unknown38(unknown38) {}
 
-void executeDetectSphereJob(anm::Job &job) {
-  DetectSphereJob &detectJob = static_cast<DetectSphereJob &>(job);
+namespace {
+
+// Inferred helper: the three detect jobs share this body in the game; the original helper name is unknown.
+template <typename Job> void unknown002(anm::Job &job) {
+  Job &detectJob = static_cast<Job &>(job);
   const ResNodeCollision *nodeCollision = detectJob.unknown18;
   mm::Vec3 normal;
   if (!detectJob.unknown10->detect(nodeCollision->unknown08, detectJob.unknown20, &normal)) {
@@ -43,39 +46,13 @@ void executeDetectSphereJob(anm::Job &job) {
   }
 }
 
-void executeDetectCapsuleJob(anm::Job &job) {
-  DetectCapsuleJob &detectJob = static_cast<DetectCapsuleJob &>(job);
-  const ResNodeCollision *nodeCollision = detectJob.unknown18;
-  mm::Vec3 normal;
-  if (!detectJob.unknown10->detect(nodeCollision->unknown08, detectJob.unknown20, &normal)) {
-    return;
-  }
-  if (detectJob.unknown30 != nullptr) {
-    detectJob.unknown30->unknown10 = normal * (1.0f - nodeCollision->unknown04);
-    detectJob.unknown30->unknown20 = true;
-  }
-  if (detectJob.unknown38 != nullptr) {
-    detectJob.unknown38->unknown10 = normal * nodeCollision->unknown04;
-    detectJob.unknown38->unknown20 = true;
-  }
-}
+} // namespace
 
-void executeDetectPlaneJob(anm::Job &job) {
-  DetectPlaneJob &detectJob = static_cast<DetectPlaneJob &>(job);
-  mm::Vec3 normal;
-  const ResNodeCollision *nodeCollision = detectJob.unknown18;
-  if (!detectJob.unknown10->detect(nodeCollision->unknown08, detectJob.unknown20, &normal)) {
-    return;
-  }
-  if (nullptr != detectJob.unknown30) {
-    detectJob.unknown30->unknown10 = normal * (1.0f - nodeCollision->unknown04);
-    detectJob.unknown30->unknown20 = true;
-  }
-  if (nullptr != detectJob.unknown38) {
-    detectJob.unknown38->unknown10 = normal * nodeCollision->unknown04;
-    detectJob.unknown38->unknown20 = true;
-  }
-}
+void executeDetectSphereJob(anm::Job &job) { unknown002<DetectSphereJob>(job); }
+
+void executeDetectCapsuleJob(anm::Job &job) { unknown002<DetectCapsuleJob>(job); }
+
+void executeDetectPlaneJob(anm::Job &job) { unknown002<DetectPlaneJob>(job); }
 
 void registerApplyDetectJobExecuter(anm::JobQueue *queue) { queue->registerJobExecuter(3, executeApplyDetectJob); }
 void registerDetectSphereJobExecuter(anm::JobQueue *queue) { queue->registerJobExecuter(0, executeDetectSphereJob); }
