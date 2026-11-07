@@ -112,6 +112,14 @@
     }
   },
   {
+    "name": "skdlib",
+    "code": {
+      "total": 55128,
+      "matching": 14884,
+      "non_matching": 0
+    }
+  },
+  {
     "name": "aiLib",
     "code": {
       "total": 16120,
@@ -120,10 +128,10 @@
     }
   },
   {
-    "name": "skdlib",
+    "name": "wndlib",
     "code": {
-      "total": 55128,
-      "matching": 8072,
+      "total": 18936,
+      "matching": 6820,
       "non_matching": 0
     }
   },
@@ -148,14 +156,6 @@
     "code": {
       "total": 668,
       "matching": 668,
-      "non_matching": 0
-    }
-  },
-  {
-    "name": "wndlib",
-    "code": {
-      "total": 18936,
-      "matching": 496,
       "non_matching": 0
     }
   },
