@@ -50,8 +50,9 @@ void Dynamics::destroySolver() {
   m_solvers.clear();
 }
 
-// Keep the original line numbers: update has assertions whose line argument is encoded in the game code.
-#line 57 "../../src/skdlib/src/skdlib/skd_dynamics.cpp"
+// The game's m_solvers[i] asserts are at lines 67 (Dynamics::update) and 89 (Dynamics::updateMT); the function
+// start lines are not independently evidenced.
+#line 58
 void Dynamics::update(f32 deltaTime) {
   if (deltaTime < 0.00000011920928955078125f) {
     return;
@@ -66,6 +67,7 @@ void Dynamics::update(f32 deltaTime) {
   }
 }
 
+#line 80
 void Dynamics::updateMT(f32 deltaTime, anm::ThreadPool &threadPool) {
   if (deltaTime < 0.00000011920928955078125f) {
     return;
