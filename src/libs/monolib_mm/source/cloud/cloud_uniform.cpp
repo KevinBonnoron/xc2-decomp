@@ -38,7 +38,7 @@ void CloudUniform::createUniform(CloudUniformType type, u32 num) {
 // the per-frame fog block.
 void CloudUniform::createFogUniform() {
   CloudCalcParams *params = CloudMan::get()->unknown50->unknown38;
-  const f32 *fog = params->unknown00->unknown1d4;
+  const f32 *fog = params->unknown00->m_fogTbl;
   f32 *buff = static_cast<f32 *>(getBuff());
   grlib::ShdF32SetF32Array(buff, fog, 0x18);
   buff[0x18] = params->unknown194;
@@ -50,7 +50,7 @@ void CloudUniform::createFogUniform() {
 // Transposed global fog matrix followed by the same 24-entry fog table.
 void CloudUniform::createGlbFogUniform() {
   CloudCalcParams *params = CloudMan::get()->unknown50->unknown38;
-  const f32 *fog = params->unknown00->unknown1d4;
+  const f32 *fog = params->unknown00->m_fogTbl;
   f32 *buff = static_cast<f32 *>(getBuff());
   grlib::ShdMat44TransposeMat44(buff, params->unknown110);
   grlib::ShdF32SetF32Array(buff + 0x10, fog, 0x18);
@@ -60,9 +60,9 @@ void CloudUniform::createGlbFogUniform() {
 void CloudUniform::createFlowShadow() {
   f32 *buff = static_cast<f32 *>(getBuff());
   CloudCalcParams *params = CloudMan::get()->unknown50->unknown38;
-  buff[0] = params->unknown00->unknown4e0[0];
-  buff[1] = params->unknown00->unknown4e0[1];
-  buff[2] = params->unknown00->unknown4e0[2];
+  buff[0] = params->unknown00->m_shadowOfs[0];
+  buff[1] = params->unknown00->m_shadowOfs[1];
+  buff[2] = params->unknown00->m_shadowOfs[2];
   buff[3] = 0.0f;
   buff[4] = params->unknown170;
   buff[5] = 1.0f - params->unknown170;
@@ -106,9 +106,9 @@ void CloudUniform::createFlowMdlUniform(f32 speed) {
   f32 *buff = static_cast<f32 *>(getBuff());
   CloudCalcParams *params = CloudMan::get()->unknown50->unknown38;
   grlib::ShdMat44TransposeMat44(buff, params->unknown50);
-  grlib::ShdMat44TransposeMat44(buff + 0x10, params->unknown00->unknown420[0]);
-  grlib::ShdMat44TransposeMat44(buff + 0x20, params->unknown00->unknown420[1]);
-  grlib::ShdMat44TransposeMat44(buff + 0x30, params->unknown00->unknown420[2]);
+  grlib::ShdMat44TransposeMat44(buff + 0x10, params->unknown00->m_shadowMatrix[0]);
+  grlib::ShdMat44TransposeMat44(buff + 0x20, params->unknown00->m_shadowMatrix[1]);
+  grlib::ShdMat44TransposeMat44(buff + 0x30, params->unknown00->m_shadowMatrix[2]);
   buff[0x40] = speed;
   buff[0x41] = 0.0f;
   buff[0x42] = 0.0f;

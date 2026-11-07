@@ -13,9 +13,9 @@ public:
   virtual void alphaRender() = 0;
   virtual void alphaRenderSec();
 
-  void *unknown08;     // Inferred role: owner; original member name unknown.
+  CloudObj *unknown08; // Inferred role: previous object; original member name unknown.
   CloudObj *unknown10; // Inferred role: next object; original member name unknown.
-  void *unknown18;     // Inferred role: original member name unknown.
+  void *unknown18;     // Inferred role: owner, the {head, tail, count} list at the start of CloudObjMan; original member name unknown.
 };
 
 static_assert(offsetof(CloudObj, unknown08) == 0x08, "");

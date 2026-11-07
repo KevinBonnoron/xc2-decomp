@@ -18,7 +18,7 @@ CloudCalcParams::~CloudCalcParams() { unknown460.release(); }
 // Same stores as CloudUniform::createFogUniform; the game keeps both functions as separate symbols.
 void CloudCalcParams::parmUpdate() {
   CloudCalcParams *params = CloudMan::get()->unknown50->unknown38;
-  const f32 *fog = params->unknown00->unknown1d4;
+  const f32 *fog = params->unknown00->m_fogTbl;
   f32 *buff = static_cast<f32 *>(unknown460.getBuff());
   grlib::ShdF32SetF32Array(buff, fog, 0x18);
   buff[0x18] = params->unknown194;
@@ -28,13 +28,13 @@ void CloudCalcParams::parmUpdate() {
   unknown460.updateData();
 }
 
-const f32 *CloudCalcParams::getFogTbl() const { return unknown00->unknown1d4; }
+const f32 *CloudCalcParams::getFogTbl() const { return unknown00->m_fogTbl; }
 
-f32 CloudCalcParams::getShadowOfs(u32 index) const { return unknown00->unknown4e0[index]; }
+f32 CloudCalcParams::getShadowOfs(u32 index) const { return unknown00->m_shadowOfs[index]; }
 
-void *CloudCalcParams::getShadowTex(u32 index) { return unknown00->unknown90[index]; }
+void *CloudCalcParams::getShadowTex(u32 index) { return unknown00->m_shadowTex[index]; }
 
-const mm::Mat44 &CloudCalcParams::getShadowMatrix(u32 index) const { return unknown00->unknown420[index]; }
+const mm::Mat44 &CloudCalcParams::getShadowMatrix(u32 index) const { return unknown00->m_shadowMatrix[index]; }
 
 void CloudCalcParams::setMainRenderTarget() { unknown420->setRenderTarget(*unknown438); }
 
