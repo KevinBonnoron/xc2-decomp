@@ -95,6 +95,7 @@ static_assert(offsetof(WindObject, m_pProxy) == 0x60, "");
 static_assert(offsetof(WindObject, unknown68) == 0x68, "");
 static_assert(offsetof(WindObject, unknown70) == 0x70, "");
 static_assert(sizeof(WindObject) == 0x90, "");
-// The subclasses place their first member at 0x88, in the tail padding of WindObject.
+// LocalWind and WindProbe reuse WindObject's tail padding and start their own members at 0x88;
+// AreaWind's 16-byte-aligned ConpoundWind member starts at 0x90.
 
 } // namespace wnd
