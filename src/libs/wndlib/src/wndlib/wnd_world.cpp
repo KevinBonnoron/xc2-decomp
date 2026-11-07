@@ -7,10 +7,8 @@
 #include "wnd/wnd_broad_phaze_interface.h"
 #include "wnd/wnd_dispatcher.h"
 #include "wnd/wnd_global_wind_manager.h" // IWYU pragma: keep
-#include "wnd/wnd_node.h"
 #include "wnd/wnd_object.h"
 #include "wnd/wnd_probe.h"
-#include "wnd/wnd_wind.h"
 
 namespace mm {
 namespace mtl {
@@ -20,25 +18,26 @@ class IAllocator;
 
 namespace wnd {
 struct ResConpoundWind;
+struct UpdateInfo;
 
-WindWorld::WindWorld(Dispatcher *dispatcher, BroadPhazeInterface *broadPhaze, const Array<const ResConpoundWind *> &resWind, mm::mtl::IAllocator *allocator) : unknown0c(0), unknown1d0(false) {
+WindWorld::WindWorld(Dispatcher *dispatcher, BroadPhazeInterface *broadPhaze, const Array<const ResConpoundWind *> &resWind, mm::mtl::IAllocator *allocator) : unknown0c(0.0f), unknown1d0(false) {
   m_pBroadPhaze = broadPhaze;
   broadPhaze->addRef();
-  m_pDispatcher = dispatcher;
+  unknown168 = dispatcher;
   dispatcher->addRef();
   unknown10.setup(resWind, allocator);
 }
 
 WindWorld::~WindWorld() {
   while (!unknown188.empty()) {
-    AreaWind *wind = unknown188.begin().get()->m_pOwner;
+    AreaWind *wind = unknown188.begin().get()->unknown10;
     removeAreaWind(*wind);
   }
   while (!unknown170.empty()) {
     removeProbe(*unknown170.begin());
   }
   delayErace();
-  mm::mtl::safeRelease(m_pDispatcher);
+  mm::mtl::safeRelease(unknown168);
   mm::mtl::safeRelease(m_pBroadPhaze);
 }
 
@@ -104,30 +103,16 @@ void WindWorld::removeLocalWind(LocalWind &wind) {
 
 void WindWorld::delayErace() {
   while (!unknown1b8.empty()) {
-    WindObject *object = unknown1b8.begin().get()->m_pOwner;
+    WindObject *object = unknown1b8.begin().get()->unknown10;
     unknown1b8.erase(&object->unknown70);
     object->release();
   }
 }
 
-// The game's bodies of these two are empty, so they return void; the pair cache is absent from this build.
+// Both functions have empty bodies in the game.
 void WindWorld::createOverlappingPairCache(WindProbe &probe) {}
 
 void WindWorld::destroyOverlappingPairCache(WindProbe &probe) {}
-
-void WindWorld::updateGlobalWind(const UpdateInfo &info) {
-  if (unknown10.unknown40.unknownf0 != nullptr) {
-    unknown10.unknown40.unknownf0->update(info);
-  }
-  if (unknown10.unknown40.unknowne8 != nullptr) {
-    unknown10.unknown40.unknowne8->update(info);
-  }
-  // The game calls the base blender directly, so GlobalWind::update is not reached twice.
-  unknown10.unknown40.WindBlender::update(info);
-  if (unknown10.unknown40.unknownf0 == nullptr) {
-    unknown10.unknown40.unknownf0 = nullptr;
-  }
-}
 
 void WindWorld::updateProbe(const UpdateInfo &info) {
   if (unknown170.empty()) {

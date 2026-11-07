@@ -8,9 +8,9 @@ namespace wnd {
 
 // Passed to the wind nodes by WindWorld::update: the accumulated time, the frame delta and the debug flag.
 struct UpdateInfo {
-  f32 unknown00;  // Inferred role: time; original member name unknown.
-  f32 unknown04;  // Inferred role: delta time; original member name unknown.
-  bool unknown08; // Inferred role: debug mode; original member name unknown.
+  f32 unknown00; // Inferred role: time; original member name unknown.
+  f32 unknown04; // Inferred role: delta time; original member name unknown.
+  u32 unknown08; // Inferred role: debug mode; original member name unknown.
 };
 
 static_assert(sizeof(UpdateInfo) == 0x0c, "");

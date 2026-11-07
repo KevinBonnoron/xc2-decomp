@@ -2,7 +2,7 @@
 
 #include "mm/mm_std_base.h"
 #include <string.h>
-
+// Inferred macro name; macros leave no trace in the binary.
 #define HEAP_INSIST(x)                                                                                                                                                                                 \
   {                                                                                                                                                                                                    \
     MM_ASSERT(x);                                                                                                                                                                                      \

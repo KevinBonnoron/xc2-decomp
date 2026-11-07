@@ -9,11 +9,11 @@
 
 namespace wnd {
 
-AreaWind::AreaWind(const AreaWindCreateInfo &info) : WindObject(unknown002_2, info), unknown260(info.unknown20) {
+AreaWind::AreaWind(const AreaWindCreateInfo &info) : WindObject(OBJECT_TYPE_UNKNOWN_2, info), unknown260(info.unknown20) {
 #line 22
   MM_ASSERT(info.m_pResWind);
   unknown90.unknownd0 = info.m_pResWind;
-  unknown268.m_pOwner = this;
+  unknown268.unknown10 = this;
 }
 
 void AreaWind::update(const UpdateInfo &info) { unknown90.update(info); }

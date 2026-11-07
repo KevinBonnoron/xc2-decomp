@@ -1,5 +1,5 @@
 #pragma once
-
+// Inferred macro name; macros leave no trace in the binary.
 #define MM_ASSERT(cond)                                                                                                                                                                                \
   do {                                                                                                                                                                                                 \
     if (!(cond)) {                                                                                                                                                                                     \

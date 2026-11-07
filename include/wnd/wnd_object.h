@@ -13,9 +13,9 @@ struct ResConpoundWind;
 // ObjectType values passed to WindObject: LocalWind passes 0, WindProbe 1 and AreaWind 2; the original
 // enumerator names are unknown.
 enum ObjectType {
-  unknown002_0 = 0,
-  unknown002_1 = 1,
-  unknown002_2 = 2,
+  OBJECT_TYPE_UNKNOWN_0 = 0,
+  OBJECT_TYPE_UNKNOWN_1 = 1,
+  OBJECT_TYPE_UNKNOWN_2 = 2,
 };
 
 // Member names come from the assertions of WindObject::WindObject ("info.pTransform", "info.pShape").
@@ -62,12 +62,13 @@ static_assert(offsetof(AreaWindCreateInfo, unknown20) == 0x20, "");
 static_assert(sizeof(AreaWindCreateInfo) == 0x28, "");
 
 class WindObject;
+class BroadPhazeProxy;
 
 // Inferred helper: intrusive list node that holds the object it belongs to, used by the lists that only receive
 // nodes and need the object back (WindWorld::delayErace); the original name is unknown.
 template <typename T> class unknown003 : public mm::mtl::IntrusiveListNodeBase {
 public:
-  T *m_pOwner;
+  T *unknown10;
 };
 
 static_assert(sizeof(unknown003<WindObject>) == 0x18, "");
@@ -81,7 +82,7 @@ public:
   Transform unknown30;              // Inferred role: transform, passed to Shape::calcAABB; original member name unknown.
   Shape *m_pShape;                  // Inferred role: shape, named by the assertion of wnd_broad_phaze_interface.h.
   u32 unknown58;                    // Inferred role: group, copied from WindObjectCreateInfo::unknown10; original member name unknown.
-  void *m_pProxy;                   // Inferred role: broad phase proxy, named by the assertion of wnd_object.cpp.
+  BroadPhazeProxy *m_pProxy;        // Inferred role: broad phase proxy, named by the assertion of wnd_object.cpp.
   u32 unknown68;                    // Role and original member name unknown.
   unknown003<WindObject> unknown70; // Inferred role: node of the delayed erase list; original member name unknown.
 };
@@ -94,6 +95,6 @@ static_assert(offsetof(WindObject, m_pProxy) == 0x60, "");
 static_assert(offsetof(WindObject, unknown68) == 0x68, "");
 static_assert(offsetof(WindObject, unknown70) == 0x70, "");
 static_assert(sizeof(WindObject) == 0x90, "");
-// The subclasses place their first member at 0x88, in the tail padding of the Transform member.
+// The subclasses place their first member at 0x88, in the tail padding of WindObject.
 
 } // namespace wnd

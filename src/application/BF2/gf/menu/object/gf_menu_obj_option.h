@@ -20,6 +20,8 @@ public:
   static void initOptionData(SDataOption &option);
   static int getVolumeValue(u8 level, u8 levelMax);
   static u32 getGammaValue(u8 level, u8 levelMax);
+  static u8 getVolumeLevel(u8 value, u8 levelMax);
+  static u8 getGammaLevel(u16 value, u8 levelMax);
 
   u8 _24[0x128 - 0x24];
   GfMenuSequence<GfMenuObjOption, 8> unknown128; // Inferred role: queued steps; original member name unknown.

@@ -97,10 +97,13 @@ public:
   void resetNavi();
   void setReadData(const _NvMhAllReadObj *readData, int offset);
   void releaseCall();
+  void update(NvmshResMemMan *memMan);
   void releaseNavi(NvmshResMemMan *memMan);
 
-  u32 unknown00; // Inferred role: state flags, bit 2 set when the resource is released; original member name unknown.
-  u16 unknown04; // Inferred role: retry counter; original member name unknown.
+  u32 unknown00; // Inferred role: state flags; createNavi sets bit 0 and bit 4, releaseCall sets bit 2 and update
+                 // clears bit 4; original member name unknown.
+  s16 unknown04; // Inferred role: update counter; after a release request 4 updates release the resource, otherwise 16
+                 // updates request it; original member name unknown.
   u8 _06[2];
   const _NvMhAllReadObj *m_readData; // Name from setReadData; original member name unknown.
   NvmshResObj unknown10;             // Inferred role: first data block; original member name unknown.

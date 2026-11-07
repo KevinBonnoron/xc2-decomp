@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "ai/ai_state.h"
+#include "ai/ai_state_fsm.h"
 #include "gf/game/gf_game_mount.h"
 #include "gf/object/gf_obj_manager.h"
 #include "mm_mtl/reference_object.h"
@@ -92,6 +93,20 @@ public:
   };
 
   static GfEvtModelDriver *create(GfInitParamDriver &param);
+  ~GfEvtModelDriver() override;
+  const mm::mtl::RTTI *getRTTI() const override;
+  void update(const fw::UpdateInfo &info) override;
+  void setDispWeapon(bool isDisp) override;
+  void setDispWeapon(bool isDispRight, bool isDispLeft) override;
+  GF_OBJ_HANDLE *getWeaponHandleRight() const override;
+  GF_OBJ_HANDLE *getWeaponHandleLeft() const override;
+  void setWeaponBattleCommand() override;
+  void setWeaponFieldCommand() override;
+  void setWeaponBattleState() override;
+  void setWeaponFieldState() override;
+  void setWeaponBattleMount() override;
+  void setWeaponFieldMount() override;
+  void setStateWeapon(bool isBattle);
   bool isAnimEnd() const;
   void setDispRexCoreCrystal(bool isDisp);
   void setDispJiji(bool isDisp);
@@ -101,10 +116,24 @@ public:
   void playAnimWeaponLeftCS(const char *name);
   bool isPlayEndAnimWeaponLeftCS();
   void setAnimSpeedWeaponLeftCS(f32 speed);
+
+  static mm::mtl::RTTI m_rtti;
+
+  u8 _28[0x298 - 0x28];
+  ai::Fsm unknown298; // Inferred role: state machine; original member name unknown.
+  u32 unknown310;     // Inferred role: blade; original member name unknown.
+  u8 _314[0x318 - 0x314];
 };
 
-class GfEvtModelSalvage : public GfEvtModel {
+static_assert(offsetof(GfEvtModelDriver, unknown298) == 0x298, "");
+static_assert(offsetof(GfEvtModelDriver, unknown310) == 0x310, "");
+static_assert(sizeof(GfEvtModelDriver) == 0x318, "");
+
+class GfEvtModelSalvage : public GfEvtModelDriver {
 public:
+  static mm::mtl::RTTI m_rtti;
+
+  const mm::mtl::RTTI *getRTTI() const override;
   bool isValid() const;
   void setTransform(const mm::Vec3 &position, f32 rotation);
 };

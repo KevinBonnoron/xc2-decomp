@@ -13,6 +13,7 @@
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
 #include "mm_mtl/bitflag.h"
+#include "mm_mtl/intrusive_ptr.h"
 
 namespace gf {
 struct GF_OBJ_HANDLE;
@@ -56,7 +57,7 @@ void StateBattle::Leave(GfComBehaviorPc *behavior, ai::State *next) {
   property->unknown110_1 = false;
   property->unknown111_7 = false;
   property->unknown470.unknown17 = false;
-  property->unknown10->unknown1b = false;
+  property->unknown10.get()->unknown1b = false;
   GfObjAcc acc(static_cast<GfObj *>(behavior->unknown08));
   acc.setFlag(OBJ_FLAG_UNKNOWN_17, true);
 }

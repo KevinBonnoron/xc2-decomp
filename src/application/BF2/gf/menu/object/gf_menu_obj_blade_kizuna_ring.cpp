@@ -98,11 +98,11 @@ int GfMenuObjBladeKizunaRing::setFadeOut(u32 handle) {
   return ctrl;
 }
 
-void GfMenuObjBladeKizunaRing::close() { unknown142(unknown001, GfMenuTypes::unknown003_34); }
+void GfMenuObjBladeKizunaRing::close() { GF_MENU_REQUEST_EVENT(unknown001, GfMenuTypes::unknown003_34); }
 
 void GfMenuObjBladeKizunaRing::setupName(ui::UIObjectAcc &acc) { GfMenuCharDataAdapter::createFromReferenceBlade(acc.searchChild("TXT_name"), 2, 0, false); }
 
-void GfMenuObjBladeKizunaRing::open() { unknown142(unknown001, GfMenuTypes::unknown003_33); }
+void GfMenuObjBladeKizunaRing::open() { GF_MENU_REQUEST_EVENT(unknown001, GfMenuTypes::unknown003_33); }
 
 } // namespace gf
 

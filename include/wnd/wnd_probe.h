@@ -15,6 +15,7 @@ class IAllocator;
 
 namespace wnd {
 struct UpdateInfo;
+class OverlappingCache;
 
 // Hit of a wind on a probe, filled by the collision agents.
 struct HitCache {
@@ -92,7 +93,7 @@ public:
   const GlobalWind *unknown180;                  // Inferred role: bound global wind; original member name unknown.
   const AreaWind *unknown188;                    // Inferred role: current area wind; original member name unknown.
   mm::mtl::Vector<LocalWindHitCache> unknown190; // Inferred role: hits of the local winds; original member name unknown.
-  void *m_pOverlappingCache;                     // Named by the assertion "m_pOverlappingCache == nullptr" of the destructor.
+  OverlappingCache *m_pOverlappingCache;         // Named by the assertion "m_pOverlappingCache == nullptr" of the destructor.
 };
 
 static_assert(offsetof(WindProbe, unknown88) == 0x88, "");

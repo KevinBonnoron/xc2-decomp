@@ -19,6 +19,7 @@ class ResASM;
 
 namespace fw {
 class EffectCasterBase;
+class EffectPack;
 class EffectPoint;
 struct EffectResData;
 } // namespace fw
@@ -29,12 +30,24 @@ class RTTI;
 } // namespace mtl
 } // namespace mm
 
+namespace ml {
+class WinProc;
+} // namespace ml
+
 namespace gf {
 
 struct GF_OBJ_HANDLE;
+struct GF_ASSET_HANDLE;
 struct MsgFxRimBloomEnd;
 struct MsgFxRimBloomTarget : fw::Message {
   MsgFxRimBloomTarget() : fw::Message(0x1000054, 0x80) {}
+};
+
+// Layout evidence: GfComEffectCaster::procMsgFxRimBloom reads the member at 0x08 and the flag at 0x0c and sets the flag at 0x0d.
+struct MsgFxRimBloom : fw::Message {
+  u32 unknown08;  // Inferred role: rim bloom state; original member name unknown.
+  bool unknown0c; // Inferred role: force; original member name unknown.
+  bool unknown0d; // Inferred role: accepted; original member name unknown.
 };
 
 struct MsgObjectNotifyDamage;
@@ -128,6 +141,12 @@ public:
     bool unknownbf;                                      // Inferred role: state flag; original member name unknown.
   };
 
+  // Layout evidence: getWeaponEffectPack (0x710050a6ac) reads the effect pack at 0x00 and the type at 0x08 of each entry.
+  struct unknown001 {
+    fw::EffectPack *unknown00; // Inferred role: weapon effect pack; original member name unknown.
+    s32 unknown08;             // Inferred role: weapon effect type; original member name unknown.
+  };
+
   // Layout evidence: addMountEffectEv (0x7100509768) builds it from an EffectMountSetupEv before pushing it into the
   // FixedVector at 0xc3b0; operator= (0x710050b1bc) copies the FixStr, the u32 at 0x24, the IntrusivePtr at 0x28, the
   // Vec3 and the three bytes at 0x40.
@@ -160,6 +179,11 @@ public:
   void procMsgObjectNotifyDead(fw::MessageObject *object, MsgObjectNotifyDead &message);
   void procMsgFxRimBloomEnd(fw::MessageObject *object, MsgFxRimBloomEnd &message);
   void procMsgFxRimBloomTarget(fw::MessageObject *object, MsgFxRimBloomTarget &message);
+  void procMsgFxRimBloom(fw::MessageObject *object, MsgFxRimBloom &message);
+  void openDebugWindow(ml::WinProc *window);
+  fw::EffectPack *getEffectPack(GF_ASSET_HANDLE *handle);
+  const char *getEfpData(const char *name, mm::Mat44 &matrix);
+  bool getWeaponEffectPack(mm::mtl::FixedVector<fw::EffectPack *, 8> &packs, int type, int);
   fw::EffectPoint *getEffectPoint();
   bool getValidEffectName(const char *name) const;
   bool isDynamicAnnotationEffect(u8 type) const;
@@ -178,9 +202,10 @@ public:
   f32 unknown20; // Inferred role: rim bloom duration; original member name unknown.
   f32 unknown24; // Inferred role: water depth threshold of the first swim state; original member name unknown.
   f32 unknown28; // Inferred role: water depth threshold of the second swim state; original member name unknown.
-  u8 _2c[0x388 - 0x2c];
-  fw::EffectCasterBase *unknown388; // Inferred role: effect caster; original member name unknown.
-  fw::EffectPoint *unknown390;      // Inferred role: effect point; original member name unknown.
+  u8 _2c[0x40 - 0x2c];
+  mm::mtl::FixedVector<unknown001, 52> unknown40; // Inferred role: weapon effect packs; original member name unknown.
+  fw::EffectCasterBase *unknown388;               // Inferred role: effect caster; original member name unknown.
+  fw::EffectPoint *unknown390;                    // Inferred role: effect point; original member name unknown.
   u8 _398[0x3a0 - 0x398];
   mm::mtl::FixedVector<Param, 256> unknown3a0;             // Inferred role: caster params; original member name unknown.
   mm::mtl::FixedVector<EventEfHandleTbl, 256> unknownc3b0; // Inferred role: mount effects; original member name unknown.
@@ -195,6 +220,7 @@ static_assert(offsetof(GfComEffectCaster, unknown1c) == 0x1c, "");
 static_assert(offsetof(GfComEffectCaster, unknown20) == 0x20, "");
 static_assert(offsetof(GfComEffectCaster, unknown24) == 0x24, "");
 static_assert(offsetof(GfComEffectCaster, unknown28) == 0x28, "");
+static_assert(offsetof(GfComEffectCaster, unknown40) == 0x40, "");
 static_assert(offsetof(GfComEffectCaster, unknown388) == 0x388, "");
 static_assert(offsetof(GfComEffectCaster, unknown390) == 0x390, "");
 static_assert(offsetof(GfComEffectCaster, unknown3a0) == 0x3a0, "");

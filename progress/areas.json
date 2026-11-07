@@ -3,7 +3,7 @@
     "name": "gf",
     "code": {
       "total": 4425452,
-      "matching": 2131552,
+      "matching": 2143280,
       "non_matching": 0
     }
   },
@@ -35,7 +35,7 @@
     "name": "framework",
     "code": {
       "total": 491936,
-      "matching": 251020,
+      "matching": 251264,
       "non_matching": 0
     }
   },
@@ -128,18 +128,18 @@
     }
   },
   {
-    "name": "wndlib",
-    "code": {
-      "total": 18936,
-      "matching": 6820,
-      "non_matching": 0
-    }
-  },
-  {
     "name": "plugin",
     "code": {
       "total": 15224,
       "matching": 6716,
+      "non_matching": 0
+    }
+  },
+  {
+    "name": "wndlib",
+    "code": {
+      "total": 18936,
+      "matching": 6044,
       "non_matching": 0
     }
   },

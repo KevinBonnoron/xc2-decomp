@@ -75,7 +75,7 @@ int GfMenuObjPopup::setFadeOut(u32 handle, u32 type) {
   return ctrl;
 }
 
-void GfMenuObjPopup::pausePickup() { unknown142(unknown001, unknown002); }
+void GfMenuObjPopup::pausePickup() { GF_MENU_REQUEST_EVENT(unknown001, unknown002); }
 
 } // namespace gf
 

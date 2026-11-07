@@ -3,10 +3,10 @@
 
 #include "mm/mm_std_base.h"
 #include "types.h"
-#include "wnd/wnd_node.h"
 #include "wnd/wnd_wind.h" // IWYU pragma: keep
 
 namespace wnd {
+class WindNode;
 
 void WindBlender::setNode(const WindNode *node) {
   unknownd0 = node;
@@ -25,19 +25,6 @@ void WindBlender::changeNode(const WindNode *node, f32 time) {
   unknownd0 = node;
   unknowne4 = time;
   unknowne0 = 0.0f;
-}
-
-void GlobalWind::update(const UpdateInfo &info) {
-  if (unknownf0 != nullptr) {
-    unknownf0->update(info);
-  }
-  if (unknowne8 != nullptr) {
-    unknowne8->update(info);
-  }
-  WindBlender::update(info);
-  if (unknownf0 == nullptr) {
-    unknownf0 = nullptr;
-  }
 }
 
 } // namespace wnd

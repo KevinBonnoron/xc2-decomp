@@ -44,6 +44,11 @@ GfComPackAnim *unknown002(GF_OBJ_HANDLE *owner, u32 index) {
   return unknown001(weapon->getCurrentHandles()[index]);
 }
 
+// Inferred role: fsm state of the driver model, registered in the constructor after StateIdleBattle and StateIdleField; original name unknown.
+constexpr u32 unknown003 = 2;
+// Inferred role: fsm state of the driver model, registered in the constructor after StateStartBattle; original name unknown.
+constexpr u32 unknown004 = 3;
+
 } // namespace
 
 const mm::mtl::RTTI *GfEvtModel::getRTTI() const { return &m_rtti; }
@@ -81,6 +86,8 @@ void GfEvtModelSalvage::setTransform(const mm::Vec3 &position, f32 rotation) {
     SCOM_OBJ_WARP_POS::create(unknown20, position, mm::Vec3(0.0f, rotation * mm::DEG_TO_RAD, 0.0f), false);
   }
 }
+
+const mm::mtl::RTTI *GfEvtModelSalvage::getRTTI() const { return &m_rtti; }
 
 void GfEvtModelDriver::playAnimWeaponRightCS(const char *name) {
   GfComPackAnim *anim = unknown002(unknown20, 0);
@@ -214,6 +221,60 @@ void GfEvtModelDriver::setDispJiji(bool isDisp) {
 }
 
 void GfEvtModelDriver::setDispRexCoreCrystal(bool isDisp) { GfGameUtil::dispRexCrystal(unknown20, isDisp); }
+
+GfEvtModelDriver::~GfEvtModelDriver() { unknown298.cleanup(); }
+
+const mm::mtl::RTTI *GfEvtModelDriver::getRTTI() const { return &m_rtti; }
+
+void GfEvtModelDriver::update(const fw::UpdateInfo &info) { unknown298.update(&info); }
+
+void GfEvtModelDriver::setDispWeapon(bool isDisp) {
+  GfWeapon *weapon = GfMountManager::getAppendHandles(unknown20, GFATTACH_WEAPON);
+  for (u32 index = 0; index < 10; index++) {
+    GfObjAcc acc(weapon->getCurrentHandles()[index]);
+    if (acc.isValid()) {
+      acc.setDisp(OBJDISP_EVENT, isDisp);
+    }
+  }
+}
+
+void GfEvtModelDriver::setDispWeapon(bool isDispRight, bool isDispLeft) {
+  GfWeapon *weapon = GfMountManager::getGfWeapon(unknown20, GFATTACH_WEAPON);
+  if (weapon != nullptr) {
+    GfObjAcc acc(isDispRight ? weapon->getCurrentHandles()[1] : weapon->getCurrentHandles()[0]);
+    if (acc.isValid()) {
+      acc.setDisp(OBJDISP_EVENT, isDispLeft);
+    }
+  }
+}
+
+GF_OBJ_HANDLE *GfEvtModelDriver::getWeaponHandleRight() const {
+  GfWeapon *weapon = GfMountManager::getGfWeapon(unknown20, GFATTACH_WEAPON);
+  if (weapon != nullptr) {
+    return weapon->getCurrentHandles()[0];
+  }
+
+  return INVALID_HANDLE;
+}
+
+GF_OBJ_HANDLE *GfEvtModelDriver::getWeaponHandleLeft() const {
+  GfWeapon *weapon = GfMountManager::getGfWeapon(unknown20, GFATTACH_WEAPON);
+  if (weapon != nullptr) {
+    return weapon->getCurrentHandles()[1];
+  }
+
+  return INVALID_HANDLE;
+}
+
+void GfEvtModelDriver::setWeaponBattleCommand() { unknown298.setState(unknown003); }
+
+void GfEvtModelDriver::setWeaponFieldCommand() { unknown298.setState(unknown004); }
+
+void GfEvtModelDriver::setStateWeapon(bool isBattle) { unknown298.setState(isBattle ? unknown003 : unknown004); }
+
+void GfEvtModelDriver::setWeaponBattleMount() { GfMountManager::execMount(unknown20, GFATTACH_WEAPON, OPTMNT_UNKNOWN_1); }
+
+void GfEvtModelDriver::setWeaponFieldMount() { GfMountManager::execMount(unknown20, GFATTACH_WEAPON, OPTMNT_WIRE); }
 
 void GfEvtModelWeapon::playAnimCS(GF_OBJ_HANDLE *handle, const char *name) {
   GfComPackAnim *anim = unknown001(handle);

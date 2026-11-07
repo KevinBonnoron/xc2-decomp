@@ -27,6 +27,8 @@ public:
   void sendEnableEvent(u32 handle);
   void sendExitEvent(u32 handle);
   void sendCloseEvent(u32 handle);
+  void sendOpenEvent(u32 handle, int value);
+  void sendReturnEvent(u32 handle, int value);
   void addCallContextResult(u32 type, u32 value);
   void reqRefreshItemList();
   void openOrbError(u32 error);

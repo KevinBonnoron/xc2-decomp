@@ -6,6 +6,7 @@
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/object/gf_menu_obj_cmn_status.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
+#include "gf/request/gf_req_scom.h"
 #include "types.h"
 #include "ui/ui_object_acc.h"
 
@@ -57,7 +58,7 @@ bool GfMenuObjCharSelect::seqSpHomuraToHikari() {
 
 void GfMenuObjCharSelect::sendEvent(u32 handle, u32 type, u32 param) { unknown140(handle, type, param, 0.0f); }
 
-void GfMenuObjCharSelect::returnSubMenu() { unknown142(unknown001, unknown002); }
+void GfMenuObjCharSelect::returnSubMenu() { GF_MENU_REQUEST_EVENT(unknown001, unknown002); }
 
 bool GfMenuObjCharSelect::attach(GfMenuCallContext *context) { return unknown151(context, unknown001); }
 
@@ -162,6 +163,33 @@ bool GfMenuObjCharSelect::seqReturn() {
   unknown140(acc.unknown10, 0x107, 0, 0.0f);
   return true;
 }
+
+bool GfMenuObjCharSelect::seqReturnChange() {
+  ui::UIObjectAcc acc(unknown18, "LAY_char");
+  unknown158(acc.unknown10, 0x107, 1, 0.0f);
+  return true;
+}
+
+bool GfMenuObjCharSelect::seqSpNiaChangeDr() {
+  SCOM_NIA_BLADE::create(false);
+  return true;
+}
+
+void GfMenuObjCharSelect::dispOnChar(u32 type) {
+  ui::UIObjectAcc acc(getAttachedObject(unknown001));
+  if (acc.isValid()) {
+    dispOnCopyChar(acc, type);
+  }
+}
+
+void GfMenuObjCharSelect::dispOffChar(u32 type) {
+  ui::UIObjectAcc acc(getAttachedObject(unknown001));
+  if (acc.isValid()) {
+    dispOffCopyChar(acc, type);
+  }
+}
+
+void GfMenuObjCharSelect::execCharPosScale(u32 type) { unknown159(unknown001, 0x109, type); }
 
 } // namespace gf
 

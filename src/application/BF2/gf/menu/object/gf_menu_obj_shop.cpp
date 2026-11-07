@@ -92,6 +92,27 @@ void GfMenuObjShop::sendCloseEvent(u32 handle) {
   GfMenuObject::sendEvent(handle, event, 0.0f);
 }
 
+void GfMenuObjShop::sendOpenEvent(u32 handle, int value) {
+  if (handle == 0) {
+    handle = ui::UIObjectAcc(unknown18, "LAY_main").unknown10;
+  }
+  ui::EventData event;
+  event.unknown08 = value;
+  event.unknown0c = 0;
+  event.unknown00 = GfMenuTypes::unknown003_33;
+  GfMenuObject::sendEvent(handle, event, 0.0f);
+}
+
+void GfMenuObjShop::sendReturnEvent(u32 handle, int value) {
+  if (handle != 0) {
+    ui::EventData event;
+    event.unknown08 = value;
+    event.unknown0c = 0;
+    event.unknown00 = 0x42;
+    GfMenuObject::sendEvent(handle, event, 0.0f);
+  }
+}
+
 void GfMenuObjShop::addCallContextResult(u32 type, u32 value) {
   ui::UIObjectAcc main(unknown18, "LAY_main");
   GfMenuObject::addResultCallContext(main.unknown10, type, value);

@@ -18,6 +18,10 @@
   and state that the original name is unknown. Do not rename exported symbols
   to follow this convention. A bitfield member is `unknownXX_N`, N being the
   index of its first bit in byte XX.
+- A macro leaves no trace in the binary, so its original name can never be
+  recovered: give it a descriptive upper-case name and say in a comment that
+  the name is inferred (`// Inferred macro name; macros leave no trace in the
+  binary.`). Macros of a public SDK keep their documented names.
 - When several accessors read the same member, pick the one that states its
   meaning (`IsPlayer` over `IsEnableBattleFace`); a union read by accessors of
   different types stays `unknownXX`.

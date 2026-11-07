@@ -6,7 +6,9 @@
 
 namespace wnd {
 
-LocalWind::LocalWind(const LocalWindCreateInfo &info) : WindObject(unknown002_0, info), unknown88(info.unknown14), unknown8c(info.unknown18), unknown90(info.unknown1c) { unknown98.m_pOwner = this; }
+LocalWind::LocalWind(const LocalWindCreateInfo &info) : WindObject(OBJECT_TYPE_UNKNOWN_0, info), unknown88(info.unknown14), unknown8c(info.unknown18), unknown90(info.unknown1c) {
+  unknown98.unknown10 = this;
+}
 
 f32 LocalWind::calcDampingDistance(f32 distance) const {
   f32 ratio = (distance - unknown8c) / (unknown90 - unknown8c);

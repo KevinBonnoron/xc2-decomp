@@ -32,6 +32,26 @@ u32 GfMenuObjOption::getGammaValue(u8 level, u8 levelMax) {
   return value;
 }
 
+u8 GfMenuObjOption::getVolumeLevel(u8 value, u8 levelMax) {
+  u8 level = levelMax;
+  if (value != 0xff) {
+    f32 step = 255.0f / levelMax;
+    f32 volume = value / step;
+    level = static_cast<int>(volume + (volume > 0.0f ? 0.5f : -0.5f));
+  }
+  return level;
+}
+
+u8 GfMenuObjOption::getGammaLevel(u16 value, u8 levelMax) {
+  u8 level = levelMax;
+  if (value != 0xff) {
+    f32 ratio = value / 255.0f;
+    f32 gamma = levelMax * ratio;
+    level = static_cast<int>(gamma + (gamma > 0.0f ? 0.5f : -0.5f));
+  }
+  return level;
+}
+
 bool GfMenuObjOption::attach(GfMenuCallContext *context) { return unknown151(context, unknown001); }
 
 } // namespace gf

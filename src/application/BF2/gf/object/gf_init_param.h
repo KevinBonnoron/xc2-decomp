@@ -3,6 +3,7 @@
 
 #include "gf/object/gf_append.h"
 #include "gf/object/gf_obj_handle.h"
+#include "mm_math/mm_vec3_na.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "types.h"
@@ -93,7 +94,11 @@ public:
   u32 unknown48; // Inferred role: gimmick type; original member name unknown.
   f32 unknown4c; // Inferred role: scale; original member name unknown.
   f32 unknown50; // Inferred role: scale copied into the object setup; original member name unknown.
-  u8 _54[0x80 - 0x54];
+  u8 _54[0x60 - 0x54];
+  mm::Vec3NA unknown60; // Inferred role: initial position, used when unknown80 is set; original member name unknown.
+  u8 _6c[0x70 - 0x6c];
+  mm::Vec3NA unknown70; // Inferred role: initial rotation, used when unknown80 is set; original member name unknown.
+  u8 _7c[0x80 - 0x7c];
   bool unknown80; // Inferred role: flag; original member name unknown.
   bool unknown81; // Inferred role: flag; original member name unknown.
   bool unknown82; // Inferred role: flag; original member name unknown.
@@ -115,6 +120,8 @@ static_assert(offsetof(GfInitParam, unknown38) == 0x38, "");
 static_assert(offsetof(GfInitParam, unknown40) == 0x40, "");
 static_assert(offsetof(GfInitParam, unknown4c) == 0x4c, "");
 static_assert(offsetof(GfInitParam, unknown50) == 0x50, "");
+static_assert(offsetof(GfInitParam, unknown60) == 0x60, "");
+static_assert(offsetof(GfInitParam, unknown70) == 0x70, "");
 static_assert(offsetof(GfInitParam, unknown80) == 0x80, "");
 static_assert(offsetof(GfInitParam, unknown81) == 0x81, "");
 static_assert(offsetof(GfInitParam, unknown82) == 0x82, "");
@@ -143,7 +150,7 @@ public:
 
   u8 _90[0x98 - 0x90];
   mm::mtl::FixedVector<unknown031, WEAPON_MAX> unknown98; // Inferred role: weapons; original member name unknown.
-  u8 _1a0[0x1a1 - 0x1a0];
+  bool unknown1a0;                                        // Inferred role: ride; original member name unknown.
   bool m_allWeapon;
   bool unknown1a2; // Inferred role: Jiji display, set by GfGameEvent::createDriver outside GfGameManager::isInMetJIJI; original member name unknown.
   u8 _1a3[0x1a8 - 0x1a3];
@@ -151,6 +158,7 @@ public:
 
 static_assert(sizeof(GfInitParamDriver::unknown031) == 0x08, "");
 static_assert(offsetof(GfInitParamDriver, unknown98) == 0x98, "");
+static_assert(offsetof(GfInitParamDriver, unknown1a0) == 0x1a0, "");
 static_assert(offsetof(GfInitParamDriver, m_allWeapon) == 0x1a1, "");
 static_assert(offsetof(GfInitParamDriver, unknown1a2) == 0x1a2, "");
 static_assert(sizeof(GfInitParamDriver) == 0x1a8, "");
@@ -208,22 +216,41 @@ static_assert(offsetof(GfInitParamEnemy, m_bladeID) == 0xa0, "");
 static_assert(offsetof(GfInitParamEnemy, unknowna4) == 0xa4, "");
 static_assert(offsetof(GfInitParamEnemy, unknowna8) == 0xa8, "");
 
-class GfInitParamNpc : public GfInitParam {};
+class GfInitParamNpc : public GfInitParam {
+public:
+  u8 _90[0x98 - 0x90];
+  void *unknown98; // Role and original member name unknown; copied into GfObjSetupNpc.
+};
+
+static_assert(offsetof(GfInitParamNpc, unknown98) == 0x98, "");
 
 class GfInitParamMob : public GfInitParam {};
 
-class GfInitParamGimmick : public GfInitParam {};
+class GfInitParamGimmick : public GfInitParam {
+public:
+  void *unknown90; // Role and original member name unknown; copied into GfObjSetupGimmick.
+};
+
+static_assert(offsetof(GfInitParamGimmick, unknown90) == 0x90, "");
 
 class GfInitParamMapObj : public GfInitParam {};
 
-class GfInitParamFobj : public GfInitParam {};
+class GfInitParamFobj : public GfInitParam {
+public:
+  u8 _90[0x94 - 0x90];
+  u8 unknown94; // Inferred role: index of the "paramid" column of the bdat; original member name unknown.
+};
+
+static_assert(offsetof(GfInitParamFobj, unknown94) == 0x94, "");
 
 class GfInitParamWeapon : public GfInitParam {
 public:
-  u8 _90[0x98 - 0x90];
+  u8 _90[0x94 - 0x90];
+  int unknown94;      // Inferred role: slot; original member name unknown.
   GfAppend unknown98; // Inferred role: append; original member name unknown.
 };
 
+static_assert(offsetof(GfInitParamWeapon, unknown94) == 0x94, "");
 static_assert(offsetof(GfInitParamWeapon, unknown98) == 0x98, "");
 
 class GfInitParamEnWeapon : public GfInitParam {
@@ -241,9 +268,12 @@ static_assert(offsetof(GfInitParamEnWeapon, m_enArrangeID) == 0x120, "");
 class GfInitParamBelonging : public GfInitParam {
 public:
   GfAppend unknown90; // Inferred role: append; original member name unknown.
+  u8 _118[0x130 - 0x118];
+  bool unknown130; // Inferred role: visible; original member name unknown.
 };
 
 static_assert(offsetof(GfInitParamBelonging, unknown90) == 0x90, "");
+static_assert(offsetof(GfInitParamBelonging, unknown130) == 0x130, "");
 
 class GfInitParamExtra : public GfInitParam {
 public:
@@ -276,6 +306,8 @@ public:
 static_assert(offsetof(GfInitParamMap, unknown90) == 0x90, "");
 
 class GfInitParamEventObj : public GfInitParam {};
+
+class GfInitParamMapLodAnim : public GfInitParam {};
 
 class GfInitParamUiObj : public GfInitParam {};
 

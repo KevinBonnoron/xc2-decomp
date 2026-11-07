@@ -47,6 +47,34 @@ void GfMenuObjZoneTelop::update() {
   GfMenuObject::update();
 }
 
+void GfMenuObjZoneTelop::open(GfMenuCallContext *context, u16 zone) {
+  u32 handle = getAttachedObject(unknown001);
+  if (ui::UIObjectAcc(handle).isValid()) {
+    if (!ui::UIObjectAcc(handle).isTerm()) {
+      if (context) {
+        startCallContext(context, unknown001, handle);
+      }
+      ui::EventData event;
+      event.unknown00 = EVENT_OPEN_TELOP;
+      event.unknown08 = zone;
+      GfMenuOrderMgr::setOrder(1, handle, event);
+    }
+  }
+}
+
+void GfMenuObjZoneTelop::close(f32 wait) {
+  u32 handle = getAttachedObject(unknown001);
+  if (ui::UIObjectAcc(handle).isValid()) {
+    if (!ui::UIObjectAcc(handle).isTerm()) {
+      ui::EventData event;
+      event.unknown0c = 0;
+      event.unknown00 = EVENT_CLOSE_TELOP;
+      event.unknown08_f32 = wait;
+      sendEvent(handle, event, 0.0f);
+    }
+  }
+}
+
 void GfMenuObjZoneTelop::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {

@@ -10,25 +10,13 @@
 
 namespace skd {
 
+Packet::~Packet() { anm::unknown001(m_pBindPose); }
+
 NodeArray::NodeArray(mm::mtl::IAllocator *allocator, const anm::Array<ResNode> &resNodes, const anm::Array<ResNodeCollision> &resNodeCollisions)
     : unknown00(&resNodes), unknown08(&resNodeCollisions), unknown10(allocator) {
   unknown10.resize(resNodes.size());
 }
 
-#line 1 "../../src/skdlib/composite/skd_packet.h"
-Packet::Packet(mm::mtl::IAllocator *allocator, anm::Pose &pose) : m_pBindPose(nullptr), unknown08(nullptr), unknown10(allocator), unknown140(6) {
-  registerApplyDetectJobExecuter(&unknown10);
-  registerDetectCapsuleJobExecuter(&unknown10);
-  registerDetectPlaneJobExecuter(&unknown10);
-  registerDetectSphereJobExecuter(&unknown10);
-  MM_ASSERT(m_pBindPose == nullptr);
-  m_pBindPose = &pose;
-  pose.addRef();
-}
-
-Packet::~Packet() { anm::unknown001(m_pBindPose); }
-
-#line 1 "../../src/skdlib/src/skdlib/skd_dynamics.cpp"
 Dynamics::Dynamics(CollisionObject &collisionObject, const anm::Array<ResSolver> &solvers, anm::Pose &pose, ForceInterface *force, mm::mtl::IAllocator *allocator)
     : anm::ReferenceObject(allocator), m_pResSolver(&solvers), m_solvers(allocator), unknown48(allocator, pose), unknown198(0.1f), unknown19c(0.0f) {
   unknown190 = &collisionObject;
@@ -114,7 +102,7 @@ s32 Dynamics::getSolverIndex(const char *name) const {
     if (m_solvers[i] == nullptr) {
       continue;
     }
-    const ResSolver *resSolver = m_solvers[i]->m_pResSolver;
+    const ResSolver *resSolver = m_solvers[i]->unknown08;
     if (resSolver == nullptr) {
       continue;
     }

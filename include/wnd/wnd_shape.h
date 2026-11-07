@@ -30,8 +30,8 @@ static_assert(sizeof(Transform) == 0x20, "");
 
 // SphereShape passes 0 and BoxShape passes 1 to Shape::Shape; the original enumerator names are unknown.
 enum ShapeType {
-  unknown001_0 = 0,
-  unknown001_1 = 1,
+  SHAPE_TYPE_UNKNOWN_0 = 0,
+  SHAPE_TYPE_UNKNOWN_1 = 1,
 };
 
 class Shape : public mm::mtl::ReferenceObject {

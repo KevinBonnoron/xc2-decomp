@@ -18,7 +18,7 @@ class IAllocator;
 namespace skd {
 
 DynamicsSolver::DynamicsSolver(mm::mtl::IAllocator *allocator, const ResSolver &resSolver, u32 index)
-    : m_pResSolver(&resSolver), unknown10(allocator, resSolver.unknown08, resSolver.unknown18), unknown48(1.0f / 30.0f), unknown50(allocator), unknown78(index), m_solverBlendWeight(0.0f),
+    : unknown08(&resSolver), unknown10(allocator, resSolver.unknown08, resSolver.unknown18), unknown48(1.0f / 30.0f), unknown50(allocator), unknown78(index), m_solverBlendWeight(0.0f),
       unknown80(false) {
   unknown50.resize(resSolver.unknown08.size(), mm::Vec3::zero);
 }

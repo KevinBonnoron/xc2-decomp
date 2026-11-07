@@ -7,6 +7,6 @@ struct Vec3;
 
 namespace wnd {
 
-BoxShape::BoxShape(const mm::Vec3 &extent) : Shape(unknown001_1), unknown10(extent) {}
+BoxShape::BoxShape(const mm::Vec3 &extent) : Shape(SHAPE_TYPE_UNKNOWN_1), unknown10(extent) {}
 
 } // namespace wnd

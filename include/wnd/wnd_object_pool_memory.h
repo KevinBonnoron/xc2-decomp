@@ -1,23 +1,19 @@
 #pragma once
 #include "mm/mm_std_base.h"
+#include "mm_mtl/allocator.h"
 #include "mm_mtl/intrusive_list.h"
-
-namespace mm {
-namespace mtl {
-class IAllocator;
-} // namespace mtl
-} // namespace mm
 
 namespace wnd {
 
-// Element pool of the broad phase octree; the member names come from the assertions of its constructor.
+// Element pool of the broad phase octree; m_freeList and m_useList are named by the constructor assertions.
 template <typename T> class PoolObjectMemory {
 public:
   explicit PoolObjectMemory(mm::mtl::IAllocator *allocator);
+  ~PoolObjectMemory();
 
   T *alloc();
 
-  mm::mtl::IAllocator *m_allocator;
+  mm::mtl::IAllocator *unknown00;
   mm::mtl::IntrusiveList<T> m_useList;
   mm::mtl::IntrusiveList<T> m_freeList;
 };
@@ -29,7 +25,24 @@ static_assert(sizeof(PoolObjectMemory<void>) == 0x38, "");
 template <typename T> inline PoolObjectMemory<T>::PoolObjectMemory(mm::mtl::IAllocator *allocator) {
   MM_ASSERT(m_freeList.empty());
   MM_ASSERT(m_useList.empty());
-  m_allocator = allocator;
+  unknown00 = allocator;
+}
+
+// The game unlinks and frees the nodes of both lists, freeing-list first.
+template <typename T> inline PoolObjectMemory<T>::~PoolObjectMemory() {
+  if (unknown00 == nullptr) {
+    return;
+  }
+  while (!m_freeList.empty()) {
+    T *node = m_freeList.begin().get();
+    m_freeList.erase(node);
+    unknown00->deallocate(node);
+  }
+  while (!m_useList.empty()) {
+    T *node = m_useList.begin().get();
+    m_useList.erase(node);
+    unknown00->deallocate(node);
+  }
 }
 
 } // namespace wnd

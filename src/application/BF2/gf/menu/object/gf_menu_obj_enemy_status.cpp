@@ -16,9 +16,9 @@ constexpr u32 unknown004 = 0x14;
 
 void GfMenuObjEnemyStatus::finalize() { GfMenuObject::finalize(); }
 
-void GfMenuObjEnemyStatus::close() { unknown142(unknown001, unknown002); }
+void GfMenuObjEnemyStatus::close() { GF_MENU_REQUEST_EVENT(unknown001, unknown002); }
 
-void GfMenuObjEnemyStatus::open(const OpenParam &) { unknown142(unknown001, unknown003); }
+void GfMenuObjEnemyStatus::open(const OpenParam &) { GF_MENU_REQUEST_EVENT(unknown001, unknown003); }
 
 void GfMenuObjEnemyStatus::disp(bool isDisp) {
   ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown004));

@@ -2,11 +2,9 @@
 #include <stddef.h>
 
 #include "anm/anm_job_queue.h"
+#include "anm/anm_pose.h"
+#include "mm/mm_std_base.h"
 #include "types.h"
-
-namespace anm {
-class Pose;
-} // namespace anm
 
 namespace mm {
 namespace mtl {
@@ -29,7 +27,17 @@ void registerDetectPlaneJobExecuter(anm::JobQueue *queue);
 // assertion "m_pBindPose == nullptr" in skd_packet.h.
 class Packet {
 public:
-  Packet(mm::mtl::IAllocator *allocator, anm::Pose &pose);
+  Packet(mm::mtl::IAllocator *allocator, anm::Pose &pose) : m_pBindPose(nullptr), unknown08(nullptr), unknown10(allocator), unknown140(6) {
+    registerApplyDetectJobExecuter(&unknown10);
+    registerDetectCapsuleJobExecuter(&unknown10);
+    registerDetectPlaneJobExecuter(&unknown10);
+    registerDetectSphereJobExecuter(&unknown10);
+#line 50
+    MM_ASSERT(m_pBindPose == nullptr);
+    m_pBindPose = &pose;
+    pose.addRef();
+  }
+
   ~Packet();
 
   anm::Pose *m_pBindPose;

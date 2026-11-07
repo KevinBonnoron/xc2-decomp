@@ -224,8 +224,8 @@ static_assert(offsetof(NodeArray, unknown10) == 0x10, "");
 static_assert(sizeof(NodeArray) == 0x38, "");
 
 // Solver for one ResSolver. Layout evidence: the constructor at 0x710097d378 stores the resource at 0x8, constructs
-// the NodeArray at 0x10, the force vector at 0x50 and the blend weight at 0x7c; `m_pResSolver` is named by the
-// assertion in skd_dynamics.cpp, and the vtable at 0x71011b9b18 lists the destructor then solve and solveMT.
+// the NodeArray at 0x10, the force vector at 0x50 and the blend weight at 0x7c; the resource member has no proven
+// name, and the vtable at 0x71011b9b18 lists the destructor then solve and solveMT.
 class DynamicsSolver {
 public:
   DynamicsSolver(mm::mtl::IAllocator *allocator, const ResSolver &resSolver, u32 index);
@@ -238,7 +238,7 @@ public:
   void convertCoordinateSystem(const anm::QsTransform &transform);
   void resetNodes(const Packet &packet);
 
-  const ResSolver *m_pResSolver;
+  const ResSolver *unknown08;
   NodeArray unknown10;                 // Inferred role: simulated nodes; original member name unknown.
   f32 unknown48;                       // Inferred role: last delta time; original member name unknown.
   mm::mtl::Vector<mm::Vec3> unknown50; // Inferred role: forces; original member name unknown.
@@ -247,7 +247,7 @@ public:
   bool unknown80;                      // Inferred role: initialized; original member name unknown.
 };
 
-static_assert(offsetof(DynamicsSolver, m_pResSolver) == 0x08, "");
+static_assert(offsetof(DynamicsSolver, unknown08) == 0x08, "");
 static_assert(offsetof(DynamicsSolver, unknown10) == 0x10, "");
 static_assert(offsetof(DynamicsSolver, unknown48) == 0x48, "");
 static_assert(offsetof(DynamicsSolver, unknown50) == 0x50, "");

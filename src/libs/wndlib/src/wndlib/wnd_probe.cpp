@@ -15,7 +15,7 @@ template void mm::mtl::Vector<wnd::LocalWindHitCache>::expand(size_t, size_t);
 namespace wnd {
 
 WindProbe::WindProbe(const ProbeCreateInfo &info, u32 seed, mm::mtl::IAllocator *allocator)
-    : WindObject(unknown002_1, info), unknown88(seed), unknown180(nullptr), unknown188(nullptr), unknown190(allocator), m_pOverlappingCache(nullptr) {
+    : WindObject(OBJECT_TYPE_UNKNOWN_1, info), unknown88(seed), unknown180(nullptr), unknown188(nullptr), unknown190(allocator), m_pOverlappingCache(nullptr) {
   unknown190.reserve(info.unknown14, 16);
 }
 

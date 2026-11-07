@@ -2,6 +2,7 @@
 
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
+#include "ui/event/ui_event_data.h"
 #include "ui/ui_object_acc.h"
 
 namespace gf {
@@ -14,6 +15,22 @@ void GfMenuObjElementEff::finalize() { GfMenuObject::finalize(); }
 void GfMenuObjElementEff::update() {
   unknown28.unknown003();
   GfMenuObject::update();
+}
+
+void GfMenuObjElementEff::start(GfMenuCallContext *context, const StartParam &param) {
+  if (GfMenuObjUtil::checkCCStart(context)) {
+    u32 handle = getAttachedObject(unknown001);
+    if (ui::UIObjectAcc(handle).isValid()) {
+      if (!ui::UIObjectAcc(handle).isTerm()) {
+        ui::EventData event;
+        event.unknown0c = 0;
+        event.unknown00 = GfMenuTypes::unknown003_33;
+        event.unknown08 = param.attribute;
+        sendEvent(handle, event, 0.0f);
+        startCallContext(context, unknown001, handle);
+      }
+    }
+  }
 }
 
 void GfMenuObjElementEff::cancel(GfMenuCallContext *context) {

@@ -16,7 +16,7 @@ WindObject::WindObject(ObjectType type, const WindObjectCreateInfo &info) : unkn
   unknown30.unknown10 = transform->unknown10;
   m_pShape = info.pShape;
   m_pShape->addRef();
-  unknown70.m_pOwner = this;
+  unknown70.unknown10 = this;
 }
 
 WindObject::~WindObject() {

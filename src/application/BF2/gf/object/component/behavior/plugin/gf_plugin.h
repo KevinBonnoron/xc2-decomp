@@ -34,7 +34,7 @@ public:
 };
 
 static_assert(offsetof(Plugin, unknown08) == 0x08, "");
-
+// Inferred macro name; macros leave no trace in the binary.
 #define GF_PLUGIN(Behavior)                                                                                                                                                                            \
 public:                                                                                                                                                                                                \
   static mm::mtl::RTTI m_rtti;                                                                                                                                                                         \

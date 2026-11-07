@@ -5,7 +5,7 @@
 
 namespace wnd {
 
-SphereShape::SphereShape(f32 radius) : Shape(unknown001_0), unknown10(radius) {}
+SphereShape::SphereShape(f32 radius) : Shape(SHAPE_TYPE_UNKNOWN_0), unknown10(radius) {}
 
 void SphereShape::calcAABB(const Transform &transform, AABB *aabb) {
   mm::Vec3 radius(unknown10, unknown10, unknown10);

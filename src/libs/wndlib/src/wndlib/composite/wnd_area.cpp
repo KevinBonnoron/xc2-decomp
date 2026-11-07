@@ -26,19 +26,4 @@ AreaBlock *AreaBlock::createChild(u32 index, PoolObjectMemory<AreaBlock> &pool) 
   return child;
 }
 
-void AreaBlock::destroyChild(u32 index, PoolObjectMemory<AreaBlock> &pool) {
-  AreaBlock *child = unknown18[index];
-  if (child != nullptr) {
-    for (u32 i = 0; i < 8; i++) {
-      child->destroyChild(i, pool);
-    }
-    // The game re-reads unknown18[index] after the recursive calls.
-    child = unknown18[index];
-    pool.m_useList.erase(child);
-    pool.m_freeList.push_back(child);
-    unknown18[index] = nullptr;
-  }
-  unknown58 &= ~(1u << index);
-}
-
 } // namespace wnd

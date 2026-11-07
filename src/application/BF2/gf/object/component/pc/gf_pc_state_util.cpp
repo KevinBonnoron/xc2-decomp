@@ -23,6 +23,7 @@
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
 #include "mm_mtl/rtti.h"
+#include "mm_mtl/unique_ptr.h"
 #include "mm_mtl/vector.h"
 
 namespace gf {
@@ -32,7 +33,7 @@ void StateUtil::resetCamera() { GfGamePlayerCamera::resetCamera(); }
 
 bool StateUtil::isManualCamera() { return GfGamePlayerCamera::isManualCamera(); }
 
-GF_OBJ_HANDLE *StateUtil::getTarget(const GfComBehaviorPc &behavior) { return behavior.unknown08->getComponent<GfComProperty>()->unknown18->handle; }
+GF_OBJ_HANDLE *StateUtil::getTarget(const GfComBehaviorPc &behavior) { return behavior.unknown08->getComponent<GfComProperty>()->unknown18.get()->handle; }
 
 void StateUtil::setTargetLock(bool isLock) { GfGameTarget::lockTarget(isLock); }
 

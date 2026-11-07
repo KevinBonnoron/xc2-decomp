@@ -4,8 +4,14 @@
 
 namespace gf {
 
+class GfMenuCallContext;
+
 class GfMenuObjChainAttack : public GfMenuObject {
 public:
+  static void openStatus(GfMenuCallContext *context);
+  static void openStart(GfMenuCallContext *context);
+  static void openFullBurst(GfMenuCallContext *context);
+  static void closeTurnSelect(GfMenuCallContext *context);
   static void closeResult();
   static void closeRoundExtend();
   static void openRoundExtend();

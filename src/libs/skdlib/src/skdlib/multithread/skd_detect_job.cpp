@@ -28,7 +28,7 @@ DetectPlaneJob::DetectPlaneJob(const PlaneCollObj *object, const ResNodeCollisio
 
 namespace {
 
-// Inferred helper: the three detect jobs share this body in the game; the original helper name is unknown.
+// Inferred helper: the game has three separate 176-byte detect-job functions with this common shape; the original helper name is unknown.
 template <typename Job> void unknown002(anm::Job &job) {
   Job &detectJob = static_cast<Job &>(job);
   const ResNodeCollision *nodeCollision = detectJob.unknown18;

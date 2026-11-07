@@ -46,10 +46,10 @@ public:
     return m_pElements[index];
   }
 
-  size_t size() const { return m_size; }
+  u32 size() const { return m_size; }
 
   T *m_pElements;
-  size_t m_size;
+  u32 m_size;
 };
 
 static_assert(sizeof(Array<const ResConpoundWind *>) == 0x10, "");
@@ -99,10 +99,10 @@ public:
   void createOverlappingPairCache(WindProbe &probe);
   void destroyOverlappingPairCache(WindProbe &probe);
 
-  u32 unknown0c;                                             // Inferred role: accumulated time; original member name unknown.
+  f32 unknown0c;                                             // Inferred role: accumulated time; original member name unknown.
   GlobalWindManager unknown10;                               // Inferred role: global wind; original member name unknown.
   BroadPhazeInterface *m_pBroadPhaze;                        // Named by the assertion "m_pBroadPhaze" of wnd_world.cpp.
-  Dispatcher *m_pDispatcher;                                 // Inferred role: dispatcher; original member name unknown.
+  Dispatcher *unknown168;                                    // Inferred role: dispatcher; original member name unknown.
   mm::mtl::IntrusiveList<WindProbe> unknown170;              // Inferred role: probes; original member name unknown.
   mm::mtl::IntrusiveList<unknown003<AreaWind>> unknown188;   // Inferred role: area winds; original member name unknown.
   mm::mtl::IntrusiveList<unknown003<LocalWind>> unknown1a0;  // Inferred role: local winds; original member name unknown.
@@ -113,7 +113,7 @@ public:
 
 static_assert(offsetof(WindWorld, unknown10) == 0x10, "");
 static_assert(offsetof(WindWorld, m_pBroadPhaze) == 0x160, "");
-static_assert(offsetof(WindWorld, m_pDispatcher) == 0x168, "");
+static_assert(offsetof(WindWorld, unknown168) == 0x168, "");
 static_assert(offsetof(WindWorld, unknown170) == 0x170, "");
 static_assert(offsetof(WindWorld, unknown188) == 0x188, "");
 static_assert(offsetof(WindWorld, unknown1a0) == 0x1a0, "");

@@ -80,6 +80,7 @@
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/intrusive_list.h"
+#include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/rtti.h"
 #include "mm_mtl/vector.h"
 
@@ -993,7 +994,7 @@ u32 GfGameUtil::getNowHp(GF_OBJ_HANDLE *handle, u32 objectType, u32 id) {
   GfObj *obj = GfObjUtil::getObj(handle);
   if (obj != nullptr) {
     GfComProperty *property = obj->getComponent<GfComProperty>();
-    if (property != nullptr && property->unknown10 != nullptr) {
+    if (property != nullptr && property->unknown10.get() != nullptr) {
       return property->unknown10->unknown10;
     }
   }
@@ -1006,7 +1007,7 @@ u32 GfGameUtil::getMaxHp(GF_OBJ_HANDLE *handle, u32 objectType, u32 id) {
   GfObj *obj = GfObjUtil::getObj(handle);
   if (obj != nullptr) {
     GfComProperty *property = obj->getComponent<GfComProperty>();
-    if (property != nullptr && property->unknown10 != nullptr) {
+    if (property != nullptr && property->unknown10.get() != nullptr) {
       return property->unknown10->unknown0c;
     }
   }

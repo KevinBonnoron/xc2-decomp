@@ -1,13 +1,17 @@
 #include "gf/object/component/effect/gf_com_effect_caster.h"
 
+#include "framework/effect/effect_caster.h"
 #include "framework/effect/effect_clip.h"
 #include "framework/effect/effect_manager.h"
+#include "framework/effect/effect_pack.h"
+#include "gf/asset/gf_asset_resource.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_data_weapon.h"
 #include "gf/game/gf_game_util.h"
 #include "gf/object/component/animation/gf_com_asm.h"      // IWYU pragma: keep
 #include "gf/object/component/animation/gf_com_evt_anim.h" // IWYU pragma: keep
 #include "gf/object/gf_obj.h"
+#include "gf/object/gf_obj_util.h"
 
 const char *ASM_CB_NAME_EFFECT = "asm_effect";
 
@@ -35,6 +39,45 @@ void GfComEffectCaster::procMsgFxRimBloomTarget(fw::MessageObject *object, MsgFx
   unknown14 = false;
   unknown1c = 0.0f;
   unknown20 = -1.0f;
+}
+
+void GfComEffectCaster::procMsgFxRimBloom(fw::MessageObject *object, MsgFxRimBloom &message) {
+  if (unknown1c < 0.0f || message.unknown0c) {
+    unknown18 = message.unknown08;
+    unknown14 = true;
+    unknown1c = 0.0f;
+    unknown20 = -1.0f;
+    message.unknown0d = true;
+  }
+}
+
+void GfComEffectCaster::openDebugWindow(ml::WinProc *window) {}
+
+fw::EffectPack *GfComEffectCaster::getEffectPack(GF_ASSET_HANDLE *handle) {
+  GfAssetResource *resource = GfObjUtil::getResourceEfb(static_cast<GfObj *>(unknown08)->unknownf8);
+  if (resource != nullptr) {
+    return fw::EffectPack::createFromMemory(resource->getAssetData(), resource->getAssetSize(), resource->getAssetName(), false);
+  }
+  return nullptr;
+}
+
+const char *GfComEffectCaster::getEfpData(const char *name, mm::Mat44 &matrix) {
+  if (unknown388 == nullptr || unknown388->unknown10 == nullptr) {
+    return nullptr;
+  }
+  const char *parentName = unknown388->unknown10->getParentName(name);
+  matrix = unknown388->unknown10->getOffset(name);
+  return parentName;
+}
+
+bool GfComEffectCaster::getWeaponEffectPack(mm::mtl::FixedVector<fw::EffectPack *, 8> &packs, int type, int) {
+  packs.clear();
+  for (const unknown001 &entry : unknown40) {
+    if (entry.unknown08 == type) {
+      packs.push_back(entry.unknown00);
+    }
+  }
+  return !packs.empty();
 }
 
 fw::EffectPoint *GfComEffectCaster::getEffectPoint() { return unknown390; }
