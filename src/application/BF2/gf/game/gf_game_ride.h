@@ -11,7 +11,17 @@ namespace gf {
 struct GF_OBJ_HANDLE;
 struct GfSetupParam;
 
+constexpr u32 MSG_GAME_RIDE_EVENT = 0x1000030;
+
+enum {
+  RIDE_EVENT_RIDE_ON = 0,
+  RIDE_EVENT_GET_DOWN = 1,
+  RIDE_EVENT_GET_DOWN_FORCE = 2,
+};
+
 struct MsgGameRideEvent : fw::Message {
+  explicit MsgGameRideEvent(u32 event) : fw::Message(MSG_GAME_RIDE_EVENT, 0), unknown08(event) {}
+
   u32 unknown08; // Inferred role: ride event type; original member name unknown.
 };
 

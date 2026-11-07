@@ -24,6 +24,10 @@ namespace fw {
 
 struct UpdateInfo;
 
+enum VibrationID : int {
+  VIBRATION_ID_UNKNOWN_2 = 2,
+};
+
 struct PadData {
   PadData()
       : unknown00(0), unknown04(0), unknown08(0), unknown0c(0), _10(), unknown1c(0.0f), unknown20(0.0f), _24(), _28(), unknown2c(0.2f), unknown30(0.2f), unknown34(0.2f), unknown38(0.2f),

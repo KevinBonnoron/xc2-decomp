@@ -23,6 +23,7 @@ struct GAME_VOICE_HANDLE;
 class GfMenuCallContext;
 struct GF_OBJ_HANDLE;
 class GfComAsm;
+class GfComBehaviorSalvage;
 class GfEvtModelSalvage;
 class GfGameSalvage;
 struct GfSetupParam;
@@ -269,6 +270,16 @@ public:
     ANIMATION_RESULT_05,
   };
 
+  enum SEID {
+    SEID_UNKNOWN_25C = 0x25c, // Inferred role: sound effect played when the dive starts; original name unknown.
+  };
+
+  struct RaffleInfo {
+    u32 unknown00; // Inferred role: number of treasure boxes; original member name unknown.
+    f32 unknown04; // Inferred role: button challenge point; original member name unknown.
+    u32 unknown08; // Inferred role: skill point; original member name unknown.
+  };
+
   struct RaffleRet {
     RaffleRet() : unknown00(0), unknown04(0), unknown08(false), unknown09(false) {}
 
@@ -318,6 +329,7 @@ public:
   void destroyModel();
   bool isValidModel();
   GfComAsm *getGfComAsm() const;
+  GfComBehaviorSalvage *getGfComBehaviorSalvage() const;
   void playAnimation(AnimationType animation);
   bool isAnimationEnd() const;
   u32 getButtonChallengeId(int index);
@@ -326,18 +338,23 @@ public:
   void playVoice(VoiceType voice);
   bool isVoiceEnd();
   void playClimbReady();
+  void playClimb();
   AnimationType getClimbAnimationType() const;
   void playWireStart(f32 time, f32 speed, f32 length);
   void addSalvagerPoint(u32 point);
-  static bool isChaseKikuInSupervia();
+  bool isChaseKikuInSupervia();
   void createLog();
-  static void setLogSkill(bool isSuccess, u32 skill);
-  static void clearLogSkill();
-  static void setLogButtonChallenge(int index, int challenge);
-  static void clearLogButtonChallenge();
-  static void setLogButtonChallengeResult(int result);
-  static void setLogLapsedTime(int time);
+  void setLogSkill(bool isSuccess, u32 skill);
+  void clearLogSkill();
+  void setLogButtonChallenge(int index, int challenge);
+  void clearLogButtonChallenge();
+  void setLogButtonChallengeResult(int result);
+  void setLogLapsedTime(int time);
   u32 getTBoxNum();
+  void execRaffle(const RaffleInfo &info);
+  void calcClimb();
+  void playSE(SEID id);
+  void playDiveVibration();
 
   ai::Fsm unknown08;                           // Inferred role: fsm; original member name unknown.
   mm::mtl::IntrusivePtr<fw::Camera> unknown80; // Inferred role: camera dive start; original member name unknown.

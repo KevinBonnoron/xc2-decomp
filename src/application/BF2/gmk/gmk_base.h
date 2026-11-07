@@ -166,6 +166,7 @@ public:
   int findBdatRowIndex() const;
   mm::Mat44 &getMatrix(mm::Mat44 &matrix, bool isRotation) const;
   bool getPositionInShape(mm::Vec3 &position, bool isRandom) const;
+  bool isInsideShape(const mm::Vec3 &position, f32 margin) const;
   bool getYSnapPosInShape(mm::Vec3 &position) const;
   bool getPositionAppliedYSnap(mm::Vec3 &result, const mm::Vec3 &position, bool isXformY) const;
 

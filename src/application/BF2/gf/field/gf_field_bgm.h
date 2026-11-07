@@ -183,6 +183,10 @@ public:
   void setRscBattleBgmID(u32 id);
   void setGimmickBgmID(u32 id);
   void gevBattleEnd();
+  void gevPlayEvent(GEV gev, u32 value);
+  void gevPause(u32 resumeBits, u32 pauseBits);
+  void update(const fw::UpdateInfo &info);
+  void destroy();
   void gevMapjump(GEV gev, const MapjumpCallbackInfo &info);
   void applyMapJumpStart(const MapjumpCallbackInfo &info);
   void applyMapJumpFadein(const MapjumpCallbackInfo &info);

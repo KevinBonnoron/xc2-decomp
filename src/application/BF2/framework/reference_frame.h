@@ -26,6 +26,16 @@ public:
   void invalidateWorld() { unknowna0 = (unknowna0 & ~FLAG_ALL_SYNCED) | FLAG_LOCAL_SYNCED; }
   // Inferred role: marks the local transform as outdated and keeps the matrix flag; original name unknown.
   void unknown001() { unknowna0 = (unknowna0 & ~(FLAG_LOCAL_SYNCED | FLAG_WORLD_SYNCED)) | FLAG_WORLD_SYNCED; }
+  // Inferred role: marks the world transform as outdated and returns the local transform for writing; original name unknown.
+  Transform &unknown002() {
+    invalidateWorld();
+    return unknown20;
+  }
+  // Inferred role: marks the local transform as outdated and returns the world transform for writing; original name unknown.
+  Transform &unknown003() {
+    invalidateLocal();
+    return unknown40;
+  }
   void addChild(ReferenceFrame &child);
   void removeChild(ReferenceFrame &child);
   void syncLocalTransform();

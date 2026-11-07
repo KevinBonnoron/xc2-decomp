@@ -86,6 +86,7 @@ public:
   static bool isBackRangeAir(GfComPropertyPc &property);
   static bool ignoreOnGroundJump(GfComPropertyPc &property, f32 time);
   static bool isSwimFromAir(GfComPropertyPc &property);
+  static bool isSwimMoveFromAir(GfComPropertyPc &property);
   static bool isWallFall(GfComPropertyPc &property);
   static bool ignoreSlideJump(GfComPropertyPc &property, f32 time);
   static bool isFallFromSlideState(GfComPropertyPc &property);
@@ -116,9 +117,16 @@ public:
   static ASM_CMD_ID_FIELD getAsmID(GfPropertyField::WALL_MOVE_MODE mode);
   static void sendMessageWallChilds(GfComPropertyPc &property, fw::Message &message);
   static bool isWallClimbEnd(GfComPropertyPc &property);
+  static bool isWallAdsorption(GfComPropertyPc &property);
+  static bool isWallAdsorptionAir(GfComPropertyPc &property);
+  static bool isWallAdsorptionUnderWall(GfComPropertyPc &property);
   static void resetCameraForWall(GfComBehaviorPc &behavior, Timing timing);
   static void setAsmSpeedSlideBrake(GfComPropertyPc &property);
+  static f32 calcFallSpeed(GfComPropertyPc &property);
+  static bool isBigSplashFallSpeed(GfComBehaviorPc &behavior);
+  static bool isBigLandDistance(GfComBehaviorPc &behavior);
   static void notifyRiderEvent(GfComBehaviorPc &behavior, VehicleEvent event);
+  static void requestGetOffRider(GfComBehaviorPc &behavior);
   static bool isBackMove(GfComPropertyPc &property);
   static bool isInterruptionWater(GfComPropertyPc &property);
 };

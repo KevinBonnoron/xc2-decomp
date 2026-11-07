@@ -1,12 +1,34 @@
 #include "gf/menu/gf_menu_bdat.h"
 
 #include "bdat.h"
+#include "framework/lang_util.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_blade.h"
+#include "gf/data/gf_data_item.h"
 #include "ui/ui_str.h"
 
 namespace gf {
+
+namespace {
+
+struct unknown001 {
+  u32 unknown00;         // Inferred role: language type; original member name unknown.
+  const char *unknown08; // Inferred role: sort key column name of the language; original member name unknown.
+};
+
+const unknown001 s_sortKeyNames[] = {
+    {0, "sortJP"},
+    {3, "sortGE"},
+    {2, "sortFR"},
+    {5, "sortSP"},
+    {4, "sortIT"},
+    {12, "sortGB"},
+    {6, "sortCN"},
+    {11, "sortTW"},
+};
+
+} // namespace
 
 u8 *GfMenuBdat::s_BdatArray[7];
 
@@ -85,6 +107,92 @@ u32 GfMenuBdat::getTopBladeIconID() { return 207; }
 
 int GfMenuBdat::getFieldSkillTypeMax() { return Bdat::getIdCount(s_BdatArray[3]); }
 
+u8 *GfMenuBdat::getItemDataFP(u8 itemType, u16 item) {
+  switch (itemType) {
+  case ItemType::PC_WPN_CHIP:
+    return GfDataBdat::getFP(BDAT_ITM_PC_WPN_CHIP);
+  case ItemType::PC_EQUIP:
+    return GfDataBdat::getFP(BDAT_ITM_PC_EQUIP);
+  case ItemType::EQUIP_ORB:
+    return GfDataBdat::getFP(BDAT_ITM_ORB_EQUIP);
+  case ItemType::SALVAGE:
+    return GfDataBdat::getFP(BDAT_ITM_SALVAGE_LIST);
+  case ItemType::PRECIOUS:
+    return GfDataBdat::getFP(BDAT_ITM_PRECIOUS_LIST);
+  case ItemType::COLLECTION_LIST:
+    return GfDataBdat::getFP(BDAT_ITM_COLLECTION_LIST);
+  case ItemType::TRESURE:
+    return GfDataBdat::getFP(BDAT_ITM_TRESURE_LIST);
+  case ItemType::EMPTY_ORB:
+    return GfDataBdat::getFP(BDAT_ITM_ORB);
+  case ItemType::FAVORITE:
+    return GfDataBdat::getFP(BDAT_ITM_FAVORITE_LIST);
+  case ItemType::CRYSTAL_LIST:
+    return GfDataBdat::getFP(BDAT_ITM_CRYSTAL_LIST);
+  case ItemType::BOOSTER:
+    return GfDataBdat::getFP(BDAT_ITM_BOOSTER_LIST);
+  case ItemType::INFO:
+    return GfDataBdat::getFP(BDAT_ITM_INFO_LIST);
+  case ItemType::EVENT:
+    return GfDataBdat::getFP(BDAT_ITM_EVENT_LIST);
+  case ItemType::HANA_ROLE:
+    return GfDataBdat::getFP(BDAT_ITM_HANA_ROLE);
+  case ItemType::HANA_ATR:
+    return GfDataBdat::getFP(BDAT_ITM_HANA_ATR);
+  case ItemType::HANA_ARTS_ENH:
+    return GfDataBdat::getFP(BDAT_ITM_HANA_ARTS_ENH);
+  case ItemType::HANA_N_ARTS_SET:
+    return GfDataBdat::getFP(BDAT_ITM_HANA_NARTS_SET);
+  case ItemType::HANA_ASSIST:
+    return GfDataBdat::getFP(BDAT_ITM_HANA_ASSIST);
+  default:
+    return nullptr;
+  }
+}
+
+u8 *GfMenuBdat::getItemTextFP(u8 itemType, u16 item) {
+  switch (itemType) {
+  case ItemType::PC_WPN_CHIP:
+    return GfDataBdat::getFP(BDAT_ITM_PCWPNCHIP_MS);
+  case ItemType::PC_EQUIP:
+    return GfDataBdat::getFP(BDAT_ITM_PCEQUIP);
+  case ItemType::EQUIP_ORB:
+    return GfDataBdat::getFP(BDAT_ITM_ORB_MS);
+  case ItemType::SALVAGE:
+    return GfDataBdat::getFP(BDAT_ITM_SALVAGE);
+  case ItemType::PRECIOUS:
+    return GfDataBdat::getFP(BDAT_ITM_PRECIOUS);
+  case ItemType::COLLECTION_LIST:
+    return GfDataBdat::getFP(BDAT_ITM_COLLECTION);
+  case ItemType::TRESURE:
+    return GfDataBdat::getFP(BDAT_ITM_TRESURE);
+  case ItemType::EMPTY_ORB:
+    return GfDataBdat::getFP(BDAT_ITM_ORB_MS);
+  case ItemType::FAVORITE:
+    return GfDataBdat::getFP(BDAT_ITM_FAVORITE);
+  case ItemType::CRYSTAL_LIST:
+    return GfDataBdat::getFP(BDAT_ITM_CRYSTAL);
+  case ItemType::BOOSTER:
+    return GfDataBdat::getFP(BDAT_ITM_BOOSTER);
+  case ItemType::INFO:
+    return GfDataBdat::getFP(BDAT_ITM_INFO);
+  case ItemType::EVENT:
+    return GfDataBdat::getFP(BDAT_ITM_EVT);
+  case ItemType::HANA_ROLE:
+    return GfDataBdat::getFP(BDAT_ITM_HANA_ROLE_MS);
+  case ItemType::HANA_ATR:
+    return GfDataBdat::getFP(BDAT_ITM_HANA_ATR_MS);
+  case ItemType::HANA_ARTS_ENH:
+    return GfDataBdat::getFP(BDAT_ITM_ORB_MS);
+  case ItemType::HANA_N_ARTS_SET:
+    return GfDataBdat::getFP(BDAT_ITM_HANA_NARTS_SET_MS);
+  case ItemType::HANA_ASSIST:
+    return GfDataBdat::getFP(BDAT_ITM_ORB_MS);
+  default:
+    return nullptr;
+  }
+}
+
 void GfMenuBdat::getFieldSkillName(u16 skill, ui::UIStr &name) {
   u8 *list = GfDataBdat::getFP(BDAT_FLD_FIELD_SKILL_LIST);
   u8 *text = GfDataBdat::getFP(BDAT_FLD_FIELDSKILLTXT);
@@ -95,6 +203,16 @@ void GfMenuBdat::getFieldSkillName(u16 skill, ui::UIStr &name) {
 }
 
 int GfMenuBdat::getIconIDFromWeatherType(u32 weatherType) { return weatherType + 167; }
+
+const char *GfMenuBdat::getSortKeyName() {
+  u32 lang = fw::LangUtil::getLangType();
+  for (u32 i = 0; i < sizeof(s_sortKeyNames) / sizeof(s_sortKeyNames[0]); i++) {
+    if (s_sortKeyNames[i].unknown00 == lang) {
+      return s_sortKeyNames[i].unknown08;
+    }
+  }
+  return nullptr;
+}
 
 u8 *GfMenuBdat::getBladeDataFP(u32 blade, u32 &id) {
   u8 *bdat;

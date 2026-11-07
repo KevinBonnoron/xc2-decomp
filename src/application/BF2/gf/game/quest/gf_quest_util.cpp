@@ -1,12 +1,12 @@
 #include "gf/game/quest/gf_quest_util.h"
 
+#include "gf/data/gf_bdat_chrenparam.h"
 #include "gf/data/gf_bdat_cond.h"
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_enemy.h"
 #include "gf/data/gf_data_game.h"
 #include "gf/data/gf_data_item.h"
 #include "gf/data/gf_data_manager.h"
-#include "gf/data/gf_data_map.h"
 #include "gf/data/gf_data_quest.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/game/gf_game_cond.h"
@@ -18,13 +18,12 @@
 #include "gf/game/quest/gf_quest_task.h"
 #include "gf/game/quest/gf_quest_task_param.h"
 #include "gf/util/gf_item_util.h"
+#include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_queue.h" // IWYU pragma: keep
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 
 namespace gf {
-
-u32 GfQuestReward::Param::getDevelopZone() const { return GfDataMap::getDevelopMapId(m_developZone); }
 
 namespace {
 
@@ -43,6 +42,21 @@ constexpr u32 PARTY_CHARACTER_COUNT = 3;
 constexpr u32 DUMMY_GROUP_NPC_COUNT = 8;
 
 } // namespace
+
+bool GfQuestUtil::isEnemyGroup(u32 group, u32 enemy) {
+  if (group == 0) {
+    return false;
+  }
+
+  GfBdatChrEnParam *chrEnParam = GfBdatChrEnParam::get();
+  for (u32 index = 0; index < 8; index++) {
+    if (chrEnParam->getEnemyGroupEnemyID(group, index) == enemy) {
+      return true;
+    }
+  }
+
+  return false;
+}
 
 u32 GfQuestUtil::getQuestNeedChar(u32 index, QuestID quest) {
   if (quest.empty()) {
@@ -248,6 +262,55 @@ void GfQuestUtil::removeOrderParentQuest(QuestID quest) {
       return;
     }
   }
+}
+
+QuestID GfQuestUtil::getLastOrderCategoryQuest(QTYPE type) {
+  SDataGame *dataGame = GfDataManager::getDataGame();
+  u16 id = 0;
+  u16 variant = 0;
+  if (dataGame->unknown10a538 != 0) {
+    for (s32 index = dataGame->unknown10a538; index > 0; index--) {
+      if (GfDataQuest::getListQuestCategory(dataGame->unknown10a138[index - 1]) == type) {
+        QuestID quest = dataGame->unknown10a138[index - 1];
+        id = quest.unknown00;
+        variant = quest.unknown02;
+        break;
+      }
+    }
+  }
+
+  return QuestID(id, variant);
+}
+
+QuestID GfQuestUtil::getLastOrderInvalidCategoryQuest(QTYPE type) {
+  SDataGame *dataGame = GfDataManager::getDataGame();
+  u16 id = 0;
+  u16 variant = 0;
+  if (dataGame->unknown10a538 != 0) {
+    for (s32 index = dataGame->unknown10a538; index > 0; index--) {
+      if (GfDataQuest::getQuestCategory(dataGame->unknown10a138[index - 1]) != type) {
+        QuestID quest = dataGame->unknown10a138[index - 1];
+        id = quest.unknown00;
+        variant = quest.unknown02;
+        break;
+      }
+    }
+  }
+
+  return QuestID(id, variant);
+}
+
+QuestID GfQuestUtil::getLastOrderParentQuest() {
+  SDataGame *dataGame = GfDataManager::getDataGame();
+  u16 id = 0;
+  u16 variant = 0;
+  if (dataGame->unknown10a538 != 0) {
+    QuestID quest = dataGame->unknown10a138[dataGame->unknown10a538 - 1];
+    id = quest.unknown00;
+    variant = quest.unknown02;
+  }
+
+  return QuestID(id, variant);
 }
 
 void GfQuestUtil::clearOrderParentQuest() { GfDataManager::getDataGame()->unknown10a538 = 0; }
@@ -519,10 +582,80 @@ static void unknown002(QTYPE type) {
   }
 }
 
+// Inferred role: counts the finished quests of the chain starting at quest; original name unknown.
+static void unknown004(u32 &count, QuestID quest) {
+  if (GfQuestInfo::getState(quest) < QSTATE_FIN_A) {
+    return;
+  }
+
+  count++;
+  QuestID nextA = GfDataQuest::getListNextQuestA(quest);
+  if (!nextA.empty()) {
+    unknown004(count, nextA);
+  }
+
+  QuestID nextB = GfDataQuest::getListNextQuestB(quest);
+  if (!nextB.empty()) {
+    unknown004(count, nextB);
+  }
+}
+
+u32 GfQuestUtil::getClearChildQuest(QuestID quest) {
+  if (!GfQuestInfo::isParent(quest)) {
+    return 0;
+  }
+
+  u32 count = 0;
+  unknown004(count, GfDataQuest::getListNextQuestA(quest));
+  return count;
+}
+
 void GfQuestUtil::setupNewGameParam() {
   unknown002(QTYPE_MAIN);
   unknown002(QTYPE_NORMAL);
   unknown002(QTYPE_BLADE);
+}
+
+bool GfQuestUtil::getResultIdea(u32 &category, u32 &value, u32 blade, u32 line, u32 level) {
+  bool isIdea = false;
+  SDataBladeAchievement *achievInfo = GfDataBlade::getAchievInfo(blade, line);
+  if (achievInfo->unknown00 != 0) {
+    GfQuestReward reward;
+    if (GfQuestManager::getRewardItem(reward, achievInfo->unknown04[level - 1].unknown00, true)) {
+      value = reward.unknown00[QUEST_REWARD_UNKNOWN_6].unknown44;
+      if (value != 0) {
+        isIdea = true;
+        category = reward.unknown00[QUEST_REWARD_UNKNOWN_6].m_developZone;
+      }
+    }
+  }
+
+  return isIdea;
+}
+
+bool GfQuestUtil::getTaskMap(mm::mtl::FixedArray<u16, 4> &maps, QuestID quest) {
+  if (quest.empty() || GfQuestInfo::isParent(quest)) {
+    return false;
+  }
+
+  for (u32 taskIndex = 0; taskIndex < maps.size(); taskIndex++) {
+    QuestTaskParam param(quest, taskIndex, TASK_STATE_NONE);
+    maps[taskIndex] = GfQuestTask::getTaskMap(param);
+    if (maps[taskIndex] == 0) {
+      mm::mtl::FixedVector<QuestID, 16> linkQuests;
+      GfQuestManager::getLinkQuest(linkQuests, quest);
+      for (const QuestID &linkQuest : linkQuests) {
+        if (!(linkQuest == quest)) {
+          maps[taskIndex] = GfQuestTask::getTaskMap(QuestTaskParam(GfDataQuest::getListNextQuestA(linkQuest), taskIndex, TASK_STATE_NONE));
+          if (maps[taskIndex] != 0) {
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  return true;
 }
 
 } // namespace gf

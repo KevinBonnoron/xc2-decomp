@@ -1,14 +1,16 @@
 #pragma once
+#include <stddef.h>
+
 #include "gmk/gmk_active_list.h"
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_phantom.h"
+#include "mm_mtl/fixed_list.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/intrusive_list.h"
 #include "mm_mtl/singleton.h"
 #include "mm_mtl/vector.h"
 #include "mtl/alloc_handle.h"
 #include "types.h"
-#include <stddef.h>
 
 namespace gf {
 struct GF_OBJ_HANDLE;
@@ -196,6 +198,8 @@ public:
   const AGmkBase *findGmkInstByGmkInstIndex(int gmkSetId, GmkType type, u32 index) const;
   bool traverseGmkGameObj(IGmkGameObjTraverser &traverser) const;
   template <typename T> bool traverseGmkInst(GmkType type, T &traverser) const;
+  template <typename T> void collectGameObjs(mm::mtl::FixedList<gf::GF_OBJ_HANDLE *, 1024> &handles) const;
+  template <typename T> void collectGameObjsUnbound(mm::mtl::FixedList<gf::GF_OBJ_HANDLE *, 1024> &handles) const;
   GmkSet *findGmkSet(int gmkSetId) const;
   void update(f32 deltaTime);
   void clearGmkSets();

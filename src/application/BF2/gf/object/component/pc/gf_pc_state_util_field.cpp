@@ -17,6 +17,7 @@
 #include "gf/object/component/env_sensor/gf_com_env_sensor.h"
 #include "gf/object/component/gf_com_transform.h"
 #include "gf/object/component/gf_component.h"
+#include "gf/object/component/gimmick/gf_com_behavior_gmk.h"
 #include "gf/object/component/pc/field/gf_pc_param_field.h"
 #include "gf/object/component/pc/gf_com_behavior_pc.h"
 #include "gf/object/component/pc/gf_com_property_pc.h"
@@ -27,7 +28,9 @@
 #include "gf/object/component/pc/plugin/gf_pc_access_plugin.h"
 #include "gf/object/component/pc/plugin/gf_pc_dead_col_check_plugin.h"
 #include "gf/object/component/pc/plugin/gf_pc_fade_plugin.h"
+#include "gf/object/component/pc/plugin/gf_pc_fall_distance_plugin.h"
 #include "gf/object/component/pc/plugin/gf_pc_fall_into_coli_plugin.h"
+#include "gf/object/component/pc/plugin/gf_pc_look_at_plugin.h"
 #include "gf/object/component/pc/plugin/gf_pc_lure_plugin.h"
 #include "gf/object/component/pc/plugin/gf_pc_water_in_plugin.h"
 #include "gf/object/gf_obj.h"
@@ -213,7 +216,7 @@ bool StateUtilField::isMovableWall(GfComPropertyPc &property, GfPropertyField::W
   if (!isMovable) {
     return false;
   }
-  if (!sensor->unknown24_1 || sensor->unknown1e0 == -1) {
+  if (!sensor->unknown24_1 || sensor->unknown150.unknown90 == -1) {
     return true;
   }
   if (isWallUpMove(mode) && sensor->unknown25_0) {
@@ -231,9 +234,31 @@ void StateUtilField::resetCameraForWall(GfComBehaviorPc &behavior, Timing timing
   GfGamePlayerCamera::resetCameraClimb(CAMERA_TIMINGS[timing]);
 }
 
+void StateUtilField::notifySkillAct(GfComBehaviorPc &behavior, bool isSkillAct) {
+  GfComPropertyPc *property = behavior.unknown08->getComponent<GfComPropertyPc>();
+  if (property != nullptr) {
+    GfObj *obj = GfObjUtil::getObj(property->unknown310.unknown78);
+    if (obj != nullptr) {
+      MsgPcFieldNotifySkillEvent message(!isSkillAct);
+      static_cast<GfObj *>(behavior.unknown08)->sendMessage(obj, message);
+      if (!isSkillAct) {
+        property->unknown310.unknown78 = INVALID_HANDLE;
+      }
+    }
+  }
+}
+
 void StateUtilField::notifyRiderEvent(GfComBehaviorPc &behavior, VehicleEvent event) {
   MsgPcFieldNotifyRiderEvent message(event);
   StateUtil::sendMessageToRider(behavior, message);
+}
+
+void StateUtilField::requestGetOffRider(GfComBehaviorPc &behavior) {
+  GfGameRide *ride = GfGameRide::get();
+  if (ride != nullptr) {
+    MsgGameRideEvent message(RIDE_EVENT_GET_DOWN_FORCE);
+    static_cast<GfObj *>(behavior.unknown08)->sendMessage(ride, message);
+  }
 }
 
 bool StateUtilField::isBackMove(GfComPropertyPc &property) {
@@ -245,9 +270,39 @@ bool StateUtilField::isInterruptionWater(GfComPropertyPc &property) {
   return 0.2f <= property.unknown160.y - depth;
 }
 
+f32 StateUtilField::calcFallSpeed(GfComPropertyPc &property) {
+  const fw::Transform &locomotion = property.getLocomotion();
+  f32 speed = locomotion.unknown00.y + property.unknownc0 * property.unknownd0.y;
+  speed = property.unknown100.y + speed;
+  return property.unknown90 + speed;
+}
+
+bool StateUtilField::isBigSplashFallSpeed(GfComBehaviorPc &behavior) {
+  GfComPropertyPc *property = behavior.unknown08->getComponent<GfComPropertyPc>();
+  const MoveParam *param = property->unknown005();
+  return calcFallSpeed(*property) <= -param->bigSplashSpeed;
+}
+
+bool StateUtilField::isBigLandDistance(GfComBehaviorPc &behavior) {
+  FallDistancePlugin *plugin = behavior.unknown001<FallDistancePlugin>(17);
+  if (plugin != nullptr) {
+    GfComPropertyPc *property = behavior.unknown08->getComponent<GfComPropertyPc>();
+    const MoveParam *param = property->unknown005();
+    return plugin->calcDistance(property->unknown160) + 0.01f >= param->landBigDist;
+  }
+
+  return false;
+}
+
 bool StateUtilField::isSwimFromAir(GfComPropertyPc &property) {
   const WaterCommonParam *param = property.unknown310.unknown002();
   return property.unknown90 >= param->waterDiveMinSpeed;
+}
+
+bool StateUtilField::isSwimMoveFromAir(GfComPropertyPc &property) {
+  const WaterCommonParam *param = property.unknown310.unknown005();
+  f32 speed = sqrtf(property.unknown80.x * property.unknown80.x + property.unknown80.y * property.unknown80.y + property.unknown80.z * property.unknown80.z);
+  return property.existInputXY() && speed >= param->swimEnableSpeed;
 }
 
 bool StateUtilField::isWallFall(GfComPropertyPc &property) {
@@ -405,6 +460,50 @@ bool StateUtilField::isWallDetach(GfComPropertyPc &property) {
   return plane.distance + dot < -property.unknown310.unknown38;
 }
 
+bool StateUtilField::isWallAdsorption(GfComPropertyPc &property) {
+  if (property.unknown310.unknown10_3) {
+    EnviromentSensor *sensor = property.getEnvSensor();
+    if (sensor->unknown24_4 && (sensor->unknown150.unknown00.unknown24 & 0x50) == 0x10) {
+      const EnviromentSensor::Parameter *sensorParam = property.unknown08->getComponent<GfComEnvSensor>()->unknown2e0.get<EnviromentSensor::Parameter>();
+      EnviromentSensor::HorizonPacket packet;
+      EnviromentSensor::unknown006 wall;
+      packet.unknown00 = 0x40;
+      const mm::Plane &sensorPlane = sensor->unknown150.unknown00.unknown00;
+      packet.unknown10 = mm::Vec3(-sensorPlane.normal.x, -sensorPlane.normal.y, -sensorPlane.normal.z);
+      packet.unknown20 = 0.0f;
+      packet.unknown24 = sensorParam->obstacleSearchLength;
+      packet.unknown30 = sensor->unknown290;
+      packet.unknown38 = &wall;
+      EnviromentSensor::searchHorizon(property.unknown160, &packet);
+      if (((packet.unknown34 >> 6) & 1) && wall.unknown60.unknown24_4) {
+        property.unknown310.unknown130 = wall.unknown60;
+        property.unknown310.unknown10_6 = true;
+        property.unknown310.flashWallInfo(property);
+        f32 limit = property.unknown310.unknown1c + property.unknown310.unknown4c;
+        if (!(wall.unknown60.unknown20 > limit)) {
+          mm::Vec3 input = property.unknown2b0 * property.unknown60.unknown04 + property.unknown2d0 * property.unknown60.unknown00;
+          if (!(fabsf(input.x) <= 0.000001f) || !(fabsf(input.y) <= 0.000001f) || !(fabsf(input.z) <= 0.000001f)) {
+            input.unknown001();
+          }
+
+          mm::Vec3 direction(wall.unknown60.unknown00.normal.x, 0.0f, wall.unknown60.unknown00.normal.z);
+          if (!(fabsf(direction.x) <= 0.000001f) || !(fabsf(direction.z) <= 0.000001f)) {
+            direction.unknown001();
+          }
+
+          const WallCommonParam *param = property.unknown310.unknown004(15).get<WallCommonParam>();
+          mm::Vec3 reverse(-direction.x, -direction.y, -direction.z);
+          f32 cosine = mm::clamp(input.x * reverse.x + input.y * reverse.y + input.z * reverse.z, -1.0f, 1.0f);
+          f32 angle = mm::acos(cosine);
+          return param->adsorptionAngle * mm::DEG_TO_RAD >= angle;
+        }
+      }
+    }
+  }
+
+  return false;
+}
+
 void StateUtilField::setEnableFallIntoColi(GfComBehaviorPc &behavior, bool isEnable) {
   FallIntoColiPlugin *plugin = behavior.unknown001<FallIntoColiPlugin>(9);
   if (plugin != nullptr) {
@@ -464,6 +563,22 @@ GF_OBJ_HANDLE *StateUtilField::getLureTargetHandle(GfComBehaviorPc &behavior) {
   }
 
   return INVALID_HANDLE;
+}
+
+void StateUtilField::setLookAtFlag(GfComBehaviorPc &behavior, bool isEnable) {
+  GfComPropertyPc *property = behavior.getProperty();
+  if (isEnable) {
+    property->unknown310.unknown10_1 = true;
+  } else {
+    property->unknown310.unknown10_1 = false;
+  }
+
+  if (StateUtil::getTarget(behavior) == INVALID_HANDLE) {
+    LookAtPlugin *plugin = behavior.unknown001<LookAtPlugin>(5);
+    if (plugin != nullptr) {
+      plugin->setActivate(isEnable);
+    }
+  }
 }
 
 void StateUtilField::startWaterWarpFade(GfComBehaviorPc &behavior) { behavior.unknown001<FadePlugin>(11)->setActivate(true); }

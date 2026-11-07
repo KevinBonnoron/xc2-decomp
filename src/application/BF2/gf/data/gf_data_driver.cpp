@@ -13,9 +13,11 @@
 #include "gf/data/gf_data_manager.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_data_party.h"
+#include "gf/data/gf_data_util.h"
 #include "gf/data/gf_data_weapon.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/data/gf_object_type.h"
+#include "gf/game/gf_game_manager.h"
 #include "gf/object/gf_init_param.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
@@ -45,6 +47,8 @@ SDataDriver *GfDataDriver::getSDataDriver(u32 driver) {
   SDataGame *dataGame = GfDataManager::getDataGame();
   return &dataGame->unknown2c[index < DRIVER_COUNT ? index : 1];
 }
+
+SDataIdea *GfDataDriver::getSDataIdea(u32 driver) { return &getSDataDriver(driver)->unknown00; }
 
 bool GfDataDriver::getPouchEnhance(mm::mtl::FixedVector<u16, 64> &enhances, u32 driver) {
   GfBdatItem *bdatItem = GfBdatItem::get();
@@ -709,6 +713,33 @@ u32 GfDataDriver::getEyeRotControl(u32 driver) {
   }
 
   return GfBdatChrDr::get()->getChrDrEyeRot(driver);
+}
+
+bool GfDataDriver::isEnableEquipBlade(u32 driver, u32 blade) {
+  if (blade == 0) {
+    return false;
+  }
+
+  u32 setDriver = GfDataBlade::getSDataBlade(blade)->unknown04;
+  if (setDriver != 0 && setDriver != driver) {
+    return false;
+  }
+
+  u32 creator = GfDataBlade::getSDataBlade(blade)->unknown02;
+  if (driver != DRIVER_REX) {
+    return creator != 0 && creator == driver;
+  }
+  if (creator == 0) {
+    return false;
+  }
+  if (creator == DRIVER_REX) {
+    return true;
+  }
+  if (GfGameManager::isRexAwakening()) {
+    return true;
+  }
+
+  return GfDataUtil::isClearGame();
 }
 
 bool GfDataDriver::isAttachedParty(u32 driver) {

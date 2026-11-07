@@ -4,12 +4,14 @@
 #include <stdarg.h>
 
 #include "battle/data_manager_battle.h"
+#include "framework/object/updatable_object.h"
 #include "fw/fw_transform.h"
 #include "gf/data/gf_bdat_blade.h"
 #include "gf/data/gf_bdat_btl.h"
 #include "gf/data/gf_bdat_chrdr.h"
 #include "gf/data/gf_bdat_chrenarrange.h"
 #include "gf/data/gf_bdat_chrenparam.h"
+#include "gf/data/gf_bdat_item.h"
 #include "gf/data/gf_bdat_maplist.h"
 #include "gf/data/gf_bdat_quest.h"
 #include "gf/data/gf_character_id.h"
@@ -21,6 +23,7 @@
 #include "gf/data/gf_data_enemy.h"
 #include "gf/data/gf_data_game.h"
 #include "gf/data/gf_data_hana.h"
+#include "gf/data/gf_data_item.h"
 #include "gf/data/gf_data_manager.h"
 #include "gf/data/gf_data_map.h"
 #include "gf/data/gf_data_mercenaries.h"
@@ -31,6 +34,7 @@
 #include "gf/data/gf_item_handle.h"
 #include "gf/data/gf_object_type.h"
 #include "gf/event/gf_event.h"
+#include "gf/field/gf_field_exec_cmd_turn.h"
 #include "gf/field/gf_field_gimmick.h"
 #include "gf/field/gf_field_weather.h"
 #include "gf/game/gf_game_cond.h"
@@ -38,11 +42,16 @@
 #include "gf/game/gf_game_mount.h"
 #include "gf/game/gf_game_obj.h"
 #include "gf/game/gf_game_party.h"
+#include "gf/game/gf_game_player_formation.h"
 #include "gf/game/gf_game_scene.h"
 #include "gf/game/gf_game_voice.h"
 #include "gf/game/kizunaring/gf_kizunaring_manager.h"
 #include "gf/game/mercenaries/gf_game_mercenaries.h"
 #include "gf/game/quest/gf_quest_manager.h"
+#include "gf/game/quest/gf_quest_util.h"
+#include "gf/object/component/behavior/gf_com_behavior_event.h"
+#include "gf/object/component/behavior/gf_com_behavior_npc.h"
+#include "gf/object/component/enemy/gf_com_behavior_enemy.h"
 #include "gf/object/component/property/gf_com_property.h"
 #include "gf/object/gf_append.h"
 #include "gf/object/gf_append_info.h"
@@ -60,13 +69,28 @@
 #include "gf/util/gf_item_util.h"
 #include "gf/util/gf_util.h"
 #include "gmk/gmk_base.h"
+#include "gmk/gmk_list.h"
+#include "gmk/gmk_set.h"
 #include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_list.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
+#include "mm_mtl/intrusive_list.h"
 #include "mm_mtl/rtti.h"
+#include "mm_mtl/vector.h"
+
+namespace gmk {
+class GmkEnemy;
+class GmkMapObj;
+class GmkMob;
+class GmkNpc;
+class GmkRoutedEnemy;
+class GmkRoutedMapObj;
+class GmkRoutedMob;
+class GmkRoutedNpc;
+} // namespace gmk
 
 namespace gf {
 
@@ -93,6 +117,10 @@ CLOUD_SEA GfGameUtilCloudSea::getCloudSea() { return GfFieldWeather::getCurrentC
 
 enum {
   GAME_COND_METSU_WITHOUT_CRYSTAL = 2695,
+};
+
+enum {
+  PRECIOUS_CATEGORY_UNKNOWN_28 = 28, // Inferred role: precious category of the owner bonus items; original enumerator name unknown.
 };
 
 enum {
@@ -591,6 +619,43 @@ void GfGameUtil::setDispByGmkTypeAndGmkIdx(gmk::GmkType type, u32 index, bool is
   gmk::setDispByGmkTypeAndGmkIdx(gmkSet, type, index, isDisp);
 }
 
+bool GfGameUtil::collectGfObjHandleByGmkType(mm::mtl::FixedList<GF_OBJ_HANDLE *, 1024> &handles, gmk::GmkType type) {
+  if (gmk::GmkManager::get() == nullptr || !gmk::GmkManager::get()->isValid()) {
+    return false;
+  }
+
+  switch (type) {
+  case gmk::GMK_TYPE_ENEMY:
+    gmk::GmkManager::get()->collectGameObjsUnbound<gmk::GmkEnemy>(handles);
+    break;
+  case gmk::GMK_TYPE_ROUTED_ENEMY:
+    gmk::GmkManager::get()->collectGameObjsUnbound<gmk::GmkRoutedEnemy>(handles);
+    break;
+  case gmk::GMK_TYPE_NPC:
+    gmk::GmkManager::get()->collectGameObjs<gmk::GmkNpc>(handles);
+    break;
+  case gmk::GMK_TYPE_ROUTED_NPC:
+    gmk::GmkManager::get()->collectGameObjs<gmk::GmkRoutedNpc>(handles);
+    break;
+  case gmk::GMK_TYPE_MAP_OBJ:
+    gmk::GmkManager::get()->collectGameObjs<gmk::GmkMapObj>(handles);
+    break;
+  case gmk::GMK_TYPE_ROUTED_MAP_OBJ:
+    gmk::GmkManager::get()->collectGameObjs<gmk::GmkRoutedMapObj>(handles);
+    break;
+  case gmk::GMK_TYPE_MOB:
+    gmk::GmkManager::get()->collectGameObjsUnbound<gmk::GmkMob>(handles);
+    break;
+  case gmk::GMK_TYPE_ROUTED_MOB:
+    gmk::GmkManager::get()->collectGameObjsUnbound<gmk::GmkRoutedMob>(handles);
+    break;
+  default:
+    return false;
+  }
+
+  return true;
+}
+
 int GfGameUtil::getAntiBladeAreaBdatId() { return GfFieldGimmick::getBdatIdOfActiveGmkAntiBladeArea(); }
 
 bool GfGameUtil::getGmkTargetPointPos(mm::Vec3 &position, GF_OBJ_HANDLE *handle) {
@@ -605,11 +670,70 @@ bool GfGameUtil::getGmkTargetPointPos(mm::Vec3 &position, GF_OBJ_HANDLE *handle)
   return false;
 }
 
+bool GfGameUtil::findNpcMat44(mm::Mat44 &matrix, int bdatId) {
+  if (gmk::GmkManager::get() != nullptr) {
+    int map = gmk::getCurrentMapBdatId();
+    int gmkSetId = gmk::GmkManager::get()->findFirstBdatId_RSC_GmkSetList(map);
+    if (gmkSetId > 0) {
+      gmk::GmkSet *gmkSet = gmk::GmkManager::get()->findGmkSet(gmkSetId);
+      if (gmkSet != nullptr) {
+        const gmk::AGmkBase *gmkInst = gmkSet->findFirstGmkInstByBdatId(gmk::GMK_TYPE_NPC, bdatId);
+        if (gmkInst != nullptr) {
+          gmkInst->getMatrix(matrix, true);
+          return true;
+        }
+      }
+    }
+  }
+
+  return false;
+}
+
+bool GfGameUtil::getGmkTargetPointPos(mm::Vec3 &position, u32 gimmick) {
+  if (gimmick == 0 || gmk::GmkManager::get() == nullptr) {
+    return false;
+  }
+
+  const gmk::GmkManager *gmkManager = gmk::GmkManager::get();
+  for (gmk::GmkSet *const *it = gmkManager->unknownf358.begin(); it != gmkManager->unknownf358.end(); ++it) {
+    gmk::IGmkList *list = (*it)->getGmkList(gmk::GMK_TYPE_TARGET_POINT);
+    if (list != nullptr && list->isValid() && gimmick <= list->getInstNum()) {
+      const gmk::AGmkBase *gmkInst = list->getInst(gimmick - 1);
+      if (gmkInst != nullptr && gmkInst->isValid()) {
+        position = gmkInst->unknown08.unknown08->unknown00;
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
 bool GfGameUtil::incEnemySuppress(u32 enemy) { return GfDataEnemy::incEnemySuppress(enemy); }
 
 bool GfGameUtil::isEnableDeleteObject(GF_OBJ_HANDLE *handle) {
   GfObjAcc objAcc(handle);
   return !objAcc.isBattle();
+}
+
+bool GfGameUtil::isPointSavable(const mm::Vec3 &position) {
+  const gmk::GmkManager *gmkManager = gmk::GmkManager::get();
+  if (gmkManager != nullptr) {
+    for (gmk::GmkSet *const *it = gmkManager->unknownf358.begin(); it != gmkManager->unknownf358.end(); ++it) {
+      gmk::IGmkList *list = (*it)->getGmkList(gmk::GMK_TYPE_FIELD_VOLUME);
+      if (list != nullptr) {
+        u32 num = list->getInstNum();
+        for (u32 index = 0; index < num; index++) {
+          const gmk::AGmkBase *gmkInst = list->getInst(index);
+          if (gmkInst != nullptr && gmkInst->isValid() && gmkInst->isInsideShape(position, 0.0f)) {
+            return false;
+          }
+        }
+      }
+    }
+  }
+
+  return true;
 }
 
 u32 GfGameUtil::getFormationPlayerID(GF_OBJ_HANDLE *handle) {
@@ -640,6 +764,65 @@ u32 GfGameUtil::getFormationPlayerID(GF_OBJ_HANDLE *handle) {
   }
 
   return hierarchy - 1;
+}
+
+void GfGameUtil::resetFormationParam(GF_OBJ_HANDLE *handle) {
+  if (GfObjUtil::isTrinityBlade(handle)) {
+    return;
+  }
+
+  GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
+  for (u32 playerId = 0; playerId < GfGamePlayerFormation::PLAYER_NUM; playerId++) {
+    GF_OBJ_HANDLE *&player = formation->unknown1a0[playerId].unknown08;
+    if (player == handle) {
+      formation->unknown1a0[playerId].unknown00 = PLAYER_ID_NONE;
+      player = INVALID_HANDLE;
+      formation->unknown1a0[playerId].unknown10 = true;
+      return;
+    }
+  }
+}
+
+void GfGameUtil::debugHpRatio(GF_OBJ_HANDLE *handle, f32 ratio) {
+  GfObj *obj = GfObjUtil::getObj(handle);
+  if (obj == nullptr) {
+    return;
+  }
+
+  DataParamAcc dataParamAcc(handle);
+  u32 hp = dataParamAcc.getHp();
+  if (hp > 1) {
+    u32 damage = static_cast<u32>(hp * ratio / 100.0f);
+    if (damage == 0) {
+      damage = 1;
+    }
+
+    MsgObjectDamage message(dataParamAcc.getHp() - damage, 0);
+    obj->sendMessage(obj, message);
+  }
+}
+
+void GfGameUtil::debugHpZero(GF_OBJ_HANDLE *handle) {
+  GfObj *obj = GfObjUtil::getObj(handle);
+  if (obj == nullptr) {
+    return;
+  }
+
+  DataParamAcc dataParamAcc(handle);
+  GfObjAcc acc(handle);
+  u32 hp = dataParamAcc.getHp();
+  if (hp != 0) {
+    MsgObjectDamage firstMessage(0, 0);
+    firstMessage.unknown2e = true;
+    firstMessage.unknown2f = false;
+    firstMessage.unknown38 = true;
+    obj->sendMessage(obj, firstMessage);
+    MsgObjectDamage secondMessage(hp - GfQuestUtil::isReduceHpObj(handle), 0);
+    secondMessage.unknown2e = true;
+    secondMessage.unknown2f = true;
+    secondMessage.unknown38 = true;
+    obj->sendMessage(obj, secondMessage);
+  }
 }
 
 void GfGameUtil::setHp(GF_OBJ_HANDLE *handle, u32 hp) {
@@ -740,6 +923,25 @@ const char *GfGameUtil::getSalvageDriverModel(u32 driver) {
   }
 
   return "";
+}
+
+void GfGameUtil::changeStopLayer(GF_OBJ_HANDLE *handle, bool isStop) {
+  GfObjAcc acc(handle);
+  if (acc.isValid()) {
+    u32 stopLayer = isStop ? 1 : 4;
+    GfObj *obj = acc.getObj();
+    int stopSection = GfObjUtil::getLayerSection(stopLayer);
+    u32 layer = acc.getLayer();
+    int section = GfObjUtil::getLayerSection(layer);
+    int sectionDiff = stopSection - section;
+    if (stopSection != section && GfObjUtil::getParentHandle(handle) == INVALID_HANDLE) {
+      for (mm::mtl::IntrusiveList<fw::UpdatableObject>::iterator it = obj->unknownb8.begin(), last = obj->unknownb8.end(); it != last; ++it) {
+        GfObj *child = mm::mtl::dynamicCast<GfObj>(it.operator->());
+        GfObjUtil::changeLayer(child, child->unknown2c + sectionDiff);
+      }
+      GfObjUtil::changeLayer(obj, layer + sectionDiff);
+    }
+  }
 }
 
 u32 GfGameUtil::getNowHp(GF_OBJ_HANDLE *handle, u32 objectType, u32 id) {
@@ -926,6 +1128,30 @@ void GfGameUtil::makeStateBattleByBlade(mm::mtl::FixStr<32> &state, u32 blade, b
   DataParamAcc dataParamAcc(OBJECT_TYPE_BLADE, blade, static_cast<GimmickType>(0));
   state.format("S_%02d_", dataParamAcc.getWeaponType(-1, false));
   state += isStart ? "btstart" : "btend";
+}
+
+void GfGameUtil::getOwnerBonus(OwnerBonus &ownerBonus) {
+  ownerBonus = OwnerBonus();
+  GfBdatItem *bdatItem = GfBdatItem::get();
+  mm::mtl::FixedVector<GfItem, 1024> items;
+  GfItemUtil::getInfo(items, ItemType::PRECIOUS, false);
+  for (GfItem *item = items.begin(); item != items.end(); item++) {
+    if (bdatItem->getPreciousCategory(item->unknown00) == PRECIOUS_CATEGORY_UNKNOWN_28) {
+      u32 type = bdatItem->getPreciousType(item->unknown00);
+      if (type != 0) {
+        GfBdatItem *bdat = GfBdatItem::get();
+        u32 bonusType = bdat->getOwnerBonusType(type);
+        s16 value = bdat->getOwnerBonusValue(type);
+        s16 max = bdat->getOwnerBonusParamMax(bonusType);
+        s16 *bonus = ownerBonus.unknown00;
+        s16 total = bonus[bonusType] + value;
+        bonus[bonusType] = total;
+        if (total > max) {
+          ownerBonus.unknown00[bonusType] = max;
+        }
+      }
+    }
+  }
 }
 
 void GfGameUtil::requestFieldDamage(GF_OBJ_HANDLE *handle) {
@@ -1194,6 +1420,26 @@ bool GfGameUtil::hasBelonging(GF_OBJ_HANDLE *handle, u32 belonging) {
   default:
     return false;
   }
+}
+
+bool GfGameUtil::isTurnEnd(GF_OBJ_HANDLE *handle) {
+  GfObjAcc objAcc(handle);
+  GfObj *obj = objAcc.getObj();
+  if (obj == nullptr) {
+    return false;
+  }
+
+  if (GfComBehaviorEvent *event = obj->getComponent<GfComBehaviorEvent>()) {
+    return event->unknowna0.unknown6c;
+  }
+  if (GfComBehaviorEnemy *enemy = obj->getComponent<GfComBehaviorEnemy>()) {
+    return enemy->unknown53f0.unknown6c;
+  }
+  if (GfComBehaviorNpc *npc = obj->getComponent<GfComBehaviorNpc>()) {
+    return npc->unknown2e0.unknown6c;
+  }
+
+  return false;
 }
 
 void GfGameUtil::execAddDevelopPointArcadia2Iyasaki() {

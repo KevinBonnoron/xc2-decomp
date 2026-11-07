@@ -1,6 +1,9 @@
 #pragma once
+#include <stddef.h>
+
 #include "gf/gf_state.h"
 #include "gf/object/component/enemy/gf_enemy_state_battle.h"
+#include "mm_math/mm_vec3.h"
 #include "types.h"
 
 namespace ai {
@@ -23,9 +26,11 @@ class StateFieldIdleTurn : public GfStateBase {
   void leave(GfComBehaviorPc *behavior, ai::State *next);
   void update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info);
 
-  u8 _18[0x30 - 0x18];
+  u8 _18[0x20 - 0x18];
+  mm::Vec3 unknown20; // Inferred role: input direction; original member name unknown.
 };
 
+static_assert(offsetof(StateFieldIdleTurn, unknown20) == 0x20, "");
 static_assert(sizeof(StateFieldIdleTurn) == 0x30, "");
 
 } // namespace pc

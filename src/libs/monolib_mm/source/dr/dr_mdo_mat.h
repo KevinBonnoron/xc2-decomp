@@ -629,7 +629,9 @@ public:
   void matCall_AccMulVal2(const MdsMatInfoHeader *header, int valueIndex, int matIndex);
   void matCall_AccMulVal3(const MdsMatInfoHeader *header, int valueIndex, int matIndex);
   void matCall_AccMulVal4(const MdsMatInfoHeader *header, int valueIndex, int matIndex);
+  void matCall_WaterFog(const MdsMatInfoHeader *header, int valueIndex, int matIndex);
   void matCall_CalcBloom(const MdsMatInfoHeader *header, int valueIndex, int matIndex);
+  void matCall_OutLineVal(const MdsMatInfoHeader *header, int valueIndex, int matIndex);
   void matCall_ToonId(const MdsMatInfoHeader *header, int valueIndex, int matIndex);
   void matCall_VolumeTest(const MdsMatInfoHeader *header, int valueIndex, int matIndex);
   void updateMatFstCallBack();
@@ -654,8 +656,8 @@ public:
   f32 unknownd8;    // Inferred role: bloom; original member name unknown.
   f32 unknowndc;    // Inferred role: frame spd; original member name unknown.
   f32 unknowne0;    // Inferred role: alpha; original member name unknown.
-  u8 _e4[0xe8 - 0xe4];
-  f32 unknowne8; // Inferred role: scale; original member name unknown.
+  f32 unknowne4;    // Inferred role: outline value time; original member name unknown.
+  f32 unknowne8;    // Inferred role: scale; original member name unknown.
   u8 _ec[0xf0 - 0xec];
   bool m_gpuRender;
   u8 _f1;
@@ -690,6 +692,7 @@ static_assert(offsetof(DrMdoMat, unknownd0) == 0xd0, "");
 static_assert(offsetof(DrMdoMat, unknownd8) == 0xd8, "");
 static_assert(offsetof(DrMdoMat, unknowndc) == 0xdc, "");
 static_assert(offsetof(DrMdoMat, unknowne0) == 0xe0, "");
+static_assert(offsetof(DrMdoMat, unknowne4) == 0xe4, "");
 static_assert(offsetof(DrMdoMat, unknowne8) == 0xe8, "");
 static_assert(offsetof(DrMdoMat, m_gpuRender) == 0xf0, "");
 static_assert(offsetof(DrMdoMat, unknownf2) == 0xf2, "");

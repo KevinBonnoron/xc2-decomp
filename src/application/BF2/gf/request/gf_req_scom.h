@@ -2,8 +2,10 @@
 #include <stddef.h>
 
 #include "gf/data/gf_data_blade.h"
+#include "gf/data/gf_data_param_acc.h"
 #include "gf/game/gf_game_voice.h"
 #include "gf/game/quest/gf_quest_id.h"
+#include "gf/menu/object/gf_menu_obj_popup.h"
 #include "gf/object/component/property/gf_com_property.h"
 #include "gf/request/gf_req_command.h"
 #include "gf/request/gf_scom.h"
@@ -22,7 +24,6 @@ namespace gf {
 struct GAME_VOICE_HANDLE;
 struct GF_SCOM_HANDLE;
 struct GF_OBJ_HANDLE;
-struct ParamObj;
 enum OPTMNT : u32;
 
 class SCOM_ADD_TRUST : public SCOM {
@@ -84,22 +85,47 @@ public:
   static void create();
 };
 
-class SCOM_ADD_EXP {
+class SCOM_ADD_EXP : public SCOM {
 public:
+  SCOM_ADD_EXP(GF_SCOM_HANDLE *handle, u32 exp, u32 driver, GF_OBJ_HANDLE *target, bool isInn)
+      : SCOM(handle, SCOM_TYPE_UNKNOWN_4, SCOM_EXEC_UNKNOWN_0, 1), unknown1c(exp), unknown20(driver), unknown28(target), unknown30(isInn) {}
+  bool exec(const fw::UpdateInfo &info) override;
+  static GF_SCOM_HANDLE *createBattleExp(u32 exp, GF_OBJ_HANDLE *handle);
+  static GF_SCOM_HANDLE *createBattleExp(u32 exp, u32 driver);
   static GF_SCOM_HANDLE *createInnExp(u32 exp);
+
+  u32 unknown1c;            // Inferred role: experience; original member name unknown.
+  u32 unknown20;            // Inferred role: driver; original member name unknown.
+  GF_OBJ_HANDLE *unknown28; // Inferred role: driver object; original member name unknown.
+  bool unknown30;           // Inferred role: is the experience for the inn; original member name unknown.
 };
 
-class SCOM_POPUP {
+static_assert(offsetof(SCOM_ADD_EXP, unknown1c) == 0x1c, "");
+static_assert(offsetof(SCOM_ADD_EXP, unknown20) == 0x20, "");
+static_assert(offsetof(SCOM_ADD_EXP, unknown28) == 0x28, "");
+static_assert(offsetof(SCOM_ADD_EXP, unknown30) == 0x30, "");
+static_assert(sizeof(SCOM_ADD_EXP) == 0x38, "");
+
+class SCOM_POPUP : public SCOM {
 public:
-  static void createQuest(QuestID quest);
-  static void createDevelop(u32 location, u32 level);
-  static void createAffinity(u32 blade, u32 driver, u32 trustRank);
-  static bool createAchievement(u32 blade, u32 achievement, u32 level);
-  static void createIdea(u32 driver, u32 idea, u32 level);
-  static void createArts(u32 driver, u32 arts);
-  static void createCrystalOK(u32 item);
-  static void createMercenaryReturn(u32 map, u32 teamID);
+  SCOM_POPUP(GF_SCOM_HANDLE *handle, GfMenuObjPopup::OpenParam &param);
+  bool exec(const fw::UpdateInfo &info) override;
+  static GF_SCOM_HANDLE *createQuest(QuestID quest);
+  static GF_SCOM_HANDLE *createMercenaryReturn(u32 map, u32 teamID);
+  static GF_SCOM_HANDLE *createMercenaryAdd(u32 mission);
+  static GF_SCOM_HANDLE *createDevelop(u32 location, u32 level);
+  static GF_SCOM_HANDLE *createAffinity(u32 blade, u32 driver, u32 trustRank);
+  static GF_SCOM_HANDLE *createAchievement(u32 blade, u32 achievement, u32 level);
+  static GF_SCOM_HANDLE *createIdea(u32 driver, u32 idea, u32 level);
+  static GF_SCOM_HANDLE *createPouch(u32 driver, u32 item, u32 unknown3);
+  static GF_SCOM_HANDLE *createArts(u32 driver, u32 arts);
+  static GF_SCOM_HANDLE *createCrystalOK(u32 item);
+
+  GfMenuObjPopup::OpenParam unknown1c; // Inferred role: popup parameter; original member name unknown.
 };
+
+static_assert(offsetof(SCOM_POPUP, unknown1c) == 0x1c, "");
+static_assert(sizeof(SCOM_POPUP) == 0x30, "");
 
 class SCOM_TARGET_UI : public SCOM {
 public:
@@ -269,17 +295,70 @@ public:
   static bool isPlayEnd(GAME_VOICE_HANDLE *voice);
 };
 
-class SCOM_FIELD_VOICE {
+class SCOM_FIELD_VOICE : public SCOM {
 public:
+  // Inferred role: queued field voice; original type name unknown.
+  struct unknown001 {
+    ParamObj unknown00;           // Inferred role: object; original member name unknown.
+    f32 unknown10;                // Inferred role: delay in seconds; original member name unknown.
+    CV_FIELD unknown14;           // Inferred role: voice; original member name unknown.
+    int unknown18;                // Inferred role: play state; original member name unknown.
+    CV_PRIO unknown1c;            // Inferred role: priority; original member name unknown.
+    GAME_VOICE_HANDLE *unknown20; // Inferred role: voice handle; original member name unknown.
+  };
+
+  SCOM_FIELD_VOICE(GF_SCOM_HANDLE *handle, bool isStopOnEvent) : SCOM(handle, SCOM_TYPE_UNKNOWN_63, SCOM_EXEC_UNKNOWN_0, 1), unknownd0(false), unknownd1(false), unknownd2(isStopOnEvent) {}
+  bool exec(const fw::UpdateInfo &info) override;
+  bool isStopVoice() const;
+
+  // Inferred role: queues a voice to play; original name unknown.
+  void unknown002(const ParamObj &object, f32 delay, CV_FIELD voice, CV_PRIO priority) {
+    unknown001 entry = {object, delay, voice, VOICE_RESULT_UNKNOWN_0, priority, nullptr};
+    unknown20.push(entry);
+  }
+
   static void create(CV_FIELD voice, CV_PRIO priority);
-  static void createLevelup(const ParamObj &paramObj);
-  static void createBadWeather();
-  static void createTime(CV_FIELD voice);
-  static void createExitInn();
-  static GAME_VOICE_HANDLE *createMercenariesLeader(u32 blade);
+  static void create(const ParamObj &paramObj, CV_FIELD voice, CV_PRIO priority);
+  static GF_SCOM_HANDLE *createLevelup(const ParamObj &paramObj);
+  static GAME_VOICE_HANDLE *createJump(const ParamObj &paramObj);
+  static GAME_VOICE_HANDLE *createHighLanding(const ParamObj &paramObj);
+  static GAME_VOICE_HANDLE *createFallDead(const ParamObj &paramObj);
+  static GF_SCOM_HANDLE *createLandmark();
+  static GF_SCOM_HANDLE *createUnexplored();
+  static GF_SCOM_HANDLE *createBadWeather();
+  static GF_SCOM_HANDLE *createTime(CV_FIELD voice);
+  static GF_SCOM_HANDLE *createExitInn();
+  static GF_SCOM_HANDLE *createBladeSkill(u32 blade);
+  static void createPartyIn(u32 id);
+  static void createPartyOut(u32 id);
   static void createMercenariesIn(u32 blade);
-  static void createMercenariesStart(u32 blade);
+  static GAME_VOICE_HANDLE *createMercenariesLeader(u32 blade);
+  static GF_SCOM_HANDLE *createMercenariesStart(u32 blade);
+  static GF_SCOM_HANDLE *createMercenariesEnd(u32 blade);
+  static GF_SCOM_HANDLE *createMercenariesResult(u32 blade);
+  static void createReleaseBlade(u32 blade);
+  static GF_SCOM_HANDLE *createSkipTravel(bool isStart);
+  static GF_SCOM_HANDLE *createRestart(CV_FIELD voice);
+  static GAME_VOICE_HANDLE *createEnemy(CV_FIELD voice);
+  static void createAchievement(u32 blade, u32 achievement);
+  static GF_SCOM_HANDLE *createAchievementAll(u32 blade);
+  static void createEngage(u32 blade);
+  static void createQuest(CV_FIELD voice);
+  static GAME_VOICE_HANDLE *createFieldSkillStart(u32 blade, u32 skill);
+  static GAME_VOICE_HANDLE *createFieldSkillClear(u32 skill);
+  static GAME_VOICE_HANDLE *createFieldSkillMiss(u32 skill);
+  static GAME_VOICE_HANDLE *createDriverKizuna(u32 driver);
+
+  mm::mtl::FixedQueue<unknown001, 4> unknown20; // Inferred role: voices to play in order; original member name unknown.
+  bool unknownd0;                               // Inferred role: wait until control is free; original member name unknown.
+  bool unknownd1;                               // Inferred role: waiting for control; original member name unknown.
+  bool unknownd2;                               // Inferred role: stop on event; original member name unknown.
 };
+
+static_assert(offsetof(SCOM_FIELD_VOICE, unknown20) == 0x20, "");
+static_assert(offsetof(SCOM_FIELD_VOICE, unknownd0) == 0xd0, "");
+static_assert(offsetof(SCOM_FIELD_VOICE, unknownd2) == 0xd2, "");
+static_assert(sizeof(SCOM_FIELD_VOICE) == 0xd8, "");
 
 class SCOM_ZONE : public SCOM {
 public:
@@ -362,6 +441,7 @@ public:
   SCOM_OBJ_ALPHA(GF_SCOM_HANDLE *handle, GF_OBJ_HANDLE *target, f32 time, f32 alpha);
   bool exec(const fw::UpdateInfo &info) override;
   static GF_SCOM_HANDLE *create(GF_OBJ_HANDLE *handle, f32 time, f32 alpha);
+  static void createWeapon(GF_OBJ_HANDLE *handle, f32 time, f32 alpha);
 
   u8 _1c[0x20 - 0x1c];
   GF_OBJ_HANDLE *unknown20; // Inferred role: target; original member name unknown.
@@ -377,6 +457,48 @@ static_assert(offsetof(SCOM_OBJ_ALPHA, unknown2c) == 0x2c, "");
 static_assert(offsetof(SCOM_OBJ_ALPHA, unknown30) == 0x30, "");
 static_assert(offsetof(SCOM_OBJ_ALPHA, unknown34) == 0x34, "");
 static_assert(sizeof(SCOM_OBJ_ALPHA) == 0x38, "");
+
+class SCOM_BC_PARTICLE : public SCOM {
+public:
+  SCOM_BC_PARTICLE(GF_SCOM_HANDLE *handle, GF_OBJ_HANDLE *target, f32 time);
+  bool exec(const fw::UpdateInfo &info) override;
+  static GF_SCOM_HANDLE *create(GF_OBJ_HANDLE *handle, f32 time);
+
+  u8 _1c[0x20 - 0x1c];
+  GF_OBJ_HANDLE *unknown20; // Inferred role: target; original member name unknown.
+  int unknown28;            // Inferred role: state; original member name unknown.
+  u32 unknown2c;            // Inferred role: object attribute; original member name unknown.
+  f32 unknown30;            // Inferred role: remaining time; original member name unknown.
+  f32 unknown34;            // Inferred role: fade time; original member name unknown.
+};
+
+static_assert(offsetof(SCOM_BC_PARTICLE, unknown20) == 0x20, "");
+static_assert(offsetof(SCOM_BC_PARTICLE, unknown28) == 0x28, "");
+static_assert(offsetof(SCOM_BC_PARTICLE, unknown2c) == 0x2c, "");
+static_assert(offsetof(SCOM_BC_PARTICLE, unknown30) == 0x30, "");
+static_assert(offsetof(SCOM_BC_PARTICLE, unknown34) == 0x34, "");
+static_assert(sizeof(SCOM_BC_PARTICLE) == 0x38, "");
+
+class SCOM_DEAD_PARTICLE : public SCOM {
+public:
+  SCOM_DEAD_PARTICLE(GF_SCOM_HANDLE *handle, GF_OBJ_HANDLE *target, u32 attribute, f32 time);
+  bool exec(const fw::UpdateInfo &info) override;
+  static GF_SCOM_HANDLE *create(GF_OBJ_HANDLE *handle, u32 attribute, f32 time);
+
+  u8 _1c[0x20 - 0x1c];
+  GF_OBJ_HANDLE *unknown20; // Inferred role: target; original member name unknown.
+  int unknown28;            // Inferred role: state; original member name unknown.
+  u32 unknown2c;            // Inferred role: object attribute; original member name unknown.
+  f32 unknown30;            // Inferred role: remaining time; original member name unknown.
+  f32 unknown34;            // Inferred role: fade time; original member name unknown.
+};
+
+static_assert(offsetof(SCOM_DEAD_PARTICLE, unknown20) == 0x20, "");
+static_assert(offsetof(SCOM_DEAD_PARTICLE, unknown28) == 0x28, "");
+static_assert(offsetof(SCOM_DEAD_PARTICLE, unknown2c) == 0x2c, "");
+static_assert(offsetof(SCOM_DEAD_PARTICLE, unknown30) == 0x30, "");
+static_assert(offsetof(SCOM_DEAD_PARTICLE, unknown34) == 0x34, "");
+static_assert(sizeof(SCOM_DEAD_PARTICLE) == 0x38, "");
 
 class SCOM_OBJ_VFADE_OFF : public SCOM {
 public:

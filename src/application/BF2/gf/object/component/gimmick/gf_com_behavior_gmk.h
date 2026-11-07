@@ -28,6 +28,8 @@ namespace gf {
 class GfMenuCallContext;
 
 struct MsgPcFieldNotifySkillEvent : fw::Message {
+  explicit MsgPcFieldNotifySkillEvent(u32 event) : fw::Message(0x100001d, 0x40), unknown08(event) {}
+
   u32 unknown08; // Inferred role: event, 0 removes the icon of the jump or warp point; original member name unknown.
 };
 

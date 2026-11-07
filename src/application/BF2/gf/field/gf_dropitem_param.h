@@ -12,6 +12,7 @@ namespace gf {
 class GfDropitemParam {
 public:
   GfDropitemParam();
+  void loadFromBdat(int &id);
 
   f32 unknown00;  // Role and original member name unknown.
   f32 unknown04;  // Role and original member name unknown.

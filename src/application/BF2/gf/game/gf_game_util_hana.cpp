@@ -3,6 +3,7 @@
 #include "gf/data/gf_bdat_btl.h"
 #include "gf/data/gf_character_id.h"
 #include "gf/data/gf_data_hana.h"
+#include "gf/data/gf_data_item.h"
 #include "gf/util/gf_item_util.h"
 
 namespace gf {
@@ -82,6 +83,20 @@ RESULT_HANA GfGameUtilHana::isOpenArtsCircuit(u32 blade, u32 circuit) {
   }
 
   return GfDataHana::isOpenCircuit(blade, circuit) ? RESULT_HANA_UNKNOWN_0 : RESULT_HANA_UNKNOWN_10;
+}
+
+u32 GfGameUtilHana::getEmptyParts(u32 parts) {
+  u32 start;
+  u32 end;
+  if (!GfDataItem::getItemBdatCount(start, end, GfDataItem::getItemType(parts))) {
+    return 0;
+  }
+
+  u32 count = 0;
+  for (u32 item = start; item < end; item++) {
+    count += GfItemUtil::getItemBoxCount(item);
+  }
+  return GfItemUtil::getEnableStock(parts) - count;
 }
 
 u32 GfGameUtilHana::getEtherForOpenArtsCircuit(u32 blade, u32 circuit) {

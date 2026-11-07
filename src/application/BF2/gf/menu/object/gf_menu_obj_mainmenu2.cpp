@@ -1,5 +1,9 @@
 #include "gf/menu/object/gf_menu_obj_mainmenu2.h"
+#include "bdat.h"
+#include "gf/data/gf_bdat_id.h"
+#include "gf/data/gf_data_bdat.h"
 #include "gf/menu/gf_menu_object.h"
+#include "gf/menu/object/gf_menu_obj_util.h"
 
 #include "gf/menu/gf_menu_fullscreen.h"
 #include "gf/menu/gf_menu_types.h"
@@ -117,6 +121,11 @@ bool GfMenuObjMainMenu2::seqExecTerm() {
   }
   main.setTerm();
   return true;
+}
+
+bool SelectionChecker::isEnableSelect(u32 handle, int index) {
+  u8 *bdat = GfDataBdat::getFP(BDAT_MNU_MAIN_ORDER);
+  return GfMenuObjUtil::getMenuCondition(Bdat::getVal(bdat, "useCond", Bdat::getIdTop(bdat) + index).valueU16);
 }
 
 } // namespace gf

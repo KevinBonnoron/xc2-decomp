@@ -96,10 +96,9 @@ public:
   // Layout from GfQuestTarget::entryTargetCache, getTargetCache and update; the FixedList instantiation
   // mm::mtl::FixedList<gf::GfQuestTarget::TargetCache, 512>::erase names the type.
   struct TargetCache {
-    TargetCache(GF_OBJ_HANDLE *handle, QuestID quest) : unknown14(0), unknown16(false), unknown17(0) {
+    TargetCache(GF_OBJ_HANDLE *handle, QuestID quest) : unknown10(quest.unknown00, quest.unknown02), unknown14(0), unknown16(false), unknown17(0) {
       ParamObj object = {handle, 0, 0};
       unknown00 = object;
-      unknown10 = quest;
     }
 
     bool operator==(const ParamObj &object) const {

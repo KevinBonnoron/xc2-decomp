@@ -29,6 +29,7 @@ public:
   static bool isValidBdatID(u8 *bdat, int id);
   static u8 *getItemDataFP(u8 itemType, u16 item);
   static u8 *getItemTextFP(u8 itemType, u16 item);
+  static const char *getSortKeyName();
   static void getMenuOffset(int id, MenuOffset &offset);
   static u32 getIconImageIndex(int icon);
   static void initialize();

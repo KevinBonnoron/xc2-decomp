@@ -1,6 +1,10 @@
 #include "gf/menu/adapter/gf_menu_quest_adapter.h"
 
+#include "gf/data/gf_bdat_quest.h"
+#include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_data_quest.h"
+#include "gf/data/gf_data_util.h"
+#include "gf/data/gf_object_type.h"
 #include "gf/game/quest/gf_quest_info.h"
 #include "gf/game/quest/gf_quest_manager.h"
 #include "gf/game/quest/gf_quest_task_param.h"
@@ -9,6 +13,7 @@
 #include "gf/menu/gf_menu_bdat.h"
 #include "gf/menu/gf_menu_reference_number.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
+#include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/rtti.h"
 #include "ui/plugin/ui_object_disp_plugin.h"
 #include "ui/plugin/ui_object_number_plugin.h"
@@ -452,6 +457,60 @@ bool GfMenuQuestAdapter::getParamNumber(QuestID quest, u32 type, u32 &number, u3
     }
     number = GfQuestUtil::getClearChildQuest(parent) + 1;
     max = 99;
+    return true;
+  }
+  default:
+    return false;
+  }
+}
+
+bool GfMenuQuestAdapter::getParamIcon(QuestID quest, u32 type, u32 &icon) {
+  if (quest.empty()) {
+    return false;
+  }
+  switch (type) {
+  case unknown002_3:
+  case unknown002_3 + 1:
+  case unknown002_3 + 2:
+  case unknown002_3 + 3:
+  case unknown002_3 + 4:
+  case unknown002_3 + 5:
+  case unknown002_3 + 6:
+  case unknown002_3 + 7:
+  case unknown002_3 + 8:
+  case unknown002_3 + 9:
+  case unknown002_3 + 10:
+  case unknown002_3 + 11: {
+    u64 index = type - unknown002_3;
+    mm::mtl::FixedVector<u16, 32> characters;
+    GfQuestUtil::getNeedCharacterByQuestTask(characters, quest, unknown98);
+    if (index >= characters.size() || characters[index] == 0) {
+      return false;
+    }
+
+    u32 objectType = GfDataUtil::getObjTypeByCharaId(characters[index]);
+    if (objectType - OBJECT_TYPE_DRIVER >= 2) {
+      return false;
+    }
+
+    DataParamAcc acc(objectType, characters[index], GIMMICK_TYPE_NONE);
+    if (!acc.isValid()) {
+      return false;
+    }
+
+    u32 iconData = acc.getIconData();
+    if (iconData == 0) {
+      return false;
+    }
+
+    icon = GfMenuBdat::getIconImageIndex(iconData);
+    return true;
+  }
+  case unknown002_57: {
+    u32 questIcon = QuestListAcc::get()->getListQuestIcon(quest);
+    if (questIcon != 0) {
+      icon = questIcon;
+    }
     return true;
   }
   default:

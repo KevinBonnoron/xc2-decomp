@@ -251,7 +251,12 @@ public:
   f32 unknown298; // Inferred role: color filter far ratio; original member name unknown.
   u8 _029c[0x02a0 - 0x029c];
   f32 unknown2a0; // Inferred role: toon dir light scale; original member name unknown.
-  u8 _02a4[0x0304 - 0x02a4];
+  u8 _02a4[0x02c4 - 0x02a4];
+  f32 unknown2c4; // Inferred role: outline value scale; original member name unknown.
+  u8 _02c8[0x02cc - 0x02c8];
+  f32 unknown2cc; // Inferred role: outline range end; original member name unknown.
+  f32 unknown2d0; // Inferred role: outline range start; original member name unknown.
+  u8 _02d4[0x0304 - 0x02d4];
   bool unknown304; // Inferred role: deffered color; original member name unknown.
   u8 _0305[0x0320 - 0x0305];
   unknown038 unknown320[5]; // Inferred role: g buff debug ranges; original member name unknown.
@@ -423,6 +428,9 @@ static_assert(offsetof(DrPixlPostParm, unknown298) == 0x0298, "");
 static_assert(offsetof(DrPixlPostParm, unknown270) == 0x0270, "");
 static_assert(offsetof(DrPixlPostParm, unknown274) == 0x0274, "");
 static_assert(offsetof(DrPixlPostParm, unknown2a0) == 0x02a0, "");
+static_assert(offsetof(DrPixlPostParm, unknown2c4) == 0x02c4, "");
+static_assert(offsetof(DrPixlPostParm, unknown2cc) == 0x02cc, "");
+static_assert(offsetof(DrPixlPostParm, unknown2d0) == 0x02d0, "");
 static_assert(offsetof(DrPixlPostParm, unknown304) == 0x0304, "");
 static_assert(offsetof(DrPixlPostParm, unknown320) == 0x0320, "");
 static_assert(offsetof(DrPixlPostParm, unknown360) == 0x0360, "");

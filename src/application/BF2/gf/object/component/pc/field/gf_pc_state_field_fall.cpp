@@ -1,6 +1,12 @@
 #include "gf/object/component/pc/field/gf_pc_state_field_fall.h"
 
 #include "ai/ai_state.h"
+#include "framework/object/updatable_object.h"
+#include "gf/object/component/animation/gf_com_asm.h"
+#include "gf/object/component/pc/gf_com_behavior_pc.h"
+#include "gf/object/component/pc/gf_com_property_pc.h"
+#include "gf/object/component/pc/gf_pc_asm_cmd_id_field.h"
+#include "gf/object/component/pc/gf_pc_move_util_field.h"
 #include "gf/object/component/pc/gf_pc_state_id.h"
 #include "gf/object/component/pc/gf_pc_state_util.h"
 #include "gf/object/component/pc/gf_pc_state_util_field.h"
@@ -26,5 +32,33 @@ void StateFieldFall::leave(GfComBehaviorPc *behavior, ai::State *next) {
   StateUtilField::notifyJumpEnd(*behavior);
 }
 
+void StateFieldFall::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
+  GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
+  GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
+  if (!property->unknown110_4) {
+    if (StateUtilField::isSlideSlope(*property) && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_SLOPE)) {
+      reqState(STATE_ID_FIELD_SLIDE_MOVE);
+      return;
+    }
+
+    if (StateUtilField::isBackRangeAir(*property)) {
+      MoveUtilField::updateMoveJumpBack(info, *property);
+    } else {
+      MoveUtilField::updateMoveJump(info, *property);
+    }
+    MoveUtilField::updateFallDown(info, *property);
+  } else if (StateUtilField::isSlideGroundLanding(*property) && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_SLOPE)) {
+    reqState(STATE_ID_FIELD_SLIDE_MOVE);
+  } else if (property->unknownc0 > 0.0f && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_MOVE)) {
+    StateUtilField::onLandSliding(*behavior);
+    reqState(STATE_ID_FIELD_SLIDE_LAND_BRAKE);
+  } else if (StateUtilField::isBigLandDistance(*behavior)) {
+    StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_JUMPDMG);
+    reqState(STATE_ID_FIELD_LAND_BIG);
+  } else {
+    StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_JUMP_END);
+    reqState(STATE_ID_FIELD_LAND);
+  }
+}
 } // namespace pc
 } // namespace gf

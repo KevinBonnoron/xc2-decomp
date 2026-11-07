@@ -58,5 +58,51 @@ static_assert(offsetof(ControllerSupportResultInfo, unknown04) == 0x04, "");
 
 Result ShowControllerSupport(ControllerSupportResultInfo *resultInfo, const ControllerSupportArg &arg);
 
+// Debug pad state of the SDK. The type and function names come from the import of the game
+// nn::hid::GetDebugPadState(nn::hid::DebugPadState*); the layout comes from the stack layout of
+// ml::DevPadNx::Impl::updateDebugPad (attributes at 0x08, buttons at 0x0c, right stick at 0x10, left stick at 0x18).
+// The member names are the nnheaders names (open-ead nnheaders include/nn/hid.h); mAttributes and mButtons are u32
+// because the BitFlagSet types of nnheaders are not declared here.
+struct AnalogStickState {
+  s32 mX;
+  s32 mY;
+};
+
+struct DebugPadState {
+  u64 mSamplingNumber;
+  u32 mAttributes;
+  u32 mButtons;
+  AnalogStickState mAnalogStickR;
+  AnalogStickState mAnalogStickL;
+};
+
+static_assert(offsetof(DebugPadState, mAttributes) == 0x08, "");
+static_assert(offsetof(DebugPadState, mButtons) == 0x0c, "");
+static_assert(offsetof(DebugPadState, mAnalogStickR) == 0x10, "");
+static_assert(offsetof(DebugPadState, mAnalogStickL) == 0x18, "");
+
+void GetDebugPadState(DebugPadState *state);
+
+// Vibration classes of the SDK. open-ead nnheaders include/nn/hid.h (https://github.com/open-ead/nnheaders) does not
+// declare them: the class names and member functions come from the imports of the game
+// (nn::hid::VibrationPlayer::IsLoaded() const, nn::hid::VibrationPlayer::Stop(),
+// nn::hid::VibrationNodeConnection::Disconnect()). The sizes come from the layout of ml::DevPadNx::Impl (0xd8 per
+// player entry starting at 0x18, 0x38 between the two connections of ml::DevPadNx::Impl::PadData); the members are
+// unknown.
+class VibrationPlayer {
+public:
+  bool IsLoaded() const;
+  void Stop();
+
+  u8 unknown00[0xc0]; // Inferred role: player state; original member name unknown.
+};
+
+class VibrationNodeConnection {
+public:
+  void Disconnect();
+
+  u8 unknown00[0x38]; // Inferred role: connection state; original member name unknown.
+};
+
 } // namespace hid
 } // namespace nn

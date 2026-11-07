@@ -23,15 +23,13 @@ enum {
 void GfDataQuest::registAchievementBlade(u32 achievement, u16 blade) { m_achieve2blade[achievement] = blade; }
 
 QuestID GfDataQuest::getListNextQuestA(QuestID quest) {
-  if (quest.empty()) {
-    return QuestID();
-  }
-
-  QuestID next = {0, 0};
-  u16 nextId = QuestListAcc::get()->getListNextQuestA(quest);
-  if (nextId != QUEST_NEXT_NONE && nextId != QUEST_NEXT_NONE_ALTERNATE) {
-    next.unknown00 = nextId;
-    next.unknown02 = quest.unknown02;
+  QuestID next;
+  if (!quest.empty()) {
+    u16 nextId = QuestListAcc::get()->getListNextQuestA(quest);
+    if (nextId != QUEST_NEXT_NONE && nextId != QUEST_NEXT_NONE_ALTERNATE) {
+      next.unknown00 = nextId;
+      next.unknown02 = quest.unknown02;
+    }
   }
 
   return next;
@@ -185,16 +183,14 @@ u32 GfDataQuest::getQuestCategory(QuestID quest) {
 }
 
 QuestID GfDataQuest::getListPRTQuestID(QuestID quest) {
-  if (quest.empty()) {
-    return QuestID();
-  }
-
   QuestID parent;
-  u32 parentQuest = QuestListAcc::get()->getListPRTQuestID(quest);
-  parent.unknown00 = parentQuest;
-  parent.unknown02 = quest.unknown02;
-  if (parent.unknown02 == 0) {
-    parent.unknown02 = parentQuest >> 16;
+  if (!quest.empty()) {
+    u32 parentQuest = QuestListAcc::get()->getListPRTQuestID(quest);
+    parent.unknown00 = parentQuest;
+    parent.unknown02 = quest.unknown02;
+    if (parent.unknown02 == 0) {
+      parent.unknown02 = parentQuest >> 16;
+    }
   }
 
   return parent;
@@ -217,15 +213,13 @@ u32 GfDataQuest::getListFlagCLD(QuestID quest) {
 }
 
 QuestID GfDataQuest::getListNextQuestB(QuestID quest) {
-  if (quest.empty()) {
-    return QuestID();
-  }
-
-  QuestID next = {0, 0};
-  u16 nextId = QuestListAcc::get()->getListNextQuestB(quest);
-  if (nextId != QUEST_NEXT_NONE && nextId != QUEST_NEXT_NONE_ALTERNATE) {
-    next.unknown00 = nextId;
-    next.unknown02 = quest.unknown02;
+  QuestID next;
+  if (!quest.empty()) {
+    u16 nextId = QuestListAcc::get()->getListNextQuestB(quest);
+    if (nextId != QUEST_NEXT_NONE && nextId != QUEST_NEXT_NONE_ALTERNATE) {
+      next.unknown00 = nextId;
+      next.unknown02 = quest.unknown02;
+    }
   }
 
   return next;

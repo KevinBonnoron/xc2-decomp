@@ -34,6 +34,12 @@ public:
     int unknown14; // Role and original member name unknown.
   };
 
+  struct RaffleInfo {
+    u32 unknown00; // Inferred role: number of treasure boxes; original member name unknown.
+    f32 unknown04; // Inferred role: button challenge point; original member name unknown.
+    u32 unknown08; // Inferred role: skill point; original member name unknown.
+  };
+
   struct RaffleResult {
     RaffleResult();
 
@@ -81,6 +87,7 @@ public:
   void createGfObjHandle();
   void disposeGfObjHandle();
   void disposeRaffle(bool isFadeOut);
+  void createRaffle(const RaffleInfo &info);
   void seqUpdatePopDepop(f32 deltaTime);
   void seqValidateGmkSalvageLocatorDetails(f32 deltaTime);
   void disposeTboxes(bool isFadeOut);
