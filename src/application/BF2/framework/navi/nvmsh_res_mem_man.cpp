@@ -14,10 +14,11 @@ NvmshResMemObj::NvmshResMemObj() {
 }
 
 NvmshResMemMan::~NvmshResMemMan() {
-  if (unknown00 != nullptr) {
-    mtl::MemManager::deallocate(unknown00, 0, false);
-    unknown00 = nullptr;
+  if (unknown00 == nullptr) {
+    return;
   }
+  mtl::MemManager::deallocate(unknown00, 0, false);
+  unknown00 = nullptr;
 }
 
 void NvmshResMemMan::memLcMove(void *destination, void *source, u32 size) { __builtin_memcpy(destination, source, size); }
