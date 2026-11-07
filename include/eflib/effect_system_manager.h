@@ -26,7 +26,8 @@ class SystemManager {
 public:
   // Inferred role: SendParam-sized payload of a command; original type and member names unknown. addCommand
   // (1.0.0: 0x710091a2b8) copies the first 0x14 bytes as three scalars, the 0xb0 bytes at 0x20 with a memcpy
-  // (0x710091a378), and the four words at 0xd0. The copy constructor reproduces that memcpy.
+  // (0x710091a378), and the four words at 0xd0. The copy constructor reproduces that memcpy. The typed and
+  // raw views stay opaque: the raw representation is a copy-constructor detail, not accessor naming evidence.
   union alignas(16) unknown001 {
     unknown001() : unknown00() {}
     unknown001(const unknown001 &other) {
@@ -47,8 +48,8 @@ public:
       void *unknown08;  // Inferred role: effect data; original member name unknown.
       u64 unknown08_64; // Inferred role: pack handle; original member name unknown.
     };
-    u32 unknown10;        // Inferred role: handle or create key; original member name unknown.
-    unknown001 unknown20; // Inferred role: command payload; original member name unknown.
+    u32 unknown10;      // Inferred role: handle, create key or size; original member name unknown.
+    unknown001 m_param; // Name from es_set_param/es_create; original member name unknown.
     // Inferred role: command payload; original member names unknown. The payload is read back with a
     // different member for each command type in es_command_core.
     union {
@@ -186,7 +187,7 @@ static_assert(sizeof(SystemManager::unknown001) == 0xb0, "");
 static_assert(alignof(SystemManager::unknown001) == 16, "");
 static_assert(offsetof(SystemManager::EsCommand, unknown08) == 0x08, "");
 static_assert(offsetof(SystemManager::EsCommand, unknown10) == 0x10, "");
-static_assert(offsetof(SystemManager::EsCommand, unknown20) == 0x20, "");
+static_assert(offsetof(SystemManager::EsCommand, m_param) == 0x20, "");
 static_assert(offsetof(SystemManager::EsCommand, unknownd0) == 0xd0, "");
 static_assert(offsetof(SystemManager::EsCommand, unknownd8) == 0xd8, "");
 static_assert(offsetof(SystemManager::EsCommand, unknowne0) == 0xe0, "");

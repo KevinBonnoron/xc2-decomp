@@ -26,7 +26,7 @@ class EmitterManager {
 public:
   // Inferred role: entry of the emitter table of unknown007; original type and member names unknown.
   struct unknown009 {
-    u32 unknown00; // Inferred role: emitter form; original member name unknown.
+    u32 m_emitterForm; // Name from getEmitterForm; original member name unknown.
     u8 _04[0x20 - 0x04];
   };
 

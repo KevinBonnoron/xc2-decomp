@@ -28,7 +28,7 @@ SystemManager *s_instance;
 void unknown002(SystemManager *manager, SystemManager::EsCommand &command, void *data, u32 handle, const SendParam *param) {
   command.unknown08 = data;
   command.unknown10 = handle;
-  command.unknown20.unknown00 = *param;
+  command.m_param.unknown00 = *param;
   manager->addCommand(command);
 }
 } // namespace
@@ -237,7 +237,7 @@ void SystemManager::es_set_alpha(u32 handle, f32 alpha) {
   command.unknown00 = 13;
   command.unknown08 = nullptr;
   command.unknown10 = handle;
-  command.unknown20.unknown00.unknown40.a = alpha;
+  command.m_param.unknown00.unknown40.a = alpha;
   addCommand(command);
 }
 
@@ -246,7 +246,7 @@ void SystemManager::es_set_viewnum(u32 handle, int viewnum) {
   command.unknown00 = 14;
   command.unknown08 = nullptr;
   command.unknown10 = handle;
-  command.unknown20.unknown00.unknowna3 = viewnum;
+  command.m_param.unknown00.m_viewnum = viewnum;
   addCommand(command);
 }
 
@@ -255,7 +255,7 @@ void SystemManager::es_set_category(u32 handle, u32 category) {
   command.unknown00 = 18;
   command.unknown08 = nullptr;
   command.unknown10 = handle;
-  command.unknown20.unknown00.unknown9c = category;
+  command.m_param.unknown00.m_category = category;
   addCommand(command);
 }
 
@@ -273,7 +273,7 @@ void SystemManager::es_set_speed(u32 handle, f32 speed) {
   command.unknown00 = 17;
   command.unknown08 = nullptr;
   command.unknown10 = handle;
-  command.unknown20.unknown00.unknown80 = speed;
+  command.m_param.unknown00.m_speed = speed;
   addCommand(command);
 }
 
@@ -308,7 +308,7 @@ void SystemManager::es_set_param_cas(u32 handle, const IEffectCallBack *callback
   // addCommand copies them unchanged.
   command.unknown10 = handle;
   command.unknownd0 = callback;
-  command.unknown20.unknown00 = *param;
+  command.m_param.unknown00 = *param;
   addCommand(command);
 }
 
@@ -322,7 +322,7 @@ u32 SystemManager::es_create(void *data, const SendParam *param, bool isLoop) {
   command.unknown08 = data;
   command.unknown10 = key;
   command.unknownd0_8 = isLoop;
-  command.unknown20.unknown00 = *param;
+  command.m_param.unknown00 = *param;
   addCommand(command);
   return key;
 }
@@ -336,7 +336,7 @@ u32 SystemManager::es_create(void *data, const SendParam *param, const IEffectCa
   command.unknown00 = 5;
   command.unknown08 = data;
   command.unknown10 = key;
-  command.unknown20.unknown00 = *param;
+  command.m_param.unknown00 = *param;
   command.unknownd0_8 = isLoop;
   command.unknownd8 = callback;
   command.unknowne0_1.unknown00 = unknown;
@@ -425,7 +425,7 @@ u32 SystemManager::getEmitterForm(u32 handle) {
   if (handle >= work->unknown4008.size()) {
     return 0;
   }
-  return work->unknown4008.begin()[handle].unknown00;
+  return work->unknown4008.begin()[handle].m_emitterForm;
 }
 
 void SystemManager::end() {}
