@@ -33,6 +33,43 @@ void NvmshResMemMan::releaseFreeObj(NvmshResMemObj *object) {
   }
 }
 
+// unknown001 is already the image-prefix struct in the unity unit; these inferred helpers use the next free names.
+// Inferred helper: unlinks a node from a list whose head and tail are passed by reference; original name unknown.
+static inline void unknown002(NvmshResMemObj *object, NvmshResMemObj *&head, NvmshResMemObj *&tail) {
+  if (object->unknown00 != nullptr) {
+    if (object->unknown08 != nullptr) {
+      object->unknown00->unknown08 = object->unknown08;
+      object->unknown08->unknown00 = object->unknown00;
+    } else {
+      tail = object->unknown00;
+      tail->unknown08 = nullptr;
+    }
+  } else if (object->unknown08 != nullptr) {
+    head = object->unknown08;
+    head->unknown00 = nullptr;
+  } else {
+    head = nullptr;
+    tail = nullptr;
+  }
+  object->unknown00 = nullptr;
+  object->unknown08 = nullptr;
+}
+
+// Inferred helper: appends a node at the tail of a list whose head and tail are passed by reference; original name
+// unknown.
+static inline void unknown003(NvmshResMemObj *object, NvmshResMemObj *&head, NvmshResMemObj *&tail) {
+  if (tail != nullptr) {
+    tail->unknown08 = object;
+    object->unknown00 = tail;
+    tail = object;
+  } else {
+    head = object;
+    tail = object;
+    object->unknown00 = nullptr;
+  }
+  object->unknown08 = nullptr;
+}
+
 // Clears the piece and folds it into free neighbours; descriptors of pieces merged into a neighbour return to the
 // spare list.
 void NvmshResMemMan::clearMemObj(NvmshResMemObj *object) {
@@ -41,33 +78,8 @@ void NvmshResMemMan::clearMemObj(NvmshResMemObj *object) {
 
   if (previous != nullptr && (previous->unknown10 & 1) == 0) {
     previous->unknown20 = previous->unknown20 + object->unknown20;
-    if (object->unknown00 != nullptr) {
-      if (object->unknown08 != nullptr) {
-        object->unknown00->unknown08 = object->unknown08;
-        object->unknown08->unknown00 = object->unknown00;
-      } else {
-        unknown20 = object->unknown00;
-        unknown20->unknown08 = nullptr;
-      }
-    } else if (object->unknown08 != nullptr) {
-      unknown18 = object->unknown08;
-      unknown18->unknown00 = nullptr;
-    } else {
-      unknown18 = nullptr;
-      unknown20 = nullptr;
-    }
-    object->unknown00 = nullptr;
-    object->unknown08 = nullptr;
-    if (unknown10 == nullptr) {
-      unknown08 = object;
-      unknown10 = object;
-      object->unknown00 = nullptr;
-    } else {
-      unknown10->unknown08 = object;
-      object->unknown00 = unknown10;
-      unknown10 = object;
-    }
-    object->unknown08 = nullptr;
+    unknown002(object, unknown18, unknown20);
+    unknown003(object, unknown08, unknown10);
     object = previous;
   }
 
@@ -77,34 +89,47 @@ void NvmshResMemMan::clearMemObj(NvmshResMemObj *object) {
   }
 
   object->unknown20 += next->unknown20;
-  if (next->unknown00 != nullptr) {
-    if (next->unknown08 != nullptr) {
-      next->unknown00->unknown08 = next->unknown08;
-      next->unknown08->unknown00 = next->unknown00;
-    } else {
-      unknown20 = next->unknown00;
-      unknown20->unknown08 = nullptr;
-    }
-  } else if (next->unknown08 != nullptr) {
-    unknown18 = next->unknown08;
-    unknown18->unknown00 = nullptr;
-  } else {
-    unknown18 = nullptr;
-    unknown20 = nullptr;
-  }
+  unknown002(next, unknown18, unknown20);
   next->unknown10 = 0;
-  next->unknown00 = nullptr;
-  next->unknown08 = nullptr;
-  if (unknown10 == nullptr) {
-    unknown08 = next;
-    unknown10 = next;
-    next->unknown00 = nullptr;
-  } else {
-    unknown10->unknown08 = next;
-    next->unknown00 = unknown10;
-    unknown10 = next;
+  unknown003(next, unknown08, unknown10);
+}
+
+// Returns the first free piece that fits. A split needs a spare descriptor; when none is left the search returns null
+// instead of continuing to a later exact fit.
+NvmshResMemObj *NvmshResMemMan::createFreeObj(u32 size) {
+  for (NvmshResMemObj *piece = unknown18; piece != nullptr; piece = piece->unknown08) {
+    if ((piece->unknown10 & 1) != 0) {
+      continue;
+    }
+    if (piece->unknown20 < size) {
+      continue;
+    }
+    u32 rest = piece->unknown20 - size;
+    if (rest != 0) {
+      NvmshResMemObj *spare = unknown08;
+      if (spare == nullptr) {
+        return nullptr;
+      }
+      piece->unknown20 = size;
+      spare->unknown18 = static_cast<u8 *>(piece->unknown18) + size;
+      spare->unknown20 = rest;
+      unknown002(spare, unknown08, unknown10);
+      spare->unknown10 = 0;
+      NvmshResMemObj *next = piece->unknown08;
+      piece->unknown08 = spare;
+      spare->unknown00 = piece;
+      if (next != nullptr) {
+        spare->unknown08 = next;
+        next->unknown00 = spare;
+      } else {
+        spare->unknown08 = nullptr;
+        unknown20 = spare;
+      }
+    }
+    piece->unknown10 |= 1;
+    return piece;
   }
-  next->unknown08 = nullptr;
+  return nullptr;
 }
 
 void NvmshResMemMan::moveMemoryObject(NvmshResMemObj *destination, NvmshResMemObj *source) {

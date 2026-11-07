@@ -18,7 +18,8 @@ public:
 
   NvmshResMemObj *unknown00; // Inferred role: previous element; original member name unknown.
   NvmshResMemObj *unknown08; // Inferred role: next element; original member name unknown.
-  u32 unknown10;             // Inferred role: state flags, bit 0 when the block is in use; original member name unknown.
+  u32 unknown10;             // Inferred role: state flags; bit 0 marks the piece in use and bit 2 marks moved data, cleared after
+                             // resetNavi; original member name unknown.
   u8 _14[4];
   void *unknown18; // Inferred role: data pointer; original member name unknown.
   u32 unknown20;   // Inferred role: data size; original member name unknown.
@@ -31,7 +32,8 @@ static_assert(offsetof(NvmshResMemObj, unknown18) == 0x18, "");
 static_assert(offsetof(NvmshResMemObj, unknown20) == 0x20, "");
 static_assert(sizeof(NvmshResMemObj) == 0x28, "");
 
-// Owns the navigation mesh memory block, its memory piece list and its spare descriptor list.
+// Owns the descriptor pool for the navigation mesh memory block and its piece lists; the caller buffer is only
+// referenced.
 class NvmshResMemMan {
 public:
   NvmshResMemMan(u8 *buffer, int size, mtl::ALLOC_HANDLE handle);

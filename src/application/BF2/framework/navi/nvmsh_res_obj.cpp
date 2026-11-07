@@ -85,6 +85,33 @@ void NvmshResData::releaseNavi(NvmshResMemMan *memMan) {
   }
 }
 
+void NvmshResData::update(NvmshResMemMan *memMan) {
+  if ((unknown00 & 1) == 0) {
+    return;
+  }
+
+  if ((unknown00 & 4) != 0) {
+    if (++unknown04 >= 4) {
+      releaseNavi(memMan);
+    }
+  } else if ((unknown00 & 0x10) != 0) {
+    unknown04 = 0;
+    if ((unknownc8->unknown10 & 4) != 0) {
+      resetNavi();
+      unknownc8->unknown10 &= ~4;
+    }
+  } else if (++unknown04 >= 0x10) {
+    unknown04 = 0;
+    unknown00 |= 4;
+  } else {
+    if ((unknownc8->unknown10 & 4) != 0) {
+      resetNavi();
+      unknownc8->unknown10 &= ~4;
+    }
+  }
+  unknown00 &= ~0x10;
+}
+
 void NvmshResData::releaseCall() {
   unknown00 |= 4;
   unknown04 = 0;
