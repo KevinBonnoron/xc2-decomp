@@ -1,10 +1,8 @@
 #include <new>
 
-#include "eflib/effect_callback.h"
-#include "eflib/effect_send_param.h"
 #include "eflib/effect_system_manager.h"
 #include "mm/mm_std_base.h"
-#include "mm_math/mm_col4.h"
+#include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mtl/alloc_handle.h"
 #include "ptlib/emitter/particle_emitter_manager.h"
@@ -16,21 +14,10 @@
 #include "ptlib/renderer/screen_render_manager.h"
 #include "types.h"
 
-namespace mm {
-struct Mat44;
-} // namespace mm
-
 namespace effect {
+
 namespace {
 SystemManager *s_instance;
-
-// Inferred role: fill the payload shared by the es_set_param-family commands; original name unknown.
-void unknown002(SystemManager *manager, SystemManager::EsCommand &command, void *data, u32 handle, const SendParam *param) {
-  command.unknown08 = data;
-  command.unknown10 = handle;
-  command.m_param.unknown00 = *param;
-  manager->addCommand(command);
-}
 } // namespace
 
 SystemManager *SystemManager::get() {
@@ -168,209 +155,6 @@ void SystemManager::es_free(void *data) {
 
 SystemManager::CommandList *SystemManager::getCommand(u32 index) { return index == 0 ? &unknown220[0] : &unknown220[1]; }
 
-void SystemManager::addCommand(const EsCommand &command) {
-  if (unknown7824f != 0) {
-    ptlib::efMsg("addCommandError!!");
-    return;
-  }
-  getCommand(unknown7824c)->push_back(command);
-}
-
-void SystemManager::es_pack_free(u64 pack) {
-  EsCommand command;
-  command.unknown00 = 22;
-  command.unknown08_64 = pack;
-  addCommand(command);
-}
-
-void *SystemManager::es_pack_regist(void *data, u32 size) {
-  EsCommand command;
-  command.unknown00 = 21;
-  command.unknown08 = data;
-  command.unknown10 = size;
-  addCommand(command);
-  return data;
-}
-
-void *SystemManager::es_regist(void *data, u32 size) {
-  EsCommand command;
-  command.unknown00 = 20;
-  command.unknown08 = data;
-  command.unknown10 = size;
-  addCommand(command);
-  return data;
-}
-
-u32 SystemManager::es_create(void *data, bool isLoop) {
-  if (data == nullptr) {
-    return 0;
-  }
-  u32 key = ptlib::HashManager::get()->get_create_key();
-  EsCommand command;
-  command.unknown00 = 2;
-  command.unknown08 = data;
-  command.unknown10 = key;
-  command.unknownd0_8 = isLoop;
-  addCommand(command);
-  return key;
-}
-
-u32 SystemManager::es_create_cas(void *data, const IEffectCallBack *callback, int unknown, f32 value, bool isLoop) {
-  if (data == nullptr) {
-    return 0;
-  }
-  u32 key = ptlib::HashManager::get()->get_create_key();
-  EsCommand command;
-  command.unknown00 = 4;
-  command.unknown08 = data;
-  command.unknown10 = key;
-  command.unknownd0_8 = isLoop;
-  command.unknownd8 = callback;
-  command.unknowne0_0.unknown00 = unknown;
-  command.unknowne0_0.unknown04 = value;
-  addCommand(command);
-  return key;
-}
-
-void SystemManager::es_set_alpha(u32 handle, f32 alpha) {
-  EsCommand command;
-  command.unknown00 = 13;
-  command.unknown08 = nullptr;
-  command.unknown10 = handle;
-  command.m_param.unknown00.unknown40.a = alpha;
-  addCommand(command);
-}
-
-void SystemManager::es_set_viewnum(u32 handle, int viewnum) {
-  EsCommand command;
-  command.unknown00 = 14;
-  command.unknown08 = nullptr;
-  command.unknown10 = handle;
-  command.m_param.unknown00.m_viewnum = viewnum;
-  addCommand(command);
-}
-
-void SystemManager::es_set_category(u32 handle, u32 category) {
-  EsCommand command;
-  command.unknown00 = 18;
-  command.unknown08 = nullptr;
-  command.unknown10 = handle;
-  command.m_param.unknown00.m_category = category;
-  addCommand(command);
-}
-
-void SystemManager::es_set_disp(u32 handle, int isDisp) {
-  EsCommand command;
-  command.unknown00 = 16;
-  command.unknown08 = nullptr;
-  command.unknown10 = handle;
-  command.unknownd0_32 = isDisp;
-  addCommand(command);
-}
-
-void SystemManager::es_set_speed(u32 handle, f32 speed) {
-  EsCommand command;
-  command.unknown00 = 17;
-  command.unknown08 = nullptr;
-  command.unknown10 = handle;
-  command.m_param.unknown00.m_speed = speed;
-  addCommand(command);
-}
-
-void SystemManager::es_set_param(u32 handle, const SendParam *param) {
-  EsCommand command;
-  command.unknown00 = 9;
-  unknown002(this, command, nullptr, handle, param);
-}
-
-void SystemManager::es_set_param(void *data, const SendParam *param) {
-  EsCommand command;
-  command.unknown00 = 9;
-  unknown002(this, command, data, 0, param);
-}
-
-void SystemManager::es_set_param_pos_only(u32 handle, const SendParam *param) {
-  EsCommand command;
-  command.unknown00 = 6;
-  unknown002(this, command, nullptr, handle, param);
-}
-
-void SystemManager::es_set_param_pos_only2(u32 handle, const SendParam *param) {
-  EsCommand command;
-  command.unknown00 = 7;
-  unknown002(this, command, nullptr, handle, param);
-}
-
-void SystemManager::es_set_param_cas(u32 handle, const IEffectCallBack *callback, const SendParam *param) {
-  EsCommand command;
-  command.unknown00 = 11;
-  // The game leaves the fields this command does not set (unknown08, unknownd8, unknowne0) unset;
-  // addCommand copies them unchanged.
-  command.unknown10 = handle;
-  command.unknownd0 = callback;
-  command.m_param.unknown00 = *param;
-  addCommand(command);
-}
-
-u32 SystemManager::es_create(void *data, const SendParam *param, bool isLoop) {
-  if (data == nullptr) {
-    return 0;
-  }
-  u32 key = ptlib::HashManager::get()->get_create_key();
-  EsCommand command;
-  command.unknown00 = 3;
-  command.unknown08 = data;
-  command.unknown10 = key;
-  command.unknownd0_8 = isLoop;
-  command.m_param.unknown00 = *param;
-  addCommand(command);
-  return key;
-}
-
-u32 SystemManager::es_create(void *data, const SendParam *param, const IEffectCallBack *callback, int unknown, int category, bool isLoop) {
-  if (data == nullptr) {
-    return 0;
-  }
-  u32 key = ptlib::HashManager::get()->get_create_key();
-  EsCommand command;
-  command.unknown00 = 5;
-  command.unknown08 = data;
-  command.unknown10 = key;
-  command.m_param.unknown00 = *param;
-  command.unknownd0_8 = isLoop;
-  command.unknownd8 = callback;
-  command.unknowne0_1.unknown00 = unknown;
-  command.unknowne0_1.unknown04 = category;
-  addCommand(command);
-  return key;
-}
-
-void SystemManager::es_remove_cas(void *callback) {
-  if (callback == nullptr) {
-    return;
-  }
-  EsCommand command;
-  command.unknown00 = 19;
-  command.unknown08 = nullptr;
-  command.unknown10 = 0;
-  command.unknownd0 = callback;
-  command.unknownd8_32 = -1;
-  addCommand(command);
-}
-
-void SystemManager::es_fade_core(void *data, u32 handle, int frame) {
-  if (data == nullptr && handle == 0) {
-    return;
-  }
-  EsCommand command;
-  command.unknown00 = 19;
-  command.unknown08 = data;
-  command.unknown10 = handle;
-  command.unknownd0 = nullptr;
-  command.unknownd8_32 = frame;
-  addCommand(command);
-}
-
 f32 SystemManager::getGlobalSpeed() { return unknown78240[unknown7824c]; }
 
 bool SystemManager::es_is_loop(void *data) const { return static_cast<ptlib::FxHeader *>(data)->unknown09 != 0; }
@@ -381,12 +165,6 @@ const char *SystemManager::es_get_name(void *data) { return static_cast<ptlib::F
 
 void SystemManager::log() { ptlib::efMsg("%04x log()", unknown7824e); }
 
-SystemManager::CommandList *SystemManager::getCommandPtr(u32 index) { return index == 0 ? &unknown220[0] : &unknown220[1]; }
-
-void SystemManager::setGlobalSpeed(f32 speed) { unknown78240[unknown7824c == 0] = speed; }
-
-void SystemManager::setCategorySpd(u32 category, f32 speed) { ptlib::emitter::EmitterManager::getPtr()->unknown1700[category] = speed; }
-
 void SystemManager::kizunaTail() {
   ptlib::emitter::EmitterManager *manager = ptlib::emitter::EmitterManager::getPtr();
   if (manager == nullptr) {
@@ -394,10 +172,17 @@ void SystemManager::kizunaTail() {
   }
   u32 src = manager->unknown1790;
   u32 dst = ~src & 1;
+  // The game's FixedArray<KizunaWork, 8> constructor initializes both parity arrays before this copy.
   for (u32 i = 0; i < 8; i++) {
     manager->unknown00[dst][i] = manager->unknown00[src][i];
   }
 }
+
+SystemManager::CommandList *SystemManager::getCommandPtr(u32 index) { return index == 0 ? &unknown220[0] : &unknown220[1]; }
+
+void SystemManager::setGlobalSpeed(f32 speed) { unknown78240[unknown7824c == 0] = speed; }
+
+void SystemManager::setCategorySpd(u32 category, f32 speed) { ptlib::emitter::EmitterManager::getPtr()->unknown1700[category] = speed; }
 
 void SystemManager::getNum(u32 &emitterNum, u32 &particleNum, u32 &drawNum) {
   ptlib::emitter::EmitterManager *manager = ptlib::emitter::EmitterManager::get();
@@ -457,17 +242,5 @@ int SystemManager::es_getDeadFlag(u32 handle) {
 void SystemManager::lastRender(const ptlib::DrDrawWorkInfoEF *info) {}
 
 void SystemManager::finalRender(const ptlib::DrDrawWorkInfoEF *info) { testRender(info); }
-
-void SystemManager::getEFP(IEffectCallBack *callback, int, int, const char *name, mm::Mat44 &matrix, f32 *scale) {
-  if (callback == nullptr) {
-    return;
-  }
-  if (name != nullptr) {
-    callback->getEfpMat(matrix, name);
-  }
-  if (scale != nullptr) {
-    *scale *= callback->getMdlScl();
-  }
-}
 
 } // namespace effect

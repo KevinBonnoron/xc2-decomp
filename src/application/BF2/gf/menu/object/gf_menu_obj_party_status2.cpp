@@ -18,10 +18,10 @@ void GfMenuObjPartyStatus2::sendEvent(u32 handle, u32 type, u32 param) {
   }
 }
 
-void GfMenuObjPartyStatus2::close() { unknown142(unknown001, GfMenuTypes::unknown003_34); }
+void GfMenuObjPartyStatus2::close() { GF_MENU_REQUEST_EVENT(unknown001, GfMenuTypes::unknown003_34); }
 
 void GfMenuObjPartyStatus2::disp(bool isDisp) { unknown154(unknown001, isDisp); }
 
-void GfMenuObjPartyStatus2::open() { unknown142(unknown001, GfMenuTypes::unknown003_33); }
+void GfMenuObjPartyStatus2::open() { GF_MENU_REQUEST_EVENT(unknown001, GfMenuTypes::unknown003_33); }
 
 } // namespace gf

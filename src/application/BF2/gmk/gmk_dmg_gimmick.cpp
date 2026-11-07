@@ -209,7 +209,7 @@ void GmkDmgEffect::applyEffectParam() const {
   param.unknown00.rows[3][1] += position.y;
   param.unknown00.rows[3][2] += position.z;
   param.unknown60 = unknown08.unknown08->unknown20;
-  param.m_viewnum = unknown48 && debugIsDispGmkType(getGmkType());
+  param.unknowna3 = unknown48 && debugIsDispGmkType(getGmkType());
   fw::EffectManager::get()->setParam(unknown4c, &param);
 }
 

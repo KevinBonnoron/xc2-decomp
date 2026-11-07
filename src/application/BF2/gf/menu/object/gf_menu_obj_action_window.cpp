@@ -29,6 +29,6 @@ void GfMenuObjActionWindow::disp(bool disp) {
   }
 }
 
-void GfMenuObjActionWindow::close() { unknown142(unknown001, unknown002); }
+void GfMenuObjActionWindow::close() { GF_MENU_REQUEST_EVENT(unknown001, unknown002); }
 
 } // namespace gf

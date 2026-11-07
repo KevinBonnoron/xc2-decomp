@@ -1,6 +1,6 @@
 #pragma once
 #include <new> // IWYU pragma: keep
-
+// Inferred macro name; macros leave no trace in the binary.
 #define GF_STATE_CLASS(name, Owner)                                                                                                                                                                    \
 public:                                                                                                                                                                                                \
   static ai::State *create(void *buffer) { return new (buffer) name; }                                                                                                                                 \

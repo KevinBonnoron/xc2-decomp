@@ -5,7 +5,7 @@
 #include "ssd/ssd_result.h"
 #include "types.h"
 
-// Probably the library's assert macro; the original name is unknown.
+// Probably the library's assert macro. Inferred macro name; macros leave no trace in the binary.
 #define SSD_ASSERT(condition, format, text, file, line, ...)                                                                                                                                           \
   do {                                                                                                                                                                                                 \
     if (!(condition)) {                                                                                                                                                                                \

@@ -9,6 +9,7 @@
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_property.h"
 #include "gf/object/gf_obj_util.h"
+#include "mm_mtl/unique_ptr.h"
 
 namespace gf {
 
@@ -24,15 +25,15 @@ u32 GfEffectGround::getWaterHeightStateImpl(f32 height, f32 first, f32 second) {
 
 bool GfEffectGround::isOnWaterSurface(const GfComEffectCaster *caster) {
   GfComProperty *property = static_cast<GfObj *>(caster->unknown08)->getComponent<GfComProperty>();
-  if (property->unknown28 != nullptr) {
-    return property->unknown28->unknown2d0 & 1;
+  if (property->unknown28.get() != nullptr) {
+    return property->unknown28.get()->unknown2d0 & 1;
   }
   return false;
 }
 
 u32 GfEffectGround::getWaterHeightState(const GfComEffectCaster *caster) {
   GfComProperty *property = static_cast<GfObj *>(caster->unknown08)->getComponent<GfComProperty>();
-  GfEnvProperty *env = property->unknown28;
+  GfEnvProperty *env = property->unknown28.get();
   if (env != nullptr && (env->unknown2d0 & 1)) {
     return getWaterHeightStateImpl(env->unknown2b4, caster->unknown24, caster->unknown28);
   }

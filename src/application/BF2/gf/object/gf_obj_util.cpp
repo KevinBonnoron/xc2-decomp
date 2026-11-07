@@ -61,6 +61,7 @@
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/intrusive_list.h"
 #include "mm_mtl/intrusive_ptr.h"
+#include "mm_mtl/unique_ptr.h"
 #include "mm_mtl/vector.h"
 #include "scn/scn_obj_acc.h"
 
@@ -722,7 +723,7 @@ u32 GfObjUtil::getLimitHP(GF_OBJ_HANDLE *handle) {
   GfObj *obj = getObj(handle);
   if (obj != nullptr) {
     GfComProperty *property = obj->getComponent<GfComProperty>();
-    if (property != nullptr && property->unknown10 != nullptr) {
+    if (property != nullptr && property->unknown10.get() != nullptr) {
       return property->unknown10->unknown14;
     }
   }
@@ -744,7 +745,7 @@ bool GfObjUtil::testInvincible(GF_OBJ_HANDLE *handle) {
   GfObj *obj = getObj(handle);
   if (obj != nullptr) {
     GfComProperty *property = obj->getComponent<GfComProperty>();
-    if (property != nullptr && property->unknown10 != nullptr) {
+    if (property != nullptr && property->unknown10.get() != nullptr) {
       invincible = property->unknown10->unknown18;
       isFound = true;
     }
@@ -757,8 +758,8 @@ void GfObjUtil::setInvincibleForDebug(GF_OBJ_HANDLE *handle, bool invincible) {
   GfObj *obj = getObj(handle);
   if (obj != nullptr) {
     GfComProperty *property = obj->getComponent<GfComProperty>();
-    if (property != nullptr && property->unknown30 != nullptr) {
-      property->unknown30->invincible = invincible;
+    if (property != nullptr && property->unknown30.get() != nullptr) {
+      property->unknown30.get()->invincible = invincible;
     }
   }
 }
@@ -769,8 +770,8 @@ bool GfObjUtil::testInvincibleForDebug(GF_OBJ_HANDLE *handle) {
   GfObj *obj = getObj(handle);
   if (obj != nullptr) {
     GfComProperty *property = obj->getComponent<GfComProperty>();
-    if (property != nullptr && property->unknown30 != nullptr) {
-      invincible = property->unknown30->invincible;
+    if (property != nullptr && property->unknown30.get() != nullptr) {
+      invincible = property->unknown30.get()->invincible;
       isFound = true;
     }
   }
@@ -782,8 +783,8 @@ void GfObjUtil::setDisableFallDeadForDebug(GF_OBJ_HANDLE *handle, bool disableFa
   GfObj *obj = getObj(handle);
   if (obj != nullptr) {
     GfComProperty *property = obj->getComponent<GfComProperty>();
-    if (property != nullptr && property->unknown30 != nullptr) {
-      property->unknown30->disableFallDead = disableFallDead;
+    if (property != nullptr && property->unknown30.get() != nullptr) {
+      property->unknown30.get()->disableFallDead = disableFallDead;
     }
   }
 }
@@ -794,8 +795,8 @@ bool GfObjUtil::testDisableFallDeadForDebug(GF_OBJ_HANDLE *handle) {
   GfObj *obj = getObj(handle);
   if (obj != nullptr) {
     GfComProperty *property = obj->getComponent<GfComProperty>();
-    if (property != nullptr && property->unknown30 != nullptr) {
-      disableFallDead = property->unknown30->disableFallDead;
+    if (property != nullptr && property->unknown30.get() != nullptr) {
+      disableFallDead = property->unknown30.get()->disableFallDead;
       isFound = true;
     }
   }
@@ -817,7 +818,7 @@ bool GfObjUtil::testDisableAutoHeal(GF_OBJ_HANDLE *handle) {
   GfObj *obj = getObj(handle);
   if (obj != nullptr) {
     GfComProperty *property = obj->getComponent<GfComProperty>();
-    if (property != nullptr && property->unknown10 != nullptr) {
+    if (property != nullptr && property->unknown10.get() != nullptr) {
       disableAutoHeal = property->unknown10->unknown1a;
       isFound = true;
     }
@@ -835,7 +836,7 @@ u32 GfObjUtil::getHp(GF_OBJ_HANDLE *handle) {
   GfObj *obj = getObj(handle);
   if (obj != nullptr) {
     GfComProperty *property = obj->getComponent<GfComProperty>();
-    if (property != nullptr && property->unknown10 != nullptr) {
+    if (property != nullptr && property->unknown10.get() != nullptr) {
       return property->unknown10->unknown10;
     }
   }

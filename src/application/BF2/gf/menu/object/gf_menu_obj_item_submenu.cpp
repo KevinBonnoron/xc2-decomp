@@ -35,6 +35,6 @@ int GfMenuObjItemSubmenu::setFadeOut(u32 handle, bool unknown) {
   return ctrl;
 }
 
-void GfMenuObjItemSubmenu::returnItemSubMenu() { unknown142(unknown001, unknown002); }
+void GfMenuObjItemSubmenu::returnItemSubMenu() { GF_MENU_REQUEST_EVENT(unknown001, unknown002); }
 
 } // namespace gf

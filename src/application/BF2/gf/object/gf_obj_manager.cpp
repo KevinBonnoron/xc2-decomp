@@ -2,6 +2,9 @@
 
 #include "gf/asset/gf_asset_multi_bind.h"
 #include "gf/data/gf_object_type.h"
+#include "gf/gf_allocator.h"
+#include "gf/gf_manager.h"
+#include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
@@ -11,6 +14,61 @@ namespace gf {
 
 GfObjManager *GfObjManager::s_pThis;
 mm::mtl::FixedList<GfObjManager::ObjListener, 256> GfObjManager::m_aListenerObj;
+
+GfObjManager::~GfObjManager() { s_pThis = nullptr; }
+
+void GfObjManager::build(const GfSetupParam &param) {
+  // __LINE__ must be 81 as in the original file: it is the line argument of the allocation.
+#line 81
+  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfObjManager(param);
+}
+
+void GfObjManager::destroy() {
+  s_pThis->finalize();
+  if (s_pThis != nullptr) {
+    delete s_pThis;
+    s_pThis = nullptr;
+  }
+  GfSleep(10);
+}
+
+void GfObjManager::finalize() {
+  requestDestroyAll();
+  while (unknown420240.size() != 0 || unknown432260.size() != 0 || unknown44d2a0.size() != 0 || unknown483320.size() != 0) {
+    GfSleep(1);
+  }
+  GfObjLayerSpeed::finalize();
+  GfEvent::removeEventCallback(this);
+  unknown10 = false;
+}
+
+void GfObjManager::update(const fw::UpdateInfo &info) {
+  checkLoadingAndCreate(INVALID_HANDLE);
+  checkTerminate();
+  applyModelLayerPauseSpeed();
+}
+
+bool GfObjManager::reloadForDebug(GF_OBJ_HANDLE *, bool) { return false; }
+
+void GfObjManager::gevMapjump(GEV event, const MapjumpCallbackInfo &info) {
+  if (event == GEV_MAPJUMP_DESTROY_FIELD) {
+    unknown484a28 = true;
+    for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096>::iterator it = unknown420240.begin(); it != unknown420240.end(); ++it) {
+      GfObjUtil::applyExecUpdate(*it);
+    }
+    for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 2048>::iterator it = unknown432260.begin(); it != unknown432260.end(); ++it) {
+      GfObjUtil::applyExecUpdate(*it);
+    }
+  } else if (event == GEV_MAPJUMP_FADEIN) {
+    unknown484a28 = false;
+    for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096>::iterator it = unknown420240.begin(); it != unknown420240.end(); ++it) {
+      GfObjUtil::applyExecUpdate(*it);
+    }
+    for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 2048>::iterator it = unknown432260.begin(); it != unknown432260.end(); ++it) {
+      GfObjUtil::applyExecUpdate(*it);
+    }
+  }
+}
 
 void GfObjManager::addListener(IGfObjListener *listener, IGfObjListener::OBJEVT event) {
   ObjListener objListener = {listener, event};
@@ -240,7 +298,7 @@ bool GfObjManager::isEmptyObj() const {
   if (unknown44d2a0.size() != 0) {
     return false;
   }
-  return unknown484538 == 0;
+  return unknown483320.size() == 0;
 }
 
 bool GfObjManager::hasReloadObjForDebug() { return false; }

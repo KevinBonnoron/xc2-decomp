@@ -11,6 +11,13 @@ void GfGameCamera::clear() {}
 
 void GfGameCamera::setCameraControlType(int type) { GfEvent::callCameraControl(type); }
 
+bool GfGameCamera::isInitialized() {
+  if (get() != nullptr) {
+    return get()->unknown20;
+  }
+  return false;
+}
+
 } // namespace gf
 
 template mm::mtl::PtrSingleton<gf::GfGameCamera>::~PtrSingleton();

@@ -2,10 +2,12 @@
 #include "gf/menu/gf_menu_object.h"
 
 namespace gf {
+class GfMenuCallContext;
 
 class GfMenuObjBladeChange : public GfMenuObject {
 public:
   static void close();
+  static void startChainAttack(GfMenuCallContext *context);
   static void exitChainAttack();
   static void open();
   static void pushGroupUp();

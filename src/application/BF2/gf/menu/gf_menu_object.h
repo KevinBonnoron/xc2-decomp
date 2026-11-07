@@ -142,17 +142,28 @@ inline void unknown141(u32 call, u16 type, u32 param0, u32 param1) {
   }
 }
 
-// Inferred helper: requests an event on the object attached to a call unless it is terminating; original name unknown.
-inline void unknown142(u32 call, u16 type) {
-  u32 handle = GfMenuObject::getAttachedObject(call);
-  if (ui::UIObjectAcc(handle).isValid()) {
-    if (!ui::UIObjectAcc(handle).isTerm()) {
-      ui::EventData event;
-      event.unknown00 = type;
-      ui::UIManager::get()->requestObjectEvent(handle, event, 0.0f);
-    }
-  }
-}
+// Requests an event on the object attached to a call unless it is terminating, after the given assignments to the event
+// (event_) have set its parameters; the callers use the wrappers below. Inferred macro names; macros leave no trace in the
+// binary. Macros rather than inline functions: the game expands this block in every caller, and as a function its inline
+// cost reaches Clang 3.9's threshold once ui::EventData has its 8-aligned 64-bit slot at 0x10.
+#define GF_MENU_REQUEST_EVENT_WITH(call, type, assignments)                                                                                                                                            \
+  do {                                                                                                                                                                                                 \
+    u32 handle_ = ::gf::GfMenuObject::getAttachedObject(call);                                                                                                                                         \
+    if (::ui::UIObjectAcc(handle_).isValid()) {                                                                                                                                                        \
+      if (!::ui::UIObjectAcc(handle_).isTerm()) {                                                                                                                                                      \
+        ::ui::EventData event_;                                                                                                                                                                        \
+        event_.unknown00 = type;                                                                                                                                                                       \
+        assignments ::ui::UIManager::get()->requestObjectEvent(handle_, event_, 0.0f);                                                                                                                 \
+      }                                                                                                                                                                                                \
+    }                                                                                                                                                                                                  \
+  } while (0)
+
+// The event with only its type, or with its first N parameters set (the others keep the constructor's zero).
+#define GF_MENU_REQUEST_EVENT(call, type) GF_MENU_REQUEST_EVENT_WITH(call, type, )
+#define GF_MENU_REQUEST_EVENT1(call, type, p0) GF_MENU_REQUEST_EVENT_WITH(call, type, event_.unknown08 = p0;)
+#define GF_MENU_REQUEST_EVENT2(call, type, p0, p1) GF_MENU_REQUEST_EVENT_WITH(call, type, event_.unknown08 = p0; event_.unknown0c = p1;)
+#define GF_MENU_REQUEST_EVENT3(call, type, p0, p1, p2) GF_MENU_REQUEST_EVENT_WITH(call, type, event_.unknown08 = p0; event_.unknown0c = p1; event_.unknown10 = p2;)
+#define GF_MENU_REQUEST_EVENT4(call, type, p0, p1, p2, p3) GF_MENU_REQUEST_EVENT_WITH(call, type, event_.unknown08 = p0; event_.unknown0c = p1; event_.unknown10 = p2; event_.unknown14 = p3;)
 
 // Inferred helper: sends an event to the object attached to a call unless it is terminating, true when sent; original name unknown.
 inline bool unknown143(u32 call, u16 type) {
@@ -170,6 +181,17 @@ inline bool unknown143(u32 call, u16 type) {
 
 // Inferred helper: sends an event to the object attached to a call; original name unknown.
 inline void unknown144(u32 call, u16 type) { unknown141(call, type, 0, 0); }
+
+// Inferred helper: sends an event with only its type to the object attached to a call (parameters left to the event's
+// constructor, unlike unknown144); original name unknown.
+inline void unknown155(u32 call, u16 type) {
+  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(call));
+  if (acc.isValid()) {
+    ui::EventData event;
+    event.unknown00 = type;
+    GfMenuObject::sendEvent(acc.unknown10, event, 0.0f);
+  }
+}
 
 // Inferred helper: requests an event on the object attached to a call unless it is terminating; original name unknown.
 inline void unknown145(u32 call, u16 type) {
@@ -233,6 +255,50 @@ inline void unknown150(u32 call, u16 type, bool param) {
     event.unknown08 = param;
     event.unknown0c = 0;
     GfMenuObject::sendEvent(acc.unknown10, event, 0.0f);
+  }
+}
+
+// Inferred helper: sends an event with a 16-bit parameter to the object attached to a call; original name unknown.
+inline void unknown156(u32 call, u16 type, u16 param) {
+  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(call));
+  if (acc.isValid()) {
+    ui::EventData event;
+    event.unknown0c = 0;
+    event.unknown00 = type;
+    event.unknown08_u16 = param;
+    event.unknown0a = 0;
+    GfMenuObject::sendEvent(acc.unknown10, event, 0.0f);
+  }
+}
+
+// Inferred helper: sends an event with its first parameter to the object attached to a call (second parameter left to the
+// event's constructor, unlike unknown141); original name unknown.
+inline void unknown157(u32 call, u16 type, u32 param) {
+  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(call));
+  if (acc.isValid()) {
+    ui::EventData event;
+    event.unknown00 = type;
+    event.unknown08 = param;
+    GfMenuObject::sendEvent(acc.unknown10, event, 0.0f);
+  }
+}
+
+// Inferred helper: requests an event with its first parameter on a UI object after a delay (second parameter left to the
+// event's constructor, unlike unknown140); original name unknown.
+inline void unknown158(u32 handle, u16 type, u32 param, f32 delay) {
+  ui::EventData event;
+  event.unknown00 = type;
+  event.unknown08 = param;
+  ui::UIManager::get()->requestObjectEvent(handle, event, delay);
+}
+
+// Inferred helper: requests an event with a parameter on the object attached to a call unless it is terminating; original name unknown.
+inline void unknown159(u32 call, u16 type, u32 param) {
+  u32 handle = GfMenuObject::getAttachedObject(call);
+  if (ui::UIObjectAcc(handle).isValid()) {
+    if (!ui::UIObjectAcc(handle).isTerm()) {
+      unknown140(handle, type, param, 0.0f);
+    }
   }
 }
 

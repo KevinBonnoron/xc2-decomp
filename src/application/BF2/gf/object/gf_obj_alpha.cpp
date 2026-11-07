@@ -5,6 +5,7 @@
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_util.h"
 #include "mm_math/mm_math.h"
+#include "mm_mtl/unique_ptr.h"
 
 namespace gf {
 
@@ -47,8 +48,8 @@ void GfObjAlpha::updateCamera(GF_OBJ_HANDLE *handle, f32 deltaTime, bool isForce
 bool GfObjAlpha::isNearCamera(const GfObjAcc &acc) { return acc.isCollideModelClip(); }
 
 f32 GfObjAlpha::getTotalAlpha(const GfComProperty *property) {
-  if (property != nullptr && property->unknown20 != nullptr) {
-    return property->unknown20->unknown18;
+  if (property != nullptr && property->unknown20.get() != nullptr) {
+    return property->unknown20.get()->unknown18;
   }
 
   return 1.0f;

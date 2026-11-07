@@ -19,7 +19,11 @@ void GfMenuObjOpeningTelop::closeCenter() { unknown144(unknown001, GfMenuTypes::
 
 void GfMenuObjOpeningTelop::openLeft(u32 telop) { unknown141(unknown001, GfMenuTypes::unknown003_33, unknown002_1, telop); }
 
+void GfMenuObjOpeningTelop::closeLeft() { unknown157(unknown001, GfMenuTypes::unknown003_34, unknown002_1); }
+
 void GfMenuObjOpeningTelop::openRight(u32 telop) { unknown141(unknown001, GfMenuTypes::unknown003_33, unknown002_2, telop); }
+
+void GfMenuObjOpeningTelop::closeRight() { unknown157(unknown001, GfMenuTypes::unknown003_34, unknown002_2); }
 
 void GfMenuObjOpeningTelop::finalize() { GfMenuObject::finalize(); }
 

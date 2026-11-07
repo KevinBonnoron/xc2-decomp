@@ -666,3 +666,5 @@ GF_OBJ_HANDLE *GfMenuGfObjAdapter::ReferenceConverter::getGfObjHandle() {
 }
 
 } // namespace gf
+
+template bool mm::mtl::Delegate<bool(gf::GF_OBJ_HANDLE *)>::memberFuncInvoker<gf::GfMenuGfObjAdapter>(const mm::mtl::Delegate<bool(gf::GF_OBJ_HANDLE *)> *, gf::GF_OBJ_HANDLE *);

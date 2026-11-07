@@ -54,6 +54,12 @@ public:
   static void log(ALLOC_HANDLE handle, bool isDetail, MemoryInfo *info);
   static bool getMemoryInfo(ALLOC_HANDLE handle, MemoryInfo *info);
   static const char *getName(ALLOC_HANDLE handle);
+
+private:
+  // The element size comes from FixedVector<HandleRegion, 512> (0x4000 bytes of storage); the members are not decompiled yet.
+  struct HandleRegion {
+    u8 unknown00[0x20]; // Inferred role: opaque storage of one region record; original member name unknown.
+  };
 };
 
 } // namespace mtl

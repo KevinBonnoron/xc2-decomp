@@ -2,7 +2,9 @@
 
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
+#include "mm_math/mm_rect.h"
 #include "types.h"
+#include "ui/event/ui_event_data.h"
 #include "ui/plugin/ui_object_fit_plugin.h"
 #include "ui/ui_object_acc.h"
 #include "ui/ui_util.h"
@@ -37,6 +39,34 @@ void GfMenuObjCommonList::setupPlugin(u32 handle) {
 void GfMenuObjCommonList::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjCommonList::update() { GfMenuObject::update(); }
+
+void GfMenuObjCommonList::open(GfMenuCallContext *context, const OpenParam &param) {
+  u32 handle = getAttachedObject(unknown001);
+  if (ui::UIObjectAcc(handle).isValid()) {
+    if (!ui::UIObjectAcc(handle).isTerm()) {
+      startCallContext(context, unknown001, handle);
+      ui::UIObjectAcc acc(handle);
+      if (param.unknown00 == 0) {
+        acc.setPos(mm::Pnt<s16>(param.unknown10.x, param.unknown10.y));
+      } else {
+        ui::UIObjectAcc base(param.unknown00);
+        if (base.isValid()) {
+          mm::Rect<s16> rect;
+          base.getLayoutRect(param.unknown08, rect);
+          mm::Pnt<s16> pos;
+          pos.x = rect.x;
+          pos.y = rect.y;
+          acc.setPos(pos);
+        }
+      }
+      ui::EventData event;
+      event.unknown0c = 0;
+      event.unknown00 = GfMenuTypes::unknown003_33;
+      event.unknown08 = param.unknown18 << 8 | param.unknown1c;
+      sendEvent(handle, event, 0.0f);
+    }
+  }
+}
 
 void GfMenuObjCommonList::moveCursor(u32 handle, int index) {
   ui::UIObjectAcc row(handle, unknown002[index]);

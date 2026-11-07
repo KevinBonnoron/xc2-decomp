@@ -107,7 +107,7 @@ public:
 };
 
 static_assert(sizeof(GfPlayCom) == 0x10, "");
-
+// Inferred macro name; macros leave no trace in the binary.
 #define GF_PLAY_COM(funcName)                                                                                                                                                                          \
 public:                                                                                                                                                                                                \
   static mm::mtl::RTTI m_rtti;                                                                                                                                                                         \

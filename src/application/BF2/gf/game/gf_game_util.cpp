@@ -55,6 +55,7 @@
 #include "gf/object/component/property/gf_com_property.h"
 #include "gf/object/gf_append.h"
 #include "gf/object/gf_append_info.h"
+#include "gf/object/gf_init_param.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
@@ -80,6 +81,7 @@
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/intrusive_list.h"
+#include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/rtti.h"
 #include "mm_mtl/vector.h"
 
@@ -993,7 +995,7 @@ u32 GfGameUtil::getNowHp(GF_OBJ_HANDLE *handle, u32 objectType, u32 id) {
   GfObj *obj = GfObjUtil::getObj(handle);
   if (obj != nullptr) {
     GfComProperty *property = obj->getComponent<GfComProperty>();
-    if (property != nullptr && property->unknown10 != nullptr) {
+    if (property != nullptr && property->unknown10.get() != nullptr) {
       return property->unknown10->unknown10;
     }
   }
@@ -1006,7 +1008,7 @@ u32 GfGameUtil::getMaxHp(GF_OBJ_HANDLE *handle, u32 objectType, u32 id) {
   GfObj *obj = GfObjUtil::getObj(handle);
   if (obj != nullptr) {
     GfComProperty *property = obj->getComponent<GfComProperty>();
-    if (property != nullptr && property->unknown10 != nullptr) {
+    if (property != nullptr && property->unknown10.get() != nullptr) {
       return property->unknown10->unknown0c;
     }
   }
@@ -1593,7 +1595,7 @@ GF_OBJ_HANDLE *GfGameUtil::getWeaponOwner(GF_OBJ_HANDLE *handle) {
   GfAppendInfo *info = GfObjUtil::getAppendInfo(handle, GFATTACH_WEAPON);
   if (info != nullptr) {
     GfObjSetupWeapon *setup = GfObjUtil::getObjSetup<GfObjSetupWeapon>(handle);
-    if (setup != nullptr && info->unknown00[1].size() != 0 && !setup->unknown118.unknown80) {
+    if (setup != nullptr && info->unknown00[1].size() != 0 && !setup->unknown80.unknown98.unknown80) {
       return GfMountManager::getHandle(owner, GFATTACH_WEAPON, OPTMNT_BLADE);
     }
   }

@@ -24,6 +24,8 @@ void GfMenuObjArtsPalette::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjArtsPalette::push(unsigned int slot) { unknown149(unknown001, unknown002, slot); }
 
+void GfMenuObjArtsPalette::startChainAttack() { unknown157(unknown001, unknown003, 1); }
+
 void GfMenuObjArtsPalette::exitChainAttack() { unknown144(unknown001, unknown003); }
 
 void GfMenuObjArtsPalette::close() { unknown145(unknown001, unknown004); }

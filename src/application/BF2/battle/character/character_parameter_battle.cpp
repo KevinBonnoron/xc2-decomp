@@ -24,6 +24,7 @@
 #include "gf/object/gf_obj_util.h"
 #include "mm_math/mm_math.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/intrusive_ptr.h"
 
 namespace btl {
 
@@ -110,7 +111,7 @@ gf::GfStatusProperty *CharacterParameter::GetStatusProperty() const {
   if (obj != nullptr) {
     gf::GfComProperty *property = obj->getComponent<gf::GfComProperty>();
     if (property != nullptr) {
-      return property->unknown10;
+      return property->unknown10.get();
     }
   }
 

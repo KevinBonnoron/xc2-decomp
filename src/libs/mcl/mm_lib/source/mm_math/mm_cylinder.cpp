@@ -16,6 +16,12 @@ void Cylinder::getOBB(Obb &obb) const {
   obb.setMat(matrix, size);
 }
 
+void Cylinder::getAABB(Aabb &aabb) const {
+  Obb obb;
+  getOBB(obb);
+  obb.getAABB(aabb);
+}
+
 bool Cylinder::isCollide(const PrimBase &prim) const {
   switch (prim.type) {
   case PRIM_CYLINDER:

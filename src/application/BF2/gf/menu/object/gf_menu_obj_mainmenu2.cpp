@@ -1,18 +1,19 @@
 #include "gf/menu/object/gf_menu_obj_mainmenu2.h"
+
 #include "bdat.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
-#include "gf/menu/gf_menu_object.h"
-#include "gf/menu/object/gf_menu_obj_util.h"
-
 #include "gf/menu/gf_menu_fullscreen.h"
+#include "gf/menu/gf_menu_object.h"
 #include "gf/menu/gf_menu_sound_manager.h"
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/object/gf_menu_obj_popup.h"
+#include "gf/menu/object/gf_menu_obj_util.h"
 #include "ui/event/ui_event_data.h"
 #include "ui/plugin/ui_object_number_plugin.h"
 #include "ui/ui_manager.h"
 #include "ui/ui_object_acc.h"
+#include "ui/ui_str.h"
 
 namespace gf {
 
@@ -22,8 +23,13 @@ constexpr u32 unknown001 = 1;
 constexpr u32 unknown002 = 0x5f;
 // Inferred role: no open menu; original name unknown.
 constexpr u32 unknown003 = 0x28;
+// Inferred role: character change menu; original name unknown.
+constexpr u32 unknown004 = 0x27;
 
 u32 GfMenuObjMainMenu2::s_openMenuID;
+bool GfMenuObjMainMenu2::s_cancelEnable;
+
+bool GfMenuObjMainMenu2::isOpenCharMenu() { return s_openMenuID == unknown004; }
 
 void GfMenuObjMainMenu2::finalize() {
   GfMenuSoundManager::fadeInFieldBgm(1.0f);
@@ -107,6 +113,59 @@ void GfMenuObjMainMenu2::execMapJump() {
   if (acc.isValid()) {
     sendEvent(acc.unknown10, 0x10e, 0);
   }
+}
+
+// Inferred helper: sends the system key enable event and remembers the flag; original name unknown.
+static inline void unknown005(bool enable) {
+  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown002));
+  if (acc.isValid()) {
+    ui::EventData event;
+    event.unknown0c = 0;
+    event.unknown00 = 0x106;
+    event.unknown08 = enable;
+    ui::UIManager::get()->requestObjectEvent(acc.unknown10, event, 0.0f);
+    GfMenuObjMainMenu2::s_cancelEnable = enable;
+  }
+}
+
+void GfMenuObjMainMenu2::setSystemKeyEnable(bool enable) { unknown005(enable); }
+
+void GfMenuObjMainMenu2::cancelEnableMainMenu(bool enable) { unknown005(enable); }
+
+void GfMenuObjMainMenu2::setDispGold(bool isDisp) {
+  u32 handle = GfMenuObject::getAttachedObject(unknown002);
+  if (ui::UIObjectAcc(handle).isValid()) {
+    if (!ui::UIObjectAcc(handle).isTerm()) {
+      GfMenuObjUtil::setChildDisp(handle, "LAY_info_money", isDisp);
+      GfMenuObjUtil::setChildDisp(handle, "LAY_info_time", isDisp);
+      GfMenuObjUtil::setChildDisp(handle, "LAY_clear_mark", isDisp);
+    }
+  }
+}
+
+void GfMenuObjMainMenu2::openCharChange(u32 handle, u32 type, bool flag) {
+  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown002));
+  if (acc.isValid()) {
+    ui::UIObjectAcc change(acc.searchChild("LAY_chr_change"));
+    ui::EventData event;
+    event.unknown00 = GfMenuTypes::unknown003_33;
+    event.unknown08 = type;
+    event.unknown0c = handle;
+    event.unknown10 = flag;
+    ui::UIManager::get()->requestObjectEvent(change.unknown10, event, 0.0f);
+  }
+}
+
+void GfMenuObjMainMenu2::setContentsSubText(u32 handle, u32 index, u32 child) {
+  bool isDisp = false;
+  if (index != 0) {
+    ui::UIObjectAcc acc(handle);
+    u8 *sub = GfDataBdat::getFP(BDAT_MNU_MSG_SUB_CONTENTS);
+    u32 name = Bdat::getVal(sub, "name", index).valueU16;
+    acc.setText(ui::UIStr(GfDataBdat::getFP(BDAT_MENU_SUB_CONTENTS_MS), name));
+    isDisp = true;
+  }
+  GfMenuObjUtil::setChildDisp(child, "LAY_index", isDisp);
 }
 
 void GfMenuObjMainMenu2::update() {

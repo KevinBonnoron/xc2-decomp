@@ -33,6 +33,7 @@
 #include "mm_mtl/intrusive_list.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/rtti.h"
+#include "mm_mtl/unique_ptr.h"
 #include "mm_mtl/vector.h"
 #include "scn/scn_obj_acc.h"
 
@@ -113,8 +114,8 @@ f32 GfObjAcc::getAlpha(OBJ_ALPHA type) const {
   f32 alpha = 1.0f;
   if (m_obj != nullptr) {
     GfComProperty *property = m_obj->getComponent<GfComProperty>();
-    if (property != nullptr && property->unknown20 != nullptr) {
-      alpha = property->unknown20->unknown00[type];
+    if (property != nullptr && property->unknown20.get() != nullptr) {
+      alpha = property->unknown20.get()->unknown00[type];
     }
   }
 
@@ -135,7 +136,7 @@ bool GfObjAcc::isAlphaChanged() const {
   if (m_obj != nullptr) {
     GfComProperty *property = m_obj->getComponent<GfComProperty>();
     if (property != nullptr) {
-      GfAlphaProperty *alpha = property->unknown20;
+      GfAlphaProperty *alpha = property->unknown20.get();
       if (alpha != nullptr) {
         GfObjAcc parentAcc(GfObjUtil::getParentObj(m_obj));
         if (parentAcc.isAlphaChanged()) {
@@ -184,18 +185,18 @@ f32 GfObjAcc::getAlpha() const {
   f32 alpha = 1.0f;
   if (m_obj != nullptr) {
     GfComProperty *property = m_obj->getComponent<GfComProperty>();
-    if (property != nullptr && property->unknown20 != nullptr) {
-      alpha = property->unknown20->unknown18;
+    if (property != nullptr && property->unknown20.get() != nullptr) {
+      alpha = property->unknown20.get()->unknown18;
       GfObj *parent = GfObjUtil::getParentObj(m_obj);
       if (parent != nullptr) {
         GfComProperty *parentProperty = parent->getComponent<GfComProperty>();
-        if (parentProperty != nullptr && parentProperty->unknown20 != nullptr) {
-          alpha *= parentProperty->unknown20->unknown18;
+        if (parentProperty != nullptr && parentProperty->unknown20.get() != nullptr) {
+          alpha *= parentProperty->unknown20.get()->unknown18;
           GfObj *grandParent = GfObjUtil::getParentObj(parent);
           if (grandParent != nullptr) {
             GfComProperty *grandParentProperty = grandParent->getComponent<GfComProperty>();
-            if (grandParentProperty != nullptr && grandParentProperty->unknown20 != nullptr) {
-              alpha *= grandParentProperty->unknown20->unknown18;
+            if (grandParentProperty != nullptr && grandParentProperty->unknown20.get() != nullptr) {
+              alpha *= grandParentProperty->unknown20.get()->unknown18;
             }
           }
         }
@@ -533,8 +534,8 @@ GF_ASSET_HANDLE *GfObjAcc::getAssetHandle() const { return unknown00 != nullptr 
 GF_OBJ_HANDLE *GfObjAcc::getTarget() const {
   if (m_obj != nullptr) {
     GfComProperty *property = m_obj->getComponent<GfComProperty>();
-    if (property != nullptr && property->unknown18 != nullptr) {
-      return property->unknown18->handle;
+    if (property != nullptr && property->unknown18.get() != nullptr) {
+      return property->unknown18.get()->handle;
     }
   }
 

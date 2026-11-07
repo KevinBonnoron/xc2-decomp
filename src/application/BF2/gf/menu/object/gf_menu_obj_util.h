@@ -66,6 +66,8 @@ public:
   struct unknown001 {
     f32 unknown00; // Inferred role: preset control time; original member name unknown.
     f32 unknown04; // Inferred role: preset control time of preset 6; original member name unknown.
+    u8 _08[0x18 - 0x08];
+    f32 unknown18; // Inferred role: delay of the blade change opening; original member name unknown.
   };
 
   struct CtrlParam {
@@ -287,6 +289,7 @@ static_assert(sizeof(GfMenuObjUtil::DockingOption) == 0x10, "");
 static_assert(offsetof(GfMenuObjUtil::ImageParam, unknown04) == 0x04, "");
 static_assert(sizeof(GfMenuObjUtil::ImageParam) == 0x08, "");
 static_assert(offsetof(GfMenuObjUtil::unknown001, unknown04) == 0x04, "");
+static_assert(offsetof(GfMenuObjUtil::unknown001, unknown18) == 0x18, "");
 static_assert(offsetof(GfMenuObjUtil::FitOption, unknown04) == 0x04, "");
 static_assert(offsetof(GfMenuObjUtil::FitOption, unknown08) == 0x08, "");
 static_assert(sizeof(GfMenuObjUtil::FitOption) == 0x0c, "");

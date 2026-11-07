@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_vector.h"
 #include "ptlib/emitter/particle_emitter.h"
 #include "ptlib/particle_intrusive_list.h"
@@ -24,6 +25,41 @@ struct EmitterParam;
 
 class EmitterManager {
 public:
+  // Inferred role: per-parity kizuna work; the game names the type KizunaWork. The game's
+  // FixedArray<KizunaWork, 8> constructor (0x710092dab8) initializes each entry's first 0x140 bytes with
+  // FixedArray<Vec3, 20>::assign (0x710092dce4). This header does not declare or reconstruct a KizunaWork
+  // constructor, and no retained function constructs it; the values below are game-side initialization
+  // evidence for the objects copied by kizunaTail.
+  struct KizunaWork {
+    // FixedArray<Vec3, 20>::assign writes x/y/z of each Vec3; Vec3's copy assignment reads only x/y/z and
+    // ignores the 4-byte padding inside each element.
+    mm::mtl::FixedArray<mm::Vec3, 20> unknown000; // Inferred role: 20 Vec3s; original member name unknown.
+    // The game's constructor stores +0x140/+0x144 = 0, +0x148..+0x14f = 0xff, +0x150 = 0xff,
+    // +0x151 = 0, +0x152 = 1, +0x154..+0x160 = four 1.0f, +0x164/+0x168 = zero floats, +0x16c = 0.3f.
+    // +0x153 is natural padding before the 4-byte field at +0x154. The +0x140 8-byte copy does not prove
+    // two u32 versus one u64; the +0x16c 32-bit copy does not prove u32 versus f32. Both are storage views.
+    u32 unknown140; // Role and original member name unknown.
+    u32 unknown144; // Role and original member name unknown.
+    u8 unknown148;  // Role and original member name unknown; u8 storage, not proven bool.
+    u8 unknown149;  // Role and original member name unknown; u8 storage, not proven bool.
+    u8 unknown14a;  // Role and original member name unknown; u8 storage, not proven bool.
+    u8 unknown14b;  // Role and original member name unknown; u8 storage, not proven bool.
+    u8 unknown14c;  // Role and original member name unknown; u8 storage, not proven bool.
+    u8 unknown14d;  // Role and original member name unknown; u8 storage, not proven bool.
+    u8 unknown14e;  // Role and original member name unknown; u8 storage, not proven bool.
+    u8 unknown14f;  // Role and original member name unknown; u8 storage, not proven bool.
+    u8 unknown150;  // Role and original member name unknown.
+    u8 unknown151;  // Role and original member name unknown.
+    u8 unknown152;  // Role and original member name unknown.
+    f32 unknown154; // Role and original member name unknown.
+    f32 unknown158; // Role and original member name unknown.
+    f32 unknown15c; // Role and original member name unknown.
+    f32 unknown160; // Role and original member name unknown.
+    f32 unknown164; // Role and original member name unknown.
+    f32 unknown168; // Role and original member name unknown.
+    u32 unknown16c; // Role and original member name unknown; 32-bit storage view, u32 versus f32 unresolved.
+  };
+
   // Inferred role: entry of the emitter table of unknown007; original type and member names unknown.
   struct unknown009 {
     u32 m_emitterForm; // Name from getEmitterForm; original member name unknown.
@@ -41,12 +77,6 @@ public:
     u32 unknownea7bc; // Inferred role: particle count; original member name unknown.
     u32 unknownea7c0; // Inferred role: draw count; original member name unknown.
     u32 unknownea7c4; // Inferred role: work count; original member name unknown.
-  };
-
-  // Inferred role: per-parity kizuna work entry; original type and member names unknown.
-  struct unknown012 {
-    mm::Vec3 unknown000[20]; // Role and original member name unknown.
-    u8 unknown140[0x30];     // Role and original member name unknown.
   };
 
   static EmitterManager *get();
@@ -101,7 +131,7 @@ public:
   void move();
   FxHeader *emitter_set_search(int type, const char *name, void *owner, u32 category);
 
-  unknown012 unknown00[2][8];                       // Inferred role: kizuna works per update parity; original member name unknown.
+  mm::mtl::FixedArray<KizunaWork, 8> unknown00[2];  // Inferred role: kizuna works per update parity; original member name unknown.
   f32 unknown1700[(0x1750 - 0x1700) / sizeof(f32)]; // Inferred role: category speed; original member name unknown.
   EmitterObj *unknown1750;                          // Inferred role: p emitter top; original member name unknown.
   EmitterObj *unknown1758;                          // Inferred role: p emitter top of the type 4 and 5 emitters; original member name unknown.
@@ -118,18 +148,38 @@ public:
   IntrusiveList<EmitterSetNode> unknown1808; // Inferred role: free emitter sets; original member name unknown.
 };
 
+static_assert(offsetof(EmitterManager::KizunaWork, unknown140) == 0x140, "");
+static_assert(offsetof(EmitterManager::KizunaWork, unknown144) == 0x144, "");
+static_assert(offsetof(EmitterManager::KizunaWork, unknown148) == 0x148, "");
+static_assert(offsetof(EmitterManager::KizunaWork, unknown149) == 0x149, "");
+static_assert(offsetof(EmitterManager::KizunaWork, unknown14a) == 0x14a, "");
+static_assert(offsetof(EmitterManager::KizunaWork, unknown14b) == 0x14b, "");
+static_assert(offsetof(EmitterManager::KizunaWork, unknown14c) == 0x14c, "");
+static_assert(offsetof(EmitterManager::KizunaWork, unknown14d) == 0x14d, "");
+static_assert(offsetof(EmitterManager::KizunaWork, unknown14e) == 0x14e, "");
+static_assert(offsetof(EmitterManager::KizunaWork, unknown14f) == 0x14f, "");
+static_assert(offsetof(EmitterManager::KizunaWork, unknown150) == 0x150, "");
+static_assert(offsetof(EmitterManager::KizunaWork, unknown151) == 0x151, "");
+static_assert(offsetof(EmitterManager::KizunaWork, unknown152) == 0x152, "");
+static_assert(offsetof(EmitterManager::KizunaWork, unknown154) == 0x154, "");
+static_assert(offsetof(EmitterManager::KizunaWork, unknown158) == 0x158, "");
+static_assert(offsetof(EmitterManager::KizunaWork, unknown15c) == 0x15c, "");
+static_assert(offsetof(EmitterManager::KizunaWork, unknown160) == 0x160, "");
+static_assert(offsetof(EmitterManager::KizunaWork, unknown164) == 0x164, "");
+static_assert(offsetof(EmitterManager::KizunaWork, unknown168) == 0x168, "");
+static_assert(offsetof(EmitterManager::KizunaWork, unknown16c) == 0x16c, "");
+static_assert(sizeof(EmitterManager::KizunaWork) == 0x170, "");
 static_assert(sizeof(EmitterManager::unknown009) == 0x20, "");
-static_assert(sizeof(EmitterManager::unknown012) == 0x170, "");
+static_assert(offsetof(EmitterManager::unknown007, unknown4000) == 0x4000, "");
+static_assert(offsetof(EmitterManager::unknown007, unknown4008) == 0x4008, "");
+static_assert(offsetof(EmitterManager::unknown007, unknownea7b0) == 0xea7b0, "");
+static_assert(sizeof(EmitterManager::unknown007) == 0xea7c8, "");
 static_assert(offsetof(EmitterManager, unknown1700) == 0x1700, "");
 static_assert(offsetof(EmitterManager, unknown1750) == 0x1750, "");
 static_assert(offsetof(EmitterManager, unknown1758) == 0x1758, "");
 static_assert(offsetof(EmitterManager, unknown1760) == 0x1760, "");
 static_assert(offsetof(EmitterManager, unknown1768) == 0x1768, "");
 static_assert(offsetof(EmitterManager, unknown1778) == 0x1778, "");
-static_assert(offsetof(EmitterManager::unknown007, unknown4000) == 0x4000, "");
-static_assert(offsetof(EmitterManager::unknown007, unknown4008) == 0x4008, "");
-static_assert(offsetof(EmitterManager::unknown007, unknownea7b0) == 0xea7b0, "");
-static_assert(sizeof(EmitterManager::unknown007) == 0xea7c8, "");
 static_assert(offsetof(EmitterManager, unknown1790) == 0x1790, "");
 static_assert(offsetof(EmitterManager, unknown17a8) == 0x17a8, "");
 static_assert(offsetof(EmitterManager, unknown17c0) == 0x17c0, "");

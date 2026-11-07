@@ -3,12 +3,16 @@
 
 #include "gf/menu/gf_menu_object.h"
 #include "gf/menu/gf_menu_sequence.h"
+#include "types.h"
 
 namespace gf {
 
 class GfMenuObjTutorial : public GfMenuObject {
 public:
   static void closeAll();
+  static void closeText(u32 param);
+  static void closeFocus(u32 param);
+  static void closeIcon(u32 param);
   void initialize() override;
   void finalize() override;
   void update() override;

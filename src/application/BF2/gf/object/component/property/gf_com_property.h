@@ -5,7 +5,9 @@
 #include "gf/object/component/gf_component.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
+#include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/reference_object.h"
+#include "mm_mtl/unique_ptr.h"
 #include "types.h"
 
 namespace mm {
@@ -22,13 +24,13 @@ struct GfEnvProperty;
 
 class GfStatusProperty : public mm::mtl::ReferenceObject {
 public:
-  GfStatusProperty(u32 hp) : unknown0c(hp), unknown10(hp), unknown14(0), unknown18(false), _19(), unknown1a(false), unknown1b(false) {}
+  GfStatusProperty(u32 hp) : unknown0c(hp), unknown10(hp), unknown14(0), unknown18(false), unknown19(false), unknown1a(false), unknown1b(false) {}
 
   u32 unknown0c;  // Inferred role: max hp; original member name unknown.
   u32 unknown10;  // Inferred role: hp; original member name unknown.
   u32 unknown14;  // Inferred role: limit hp; original member name unknown.
   bool unknown18; // Inferred role: invincible; original member name unknown.
-  u8 _19[0x1a - 0x19];
+  bool unknown19; // Inferred role: sub invincible; original member name unknown.
   bool unknown1a; // Inferred role: disable auto heal; original member name unknown.
   bool unknown1b; // Inferred role: battle special sequence running, written by the pc battle states; original member name unknown.
 };
@@ -37,6 +39,7 @@ static_assert(offsetof(GfStatusProperty, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfStatusProperty, unknown10) == 0x10, "");
 static_assert(offsetof(GfStatusProperty, unknown14) == 0x14, "");
 static_assert(offsetof(GfStatusProperty, unknown18) == 0x18, "");
+static_assert(offsetof(GfStatusProperty, unknown19) == 0x19, "");
 static_assert(offsetof(GfStatusProperty, unknown1a) == 0x1a, "");
 static_assert(offsetof(GfStatusProperty, unknown1b) == 0x1b, "");
 
@@ -58,6 +61,7 @@ struct GfDebugStatusProperty {
   bool disableFallDead;
 };
 
+struct MsgObjectInvincible;
 struct MsgObjectMaxHp;
 struct MsgObjectSetHp;
 struct MsgObjectStopAutoHeal;
@@ -72,16 +76,17 @@ public:
   ~GfComProperty() override;
   bool recieveMessage(fw::MessageObject *sender, fw::Message &message) override;
   void flush();
+  void procMsgObjectInvincible(fw::MessageObject *object, MsgObjectInvincible &message);
   void procMsgObjectMaxHp(fw::MessageObject *object, MsgObjectMaxHp &message);
   void procMsgObjectSetHp(fw::MessageObject *object, MsgObjectSetHp &message);
   void procMsgObjectStopAutoHeal(fw::MessageObject *object, MsgObjectStopAutoHeal &message);
   void procMsgObjectLimitHP(fw::MessageObject *object, MsgObjectLimitHP &message);
 
-  GfStatusProperty *unknown10;      // Inferred role: status; original member name unknown.
-  GfTargetProperty *unknown18;      // Inferred role: target; original member name unknown.
-  GfAlphaProperty *unknown20;       // Inferred role: alpha; original member name unknown.
-  GfEnvProperty *unknown28;         // Inferred role: environment; original member name unknown.
-  GfDebugStatusProperty *unknown30; // Inferred role: debug flags; original member name unknown.
+  mm::mtl::IntrusivePtr<GfStatusProperty> unknown10;   // Inferred role: status; original member name unknown.
+  mm::mtl::UniquePtr<GfTargetProperty> unknown18;      // Inferred role: target; original member name unknown.
+  mm::mtl::UniquePtr<GfAlphaProperty> unknown20;       // Inferred role: alpha; original member name unknown.
+  mm::mtl::UniquePtr<GfEnvProperty> unknown28;         // Inferred role: environment; original member name unknown.
+  mm::mtl::UniquePtr<GfDebugStatusProperty> unknown30; // Inferred role: debug flags; original member name unknown.
 };
 
 static_assert(offsetof(GfComProperty, unknown10) == 0x10, "");

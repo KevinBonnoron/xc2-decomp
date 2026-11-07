@@ -28,7 +28,12 @@ public:
   static void disableCharChange();
   static void setSubLayer(u32 layer);
   static void setGuideText(u32 text);
+  static void setSystemKeyEnable(bool enable);
+  static void cancelEnableMainMenu(bool enable);
+  static void setDispGold(bool isDisp);
+  static void setContentsSubText(u32 handle, u32 index, u32 child);
   static void dispCloseButton();
+  static bool isOpenCharMenu();
   static void execMapJump();
   void initialize() override;
   void finalize() override;
@@ -36,6 +41,7 @@ public:
   bool seqExecTerm();
 
   static u32 s_openMenuID;
+  static bool s_cancelEnable;
 
   u8 _24[0x44 - 0x24];
   u32 unknown44; // Inferred role: open menu; original member name unknown.

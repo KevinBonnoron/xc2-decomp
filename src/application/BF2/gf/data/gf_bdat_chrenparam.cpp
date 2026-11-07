@@ -931,7 +931,7 @@ void GfBdatChrEnParam::destroyFP() {
     m_enemyGroup = nullptr;
   }
 }
-
+// Inferred macro name; macros leave no trace in the binary.
 #define NEW_BDAT_WRAPPER(bdat)                                                                                                                                                                         \
   new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper { GfDataBdat::getFP(bdat) }
 
