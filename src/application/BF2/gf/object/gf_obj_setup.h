@@ -3,7 +3,6 @@
 
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_object_type.h"
-#include "gf/object/gf_append.h"
 #include "gf/object/gf_init_param.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixstr.h"
@@ -156,15 +155,19 @@ public:
   static const u32 OBJECT_TYPE = OBJECT_TYPE_DRIVER;
 
   GfObjSetupDriver(const GfInitParamDriver &param);
+  const mm::mtl::RTTI *getRTTI() const override;
 
   bool unknown6c; // Inferred role: ride; original member name unknown.
   u8 _6d[0x70 - 0x6d];
   int unknown70; // Inferred role: formation player id; original member name unknown.
-  u8 _74[0x230 - 0x74];
+  u8 _74[0x80 - 0x74];
+  GfInitParamDriver unknown80; // Inferred role: copy of the init param; original member name unknown.
+  u8 _228[0x230 - 0x228];
 };
 
 static_assert(offsetof(GfObjSetupDriver, unknown6c) == 0x6c, "");
 static_assert(offsetof(GfObjSetupDriver, unknown70) == 0x70, "");
+static_assert(offsetof(GfObjSetupDriver, unknown80) == 0x80, "");
 static_assert(sizeof(GfObjSetupDriver) == 0x230, "");
 
 class GfObjSetupBlade : public GfObjSetup {
@@ -193,23 +196,24 @@ public:
   static const u32 OBJECT_TYPE = OBJECT_TYPE_PC_WEAPON;
 
   GfObjSetupWeapon(const GfInitParamWeapon &param);
+  const mm::mtl::RTTI *getRTTI() const override;
 
   int unknown6c;  // Inferred role: slot; original member name unknown.
   bool unknown70; // Inferred role: leaving; original member name unknown.
   u8 _71[0x74 - 0x71];
   u32 unknown74;  // Inferred role: mount index; original member name unknown.
   bool unknown78; // Inferred role: alternate; original member name unknown.
-  u8 _79[0x118 - 0x79];
-  GfAppend unknown118; // Inferred role: append; original member name unknown.
+  u8 _79[0x80 - 0x79];
+  GfInitParamWeapon unknown80; // Inferred role: copy of the init param; original member name unknown.
   u8 _1a0[0x270 - 0x1a0];
 };
 
-// Evidence: the GfObjSetupWeapon constructor calls GfAppend::GfAppend on this+0x118 and assigns its mounts from GfInitParamWeapon::unknown98.
+// Evidence: the GfObjSetupWeapon constructor calls GfAppend::GfAppend on this+0x118 (GfInitParamWeapon::unknown98 of the copy) and assigns its mounts from GfInitParamWeapon::unknown98.
 static_assert(offsetof(GfObjSetupWeapon, unknown6c) == 0x6c, "");
 static_assert(offsetof(GfObjSetupWeapon, unknown70) == 0x70, "");
 static_assert(offsetof(GfObjSetupWeapon, unknown74) == 0x74, "");
 static_assert(offsetof(GfObjSetupWeapon, unknown78) == 0x78, "");
-static_assert(offsetof(GfObjSetupWeapon, unknown118) == 0x118, "");
+static_assert(offsetof(GfObjSetupWeapon, unknown80) == 0x80, "");
 static_assert(sizeof(GfObjSetupWeapon) == 0x270, "");
 
 class GfObjSetupMob : public GfObjSetup {

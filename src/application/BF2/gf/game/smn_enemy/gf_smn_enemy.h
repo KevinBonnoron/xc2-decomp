@@ -31,12 +31,17 @@ public:
   void listenerGfObj(OBJEVT event, GF_OBJ_HANDLE *handle, u32 objectType) override;
 
   bool isOwnerValid() const;
+  u32 getEnemyNum() const;
+  GF_OBJ_HANDLE *getEnemy(u32 index) const;
+  void disposeWaitEnemies();
+  void disposeEnemies(bool isFade);
 
   u8 _08[0x10 - 0x08];
   GF_OBJ_HANDLE *unknown10; // Inferred role: owner object; original member name unknown.
-  u8 _18[0x78 - 0x18];
-  mm::mtl::Vector<std::pair<PopInfo *, GF_OBJ_HANDLE *>> unknown78; // Inferred role: pop enemies; original member name unknown.
-  mm::mtl::Vector<GF_OBJ_HANDLE *> unknowna0;                       // Inferred role: wait enemies; original member name unknown.
+  s32 unknown18;            // Inferred role: bdat id of the summon enemy table row; original member name unknown.
+  u8 _1c[0x78 - 0x1c];
+  mm::mtl::Vector<std::pair<PopInfo *, GF_OBJ_HANDLE *>> unknown78; // Inferred role: wait enemies; original member name unknown.
+  mm::mtl::Vector<GF_OBJ_HANDLE *> unknowna0;                       // Inferred role: popped enemies; original member name unknown.
 };
 
 static_assert(offsetof(GfRelSmnEnemy::PopInfo, unknown02) == 0x02, "");
@@ -44,6 +49,7 @@ static_assert(offsetof(GfRelSmnEnemy::PopInfo, unknown08) == 0x08, "");
 static_assert(offsetof(GfRelSmnEnemy::PopInfo, unknown10) == 0x10, "");
 static_assert(offsetof(GfRelSmnEnemy::PopInfo, unknown20) == 0x20, "");
 static_assert(sizeof(GfRelSmnEnemy::PopInfo) == 0x30, "");
+static_assert(offsetof(GfRelSmnEnemy, unknown18) == 0x18, "");
 static_assert(offsetof(GfRelSmnEnemy, unknown78) == 0x78, "");
 static_assert(offsetof(GfRelSmnEnemy, unknowna0) == 0xa0, "");
 

@@ -1,11 +1,15 @@
 #pragma once
 #include <stddef.h>
 
+#include "mm_mtl/map.h"
 #include "mm_mtl/singleton.h"
-#include "types.h"
 
 namespace fw {
 struct UpdateInfo;
+}
+
+namespace mm {
+struct Vec3;
 }
 
 namespace gf {
@@ -19,9 +23,11 @@ public:
   static void destroy();
   static void update(const fw::UpdateInfo &info);
   static bool isInside(GF_OBJ_HANDLE *handle);
+  static bool isInside(const mm::Vec3 &position);
+  bool isInsideBattleLock(GF_OBJ_HANDLE *handle) const;
 
-  u8 _08[0x20 - 0x08];
-  bool unknown20; // Inferred role: player inside; original member name unknown.
+  mm::mtl::Map<GF_OBJ_HANDLE *, bool> unknown08; // Inferred role: whether each enemy is inside a battle lock; original member name unknown.
+  bool unknown20;                                // Inferred role: player inside; original member name unknown.
 };
 
 static_assert(offsetof(GfGameInsideBattleLock, unknown20) == 0x20, "");

@@ -295,7 +295,7 @@ static_assert(sizeof(GfMenuReference) == 0x4cf10, "");
 
 class GfMenuReferenceFs : public mm::mtl::ReferenceObject {
 public:
-  virtual void getFs(MenuFieldSkill &fs) const { fs = unknown0c; }
+  virtual void getFs(MenuFieldSkill &fs) const;
 
   MenuFieldSkill unknown0c; // Inferred role: field skill; original member name unknown.
 };
@@ -304,7 +304,7 @@ static_assert(offsetof(GfMenuReferenceFs, unknown0c) == 0x0c, "");
 
 class GfMenuReferenceQuest : public mm::mtl::ReferenceObject {
 public:
-  virtual void getQuest(QuestID &quest) const { quest = unknown0c; }
+  virtual void getQuest(QuestID &quest) const;
 
   QuestID unknown0c; // Inferred role: quest; original member name unknown.
 };

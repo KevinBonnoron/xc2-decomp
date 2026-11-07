@@ -10,6 +10,7 @@
 #include "gf/data/gf_data_enemy.h"
 #include "gf/data/gf_data_obj.h"
 #include "gf/gf_allocator.h"
+#include "gf/object/gf_append.h"
 #include "gf/object/gf_obj_manager.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_math.h"
@@ -22,6 +23,10 @@ const mm::mtl::RTTI *GfObjSetup::getRTTI() const { return &m_rtti; }
 const mm::mtl::RTTI *GfObjSetupMap::getRTTI() const { return &m_rtti; }
 
 const mm::mtl::RTTI *GfObjSetupBlade::getRTTI() const { return &m_rtti; }
+
+const mm::mtl::RTTI *GfObjSetupDriver::getRTTI() const { return &m_rtti; }
+
+const mm::mtl::RTTI *GfObjSetupWeapon::getRTTI() const { return &m_rtti; }
 
 const mm::mtl::RTTI *GfObjSetupMob::getRTTI() const { return &m_rtti; }
 
