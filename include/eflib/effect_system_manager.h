@@ -1,9 +1,14 @@
 #pragma once
 #include <stddef.h>
 
+#include "eflib/effect_send_param.h"
 #include "mm_mtl/fixed_vector.h"
 #include "ptlib/forcefield/particle_force_field.h"
 #include "types.h"
+
+namespace mm {
+struct Mat44;
+} // namespace mm
 
 namespace mtl {
 class ALLOC_HANDLE;
@@ -16,12 +21,56 @@ struct DrDrawWorkInfoEF;
 namespace effect {
 
 class IEffectCallBack;
-struct SendParam;
 
 class SystemManager {
 public:
+  // Inferred role: SendParam-sized payload of a command; original type and member names unknown. addCommand
+  // (1.0.0: 0x710091a2b8) copies the first 0x14 bytes as three scalars, the 0xb0 bytes at 0x20 with a memcpy
+  // (0x710091a378), and the four words at 0xd0. The copy constructor reproduces that memcpy.
+  union alignas(16) unknown001 {
+    unknown001() : unknown00() {}
+    unknown001(const unknown001 &other) {
+      if (this != &other) {
+        __builtin_memcpy(unknown00_raw, other.unknown00_raw, sizeof(unknown00_raw));
+      }
+    }
+    unknown001 &operator=(const unknown001 &) = default;
+
+    SendParam unknown00;
+    u8 unknown00_raw[sizeof(SendParam)];
+  };
+
   struct alignas(16) EsCommand {
-    u8 _00[0xf0 - 0x00];
+    u32 unknown00; // Inferred role: command type; original member name unknown.
+    u8 _04[4];
+    union {
+      void *unknown08;  // Inferred role: effect data; original member name unknown.
+      u64 unknown08_64; // Inferred role: pack handle; original member name unknown.
+    };
+    u32 unknown10;        // Inferred role: handle or create key; original member name unknown.
+    unknown001 unknown20; // Inferred role: command payload; original member name unknown.
+    // Inferred role: command payload; original member names unknown. The payload is read back with a
+    // different member for each command type in es_command_core.
+    union {
+      const void *unknownd0; // Inferred role: callback; original member name unknown.
+      u8 unknownd0_8;        // Inferred role: loop flag; original member name unknown.
+      u32 unknownd0_32;      // Inferred role: display flag; original member name unknown.
+    };
+    union {
+      const void *unknownd8; // Inferred role: callback; original member name unknown.
+      int unknownd8_32;      // Inferred role: fade frame; original member name unknown.
+    };
+    union {
+      char unknowne0[16]; // Inferred role: name payload; original member name unknown.
+      struct {
+        u32 unknown00; // Inferred role: callback argument; original member name unknown.
+        f32 unknown04; // Inferred role: cast value; original member name unknown.
+      } unknowne0_0;
+      struct {
+        int unknown00; // Inferred role: callback argument; original member name unknown.
+        int unknown04; // Inferred role: effect category; original member name unknown.
+      } unknowne0_1;
+    };
   };
 
   using CommandList = mm::mtl::FixedVector<EsCommand, 0x400>;
@@ -59,17 +108,23 @@ public:
   void MainDraw(const ptlib::DrDrawWorkInfoEF *info, int viewIndex, bool isBlur);
   void MainLoop(const ptlib::DrDrawWorkInfoEF *info);
   void es_command_core();
+  void addCommand(const EsCommand &command);
   void es_pause(bool isPause);
   void es_pack_free_(u64 pack);
   void es_pack_free(u64 pack);
-  void es_pack_regist(void *data, u32 size);
-  u64 es_regist(void *data, u32 size);
+  void es_pack_regist(const char *name, void *data, u32 size);
+  // The game returns the data it registers (1.0.0: 0x710091a570 and 0x710091a918 move the first argument to x0).
+  void *es_pack_regist(void *data, u32 size);
+  void *es_regist(void *data, u32 size);
+  void *es_regist(const char *name, void *data, u32 size);
   void es_free(void *data);
   u32 es_create(void *data, bool isLoop);
   void es_set_param_pos_only(u32 handle, const SendParam *param);
   void es_set_param_pos_only2(u32 handle, const SendParam *param);
   void es_set_category(u32 handle, u32 category);
   void es_set_param(u32 handle, const SendParam *param);
+  void es_set_param(void *data, const SendParam *param);
+  u32 es_create_cas(void *data, const IEffectCallBack *callback, int unknown, f32 value, bool isLoop);
   void es_set_alpha(u32 handle, f32 alpha);
   void es_set_speed(u32 handle, f32 speed);
   void es_set_viewnum(u32 handle, int viewnum);
@@ -90,6 +145,7 @@ public:
   const char *es_get_name(void *data);
   void es_clearall(bool isForce);
   void log();
+  void kizunaTail();
   CommandList *getCommandPtr(u32 index);
   void setGlobalSpeed(f32 speed);
   void setCategorySpd(u32 category, f32 speed);
@@ -106,6 +162,7 @@ public:
   void getNum(u32 &emitterNum, u32 &particleNum, u32 &drawNum);
   void getNumDetail(u32 &emitterNum, u32 &particleNum, u32 &drawNum, u32 &workNum);
   u32 getEmitterForm(u32 handle);
+  static void getEFP(IEffectCallBack *callback, int, int, const char *name, mm::Mat44 &matrix, f32 *scale);
 
   u8 _08[0x09 - 0x08];
   bool unknown09;                                          // Inferred role: update; original member name unknown.
@@ -125,6 +182,15 @@ public:
   u8 unknown7824f;   // Inferred role: clear count; original member name unknown.
 };
 
+static_assert(sizeof(SystemManager::unknown001) == 0xb0, "");
+static_assert(alignof(SystemManager::unknown001) == 16, "");
+static_assert(offsetof(SystemManager::EsCommand, unknown08) == 0x08, "");
+static_assert(offsetof(SystemManager::EsCommand, unknown10) == 0x10, "");
+static_assert(offsetof(SystemManager::EsCommand, unknown20) == 0x20, "");
+static_assert(offsetof(SystemManager::EsCommand, unknownd0) == 0xd0, "");
+static_assert(offsetof(SystemManager::EsCommand, unknownd8) == 0xd8, "");
+static_assert(offsetof(SystemManager::EsCommand, unknowne0) == 0xe0, "");
+static_assert(sizeof(SystemManager::EsCommand) == 0xf0, "");
 static_assert(offsetof(SystemManager, unknown09) == 0x09, "");
 static_assert(offsetof(SystemManager, unknown0b) == 0x0b, "");
 static_assert(offsetof(SystemManager, unknown10) == 0x10, "");
