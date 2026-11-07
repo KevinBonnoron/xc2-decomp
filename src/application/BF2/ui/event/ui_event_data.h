@@ -12,7 +12,7 @@ struct EventData {
   u8 _02[0x08 - 0x02];
   union {
     u32 unknown08;     // Inferred role: param0; original member name unknown.
-    f32 unknown08_f32; // View of the first parameter slot as a float; the repo owner reports GfMenuObjZoneTelop's listener reads it; not matched yet.
+    f32 unknown08_f32; // View of the first parameter slot: read as a float by GfMenuObjZoneTelop's MainListener::reciveEvent (not matched yet); original member name unknown.
     struct {
       u16 unknown08_u16; // Inferred role: param0 low half; original member name unknown.
       u16 unknown0a;     // Inferred role: param0 high half; original member name unknown.
