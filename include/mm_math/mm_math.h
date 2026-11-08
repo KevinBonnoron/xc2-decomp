@@ -159,4 +159,23 @@ __attribute__((always_inline)) inline Vec3 quatToEuler(const Quat &quat) {
   return matrixToEuler(matrix);
 }
 
+inline bool isFinite(f32 r) { return isValidFloat(r); }
+
+// Inferred helper: wraps an angle in radians into [-pi, pi]; original name unknown.
+// Evidence: inlined in gf::GfFieldLookIk::isCondMatched, with the assertion "mm::isFinite(r)" of mm_math.h line 1014.
+inline f32 unknown003(f32 r) {
+  // __LINE__ must be 1014 as in the original header: it is the line argument of the assert.
+#line 1014
+  MM_ASSERT(mm::isFinite(r));
+  if (fabsf(r) > 6.2831855f) {
+    r = r - static_cast<int>(r / 6.2831855f) * 6.2831855f;
+  }
+  if (r > 3.1415927f) {
+    r = r - 6.2831855f;
+  } else if (r < -3.1415927f) {
+    r = r + 6.2831855f;
+  }
+  return r;
+}
+
 } // namespace mm

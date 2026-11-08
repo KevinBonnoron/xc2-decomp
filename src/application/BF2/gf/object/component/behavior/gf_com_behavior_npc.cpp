@@ -1,5 +1,7 @@
 #include "gf/object/component/behavior/gf_com_behavior_npc.h"
 
+#include <math.h>
+
 #include "ai/ai_state.h"
 #include "bdat.h"
 #include "framework/coli/coli_object.h"
@@ -19,10 +21,18 @@
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/object/gf_menu_obj_target_info.h"
 #include "gf/object/component/animation/gf_com_asm.h"
+#include "gf/object/component/behavior/npc/gf_npc_state_approach_pc.h"
+#include "gf/object/component/behavior/npc/gf_npc_state_area_move.h"
+#include "gf/object/component/behavior/npc/gf_npc_state_battle.h"
+#include "gf/object/component/behavior/npc/gf_npc_state_idle.h"
+#include "gf/object/component/behavior/npc/gf_npc_state_reaction.h"
+#include "gf/object/component/behavior/npc/gf_npc_state_talk.h"
+#include "gf/object/component/behavior/npc/gf_npc_state_walk.h"
 #include "gf/object/component/behavior/plugin/gf_lip_sync_plugin.h"
 #include "gf/object/component/gf_com_collider.h"
 #include "gf/object/component/gf_com_transform.h"
 #include "gf/object/gf_obj.h"
+#include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_bdat.h"
@@ -32,7 +42,9 @@
 #include "gmk/gmk_npc/gmk_routed_npc.h"
 #include "mm_mtl/reference_object.h"
 #include "mm_mtl/rtti.h"
+#include "mm_mtl/unique_ptr.h"
 #include "mm_mtl/vector.h"
+#include "navi/nvmsh_ac_obj.h"
 
 namespace gf {
 
@@ -97,14 +109,14 @@ void GfComBehaviorNpc::procMsgPcFieldNotifyAction(fw::MessageObject *sender, Msg
   case 0:
     if (!unknown100 && GfGameManager::isTalkOK() && getStateId() != npc::STATE_ID_UNKNOWN_6) {
       unknown100 = true;
-      unknown240 = false;
+      unknown220.unknown20 = false;
       setStateId(npc::STATE_ID_UNKNOWN_6);
     }
     break;
   case 1:
     if (unknown100) {
       unknown100 = false;
-      unknown240 = true;
+      unknown220.unknown20 = true;
     }
     break;
   }
@@ -191,6 +203,8 @@ gmk::AGmkBase *GfComBehaviorNpc::getBindedGmkInst() const { return gmk::getBinde
 
 void GfComBehaviorNpc::setGoalPos(const mm::Vec3 &position) { unknownc0 = position; }
 
+const mm::mtl::RTTI *GfComBehaviorNpc::getRTTI() const { return &m_rtti; }
+
 GfComAsm *GfComBehaviorNpc::getComAsm() const { return unknown08->getComponent<GfComAsm>(); }
 
 bool GfComBehaviorNpc::isNullNpc() const { return !GfAssetManager::isExist(GfObjUtil::getAssetHandle(static_cast<GfObj *>(unknown08)->unknownf8), static_cast<GfFileIdx>(6)); }
@@ -256,6 +270,104 @@ void GfComBehaviorNpc::setActivateCollison(bool isActivate) {
   if (coli != nullptr) {
     coli->setActivate(isActivate);
   }
+}
+
+void GfComBehaviorNpc::createFsm() {
+  disposeFsm();
+  unknown108.beginSetup(this, 7, 1);
+  unknown108.registerState<npc::StateIdle>(npc::STATE_ID_UNKNOWN_0, -1);
+  unknown108.registerState<npc::StateWalk>(npc::STATE_ID_UNKNOWN_1, -1);
+  unknown108.registerState<npc::StateAreaMove<GfComBehaviorNpc>>(npc::STATE_ID_UNKNOWN_2, -1);
+  unknown108.registerState<npc::StateApproachPc>(npc::STATE_ID_UNKNOWN_3, -1);
+  unknown108.registerState<npc::StateReaction<GfComBehaviorNpc>>(npc::STATE_ID_UNKNOWN_4, -1);
+  unknown108.registerState<npc::StateBattle<GfComBehaviorNpc>>(npc::STATE_ID_UNKNOWN_5, -1);
+  unknown108.registerState<npc::StateTalk>(npc::STATE_ID_UNKNOWN_6, -1);
+  unknown108.endSetup();
+  unknown190 = false;
+}
+
+void GfComBehaviorNpc::createNaviMeshObj() {
+  disposeNaviMeshObj();
+  unknownb8 = fw::NaviManager::get()->createObject();
+  if (unknownb8 != nullptr) {
+    unknownb8->setMeshNum(0);
+    unknownb8->unknown10 |= 2;
+  }
+}
+
+GfComBehaviorNpc::~GfComBehaviorNpc() {
+  cleanup();
+  disposeNaviMeshObj();
+}
+
+void GfComBehaviorNpc::updateNaviMeshObj(f32 deltaTime) {
+  if (unknownb8 != nullptr && (unknownb8->unknown10 & 2) != 0) {
+    const mm::Vec3 &position = getPos();
+    unknownb8->setBeginPos(position);
+    unknownb8->setEndPos(unknownc0);
+    unknownb8->setMoveSpd(unknown98.unknown08 * deltaTime);
+  }
+}
+
+void GfComBehaviorNpc::init(bool param1) {
+  fw::ColiMoveObject *coli = getColiObject();
+  if (coli != nullptr) {
+    coli->setState(fw::COLI_STATE_ENABLE);
+    if (param1) {
+      coli->setColiType(fw::COLI_TYPE_UNKNOWN_1);
+      coli->setPriority(200);
+      coli->setState(fw::COLI_STATE_UNKNOWN_0);
+    } else {
+      coli->setColiType(fw::COLI_TYPE_STATIC);
+      coli->setPriority(900);
+      coli->clearState(fw::COLI_STATE_UNKNOWN_0);
+    }
+
+    if (coli->unknowne8.get() != nullptr && coli->unknowne8.get()->unknown00 == fw::unknown031::TYPE_UNKNOWN_5) {
+      coli->setPriority(900);
+    }
+  }
+
+  if (unknownb8 != nullptr) {
+    if (param1) {
+      unknownb8->unknown10 |= 2;
+    } else {
+      unknownb8->unknown10 &= ~2;
+    }
+  }
+}
+
+void GfComBehaviorNpc::execTurnCmd(f32 angle) {
+  angle += unknown350.unknown00.unknown00 == INVALID_HANDLE ? 0.0f : unknown350.getCurAngle();
+  unknown2e0.create(TFieldExecCmdTurn<GfComAsm>::CreateInfo(static_cast<GfObj *>(unknown08)->unknownf8, angle));
+}
+
+void GfComBehaviorNpc::execTurnCmd(f32 angle, f32 param2, f32 param3, f32 param4) {
+  TFieldExecCmdTurn<GfComAsm>::CreateInfo info;
+  info.unknown00 = static_cast<GfObj *>(unknown08)->unknownf8;
+  info.unknown08 = (unknown350.unknown00.unknown00 == INVALID_HANDLE ? 0.0f : unknown350.getCurAngle()) + angle;
+  info.unknown0c = param3;
+  info.unknown14 = param2;
+  info.unknown18 = param4;
+  unknown2e0.create(info);
+}
+
+void GfComBehaviorNpc::execTurnCmdToPos(const mm::Vec3 &position) {
+  const mm::Vec3 &current = getPos();
+  f32 angle = atan2f(position.x - current.x, position.z - current.z);
+  angle += unknown350.unknown00.unknown00 == INVALID_HANDLE ? 0.0f : unknown350.getCurAngle();
+  unknown2e0.create(TFieldExecCmdTurn<GfComAsm>::CreateInfo(static_cast<GfObj *>(unknown08)->unknownf8, angle));
+}
+
+void GfComBehaviorNpc::execTurnCmdToGoal() {
+  mm::Vec3 position;
+  if (getMoveVec(position, unknownb8)) {
+    position += getPos();
+  } else {
+    position = unknownc0;
+  }
+
+  execTurnCmdToPos(position);
 }
 
 void GfComBehaviorNpc::Listener::onWkStandbyLogout() { unknown08->unknown198 = nullptr; }

@@ -21,6 +21,34 @@
 #include "types.h"
 
 namespace gf {
+void GfKizunaringBlade::orderAchievement(u32 blade, u32 line, u32 level) {
+  if (blade == 0) {
+    return;
+  }
+
+  SDataBladeAchievement *achievement = GfDataBlade::getAchievInfo(blade, line);
+  if (achievement->unknown00 == 0) {
+    return;
+  }
+
+  u32 keyReleaseLevel = GfDataBlade::getKeyReleaseLevel(blade);
+  if (line != ACHIEVEMENT_LINE_KEY && level > keyReleaseLevel) {
+    return;
+  }
+
+  const AchievQuest &achievQuest = achievement->unknown04[level - 1];
+  if (achievQuest.unknown00.empty()) {
+    return;
+  }
+
+  if (line == ACHIEVEMENT_LINE_KEY) {
+    if (!GfQuestInfo::isQuestFin(achievQuest.unknown00) && !GfQuestInfo::isQuestOrder(achievQuest.unknown00)) {
+      GfQuestManager::openOrder(achievQuest.unknown00, false);
+    }
+  } else if (GfQuestInfo::isQuestNotOrder(achievQuest.unknown00)) {
+    GfQuestManager::openOrder(achievQuest.unknown00, false);
+  }
+}
 
 u32 GfKizunaringBlade::getAchievementCategory(u32 blade, u32 line, u32 level) {
   if (blade != 0) {

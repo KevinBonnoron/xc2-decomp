@@ -10,6 +10,10 @@ constexpr u32 unknown001 = 0x6e;
 // Inferred role: ui event type; original name unknown.
 constexpr u16 unknown002 = 0x101;
 
+GfMenuObjItemSubmenu::GfMenuObjItemSubmenu(u32 handle) : GfMenuObject(handle), unknown2c(0) {}
+
+GfMenuObjItemSubmenu::~GfMenuObjItemSubmenu() { ; }
+
 void GfMenuObjItemSubmenu::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjItemSubmenu::update() { GfMenuObject::update(); }

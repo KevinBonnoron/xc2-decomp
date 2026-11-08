@@ -94,7 +94,7 @@ public:
   static bool isExtstActivateEnemy(const QuestTaskParam &param);
   static bool isEnemyGroup(u32 group, u32 enemy);
   static u32 getCurrentItemWithEvent(u32 item);
-  static u32 getCurrentTBoxWithEvent(GF_OBJ_HANDLE *handle);
+  static QuestID getCurrentTBoxWithEvent(GF_OBJ_HANDLE *handle);
   static u32 getQuestNeedChar(u32 index, QuestID quest);
   static void finishTalkNpc(u32 map, u32 npc, QuestID quest);
   static void removeQuestItem(const QuestTaskParam &param);

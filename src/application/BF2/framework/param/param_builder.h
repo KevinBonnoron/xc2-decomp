@@ -12,6 +12,7 @@ class ParamBuilder {
 public:
   static mm::mtl::IntrusivePtr<ParamList> create(void *data, u32 index, const char *name);
   static mm::mtl::IntrusivePtr<ParamList> importBinary(void *data, Reflection *reflection);
+  static void destroy(u32 index);
   static bool restore(void *data);
 };
 

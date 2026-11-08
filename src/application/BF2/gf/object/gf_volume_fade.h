@@ -2,12 +2,17 @@
 #include <stddef.h>
 
 #include "mm_mtl/fixed_array.h"
+#include "mm_mtl/fixed_vector.h"
 #include "scn/scn_obj_acc.h"
 #include "types.h"
 
 namespace ml {
 class ScnObjModel;
 } // namespace ml
+
+namespace fw {
+struct VolumeFadeParams;
+} // namespace fw
 
 namespace gf {
 
@@ -19,6 +24,13 @@ enum VFPARTS : s32 {
   VFPARTS_UNKNOWN_FFFFFFFF = -1, // Inferred role: every part; original enumerator name unknown.
 };
 
+struct VFKEYDATA {
+  f32 unknown00; // Inferred role: key time in seconds; original member name unknown.
+  f32 unknown04; // Inferred role: key ratio; original member name unknown.
+};
+
+static_assert(sizeof(VFKEYDATA) == 0x08, "");
+
 class GfVolumeFade {
 public:
   GfVolumeFade(GF_OBJ_HANDLE *handle, ml::ScnObjModel *model);
@@ -26,7 +38,9 @@ public:
   void setEffectType(VFEFF effect);
   void setFadeRatio(VFACC acc, VFPARTS parts, f32 ratio);
   void applyFadeRatio();
+  static void copyVolumeFadeParams(ml::VolumeFadeParams &params, const fw::VolumeFadeParams &source);
   static bool setupVolumeFadeParamForDead(ml::VolumeFadeParams &params, VFEFF effect);
+  static void setupKeyFrame(mm::mtl::FixedVector<VFKEYDATA, 4> &keys, VFEFF effect);
   f32 getFadeRatio(VFACC acc, VFPARTS parts) const;
   f32 getFadeRatioForParts(VFPARTS parts) const;
 

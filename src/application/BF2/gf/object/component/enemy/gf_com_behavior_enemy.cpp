@@ -314,6 +314,58 @@ void GfComBehaviorEnemy::setupWeapon() {
   updateWeapon();
 }
 
+void GfComBehaviorEnemy::updateInvincible() {
+  bool isInvincible;
+  bool isTargetable;
+  {
+    DataParamAcc dataParam(static_cast<GfObj *>(unknown08)->unknownf8);
+    if (!dataParam.isEnbaleTarget()) {
+      isTargetable = false;
+      isInvincible = true;
+    } else {
+      switch (getStateId()) {
+      case enemy::STATE_ID_UNKNOWN_6:
+      case enemy::STATE_ID_UNKNOWN_7:
+      case enemy::STATE_ID_UNKNOWN_13:
+        isTargetable = false;
+        isInvincible = true;
+        break;
+      default:
+        gmk::AGmkBase *gmkInst = getBindedGmkInst();
+        if (gmkInst == nullptr) {
+          isTargetable = true;
+          isInvincible = false;
+        } else {
+          gmk::GmkType type = gmkInst->getGmkType();
+          if (type == gmk::GmkEnemy::GMK_TYPE) {
+            if ((unknown140.unknownd0.unknown10.unknown48 | unknown140.unknownd0.unknown10.unknown4c) >= 0) {
+              isInvincible = true;
+              isTargetable = true;
+            } else {
+              isInvincible = unknown002(*static_cast<gmk::GmkEnemy *>(gmkInst)).unknown38.isInvincibleCondMatched();
+              isTargetable = !isInvincible;
+            }
+          } else if (type == gmk::GmkRoutedEnemy::GMK_TYPE) {
+            isInvincible = unknown002(*static_cast<gmk::GmkRoutedEnemy *>(gmkInst)).unknown38.isInvincibleCondMatched();
+            isTargetable = !isInvincible;
+          } else {
+            isTargetable = true;
+            isInvincible = false;
+          }
+        }
+        break;
+      }
+    }
+  }
+  if (isTargetable) {
+    static_cast<GfObj *>(unknown08)->unknown110 |= 4;
+  } else {
+    static_cast<GfObj *>(unknown08)->unknown110 &= ~4u;
+  }
+  unknown140.unknown52a8 = isTargetable;
+  GfObjUtil::setInvincible(static_cast<GfObj *>(unknown08)->unknownf8, isInvincible, false);
+}
+
 void GfComBehaviorEnemy::disposeMenuObj() {
   if (unknown130 != nullptr) {
     GfMenuObjTargetInfo::close(unknown130);

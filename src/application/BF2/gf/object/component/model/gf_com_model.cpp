@@ -22,6 +22,10 @@ class MessageObject;
 
 namespace gf {
 
+GfComModel::GfComModel() : unknown10(-1), unknown18(nullptr), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), m_modelScale(1.0f), unknown11a8(nullptr) { unknown1198.unknown08 = this; }
+
+GfComModel::~GfComModel() { ; }
+
 bool GfComModel::hasBone(const char *name) const {
   if (name != nullptr) {
     return unknown28->getBoneID(name) != anm::Skeleton::INVALID_BONE;

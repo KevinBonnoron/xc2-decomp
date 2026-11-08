@@ -25,6 +25,8 @@
 #include "gf/data/gf_game_flag.h"
 #include "gf/data/gf_object_type.h"
 #include "gf/event/gf_event.h"
+#include "gf/game/quest/gf_quest_id.h"
+#include "gf/game/quest/gf_quest_task_param.h"
 #include "mm_mtl/algorithm.h"
 #include "mm_mtl/fixed_vector.h"
 
@@ -86,7 +88,40 @@ template <typename Condition> bool unknown001(mm::mtl::FixedVector<u16, BLADE_CO
   return !blades.empty();
 }
 
+// Defined in gf_data_driver.cpp.
+void unknown006(u32 driver, u32 blade, bool isNew);
+
+// Inferred role: activates the weapon type of a blade for a driver and releases its driver arts; original name unknown.
+void unknown005(u32 driver, u32 blade) {
+  DataParamAcc acc(OBJECT_TYPE_BLADE, blade, GIMMICK_TYPE_NONE);
+  GfDataDriver::setActivateWeaponType(driver, acc.getWeaponType(-1, false));
+  unknown006(driver, blade, false);
+}
+
+// Inferred role: resource name suffix of a weapon type; original name unknown.
+const char *const unknown002[] = {
+    "", "_01", "_02", "_03", "_04", "_05", "_06", "_07", "_08", "_09", "_10", "_11", "_12", "_13", "_14", "_15", "_16", "_17", "_18", "_19", "_20",
+};
+
+// Inferred role: last blade id before the blades named with a weapon type suffix; original name unknown.
+constexpr u32 unknown990 = 0x439;
+// Inferred role: blade id named without a weapon type suffix; original name unknown.
+constexpr u32 unknown991 = 0x44f;
+
 } // namespace
+
+void GfDataBlade::initSaveData(SDataGame &dataGame) {
+  for (u32 i = 0; i < BLADE_COUNT; i++) {
+    u32 blade = getBladeID(i);
+    if (blade != 0) {
+      u32 index = getBladeRelativeID(blade);
+      SDataBlade dataBlade;
+      setupSDataBlade(dataBlade, blade, false);
+      dataGame.unknown5a2c[index] = dataBlade;
+      setupSDataBladeAchievement(*getSDataBlade(blade), true);
+    }
+  }
+}
 
 void GfDataBlade::setCreator(u32 blade, u32 creator) {
   if (blade != 0) {
@@ -337,11 +372,38 @@ bool GfDataBlade::getName(u8 *&bdat, u32 &textId, u32 blade) {
   return getNameWithMsgID(bdat, textId, blade);
 }
 
+u32 GfDataBlade::addRareBlade(const SDataBlade &dataBlade) {
+  if (!isActivateUnuse(dataBlade.unknown06)) {
+    return 0;
+  }
+
+  *getSDataBlade(dataBlade.unknown06) = dataBlade;
+  setupSDataBladeAchievement(*getSDataBlade(dataBlade.unknown06), false);
+  setActivateReserver(dataBlade.unknown06);
+  unknown005(getCreator(dataBlade.unknown06), dataBlade.unknown06);
+  return dataBlade.unknown06;
+}
+
 bool GfDataBlade::getCommonBladeName(const char *model) {
   if (model == nullptr || __builtin_strlen(model) < 6) {
     return false;
   }
   return __builtin_strncmp(model, "bl/bl2", 6) == 0;
+}
+
+u32 GfDataBlade::addCommonBlade(const SDataBlade &dataBlade) {
+  for (u32 blade = BLADE_COMMON_FIRST; blade < BLADE_COMMON_END; blade++) {
+    if (isActivateUnuse(blade)) {
+      *getSDataBlade(blade) = dataBlade;
+      getSDataBlade(blade)->unknown06 = blade;
+      setupSDataBladeAchievement(*getSDataBlade(blade), false);
+      setActivateReserver(blade);
+      unknown005(getCreator(blade), blade);
+      return blade;
+    }
+  }
+
+  return 0;
 }
 
 const char *GfDataBlade::getCommonBladeName(u32 nameList) {
@@ -378,6 +440,48 @@ u32 GfDataBlade::getFavorite(u32 blade, FAVORITE favorite) {
 }
 
 u32 GfDataBlade::getAchievementQuestPrefix(u32 blade, u32 line, u32 level) { return getBladeRelativeID(blade) * ACHIEVEMENT_PER_BLADE + line * ACHIEVEMENT_LEVEL_COUNT + level; }
+
+void GfDataBlade::setupAchievQuest(AchievQuest &achievQuest) {
+  achievQuest.unknown04 = 0;
+  achievQuest.unknown08 = 0;
+  achievQuest.unknown0e = 0;
+  QuestListAcc *questListAcc = QuestListAcc::get();
+  u32 purpose = GfDataQuest::getListPurposeID(GfDataQuest::getListNextQuestA(achievQuest.unknown00));
+  if (purpose == 0) {
+    return;
+  }
+
+  u32 taskType = questListAcc->getTaskTaskType(purpose, 0);
+  u32 taskId = questListAcc->getTaskTaskID(purpose, 0);
+  if (taskType == 0) {
+    return;
+  }
+
+  achievQuest.unknown10 = taskType;
+  u32 count;
+  switch (taskType) {
+  case TASK_TYPE_BATTLE:
+    count = questListAcc->getBattleCount(taskId);
+    break;
+  case TASK_TYPE_COLLECT:
+    count = questListAcc->getCollectCount(taskId);
+    break;
+  case TASK_TYPE_USE:
+    count = questListAcc->getUseItemNumber(taskId);
+    break;
+  case TASK_TYPE_FIELD_SKILL_COUNT:
+    count = questListAcc->getFieldSkillCountCount(taskId);
+    break;
+  case TASK_TYPE_ACHIEVEMENT:
+    achievQuest.unknown08 = questListAcc->getAchievementCount(taskId);
+    achievQuest.unknown0e = questListAcc->getAchievementStatsID(taskId);
+    return;
+  default:
+    return;
+  }
+
+  achievQuest.unknown08 = count;
+}
 
 void SDataIdea::setLevel(u32 idea, int level) {
   unknown00[idea].unknown04 = level;
@@ -490,6 +594,14 @@ void GfDataBlade::resetAttachedParty(u32 blade) {
 }
 
 u32 GfDataBlade::getEndRareBlade() { return GfBdatChrBl::get()->getChrBlEnd(); }
+
+u32 GfDataBlade::addCommonBladeWithPos(const SDataBlade &dataBlade, u32 pos) {
+  u32 blade = BLADE_COMMON_FIRST + pos;
+  *getSDataBlade(blade) = dataBlade;
+  getSDataBlade(blade)->unknown06 = blade;
+  setActivateReserver(blade);
+  return blade;
+}
 
 u32 GfDataBlade::getStartUiCommonBlade() { return BLADE_UI_COMMON_FIRST; }
 
@@ -638,9 +750,47 @@ bool GfDataBlade::isFemale(u32 blade) {
 
 bool GfDataBlade::getNameWithFieldSkillForDebug(mm::mtl::FixStr<128> &, u32) { return false; }
 
-u16 GfDataBlade::getKeyReleaseLevel(u32 blade) { return getSDataBlade(blade)->unknown664; }
+u32 GfDataBlade::getKeyReleaseLevel(u32 blade) { return getSDataBlade(blade)->unknown664; }
 
 u32 GfDataBlade::getRealBladeId(u32 blade) { return blade == BLADE_REAL_ALIAS ? BLADE_REAL_ALIAS_TARGET : blade; }
+
+const char *GfDataBlade::getBaseEabWeaponName(u32 blade) {
+  if (blade == 0) {
+    return "";
+  }
+
+  u32 weaponType = getBladeWpnType(blade);
+  if (GfDataHana::isValid(blade) || isCommonBlade(blade)) {
+    return unknown002[weaponType];
+  }
+  if (blade - BLADE_ACT_FIRST < BLADE_ACT_COUNT) {
+    return unknown002[weaponType];
+  }
+  if (blade > unknown990 && blade != unknown991) {
+    return unknown002[weaponType];
+  }
+
+  return "";
+}
+
+const char *GfDataBlade::getBaseEfbWeaponName(u32 blade) {
+  if (blade == 0) {
+    return "";
+  }
+
+  u32 weaponType = getBladeWpnType(blade);
+  if (blade == BLADE_BYAKKO || GfDataHana::isValid(blade) || blade == BLADE_SAIKA || isCommonBlade(blade)) {
+    return unknown002[weaponType];
+  }
+  if (blade - BLADE_ACT_FIRST < BLADE_ACT_COUNT) {
+    return unknown002[weaponType];
+  }
+  if (blade > unknown990 && blade != unknown991) {
+    return unknown002[weaponType];
+  }
+
+  return "";
+}
 
 u8 GfDataBlade::getAttribute(u32 blade) {
   if (blade == 0) {
@@ -674,12 +824,8 @@ bool GfDataBlade::isMatchIdeaAttribute(u32 blade, u32 idea) {
 }
 
 const char *GfDataBlade::getDeathBlowWeaponName(u32 blade) {
-  static const char *const deathBlowWeaponNames[] = {
-      "", "_01", "_02", "_03", "_04", "_05", "_06", "_07", "_08", "_09", "_10", "_11", "_12", "_13", "_14", "_15", "_16", "_17", "_18", "_19", "_20",
-  };
-
   u32 weaponType = blade == 0 ? 0 : getSDataBlade(blade)->unknown821;
-  return deathBlowWeaponNames[weaponType];
+  return unknown002[weaponType];
 }
 
 u32 GfDataBlade::getBladePower(SDataBlade &dataBlade) {

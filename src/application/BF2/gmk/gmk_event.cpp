@@ -3,10 +3,12 @@
 
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/game/gf_game_cond.h"
+#include "gf/game/gf_game_manager.h"
 #include "gf/game/sequential_play/gf_play_factory.h"
 #include "gf/scom/gf_scom_obj.h"
 #include "gmk/gmk_active_list.h"
 #include "gmk/gmk_bdat.h"
+#include "gmk/gmk_set.h"
 
 namespace gmk {
 
@@ -52,6 +54,40 @@ void GmkEvent::disposeGmkPhantom() {
     TGmkActiveList<GmkEvent>::get()->unknown08.erase(this);
   }
   unknown60.dispose();
+}
+
+void GmkEvent::update(f32 deltaTime) {
+  debugUpdateMmf();
+  if (!isValid()) {
+    return;
+  }
+  bool isCondMatched = unknown001()->isCondMatched();
+  if (unknownf0 != isCondMatched) {
+    if (isCondMatched) {
+      createGmkPhantom();
+    } else {
+      disposeGmkPhantom();
+    }
+    unknownf0 = isCondMatched;
+  }
+  if (unknown60.unknown83) {
+    unknownf2 = true;
+  }
+  if (unknownf1 && gf::GfGameManager::isControlFree()) {
+    unknownf1 = false;
+  }
+}
+
+void GmkEvent::createGmkPhantom() {
+  const GmkSet *set = AGmkBase::unknown08.unknown00->getCreateInfo().unknown08;
+  if (set != nullptr && set->unknown10.unknown24) {
+    return;
+  }
+  unknown60.create(*this, nullptr, false);
+  TGmkActiveList<GmkEvent> *list = TGmkActiveList<GmkEvent>::get();
+  if (list->unknown08.end() == list->unknown08.unknown002(list->unknown08.begin(), list->unknown08.end(), this)) {
+    TGmkActiveList<GmkEvent>::get()->unknown08.push_back(this);
+  }
 }
 
 void GmkEvent::create(const CreateInfo &info) { AGmkBase::create(info); }

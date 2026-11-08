@@ -1,4 +1,5 @@
 // Original file name from the game string C:/Monolithsoft/BF2/prog/libs/wndlib/src/wndlib/wnd_world.cpp.
+#include "anm/anm_array-inl.h"
 #include "mm/mm_std_base.h"
 #include "mm_mtl/intrusive_list.h"
 #include "mm_mtl/reference_object.h" // for safeRelease

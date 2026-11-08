@@ -1,11 +1,11 @@
 #pragma once
 #include <stddef.h>
 
-#include "mm/mm_std_base.h"
 #include "mm_mtl/intrusive_list.h"
 #include "mm_mtl/reference_object.h"
 #include "mm_mtl/vector.h"
 #include "types.h"
+#include "wnd/wnd_array-inl.h"
 #include "wnd/wnd_object.h"
 #include "wnd/wnd_wind.h"
 
@@ -26,31 +26,6 @@ class Dispatcher;
 class WindObject;
 struct ResConpoundWind;
 struct UpdateInfo;
-
-// Array of pointers with the assertions of the original wnd_array-inl.h.
-template <typename T> class Array {
-public:
-  // __LINE__ must be 231 and 232 as in the original header: they are the line arguments of the asserts.
-#line 230
-  T &operator[](size_t index) {
-    MM_ASSERT(m_pElements);
-    MM_ASSERT(index < m_size);
-    return m_pElements[index];
-  }
-
-  // __LINE__ must be 231 and 232 as in the original header: they are the line arguments of the asserts.
-#line 230
-  const T &operator[](size_t index) const {
-    MM_ASSERT(m_pElements);
-    MM_ASSERT(index < m_size);
-    return m_pElements[index];
-  }
-
-  u32 size() const { return m_size; }
-
-  T *m_pElements;
-  u32 m_size;
-};
 
 static_assert(sizeof(Array<const ResConpoundWind *>) == 0x10, "");
 
@@ -108,7 +83,7 @@ public:
   mm::mtl::IntrusiveList<unknown003<LocalWind>> unknown1a0;  // Inferred role: local winds; original member name unknown.
   mm::mtl::IntrusiveList<unknown003<WindObject>> unknown1b8; // Inferred role: objects to erase; original member name unknown.
   bool unknown1d0;                                           // Inferred role: debug mode; original member name unknown.
-  u8 _1d1[0x1d8 - 0x1d1];
+  u8 _1d1[0x1e0 - 0x1d1];
 };
 
 static_assert(offsetof(WindWorld, unknown10) == 0x10, "");
@@ -119,5 +94,7 @@ static_assert(offsetof(WindWorld, unknown188) == 0x188, "");
 static_assert(offsetof(WindWorld, unknown1a0) == 0x1a0, "");
 static_assert(offsetof(WindWorld, unknown1b8) == 0x1b8, "");
 static_assert(offsetof(WindWorld, unknown1d0) == 0x1d0, "");
+// The game allocates WindWorld with size 0x1e0 at 0x71001af5c8; the last known field is the bool at 0x1d0.
+static_assert(sizeof(WindWorld) == 0x1e0, "");
 
 } // namespace wnd

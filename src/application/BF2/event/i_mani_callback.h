@@ -7,7 +7,10 @@ namespace event {
 
 class IManiCallback {
 public:
-  struct StartParam;
+  struct StartParam {
+    mm::Mat44 unknown00; // Inferred role: start transform with position; original member name unknown.
+    mm::Mat44 unknown40; // Inferred role: start rotation; original member name unknown.
+  };
 
   struct RenderParam {
     mm::Col4 unknown00; // Inferred role: color; original member name unknown.

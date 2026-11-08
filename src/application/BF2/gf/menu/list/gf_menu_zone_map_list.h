@@ -7,14 +7,16 @@
 namespace gf {
 
 struct MenuZoneMapInfo {
-  MenuZoneMapInfo() : unknown00(0), unknown04(0), _08(), unknown14(0) {}
+  MenuZoneMapInfo() : unknown00(0), unknown04(0), unknown08(0), _0c(), unknown14(0) {}
 
   u32 unknown00; // Inferred role: map id; original member name unknown.
   u32 unknown04; // Inferred role: param; original member name unknown.
-  u8 _08[0x14 - 0x8];
+  u32 unknown08; // Inferred role: jump condition; original member name unknown.
+  u8 _0c[0x14 - 0xc];
   u16 unknown14; // Inferred role: priority; original member name unknown.
 };
 
+static_assert(offsetof(MenuZoneMapInfo, unknown08) == 0x8, "");
 static_assert(offsetof(MenuZoneMapInfo, unknown14) == 0x14, "");
 static_assert(sizeof(MenuZoneMapInfo) == 0x18, "");
 

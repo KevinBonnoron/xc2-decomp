@@ -26,6 +26,8 @@ enum {
 };
 
 struct MsgPcGetLookPoint : fw::Message {
+  MsgPcGetLookPoint() : fw::Message(MSG_PC_GET_LOOK_POINT, 0x40), unknown10(mm::Vec3::zero), unknown20(false) {}
+
   mm::Vec3 unknown10; // Inferred role: look point; original member name unknown.
   bool unknown20;     // Inferred role: valid; original member name unknown.
 };

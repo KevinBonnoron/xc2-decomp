@@ -8,8 +8,9 @@
 #include <stddef.h>
 
 namespace fw {
+class Reflection;
 struct UpdateInfo;
-}
+} // namespace fw
 
 namespace gf {
 
@@ -25,10 +26,14 @@ struct MsgPcFieldNotifyChangePlayerID : fw::Message {
 };
 
 struct FormationParam {
+  static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
+
   mm::Vec2 offsets[5];
 };
 
 struct WarpForRandomTalkParam {
+  static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
+
   f32 height;
   f32 distance;
 };

@@ -32,6 +32,20 @@ void GmkCtrlVolSe::dispose() {
   unknown20 = CreateInfo();
 }
 
+void GmkCtrlVolSe::createInst() {
+  disposeInst(true);
+  unknown60 = fw::SoundManager::get()->playSe(unknown20.unknown08, unknown20.unknown00, unknown20.unknown18 * 0.01f, unknown20.unknown0c);
+  if (unknown60 == 0) {
+    dispose();
+    return;
+  }
+  fw::SoundManager::get()->setVolume(unknown60, unknown20.unknown18 * 0.01f, 1.0f);
+  GmkCtrlVolSeManager *manager = GmkCtrlVolSeManager::get();
+  if (manager->unknown08.end() == manager->unknown08.unknown002(manager->unknown08.begin(), manager->unknown08.end(), this)) {
+    GmkCtrlVolSeManager::get()->unknown08.push_back(this);
+  }
+}
+
 void GmkCtrlVolSe::disposeInst(bool isFadeOut) {
   if (unknown60 == 0) {
     return;

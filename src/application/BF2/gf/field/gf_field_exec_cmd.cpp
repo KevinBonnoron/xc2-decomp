@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "gf/object/component/animation/gf_com_asm.h"
+#include "gf/object/component/animation/gf_com_evt_anim.h"
 
 namespace gf {
 
@@ -14,19 +15,20 @@ template <typename T> void TFieldExecCmd<T>::create(const CreateInfo &info) {
 }
 
 template <typename T> bool TFieldExecCmd<T>::execCmd(T &comAsm, const char *command) const {
-  const char *stateName = comAsm.getStateName(ANIM_LAYER_BASE);
+  const char *stateName = comAsm.getStateName();
   if (stateName == nullptr) {
     return false;
   }
 
-  mm::mtl::FixStr<32> state = comAsm.getStateName(ANIM_LAYER_BASE);
+  mm::mtl::FixStr<32> state = comAsm.getStateName();
   if (strcmp(command + 1, state.c_str() + 1) == 0) {
     return true;
   }
 
-  return comAsm.execCmd(command, ANIM_LAYER_BASE);
+  return comAsm.execCmd(command);
 }
 
 template class TFieldExecCmd<GfComAsm>;
+template class TFieldExecCmd<GfComEvtAnim>;
 
 } // namespace gf

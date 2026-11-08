@@ -36,21 +36,29 @@ struct unknown024;
 struct unknown020;
 struct MdsMatInfoHeader;
 
-// Layout evidence: ScnObjAccVolumeFade::setParams (0x7107b42cc) copies 0x3c bytes then the members at 0x40, 0x50 and 0x9c to 0xa4.
+// Layout evidence: ScnObjAccVolumeFade::setParams (0x7107b42cc) copies 0x3c bytes then the members at 0x40, 0x50 and 0x9c to 0xa4;
+// gf::GfVolumeFade::copyVolumeFadeParams (0x7104f74a4) fills 0x00..0x3c with five 12 byte colors, 0x40 and 0x50 with the two aligned
+// vectors and 0x60..0x9c with three groups of five floats.
 struct VolumeFadeParams {
-  u8 _00[0x40 - 0x00];
-  mm::Vec3 unknown40; // Inferred role: position; original member name unknown.
-  mm::Vec3 unknown50; // Inferred role: scale; original member name unknown.
-  u8 _60[0x9c - 0x60];
-  f32 unknown9c; // Inferred role: frame; original member name unknown.
-  f32 unknowna0; // Inferred role: rate; original member name unknown.
-  f32 unknowna4; // Role and original member name unknown.
+  mm::Col3 unknown00[5]; // Inferred role: colors; original member name unknown.
+  mm::Vec3 unknown40;    // Inferred role: position; original member name unknown.
+  mm::Vec3 unknown50;    // Inferred role: scale; original member name unknown.
+  f32 unknown60[5];      // Inferred role: first group of five floats; original member name unknown.
+  f32 unknown74[5];      // Inferred role: second group of five floats; original member name unknown.
+  f32 unknown88[5];      // Inferred role: third group of five floats; original member name unknown.
+  f32 unknown9c;         // Inferred role: frame; original member name unknown.
+  f32 unknowna0;         // Inferred role: rate; original member name unknown.
+  f32 unknowna4;         // Role and original member name unknown.
 };
 
 static_assert(offsetof(VolumeFadeParams, unknown40) == 0x40, "");
 static_assert(offsetof(VolumeFadeParams, unknown50) == 0x50, "");
+static_assert(offsetof(VolumeFadeParams, unknown60) == 0x60, "");
+static_assert(offsetof(VolumeFadeParams, unknown74) == 0x74, "");
+static_assert(offsetof(VolumeFadeParams, unknown88) == 0x88, "");
 static_assert(offsetof(VolumeFadeParams, unknown9c) == 0x9c, "");
 static_assert(offsetof(VolumeFadeParams, unknowna4) == 0xa4, "");
+static_assert(sizeof(VolumeFadeParams) == 0xb0, "");
 
 struct DrMdlAfterImageParams {
   f32 unknown00;      // Inferred role: count; original member name unknown.

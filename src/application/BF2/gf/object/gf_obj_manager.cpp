@@ -2,6 +2,7 @@
 
 #include "gf/asset/gf_asset_multi_bind.h"
 #include "gf/data/gf_object_type.h"
+#include "gf/game/gf_game_manager.h"
 #include "gf/gf_allocator.h"
 #include "gf/gf_manager.h"
 #include "gf/object/gf_obj.h"
@@ -14,6 +15,26 @@ namespace gf {
 
 GfObjManager *GfObjManager::s_pThis;
 mm::mtl::FixedList<GfObjManager::ObjListener, 256> GfObjManager::m_aListenerObj;
+
+// Inferred role: capacity of each object type, -1 when unlimited; original table name unknown.
+static const int GFOBJ_CAPACITIES[] = {
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    40,
+    32,
+    64,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+};
 
 GfObjManager::~GfObjManager() { s_pThis = nullptr; }
 
@@ -104,7 +125,53 @@ bool GfObjManager::isInitialized() {
 
 int GfObjManager::getObjectNum(u32 objectType) { return s_pThis->unknown484540[objectType]; }
 
+int GfObjManager::getGfObjCapacity(u32 objectType) {
+  if (objectType >= sizeof(GFOBJ_CAPACITIES) / sizeof(GFOBJ_CAPACITIES[0])) {
+    return -1;
+  }
+  if (objectType == OBJECT_TYPE_MOB && get() != nullptr && !GfGameManager::isPlayEvent()) {
+    return get()->unknown484a2c;
+  }
+  return GFOBJ_CAPACITIES[objectType];
+}
+
+GFOBJ_INFO *GfObjManager::getObjInfo(GF_OBJ_HANDLE *handle) {
+  if (s_pThis == nullptr) {
+    return nullptr;
+  }
+  u32 index = reinterpret_cast<u64>(handle) & 0xfff;
+  GFOBJ_INFO *info = &s_pThis->unknown18.unknown007[index];
+  if (s_pThis->unknown18.unknown010(index)) {
+    if (info->unknown08 == handle) {
+      return info;
+    }
+    return nullptr;
+  }
+  return nullptr;
+}
+
+void GfObjManager::updateFirstObjects(const fw::UpdateInfo &info) {
+  for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096>::iterator it = unknown43b280.begin(); it != unknown43b280.end(); ++it) {
+    GFOBJ_INFO *objInfo = getObjInfo(*it);
+    if (objInfo != nullptr) {
+      objInfo->unknown38.set(OBJ_FLAG_UPDATED, true);
+    }
+  }
+  unknown43b280.clear();
+}
+
 bool GfObjManager::isSuspendUpdate() const { return unknown484a28; }
+
+GF_OBJ_HANDLE *GfObjManager::getExistFixedObj(int index) const {
+  u32 slot = index;
+  if (slot >= 0x100) {
+    return INVALID_HANDLE;
+  }
+  if (unknown18.unknown010(slot)) {
+    return unknown18.unknown007[slot].unknown08;
+  }
+  return INVALID_HANDLE;
+}
 
 const mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096> *GfObjManager::getLoadingObj() const { return &unknown420240; }
 

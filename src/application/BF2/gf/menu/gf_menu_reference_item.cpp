@@ -7,6 +7,7 @@
 #include "gf/data/gf_object_type.h"
 #include "gf/game/quest/gf_quest_id.h"
 #include "gf/menu/gf_menu_reference.h"
+#include "gf/menu/gf_menu_reference_quest.h"
 #include "gf/menu/list/gf_menu_field_skill_list.h"
 #include "gf/util/gf_item_util.h"
 #include "mm_mtl/fixed_array.h"

@@ -18,6 +18,7 @@ public:
   static void dispAllOther(bool disp);
   static void dispAllEnemy(bool disp);
   static void disp(bool disp);
+  static void startOpen(u32 handle, u32 object, int param0, int param1);
 };
 
 } // namespace gf

@@ -1,4 +1,5 @@
 #pragma once
+#include "gf/data/gf_item_handle.h"
 #include "types.h"
 
 namespace gf {
@@ -54,6 +55,12 @@ public:
   static RESULT_HANA isEnableEquipCondenserParts(u32 blade, u32 parts, u32 slot);
   static RESULT_HANA isEnableEquipArtsParts(u32 blade, u32 parts, u32 slot);
   static RESULT_HANA isEnableEquipExtendCondenserParts(u32 blade, u32 parts, u32 slot);
+  static RESULT_HANA execEquipRoleParts(u32 blade, u32 parts, GfItemHandle handle);
+  static RESULT_HANA execEquipAttributeParts(u32 blade, u32 parts, GfItemHandle handle);
+  static RESULT_HANA execEquipNArtsParts(u32 blade, u32 parts, GfItemHandle handle, u32 slot);
+  static RESULT_HANA execEquipCondenserParts(u32 blade, u32 parts, GfItemHandle handle, u32 slot);
+  static RESULT_HANA execEquipArtsParts(u32 blade, u32 parts, GfItemHandle handle, u32 slot);
+  static RESULT_HANA execEquipExtendCondenserParts(u32 blade, u32 parts, GfItemHandle handle, u32 slot);
 };
 
 } // namespace gf

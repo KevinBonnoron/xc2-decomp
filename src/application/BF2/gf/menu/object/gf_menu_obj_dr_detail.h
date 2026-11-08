@@ -14,8 +14,10 @@ public:
   void finalize() override;
   void update() override;
   static void open(GfMenuCallContext *context);
+  static void close(GfMenuCallContext *context, bool flag);
   static void nextPage(GfMenuCallContext *context);
   static void prevPage(GfMenuCallContext *context);
+  static void disp(GfMenuCallContext *context, bool flag);
 };
 
 } // namespace gf

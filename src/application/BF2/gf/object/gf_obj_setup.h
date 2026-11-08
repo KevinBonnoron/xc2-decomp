@@ -5,6 +5,7 @@
 #include "gf/data/gf_object_type.h"
 #include "gf/object/gf_init_param.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_math/mm_vec3_na.h"
 #include "mm_mtl/fixstr.h"
 #include "types.h"
 
@@ -29,6 +30,7 @@ class GfObjSetupBelonging;
 class GfObjSetupBlade;
 class GfObjSetupDriver;
 class GfObjSetupEnWeapon;
+class GfObjSetupEventObj;
 class GfObjSetupExtra;
 class GfObjSetupFieldObj;
 class GfObjSetupGimmick;
@@ -36,6 +38,7 @@ class GfObjSetupMap;
 class GfObjSetupMapLodAnim;
 class GfObjSetupMob;
 class GfObjSetupNpc;
+class GfObjSetupUiObj;
 class GfObjSetupWeapon;
 
 enum VFACC : s32 {
@@ -58,6 +61,25 @@ public:
   virtual u32 getFootStepEffect() const;
   virtual u32 getEnArrangeID() const;
 
+  GfObjSetup(const GfInitParam &param, u32 type)
+      : unknown08(type), unknown0c(param.unknown40), unknown10(param.m_bladeID), unknown14(param.unknown20), unknown18(param.unknown24), unknown1c(param.unknown08), unknown54(param.isAllWeapon()),
+        unknown58(0), unknown5c(static_cast<GimmickType>(param.unknown48)), unknown60(param.unknown81), unknown64(VFACC_UNKNOWN_FFFFFFFF), unknown68(-1) {
+    if (!param.unknown80) {
+      unknown20 = mm::Vec3::zero;
+      unknown30 = mm::Vec3::zero;
+    } else {
+      unknown20.x = param.unknown60.x;
+      unknown20.y = param.unknown60.y;
+      unknown20.z = param.unknown60.z;
+      unknown30.x = param.unknown70.x;
+      unknown30.y = param.unknown70.y;
+      unknown30.z = param.unknown70.z;
+    }
+
+    setInitialScale(param.unknown4c);
+    unknown50 = param.unknown50;
+  }
+
   void setInitialTransform(const fw::Transform &transform);
   void setInitialTransform(const mm::Mat44 &matrix);
   void setInitialScale(f32 scale);
@@ -76,6 +98,8 @@ public:
   static GfObjSetupEnWeapon *createSetupParam(GF_OBJ_HANDLE *handle, const GfInitParamEnWeapon &param);
   static GfObjSetupBelonging *createSetupParam(GF_OBJ_HANDLE *handle, const GfInitParamBelonging &param);
   static GfObjSetupExtra *createSetupParam(GF_OBJ_HANDLE *handle, const GfInitParamExtra &param);
+  static GfObjSetupEventObj *createSetupParam(GF_OBJ_HANDLE *handle, const GfInitParamEventObj &param);
+  static GfObjSetupUiObj *createSetupParam(GF_OBJ_HANDLE *handle, const GfInitParamUiObj &param);
 
   bool isEvent() const {
     switch (unknown1c) {
@@ -88,11 +112,11 @@ public:
     }
   }
 
-  u32 unknown08; // Inferred role: object type; original member name unknown.
-  u8 _0c[0x10 - 0x0c];
-  u32 unknown10; // Inferred role: id; original member name unknown.
-  u32 unknown14; // Inferred role: party member; original member name unknown.
-  u8 _18[0x1c - 0x18];
+  u32 unknown08;      // Inferred role: object type; original member name unknown.
+  u32 unknown0c;      // Inferred role: layer; original member name unknown.
+  u32 unknown10;      // Inferred role: id; original member name unknown.
+  u32 unknown14;      // Inferred role: party member; original member name unknown.
+  VIEWCAM unknown18;  // Inferred role: view camera; original member name unknown.
   u32 unknown1c;      // Inferred role: character type; original member name unknown.
   mm::Vec3 unknown20; // Inferred role: position; original member name unknown.
   mm::Vec3 unknown30; // Inferred role: rotation; original member name unknown.
@@ -133,7 +157,7 @@ class GfObjSetupMap : public GfObjSetup {
 public:
   static mm::mtl::RTTI m_rtti;
 
-  GfObjSetupMap(const GfInitParam &param);
+  GfObjSetupMap(const GfInitParam &param) : GfObjSetup(param, OBJECT_TYPE_MAP), unknown6c(0), unknown70(0), unknown74(false), unknown75(false) {}
   const mm::mtl::RTTI *getRTTI() const override;
 
   u32 unknown6c;  // Inferred role: bdat id; original member name unknown.
@@ -205,7 +229,7 @@ public:
   bool unknown78; // Inferred role: alternate; original member name unknown.
   u8 _79[0x80 - 0x79];
   GfInitParamWeapon unknown80; // Inferred role: copy of the init param; original member name unknown.
-  u8 _1a0[0x270 - 0x1a0];
+  u8 _268[0x270 - 0x268];
 };
 
 // Evidence: the GfObjSetupWeapon constructor calls GfAppend::GfAppend on this+0x118 (GfInitParamWeapon::unknown98 of the copy) and assigns its mounts from GfInitParamWeapon::unknown98.
@@ -219,39 +243,42 @@ static_assert(sizeof(GfObjSetupWeapon) == 0x270, "");
 class GfObjSetupMob : public GfObjSetup {
 public:
   static mm::mtl::RTTI m_rtti;
+  static const u32 OBJECT_TYPE = OBJECT_TYPE_MOB;
 
-  GfObjSetupMob(const GfInitParamMob &param);
+  GfObjSetupMob(const GfInitParamMob &param) : GfObjSetup(param, OBJECT_TYPE_MOB), unknown6c("S_idle"), unknown90(100) {}
   const mm::mtl::RTTI *getRTTI() const override;
 
-  u8 _6c[0x90 - 0x6c];
-  u8 unknown90; // Inferred role: move speed rate in percent; original member name unknown.
+  mm::mtl::FixStr<32> unknown6c; // Inferred role: motion; original member name unknown.
+  u8 unknown90;                  // Inferred role: move speed rate in percent; original member name unknown.
   u8 _91[0xa0 - 0x91];
 };
 
 static_assert(offsetof(GfObjSetupMob, unknown90) == 0x90, "");
+static_assert(offsetof(GfObjSetupMob, unknown6c) == 0x6c, "");
 static_assert(sizeof(GfObjSetupMob) == 0xa0, "");
 
 class GfObjSetupNpc : public GfObjSetup {
 public:
   static mm::mtl::RTTI m_rtti;
 
-  GfObjSetupNpc(const GfInitParamNpc &param);
+  GfObjSetupNpc(const GfInitParamNpc &param) : GfObjSetup(param, OBJECT_TYPE_NPC), unknown6c("S_idle"), unknown90(nullptr) {}
   const mm::mtl::RTTI *getRTTI() const override;
   static const u32 OBJECT_TYPE = OBJECT_TYPE_NPC;
 
-  u8 _6c[0x90 - 0x6c];
-  void *unknown90; // Role and original member name unknown; copied from GfInitParamNpc.
+  mm::mtl::FixStr<32> unknown6c; // Inferred role: motion; original member name unknown.
+  void *unknown90;               // Role and original member name unknown; copied from GfInitParamNpc.
   u8 _98[0xa0 - 0x98];
 };
 
 static_assert(offsetof(GfObjSetupNpc, unknown90) == 0x90, "");
+static_assert(offsetof(GfObjSetupNpc, unknown6c) == 0x6c, "");
 static_assert(sizeof(GfObjSetupNpc) == 0xa0, "");
 
 class GfObjSetupGimmick : public GfObjSetup {
 public:
   static mm::mtl::RTTI m_rtti;
 
-  GfObjSetupGimmick(const GfInitParamGimmick &param);
+  GfObjSetupGimmick(const GfInitParamGimmick &param) : GfObjSetup(param, OBJECT_TYPE_GIMMICK), unknown6c(0), unknown70("S_idle"), unknown98(nullptr), unknowna0(true), unknowna1(true) {}
   const mm::mtl::RTTI *getRTTI() const override;
   static const u32 OBJECT_TYPE = OBJECT_TYPE_GIMMICK;
 
@@ -259,14 +286,15 @@ public:
   mm::mtl::FixStr<32> unknown70; // Inferred role: motion; original member name unknown.
   u8 _94[0x98 - 0x94];
   void *unknown98; // Role and original member name unknown; copied from GfInitParamGimmick.
-  u8 _a0[0xa1 - 0xa0];
-  bool unknowna1; // Inferred role: accessible; original member name unknown.
+  bool unknowna0;  // Role and original member name unknown; set to true by the constructor.
+  bool unknowna1;  // Inferred role: accessible; original member name unknown.
   u8 _a2[0xb0 - 0xa2];
 };
 
 static_assert(offsetof(GfObjSetupGimmick, unknown6c) == 0x6c, "");
 static_assert(offsetof(GfObjSetupGimmick, unknown70) == 0x70, "");
 static_assert(offsetof(GfObjSetupGimmick, unknown98) == 0x98, "");
+static_assert(offsetof(GfObjSetupGimmick, unknowna0) == 0xa0, "");
 static_assert(offsetof(GfObjSetupGimmick, unknowna1) == 0xa1, "");
 static_assert(sizeof(GfObjSetupGimmick) == 0xb0, "");
 
@@ -314,7 +342,7 @@ class GfObjSetupBelonging : public GfObjSetup {
 public:
   static mm::mtl::RTTI m_rtti;
 
-  GfObjSetupBelonging(const GfInitParamBelonging &param);
+  GfObjSetupBelonging(const GfInitParamBelonging &param) : GfObjSetup(param, OBJECT_TYPE_BELONGING), unknown6c(-1) {}
   const mm::mtl::RTTI *getRTTI() const override;
   static const u32 OBJECT_TYPE = OBJECT_TYPE_BELONGING;
 
@@ -328,7 +356,7 @@ class GfObjSetupEnWeapon : public GfObjSetup {
 public:
   static mm::mtl::RTTI m_rtti;
 
-  GfObjSetupEnWeapon(const GfInitParamEnWeapon &param);
+  GfObjSetupEnWeapon(const GfInitParamEnWeapon &param) : GfObjSetup(param, OBJECT_TYPE_EN_WEAPON), unknown6c(-1) {}
   const mm::mtl::RTTI *getRTTI() const override;
 
   u32 unknown6c; // Inferred role: mount index; original member name unknown.
@@ -342,13 +370,18 @@ public:
   static mm::mtl::RTTI m_rtti;
 
   const mm::mtl::RTTI *getRTTI() const override;
+
+  mm::mtl::FixStr<128> unknown6c; // Inferred role: model name; original member name unknown.
 };
+
+static_assert(offsetof(GfObjSetupEventObj, unknown6c) == 0x6c, "");
+static_assert(sizeof(GfObjSetupEventObj) == 0xf0, "");
 
 class GfObjSetupExtra : public GfObjSetup {
 public:
   static mm::mtl::RTTI m_rtti;
 
-  GfObjSetupExtra(const GfInitParamExtra &param);
+  GfObjSetupExtra(const GfInitParamExtra &param) : GfObjSetup(param, OBJECT_TYPE_UNKNOWN_14), unknown6c(-1) {}
   const mm::mtl::RTTI *getRTTI() const override;
 
   u32 unknown6c; // Inferred role: mount index; original member name unknown.
@@ -361,21 +394,27 @@ class GfObjSetupFieldObj : public GfObjSetup {
 public:
   static mm::mtl::RTTI m_rtti;
 
-  GfObjSetupFieldObj(const GfInitParamFobj &param);
+  GfObjSetupFieldObj(const GfInitParamFobj &param) : GfObjSetup(param, OBJECT_TYPE_FOBJ), unknown6c(-1), unknown70(0), unknown78(0), unknown80(0), unknown88(0) {}
   const mm::mtl::RTTI *getRTTI() const override;
 
   u32 unknown6c; // Inferred role: param id; original member name unknown.
-  u8 _70[0x90 - 0x70];
+  u64 unknown70; // Role and original member name unknown; cleared by the constructor.
+  u64 unknown78; // Role and original member name unknown; cleared by the constructor.
+  u64 unknown80; // Role and original member name unknown; cleared by the constructor.
+  u32 unknown88; // Role and original member name unknown; cleared by the constructor.
+  u8 _8c[0x90 - 0x8c];
 };
 
 static_assert(offsetof(GfObjSetupFieldObj, unknown6c) == 0x6c, "");
+static_assert(offsetof(GfObjSetupFieldObj, unknown70) == 0x70, "");
+static_assert(offsetof(GfObjSetupFieldObj, unknown88) == 0x88, "");
 static_assert(sizeof(GfObjSetupFieldObj) == 0x90, "");
 
 class GfObjSetupMapLodAnim : public GfObjSetup {
 public:
   static mm::mtl::RTTI m_rtti;
 
-  GfObjSetupMapLodAnim(const GfInitParamMapLodAnim &param);
+  GfObjSetupMapLodAnim(const GfInitParamMapLodAnim &param) : GfObjSetup(param, OBJECT_TYPE_UNKNOWN_2), unknown6c(0) {}
   const mm::mtl::RTTI *getRTTI() const override;
 
   u16 unknown6c; // Inferred role: lod id; original member name unknown.

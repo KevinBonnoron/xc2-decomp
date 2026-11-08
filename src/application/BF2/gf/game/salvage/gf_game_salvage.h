@@ -179,9 +179,12 @@ class StateSalvageClimbStart : public ai::State {
   void enter(GfGameSalvage *salvage, ai::State *previous);
   void leave(GfGameSalvage *salvage, ai::State *next);
   void update(GfGameSalvage *salvage, const fw::UpdateInfo &info);
+  void callback();
 
 private:
-  u8 _18[0x20 - 0x18];
+  u8 unknown18; // Inferred role: climb animation type; original member name unknown.
+  u8 unknown19; // Inferred role: number of vibrations played; original member name unknown.
+  u8 _1a[0x20 - 0x1a];
 };
 
 class StateSalvageResult : public ai::State {
@@ -355,6 +358,7 @@ public:
   bool isVoiceEnd();
   void playClimbReady();
   void playClimb();
+  bool isClimbEnd();
   AnimationType getClimbAnimationType() const;
   void playWireStart(f32 time, f32 speed, f32 length);
   void addSalvagerPoint(u32 point);

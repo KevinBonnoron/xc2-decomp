@@ -1,6 +1,11 @@
 #include "gf/object/component/property/gf_com_property.h"
 
+#include "framework/object/updatable_object.h"
+#include "gf/object/component/behavior/gf_com_behavior.h"
 #include "gf/object/component/property/gf_env_property.h"
+#include "gf/object/gf_obj.h"
+#include "gf/object/gf_obj_property.h"
+#include "gf/object/gf_obj_util.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/unique_ptr.h" // IWYU pragma: keep
 
@@ -9,6 +14,46 @@ namespace gf {
 GfComProperty::GfComProperty() {}
 
 GfComProperty::~GfComProperty() {}
+
+void GfComProperty::changeLayer(u32 oldLayer, u32 newLayer) {}
+
+void GfComProperty::flush() {
+  GfObjPropertyCharacter *character = GfObjUtil::getProperty(static_cast<GfObj *>(unknown08)->unknownf8)->unknown10;
+  if (character != nullptr) {
+    GfStatusProperty *status = unknown10.get();
+    if (status != nullptr) {
+      character->unknown00 = status->unknown0c;
+      character->unknown04 = status->unknown10;
+    }
+    if (unknown18) {
+      character->unknown28 = unknown18->handle;
+    }
+  }
+
+  MsgObjectFlushProperty message;
+  recieveMessage(static_cast<GfObj *>(unknown08), message);
+}
+
+void GfComProperty::procMsgGameChangeTarget(fw::MessageObject *object, MsgGameChangeTarget &message) {
+  if (unknown18) {
+    unknown18->handle = message.unknown08;
+    GfComBehavior *behavior = unknown08->getComponent<GfComBehavior>();
+    if (behavior != nullptr) {
+      behavior->recieveMessage(object, message);
+    }
+  }
+}
+
+void GfComProperty::procMsgObjectDead(fw::MessageObject *object, MsgObjectDead &message) {
+  if (unknown10.get() != nullptr && unknown10->unknown10 != 0) {
+    unknown10->unknown10 = 0;
+    MsgObjectNotifyDead notify(0, static_cast<const MsgObjectDamage *>(static_cast<const fw::Message *>(&message)));
+    notify.unknown08 = message.deadType;
+    onDead(notify);
+  }
+}
+
+const mm::mtl::RTTI *GfComProperty::getRTTI() const { return &m_rtti; }
 
 void GfComProperty::procMsgObjectInvincible(fw::MessageObject *object, MsgObjectInvincible &message) {
   if (unknown10.get() != nullptr) {

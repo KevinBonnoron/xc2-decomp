@@ -3,6 +3,7 @@
 
 #include "gf/menu/adapter/gf_menu_adapter.h"
 #include "gf/menu/gf_menu_reference_item.h"
+#include "gf/menu/gf_menu_reference_list.h"
 #include "gf/menu/gf_menu_reference_number.h"
 #include "gf/menu/list/gf_menu_item_list.h"
 #include "mm_mtl/delegate.h"
@@ -40,6 +41,16 @@ public:
 
     GfMenuItemList *list;
     int listIndex;
+  };
+
+  class ReferenceListConverter : public IConverter {
+  public:
+    ReferenceListConverter(mm::mtl::IntrusivePtr<GfMenuReferenceList<GfMenuItemList>> list, u32 listIndex) : list(list), listIndex(listIndex) {}
+    ~ReferenceListConverter() override { list = nullptr; }
+    void getItemInfo(MenuItemInfo &info) override;
+
+    mm::mtl::IntrusivePtr<GfMenuReferenceList<GfMenuItemList>> list;
+    u32 listIndex;
   };
 
   class ReferenceItemConverter : public IConverter {
@@ -175,6 +186,7 @@ public:
   static GfMenuItemAdapter *createFromCoverter(u32 handle, u32 type, IConverter *converter, bool isUpdateAlways);
   static GfMenuItemAdapter *createFromList(u32 handle, u32 type, GfMenuItemList *list, int listIndex, bool isUpdateAlways);
   static GfMenuItemAdapter *createFromReference(u32 handle, u32 type, mm::mtl::IntrusivePtr<IGfMenuReferenceItem> item, bool isUpdateAlways);
+  static GfMenuItemAdapter *createFromRefernceList(u32 handle, u32 type, mm::mtl::IntrusivePtr<GfMenuReferenceList<GfMenuItemList>> list, u32 listIndex, bool isUpdateAlways);
   static GfMenuItemAdapter *createFromPouch(u32 handle, u32 type, u32 pouchIndex, u32 driver, bool isUpdateAlways);
   static GfMenuItemAdapter *createFromPouchReferenceIndex(u32 handle, u32 type, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number, u32 driver, bool isUpdateAlways);
   static GfMenuItemAdapter *createFromPouchReferenceDriver(u32 handle, u32 type, u32 pouchIndex, u32 driverIndex, bool isUpdateAlways);

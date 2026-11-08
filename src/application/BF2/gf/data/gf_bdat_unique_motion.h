@@ -1,15 +1,20 @@
 #pragma once
 #include <stddef.h>
 
+#include "framework/message/message_object.h"
+#include "gf/data/gf_data_bdat.h"
 #include "mm_mtl/fixed_queue.h"
+#include "mm_mtl/map.h"
 #include "mm_mtl/singleton.h"
+#include "mm_mtl/unique_ptr.h"
+#include "mm_mtl/vector.h"
 #include "types.h"
 
 namespace gf {
 
-class GfBdatUniqueMotion : public mm::mtl::PtrSingleton<GfBdatUniqueMotion> {
+class GfBdatUniqueMotion : public mm::mtl::PtrSingleton<GfBdatUniqueMotion>, public IDataBdat, public fw::MessageObject {
 public:
-  struct Impl;
+  class Impl;
 
   // Layout evidence: Impl::build (0x71002862c4) fills it from the bdat columns before
   // Map<u16, CharaInfo>::insert (0x71002874a4), whose node copies the 0x18-byte MapPair (key at 0x00, value at 0x04).
@@ -24,6 +29,8 @@ public:
   };
 
   struct PresetKey {
+    bool isContain(const PresetKey &key) const;
+
     u16 ids[6];
   };
 
@@ -42,7 +49,22 @@ public:
     PresetKey unknown34;     // Inferred role: sorted characters; original member name unknown.
   };
 
+  GfBdatUniqueMotion();
+  void bdatRefresh() override;
   static void queryPreset(mm::mtl::FixedQueue<const PresetInfo *, 32> *presets, const PresetKey &key);
+
+  mm::mtl::UniquePtr<Impl> unknown28; // Inferred role: implementation; original member name unknown.
+};
+
+class GfBdatUniqueMotion::Impl {
+public:
+  Impl();
+  ~Impl();
+  void build();
+  void queryPreset(mm::mtl::FixedQueue<const PresetInfo *, 32> *presets, const PresetKey &key);
+
+  mm::mtl::Vector<PresetInfo> unknown00;  // Inferred role: presets; original member name unknown.
+  mm::mtl::Map<u16, CharaInfo> unknown28; // Inferred role: characters by reference id; original member name unknown.
 };
 
 static_assert(offsetof(GfBdatUniqueMotion::CharaInfo, unknown04) == 0x04, "");
@@ -52,5 +74,9 @@ static_assert(sizeof(GfBdatUniqueMotion::CharaInfo) == 0x14, "");
 static_assert(offsetof(GfBdatUniqueMotion::PresetInfo, unknown04) == 0x04, "");
 static_assert(offsetof(GfBdatUniqueMotion::PresetInfo, unknown34) == 0x34, "");
 static_assert(sizeof(GfBdatUniqueMotion::PresetInfo) == 0x40, "");
+static_assert(offsetof(GfBdatUniqueMotion, unknown28) == 0x28, "");
+static_assert(sizeof(GfBdatUniqueMotion) == 0x30, "");
+static_assert(offsetof(GfBdatUniqueMotion::Impl, unknown28) == 0x28, "");
+static_assert(sizeof(GfBdatUniqueMotion::Impl) == 0x40, "");
 
 } // namespace gf

@@ -21,6 +21,7 @@ struct GfSetupParam;
 
 class GfFieldSound : public mm::mtl::PtrSingleton<GfFieldSound> {
 public:
+  ~GfFieldSound() override;
   static void build(const GfSetupParam &param);
   static void destroy();
   void update(const fw::UpdateInfo &info);

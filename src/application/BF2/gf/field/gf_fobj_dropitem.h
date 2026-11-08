@@ -1,9 +1,14 @@
 #pragma once
 #include <stddef.h>
 
+#include "gf/field/gf_dropitem_param.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/vector.h"
 #include "types.h"
+
+namespace fw {
+struct UpdateInfo;
+} // namespace fw
 
 namespace gf {
 
@@ -31,23 +36,37 @@ public:
   };
 
   struct EmitInfo {
+    EmitInfo() : unknown00(mm::Vec3::zero), unknown10(0.0f), unknown14(3.1415927f), unknown18(0.0f), unknown1c(0.0f), unknown20(0.0f), unknown50(0), unknown54(0), unknown55(false) {}
+    void createDropitemInfos(u8 *bdat, s32 row);
     bool isValid() const;
 
     mm::Vec3 unknown00;
-    u8 _10[0x28 - 0x10];
+    f32 unknown10; // Inferred role: rotation Y; original member name unknown.
+    f32 unknown14; // Role and original member name unknown.
+    f32 unknown18; // Role and original member name unknown.
+    f32 unknown1c; // Role and original member name unknown.
+    f32 unknown20; // Role and original member name unknown.
+    u8 _24[0x28 - 0x24];
     mm::mtl::Vector<GfDropitemInfo> unknown28; // Inferred role: dropitems; original member name unknown.
     u32 unknown50;                             // Role and original member name unknown.
     u8 unknown54;                              // Inferred role: parameter id; original member name unknown.
     bool unknown55;                            // Role and original member name unknown.
   };
 
+  GfFobjDropitem(GF_OBJ_HANDLE *handle);
   virtual ~GfFobjDropitem() {}
   void bindToGfObj(GF_OBJ_HANDLE *handle) const;
   void unbindToGfObj(GF_OBJ_HANDLE *handle) const;
+  void initialize();
+  void update(const fw::UpdateInfo &info);
   void destroy();
   void setEventDisp(bool isDisp);
   static u32 getBdatDefineFromItemId(s32 itemId);
   static u32 getResBdatIdFromItemId(s32 itemId);
+  void applyGetItem(GF_OBJ_HANDLE *target) const;
+  static bool applyGetItem(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *target);
+  static f32 emitDropitems(const EmitInfo &info);
+  void createGottenEffect(GF_OBJ_HANDLE *target) const;
   bool isEnableGet() const;
   void disposeEffect();
 
@@ -59,15 +78,13 @@ public:
   u8 _0f;
   GF_OBJ_HANDLE *unknown10; // Inferred role: object; original member name unknown.
   u8 _18[0x20 - 0x18];
-  u64 unknown20; // Role and original member name unknown.
-  u32 unknown28; // Role and original member name unknown.
-  u8 _2c[0x30 - 0x2c];
-  s32 unknown30; // Inferred role: state; original member name unknown.
-  u8 _34[0x38 - 0x34];
-  u64 unknown38;  // Role and original member name unknown.
-  u64 unknown40;  // Role and original member name unknown.
-  u64 unknown48;  // Role and original member name unknown.
-  bool unknown50; // Role and original member name unknown.
+  mm::Vec3 unknown20;            // Inferred role: velocity; original member name unknown.
+  s32 unknown30;                 // Inferred role: state; original member name unknown.
+  f32 unknown34;                 // Role and original member name unknown.
+  f32 unknown38;                 // Role and original member name unknown.
+  f32 unknown3c;                 // Role and original member name unknown.
+  GfDropitemParamInst unknown40; // Inferred role: parameters of the drop; original member name unknown.
+  bool unknown50;                // Role and original member name unknown.
   u8 _51[0x54 - 0x51];
   u32 unknown54; // Inferred role: effect handle; original member name unknown.
   u8 _58[0x60 - 0x58];
@@ -77,6 +94,9 @@ static_assert(offsetof(GfFobjDropitem::EmitInfo, unknown28) == 0x28, "");
 static_assert(offsetof(GfFobjDropitem::EmitInfo, unknown50) == 0x50, "");
 static_assert(offsetof(GfFobjDropitem::EmitInfo, unknown54) == 0x54, "");
 static_assert(offsetof(GfFobjDropitem, unknown08) == 0x08, "");
+static_assert(offsetof(GfFobjDropitem, unknown20) == 0x20, "");
+static_assert(offsetof(GfFobjDropitem, unknown34) == 0x34, "");
+static_assert(offsetof(GfFobjDropitem, unknown40) == 0x40, "");
 static_assert(offsetof(GfFobjDropitem, unknown10) == 0x10, "");
 static_assert(offsetof(GfFobjDropitem, unknown30) == 0x30, "");
 static_assert(offsetof(GfFobjDropitem, unknown50) == 0x50, "");
@@ -106,6 +126,8 @@ public:
   void create(const CreateInfo &info);
   void dispose();
   void update(f32 deltaTime);
+  void seqWaitBeginDrop(f32 deltaTime);
+  void seqWaitEndDrop(f32 deltaTime);
 
   CreateInfo unknown00; // Inferred role: create info; original member name unknown.
   bool m_dropitemsEmitted;

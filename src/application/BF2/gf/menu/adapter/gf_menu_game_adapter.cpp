@@ -46,9 +46,9 @@ static GfMenuGameAdapter::TypeInfo TYPE_INFOS[] = {
 
 GfMenuGameAdapter::GfMenuGameAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways) {}
 
-GfMenuGameAdapter::~GfMenuGameAdapter() {}
+GfMenuGameAdapter::~GfMenuGameAdapter() { ; }
 
-GfMenuAdapter *GfMenuGameAdapter::create(u32 handle, u32 type, bool isUpdateAlways) {
+GfMenuGameAdapter *GfMenuGameAdapter::create(u32 handle, u32 type, bool isUpdateAlways) {
   ui::UIObjectAcc acc(handle);
   if (acc.isValid()) {
     TypeInfo &info = TYPE_INFOS[type];

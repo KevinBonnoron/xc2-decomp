@@ -47,6 +47,7 @@ public:
   void destroyAll();
   u64 createHandle(MLTHG *group, u32 index);
   MLTHG *createGroup();
+  u64 createThread(MLTHG *group, nn::os::FiberFunction function, void *userData);
   void releaseGroup(MLTHG *group);
   void releaseThread(MLTH *handle);
   void sleep(unsigned int frame, bool isWait);

@@ -3,8 +3,10 @@
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_mercenaries.h"
 #include "gf/game/mercenaries/gf_game_mercenaries.h"
+#include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_manager.h"
 #include "gf/menu/gf_menu_reference.h"
+#include "gf/menu/gf_menu_reference_number.h"
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/list/gf_menu_blade_list.h"
 #include "gf/menu/list/gf_menu_id_list.h"
@@ -15,11 +17,46 @@
 #include "mm_math/mm_rect.h"
 #include "mm_mtl/algorithm.h"
 #include "mm_mtl/fixstr.h"
+#include "mm_mtl/reference_object.h"
+#include "ui/ctrl/ui_ctrl_cursor_select.h"
 #include "ui/event/ui_event_data.h"
 #include "ui/list/ui_select_obj_list.h"
 #include "ui/ui_object_acc.h"
 
 namespace gf {
+
+GfMenuObjMercenaryForm::GfMenuObjMercenaryForm(u32 handle)
+    : GfMenuObject(handle), unknown24(0), unknown28(nullptr), unknown30(nullptr), unknown78(nullptr), unknown80(nullptr), unknown98(nullptr), unknowna0(nullptr), unknowna8(nullptr),
+      unknownb0(nullptr), unknownb8(nullptr), unknown100(0), unknown104(0), unknown108(this), unknown430(false), unknown438(this), unknown8f0(false), unknown8f8(nullptr) {
+  for (int i = 0; i < 8; i++) {
+    unknownc0[i] = unknown160();
+  }
+  unknownb8 = GfMenuCallContext::create();
+}
+
+GfMenuObjMercenaryForm::~GfMenuObjMercenaryForm() {
+  for (int i = 0; i < 8; i++) {
+    unknownc0[i] = nullptr;
+  }
+  mm::mtl::safeRelease(unknown38);
+  mm::mtl::safeRelease(unknown40);
+  mm::mtl::safeRelease(unknown48);
+  mm::mtl::safeRelease(unknownb8);
+  mm::mtl::safeRelease(unknownb0);
+  mm::mtl::safeRelease(unknowna8);
+  mm::mtl::safeRelease(unknowna0);
+  mm::mtl::safeRelease(unknown98);
+  mm::mtl::safeRelease(unknown80);
+  mm::mtl::safeRelease(unknown78);
+  mm::mtl::safeRelease(unknown30);
+  mm::mtl::safeRelease(unknown28);
+  mm::mtl::safeRelease(unknown88);
+  mm::mtl::safeRelease(unknown90);
+  mm::mtl::safeRelease(unknown68);
+  mm::mtl::safeRelease(unknown50[0]);
+  mm::mtl::safeRelease(unknown50[1]);
+  mm::mtl::safeRelease(unknown50[2]);
+}
 
 void GfMenuObjMercenaryForm::sendOpenEvent(u32 handle, int type, f32 delay) {
   if (handle == 0) {

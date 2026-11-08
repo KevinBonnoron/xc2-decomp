@@ -1,8 +1,10 @@
 #include "gf/menu/object/gf_menu_obj_help_hud.h"
 
+#include "gf/gf_allocator.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "mm_mtl/delegate.h" // IWYU pragma: keep
 #include "types.h"
+#include "ui/event/ui_event_manager.h"
 #include "ui/ui_object_acc.h"
 
 namespace gf {
@@ -13,6 +15,24 @@ constexpr u32 unknown001 = 0x84;
 constexpr u16 unknown002 = 0x101;
 // Inferred role: ui event type; original name unknown.
 constexpr u16 unknown003 = 0x102;
+
+GfMenuObjHelpHud::GfMenuObjHelpHud(u32 handle) : GfMenuObject(handle), unknown24(0), unknown30(this), unknown2c0(false) {}
+
+GfMenuObjHelpHud::~GfMenuObjHelpHud() { ; }
+
+void GfMenuObjHelpHud::initialize() {
+  ui::UIObjectAcc main(unknown18, "LAY_main");
+// __LINE__ must be 111 as in the original file: it is the line argument of operator new.
+#line 111
+  MainListener *listener = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) MainListener(this);
+  listener->addRef();
+  ui::UIEventManager::get()->registObjectListener(main.unknown10, listener);
+  if (listener != nullptr) {
+    listener->release();
+  }
+  attachExternalCall(unknown001, main.unknown10);
+  GfMenuObject::initialize();
+}
 
 void GfMenuObjHelpHud::finalize() { GfMenuObject::finalize(); }
 
@@ -52,6 +72,25 @@ bool GfMenuObjHelpHud::seqPageFadeIn() {
     }
   }
   return isEnd;
+}
+
+bool GfMenuObjHelpHud::seqPageLoad() {
+  ui::UIObjectAcc acc(unknown18, "IMG_help");
+  if (!unknown2c0) {
+    if (unknown24 == 0) {
+      acc.setImageIndex(0);
+      acc.setDisp(false);
+      return true;
+    }
+    acc.setImageIndex(unknown24);
+    unknown2c0 = true;
+  }
+  if (acc.isStreaming()) {
+    return false;
+  }
+  unknown30.unknown002(&GfMenuObjHelpHud::seqPageFadeIn);
+  unknown2c0 = false;
+  return true;
 }
 
 bool GfMenuObjHelpHud::seqPageFadeOut() {

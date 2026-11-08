@@ -31,6 +31,31 @@ template <typename InputIterator, typename Predicate> InputIterator find_if(Inpu
   return first;
 }
 
+template <typename T> void fill_n(T *first, size_t n, const T &value) {
+  T *last = first + n;
+  // Unrolled by hand in the original (Duff's device: the game switches on n & 7 into a loop of eight stores).
+  switch (n & 7) {
+  case 0:
+    while (first != last) {
+      *first++ = value;
+    case 7:
+      *first++ = value;
+    case 6:
+      *first++ = value;
+    case 5:
+      *first++ = value;
+    case 4:
+      *first++ = value;
+    case 3:
+      *first++ = value;
+    case 2:
+      *first++ = value;
+    case 1:
+      *first++ = value;
+    }
+  }
+}
+
 // __LINE__ must be 224 as in the original header: it is the line argument of the assert.
 #line 223
 template <typename T> T *copy_n(const T *first, size_t n, T *result) {

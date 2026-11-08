@@ -1,16 +1,18 @@
 #include "gf/field/gf_fobj_dropitem.h"
-#include "mm_mtl/map.h" // IWYU pragma: keep
-
-#include "mm_mtl/fixed_list.h" // IWYU pragma: keep
 
 #include "bdat.h"
 #include "framework/effect/effect_manager.h"
+#include "fw/fw_transform.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
+#include "gf/field/gf_fobj_gotten_effect_manager.h"
 #include "gf/field/gf_fobj_manager.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
+#include "gf/object/gf_obj_util.h"
+#include "mm_mtl/fixed_list.h" // IWYU pragma: keep
 #include "mm_mtl/fixstr.h"
+#include "mm_mtl/map.h" // IWYU pragma: keep
 
 namespace gf {
 
@@ -27,6 +29,10 @@ static const u32 unknown001[] = {
     BDAT_ITM_SALVAGE_LIST,
     BDAT_ITM_BOOSTER_LIST,
 };
+
+GfFobjDropitem::GfFobjDropitem(GF_OBJ_HANDLE *handle)
+    : unknown08(0), unknown0a(0), unknown0c(false), unknown0e(false), unknown10(handle), unknown20(0.0f, 0.0f, 0.0f), unknown30(0), unknown34(0.0f), unknown38(0.0f), unknown3c(0.0f), unknown50(false),
+      unknown54(0) {}
 
 void GfFobjDropitem::bindToGfObj(GF_OBJ_HANDLE *handle) const {
   GfObjAcc acc(handle);
@@ -81,7 +87,36 @@ bool GfFobjDropitem::EmitInfo::isValid() const {
   return false;
 }
 
+void GfFobjDropitem::createGottenEffect(GF_OBJ_HANDLE *target) const {
+  if (GfObjUtil::getObj(unknown10) != nullptr) {
+    GfObjAcc acc(unknown10);
+    if (acc.isValidTransform()) {
+      GfFobjManager *manager = GfFobjManager::get();
+      if (manager != nullptr) {
+        GfFobjGottenEffectManager &effects = manager->unknown9088;
+        GfFobjGottenEffectManager::CreateEffectInfo info;
+        info.unknown00 = acc.getWorldTransform().unknown00;
+        info.unknown10 = target;
+        info.unknown18 = unknown0e;
+        effects.createEffect(info);
+      }
+    }
+  }
+}
+
 bool GfFobjDropitem::isEnableGet() const { return unknown30 > 1; }
+
+bool GfFobjDropitem::applyGetItem(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *target) {
+  GfObjAcc acc(handle);
+  if (acc.isValid()) {
+    GfFobjDropitem *dropitem = reinterpret_cast<GfFobjDropitem *>(acc.getUserData(OBJ_USER_DATA_UNKNOWN_2));
+    if (dropitem != nullptr && GfObjUtil::getObj(target) != nullptr) {
+      dropitem->applyGetItem(target);
+      return true;
+    }
+  }
+  return false;
+}
 
 void GfFobjDropitem::disposeEffect() {
   if (unknown54 != 0) {
@@ -152,6 +187,58 @@ u32 GfFobjDropitem::getResBdatIdFromItemId(s32 itemId) {
     }
   }
   return 0xffffffff;
+}
+
+GfDropitemEmitter::GfDropitemEmitter(const CreateInfo *info) : m_dropitemsEmitted(false), unknown44(0.0f), unknown48(0.0f) {
+  if (info != nullptr) {
+    create(*info);
+  }
+}
+
+void GfDropitemEmitter::create(const CreateInfo &info) {
+  dispose();
+  unknown00 = info;
+  unknown50 = &GfDropitemEmitter::seqWaitBeginDrop;
+}
+
+void GfDropitemEmitter::dispose() {
+  unknown44 = 0.0f;
+  unknown48 = 0.0f;
+  m_dropitemsEmitted = false;
+  unknown00 = CreateInfo();
+}
+
+void GfDropitemEmitter::update(f32 deltaTime) {
+  if (unknown00.unknown28 != nullptr && unknown00.unknown30 > 0) {
+    unknown44 += deltaTime;
+    if (unknown50) {
+      (this->*unknown50)(deltaTime);
+    }
+  }
+}
+
+void GfDropitemEmitter::seqWaitBeginDrop(f32 deltaTime) {
+  if (unknown44 < unknown00.unknown1c) {
+    return;
+  }
+  GfFobjDropitem::EmitInfo info;
+  info.createDropitemInfos(unknown00.unknown28, unknown00.unknown30);
+  info.unknown00 = unknown00.unknown00;
+  info.unknown10 = unknown00.unknown10;
+  info.unknown14 = unknown00.unknown14;
+  info.unknown18 = unknown00.unknown18;
+  info.unknown1c = unknown00.unknown20;
+  info.unknown20 = unknown00.unknown24;
+  unknown48 = GfFobjDropitem::emitDropitems(info) + unknown44;
+  unknown50 = &GfDropitemEmitter::seqWaitEndDrop;
+}
+
+void GfDropitemEmitter::seqWaitEndDrop(f32 deltaTime) {
+  if (unknown44 < unknown48) {
+    return;
+  }
+  m_dropitemsEmitted = true;
+  unknown50 = nullptr;
 }
 
 } // namespace gf

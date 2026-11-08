@@ -36,6 +36,7 @@ public:
 
   class PartyDriverConverter : public IConverter {
   public:
+    PartyDriverConverter(u8 partyId) : unknown08(partyId) {}
     GF_OBJ_HANDLE *getGfObjHandle() override;
     PartyDriverConverter *fromPartyDriver() override;
 
@@ -44,6 +45,7 @@ public:
 
   class PartyBladeConverter : public IConverter {
   public:
+    PartyBladeConverter(u8 partyId, int slot, bool isVirtual) : unknown08(partyId), unknown0c(slot), unknown10(isVirtual) {}
     GF_OBJ_HANDLE *getGfObjHandle() override;
     PartyBladeConverter *fromPartyBlade() override;
 
@@ -59,6 +61,7 @@ public:
 
   class ReferenceConverter : public IConverter {
   public:
+    ReferenceConverter(mm::mtl::IntrusivePtr<IGfMenuReferenceGfObj> reference) : unknown08(reference) {}
     GF_OBJ_HANDLE *getGfObjHandle() override;
 
     mm::mtl::IntrusivePtr<IGfMenuReferenceGfObj> unknown08; // Inferred role: reference; original member name unknown.
@@ -66,6 +69,12 @@ public:
 
   GfMenuGfObjAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways, bool isUpdateAfter);
   ~GfMenuGfObjAdapter() override;
+  static GfMenuGfObjAdapter *create(u32 handle, u32 type, GF_OBJ_HANDLE *objHandle, bool isUpdateAlways);
+  static GfMenuGfObjAdapter *createFromCoverter(u32 handle, u32 type, IConverter *converter, bool isUpdateAlways);
+  static GfMenuGfObjAdapter *createFromPartyDriver(u32 handle, u32 type, u8 partyId, bool isUpdateAlways);
+  static GfMenuGfObjAdapter *createFromPartyBlade(u32 handle, u32 type, u8 partyId, int slot, bool isUpdateAlways, bool isVirtual);
+  static GfMenuGfObjAdapter *createFromTargetEnemy(u32 handle, u32 type, bool isUpdateAlways);
+  static GfMenuGfObjAdapter *createFromReference(u32 handle, u32 type, mm::mtl::IntrusivePtr<IGfMenuReferenceGfObj> reference, bool isUpdateAlways);
   bool update_NowHp(GF_OBJ_HANDLE *handle);
   bool update_Battle(GF_OBJ_HANDLE *handle);
   bool update_InfoBody(GF_OBJ_HANDLE *handle);

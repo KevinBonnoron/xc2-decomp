@@ -5,13 +5,33 @@
 #include <algorithm>
 
 #include "fw/fw_transform.h"
+#include "gf/data/gf_data_quest.h"
+#include "gf/field/gf_field_locator.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/game/quest/gf_quest_id.h"
+#include "gf/game/quest/gf_quest_info.h"
+#include "gf/game/quest/gf_quest_manager.h"
+#include "gf/game/quest/gf_quest_task.h"
+#include "gf/game/quest/gf_quest_task_param.h"
+#include "gf/menu/gf_menu_fullscreen.h"
+#include "gf/menu/object/gf_menu_obj_util.h"
 #include "gf/object/gf_obj_acc.h"
 #include "mm_math/mm_vec3.h"
 
 namespace gf {
 
 constexpr u32 ORDER_DISTANCE_OTHER_MAP = 0xffffffff;
+constexpr u32 ICON_DEFAULT = 455;
+
+// Inferred role: locator type to icon entry; original type name unknown.
+struct unknown002 {
+  u32 unknown00; // Inferred role: locator type; original member name unknown.
+  u32 unknown04; // Inferred role: icon; original member name unknown.
+};
+
+// Inferred role: locator type to icon table; original table name unknown.
+static const unknown002 ICON_TABLE[] = {{415, 455}, {416, 456}, {417, 457}};
+constexpr u32 ICON_TABLE_COUNT = sizeof(ICON_TABLE) / sizeof(ICON_TABLE[0]);
 
 bool GfMenuLocation::isInitialized() {
   GfMenuLocation *location = get();
@@ -21,12 +41,41 @@ bool GfMenuLocation::isInitialized() {
   return false;
 }
 
+GfMenuLocation::GfMenuLocation(const GfSetupParam &param) : unknown10(), unknown10f0(0) {}
+
 u32 GfMenuLocation::getLocatorDataNum(u32 type) {
   GfMenuLocation *location = get();
   if (type < LOCATOR_TYPE_COUNT && location != nullptr) {
     return location->unknown10[type].unknown28;
   }
   return 0;
+}
+
+void GfMenuLocation::refreshLocatorFromQuest(u32 index, u32 type) {
+  QuestID current = GfMenuObjUtil::getCurrentQuest(type);
+  mm::mtl::FixedVector<QuestID, 16> linkQuests;
+  GfQuestManager::getLinkQuest(linkQuests, current);
+  mm::mtl::Vector<GfFieldLocator> &locators = unknown10[index].unknown00;
+  QuestID *end = linkQuests.end();
+  for (QuestID *quest = linkQuests.begin(); quest != end; ++quest) {
+    if (!GfMenuObjUtil::isQuestCompleted(*quest)) {
+      u32 purpose = GfDataQuest::getListPurposeID(*quest);
+      for (u32 task = 0; task < 4; task++) {
+        QuestTaskParam param(*quest, task, purpose, TASK_STATE_NONE);
+        if (param.unknown10 == 0) {
+          break;
+        }
+        if (!GfQuestInfo::isCompleteTask(param) && GfQuestTask::isEnableTaskCondition(param)) {
+          GfFieldLocator::CreateInfoByQuest info;
+          info.unknown00 = *quest;
+          info.unknown08 = param.unknown14;
+          info.unknown04 = param.unknown10;
+          GfFieldLocator locator(&info);
+          locators.push_back(locator);
+        }
+      }
+    }
+  }
 }
 
 void GfMenuLocation::updateDataNum(u32 type) {
@@ -69,6 +118,21 @@ void GfMenuLocation::updateDataNum(u32 type) {
   }
   group.unknown28 = dataNum;
   std::sort(group.unknown30.begin(), group.unknown30.end(), CompareOrder());
+}
+
+void GfMenuLocation::postUpdate(const fw::UpdateInfo &) {
+  if (get() != nullptr && !GfMenuFullScreen::isOpen() && !GfGameManager::isEvent(false)) {
+    updateLocator();
+  }
+}
+
+u32 GfMenuLocation::convIcon(u32 type) {
+  for (u32 i = 0; i < ICON_TABLE_COUNT; i++) {
+    if (ICON_TABLE[i].unknown00 == type) {
+      return ICON_TABLE[i].unknown04;
+    }
+  }
+  return ICON_DEFAULT;
 }
 
 } // namespace gf

@@ -3,6 +3,7 @@
 
 #include "framework/coli/coli_object.h"
 #include "gf/event/gf_event.h"
+#include "gmk/gmk_cond.h"
 #include "mm_mtl/singleton.h"
 #include "mm_mtl/vector.h"
 #include "types.h"
@@ -122,7 +123,11 @@ public:
     bool unknown18;               // Inferred role: created for the debug draw; original member name unknown.
   };
 
+  explicit GfFieldLodColiAnim(const CreateInfo *info = nullptr);
+  ~GfFieldLodColiAnim() { dispose(); }
+  void create(const CreateInfo &info);
   void dispose();
+  void createPosInfos(bool isDebugDraw);
   void disposePosInfos();
   void update(const fw::UpdateInfo &info);
   void validateVeSe(const GfFieldLod &lod);
@@ -164,17 +169,36 @@ static_assert(sizeof(GfFieldLodColiAnim) == 0x48, "");
 
 class GfFieldLod : public mm::mtl::PtrSingleton<GfFieldLod> {
 public:
-  struct unknown001 {
-    u16 unknown00; // Inferred role: lod id; original member name unknown.
-    u8 _02[0x04 - 0x02];
-    f32 unknown04; // Inferred role: fade in speed; original member name unknown.
-    f32 unknown08; // Inferred role: fade out speed; original member name unknown.
+  // Layout evidence: create (0x71002e49b4) reads the bdat columns, update (0x71002e4bc4) and dirtyCache (0x71002e51a4) the
+  // three condition infos; the element size 0x34 is the stride of the vector of the destroy (0x71002e6afc) loop.
+  struct BdatInfo {
+    struct CondInfo {
+      CondInfo() : unknown08(0), unknown0a(false) {}
+
+      gmk::ScenarioFlagCond unknown00; // Inferred role: scenario flag; original member name unknown.
+      gmk::QuestFlagCond unknown04;    // Inferred role: quest flag; original member name unknown.
+      u16 unknown08;                   // Inferred role: condition; original member name unknown.
+      bool unknown0a;                  // Inferred role: condition matched on the last update; original member name unknown.
+    };
+
+    BdatInfo(u16 bdatId);
+    ~BdatInfo() { dispose(); }
+    void create(u16 bdatId);
+    void dispose();
+    void dirtyCache();
+
+    u16 unknown00;         // Inferred role: lod id; original member name unknown.
+    f32 unknown04;         // Inferred role: fade in time; original member name unknown.
+    f32 unknown08;         // Inferred role: fade out time; original member name unknown.
+    u16 unknown0c;         // Inferred role: bdat id; original member name unknown.
+    CondInfo unknown0e[3]; // Inferred role: change conditions; original member name unknown.
   };
 
   GfFieldLod(const GfSetupParam &param);
+  ~GfFieldLod();
   void initialize(const GfSetupParam &param);
   int findBdatIdByLodId(u16 lodId) const;
-  const unknown001 *findBdatInfo(int bdatId) const;
+  const BdatInfo *findBdatInfo(int bdatId) const;
   bool isAnimReverse(int bdatId) const;
   bool isPlayAnimEnd(int bdatId) const;
   f32 getAnimEndTime(int bdatId) const;
@@ -198,14 +222,24 @@ public:
   u16 unknown08[0x400]; // Inferred role: lod id of each bdat entry; original member name unknown.
   int unknown808;       // Inferred role: first bdat id; original member name unknown.
   bool unknown80c;      // Inferred role: lod data ready; original member name unknown.
-  u8 _80d[0x840 - 0x80d];
-  GfFieldLodColiAnim unknown840; // Inferred role: lod animation of the map model; original member name unknown.
-  u8 _888[0x890 - 0x888];
+  u8 _80d[0x810 - 0x80d];
+  mm::mtl::Vector<BdatInfo> unknown810; // Inferred role: bdat infos of the current map; original member name unknown.
+  u32 unknown838;                       // Inferred role: unknown; original member name unknown.
+  GfFieldLodColiAnim unknown840;        // Inferred role: lod animation of the map model; original member name unknown.
+  bool unknown888;                      // Inferred role: unknown; original member name unknown.
+  bool unknown889;                      // Inferred role: unknown; original member name unknown.
+  u8 _88a[0x890 - 0x88a];
 };
 
+static_assert(sizeof(GfFieldLod::BdatInfo::CondInfo) == 0xc, "");
+static_assert(offsetof(GfFieldLod::BdatInfo, unknown0c) == 0x0c, "");
+static_assert(offsetof(GfFieldLod::BdatInfo, unknown0e) == 0x0e, "");
+static_assert(sizeof(GfFieldLod::BdatInfo) == 0x34, "");
 static_assert(offsetof(GfFieldLod, unknown808) == 0x808, "");
 static_assert(offsetof(GfFieldLod, unknown80c) == 0x80c, "");
+static_assert(offsetof(GfFieldLod, unknown810) == 0x810, "");
 static_assert(offsetof(GfFieldLod, unknown840) == 0x840, "");
+static_assert(offsetof(GfFieldLod, unknown888) == 0x888, "");
 static_assert(sizeof(GfFieldLod) == 0x890, "");
 
 } // namespace gf

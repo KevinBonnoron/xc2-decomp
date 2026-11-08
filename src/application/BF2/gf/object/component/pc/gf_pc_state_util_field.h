@@ -35,13 +35,21 @@ static_assert(offsetof(MsgPcFieldNotifyWall, unknown50) == 0x50, "");
 
 namespace pc {
 
-enum VehicleEvent {};
+enum VehicleEvent {
+  VEHICLE_EVENT_UNKNOWN_0 = 0,
+  VEHICLE_EVENT_UNKNOWN_1 = 1,
+  VEHICLE_EVENT_UNKNOWN_2 = 2,
+};
+
+} // namespace pc
 
 struct MsgPcFieldNotifyRiderEvent : fw::Message {
-  MsgPcFieldNotifyRiderEvent(VehicleEvent event) : fw::Message(0x1000024, 0x40), unknown08(event) {}
+  MsgPcFieldNotifyRiderEvent(pc::VehicleEvent event) : fw::Message(0x1000024, 0x40), unknown08(event) {}
 
-  VehicleEvent unknown08; // Inferred role: vehicle event; original member name unknown.
+  pc::VehicleEvent unknown08; // Inferred role: vehicle event; original member name unknown.
 };
+
+namespace pc {
 
 f32 calcInputDiffAngle(GfComPropertyPc &property);
 f32 calcInputDiffAngleVel(GfComPropertyPc &property);

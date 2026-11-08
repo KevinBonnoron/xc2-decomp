@@ -16,6 +16,7 @@
 #include "gf/menu/gf_menu_field_skill.h"
 #include "gf/menu/gf_menu_manager.h"
 #include "gf/object/component/gimmick/gf_com_behavior_gmk.h"
+#include "gf/object/component/pc/gf_pc_property_field.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
@@ -26,6 +27,8 @@
 #include "gmk/gmk_grave.h"
 #include "gmk/gmk_manager.h"
 #include "gmk/gmk_map_gimmick.h"
+#include "gmk/gmk_warp.h"
+#include "mm_math/mm_vec3.h"
 #include "mm_mtl/array.h"
 
 namespace gf {
@@ -355,6 +358,35 @@ void GfFieldGrave::update(f32 deltaTime) {
   if (unknown20) {
     (this->*unknown20)(deltaTime);
   }
+}
+
+void GfFieldWarp::onFsSucceeded() {
+  gmk::GmkWarp *warp = static_cast<gmk::GmkWarp *>(gmk::getBindedGmkInst(unknown08));
+  if (warp != nullptr) {
+    GfObj *obj = GfObjUtil::getObj(unknown08);
+    if (obj != nullptr) {
+      obj->unknown110 |= OBJ_ATTRIBUTE_TARGETABLE;
+    }
+    GfObj *mover = GfObjUtil::getObj(GfGameManager::getControlMover());
+    if (mover != nullptr) {
+      GfObj *self = GfObjUtil::getObj(unknown08);
+      if (self != nullptr) {
+        MsgPcFieldNotifyWarp message;
+        const gmk::GmkWarp::unknown004 *points = warp->unknown005();
+        const f32 *position = unknown08 == warp->unknown50[0] ? points[1].unknown00 : points[0].unknown00;
+        message.unknown10.x = position[0];
+        message.unknown10.y = position[1];
+        message.unknown10.z = position[2];
+        message.unknown20 = unknown08 == warp->unknown50[0] ? points[1].unknown0c : points[0].unknown0c;
+        message.unknown28 = warp->getBindedBdatFp();
+        message.unknown30 = warp->unknown20.unknown18;
+        message.unknown34 = warp->unknown20.unknown18;
+        self->sendMessage(mover, message);
+        return;
+      }
+    }
+  }
+  dispose();
 }
 
 void GfFieldGmkTutorial::build(const GfSetupParam &) {

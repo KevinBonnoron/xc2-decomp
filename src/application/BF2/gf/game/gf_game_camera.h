@@ -12,6 +12,7 @@ struct GfSetupParam;
 
 class GfGameCamera : public mm::mtl::PtrSingleton<GfGameCamera> {
 public:
+  ~GfGameCamera();
   static void build(const GfSetupParam &param);
   static void destroy();
   static void clear();

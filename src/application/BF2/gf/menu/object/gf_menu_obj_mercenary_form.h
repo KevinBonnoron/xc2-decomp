@@ -22,6 +22,8 @@ class GfMenuReferenceNumber;
 
 class GfMenuObjMercenaryForm : public GfMenuObject {
 public:
+  GfMenuObjMercenaryForm(u32 handle);
+  ~GfMenuObjMercenaryForm() override;
   bool chkTempUnlink(u32 blade);
   void addTempUnlink(u32 blade);
   void delTempUnlink(u32 blade);

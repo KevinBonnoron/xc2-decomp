@@ -1,6 +1,8 @@
 #include "gf/menu/object/gf_menu_obj_hana_submenu.h"
 
+#include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
+#include "mm_mtl/reference_object.h"
 #include "types.h"
 
 namespace gf {
@@ -9,6 +11,10 @@ namespace gf {
 constexpr u32 unknown001 = 0x71;
 // Inferred role: ui event type; original name unknown.
 constexpr u16 unknown002 = 0x101;
+
+GfMenuObjHanaSubmenu::GfMenuObjHanaSubmenu(u32 handle) : GfMenuObject(handle), unknown28(nullptr), unknown30(0) {}
+
+GfMenuObjHanaSubmenu::~GfMenuObjHanaSubmenu() { mm::mtl::safeRelease(unknown28); }
 
 void GfMenuObjHanaSubmenu::finalize() { GfMenuObject::finalize(); }
 

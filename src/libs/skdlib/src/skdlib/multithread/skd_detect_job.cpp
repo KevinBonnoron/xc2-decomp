@@ -1,6 +1,8 @@
 // Original file name inferred from the job type strings and the skd_detect_info.h assertion file path.
 #include "anm/anm_job.h"
 #include "anm/anm_job_queue.h"
+#include "anm/anm_pose.h"
+#include "anm/anm_reference_object.h"
 #include "mm_math/mm_vec3.h"
 #include "skd/skd_collision_object.h" // IWYU pragma: keep
 #include "skd/skd_detect_info.h"      // IWYU pragma: keep
@@ -9,6 +11,8 @@
 #include "types.h"
 
 namespace skd {
+
+Packet::~Packet() { anm::unknown001(m_pBindPose); }
 
 const char *ApplyDetectJob::_TYPE_NAME = "ApplyDetectJob";
 const char *DetectCapsuleJob::_TYPE_NAME = "DetectCapsuleJob";

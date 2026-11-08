@@ -16,6 +16,10 @@ namespace gf {
 // Inferred role: attached call id; original name unknown.
 constexpr u32 unknown001 = 0x54;
 
+GfMenuObjChainAttack::GfMenuObjChainAttack(u32 handle) : GfMenuObject(handle), unknown30(0), unknown38(0), unknown40(0), unknown48(0), unknown50(0) {}
+
+GfMenuObjChainAttack::~GfMenuObjChainAttack() { ; }
+
 void GfMenuObjChainAttack::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjChainAttack::update() { GfMenuObject::update(); }

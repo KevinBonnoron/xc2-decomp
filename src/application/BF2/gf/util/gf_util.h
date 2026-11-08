@@ -4,6 +4,7 @@
 
 namespace mm {
 struct Mat44;
+struct Quat;
 struct Vec3;
 } // namespace mm
 
@@ -11,8 +12,10 @@ namespace gf {
 namespace util {
 
 bool getScreenPos(mm::Vec3 &screenPos, const mm::Vec3 &position);
+void getEulerRotateModel(mm::Vec3 &euler, const mm::Quat &quat);
 bool isInsideView(const mm::Vec3 &position, f32 radius);
 void getViewLocalToDeviceCoord(mm::Vec3 &device, const mm::Mat44 &frustum, const mm::Vec3 &local);
+void getDeviceCoordToViewLocal(mm::Vec3 &local, const mm::Mat44 &frustum, const mm::Vec3 &device);
 bool getHitCollision(mm::Vec3 &hit, const mm::Vec3 &start, const mm::Vec3 &end);
 bool getUnderHitCollision(mm::Vec3 &hit, const mm::Vec3 &position, f32 distance);
 bool getUpperHitCollision(mm::Vec3 &hit, const mm::Vec3 &position, f32 distance);

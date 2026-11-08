@@ -3,7 +3,7 @@
 
 #include "gf/game/quest/gf_quest_id.h"
 #include "gf/menu/adapter/gf_menu_adapter.h"
-#include "gf/menu/gf_menu_reference.h"
+#include "gf/menu/gf_menu_reference_quest.h"
 #include "gf/menu/list/gf_menu_quest_list.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/intrusive_ptr.h"

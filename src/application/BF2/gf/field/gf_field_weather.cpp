@@ -8,6 +8,7 @@
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_util.h"
+#include "gf/gf_allocator.h"
 #include "gf/gf_pause.h"
 #include "gf/map/gf_map_manager.h"
 #include "ml/rand.h"
@@ -184,6 +185,11 @@ void setPause(bool isPause) {
 }
 
 } // namespace _gffwt
+
+GfFieldWeather::GfFieldWeather(const GfSetupParam &param)
+    : unknown08(false), unknown09(false), unknown0a(false), unknown74(0), unknown78(CLOUD_SEA_HANDLE(0)), unknown7c(CLOUD_SEA_REQUEST_NONE), unknown80(CLOUD_SEA_HANDLE(0)), unknown84(true) {
+  initialize(param);
+}
 
 void GfFieldWeather::initialize(const GfSetupParam &) {
   _gffwt::destroyList();
@@ -391,6 +397,12 @@ void GfFieldWeather::clear() {
   GfFieldWeather *weather = get();
   _gffwt::destroyList();
   weather->destroyCloudSeaCondition();
+}
+
+void GfFieldWeather::build(const GfSetupParam &param) {
+  // __LINE__ must be 1330 as in the original file: it is the line argument of operator new.
+#line 1330
+  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfFieldWeather(param);
 }
 
 void GfFieldWeather::destroy() {

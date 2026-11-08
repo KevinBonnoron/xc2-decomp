@@ -38,4 +38,14 @@ void GfMenuObjQuestReward::open(GfMenuCallContext *context, bool isAnim) {
   }
 }
 
+void GfMenuObjQuestReward::close(GfMenuCallContext *context, bool isAnim) {
+  if (context != nullptr && GfMenuObjUtil::checkCCNext(context, CALL_QUEST_REWARD)) {
+    ui::UIObjectAcc acc(context->unknown14);
+    ui::EventData event;
+    event.unknown00 = GfMenuTypes::unknown003_34;
+    event.unknown08 = isAnim;
+    GfMenuObject::sendEvent(context->unknown14, event, 0.0f);
+  }
+}
+
 } // namespace gf

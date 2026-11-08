@@ -14,6 +14,7 @@ public:
   };
 
   GfBigObjUnique(const CreateInfo *info);
+  ~GfBigObjUnique() { dispose(); }
   void create(const CreateInfo &info);
   void dispose();
 

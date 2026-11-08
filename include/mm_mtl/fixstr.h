@@ -104,6 +104,24 @@ public:
     return *this;
   }
 
+  // __LINE__ must be 686 and 687 as in the original header: they are the line arguments of the asserts.
+#line 685
+  FixStr &insert(int index, int count, char ch) {
+    if (index < 0) {
+      index = 0;
+    }
+    int nowSize = m_nLen;
+    int newSize = nowSize + count;
+    MM_ASSERT(newSize < capacity());
+    MM_ASSERT(index <= nowSize);
+    char *position = mData + index;
+    move(position, m_nLen - index, position + count);
+    fill_n(position, count, ch);
+    m_nLen = newSize;
+    mData[newSize] = 0;
+    return *this;
+  }
+
   // __LINE__ must be 761 as in the original header: it is the line argument of the assert.
 #line 760
   FixStr &replace(int pos, int count, const char *strNew) {

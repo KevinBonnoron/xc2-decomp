@@ -394,6 +394,39 @@ void StateSalvageDiveFadeIn::update(GfGameSalvage *, const fw::UpdateInfo &) {
   }
 }
 
+void StateSalvageClimbStart::enter(GfGameSalvage *salvage, ai::State *) {
+  unknown18 = salvage->getClimbAnimationType();
+  unknown19 = 0;
+  salvage->playClimb();
+  salvage->playCameraClimb();
+  mm::Mat44 matrix;
+  if (salvage->getEventTbox(matrix)) {
+    mm::Vec3 position(matrix.rows[3][0], matrix.rows[3][1], matrix.rows[3][2]);
+    f32 rotation = atan2f(matrix.rows[2][0], matrix.rows[2][2]);
+    salvage->createCameraCut01(position, rotation);
+  }
+  GfComBehaviorSalvage *behavior = salvage->getGfComBehaviorSalvage();
+  if (behavior != nullptr) {
+    behavior->unknown98.bind(this, &StateSalvageClimbStart::callback);
+  }
+}
+
+void StateSalvageClimbStart::leave(GfGameSalvage *salvage, ai::State *) {
+  GfComBehaviorSalvage *behavior = salvage->getGfComBehaviorSalvage();
+  if (behavior != nullptr) {
+    behavior->unknown98.clear();
+  }
+}
+
+void StateSalvageClimbStart::update(GfGameSalvage *salvage, const fw::UpdateInfo &) {
+  if (GfManager::isDestroyNow()) {
+    reqState(GfGameSalvage::STATE_FINISH);
+  }
+  if (salvage->isClimbEnd() && salvage->isCameraClimbEnd()) {
+    reqState(unknown08 + 1);
+  }
+}
+
 void StateSalvageResult::enter(GfGameSalvage *salvage, ai::State *) {
   ml::DevClock::getClockNow(startClock);
   isVibrated = false;

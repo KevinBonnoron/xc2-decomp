@@ -1,6 +1,13 @@
 #include "gf/object/gf_volume_fade.h"
 
+#include "framework/effect/effect_manager.h"
+#include "framework/effect/volume_fade_params.h"
+#include "gf/gf_info.h"
 #include "gf/object/gf_obj_setup.h"
+#include "mm_math/mm_col3.h"
+#include "mm_math/mm_vec3.h"
+#include "mm_math/mm_vec3_na.h"
+#include "mm_mtl/fixed_vector.h"
 
 namespace gf {
 
@@ -32,6 +39,17 @@ void GfVolumeFade::setEffectType(VFEFF effect) {
   }
 }
 
+bool GfVolumeFade::setupVolumeFadeParamForDead(ml::VolumeFadeParams &params, VFEFF effect) {
+  if (effect < fw::EffectManager::unknown005) {
+    const fw::VolumeFadeParams *source = fw::EffectManager::get()->m_volumeFadeParam[effect];
+    if (source != nullptr) {
+      copyVolumeFadeParams(params, *source);
+      return true;
+    }
+  }
+  return false;
+}
+
 f32 GfVolumeFade::getFadeRatio(VFACC acc, VFPARTS parts) const {
   if (parts != VFPARTS_UNKNOWN_FFFFFFFF) {
     return unknown14[acc][parts];
@@ -49,6 +67,54 @@ f32 GfVolumeFade::getFadeRatioForParts(VFPARTS parts) const {
     ratio *= getFadeRatio(static_cast<VFACC>(acc), parts);
   }
   return ratio;
+}
+
+void GfVolumeFade::copyVolumeFadeParams(ml::VolumeFadeParams &params, const fw::VolumeFadeParams &source) {
+  for (u32 i = 0; i < 5; i++) {
+    params.unknown00[i] = source.unknown00[i];
+    params.unknown60[i] = source.unknown54[i];
+    params.unknown74[i] = source.unknown68[i];
+    params.unknown88[i] = source.unknown7c[i];
+  }
+  params.unknown40 = mm::Vec3(source.unknown3c.x, source.unknown3c.y, source.unknown3c.z);
+  params.unknown50 = mm::Vec3(source.unknown48.x, source.unknown48.y, source.unknown48.z);
+  params.unknown9c = source.unknown90;
+  params.unknowna0 = source.unknown94;
+  params.unknowna4 = source.unknown98;
+}
+
+void GfVolumeFade::setupKeyFrame(mm::mtl::FixedVector<VFKEYDATA, 4> &keys, VFEFF effect) {
+  keys.clear();
+  if (effect < fw::EffectManager::unknown005) {
+    const fw::VolumeFadeParams *source = fw::EffectManager::get()->m_volumeFadeParam[effect];
+    if (source != nullptr) {
+      u32 count;
+      if (source->unknown9c[3] == 0.0f) {
+        if (source->unknown9c[2] == 0.0f) {
+          if (source->unknown9c[1] == 0.0f) {
+            if (source->unknown9c[0] == 0.0f) {
+              return;
+            }
+            count = 1;
+          } else {
+            count = 2;
+          }
+        } else {
+          count = 3;
+        }
+      } else {
+        count = 4;
+      }
+      const f32 *time = source->unknown9c;
+      const f32 *value = source->unknownac;
+      for (; count != 0; time++, value++, count--) {
+        VFKEYDATA key;
+        key.unknown00 = *time * GfInfo::m_fSecPerFrame;
+        key.unknown04 = 1.0f - *value;
+        keys.push_back(key);
+      }
+    }
+  }
 }
 
 } // namespace gf

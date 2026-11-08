@@ -2,11 +2,12 @@
 #include <math.h>
 
 #include "mm/mm_std_base.h"
+#include "mm_math/mm_vec3.h"
 #include "types.h"
+#include "wnd/wnd_node.h"
 #include "wnd/wnd_wind.h" // IWYU pragma: keep
 
 namespace wnd {
-class WindNode;
 
 void WindBlender::setNode(const WindNode *node) {
   unknownd0 = node;
@@ -25,6 +26,12 @@ void WindBlender::changeNode(const WindNode *node, f32 time) {
   unknownd0 = node;
   unknowne4 = time;
   unknowne0 = 0.0f;
+}
+
+void ConpoundWind::update(const UpdateInfo &info) {
+  for (u32 i = 0; i < 12; i++) {
+    calcWind(info.unknown00, i, &unknown10[i]);
+  }
 }
 
 } // namespace wnd

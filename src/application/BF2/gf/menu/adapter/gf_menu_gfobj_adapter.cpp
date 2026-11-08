@@ -10,6 +10,7 @@
 #include "gf/game/gf_game_party.h"
 #include "gf/game/gf_game_util.h"
 #include "gf/game/gf_game_visible.h"
+#include "gf/gf_allocator.h"
 #include "gf/menu/gf_menu_bdat.h"
 #include "gf/menu/gf_menu_manager.h"
 #include "gf/menu/gf_menu_reference.h"
@@ -588,6 +589,42 @@ bool GfMenuGfObjAdapter::update_BL_DispCurrent(GF_OBJ_HANDLE *handle) {
     }
   }
   return GfMenuObjUtil::getLeaderBladeHandle(true) == handle;
+}
+
+GfMenuGfObjAdapter *GfMenuGfObjAdapter::createFromCoverter(u32 handle, u32 type, IConverter *converter, bool isUpdateAlways) {
+  GfMenuGfObjAdapter *adapter = create(handle, type, converter->getGfObjHandle(), isUpdateAlways);
+  if (adapter != nullptr) {
+    adapter->unknown78 = converter;
+  }
+  return adapter;
+}
+
+GfMenuGfObjAdapter *GfMenuGfObjAdapter::createFromPartyDriver(u32 handle, u32 type, u8 partyId, bool isUpdateAlways) {
+  // __LINE__ must be 289 as in the original source: it is the line argument of operator new.
+#line 289
+  PartyDriverConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) PartyDriverConverter(partyId);
+  return createFromCoverter(handle, type, converter, isUpdateAlways);
+}
+
+GfMenuGfObjAdapter *GfMenuGfObjAdapter::createFromPartyBlade(u32 handle, u32 type, u8 partyId, int slot, bool isUpdateAlways, bool isVirtual) {
+  // __LINE__ must be 296 as in the original source: it is the line argument of operator new.
+#line 296
+  PartyBladeConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) PartyBladeConverter(partyId, slot, isVirtual);
+  return createFromCoverter(handle, type, converter, isUpdateAlways);
+}
+
+GfMenuGfObjAdapter *GfMenuGfObjAdapter::createFromTargetEnemy(u32 handle, u32 type, bool isUpdateAlways) {
+  // __LINE__ must be 303 as in the original source: it is the line argument of operator new.
+#line 303
+  TargetEnemyConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) TargetEnemyConverter;
+  return createFromCoverter(handle, type, converter, isUpdateAlways);
+}
+
+GfMenuGfObjAdapter *GfMenuGfObjAdapter::createFromReference(u32 handle, u32 type, mm::mtl::IntrusivePtr<IGfMenuReferenceGfObj> reference, bool isUpdateAlways) {
+  // __LINE__ must be 310 as in the original source: it is the line argument of operator new.
+#line 310
+  ReferenceConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceConverter(reference);
+  return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 
 void GfMenuGfObjAdapter::update(const fw::UpdateInfo &info) {

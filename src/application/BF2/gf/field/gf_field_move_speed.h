@@ -17,6 +17,7 @@ public:
   };
 
   GfFieldMoveSpeed(const CreateInfo *info = nullptr);
+  ~GfFieldMoveSpeed() { dispose(); }
   void create(const CreateInfo &info);
   void dispose();
   GfComAsm *getComAsm() const;

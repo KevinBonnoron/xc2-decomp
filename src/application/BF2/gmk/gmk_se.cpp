@@ -13,6 +13,7 @@
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
+#include "gf/sound/gf_sound.h"
 #include "gmk/gmk_active_list.h"
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_list_impl.h" // IWYU pragma: keep
@@ -201,6 +202,31 @@ bool GmkSe::canPopInst() const {
   return true;
 }
 
+void GmkSe::createInst() {
+  const GmkSet *set = AGmkBase::unknown08.unknown00->getCreateInfo().unknown08;
+  if (set != nullptr && set->unknown10.unknown24) {
+    return;
+  }
+  disposeInst(true);
+  const BdatInfo *info = getBdatInfo();
+  if (info->unknown01 && unknownf1) {
+    return;
+  }
+  fw::SoundPack *pack = info->getSoundPack();
+  unknownf4 = fw::SoundManager::get()->playSe(info->unknown02, pack, info->unknown05 * 0.01f, gf::CATEGORY_GAME_ENV);
+  if (unknownf4 == 0) {
+    dispose();
+    return;
+  }
+  fw::SoundManager::get()->setVolume(unknownf4, info->unknown05 * 0.01f, 1.0f);
+  unknownf8 = 0.0f;
+  unknownf1 = true;
+  TGmkActiveList<GmkSe> *list = TGmkActiveList<GmkSe>::get();
+  if (list->unknown08.end() == list->unknown08.unknown002(list->unknown08.begin(), list->unknown08.end(), this)) {
+    TGmkActiveList<GmkSe>::get()->unknown08.push_back(this);
+  }
+}
+
 bool GmkSe::canDepopInst() const {
   if (unknownf4 != 0) {
     if (!unknownf0) {
@@ -378,6 +404,27 @@ bool GmkSeLine::canPopInst() const {
   return false;
 }
 
+void GmkSeLine::createInst() {
+  disposeInst(true);
+  const GmkSe::BdatInfo *info = getBdatInfo();
+  if (info->unknown01 && unknown59) {
+    return;
+  }
+  fw::SoundPack *pack = info->getSoundPack();
+  unknown5c = fw::SoundManager::get()->playSe(info->unknown02, pack, info->unknown05 * 0.01f, gf::CATEGORY_GAME_ENV);
+  if (unknown5c == 0) {
+    dispose();
+    return;
+  }
+  fw::SoundManager::get()->setVolume(unknown5c, info->unknown05 * 0.01f, 1.0f);
+  unknown60 = 0.0f;
+  unknown59 = true;
+  TGmkActiveList<GmkSeLine> *list = TGmkActiveList<GmkSeLine>::get();
+  if (list->unknown08.end() == list->unknown08.unknown002(list->unknown08.begin(), list->unknown08.end(), this)) {
+    TGmkActiveList<GmkSeLine>::get()->unknown08.push_back(this);
+  }
+}
+
 bool GmkSeLine::canDepopInst() const {
   if (unknown5c != 0) {
     if (!unknown58) {
@@ -404,3 +451,4 @@ template void mm::mtl::Vector<gmk::GmkSeLine>::resize(size_t);
 template void mm::mtl::Vector<gmk::GmkSeLinePoint>::extend(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkSeLinePoint>::resize(size_t);
 template void mm::mtl::Vector<gmk::GmkSe>::expand(size_t, size_t);
+template void mm::mtl::construct_n<gmk::GmkSe>(gmk::GmkSe *, size_t);

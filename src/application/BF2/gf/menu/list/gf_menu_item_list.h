@@ -37,6 +37,19 @@ public:
     ItemType::Type unknown14; // Inferred role: item type of the parts; original member name unknown.
   };
 
+  struct ItemBoxSetup {
+    ItemBoxSetup() : unknown14(ItemType::NONE), unknown18(nullptr), unknown20(0), unknown2a(false), unknown2b(false) {}
+
+    SetupParam unknown00;     // Inferred role: param; original member name unknown.
+    ItemType::Type unknown14; // Inferred role: item type of the item box; original member name unknown.
+    FiltertInfo *unknown18;   // Inferred role: filter; original member name unknown.
+    u64 unknown20;            // Role and original member name unknown.
+    bool unknown28;           // Role and original member name unknown.
+    bool unknown29;           // Inferred role: keep items whose count is zero; original member name unknown.
+    bool unknown2a;           // Inferred role: skip items that cannot be sold; original member name unknown.
+    bool unknown2b;           // Inferred role: skip items equipped by a character; original member name unknown.
+  };
+
   GfMenuItemList();
   ~GfMenuItemList() override;
   static GfMenuItemList *create();
@@ -80,9 +93,18 @@ public:
   void filterFavoriteType(const FiltertInfo &filter);
   void addItem(const MenuItemInfo &info, bool isAddItemBox);
   void setupFromHanaParts(const HanaPartsSetup &setup);
+  void setupFromBox(const ItemBoxSetup &setup);
 };
 
 static_assert(offsetof(GfMenuItemList::HanaPartsSetup, unknown14) == 0x14, "");
+static_assert(offsetof(GfMenuItemList::ItemBoxSetup, unknown14) == 0x14, "");
+static_assert(offsetof(GfMenuItemList::ItemBoxSetup, unknown18) == 0x18, "");
+static_assert(offsetof(GfMenuItemList::ItemBoxSetup, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuItemList::ItemBoxSetup, unknown28) == 0x28, "");
+static_assert(offsetof(GfMenuItemList::ItemBoxSetup, unknown29) == 0x29, "");
+static_assert(offsetof(GfMenuItemList::ItemBoxSetup, unknown2a) == 0x2a, "");
+static_assert(offsetof(GfMenuItemList::ItemBoxSetup, unknown2b) == 0x2b, "");
+static_assert(sizeof(GfMenuItemList::ItemBoxSetup) == 0x30, "");
 
 static_assert(offsetof(GfMenuItemList::FiltertInfo, unknown04) == 0x4, "");
 static_assert(offsetof(GfMenuItemList::FiltertInfo, unknown05) == 0x5, "");

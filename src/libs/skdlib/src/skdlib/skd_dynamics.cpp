@@ -3,19 +3,17 @@
 
 #include <string.h>
 
-#include "anm/anm_pose.h"
 #include "mm/mm_std_base.h"
 #include "mm_mtl/vector.h" // IWYU pragma: keep
 #include "skd/skd_collision_object.h"
 
+namespace mm {
+namespace mtl {
+class IAllocator;
+} // namespace mtl
+} // namespace mm
+
 namespace skd {
-
-Packet::~Packet() { anm::unknown001(m_pBindPose); }
-
-NodeArray::NodeArray(mm::mtl::IAllocator *allocator, const anm::Array<ResNode> &resNodes, const anm::Array<ResNodeCollision> &resNodeCollisions)
-    : unknown00(&resNodes), unknown08(&resNodeCollisions), unknown10(allocator) {
-  unknown10.resize(resNodes.size());
-}
 
 Dynamics::Dynamics(CollisionObject &collisionObject, const anm::Array<ResSolver> &solvers, anm::Pose &pose, ForceInterface *force, mm::mtl::IAllocator *allocator)
     : anm::ReferenceObject(allocator), m_pResSolver(&solvers), m_solvers(allocator), unknown48(allocator, pose), unknown198(0.1f), unknown19c(0.0f) {
@@ -40,30 +38,24 @@ void Dynamics::destroySolver() {
 
 // The game's m_solvers[i] asserts are at lines 67 (Dynamics::update) and 89 (Dynamics::updateMT); the function
 // start lines are not independently evidenced.
-#line 58
+#line 61
 void Dynamics::update(f32 deltaTime) {
   if (deltaTime < 0.00000011920928955078125f) {
     return;
   }
   u32 count = m_solvers.size();
-  if (count == 0) {
-    return;
-  }
   for (u32 i = 0; i < count; i++) {
     MM_ASSERT(m_solvers[i]);
     m_solvers[i]->solve(deltaTime, unknown190->unknown18, unknown48);
   }
 }
 
-#line 80
+#line 83
 void Dynamics::updateMT(f32 deltaTime, anm::ThreadPool &threadPool) {
   if (deltaTime < 0.00000011920928955078125f) {
     return;
   }
   u32 count = m_solvers.size();
-  if (count == 0) {
-    return;
-  }
   for (u32 i = 0; i < count; i++) {
     MM_ASSERT(m_solvers[i]);
     m_solvers[i]->solveMT(deltaTime, unknown190->unknown18, unknown48, threadPool);

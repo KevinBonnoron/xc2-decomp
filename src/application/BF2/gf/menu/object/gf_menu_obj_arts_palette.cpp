@@ -20,6 +20,18 @@ constexpr u32 unknown001 = 0x27;
 // Inferred role: ui event type; original name unknown.
 constexpr u16 unknown002 = 0x10a;
 
+GfMenuObjArtsPalette::GfMenuObjArtsPalette(u32 handle) : GfMenuObject(handle), unknown40(this), unknown2d0(this), unknown560(this), unknown808(this) {
+  for (u32 i = 0; i < 3; i++) {
+    unknown24[i] = -1;
+  }
+  unknown7f0 = &unknown40;
+  unknown7f8 = &unknown2d0;
+  unknown800 = &unknown560;
+  for (u32 i = 0; i < 3; i++) {
+    unknown30[i] = 0;
+  }
+}
+
 void GfMenuObjArtsPalette::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjArtsPalette::push(unsigned int slot) { unknown149(unknown001, unknown002, slot); }

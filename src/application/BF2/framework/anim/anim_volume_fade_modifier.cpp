@@ -11,6 +11,8 @@ namespace fw {
 
 AnimVolumeFadeModifier::AnimVolumeFadeModifier() : unknown18(nullptr), unknown70(true) {}
 
+AnimVolumeFadeModifier::~AnimVolumeFadeModifier() {}
+
 void AnimVolumeFadeModifier::unbind() { mm::mtl::safeRelease(unknown18); }
 
 void AnimVolumeFadeModifier::bind(ModelObject *modelObject) {

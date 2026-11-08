@@ -1,25 +1,124 @@
 #include "gf/game/gf_game_obj.h"
 
+#include "fw/fw_transform.h"
+#include "fw/fw_update_info.h"
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_enemy.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_object_type.h"
 #include "gf/event/gf_event.h"
 #include "gf/game/event/gf_game_event.h"
+#include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_mount.h"
 #include "gf/game/gf_game_obj_enemy.h"
+#include "gf/game/gf_game_party.h"
+#include "gf/game/gf_game_search_obj.h"
 #include "gf/game/gf_game_util.h"
+#include "gf/gf_allocator.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_manager.h"
 #include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
+#include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/rtti.h"
 
 namespace gf {
 struct GF_MOUNT_HANDLE;
+
+void GfGameObj::build(const GfSetupParam &param) {
+  // __LINE__ must be 213 as in the original file: it is the line argument of the allocation.
+#line 213
+  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfGameObj(param);
+}
+
+GfGameObj::~GfGameObj() { GfObjManager::removeListener(this); }
+
+void GfGameObj::finalize() {
+  unknown54240.clear();
+  GfGameSearchObj::destroy();
+  if (unknown55c68 != nullptr) {
+    delete unknown55c68;
+    unknown55c68 = nullptr;
+  }
+  unknown55c70 = false;
+}
+
+void GfGameObj::destroy() {
+  GfGameObj *gameObj = get();
+  gameObj->finalize();
+  delete gameObj;
+}
+
+void GfGameObj::calcCameraFade(const mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_OBJ_LIST_CAPACITY> &list, const mm::Vec3 &cameraPosition) {
+  for (mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_OBJ_LIST_CAPACITY>::const_iterator it = list.begin(); it != list.end(); ++it) {
+    GfObjAcc acc(*it);
+    if (acc.getObj()->unknown118) {
+      mm::Vec3 position = acc.getWorldTransformNoSync().unknown00;
+      f32 radius = acc.getModelRadius();
+      f32 height = position.y + radius;
+      f32 dx = position.x - cameraPosition.x;
+      f32 dy = height - cameraPosition.y;
+      f32 dz = position.z - cameraPosition.z;
+      if (radius >= 50.0f || dx * dx + dy * dy + dz * dz < 400.0f || acc.getAlphaCamera() < 1.0f || acc.getAlpha() != acc.getModelAlpha()) {
+        acc.setCalcCameraAlpha();
+      }
+    }
+  }
+}
+
+void GfGameObj::enableGameObj(GfObjAcc &acc, bool isEnable) {
+  acc.setFlag(OBJ_FLAG_UNKNOWN_E, isEnable);
+  acc.setCollisionChar(isEnable);
+  acc.getObj()->setUpdateComponent(isEnable);
+  if (!isEnable) {
+    if (acc.isPartyObj()) {
+      if (GfGameParty::getPartyId(acc.getHandle()) != PARTY_ID_NONE && (acc.getType() == OBJECT_TYPE_DRIVER || acc.getType() == OBJECT_TYPE_BLADE)) {
+        GfGameUtil::resetFormationParam(acc.getHandle());
+      }
+    }
+    unknown52238.push_back(acc.getHandle());
+  } else {
+    unknown50230.push_back(acc.getHandle());
+  }
+}
+
+bool GfGameObj::fadeoutGameObj(INOUT &inout, GfObjAcc &acc, const fw::UpdateInfo &info) {
+  inout.unknown0c += info.unknown04;
+  f32 step = 0.0f;
+  if (!inout.unknown16) {
+    if (inout.unknown08 > 0.0f) {
+      step = (-1.0f / inout.unknown08) * info.unknown04;
+    }
+    inout.unknown10 += step;
+  }
+  if (inout.unknown15) {
+    if (inout.unknown10 < 1.0f && inout.unknown10 - step >= 1.0f) {
+      inout.unknown15 = false;
+      setupEffectFadeout(inout, acc, info);
+    }
+  }
+  if (inout.unknown10 <= 0.0f || isEffectFadeEnd(inout, acc)) {
+    inout.unknown10 = 0.0f;
+    if (inout.unknown14) {
+      inout.unknown14 = false;
+      enableGameObj(acc, false);
+    }
+    acc.setFlag(OBJ_FLAG_UI_HIDDEN, false);
+    if (!acc.testFlag(OBJ_FLAG_LOADED_WAIT) || acc.isRebuild()) {
+      if (!acc.isDestroy()) {
+        GfObjUtil::destroy(inout.unknown00);
+      }
+    } else {
+      GfObjUtil::rebuild(inout.unknown00);
+    }
+    return true;
+  }
+  acc.setAlphaLife(inout.unknown10 > 1.0f ? 1.0f : inout.unknown10);
+  return false;
+}
 
 bool GfGameObj::isInitialized() {
   GfGameObj *gameObj = get();
@@ -94,6 +193,27 @@ GfObj *GfGameObj::getObj(GF_OBJ_HANDLE *handle) {
     return GfObjUtil::getObj(handle);
   }
   return nullptr;
+}
+
+bool GfGameObj::fadeinGameObj(INOUT &inout, GfObjAcc &acc, const fw::UpdateInfo &info) {
+  if (inout.unknown15) {
+    inout.unknown15 = false;
+  }
+  if (GfGameManager::isFadeout()) {
+    inout.unknown10 = 1.0f;
+  }
+  if (0.0f < inout.unknown08) {
+    inout.unknown10 += (1.0f / inout.unknown08) * info.unknown04;
+    acc.setAlphaLife(inout.unknown10);
+    if (!(inout.unknown10 >= 1.0f)) {
+      return false;
+    }
+  } else {
+    inout.unknown10 = 1.0f;
+  }
+  addGameObj(inout.unknown00);
+  acc.setAlphaLife(1.0f);
+  return true;
 }
 
 bool GfGameObj::isEffectFadeEnd(const INOUT &inout, const GfObjAcc &acc) const {

@@ -47,6 +47,7 @@ struct SendParam;
 
 namespace fw {
 
+struct VolumeFadeParams;
 struct UpdateInfo;
 class EffectData;
 class EffectPack;
@@ -62,6 +63,7 @@ public:
   static const u32 unknown002 = 8;   // Inferred role: kizuna line slot count, slot 0 is unused; original name unknown.
   static const u32 unknown003 = 128; // Inferred role: kizuna line texture resource capacity; original name unknown.
   static const u32 unknown004 = 32;  // Inferred role: kizuna line texture capacity; original name unknown.
+  static const u32 unknown005 = 32;  // Inferred role: volume fade param table size; original name unknown.
 
   struct CasterGroup {
     mm::mtl::IntrusiveList<EffectCasterSend> unknown00; // Inferred role: casters; original member name unknown.
@@ -267,7 +269,9 @@ public:
   u8 _2fd7[0x2fd8 - 0x2fd7];
   u8 unknown2fd8;   // Inferred role: caster buffer index flipped every tail; original member name unknown.
   bool unknown2fd9; // Inferred role: destroy the effect system on tail; original member name unknown.
-  u8 _2fda[0x353e0 - 0x2fda];
+  u8 _2fda[0x2fe0 - 0x2fda];
+  const VolumeFadeParams *m_volumeFadeParam[unknown005]; // Inferred role: volume fade params per effect type, read by getVolumeFadeParam; original member name unknown.
+  u8 _30e0[0x353e0 - 0x30e0];
   KizunaWork unknown353e0[unknown002];                                        // Inferred role: kizuna lines; original member name unknown.
   mm::mtl::FixedVector<grlib::CGLibTextureBuffer *, unknown004> unknown37760; // Inferred role: kizuna line textures; original member name unknown.
   u8 _37868[0x37958 - 0x37868];
@@ -301,6 +305,7 @@ static_assert(offsetof(EffectManager, unknown2fd5) == 0x2fd5, "");
 static_assert(offsetof(EffectManager, unknown2fd6) == 0x2fd6, "");
 static_assert(offsetof(EffectManager, unknown2fd8) == 0x2fd8, "");
 static_assert(offsetof(EffectManager, unknown2fd9) == 0x2fd9, "");
+static_assert(offsetof(EffectManager, m_volumeFadeParam) == 0x2fe0, "");
 static_assert(offsetof(EffectManager, unknown353e0) == 0x353e0, "");
 static_assert(offsetof(EffectManager, unknown37760) == 0x37760, "");
 static_assert(offsetof(EffectManager, unknown37958) == 0x37958, "");

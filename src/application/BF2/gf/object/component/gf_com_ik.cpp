@@ -1,5 +1,7 @@
 #include "gf/object/component/gf_com_ik.h"
 
+#include "anm/anm_pose.h"
+#include "anm/anm_skeleton.h"
 #include "framework/anim/anim_manager.h"
 #include "framework/ik/ik_ground_interface.h"
 #include "framework/ik/ik_look_at_solver.h"
@@ -24,6 +26,30 @@ class ReferenceFrame;
 } // namespace fw
 
 namespace gf {
+
+u32 calcFootCnt(GfComModel *model) {
+  if (model == nullptr || model->unknown30 == nullptr) {
+    return 0;
+  }
+  const anm::Skeleton *skeleton = model->unknown30->unknown18;
+  if (skeleton == nullptr) {
+    return 0;
+  }
+  const anm::Skeleton::unknown004 *bone = skeleton->getBoneFromLabel(static_cast<anm::LabelType>(0), 2);
+  if (bone != nullptr && bone->unknown00 != nullptr) {
+    return 6;
+  }
+  bone = skeleton->getBoneFromLabel(static_cast<anm::LabelType>(0), 1);
+  if (bone != nullptr && bone->unknown00 != nullptr) {
+    return 4;
+  }
+  bone = skeleton->getBoneFromLabel(static_cast<anm::LabelType>(0), 0);
+  u32 footCount = 0;
+  if (bone != nullptr && bone->unknown00 != nullptr) {
+    footCount = 2;
+  }
+  return footCount;
+}
 
 bool GfComIK::recieveMessage(fw::MessageObject *sender, fw::Message &message) {
   if (message.unknown00 == MSG_DEBUG_ACTIVATE_COMPONENT_WINDOW) {

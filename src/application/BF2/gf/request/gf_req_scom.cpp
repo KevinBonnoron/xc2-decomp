@@ -4,6 +4,7 @@
 
 #include "framework/lang_util.h"
 #include "fw/fw_bdat_manager.h"
+#include "fw/fw_transform.h"
 #include "fw/fw_update_info.h"
 #include "gf/data/gf_bdat_btl.h"
 #include "gf/data/gf_bdat_quest.h"
@@ -70,6 +71,8 @@
 #include "gmk/gmk_manager.h"
 #include "ml/rand.h"
 #include "mm_math/mm_col4.h"
+#include "mm_math/mm_quat.h"
+#include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_list.h" // IWYU pragma: keep
 #include "mm_mtl/fixed_queue.h"
@@ -86,6 +89,10 @@ static const u32 unknown003 = 1; // Inferred role: game speed layer set by the l
 SCOM::SCOM(GF_SCOM_HANDLE *handle, SCOM_TYPE type, SCOM_EXEC exec, u16 unknown10) : unknown08(handle), unknown10(unknown10), unknown14(exec), unknown18(type) {}
 
 GF_OBJ_HANDLE *SCOM::getObjHandle() const { return INVALID_HANDLE; }
+
+GfReqSmallCom::GfReqSmallCom() : unknownd868(0), unknownd870(false) { SCOM_PARTY_ADD::initialize(); }
+
+GfReqSmallCom::~GfReqSmallCom() {}
 
 GF_SCOM_HANDLE *GfReqSmallCom::allocate() {
   s64 handle = unknownd868++;
@@ -369,6 +376,52 @@ void SCOM_LEVELUP_DEVELOP::create() {
 #line 431
   SCOM_LEVELUP_DEVELOP *command = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) SCOM_LEVELUP_DEVELOP(GfReqSmallCom::get()->allocate());
   GfReqSmallCom::addRequestParallel(command);
+}
+
+// Inferred helper: quaternion of the Euler angles; original name unknown. Evidence: inlined in both SCOM_OBJ_WARP_POS::create overloads taking a position and a rotation.
+static inline mm::Quat unknown004(mm::Vec3 rotation) {
+  f32 sinX = sinf(rotation.x * 0.5f);
+  f32 cosX = cosf(rotation.x * 0.5f);
+  f32 sinY = sinf(rotation.y * 0.5f);
+  f32 cosY = cosf(rotation.y * 0.5f);
+  f32 sinZ = sinf(rotation.z * 0.5f);
+  f32 cosZ = cosf(rotation.z * 0.5f);
+  mm::Quat quat;
+  quat.x = sinX * cosY * cosZ + cosX * sinY * sinZ;
+  quat.y = cosX * sinY * cosZ - sinX * cosY * sinZ;
+  quat.z = cosX * cosY * sinZ - sinX * sinY * cosZ;
+  quat.w = cosX * cosY * cosZ + sinX * sinY * sinZ;
+  return quat;
+}
+
+GF_SCOM_HANDLE *SCOM_OBJ_WARP_POS::create(GF_OBJ_HANDLE *handle, const mm::Vec3 &position, const mm::Vec3 &rotation, bool isFollow) {
+  fw::Transform transform;
+  transform.unknown00 = position;
+  transform.unknown10 = unknown004(rotation);
+#line 629
+  SCOM_OBJ_WARP_POS *command = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) SCOM_OBJ_WARP_POS(GfReqSmallCom::get()->allocate(), handle, transform, isFollow);
+  return GfReqSmallCom::addRequest(command);
+}
+
+GF_SCOM_HANDLE *SCOM_OBJ_WARP_POS::create(const mm::Vec3 &position, const mm::Vec3 &rotation, bool isFollow) {
+  fw::Transform transform;
+  transform.unknown00 = position;
+  transform.unknown10 = unknown004(rotation);
+#line 637
+  SCOM_OBJ_WARP_POS *command = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) SCOM_OBJ_WARP_POS(GfReqSmallCom::get()->allocate(), GfGameManager::getControlMover(), transform, isFollow);
+  return GfReqSmallCom::addRequest(command);
+}
+
+GF_SCOM_HANDLE *SCOM_OBJ_WARP_POS::create(GF_OBJ_HANDLE *handle, const fw::Transform &transform, bool isFollow) {
+#line 642
+  SCOM_OBJ_WARP_POS *command = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) SCOM_OBJ_WARP_POS(GfReqSmallCom::get()->allocate(), handle, transform, isFollow);
+  return GfReqSmallCom::addRequest(command);
+}
+
+GF_SCOM_HANDLE *SCOM_OBJ_WARP_POS::create(const fw::Transform &transform, bool isFollow) {
+#line 647
+  SCOM_OBJ_WARP_POS *command = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) SCOM_OBJ_WARP_POS(GfReqSmallCom::get()->allocate(), GfGameManager::getControlMover(), transform, isFollow);
+  return GfReqSmallCom::addRequest(command);
 }
 
 bool SCOM_DESTROY_GAME_OBJ::exec(const fw::UpdateInfo &) {
@@ -2663,12 +2716,12 @@ GF_SCOM_HANDLE *SCOM_FIELD_VOICE::createMercenariesResult(u32 blade) {
   return reinterpret_cast<GF_SCOM_HANDLE *>(-1);
 }
 
-void SCOM_FIELD_VOICE::createReleaseBlade(u32 blade) {
+GAME_VOICE_HANDLE *SCOM_FIELD_VOICE::createReleaseBlade(u32 blade) {
   ParamObj object = {INVALID_HANDLE, OBJECT_TYPE_BLADE, blade};
   if (blade == 0) {
     object = ParamObj{GfGameManager::getControlMover(), 0, 0};
   }
-  GfFieldVoice::playVoice(object, CV_FIELD_UNKNOWN_18, CV_PRIO_UNKNOWN_1);
+  return GfFieldVoice::playVoice(object, CV_FIELD_UNKNOWN_18, CV_PRIO_UNKNOWN_1);
 }
 
 GF_SCOM_HANDLE *SCOM_FIELD_VOICE::createSkipTravel(bool isStart) {
@@ -2886,6 +2939,37 @@ bool GfReqSmallCom::isExistCommand(SCOM_TYPE type) {
     }
   }
   return false;
+}
+
+bool GfReqSmallCom::update(const fw::UpdateInfo &info, u16 priority) {
+  for (mm::mtl::FixedList<SCOM *, 1024>::iterator it = unknown08.begin(); it != unknown08.end(); ++it) {
+    if ((*it)->unknown10 == priority) {
+      if ((*it)->exec(info)) {
+        if (*it != nullptr) {
+          delete *it;
+          *it = nullptr;
+        }
+        unknown08.erase(it);
+      }
+      return false;
+    }
+  }
+  return true;
+}
+
+void GfReqSmallCom::update(const fw::UpdateInfo &info) {
+  unknownd870 = true;
+  if (update(info, 0)) {
+    if (update(info, 1)) {
+      update(info, 2);
+    }
+  }
+  updateParallel(info);
+  for (mm::mtl::FixedList<SCOM *, 1024>::iterator it = unknown9048.begin(); it != unknown9048.end(); ++it) {
+    unknown4828.push_back(*it);
+  }
+  unknown9048.clear();
+  unknownd870 = false;
 }
 
 } // namespace gf

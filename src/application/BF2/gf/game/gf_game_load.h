@@ -20,7 +20,7 @@ class GfGameLoad : public ml::IWorkEvent {
 public:
   GfGameLoad(SAVESLOT slot);
   GfGameLoad(const char *path);
-  ~GfGameLoad() override {}
+  ~GfGameLoad() override;
   bool OnFileEvent(ml::EventFileTh *event) override;
   bool isBusy() const;
   void terminateNonBlock();

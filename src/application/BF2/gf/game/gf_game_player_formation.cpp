@@ -1,10 +1,15 @@
 #include "gf/game/gf_game_player_formation.h"
 
+#include <math.h>
+
+#include "framework/debug/debug_draw.h"
 #include "fw/fw_param_manager.h"
 #include "gf/event/gf_event.h"
 #include "gf/gf_allocator.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_util.h"
+#include "mm_math/mm_col4.h"
+#include "mm_math/mm_mat44.h"
 #include "mm_math/mm_quat.h"
 #include "mm_mtl/intrusive_ptr.h"
 
@@ -69,6 +74,20 @@ const fw::Transform &GfGamePlayerFormation::getFollowTransform(u32 playerId) con
   return unknowne0[playerId];
 }
 
+bool GfGamePlayerFormation::isFarRandomTalk(GF_OBJ_HANDLE *handle) {
+  u32 playerId = findPlayer(handle);
+  if (playerId == PLAYER_ID_NONE) {
+    return false;
+  }
+  const WarpForRandomTalkParam *param = getWarpForRandomTalkParam();
+  mm::Vec3 delta = unknowne0[0].unknown00 - unknowne0[playerId].unknown00;
+  if (fabsf(delta.y) >= param->height) {
+    return true;
+  }
+  f32 distanceSq = param->distance * param->distance;
+  return delta.x * delta.x + delta.z * delta.z >= distanceSq;
+}
+
 void GfGamePlayerFormation::swapFormation(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *otherHandle) { swapFormation(findPlayer(handle), findPlayer(otherHandle)); }
 
 u32 GfGamePlayerFormation::findPlayer(GF_OBJ_HANDLE *handle) {
@@ -94,6 +113,13 @@ void GfGamePlayerFormation::swapFormation(u32 playerId, u32 otherPlayerId) {
   notifyChangePlayerID(this, otherPlayerId);
 
   GfEvent::callSwapFormation(playerId, otherPlayerId);
+}
+
+void GfGamePlayerFormation::drawDebugRandomTalk() {
+  const WarpForRandomTalkParam *param = getWarpForRandomTalkParam();
+  mm::Mat44 matrix;
+  matrix.unknown007(unknowne0[0].unknown00);
+  fw::debug::drawCylinderLine(matrix, param->height * 2.0f, param->distance, mm::Col4::cyan, 8);
 }
 
 void GfGamePlayerFormation::changeFormation(u32 formation) {

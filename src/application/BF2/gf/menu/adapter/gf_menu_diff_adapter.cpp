@@ -16,7 +16,7 @@ static GfMenuDiffAdapter::TypeInfo TYPE_INFOS[] = {
 
 GfMenuDiffAdapter::GfMenuDiffAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways) {}
 
-GfMenuDiffAdapter::~GfMenuDiffAdapter() {}
+GfMenuDiffAdapter::~GfMenuDiffAdapter() { ; }
 
 GfMenuAdapter *GfMenuDiffAdapter::create(u32 handle, GfMenuAdapter *adapter, GfMenuAdapter *other, u32 type, bool isUpdateAlways) {
   ui::UIObjectAcc acc(handle);

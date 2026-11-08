@@ -11,6 +11,8 @@
 #include "gf/gf_allocator.h"
 #include "gf/menu/gf_menu_bdat.h"
 #include "gf/menu/gf_menu_reference.h"
+#include "gf/menu/gf_menu_reference_number.h"
+#include "gf/menu/list/gf_menu_item_list.h"
 #include "ui/ui_object_acc.h"
 #include "ui/ui_object_plugin.h"
 #include "ui/ui_str.h"
@@ -147,6 +149,20 @@ GfMenuWeaponAdapter *GfMenuWeaponAdapter::createFromReferenceBlade(u32 handle, u
   return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 
+GfMenuWeaponAdapter *GfMenuWeaponAdapter::createFromBladeWithChipList(u32 handle, u32 type, u32 blade, GfMenuItemList *list, u32 index, bool isUpdateAlways) {
+  // __LINE__ must be 225 as in the original source: it is the line argument of operator new.
+#line 225
+  BladeWithChipListConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) BladeWithChipListConverter(blade, list, index);
+  return createFromCoverter(handle, type, converter, isUpdateAlways);
+}
+
+GfMenuWeaponAdapter *GfMenuWeaponAdapter::createFromReferenceChip(u32 handle, u32 type, const ReferenceChip &chip, bool isUpdateAlways) {
+  // __LINE__ must be 234 as in the original source: it is the line argument of operator new.
+#line 234
+  ReferenceChipConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceChipConverter(chip);
+  return createFromCoverter(handle, type, converter, isUpdateAlways);
+}
+
 u32 GfMenuWeaponAdapter::BladeConverter::getWeaponID() {
   DataParamAcc acc(OBJECT_TYPE_BLADE, unknown08, GIMMICK_TYPE_NONE);
   if (acc.isValid()) {
@@ -159,6 +175,27 @@ u32 GfMenuWeaponAdapter::ReferenceBladeConverter::getWeaponID() {
   DataParamAcc acc(OBJECT_TYPE_BLADE, GfMenuReference::getReferenceBladeID(unknown08), GIMMICK_TYPE_NONE);
   if (acc.isValid()) {
     return acc.getEquipWeapon(EQUIP_WEAPON_SLOT_CURRENT, false);
+  }
+  return 0;
+}
+
+u32 GfMenuWeaponAdapter::BladeWithChipListConverter::getWeaponID() {
+  DataParamAcc acc(OBJECT_TYPE_BLADE, unknown08, GIMMICK_TYPE_NONE);
+  if (acc.isValid()) {
+    u32 chip = unknown10->getContents(unknown10->getPageIndex(unknown18)).unknown04;
+    if (chip != 0) {
+      return GfDataWeapon::getNewWeapon(acc.getEquipWeapon(EQUIP_WEAPON_SLOT_CURRENT, false), chip);
+    }
+  }
+  return 0;
+}
+
+u32 GfMenuWeaponAdapter::ReferenceChipConverter::getWeaponID() {
+  DataParamAcc acc(OBJECT_TYPE_BLADE, GfMenuReference::getReferenceBladeID(unknown08), GIMMICK_TYPE_NONE);
+  if (acc.isValid()) {
+    if (unknown10.get() != nullptr && unknown10->unknown0c != 0) {
+      return GfDataWeapon::getNewWeapon(acc.getEquipWeapon(EQUIP_WEAPON_SLOT_CURRENT, false), unknown10->unknown0c);
+    }
   }
   return 0;
 }

@@ -14,7 +14,7 @@ constexpr size_t MOVIE_SLOT_SIZE = 0x500000;
 
 GfArtsMovie::GfArtsMovie() : unknown10(INVALID_SLOT_HANDLE), unknown18(nullptr), unknown20(0), m_state(0) { unknown28.clear(); }
 
-GfArtsMovie::~GfArtsMovie() {}
+GfArtsMovie::~GfArtsMovie() { ; }
 
 void GfArtsMovie::startSetup(const char *name) {
   unknown10 = GfAssetManager::allocateFromAssetTypeSlot(ASSET_TYPE_TEMPORARY, MOVIE_SLOT_SIZE);

@@ -20,7 +20,7 @@ public:
 
   GfMenuGameAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways);
   ~GfMenuGameAdapter() override;
-  static GfMenuAdapter *create(u32 handle, u32 type, bool isUpdateAlways);
+  static GfMenuGameAdapter *create(u32 handle, u32 type, bool isUpdateAlways);
   bool update_GamePlayTime();
   bool update_Money();
   bool update_FieldTime();

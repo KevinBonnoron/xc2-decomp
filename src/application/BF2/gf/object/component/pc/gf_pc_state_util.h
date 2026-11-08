@@ -28,6 +28,7 @@ enum {
   MSG_PC_FIELD_WATER_WARP = 0x1000018,
   MSG_PC_FIELD_RELAY_SURVIVE = 0x100001e,
   MSG_PC_FIELD_WATER_WARP_BUDDY = 0x1000020,
+  MSG_PC_FIELD_NOTIFY_RIDER_EVENT = 0x1000024,
   MSG_PC_FIELD_REQ_FALL_DEAD_MOTION = 0x1000025,
 };
 
@@ -120,6 +121,7 @@ public:
   static void notifyDead(GfComBehaviorPc &behavior, MsgObjectNotifyDead &message, bool isBroadcast);
   static void setEnableFallDistChecker(GfComBehaviorPc &behavior, bool isEnable);
   static EnviromentSensor::GroundInfo *getGroundInfo(GfComBehaviorPc &behavior);
+  static void applyDamage(GfComBehaviorPc &behavior, u32 rate, bool isTerrain);
   static EnviromentSensor::unknown003 *getClimbWallInfo(GfComBehaviorPc &behavior);
   static EnviromentSensor::GroundInfo *getClimbEndGroundInfo(GfComBehaviorPc &behavior);
   static EnviromentSensor::unknown003 *getDescendWallInfo(GfComBehaviorPc &behavior);

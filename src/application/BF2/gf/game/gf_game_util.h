@@ -42,7 +42,7 @@ public:
     f32 unknown08;            // Inferred role: target rotation; original member name unknown.
     f32 unknown0c;            // Inferred role: turn time; original member name unknown.
     f32 unknown10;            // Inferred role: turn speed; original member name unknown.
-    u32 unknown14;            // Role and original member name unknown.
+    f32 unknown14;            // Role and original member name unknown.
   };
 
   struct UiEnemyStatusIconInfo {
@@ -53,10 +53,20 @@ public:
     bool unknown01; // Inferred role: enemy is linked to others (link icon); original member name unknown.
   };
 
+  struct UiActionWindowInfo {
+    UiActionWindowInfo() : unknown00(nullptr), unknown08(-1) {}
+    void create(GF_OBJ_HANDLE *handle);
+
+    u8 *unknown00; // Inferred role: action window table (fld_actionwindow); original member name unknown.
+    u32 unknown08; // Inferred role: action window message id; original member name unknown.
+  };
+
   static bool isUiGfObjHandleValid(GF_OBJ_HANDLE *handle);
+  static f32 getUiNameDist(GF_OBJ_HANDLE *handle);
   static bool isUiNameDistMatch(GF_OBJ_HANDLE *handle);
   static bool isUiInfoIconDistMatch(GF_OBJ_HANDLE *handle);
   static int getUiInfoIconBdatId(GF_OBJ_HANDLE *handle);
+  static int getUiOffsetId(GF_OBJ_HANDLE *handle);
   static bool enterPlayerBattle(bool isStart, GF_OBJ_HANDLE *target, bool isForce);
   static bool evalSumFs(int condition, u32 option);
   static bool getNameMsId(u32 &nameId, GF_OBJ_HANDLE *handle);
@@ -157,7 +167,7 @@ public:
   static u32 execAddCommonBlade(const SDataBlade &dataBlade);
   static void changeAlphaBelonging(GF_OBJ_HANDLE *handle, u32 belonging, f32 alpha, f32 time);
   static bool hasBelonging(GF_OBJ_HANDLE *handle, u32 belonging);
-  static void execTurnCmd(const ExecTurnCmdInfo &info);
+  static bool execTurnCmd(const ExecTurnCmdInfo &info);
   static bool isTurnEnd(GF_OBJ_HANDLE *handle);
   static void disposeTurnEnd(GF_OBJ_HANDLE *handle);
   static void execAddDevelopPointArcadia2Iyasaki();
@@ -195,6 +205,8 @@ public:
 
 static_assert(offsetof(GfGameUtil::UiEnemyStatusIconInfo, unknown01) == 0x01, "");
 static_assert(sizeof(GfGameUtil::UiEnemyStatusIconInfo) == 0x02, "");
+static_assert(offsetof(GfGameUtil::UiActionWindowInfo, unknown08) == 0x08, "");
+static_assert(sizeof(GfGameUtil::UiActionWindowInfo) == 0x10, "");
 
 class GfGameUtilCloudSea {
 public:

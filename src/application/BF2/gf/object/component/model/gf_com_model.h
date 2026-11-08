@@ -69,6 +69,9 @@ public:
     GfComModel *unknown08; // Inferred role: owner; original member name unknown.
   };
 
+  GfComModel();
+  virtual ~GfComModel();
+
   bool hasBone(const char *name) const;
   bool isRender() const;
   bool isVolumeFadeForUser() const;
@@ -90,7 +93,7 @@ public:
   void bindReferenceFrameToBone(u16 bone, mm::mtl::IntrusivePtr<fw::ReferenceFrame> &frame);
   void unbindReferenceFrameToBone(mm::mtl::IntrusivePtr<fw::ReferenceFrame> &frame);
 
-  u8 _10[0x18 - 0x10];
+  s64 unknown10;                                       // Inferred role: asset manager handle, -1 when unset; original member name unknown.
   fw::ModelObject *unknown18;                          // Inferred role: model object; original member name unknown.
   mm::mtl::IntrusivePtr<fw::ReferenceFrame> unknown20; // Inferred role: reference frame; original member name unknown.
   const anm::Skeleton *unknown28;                      // Inferred role: skeleton; original member name unknown.

@@ -5,6 +5,7 @@
 namespace gf {
 
 class GfMenuCallContext;
+class GfMenuItemList;
 struct MenuCommonWindowParam;
 
 class GfMenuObjCommonText : public GfMenuObject {
@@ -24,7 +25,10 @@ public:
   static void close();
   static void open(GfMenuCallContext *context, const MenuCommonWindowParam &param);
   static void open(GfMenuCallContext *context, u32 window, u32 param);
-  static void openItem(GfMenuCallContext *context, u32 type, u32 item);
+  static void openError(GfMenuCallContext *context, u32 error, u32 param);
+  static void openItem(GfMenuCallContext *context, u32 window, u32 item);
+  static void openSelectItem(GfMenuCallContext *context, const GfMenuItemList *list);
+  static void openGetItem(GfMenuCallContext *context, const GfMenuItemList *items);
   static void openKizunaDialog(GfMenuCallContext *context, const OpenKizunaParam &param);
 };
 

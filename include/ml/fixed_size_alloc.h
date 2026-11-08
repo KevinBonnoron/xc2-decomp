@@ -104,7 +104,11 @@ public:
   }
 
   // Inferred role: tells whether the element at index is used; original name unknown.
-  bool unknown010(u32 index) const { return ((1 << (index % 32)) & unknown006[index / 32]) != 0; }
+  bool unknown010(u32 index) const {
+    u32 word = index / 32;
+    u32 bit = 1 << (index % 32);
+    return (unknown006[word] & bit) != 0;
+  }
 
   u8 unknown08[sizeof(T) * N]; // Inferred role: element storage, not aligned to T (GfGameSearchObj::GFSEARCH_INFO pool at 0x08); original member name unknown.
   u32 unknown005[N / 32 + 1];  // Inferred role: usage bitmap storage; original member name unknown (offset depends on N).

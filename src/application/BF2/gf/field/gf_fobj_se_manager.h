@@ -30,6 +30,7 @@ public:
   };
 
   GfFobjSeManager(const CreateInfo *info);
+  ~GfFobjSeManager() { dispose(); }
   void create(const CreateInfo &info);
   void dispose();
   void update(f32 deltaTime);

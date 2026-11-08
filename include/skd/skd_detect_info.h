@@ -1,7 +1,6 @@
 #pragma once
 #include <stddef.h>
 
-#include "mm/mm_std_base.h"
 #include "mm_math/mm_vec3.h"
 #include "types.h"
 
@@ -27,11 +26,8 @@ static_assert(sizeof(DetectInfo) == 0x30, "");
 struct DetectInfoBuffer {
   static const u32 SIZE = 0x800;
 
-  // Inferred helper: appends an entry; original name unknown. The "SIZE > m_size" assertion text comes from the game.
-  DetectInfo *unknown001() {
-    MM_ASSERT(SIZE > m_size);
-    return &unknown00[m_size++];
-  }
+  // Declared only: no compiled caller instantiates the append helper; the "SIZE > m_size" assertion text comes from the game.
+  DetectInfo *unknown001();
 
   DetectInfo unknown00[SIZE];
   u32 m_size; // Name from the "SIZE > m_size" assertion in skd_detect_info.h.

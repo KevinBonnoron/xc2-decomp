@@ -87,6 +87,8 @@ static_assert(sizeof(MsgPcFieldNotifyWallJump) == 0x30, "");
 // Layout evidence: StateFieldWallPrepareJump broadcasts it with the wall jump info of GfPropertyField::getWallJumpInfo,
 // and AIAgentField::recieveMessage reads that info through the member at 0x8.
 struct MsgPcFieldNotifyWallJumpStart : fw::Message {
+  MsgPcFieldNotifyWallJumpStart(const MsgPcFieldNotifyWallJump *wallJump) : fw::Message(MSG_PC_FIELD_NOTIFY_WALL_JUMP_START, 0x40), unknown08(wallJump) {}
+
   const MsgPcFieldNotifyWallJump *unknown08; // Inferred role: wall jump info; original member name unknown.
 };
 
@@ -95,6 +97,8 @@ static_assert(offsetof(MsgPcFieldNotifyWallJumpStart, unknown08) == 0x08, "");
 // Layout evidence: StateFieldWaterPrepareWarp broadcasts it with the warp info of GfPropertyField::getWarpInfo, and
 // AIAgentField::procMsgPcFieldNotifyWaterWarp reads that info through the member at 0x8.
 struct MsgPcFieldNotifyWaterWarp : fw::Message {
+  MsgPcFieldNotifyWaterWarp(const MsgPcFieldNotifyWarp *warp) : fw::Message(MSG_PC_FIELD_NOTIFY_WATER_WARP, 0x40), unknown08(warp) {}
+
   const MsgPcFieldNotifyWarp *unknown08; // Inferred role: warp info; original member name unknown.
 };
 

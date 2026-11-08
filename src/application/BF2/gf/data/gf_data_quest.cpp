@@ -1,11 +1,14 @@
 #include "gf/data/gf_data_quest.h"
 
 #include "bdat.h"
+#include "gf/data/gf_bdat_cond.h"
 #include "gf/data/gf_bdat_msg.h"
 #include "gf/data/gf_bdat_quest.h"
 #include "gf/data/gf_data_game.h"
 #include "gf/data/gf_data_manager.h"
 #include "gf/data/gf_game_flag.h"
+#include "gf/game/gf_game_cond.h"
+#include "gf/game/quest/gf_quest_task_param.h"
 #include "mm_mtl/fixed_vector.h"
 
 namespace gf {
@@ -14,6 +17,12 @@ enum {
   FLAG_ORDER_TIMMING_FIRST = 0x619,
   FLAG_ORDER_TIMMING_END = 0x763,
 };
+
+// Inferred role: first game flag of the range getHanyouFlg accepts; original name unknown (numbered across gf_data.cpp, which
+// includes every gf_data_*.cpp).
+constexpr u32 unknown010 = 0x8b0;
+// Inferred role: number of game flags in the range getHanyouFlg accepts; original name unknown.
+constexpr u32 unknown011 = 0x5dc;
 
 enum {
   QUEST_NEXT_NONE = 30000,
@@ -329,6 +338,45 @@ void GfDataQuest::setSelect(QuestID select) {
 }
 
 QuestID GfDataQuest::getSelect() { return GfDataManager::getDataGame()->unknown1097e8; }
+
+bool GfDataQuest::getHanyouFlg(u32 &flag, u32 &flagMin, u32 &flagMax, const QuestTaskParam &param) {
+  QuestListAcc *questListAcc = QuestListAcc::get();
+  u32 purpose = param.unknown08;
+  if (purpose == 0) {
+    getListPurposeID(param.unknown04);
+    return false;
+  }
+
+  GfBdatCond *bdatCond = GfBdatCond::get();
+  if (questListAcc->getTaskTaskType(purpose, param.unknown0c) != TASK_TYPE_CONDITION) {
+    return false;
+  }
+
+  u32 condition = questListAcc->getConditionConditionID(questListAcc->getTaskTaskID(purpose, param.unknown0c));
+  if (condition == 0) {
+    return false;
+  }
+
+  for (u32 index = 0; index < CONDITION_LIST_COUNT; index++) {
+    if (bdatCond->getConditionListConditionType(condition, index) != CONDITION_TYPE_FLAG) {
+      continue;
+    }
+
+    u32 flagCondition = bdatCond->getConditionListCondition(condition, index);
+    if (flagCondition == 0) {
+      return false;
+    }
+
+    flag = bdatCond->getConditionFlagFlagID(flagCondition);
+    if (flag - unknown010 < unknown011) {
+      flagMin = bdatCond->getConditionFlagFlagMin(flagCondition);
+      flagMax = bdatCond->getConditionFlagFlagMax(flagCondition);
+      return true;
+    }
+  }
+
+  return false;
+}
 
 mm::mtl::FixedVector<unknown106, 128> &GfDataQuest::getTaskAchieve() { return GfDataManager::getDataGame()->unknown109b30; }
 

@@ -52,5 +52,7 @@ static_assert(offsetof(Dispatcher, unknown18) == 0x18, "");
 static_assert(offsetof(Dispatcher, unknown20) == 0x20, "");
 static_assert(offsetof(Dispatcher, unknown28) == 0x28, "");
 static_assert(offsetof(Dispatcher, unknown30) == 0x30, "");
+// The game allocates a Dispatcher with size 0x38 at 0x71001af57c.
+static_assert(sizeof(Dispatcher) == 0x38, "");
 
 } // namespace wnd

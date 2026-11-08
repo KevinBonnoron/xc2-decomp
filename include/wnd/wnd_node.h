@@ -17,11 +17,8 @@ static_assert(sizeof(UpdateInfo) == 0x0c, "");
 
 class WindNode {
 public:
-  WindNode() {
-    for (int i = 0; i < 12; i++) {
-      unknown10[i] = mm::Vec3::zero;
-    }
-  }
+  // Declared only: no compiled caller instantiates WindNode, and the game has no standalone WindNode ctor symbol.
+  WindNode();
 
   virtual void update(const UpdateInfo &info) = 0;
 

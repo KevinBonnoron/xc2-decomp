@@ -1,7 +1,6 @@
 #pragma once
 #include <stddef.h>
 
-#include "gf/game/quest/gf_quest_id.h"
 #include "gf/menu/list/gf_menu_field_skill_list.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "ml/critical_section.h"
@@ -30,10 +29,13 @@ struct MENUREF_OBJ {
 
 class GfMenuReference : public mm::mtl::PtrSingleton<GfMenuReference> {
 public:
-  static const u32 ARTS_PALETTE_COUNT = 3;
-  static const u32 ALL_ARTS_PALETTE_COUNT = 9;
+  // 64-bit counts: with u32 counts the index is widened separately in each branch and the address computation becomes
+  // a umaddl; the game shares one widened index (mul + add), as getArtsPaletteDisable, getArtsPaletteElementType,
+  // isArtsPaletteEnable and setArtsPaletteEnable show.
+  static const u64 ARTS_PALETTE_COUNT = 3;
+  static const u64 ALL_ARTS_PALETTE_COUNT = 9;
 
-  enum HOMURA_MODE {};
+  enum HOMURA_MODE { HOMURA_MODE_UNKNOWN_1 = 1 };
 
   struct REFLIST {
     GF_SEARCH_OBJ *unknown00;                         // Inferred role: search object; original member name unknown.
@@ -301,14 +303,5 @@ public:
 };
 
 static_assert(offsetof(GfMenuReferenceFs, unknown0c) == 0x0c, "");
-
-class GfMenuReferenceQuest : public mm::mtl::ReferenceObject {
-public:
-  virtual void getQuest(QuestID &quest) const;
-
-  QuestID unknown0c; // Inferred role: quest; original member name unknown.
-};
-
-static_assert(offsetof(GfMenuReferenceQuest, unknown0c) == 0x0c, "");
 
 } // namespace gf

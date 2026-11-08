@@ -3,14 +3,18 @@
 #include <string.h>
 
 #include "bdat.h"
+#include "fw/fw_transform.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
+#include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_save.h"
 #include "gf/data/gf_item_id.h"
 #include "gf/menu/gf_menu_fade.h"
 #include "gf/menu/gf_menu_fullscreen.h"
 #include "gf/menu/gf_menu_manager.h"
 #include "gf/menu/gf_menu_model_view.h"
+#include "gf/menu/gf_menu_reference.h"
+#include "gf/menu/gf_menu_reference_number.h"
 #include "gf/menu/gf_menu_sound_manager.h"
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/object/gf_menu_obj_blade_name.h"
@@ -21,6 +25,7 @@
 #include "gf/util/gf_item_util.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/intrusive_ptr.h"
 #include "scn/scn_render_dr_sys_parm_acc.h"
 #include "ui/list/ui_list_info.h"
 #include "ui/ui_object_acc.h"
@@ -39,6 +44,15 @@ const char *const unknown002[6] = {"LAY_dr_select", "LAY_core_select", "LAY_bst_
 
 // Inferred role: object type of the drivers in the model view; original name unknown.
 constexpr u32 unknown003 = 3;
+
+// Inferred role: driver of each camera of the driver select page; original name unknown.
+const u32 unknown004[16] = {1, 2, 6, 3, 0x15, 0x13, 0x15, 0x15, 0xb9, 0xba, 0xbb, 0xbc, 0x154, 0x151, 0xffffffff, 0x150};
+
+// Inferred role: sets the weapon type of a driver in the model view; original name unknown.
+static void unknown006(GfMenuModelView *view, u32 driver, int weaponType) { view->setObjectCommandValue(view->findGfObj(unknown003, driver), "V_weaponselect", weaponType); }
+
+// Inferred role: starts the blade arts animation of a driver in the model view; original name unknown.
+static void unknown007(GfMenuModelView *view, u32 driver) { view->sendObjectCommand(view->findGfObj(unknown003, driver), "C_bladearts_01"); }
 
 void GfMenuObjBladeCreate::registOpenParam(const OpenParam &param) {
   GfMenuTypes::Param layerParam;
@@ -59,6 +73,14 @@ u32 GfMenuObjBladeCreate::getPageObject(u32 handle, u32 page, bool isSibling) {
     }
   }
   return object;
+}
+
+u32 GfMenuObjBladeCreate::getDriverCameraIndex(u32 driver) {
+  u32 index = 0;
+  while (unknown004[index] != driver) {
+    index++;
+  }
+  return index;
 }
 
 void GfMenuObjBladeCreate::nextPage(u32 handle, PageContext *context, bool isSibling) {
@@ -301,6 +323,36 @@ bool GfMenuObjBladeCreate::seqCreateWaitDriver() {
 }
 
 bool GfMenuObjBladeCreate::seqCreateWaitFade() { return !GfMenuManager::isFading(); }
+
+void GfMenuObjBladeCreate::updateIdea(bool isSave) {
+  int levels[4] = {};
+  GfMenuReference::resetDriverAddIdeaLv();
+  if (unknown28.unknown00 > 1 && unknown1188->unknown0c > 0) {
+    int idea = unknown28.unknown50->getContents(unknown28.unknown50->getIndex(false)).unknown04;
+    int index = idea - Bdat::getIdTop(GfDataBdat::getFP(BDAT_ITM_BOOSTER_LIST));
+    int level = unknown1188->unknown0c;
+    levels[index] = level;
+    if (isSave) {
+      int slot = unknown28.unknown50->getIndex(false);
+      unknown1174[slot] = level;
+    }
+  }
+  for (u32 i = 0; i < 4; i++) {
+    GfMenuReference::setDriverAddIdeaLv(i, levels[i]);
+  }
+}
+
+bool GfMenuObjBladeCreate::seqResultAppearBlade() {
+  u32 driver = unknown28.unknown40->getContents(unknown28.unknown40->getIndex(false));
+  u32 blade = unknown28.unknown28;
+  GfMenuModelView::getObjectTransform(unknown28.unknownac8->findGfObj(4, blade)).unknown00.z = -1.0f;
+  GfMenuModelView::CtrlParam param(unknown28.unknownac8->findGfObj(4, blade), 0.5f, false);
+  param.setMovePosX(-1.0f, 1.0f);
+  unknown28.unknownac8->startObjectCtrl(param);
+  unknown006(unknown28.unknownac8, driver, GfDataBlade::getBladeWpnType(blade));
+  unknown007(unknown28.unknownac8, driver);
+  return true;
+}
 
 bool GfMenuObjBladeCreate::seqResultEnd() {
   u32 blade = unknown28.unknown28;

@@ -33,6 +33,8 @@ struct GF_OBJ_HANDLE;
 // The info offsets are the ones StateUtil::get*Info() add to the sensor, selected by a bit of the state word at +0x24.
 class EnviromentSensor {
 public:
+  EnviromentSensor();
+
   enum Flag {};
 
   struct GroundInfo {
@@ -47,7 +49,7 @@ public:
 
   // Inferred role: water info; original type name unknown.
   struct unknown001 {
-    u32 unknown00;       // Inferred role: unknown; original member name unknown.
+    f32 unknown00;       // Inferred role: water height; original member name unknown.
     mm::Plane unknown10; // Inferred role: plane; original member name unknown.
     u32 unknown30;       // Inferred role: damage id; original member name unknown.
     u32 unknown34;       // Inferred role: unknown; original member name unknown.
@@ -230,6 +232,7 @@ public:
     GfComEnvSensor *unknown08; // Inferred role: owner; original member name unknown.
   };
 
+  GfComEnvSensor();
   bool recieveMessage(fw::MessageObject *sender, fw::Message &message) override;
   void procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message);
   ~GfComEnvSensor() override;

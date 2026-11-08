@@ -15,6 +15,14 @@ struct GF_OBJ_HANDLE;
 
 class GfGameDepopMeter : public mm::mtl::IntrusiveListNode<GfGameDepopMeter> {
 public:
+  struct CreateInfo {
+    GF_OBJ_HANDLE *unknown00; // Inferred role: target object; original member name unknown.
+    bool unknown08;           // Inferred role: destroy the object when it is hidden by a collision; original member name unknown.
+  };
+
+  GfGameDepopMeter(const CreateInfo *info);
+  ~GfGameDepopMeter() { dispose(); }
+  void create(const CreateInfo &info);
   void dispose();
   void update(f32 deltaTime);
 
@@ -37,6 +45,9 @@ static_assert(sizeof(GfGameDepopMeter) == 0x50, "");
 class GfGameStuckMeter {
 public:
   struct CreateInfo {
+    CreateInfo() : unknown00(1.0f), unknown04(0.5f), unknown08(nullptr), unknown10(1.0f) {}
+    ~CreateInfo() { dispose(); }
+    void operator=(const CreateInfo &other);
     void dispose();
     void setColiObj(fw::ColiMoveObject *object);
 
@@ -47,18 +58,15 @@ public:
   };
 
   GfGameStuckMeter(const CreateInfo *info);
+  ~GfGameStuckMeter() { dispose(); }
   void create(const CreateInfo &info);
   void dispose();
   bool isStuck() const;
 
-  f32 unknown00;                 // Role and original member name unknown.
-  f32 unknown04;                 // Inferred role: stuck time threshold; original member name unknown.
-  fw::ColiMoveObject *unknown08; // Inferred role: collision object, reference counted by hand; original member name unknown.
-  f32 unknown10;                 // Role and original member name unknown.
-  u8 _14[0x18 - 0x14];
-  f32 unknown18; // Inferred role: radius of the collision object; original member name unknown.
-  f32 unknown1c; // Inferred role: height of the collision object; original member name unknown.
-  f32 unknown20; // Inferred role: radius of the collision object; original member name unknown.
+  CreateInfo unknown00; // Inferred role: create parameters, the collision object is released with the meter; original member name unknown.
+  f32 unknown18;        // Inferred role: radius of the collision object; original member name unknown.
+  f32 unknown1c;        // Inferred role: height of the collision object; original member name unknown.
+  f32 unknown20;        // Inferred role: radius of the collision object; original member name unknown.
   u8 _24[0x30 - 0x24];
   mm::Vec3 unknown30; // Inferred role: last position; original member name unknown.
   mm::Vec3 unknown40; // Inferred role: average position; original member name unknown.
@@ -66,7 +74,7 @@ public:
   f32 unknown54;      // Inferred role: stuck time; original member name unknown.
 };
 
-static_assert(offsetof(GfGameStuckMeter, unknown08) == 0x08, "");
+static_assert(offsetof(GfGameStuckMeter, unknown00) == 0x00, "");
 static_assert(offsetof(GfGameStuckMeter, unknown18) == 0x18, "");
 static_assert(offsetof(GfGameStuckMeter, unknown30) == 0x30, "");
 static_assert(offsetof(GfGameStuckMeter, unknown40) == 0x40, "");

@@ -9,7 +9,11 @@ namespace gf {
 class GfMenuObjSort : public GfMenuObject {
 public:
   GfMenuObjSort(u32 handle);
+  ~GfMenuObjSort() override;
   static void close();
+  static u16 getSortID(u16 id, u16 index);
+  static void setSortLabelText(u16 id, u32 handle);
+  void refreshItem(u32 selected, u32 count);
   void initialize() override;
   void finalize() override;
   void update() override;

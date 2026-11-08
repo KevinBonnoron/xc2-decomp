@@ -16,6 +16,8 @@ struct GF_OBJ_HANDLE;
 struct GfReqParam;
 
 struct RQ_SETUP_BLADE {
+  RQ_SETUP_BLADE();
+
   u16 unknown00;                         // Inferred role: driver; original member name unknown.
   u16 unknown02;                         // Inferred role: current blade; original member name unknown.
   mm::mtl::FixedArray<u16, 5> unknown04; // Inferred role: blades; original member name unknown.
@@ -110,6 +112,7 @@ public:
   static void reqRebuildPartyWeapon(u32 blade);
   static void reqChangeAttribute(u32 objectType, u32 blade, u32 attribute);
   static void reqChangeParty(const RQ_SETUP_PARTY &info);
+  static u32 reqChangeParty(const RQ_SETUP_PARTY_DRIVER &info);
   static u32 reqChangeBladeWithSetId(u32 partyId, int bladeSet, bool isForce);
   static void reqDestroyGf();
   static u32 reqMapjump(const GfMapjumpInfo &info);

@@ -5,6 +5,8 @@
 #include "ai/ai_state_fsm.h"
 #include "gf/game/gf_game_mount.h"
 #include "gf/object/gf_obj_manager.h"
+#include "mm_mtl/fixed_list.h"
+#include "mm_mtl/fixstr.h"
 #include "mm_mtl/reference_object.h"
 #include "types.h"
 
@@ -15,7 +17,6 @@ namespace mm {
 struct Vec3;
 namespace mtl {
 class RTTI;
-template <int LEN> class FixStr;
 } // namespace mtl
 } // namespace mm
 
@@ -42,6 +43,7 @@ class GfEvtModel : public mm::mtl::ReferenceObject, public IGfObjListener {
 public:
   static mm::mtl::RTTI m_rtti;
 
+  GfEvtModel(GF_EVT_MODEL type, u32 param);
   virtual ~GfEvtModel();
   virtual const mm::mtl::RTTI *getRTTI() const;
   virtual void update(const fw::UpdateInfo &info);
@@ -58,6 +60,7 @@ public:
   void listenerGfObj(OBJEVT event, GF_OBJ_HANDLE *handle, u32 objectType) override;
   bool isValid() const;
   bool isBusy(mm::mtl::FixStr<128> *name) const;
+  void destroy();
   void resetMount(GfEvtModel *parent);
   void setMount(GfEvtModel *parent, const char *bone);
   void setMount(GfEvtModel *parent, const char *bone, const mm::Vec3 &pos, const mm::Vec3 &rot);
@@ -65,12 +68,21 @@ public:
   static u32 changeLayerUI(u32 layer);
 
   // Inferred role: the GfEvtModel members from 0x18, after the ReferenceObject and IGfObjListener bases.
-  GF_EVT_MODEL unknown18;   // Inferred role: type; original member name unknown.
-  GF_OBJ_HANDLE *unknown20; // Inferred role: handle; original member name unknown.
+  GF_EVT_MODEL unknown18;                         // Inferred role: type; original member name unknown.
+  u32 unknown1c;                                  // Inferred role: second constructor parameter; original member name unknown.
+  GF_OBJ_HANDLE *unknown20;                       // Inferred role: handle; original member name unknown.
+  GfEvtModel *unknown28;                          // Inferred role: model this one is mounted on; original member name unknown.
+  mm::mtl::FixStr<32> unknown30;                  // Inferred role: mount bone name; original member name unknown.
+  mm::mtl::FixedList<GfEvtModel *, 32> unknown58; // Inferred role: models mounted on this one; original member name unknown.
 };
 
 static_assert(offsetof(GfEvtModel, unknown18) == 0x18, "");
+static_assert(offsetof(GfEvtModel, unknown1c) == 0x1c, "");
 static_assert(offsetof(GfEvtModel, unknown20) == 0x20, "");
+static_assert(offsetof(GfEvtModel, unknown28) == 0x28, "");
+static_assert(offsetof(GfEvtModel, unknown30) == 0x30, "");
+static_assert(offsetof(GfEvtModel, unknown58) == 0x58, "");
+static_assert(sizeof(GfEvtModel) == 0x298, "");
 
 class GfEvtModelDriver : public GfEvtModel {
 public:
@@ -92,6 +104,30 @@ public:
     void onStep(void *owner, const void *param) override;
   };
 
+  class StateStartBattle : public ai::State {
+  public:
+    static ai::State *create(void *buffer);
+    const char *getName() const override;
+    void onEnter(void *owner, ai::State *previous) override;
+    void onLeave(void *owner, ai::State *next) override;
+    void onStep(void *owner, const void *param) override;
+    void enter(GfEvtModelDriver *model, ai::State *previous);
+    void update(GfEvtModelDriver *model, const fw::UpdateInfo &info);
+  };
+
+  class StateEndBattle : public ai::State {
+  public:
+    static ai::State *create(void *buffer);
+    const char *getName() const override;
+    void onEnter(void *owner, ai::State *previous) override;
+    void onLeave(void *owner, ai::State *next) override;
+    void onStep(void *owner, const void *param) override;
+    void enter(GfEvtModelDriver *model, ai::State *previous);
+    void leave(GfEvtModelDriver *model, ai::State *next);
+    void update(GfEvtModelDriver *model, const fw::UpdateInfo &info);
+  };
+
+  explicit GfEvtModelDriver(GfInitParamDriver &param);
   static GfEvtModelDriver *create(GfInitParamDriver &param);
   ~GfEvtModelDriver() override;
   const mm::mtl::RTTI *getRTTI() const override;
@@ -119,7 +155,6 @@ public:
 
   static mm::mtl::RTTI m_rtti;
 
-  u8 _28[0x298 - 0x28];
   ai::Fsm unknown298; // Inferred role: state machine; original member name unknown.
   u32 unknown310;     // Inferred role: blade; original member name unknown.
   u8 _314[0x318 - 0x314];
@@ -132,6 +167,9 @@ static_assert(sizeof(GfEvtModelDriver) == 0x318, "");
 class GfEvtModelSalvage : public GfEvtModelDriver {
 public:
   static mm::mtl::RTTI m_rtti;
+
+  explicit GfEvtModelSalvage(GfInitParamDriver &param);
+  static GfEvtModelSalvage *create(GfInitParamDriver &param);
 
   const mm::mtl::RTTI *getRTTI() const override;
   bool isValid() const;
@@ -156,6 +194,29 @@ public:
     void onEnter(void *owner, ai::State *previous) override;
     void onLeave(void *owner, ai::State *next) override;
     void onStep(void *owner, const void *param) override;
+  };
+
+  class StateStartBattle : public ai::State {
+  public:
+    static ai::State *create(void *buffer);
+    const char *getName() const override;
+    void onEnter(void *owner, ai::State *previous) override;
+    void onLeave(void *owner, ai::State *next) override;
+    void onStep(void *owner, const void *param) override;
+    void enter(GfEvtModelBlade *model, ai::State *previous);
+    void update(GfEvtModelBlade *model, const fw::UpdateInfo &info);
+  };
+
+  class StateEndBattle : public ai::State {
+  public:
+    static ai::State *create(void *buffer);
+    const char *getName() const override;
+    void onEnter(void *owner, ai::State *previous) override;
+    void onLeave(void *owner, ai::State *next) override;
+    void onStep(void *owner, const void *param) override;
+    void enter(GfEvtModelBlade *model, ai::State *previous);
+    void leave(GfEvtModelBlade *model, ai::State *next);
+    void update(GfEvtModelBlade *model, const fw::UpdateInfo &info);
   };
 
   static GfEvtModelBlade *create(GfInitParamBlade &param);
@@ -183,7 +244,6 @@ public:
 
   static mm::mtl::RTTI m_rtti;
 
-  u8 _28[0x298 - 0x28];
   ai::Fsm unknown298; // Inferred role: state machine; original member name unknown.
 };
 
@@ -210,6 +270,29 @@ public:
     void onStep(void *owner, const void *param) override;
   };
 
+  class StateStartBattle : public ai::State {
+  public:
+    static ai::State *create(void *buffer);
+    const char *getName() const override;
+    void onEnter(void *owner, ai::State *previous) override;
+    void onLeave(void *owner, ai::State *next) override;
+    void onStep(void *owner, const void *param) override;
+    void enter(GfEvtModelEnemy *model, ai::State *previous);
+    void update(GfEvtModelEnemy *model, const fw::UpdateInfo &info);
+  };
+
+  class StateEndBattle : public ai::State {
+  public:
+    static ai::State *create(void *buffer);
+    const char *getName() const override;
+    void onEnter(void *owner, ai::State *previous) override;
+    void onLeave(void *owner, ai::State *next) override;
+    void onStep(void *owner, const void *param) override;
+    void enter(GfEvtModelEnemy *model, ai::State *previous);
+    void leave(GfEvtModelEnemy *model, ai::State *next);
+    void update(GfEvtModelEnemy *model, const fw::UpdateInfo &info);
+  };
+
   GfEvtModelEnemy(GfInitParamEnemy &param);
   static GfEvtModelEnemy *create(GfInitParamEnemy &param);
   ~GfEvtModelEnemy() override;
@@ -230,7 +313,6 @@ public:
 
   static mm::mtl::RTTI m_rtti;
 
-  u8 _28[0x298 - 0x28];
   ai::Fsm unknown298; // Inferred role: state machine; original member name unknown.
 };
 
@@ -260,7 +342,6 @@ public:
   bool isPlayEndAnimCS();
   void setAnimSpeedCS(f32 speed);
 
-  u8 _28[0x298 - 0x28];
   GfWeapon unknown298; // Inferred role: weapon handles; original member name unknown.
   u32 unknown348;      // Inferred role: driver; original member name unknown.
   u8 _34c[0x350 - 0x34c];
@@ -277,8 +358,6 @@ public:
   GfEvtModelEvent(GfInitParamEventObj &param);
   static GfEvtModelEvent *create(GfInitParamEventObj &param);
   const mm::mtl::RTTI *getRTTI() const override;
-
-  u8 _28[0x298 - 0x28];
 };
 
 static_assert(sizeof(GfEvtModelEvent) == 0x298, "");

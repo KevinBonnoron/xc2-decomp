@@ -7,10 +7,15 @@
 #include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_math/mm_vec4.h"
-#include "mm_mtl/allocator.h"
 #include "mm_mtl/vector.h"
 #include "skd/skd_packet.h"
 #include "types.h"
+
+namespace mm {
+namespace mtl {
+class IAllocator;
+} // namespace mtl
+} // namespace mm
 
 namespace anm {
 class Pose;
@@ -333,8 +338,8 @@ static_assert(offsetof(DetectPlaneJob, unknown38) == 0x38, "");
 static_assert(sizeof(DetectPlaneJob) == 0x40, "");
 
 // Layout evidence: import (0x71009756a4) placement-constructs the object at header+8, whose constructor only sets the
-// vptr (the serialized data keeps its members); DynamicResDynamics's destructor reads the allocator at 0x10 and the
-// collisions and solvers at 0x18 and 0x20.
+// vptr (the serialized data keeps its members); the game's DynamicResDynamics destructor reads the allocator at 0x10
+// and the collisions and solvers at 0x18 and 0x20.
 struct ResDynamics {
   // Inline default; the game's D0 is delete-only, but no standalone D1/D2 comparison is made for this default.
   virtual ~ResDynamics() = default;
@@ -350,24 +355,9 @@ static_assert(offsetof(ResDynamics, unknown18) == 0x18, "");
 static_assert(offsetof(ResDynamics, unknown20) == 0x20, "");
 static_assert(sizeof(ResDynamics) == 0x28, "");
 
-// Layout evidence: the destructor at 0x7100978d54 deallocates each pointer of the Vector at 0x28 with the
-// ReferenceObject allocator at 0x10, then destroys the vector; the vtable at 0x71011b9ab8 lists the destructor only.
-class DynamicResDynamics : public ResDynamics {
-public:
-  // The game's D0/D2 are emitted out of line; they are not emitted from this inline body without a
-  // vtable-emitting translation unit, so the destructor remains TODO.
-  ~DynamicResDynamics() override {
-    mm::mtl::IAllocator *allocator = unknown10;
-    for (u32 i = 0; i < unknown28.size(); i++) {
-      allocator->deallocate(unknown28[i]);
-    }
-  }
-
-  mm::mtl::Vector<void *> unknown28; // Inferred role: owned resources; original member name unknown.
-};
-
-static_assert(offsetof(DynamicResDynamics, unknown28) == 0x28, "");
-static_assert(sizeof(DynamicResDynamics) == 0x50, "");
+// DynamicResDynamics is forward-declared only: the game has D2 at 0x7100978d54 and D0 at 0x7100978e80, but no
+// compiled caller in this tree instantiates the subtype, so its full layout, sizeof and cleanup stay deferred until
+// a verified instantiating caller exists.
 
 class DynamicsImporter {
 public:

@@ -8,6 +8,14 @@ namespace gf {
 // Inferred role: attached call id; original name unknown.
 constexpr u32 unknown001 = 0x5e;
 
+GfMenuObjComboRoute::GfMenuObjComboRoute(u32 handle) : GfMenuObject(handle) {
+  for (u32 i = 0; i < 8; i++) {
+    unknown24[i] = -1;
+  }
+}
+
+GfMenuObjComboRoute::~GfMenuObjComboRoute() { ; }
+
 void GfMenuObjComboRoute::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjComboRoute::update() { GfMenuObject::update(); }

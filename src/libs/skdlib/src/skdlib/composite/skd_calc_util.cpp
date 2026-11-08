@@ -10,6 +10,12 @@
 #include "skd/skd_dynamics.h"
 #include "types.h"
 
+namespace mm {
+namespace mtl {
+class IAllocator;
+} // namespace mtl
+} // namespace mm
+
 namespace skd {
 
 void CalcUtil::writeBackNode(anm::Pose &pose, NodeArray *nodes) {
@@ -56,6 +62,11 @@ void CalcUtil::applyHingeConstraints(const anm::Array<ResHingeConstraint> &const
   for (u32 i = 0; i < count; i++) {
     limitDistance(constraints[i], nodes);
   }
+}
+
+NodeArray::NodeArray(mm::mtl::IAllocator *allocator, const anm::Array<ResNode> &resNodes, const anm::Array<ResNodeCollision> &resNodeCollisions)
+    : unknown00(&resNodes), unknown08(&resNodeCollisions), unknown10(allocator) {
+  unknown10.resize(resNodes.size());
 }
 
 } // namespace skd

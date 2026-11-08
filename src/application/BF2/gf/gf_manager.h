@@ -10,7 +10,8 @@
 
 namespace ml {
 class Scn;
-}
+class WinView;
+} // namespace ml
 
 namespace fw {
 struct UpdateInfo;
@@ -23,10 +24,10 @@ struct SDataOption;
 struct SDataSystem;
 
 struct GfSetupParam {
-  GfSetupParam() : unknown00(), _08(), _10(), unknown18(ml::MlMem::getProductMem()), unknown1c(0), unknown20(1.0f), unknown24(EXEC_STATE_DEBUG) {}
+  GfSetupParam() : unknown00(), unknown08(), _10(), unknown18(ml::MlMem::getProductMem()), unknown1c(0), unknown20(1.0f), unknown24(EXEC_STATE_DEBUG) {}
 
-  ml::Scn *unknown00; // Inferred role: scn; original member name unknown.
-  u8 _08[0x10 - 0x08];
+  ml::Scn *unknown00;     // Inferred role: scn; original member name unknown.
+  ml::WinView *unknown08; // Inferred role: view the work event of the asset manager is attached to; original member name unknown.
   u8 _10[0x18 - 0x10];
   mtl::ALLOC_HANDLE unknown18; // Inferred role: mem handle; original member name unknown.
   u32 unknown1c;               // Inferred role: slot mapping type; original member name unknown.

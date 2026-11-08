@@ -82,4 +82,8 @@ void GfMenuPouchAdapter::update(const fw::UpdateInfo &info) {
   }
 }
 
+u32 GfMenuPouchAdapter::ReferenceIndexConverter::getPouchIndex() { return number->unknown0c; }
+
+u32 GfMenuPouchAdapter::ReferenceIndexReferenceDriverConverter::getPouchIndex() { return number->unknown0c; }
+
 } // namespace gf

@@ -194,7 +194,7 @@ public:
   void getWpnMatOld1(mm::Mat44 &matrix);
   void getWpnMatOld2(mm::Mat44 &matrix);
 
-  u8 _10[0x14 - 0x10];
+  u32 unknown10;  // Inferred role: setup value; original member name unknown.
   bool unknown14; // Inferred role: rim bloom active; original member name unknown.
   u8 _15[0x18 - 0x15];
   u32 unknown18; // Inferred role: rim bloom state; original member name unknown.
@@ -202,16 +202,27 @@ public:
   f32 unknown20; // Inferred role: rim bloom duration; original member name unknown.
   f32 unknown24; // Inferred role: water depth threshold of the first swim state; original member name unknown.
   f32 unknown28; // Inferred role: water depth threshold of the second swim state; original member name unknown.
-  u8 _2c[0x40 - 0x2c];
+  u8 _2c[0x30 - 0x2c];
+  fw::EffectResData *unknown30;                   // Inferred role: effect annotations of the weapon effect pack; original member name unknown.
+  fw::EffectPack *unknown38;                      // Inferred role: effect pack; original member name unknown.
   mm::mtl::FixedVector<unknown001, 52> unknown40; // Inferred role: weapon effect packs; original member name unknown.
   fw::EffectCasterBase *unknown388;               // Inferred role: effect caster; original member name unknown.
   fw::EffectPoint *unknown390;                    // Inferred role: effect point; original member name unknown.
   u8 _398[0x3a0 - 0x398];
   mm::mtl::FixedVector<Param, 256> unknown3a0;             // Inferred role: caster params; original member name unknown.
   mm::mtl::FixedVector<EventEfHandleTbl, 256> unknownc3b0; // Inferred role: mount effects; original member name unknown.
-  u8 _113c0[0x113d0 - 0x113c0];
-  mm::Mat44 unknown113d0; // Inferred role: weapon matrix of the previous frame; original member name unknown.
-  mm::Mat44 unknown11410; // Inferred role: second weapon matrix of the previous frame; original member name unknown.
+  u32 unknown113c0;                                        // Inferred role: effect layer; original member name unknown.
+  u8 _113c4[0x113d0 - 0x113c4];
+  mm::Mat44 unknown113d0;           // Inferred role: weapon matrix of the previous frame; original member name unknown.
+  mm::Mat44 unknown11410;           // Inferred role: second weapon matrix of the previous frame; original member name unknown.
+  mm::mtl::FixStr<16> unknown11450; // Inferred role: name set by the constructor; original member name unknown.
+  mm::mtl::FixStr<16> unknown11464; // Inferred role: second name set by the constructor; original member name unknown.
+  mm::mtl::FixStr<32> unknown11478; // Inferred role: current asm state name; original member name unknown.
+  u32 unknown1149c;                 // Inferred role: caster type; original member name unknown.
+  f32 unknown114a0;                 // Inferred role: previous asm local time; original member name unknown.
+  u32 unknown114a4;                 // Inferred role: asm loop restarted; original member name unknown.
+  f32 unknown114a8;                 // Inferred role: effect scale; original member name unknown.
+  s32 unknown114ac;                 // Inferred role: current weapon switch; original member name unknown.
 };
 
 static_assert(offsetof(GfComEffectCaster, unknown14) == 0x14, "");
@@ -227,6 +238,19 @@ static_assert(offsetof(GfComEffectCaster, unknown3a0) == 0x3a0, "");
 static_assert(offsetof(GfComEffectCaster, unknownc3b0) == 0xc3b0, "");
 static_assert(offsetof(GfComEffectCaster, unknown113d0) == 0x113d0, "");
 static_assert(offsetof(GfComEffectCaster, unknown11410) == 0x11410, "");
+static_assert(offsetof(GfComEffectCaster, unknown10) == 0x10, "");
+static_assert(offsetof(GfComEffectCaster, unknown30) == 0x30, "");
+static_assert(offsetof(GfComEffectCaster, unknown38) == 0x38, "");
+static_assert(offsetof(GfComEffectCaster, unknown113c0) == 0x113c0, "");
+static_assert(offsetof(GfComEffectCaster, unknown11450) == 0x11450, "");
+static_assert(offsetof(GfComEffectCaster, unknown11464) == 0x11464, "");
+static_assert(offsetof(GfComEffectCaster, unknown11478) == 0x11478, "");
+static_assert(offsetof(GfComEffectCaster, unknown1149c) == 0x1149c, "");
+static_assert(offsetof(GfComEffectCaster, unknown114a0) == 0x114a0, "");
+static_assert(offsetof(GfComEffectCaster, unknown114a4) == 0x114a4, "");
+static_assert(offsetof(GfComEffectCaster, unknown114a8) == 0x114a8, "");
+static_assert(offsetof(GfComEffectCaster, unknown114ac) == 0x114ac, "");
+static_assert(sizeof(GfComEffectCaster) == 0x114b0, "");
 static_assert(offsetof(GfComEffectCaster::Param, unknown24) == 0x24, "");
 static_assert(offsetof(GfComEffectCaster::Param, unknown28) == 0x28, "");
 static_assert(offsetof(GfComEffectCaster::Param, unknown30) == 0x30, "");

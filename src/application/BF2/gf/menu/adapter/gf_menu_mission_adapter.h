@@ -2,7 +2,12 @@
 #include <stddef.h>
 
 #include "gf/menu/adapter/gf_menu_adapter.h"
+#include "gf/menu/gf_menu_reference_number.h"
+#include "gf/menu/list/gf_menu_id_list.h"
+#include "gf/menu/list/gf_menu_mission_list.h"
 #include "mm_mtl/delegate.h"
+#include "mm_mtl/intrusive_ptr.h"
+#include "mm_mtl/reference_object.h"
 #include "types.h"
 
 namespace ui {
@@ -21,8 +26,41 @@ public:
     virtual u32 getMissionId() = 0;
   };
 
+  class MissionListConverter : public IConverter {
+  public:
+    ~MissionListConverter() override { mm::mtl::safeRelease(list); }
+    u32 getMissionId() override;
+
+    GfMenuMissionList *list;
+    u32 listIndex;
+  };
+
+  class ReferenceConverter : public IConverter {
+  public:
+    ~ReferenceConverter() override { number = nullptr; }
+    u32 getMissionId() override;
+
+    mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number;
+  };
+
+  class ListConverter : public IConverter {
+  public:
+    ~ListConverter() override { mm::mtl::safeRelease(list); }
+    u32 getMissionId() override;
+
+    GfMenuIDList *list;
+    u32 listIndex;
+  };
+
+  class ReferenceMissionConverter : public IConverter {
+  public:
+    u32 getMissionId() override;
+  };
+
+  static GfMenuMissionAdapter *createFromReferenceMission(u32 handle, u32 type, u32 index, bool isUpdateAlways);
   GfMenuMissionAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways);
   ~GfMenuMissionAdapter() override;
+  static GfMenuMissionAdapter *create(u32 handle, u32 type, u32 mission, bool isUpdateAlways);
   bool update_MissionName();
   bool update_MissionCategoryIcon();
   bool update_MissionRewardGold();

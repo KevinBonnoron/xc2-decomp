@@ -3,6 +3,10 @@
 
 #include "types.h"
 
+namespace fw {
+class Reflection;
+} // namespace fw
+
 namespace gf {
 namespace pc {
 
@@ -79,6 +83,8 @@ static_assert(sizeof(WallMoveParam) == 0x0c, "");
 
 // Field names and offsets from the reflection built by gf::pc::ForceWarpAiParam::createReflection.
 struct ForceWarpAiParam {
+  static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
+
   f32 baseWaitTime;
   f32 waitTimeRange;
 };
@@ -88,6 +94,8 @@ static_assert(sizeof(ForceWarpAiParam) == 0x08, "");
 
 // Field names and offsets from the reflection built by gf::pc::JumpAIParam::createReflection.
 struct JumpAIParam {
+  static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
+
   f32 minVel;
 };
 
@@ -95,6 +103,8 @@ static_assert(sizeof(JumpAIParam) == 0x04, "");
 
 // Field names and offsets from the reflection built by gf::pc::FollowMainPcParam::createReflection.
 struct FollowMainPcParam {
+  static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
+
   f32 followDist;
   f32 stopDist;
   f32 powMinDist;
@@ -110,6 +120,8 @@ static_assert(sizeof(FollowMainPcParam) == 0x1c, "");
 
 // Field names and offsets from the reflection built by gf::pc::FollowBuddyPcParam::createReflection.
 struct FollowBuddyPcParam {
+  static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
+
   f32 stopDist;
   f32 powMinDist;
   f32 powMaxDist;
@@ -122,6 +134,8 @@ static_assert(sizeof(FollowBuddyPcParam) == 0x10, "");
 
 // Field names and offsets from the reflection built by gf::pc::WallAiParam::createReflection.
 struct WallAiParam {
+  static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
+
   f32 prepareRange;
   f32 minDist;
   f32 fallDelay;
@@ -138,6 +152,8 @@ static_assert(sizeof(WallAiParam) == 0x1c, "");
 
 // Field names and offsets from the reflection built by gf::pc::WarpParam::createReflection.
 struct WarpParam {
+  static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
+
   f32 distanceHorz;
   f32 distanceVert;
   f32 stackTime;
@@ -153,6 +169,8 @@ static_assert(offsetof(WarpParam, stackTime) == 0x08, "");
 static_assert(offsetof(WarpParam, distanceHorzWall) == 0x1c, "");
 static_assert(offsetof(WarpParam, distanceVertWall) == 0x20, "");
 static_assert(sizeof(WarpParam) == 0x24, "");
+
+fw::Reflection *createReflectionFieldAI();
 
 } // namespace pc
 } // namespace gf

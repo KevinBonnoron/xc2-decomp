@@ -147,6 +147,8 @@ public:
   static GfMenuCharDataAdapter *createFromGfObj(u32 handle, u32 type, GF_OBJ_HANDLE *objHandle, bool isUpdateAlways);
   static GfMenuCharDataAdapter *createFromPartyDriver(u32 handle, u32 type, u8 partyId, bool isUpdateAlways);
   static GfMenuCharDataAdapter *createFromPartyBlade(u32 handle, u32 type, u8 partyId, int slot, bool isUpdateAlways, bool isBackSlot, bool isVirtual);
+  static GfMenuCharDataAdapter *createFromDriverList(u32 handle, u32 type, const GfMenuDriverList *list, int index, bool isUpdateAlways);
+  static GfMenuCharDataAdapter *createFromBladeList(u32 handle, u32 type, const GfMenuBladeList *list, int index, bool isUpdateAlways);
   static GfMenuCharDataAdapter *createFromReferenceDriver(u32 handle, u32 type, u32 index, bool isUpdateAlways);
   static GfMenuCharDataAdapter *createFromReferenceBlade(u32 handle, u32 type, u32 index, bool isUpdateAlways);
   static GfMenuCharDataAdapter *createFromReferenceBladeOwnerDriver(u32 handle, u32 type, u32 index, bool isUpdateAlways);

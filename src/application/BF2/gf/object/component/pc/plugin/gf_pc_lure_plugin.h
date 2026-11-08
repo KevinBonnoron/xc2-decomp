@@ -19,10 +19,12 @@ struct UpdateInfo;
 namespace gf {
 
 struct GF_OBJ_HANDLE;
+class GfComPropertyPc;
+struct AccessParam;
 
 namespace pc {
 
-struct LureParam;
+bool isActiveRangeLure(GfComPropertyPc &property, const AccessParam &param, GF_OBJ_HANDLE *target);
 
 class LurePlugin : public Plugin {
   GF_PLUGIN(GfComBehaviorPc)
@@ -35,7 +37,7 @@ public:
   void onActivate() override;
   void onDeactivate() override;
   virtual void update(GfComBehaviorPc &behavior, const fw::UpdateInfo &info);
-  const LureParam *getParam() const;
+  const AccessParam *getParam() const;
   void drawDebug(GfComBehaviorPc &behavior);
 
   GF_OBJ_HANDLE *unknown10;                       // Inferred role: target; original member name unknown.

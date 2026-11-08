@@ -16,6 +16,8 @@ class GmkPrecious;
 
 namespace gf {
 
+bool getPopPos(mm::Vec3 &position, const gmk::AGmkBase &gmk);
+
 class AFieldLocator {
 public:
   AFieldLocator() : unknown08{0, 0}, m_iconBdatId(-1), m_mapBdatId(-1) {}

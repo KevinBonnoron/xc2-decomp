@@ -34,6 +34,7 @@ public:
   void dispose();
   void createByGmkBattleLock();
   void update(GF_OBJ_HANDLE *handle, const IGfBehFieldOwner &owner);
+  void debugDraw(GF_OBJ_HANDLE *handle, const IGfBehFieldOwner &owner) const;
   bool isPlayerEnter() const;
   f32 getEyeRadiusSq() const;
   void enter(const EnterInfo &info) override;

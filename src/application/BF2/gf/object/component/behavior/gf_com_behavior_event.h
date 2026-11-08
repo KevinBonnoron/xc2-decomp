@@ -11,6 +11,7 @@ class MessageObject;
 
 namespace mm {
 struct Vec3;
+
 namespace mtl {
 class RTTI;
 } // namespace mtl
@@ -25,6 +26,10 @@ class GfComBehaviorEvent : public GfComBehavior {
 public:
   static mm::mtl::RTTI m_rtti;
 
+  GfComBehaviorEvent();
+  const mm::mtl::RTTI *getRTTI() const override;
+  bool recieveMessage(fw::MessageObject *sender, fw::Message &message) override;
+  void update(const fw::UpdateInfo &info) override;
   void cleanup();
   void setFootIK(bool isEnable);
   void setTarget(bool isEnable, f32 time, bool isLookOnly);

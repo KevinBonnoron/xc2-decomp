@@ -7,7 +7,13 @@
 #include "mm_mtl/vector.h"
 #include "types.h"
 
+namespace fw {
+struct UpdateInfo;
+} // namespace fw
+
 namespace gf {
+
+struct GfSetupParam;
 
 class GfMenuLocation : public mm::mtl::PtrSingleton<GfMenuLocation> {
 public:
@@ -30,14 +36,20 @@ public:
     mm::mtl::FixedVector<OrderInfo, ORDER_MAX> unknown30; // Inferred role: orders; original member name unknown.
   };
 
+  GfMenuLocation(const GfSetupParam &param);
   void updateDataNum(u32 type);
+  void refreshLocatorFromQuest(u32 index, u32 type);
   static bool isInitialized();
   static void refreshLocator(u32 type);
+  static void updateLocator();
+  static void postUpdate(const fw::UpdateInfo &info);
+  static u32 convIcon(u32 type);
   static u32 getLocatorDataNum(u32 type);
 
   bool unknown08; // Inferred role: initialized; original member name unknown.
   u8 _09[0x10 - 0x09];
   unknown001 unknown10[LOCATOR_TYPE_COUNT]; // Inferred role: groups; original member name unknown.
+  u32 unknown10f0;                          // Role and original member name unknown.
 };
 
 static_assert(sizeof(GfMenuLocation::OrderInfo) == 0x8, "");
