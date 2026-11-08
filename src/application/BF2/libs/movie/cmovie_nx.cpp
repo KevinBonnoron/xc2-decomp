@@ -8,11 +8,57 @@
 #include "nn/os.h"
 #include "types.h"
 
+namespace movie {
+class Decoder;
+} // namespace movie
+
+MediaClock::MediaClock() {
+  nn::os::InitializeMutex(&unknown00, false, 0);
+  unknown20 = -1;
+  unknown28 = -1;
+  unknown30 = 0x7fffffffffffffff;
+  unknown38 = -1;
+}
+
 movie::Status MediaClock::SetMediaStartTime(s64 mediaStartTimeUs) {
   nn::os::LockMutex(&unknown00);
   this->unknown38 = mediaStartTimeUs;
   nn::os::UnlockMutex(&unknown00);
   return movie::Status_Success;
+}
+
+movie::Status MediaClock::ClearAnchorTime() {
+  nn::os::LockMutex(&unknown00);
+  unknown20 = -1;
+  unknown28 = -1;
+  nn::os::UnlockMutex(&unknown00);
+  return movie::Status_Success;
+}
+
+s64 AudioOutRenderer::GetPlayedOutAudioDurationUs(s64 currentTimeUs) {
+  if (unknown4c8 == -1) {
+    unknown4c8 = currentTimeUs;
+  }
+  const s64 playedUs = unknown4d0 * 1000000 / unknown10;
+  const s64 elapsedUs = currentTimeUs - unknown4c8;
+  return elapsedUs > playedUs ? playedUs : elapsedUs;
+}
+
+movie::Status VideoRenderer::Open(movie::Decoder *decoder, int unknown01, int unknown02, double unknown03) {
+  unknown260 = unknown01;
+  unknown264 = unknown02;
+  unknown00 = decoder;
+  unknown18 = unknown03;
+  return movie::Status_Success;
+}
+
+s64 VideoRenderer::GetVideoPostDelayUs() {
+  if (m_videoPostDelayUs < 2000) {
+    m_videoPostDelayUs = 2000;
+  } else if (m_videoPostDelayUs > 300000) {
+    m_videoPostDelayUs = 300000;
+  }
+  return m_videoPostDelayUs;
 }
 
 void AudioOutRenderer::OnOutputAvailable(int index, s64 presentationTimeUs, u32 flags) {
