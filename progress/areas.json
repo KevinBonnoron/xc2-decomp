@@ -120,18 +120,18 @@
     }
   },
   {
-    "name": "skdlib",
+    "name": "plugin",
     "code": {
-      "total": 55128,
-      "matching": 8072,
+      "total": 15224,
+      "matching": 9760,
       "non_matching": 0
     }
   },
   {
-    "name": "plugin",
+    "name": "skdlib",
     "code": {
-      "total": 15224,
-      "matching": 6716,
+      "total": 55128,
+      "matching": 8072,
       "non_matching": 0
     }
   },
@@ -147,7 +147,7 @@
     "name": "movie",
     "code": {
       "total": 20812,
-      "matching": 2612,
+      "matching": 2636,
       "non_matching": 0
     }
   },
