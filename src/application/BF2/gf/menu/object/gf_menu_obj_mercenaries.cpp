@@ -7,7 +7,9 @@
 #include "gf/menu/adapter/gf_menu_zone_adapter.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_fade.h"
+#include "gf/menu/gf_menu_reference.h"
 #include "gf/menu/gf_menu_reference_number.h"
+#include "gf/menu/gf_menu_types.h"
 #include "gf/menu/list/gf_menu_blade_list.h"
 #include "gf/menu/list/gf_menu_field_skill_list.h"
 #include "gf/menu/list/gf_menu_mission_list.h"
@@ -17,13 +19,21 @@
 #include "mm_math/mm_col4.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/reference_object.h"
+#include "ui/event/ui_event_data.h"
 #include "ui/list/ui_select_obj_list.h"
+#include "ui/ui_manager.h"
 #include "ui/ui_object_acc.h"
 
 namespace gf {
 
 // Inferred role: mission adapter type of each condition type; original name unknown.
 static const u32 unknown001[4] = {21, 19, 21, 21};
+
+// Inferred role: sends the open event to a layer of a screen; original name unknown.
+static void unknown002(u32 handle, const char *layer) {
+  ui::UIObjectAcc root(handle);
+  unknown164(root.searchChild(layer), GfMenuTypes::unknown003_33);
+}
 
 GfMenuObjMercenaries::GfMenuObjMercenaries(u32 handle)
     : GfMenuObject(handle), unknown28(nullptr), unknown38(nullptr), unknown40(nullptr), unknown48(nullptr), unknown50(nullptr), unknown58(nullptr), unknown60(nullptr), unknown68(nullptr),
@@ -285,6 +295,71 @@ bool GfMenuObjMercenaries::seqRewardComp5() {
     isEnd = true;
   }
   return isEnd;
+}
+
+void GfMenuObjMercenaries::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1: {
+    GfMenuTypes::Param param;
+    u32 mission;
+    if (!GfMenuObject::getFSLayerParam(unknown20->unknown20, param)) {
+      unknown20->unknowna0 = 0;
+      GfMenuReference::setReferenceTeamID(1);
+      mission = 0;
+    } else {
+      mission = param.get<u32>();
+      unknown20->unknowna0 = 1;
+      GfMenuObject::removeFSLayerParam(unknown20->unknown20);
+    }
+    if (unknown20->unknowna0 != 1) {
+      ui::EventData update;
+      update.unknown00 = GfMenuTypes::unknown003_260;
+      ui::UIManager::get()->requestObjectEvent(handle, update, 0.0f);
+      break;
+    }
+    u32 team = GfMenuReference::getReferenceTeamID();
+    GfMenuReference::setReferenceMissionID(mission);
+    if (GfMenuReference::getReferenceTeamID() == 0) {
+      unknown002(handle, "LAY_mission");
+    } else if (!isInvokeFieldSkill(mission, team)) {
+      unknown002(handle, "LAY_form");
+    } else {
+      unknown002(handle, "LAY_fs_activate");
+    }
+    break;
+  }
+  case 2:
+    GfMenuObject::termCallContext(handle);
+    GfMenuObjOperationInfo::close();
+    acc.setDisp(false);
+    acc.setTerm();
+    break;
+  case GfMenuTypes::unknown003_34:
+    GfMenuObject::returnFSSubLayer(handle, 1);
+    break;
+  case GfMenuTypes::unknown003_260: {
+    u32 team = GfMenuReference::getReferenceTeamID();
+    while (true) {
+      if (team > GfDataMercenaries::getTeamNum()) {
+        updateTeamList(unknown20->unknown70);
+        unknown002(unknown20->unknown18, "LAY_location");
+        break;
+      }
+      if (GfDataMercenaries::isTeamStateReward(team)) {
+        GfMenuReference::setReferenceMissionID(GfDataMercenaries::getTeamMission(team));
+        GfMenuReference::setReferenceTeamID(team);
+        unknown002(unknown20->unknown18, "LAY_reward");
+        break;
+      }
+      team++;
+    }
+    break;
+  }
+  default:
+    break;
+  }
+  ui::UIObjectListener::reciveEvent(event, handle);
 }
 
 } // namespace gf

@@ -1,5 +1,7 @@
 #include "gf/menu/object/gf_menu_obj_tutorial.h"
 
+#include "gf/data/gf_bdat_id.h"
+#include "gf/data/gf_data_bdat.h"
 #include "gf/gf_allocator.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_types.h"
@@ -10,6 +12,7 @@
 #include "ui/event/ui_event_data.h"
 #include "ui/event/ui_event_manager.h"
 #include "ui/ui_object_acc.h"
+#include "ui/ui_str.h"
 
 namespace gf {
 
@@ -53,11 +56,68 @@ void GfMenuObjTutorial::update() {
 
 void GfMenuObjTutorial::closeAll() { unknown144(unknown001, GfMenuTypes::unknown003_34); }
 
+void GfMenuObjTutorial::openText(u32 param, const TextParam &text) {
+  if (GfMenuObjUtil::checkCCStart(unknown002)) {
+    ui::UIObjectAcc acc(getAttachedObject(unknown001));
+    if (acc.isValid()) {
+      u16 id = registString(ui::UIStr(GfDataBdat::getFP(BDAT_MENU_TUTORIAL), text.unknown00));
+      ui::EventData event;
+      event.unknown0c = 0;
+      event.unknown00 = 0x101;
+      event.unknown08_u16 = param;
+      event.unknown0a = 1;
+      event.unknown0c_u16 = id;
+      sendEvent(acc.unknown10, event, 0.0f);
+      startCallContext(unknown002, unknown001, acc.unknown10);
+    }
+  }
+}
+
 void GfMenuObjTutorial::closeText(u32 param) { unknown156(unknown001, 0x101, param); }
+
+void GfMenuObjTutorial::openFocus(u32 param, const FocusParam &focus) {
+  ui::UIObjectAcc acc(getAttachedObject(unknown001));
+  if (acc.isValid()) {
+    ui::EventData event;
+    event.unknown00 = 0x102;
+    event.unknown08_u16 = param;
+    event.unknown0a = 1;
+    event.unknown0c_u16 = focus.unknown04;
+    event.unknown0e = focus.unknown00;
+    event.unknown10_u16 = focus.unknown02;
+    sendEvent(acc.unknown10, event, 0.0f);
+  }
+}
 
 void GfMenuObjTutorial::closeFocus(u32 param) { unknown156(unknown001, 0x102, param); }
 
+void GfMenuObjTutorial::openIcon(u32 param, const IconParam &icon) {
+  ui::UIObjectAcc acc(getAttachedObject(unknown001));
+  if (acc.isValid()) {
+    ui::EventData event;
+    event.unknown0c = 0;
+    event.unknown00 = 0x103;
+    event.unknown08_u16 = param;
+    event.unknown0a = 1;
+    event.unknown0e = icon.unknown00;
+    event.unknown10_u16 = icon.unknown02;
+    sendEvent(acc.unknown10, event, 0.0f);
+  }
+}
+
 void GfMenuObjTutorial::closeIcon(u32 param) { unknown156(unknown001, 0x103, param); }
+
+void GfMenuObjTutorial::start() {
+  if (GfMenuObjUtil::checkCCStart(unknown002)) {
+    ui::UIObjectAcc acc(getAttachedObject(unknown001));
+    if (acc.isValid()) {
+      ui::EventData event;
+      event.unknown00 = 0x104;
+      sendEvent(acc.unknown10, event, 0.0f);
+      startCallContext(unknown002, unknown001, acc.unknown10);
+    }
+  }
+}
 
 bool GfMenuObjTutorial::seqTelopStart() {
   ui::UIObjectAcc image(unknown18, "IMG_start");

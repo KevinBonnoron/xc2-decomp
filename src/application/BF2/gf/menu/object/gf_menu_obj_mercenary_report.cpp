@@ -8,6 +8,7 @@
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/list/gf_menu_blade_list.h"
 #include "gf/menu/object/gf_menu_obj_bl_kizuna_ring.h"
+#include "gf/menu/object/gf_menu_obj_operation_info.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "mm_mtl/reference_object.h"
 #include "ui/event/ui_event_data.h"
@@ -139,6 +140,31 @@ bool GfMenuObjMercenaryReport::seqWaitEndKizuna() {
     isEnd = false;
   }
   return isEnd;
+}
+
+void GfMenuObjMercenaryReport::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    unknown20->unknown30.unknown005();
+    unknown20->unknown30.unknown002(&GfMenuObjMercenaryReport::seqStart);
+    GfMenuObjOperationInfo::setGuideDisp(false);
+    break;
+  case 2: {
+    GfMenuObjUtil::PresetCtrlParam param;
+    param.unknown10 = 0;
+    param.unknown04 = 1;
+    param.unknown00 = 6;
+    param.unknown0c = true;
+    GfMenuObjUtil::startPresetCtrl(acc.unknown10, param);
+    break;
+  }
+  case 3:
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
 }
 
 } // namespace gf

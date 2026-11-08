@@ -11,12 +11,18 @@ class GfMenuCallContext;
 
 class GfMenuObjChainAttack : public GfMenuObject, public ui::IUIInputSelectionChecker {
 public:
+  struct ResultParam {
+    u8 unknown00;  // Inferred role: event parameter; original member name unknown.
+    u32 unknown04; // Inferred role: event parameter; original member name unknown.
+  };
+
   GfMenuObjChainAttack(u32 handle);
   ~GfMenuObjChainAttack() override;
   static void openStatus(GfMenuCallContext *context);
   static void openStart(GfMenuCallContext *context);
   static void openFullBurst(GfMenuCallContext *context);
   static void closeTurnSelect(GfMenuCallContext *context);
+  static void openResult(const ResultParam &param);
   static void closeResult();
   static void closeRoundExtend();
   static void openRoundExtend();
@@ -40,5 +46,8 @@ static_assert(offsetof(GfMenuObjChainAttack, unknown40) == 0x40, "");
 static_assert(offsetof(GfMenuObjChainAttack, unknown48) == 0x48, "");
 static_assert(offsetof(GfMenuObjChainAttack, unknown50) == 0x50, "");
 static_assert(sizeof(GfMenuObjChainAttack) == 0x58, "");
+
+static_assert(offsetof(GfMenuObjChainAttack::ResultParam, unknown04) == 0x4, "");
+static_assert(sizeof(GfMenuObjChainAttack::ResultParam) == 0x8, "");
 
 } // namespace gf

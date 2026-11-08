@@ -60,6 +60,21 @@ void GfMenuObjPartyStatus::memberChange(u16 member, u32 value) {
   }
 }
 
+void GfMenuObjPartyStatus::openComboRequest(u16 index, const RequestParam &param) {
+  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown002));
+  if (acc.isValid() && !acc.isTerm()) {
+    ui::EventData event;
+    event.unknown0c = 0;
+    event.unknown00 = GfMenuTypes::unknown003_257;
+    event.unknown08_u16 = index;
+    event.unknown0a = param.unknown00;
+    event.unknown0c_u16 = param.unknown08;
+    event.unknown0e = param.unknown02;
+    event.unknown10 = param.unknown04;
+    ui::UIManager::get()->requestObjectEvent(acc.unknown10, event, 0.0f);
+  }
+}
+
 void GfMenuObjPartyStatus::closeComboRequest(u16 index, bool isImmediate) {
   ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown002));
   if (acc.isValid() && !acc.isTerm()) {
@@ -68,6 +83,21 @@ void GfMenuObjPartyStatus::closeComboRequest(u16 index, bool isImmediate) {
     event.unknown00 = GfMenuTypes::unknown003_258;
     event.unknown08_u16 = index;
     event.unknown0a = isImmediate;
+    ui::UIManager::get()->requestObjectEvent(acc.unknown10, event, 0.0f);
+  }
+}
+
+void GfMenuObjPartyStatus::resetComboRequest(u16 index, const RequestParam &param) {
+  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown002));
+  if (acc.isValid() && !acc.isTerm()) {
+    ui::EventData event;
+    event.unknown0c = 0;
+    event.unknown00 = GfMenuTypes::unknown003_259;
+    event.unknown08_u16 = index;
+    event.unknown0a = param.unknown00;
+    event.unknown0c_u16 = param.unknown08;
+    event.unknown0e = param.unknown02;
+    event.unknown10 = param.unknown04;
     ui::UIManager::get()->requestObjectEvent(acc.unknown10, event, 0.0f);
   }
 }

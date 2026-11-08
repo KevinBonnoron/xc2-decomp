@@ -81,6 +81,17 @@ void GfMenuObjExpGet::removeObject(ui::UIObjectAcc acc) {
   acc.setTerm();
 }
 
+void GfMenuObjExpGet::sendOpen(u32 handle, const ExpGetInfo &info) {
+  ui::EventData event;
+  event.unknown00 = GfMenuTypes::unknown003_33;
+  event.unknown08 = info.unknown10.unknown00;
+  event.unknown0c = info.unknown10.unknown04;
+  event.unknown10_u16 = ui::UIObjectAcc(info.unknown08).getDuplicateIndex();
+  event.unknown12 = info.unknown10.unknown18;
+  event.unknown14 = info.unknown10.unknown08;
+  sendEvent(handle, event, 0.0f);
+}
+
 void GfMenuObjExpGet::update() { GfMenuObject::update(); }
 
 } // namespace gf

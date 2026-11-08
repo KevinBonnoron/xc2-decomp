@@ -1,18 +1,26 @@
 #include "gf/object/component/gimmick/gf_com_behavior_gmk.h"
 
+#include "bdat.h"
 #include "framework/coli/coli_object.h"
 #include "framework/object/updatable_object.h"
 #include "framework/reference_frame.h"
 #include "fw/fw_transform.h"
+#include "gf/data/gf_bdat_id.h"
+#include "gf/data/gf_data_bdat.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/game/gf_game_util.h"
 #include "gf/game/sequential_play/gf_play_factory.h"
 #include "gf/menu/call/gf_menu_call_context.h"
+#include "gf/menu/gf_menu_bdat.h"
 #include "gf/menu/object/gf_menu_obj_target_info.h"
 #include "gf/object/component/gf_com_collider.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_manager.h"
+#include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_base.h"
+#include "gmk/gmk_bdat.h"
 #include "gmk/gmk_jump.h"
 #include "gmk/gmk_manager.h"
 #include "gmk/gmk_route_navi.h"
@@ -35,6 +43,28 @@ GfComBehaviorGmk::~GfComBehaviorGmk() {
 }
 
 const mm::mtl::RTTI *GfComBehaviorGmk::getRTTI() const { return &m_rtti; }
+
+bool GfComBehaviorGmk::recieveMessage(fw::MessageObject *sender, fw::Message &message) {
+  switch (message.unknown00) {
+  case MSG_PC_GET_LOOK_POINT:
+    procMsgPcGetLookPoint(sender, static_cast<MsgPcGetLookPoint &>(message));
+    return true;
+  case MSG_PC_FIELD_GET_ACCESS_TYPE:
+    procMsgPcFieldGetAccessType(sender, static_cast<MsgPcFieldGetAccessType &>(message));
+    return true;
+  case MSG_PC_FIELD_NOTIFY_ACTION:
+    procMsgPcFieldNotifyAction(sender, static_cast<MsgPcFieldNotifyAction &>(message));
+    return true;
+  case MSG_PC_FIELD_NOTIFY_SKILL_EVENT:
+    procMsgPcFieldNotifySkillEvent(sender, static_cast<MsgPcFieldNotifySkillEvent &>(message));
+    return true;
+  case MSG_PC_GET_ELV_LIFT:
+    procMsgPcGetElvLift(sender, static_cast<MsgPcGetElvLift &>(message));
+    return true;
+  default:
+    return false;
+  }
+}
 
 void GfComBehaviorGmk::procMsgPcFieldNotifyAction(fw::MessageObject *sender, MsgPcFieldNotifyAction &message) {
   if (message.unknown08 != 0 || (static_cast<GfObj *>(unknown08)->unknown110 & 1) == 0) {
@@ -153,6 +183,51 @@ void GfComBehaviorGmk::procMsgPcFieldNotifySkillEvent(fw::MessageObject *sender,
   default:
     break;
   }
+}
+
+void GfComBehaviorGmk::createMenuObj() {
+  disposeMenuObj();
+  if (!mm::mtl::dynamicCast<GfObjSetupGimmick>(GfObjManager::getObjInfo(static_cast<GfObj *>(unknown08)->unknownf8)->unknown30)->unknowna1) {
+    return;
+  }
+  GfMenuObjTargetInfo::OpenOtherParam param;
+  param.unknown00 = static_cast<GfObj *>(unknown08)->unknownf8;
+  param.unknown30 = GfDataBdat::getFP(BDAT_FLD_GMKNAME);
+  if (!GfGameUtil::getNameMsId(param.unknown38, static_cast<GfObj *>(unknown08)->unknownf8)) {
+    return;
+  }
+  gmk::AGmkBase *gmk = gmk::getBindedGmkInst(static_cast<GfObj *>(unknown08)->unknownf8);
+  if (gmk == nullptr || !gmk->isValid()) {
+    return;
+  }
+  u8 *bdat = gmk->getBindedBdatFp();
+  int id = gmk->unknown20.unknown18;
+  switch (gmk->getGmkType()) {
+  case gmk::GMK_TYPE_COLLECTION:
+    param.unknown3c = true;
+    param.unknown40 = 2;
+    break;
+  case gmk::GMK_TYPE_SALVAGE:
+    param.unknown40 = 0;
+    param.unknown3c = true;
+    param.unknown48 = GfDataBdat::getFP(BDAT_FLD_SALVAGEPOINT);
+    param.unknown50 = static_cast<u16>(Bdat::getValCheck(bdat, "SalvagePointName", id, gmk::BDAT_TYPE_U16));
+    break;
+  case gmk::GMK_TYPE_KIZUNA_TALK:
+    param.unknown3c = true;
+    param.unknown40 = 1;
+    break;
+  default:
+    break;
+  }
+  int offsetId = GfGameUtil::getUiOffsetId(param.unknown00);
+  param.unknown10.unknown10 = nullptr;
+  param.unknown10.unknown00 = mm::Vec3::zero.x;
+  param.unknown10.unknown04 = mm::Vec3::zero.y;
+  param.unknown10.unknown08 = mm::Vec3::zero.z;
+  GfMenuBdat::getMenuOffset(offsetId, param.unknown10);
+  unknowna8 = GfMenuCallContext::create();
+  GfMenuObjTargetInfo::openOther(unknowna8, param);
 }
 
 void GfComBehaviorGmk::cleanup() {

@@ -10,6 +10,7 @@ class GfMenuObjSort : public GfMenuObject {
 public:
   GfMenuObjSort(u32 handle);
   ~GfMenuObjSort() override;
+  static void open(u32 object, u32 label, u16 type, u16 index);
   static void close();
   static u16 getSortID(u16 id, u16 index);
   static void setSortLabelText(u16 id, u32 handle);

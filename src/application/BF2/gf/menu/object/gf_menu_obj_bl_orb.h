@@ -6,6 +6,7 @@
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 #include "ui/ui_object_acc.h"
 
 namespace ui {
@@ -20,6 +21,14 @@ class GfMenuReferenceNumber;
 
 class GfMenuObjBlOrb : public GfMenuObject {
 public:
+  class MainListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjBlOrb *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   // Inferred helper: runs a quarter second control on the main layout and waits for its end; original name unknown.
   bool unknown002(u32 method) {
     if (unknown2e8 == -1) {
@@ -63,6 +72,7 @@ public:
   GfMenuCallContext *unknown2f0;                          // Inferred role: call context; original member name unknown.
 };
 
+static_assert(offsetof(GfMenuObjBlOrb::MainListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjBlOrb, unknown24) == 0x24, "");
 static_assert(offsetof(GfMenuObjBlOrb, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjBlOrb, unknown30) == 0x30, "");

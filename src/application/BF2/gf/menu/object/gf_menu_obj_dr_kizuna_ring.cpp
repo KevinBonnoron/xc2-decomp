@@ -7,14 +7,25 @@
 #include "gf/menu/adapter/gf_menu_skill_adapter.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_reference.h"
+#include "gf/menu/gf_menu_types.h"
 #include "gf/menu/list/gf_menu_item_list.h"
+#include "gf/menu/object/gf_menu_obj_char_select.h"
+#include "gf/menu/object/gf_menu_obj_mainmenu2.h"
+#include "gf/menu/object/gf_menu_obj_operation_info.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "mm_math/mm_pnt.h"
 #include "mm_math/mm_rect.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/reference_object.h"
+#include "ui/event/ui_event_data.h"
 #include "ui/list/ui_select_obj_list.h"
 #include "ui/ui_object_acc.h"
+
+namespace gmo_dr_kizuna_ring {
+
+f32 rateTbl[2] = {1.0f, 0.5f};
+
+} // namespace gmo_dr_kizuna_ring
 
 namespace gf {
 
@@ -168,6 +179,48 @@ bool GfMenuObjDrKizunaRing::seqUnlockAnime() {
     isEnd = false;
   }
   return isEnd;
+}
+
+void GfMenuObjDrKizunaRing::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    setupMain(acc);
+    getSkillUnlockLevel(GfMenuReference::getReferenceDriverID(0));
+    GfMenuReference::setReferenceNumber(0, 0);
+    GfMenuReference::setReferenceNumber(1, 1);
+    GfMenuReference::setReferenceNumber(2, 0);
+    GfMenuObjOperationInfo::add(acc.searchChild("LAY_scale"), acc.searchChild("LAY_dr_main"), 0, 0);
+    GfMenuObjOperationInfo::setGuideText(0x10, 0);
+    GfMenuObjMainMenu2::setSubIndexText(7);
+    GfMenuObject::hookCtrlEvent(handle, GfMenuObjUtil::unknown002(handle));
+    GfMenuObjUtil::setPointSpeedRate(ui::UIObjectAcc(acc.searchChild("LAY_dr_main")), gmo_dr_kizuna_ring::rateTbl[0]);
+    break;
+  case 3:
+    if (event.unknown08 == 1) {
+      unknown164(acc.searchChild("LAY_dr_main"), GfMenuTypes::unknown003_258);
+      ui::UIObjectAcc cursor(acc.searchChild("IMG_pointcursor"));
+      cursor.startAnimation("loop", false);
+      cursor.setDisp(true);
+    } else if (event.unknown08 == 2) {
+      acc.setDisp(false);
+      acc.setTerm();
+      GfMenuObjUtil::setPointSpeedRate(ui::UIObjectAcc(acc.searchChild("LAY_dr_main")), 1.0f);
+      GfMenuObjOperationInfo::remove(acc.searchChild("LAY_scale"), acc.searchChild("LAY_dr_main"), 0, 0);
+      GfMenuObjCharSelect::returnSubMenu();
+      GfMenuObject::returnFSSubLayer(unknown20);
+    }
+    break;
+  case 0x21:
+    acc.setDisp(true);
+    break;
+  case 0x22:
+    GfMenuObject::hookCtrlEvent(handle, GfMenuObjUtil::unknown003(handle));
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
 }
 
 } // namespace gf

@@ -5,6 +5,7 @@
 #include "gf/menu/gf_menu_sequence.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 
 namespace mm {
 namespace mtl {
@@ -28,6 +29,14 @@ class GfMenuTeamList;
 
 class GfMenuObjMercenaries : public GfMenuObject {
 public:
+  class MainListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjMercenaries *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   GfMenuObjMercenaries(u32 handle);
   ~GfMenuObjMercenaries() override;
   static void setupLocationSelect(ui::UIObjectAcc &acc);
@@ -42,6 +51,7 @@ public:
   static bool isExistFieldSkill(u32 mission, u32 index);
   static void moveFieldSkillEnd(ui::UIObjectAcc &acc, u32 mission, u32 index);
   static void setupMercenariesCondParam(ui::UIObjectAcc &acc, int index, u32 type, const char *adapterFormat, const char *iconFormat);
+  static bool isInvokeFieldSkill(u32 mission, u32 team);
   static void sendEvent(u32 handle, u32 type, u32 param);
   static int setFadeIn(u32 handle);
   static int setFadeOut(u32 handle);
@@ -94,6 +104,7 @@ public:
 };
 
 static_assert(offsetof(GfMenuObjMercenaries, unknown28) == 0x28, "");
+static_assert(offsetof(GfMenuObjMercenaries::MainListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjMercenaries, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjMercenaries, unknown98) == 0x98, "");
 static_assert(offsetof(GfMenuObjMercenaries, unknown0a8) == 0xa8, "");

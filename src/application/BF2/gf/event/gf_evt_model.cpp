@@ -3,6 +3,7 @@
 #include <new>
 #include <string.h>
 
+#include "gf/game/event/gf_game_event.h"
 #include "gf/game/gf_game_mount.h"
 #include "gf/game/gf_game_obj.h"
 #include "gf/game/gf_game_util.h"
@@ -18,6 +19,7 @@
 #include "gf/scom/gf_scom_obj.h"
 #include "mm_math/mm_math.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/algorithm.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixstr.h"
 
@@ -157,6 +159,110 @@ GfEvtModel::GfEvtModel(GF_EVT_MODEL type, u32 param) : unknown18(type), unknown1
 GfEvtModel::~GfEvtModel() {
   destroy();
   GfObjManager::removeListener(this);
+}
+
+void GfEvtModel::destroy() {
+  GfGameEvent::destroyEvtModel(this);
+  while (unknown58.size() != 0) {
+    unknown58.front()->resetMount(this);
+  }
+  if (unknown28 != nullptr) {
+    GfEvtModel *parent = unknown28;
+    unknown28 = nullptr;
+    parent->release();
+  }
+  GfObjUtil::destroy(unknown20);
+  unknown20 = INVALID_HANDLE;
+}
+
+bool GfEvtModel::isBusy(mm::mtl::FixStr<128> *) const {
+  mm::mtl::FixStr<128> reason;
+  if (unknown20 == INVALID_HANDLE) {
+    return false;
+  }
+  for (int attach = GFATTACH_WEAPON; attach <= GFATTACH_WEAPON_EXTRA; attach++) {
+    GfWeapon *weapon = GfMountManager::getAppendHandles(unknown20, static_cast<GFATTACH>(attach));
+    if (weapon != nullptr) {
+      for (u32 index = 0; index < 10; index++) {
+        GF_OBJ_HANDLE *handle = weapon->getCurrentHandles()[index];
+        if (handle != INVALID_HANDLE && GfObjUtil::getObj(handle) != nullptr && !GfGameObj::isValidGameObj(handle, true, &reason)) {
+          return true;
+        }
+      }
+    }
+  }
+  return !GfGameObj::isValidGameObj(unknown20, true, &reason);
+}
+
+void GfEvtModel::resetMount(GfEvtModel *parent) {
+  if (parent == nullptr || unknown28 == nullptr) {
+    return;
+  }
+  if (GfObjUtil::getParentHandle(unknown20) == parent->unknown20) {
+    GfObjUtil::unmountFromBone(unknown20);
+  }
+  if (strcmp(unknown30.c_str(), "MT_met") == 0) {
+    GfMountManager::setMountType(unknown20, GFATTACH_APPEND, OPTMNT_WIRE);
+  }
+  unknown30 = "";
+  unknown28 = nullptr;
+  release();
+  mm::mtl::FixedList<GfEvtModel *, 32>::iterator it = mm::mtl::find(parent->unknown58.begin(), parent->unknown58.end(), this);
+  parent->unknown58.erase(it);
+}
+
+void GfEvtModel::setMount(GfEvtModel *parent, const char *bone, const mm::Vec3 &pos, const mm::Vec3 &rot) {
+  if (unknown28 == nullptr) {
+    if (mm::mtl::find(parent->unknown58.begin(), parent->unknown58.end(), this) == parent->unknown58.end()) {
+      parent->unknown58.push_back(this);
+      addRef();
+      unknown28 = parent;
+      unknown30 = bone;
+      parent->execMount(this, pos, rot);
+    }
+  }
+}
+
+void GfEvtModel::execUnmount(GfEvtModel *child) {
+  if (GfObjUtil::getParentHandle(child->unknown20) == unknown20) {
+    GfObjUtil::unmountFromBone(child->unknown20);
+  }
+}
+
+void GfEvtModel::execMount(GfEvtModel *child) {
+  if (GfObjUtil::getParentHandle(child->unknown20) != unknown20 && !child->isBusy(nullptr)) {
+    if (strcmp(child->unknown30.c_str(), "MT_met") == 0) {
+      GfMountManager::execMount(unknown20, GFATTACH_APPEND, OPTMNT_UNKNOWN_0);
+    }
+    GfObjUtil::mountToBone(child->unknown20, unknown20, child->unknown30.c_str());
+  }
+}
+
+void GfEvtModel::listenerGfObj(OBJEVT event, GF_OBJ_HANDLE *handle, u32) {
+  if (unknown20 != handle) {
+    return;
+  }
+  switch (event) {
+  case OBJEVT_LOADED:
+    for (mm::mtl::FixedList<GfEvtModel *, 32>::iterator it = unknown58.begin(); it != unknown58.end(); ++it) {
+      execMount(*it);
+    }
+    if (unknown28 != nullptr && !unknown28->isBusy(nullptr)) {
+      unknown28->execMount(this);
+    }
+    break;
+  case OBJEVT_DESTROY:
+    for (mm::mtl::FixedList<GfEvtModel *, 32>::iterator it = unknown58.begin(); it != unknown58.end(); ++it) {
+      execUnmount(*it);
+    }
+    if (unknown28 != nullptr && !unknown28->isBusy(nullptr)) {
+      unknown28->execUnmount(this);
+      unknown28 = nullptr;
+    }
+    break;
+  default:
+    break;
+  }
 }
 
 const mm::mtl::RTTI *GfEvtModel::getRTTI() const { return &m_rtti; }

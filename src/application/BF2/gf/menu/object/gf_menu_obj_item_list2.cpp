@@ -1,4 +1,7 @@
 #include "gf/menu/object/gf_menu_obj_item_list2.h"
+#include "gf/menu/gf_menu_types.h"
+#include "gf/menu/object/gf_menu_obj_mainmenu2.h"
+#include "gf/menu/object/gf_menu_obj_operation_info.h"
 #include "ui/event/ui_event_data.h"
 #include "ui/ui_manager.h"
 
@@ -70,6 +73,49 @@ int GfMenuObjItemList2::setFadeOut(u32 handle) {
   int ctrl = GfMenuObjUtil::setCommonFadeOut(handle, 2, 0);
   GfMenuObject::hookCtrlEvent(handle, ctrl);
   return ctrl;
+}
+
+void GfMenuObjItemList2::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    GfMenuObjOperationInfo::setGuideText(3, 0);
+    setFadeIn(handle);
+    break;
+  case 2:
+    unknown163(handle, GfMenuTypes::unknown003_34, 0);
+    break;
+  case 3:
+    if (event.unknown08 == 1) {
+      unknown163(acc.searchChild("LAY_mainwindow"), GfMenuTypes::unknown003_257, 0);
+      unknown163(acc.searchChild("LAY_filter"), GfMenuTypes::unknown003_257, 0);
+      GfMenuObjMainMenu2::setSystemKeyEnable(true);
+      GfMenuObjOperationInfo::add(acc.searchChild("LAY_mainwindow"), 0, 0, 0);
+    } else if (event.unknown08 == 2) {
+      GfMenuObjOperationInfo::remove(acc.searchChild("LAY_mainwindow"), 0, 0, 0);
+      acc.setDisp(false);
+      acc.setTerm();
+    }
+    break;
+  case GfMenuTypes::unknown003_33:
+    acc.setDisp(true);
+    break;
+  case GfMenuTypes::unknown003_34:
+    if (!unknown20->unknowna0) {
+      unknown163(handle, 3, 2);
+    } else {
+      setFadeOut(handle);
+    }
+    break;
+  case 0x24:
+    GfMenuObject::disableInput(acc.searchChild("LAY_mainwindow"));
+    setFadeOutSub(handle);
+    unknown20->unknowna0 = false;
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
 }
 
 } // namespace gf

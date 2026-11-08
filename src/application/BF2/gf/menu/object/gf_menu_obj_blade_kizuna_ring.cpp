@@ -4,11 +4,13 @@
 #include "gf/menu/adapter/gf_menu_char_data_adapter.h"
 #include "gf/menu/gf_menu_reference.h"
 #include "gf/menu/gf_menu_types.h"
+#include "gf/menu/object/gf_menu_obj_operation_info.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/reference_object.h"
 #include "types.h"
 #include "ui/ctrl/ui_ctrl_object.h"
+#include "ui/event/ui_event_data.h"
 #include "ui/list/ui_select_obj_list.h"
 #include "ui/ui_object_acc.h"
 
@@ -114,6 +116,49 @@ void GfMenuObjBladeKizunaRing::close() { GF_MENU_REQUEST_EVENT(unknown001, GfMen
 void GfMenuObjBladeKizunaRing::setupName(ui::UIObjectAcc &acc) { GfMenuCharDataAdapter::createFromReferenceBlade(acc.searchChild("TXT_name"), 2, 0, false); }
 
 void GfMenuObjBladeKizunaRing::open() { GF_MENU_REQUEST_EVENT(unknown001, GfMenuTypes::unknown003_33); }
+
+void GfMenuObjBladeKizunaRing::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    GfMenuReference::setReferenceBladeID(0, 0x3e9);
+    GfMenuReference::setReferenceNumber(0, 0);
+    GfMenuReference::setReferenceNumber(1, 1);
+    setupName(acc);
+    acc.setDisp(false);
+    unknown163(handle, GfMenuTypes::unknown003_33, 0);
+    break;
+  case 2:
+    GfMenuObjOperationInfo::close();
+    acc.setDisp(false);
+    acc.setTerm();
+    break;
+  case 3:
+    if (event.unknown08 == 1) {
+      if (getAchievementList(unknown20->unknown58) == 0) {
+        unknown163(acc.searchChild("LAY_ring"), GfMenuTypes::unknown003_33, 0);
+      } else {
+        unknown20->unknown4c = 1;
+        unknown20->unknown190.unknown005();
+        unknown20->unknown190.unknown002(&GfMenuObjBladeKizunaRing::seqComplete);
+      }
+    } else if (event.unknown08 == 2) {
+      GfMenuObject::returnFSSubLayer(handle, 1);
+    }
+    break;
+  case GfMenuTypes::unknown003_33:
+    GfMenuObjOperationInfo::open(acc.searchChild("LAY_ring"), 0, 0, 0);
+    setFadeIn(handle);
+    break;
+  case GfMenuTypes::unknown003_34:
+    GfMenuObjOperationInfo::close();
+    setFadeOut(handle);
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
 
 } // namespace gf
 

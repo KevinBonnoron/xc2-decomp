@@ -34,6 +34,10 @@ FORBIDDEN = [
 # always_inline is accepted only on the inlined math helpers of these headers (Mat44 products, Euler and
 # quaternion conversions), which the game inlines where clang 3.9 would not.
 ALWAYS_INLINE_OK = ("include/mm_math/mm_mat44.h", "include/mm_math/mm_math.h")
+# The one volatile accepted: dlmalloc 2.8's init_mparams store `(*(volatile size_t *)(&(mparams.magic))) = magic;`,
+# reproduced from its public source in the DlAllocator code.
+DLMALLOC_FILE = "src/libs/monolib_mm/source/mtl/mtl_mem_manager.cpp"
+DLMALLOC_VOLATILE = re.compile(r"\(\*\(volatile size_t \*\)\(&\(?[\w.]+\)?\)\) = \w+;")
 
 TRIVIAL = re.compile(r"^(\{|\}|\};|\} else \{|else|return;|return \w+;|return (true|false|nullptr|0|-1);|break;|continue;|default:|)$")
 IDENT = re.compile(r"(?<![\w:.>])([A-Za-z_]\w*)(?!\s*[\w(:<])")
@@ -116,9 +120,11 @@ def main():
 
     print(f"== Forbidden patterns ({BASE}..{HEAD})")
     for path, at, text in texts:
-        code = re.sub(r"//.*", "", text)
+        code = re.sub(r"//.*", "", re.sub(r"/\*.*?\*/", "", text))
         if path in ALWAYS_INLINE_OK:
             code = code.replace("__attribute__((always_inline))", "")
+        if path == DLMALLOC_FILE:
+            code = DLMALLOC_VOLATILE.sub("", code)
         for label, pattern in FORBIDDEN:
             if pattern.search(code):
                 print(f"{path}:{at}: {label}: {text.strip()[:140]}")

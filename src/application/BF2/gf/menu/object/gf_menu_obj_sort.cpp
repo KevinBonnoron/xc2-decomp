@@ -8,6 +8,7 @@
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "mm_mtl/fixstr.h"
 #include "types.h"
+#include "ui/event/ui_event_data.h"
 #include "ui/ui_object_acc.h"
 #include "ui/ui_str.h"
 
@@ -33,6 +34,19 @@ void GfMenuObjSort::update() {
 }
 
 void GfMenuObjSort::close() { unknown144(unknown001, GfMenuTypes::unknown003_34); }
+
+void GfMenuObjSort::open(u32 object, u32 label, u16 type, u16 index) {
+  ui::UIObjectAcc acc(getAttachedObject(unknown001));
+  if (acc.isValid()) {
+    ui::EventData event;
+    event.unknown00 = 0x21;
+    event.unknown08 = object;
+    event.unknown0c = label;
+    event.unknown10_u16 = type;
+    event.unknown12 = index;
+    sendEvent(acc.unknown10, event, 0.0f);
+  }
+}
 
 void GfMenuObjSort::refreshItem(u32 selected, u32 count) {
   ui::UIObjectAcc main(unknown18, "LAY_main");

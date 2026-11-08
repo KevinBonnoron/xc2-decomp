@@ -3,10 +3,13 @@
 #include "gf/menu/adapter/gf_menu_item_adapter.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_reference_item.h"
+#include "gf/menu/gf_menu_types.h"
 #include "gf/menu/list/gf_menu_driver_list.h"
 #include "gf/menu/list/gf_menu_item_list.h"
+#include "gf/menu/object/gf_menu_obj_char_select.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "mm_mtl/reference_object.h"
+#include "ui/event/ui_event_data.h"
 #include "ui/list/ui_select_obj_list.h"
 #include "ui/ui_object_acc.h"
 
@@ -69,6 +72,36 @@ void GfMenuObjDrEquip2::setupEquipItem(ui::UIObjectAcc &acc, GfMenuItemList *lis
   GfMenuItemAdapter::createFromList(acc.searchChild("TXT_equip_item_tag"), 0, list, -1, false);
   GfMenuItemAdapter::createFromList(acc.searchChild("TXT_equip_item_info"), 9, list, -1, false);
   GfMenuItemAdapter::createFromList(acc.searchChild("IMG_equip_item_reality_icon"), 7, list, -1, false);
+}
+
+void GfMenuObjDrEquip2::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    acc.setDisp(true);
+    setFadeIn(handle, 1);
+    break;
+  case 3:
+    if (event.unknown08 == 1) {
+      sendOpenEvent(acc.searchChild("LAY_equip_slot"), 0, 0.0f);
+    } else if (event.unknown08 == 2) {
+      acc.setDisp(false);
+      acc.setTerm();
+      GfMenuObjCharSelect::returnSubMenu();
+      GfMenuObject::returnFSSubLayer(unknown20);
+    }
+    break;
+  case GfMenuTypes::unknown003_33:
+    acc.setDisp(true);
+    break;
+  case GfMenuTypes::unknown003_34:
+    setFadeOut(handle, 1);
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
 }
 
 } // namespace gf

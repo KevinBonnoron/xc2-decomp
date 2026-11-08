@@ -302,6 +302,13 @@ inline void unknown163(u32 handle, u16 type, u32 param) {
   ui::UIManager::get()->requestObjectEvent(handle, event, 0.0f);
 }
 
+// Inferred helper: requests an event with only its type on a UI object (parameters left to the event's constructor); original name unknown.
+inline void unknown164(u32 handle, u16 type) {
+  ui::EventData event;
+  event.unknown00 = type;
+  ui::UIManager::get()->requestObjectEvent(handle, event, 0.0f);
+}
+
 // Inferred helper: requests an event with a parameter on the object attached to a call unless it is terminating; original name unknown.
 inline void unknown159(u32 call, u16 type, u32 param) {
   u32 handle = GfMenuObject::getAttachedObject(call);

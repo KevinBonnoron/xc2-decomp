@@ -118,6 +118,33 @@ bool GfMenuObjElementEff::seqClose() {
   return isEnd;
 }
 
+void GfMenuObjElementEff::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    acc.setDisp(false);
+    break;
+  case GfMenuTypes::unknown003_33:
+    acc.setDisp(true);
+    unknown20->unknown2bc = event.unknown08;
+    unknown20->unknown2b8 = -1;
+    unknown20->unknown28.unknown005();
+    unknown20->unknown28.unknown002(&GfMenuObjElementEff::seqInit);
+    unknown20->unknown28.unknown002(&GfMenuObjElementEff::seqOpen);
+    unknown20->unknown28.unknown002(&GfMenuObjElementEff::seqComboName);
+    unknown20->unknown28.unknown002(&GfMenuObjElementEff::seqLoop);
+    break;
+  case GfMenuTypes::unknown003_34:
+    unknown20->unknown2b8 = -1;
+    unknown20->unknown28.unknown005();
+    unknown20->unknown28.unknown002(&GfMenuObjElementEff::seqClose);
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
 } // namespace gf
 
 template bool mm::mtl::Delegate<bool()>::memberFuncInvoker<gf::GfMenuObjElementEff>(const mm::mtl::Delegate<bool()> *);

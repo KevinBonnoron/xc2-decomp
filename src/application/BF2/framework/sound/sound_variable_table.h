@@ -1,13 +1,9 @@
 #pragma once
 #include <stddef.h>
 
+#include "mm_mtl/fixstr.h"
+#include "mm_mtl/map.h"
 #include "types.h"
-
-namespace mm {
-namespace mtl {
-class IAllocator;
-} // namespace mtl
-} // namespace mm
 
 namespace fw {
 
@@ -16,16 +12,15 @@ namespace fw {
 // places its next member 0x20 bytes after the table.
 class SoundVariableTable {
 public:
+  SoundVariableTable();
+  ~SoundVariableTable();
   void setVariable(const char *name, int value);
 
-  void *unknown00;                // Inferred role: root node of the variable tree; original member name unknown.
-  u32 unknown08;                  // Inferred role: variable count; original member name unknown.
-  mm::mtl::IAllocator *unknown10; // Inferred role: allocator; original member name unknown.
+  mm::mtl::Map<mm::mtl::FixStr<64>, int> unknown00; // Inferred role: variables by name; original member name unknown.
   u8 _18[0x20 - 0x18];
 };
 
-static_assert(offsetof(SoundVariableTable, unknown08) == 0x08, "");
-static_assert(offsetof(SoundVariableTable, unknown10) == 0x10, "");
+static_assert(offsetof(SoundVariableTable, unknown00) == 0x00, "");
 static_assert(sizeof(SoundVariableTable) == 0x20, "");
 
 } // namespace fw

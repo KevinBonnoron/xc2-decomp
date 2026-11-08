@@ -91,6 +91,15 @@ static_assert(offsetof(ReflectionValueStruct, unknown90) == 0x90, "");
 
 class ReflectionValueBitset32 : public ReflectionValue {
 public:
+  ~ReflectionValueBitset32() override {
+    while (!unknown78.empty()) {
+      ReflectionValueFlag *value = unknown78.begin().get();
+      unknown78.pop_front();
+      value->release();
+    }
+  }
+  void writeDefault(u8 *data) const override;
+
   mm::mtl::IntrusiveList<ReflectionValueFlag> unknown78; // Inferred role: flags; original member name unknown.
 };
 

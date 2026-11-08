@@ -13,7 +13,9 @@
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_map_info.h"
 #include "gf/menu/gf_menu_reference.h"
+#include "gf/menu/gf_menu_types.h"
 #include "gf/menu/list/gf_menu_zone_map_list.h"
+#include "gf/menu/object/gf_menu_obj_operation_info.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "mm_math/mm_aabb.h"
 #include "mm_math/mm_pnt.h"
@@ -21,6 +23,7 @@
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/reference_object.h"
 #include "ui/ctrl/ui_ctrl_object.h"
+#include "ui/event/ui_event_data.h"
 #include "ui/list/ui_select_obj_list.h"
 #include "ui/stream/ui_stream_manager.h"
 #include "ui/ui_object_acc.h"
@@ -263,6 +266,45 @@ void GfMenuObjZoneMap::getFloorAABB(u32 map, u32 floor, mm::Aabb &aabb, mm::Pnt<
       center.x = static_cast<s16>((min.x + max.x) * 0.5f);
       center.y = static_cast<s16>((min.z + max.z) * 0.5f);
     }
+  }
+}
+
+void GfMenuObjZoneMap::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    GfMenuObjOperationInfo::add(handle, acc.searchChild("LAY_zonemap"), 0, 0);
+    setupMain(acc);
+    setFadeIn(handle);
+    GfMenuObject::enableInput(handle);
+    break;
+  case 3:
+    if (event.unknown08 == 2) {
+      GfMenuObjOperationInfo::remove(handle, acc.searchChild("LAY_zonemap"), 0, 0);
+      acc.setDisp(false);
+      acc.setTerm();
+    }
+    break;
+  case 8:
+    if (event.unknown0c == 9) {
+      unknown20->unknown3100++;
+      if (unknown20->unknown3100 > 8) {
+        unknown20->unknown3100 = 0;
+      }
+      setDispIconNode(acc, unknown20->unknown3100);
+    } else if (event.unknown0c == 10) {
+      unknown158(acc.searchChild("LAY_helpmenu"), GfMenuTypes::unknown003_260, 0, 0.0f);
+    }
+    break;
+  case 0x21:
+    acc.setDisp(true);
+    break;
+  case 0x22:
+    setFadeOut(handle);
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
   }
 }
 

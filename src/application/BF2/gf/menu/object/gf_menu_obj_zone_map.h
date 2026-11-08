@@ -9,6 +9,7 @@
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 
 namespace ui {
 class UICtrlObject;
@@ -29,6 +30,14 @@ struct MenuZoneMapInfo;
 
 class GfMenuObjZoneMap : public GfMenuObject {
 public:
+  class MainListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjZoneMap *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   // Inferred role: pair of values per map list entry, the second one reset to -1; original name unknown.
   struct unknown001 {
     s32 unknown00; // Role and original member name unknown.
@@ -53,6 +62,7 @@ public:
   static bool chkFloor(u32 map, u32 floor);
   static u32 setupIconTableSub(ui::UIObjectAcc &acc, mm::mtl::FixedVector<u32, 256> &icons, u32 type, mm::Pnt<s16> pos, mm::Vec2 scale);
   static const char *getIconNodeName(u32 type);
+  static void setDispIconNode(ui::UIObjectAcc &acc, u32 node);
   static void closeIconTable(ui::UIObjectAcc &acc, mm::mtl::FixedArray<mm::mtl::FixedVector<u32, 256>, 12> &icons);
   u32 getFloor();
   bool seqTexDelete();
@@ -86,6 +96,7 @@ public:
   u16 unknown33d0; // Role and original member name unknown, cleared by the constructor.
 };
 
+static_assert(offsetof(GfMenuObjZoneMap::MainListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjZoneMap, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjZoneMap, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjZoneMap, unknown38) == 0x38, "");

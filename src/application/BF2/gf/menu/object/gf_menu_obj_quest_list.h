@@ -5,10 +5,12 @@
 #include "gf/menu/gf_menu_sequence.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 
 namespace ui {
 class UICtrlCursorSelect;
 class UISelectObjList;
+class UIObjectAcc;
 } // namespace ui
 
 namespace gf {
@@ -21,6 +23,14 @@ class GfMenuReferenceQuest;
 
 class GfMenuObjQuestList : public GfMenuObject {
 public:
+  class MainListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjQuestList *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   GfMenuObjQuestList(u32 handle);
   ~GfMenuObjQuestList() override;
   void initialize() override;
@@ -38,6 +48,7 @@ public:
   bool seqActivateSelect();
   bool seqEnd();
   bool seqActivateError();
+  void initializeSub(ui::UIObjectAcc &acc);
 
   u8 _24[0x28 - 0x24];
   GfMenuQuestList *unknown28;        // Inferred role: quests; original member name unknown.
@@ -71,6 +82,7 @@ public:
   bool unknown368; // Role and original member name unknown.
 };
 
+static_assert(offsetof(GfMenuObjQuestList::MainListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjQuestList, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjQuestList, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjQuestList, unknown38) == 0x38, "");

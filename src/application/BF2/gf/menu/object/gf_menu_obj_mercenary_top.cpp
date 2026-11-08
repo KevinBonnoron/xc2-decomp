@@ -197,6 +197,46 @@ void GfMenuObjMercenaryTop::update() {
   GfMenuObject::update();
 }
 
+void GfMenuObjMercenaryTop::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1: {
+    GfMenuObjUtil::PresetCtrlParam param;
+    param.unknown10 = 0;
+    param.unknown04 = 0;
+    param.unknown00 = 6;
+    GfMenuObjUtil::startPresetCtrl(acc.unknown10, param);
+    break;
+  }
+  case 2:
+  case GfMenuTypes::unknown003_34:
+    if (!unknown20->unknown340) {
+      acc.setTerm();
+    } else {
+      GfMenuObjUtil::PresetCtrlParam param;
+      param.unknown10 = 0;
+      param.unknown04 = 1;
+      param.unknown00 = 6;
+      param.unknown0c = true;
+      GfMenuObjUtil::startPresetCtrl(acc.unknown10, param);
+    }
+    break;
+  case 0x24: {
+    GfMenuObject::disableInput(acc.searchChild("LAY_zone"));
+    GfMenuObjUtil::PresetCtrlParam param;
+    param.unknown00 = 6;
+    param.unknown04 = 1;
+    param.unknown10 = 2;
+    GfMenuObjUtil::startPresetCtrl(acc.unknown10, param);
+    unknown20->unknown340 = false;
+    break;
+  }
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
 } // namespace gf
 
 template bool mm::mtl::Delegate<bool()>::memberFuncInvoker<gf::GfMenuObjMercenaryTop>(const mm::mtl::Delegate<bool()> *);

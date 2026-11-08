@@ -25,10 +25,27 @@ void GfMenuObjIdeaGram::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjIdeaGram::update() { GfMenuObject::update(); }
 
+void GfMenuObjIdeaGram::setIdeaPoint(GfMenuCallContext *context, u8 type, u32 point) {
+  if (context != nullptr && context->unknown10 == CALL_IDEA_GRAM) {
+    ui::EventData event;
+    event.unknown08 = 0;
+    event.unknown00 = 0x100;
+    event.unknown0c = point;
+    event.unknown08_u16 = type;
+    ui::UIManager::get()->requestObjectEvent(context->unknown14, event, 0.0f);
+  }
+}
+
 void GfMenuObjIdeaGram::setIdeaPointFromDriver(GfMenuCallContext *context, u32 driver) {
   SDataIdea data = {};
   GfMenuObjUtil::getIdeagramDriver(driver, data);
   setIdeaPointFromData(context, data);
+}
+
+void GfMenuObjIdeaGram::setIdeaPointFromData(GfMenuCallContext *context, const SDataIdea &data) {
+  for (u32 i = 0; i < SDataIdea::IDEA_MAX; i++) {
+    setIdeaPoint(context, i, data.unknown00[i].unknown00);
+  }
 }
 
 void GfMenuObjIdeaGram::setIdeaPointFromBlade(GfMenuCallContext *context, u32 blade) {

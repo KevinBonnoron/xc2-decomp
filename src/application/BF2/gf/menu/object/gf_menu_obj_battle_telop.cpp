@@ -2,14 +2,30 @@
 
 #include "gf/menu/gf_menu_reference_number.h"
 #include "gf/menu/gf_menu_types.h"
+#include "gf/menu/object/gf_menu_obj_util.h"
 #include "types.h"
 #include "ui/event/ui_event_data.h"
 #include "ui/ui_object_acc.h"
 
 namespace gf {
 
+// Inferred role: telop names by message; original name unknown.
+static const char *const unknown005[] = {nullptr, "TXT_unite_combo_finish"};
+
 // Inferred role: attached call id; original name unknown.
 constexpr u32 unknown001 = 0x4e;
+
+// Inferred helper: starts the preset 1 control of a UI object on a control id, with a direction and a control type; original name unknown.
+static int unknown006(u32 handle, int ctrl, u32 direction, u32 type) {
+  GfMenuObjUtil::PresetCtrlParam param;
+  param.unknown00 = 1;
+  param.unknown04 = direction;
+  param.unknown0d = true;
+  param.unknown08 = ctrl;
+  param.unknown10 = type;
+  return GfMenuObjUtil::startPresetCtrl(handle, param);
+}
+
 // Inferred role: ui event type; original name unknown.
 constexpr u16 unknown002 = 0x101;
 // Inferred role: ui event type; original name unknown.
@@ -44,5 +60,67 @@ void GfMenuObjBattleTelop::open(const OpenParam &param) {
 void GfMenuObjBattleTelop::close() { unknown147(unknown001, "LAY_telop", GfMenuTypes::unknown003_34); }
 
 void GfMenuObjBattleTelop::closeUniteCombo() { unknown147(unknown001, "LAY_fusion_combo", unknown002); }
+
+void GfMenuObjBattleTelop::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    acc.setDisp(false);
+    unknown0c = -1;
+    unknown10 = unknown004();
+    break;
+  case 3:
+    if (event.unknown08 == 1) {
+      GfMenuObject::registTimer(acc.unknown10, 1, 2.0f, false);
+    } else if (event.unknown08 == 2) {
+      acc.setDisp(false);
+    }
+    break;
+  case 0xb:
+    if (event.unknown08 == 1) {
+      close();
+    }
+    break;
+  case 0x21: {
+    u16 message = event.unknown08_u16;
+    if (message == 0) {
+      break;
+    }
+    unknown10.unknown00 = 1;
+    if (unknown20->unknown24 != 0) {
+      ui::UIObjectAcc(unknown20->unknown24).setDisp(false);
+    }
+    unknown20->unknown24 = acc.searchChild(unknown005[message]);
+    {
+      ui::UIObjectAcc telop(unknown20->unknown24);
+      if (!telop.isValid()) {
+        break;
+      }
+      telop.setDisp(true);
+    }
+    if (unknown10.unknown04 == 0) {
+      acc.setDisp(true);
+      int ctrl = unknown006(acc.unknown10, unknown0c, 0, 1);
+      if (ctrl != -1) {
+        GfMenuObject::releaseTimer(acc.unknown10);
+        unknown0c = ctrl;
+      }
+      unknown10.unknown04 = 1;
+    }
+    break;
+  }
+  case 0x22:
+    unknown10.unknown00 = 0;
+    if (unknown10.unknown04 != 0) {
+      unknown006(acc.unknown10, unknown0c, 1, 2);
+      unknown10.unknown04 = 0;
+    }
+    GfMenuObject::releaseTimer(acc.unknown10);
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
 
 } // namespace gf

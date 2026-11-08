@@ -11,6 +11,9 @@
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/list/gf_menu_item_list.h"
 #include "gf/menu/list/gf_menu_quest_list.h"
+#include "gf/menu/object/gf_menu_obj_mainmenu2.h"
+#include "gf/menu/object/gf_menu_obj_operation_info.h"
+#include "gf/menu/object/gf_menu_obj_util.h"
 #include "mm_mtl/reference_object.h"
 #include "ui/ctrl/ui_ctrl_cursor_select.h"
 #include "ui/event/ui_event_data.h"
@@ -144,6 +147,55 @@ bool GfMenuObjQuestList::seqEnd() {
 }
 
 bool GfMenuObjQuestList::seqActivateError() { return true; }
+
+void GfMenuObjQuestList::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1: {
+    unknown20->initializeSub(acc);
+    GfMenuObjUtil::PresetCtrlParam param;
+    param.unknown00 = 6;
+    param.unknown04 = 0;
+    param.unknown10 = 1;
+    GfMenuObjUtil::startPresetCtrl(acc.unknown10, param);
+    GfMenuObjOperationInfo::setGuideText(4, 0);
+    break;
+  }
+  case 2:
+  case GfMenuTypes::unknown003_34:
+    if (!unknown20->unknown360) {
+      unknown163(handle, 3, 2);
+    } else {
+      GfMenuObjUtil::PresetCtrlParam param;
+      param.unknown00 = 6;
+      param.unknown04 = 1;
+      param.unknown10 = 2;
+      GfMenuObjUtil::startPresetCtrl(acc.unknown10, param);
+    }
+    break;
+  case 3:
+    if (event.unknown08 == 1) {
+      GfMenuObjMainMenu2::setCloseKeyEnable(true);
+    } else if (event.unknown08 == 2) {
+      acc.setDisp(false);
+      acc.setTerm();
+    }
+    break;
+  case 0x24: {
+    GfMenuObject::disableInput(acc.searchChild("LAY_list"));
+    GfMenuObjUtil::PresetCtrlParam param;
+    param.unknown00 = 6;
+    param.unknown04 = 1;
+    param.unknown10 = 1;
+    GfMenuObjUtil::startPresetCtrl(acc.unknown10, param);
+    unknown20->unknown360 = false;
+    break;
+  }
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
 
 } // namespace gf
 

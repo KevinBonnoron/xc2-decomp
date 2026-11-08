@@ -122,4 +122,44 @@ bool GfMenuObjBladeName::seqApperWait() {
   return isEnd;
 }
 
+void GfMenuObjBladeName::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    acc.setDisp(false);
+    break;
+  case GfMenuTypes::unknown003_33:
+    unknown20->unknown28.unknown005();
+    unknown20->unknown28.unknown002(&GfMenuObjBladeName::seqStart);
+    break;
+  case GfMenuTypes::unknown003_34: {
+    unknown20->unknown28.unknown005();
+    {
+      ui::UIObjectAcc base(acc.unknown10, "IMG_bl_name_base");
+      base.stopAnimation();
+      base.setDisp(false);
+    }
+    {
+      ui::UIObjectAcc name(acc.unknown10, "TXT_bl_name");
+      ui::UIObjectAcc shadow(acc.unknown10, "TXT_bl_name_shadow");
+      GfMenuObjUtil::stopCtrl(GfMenuObjUtil::getCtrlID(name.unknown10));
+      name.setDisp(false);
+      GfMenuObjUtil::stopCtrl(GfMenuObjUtil::getCtrlID(shadow.unknown10));
+      shadow.setDisp(false);
+    }
+    {
+      ui::UIObjectAcc self(acc.unknown10);
+      GfMenuObjUtil::stopCtrl(GfMenuObjUtil::getCtrlID(self.unknown10));
+      self.setDisp(false);
+    }
+    break;
+  }
+  case GfMenuTypes::unknown003_257:
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
 } // namespace gf

@@ -9,8 +9,10 @@
 #include "gf/menu/adapter/gf_menu_mission_adapter.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_reference.h"
+#include "gf/menu/gf_menu_types.h"
 #include "gf/menu/list/gf_menu_blade_list.h"
 #include "gf/menu/object/gf_menu_obj_common_detail.h"
+#include "gf/menu/object/gf_menu_obj_operation_info.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "mm_math/mm_rect.h"
 #include "mm_mtl/fixed_array.h"
@@ -18,12 +20,18 @@
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/reference_object.h"
 #include "ui/ctrl/ui_ctrl_cursor_select.h"
+#include "ui/event/ui_event_data.h"
 #include "ui/ui_object_acc.h"
 
 namespace gf {
 
 // Inferred role: GfMenuMissionAdapter type of each condition type; original name unknown.
 static const u32 unknown001[] = {21, 19, 21, 21};
+
+// Inferred role: layout names of each mode; original name unknown.
+static const char *const unknown002[] = {"LAY_bl_form", "LAY_release", "LAY_mer"};
+// Inferred role: slot layout names of each mode; original name unknown.
+static const char *const unknown003[] = {"LAY_bl_form_slot", "LAY_bl_release_slot", "LAY_mer_slot"};
 
 GfMenuObjBladeSet::GfMenuObjBladeSet(u32 handle)
     : GfMenuObject(handle), unknown24(0), unknown28(0), unknown2c(0), unknown30(0), unknown34(false), unknown35(true), unknown38(0), unknown40(nullptr), unknown48(nullptr), unknown50(nullptr),
@@ -271,6 +279,56 @@ void GfMenuObjBladeSet::setupMercenariesPreview(ui::UIObjectAcc &acc, GfMenuBlad
   GfMenuMercenariesAdapter::createFromReferenceBlade(acc.searchChild("IMG_mer_unit_symbol"), 4, 0, false);
   GfMenuMercenariesAdapter *unit = GfMenuMercenariesAdapter::createFromReferenceBlade(acc.searchChild("IMG_mer_unit_symbol"), 2, 0, false);
   unit->unknown24 = acc.searchChild("LAY_mer_unit");
+}
+
+void GfMenuObjBladeSet::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1: {
+    GfMenuTypes::Param param;
+    if (!GfMenuObject::getFSLayerParam(unknown20->unknown20, param)) {
+      unknown20->unknown24 = 0;
+      unknown20->unknown28 = 2;
+    } else {
+      u32 mode = param.get<OpenParam>().unknown00;
+      unknown20->unknown24 = mode < 3 ? mode : 0;
+      unknown20->unknown28 = param.get<OpenParam>().unknown04;
+      GfMenuObject::removeFSLayerParam(unknown20->unknown20);
+    }
+    unknown158(handle, GfMenuTypes::unknown003_33, 0, 0.0f);
+    break;
+  }
+  case 2:
+    unknown158(handle, GfMenuTypes::unknown003_34, 0, 0.0f);
+    break;
+  case 3:
+    if (event.unknown08 == 2) {
+      acc.setDisp(false);
+      acc.setTerm();
+      GfMenuObject::returnFSSubLayer(handle, 1);
+    }
+    break;
+  case 0x21: {
+    unknown163(acc.searchChild("LAY_bl_select"), GfMenuTypes::unknown003_257, 0);
+    const char *form = nullptr;
+    const char *slot = nullptr;
+    if (unknown20->unknown24 >= 0 && unknown20->unknown24 < 3) {
+      form = unknown002[unknown20->unknown24];
+      slot = unknown003[unknown20->unknown24];
+    }
+    unknown163(acc.searchChild(slot), GfMenuTypes::unknown003_257, 0);
+    unknown163(acc.searchChild(form), GfMenuTypes::unknown003_33, 0);
+    acc.setDisp(true);
+    break;
+  }
+  case 0x22:
+    GfMenuObjOperationInfo::close();
+    GfMenuObject::hookCtrlEvent(handle, GfMenuObjUtil::setCommonFadeOut(handle, 2, 0));
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
 }
 
 } // namespace gf

@@ -4,12 +4,14 @@
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_sound_manager.h"
 #include "gf/menu/list/gf_menu_driver_list.h"
+#include "gf/menu/object/gf_menu_obj_lvup_select.h"
 #include "gf/menu/object/gf_menu_obj_operation_info.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "gf/sound/gf_sound.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/reference_object.h"
 #include "ui/ctrl/ui_ctrl_cursor_select.h"
+#include "ui/event/ui_event_data.h"
 #include "ui/list/ui_select_obj_list.h"
 #include "ui/ui_object_acc.h"
 
@@ -114,6 +116,73 @@ bool GfMenuObjLvupMain::seqExecLevelUp() {
   GfMenuObjUtil::startCtrl(background.unknown10, param, nullptr);
   GfMenuObjUtil::playJingle(5);
   return true;
+}
+
+void GfMenuObjLvupMain::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    GfMenuObjUtil::unknown002(acc.unknown10);
+    unknown20->refreshLevelUpInfo();
+    break;
+  case 3:
+    if (event.unknown08 == 1) {
+      if (!unknown20->unknown300) {
+        sendOpenEvent(acc.searchChild("LAY_lv_driverset"), 0, 0.0f);
+      } else {
+        unknown20->unknown2e0 = false;
+        unknown20->unknown50.unknown005();
+        unknown20->unknown50.unknown002(&GfMenuObjLvupMain::seqExecLevelUp);
+        unknown20->unknown50.unknown002(&GfMenuObjLvupMain::seqEndLevelUp);
+      }
+    }
+    break;
+  case 0x41: {
+    u32 call = event.unknown08;
+    if (unknown20->unknown2f8->unknown0c == call) {
+      if (event.unknown10 == 0) {
+        unknown20->unknown300 = true;
+      } else {
+        unknown20->unknown300 = false;
+      }
+    }
+    break;
+  }
+  case 0x42:
+    if (event.unknown08 == unknown20->unknown2f8->unknown0c) {
+      GfMenuObjUtil::PresetCtrlParam param;
+      param.unknown00 = 6;
+      param.unknown04 = 0;
+      param.unknown10 = 1;
+      GfMenuObjUtil::startPresetCtrl(acc.unknown10, param);
+      unknown20->refreshLevelUpInfo();
+      GfMenuObjOperationInfo::setGuideDisp(true);
+      mm::mtl::FixStr<32> name;
+      if (unknown20->unknown300) {
+        name.format("LAY_lv_lvup_enable@%02d", unknown20->unknown30->getIndex(true) + 1);
+        ui::UIObjectAcc enable(acc.unknown10, name.c_str());
+        enable.setDisp(false);
+      }
+    }
+    break;
+  case 0x100: {
+    GfMenuObjUtil::PresetCtrlParam param;
+    param.unknown10 = 0;
+    param.unknown00 = 6;
+    param.unknown04 = 1;
+    GfMenuObjUtil::startPresetCtrl(acc.unknown10, param);
+    GfMenuObjOperationInfo::setGuideDisp(false);
+    GfMenuDriverList *list = unknown20->unknown30;
+    GfMenuCallContext *context = unknown20->unknown2f8;
+    GfMenuObjLvupSelect::openLevelSelect(context, list->getContents(list->getIndex(false)).unknown00);
+    unknown20->unknown300 = false;
+    GfMenuObject::setCallContextEventHandler(unknown20->unknown2f8, acc.unknown10);
+    break;
+  }
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
 }
 
 } // namespace gf

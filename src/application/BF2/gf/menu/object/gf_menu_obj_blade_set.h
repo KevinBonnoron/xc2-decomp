@@ -3,6 +3,7 @@
 
 #include "gf/menu/gf_menu_object.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 
 namespace ui {
 class UICtrlCursorSelect;
@@ -15,6 +16,14 @@ class GfMenuCallContext;
 
 class GfMenuObjBladeSet : public GfMenuObject {
 public:
+  class MainListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjBladeSet *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   GfMenuObjBladeSet(u32 handle);
   ~GfMenuObjBladeSet() override;
   enum eMode {
@@ -45,11 +54,14 @@ public:
   void initialize() override;
   void finalize() override;
   void update() override;
-  struct OpenParam;
+  struct OpenParam {
+    u32 unknown00; // Inferred role: mode; original member name unknown.
+    int unknown04; // Role and original member name unknown.
+  };
 
   static void registOpenParam(const OpenParam &);
 
-  u32 unknown24;  // Role and original member name unknown, cleared by the constructor.
+  int unknown24;  // Role and original member name unknown, cleared by the constructor.
   u32 unknown28;  // Role and original member name unknown, cleared by the constructor.
   u32 unknown2c;  // Role and original member name unknown, cleared by the constructor.
   u32 unknown30;  // Role and original member name unknown, cleared by the constructor.
@@ -70,6 +82,8 @@ public:
   ui::UICtrlCursorSelect *unknown88; // Inferred role: blade cursor; original member name unknown.
 };
 
+static_assert(offsetof(GfMenuObjBladeSet::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjBladeSet::OpenParam, unknown04) == 0x04, "");
 static_assert(offsetof(GfMenuObjBladeSet, unknown24) == 0x24, "");
 static_assert(offsetof(GfMenuObjBladeSet, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjBladeSet, unknown2c) == 0x2c, "");

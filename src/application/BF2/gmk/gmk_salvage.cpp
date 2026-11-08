@@ -58,6 +58,10 @@ void GmkSalvage::debugDraw() const {
 
 bool GmkSalvageLocator::isValid() const { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
 
+GmkSalvageLocator::GmkSalvageLocator()
+    : unknown48(nullptr), unknown58(false), unknown60(nullptr), unknownc0(gf::INVALID_HANDLE), unknownc8(0), unknownd0(nullptr), unknownd8(0.0f), unknowndc(0.0f), unknowne0(0.0f), unknowne4(0.0f),
+      unknowne8(-1), unknownec(0), unknownf0(0), unknownf1(false), unknownf2(false) {}
+
 void GmkSalvage::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) { unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_U16); }
 
 bool GmkSalvage::BdatInfo::isCondMatched() const {

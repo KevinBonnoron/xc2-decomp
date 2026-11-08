@@ -4,6 +4,7 @@
 #include "gf/menu/gf_menu_object.h"
 #include "mm_mtl/fixed_vector.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 
 namespace ui {
 class UIObjectAcc;
@@ -17,6 +18,14 @@ class GfMenuItemList;
 
 class GfMenuObjItemList2 : public GfMenuObject {
 public:
+  class MainListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjItemList2 *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   GfMenuObjItemList2(u32 handle);
   ~GfMenuObjItemList2() override;
   static void sendEvent(u32 handle, u32 type, u32 param, u32 delay);
@@ -38,6 +47,7 @@ public:
   bool unknowna0;                          // Role and original member name unknown, set by the constructor.
 };
 
+static_assert(offsetof(GfMenuObjItemList2::MainListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjItemList2, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjItemList2, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjItemList2, unknown38) == 0x38, "");

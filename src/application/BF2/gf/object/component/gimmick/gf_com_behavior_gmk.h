@@ -5,6 +5,7 @@
 #include "framework/reference_frame.h" // IWYU pragma: keep
 #include "gf/field/gf_big_obj_unique.h"
 #include "gf/object/component/behavior/gf_com_behavior.h"
+#include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
 
@@ -25,15 +26,29 @@ class GmkRouteNavi;
 
 namespace gf {
 
+struct GF_OBJ_HANDLE;
 class GfMenuCallContext;
 
+enum {
+  MSG_PC_FIELD_NOTIFY_SKILL_EVENT = 0x100001d,
+  MSG_PC_GET_ELV_LIFT = 0x1000026,
+};
+
 struct MsgPcFieldNotifySkillEvent : fw::Message {
-  explicit MsgPcFieldNotifySkillEvent(u32 event) : fw::Message(0x100001d, 0x40), unknown08(event) {}
+  explicit MsgPcFieldNotifySkillEvent(u32 event) : fw::Message(MSG_PC_FIELD_NOTIFY_SKILL_EVENT, 0x40), unknown08(event) {}
 
   u32 unknown08; // Inferred role: event, 0 removes the icon of the jump or warp point; original member name unknown.
 };
 
 static_assert(offsetof(MsgPcFieldNotifySkillEvent, unknown08) == 0x08, "");
+
+struct MsgPcGetElvLift : fw::Message {
+  mm::mtl::FixedVector<GF_OBJ_HANDLE *, 16> unknown08; // Inferred role: objects riding the lift of the elevator; original member name unknown.
+  bool unknown90;                                      // Inferred role: lift switch; original member name unknown.
+};
+
+static_assert(offsetof(MsgPcGetElvLift, unknown08) == 0x08, "");
+static_assert(offsetof(MsgPcGetElvLift, unknown90) == 0x90, "");
 
 // Layout from its constructor (0x710052a63c), destructor, setup and cleanup: the moving collision at 0x98, the route navi
 // at 0xa0, the target info menu context at 0xa8, the big object at 0xb0 and the look point frame at 0xc0.
@@ -54,6 +69,7 @@ public:
   void cleanup();
   void createMenuObj();
   void disposeMenuObj();
+  void procMsgPcGetElvLift(fw::MessageObject *sender, MsgPcGetElvLift &message);
   void setActivateCollison(bool isActivate);
   fw::ColiMoveObject *getColiObject() const;
 

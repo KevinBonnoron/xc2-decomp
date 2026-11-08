@@ -14,6 +14,7 @@ public:
   void initialize() override;
   void finalize() override;
   void update() override;
+  static void setIdeaPoint(GfMenuCallContext *context, u8 type, u32 point);
   static void setIdeaPointFromDriver(GfMenuCallContext *context, u32 driver);
   static void setIdeaPointFromData(GfMenuCallContext *context, const SDataIdea &data);
   static void setIdeaPointFromBlade(GfMenuCallContext *context, u32 blade);

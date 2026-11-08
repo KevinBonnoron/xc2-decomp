@@ -4,6 +4,10 @@
 #include "gf/gf_allocator.h"
 #include "ui/ui_manager.h"
 
+// pushLogOrder calls FixedQueue<sLog, 20>::insert out of line; its instantiation is not defined here.
+extern template mm::mtl::FixedQueue<gf::GfMenuOrderMgr::sLog, 20>::iterator mm::mtl::FixedQueue<gf::GfMenuOrderMgr::sLog, 20>::insert(mm::mtl::FixedQueue<gf::GfMenuOrderMgr::sLog, 20>::iterator,
+                                                                                                                                      const gf::GfMenuOrderMgr::sLog &);
+
 namespace gf {
 
 // Inferred role: order and its priority; original type name unknown.
@@ -61,6 +65,28 @@ int GfMenuOrderMgr::getPrioOrder(int order) {
     }
   }
   return 0;
+}
+
+void GfMenuOrderMgr::setOrder(int order, u32 handle, const ui::EventData &event) {
+  sLog log(order, handle, event);
+  log.unknown20 = get()->getPrioOrder(order);
+  get()->pushLogOrder(log);
+}
+
+void GfMenuOrderMgr::pushLogOrder(const sLog &log) {
+  if (!unknown10.full()) {
+    for (mm::mtl::FixedQueue<sLog, LOG_MAX>::iterator it = unknown10.begin(); it != unknown10.end(); ++it) {
+      if ((*it).unknown00 == log.unknown00 && (*it).unknown00 == ORDER_LOCATION_TELOP && (*it).unknown08.unknown14 == 0) {
+        *it = log;
+        return;
+      }
+      if ((*it).unknown20 < log.unknown20) {
+        unknown10.insert(it, log);
+        return;
+      }
+    }
+    unknown10.push(log);
+  }
 }
 
 void GfMenuOrderMgr::finishOrder(int order) {

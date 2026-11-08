@@ -4,6 +4,7 @@
 #include "gf/menu/gf_menu_object.h"
 #include "gf/menu/gf_menu_sequence.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 
 namespace mm {
 namespace mtl {
@@ -23,6 +24,14 @@ class GfMenuItemList;
 
 class GfMenuObjDrKizunaRing : public GfMenuObject {
 public:
+  class MainListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjDrKizunaRing *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   GfMenuObjDrKizunaRing(u32 handle);
   ~GfMenuObjDrKizunaRing() override;
 
@@ -68,6 +77,7 @@ public:
   u8 _314[0x318 - 0x314];
 };
 
+static_assert(offsetof(GfMenuObjDrKizunaRing::MainListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjDrKizunaRing, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjDrKizunaRing, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjDrKizunaRing, unknown38) == 0x38, "");

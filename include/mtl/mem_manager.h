@@ -15,16 +15,18 @@ template <typename T, size_t N> class FixedVector;
 
 namespace mtl {
 class IMemAllocator;
-struct MemoryInfo1;
+
+size_t getMemoryChunkSize(void *pointer);
 
 struct MemoryInfo {
-  MemoryInfo() : unknown00(0), unknown08(0), unknown10(0), unknown18(0), unknown20(0), unknown28(0), unknown30(0), unknown38(0), unknown40(0) {}
+  MemoryInfo() : unknown00(0), unknown08(0), unknown10(0), unknown18(0), unknown20(0), unknown24(0), unknown28(0), unknown30(0), unknown38(0), unknown40(0) {}
 
   u64 unknown00; // Inferred role: total size; original member name unknown.
   u64 unknown08; // Role and original member name unknown.
   u64 unknown10; // Inferred role: used size; original member name unknown.
-  u64 unknown18; // Role and original member name unknown.
-  u64 unknown20; // Role and original member name unknown.
+  u64 unknown18; // Inferred role: size of the largest free chunk; original member name unknown.
+  f32 unknown20; // Inferred role: percentage of used memory; original member name unknown.
+  f32 unknown24; // Inferred role: percentage of chunks in use; original member name unknown.
   int unknown28; // Inferred role: allocation count; original member name unknown.
   u64 unknown30; // Inferred role: top address of the region; original member name unknown.
   u64 unknown38; // Inferred role: allocator name; original member name unknown.
@@ -35,6 +37,37 @@ static_assert(offsetof(MemoryInfo, unknown10) == 0x10, "");
 static_assert(offsetof(MemoryInfo, unknown28) == 0x28, "");
 static_assert(offsetof(MemoryInfo, unknown30) == 0x30, "");
 static_assert(sizeof(MemoryInfo) == 0x48, "");
+
+// Evidence: AssetAllocator<1024>::getMemInfo1 and DlAllocator::getMemInfo1 fill one per allocation, 0x20 bytes apart.
+struct MemoryInfo1 {
+  u64 unknown00;         // Inferred role: address of the allocation; original member name unknown.
+  u64 unknown08;         // Inferred role: size of the allocation; original member name unknown.
+  const char *unknown10; // Inferred role: file of the allocation; original member name unknown.
+  u32 unknown18;         // Inferred role: line of the allocation; original member name unknown.
+};
+
+static_assert(offsetof(MemoryInfo1, unknown10) == 0x10, "");
+static_assert(offsetof(MemoryInfo1, unknown18) == 0x18, "");
+static_assert(sizeof(MemoryInfo1) == 0x20, "");
+
+// Evidence: AssetAllocator<1024>::getMemImage sets unknown10 to the number of blocks it wrote from 0x18 on, 0x10 bytes
+// each, at most the value unknown10 had.
+struct MEMIMAGE_HEAD {
+  // Inferred role: block of the image; original type name unknown.
+  struct unknown001 {
+    u64 unknown00; // Inferred role: address of the block; original member name unknown.
+    u64 unknown08; // Inferred role: size of the block; original member name unknown.
+  };
+
+  u64 unknown00;          // Role and original member name unknown.
+  u64 unknown08;          // Role and original member name unknown.
+  u64 unknown10;          // Inferred role: capacity of the blocks, then their count; original member name unknown.
+  unknown001 unknown18[]; // Inferred role: blocks of the image; original member name unknown.
+};
+
+static_assert(offsetof(MEMIMAGE_HEAD, unknown10) == 0x10, "");
+static_assert(offsetof(MEMIMAGE_HEAD, unknown18) == 0x18, "");
+static_assert(sizeof(MEMIMAGE_HEAD) == 0x18, "");
 
 enum AllocatorType {
   ALLOCATOR_TYPE_PROGRAM = 1,

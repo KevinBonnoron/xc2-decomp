@@ -5,6 +5,7 @@
 #include "gf/menu/gf_menu_sequence.h"
 #include "gf/sound/gf_sound.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 
 namespace ui {
 class UICtrlCursorSelect;
@@ -16,6 +17,14 @@ class GfMenuDriverList;
 
 class GfMenuObjLvupMain : public GfMenuObject {
 public:
+  class MainListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjLvupMain *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   GfMenuObjLvupMain(u32 handle);
   ~GfMenuObjLvupMain() override;
   void initialize() override;
@@ -52,6 +61,7 @@ static_assert(offsetof(GfMenuObjLvupMain, unknown38) == 0x38, "");
 static_assert(offsetof(GfMenuObjLvupMain, unknown40) == 0x40, "");
 static_assert(offsetof(GfMenuObjLvupMain, unknown48) == 0x48, "");
 static_assert(offsetof(GfMenuObjLvupMain, unknown50) == 0x50, "");
+static_assert(offsetof(GfMenuObjLvupMain::MainListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjLvupMain, unknown2e0) == 0x2e0, "");
 static_assert(offsetof(GfMenuObjLvupMain, unknown2e4) == 0x2e4, "");
 static_assert(offsetof(GfMenuObjLvupMain, unknown2f0) == 0x2f0, "");

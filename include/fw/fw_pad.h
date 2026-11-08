@@ -1,19 +1,23 @@
 #pragma once
+#include <stddef.h>
+
 #include "framework/manager_object.h"
 #include "framework/pad/pad_res_event_manager.h"
 #include "ml/dev_graph_cb.h"
 #include "mm_mtl/bitflag.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_queue.h"
+#include "mm_mtl/fixstr.h"
+#include "mm_mtl/map.h"
 #include "mm_mtl/reference_object.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
-#include <stddef.h>
 
 namespace mm {
 namespace mtl {
 class IAllocator;
-}
+template <typename Signature> class Delegate;
+} // namespace mtl
 } // namespace mm
 
 namespace ml {
@@ -203,7 +207,10 @@ public:
   template <typename T, typename F> void bindAction(const char *name, T *object, F function);
   template <typename T, typename F> void bindAxis(const char *name, T *object, F function);
 
-  u8 _00[0x38 - 0x00];
+  s32 unknown00;                                                               // Inferred role: pad number; original member name unknown.
+  s32 unknown04;                                                               // Inferred role: pad type; original member name unknown.
+  mm::mtl::Map<mm::mtl::FixStr<32>, mm::mtl::Delegate<void()>> unknown08;      // Inferred role: action delegates by name; original member name unknown.
+  mm::mtl::Map<mm::mtl::FixStr<32>, mm::mtl::Delegate<void(float)>> unknown20; // Inferred role: axis delegates by name; original member name unknown.
 };
 
 static_assert(sizeof(PadRelay) == 0x38, "");

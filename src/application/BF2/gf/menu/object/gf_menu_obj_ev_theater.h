@@ -3,6 +3,7 @@
 
 #include "gf/menu/gf_menu_object.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 
 namespace ui {
 class UISelectObjList;
@@ -16,6 +17,14 @@ class GfMenuMsgList;
 
 class GfMenuObjEvTheater : public GfMenuObject {
 public:
+  class MainListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjEvTheater *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   GfMenuObjEvTheater(u32 handle);
   ~GfMenuObjEvTheater() override;
   void initialize() override;
@@ -35,6 +44,7 @@ public:
   ui::UISelectObjList *unknown40; // Inferred role: event objects; original member name unknown.
 };
 
+static_assert(offsetof(GfMenuObjEvTheater::MainListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjEvTheater, unknown24) == 0x24, "");
 static_assert(offsetof(GfMenuObjEvTheater, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjEvTheater, unknown30) == 0x30, "");

@@ -6,6 +6,7 @@
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 
 namespace gf {
 
@@ -13,6 +14,20 @@ class GfMenuReferenceNumber;
 
 class GfMenuObjBattleTelop : public GfMenuObject {
 public:
+  class MainListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    int unknown0c; // Inferred role: fade control; original member name unknown.
+    // Inferred role: display flags; original type name unknown.
+    struct unknown004 {
+      int unknown00; // Inferred role: telop shown flag; original member name unknown.
+      int unknown04; // Inferred role: fade in flag; original member name unknown.
+    } unknown10;
+    u8 _18[0x20 - 0x18];
+    GfMenuObjBattleTelop *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   struct OpenParam {
     u16 unknown00; // Inferred role: telop message; original member name unknown.
   };
@@ -34,6 +49,11 @@ public:
   mm::mtl::FixedVector<u32, 4> unknown2d8;                    // Inferred role: unite combo elements; original member name unknown.
 };
 
+static_assert(offsetof(GfMenuObjBattleTelop::MainListener, unknown0c) == 0x0c, "");
+static_assert(offsetof(GfMenuObjBattleTelop::MainListener, unknown10) == 0x10, "");
+static_assert(offsetof(GfMenuObjBattleTelop::MainListener::unknown004, unknown04) == 0x04, "");
+static_assert(offsetof(GfMenuObjBattleTelop::MainListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjBattleTelop::MainListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjBattleTelop, unknown24) == 0x24, "");
 static_assert(offsetof(GfMenuObjBattleTelop, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjBattleTelop, unknown2b8) == 0x2b8, "");

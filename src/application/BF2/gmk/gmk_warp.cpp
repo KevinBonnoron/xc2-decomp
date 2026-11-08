@@ -68,6 +68,15 @@ bool GmkWarp::BdatInfo::isDepopCondMatched(const mm::Vec3 &position) const {
 
 void GmkWarp::BdatInfo::debugDraw(const AGmkBase &gmk) const {}
 
+GmkWarp::GmkWarp() : _48(), unknown68(), unknown6c(false), unknown6d(true) {
+  for (u32 i = 0; i < POINT_NUM; i++) {
+    unknown50[i] = gf::INVALID_HANDLE;
+  }
+  for (u32 i = 0; i < POINT_NUM; i++) {
+    unknown60[i] = 0;
+  }
+}
+
 void GmkWarp::create(const CreateInfo &info) {
   AGmkBase::create(info);
   f32 iconDistance = Bdat::getValCheck(gf::GfDataBdat::getFP(gf::BDAT_FLD_WILDCARD_DATA), 0, WILDCARD_WARP_ICON_DIST_ROW, BDAT_TYPE_F32).valueF32;

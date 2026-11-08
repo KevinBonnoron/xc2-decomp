@@ -5,6 +5,7 @@
 #include "gf/menu/gf_menu_sequence.h"
 #include "mm_mtl/fixed_vector.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 
 namespace ui {
 class UICtrlObject;
@@ -16,6 +17,14 @@ namespace gf {
 
 class GfMenuObjBladeKizunaRing : public GfMenuObject {
 public:
+  class MainListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjBladeKizunaRing *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   struct Achievement {
     Achievement(u16 line, u16 level, u16 state) : unknown00(line), unknown02(level), unknown04(state) {}
 
@@ -56,6 +65,7 @@ public:
 };
 
 static_assert(sizeof(GfMenuObjBladeKizunaRing::Achievement) == 6, "");
+static_assert(offsetof(GfMenuObjBladeKizunaRing::MainListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjBladeKizunaRing, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjBladeKizunaRing, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjBladeKizunaRing, unknown3c) == 0x3c, "");

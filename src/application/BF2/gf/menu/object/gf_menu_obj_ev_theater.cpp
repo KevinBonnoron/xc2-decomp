@@ -114,4 +114,58 @@ void GfMenuObjEvTheater::dispOffScreen(bool isDisp) {
   }
 }
 
+void GfMenuObjEvTheater::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1: {
+    ui::UIObjectAcc bg(acc.unknown10, "IMG_bg");
+    bg.startAnimation("start", false);
+    GfMenuObject::hookAnimationEvent(acc.unknown10, bg.unknown10);
+    break;
+  }
+  case 2:
+    GfMenuObject::termCallContext(acc.unknown10);
+    acc.setTerm();
+    break;
+  case 3:
+    if (event.unknown08 == 1) {
+      GfMenuObject::enableFSInput(2);
+    }
+    break;
+  case 0xc: {
+    ui::UIObjectAcc bg(acc.unknown10, "IMG_bg");
+    bg.startAnimation("loop", false);
+    break;
+  }
+  case 0x100: {
+    u32 result = event.unknown08;
+    GfMenuObject::addResultCallContext(acc.unknown10, result, 0);
+    break;
+  }
+  case GfMenuTypes::unknown003_257: {
+    GfMenuObjUtil::PresetCtrlParam param;
+    param.unknown00 = 6;
+    param.unknown04 = 1;
+    param.unknown10 = 3;
+    GfMenuObjUtil::startPresetCtrl(acc.unknown10, param);
+    break;
+  }
+  case GfMenuTypes::unknown003_258: {
+    GfMenuObjUtil::PresetCtrlParam param;
+    param.unknown00 = 6;
+    param.unknown04 = 0;
+    param.unknown10 = 1;
+    GfMenuObjUtil::startPresetCtrl(acc.unknown10, param);
+    if (unknown20->unknown24 == 3) {
+      ui::UIObjectAcc view(acc.searchSibiling("LAY_mdl_view"));
+      view.setDisp(false);
+    }
+    break;
+  }
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
 } // namespace gf

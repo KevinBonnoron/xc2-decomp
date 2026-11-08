@@ -26,6 +26,19 @@ void GfMenuObjChainAttack::update() { GfMenuObject::update(); }
 
 void GfMenuObjChainAttack::changeCharacter(u32) { GfMenuObjUtil::playSE(0x34); }
 
+void GfMenuObjChainAttack::openResult(const ResultParam &param) {
+  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown001));
+  if (acc.isValid()) {
+    ui::UIObjectAcc child(acc.searchChild("LAY_result"));
+    ui::EventData event;
+    event.unknown08 = 0;
+    event.unknown00 = GfMenuTypes::unknown003_33;
+    event.unknown08_u16 = param.unknown00;
+    event.unknown0c = param.unknown04;
+    GfMenuObject::sendEvent(child.unknown10, event, 0.0f);
+  }
+}
+
 void GfMenuObjChainAttack::closeResult() { unknown148(unknown001, "LAY_result", GfMenuTypes::unknown003_34); }
 
 void GfMenuObjChainAttack::closeRoundExtend() { unknown148(unknown001, "LAY_extend", GfMenuTypes::unknown003_34); }

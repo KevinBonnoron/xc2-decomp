@@ -30,6 +30,20 @@ void GfMenuObjComboRequest::update() {
 
 void GfMenuObjComboRequest::attachComboRequest(GfMenuCallContext *context) { unknown152(context, unknown001); }
 
+void GfMenuObjComboRequest::openComboRequest(u16 index, const RequestParam &param) {
+  ui::UIObjectAcc acc(getAttachedObject(unknown001));
+  if (acc.isValid() && !acc.isTerm()) {
+    ui::EventData event;
+    event.unknown0c = 0;
+    event.unknown00 = 0x101;
+    event.unknown08_u16 = index;
+    event.unknown0a = param.unknown00;
+    event.unknown0c_u16 = param.unknown08;
+    event.unknown10 = param.unknown04;
+    ui::UIManager::get()->requestObjectEvent(acc.unknown10, event, 0.0f);
+  }
+}
+
 void GfMenuObjComboRequest::closeComboRequest(u16 index, bool isImmediate) {
   ui::UIObjectAcc acc(getAttachedObject(unknown001));
   if (acc.isValid() && !acc.isTerm()) {
@@ -38,6 +52,20 @@ void GfMenuObjComboRequest::closeComboRequest(u16 index, bool isImmediate) {
     event.unknown00 = 0x102;
     event.unknown08_u16 = index;
     event.unknown0a = isImmediate;
+    ui::UIManager::get()->requestObjectEvent(acc.unknown10, event, 0.0f);
+  }
+}
+
+void GfMenuObjComboRequest::resetComboRequest(u16 index, const RequestParam &param) {
+  ui::UIObjectAcc acc(getAttachedObject(unknown001));
+  if (acc.isValid() && !acc.isTerm()) {
+    ui::EventData event;
+    event.unknown0c = 0;
+    event.unknown00 = 0x103;
+    event.unknown08_u16 = index;
+    event.unknown0a = param.unknown00;
+    event.unknown0c_u16 = param.unknown08;
+    event.unknown10 = param.unknown04;
     ui::UIManager::get()->requestObjectEvent(acc.unknown10, event, 0.0f);
   }
 }

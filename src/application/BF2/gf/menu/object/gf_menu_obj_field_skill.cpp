@@ -228,6 +228,45 @@ void GfMenuObjFieldSkill::undoTotalSkillLevel(u8 skill) {
   }
 }
 
+void GfMenuObjFieldSkill::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    GfMenuObject::disableInput(acc.unknown10);
+    break;
+  case 8:
+    if (event.unknown0c == 1) {
+      GfMenuObject::addResultCallContext(acc.unknown10, 2, 0);
+      GfMenuObject::disableInput(acc.unknown10);
+    }
+    break;
+  case GfMenuTypes::unknown003_34:
+    GfMenuObject::disableInput(acc.unknown10);
+    sendCloseEvent(acc.searchChild("LAY_blade"), 0, 0.0f);
+    sendCloseEvent(acc.searchChild("LAY_base"), 0, 0.0f);
+    sendCloseEvent(acc.searchChild("LAY_request"), 0, 0.0f);
+    sendCloseEvent(acc.searchChild("LAY_blade_info"), 0, 0.0f);
+    sendCloseEvent(acc.searchChild("LAY_blade_result"), 0, 0.0f);
+    sendCloseEvent(acc.searchChild("LAY_input"), 0, 0.0f);
+    unknown20->unknown60 = acc.unknown10;
+    break;
+  case 0x10b:
+    if (event.unknown08 == 1) {
+      GfMenuObject::enableInput(acc.unknown10);
+    } else {
+      GfMenuObject::disableInput(acc.unknown10);
+    }
+    break;
+  case 0x10d:
+    unknown20->unknown70.unknown005();
+    unknown20->unknown70.unknown002(&GfMenuObjFieldSkill::seqWaitVoice);
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
 } // namespace gf
 
 template bool mm::mtl::Delegate<bool()>::memberFuncInvoker<gf::GfMenuObjFieldSkill>(const mm::mtl::Delegate<bool()> *);

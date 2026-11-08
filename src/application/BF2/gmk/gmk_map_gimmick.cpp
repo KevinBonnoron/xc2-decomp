@@ -47,6 +47,8 @@ bool GmkMapGimmick::BdatInfo::isPopCondMatched() const {
 
 void GmkMapGimmick::BdatInfo::debugDraw(const AGmkBase &gmk) const {}
 
+GmkMapGimmick::GmkMapGimmick() : unknown48(0.0f), unknown50(nullptr), unknown60(gf::INVALID_HANDLE), unknown68(true), unknowna8(false), unknowna9(false) {}
+
 void GmkMapGimmick::update(f32 deltaTime) {
   AGmkBase::update(deltaTime);
   if (isValid() && unknown50) {

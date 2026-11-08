@@ -22,6 +22,8 @@ class Plugin;
 
 enum {
   MSG_PC_GET_LOOK_POINT = 0x1000008,
+  MSG_PC_FIELD_GET_ACCESS_TYPE = 0x100000c,
+  MSG_PC_FIELD_NOTIFY_ACTION = 0x100000d,
   MSG_OBJECT_GET_VELOCITY = 0x1000046,
 };
 
@@ -42,7 +44,7 @@ struct MsgObjectGetVelocity : fw::Message {
 static_assert(offsetof(MsgObjectGetVelocity, unknown10) == 0x10, "");
 
 struct MsgPcFieldNotifyAction : fw::Message {
-  MsgPcFieldNotifyAction(u32 action) : fw::Message(0x100000d, 0x40), unknown08(action) {}
+  MsgPcFieldNotifyAction(u32 action) : fw::Message(MSG_PC_FIELD_NOTIFY_ACTION, 0x40), unknown08(action) {}
 
   u32 unknown08; // Inferred role: action, 0 when the player accesses the object, 1 when the access ends; original member name unknown.
 };
@@ -50,7 +52,7 @@ struct MsgPcFieldNotifyAction : fw::Message {
 static_assert(offsetof(MsgPcFieldNotifyAction, unknown08) == 0x08, "");
 
 struct MsgPcFieldGetAccessType : fw::Message {
-  MsgPcFieldGetAccessType() : fw::Message(0x100000c, 0x40), unknown08(0), unknown0c(true), unknown0d(false) {}
+  MsgPcFieldGetAccessType() : fw::Message(MSG_PC_FIELD_GET_ACCESS_TYPE, 0x40), unknown08(0), unknown0c(true), unknown0d(false) {}
 
   u32 unknown08;  // Inferred role: access type; original member name unknown.
   bool unknown0c; // Inferred role: access enabled; original member name unknown.

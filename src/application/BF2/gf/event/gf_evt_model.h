@@ -64,6 +64,9 @@ public:
   void resetMount(GfEvtModel *parent);
   void setMount(GfEvtModel *parent, const char *bone);
   void setMount(GfEvtModel *parent, const char *bone, const mm::Vec3 &pos, const mm::Vec3 &rot);
+  void execMount(GfEvtModel *child);
+  void execMount(GfEvtModel *child, const mm::Vec3 &position, const mm::Vec3 &rotation);
+  void execUnmount(GfEvtModel *child);
 
   static u32 changeLayerUI(u32 layer);
 

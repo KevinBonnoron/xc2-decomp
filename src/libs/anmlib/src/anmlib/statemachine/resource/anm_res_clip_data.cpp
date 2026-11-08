@@ -20,7 +20,7 @@ void ResClipData::cleanup() {
   }
 }
 
-void ResClipData::restore(const ResResolver &resolver) { resolver.unknown08(unknown00->unknown00, unknown00->unknown08); }
+void ResClipData::restore(const ResResolver &resolver) { resolver.restoreBinding(unknown00->unknown00, unknown00->unknown08); }
 
 void ResClipData::setFrameAnnotation(u32 type, f32 frame, const AsmAnnotetion &annotation) {
   if (m_pBinding != nullptr) {

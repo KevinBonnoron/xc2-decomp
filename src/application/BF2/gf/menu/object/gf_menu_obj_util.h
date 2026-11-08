@@ -10,6 +10,7 @@
 
 namespace fw {
 enum VibrationID : int;
+enum SoundCategory : int;
 } // namespace fw
 
 namespace ui {
@@ -100,7 +101,10 @@ public:
     f32 unknown34; // Inferred role: rotation; original member name unknown.
     f32 unknown38; // Inferred role: brightness; original member name unknown.
     f32 unknown3c; // Inferred role: alpha; original member name unknown.
-    u8 _40[0x50 - 0x40];
+    f32 unknown40; // Inferred role: control parameter; original member name unknown.
+    f32 unknown44; // Inferred role: control parameter; original member name unknown.
+    f32 unknown48; // Inferred role: control parameter; original member name unknown.
+    u8 _4c[0x50 - 0x4c];
     const char *unknown50; // Inferred role: motion data name; original member name unknown.
     const char *unknown58; // Inferred role: motion name; original member name unknown.
   };
@@ -248,6 +252,7 @@ public:
   static u32 playSECommonCloseSubMenu();
   static void stopSE(u32 handle, f32 time);
   static bool startBGM(u32 handle);
+  static u32 playBGM(u32 bgm, bool ignorePause, fw::SoundCategory category);
   static bool isValidSoundHandle(u32 handle);
   static void stopBGM(u32 handle, f32 time);
   static SoundHandle playJingle(u32 id);

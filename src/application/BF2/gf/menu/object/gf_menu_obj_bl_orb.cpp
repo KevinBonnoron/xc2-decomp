@@ -1,12 +1,14 @@
 #include "gf/menu/object/gf_menu_obj_bl_orb.h"
 
 #include "gf/menu/call/gf_menu_call_context.h"
+#include "gf/menu/gf_menu_reference.h"
 #include "gf/menu/gf_menu_reference_number.h"
 #include "gf/menu/list/gf_menu_item_list.h"
 #include "gf/menu/object/gf_menu_obj_operation_info.h"
 #include "mm_mtl/reference_object.h"
 #include "types.h"
 #include "ui/ctrl/ui_ctrl_cursor_select.h"
+#include "ui/event/ui_event_data.h"
 #include "ui/list/ui_select_obj_list.h"
 #include "ui/ui_object_acc.h"
 
@@ -81,6 +83,33 @@ bool GfMenuObjBlOrb::seqEndClose() {
 bool GfMenuObjBlOrb::seqAppearPhase1() { return unknown002(1); }
 
 bool GfMenuObjBlOrb::seqLeavePhase1() { return unknown002(2); }
+
+void GfMenuObjBlOrb::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    unknown20->unknown58.unknown002(&GfMenuObjBlOrb::seqStartOpen);
+    unknown20->unknown58.unknown002(&GfMenuObjBlOrb::seqAppearPhase1);
+    unknown20->unknown58.unknown002(&GfMenuObjBlOrb::seqEndOpen);
+    break;
+  case 2:
+    unknown20->unknown58.unknown002(&GfMenuObjBlOrb::seqStartClose);
+    unknown20->unknown58.unknown002(&GfMenuObjBlOrb::seqLeavePhase1);
+    unknown20->unknown58.unknown002(&GfMenuObjBlOrb::seqEndClose);
+    break;
+  case 8: {
+    int result = event.unknown0c;
+    GfMenuReference::getReferenceBladeID(unknown20->unknown24);
+    if (result == 2) {
+      GfMenuObject::returnFSSubLayer(acc.unknown10, 2);
+    }
+    break;
+  }
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
 
 } // namespace gf
 

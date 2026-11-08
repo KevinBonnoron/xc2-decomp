@@ -10,7 +10,6 @@ namespace mtl {
 
 class NullAllocator : public IMemAllocator {
 public:
-  ~NullAllocator() override;
   void create(void *buffer, size_t size, const char *name) override;
   void destroy() override;
   AllocatorType getType() const override;

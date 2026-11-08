@@ -8,7 +8,6 @@
 #include "types.h"
 
 namespace mtl {
-class CallStackInfo;
 
 class DlAllocator : public IMemAllocator {
 public:
@@ -18,6 +17,39 @@ public:
     size_t unknown08;         // Inferred role: offset of the footer from the allocation; original member name unknown.
     CallStackInfo *unknown10; // Inferred role: call stack of the allocation; original member name unknown.
   };
+
+  // Layout of the dlmalloc space handed out by create_mspace_with_base (a game symbol, as are the other mspace_
+  // functions); only what the code of this class reads is declared, the original type names are unknown.
+
+  // Inferred role: chunk of dlmalloc, 0x10 bytes before the memory it hands out; original type name unknown.
+  struct unknown002 {
+    size_t unknown00; // Inferred role: size of the previous chunk when it is free; original member name unknown.
+    size_t unknown08; // Inferred role: size of the chunk and its flags (bit 0 previous in use, bit 1 in use); original member name unknown.
+  };
+
+  // Inferred role: segment of the memory of a dlmalloc space; original type name unknown.
+  struct unknown004 {
+    u8 *unknown00;         // Inferred role: base of the segment; original member name unknown.
+    size_t unknown08;      // Inferred role: size of the segment; original member name unknown.
+    unknown004 *unknown10; // Inferred role: next segment; original member name unknown.
+    u32 unknown18;         // Inferred role: flags of the segment; original member name unknown.
+  };
+
+  // Inferred role: state of a dlmalloc space (the mspace); original type name unknown.
+  struct unknown003 {
+    u8 unknown00[0x28];
+    unknown002 *unknown28; // Inferred role: top chunk, null while the space is not initialized; original member name unknown.
+    u8 unknown30[0x10];
+    size_t unknown40; // Inferred role: magic, equal to the one of the parameters of dlmalloc; original member name unknown.
+    u8 unknown48[0x330];
+    unknown004 unknown378;  // Inferred role: first segment; original member name unknown.
+    const char *unknown398; // Inferred role: name of the allocator given by create; original member name unknown.
+  };
+
+  static_assert(offsetof(unknown003, unknown28) == 0x28, "");
+  static_assert(offsetof(unknown003, unknown40) == 0x40, "");
+  static_assert(offsetof(unknown003, unknown378) == 0x378, "");
+  static_assert(offsetof(unknown003, unknown398) == 0x398, "");
 
   DlAllocator();
   ~DlAllocator() override;
@@ -48,7 +80,7 @@ public:
   static void *getNewInfo(const void *pointer, size_t &size);
 
   mm::mtl::FixStr<32> m_name;
-  void *unknown30;            // Inferred role: dlmalloc mspace of the buffer; original member name unknown.
+  unknown003 *unknown30;      // Inferred role: dlmalloc space of the buffer; original member name unknown.
   void *unknown38;            // Inferred role: buffer given to create; original member name unknown.
   size_t unknown40;           // Inferred role: size of the buffer; original member name unknown.
   CallStackManager unknown48; // Inferred role: call stacks of the allocations; original member name unknown.
