@@ -2,11 +2,30 @@
 
 #include "gf/menu/gf_menu_types.h"
 #include "types.h"
+#include "ui/ui_object_acc.h"
 
 namespace gf {
 
 // Inferred role: attached call id; original name unknown.
 constexpr u32 unknown001 = 0x47;
+
+GfMenuObjOperationInfo::GfMenuObjOperationInfo(u32 handle) : GfMenuObject(handle) {}
+
+GfMenuObjOperationInfo::~GfMenuObjOperationInfo() { ; }
+
+void GfMenuObjOperationInfo::dupClose(mm::mtl::FixedVector<DupItem, 16> &) {}
+
+void GfMenuObjOperationInfo::setupScreen(u32, mm::mtl::FixedVector<DupItem, 16> &) {}
+
+void GfMenuObjOperationInfo::dispOffIconTable(mm::mtl::FixedVector<DupItem, 16> &table, u32 index) {
+  if (index < table.size()) {
+    ui::UIObjectAcc acc(table[index].unknown00);
+    if (acc.isValid()) {
+      table[index].unknown0e = 0;
+      acc.setDisp(false);
+    }
+  }
+}
 
 void GfMenuObjOperationInfo::finalize() { GfMenuObject::finalize(); }
 

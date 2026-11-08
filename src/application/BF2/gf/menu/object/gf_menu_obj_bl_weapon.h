@@ -4,11 +4,19 @@
 #include "gf/menu/gf_menu_object.h"
 #include "gf/menu/gf_menu_sequence.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
+#include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
 #include "ui/ui_object_acc.h"
 
+namespace ui {
+class UICtrlCursorSelect;
+class UISelectObjList;
+} // namespace ui
+
 namespace gf {
 class GfMenuCallContext;
+class GfMenuItemList;
+class GfMenuReferenceNumber;
 
 class GfMenuObjBlWeapon : public GfMenuObject {
 public:
@@ -28,6 +36,8 @@ public:
     return true;
   }
 
+  GfMenuObjBlWeapon(u32 handle);
+  ~GfMenuObjBlWeapon() override;
   static bool attach(GfMenuCallContext *context);
   bool isSameWeapon(u32 blade, u32 chip);
   void initialize() override;
@@ -42,12 +52,26 @@ public:
   bool seqAppearPhase1();
   bool seqLeavePhase1();
 
-  u8 _24[0x50 - 0x24];
-  GfMenuSequence<GfMenuObjBlWeapon, 8> unknown50; // Inferred role: appear and leave steps; original member name unknown.
-  int unknown2e0;                                 // Inferred role: control of the appear and leave phases, -1 when idle; original member name unknown.
+  u32 unknown24;                                          // Inferred role: blade; original member name unknown.
+  u32 unknown28;                                          // Inferred role: chip; original member name unknown.
+  GfMenuItemList *unknown30;                              // Inferred role: item list; original member name unknown.
+  ui::UISelectObjList *unknown38;                         // Inferred role: item objects; original member name unknown.
+  ui::UICtrlCursorSelect *unknown40;                      // Inferred role: item cursor; original member name unknown.
+  mm::mtl::IntrusivePtr<GfMenuReferenceNumber> unknown48; // Inferred role: reference chip; original member name unknown.
+  GfMenuSequence<GfMenuObjBlWeapon, 8> unknown50;         // Inferred role: appear and leave steps; original member name unknown.
+  int unknown2e0;                                         // Inferred role: control of the appear and leave phases, -1 when idle; original member name unknown.
+  GfMenuCallContext *unknown2e8;                          // Inferred role: call context; original member name unknown.
 };
 
+static_assert(offsetof(GfMenuObjBlWeapon, unknown24) == 0x24, "");
+static_assert(offsetof(GfMenuObjBlWeapon, unknown28) == 0x28, "");
+static_assert(offsetof(GfMenuObjBlWeapon, unknown30) == 0x30, "");
+static_assert(offsetof(GfMenuObjBlWeapon, unknown38) == 0x38, "");
+static_assert(offsetof(GfMenuObjBlWeapon, unknown40) == 0x40, "");
+static_assert(offsetof(GfMenuObjBlWeapon, unknown48) == 0x48, "");
 static_assert(offsetof(GfMenuObjBlWeapon, unknown50) == 0x50, "");
 static_assert(offsetof(GfMenuObjBlWeapon, unknown2e0) == 0x2e0, "");
+static_assert(offsetof(GfMenuObjBlWeapon, unknown2e8) == 0x2e8, "");
+static_assert(sizeof(GfMenuObjBlWeapon) == 0x2f0, "");
 
 } // namespace gf

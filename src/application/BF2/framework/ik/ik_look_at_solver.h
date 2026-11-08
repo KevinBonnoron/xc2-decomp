@@ -42,6 +42,7 @@ public:
   LookAtIkSolver();
   ~LookAtIkSolver() override;
   void resetLimitParam();
+  void drawDebug();
   void onDisable() override;
   void calcIK(const UpdateInfo &info) override;
   const mm::mtl::RTTI *getRTTI() const override;

@@ -28,6 +28,8 @@ static const fw::SoundCategory unknown002[9] = {
 // Inferred role: sound categories destroyed after a map jump; original name unknown.
 static const fw::SoundCategory unknown003[7] = {CATEGORY_FIELD_SE, CATEGORY_GIMMICK_SE, CATEGORY_GAME_ENV, CATEGORY_CHARACTER_SE, CATEGORY_NO_SLOW_SE, CATEGORY_ENEMY_VOICE, CATEGORY_NARE_VOICE};
 
+GfFieldSound::~GfFieldSound() {}
+
 void GfFieldSound::destroyCommonSound() {
   m_commonPack = nullptr;
   mm::mtl::safeRelease(unknown20);

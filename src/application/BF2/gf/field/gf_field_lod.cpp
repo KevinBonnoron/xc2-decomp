@@ -163,6 +163,21 @@ void GfFieldLod::initialize(const GfSetupParam &) {
   validateByInitData();
 }
 
+GfFieldLodColiAnim::GfFieldLodColiAnim(const CreateInfo *info) {
+  if (info != nullptr) {
+    create(*info);
+  }
+}
+
+void GfFieldLodColiAnim::create(const CreateInfo &info) {
+  disposePosInfos();
+  unknown00.unknown18 = info.unknown18;
+  unknown00.unknown10 = info.unknown10;
+  unknown00.unknown08 = info.unknown08;
+  unknown00.unknown00 = info.unknown00;
+  createPosInfos(info.unknown18);
+}
+
 void GfFieldLodColiAnim::dispose() {
   disposePosInfos();
   unknown00 = CreateInfo();

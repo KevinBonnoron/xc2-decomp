@@ -21,8 +21,10 @@ public:
     virtual u32 getMissionId() = 0;
   };
 
+  static GfMenuMissionAdapter *createFromReferenceMission(u32 handle, u32 type, u32 index, bool isUpdateAlways);
   GfMenuMissionAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways);
   ~GfMenuMissionAdapter() override;
+  static GfMenuMissionAdapter *create(u32 handle, u32 type, u32 mission, bool isUpdateAlways);
   bool update_MissionName();
   bool update_MissionCategoryIcon();
   bool update_MissionRewardGold();

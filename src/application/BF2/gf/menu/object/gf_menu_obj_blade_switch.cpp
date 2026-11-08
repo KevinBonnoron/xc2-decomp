@@ -8,6 +8,10 @@ namespace gf {
 // Inferred role: attached call id; original name unknown.
 constexpr u32 unknown001 = 0x22;
 
+GfMenuObjBladeSwitch::GfMenuObjBladeSwitch(u32 handle) : GfMenuObject(handle), unknown24(false), unknown25(false), unknown26(false), unknown28(this) {}
+
+GfMenuObjBladeSwitch::~GfMenuObjBladeSwitch() {}
+
 void GfMenuObjBladeSwitch::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjBladeSwitch::open() { unknown144(unknown001, GfMenuTypes::unknown003_33); }

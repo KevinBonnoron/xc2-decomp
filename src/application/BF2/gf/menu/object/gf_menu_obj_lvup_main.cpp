@@ -1,14 +1,34 @@
 #include "gf/menu/object/gf_menu_obj_lvup_main.h"
 
+#include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_sound_manager.h"
 #include "gf/menu/object/gf_menu_obj_operation_info.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "gf/sound/gf_sound.h"
 #include "mm_mtl/fixstr.h"
+#include "mm_mtl/reference_object.h"
+#include "ui/ctrl/ui_ctrl_cursor_select.h"
 #include "ui/list/ui_list_info.h"
+#include "ui/list/ui_select_obj_list.h"
 #include "ui/ui_object_acc.h"
 
 namespace gf {
+
+GfMenuObjLvupMain::GfMenuObjLvupMain(u32 handle)
+    : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr), unknown48(0xff), unknown50(this), unknown2e0(false), unknown2e4(0), unknown2f0(nullptr),
+      unknown2f8(nullptr), unknown300(false) {
+  unknown2f0 = GfMenuCallContext::create();
+  unknown2f8 = GfMenuCallContext::create();
+}
+
+GfMenuObjLvupMain::~GfMenuObjLvupMain() {
+  mm::mtl::safeRelease(unknown2f0);
+  mm::mtl::safeRelease(unknown2f8);
+  mm::mtl::safeRelease(unknown40);
+  mm::mtl::safeRelease(unknown38);
+  mm::mtl::safeRelease(unknown30);
+  mm::mtl::safeRelease(unknown28);
+}
 
 void GfMenuObjLvupMain::finalize() { GfMenuObject::finalize(); }
 

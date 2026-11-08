@@ -32,6 +32,7 @@ public:
     int unknown10;                              // Inferred role: handle; original member name unknown.
   };
 
+  ~GfReqManager() override;
   static void build(const GfSetupParam &param);
   static void destroy();
   void finalize();

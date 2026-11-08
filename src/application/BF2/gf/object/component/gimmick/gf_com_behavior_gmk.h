@@ -41,6 +41,12 @@ class GfComBehaviorGmk : public GfComBehavior {
 public:
   static mm::mtl::RTTI m_rtti;
 
+  GfComBehaviorGmk();
+  ~GfComBehaviorGmk() override;
+  const mm::mtl::RTTI *getRTTI() const override;
+  bool recieveMessage(fw::MessageObject *sender, fw::Message &message) override;
+  void update(const fw::UpdateInfo &info) override;
+
   void procMsgPcFieldNotifyAction(fw::MessageObject *sender, MsgPcFieldNotifyAction &message);
   void procMsgPcFieldGetAccessType(fw::MessageObject *sender, MsgPcFieldGetAccessType &message);
   void procMsgPcGetLookPoint(fw::MessageObject *sender, MsgPcGetLookPoint &message);

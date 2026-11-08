@@ -1,10 +1,13 @@
 #include "gf/game/gf_game_player_formation.h"
 
+#include "framework/debug/debug_draw.h"
 #include "fw/fw_param_manager.h"
 #include "gf/event/gf_event.h"
 #include "gf/gf_allocator.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_util.h"
+#include "mm_math/mm_col4.h"
+#include "mm_math/mm_mat44.h"
 #include "mm_math/mm_quat.h"
 #include "mm_mtl/intrusive_ptr.h"
 
@@ -94,6 +97,13 @@ void GfGamePlayerFormation::swapFormation(u32 playerId, u32 otherPlayerId) {
   notifyChangePlayerID(this, otherPlayerId);
 
   GfEvent::callSwapFormation(playerId, otherPlayerId);
+}
+
+void GfGamePlayerFormation::drawDebugRandomTalk() {
+  const WarpForRandomTalkParam *param = getWarpForRandomTalkParam();
+  mm::Mat44 matrix;
+  matrix.unknown007(unknowne0[0].unknown00);
+  fw::debug::drawCylinderLine(matrix, param->height * 2.0f, param->distance, mm::Col4::cyan, 8);
 }
 
 void GfGamePlayerFormation::changeFormation(u32 formation) {

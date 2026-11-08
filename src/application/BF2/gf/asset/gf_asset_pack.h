@@ -155,7 +155,8 @@ public:
 
   void setLoadSlotNum(u32 num) { unknown24c = num; }
 
-  u8 _0c[0x18 - 0x0c];
+  u8 _0c[0x10 - 0x0c];
+  u64 unknown10;                                  // Inferred role: asset pack value (AssetPackValue as one 64-bit word); original member name unknown.
   mm::mtl::FixedVector<unknown001, 16> unknown18; // Inferred role: resources; original member name unknown.
   GfAssetFiles m_assetType;
   GF_SLOT_HANDLE *unknown230; // Inferred role: slot handle; original member name unknown.

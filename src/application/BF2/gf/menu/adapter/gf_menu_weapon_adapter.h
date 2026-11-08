@@ -2,7 +2,9 @@
 #include <stddef.h>
 
 #include "gf/menu/adapter/gf_menu_adapter.h"
+#include "gf/menu/gf_menu_reference_number.h"
 #include "mm_mtl/delegate.h"
+#include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
 
 namespace ui {
@@ -10,6 +12,8 @@ class UIObjectPlugin;
 } // namespace ui
 
 namespace gf {
+
+class GfMenuItemList;
 
 class GfMenuWeaponAdapter : public GfMenuAdapter {
 public:
@@ -40,6 +44,30 @@ public:
     u32 unknown08; // Inferred role: reference blade index; original member name unknown.
   };
 
+  class BladeWithChipListConverter : public IConverter {
+  public:
+    BladeWithChipListConverter(u32 blade, GfMenuItemList *list, u32 index) : unknown08(blade), unknown10(list), unknown18(index) {}
+    u32 getWeaponID() override;
+
+    u32 unknown08;             // Inferred role: blade; original member name unknown.
+    GfMenuItemList *unknown10; // Inferred role: chip list; original member name unknown.
+    u32 unknown18;             // Inferred role: chip list index; original member name unknown.
+  };
+
+  struct ReferenceChip {
+    u32 unknown00;                                          // Inferred role: reference blade index; original member name unknown.
+    mm::mtl::IntrusivePtr<GfMenuReferenceNumber> unknown08; // Inferred role: reference chip item; original member name unknown.
+  };
+
+  class ReferenceChipConverter : public IConverter {
+  public:
+    ReferenceChipConverter(const ReferenceChip &chip) : unknown08(chip.unknown00), unknown10(chip.unknown08) {}
+    u32 getWeaponID() override;
+
+    u32 unknown08;                                          // Inferred role: reference blade index; original member name unknown.
+    mm::mtl::IntrusivePtr<GfMenuReferenceNumber> unknown10; // Inferred role: reference chip item; original member name unknown.
+  };
+
   GfMenuWeaponAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways);
   ~GfMenuWeaponAdapter() override;
   static GfMenuWeaponAdapter *create(u32 handle, u32 type, u32 weapon, bool isUpdateAlways);
@@ -54,6 +82,8 @@ public:
   static GfMenuWeaponAdapter *createFromBlade(u32 handle, u32 type, u32 blade, bool isUpdateAlways);
   static GfMenuWeaponAdapter *createFromCoverter(u32 handle, u32 type, IConverter *converter, bool isUpdateAlways);
   static GfMenuWeaponAdapter *createFromReferenceBlade(u32 handle, u32 type, u32 index, bool isUpdateAlways);
+  static GfMenuWeaponAdapter *createFromBladeWithChipList(u32 handle, u32 type, u32 blade, GfMenuItemList *list, u32 index, bool isUpdateAlways);
+  static GfMenuWeaponAdapter *createFromReferenceChip(u32 handle, u32 type, const ReferenceChip &chip, bool isUpdateAlways);
 
   mm::mtl::Delegate<bool(u32)> unknown30; // Inferred role: updater; original member name unknown.
   IConverter *unknown50;                  // Inferred role: converter; original member name unknown.

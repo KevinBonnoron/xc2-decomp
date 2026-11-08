@@ -10,8 +10,11 @@ GfMenuManyObjects::GfMenuManyObjects(const GfSetupParam &param) { initialize(par
 
 void GfMenuManyObjects::initialize(const GfSetupParam &) {
   unknown08 = true;
-  for (u32 i = 0; i < 9; i++) {
+  for (u32 i = 0; i < 8; i++) {
     unknown10[i] = nullptr;
+  }
+  for (u32 i = 0; i < 8; i++) {
+    unknown50[i] = false;
   }
 }
 

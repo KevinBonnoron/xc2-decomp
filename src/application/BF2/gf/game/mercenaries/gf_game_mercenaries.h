@@ -19,7 +19,9 @@ struct QuestCompleteParam;
 struct QuestID;
 struct QuestOrderParam;
 
-enum MERCENARY_SELECT : int;
+enum MERCENARY_SELECT : int {
+  MERCENARY_SELECT_UNKNOWN_0,
+};
 
 class GfGameMercenaries : public mm::mtl::PtrSingleton<GfGameMercenaries> {
 public:

@@ -13,6 +13,10 @@ constexpr u32 unknown001 = 0x55;
 
 constexpr u32 BATTLE_STATE_UNKNOWN_3 = 3;
 
+GfMenuObjPartyGauge::GfMenuObjPartyGauge(u32 handle) : GfMenuObject(handle), unknown24(-1) {}
+
+GfMenuObjPartyGauge::~GfMenuObjPartyGauge() { ; }
+
 void GfMenuObjPartyGauge::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjPartyGauge::update() {

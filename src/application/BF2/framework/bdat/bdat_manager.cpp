@@ -12,6 +12,12 @@ namespace fw {
 
 bool BdatManager::Impl::isMsgFile(const char *name) { return __builtin_strstr(name, "_ms.") != nullptr; }
 
+BdatManager::Impl::~Impl() {
+  for (int i = 0; i < BDAT_MAX; i++) {
+    unregistBdat(i);
+  }
+}
+
 void BdatManager::Impl::unregistBdat(const char *name) {
   int id = find(name);
   if (id >= 0) {

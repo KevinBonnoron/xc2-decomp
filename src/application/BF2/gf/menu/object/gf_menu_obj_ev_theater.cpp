@@ -1,9 +1,13 @@
 #include "gf/menu/object/gf_menu_obj_ev_theater.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_types.h"
+#include "gf/menu/list/gf_menu_id_list.h"
+#include "gf/menu/list/gf_menu_msg_list.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
+#include "mm_mtl/reference_object.h"
 #include "types.h"
 #include "ui/event/ui_event_data.h"
+#include "ui/list/ui_select_obj_list.h"
 #include "ui/ui_object_acc.h"
 
 namespace gf {
@@ -13,6 +17,18 @@ constexpr u32 unknown001 = 0x19;
 
 // Inferred role: off screen call id; original name unknown.
 constexpr u32 unknown002 = 0x1a;
+
+GfMenuObjEvTheater::GfMenuObjEvTheater(u32 handle) : GfMenuObject(handle), unknown24(1), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr) {
+  unknown28 = GfMenuMsgList::create();
+  unknown38 = GfMenuIDList::create();
+}
+
+GfMenuObjEvTheater::~GfMenuObjEvTheater() {
+  mm::mtl::safeRelease(unknown30);
+  mm::mtl::safeRelease(unknown28);
+  mm::mtl::safeRelease(unknown40);
+  mm::mtl::safeRelease(unknown38);
+}
 
 void GfMenuObjEvTheater::finalize() { GfMenuObject::finalize(); }
 

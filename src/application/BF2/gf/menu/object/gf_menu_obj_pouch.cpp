@@ -1,8 +1,23 @@
 #include "gf/menu/object/gf_menu_obj_pouch.h"
 
+#include "gf/menu/call/gf_menu_call_context.h"
+#include "gf/menu/gf_menu_reference_item.h"
+#include "gf/menu/list/gf_menu_item_list.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
+#include "mm_mtl/reference_object.h"
+#include "ui/ctrl/ui_ctrl_cursor_select.h"
 
 namespace gf {
+
+GfMenuObjPouch::GfMenuObjPouch(u32 handle) : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr), unknown48(0) {}
+
+GfMenuObjPouch::~GfMenuObjPouch() {
+  mm::mtl::safeRelease(unknown28);
+  mm::mtl::safeRelease(unknown30);
+  mm::mtl::safeRelease(unknown38);
+  mm::mtl::safeRelease(unknown40);
+  unknown50 = nullptr;
+}
 
 void GfMenuObjPouch::finalize() { GfMenuObject::finalize(); }
 

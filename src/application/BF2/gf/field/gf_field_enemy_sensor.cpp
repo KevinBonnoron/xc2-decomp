@@ -1,6 +1,7 @@
 #include "gf/field/gf_field_enemy_sensor.h"
 
 #include "gf/game/gf_game_manager.h"
+#include "gf/object/gf_obj_acc.h"
 #include "gmk/gmk_manager.h"
 #include "mm_mtl/reference_object.h"
 
@@ -55,6 +56,13 @@ void GfFieldEnemySensor::createByGmkBattleLock() {
   createInfo.unknown04 = gmk::GMK_TYPE_BATTLE_LOCK;
   createInfo.unknown08 = unknown10.unknown4c;
   unknownb0.create(createInfo);
+}
+
+void GfFieldEnemySensor::debugDraw(GF_OBJ_HANDLE *handle, const IGfBehFieldOwner &) const {
+  if (unknown10.unknown44 > 0) {
+    GfObjAcc acc(handle);
+    acc.isValidTransform();
+  }
 }
 
 void GfFieldEnemySensor::enter(const EnterInfo &info) {

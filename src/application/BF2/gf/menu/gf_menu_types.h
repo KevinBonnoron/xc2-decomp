@@ -6,8 +6,12 @@ namespace GfMenuTypes {
 
 // Inferred role: menu UI event ids; original type name unknown.
 enum unknown003 {
-  unknown003_33 = 0x21, // Inferred role: open; original name unknown.
-  unknown003_34 = 0x22, // Inferred role: close; original name unknown.
+  unknown003_33 = 0x21,   // Inferred role: open; original name unknown.
+  unknown003_34 = 0x22,   // Inferred role: close; original name unknown.
+  unknown003_257 = 0x101, // Inferred role: suspend; original name unknown.
+  unknown003_258 = 0x102, // Inferred role: resume; original name unknown.
+  unknown003_259 = 0x103, // Inferred role: end; original name unknown.
+  unknown003_260 = 0x104, // Inferred role: update; original name unknown.
 };
 
 struct Param {

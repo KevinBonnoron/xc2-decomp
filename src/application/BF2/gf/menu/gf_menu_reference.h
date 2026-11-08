@@ -1,7 +1,6 @@
 #pragma once
 #include <stddef.h>
 
-#include "gf/game/quest/gf_quest_id.h"
 #include "gf/menu/list/gf_menu_field_skill_list.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "ml/critical_section.h"
@@ -301,14 +300,5 @@ public:
 };
 
 static_assert(offsetof(GfMenuReferenceFs, unknown0c) == 0x0c, "");
-
-class GfMenuReferenceQuest : public mm::mtl::ReferenceObject {
-public:
-  virtual void getQuest(QuestID &quest) const;
-
-  QuestID unknown0c; // Inferred role: quest; original member name unknown.
-};
-
-static_assert(offsetof(GfMenuReferenceQuest, unknown0c) == 0x0c, "");
 
 } // namespace gf

@@ -41,6 +41,12 @@ public:
     mm::Vec3 unknown00; // Inferred role: position; original member name unknown.
   };
 
+  // Inferred role: one warp point of the gimmick data, with its rotation stored after the position; original type name unknown.
+  struct unknown004 {
+    f32 unknown00[3]; // Inferred role: position; original member name unknown.
+    f32 unknown0c;    // Inferred role: rotation; original member name unknown.
+  };
+
   static const GmkType GMK_TYPE = GMK_TYPE_WARP;
 
   static const u32 POINT_NUM = 2;
@@ -53,6 +59,8 @@ public:
   const BdatInfo *unknown002() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
   // Inferred helper: data of the warp; original name unknown.
   const unknown001 *unknown003() const { return static_cast<const unknown001 *>(unknown20.unknown08); }
+  // Inferred helper: warp points of the gimmick data, indexed like unknown50; original name unknown.
+  const unknown004 *unknown005() const { return static_cast<const unknown004 *>(unknown20.unknown08); }
 
   void create(const CreateInfo &info) override;
   void dispose() override;

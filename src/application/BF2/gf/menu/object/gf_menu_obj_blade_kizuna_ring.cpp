@@ -6,13 +6,24 @@
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "mm_mtl/fixstr.h"
+#include "mm_mtl/reference_object.h"
 #include "types.h"
+#include "ui/ctrl/ui_ctrl_object.h"
+#include "ui/list/ui_select_obj_list.h"
 #include "ui/ui_object_acc.h"
 
 namespace gf {
 
 // Inferred role: attached call id; original name unknown.
 constexpr u32 unknown001 = 0x5a;
+
+GfMenuObjBladeKizunaRing::GfMenuObjBladeKizunaRing(u32 handle)
+    : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown3c(0), unknown3e(0), unknown40(false), unknown44(0), unknown48(-1), unknown4c(0), unknown50(1.0f), unknown190(this) {}
+
+GfMenuObjBladeKizunaRing::~GfMenuObjBladeKizunaRing() {
+  mm::mtl::safeRelease(unknown28);
+  mm::mtl::safeRelease(unknown30);
+}
 
 void GfMenuObjBladeKizunaRing::finalize() { GfMenuObject::finalize(); }
 

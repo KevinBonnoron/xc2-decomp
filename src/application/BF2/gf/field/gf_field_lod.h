@@ -122,7 +122,10 @@ public:
     bool unknown18;               // Inferred role: created for the debug draw; original member name unknown.
   };
 
+  explicit GfFieldLodColiAnim(const CreateInfo *info = nullptr);
+  void create(const CreateInfo &info);
   void dispose();
+  void createPosInfos(bool isDebugDraw);
   void disposePosInfos();
   void update(const fw::UpdateInfo &info);
   void validateVeSe(const GfFieldLod &lod);

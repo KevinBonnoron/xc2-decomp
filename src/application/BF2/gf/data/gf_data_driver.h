@@ -172,6 +172,7 @@ public:
   static void setExp(u32 driver, u32 exp);
   static void setBattleExp(u32 driver, u32 battleExp);
   static void openDriverArtsForLevelup(u32 driver);
+  static void openDriverArtsForSetWeapon(u32 driver, u32 blade);
   static u32 getBlade(const SDataDriver &dataDriver, int slot);
   static int getBladeSet(const SDataDriver &dataDriver);
   static int getMaxSetBladeNum(const SDataDriver &dataDriver);

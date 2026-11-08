@@ -502,3 +502,4 @@ template void mm::mtl::Vector<gmk::GmkRoutePoint>::expand(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkRoutePoint>::extend(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkRoutePoint>::resize(size_t);
 template void mm::mtl::Vector<std::pair<gf::GF_OBJ_HANDLE *, gmk::GmkRouteNavi>>::pop_back();
+template void mm::mtl::construct_n<std::pair<gf::GF_OBJ_HANDLE *, gmk::GmkRouteNavi>>(std::pair<gf::GF_OBJ_HANDLE *, gmk::GmkRouteNavi> *, size_t);

@@ -11,6 +11,8 @@ constexpr u32 unknown001 = 0x83;
 
 GfMenuObjSort::GfMenuObjSort(u32 handle) : GfMenuObject(handle), unknown24(0), unknown28(0), unknown2c(0), unknown30(0) {}
 
+GfMenuObjSort::~GfMenuObjSort() { ; }
+
 void GfMenuObjSort::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjSort::update() {

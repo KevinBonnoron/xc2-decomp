@@ -71,7 +71,7 @@ public:
   static void removeLayerParam(u32 layer);
   static void registLayerObject(u32 layer, u32 object);
   static void setShadowLayer(u32 layer, bool shadow);
-  static u16 getLayerGroup(u32 layer);
+  static u32 getLayerGroup(u32 layer);
   static void destroy();
   static void postUpdate(const fw::UpdateInfo &info);
   void initialize(const GfSetupParam &param);
@@ -83,6 +83,15 @@ public:
   void startProcess();
   void exitProcess(bool isReset);
   void terminateLayer(u16 index, bool isImmediate, bool isKeep);
+  void switchLayerStart();
+  void switchLayerWaitRelease();
+  void switchLayerOpenScreen();
+  void switchLayerWaitScreen();
+  void switchLayerWaitFadeIn();
+  void subLayerWaitRelease();
+  void subLayerCreate();
+  void subLayerWaitOpen();
+  void switchLayerWaitFadeOut();
 
   bool unknown08; // Inferred role: initialized; original member name unknown.
   u32 unknown0c;  // Inferred role: current screen; original member name unknown.

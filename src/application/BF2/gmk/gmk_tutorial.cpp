@@ -7,10 +7,12 @@
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_data_util.h"
 #include "gf/data/gf_game_flag.h"
+#include "gf/field/gf_field_map_gimmick.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/sequential_play/gf_play_factory.h"
 #include "gmk/gmk_active_list.h"
 #include "gmk/gmk_bdat.h"
+#include "gmk/gmk_set.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_vec2.h"
 #include "mm_mtl/fixstr.h"
@@ -73,6 +75,37 @@ GmkType GmkTutorial::getGmkType() const { return GMK_TYPE; }
 void GmkTutorial::updateInActiveList(f32 deltaTime) {
   if (unknown60.unknown83 && gf::GfGameFlag::getLocal(1, getGameFlagId()) == 0 && gf::GfGameManager::isGmkTutorialOK()) {
     beginTutorial();
+  }
+}
+
+void GmkTutorial::update(f32 deltaTime) {
+  debugUpdateMmf();
+  if (!isValid()) {
+    return;
+  }
+  const BdatInfo *info = getBdatInfo();
+  bool isCondMatched = info == nullptr ? true : info->isCondMatched();
+  if (unknown60.unknown78 == nullptr) {
+    if (isCondMatched && gf::GfGameFlag::getLocal(1, getGameFlagId()) == 0) {
+      createGmkPhantom();
+    }
+  } else if (!isCondMatched || gf::GfGameFlag::getLocal(1, getGameFlagId()) != 0) {
+    disposeGmkPhantom();
+  }
+  if (unknownf0 && gf::GfFieldGmkTutorial::get()->isEnd()) {
+    unknownf0 = false;
+  }
+}
+
+void GmkTutorial::createGmkPhantom() {
+  const GmkSet *set = AGmkBase::unknown08.unknown00->getCreateInfo().unknown08;
+  if (set != nullptr && set->unknown10.unknown24) {
+    return;
+  }
+  unknown60.create(*this, nullptr, false);
+  TGmkActiveList<GmkTutorial> *list = TGmkActiveList<GmkTutorial>::get();
+  if (list->unknown08.end() == list->unknown08.unknown002(list->unknown08.begin(), list->unknown08.end(), this)) {
+    TGmkActiveList<GmkTutorial>::get()->unknown08.push_back(this);
   }
 }
 

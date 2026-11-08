@@ -102,12 +102,12 @@ void CharaObj::playWink(int type, f32 frame, bool isLoop, f32 lensX, f32 lensY, 
 
 const mm::Vec3 &CharaObj::getPos() const { return unknown2fb0; }
 
-// The routine at 0x71000c19cc reads +0xc of GfObjSetup. The original
-// meaning of that opaque field is unknown; values 10 through 12 skip pause.
+// The routine at 0x71000c19cc reads GfObjSetup::unknown0c (the layer copied from
+// GfInitParam::unknown40); values 10 through 12 skip pause.
 bool CharaObj::isCharaObjPause(const FrameInfo &info) const {
   gf::GfObjSetup *setup = gf::GfObjUtil::getObjSetup(unknownd40);
   if (setup != nullptr) {
-    u32 unknown0c = *reinterpret_cast<const u32 *>(setup->_0c);
+    u32 unknown0c = setup->unknown0c;
     if (unknown0c - 10 < 3)
       return false;
   }

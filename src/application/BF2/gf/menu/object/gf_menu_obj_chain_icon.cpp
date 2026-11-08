@@ -10,6 +10,10 @@ namespace gf {
 // Inferred role: call id passed to getAttachedObject in close(); taken from the game disassembly, original name unknown.
 constexpr u32 unknown001 = 0x41;
 
+GfMenuObjChainIcon::GfMenuObjChainIcon(u32 handle) : GfMenuObject(handle) {}
+
+GfMenuObjChainIcon::~GfMenuObjChainIcon() { GfMenuManyObjects::destroy<ChainIconInfo>(GfMenuManyObjects::unknown001_2); }
+
 void GfMenuObjChainIcon::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjChainIcon::update() { GfMenuObject::update(); }
@@ -39,3 +43,7 @@ void GfMenuObjChainIcon::close(u32 handle) {
 void GfMenuObjChainIcon::setupScreen(u32 handle, int, int, int, int) { GfMenuObjUtil::setChildDisp(handle, "LAY_main", true); }
 
 } // namespace gf
+
+template void gf::GfMenuManyObjects::remove<gf::GfMenuObjChainIcon::ChainIconInfo>(u32, u32);
+template void mm::mtl::Queue<gf::GfMenuObjChainIcon::ChainIconInfo>::push_back(const gf::GfMenuObjChainIcon::ChainIconInfo &);
+template void mm::mtl::Queue<gf::GfMenuObjChainIcon::ChainIconInfo>::expand(size_t, size_t);

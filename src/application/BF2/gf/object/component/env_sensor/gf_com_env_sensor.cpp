@@ -13,6 +13,16 @@ struct Transform;
 
 namespace gf {
 
+GfComEnvSensor::GfComEnvSensor() : unknown2bc(0xffff), unknown2d8(nullptr), unknown2e0(), unknown2e8(nullptr), unknown360(nullptr), unknown368(nullptr) {
+  for (u32 i = 0; i < 6; i++) {
+    unknown2b0[i] = 0xffff;
+  }
+  for (u32 i = 0; i < 6; i++) {
+    unknown2c0[i] = 0;
+  }
+  unknown370.unknown08 = this;
+}
+
 bool GfComEnvSensor::recieveMessage(fw::MessageObject *sender, fw::Message &message) {
   if (message.unknown00 == MSG_DEBUG_ACTIVATE_COMPONENT_WINDOW) {
     procMsgActivateComponentDebugWindow(sender, static_cast<MsgDebugActivateComponentWindow &>(message));

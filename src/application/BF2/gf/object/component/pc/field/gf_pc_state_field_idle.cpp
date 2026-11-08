@@ -1,14 +1,20 @@
 #include "gf/object/component/pc/field/gf_pc_state_field_idle.h"
 
+#include <float.h>
+#include <math.h>
+
 #include "framework/object/updatable_object.h"
+#include "fw/fw_coli_check.h"
 #include "gf/object/component/animation/gf_com_asm.h"
 #include "gf/object/component/pc/gf_com_behavior_pc.h"
 #include "gf/object/component/pc/gf_com_property_pc.h"
 #include "gf/object/component/pc/gf_pc_asm_cmd_id_field.h"
+#include "gf/object/component/pc/gf_pc_property_field.h"
 #include "gf/object/component/pc/gf_pc_state_id.h"
 #include "gf/object/component/pc/gf_pc_state_util.h"
 #include "gf/object/component/pc/gf_pc_state_util_field.h"
 #include "mm_math/mm_vec3.h"
+#include "types.h"
 
 namespace gf {
 namespace pc {
@@ -39,6 +45,30 @@ void StateFieldIdle::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &inf
       reqState(STATE_ID_FIELD_MOVE);
     }
   }
+}
+
+bool StateFieldIdle::checkSpace(GfComBehaviorPc *behavior) const {
+  GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
+  f32 space = property->unknown310.unknown54;
+  if (space > FLT_EPSILON) {
+    fw::ColiCheckConfig config;
+    config.unknown08 = 0.0f;
+    config.unknown0c = 0.0f;
+    config.unknown14 = false;
+    config.unknown15 = false;
+    config.unknown00 = 9;
+    config.unknown10 = 0;
+    config.unknown04 = 0x80000076;
+    f32 length = space - 0.5f;
+    mm::Vec3 base = property->unknown160 + property->unknown1c0 * 0.6f;
+    length = fmaxf(length, 0.01f);
+    mm::Vec3 start = base + property->unknown1e0 * 0.5f;
+    mm::Vec3 end = base + property->unknown1e0 * length;
+    fw::TColiCheckResult<256> result;
+    return !fw::ColiCheck::testCapsule(result, start, end, 0.5f, config);
+  }
+
+  return true;
 }
 
 void StateFieldIdle::procMsgPcFieldHighJump(GfComBehaviorPc *behavior, fw::MessageObject *sender, MsgPcFieldHighJump &message) {

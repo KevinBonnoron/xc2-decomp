@@ -87,6 +87,8 @@ SCOM::SCOM(GF_SCOM_HANDLE *handle, SCOM_TYPE type, SCOM_EXEC exec, u16 unknown10
 
 GF_OBJ_HANDLE *SCOM::getObjHandle() const { return INVALID_HANDLE; }
 
+GfReqSmallCom::~GfReqSmallCom() {}
+
 GF_SCOM_HANDLE *GfReqSmallCom::allocate() {
   s64 handle = unknownd868++;
   if (handle == -1) {
@@ -2663,12 +2665,12 @@ GF_SCOM_HANDLE *SCOM_FIELD_VOICE::createMercenariesResult(u32 blade) {
   return reinterpret_cast<GF_SCOM_HANDLE *>(-1);
 }
 
-void SCOM_FIELD_VOICE::createReleaseBlade(u32 blade) {
+GAME_VOICE_HANDLE *SCOM_FIELD_VOICE::createReleaseBlade(u32 blade) {
   ParamObj object = {INVALID_HANDLE, OBJECT_TYPE_BLADE, blade};
   if (blade == 0) {
     object = ParamObj{GfGameManager::getControlMover(), 0, 0};
   }
-  GfFieldVoice::playVoice(object, CV_FIELD_UNKNOWN_18, CV_PRIO_UNKNOWN_1);
+  return GfFieldVoice::playVoice(object, CV_FIELD_UNKNOWN_18, CV_PRIO_UNKNOWN_1);
 }
 
 GF_SCOM_HANDLE *SCOM_FIELD_VOICE::createSkipTravel(bool isStart) {

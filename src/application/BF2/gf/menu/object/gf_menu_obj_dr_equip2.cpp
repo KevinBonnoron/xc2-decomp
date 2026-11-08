@@ -1,8 +1,32 @@
 #include "gf/menu/object/gf_menu_obj_dr_equip2.h"
 
+#include "gf/menu/call/gf_menu_call_context.h"
+#include "gf/menu/gf_menu_reference_item.h"
+#include "gf/menu/list/gf_menu_driver_list.h"
+#include "gf/menu/list/gf_menu_item_list.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
+#include "mm_mtl/reference_object.h"
+#include "ui/list/ui_select_obj_list.h"
 
 namespace gf {
+
+GfMenuObjDrEquip2::GfMenuObjDrEquip2(u32 handle)
+    : GfMenuObject(handle), unknown24(0), unknown28(false), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr), unknown48(nullptr), unknown50(nullptr), unknown60(nullptr), unknown68(nullptr),
+      unknown70(nullptr), unknown7c(0) {
+  unknown70 = GfMenuCallContext::create();
+}
+
+GfMenuObjDrEquip2::~GfMenuObjDrEquip2() {
+  mm::mtl::safeRelease(unknown70);
+  mm::mtl::safeRelease(unknown40);
+  mm::mtl::safeRelease(unknown48);
+  mm::mtl::safeRelease(unknown50);
+  unknown58 = nullptr;
+  mm::mtl::safeRelease(unknown60);
+  mm::mtl::safeRelease(unknown68);
+  mm::mtl::safeRelease(unknown30);
+  mm::mtl::safeRelease(unknown38);
+}
 
 void GfMenuObjDrEquip2::finalize() { GfMenuObject::finalize(); }
 

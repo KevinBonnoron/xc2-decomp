@@ -178,6 +178,69 @@ void GfInitParamEnemy::setupForActViewerEvent(u32 resource, const CBdatWrapper *
   unknown40 = 7;
 }
 
+void GfInitParamWeapon::setupBladeForEvent(u32 blade) {
+  u32 driver = GfDataBlade::getSetDriver(blade);
+  if (driver == 0) {
+    driver = GfDataBlade::getCreator(blade);
+  }
+  setupForEvent(driver, blade);
+}
+
+void GfInitParamWeapon::setupForEventBlade(u32 blade, GF_OBJ_HANDLE *owner) {
+  unknown08 = unknown030_2;
+  m_bladeID = blade;
+  unknown30 = owner;
+  unknown38 = owner;
+  unknown90 = false;
+}
+
+void GfInitParamWeapon::setupBladeForEventRight(u32 blade) {
+  u32 driver = GfDataBlade::getSetDriver(blade);
+  if (driver == 0) {
+    driver = GfDataBlade::getCreator(blade);
+  }
+  setupForEvent(driver, blade);
+  unknown1e0 = true;
+}
+
+void GfInitParamWeapon::setupBladeForEventCS(u32 blade) {
+  u32 driver = GfDataBlade::getSetDriver(blade);
+  if (driver == 0) {
+    driver = GfDataBlade::getCreator(blade);
+  }
+  setupForEvent(driver, blade);
+  unknown08 = unknown030_3;
+}
+
+void GfInitParamWeapon::setupBladeForEventRightCS(u32 blade) {
+  u32 driver = GfDataBlade::getSetDriver(blade);
+  if (driver == 0) {
+    driver = GfDataBlade::getCreator(blade);
+  }
+  setupForEvent(driver, blade);
+  unknown08 = unknown030_3;
+  unknown1e0 = true;
+}
+
+void GfInitParamWeapon::setupBladeForEventLeft(u32 blade) {
+  u32 driver = GfDataBlade::getSetDriver(blade);
+  if (driver == 0) {
+    driver = GfDataBlade::getCreator(blade);
+  }
+  setupForEvent(driver, blade);
+  unknown1e1 = true;
+}
+
+void GfInitParamWeapon::setupBladeForEventLeftCS(u32 blade) {
+  u32 driver = GfDataBlade::getSetDriver(blade);
+  if (driver == 0) {
+    driver = GfDataBlade::getCreator(blade);
+  }
+  setupForEvent(driver, blade);
+  unknown08 = unknown030_3;
+  unknown1e1 = true;
+}
+
 u32 GfInitParamEnWeapon::getEnArrangeID() const { return m_enArrangeID; }
 
 } // namespace gf

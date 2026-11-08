@@ -10,23 +10,37 @@ namespace skt {
 // Inferred role: parsed argument of a command; original type name unknown.
 struct unknown001 {
   const char *unknown00; // Inferred role: argument string, read by CommandParam::getArg; original member name unknown.
-  u8 _08[0x10 - 0x08];
+  u32 unknown08;         // Inferred role: argument type; original member name unknown.
 };
 
 class CommandParam {
 public:
   void parseCommand(s8 separator);
+  bool isValid(int index) const;
+  const char *getArg(int index) const {
+    if (!isValid(index)) {
+      return "";
+    }
+
+    const char *arg = unknown800[index].unknown00;
+    if (arg == nullptr) {
+      arg = "";
+    }
+
+    return arg;
+  }
+  mm::mtl::FixStr<128> getStr(int index) const;
   bool getS32(int index, int &value) const;
   bool getF32(int index, f32 &value) const;
-  mm::mtl::FixStr<128> getStr(int index) const;
 
-  char unknown000[0x400]; // Inferred role: command line parsed by parseCommand; original member name unknown.
-  u8 _400[0x800 - 0x400];
+  char unknown000[0x400];                          // Inferred role: command line parsed by parseCommand; original member name unknown.
+  char unknown400[0x400];                          // Inferred role: copy of the command line split in place into arguments; original member name unknown.
   mm::mtl::FixedVector<unknown001, 32> unknown800; // Inferred role: arguments; original member name unknown.
   u8 _a08[0xa18 - 0xa08];
 };
 
 static_assert(sizeof(unknown001) == 0x10, "");
+static_assert(offsetof(CommandParam, unknown400) == 0x400, "");
 static_assert(offsetof(CommandParam, unknown800) == 0x800, "");
 static_assert(sizeof(CommandParam) == 0xa18, "");
 

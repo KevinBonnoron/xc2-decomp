@@ -8,6 +8,7 @@
 #include "gf/object/component/property/gf_env_property.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_property.h"
+#include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
 #include "mm_mtl/unique_ptr.h"
 
@@ -49,6 +50,17 @@ bool GfEffectGround::tryGetWaterDepth(const GfComEffectCaster *caster, const GfC
     if (property->unknown18 != nullptr) {
       depth = waterInfo->unknown00 - property->unknown18->unknown34;
       return true;
+    }
+  }
+  return false;
+}
+
+bool GfEffectGround::getGroundEffectFileName(const GfComEffectCaster *caster, u32 type, const char *&fileName) {
+  GfObjSetup *setup = GfObjUtil::getObjSetup(static_cast<GfObj *>(caster->unknown08)->unknownf8);
+  if (setup != nullptr) {
+    GfEnvProperty *env = static_cast<GfObj *>(caster->unknown08)->getComponent<GfComProperty>()->unknown28.get();
+    if (env != nullptr) {
+      return getGroundEffectFileNameImpl(type, setup->getFootStepEffect(), getGroundMaterial(env, caster), fileName);
     }
   }
   return false;

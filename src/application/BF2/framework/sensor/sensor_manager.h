@@ -16,6 +16,8 @@ struct UpdateInfo;
 
 class SensorUpdater : public mm::mtl::IntrusiveListNode<SensorUpdater> {
 public:
+  SensorUpdater() : unknown30(false) {}
+
   mm::mtl::Delegate<void()> unknown10; // Inferred role: update callback; original member name unknown.
   bool unknown30;                      // Inferred role: registered; original member name unknown.
 };

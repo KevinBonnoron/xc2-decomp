@@ -9,6 +9,8 @@ namespace gf {
 
 class GfMenuObjTutorial : public GfMenuObject {
 public:
+  GfMenuObjTutorial(u32 handle);
+  ~GfMenuObjTutorial() override;
   static void closeAll();
   static void closeText(u32 param);
   static void closeFocus(u32 param);

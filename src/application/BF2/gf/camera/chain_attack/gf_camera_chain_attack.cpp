@@ -2,6 +2,9 @@
 
 #include <math.h>
 
+#include "fw/fw_camera.h"
+#include "mm_mtl/intrusive_ptr.h"
+
 namespace gf {
 
 ChainAttackCameraEntity::~ChainAttackCameraEntity() {}
@@ -66,5 +69,22 @@ void ChainAttackCameraEntity::setMoveType(int moveType) { unknown118 = moveType;
 const mm::mtl::RTTI *ChainAttackCameraEntity::getRTTI() const { return &m_rtti; }
 
 const char *ChainAttackCameraEntity::getName() const { return "ChainAttackCameraEntity"; }
+
+ChainAttackCamera::~ChainAttackCamera() {}
+
+void ChainAttackCamera::start() {}
+
+void ChainAttackCamera::end() { destroyCamera(&unknown08, 0.0f); }
+
+void ChainAttackCamera::destroyCamera(mm::mtl::IntrusivePtr<fw::Camera> *camera, f32 time) {
+  if (camera->get() != nullptr) {
+    if (!(*camera)->unknowna0) {
+      *camera = nullptr;
+    } else {
+      fw::CameraManager::get()->unknown20[0].pop(*camera, time);
+      *camera = nullptr;
+    }
+  }
+}
 
 } // namespace gf

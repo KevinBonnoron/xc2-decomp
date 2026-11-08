@@ -3,17 +3,22 @@
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_data_weapon.h"
 #include "gf/data/gf_object_type.h"
+#include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_fullscreen.h"
+#include "gf/menu/gf_menu_reference_number.h"
 #include "gf/menu/gf_menu_types.h"
+#include "gf/menu/list/gf_menu_blade_list.h"
+#include "gf/menu/list/gf_menu_item_list.h"
 #include "gf/menu/object/gf_menu_obj_mainmenu2.h"
 #include "gf/menu/object/gf_menu_obj_operation_info.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
+#include "mm_mtl/reference_object.h"
 #include "ui/event/ui_event_data.h"
+#include "ui/list/ui_select_obj_list.h"
 #include "ui/ui_manager.h"
 #include "ui/ui_object_acc.h"
 
 namespace gf {
-class GfMenuCallContext;
 
 // Inferred role: attached call id; original name unknown.
 constexpr u32 unknown001 = 0x68;
@@ -23,6 +28,20 @@ constexpr u32 unknown003 = 0x21;
 
 // Inferred role: shop layer; original name unknown.
 constexpr u32 unknown004 = 0x2d;
+
+GfMenuObjBlWeapon2::GfMenuObjBlWeapon2(u32 handle)
+    : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown40(nullptr), unknown58(this), unknown2e8(false), unknown2ec(0), unknown2f0(0), unknown2f8(nullptr), unknown300(false) {
+  unknown50 = GfMenuCallContext::create();
+}
+
+GfMenuObjBlWeapon2::~GfMenuObjBlWeapon2() {
+  mm::mtl::safeRelease(unknown50);
+  mm::mtl::safeRelease(unknown28);
+  mm::mtl::safeRelease(unknown30);
+  unknown38 = nullptr;
+  mm::mtl::safeRelease(unknown40);
+  mm::mtl::safeRelease(unknown2f8);
+}
 
 void GfMenuObjBlWeapon2::registOpenParam(const OpenParam &param) {
   GfMenuTypes::Param layerParam;

@@ -48,7 +48,7 @@ GfMenuGameAdapter::GfMenuGameAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAl
 
 GfMenuGameAdapter::~GfMenuGameAdapter() {}
 
-GfMenuAdapter *GfMenuGameAdapter::create(u32 handle, u32 type, bool isUpdateAlways) {
+GfMenuGameAdapter *GfMenuGameAdapter::create(u32 handle, u32 type, bool isUpdateAlways) {
   ui::UIObjectAcc acc(handle);
   if (acc.isValid()) {
     TypeInfo &info = TYPE_INFOS[type];

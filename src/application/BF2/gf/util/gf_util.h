@@ -13,6 +13,7 @@ namespace util {
 bool getScreenPos(mm::Vec3 &screenPos, const mm::Vec3 &position);
 bool isInsideView(const mm::Vec3 &position, f32 radius);
 void getViewLocalToDeviceCoord(mm::Vec3 &device, const mm::Mat44 &frustum, const mm::Vec3 &local);
+void getDeviceCoordToViewLocal(mm::Vec3 &local, const mm::Mat44 &frustum, const mm::Vec3 &device);
 bool getHitCollision(mm::Vec3 &hit, const mm::Vec3 &start, const mm::Vec3 &end);
 bool getUnderHitCollision(mm::Vec3 &hit, const mm::Vec3 &position, f32 distance);
 bool getUpperHitCollision(mm::Vec3 &hit, const mm::Vec3 &position, f32 distance);

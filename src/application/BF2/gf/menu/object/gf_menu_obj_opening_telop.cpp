@@ -1,8 +1,11 @@
 #include "gf/menu/object/gf_menu_obj_opening_telop.h"
 
+#include "gf/gf_allocator.h"
 #include "gf/menu/gf_menu_object.h"
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
+#include "mm_mtl/reference_object.h"
+#include "ui/list/ui_select_obj_list.h"
 
 namespace gf {
 
@@ -12,6 +15,14 @@ constexpr u32 unknown001 = 0x82;
 constexpr u32 unknown002_0 = 0;
 constexpr u32 unknown002_1 = 1;
 constexpr u32 unknown002_2 = 2;
+
+GfMenuObjOpeningTelop::GfMenuObjOpeningTelop(u32 handle) : GfMenuObject(handle), unknown24(0), unknown28(0), unknown2c(0), unknown30(nullptr) {
+  ui::UISelectObjList::CreateParam param;
+  param.allocator = getAllocator(ALLOCATOR_DEFAULT);
+  unknown30 = ui::UISelectObjList::create(param);
+}
+
+GfMenuObjOpeningTelop::~GfMenuObjOpeningTelop() { mm::mtl::safeRelease(unknown30); }
 
 void GfMenuObjOpeningTelop::openCenter(u32 telop) { unknown141(unknown001, GfMenuTypes::unknown003_33, unknown002_0, telop); }
 

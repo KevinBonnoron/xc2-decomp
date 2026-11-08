@@ -89,6 +89,7 @@ public:
   void addVolumeMulti(f32 (*function)(f32, f32, f32), f32 arg0, f32 arg1, f32 arg2);
   void calcMultiplyVolume(const fw::UpdateInfo &info);
   bool getPlayVolume(f32 &volume, const fw::UpdateInfo &info, const BGMCOND &cond, bool isFadeOut);
+  void copyPlayParam(BgmTrack *src);
   void copyPlayParam(BgmTrack *src, const BgmFileInfo &info);
   bool makeBgmFile(mm::mtl::FixStr<64> &name, u32 &bgmID, u32 bgmCondID, u32 index) const;
   const char *getPlayingBgmFileName() const;
@@ -215,6 +216,7 @@ extern bool s_bStopBGM;
 
 class GfFieldBgm : public mm::mtl::PtrSingleton<GfFieldBgm> {
 public:
+  ~GfFieldBgm() override;
   u32 getRscFieldBgmID() const;
   u32 getRscBossBattleBgmID() const;
   u32 getRscBattleBgmID() const;
@@ -226,8 +228,11 @@ public:
   void gevBattleEnd();
   void gevPlayEvent(GEV gev, u32 value);
   void gevPause(u32 resumeBits, u32 pauseBits);
+  void setPause(bool isPause);
   void update(const fw::UpdateInfo &info);
   void destroy();
+  void updateBattleBgm(const fw::UpdateInfo &info);
+  void transferSoundParam(BgmTrack *track);
   void gevMapjump(GEV gev, const MapjumpCallbackInfo &info);
   void applyMapJumpStart(const MapjumpCallbackInfo &info);
   void applyMapJumpFadein(const MapjumpCallbackInfo &info);
@@ -238,7 +243,7 @@ public:
 
   mm::mtl::FixedVector<BgmTrack *, 16> unknown08; // Inferred role: bgm tracks; original member name unknown.
   u32 m_rscBossBattleBgmID;
-  u32 unknown94; // Inferred role: boss battle bgm frame counter; original member name unknown.
+  s32 unknown94; // Inferred role: boss battle bgm frame counter; original member name unknown.
   u32 m_rscBattleBgmID;
   u32 m_rscGimmickBgmID;
   u32 m_gimmickBgmID;

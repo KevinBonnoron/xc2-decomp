@@ -4,9 +4,13 @@
 
 namespace gf {
 
+class GfMenuCallContext;
+struct QuestID;
+
 class GfMenuObjQuestOrder : public GfMenuObject {
 public:
   static void close();
+  static void open(GfMenuCallContext *context, QuestID quest);
   GfMenuObjQuestOrder(u32 handle);
   ~GfMenuObjQuestOrder() override;
   void initialize() override;

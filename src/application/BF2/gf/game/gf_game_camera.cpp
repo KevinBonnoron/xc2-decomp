@@ -11,6 +11,8 @@ void GfGameCamera::clear() {}
 
 void GfGameCamera::setCameraControlType(int type) { GfEvent::callCameraControl(type); }
 
+GfGameCamera::~GfGameCamera() { ; }
+
 bool GfGameCamera::isInitialized() {
   if (get() != nullptr) {
     return get()->unknown20;

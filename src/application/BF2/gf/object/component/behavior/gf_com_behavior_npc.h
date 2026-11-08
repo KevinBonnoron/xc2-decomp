@@ -4,13 +4,16 @@
 #include "ai/ai_state_hfsm.h"
 #include "gf/field/gf_field_exec_cmd_turn.h"
 #include "gf/field/gf_field_local_steer.h"
+#include "gf/field/gf_field_look_ik.h"
+#include "gf/field/gf_field_move_speed.h"
+#include "gf/game/gf_game_stuck_meter.h"
 #include "gf/object/component/behavior/gf_com_behavior.h"
+#include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
 
 namespace mm {
-struct Quat;
 
 namespace mtl {
 class RTTI;
@@ -92,6 +95,12 @@ public:
     bool unknown1a; // Inferred role: talk bonus enabled; original member name unknown.
   };
 
+  ~GfComBehaviorNpc() override;
+  const mm::mtl::RTTI *getRTTI() const override;
+  virtual GfComAsm *getComAsm() const;
+
+  void cleanup();
+
   void procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message);
   void procMsgPcFieldNotifyAction(fw::MessageObject *sender, MsgPcFieldNotifyAction &message);
   void procMsgPcFieldGetAccessType(fw::MessageObject *sender, MsgPcFieldGetAccessType &message);
@@ -115,12 +124,44 @@ public:
   void initStateId(npc::STATE_ID stateId);
   void validateLocalSteer(npc::STATE_ID stateId);
   void setActivateCollison(bool isActivate);
-  GfComAsm *getComAsm() const;
+  void createFsm();
+  void createNaviMeshObj();
+  void updateNaviMeshObj(f32 deltaTime);
+  void init(bool param1);
+  bool isStateCondMatch(npc::STATE_ID stateId);
+  int getNexStateId();
+  void execTurnCmd(f32 angle);
+  void execTurnCmd(f32 angle, f32 param2, f32 param3, f32 param4);
+  void execTurnCmdToGoal();
+  void execTurnCmdToPos(const mm::Vec3 &position);
+  void moveToGoal(f32 deltaTime);
 
-  u8 _98[0xb8 - 0x98];
+  // Inferred helper: rotation of the object kept by the reaction state; original name unknown.
+  mm::Quat &unknown003() { return unknownd0; }
+
+  // Inferred helper: turn command; original name unknown.
+  TFieldExecCmdTurn<GfComAsm> &unknown004() { return unknown2e0; }
+
+  // Inferred helper: goal position; original name unknown.
+  mm::Vec3 &unknown005() { return unknownc0; }
+
+  // Inferred helper: reaction motion; original name unknown.
+  u16 unknown006() const { return unknown98.unknown12; }
+
+  // Inferred helper: battle motion; original name unknown.
+  u16 unknown007() const { return unknown98.unknown16; }
+
+  // Inferred helper: battle reaction; original name unknown.
+  u16 unknown008() const { return unknown98.unknown14; }
+
+  BdatInfo unknown98; // Inferred role: bdat parameters; original member name unknown.
+  u8 _b4[0xb8 - 0xb4];
   navi::NvmshAcObj *unknownb8; // Inferred role: navi mesh object; original member name unknown.
   mm::Vec3 unknownc0;          // Inferred role: goal position; original member name unknown.
-  u8 _d0[0xf0 - 0xd0];
+  mm::Quat unknownd0;          // Inferred role: rotation; original member name unknown.
+  f32 unknowne0;               // Inferred role: squared distance to the player on the ground plane; original member name unknown.
+  f32 unknowne4;               // Inferred role: squared height difference to the player; original member name unknown.
+  u8 _e8[0xf0 - 0xe8];
   mm::Vec3 unknownf0; // Inferred role: velocity; original member name unknown.
   bool unknown100;    // Role and original member name unknown.
   u8 _101[0x108 - 0x101];
@@ -130,12 +171,13 @@ public:
   Listener unknown1a0;                                  // Inferred role: listener; original member name unknown.
   GfMenuCallContext *unknown1b0;                        // Inferred role: target info menu context; original member name unknown.
   mm::mtl::IntrusivePtr<fw::ReferenceFrame> unknown1b8; // Inferred role: look point frame; original member name unknown.
-  u8 _1c0[0x240 - 0x1c0];
-  bool unknown240; // Inferred role: set when the talk access ends; original member name unknown.
-  u8 _241[0x2e0 - 0x241];
-  TFieldExecCmdTurn<GfComAsm> unknown2e0;  // Inferred role: turn command; original member name unknown.
-  GfFieldLocalSteer unknown350;            // Inferred role: local steer; original member name unknown.
-  LocalSteerIsTargetNotPlayer unknown53b0; // Inferred role: predicate of the local steer while approaching the player; original member name unknown.
+  GfGameStuckMeter unknown1c0;                          // Inferred role: stuck meter; original member name unknown.
+  GfGameDepopMeter unknown220;                          // Inferred role: depop meter, its flag is cleared while the player talks to the npc; original member name unknown.
+  GfFieldMoveSpeed unknown270;                          // Inferred role: move speed; original member name unknown.
+  GfFieldLookIk unknown2a0;                             // Inferred role: look ik; original member name unknown.
+  TFieldExecCmdTurn<GfComAsm> unknown2e0;               // Inferred role: turn command; original member name unknown.
+  GfFieldLocalSteer unknown350;                         // Inferred role: local steer; original member name unknown.
+  LocalSteerIsTargetNotPlayer unknown53b0;              // Inferred role: predicate of the local steer while approaching the player; original member name unknown.
 };
 
 static_assert(offsetof(GfComBehaviorNpc::BdatInfo, unknown04) == 0x04, "");
@@ -145,6 +187,9 @@ static_assert(sizeof(GfComBehaviorNpc::BdatInfo) == 0x1c, "");
 static_assert(sizeof(GfComBehaviorNpc::Listener) == 0x10, "");
 static_assert(offsetof(GfComBehaviorNpc, unknownb8) == 0xb8, "");
 static_assert(offsetof(GfComBehaviorNpc, unknownc0) == 0xc0, "");
+static_assert(offsetof(GfComBehaviorNpc, unknownd0) == 0xd0, "");
+static_assert(offsetof(GfComBehaviorNpc, unknowne0) == 0xe0, "");
+static_assert(offsetof(GfComBehaviorNpc, unknowne4) == 0xe4, "");
 static_assert(offsetof(GfComBehaviorNpc, unknownf0) == 0xf0, "");
 static_assert(offsetof(GfComBehaviorNpc, unknown100) == 0x100, "");
 static_assert(offsetof(GfComBehaviorNpc, unknown108) == 0x108, "");
@@ -153,7 +198,10 @@ static_assert(offsetof(GfComBehaviorNpc, unknown198) == 0x198, "");
 static_assert(offsetof(GfComBehaviorNpc, unknown1a0) == 0x1a0, "");
 static_assert(offsetof(GfComBehaviorNpc, unknown1b0) == 0x1b0, "");
 static_assert(offsetof(GfComBehaviorNpc, unknown1b8) == 0x1b8, "");
-static_assert(offsetof(GfComBehaviorNpc, unknown240) == 0x240, "");
+static_assert(offsetof(GfComBehaviorNpc, unknown1c0) == 0x1c0, "");
+static_assert(offsetof(GfComBehaviorNpc, unknown220) == 0x220, "");
+static_assert(offsetof(GfComBehaviorNpc, unknown270) == 0x270, "");
+static_assert(offsetof(GfComBehaviorNpc, unknown2a0) == 0x2a0, "");
 static_assert(offsetof(GfComBehaviorNpc, unknown2e0) == 0x2e0, "");
 static_assert(offsetof(GfComBehaviorNpc, unknown350) == 0x350, "");
 static_assert(offsetof(GfComBehaviorNpc, unknown53b0) == 0x53b0, "");

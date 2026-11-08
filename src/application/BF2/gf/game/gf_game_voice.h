@@ -114,8 +114,8 @@ public:
   VoiceInfo *getPlayInfo(GAME_VOICE_HANDLE *voice);
   VoiceInfo *getInfoLowestPrio();
   static void destroyVoiceAll();
-  static u32 getResult(GAME_VOICE_HANDLE *voice);
-  static u32 getResult(GF_OBJ_HANDLE *handle);
+  static int getResult(GAME_VOICE_HANDLE *voice);
+  static int getResult(GF_OBJ_HANDLE *handle);
   static GAME_VOICE_HANDLE *playVoice(const ParamObj &object, const char *name, CV_PRIO priority);
   static GAME_VOICE_HANDLE *playVoice(GF_OBJ_HANDLE *handle, const char *name, CV_PRIO priority);
   static GAME_VOICE_HANDLE *playVoice(u32 type, u32 id, const char *name, CV_PRIO priority);

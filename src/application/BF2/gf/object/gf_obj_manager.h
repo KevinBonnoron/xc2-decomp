@@ -25,6 +25,7 @@ struct GF_MOUNT_HANDLE;
 struct GF_OBJ_HANDLE;
 class GfAssetMultiBind;
 class GfComModel;
+class GfInitParam;
 class GfObj;
 class GfObjProperty;
 class GfObjSetup;
@@ -175,6 +176,8 @@ public:
   const mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096> *getLoadingObj() const;
   const mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096> *getDestroyObj() const;
   u32 createGfObjHandle(const GFOBJ_INFO *info, u32 index, int multiBind);
+  GF_OBJ_HANDLE *createGfObj(u32 objectType, const GfInitParam &param);
+  void addFollowObj(GF_OBJ_HANDLE *handle);
 
   bool unknown10; // Inferred role: initialized; original member name unknown.
   u32 unknown14;  // Inferred role: handle generation; original member name unknown.

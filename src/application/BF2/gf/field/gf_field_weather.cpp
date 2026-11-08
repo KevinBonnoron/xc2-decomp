@@ -185,6 +185,11 @@ void setPause(bool isPause) {
 
 } // namespace _gffwt
 
+GfFieldWeather::GfFieldWeather(const GfSetupParam &param)
+    : unknown08(false), unknown09(false), unknown0a(false), unknown74(0), unknown78(CLOUD_SEA_HANDLE(0)), unknown7c(CLOUD_SEA_REQUEST_NONE), unknown80(CLOUD_SEA_HANDLE(0)), unknown84(true) {
+  initialize(param);
+}
+
 void GfFieldWeather::initialize(const GfSetupParam &) {
   _gffwt::destroyList();
   createCloudSeaDefault();

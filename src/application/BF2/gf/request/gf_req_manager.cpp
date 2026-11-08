@@ -12,6 +12,8 @@ struct FiberType;
 } // namespace nn
 namespace gf {
 
+GfReqManager::~GfReqManager() {}
+
 void GfReqManager::destroy() {
   GfReqManager *manager = get();
   manager->finalize();

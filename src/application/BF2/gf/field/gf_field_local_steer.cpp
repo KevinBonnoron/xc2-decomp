@@ -3,9 +3,12 @@
 #include <math.h>
 #include <string.h>
 
+#include "framework/object/component_object.h"
 #include "fw/fw_coli_check.h"
 #include "fw/fw_transform.h"
 #include "gf/asset/gf_asset_manager.h"
+#include "gf/object/component/animation/gf_com_asm.h"
+#include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
@@ -14,6 +17,7 @@
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_math.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/fixstr.h"
 #include "navi/nvmsh_ac_obj.h"
 
 namespace gf {
@@ -138,6 +142,20 @@ bool getMoveVec(mm::Vec3 &vector, const navi::NvmshAcObj *navi) {
   if (canGetMoveVec(navi)) {
     vector = navi->getMoveVec();
     return true;
+  }
+  return false;
+}
+
+bool execEndSchedule(fw::ComponentObject &component) {
+  GfComAsm *comAsm = static_cast<GfObj *>(component.unknown08)->getComponent<GfComAsm>();
+  if (comAsm != nullptr) {
+    const char *state = comAsm->getStateName(ANIM_LAYER_BASE);
+    if (state != nullptr && strstr(state, "S_schedule_") != nullptr) {
+      mm::mtl::FixStr<32> command(state);
+      command[0] = 'C';
+      command[command.length() - 1] = '2';
+      return comAsm->execCmd(command.c_str(), ANIM_LAYER_BASE);
+    }
   }
   return false;
 }

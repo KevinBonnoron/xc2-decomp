@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "gf/data/gf_data_blade.h"
+#include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/game/gf_game_voice.h"
 #include "gf/game/quest/gf_quest_id.h"
@@ -337,7 +338,7 @@ public:
   static GF_SCOM_HANDLE *createMercenariesStart(u32 blade);
   static GF_SCOM_HANDLE *createMercenariesEnd(u32 blade);
   static GF_SCOM_HANDLE *createMercenariesResult(u32 blade);
-  static void createReleaseBlade(u32 blade);
+  static GAME_VOICE_HANDLE *createReleaseBlade(u32 blade);
   static GF_SCOM_HANDLE *createSkipTravel(bool isStart);
   static GF_SCOM_HANDLE *createRestart(CV_FIELD voice);
   static GAME_VOICE_HANDLE *createEnemy(CV_FIELD voice);
@@ -349,6 +350,7 @@ public:
   static GAME_VOICE_HANDLE *createFieldSkillClear(u32 skill);
   static GAME_VOICE_HANDLE *createFieldSkillMiss(u32 skill);
   static GAME_VOICE_HANDLE *createDriverKizuna(u32 driver);
+  static GAME_VOICE_HANDLE *createFavorite(u32 driver, FAVORITE favorite);
 
   mm::mtl::FixedQueue<unknown001, 4> unknown20; // Inferred role: voices to play in order; original member name unknown.
   bool unknownd0;                               // Inferred role: wait until control is free; original member name unknown.
@@ -1018,6 +1020,7 @@ static_assert(sizeof(SCOM_STOP_BATTLE) == 0x20, "");
 
 class GfReqSmallCom : public mm::mtl::PtrSingleton<GfReqSmallCom> {
 public:
+  ~GfReqSmallCom() override;
   static GF_SCOM_HANDLE *addRequest(SCOM *scom);
   static GF_SCOM_HANDLE *addRequestParallel(SCOM *scom);
   GF_SCOM_HANDLE *allocate();

@@ -1,9 +1,13 @@
 #include "gf/menu/object/gf_menu_obj_cmn_status.h"
 
+#include "gf/gf_allocator.h"
 #include "gf/menu/gf_menu_reference.h"
 #include "gf/menu/gf_menu_types.h"
+#include "mm_mtl/reference_object.h"
 #include "types.h"
+#include "ui/ctrl/ui_ctrl_radar_graph.h"
 #include "ui/event/ui_event_data.h"
+#include "ui/list/ui_select_obj_list.h"
 #include "ui/ui_object_acc.h"
 
 namespace gf {
@@ -12,6 +16,21 @@ namespace gf {
 constexpr u32 unknown001 = 0x52;
 
 bool GfMenuObjCmnStatus::s_DispFlag[2];
+
+GfMenuObjCmnStatus::GfMenuObjCmnStatus(u32 handle) : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr) {
+  ui::UISelectObjList::CreateParam param;
+  param.allocator = getAllocator(ALLOCATOR_DEFAULT);
+  unknown28 = ui::UISelectObjList::create(param);
+  param = ui::UISelectObjList::CreateParam();
+  param.allocator = getAllocator(ALLOCATOR_DEFAULT);
+  unknown30 = ui::UISelectObjList::create(param);
+}
+
+GfMenuObjCmnStatus::~GfMenuObjCmnStatus() {
+  mm::mtl::safeRelease(unknown28);
+  mm::mtl::safeRelease(unknown30);
+  mm::mtl::safeRelease(unknown38);
+}
 
 bool GfMenuObjCmnStatus::isOpenDrStatus() { return s_DispFlag[0]; }
 

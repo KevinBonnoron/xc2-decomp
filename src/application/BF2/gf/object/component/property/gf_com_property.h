@@ -66,6 +66,9 @@ struct MsgObjectMaxHp;
 struct MsgObjectSetHp;
 struct MsgObjectStopAutoHeal;
 struct MsgObjectLimitHP;
+struct MsgObjectDead;
+struct MsgObjectNotifyDead;
+struct MsgGameChangeTarget;
 
 class GfComProperty : public GfComponent {
 public:
@@ -75,6 +78,11 @@ public:
   GfComProperty();
   ~GfComProperty() override;
   bool recieveMessage(fw::MessageObject *sender, fw::Message &message) override;
+  void changeLayer(u32 oldLayer, u32 newLayer) override;
+  const mm::mtl::RTTI *getRTTI() const override;
+  void onDead(MsgObjectNotifyDead &message);
+  void procMsgObjectDead(fw::MessageObject *object, MsgObjectDead &message);
+  void procMsgGameChangeTarget(fw::MessageObject *object, MsgGameChangeTarget &message);
   void flush();
   void procMsgObjectInvincible(fw::MessageObject *object, MsgObjectInvincible &message);
   void procMsgObjectMaxHp(fw::MessageObject *object, MsgObjectMaxHp &message);
@@ -210,7 +218,9 @@ struct MsgObjectAlpha : fw::Message {
   f32 alpha;
 };
 
-struct MsgObjectFlushProperty : fw::Message {};
+struct MsgObjectFlushProperty : fw::Message {
+  MsgObjectFlushProperty() : fw::Message(MSG_OBJECT_FLUSH_PROPERTY, 0x20) {}
+};
 
 struct MsgGameChangeTarget : fw::Message {
   MsgGameChangeTarget(GF_OBJ_HANDLE *target) : fw::Message(0x100002b, 0x20), unknown08(target) {}

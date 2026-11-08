@@ -9,6 +9,12 @@ namespace gf {
 // Inferred role: call id; original name unknown.
 constexpr u32 unknown001 = 0x4a;
 
+GfMenuObjCommonJog::GfMenuObjCommonJog(u32 handle)
+    : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(0), unknown48(nullptr), unknown50(nullptr), unknown58(0), unknown5c(false), unknown5e(0),
+      unknown60(0), unknown64(-1) {}
+
+GfMenuObjCommonJog::~GfMenuObjCommonJog() { ; }
+
 void GfMenuObjCommonJog::update() { GfMenuObject::update(); }
 
 void GfMenuObjCommonJog::close(GfMenuCallContext *context) {

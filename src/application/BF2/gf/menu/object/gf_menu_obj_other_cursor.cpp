@@ -3,6 +3,10 @@
 
 namespace gf {
 
+GfMenuObjOtherCursor::GfMenuObjOtherCursor(u32 handle) : GfMenuObject(handle), unknown24(0), unknown30(0) {}
+
+GfMenuObjOtherCursor::~GfMenuObjOtherCursor() { ; }
+
 void GfMenuObjOtherCursor::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjOtherCursor::disp(bool disp) {

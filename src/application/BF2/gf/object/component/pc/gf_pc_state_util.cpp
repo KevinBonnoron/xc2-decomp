@@ -2,6 +2,7 @@
 
 #include "framework/object/component_object.h"
 #include "framework/object/updatable_object.h"
+#include "framework/pad/pad_relay_util.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_party.h"
 #include "gf/game/gf_game_player_camera.h"
@@ -28,6 +29,16 @@
 
 namespace gf {
 namespace pc {
+
+u32 StateUtil::getFwPadKey(const char *name) {
+  u32 key = 0;
+  for (u32 padIndex = 0; padIndex < 5; padIndex++) {
+    if (fw::PadRelayUtil::getFwPadKey(padIndex, name, 0, 0, &key)) {
+      break;
+    }
+  }
+  return key;
+}
 
 void StateUtil::resetCamera() { GfGamePlayerCamera::resetCamera(); }
 

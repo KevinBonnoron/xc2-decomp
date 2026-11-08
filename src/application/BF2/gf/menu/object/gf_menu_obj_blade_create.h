@@ -40,6 +40,7 @@ public:
   static void openCreatedBladeName(GfMenuCallContext *context);
   void update() override;
   u32 getPageObject(u32 handle, u32 page, bool isSibling);
+  static u32 getDriverCameraIndex(u32 driver);
   void nextPage(u32 handle, PageContext *context, bool isSibling);
   void changePage(u32 handle, PageContext *context, u32 page, bool isSibling, bool isReturn);
   void returnPage(u32 handle, PageContext *context, bool isSibling);

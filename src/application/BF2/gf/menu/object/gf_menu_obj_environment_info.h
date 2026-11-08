@@ -10,6 +10,7 @@ public:
   static void open();
   static void disable();
   static void enable();
+  static void createAdapter(u32 handle, const char *name, u32 type);
   GfMenuObjEnvironmentInfo(u32 handle);
   ~GfMenuObjEnvironmentInfo() override;
   void initialize() override;

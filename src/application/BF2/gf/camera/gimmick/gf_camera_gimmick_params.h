@@ -9,7 +9,13 @@ namespace gf {
 class GimmickCameraParams {
 public:
   struct Param {
-    u8 _00[0x2c];
+    f32 unknown00; // Inferred role: position x, read by the GfMenuModelViewCamera constructor; original member name unknown.
+    f32 unknown04; // Inferred role: position y; original member name unknown.
+    f32 unknown08; // Inferred role: position z; original member name unknown.
+    f32 unknown0c; // Inferred role: rotation x; original member name unknown.
+    f32 unknown10; // Inferred role: rotation y; original member name unknown.
+    f32 unknown14; // Inferred role: rotation z; original member name unknown.
+    u8 _18[0x2c - 0x18];
   };
 
   GimmickCameraParams();

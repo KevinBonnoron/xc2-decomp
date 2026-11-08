@@ -40,6 +40,9 @@ const char *const unknown002[6] = {"LAY_dr_select", "LAY_core_select", "LAY_bst_
 // Inferred role: object type of the drivers in the model view; original name unknown.
 constexpr u32 unknown003 = 3;
 
+// Inferred role: driver of each camera of the driver select page; original name unknown.
+const u32 unknown004[16] = {1, 2, 6, 3, 0x15, 0x13, 0x15, 0x15, 0xb9, 0xba, 0xbb, 0xbc, 0x154, 0x151, 0xffffffff, 0x150};
+
 void GfMenuObjBladeCreate::registOpenParam(const OpenParam &param) {
   GfMenuTypes::Param layerParam;
   layerParam.set(param);
@@ -59,6 +62,14 @@ u32 GfMenuObjBladeCreate::getPageObject(u32 handle, u32 page, bool isSibling) {
     }
   }
   return object;
+}
+
+u32 GfMenuObjBladeCreate::getDriverCameraIndex(u32 driver) {
+  u32 index = 0;
+  while (unknown004[index] != driver) {
+    index++;
+  }
+  return index;
 }
 
 void GfMenuObjBladeCreate::nextPage(u32 handle, PageContext *context, bool isSibling) {

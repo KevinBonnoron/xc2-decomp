@@ -23,6 +23,12 @@ void getViewLocalToDeviceCoord(mm::Vec3 &device, const mm::Mat44 &frustum, const
   device.z = -frustum.rows[3][2] / local.z - frustum.rows[2][2];
 }
 
+void getDeviceCoordToViewLocal(mm::Vec3 &local, const mm::Mat44 &frustum, const mm::Vec3 &device) {
+  local.z = -frustum.rows[3][2] / (device.z + frustum.rows[2][2]);
+  local.x = local.z * ((device.x + frustum.rows[2][0]) / frustum.rows[0][0]);
+  local.y = ((device.y + frustum.rows[2][1]) / frustum.rows[1][1]) * local.z;
+}
+
 bool getHitCollision(mm::Vec3 &hit, const mm::Vec3 &start, const mm::Vec3 &end) {
   fw::TColiCheckResult<256> result;
   fw::ColiCheckConfig config;

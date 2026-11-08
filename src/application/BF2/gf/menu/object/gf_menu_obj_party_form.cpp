@@ -2,6 +2,10 @@
 
 namespace gf {
 
+GfMenuObjPartyForm::GfMenuObjPartyForm(u32 handle) : GfMenuObject(handle) {}
+
+GfMenuObjPartyForm::~GfMenuObjPartyForm() {}
+
 void GfMenuObjPartyForm::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjPartyForm::update() { GfMenuObject::update(); }

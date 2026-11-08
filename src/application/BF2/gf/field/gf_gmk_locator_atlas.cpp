@@ -9,6 +9,7 @@
 #include "gf/gf_allocator.h"
 #include "gf/menu/gf_menu_map_info.h"
 #include "gmk/gmk_bdat.h"
+#include "gmk/gmk_manager.h"
 
 namespace gf {
 
@@ -115,6 +116,14 @@ bool GfGmkLocatorAtlas::isBelongToCurMap(const mm::Vec3 &position) const {
     }
   }
   return true;
+}
+
+void GfGmkLocatorAtlas::seqWaitToCreateCurMapGmkSet(f32) {
+  gmk::GmkManager *manager = gmk::GmkManager::get();
+  if (!manager->unknownf358.empty()) {
+    unknown60 = manager->unknownf358[0];
+    unknown438 = &GfGmkLocatorAtlas::seqWaitToCreateGmkSet;
+  }
 }
 
 } // namespace gf

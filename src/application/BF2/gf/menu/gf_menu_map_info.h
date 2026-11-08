@@ -20,6 +20,8 @@ public:
   // Layout evidence: getMapArea(int, u32) at 0x71003c8658 returns the elements of 0x48 bytes of the map asset and
   // getMapAreaFromName(int, const char *, MapAreaInfo &) copies one of them into a MapAreaInfo.
   struct MapAreaInfo {
+    MapAreaInfo() : unknown20(0.0f), unknown24(0.0f), unknown28(0.0f), unknown2c(0.0f), unknown30(0.0f), unknown34(0.0f), _38() { unknown00[0] = 0; }
+
     char unknown00[0x20]; // Inferred role: area name; original member name unknown.
     f32 unknown20;        // Inferred role: minimum x; original member name unknown.
     f32 unknown24;        // Inferred role: minimum y; original member name unknown.

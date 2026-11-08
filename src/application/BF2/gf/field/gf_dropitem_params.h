@@ -9,6 +9,7 @@ namespace gf {
 
 class GfDropitemParams {
 public:
+  GfDropitemParams();
   virtual ~GfDropitemParams() {}
   void create();
   void dispose();

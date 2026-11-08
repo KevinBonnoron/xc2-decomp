@@ -5,20 +5,28 @@
 #include "gf/menu/gf_menu_object.h"
 #include "gf/menu/gf_menu_sequence.h"
 #include "gf/object/gf_obj_handle.h"
+#include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_vector.h"
+#include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
 
 namespace ui {
 class UIObjectAcc;
+class UISelectObjList;
+class UIStr;
 } // namespace ui
 
 namespace gf {
 
 class GfMenuCallContext;
+class GfMenuReferenceItem;
 struct GF_OBJ_HANDLE;
 
 class GfMenuObjBalloon : public GfMenuObject {
 public:
+  GfMenuObjBalloon(u32 handle);
+  ~GfMenuObjBalloon() override;
+  static void setFeeling(ui::UIObjectAcc &acc, const ui::UIStr &string);
   static void resetFeeling(ui::UIObjectAcc &acc);
   void initialize() override;
   void finalize() override;
@@ -74,12 +82,35 @@ public:
   static void openEventSelectBox(GfMenuCallContext *context, const OpenSelectBoxParam &param);
   static void openEventSelectMoney(GfMenuCallContext *context, const OpenSelectMoneyParam &param);
   static bool openGetItem(GfMenuCallContext *context, const OpenGetItemParam &param);
+  static u32 openCommon(GfMenuCallContext *context, u32 call, GF_OBJ_HANDLE *handle, const MenuOffset &offset, u32 type, bool isAutoTalk);
+  static void setup(u32 object, GF_OBJ_HANDLE *handle, const MenuOffset &offset, bool isUpdate, u32 type, bool isAutoTalk);
+  static u32 getFeeling(const ui::UIStr &string);
+  bool seqSave();
+  bool seqSaveWait();
 
-  u8 _24[0x78 - 0x24];
-  GfMenuSequence<GfMenuObjBalloon, 4> unknown78; // Inferred role: queued steps; original member name unknown.
+  u8 _24[0x28 - 0x24];
+  u64 unknown28;                                                                // Role and original member name unknown, cleared by the constructor.
+  u64 unknown30;                                                                // Role and original member name unknown, cleared by the constructor.
+  ui::UISelectObjList *unknown38;                                               // Inferred role: message objects; original member name unknown.
+  ui::UISelectObjList *unknown40;                                               // Inferred role: select objects; original member name unknown.
+  mm::mtl::FixedVector<u32, 4> unknown48;                                       // Inferred role: unused; original member name unknown.
+  mm::mtl::FixedArray<mm::mtl::IntrusivePtr<GfMenuReferenceItem>, 3> unknown60; // Inferred role: select items; original member name unknown.
+  GfMenuSequence<GfMenuObjBalloon, 4> unknown78;                                // Inferred role: queued steps; original member name unknown.
+  bool unknown1d8;                                                              // Role and original member name unknown, cleared by the constructor.
+  u8 _1d9[0x1dc - 0x1d9];
+  u32 unknown1dc; // Inferred role: save request, 0xffffffff when none; original member name unknown.
 };
 
+static_assert(offsetof(GfMenuObjBalloon, unknown28) == 0x28, "");
+static_assert(offsetof(GfMenuObjBalloon, unknown30) == 0x30, "");
+static_assert(offsetof(GfMenuObjBalloon, unknown38) == 0x38, "");
+static_assert(offsetof(GfMenuObjBalloon, unknown40) == 0x40, "");
+static_assert(offsetof(GfMenuObjBalloon, unknown48) == 0x48, "");
+static_assert(offsetof(GfMenuObjBalloon, unknown60) == 0x60, "");
 static_assert(offsetof(GfMenuObjBalloon, unknown78) == 0x78, "");
+static_assert(offsetof(GfMenuObjBalloon, unknown1d8) == 0x1d8, "");
+static_assert(offsetof(GfMenuObjBalloon, unknown1dc) == 0x1dc, "");
+static_assert(sizeof(GfMenuObjBalloon) == 0x1e0, "");
 
 static_assert(offsetof(GfMenuObjBalloon::OpenParam, unknown10) == 0x10, "");
 static_assert(offsetof(GfMenuObjBalloon::OpenParam, unknown20) == 0x20, "");

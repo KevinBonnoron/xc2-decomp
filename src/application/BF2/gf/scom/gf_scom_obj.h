@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "fw/fw_transform.h"
 #include "gf/request/gf_scom.h"
 #include "gmk/gmk_manager.h"
 #include "types.h"
@@ -61,10 +62,22 @@ static_assert(offsetof(SCOM_QUEST_GIMMICK, unknown20) == 0x20, "");
 static_assert(offsetof(SCOM_QUEST_GIMMICK, unknown24) == 0x24, "");
 static_assert(sizeof(SCOM_QUEST_GIMMICK) == 0x28, "");
 
-class SCOM_OBJ_WARP_POS {
+class SCOM_OBJ_WARP_POS : public SCOM {
 public:
+  bool exec(const fw::UpdateInfo &info) override;
   static void create(GF_OBJ_HANDLE *handle, const mm::Vec3 &position, const mm::Vec3 &rotation, bool isFollow);
+
+  u8 _1c[0x20 - 0x1c];
+  GF_OBJ_HANDLE *unknown20; // Inferred role: target; original member name unknown.
+  u8 _28[0x30 - 0x28];
+  fw::Transform unknown30; // Inferred role: transform; original member name unknown.
+  bool unknown50;          // Inferred role: reset state; original member name unknown.
 };
+
+static_assert(offsetof(SCOM_OBJ_WARP_POS, unknown20) == 0x20, "");
+static_assert(offsetof(SCOM_OBJ_WARP_POS, unknown30) == 0x30, "");
+static_assert(offsetof(SCOM_OBJ_WARP_POS, unknown50) == 0x50, "");
+static_assert(sizeof(SCOM_OBJ_WARP_POS) == 0x60, "");
 
 class SCOM_DESTROY_GAME_OBJ : public SCOM {
 public:

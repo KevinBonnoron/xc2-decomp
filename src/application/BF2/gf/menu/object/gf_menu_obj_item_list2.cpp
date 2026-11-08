@@ -2,9 +2,19 @@
 #include "ui/event/ui_event_data.h"
 #include "ui/ui_manager.h"
 
+#include "gf/menu/list/gf_menu_item_list.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
+#include "mm_mtl/reference_object.h"
+#include "ui/list/ui_select_obj_list.h"
 
 namespace gf {
+
+GfMenuObjItemList2::GfMenuObjItemList2(u32 handle) : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown98(0), unknowna0(true) {}
+
+GfMenuObjItemList2::~GfMenuObjItemList2() {
+  mm::mtl::safeRelease(unknown30);
+  mm::mtl::safeRelease(unknown28);
+}
 
 void GfMenuObjItemList2::finalize() { GfMenuObject::finalize(); }
 

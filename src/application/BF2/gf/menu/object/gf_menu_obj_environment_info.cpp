@@ -1,10 +1,13 @@
 #include "gf/menu/object/gf_menu_obj_environment_info.h"
 
+#include "gf/menu/adapter/gf_menu_game_adapter.h"
 #include "gf/menu/gf_menu_flag.h"
 #include "gf/menu/gf_menu_types.h"
 #include "types.h"
+#include "ui/ui_object_acc.h"
 
 namespace gf {
+class GfMenuAdapter;
 
 // Inferred role: attached call id; original name unknown.
 constexpr u32 unknown001 = 0x2a;
@@ -34,6 +37,14 @@ void GfMenuObjEnvironmentInfo::disable() {
 void GfMenuObjEnvironmentInfo::enable() {
   if (unknown143(unknown001, unknown003)) {
     GfMenuFlag::set1(0x1e, 0);
+  }
+}
+
+void GfMenuObjEnvironmentInfo::createAdapter(u32 handle, const char *name, u32 type) {
+  ui::UIObjectAcc acc(handle, name);
+  if (acc.isValid()) {
+    GfMenuAdapter *adapter = GfMenuGameAdapter::create(acc.unknown10, type, true);
+    acc.setDisp(adapter != nullptr);
   }
 }
 

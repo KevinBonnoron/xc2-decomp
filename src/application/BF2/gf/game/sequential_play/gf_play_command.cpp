@@ -1212,6 +1212,41 @@ void GfPlayComFieldTbox::end() {
   }
 }
 
+bool GfPlayComFieldTbox::updateForCheckOpenFinish(const fw::UpdateInfo &) {
+  if (!isOpenFinish()) {
+    return false;
+  }
+  if (GfFieldTbox::get() == nullptr || GfFieldTbox::get()->unknown12) {
+    unknown2c = unknown28.empty() ? 2 : 1;
+    return false;
+  }
+  return true;
+}
+
+bool GfPlayComFieldTbox::updateForCompleteQuest(const fw::UpdateInfo &info) {
+  unknown30 += info.unknown04;
+  if (unknown30 < 0.5f && !GfQuestInfo::isQuestFin(unknown28)) {
+    return false;
+  }
+  return true;
+}
+
+bool GfPlayComFieldTbox::updateForWaitItemDrop(const fw::UpdateInfo &info) {
+  if (GfFieldTbox::get() != nullptr) {
+    unknown30 += info.unknown04;
+    if (unknown30 < 5.0f && !GfFieldTbox::get()->isDropitemsEmitted()) {
+      return false;
+    }
+  }
+  return true;
+}
+
+GfPlayComFieldTbox *GfPlayComFieldTbox::create(GF_OBJ_HANDLE *handle) {
+  // __LINE__ must be 1910 as in the original file: its value changes the instruction order.
+#line 1910
+  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComFieldTbox(handle);
+}
+
 void GfPlayComFieldSeq::start() { unknown18->create(unknown20); }
 
 void GfPlayComFieldSeq::end() {
@@ -1241,6 +1276,10 @@ GfPlayComFieldSeq *GfPlayComFieldSeq::create(IFieldSeq *sequence, GF_OBJ_HANDLE 
 }
 
 bool GfPlayComResetBlade::isPlaying(u32 partyId) { return mm::mtl::find(s_execFlag.begin(), s_execFlag.end(), static_cast<u8>(partyId)) != s_execFlag.end(); }
+
+GfPlayComMoverSwitch::GfPlayComMoverSwitch() : GfPlayCom(PCOMTYPE_MOVER_SWITCH, true), unknown10(-1), unknown14(0), unknown18(0) {}
+
+GfPlayComMoverSwitch::~GfPlayComMoverSwitch() {}
 
 void GfPlayComMoverSwitch::start() { unknown14 = 3; }
 

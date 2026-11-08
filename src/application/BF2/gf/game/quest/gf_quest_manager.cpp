@@ -111,6 +111,13 @@ void GfQuestManager::destroyEvent() {
   }
 }
 
+void GfQuestManager::removeEvent(IQuestEvent *event) {
+  GfQuestManager *manager = get();
+  if (manager != nullptr) {
+    manager->unknown08.erase(manager->unknown08.find(event));
+  }
+}
+
 mm::mtl::FixedQueue<QuestData, 15000> *GfQuestManager::getOrderAchievementQuest() { return &get()->unknown7db0; }
 
 mm::mtl::FixedQueue<QuestData, 8000> *GfQuestManager::getOrderQuest() { return &get()->unknowna0; }
