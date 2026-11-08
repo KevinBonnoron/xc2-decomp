@@ -9,6 +9,7 @@
 #include "gf/asset/gf_file_size_pool.h"
 #include "gf/asset/gf_slot.h"
 #include "gf/asset/gf_slot_mapping.h"
+#include "gf/gf_allocator.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/sound/gf_sound.h"
 #include "gf/util/gf_util.h"
@@ -761,6 +762,10 @@ AssetPackValue GfAssetPack::calcAssetPackValue(const char *name, GfAssetType typ
   value.unknown04 = mm::mtl::hashStrCrc(name);
   return value;
 }
+
+// __LINE__ must be 1029 as in the original file: it is the line argument of operator new.
+#line 1029
+GfAssetPack *GfAssetPack::create(const GfAssetFilesInfo &filesInfo) { return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfAssetPack(filesInfo); }
 
 } // namespace gf
 

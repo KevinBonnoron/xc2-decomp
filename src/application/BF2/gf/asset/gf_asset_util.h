@@ -1,5 +1,6 @@
 #pragma once
 #include "gf/asset/gf_asset_def.h"
+#include "mm_mtl/fixed_list.h"
 #include "types.h"
 
 namespace gf {
@@ -18,6 +19,7 @@ public:
   static bool isRetargetLoad(GF_ASSET_HANDLE *handle);
   static void setRetargetLoad(GF_ASSET_HANDLE *handle, bool isRetarget);
   static const char *getAssetTypeName(GfAssetType type);
+  static void getAssetHandleBySlotHandle(mm::mtl::FixedList<GF_ASSET_HANDLE *, 1024> &assets, const mm::mtl::FixedList<GF_ASSET_HANDLE *, 1024> &handles, GF_SLOT_HANDLE *slot);
 };
 
 } // namespace gf

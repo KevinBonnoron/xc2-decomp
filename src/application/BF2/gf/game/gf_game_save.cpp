@@ -6,6 +6,7 @@
 #include "gf/data/gf_data_manager.h"
 #include "gf/data/gf_data_mercenaries.h"
 #include "gf/data/gf_data_option.h"
+#include "gf/field/gf_real_time.h"
 #include "gf/game/gf_game_util_save_data.h"
 #include "gf/gf_allocator.h"
 #include "gf/gf_manager.h"

@@ -1,4 +1,5 @@
 #pragma once
+#include "gf/field/gf_real_time.h"
 #include "types.h"
 #include <stddef.h>
 
@@ -7,10 +8,10 @@ namespace gf {
 constexpr u32 SAVE_DATA_VERSION = 0x3a15b;
 
 struct SDataSystem {
-  SDataSystem() : unknown00(SAVE_DATA_VERSION), unknown08(0) {}
+  SDataSystem() : unknown00(SAVE_DATA_VERSION), unknown08() {}
 
-  u32 unknown00; // Inferred role: version; original member name unknown.
-  u64 unknown08; // Inferred role: flags; original member name unknown.
+  u32 unknown00;      // Inferred role: version; original member name unknown.
+  RealTime unknown08; // Inferred role: real time of the save; original member name unknown.
 };
 
 static_assert(offsetof(SDataSystem, unknown08) == 0x08, "");

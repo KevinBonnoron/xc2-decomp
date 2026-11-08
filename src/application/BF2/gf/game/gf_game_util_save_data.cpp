@@ -2,6 +2,7 @@
 
 #include "gf/data/gf_data_manager.h"
 #include "gf/data/gf_data_system.h"
+#include "gf/field/gf_real_time.h"
 
 namespace gf {
 

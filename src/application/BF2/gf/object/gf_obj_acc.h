@@ -53,6 +53,7 @@ public:
 
   int getBoneIdx(const char *name);
   bool getBoneTransform(fw::Transform &transform, int bone);
+  bool getBoneTransform(fw::Transform &transform, const char *name);
 
   const fw::Transform &getWorldTransformNoSync() const;
   bool getObjPosRot(mm::Vec3 &position, f32 &rotation);

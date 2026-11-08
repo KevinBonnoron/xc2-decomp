@@ -11,6 +11,7 @@
 #include "gf/data/gf_data_map.h"
 #include "gf/data/gf_data_mercenaries.h"
 #include "gf/data/gf_data_util.h"
+#include "gf/field/gf_real_time.h"
 #include "gf/gf_allocator.h"
 #include "gf/sound/gf_master_volume.h"
 #include "mm_mtl/fixed_array.h"
@@ -54,7 +55,7 @@ void GfDataStore::clear() {
   initOptionData();
 }
 
-void GfDataStore::initSystemData() { get()->mDataSystem.unknown08 = 0; }
+void GfDataStore::initSystemData() { get()->mDataSystem.unknown08 = RealTime(); }
 
 void GfDataStore::initGameData() {
   new (&get()->mDataGame) SDataGame();

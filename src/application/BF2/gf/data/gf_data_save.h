@@ -11,6 +11,10 @@ extern SDataSave s_SDataSave;
 extern SDataOption s_SDataOption;
 } // namespace _gfgsv
 
+namespace _gfdsv {
+extern SDataSave s_tempSav;
+} // namespace _gfdsv
+
 enum SAVESLOT {
   SAVESLOT_NONE = -1,
   SAVESLOT_CHAPTER_FIRST = 10,

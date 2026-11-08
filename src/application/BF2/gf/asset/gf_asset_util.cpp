@@ -7,6 +7,7 @@
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_manager.h"
+#include "mm_mtl/fixed_list.h"
 
 namespace gf {
 
@@ -34,6 +35,14 @@ GF_OBJ_HANDLE *GfAssetUtil::getObjHandle(GF_ASSET_HANDLE *handle) {
     return info->unknown2d8;
   }
   return INVALID_HANDLE;
+}
+
+void GfAssetUtil::getAssetHandleBySlotHandle(mm::mtl::FixedList<GF_ASSET_HANDLE *, 1024> &assets, const mm::mtl::FixedList<GF_ASSET_HANDLE *, 1024> &handles, GF_SLOT_HANDLE *slot) {
+  for (mm::mtl::FixedList<GF_ASSET_HANDLE *, 1024>::const_iterator it = handles.begin(); it != handles.end(); ++it) {
+    if (GfAssetManager::getAssetPack(slot) != nullptr) {
+      assets.push_back(*it);
+    }
+  }
 }
 
 u32 GfAssetUtil::getAssetPrio(GF_ASSET_HANDLE *handle) {

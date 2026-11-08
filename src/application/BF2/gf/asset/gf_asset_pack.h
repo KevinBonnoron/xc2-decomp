@@ -114,6 +114,7 @@ public:
     u16 unknown08;              // Inferred role: file index; original member name unknown.
   };
 
+  GfAssetPack(const GfAssetFilesInfo &info);
   GfAssetResource *getResource(GfFileIdx index) const;
   bool isLoaded(mm::mtl::FixStr<128> *name) const;
   void setupStreamObject();
@@ -151,6 +152,7 @@ public:
   void calcAllFileSize();
   s64 getAllFileSize();
   void replaceAssetType(const GfAssetFilesInfo &info);
+  static GfAssetPack *create(const GfAssetFilesInfo &info);
   static AssetPackValue calcAssetPackValue(const char *name, GfAssetType type);
 
   void setLoadSlotNum(u32 num) { unknown24c = num; }

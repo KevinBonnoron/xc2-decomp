@@ -7,6 +7,7 @@
 #include "gf/data/gf_data_mercenaries.h"
 #include "gf/data/gf_data_option.h"
 #include "gf/data/gf_data_system.h"
+#include "gf/field/gf_real_time.h"
 #include "gf/gf_allocator.h"
 #include "gf/gf_manager.h"
 #include "ml/dev_file_th.h"

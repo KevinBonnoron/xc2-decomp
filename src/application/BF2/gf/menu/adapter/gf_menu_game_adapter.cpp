@@ -6,6 +6,7 @@
 #include "gf/field/gf_field_manager.h"
 #include "gf/field/gf_field_time.h"
 #include "gf/field/gf_field_weather.h"
+#include "gf/field/gf_real_time.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_util.h"
 #include "gf/gf_allocator.h"
