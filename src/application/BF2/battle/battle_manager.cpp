@@ -135,6 +135,13 @@ void BattleManager::QuestTaskProc(u32 task) {
   }
 }
 
+void BattleManager::NotifyQuestTask(u32 task) {
+  BattleManager *manager = get();
+  if (manager != nullptr) {
+    manager->QuestTaskProc(task);
+  }
+}
+
 void BattleManager::gevBattleStart() {}
 
 void BattleManager::CheckTargetMode() {

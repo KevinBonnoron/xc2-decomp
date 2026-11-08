@@ -342,6 +342,7 @@ public:
   void ActionCommandBladeArts(const ActionCommand *command, ActionCommand::COMMAND_TYPE type);
   void HealDirect(u32 value, int, BattleCharacter *healer);
   void HealHpRate(f32 rate, int, BattleCharacter *healer);
+  void HealByRate(u32 value, f32 rate, int, BattleCharacter *healer);
   void AddPartyGauge(f32 value);
   void FluctuatePartyGauge(int);
   bool IsInAttackRange(int slot, f32 *distance) const;

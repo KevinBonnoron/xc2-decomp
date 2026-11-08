@@ -1905,13 +1905,22 @@ void BattleCharacter::NotifyStrikeDamage(int) { TalkManager::get()->NotifyTrigge
 
 void BattleCharacter::HealDirect(u32 value, int type, BattleCharacter *healer) {
   DIRECT_DAMAGE_DATA data;
-  data.unknown08 = type;
-  data.unknown0c = value;
   data.unknown11 = 0;
   data.unknown12 = 0;
   data.unknown00 = healer;
+  data.unknown08 = type;
+  data.unknown0c = value;
   data.unknown10 = 1;
   NotifyDirectDamage(data);
+}
+
+void BattleCharacter::HealByRate(u32 value, f32 rate, int type, BattleCharacter *healer) {
+  f32 amount = static_cast<f32>(value) * rate;
+  u32 heal = static_cast<u32>(amount);
+  if (amount - static_cast<f32>(heal) > 0.998f) {
+    heal++;
+  }
+  HealDirect(mm::max(1u, heal), type, healer);
 }
 
 void BattleCharacter::LandingCallback() {}
