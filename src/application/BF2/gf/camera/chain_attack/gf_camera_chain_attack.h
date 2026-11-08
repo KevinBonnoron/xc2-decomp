@@ -22,6 +22,7 @@ public:
 
   ~ChainAttackCameraEntity() override;
   void onActivate() override;
+  void setPoint(const mm::Vec3 &startPosition, const mm::Vec3 &startTarget, const mm::Vec3 &endPosition, const mm::Vec3 &endTarget);
   void calcSpeedTypeLinearSpacing();
   void calcSpeedTypeFastOut();
   void calcSpeedTypeSlowOut();
@@ -90,6 +91,7 @@ public:
   virtual ~ChainAttackCamera();
   void start();
   void end();
+  void setCameraParam(const Param &param);
   void destroyCamera(mm::mtl::IntrusivePtr<fw::Camera> *camera, f32 time);
 
   mm::mtl::IntrusivePtr<fw::Camera> unknown08; // Inferred role: camera; original member name unknown.

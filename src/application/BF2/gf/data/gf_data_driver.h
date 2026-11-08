@@ -156,6 +156,7 @@ public:
   static int getMaxSetBladeNum(u32 driver);
   static int getSetIdByDummyBlade(u32 driver);
   static u32 getBlade(u32 driver, int slot);
+  static bool getListBlade(mm::mtl::FixedVector<u16, 422> &blades, u32 driver);
   static void unsetBlade(u32 blade);
   static bool leaveOneCommonBlade(u32 driver);
   static bool leaveOneRareBlade(u32 driver);

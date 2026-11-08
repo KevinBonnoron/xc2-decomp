@@ -36,6 +36,9 @@ public:
   void updateBladeList();
   void updateTargetTeam();
   bool seqCanNotOrder();
+  static void setDispUnitReady(u32 handle, u32 index);
+  static void setDispUnitProgress(u32 handle, u32 index);
+  static void setDispUnitReturn(u32 handle, u32 index);
   void initialize() override;
   void finalize() override;
   void update() override;

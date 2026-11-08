@@ -22,6 +22,7 @@
 #include "gf/data/gf_game_flag.h"
 #include "gf/data/gf_object_type.h"
 #include "gf/game/gf_game_cond.h"
+#include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_party.h"
 #include "gf/game/gf_game_util.h"
 #include "gf/game/kizunaring/gf_kizunaring_manager.h"
@@ -33,7 +34,9 @@
 #include "gf/menu/adapter/gf_menu_adapter_manager.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_bdat.h"
+#include "gf/menu/gf_menu_manager.h"
 #include "gf/menu/gf_menu_object.h"
+#include "gf/menu/gf_menu_reference.h"
 #include "gf/menu/gf_menu_sound_manager.h"
 #include "gf/menu/list/gf_menu_blade_list.h"
 #include "gf/object/gf_obj_acc.h"
@@ -49,6 +52,7 @@
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_pnt.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/algorithm.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
@@ -348,6 +352,35 @@ int GfMenuObjUtil::convMenuDriverID(u32 driver) {
   return index;
 }
 
+int GfMenuObjUtil::convMenuBladeID(u32 blade) {
+  u8 *bdat = GfDataBdat::getFP(BDAT_MNU_BL_IMAGE_ID);
+  DataParamAcc acc(OBJECT_TYPE_BLADE, blade, GIMMICK_TYPE_NONE);
+  int index = 0;
+  if (acc.isValid()) {
+    int top = Bdat::getIdTop(bdat);
+    u32 icon = getFaceIconID(acc);
+    index = 0;
+    do {
+      if (index >= Bdat::getIdCount(bdat)) {
+        return 0;
+      }
+      u32 iconId = Bdat::getVal(bdat, "icon_id", top + index).valueU16;
+      index++;
+      if (icon == iconId) {
+        break;
+      }
+    } while (true);
+    if (GfDataBlade::isCommonBlade(acc.getValidBdatId())) {
+      for (u32 type = 10; type <= 16; type++) {
+        if (acc.getWeaponType(-1, false) == type) {
+          index += (type - 10) * 4;
+        }
+      }
+    }
+  }
+  return index;
+}
+
 int GfMenuObjUtil::getLeaderPartyType() {
   GF_OBJ_HANDLE *leader = GfGameParty::getLeader();
   if (leader != INVALID_HANDLE) {
@@ -390,6 +423,49 @@ bool GfMenuObjUtil::isBladeEnable(u32 partyId, int slot) {
 }
 
 bool GfMenuObjUtil::isValidBlade(u32 blade) { return blade != 0 && !GfDataBlade::isDummyBlade(blade); }
+
+int GfMenuObjUtil::getSetBladeID(u32 partyId, int offset, bool isVirtual) {
+  DataParamAcc acc(OBJECT_TYPE_DRIVER, GfDataParty::getDriver(partyId), GIMMICK_TYPE_NONE);
+  int setId = 0;
+  if (acc.isValid()) {
+    if (offset == -1) {
+      setId = acc.getBladeSet(false);
+    } else if (offset < static_cast<int>(getBladeSlotMax())) {
+      setId = acc.getBladeSet(false);
+      if (isVirtual && (GfMenuManager::isBattleState(0) || GfMenuManager::isBattleState(1))) {
+        setId = GfSelectBlade::getStartBattleSetId(partyId);
+      }
+      int slot = setId;
+      if (acc.getValidDriverId() == DRIVER_REX && setId - 3U < 2) {
+        if (acc.getBlade(0, false) == BLADE_HOMURA) {
+          slot = 0;
+        } else if (acc.getBlade(1, false) == BLADE_HOMURA) {
+          slot = 1;
+        } else if (acc.getBlade(2, false) == BLADE_HOMURA) {
+          slot = 2;
+        }
+      }
+      slot += offset;
+      if (slot >= static_cast<int>(getBladeSlotMax())) {
+        slot -= getBladeSlotMax();
+      }
+      setId = slot;
+      if (acc.getValidDriverId() == DRIVER_REX && acc.getBlade(slot, false) == BLADE_HOMURA) {
+        setId = acc.getBladeSet(false);
+        if (setId == 4) {
+          setId = 4;
+        } else if (isVirtual) {
+          setId = GfMenuReference::getHomuraModeInBattle() == GfMenuReference::HOMURA_MODE_UNKNOWN_1 ? 3 : slot;
+        } else {
+          setId = GfDataBlade::isHikariCurrent() ? 3 : slot;
+        }
+      }
+    } else {
+      setId = -1;
+    }
+  }
+  return setId;
+}
 
 bool GfMenuObjUtil::isBladeEnableOffset(u32 partyId, int offset) {
   int slot = getSetBladeID(partyId, offset, false);
@@ -669,6 +745,58 @@ bool GfMenuObjUtil::isBladeCurrent(u32 blade) {
   return GfDataDriver::getBlade(driver, -1) == blade;
 }
 
+u32 GfMenuObjUtil::canRemoveBladeEx(u32 blade, u32 driver, const mm::mtl::FixedVector<u16, 422> *candidates) {
+  if (blade == 0) {
+    return 0;
+  }
+  u32 setDriver = GfDataBlade::getSetDriver(blade);
+  u32 isAwakening = 0;
+  if (driver == 1) {
+    isAwakening = GfGameManager::isRexAwakening();
+  }
+  if (isScenarioBlade(blade) && !GfGameManager::isClearGame() && isAwakening == 0) {
+    if (blade == 0x3f0) {
+      if (GfDataBlade::getSetDriver(0x3f0) == 5) {
+        return 1;
+      }
+    } else {
+      if (setDriver == 0) {
+        return 0;
+      }
+      if (blade != 0x3f3 && blade != 0x3f6 && setDriver == GfDataBlade::getCreator(blade)) {
+        return 1;
+      }
+    }
+  }
+  if (setDriver == 0) {
+    return 0;
+  }
+  if (driver != 0 && GfDataBlade::getSetDriver(blade) != driver && GfDataDriver::getBlade(setDriver, -1) == blade) {
+    return 2;
+  }
+  mm::mtl::FixedVector<u16, 422> blades;
+  if (!GfDataDriver::getListBlade(blades, setDriver)) {
+    return 0;
+  }
+  for (u16 *it = blades.begin(); it != blades.end();) {
+    if ((*it == 0x3eb && GfDataBlade::getDriverSetID(0x3ea) == 4) || (*it == 0x3ea && GfDataBlade::getDriverSetID(0x3ea) == 3)) {
+      it = blades.erase(it);
+    } else {
+      it++;
+    }
+  }
+  if (candidates != nullptr) {
+    for (u16 *it = blades.begin(); it != blades.end();) {
+      if (mm::mtl::find(candidates->begin(), candidates->end(), *it) != candidates->end()) {
+        it = blades.erase(it);
+      } else {
+        it++;
+      }
+    }
+  }
+  return blades.size() < 2 ? 3 : 0;
+}
+
 bool GfMenuObjUtil::canRemoveBlade(u32 blade, const mm::mtl::FixedVector<u16, 422> *blades) { return canRemoveBladeEx(blade, 0, blades) == 0; }
 
 bool GfMenuObjUtil::hasHomura(u32 driver) {
@@ -680,6 +808,52 @@ bool GfMenuObjUtil::hasHomura(u32 driver) {
     }
   }
   return hasHomura;
+}
+
+bool GfMenuObjUtil::getImageParam(u32 type, u32 id, ImageParam &param, u32 index) {
+  if (index >= 5) {
+    return false;
+  }
+  u8 *bdat = GfDataBdat::getFP(type != 0 ? BDAT_MNU_BL_IMAGE_ID : BDAT_MNU_DR_IMAGE_ID);
+  mm::mtl::FixStr<32> offsetX;
+  mm::mtl::FixStr<32> offsetY;
+  mm::mtl::FixStr<32> scale;
+  if (index == 0) {
+    offsetX = "offs_x";
+    offsetY = "offs_y";
+    scale = "scale";
+  } else {
+    offsetX.format("offs_x%1d", index + 1);
+    offsetY.format("offs_y%1d", index + 1);
+    scale.format("scale%1d", index + 1);
+  }
+  u32 row;
+  if (type == 0) {
+    u8 *list = GfDataBdat::getFP(BDAT_CHR_DR);
+    if (id < static_cast<u32>(Bdat::getIdTop(list)) || id > static_cast<u32>(Bdat::getIdEnd(list))) {
+      return false;
+    }
+    u16 still = Bdat::getVal(list, "Still", id).valueU16;
+    row = Bdat::getIdTop(bdat);
+    if (row > static_cast<u32>(Bdat::getIdEnd(bdat))) {
+      return false;
+    }
+    do {
+      if (Bdat::getVal(bdat, "icon_id", row).valueU16 == still) {
+        break;
+      }
+      row++;
+      if (row > static_cast<u32>(Bdat::getIdEnd(bdat))) {
+        return false;
+      }
+    } while (true);
+  } else {
+    row = convMenuBladeID(id);
+  }
+  param.unknown00 = Bdat::getVal(bdat, offsetX.c_str(), row).valueS16;
+  param.unknown02 = Bdat::getVal(bdat, offsetY.c_str(), row).valueS16;
+  param.unknown04 = Bdat::getVal(bdat, scale.c_str(), row).valueF32;
+  return true;
 }
 
 ui::UIStr GfMenuObjUtil::getName(const DataParamAcc &acc) {

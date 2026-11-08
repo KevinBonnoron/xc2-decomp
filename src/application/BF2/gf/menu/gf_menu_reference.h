@@ -32,7 +32,7 @@ public:
   static const u32 ARTS_PALETTE_COUNT = 3;
   static const u32 ALL_ARTS_PALETTE_COUNT = 9;
 
-  enum HOMURA_MODE {};
+  enum HOMURA_MODE { HOMURA_MODE_UNKNOWN_1 = 1 };
 
   struct REFLIST {
     GF_SEARCH_OBJ *unknown00;                         // Inferred role: search object; original member name unknown.

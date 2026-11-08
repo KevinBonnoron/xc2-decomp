@@ -10,6 +10,8 @@
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/list/gf_menu_blade_list.h"
 #include "gf/menu/list/gf_menu_id_list.h"
+#include "gf/menu/object/gf_menu_obj_util.h"
+#include "mm_mtl/fixstr.h"
 #include "mm_mtl/reference_object.h"
 #include "ui/ctrl/ui_ctrl_object.h"
 #include "ui/ctrl/ui_ctrl_revolve_select.h"
@@ -128,6 +130,64 @@ bool GfMenuObjMercenaryTop::seqCanNotOrder() {
     isEnd = false;
   }
   return isEnd;
+}
+
+void GfMenuObjMercenaryTop::setDispUnitReady(u32 handle, u32 index) {
+  ui::UIObjectAcc acc(handle);
+  u32 number = index + 1;
+  mm::mtl::FixStr<32> name;
+  name.format("TXT_zone_unit_name@%02d", number);
+  ui::UIObjectAcc(acc.searchChild(name.c_str())).setAlpha(0.0f);
+  name.format("TXT_zone_unit_ready@%02d", number);
+  acc.setDispChild(true, name.c_str());
+  name.format("TXT_zone_unit_mission_name@%02d", number);
+  ui::UIObjectAcc(acc.searchChild(name.c_str())).setAlpha(0.0f);
+  name.format("TXT_zone_unit_mission_time@%02d", number);
+  ui::UIObjectAcc(acc.searchChild(name.c_str())).setAlpha(0.0f);
+  name.format("IMG_zone_unit_base@%02d", number);
+  GfMenuObjUtil::setChildAddColor(acc.unknown10, name.c_str(), "mer_unit_empty");
+  name.format("TXT_zone_unit_mission_inf@%02d", number);
+  ui::UIObjectAcc(acc.unknown10, name.c_str()).setAlpha(0.0f);
+}
+
+void GfMenuObjMercenaryTop::setDispUnitProgress(u32 handle, u32 index) {
+  ui::UIObjectAcc acc(handle);
+  u32 number = index + 1;
+  mm::mtl::FixStr<32> name;
+  name.format("TXT_zone_unit_name@%02d", number);
+  GfMenuObjUtil::setColDefault(acc.searchChild(name.c_str()));
+  ui::UIObjectAcc(acc.searchChild(name.c_str())).setAlpha(1.0f);
+  name.format("TXT_zone_unit_ready@%02d", number);
+  acc.setDispChild(false, name.c_str());
+  name.format("TXT_zone_unit_mission_name@%02d", number);
+  GfMenuObjUtil::setColDefault(acc.searchChild(name.c_str()));
+  ui::UIObjectAcc(acc.searchChild(name.c_str())).setAlpha(1.0f);
+  name.format("TXT_zone_unit_mission_time@%02d", number);
+  GfMenuObjUtil::setColDefault(acc.searchChild(name.c_str()));
+  name.format("IMG_zone_unit_base@%02d", number);
+  GfMenuObjUtil::setColDefault(acc.searchChild(name.c_str()));
+  name.format("TXT_zone_unit_mission_inf@%02d", number);
+  ui::UIObjectAcc(acc.unknown10, name.c_str()).setAlpha(1.0f);
+}
+
+void GfMenuObjMercenaryTop::setDispUnitReturn(u32 handle, u32 index) {
+  ui::UIObjectAcc acc(handle);
+  u32 number = index + 1;
+  mm::mtl::FixStr<32> name;
+  name.format("TXT_zone_unit_name@%02d", number);
+  GfMenuObjUtil::setColMulandAdd(acc.searchChild(name.c_str()), "txt_disable");
+  ui::UIObjectAcc(acc.searchChild(name.c_str())).setAlpha(0.5f);
+  name.format("TXT_zone_unit_ready@%02d", number);
+  acc.setDispChild(false, name.c_str());
+  name.format("TXT_zone_unit_mission_name@%02d", number);
+  GfMenuObjUtil::setColMulandAdd(acc.searchChild(name.c_str()), "txt_disable");
+  ui::UIObjectAcc(acc.searchChild(name.c_str())).setAlpha(0.5f);
+  name.format("TXT_zone_unit_mission_time@%02d", number);
+  GfMenuObjUtil::setColMulandAdd(acc.searchChild(name.c_str()), "txt_disable");
+  name.format("IMG_zone_unit_base@%02d", number);
+  GfMenuObjUtil::setChildAddColor(acc.unknown10, name.c_str(), "black");
+  name.format("TXT_zone_unit_mission_inf@%02d", number);
+  ui::UIObjectAcc(acc.unknown10, name.c_str()).setAlpha(0.0f);
 }
 
 void GfMenuObjMercenaryTop::finalize() { GfMenuObject::finalize(); }

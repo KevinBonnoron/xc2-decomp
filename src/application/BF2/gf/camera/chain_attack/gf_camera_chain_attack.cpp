@@ -87,4 +87,17 @@ void ChainAttackCamera::destroyCamera(mm::mtl::IntrusivePtr<fw::Camera> *camera,
   }
 }
 
+void ChainAttackCamera::setCameraParam(const Param &param) {
+  ChainAttackCameraEntity *entity = static_cast<ChainAttackCameraEntity *>(unknown08.get());
+  if (entity != nullptr && entity->unknowna0) {
+    if (param.unknown00 != 0) {
+      entity->setPlayTimeDuration(param.unknown04);
+    } else {
+      entity->setPlayTimeRate(param.unknown04 * 0.0001f);
+    }
+    entity->setMoveType(param.unknown08);
+    entity->setPoint(param.unknown10, param.unknown20, param.unknown40, param.unknown50);
+  }
+}
+
 } // namespace gf
