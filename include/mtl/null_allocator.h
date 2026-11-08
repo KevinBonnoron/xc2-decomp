@@ -25,11 +25,11 @@ public:
   size_t getAllocSize(const void *pointer) const override;
   void memoryInfo(MemoryInfo *info) const override;
   void getMemImage(MEMIMAGE_HEAD *head) const override;
-  int getMemInfo1(MemoryInfo1 *info, u32 num) const override;
+  bool getMemInfo1(MemoryInfo1 *info, u32 num) const override;
   bool empty() const override;
   bool valid() const override;
   bool dummy() const override;
-  u32 getMemSize(const void *pointer) const override;
+  virtual u32 getMemSize(const void *pointer) const;
 
   mm::mtl::FixStr<32> m_name;
 };
