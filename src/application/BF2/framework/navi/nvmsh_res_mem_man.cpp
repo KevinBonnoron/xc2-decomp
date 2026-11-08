@@ -1,5 +1,8 @@
 #include "navi/nvmsh_res_mem_man.h"
 
+#include <new>
+
+#include "mtl/alloc_handle.h"
 #include "mtl/mem_manager.h"
 
 namespace navi {
@@ -68,6 +71,29 @@ static inline void unknown003(NvmshResMemObj *object, NvmshResMemObj *&head, Nvm
     object->unknown00 = nullptr;
   }
   object->unknown08 = nullptr;
+}
+
+// Allocates the 38-descriptor pool. Descriptor 0 references the caller buffer and joins the memory piece list; the
+// other 37 descriptors are spare.
+NvmshResMemMan::NvmshResMemMan(u8 *buffer, int size, mtl::ALLOC_HANDLE handle) {
+  unknown18 = nullptr;
+  unknown20 = nullptr;
+  unknown08 = nullptr;
+  unknown10 = nullptr;
+  unknown00 = mtl::MemManager::allocate(handle, 0x5f0, 0x40, false, "no name", 0);
+
+  NvmshResMemObj *base = static_cast<NvmshResMemObj *>(unknown00);
+  for (int i = 0; i < 38; i++) {
+    new (&base[i]) NvmshResMemObj();
+  }
+
+  base->unknown18 = buffer;
+  base->unknown20 = size;
+  unknown003(base, unknown18, unknown20);
+
+  for (int i = 1; i < 38; i++) {
+    unknown003(&base[i], unknown08, unknown10);
+  }
 }
 
 // Clears the piece and folds it into free neighbours; descriptors of pieces merged into a neighbour return to the
