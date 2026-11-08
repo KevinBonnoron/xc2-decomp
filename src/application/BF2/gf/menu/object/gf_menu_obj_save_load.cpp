@@ -2,6 +2,10 @@
 
 namespace gf {
 
+GfMenuObjSaveLoad::GfMenuObjSaveLoad(u32 handle) : GfMenuObject(handle), unknown24(0) {}
+
+GfMenuObjSaveLoad::~GfMenuObjSaveLoad() { ; }
+
 void GfMenuObjSaveLoad::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjSaveLoad::update() { GfMenuObject::update(); }

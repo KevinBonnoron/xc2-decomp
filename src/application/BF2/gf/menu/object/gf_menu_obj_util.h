@@ -31,6 +31,7 @@ class GfMenuBladeList;
 struct SDataIdea;
 class GfMenuCallContext;
 struct QuestID;
+struct GfRequestBladeData;
 struct GF_OBJ_HANDLE;
 class SoundHandle;
 
@@ -41,7 +42,7 @@ public:
 
     int unknown00; // Inferred role: icon type; original member name unknown.
     int unknown04; // Inferred role: enhance icon; original member name unknown.
-    int unknown08; // Inferred role: reaction icon; original member name unknown.
+    u32 unknown08; // Inferred role: reaction icon; original member name unknown.
     u8 _0c[0x10 - 0x0c];
     int unknown10; // Inferred role: range icon; original member name unknown.
   };
@@ -110,6 +111,17 @@ public:
     f32 unknown04; // Inferred role: scale; original member name unknown.
   };
 
+  struct MissionInfo {
+    u32 unknown00; // Inferred role: category; original member name unknown.
+    u32 unknown04; // Inferred role: reward; original member name unknown.
+    u32 unknown08; // Inferred role: map; original member name unknown.
+    u32 unknown0c; // Inferred role: state flags; original member name unknown.
+    u32 unknown10; // Inferred role: team; original member name unknown.
+    u32 unknown14; // Inferred role: first field skill; original member name unknown.
+    u32 unknown18; // Inferred role: second field skill; original member name unknown.
+    u32 unknown1c; // Inferred role: third field skill; original member name unknown.
+  };
+
   struct PresetCtrlParam {
     PresetCtrlParam() : unknown00(0), unknown04(0), unknown08(-1), unknown10(0), unknown18(nullptr) {
       unknown0c = false;
@@ -125,7 +137,7 @@ public:
     const char *unknown18; // Inferred role: animation name; original member name unknown.
   };
 
-  static u32 getBtnIconNumber(u32 button);
+  static s16 getBtnIconNumber(u32 button);
   static u32 getFavoriteStat(u32 objType, u32 id, FAVORITE favorite);
   static u32 getPadSelectIconNumber(u32 select);
   static u32 getPointerSelectIconNumber();
@@ -138,6 +150,8 @@ public:
   static void setChildDisp(u32 handle, const char *name, bool disp);
   static void setChildMulColor(u32 handle, const char *name, const char *color);
   static void setChildAddColor(u32 handle, const char *name, const char *color);
+  static u32 getMissionCondBladeCount(const GfRequestBladeData &data, const GfMenuBladeList *list);
+  static bool checkMissionCond(u32 mission, const GfMenuBladeList *list);
   static void setChildText(u32 handle, const char *name, u16 id);
   static void setChildText(u32 handle, const char *name, const ui::UIStr &text);
   static void setChildIcon(u32 handle, const char *name, u16 icon);
@@ -172,6 +186,7 @@ public:
   static u32 getLeaderPartyID();
   static int getLeaderPartyType();
   static bool isExitDriver(u32 partyId);
+  static u32 setupPartyDriver(const mm::mtl::FixedVector<u16, 16> &drivers);
   static bool isLeaderBladeEnable();
   static bool isBladeEnable(u32 partyId, int slot);
   static bool isValidBlade(u32 blade);
@@ -215,6 +230,7 @@ public:
   static bool canRemoveBlade(u32 blade, const mm::mtl::FixedVector<u16, 422> *blades);
   static bool hasHomura(u32 driver);
   static u16 getMsgIDFromList(u32 bdat, u16 id);
+  static bool isBladeAchivementReleased(u32 blade);
   static bool getArtsIconInfo(u32 arts, u32 level, ArtsIconInfo &info);
   static int getEnableArts(mm::mtl::FixedArray<u32, 4> &arts, u32 driver, u32 weaponType);
   static bool checkCCStart(GfMenuCallContext *context);
@@ -249,14 +265,19 @@ public:
   static u8 getElementComboStage(u32 combo);
   static bool isQuestCompleted(QuestID quest);
   static bool getMenuCondition(u32 id);
+  static bool getMissionInfo(u32 mission, MissionInfo &info);
   static bool getScreenPos(mm::Vec3 &screenPos, const mm::Vec3 &position);
+  static void convViewSpace(mm::Vec3 &viewPos, const mm::Vec3 &position);
+  static void placeObjectHLeft(u32 handle, const char *format, u32 count, const mm::Pnt<s16> &pos, u32 interval);
+  static void placeObjectHRatio(u32 handle, u32 target, f32 ratio, s16 margin);
+  static QuestID getCurrentQuest(u32 type);
   static bool getMenuFullOpenFlag();
   static bool isCustomEnableBlade(u32 blade);
   static int convMenuDriverID(u32 driver);
   static int convMenuBladeID(u32 blade);
   static int getDriverClassBuffRatio(u32 driverClass, u32 index);
   static u32 getDriverClassBuffType(u32 driverClass, u32 index);
-  static u8 getDriverClassBuffLv(u32 driverClass, u32 index);
+  static u32 getDriverClassBuffLv(u32 driverClass, u32 index);
   static bool isBladeSelectable(u32 blade, const GfMenuBladeList *list);
   static bool isBladeReleasable(u32 blade, const GfMenuBladeList *list);
   static bool getImageParam(u32 type, u32 id, ImageParam &param, u32 index);

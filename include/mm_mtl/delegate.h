@@ -10,8 +10,9 @@ template <typename R, typename... Args> class Delegate<R(Args...)> {
 public:
   typedef R (*Invoker)(const Delegate *delegate, Args... args);
 
+  // No destructor: the game's fw::AnimVolumeFadeModifier D1 and D2 (a Delegate member) are a bare ret, which only happens when
+  // the member destructor is implicit; classes whose destructor stores the vtable pointer declare it with the body `{ ; }`.
   Delegate() : m_invoker(nullptr) {}
-  ~Delegate() {}
 
   bool isValid() const { return m_invoker != nullptr; }
   void clear() { m_invoker = nullptr; }

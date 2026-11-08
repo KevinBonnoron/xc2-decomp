@@ -17,6 +17,8 @@ public:
   static void setIdeaPointFromDriver(GfMenuCallContext *context, u32 driver);
   static void setIdeaPointFromData(GfMenuCallContext *context, const SDataIdea &data);
   static void setIdeaPointFromBlade(GfMenuCallContext *context, u32 blade);
+  static void addIdeaPoint(GfMenuCallContext *context, u8 type, int value, bool flag);
+  static void addIdeaLevel(GfMenuCallContext *context, u8 type, int value, bool flag);
 };
 
 } // namespace gf

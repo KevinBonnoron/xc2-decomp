@@ -1342,7 +1342,7 @@ bool isEnemyHoming(gf::GF_OBJ_HANDLE *handle) {
 }
 
 void applyLodFade(u16 lodId, bool isImmediate) {
-  const gf::GfFieldLod::unknown001 *info = gf::GfFieldLod::get()->findBdatInfo(lodId);
+  const gf::GfFieldLod::BdatInfo *info = gf::GfFieldLod::get()->findBdatInfo(lodId);
   if (info == nullptr) {
     return;
   }

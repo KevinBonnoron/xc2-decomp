@@ -25,6 +25,8 @@ GfGameLoad::GfGameLoad(const char *path)
   unknown0c = path;
 }
 
+GfGameLoad::~GfGameLoad() { ; }
+
 bool GfGameLoad::isBusy() const { return unknown120 != 0; }
 
 void GfGameLoad::terminateNonBlock() {

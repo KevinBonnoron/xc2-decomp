@@ -555,7 +555,7 @@ void GmkDoor::bootGmk(bool isImmediate, bool isCamera) {
     closeDoor(isImmediate);
   }
   u16 lodId = info->unknown06;
-  const gf::GfFieldLod::unknown001 *lodInfo = gf::GfFieldLod::get()->findBdatInfo(lodId);
+  const gf::GfFieldLod::BdatInfo *lodInfo = gf::GfFieldLod::get()->findBdatInfo(lodId);
   if (lodInfo != nullptr) {
     if (lodInfo->unknown04 > 0.0f) {
       gf::GfFieldLod::get()->setFade(lodId, true, isImmediate);

@@ -11,12 +11,18 @@ namespace ml {
 // Layout evidence: ml::DevPadNx::Impl::playVibration reads the id at 0x00, tests bits 0 and 1 of 0x04 and copies the four
 // floats at 0x08; every caller (GfGameSalvage::playDiveVibration, GfMenuObjUtil::playVibration) stores 3 at 0x04 and 1.0f
 // at 0x0c and 0x14.
+// Store order evidence: with a constant amplitude the game keeps four separate 32-bit stores (stp w8,w8 twice) in
+// StateUtil::playVibration and GfGameSalvage::playDiveVibration, and with a variable amplitude it keeps
+// GfMenuObjUtil::playVibration's 0c, 14, 08, 10 order; only a body that stores the motors first and the id last gives
+// both (any in-order spelling merges the constant stores into one 64-bit store).
 struct PadVibrationInfo {
-  explicit PadVibrationInfo(u32 id, f32 amplitude = 1.0f) : unknown00(id), unknown04(3) {
+  explicit PadVibrationInfo(u32 id, f32 amplitude = 1.0f) {
+    unknown04 = 3;
     unknown0c = 1.0f;
     unknown14 = 1.0f;
     unknown08 = amplitude;
     unknown10 = amplitude;
+    unknown00 = id;
   }
 
   u32 unknown00; // Inferred role: vibration id; original member name unknown.

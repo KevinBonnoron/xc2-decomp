@@ -1,7 +1,13 @@
 #include "gf/object/component/pc/gf_com_behavior_pc.h"
 
+#include <string.h>
+
+#include "framework/memory/allocator.h"
+#include "framework/reference_frame.h"
 #include "gf/gf_allocator.h"
+#include "gf/object/component/pc/gf_pc_agent.h"
 #include "gf/object/component/pc/plugin/gf_pc_access_plugin.h"
+#include "gf/object/component/pc/plugin/gf_pc_attach_plugin.h"
 #include "gf/object/component/pc/plugin/gf_pc_col_velocity_plugin.h"
 #include "gf/object/component/pc/plugin/gf_pc_dead_col_check_plugin.h"
 #include "gf/object/component/pc/plugin/gf_pc_fade_plugin.h"
@@ -9,6 +15,7 @@
 #include "gf/object/component/pc/plugin/gf_pc_fall_distance_achiev_plugin.h"
 #include "gf/object/component/pc/plugin/gf_pc_fall_distance_plugin.h"
 #include "gf/object/component/pc/plugin/gf_pc_fall_into_coli_plugin.h"
+#include "gf/object/component/pc/plugin/gf_pc_look_at_plugin.h"
 #include "gf/object/component/pc/plugin/gf_pc_look_axis_plugin.h"
 #include "gf/object/component/pc/plugin/gf_pc_lure_plugin.h"
 #include "gf/object/component/pc/plugin/gf_pc_slide_plugin.h"
@@ -18,12 +25,25 @@
 #include "gf/object/component/pc/plugin/gf_pc_water_in_plugin.h"
 
 namespace gf {
+class GfComAsm;
+struct CallBackCache;
+
+bool isAttenuationPack(const char *name) {
+  return strcmp(name, "se_mov_pc_default") == 0 || strcmp(name, "se_fld_move_nopon") == 0 || strcmp(name, "se_fld_move_large") == 0 || strcmp(name, "se_fld_move_hana") == 0 ||
+         strcmp(name, "se_fld_move_beast") == 0 || strcmp(name, "se_fld_move_float") == 0 || strcmp(name, "se_fld_allmap") == 0;
+}
 namespace pc {
 
 AccessPlugin *AccessPlugin::create() {
   // __LINE__ must be 31 as in the original header: it is the line argument of operator new.
 #line 31 "gf/object/component/pc/plugin/gf_pc_access_plugin.h"
   return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) AccessPlugin();
+}
+
+AttachPlugin *AttachPlugin::create() {
+  // __LINE__ must be 26 as in the original header: it is the line argument of operator new.
+#line 26 "gf/object/component/pc/plugin/gf_pc_attach_plugin.h"
+  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) AttachPlugin();
 }
 
 ColVelCalculatorPlugin *ColVelCalculatorPlugin::create() {
@@ -80,6 +100,12 @@ LurePlugin *LurePlugin::create() {
   return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) LurePlugin();
 }
 
+LookAtPlugin *LookAtPlugin::create() {
+  // __LINE__ must be 39 as in the original header: it is the line argument of operator new.
+#line 39 "gf/object/component/pc/plugin/gf_pc_lookat_plugin.h"
+  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) LookAtPlugin();
+}
+
 SlidePlugin *SlidePlugin::create() {
   // __LINE__ must be 26 as in the original header: it is the line argument of operator new.
 #line 26 "gf/object/component/pc/plugin/gf_pc_slide_plugin.h"
@@ -112,7 +138,19 @@ WaterInPlugin *WaterInPlugin::create() {
 
 } // namespace pc
 
+void GfComBehaviorPc::Listener::onWkStandbyLogout() { unknown08->unknown130 = nullptr; }
+
+GfComBehaviorPc::GfComBehaviorPc() : unknowna0(fw::Allocator::getProcAllocator()), unknown130(nullptr), unknown138(this) {}
+
+GfComBehaviorPc::~GfComBehaviorPc() {}
+
+void GfComBehaviorPc::callbackBattle(GfComAsm *comAsm, const CallBackCache &cache) {}
+
+void GfComBehaviorPc::callbackField(GfComAsm *comAsm, const CallBackCache &cache) {}
+
 void GfComBehaviorPc::procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message) {}
+
+const mm::mtl::RTTI *GfComBehaviorPc::getRTTI() const { return &m_rtti; }
 
 } // namespace gf
 

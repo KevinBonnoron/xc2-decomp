@@ -3,6 +3,7 @@
 #include "bdat.h"
 #include "framework/sound/sound_manager.h"
 #include "fw/fw_camera.h"
+#include "fw/fw_pad.h"
 #include "gf/camera/gimmick/gf_camera_gimmick.h"
 #include "gf/data/gf_data_map.h"
 #include "gf/data/gf_data_util.h"
@@ -28,6 +29,7 @@
 #include "gmk/gmk_manager.h"
 #include "gmk/gmk_salvage.h"
 #include "gmk/gmk_set.h"
+#include "ml/dev_pad.h"
 #include "ml/rand.h"
 #include "mm_math/mm_vec3.h"
 
@@ -467,6 +469,12 @@ void GfGameSalvage::playClimbReady() {
 void GfGameSalvage::playSE(SEID id) {
   if (fw::SoundManager::get() != nullptr && GfFieldSound::get() != nullptr) {
     fw::SoundManager::get()->playSe(id, GfFieldSound::get()->getCommonPack(), 1.0f, static_cast<fw::SoundCategory>(0));
+  }
+}
+
+void GfGameSalvage::playDiveVibration() {
+  if (unknownd8 != 0) {
+    fw::PadManager::playVibration(ml::PadVibrationInfo(unknownd8));
   }
 }
 

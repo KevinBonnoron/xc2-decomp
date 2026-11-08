@@ -10,6 +10,10 @@ namespace gf {
 // Inferred role: attached call id; original name unknown.
 constexpr u32 unknown001 = 0x17;
 
+GfMenuObjElementEff::GfMenuObjElementEff(u32 handle) : GfMenuObject(handle), unknown28(this), unknown2b8(-1), unknown2bc(0), unknown2c0(0) {}
+
+GfMenuObjElementEff::~GfMenuObjElementEff() {}
+
 void GfMenuObjElementEff::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjElementEff::update() {

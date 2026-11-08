@@ -30,13 +30,15 @@ struct GfObjPropertyCharacter {
   u32 unknown00; // Inferred role: max hp; original member name unknown.
   u32 unknown04; // Inferred role: hp; original member name unknown.
   u16 unknown08; // Inferred role: level; original member name unknown.
-  u8 _0a[0x30 - 0x0a];
-  bool unknown30; // Inferred role: battle; original member name unknown.
+  u8 _0a[0x28 - 0x0a];
+  GF_OBJ_HANDLE *unknown28; // Inferred role: target, copied from the property component by GfComProperty::flush; original member name unknown.
+  bool unknown30;           // Inferred role: battle; original member name unknown.
 };
 
 static_assert(offsetof(GfObjPropertyCharacter, unknown04) == 0x04, "");
 static_assert(offsetof(GfObjPropertyCharacter, unknown08) == 0x08, "");
 static_assert(offsetof(GfObjPropertyCharacter, unknown30) == 0x30, "");
+static_assert(offsetof(GfObjPropertyCharacter, unknown28) == 0x28, "");
 
 enum {
   PROPERTY_MOVE_WALK = 0,
@@ -121,7 +123,7 @@ class GfObjPropertyDriver : public GfObjProperty {
 public:
   u8 _40[0x88 - 0x40];
   GfObjPropertyCharacter unknown88; // Inferred role: character, pointed to by unknown10; original member name unknown.
-  u8 _bc[0x190 - 0xbc];
+  u8 _c0[0x190 - 0xc0];
   u32 unknown190; // Inferred role: exp, set from DataParamAcc::getExp by GfGameUtil::flushProperty; original member name unknown.
   u32 unknown194; // Inferred role: exp next, set from DataParamAcc::getExpNext; original member name unknown.
   u32 unknown198; // Inferred role: weapon point, set from DataParamAcc::getWeaponPoint; original member name unknown.
@@ -143,7 +145,7 @@ public:
 
   u8 _40[0x88 - 0x40];
   GfObjPropertyCharacter unknown88; // Inferred role: character, pointed to by unknown10; original member name unknown.
-  u8 _bc[0x190 - 0xbc];
+  u8 _c0[0x190 - 0xc0];
   mm::mtl::FixedArray<unknown109, 3> unknown190; // Inferred role: field skills copied from SDataBlade::unknownae by GfGameUtil::flushProperty; original member name unknown.
   u8 _1a2[0x1a4 - 0x1a2];
   int unknown1a4; // Inferred role: kizuna value, read by GfMenuGfObjAdapter::update_BL_Kizuna; original member name unknown.
@@ -184,7 +186,7 @@ class GfObjPropertyEnemy : public GfObjProperty {
 public:
   u8 _40[0x88 - 0x40];
   GfObjPropertyCharacter unknown88; // Inferred role: character, pointed to by unknown10; original member name unknown.
-  u8 _bc[0xc2 - 0xbc];
+  u8 _c0[0xc2 - 0xc0];
   bool unknownc2; // Inferred role: scouted; original member name unknown.
   u8 _c3[0xc4 - 0xc3];
   u32 unknownc4; // Inferred role: arts id; original member name unknown.

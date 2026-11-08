@@ -615,13 +615,21 @@ class GfPlayComFieldTbox : public GfPlayCom, public mm::mtl::PtrSingleton<GfPlay
   GF_PLAY_COM("PlayComFieldTbox")
 
 public:
+  explicit GfPlayComFieldTbox(GF_OBJ_HANDLE *handle);
   void start() override;
   void end() override;
+  bool isOpenFinish() const;
+  bool updateForCheckOpenFinish(const fw::UpdateInfo &info);
+  bool updateForCompleteQuest(const fw::UpdateInfo &info);
+  bool updateForWaitItemDrop(const fw::UpdateInfo &info);
   static GfPlayComFieldTbox *create(GF_OBJ_HANDLE *handle);
 
   u32 unknown18;            // Inferred role: player pause; original member name unknown.
   GF_OBJ_HANDLE *unknown20; // Inferred role: handle; original member name unknown.
-  u8 _28[0x38 - 0x28];
+  QuestID unknown28;        // Inferred role: quest of the treasure box; original member name unknown.
+  u32 unknown2c;            // Inferred role: update step (0 wait for the opening, 1 wait for the quest, 2 wait for the items); original member name unknown.
+  f32 unknown30;            // Inferred role: elapsed time of the step; original member name unknown.
+  u8 _34[0x38 - 0x34];
 };
 
 static_assert(offsetof(GfPlayComFieldTbox, unknown18) == 0x18, "");
@@ -893,6 +901,10 @@ class GfPlayComResetBlade : public GfPlayCom {
   GF_PLAY_COM("ResetBlade")
 
 public:
+  ~GfPlayComResetBlade() override;
+  void start() override;
+  void end() override;
+  bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComResetBlade *create(u32 partyId, int blade);
   static bool isPlaying(u32 partyId);
 
@@ -916,7 +928,8 @@ class GfPlayComMoverSwitch : public GfPlayCom {
   GF_PLAY_COM("PlayComMoverSwitch")
 
 public:
-  GfPlayComMoverSwitch() : GfPlayCom(PCOMTYPE_MOVER_SWITCH, true), unknown10(-1), unknown14(0), unknown18(0) {}
+  GfPlayComMoverSwitch();
+  ~GfPlayComMoverSwitch() override;
   void start() override;
   void end() override;
   static GfPlayComMoverSwitch *create();

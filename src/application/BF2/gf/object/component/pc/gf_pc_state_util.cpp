@@ -2,6 +2,8 @@
 
 #include "framework/object/component_object.h"
 #include "framework/object/updatable_object.h"
+#include "framework/pad/pad_relay_util.h"
+#include "fw/fw_pad.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_party.h"
 #include "gf/game/gf_game_player_camera.h"
@@ -22,12 +24,23 @@
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
+#include "ml/dev_pad.h"
 #include "mm_mtl/rtti.h"
 #include "mm_mtl/unique_ptr.h"
 #include "mm_mtl/vector.h"
 
 namespace gf {
 namespace pc {
+
+u32 StateUtil::getFwPadKey(const char *name) {
+  u32 key = 0;
+  for (u32 padIndex = 0; padIndex < 5; padIndex++) {
+    if (fw::PadRelayUtil::getFwPadKey(padIndex, name, 0, 0, &key)) {
+      break;
+    }
+  }
+  return key;
+}
 
 void StateUtil::resetCamera() { GfGamePlayerCamera::resetCamera(); }
 
@@ -88,6 +101,18 @@ void StateUtil::setEnableDownIK(GfComBehaviorPc &behavior, bool isEnable) {
   FootIkControllerPlugin *plugin = behavior.unknown001<FootIkControllerPlugin>(3);
   if (plugin != nullptr) {
     plugin->unknown1e = isEnable;
+  }
+}
+
+void StateUtil::setEnableHeadDetectForSwitcher(GfComBehaviorPc &behavior, bool isEnable) {
+  FootIkControllerPlugin *plugin = behavior.unknown001<FootIkControllerPlugin>(3);
+  if (plugin != nullptr && plugin->unknown1c) {
+    GfComPropertyPc *property = behavior.unknown08->getComponent<GfComPropertyPc>();
+    if (isEnable) {
+      property->unknown111_6 = true;
+    } else {
+      property->unknown111_6 = false;
+    }
   }
 }
 
@@ -304,6 +329,12 @@ void StateUtil::sendMessageGfObj(GfComBehaviorPc &behavior, GF_OBJ_HANDLE *handl
   GfObj *obj = GfObjUtil::getObj(handle);
   if (obj != nullptr) {
     static_cast<GfObj *>(behavior.unknown08)->sendMessage(obj, message);
+  }
+}
+
+void StateUtil::playVibration(GfComBehaviorPc &behavior, fw::VibrationID id) {
+  if (behavior.getProperty()->unknown111_2) {
+    fw::PadManager::playVibration(ml::PadVibrationInfo(id));
   }
 }
 

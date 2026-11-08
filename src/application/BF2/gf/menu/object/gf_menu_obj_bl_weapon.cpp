@@ -3,13 +3,29 @@
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_data_weapon.h"
 #include "gf/data/gf_object_type.h"
+#include "gf/menu/call/gf_menu_call_context.h"
+#include "gf/menu/gf_menu_reference_number.h"
+#include "gf/menu/list/gf_menu_item_list.h"
+#include "mm_mtl/reference_object.h"
 #include "types.h"
+#include "ui/ctrl/ui_ctrl_cursor_select.h"
+#include "ui/list/ui_select_obj_list.h"
 
 namespace gf {
-class GfMenuCallContext;
 
 // Inferred role: attached call id; original name unknown.
 constexpr u32 unknown001 = 0x7c;
+
+GfMenuObjBlWeapon::GfMenuObjBlWeapon(u32 handle)
+    : GfMenuObject(handle), unknown24(0), unknown28(0), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr), unknown50(this), unknown2e0(-1), unknown2e8(nullptr) {}
+
+GfMenuObjBlWeapon::~GfMenuObjBlWeapon() {
+  mm::mtl::safeRelease(unknown30);
+  mm::mtl::safeRelease(unknown38);
+  mm::mtl::safeRelease(unknown40);
+  mm::mtl::safeRelease(unknown2e8);
+  unknown48 = nullptr;
+}
 
 void GfMenuObjBlWeapon::finalize() { GfMenuObject::finalize(); }
 

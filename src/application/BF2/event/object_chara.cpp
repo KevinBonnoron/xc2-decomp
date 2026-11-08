@@ -149,4 +149,17 @@ void ObjectChara::OnManiSetRot(IManiCallback::SetParam &param) {
   setRotAxis(axis);
 }
 
+bool ObjectChara::OnManiStartRot(IManiCallback::StartParam &param) {
+  mm::Vec3 pos = unknown70->getPos();
+  f32 ofs = mm::mtl::Singleton<DataManager>::getPtr()->getRotOfsY(unknowna0.getAxis(), pos);
+  mm::Mat44 start;
+  start.setRotY(ofs);
+  start.setTrans(unknown70->getPos());
+  mm::Mat44 rot;
+  rot.setRotY(unknown70->getRotTo().y - ofs);
+  param.unknown00 = start;
+  param.unknown40 = rot;
+  return true;
+}
+
 } // namespace event

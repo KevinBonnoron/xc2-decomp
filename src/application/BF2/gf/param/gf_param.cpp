@@ -3,6 +3,7 @@
 #include "arc/arc_data.h"
 #include "framework/pad/pad_res_event.h"
 #include "framework/pad/pad_res_event_manager.h"
+#include "framework/param/param_builder.h"
 #include "framework/reflection.h"
 #include "framework/resource/common_resource.h"
 #include "fw/fw_param_manager.h"
@@ -55,6 +56,12 @@ void unbindPadResource() {
       fw::PadResEventManager::setResource(index, nullptr);
     }
     manager->cleanup();
+  }
+}
+
+void destroyGfParameter() {
+  for (u32 index = 0; index < 25; index++) {
+    fw::ParamBuilder::destroy(index);
   }
 }
 

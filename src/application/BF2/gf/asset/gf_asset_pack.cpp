@@ -9,6 +9,7 @@
 #include "gf/asset/gf_file_size_pool.h"
 #include "gf/asset/gf_slot.h"
 #include "gf/asset/gf_slot_mapping.h"
+#include "gf/object/gf_obj_handle.h"
 #include "gf/sound/gf_sound.h"
 #include "gf/util/gf_util.h"
 #include "ml/fixed_size_alloc.h"
@@ -24,6 +25,18 @@ struct GF_OBJ_HANDLE;
 namespace gf {
 
 class GfExtendResource : public mm::mtl::ReferenceObject {};
+
+AssetPackInfo::AssetPackInfo() : unknown08(INVALID_ASSET_HANDLE), unknown2d8(INVALID_HANDLE), unknown300(10) {
+  for (u32 i = 0; i < 4; i++) {
+    unknown2e0[i] = nullptr;
+  }
+  unknown304 = false;
+  unknown305 = false;
+  unknown306 = false;
+  unknown307 = false;
+  unknown308 = ASSET_TYPE_BASE;
+  unknown334 = 0;
+}
 
 AssetPackInfo::~AssetPackInfo() {
   GfAssetPack **end = unknown10.end();

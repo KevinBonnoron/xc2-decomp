@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include "framework/manager_object.h"
 #include "framework/sound/sound_manager.h"
 #include "fw/fw_pad.h"
@@ -12,6 +14,23 @@
 
 namespace fw {
 
+namespace detail {
+
+template <typename T> int getPadNo(const T &name) {
+  static const char *padNames[] = {"pad0", "pad1", "pad2", "pad3", "pad4", "pad5", "pad6", "pad7"};
+  for (int i = 0; i < 8; i++) {
+    if (strcmp(name.c_str(), padNames[i]) == 0) {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
+template int getPadNo<mm::mtl::FixStr<32>>(const mm::mtl::FixStr<32> &);
+
+} // namespace detail
+
 PadManager::~PadManager() {}
 
 bool PadManager::registListener(IPadListener *listener) {
@@ -23,6 +42,8 @@ bool PadManager::registListener(IPadListener *listener) {
   }
   return manager != nullptr;
 }
+
+IPadListener::IPadListener() { PadManager::registListener(this); }
 
 IPadListener::~IPadListener() { PadManager::removeListener(this); }
 

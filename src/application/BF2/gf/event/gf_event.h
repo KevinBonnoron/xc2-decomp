@@ -77,11 +77,11 @@ enum {
 };
 
 struct MapjumpCallbackInfo {
-  u32 unknown00;  // Inferred role: map jump id; original member name unknown.
-  u32 unknown04;  // Inferred role: map; original member name unknown.
-  u32 unknown08;  // Inferred role: prev map; original member name unknown.
-  bool unknown0c; // Inferred role: with save data; original member name unknown.
-  u32 unknown10;  // Inferred role: jump type; original member name unknown.
+  u32 unknown00 = 0;      // Inferred role: map jump id; original member name unknown.
+  u32 unknown04 = 0;      // Inferred role: map; original member name unknown.
+  u32 unknown08 = 0;      // Inferred role: prev map; original member name unknown.
+  bool unknown0c = false; // Inferred role: with save data; original member name unknown.
+  u32 unknown10 = 0;      // Inferred role: jump type; original member name unknown.
 };
 
 static_assert(sizeof(MapjumpCallbackInfo) == 0x14, "");

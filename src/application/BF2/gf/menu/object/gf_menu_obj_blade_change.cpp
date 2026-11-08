@@ -16,6 +16,11 @@ constexpr u16 unknown002 = 0x104;
 // Inferred role: ui event type; original name unknown.
 constexpr u16 unknown003 = 0x102;
 
+GfMenuObjBladeChange::GfMenuObjBladeChange(u32 handle)
+    : GfMenuObject(handle), unknown24(-1), unknown28(-1), unknown2c(false), unknown2d(false), unknown2e(false), unknown48(-1), unknown4c(-1), unknown50(-1), unknown54(-1) {}
+
+GfMenuObjBladeChange::~GfMenuObjBladeChange() { ; }
+
 void GfMenuObjBladeChange::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjBladeChange::update() {

@@ -14,6 +14,7 @@ public:
   void finalize() override;
   void update() override;
   static void open(GfMenuCallContext *context, bool isAnim);
+  static void close(GfMenuCallContext *context, bool isAnim);
 };
 
 } // namespace gf

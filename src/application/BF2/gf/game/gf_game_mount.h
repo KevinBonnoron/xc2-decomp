@@ -110,6 +110,7 @@ public:
     GF_MOUNT_HANDLE *unknown08; // Inferred role: mount handle; original member name unknown.
   };
 
+  ~GfMountManager() override;
   static void build(const GfSetupParam &param);
   static void destroy();
   void finalize();

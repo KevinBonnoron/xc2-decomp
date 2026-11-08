@@ -2,6 +2,8 @@
 
 namespace gf {
 
+GfEvtBgm::~GfEvtBgm() { ; }
+
 void GfEvtBgm::destroy() {
   GfEvtBgm *bgm = get();
   bgm->finalize();

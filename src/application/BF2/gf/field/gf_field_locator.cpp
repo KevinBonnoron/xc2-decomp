@@ -23,6 +23,7 @@
 #include "gmk/gmk_npc/gmk_npc.h"
 #include "gmk/gmk_npc/gmk_npc_manager.h"
 #include "gmk/gmk_precious.h"
+#include "gmk/gmk_route.h"
 #include "gmk/gmk_salvage.h"
 #include "gmk/gmk_set.h"
 #include "gmk/gmk_tbox.h"
@@ -30,6 +31,20 @@
 #include "mm_mtl/fixstr.h"
 
 namespace gf {
+
+bool getPopPos(mm::Vec3 &position, const gmk::AGmkBase &gmk) {
+  gmk::GmkType type = gmk.getGmkType();
+  if (type == gmk::GMK_TYPE_ENEMY) {
+    position = gmk.unknown08.unknown08->unknown00;
+    return true;
+  }
+  if (type == gmk::GMK_TYPE_ROUTED_ENEMY) {
+    if (static_cast<const gmk::GmkRoute &>(gmk).getRoutePointPos(position, 0)) {
+      return true;
+    }
+  }
+  return false;
+}
 
 LocatorBat_EnemyID::LocatorBat_EnemyID(QuestID quest, u16 enemyId) : unknown14(0), unknown18(0) {
   if (!quest.empty() && enemyId != 0) {

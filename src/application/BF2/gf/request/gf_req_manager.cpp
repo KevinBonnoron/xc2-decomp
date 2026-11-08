@@ -1,5 +1,6 @@
 #include "gf/request/gf_req_manager.h"
 
+#include "gf/gf_allocator.h"
 #include "gf/gf_manager.h"
 #include "gf/request/gf_req_scom.h"
 #include "ml/micro_thread.h"
@@ -11,6 +12,23 @@ struct FiberType;
 } // namespace os
 } // namespace nn
 namespace gf {
+
+GfReqManager::GfReqManager(const GfSetupParam &param) : unknown18(reinterpret_cast<ml::MLTHG *>(-1)), unknown20(-1), unknown1838(nullptr), unknown1840(false), unknown1848(false) { initialize(param); }
+
+void GfReqManager::initialize(const GfSetupParam &) {
+  unknown18 = ml::MicroThread::get()->createGroup();
+  unknown20 = ml::MicroThread::get()->createThread(unknown18, fnReqUpdate, this);
+#line 93
+  unknown1838 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfReqSmallCom();
+  unknown1848 = true;
+}
+
+GfReqManager::~GfReqManager() {}
+
+void GfReqManager::build(const GfSetupParam &param) {
+#line 53
+  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfReqManager(param);
+}
 
 void GfReqManager::destroy() {
   GfReqManager *manager = get();

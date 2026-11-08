@@ -91,7 +91,7 @@ void GmkElevator::seqWaitToValidate_GfFieldLod(f32 deltaTime) {
     return;
   }
   const BdatInfo *info = getBdatInfo();
-  const gf::GfFieldLod::unknown001 *lodInfo = lod->findBdatInfo(info->unknown06);
+  const gf::GfFieldLod::BdatInfo *lodInfo = lod->findBdatInfo(info->unknown06);
   if (lodInfo != nullptr) {
     u16 lodId = lodInfo->unknown00;
     for (gf::GF_OBJ_HANDLE *const &handle : *gf::GfGameObj::getList(gf::OBJECT_TYPE_UNKNOWN_2)) {

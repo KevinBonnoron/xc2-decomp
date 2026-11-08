@@ -25,6 +25,7 @@ struct GF_MOUNT_HANDLE;
 struct GF_OBJ_HANDLE;
 class GfAssetMultiBind;
 class GfComModel;
+class GfInitParam;
 class GfObj;
 class GfObjProperty;
 class GfObjSetup;
@@ -139,6 +140,7 @@ public:
   void finalize();
   void update(const fw::UpdateInfo &info);
   void postUpdate(const fw::UpdateInfo &info);
+  void updateFirstObjects(const fw::UpdateInfo &info);
   void checkTerminate();
   void applyModelLayerPauseSpeed();
   static bool reloadForDebug(GF_OBJ_HANDLE *handle, bool isReload);
@@ -148,6 +150,7 @@ public:
   static void removeListener(IGfObjListener *listener);
   static int getGfObjCapacity(u32 objectType);
   static int getObjectNum(u32 objectType);
+  GF_OBJ_HANDLE *getExistFixedObj(int index) const;
   bool isValidMultiBind(GF_OBJ_HANDLE *handle, u32 uniqId) const;
   GfAssetMultiBind *getAssetMultiBind(u32 uniqId) const;
   GfAssetMultiBind *getMultiBinder(GF_OBJ_HANDLE *handle);
@@ -175,6 +178,8 @@ public:
   const mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096> *getLoadingObj() const;
   const mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096> *getDestroyObj() const;
   u32 createGfObjHandle(const GFOBJ_INFO *info, u32 index, int multiBind);
+  GF_OBJ_HANDLE *createGfObj(u32 objectType, const GfInitParam &param);
+  void addFollowObj(GF_OBJ_HANDLE *handle);
 
   bool unknown10; // Inferred role: initialized; original member name unknown.
   u32 unknown14;  // Inferred role: handle generation; original member name unknown.

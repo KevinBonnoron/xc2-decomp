@@ -1,15 +1,21 @@
 #pragma once
 #include <stddef.h>
 
+#include "gf/menu/gf_menu_many_objects.h"
 #include "gf/menu/gf_menu_object.h"
-
 #include "mm_math/mm_vec3.h"
 #include "types.h"
+#include "ui/ui_object_acc.h"
 
 namespace gf {
 
 class GfMenuObjDamageBuff : public GfMenuObject {
 public:
+  // Queued by GfMenuManyObjects; the game gives it its own vtable, inheriting the dispose of the base.
+  struct DamageInfo : GfMenuManyObjects::InfoType {};
+
+  GfMenuObjDamageBuff(u32 handle);
+  ~GfMenuObjDamageBuff() override;
   void initialize() override;
   void finalize() override;
   void update() override;
@@ -38,8 +44,13 @@ public:
   static void open(const OpenParam &param);
   static void close(u32 handle);
   static void openUniteCombo(const OpenUniteParam &param);
+  static void closeUniteCombo(u32 handle);
+  static void removeObject(ui::UIObjectAcc acc);
+  static void setupPlugin(u32 handle);
+  static void setupScreen(u32 handle, int color, int resist, int name, int);
 };
 
+static_assert(sizeof(GfMenuObjDamageBuff::DamageInfo) == 0x10, "");
 static_assert(offsetof(GfMenuObjDamageBuff::OpenParam, unknown10) == 0x10, "");
 static_assert(offsetof(GfMenuObjDamageBuff::OpenParam, unknown20) == 0x20, "");
 static_assert(sizeof(GfMenuObjDamageBuff::OpenParam) == 0x30, "");

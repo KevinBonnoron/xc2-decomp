@@ -4,13 +4,30 @@
 #include "gf/game/mercenaries/gf_game_mercenaries.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_manager.h"
+#include "gf/menu/gf_menu_reference_number.h"
 #include "gf/menu/gf_menu_types.h"
+#include "gf/menu/list/gf_menu_blade_list.h"
 #include "gf/menu/object/gf_menu_obj_bl_kizuna_ring.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
+#include "mm_mtl/reference_object.h"
 #include "ui/event/ui_event_data.h"
 #include "ui/ui_object_acc.h"
 
 namespace gf {
+
+GfMenuObjMercenaryReport::GfMenuObjMercenaryReport(u32 handle)
+    : GfMenuObject(handle), unknown24(0), unknown28(nullptr), unknown30(this), unknown358(false), unknown359(false), unknown360(nullptr), unknown368(nullptr), unknown370(nullptr) {
+  unknown360 = unknown160();
+  unknown368 = GfMenuCallContext::create();
+  unknown370 = GfMenuCallContext::create();
+}
+
+GfMenuObjMercenaryReport::~GfMenuObjMercenaryReport() {
+  mm::mtl::safeRelease(unknown28);
+  mm::mtl::safeRelease(unknown370);
+  mm::mtl::safeRelease(unknown368);
+  unknown360 = nullptr;
+}
 
 void GfMenuObjMercenaryReport::finalize() { GfMenuObject::finalize(); }
 

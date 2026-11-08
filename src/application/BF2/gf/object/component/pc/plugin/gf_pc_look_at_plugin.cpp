@@ -1,6 +1,77 @@
 #include "gf/object/component/pc/plugin/gf_pc_look_at_plugin.h"
 
+#include "framework/ik/ik_look_at_solver.h"
+#include "fw/fw_transform.h"
+#include "gf/game/gf_game_search_obj.h"
+#include "gf/gf_allocator.h"
+#include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_util.h"
+#include "mm_math/mm_quat.h"
+#include "mm_math/mm_vec3.h"
 #include "mm_mtl/map.h" // IWYU pragma: keep
+
+namespace gf {
+class GfObj;
+
+namespace pc {
+
+LookAtPlugin::LookAtPlugin() : unknown20(INVALID_SEARCH_OBJ), unknown28(getAllocator(ALLOCATOR_DEFAULT)), unknown40(nullptr), unknown68(0), unknown6c(0.0f), unknown70() {}
+
+LookAtPlugin::~LookAtPlugin() {}
+
+void LookAtPlugin::cleanup(GfComBehaviorPc &) {
+  if (unknown20 != INVALID_SEARCH_OBJ) {
+    GfGameSearchObj::destroyObj(unknown20);
+    unknown20 = INVALID_SEARCH_OBJ;
+  }
+  unknown10 = nullptr;
+}
+
+const unknown002 *LookAtPlugin::getParam() const {
+  const fw::ParamList *list = unknown18.operator->();
+  return list->unknown0c > 4 ? static_cast<const unknown002 *>(list->unknown10[4].param) : nullptr;
+}
+
+void LookAtPlugin::onActivate() {
+  unknown40 = nullptr;
+  unknown28.clear();
+  unknown68 = 0;
+  unknown6c = 0.0f;
+  for (u32 i = 0; i < 5; i++) {
+    unknown70[i] = 0.0f;
+  }
+}
+
+void LookAtPlugin::onDeactivate() {
+  const unknown002 *param = getParam();
+  if (unknown40 != nullptr) {
+    unknown10->fadeOut(param->unknown10);
+  }
+}
+
+bool LookAtPlugin::getTargetTransform(const TargetInfo &info, fw::Transform *transform) const {
+  GfObj *obj = GfObjUtil::getObj(info.unknown00);
+  if (obj != nullptr) {
+    GfObjAcc acc(obj);
+    const fw::Transform &worldTransform = acc.getWorldTransform();
+    transform->unknown00 = worldTransform.unknown00;
+    transform->unknown10 = worldTransform.unknown10;
+    return true;
+  }
+  return false;
+}
+
+void LookAtPlugin::drawDebugTarget() {
+  if (unknown40 != nullptr && unknown10.get() != nullptr) {
+    fw::LookAtIkSolver *solver = unknown10->unknown28.get();
+    if (solver != nullptr && solver->isEnable()) {
+      solver->drawDebug();
+    }
+  }
+}
+
+} // namespace pc
+} // namespace gf
 
 typedef mm::mtl::RedBlackTreeBase<mm::mtl::Map<gf::GF_OBJ_HANDLE *, gf::pc::LookAtPlugin::TargetInfo>::MapTraits<gf::GF_OBJ_HANDLE *, gf::pc::LookAtPlugin::TargetInfo>> unknown101;
 

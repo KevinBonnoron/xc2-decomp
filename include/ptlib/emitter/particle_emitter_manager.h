@@ -34,12 +34,12 @@ public:
     // FixedArray<Vec3, 20>::assign writes x/y/z of each Vec3; Vec3's copy assignment reads only x/y/z and
     // ignores the 4-byte padding inside each element.
     mm::mtl::FixedArray<mm::Vec3, 20> unknown000; // Inferred role: 20 Vec3s; original member name unknown.
-    // The game's constructor stores +0x140/+0x144 = 0, +0x148..+0x14f = 0xff, +0x150 = 0xff,
-    // +0x151 = 0, +0x152 = 1, +0x154..+0x160 = four 1.0f, +0x164/+0x168 = zero floats, +0x16c = 0.3f.
-    // +0x153 is natural padding before the 4-byte field at +0x154. The +0x140 8-byte copy does not prove
-    // two u32 versus one u64; the +0x16c 32-bit copy does not prove u32 versus f32. Both are storage views.
-    u32 unknown140; // Role and original member name unknown.
-    u32 unknown144; // Role and original member name unknown.
+    // The game's constructor stores 0 at +0x140, 0xff at +0x148..+0x14f, 0xff at +0x150, 0 at +0x151,
+    // 1 at +0x152, four 1.0f at +0x154..+0x160, zero floats at +0x164/+0x168, and 0.3f at +0x16c.
+    // +0x140 is an opaque 8-byte storage view: the constructor, updateKizunaPos and drawKizunaLine all use
+    // 8-byte loads or copies. Its original semantic/pointer type is unknown. +0x16c is a 32-bit storage view;
+    // u32 versus f32 is unresolved. +0x153 is natural padding before the 4-byte field at +0x154.
+    u64 unknown140; // Opaque 8-byte storage; original semantic/pointer type unknown.
     u8 unknown148;  // Role and original member name unknown; u8 storage, not proven bool.
     u8 unknown149;  // Role and original member name unknown; u8 storage, not proven bool.
     u8 unknown14a;  // Role and original member name unknown; u8 storage, not proven bool.
@@ -149,7 +149,6 @@ public:
 };
 
 static_assert(offsetof(EmitterManager::KizunaWork, unknown140) == 0x140, "");
-static_assert(offsetof(EmitterManager::KizunaWork, unknown144) == 0x144, "");
 static_assert(offsetof(EmitterManager::KizunaWork, unknown148) == 0x148, "");
 static_assert(offsetof(EmitterManager::KizunaWork, unknown149) == 0x149, "");
 static_assert(offsetof(EmitterManager::KizunaWork, unknown14a) == 0x14a, "");

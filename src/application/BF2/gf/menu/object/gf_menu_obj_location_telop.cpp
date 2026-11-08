@@ -11,7 +11,6 @@ namespace gf {
 
 constexpr u32 CALL_LOCATION_TELOP = 37;
 constexpr u32 CALL_LOCATION_TELOP_SUB = 38;
-constexpr int ORDER_LOCATION_TELOP = 2;
 constexpr u16 EVENT_OPEN_TELOP = 0x100;
 constexpr u16 EVENT_CLOSE_TELOP = 0x101;
 constexpr u32 TELOP_FRAME = 200;

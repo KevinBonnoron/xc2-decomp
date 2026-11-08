@@ -370,10 +370,12 @@ void GfComAsm::setVariable(const char *name, f32 value) {
   }
 }
 
-void GfComAsm::getVariable(const char *name, f32 *value) const {
+bool GfComAsm::getVariable(const char *name, f32 *value) const {
   if (unknown10 != nullptr) {
-    unknown10->getVariable(name, value);
+    return unknown10->getVariable(name, value);
   }
+
+  return false;
 }
 
 void GfComAsm::setVariable(const char *name, int value) {
@@ -382,10 +384,12 @@ void GfComAsm::setVariable(const char *name, int value) {
   }
 }
 
-void GfComAsm::getVariable(const char *name, int *value) const {
+bool GfComAsm::getVariable(const char *name, int *value) const {
   if (unknown10 != nullptr) {
-    unknown10->getVariable(name, value);
+    return unknown10->getVariable(name, value);
   }
+
+  return false;
 }
 
 void GfComAsm::cacheCallback(anm::AsmListener::CallBackType type, const anm::AsmAnnotetion &annotation) { unknown148.push_back(CallBackCache(type, &annotation)); }

@@ -70,6 +70,7 @@
 #include "gf/util/gf_item_util.h"
 #include "gf/util/gf_util.h"
 #include "gmk/gmk_base.h"
+#include "gmk/gmk_cond.h"
 #include "gmk/gmk_enemy/gmk_enemy.h"
 #include "gmk/gmk_enemy/gmk_routed_enemy.h"
 #include "gmk/gmk_list.h"
@@ -167,6 +168,19 @@ bool GfGameUtil::isUiGfObjHandleValid(GF_OBJ_HANDLE *handle) {
 
   GfObjAcc objAcc(handle);
   return objAcc.isValid() && !objAcc.isDestroy() && !objAcc.testFlag(OBJ_FLAG_UI_HIDDEN);
+}
+
+bool GfGameUtil::isUiNameDistMatch(GF_OBJ_HANDLE *handle) {
+  if (isUiGfObjHandleValid(handle)) {
+    GfObjAcc objAcc(handle);
+    f32 distance = getUiNameDist(handle);
+    if (!(distance <= 0.0f)) {
+      const mm::Vec3 &position = objAcc.getWorldTransform().unknown00;
+      return gmk::DistCond::isMatch(distance * distance, position);
+    }
+  }
+
+  return false;
 }
 
 static void makeWeaponBattleIdleState(mm::mtl::FixStr<32> &state, u32 weaponType) {
@@ -1467,6 +1481,26 @@ bool GfGameUtil::hasBelonging(GF_OBJ_HANDLE *handle, u32 belonging) {
   default:
     return false;
   }
+}
+
+bool GfGameUtil::execTurnCmd(const ExecTurnCmdInfo &info) {
+  GfObjAcc objAcc(info.unknown00);
+  GfObj *obj = objAcc.getObj();
+  if (obj == nullptr) {
+    return false;
+  }
+
+  if (GfComBehaviorEvent *event = obj->getComponent<GfComBehaviorEvent>()) {
+    event->execTurnCmd(info.unknown08, info.unknown0c, info.unknown10, info.unknown14);
+  } else if (GfComBehaviorEnemy *enemy = obj->getComponent<GfComBehaviorEnemy>()) {
+    enemy->execTurnCmd(info.unknown08, info.unknown0c, info.unknown10, info.unknown14);
+  } else if (GfComBehaviorNpc *npc = obj->getComponent<GfComBehaviorNpc>()) {
+    npc->execTurnCmd(info.unknown08, info.unknown0c, info.unknown10, info.unknown14);
+  } else {
+    return false;
+  }
+
+  return true;
 }
 
 bool GfGameUtil::isTurnEnd(GF_OBJ_HANDLE *handle) {

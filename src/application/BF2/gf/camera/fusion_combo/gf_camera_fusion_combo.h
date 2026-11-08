@@ -4,6 +4,10 @@
 #include "fw/fw_camera.h"
 #include "types.h"
 
+namespace fw {
+class Reflection;
+} // namespace fw
+
 namespace mm {
 namespace mtl {
 class RTTI;
@@ -17,6 +21,7 @@ public:
   static mm::mtl::RTTI m_rtti;
 
   ~FusionComboCamera() override;
+  static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
   void onActivate() override;
   bool isPlayEnd() const;
   static f32 fastOut(f32 t);

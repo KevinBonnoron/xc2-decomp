@@ -80,14 +80,15 @@ public:
 private:
   bool unknown08; // Inferred role: initialized; original member name unknown.
   bool unknown09; // Inferred role: is infinite time; original member name unknown.
-  u8 _0a[0x10 - 0x0a];
+  bool unknown0a; // Inferred role: unknown flag, cleared at construction; original member name unknown.
+  u8 _0b[0x10 - 0x0b];
   mm::mtl::FixedQueue<GEV, 16> unknown10; // Inferred role: events; original member name unknown.
   MapjumpCallbackInfo unknown60;          // Inferred role: mapjump info; original member name unknown.
-  u8 _74[0x78 - 0x74];
-  CLOUD_SEA_HANDLE unknown78;  // Inferred role: cloud sea default; original member name unknown.
-  CLOUD_SEA_REQUEST unknown7c; // Inferred role: cloud sea request; original member name unknown.
-  CLOUD_SEA_HANDLE unknown80;  // Inferred role: cloud sea condition; original member name unknown.
-  bool unknown84;              // Inferred role: is disp weather; original member name unknown.
+  u32 unknown74;                          // Inferred role: unknown, cleared at construction; original member name unknown.
+  CLOUD_SEA_HANDLE unknown78;             // Inferred role: cloud sea default; original member name unknown.
+  CLOUD_SEA_REQUEST unknown7c;            // Inferred role: cloud sea request; original member name unknown.
+  CLOUD_SEA_HANDLE unknown80;             // Inferred role: cloud sea condition; original member name unknown.
+  bool unknown84;                         // Inferred role: is disp weather; original member name unknown.
 };
 
 static_assert(sizeof(GfFieldWeather) == 0x88, "");

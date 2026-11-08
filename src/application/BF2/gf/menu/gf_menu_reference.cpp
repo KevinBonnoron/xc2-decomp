@@ -135,6 +135,62 @@ const GfMenuObjUtil::ArtsIconInfo &GfMenuReference::getArtsPaletteIconInfo(u8 in
   return *info;
 }
 
+void GfMenuReference::setArtsPaletteEnable(u8 index, bool isEnable, u32 disableFlags) {
+  GfMenuReference *reference = get();
+  if (reference != nullptr) {
+    if (index < ARTS_PALETTE_COUNT) {
+      reference->unknown4cac0[index].unknown20 = isEnable;
+      reference->unknown4cac0[index].unknown24 = disableFlags;
+    }
+    if (index < ALL_ARTS_PALETTE_COUNT) {
+      reference->unknown4cda0[index].unknown20 = isEnable;
+      reference->unknown4cda0[index].unknown24 = disableFlags;
+    }
+  }
+}
+
+u32 GfMenuReference::getArtsPaletteElementType(u8 index) {
+  GfMenuReference *reference = get();
+  if (reference == nullptr) {
+    return 0;
+  }
+  if (index < ARTS_PALETTE_COUNT) {
+    return reference->unknown4cac0[index].unknown1c;
+  }
+  if (index < ALL_ARTS_PALETTE_COUNT) {
+    return reference->unknown4cda0[index].unknown1c;
+  }
+  return 0;
+}
+
+bool GfMenuReference::isArtsPaletteEnable(u8 index) {
+  GfMenuReference *reference = get();
+  if (reference == nullptr) {
+    return false;
+  }
+  if (index < ARTS_PALETTE_COUNT) {
+    return reference->unknown4cac0[index].unknown20;
+  }
+  if (index < ALL_ARTS_PALETTE_COUNT) {
+    return reference->unknown4cda0[index].unknown20;
+  }
+  return false;
+}
+
+u32 GfMenuReference::getArtsPaletteDisable(u8 index) {
+  GfMenuReference *reference = get();
+  if (reference == nullptr) {
+    return 0;
+  }
+  if (index < ARTS_PALETTE_COUNT) {
+    return reference->unknown4cac0[index].unknown24;
+  }
+  if (index < ALL_ARTS_PALETTE_COUNT) {
+    return reference->unknown4cda0[index].unknown24;
+  }
+  return 0;
+}
+
 u32 GfMenuReference::getTargetEnemyBuff(u32 index) {
   GfMenuReference *reference = get();
   if (index < 3 && reference != nullptr) {

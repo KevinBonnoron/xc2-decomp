@@ -66,6 +66,9 @@ struct MsgObjectMaxHp;
 struct MsgObjectSetHp;
 struct MsgObjectStopAutoHeal;
 struct MsgObjectLimitHP;
+struct MsgObjectDead;
+struct MsgObjectNotifyDead;
+struct MsgGameChangeTarget;
 
 class GfComProperty : public GfComponent {
 public:
@@ -75,6 +78,11 @@ public:
   GfComProperty();
   ~GfComProperty() override;
   bool recieveMessage(fw::MessageObject *sender, fw::Message &message) override;
+  void changeLayer(u32 oldLayer, u32 newLayer) override;
+  const mm::mtl::RTTI *getRTTI() const override;
+  void onDead(MsgObjectNotifyDead &message);
+  void procMsgObjectDead(fw::MessageObject *object, MsgObjectDead &message);
+  void procMsgGameChangeTarget(fw::MessageObject *object, MsgGameChangeTarget &message);
   void flush();
   void procMsgObjectInvincible(fw::MessageObject *object, MsgObjectInvincible &message);
   void procMsgObjectMaxHp(fw::MessageObject *object, MsgObjectMaxHp &message);
@@ -210,7 +218,9 @@ struct MsgObjectAlpha : fw::Message {
   f32 alpha;
 };
 
-struct MsgObjectFlushProperty : fw::Message {};
+struct MsgObjectFlushProperty : fw::Message {
+  MsgObjectFlushProperty() : fw::Message(MSG_OBJECT_FLUSH_PROPERTY, 0x20) {}
+};
 
 struct MsgGameChangeTarget : fw::Message {
   MsgGameChangeTarget(GF_OBJ_HANDLE *target) : fw::Message(0x100002b, 0x20), unknown08(target) {}
@@ -243,6 +253,7 @@ enum {
   DEAD_TYPE_UNKNOWN_1 = 1, // Inferred role: game over of the controlled character, sent by StateBattleDead::Update; original name unknown.
   DEAD_TYPE_UNKNOWN_3 = 3, // Inferred role: death that the pc water states do not relay to the buddy; original name unknown.
   DEAD_TYPE_EMERGENCY_ESCAPE = 4,
+  DEAD_TYPE_UNKNOWN_7 = 7, // Inferred role: death by staying inside the collision, sent by FallIntoColiPlugin::update; original name unknown.
 };
 
 struct MsgObjectDead : fw::Message {

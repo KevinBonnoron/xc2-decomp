@@ -5,6 +5,7 @@
 #include "framework/ik/ik_look_solver.h"
 #include "framework/ik/ik_solver.h"
 #include "framework/ik/ik_spine_solver.h"
+#include "framework/message/message_object.h"
 #include "framework/object/updatable_object.h"
 #include "gf/object/component/animation/gf_com_evt_anim.h"
 #include "gf/object/component/behavior/plugin/gf_foot_ik_controller_plugin.h"
@@ -19,6 +20,18 @@
 
 namespace gf {
 
+GfComBehaviorEvent::GfComBehaviorEvent() : unknown98(0) {}
+
+bool GfComBehaviorEvent::recieveMessage(fw::MessageObject *sender, fw::Message &message) {
+  if (message.unknown00 != MSG_OBJECT_GET_VELOCITY) {
+    return false;
+  }
+
+  procMsgObjectGetVelocity(sender, static_cast<MsgObjectGetVelocity &>(message));
+  return true;
+}
+
+const mm::mtl::RTTI *GfComBehaviorEvent::getRTTI() const { return &m_rtti; }
 void GfComBehaviorEvent::cleanup() { unknown10.cleanup(); }
 
 void GfComBehaviorEvent::setFootIK(bool isEnable) {

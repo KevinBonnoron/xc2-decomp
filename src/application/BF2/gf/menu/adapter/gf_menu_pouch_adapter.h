@@ -32,7 +32,7 @@ public:
   public:
     ReferenceIndexConverter(mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number, u32 driver) : number(number), driver(driver) {}
     ~ReferenceIndexConverter() override { number = nullptr; }
-    u32 getPouchIndex() override { return number->unknown0c; }
+    u32 getPouchIndex() override;
     u32 getDriverId() override { return driver; }
 
     mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number;
@@ -53,7 +53,7 @@ public:
   public:
     ReferenceIndexReferenceDriverConverter(mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number, u32 driverIndex) : number(number), driverIndex(driverIndex) {}
     ~ReferenceIndexReferenceDriverConverter() override { number = nullptr; }
-    u32 getPouchIndex() override { return number->unknown0c; }
+    u32 getPouchIndex() override;
     u32 getDriverId() override { return GfMenuReference::getReferenceDriverID(driverIndex); }
 
     mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number;

@@ -14,7 +14,7 @@ public:
   static const u32 RATIO_MAX = 6;
 
   AnimVolumeFadeModifier();
-  ~AnimVolumeFadeModifier() override {}
+  ~AnimVolumeFadeModifier() override;
   void bind(ModelObject *modelObject);
   void unbind();
   void apply() override;

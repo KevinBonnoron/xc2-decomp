@@ -48,6 +48,7 @@ static_assert(sizeof(GfDropitemParam) == 0x5c, "");
 
 class GfDropitemParamInst {
 public:
+  GfDropitemParamInst() : unknown00(nullptr), unknown08(0.0f), unknown0c(0.0f) {}
   GfDropitemParamInst(const GfDropitemParam *param, f32 height);
   void create(const GfDropitemParam &param, f32 height);
   f32 getGravity() const;

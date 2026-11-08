@@ -14,6 +14,10 @@ constexpr u16 unknown003 = 0x100;
 // Inferred role: attached display call id; original name unknown.
 constexpr u32 unknown004 = 0x14;
 
+GfMenuObjEnemyStatus::GfMenuObjEnemyStatus(u32 handle) : GfMenuObject(handle), unknown28(-1), unknown100(-1) {}
+
+GfMenuObjEnemyStatus::~GfMenuObjEnemyStatus() {}
+
 void GfMenuObjEnemyStatus::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjEnemyStatus::close() { GF_MENU_REQUEST_EVENT(unknown001, unknown002); }

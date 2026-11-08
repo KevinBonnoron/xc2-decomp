@@ -4,6 +4,7 @@
 namespace gf {
 
 class GfComEffectCaster;
+class GfEnvProperty;
 
 struct GfCharaWaterInfo {
   f32 unknown00; // Inferred role: water height; original member name unknown.
@@ -22,6 +23,7 @@ public:
 
   static u32 getWaterHeightState(const GfComEffectCaster *caster);
   static bool getGroundEffectFileName(const GfComEffectCaster *caster, u32 type, const char *&fileName);
+  static u32 getGroundMaterial(GfEnvProperty *env, const GfComEffectCaster *caster);
   static bool getGroundEffectFileNameImpl(u32 type, u32 effectType, u32 material, const char *&fileName);
   static bool tryGetWaterDepth(const GfComEffectCaster *caster, const GfCharaWaterInfo *waterInfo, f32 &depth);
   static bool isOnWaterSurface(const GfComEffectCaster *caster);

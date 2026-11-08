@@ -48,7 +48,9 @@ public:
   void beginTutorial();
   void debugDraw() const override;
   void disposeGmkPhantom();
+  void createGmkPhantom();
 
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
   const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
 
   GmkPhantom unknown60; // Inferred role: phantom; original member name unknown.

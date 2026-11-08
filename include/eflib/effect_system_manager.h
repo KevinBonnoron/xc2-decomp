@@ -64,7 +64,7 @@ public:
   void es_pack_free(u64 pack);
   void es_pack_regist(const char *name, void *data, u32 size);
   void es_pack_regist(void *data, u32 size);
-  void *es_regist(const char *name, void *data, u32 size);
+  void *es_regist(const char *name, void *data, u32 value);
   u64 es_regist(void *data, u32 size);
   void es_free(void *data);
   u32 es_create(void *data, bool isLoop);

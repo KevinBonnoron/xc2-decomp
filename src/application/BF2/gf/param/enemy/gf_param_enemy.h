@@ -3,10 +3,16 @@
 
 #include "types.h"
 
+namespace fw {
+class Reflection;
+} // namespace fw
+
 namespace gf {
 
 // Names are the reflection names registered by EnemyMoveParam::createReflection (gf_param_enemy_reflection.cpp), in order.
 struct EnemyMoveParam {
+  static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
+
   f32 accel0;
   f32 accel1;
   f32 accel2;

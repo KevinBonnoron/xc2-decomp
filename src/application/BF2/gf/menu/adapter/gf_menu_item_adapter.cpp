@@ -1,5 +1,6 @@
 #include "gf/menu/adapter/gf_menu_item_adapter.h"
 
+#include "bdat.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_driver.h"
@@ -14,6 +15,7 @@
 #include "gf/menu/gf_menu_item_util.h"
 #include "gf/menu/gf_menu_reference.h"
 #include "gf/util/gf_item_util.h"
+#include "mm_mtl/fixstr.h"
 #include "ui/plugin/ui_object_time_plugin.h"
 #include "ui/ui_str.h"
 
@@ -129,6 +131,80 @@ bool GfMenuItemAdapter::update_CategoryIcon(const MenuItemInfo &info) {
   return true;
 }
 
+bool GfMenuItemAdapter::update_GetAreaText(const MenuItemInfo &info) {
+  if (unknown38.unknown04 == 0) {
+    return false;
+  }
+  if (unknown38.unknown00 == ItemType::NONE) {
+    return false;
+  }
+  u8 *mapInfoBdat = GfDataBdat::getFP(BDAT_FLD_MAPINFO);
+  u16 zone;
+  switch (info.unknown00) {
+  case ItemType::PC_WPN_CHIP: {
+    const char *column = unknown70 == 0 ? "Zone" : "Zone2";
+    u8 *bdat = GfDataBdat::getFP(BDAT_ITM_PC_WPN_CHIP);
+    zone = Bdat::getVal(bdat, column, info.unknown04).valueU16;
+    break;
+  }
+  case ItemType::PC_EQUIP: {
+    const char *column = unknown70 == 0 ? "Zone" : "Zone2";
+    u8 *bdat = GfDataBdat::getFP(BDAT_ITM_PC_EQUIP);
+    zone = Bdat::getVal(bdat, column, info.unknown04).valueU16;
+    break;
+  }
+  case ItemType::COLLECTION_LIST: {
+    if (unknown70 != 0) {
+      return false;
+    }
+    u8 *bdat = GfDataBdat::getFP(BDAT_ITM_COLLECTION_LIST);
+    zone = Bdat::getVal(bdat, "Zone", info.unknown04).valueU16;
+    break;
+  }
+  case ItemType::TRESURE: {
+    if (unknown70 != 0) {
+      return false;
+    }
+    u8 *bdat = GfDataBdat::getFP(BDAT_ITM_TRESURE_LIST);
+    zone = Bdat::getVal(bdat, "Zone", info.unknown04).valueU16;
+    break;
+  }
+  case ItemType::FAVORITE: {
+    if (unknown70 != 0) {
+      return false;
+    }
+    u8 *bdat = GfDataBdat::getFP(BDAT_ITM_FAVORITE_LIST);
+    zone = Bdat::getVal(bdat, "Zone", info.unknown04).valueU16;
+    break;
+  }
+  default:
+    return false;
+  }
+  if (zone != 0) {
+    u16 nameId = Bdat::getVal(GfDataBdat::getFP(BDAT_FLD_MAPLIST), "nameID", zone).valueU16;
+    ui::UIStr text(mapInfoBdat, nameId);
+    if (text.c_str() != nullptr && *text.c_str() != '\0') {
+      setText(text);
+      return true;
+    }
+  }
+  return false;
+}
+
+bool GfMenuItemAdapter::update_SubCategoryText(const MenuItemInfo &info) {
+  if (unknown38.unknown04 != 0 && unknown38.unknown00 != ItemType::NONE && info.unknown00 == ItemType::FAVORITE) {
+    ItemProperty property;
+    GfItemUtil::getProperty(property, info.unknown04, 0);
+    int index = property.unknown4e - 11;
+    if (index > 0) {
+      ui::UIStr text(GfDataBdat::getFP(BDAT_MENU_FAVORITE_CATEGORY), index);
+      setText(text);
+      return true;
+    }
+  }
+  return false;
+}
+
 bool GfMenuItemAdapter::update_EffectTime(const MenuItemInfo &info) {
   if (unknown38.unknown04 == 0 || unknown38.unknown00 == ItemType::NONE || info.unknown00 != ItemType::FAVORITE) {
     return false;
@@ -140,6 +216,33 @@ bool GfMenuItemAdapter::update_EffectTime(const MenuItemInfo &info) {
   time.unknown04_6 = property.unknown52 % 60;
   setTime(time);
   return true;
+}
+
+bool GfMenuItemAdapter::update_EffectText(const MenuItemInfo &info) {
+  if (unknown38.unknown04 == 0 || unknown38.unknown00 == ItemType::NONE || info.unknown00 != ItemType::FAVORITE || unknown70 > 2) {
+    return false;
+  }
+  ItemProperty property;
+  GfItemUtil::getProperty(property, info.unknown04, 0);
+  u16 effect = property.unknown50;
+  bool result = false;
+  if (effect != 0) {
+    u8 *setBdat = GfDataBdat::getFP(BDAT_BTL_POUCH_BUFF_SET);
+    u8 *buffBdat = GfDataBdat::getFP(BDAT_BTL_POUCH_BUFF);
+    u8 *textBdat = GfDataBdat::getFP(BDAT_BTL_POUCHBUFF_MS);
+    mm::mtl::FixStr<32> column;
+    column.format("PBuff%d", unknown70 + 1);
+    u8 buff = Bdat::getVal(setBdat, column.c_str(), effect).valueU8;
+    if (buff != 0) {
+      u8 name = Bdat::getVal(buffBdat, "Name", buff).valueU8;
+      u16 option = (unknown70 & 3) | (effect << 2);
+      ui::UIStr text(textBdat, name);
+      text.unknown12 = option;
+      setText(text);
+      result = true;
+    }
+  }
+  return result;
 }
 
 bool GfMenuItemAdapter::update_useEnergy(const MenuItemInfo &info) {
@@ -275,6 +378,22 @@ GfMenuItemAdapter *GfMenuItemAdapter::createFromReference(u32 handle, u32 type, 
   return adapter;
 }
 
+GfMenuItemAdapter *GfMenuItemAdapter::createFromRefernceList(u32 handle, u32 type, mm::mtl::IntrusivePtr<GfMenuReferenceList<GfMenuItemList>> list, u32 listIndex, bool isUpdateAlways) {
+  if (handle == 0) {
+    return nullptr;
+  }
+  // __LINE__ must be 698 as in the original source: it is the line argument of operator new.
+#line 698
+  ReferenceListConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceListConverter(list, listIndex);
+  MenuItemInfo info;
+  converter->getItemInfo(info);
+  GfMenuItemAdapter *adapter = create(handle, type, info, isUpdateAlways);
+  if (adapter != nullptr) {
+    adapter->unknown68 = converter;
+  }
+  return adapter;
+}
+
 GfMenuItemAdapter *GfMenuItemAdapter::createFromPouchReferenceIndex(u32 handle, u32 type, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number, u32 driver, bool isUpdateAlways) {
   if (handle == 0) {
     return nullptr;
@@ -354,6 +473,22 @@ void GfMenuItemAdapter::ReferenceItemConverter::getItemInfo(MenuItemInfo &info) 
 
 void GfMenuItemAdapter::PouchConverter::getItemInfo(MenuItemInfo &info) {
   SDataPouch *pouch = GfPouchUtil::getPouch(driver, pouchIndex);
+  info.unknown00 = ItemType::FAVORITE;
+  info.unknown04 = pouch->unknown04;
+  info.unknown08 = 1;
+}
+
+void GfMenuItemAdapter::PouchReferenceIndexConverter::getItemInfo(MenuItemInfo &info) {
+  u32 pouchIndex = number->unknown0c;
+  SDataPouch *pouch = GfPouchUtil::getPouch(driver, pouchIndex);
+  info.unknown00 = ItemType::FAVORITE;
+  info.unknown04 = pouch->unknown04;
+  info.unknown08 = 1;
+}
+
+void GfMenuItemAdapter::PouchReferenceIndexReferenceDriverConverter::getItemInfo(MenuItemInfo &info) {
+  u32 pouchIndex = number->unknown0c;
+  SDataPouch *pouch = GfPouchUtil::getPouch(GfMenuReference::getReferenceDriverID(driverIndex), pouchIndex);
   info.unknown00 = ItemType::FAVORITE;
   info.unknown04 = pouch->unknown04;
   info.unknown08 = 1;

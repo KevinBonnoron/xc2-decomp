@@ -58,7 +58,7 @@ enum ASM_CMD_ID_FIELD {
 };
 
 inline const char *getASMCmdNameField(ASM_CMD_ID_FIELD id) {
-  static const char *TABLE[] = {
+  static const char *const TABLE[] = {
       "C_idle",
       "C_move",
       "C_jump",

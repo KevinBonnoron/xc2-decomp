@@ -137,8 +137,8 @@ public:
   const void *getAppendix(const char *name) const;
   bool existState(const char *state);
   void executeCallback();
-  bool execCmd(const char *command, AnimLayer layer);
-  const char *getStateName(AnimLayer layer) const;
+  bool execCmd(const char *command, AnimLayer layer = ANIM_LAYER_BASE);
+  const char *getStateName(AnimLayer layer = ANIM_LAYER_BASE) const;
   bool setState(const char *state, AnimLayer layer);
   void clearState(AnimLayer layer);
   bool resetState(const char *state, AnimLayer layer);
@@ -158,9 +158,9 @@ public:
   u64 getAttribute(AsmCategory category, AnimLayer layer) const;
   const anm::QsTransform &getLocomotion() const;
   void setVariable(const char *name, f32 value);
-  void getVariable(const char *name, f32 *value) const;
+  bool getVariable(const char *name, f32 *value) const;
   void setVariable(const char *name, int value);
-  void getVariable(const char *name, int *value) const;
+  bool getVariable(const char *name, int *value) const;
   void cacheCallback(anm::AsmListener::CallBackType type, const anm::AsmAnnotetion &annotation);
   void changeLayer(u32 oldLayer, u32 newLayer) override;
   const mm::mtl::RTTI *getRTTI() const override;

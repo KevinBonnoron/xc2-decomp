@@ -3,6 +3,7 @@
 #include "gf/data/gf_data_map.h"
 #include "gf/data/gf_data_quest.h"
 #include "gf/game/gf_game_scene.h"
+#include "gf/game/gf_game_util.h"
 #include "gf/game/kizunaring/gf_kizunaring_manager.h"
 #include "gf/game/mercenaries/gf_game_mercenaries.h"
 #include "gf/game/quest/gf_achiev_quest.h"
@@ -13,6 +14,7 @@
 #include "gf/game/sequential_play/gf_play_factory.h"
 #include "gf/gf_allocator.h"
 #include "gf/request/gf_req_scom.h"
+#include "gf/scom/gf_scom_achiev.h"
 #include "mm_mtl/algorithm.h"
 
 namespace gf {
@@ -108,6 +110,13 @@ void GfQuestManager::destroyEvent() {
   while (!unknown2e788.empty()) {
     delete unknown2e788.front();
     unknown2e788.pop_front();
+  }
+}
+
+void GfQuestManager::removeEvent(IQuestEvent *event) {
+  GfQuestManager *manager = get();
+  if (manager != nullptr) {
+    manager->unknown08.erase(manager->unknown08.find(event));
   }
 }
 
@@ -345,6 +354,21 @@ void GfQuestManager::setCompleteQuest(QuestID quest, QuestID child, QSTATE state
   }
 }
 
+void GfQuestManager::setCompleteState(QuestID quest, QuestID child, QSTATE state) {
+  QuestID parent = GfDataQuest::getListPRTQuestID(child);
+  if (!parent.empty()) {
+    GfQuestInfo::setState(parent, state);
+    eventCompleteQuest(parent, state);
+  }
+
+  QuestData data(quest);
+  s_pThis->unknown2e160.push(data);
+  if (GfDataQuest::getListQuestCategory(data.unknown00) != QTYPE_MAIN && data.unknown00.unknown02 == 0) {
+    SCOM_ACHIEV_INC::addTotalCount(1, 1);
+    SCOM_ACHIEV_INC::create(1, 1, 0);
+  }
+}
+
 // Inlined into every caller: the game keeps an out-of-line copy this code does not match yet.
 inline QuestID GfQuestManager::getCurrentQuest(QTYPE type) {
   QuestID quest;
@@ -389,6 +413,36 @@ void GfQuestManager::execReward(QuestID quest) {
   }
 
   GfQuestUtil::execReward(reward);
+}
+
+bool GfQuestManager::getRewardItem(GfQuestReward &reward, QuestID quest, bool isRandom) {
+  QuestListAcc *questListAcc = QuestListAcc::get();
+  if (quest.empty() && quest.unknown02 == 0) {
+    quest = getPrevCompleteQuest();
+  }
+
+  QuestID parent = GfDataQuest::getListPRTQuestID(quest);
+  if (parent.empty()) {
+    parent = quest;
+  }
+
+  u32 rewardSet;
+  if (!GfQuestInfo::isQuestFin(parent)) {
+    rewardSet = questListAcc->getListRewardSetA(parent);
+    if (rewardSet == 0) {
+      rewardSet = questListAcc->getListRewardSetB(parent);
+    }
+  } else {
+    rewardSet = 0;
+    if (GfQuestInfo::getState(parent) == QSTATE_FIN_A) {
+      rewardSet = questListAcc->getListRewardSetA(parent);
+    }
+    if (GfQuestInfo::getState(parent) == QSTATE_FIN_B) {
+      rewardSet = questListAcc->getListRewardSetB(parent);
+    }
+  }
+
+  return GfQuestUtil::getReward(reward, rewardSet, isRandom);
 }
 
 // Inlined into every caller: the game keeps an out-of-line copy this code does not match yet.
@@ -449,6 +503,16 @@ void GfQuestManager::resetBattleTaskForPlayerDead() {
   for (mm::mtl::FixedQueue<QuestData, 15000>::iterator it = manager->unknown7db0.begin(), last = manager->unknown7db0.end(); it != last; ++it) {
     GfQuestTask::resetBattleTaskForPlayerDead((*it).unknown00);
   }
+}
+
+void GfQuestManager::resetBattleTaskForBattleEnd() {
+  mm::mtl::FixedVector<u16, 128> enemies;
+  u32 count = getOrderQuestMax();
+  for (u32 i = 0; i < count; i++) {
+    GfQuestTask::resetBattleTaskForBattleEnd(enemies, getOrderQuest(i));
+  }
+
+  mm::mtl::for_each(enemies.begin(), enemies.end(), GfGameUtil::clearEnemyRepopCounter);
 }
 
 void GfQuestManager::acceptOrder(QuestID quest) {

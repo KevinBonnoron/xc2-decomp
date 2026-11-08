@@ -1,14 +1,45 @@
 #include "gf/menu/adapter/gf_menu_weapon_type_adapter.h"
 
+#include "gf/data/gf_bdat_id.h"
+#include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_driver_arts.h"
 #include "gf/data/gf_data_weapon.h"
+#include "gf/gf_allocator.h"
+#include "gf/menu/gf_menu_reference.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "mm_mtl/fixed_array.h"
+#include "ui/ui_object_acc.h"
+#include "ui/ui_object_plugin.h"
 #include "ui/ui_str.h"
 
 namespace gf {
 
 constexpr u32 ARTS_SLOT_MAX = 4;
+
+static GfMenuWeaponTypeAdapter::TypeInfo TYPE_INFOS[] = {
+    {&GfMenuWeaponTypeAdapter::update_WpnTypeName, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuWeaponTypeAdapter::update_WpnTypeIcon, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuWeaponTypeAdapter::update_WpnTypeWP, {GfMenuAdapter::unknown004_0, 0, 99999}},
+    {&GfMenuWeaponTypeAdapter::update_ArtsName, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuWeaponTypeAdapter::update_ArtsIconType, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuWeaponTypeAdapter::update_ArtsIconEnhance, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuWeaponTypeAdapter::update_ArtsIconReact, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuWeaponTypeAdapter::update_ArtsIconRange, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuWeaponTypeAdapter::update_ArtsTextType, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuWeaponTypeAdapter::update_ArtsTextReact, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuWeaponTypeAdapter::update_ArtsTextRange, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuWeaponTypeAdapter::update_ArtsNumDamage, {GfMenuAdapter::unknown004_0, 0, 999}},
+    {&GfMenuWeaponTypeAdapter::update_ArtsNumRecast, {GfMenuAdapter::unknown004_0, 0, 999}},
+    {&GfMenuWeaponTypeAdapter::update_ArtsLevel, {GfMenuAdapter::unknown004_0, 0, 99}},
+    {&GfMenuWeaponTypeAdapter::update_ArtsIconLevel, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuWeaponTypeAdapter::update_ArtsDescription, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuWeaponTypeAdapter::update_ArtsWp, {GfMenuAdapter::unknown004_0, 0, 99999}},
+    {&GfMenuWeaponTypeAdapter::update_ArtsDriverLevel, {GfMenuAdapter::unknown004_0, 1, 99}},
+    {&GfMenuWeaponTypeAdapter::update_ArtsLevel0Disp, {GfMenuAdapter::unknown004_3, 0, 0}},
+    {&GfMenuWeaponTypeAdapter::update_ArtsLevelMaxDisp, {GfMenuAdapter::unknown004_3, 0, 0}},
+    {&GfMenuWeaponTypeAdapter::update_ArtsEnhanceDescription, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuWeaponTypeAdapter::update_ArtsReleseLv, {GfMenuAdapter::unknown004_0, 0, 99}},
+};
 
 GfMenuWeaponTypeAdapter::GfMenuWeaponTypeAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways)
     : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(nullptr), unknown58(0), unknown5c(0), unknown60(0), unknown64(0) {}
@@ -18,6 +49,26 @@ GfMenuWeaponTypeAdapter::~GfMenuWeaponTypeAdapter() {
     delete unknown50;
     unknown50 = nullptr;
   }
+}
+
+GfMenuWeaponTypeAdapter *GfMenuWeaponTypeAdapter::create(u32 handle, u32 type, u32 driver, u32 weaponType, u32 artsIndex, bool isUpdateAlways) {
+  ui::UIObjectAcc acc(handle);
+  if (acc.isValid()) {
+    TypeInfo &info = TYPE_INFOS[type];
+    ui::UIObjectPlugin *plugin = createPlugin(handle, info.setup);
+    if (plugin != nullptr) {
+      // __LINE__ must be 203 as in the original source: it is the line argument of operator new.
+#line 203
+      GfMenuWeaponTypeAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuWeaponTypeAdapter(plugin, isUpdateAlways);
+      adapter->unknown30.bind(adapter, info.update);
+      adapter->unknown58 = driver;
+      adapter->unknown5c = weaponType;
+      adapter->unknown60 = artsIndex;
+      plugin->release();
+      return adapter;
+    }
+  }
+  return nullptr;
 }
 
 bool GfMenuWeaponTypeAdapter::update_WpnTypeName() {
@@ -41,6 +92,69 @@ bool GfMenuWeaponTypeAdapter::update_WpnTypeIcon() {
 bool GfMenuWeaponTypeAdapter::update_WpnTypeWP() {
   setNumber(GfDataDriverArts::getWp(unknown58, unknown5c));
   return true;
+}
+
+bool GfMenuWeaponTypeAdapter::update_ArtsTextType() {
+  GfMenuObjUtil::ArtsIconInfo iconInfo;
+  DriverArts driverArts;
+  if (getDriverArts(driverArts)) {
+    if (GfMenuObjUtil::getArtsIconInfo(driverArts.unknown00, driverArts.unknown04, iconInfo) && iconInfo.unknown00 != 0) {
+      u16 textId = GfMenuObjUtil::getMsgIDFromList(BDAT_MNU_MSG_ARTS_TYPE, iconInfo.unknown00);
+      if (textId != 0) {
+        setText(ui::UIStr(GfDataBdat::getFP(BDAT_MENU_ARTS_TYPE), textId));
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+bool GfMenuWeaponTypeAdapter::update_ArtsTextReact() {
+  GfMenuObjUtil::ArtsIconInfo iconInfo;
+  DriverArts driverArts;
+  if (getDriverArts(driverArts)) {
+    if (GfMenuObjUtil::getArtsIconInfo(driverArts.unknown00, driverArts.unknown04, iconInfo) && iconInfo.unknown08 > 2) {
+      u16 textId = GfMenuObjUtil::getMsgIDFromList(BDAT_MNU_MSG_REACTION, iconInfo.unknown08 - 2);
+      if (textId != 0) {
+        setText(ui::UIStr(GfDataBdat::getFP(BDAT_MENU_ENEMY_REACTION), textId));
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+bool GfMenuWeaponTypeAdapter::update_ArtsTextRange() {
+  GfMenuObjUtil::ArtsIconInfo iconInfo;
+  DriverArts driverArts;
+  if (getDriverArts(driverArts)) {
+    if (GfMenuObjUtil::getArtsIconInfo(driverArts.unknown00, driverArts.unknown04, iconInfo)) {
+      u16 textId = GfMenuObjUtil::getMsgIDFromList(BDAT_MNU_MSG_ARTS_RANGE, iconInfo.unknown10 + 1);
+      if (textId != 0) {
+        setText(ui::UIStr(GfDataBdat::getFP(BDAT_MENU_RANGE_TYPE), textId));
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+bool GfMenuWeaponTypeAdapter::update_ArtsNumDamage() {
+  DriverArts driverArts;
+  if (getDriverArts(driverArts)) {
+    setNumber(GfDataDriverArts::getDamageMul(driverArts.unknown00, driverArts.unknown04));
+    return true;
+  }
+  return false;
+}
+
+bool GfMenuWeaponTypeAdapter::update_ArtsNumRecast() {
+  DriverArts driverArts;
+  if (getDriverArts(driverArts)) {
+    setNumber(GfDataDriverArts::getRecast(driverArts.unknown00, driverArts.unknown04));
+    return true;
+  }
+  return false;
 }
 
 bool GfMenuWeaponTypeAdapter::update_ArtsName() {
@@ -230,6 +344,14 @@ bool GfMenuWeaponTypeAdapter::update_ArtsReleseLv() {
   return false;
 }
 
+GfMenuWeaponTypeAdapter *GfMenuWeaponTypeAdapter::createFromCoverter(u32 handle, u32 type, IConverter *converter, bool isUpdateAlways) {
+  GfMenuWeaponTypeAdapter *adapter = create(handle, type, converter->getDriverId(), converter->getWpnType(), converter->getArtsIndex(), isUpdateAlways);
+  if (adapter != nullptr) {
+    adapter->unknown50 = converter;
+  }
+  return adapter;
+}
+
 void GfMenuWeaponTypeAdapter::update(const fw::UpdateInfo &info) {
   if (unknown50 != nullptr) {
     u32 driver = unknown50->getDriverId();
@@ -271,6 +393,32 @@ bool GfMenuWeaponTypeAdapter::getDriverArts(DriverArts &driverArts) {
   }
   return false;
 }
+
+GfMenuWeaponTypeAdapter *GfMenuWeaponTypeAdapter::createFromReferenceDriverWpnType(u32 handle, u32 type, u16 driver, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> wpnType, u16 artsIndex,
+                                                                                   bool isUpdateAlways) {
+  // __LINE__ must be 234 as in the original source: it is the line argument of operator new.
+#line 234
+  ReferenceDriverConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceDriverConverter(driver, wpnType, artsIndex);
+  return createFromCoverter(handle, type, converter, isUpdateAlways);
+}
+
+GfMenuWeaponTypeAdapter *GfMenuWeaponTypeAdapter::createFromReferenceDriverWpnTypeArtsIndex(u32 handle, u32 type, u16 driver, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> wpnType,
+                                                                                            mm::mtl::IntrusivePtr<GfMenuReferenceNumber> artsIndex, bool isUpdateAlways) {
+  // __LINE__ must be 242 as in the original source: it is the line argument of operator new.
+#line 242
+  ReferenceDriverWeaponTypeConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceDriverWeaponTypeConverter(driver, wpnType, artsIndex);
+  return createFromCoverter(handle, type, converter, isUpdateAlways);
+}
+
+u32 GfMenuWeaponTypeAdapter::ReferenceDriverConverter::getDriverId() { return GfMenuReference::getReferenceDriverID(unknown08); }
+
+u32 GfMenuWeaponTypeAdapter::ReferenceDriverConverter::getWpnType() { return unknown10->unknown0c; }
+
+u32 GfMenuWeaponTypeAdapter::ReferenceDriverWeaponTypeConverter::getDriverId() { return GfMenuReference::getReferenceDriverID(unknown08); }
+
+u32 GfMenuWeaponTypeAdapter::ReferenceDriverWeaponTypeConverter::getWpnType() { return unknown10->unknown0c; }
+
+u32 GfMenuWeaponTypeAdapter::ReferenceDriverWeaponTypeConverter::getArtsIndex() { return unknown18->unknown0c; }
 
 } // namespace gf
 

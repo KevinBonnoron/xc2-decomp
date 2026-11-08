@@ -30,6 +30,7 @@ extern const u32 COLI_INVALID_DAMAGE_ID;
 
 enum ColiType : int {
   COLI_TYPE_STATIC = 0,
+  COLI_TYPE_UNKNOWN_1 = 1, // Inferred role: set by GfComBehaviorNpc::init while the npc moves on its own; original name unknown.
 };
 
 enum ColiState : int {

@@ -52,6 +52,32 @@ bool WeatherEff::isDispEffect() const {
   return GfFieldWeather::isDispWeather();
 }
 
+void WeatherEff::update(const fw::UpdateInfo &info, f32, bool) {
+  if (unknown14 != 0) {
+    if (isEraseEffect()) {
+      unknown0c = true;
+      unknown10 = 1.0f;
+    } else if (!fw::EffectManager::get()->isExist(unknown14)) {
+      unknown14 = 0;
+    }
+  }
+  if (unknown0c) {
+    if (isDispEffect()) {
+      unknown0c = false;
+      create(unknown08);
+    }
+    if (unknown0c && unknown10 > 0.0f) {
+      unknown10 -= info.unknown04 * 4.0f;
+      if (unknown10 < 0.0f) {
+        unknown10 = 0.0f;
+        destroy();
+      }
+      applyAlpha(info);
+    }
+  }
+  applySpeed(info);
+}
+
 void WeatherEff::applyAlpha(const fw::UpdateInfo &) {
   if (unknown14 != 0) {
     fw::EffectManager::get()->setAlpha(unknown14, unknown10);

@@ -12,6 +12,10 @@ namespace fw {
 struct UpdateInfo;
 }
 
+namespace mm {
+struct Vec3;
+}
+
 namespace gf {
 
 struct GF_OBJ_HANDLE;
@@ -34,7 +38,7 @@ struct ObjMsg {
   u32 unknown08;            // Inferred role: attribute; original member name unknown.
 };
 
-class GfGameObj : public mm::mtl::PtrSingleton<GfGameObj> {
+class GfGameObj : public mm::mtl::PtrSingleton<GfGameObj>, public IGfObjListener {
 public:
   struct INOUT {
     GF_OBJ_HANDLE *unknown00; // Inferred role: object handle; original member name unknown.
@@ -47,6 +51,10 @@ public:
     u8 _17[0x18 - 0x17];
   };
 
+  explicit GfGameObj(const GfSetupParam &param);
+  ~GfGameObj() override;
+  void listenerGfObj(OBJEVT event, GF_OBJ_HANDLE *handle, u32 objectType) override;
+  void finalize();
   static void build(const GfSetupParam &param);
   static void destroy();
   static void update(const fw::UpdateInfo &info);
@@ -67,7 +75,13 @@ public:
   static void setupEnterGameObj(GF_OBJ_HANDLE *handle, f32 fadeTime);
   static GfObj *getObj(GF_OBJ_HANDLE *handle);
   bool isEffectFadeEnd(const INOUT &inout, const GfObjAcc &acc) const;
+  bool fadeinGameObj(INOUT &inout, GfObjAcc &acc, const fw::UpdateInfo &info);
+  void addGameObj(GF_OBJ_HANDLE *handle);
   bool isBattle(const mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_OBJ_LIST_CAPACITY> &list) const;
+  void calcCameraFade(const mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_OBJ_LIST_CAPACITY> &list, const mm::Vec3 &cameraPosition);
+  void enableGameObj(GfObjAcc &acc, bool isEnable);
+  bool fadeoutGameObj(INOUT &inout, GfObjAcc &acc, const fw::UpdateInfo &info);
+  void setupEffectFadeout(INOUT &inout, GfObjAcc &acc, const fw::UpdateInfo &info);
   static void destroyGameObj(GF_OBJ_HANDLE *handle, f32 fadeTime);
   static void addCharDeadMessage(GF_OBJ_HANDLE *handle, const MsgObjectNotifyDead &message);
   bool addOutObj(GF_OBJ_HANDLE *handle, f32 fadeTime, bool isEffect);
@@ -94,7 +108,6 @@ public:
   static void enterStayObjectWithVolumeFade(GF_MOUNT_HANDLE *mountHandle);
   static void enterStayObjectMountWithVolumeFade(GF_OBJ_HANDLE *handle, GFATTACH attach);
 
-  u8 _08[0x10 - 0x08];
   mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_OBJ_LIST_CAPACITY> unknown10;      // Inferred role: object list; original member name unknown.
   mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_OBJ_LIST_CAPACITY> unknown4830;    // Inferred role: object list; original member name unknown.
   mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_OBJ_LIST_CAPACITY> unknown9050;    // Inferred role: object list; original member name unknown.

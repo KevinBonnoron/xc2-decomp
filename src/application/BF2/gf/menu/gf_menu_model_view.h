@@ -24,6 +24,7 @@ struct GF_OBJ_HANDLE;
 class GfMenuModelView {
 public:
   struct CtrlParam {
+    CtrlParam(GF_OBJ_HANDLE *handle, f32 duration, bool unknown);
     void setMovePosX(f32 value);
     void setMovePosX(f32 start, f32 end);
     void setMovePosY(f32 value);
@@ -72,6 +73,7 @@ public:
     GF_OBJ_HANDLE *unknown08; // Inferred role: effect owner, invalid handle when unused; original member name unknown.
   };
 
+  virtual ~GfMenuModelView();
   void update();
   static void setVanishRatio(GF_OBJ_HANDLE *handle, f32 ratio);
   void addWeaponFromBlade(u32 blade, u32 id);
@@ -81,7 +83,7 @@ public:
   void setObjectCommandValue(GF_OBJ_HANDLE *handle, const char *name, int value);
   void attachObject(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *parent, const char *bone);
   void detachObject(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *parent, const char *bone);
-  static const fw::Transform &getObjectTransform(GF_OBJ_HANDLE *handle);
+  static fw::Transform &getObjectTransform(GF_OBJ_HANDLE *handle);
   static fw::Transform &getObjectTransformLocal(GF_OBJ_HANDLE *handle);
   static bool getObjectEffectPoint(GF_OBJ_HANDLE *handle, const char *name, mm::Vec3 &position);
   static void setObjectScale(GF_OBJ_HANDLE *handle, const mm::Vec3 &scale);
@@ -98,6 +100,10 @@ public:
   void popCamera(f32 time);
   void changeCamera(u32 index, f32 time);
   int getCurrentCameraIndex();
+  mm::Vec3 getCameraPos(u32 index);
+  mm::Vec3 getCameraRot(u32 index);
+  bool playCameraMotion(const char *name, const mm::Vec3 &position, f32 rotation);
+  void resetCamera(u32 index, f32 time);
   void stopCameraMotion();
   void playEffect(u32 type, const char *name, const mm::Vec3 &position, GF_OBJ_HANDLE *handle);
   u32 createEffect(u32 type, const char *name);
@@ -108,9 +114,11 @@ public:
   bool isLoading() const;
   void delGfObj(u32 type, u32 id);
   GF_OBJ_HANDLE *findGfObj(u32 type, u32 id);
+  void addEnemyObject(u32 id, const fw::Transform &transform);
+  void startObjectCtrl(const CtrlParam &param);
   bool checkGfObj(u32 type, u32 id);
 
-  u8 _00[0x08];
+  // The vptr is at 0x00.
   int unknown08; // Inferred role: row of the model view bdat; original member name unknown.
   u32 unknown0c; // Inferred role: ui object handle; original member name unknown.
   u32 unknown10; // Inferred role: render index; original member name unknown.
@@ -121,7 +129,8 @@ public:
   fw::EffectPack *unknown9a0;                                    // Inferred role: effect pack; original member name unknown.
   unknown002 unknown9a8[16];                                     // Inferred role: effect slots; original member name unknown.
   bool unknownaa8;                                               // Inferred role: resources loaded; original member name unknown.
-  u8 _aa9[0xab8 - 0xaa9];
+  u8 _aa9[0xab0 - 0xaa9];
+  mm::mtl::IntrusivePtr<fw::Camera> unknownab0; // Inferred role: camera of the camera motion; original member name unknown.
 };
 
 static_assert(sizeof(GfMenuModelView::unknown001) == 0x90, "");

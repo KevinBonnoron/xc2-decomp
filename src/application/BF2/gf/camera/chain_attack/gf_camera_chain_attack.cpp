@@ -2,6 +2,9 @@
 
 #include <math.h>
 
+#include "fw/fw_camera.h"
+#include "mm_mtl/intrusive_ptr.h"
+
 namespace gf {
 
 ChainAttackCameraEntity::~ChainAttackCameraEntity() {}
@@ -66,5 +69,35 @@ void ChainAttackCameraEntity::setMoveType(int moveType) { unknown118 = moveType;
 const mm::mtl::RTTI *ChainAttackCameraEntity::getRTTI() const { return &m_rtti; }
 
 const char *ChainAttackCameraEntity::getName() const { return "ChainAttackCameraEntity"; }
+
+ChainAttackCamera::~ChainAttackCamera() {}
+
+void ChainAttackCamera::start() {}
+
+void ChainAttackCamera::end() { destroyCamera(&unknown08, 0.0f); }
+
+void ChainAttackCamera::destroyCamera(mm::mtl::IntrusivePtr<fw::Camera> *camera, f32 time) {
+  if (camera->get() != nullptr) {
+    if (!(*camera)->unknowna0) {
+      *camera = nullptr;
+    } else {
+      fw::CameraManager::get()->unknown20[0].pop(*camera, time);
+      *camera = nullptr;
+    }
+  }
+}
+
+void ChainAttackCamera::setCameraParam(const Param &param) {
+  ChainAttackCameraEntity *entity = static_cast<ChainAttackCameraEntity *>(unknown08.get());
+  if (entity != nullptr && entity->unknowna0) {
+    if (param.unknown00 != 0) {
+      entity->setPlayTimeDuration(param.unknown04);
+    } else {
+      entity->setPlayTimeRate(param.unknown04 * 0.0001f);
+    }
+    entity->setMoveType(param.unknown08);
+    entity->setPoint(param.unknown10, param.unknown20, param.unknown40, param.unknown50);
+  }
+}
 
 } // namespace gf

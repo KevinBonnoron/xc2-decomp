@@ -38,6 +38,48 @@ void GfMenuObjChapterTelop::initialize() {
 
 void GfMenuObjChapterTelop::finalize() { GfMenuObject::finalize(); }
 
+void GfMenuObjChapterTelop::openBeginTelop(GfMenuCallContext *context, int chapter) {
+  u32 handle = getAttachedObject(unknown001);
+  if (ui::UIObjectAcc(handle).isValid()) {
+    if (!ui::UIObjectAcc(handle).isTerm()) {
+      startCallContext(context, unknown001, handle);
+      ui::EventData event;
+      event.unknown00 = GfMenuTypes::unknown003_33;
+      event.unknown08 = (chapter >= 1 && chapter <= 10) ? chapter : 1;
+      event.unknown0c = 0;
+      sendEvent(handle, event, 0.0f);
+    }
+  }
+}
+
+void GfMenuObjChapterTelop::openEndTelop(GfMenuCallContext *context, int chapter) {
+  u32 handle = getAttachedObject(unknown001);
+  if (ui::UIObjectAcc(handle).isValid()) {
+    if (!ui::UIObjectAcc(handle).isTerm()) {
+      startCallContext(context, unknown001, handle);
+      ui::EventData event;
+      event.unknown00 = GfMenuTypes::unknown003_33;
+      event.unknown08 = (chapter >= 1 && chapter <= 10) ? chapter : 1;
+      event.unknown0c = 1;
+      sendEvent(handle, event, 0.0f);
+    }
+  }
+}
+
+void GfMenuObjChapterTelop::openAvanTitle(GfMenuCallContext *context, int title) {
+  u32 handle = getAttachedObject(unknown001);
+  if (ui::UIObjectAcc(handle).isValid()) {
+    if (!ui::UIObjectAcc(handle).isTerm()) {
+      startCallContext(context, unknown001, handle);
+      ui::EventData event;
+      event.unknown00 = GfMenuTypes::unknown003_33;
+      event.unknown08 = (title >= 1 && title <= 10) ? title : 1;
+      event.unknown0c = 2;
+      sendEvent(handle, event, 0.0f);
+    }
+  }
+}
+
 void GfMenuObjChapterTelop::close(u16 unknown00) {
   u32 handle = getAttachedObject(unknown001);
   // The game destroys each temporary before the next check; a named local moves the destructor after sendEvent.

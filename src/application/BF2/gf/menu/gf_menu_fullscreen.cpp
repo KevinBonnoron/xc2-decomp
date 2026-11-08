@@ -1,6 +1,14 @@
 #include "gf/menu/gf_menu_fullscreen.h"
 
 #include "gf/gf_allocator.h"
+#include "gf/gf_manager.h"
+#include "gf/menu/gf_menu_fade.h"
+#include "gf/menu/gf_menu_manager.h"
+#include "gf/menu/object/gf_menu_obj_common_text.h"
+#include "gf/menu/object/gf_menu_obj_operation_info.h"
+#include "mm_math/mm_col4.h"
+#include "scn/scn_render_dr_sys_parm_acc.h"
+#include "ui/event/ui_event_data.h"
 #include "ui/input/ui_input_manager.h"
 #include "ui/ui_manager.h"
 #include "ui/ui_util.h"
@@ -214,7 +222,7 @@ void GfMenuFullScreen::setShadowLayer(u32 layer, bool shadow) {
   }
 }
 
-u16 GfMenuFullScreen::getLayerGroup(u32 layer) {
+u32 GfMenuFullScreen::getLayerGroup(u32 layer) {
   GfMenuFullScreen *fullScreen = get();
   if (layer != 0 && fullScreen != nullptr) {
     for (u16 i = 0; i < LAYER_COUNT; i++) {
@@ -258,6 +266,153 @@ void GfMenuFullScreen::terminateLayer(u16 index, bool isImmediate, bool isKeep) 
     }
     ui::UIManager::get()->terminateLayer(unknown18[index].unknown00, isImmediate);
   }
+}
+
+void GfMenuFullScreen::close(bool isFadeOut, bool isFadeIn) {
+  if (isDisp()) {
+    GfMenuFullScreen *fullScreen = get();
+    fullScreen->unknown10 = 0;
+    fullScreen->unknown110.bind(fullScreen, &GfMenuFullScreen::switchLayerStart);
+    GfMenuObjCommonText::close();
+    fullScreen->unknown109 = isFadeOut;
+    fullScreen->unknown10a = isFadeIn;
+  }
+}
+
+void GfMenuFullScreen::switchLayerStart() {
+  startProcess();
+  for (u32 i = 0; i < LAYER_COUNT; i++) {
+    if (unknown18[i].unknown00 != 0) {
+      ui::UIManager::get()->terminateLayer(unknown18[i].unknown00, false);
+    }
+  }
+  if (unknown109) {
+    if (unknown100 == 0) {
+      GfMenuFade::setFade(2, 15, mm::Col4::black);
+    } else {
+      GfMenuFade::setFade(2, unknown100, mm::Col4::black);
+      unknown100 = 0;
+    }
+  }
+  unknown109 = true;
+  unknown110.bind(this, &GfMenuFullScreen::switchLayerWaitFadeOut);
+}
+
+void GfMenuFullScreen::switchLayerWaitFadeOut() {
+  if (GfMenuManager::isFading()) {
+    return;
+  }
+  ml::ScnRenderDrSysParmAcc renderParam;
+  if (unknown10 == 0) {
+    renderParam.setViewRenderSkip(0, false);
+  } else if (GfManager::isExecModeScenarioGame()) {
+    renderParam.setViewRenderSkip(0, true);
+  }
+  for (u16 i = 0; i < LAYER_COUNT; i++) {
+    releaseLayer(i);
+  }
+  unknown110.bind(this, &GfMenuFullScreen::switchLayerWaitRelease);
+  unknown160.clearInputObject();
+}
+
+void GfMenuFullScreen::switchLayerWaitRelease() {
+  for (u32 i = 0; i < LAYER_COUNT; i++) {
+    if (unknown18[i].unknown00 != 0) {
+      return;
+    }
+  }
+  unknown110.bind(this, &GfMenuFullScreen::switchLayerOpenScreen);
+}
+
+void GfMenuFullScreen::switchLayerOpenScreen() {
+  if (unknown10 == 0) {
+    GfMenuObjOperationInfo::close();
+    GfMenuObjCommonText::close();
+    for (u16 i = 0; i < LAYER_COUNT; i++) {
+      resetLayer(i);
+    }
+    unknown188.clear();
+  } else {
+    createLayer(0, unknown130);
+  }
+  unknown134 = 2;
+  unknown110.bind(this, &GfMenuFullScreen::switchLayerWaitScreen);
+}
+
+void GfMenuFullScreen::switchLayerWaitScreen() {
+  if (ui::UIManager::get()->isLoading()) {
+    return;
+  }
+  unknown134--;
+  if (unknown134 != 0) {
+    return;
+  }
+  if (unknown10a) {
+    if (unknownfc == 0) {
+      GfMenuFade::setFade(2, 15, mm::Col4(0.0f, 0.0f, 0.0f, 0.0f));
+    } else {
+      GfMenuFade::setFade(2, unknownfc, mm::Col4(0.0f, 0.0f, 0.0f, 0.0f));
+    }
+  }
+  unknown10a = true;
+  if (unknown10 == 0) {
+    unknown0c = 0;
+    unknown10 = 0;
+    unknown130 = 0;
+    unknown110.clear();
+    exitProcess(true);
+  } else {
+    unknown110.bind(this, &GfMenuFullScreen::switchLayerWaitFadeIn);
+  }
+}
+
+void GfMenuFullScreen::switchLayerWaitFadeIn() {
+  if (GfMenuManager::isFading()) {
+    return;
+  }
+  unknown0c = unknown10;
+  unknown10 = 0;
+  unknown130 = 0;
+  unknown110.clear();
+  exitProcess(false);
+}
+
+void GfMenuFullScreen::subLayerWaitRelease() {
+  for (u16 i = unknown158.unknown04; i < LAYER_COUNT; i++) {
+    if (unknown18[i].unknown00 != 0) {
+      return;
+    }
+  }
+  unknown138.bind(this, &GfMenuFullScreen::subLayerCreate);
+}
+
+void GfMenuFullScreen::subLayerCreate() {
+  if (unknown158.unknown00 == 0) {
+    resetLayer(unknown158.unknown04);
+  } else {
+    createLayer(unknown158.unknown04, unknown158.unknown00);
+  }
+  unknown138.bind(this, &GfMenuFullScreen::subLayerWaitOpen);
+}
+
+void GfMenuFullScreen::subLayerWaitOpen() {
+  if (ui::UIManager::get()->isLoading()) {
+    return;
+  }
+  if (unknown158.unknown00 == 0) {
+    size_t index = unknown158.unknown04;
+    if (index != 0 && unknown18[index - 1].unknown30 != 0) {
+      ui::EventData event;
+      event.unknown0c = 0;
+      event.unknown00 = 0x43;
+      event.unknown08 = index;
+      ui::UIManager::get()->requestObjectEvent(unknown18[index - 1].unknown30, event, 0.0f);
+    }
+  }
+  unknown138.clear();
+  unknown158.unknown00 = 0;
+  unknown158.unknown04 = 0;
+  exitProcess(false);
 }
 
 } // namespace gf

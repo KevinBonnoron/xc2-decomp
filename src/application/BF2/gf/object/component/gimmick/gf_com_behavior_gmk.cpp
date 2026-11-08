@@ -15,6 +15,7 @@
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_jump.h"
 #include "gmk/gmk_manager.h"
+#include "gmk/gmk_route_navi.h"
 #include "gmk/gmk_salvage.h"
 #include "gmk/gmk_warp.h"
 #include "mm_math/mm_vec3.h"
@@ -23,6 +24,17 @@
 #include "mm_mtl/vector.h"
 
 namespace gf {
+
+GfComBehaviorGmk::GfComBehaviorGmk() : unknown98(nullptr), unknowna0(nullptr), unknowna8(nullptr), unknownb0(nullptr), unknownc0(nullptr) {}
+
+GfComBehaviorGmk::~GfComBehaviorGmk() {
+  if (unknowna0 != nullptr) {
+    delete unknowna0;
+    unknowna0 = nullptr;
+  }
+}
+
+const mm::mtl::RTTI *GfComBehaviorGmk::getRTTI() const { return &m_rtti; }
 
 void GfComBehaviorGmk::procMsgPcFieldNotifyAction(fw::MessageObject *sender, MsgPcFieldNotifyAction &message) {
   if (message.unknown08 != 0 || (static_cast<GfObj *>(unknown08)->unknown110 & 1) == 0) {

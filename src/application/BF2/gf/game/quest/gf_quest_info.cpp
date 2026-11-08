@@ -255,6 +255,23 @@ void GfQuestInfo::setupAchievementCount(const QuestTaskParam &param) {
 
 u32 GfQuestInfo::getTaskHide(const QuestTaskParam &param) { return QuestListAcc::get()->getTaskTaskUI(param.unknown08, param.unknown0c); }
 
+bool GfQuestInfo::isCompletePrevQuest(QuestID quest) {
+  QuestListAcc *questListAcc = QuestListAcc::get();
+  for (qlist_iterator it = questListAcc->begin(QTYPE_NONE); it != questListAcc->end(QTYPE_NONE); ++it) {
+    QuestID prev(it.getQuestID().unknown00, quest.unknown02);
+    if (GfDataQuest::getListFlagPRT(prev) == 0) {
+      if (GfDataQuest::getListNextQuestA(prev) == quest && getState(prev) < QSTATE_FIN_A) {
+        return false;
+      }
+      if (GfDataQuest::getListNextQuestB(prev) == quest && getState(prev) < QSTATE_FIN_A) {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
+
 bool GfQuestInfo::canQuestOrder(QuestID quest) { return getState(quest) == QSTATE_NOT_ORDER && !isQuestProgress(quest); }
 
 bool GfQuestInfo::isScenarioQuest(QuestID quest) { return GfDataQuest::getQuestCategory(quest) == QTYPE_MAIN; }

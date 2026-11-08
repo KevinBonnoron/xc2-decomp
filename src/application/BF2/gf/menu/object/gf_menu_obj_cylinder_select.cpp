@@ -1,18 +1,33 @@
 #include "gf/menu/object/gf_menu_obj_cylinder_select.h"
 
 #include "gf/menu/adapter/gf_menu_adapter_manager.h"
+#include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_types.h"
+#include "gf/menu/list/gf_menu_item_list.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
+#include "mm_mtl/reference_object.h"
+#include "ui/ctrl/ui_ctrl_cursor_select.h"
 #include "ui/event/ui_event_data.h"
+#include "ui/list/ui_select_obj_list.h"
 #include "ui/ui_object_acc.h"
 
 namespace gf {
-class GfMenuCallContext;
 
 // Inferred role: attached call id; original name unknown.
 constexpr u32 unknown001 = 0x46;
 // Inferred role: active adapter category; original name unknown.
 constexpr u32 unknown002 = 2;
+
+GfMenuObjCylinderSelect::GfMenuObjCylinderSelect(u32 handle) : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr) {
+  unknown40 = GfMenuCallContext::create();
+}
+
+GfMenuObjCylinderSelect::~GfMenuObjCylinderSelect() {
+  mm::mtl::safeRelease(unknown40);
+  mm::mtl::safeRelease(unknown38);
+  mm::mtl::safeRelease(unknown30);
+  mm::mtl::safeRelease(unknown28);
+}
 
 void GfMenuObjCylinderSelect::finalize() { GfMenuObject::finalize(); }
 

@@ -9,6 +9,7 @@ namespace gf {
 
 class GfMenuObjArtsPalette : public GfMenuObject {
 public:
+  GfMenuObjArtsPalette(u32 handle);
   ~GfMenuObjArtsPalette() override;
   static void startChainAttack();
   static void exitChainAttack();

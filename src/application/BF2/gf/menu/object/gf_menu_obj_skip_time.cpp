@@ -2,10 +2,15 @@
 
 #include "gf/field/gf_field_time.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
+#include "mm_mtl/reference_object.h"
 #include "ui/plugin/ui_object_time_plugin.h"
 #include "ui/ui_object_acc.h"
 
 namespace gf {
+
+GfMenuObjSkipTime::GfMenuObjSkipTime(u32 handle) : GfMenuObject(handle), unknown28(nullptr), unknown30(), unknown34() {}
+
+GfMenuObjSkipTime::~GfMenuObjSkipTime() { mm::mtl::safeRelease(unknown28); }
 
 void GfMenuObjSkipTime::finalize() { GfMenuObject::finalize(); }
 

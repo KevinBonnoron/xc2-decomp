@@ -175,11 +175,17 @@ private:
   const ListNode *head() const { return node(0); }
 
   // Inferred role: storage unit selected by the node alignment; original type name unknown.
-  template <size_t Align, bool IsWord = (Align == 8)> struct unknown069 {
+  // Evidence: the clear() loop of the FixedList<u32, 32> (8 byte nodes) in gf::GfAssetManager::~GfAssetManager only matches the game when the
+  // buffer is not a byte array (with a byte array clang rotates that loop); the buffer has the element type of the node alignment.
+  template <size_t Align, bool Unused = true> struct unknown069 {
     typedef u8 Unit;
   };
 
-  template <size_t Align> struct unknown069<Align, true> {
+  template <bool Unused> struct unknown069<4, Unused> {
+    typedef u32 Unit;
+  };
+
+  template <bool Unused> struct unknown069<8, Unused> {
     typedef u64 Unit;
   };
 

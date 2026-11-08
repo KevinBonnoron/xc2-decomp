@@ -79,6 +79,12 @@ void GfMapjumpInfo::setupForSaveData(u32 mapjumpId, const mm::Vec3 &position, co
   unknown108 = 1;
 }
 
+RQ_SETUP_BLADE::RQ_SETUP_BLADE() : unknown00(0), unknown02(0) {
+  for (u32 slot = 0; slot < 5; slot++) {
+    unknown04[slot] = 0;
+  }
+}
+
 u32 GfReqCommand::reqSave(SAVESLOT slot) {
 #line 68
   unknown001 *param = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) unknown001();

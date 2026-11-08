@@ -19,6 +19,9 @@ class GfComPropertyEnemy : public GfComProperty {
 public:
   static mm::mtl::RTTI m_rtti;
 
+  GfComPropertyEnemy();
+  ~GfComPropertyEnemy() override;
+  const mm::mtl::RTTI *getRTTI() const override;
   void cleanup();
   bool isFieldDeadCondMatched() const;
   void flush();

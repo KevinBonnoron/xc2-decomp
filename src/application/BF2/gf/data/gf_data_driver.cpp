@@ -17,8 +17,11 @@
 #include "gf/data/gf_data_weapon.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/data/gf_object_type.h"
+#include "gf/event/gf_event.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/gf_manager.h"
 #include "gf/object/gf_init_param.h"
+#include "mm_mtl/algorithm.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 
@@ -142,6 +145,65 @@ void GfDataDriver::setLevel(u32 driver, u32 level) { setLevel(*getSDataDriver(dr
 void GfDataDriver::setExp(u32 driver, u32 exp) { getSDataDriver(driver)->unknownb0 = exp; }
 
 void GfDataDriver::setBattleExp(u32 driver, u32 battleExp) { getSDataDriver(driver)->unknownb4 = battleExp; }
+
+namespace {
+
+// Inferred role: adds a blade to the list unless it is already in it; original name unknown.
+void unknown007(mm::mtl::FixedVector<u16, BLADE_COUNT> &blades, u16 blade) {
+  if (mm::mtl::find(blades.begin(), blades.end(), blade) == blades.end()) {
+    blades.push_back(blade);
+  }
+}
+
+// Inferred role: releases the driver arts of a driver for the weapon types it can use with the blades (all the party blades when no blade is given); original name unknown.
+void unknown006(u32 driver, u32 blade, bool isNew) {
+  mm::mtl::FixedVector<u16, BLADE_COUNT> blades;
+  if (blade == 0) {
+    GfDataBlade::getListParty(blades, true, true);
+  }
+  unknown007(blades, blade);
+
+  GfBdatBtl *bdatBattle = GfBdatBtl::get();
+  u32 artsStart = bdatBattle->getArtsDrStart();
+  u32 artsEnd = bdatBattle->getArtsDrEnd();
+  if (!blades.empty()) {
+    u16 *it = blades.begin();
+    do {
+      if (blade == 0 || *it == blade) {
+        DataParamAcc bladeAcc(OBJECT_TYPE_BLADE, *it, GIMMICK_TYPE_NONE);
+        for (u32 arts = artsStart; arts < artsEnd; arts++) {
+          u32 weaponType = bdatBattle->getArtsDrWpnType(arts);
+          if (GfDataDriver::isActivateWeaponType(driver, weaponType)) {
+            u32 artsDriver = bdatBattle->getArtsDrDriver(arts);
+            int priority = bdatBattle->getArtsDrPriority(arts);
+            if (!bdatBattle->isArtsDrFlagNormal(arts) && weaponType == bladeAcc.getWeaponType(-1, false) && artsDriver == driver) {
+              if (GfDataDriver::isEnableEquipWeapon(driver, weaponType)) {
+                DataParamAcc driverAcc(OBJECT_TYPE_DRIVER, driver, GIMMICK_TYPE_NONE);
+                GfBdatBtl *bdatBattleRelease = GfBdatBtl::get();
+                if (driverAcc.isValid()) {
+                  u32 level = driverAcc.getLevel(false);
+                  if ((level >= bdatBattleRelease->getArtsDrReleaseLv1(arts) || GfManager::isExecModeDebug()) && driverAcc.getDriverArtsLevel(arts) == 0) {
+                    int index = priority - 1;
+                    driverAcc.setDriverArtsLevel(arts, 1);
+                    driverAcc.setDriverArts(weaponType, index, arts);
+                    GfEvent::callGetArts(driver, arts, isNew);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      it++;
+    } while (it != blades.end());
+  }
+}
+
+} // namespace
+
+void GfDataDriver::openDriverArtsForLevelup(u32 driver) { unknown006(driver, 0, true); }
+
+void GfDataDriver::openDriverArtsForSetWeapon(u32 driver, u32 blade) { unknown006(driver, blade, false); }
 
 u32 GfDataDriver::getBlade(const SDataDriver &dataDriver, int slot) {
   if (slot < 0) {

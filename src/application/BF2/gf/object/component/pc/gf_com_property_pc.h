@@ -155,7 +155,7 @@ public:
   u32 unknown111_3 : 1; // Inferred role: dead; original member name unknown.
   u32 unknown111_4 : 1; // Inferred role: dead sequence requested; original member name unknown.
   u32 unknown111_5 : 1; // Inferred role: poisoned, selects the poison slow of the field param; original member name unknown.
-  u32 : 1;
+  u32 unknown111_6 : 1; // Inferred role: head detect for the switcher, set by StateUtil::setEnableHeadDetectForSwitcher; original member name unknown.
   u32 unknown111_7 : 1; // Inferred role: cleared with the battle control flag by StateBattle::Leave; original member name unknown.
   u32 : 10;
   u32 unknown113_2 : 1; // Inferred role: warp requested, cleared by MsgPcFieldWarpCancel; original member name unknown.

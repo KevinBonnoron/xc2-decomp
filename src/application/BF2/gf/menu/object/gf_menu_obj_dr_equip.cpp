@@ -1,13 +1,30 @@
 #include "gf/menu/object/gf_menu_obj_dr_equip.h"
 
+#include "gf/menu/call/gf_menu_call_context.h"
+#include "gf/menu/gf_menu_reference_item.h"
+#include "gf/menu/list/gf_menu_item_list.h"
+#include "mm_mtl/reference_object.h"
 #include "types.h"
+#include "ui/ctrl/ui_ctrl_cursor_select.h"
+#include "ui/list/ui_select_obj_list.h"
 #include "ui/ui_object_acc.h"
 
 namespace gf {
-class GfMenuCallContext;
 
 // Inferred role: attached call id; original name unknown.
 constexpr u32 unknown001 = 0x7b;
+
+GfMenuObjDrEquip::GfMenuObjDrEquip(u32 handle)
+    : GfMenuObject(handle), unknown24(0), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr), unknown48(nullptr), unknown50(this), unknown2e0(-1) {}
+
+GfMenuObjDrEquip::~GfMenuObjDrEquip() {
+  mm::mtl::safeRelease(unknown28);
+  mm::mtl::safeRelease(unknown30);
+  mm::mtl::safeRelease(unknown38);
+  mm::mtl::safeRelease(unknown40);
+  mm::mtl::safeRelease(unknown48);
+  unknown2e8 = nullptr;
+}
 
 void GfMenuObjDrEquip::finalize() { GfMenuObject::finalize(); }
 

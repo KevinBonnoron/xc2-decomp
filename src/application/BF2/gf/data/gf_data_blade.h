@@ -20,6 +20,8 @@ constexpr int FLAG_BLADE_HOMURI_NAME_HIKARI = 0x89fb;
 
 enum GfIdea {};
 
+struct SDataGame;
+
 // Inferred role: save data blade arts; original type name unknown.
 struct unknown108 {
   u16 unknown00; // Inferred role: id; original member name unknown.
@@ -280,6 +282,9 @@ public:
   static u32 getMenuIlustName(u32 blade);
   static void setActivateDriver(u32 bladeId, int slot, u32 driverId, u32 option);
   static SDataBlade *getSDataBlade(u32 blade);
+  static void initSaveData(SDataGame &dataGame);
+  static void setupSDataBlade(SDataBlade &dataBlade, u32 blade, bool unknown001);
+  static void setupSDataBladeAchievement(SDataBlade &dataBlade, bool unknown001);
   static SDataIdea *getSDataIdea(u32 blade);
   static void setUiCommonBlade(const SDataBlade &dataBlade, u32 blade);
   static void setActCommonBlade(const SDataBlade &dataBlade, u32 blade);
@@ -363,6 +368,7 @@ public:
   static u32 getEndRareBlade();
   static u32 addRareBlade(const SDataBlade &dataBlade);
   static u32 addCommonBlade(const SDataBlade &dataBlade);
+  static u32 addCommonBladeWithPos(const SDataBlade &dataBlade, u32 pos);
   static u32 getStartUiCommonBlade();
   static u32 getEndUiCommonBlade();
   static u32 getStartActCommonBlade();
@@ -385,7 +391,7 @@ public:
   static bool isMale(u32 blade);
   static bool isFemale(u32 blade);
   static bool getNameWithFieldSkillForDebug(mm::mtl::FixStr<128> &name, u32 blade);
-  static u16 getKeyReleaseLevel(u32 blade);
+  static u32 getKeyReleaseLevel(u32 blade);
   static u32 getSkillLineId(u32 blade, u32 line);
   static bool setAchievReleaseLevel(u32 blade, u32 line, u32 level);
   static bool getTaskSkillMessage(u8 *&bdat, u32 &textId, u32 blade, u32 line);

@@ -139,10 +139,10 @@ void SystemManager::es_pack_free_(u64 pack) { ptlib::ParticleManager::get()->emi
 
 void SystemManager::es_pack_regist(const char *name, void *data, u32 size) { ptlib::ParticleManager::get()->parse_efs(name, data, size); }
 
-void *SystemManager::es_regist(const char *name, void *data, u32 size) {
-  ptlib::FxHeader *header = ptlib::ParticleManager::get()->emitter_set_search(0, name, data, size);
+void *SystemManager::es_regist(const char *name, void *data, u32 value) {
+  ptlib::FxHeader *header = ptlib::ParticleManager::get()->emitter_set_search(0, name, data, value);
   if (header == nullptr) {
-    return ptlib::ParticleManager::get()->parse_efs(name, data, size);
+    return ptlib::ParticleManager::get()->parse_efs(name, data, value);
   }
   return header;
 }
@@ -228,8 +228,7 @@ void SystemManager::blurRender(const ptlib::DrDrawWorkInfoEF *info) {
     return;
   }
   updateCam(info);
-  int viewIndex = info->unknown560;
-  ptlib::ParticleManager::get()->draw(info, viewIndex, true);
+  MainDraw(info, info->unknown560, true);
 }
 
 int SystemManager::es_getDeadFlag(u32 handle) {

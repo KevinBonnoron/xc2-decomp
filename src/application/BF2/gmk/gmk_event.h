@@ -39,6 +39,7 @@ public:
   void update(f32 deltaTime) override;
   void debugDraw() const override;
   void disposeGmkPhantom();
+  void createGmkPhantom();
 
   // Inferred helper: bdat info of the event; original name unknown.
   const BdatInfo *unknown001() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }

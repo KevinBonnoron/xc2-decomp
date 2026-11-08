@@ -24,6 +24,7 @@ class StateFieldIdle : public GfStateBase {
   void leave(GfComBehaviorPc *behavior, ai::State *next);
   void update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info);
   bool recieveMessage(void *owner, fw::MessageObject *sender, fw::Message &message) override;
+  bool checkSpace(GfComBehaviorPc *behavior) const;
   void procMsgPcFieldHighJump(GfComBehaviorPc *behavior, fw::MessageObject *sender, MsgPcFieldHighJump &message);
 };
 

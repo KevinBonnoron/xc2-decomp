@@ -1,13 +1,74 @@
 #include "gf/camera/gf_camera_player.h"
 
-#include "gf/gf_allocator.h"
-#include "mm_mtl/delegate.h" // IWYU pragma: keep
-#include "mm_mtl/fixstr.h"   // IWYU pragma: keep
-#include "mm_mtl/map.h"      // IWYU pragma: keep
+#include <math.h>
+
+#include "framework/framework.h"
+#include "framework/memory/framework_memory.h"
+#include "fw/fw_param_manager.h"
+#include "gf/camera/gf_camera_player_target.h"
+#include "gf/data/gf_object_type.h"
+#include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_handle.h"
+#include "mm_math/mm_vec3.h"
 
 namespace gf {
 
-constexpr int CAMERA_PAD_TYPE = 2;
+// Inferred role: camera parameter read from the param list of the camera; original type name unknown.
+struct unknown002 {
+  f32 unknown00; // Inferred role: field of view in degrees; original member name unknown.
+};
+
+PlayerCamera::~PlayerCamera() { ; }
+
+void PlayerCamera::updateViewMatrix() {
+  updateCollision2(unknown40, unknown50);
+  unknownd0 = m_saveDistance;
+  Camera::updateViewMatrix();
+}
+
+// __LINE__ must be 233 as in the original file: it is the line argument of the allocation.
+mm::mtl::IntrusivePtr<fw::Camera> PlayerCamera::create() {
+  const fw::ParamList *paramList = fw::ParamManager::get()->unknown408[19].operator->();
+  fw::ParamAdapter adapter;
+  adapter.unknown00 = paramList->unknown0c > 0 ? &paramList->unknown10[0] : nullptr;
+#line 233
+  return new (fw::Framework::getAllocator(), 16, __FILE__, __LINE__) PlayerCamera(adapter);
+}
+
+bool PlayerCamera::isResetClimb() {
+  f32 yaw = getYaw(PlayerCameraTarget::get()->unknown60, mm::Vec3::unitZ);
+  f32 target = unknownb8;
+  if (target < 0.0f) {
+    target += 6.2831855f;
+  }
+  f32 diff = fabsf(yaw - target);
+  return diff > 1.4835299f && diff < 4.7996554f;
+}
+
+void PlayerCamera::setTarget(GF_OBJ_HANDLE *target) {
+  if (target != INVALID_HANDLE) {
+    GfObjAcc acc(target);
+    if (acc.getType() != OBJECT_TYPE_ENEMY) {
+      return;
+    }
+  }
+  if (unknowna8 != target) {
+    if (unknowna8 == INVALID_HANDLE) {
+      if (PlayerCameraTarget::get() == nullptr) {
+        return;
+      }
+    } else {
+      unknown5190 = true;
+    }
+    unknowna8 = target;
+  }
+}
+
+f32 PlayerCamera::getFov() { return static_cast<const unknown002 *>(fw::ParamManager::get()->unknown408[19]->unknown10->param)->unknown00; }
+
+const mm::mtl::RTTI *PlayerCamera::getRTTI() const { return &m_rtti; }
+
+const char *PlayerCamera::getName() const { return "PlayerCamera"; }
 
 f32 PlayerCamera::getNearClip() { return 0.4f; }
 
@@ -33,75 +94,4 @@ void PlayerCamera::resetClimb(ResetCameraWallTiming timing) {
   unknownf0 = timing == RESET_CAMERA_WALL_TIMING_UNDER_GROUND ? 0.6666667f : 0.23333335f;
 }
 
-CameraPadData::CameraPadData() {
-  reset();
-  bind();
-}
-
-void CameraPadData::reset() {
-  m_ARX = 0.0f;
-  m_ARY = 0.0f;
-  unknown40 = false;
-  unknown41 = false;
-  unknown42 = false;
-  unknown43 = false;
-  unknown44 = false;
-  unknown45 = false;
-  unknown46 = false;
-}
-
-void CameraPadData::bind() {
-  PadRelay::bind(0, CAMERA_PAD_TYPE, getAllocator(ALLOCATOR_DEFAULT));
-  bindAction("reset", this, &CameraPadData::resetAction);
-  bindAction("zoom", this, &CameraPadData::zoomCamera);
-  bindAction("height", this, &CameraPadData::heightCamera);
-  bindAction("side_left", this, &CameraPadData::sideLeftCamera);
-  bindAction("side_right", this, &CameraPadData::sideRightCamera);
-  bindAction("side_reset", this, &CameraPadData::sideResetCamera);
-  bindAction("all_reset", this, &CameraPadData::allResetAction);
-  bindAxis("arx", this, &CameraPadData::setARX);
-  bindAxis("ary", this, &CameraPadData::setARY);
-}
-
-CameraPadData::~CameraPadData() { unbind(); }
-
-void CameraPadData::unbind() { PadRelay::unbind(); }
-
-void CameraPadData::update() {
-  reset();
-  PadRelay::update();
-}
-
-void CameraPadData::resetAction() { unknown40 = true; }
-
-void CameraPadData::zoomCamera() { unknown42 = true; }
-
-void CameraPadData::heightCamera() { unknown43 = true; }
-
-void CameraPadData::sideLeftCamera() { unknown44 = true; }
-
-void CameraPadData::sideRightCamera() { unknown45 = true; }
-
-void CameraPadData::sideResetCamera() { unknown46 = true; }
-
-void CameraPadData::allResetAction() { unknown41 = true; }
-
-void CameraPadData::setARX(f32 value) { m_ARX = value; }
-
-void CameraPadData::setARY(f32 value) { m_ARY = value; }
-
 } // namespace gf
-
-typedef mm::mtl::RedBlackTreeBase<mm::mtl::Map<mm::mtl::FixStr<32>, mm::mtl::Delegate<void()>>::MapTraits<mm::mtl::FixStr<32>, mm::mtl::Delegate<void()>>> unknown101;
-
-template void unknown101::free_node(unknown101::node *, bool);
-template unknown101::node *unknown101::insert(const mm::mtl::MapPair<mm::mtl::FixStr<32>, mm::mtl::Delegate<void()>> &);
-template void unknown101::rebalance(unknown101::node *);
-
-typedef mm::mtl::RedBlackTreeBase<mm::mtl::Map<mm::mtl::FixStr<32>, mm::mtl::Delegate<void(float)>>::MapTraits<mm::mtl::FixStr<32>, mm::mtl::Delegate<void(float)>>> unknown102;
-
-template void unknown102::free_node(unknown102::node *, bool);
-template unknown102::node *unknown102::insert(const mm::mtl::MapPair<mm::mtl::FixStr<32>, mm::mtl::Delegate<void(float)>> &);
-template void unknown102::rebalance(unknown102::node *);
-template void mm::mtl::Delegate<void()>::memberFuncInvoker<gf::CameraPadData>(const mm::mtl::Delegate<void()> *);
-template void mm::mtl::Delegate<void(float)>::memberFuncInvoker<gf::CameraPadData>(const mm::mtl::Delegate<void(float)> *, float);

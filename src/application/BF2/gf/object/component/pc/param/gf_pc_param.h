@@ -3,11 +3,17 @@
 
 #include "types.h"
 
+namespace fw {
+class Reflection;
+} // namespace fw
+
 namespace gf {
 namespace pc {
 
 // Field name and offset from the reflection built by gf::pc::InputParam::createReflection (gf_pc_param.cpp).
 struct InputParam {
+  static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
+
   f32 threshold;
 };
 
@@ -16,6 +22,8 @@ static_assert(sizeof(InputParam) == 0x04, "");
 // Field names and offsets from the reflection built by gf::pc::MoveParam::createReflection (gf_pc_param.cpp); the names are
 // the reflection strings of the game.
 struct MoveParam {
+  static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
+
   f32 gravity;
   f32 adsorptionMin;
   f32 adsorptionMax;
@@ -37,6 +45,8 @@ static_assert(sizeof(MoveParam) == 0x2c, "");
 
 // Field names and offsets from the reflection built by gf::pc::SlideParam::createReflection (gf_pc_param.cpp).
 struct SlideParam {
+  static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
+
   f32 minAngle;
   f32 maxSpeed;
   f32 gravity;
@@ -58,6 +68,8 @@ static_assert(sizeof(SlideParam) == 0x30, "");
 
 // Field names and offsets from the reflection built by gf::pc::SensorAIParam::createReflection (gf_pc_param.cpp).
 struct SensorAIParam {
+  static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
+
   f32 stackThreashold;
   f32 obstacleAngle;
   f32 enableJumpOffset;

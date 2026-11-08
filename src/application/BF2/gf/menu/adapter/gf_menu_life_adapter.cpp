@@ -17,7 +17,7 @@ constexpr int BONUS_MAX = 99;
 
 GfMenuLifeAdapter::GfMenuLifeAdapter(ui::UIObjectPlugin *plugin) : GfMenuAdapter(plugin, false, false), unknown30(0), unknown58(true) {}
 
-GfMenuLifeAdapter::~GfMenuLifeAdapter() {}
+GfMenuLifeAdapter::~GfMenuLifeAdapter() { ; }
 
 GfMenuLifeAdapter *GfMenuLifeAdapter::create_Time_EffTime(u32 handle, const char *name, u8 index) {
   ui::UIObjectAcc acc(handle, name);

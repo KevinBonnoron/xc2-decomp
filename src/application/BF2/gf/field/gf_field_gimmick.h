@@ -71,6 +71,7 @@ public:
 
 private:
   friend class event::EnvManager;
+  friend class GfMenuObjZoneMap;
   friend f32 gmk::getMobPopDistSq();
   friend void gmk::resetMobPopDistSq();
   friend bool gmk::addFailedPopDistSq(f32 distSq);

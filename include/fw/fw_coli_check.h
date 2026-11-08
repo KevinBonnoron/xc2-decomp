@@ -109,6 +109,7 @@ class ColiCheck {
 public:
   static bool testLineChara(TColiCheckResult<256> &result, const mm::Vec3 &start, const mm::Vec3 &end, const ColiCheckConfig &config);
   static bool testLine(TColiCheckResult<256> &result, const mm::Vec3 &start, const mm::Vec3 &end, const ColiCheckConfig &config);
+  static bool testCapsule(TColiCheckResult<256> &result, const mm::Vec3 &start, const mm::Vec3 &end, f32 radius, const ColiCheckConfig &config);
   static bool testObjectChara(TColiCheckResult<256> &result, ColiObject *object, const ColiCheckConfig &config);
   static bool testObjectPhantom(TColiCheckResult<256> &result, ColiObject *object, const ColiCheckConfig &config);
   static ColiObject *getObjectFromUserData(u32 handle);
