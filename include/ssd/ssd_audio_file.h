@@ -83,6 +83,8 @@ public:
   void NewReadBuffer(size_t size);
   int ReadBySamples(s16 *buffer, int count);
   int WriteBySamples(const s16 *buffer, int count);
+  static Result OpenFileBase(AudioFileBase **file, const TextRef &name);
+  static Result OpenFileBase(AudioFileBase **file, IoStreamBase *stream);
   static Result CloseFileBase(AudioFileBase **file);
 
   IoStreamBase *unknown08; // Inferred role: stream; original member name unknown.
