@@ -86,6 +86,7 @@ public:
   void get_pc_dxdy(int x, int y, int &dx, int &dy);
   void get_coli_xy(int &x, int &y, _sTask *task);
   void get_pc_atk_xy(int &x, int &y, _sTask *task);
+  void clip_screen(int &x, int &y, int &w, int &h, int &ox, int &oy);
 
   u8 _08[0x3528 - 0x08];
   _sTask *unknown3528; // Task whose 0x2c/0x30 fields get_pc_pos and get_pc_dxdy read; original member name unknown.

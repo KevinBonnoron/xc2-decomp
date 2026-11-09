@@ -142,6 +142,29 @@ void minigame::get_pc_atk_xy(int &x, int &y, _sTask *task) {
   y -= task->unknown5d;
 }
 
+void minigame::clip_screen(int &x, int &y, int &w, int &h, int &ox, int &oy) {
+  ox = x;
+  if (x < 0) {
+    x = -x;
+    ox = 0;
+  } else {
+    if (w + x > 320) {
+      w = 320 - x;
+    }
+    x = 0;
+  }
+  oy = y;
+  if (y < 0) {
+    y = -y;
+    oy = 0;
+  } else {
+    if (h + y > 240) {
+      h = 240 - y;
+    }
+    y = 0;
+  }
+}
+
 } // namespace tora
 } // namespace minigame
 
