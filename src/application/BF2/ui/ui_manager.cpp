@@ -140,7 +140,7 @@ void UIManager::setGameEventLisenter(UIGameListener *listener) { UIEventManager:
 
 void UIManager::setUpdateCallback(UIUpdateCallback *callback) { m_updateCallback = callback; }
 
-void UIManager::registObjectTimer(u32 handle, u16 id, u64 time, bool repeat) { UITimerManager::get()->registTimer(handle, id, time, repeat); }
+u32 UIManager::registObjectTimer(u32 handle, u16 id, u64 time, bool repeat) { return UITimerManager::get()->registTimer(handle, id, time, repeat); }
 
 void UIManager::releaseObjectTimer(u32 handle) {
   u32 timer = UITimerManager::get()->getTimerHandle(handle);
