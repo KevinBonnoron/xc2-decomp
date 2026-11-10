@@ -127,6 +127,28 @@ s64 VideoRenderer::GetVideoPostDelayUs() {
   return m_videoPostDelayUs;
 }
 
+void VideoRenderer::Close() {
+  m_doneProcessing = true;
+  if (unknown0a) {
+    if (unknown08) {
+      nn::os::WaitThread(&unknown30);
+      unknown08 = false;
+    }
+    nn::os::DestroyThread(&unknown30);
+    unknown0a = false;
+  }
+}
+
+movie::Status VideoRenderer::Start(int unknown01, int unknown02) {
+  unknown260 = unknown01;
+  unknown264 = unknown02;
+  nn::os::StartThread(&unknown30);
+  unknown08 = true;
+  return movie::Status_Success;
+}
+
+bool VideoRenderer::DoneProcessing() { return m_doneProcessing; }
+
 u64 AudioOutRenderer::GetRendererSleepTimeMs() { return m_rendererSleepTimeMs; }
 
 s64 AudioOutRenderer::GetPlayedOutAudioDurationUs(s64 currentTimeUs) {
@@ -222,3 +244,71 @@ movie::Status MovieDecoderPlayer::RemoveBufferFromVideoIndexList(int *index) {
   nn::os::UnlockMutex(&unknowna38);
   return movie::Status_Success;
 }
+
+movie::Status MovieDecoderPlayer::SignalAudioVideoWorkerThreadExit() {
+  nn::os::SignalEvent(&unknown18);
+  return movie::Status_Success;
+}
+
+void MovieDecoderPlayer::StopAndDestroyAudioVideoWorkerThread() {
+  if (unknown821) {
+    unknown820 = true;
+    nn::os::SignalEvent(&unknown18);
+    nn::os::WaitThread(&unknown828);
+    nn::os::DestroyThread(&unknown828);
+    unknown821 = false;
+  }
+}
+
+movie::Status MovieDecoderPlayer::SignalVideoInputReadThreadExit() {
+  nn::os::SendMessageQueue(&unknowna68, 2);
+  return movie::Status_Success;
+}
+
+movie::Status MovieDecoderPlayer::SignalAudioInputReadThreadExit() {
+  nn::os::SendMessageQueue(&unknownab8, 4);
+  return movie::Status_Success;
+}
+
+movie::Status MovieDecoderPlayer::SignalVideoInputBufferAvailable() {
+  nn::os::SendMessageQueue(&unknowna68, 1);
+  return movie::Status_Success;
+}
+
+movie::Status MovieDecoderPlayer::SignalAudioInputBufferAvailable() {
+  nn::os::SendMessageQueue(&unknownab8, 3);
+  return movie::Status_Success;
+}
+
+void MovieDecoderPlayer::StopAndDestroyVideoInputReaderThread() {
+  if (unknown481) {
+    unknown480 = true;
+    nn::os::SendMessageQueue(&unknowna68, 2);
+    nn::os::WaitThread(&unknown488);
+    nn::os::DestroyThread(&unknown488);
+    unknown481 = false;
+  }
+}
+
+void MovieDecoderPlayer::StopAndDestroyAudioInputReaderThread() {
+  if (unknown651) {
+    unknown650 = true;
+    nn::os::SendMessageQueue(&unknownab8, 4);
+    nn::os::WaitThread(&unknown658);
+    nn::os::DestroyThread(&unknown658);
+    unknown651 = false;
+  }
+}
+
+void MovieDecoderPlayer::StartVideoInputReaderThread() { nn::os::StartThread(&unknown488); }
+
+void MovieDecoderPlayer::StartAudioInputReaderThread() { nn::os::StartThread(&unknown658); }
+
+void MovieDecoderPlayer::StartAudioVideoWorkerThread() { nn::os::StartThread(&unknown828); }
+
+void MovieDecoderPlayer::ResetPlaybackComplete() {
+  unknownb48 = false;
+  unknownb49 = false;
+}
+
+movie::Status MovieDecoderPlayer::AudioFormatChangedEvent() { return movie::Status_Success; }
