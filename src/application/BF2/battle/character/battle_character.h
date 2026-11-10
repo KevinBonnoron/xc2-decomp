@@ -189,6 +189,7 @@ public:
   void JoinProc(f32 rate, bool isScout);
   void SetWeaponType(int weaponType);
   void SetCollisionPriority(int priority);
+  void ResetCollisionPriority();
   void SetChrCollisionFlag(bool isEnable);
   void WriteBackChrCollisionFlag();
   bool IsOnSlide() const;

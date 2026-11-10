@@ -216,6 +216,24 @@ void BattleCharacter::SetCollisionPriority(int priority) {
   }
 }
 
+void BattleCharacter::ResetCollisionPriority() {
+  gf::GfObj *obj = gf::GfObjUtil::getObj(unknown118);
+  if (unknownf6c != COLLISION_PRIORITY_UNKNOWN_8AD0) {
+    gf::GfComCollider *collider = obj->getComponent<gf::GfComCollider>();
+    if (collider != nullptr) {
+      fw::ColiObject *coli = collider->unknown18[0];
+      if (coli != nullptr) {
+        coli->setPriority(unknownf6c);
+      }
+    }
+    unknownf6c = COLLISION_PRIORITY_UNKNOWN_8AD0;
+  }
+  if (unknownf6e != COLLISION_PRIORITY_UNKNOWN_8AD0) {
+    obj->unknown100->unknownb0 = unknownf6e;
+    unknownf6e = COLLISION_PRIORITY_UNKNOWN_8AD0;
+  }
+}
+
 void BattleCharacter::SetChrCollisionFlag(bool isEnable) {
   if (unknownf90_4 != isEnable) {
     unknownf90_4 = isEnable;
