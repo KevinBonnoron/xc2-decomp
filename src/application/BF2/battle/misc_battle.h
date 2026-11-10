@@ -71,6 +71,7 @@ public:
   static bool CheckOnSegment2D(const mm::Pnt<f32> &point, const SEGMENT_2D &segment);
   static bool CheckInRange(const mm::Vec3 &position, const mm::Vec3 &target, f32 range, bool isXZ);
   static bool CheckInRange(const mm::Vec3 &position, BattleCharacter *character, f32 range, bool isXZ);
+  static bool CheckInRange(const mm::Vec3 &position, gf::GF_OBJ_HANDLE *handle, f32 range, bool isXZ);
   static f32 GetLandHeight(const mm::Vec3 &position, f32 distance, bool isUnder);
   static f32 GetVolumeFadeAlphaRate(gf::GF_OBJ_HANDLE *handle);
   static bool IsInWater(const mm::Vec3 &position, f32 depth);
