@@ -25,6 +25,19 @@ UIInputSwitcher::~UIInputSwitcher() {
   }
 }
 
+bool UIInputSwitcher::setInputObject(u32 index, u32 handle) {
+  if (UIInputManager::get() == nullptr || index >= unknown08.size()) {
+    return false;
+  }
+  u32 input = unknown001(handle);
+  if (input == 0) {
+    return false;
+  }
+  UIInputManager::get()->disableInput(input);
+  unknown08[index] = handle;
+  return true;
+}
+
 void UIInputSwitcher::clearInputObject() {
   for (u32 i = 0; i < unknown08.size(); i++) {
     unknown08[i] = 0;

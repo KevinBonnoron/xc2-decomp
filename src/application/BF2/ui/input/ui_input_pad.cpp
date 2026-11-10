@@ -42,6 +42,14 @@ void UIInputPad::setLoop(bool loop) {
   unknown398 = loop;
 }
 
+void UIInputPad::clearExt() {
+  unknown3a8.unknown00 = 0;
+  unknown3a8.unknown08 = 0;
+  unknown3a8.unknown0c = 0;
+  unknown3a8.unknown10 = 0;
+  unknown3a8.unknown14 = 0;
+}
+
 const EventData *UIInputPad::getInputEventExt() { return &unknown3a8; }
 
 bool UIInputPad::hasEventExt() const { return unknown3a8.unknown00 != 0; }
