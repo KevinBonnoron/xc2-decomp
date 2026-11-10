@@ -409,6 +409,32 @@ Object *ObjectList::searchByPathSub(Object *object, const char *path) {
   return nullptr;
 }
 
+Object *ObjectList::searchByPath(const char *path) const {
+  if (unknown50 == nullptr) {
+    return nullptr;
+  }
+  Object *found = searchByPathSub(unknown50, path);
+  if (found == nullptr || found == unknown50 || found == unknown58 || found == unknown60 || found == unknown68 || found == unknown70) {
+    return nullptr;
+  }
+  return found;
+}
+
+void ObjectList::setActivePath(const char *path) {
+  if (unknown50 == nullptr) {
+    return;
+  }
+  if (*path == '\0') {
+    unknown78 = nullptr;
+    return;
+  }
+  Object *found = searchByPathSub(unknown50, path);
+  unknown78 = found;
+  if (found == nullptr || found == unknown50 || found == unknown58 || found == unknown60 || found == unknown68 || found == unknown70) {
+    unknown78 = nullptr;
+  }
+}
+
 Object *ObjectList::searchByNameSub(Object *object, const char *name) {
   if (__builtin_strcmp(name, object->getName()) == 0) {
     return object;

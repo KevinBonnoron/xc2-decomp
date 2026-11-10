@@ -32,6 +32,12 @@ void unknown001(mm::mtl::FixStr<256> &name, const char *pattern, int length) {
 
 MovieManager::MovieManager() : unknown10(0), unknown118(false), unknown220(-1) {}
 
+void MovieManager::clear() {
+  close();
+  captureScreen(false);
+  unknown10 = 0;
+}
+
 bool MovieManager::makePath(mm::mtl::FixStr<256> &path, const char *name) {
   mm::mtl::FixStr<256> movieName = name;
   unknown001(movieName, "bf", 2);
