@@ -191,6 +191,7 @@ public:
       return nullptr;
     }
 
+    // Inferred name; shared by every object setup class for GfObjUtil::getObjSetup<T>.
     if (info->unknown30->unknown08 != info->unknown18->unknown28 || info->unknown18->unknown28 != T::OBJECT_TYPE) {
       return nullptr;
     }

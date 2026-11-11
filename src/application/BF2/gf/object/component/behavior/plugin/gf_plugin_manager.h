@@ -35,6 +35,7 @@ public:
 
   // Inferred name; shared by every plugin class for GfPluginManager::createPlugin<T> and destroyPlugin<T>.
   template <typename T> void createPlugin() {
+    // Inferred name; shared by every plugin class for the GfPluginManager templates.
     if (unknown00[T::PLUGIN_INDEX] != nullptr) {
       unknown28[T::PLUGIN_INDEX] = unknown00[T::PLUGIN_INDEX]();
       if (unknown28[T::PLUGIN_INDEX] != nullptr) {

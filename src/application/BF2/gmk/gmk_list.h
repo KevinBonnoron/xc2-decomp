@@ -97,6 +97,7 @@ public:
     GmkGobEventListener::disposeInstance();
   }
 
+  // Inferred name; shared by every gimmick class for the TGmkList templates.
   GmkType getGmkType() const override { return T::GMK_TYPE; }
 
   bool isValid() const override {

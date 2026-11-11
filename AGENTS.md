@@ -61,12 +61,21 @@
   - A constant whose value is a BDAT row id keeps a descriptive name only
     when a row of the game's BDAT tables gives that name; cite the table, row
     and column in a comment. Otherwise it is `<PREFIX>_UNKNOWN_<N>`.
-  - Exception: the static member `GMK_TYPE` that every gimmick class declares
-    (read by name by the `TGmkList` templates and `gf_com_behavior_enemy.cpp`)
-    keeps this inferred name, marked with the comment `// Inferred name;
-    shared by every gimmick class for the TGmkList templates.`. An enumerator
-    of `GmkType` whose suffix is exactly a game class name (`GMK_TYPE_ENEMY`
-    for `GmkEnemy`) counts as derived from that class symbol.
+  - A game string table read by a game function (for example
+    `getASMCmdNameField::TABLE`, `GfObj::getTypeName`, the sound category
+    names) gives enumerator names through a written-down derivation, like the
+    BDAT ids: state in a comment which table the name comes from and how the
+    string becomes the name.
+  - Exception: the static members that templates read by name keep their
+    inferred names: `GMK_TYPE` (every gimmick class; read by the `TGmkList`
+    templates and `gf_com_behavior_enemy.cpp`), `COMPONENT_INDEX`
+    (`getComponent<T>`), `PLUGIN_INDEX` (`GfPluginManager`) and `OBJECT_TYPE`
+    (`GfObjUtil`). Each is marked once, at the template that reads it, with a
+    comment `// Inferred name; shared by every ... class for ...`, for example
+    `// Inferred name; shared by every gimmick class for the TGmkList
+    templates.`. An enumerator of `GmkType` whose suffix is exactly a game
+    class name (`GMK_TYPE_ENEMY` for `GmkEnemy`) counts as derived from that
+    class symbol.
   - Exception: `mm::DEG_TO_RAD` and `mm::RAD_TO_DEG` in `include/mm_math/mm_math.h`
     keep their inferred names, marked with the comment `// Inferred name; kept
     as an exception to the unknown-name rule (AGENTS.md).`.
