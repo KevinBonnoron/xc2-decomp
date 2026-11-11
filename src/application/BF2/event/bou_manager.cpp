@@ -32,17 +32,6 @@ void BouManager::clear() {
 
 void BouManager::endActive() { unknown18.set(FLAG_UNKNOWN_2, false); }
 
-void BouManager::startActive(const mm::Pnt<int> &point) {
-  unknown20.x = point.x;
-  unknown20.y = point.y;
-  // The target reloads +0x28 before subtracting. This read preserves that
-  // instruction; it does not establish a volatile original member type.
-  unknown20.width = point.x - *reinterpret_cast<volatile int *>(&unknown20.x);
-  unknown20.height = point.y - unknown20.y;
-  unknown2040.clear();
-  unknown18.set(FLAG_UNKNOWN_2);
-}
-
 void BouManager::render() {
   if (!isEnable() || !isDebugEnable()) {
     return;
@@ -53,14 +42,6 @@ void BouManager::render() {
   for (IBouCallback **it = unknown2040.begin(); it != unknown2040.end(); ++it) {
     (*it)->OnBouRender(IBouCallback::RenderParam(mm::Col4(1.0f, 1.0f, 0.8f, 0.5f)));
   }
-}
-
-bool BouManager::OnMouseButtonDown(ml::EventView *view) {
-  if (isEnable() && isDebugEnable() && unknown002() && (view->buttons & ml::EventView::BUTTON_UNKNOWN_0) != 0) {
-    startActive(view->pos);
-    updateActive(view->pos);
-  }
-  return false;
 }
 
 bool BouManager::OnMouseMove(ml::EventView *view) {
