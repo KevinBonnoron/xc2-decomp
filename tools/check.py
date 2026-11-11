@@ -902,6 +902,19 @@ def merge_copies(rows, symbol, ok, local):
     return [row for row in rows if ok(row) or local(row) or symbol(row) not in matched]
 
 
+def end_local_spans(rows):
+    """rows with the game count of each local function cut at the start of the next local function of the object: the
+    game names only the symbol after them, so the span of an unnamed function includes the unnamed ones that follow."""
+    starts = sorted({row[1] for row in rows if row[4]})
+    ended = []
+    for name, address, ok, count, local, game_count in rows:
+        i = bisect.bisect_right(starts, address)
+        if local and i < len(starts):
+            game_count = min(game_count, (starts[i] - address) // 4)
+        ended.append((name, address, ok, count, local, game_count))
+    return ended
+
+
 def check_object(entry):
     """The result of one object: (symbol, game address, match, instructions, instructions of the game's code,
     local) of each function, then of the local functions the matching ones call; the global functions it defines;
@@ -928,7 +941,7 @@ def check_object(entry):
             done.add(name)
             add(name, verify(game, obj, name, calls[name]), True)
     objects = writable_objects(obj, mapped)
-    return {"rows": rows, "strong": obj.strong_functions(),
+    return {"rows": end_local_spans(rows), "strong": obj.strong_functions(),
             "data": global_data_problems(game, obj) + writable_problems(game, objects),
             "locals": [(name, base, size, shared) for name, base, size, _, shared in objects.values()]}
 

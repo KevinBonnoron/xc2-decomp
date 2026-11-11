@@ -248,6 +248,23 @@ class LocalFunctionTest(ObjectTest):
         verdict = check.verify(game, self.local_function(), "_ZL5localv", TEXT + 0x10, 12)
         self.assertEqual((verdict.count, verdict.game_count), (3, 3))
 
+    def test_the_game_span_of_a_local_function_ends_at_the_next_local_function(self):
+        rows = [("_Z1fv", TEXT, True, 4, False, 4), ("first", TEXT + 0x10, True, 3, True, 8), ("second", TEXT + 0x1C, True, 5, True, 5),
+                ("other", TEXT + 0x40, True, 2, True, 2)]
+        ended = check.end_local_spans(rows)
+        self.assertEqual([row[5] for row in ended], [4, 3, 5, 2])
+        self.assertEqual([row for row in ended if row[4] and row[3] < row[5]], [])
+
+    def test_a_true_prefix_of_the_last_local_function_is_still_one(self):
+        rows = [("first", TEXT + 0x10, True, 3, True, 3), ("last", TEXT + 0x1C, True, 3, True, 5)]
+        ended = check.end_local_spans(rows)
+        self.assertEqual([row for row in ended if row[4] and row[3] < row[5]], [rows[1]])
+
+    def test_a_true_prefix_before_the_next_local_function_is_still_one(self):
+        rows = [("first", TEXT + 0x10, True, 2, True, 4), ("next", TEXT + 0x30, True, 2, True, 2)]
+        ended = check.end_local_spans(rows)
+        self.assertEqual([row for row in ended if row[4] and row[3] < row[5]], [("first", TEXT + 0x10, True, 2, True, 4)])
+
     def test_the_writable_data_a_function_reaches_is_mapped_to_a_game_address(self):
         obj = self.local_function()
         verdict = check.verify(self.game(NOP), obj, "_ZL5localv", TEXT + 0x10)
