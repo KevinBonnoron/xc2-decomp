@@ -36,6 +36,14 @@
   and `include/nvn/` keep the names of their public API, and the dlmalloc code
   Monolith embedded (`src/libs/monolib_mm/source/mtl/dlmalloc.inl`) keeps the
   names of dlmalloc 2.8's public source, with a provenance comment.
+- The public names of the Switch SDK and of the NVN API (functions, types,
+  enumerators, parameter names) may be taken from the open-ead nnheaders
+  project (https://github.com/open-ead/nnheaders), a community-written set of
+  declarations. This applies only to what the game imports or uses, and the
+  declaration cites nnheaders in a comment, as the existing headers of
+  `include/nn/` and `include/nvn/` do. Sizes and layouts must agree with the
+  game's code: they win over nnheaders when the two differ, and a comment says
+  so. Nintendo's own SDK headers are never used or copied.
 - Document evidence for reconstructed layouts (assembly offsets, symbols and
   matching checks). Matching machine code does not prove the original types or
   variable names.
