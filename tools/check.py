@@ -1427,13 +1427,15 @@ def write_data_baseline(report, path=DATA_BASELINE):
     return [line for line in lines if not old.get(line)]
 
 
-def check_against_baseline(report, path=DATA_BASELINE):
+def check_against_baseline(report, path=DATA_BASELINE, incomplete=False):
     """Print what the data report holds beyond tools/data_baseline.txt, and which listed problems are gone. True when
-    the check fails: a problem that is not listed, a listed one without a reason, or an unreadable file."""
+    the check fails: a problem that is not listed, a listed one without a reason, or an unreadable file. An incomplete
+    report (a file failed to compile or a function does not match: its data and prefixes are not collected) cannot
+    tell that a listed problem is gone, so no problem is called fixed."""
     baseline, errors = read_data_baseline(path)
     new = without_known(report, baseline)
     found = data_keys(report)
-    fixed = sorted(line for line in baseline if line not in found)
+    fixed = [] if incomplete else sorted(line for line in baseline if line not in found)
     unexplained = sorted(line for line, reason in baseline.items() if not reason)
     for error in errors:
         print(paint(f"BASELINE  {error}", "31"))
@@ -1444,8 +1446,22 @@ def check_against_baseline(report, path=DATA_BASELINE):
         print(f"{paint('fixed:   ', '32')}  {line}  (no longer reported: remove it from tools/data_baseline.txt "
               f"with `check --write-data-baseline`)")
     print(paint(f"data baseline: {len(found) - len(data_keys(new))} known, {len(data_keys(new))} new, "
-                f"{len(fixed)} fixed", "1"))
+                + ("report incomplete, fixed entries not evaluated" if incomplete else f"{len(fixed)} fixed"), "1"))
     return bool(errors or unexplained or new.problems or new.duplicates or new.prefixes)
+
+
+def write_data_baseline_if_complete(report, incomplete, path=DATA_BASELINE):
+    """Rewrite the baseline file from the report and say so, unless the report is incomplete (a file failed to
+    compile or a function does not match: its writable data and prefix matches are not collected, so the file would
+    lose their lines and reasons). True when the file was written."""
+    if incomplete:
+        print(paint("data baseline not written: a file failed to compile or a function does not match, "
+                    "so the report is incomplete", "1;31"))
+        return False
+    unexplained = write_data_baseline(report, path)
+    print(paint(f"wrote {os.path.relpath(path, ROOT)}: {len(data_keys(report))} problems, "
+                f"{len(unexplained)} without a reason yet (write one after the # of each)", "1"))
+    return True
 
 
 def check_all(demangled, scope=None, verbose=True, strict_data=False, write_baseline=False):
@@ -1510,15 +1526,11 @@ def check_all(demangled, scope=None, verbose=True, strict_data=False, write_base
     report = None if scope else data_report(per_object, results, prefixes)
     data_failed = False
     if report and strict_data:
-        data_failed = check_against_baseline(report)
+        data_failed = check_against_baseline(report, incomplete=bool(errors or mismatches))
     elif report:
         print_data_report(report)
-        if write_baseline and errors:
-            print(paint("data baseline not written: the files above failed to compile, so the report is incomplete", "1;31"))
-        elif write_baseline:
-            unexplained = write_data_baseline(report)
-            print(paint(f"wrote {os.path.relpath(DATA_BASELINE, ROOT)}: {len(data_keys(report))} problems, "
-                        f"{len(unexplained)} without a reason yet (write one after the # of each)", "1"))
+        if write_baseline:
+            write_data_baseline_if_complete(report, bool(errors or mismatches))
     failed = bool(errors or unknown or data_failed)
     matched = len(rows) - len(mismatches)
     local_count = len(locals_)

@@ -368,10 +368,10 @@ class BaselineTest(unittest.TestCase):
         with open(self.path, "w") as f:
             f.write("# a comment\n\n" + "".join(line + "\n" for line in lines))
 
-    def verdict(self, report):
+    def verdict(self, report, incomplete=False):
         out = io.StringIO()
         with mock.patch.object(check, "color", False), contextlib.redirect_stdout(out):
-            failed = check.check_against_baseline(report, self.path)
+            failed = check.check_against_baseline(report, self.path, incomplete)
         return failed, out.getvalue()
 
     def test_a_new_problem_fails(self):
@@ -417,6 +417,38 @@ class BaselineTest(unittest.TestCase):
         self.assertIn("DATA gone size", out)
         self.assertNotIn("fixed:     DATA table", out)
         self.assertIn("data baseline: 1 known, 0 new, 1 fixed", out)
+
+    def test_an_incomplete_report_does_not_call_a_listed_problem_fixed(self):
+        self.baseline("DATA table +0x8  # known", "DATA gone size  # known")
+        failed, out = self.verdict(report_of([self.TABLE]), incomplete=True)
+        self.assertFalse(failed)  # the compile errors and mismatches fail the check on their own
+        self.assertNotIn("fixed:", out)
+        self.assertIn("data baseline: 1 known, 0 new, report incomplete, fixed entries not evaluated", out)
+
+    def test_an_incomplete_report_still_fails_on_a_new_problem(self):
+        self.baseline()
+        failed, out = self.verdict(report_of([self.TABLE]), incomplete=True)
+        self.assertTrue(failed)
+        self.assertIn("NEW problems", out)
+
+    def test_an_incomplete_report_does_not_rewrite_the_baseline(self):
+        self.baseline("DATA table +0x8  # known", "DATA hidden @0x1000  # its function does not match for now")
+        with open(self.path) as f:
+            before = f.read()
+        out = io.StringIO()
+        with mock.patch.object(check, "color", False), contextlib.redirect_stdout(out):
+            self.assertFalse(check.write_data_baseline_if_complete(report_of([self.TABLE]), True, self.path))
+        with open(self.path) as f:
+            self.assertEqual(f.read(), before)
+        self.assertIn("data baseline not written", out.getvalue())
+
+    def test_a_complete_report_rewrites_the_baseline(self):
+        self.baseline("DATA table +0x8  # known", "DATA gone size  # known")
+        out = io.StringIO()
+        with mock.patch.object(check, "color", False), contextlib.redirect_stdout(out):
+            self.assertTrue(check.write_data_baseline_if_complete(report_of([self.TABLE]), False, self.path))
+        self.assertEqual(check.read_data_baseline(self.path)[0], {"DATA table +0x8": "known"})
+        self.assertIn("1 problems, 0 without a reason yet", out.getvalue())
 
     def test_a_line_without_a_reason_fails(self):
         for line in ("DATA table +0x8", "DATA table +0x8  #", "DATA table +0x8  #   "):
