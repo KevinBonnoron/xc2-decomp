@@ -52,7 +52,8 @@ def git(*args):
 
 def added_lines():
     """file -> set of added line numbers in HEAD, and the added line texts."""
-    out = git("diff", "-U0", f"{BASE}..{HEAD}", "--", *PATHS)
+    # --text and --no-ext-diff: a .gitattributes file of the change (-diff, binary, a diff driver) must not hide hunks.
+    out = git("diff", "-U0", "--text", "--no-ext-diff", "--no-color", f"{BASE}..{HEAD}", "--", *PATHS)
     lines, texts, path, at = defaultdict(set), [], None, 0
     for line in out.splitlines():
         if line.startswith("+++ "):

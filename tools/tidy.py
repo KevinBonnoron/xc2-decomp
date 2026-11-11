@@ -43,9 +43,13 @@ def added_lines(base, head):
     """path -> [first, last] ranges of the lines the change adds to a source or header."""
     found = defaultdict(list)
     path = None
-    for line in git("diff", "-U0", "--no-color", "--diff-filter=ACMR", base, head, "--", "src", "include").splitlines():
+    # --text and --no-ext-diff: a .gitattributes file of the change must not hide hunks. quotePath=false keeps
+    # non-ASCII names as they are, and git ends a name containing a space with a tab, which is dropped.
+    diff = git("-c", "core.quotePath=false", "diff", "-U0", "--text", "--no-ext-diff", "--no-color",
+               "--diff-filter=ACMR", base, head, "--", "src", "include")
+    for line in diff.splitlines():
         if line.startswith("+++ "):
-            path = line[6:] if line.startswith("+++ b/") else None
+            path = line[6:].rstrip("\t") if line.startswith("+++ b/") else None
         elif path and path.endswith((".cpp", ".h")):
             hunk = HUNK.match(line)
             if hunk:
@@ -112,7 +116,8 @@ def main():
         else:
             print(f"{path}:{line}:{column}: {message}")
     for failure in failures:
-        print(f"tidy: cannot analyze {failure}", file=sys.stderr)
+        print(f"::warning title=tidy::cannot analyze {failure}" if github else f"tidy: cannot analyze {failure}",
+              file=sys.stdout if github else sys.stderr)
     print(f"tidy: {len(units)} files analyzed, {len(findings)} findings on added lines, {len(failures)} failures",
           file=sys.stderr)
     return 1 if findings or failures else 0
