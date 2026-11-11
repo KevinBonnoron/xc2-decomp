@@ -40,6 +40,22 @@
   when the game gives it: a symbol, an assertion or debug string, a BDAT table
   or column name, or a symbol of a sibling build. Cite that source in a
   comment. Unlike macros, constants do not get a free descriptive name.
+  - A name derived mechanically from a game name counts as original when the
+    transformation is written down. A BDAT table id is `BDAT_` plus the
+    game's table name from `s_aszGfBdatName`, and a BDAT column enumerator is
+    the name of its game accessor without `get`, `is` or `init` (the same
+    logic as the member rule, where `getWp()` gives `m_wp`).
+    `tools/gen_bdat.py` applies both: `bdat_id_name` (used by `write_ids`)
+    for the table ids, and the `init` prefix removal in `main` for the column
+    enumerators.
+  - A range marker `<PREFIX>_COUNT` or `<PREFIX>_MAX` is kept only when its
+    value is verifiably the number of enumerators or the value of the last
+    one, checked against the enum and its uses. Any other marker (`_NONE`,
+    `_INVALID`, `_FIRST`, `_LAST`...) follows the `_UNKNOWN_<N>` rule like any
+    other name.
+  - A constant whose value is a BDAT row id keeps a descriptive name only
+    when a row of the game's BDAT tables gives that name; cite the table, row
+    and column in a comment. Otherwise it is `<PREFIX>_UNKNOWN_<N>`.
 - When several accessors read the same member, pick the one that states its
   meaning (`IsPlayer` over `IsEnableBattleFace`); a union read by accessors of
   different types stays `unknownXX`.
