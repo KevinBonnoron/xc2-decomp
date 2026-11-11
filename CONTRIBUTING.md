@@ -27,9 +27,9 @@ Most namespaces are worked on by regular automated passes, so code outside a res
 
 ## Pull requests
 
-- Use commit messages of the form `feat(<namespace>): match <Class> functions`. Only squash merges are allowed, so the title of the pull request becomes the commit message on `main`: give it the same form (`type(scope): description`, types as in `.githooks/commit-msg`; the scope is lower case letters, digits, `_` or `-`, a single word).
+- Use commit messages of the form `feat(<namespace>): match <Class> functions`. Only squash merges are allowed, so the title of the pull request becomes the commit message on `main`: give it the same form, `type(scope): description`, with the types of `.githooks/commit-msg`. One scope only, in lower case letters, digits, `_` or `-`, no list: `feat(wnd, skd): ...` is refused, use `feat(wnd): ...` and name the rest in the description, or drop the scope. `Merge ...`, `fixup!` and `squash!` titles are refused too.
 - Keep a pull request to one namespace or a few classes, so it is easy to review and rebase. `main` moves often: rebase on it before opening the pull request.
-- Do not commit the progress snapshot: the hook writes the `<!-- progress -->` block of `README.md` and `progress/areas.json` on `main` only, and a pull request that changes them is refused.
+- Do not commit the progress snapshot: the hook writes the `<!-- progress -->` block of `README.md` and `progress/areas.json` on a branch named `main` only, and a pull request that changes them is refused (restore them with `git checkout origin/main -- README.md progress/areas.json`). So work on a feature branch of your fork, never on your fork's `main`: there the hook would write the snapshot into your commits.
 
 ### What the continuous integration checks
 
@@ -45,7 +45,9 @@ Every pull request against `main`, including one from a fork, runs the workflow 
 | Title | The title of the pull request follows the commit message form | `PR_TITLE='feat(ui): ...' tools/check_title.sh` |
 | Tooling | The Python tools compile and their tests pass, the workflows pass `actionlint`, the shell scripts `shellcheck` | `python3 -m unittest discover -s tools/tests` |
 
-The quality gate, hygiene and title checks run the copy of their script that is on `main`, so a pull request that edits one of them is still judged by the current version. A `Static analysis` job also runs clang-tidy (`tidy main HEAD`) on the lines the pull request adds, for dead stores, reads of uninitialised values, identical branches and self assignments. It only annotates the pull request and never blocks it. The last job, `Pull request checks`, fails unless every blocking check passed; it is the one status to require in the branch protection.
+The quality gate, hygiene and title checks run the copy of their script that is on `main`, so a pull request cannot weaken them by editing them. That is the extent of it: the workflow file itself, `tools/check.py`, `tools/includes.py`, `tools/iwyu.imp`, `flake.nix`, `flake.lock`, `.clang-format`, `.gitattributes` and `.githooks/commit-msg` come from the pull request, so a pull request that edits them can change what the build, format and includes jobs do, or drop a job. It cannot reach a secret (there is none) or the caches written on `main`. The maintainer therefore reviews every change under `.github/`, `tools/`, `flake.*` and `.clang-format` by hand, and runs the full `check` locally before merging.
+
+A `Static analysis` job also runs clang-tidy (`tidy main HEAD`) on the lines the pull request adds, for dead stores, reads of uninitialised values, identical branches and self assignments. It only annotates the pull request and never blocks it. A separate `Main build` workflow builds `main` on every push, so that pull requests restore its caches instead of starting cold. The last job of a pull request, `Pull request checks`, fails unless every blocking check passed; it is the one status to require in the branch protection. A pull request that conflicts with `main` gets no run at all and stays pending: rebase it.
 
 What the continuous integration cannot do is compare the code with the game, since that needs the executable. Each pull request is still checked locally with `check` before it is merged, along with a review of naming and code style, and that is where a function that does not match is found.
 

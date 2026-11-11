@@ -2,7 +2,7 @@
 
 [![Matching](https://decompilati.onl/badge/xenoblade-chronicles-2/matching.svg)](https://decompilati.onl/projects/xenoblade-chronicles-2)
 [![Functions](https://decompilati.onl/badge/xenoblade-chronicles-2/functions.svg)](https://decompilati.onl/projects/xenoblade-chronicles-2)
-[![Pull request checks](https://github.com/KevinBonnoron/xc2-decomp/actions/workflows/pr.yml/badge.svg)](https://github.com/KevinBonnoron/xc2-decomp/actions/workflows/pr.yml)
+[![Main build](https://github.com/KevinBonnoron/xc2-decomp/actions/workflows/main.yml/badge.svg)](https://github.com/KevinBonnoron/xc2-decomp/actions/workflows/main.yml)
 
 A work-in-progress matching decompilation of *Xenoblade Chronicles 2* (Nintendo Switch, version 1.0.0).
 
@@ -39,7 +39,7 @@ You need [Nix](https://nixos.org/) with flakes and your own XCI dump and `prod.k
 
 Contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) and [AGENTS.md](AGENTS.md) (naming rules) first. In short:
 
-- Every function you keep must match: the pre-commit hook runs `format`, `includes` and `check`, and updates the progress above.
+- Every function you keep must match: the pre-commit hook runs `format`, `includes` and `check`, and refreshes the progress above on `main` only.
 - Every pull request is also checked on GitHub, without the game: compilation, formatting, includes, the quality gate, repository hygiene and the title (see [CONTRIBUTING.md](CONTRIBUTING.md)). Matching the game is still checked locally before a merge.
 - Use the game's names; anything the binary does not name is `unknown` plus its offset, with the inferred role in a comment. Write the code a programmer would have written, not decompiler output forced to match.
 - Never commit anything from the game (executables, assets, keys, SDK files); local files stay in `work/`.
@@ -217,7 +217,7 @@ Abbreviations and names imposed by the game's symbols:
 | `tools/tests/` | Unit tests of the pull request check scripts |
 | `tools/setup.sh` | Extract the executable from the XCI |
 | `tools/nso2elf.py`, `tools/nso_syms.py` | NSO to ELF conversion, symbol dump |
-| `.github/workflows/` | Continuous integration: `pr.yml` checks every pull request, `progress.yml` publishes the progress |
+| `.github/workflows/` | Continuous integration: `pr.yml` checks every pull request, `main.yml` builds `main` and seeds the caches, `progress.yml` publishes the progress |
 | `tools/ghidra/` | Ghidra scripts |
 
 ## Tips
