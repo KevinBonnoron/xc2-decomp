@@ -30,7 +30,7 @@ CHECKS = ["-*", "clang-analyzer-deadcode.DeadStores", "clang-analyzer-core.unini
           "bugprone-suspicious-semicolon", "misc-redundant-expression", "clang-diagnostic-self-assign*"]
 WARNINGS = ["-Wself-assign", "-Wself-assign-field"]
 # The language and the headers of the game; what the code generation needs is not for the analysis.
-FLAGS = [flag for flag in CXXFLAGS if flag.startswith(("--target", "-std", "-fno-exceptions", "-fno-rtti", "-D", "-I", "-isystem", "-idirafter"))]
+FLAGS = [flag for flag in CXXFLAGS if flag.startswith(("--target", "-std", "-fno-exceptions", "-fno-rtti", "-D", "-I", "-isystem", "-idirafter", "-nostdlibinc"))]
 HUNK = re.compile(r"^@@ -\S+ \+(\d+)(?:,(\d+))? @@")
 FINDING = re.compile(r"^(.+?):(\d+):(\d+): (warning|error): (.*)$")
 

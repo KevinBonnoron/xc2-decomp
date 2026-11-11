@@ -139,6 +139,8 @@ The game was built with **Clang 3.9.1**. The flags that matter:
 
 To try another compiler: `XC2_CXX=clang++-4.0.1 check ...`.
 
+`-nostdlibinc` (a header search flag, no effect on the generated code) keeps the compiler from reading the host's `/usr/include`, so that on a distribution that has one the musl headers of the sysroot are the only libc headers.
+
 </details>
 
 <details>
