@@ -25,7 +25,7 @@ public:
 
 class DrResMdoSeamMemObj {
 public:
-  virtual ~DrResMdoSeamMemObj();
+  virtual ~DrResMdoSeamMemObj() {}
 
   DrResMdoSeamMemObj *unknown08; // Inferred role: prev; original member name unknown.
   DrResMdoSeamMemObj *unknown10; // Inferred role: next; original member name unknown.
