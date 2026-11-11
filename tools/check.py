@@ -6,6 +6,7 @@ Usage:
                                           listing only the functions that do not match
   check -v                                same, and list every function
   check --readme                          same, and update the progress section of README.md
+  check --strict-data                     same, and fail on what the data report below lists (not used by the hook yet)
   check --compile                         only compile every source and header of src/ and include/ with the game's
                                           flags and look for absolute includes; needs no game executable, so it
                                           runs in the continuous integration
@@ -37,6 +38,16 @@ game address and its name in your file (mangled, qualified or not), e.g.
   check 0x710028c7ec src/application/BF2/gf/data/gf_data_obj.cpp unknown001
 The game side ends at the next named function or at the next address some bl
 calls, whichever comes first; your function is compared over its own size.
+
+A full check ends with a report of what the function check does not compare. It
+is only printed and counted (data: N problems, duplicate definitions: N, local
+prefix matches: N) and never fails the check, until --strict-data turns it into
+a failure. It lists, as DATA, a global data object (a table, a vtable) whose size,
+bytes or pointers differ from the game's symbol of that name, a writable data
+object local to your file that a matching function places on a game symbol, and
+two local objects placed over each other; as DUPLICATE, a global function (not a
+weak inline or template one) defined by several sources; and as PREFIX, a local
+function that matches only the start of the game's code at its address.
 """
 import bisect
 import difflib
@@ -98,12 +109,14 @@ SOURCE_LOCATION_CALLS = {
 SOURCE_LOCATION_WINDOW = 64
 # Complete and base constructors and destructors are aliases at the same address: either name finds it.
 STRUCTOR = re.compile(r"(_ZN\w*?[0-9][A-Za-z_][A-Za-z0-9_]*)(C|D)([12])(E.*)")
+MANGLED = re.compile(r"_Z\w+")
 INCLUDE_CPP = re.compile(r'^#include "([^"]+\.cpp)"', re.M)
 # The last operand of a pc-relative instruction as llvm-mc prints it: an offset from the instruction.
 PC_RELATIVE_OPERAND = re.compile(r"#-?(?:0x[0-9a-f]+|\d+)$")
 SHT_SYMTAB, SHT_RELA, SHT_NOBITS = 2, 4, 8
 SHF_WRITE, SHF_EXECINSTR, SHF_MERGE, SHF_STRINGS = 0x1, 0x4, 0x10, 0x20
-STT_FUNC, STT_SECTION = 2, 3
+STT_OBJECT, STT_FUNC, STT_SECTION = 1, 2, 3
+STB_LOCAL, STB_GLOBAL = 0, 1
 SHN_LORESERVE = 0xFF00
 # AArch64 relocations of code, by the instruction field they fill: the page of an address (adrp), its low 12 bits
 # scaled by the access size (add, ldr, str), or a branch offset of the given width.
@@ -116,6 +129,8 @@ RELOCATION_FIELDS = {
 }
 GOT_RELOCATIONS = {311, 312}
 R_ABS64, R_ABS32, R_PREL64, R_PREL32 = 257, 258, 260, 261
+# What fills the end of a function span without being code: zero words and nops.
+PADDING_WORDS = {0, 0xD503201F}
 # The SDK runtime links __cxa_atexit (a no-op) and __dso_handle statically, without a symbol.
 UNNAMED_RUNTIME = {0x710000019C: "__cxa_atexit", 0x7101171000: "__dso_handle"}
 README_START = "<!-- progress -->"
@@ -199,7 +214,7 @@ def read_source(path):
 
 
 Section = namedtuple("Section", "name type flags addr offset size link info align entsize")
-Symbol = namedtuple("Symbol", "name type shndx value size")
+Symbol = namedtuple("Symbol", "name type bind shndx value size")
 
 
 class Elf:
@@ -222,7 +237,7 @@ class ObjectFile(Elf):
         super().__init__(path)
         symtab = next(s for s in self.sections if s.type == SHT_SYMTAB)
         strtab = self.sections[symtab.link].offset
-        self.symbols = [Symbol(self.string(strtab + name) if name else "", info & 0xF, shndx, value, size)
+        self.symbols = [Symbol(self.string(strtab + name) if name else "", info & 0xF, info >> 4, shndx, value, size)
                         for name, info, _, shndx, value, size
                         in struct.iter_unpack("<IBBHQQ", self.data[symtab.offset:symtab.offset + symtab.size])]
         self.functions = {}
@@ -233,6 +248,12 @@ class ObjectFile(Elf):
                 self.function_at.setdefault((symbol.shndx, symbol.value), symbol.name)
         self.relocation_lists = {}
         self.starts = None
+
+    def strong_functions(self):
+        """The functions this object defines with global binding: a weak one (an inline or template function) may
+        be defined by several objects, a global one by one only."""
+        return sorted({s.name for s in self.symbols
+                       if s.type == STT_FUNC and s.bind == STB_GLOBAL and 0 < s.shndx < SHN_LORESERVE})
 
     def bytes(self, index, offset, size):
         section = self.sections[index]
@@ -295,20 +316,24 @@ class Game:
             parts = line.split()
             if len(parts) == 4:
                 entries.append((int(parts[0], 16), int(parts[1], 16), parts[2], parts[3]))
+        self.index_symbols(entries)
+        stubs, self.calls = cached(os.path.join(CACHE_DIR, "target.code"), target_key(), self.scan_code)
+        self.unnamed = {**UNNAMED_RUNTIME, **stubs}
+        for addr, name in self.unnamed.items():
+            self.addresses.setdefault(name, [addr])
+
+    def index_symbols(self, entries):
+        """Index the (address, size, kind, name) symbols: by address, by name, functions and data objects apart."""
         entries.sort()
         self.entries = entries
         self.starts = [e[0] for e in entries]
         self.addresses = {}
         self.functions = {}
+        self.objects = {}
         for addr, size, kind, name in entries:
             self.addresses.setdefault(name, []).append(addr)
-            if kind in "TtWw":
-                self.functions.setdefault(name, []).append((addr, size))
+            (self.functions if kind in "TtWw" else self.objects).setdefault(name, []).append((addr, size))
         self.got_imports = {addr: name[len("__got_"):] for addr, _, _, name in entries if name.startswith("__got_")}
-        stubs, self.calls = cached(os.path.join(CACHE_DIR, "target.code"), target_key(), self.scan_code)
-        self.unnamed = {**UNNAMED_RUNTIME, **stubs}
-        for addr, name in self.unnamed.items():
-            self.addresses.setdefault(name, [addr])
 
     def scan_code(self):
         """The import stubs (adrp x16; ldr x17, [x16, #slot]; add x16; br x17), named after the import they jump to,
@@ -336,6 +361,15 @@ class Game:
                 return self.image.data[pos:s.offset + min(addr - s.addr + size, s.size)]
         return b""
 
+    def read_data(self, addr, size):
+        """The bytes of a data object at addr: what read gives, zeros in .bss."""
+        for s in self.image.sections:
+            if s.addr and s.addr <= addr < s.addr + s.size:
+                if s.type == SHT_NOBITS:
+                    return bytes(min(size, s.addr + s.size - addr))
+                return self.read(addr, size)
+        return b""
+
     def c_string(self, addr):
         raw = b""
         while b"\0" not in raw:
@@ -357,6 +391,14 @@ class Game:
         if addr == start or addr < start + size:
             return name, addr - start
         return None
+
+    def symbol_in(self, addr, size):
+        """The name of a game symbol that overlaps [addr, addr + size), or None."""
+        found = self.covering(addr)
+        if found:
+            return found[0]
+        i = bisect.bisect_right(self.starts, addr)
+        return self.entries[i][3] if i < len(self.entries) and self.starts[i] < addr + size else None
 
     def name_at(self, addr):
         if addr in self.unnamed:
@@ -436,6 +478,14 @@ def set_field(word, field, value, pc):
 
 def word_at(raw, offset):
     return int.from_bytes(raw[offset:offset + 4], "little")
+
+
+def code_length(raw):
+    """Length of raw code without its trailing padding: zero words and nops."""
+    end = len(raw) & ~3
+    while end >= 4 and word_at(raw, end - 4) in PADDING_WORDS:
+        end -= 4
+    return end
 
 
 def is_mov_immediate(word):
@@ -564,10 +614,12 @@ def verify(game, obj, symbol, address, size=None):
         if length != size:
             problems.append((min(length, size), f"the game function has {size // 4} instructions, yours {length // 4}"))
     theirs = game.read(address, span)
+    game_length = size if size is not None else code_length(theirs)
     if len(theirs) < span:
         problems.append((len(theirs), f"the game has no code at {address + len(theirs):#x}"))
 
     sites = []  # (offset, field, key)
+    writable = {}  # (section index, offset) of your writable data -> the game address the instructions reach
     relocated = set()
     for offset, rtype, symbol_index, addend in obj.relocations_in(index, start, start + length):
         offset -= start
@@ -649,6 +701,8 @@ def verify(game, obj, symbol, address, size=None):
                 labels[key] = (game_label, your_label)
                 if problem:
                     problems.append((offset, problem))
+            else:
+                writable[key[1:]] = theirs_value
 
     for offset, field, key in sites:
         if key in values:
@@ -681,9 +735,9 @@ def verify(game, obj, symbol, address, size=None):
             our_labels[offset] = your_label
         if game_label and offset + 4 <= len(theirs) and fits(word_at(theirs, offset), field):
             game_labels[offset] = game_label
-    return SimpleNamespace(ok=not diffs and not problems, address=address, count=compared // 4,
+    return SimpleNamespace(ok=not diffs and not problems, address=address, count=compared // 4, game_count=game_length // 4,
                            ours=bytes(ours), theirs=theirs, diffs=diffs, problems=sorted(problems), lines=lines,
-                           our_labels=our_labels, game_labels=game_labels, calls=calls)
+                           our_labels=our_labels, game_labels=game_labels, calls=calls, writable=writable)
 
 
 def is_line_number(ours, offset, mine, theirs, windows):
@@ -711,29 +765,172 @@ def verify_named(game, obj, symbol):
     return verdicts[0]
 
 
+# What a relocation in data fills, by type: its width in bytes and whether it is relative to the place it fills.
+DATA_RELOCATIONS = {R_ABS64: (8, False), R_ABS32: (4, False), R_PREL64: (8, True), R_PREL32: (4, True)}
+
+
+def pointer_problem(game, obj, rtype, symbol, addend, theirs, at, base):
+    """Why the pointer at offset at of the game's data (which starts at base) is not what your relocation resolves
+    to, or None. Your symbol must be the one the game's pointer reaches: the game's symbol of that name, or the
+    same bytes for what is local to your file."""
+    width, relative = DATA_RELOCATIONS[rtype]
+    held = int.from_bytes(theirs[at:at + width], "little", signed=relative)
+    target = held + base + at if relative else held
+    mask = (1 << 8 * width) - 1
+    key = reference(game, obj, symbol, addend, False)
+    if key[0] == "symbol":
+        if any((address + key[2]) & mask == target & mask for address in game.symbol_addresses(key[1])):
+            return None
+        return f"points to {describe(obj, key)}, the game's {game.name_at(target)}"
+    if key[0] == "missing":
+        if game.got_imports.get(base + at) == key[1]:  # an import: the game holds no address there, only its slot
+            return None
+        return f"refers to {key[1]}, which the game has no symbol for"
+    section = obj.sections[key[1]]
+    if section.flags & SHF_EXECINSTR:
+        if game.covering(target):
+            return f"points to {describe(obj, key)}, local to your file, the game's {game.name_at(target)}"
+    elif not section.flags & SHF_WRITE and section.type != SHT_NOBITS:
+        problem = compare_read_only(game, obj, key[1], key[2], target, (-1, 0, 0, 0), False)[2]
+        if problem:
+            return f"points to {describe(obj, key)}: {problem}"
+    elif game.covering(target):
+        return f"points to {describe(obj, key)}, local writable data, the game's {game.name_at(target)}"
+    return None
+
+
+def global_data_problem(game, obj, symbol, address, game_size):
+    """Why your global data object differs from the game's at address, or None: its size, then its bytes, with each
+    pointer in it compared by what it resolves to."""
+    size = symbol.size
+    if size != game_size:
+        return f"its size is {size}, the game's {game_size}"
+    theirs = game.read_data(address, size)
+    if len(theirs) != size:
+        return f"the game holds no data at {address:#x}"
+    mine = bytearray(obj.bytes(symbol.shndx, symbol.value, size))
+    problems = []  # (offset, text)
+    for r_offset, rtype, symbol_index, addend in obj.relocations_in(symbol.shndx, symbol.value, symbol.value + size):
+        at = r_offset - symbol.value
+        if rtype not in DATA_RELOCATIONS:
+            problems.append((at, f"relocation type {rtype} in data"))
+            continue
+        width = DATA_RELOCATIONS[rtype][0]
+        mine[at:at + width] = theirs[at:at + width]  # compared through what it resolves to
+        problem = pointer_problem(game, obj, rtype, obj.symbols[symbol_index], addend, theirs, at, address)
+        if problem:
+            problems.append((at, problem))
+    if mine != theirs:
+        at = next(i for i in range(size) if mine[i] != theirs[i])
+        problems.append((at, f"holds {bytes(mine[at:at + 8]).hex()}, the game's {theirs[at:at + 8].hex()}"))
+    if not problems:
+        return None
+    at, problem = min(problems)
+    return f"at +{at:#x} (game {address + at:#x}) {problem}"
+
+
+def global_data_problems(game, obj):
+    """(name, problem) of each global data object your object defines that the game has too and that differs from
+    it: a table, a vtable, a static member. Local data has no symbol in the game and is compared where code uses it."""
+    found = []
+    for symbol in obj.symbols:
+        if (symbol.type != STT_OBJECT or symbol.bind == STB_LOCAL or not 0 < symbol.shndx < SHN_LORESERVE
+                or obj.sections[symbol.shndx].flags & SHF_EXECINSTR):
+            continue
+        problems = [global_data_problem(game, obj, symbol, address, size) for address, size in game.objects.get(symbol.name, [])]
+        if problems and None not in problems:
+            found.append((symbol.name, problems[0]))
+    return found
+
+
+def writable_objects(obj, mapped):
+    """The writable data objects of your file that matching functions reach, from {(section index, offset): (game
+    address, function)}: {(section index, start): (name, game address of the start, size, function, shared)}, shared
+    being true for an object with global or weak binding (a variable local to an inline function), which every object
+    using it defines and the linker keeps once."""
+    found = {}
+    for (index, offset), (address, function) in mapped.items():
+        symbol = obj.covering(index, offset)
+        start, size = (symbol.value, symbol.size) if symbol else (offset, 1)
+        name = symbol.name if symbol and symbol.name else f"{obj.sections[index].name}+{start:#x}"
+        shared = bool(symbol and symbol.name and symbol.bind != STB_LOCAL)
+        found.setdefault((index, start), (name, address - (offset - start), size, function, shared))
+    return found
+
+
+def writable_problems(game, objects):
+    """(name, problem) of each writable data object of your file that the game places over a symbol of its own: local
+    data has no symbol in the game."""
+    found = []
+    for name, base, size, function, _ in objects.values():
+        named = game.symbol_in(base, size)
+        if named:
+            found.append((name, f"is writable data local to your file, used by {function}, at {base:#x} in the game, "
+                                f"which is {named}"))
+    return found
+
+
+def overlapping_objects(objects):
+    """The pairs of (name, game address, size, source, shared) local data objects that overlap in the game: two
+    distinct objects cannot share an address. The same shared object seen from two sources is one object."""
+    found, previous = [], None
+    for current in sorted(objects, key=lambda o: (o[1], o[2], o[0], o[3])):
+        if previous and current[1] < previous[1] + previous[2] and not (
+                previous[4] and current[4] and previous[:3] == current[:3]):
+            found.append((previous, current))
+        if not previous or current[1] + current[2] > previous[1] + previous[2]:
+            previous = current
+    return found
+
+
+def strong_duplicates(definitions):
+    """{function: sources} of every function defined with global binding by several sources, from (source, names of
+    its global functions). A weak function (inline, template) is defined by every object that uses it: not one."""
+    by_name = defaultdict(list)
+    for source, names in definitions:
+        for name in names:
+            by_name[name].append(source)
+    return {name: sources for name, sources in sorted(by_name.items()) if len(sources) > 1}
+
+
+def merge_copies(rows, symbol, ok, local):
+    """Drop the copies of a function that do not match when another copy does. A function defined in several objects
+    is a weak copy (an inline or template function): the linker keeps one of them, so the function matches when one
+    copy is the game's. A global function defined twice is reported apart (strong_duplicates). symbol, ok and local
+    read these fields of a row; local rows are never copies."""
+    matched = {symbol(row) for row in rows if ok(row) and not local(row)}
+    return [row for row in rows if ok(row) or local(row) or symbol(row) not in matched]
+
+
 def check_object(entry):
-    """(symbol, game address, match, instructions, local) of each function, then of the local functions the
-    matching ones call."""
+    """The result of one object: (symbol, game address, match, instructions, instructions of the game's code,
+    local) of each function, then of the local functions the matching ones call; the global functions it defines;
+    and what the function check does not compare: (name, problem) of its data, and (name, game address, size) of its
+    local data objects."""
     path, symbols = entry
     game = target_game()
     obj = ObjectFile(path)
-    rows, calls = [], {}
-    for symbol in symbols:
-        verdict = verify_named(game, obj, symbol)
-        rows.append((symbol, verdict.address, verdict.ok, verdict.count, False))
+    rows, calls, mapped = [], {}, {}
+
+    def add(name, verdict, local):
+        rows.append((name, verdict.address, verdict.ok, verdict.count, local, verdict.game_count))
         if verdict.ok:
-            for name, address in verdict.calls.items():
-                calls.setdefault(name, address)
+            for callee, address in verdict.calls.items():
+                calls.setdefault(callee, address)
+            for key, address in verdict.writable.items():
+                mapped.setdefault(key, (address, name))
+
+    for symbol in symbols:
+        add(symbol, verify_named(game, obj, symbol), False)
     done = set()
     while len(done) < len(calls):
         for name in [n for n in calls if n not in done]:
             done.add(name)
-            verdict = verify(game, obj, name, calls[name])
-            rows.append((name, calls[name], verdict.ok, verdict.count, True))
-            if verdict.ok:
-                for callee, address in verdict.calls.items():
-                    calls.setdefault(callee, address)
-    return rows
+            add(name, verify(game, obj, name, calls[name]), True)
+    objects = writable_objects(obj, mapped)
+    return {"rows": rows, "strong": obj.strong_functions(),
+            "data": global_data_problems(game, obj) + writable_problems(game, objects),
+            "locals": [(name, base, size, shared) for name, base, size, _, shared in objects.values()]}
 
 
 def check_objects(entries):
@@ -1060,11 +1257,60 @@ def compile_only():
     return True
 
 
-def check_all(demangled, scope=None, verbose=True):
+def data_report(per_object, results, prefixes):
+    """What the function check does not compare, over every object: the global data that differs from the game's and
+    the local data that sits on a symbol of the game or over another object ((name, problem, source)), the global
+    functions defined by several sources ({function: sources}), and the local functions that match a prefix of the
+    game's code ((function, address, instructions, game instructions, source)), as given by check_all."""
+    problems, seen, local_objects = [], set(), []
+    for (source, _, _), found in zip(per_object, results):
+        source = os.path.relpath(source, ROOT)
+        for name, problem in found["data"]:
+            if (name, problem) not in seen:  # a vtable or an inline variable is defined by every object using it
+                seen.add((name, problem))
+                problems.append((name, problem, source))
+        local_objects += [(name, base, size, source, shared) for name, base, size, shared in found["locals"]]
+    for first, second in overlapping_objects(local_objects):
+        problems.append((first[0], f"is at {first[1]:#x} in the game, over {second[0]} of {second[3]}", first[3]))
+    duplicates = strong_duplicates([(os.path.relpath(source, ROOT), found["strong"])
+                                    for (source, _, _), found in zip(per_object, results)])
+    return SimpleNamespace(problems=problems, duplicates=duplicates, prefixes=prefixes)
+
+
+def data_summary(report):
+    return (f"data: {len(report.problems)} problems, duplicate definitions: {len(report.duplicates)}, "
+            f"local prefix matches: {len(report.prefixes)}")
+
+
+def print_data_report(report):
+    """The section of the controls that only report for now, and its one line summary."""
+    if report.problems or report.duplicates or report.prefixes:
+        tokens = {token for _, problem, _ in report.problems for token in MANGLED.findall(problem)}
+        tokens |= {name for name, *_ in report.problems} | set(report.duplicates)
+        tokens |= {symbol for symbol, *_ in report.prefixes}
+        mangled = sorted(t for t in tokens if t.startswith("_Z"))
+        names = demangle(mangled) if mangled else {}
+
+        def readable(text):
+            return MANGLED.sub(lambda m: names.get(m[0], m[0]), text)
+
+        print(paint("\nNot compared by the function check (reported only, --strict-data makes them fail):", "1"))
+        for name, problem, source in report.problems:
+            print(f"{paint('DATA     ', '33')}  {names.get(name, name)}  {readable(problem)}  {source}")
+        for name, sources in report.duplicates.items():
+            print(f"{paint('DUPLICATE', '33')}  {names.get(name, name)}  defined by {', '.join(sources)}")
+        for symbol, address, count, game_count, source in report.prefixes:
+            print(f"{paint('PREFIX   ', '33')}  {names.get(symbol, symbol)} (local, {address:#x})  "
+                  f"{count} of the game's {game_count} instructions  {source}")
+    print(paint("\n" + data_summary(report), "1"))
+
+
+def check_all(demangled, scope=None, verbose=True, strict_data=False):
     objects, errors = compile_everything()
     per_object = [(source, obj, [f for f in defined_functions(obj) if f in demangled and in_scope(demangled[f], scope)])
                   for source, obj in objects]
-    per_object = [entry for entry in per_object if entry[2]]
+    # A full check also reads the objects that define no game function: they may define data.
+    per_object = [entry for entry in per_object if entry[2] or not scope]
     unknown = unknown_functions(objects, demangled, scope)
     all_funcs = {f for _, _, funcs in per_object for f in funcs}
     # A game name sharing its address with a defined one (a C1/D1 alias of a C2/D2 body) is not left to decompile.
@@ -1082,17 +1328,17 @@ def check_all(demangled, scope=None, verbose=True):
     missing = sorted({demangled[m] for m in demangled if in_scope(demangled[m], scope) and m not in all_funcs and not is_defined_alias(m, all_funcs)}) if scope else []
     if not all_funcs and not scope:
         sys.exit("no game function defined under src/")
-    rows = []
-    for (source, obj, _), found in zip(per_object, check_objects([(obj, funcs) for _, obj, funcs in per_object])):
-        for symbol, address, ok, count, local in found:
+    rows, prefixes = [], []
+    results = check_objects([(obj, funcs) for _, obj, funcs in per_object])
+    for (source, obj, _), found in zip(per_object, results):
+        for symbol, address, ok, count, local, game_count in found["rows"]:
             if local:
                 rows.append((f"local:{address:#x}:{symbol}", os.path.relpath(source, ROOT), ok, count, obj, symbol, address))
+                if ok and count < game_count:
+                    prefixes.append((symbol, address, count, game_count, os.path.relpath(source, ROOT)))
             else:
                 rows.append((symbol, os.path.relpath(defining_file(demangled[symbol], source), ROOT), ok, count, obj, symbol, None))
-    # A function defined in several objects (an inline or template function) is a weak copy: the linker keeps one of
-    # them, so it matches when one copy is the game's; the other copies are dropped from the report.
-    matched_copies = {row[5] for row in rows if row[2] and row[6] is None}
-    rows = [row for row in rows if row[2] or row[6] is not None or row[5] not in matched_copies]
+    rows = merge_copies(rows, lambda row: row[5], lambda row: row[2], lambda row: row[6] is not None)
     names = dict(demangled)
     locals_ = [row for row in rows if row[6] is not None]
     readable = demangle(sorted({row[5] for row in locals_})) if locals_ else {}
@@ -1118,7 +1364,10 @@ def check_all(demangled, scope=None, verbose=True):
             show(game, verify(game, obj, symbol, address) if address is not None else verify_named(game, obj, symbol))
     sys.stdout.flush()
     print_compile_errors(errors)
-    failed = bool(errors or unknown)
+    report = None if scope else data_report(per_object, results, prefixes)
+    if report:
+        print_data_report(report)
+    failed = bool(errors or unknown or (strict_data and report and (report.problems or report.duplicates or report.prefixes)))
     matched = len(rows) - len(mismatches)
     local_count = len(locals_)
     summary = f"\n{matched}/{len(rows)} functions match"
@@ -1170,15 +1419,18 @@ def main():
         return
     readme = "--readme" in args
     verbose = any(a in ("-v", "--verbose") for a in args)
-    args = [a for a in args if a not in ("--readme", "-v", "--verbose")]
+    strict_data = "--strict-data" in args
+    args = [a for a in args if a not in ("--readme", "-v", "--verbose", "--strict-data")]
     if "--compile" in args:
-        if args != ["--compile"] or readme or verbose:
+        if args != ["--compile"] or readme or verbose or strict_data:
             sys.exit("usage: check --compile")
         sys.exit(0 if compile_only() else 1)
+    if strict_data and args:
+        sys.exit("usage: check [-v] [--readme] [--strict-data]")
     demangled = cached(os.path.join(CACHE_DIR, "target.demangled"), target_key(),
                        lambda: demangle(sorted(target_symbols())))
     if not args:
-        ok, matched = check_all(demangled, verbose=verbose)
+        ok, matched = check_all(demangled, verbose=verbose, strict_data=strict_data)
         text = progress_text(matched)
         print(paint(f"Game progress: {text}", "1"))
         if readme and ok:

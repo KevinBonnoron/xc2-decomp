@@ -180,12 +180,11 @@ def check_results(demangled):
     rows = []
     results = check.check_objects([(obj, funcs) for _, obj, funcs in per_object])
     for (source, obj, _), found in zip(per_object, results):
-        for symbol, address, ok, count, local in found:
+        for symbol, address, ok, count, local, _ in found["rows"]:
             defining = source if local else check.defining_file(demangled[symbol], source)
             rows.append((symbol, address, ok, count, local, os.path.relpath(source, ROOT), os.path.relpath(defining, ROOT)))
-    # A function defined in several objects is a weak copy: it matches when one copy does.
-    matched = {r[0] for r in rows if r[2] and not r[4]}
-    rows = [r for r in rows if r[2] or r[4] or r[0] not in matched]
+    # The same rule as check: a function defined in several objects is a weak copy, it matches when one copy does.
+    rows = check.merge_copies(rows, lambda row: row[0], lambda row: row[2], lambda row: row[4])
     return rows, errors
 
 
