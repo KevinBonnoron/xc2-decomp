@@ -16,6 +16,12 @@ A work-in-progress matching decompilation of *Xenoblade Chronicles 2* (Nintendo 
 
 Counted over the named functions of `main`, as reported by `check`. Run `check --readme` to update this section. History and details: [decompilati.onl](https://decompilati.onl/projects/xenoblade-chronicles-2).
 
+## Status and limits
+
+- Matching is verified function by function: `check` places each function at its game address and compares its bytes. There is no link step and no executable is rebuilt, so the data sections and the vtables are not compared; only the read-only data a function uses, such as its strings and tables, must hold the game's bytes.
+- Only version 1.0.0 is covered.
+- The matched functions are mostly the small ones. From the totals above, a matched function averaged about 126 bytes of code and a function still to do about 655 when this section was written, so the byte percentage is the representative figure, not the function percentage.
+
 ## How it works
 
 - The game was built with Clang 3.9.1. We write C++ that, compiled with the same compiler and flags, produces exactly the same machine code as the game, function by function.
