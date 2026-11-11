@@ -97,6 +97,7 @@ setup
 check                                       # every function defined in src/, and the overall progress
 check -v                                    # same, listing the matching functions too
 check --readme                              # same, and update the progress in this README
+check --strict-data                         # same, and fail on what the data report lists (not used by the hook yet)
 check --compile                             # only compile every source and header with the game's flags, no game needed
 check gf::GfDataBladeCreate                 # one class or namespace, and the functions left to do
 check gf::GfDataBlade::setHikariCurrent     # side by side diff of one function
@@ -113,6 +114,8 @@ check 0x710028c7ec src/application/BF2/gf/data/gf_data_obj.cpp unknown001
 A function you define that the game has no symbol for is listed as `NOT IN GAME`, with the game functions of the same name: it usually means a wrong namespace or parameter type in its signature.
 
 Functions local to their source file (`static`, anonymous namespace) have no symbol in the game. A full `check` finds the game address of each local function where the callers that match call it, and checks it too, listed as `(local, address)`; a local function only ever inlined has no call to follow. To diff one by hand, pass its game address and its name in your file. The game side of that diff ends at the next named function or at the next address called by a `bl`; your function is compared over its own size.
+
+A full `check` also ends with a report of what the function check does not compare: global data (tables, vtables) whose size, bytes or pointers differ from the game's symbol of the same name, writable data local to a file that the game places on a symbol or that overlaps another local object, global functions defined by more than one source, and `(local, address)` functions that match only the start of the game's code. It is printed and counted (`data: N problems, duplicate definitions: N, local prefix matches: N`) without failing `check` for now, and `check --strict-data` makes it fail.
 
 </details>
 
