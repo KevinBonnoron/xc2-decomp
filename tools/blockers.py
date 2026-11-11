@@ -32,7 +32,7 @@ CATEGORY is one of:
 
 Records live in work/blockers.json (never committed): function, mangled, zone, category, detail, date, source.
 Run it from your own worktree or by the main checkout path: a worktree without work/blockers.json of its own
-should use /home/kevin/Workspaces/xc2-decomp/tools/blockers.py so all agents write the same file.
+should use the tools/blockers.py of the main checkout so all agents write the same file.
 `retire` drops the records of the functions that now match according to work/status.json and keeps them,
 with the date, under "retired".
 """
