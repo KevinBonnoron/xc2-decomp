@@ -7,11 +7,12 @@ Looks at the files added or modified between the merge base of BASE and HEAD and
 In the continuous integration HEAD is the merge of the pull request into main and BASE its first parent. Fails, one
 line per violation, when a changed file:
   - lives under work/, which holds the local state (game executable, caches, dumps) and is never committed;
-  - is a binary file, a game or SDK artefact (by extension or by magic number: ELF, NSO, NRO, PFS0, HFS0, NCA, XCI);
+  - is a binary file, a game or SDK artefact (by extension or by magic number: ELF, NSO, NRO, PFS0, HFS0, NCA, XCI),
+    or a submodule;
   - is larger than 1 MiB;
-  - is progress/areas.json, or changes the <!-- progress --> block of README.md: only the pre-commit hook writes
-    them, on main;
-  - is a text file holding the absolute path of a user's home directory (a Linux or a Windows one).
+  - is progress/areas.json (changed or deleted), or changes the <!-- progress --> block of README.md: only the
+    pre-commit hook writes them, on main;
+  - adds a line holding the absolute path of a user's home directory (a Linux, macOS or Windows one).
 It needs nothing but git and Python 3, so it runs without the game and without Nix.
 """
 import os
@@ -41,31 +42,36 @@ MAGICS = [
     (0, b"xbc1", "a Xenoblade compressed resource"),
 ]
 HEAD_BYTES = 0x204
+GITLINK = "160000"
+HUNK = re.compile(r"^@@ -\S+ \+(\d+)")
 README_BLOCK = re.compile(r"<!-- progress -->.*?<!-- /progress -->", re.S)
-# Spelled with a character class so that this file does not match its own rule.
-HOME_PATH = re.compile(r"(?<![\w.~$])/hom[e]/(?!(?:user|username|you|example|name|runner)\b|[<{$])[^\s\"'`)>]+|"
+# Spelled with character classes so that this file does not match its own rule.
+HOME_PATH = re.compile(r"(?<![\w.~$])/(?:hom[e]|User[s])/(?!(?:user|username|you|example|name|runner)\b|[<{$])[^\s\"'`)>]+|"
                        r"[A-Za-z]:[/\\]+User[s][/\\]+(?!(?:user|username|you|example|name)\b|[<{%])[^\s\"'`)>]+")
 PLACEHOLDER_NOTE = "use a placeholder such as /home/user, or a path relative to the repository"
+RESTORE_NOTE = ("restore them with `git checkout origin/main -- README.md progress/areas.json` "
+                "(or put back only the progress block of README.md)")
 
 
 def git(*args):
-    return subprocess.run(["git", *args], capture_output=True, check=True).stdout
+    return subprocess.run(["git", "--literal-pathspecs", *args], capture_output=True, check=True).stdout
 
 
 def changed_files(base, head):
-    """The merge base, and every file added, copied, modified or renamed (to this path) since."""
+    """The merge base, and (status, new mode, path) of every file added, copied, modified, renamed (to this path),
+    type-changed or deleted since."""
     try:
         base = git("merge-base", base, head).decode().strip() or base
     except subprocess.CalledProcessError:
         pass
-    out = git("diff", "-z", "--name-status", "--diff-filter=ACMR", "-M", base, head).decode()
-    fields = out.split("\0")
+    fields = git("diff", "-z", "--raw", "--no-abbrev", "--diff-filter=ACMRTD", "-M", base, head).decode().split("\0")
     found = []
     i = 0
     while i + 1 < len(fields) and fields[i]:
-        status = fields[i][0]
+        meta = fields[i].lstrip(":").split()
+        status = meta[4][0]
         step = 3 if status in "RC" else 2
-        found.append(fields[i + step - 1])
+        found.append((status, meta[1], fields[i + step - 1]))
         i += step
     return base, found
 
@@ -91,17 +97,37 @@ def progress_block(text):
     return found.group(0) if found else None
 
 
-def check_file(base, head, path):
+def added_lines(base, head, path):
+    """(line number, text) of the lines the change adds to a text file."""
+    diff = git("-c", "core.quotePath=false", "diff", "-U0", "--text", "--no-ext-diff", "--no-color", base, head, "--",
+               path).decode("utf-8", "replace")
+    found, at, in_hunk = [], 0, False
+    for line in diff.splitlines():
+        hunk = HUNK.match(line)
+        if hunk:
+            at, in_hunk = int(hunk.group(1)), True
+        elif in_hunk and line.startswith("+"):
+            found.append((at, line[1:]))
+            at += 1
+    return found
+
+
+def check_file(base, head, status, mode, path):
     """The violations of one changed file."""
+    if status == "D":
+        return ["is deleted, and only the pre-commit hook on main writes it: " + RESTORE_NOTE] \
+            if path == "progress/areas.json" else []
     problems = []
     if path.startswith("work/"):
         problems.append("lives under work/, which is local state and never committed")
+    if mode == GITLINK:
+        return problems + ["is a submodule, which is not allowed"]
     extension = os.path.splitext(path)[1].lower()
     if extension in ARTEFACT_EXTENSIONS:
         problems.append(f"is a game, SDK or build artefact by its extension ({extension})")
     size = blob_size(head, path)
     if size > MAX_SIZE:
-        problems.append(f"is {size / (1 << 20):.1f} MiB, the limit is 1 MiB")
+        problems.append(f"is {size} bytes, the limit is {MAX_SIZE} bytes (1 MiB)")
     data = blob(head, path) if size <= MAX_SIZE else blob_head(head, path, HEAD_BYTES)
     binary = b"\0" in data[:8000]
     for offset, magic, what in MAGICS:
@@ -111,16 +137,16 @@ def check_file(base, head, path):
     if binary and not any("magic number" in p for p in problems):
         problems.append("is a binary file")
     if path == "progress/areas.json":
-        problems.append("is written only by the pre-commit hook on main, do not change it in a pull request")
+        problems.append("is written only by the pre-commit hook on main, do not change it in a pull request: " + RESTORE_NOTE)
     if path == "README.md" and size <= MAX_SIZE:
         try:
             before = progress_block(blob(base, path).decode("utf-8", "replace"))
         except subprocess.CalledProcessError:
             before = None
         if progress_block(data.decode("utf-8", "replace")) != before:
-            problems.append("changes the <!-- progress --> block, which only the pre-commit hook writes, on main")
+            problems.append("changes the <!-- progress --> block, which only the pre-commit hook writes, on main: " + RESTORE_NOTE)
     if not binary and size <= MAX_SIZE:
-        for number, line in enumerate(data.decode("utf-8", "replace").splitlines(), 1):
+        for number, line in added_lines(base, head, path):
             found = HOME_PATH.search(line)
             if found:
                 problems.append(f"line {number} holds an absolute home path ({found.group(0)}), {PLACEHOLDER_NOTE}")
@@ -137,8 +163,8 @@ def main():
     head = args[1] if len(args) > 1 else "HEAD"
     base, files = changed_files(base, head)
     violations = 0
-    for path in files:
-        for problem in check_file(base, head, path):
+    for status, mode, path in files:
+        for problem in check_file(base, head, status, mode, path):
             print(f"hygiene: {path}: {problem}")
             violations += 1
     print(f"hygiene: {len(files)} changed {'file' if len(files) == 1 else 'files'} checked, "

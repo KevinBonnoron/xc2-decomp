@@ -23,7 +23,8 @@ class CheckTitleTest(unittest.TestCase):
 
     def test_rejected_titles(self):
         for title in ("Fix the thing", "feat(UI): upper case scope", "feat: ", "feat(ui):match", "#12 fix",
-                      "fixup! feat: x", "squash! feat: x", "feat: first\nsecond line", "", None):
+                      "fixup! feat: x", "squash! feat: x", "Merge branch 'main' into x", "feat: first\nsecond line", "",
+                      None):
             with self.subTest(title=title):
                 self.assertEqual(run(title).returncode, 1, title)
 

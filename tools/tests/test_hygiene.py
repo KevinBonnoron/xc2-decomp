@@ -42,7 +42,8 @@ class Repo:
         os.chdir(self.root)
         try:
             base, files = hygiene.changed_files("HEAD~1", "HEAD")
-            return {path: problems for path in files if (problems := hygiene.check_file(base, "HEAD", path))}
+            return {path: problems for status, mode, path in files
+                    if (problems := hygiene.check_file(base, "HEAD", status, mode, path))}
         finally:
             os.chdir(cwd)
 
@@ -95,7 +96,7 @@ class HygieneTest(unittest.TestCase):
 
     def test_large_file(self):
         found = self.violations_of(docs__big_dot_txt="x" * (1 << 20) + "\n")
-        self.assertIn("MiB", found["docs/big.txt"][0])
+        self.assertIn("1048577 bytes", found["docs/big.txt"][0])
         self.assertEqual(self.violations_of(docs__edge_dot_txt="x" * ((1 << 20) - 1) + "\n").get("docs/edge.txt"), None)
 
     def test_progress_files(self):
@@ -124,6 +125,35 @@ class HygieneTest(unittest.TestCase):
         self.repo.git("rm", "-q", "src/a.cpp")
         self.repo.commit("delete")
         self.assertEqual(self.repo.violations(), {})
+
+    def test_deleting_the_progress_snapshot_is_refused(self):
+        self.repo.git("rm", "-q", "progress/areas.json")
+        self.repo.commit("delete")
+        found = self.repo.violations()
+        self.assertIn("git checkout origin/main", found["progress/areas.json"][0])
+
+    def test_home_path_of_macos(self):
+        found = self.violations_of(docs__m_dot_md="see /Us" + "ers/someone/project\n")
+        self.assertIn("line 1", found["docs/m.md"][0])
+
+    def test_only_added_lines_are_scanned_for_home_paths(self):
+        self.repo.write("docs/old.md", f"old {HOME}\n")
+        self.repo.commit("seed")
+        self.assertEqual(self.violations_of(docs__old_dot_md=f"old {HOME}\nnew line\n"), {})
+        found = self.violations_of(docs__old_dot_md=f"old {HOME}\nnew line\nnew {HOME}\n")
+        self.assertIn("line 3", found["docs/old.md"][0])
+
+    def test_type_change_to_a_symlink(self):
+        self.repo.git("rm", "-q", "src/a.cpp")
+        os.makedirs(os.path.join(self.tmp.name, "src"), exist_ok=True)
+        os.symlink(HOME, os.path.join(self.tmp.name, "src", "a.cpp"))
+        self.repo.commit("symlink")
+        self.assertIn("src/a.cpp", self.repo.violations())
+
+    def test_submodule(self):
+        self.repo.git("update-index", "--add", "--cacheinfo", "160000," + "1" * 40 + ",vendor")
+        self.repo.git("commit", "-q", "-m", "submodule")
+        self.assertEqual(self.repo.violations(), {"vendor": ["is a submodule, which is not allowed"]})
 
     def test_main_end_to_end(self):
         self.repo.write("work/x", "x\n")
