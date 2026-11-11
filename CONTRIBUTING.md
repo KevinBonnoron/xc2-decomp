@@ -27,8 +27,26 @@ Most namespaces are worked on by regular automated passes, so code outside a res
 
 ## Pull requests
 
-- Use commit messages of the form `feat(<namespace>): match <Class> functions`.
+- Use commit messages of the form `feat(<namespace>): match <Class> functions`. Only squash merges are allowed, so the title of the pull request becomes the commit message on `main`: give it the same form (`type(scope): description`, types as in `.githooks/commit-msg`; the scope is lower case letters, digits, `_` or `-`, a single word).
 - Keep a pull request to one namespace or a few classes, so it is easy to review and rebase. `main` moves often: rebase on it before opening the pull request.
-- The continuous integration runs the quality gate but cannot run `check`, since `check` needs the game executable. Each pull request is checked locally against the game before it is merged, along with a review of naming and code style.
+- Do not commit the progress snapshot: the hook writes the `<!-- progress -->` block of `README.md` and `progress/areas.json` on `main` only, and a pull request that changes them is refused.
+
+### What the continuous integration checks
+
+Every pull request against `main`, including one from a fork, runs the workflow `Pull request checks` on GitHub, with no game executable and no secret. All of it can be run on your machine too, from `nix develop`:
+
+| Check | What it verifies | Locally |
+|---|---|---|
+| Quality gate | The patterns of the rules above, and duplicated code, in what the pull request adds | `python3 -I tools/quality_gate.py main HEAD` |
+| Build | Every root source and every header of `src/` and `include/` compiles on its own with Clang 3.9.1 and the game's flags, and no file includes another by an absolute path | `check --compile` |
+| Format | The changed `.h` and `.cpp` files are `clang-format` clean | `format --check main` |
+| Includes | `includes` (include-what-you-use) has nothing to say about the changed files | `includes <files>` |
+| Hygiene | Nothing under `work/`, no binary, game or SDK artefact, no file above 1 MiB, no progress snapshot change, no absolute home path | `python3 tools/hygiene.py main HEAD` |
+| Title | The title of the pull request follows the commit message form | `PR_TITLE='feat(ui): ...' tools/check_title.sh` |
+| Tooling | The Python tools compile and their tests pass, the workflows pass `actionlint`, the shell scripts `shellcheck` | `python3 -m unittest discover -s tools/tests` |
+
+The quality gate, hygiene and title checks run the copy of their script that is on `main`, so a pull request that edits one of them is still judged by the current version. A `Static analysis` job also runs clang-tidy (`tidy main HEAD`) on the lines the pull request adds, for dead stores, reads of uninitialised values, identical branches and self assignments. It only annotates the pull request and never blocks it. The last job, `Pull request checks`, fails unless every blocking check passed; it is the one status to require in the branch protection.
+
+What the continuous integration cannot do is compare the code with the game, since that needs the executable. Each pull request is still checked locally with `check` before it is merged, along with a review of naming and code style, and that is where a function that does not match is found.
 
 Questions are welcome in the issues.

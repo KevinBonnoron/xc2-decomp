@@ -2,7 +2,7 @@
 
 [![Matching](https://decompilati.onl/badge/xenoblade-chronicles-2/matching.svg)](https://decompilati.onl/projects/xenoblade-chronicles-2)
 [![Functions](https://decompilati.onl/badge/xenoblade-chronicles-2/functions.svg)](https://decompilati.onl/projects/xenoblade-chronicles-2)
-[![Quality gate](https://github.com/KevinBonnoron/xc2-decomp/actions/workflows/quality.yml/badge.svg)](https://github.com/KevinBonnoron/xc2-decomp/actions/workflows/quality.yml)
+[![Pull request checks](https://github.com/KevinBonnoron/xc2-decomp/actions/workflows/pr.yml/badge.svg)](https://github.com/KevinBonnoron/xc2-decomp/actions/workflows/pr.yml)
 
 A work-in-progress matching decompilation of *Xenoblade Chronicles 2* (Nintendo Switch, version 1.0.0).
 
@@ -40,6 +40,7 @@ You need [Nix](https://nixos.org/) with flakes and your own XCI dump and `prod.k
 Contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) and [AGENTS.md](AGENTS.md) (naming rules) first. In short:
 
 - Every function you keep must match: the pre-commit hook runs `format`, `includes` and `check`, and updates the progress above.
+- Every pull request is also checked on GitHub, without the game: compilation, formatting, includes, the quality gate, repository hygiene and the title (see [CONTRIBUTING.md](CONTRIBUTING.md)). Matching the game is still checked locally before a merge.
 - Use the game's names; anything the binary does not name is `unknown` plus its offset, with the inferred role in a comment. Write the code a programmer would have written, not decompiler output forced to match.
 - Never commit anything from the game (executables, assets, keys, SDK files); local files stay in `work/`.
 - To avoid working on the same code, say which namespace or classes you take in the [contribution issue](https://github.com/KevinBonnoron/xc2-decomp/issues/2). `ui` is reserved for contributors.
@@ -94,6 +95,7 @@ setup
 check                                       # every function defined in src/, and the overall progress
 check -v                                    # same, listing the matching functions too
 check --readme                              # same, and update the progress in this README
+check --compile                             # only compile every source and header with the game's flags, no game needed
 check gf::GfDataBladeCreate                 # one class or namespace, and the functions left to do
 check gf::GfDataBlade::setHikariCurrent     # side by side diff of one function
 check 0x710028c7ec src/application/BF2/gf/data/gf_data_obj.cpp unknown001
@@ -103,6 +105,8 @@ check 0x710028c7ec src/application/BF2/gf/data/gf_data_obj.cpp unknown001
 `check` compiles `src/`, places each of your functions at the address of the original with every relocation resolved, and compares the bytes: it prints `MATCH`, or a colored side by side diff and the first instruction that differs. Only source locations may differ: the directory of a `__FILE__` path, the `__LINE__` passed to an assertion or to `operator new`, and the spaces of an assertion text. Data local to your file has no symbol in the game: read-only data (strings, literals, tables) must hold the game's bytes, and writable data must be at one game address wherever the function uses it. A full `check` lists only the functions that do not match; `-v` lists them all. It also compiles every header on its own, so a header must include or forward-declare everything it uses. It exits with an error when something does not match or fails to compile.
 
 `check` keeps its work in `work/check_cache`: each object and its results are reused until its source or one of the headers it includes changes, and the game's symbols are read once. A change to `tools/check.py`, the compiler or its flags discards the whole cache; delete the directory to start over.
+
+`check --compile` does the compiling half of a full `check` and nothing else: every source and every header must build with Clang 3.9.1 and the game's flags, and no file may include another by an absolute path. It never opens the game executable, so it also runs in the continuous integration.
 
 A function you define that the game has no symbol for is listed as `NOT IN GAME`, with the game functions of the same name: it usually means a wrong namespace or parameter type in its signature.
 
@@ -205,11 +209,15 @@ Abbreviations and names imposed by the game's symbols:
 |---|---|
 | `src/application/BF2/` | Decompiled game code, following the original source tree |
 | `include/` | Shared headers (basic types, libraries); the C and C++ standard headers come from the dev shell |
-| `tools/check.py` | Compile and compare functions |
+| `tools/check.py` | Compile and compare functions; `check --compile` only compiles everything, without the game |
 | `tools/quality_gate.py` | Flag match-forcing patterns and duplicated code added since a revision |
 | `tools/includes.py`, `tools/iwyu.imp` | Include-what-you-use pass and its mappings |
+| `tools/hygiene.py`, `tools/check_title.sh` | Pull request checks: files that must not be committed, commit message form of the title |
+| `tools/tidy.py` | clang-tidy on the lines a change adds (dead stores, uninitialised reads, identical branches) |
+| `tools/tests/` | Unit tests of the pull request check scripts |
 | `tools/setup.sh` | Extract the executable from the XCI |
 | `tools/nso2elf.py`, `tools/nso_syms.py` | NSO to ELF conversion, symbol dump |
+| `.github/workflows/` | Continuous integration: `pr.yml` checks every pull request, `progress.yml` publishes the progress |
 | `tools/ghidra/` | Ghidra scripts |
 
 ## Tips
