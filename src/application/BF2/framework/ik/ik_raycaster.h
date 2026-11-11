@@ -1,5 +1,7 @@
 #pragma once
 
+#include "anm/anm_foot_placement_ik_solver.h"
+
 namespace mm {
 struct Plane;
 struct Vec3;
@@ -7,10 +9,13 @@ struct Vec3;
 
 namespace fw {
 
-class Raycaster {
+// Evidence: the vtables of the game's Raycaster (1.0.0: 0x7101178530) and PlaneRayCaster (0x71011785d0) hold
+// anm::RaycastInterface::~RaycastInterface (0x710018031c) in their first destructor slot, followed by their own deleting
+// destructor and castRay, so Raycaster derives from anm::RaycastInterface.
+class Raycaster : public anm::RaycastInterface {
 public:
-  virtual ~Raycaster() {}
-  virtual bool castRay(const mm::Vec3 &start, const mm::Vec3 &end, mm::Vec3 *position, mm::Vec3 *normal);
+  ~Raycaster() override {}
+  bool castRay(const mm::Vec3 &start, const mm::Vec3 &end, mm::Vec3 *position, mm::Vec3 *normal) override;
 };
 
 // Evidence: the vtable of the game is 0x20 bytes (two virtual functions, no virtual destructor) and

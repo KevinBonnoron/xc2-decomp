@@ -81,7 +81,10 @@ public:
   virtual ~IPadFilter() {}
 };
 
-class PadFilterStd : public IPadFilter, public mm::mtl::ReferenceObject, public mm::mtl::Singleton<PadFilterStd> {
+// Evidence: the vtable of the game (1.0.0: 0x71011794f0, 0x70 bytes) holds the vtables of IPadFilter and ReferenceObject only,
+// so the class does not derive from mm::mtl::Singleton (polymorphic): the game only has the function-local instance of
+// mm::mtl::Singleton<fw::PadFilterStd>::getPtr (0x710125d170).
+class PadFilterStd : public IPadFilter, public mm::mtl::ReferenceObject {
 public:
   u32 filterBtn(u32 button) override;
   f32 filterALX(f32 x, f32 y) override;

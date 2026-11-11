@@ -12,7 +12,19 @@ namespace fw {
 
 enum ValueType : int {};
 
-class ReflectionValue : public mm::mtl::IntrusiveListNode<ReflectionValue>, public mm::mtl::ReferenceObject {
+class ReflectionValue;
+
+// Inferred class: the list node base of ReflectionValue; the original name is unknown.
+// Evidence: the game emits fw::ReflectionValue::~ReflectionValue (base destructor, 1.0.0: 0x71001808b4) as a function of
+// its own and the vtables of ReflectionValue, ReflectionValueF32 and ReflectionValueFlag point to it, whereas Clang
+// aliases the destructor of a class to its base's (mm::mtl::ReferenceObject::~ReferenceObject) when only one base has a
+// non-trivial destructor, as for fw::Camera. A user-provided destructor here gives the second one.
+class ReflectionValueNode : public mm::mtl::IntrusiveListNode<ReflectionValue> {
+public:
+  ~ReflectionValueNode() {}
+};
+
+class ReflectionValue : public ReflectionValueNode, public mm::mtl::ReferenceObject {
 public:
   ReflectionValue(const char *name, ValueType type) : unknown20(name), unknown64(type), unknown68(0), unknown70(0) {}
   ReflectionValue(const char *name, ValueType type, s64 offset) : unknown20(name), unknown64(type), unknown68(0), unknown70(offset) {}

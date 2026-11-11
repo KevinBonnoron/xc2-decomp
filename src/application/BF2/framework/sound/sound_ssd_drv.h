@@ -153,6 +153,8 @@ public:
   bool isValid() const;
   void destroyResourceAll();
   const mm::Mat44 &getListeningPoint() const;
+  void attachPoolMemory(void *memory, u32 size) override;
+  void detachPoolMemory(void *memory, u32 size) override;
   SoundPoolMemory *findPoolMemory(void *pointer, u32 size) const;
   void setListeningPoint(const mm::Mat44 &matrix);
   unknown126 *findCategory(SoundCategory category);
