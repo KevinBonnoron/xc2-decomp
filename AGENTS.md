@@ -28,6 +28,18 @@
   recovered: give it a descriptive upper-case name and say in a comment that
   the name is inferred (`// Inferred macro name; macros leave no trace in the
   binary.`). Macros of a public SDK keep their documented names.
+- The no-invented-name rule also covers `constexpr` and `const` constants and
+  enumerators. One without an original name is `<PREFIX>_UNKNOWN_<N>`: PREFIX
+  is the prefix its named siblings share (the enum's own, or the group a
+  standalone constant belongs to, such as `KAKUSEI_BDAT_ID`) and N is its
+  value in decimal (the index of the bit for a flag, so `1 << 2` is
+  `FLAG_UNKNOWN_2`). Keep the inferred role in a comment, like for members.
+  For example, in `src/application/BF2/battle/character/battle_character.h`:
+  `ACTION_ID_UNKNOWN_5 = 5, // Inferred role: kizuna max, paired with
+  STATE_ID_BATTLE_KIZUNA_MAX; original name unknown.` A name is kept only
+  when the game gives it: a symbol, an assertion or debug string, a BDAT table
+  or column name, or a symbol of a sibling build. Cite that source in a
+  comment. Unlike macros, constants do not get a free descriptive name.
 - When several accessors read the same member, pick the one that states its
   meaning (`IsPlayer` over `IsEnableBattleFace`); a union read by accessors of
   different types stays `unknownXX`.
