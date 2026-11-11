@@ -1051,7 +1051,9 @@ def compile_only():
     if errors:
         print(paint(f"\n{len(errors)} {'file' if len(errors) == 1 else 'files'} failed to compile", "1;31"))
         return False
-    print(paint(f"\n{len(objects)} sources and {len(header_sources())} headers compile", "1;32"))
+    headers = len(header_sources())
+    print(paint(f"\n{len(objects)} {'source' if len(objects) == 1 else 'sources'} and "
+                f"{headers} {'header' if headers == 1 else 'headers'} compile", "1;32"))
     return True
 
 
