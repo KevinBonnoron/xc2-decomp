@@ -204,7 +204,6 @@ public:
   };
 
   SeqManager();
-  virtual ~SeqManager();
   void clear();
   void play(const char *name);
   void login();
