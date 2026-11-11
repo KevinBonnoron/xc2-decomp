@@ -523,7 +523,8 @@ public:
   void update() override;
   bool SweepAndPruneUpdate() override;
   void consistentUpdate() override;
-  virtual void moveUpdate();
+  // Not virtual: the game's vtable of IDColiObjChar (1.0.0: 0x71011b6fd8) is 0x48 bytes and ends at consistentUpdate.
+  void moveUpdate();
 
   u8 _208[0x210 - 0x208];
   mm::Vec3 unknown210; // Inferred role: unknown; original member name unknown.
