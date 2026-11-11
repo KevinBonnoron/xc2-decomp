@@ -1,15 +1,19 @@
 #pragma once
 #include <new> // IWYU pragma: keep
 
-#include "ai/ai_state.h"
 #include "framework/navi/navi_util.h"
 #include "gf/field/gf_field_exec_cmd.h"
 #include "gf/object/component/behavior/gf_com_behavior_npc.h"
+#include "gf/object/component/enemy/gf_enemy_state_battle.h"
 #include "gf/object/gf_obj.h"
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_manager.h"
 #include "mm_math/mm_vec3.h"
 #include "types.h"
+
+namespace ai {
+class State;
+} // namespace ai
 
 namespace fw {
 struct UpdateInfo;
@@ -21,7 +25,7 @@ class GfComAsm;
 
 namespace npc {
 
-template <typename T> class StateAreaMove : public ai::State {
+template <typename T> class StateAreaMove : public GfStateBase {
 public:
   StateAreaMove() : unknown18(), unknown50(nullptr), unknown60(0.0f), unknown64(0.0f) {}
   static ai::State *create(void *buffer) { return new (buffer) StateAreaMove; }

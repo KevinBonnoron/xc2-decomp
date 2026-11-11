@@ -42,6 +42,7 @@ public:
   static void dispInBattle(bool isDisp);
   void initialize() override;
   void finalize() override;
+  void update() override;
 
   static mm::mtl::FixedVector<unknown004, 32> m_IconObjList;
 };

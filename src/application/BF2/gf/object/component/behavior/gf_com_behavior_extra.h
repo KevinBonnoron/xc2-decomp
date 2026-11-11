@@ -30,8 +30,8 @@ public:
   void procMsgPcFieldNotifyExtra(fw::MessageObject *sender, MsgPcFieldNotifyExtra &message);
   GfComBehaviorExtra();
   ~GfComBehaviorExtra() override;
-  virtual void setup();
-  virtual void cleanup();
+  void setup();
+  void cleanup();
   void update(const fw::UpdateInfo &info) override;
   const mm::mtl::RTTI *getRTTI() const override;
 

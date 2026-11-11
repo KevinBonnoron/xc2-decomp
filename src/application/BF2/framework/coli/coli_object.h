@@ -145,12 +145,15 @@ static_assert(sizeof(unknown134) == 0xc, "");
 static_assert(offsetof(unknown135, unknown08) == 0x08, "");
 static_assert(sizeof(unknown135) == 0x10, "");
 
+// Evidence: the game's vtables of ColiObjUserData, gf::GfComCollider::UserData (0x710119c240) and gf::GfFieldLodColiAnim::ColiUserData
+// (0x7101188678) hold only the getRTTI slot (24 bytes), so the class has no virtual destructor.
 class ColiUserData {
 public:
   static mm::mtl::RTTI m_rtti;
 
+  // The game's vtables of the classes deriving from it (gf::GfFieldLodColiAnim::ColiUserData at 0x7101188678)
+  // hold only getRTTI, so it has no virtual destructor.
   virtual const mm::mtl::RTTI *getRTTI() const { return &m_rtti; }
-  virtual ~ColiUserData() {}
 };
 
 class ColiObjUserData {

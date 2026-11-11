@@ -22,6 +22,7 @@ public:
 
   ~ChainAttackCameraEntity() override;
   void onActivate() override;
+  void update(const fw::UpdateInfo &info) override;
   void setPoint(const mm::Vec3 &startPosition, const mm::Vec3 &startTarget, const mm::Vec3 &endPosition, const mm::Vec3 &endTarget);
   void calcSpeedTypeLinearSpacing();
   void calcSpeedTypeFastOut();

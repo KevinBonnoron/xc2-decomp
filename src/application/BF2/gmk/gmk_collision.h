@@ -34,7 +34,7 @@ public:
   static mm::mtl::RTTI m_rtti;
 
   explicit GmkCollision(const CreateInfo *info = nullptr);
-  ~GmkCollision() override { dispose(); }
+  virtual ~GmkCollision() { dispose(); }
   void create(const CreateInfo &info);
   void create(const AGmkBase &gmk, bool flag);
   void dispose();

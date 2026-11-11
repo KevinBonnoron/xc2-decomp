@@ -78,6 +78,7 @@ public:
 
   bool existInputXY() const;
   const mm::mtl::RTTI *getRTTI() const override;
+  bool recieveMessage(fw::MessageObject *sender, fw::Message &message) override;
   f32 getGravity() const;
   const fw::Transform &getLocomotion() const;
   void setPadControl(bool padControl);
@@ -93,6 +94,7 @@ public:
   void procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message);
   void procMsgPcFieldNotifyChangePlayerID(fw::MessageObject *object, MsgPcFieldNotifyChangePlayerID &message);
   void procMsgPcFieldWarpCancel(fw::MessageObject *object, MsgPcFieldWarpCancel &message);
+  void procMsgObjectFlushProperty(fw::MessageObject *sender, MsgObjectFlushProperty &message);
 
   // Inferred role: slide param of the pc param list entry 4 ("slide"); original name unknown.
   const pc::SlideParam *unknown001() const { return static_cast<const pc::SlideParam *>(unknown300->unknown10[4].param); }

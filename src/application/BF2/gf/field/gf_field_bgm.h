@@ -187,6 +187,7 @@ public:
   explicit BgmEvent(GfFieldBgm *owner);
   const char *getTrackName() const override;
   bool isPlaying() const override;
+  void update(const fw::UpdateInfo &info) override;
   void gevPlayEvent(GEV gev, u32 value);
   void cancelOverTime();
 

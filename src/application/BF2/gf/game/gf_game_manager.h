@@ -54,6 +54,7 @@ public:
   static void setState(GF_STATE state, bool isForce);
   static void clear();
   static bool isInitialized();
+  // The order of the overrides follows the game's vtable (0x710118a3d8).
   void gevExecBuy(u32 item, u32 count, u32 shop) override;
   void gevChangeParty() override;
   void gevGetArts(u32 driver, u32 arts, bool isPopup) override;
@@ -71,10 +72,10 @@ public:
   void gevBladeUnselect(u32 blade, bool unselect) override;
   void gevBladeEnable(u32 blade) override;
   void gevPlayEvent(GEV event, u32 eventId) override;
-  void gevItemAdd(u32 item, int count) override;
   void gevPartyMemberOK(bool isOK) override;
-  void gevLayerPause(u32 layer, bool isPause) override;
   void gevPartyIDMemberOK(bool isOK, u32 partyId) override;
+  void gevItemAdd(u32 item, int count) override;
+  void gevLayerPause(u32 layer, bool isPause) override;
   void gevReloadBdat(RELOAD_BDAT reload, u32 value) override;
   void gevSalvageStateChange(u32 state) override;
   void gevChangeScenarioFlag(u32 scenarioFlag, u32 oldScenarioFlag) override;
@@ -83,8 +84,8 @@ public:
   void gevGameState(GF_STATE previousState, GF_STATE state) override;
   void gevControllFree(bool isFree) override;
   void gevMercenariesMissionFlag(u32 mission, u32 flag, u32 value) override;
-  void qevCompleteQuest(const QuestCompleteParam &param) override;
   void qevOrderQuest(const QuestOrderParam &param) override;
+  void qevCompleteQuest(const QuestCompleteParam &param) override;
   void qevCompleteChildQuest(const QuestCompleteChildParam &param) override;
   static bool isInnerState(GF_STATE state);
   static GF_OBJ_HANDLE *getPartyLeader();

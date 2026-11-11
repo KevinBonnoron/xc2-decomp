@@ -40,6 +40,7 @@ public:
 
   GfMenuObjPartyForm2(u32 handle);
   ~GfMenuObjPartyForm2() override;
+  void initialize() override;
   void finalize() override;
   void update() override;
   static void registOpenParam(const OpenParam &param);

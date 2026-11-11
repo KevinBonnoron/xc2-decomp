@@ -71,6 +71,9 @@ public:
 
   GfComModel();
   virtual ~GfComModel();
+  void changeLayer(u32 oldLayer, u32 newLayer) override;
+  bool recieveMessage(fw::MessageObject *sender, fw::Message &message) override;
+  const mm::mtl::RTTI *getRTTI() const override;
 
   bool hasBone(const char *name) const;
   bool isRender() const;

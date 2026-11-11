@@ -41,8 +41,9 @@ public:
   static bool isRider(GF_OBJ_HANDLE *handle);
   void resetHandles();
   static bool isVehicle(GF_OBJ_HANDLE *handle);
-  void gevPartyReturnFieldState(u32 state) override;
+  // The order of the overrides follows the game's vtable (0x710118b510).
   bool recieveMessage(fw::MessageObject *sender, fw::Message &message) override;
+  void gevPartyReturnFieldState(u32 state) override;
   void procMsgGameRideEvent(fw::MessageObject *sender, MsgGameRideEvent &message);
 
   GF_OBJ_HANDLE *unknown28; // Inferred role: vehicle; original member name unknown.

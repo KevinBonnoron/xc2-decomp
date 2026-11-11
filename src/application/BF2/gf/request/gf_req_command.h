@@ -19,9 +19,11 @@ struct GfReqParam;
 struct RQ_SETUP_BLADE {
   RQ_SETUP_BLADE();
 
-  u16 unknown00;                         // Inferred role: driver; original member name unknown.
-  u16 unknown02;                         // Inferred role: current blade; original member name unknown.
-  mm::mtl::FixedArray<u16, 5> unknown04; // Inferred role: blades; original member name unknown.
+  u16 unknown00; // Inferred role: driver; original member name unknown.
+  u16 unknown02; // Inferred role: current blade; original member name unknown.
+  // A plain array, not a FixedArray: the game's SCOM_SET_BLADE destructor is the one of SCOM (the vtable slot at 0x71011a1828
+  // is SCOM::~SCOM), which only happens when every member is trivially destructible.
+  u16 unknown04[5]; // Inferred role: blades; original member name unknown.
 };
 
 static_assert(offsetof(RQ_SETUP_BLADE, unknown04) == 0x04, "");

@@ -3056,7 +3056,9 @@ u32 QuestListAcc::getHintsMainChar(u32 id, u32 index) const {
 }
 
 u32 QuestListAcc::getHintsFSkillID(u32 id, u32 index) const {
-  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbqa::getHintsFSkillID1, _gfbqa::getHintsFSkillID2, _gfbqa::getHintsFSkillID3};
+  // The game's table (0x71011879b8) holds the first two getters only: the table of getRewardItemID starts at 0x71011879c8,
+  // right behind it (getHintsFSkillID3 is reached through QuestListAcc::getHintsFSkillID3).
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbqa::getHintsFSkillID1, _gfbqa::getHintsFSkillID2};
   CBdatWrapper *fp = GfBdatQuest::get()->unknownc8;
   return getters[index](*fp, id);
 }

@@ -13,7 +13,7 @@ class GfMenuCallContext;
 // Inferred role: attached call id; original name unknown.
 constexpr u32 unknown001 = 0x18;
 
-bool GfMenuObjTitle::s_NoSaveData;
+bool GfMenuObjTitle::s_NoSaveData = true;
 
 GfMenuObjTitle::GfMenuObjTitle(u32 handle) : GfMenuObject(handle), unknown48(0), unknown50(nullptr), unknown58(this), unknown1b8(false) { s_NoSaveData = true; }
 

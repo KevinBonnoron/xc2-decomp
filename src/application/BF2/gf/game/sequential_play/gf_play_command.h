@@ -174,6 +174,7 @@ class GfPlayComWaitEvent : public GfPlayCom {
 public:
   GfPlayComWaitEvent(f32 time, GF_OBJ_HANDLE *handle) : GfPlayCom(PCOMTYPE_UNKNOWN_4, false), unknown10(time), unknown18(handle), unknown20(-1) {}
   void start() override;
+  void end() override;
   bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComWaitEvent *create(f32 time, GF_OBJ_HANDLE *handle);
 
@@ -210,6 +211,7 @@ public:
   GfPlayComWaitBattleEnd(u32 battle) : GfPlayCom(PCOMTYPE_UNKNOWN_6, true), unknown10(false), unknown18(battle) {}
   void start() override;
   void end() override;
+  bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComWaitBattleEnd *create(u32 battle);
 
   bool unknown10; // Inferred role: unknown; original member name unknown.
@@ -601,6 +603,7 @@ public:
   GfPlayComCollect(GF_OBJ_HANDLE *handle);
   void start() override;
   void end() override;
+  bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComCollect *create(GF_OBJ_HANDLE *handle);
 
   u32 unknown18;            // Inferred role: player pause; original member name unknown.
@@ -618,6 +621,7 @@ public:
   explicit GfPlayComFieldTbox(GF_OBJ_HANDLE *handle);
   void start() override;
   void end() override;
+  bool update(const fw::UpdateInfo &info, bool isCancel) override;
   bool isOpenFinish() const;
   bool updateForCheckOpenFinish(const fw::UpdateInfo &info);
   bool updateForCompleteQuest(const fw::UpdateInfo &info);
@@ -719,6 +723,9 @@ public:
   GfPlayComPlayerDead(GfPlayerDead dead)
       : GfPlayCom(PCOMTYPE_UNKNOWN_32, false), unknown20(dead), unknown24(0.0f), unknown28(0.0f), unknown2c(15.0f), unknown30(nullptr), unknown38(false), unknown39(false), unknown3a(false) {}
   void gevMapjump(GEV event, const MapjumpCallbackInfo &info) override;
+  void start() override;
+  void end() override;
+  bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static bool isDead();
   static bool replaceDeadType(GfPlayerDead dead);
   static GfPlayComPlayerDead *create(GfPlayerDead dead);
@@ -763,7 +770,8 @@ public:
 static_assert(sizeof(GfPlayComTalk) == 0x48, "");
 
 class GfPlayComQuestOrderUI : public GfPlayCom {
-  GF_PLAY_COM("PlayComQuestOrderUI")
+  // The game's name has no "PlayCom" prefix (0x710118e5b8).
+  GF_PLAY_COM("QuestOrderUI")
 
 public:
   GfPlayComQuestOrderUI(QuestID quest, bool isForce);
@@ -825,6 +833,7 @@ public:
   GfPlayComReturnTitle(const ParamReturnTitle &param) : GfPlayCom(PCOMTYPE_UNKNOWN_36, false), unknown18(param), unknown1c(0) {}
   void start() override;
   void end() override;
+  bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComReturnTitle *create(const ParamReturnTitle &param);
 
   ParamReturnTitle unknown18; // Inferred role: param; original member name unknown.
@@ -925,13 +934,15 @@ static_assert(offsetof(GfPlayComResetBlade, unknown20) == 0x20, "");
 static_assert(sizeof(GfPlayComResetBlade) == 0x28, "");
 
 class GfPlayComMoverSwitch : public GfPlayCom {
-  GF_PLAY_COM("PlayComMoverSwitch")
+  // The game's name has no "PlayCom" prefix (0x710118e5d0).
+  GF_PLAY_COM("MoverSwitch")
 
 public:
   GfPlayComMoverSwitch();
   ~GfPlayComMoverSwitch() override;
   void start() override;
   void end() override;
+  bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComMoverSwitch *create();
 
   int unknown10; // Inferred role: unknown; original member name unknown.
@@ -945,7 +956,8 @@ static_assert(offsetof(GfPlayComMoverSwitch, unknown18) == 0x18, "");
 static_assert(sizeof(GfPlayComMoverSwitch) == 0x20, "");
 
 class GfPlayComHoodHomuraBattou : public GfPlayCom, public mm::mtl::PtrSingleton<GfPlayComHoodHomuraBattou> {
-  GF_PLAY_COM("PlayComHoodHomuraBattou")
+  // The game's name has no "PlayCom" prefix (0x710118e5d8).
+  GF_PLAY_COM("HoodHomuraBattou")
 
 public:
   void start() override;

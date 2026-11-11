@@ -3,6 +3,7 @@
 
 #include "gf/menu/gf_menu_many_objects.h"
 #include "gf/menu/gf_menu_object.h"
+#include "mm_mtl/reference_object.h"
 #include "types.h"
 #include "ui/ui_object_acc.h"
 #include "ui/ui_str.h"
@@ -13,14 +14,12 @@ class GfMenuCallContext;
 
 class GfMenuObjCommonInfo : public GfMenuObject {
 public:
-  class ParamBase {
+  // The game's vtable of ParamAchivement has mm::mtl::ReferenceObject::~ReferenceObject() in the complete destructor slot (+0x10) and the
+  // reference count at 0x08 (set to 1 by createParamAchivement), so ParamBase has no destructor of its own.
+  class ParamBase : public mm::mtl::ReferenceObject {
   public:
-    ParamBase() : unknown08(0) {}
-    virtual ~ParamBase() {}
     virtual ui::UIStr getTitleString() const = 0;
     virtual ui::UIStr getContentsString() const = 0;
-
-    u32 unknown08; // Inferred role: kind of parameter; original member name unknown.
   };
 
   class ParamAchivement : public ParamBase {

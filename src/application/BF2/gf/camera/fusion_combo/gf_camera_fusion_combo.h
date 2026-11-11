@@ -23,6 +23,7 @@ public:
   ~FusionComboCamera() override;
   static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
   void onActivate() override;
+  void update(const fw::UpdateInfo &info) override;
   bool isPlayEnd() const;
   static f32 fastOut(f32 t);
   static f32 slowOut(f32 t);

@@ -1,6 +1,7 @@
 #include "gf/request/gf_req_scom.h"
 
 #include <math.h>
+#include <string.h>
 
 #include "framework/lang_util.h"
 #include "fw/fw_bdat_manager.h"
@@ -1073,7 +1074,8 @@ bool SCOM_SET_BLADE::exec(const fw::UpdateInfo &) {
   u32 partyId = GfDataParty::getDriverPartyID(unknown1c.unknown00);
   RQ_SETUP_PARTY::Member &member = info.unknown00[partyId];
   member.unknown12 = true;
-  member.unknown08 = unknown1c.unknown04;
+  // The game copies the 10 bytes in one go (0x71005c9d70 to 0x71005c9d84 load and store one 2 byte and one 8 byte word).
+  memcpy(member.unknown08.begin(), unknown1c.unknown04, sizeof(unknown1c.unknown04));
   member.unknown04 = -1;
   u32 current = unknown1c.unknown02;
   u32 blade = GfDataDriver::getBlade(member.unknown00, -1);

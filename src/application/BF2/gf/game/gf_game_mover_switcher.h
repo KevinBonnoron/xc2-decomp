@@ -29,9 +29,10 @@ public:
   static void destroy();
   void cleanup();
   void switchMover();
+  // The order of the overrides follows the game's vtable (0x710118a850).
+  bool recieveMessage(fw::MessageObject *sender, fw::Message &message) override;
   void gevPartyMemberOK(bool isMemberOk) override;
   void gevPartyReturnFieldState(u32 state) override;
-  bool recieveMessage(fw::MessageObject *sender, fw::Message &message) override;
   void procMsgGameSwitchControlMover(fw::MessageObject *sender, MsgGameSwitchControlMover &message);
 
   bool unknown28; // Inferred role: mover switch enabled, set by gevPartyMemberOK; original member name unknown.

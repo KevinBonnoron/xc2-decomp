@@ -85,9 +85,10 @@ public:
   bool isWaterHole(GF_OBJ_HANDLE *handle);
   bool setTargetNearestEnemy(const mm::mtl::FixedList<GfSearchInfo *, 256> &list);
   bool setTargetNearestEnemyBattle(const mm::mtl::FixedList<GfSearchInfo *, 256> &list);
+  // The order of the overrides follows the game's vtable (0x710118c008).
+  bool recieveMessage(fw::MessageObject *sender, fw::Message &message) override;
   void gevChangeLeader(GF_OBJ_HANDLE *handle) override;
   void gevSwapFormation(u32 slot, u32 otherSlot) override;
-  bool recieveMessage(fw::MessageObject *sender, fw::Message &message) override;
   void procMsgGameChangeTarget(fw::MessageObject *sender, MsgGameChangeTarget &message);
   void procMsgGameDebugTarget(fw::MessageObject *sender, MsgGameDebugTarget &message);
 

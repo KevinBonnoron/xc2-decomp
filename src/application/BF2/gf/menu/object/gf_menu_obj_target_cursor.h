@@ -25,6 +25,7 @@ public:
   ~GfMenuObjTargetCursor() override;
   void initialize() override;
   void finalize() override;
+  void update() override;
   static void disp(bool disp);
   void refreshDisp(u32 kind);
   void startCursorAnimation(const char *name);

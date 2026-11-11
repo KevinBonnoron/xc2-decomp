@@ -9,7 +9,7 @@ GfMenuObjCommonInfo::ParamBase *GfMenuObjCommonInfo::createParamAchivement(u32 p
 #line 53
   ParamAchivement *param = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ParamAchivement();
   if (param != nullptr) {
-    param->unknown08 = 1;
+    param->addRef();
     param->unknown0c = param0;
     param->unknown10 = param1;
     param->unknown14 = param2;

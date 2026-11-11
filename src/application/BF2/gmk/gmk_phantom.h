@@ -93,7 +93,7 @@ public:
 
   explicit GmkPhantom(const CreateInfo *info = nullptr);
   void create(const CreateInfo &info);
-  ~GmkPhantom() override;
+  virtual ~GmkPhantom();
   void dispose();
   void create(const AGmkBase &gmk, IGmkPhantomEventListener *listener, bool isCheckParty);
   void update(const GmkPhantomCheckResults &results);

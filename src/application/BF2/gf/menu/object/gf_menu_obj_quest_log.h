@@ -89,6 +89,7 @@ public:
   bool seqTitleFadeOutText();
   void initialize() override;
   void finalize() override;
+  void update() override;
   static void order(GfMenuCallContext *context, QuestID quest);
   static void complete(GfMenuCallContext *context, QuestID quest);
   static void lockLogOpen();

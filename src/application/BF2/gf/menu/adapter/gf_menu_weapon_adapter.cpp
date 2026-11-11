@@ -164,6 +164,25 @@ GfMenuWeaponAdapter *GfMenuWeaponAdapter::createFromReferenceChip(u32 handle, u3
   return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 
+void GfMenuWeaponAdapter::update(const fw::UpdateInfo &info) {
+  if (unknown50 != nullptr) {
+    u32 newWeapon = unknown50->getWeaponID();
+    if (unknown58 != newWeapon) {
+      unknown58 = newWeapon;
+      setChange();
+    }
+  }
+
+  if (unknown30.isValid() && (unknown20 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) != 0) {
+    if (unknown58 != 0) {
+      setDisp(unknown30(unknown58));
+    } else {
+      setDisp(false);
+    }
+    unknown20 &= ~FLAG_UNKNOWN_0;
+  }
+}
+
 u32 GfMenuWeaponAdapter::BladeConverter::getWeaponID() {
   DataParamAcc acc(OBJECT_TYPE_BLADE, unknown08, GIMMICK_TYPE_UNKNOWN_0);
   if (acc.isValid()) {

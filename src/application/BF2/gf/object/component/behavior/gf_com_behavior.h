@@ -70,6 +70,7 @@ public:
 
   GfComBehavior() : unknown10(fw::Allocator::getProcAllocator()) {}
 
+  const mm::mtl::RTTI *getRTTI() const override { return &m_rtti; }
   void changeLayer(u32 oldLayer, u32 newLayer) override {}
   virtual void update(const fw::UpdateInfo &info) = 0;
   virtual void procAnimCallback(GfComAsm *comAsm, const CallBackCache &cache) {}
