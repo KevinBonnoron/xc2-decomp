@@ -93,6 +93,7 @@
         # --check [REV] writes nothing: it fails on the files that are not clang-format clean, among those changed
         # between REV and HEAD, or among every tracked file when there is no REV.
         if [ "''${1:-}" = "--check" ]; then
+          set -o pipefail
           pathspecs=('src/*.h' 'src/*.cpp' 'include/*.h' 'include/*.cpp')
           if [ -n "''${2:-}" ]; then
             git diff -z --name-only --diff-filter=ACMR "$2" HEAD -- "''${pathspecs[@]}"
