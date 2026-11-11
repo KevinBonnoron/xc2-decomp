@@ -11,6 +11,7 @@ namespace mm {
 
 // Inferred name; kept as an exception to the unknown-name rule (AGENTS.md).
 const f32 DEG_TO_RAD = 0.017453292f;
+// Inferred name; kept as an exception to the unknown-name rule (AGENTS.md).
 const f32 RAD_TO_DEG = 180.0f / 3.1415927f;
 
 template <typename T> T clamp(T value, T mi, T ma) {

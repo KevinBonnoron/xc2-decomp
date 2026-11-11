@@ -67,6 +67,9 @@
     shared by every gimmick class for the TGmkList templates.`. An enumerator
     of `GmkType` whose suffix is exactly a game class name (`GMK_TYPE_ENEMY`
     for `GmkEnemy`) counts as derived from that class symbol.
+  - Exception: `mm::DEG_TO_RAD` and `mm::RAD_TO_DEG` in `include/mm_math/mm_math.h`
+    keep their inferred names, marked with the comment `// Inferred name; kept
+    as an exception to the unknown-name rule (AGENTS.md).`.
 - When several accessors read the same member, pick the one that states its
   meaning (`IsPlayer` over `IsEnableBattleFace`); a union read by accessors of
   different types stays `unknownXX`.
