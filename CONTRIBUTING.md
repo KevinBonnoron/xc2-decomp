@@ -28,6 +28,7 @@ Most namespaces are worked on by regular automated passes, so code outside a res
 ## Pull requests
 
 - Use commit messages of the form `feat(<namespace>): match <Class> functions`. Only squash merges are allowed, so the title of the pull request becomes the commit message on `main`: give it the same form, `type(scope): description`, with the types of `.githooks/commit-msg`. One scope only, in lower case letters, digits, `_` or `-`, no list: `feat(wnd, skd): ...` is refused, use `feat(wnd): ...` and name the rest in the description, or drop the scope. `Merge ...`, `fixup!` and `squash!` titles are refused too.
+- By opening a pull request you agree to release your contribution under CC0 1.0 Universal, like the rest of the repository (see [LICENSE](LICENSE)).
 - Keep a pull request to one namespace or a few classes, so it is easy to review and rebase. `main` moves often: rebase on it before opening the pull request.
 - Do not commit the progress snapshot: the hook writes the `<!-- progress -->` block of `README.md` and `progress/areas.json` on a branch named `main` only, and a pull request that changes them is refused (restore them with `git checkout origin/main -- README.md progress/areas.json`). So work on a feature branch of your fork, never on your fork's `main`: there the hook would write the snapshot into your commits.
 

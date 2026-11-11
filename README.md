@@ -230,3 +230,11 @@ Abbreviations and names imposed by the game's symbols:
 - Ghidra guesses types and return values. When in doubt, the assembly is the reference.
 - A destructor that must store the vtable pointer as the game does gets a body holding only `;`: with an empty body `{}`, the compiler drops the store.
 - Different C++ can produce the same machine code. Prefer the version a programmer would naturally have written.
+
+## License and disclaimer
+
+The reconstructed code and the tools of this repository are dedicated to the public domain under [CC0 1.0 Universal](LICENSE), to the extent the contributors hold rights in them.
+
+Third-party code keeps its own terms. The memory allocator embedded in `src/libs/monolib_mm/source/mtl/dlmalloc.inl` is dlmalloc 2.8.6 by Doug Lea, released to the public domain (CC0); the provenance comment at the top of that file is its notice.
+
+This project is not affiliated with, endorsed by or sponsored by Nintendo or Monolith Soft. *Xenoblade Chronicles* is a trademark of Nintendo. The repository contains no game executable, asset or key: you need your own legally obtained copy of the game.
