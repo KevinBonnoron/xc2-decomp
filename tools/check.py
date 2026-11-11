@@ -6,7 +6,9 @@ Usage:
                                           listing only the functions that do not match
   check -v                                same, and list every function
   check --readme                          same, and update the progress section of README.md
-  check --strict-data                     same, and fail on what the data report below lists (not used by the hook yet)
+  check --strict-data                     same, and fail on a problem of the data report below that tools/data_baseline.txt
+                                          does not list (the pre-commit hook runs it)
+  check --write-data-baseline             full check only: rewrite tools/data_baseline.txt from the data report
   check --compile                         only compile every source and header of src/ and include/ with the game's
                                           flags and look for absolute includes; needs no game executable, so it
                                           runs in the continuous integration
@@ -48,6 +50,13 @@ object local to your file that a matching function places on a game symbol, and
 two local objects placed over each other; as DUPLICATE, a global function (not a
 weak inline or template one) defined by several sources; and as PREFIX, a local
 function that matches only the start of the game's code at its address.
+
+tools/data_baseline.txt lists the problems accepted for now, one per line as
+`KIND SYMBOL WHERE  # reason` (the key holds no address of your objects, so it
+survives code moving around). --strict-data fails only on a problem the file does
+not list or lists without a reason, and prints `fixed:` for a listed problem the
+check no longer reports. --write-data-baseline rewrites the file from the report,
+keeping the reasons: give each new line its reason, which is reviewed like code.
 """
 import bisect
 import difflib
@@ -1295,30 +1304,151 @@ def data_summary(report):
             f"local prefix matches: {len(report.prefixes)}")
 
 
-def print_data_report(report):
-    """The section of the controls that only report for now, and its one line summary."""
-    if report.problems or report.duplicates or report.prefixes:
-        tokens = {token for _, problem, _ in report.problems for token in MANGLED.findall(problem)}
-        tokens |= {name for name, *_ in report.problems} | set(report.duplicates)
-        tokens |= {symbol for symbol, *_ in report.prefixes}
+def print_data_report(report, new=None):
+    """The section of the controls that only report for now, and its one line summary. With new (the part of the
+    report that tools/data_baseline.txt does not list), only that part is listed."""
+    shown = report if new is None else new
+    if shown.problems or shown.duplicates or shown.prefixes:
+        tokens = {token for _, problem, _ in shown.problems for token in MANGLED.findall(problem)}
+        tokens |= {name for name, *_ in shown.problems} | set(shown.duplicates)
+        tokens |= {symbol for symbol, *_ in shown.prefixes}
         mangled = sorted(t for t in tokens if t.startswith("_Z"))
         names = demangle(mangled) if mangled else {}
 
         def readable(text):
             return MANGLED.sub(lambda m: names.get(m[0], m[0]), text)
 
-        print(paint("\nNot compared by the function check (reported only, --strict-data makes them fail):", "1"))
-        for name, problem, source in report.problems:
+        if new is None:
+            print(paint("\nNot compared by the function check (reported only, --strict-data makes them fail):", "1"))
+        else:
+            print(paint("\nNEW problems, not compared by the function check and not in tools/data_baseline.txt "
+                        "(fix them; a justified one is added with `check --write-data-baseline` and a reason):", "1;31"))
+        for name, problem, source in shown.problems:
             print(f"{paint('DATA     ', '33')}  {names.get(name, name)}  {readable(problem)}  {source}")
-        for name, sources in report.duplicates.items():
+        for name, sources in shown.duplicates.items():
             print(f"{paint('DUPLICATE', '33')}  {names.get(name, name)}  defined by {', '.join(sources)}")
-        for symbol, address, count, game_count, source in report.prefixes:
+        for symbol, address, count, game_count, source in shown.prefixes:
             print(f"{paint('PREFIX   ', '33')}  {names.get(symbol, symbol)} (local, {address:#x})  "
                   f"{count} of the game's {game_count} instructions  {source}")
     print(paint("\n" + data_summary(report), "1"))
 
 
-def check_all(demangled, scope=None, verbose=True, strict_data=False):
+DATA_BASELINE = os.path.join(ROOT, "tools", "data_baseline.txt")
+# The kinds of a line and how many words (KIND SYMBOL WHERE) of it there are at least: a duplicate has no place.
+DATA_BASELINE_KINDS = {"DATA": 3, "DUPLICATE": 2, "PREFIX": 3}
+DATA_BASELINE_HEADER = """\
+# The data problems that `check` accepts for now: what its data report lists (DATA, DUPLICATE, PREFIX).
+# `check --strict-data`, run by the pre-commit hook, fails on a problem that is not listed here (or listed without a
+# reason) and prints `fixed:` for a listed problem the check no longer reports.
+#
+# One problem per line: KIND SYMBOL WHERE  # reason. SYMBOL is the mangled name; WHERE is the offset in the object
+# (+0x20), `size`, or a game address (@0x...), and a DUPLICATE has none. No address of our own objects is part of a
+# line, so it survives code moving.
+# `check --write-data-baseline` rewrites this file from the report: it drops the fixed lines, adds the new ones with
+# an empty reason and keeps the other reasons. Every line needs a reason, reviewed like a code change."""
+# What the name of a local object without a symbol of its own looks like: its section and its offset in it.
+ANONYMOUS_OBJECT = re.compile(r"(\.[\w.]+)\+0x[0-9a-f]+")
+GAME_ADDRESS_OF_OBJECT = re.compile(r" at (0x[0-9a-f]+) in the game")
+
+
+def problem_key(name, problem):
+    """The line of tools/data_baseline.txt that stands for a DATA problem, without the text that moves with our code:
+    the symbol and where in it (the offset, the size, or the address the game gives a local object), never the bytes
+    or the address of an object of ours."""
+    name = ANONYMOUS_OBJECT.sub(r"\1", name)
+    at = re.match(r"at \+(0x[0-9a-f]+) ", problem)
+    if at:
+        return f"DATA {name} +{at[1]}"
+    if problem.startswith("its size is"):
+        return f"DATA {name} size"
+    in_game = GAME_ADDRESS_OF_OBJECT.search(problem)
+    if in_game:
+        return f"DATA {name} @{in_game[1]}"
+    return f"DATA {name} {' '.join(problem.split())}"
+
+
+def duplicate_key(name):
+    return f"DUPLICATE {name}"
+
+
+def prefix_key(symbol, address):
+    return f"PREFIX {symbol} @{address:#x}"
+
+
+def data_keys(report):
+    """The baseline line of every problem of the data report."""
+    return ({problem_key(name, problem) for name, problem, _ in report.problems}
+            | {duplicate_key(name) for name in report.duplicates}
+            | {prefix_key(symbol, address) for symbol, address, *_ in report.prefixes})
+
+
+def without_known(report, known):
+    """The part of the data report whose baseline line is not in known."""
+    return SimpleNamespace(
+        problems=[p for p in report.problems if problem_key(p[0], p[1]) not in known],
+        duplicates={name: sources for name, sources in report.duplicates.items() if duplicate_key(name) not in known},
+        prefixes=[p for p in report.prefixes if prefix_key(p[0], p[1]) not in known])
+
+
+def read_data_baseline(path=DATA_BASELINE):
+    """({line: reason}, [errors]) of the baseline file: a missing file lists nothing, a line is KIND SYMBOL WHERE
+    followed by # and its reason (empty when there is none), and every other line is blank or a comment."""
+    entries, errors = {}, []
+    if not os.path.exists(path):
+        return entries, errors
+    with open(path) as f:
+        for number, text in enumerate(f, 1):
+            body, _, reason = text.partition("#")
+            tokens = body.split()
+            if not tokens:
+                continue
+            where = f"{os.path.relpath(path, ROOT)}:{number}"
+            if tokens[0] not in DATA_BASELINE_KINDS or len(tokens) < DATA_BASELINE_KINDS[tokens[0]]:
+                errors.append(f"{where}: expected KIND SYMBOL WHERE  # reason with KIND one of "
+                              f"{', '.join(DATA_BASELINE_KINDS)}, got {text.strip()!r}")
+                continue
+            line = " ".join(tokens)
+            if line in entries:
+                errors.append(f"{where}: {line} is listed twice")
+            entries[line] = reason.strip()
+    return entries, errors
+
+
+def write_data_baseline(report, path=DATA_BASELINE):
+    """Rewrite the baseline file from the data report, keeping the reason of every line that stays: the lines that
+    the report no longer has are dropped, the new ones are written with an empty reason. Returns the lines that
+    have no reason."""
+    old, _ = read_data_baseline(path)
+    lines = sorted(data_keys(report), key=lambda line: (list(DATA_BASELINE_KINDS).index(line.split()[0]), line))
+    with open(path, "w") as f:
+        f.write(DATA_BASELINE_HEADER + "\n\n")
+        for line in lines:
+            f.write(f"{line}  # {old.get(line, '')}".rstrip() + "\n")
+    return [line for line in lines if not old.get(line)]
+
+
+def check_against_baseline(report, path=DATA_BASELINE):
+    """Print what the data report holds beyond tools/data_baseline.txt, and which listed problems are gone. True when
+    the check fails: a problem that is not listed, a listed one without a reason, or an unreadable file."""
+    baseline, errors = read_data_baseline(path)
+    new = without_known(report, baseline)
+    found = data_keys(report)
+    fixed = sorted(line for line in baseline if line not in found)
+    unexplained = sorted(line for line, reason in baseline.items() if not reason)
+    for error in errors:
+        print(paint(f"BASELINE  {error}", "31"))
+    print_data_report(report, new)
+    for line in unexplained:
+        print(f"{paint('NO REASON', '31')}  {line}  (every line of tools/data_baseline.txt needs a reason after #)")
+    for line in fixed:
+        print(f"{paint('fixed:   ', '32')}  {line}  (no longer reported: remove it from tools/data_baseline.txt "
+              f"with `check --write-data-baseline`)")
+    print(paint(f"data baseline: {len(found) - len(data_keys(new))} known, {len(data_keys(new))} new, "
+                f"{len(fixed)} fixed", "1"))
+    return bool(errors or unexplained or new.problems or new.duplicates or new.prefixes)
+
+
+def check_all(demangled, scope=None, verbose=True, strict_data=False, write_baseline=False):
     objects, errors = compile_everything()
     per_object = [(source, obj, [f for f in defined_functions(obj) if f in demangled and in_scope(demangled[f], scope)])
                   for source, obj in objects]
@@ -1378,9 +1508,18 @@ def check_all(demangled, scope=None, verbose=True, strict_data=False):
     sys.stdout.flush()
     print_compile_errors(errors)
     report = None if scope else data_report(per_object, results, prefixes)
-    if report:
+    data_failed = False
+    if report and strict_data:
+        data_failed = check_against_baseline(report)
+    elif report:
         print_data_report(report)
-    failed = bool(errors or unknown or (strict_data and report and (report.problems or report.duplicates or report.prefixes)))
+        if write_baseline and errors:
+            print(paint("data baseline not written: the files above failed to compile, so the report is incomplete", "1;31"))
+        elif write_baseline:
+            unexplained = write_data_baseline(report)
+            print(paint(f"wrote {os.path.relpath(DATA_BASELINE, ROOT)}: {len(data_keys(report))} problems, "
+                        f"{len(unexplained)} without a reason yet (write one after the # of each)", "1"))
+    failed = bool(errors or unknown or data_failed)
     matched = len(rows) - len(mismatches)
     local_count = len(locals_)
     summary = f"\n{matched}/{len(rows)} functions match"
@@ -1433,17 +1572,20 @@ def main():
     readme = "--readme" in args
     verbose = any(a in ("-v", "--verbose") for a in args)
     strict_data = "--strict-data" in args
-    args = [a for a in args if a not in ("--readme", "-v", "--verbose", "--strict-data")]
+    write_baseline = "--write-data-baseline" in args
+    args = [a for a in args if a not in ("--readme", "-v", "--verbose", "--strict-data", "--write-data-baseline")]
     if "--compile" in args:
-        if args != ["--compile"] or readme or verbose or strict_data:
+        if args != ["--compile"] or readme or verbose or strict_data or write_baseline:
             sys.exit("usage: check --compile")
         sys.exit(0 if compile_only() else 1)
-    if strict_data and args:
-        sys.exit("usage: check [-v] [--readme] [--strict-data]")
+    if (strict_data or write_baseline) and args:
+        sys.exit("usage: check [-v] [--readme] [--strict-data]\n       check --write-data-baseline")
+    if write_baseline and (strict_data or readme):
+        sys.exit("usage: check --write-data-baseline")
     demangled = cached(os.path.join(CACHE_DIR, "target.demangled"), target_key(),
                        lambda: demangle(sorted(target_symbols())))
     if not args:
-        ok, matched = check_all(demangled, verbose=verbose, strict_data=strict_data)
+        ok, matched = check_all(demangled, verbose=verbose, strict_data=strict_data, write_baseline=write_baseline)
         text = progress_text(matched)
         print(paint(f"Game progress: {text}", "1"))
         if readme and ok:

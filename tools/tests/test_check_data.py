@@ -350,5 +350,140 @@ class ReportTest(unittest.TestCase):
         self.assertEqual(out.getvalue().strip(), "data: 0 problems, duplicate definitions: 0, local prefix matches: 0")
 
 
+def report_of(problems=(), duplicates=None, prefixes=()):
+    return SimpleNamespace(problems=list(problems), duplicates=duplicates or {}, prefixes=list(prefixes))
+
+
+class BaselineTest(unittest.TestCase):
+    """tools/data_baseline.txt: --strict-data fails only on a problem it does not list."""
+
+    TABLE = ("table", "at +0x8 (game 0x2008) holds 06, the game's 05", "src/a.cpp")
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.path = os.path.join(self.tmp.name, "data_baseline.txt")
+
+    def baseline(self, *lines):
+        with open(self.path, "w") as f:
+            f.write("# a comment\n\n" + "".join(line + "\n" for line in lines))
+
+    def verdict(self, report):
+        out = io.StringIO()
+        with mock.patch.object(check, "color", False), contextlib.redirect_stdout(out):
+            failed = check.check_against_baseline(report, self.path)
+        return failed, out.getvalue()
+
+    def test_a_new_problem_fails(self):
+        self.baseline()
+        failed, out = self.verdict(report_of([self.TABLE]))
+        self.assertTrue(failed)
+        self.assertIn("NEW problems", out)
+        self.assertIn("DATA       table  at +0x8 (game 0x2008) holds 06, the game's 05  src/a.cpp", out)
+        self.assertIn("data baseline: 0 known, 1 new, 0 fixed", out)
+
+    def test_a_new_problem_fails_without_any_baseline_file(self):
+        self.assertTrue(self.verdict(report_of([self.TABLE]))[0])
+
+    def test_a_new_problem_next_to_a_known_one_fails_and_only_it_is_listed(self):
+        self.baseline("DATA table +0x8  # known")
+        other = ("other", "its size is 24, the game's 16", "src/b.cpp")
+        failed, out = self.verdict(report_of([self.TABLE, other]))
+        self.assertTrue(failed)
+        self.assertIn("DATA       other", out)
+        self.assertNotIn("DATA       table", out)
+        self.assertIn("data baseline: 1 known, 1 new, 0 fixed", out)
+
+    def test_a_problem_of_the_baseline_passes(self):
+        self.baseline("DATA table +0x8  # the game has a weak copy")
+        failed, out = self.verdict(report_of([self.TABLE]))
+        self.assertFalse(failed)
+        self.assertNotIn("NEW", out)
+        self.assertIn("data: 1 problems, duplicate definitions: 0, local prefix matches: 0", out)
+        self.assertIn("data baseline: 1 known, 0 new, 0 fixed", out)
+
+    def test_a_known_duplicate_and_a_known_prefix_pass_and_others_fail(self):
+        self.baseline("DUPLICATE foo  # defined twice on purpose", "PREFIX local @0x1000  # ends early")
+        duplicates, prefixes = {"foo": ["src/a.cpp", "src/b.cpp"]}, [("local", TEXT, 3, 4, "src/c.cpp")]
+        self.assertFalse(self.verdict(report_of(duplicates=duplicates, prefixes=prefixes))[0])
+        self.assertTrue(self.verdict(report_of(duplicates={"bar": ["src/a.cpp", "src/b.cpp"]}, prefixes=prefixes))[0])
+        self.assertTrue(self.verdict(report_of(duplicates=duplicates, prefixes=[("local", TEXT + 4, 3, 4, "src/c.cpp")]))[0])
+
+    def test_a_fixed_problem_is_reported_and_passes(self):
+        self.baseline("DATA table +0x8  # known", "DATA gone size  # known")
+        failed, out = self.verdict(report_of([self.TABLE]))
+        self.assertFalse(failed)
+        self.assertIn("fixed:", out)
+        self.assertIn("DATA gone size", out)
+        self.assertNotIn("fixed:     DATA table", out)
+        self.assertIn("data baseline: 1 known, 0 new, 1 fixed", out)
+
+    def test_a_line_without_a_reason_fails(self):
+        for line in ("DATA table +0x8", "DATA table +0x8  #", "DATA table +0x8  #   "):
+            self.baseline(line)
+            failed, out = self.verdict(report_of([self.TABLE]))
+            self.assertTrue(failed, line)
+            self.assertIn("NO REASON", out)
+
+    def test_a_malformed_or_repeated_line_fails(self):
+        for lines in (["DATA table  # no offset"], ["WRONG table +0x8  # kind"], ["DATA table +0x8  # a", "DATA  table   +0x8 # b"]):
+            self.baseline(*lines)
+            failed, out = self.verdict(report_of([self.TABLE]))
+            self.assertTrue(failed, lines)
+            self.assertIn("BASELINE", out)
+
+    def test_the_key_holds_the_symbol_and_where_but_neither_the_bytes_nor_an_address_of_ours(self):
+        key = check.problem_key
+        self.assertEqual(key("_ZTV3Foo", "at +0x20 (game 0x7101171598) points to a::b(), the game's c::d()"), "DATA _ZTV3Foo +0x20")
+        self.assertEqual(key("_ZTV3Foo", "at +0x20 (game 0x7101171598) holds 01, the game's 02"), "DATA _ZTV3Foo +0x20")
+        self.assertEqual(key("_ZTV3Foo", "its size is 128, the game's 144"), "DATA _ZTV3Foo size")
+        self.assertEqual(key("_ZTV3Foo", "its size is 136, the game's 144"), "DATA _ZTV3Foo size")
+        for ours in (".bss+0x40", ".bss+0x1f00"):
+            self.assertEqual(key(ours, "is writable data local to your file, used by f, at 0x7101000000 in the game, which is g"),
+                             "DATA .bss @0x7101000000")
+            self.assertEqual(key(ours, "is at 0x7101000000 in the game, over h of src/b.cpp"), "DATA .bss @0x7101000000")
+
+    def test_a_write_keeps_the_reasons_drops_the_fixed_and_leaves_the_new_without_one(self):
+        self.baseline("DATA table +0x8  # the game has a weak copy", "DATA gone size  # known")
+        other = ("other", "its size is 24, the game's 16", "src/b.cpp")
+        self.assertEqual(check.write_data_baseline(report_of([self.TABLE, other]), self.path), ["DATA other size"])
+        entries, errors = check.read_data_baseline(self.path)
+        self.assertEqual(errors, [])
+        self.assertEqual(entries, {"DATA table +0x8": "the game has a weak copy", "DATA other size": ""})
+        self.assertTrue(self.verdict(report_of([self.TABLE, other]))[0])  # the empty reason fails the check
+        self.assertEqual(check.write_data_baseline(report_of([self.TABLE, other]), self.path), ["DATA other size"])
+
+    def test_the_baseline_of_the_repository_is_well_formed(self):
+        entries, errors = check.read_data_baseline()
+        self.assertEqual(errors, [])
+        self.assertEqual([line for line, reason in entries.items() if not reason], [])
+
+    def test_the_file_of_the_repository_starts_with_the_header_a_write_gives_it(self):
+        with open(check.DATA_BASELINE) as f:
+            self.assertTrue(f.read().startswith(check.DATA_BASELINE_HEADER + "\n\n"))
+
+
+class BaselineKeyTest(ObjectTest):
+    """The key of a problem does not change when unrelated code moves our data around."""
+
+    def table(self, padding):
+        return self.object(
+            [(".text", SHT_PROGBITS, EXEC_ALLOC, words(MOV_W0_1, RET, MOV_W0_2, RET)),
+             (".data.rel.ro", SHT_PROGBITS, WRITE_ALLOC, bytes(padding) + struct.pack("<QQ", 0, 6))],
+            [("_Z3foov", STT_FUNC, 1, ".text", 0, 8), ("_ZN2gf5tableE", STT_OBJECT, 1, ".data.rel.ro", padding, 16)],
+            [(".data.rel.ro", padding, R_ABS64, "_Z3foov", 0)])
+
+    def test_the_table_keeps_its_key_wherever_it_lies_in_our_object(self):
+        game = make_game(
+            [(".text", SHT_PROGBITS, EXEC_ALLOC, TEXT, words(MOV_W0_1, RET, MOV_W0_2, RET)),
+             (".data", SHT_PROGBITS, WRITE_ALLOC, DATA, struct.pack("<QQ", TEXT, 5))],
+            [(TEXT, 8, "T", "_Z3foov"), (DATA, 16, "D", "_ZN2gf5tableE")])
+        keys = []
+        for padding in (0, 32, 4096):
+            (name, problem), = check.global_data_problems(game, self.table(padding))
+            keys.append(check.problem_key(name, problem))
+        self.assertEqual(keys, ["DATA _ZN2gf5tableE +0x8"] * 3)
+
+
 if __name__ == "__main__":
     unittest.main()

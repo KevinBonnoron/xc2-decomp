@@ -45,7 +45,7 @@ You need [Nix](https://nixos.org/) with flakes and your own XCI dump and `prod.k
 
 Contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) and [AGENTS.md](AGENTS.md) (naming rules) first. In short:
 
-- Every function you keep must match: the pre-commit hook runs `format`, `includes` and `check`, and refreshes the progress above on `main` only.
+- Every function you keep must match, and no new data problem may appear: the pre-commit hook runs `format`, `includes` and `check --strict-data`, and refreshes the progress above on `main` only.
 - Every pull request is also checked on GitHub, without the game: compilation, formatting, includes, the quality gate, repository hygiene and the title (see [CONTRIBUTING.md](CONTRIBUTING.md)). Matching the game is still checked locally before a merge.
 - Use the game's names; anything the binary does not name is `unknown` plus its offset, with the inferred role in a comment. Write the code a programmer would have written, not decompiler output forced to match.
 - Never commit anything from the game (executables, assets, keys, SDK files); local files stay in `work/`.
@@ -103,7 +103,8 @@ setup
 check                                       # every function defined in src/, and the overall progress
 check -v                                    # same, listing the matching functions too
 check --readme                              # same, and update the progress in this README
-check --strict-data                         # same, and fail on what the data report lists (not used by the hook yet)
+check --strict-data                         # same, and fail on a data problem tools/data_baseline.txt does not list (what the hook runs)
+check --write-data-baseline                 # rewrite tools/data_baseline.txt from the data report (full check only)
 check --compile                             # only compile every source and header with the game's flags, no game needed
 check gf::GfDataBladeCreate                 # one class or namespace, and the functions left to do
 check gf::GfDataBlade::setHikariCurrent     # side by side diff of one function
@@ -121,7 +122,7 @@ A function you define that the game has no symbol for is listed as `NOT IN GAME`
 
 Functions local to their source file (`static`, anonymous namespace) have no symbol in the game. A full `check` finds the game address of each local function where the callers that match call it, and checks it too, listed as `(local, address)`; a local function only ever inlined has no call to follow. To diff one by hand, pass its game address and its name in your file. The game side of that diff ends at the next named function or at the next address called by a `bl`; your function is compared over its own size.
 
-A full `check` also ends with a report of what the function check does not compare: global data (tables, vtables) whose size, bytes or pointers differ from the game's symbol of the same name, writable data local to a file that the game places on a symbol or that overlaps another local object, global functions defined by more than one source, and `(local, address)` functions that match only the start of the game's code. It is printed and counted (`data: N problems, duplicate definitions: N, local prefix matches: N`) without failing `check` for now, and `check --strict-data` makes it fail.
+A full `check` also ends with a report of what the function check does not compare: global data (tables, vtables) whose size, bytes or pointers differ from the game's symbol of the same name, writable data local to a file that the game places on a symbol or that overlaps another local object, global functions defined by more than one source, and `(local, address)` functions that match only the start of the game's code. It is printed and counted (`data: N problems, duplicate definitions: N, local prefix matches: N`); `check --strict-data`, which the pre-commit hook runs, fails only on a problem that `tools/data_baseline.txt` does not list, and prints `fixed:` for a listed problem that is gone. To update the baseline, run `check --write-data-baseline` (it drops the fixed lines and keeps the reasons), then write the reason after the `#` of each line it added: a new entry needs a reason that is reviewed like a code change, and fixing the problem is preferred to listing it.
 
 </details>
 
