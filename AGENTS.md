@@ -61,6 +61,12 @@
   - A constant whose value is a BDAT row id keeps a descriptive name only
     when a row of the game's BDAT tables gives that name; cite the table, row
     and column in a comment. Otherwise it is `<PREFIX>_UNKNOWN_<N>`.
+  - Exception: the static member `GMK_TYPE` that every gimmick class declares
+    (read by name by the `TGmkList` templates and `gf_com_behavior_enemy.cpp`)
+    keeps this inferred name, marked with the comment `// Inferred name;
+    shared by every gimmick class for the TGmkList templates.`. An enumerator
+    of `GmkType` whose suffix is exactly a game class name (`GMK_TYPE_ENEMY`
+    for `GmkEnemy`) counts as derived from that class symbol.
 - When several accessors read the same member, pick the one that states its
   meaning (`IsPlayer` over `IsEnableBattleFace`); a union read by accessors of
   different types stays `unknownXX`.
