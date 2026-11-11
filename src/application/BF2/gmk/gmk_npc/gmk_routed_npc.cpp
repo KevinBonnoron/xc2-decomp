@@ -11,6 +11,7 @@
 #include "gmk/gmk_cond.h"
 #include "gmk/gmk_gob_event_listener_impl.h" // IWYU pragma: keep
 #include "gmk/gmk_npc/gmk_npc_manager.h"
+#include "gmk/gmk_route_navi.h"
 #include "gmk/gmk_set.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/vector.h"
@@ -41,6 +42,14 @@ void GmkRoutedNpcList::disposeGmk() {
 }
 
 GmkType GmkRoutedNpc::getGmkType() const { return GMK_TYPE; }
+
+void GmkRoutedNpc::dispose() {
+  if (unknown70 != nullptr) {
+    delete unknown70;
+    unknown70 = nullptr;
+  }
+  AGmkBase::dispose();
+}
 
 bool GmkRoutedNpc::isPopCondMatched() const {
   if (!isValid()) {
