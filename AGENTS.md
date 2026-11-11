@@ -53,11 +53,11 @@
     prefix removal in `main` for the column enumerators. The `Flag` suffix
     the generator gives the second flag member of a column is not covered by
     this rule.
-  - A range marker `<PREFIX>_COUNT` or `<PREFIX>_MAX` is kept only when its
-    value is verifiably the number of enumerators or the value of the last
-    one, checked against the enum and its uses. Any other marker (`_NONE`,
-    `_INVALID`, `_FIRST`, `_LAST`...) follows the `_UNKNOWN_<N>` rule like any
-    other name.
+  - A range marker `<PREFIX>_COUNT`, `<PREFIX>_NUM` or `<PREFIX>_MAX` is kept
+    only when its value is verifiably the number of enumerators or the value
+    of the last one, checked against the enum and its uses. Any other marker
+    (`_NONE`, `_INVALID`, `_FIRST`, `_LAST`...) follows the `_UNKNOWN_<N>`
+    rule like any other name.
   - A constant whose value is a BDAT row id keeps a descriptive name only
     when a row of the game's BDAT tables gives that name; cite the table, row
     and column in a comment. Otherwise it is `<PREFIX>_UNKNOWN_<N>`.
