@@ -1,5 +1,7 @@
 #include "mm_mtl/hash.h"
 
+#include <string.h>
+
 #include "types.h"
 
 namespace mm {
@@ -74,9 +76,17 @@ unsigned int hash64Mix(unsigned long key) {
   return static_cast<unsigned int>(key);
 }
 
-unsigned int hashFloatMix(float key) { return hash32Mix(*reinterpret_cast<const u32 *>(&key)); }
+unsigned int hashFloatMix(float key) {
+  u32 bits;
+  memcpy(&bits, &key, sizeof(bits));
+  return hash32Mix(bits);
+}
 
-unsigned int hashDoubleMix(double key) { return hash64Mix(*reinterpret_cast<const u64 *>(&key)); }
+unsigned int hashDoubleMix(double key) {
+  u64 bits;
+  memcpy(&bits, &key, sizeof(bits));
+  return hash64Mix(bits);
+}
 
 unsigned int hashPointerMix(const void *key) { return hash64Mix(reinterpret_cast<u64>(key)); }
 
