@@ -12,7 +12,8 @@ public:
   DrCalcClipWorkViewPoli();
   ~DrCalcClipWorkViewPoli();
   // The second argument is a direction, not an end point: the game's clipLineTest (0x71008a9db0) intersects start + direction * t with the
-  // planes and scales it by 2000 for checkLineNeraPointGet.
+  // planes and scales it by 2000 for checkLineNeraPointGet. It is declared but not defined: every natural form matches except four register
+  // numbers (see the `registers` blocker), so the vtable of this class is not emitted by this unit until it is defined.
   bool clipLineTest(const mm::Vec3 &start, const mm::Vec3 &direction, f32 radius) const override;
 
   // Game symbol _ZN2ml22DrCalcClipWorkViewPoli21checkLineNeraPointGetERN2mm4Vec3ES3_RKS2_S5_S5_S5_ (0x71008a99d4, not decompiled yet).
