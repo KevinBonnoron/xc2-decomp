@@ -42,12 +42,17 @@
   comment. Unlike macros, constants do not get a free descriptive name.
   - A name derived mechanically from a game name counts as original when the
     transformation is written down. A BDAT table id is `BDAT_` plus the
-    game's table name from `s_aszGfBdatName`, and a BDAT column enumerator is
-    the name of its game accessor without `get`, `is` or `init` (the same
-    logic as the member rule, where `getWp()` gives `m_wp`).
-    `tools/gen_bdat.py` applies both: `bdat_id_name` (used by `write_ids`)
-    for the table ids, and the `init` prefix removal in `main` for the column
-    enumerators.
+    game's table name from `s_aszGfBdatName`, split at each lower-case or
+    digit to upper-case boundary and upper-cased (`bgmList` gives
+    `BDAT_BGM_LIST`), with `_MS` appended when a lower-case message table
+    would otherwise get the id of an upper-case table (`itm_orb` against
+    `ITM_Orb`). A BDAT column enumerator is the name of its game accessor
+    without `get`, `is` or `init` (the same logic as the member rule, where
+    `getWp()` gives `m_wp`). `tools/gen_bdat.py` applies both: `bdat_id_name`
+    and the `_MS` check in `write_ids` for the table ids, and the `init`
+    prefix removal in `main` for the column enumerators. The `Flag` suffix
+    the generator gives the second flag member of a column is not covered by
+    this rule.
   - A range marker `<PREFIX>_COUNT` or `<PREFIX>_MAX` is kept only when its
     value is verifiably the number of enumerators or the value of the last
     one, checked against the enum and its uses. Any other marker (`_NONE`,
