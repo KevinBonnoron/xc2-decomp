@@ -90,6 +90,17 @@
 
       format = pkgs.writeShellScriptBin "format" ''
         cd "$(git rev-parse --show-toplevel)"
+        # --check [REV] writes nothing: it fails on the files that are not clang-format clean, among those changed
+        # between REV and HEAD, or among every tracked file when there is no REV.
+        if [ "''${1:-}" = "--check" ]; then
+          pathspecs=('src/*.h' 'src/*.cpp' 'include/*.h' 'include/*.cpp')
+          if [ -n "''${2:-}" ]; then
+            git diff -z --name-only --diff-filter=ACMR "$2" HEAD -- "''${pathspecs[@]}"
+          else
+            git ls-files -z -- "''${pathspecs[@]}"
+          fi | xargs -0 -r ${pkgs.clang-tools}/bin/clang-format --dry-run --Werror
+          exit
+        fi
         if [ "''${1:-}" != "--staged" ]; then
           find src include -name '*.h' -o -name '*.cpp' | xargs ${pkgs.clang-tools}/bin/clang-format -i
           exit
@@ -121,28 +132,56 @@
       setup = pkgs.writeShellScriptBin "setup" ''
         exec ${pkgs.bash}/bin/bash "$(git rev-parse --show-toplevel)/tools/setup.sh" "$@"
       '';
+
+      # clang-tidy of the nixpkgs wrapper adds the host glibc headers, as for include-what-you-use: use the unwrapped one.
+      tidy = pkgs.writeShellScriptBin "tidy" ''
+        export PATH=${pkgs.clang-tools}/bin:$PATH
+        exec ${pkgs.python3}/bin/python3 "$(git rev-parse --show-toplevel)/tools/tidy.py" "$@"
+      '';
+
+      sysrootHook = ''
+        export XC2_SYSROOT=${sysroot}
+        mkdir -p "$(git rev-parse --show-toplevel)/work"
+        ln -sfn ${sysroot} "$(git rev-parse --show-toplevel)/work/sysroot"
+      '';
     in
     {
-      devShells.${system}.default = pkgs.mkShell {
-        packages = with pkgs; [
-          clang391
-          clang401
-          check
-          format
-          includes
-          setup
-          ghidra
-          hactool
-          python3
-          llvmPackages.bintools
-        ];
+      devShells.${system} = {
+        default = pkgs.mkShell {
+          packages = with pkgs; [
+            clang391
+            clang401
+            check
+            format
+            includes
+            tidy
+            setup
+            ghidra
+            hactool
+            python3
+            llvmPackages.bintools
+          ];
 
-        shellHook = ''
-          git config core.hooksPath .githooks
-          export XC2_SYSROOT=${sysroot}
-          mkdir -p "$(git rev-parse --show-toplevel)/work"
-          ln -sfn ${sysroot} "$(git rev-parse --show-toplevel)/work/sysroot"
-        '';
+          shellHook = ''
+            git config core.hooksPath .githooks
+          '' + sysrootHook;
+        };
+
+        # What the pull request checks need (compile, format, includes, tidy): the dev shell without the game setup
+        # tools, Ghidra and the comparison compiler, which are the bulk of its download.
+        ci = pkgs.mkShell {
+          packages = with pkgs; [
+            clang391
+            check
+            format
+            includes
+            tidy
+            python3
+            llvmPackages.bintools
+          ];
+
+          shellHook = sysrootHook;
+        };
       };
     };
 }
