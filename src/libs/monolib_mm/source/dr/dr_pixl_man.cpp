@@ -20,7 +20,6 @@
 #include "dr/dr_shd_data_list.h"
 #include "dr/dr_shd_data_obj.h"
 #include "dr/dr_shd_man.h"
-#include "dr_pixl_occ_query.cpp"
 #include "grlib/cglib_color_ctl.h"
 #include "grlib/cglib_dbl_uniform_block.h"
 #include "grlib/cglib_depth_ctl.h"
@@ -878,3 +877,6 @@ DrPixlRenderTarget *DrPixlMan::getDiffIBLObj() {
 DrPixlRenderTarget *DrPixlMan::getBackFaceDepthTexture() const { return unknown7f0->unknown148; }
 
 } // namespace ml
+
+// The game builds these files in one unit with this one.
+#include "dr_pixl_occ_query.cpp"
