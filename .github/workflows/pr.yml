@@ -6,12 +6,13 @@ name: Pull request checks
 # The workflow runs in the unprivileged `pull_request` context (read-only token, no secrets). Never switch it to
 # `pull_request_target`: it checks out and runs the code of the pull request.
 #
-# `edited` re-runs everything on purpose: the title is checked, and a skipped job would count as a success for the
-# required check, so a run must never be partial.
+# `edited` also fires for a change of the body and re-runs everything: the title is checked, and a skipped job would
+# count as a success for the required check, so a run must never be partial. A draft is checked like any other pull
+# request. A pull request that conflicts with main gets no merge commit and therefore no run at all.
 on:
   pull_request:
     branches: [main]
-    types: [opened, synchronize, reopened, edited, ready_for_review]
+    types: [opened, synchronize, reopened, edited]
 
 permissions:
   contents: read
@@ -24,8 +25,14 @@ jobs:
   # HEAD is the merge of the pull request into main; its first parent is main.
   #
   # The scripts that judge a pull request (quality gate, hygiene, title) run from the copy in main, so a pull request
-  # that edits one of them is still judged by main's version. Only a script main does not have yet (the pull request
-  # that introduces it) runs from the merge copy. They are laid out under $RUNNER_TEMP/judge as in the repository.
+  # cannot weaken them by editing them. Only a script main does not have yet (the pull request that introduces it)
+  # runs from the merge copy. They are laid out under $RUNNER_TEMP/judge as in the repository.
+  #
+  # Trust model: this is not tamper-proof. The workflow file, tools/check.py, tools/includes.py, tools/iwyu.imp,
+  # flake.nix, flake.lock, .clang-format, .gitattributes and .githooks/commit-msg still come from the merge commit, so
+  # a pull request that edits them can change what the build, format, includes and aggregator jobs do, or drop a job.
+  # It cannot reach a secret (there is none) or a cache written on main. The owner therefore reviews every change under
+  # .github/, tools/, flake.* and .clang-format, and runs the full `check` against the game before merging.
   quality-gate:
     name: Quality gate
     runs-on: ubuntu-latest
@@ -103,7 +110,9 @@ jobs:
         run: bash "$RUNNER_TEMP/judge/tools/check_title.sh"
 
   # The toolchain is the dev shell of the flake (`ci`: the same compiler and tools as `nix develop`, without the
-  # game setup tools and Ghidra). The Nix store is cached by the hash of the flake; only the build job saves it.
+  # game setup tools and Ghidra). The caches below are seeded by main.yml on every push to main: a cache written by a
+  # pull request is only readable by that pull request, one written on main by every pull request. This job also saves
+  # them (the Nix store, then the compilation) when its own run has something new.
   build:
     name: Build
     runs-on: ubuntu-latest
@@ -169,7 +178,7 @@ jobs:
   includes:
     name: Includes
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - name: Check out repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -193,7 +202,7 @@ jobs:
       # As the pre-commit hook: include-what-you-use on the sources and headers the pull request adds or changes.
       - name: Check the includes of the changed files
         run: |
-          mapfile -t files < <(git diff --name-only --diff-filter=ACMR HEAD^1 HEAD -- 'src/*.h' 'src/*.cpp' 'include/*.h' 'include/*.cpp')
+          mapfile -d '' -t files < <(git diff -z --name-only --diff-filter=ACMR HEAD^1 HEAD -- 'src/*.h' 'src/*.cpp' 'include/*.h' 'include/*.cpp')
           if [ ${#files[@]} -eq 0 ]; then
             echo "No source or header changed."
             exit 0
