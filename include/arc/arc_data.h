@@ -27,6 +27,9 @@ public:
 
   // Default argument decoded from Vector<CArcData>::resize and extend, which construct new elements with CArcData(nullptr).
   CArcData(void *data = nullptr);
+  // User-provided (empty) in the original: the game emits event::LipsyncRes::~LipsyncRes (base destructor, 1.0.0: 0x710013db1c) as a
+  // function of its own instead of reusing event::IResEvent's, which only happens with a member of non-trivial destructor.
+  ~CArcData() {}
   // Reconstructed from symbol arc::CArcData::setData(void*) at 0x7100695320.
   void setData(void *data);
   u32 find(const char *name) const;
