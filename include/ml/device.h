@@ -20,6 +20,7 @@ public:
   Device(const char *name, WorkObj *parent);
   ~Device() override {}
   bool wkStandbyLogout() override;
+  bool wkStandbyLogin() override;
   static void create();
   static bool isAllReady();
   static bool isColdStartReady();

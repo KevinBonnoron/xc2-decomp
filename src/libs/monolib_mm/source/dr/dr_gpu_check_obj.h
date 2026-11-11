@@ -29,6 +29,10 @@ public:
   bool isRender() const override;
   void setPause(bool isPause) override;
   u32 isDeleteCall() const override;
+  void setPos(const mm::Vec3 &position, f32 radius) override;
+  void setWorldPos(const mm::Vec3 &position, f32 radius) override;
+  void update() override;
+  void render() override;
 
   DrGpuCheckObj *unknown08; // Inferred role: previous object; original member name unknown.
   DrGpuCheckObj *unknown10; // Inferred role: next object; original member name unknown.

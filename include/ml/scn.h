@@ -149,10 +149,11 @@ static_assert(offsetof(ScnSetup, unknown34) == 0x34, "");
 static_assert(offsetof(ScnSetup, unknown44) == 0x44, "");
 static_assert(sizeof(ScnSetup) == 0x48, "");
 
-class ScnCamMan {
+// The vtable of the game holds the IWorkEvent slots after the destructor (slots 0x20 to 0x48).
+class ScnCamMan : public IWorkEvent {
 public:
   ScnCamMan(Scn *scn);
-  virtual ~ScnCamMan();
+  ~ScnCamMan() override;
   static void setCrossIdTarget(const WinView *view);
   void update();
   void setView(WinView *view, int screen);

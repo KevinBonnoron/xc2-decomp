@@ -54,12 +54,14 @@ public:
   ~DevTouch() override {}
   static bool isInitialized();
   static int getTouchCount();
-  void itUp(u32 index, f32 x, f32 y) override;
-  void itMove(u32 index, f32 x, f32 y) override;
-  void itDown(u32 index, f32 x, f32 y) override;
+  // The first declared virtual function stays one we define (wkUpdate): it is the key function that places the vtable
+  // in this unit. itDown, itUp and itMove follow the order of the game's vtable (slots 0x98, 0xa0, 0xa8).
   void wkUpdate() override;
   bool wkStandbyLogin() override;
   bool wkStandbyLogout() override;
+  void itDown(u32 index, f32 x, f32 y) override;
+  void itUp(u32 index, f32 x, f32 y) override;
+  void itMove(u32 index, f32 x, f32 y) override;
   void releseContact(u32 contactId);
   static DevTouchInfo *getInfo(u32 index);
   virtual void updateDevice();

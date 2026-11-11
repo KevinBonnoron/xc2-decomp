@@ -44,10 +44,14 @@ public:
   u32 addressAlignment() override;
   bool readBlock(FileHandleTh *handle, const char *path) override;
   bool readBlockSlice(FileHandleTh *handle, const char *path, void *buffer, u32 size) override;
+  int getFileSize(const char *path, mm::VAL64 *size, const char *archive) override;
+  bool writeBlock(FileHandleTh *handle, DevFileResult &result) override;
   DevFileJobTh *createLoader(mtl::ALLOC_HANDLE handle) override;
+  DevFileJobTh *createWriter(mtl::ALLOC_HANDLE handle) override;
   DevFileJobTh *createFileValid(mtl::ALLOC_HANDLE handle) override;
   bool rfOpen(FileHandleTh *handle, const char *path) override;
   bool rfRead(FileHandleTh *handle, const DevFileParamTh &param) override;
+  bool rfIsBusy(FileHandleTh *handle) override;
   static void setMediaRootPath(const char *path);
   static void flushSave();
   static void finalizeSDK();
@@ -56,6 +60,9 @@ public:
   static void *allocate(size_t size);
   static void deallocate(void *pointer, size_t size);
   bool rfClose(FileHandleTh *handle) override;
+  bool getFilesBlock(char *&files, int &num, mtl::ALLOC_HANDLE handle, const char *path, const char *extension) override;
+  bool deleteFileBlock(const char *path) override;
+  const char *getMediaRootPath() const override;
   bool rfIsUsedChannel(u32 channel) override;
   static u32 thFileLoader(void *argument);
 

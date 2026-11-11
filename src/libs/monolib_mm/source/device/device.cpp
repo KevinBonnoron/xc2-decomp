@@ -91,6 +91,7 @@ template mm::mtl::PtrSingleton<ml::Device>::~PtrSingleton();
 #include "nx/dev_file_nx_th.cpp"
 #include "rom_mount.cpp"
 #include "nx/dev_file_util_nx.cpp"
+#include "nx/file_loader.cpp"
 #include "nx/dev_file_archive_nx.cpp"
 #include "dev_file_th.cpp"
 #include "file_handle_th.cpp"

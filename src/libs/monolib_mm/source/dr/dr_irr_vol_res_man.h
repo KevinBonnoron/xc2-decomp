@@ -54,6 +54,7 @@ static_assert(sizeof(DrIrrVolResObj) == 0x28, "");
 class DrIrrVolResMan : public IWorkEvent {
 public:
   ~DrIrrVolResMan() override;
+  bool OnFileEvent(EventFileTh *event) override;
   DrIrrVolResObj *loadSector(u32 index);
   void update();
   void drawDebugInfo(DebDraw *debDraw);

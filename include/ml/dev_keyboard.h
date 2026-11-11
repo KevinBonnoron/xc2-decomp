@@ -66,8 +66,8 @@ public:
   virtual void ikCharUp(u8 code) = 0;
   virtual bool ikIsAltDown() const = 0;
   virtual bool ikIsAltUp() const = 0;
-  virtual void ikKeyMsgOn(u32 message) = 0;
-  virtual void ikKeyMsgOff(u32 message) = 0;
+  virtual void ikKeyMsgOn(u32 message);
+  virtual void ikKeyMsgOff(u32 message);
   virtual void ikPauseDown() = 0;
   virtual void ikPauseUp() = 0;
   virtual void ikScrollDown() = 0;

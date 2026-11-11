@@ -119,6 +119,9 @@ public:
   static RSTAT getRenderState();
   void wkStandby() override;
   void wkUpdate() override;
+  void wkTail() override;
+  bool wkStandbyLogin() override;
+  bool wkStandbyLogout() override;
   static void setFrameSpd(f32 speed);
   static void addOuterRender(void (*render)());
   static void removeOuterRender(void (*render)());

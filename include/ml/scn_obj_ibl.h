@@ -27,6 +27,7 @@ public:
   virtual const mm::Vec3 &getReferencePos() const = 0;
   virtual void setFromCaptureTool() = 0;
   virtual void dispDebugWindow(bool isOpen, const char *title, WinProc *window) {}
+  virtual void setName(const char *name) = 0;
 
   u32 unknown14; // Inferred role: flags; original member name unknown.
 };

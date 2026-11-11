@@ -230,6 +230,7 @@ public:
   static bool checkValidFileBlock(const char *path);
   static void sendCommand(const char *command, const char *argument);
   bool wkStandbyLogout() override;
+  bool wkStandbyLogin() override;
   void wkTail() override;
   void wkUpdate() override;
   bool icbError(CERR_STRUCT *error) override;

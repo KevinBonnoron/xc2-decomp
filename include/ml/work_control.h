@@ -30,6 +30,7 @@ public:
   ~WorkControl() override;
   void wkTail() override;
   bool wkStandbyLogout() override;
+  bool wkStandbyLogin() override;
   static WorkControl *create(WorkObj *parent);
   static bool setFlowSetup();
   static bool setFlowChangePort(const char *name);

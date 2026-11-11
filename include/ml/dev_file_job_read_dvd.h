@@ -9,6 +9,7 @@ class DevFileJobReadDvd : public DevFileJob {
 public:
   DevFileJobReadDvd(const char *name, WorkObj *parent);
   ~DevFileJobReadDvd() override;
+  void wkUpdate() override;
   bool wkStandbyLogin() override;
   bool wkStandbyLogout() override;
 };

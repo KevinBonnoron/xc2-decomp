@@ -4,8 +4,6 @@
 
 #include "device/nx/dev_file_util_nx.h"
 #include "nn/result.h"
-// The game builds DevFileUtilNx in the same unit, so getFileSize is inlined here.
-#include "dev_file_util_nx.cpp"
 
 namespace ml {
 namespace detail {

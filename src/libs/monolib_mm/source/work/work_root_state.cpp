@@ -52,7 +52,7 @@ WorkObj **s_apBitWID;
 s32 s_nWidCount;
 CriticalSectionNC s_lockEntry;
 s32 s_nEntry;
-unknown001 s_aEntry[100];
+unknown001 s_aEntry[384]; // The symbol of the game is 0x1200 bytes, 384 entries of 12 bytes.
 mm::mtl::FixedList<WorkObj *, 32> s_frameEnd;
 bool s_bThreadRenderReq;
 bool s_bThreadRender;
