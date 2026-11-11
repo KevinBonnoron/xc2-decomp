@@ -115,6 +115,35 @@ def skeleton(line):
     return IDENT.sub(name, s)
 
 
+# The release idiom: test one pointer for null, delete it, null it. Every class that owns a pointer writes it in its
+# destructor and release function, so the statements are shared by many functions without being copied code. The
+# pointer must be the same in all three places (a regex back reference); nothing else is accepted: no other test, no
+# other statement in the braces. Statements are joined with spaces, so the braces and line breaks do not matter; the
+# last form is the same idiom with the null store after the closing brace.
+POINTER = r"[A-Za-z_]\w*(?:(?:\.|->|::)[A-Za-z_]\w*)*"
+RELEASE_TEST = rf"if \((?P<p>{POINTER})(?: != (?:nullptr|0))?\) \{{ delete(?:\[\])? (?P=p);"
+RELEASE_IDIOM = [re.compile(RELEASE_TEST + r" (?P=p) = nullptr; \}"), re.compile(RELEASE_TEST + r" \} (?P=p) = nullptr;")]
+
+
+def statements(body):
+    """The normalised statements of a function body. A release idiom becomes None: it never matches anything, and
+    no run of statements that contains it is compared, so it neither forms a duplicate nor joins a longer run."""
+    lines = [s for s in (l.strip() for _, l in body) if s]
+    out, k = [], 0
+    while k < len(lines):
+        # the idiom spans 1 line when written compactly, 4 when clang-format spreads it
+        span = next((n for n in (1, 4) for rx in RELEASE_IDIOM if rx.fullmatch(" ".join(lines[k:k + n]))), 0)
+        if span:
+            out.append(None)
+            k += span
+            continue
+        sk = skeleton(lines[k])
+        if sk:
+            out.append(sk)
+        k += 1
+    return out
+
+
 def main():
     added, texts = added_lines()
     problems = 0
@@ -149,7 +178,7 @@ def main():
             where[key] = f"{path}:{first} {name}"
             if any(first <= n <= last for n in added.get(path, ())):
                 changed.add(key)
-            bodies[key] = [sk for _, l in body for sk in [skeleton(l)] if sk]
+            bodies[key] = statements(body)
 
     # (A) a changed function holds the whole body of another function: it should call it.
     def contains(outer, inner):
@@ -162,7 +191,7 @@ def main():
         if short.startswith("~") or (len(hname.split("::")) > 1 and hname.split("::")[-2] == short):
             return False
         return hname.rsplit("::", 1)[0] == kname.rsplit("::", 1)[0] or "::" not in hname or helper[0].endswith(".h")
-    helpers = {k: b for k, b in bodies.items() if len(b) >= 3 and len(" ".join(b)) > 60}
+    helpers = {k: b for k, b in bodies.items() if None not in b and len(b) >= 3 and len(" ".join(b)) > 60}
     by_first = defaultdict(list)
     for k, b in helpers.items():
         by_first[b[0]].append(k)
@@ -183,7 +212,7 @@ def main():
         for key, body in bodies.items():
             for k in range(len(body) - size + 1):
                 run = tuple(body[k:k + size])
-                if sum(len(sk) > 14 for sk in run) >= 3 and len(" ".join(run)) > 20 * size:
+                if None not in run and sum(len(sk) > 14 for sk in run) >= 3 and len(" ".join(run)) > 20 * size:
                     runs[run].add(key)
         for run, keys in runs.items():
             if len(keys) >= copies and keys & changed:
@@ -200,12 +229,12 @@ def main():
 
     # (C) the same block several times inside one function: an unrolled loop written out by hand.
     for key in sorted(changed, key=lambda k: where[k]):
-        body = [re.sub(r"\b(0x[0-9a-f]+|\d+)\b", "N", sk) for sk in bodies[key]]
+        body = [sk and re.sub(r"\b(0x[0-9a-f]+|\d+)\b", "N", sk) for sk in bodies[key]]
         for size in (4, 3):
             counts = defaultdict(int)
             for k in range(len(body) - size + 1):
                 run = tuple(body[k:k + size])
-                if sum(len(sk) > 14 for sk in run) >= 2 and not any(sk.startswith("case ") for sk in run):
+                if None not in run and sum(len(sk) > 14 for sk in run) >= 2 and not any(sk.startswith("case ") for sk in run):
                     counts[run] += 1
             repeated = [run for run, n in counts.items() if n >= 3]
             if repeated:
