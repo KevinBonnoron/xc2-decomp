@@ -1007,4 +1007,8 @@ template mm::mtl::FixedVector<mtl::MemManager::HandleRegion, 512>::~FixedVector(
 
 void operator delete(void *pointer) noexcept { mtl::MemManager::deallocate(pointer, 0, false); }
 
+void operator delete(void *pointer, mtl::ALLOC_HANDLE, const char *, size_t, int, bool) noexcept { mtl::MemManager::deallocate(pointer, 0, false); }
+
+void operator delete[](void *pointer, mtl::ALLOC_HANDLE, const char *, size_t, int, bool) noexcept { mtl::MemManager::deallocate(pointer, 0, false); }
+
 template class mtl::AssetAllocator<1024>;

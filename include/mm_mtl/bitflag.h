@@ -39,12 +39,21 @@ public:
     }
   }
 
+  // Inferred role: clears one bit; original name unknown. The assert line of the game (181).
+#line 180
+  void unknown004(unsigned int index) {
+    MM_ASSERT(index < Size);
+    mBits[wordIndex(index)] &= ~bit(index);
+  }
+
   // Inferred role: replaces the stored words with a raw value; original name unknown.
   void unknown002(unsigned int value) {
     clear();
     mBits[0] = value;
   }
 
+  // The assert line of the game (133).
+#line 132
   bool test(unsigned int index) const {
     MM_ASSERT(index < Size);
     if (WORD_COUNT > 1) {

@@ -1,6 +1,7 @@
 #include <assert.h>
 
 #include "font/font_sys.h"
+#include "font/stream.h"
 #include "types.h"
 
 namespace grlib {
@@ -11,6 +12,19 @@ FontSys::FontSys() : m_head(nullptr), m_data(nullptr), m_width(0.0f), m_height(0
   for (int i = 0; i < HASH_SIZE; i++) {
     unknown08[i] = nullptr;
   }
+}
+
+void FontSys::Header::read(Stream *stream) {
+  m_signature = stream->read_u32();
+  m_cmp = m_signature == 0x43544e46;
+#line 31
+  assert(m_signature == 0x00544e46 || m_cmp);
+  unknown04 = stream->read_u32();
+  unknown08 = stream->read_u16();
+  unknown0a = stream->read_u8();
+  m_font_size = stream->read_u8();
+  m_origin_width = stream->read_u8();
+  m_origin_height = stream->read_u8();
 }
 
 FontSys::~FontSys() {}

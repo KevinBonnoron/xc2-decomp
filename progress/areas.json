@@ -2,7 +2,7 @@
   {
     "name": "gf",
     "code": {
-      "total": 4352948,
+      "total": 4352640,
       "matching": 2678220,
       "non_matching": 0
     }
@@ -10,8 +10,8 @@
   {
     "name": "monolib_mm",
     "code": {
-      "total": 1745116,
-      "matching": 503944,
+      "total": 1745248,
+      "matching": 510208,
       "non_matching": 0
     }
   },
@@ -34,8 +34,8 @@
   {
     "name": "framework",
     "code": {
-      "total": 486800,
-      "matching": 259700,
+      "total": 486828,
+      "matching": 259728,
       "non_matching": 0
     }
   },
@@ -122,8 +122,8 @@
   {
     "name": "plugin",
     "code": {
-      "total": 15224,
-      "matching": 9760,
+      "total": 15372,
+      "matching": 9908,
       "non_matching": 0
     }
   },

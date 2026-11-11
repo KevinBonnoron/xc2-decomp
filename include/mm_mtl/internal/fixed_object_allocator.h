@@ -12,6 +12,17 @@ namespace mtl {
 
 template <typename T, size_t N> class FixedObjectAllocator {
 public:
+  FixedObjectAllocator() : m_allocated(0), m_capacity(N) {}
+
+  ~FixedObjectAllocator() {
+    for (u32 i = 0; i < m_capacity; i++) {
+      if (unknown001.test(i)) {
+        unknown001.unknown004(i);
+      }
+    }
+    m_allocated = 0;
+  }
+
   // The assert lines of the game: their constants change the instruction encoding.
 #line 82
   bool valid_pointer(const T *p) const { return reinterpret_cast<const u8 *>(p) <= unknown00 + sizeof(unknown00) && unknown00 <= reinterpret_cast<const u8 *>(p); }

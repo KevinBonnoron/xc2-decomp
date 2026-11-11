@@ -263,6 +263,23 @@ void WorkRootState::updateWork() { updateWork(_wrootst::s_pWorkRoot); }
 
 void WorkRootState::tailWork() { tailWork(_wrootst::s_pWorkRoot); }
 
+void _wrootst::WorkRoot::procParent() {
+  while (unknown1a8.size() != 0) {
+    WorkObj *work = unknown1a8.begin()->value;
+    WorkObj *parent = unknown1e8.begin()->value;
+    if (!work->wkIsWaitException()) {
+      if (work->wkIsActive() && !parent->wkIsWaitException() && parent->wkIsActive()) {
+        unknown1a8.erase(unknown1a8.begin());
+        unknown1e8.erase(unknown1e8.begin());
+        work->unknown58->wkRemoveChild(work);
+        parent->wkEntryChild(work, false);
+      }
+    }
+  }
+  unknown1a8.clear();
+  unknown1e8.clear();
+}
+
 bool _wrootst::WorkRoot::wkStandbyLogout() {
   if (unknown60.size() != 0) {
     return false;

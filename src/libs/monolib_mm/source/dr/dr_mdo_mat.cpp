@@ -4,16 +4,25 @@
 #include <string.h>
 
 #include "dr/dr_man.h"
+#include "dr/dr_mdl_man.h"
+#include "dr/dr_mdo_sampler_man.h"
 #include "dr/dr_pixl_man.h"
 #include "dr/dr_pixl_post_man.h"
 #include "dr/dr_pixl_post_parm.h"
 #include "dr/dr_res_mdo_mat.h"
+#include "dr/dr_res_mdo_tex_list.h"
+#include "dr/dr_res_mdo_vertex.h"
+#include "dr/dr_res_mpf_sampler.h"
+#include "dr/dr_shd_mdo_dec_shd_obj.h"
 #include "grlib/cglib_dbl_uniform_block.h" // IWYU pragma: keep
 #include "grlib/cglib_one_uniform_block.h" // IWYU pragma: keep
 #include "grlib/cglib_tri_uniform_block.h" // IWYU pragma: keep
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_math.h"
 #include "mm_mtl/fixed_array.h"
+// The game builds the sampler manager in the same unit, so its release functions are inlined here.
+#include "dr_mdo_sampler_man.cpp"
+#include "grlib/cglib_uniform_array.h"
 
 namespace ml {
 
@@ -34,8 +43,8 @@ int DrMdoMat::getNodeAnmWrkRes(const u8 *data, u8 *work, MdoWrkMatRes *matRes) {
     return 0;
   }
   if (work != nullptr) {
-    const unknown001 *table = reinterpret_cast<const unknown001 *>(data + header->unknown78);
-    unknown002 *nodeAnm = reinterpret_cast<unknown002 *>(work);
+    const unknown701 *table = reinterpret_cast<const unknown701 *>(data + header->unknown78);
+    unknown702 *nodeAnm = reinterpret_cast<unknown702 *>(work);
     u32 dataOffset = table->unknown04;
     nodeAnm->unknown00 = table;
     nodeAnm->unknown08 = table;
@@ -43,13 +52,13 @@ int DrMdoMat::getNodeAnmWrkRes(const u8 *data, u8 *work, MdoWrkMatRes *matRes) {
     nodeAnm->unknown18 = reinterpret_cast<const u8 *>(table) + dataOffset;
     matRes->unknown148 = nodeAnm;
   }
-  return sizeof(unknown002);
+  return sizeof(unknown702);
 }
 
 void DrMdoMat::resetNodeAnmWrkRes(const u8 *data, MdoWrkMatRes *matRes) {
   const unknown022 *header = reinterpret_cast<const unknown022 *>(data);
   if (header->unknown00 & unknown022::FLAG_UNKNOWN_3) {
-    const unknown001 *table = reinterpret_cast<const unknown001 *>(data + header->unknown78);
+    const unknown701 *table = reinterpret_cast<const unknown701 *>(data + header->unknown78);
     matRes->unknown148->unknown00 = table;
     matRes->unknown148->unknown08 = table;
     matRes->unknown148->unknown18 = reinterpret_cast<const u8 *>(table) + table->unknown04;
@@ -57,20 +66,20 @@ void DrMdoMat::resetNodeAnmWrkRes(const u8 *data, MdoWrkMatRes *matRes) {
 }
 
 int DrMdoMat::getDispCallRes(const u8 *data, u32 offset, u8 *work, MdoWrkMatRes *matRes) {
-  const unknown004 *table = reinterpret_cast<const unknown004 *>(data + offset);
+  const unknown704 *table = reinterpret_cast<const unknown704 *>(data + offset);
   if (work != nullptr) {
-    unknown003 *dispCall = reinterpret_cast<unknown003 *>(work);
+    unknown703 *dispCall = reinterpret_cast<unknown703 *>(work);
     dispCall->unknown00 = table->unknown00;
     dispCall->unknown10 = reinterpret_cast<const MdsMatDispCCData *>(data + table->unknown04);
-    dispCall->unknown08 = reinterpret_cast<_MdoWrkDispCallTemp *>(work + sizeof(unknown003));
+    dispCall->unknown08 = reinterpret_cast<_MdoWrkDispCallTemp *>(work + sizeof(unknown703));
     memset(dispCall->unknown08, 0, static_cast<u64>(table->unknown00) * 8);
     matRes->unknown130 = dispCall;
   }
-  return table->unknown00 * 8 + sizeof(unknown003);
+  return table->unknown00 * 8 + sizeof(unknown703);
 }
 
 void DrMdoMat::resetDispCallRes(const u8 *data, u32 offset, MdoWrkMatRes *matRes) {
-  const unknown004 *table = reinterpret_cast<const unknown004 *>(data + offset);
+  const unknown704 *table = reinterpret_cast<const unknown704 *>(data + offset);
   matRes->unknown130->unknown10 = reinterpret_cast<const MdsMatDispCCData *>(data + table->unknown04);
 }
 
@@ -124,7 +133,7 @@ void DrMdoMat::updateMatCallBack(const u32 *flags) {
 }
 
 void DrMdoMat::updateDispCall() {
-  unknown003 *dispCall = unknown30->unknown130;
+  unknown703 *dispCall = unknown30->unknown130;
   if (dispCall != nullptr && dispCall->unknown00 > 0) {
     _MdoWrkDispCallTemp *temp = dispCall->unknown08;
     const MdsMatDispCCData *data = dispCall->unknown10;
@@ -137,7 +146,7 @@ void DrMdoMat::updateDispCall() {
 }
 
 bool DrMdoMat::updateDispEnvCall(MdoWrkMatRes *matRes) {
-  unknown003 *dispCall = matRes->unknown130;
+  unknown703 *dispCall = matRes->unknown130;
   if (dispCall == nullptr || dispCall->unknown00 < 1) {
     return false;
   }
@@ -152,6 +161,20 @@ bool DrMdoMat::updateDispEnvCall(MdoWrkMatRes *matRes) {
     temp++;
   } while (i < dispCall->unknown00);
   return result != 0;
+}
+
+void DrMdoMat::updateSeamDispCall(MdoWrkMatRes *matRes, u32 *flags, const u32 *seamFlags) {
+  unknown703 *dispCall = matRes->unknown130;
+  if (dispCall != nullptr && dispCall->unknown00 > 0) {
+    _MdoWrkDispCallTemp *temp = dispCall->unknown08;
+    const MdsMatDispCCData *data = dispCall->unknown10;
+    for (s32 i = 0; i < dispCall->unknown00; i++, data++, temp++) {
+      if ((seamFlags[data->unknown04 >> 5] & (1 << (data->unknown04 & 31))) && checkCallBackParam(temp, data)) {
+        flags[data->unknown04 >> 4] |= 1 << ((data->unknown04 & 0xf) << 1);
+        flags[data->unknown04 >> 4] |= 1 << (((data->unknown04 & 0xf) << 1) | 1);
+      }
+    }
+  }
 }
 
 int DrMdoMat::getFurShaderRes(const u8 *data, u32 offset, u8 *work, MdoWrkMatRes *matRes) {
@@ -179,6 +202,102 @@ void DrMdoMat::resetFurShaderRes(const u8 *data, u32 offset, MdoWrkMatRes *matRe
   const unknown008 *table = reinterpret_cast<const unknown008 *>(data + offset);
   matRes->unknown138->unknown08 = reinterpret_cast<const unknown005 *>(data + table->unknown04);
   matRes->unknown138->unknown00 = data + table->unknown00;
+}
+
+void DrMdoMat::releaseBaseMapSeamMat(MdoWrkMatRes *matRes) {
+  if (matRes->unknownc8 != nullptr) {
+    delete matRes->unknownc8;
+    matRes->unknownc8 = nullptr;
+  }
+  if (matRes->unknownd0 != nullptr) {
+    delete matRes->unknownd0;
+    matRes->unknownd0 = nullptr;
+  }
+  matRes->unknowne8 = nullptr;
+  if (matRes->unknownd8 != nullptr) {
+    m_drMan->unknown88->unknown018->releaseSamplerSeamObj(matRes->unknownd8);
+    matRes->unknownd8 = nullptr;
+  }
+  if (matRes->unknown80 != nullptr) {
+    delete matRes->unknown80;
+    matRes->unknown80 = nullptr;
+  }
+  matRes->unknown88 = nullptr;
+  if (matRes->unknown90 != nullptr) {
+    matRes->unknown90->unknown001();
+    matRes->unknown90 = nullptr;
+  }
+  if (matRes->unknownb0 != nullptr) {
+    matRes->unknownb0->unknown001();
+    matRes->unknownb0 = nullptr;
+  }
+  if (matRes->unknownb8 != nullptr) {
+    matRes->unknownb8->unknown001();
+    matRes->unknownb8 = nullptr;
+  }
+  if (matRes->unknown120 != nullptr && matRes->unknown120->unknown08 != nullptr) {
+    matRes->unknown120->unknown08->unknown001();
+    matRes->unknown120->unknown08 = nullptr;
+  }
+}
+
+void DrMdoMat::releaseInstMapSeamMat(MdoWrkMatRes *matRes) {
+  if (matRes->unknownd0 != nullptr) {
+    delete matRes->unknownd0;
+    matRes->unknownd0 = nullptr;
+  }
+  matRes->unknowne8 = nullptr;
+  if (matRes->unknownd8 != nullptr) {
+    m_drMan->unknown88->unknown018->releaseSamplerSeamObj(matRes->unknownd8);
+    matRes->unknownd8 = nullptr;
+  }
+  if (matRes->unknown80 != nullptr) {
+    delete matRes->unknown80;
+    matRes->unknown80 = nullptr;
+  }
+  matRes->unknown88 = nullptr;
+  if (matRes->unknown90 != nullptr) {
+    matRes->unknown90->unknown001();
+    matRes->unknown90 = nullptr;
+  }
+  if (matRes->unknownb0 != nullptr) {
+    matRes->unknownb0->unknown001();
+    matRes->unknownb0 = nullptr;
+  }
+  if (matRes->unknownb8 != nullptr) {
+    matRes->unknownb8->unknown001();
+    matRes->unknownb8 = nullptr;
+  }
+  if (matRes->unknown120_1 != nullptr && matRes->unknown120_1->unknown08 != nullptr) {
+    matRes->unknown120_1->unknown08->unknown001();
+    matRes->unknown120_1->unknown08 = nullptr;
+  }
+}
+
+void DrMdoMat::releaseMpfMapSeamMat(MdoWrkMatRes *matRes) {
+  if (matRes->unknownc8 != nullptr) {
+    delete matRes->unknownc8;
+    matRes->unknownc8 = nullptr;
+  }
+  if (matRes->unknowne0 != nullptr) {
+    for (u32 i = 0; i < matRes->unknown30; i++) {
+      matRes->unknowne0[i].~DrResMpfSampler();
+    }
+    matRes->unknowne0 = nullptr;
+  }
+  if (matRes->unknownd8 != nullptr) {
+    m_drMan->unknown88->unknown018->releaseSamplerSeamObj(matRes->unknownd8);
+    matRes->unknownd8 = nullptr;
+  }
+  if (matRes->unknownd0 != nullptr) {
+    delete matRes->unknownd0;
+    matRes->unknownd0 = nullptr;
+  }
+  if (matRes->unknown90 != nullptr) {
+    matRes->unknown90->unknown001();
+    matRes->unknown90 = nullptr;
+  }
+  matRes->unknowne8 = nullptr;
 }
 
 void DrMdoMat::matCall_BaseColor(const MdsMatInfoHeader *header, int valueIndex, int matIndex) {

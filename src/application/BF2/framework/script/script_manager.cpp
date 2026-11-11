@@ -4,7 +4,8 @@
 #include "mtl/alloc_handle.h"
 #include "mtl/mem_manager.h"
 
-void pluginRegist();
+#include "plugin/plugin_regist.h"
+
 extern "C" void vmExec();
 
 namespace fw {

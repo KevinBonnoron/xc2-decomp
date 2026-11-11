@@ -6,6 +6,9 @@ Usage:
                                           listing only the functions that do not match
   check -v                                same, and list every function
   check --readme                          same, and update the progress section of README.md
+  check --compile                         only compile every source and header of src/ and include/ with the game's
+                                          flags and look for absolute includes; needs no game executable, so it
+                                          runs in the continuous integration
   check <scope>                           check every function of a class or namespace, list the missing ones
   check <symbol>                          diff one function, its source file is found automatically
   check <symbol> <source.cpp> [flags...]  diff one function from a given file
@@ -74,6 +77,9 @@ CXXFLAGS = [
     "-fPIC",
     "-g",
     "-D_GNU_SOURCE",
+    # Only the headers of the sysroot: a host with /usr/include (any non-Nix Linux, as the CI runners) must not
+    # provide its own libc headers before the musl ones. It changes no code generation.
+    "-nostdlibinc",
     "-I" + os.path.join(ROOT, "include"),
     "-I" + os.path.join(ROOT, "src", "application", "BF2"),
     "-I" + os.path.join(ROOT, "src", "libs", "monolib_mm", "source"),
@@ -1030,12 +1036,32 @@ def diff_unnamed(address, source, name, extra):
     return show(game, verify(game, ObjectFile(obj), matches[0], address))
 
 
-def check_all(demangled, scope=None, verbose=True):
+def compile_everything():
+    """Compile every root source and every header, and look for absolute includes: (source, object) pairs and the
+    (file, error) pairs that failed."""
     with tempfile.TemporaryDirectory() as tmp:
         with ThreadPoolExecutor(max_workers=2) as pool:
             pending_headers = pool.submit(compile_headers, tmp)
             objects, errors = compile_all(tmp)
             errors += pending_headers.result() + absolute_includes()
+    return objects, errors
+
+
+def compile_only():
+    """check --compile: everything builds, no game executable involved."""
+    objects, errors = compile_everything()
+    print_compile_errors(errors)
+    if errors:
+        print(paint(f"\n{len(errors)} {'file' if len(errors) == 1 else 'files'} failed to compile", "1;31"))
+        return False
+    headers = len(header_sources())
+    print(paint(f"\n{len(objects)} {'source' if len(objects) == 1 else 'sources'} and "
+                f"{headers} {'header' if headers == 1 else 'headers'} compile", "1;32"))
+    return True
+
+
+def check_all(demangled, scope=None, verbose=True):
+    objects, errors = compile_everything()
     per_object = [(source, obj, [f for f in defined_functions(obj) if f in demangled and in_scope(demangled[f], scope)])
                   for source, obj in objects]
     per_object = [entry for entry in per_object if entry[2]]
@@ -1145,6 +1171,10 @@ def main():
     readme = "--readme" in args
     verbose = any(a in ("-v", "--verbose") for a in args)
     args = [a for a in args if a not in ("--readme", "-v", "--verbose")]
+    if "--compile" in args:
+        if args != ["--compile"] or readme or verbose:
+            sys.exit("usage: check --compile")
+        sys.exit(0 if compile_only() else 1)
     demangled = cached(os.path.join(CACHE_DIR, "target.demangled"), target_key(),
                        lambda: demangle(sorted(target_symbols())))
     if not args:

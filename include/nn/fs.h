@@ -5,7 +5,7 @@
 
 // Reconstructed from the symbols imported by the game executable (_ZN2nn2fs14CommitSaveDataEPKc,
 // _ZN2nn2fs8OpenFileEPNS0_10FileHandleEPKci, _ZN2nn2fs11GetFileSizeEPlNS0_10FileHandleE,
-// _ZN2nn2fs9CloseFileENS0_10FileHandleE, _ZN2nn2fs8ReadFileEPmNS0_10FileHandleElPvm) and from how the game calls
+// _ZN2nn2fs9CloseFileENS0_10FileHandleE, _ZN2nn2fs8ReadFileEPmNS0_10FileHandleElPvm, _ZN2nn2fs8ReadFileENS0_10FileHandleElPvm) and from how the game calls
 // them; the parameter names, the return types and the layout of FileHandle are inferred (the game opens files with
 // mode 1), no SDK header was used. Unmount follows include/nn/fs/fs_mount.h of open-ead/nnheaders.
 namespace nn {
@@ -20,6 +20,7 @@ Result OpenFile(FileHandle *outHandle, const char *path, int mode);
 Result GetFileSize(long *outSize, FileHandle handle);
 void CloseFile(FileHandle handle);
 Result ReadFile(size_t *outSize, FileHandle handle, long offset, void *buffer, size_t size);
+Result ReadFile(FileHandle handle, long offset, void *buffer, size_t size);
 Result Unmount(const char *mountPoint);
 
 } // namespace fs

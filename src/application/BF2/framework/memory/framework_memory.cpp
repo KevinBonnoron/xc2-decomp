@@ -2,6 +2,7 @@
 
 #include "ml/ml_mem.h"
 #include "ml/work_root.h"
+#include "mm_mtl/allocator.h"
 #include "mm_mtl/hash.h"
 #include "mtl/mem_manager.h"
 
@@ -121,3 +122,5 @@ mm::mtl::IAllocator *FrameworkMemory::getAllocator(u32 section) {
 }
 
 } // namespace fw
+
+void *operator new(size_t size, mm::mtl::IAllocator *allocator, int alignment, const char *file, size_t line) { return allocator->allocate(size, alignment); }

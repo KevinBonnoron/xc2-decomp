@@ -7,8 +7,14 @@ namespace ml {
 
 class DrMan;
 
+// Inferred role: header of the shadow data (node count first); original name unknown.
+struct unknown002 {
+  u32 unknown00; // Inferred role: node count; original member name unknown.
+};
+
 class DrMdoSmlShadowObj {
 public:
+  DrMdoSmlShadowObj(int viewNum, const u8 *data, DrMan *man);
   ~DrMdoSmlShadowObj();
 
   enum Flag {
@@ -16,17 +22,21 @@ public:
     FLAG_UNKNOWN_14 = 1 << 14,
   };
 
-  u8 _00[0x08 - 0x00];
+  DrMdoSmlShadowObj *unknown00; // Inferred role: previous; original member name unknown.
   DrMdoSmlShadowObj *unknown08; // Inferred role: next; original member name unknown.
-  u8 _10[0x18 - 0x10];
-  void *unknown18; // Inferred role: shadow work buffer; original member name unknown.
-  u8 _20[0x28 - 0x20];
-  u16 unknown28; // Inferred role: flags; original member name unknown.
+  const unknown002 *unknown10;  // Inferred role: shadow data; original member name unknown.
+  void *unknown18;              // Inferred role: shadow work buffer; original member name unknown.
+  void *unknown20;              // Inferred role: shadow work buffer in use; original member name unknown.
+  u16 unknown28;                // Inferred role: flags; original member name unknown.
+  s16 unknown2a;                // Inferred role: view number; original member name unknown.
 };
 
 static_assert(offsetof(DrMdoSmlShadowObj, unknown08) == 0x08, "");
+static_assert(offsetof(DrMdoSmlShadowObj, unknown10) == 0x10, "");
 static_assert(offsetof(DrMdoSmlShadowObj, unknown18) == 0x18, "");
+static_assert(offsetof(DrMdoSmlShadowObj, unknown20) == 0x20, "");
 static_assert(offsetof(DrMdoSmlShadowObj, unknown28) == 0x28, "");
+static_assert(offsetof(DrMdoSmlShadowObj, unknown2a) == 0x2a, "");
 
 class DrMdoSmlShadowMan {
 public:

@@ -1,9 +1,23 @@
 #include "dr/dr_mdo_sml_shadow_man.h"
 
 #include "dr/dr_man.h"
+#include "mtl/alloc_handle.h"
 #include "mtl/mem_manager.h"
 
 namespace ml {
+
+DrMdoSmlShadowObj::DrMdoSmlShadowObj(int viewNum, const u8 *data, DrMan *man) {
+  unknown28 = 0;
+  unknown00 = nullptr;
+  unknown08 = nullptr;
+  unknown10 = reinterpret_cast<const unknown002 *>(data);
+  unknown18 = nullptr;
+  unknown2a = viewNum;
+  int size = unknown10->unknown00 * 0x30;
+  size += (32 - size % 32) % 32;
+  unknown18 = mtl::MemManager::allocate(man->unknown14, size, 0x20, false, "no name", 0);
+  unknown20 = unknown18;
+}
 
 DrMdoSmlShadowObj::~DrMdoSmlShadowObj() {
   if (unknown18 != nullptr) {
