@@ -536,6 +536,24 @@ void GfMenuModelView::CtrlParam::setMovePosZ(f32 start, f32 end) {
   m_movePosX = end;
 }
 
+void GfMenuModelView::CtrlParam::setAddPosX(f32 value) {
+  fw::Transform &transform = getObjectTransformLocal(unknown00);
+  unknown08 |= 0x1;
+  m_movePosX = transform.unknown00.x + value;
+}
+
+void GfMenuModelView::CtrlParam::setAddPosY(f32 value) {
+  fw::Transform &transform = getObjectTransformLocal(unknown00);
+  unknown08 |= 0x2;
+  m_movePosY = transform.unknown00.y + value;
+}
+
+void GfMenuModelView::CtrlParam::setAddPosZ(f32 value) {
+  fw::Transform &transform = getObjectTransformLocal(unknown00);
+  unknown08 |= 0x4;
+  m_movePosZ = transform.unknown00.z + value;
+}
+
 void GfMenuModelView::CtrlParam::setMoveSclX(f32 value) {
   unknown08 |= 0x8;
   m_moveSclX = value;

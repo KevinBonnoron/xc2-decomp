@@ -2,6 +2,12 @@
 
 #include "framework/framework.h"
 #include "framework/memory/framework_memory.h"
+#include "fw/fw_update_info.h"
+#include "gf/camera/gf_camera_utilities.h"
+
+namespace fw {
+enum CAMERA_PRIO : int;
+} // namespace fw
 
 namespace gf {
 
@@ -11,9 +17,35 @@ mm::mtl::IntrusivePtr<fw::Camera> ScriptCameraEntity::create(const mm::Vec3 &pos
   return new (fw::Framework::getAllocator(), 16, __FILE__, __LINE__) ScriptCameraEntity(position, rotation);
 }
 
+static constexpr fw::CAMERA_PRIO CAMERA_PRIO_UNKNOWN_55 = static_cast<fw::CAMERA_PRIO>(55); // Inferred role: camera prio script; original name unknown.
+
+ScriptCameraEntity::ScriptCameraEntity(const mm::Vec3 &position, const mm::Vec3 &rotation)
+    : fw::Camera(CAMERA_PRIO_UNKNOWN_55), unknownb0(position), unknownc0(rotation), unknownd0(position), unknowne0(rotation), unknownf0(position), unknown100(rotation), unknown110(0.0f),
+      unknown114(0.0f) {
+  m_fov = 45.0f;
+  unknown30 = 0.4f;
+  unknown34 = 80000.0f;
+  mm::Vec3 target = unknown171(unknown100.x, unknown100.y, 0.0f);
+  target += unknownf0;
+  setLookAt(unknownf0, target, unknown100.z);
+}
+
 ScriptCameraEntity::~ScriptCameraEntity() {}
 
 void ScriptCameraEntity::onActivate() {}
+
+void ScriptCameraEntity::update(const fw::UpdateInfo &info) {
+  if (unknown110 > 0.0f) {
+    calcSpeedTypeLinearSpacing();
+    unknown114 += info.unknown04 / (1.0f / 30.0f);
+    if (unknown110 < unknown114) {
+      unknown114 = unknown110;
+    }
+  }
+  mm::Vec3 target = unknown171(unknown100.x, unknown100.y, 0.0f);
+  target += unknownf0;
+  setLookAt(unknownf0, target, unknown100.z);
+}
 
 void ScriptCameraEntity::calcSpeedTypeLinearSpacing() {
   f32 rate = unknown114 / unknown110;

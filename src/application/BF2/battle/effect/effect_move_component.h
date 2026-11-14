@@ -25,7 +25,12 @@ public:
     MOVE_TYPE_UP,
   };
 
+  // Layout from the loads of EffectMoveComponent::Initialize(const MOVE_PARAM &), which reads the up, homing and link views;
+  // only the up view is used by compiled code so far. The builders (CreateBullet, ReboundUp, ReturnLinkObj, EndProc,
+  // StartAdditionalAttack) open by zeroing +0x1c and +0x38, which the constructor does.
   struct MOVE_PARAM {
+    MOVE_PARAM() : unknown1c(0.0f), unknown38(0) {}
+
     mm::Vec3 unknown00; // Inferred role: direction; original member name unknown.
     f32 unknown10;      // Inferred role: speed; original member name unknown.
     f32 unknown14;      // Inferred role: speed max; original member name unknown.
@@ -113,6 +118,7 @@ public:
   u8 unknowna5;       // Inferred role: move type; original member name unknown.
 };
 
+static_assert(sizeof(EffectMoveComponent::MOVE_PARAM) == 0x70, "");
 static_assert(offsetof(EffectMoveComponent::MOVE_PARAM, unknown10) == 0x10, "");
 static_assert(offsetof(EffectMoveComponent::MOVE_PARAM, unknown1c) == 0x1c, "");
 static_assert(offsetof(EffectMoveComponent::MOVE_PARAM, unknown20) == 0x20, "");

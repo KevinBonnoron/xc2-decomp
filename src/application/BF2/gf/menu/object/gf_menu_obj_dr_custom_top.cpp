@@ -234,6 +234,34 @@ bool GfMenuObjDrCustomTop::seqStartAddLayer() {
   return true;
 }
 
+void GfMenuObjDrCustomTop::DrSelectListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    break;
+  case 6: {
+    u32 index = event.unknown08;
+    if (index != 0xffffffff) {
+      unknown20->unknown28->setIndex(index);
+      unknown20->unknown30->setIndex(index);
+      GfMenuDriverList *list = unknown20->unknown28;
+      GfMenuReference::setReferenceDriverID(0, list->getContents(list->getIndex(false)).unknown00);
+    }
+    break;
+  }
+  case 0xe:
+    if (ui::UICtrlObject::getEventCtrlObjID(event) == 1) {
+      // The game never sets x0 for this call (0x7100450708): receiveRevolveEvent, defined in this file, does not read its object, so the compiler dropped the argument and the original
+      // expression cannot be checked. The owner is the object the other listeners of this class call their owner's functions on.
+      unknown20->receiveRevolveEvent(event, acc.unknown10);
+    }
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
 void GfMenuObjDrCustomTop::receiveRevolveEvent(const ui::EventData &event, u32 handle) {
   ui::UIObjectAcc acc(handle);
   if (ui::UICtrlObject::getEventType(event) == 0) {

@@ -37,10 +37,11 @@ public:
 
   class NotifyListener : public ui::UIObjectListener {
   public:
-    NotifyListener(GfMenuObjLinkJump *owner) : _0c(), unknown20(owner) {}
+    NotifyListener(GfMenuObjLinkJump *owner) : unknown0c(0), _10(), unknown20(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x1c - 0x0c];
+    int unknown0c; // Inferred role: fade control id; original member name unknown.
+    u8 _10[0x1c - 0x10];
     GfMenuObjLinkJump *unknown20; // Inferred role: owner; original member name unknown.
   };
 
@@ -90,6 +91,7 @@ static_assert(offsetof(GfMenuObjLinkJump::RootListener, unknown20) == 0x20, "");
 static_assert(sizeof(GfMenuObjLinkJump::RootListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjLinkJump::CategoryListener, unknown20) == 0x20, "");
 static_assert(sizeof(GfMenuObjLinkJump::CategoryListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjLinkJump::NotifyListener, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfMenuObjLinkJump::NotifyListener, unknown20) == 0x20, "");
 static_assert(sizeof(GfMenuObjLinkJump::NotifyListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjLinkJump::ListListener, unknown20) == 0x20, "");

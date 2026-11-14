@@ -38,6 +38,15 @@ public:
     GfMenuObjMercenaryForm *unknown20; // Inferred role: owner; original member name unknown.
   };
 
+  // Only the member that reciveEvent (1.0.0: 0x7100494870) reads or writes is declared: the constructor is inlined in GfMenuObjMercenaryForm::initialize, which is not matched, so the rest of the
+  // layout and the size are not proven.
+  class ApplyListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    int unknown0c; // Inferred role: caption shown flag; original member name unknown.
+  };
+
   class BlImgListener : public ui::UIObjectListener {
   public:
     void reciveEvent(const ui::EventData &event, u32 handle) override;
@@ -120,6 +129,7 @@ public:
 static_assert(offsetof(GfMenuObjMercenaryForm::FormListener, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfMenuObjMercenaryForm::FormListener, unknown10) == 0x10, "");
 static_assert(offsetof(GfMenuObjMercenaryForm::FormListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjMercenaryForm::ApplyListener, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfMenuObjMercenaryForm::BlImgListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjMercenaryForm::StartListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjMercenaryForm, unknown24) == 0x24, "");

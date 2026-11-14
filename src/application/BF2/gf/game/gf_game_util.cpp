@@ -676,11 +676,13 @@ void GfGameUtil::setDevelopLevelForDebug(u32 nation, u32 level) {
   SCOM_LEVELUP_DEVELOP::create();
 }
 
-static int getEffectiveTrustRank(u32 blade) {
+u32 GfGameUtil::getTrustRank(u32 blade) {
   int trustRank = GfDataBlade::getTrustRank(blade);
   u32 creator = GfDataBlade::getCreator(blade);
-  u32 setDriver = GfDataBlade::getSetDriver(blade);
-  u32 driver = setDriver == 0 ? creator : setDriver;
+  u32 driver = GfDataBlade::getSetDriver(blade);
+  if (driver == 0) {
+    driver = creator;
+  }
   if (trustRank > RANK_UNKNOWN_6 && trustRank < TRUST_UNKNOWN_16) {
     trustRank = RANK_UNKNOWN_6;
   }
@@ -689,18 +691,21 @@ static int getEffectiveTrustRank(u32 blade) {
     return trustRank;
   }
 
-  return trustRank > 1 ? trustRank - 1 : trustRank;
+  if (trustRank > 1) {
+    trustRank--;
+  }
+  return trustRank;
 }
 
 void GfGameUtil::addTrustRankForKizunaRing(u32 blade) {
-  int oldTrustRank = getEffectiveTrustRank(blade);
+  int oldTrustRank = getTrustRank(blade);
   int trustRank = GfDataBlade::getTrustRank(blade);
   if (trustRank >= RANK_UNKNOWN_6) {
     return;
   }
 
   GfDataBlade::setTrustRank(blade, static_cast<GfIdea>(trustRank + 1));
-  int newTrustRank = getEffectiveTrustRank(blade);
+  int newTrustRank = getTrustRank(blade);
   if (newTrustRank <= oldTrustRank) {
     return;
   }

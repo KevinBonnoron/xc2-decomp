@@ -39,6 +39,7 @@ public:
   void releaseColorBuff();
   void calcFragCoordToUV(mm::Vec4 &uv, f32 width, f32 height);
   void calcFragCoordToScreen(mm::Vec4 &screen, f32 width, f32 height);
+  void debugRender();
 
   u32 unknown18;                    // Inferred role: flags; original member name unknown.
   DrPixlRenderTarget *unknown20;    // Inferred role: render target; original member name unknown.

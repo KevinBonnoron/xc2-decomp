@@ -288,19 +288,23 @@ void GfMenuObjMainMenu2::setContentsSubText(u32 handle, u32 index, u32 child) {
 
 void GfMenuObjMainMenu2::setContentsText(u32 handle, u32 index) {
   ui::UIObjectAcc acc(handle);
+  u8 *bdat;
+  u32 text;
+  getContentsText(index, bdat, text);
+  acc.setText(ui::UIStr(bdat, text));
+}
+
+void GfMenuObjMainMenu2::getContentsText(u32 index, u8 *&bdat, u32 &text) {
   u8 *order = GfDataBdat::getFP(BDAT_MNU_MAIN_ORDER);
   int top = Bdat::getIdTop(order);
   u32 condition = Bdat::getVal(order, "useCond", top + index).valueU16;
-  u8 *bdat;
-  u32 text;
-  if (!GfMenuObjUtil::getMenuCondition(condition)) {
-    bdat = GfDataBdat::getFP(BDAT_MENU_MS);
-    text = 0x67c;
-  } else {
+  if (GfMenuObjUtil::getMenuCondition(condition)) {
     bdat = GfDataBdat::getFP(BDAT_MENU_MAIN_CONTENTS_MS);
     text = Bdat::getVal(order, "title", top + index).valueU16;
+  } else {
+    bdat = GfDataBdat::getFP(BDAT_MENU_MS);
+    text = 0x67c;
   }
-  acc.setText(ui::UIStr(bdat, text));
 }
 
 void GfMenuObjMainMenu2::initChrChangeDr(ui::UIObjectAcc &acc, GfMenuDriverList *list) {

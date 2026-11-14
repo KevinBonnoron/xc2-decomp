@@ -620,6 +620,62 @@ void GfMenuObjMercenaryForm::FormListener::reciveEvent(const ui::EventData &even
   }
 }
 
+void GfMenuObjMercenaryForm::ApplyListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1: {
+    acc.setDisp(true);
+    ui::UIObjectAcc base(acc.unknown10, "IMG_form_apply_base");
+    base.startAnimation("non", false);
+    acc.setDispChild(false, "LAY_form_apply_caption");
+    unknown0c = 0;
+    break;
+  }
+  case 0xc:
+    if (unknown0c == 1) {
+      ui::UIObjectAcc base(acc.unknown10, "IMG_form_apply_base");
+      base.startAnimation("loop", false);
+    }
+    break;
+  case GfMenuTypes::unknown003_33:
+    if (unknown0c == 0) {
+      ui::UIObjectAcc caption(acc.unknown10, "LAY_form_apply_caption");
+      caption.setDisp(true);
+      caption.setAlpha(1.0f);
+      GfMenuObjUtil::CtrlParam param;
+      param.unknown004("fade_in_r");
+      param.unknown11 = true;
+      param.unknown14 = 8;
+      GfMenuObjUtil::startCtrl(caption.unknown10, param, nullptr);
+      {
+        ui::UIObjectAcc base(acc.unknown10, "IMG_form_apply_base");
+        base.startAnimation("start", false);
+        GfMenuObject::hookAnimationEvent(acc.unknown10, base.unknown10);
+      }
+      acc.setDisp(true);
+      unknown0c = 1;
+    }
+    break;
+  case GfMenuTypes::unknown003_34: {
+    ui::UIObjectAcc base(acc.unknown10, "IMG_form_apply_base");
+    base.startAnimation("non", false);
+    {
+      ui::UIObjectAcc caption(acc.unknown10, "LAY_form_apply_caption");
+      int ctrl = GfMenuObjUtil::getCtrlID(caption.unknown10);
+      if (ctrl != -1) {
+        GfMenuObjUtil::stopCtrl(ctrl);
+      }
+      caption.setDisp(false);
+    }
+    unknown0c = 0;
+    break;
+  }
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
 void GfMenuObjMercenaryForm::BlImgListener::reciveEvent(const ui::EventData &event, u32 handle) {
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {

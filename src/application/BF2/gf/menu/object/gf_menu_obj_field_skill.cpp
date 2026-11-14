@@ -270,6 +270,61 @@ void GfMenuObjFieldSkill::MainListener::reciveEvent(const ui::EventData &event, 
   }
 }
 
+void GfMenuObjFieldSkill::BladeListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    acc.setDisp(false);
+    unknown0c = 0;
+    break;
+  case 3:
+    if (event.unknown08 == 1) {
+      acc.setDisp(true);
+      applyImageParam(acc.unknown10);
+      GfMenuObjUtil::CtrlParam param;
+      param.unknown004("fade_in_l");
+      param.unknown14 = 8;
+      GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
+    } else if (event.unknown08 == 2) {
+      ui::UIObjectAcc blade(acc.unknown10, "IMG_blade");
+      ui::UIObjectAcc shadow(acc.unknown10, "IMG_blade_shadow");
+      blade.setImageIndex(0);
+      shadow.setImageIndex(0);
+    }
+    break;
+  case GfMenuTypes::unknown003_33:
+    acc.setDisp(true);
+    if (unknown0c == 0) {
+      applyImageParam(acc.unknown10);
+      GfMenuObjUtil::CtrlParam param;
+      param.unknown004("fade_in_l");
+      param.unknown14 = 8;
+      GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
+      unknown0c = 1;
+    } else {
+      GfMenuObjUtil::CtrlParam param;
+      param.unknown004("fade_out_r");
+      param.unknown04 = 1;
+      param.unknown14 = 10;
+      GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
+    }
+    break;
+  case GfMenuTypes::unknown003_34:
+    if (unknown0c == 1) {
+      GfMenuObjUtil::CtrlParam param;
+      param.unknown004("fade_out_l");
+      param.unknown14 = 10;
+      param.unknown04 = 2;
+      GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
+      unknown0c = 0;
+    }
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
 void GfMenuObjFieldSkill::InputListener::reciveEvent(const ui::EventData &event, u32 handle) {
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {

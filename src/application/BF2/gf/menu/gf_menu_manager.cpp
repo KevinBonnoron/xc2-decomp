@@ -592,6 +592,19 @@ bool GfMenuManager::isFading(u32 fade) {
   return false;
 }
 
+bool GfMenuManager::isFading() {
+  // The game tests the manager once before the loop: the first fade's test returns false at once (0x71003c26c4-0x71003c26d0) while a
+  // failed test of the second fade goes on to the third (0x71003c26f0).
+  if (get() != nullptr && get()->unknown4090) {
+    for (u32 i = 0; i < 3; i++) {
+      if (isFading(i)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 void GfMenuManager::getFadeColor(u32 fade, mm::Col4 &color) {
   GfMenuManager *manager = get();
   if (manager != nullptr && manager->unknown4090 && !manager->unknown4091) {

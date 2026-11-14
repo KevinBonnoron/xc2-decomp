@@ -21,6 +21,7 @@
 #include "types.h"
 #include "ui/ctrl/ui_ctrl_cursor_select.h"
 #include "ui/event/ui_event_data.h"
+#include "ui/input/ui_input_manager.h"
 #include "ui/list/ui_list_info.h"
 #include "ui/list/ui_select_obj_list.h"
 #include "ui/plugin/ui_object_sync_plugin.h"
@@ -40,6 +41,112 @@ ui::UIListInfo<MenuDriverInfo> *GfMenuObjCommonText::s_pChangeDrList;
 void GfMenuObjCommonText::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjCommonText::update() { GfMenuObject::update(); }
+
+void GfMenuObjCommonText::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    unknown10 = 0xff;
+    break;
+  case GfMenuTypes::unknown003_33: {
+    GfMenuAdapterManager::addActiveCategory(3);
+    unknown10 = event.unknown16;
+    u32 window;
+    switch (unknown10) {
+    case 0:
+      window = acc.searchChild("LAY_dialog");
+      break;
+    case 1:
+      window = acc.searchChild("LAY_error");
+      break;
+    case 2:
+      window = acc.searchChild("LAY_dialog_mer");
+      break;
+    case 3:
+      window = acc.searchChild("LAY_dialog_kizuna");
+      break;
+    case 4:
+      window = acc.searchChild("LAY_get_item");
+      break;
+    case 5:
+      window = acc.searchChild("LAY_select");
+      break;
+    case 6:
+      window = acc.searchChild("LAY_dr_change");
+      break;
+    case 7:
+      window = acc.searchChild("LAY_owner_change");
+      break;
+    case 8:
+      window = acc.searchChild("LAY_num_select");
+      break;
+    default:
+      GfMenuObject::termCallContext(acc.unknown10);
+      return;
+    }
+    if (window == 0) {
+      return;
+    }
+    if (unknown10 == 5) {
+      GfMenuObject::sendEvent(window, event, 0.06666667f);
+    } else {
+      GfMenuObject::sendEvent(window, event, 0.0f);
+    }
+    ui::UIObjectAcc(window).setSuspend(false);
+    ui::UIInputManager *inputManager = ui::UIInputManager::get();
+    unknown0c = inputManager->unknown20;
+    inputManager->unknown20 = ui::UIUtil::getGroupPriority(4);
+    GfMenuObjUtil::playSE(9);
+    break;
+  }
+  case GfMenuTypes::unknown003_34: {
+    // The game holds the window lookup of event 0x21 a second time here (its own jump table at 0x7100f6e0a8), with a default that only leaves.
+    u32 window;
+    switch (unknown10) {
+    case 0:
+      window = acc.searchChild("LAY_dialog");
+      break;
+    case 1:
+      window = acc.searchChild("LAY_error");
+      break;
+    case 2:
+      window = acc.searchChild("LAY_dialog_mer");
+      break;
+    case 3:
+      window = acc.searchChild("LAY_dialog_kizuna");
+      break;
+    case 4:
+      window = acc.searchChild("LAY_get_item");
+      break;
+    case 5:
+      window = acc.searchChild("LAY_select");
+      break;
+    case 6:
+      window = acc.searchChild("LAY_dr_change");
+      break;
+    case 7:
+      window = acc.searchChild("LAY_owner_change");
+      break;
+    case 8:
+      window = acc.searchChild("LAY_num_select");
+      break;
+    default:
+      return;
+    }
+    if (window == 0) {
+      return;
+    }
+    GfMenuObject::sendEvent(window, event, 0.0f);
+    ui::UIInputManager *inputManager = ui::UIInputManager::get();
+    inputManager->unknown20 = unknown0c;
+    GfMenuObject::termCallContext(handle);
+    unknown10 = 0xff;
+    GfMenuAdapterManager::delActiveCategory(3);
+    break;
+  }
+  }
+  ui::UIObjectListener::reciveEvent(event, handle);
+}
 
 void GfMenuObjCommonText::setupDialog(u32 handle) {
   GfMenuObjUtil::FitOption option;

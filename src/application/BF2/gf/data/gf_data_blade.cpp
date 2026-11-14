@@ -17,6 +17,7 @@
 #include "gf/data/gf_data_game.h"
 #include "gf/data/gf_data_hana.h"
 #include "gf/data/gf_data_idea.h"
+#include "gf/data/gf_data_item.h"
 #include "gf/data/gf_data_manager.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_data_party.h"
@@ -437,6 +438,20 @@ u32 GfDataBlade::getFavorite(u32 blade, FAVORITE favorite) {
   }
 
   return 0;
+}
+
+bool GfDataBlade::isFavoriteItem(u32 blade, u32 item) {
+  if (item == 0) {
+    return false;
+  }
+
+  for (u32 favorite = FAVORITE_UNKNOWN_2; favorite <= FAVORITE_UNKNOWN_3; favorite++) {
+    if (getFavorite(blade, static_cast<FAVORITE>(favorite)) == item) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 u32 GfDataBlade::getAchievementQuestPrefix(u32 blade, u32 line, u32 level) { return getBladeRelativeID(blade) * ACHIEVEMENT_UNKNOWN_50 + line * ACHIEVEMENT_UNKNOWN_5 + level; }
@@ -1345,6 +1360,36 @@ u32 GfDataBlade::getBookedItemInfo(u32 blade) {
   }
 
   return 0;
+}
+
+void GfDataBlade::setUsedFavoriteItemForPouch(u32 blade, u32 item) {
+  if (blade == 0 || isDummyBlade(blade)) {
+    return;
+  }
+
+  if (blade == BLADE_HOMURA) {
+    if (isHikariCurrent()) {
+      return;
+    }
+  } else if (blade == BLADE_HIKARI) {
+    if (!isHikariCurrent()) {
+      return;
+    }
+  }
+
+  SDataBlade &dataBlade = getSDataBlade(blade);
+  for (u32 i = 0; i < 2; i++) {
+    unknown112 &favorite = dataBlade.unknown666[i];
+    if (favorite.unknown06 == 0 && favorite.unknown02 == item) {
+      favorite.unknown06 = 1;
+    }
+    if (favorite.unknown04 == 0) {
+      u32 category = GfDataItem::getCategory(item);
+      if (favorite.unknown00 == category) {
+        favorite.unknown04 = 1;
+      }
+    }
+  }
 }
 
 bool GfDataBlade::isUsedFavorite(u32 blade, FAVORITE favorite) {

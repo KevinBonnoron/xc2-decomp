@@ -313,6 +313,7 @@ public:
   static const char *getCommonBladeName(u32 nameList);
   static bool getCommonBladeName(u8 *&bdat, u32 &textId, u32 nameList);
   static u32 getFavorite(u32 blade, FAVORITE favorite);
+  static bool isFavoriteItem(u32 blade, u32 item);
   static const char *getFieldSkillVoice(u32 blade, u32 skill);
   static u32 getAchievementQuestPrefix(u32 blade, u32 line, u32 level);
   static void setupAchievQuest(AchievQuest &achievQuest);

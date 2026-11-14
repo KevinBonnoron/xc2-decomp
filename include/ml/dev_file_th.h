@@ -1,4 +1,5 @@
 #pragma once
+#include <atomic>
 #include <stddef.h>
 
 #include "ml/critical_section.h"
@@ -31,6 +32,7 @@ class IDevFileEvent;
 class IWorkEvent;
 
 enum CBM : int {
+  CBM_UNKNOWN_0 = 0, // Inferred role: no callback yet, value set by FileHandleTh::init; original name unknown.
   CBM_UNKNOWN_2 = 2,
   CBM_UNKNOWN_4 = 4,
   CBM_UNKNOWN_5 = 5,
@@ -123,6 +125,11 @@ public:
   class Impl {
   public:
     ~Impl();
+    static u32 thFileLoader(void *argument);
+    void thUpdate();
+    void releaseRequest(DevFileJobTh *job);
+    void updateCancel();
+    bool isLoadingBusy();
     FileHandleTh *checkValidFile(const char *path, IWorkEvent *event);
     bool writeFileBlock(const char *path, const void *data, u32 size, int priority);
     FileHandleTh *writeFile(const char *path, IWorkEvent *event, const void *data, int size, int priority);
@@ -179,9 +186,12 @@ public:
     u8 _58930[0x58934 - 0x58930];
     bool m_initialized;
     u8 _58935[0x5a348 - 0x58935];
-    IWorkEvent *unknown5a348;     // Inferred role: registered event callback; original member name unknown.
-    CriticalSection unknown5a350; // Inferred role: job lock; original member name unknown.
-    CriticalSection unknown5a378; // Inferred role: read lock; original member name unknown.
+    IWorkEvent *unknown5a348;       // Inferred role: registered event callback; original member name unknown.
+    CriticalSection unknown5a350;   // Inferred role: job lock; original member name unknown.
+    CriticalSection unknown5a378;   // Inferred role: read lock; original member name unknown.
+    std::atomic<bool> unknown5a3a0; // Inferred role: loader thread stop request; original member name unknown.
+    u8 _5a3a1[0x5a3a4 - 0x5a3a1];
+    std::atomic<s32> unknown5a3a4; // Inferred role: running loader threads; original member name unknown.
   };
 
   ~DevFileTh() override;
@@ -214,6 +224,8 @@ public:
   static void removeAccessor(MEDIA media);
   static void registArchiveAccessor(MEDIA media, DevFileAccessor *accessor);
   static void removeArchiveAccessor(MEDIA media);
+  static const char *getSessionHioPortName();
+  static bool isLoadingBusy();
   static bool initialize();
   static bool finalize();
   static void initializeEnv(const char *path);
@@ -257,6 +269,8 @@ static_assert(offsetof(DevFileTh::Impl, m_initialized) == 0x58934, "");
 static_assert(offsetof(DevFileTh::Impl, unknown5a348) == 0x5a348, "");
 static_assert(offsetof(DevFileTh::Impl, unknown5a350) == 0x5a350, "");
 static_assert(offsetof(DevFileTh::Impl, unknown5a378) == 0x5a378, "");
+static_assert(offsetof(DevFileTh::Impl, unknown5a3a0) == 0x5a3a0, "");
+static_assert(offsetof(DevFileTh::Impl, unknown5a3a4) == 0x5a3a4, "");
 static_assert(offsetof(DevFileTh, unknown1c0) == 0x1c0, "");
 static_assert(offsetof(DevFileTh, unknown1c9) == 0x1c9, "");
 

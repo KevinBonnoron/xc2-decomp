@@ -5,6 +5,7 @@
 #include "framework/framework.h"
 #include "framework/memory/framework_memory.h"
 #include "fw/fw_update_info.h"
+#include "gf/camera/gf_camera_utilities.h"
 #include "mm_math/mm_math.h"
 #include "mm_math/mm_quat.h"
 
@@ -14,33 +15,8 @@ enum CAMERA_PRIO : int;
 
 namespace gf {
 
-// Inferred role: quaternion of the Euler angles (half-angle products); original name unknown.
-static inline mm::Quat unknown003(f32 pitch, f32 yaw, f32 roll) {
-  f32 halfX = pitch * 0.5f;
-  f32 halfY = yaw * 0.5f;
-  f32 halfZ = roll * 0.5f;
-  f32 sinX = sinf(halfX);
-  f32 cosX = cosf(halfX);
-  f32 sinY = sinf(halfY);
-  f32 cosY = cosf(halfY);
-  f32 sinZ = sinf(halfZ);
-  f32 cosZ = cosf(halfZ);
-  mm::Quat quat;
-  quat.x = sinX * cosY * cosZ - cosX * sinY * sinZ;
-  quat.y = cosX * sinY * cosZ + sinX * cosY * sinZ;
-  quat.z = cosX * cosY * sinZ - sinX * sinY * cosZ;
-  quat.w = sinX * sinY * sinZ + cosX * cosY * cosZ;
-  return quat;
-}
-
-// Inferred role: direction of a camera rotation, the unitZ rotated by the quaternion of the Euler angles; original name unknown.
-static inline mm::Vec3 unknown001(f32 pitch, f32 yaw, f32 roll) {
-  mm::Quat quat = unknown003(pitch, yaw, roll);
-  return quat.rotate(mm::Vec3::unitZ);
-}
-
 void GimmickCamera::updateParams() {
-  mm::Vec3 target = unknown001(unknownc0.x, unknownc0.y, 0.0f);
+  mm::Vec3 target = unknown171(unknownc0.x, unknownc0.y, 0.0f);
   target += unknownb0;
   m_fov = unknownd0;
   setLookAt(unknownb0, target, unknownc0.z);
@@ -143,7 +119,7 @@ void GimmickCamera::setLookLock(const mm::Vec3 &position) {
   mm::Vec3 reference = mm::Vec3::unitZ;
   unknownc0.x = getPitch(direction, reference);
   unknownc0.y = getYaw(direction, reference);
-  mm::Quat quat = unknown003(unknownc0.x, unknownc0.y, 0.0f);
+  mm::Quat quat = unknown169(unknownc0.x, unknownc0.y, 0.0f);
   mm::Vec3 offset = mm::Vec3::unitZ * distance;
   unknownb0 = unknown10160 + quat.rotate(mm::Vec3(-offset.x, -offset.y, -offset.z));
 }

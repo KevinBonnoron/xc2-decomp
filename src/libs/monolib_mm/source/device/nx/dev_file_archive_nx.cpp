@@ -2,14 +2,19 @@
 
 #include <string.h>
 
+#include "device/nx/dev_file_util_nx.h"
+#include "ml/dev_file_th.h"
 #include "ml/file_handle_th.h"
 #include "ml/thread.h"
 #include "ml/work_cpu.h"
 #include "mm_mtl/fixstr.h" // IWYU pragma: keep
 #include "mm_mtl/internal/fixed_object_allocator.h"
 #include "mm_mtl/tuple.h" // IWYU pragma: keep
-#include "nn/fs.h"        // IWYU pragma: keep
+#include "mm_thread/mm_thread_csection.h"
+#include "nn/fs.h" // IWYU pragma: keep
+#include "nn/os.h"
 #include "nn/result.h"
+#include "nn/time_span.h"
 
 namespace ml {
 
@@ -104,6 +109,65 @@ bool DevFileArchiveNx::finalize() {
     unknown18 = 4;
   }
   return unknown18 == 4;
+}
+
+// thFileLoader and thUpdate repeat DevFileNxTh::thFileLoader and DevFileNxTh::thUpdate: the game has four separate functions
+// (0x710072e1b8 / 0x710072a4bc and 0x710072f6e8 / 0x710072c5f4), and the two classes share no base holding the channels. The archive
+// adds unknown190 to the read offset.
+u32 DevFileArchiveNx::thFileLoader(void *argument) {
+  OpenReadParam *channel = static_cast<OpenReadParam *>(argument);
+  DevFileArchiveNx *accessor = static_cast<DevFileArchiveNx *>(channel->unknown1a0);
+  accessor->unknown20->unknown17fc++;
+  while (!DevFileTh::isInitialized()) {
+    nn::os::SleepThread(nn::TimeSpan::FromNanoSeconds(100000000));
+  }
+  accessor->thUpdate(argument);
+  accessor->unknown20->unknown17fc--;
+  return 0;
+}
+
+void DevFileArchiveNx::thUpdate(void *argument) {
+  OpenReadParam *channel = static_cast<OpenReadParam *>(argument);
+  DevFileArchiveNx *accessor = static_cast<DevFileArchiveNx *>(channel->unknown1a0);
+  while (!accessor->unknown20->unknown17f8) {
+    channel->unknown198->waitSignalEvent();
+    if (accessor->unknown20->unknown17f8) {
+      break;
+    }
+    void *buffer;
+    u32 offset;
+    int size;
+    u64 base;
+    bool reading = false;
+    {
+      mm::threading::ReadLockGuard guard(channel->unknown1a8);
+      buffer = channel->unknown120.unknown40;
+      offset = channel->unknown120.unknown4c;
+      size = channel->unknown120.unknown50;
+      base = channel->unknown190;
+      if (channel->unknown10d) {
+        reading = (channel->unknown118->unknown94 & 0x10000) == 0;
+      }
+    }
+    if (reading) {
+      FileReadResult result;
+      channel->unknown10f = true;
+      if (DevFileUtilNx::readFile(channel->unknown118, channel->unknown00, size, base + offset, buffer, size, result)) {
+        mm::threading::WriteLockGuard guard(channel->unknown1a8);
+        FileHandleTh *handle = channel->unknown118;
+        if (handle != nullptr) {
+          int read = result.unknown00;
+          if (result.unknown08) {
+            handle->unknown18 = read;
+            handle->m_currentPtr = read;
+          } else {
+            handle->m_currentPtr += read;
+          }
+        }
+      }
+      channel->unknown10f = false;
+    }
+  }
 }
 
 u32 DevFileArchiveNx::addressAlignment() { return 16; }

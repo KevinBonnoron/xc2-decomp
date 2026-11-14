@@ -126,8 +126,6 @@ void EffectObject::ReboundUp() {
   s32 frame = CharacterManager::get()->GetCharacterConst(unknown48)->GetAnimSpecialProcData(BattleCharacter::ANIM_SPDATA_TYPE_UNKNOWN_0);
   f32 distance = __builtin_fmaxf(frame - unknown248, 0.0f);
   EffectMoveComponent::MOVE_PARAM param;
-  param.unknown1c = 0.0f;
-  param.unknown38 = 0;
   f32 time = distance * (1.0f / 3.0f);
   param.unknown39 = EffectMoveComponent::MOVE_TYPE_UP;
   param.unknown40_2 = time;

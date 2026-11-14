@@ -1,9 +1,12 @@
 #include "gf/data/gf_bdat_quest.h"
 #include "gf/data/gf_bdat_wrapper.h"
 
+#include "bdat.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/gf_allocator.h"
+#include "gmk/gmk_bdat.h"
+#include "types.h"
 
 namespace gf {
 
@@ -249,6 +252,47 @@ void GfBdatQuest::createFP() {
   unknown118 = NEW_BDAT_WRAPPER(BDAT_FLD_FIELD_SKILL_SETTING);
   unknown120 = NEW_BDAT_WRAPPER(BDAT_FLD_FIELD_SKILL_RANDOM);
   unknown128 = NEW_BDAT_WRAPPER(BDAT_FLD_DEVELOPMENT_LEVEL);
+}
+
+// Inferred role: adds every row of a quest list table to the list categories, repeated by GfBdatQuest::bdatRefresh for its six quest list tables; original name unknown.
+static inline void unknown001(QuestListAcc *acc, CBdatWrapper *list, u32 type) {
+  u32 start = Bdat::getIdTop(list->unknown00);
+  u32 end = Bdat::getIdTop(list->unknown00) + Bdat::getIdCount(list->unknown00);
+  for (u32 id = start; id < end; id++) {
+    acc->addListCategory(id, type, list);
+  }
+}
+
+// Inferred role: adds the purpose of every row of a quest list table to the task categories unless it is empty, repeated by GfBdatQuest::bdatRefresh for its six quest list tables; original name
+// unknown.
+static inline void unknown002(QuestListAcc *acc, CBdatWrapper *list, u32 type, CBdatWrapper *task) {
+  u32 start = Bdat::getIdTop(list->unknown00);
+  u32 end = Bdat::getIdTop(list->unknown00) + Bdat::getIdCount(list->unknown00);
+  for (u32 id = start; id < end; id++) {
+    u16 purpose = list->getValCheck("PurposeID", id, gmk::BDAT_TYPE_UNKNOWN_2);
+    if (purpose) {
+      acc->addTaskCategory(purpose, type, task);
+    }
+  }
+}
+
+void GfBdatQuest::bdatRefresh() {
+  destroyFP();
+  createFP();
+  unknown130->rebuild();
+  unknown001(unknown130, unknown10, 1);
+  unknown001(unknown130, unknown20, 3);
+  unknown001(unknown130, unknown18, 3);
+  unknown001(unknown130, unknown28, 5);
+  unknown001(unknown130, unknown38, 2);
+  unknown001(unknown130, unknown30, 6);
+  unknown002(unknown130, unknown10, 1, unknown48);
+  unknown002(unknown130, unknown20, 3, unknown58);
+  unknown002(unknown130, unknown18, 3, unknown50);
+  unknown002(unknown130, unknown28, 5, unknown60);
+  unknown002(unknown130, unknown38, 2, unknown70);
+  unknown002(unknown130, unknown30, 6, unknown68);
+  unknown130->makeQuestTaskInfo();
 }
 
 } // namespace gf

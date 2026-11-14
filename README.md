@@ -11,7 +11,7 @@ A work-in-progress matching decompilation of *Xenoblade Chronicles 2* (Nintendo 
 ## Progress
 
 <!-- progress -->
-43,270 / 48,739 functions (88.779%), 5,927,956 / 10,024,304 bytes of code (59.136%)
+43,348 / 48,739 functions (88.939%), 5,950,240 / 10,024,304 bytes of code (59.358%)
 <!-- /progress -->
 
 Counted over the named functions of `main`, as reported by `check`. Run `check --readme` to update this section. History and details: [decompilati.onl](https://decompilati.onl/projects/xenoblade-chronicles-2).
@@ -152,6 +152,8 @@ The game was built with **Clang 3.9.1**. The flags that matter:
 To try another compiler: `XC2_CXX=clang++-4.0.1 check ...`.
 
 `-nostdlibinc` (a header search flag, no effect on the generated code) keeps the compiler from reading the host's `/usr/include`, so that on a distribution that has one the musl headers of the sysroot are the only libc headers.
+
+`-fno-spell-checking` (diagnostics only, no effect on the generated code) turns off the "did you mean" suggestions: on an undeclared identifier, Clang 3.9.1's spelling correction can allocate tens of gigabytes within seconds instead of reporting the error.
 
 </details>
 

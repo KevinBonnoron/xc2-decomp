@@ -269,14 +269,40 @@ static_assert(sizeof(unknown138) == 0x04, "");
 
 class GfObjPropertyEnemy : public GfObjProperty {
 public:
-  GfObjPropertyEnemy(GF_OBJ_HANDLE *handle);
+  // The game (1.0.0: 0x71005aaee4) zeroes the nine elements of unknownfc while it constructs the members (0x71005aaf64-0x71005aaf88, before the body) and again at the end of the body
+  // (0x71005ab028-0x71005ab034, with unknownf8): the value-initialisation and the loop are both in the game's code.
+  GfObjPropertyEnemy(GF_OBJ_HANDLE *handle) : GfObjProperty(handle, &unknown88, nullptr), unknownfc() {
+    unknown88.unknown002();
+    unknownc0 = 0;
+    unknownc2 = false;
+    unknownc3 = false;
+    unknownc4 = 0;
+    unknownc8 = 0;
+    unknownd0 = nullptr;
+    unknownd8 = 0;
+    unknowndc = 0;
+    unknowne0 = 0.0f;
+    unknowne4 = false;
+    unknowne8 = 0;
+    unknownec = 0;
+    unknownf0 = 0.0f;
+    unknownf4 = false;
+    unknownf8 = 0;
+    for (int i = 0; i < 9; i++) {
+      unknownfc[i].unknown00 = 0;
+      unknownfc[i].unknown02 = 0;
+    }
+    unknown150 = 0;
+  }
 
   GfObjPropertyCharacter unknown88; // Inferred role: character, pointed to by unknown10; original member name unknown.
-  u8 _c0[0xc2 - 0xc0];
+  // The width of unknownc0 is not proven: the constructor zeroes 0xc0..0xc7 with one 64-bit store (0x71005ab018), nothing else known reads the two bytes, and u16 is the simplest type that gives the
+  // store.
+  u16 unknownc0;  // Inferred role: zeroed by the constructor; original member name unknown.
   bool unknownc2; // Inferred role: scouted; original member name unknown.
-  u8 _c3[0xc4 - 0xc3];
-  u32 unknownc4; // Inferred role: arts id; original member name unknown.
-  u32 unknownc8; // Inferred role: arts message id; original member name unknown.
+  bool unknownc3; // Inferred role: flag written by GfEnemyBattleProperty before the scouted flag; original member name unknown.
+  u32 unknownc4;  // Inferred role: arts id; original member name unknown.
+  u32 unknownc8;  // Inferred role: arts message id; original member name unknown.
   u8 _cc[0xd0 - 0xcc];
   u8 *unknownd0;  // Inferred role: arts message bdat; original member name unknown.
   u32 unknownd8;  // Inferred role: weak attribute bits; original member name unknown.
@@ -296,7 +322,9 @@ public:
 };
 
 static_assert(offsetof(GfObjPropertyEnemy, unknown88) == 0x88, "");
+static_assert(offsetof(GfObjPropertyEnemy, unknownc0) == 0xc0, "");
 static_assert(offsetof(GfObjPropertyEnemy, unknownc2) == 0xc2, "");
+static_assert(offsetof(GfObjPropertyEnemy, unknownc3) == 0xc3, "");
 static_assert(offsetof(GfObjPropertyEnemy, unknownc4) == 0xc4, "");
 static_assert(offsetof(GfObjPropertyEnemy, unknownd8) == 0xd8, "");
 static_assert(offsetof(GfObjPropertyEnemy, unknownc8) == 0xc8, "");
@@ -307,6 +335,7 @@ static_assert(offsetof(GfObjPropertyEnemy, unknownf8) == 0xf8, "");
 static_assert(offsetof(GfObjPropertyEnemy, unknownfc) == 0xfc, "");
 static_assert(offsetof(GfObjPropertyEnemy, unknown120) == 0x120, "");
 static_assert(offsetof(GfObjPropertyEnemy, unknown150) == 0x150, "");
+static_assert(sizeof(GfObjPropertyEnemy) == 0x160, "");
 
 class GfObjPropertyNpc : public GfObjProperty {
 public:

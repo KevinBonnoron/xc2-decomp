@@ -137,7 +137,12 @@ public:
   DrPixlPostObjUnbranchToDepth *unknownb8; // Inferred role: unbranch to depth; original member name unknown.
   DrPixlRenderTarget *unknownc0[2];        // Inferred role: down depths; original member name unknown.
   DrPixlRenderTarget *unknownd0;           // Inferred role: refraction map; original member name unknown.
-  u8 _0d8[0x0f0 - 0x0d8];
+  u8 _0d8[0x0e0 - 0x0d8];
+  // Inferred role: quarter normal target shown by DrPixlPostObjTSSAO::debugRender; original member name unknown. Evidence: receives a new
+  // DrPixlRenderTarget in the DrPixlPostMan constructor (0x710084d600-0x710084d618) and is read by DrPixlPostObjTSSAO::passQuaterNormal
+  // (0x71008c1ee8).
+  DrPixlRenderTarget *unknowne0;
+  u8 _0e8[0x0f0 - 0x0e8];
   DrResUseQueryObj *unknownf0; // Inferred role: refraction query; original member name unknown.
   u32 unknownf8;               // Inferred role: flags; original member name unknown.
   f32 unknownfc;
@@ -155,6 +160,7 @@ static_assert(offsetof(DrPixlPostMan, unknown90) == 0x090, "");
 static_assert(offsetof(DrPixlPostMan, unknowna0) == 0x0a0, "");
 static_assert(offsetof(DrPixlPostMan, unknownb0) == 0x0b0, "");
 static_assert(offsetof(DrPixlPostMan, unknownc0) == 0x0c0, "");
+static_assert(offsetof(DrPixlPostMan, unknowne0) == 0x0e0, "");
 static_assert(offsetof(DrPixlPostMan, unknownf0) == 0x0f0, "");
 static_assert(offsetof(DrPixlPostMan, unknownf8) == 0x0f8, "");
 static_assert(offsetof(DrPixlPostMan, unknownfc) == 0x0fc, "");

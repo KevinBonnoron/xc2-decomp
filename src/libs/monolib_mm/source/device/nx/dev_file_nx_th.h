@@ -65,6 +65,7 @@ public:
   const char *getMediaRootPath() const override;
   bool rfIsUsedChannel(u32 channel) override;
   static u32 thFileLoader(void *argument);
+  void thUpdate(void *argument);
 
   u8 _10[0x14 - 0x10];
   mtl::ALLOC_HANDLE unknown14; // Inferred role: memory; original member name unknown.

@@ -7,6 +7,7 @@
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/item/gf_item_box.h"
+#include "mm_mtl/fixed_vector.h"
 
 namespace gf {
 
@@ -180,6 +181,50 @@ GfItem GfItemUtil::getInfo(u32 item) {
   info.unknown02 = getItemBoxCount(item);
   info.unknown00 = item;
   return info;
+}
+
+void GfItemUtil::getInfo(mm::mtl::FixedVector<GfItem, 1024> &items, ItemType::Type type, bool withoutEquip) {
+  switch (type) {
+  case ItemType::ITEM_TYPE_UNKNOWN_2:
+  case ItemType::ITEM_TYPE_UNKNOWN_3:
+  case ItemType::ITEM_TYPE_UNKNOWN_16:
+  case ItemType::ITEM_TYPE_UNKNOWN_17:
+  case ItemType::ITEM_TYPE_UNKNOWN_18:
+  case ItemType::ITEM_TYPE_UNKNOWN_19:
+  case ItemType::ITEM_TYPE_UNKNOWN_20: {
+    GfItemBox::get()->isMulti(type);
+    item_iterator it = GfItemBox::get()->begin(type);
+    item_iterator last = GfItemBox::get()->end(type);
+    while (it != last) {
+      if (it->unknown00_0 != 0) {
+        if (withoutEquip && it->unknown03_6) {
+          continue;
+        }
+        GfItem item;
+        item.unknown02 = it->unknown02_3;
+        item.unknown00 = it->getItemID();
+        item.unknown08 = it->getHandle();
+        item.unknown04 = it->unknown03_6 ? getEquipChar(it->getHandle()) : 0;
+        items.push_back(item);
+      }
+      ++it;
+    }
+    break;
+  }
+  default: {
+    for (item_iterator it = GfItemBox::get()->begin(type), last = GfItemBox::get()->end(type); it != last; ++it) {
+      GfItemInfo &info = *it;
+      if (info.unknown00_0 != 0) {
+        GfItem item;
+        item.unknown00 = info.getItemID();
+        item.unknown02 = info.unknown02_3;
+        item.unknown08 = info.getHandle();
+        items.push_back(item);
+      }
+    }
+    break;
+  }
+  }
 }
 
 bool GfItemUtil::isPrecious(u32 item) { return GfDataItem::getItemType(item) == ItemType::ITEM_TYPE_UNKNOWN_6; }

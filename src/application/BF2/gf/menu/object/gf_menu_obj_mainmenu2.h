@@ -127,6 +127,7 @@ public:
   static bool isOpenCharMenu();
   static void execMapJump();
   static void setContentsText(u32 handle, u32 index);
+  static void getContentsText(u32 index, u8 *&bdat, u32 &text);
   static void initChrChangeDr(ui::UIObjectAcc &acc, GfMenuDriverList *list);
   static void initChrChangeBl(ui::UIObjectAcc &acc, GfMenuBladeList *list);
   static int moveMainMenu(ui::UIObjectAcc &acc, u32 index, bool);

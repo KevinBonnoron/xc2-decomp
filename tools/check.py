@@ -100,6 +100,9 @@ CXXFLAGS = [
     # Only the headers of the sysroot: a host with /usr/include (any non-Nix Linux, as the CI runners) must not
     # provide its own libc headers before the musl ones. It changes no code generation.
     "-nostdlibinc",
+    # Diagnostics only, no code generation: clang 3.9.1's spelling correction ("did you mean") can allocate without
+    # bound on an undeclared identifier (20+ GB in seconds on a dr unit) instead of reporting the error.
+    "-fno-spell-checking",
     "-I" + os.path.join(ROOT, "include"),
     "-I" + os.path.join(ROOT, "src", "application", "BF2"),
     "-I" + os.path.join(ROOT, "src", "libs", "monolib_mm", "source"),

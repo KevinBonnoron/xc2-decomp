@@ -44,10 +44,25 @@ void BouManager::render() {
   }
 }
 
+void BouManager::startActive(const mm::Pnt<int> &point) {
+  unknown20.x = point.x;
+  unknown20.y = point.y;
+  unknown003(point);
+  unknown2040.clear();
+  unknown18.set(FLAG_UNKNOWN_2);
+}
+
+bool BouManager::OnMouseButtonDown(ml::EventView *view) {
+  if (isEnable() && isDebugEnable() && unknown002() && (view->buttons & ml::EventView::BUTTON_UNKNOWN_0) != 0) {
+    startActive(view->pos);
+    updateActive(view->pos);
+  }
+  return false;
+}
+
 bool BouManager::OnMouseMove(ml::EventView *view) {
   if (unknown001()) {
-    unknown20.width = view->pos.x - unknown20.x;
-    unknown20.height = view->pos.y - unknown20.y;
+    unknown003(view->pos);
     updateActive(view->pos);
   }
   return false;

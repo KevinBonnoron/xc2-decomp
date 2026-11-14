@@ -29,6 +29,15 @@ public:
     void reciveEvent(const ui::EventData &event, u32 handle) override;
   };
 
+  // Only the member that reciveEvent (1.0.0: 0x71004684c8) reads or writes is declared: the constructor is inlined in GfMenuObjFieldSkill::initialize, which is not matched (it allocates each of its
+  // seven listeners with 0x28 bytes, 0x7100467290..0x7100467b84), so the rest of the layout is not proven.
+  class BladeListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    int unknown0c; // Inferred role: shown flag; original member name unknown.
+  };
+
   struct OpenSkillInfoParam {
     u32 unknown00_0 : 16; // Inferred role: skill; original member name unknown.
     u32 unknown00_16 : 8; // Inferred role: level; original member name unknown.
@@ -87,6 +96,7 @@ static_assert(offsetof(GfMenuObjFieldSkill, unknown38) == 0x38, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown40) == 0x40, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown50) == 0x50, "");
 static_assert(offsetof(GfMenuObjFieldSkill::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjFieldSkill::BladeListener, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown60) == 0x60, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown58) == 0x58, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown5a) == 0x5a, "");

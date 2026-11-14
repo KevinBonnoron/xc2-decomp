@@ -579,6 +579,8 @@ template void mm::mtl::Vector<gmk::GmkDmgPhantom::BdatInfo>::expand(size_t, size
 template void mm::mtl::Vector<gmk::GmkDmgPhantom::BdatInfo>::extend(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkDmgPhantom::BdatInfo>::resize(size_t);
 template void mm::mtl::Vector<gmk::GmkDmgPhantom>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkDmgPhantom>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkDmgPhantom>::resize(size_t);
 template void mm::mtl::Vector<gmk::GmkDmgSe::BdatInfo>::expand(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkDmgSe::BdatInfo>::extend(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkDmgSe::BdatInfo>::resize(size_t);

@@ -1941,6 +1941,19 @@ void BattleCharacter::HealByRate(u32 value, f32 rate, int type, BattleCharacter 
   HealDirect(mm::max(1u, heal), type, healer);
 }
 
+void BattleCharacter::ReviveHeal(BattleCharacter *reviver) {
+  f32 rate = BtlSystemBalanceAccess::get()->unknowne7 * 0.01f + SatisfyEnhanceCondition(0xa8, 0, 0.0f, nullptr, true);
+  if (reviver) {
+    rate += reviver->SatisfyEnhanceCondition(0xa9, 0, 0.0f, nullptr, true);
+  }
+  const CharacterParameter *parameter = GetCharacterParameterConst(true);
+  if (parameter == nullptr) {
+    return;
+  }
+  rate = __builtin_fminf(rate, 1.0f);
+  HealByRate(parameter->GetMaxHP(), rate, 7, reviver);
+}
+
 void BattleCharacter::LandingCallback() {}
 
 void BattleCharacter::BoundCallback() {}

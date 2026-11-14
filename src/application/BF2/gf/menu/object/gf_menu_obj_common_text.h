@@ -63,6 +63,15 @@ public:
     int unknown18;                  // Inferred role: open flag; original member name unknown.
     GfMenuObjCommonText *unknown20; // Inferred role: owner; original member name unknown.
   };
+  // Only the members that reciveEvent (1.0.0: 0x710043d188) reads or writes are declared: the constructor is inlined in GfMenuObjCommonText::initialize, which is not matched, so the rest of the
+  // layout and the size are not proven.
+  class MainListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u32 unknown0c; // Inferred role: input group priority saved while a window is open; original member name unknown.
+    u32 unknown10; // Inferred role: type of the open window, 0xff for none; original member name unknown.
+  };
   class NumSelectListener : public ui::UIObjectListener {
   public:
     void reciveEvent(const ui::EventData &event, u32 handle) override;
@@ -128,6 +137,8 @@ public:
 
 static_assert(offsetof(GfMenuObjCommonText::DialogListener, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfMenuObjCommonText::DialogListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjCommonText::MainListener, unknown0c) == 0x0c, "");
+static_assert(offsetof(GfMenuObjCommonText::MainListener, unknown10) == 0x10, "");
 static_assert(offsetof(GfMenuObjCommonText::DrChangeListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjCommonText::ErrorListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjCommonText::GetItemListener, unknown20) == 0x20, "");

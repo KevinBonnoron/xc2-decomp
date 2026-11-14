@@ -278,6 +278,17 @@ void SoundSsdBank::update() {
   }
 }
 
+void SoundSsdBank::removeSource(SoundSsdSource *source) {
+  mm::mtl::List<SoundSsdSource *>::iterator end = unknown270.end();
+  for (mm::mtl::List<SoundSsdSource *>::iterator it = unknown270.begin(); it != end;) {
+    mm::mtl::List<SoundSsdSource *>::iterator cur = it;
+    ++it;
+    if (*cur == source) {
+      unknown270.erase(cur);
+    }
+  }
+}
+
 void SoundSsdDriver::updateBank() {
   ml::CS lock(unknown70);
   for (mm::mtl::List<SoundSsdBank *>::iterator it = unknown838.begin(); it != unknown838.end();) {
@@ -585,6 +596,28 @@ u32 SoundSsdDriver::getSoundHandleForFw(ssd::SoundHandle *handle) {
   }
 
   return 0;
+}
+
+SoundSsdSource::~SoundSsdSource() {
+  if (unknown20 != nullptr) {
+    unknown20->removeEntry(unknown18);
+  }
+
+  ssd::SoundEntry *entry = unknown18;
+  if (entry != nullptr) {
+    entry->~SoundEntry();
+    mtl::MemManager::deallocate(entry, 0, false);
+    unknown18 = nullptr;
+  }
+
+  ssd::WaveSource *wave = unknown10;
+  if (wave != nullptr) {
+    wave->~WaveSource();
+    mtl::MemManager::deallocate(wave, 0, false);
+    unknown10 = nullptr;
+  }
+
+  unknown20->removeSource(this);
 }
 
 bool SoundSsdSource::isLoop() const {

@@ -1,11 +1,13 @@
 #include "dr/dr_pixl_post_obj_tssao.h"
 
 #include "dr/dr_man.h"
+#include "dr/dr_pixl_man.h"
 #include "dr/dr_pixl_post_man.h"
 #include "dr/dr_pixl_post_obj.h"
 #include "dr/dr_pixl_post_parm.h"
 #include "dr/dr_pixl_render_target.h"
 #include "grlib/cglib_ctl_shader.h"
+#include "mm_math/mm_math.h"
 #include "mm_math/mm_vec4.h"
 #include "mm_mtl/fixed_array.h"
 
@@ -137,6 +139,33 @@ void DrPixlPostObjTSSAO::releaseColorBuff() {
     unknown68->releaseTexture();
   }
   unknown48->releaseTexture();
+}
+
+void DrPixlPostObjTSSAO::debugRender() {
+  if (!unknown00->unknown120[unknown00->unknown1c98]->unknown175) {
+    return;
+  }
+  int width = mm::min(unknown00->unknown5b8->unknown28, 1280);
+  int height = mm::min(unknown00->unknown5b8->unknown2c, 720);
+  int halfWidth = static_cast<int>(width * 0.5f);
+  int halfHeight = static_cast<int>(height * 0.5f);
+  int quarterWidth = static_cast<int>(halfWidth * 0.5f);
+  int quarterHeight = static_cast<int>(halfHeight * 0.5f);
+  unknown28[DrMan::s_nDblIdx]->debugRenderCh(0, 0, halfWidth, halfHeight, 0);
+  int x1 = halfWidth + 1;
+  unknown20->debugRenderCh(x1, 0, quarterWidth, quarterHeight, 0);
+  int x2 = halfWidth + quarterWidth + 2;
+  unknown48->debugRenderCh(x2, 0, quarterWidth, quarterHeight, 0);
+  int y1 = quarterHeight + 1;
+  unknown08->debugRenderSimilarity(x1, y1, quarterWidth, quarterHeight);
+  unknown50[DrMan::s_nDblIdx]->debugRenderCh(x2, y1, quarterWidth, quarterHeight, 0);
+  int y2 = quarterHeight * 2 + 2;
+  if (unknown00->unknown120[unknown00->unknown1c98]->unknownfa0) {
+    unknown60->debugRenderCh(x1, y2, quarterWidth, quarterHeight, 0);
+  }
+  if (unknown00->unknown120[unknown00->unknown1c98]->unknownfb1) {
+    unknown00->unknown78->unknown7f0->unknown180->unknowne0->debugRender(x2, y2, quarterWidth, quarterHeight, false, false, 1.0f, true);
+  }
 }
 
 } // namespace ml

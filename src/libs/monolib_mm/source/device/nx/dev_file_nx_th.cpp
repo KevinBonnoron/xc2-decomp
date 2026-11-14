@@ -1,5 +1,6 @@
 #include "device/nx/dev_file_nx_th.h"
 
+#include "device/nx/dev_file_util_nx.h"
 #include "ml/critical_section.h"
 #include "ml/dev_file_th.h"
 #include "ml/file_handle_th.h"
@@ -12,7 +13,9 @@
 #include "mtl/mem_manager.h"
 #include "nn/account.h"
 #include "nn/fs.h"
+#include "nn/os.h"
 #include "nn/result.h"
+#include "nn/time_span.h"
 
 namespace ml {
 
@@ -148,6 +151,60 @@ bool DevFileNxTh::initialize() {
     unknown18 = 1;
   }
   return true;
+}
+
+u32 DevFileNxTh::thFileLoader(void *argument) {
+  OpenReadParam *channel = static_cast<OpenReadParam *>(argument);
+  DevFileNxTh *accessor = static_cast<DevFileNxTh *>(channel->unknown1a0);
+  __atomic_fetch_add(&accessor->unknown20->unknown17fc, 1, __ATOMIC_SEQ_CST);
+  while (!DevFileTh::isInitialized()) {
+    nn::os::SleepThread(nn::TimeSpan::FromNanoSeconds(100000000));
+  }
+  accessor->thUpdate(argument);
+  __atomic_fetch_sub(&accessor->unknown20->unknown17fc, 1, __ATOMIC_SEQ_CST);
+  return 0;
+}
+
+void DevFileNxTh::thUpdate(void *argument) {
+  OpenReadParam *channel = static_cast<OpenReadParam *>(argument);
+  DevFileNxTh *accessor = static_cast<DevFileNxTh *>(channel->unknown1a0);
+  while (!__atomic_load_n(&accessor->unknown20->unknown17f8, __ATOMIC_SEQ_CST)) {
+    channel->unknown198->waitSignalEvent();
+    if (__atomic_load_n(&accessor->unknown20->unknown17f8, __ATOMIC_SEQ_CST)) {
+      break;
+    }
+    void *buffer;
+    u32 offset;
+    int size;
+    bool reading = false;
+    {
+      mm::threading::ReadLockGuard guard(channel->unknown1a8);
+      buffer = channel->unknown120.unknown40;
+      offset = channel->unknown120.unknown4c;
+      size = channel->unknown120.unknown50;
+      if (channel->unknown10d) {
+        reading = (channel->unknown118->unknown94 & 0x10000) == 0;
+      }
+    }
+    if (reading) {
+      FileReadResult result;
+      channel->unknown10f = true;
+      if (DevFileUtilNx::readFile(channel->unknown118, channel->unknown00, size, offset, buffer, size, result)) {
+        mm::threading::WriteLockGuard guard(channel->unknown1a8);
+        FileHandleTh *handle = channel->unknown118;
+        if (handle != nullptr) {
+          int read = result.unknown00;
+          if (result.unknown08) {
+            handle->unknown18 = read;
+            handle->m_currentPtr = read;
+          } else {
+            handle->m_currentPtr += read;
+          }
+        }
+      }
+      channel->unknown10f = false;
+    }
+  }
 }
 
 bool DevFileNxTh::finalize() {

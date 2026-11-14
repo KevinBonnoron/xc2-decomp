@@ -707,6 +707,8 @@ template mm::mtl::FixedList<ml::TJOB *, 64>::iterator mm::mtl::FixedList<ml::TJO
 
 template mm::mtl::FixedList<ml::WorkCpu::AUTO_EXEC, 32>::iterator mm::mtl::FixedList<ml::WorkCpu::AUTO_EXEC, 32>::erase(mm::mtl::FixedList<ml::WorkCpu::AUTO_EXEC, 32>::iterator);
 
+template mm::mtl::FixedList<ml::WorkCpu::GRPLIST, 128>::iterator mm::mtl::FixedList<ml::WorkCpu::GRPLIST, 128>::erase(mm::mtl::FixedList<ml::WorkCpu::GRPLIST, 128>::iterator);
+
 namespace ml {
 
 void WorkCpu::addShutdownForceListener(IWorkEvent *listener) {

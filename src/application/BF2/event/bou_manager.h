@@ -2,14 +2,11 @@
 #include "event/bou_rect.h"
 #include "event/i_manager.h"
 #include "ml/work_event.h"
+#include "mm_math/mm_pnt.h"
 #include "mm_mtl/bitflag.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/noncopyable.h"
 #include "types.h"
-
-namespace mm {
-template <typename T> struct Pnt;
-}
 
 namespace ml {
 class EventView;
@@ -60,6 +57,13 @@ private:
   bool unknown002() const { return !unknown18.test(FLAG_UNKNOWN_3); }
   bool isEnable() const { return unknown18.test(FLAG_UNKNOWN_0); }
   bool isDebugEnable() const { return unknown1c.test(DEBUG_FLAG_UNKNOWN_0); }
+  // Inferred role: sets the size of the rect from its origin to a point; original name unknown.
+  // BouManager::startActive (1.0.0: 0x7100105ef4) reloads the origin x it has just stored: the two subtractions were compiled as a function of their own (one 64-bit load of the origin) before they
+  // were inlined.
+  void unknown003(const mm::Pnt<int> &point) {
+    unknown20.width = point.x - unknown20.x;
+    unknown20.height = point.y - unknown20.y;
+  }
 
   mm::mtl::unknown027<32> unknown18;                                       // Inferred role: flags; original member name unknown.
   mm::mtl::unknown027<32> unknown1c;                                       // Inferred role: debug flags; original member name unknown.

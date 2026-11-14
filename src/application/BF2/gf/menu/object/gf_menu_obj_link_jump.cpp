@@ -3,6 +3,7 @@
 #include "gf/gf_allocator.h"
 #include "gf/menu/adapter/gf_menu_char_data_adapter.h"
 #include "gf/menu/adapter/gf_menu_item_adapter.h"
+#include "gf/menu/gf_menu_bdat.h"
 #include "gf/menu/gf_menu_reference.h"
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/list/gf_menu_enemy_list.h"
@@ -205,6 +206,46 @@ void GfMenuObjLinkJump::RootListener::reciveEvent(const ui::EventData &event, u3
       GfMenuObject::sendEvent(acc.searchChild("LAY_category_list"), sendData, 0.0f);
     }
     break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
+void GfMenuObjLinkJump::NotifyListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1: {
+    ui::UIObjectAcc button(acc.unknown10, "IMG_notify_btn");
+    if (button.isValid()) {
+      s16 icon = GfMenuObjUtil::getBtnIconNumber(8);
+      if (icon != -1) {
+        button.setImageIndex(GfMenuBdat::getIconImageIndex(icon));
+      }
+    }
+    acc.setDisp(false);
+    unknown0c = -1;
+    break;
+  }
+  case GfMenuTypes::unknown003_33: {
+    GfMenuObjUtil::PresetCtrlParam param;
+    param.unknown10 = 0;
+    param.unknown00 = 2;
+    param.unknown0d = true;
+    param.unknown08 = unknown0c;
+    unknown0c = GfMenuObjUtil::startPresetCtrl(acc.unknown10, param);
+    break;
+  }
+  case GfMenuTypes::unknown003_34: {
+    GfMenuObjUtil::PresetCtrlParam param;
+    param.unknown10 = 0;
+    param.unknown04 = 1;
+    param.unknown00 = 2;
+    param.unknown0d = true;
+    param.unknown08 = unknown0c;
+    unknown0c = GfMenuObjUtil::startPresetCtrl(acc.unknown10, param);
+    break;
+  }
   default:
     ui::UIObjectListener::reciveEvent(event, handle);
     break;

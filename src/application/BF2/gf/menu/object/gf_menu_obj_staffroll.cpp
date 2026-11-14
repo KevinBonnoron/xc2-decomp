@@ -5,6 +5,8 @@
 #include "gf/menu/gf_menu_manager.h"
 #include "gf/menu/gf_menu_object.h"
 #include "gf/menu/gf_menu_types.h"
+#include "gf/menu/object/gf_menu_obj_util.h"
+#include "mm_math/mm_pnt.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/reference_object.h"
 #include "ui/event/ui_event_data.h"
@@ -111,5 +113,38 @@ void GfMenuObjStaffroll::start(f32 time, int type) {
 }
 
 void GfMenuObjStaffroll::fadeout() { unknown144(unknown001, GfMenuTypes::unknown003_34); }
+
+void GfMenuObjStaffroll::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    acc.setDisp(false);
+    break;
+  case GfMenuTypes::unknown003_33: {
+    f32 time = event.unknown08_f32;
+    int x = event.unknown0c;
+    unknown20->unknown68 = unknown20->unknown5c / (time * 30.0f);
+    unknown20->unknown58 = 2;
+    mm::Pnt<s16> pos(x, 0);
+    acc.setPos(pos);
+    acc.setDisp(true);
+    ui::UIObjectAcc grade(acc.searchSibiling("LAY_grade"));
+    grade.setDisp(true);
+    break;
+  }
+  case GfMenuTypes::unknown003_34: {
+    GfMenuObjUtil::CtrlParam param;
+    param.unknown08 = 2;
+    param.unknown00 = 2.0f;
+    GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
+    ui::UIObjectAcc grade(acc.searchSibiling("LAY_grade"));
+    grade.setDisp(false);
+    break;
+  }
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
 
 } // namespace gf

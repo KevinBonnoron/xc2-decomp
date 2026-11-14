@@ -67,6 +67,17 @@ mm::mtl::FixedList<GfSearchInfo *, 256> *GfGameSearchObj::getObj(GF_SEARCH_OBJ *
   return infos[reinterpret_cast<u64>(searchObj) & 0x3f].unknown78;
 }
 
+void GfGameSearchObj::setEnable(GF_SEARCH_OBJ *searchObj, bool isEnable) {
+  GfGameSearchObj *search = get();
+  if (searchObj != unknown012 && search != nullptr) {
+    if (isEnable) {
+      search->unknown08.unknown007[reinterpret_cast<u64>(searchObj) & 0x3f].unknown80 &= ~1;
+    } else {
+      search->unknown08.unknown007[reinterpret_cast<u64>(searchObj) & 0x3f].unknown80 |= 1;
+    }
+  }
+}
+
 bool GfGameSearchObj::isEnable(GF_SEARCH_OBJ *searchObj) {
   GfGameSearchObj *search = get();
   if (searchObj != unknown012 && search != nullptr) {

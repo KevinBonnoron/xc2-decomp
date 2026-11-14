@@ -115,6 +115,9 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_DMG_PHANTOM; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
+  // User-provided as in GmkAntiBladeArea and GmkDmgSe: the game's Vector<GmkDmgPhantom>::extend and resize construct the elements without
+  // zero-filling them first (no memset before the member stores).
+  GmkDmgPhantom() : unknown50(nullptr) {}
   ~GmkDmgPhantom() override { dispose(); }
   GmkType getGmkType() const override;
   bool isValid() const override;

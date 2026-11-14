@@ -30,6 +30,17 @@ void MessageManager::Impl::update(const UpdateInfo &info) {
   }
 }
 
+void MessageManager::Impl::remove(u32 id) {
+  mm::mtl::List<MessageInfo>::iterator end = unknown50.end();
+  for (mm::mtl::List<MessageInfo>::iterator it = unknown50.begin(); it != end;) {
+    mm::mtl::List<MessageInfo>::iterator cur = it;
+    ++it;
+    if ((*cur).unknown30 == id) {
+      unknown50.erase(cur);
+    }
+  }
+}
+
 void MessageManager::Impl::registObject(MessageObject *object) {
   object->unknown08.id = unknown08.regist(object);
   object->unknown08.map = &unknown08;

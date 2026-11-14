@@ -62,7 +62,9 @@ public:
   void es_pause(bool isPause);
   void es_pack_free_(u64 pack);
   void es_pack_free(u64 pack);
+  void es_pack_regist(const char *name, void *data, u32 size);
   void es_pack_regist(void *data, u32 size);
+  void *es_regist(const char *name, void *data, u32 value);
   u64 es_regist(void *data, u32 size);
   void es_free(void *data);
   u32 es_create(void *data, bool isLoop);
@@ -90,6 +92,7 @@ public:
   const char *es_get_name(void *data);
   void es_clearall(bool isForce);
   void log();
+  void kizunaTail();
   CommandList *getCommandPtr(u32 index);
   void setGlobalSpeed(f32 speed);
   void setCategorySpd(u32 category, f32 speed);

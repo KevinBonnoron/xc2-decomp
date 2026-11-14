@@ -124,11 +124,15 @@ public:
     }
   }
 
+  // The iterator to the next element is taken from a copy of the position before the node is unlinked, as IntrusiveList::erase does:
+  // fw::SoundSsdBank::removeSource (1.0.0: 0x71001a3c88) loads the next node through that copy and the previous one through the node.
   iterator erase(const iterator &it) {
     if (it == end()) {
       return end();
     }
 
+    iterator result = it;
+    ++result;
     Node *node = it.m_node;
     Node *next = node->m_next;
     Node *prev = node->m_prev;
@@ -136,7 +140,7 @@ public:
     next->m_prev = prev;
     destroyNode(node);
     m_size--;
-    return iterator(next, this);
+    return result;
   }
 
 private:

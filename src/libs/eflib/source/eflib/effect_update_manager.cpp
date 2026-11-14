@@ -2,9 +2,12 @@
 
 #include "eflib/effect_system_manager.h"
 #include "mm/mm_std_base.h"
+#include "mm_mtl/fixed_array.h"
+#include "mm_mtl/fixed_vector.h"
 #include "mtl/alloc_handle.h"
 #include "ptlib/emitter/particle_emitter_manager.h"
 #include "ptlib/forcefield/particle_force_field.h"
+#include "ptlib/particle_hash.h"
 #include "ptlib/particle_heap_allocater.h"
 #include "ptlib/particle_system.h"
 #include "ptlib/renderer/particle_renderer_eff_state.h"
@@ -134,6 +137,16 @@ void SystemManager::MainDraw(const ptlib::DrDrawWorkInfoEF *info, int viewIndex,
 
 void SystemManager::es_pack_free_(u64 pack) { ptlib::ParticleManager::get()->emitter_pack_free(pack); }
 
+void SystemManager::es_pack_regist(const char *name, void *data, u32 size) { ptlib::ParticleManager::get()->parse_efs(name, data, size); }
+
+void *SystemManager::es_regist(const char *name, void *data, u32 value) {
+  ptlib::FxHeader *header = ptlib::ParticleManager::get()->emitter_set_search(0, name, data, value);
+  if (header == nullptr) {
+    return ptlib::ParticleManager::get()->parse_efs(name, data, value);
+  }
+  return header;
+}
+
 void SystemManager::es_free(void *data) {
   if (data != nullptr) {
     ptlib::ParticleManager::get()->emitter_set_free(static_cast<ptlib::FxHeader *>(data), 0);
@@ -152,11 +165,53 @@ const char *SystemManager::es_get_name(void *data) { return static_cast<ptlib::F
 
 void SystemManager::log() { ptlib::efMsg("%04x log()", unknown7824e); }
 
+void SystemManager::kizunaTail() {
+  ptlib::emitter::EmitterManager *manager = ptlib::emitter::EmitterManager::getPtr();
+  if (manager == nullptr) {
+    return;
+  }
+  u32 src = manager->unknown1790;
+  u32 dst = ~src & 1;
+  // The game's FixedArray<KizunaWork, 8> constructor initializes both parity arrays before this copy.
+  for (u32 i = 0; i < 8; i++) {
+    manager->unknown00[dst][i] = manager->unknown00[src][i];
+  }
+}
+
 SystemManager::CommandList *SystemManager::getCommandPtr(u32 index) { return index == 0 ? &unknown220[0] : &unknown220[1]; }
 
 void SystemManager::setGlobalSpeed(f32 speed) { unknown78240[unknown7824c == 0] = speed; }
 
 void SystemManager::setCategorySpd(u32 category, f32 speed) { ptlib::emitter::EmitterManager::getPtr()->unknown1700[category] = speed; }
+
+void SystemManager::getNum(u32 &emitterNum, u32 &particleNum, u32 &drawNum) {
+  ptlib::emitter::EmitterManager *manager = ptlib::emitter::EmitterManager::get();
+  ptlib::emitter::EmitterManager::unknown007 *work = manager->unknown1778[~manager->unknown1790 & 1];
+  emitterNum = work->unknown4008.size();
+  particleNum = work->unknownea7b0;
+  drawNum = work->unknown4000;
+}
+
+void SystemManager::getNumDetail(u32 &emitterNum, u32 &particleNum, u32 &drawNum, u32 &workNum) {
+  ptlib::emitter::EmitterManager *manager = ptlib::emitter::EmitterManager::get();
+  ptlib::emitter::EmitterManager::unknown007 *work = manager->unknown1778[~manager->unknown1790 & 1];
+  emitterNum = work->unknownea7b8;
+  particleNum = work->unknownea7bc;
+  drawNum = work->unknownea7c0;
+  workNum = work->unknownea7c4;
+}
+
+u32 SystemManager::getEmitterForm(u32 handle) {
+  ptlib::emitter::EmitterManager *manager = ptlib::emitter::EmitterManager::get();
+  ptlib::emitter::EmitterManager::unknown007 *work = manager->unknown1778[~manager->unknown1790 & 1];
+  if (work == nullptr) {
+    return 0;
+  }
+  if (handle >= work->unknown4008.size()) {
+    return 0;
+  }
+  return work->unknown4008.begin()[handle].m_emitterForm;
+}
 
 void SystemManager::end() {}
 
@@ -167,6 +222,21 @@ void SystemManager::apply(const ptlib::DrDrawWorkInfoEF *info) {
 }
 
 void SystemManager::opacityRender(const ptlib::DrDrawWorkInfoEF *info) {}
+
+void SystemManager::blurRender(const ptlib::DrDrawWorkInfoEF *info) {
+  if (info->unknown560 != 0) {
+    return;
+  }
+  updateCam(info);
+  MainDraw(info, info->unknown560, true);
+}
+
+int SystemManager::es_getDeadFlag(u32 handle) {
+  if (ptlib::HashManager::getPtr() != nullptr) {
+    return ptlib::HashManager::getPtr()->searchDead(handle);
+  }
+  return -1;
+}
 
 void SystemManager::lastRender(const ptlib::DrDrawWorkInfoEF *info) {}
 

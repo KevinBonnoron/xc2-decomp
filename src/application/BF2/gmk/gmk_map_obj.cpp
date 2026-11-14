@@ -21,10 +21,13 @@ namespace gmk {
 template bool TGmkList<GmkMapObj, GmkMapObj::BdatInfo, 1330659661u, 3u, GmkMapObjGob>::initGmkBdatInfo(GmkMapObj::BdatInfo &, int &, const AGmkBase &);
 template bool TGmkList<GmkRoutedMapObj, GmkMapObj::BdatInfo, 1330662738u, 7u, GmkRouteGob>::initGmkBdatInfo(GmkMapObj::BdatInfo &, int &, const AGmkBase &);
 
+// Assignment order: of the 120 orders of the five statements this is the only one that gives the game's stores both in the constructor
+// (0x71005fc20c: three byte stores and two word stores) and in its copies inlined in Vector<GmkMapObj>::extend and resize (0x710063bfe8:
+// one halfword and one doubleword store).
 GmkMapObj::GmkMapObj() : unknown48(gf::unknown020) {
-  unknown54 = 0.0f;
   unknown50 = true;
   unknown51 = false;
+  unknown54 = 0.0f;
   unknown52 = false;
   unknown58 = 0;
 }
@@ -239,3 +242,5 @@ template void mm::mtl::Vector<gmk::GmkRoutedMapObj>::resize(size_t);
 
 template void mm::mtl::Vector<gmk::GmkMapObj::BdatInfo>::extend(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkMapObj::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkMapObj>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkMapObj>::resize(size_t);

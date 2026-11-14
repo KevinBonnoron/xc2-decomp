@@ -8,6 +8,7 @@
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/field/gf_field_lod.h"
+#include "gf/field/gf_field_sound.h"
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_party.h"
@@ -272,6 +273,85 @@ void GfFieldMapGimmick::onFsSucceeded() {
   unknown230 = 1;
   unknown220 = &GfFieldMapGimmick::seqLod_init;
   unknown238 = &GfFieldMapGimmick::seqMapObj_init;
+}
+
+void GfFieldMapGimmick::seqLod_init(f32) {
+  const gmk::AGmkBase *gmk = unknown68.unknown38;
+  u8 *bdat = gmk->getBindedBdatFp();
+  int id = gmk->unknown20.unknown18;
+  mm::mtl::FixStr<32> name;
+  name.format("G%d_LODmodel", unknown230);
+  unknown234 = static_cast<u16>(Bdat::getValCheck(bdat, name.c_str(), id, gmk::BDAT_TYPE_UNKNOWN_2));
+  if (unknown234 == 0) {
+    unknown220 = nullptr;
+    if (unknown30.unknown04) {
+      setSolvedMapGimmick();
+    }
+    return;
+  }
+  name.format("G%d_LODanime_play", unknown230);
+  u8 play = Bdat::getValCheck(bdat, name.c_str(), id, gmk::BDAT_TYPE_UNKNOWN_1);
+  u32 switchId = 0;
+  switch (play) {
+  case 0:
+    GfFieldLod::get()->setFade(unknown234, false, false);
+    unknown220 = &GfFieldMapGimmick::seqLod_waitToElapseTime;
+    break;
+  case 4:
+    switchId = 1;
+    break;
+  case 5:
+    switchId = 2;
+    break;
+  case 6:
+    switchId = 3;
+    break;
+  default: {
+    bool isSkip = false;
+    bool isReverse = false;
+    switch (play) {
+    case 2:
+      isReverse = true;
+      break;
+    case 3:
+      isSkip = true;
+      break;
+    }
+    if (GfFieldLod::get()->setAnimReverse(unknown234, isReverse, isSkip)) {
+      gmk::applyLodFade(unknown234, isSkip);
+      unknown220 = &GfFieldMapGimmick::seqLod_waitToEndAnim;
+    } else {
+      static_cast<const gmk::GmkMapGimmick *>(gmk)->validateEffectWithoutLodControl(unknown234, false);
+      unknown220 = &GfFieldMapGimmick::seqLod_waitToElapseTime;
+    }
+    break;
+  }
+  }
+  if (switchId != 0) {
+    GfFieldLod::get()->setLodSwitchId(unknown234, switchId);
+    unknown220 = &GfFieldMapGimmick::seqLod_waitToElapseTime;
+  }
+  name.format("nextwait%d", unknown230);
+  unknown248 = static_cast<s16>(Bdat::getValCheck(bdat, name.c_str(), id, gmk::BDAT_TYPE_UNKNOWN_5));
+  unknown24c = 0.0f;
+  name.format("G%d_LOD_SE", unknown230);
+  s16 seId = Bdat::getValCheck(bdat, name.c_str(), id, gmk::BDAT_TYPE_UNKNOWN_2);
+  if (seId != 0) {
+    gmk::GmkCtrlVolSe::CreateInfo info;
+    name.format("G%d_LOD_SE_type", unknown230);
+    if (Bdat::getFlagVal(bdat, "flag", id, name.c_str()) != 0) {
+      info.unknown00 = GfFieldSound::get()->getMapPack();
+    } else {
+      info.unknown00 = GfFieldSound::get()->getCommonPack();
+    }
+    name.format("G%d_LOD_size", unknown230);
+    u8 distance = Bdat::getValCheck(bdat, name.c_str(), id, gmk::BDAT_TYPE_UNKNOWN_1);
+    info.unknown08 = seId;
+    info.unknown10 = distance;
+    info.unknown14 = distance;
+    info.unknown20 = gmk->unknown08.unknown08->unknown00;
+    unknown250[unknown230 - 1].create(info);
+  }
 }
 
 void GfFieldMapGimmick::onFsFailed() { unknown210 = nullptr; }

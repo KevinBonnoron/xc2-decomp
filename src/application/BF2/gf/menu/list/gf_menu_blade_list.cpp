@@ -2,17 +2,48 @@
 
 #include <functional>
 
+#include "bdat.h"
 #include "gf/data/gf_character_id.h"
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_object_type.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/gf_allocator.h"
+#include "gf/menu/gf_menu_bdat.h"
 #include "gf/menu/list/gf_menu_sort_type.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "mm_mtl/fixed_vector.h"
 
 namespace gf {
+
+namespace {
+
+// Inferred role: compares the sort key name column of two blades, ties broken by blade id; original name unknown.
+template <bool Ascending> bool unknown001(const MenuBladeInfo &info, const MenuBladeInfo &other) {
+  u32 row;
+  u32 otherRow;
+  u8 *bdat = GfMenuBdat::getBladeDataFP(info.unknown00, row);
+  u8 *otherBdat = GfMenuBdat::getBladeDataFP(other.unknown00, otherRow);
+  const char *name = GfMenuBdat::getSortKeyName();
+  u32 key;
+  u32 otherKey;
+  if (bdat == nullptr || otherBdat == nullptr || row == 0 || otherRow == 0 || name == nullptr) {
+    key = info.unknown00;
+    otherKey = other.unknown00;
+  } else {
+    key = Bdat::getVal(bdat, name, row).valueU32;
+    otherKey = Bdat::getVal(otherBdat, name, otherRow).valueU32;
+  }
+  if (key == otherKey) {
+    return info.unknown00 < other.unknown00;
+  }
+  if (Ascending) {
+    return key < otherKey;
+  }
+  return key > otherKey;
+}
+
+} // namespace
 
 GfMenuBladeList::GfMenuBladeList() {}
 
@@ -76,6 +107,10 @@ bool GfMenuBladeList::sortTimeDescending(const MenuBladeInfo &info, const MenuBl
   }
   return time > otherTime;
 }
+
+bool GfMenuBladeList::sortNameDescending(const MenuBladeInfo &info, const MenuBladeInfo &other) { return unknown001<false>(info, other); }
+
+bool GfMenuBladeList::sortNameAscending(const MenuBladeInfo &info, const MenuBladeInfo &other) { return unknown001<true>(info, other); }
 
 bool GfMenuBladeList::sortRarityAscending(const MenuBladeInfo &info, const MenuBladeInfo &other) {
   u32 rarity = GfMenuObjUtil::getBladeRarity(info.unknown00);

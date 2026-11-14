@@ -99,4 +99,36 @@ void GfMenuObjActionWindow::disp(bool disp) {
   }
 }
 
+void GfMenuObjActionWindow::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+  case unknown002:
+    acc.setDisp(false);
+    break;
+  case unknown003: {
+    {
+      ui::UIObjectAcc text(acc.searchChild("TXT_content"));
+      if (text.isValid()) {
+        GfMenuObject::setText(text.unknown10, event.unknown08);
+      }
+    }
+    if (event.unknown0c != 0xffffffff) {
+      ui::UIObjectAcc button(handle, "IMG_btn");
+      if (button.isValid()) {
+        button.setImageIndex(event.unknown0c);
+        button.setDisp(true);
+      } else {
+        button.setDisp(false);
+      }
+    }
+    acc.setDisp(true);
+    break;
+  }
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
 } // namespace gf

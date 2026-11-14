@@ -46,7 +46,7 @@ public:
   };
   enum ALPHA_PROC_ID {};
   enum ANIM_SPDATA_TYPE {
-    ANIM_SPDATA_TYPE_UNKNOWN_0,
+    ANIM_SPDATA_TYPE_UNKNOWN_0, // Inferred role: frame span, GetAnimSpecialProcData returns unknowndcc - unknowndc8; original name unknown.
   };
   enum BLADE_TIMER_MODE {};
   enum RIMBLOOM_ID {};
@@ -346,6 +346,7 @@ public:
   void HealDirect(u32 value, int, BattleCharacter *healer);
   void HealHpRate(f32 rate, int, BattleCharacter *healer);
   void HealByRate(u32 value, f32 rate, int, BattleCharacter *healer);
+  void ReviveHeal(BattleCharacter *reviver);
   void AddPartyGauge(f32 value);
   void FluctuatePartyGauge(int);
   bool IsInAttackRange(int slot, f32 *distance) const;

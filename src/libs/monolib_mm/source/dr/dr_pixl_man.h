@@ -92,6 +92,7 @@ public:
   void debugRenderCube(const grlib::CGLibTextureBuffer &texture, u32 face, u32 level, bool isAlpha, int x, int y, int width, int height, bool isGamma, f32 scale);
   void captureMainFrameBuffer(grlib::CGLibTextureBuffer *buffer, u32 width, u32 height);
   void debugRenderCh(const grlib::CGLibTextureBuffer &texture, int x, int y, int width, int height, u32 channel);
+  void debugRenderSimilarity(int x, int y, int width, int height);
   void setupGodRay();
   void lastTexRender();
   void debugIlluminanceRender();
