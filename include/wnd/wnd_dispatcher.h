@@ -14,7 +14,7 @@ struct UpdateInfo;
 
 // Settings of the collision dispatcher; the game reads member 0.
 struct CollisionInfo {
-  u32 unknown00; // Inferred role: collision mask; original member name unknown.
+  f32 unknown00; // Role unknown; stored as 0.001f by fw::WindManager::buildWorld and passed as the float argument of the agent callback; original member name unknown.
 };
 
 static_assert(sizeof(CollisionInfo) == 0x04, "");

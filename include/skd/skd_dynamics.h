@@ -234,7 +234,7 @@ static_assert(sizeof(NodeArray) == 0x38, "");
 class DynamicsSolver {
 public:
   DynamicsSolver(mm::mtl::IAllocator *allocator, const ResSolver &resSolver, u32 index);
-  // Inline default; the game has D0/D2, but no standalone symbol is emitted here, so this is not byte-verified.
+  // Inline default; D2 and D0 match in a scratch instantiation.
   virtual ~DynamicsSolver() = default;
   virtual void solve(f32 deltaTime, const CollionArray &collisions, const Packet &packet);
   virtual void solveMT(f32 deltaTime, const CollionArray &collisions, const Packet &packet, anm::ThreadPool &threadPool);
@@ -341,7 +341,7 @@ static_assert(sizeof(DetectPlaneJob) == 0x40, "");
 // vptr (the serialized data keeps its members); the game's DynamicResDynamics destructor reads the allocator at 0x10
 // and the collisions and solvers at 0x18 and 0x20.
 struct ResDynamics {
-  // Inline default; the game's D0 is delete-only, but no standalone D1/D2 comparison is made for this default.
+  // Inline default; D0 matches in a scratch instantiation.
   virtual ~ResDynamics() = default;
 
   u8 _08[0x08];

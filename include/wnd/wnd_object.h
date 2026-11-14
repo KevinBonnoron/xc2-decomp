@@ -81,7 +81,7 @@ public:
   ObjectType unknown20;             // Inferred role: object type; original member name unknown.
   Transform unknown30;              // Inferred role: transform, passed to Shape::calcAABB; original member name unknown.
   Shape *m_pShape;                  // Inferred role: shape, named by the assertion of wnd_broad_phaze_interface.h.
-  u32 unknown58;                    // Inferred role: group, copied from WindObjectCreateInfo::unknown10; original member name unknown.
+  u32 unknown58;                    // Role unknown, copied from WindObjectCreateInfo::unknown10; original member name unknown.
   BroadPhazeProxy *m_pProxy;        // Inferred role: broad phase proxy, named by the assertion of wnd_object.cpp.
   u32 unknown68;                    // Role and original member name unknown.
   unknown003<WindObject> unknown70; // Inferred role: node of the delayed erase list; original member name unknown.
