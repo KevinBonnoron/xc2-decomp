@@ -24,13 +24,13 @@ class Dispatcher;
 class SphereSphereAgent {
 public:
   static void registerAgent(Dispatcher &dispatcher);
-  static void processCollision(const WindObject &wind0, const WindObject &wind1, f32 radius, HitCache *cache);
+  static bool processCollision(const WindObject &wind0, const WindObject &wind1, f32 radius, HitCache *cache);
 };
 
 class SphereBoxAgent {
 public:
   static void registerAgent(Dispatcher &dispatcher);
-  static void processCollision(const WindObject &wind0, const WindObject &wind1, f32 radius, HitCache *cache);
+  static bool processCollision(const WindObject &wind0, const WindObject &wind1, f32 radius, HitCache *cache);
 };
 
 class Dispatcher : public mm::mtl::ReferenceObject {
@@ -39,8 +39,8 @@ public:
 
   bool dispatchAll(mm::mtl::IntrusiveList<WindProbe> &probes, const UpdateInfo &info);
 
-  void (*unknown10)(const WindObject &, const WindObject &, f32, HitCache *); // Inferred role: sphere/sphere test.
-  void (*unknown18)(const WindObject &, const WindObject &, f32, HitCache *); // Inferred role: sphere/box test.
+  bool (*unknown10)(const WindObject &, const WindObject &, f32, HitCache *); // Inferred role: sphere/sphere test.
+  bool (*unknown18)(const WindObject &, const WindObject &, f32, HitCache *); // Inferred role: sphere/box test.
   void *unknown20;                                                            // Role and original member name unknown.
   void *unknown28;                                                            // Role and original member name unknown.
   CollisionInfo unknown30;                                                    // Inferred role: settings; original member name unknown.
