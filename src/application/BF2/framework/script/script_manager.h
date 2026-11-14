@@ -84,6 +84,14 @@ public:
   bool isFinish() const;
   bool isEmpty() const;
   bool isActive() const;
+  // Inferred name; kept as an exception to the unknown-name rule (AGENTS.md): single-user helper whose existence only the match proves; rename if a sibling build gives a symbol.
+  // Tells whether the script is linked to its vm. ScriptInfo::destroy (1.0.0: 0x710019cf04, 26 instructions) writes the last two zero stores of clear() one by one (str xzr, [x19, #0x228];
+  // str xzr, [x19, #0x220] at 0x710019cf58), which it does only when the test is optimised as a function of its own before it is inlined. The destructor is destroy() inlined (0x710019ce88, 31
+  // instructions, one stp through a kept address at 0x710019cef4), so destroy is the only user.
+  // Forms tried without the helper, written in destroy: the test in the `if` (27 instructions, the stp of the destructor), the negated test with the arms swapped (27), a ternary (27), the flags, the
+  // file handle or the test read into a local (27), two bool locals joined in the `if` (27), unknown08 read into a local first (28), an early return after unlink() (32). unlink matches with or
+  // without the helper and keeps its own test.
+  bool isLinked() const { return (unknown22c & FLAG_UNKNOWN_3) != 0 && unknown08 != nullptr; }
 
   void *unknown08;                 // Inferred role: vm; original member name unknown.
   u32 unknown10;                   // Inferred role: size; original member name unknown.

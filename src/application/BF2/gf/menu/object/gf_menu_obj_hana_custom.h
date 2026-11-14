@@ -54,6 +54,7 @@ public:
   static void setupMain(ui::UIObjectAcc &acc);
   static void updateItemList(GfMenuItemList *list, ItemType::Type type);
   u32 getPartsId();
+  bool seqLineAnime();
   static void removeParts(u32 blade, u32 parts);
   static void expandCircuit(u32 blade, u32 parts);
   static void setupItemList(ui::UIObjectAcc &acc, GfMenuItemList *list, ui::UISelectObjList *selectList);

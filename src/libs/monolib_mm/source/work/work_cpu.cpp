@@ -16,6 +16,8 @@
 #include "mm_mtl/algorithm.h"
 #include "mm_mtl/fixed_list.h" // IWYU pragma: keep
 
+#include <algorithm>
+
 namespace ml {
 
 WorkCpuThread *WorkCpu::getCpuThread(CPUID cpuId) {
@@ -692,6 +694,16 @@ WorkCpu *WorkCpu::create(WorkObj *parent) { return WorkUtil::createWork<WorkCpu>
 template class reslist<IThreadValue *>;
 template class reslist<TJOB *>;
 template class fixed_size_alloc<TJOB>;
+
+void WorkCpu::removeSwap(IThreadValue *value) {
+  CS lock(_mlwcpu::getSwapLock());
+  WorkCpu *cpu = get();
+  reslist<IThreadValue *> &list = cpu->unknown1c0[value->getCpuBank()];
+  reslist<IThreadValue *>::iterator found = std::find<reslist<IThreadValue *>::iterator, IThreadValue *>(list.begin(), list.end(), value);
+  if (found != list.end()) {
+    list.erase(found);
+  }
+}
 
 } // namespace ml
 

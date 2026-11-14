@@ -220,4 +220,22 @@ void GfMenuObjDrArtsSet::MainListener::reciveEvent(const ui::EventData &event, u
   }
 }
 
+void GfMenuObjDrArtsSet::ArtsDetailListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    setupArtsDetail(acc, unknown20->unknown38, unknown20->unknown40);
+    break;
+  case GfMenuTypes::unknown003_33:
+    setFadeIn(handle);
+    break;
+  case GfMenuTypes::unknown003_34:
+    setFadeOut(handle);
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
 } // namespace gf

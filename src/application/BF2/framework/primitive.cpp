@@ -13,6 +13,15 @@ void PrimCapsule::setup(const mm::Vec3 &start, const mm::Vec3 &end, f32 radius) 
   this->unknown30 = radius;
 }
 
+void PrimCapsule::setup(const mm::Vec3 &position, const mm::Quat &rotation, f32 length, f32 radius) {
+  mm::Vec3 start(0.0f, 0.0f, length * 0.5f);
+  mm::Vec3 end(0.0f, 0.0f, length * -0.5f);
+  start = rotation.rotate(start);
+  end = rotation.rotate(end);
+  set(position + start, position + end);
+  this->unknown30 = radius;
+}
+
 void PrimCapsule::setup(const mm::Mat44 &matrix, f32 length, f32 radius) {
   mm::Quat rotation;
   mm::unknown004(rotation, matrix);

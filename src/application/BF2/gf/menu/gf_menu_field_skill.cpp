@@ -101,6 +101,18 @@ void GfMenuFieldSkill::StateWait::onEnter(void *owner, ai::State *previous) {}
 
 void GfMenuFieldSkill::StateWait::onLeave(void *owner, ai::State *next) { static_cast<GfMenuFieldSkill *>(owner)->unknown210 = 0; }
 
+void GfMenuFieldSkill::StateWait::onStep(void *owner, const void *param) {
+  GfMenuFieldSkill *skill = static_cast<GfMenuFieldSkill *>(owner);
+  if (skill->unknown210 == 0 || --skill->unknown210 == 0 || skill->unknown218) {
+    int state = skill->unknown214;
+    if (!skill->unknown218 || state == 5) {
+      reqState(state);
+    } else {
+      reqState(7);
+    }
+  }
+}
+
 ai::State *GfMenuFieldSkill::StateSkip::create(void *buffer) { return new (buffer) StateSkip; }
 
 const char *GfMenuFieldSkill::StateSkip::getName() const { return "StateSkip"; }

@@ -177,6 +177,8 @@ void EffectObject::ReboundUp() {
 void EffectObject::StartAdditionalAttack() {
   mm::Vec3 target;
   mm::Vec3 way;
+  // The blocks are in the game's frame: direction and param share sp+0 (0x710007fbd8 / 0x710007fcfc), and cross and target
+  // share x29-0x40 (0x710007fc3c / 0x710007fca4). Both blocks together give the 0xd0 frame.
   {
     mm::Vec3 direction = unknown190.unknown50;
     direction.x = -direction.x;
@@ -202,13 +204,14 @@ void EffectObject::StartAdditionalAttack() {
   EffectMoveComponent::MOVE_PARAM param;
   param.unknown39 = EffectMoveComponent::MOVE_TYPE_PARABOLA;
   param.unknown00 = way;
-  u8 delay = Bdat::getValCheck(gf::GfDataBdat::getFP(gf::BDAT_BTL_BULLET), "AddAtkDelay", unknown250, 1);
-  f32 time = __builtin_fmaxf(delay, 1.0f);
+  f32 time = __builtin_fmaxf(static_cast<u8>(Bdat::getValCheck(gf::GfDataBdat::getFP(gf::BDAT_BTL_BULLET), "AddAtkDelay", unknown250, 1)), 1.0f);
   f32 cosine = sqrtf(1.0f - way.y * way.y);
   f32 speed = Misc::CalcLengthXZ(unknown80, target) / time / cosine;
   param.unknown10 = speed;
   param.unknown14 = speed;
   param.unknown18 = 0.0f;
+  // The game stores this zero explicitly (str xzr, [sp, #0x18] at 0x710007fd74 covers unknown18 and unknown1c), although the
+  // constructor already zeroes it.
   param.unknown1c = 0.0f;
   param.unknown40_3.unknown40[0] = unknown80.x;
   param.unknown40_3.unknown40[1] = unknown80.y;
@@ -216,6 +219,8 @@ void EffectObject::StartAdditionalAttack() {
   param.unknown40_3.unknown4c[0] = target.x;
   param.unknown40_3.unknown4c[1] = target.y;
   param.unknown40_3.unknown4c[2] = target.z;
+  // The game calls CalcLengthXZ (0x710007fdb8), stores the flags (0x710007fdc8), then the field (0x710007fdcc); writing the
+  // call straight into the field gives the wrong store order.
   f32 length = Misc::CalcLengthXZ(unknown80, target);
   param.unknown38 |= 0x4;
   param.unknown20[2] = length;

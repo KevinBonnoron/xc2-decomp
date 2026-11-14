@@ -159,6 +159,33 @@ bool DrCalcTexStreamMan::memSeachOptimization(u32 size) {
   return isFound;
 }
 
+DrCalcTexStmObj *DrCalcTexStreamMan::createBackwardFreeObj(u32 size) {
+  for (DrCalcTexStmObj *obj = unknown08.unknown08; obj != nullptr; obj = obj->unknown08) {
+    if ((obj->unknown24 & 1) == 0 && static_cast<u32>(obj->unknown20) >= size) {
+      // Unsigned: the game adds it to the address with a zero extension (1.0.0: 0x71008b4470, uxtw).
+      u32 rest = obj->unknown20 - size;
+      if (rest != 0) {
+        DrCalcTexStmObj *child = unknown18.unknown00;
+        if (child == nullptr) {
+          return nullptr;
+        }
+        obj->unknown20 = rest;
+        child->unknown20 = size;
+        child->unknown18 = obj->unknown18 + rest;
+        unknown18.unknown001(child);
+        child->unknown24 = 0;
+        unknown08.unknown003(obj, child);
+        obj = child;
+      } else {
+        obj->unknown24 = 0;
+      }
+      obj->unknown24 |= 1;
+      return obj;
+    }
+  }
+  return nullptr;
+}
+
 DrCalcTexStmObj *DrCalcTexStreamMan::createAheadFreeObj(u32 size) {
   for (DrCalcTexStmObj *obj = unknown08.unknown00; obj != nullptr; obj = obj->unknown10) {
     if ((obj->unknown24 & 1) == 0 && static_cast<u32>(obj->unknown20) >= size) {

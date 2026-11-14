@@ -118,6 +118,27 @@ void GfMenuObjHanaCustom::setupMain(ui::UIObjectAcc &acc) { GfMenuHanaAdapter::c
 
 u32 GfMenuObjHanaCustom::getPartsId() { return unknown28->getContents(unknown28->getIndex(false)).unknown00 + unknown80; }
 
+bool GfMenuObjHanaCustom::seqLineAnime() {
+  ui::UIObjectAcc acc(unknown18);
+  ui::UIObjectAcc main(acc.searchChild("LAY_main"));
+  // The game evaluates getPartsId (1.0.0: 0x710046dc8c) before the stores of the name's constructor.
+  u32 partsId = getPartsId();
+  mm::mtl::FixStr<32> name;
+  name.format("IMG_hnptline@%02d", convPartsId(partsId));
+  ui::UIObjectAcc line(main.searchChild(name.c_str()));
+  if (unknown338 == 0) {
+    line.startAnimation("act_start", false);
+    unknown338 = 1;
+    return false;
+  }
+  if (line.isPlayingAnimation()) {
+    return false;
+  }
+  unknown164(main.searchChild("LAY_parts_window"), 0x101);
+  unknown338 = 0;
+  return true;
+}
+
 void GfMenuObjHanaCustom::getEquipItem(u32 blade, u32 parts, MenuItemInfo &info) {
   EquipHana equip;
   GfGameUtilHana::getEquip(equip, blade);

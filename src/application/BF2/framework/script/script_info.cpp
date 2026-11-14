@@ -9,8 +9,10 @@ namespace fw {
 
 ScriptInfo::ScriptInfo() : unknown08(nullptr), unknown10(0), unknown21c(-1), unknown220(nullptr), unknown228(STATE_UNKNOWN_0), unknown22c(0), unknown230(nullptr), unknown238(nullptr) {}
 
-ScriptInfo::~ScriptInfo() {
-  if ((unknown22c & FLAG_UNKNOWN_3) != 0 && unknown08 != nullptr) {
+ScriptInfo::~ScriptInfo() { destroy(); }
+
+void ScriptInfo::destroy() {
+  if (isLinked()) {
     unlink();
   } else if (unknown220 != nullptr) {
     ml::DevFileTh::cancel(unknown220, false);

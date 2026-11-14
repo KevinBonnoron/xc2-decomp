@@ -30,6 +30,7 @@ class StateFieldAreaWalk : public GfStateBase {
   StateFieldAreaWalk() : unknown18(0), unknown1c(false), unknown20(), unknown58(nullptr), unknown68(0.0f) {}
   static bool isCondMatch(const GfComBehaviorEnemy &behavior);
   bool getGoalPosRandom(mm::Vec3 &position, const GfComBehaviorEnemy &behavior) const;
+  bool getGoalPosCircle(mm::Vec3 &position, const GfComBehaviorEnemy &behavior) const;
   bool getGoalPosWater(mm::Vec3 &position, const GfComBehaviorEnemy &behavior) const;
   void enter(GfComBehaviorEnemy *behavior, ai::State *previous);
   void leave(GfComBehaviorEnemy *behavior, ai::State *next);

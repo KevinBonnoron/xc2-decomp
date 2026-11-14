@@ -17,6 +17,7 @@
 #include "idcoli/idcoli_util_coli.h"
 #include "ml/rand.h"
 #include "mm_math/mm_mat44.h"
+#include "mm_math/mm_math.h"
 #include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
 
@@ -73,6 +74,43 @@ bool StateFieldAreaWalk::getGoalPosRandom(mm::Vec3 &position, const GfComBehavio
     gmkInst->getPositionInRandomWalk(position, angleMin, angleMax, distanceMin, distanceMax);
   }
 
+  return true;
+}
+
+bool StateFieldAreaWalk::getGoalPosCircle(mm::Vec3 &position, const GfComBehaviorEnemy &behavior) const {
+  gmk::AGmkBase *gmkInst = behavior.getBindedGmkInst();
+  if (gmkInst == nullptr || gmkInst->getGmkType() != gmk::GmkEnemy::GMK_TYPE) {
+    return false;
+  }
+
+  gmk::GmkEnemy *enemy = static_cast<gmk::GmkEnemy *>(gmkInst);
+  f32 radius = enemy->getData()->unknown00;
+  if (radius < 0.000001f) {
+    return false;
+  }
+
+  const mm::Vec3 &center = enemy->unknown08.unknown08->unknown00;
+  mm::Vec3 direction = behavior.unknown140.unknownc0 - center;
+  if (direction.unknown003()) {
+    direction = mm::Vec3::unitX;
+  } else {
+    direction.unknown001();
+  }
+
+  // The game scales the direction before the sinf and cosf calls (1.0.0: 0x710050d2c8).
+  direction *= radius;
+  f32 angle = 100.0f / radius;
+  if (angle > 90.0f) {
+    angle = 90.0f;
+  }
+
+  if (unknown1c) {
+    angle = -angle;
+  }
+
+  f32 radian = angle * mm::DEG_TO_RAD;
+  mm::Quat rotation = {0.0f, sinf(radian * 0.5f), 0.0f, cosf(radian * 0.5f)};
+  position = center + rotation.rotate(direction);
   return true;
 }
 

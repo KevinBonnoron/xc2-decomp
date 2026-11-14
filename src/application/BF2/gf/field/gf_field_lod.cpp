@@ -296,6 +296,27 @@ void GfFieldLod::destroy() {
   delete lod;
 }
 
+void GfFieldLod::setFade(int bdatId, bool isFadeIn, bool isImmediate) {
+  GfGameFlag::setLocal(1, bdatId + unknown003 - unknown808, isFadeIn);
+  // The lod id is read here, before the model test: the game loads it once before the search (1.0.0: 0x71002e4e34) and keeps it on the stack across the loop (str w1, [sp, #0xc] at
+  // 0x71002e4e54). Read at the setFade call the load comes after the loop (93 instructions instead of 97); declared after the model test the id takes x22 and the address of unknown840 the stack slot.
+  u16 lodId = unknown08[bdatId - unknown808];
+  if (unknown840.unknown00.unknown00 == nullptr || unknown840.unknown00.unknown10 == nullptr) {
+    return;
+  }
+  f32 fadeTime = 0.0f;
+  BdatInfo *info = _findBdatInfo(bdatId);
+  if (info != nullptr) {
+    if (!unknown888) {
+      info->dirtyCache();
+    }
+    if (!isImmediate) {
+      fadeTime = isFadeIn ? info->unknown04 : info->unknown08;
+    }
+  }
+  unknown840.setFade(lodId, isFadeIn, fadeTime);
+}
+
 void GfFieldLod::validateBySaveData() {
   u8 *bdat = GfDataBdat::getFP(BDAT_FLD_LODLIST);
   int top = Bdat::getIdTop(bdat);

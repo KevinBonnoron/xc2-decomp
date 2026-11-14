@@ -6,6 +6,8 @@
 #include "ml/work_util.h"
 #include "mm_mtl/fixed_list.h" // IWYU pragma: keep
 
+#include <algorithm>
+
 namespace ml {
 
 WorkObj::WorkObj(const char *name, WorkObj *parent, int childNum)
@@ -264,6 +266,13 @@ template void WorkObj::wkSetEventCurrent<u32>(EVT event, const u32 &param);
 
 template class reslist<IWorkEvent *>;
 template class reslist<unsigned int>;
+
+void WorkObj::wkRemoveChild(WorkObj *child) {
+  reslist<WorkObj *>::iterator found = std::find<reslist<WorkObj *>::iterator, WorkObj *>(unknown60.begin(), unknown60.end(), child);
+  if (found != unknown60.end()) {
+    unknown60.erase(found);
+  }
+}
 
 } // namespace ml
 

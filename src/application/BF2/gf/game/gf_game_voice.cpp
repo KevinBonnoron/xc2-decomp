@@ -189,9 +189,8 @@ int GfVoiceName::getCharaId() const {
   if (unknown18 > 0) {
     int id = 0;
     int scale = 1;
-    for (int i = unknown18 - 1; i >= 0; i--) {
+    for (int i = unknown18 - 1; i >= 0; i--, scale *= 10) {
       id += (static_cast<u8>(unknown00.c_str()[i]) - '0') * scale;
-      scale *= 10;
     }
     return id;
   }
@@ -219,6 +218,18 @@ u32 GfVoiceName::getObjType() const {
     return OBJECT_TYPE_ENEMY;
   }
   return OBJECT_TYPE_NONE;
+}
+
+int GfVoiceName::getVoiceId() const {
+  if (unknown18 != 0) {
+    int id = 0;
+    int scale = 1;
+    for (int i = unknown18 + 1; i >= unknown18; i--, scale *= 10) {
+      id += (static_cast<u8>(unknown00.c_str()[i]) - '0') * scale;
+    }
+    return id;
+  }
+  return 0;
 }
 
 void GfVoiceName::addNumber2keta(mm::mtl::FixStr<16> &name, u32 number) {

@@ -63,6 +63,19 @@ void DrPixlDeferred::shadowLightRender() {
   }
 }
 
+void DrPixlDeferred::debugRender() {
+  s32 width = static_cast<s32>(unknown08->unknown5b8->unknown28 * 0.25f);
+  s32 height = static_cast<s32>(unknown08->unknown5b8->unknown2c * 0.25f);
+  s32 y = height * 2;
+  getTemporalInputShadowMap()->debugRender(0, y, width, height, false, false, 1.0f, true);
+  const DrPixlPostParm *postParm = unknown08->unknown120[unknown08->unknown1c98];
+  if (postParm->unknown103c && postParm->unknown103d) {
+    s32 x = width + 1;
+    getTemporalHistoryShadowMap()->debugRender(x, y, width, height, false, false, 1.0f, true);
+    getTemporalOutputShadowMap()->debugRender(x * 2, y, width, height, false, false, 1.0f, true);
+  }
+}
+
 void DrPixlDeferred::globalIBLRender() {
   DrShdLgtMan *lgtMan = unknown08->unknown80->unknown18;
   lgtMan->unknown58->render(lgtMan);

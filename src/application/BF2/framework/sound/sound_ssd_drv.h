@@ -66,6 +66,15 @@ static_assert(sizeof(SoundBankSetup) == 0x20, "");
 // Layout from the SoundSsdDriver constructor and addCategory (1.0.0: 0x71001a587c, 0x71001a78c0): the constructor stores the vtable of
 // ssd::SoundCategory at 0x00, so the category is a member, not a base.
 struct unknown126 {
+  // Inferred name; kept as an exception to the unknown-name rule (AGENTS.md): single-user helper whose existence only the match proves; rename if a sibling build gives a symbol.
+  // Sets the volume of the ssd category. SoundSsdDriver::setCategoryMute (1.0.0: 0x71001a79e8, 58 instructions) multiplies the four volume factors with both first fmul before the load of the
+  // mute fade value (fmul, fmul, ldr s1, [x1, #0x28], fmul at 0x71001a7ab4-0x71001a7ac0), which clang gives only when the product is a named value: the argument of an inline function, or a local.
+  // Forms tried without the helper, written in setCategoryMute, all 58 instructions with that load before the second fmul: the store of the product to unknown00.unknown08.unknown04, the product
+  // accumulated in a local with *=, a reference to the ssd parameters or to the ssd category, a helper without argument that computes and stores the product, a helper that returns the product.
+  // A local holding the product (f32 volume = ...;) matches too, but it is a single-use local of arithmetic; a setter on ssd::SoundCategory matches as well. setCategoryVolume (0x71001a7ad0)
+  // and update (0x71001a6c8c) multiply the same factors in another operand order, so no helper computing the product can serve the three.
+  void setVolume(f32 volume) { unknown00.unknown08.unknown04 = volume; }
+
   ssd::SoundCategory unknown00;  // Inferred role: ssd category; original member name unknown.
   f32 unknown10;                 // Inferred role: volume factor; original member name unknown.
   unknown129 unknown14;          // Inferred role: volume fade; original member name unknown.

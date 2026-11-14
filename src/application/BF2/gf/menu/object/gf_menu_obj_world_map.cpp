@@ -726,6 +726,42 @@ void GfMenuObjWorldMap::refreshZoneSelect(ui::UIObjectAcc &, GfMenuZoneMapList *
   }
 }
 
+int GfMenuObjWorldMap::ctrlGroupUp(ui::UISelectObjList *objects, u32 count) {
+  // Both points are declared first: the game's stack holds topPos (sp+0xa8, 1.0.0: 0x71004e9794) and pos (sp+0xa0, 0x71004e9810) above the two UIObjectAcc (sp+0x88 and sp+0x70). With either
+  // point declared at its first use, or the two swapped, the slots differ.
+  mm::Pnt<s16> topPos;
+  mm::Pnt<s16> pos;
+  ui::UIObjectAcc top(objects->getObject(0));
+  top.getPos(topPos);
+  int ctrl = -1;
+  for (u32 i = 0; i < objects->getSize() && i < count; i++) {
+    ui::UIObjectAcc acc(objects->getObject(i));
+    if (i == objects->getIndex(false)) {
+      if (i != 0) {
+        acc.getPos(pos);
+        GfMenuObjUtil::CtrlParam param;
+        param.unknown08 = 0x20;
+        param.unknown20 = pos.y - topPos.y;
+        param.unknown00 = 0.3f;
+        param.unknown04 = 2;
+        param.unknown14 = 4;
+        param.unknown0c = 1;
+        ctrl = GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
+        acc.setDispPriority(9);
+      }
+    } else {
+      GfMenuObjUtil::CtrlParam param;
+      param.unknown004("fade_out_l");
+      param.unknown00 = 0.3f;
+      param.unknown04 = 2;
+      param.unknown14 = 10;
+      ctrl = GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
+      acc.setDispPriority(8);
+    }
+  }
+  return ctrl;
+}
+
 int GfMenuObjWorldMap::ctrlGroupReturn(ui::UISelectObjList *objects, u32 count) {
   int ctrl = -1;
   for (u32 i = 0; i < objects->getSize() && i < count; i++) {

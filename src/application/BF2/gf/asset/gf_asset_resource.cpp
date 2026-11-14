@@ -154,6 +154,19 @@ u64 GfAssetResource::getAssetTimeStamp() const {
   return 0;
 }
 
+bool GfAssetResource::isFinishLoad() const {
+  switch (unknown0c) {
+  case unknown001_1:
+    return unknown18->valid();
+  case unknown001_2:
+    return unknown38 != 0 && unknown30 != nullptr;
+  case unknown001_3:
+    return true;
+  default:
+    return false;
+  }
+}
+
 void GfAssetResource::destroyStreamObject() {
   if (unknownc8 != nullptr) {
     unknownc8->release();

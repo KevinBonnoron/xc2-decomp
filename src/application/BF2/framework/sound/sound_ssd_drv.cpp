@@ -108,6 +108,29 @@ void SoundSsdDriver::removeCategory(SoundCategory category) {
   }
 }
 
+void SoundSsdDriver::setCategoryMute(SoundCategory category, bool isMute, f32 time) {
+  if (unknown10 != nullptr) {
+    unknown126 *found = findCategory(category);
+    if (found != &unknowne8[CATEGORY_UNKNOWN_18] && (isMute || found->unknown40 != 0)) {
+      if (found->unknown48 != 0) {
+        if (isMute) {
+          if (found->unknown40 == 0) {
+            found->unknown28.start(0.0f, time);
+          }
+          found->unknown40++;
+        } else {
+          found->unknown40--;
+          if (found->unknown40 == 0) {
+            found->unknown28.start(1.0f, time);
+          }
+        }
+      }
+      found->setVolume(found->unknown3c * found->unknown10 * found->unknown14.unknown00 * found->unknown28.unknown00);
+      unknown10->SetCategory(found->unknown00);
+    }
+  }
+}
+
 u32 SoundSsdDriver::registPlayer(SoundSsdPlayer *player, SoundType type) { return unknown8b8.regist(player) | (static_cast<u32>(type) << 24); }
 
 f32 SoundSsdDriver::getCategoryVolume(SoundCategory category) const {

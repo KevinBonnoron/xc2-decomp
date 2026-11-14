@@ -11,6 +11,7 @@
 #include "gf/data/gf_data_map.h"
 #include "gf/field/gf_field_exec_cmd_turn.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/game/gf_game_party.h"
 #include "gf/object/component/behavior/gf_com_behavior_npc.h"
 #include "gf/object/component/gf_com_collider.h"
 #include "gf/object/gf_obj.h"
@@ -81,6 +82,13 @@ void StateTalk::seqWaitTalkEnd(GfComBehaviorNpc &behavior, const fw::UpdateInfo 
     unknown50 = &StateTalk::seqWaitTurnEnd;
   } else {
     reqState(STATE_ID_UNKNOWN_0);
+  }
+}
+
+void StateTalk::setCollideNpcMob(bool isCollide) {
+  for (u32 i = 0; i < 3; i++) {
+    setCollideNpcMob(GfGameParty::getHandleDriver(i), isCollide);
+    setCollideNpcMob(GfGameParty::getHandleBlade(i, -1), isCollide);
   }
 }
 

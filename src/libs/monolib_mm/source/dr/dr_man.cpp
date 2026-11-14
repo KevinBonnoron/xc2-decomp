@@ -68,6 +68,31 @@ CriticalSection &DrMan::getCriticalSection() {
 
 int DrMan::loopCnt() { return 1; }
 
+void DrMan::apply(int loop) {
+  applyBegin(loop);
+  // The view test is written in place, as in render: through unknown059 a for loop indexes unknown440 with the widened counter (add x8, x19, x20, lsl #6), where the game sign extends the
+  // 32-bit counter (lsl x8, x20, #32; add x8, x19, x8, asr #26 at 1.0.0: 0x71007cb384).
+  for (int view = 0; view < 4; view++) {
+    if ((unknown440[view].unknown38 & 1) == 0) {
+      unknown88->applyDispOff(view);
+    } else {
+      applyView(view);
+    }
+  }
+  unknown580 = unknowna0[0];
+  unknown588 = unknownc0[0];
+  unknown590 = unknowne0[0];
+  unknown598 = unknown100[0];
+  unknown5a0 = unknown140[0];
+  unknown5a8 = unknown160[0];
+  unknown78->setupCate(0);
+  unknown88->setupCate(0);
+  unknown80->setupCate(0);
+  unknown88->endApply();
+  unknown78->lastUpdate();
+  unknown5b0->entryJob();
+}
+
 void DrMan::applyBegin(int loop) {
   unknown1c8c = unknown1c84 * unknown1c88;
   unknown88->beginApply();

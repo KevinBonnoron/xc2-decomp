@@ -44,6 +44,7 @@ class ScriptCamera {
 public:
   ScriptCamera();
   virtual ~ScriptCamera();
+  void start(const mm::Vec3 &position, const mm::Vec3 &rotation, f32 time);
   void end(f32 time);
   void move(const mm::Vec3 &position, const mm::Vec3 &rotation, f32 time);
 

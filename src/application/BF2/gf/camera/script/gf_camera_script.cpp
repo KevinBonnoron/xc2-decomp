@@ -75,10 +75,20 @@ ScriptCamera::ScriptCamera() {}
 
 ScriptCamera::~ScriptCamera() {}
 
+void ScriptCamera::start(const mm::Vec3 &position, const mm::Vec3 &rotation, f32 time) {
+  if (unknown08.get() == nullptr) {
+    unknown08 = ScriptCameraEntity::create(position, rotation);
+    // The frame count is converted in place, as in end: with time / 30.0f written in the call the address of the layer (add x0, x8, #0x20) comes before the fdiv of 1.0.0: 0x71001e6260.
+    time /= 30.0f;
+    fw::CameraManager::get()->unknown20[0].push(unknown08, time);
+  }
+}
+
 void ScriptCamera::end(f32 time) {
   if (unknown08.get() != nullptr) {
     if (unknown08->unknowna0) {
-      fw::CameraManager::get()->unknown20[0].pop(unknown08, time / 30.0f);
+      time /= 30.0f;
+      fw::CameraManager::get()->unknown20[0].pop(unknown08, time);
     }
     unknown08 = nullptr;
   }

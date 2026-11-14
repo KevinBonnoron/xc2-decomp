@@ -89,6 +89,19 @@ bool LookAtPlugin::getTargetTransform(const TargetInfo &info, fw::Transform *tra
   return false;
 }
 
+void LookAtPlugin::onReloadBdat() {
+  GfBdatLookAt *bdat = GfBdatLookAt::get();
+  GfGameSearchObj::GFSEARCH_INFO *info = GfGameSearchObj::getInfo(unknown20);
+  info->unknown00.unknown3c = bdat->getMaxRadius();
+  info->unknown00.unknown00 |= 1;
+  // The game calls getMaxUpper (1.0.0: 0x7100579c70) and getMaxLower (0x7100579c7c), then sets the flag (0x7100579c80), then stores both values (stp s8, s0 at 0x7100579c8c).
+  f32 upper = bdat->getMaxUpper();
+  f32 lower = bdat->getMaxLower();
+  info->unknown00.unknown00 |= 2;
+  info->unknown00.unknown30 = upper;
+  info->unknown00.unknown34 = lower;
+}
+
 void LookAtPlugin::drawDebugTarget() {
   if (unknown40 != nullptr && unknown10.get() != nullptr) {
     fw::LookAtIkSolver *solver = unknown10->unknown28.get();

@@ -105,6 +105,27 @@ void GfComPropertyPc::writeBack() {
 
 void GfComPropertyPc::procMsgObjectGetVelocity(fw::MessageObject *sender, MsgObjectGetVelocity &message) { message.unknown10 = unknown80 + mm::Vec3::unitY * unknown90; }
 
+void GfComPropertyPc::updateWorldDirs() {
+  unknown290 = mm::Vec3::unitY;
+  unknown2b0 = unknown250 - unknown290 * (unknown250.x * unknown290.x + unknown250.y * unknown290.y + unknown250.z * unknown290.z);
+  if (unknown2b0.unknown003()) {
+    unknown2b0 = unknown1e0 - unknown290 * (unknown1e0.x * unknown290.x + unknown1e0.y * unknown290.y + unknown1e0.z * unknown290.z);
+  }
+  if (!unknown2b0.unknown003()) {
+    unknown2b0.unknown001();
+  }
+  unknown2d0 = unknown270 - unknown290 * (unknown270.x * unknown290.x + unknown270.y * unknown290.y + unknown270.z * unknown290.z);
+  if (unknown2d0.unknown003()) {
+    unknown2d0 = unknown200 - unknown290 * (unknown200.x * unknown290.x + unknown200.y * unknown290.y + unknown200.z * unknown290.z);
+  }
+  if (!unknown2d0.unknown003()) {
+    unknown2d0.unknown001();
+  }
+  unknown2a0 = mm::Vec3(-unknown290.x, -unknown290.y, -unknown290.z);
+  unknown2c0 = mm::Vec3(-unknown2b0.x, -unknown2b0.y, -unknown2b0.z);
+  unknown2e0 = mm::Vec3(-unknown2d0.x, -unknown2d0.y, -unknown2d0.z);
+}
+
 void GfComPropertyPc::resetInput() {
   unknown60.unknown00 = 0.0f;
   unknown60.unknown04 = 0.0f;

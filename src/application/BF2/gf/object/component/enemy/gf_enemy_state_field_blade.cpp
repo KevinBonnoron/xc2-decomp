@@ -80,5 +80,31 @@ void StateFieldBlade::seqIdle(GfComBehaviorEnemy &behavior, const fw::UpdateInfo
   unknown50 = &StateFieldBlade::seqMoveToDriver;
 }
 
+void StateFieldBlade::seqMoveToDriver(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info) {
+  unknown18.update(info.unknown04);
+  if (!unknown18.unknown34) {
+    return;
+  }
+
+  behavior.unknown003(info.unknown04);
+  mm::Vec3 driverPos;
+  if (getOwnerDriverPos(driverPos, static_cast<GfObj *>(behavior.unknown08)->unknownf8)) {
+    behavior.unknown140.unknownc0 = driverPos;
+    const mm::Vec3 &current = behavior.getTransform().unknown00;
+    f32 dx = driverPos.x - current.x;
+    f32 dy = driverPos.y - current.y;
+    f32 dz = driverPos.z - current.z;
+    f32 distanceSq = dx * dx + dy * dy + dz * dz;
+    f32 radius = getEnRadius(behavior) + 1.0f;
+    if (radius * radius < distanceSq) {
+      return;
+    }
+  }
+
+  behavior.unknown140.applyFieldMoveSpeed(GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_0, behavior);
+  unknown18.create(TFieldExecCmd<GfComAsm>::CreateInfo(static_cast<GfObj *>(behavior.unknown08)->unknownf8, "C_walkend"));
+  unknown50 = &StateFieldBlade::seqWaitIdle;
+}
+
 } // namespace enemy
 } // namespace gf

@@ -75,6 +75,7 @@ struct GfVoiceName {
   bool getVoicePath(mm::mtl::FixStr<16> &path) const;
   int getCharaId() const;
   u32 getObjType() const;
+  int getVoiceId() const;
   static bool isHanaVoice(const char *name);
   static void addNumber2keta(mm::mtl::FixStr<16> &name, u32 number);
   static const char *getCharacterVoiceStr(GF_OBJ_HANDLE *handle);

@@ -363,12 +363,27 @@ const mm::mtl::RTTI *GfEvtModelEvent::getRTTI() const { return &m_rtti; }
 
 const mm::mtl::RTTI *GfEvtModelNpc::getRTTI() const { return &m_rtti; }
 
+GfEvtModelNpc::GfEvtModelNpc(GfInitParamNpc &param) : GfEvtModel(GF_EVT_MODEL_UNKNOWN_4, param.m_bladeID) {
+  if (GfMenuManager::isOpenFullScreen() && GfGameManager::isInnerState(GF_STATE_UNKNOWN_6)) {
+    param.unknown40 = changeLayerUI(param.unknown40);
+  }
+  param.unknown44 = 1;
+  unknown20 = GfObjFactory::createNpc(param);
+}
+
 GfEvtModelNpc *GfEvtModelNpc::create(GfInitParamNpc &param) {
   // __LINE__ must be 1020 as in the original source: it is the line argument of operator new.
 #line 1020
   GfEvtModelNpc *model = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfEvtModelNpc(param);
   model->addRef();
   return model;
+}
+
+GfEvtModelEvent::GfEvtModelEvent(GfInitParamEventObj &param) : GfEvtModel(GF_EVT_MODEL_UNKNOWN_3, param.m_bladeID) {
+  if (GfMenuManager::isOpenFullScreen() && GfGameManager::isInnerState(GF_STATE_UNKNOWN_6)) {
+    param.unknown40 = changeLayerUI(param.unknown40);
+  }
+  unknown20 = GfObjFactory::createEventObj(param);
 }
 
 GfEvtModelEvent *GfEvtModelEvent::create(GfInitParamEventObj &param) {

@@ -26,7 +26,8 @@ public:
   };
 
   // Layout from the loads of EffectMoveComponent::Initialize(const MOVE_PARAM &), which reads the up, homing and link views;
-  // only the up view is used by compiled code so far. The builders (CreateBullet, ReboundUp, ReturnLinkObj, EndProc,
+  // ReboundUp, ReturnLinkObj and StartAdditionalAttack use the up, link and parabola views; no compiled code uses the
+  // homing view yet. The builders (CreateBullet, ReboundUp, ReturnLinkObj, EndProc,
   // StartAdditionalAttack) open by zeroing +0x1c and +0x38, which the constructor does.
   struct MOVE_PARAM {
     MOVE_PARAM() : unknown1c(0.0f), unknown38(0) {}
