@@ -6,6 +6,9 @@
 
 // setMainRenderTarget is inlined by the game in alphaRender; keep its definition visible in this unit.
 #include "cloud_calc_params.cpp"
+// The game builds the cloud object files in one unit (0x71007b68b4 to 0x71007c1694), in this order: CloudCalcParams, CloudObjFlow (0x71007b761c), CloudObjMan (0x71007b87e0), the other objects,
+// CloudObjReduction (0x71007bfe10) and CloudUniform (0x71007c0c9c). Functions of the last two also sit after their first callers earlier in the unit (CloudUniform::createUniform at 0x71007b6ce8).
+#include "cloud_obj_flow.cpp"
 
 namespace cloud {
 
@@ -28,3 +31,6 @@ void CloudObjMan::alphaRender(const ml::IDrDrawWorkInfo *workInfo) {
 }
 
 } // namespace cloud
+
+#include "cloud_obj_reduction.cpp"
+#include "cloud_uniform.cpp"

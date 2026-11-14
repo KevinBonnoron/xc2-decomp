@@ -2,9 +2,6 @@
 
 #include "navi/nvmsh_res_mem_man.h"
 
-// releaseFreeObj is inlined by the game in releaseNavi; keep its definition visible in this unit.
-#include "nvmsh_res_mem_man.cpp"
-
 namespace navi {
 
 NvmshResObj::NvmshResObj()
@@ -118,3 +115,8 @@ void NvmshResData::releaseCall() {
 }
 
 } // namespace navi
+
+// The game builds these files in the same unit, after this one and in this order: nvmsh_res_man.cpp (0x71008eeb90 to 0x71008f0858, NvmshResMan::tail at 0x71008ef3a8), then
+// nvmsh_res_mem_man.cpp (0x71008f0858 to 0x71008f0b28). releaseFreeObj (0x71008eeb44) is inlined by the game in releaseNavi; keep its definition visible in this unit.
+#include "nvmsh_res_man.cpp"
+#include "nvmsh_res_mem_man.cpp"

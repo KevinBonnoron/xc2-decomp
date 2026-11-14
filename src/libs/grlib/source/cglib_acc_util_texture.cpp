@@ -4,6 +4,10 @@
 #include "grlib/cglib_util_pixel.h"
 #include "nn/os.h"
 
+// The game builds this file in the same unit, before the functions below: its block (0x7100799c30 to 0x7100799de8) ends where CGLibAcc1DTexture starts and sits inside this file's range
+// (0x7100795b1c to 0x710079d2e4).
+#include "cglib_sampler.cpp"
+
 namespace grlib {
 
 CGLibAccUtilTexture::ReadF32Call CGLibAccUtilTexture::s_pReadF32Call[] = {
