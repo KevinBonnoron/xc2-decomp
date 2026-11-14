@@ -295,3 +295,7 @@ CGLibPipeline::~CGLibPipeline() {}
 } // namespace grlib
 
 template mm::mtl::PtrSingleton<grlib::context::CGLibSystemContext>::~PtrSingleton();
+
+// The game builds this file in the same unit: CGLibPipeline::setDefaults (0x71007a7aa4), relase (0x71007a8524) and begin (0x71007a8928) sit among the functions of this file (0x71007a6f4c to
+// 0x71007abea4), before its CGLibPipeline constructor (0x71007abe9c).
+#include "cglib_pipeline.cpp"
