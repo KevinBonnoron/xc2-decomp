@@ -49,7 +49,9 @@ public:
   u16 unknownc4[1];  // Inferred role: SP benkei weapon enemy ids; original member name unknown.
   u16 unknownc6[11]; // Inferred role: system message text ids; original member name unknown.
   f32 unknowndc;     // Inferred role: dying HP rate; original member name unknown.
-  u8 _e0[0xea - 0xe0];
+  u8 _e0[0xe7 - 0xe0];
+  u8 unknowne7; // Inferred role: revive heal rate, in percent; original member name unknown.
+  u8 _e8[0xea - 0xe8];
   u8 unknownea; // Role and original member name unknown.
   u8 _eb[0xf0 - 0xeb];
 };
@@ -70,6 +72,7 @@ static_assert(offsetof(BtlSystemBalanceAccess, unknownc0) == 0xc0, "");
 static_assert(offsetof(BtlSystemBalanceAccess, unknownc4) == 0xc4, "");
 static_assert(offsetof(BtlSystemBalanceAccess, unknownc6) == 0xc6, "");
 static_assert(offsetof(BtlSystemBalanceAccess, unknowndc) == 0xdc, "");
+static_assert(offsetof(BtlSystemBalanceAccess, unknowne7) == 0xe7, "");
 static_assert(offsetof(BtlSystemBalanceAccess, unknownea) == 0xea, "");
 static_assert(sizeof(BtlSystemBalanceAccess) == 0xf0, "");
 

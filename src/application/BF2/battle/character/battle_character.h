@@ -344,6 +344,7 @@ public:
   void HealDirect(u32 value, int, BattleCharacter *healer);
   void HealHpRate(f32 rate, int, BattleCharacter *healer);
   void HealByRate(u32 value, f32 rate, int, BattleCharacter *healer);
+  void ReviveHeal(BattleCharacter *reviver);
   void AddPartyGauge(f32 value);
   void FluctuatePartyGauge(int);
   bool IsInAttackRange(int slot, f32 *distance) const;
