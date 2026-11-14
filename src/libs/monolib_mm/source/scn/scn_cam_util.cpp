@@ -8,6 +8,7 @@
 #include "ml/scn.h"
 #include "ml/threadval.h"
 #include "mm_math/mm_mat44.h"
+#include "mm_math/mm_pnt.h"
 #include "mm_math/mm_quat.h"
 #include "mm_math/mm_sphere.h"
 #include "mm_math/mm_vec3.h"
@@ -42,8 +43,8 @@ bool ScnCamUtil::getScreenPos(mm::Vec3 &screen, const ScnObjCam *cam, bool isBac
   screen.x = x;
   screen.y = y * info->unknown1f0;
   screen.z = z;
-  screen.x = (1.0f - screen.x) * (static_cast<f32>(info->unknown1e0) * 0.5f);
-  screen.y = (screen.y + 1.0f) * (static_cast<f32>(info->unknown1e4) * 0.5f);
+  screen.x = (1.0f - screen.x) * (static_cast<f32>(info->unknown1e0.x) * 0.5f);
+  screen.y = (screen.y + 1.0f) * (static_cast<f32>(info->unknown1e0.y) * 0.5f);
   return isFront;
 }
 
@@ -63,7 +64,7 @@ void ScnCamUtil::getSphereScreenRadius(mm::Sphere &sphere, const ScnObjCam *cam,
   mm::Vec3 device;
   CamUtil::getViewLocalToDeviceCoord(device, info->unknown160, viewLocal);
   info = cam->unknown70.m_front;
-  f32 delta = radius / (static_cast<f32>(info->unknown1e0) * 0.5f);
+  f32 delta = radius / (static_cast<f32>(info->unknown1e0.x) * 0.5f);
   device.x = info->unknown1f0 * delta + device.x;
   device.y = device.y + 0.0f;
   device.z = device.z + 0.0f;

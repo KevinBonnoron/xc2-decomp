@@ -569,6 +569,15 @@ def compare_read_only(game, obj, index, offset, address, function, assert_text):
         symbol = obj.covering(index, offset)
         start, size = (symbol.value, symbol.size) if symbol else (offset, obj.next_start(index, offset) - offset)
     size = min(size, 0x10000)
+    if not literal and not symbol:
+        # Data without a symbol that holds relocations is a run of jump tables. next_start also counts the alignment
+        # padding between the last table of the unit and the next symbol: zeros in the object, other data in the game
+        # (the tables of a unit need not end on the boundary the next symbol is aligned to). The window stops after
+        # its last relocation; it is never widened, and data without relocations is compared as before.
+        ends = [r_offset + (8 if rtype in (R_ABS64, R_PREL64) else 4) - start
+                for r_offset, rtype, _, _ in obj.relocations_in(index, start, start + size)]
+        if ends:
+            size = min(size, max(ends))
     base = address - (offset - start)
     mine = bytearray(obj.bytes(index, start, size))
     masked = set()

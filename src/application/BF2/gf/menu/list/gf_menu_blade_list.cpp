@@ -5,6 +5,7 @@
 #include "bdat.h"
 #include "gf/data/gf_character_id.h"
 #include "gf/data/gf_data_blade.h"
+#include "gf/data/gf_data_mercenaries.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_object_type.h"
 #include "gf/game/gf_game_manager.h"
@@ -12,6 +13,7 @@
 #include "gf/menu/gf_menu_bdat.h"
 #include "gf/menu/list/gf_menu_sort_type.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
+#include "mm_mtl/algorithm.h"
 #include "mm_mtl/fixed_vector.h"
 
 namespace gf {
@@ -212,6 +214,26 @@ void GfMenuBladeList::updateOwner() {
   for (u32 i = 0; i < getSize(); i++) {
     MenuBladeInfo &info = getContents(i);
     info.unknown04 = GfDataBlade::getCreator(info.unknown00);
+  }
+}
+
+void GfMenuBladeList::setMercenaries(mm::mtl::FixedVector<u16, 422> &blades) {
+  for (u32 i = 0; i < GfDataMercenaries::getTeamNum(); i++) {
+    unknown120 *team = GfDataMercenaries::getTeamMember(i + 1);
+    if (team != nullptr) {
+      for (u32 j = 0; j < 6; j++) {
+        u16 blade = team->unknown00[j];
+        if (blade == 0) {
+          continue;
+        }
+        // The game computes the end once (0x71003d2f34): `find(blades.begin(), blades.end(), blade) == blades.end()` gives 63 instructions
+        // instead of 61.
+        u16 *end = blades.end();
+        if (mm::mtl::find(blades.begin(), end, blade) == end) {
+          blades.push_back(blade);
+        }
+      }
+    }
   }
 }
 

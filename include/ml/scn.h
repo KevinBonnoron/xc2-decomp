@@ -7,6 +7,7 @@
 #include "ml/work_event.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_plane.h"
+#include "mm_math/mm_pnt.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_queue.h"
 #include "mm_mtl/fixed_vector.h"
@@ -50,13 +51,15 @@ public:
     f32 unknown150[4];    // Inferred role: frustum edges; original member name unknown.
     mm::Mat44 unknown160; // Inferred role: matrix converting view local to device coordinates; original member name unknown.
     mm::Mat44 unknown1a0; // Inferred role: projection matrix; original member name unknown.
-    s32 unknown1e0;       // Inferred role: viewport width; original member name unknown.
-    s32 unknown1e4;       // Inferred role: viewport height; original member name unknown.
-    f32 unknown1e8;       // Inferred role: fov in degrees; original member name unknown.
-    f32 unknown1ec;       // Inferred role: inverse tangent of half fov; original member name unknown.
-    f32 unknown1f0;       // Inferred role: aspect ratio; original member name unknown.
-    f32 unknown1f4;       // Inferred role: near clip; original member name unknown.
-    f32 unknown1f8;       // Inferred role: far clip; original member name unknown.
+    // Inferred role: viewport size; original member name unknown. A mm::Pnt<int>: ScnObjCam::setSize (0x7100742938) compares and copies it
+    // through references to the two ints (two 32-bit loads; as two s32 members of this 16-aligned struct clang 3.9 merges them into one
+    // 64-bit load).
+    mm::Pnt<int> unknown1e0;
+    f32 unknown1e8; // Inferred role: fov in degrees; original member name unknown.
+    f32 unknown1ec; // Inferred role: inverse tangent of half fov; original member name unknown.
+    f32 unknown1f0; // Inferred role: aspect ratio; original member name unknown.
+    f32 unknown1f4; // Inferred role: near clip; original member name unknown.
+    f32 unknown1f8; // Inferred role: far clip; original member name unknown.
     f32 m_targetDist;
     mm::Plane unknown200[6]; // Inferred role: local planes; original member name unknown.
     mm::Plane unknown2c0[6]; // Inferred role: global planes; original member name unknown.
@@ -89,6 +92,7 @@ public:
   void updateViewMatrix(bool isUpdate);
   void setDefault();
   void setInfo(int info);
+  void setSize(const mm::Pnt<int> &size);
   void setLookAt(const mm::Vec3 &position, const mm::Vec3 &target, f32 roll);
   void setRot(const mm::Vec3 &rot);
   void updateFovNearFar();
@@ -119,7 +123,6 @@ static_assert(offsetof(ScnObjCam::RENDER_INFO, unknown150) == 0x150, "");
 static_assert(offsetof(ScnObjCam::RENDER_INFO, unknown160) == 0x160, "");
 static_assert(offsetof(ScnObjCam::RENDER_INFO, unknown1a0) == 0x1a0, "");
 static_assert(offsetof(ScnObjCam::RENDER_INFO, unknown1e0) == 0x1e0, "");
-static_assert(offsetof(ScnObjCam::RENDER_INFO, unknown1e4) == 0x1e4, "");
 static_assert(offsetof(ScnObjCam::RENDER_INFO, unknown1e8) == 0x1e8, "");
 static_assert(offsetof(ScnObjCam::RENDER_INFO, unknown1f0) == 0x1f0, "");
 static_assert(offsetof(ScnObjCam::RENDER_INFO, unknown1f4) == 0x1f4, "");
@@ -156,11 +159,14 @@ public:
   ~ScnCamMan() override;
   static void setCrossIdTarget(const WinView *view);
   void update();
+  void apply();
   bool setCurrentCam();
   void setView(WinView *view, int screen);
   void clrView(WinView *view, int screen);
   const ScnObjCam *getCam(const WinView *view) const;
   ScnObjCam *getCam(const WinView *view);
+  ScnObjCam *getCam(int screen);
+  const ScnObjCam *getCam(int screen) const;
   WinView *getView(s16 screen);
   const WinView *getView(s16 screen) const;
 
@@ -218,6 +224,7 @@ public:
   void setView(WinView *view, int screen);
   void clrView(WinView *view, int screen);
   ScnObjCam *getCam(int index);
+  const ScnObjCam *getCam(int index) const;
   WinView *getView(int index);
   void addRenderCB(IScnRender *render, SCNPRIO_CB priority, bool flag1, bool flag2);
   void addEntryRes(FileResTh *res);

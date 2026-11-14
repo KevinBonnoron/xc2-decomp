@@ -101,6 +101,23 @@ public:
     m_size++;
   }
 
+  // Inferred: no game symbol (inlined). ScnPoolObj::release(ScnObj *) (0x7100740acc) and release(u16) (0x7100754a3c) link the new node
+  // before the position their search returned: the links of that node are read through the iterator, which push_back (links read through
+  // the end node) does not give.
+  void insert(iterator position, const T &value) {
+    int index = 0;
+    while (index < m_capacity && m_pool[index].next != nullptr) {
+      index++;
+    }
+    Node *node = &m_pool[index];
+    node->value = value;
+    node->next = position.unknown00;
+    node->prev = position.unknown00->prev;
+    position.unknown00->prev->next = node;
+    position.unknown00->prev = node;
+    m_size++;
+  }
+
   void erase(iterator position) {
     Node *next = position.unknown00->getNext();
     Node *prev = position.unknown00->getPrev();

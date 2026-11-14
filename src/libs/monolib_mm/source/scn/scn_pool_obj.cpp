@@ -3,6 +3,7 @@
 #include "ml/scn.h"
 #include "ml/scn_obj.h"
 #include "ml/scn_obj_light.h"
+#include "ml/scn_obj_model.h"
 #include "mtl/alloc_handle.h"
 
 #include <algorithm>
@@ -133,6 +134,43 @@ bool ScnPoolObj::insert(ScnObj *obj) {
   return false;
 }
 
+bool ScnPoolObj::release(ScnObj *obj) {
+  CS lock(unknown10);
+  CS listLock(unknown38);
+  obj->setDelete();
+  if (obj->unknown10 == ScnObj::TYPE_UNKNOWN_1) {
+    static_cast<ScnObjModel *>(obj)->setDisp(false);
+  }
+  reslist<ScnObj *>::iterator found = std::find<reslist<ScnObj *>::iterator, ScnObj *>(unknown1e8.begin(), unknown1e8.end(), obj);
+  // The game compares the node with the end node as base pointers and inserts at the position found (0x7100740b58): the new node gets
+  // next = end, while the links of the position are read through the iterator. With `found == unknown1e8.end()` or push_back every link
+  // goes through the end node (76 instructions each time, other registers).
+  if (found.unknown00 == unknown1e8.m_end) {
+    unknown1e8.insert(found, obj);
+  }
+  return true;
+}
+
+void ScnPoolObj::release(u16 type) {
+  CS lock(unknown10);
+  if (type != 0) {
+    CS listLock(unknown38);
+    reslist<ScnObj *> *list = getList(type);
+    if (list != nullptr) {
+      for (reslist<ScnObj *>::iterator it = list->begin(); it != list->end(); ++it) {
+        ScnObj *obj = *it;
+        obj->setDelete();
+        reslist<ScnObj *>::iterator found = std::find<reslist<ScnObj *>::iterator, ScnObj *>(unknown1e8.begin(), unknown1e8.end(), obj);
+        // As release(ScnObj *): the node is compared with the end node as base pointers (0x7100754b28).
+        if (found.unknown00 == unknown1e8.m_end) {
+          unknown1e8.insert(found, obj);
+        }
+      }
+      list->clear();
+    }
+  }
+}
+
 void ScnPoolObj::tail() {
   CS lock(unknown10);
   CS listLock(unknown38);
@@ -179,6 +217,25 @@ void ScnPoolObj::apply() {
       obj->apply();
     }
   }
+}
+
+ScnObjCam *ScnPoolObj::getCam(int screen) {
+  CS lock(unknown38);
+  for (reslist<ScnObj *>::iterator it = unknown68.begin(); it != unknown68.end(); ++it) {
+    ScnObjCam *cam = static_cast<ScnObjCam *>(*it);
+    if (cam->m_info == screen) {
+      return cam;
+    }
+  }
+  // The released object is read through the iterator each time: the game's own copy of this function (0x7100742a6c) tests the type and the
+  // screen with two loads in two blocks, and its inlined copies (ScnCamMan::apply, 0x71007429a0) with one 64-bit load. A local pointer for
+  // the object gives the 64-bit load here too (48 instructions against 46).
+  for (reslist<ScnObj *>::iterator it = unknown1e8.begin(); it != unknown1e8.end(); ++it) {
+    if ((*it)->unknown10 == ScnObj::TYPE_UNKNOWN_2 && static_cast<ScnObjCam *>(*it)->m_info == screen) {
+      return static_cast<ScnObjCam *>(*it);
+    }
+  }
+  return nullptr;
 }
 
 ScnObjCam *ScnPoolObj::getCam(const WinView *view) {

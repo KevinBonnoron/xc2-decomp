@@ -8,6 +8,7 @@
 #include "ml/threadval.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_plane.h"
+#include "mm_math/mm_pnt.h"
 #include "mm_math/mm_rect.h"
 #include "mm_math/mm_sphere.h"
 #include "mm_math/mm_vec3.h"
@@ -162,8 +163,21 @@ void ScnObjCam::infoInit(RENDER_INFO *info) {
   info->unknown00.unknown130 |= AttrTransform::FLAG_UNKNOWN_3;
   int width = DevGraph::getRootWidth();
   int height = DevGraph::getRootHeight();
-  info->unknown1e0 = width;
-  info->unknown1e4 = height;
+  info->unknown1e0.x = width;
+  info->unknown1e0.y = height;
+}
+
+void ScnObjCam::setSize(const mm::Pnt<int> &size) {
+  RENDER_INFO *info = unknown70.m_back;
+  if (info->unknown1e0 != size) {
+    info->unknown1e0.set(size);
+    if (info->unknown1e0.x != 0 && info->unknown1e0.y != 0) {
+      info->unknown1f0 = static_cast<f32>(info->unknown1e0.x) / static_cast<f32>(info->unknown1e0.y);
+    } else {
+      info->unknown1f0 = 1.0f;
+    }
+    updateViewMatrix(false);
+  }
 }
 
 void ScnObjCam::setDefault() {

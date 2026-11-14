@@ -5,6 +5,7 @@
 #include "gf/gf_manager.h"
 #include "gf/sound/gf_sound.h"
 #include "ml/ml_mem.h"
+#include "mm_mtl/reference_object.h"
 #include "mtl/alloc_handle.h"
 #include "mtl/mem_manager.h"
 #include "types.h"
@@ -19,6 +20,20 @@ void GfStaticRes::initialize() {
   loadRequest();
   while (!isLoaFinish()) {
     GfSleep(1);
+  }
+}
+
+void GfStaticRes::finalize() {
+  for (mm::mtl::FixedList<ResourceInfo, 64>::iterator it = s_aResource.begin(); it != s_aResource.end(); ++it) {
+    mm::mtl::safeRelease(it->unknown00);
+  }
+  // The game walks the list a second time without any effect before clear() (1.0.0: 0x71003925a0); the original body is unknown.
+  for (mm::mtl::FixedList<ResourceInfo, 64>::iterator it = s_aResource.begin(); it != s_aResource.end(); ++it) {
+  }
+  s_aResource.clear();
+  if (s_hMem.isValid()) {
+    mtl::MemManager::erase(s_hMem);
+    s_hMem = mtl::ALLOC_HANDLE();
   }
 }
 

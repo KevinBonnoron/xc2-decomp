@@ -69,6 +69,7 @@ public:
   static bool sortGenderDescending(const MenuBladeInfo &info, const MenuBladeInfo &other);
   static bool sortGenderAscending(const MenuBladeInfo &info, const MenuBladeInfo &other);
   void updateOwner();
+  void setMercenaries(mm::mtl::FixedVector<u16, 422> &blades);
   void setupFromBladeList(const BladeListSetup &setup);
   void setupFromBook(const BladeBookSetup &setup);
   void setupFromDriver(const DriverSetup &setup);

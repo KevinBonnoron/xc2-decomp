@@ -365,6 +365,51 @@ ScnObjCam *Scn::getCam(const WinView *view) { return unknown28->getCam(view); }
 
 const ScnObjCam *Scn::getCam(const WinView *view) const { return unknown28->getCam(view); }
 
+ScnObjCam *ScnCamMan::getCam(int screen) {
+  if (screen < 0) {
+    screen = unknown40;
+  }
+  return unknown08->unknown20->getCam(screen);
+}
+
+const ScnObjCam *ScnCamMan::getCam(int screen) const {
+  if (screen < 0) {
+    screen = unknown40;
+  }
+  return unknown08->unknown20->getCam(screen);
+}
+
+ScnObjCam *Scn::getCam(int index) {
+  ScnObjCam *cam = nullptr;
+  if (index == -1 && WorkCpu::getCurrentCPUID() == WorkCpu::getRenderCPUID()) {
+    cam = unknown28->getCam(WinView::getView(true));
+  }
+  if (cam == nullptr) {
+    cam = unknown28->getCam(index);
+  }
+  return cam;
+}
+
+const ScnObjCam *Scn::getCam(int index) const {
+  const ScnObjCam *cam = nullptr;
+  if (index == -1) {
+    cam = unknown28->getCam(WinView::getView(true));
+  }
+  if (cam == nullptr) {
+    cam = unknown28->getCam(index);
+  }
+  return cam;
+}
+
+void ScnCamMan::apply() { unknown08->unknown20->getCam(unknown40)->apply(); }
+
+void ScnCamMan::update() {
+  WinView *view = getView(unknown40);
+  if (view != nullptr) {
+    unknown08->unknown20->getCam(unknown40)->setSize(view->getClientSize(false));
+  }
+}
+
 bool ScnCamMan::setCurrentCam() {
   ScnObjCam *cam = getCam(WinView::getView(true));
   if (cam != nullptr) {
