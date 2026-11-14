@@ -26,7 +26,8 @@ public:
   };
 
   // Layout from the loads of EffectMoveComponent::Initialize(const MOVE_PARAM &), which reads the up, homing and link views;
-  // only the up view is used by compiled code so far. The builders (CreateBullet, ReboundUp, ReturnLinkObj, EndProc,
+  // ReboundUp, ReturnLinkObj and StartAdditionalAttack use the up, link and parabola views; no compiled code uses the
+  // homing view yet. The builders (CreateBullet, ReboundUp, ReturnLinkObj, EndProc,
   // StartAdditionalAttack) open by zeroing +0x1c and +0x38, which the constructor does.
   struct MOVE_PARAM {
     MOVE_PARAM() : unknown1c(0.0f), unknown38(0) {}
@@ -55,6 +56,10 @@ public:
         f32 unknown5c;                // Inferred role: time; original member name unknown.
       } unknown40_1;                  // Inferred role: link object parameters; original member name unknown.
       f32 unknown40_2;                // Inferred role: time of the up move; original member name unknown.
+      struct {
+        f32 unknown40[3]; // Inferred role: start position; original member name unknown.
+        f32 unknown4c[3]; // Inferred role: target position; original member name unknown.
+      } unknown40_3;      // Inferred role: parabola move parameters; original member name unknown.
     };
   };
 
@@ -127,6 +132,7 @@ static_assert(offsetof(EffectMoveComponent::MOVE_PARAM, unknown39) == 0x39, "");
 static_assert(offsetof(EffectMoveComponent::MOVE_PARAM, unknown40_2) == 0x40, "");
 static_assert(offsetof(EffectMoveComponent::MOVE_PARAM, unknown40_0.unknown60) == 0x60, "");
 static_assert(offsetof(EffectMoveComponent::MOVE_PARAM, unknown40_1.unknown5c) == 0x5c, "");
+static_assert(offsetof(EffectMoveComponent::MOVE_PARAM, unknown40_3.unknown4c) == 0x4c, "");
 static_assert(offsetof(EffectMoveComponent, unknown00_0.unknown38) == 0x38, "");
 static_assert(offsetof(EffectMoveComponent, unknown00_0.unknown3c) == 0x3c, "");
 static_assert(offsetof(EffectMoveComponent, unknown40) == 0x40, "");
