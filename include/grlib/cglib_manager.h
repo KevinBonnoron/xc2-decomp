@@ -22,7 +22,7 @@ public:
   void swap();
   void tail();
   s64 getGpuTimeStamp() const;
-  void isRelease();
+  bool isRelease();
   static bool isReleaseOk();
 
   static int s_nDblNowIdx;

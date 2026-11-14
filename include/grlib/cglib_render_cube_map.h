@@ -46,6 +46,7 @@ public:
   void releaseWork();
   void release();
   void releaseTexture();
+  void setTextureInfo(f32 width, f32 height, GrlSurfaceFormat format, bool isResArea, u32 resArea);
   void clearTexture(GrlCubeMapFace face, u32 mipmap, const mm::Col4 &color, GrlClaerMask mask);
   void clearIntTexture(GrlCubeMapFace face, u32 mipmap, const int *color, GrlClaerMask mask);
   CGLibColorBuffer *getColorBuffer(GrlCubeMapFace face, u32 mipmap);

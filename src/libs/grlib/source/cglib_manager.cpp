@@ -48,11 +48,7 @@ bool CGLibManager::deviceRelease() {
   return result;
 }
 
-void CGLibManager::isRelease() {
-  if (unknown5028 != nullptr) {
-    unknown5028->isRelease();
-  }
-}
+bool CGLibManager::isRelease() { return unknown5028 != nullptr && unknown5028->isRelease(); }
 
 bool CGLibManager::isReleaseOk() { return s_nReleaseOk; }
 
