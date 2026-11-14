@@ -13,6 +13,29 @@ namespace ml {
 
 DrAPCache *DrAPCache::s_pIns;
 
+void DrAPCache::begin() {
+  unknown10 = DR_AP_CULL_TYPE_UNKNOWN_4;
+  unknown08 = -1;
+  unknown0c = -1;
+  // The four depth stencil values are reset in the parameter order of setupDepthStencil (ref, stencil, depth write, depth
+  // test), then the gbuff mask, then the depth compare. The game stores unknown1c = -1 and unknown20 = 0 together (stur
+  // x8, [x0, #0x1c] at 1.0.0: 0x71008a3760) and keeps unknown24 and unknown28 as two words (stp w8, w8, [x0, #0x24] at
+  // 0x71008a3764); stored one after the other, these two merge into one 64-bit store. 8 of the 720 orders of the six
+  // stores match, all with unknown28 last and unknown1c or unknown20 between unknown24 and unknown28.
+  unknown14 = -1;
+  unknown18 = -1;
+  unknown1c = -1;
+  unknown24 = -1;
+  unknown20 = 0;
+  unknown28 = -1;
+  unknown40 = 0;
+  unknown42 = 0;
+  unknown38 = 0;
+  unknown3a = 0;
+  m_filter = 0;
+  m_mipMapOn = 0;
+}
+
 void DrAPCache::releaseSampler() {
   if (unknown30 != nullptr) {
     delete[] unknown30;

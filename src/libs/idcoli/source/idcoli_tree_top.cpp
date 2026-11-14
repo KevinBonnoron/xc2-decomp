@@ -69,7 +69,37 @@ void IDColiTreeTop::initCehckTree(int index, int level, int x, int z) {
   cell->unknown08 = posX - unknowne0[level].x;
   cell->unknown04 = posZ + unknown40[level].z + unknowne0[level].z;
   cell->unknown0c = posZ - unknowne0[level].z;
-  unknown130[index >> 6] |= static_cast<u64>(1) << (static_cast<s64>(index) & 63);
+  unknown130[index >> 6] |= unknown036(index);
+}
+
+void IDColiTreeTop::releaseTreeList(IDColiTreeObj *node, int index) {
+  if (!(unknown130[index >> 6] & unknown036(index))) {
+    return;
+  }
+  ColiLinkList<IDColiTreeObj> *list = &unknown168[index];
+  IDColiTreeObj *prev = node->unknown00;
+  IDColiTreeObj *next = node->unknown08;
+  if (prev == nullptr) {
+    if (next != nullptr) {
+      list->m_head = next;
+      next->unknown00 = nullptr;
+    } else {
+      // The tail is cleared first: the game clears it with the store that also clears prev->unknown08 below (str xzr,
+      // [x9, #8] at 1.0.0: 0x71008d329c, 28 instructions); with the head cleared first it keeps its own stores (29).
+      list->m_tail = nullptr;
+      list->m_head = nullptr;
+    }
+  } else {
+    if (next != nullptr) {
+      prev->unknown08 = next;
+      node->unknown08->unknown00 = node->unknown00;
+    } else {
+      list->m_tail = prev;
+      prev->unknown08 = nullptr;
+    }
+  }
+  node->unknown00 = nullptr;
+  node->unknown08 = nullptr;
 }
 
 u32 IDColiTreeTop::getPart1By1(u32 value) {

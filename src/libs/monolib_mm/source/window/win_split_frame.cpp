@@ -56,4 +56,22 @@ mm::Rect<int> WinSplitFrame::getScissorRect1() const {
   return unknown001(getWorkRect1(false), screen);
 }
 
+mm::Rect<int> WinSplitFrame::getClientScissorRect1() const {
+  mm::Pnt<int> screen;
+  if (!(unknown00->unknown3b8 & 1)) {
+    const WinView::RENDER_INFO *info = unknown00->unknown1b8.m_front;
+    // WinView::getClientSize written out again: its call, inlined in this unit (window.cpp), gives the same code except
+    // the order of two loads. The game loads the client position first (ldp w8, w9, [x10, #0x18] at 1.0.0:
+    // 0x71007638b4) and the size after it (ldp w11, w12, [x10] at 0x71007638b8); the call form loads the size first. The
+    // copy of the position places that load.
+    mm::Pnt<int> pos = info->unknown18;
+    screen.x = info->unknown00.x - pos.x - info->unknown20.x;
+    screen.y = info->unknown00.y - pos.y - info->unknown20.y;
+  } else {
+    screen.x = DevGraph::getRootWidth();
+    screen.y = DevGraph::getRootHeight();
+  }
+  return unknown001(getWorkRect1(false), screen);
+}
+
 } // namespace ml

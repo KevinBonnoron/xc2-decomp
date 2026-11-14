@@ -97,11 +97,17 @@ public:
   void begin();
   void end();
   void updateTree();
+  void releaseTreeList(IDColiTreeObj *node, int index);
   int setupTreeList(IDColiTreeObj *node, const mm::Vec3 &max, const mm::Vec3 &min);
   void initCehckTree(int index, int level, int x, int z);
   ColiLinkList<IDColiTreeObj> *getObjList(int x, int z, int level);
   static u32 getMorton2(u32 x, u32 y);
   static u32 getPart1By1(u32 value);
+
+  // Inferred helper: mask of a cell in its word of unknown130; original name unknown. The bit number is 64 bits wide:
+  // initCehckTree and releaseTreeList sign extend the cell index before they mask it (sxtw x8, w2; and x10, x8, #0x3f
+  // at 1.0.0: 0x71008d3244), where `index & 63` written in place masks the 32-bit index (and w9, w2, #0x3f).
+  static u64 unknown036(size_t bit) { return static_cast<u64>(1) << (bit & 63); }
 
   mm::Vec3 unknown00;                          // Inferred role: max of the registered objects; original member name unknown.
   mm::Vec3 unknown10;                          // Inferred role: min of the registered objects; original member name unknown.

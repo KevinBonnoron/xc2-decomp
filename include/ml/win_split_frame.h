@@ -20,6 +20,7 @@ public:
   const WinView *getView2() const;
   mm::Rect<int> getWorkRect1(bool isBack) const;
   mm::Rect<int> getScissorRect1() const;
+  mm::Rect<int> getClientScissorRect1() const;
   bool isActive() const;
   mm::Rect<int> getScissorRect2() const;
   void setup(WinView *view, bool isHorizontal, WinView *view1, WinView *view2);

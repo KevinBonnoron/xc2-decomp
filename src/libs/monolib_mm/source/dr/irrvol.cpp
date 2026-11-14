@@ -247,6 +247,14 @@ void DrIrrVolResObj::onLoaded(EventFileTh *event) {
   unknown20 = 1;
 }
 
+DrIrrVolResMan::DrIrrVolResMan(mtl::ALLOC_HANDLE handle, u32 cascadeIndex, u32 sectorCount, const char *name)
+    : unknown08(nullptr), unknown10(nullptr), unknown18(nullptr), unknown20(handle), unknown28(handle), unknownb8(cascadeIndex), unknownbc(sectorCount), unknownc0(name) {
+  unknown38.setAllocator(&unknown28);
+  unknown38.reserve(81);
+  unknown78.setAllocator(&unknown28);
+  unknown78.reserve(19);
+}
+
 DrIrrVolResMan::~DrIrrVolResMan() { destroy(); }
 
 void DrIrrVolResMan::destroy() {

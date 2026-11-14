@@ -1,14 +1,21 @@
 #include "event/dof_manager.h"
 
+#include <math.h>
+
 #include "bdat.h"
+#include "event/cam_interface.h"
+#include "event/cam_manager.h"
+#include "event/chara_obj.h"
 #include "event/manager.h"
 #include "event/object_chara.h"
 #include "event/object_manager.h"
+#include "event/text_manager.h"
 #include "fw/fw_debug.h"
 #include "ml/dev_graph.h"
 #include "ml/scn.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_rect.h"
+#include "mm_math/mm_vec3.h"
 #include "scn/scn_render_dr_sys_parm_acc.h"
 
 namespace event {
@@ -174,6 +181,44 @@ void DofManager::update() {
     parmAcc.setDofHLvMode(unknown48);
   }
   unknown14 &= ~FLAG_UNKNOWN_1;
+}
+
+f32 DofManager::calcDist(int axis, f32 dist) {
+  if (axis < 3) {
+    if (axis == 2) {
+      CharaObj *talker = mm::mtl::Singleton<TextManager>::getPtr()->getTalker();
+      if (talker != nullptr) {
+        return calcDistSub(talker, dist);
+      }
+    }
+  } else if (static_cast<u32>(axis) <= mm::mtl::Singleton<ObjectManager>::getPtr()->getCharaCount() + 3) {
+    ObjectChara *chara = mm::mtl::Singleton<ObjectManager>::getPtr()->getChara(axis - 3);
+    if (chara != nullptr) {
+      return calcDistSub(chara->getCharaObj(), dist);
+    }
+  }
+  return dist;
+}
+
+f32 DofManager::calcDistSub(CharaObj *chara, f32 dist) {
+  mm::Vec3 camPos = mm::mtl::Singleton<CamManager>::getPtr()->unknown001(0)->unknown40;
+  mm::Vec3 camTar = mm::mtl::Singleton<CamManager>::getPtr()->unknown001(0)->unknown50;
+  mm::Vec3 charaPos = chara->getPos() + mm::Vec3(0.0f, chara->getEyeOffset(), 0.0f);
+  // Both directions are declared before the first is computed: with tarDir declared at its assignment, or between the
+  // assignment of charaDir and its own, one or both fadd of the dot product take their operands in the other order
+  // (1.0.0: 0x71000d95c0, 0x71000d95d4).
+  mm::Vec3 charaDir;
+  mm::Vec3 tarDir;
+  charaDir = charaPos - camPos;
+  f32 length = sqrtf(charaDir.x * charaDir.x + charaDir.y * charaDir.y + charaDir.z * charaDir.z);
+  if (!charaDir.unknown003()) {
+    charaDir.unknown001();
+  }
+  tarDir = camTar - camPos;
+  if (!tarDir.unknown003()) {
+    tarDir.unknown001();
+  }
+  return (charaDir.x * tarDir.x + charaDir.y * tarDir.y + charaDir.z * tarDir.z) * length;
 }
 
 void DofManager::play(int axis, f32 dist, f32 range, f32 pixel, f32 lens, f32 strength, f32 blend, int pixelLv, bool isHlv, const char *name) {

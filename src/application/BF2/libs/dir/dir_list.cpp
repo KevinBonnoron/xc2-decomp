@@ -40,6 +40,43 @@ SingleListNode *SingleListHeader::InsertEnd(SingleListNode *node) {
   return node;
 }
 
+SingleListNode *SingleListHeader::InsertNext(SingleListNode *position, SingleListNode *node) {
+  if (position != nullptr && node != nullptr) {
+    SingleListNode *next = position->unknown08;
+    if (next == nullptr) {
+      return nullptr;
+    }
+    SingleListNode *head = unknown08;
+    if (head == nullptr) {
+      unknown08 = node;
+      node->unknown08 = node;
+      return nullptr;
+    }
+    SingleListNode *current = head->unknown08;
+    SingleListNode *prev = head;
+    if (current == nullptr) {
+      return nullptr;
+    }
+    while (current != next) {
+      if (head == current) {
+        return nullptr;
+      }
+      prev = current;
+      current = current->unknown08;
+      if (current == nullptr) {
+        return nullptr;
+      }
+    }
+    prev->unknown08 = node;
+    node->unknown08 = next;
+    if (unknown08 == position) {
+      unknown08 = node;
+    }
+    return node;
+  }
+  return nullptr;
+}
+
 SingleListNode *SingleListHeader::Remove(SingleListNode *node) {
   if (node != nullptr) {
     SingleListNode *head = unknown08;

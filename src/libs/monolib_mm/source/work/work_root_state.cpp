@@ -28,9 +28,12 @@ namespace _wrootst {
 
 class WorkRoot : public WorkObj {
 public:
-  WorkRoot(const char *name, WorkObj *parent);
+  // Defined in the class and with an implicit destructor: the game has the C2, D2 and D0 symbols only (no C1, no D1).
+  WorkRoot(const char *name, WorkObj *parent) : WorkObj(name, parent, 0x20) {
+    unknown1a8.create(128, unknown54);
+    unknown1e8.create(128, unknown54);
+  }
   void procParent();
-  ~WorkRoot() override;
   bool wkStandbyLogout() override;
 
   reslist<WorkObj *> unknown1a8; // Inferred role: works requesting a parent; original member name unknown.
