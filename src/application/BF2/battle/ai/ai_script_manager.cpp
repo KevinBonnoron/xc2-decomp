@@ -133,3 +133,6 @@ bool AiScriptManager::reload(const char *name) {
 }
 
 } // namespace ai
+
+// The game builds this file in the same unit: AiScriptDataManager::_init (0x7100003134) sits between init (0x7100003080) and destroy (0x71000032ac) of this file.
+#include "ai_script_data_manager.cpp"
