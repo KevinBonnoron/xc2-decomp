@@ -1,5 +1,7 @@
 #include "dr/dr_shd_uniform_block_man.h"
 
+#include <string.h>
+
 #include <new>
 
 #include "dr/dr_mdo_mat.h"
@@ -10,10 +12,7 @@
 #include "grlib/cglib_one_uniform_block.h"
 #include "grlib/cglib_tri_uniform_block.h"
 #include "grlib/cglib_uniform_array.h"
-
-namespace grlib {
-class CGLibVtlMemPool;
-} // namespace grlib
+#include "grlib/cglib_vtl_mem_pool.h"
 
 namespace ml {
 
@@ -85,6 +84,40 @@ void DrShdUniformBlockMan::createUniformMdlObj(grlib::CGLibTriUniformArray *unif
 void DrShdUniformBlockMan::createUniformBoneObj(grlib::CGLibTriUniformBlock *uniform, int boneNum) {
   new (uniform) grlib::CGLibTriUniformBlock();
   uniform->setup(boneNum * 0x30);
+}
+
+void DrShdUniformBlockMan::createMotionBlendObj(grlib::CGLibOneUniformArray *uniforms, const u8 *data, DrResMdoVertex *vertex) {
+  const unknown051 *blendHeader = reinterpret_cast<const unknown051 *>(data + reinterpret_cast<const unknown055 *>(data)->unknown28);
+  grlib::CGLibVtlMemPool *memPool = vertex->unknown68;
+  const u8 *buffer = static_cast<const u8 *>(memPool->m_buffer);
+  const unknown050 *info = reinterpret_cast<const unknown050 *>(data + blendHeader->infoOffset);
+  uniforms->setupArray(blendHeader->unknown08);
+  uniforms->unknown0c = 0;
+  for (int i = 0; i < blendHeader->unknown08; i++, info++) {
+    if (info->unknown0e & 1) {
+      int size = info->unknown08 * info->unknown04;
+      uniforms->unknown0c += size + (-size & 0xff);
+    }
+  }
+  uniforms->unknown002();
+  info = reinterpret_cast<const unknown050 *>(data + blendHeader->infoOffset);
+  for (int i = 0; i < blendHeader->unknown08; i++, info++) {
+    u32 size = info->unknown08 * info->unknown04;
+    if (!(info->unknown0e & 1)) {
+      // Decision 2026-11-14 #14: the game keeps the element access (*uniforms)[i] inside both arms (`ldr x9, [x19]` then `ldur w3, [x22, #-8]`
+      // at 0x71008a1bf0). `offset` makes the first statement of the two arms differ, so the common access is not hoisted above the test (103
+      // instructions); with info->unknown00 passed directly, as changeMotionBlendObj writes it: 101. The arms swapped, `continue`, `size`
+      // declared in each arm and a CGLibMemType & local give 101, two tests 106.
+      u32 offset = info->unknown00;
+      (*uniforms)[i].setupArray(memPool, size, offset);
+    } else {
+      uniforms->unknown0c += (*uniforms)[i].setupArray(size, uniforms->unknown18, uniforms->unknown0c);
+      memcpy((*uniforms)[i].m_mapping, buffer + info->unknown00, static_cast<size_t>(info->unknown08) * info->unknown04);
+    }
+  }
+  for (u32 i = 0; i < uniforms->unknown08; i++) {
+    (*uniforms)[i].updateData();
+  }
 }
 
 void DrShdUniformBlockMan::changeMotionBlendObj(grlib::CGLibOneUniformArray *uniforms, const u8 *data, DrResMdoVertex *vertex) {

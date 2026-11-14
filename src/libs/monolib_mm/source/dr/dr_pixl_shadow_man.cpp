@@ -192,6 +192,30 @@ DrPixlShadowMan::DrPixlShadowMan(DrMan *man, DrPixlMan *pixlMan) : unknown8900(0
 
 DrPixlShadowMan::~DrPixlShadowMan() { releaseTexWork(); }
 
+// Decision 2026-11-14 #4: both create functions inline the DrPixlShadowObjDir constructor (the merged 5.0f/30.0f store at 0x338, 0x71008618f4)
+// and createShdTexWrk; createDirShadow uses type 0 (0x71008617dc), createDirCacheShadow type 1 (0x7100861b38).
+DrPixlShadowObj *DrPixlShadowMan::createDirShadow(DrLightObj *light, int index) {
+  MdoShdPxlWrkTex *work = createShdTexWrk(index, 0);
+  if (work == nullptr) {
+    return nullptr;
+  }
+  DrPixlShadowObjDir *shadow = new (unknown8908->unknown10) DrPixlShadowObjDir(unknown8908);
+  shadow->createWork(light, 0, work);
+  unknown0000[unknown8900++] = shadow;
+  return shadow;
+}
+
+DrPixlShadowObj *DrPixlShadowMan::createDirCacheShadow(DrLightObj *light, int index) {
+  MdoShdPxlWrkTex *work = createShdTexWrk(index, 1);
+  if (work == nullptr) {
+    return nullptr;
+  }
+  DrPixlShadowObjDir *shadow = new (unknown8908->unknown10) DrPixlShadowObjDir(unknown8908);
+  shadow->createWork(light, 0, work);
+  unknown0000[unknown8900++] = shadow;
+  return shadow;
+}
+
 DrPixlShadowObj *DrPixlShadowMan::createPntShadow(DrLightObj *light, int index) {
   DrPixlShadowObjPnt *shadow = new (unknown8908->unknown10) DrPixlShadowObjPnt(unknown8908, 0);
   shadow->unknown190 = new (unknown8908->unknown10) DrPixlShadowObjPnt(unknown8908, 1);

@@ -62,6 +62,7 @@ public:
   CharaObj *getTalker() const { return unknown5d0; }
 
 private:
+  // Inferred name; kept as an exception to the unknown-name rule (AGENTS.md, decision 2026-11-14 #26): inline flag helper, no game symbol gives its name; rename if a sibling build gives a symbol.
   void setFlag(u32 flag, bool isSet) {
     if (isSet) {
       unknown10 |= flag;
@@ -70,6 +71,7 @@ private:
     }
   }
 
+  // Inferred name; kept as an exception to the unknown-name rule (AGENTS.md, decision 2026-11-14 #26): inline flag helper, no game symbol gives its name; rename if a sibling build gives a symbol.
   void setDispFlag(u32 flag, bool isSet) {
     if (isSet) {
       unknown14 |= flag;

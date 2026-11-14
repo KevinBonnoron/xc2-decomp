@@ -41,14 +41,22 @@ DevFontLayer *DevFont::createLayer(const FontLayer *layer) {
   return fontLayer;
 }
 
+// Inferred role: the layer of a FontLayer through the DevFont singleton, null when there is no DevFont or no layer; original name
+// unknown. Decision 2026-11-14 #31: the game has this lookup in releaseLayer and the nine fontLayer functions below; the helper with
+// ten users matches, so no re-inlined body is needed.
+static DevFontLayer *unknown009(const FontLayer *layer) {
+  DevFont *font = DevFont::get();
+  if (font == nullptr) {
+    return nullptr;
+  }
+  return font->getFontLayer(layer);
+}
+
 bool DevFont::releaseLayer(const FontLayer *layer) {
-  DevFont *font = get();
-  if (font != nullptr) {
-    DevFontLayer *fontLayer = font->getFontLayer(layer);
-    if (fontLayer != nullptr) {
-      fontLayer->unknown1ec = true;
-      return true;
-    }
+  DevFontLayer *fontLayer = unknown009(layer);
+  if (fontLayer != nullptr) {
+    fontLayer->unknown1ec = true;
+    return true;
   }
   return false;
 }
@@ -87,60 +95,45 @@ void DevFont::fontLayerSetMaxQue(const FontLayer *layer, u32 maxQue) {
 }
 
 void DevFont::fontLayer(const FontLayer *layer, int x, int y, const char *text) {
-  DevFont *font = get();
-  if (font != nullptr) {
-    DevFontLayer *fontLayer = font->getFontLayer(layer);
-    if (fontLayer != nullptr) {
-      fontLayer->font(x, y, text);
-    }
+  DevFontLayer *fontLayer = unknown009(layer);
+  if (fontLayer != nullptr) {
+    fontLayer->font(x, y, text);
   }
 }
 
 u32 DevFont::fontLayerGetWidth(const FontLayer *layer, const char *text) {
-  DevFont *font = get();
-  if (font != nullptr) {
-    DevFontLayer *fontLayer = font->getFontLayer(layer);
-    if (fontLayer != nullptr) {
-      DevGraph *graph = DevGraph::get();
-      if (graph != nullptr) {
-        return graph->fontGetWidthSys(text, fontLayer->unknown1bc, fontLayer->unknown1b4);
-      }
+  DevFontLayer *fontLayer = unknown009(layer);
+  if (fontLayer != nullptr) {
+    DevGraph *graph = DevGraph::get();
+    if (graph != nullptr) {
+      return graph->fontGetWidthSys(text, fontLayer->unknown1bc, fontLayer->unknown1b4);
     }
   }
   return 0;
 }
 
 u32 DevFont::fontLayerGetHeight(const FontLayer *layer) {
-  DevFont *font = get();
-  if (font != nullptr) {
-    DevFontLayer *fontLayer = font->getFontLayer(layer);
-    if (fontLayer != nullptr) {
-      DevGraph *graph = DevGraph::get();
-      if (graph != nullptr) {
-        return graph->fontGetHeightSys(fontLayer->unknown1bc, fontLayer->unknown1b8);
-      }
+  DevFontLayer *fontLayer = unknown009(layer);
+  if (fontLayer != nullptr) {
+    DevGraph *graph = DevGraph::get();
+    if (graph != nullptr) {
+      return graph->fontGetHeightSys(fontLayer->unknown1bc, fontLayer->unknown1b8);
     }
   }
   return 0;
 }
 
 void DevFont::fontLayerColor(const FontLayer *layer, const mm::Col4 &color) {
-  DevFont *font = get();
-  if (font != nullptr) {
-    DevFontLayer *fontLayer = font->getFontLayer(layer);
-    if (fontLayer != nullptr) {
-      fontLayer->fontColor(color, true);
-    }
+  DevFontLayer *fontLayer = unknown009(layer);
+  if (fontLayer != nullptr) {
+    fontLayer->fontColor(color, true);
   }
 }
 
 void DevFont::fontLayerBack(const FontLayer *layer, const mm::Col4 &color) {
-  DevFont *font = get();
-  if (font != nullptr) {
-    DevFontLayer *fontLayer = font->getFontLayer(layer);
-    if (fontLayer != nullptr) {
-      fontLayer->fontBack(color);
-    }
+  DevFontLayer *fontLayer = unknown009(layer);
+  if (fontLayer != nullptr) {
+    fontLayer->fontBack(color);
   }
 }
 
@@ -153,42 +146,30 @@ const mm::Col4 &DevFont::fontLayerGetColor(const FontLayer *layer) {
 }
 
 void DevFont::fontLayerScale(const FontLayer *layer, f32 x, f32 y) {
-  DevFont *font = get();
-  if (font != nullptr) {
-    DevFontLayer *fontLayer = font->getFontLayer(layer);
-    if (fontLayer != nullptr) {
-      fontLayer->fontScale(x, y);
-    }
+  DevFontLayer *fontLayer = unknown009(layer);
+  if (fontLayer != nullptr) {
+    fontLayer->fontScale(x, y);
   }
 }
 
 void DevFont::fontLayerStyle(const FontLayer *layer, FONT_STYLE style) {
-  DevFont *font = get();
-  if (font != nullptr) {
-    DevFontLayer *fontLayer = font->getFontLayer(layer);
-    if (fontLayer != nullptr) {
-      fontLayer->fontStyle(style);
-    }
+  DevFontLayer *fontLayer = unknown009(layer);
+  if (fontLayer != nullptr) {
+    fontLayer->fontStyle(style);
   }
 }
 
 void DevFont::fontLayerShadow(const FontLayer *layer, bool isShadow) {
-  DevFont *font = get();
-  if (font != nullptr) {
-    DevFontLayer *fontLayer = font->getFontLayer(layer);
-    if (fontLayer != nullptr) {
-      fontLayer->fontShadow(isShadow);
-    }
+  DevFontLayer *fontLayer = unknown009(layer);
+  if (fontLayer != nullptr) {
+    fontLayer->fontShadow(isShadow);
   }
 }
 
 void DevFont::fontLayerZ(const FontLayer *layer, u32 z) {
-  DevFont *font = get();
-  if (font != nullptr) {
-    DevFontLayer *fontLayer = font->getFontLayer(layer);
-    if (fontLayer != nullptr) {
-      fontLayer->fontZ(z);
-    }
+  DevFontLayer *fontLayer = unknown009(layer);
+  if (fontLayer != nullptr) {
+    fontLayer->fontZ(z);
   }
 }
 

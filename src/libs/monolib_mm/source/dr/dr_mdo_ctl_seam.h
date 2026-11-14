@@ -119,11 +119,20 @@ static_assert(sizeof(unknown721) == 0x40, "");
 
 // Inferred role: mpf map entry of the seam resource; original type name unknown.
 struct unknown722 {
-  u8 _00[0x34];
+  f32 unknown00[3]; // Inferred role: maximum position of the area; original member name unknown.
+  f32 unknown0c[3]; // Inferred role: minimum position of the area; original member name unknown.
+  u8 _18[0x24 - 0x18];
+  u16 unknown24; // Inferred role: global index that hides the map, zero for none; original member name unknown.
+  u8 _26[0x28 - 0x26];
+  u32 unknown28; // Inferred role: flags; original member name unknown.
+  u8 _2c[0x34 - 0x2c];
   u32 unknown34; // Inferred role: data offset; original member name unknown.
   s32 unknown38; // Inferred role: data size; original member name unknown.
 };
 
+static_assert(offsetof(unknown722, unknown0c) == 0x0c, "");
+static_assert(offsetof(unknown722, unknown24) == 0x24, "");
+static_assert(offsetof(unknown722, unknown28) == 0x28, "");
 static_assert(offsetof(unknown722, unknown34) == 0x34, "");
 static_assert(offsetof(unknown722, unknown38) == 0x38, "");
 static_assert(sizeof(unknown722) == 0x3c, "");

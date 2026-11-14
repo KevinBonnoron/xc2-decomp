@@ -66,6 +66,20 @@ template <typename T> struct ColiLinkList {
     object->unknown10 = nullptr;
   }
 
+  // Inferred helper: appends a tree node to the list; original name unknown.
+  void unknown002(T *object) {
+    if (m_tail == nullptr) {
+      m_head = object;
+      m_tail = object;
+      object->unknown00 = nullptr;
+    } else {
+      m_tail->unknown08 = object;
+      object->unknown00 = m_tail;
+      m_tail = object;
+    }
+    object->unknown08 = nullptr;
+  }
+
   T *m_head;
   T *m_tail;
 };
@@ -98,8 +112,55 @@ public:
   void end();
   void updateTree();
   void releaseTreeList(IDColiTreeObj *node, int index);
-  int setupTreeList(IDColiTreeObj *node, const mm::Vec3 &max, const mm::Vec3 &min);
   void initCehckTree(int index, int level, int x, int z);
+
+  // Inline in the game: emitted right after its first user, IDColiObjBase::defTreeUpdate (0x71008d32dc), inside the IDColiObjBase block
+  // and not with the IDColiTreeTop functions at 0x71008d6f90 (like releaseTreeList after releaseDefTree; same order in Torna and XC1DE).
+  // Decision 2026-11-14 #7: the loop keeps &unknown90[level] as its level pointer (add x9, x0, #208 at 0x71008d3360); it matches (175
+  // instructions) only with the copy `mm::Vec3 inverse = unknown90[level];`, a local copy of a table entry. Direct `unknown90[level].x`/`.z`, a
+  // `const mm::Vec3 &`, both products before the range tests, a `mm::Vec3` built from the three products and two `f32` locals all keep the
+  // pointer at this+0x128 (add x9, x0, #296).
+  int setupTreeList(IDColiTreeObj *node, const mm::Vec3 &max, const mm::Vec3 &min) {
+    unknown00.x = unknown00.x > max.x ? unknown00.x : max.x;
+    unknown00.y = unknown00.y > max.y ? unknown00.y : max.y;
+    unknown00.z = unknown00.z > max.z ? unknown00.z : max.z;
+    unknown10.x = unknown10.x < min.x ? unknown10.x : min.x;
+    unknown10.y = unknown10.y < min.y ? unknown10.y : min.y;
+    unknown10.z = unknown10.z < min.z ? unknown10.z : min.z;
+    unknown160 |= 1;
+    mm::Vec3 localMax = max - unknown30;
+    mm::Vec3 localMin = min - unknown30;
+    mm::Vec3 center = localMin + (localMax - localMin) * 0.5f;
+    for (int level = 4; level > 0; level--) {
+      if ((unknown164 & (1 << level)) == 0) {
+        continue;
+      }
+      mm::Vec3 inverse = unknown90[level];
+      int x = static_cast<int>(center.x * inverse.x);
+      if (x >= COLI_TBL_GRID[level] || x < 0) {
+        continue;
+      }
+      int z = static_cast<int>(center.z * inverse.z);
+      if (z >= COLI_TBL_GRID[level] || z < 0) {
+        continue;
+      }
+      int index = x + z * COLI_TBL_GRID[level] + COLI_TBL_INDEX[level];
+      if ((unknown130[index >> 6] & unknown036(index)) == 0) {
+        initCehckTree(index, level, x, z);
+      }
+      const unknown003 &cell = unknown16b8[index];
+      if (localMax.x <= cell.unknown00 && localMin.x >= cell.unknown08 && localMax.z <= cell.unknown04 && localMin.z >= cell.unknown0c) {
+        unknown168[index].unknown002(node);
+        return index;
+      }
+    }
+    if ((unknown130[0] & 1) == 0) {
+      initCehckTree(0, 0, 0, 0);
+    }
+    unknown168[0].unknown002(node);
+    return 0;
+  }
+
   ColiLinkList<IDColiTreeObj> *getObjList(int x, int z, int level);
   static u32 getMorton2(u32 x, u32 y);
   static u32 getPart1By1(u32 value);

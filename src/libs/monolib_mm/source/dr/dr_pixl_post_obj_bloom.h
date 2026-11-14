@@ -13,6 +13,7 @@ namespace ml {
 class DrMan;
 class DrPixlMan;
 class DrPixlPostMan;
+class DrPixlRenderTarget;
 
 class DrPixlPostObjBloom : public DrPixlPostObj {
 public:
@@ -42,18 +43,22 @@ public:
   void calculateFlareBuff();
   void calculateLensFlare();
   void bloomLensFlare();
+  void debugRender();
   void calcCollectRender(bool isVolume);
 
-  grlib::CGLibRenderTarget *unknown18;    // Inferred role: render target; original member name unknown.
-  grlib::CGLibRenderTarget *unknown20;    // Inferred role: render target; original member name unknown.
-  grlib::CGLibRenderTarget *unknown28;    // Inferred role: render target; original member name unknown.
-  grlib::CGLibRenderTarget *unknown30;    // Inferred role: render target; original member name unknown.
-  grlib::CGLibRenderTarget *unknown38[5]; // Inferred role: render targets; original member name unknown.
-  grlib::CGLibRenderTarget *unknown60[5]; // Inferred role: render targets; original member name unknown.
+  // Decision 2026-11-14 #35: the constructor allocates a DrPixlRenderTarget for every one of these members and debugRender inlines
+  // DrPixlRenderTarget::debugRender (0x710083be9c, which calls DrPixlMan::debugRender), so they are typed DrPixlRenderTarget *; no downcast
+  // is needed to reach its methods (DrPixlPostObjBloom::debugRender is at 0x71008552c8).
+  DrPixlRenderTarget *unknown18;    // Inferred role: render target; original member name unknown.
+  DrPixlRenderTarget *unknown20;    // Inferred role: render target; original member name unknown.
+  DrPixlRenderTarget *unknown28;    // Inferred role: render target; original member name unknown.
+  DrPixlRenderTarget *unknown30;    // Inferred role: render target; original member name unknown.
+  DrPixlRenderTarget *unknown38[5]; // Inferred role: render targets; original member name unknown.
+  DrPixlRenderTarget *unknown60[5]; // Inferred role: render targets; original member name unknown.
   u8 _88[0x90 - 0x88];
   u32 unknown90; // Inferred role: update request; original member name unknown.
   u32 unknown94; // Inferred role: flags; original member name unknown.
-  grlib::CGLibRenderTarget *m_lgtDownTarget[2];
+  DrPixlRenderTarget *m_lgtDownTarget[2];
   s32 unknowna8; // Inferred role: bloom scale type; original member name unknown.
 };
 

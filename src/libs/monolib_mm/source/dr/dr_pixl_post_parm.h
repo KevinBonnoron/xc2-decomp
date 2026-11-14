@@ -152,7 +152,7 @@ public:
   f32 unknown30; // Inferred role: tone map parameter written with the tone ave max rate by resetToneMapParams; original member name unknown.
   u8 _0034[0x003c - 0x0034];
   bool m_bloomOn;
-  u8 _003d[0x003e - 0x003d];
+  bool unknown3d; // Inferred role: bloom debug render; original member name unknown. `ldrb w8, [x8, #0x3d]` at 0x71008552d8 (DrPixlPostObjBloom::debugRender).
   bool unknown3e; // Inferred role: lens flare; original member name unknown.
   u8 _003f[0x0040 - 0x003f];
   f32 unknown40; // Inferred role: border blm sub; original member name unknown.
@@ -314,11 +314,13 @@ public:
   bool unknownf54;          // Inferred role: histgram reset; original member name unknown.
   u8 _0f55[0x0f58 - 0x0f55];
   s32 unknownf58; // Inferred role: bloom scale type; original member name unknown.
-  u8 _0f5c[0x0f72 - 0x0f5c];
+  u8 _0f5c[0x0f71 - 0x0f5c];
+  bool unknownf71; // Inferred role: bloom down scale with the reduction offsets; original member name unknown. `ldrb w8, [x19, #0xf71]` at 0x7100854444 (calculateDownScaleImpl).
   bool unknownf72; // Inferred role: blm 2 pass; original member name unknown.
   bool unknownf73; // Inferred role: selects the second bloom buffer for the bloom render; original member name unknown.
-  u8 _0f74[0x0f78 - 0x0f74];
-  u32 unknownf78; // Inferred role: SSR debug scale shift; original member name unknown.
+  u32 unknownf74;  // Inferred role: bloom debug render target index; original member name unknown. `ldr w10, [x10, #0xf74]` with an unsigned clamp at 0x71008553cc, `str wzr` in DrPixlPostParm::reset
+                   // 0x710085c1c0.
+  u32 unknownf78;  // Inferred role: SSR debug scale shift; original member name unknown.
   u8 _0f7c[0x0f94 - 0x0f7c];
   f32 unknownf94; // Inferred role: tssao prev blur strength; original member name unknown.
   u8 _0f98[0x0fa0 - 0x0f98];
@@ -343,7 +345,9 @@ public:
   u8 _0fe8[0x0ff0 - 0x0fe8];
   mm::Vec3 unknownff0; // Inferred role: sp blur target; original member name unknown.
   bool unknown1000;    // Inferred role: debug blur mask render; original member name unknown.
-  u8 _1001[0x101c - 0x1001];
+  u8 _1001[0x1008 - 0x1001];
+  s32 unknown1008; // Inferred role: debug mode of DrPixlShadowRaytrace::debugRender (1 draws three targets, 2 to 4 one); original member name unknown. Split out of _1001 (decision 2026-11-14 #17).
+  u8 _100c[0x101c - 0x100c];
   f32 unknown101c; // Inferred role: unbranch to depth quarter size scale parameter; original member name unknown.
   u8 _1020[0x1024 - 0x1020];
   bool unknown1024; // Inferred role: shw raytrace temporal; original member name unknown.
@@ -402,6 +406,7 @@ static_assert(offsetof(DrPixlPostParm, unknown24) == 0x0024, "");
 static_assert(offsetof(DrPixlPostParm, unknown28) == 0x0028, "");
 static_assert(offsetof(DrPixlPostParm, unknown2c) == 0x002c, "");
 static_assert(offsetof(DrPixlPostParm, m_bloomOn) == 0x003c, "");
+static_assert(offsetof(DrPixlPostParm, unknown3d) == 0x003d, "");
 static_assert(offsetof(DrPixlPostParm, unknown3e) == 0x003e, "");
 static_assert(offsetof(DrPixlPostParm, unknown40) == 0x0040, "");
 static_assert(offsetof(DrPixlPostParm, m_borderBlmMul) == 0x0044, "");
@@ -507,6 +512,8 @@ static_assert(offsetof(DrPixlPostParm, unknown514) == 0x0514, "");
 static_assert(offsetof(DrPixlPostParm, unknownf54) == 0x0f54, "");
 static_assert(offsetof(DrPixlPostParm, unknownf58) == 0x0f58, "");
 static_assert(offsetof(DrPixlPostParm, unknownf72) == 0x0f72, "");
+static_assert(offsetof(DrPixlPostParm, unknownf71) == 0x0f71, "");
+static_assert(offsetof(DrPixlPostParm, unknownf74) == 0x0f74, "");
 static_assert(offsetof(DrPixlPostParm, unknownf73) == 0x0f73, "");
 static_assert(offsetof(DrPixlPostParm, unknownf94) == 0x0f94, "");
 static_assert(offsetof(DrPixlPostParm, unknownfa0) == 0x0fa0, "");
@@ -522,6 +529,7 @@ static_assert(offsetof(DrPixlPostParm, unknownfc0) == 0x0fc0, "");
 static_assert(offsetof(DrPixlPostParm, unknownfc8) == 0x0fc8, "");
 static_assert(offsetof(DrPixlPostParm, unknownff0) == 0x0ff0, "");
 static_assert(offsetof(DrPixlPostParm, unknown1000) == 0x1000, "");
+static_assert(offsetof(DrPixlPostParm, unknown1008) == 0x1008, "");
 static_assert(offsetof(DrPixlPostParm, unknown101c) == 0x101c, "");
 static_assert(offsetof(DrPixlPostParm, unknown1024) == 0x1024, "");
 static_assert(offsetof(DrPixlPostParm, unknown1025) == 0x1025, "");

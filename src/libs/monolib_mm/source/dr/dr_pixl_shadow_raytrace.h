@@ -25,6 +25,7 @@ public:
 
   void update();
   void releaseColorBuff();
+  void debugRender();
   void render_beforeTemporal();
   void raytracePass();
   void temporalFiltering();

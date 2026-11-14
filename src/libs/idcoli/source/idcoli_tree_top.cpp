@@ -64,7 +64,7 @@ void IDColiTreeTop::begin() {
 void IDColiTreeTop::initCehckTree(int index, int level, int x, int z) {
   unknown003 *cell = &unknown16b8[index];
   f32 posX = unknown40[level].x * x;
-  f32 posZ = z * unknown40[level].z;
+  f32 posZ = unknown40[level].z * z; // Same operand order as posX; the order only matters for the inlined copy in setupTreeList (decision 2026-11-14 #7).
   cell->unknown00 = unknown40[level].x + posX + unknowne0[level].x;
   cell->unknown08 = posX - unknowne0[level].x;
   cell->unknown04 = posZ + unknown40[level].z + unknowne0[level].z;

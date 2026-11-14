@@ -27,6 +27,7 @@ public:
   static void createUniformMaterialObj(grlib::CGLibDblUniformArray *uniforms, const MdsMatTechnique *techniques, const u8 *variables, const u8 *shaders, const MdsMatInfoHeader *headers, int matNum);
   static void createUniformMdlObj(grlib::CGLibTriUniformArray *uniforms, int num);
   static void createUniformBoneObj(grlib::CGLibTriUniformBlock *uniform, int boneNum);
+  static void createMotionBlendObj(grlib::CGLibOneUniformArray *uniforms, const u8 *data, DrResMdoVertex *vertex);
   static void changeMotionBlendObj(grlib::CGLibOneUniformArray *uniforms, const u8 *data, DrResMdoVertex *vertex);
   static void createUniformVolTexCalcObj(grlib::CGLibDblUniformArray *uniforms, u32 num);
   static void createUniformRimBloomCalcObj(grlib::CGLibDblUniformArray *uniforms);

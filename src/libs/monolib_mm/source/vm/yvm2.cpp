@@ -1,7 +1,7 @@
 #include <stddef.h>
 // Script VM of monolib_mm. The assertion strings of the game name its source
-// `C:/Monolithsoft/BF2/prog/libs/monolib_mm/source/vm/yvm2.c`: it is a C file. VMData-like values of the stack and the
-// opcode table hold 8-byte pointers at 4-byte aligned offsets (12-byte elements), so these two types are packed to 4.
+// `C:/Monolithsoft/BF2/prog/libs/monolib_mm/source/vm/yvm2.c`: it is a C file. VMData-like values of the stack hold
+// 8-byte pointers at 4-byte aligned offsets (12-byte elements), so that type is packed.
 //
 // Layout evidence: the pool getters (vmIdPoolGet 0x7100786c74 ...), vmThreadCreate 0x71007873b0, vmPush 0x7100787e2c
 // and the opcode table at 0x71011b05a0 (96 entries, the strings of the table name every VMC_ opcode).
@@ -67,8 +67,14 @@ struct sSbCode {
   int unknown04; // Inferred role: function index run by vmStart; original member name unknown.
 };
 
-// The game stores 8-byte pointers at 4-byte aligned offsets in the 12-byte stack value (ldur x0, [x1, #4]).
-#pragma pack(push, 4)
+// The game stores 8-byte pointers at 4-byte aligned offsets in the 12-byte stack value (ldur x0, [x1, #4]), so the type
+// is packed to 4 or less. Decision 2026-11-14 #15: pack(1). The game's loads exclude 4: vmArgFunctionGet and vmOCNameGet
+// test the type byte, call the error function and then read the halfword at offset 2 with a separate load (`ldrb w8, [x19]`
+// at 0x7100787aa8, `ldrh w8, [x19, #2]` at 0x7100787ab8; 0x7100787d78 and 0x7100787d9c), whereas with pack(4) clang 3.9 knows
+// the byte is 4-aligned and widens its load to 32 bits (17 and 26 instructions instead of 14 and 23). pack(2) matches too
+// (78 of 78 functions of the file match with 4, 2 and 1 alike); size and offsets are the same, only the alignment differs,
+// and nothing in the game separates 2 from 1.
+#pragma pack(push, 1)
 
 // Inferred role: value of the VM stack (a VMData of the original is the 4-byte operand read by vmDataGet); original
 // name unknown.
@@ -792,12 +798,41 @@ int vmOCRegist(unknown013 *pOC) {
   return 0;
 }
 
+const char *vmOCNameGet(unknown004 *pData) {
+  if (pData->unknown00 != 9) {
+    vmHalt();
+  }
+  return unknown017.unknownd710[pData->unknown02]->unknown00;
+}
+
 unknown004 *vmArgPtrGet(unknown007 *pThread, int no) {
   u8 cnt = vmArgCntGet(pThread);
   if (no == 0 || cnt < no) {
     vmHalt();
   }
   return &pThread->unknown50[pThread->reg.sp - no - 1];
+}
+
+int vmArgFunctionGet(unknown007 *pThread, unknown004 *pData) {
+  if (pData->unknown00 != 7) {
+    vmArgErr();
+  }
+  return (pData->unknown02 << 16) | (pData->unknown04 & 0xffff);
+}
+
+// Decision 2026-11-14 #16: `package` and `function` place the `add` of the package index before the `sbfiz`
+// (0x71007883c4); with both expressions written in the call, or with `package` alone, the `add` comes after the `sbfiz`
+// (20 instructions); with `function` alone it is 21. The game never reads its first argument.
+int vmThreadGetOC(void *vm, int func, int *id) {
+  int package = func >> 16;
+  int function = func & 0xffff;
+  unknown007 *pThread = vmThreadCreate(unknown017.unknown00[package].unknown00, function);
+  if (pThread == 0) {
+    return 0;
+  }
+  pThread->unknown60 |= 0x80000000;
+  *id = pThread->unknown5c;
+  return 1;
 }
 
 char *vmUsrAtrSearch(sSbHeader *pSb, const char *name) {
