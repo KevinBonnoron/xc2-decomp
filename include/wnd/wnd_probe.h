@@ -19,9 +19,9 @@ class OverlappingCache;
 
 // Hit of a wind on a probe, filled by the collision agents.
 struct HitCache {
-  WindObject *unknown00; // Inferred role: wind; original member name unknown.
-  f32 unknown08;         // Inferred role: distance; original member name unknown.
-  mm::Vec3 unknown10;    // Inferred role: wind; original member name unknown.
+  const WindObject *unknown00; // Inferred role: wind; original member name unknown.
+  f32 unknown08;               // Inferred role: distance; original member name unknown.
+  mm::Vec3 unknown10;          // Inferred role: wind; original member name unknown.
 };
 
 static_assert(offsetof(HitCache, unknown08) == 0x08, "");

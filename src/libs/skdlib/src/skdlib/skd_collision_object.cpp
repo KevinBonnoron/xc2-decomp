@@ -2,6 +2,8 @@
 // instantiations right after skd::CollionArray's constructor, which builds the three shape vectors.
 #include "skd/skd_collision_object.h"
 
+#include <math.h>
+
 #include "anm/anm_pose.h"
 #include "anm/anm_qs_transform.h"
 #include "mm_mtl/vector.h" // IWYU pragma: keep
@@ -20,6 +22,22 @@ void ShpereCollObj::calc(anm::Pose &pose) {
   mm::Vec3 local(unknown00->unknown20.x, unknown00->unknown20.y, unknown00->unknown20.z);
   mm::Vec3 world = transform.unknown10.rotate(local);
   unknown10 = world + mm::Vec3(transform.unknown00.x, transform.unknown00.y, transform.unknown00.z);
+}
+
+bool ShpereCollObj::detect(f32 radius, const mm::Vec3 &position, mm::Vec3 *normal) const {
+  mm::Vec3 direction = position - unknown10;
+  f32 distance = sqrtf(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z);
+  f32 limit = unknown00->unknown40 + radius;
+  if (distance < limit) {
+    if (direction.unknown003()) {
+      direction = mm::Vec3::unitY;
+    } else {
+      direction.unknown001();
+    }
+    *normal = direction * (limit - distance);
+    return true;
+  }
+  return false;
 }
 
 CollisionObject::CollisionObject(const ResCollisionArray &collisions, anm::Pose &pose, mm::mtl::IAllocator *allocator)
