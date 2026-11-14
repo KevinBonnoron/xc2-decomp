@@ -393,4 +393,36 @@ void Misc::TurnDirectionAngle(const mm::Vec3 &from, const mm::Vec3 &to, mm::Vec3
   TurnDirectionAngle(direction, vector, angle, isRadian);
 }
 
+f32 Misc::TurnDirectionAngle(mm::Vec3 &direction, const mm::Vec3 &axis, f32 angle, bool isRadian) {
+  mm::Vec3 vector = direction;
+  f32 dot = vector.x * axis.x + vector.y * axis.y + vector.z * axis.z;
+  if (dot >= 1.0f) {
+    return 0.0f;
+  }
+
+  f32 between = mm::acos(fmaxf(dot, -1.0f));
+  if (between <= angle && !isRadian) {
+    direction = axis;
+    return between;
+  }
+
+  mm::Vec3 normal;
+  normal.x = vector.y * axis.z - vector.z * axis.y;
+  normal.y = vector.z * axis.x - vector.x * axis.z;
+  normal.z = vector.x * axis.y - vector.y * axis.x;
+  Normalize(normal);
+
+  mm::Vec3 cross;
+  cross.x = normal.y * vector.z - normal.z * vector.y;
+  cross.y = normal.z * vector.x - normal.x * vector.z;
+  cross.z = normal.x * vector.y - normal.y * vector.x;
+  f32 projection = mm::clamp(normal.x * vector.x + normal.y * vector.y + normal.z * vector.z, -1.0f, 1.0f);
+  f32 cosine = cosf(angle);
+  f32 sine = sinf(angle);
+  mm::Vec3 parallel = normal * projection;
+  direction = parallel + (vector - parallel) * cosine;
+  direction += cross * sine;
+  return angle;
+}
+
 } // namespace btl
