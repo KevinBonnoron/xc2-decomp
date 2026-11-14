@@ -7,7 +7,11 @@
 #include "dr/dr_shd_lgt_global_ibl.h"
 #include "dr/dr_shd_lgt_man.h"
 #include "dr/dr_shd_man.h"
+#include "grlib/cglib_texture_buffer.h"
+#include "grlib/cglib_util_sh.h"
+#include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_array.h"
+#include "mtl/alloc_handle.h"
 
 // Spherical harmonics helpers of the unit (second order, 9 coefficients). The game keeps them in the namespace
 // _cubemap_multi_ibl_ (_ZN19_cubemap_multi_ibl_5shMulEPff).
@@ -35,6 +39,43 @@ void shLerp(f32 *sh, const f32 *a, const f32 *b, f32 t) {
 } // namespace _cubemap_multi_ibl_
 
 namespace ml {
+
+DrPixlPostObjCubeMapMultiIBL::DrPixlPostObjCubeMapMultiIBL(DrMan *drMan, DrPixlMan *pixlMan, DrPixlPostMan *postMan)
+    : DrPixlPostObj(drMan, pixlMan, postMan), unknown5dc(false), unknown64c(2), unknown6d8(0) {
+  // The two textures are written out twice, not looped: the game keeps two ALLOC_HANDLE stack slots (+0x38 and +0x30
+  // at 0x71008b9078 and 0x71008b90d0), one per `new`, and a loop would share a single slot.
+  unknown5c8[0] = new (drMan->unknown0c) DrPixlRenderCubeMapMipMap(drMan);
+  unknown5c8[0]->setTextureInfo(64.0f, 64.0f, GRL_SURFACE_FORMAT_R11G11B10F, false, 0);
+  unknown5c8[1] = new (drMan->unknown0c) DrPixlRenderCubeMapMipMap(drMan);
+  unknown5c8[1]->setTextureInfo(64.0f, 64.0f, GRL_SURFACE_FORMAT_R11G11B10F, false, 0);
+  m_premMipCount = 5;
+  unknown650.createVertexBuff(unknown64c * unknown64c * 6 * 16, 16);
+  void *buffer;
+  u32 size;
+  unknown650.lock(&buffer, &size);
+  for (int face = 0; face < 6; face++) {
+    for (u32 y = 0; y < unknown64c; y++) {
+      for (u32 x = 0; x < unknown64c; x++) {
+        f32 *texel = static_cast<f32 *>(buffer) + ((face * unknown64c + y) * unknown64c + x) * 4;
+        mm::Vec3 vector;
+        grlib::CGLibUtilSH::TexelCoordToVect(vector, face, y, x, unknown64c);
+        texel[0] = vector.x;
+        texel[1] = vector.y;
+        texel[2] = vector.z;
+        texel[3] = grlib::CGLibUtilSH::TexelCoordSolidAngle(face, y, x, unknown64c) * 0.33334f;
+      }
+    }
+  }
+  unknown650.unlock();
+  unknown6e0 = 0x90;
+  unknown6dc = unknown64c * unknown64c * 6 * unknown6e0;
+  grlib::CGLibVtxAttr attributes[1];
+  attributes[0] = {unknown073_46, 0, 0, 0};
+  unknown6c8.createFetchObj(attributes, 1);
+  unknown678[0].createWorkBuff(unknown6dc);
+  unknown678[1].createWorkBuff(unknown6dc);
+  unknown6e8 = new (drMan->unknown0c) DrShdCubeCapFilter(drMan);
+}
 
 DrPixlPostObjCubeMapMultiIBL::~DrPixlPostObjCubeMapMultiIBL() {
   if (unknown6e8 != nullptr) {
