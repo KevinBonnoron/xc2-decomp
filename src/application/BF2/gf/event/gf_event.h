@@ -1,79 +1,82 @@
 #pragma once
-#include "gf/data/gf_data_blade.h"
+#include <stddef.h>
+
+#include "gf/data/gf_data_driver.h"
 #include "mm_mtl/fixed_queue.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
-#include <stddef.h>
 
 namespace gf {
 
 enum RELOAD_BDAT {
   RELOAD_BDAT_UNKNOWN_0 = 0, // Inferred role: sent before the bdat files are reloaded; original name unknown.
-  RELOAD_BDAT_ALL = 1,
+  RELOAD_BDAT_UNKNOWN_1 = 1, // Inferred role: reload bdat all; original name unknown.
 };
 
 enum GEV {
-  GEV_MAPJUMP_START = 1,
-  GEV_MAPJUMP_DESTROY_FIELD = 2,
-  GEV_MAPJUMP_CHANGE_MAP = 4,
-  GEV_MAPJUMP_CREATE_FIELD = 5,
-  GEV_MAPJUMP_FADEIN = 6,
-  GEV_MAPJUMP_END = 7,
-  GEV_EVENT_END_WAIT = 8,
-  GEV_EVENT_END = 9,
-  GEV_EVENT_PLAY_END = 10,
-  GEV_EVENT_SEQUENCE_START = 11,
-  GEV_EVENT_SEQUENCE_END = 12,
-  GEV_EVENT_START_FRAME = 13,
-  GEV_PLAYER_CONTROL_FREE = 14,
-  GEV_PLAYER_CONTROL_LOCK = 15,
+  GEV_UNKNOWN_1 = 1,   // Inferred role: gev mapjump start; original name unknown.
+  GEV_UNKNOWN_2 = 2,   // Inferred role: gev mapjump destroy field; original name unknown.
+  GEV_UNKNOWN_3 = 3,   // Inferred role: gev mapjump dispose field; original name unknown.
+  GEV_UNKNOWN_4 = 4,   // Inferred role: gev mapjump change map; original name unknown.
+  GEV_UNKNOWN_5 = 5,   // Inferred role: gev mapjump create field; original name unknown.
+  GEV_UNKNOWN_6 = 6,   // Inferred role: gev mapjump fadein; original name unknown.
+  GEV_UNKNOWN_7 = 7,   // Inferred role: gev mapjump end; original name unknown.
+  GEV_UNKNOWN_8 = 8,   // Inferred role: gev event end wait; original name unknown.
+  GEV_UNKNOWN_9 = 9,   // Inferred role: gev event end; original name unknown.
+  GEV_UNKNOWN_10 = 10, // Inferred role: gev event play end; original name unknown.
+  GEV_UNKNOWN_11 = 11, // Inferred role: gev event sequence start; original name unknown.
+  GEV_UNKNOWN_12 = 12, // Inferred role: gev event sequence end; original name unknown.
+  GEV_UNKNOWN_13 = 13, // Inferred role: gev event start frame; original name unknown.
+  GEV_UNKNOWN_14 = 14, // Inferred role: gev player control free; original name unknown.
+  GEV_UNKNOWN_15 = 15, // Inferred role: gev player control lock; original name unknown.
 };
 
 enum {
-  DEBUG_CHANGE_IDEA_TRUST = 4,
+  DEBUG_UNKNOWN_4 = 4, // Inferred role: debug change idea trust; original name unknown.
 };
 
 enum GF_STATE {
-  GF_STATE_NONE = 0,
-  GF_STATE_INITIALIZE = 1,
-  GF_STATE_DESTROY = 2,
-  GF_STATE_CONTROL = 3,
-  GF_STATE_TALK = 4,
-  GF_STATE_MENU = 6,
-  GF_STATE_WAIT_EVENT = 7,
-  GF_STATE_MAPJUMP = 8,
-  GF_STATE_MAPJUMP_SKIP_TRAVEL = 9,
-  GF_STATE_PLAYER_DEAD = 10,
-  GF_STATE_SALVAGE = 11,
-  GF_STATE_COLLECT = 12,
-  GF_STATE_FIELD_TBOX = 13,
-  GF_STATE_MAP_GIMMICK = 14,
-  GF_STATE_GRAVE = 15,
-  GF_STATE_JUMP = 16,
-  GF_STATE_WARP = 17,
-  GF_STATE_GMK_TUTORIAL = 18,
-  GF_STATE_GMK_CAMERA = 19,
-  GF_STATE_EVENT = 20,
-  GF_STATE_GIMMICK_TASK = 21,
-  GF_STATE_CHAIN_ATTACK = 22,
-  GF_STATE_ARTS_MOVIE = 23,
-  GF_STATE_RESET_BLADE = 24,
-  GF_STATE_MAX = 25,
+  GF_STATE_UNKNOWN_0 = 0,   // Inferred role: gf state none; original name unknown.
+  GF_STATE_UNKNOWN_1 = 1,   // Inferred role: gf state initialize; original name unknown.
+  GF_STATE_UNKNOWN_2 = 2,   // Inferred role: gf state destroy; original name unknown.
+  GF_STATE_UNKNOWN_3 = 3,   // Inferred role: gf state control; original name unknown.
+  GF_STATE_UNKNOWN_4 = 4,   // Inferred role: gf state talk; original name unknown.
+  GF_STATE_UNKNOWN_6 = 6,   // Inferred role: gf state menu; original name unknown.
+  GF_STATE_UNKNOWN_7 = 7,   // Inferred role: gf state wait event; original name unknown.
+  GF_STATE_UNKNOWN_8 = 8,   // Inferred role: gf state mapjump; original name unknown.
+  GF_STATE_UNKNOWN_9 = 9,   // Inferred role: gf state mapjump skip travel; original name unknown.
+  GF_STATE_UNKNOWN_10 = 10, // Inferred role: gf state player dead; original name unknown.
+  GF_STATE_UNKNOWN_11 = 11, // Inferred role: gf state salvage; original name unknown.
+  GF_STATE_UNKNOWN_12 = 12, // Inferred role: gf state collect; original name unknown.
+  GF_STATE_UNKNOWN_13 = 13, // Inferred role: gf state field tbox; original name unknown.
+  GF_STATE_UNKNOWN_14 = 14, // Inferred role: gf state map gimmick; original name unknown.
+  GF_STATE_UNKNOWN_15 = 15, // Inferred role: gf state grave; original name unknown.
+  GF_STATE_UNKNOWN_16 = 16, // Inferred role: gf state jump; original name unknown.
+  GF_STATE_UNKNOWN_17 = 17, // Inferred role: gf state warp; original name unknown.
+  GF_STATE_UNKNOWN_18 = 18, // Inferred role: gf state gmk tutorial; original name unknown.
+  GF_STATE_UNKNOWN_19 = 19, // Inferred role: gf state gmk camera; original name unknown.
+  GF_STATE_UNKNOWN_20 = 20, // Inferred role: gf state event; original name unknown.
+  GF_STATE_UNKNOWN_21 = 21, // Inferred role: gf state gimmick task; original name unknown.
+  GF_STATE_UNKNOWN_22 = 22, // Inferred role: gf state chain attack; original name unknown.
+  GF_STATE_UNKNOWN_23 = 23, // Inferred role: gf state arts movie; original name unknown.
+  GF_STATE_UNKNOWN_24 = 24, // Inferred role: gf state reset blade; original name unknown.
+  GF_STATE_UNKNOWN_25 = 25, // Inferred role: gf state max; original name unknown.
 };
 
 enum EXEC_STATE {
-  EXEC_STATE_DEBUG,
-  EXEC_STATE_SCENARIO_GAME,
-  EXEC_STATE_ADVERTIZE,
-  EXEC_STATE_THEATER,
-  EXEC_STATE_TOOL,
+  EXEC_STATE_UNKNOWN_0, // Inferred role: exec state debug; original name unknown.
+  EXEC_STATE_UNKNOWN_1, // Inferred role: exec state scenario game; original name unknown.
+  EXEC_STATE_UNKNOWN_2, // Inferred role: exec state advertize; original name unknown.
+  EXEC_STATE_UNKNOWN_3, // Inferred role: exec state theater; original name unknown.
+  EXEC_STATE_UNKNOWN_4, // Inferred role: exec state tool; original name unknown.
 };
 
 struct GF_ASSET_HANDLE;
 struct GfSetupParam;
 struct GF_OBJ_HANDLE;
+
 enum {
-  MAPJUMP_TYPE_SAVE_DATA = 1,
+  MAPJUMP_UNKNOWN_1 = 1, // Inferred role: mapjump type save data; original name unknown.
 };
 
 struct MapjumpCallbackInfo {
@@ -156,7 +159,7 @@ public:
 
 class GfEvent : public mm::mtl::PtrSingleton<GfEvent> {
 public:
-  static const u32 CALLBACK_MAX = 32;
+  static const u32 CALLBACK_UNKNOWN_32 = 32; // Inferred role: callback max; original name unknown.
 
   GfEvent(const GfSetupParam &param);
   void initialize(const GfSetupParam &param);
@@ -239,8 +242,8 @@ public:
   }
 
 private:
-  mm::mtl::FixedQueue<IGfEvent *, CALLBACK_MAX> unknown08; // Inferred role: callbacks; original member name unknown.
-  bool unknown118;                                         // Inferred role: initialized; original member name unknown.
+  mm::mtl::FixedQueue<IGfEvent *, CALLBACK_UNKNOWN_32> unknown08; // Inferred role: callbacks; original member name unknown.
+  bool unknown118;                                                // Inferred role: initialized; original member name unknown.
 };
 
 static_assert(sizeof(GfEvent) == 0x120, "");

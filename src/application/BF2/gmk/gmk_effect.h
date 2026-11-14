@@ -28,7 +28,7 @@ public:
     QuestFlagCond unknown06;    // Inferred role: quest flag; original member name unknown.
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_EFFECT;
+  static const GmkType GMK_TYPE = GMK_TYPE_EFFECT; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkEffect();
   ~GmkEffect() override { dispose(); }
@@ -93,7 +93,7 @@ public:
     void create(CBdatWrapper, int, const AGmkBase &) {}
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_EFFECT_LOCATOR;
+  static const GmkType GMK_TYPE = GMK_TYPE_EFFECT_LOCATOR; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkEffectLocator() {}
   GmkType getGmkType() const override;

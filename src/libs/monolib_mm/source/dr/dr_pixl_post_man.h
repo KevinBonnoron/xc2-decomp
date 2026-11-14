@@ -39,29 +39,32 @@ class DrResUseQueryObj;
 
 class DrPixlPostMan {
 public:
+  ~DrPixlPostMan();
   enum Flag {
-    FLAG_3D_LUT = 0x1,
-    FLAG_TONE_MAPING = 0x2,
-    FLAG_BLOOM = 0x4,
-    FLAG_VOLUME = 0x8,
-    FLAG_SSAO = 0x10,
-    FLAG_DEPTH_FIELD = 0x20,
-    FLAG_BLUR = 0x40,
-    FLAG_REFLECTION = 0x80,
-    FLAG_CHG_SHADER = 0x100,
-    FLAG_SSS = 0x200,
-    FLAG_CALC_BLOOM = 0x8000,
-    FLAG_CALC_VOLUME = 0x10000,
-    FLAG_UNKNOWN_17 = 0x20000, // Inferred role: reflection; original name unknown.
-    FLAG_UNKNOWN_18 = 0x40000, // Inferred role: high reflection; original name unknown.
-    FLAG_DEPTH_DOWN = 0x80000,
-    FLAG_REFRACTION_MAP = 0x200000,
+    FLAG_UNKNOWN_0 = 0x1,       // Inferred role: 3d lut; original name unknown.
+    FLAG_UNKNOWN_1 = 0x2,       // Inferred role: tone maping; original name unknown.
+    FLAG_UNKNOWN_2 = 0x4,       // Inferred role: bloom; original name unknown.
+    FLAG_UNKNOWN_3 = 0x8,       // Inferred role: volume; original name unknown.
+    FLAG_UNKNOWN_4 = 0x10,      // Inferred role: ssao; original name unknown.
+    FLAG_UNKNOWN_5 = 0x20,      // Inferred role: depth field; original name unknown.
+    FLAG_UNKNOWN_6 = 0x40,      // Inferred role: blur; original name unknown.
+    FLAG_UNKNOWN_7 = 0x80,      // Inferred role: reflection; original name unknown.
+    FLAG_UNKNOWN_8 = 0x100,     // Inferred role: chg shader; original name unknown.
+    FLAG_UNKNOWN_9 = 0x200,     // Inferred role: sss; original name unknown.
+    FLAG_UNKNOWN_15 = 0x8000,   // Inferred role: calc bloom; original name unknown.
+    FLAG_UNKNOWN_16 = 0x10000,  // Inferred role: calc volume; original name unknown.
+    FLAG_UNKNOWN_17 = 0x20000,  // Inferred role: reflection; original name unknown.
+    FLAG_UNKNOWN_18 = 0x40000,  // Inferred role: high reflection; original name unknown.
+    FLAG_UNKNOWN_19 = 0x80000,  // Inferred role: depth down; original name unknown.
+    FLAG_UNKNOWN_21 = 0x200000, // Inferred role: refraction map; original name unknown.
   };
 
   void setDownDepth();
   void setReflection(f32 x, f32 y, f32 z, bool isHigh);
   void renderDeferred();
   void renderDeferredLast();
+  void render();
+  void renderDeferredTemporal();
   DrPixlRenderTarget *getDownDepth();
   bool isCalcVolume();
   void update();
@@ -134,7 +137,12 @@ public:
   DrPixlPostObjUnbranchToDepth *unknownb8; // Inferred role: unbranch to depth; original member name unknown.
   DrPixlRenderTarget *unknownc0[2];        // Inferred role: down depths; original member name unknown.
   DrPixlRenderTarget *unknownd0;           // Inferred role: refraction map; original member name unknown.
-  u8 _0d8[0x0f0 - 0x0d8];
+  u8 _0d8[0x0e0 - 0x0d8];
+  // Inferred role: quarter normal target shown by DrPixlPostObjTSSAO::debugRender; original member name unknown. Evidence: receives a new
+  // DrPixlRenderTarget in the DrPixlPostMan constructor (0x710084d600-0x710084d618) and is read by DrPixlPostObjTSSAO::passQuaterNormal
+  // (0x71008c1ee8).
+  DrPixlRenderTarget *unknowne0;
+  u8 _0e8[0x0f0 - 0x0e8];
   DrResUseQueryObj *unknownf0; // Inferred role: refraction query; original member name unknown.
   u32 unknownf8;               // Inferred role: flags; original member name unknown.
   f32 unknownfc;
@@ -152,6 +160,7 @@ static_assert(offsetof(DrPixlPostMan, unknown90) == 0x090, "");
 static_assert(offsetof(DrPixlPostMan, unknowna0) == 0x0a0, "");
 static_assert(offsetof(DrPixlPostMan, unknownb0) == 0x0b0, "");
 static_assert(offsetof(DrPixlPostMan, unknownc0) == 0x0c0, "");
+static_assert(offsetof(DrPixlPostMan, unknowne0) == 0x0e0, "");
 static_assert(offsetof(DrPixlPostMan, unknownf0) == 0x0f0, "");
 static_assert(offsetof(DrPixlPostMan, unknownf8) == 0x0f8, "");
 static_assert(offsetof(DrPixlPostMan, unknownfc) == 0x0fc, "");

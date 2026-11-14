@@ -8,7 +8,7 @@ extern template void mm::mtl::Vector<gf::GfDropitemParam>::resize(size_t);
 
 namespace gf {
 
-GfDropitemParams::GfDropitemParams() { unknown08.setAllocator(getAllocator(ALLOCATOR_DEFAULT)); }
+GfDropitemParams::GfDropitemParams() { unknown08.setAllocator(getAllocator(ALLOCATOR_UNKNOWN_0)); }
 
 GfDropitemParams::~GfDropitemParams() { unknown08.destroy(); }
 

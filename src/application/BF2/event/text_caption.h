@@ -8,7 +8,7 @@ namespace event {
 class TextCaption {
 public:
   enum {
-    FLAG_DISP = 1 << 0,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: disp flag; original name unknown.
   };
 
   TextCaption();
@@ -17,11 +17,11 @@ public:
   void update();
   void render();
   void write(const char *text, u8 *bdat, int textId, int position);
-  bool isDisp() const { return (unknown08 & FLAG_DISP) != 0; }
+  bool isDisp() const { return (unknown08 & FLAG_UNKNOWN_0) != 0; }
   void hide() {
     gf::GfMenuObjEventSubtitle::hideText();
     unknown0c = "";
-    unknown08 &= ~FLAG_DISP;
+    unknown08 &= ~FLAG_UNKNOWN_0;
   }
 
 private:

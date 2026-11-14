@@ -11,7 +11,10 @@ namespace ml {
 
 class DrResMdoSampler {
 public:
+  DrResMdoSampler(const u8 *data);
   ~DrResMdoSampler();
+  void setup();
+  void setupSampler(const u8 *data);
   void samplerRelease();
 
   DrResMdoSampler *unknown00; // Inferred role: prev; original member name unknown.

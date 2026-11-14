@@ -7,7 +7,7 @@
 namespace event {
 
 void CharaPlayEva::term() {
-  if ((unknown08 & FLAG_PLAY) != 0) {
+  if ((unknown08 & FLAG_UNKNOWN_2) != 0) {
     if (mm::mtl::Singleton<CharaManager>::getPtr()->isStreamMode() && unknown20 != nullptr) {
       mm::mtl::Singleton<MotstmManager>::getPtr()->free(unknown20);
     }
@@ -16,7 +16,7 @@ void CharaPlayEva::term() {
       mm::mtl::Singleton<MotstmManager>::getPtr()->free(unknown28);
     }
     unknown28 = nullptr;
-    unknown08 &= ~FLAG_PLAY;
+    unknown08 &= ~FLAG_UNKNOWN_2;
   }
 }
 

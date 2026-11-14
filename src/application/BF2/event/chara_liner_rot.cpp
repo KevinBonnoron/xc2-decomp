@@ -12,7 +12,7 @@ namespace event {
 
 ICmd::RESULT CharaLinerRot::update(const Param &param) {
   if (unknown08 == nullptr) {
-    return RESULT_NEXT;
+    return RESULT_UNKNOWN_2;
   }
   CharaObj *chara = static_cast<CharaObj *>(param.val(0).getUserdata());
   f32 delta = chara->getFrameInfo().unknown0c;
@@ -20,7 +20,7 @@ ICmd::RESULT CharaLinerRot::update(const Param &param) {
     mm::Vec3 from = chara->getRot();
     mm::Vec3 to(param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32());
     unknown10.clear();
-    unknown10.append(0.0f, from, CV_TYPE_STEP);
+    unknown10.append(0.0f, from, CV_TYPE_UNKNOWN_0);
     unknown10.append(param.val(4).getF32(), to, static_cast<CV_TYPE>(param.val(5).getS32()));
     unknown08->resetMovement(0);
   }
@@ -28,9 +28,9 @@ ICmd::RESULT CharaLinerRot::update(const Param &param) {
   chara->setRot(unknown10.getValue());
   if (unknown10.isEnd()) {
     unknown10.clear();
-    return RESULT_END;
+    return RESULT_UNKNOWN_1;
   }
-  return RESULT_NEXT;
+  return RESULT_UNKNOWN_2;
 }
 
 } // namespace event

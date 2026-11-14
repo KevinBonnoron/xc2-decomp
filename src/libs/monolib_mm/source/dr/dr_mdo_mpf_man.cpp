@@ -2,8 +2,12 @@
 
 #include <string.h>
 
+#include "dr/dr_light_man.h"
+#include "dr/dr_man.h"
 #include "dr/dr_mpf_work_auto_inf.h"
 #include "grlib/cglib_ctl_vertex.h"
+#include "grlib/shd_util.h"
+#include "mm_math/mm_col3.h"
 #include "mtl/mem_manager.h"
 
 namespace ml {
@@ -52,11 +56,7 @@ bool DrMdoMpfMan::delMpfObj() {
   return count < 2;
 }
 
-u8 *DrMdoMpfMan::getTempMemTbl(int size) {
-  u8 *table = unknown3d10 + unknown3d20;
-  unknown3d20 += size;
-  return table;
-}
+void *DrMdoMpfMan::getTempMemTbl(int size) { return unknown001(size); }
 
 void DrMdoMpfMan::releaseList(_MPFWorkAutoInf *work) {
   _MPFWorkAutoInf *first = work->unknown28;
@@ -147,5 +147,51 @@ void DrMdoMpfMan::freeMemWork(_MPFWorkAutoInf *work) {
     unknowne0 = work;
   }
 }
+
+void DrMdoMpfMan::getTempCalcTbl(_MPFWorkAutoPos **tables, int count) {
+  for (int i = 0; i < count; i++) {
+    tables[i] = &unknown3d18[i];
+  }
+}
+
+void DrMdoMpfMan::update() {
+  u32 flags = unknown3d30;
+  unknown3d30 = flags | 1;
+  if ((flags & 2) == 0) {
+    return;
+  }
+  unknown3d30 &= ~2;
+  if (!unknown00->unknown1d7c) {
+    f32 speed = unknown3d24 * 0.4f * unknown00->unknown1c8c;
+    if (speed != 0.0f) {
+      for (int i = 0; i < getMpfWindMax(); i++) {
+        unknown100[i].calcUpdate(1.0f, speed, 1.0f);
+      }
+    }
+  }
+  updateUniformWork();
+}
+
+void DrMdoMpfMan::updateUniformWork() {
+  f32 *buffer = static_cast<f32 *>(unknown18.getBuff());
+  for (int i = 0; i < getMpfWindMax(); i++) {
+    grlib::ShdMat44TransposeMat34(buffer, unknown100[i].unknown70);
+    grlib::ShdMat44TransposeMat34(buffer + 0xc, unknown100[i].unknownb0);
+    buffer += 0x18;
+  }
+  unknown18.updateData();
+  mm::Col3 color = unknown00->unknown588->unknown12c;
+  color.r *= 0.5f;
+  color.g *= 0.5f;
+  color.b *= 0.5f;
+  f32 *ambient = static_cast<f32 *>(unknown60.getBuff());
+  ambient[0] = color.r;
+  ambient[1] = color.g;
+  ambient[2] = color.b;
+  ambient[3] = 0.0f;
+  unknown60.updateData();
+}
+
+void DrMdoMpfMan::bindInstanceBuffAsSSBO(u32 index, u32 offset, u32 size) { unknown98.setStorageBuffer(index, offset, size); }
 
 } // namespace ml

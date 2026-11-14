@@ -11,9 +11,12 @@
 
 namespace gf {
 
-constexpr int EFF_TIME_MINUTE_MAX = 99;
-constexpr int EFF_TIME_SECOND_MAX = 59;
-constexpr int BONUS_MAX = 99;
+// Inferred role: maximum of the random minutes of the effect time; original name unknown.
+constexpr int EFF_TIME_UNKNOWN_99 = 99;
+// Inferred role: maximum of the random seconds of the effect time; original name unknown.
+constexpr int EFF_TIME_UNKNOWN_59 = 59;
+// Inferred role: maximum of the bonus number; original name unknown.
+constexpr int BONUS_UNKNOWN_99 = 99;
 
 GfMenuLifeAdapter::GfMenuLifeAdapter(ui::UIObjectPlugin *plugin) : GfMenuAdapter(plugin, false, false), unknown30(0), unknown58(true) {}
 
@@ -33,7 +36,7 @@ GfMenuLifeAdapter *GfMenuLifeAdapter::create(ui::UIObjectPlugin *plugin, u8 inde
   }
   // __LINE__ must be 95 as in the original source: it is the line argument of operator new.
 #line 95
-  GfMenuLifeAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuLifeAdapter(plugin);
+  GfMenuLifeAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuLifeAdapter(plugin);
   if (adapter != nullptr) {
     adapter->unknown30 = index;
     adapter->unknown38.bind(adapter, update);
@@ -45,8 +48,8 @@ GfMenuLifeAdapter *GfMenuLifeAdapter::create(ui::UIObjectPlugin *plugin, u8 inde
 void GfMenuLifeAdapter::update_Time_EffTime(u8 index) {
   ui::UIObjectTimePlugin *timePlugin = static_cast<ui::UIObjectTimePlugin *>(unknown18);
   if (timePlugin != nullptr && timePlugin->getRTTI()->isKindOf(&ui::UIObjectTimePlugin::m_rtti)) {
-    timePlugin->setMin(ml::mtRand(0, EFF_TIME_MINUTE_MAX));
-    timePlugin->setSec(ml::mtRand(0, EFF_TIME_SECOND_MAX));
+    timePlugin->setMin(ml::mtRand(0, EFF_TIME_UNKNOWN_99));
+    timePlugin->setSec(ml::mtRand(0, EFF_TIME_UNKNOWN_59));
   }
 }
 
@@ -71,7 +74,7 @@ GfMenuLifeAdapter *GfMenuLifeAdapter::create_Number_Bonus(u32 handle, const char
   }
   ui::UIObjectNumberPlugin *numberPlugin = ui::UIObjectNumberPlugin::create(acc.unknown10);
   numberPlugin->setMin(0);
-  numberPlugin->setMax(BONUS_MAX);
+  numberPlugin->setMax(BONUS_UNKNOWN_99);
   return create(numberPlugin, index, &GfMenuLifeAdapter::update_Number_Bonus);
 }
 

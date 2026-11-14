@@ -41,7 +41,7 @@ public:
     u32 unknown10; // Inferred role: end point index; original member name unknown.
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_ROUTED_FOOT_PRINT;
+  static const GmkType GMK_TYPE = GMK_TYPE_ROUTED_FOOT_PRINT; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkRoutedFootPrint();
   ~GmkRoutedFootPrint() override { dispose(); }
@@ -78,7 +78,7 @@ public:
     void create(CBdatWrapper, int, const AGmkBase &) {}
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_ROUTED_FOOT_PRINT_POINT;
+  static const GmkType GMK_TYPE = GMK_TYPE_ROUTED_FOOT_PRINT_POINT; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkRoutedFootPrintPoint();
   ~GmkRoutedFootPrintPoint() override { dispose(); }

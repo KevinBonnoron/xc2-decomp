@@ -35,7 +35,7 @@ class GfComBehaviorEnemy;
 class GfBehaviorEnemyField {
 public:
   struct CreateInfo {
-    CreateInfo() : unknown00(nullptr), unknown08(INVALID_HANDLE), unknown10(1.0f), unknown14(2.0f), unknown18(0) {}
+    CreateInfo() : unknown00(nullptr), unknown08(unknown020), unknown10(1.0f), unknown14(2.0f), unknown18(0) {}
 
     IGfBehFieldOwner *unknown00; // Inferred role: owner; original member name unknown.
     GF_OBJ_HANDLE *unknown08;    // Inferred role: object; original member name unknown.

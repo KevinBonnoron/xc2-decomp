@@ -18,10 +18,10 @@ class CharaPlayFacial;
 class CharaPlayTalk : public ICmd {
 public:
   enum {
-    FLAG_PLAY = 1 << 0,
-    FLAG_LOOP = 1 << 1,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: play flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: loop flag; original name unknown.
     FLAG_UNKNOWN_2 = 1 << 2, // Role and original name unknown.
-    FLAG_MANUAL = 1 << 3,
+    FLAG_UNKNOWN_3 = 1 << 3, // Inferred role: manual flag; original name unknown.
   };
 
   virtual void init();
@@ -30,7 +30,7 @@ public:
   virtual void term();
   void render(const mm::Vec3 &position, f32 eyeOffset);
 
-  bool isManual() const { return (unknown08 & FLAG_MANUAL) != 0; }
+  bool isManual() const { return (unknown08 & FLAG_UNKNOWN_3) != 0; }
 
 private:
   u32 unknown08;                // Inferred role: flags; original member name unknown.

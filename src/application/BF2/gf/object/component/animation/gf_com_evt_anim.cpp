@@ -30,7 +30,7 @@ class Pose;
 namespace gf {
 
 bool GfComEvtAnim::recieveMessage(fw::MessageObject *sender, fw::Message &message) {
-  if (message.unknown00 == MSG_DEBUG_ACTIVATE_COMPONENT_WINDOW) {
+  if (message.unknown00 == MSG_UNKNOWN_16777219) {
     procMsgActivateComponentDebugWindow(sender, static_cast<MsgDebugActivateComponentWindow &>(message));
     return true;
   }
@@ -40,7 +40,7 @@ bool GfComEvtAnim::recieveMessage(fw::MessageObject *sender, fw::Message &messag
 
 void GfComEvtAnim::procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message) {}
 
-GfComEvtAnim::Asm::Asm() : unknown08(nullptr), unknown10(nullptr), unknown148(getAllocator(ALLOCATOR_DEFAULT)), unknown180(nullptr) {
+GfComEvtAnim::Asm::Asm() : unknown08(nullptr), unknown10(nullptr), unknown148(getAllocator(ALLOCATOR_UNKNOWN_0)), unknown180(nullptr) {
   unknown138.unknown08 = this;
   unknown170.unknown08 = this;
 }
@@ -50,13 +50,13 @@ void GfComEvtAnim::Asm::cleanup(u32 layer) {
     return;
   }
 
-  if (unknown00.test(FLAG_REGISTERED)) {
+  if (unknown00.test(FLAG_UNKNOWN_0)) {
     fw::AnimationManager *manager = fw::AnimationManager::get();
     if (manager != nullptr) {
       manager->removePoseSampler(layer, unknown38);
       manager->removeControlUpdater(layer, unknown18);
     }
-    unknown00.set(FLAG_REGISTERED, false);
+    unknown00.set(FLAG_UNKNOWN_0, false);
   }
 
   unknown38.unbind();
@@ -81,7 +81,7 @@ void GfComEvtAnim::Asm::setup(u32 layer, GfComModel *model, anm::ResASM *resAsm,
   }
 
   anm::ExtraTruckBuffer *extraTruckBuffer = model->unknown38;
-  unknown10 = anm::Factory::createASMControl(*resAsm, *getAllocator(ALLOCATOR_ANIMATION));
+  unknown10 = anm::Factory::createASMControl(*resAsm, *getAllocator(ALLOCATOR_UNKNOWN_7));
   unknown18.bind(unknown10);
   if (unknown18.unknown18 == nullptr) {
     return;
@@ -97,17 +97,17 @@ void GfComEvtAnim::Asm::setup(u32 layer, GfComModel *model, anm::ResASM *resAsm,
   if (manager != nullptr) {
     manager->addControlUpdater(layer, unknown18);
     manager->addPoseSampler(layer, unknown38);
-    unknown00.set(FLAG_REGISTERED);
+    unknown00.set(FLAG_UNKNOWN_0);
   }
 
   unknown10->setListener(&unknown138);
   unknown148.reserve(32);
-  unknown10->unknown70[ANIM_LAYER_BASE].setState(state);
-  unknown10->unknown70[ANIM_LAYER_BASE].executeCmd("C_idle");
+  unknown10->unknown70[ANIM_LAYER_UNKNOWN_0].setState(state);
+  unknown10->unknown70[ANIM_LAYER_UNKNOWN_0].executeCmd("C_idle");
 }
 
 void GfComEvtAnim::Asm::changeLayer(u32 oldLayer, u32 newLayer) {
-  if (unknown10 == nullptr || !unknown00.test(FLAG_REGISTERED)) {
+  if (unknown10 == nullptr || !unknown00.test(FLAG_UNKNOWN_0)) {
     return;
   }
 
@@ -265,13 +265,13 @@ void GfComEvtAnim::Asm::executeCallback(GfComEvtAnim *owner) {
   for (u32 i = 0; i < unknown148.size(); i++) {
     const anm::AsmAnnotetion *annotation = unknown148[i].unknown08;
     u32 index;
-    for (index = 1; index < CALLBACK_MAX; index++) {
+    for (index = 1; index < CALLBACK_UNKNOWN_5; index++) {
       if (unknown70[index].unknown08.isValid() && strcmp(unknown70[index].unknown00, annotation->unknown00) == 0) {
         break;
       }
     }
 
-    if (index < CALLBACK_MAX) {
+    if (index < CALLBACK_UNKNOWN_5) {
       unknown70[index].unknown08(owner, unknown148[i]);
     } else if (unknown70[0].unknown08.isValid()) {
       unknown70[0].unknown08(owner, unknown148[i]);
@@ -313,14 +313,14 @@ void GfComEvtAnim::Mot::stop(u32 layer) {
     return;
   }
 
-  if (unknown00.test(FLAG_REGISTERED)) {
+  if (unknown00.test(FLAG_UNKNOWN_0)) {
     fw::AnimationManager *manager = fw::AnimationManager::get();
     if (manager != nullptr) {
       unknown40.resetPose();
       manager->removePoseSampler(layer, unknown40);
       manager->removeControlUpdater(layer, unknown20);
     }
-    unknown00.set(FLAG_REGISTERED, false);
+    unknown00.set(FLAG_UNKNOWN_0, false);
   }
 
   for (u64 i = 0; i < unknown3a8; i++) {
@@ -349,7 +349,7 @@ void GfComEvtAnim::Mot::setup(GfComModel *model, anm::ResASM *resAsm, bool isLoc
   }
 
   anm::ExtraTruckBuffer *extraTruckBuffer = model->unknown38;
-  unknown18 = anm::Factory::createBlender(model->unknown28, getAllocator(ALLOCATOR_ANIMATION));
+  unknown18 = anm::Factory::createBlender(model->unknown28, getAllocator(ALLOCATOR_UNKNOWN_7));
   unknown20.bind(unknown18);
   if (unknown20.unknown18 != nullptr) {
     unknown40.unknown33 = isLocalSpace;
@@ -358,7 +358,7 @@ void GfComEvtAnim::Mot::setup(GfComModel *model, anm::ResASM *resAsm, bool isLoc
 }
 
 void GfComEvtAnim::Mot::changeLayer(u32 oldLayer, u32 newLayer) {
-  if (unknown18 == nullptr || !unknown00.test(FLAG_REGISTERED)) {
+  if (unknown18 == nullptr || !unknown00.test(FLAG_UNKNOWN_0)) {
     return;
   }
 
@@ -385,7 +385,7 @@ void GfComEvtAnim::Mot::init(u32 layer, void **motions, u64 *sizes, u64 count) {
   stop(layer);
   for (u64 i = 0; i < count; i++) {
     anm::Binding *binding = anm::AnimationImporter::import(motions[i]);
-    unknown348[i] = anm::Factory::createControl(binding, getAllocator(ALLOCATOR_ANIMATION));
+    unknown348[i] = anm::Factory::createControl(binding, getAllocator(ALLOCATOR_UNKNOWN_7));
     unknown388[i] = anm::Util::getPlayBackTime(*binding);
     unknown18->addControl(unknown348[i]);
     if (binding != nullptr) {
@@ -397,7 +397,7 @@ void GfComEvtAnim::Mot::init(u32 layer, void **motions, u64 *sizes, u64 count) {
   if (manager != nullptr) {
     manager->addControlUpdater(layer, unknown20);
     manager->addPoseSampler(layer, unknown40);
-    unknown00.set(FLAG_REGISTERED);
+    unknown00.set(FLAG_UNKNOWN_0);
   }
 
   for (u64 i = 0; i < count; i++) {
@@ -484,7 +484,7 @@ bool GfComEvtAnim::Mot::easeIn(const char *state, AnimLayer layer) {
     return false;
   }
 
-  anm::Control *control = anm::Factory::createControl(binding, getAllocator(ALLOCATOR_ANIMATION));
+  anm::Control *control = anm::Factory::createControl(binding, getAllocator(ALLOCATOR_UNKNOWN_7));
   unknown18->addControl(control);
   control->unknown4c = 1.0f;
   control->unknown50 = 1.0f;
@@ -561,7 +561,7 @@ void GfComEvtAnim::setup(const SetupInfo &info) {
 }
 
 void GfComEvtAnim::updateSetup() {
-  if (unknown57c.test(FLAG_SETUP)) {
+  if (unknown57c.test(FLAG_UNKNOWN_0_2)) {
     return;
   }
 
@@ -572,7 +572,7 @@ void GfComEvtAnim::updateSetup() {
 
   unknown10.setup(getLayer(), model, unknown550, unknown558.c_str(), unknown580);
   unknown198.setup(model, unknown550, unknown580);
-  unknown57c.set(FLAG_SETUP);
+  unknown57c.set(FLAG_UNKNOWN_0_2);
 }
 
 void GfComEvtAnim::changeLayer(u32 oldLayer, u32 newLayer) {
@@ -584,11 +584,11 @@ void GfComEvtAnim::changeLayer(u32 oldLayer, u32 newLayer) {
   unknown198.changeLayer(oldLayer, newLayer);
 }
 
-bool GfComEvtAnim::execCmd(const char *command) { return unknown10.execCmd(ANIM_LAYER_BASE, command); }
+bool GfComEvtAnim::execCmd(const char *command) { return unknown10.execCmd(ANIM_LAYER_UNKNOWN_0, command); }
 
-const char *GfComEvtAnim::getStateName() const { return unknown10.getStateName(ANIM_LAYER_BASE); }
+const char *GfComEvtAnim::getStateName() const { return unknown10.getStateName(ANIM_LAYER_UNKNOWN_0); }
 
-bool GfComEvtAnim::setState(const char *state) { return unknown10.setState(ANIM_LAYER_BASE, state); }
+bool GfComEvtAnim::setState(const char *state) { return unknown10.setState(ANIM_LAYER_UNKNOWN_0, state); }
 
 void GfComEvtAnim::setVariable(const char *name, f32 value) { unknown10.setVariable(name, value); }
 

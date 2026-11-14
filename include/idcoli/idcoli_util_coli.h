@@ -9,11 +9,22 @@ namespace idcoli {
 struct IDCmfPosData;
 class IDColiObj;
 
+// Inferred role: material record of a hit, 0x1c bytes as zeroed by fw::TColiCheckResult::getMaterial; original type name unknown.
+struct unknown250 {
+  u16 unknown00; // Inferred role: material type; original member name unknown.
+  u8 _02[0x08 - 0x02];
+  u32 unknown08; // Inferred role: flags, bit 7 selects the vector table; original member name unknown.
+  u8 _0c[0x1c - 0x0c];
+};
+
+static_assert(offsetof(unknown250, unknown08) == 0x08, "");
+static_assert(sizeof(unknown250) == 0x1c, "");
+
 struct IDColiCallArg {
-  mm::Vec3 unknown00; // Inferred role: hit position; original member name unknown.
-  mm::Vec3 unknown10; // Inferred role: hit normal; original member name unknown.
-  mm::Vec3 unknown20; // Inferred role: hit vector; original member name unknown.
-  u32 *unknown30;     // Inferred role: material data of the hit object; original member name unknown.
+  mm::Vec3 unknown00;          // Inferred role: hit position; original member name unknown.
+  mm::Vec3 unknown10;          // Inferred role: hit normal; original member name unknown.
+  mm::Vec3 unknown20;          // Inferred role: hit vector; original member name unknown.
+  const unknown250 *unknown30; // Inferred role: material data of the hit object; original member name unknown.
 };
 
 static_assert(offsetof(IDColiCallArg, unknown10) == 0x10, "");
@@ -21,9 +32,12 @@ static_assert(offsetof(IDColiCallArg, unknown20) == 0x20, "");
 static_assert(offsetof(IDColiCallArg, unknown30) == 0x30, "");
 static_assert(sizeof(IDColiCallArg) == 0x40, "");
 
-struct unknown005 {
-  virtual void unknown00(u64 value) {}                     // Inferred role: result callback; original name unknown.
-  virtual void unknown01(u64 value, IDColiCallArg *arg) {} // Inferred role: stock callback; original name unknown.
+// Name from the game symbols _ZN6idcoli14IDColiCallBack13coli_callbackEPv and _ZN6idcoli14IDColiCallBack19coli_param_callbackEPvRKNS_13IDColiCallArgE of Xenoblade Chronicles DE; fw::ColiCheckCallback
+// overrides both in the game.
+class IDColiCallBack {
+public:
+  virtual void coli_callback(void *userData) {}
+  virtual void coli_param_callback(void *userData, const IDColiCallArg &arg) {}
 };
 
 class IDColiResult {
@@ -63,7 +77,7 @@ public:
   // Inferred helper: notifies the callback of a hit and returns true; original name unknown.
   bool unknown001() {
     if (unknown100 != nullptr) {
-      unknown100->unknown00(unknownf0);
+      unknown100->coli_callback(unknownf0);
     }
     return true;
   }
@@ -74,28 +88,28 @@ public:
   IDColiCallArg unknown50; // Inferred role: back hit; original member name unknown.
   f32 unknown90;           // Inferred role: front hit distance; original member name unknown.
   u8 _94[0x98 - 0x94];
-  u64 unknown98; // Inferred role: front hit callback argument; original member name unknown.
-  f32 unknowna0; // Inferred role: back hit distance; original member name unknown.
+  void *unknown98; // Inferred role: front hit callback argument; original member name unknown.
+  f32 unknowna0;   // Inferred role: back hit distance; original member name unknown.
   u8 _a4[0xa8 - 0xa4];
-  u64 unknowna8;  // Inferred role: back hit callback argument; original member name unknown.
-  bool unknownb0; // Inferred role: front hit found; original member name unknown.
-  bool unknownb1; // Inferred role: back hit found; original member name unknown.
-  bool unknownb2; // Inferred role: unknown flag; original member name unknown.
-  bool unknownb3; // Inferred role: clear the back hit vector after a hit; original member name unknown.
+  void *unknowna8; // Inferred role: back hit callback argument; original member name unknown.
+  bool unknownb0;  // Inferred role: front hit found; original member name unknown.
+  bool unknownb1;  // Inferred role: back hit found; original member name unknown.
+  bool unknownb2;  // Inferred role: unknown flag; original member name unknown.
+  bool unknownb3;  // Inferred role: clear the back hit vector after a hit; original member name unknown.
   u8 _b4[0xb8 - 0xb4];
-  mm::Vec3 *unknownb8; // Inferred role: stock positions; original member name unknown.
-  mm::Vec3 *unknownc0; // Inferred role: stock normals; original member name unknown.
-  mm::Vec3 *unknownc8; // Inferred role: stock vectors; original member name unknown.
-  u32 **unknownd0;     // Inferred role: stock material data; original member name unknown.
-  u32 *unknownd8;      // Inferred role: stock flag bits; original member name unknown.
-  u32 unknowne0;       // Inferred role: stock count; original member name unknown.
-  u32 unknowne4;       // Inferred role: stock max; original member name unknown.
-  u32 unknowne8;       // Inferred role: material bits to skip; original member name unknown.
+  mm::Vec3 *unknownb8;          // Inferred role: stock positions; original member name unknown.
+  mm::Vec3 *unknownc0;          // Inferred role: stock normals; original member name unknown.
+  mm::Vec3 *unknownc8;          // Inferred role: stock vectors; original member name unknown.
+  const unknown250 **unknownd0; // Inferred role: stock material data; original member name unknown.
+  u32 *unknownd8;               // Inferred role: stock flag bits; original member name unknown.
+  u32 unknowne0;                // Inferred role: stock count; original member name unknown.
+  u32 unknowne4;                // Inferred role: stock max; original member name unknown.
+  u32 unknowne8;                // Inferred role: material bits to skip; original member name unknown.
   u8 _ec[0xf0 - 0xec];
-  u64 unknownf0;          // Inferred role: callback argument; original member name unknown.
-  IDColiObj *unknownf8;   // Inferred role: tested object; original member name unknown.
-  unknown005 *unknown100; // Inferred role: callback; original member name unknown.
-  IDColiObj *unknown108;  // Inferred role: object to skip; original member name unknown.
+  void *unknownf0;            // Inferred role: callback argument; original member name unknown.
+  IDColiObj *unknownf8;       // Inferred role: tested object; original member name unknown.
+  IDColiCallBack *unknown100; // Inferred role: callback; original member name unknown.
+  IDColiObj *unknown108;      // Inferred role: object to skip; original member name unknown.
 };
 
 static_assert(offsetof(IDColiResult, unknown10) == 0x10, "");
@@ -233,10 +247,10 @@ public:
 
 class IDColiUtilColiResult {
 public:
-  static const unknown004 s_CallLine[5];
-  static const unknown004 s_CallRay[5];
-  static const unknown004 s_CallSphere[5];
-  static const unknown004 s_CallCapsule[5];
+  static const unknown004 s_CallLine[5];    // Name from the game symbol _ZN6idcoli20IDColiUtilColiResult10s_CallLineE; also in torna and xc1de.
+  static const unknown004 s_CallRay[5];     // Name from the game symbol _ZN6idcoli20IDColiUtilColiResult9s_CallRayE; also in torna and xc1de.
+  static const unknown004 s_CallSphere[5];  // Name from the game symbol _ZN6idcoli20IDColiUtilColiResult12s_CallSphereE; also in torna and xc1de.
+  static const unknown004 s_CallCapsule[5]; // Name from the game symbol _ZN6idcoli20IDColiUtilColiResult13s_CallCapsuleE; also in torna and xc1de.
 
   static void setStockParms(IDColiResult &result, IDColiCallArg &arg, f32 distance, bool isBack);
   static s32 calcNearBoxPoint(mm::Vec3 &near, const CLBoxWork *box, const mm::Vec3 &point);
@@ -244,6 +258,16 @@ public:
   static bool calcNearInBoxPoint(mm::Vec3 &near, const CLBoxWork *box, const mm::Vec3 &point, f32 range, f32 radius);
   static bool isSpherePoli(IDColiResult &result, const IDColiInput &input, const void *data);
   static bool isCapsulePoli(IDColiResult &result, const IDColiInput &input, const void *data);
+  static bool isSphereBox(IDColiResult &result, const IDColiInput &input, const void *data);
+  static bool isSphereInBox(IDColiResult &result, const IDColiInput &input, const void *data);
+  static bool isSphereCapsule(IDColiResult &result, const IDColiInput &input, const void *data);
+  static bool isSphereInCapsule(IDColiResult &result, const IDColiInput &input, const void *data);
+  static bool isCapsuleSphere(IDColiResult &result, const IDColiInput &input, const void *data);
+  static bool isCapsuleBox(IDColiResult &result, const IDColiInput &input, const void *data);
+  static bool isCapsuleInBox(IDColiResult &result, const IDColiInput &input, const void *data);
+  static bool isCapsuleCapsule(IDColiResult &result, const IDColiInput &input, const void *data);
+  static bool isCapsuleInCapsule(IDColiResult &result, const IDColiInput &input, const void *data);
+  static void setStockBox(IDColiResult &result, const CLBoxWork *box, const mm::Vec3 &vector, f32 distance, const mm::Vec3 &point, f32 radius, bool isIn);
   static bool isPartsLineSphere(IDColiResult &result, const CLLineWork *line, const void *data, bool isBack);
   static bool isPartsLineBox(IDColiResult &result, const CLLineWork *line, const void *data, bool isBack, bool isIn);
   static bool isPartsLineCapsule(IDColiResult &result, const CLLineWork *line, const void *data, bool isBack, bool isIn);
@@ -263,11 +287,11 @@ public:
 
 class IDColiUtilColiSimple {
 public:
-  static const unknown004 s_CallLine[5];
-  static const unknown004 s_CallRay[5];
-  static const unknown004 s_CallSphere[5];
-  static const unknown004 s_CallCapsule[5];
-  static const unknown004 s_CallBox[5];
+  static const unknown004 s_CallLine[5];    // Name from the game symbol _ZN6idcoli20IDColiUtilColiSimple10s_CallLineE; also in torna and xc1de.
+  static const unknown004 s_CallRay[5];     // Name from the game symbol _ZN6idcoli20IDColiUtilColiSimple9s_CallRayE; also in torna and xc1de.
+  static const unknown004 s_CallSphere[5];  // Name from the game symbol _ZN6idcoli20IDColiUtilColiSimple12s_CallSphereE; also in torna and xc1de.
+  static const unknown004 s_CallCapsule[5]; // Name from the game symbol _ZN6idcoli20IDColiUtilColiSimple13s_CallCapsuleE; also in torna and xc1de.
+  static const unknown004 s_CallBox[5];     // Name from the game symbol _ZN6idcoli20IDColiUtilColiSimple9s_CallBoxE; also in torna and xc1de.
 
   static bool isSphereSphere(IDColiResult &result, const IDColiInput &input, const void *data);
   static bool isPartsLineSphere(IDColiResult &result, const CLLineWork *line, const void *data);

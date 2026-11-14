@@ -1,7 +1,7 @@
 #pragma once
 #include <stddef.h>
 
-#include "gf/data/gf_data_blade.h"
+#include "gf/data/gf_data_driver.h"
 #include "gf/event/gf_event.h"
 #include "gf/field/gf_gmk_locator_atlas.h"
 #include "gf/field/gf_mob_slot_manager.h"
@@ -51,8 +51,6 @@ public:
 
   GfFieldGimmick(const GfSetupParam &param);
   void initialize(const GfSetupParam &param);
-  // Not decompiled yet: defining it emits the inline ~GfGmkLocatorAtlas and mm::mtl::destruct_n<GfGmkLocators>, whose
-  // loop does not match the game's copy yet.
   ~GfFieldGimmick();
   void finalize();
   void listenerGfObj(OBJEVT event, GF_OBJ_HANDLE *handle, u32 objectType) override;
@@ -72,6 +70,7 @@ public:
 private:
   friend class event::EnvManager;
   friend class GfMenuObjZoneMap;
+  friend class GfMenuObjWorldMap;
   friend f32 gmk::getMobPopDistSq();
   friend void gmk::resetMobPopDistSq();
   friend bool gmk::addFailedPopDistSq(f32 distSq);

@@ -25,75 +25,75 @@ void Manager::failureSkip() {
 }
 
 void Manager::play(const char *name, gf::GF_OBJ_HANDLE *handle, u32 param0, u32 param1, u32 param2, u32 param3, bool isEndFadeOut) {
-  unknown298 = LANGUAGE_MODE_NONE;
+  unknown298 = LANGUAGE_MODE_UNKNOWN_0;
   unknown280 = handle;
   unknown288[0] = param0;
   unknown288[1] = param1;
   unknown288[2] = param2;
   unknown288[3] = param3;
   if (isEndFadeOut) {
-    unknown18 |= FLAG_END_FADE_OUT;
+    unknown18 |= FLAG_UNKNOWN_2;
   } else {
-    unknown18 &= ~FLAG_END_FADE_OUT;
+    unknown18 &= ~FLAG_UNKNOWN_2;
   }
   if (!isPlay()) {
     mm::mtl::Singleton<SeqManager>::getPtr()->play(name);
   }
-  unknown18 &= ~(FLAG_PLAY | FLAG_PLAY_END);
-  unknown18 |= FLAG_PLAY;
+  unknown18 &= ~(FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1);
+  unknown18 |= FLAG_UNKNOWN_0;
 }
 
 bool Manager::startScene(const char *name, int pageID) {
-  if ((unknown1c & STATE_START_SCENE) == 0) {
+  if ((unknown1c & STATE_UNKNOWN_2) == 0) {
     unknown254 = name;
     unknown278 = pageID;
-    execMessage(MSG_TYPE_START_SCENE);
-    unknown1c |= STATE_START_SCENE;
+    execMessage(MSG_TYPE_UNKNOWN_7);
+    unknown1c |= STATE_UNKNOWN_2;
   }
   SeqManager *seq = mm::mtl::Singleton<SeqManager>::getPtr();
   if (seq->unknown200.isExist(&seq->unknowna8) || seq->unknown200.isExist(&seq->unknownb0) || seq->unknown200.isExist(&seq->unknownb8) || seq->unknown200.isExist(&seq->unknownc0) ||
       seq->unknown200.isExist(&seq->unknownc8) || seq->unknown200.isExist(&seq->unknownd0)) {
     return false;
   }
-  unknown1c &= ~STATE_START_SCENE;
+  unknown1c &= ~STATE_UNKNOWN_2;
   return true;
 }
 
 bool Manager::startPage(const char *name, int pageID, f32 maxFrame) {
-  if ((unknown1c & STATE_START_PAGE) == 0) {
-    execMessage(MSG_TYPE_START_PAGE);
+  if ((unknown1c & STATE_UNKNOWN_3) == 0) {
+    execMessage(MSG_TYPE_UNKNOWN_8);
     mm::mtl::Singleton<FrameManager>::getPtr()->setInfomation(name, pageID, maxFrame);
-    unknown1c |= STATE_START_PAGE;
+    unknown1c |= STATE_UNKNOWN_3;
   }
   SeqManager *seq = mm::mtl::Singleton<SeqManager>::getPtr();
   if (seq->unknown200.isExist(&seq->unknownd8)) {
     return false;
   }
-  unknown1c &= ~STATE_START_PAGE;
+  unknown1c &= ~STATE_UNKNOWN_3;
   return true;
 }
 
 bool Manager::endScene() {
-  if ((unknown1c & STATE_END_SCENE) == 0) {
-    execMessage(MSG_TYPE_END_SCENE_BEGIN);
-    unknown1c |= STATE_END_SCENE;
+  if ((unknown1c & STATE_UNKNOWN_4) == 0) {
+    execMessage(MSG_TYPE_UNKNOWN_9);
+    unknown1c |= STATE_UNKNOWN_4;
   }
   SeqManager *seq = mm::mtl::Singleton<SeqManager>::getPtr();
   if (seq->unknown200.isExist(&seq->unknowne0) || seq->unknown200.isExist(&seq->unknownf8) || seq->unknown200.isExist(&seq->unknown100) || seq->unknown200.isExist(&seq->unknown108)) {
     return false;
   }
-  execMessage(MSG_TYPE_END_SCENE);
-  unknown1c &= ~STATE_END_SCENE;
+  execMessage(MSG_TYPE_UNKNOWN_10);
+  unknown1c &= ~STATE_UNKNOWN_4;
   return true;
 }
 
 bool Manager::setupSceneEnd() {
-  if ((unknown1c & STATE_SETUP_SCENE_END) == 0) {
-    execMessage(MSG_TYPE_SETUP_SCENE_END);
-    unknown1c |= STATE_SETUP_SCENE_END;
+  if ((unknown1c & STATE_UNKNOWN_1) == 0) {
+    execMessage(MSG_TYPE_UNKNOWN_6);
+    unknown1c |= STATE_UNKNOWN_1;
   }
   if (mm::mtl::Singleton<SeqManager>::getPtr()->isSetupSceneEnd()) {
-    unknown1c &= ~STATE_SETUP_SCENE_END;
+    unknown1c &= ~STATE_UNKNOWN_1;
     return true;
   }
   return false;
@@ -110,10 +110,10 @@ void Manager::finishNewGameWait() { mm::mtl::Singleton<UIManager>::getPtr()->fin
 bool Manager::isPlayCancel() const { return mm::mtl::Singleton<DebugManager>::getPtr()->isPlayCancel(); }
 
 void Manager::clearAlways() {
-  if (unknown18 & FLAG_HIDE_INFO) {
-    unknown18 &= ~FLAG_HIDE_INFO;
+  if (unknown18 & FLAG_UNKNOWN_10) {
+    unknown18 &= ~FLAG_UNKNOWN_10;
   }
-  unknown18 &= ~FLAG_PLAY;
+  unknown18 &= ~FLAG_UNKNOWN_0;
 }
 
 void Manager::clear() {
@@ -122,8 +122,8 @@ void Manager::clear() {
   unknown288[1] = 0;
   unknown288[2] = 0;
   unknown288[3] = 0;
-  unknown298 = LANGUAGE_MODE_NONE;
-  unknown18 &= ~FLAG_END_FADE_OUT;
+  unknown298 = LANGUAGE_MODE_UNKNOWN_0;
+  unknown18 &= ~FLAG_UNKNOWN_2;
   unknown1c = 0;
 }
 
@@ -136,27 +136,27 @@ void Manager::execMessage(MSG_TYPE type) {
 void Manager::render() { ml::ProcDesktop::isDispInfo(); }
 
 void Manager::tail() {
-  if (unknown1c & STATE_INIT) {
-    execMessage(MSG_TYPE_TAIL);
+  if (unknown1c & STATE_UNKNOWN_0) {
+    execMessage(MSG_TYPE_UNKNOWN_18);
   }
-  execMessage(MSG_TYPE_TAIL_POST);
+  execMessage(MSG_TYPE_UNKNOWN_19);
 }
 
 void Manager::post() {}
 
 bool Manager::setupScene(const char *name) {
   unknown254 = name;
-  execMessage(MSG_TYPE_SETUP_SCENE);
+  execMessage(MSG_TYPE_UNKNOWN_5);
   return true;
 }
 
-void Manager::setLanguageMode(bool isEnable, LANGUAGE_MODE mode) { unknown298 = isEnable ? mode : LANGUAGE_MODE_NONE; }
+void Manager::setLanguageMode(bool isEnable, LANGUAGE_MODE mode) { unknown298 = isEnable ? mode : LANGUAGE_MODE_UNKNOWN_0; }
 
 bool Manager::checkLanguageMode() const {
   switch (unknown298) {
-  case LANGUAGE_MODE_VOICE_TYPE_0:
+  case LANGUAGE_MODE_UNKNOWN_1:
     return fw::LangUtil::getVoiceType() == 0;
-  case LANGUAGE_MODE_VOICE_TYPE_1:
+  case LANGUAGE_MODE_UNKNOWN_2:
     return fw::LangUtil::getVoiceType() == 1;
   default:
     return true;

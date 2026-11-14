@@ -4,6 +4,10 @@
 #include "dr/dr_res_mdo_seam_res.h"
 #include "types.h"
 
+namespace mtl {
+class ALLOC_HANDLE;
+} // namespace mtl
+
 namespace grlib {
 class CGLibVtxInstans;
 } // namespace grlib
@@ -15,16 +19,21 @@ class DrMdoCtlMpfInst;
 class DrMdoCtlMpfWork;
 class DrMdoCtlSeamMpfMap;
 class DrMdoMpfMan;
+class DrResMdoSeamParmRead;
 class DrResMdoSeamWrkPosMpf;
 struct MdoWrkMatRes;
 struct MdsMpfObjData;
+struct unknown722;
 struct _wkMpfAutoBuff;
 
 // Inferred layout of the mpf map resource header; offsets are relative to the header.
 struct MdsSeamMpfMapHead {
-  u8 _00[0x08];
+  u32 unknown00; // Inferred role: model data offset; original member name unknown.
+  u32 unknown04; // Inferred role: material data offset; original member name unknown.
   u32 unknown08; // Inferred role: mpf data offset; original member name unknown.
-  u8 _0c[0x1c - 0x0c];
+  u32 unknown0c; // Inferred role: vertex data offset; original member name unknown.
+  u32 unknown10; // Inferred role: texture data offset; original member name unknown.
+  u8 _14[0x1c - 0x14];
   u32 unknown1c; // Inferred role: etc position table offset; original member name unknown.
   u32 unknown20; // Inferred role: etc position num; original member name unknown.
 };
@@ -65,8 +74,11 @@ public:
   DrResMdoSeamWrkMpf();
   virtual ~DrResMdoSeamWrkMpf();
   void release();
+  void setupWork(MdoWrkMatRes *matRes, mtl::ALLOC_HANDLE handle, const MdsSeamMpfMapHead *head, DrMdoMpfMan *mpfMan);
   void changeMemCall();
   void releaseCache(DrMdoCtlSeamMpfMap *ctl);
+  bool update(const DrResMdoSeamParmRead *parmRead, bool isOpen, u32 flags);
+  u32 updateRenderList(DrCalcViewWork *view, grlib::CGLibVtxInstans *instans, DrMdoCtlSeamMpfMap *ctl);
   void beginCalc();
   void calcCacheInfo();
   void calcMpfMatSetup(DrCalcViewWork *view, grlib::CGLibVtxInstans *instans);
@@ -74,9 +86,11 @@ public:
   void setMpfPoliCache(int id, DrResMdoSeamMemObj *memObj);
   void setupMpfPoliWork(int index);
 
-  DrResMdoSeamMemObj *unknown18; // Inferred role: memory object; original member name unknown.
-  DrMdoMpfMan *unknown20;        // Inferred role: mpf manager; original member name unknown.
-  u8 _28[0x30 - 0x28];
+  static f32 SEAM_MPFMAP_READ_CHECK;
+
+  DrResMdoSeamMemObj *unknown18;      // Inferred role: memory object; original member name unknown.
+  DrMdoMpfMan *unknown20;             // Inferred role: mpf manager; original member name unknown.
+  const unknown722 *unknown28;        // Inferred role: mpf map entry; original member name unknown.
   const MdsSeamMpfMapHead *unknown30; // Inferred role: mpf map header; original member name unknown.
   const MdsMpfObjData *unknown38;     // Inferred role: object data; original member name unknown.
   const unknown002 *unknown40;        // Inferred role: etc position table; original member name unknown.
@@ -114,6 +128,7 @@ public:
 static_assert(offsetof(DrResMdoSeamWrkMpf, unknown08) == 0x08, "");
 static_assert(offsetof(DrResMdoSeamWrkMpf, unknown18) == 0x18, "");
 static_assert(offsetof(DrResMdoSeamWrkMpf, unknown20) == 0x20, "");
+static_assert(offsetof(DrResMdoSeamWrkMpf, unknown28) == 0x28, "");
 static_assert(offsetof(DrResMdoSeamWrkMpf, unknown30) == 0x30, "");
 static_assert(offsetof(DrResMdoSeamWrkMpf, unknown48) == 0x48, "");
 static_assert(offsetof(DrResMdoSeamWrkMpf, unknown4c) == 0x4c, "");

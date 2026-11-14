@@ -27,12 +27,12 @@ class GfComPackAnim : public GfComAnimation {
 public:
   static mm::mtl::RTTI m_rtti;
   static const u32 COMPONENT_INDEX = 2;
-  static const u32 ARC_MAX = 8;
+  static const u32 ARC_UNKNOWN_8 = 8; // Inferred role: arc max; original name unknown.
 
   struct SetupInfo {
-    mm::mtl::FixedVector<void *, ARC_MAX> unknown00; // Inferred role: arcs; original member name unknown.
-    const char *unknown48;                           // Inferred role: name; original member name unknown.
-    bool unknown50;                                  // Inferred role: local space; original member name unknown.
+    mm::mtl::FixedVector<void *, ARC_UNKNOWN_8> unknown00; // Inferred role: arcs; original member name unknown.
+    const char *unknown48;                                 // Inferred role: name; original member name unknown.
+    bool unknown50;                                        // Inferred role: local space; original member name unknown.
   };
 
   class Mot {
@@ -65,9 +65,9 @@ public:
   void changeLayer(u32 oldLayer, u32 newLayer) override;
   const mm::mtl::RTTI *getRTTI() const override;
 
-  Mot unknown10;                                            // Inferred role: mot; original member name unknown.
-  mm::mtl::FixedVector<arc::CArcData *, ARC_MAX> unknown80; // Inferred role: arcs; original member name unknown.
-  bool unknownc8;                                           // Inferred role: local space; original member name unknown.
+  Mot unknown10;                                                  // Inferred role: mot; original member name unknown.
+  mm::mtl::FixedVector<arc::CArcData *, ARC_UNKNOWN_8> unknown80; // Inferred role: arcs; original member name unknown.
+  bool unknownc8;                                                 // Inferred role: local space; original member name unknown.
 };
 
 static_assert(offsetof(GfComPackAnim::SetupInfo, unknown48) == 0x48, "");

@@ -77,7 +77,7 @@ int MstxtManager::getTop() const { return unknown98 != nullptr ? unknown98->getT
 int MstxtManager::getCount() const { return unknown98 != nullptr ? unknown98->getCount() : 0; }
 
 void MstxtManager::OnEventProc(MSG_TYPE type) {
-  if (type == MSG_TYPE_CLEAR) {
+  if (type == MSG_TYPE_UNKNOWN_12) {
     clear();
   }
 }

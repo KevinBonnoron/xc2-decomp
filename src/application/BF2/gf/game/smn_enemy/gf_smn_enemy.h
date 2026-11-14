@@ -29,7 +29,7 @@ public:
   };
 
   struct CreateInfo {
-    CreateInfo() : unknown00(INVALID_HANDLE), unknown08(0), unknown10(mm::Vec3::zero), unknown20(false) {}
+    CreateInfo() : unknown00(unknown020), unknown08(0), unknown10(mm::Vec3::zero), unknown20(false) {}
 
     GF_OBJ_HANDLE *unknown00; // Inferred role: owner object; original member name unknown.
     s32 unknown08;            // Inferred role: bdat id of the summon enemy table row; original member name unknown.

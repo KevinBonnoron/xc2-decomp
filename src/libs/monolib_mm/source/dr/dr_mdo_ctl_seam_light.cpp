@@ -27,7 +27,7 @@ void DrMdoCtlSeamLight::releaseFreeSeamLight(DrResMdoSeamWrkLight *light) {
   DrResMdoSeamMemObj *mem = light->unknown28;
   if (mem != nullptr) {
     unknownc6c -= light->unknown34;
-    unknownbc0[static_cast<u32>(light->unknown30) >> 5] &= ~(1 << (light->unknown30 & 0x1f));
+    unknown723(unknownbc0, light->unknown30) &= ~(1 << (light->unknown30 & 0x1f));
     unknownc0c--;
     light->release();
   }

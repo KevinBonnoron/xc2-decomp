@@ -1,6 +1,8 @@
+#include "gf/data/gf_bdat_item.h"
 #include "gf/data/gf_bdat_rsc.h"
 #include "gf/data/gf_data_achievement.h"
 #include "gf/data/gf_data_blade.h"
+#include "gf/data/gf_data_item.h"
 #include "gf/data/gf_data_npc.h"
 #include "gf/data/gf_data_util.h"
 #include "gf/game/achiev/gf_achiev_manager.h"
@@ -44,6 +46,20 @@ enum unknown001 {
   unknown001_29 = 0x1d,
   unknown001_30 = 0x1e,
   unknown001_31 = 0x1f,
+  unknown001_5 = 0x5,
+  unknown001_6 = 0x6,
+  unknown001_7 = 0x7,
+  unknown001_8 = 0x8,
+  unknown001_9 = 0x9,
+  unknown001_10 = 0xa,
+  unknown001_11 = 0xb,
+  unknown001_12 = 0xc,
+  unknown001_13 = 0xd,
+  unknown001_14 = 0xe,
+  unknown001_15 = 0xf,
+  unknown001_16 = 0x10,
+  unknown001_17 = 0x11,
+  unknown001_18 = 0x12,
 };
 
 // Inferred role: counts of the blades of the party and the reserve; no game symbol, original type and member names unknown.
@@ -63,7 +79,7 @@ struct unknown002 {
 
 // Inferred role: counts the blades of the party and the reserve, except one; no game symbol, original name unknown.
 static void unknown003(unknown002 &counts, u16 except) {
-  mm::mtl::FixedVector<u16, BLADE_COUNT> blades;
+  mm::mtl::FixedVector<u16, BLADE_UNKNOWN_422> blades;
   GfDataBlade::getListParty(blades);
   GfDataBlade::getListReserver(blades);
   GfDataBlade::removeSameBlade(blades);
@@ -107,6 +123,65 @@ static void unknown003(unknown002 &counts, u16 except) {
       counts.unknown28++;
       break;
     }
+  }
+}
+
+// Inferred role: statistics ids per category of an item type; no game symbol, original type name unknown.
+struct unknown007 {
+  u32 unknown00[12];
+};
+
+// Inferred role: statistics id of each collection list category (the first category is 4); no game symbol, original name unknown.
+static const unknown007 unknown005 = {{unknown001_6, unknown001_7, unknown001_8, unknown001_9, unknown001_10, unknown001_11, unknown001_12, unknown001_13}};
+
+// Inferred role: statistics id of each tresure category (the first category is 0x18); no game symbol, original name unknown.
+static const unknown007 unknown006 = {{unknown001_18, unknown001_15, unknown001_16, unknown001_17}};
+
+void GfAchievStats::checkItem(u32 item, int count) {
+  if (item == 0 || count <= 0) {
+    return;
+  }
+  GfBdatItem *bdatItem = GfBdatItem::get();
+  ItemType::Type type = GfDataItem::getItemType(item);
+  GfAchievManager *achievManager = GfAchievManager::get();
+  if (achievManager == nullptr) {
+    return;
+  }
+  u32 stats;
+  switch (type) {
+  case ItemType::ITEM_TYPE_UNKNOWN_7: {
+    u32 category = bdatItem->getCollectionListCategory(item);
+    if (category == 0) {
+      return;
+    }
+    stats = unknown005.unknown00[category - 4];
+    if (stats == 0) {
+      return;
+    }
+    SCOM_ACHIEV_INC::addTotalCount(unknown001_5, count);
+    achievManager->incAchiev(unknown001_5, count);
+    achievManager->incAchiev(stats, count);
+    return;
+  }
+  case ItemType::ITEM_TYPE_UNKNOWN_11:
+    SCOM_ACHIEV_INC::createCrystal();
+    return;
+  case ItemType::ITEM_TYPE_UNKNOWN_8: {
+    u32 category = bdatItem->getTresureCategory(item);
+    if (category == 0) {
+      return;
+    }
+    stats = unknown006.unknown00[category - 0x18];
+    if (stats == 0) {
+      return;
+    }
+    SCOM_ACHIEV_INC::addTotalCount(unknown001_14, count);
+    achievManager->incAchiev(unknown001_14, count);
+    achievManager->incAchiev(stats, count);
+    return;
+  }
+  default:
+    return;
   }
 }
 

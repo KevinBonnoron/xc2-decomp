@@ -24,7 +24,8 @@ class TimerPlugin : public Plugin {
 
 public:
   enum TYPE {
-    TYPE_FALL,
+    TYPE_UNKNOWN_0, // Inferred role: type fall; original name unknown.
+    // TYPE_MAX is the number of enumerators above.
     TYPE_MAX,
   };
 

@@ -17,12 +17,12 @@
 
 namespace gf {
 
-constexpr u32 EMERGENCY_ESCAPE_BUTTONS = 0x40f8;
-constexpr u32 EMERGENCY_ESCAPE_FRAME = 150;
-constexpr u32 COND_DISABLE_EMERGENCY_ESCAPE = 2654;
-constexpr u32 SE_OPEN_MENU = 3;
-constexpr u32 SE_DISABLE = 7;
-constexpr u32 OPEN_MENU_TYPE = 1;
+constexpr u32 EMERGENCY_ESCAPE_UNKNOWN_16632 = 0x40f8; // Inferred role: emergency escape buttons; original name unknown.
+constexpr u32 EMERGENCY_ESCAPE_UNKNOWN_150 = 150;      // Inferred role: emergency escape frame; original name unknown.
+constexpr u32 COND_UNKNOWN_2654 = 2654;                // Inferred role: cond disable emergency escape; original name unknown.
+constexpr u32 SE_UNKNOWN_3 = 3;                        // Inferred role: se open menu; original name unknown.
+constexpr u32 SE_UNKNOWN_7 = 7;                        // Inferred role: se disable; original name unknown.
+constexpr u32 TYPE_UNKNOWN_1 = 1;                      // Inferred role: open menu type; original name unknown.
 
 void GfGamePad::initialize(const GfSetupParam &) {
   GfEvent::addEventCallback(this);
@@ -48,7 +48,7 @@ void GfGamePad::finalize() {
 
 void GfGamePad::changePadInputMode() {
   unknown18.unbind();
-  unknown18.bind(0, 4, getAllocator(ALLOCATOR_DEFAULT));
+  unknown18.bind(0, 4, getAllocator(ALLOCATOR_UNKNOWN_0));
   if (GfManager::isExecModeDebug() || GfManager::isExecModeScenarioGame()) {
     if (GfGameManager::isEvent(false) || GfGameManager::isTalking()) {
       unknown18.bindAction("pause_event", this, &GfGamePad::eventInGameEventPause);
@@ -78,16 +78,16 @@ void GfGamePad::clearUniqParams() { unknown11 = false; }
 u32 GfGamePad::getPlayerPadId() { return 0; }
 
 void GfGamePad::checkEmergencyEscape() {
-  if ((unknown50.unknown00 & EMERGENCY_ESCAPE_BUTTONS) != EMERGENCY_ESCAPE_BUTTONS) {
+  if ((unknown50.unknown00 & EMERGENCY_ESCAPE_UNKNOWN_16632) != EMERGENCY_ESCAPE_UNKNOWN_16632) {
     unknown1a0 = 0;
     return;
   }
 
-  if (++unknown1a0 > EMERGENCY_ESCAPE_FRAME) {
+  if (++unknown1a0 > EMERGENCY_ESCAPE_UNKNOWN_150) {
     unknown1a0 = 0;
-    if (!GfGameCond::isGameCond(COND_DISABLE_EMERGENCY_ESCAPE)) {
+    if (!GfGameCond::isGameCond(COND_UNKNOWN_2654)) {
       GfObj *obj = GfObjUtil::getObj(GfGameManager::getPartyLeader());
-      MsgObjectDead message(DEAD_TYPE_EMERGENCY_ESCAPE);
+      MsgObjectDead message(DEAD_TYPE_UNKNOWN_4);
       obj->sendMessage(obj, message);
     }
   }
@@ -126,28 +126,28 @@ void GfGamePad::eventInGameEventPause() { unknown11 = true; }
 
 void GfGamePad::eventInGameOpenMainMenu() {
   if (GfGameManager::isEnableOpenMainMenu() && GfGameManager::isEnableOpenMainMenuSequence()) {
-    GfMenuObjUtil::playSE(SE_OPEN_MENU);
-    GfPlayFactory::createOpenMenu2(OPEN_MENU_TYPE, MAINMENU_TOP, nullptr);
+    GfMenuObjUtil::playSE(SE_UNKNOWN_3);
+    GfPlayFactory::createOpenMenu2(TYPE_UNKNOWN_1, MAINMENU_UNKNOWN_0, nullptr);
   } else {
-    GfMenuObjUtil::playSE(SE_DISABLE);
+    GfMenuObjUtil::playSE(SE_UNKNOWN_7);
   }
 }
 
 void GfGamePad::eventInGameOpenSystemMenu() {
   if (GfGameManager::isEnableOpenMainMenu() && GfGameManager::isEnableOpenMainMenuSequence()) {
-    GfMenuObjUtil::playSE(SE_OPEN_MENU);
-    GfPlayFactory::createOpenMenu2(OPEN_MENU_TYPE, MAINMENU_SYSTEM, nullptr);
+    GfMenuObjUtil::playSE(SE_UNKNOWN_3);
+    GfPlayFactory::createOpenMenu2(TYPE_UNKNOWN_1, MAINMENU_UNKNOWN_1, nullptr);
   } else {
-    GfMenuObjUtil::playSE(SE_DISABLE);
+    GfMenuObjUtil::playSE(SE_UNKNOWN_7);
   }
 }
 
 void GfGamePad::eventInGameOpenSkipTravelMenu() {
   if (GfGameManager::isEnableOpenMainMenu() && GfGameManager::isEnableOpenMainMenuSequence()) {
-    GfMenuObjUtil::playSE(SE_OPEN_MENU);
-    GfPlayFactory::createOpenMenu2(OPEN_MENU_TYPE, MAINMENU_SKIP_TRAVEL, nullptr);
+    GfMenuObjUtil::playSE(SE_UNKNOWN_3);
+    GfPlayFactory::createOpenMenu2(TYPE_UNKNOWN_1, MAINMENU_UNKNOWN_2, nullptr);
   } else {
-    GfMenuObjUtil::playSE(SE_DISABLE);
+    GfMenuObjUtil::playSE(SE_UNKNOWN_7);
   }
 }
 
@@ -157,7 +157,7 @@ void GfGamePad::gevGameState(GF_STATE, GF_STATE) {}
 
 void GfGamePad::eventInGameOpenQuestListMenu() {
   if (GfGameManager::isControlFree() && !GfGameManager::isBattle() && !GfGameManager::isControlMoverBattle() && !GfGameManager::isStopMainMenuOpenForGimmick() &&
-      GfQuestInfo::isDispUI(GfQuestManager::getCurrentQuest(QTYPE_NONE))) {
+      GfQuestInfo::isDispUI(GfQuestManager::getCurrentQuest(QTYPE_UNKNOWN_0))) {
     GfPlayFactory::createMenuQuestList();
   }
 }

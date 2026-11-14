@@ -23,19 +23,19 @@ struct MsgObjectNotifyDead;
 struct MsgObjectNotifyHealHp;
 
 enum {
-  MSG_PC_FIELD_WALL_JUMP = 0x1000013,
-  MSG_PC_FIELD_HIGH_JUMP = 0x1000016,
-  MSG_PC_FIELD_WATER_WARP = 0x1000018,
-  MSG_PC_FIELD_RELAY_SURVIVE = 0x100001e,
-  MSG_PC_FIELD_WATER_WARP_BUDDY = 0x1000020,
-  MSG_PC_FIELD_NOTIFY_RIDER_EVENT = 0x1000024,
-  MSG_PC_FIELD_REQ_FALL_DEAD_MOTION = 0x1000025,
+  MSG_PC_FIELD_UNKNOWN_16777235 = 0x1000013, // Inferred role: msg pc field wall jump; original name unknown.
+  MSG_PC_FIELD_UNKNOWN_16777238 = 0x1000016, // Inferred role: msg pc field high jump; original name unknown.
+  MSG_PC_FIELD_UNKNOWN_16777240 = 0x1000018, // Inferred role: msg pc field water warp; original name unknown.
+  MSG_PC_FIELD_UNKNOWN_16777246 = 0x100001e, // Inferred role: msg pc field relay survive; original name unknown.
+  MSG_PC_FIELD_UNKNOWN_16777248 = 0x1000020, // Inferred role: msg pc field water warp buddy; original name unknown.
+  MSG_PC_FIELD_UNKNOWN_16777252 = 0x1000024, // Inferred role: msg pc field notify rider event; original name unknown.
+  MSG_PC_FIELD_UNKNOWN_16777253 = 0x1000025, // Inferred role: msg pc field req fall dead motion; original name unknown.
 };
 
 // Layout evidence: TaskFieldWallJumpWait::update (0x7100545800) builds it on the stack and tests the member at 0x8 that
 // StateFieldOnWall::procMsgPcFieldWallJump sets.
 struct MsgPcFieldWallJump : fw::Message {
-  MsgPcFieldWallJump() : fw::Message(MSG_PC_FIELD_WALL_JUMP, 0x40), unknown08(false) {}
+  MsgPcFieldWallJump() : fw::Message(MSG_PC_FIELD_UNKNOWN_16777235, 0x40), unknown08(false) {}
 
   bool unknown08; // Inferred role: wall jump accepted; original member name unknown.
 };
@@ -45,7 +45,7 @@ static_assert(offsetof(MsgPcFieldWallJump, unknown08) == 0x08, "");
 // Layout evidence: TaskFieldSensor::update (0x7100544988) builds it on the stack and tests the member at 0x8 that
 // StateFieldIdle::procMsgPcFieldHighJump sets.
 struct MsgPcFieldHighJump : fw::Message {
-  MsgPcFieldHighJump() : fw::Message(MSG_PC_FIELD_HIGH_JUMP, 0x40), unknown08(false) {}
+  MsgPcFieldHighJump() : fw::Message(MSG_PC_FIELD_UNKNOWN_16777238, 0x40), unknown08(false) {}
 
   bool unknown08; // Inferred role: high jump accepted; original member name unknown.
 };
@@ -55,7 +55,7 @@ static_assert(offsetof(MsgPcFieldHighJump, unknown08) == 0x08, "");
 // Layout evidence: TaskFieldSensor::update (0x7100544988) builds it on the stack and tests the member at 0x8 that
 // StateFieldWaterNormal::procMsgPcFieldWaterWarp sets.
 struct MsgPcFieldWaterWarp : fw::Message {
-  MsgPcFieldWaterWarp() : fw::Message(MSG_PC_FIELD_WATER_WARP, 0x40), unknown08(false) {}
+  MsgPcFieldWaterWarp() : fw::Message(MSG_PC_FIELD_UNKNOWN_16777240, 0x40), unknown08(false) {}
 
   bool unknown08; // Inferred role: warp accepted; original member name unknown.
 };
@@ -65,7 +65,7 @@ static_assert(offsetof(MsgPcFieldWaterWarp, unknown08) == 0x08, "");
 // Layout evidence: TaskFieldSensor::update (0x7100544988) builds it on the stack and tests the member at 0x8 that
 // StateFieldWaterNormal::procMsgPcFieldWaterWarpBuddy sets.
 struct MsgPcFieldWaterWarpBuddy : fw::Message {
-  MsgPcFieldWaterWarpBuddy() : fw::Message(MSG_PC_FIELD_WATER_WARP_BUDDY, 0x40), unknown08(false) {}
+  MsgPcFieldWaterWarpBuddy() : fw::Message(MSG_PC_FIELD_UNKNOWN_16777248, 0x40), unknown08(false) {}
 
   bool unknown08; // Inferred role: warp accepted; original member name unknown.
 };
@@ -75,13 +75,13 @@ static_assert(offsetof(MsgPcFieldWaterWarpBuddy, unknown08) == 0x08, "");
 // Layout evidence: the pc states build it on the stack (0x710053cbcc) with a MsgObjectNotifyHealHp or a MsgObjectNotifyDead,
 // and StateFieldDead::procMsgPcFieldRelaySurvive reads the member at 0x8.
 struct MsgPcFieldRelaySurvive : fw::Message {
-  explicit MsgPcFieldRelaySurvive(fw::Message *message) : fw::Message(MSG_PC_FIELD_RELAY_SURVIVE, 0x40), unknown08(message) {}
+  explicit MsgPcFieldRelaySurvive(fw::Message *message) : fw::Message(MSG_PC_FIELD_UNKNOWN_16777246, 0x40), unknown08(message) {}
 
   fw::Message *unknown08; // Inferred role: heal or dead notification relayed to the buddy; original member name unknown.
 };
 
 struct MsgPcFieldReqFallDeadMotion : fw::Message {
-  MsgPcFieldReqFallDeadMotion() : fw::Message(MSG_PC_FIELD_REQ_FALL_DEAD_MOTION, 0x40) {}
+  MsgPcFieldReqFallDeadMotion() : fw::Message(MSG_PC_FIELD_UNKNOWN_16777253, 0x40) {}
 };
 
 namespace pc {
@@ -141,6 +141,7 @@ public:
   static void broadcastPlayerAll(GfComBehaviorPc &behavior, fw::Message &message);
   static void sendMessageGfObj(GfComBehaviorPc &behavior, GF_OBJ_HANDLE *handle, fw::Message &message);
   static void playVibration(GfComBehaviorPc &behavior, fw::VibrationID id);
+  static void reflectionAdsorption(GfComBehaviorPc &behavior);
 };
 
 } // namespace pc

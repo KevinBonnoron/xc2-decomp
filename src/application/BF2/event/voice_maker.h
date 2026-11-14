@@ -7,7 +7,7 @@ namespace event {
 class VoiceMaker {
 public:
   enum {
-    FLAG_ENABLE = 1 << 0,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: enable flag; original name unknown.
   };
 
   VoiceMaker();

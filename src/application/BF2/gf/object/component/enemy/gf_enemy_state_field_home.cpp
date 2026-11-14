@@ -117,5 +117,12 @@ void StateFieldHome::seqWaitTurnEnd(GfComBehaviorEnemy &behavior, const fw::Upda
   }
 }
 
+void StateFieldHome::seqMoveToHomePos(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info) {
+  unknown18.update(info.unknown04);
+  if (unknown18.unknown34) {
+    behavior.unknown003(info.unknown04);
+  }
+}
+
 } // namespace enemy
 } // namespace gf

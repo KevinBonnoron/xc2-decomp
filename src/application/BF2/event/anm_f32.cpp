@@ -13,7 +13,7 @@ void AnmF32::clear() {
 
 void AnmF32::update(f32 delta) {
   AnmBase::update(delta);
-  if (unknown08 & STATE_PLAY) {
+  if (unknown08 & STATE_UNKNOWN_1) {
     unknown108 = calcEvalute(unknown68, unknown70);
   }
 }
@@ -32,7 +32,7 @@ CV_TYPE AnmF32::getCv(size_t index) const {
   if (index < unknownc0.size()) {
     return unknownc0[index];
   }
-  return CV_TYPE_LINEAR;
+  return CV_TYPE_UNKNOWN_1;
 }
 
 f32 AnmF32::getValue(size_t index) const {

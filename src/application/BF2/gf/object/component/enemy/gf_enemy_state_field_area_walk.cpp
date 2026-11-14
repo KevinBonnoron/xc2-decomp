@@ -14,6 +14,7 @@
 #include "gf/object/gf_obj_acc.h"
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_enemy/gmk_enemy.h"
+#include "idcoli/idcoli_util_coli.h"
 #include "ml/rand.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_quat.h"

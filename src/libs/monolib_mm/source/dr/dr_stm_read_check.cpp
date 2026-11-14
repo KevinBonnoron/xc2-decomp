@@ -38,11 +38,11 @@ bool DrStmReadCheck::update() {
     result = true;
   } else if (!(unknown1c & 4)) {
     if (unknown18 == 2) {
-      unknown20->setUseMode(DrCalcStmListObj::DR_TEX_USE_MODE_MIDDLE);
+      unknown20->setUseMode(DrCalcStmListObj::DR_TEX_USE_MODE_UNKNOWN_2);
     } else if (unknown18 == 1) {
-      unknown20->setUseMode(DrCalcStmListObj::DR_TEX_USE_MODE_LOW);
+      unknown20->setUseMode(DrCalcStmListObj::DR_TEX_USE_MODE_UNKNOWN_1);
     } else {
-      unknown20->setUseMode(DrCalcStmListObj::DR_TEX_USE_MODE_NONE);
+      unknown20->setUseMode(DrCalcStmListObj::DR_TEX_USE_MODE_UNKNOWN_0);
     }
   }
   return result;

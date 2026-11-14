@@ -30,8 +30,8 @@ struct TargetInfo {
   };
 
   TargetInfo()
-      : unknown00(INVALID_HANDLE), unknown08(0), unknown0c(), unknown10(0), unknown14(false), unknown18(0), unknown1c(COLLECT_CATEGORY_UNKNOWN_0), unknown20(0), unknown24(0),
-        unknown28(gmk::GMK_TYPE_INVALID) {}
+      : unknown00(unknown020), unknown08(0), unknown0c(), unknown10(0), unknown14(false), unknown18(0), unknown1c(COLLECT_CATEGORY_UNKNOWN_0), unknown20(0), unknown24(0),
+        unknown28(gmk::GMK_TYPE_UNKNOWN_59) {}
 
   // Inferred helper: sets a reach place target; original name unknown.
   void unknown008(u32 category, u32 placeId, QuestID quest, u32 mapId, bool isCheckCurrent) {
@@ -102,7 +102,7 @@ public:
     }
 
     bool operator==(const ParamObj &object) const {
-      if (unknown00.unknown00 != INVALID_HANDLE) {
+      if (unknown00.unknown00 != unknown020) {
         return unknown00.unknown00 == object.unknown00;
       }
       return unknown00.unknown08 == object.unknown08 && unknown00.unknown0c == object.unknown0c;

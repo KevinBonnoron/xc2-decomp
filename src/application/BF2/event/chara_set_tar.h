@@ -1,6 +1,7 @@
 #pragma once
 #include "event/i_cmd.h"
 #include "event/tar_axis.h"
+#include "mm_math/mm_vec2.h"
 #include "mm_math/mm_vec3.h"
 #include "types.h"
 
@@ -11,6 +12,8 @@ struct GF_OBJ_HANDLE;
 namespace event {
 
 class CharaSetTar : public ICmd {
+  friend class CharaPlayWink;
+
 public:
   void idle();
   virtual RESULT update(const Param &param);
@@ -19,6 +22,12 @@ public:
   const mm::Vec3 &getTar() const { return unknown80; }
 
 private:
+  static mm::Vec2 calcLensUV(const mm::Vec3 &from, const mm::Vec3 &to);
+  static mm::Vec2 vec2rot(const mm::Vec3 &direction);
+  static mm::Vec2 getSubRot(const mm::Vec2 &from, const mm::Vec2 &to);
+
+  static mm::Vec2 LENS_LIMIT; // Name from the game symbol _ZN5event11CharaSetTar10LENS_LIMITE (size 0x10, in .bss); not defined here.
+
   u32 unknown08;                // Inferred role: flags; original member name unknown.
   gf::GF_OBJ_HANDLE *unknown10; // Inferred role: handle; original member name unknown.
   u8 _18[0x60 - 0x18];

@@ -12,7 +12,7 @@ namespace event {
 class EffectRes : public IResEvent {
 public:
   enum {
-    FLAG_LOADING = 1 << 0,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: loading flag; original name unknown.
   };
 
   EffectRes(const char *name);

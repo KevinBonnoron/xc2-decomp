@@ -52,7 +52,7 @@ public:
     f32 unknown04; // Inferred role: near distance; original member name unknown.
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_SE;
+  static const GmkType GMK_TYPE = GMK_TYPE_SE; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkSe();
   ~GmkSe() override { dispose(); }
@@ -108,7 +108,7 @@ public:
     f32 unknown24; // Inferred role: near distance; original member name unknown.
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_SE_LINE;
+  static const GmkType GMK_TYPE = GMK_TYPE_SE_LINE; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkSeLine();
   ~GmkSeLine() override { dispose(); }
@@ -155,7 +155,7 @@ public:
     void create(CBdatWrapper, int, const AGmkBase &) {}
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_SE_LINE_POINT;
+  static const GmkType GMK_TYPE = GMK_TYPE_SE_LINE_POINT; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkSeLinePoint() {}
   GmkType getGmkType() const override;

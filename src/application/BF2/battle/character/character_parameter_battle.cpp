@@ -419,7 +419,7 @@ const ENHANCE_EFFECT_DATA *CharacterParameter::GetEnhanceEffectDataConst(int enh
 }
 
 void CharacterParameter::SetSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, f32 rate, u16 value) {
-  if (!m_invalidTarget && unknown10 != gf::INVALID_HANDLE) {
+  if (!m_invalidTarget && unknown10 != gf::unknown020) {
     BattleCharacter *character = CharacterManager::get()->GetCharacterConst(unknown10);
     if (character != nullptr) {
       CharacterParameter *parameter = character->GetCharacterParameter(true);
@@ -436,7 +436,7 @@ void CharacterParameter::SetSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, f32 ra
 }
 
 void CharacterParameter::AddSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, f32 rate, u16 value) {
-  if (!m_invalidTarget && unknown10 != gf::INVALID_HANDLE) {
+  if (!m_invalidTarget && unknown10 != gf::unknown020) {
     BattleCharacter *character = CharacterManager::get()->GetCharacterConst(unknown10);
     if (character != nullptr) {
       CharacterParameter *parameter = character->GetCharacterParameter(true);
@@ -453,7 +453,7 @@ void CharacterParameter::AddSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, f32 ra
 }
 
 void CharacterParameter::MinSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, f32 rate, u16 value) {
-  if (!m_invalidTarget && unknown10 != gf::INVALID_HANDLE) {
+  if (!m_invalidTarget && unknown10 != gf::unknown020) {
     BattleCharacter *character = CharacterManager::get()->GetCharacterConst(unknown10);
     if (character != nullptr) {
       CharacterParameter *parameter = character->GetCharacterParameter(true);
@@ -471,7 +471,7 @@ void CharacterParameter::MinSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, f32 ra
 }
 
 void CharacterParameter::MaxSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, f32 rate, u16 value) {
-  if (!m_invalidTarget && unknown10 != gf::INVALID_HANDLE) {
+  if (!m_invalidTarget && unknown10 != gf::unknown020) {
     BattleCharacter *character = CharacterManager::get()->GetCharacterConst(unknown10);
     if (character != nullptr) {
       CharacterParameter *parameter = character->GetCharacterParameter(true);
@@ -489,7 +489,7 @@ void CharacterParameter::MaxSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, f32 ra
 }
 
 f32 CharacterParameter::GetSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, int *value) const {
-  if (!m_invalidTarget && unknown10 != gf::INVALID_HANDLE) {
+  if (!m_invalidTarget && unknown10 != gf::unknown020) {
     BattleCharacter *character = CharacterManager::get()->GetCharacterConst(unknown10);
     if (character != nullptr) {
       CharacterParameter *parameter = character->GetCharacterParameter(true);
@@ -743,7 +743,7 @@ PlayerParameter::~PlayerParameter() {
 }
 
 void PlayerParameter::ResetUseWeapon() {
-  for (int i = 0; i < gf::WEAPON_TYPE_COUNT + 1; i++) {
+  for (int i = 0; i < gf::WEAPON_TYPE_UNKNOWN_26 + 1; i++) {
     unknown5f0[i] = 0;
   }
 
@@ -946,7 +946,7 @@ void EnemyParameter::SetBuddy(gf::GF_OBJ_HANDLE *handle, bool isIgnoreBuddy) {
   unknown10 = handle;
   unknown5df_6 = isIgnoreBuddy;
   gf::GF_OBJ_HANDLE *self = unknown08;
-  if (handle == gf::INVALID_HANDLE) {
+  if (handle == gf::unknown020) {
     DataManager::get()->ReleaseEnemyGroup(self);
     return;
   }

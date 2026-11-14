@@ -26,6 +26,7 @@ class DrIniSys;
 class DrEnvironmentMan;
 class DrFogMan;
 class DrGlobalIBLMan;
+class DrIBLMan;
 class DrIrrVolMan;
 class DrLightMan;
 class DrMdlMan;
@@ -34,6 +35,7 @@ class DrResFilterData;
 class DrShdMan;
 class IDrDrawCallback;
 class DrPixlMan;
+class DrPixlMdlSampler;
 class DrPixlPostParm;
 class Scn;
 class WinProc;
@@ -113,13 +115,17 @@ public:
   void resetModelTexture(u32 index);
   void deleteAddRenderSystem(u32 id);
   void begin();
+  void beginSetup();
   void end();
+  void endSetup();
   int loopCnt();
   void apply(int loop);
+  void applyView(int view);
   void applyBegin(int loop);
   void applyEnd(int loop);
   void applyViewBegin();
   void render(int loop);
+  void renderView(int view);
   void renderBegin(int loop);
   void setAlphaRenderTarget();
   void setSkyGodRayRenderTarget();
@@ -143,6 +149,8 @@ public:
   u32 getMem1AlphaFree();
   void setGblIdx(s32 id);
   void offGblIdx(s32 id);
+  // Name from Xenoblade Chronicles DE: _ZNK2ml5DrMan8isGblIdxEi (same class, same bit test of the global index table; the DE copy also tests a second table).
+  u32 isGblIdx(s32 id) const { return m_gblIdx[id >> 5] & (1 << (id & 31)); }
   void setTimeVal(f32 timeVal);
   void setGroupsDisp(s32 group, bool disp);
   void setReduction(bool isReduction, f32 scaleX, f32 scaleY);
@@ -214,16 +222,16 @@ public:
   mm::mtl::FixedArray<DrFogMan *, 4> unknowne0;          // Inferred role: fog mans; original member name unknown.
   mm::mtl::FixedArray<DrEnvironmentMan *, 4> unknown100; // Inferred role: environment mans; original member name unknown.
   mm::mtl::FixedArray<DrPixlPostParm *, 4> unknown120;   // Inferred role: post parms; original member name unknown.
-  u8 _0140[0x0160 - 0x0140];
-  mm::mtl::FixedArray<DrGlobalIBLMan *, 4> unknown160; // Inferred role: global ibl mans; original member name unknown.
-  DrPixlTileParm *unknown180;                          // Inferred role: tile parm; original member name unknown.
-  u8 _0188[0x0190 - 0x0188];
-  DR_VIEW_PARAM unknown190[2][4]; // Inferred role: additional render system view params; original member name unknown.
-  s32 unknown350[2];              // Inferred role: additional render system counts; original member name unknown.
-  u32 unknown358[2][4];           // Inferred role: deleted render system ids; original member name unknown.
-  s32 unknown378[2];              // Inferred role: deleted render system counts; original member name unknown.
-  DR_CAPTURE_PARAM unknown380[2]; // Inferred role: capture requests; original member name unknown.
-  u32 unknown3b0;                 // Inferred role: capture request mask; original member name unknown.
+  mm::mtl::FixedArray<DrIBLMan *, 4> unknown140;         // Inferred role: ibl mans; original member name unknown.
+  mm::mtl::FixedArray<DrGlobalIBLMan *, 4> unknown160;   // Inferred role: global ibl mans; original member name unknown.
+  DrPixlTileParm *unknown180;                            // Inferred role: tile parm; original member name unknown.
+  DrPixlMdlSampler *unknown188;                          // Inferred role: model sampler; original member name unknown.
+  DR_VIEW_PARAM unknown190[2][4];                        // Inferred role: additional render system view params; original member name unknown.
+  s32 unknown350[2];                                     // Inferred role: additional render system counts; original member name unknown.
+  u32 unknown358[2][4];                                  // Inferred role: deleted render system ids; original member name unknown.
+  s32 unknown378[2];                                     // Inferred role: deleted render system counts; original member name unknown.
+  DR_CAPTURE_PARAM unknown380[2];                        // Inferred role: capture requests; original member name unknown.
+  u32 unknown3b0;                                        // Inferred role: capture request mask; original member name unknown.
   u8 _03b4[0x03b8 - 0x03b4];
   DR_MODEL_TEXTURE unknown3b8[2][4]; // Inferred role: model textures; original member name unknown.
   u32 unknown438[2];                 // Inferred role: model texture update masks; original member name unknown.
@@ -232,11 +240,12 @@ public:
   DrLightMan *unknown588;            // Inferred role: light man; original member name unknown.
   DrFogMan *unknown590;              // Inferred role: fog man; original member name unknown.
   DrEnvironmentMan *unknown598;      // Inferred role: environment man; original member name unknown.
-  u8 _05a0[0x05b0 - 0x05a0];
-  DrCalcTexStreamMan *unknown5b0; // Inferred role: tex stream man; original member name unknown.
-  unknown057 *unknown5b8;         // Inferred role: screen info; original member name unknown.
-  DrAPCache *unknown5c0;          // Inferred role: ap cache; original member name unknown.
-  DrCalcGpuCost *unknown5c8;      // Inferred role: gpu cost; original member name unknown.
+  DrIBLMan *unknown5a0;              // Inferred role: ibl man; original member name unknown.
+  DrGlobalIBLMan *unknown5a8;        // Inferred role: global ibl man; original member name unknown.
+  DrCalcTexStreamMan *unknown5b0;    // Inferred role: tex stream man; original member name unknown.
+  unknown057 *unknown5b8;            // Inferred role: screen info; original member name unknown.
+  DrAPCache *unknown5c0;             // Inferred role: ap cache; original member name unknown.
+  DrCalcGpuCost *unknown5c8;         // Inferred role: gpu cost; original member name unknown.
   u8 _05d0[0x05d8 - 0x05d0];
   IDrDrawCallback *unknown5d8[16]; // Inferred role: callbacks; original member name unknown.
   s32 unknown658;                  // Inferred role: callback num; original member name unknown.
@@ -273,14 +282,14 @@ public:
   u8 _1cd8[0x1cfc - 0x1cd8];
   s32 unknown1cfc; // Inferred role: seam read lv; original member name unknown.
   u8 _1d00[0x1d20 - 0x1d00];
-  u32 *unknown1d20;           // Inferred role: gbl tbl; original member name unknown.
+  u32 *m_gblIdx;              // Named after setGblIdx and offGblIdx, which write its bits; Xenoblade Chronicles DE has isGblIdx and clearGblIdx on its table.
   RenderSpecMode unknown1d28; // Inferred role: render spec mode; original member name unknown.
   u8 _1d2c[0x1d30 - 0x1d2c];
-  mm::Vec3 unknown1d30[2]; // Inferred role: global winds; original member name unknown.
+  mm::Vec3 m_globalWind[2];
   u8 _1d50[0x1d60 - 0x1d50];
   bool unknown1d60; // Inferred role: chara disp off; original member name unknown.
   bool unknown1d61; // Inferred role: seam render skip; original member name unknown.
-  u8 _1d62;
+  bool unknown1d62; // Inferred role: copied to the draw work info of each view; original member name unknown.
   bool unknown1d63; // Inferred role: model render skip; original member name unknown.
   bool unknown1d64; // Inferred role: light pre pass and GBuff render skip; original member name unknown.
   bool unknown1d65; // Inferred role: refraction render skip; original member name unknown.
@@ -289,7 +298,7 @@ public:
   bool unknown1d68; // Inferred role: shadow render skip; original member name unknown.
   bool unknown1d69; // Inferred role: seam base map shadow render skip; original member name unknown.
   bool unknown1d6a; // Inferred role: occlusion render skip; original member name unknown.
-  u8 _1d6b;
+  bool unknown1d6b; // Inferred role: seam mpf map render skip; original member name unknown.
   bool unknown1d6c; // Inferred role: seam env map render skip; original member name unknown.
   u8 _1d6d[0x1d70 - 0x1d6d];
   bool unknown1d70; // Inferred role: shadow light skip; original member name unknown.
@@ -299,19 +308,24 @@ public:
   u8 _1d76[0x1d7a - 0x1d76];
   bool unknown1d7a; // Inferred role: shadow map override; original member name unknown.
   bool unknown1d7b; // Inferred role: mdl dbl pause; original member name unknown.
-  u8 _1d7c[0x1d80 - 0x1d7c];
+  bool unknown1d7c; // Inferred role: skips the mpf wind update; original member name unknown.
+  u8 _1d7d[0x1d80 - 0x1d7d];
   bool unknown1d80; // Inferred role: clip; original member name unknown.
-  u8 _1d81[0x1d8e - 0x1d81];
+  u8 _1d81[0x1d8c - 0x1d81];
+  bool unknown1d8c; // Inferred role: flag, copied to unknown1d8d at the end of the setup; original member name unknown.
+  bool unknown1d8d; // Inferred role: copy of unknown1d8c; original member name unknown.
   bool unknown1d8e; // Inferred role: skips the env coli parameters; original member name unknown.
   u8 _1d8f[0x1d94 - 0x1d8f];
   FILE_PRIO unknown1d94; // Inferred role: seam map pri mdl; original member name unknown.
   FILE_PRIO unknown1d98; // Inferred role: seam map pri coli; original member name unknown.
-  bool unknown1d9c[2];   // Inferred role: all middel tex stm chks; original member name unknown.
-  bool unknown1d9e[2];   // Inferred role: seam map stm oks; original member name unknown.
-  bool unknown1da0;      // Inferred role: camera light; original member name unknown.
+  bool m_allMiddelTexStmChk[2];
+  bool m_seamMapStmOk[2];
+  bool unknown1da0; // Inferred role: camera light; original member name unknown.
   u8 _1da1[0x1da4 - 0x1da1];
   s32 unknown1da4; // Inferred role: dynamic light type; original member name unknown.
-  u8 _1da8[0x1de4 - 0x1da8];
+  u8 _1da8[0x1dbc - 0x1da8];
+  s32 unknown1dbc; // Inferred role: render skip; original member name unknown.
+  u8 _1dc0[0x1de4 - 0x1dc0];
   u32 unknown1de4;  // Inferred role: histgram size shift; original member name unknown.
   bool unknown1de8; // Inferred role: histgram uses the tone map target; original member name unknown.
   u8 _1de9[0x1e00 - 0x1de9];
@@ -338,6 +352,7 @@ static_assert(offsetof(DrMan, unknownc0) == 0x00c0, "");
 static_assert(offsetof(DrMan, unknowne0) == 0x00e0, "");
 static_assert(offsetof(DrMan, unknown100) == 0x0100, "");
 static_assert(offsetof(DrMan, unknown120) == 0x0120, "");
+static_assert(offsetof(DrMan, unknown140) == 0x0140, "");
 static_assert(offsetof(DrMan, unknown160) == 0x0160, "");
 static_assert(offsetof(DrMan, unknown180) == 0x0180, "");
 static_assert(offsetof(DrMan, unknown190) == 0x0190, "");
@@ -353,6 +368,8 @@ static_assert(offsetof(DrMan, unknown580) == 0x0580, "");
 static_assert(offsetof(DrMan, unknown588) == 0x0588, "");
 static_assert(offsetof(DrMan, unknown590) == 0x0590, "");
 static_assert(offsetof(DrMan, unknown598) == 0x0598, "");
+static_assert(offsetof(DrMan, unknown5a0) == 0x05a0, "");
+static_assert(offsetof(DrMan, unknown5a8) == 0x05a8, "");
 static_assert(offsetof(DrMan, unknown5b0) == 0x05b0, "");
 static_assert(offsetof(DrMan, unknown5b8) == 0x05b8, "");
 static_assert(offsetof(DrMan, unknown5c0) == 0x05c0, "");
@@ -383,11 +400,12 @@ static_assert(offsetof(DrMan, unknown1cc9) == 0x1cc9, "");
 static_assert(offsetof(DrMan, unknown1ccc) == 0x1ccc, "");
 static_assert(offsetof(DrMan, unknown1cd0) == 0x1cd0, "");
 static_assert(offsetof(DrMan, unknown1cfc) == 0x1cfc, "");
-static_assert(offsetof(DrMan, unknown1d20) == 0x1d20, "");
+static_assert(offsetof(DrMan, m_gblIdx) == 0x1d20, "");
 static_assert(offsetof(DrMan, unknown1d28) == 0x1d28, "");
-static_assert(offsetof(DrMan, unknown1d30) == 0x1d30, "");
+static_assert(offsetof(DrMan, m_globalWind) == 0x1d30, "");
 static_assert(offsetof(DrMan, unknown1d60) == 0x1d60, "");
 static_assert(offsetof(DrMan, unknown1d61) == 0x1d61, "");
+static_assert(offsetof(DrMan, unknown1d62) == 0x1d62, "");
 static_assert(offsetof(DrMan, unknown1d63) == 0x1d63, "");
 static_assert(offsetof(DrMan, unknown1d64) == 0x1d64, "");
 static_assert(offsetof(DrMan, unknown1d65) == 0x1d65, "");
@@ -399,13 +417,16 @@ static_assert(offsetof(DrMan, unknown1d75) == 0x1d75, "");
 static_assert(offsetof(DrMan, unknown1d7a) == 0x1d7a, "");
 static_assert(offsetof(DrMan, unknown1d7b) == 0x1d7b, "");
 static_assert(offsetof(DrMan, unknown1d80) == 0x1d80, "");
+static_assert(offsetof(DrMan, unknown1d8c) == 0x1d8c, "");
+static_assert(offsetof(DrMan, unknown1d8d) == 0x1d8d, "");
 static_assert(offsetof(DrMan, unknown1d8e) == 0x1d8e, "");
 static_assert(offsetof(DrMan, unknown1d94) == 0x1d94, "");
 static_assert(offsetof(DrMan, unknown1d98) == 0x1d98, "");
-static_assert(offsetof(DrMan, unknown1d9c) == 0x1d9c, "");
-static_assert(offsetof(DrMan, unknown1d9e) == 0x1d9e, "");
+static_assert(offsetof(DrMan, m_allMiddelTexStmChk) == 0x1d9c, "");
+static_assert(offsetof(DrMan, m_seamMapStmOk) == 0x1d9e, "");
 static_assert(offsetof(DrMan, unknown1da0) == 0x1da0, "");
 static_assert(offsetof(DrMan, unknown1da4) == 0x1da4, "");
+static_assert(offsetof(DrMan, unknown1dbc) == 0x1dbc, "");
 static_assert(offsetof(DrMan, unknown1de4) == 0x1de4, "");
 static_assert(offsetof(DrMan, unknown1de8) == 0x1de8, "");
 static_assert(offsetof(DrMan, unknown1e00) == 0x1e00, "");

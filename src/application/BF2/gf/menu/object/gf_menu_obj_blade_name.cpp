@@ -1,12 +1,15 @@
 #include "gf/menu/object/gf_menu_obj_blade_name.h"
 
 #include "gf/data/gf_data_blade.h"
+#include "gf/gf_allocator.h"
+#include "gf/menu/adapter/gf_menu_char_data_adapter.h"
 #include "gf/menu/gf_menu_object.h"
 #include "gf/menu/gf_menu_reference.h"
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "types.h"
 #include "ui/event/ui_event_data.h"
+#include "ui/event/ui_event_manager.h"
 #include "ui/ui_object_acc.h"
 
 namespace gf {
@@ -17,6 +20,22 @@ constexpr u32 unknown001 = 0x81;
 GfMenuObjBladeName::GfMenuObjBladeName(u32 handle) : GfMenuObject(handle), unknown28(this), unknown2b8(false) {}
 
 GfMenuObjBladeName::~GfMenuObjBladeName() {}
+
+void GfMenuObjBladeName::initialize() {
+  ui::UIObjectAcc acc(unknown18, "LAY_main");
+  attachExternalCall(unknown001, acc.unknown10);
+// __LINE__ must be 116 as in the original file: it is the line argument of operator new.
+#line 116
+  MainListener *listener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) MainListener(this);
+  listener->addRef();
+  ui::UIEventManager::get()->registObjectListener(acc.unknown10, listener);
+  if (listener != nullptr) {
+    listener->release();
+  }
+  GfMenuCharDataAdapter::createFromReferenceBlade(acc.searchChild("TXT_bl_name"), 2, 0, false);
+  GfMenuCharDataAdapter::createFromReferenceBlade(acc.searchChild("TXT_bl_name_shadow"), 2, 0, false);
+  GfMenuObject::initialize();
+}
 
 void GfMenuObjBladeName::close() { unknown144(unknown001, GfMenuTypes::unknown003_34); }
 
@@ -120,6 +139,46 @@ bool GfMenuObjBladeName::seqApperWait() {
     isEnd = false;
   }
   return isEnd;
+}
+
+void GfMenuObjBladeName::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    acc.setDisp(false);
+    break;
+  case GfMenuTypes::unknown003_33:
+    unknown20->unknown28.unknown005();
+    unknown20->unknown28.unknown002(&GfMenuObjBladeName::seqStart);
+    break;
+  case GfMenuTypes::unknown003_34: {
+    unknown20->unknown28.unknown005();
+    {
+      ui::UIObjectAcc base(acc.unknown10, "IMG_bl_name_base");
+      base.stopAnimation();
+      base.setDisp(false);
+    }
+    {
+      ui::UIObjectAcc name(acc.unknown10, "TXT_bl_name");
+      ui::UIObjectAcc shadow(acc.unknown10, "TXT_bl_name_shadow");
+      GfMenuObjUtil::stopCtrl(GfMenuObjUtil::getCtrlID(name.unknown10));
+      name.setDisp(false);
+      GfMenuObjUtil::stopCtrl(GfMenuObjUtil::getCtrlID(shadow.unknown10));
+      shadow.setDisp(false);
+    }
+    {
+      ui::UIObjectAcc self(acc.unknown10);
+      GfMenuObjUtil::stopCtrl(GfMenuObjUtil::getCtrlID(self.unknown10));
+      self.setDisp(false);
+    }
+    break;
+  }
+  case GfMenuTypes::unknown003_257:
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
 }
 
 } // namespace gf

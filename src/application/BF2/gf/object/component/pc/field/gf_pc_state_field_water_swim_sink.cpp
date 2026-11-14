@@ -26,7 +26,7 @@ void StateFieldWaterSwimSink::update(GfComBehaviorPc *behavior, const fw::Update
   if (unknown18 >= param->swimSinkTime) {
     GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
     if (StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_SWIM_00)) {
-      reqState(STATE_ID_FIELD_WATER_SWIM_RISE);
+      reqState(STATE_ID_UNKNOWN_28);
       return;
     }
   }

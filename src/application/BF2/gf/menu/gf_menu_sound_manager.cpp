@@ -10,7 +10,7 @@
 
 namespace gf {
 
-GfMenuSoundManager::GfMenuSoundManager(const GfSetupParam &param) : unknown08(false), unknown78(INVALID_CATEGORY_HANDLE) { initialize(param); }
+GfMenuSoundManager::GfMenuSoundManager(const GfSetupParam &param) : unknown08(false), unknown78(unknown019) { initialize(param); }
 
 void GfMenuSoundManager::initialize(const GfSetupParam &) {
   unknown08 = true;
@@ -22,7 +22,7 @@ void GfMenuSoundManager::initialize(const GfSetupParam &) {
 
 GfMenuSoundManager::~GfMenuSoundManager() {}
 
-void GfMenuSoundManager::build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfMenuSoundManager(param); }
+void GfMenuSoundManager::build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfMenuSoundManager(param); }
 
 void GfMenuSoundManager::destroy() {
   GfMenuSoundManager *manager = get();
@@ -132,9 +132,9 @@ void GfMenuSoundManager::fadeFieldBgm(f32 time, f32 volume) {
   if (sound == nullptr) {
     return;
   }
-  sound->setCategoryVolume(manager->unknown78, CATEGORY_GAME_BGM, volume, time);
-  sound->setCategoryVolume(manager->unknown78, CATEGORY_GAME_ENV, volume, time);
-  sound->setCategoryVolume(manager->unknown78, CATEGORY_GAME_WEATHER, volume, time);
+  sound->setCategoryVolume(manager->unknown78, CATEGORY_BGM, volume, time);
+  sound->setCategoryVolume(manager->unknown78, CATEGORY_ENV, volume, time);
+  sound->setCategoryVolume(manager->unknown78, CATEGORY_WEATHER, volume, time);
 }
 
 void GfMenuSoundManager::fadeOutFieldBgm(f32 time) { fadeFieldBgm(time, 0.0f); }

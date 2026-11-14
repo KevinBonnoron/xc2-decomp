@@ -13,7 +13,7 @@ namespace event {
 
 void ScriptCharaSetIdle::doit(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CHARA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_2) {
     return;
   }
   ObjectChara *chara = static_cast<ObjectChara *>(object);
@@ -23,7 +23,7 @@ void ScriptCharaSetIdle::doit(const Param &param) {
 
 void ScriptCharaSetIdle::undo(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CHARA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_2) {
     return;
   }
   static_cast<ObjectChara *>(object)->getCharaObj()->setIdle(unknown08);

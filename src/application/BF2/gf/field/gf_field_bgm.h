@@ -172,12 +172,14 @@ static_assert(sizeof(ExecFadeParam) == 0x20, "");
 
 class BgmBattle : public BgmTrack, public mm::mtl::PtrSingleton<BgmBattle> {
 public:
+  explicit BgmBattle(GfFieldBgm *owner);
   const char *getTrackName() const override;
   void update(const fw::UpdateInfo &info) override;
 };
 
 class BgmBattleBoss : public BgmTrack, public mm::mtl::PtrSingleton<BgmBattleBoss> {
 public:
+  explicit BgmBattleBoss(GfFieldBgm *owner);
   const char *getTrackName() const override;
   void update(const fw::UpdateInfo &info) override;
 };
@@ -187,6 +189,7 @@ public:
   explicit BgmEvent(GfFieldBgm *owner);
   const char *getTrackName() const override;
   bool isPlaying() const override;
+  void update(const fw::UpdateInfo &info) override;
   void gevPlayEvent(GEV gev, u32 value);
   void cancelOverTime();
 
@@ -200,12 +203,14 @@ static_assert(sizeof(BgmEvent) == 0x728, "");
 
 class BgmField : public BgmTrack, public mm::mtl::PtrSingleton<BgmField> {
 public:
+  explicit BgmField(GfFieldBgm *owner);
   const char *getTrackName() const override;
   void update(const fw::UpdateInfo &info) override;
 };
 
 class BgmGimmick : public BgmTrack, public mm::mtl::PtrSingleton<BgmGimmick> {
 public:
+  explicit BgmGimmick(GfFieldBgm *owner);
   const char *getTrackName() const override;
   void update(const fw::UpdateInfo &info) override;
 };
@@ -216,6 +221,7 @@ extern bool s_bStopBGM;
 
 class GfFieldBgm : public mm::mtl::PtrSingleton<GfFieldBgm> {
 public:
+  GfFieldBgm();
   ~GfFieldBgm() override;
   u32 getRscFieldBgmID() const;
   u32 getRscBossBattleBgmID() const;
@@ -223,6 +229,7 @@ public:
   u32 getRscGimmickBgmID() const;
   bool isDisableFieldBgmChange() const;
   bool isBossBgmCopied() const;
+  bool getBgmFileInfo(BgmFileInfo &info, const char *name) const;
   void setRscBattleBgmID(u32 id);
   void setGimmickBgmID(u32 id);
   void gevBattleEnd();

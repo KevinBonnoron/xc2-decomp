@@ -20,7 +20,8 @@ struct GfSetupParam;
 
 class GfMenuHUD : public mm::mtl::PtrSingleton<GfMenuHUD> {
 public:
-  static const u32 LAYER_MAX = 8;
+  // Inferred role: capacity of the layers; original name unknown.
+  static const u32 LAYER_UNKNOWN_8 = 8;
 
   GfMenuHUD(const GfSetupParam &param);
   void initialize(const GfSetupParam &param);
@@ -44,12 +45,12 @@ public:
   void systemWait();
   void systemUpdate();
 
-  bool unknown08;                                 // Inferred role: initialized; original member name unknown.
-  u32 unknown0c;                                  // Inferred role: scene id; original member name unknown.
-  u32 unknown10;                                  // Inferred role: next scene id; original member name unknown.
-  mm::mtl::FixedVector<u32, LAYER_MAX> unknown18; // Inferred role: layers; original member name unknown.
-  mm::mtl::Delegate<void()> unknown40;            // Inferred role: system updater; original member name unknown.
-  mm::mtl::Delegate<void()> unknown60;            // Inferred role: scene updater; original member name unknown.
+  bool unknown08;                                       // Inferred role: initialized; original member name unknown.
+  u32 unknown0c;                                        // Inferred role: scene id; original member name unknown.
+  u32 unknown10;                                        // Inferred role: next scene id; original member name unknown.
+  mm::mtl::FixedVector<u32, LAYER_UNKNOWN_8> unknown18; // Inferred role: layers; original member name unknown.
+  mm::mtl::Delegate<void()> unknown40;                  // Inferred role: system updater; original member name unknown.
+  mm::mtl::Delegate<void()> unknown60;                  // Inferred role: scene updater; original member name unknown.
 };
 
 static_assert(offsetof(GfMenuHUD, unknown08) == 0x08, "");

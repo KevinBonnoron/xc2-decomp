@@ -10,10 +10,10 @@ namespace event {
 
 class MemoryManager : public IManager, public mm::mtl::Singleton<MemoryManager> {
 public:
-  static constexpr u32 TXTBUF_COUNT = 512;
+  static constexpr u32 TXTBUF_UNKNOWN_512 = 512; // Inferred role: txtbuf count; original name unknown.
 
   enum {
-    FLAG_DISP = 1 << 0,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: disp flag; original name unknown.
   };
 
   MemoryManager();
@@ -53,11 +53,11 @@ private:
   u32 unknown2c;               // Inferred role: static size; original member name unknown.
   u32 m_sysMemSize;
   u32 m_resMemSize;
-  u32 unknown38;                                        // Inferred role: motstm size; original member name unknown.
-  mm::mtl::FixedVector<char *, TXTBUF_COUNT> unknown40; // Inferred role: txtbufs; original member name unknown.
-  u64 unknown1048;                                      // Inferred role: highest sys heap; original member name unknown.
-  u64 unknown1050;                                      // Inferred role: highest res heap; original member name unknown.
-  u32 unknown1058;                                      // Inferred role: txtbuf total size; original member name unknown.
+  u32 unknown38;                                              // Inferred role: motstm size; original member name unknown.
+  mm::mtl::FixedVector<char *, TXTBUF_UNKNOWN_512> unknown40; // Inferred role: txtbufs; original member name unknown.
+  u64 unknown1048;                                            // Inferred role: highest sys heap; original member name unknown.
+  u64 unknown1050;                                            // Inferred role: highest res heap; original member name unknown.
+  u32 unknown1058;                                            // Inferred role: txtbuf total size; original member name unknown.
 };
 
 static_assert(sizeof(MemoryManager) == 0x1060, "");

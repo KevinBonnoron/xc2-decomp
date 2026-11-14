@@ -3,6 +3,7 @@
 
 #include "grlib/cglib_dbl_uniform_block.h"
 #include "grlib/cglib_one_uniform_block.h"
+#include "mm_math/mm_col3.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
 #include "types.h"
@@ -24,6 +25,7 @@ public:
   void updateUniform(const mm::Mat44 &matrix, f32 param2, f32 param3);
   void setActive(bool isActive, u32 index);
   void alpRender();
+  void stmRender(bool isNode);
   u32 setup(const u8 *, u8 *);
   u32 calcWorkSize(const u8 *);
   void resourceInit(DrResMdoVertex *vertex);
@@ -47,10 +49,22 @@ public:
   mm::Mat44 unknowna0; // Inferred role: matrix; original member name unknown.
   mm::Vec3 unknowne0;  // Inferred role: init vector; original member name unknown.
   mm::Vec3 unknownf0;  // Inferred role: add vector; original member name unknown.
-  u8 _100[0x130 - 0x100];
-  f32 unknown130; // Inferred role: fade ratio; original member name unknown.
+  f32 unknown100;      // Inferred role: life time; original member name unknown.
+  f32 unknown104;      // Inferred role: scale divisor; original member name unknown.
+  f32 unknown108;      // Inferred role: speed; original member name unknown.
+  f32 unknown10c;      // Inferred role: gravity; original member name unknown.
+  u32 unknown110;      // Inferred role: particle count limit; original member name unknown.
+  mm::Col3 unknown114; // Inferred role: color; original member name unknown.
+  f32 unknown120;      // Role and original member name unknown.
+  f32 unknown124;      // Inferred role: ratio clamped to 0..1; original member name unknown.
+  f32 unknown128;      // Inferred role: ratio clamped to 0..1; original member name unknown.
+  f32 unknown12c;      // Role and original member name unknown.
+  f32 unknown130;      // Inferred role: fade ratio; original member name unknown.
 };
 
+static_assert(offsetof(DrResMdoVtxMeshObj, unknown100) == 0x100, "");
+static_assert(offsetof(DrResMdoVtxMeshObj, unknown114) == 0x114, "");
+static_assert(offsetof(DrResMdoVtxMeshObj, unknown12c) == 0x12c, "");
 static_assert(offsetof(DrResMdoVtxMeshObj, unknown10) == 0x10, "");
 static_assert(offsetof(DrResMdoVtxMeshObj, unknown38) == 0x38, "");
 static_assert(offsetof(DrResMdoVtxMeshObj, unknown74) == 0x74, "");

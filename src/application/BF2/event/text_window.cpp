@@ -23,7 +23,7 @@ struct GF_OBJ_HANDLE;
 
 namespace event {
 
-TextWindow::TextWindow() : unknown08(0), unknown218(gf::INVALID_HANDLE), unknown220(nullptr) {}
+TextWindow::TextWindow() : unknown08(0), unknown218(gf::unknown020), unknown220(nullptr) {}
 
 void TextWindow::clear() {
   if (unknown220 != nullptr) {
@@ -32,7 +32,7 @@ void TextWindow::clear() {
   }
   unknown110 = "";
   unknown0c = "";
-  unknown218 = gf::INVALID_HANDLE;
+  unknown218 = gf::unknown020;
   unknown08 = 0;
 }
 
@@ -40,19 +40,19 @@ void TextWindow::update() {
   if (!isDisp()) {
     return;
   }
-  if ((unknown08 & FLAG_CLOSE) == 0) {
+  if ((unknown08 & FLAG_UNKNOWN_1) == 0) {
     gf::GfMenuCallContext::GfMenuResult result = {};
     if (unknown220->popResult(result) && result.unknown04 == 1) {
-      unknown08 |= FLAG_CLOSE;
+      unknown08 |= FLAG_UNKNOWN_1;
       unknown228 = 4;
     }
   }
-  if ((unknown08 & FLAG_CLOSE) != 0) {
+  if ((unknown08 & FLAG_UNKNOWN_1) != 0) {
     if (unknown228-- > 0 && !TextManager::get().isCutChangeFrame()) {
       return;
     }
     erase();
-    unknown08 &= ~FLAG_WRITE;
+    unknown08 &= ~FLAG_UNKNOWN_0;
   }
 }
 
@@ -91,11 +91,11 @@ void TextWindow::write(const char *text, const char *name, u8 *bdat, u32 textId,
     param.unknown00 = bdat;
     param.unknown08 = textId;
     param.unknown20 = handle;
-    if (handle != gf::INVALID_HANDLE) {
+    if (handle != gf::unknown020) {
       gf::DataParamAcc paramAcc(handle);
       switch (paramAcc.getObjType()) {
-      case gf::OBJECT_TYPE_DRIVER:
-        gf::GfDataDriver::getName(param.unknown10, param.unknown18, paramAcc.isValid() && paramAcc.getObjType() == gf::OBJECT_TYPE_DRIVER ? paramAcc.getBdatId() : 0);
+      case gf::OBJECT_TYPE_PC:
+        gf::GfDataDriver::getName(param.unknown10, param.unknown18, paramAcc.isValid() && paramAcc.getObjType() == gf::OBJECT_TYPE_PC ? paramAcc.getBdatId() : 0);
         break;
       case gf::OBJECT_TYPE_BLADE:
         gf::GfDataBlade::getName(param.unknown10, param.unknown18, paramAcc.isValid() ? paramAcc.getBdatId() : 0);
@@ -120,9 +120,9 @@ void TextWindow::write(const char *text, const char *name, u8 *bdat, u32 textId,
   this->unknown110 = text;
   this->unknown0c = name;
   this->unknown218 = handle;
-  unknown08 = (unknown08 & ~(FLAG_WRITE | FLAG_CLOSE)) | FLAG_WRITE;
+  unknown08 = (unknown08 & ~(FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) | FLAG_UNKNOWN_0;
 }
 
-bool TextWindow::isWriting() const { return (unknown08 & (FLAG_WRITE | FLAG_CLOSE)) == FLAG_WRITE; }
+bool TextWindow::isWriting() const { return (unknown08 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) == FLAG_UNKNOWN_0; }
 
 } // namespace event

@@ -39,32 +39,34 @@ struct GF_SE_CATEGORY_HANDLE;
 struct GfSetupParam;
 struct EventBgmSetup;
 
+// The enumerators that keep a name are the strings of the game's event display table: "EVTDISP_MAP", "EVTDISP_COLLECTION", "EVTDISP_SALVAGE", "EVTDISP_PRECIOUS", "EVTDISP_TBOX", "EVTDISP_JUMP",
+// "EVTDISP_WARP", "EVTDISP_DMG_EFFECT", "EVTDISP_DMG_SE".
 enum EVTDISP {
   EVTDISP_MAP = 1,
-  EVTDISP_GIMMICK = 8,
+  EVTDISP_UNKNOWN_8 = 8, // Inferred role: evtdisp gimmick; original name unknown.
   EVTDISP_COLLECTION = 16,
   EVTDISP_SALVAGE = 17,
   EVTDISP_PRECIOUS = 18,
   EVTDISP_TBOX = 19,
-  EVTDISP_EFFECT = 20,
-  EVTDISP_SE = 21,
+  EVTDISP_UNKNOWN_20 = 20, // Inferred role: evtdisp effect; original name unknown.
+  EVTDISP_UNKNOWN_21 = 21, // Inferred role: evtdisp se; original name unknown.
   EVTDISP_JUMP = 22,
   EVTDISP_WARP = 23,
   EVTDISP_DMG_EFFECT = 24,
   EVTDISP_DMG_SE = 25,
-  EVTDISP_NUM = 26,
+  EVTDISP_UNKNOWN_26 = 26, // Inferred role: evtdisp num; original name unknown.
 };
 
 class GfGameEvent : public mm::mtl::PtrSingleton<GfGameEvent> {
 public:
   enum {
-    FLAG_CANCEL = 1 << 0,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: flag cancel; original name unknown.
   };
 
   enum PLAY_STATE {
-    PLAY_STATE_NONE,
-    PLAY_STATE_SEQUENCE,
-    PLAY_STATE_PLAY,
+    PLAY_STATE_UNKNOWN_0, // Inferred role: play state none; original name unknown.
+    PLAY_STATE_UNKNOWN_1, // Inferred role: play state sequence; original name unknown.
+    PLAY_STATE_UNKNOWN_2, // Inferred role: play state play; original name unknown.
   };
 
   GfGameEvent(const GfSetupParam &param);
@@ -158,7 +160,7 @@ public:
   int unknown18;                                     // Inferred role: after event start id; original member name unknown.
   int unknown1c;                                     // Inferred role: player off state; original member name unknown.
   GF_LP_HANDLE *unknown20;                           // Inferred role: layer pause; original member name unknown.
-  bool unknown28[EVTDISP_NUM];                       // Inferred role: display flags; original member name unknown.
+  bool unknown28[EVTDISP_UNKNOWN_26];                // Inferred role: display flags; original member name unknown.
   mm::mtl::FixedVector<u32, 1024> unknown48;         // Inferred role: display ids; original member name unknown.
   mm::mtl::FixedList<GfEvtModel *, 128> unknown1050; // Inferred role: event models; original member name unknown.
   CFILTER_HANDLE unknown18f0;                        // Inferred role: color filter; original member name unknown.

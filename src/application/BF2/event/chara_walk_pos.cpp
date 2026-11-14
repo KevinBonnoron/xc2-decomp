@@ -34,7 +34,7 @@ void CharaWalkPos::term() {
       if (property != nullptr) {
         property->setMoveSpeed(0.0f);
       }
-      unknown10->setFootIK(true, CharaIKUpdater::FOOT_TYPE_1);
+      unknown10->setFootIK(true, CharaIKUpdater::FOOT_TYPE_UNKNOWN_1);
     }
   }
   unknown28 = 0;

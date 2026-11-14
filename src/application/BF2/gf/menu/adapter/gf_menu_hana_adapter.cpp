@@ -87,7 +87,7 @@ GfMenuHanaAdapter *GfMenuHanaAdapter::create(u32 handle, u32 type, u32 blade, bo
     if (plugin != nullptr) {
       // __LINE__ must be 119 as in the original source: it is the line argument of operator new.
 #line 119
-      GfMenuHanaAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuHanaAdapter(plugin, isUpdateAlways);
+      GfMenuHanaAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuHanaAdapter(plugin, isUpdateAlways);
       adapter->unknown30.bind(adapter, info.update);
       adapter->unknown5c = blade;
       plugin->release();
@@ -136,7 +136,7 @@ bool GfMenuHanaAdapter::update_atrIcon() {
 }
 
 bool GfMenuHanaAdapter::update_bustupIcon() {
-  u32 index = unknown5c - BLADE_HANA_JS;
+  u32 index = unknown5c - BLADE_UNKNOWN_1005;
   if (index < 3) {
     setNumber(index + 1);
     return true;
@@ -183,7 +183,7 @@ GfMenuHanaAdapter *GfMenuHanaAdapter::createFromReferenceIndex(u32 handle, u32 t
   }
   // __LINE__ must be 137 as in the original source: it is the line argument of operator new.
 #line 137
-  ReferenceIndexConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceIndexConverter(index);
+  ReferenceIndexConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceIndexConverter(index);
   GfMenuHanaAdapter *adapter = create(handle, type, converter->getHanaId(), isUpdateAlways);
   if (adapter != nullptr) {
     adapter->unknown50 = converter;
@@ -211,9 +211,9 @@ void GfMenuHanaAdapter::update(const fw::UpdateInfo &info) {
     }
   }
 
-  if (unknown30.isValid() && (unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
+  if (unknown30.isValid() && (unknown20 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) != 0) {
     setDisp(unknown30());
-    unknown20 &= ~FLAG_CHANGED;
+    unknown20 &= ~FLAG_UNKNOWN_0;
   }
 }
 
@@ -375,7 +375,7 @@ bool GfMenuHanaAdapter::isCrystalParts(u32 type, u32 parts, RESULT_HANA &result)
 
 int GfMenuHanaAdapter::getHanaCount() {
   mm::mtl::FixedVector<u16, 16> drivers;
-  GfPartySelect::getDriverList(drivers, GfPartySelect::LIST_TYPE_PARTY_AND_RESERVER, 0);
+  GfPartySelect::getDriverList(drivers, GfPartySelect::LIST_TYPE_UNKNOWN_2, 0);
   mm::mtl::FixedVector<u16, 422> blades;
   for (u16 *driver = drivers.begin(); driver != drivers.end(); ++driver) {
     GfMenuBladeList::getBladeFromDriver(*driver, blades, false);

@@ -18,9 +18,12 @@
 
 namespace gf {
 
-constexpr u32 POUCH_MSG_NO_ENHANCE = 4;
-constexpr u32 TALENT_ARTS_DAMAGE_DIVISOR = 30;
-constexpr u16 REACTION_MSG_NONE = 7;
+// Inferred role: row of BDAT_MNU_MSG_POUCH (column name) of the text shown when an art has no enhance; original name unknown.
+constexpr u32 POUCH_MSG_UNKNOWN_4 = 4;
+// Inferred role: divisor applied to the damage multiplier of a talent art (type 11) before it is shown; original name unknown.
+constexpr u32 TALENT_ARTS_UNKNOWN_30 = 30;
+// Inferred role: row of BDAT_MNU_MSG_REACTION_ALL of the text of an art without reaction; original name unknown.
+constexpr u16 REACTION_MSG_UNKNOWN_7 = 7;
 
 static GfMenuArtsAdapter::TypeInfo TYPE_INFOS[] = {
     {&GfMenuArtsAdapter::update_ArtsName, {GfMenuAdapter::unknown004_2, 0, 0}},
@@ -50,7 +53,7 @@ static GfMenuArtsAdapter::TypeInfo TYPE_INFOS[] = {
 GfMenuArtsAdapter *GfMenuArtsAdapter::createFromList(u32 handle, u32 type, GfMenuArtsList *list, int listIndex, u32 driver, bool isUpdateAlways) {
   // __LINE__ must be 287 as in the original source: it is the line argument of operator new.
 #line 287
-  ListConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ListConverter(list, listIndex, driver);
+  ListConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ListConverter(list, listIndex, driver);
   return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 
@@ -69,14 +72,22 @@ GfMenuArtsAdapter *GfMenuArtsAdapter::createFromCoverter(u32 handle, u32 type, I
 GfMenuArtsAdapter *GfMenuArtsAdapter::createFromListReferenceDriver(u32 handle, u32 type, GfMenuArtsList *list, int listIndex, u32 driverIndex, bool isUpdateAlways) {
   // __LINE__ must be 296 as in the original source: it is the line argument of operator new.
 #line 296
-  ListReferenceDriverConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ListReferenceDriverConverter(list, listIndex, driverIndex);
+  ListReferenceDriverConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ListReferenceDriverConverter(list, listIndex, driverIndex);
+  return createFromCoverter(handle, type, converter, isUpdateAlways);
+}
+
+GfMenuArtsAdapter *GfMenuArtsAdapter::createFromListReferenceDriverReferenceIndex(u32 handle, u32 type, GfMenuArtsList *list, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number, u32 driverIndex,
+                                                                                  bool isUpdateAlways) {
+  // __LINE__ must be 305 as in the original source: it is the line argument of operator new.
+#line 305
+  IConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ListReferenceDriverConverterReferenceIndex(list, number, driverIndex);
   return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 
 GfMenuArtsAdapter *GfMenuArtsAdapter::createFromReferenceDriverSlot(u32 handle, u32 type, u32 driverIndex, u32 slot, bool isUpdateAlways) {
   // __LINE__ must be 314 as in the original source: it is the line argument of operator new.
 #line 314
-  ReferenceDriverSlotConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceDriverSlotConverter(driverIndex, slot);
+  ReferenceDriverSlotConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceDriverSlotConverter(driverIndex, slot);
   return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 
@@ -97,7 +108,7 @@ GfMenuArtsAdapter *GfMenuArtsAdapter::create(u32 handle, u32 type, u32 arts, u32
     if (plugin != nullptr) {
       // __LINE__ must be 374 as in the original source: it is the line argument of operator new.
 #line 374
-      GfMenuArtsAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuArtsAdapter(plugin, isUpdateAlways);
+      GfMenuArtsAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuArtsAdapter(plugin, isUpdateAlways);
       adapter->unknown30.bind(adapter, info.update);
       adapter->unknown58 = arts;
       adapter->unknown5c = driver;
@@ -256,7 +267,7 @@ bool GfMenuArtsAdapter::update_ArtsTextReact() {
       }
       u32 textId;
       if (iconInfo.unknown08 == 0) {
-        textId = GfMenuObjUtil::getMsgIDFromList(BDAT_MNU_MSG_REACTION_ALL, REACTION_MSG_NONE);
+        textId = GfMenuObjUtil::getMsgIDFromList(BDAT_MNU_MSG_REACTION_ALL, REACTION_MSG_UNKNOWN_7);
         if (textId == 0) {
           return false;
         }
@@ -283,7 +294,7 @@ bool GfMenuArtsAdapter::update_ArtsNumDamage() {
       u32 artsType = GfDataDriverArts::getArtsType(unknown58);
       u32 damage = GfDataDriverArts::getDamageMul(unknown58, currentLevel);
       if (artsType == 11) {
-        setNumber(damage / TALENT_ARTS_DAMAGE_DIVISOR);
+        setNumber(damage / TALENT_ARTS_UNKNOWN_30);
       } else {
         setNumber(damage);
       }
@@ -307,7 +318,7 @@ bool GfMenuArtsAdapter::update_ArtsEnhanceDescription() {
   }
   u32 enhance = GfDataDriverArts::getEnhance(unknown58, unknown60);
   if (enhance == 0) {
-    u32 textId = Bdat::getVal(GfDataBdat::getFP(BDAT_MNU_MSG_POUCH), "name", POUCH_MSG_NO_ENHANCE).valueU16;
+    u32 textId = Bdat::getVal(GfDataBdat::getFP(BDAT_MNU_MSG_POUCH), "name", POUCH_MSG_UNKNOWN_4).valueU16;
     ui::UIStr caption(GfDataBdat::getFP(BDAT_MENU_MS), textId);
     setText(caption);
   } else {
@@ -323,7 +334,7 @@ bool GfMenuArtsAdapter::update_ArtsIconReleseLv() {
     return false;
   }
   u32 cap = GfDataDriverArts::getLevelCap(unknown58, unknown64);
-  DataParamAcc acc(OBJECT_TYPE_DRIVER, unknown5c, GIMMICK_TYPE_NONE);
+  DataParamAcc acc(OBJECT_TYPE_PC, unknown5c, GIMMICK_TYPE_UNKNOWN_0);
   if (acc.isValid()) {
     setNumber(cap <= acc.getLevel(false));
     return true;
@@ -342,7 +353,7 @@ bool GfMenuArtsAdapter::update_ArtsNumDamageNextLv() {
   u32 artsType = GfDataDriverArts::getArtsType(unknown58);
   u32 damage = GfDataDriverArts::getDamageMul(unknown58, nextLevel);
   if (artsType == 11) {
-    setNumber(damage / TALENT_ARTS_DAMAGE_DIVISOR);
+    setNumber(damage / TALENT_ARTS_UNKNOWN_30);
   } else {
     setNumber(damage);
   }
@@ -371,7 +382,7 @@ bool GfMenuArtsAdapter::update_ArtsEnhanceDescriptionNextLv() {
   }
   u32 enhance = GfDataDriverArts::getEnhance(unknown58, nextLevel);
   if (enhance == 0) {
-    u32 textId = Bdat::getVal(GfDataBdat::getFP(BDAT_MNU_MSG_POUCH), "name", POUCH_MSG_NO_ENHANCE).valueU16;
+    u32 textId = Bdat::getVal(GfDataBdat::getFP(BDAT_MNU_MSG_POUCH), "name", POUCH_MSG_UNKNOWN_4).valueU16;
     ui::UIStr caption(GfDataBdat::getFP(BDAT_MENU_MS), textId);
     setText(caption);
   } else {
@@ -427,13 +438,13 @@ void GfMenuArtsAdapter::update(const fw::UpdateInfo &info) {
     }
   }
 
-  if (unknown30.isValid() && (unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
+  if (unknown30.isValid() && (unknown20 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) != 0) {
     if (unknown58 != 0) {
       setDisp(unknown30());
     } else {
       setDisp(false);
     }
-    unknown20 &= ~FLAG_CHANGED;
+    unknown20 &= ~FLAG_UNKNOWN_0;
   }
 }
 
@@ -483,7 +494,7 @@ void GfMenuArtsAdapter::ReferenceDriverSlotConverter::getArtsInfo(MenuArtsInfo &
   u32 driver = GfMenuReference::getReferenceDriverID(driverIndex);
   u32 weaponType;
   {
-    DataParamAcc acc(OBJECT_TYPE_DRIVER, driver, GIMMICK_TYPE_NONE);
+    DataParamAcc acc(OBJECT_TYPE_PC, driver, GIMMICK_TYPE_UNKNOWN_0);
     if (!acc.isValid()) {
       return;
     }

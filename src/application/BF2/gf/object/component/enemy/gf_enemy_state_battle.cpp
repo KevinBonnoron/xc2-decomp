@@ -88,7 +88,7 @@ const btl::EnemyParameter *StateBattleBase::GetEnemyParameterConst() const { ret
 bool StateBattleBase::IsDriver() const {
   const btl::EnemyParameter *parameter = GetEnemyParameterConst();
   if (!parameter->btl::CharacterParameter::m_invalidTarget) {
-    return parameter->unknown10 != INVALID_HANDLE;
+    return parameter->unknown10 != unknown020;
   }
 
   return false;
@@ -101,7 +101,7 @@ void StateBattleActionBase::BeforeUpdate(btl::BattleCharacter *character, GfComB
 void StateBattleActionBase::Update(btl::BattleCharacter *character, GfComBehaviorEnemy *behavior, const fw::UpdateInfo &info) { character->Update(); }
 
 bool StateBattleActionBase::recieveMessage(void *owner, fw::MessageObject *sender, fw::Message &message) {
-  if (message.unknown00 == MSG_OBJECT_NOTIFY_ASM_CALLBACK) {
+  if (message.unknown00 == MSG_OBJECT_UNKNOWN_16777279) {
     ProcMessageAsmCallback(static_cast<GfComBehaviorEnemy *>(owner), sender, static_cast<MsgObjectNotifyAsmCallback &>(message));
     return true;
   }
@@ -154,7 +154,7 @@ void StateBattle::CheckInvalidTarget(btl::BattleCharacter *character, GfComBehav
 void StateBattle::Leave(GfComBehaviorEnemy *behavior, ai::State *next) {
   GetBattleCharacter()->NotifyBattleEnd();
   GfObjAcc acc(static_cast<GfObj *>(behavior->unknown08));
-  acc.setFlag(OBJ_FLAG_UNKNOWN_17, true);
+  acc.setFlag(OBJ_FLAG_UNKNOWN_23, true);
 }
 
 void StateBattle::Update(btl::BattleCharacter *character, GfComBehaviorEnemy *behavior, const fw::UpdateInfo &info) {

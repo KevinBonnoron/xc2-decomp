@@ -30,8 +30,8 @@ void GfMenuFullScreen::initialize(const GfSetupParam &param) { unknown08 = true;
 void GfMenuFullScreen::build(const GfSetupParam &param) {
 // __LINE__ must be 89 as in the original file: it is the line argument of operator new.
 #line 89
-  GfMenuFullScreen *fullScreen = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfMenuFullScreen(param);
-  for (u16 i = 0; i < LAYER_COUNT; i++) {
+  GfMenuFullScreen *fullScreen = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfMenuFullScreen(param);
+  for (u16 i = 0; i < LAYER_UNKNOWN_4; i++) {
     fullScreen->resetLayer(i);
   }
 }
@@ -84,7 +84,7 @@ bool GfMenuFullScreen::isDisp() {
   if (fullScreen == nullptr) {
     return false;
   }
-  for (u32 i = 0; i < LAYER_COUNT; i++) {
+  for (u32 i = 0; i < LAYER_UNKNOWN_4; i++) {
     if (fullScreen->unknown18[i].unknown00 != 0) {
       return true;
     }
@@ -210,14 +210,14 @@ bool GfMenuFullScreen::getLayerParam(u32 layer, GfMenuTypes::Param &param) {
 
 void GfMenuFullScreen::registLayerObject(u32 layer, u32 object) {
   u16 group = getLayerGroup(layer);
-  if (group < LAYER_COUNT) {
+  if (group < LAYER_UNKNOWN_4) {
     get()->unknown18[group].unknown30 = object;
   }
 }
 
 void GfMenuFullScreen::setShadowLayer(u32 layer, bool shadow) {
   u16 group = getLayerGroup(layer);
-  if (group < LAYER_COUNT) {
+  if (group < LAYER_UNKNOWN_4) {
     get()->unknown18[group].unknown34 = shadow;
   }
 }
@@ -225,7 +225,7 @@ void GfMenuFullScreen::setShadowLayer(u32 layer, bool shadow) {
 u32 GfMenuFullScreen::getLayerGroup(u32 layer) {
   GfMenuFullScreen *fullScreen = get();
   if (layer != 0 && fullScreen != nullptr) {
-    for (u16 i = 0; i < LAYER_COUNT; i++) {
+    for (u16 i = 0; i < LAYER_UNKNOWN_4; i++) {
       if (fullScreen->unknown18[i].unknown00 == layer) {
         return i;
       }
@@ -281,7 +281,7 @@ void GfMenuFullScreen::close(bool isFadeOut, bool isFadeIn) {
 
 void GfMenuFullScreen::switchLayerStart() {
   startProcess();
-  for (u32 i = 0; i < LAYER_COUNT; i++) {
+  for (u32 i = 0; i < LAYER_UNKNOWN_4; i++) {
     if (unknown18[i].unknown00 != 0) {
       ui::UIManager::get()->terminateLayer(unknown18[i].unknown00, false);
     }
@@ -308,7 +308,7 @@ void GfMenuFullScreen::switchLayerWaitFadeOut() {
   } else if (GfManager::isExecModeScenarioGame()) {
     renderParam.setViewRenderSkip(0, true);
   }
-  for (u16 i = 0; i < LAYER_COUNT; i++) {
+  for (u16 i = 0; i < LAYER_UNKNOWN_4; i++) {
     releaseLayer(i);
   }
   unknown110.bind(this, &GfMenuFullScreen::switchLayerWaitRelease);
@@ -316,7 +316,7 @@ void GfMenuFullScreen::switchLayerWaitFadeOut() {
 }
 
 void GfMenuFullScreen::switchLayerWaitRelease() {
-  for (u32 i = 0; i < LAYER_COUNT; i++) {
+  for (u32 i = 0; i < LAYER_UNKNOWN_4; i++) {
     if (unknown18[i].unknown00 != 0) {
       return;
     }
@@ -328,7 +328,7 @@ void GfMenuFullScreen::switchLayerOpenScreen() {
   if (unknown10 == 0) {
     GfMenuObjOperationInfo::close();
     GfMenuObjCommonText::close();
-    for (u16 i = 0; i < LAYER_COUNT; i++) {
+    for (u16 i = 0; i < LAYER_UNKNOWN_4; i++) {
       resetLayer(i);
     }
     unknown188.clear();
@@ -378,7 +378,7 @@ void GfMenuFullScreen::switchLayerWaitFadeIn() {
 }
 
 void GfMenuFullScreen::subLayerWaitRelease() {
-  for (u16 i = unknown158.unknown04; i < LAYER_COUNT; i++) {
+  for (u16 i = unknown158.unknown04; i < LAYER_UNKNOWN_4; i++) {
     if (unknown18[i].unknown00 != 0) {
       return;
     }

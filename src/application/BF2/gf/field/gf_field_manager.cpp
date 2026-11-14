@@ -37,7 +37,7 @@ namespace gf {
 
 GfFieldManager::GfFieldManager(const GfSetupParam &param) : unknown18(false), unknown1c(0.0f) {
   initialize(param);
-  GfObjManager::addListener(this, OBJEVT_ALL);
+  GfObjManager::addListener(this, OBJEVT_UNKNOWN_0);
 }
 
 void GfFieldManager::initialize(const GfSetupParam &param) {
@@ -58,7 +58,7 @@ void GfFieldManager::initialize(const GfSetupParam &param) {
   GfFobjManager::build(param);
   GfFieldDmgManager::build(param);
   unknown18 = true;
-  SCOM_SCRIPT::create(SCRIPT_SLOT_FIELD_SYSTEM, "field", false);
+  SCOM_SCRIPT::create(SCRIPT_SLOT_UNKNOWN_0, "field", false);
 }
 
 GfFieldManager::~GfFieldManager() { GfObjManager::removeListener(this); }
@@ -66,7 +66,7 @@ GfFieldManager::~GfFieldManager() { GfObjManager::removeListener(this); }
 void GfFieldManager::build(const GfSetupParam &param) {
   // __LINE__ must be 70 as in the original file: its value changes the instruction order.
 #line 70
-  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfFieldManager(param);
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfFieldManager(param);
 }
 
 void GfFieldManager::destroy() {
@@ -157,7 +157,7 @@ bool GfFieldManager::isExecMapScriptBusy() { return GfFieldZoneScript::isExecScr
 
 bool GfFieldManager::isDestroyMapScriptBusy() { return GfFieldZoneScript::isDestroyScriptBusy(); }
 
-void GfFieldManager::updateGlobalWind() { fw::RenderParam::setGlobalWindPower(fw::WindManager::getGlobalWindPower(), fw::CAMERA_TYPE_MAIN); }
+void GfFieldManager::updateGlobalWind() { fw::RenderParam::setGlobalWindPower(fw::WindManager::getGlobalWindPower(), fw::CAMERA_TYPE_UNKNOWN_0); }
 
 f32 GfFieldManager::getEnemyBaloonRadius() { return get()->unknown1c; }
 
@@ -199,7 +199,7 @@ f32 GfFieldManager::getLandmarkRotY() {
 }
 
 void GfFieldManager::gevMapjump(GEV event, const MapjumpCallbackInfo &info) {
-  if (event == GEV_MAPJUMP_CREATE_FIELD) {
+  if (event == GEV_UNKNOWN_5) {
     getFieldParam(info.unknown00);
   }
   GfFieldZone::get()->gevMapjump(event, info);
@@ -267,7 +267,7 @@ void GfFieldManager::update(const fw::UpdateInfo &info) {
     GfFieldSound::get()->update(info);
   }
   GfFieldWeather::update(info);
-  if (!GfPause::isPause(PAUSE_BIT_SYSTEM)) {
+  if (!GfPause::isPause(PAUSE_BIT_UNKNOWN_0)) {
     GfFobjManager::update(info);
     GfFieldGimmick::update(info);
     GfFieldCollect::update(info);

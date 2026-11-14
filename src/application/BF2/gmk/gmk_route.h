@@ -32,12 +32,12 @@ public:
     s8 unknown10;  // Inferred role: width side; original member name unknown.
   };
 
-  static const u32 FLAG_CLOSED = 1 << 0;
-  static const u32 FLAG_FORWARD = 1 << 1;
-  static const u32 FLAG_REVERSE = 1 << 2;
+  static const u32 FLAG_UNKNOWN_0 = 1 << 0; // Inferred role: flag closed; original name unknown.
+  static const u32 FLAG_UNKNOWN_1 = 1 << 1; // Inferred role: flag forward; original name unknown.
+  static const u32 FLAG_UNKNOWN_2 = 1 << 2; // Inferred role: flag reverse; original name unknown.
   static const u32 FLAG_UNKNOWN_3 = 1 << 3; // Inferred role: the routed enemies stop at the end of the route; original name unknown.
 
-  static const GmkType GMK_TYPE = GMK_TYPE_ROUTE;
+  static const GmkType GMK_TYPE = GMK_TYPE_ROUTE; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkRoute();
   ~GmkRoute() override { GmkRoute::dispose(); }
@@ -85,11 +85,11 @@ public:
     u8 unknown28;       // Role and original member name unknown.
   };
 
-  static const u32 FLAG_LINE = 1 << 0;
+  static const u32 FLAG_UNKNOWN_0 = 1 << 0; // Inferred role: flag line; original name unknown.
   static const u32 FLAG_UNKNOWN_1 = 1 << 1;
   static const u32 FLAG_UNKNOWN_2 = 1 << 2;
 
-  static const GmkType GMK_TYPE = GMK_TYPE_ROUTE_POINT;
+  static const GmkType GMK_TYPE = GMK_TYPE_ROUTE_POINT; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkRoutePoint() : unknown48(nullptr) {}
   ~GmkRoutePoint() override { dispose(); }

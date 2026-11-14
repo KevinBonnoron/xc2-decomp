@@ -6,10 +6,12 @@
 #include "gf/object/component/pc/gf_pc_asm_cmd_id_field.h"
 #include "gf/object/component/pc/gf_pc_property_field.h"
 #include "mm_math/mm_plane.h"
+#include "mm_mtl/fixed_queue.h"
 #include "types.h"
 
 namespace mm {
 struct Vec3;
+struct Vec2;
 } // namespace mm
 
 namespace gf {
@@ -57,12 +59,13 @@ f32 calcInputDiffAngleVel(GfComPropertyPc &property);
 class StateUtilField {
 public:
   enum Timing {
-    TIMING_UNDER_GROUND,
-    TIMING_GROUND,
-    TIMING_AIR,
+    TIMING_UNKNOWN_0, // Inferred role: timing under ground; original name unknown.
+    TIMING_UNKNOWN_1, // Inferred role: timing ground; original name unknown.
+    TIMING_UNKNOWN_2, // Inferred role: timing air; original name unknown.
   };
 
   static bool execAsmCmd(GfComAsm &comAsm, ASM_CMD_ID_FIELD id);
+  static bool requestBattleStart(GfComPropertyPc &property);
   static bool testVechile(GfComBehaviorPc &behavior);
   static void setEnableFallIntoColi(GfComBehaviorPc &behavior, bool isEnable);
   static bool isWalkMode(GfComPropertyPc &property);
@@ -90,6 +93,7 @@ public:
   static bool isEndSlipPosuture(GfComBehaviorPc &behavior);
   static bool isStartSlidePosuture(GfComBehaviorPc &behavior);
   static bool isTurnEndRange(GfComPropertyPc &property);
+  static bool isTurnRange(GfComPropertyPc &property, mm::mtl::FixedQueue<mm::Vec2, 2> &queue);
   static bool isBackRange(GfComPropertyPc &property);
   static bool isBackRangeAir(GfComPropertyPc &property);
   static bool ignoreOnGroundJump(GfComPropertyPc &property, f32 time);

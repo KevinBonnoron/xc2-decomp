@@ -1,8 +1,10 @@
 #include "gf/menu/object/gf_menu_obj_damage_value.h"
 
+#include "gf/gf_allocator.h"
 #include "gf/menu/gf_menu_types.h"
 #include "types.h"
 #include "ui/event/ui_event_data.h"
+#include "ui/event/ui_event_manager.h"
 
 namespace gf {
 
@@ -16,6 +18,25 @@ GfMenuObjDamageValue::~GfMenuObjDamageValue() { GfMenuManyObjects::destroy<Damag
 void GfMenuObjDamageValue::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjDamageValue::update() { GfMenuObject::update(); }
+
+void GfMenuObjDamageValue::initialize() {
+  ui::UIObjectAcc acc(unknown18);
+  u32 main = acc.searchChild("LAY_main");
+  if (ui::UIObjectAcc(main).isValid()) {
+    attachExternalCall(unknown001, main);
+// __LINE__ must be 84 as in the original file: it is the line argument of operator new.
+#line 84
+    ListListener *listener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ListListener(this);
+    listener->addRef();
+    ui::UIEventManager::get()->registObjectListener(main, listener);
+    if (listener != nullptr) {
+      listener->release();
+    }
+  }
+  ui::UIObjectAcc(unknown18).setTerm();
+  GfMenuObject::initialize();
+  GfMenuManyObjects::unknown002<DamageInfo>(GfMenuManyObjects::unknown001_0, 32);
+}
 
 void GfMenuObjDamageValue::removeObject(ui::UIObjectAcc acc) {
   GfMenuManyObjects::remove<DamageInfo>(GfMenuManyObjects::unknown001_0, acc.unknown10);

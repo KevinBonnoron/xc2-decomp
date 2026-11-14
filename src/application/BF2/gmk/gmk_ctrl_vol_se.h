@@ -23,7 +23,7 @@ public:
   struct CreateInfo {
     CreateInfo()
         : unknown00(nullptr), unknown08(0), unknown0c(static_cast<fw::SoundCategory>(6)), unknown10(0.0f), unknown14(10.0f), unknown18(0), unknown19(100), unknown1a(100), unknown20(mm::Vec3::zero),
-          unknown30(gf::INVALID_HANDLE) {}
+          unknown30(gf::unknown020) {}
 
     fw::SoundPack *unknown00;     // Inferred role: sound pack; original member name unknown.
     u16 unknown08;                // Inferred role: sound id; original member name unknown.

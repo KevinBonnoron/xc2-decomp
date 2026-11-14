@@ -94,7 +94,7 @@ void FileResTh::setMem(void *buffer, int size, const char *name, bool isBufferOw
 }
 
 bool FileResTh::OnFileEvent(EventFileTh *event) {
-  if (event->type == EventFileTh::TYPE_COMPLETE) {
+  if (event->type == EventFileTh::TYPE_UNKNOWN_2) {
     void *buffer = unknownc0->unknown08;
     unknownc0->unknown08 = nullptr;
     unknownc8 = buffer;

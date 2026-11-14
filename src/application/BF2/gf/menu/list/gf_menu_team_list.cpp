@@ -13,7 +13,7 @@ GfMenuTeamList::~GfMenuTeamList() { ; }
 GfMenuTeamList *GfMenuTeamList::create() {
   // __LINE__ must be 38 as in the original source: it is the line argument of operator new.
 #line 38
-  GfMenuTeamList *list = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuTeamList();
+  GfMenuTeamList *list = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuTeamList();
   list->addRef();
   return list;
 }
@@ -25,7 +25,7 @@ void GfMenuTeamList::setupFromMercenaries(const TeamSetup &setup) {
     teams.push_back(team);
   }
   SetupParam param = setup.param;
-  UIListInfo<MenuTeamInfo>::setup(getAllocator(ALLOCATOR_DEFAULT), param);
+  UIListInfo<MenuTeamInfo>::setup(getAllocator(ALLOCATOR_UNKNOWN_0), param);
   if (isValid()) {
     MenuTeamInfo info = {};
     for (u32 i = 0; i < teams.size(); i++) {

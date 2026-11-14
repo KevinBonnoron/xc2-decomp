@@ -44,9 +44,10 @@ public:
     GmkRoutedEnemy *unknown08; // Inferred role: owner; original member name unknown.
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_ROUTED_ENEMY;
+  static const GmkType GMK_TYPE = GMK_TYPE_ROUTED_ENEMY; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
-  ~GmkRoutedEnemy() override;
+  GmkRoutedEnemy();
+  ~GmkRoutedEnemy() override { dispose(); }
   GmkType getGmkType() const override;
   const IGmkList *getBindedRoutePointList() const override;
   bool isValid() const override;
@@ -62,6 +63,7 @@ public:
   GmkRouteNavi *findFreeRouteNavi() const;
   GmkRouteNavi *findRouteNavi(gf::GF_OBJ_HANDLE *handle) const;
   void createRouteNavis(u32 num);
+  void disposeRouteNavis();
   void onEnemyDead(gf::GF_OBJ_HANDLE *handle);
 
   const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
@@ -105,7 +107,7 @@ public:
     void create(CBdatWrapper, int, const AGmkBase &) {}
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_ROUTED_ENEMY_POINT;
+  static const GmkType GMK_TYPE = GMK_TYPE_ROUTED_ENEMY_POINT; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkRoutedEnemyPoint() {}
   ~GmkRoutedEnemyPoint() override { dispose(); }

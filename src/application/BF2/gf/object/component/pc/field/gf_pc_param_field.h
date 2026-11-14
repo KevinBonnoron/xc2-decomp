@@ -12,6 +12,8 @@ namespace pc {
 
 // Field names and offsets from the reflection built by gf::pc::FieldParam::createReflection.
 struct FieldParam {
+  static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
+
   f32 accelThreshold;
   u32 stopCnt;
   f32 turnAngle;
@@ -34,6 +36,8 @@ static_assert(sizeof(FieldParam) == 0x2c, "");
 
 // Field names and offsets from the reflection built by gf::pc::WaterCommonParam::createReflection.
 struct WaterCommonParam {
+  static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
+
   f32 sinkTime;
   f32 sinkDepth;
   f32 swimEnableSpeed;
@@ -50,6 +54,8 @@ static_assert(sizeof(WaterCommonParam) == 0x24, "");
 
 // Field names and offsets from the reflection built by gf::pc::WallCommonParam::createReflection.
 struct WallCommonParam {
+  static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
+
   f32 adsorptionAngle;
   f32 adsorptionAngleUuderGround;
   f32 adsorptionOffset;
@@ -73,6 +79,8 @@ static_assert(sizeof(WallCommonParam) == 0x3c, "");
 
 // Field names and offsets from the reflection built by gf::pc::WallMoveParam::createReflection.
 struct WallMoveParam {
+  static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
+
   f32 upSpeed;
   f32 sideSpeed;
   f32 downSpeed;
@@ -150,26 +158,18 @@ static_assert(offsetof(WallAiParam, escapeRange) == 0x10, "");
 static_assert(offsetof(WallAiParam, delay) == 0x18, "");
 static_assert(sizeof(WallAiParam) == 0x1c, "");
 
-// Field names and offsets from the reflection built by gf::pc::WarpParam::createReflection.
-struct WarpParam {
+// Field names and offsets from the reflection built by gf::pc::UniqueIdleParam::createReflection.
+struct UniqueIdleParam {
   static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
 
-  f32 distanceHorz;
-  f32 distanceVert;
-  f32 stackTime;
-  f32 naviSearchUp;
-  f32 naviSearchDown;
-  f32 fadeTime;
-  f32 wallSearchDist;
-  f32 distanceHorzWall;
-  f32 distanceVertWall;
+  f32 interval;
+  f32 probability;
 };
 
-static_assert(offsetof(WarpParam, stackTime) == 0x08, "");
-static_assert(offsetof(WarpParam, distanceHorzWall) == 0x1c, "");
-static_assert(offsetof(WarpParam, distanceVertWall) == 0x20, "");
-static_assert(sizeof(WarpParam) == 0x24, "");
+static_assert(offsetof(UniqueIdleParam, probability) == 0x04, "");
+static_assert(sizeof(UniqueIdleParam) == 0x08, "");
 
+fw::Reflection *createReflectionField();
 fw::Reflection *createReflectionFieldAI();
 
 } // namespace pc

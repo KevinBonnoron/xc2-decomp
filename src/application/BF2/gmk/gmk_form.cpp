@@ -18,11 +18,10 @@ struct GF_OBJ_HANDLE;
 
 namespace gmk {
 
-extern template bool GmkForm::create<GmkFormPc, GmkFormPcnpc>(const GmkFormPc &);
 template bool GmkForm::create<GmkFormPcEv, GmkFormPcnpcEv>(const GmkFormPcEv &);
 
 GmkForm::GmkForm(const CreateInfo *info) : unknown00(0) {
-  for (u32 i = 0; i < MAX_NUM; i++) {
+  for (u32 i = 0; i < MAX_UNKNOWN_6; i++) {
     unknown10[i] = mm::Vec3::zero;
     unknown70[i] = 0.0f;
   }
@@ -45,7 +44,7 @@ bool GmkForm::create(const CreateInfo &info) {
       }
     }
   } else {
-    const IGmkList *list = set->unknown1b8[GMK_TYPE_FORM_PC_EV];
+    const IGmkList *list = set->unknown1b8[GMK_TYPE_UNKNOWN_26];
     if (list != nullptr && list->getInstNum() > index) {
       const GmkFormPcEv *formPc = static_cast<const GmkFormPcEv *>(list->getInst(index));
       if (formPc != nullptr && create<GmkFormPcEv, GmkFormPcnpcEv>(*formPc)) {
@@ -75,7 +74,7 @@ void GmkForm::dispose() { unknown00 = 0; }
 void GmkForm::apply(f32 snapDistance) {
   for (u32 i = 0; i < 3; i++) {
     gf::GF_OBJ_HANDLE *driver = gf::GfGameParty::getHandleDriver(i);
-    if (driver != gf::INVALID_HANDLE) {
+    if (driver != gf::unknown020) {
       gf::GfObjSetupDriver *setup = gf::GfObjUtil::getObjSetup<gf::GfObjSetupDriver>(driver);
       mm::Vec3 position;
       f32 rotationY;
@@ -92,7 +91,7 @@ void GmkForm::apply(f32 snapDistance) {
       }
     }
     gf::GF_OBJ_HANDLE *blade = gf::GfGameParty::getHandleBlade(i, -1);
-    if (blade != gf::INVALID_HANDLE) {
+    if (blade != gf::unknown020) {
       gf::GfObjSetupBlade *setup = gf::GfObjUtil::getObjSetup<gf::GfObjSetupBlade>(blade);
       mm::Vec3 position;
       f32 rotationY;

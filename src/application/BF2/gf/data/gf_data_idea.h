@@ -4,7 +4,7 @@
 
 namespace gf {
 
-constexpr u32 IDEA_LEVEL_MAX = 10;
+constexpr u32 IDEA_LEVEL_UNKNOWN_10 = 10; // Inferred role: idea level max; original name unknown.
 
 class GfDataIdea {
 public:
@@ -15,7 +15,7 @@ public:
 };
 
 struct SDataIdea {
-  static const u32 IDEA_MAX = 4;
+  static const u32 IDEA_UNKNOWN_4 = 4; // Inferred role: idea max; original name unknown.
 
   // Inferred role: idea; original type name unknown.
   struct unknown004 {
@@ -26,7 +26,7 @@ struct SDataIdea {
   void setLevel(u32 idea, int level);
   void setPoint(u32 idea, u32 point);
 
-  unknown004 unknown00[IDEA_MAX]; // Inferred role: ideas; original member name unknown.
+  unknown004 unknown00[IDEA_UNKNOWN_4]; // Inferred role: ideas; original member name unknown.
 };
 
 static_assert(sizeof(SDataIdea) == 0x20, "");

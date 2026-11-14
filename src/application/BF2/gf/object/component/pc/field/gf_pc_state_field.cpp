@@ -56,7 +56,7 @@ void StateField::leave(GfComBehaviorPc *behavior, ai::State *next) {
 
 void StateField::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
   GfComPropertyPc *property = behavior->getProperty();
-  if (property->unknown60.unknown08.test(INPUT_ID_LOCK)) {
+  if (property->unknown60.unknown08.test(INPUT_ID_UNKNOWN_1)) {
     StateUtilField::flipAutoRun(*property);
   }
   if (StateUtilField::isInputInverseDirAutoRun(*property)) {
@@ -71,41 +71,41 @@ void StateField::onDead(GfComBehaviorPc *behavior, MsgObjectNotifyDead &message)
   StateUtil::notifyDead(*behavior, message, true);
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
-  if (message.unknown08 == DEAD_TYPE_EMERGENCY_ESCAPE) {
-    if (__builtin_strcmp(comAsm->getStateName(ANIM_LAYER_BASE), "S_fall") != 0) {
-      comAsm->setState("S_fall", ANIM_LAYER_BASE);
+  if (message.unknown08 == DEAD_TYPE_UNKNOWN_4) {
+    if (__builtin_strcmp(comAsm->getStateName(ANIM_LAYER_UNKNOWN_0), "S_fall") != 0) {
+      comAsm->setState("S_fall", ANIM_LAYER_UNKNOWN_0);
     }
-    comAsm->execCmd("C_falldead", ANIM_LAYER_BASE);
+    comAsm->execCmd("C_falldead", ANIM_LAYER_UNKNOWN_0);
     StateUtil::setFallDamageDisable(*behavior, true);
     MsgPcFieldReqFallDeadMotion request;
     StateUtil::sendMessageToBuddy(*behavior, request);
   } else {
     bool isSlide = property->unknown110_4;
-    comAsm->setState("S_idle", ANIM_LAYER_BASE);
+    comAsm->setState("S_idle", ANIM_LAYER_UNKNOWN_0);
     if (!isSlide) {
       if (!StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_DOWN_00)) {
         StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_DEAD);
       }
-      reqState(STATE_ID_FIELD_AIR_DEAD);
+      reqState(STATE_ID_UNKNOWN_60);
     } else {
       StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_DEAD);
-      reqState(STATE_ID_FIELD_DEAD);
+      reqState(STATE_ID_UNKNOWN_58);
     }
   }
 }
 
 bool StateField::recieveMessage(void *owner, fw::MessageObject *sender, fw::Message &message) {
   switch (message.unknown00) {
-  case MSG_PC_BATTLE_START:
+  case MSG_PC_BATTLE_UNKNOWN_16777226:
     procMsgPcBattleStart(static_cast<GfComBehaviorPc *>(owner), sender, static_cast<MsgPcBattleStart &>(message));
     break;
-  case MSG_PC_FIELD_RELAY_SURVIVE:
+  case MSG_PC_FIELD_UNKNOWN_16777246:
     procMsgPcFieldRelaySurvive(static_cast<GfComBehaviorPc *>(owner), sender, static_cast<MsgPcFieldRelaySurvive &>(message));
     break;
-  case MSG_OBJECT_NOTIFY_DAMAGE:
+  case MSG_OBJECT_UNKNOWN_16777271:
     procMsgObjectNotifyDamage(static_cast<GfComBehaviorPc *>(owner), sender, static_cast<MsgObjectNotifyDamage &>(message));
     break;
-  case MSG_OBJECT_NOTIFY_DEAD:
+  case MSG_OBJECT_UNKNOWN_16777272:
     procMsgObjectNotifyDead(static_cast<GfComBehaviorPc *>(owner), sender, static_cast<MsgObjectNotifyDead &>(message));
     break;
   default:
@@ -117,7 +117,7 @@ bool StateField::recieveMessage(void *owner, fw::MessageObject *sender, fw::Mess
 
 void StateField::procMsgPcBattleStart(GfComBehaviorPc *behavior, fw::MessageObject *sender, MsgPcBattleStart &message) {
   behavior->unknown08->getComponent<GfComPropertyPc>()->unknown470.SetStartCondition(message);
-  reqState(STATE_ID_BATTLE_START);
+  reqState(STATE_ID_UNKNOWN_63);
 }
 
 void StateField::procMsgObjectNotifyDamage(GfComBehaviorPc *behavior, fw::MessageObject *sender, MsgObjectNotifyDamage &message) {
@@ -132,17 +132,17 @@ void StateField::procMsgObjectNotifyDamage(GfComBehaviorPc *behavior, fw::Messag
 
 void StateField::procMsgObjectNotifyDead(GfComBehaviorPc *behavior, fw::MessageObject *sender, MsgObjectNotifyDead &message) {
   const MsgObjectDamage *damage = message.unknown10;
-  if (damage != nullptr && damage->unknown00 == MSG_OBJECT_DAMAGE && damage->unknown10 == 0) {
+  if (damage != nullptr && damage->unknown00 == MSG_OBJECT_UNKNOWN_16777266 && damage->unknown10 == 0) {
     GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
     property->unknown80 = mm::Vec3::zero;
     property->unknown90 = 0.0f;
     property->unknown94 = 0.0f;
     MsgPcBattleStart start(2);
     property->unknown470.SetStartCondition(start);
-    reqState(STATE_ID_BATTLE_START);
+    reqState(STATE_ID_UNKNOWN_63);
   } else {
     onDead(behavior, message);
-    if (message.unknown08 != DEAD_TYPE_EMERGENCY_ESCAPE) {
+    if (message.unknown08 != DEAD_TYPE_UNKNOWN_4) {
       MsgPcFieldRelaySurvive relay(&message);
       StateUtil::sendMessageToBuddy(*behavior, relay);
     }
@@ -151,7 +151,7 @@ void StateField::procMsgObjectNotifyDead(GfComBehaviorPc *behavior, fw::MessageO
 
 void StateField::procMsgPcFieldRelaySurvive(GfComBehaviorPc *behavior, fw::MessageObject *sender, MsgPcFieldRelaySurvive &message) {
   fw::Message *relayed = message.unknown08;
-  if (relayed != nullptr && relayed->unknown00 == MSG_OBJECT_NOTIFY_DEAD) {
+  if (relayed != nullptr && relayed->unknown00 == MSG_OBJECT_UNKNOWN_16777272) {
     onDead(behavior, static_cast<MsgObjectNotifyDead &>(*relayed));
   }
 }

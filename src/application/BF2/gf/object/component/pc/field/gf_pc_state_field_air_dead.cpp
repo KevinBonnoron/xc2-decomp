@@ -15,7 +15,7 @@ namespace pc {
 
 void StateFieldAirDead::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
-  unknown18 = __builtin_strcmp(comAsm->getStateName(ANIM_LAYER_BASE), "S_down_00") == 0;
+  unknown18 = __builtin_strcmp(comAsm->getStateName(ANIM_LAYER_UNKNOWN_0), "S_down_00") == 0;
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   property->unknown80 = mm::Vec3::zero;
   property->unknown90 = 4.3f;
@@ -32,10 +32,10 @@ void StateFieldAirDead::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &
       StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_DOWN_01);
     }
     StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_DEAD);
-    reqState(STATE_ID_FIELD_DEAD);
+    reqState(STATE_ID_UNKNOWN_58);
     return;
   }
-  if (unknown18 && comAsm->isEnd(ANIM_LAYER_BASE) && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_DOWN_01)) {
+  if (unknown18 && comAsm->isEnd(ANIM_LAYER_UNKNOWN_0) && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_DOWN_01)) {
     unknown18 = false;
   }
   MoveUtilField::updateFallDown(info, *property);

@@ -3,10 +3,61 @@
 #include <new>
 
 #include "gf/menu/call/gf_menu_call_context.h"
+#include "gf/menu/gf_menu_reference.h"
 #include "gf/menu/object/gf_menu_obj_field_skill.h"
 #include "mm_mtl/reference_object.h"
 
 namespace gf {
+
+GfMenuFieldSkill::~GfMenuFieldSkill() { mm::mtl::safeRelease(unknown1f8); }
+
+bool GfMenuFieldSkill::isDisp() { return true; }
+
+bool GfMenuFieldSkill::isInitialized() { return true; }
+
+void GfMenuFieldSkill::postUpdate(const fw::UpdateInfo &info) {
+  GfMenuFieldSkill *skill = get();
+  if (skill != nullptr) {
+    GfMenuCallContext::GfMenuResult result;
+    if (skill->unknown1f8 != nullptr && skill->unknown1f8->isActive() && !skill->unknown1f8->unknown18.empty() && (skill->unknown1f8->popResult(result), result.unknown04 == 2)) {
+      skill->unknown218 = true;
+    }
+    skill->unknown08.update(&info);
+  }
+}
+
+bool GfMenuFieldSkill::start(const StartParam &param) {
+  GfMenuFieldSkill *skill = get();
+  bool started = false;
+  if (skill != nullptr) {
+    if (!isRunning()) {
+      if (param.unknown00 != 0 || !param.unknown08.empty()) {
+        skill->unknown80 = param;
+        skill->unknown218 = false;
+        started = true;
+        skill->unknown08.setState(1);
+        GfMenuReference::setReferenceBladeID(5, 0);
+      }
+    }
+  }
+  return started;
+}
+
+bool GfMenuFieldSkill::isRunning() {
+  GfMenuFieldSkill *skill = get();
+  return skill != nullptr && skill->unknown08.getState()->unknown08 != 0;
+}
+
+int GfMenuFieldSkill::getTotalSkillIndex(GfMenuFieldSkill *skill, u16 id) {
+  int index = 0;
+  for (const StartParam::unknown001 *it = skill->unknown80.unknown120.begin(); it != skill->unknown80.unknown120.end(); it++) {
+    if (it->unknown00 == id) {
+      return index;
+    }
+    index++;
+  }
+  return -1;
+}
 
 ai::State *GfMenuFieldSkill::StateIdle::create(void *buffer) { return new (buffer) StateIdle; }
 
@@ -32,7 +83,7 @@ void GfMenuFieldSkill::StateStart::onEnter(void *owner, ai::State *previous) {
 void GfMenuFieldSkill::StateStart::onLeave(void *owner, ai::State *next) {}
 
 void GfMenuFieldSkill::StateStart::onStep(void *owner, const void *param) {
-  switch (static_cast<GfMenuFieldSkill *>(owner)->unknown80) {
+  switch (static_cast<GfMenuFieldSkill *>(owner)->unknown80.unknown00) {
   case 0:
     reqState(2);
     break;

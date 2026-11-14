@@ -1,11 +1,10 @@
 // Same order as in the game executable.
 // clang-format off
 #include "gf/field/gf_mob_slot_manager.cpp"
+#include "gf/data/gf_data_blade.h"
 // clang-format on
 
 #include "gf/field/gf_field_gimmick.h"
-#include "mm_mtl/map.h" // IWYU pragma: keep
-
 #include "fw/fw_update_info.h"
 #include "gf/asset/gf_slot.h"
 #include "gf/data/gf_character_id.h"
@@ -24,6 +23,7 @@
 #include "mm_mtl/algorithm.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
+#include "mm_mtl/map.h" // IWYU pragma: keep
 #include "mm_mtl/singleton.h"
 #include "mm_mtl/vector.h"
 #include "mtl/alloc_handle.h"
@@ -113,12 +113,12 @@ constexpr f32 unknown005 = 0.75f;
 
 GfFieldGimmick::GfFieldGimmick(const GfSetupParam &param) : unknownf4a8(false), unknownf4c0(nullptr), unknownfe40(false), unknownfe41(true) {
   initialize(param);
-  GfObjManager::addListener(this, OBJEVT_ALL);
+  GfObjManager::addListener(this, OBJEVT_UNKNOWN_0);
 }
 
 void GfFieldGimmick::initialize(const GfSetupParam &) {
   gmk::GmkManager::CreateInfo info;
-  info.unknown00 = getAllocator(ALLOCATOR_UNKNOWN09)->getMemHandle();
+  info.unknown00 = getAllocator(ALLOCATOR_UNKNOWN_9)->getMemHandle();
   info.unknown04 = "bdat/common_gmk.bdat";
   info.unknown28 = "RSC_GmkSetList";
   info.unknown4c = 1;
@@ -126,16 +126,18 @@ void GfFieldGimmick::initialize(const GfSetupParam &) {
   unknownf4a8 = true;
 }
 
+GfFieldGimmick::~GfFieldGimmick() { GfObjManager::removeListener(this); }
+
 void GfFieldGimmick::listenerGfObj(OBJEVT, GF_OBJ_HANDLE *, u32) {}
 
 void GfFieldGimmick::gevMapjump(GEV event, const MapjumpCallbackInfo &info) {
   switch (event) {
-  case GEV_MAPJUMP_START:
+  case GEV_UNKNOWN_1:
     if (info.unknown0c) {
       unknownfe40 = true;
     }
     break;
-  case GEV_MAPJUMP_DESTROY_FIELD:
+  case GEV_UNKNOWN_2:
     for (gmk::GmkSet **it = unknown20.unknownf358.begin(); it != unknown20.unknownf358.end(); ++it) {
       gmk::GmkEffectList *list = static_cast<gmk::GmkEffectList *>((*it)->getGmkList(gmk::GMK_TYPE_EFFECT));
       if (list == nullptr || !list->isValid()) {
@@ -162,7 +164,7 @@ void GfFieldGimmick::gevMapjump(GEV event, const MapjumpCallbackInfo &info) {
       }
     }
     break;
-  case GEV_MAPJUMP_FADEIN: {
+  case GEV_UNKNOWN_6: {
     GfUnpopBladeIds unpopBlades;
     if (unpopBlades.unknown08.empty()) {
       break;
@@ -177,11 +179,11 @@ void GfFieldGimmick::gevMapjump(GEV event, const MapjumpCallbackInfo &info) {
           }
         }
       }
-      gevBladeActivate(*blade, ACTIVATE_TYPE_UNUSE, ACTIVATE_TYPE_RESERVER);
+      gevBladeActivate(*blade, ACTIVATE_TYPE_UNKNOWN_0, ACTIVATE_TYPE_UNKNOWN_1);
       unpopBlades.unknown08.erase(blade);
     } while (!unpopBlades.unknown08.empty());
   } break;
-  case GEV_MAPJUMP_END:
+  case GEV_UNKNOWN_7:
     unknownfe40 = false;
     break;
   default:
@@ -193,7 +195,7 @@ void GfFieldGimmick::gevBladeActivate(u32 blade, ActivateType, ActivateType oldA
   if (blade == BLADE_HOMURI) {
     return;
   }
-  if (oldActivateType == ACTIVATE_TYPE_RESERVER) {
+  if (oldActivateType == ACTIVATE_TYPE_UNKNOWN_1) {
     if (!GfGameUtil::isBladeInVillage(blade) || unknown003(0, blade) != nullptr) {
       return;
     }
@@ -201,7 +203,7 @@ void GfFieldGimmick::gevBladeActivate(u32 blade, ActivateType, ActivateType oldA
     if (gmk != nullptr) {
       unknown004(*gmk, blade);
     }
-  } else if (oldActivateType == ACTIVATE_TYPE_PARTY || oldActivateType == ACTIVATE_TYPE_MERCENARY_TEAM || oldActivateType == ACTIVATE_TYPE_UNUSE) {
+  } else if (oldActivateType == ACTIVATE_TYPE_UNKNOWN_2 || oldActivateType == ACTIVATE_TYPE_UNKNOWN_3 || oldActivateType == ACTIVATE_TYPE_UNKNOWN_0) {
     GfGmkBladeTraverser traverser(0, blade);
     mm::mtl::PtrSingleton<gmk::GmkManager>::get()->traverseGmkInst(gmk::GMK_TYPE_BLADE, traverser);
     if (traverser.unknown10 == nullptr) {
@@ -228,7 +230,7 @@ void GfFieldGimmick::gevBladeActivate(u32 blade, ActivateType, ActivateType oldA
 void GfFieldGimmick::build(const GfSetupParam &param) {
   // __LINE__ must be 727 as in the original file: it is the line argument of operator new.
 #line 727
-  GfEvent::addEventCallback(new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfFieldGimmick(param));
+  GfEvent::addEventCallback(new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfFieldGimmick(param));
 }
 
 void GfFieldGimmick::destroy() {
@@ -283,7 +285,7 @@ bool GfFieldGimmick::createGmkSet(int gmkSet) {
   if (!mm::mtl::PtrSingleton<GfFieldGimmick>::get()->unknown20.isValid()) {
     return false;
   }
-  mtl::ALLOC_HANDLE memory = getAllocator(ALLOCATOR_UNKNOWN08)->getMemHandle();
+  mtl::ALLOC_HANDLE memory = getAllocator(ALLOCATOR_UNKNOWN_8)->getMemHandle();
   int rscGmkSet = getBdatIdFrom_FLD_maplist_To_RSC_GmkSetList(gmkSet);
   mm::mtl::PtrSingleton<GfFieldGimmick>::get()->unknown20.createGmkSet(memory, rscGmkSet, mm::Vec3::zero, 0.0f);
   return true;

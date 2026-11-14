@@ -25,20 +25,20 @@ void StateFieldSlideLandBrake::update(GfComBehaviorPc *behavior, const fw::Updat
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
   if (StateUtilField::isFallFromSlideState(*property) && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_FALL)) {
-    reqState(STATE_ID_FIELD_FALL);
-  } else if (property->unknown60.unknown08.test(INPUT_ID_JUMP) && property->unknown310.unknown12_1 && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_JUMP)) {
-    reqState(STATE_ID_FIELD_JUMP);
+    reqState(STATE_ID_UNKNOWN_15);
+  } else if (property->unknown60.unknown08.test(INPUT_ID_UNKNOWN_2) && property->unknown310.unknown12_1 && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_JUMP)) {
+    reqState(STATE_ID_UNKNOWN_12);
   } else if (StateUtilField::isStartSlidePosuture(*behavior) && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_SLOPE)) {
-    reqState(STATE_ID_FIELD_SLIDE_MOVE);
+    reqState(STATE_ID_UNKNOWN_54);
   } else if (!property->existInputXY()) {
     if (StateUtilField::isSlideStop(*property) && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_IDLE)) {
-      reqState(STATE_ID_FIELD_IDLE);
+      reqState(STATE_ID_UNKNOWN_3);
     } else {
       StateUtilField::setAsmSpeedSlideBrake(*property);
     }
   } else {
     property->unknownc0 = 0.0f;
-    reqState(STATE_ID_FIELD_MOVE);
+    reqState(STATE_ID_UNKNOWN_7);
   }
 }
 

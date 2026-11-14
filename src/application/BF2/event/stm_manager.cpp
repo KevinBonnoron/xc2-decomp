@@ -43,7 +43,7 @@ bool StmManager::isBusy() {
 }
 
 void StmManager::update() {
-  if (!(unknown08 & FLAG_PAUSE) && unknown50 != nullptr) {
+  if (!(unknown08 & FLAG_UNKNOWN_0) && unknown50 != nullptr) {
     unknown50->update();
   }
 }
@@ -51,16 +51,16 @@ void StmManager::update() {
 void StmManager::render(int x, f32 frame) {}
 
 void StmManager::tail() {
-  if (!(unknown08 & FLAG_PAUSE) && unknown50 != nullptr) {
+  if (!(unknown08 & FLAG_UNKNOWN_0) && unknown50 != nullptr) {
     unknown50->tail();
   }
 }
 
 void StmManager::pause(bool isPause) {
   if (isPause) {
-    unknown08 |= FLAG_PAUSE;
+    unknown08 |= FLAG_UNKNOWN_0;
   } else {
-    unknown08 &= ~FLAG_PAUSE;
+    unknown08 &= ~FLAG_UNKNOWN_0;
   }
 }
 

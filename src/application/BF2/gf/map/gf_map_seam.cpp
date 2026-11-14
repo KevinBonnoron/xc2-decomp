@@ -17,7 +17,7 @@ namespace gf {
 MapSeam::~MapSeam() {}
 
 void MapSeam::create(GF_ASSET_HANDLE *handle) {
-  if (unknown00 == INVALID_HANDLE) {
+  if (unknown00 == unknown020) {
     GF_OBJ_HANDLE *objHandle = GfAssetManager::getObj(handle);
     GFOBJ_INFO *info = GfObjManager::getObjInfo(objHandle);
     if (info != nullptr && info->unknown30 != nullptr) {
@@ -32,7 +32,7 @@ void MapSeam::create(GF_ASSET_HANDLE *handle) {
   }
 }
 
-void MapSeam::destroy() { unknown00 = INVALID_HANDLE; }
+void MapSeam::destroy() { unknown00 = unknown020; }
 
 ml::ScnObjModel *MapSeam::getModel() const {
   GfObjAcc acc(unknown00);
@@ -43,7 +43,7 @@ ml::ScnObjModel *MapSeam::getModel() const {
 }
 
 ml::DrMdlObj *MapSeam::getDrModel() const {
-  if (unknown00 != INVALID_HANDLE) {
+  if (unknown00 != unknown020) {
     return static_cast<ml::ScnObjModelDrSys *>(getModel())->unknown3d8;
   }
   return nullptr;

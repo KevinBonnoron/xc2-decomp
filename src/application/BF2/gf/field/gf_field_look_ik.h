@@ -25,15 +25,15 @@ public:
   bool findTargetPos(mm::Vec3 &position) const;
   bool findPos(mm::Vec3 &position) const;
 
-  GF_OBJ_HANDLE *unknown00 = INVALID_HANDLE; // Inferred role: object; original member name unknown.
-  u32 unknown08 = 3;                         // Inferred role: slot of the look solver in the ik solver vector; original member name unknown.
-  f32 unknown0c = 5.0f;                      // Inferred role: distance range; original member name unknown.
-  f32 unknown10 = 2.3561945f;                // Inferred role: horizontal angle range; original member name unknown.
-  f32 unknown14 = 1.0471976f;                // Inferred role: vertical angle range; original member name unknown.
-  f32 unknown18 = 0.7f;                      // Inferred role: fade time; original member name unknown.
-  bool unknown1c = true;                     // Inferred role: enabled; original member name unknown.
-  mm::Vec3 unknown20 = mm::Vec3::zero;       // Inferred role: current target; original member name unknown.
-  bool unknown30 = false;                    // Inferred role: condition matched; original member name unknown.
+  GF_OBJ_HANDLE *unknown00 = unknown020; // Inferred role: object; original member name unknown.
+  u32 unknown08 = 3;                     // Inferred role: slot of the look solver in the ik solver vector; original member name unknown.
+  f32 unknown0c = 5.0f;                  // Inferred role: distance range; original member name unknown.
+  f32 unknown10 = 2.3561945f;            // Inferred role: horizontal angle range; original member name unknown.
+  f32 unknown14 = 1.0471976f;            // Inferred role: vertical angle range; original member name unknown.
+  f32 unknown18 = 0.7f;                  // Inferred role: fade time; original member name unknown.
+  bool unknown1c = true;                 // Inferred role: enabled; original member name unknown.
+  mm::Vec3 unknown20 = mm::Vec3::zero;   // Inferred role: current target; original member name unknown.
+  bool unknown30 = false;                // Inferred role: condition matched; original member name unknown.
 };
 
 static_assert(offsetof(GfFieldLookIk, unknown08) == 0x08, "");

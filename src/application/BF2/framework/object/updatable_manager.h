@@ -22,17 +22,17 @@ struct UpdateInfo;
 
 class UpdatableObjectManager : public ManagerObject, public mm::mtl::PtrSingleton<UpdatableObjectManager> {
 public:
-  static const u32 GROUP_MAX = 32;
-  static const u32 POINTER_ID_MAX = 0x7ffffff;
+  static const u32 GROUP_UNKNOWN_32 = 32;                    // Inferred role: maximum number of groups; original name unknown.
+  static const u32 POINTER_ID_UNKNOWN_134217727 = 0x7ffffff; // Inferred role: maximum pointer id; original name unknown.
 
   class Impl {
   public:
     Impl(mm::mtl::IAllocator *allocator, size_t capacity) : unknown00(allocator) {
-      for (u32 i = 0; i < GROUP_MAX; i++) {
+      for (u32 i = 0; i < GROUP_UNKNOWN_32; i++) {
         unknown08[i] = nullptr;
       }
       unknown108.reserve(allocator, capacity);
-      unknown108.setRange(1, POINTER_ID_MAX, POINTER_ID_MAX);
+      unknown108.setRange(1, POINTER_ID_UNKNOWN_134217727, POINTER_ID_UNKNOWN_134217727);
     }
 
     ~Impl() {
@@ -51,9 +51,9 @@ public:
     UpdatableGroup *getGroup(u32 group);
     void registObject(u32 group, UpdatableObject *object);
 
-    mm::mtl::IAllocator *unknown00;       // Inferred role: allocator; original member name unknown.
-    UpdatableGroup *unknown08[GROUP_MAX]; // Inferred role: groups; original member name unknown.
-    PointerMap unknown108;                // Inferred role: pointer map; original member name unknown.
+    mm::mtl::IAllocator *unknown00;              // Inferred role: allocator; original member name unknown.
+    UpdatableGroup *unknown08[GROUP_UNKNOWN_32]; // Inferred role: groups; original member name unknown.
+    PointerMap unknown108;                       // Inferred role: pointer map; original member name unknown.
   };
 
   UpdatableObjectManager(mm::mtl::IAllocator *allocator, size_t capacity);

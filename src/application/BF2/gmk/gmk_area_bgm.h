@@ -42,7 +42,7 @@ public:
     u16 unknown00; // Inferred role: bgm condition; original member name unknown.
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_AREA_BGM;
+  static const GmkType GMK_TYPE = GMK_TYPE_AREA_BGM; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkAreaBgm() : unknown50(nullptr), unknown160(nullptr) {}
   ~GmkAreaBgm() override { dispose(); }

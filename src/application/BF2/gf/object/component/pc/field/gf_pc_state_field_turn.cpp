@@ -19,7 +19,7 @@ void StateFieldTurn::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   StateUtilField::setAsmSpeedMove(*property);
   property->unknown80 = mm::Vec3::zero;
   property->unknown94 = 0.0f;
-  unknown18 = previous->unknown08 != STATE_ID_FIELD_MOVE;
+  unknown18 = previous->unknown08 != STATE_ID_UNKNOWN_7;
   unknown20 = property->unknown2b0 * property->unknown60.unknown04 + property->unknown2d0 * property->unknown60.unknown00;
   if (!(fabsf(unknown20.x) <= 0.000001f) || !(fabsf(unknown20.y) <= 0.000001f) || !(fabsf(unknown20.z) <= 0.000001f)) {
     unknown20.unknown001();
@@ -31,7 +31,7 @@ void StateFieldTurn::enter(GfComBehaviorPc *behavior, ai::State *previous) {
 
 void StateFieldTurn::leave(GfComBehaviorPc *behavior, ai::State *next) {
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
-  if (next != nullptr && next->unknown08 != STATE_ID_FIELD_JUMP) {
+  if (next != nullptr && next->unknown08 != STATE_ID_UNKNOWN_12) {
     property->unknown80 = mm::Vec3::zero;
   }
   property->unknown94 = 0.0f;
@@ -40,7 +40,7 @@ void StateFieldTurn::leave(GfComBehaviorPc *behavior, ai::State *next) {
 void StateFieldTurn::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   if (StateUtilField::isTurnEndRangeCacheInput(*property, unknown20)) {
-    reqState(STATE_ID_FIELD_MOVE);
+    reqState(STATE_ID_UNKNOWN_7);
     return;
   }
   if (unknown18) {

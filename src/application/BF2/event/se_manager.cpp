@@ -12,7 +12,7 @@ namespace event {
 SeManager::SeManager() : unknown10(0), unknown14(0) {}
 
 void SeManager::clear() {
-  for (u32 i = 0; i < SE_COUNT; i++) {
+  for (u32 i = 0; i < SE_UNKNOWN_32; i++) {
     unknown18[i].clear();
   }
   unknown5318.clear();
@@ -21,11 +21,11 @@ void SeManager::clear() {
 }
 
 void SeManager::render() {
-  if ((unknown10 & DISP_FLAG_DISP) == 0 || unknown5318.empty()) {
+  if ((unknown10 & DISP_FLAG_UNKNOWN_0) == 0 || unknown5318.empty()) {
     return;
   }
   int x = ml::DevGraph::getRootWidth() - 340;
-  for (u32 i = 0; i < SE_COUNT; i++) {
+  for (u32 i = 0; i < SE_UNKNOWN_32; i++) {
     if (unknown18[i].isPlay()) {
       unknown18[i].draw(i, x, 230 + i * 70);
     }
@@ -82,26 +82,26 @@ void SeManager::pan(int index, f32 pan, f32 frame, CV_TYPE cv) {
 
 void SeManager::setDisp(bool isDisp) {
   if (isDisp) {
-    unknown10 |= DISP_FLAG_DISP;
+    unknown10 |= DISP_FLAG_UNKNOWN_0;
   } else {
-    unknown10 &= ~DISP_FLAG_DISP;
+    unknown10 &= ~DISP_FLAG_UNKNOWN_0;
   }
 }
 
-bool SeManager::isDisp() const { return (unknown10 & DISP_FLAG_DISP) != 0; }
+bool SeManager::isDisp() const { return (unknown10 & DISP_FLAG_UNKNOWN_0) != 0; }
 
 void SeManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
-  case MSG_TYPE_INIT:
+  case MSG_TYPE_UNKNOWN_4:
     clear();
     break;
-  case MSG_TYPE_CLEAR:
+  case MSG_TYPE_UNKNOWN_12:
     clear();
     break;
-  case MSG_TYPE_UPDATE:
+  case MSG_TYPE_UNKNOWN_14:
     update();
     break;
-  case MSG_TYPE_RENDER:
+  case MSG_TYPE_UNKNOWN_16:
     render();
     break;
   default:

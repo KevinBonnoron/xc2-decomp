@@ -16,10 +16,11 @@ struct Mat44;
 namespace gf {
 
 enum {
-  SCENARIO_FLAG_SAIKA_LENS_OFF = 0x1b70,
+  SCENARIO_UNKNOWN_7024 = 0x1b70, // Inferred role: scenario flag saika lens off; original name unknown.
 };
 
 struct GF_OBJ_HANDLE;
+struct GfItem;
 struct OwnerBonus;
 struct SDataBlade;
 struct SDataGame;
@@ -113,6 +114,7 @@ public:
   static void debugHpRatio(GF_OBJ_HANDLE *handle, f32 ratio);
   static void debugHpZero(GF_OBJ_HANDLE *handle);
   static void debugFallDead(GF_OBJ_HANDLE *handle);
+  static void setEnterbattleEnemyForDebug();
   static bool isDriverRide(GF_OBJ_HANDLE *handle);
   static bool isSceneRide();
   static const char *getBladeModel(u32 blade, bool isDefault);
@@ -159,6 +161,7 @@ public:
   static bool isDispWorldMap(u32 map);
   static u32 getBladeOnBookedItem(u32 blade);
   static bool execActivateUnuseForBlade(u32 blade, bool isRelease);
+  static void execBoosterAddForReleaseBlade(mm::mtl::FixedVector<GfItem, 1024> &items, u32 blade);
   static bool execActivateMercenaryTeamForBlade(u32 blade);
   static bool execActivateReserverForBlade(u32 blade);
   static void execEquipMercenariesBlade(u32 driver, u32 blade);

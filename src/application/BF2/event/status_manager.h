@@ -12,15 +12,15 @@ namespace event {
 
 class StatusManager : public IManager, public ml::IWorkEvent, public mm::mtl::Singleton<StatusManager> {
 public:
-  static constexpr u32 CHANGE_COUNT = 32;
+  static constexpr u32 CHANGE_UNKNOWN_32 = 32; // Inferred role: change count; original name unknown.
 
   enum MATH {
-    MATH_SET = 0,
-    MATH_ADD = 1,
+    MATH_EQUAL = 0, // Name of row 0 of the BDAT table EVT_mathtype (column name).
+    MATH_ADD = 1,   // Name of row 1 of the BDAT table EVT_mathtype (column name).
   };
 
   enum {
-    FLAG_CHANGE_FROM_BDAT = 1 << 0,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: change from bdat flag; original name unknown.
   };
 
   // Inferred role: change; original type name unknown.
@@ -57,8 +57,8 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  u32 unknown18;                                            // Inferred role: flags; original member name unknown.
-  mm::mtl::FixedVector<unknown003, CHANGE_COUNT> unknown20; // Inferred role: changes; original member name unknown.
+  u32 unknown18;                                                 // Inferred role: flags; original member name unknown.
+  mm::mtl::FixedVector<unknown003, CHANGE_UNKNOWN_32> unknown20; // Inferred role: changes; original member name unknown.
 };
 
 static_assert(sizeof(StatusManager) == 0x428, "");

@@ -8,7 +8,7 @@ namespace event {
 
 class LodManager : public IManager, public mm::mtl::Singleton<LodManager> {
 public:
-  static constexpr u32 OBJ_COUNT = 8;
+  static constexpr u32 OBJ_UNKNOWN_8 = 8; // Inferred role: obj count; original name unknown.
 
   class Obj {
   public:
@@ -32,7 +32,7 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  mm::mtl::FixedVector<Obj *, OBJ_COUNT> unknown10; // Inferred role: objs; original member name unknown.
+  mm::mtl::FixedVector<Obj *, OBJ_UNKNOWN_8> unknown10; // Inferred role: objs; original member name unknown.
 };
 
 static_assert(sizeof(LodManager::Obj) == 0x8, "");

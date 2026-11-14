@@ -742,9 +742,9 @@ void GfBdatMaplist::destroyFP() {
 }
 
 void GfBdatMaplist::createFP() {
-  m_maplist = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_MAPLIST)};
-  m_weatherInfo = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_WEATHER_INFO)};
-  m_timeInfo = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_TIME_INFO)};
+  m_maplist = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_MAPLIST)};
+  m_weatherInfo = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_WEATHER_INFO)};
+  m_timeInfo = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_TIME_INFO)};
 }
 
 void GfBdatMaplist::bdatRefresh() {

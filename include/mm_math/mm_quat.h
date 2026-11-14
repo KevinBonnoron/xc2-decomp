@@ -8,8 +8,8 @@
 namespace mm {
 
 struct alignas(16) Quat {
-  static const Quat zero;
-  static const Quat identity;
+  static const Quat zero;     // Name from the game symbol _ZN2mm4Quat4zeroE; also in torna and xc1de.
+  static const Quat identity; // Name from the game symbol _ZN2mm4Quat8identityE; also in torna and xc1de.
   bool isValid() const;
   bool isZero() const;
   bool isNormalized() const;

@@ -1,6 +1,8 @@
 #pragma once
 #include <stddef.h>
 
+#include "types.h"
+
 namespace ml {
 
 class DrMan;
@@ -11,6 +13,8 @@ public:
   DrMdoSamplerMan(DrMan *drMan);
   ~DrMdoSamplerMan();
   void begin();
+  DrResMdoSampler *createSamplerObj(const u8 *data);
+  DrResMdoSampler *createSamplerSeamObj(const u8 *data);
   void releaseSamplerObj(DrResMdoSampler *sampler);
   void releaseSamplerSeamObj(DrResMdoSampler *sampler);
 

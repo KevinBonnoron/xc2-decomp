@@ -15,17 +15,18 @@ namespace fw {
 
 class ReferenceFrame : public mm::mtl::ReferenceObject, public mm::mtl::IntrusiveListNode<ReferenceFrame> {
 public:
-  static const u32 FLAG_LOCAL_SYNCED = 1 << 0;
-  static const u32 FLAG_WORLD_SYNCED = 1 << 1;
-  static const u32 FLAG_MATRIX_SYNCED = 1 << 2;
-  static const u32 FLAG_ALL_SYNCED = FLAG_LOCAL_SYNCED | FLAG_WORLD_SYNCED | FLAG_MATRIX_SYNCED;
+  static const u32 FLAG_UNKNOWN_0 = 1 << 0; // Inferred role: local synced; original name unknown.
+  static const u32 FLAG_UNKNOWN_1 = 1 << 1; // Inferred role: world synced; original name unknown.
+  static const u32 FLAG_UNKNOWN_2 = 1 << 2; // Inferred role: matrix synced; original name unknown.
+  static const u32 FLAG_MASK_UNKNOWN_7 =
+      FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1 | FLAG_UNKNOWN_2; // Inferred role: mask of the three synced flags, bits 0 to 2 (decimal value 7, not bit 7); original name unknown.
 
   ReferenceFrame();
   ~ReferenceFrame() override;
-  void invalidateLocal() { unknowna0 = (unknowna0 & ~FLAG_ALL_SYNCED) | FLAG_WORLD_SYNCED; }
-  void invalidateWorld() { unknowna0 = (unknowna0 & ~FLAG_ALL_SYNCED) | FLAG_LOCAL_SYNCED; }
+  void invalidateLocal() { unknowna0 = (unknowna0 & ~FLAG_MASK_UNKNOWN_7) | FLAG_UNKNOWN_1; }
+  void invalidateWorld() { unknowna0 = (unknowna0 & ~FLAG_MASK_UNKNOWN_7) | FLAG_UNKNOWN_0; }
   // Inferred role: marks the local transform as outdated and keeps the matrix flag; original name unknown.
-  void unknown001() { unknowna0 = (unknowna0 & ~(FLAG_LOCAL_SYNCED | FLAG_WORLD_SYNCED)) | FLAG_WORLD_SYNCED; }
+  void unknown001() { unknowna0 = (unknowna0 & ~(FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) | FLAG_UNKNOWN_1; }
   // Inferred role: marks the world transform as outdated and returns the local transform for writing; original name unknown.
   Transform &unknown002() {
     invalidateWorld();
@@ -46,10 +47,10 @@ public:
 
   void syncWorldTransform();
   void syncWorldMatrix() {
-    if ((unknowna0 & FLAG_MATRIX_SYNCED) == 0) {
+    if ((unknowna0 & FLAG_UNKNOWN_2) == 0) {
       syncWorldTransform();
       unknown40.unknown001(unknown60);
-      unknowna0 |= FLAG_MATRIX_SYNCED;
+      unknowna0 |= FLAG_UNKNOWN_2;
     }
   }
   static void unlinkParent(ReferenceFrame &frame);
@@ -93,7 +94,7 @@ static_assert(sizeof(TransformUpdater) == 0x60, "");
 
 class TransformManager : public mm::mtl::PtrSingleton<TransformManager> {
 public:
-  static const u32 LAYER_MAX = 32;
+  static const u32 LAYER_UNKNOWN_32 = 32; // Inferred role: maximum number of layers; original name unknown.
 
   struct Group {
     mm::mtl::IntrusiveList<TransformUpdater> unknown00; // Inferred role: updaters; original member name unknown.
@@ -103,7 +104,7 @@ public:
   void addUpdater(u32 layer, TransformUpdater &updater) { unknown08[layer].unknown00.push_back(&updater); }
   void removeUpdater(u32 layer, TransformUpdater &updater) { unknown08[layer].unknown00.erase(&updater); }
 
-  mm::mtl::FixedArray<Group, LAYER_MAX> unknown08; // Inferred role: groups; original member name unknown.
+  mm::mtl::FixedArray<Group, LAYER_UNKNOWN_32> unknown08; // Inferred role: groups; original member name unknown.
 };
 
 static_assert(sizeof(TransformManager::Group) == 0x18, "");

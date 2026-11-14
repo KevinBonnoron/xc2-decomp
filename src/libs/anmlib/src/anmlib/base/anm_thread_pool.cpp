@@ -35,15 +35,15 @@ ThreadPool::~ThreadPool() { finalize(); }
 void ThreadPool::initialize(const TreadPoolInfo &info, mm::mtl::IAllocator &allocator) {
   unknown001 arguments[3] = {{this, 0}, {this, 1}, {this, 2}};
   if ((info.unknown00 & 1) != 0) {
-    unknown08[0] = mm::threading::Thread::create(&allocator, "WorkerThread0", threadFunc, &arguments[0], 0x40000, mm::threading::CPUID_CORE_0, info.unknown04);
+    unknown08[0] = mm::threading::Thread::create(&allocator, "WorkerThread0", threadFunc, &arguments[0], 0x40000, mm::threading::CPUID_UNKNOWN_1, info.unknown04);
     unknown08[0]->resume();
   }
   if ((info.unknown00 & 2) != 0) {
-    unknown08[1] = mm::threading::Thread::create(&allocator, "WorkerThread1", threadFunc, &arguments[1], 0x40000, mm::threading::CPUID_CORE_1, info.unknown04);
+    unknown08[1] = mm::threading::Thread::create(&allocator, "WorkerThread1", threadFunc, &arguments[1], 0x40000, mm::threading::CPUID_UNKNOWN_2, info.unknown04);
     unknown08[1]->resume();
   }
   if ((info.unknown00 & 4) != 0) {
-    unknown08[2] = mm::threading::Thread::create(&allocator, "WorkerThread2", threadFunc, &arguments[2], 0x40000, mm::threading::CPUID_CORE_2, info.unknown04);
+    unknown08[2] = mm::threading::Thread::create(&allocator, "WorkerThread2", threadFunc, &arguments[2], 0x40000, mm::threading::CPUID_UNKNOWN_3, info.unknown04);
     unknown08[2]->resume();
   }
   if (unknown08[0] != nullptr) {

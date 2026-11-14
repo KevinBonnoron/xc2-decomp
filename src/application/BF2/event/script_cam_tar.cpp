@@ -15,7 +15,7 @@ namespace event {
 
 void ScriptCamTar::doit(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CAMERA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_3) {
     return;
   }
   ObjectCamera *camera = static_cast<ObjectCamera *>(object);
@@ -31,11 +31,11 @@ void ScriptCamTar::doit(const Param &param) {
 
 void ScriptCamTar::undo(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CAMERA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_3) {
     return;
   }
   TarAxis axis = unknown10;
-  static_cast<ObjectCamera *>(object)->setTarAxis(axis, CV_TYPE_LINEAR);
+  static_cast<ObjectCamera *>(object)->setTarAxis(axis, CV_TYPE_UNKNOWN_1);
 }
 
 } // namespace event

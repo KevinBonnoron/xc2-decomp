@@ -171,4 +171,104 @@ Result StreamBuffer::OutData64(void *buffer, u64 size, u64 *outSize, bool *isMar
   return static_cast<Result>(0);
 }
 
+Result StreamBuffer::InData8(const void *buffer, u64 size, bool isMark) {
+  if (static_cast<u32>(size) > GetFreeSize()) {
+    return static_cast<Result>(-9);
+  }
+  if (isMark) {
+    unknown28 = unknown20;
+  }
+  u8 *destination = unknown10 + unknown20;
+  m_dataSize += static_cast<u32>(size);
+  u32 space = m_bufferSize - unknown20;
+  if (static_cast<u32>(size) <= space) {
+    CopyMemory8(buffer, destination, static_cast<u32>(size));
+    unknown20 += static_cast<u32>(size);
+    if (unknown20 >= m_bufferSize) {
+      unknown20 = 0;
+    }
+    return static_cast<Result>(0);
+  }
+  u32 remaining = static_cast<u32>(size) - space;
+  CopyMemory8(buffer, destination, space);
+  CopyMemory8(static_cast<const u8 *>(buffer) + space, unknown10, remaining);
+  unknown20 = remaining;
+  return static_cast<Result>(0);
+}
+
+Result StreamBuffer::InData16(const void *buffer, u64 size, bool isMark) {
+  if (static_cast<u32>(size) > GetFreeSize()) {
+    return static_cast<Result>(-9);
+  }
+  if (isMark) {
+    unknown28 = unknown20;
+  }
+  u8 *destination = unknown10 + unknown20;
+  m_dataSize += static_cast<u32>(size);
+  u32 space = m_bufferSize - unknown20;
+  if (static_cast<u32>(size) <= space) {
+    CopyMemory16(buffer, destination, static_cast<u32>(size));
+    unknown20 += static_cast<u32>(size);
+    if (unknown20 >= m_bufferSize) {
+      unknown20 = 0;
+    }
+    return static_cast<Result>(0);
+  }
+  u32 remaining = static_cast<u32>(size) - space;
+  CopyMemory16(buffer, destination, space);
+  CopyMemory16(static_cast<const u8 *>(buffer) + space, unknown10, remaining);
+  unknown20 = remaining;
+  return static_cast<Result>(0);
+}
+
+Result StreamBuffer::InData32(const void *buffer, u64 size, bool isMark) {
+  if (static_cast<u32>(size) > GetFreeSize()) {
+    return static_cast<Result>(-9);
+  }
+  if (isMark) {
+    unknown28 = unknown20;
+  }
+  u8 *destination = unknown10 + unknown20;
+  m_dataSize += static_cast<u32>(size);
+  u32 space = m_bufferSize - unknown20;
+  if (static_cast<u32>(size) <= space) {
+    CopyMemory32(buffer, destination, static_cast<u32>(size));
+    unknown20 += static_cast<u32>(size);
+    if (unknown20 >= m_bufferSize) {
+      unknown20 = 0;
+    }
+    return static_cast<Result>(0);
+  }
+  u32 remaining = static_cast<u32>(size) - space;
+  CopyMemory32(buffer, destination, space);
+  CopyMemory32(static_cast<const u8 *>(buffer) + space, unknown10, remaining);
+  unknown20 = remaining;
+  return static_cast<Result>(0);
+}
+
+Result StreamBuffer::InData64(const void *buffer, u64 size, bool isMark) {
+  if (static_cast<u32>(size) > GetFreeSize()) {
+    return static_cast<Result>(-9);
+  }
+  if (isMark) {
+    unknown28 = unknown20;
+  }
+  u8 *destination = unknown10 + unknown20;
+  m_dataSize += static_cast<u32>(size);
+  u32 space = m_bufferSize - unknown20;
+  if (static_cast<u32>(size) <= space) {
+    CopyMemory64(buffer, destination, static_cast<u32>(size));
+    unknown20 += static_cast<u32>(size);
+    if (unknown20 >= m_bufferSize) {
+      unknown20 = 0;
+    }
+    return static_cast<Result>(0);
+  }
+  u32 remaining = static_cast<u32>(size) - space;
+  CopyMemory64(buffer, destination, space);
+  CopyMemory64(static_cast<const u8 *>(buffer) + space, unknown10, remaining);
+  unknown20 = remaining;
+  return static_cast<Result>(0);
+}
+
 } // namespace ssd

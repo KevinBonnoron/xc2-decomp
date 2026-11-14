@@ -29,6 +29,7 @@ public:
   ~DrShdDataList();
   void createWork();
   void createShader();
+  void createAlphaTestBlock();
   void releaseShader();
   void reloadShader(int type);
   DrShdDataObj *getDebugShdObj(int index);

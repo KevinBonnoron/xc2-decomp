@@ -5,6 +5,7 @@
 #include "gf/event/gf_event.h"
 #include "gf/object/gf_append_info.h"
 #include "ml/fixed_size_alloc.h"
+#include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/bitflag.h"
 #include "mm_mtl/fixed_array.h"
@@ -27,21 +28,23 @@ class GfAssetMultiBind;
 class GfComModel;
 class GfInitParam;
 class GfObj;
+class GfObjAcc;
 class GfObjProperty;
 class GfObjSetup;
 struct GfSetupParam;
 class GfVolumeFade;
 
 enum GFATTACH {
-  GFATTACH_WEAPON = 0,
-  GFATTACH_APPEND = 1,
-  GFATTACH_BELONGING = 2,
-  GFATTACH_WEAPON_EXTRA = 3,
+  GFATTACH_UNKNOWN_0 = 0, // Inferred role: gfattach weapon; original name unknown.
+  GFATTACH_UNKNOWN_1 = 1, // Inferred role: gfattach append; original name unknown.
+  GFATTACH_UNKNOWN_2 = 2, // Inferred role: gfattach belonging; original name unknown.
+  GFATTACH_UNKNOWN_3 = 3, // Inferred role: gfattach weapon extra; original name unknown.
 };
 
 enum {
-  GFOBJ_STATE_LOADING = 1,
-  GFOBJ_STATE_UPDATE = 2,
+  GFOBJ_STATE_UNKNOWN_1 = 1, // Inferred role: gfobj state loading; original name unknown.
+  GFOBJ_STATE_UNKNOWN_2 = 2, // Inferred role: gfobj state update; original name unknown.
+  GFOBJ_STATE_UNKNOWN_3 = 3, // Inferred role: gfobj state destroy, set by setStateDestroy; original name unknown.
 };
 
 struct GFOBJ_MOUNT {
@@ -74,7 +77,9 @@ struct GFOBJ_INFO {
   mm::mtl::unknown027<64> unknown38;            // Inferred role: flags; original member name unknown.
   mm::mtl::unknown027<64> unknown40;            // Inferred role: previous flags; original member name unknown.
   u32 unknown48;                                // Inferred role: disp flags; original member name unknown.
-  u8 _4c[0x70 - 0x4c];
+  u8 _4c[0x50 - 0x4c];
+  mm::Vec3 unknown50;                            // Inferred role: world position saved when the object is reloaded; original member name unknown.
+  mm::Quat unknown60;                            // Inferred role: world rotation saved when the object is reloaded; original member name unknown.
   u64 unknown70[3];                              // Inferred role: user data; original member name unknown.
   GF_OBJ_HANDLE *unknown88;                      // Inferred role: master; original member name unknown.
   GF_OBJ_HANDLE *unknown90;                      // Inferred role: owner; original member name unknown.
@@ -96,6 +101,8 @@ static_assert(offsetof(GFOBJ_INFO, unknown18) == 0x18, "");
 static_assert(offsetof(GFOBJ_INFO, unknown20) == 0x20, "");
 static_assert(offsetof(GFOBJ_INFO, unknownb0) == 0xb0, "");
 static_assert(offsetof(GFOBJ_INFO, unknown30) == 0x30, "");
+static_assert(offsetof(GFOBJ_INFO, unknown50) == 0x50, "");
+static_assert(offsetof(GFOBJ_INFO, unknown60) == 0x60, "");
 static_assert(offsetof(GFOBJ_INFO, unknown38) == 0x38, "");
 static_assert(offsetof(GFOBJ_INFO, unknown40) == 0x40, "");
 static_assert(offsetof(GFOBJ_INFO, unknown48) == 0x48, "");
@@ -113,11 +120,11 @@ static_assert(sizeof(GFOBJ_INFO) == 0x420, "");
 class IGfObjListener {
 public:
   enum OBJEVT {
-    OBJEVT_ALL,
-    OBJEVT_ENTRY,
-    OBJEVT_LOADED,
-    OBJEVT_DESTROY,
-    OBJEVT_REMOVE,
+    OBJEVT_UNKNOWN_0, // Inferred role: objevt all; original name unknown.
+    OBJEVT_UNKNOWN_1, // Inferred role: objevt entry; original name unknown.
+    OBJEVT_UNKNOWN_2, // Inferred role: objevt loaded; original name unknown.
+    OBJEVT_UNKNOWN_3, // Inferred role: objevt destroy; original name unknown.
+    OBJEVT_UNKNOWN_4, // Inferred role: objevt remove; original name unknown.
   };
 
   virtual void listenerGfObj(OBJEVT event, GF_OBJ_HANDLE *handle, u32 objectType) = 0;
@@ -140,7 +147,9 @@ public:
   void finalize();
   void update(const fw::UpdateInfo &info);
   void postUpdate(const fw::UpdateInfo &info);
+  void updateLayerPauseObjects(const fw::UpdateInfo &info);
   void updateFirstObjects(const fw::UpdateInfo &info);
+  void updateChangeParamObjects(const fw::UpdateInfo &info);
   void checkTerminate();
   void applyModelLayerPauseSpeed();
   static bool reloadForDebug(GF_OBJ_HANDLE *handle, bool isReload);
@@ -157,6 +166,7 @@ public:
   void loadedMultiBind(GF_OBJ_HANDLE *handle, u32 uniqId);
   void unloadedMultiBind(GF_OBJ_HANDLE *handle, u32 uniqId);
   void addDestroyObj(GF_OBJ_HANDLE *handle, bool isImmediate);
+  void destroyAssetObj(GF_OBJ_HANDLE *handle);
   void addApplyParam(GF_OBJ_HANDLE *handle);
   bool isSuspendUpdate() const;
   bool hasReloadObjForDebug();
@@ -180,6 +190,16 @@ public:
   u32 createGfObjHandle(const GFOBJ_INFO *info, u32 index, int multiBind);
   GF_OBJ_HANDLE *createGfObj(u32 objectType, const GfInitParam &param);
   void addFollowObj(GF_OBJ_HANDLE *handle);
+  void setStateDestroy(GF_OBJ_HANDLE *handle);
+  void destroyObjAsset(GF_ASSET_HANDLE *asset);
+  void getObjListForDebug(mm::mtl::FixedList<GF_OBJ_HANDLE *, 1024> &objs);
+  void checkDeleteFollowObj(GF_OBJ_HANDLE *handle);
+  bool getWaitingMultiBindObj(mm::mtl::FixedList<GF_OBJ_HANDLE *, 768> &objs, u32 uniqId) const;
+  void setMultiBind(GF_OBJ_HANDLE *handle, u32 uniqId, u32 count, bool flag);
+  void setStateUpdate(GF_OBJ_HANDLE *handle);
+  bool isFinishLoadState(GfObjAcc &acc, bool unknown);
+  void destroyMultiBind(GF_OBJ_HANDLE *handle, u32 uniqId);
+  void createGfObjProperty(GF_OBJ_HANDLE *handle);
 
   bool unknown10; // Inferred role: initialized; original member name unknown.
   u32 unknown14;  // Inferred role: handle generation; original member name unknown.

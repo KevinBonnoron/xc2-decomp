@@ -19,8 +19,8 @@ void StateFieldWallJumpEnd::update(GfComBehaviorPc *behavior, const fw::UpdateIn
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
   property->setLocomotion(comAsm->getLocomotion());
-  if (comAsm->isEnd(ANIM_LAYER_BASE) && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_CLIMBIDLE)) {
-    reqState(STATE_ID_FIELD_WALL_IDLE);
+  if (comAsm->isEnd(ANIM_LAYER_UNKNOWN_0) && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_CLIMBIDLE)) {
+    reqState(STATE_ID_UNKNOWN_46);
   }
 }
 

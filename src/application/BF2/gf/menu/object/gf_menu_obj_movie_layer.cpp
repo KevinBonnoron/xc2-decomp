@@ -10,7 +10,8 @@
 
 namespace gf {
 
-constexpr u32 CALL_MOVIE_LAYER = 126;
+// Inferred role: call id of the movie layer layout; original name unknown.
+constexpr u32 CALL_UNKNOWN_126 = 126;
 
 u32 GfMenuObjMovieLayer::m_CreatedCount;
 
@@ -19,7 +20,7 @@ GfMenuObjMovieLayer::GfMenuObjMovieLayer(u32 handle) : GfMenuObject(handle) {}
 GfMenuObjMovieLayer::~GfMenuObjMovieLayer() { ; }
 
 void GfMenuObjMovieLayer::initialize() {
-  attachExternalCall(CALL_MOVIE_LAYER, unknown18);
+  attachExternalCall(CALL_UNKNOWN_126, unknown18);
   GfMenuObject::initialize();
 }
 
@@ -30,14 +31,14 @@ void GfMenuObjMovieLayer::finalize() {
 
 void GfMenuObjMovieLayer::update() { GfMenuObject::update(); }
 
-u32 GfMenuObjMovieLayer::getMovieLayerObject() { return getAttachedObject(CALL_MOVIE_LAYER); }
+u32 GfMenuObjMovieLayer::getMovieLayerObject() { return getAttachedObject(CALL_UNKNOWN_126); }
 
 u32 GfMenuObjMovieLayer::createMovieLayer(u32 width, u32 height, const ui::UIScreenObject::OnMemoryInfo &info) {
-  if (getAttachedObject(CALL_MOVIE_LAYER) == 0) {
+  if (getAttachedObject(CALL_UNKNOWN_126) == 0) {
     return 0;
   }
 
-  ui::UIObject *object = ui::UIUtil::getObject(getAttachedObject(CALL_MOVIE_LAYER));
+  ui::UIObject *object = ui::UIUtil::getObject(getAttachedObject(CALL_UNKNOWN_126));
   ui::UILayoutObject *layout = nullptr;
   if (object != nullptr) {
     layout = mm::mtl::dynamicCast<ui::UILayoutObject>(object);

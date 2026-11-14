@@ -5,6 +5,7 @@
 #include "gf/menu/gf_menu_object.h"
 #include "gf/menu/gf_menu_sequence.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 #include "ui/ui_object_acc.h"
 
 namespace ui {
@@ -46,6 +47,15 @@ public:
     OpenParam unknown0c; // Inferred role: open parameter of the queued popup; original member name unknown.
   };
 
+  class MainListener : public ui::UIObjectListener {
+  public:
+    MainListener(GfMenuObjPopup *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjPopup *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   GfMenuObjPopup(u32 handle);
   ~GfMenuObjPopup() override;
   static void open(const OpenParam &param);
@@ -82,6 +92,8 @@ static_assert(offsetof(GfMenuObjPopup::OpenParam, unknown0c) == 0x0c, "");
 static_assert(sizeof(GfMenuObjPopup::OpenParam) == 0x10, "");
 static_assert(offsetof(GfMenuObjPopup::PopupInfo, unknown0c) == 0x0c, "");
 static_assert(sizeof(GfMenuObjPopup::PopupInfo) == 0x20, "");
+static_assert(offsetof(GfMenuObjPopup::MainListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjPopup::MainListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjPopup, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjPopup, unknown60) == 0x60, "");
 static_assert(sizeof(GfMenuObjPopup) == 0x2f0, "");

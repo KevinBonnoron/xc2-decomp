@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "dr/dr_pixl_post_obj.h"
 #include "types.h"
 
 namespace grlib {
@@ -10,9 +11,11 @@ class CGLibTextureBuffer;
 namespace ml {
 
 class DrMan;
+class DrPixlMan;
+class DrPixlPostMan;
 class DrPixlRenderTarget;
 
-class DrPixlPostObjTMAA {
+class DrPixlPostObjTMAA : public DrPixlPostObj {
 public:
   enum SHARPNESS_TYPE {
     SHARPNESS_TYPE_UNKNOWN_1 = 1,
@@ -20,6 +23,7 @@ public:
     SHARPNESS_TYPE_UNKNOWN_4 = 4,
   };
 
+  DrPixlPostObjTMAA(DrMan *drMan, DrPixlMan *pixlMan, DrPixlPostMan *postMan);
   ~DrPixlPostObjTMAA();
   void render();
   void renderTMAA();
@@ -30,15 +34,12 @@ public:
   void releaseColorBuff();
   grlib::CGLibTextureBuffer *getBloomTexture();
 
-  DrMan *unknown00; // Inferred role: driver manager; original member name unknown.
-  u8 _08[0x18 - 0x08];
   u32 unknown18; // Inferred role: flags; original member name unknown.
   u8 _1c[0x20 - 0x1c];
   DrPixlRenderTarget *unknown20[2]; // Inferred role: render targets; original member name unknown.
   DrPixlRenderTarget *m_bloomTexture[2];
 };
 
-static_assert(offsetof(DrPixlPostObjTMAA, unknown00) == 0x00, "");
 static_assert(offsetof(DrPixlPostObjTMAA, unknown18) == 0x18, "");
 static_assert(offsetof(DrPixlPostObjTMAA, unknown20) == 0x20, "");
 static_assert(offsetof(DrPixlPostObjTMAA, m_bloomTexture) == 0x30, "");

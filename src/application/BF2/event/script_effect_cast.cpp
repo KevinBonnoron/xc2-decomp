@@ -14,7 +14,7 @@ namespace event {
 
 void ScriptEffectCast::doit(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_EFFECT) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_4) {
     return;
   }
   ObjectChara *chara = static_cast<ObjectChara *>(param.val(0).getUserdata());
@@ -23,7 +23,7 @@ void ScriptEffectCast::doit(const Param &param) {
 
 void ScriptEffectCast::undo(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_EFFECT) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_4) {
     return;
   }
   static_cast<ObjectEffect *>(object)->setCaster(nullptr);

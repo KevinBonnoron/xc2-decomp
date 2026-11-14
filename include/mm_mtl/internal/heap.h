@@ -7,14 +7,14 @@ namespace mtl {
 class HeapAllocUtil {
 public:
   enum {
-    SL_INDEX_COUNT_LOG2 = 5,
-    ALIGN_SIZE_LOG2 = 3,
-    ALIGN_SIZE = 1 << ALIGN_SIZE_LOG2,
-    FL_INDEX_MAX = 32,
-    SL_INDEX_COUNT = 1 << SL_INDEX_COUNT_LOG2,
-    FL_INDEX_SHIFT = SL_INDEX_COUNT_LOG2 + ALIGN_SIZE_LOG2,
-    FL_INDEX_COUNT = FL_INDEX_MAX - FL_INDEX_SHIFT + 1,
-    SMALL_BLOCK_SIZE = 1 << FL_INDEX_SHIFT,
+    SL_INDEX_UNKNOWN_5 = 5,                                         // Inferred role: log2 of the number of second level lists; original name unknown.
+    ALIGN_SIZE_UNKNOWN_3 = 3,                                       // Inferred role: log2 of the block alignment; original name unknown.
+    ALIGN_SIZE = 1 << ALIGN_SIZE_UNKNOWN_3,                         // Name from an assertion string of the heap ("block_to_ptr(block) == align_ptr(block_to_ptr(block), HeapAllocUtil::ALIGN_SIZE)").
+    FL_INDEX_UNKNOWN_32 = 32,                                       // Inferred role: log2 of the largest block size; original name unknown.
+    SL_INDEX_UNKNOWN_32 = 1 << SL_INDEX_UNKNOWN_5,                  // Inferred role: number of second level lists; original name unknown.
+    FL_INDEX_UNKNOWN_8 = SL_INDEX_UNKNOWN_5 + ALIGN_SIZE_UNKNOWN_3, // Inferred role: shift of the first level index; original name unknown.
+    FL_INDEX_UNKNOWN_25 = FL_INDEX_UNKNOWN_32 - FL_INDEX_UNKNOWN_8 + 1, // Inferred role: number of first level lists; original name unknown.
+    SMALL_BLOCK_UNKNOWN_256 = 1 << FL_INDEX_UNKNOWN_8,                  // Inferred role: size under which the blocks share the first level list; original name unknown.
   };
 
   struct block_header_t {
@@ -27,8 +27,8 @@ public:
   struct control_t {
     block_header_t block_null;
     unsigned int fl_bitmap;
-    unsigned int sl_bitmap[FL_INDEX_COUNT];
-    block_header_t *blocks[FL_INDEX_COUNT][SL_INDEX_COUNT];
+    unsigned int sl_bitmap[FL_INDEX_UNKNOWN_25];
+    block_header_t *blocks[FL_INDEX_UNKNOWN_25][SL_INDEX_UNKNOWN_32];
   };
 
   typedef void (*heap_walker)(void *ptr, size_t size, bool used, void *user, size_t index);

@@ -108,6 +108,8 @@ void IDColiObjData::setBoneMatrix(int index, const mm::Mat44 &matrix) { unknown1
 
 mm::Mat44 &IDColiObjData::getBoneMatrix(int index) { return unknown1f0[index]; }
 
+void IDColiObjData::calcLinkNodeMatrix(mm::Mat44 &result, const CHCLBaseInfo *info) { result.unknown009(unknown1f0[info->unknown06], unknown70); }
+
 void IDColiObjData::primset_sphere(void *work, IDColiBaseType &type, const CHCLBaseData *data, const CHCLBaseInfo *info) {
   mm::Mat44 matrix;
   calcNodeMatrix(matrix, unknown70, data, info);

@@ -9,13 +9,13 @@ namespace {
 
 // Inferred role: lang folders; original type name unknown.
 struct unknown082 {
-  mm::mtl::FixStr<16> unknown00[LangUtil::LANG_TYPE_MAX];  // Inferred role: lang; original member name unknown.
-  mm::mtl::FixStr<16> unknown12c[LangUtil::LANG_TYPE_MAX]; // Inferred role: voice; original member name unknown.
+  mm::mtl::FixStr<16> unknown00[LangUtil::LANG_TYPE_UNKNOWN_15];  // Inferred role: lang; original member name unknown.
+  mm::mtl::FixStr<16> unknown12c[LangUtil::LANG_TYPE_UNKNOWN_15]; // Inferred role: voice; original member name unknown.
 };
 
 unknown082 s_folders;
 
-constexpr LangType FALLBACK_LANG = static_cast<LangType>(1);
+constexpr LangType FALLBACK_LANG_UNKNOWN_1 = static_cast<LangType>(1); // Inferred role: language used when the system one is unsupported; original name unknown.
 
 } // namespace
 
@@ -47,11 +47,11 @@ void LangUtil::setLangType(LangType type) {
       return;
     }
   }
-  m_selectLang = FALLBACK_LANG;
+  m_selectLang = FALLBACK_LANG_UNKNOWN_1;
 }
 
 LangUtil::LangList &LangUtil::getLangList(LangList &list) {
-  mm::mtl::FixedVector<ml::LangType, ml::DEV_LANG_NUM> devLangs;
+  mm::mtl::FixedVector<ml::LangType, ml::DEV_LANG_UNKNOWN_15> devLangs;
   ml::DevSetting::getLangList(devLangs);
   list.clear();
   for (ml::LangType devLang : devLangs) {

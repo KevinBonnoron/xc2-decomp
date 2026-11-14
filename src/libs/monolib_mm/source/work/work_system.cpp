@@ -51,7 +51,7 @@ bool WorkSystem::isReset() {
   return false;
 }
 
-mtl::ALLOC_HANDLE WorkSystem::getMem() { return get()->unknown1b0; }
+mtl::ALLOC_HANDLE WorkSystem::getMem() { return get()->m_mem; }
 
 void WorkSystem::setSaveLoadInvalidReset(bool isInvalid) {
   WorkSystem *system = get();
@@ -74,7 +74,7 @@ bool WorkSystem::wkStandbyLogin() {
     }
   }
 
-  unknown1b0 = mtl::MemManager::create(MlMem::getProductMem(), 0xfe0, unknown08.c_str(), false);
+  m_mem = mtl::MemManager::create(MlMem::getProductMem(), 0xfe0, unknown08.c_str(), false);
   WinProcRoot::create(this);
   WinViewRoot::create(this);
   return WorkObj::wkStandbyLogin();
@@ -85,9 +85,9 @@ bool WorkSystem::wkStandbyLogout() {
     return false;
   }
 
-  if (unknown1b0.isValid()) {
-    mtl::MemManager::erase(unknown1b0);
-    unknown1b0 = mtl::ALLOC_HANDLE();
+  if (m_mem.isValid()) {
+    mtl::MemManager::erase(m_mem);
+    m_mem = mtl::ALLOC_HANDLE();
   }
 
   return WorkObj::wkStandbyLogout();

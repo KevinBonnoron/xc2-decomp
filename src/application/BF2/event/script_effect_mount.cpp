@@ -18,7 +18,7 @@ const char *ScriptEffectMount::cmdName() const { return "effmount"; }
 
 void ScriptEffectMount::doit(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_EFFECT) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_4) {
     return;
   }
   ObjectChara *chara = static_cast<ObjectChara *>(param.val(0).getUserdata());
@@ -33,7 +33,7 @@ void ScriptEffectMount::redo(const Param &param) { doit(param); }
 
 void ScriptEffectMount::undo(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_EFFECT) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_4) {
     return;
   }
   static_cast<ObjectEffect *>(object)->setMount(nullptr, "", mm::Vec3::zero, false, static_cast<ATTACH_TYPE>(0));

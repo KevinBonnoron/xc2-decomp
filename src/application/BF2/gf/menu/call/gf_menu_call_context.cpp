@@ -17,19 +17,19 @@ GfMenuCallContext::GfMenuCallContext() : unknown10(0), unknown14(0), unknown40(f
 GfMenuCallContext::~GfMenuCallContext() {}
 
 GfMenuCallContext *GfMenuCallContext::create() {
-  GfMenuCallContext *context = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuCallContext();
+  GfMenuCallContext *context = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuCallContext();
   context->addRef();
   return context;
 }
 
 GfMenuCallContext::STATE GfMenuCallContext::getState() {
   if (unknown14 != 0 && ui::UIObjectAcc(unknown14).isTerm()) {
-    return STATE_TERM;
+    return STATE_UNKNOWN_2;
   }
   if (unknown40) {
-    return STATE_TERM;
+    return STATE_UNKNOWN_2;
   }
-  return unknown14 != 0 ? STATE_ACTIVE : STATE_IDLE;
+  return unknown14 != 0 ? STATE_UNKNOWN_1 : STATE_UNKNOWN_0;
 }
 
 bool GfMenuCallContext::isTerm() const {

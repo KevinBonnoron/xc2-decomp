@@ -1,6 +1,9 @@
 #include "gf/asset/gf_asset_name.h"
 #include <stdlib.h>
 
+#include <string.h>
+
+#include "gf/data/gf_object_type.h"
 #include "gf/util/gf_util.h"
 
 namespace gf {
@@ -34,6 +37,18 @@ void GfAssetName::set(const char *name) {
       }
       unknown14 = directory.c_str();
     }
+  }
+}
+
+void GfAssetName::set(u32 type, u32 idUpper, u32 idMiddle, u32 idLower) {
+  clear();
+  const char *prefix = getPrefix(type);
+  if (strlen(prefix) == 2) {
+    unknown00 = prefix;
+    unknown00 += "000000";
+    setIdUpper(idUpper);
+    setIdMiddle(idMiddle);
+    setIdLower(idLower);
   }
 }
 
@@ -96,6 +111,50 @@ const char *GfAssetName::getName() {
 }
 
 bool GfAssetName::isValid() const { return getObjType() != 0; }
+
+u32 GfAssetName::getObjType() const {
+  if (unknown00.length() < 8) {
+    return OBJECT_TYPE_NONE;
+  }
+
+  const char *name = unknown00.c_str();
+  for (int i = 2; i < 8; i++) {
+    if (name[i] < '0' || name[i] > '9') {
+      return OBJECT_TYPE_NONE;
+    }
+  }
+
+  mm::mtl::FixStr<128> prefix = unknown00.c_str();
+  if (prefix.length() > 2) {
+    prefix.resize(2);
+  }
+
+  if (strcmp(prefix.c_str(), "pc") == 0) {
+    return OBJECT_TYPE_PC;
+  }
+  if (strcmp(prefix.c_str(), "bl") == 0) {
+    return OBJECT_TYPE_BLADE;
+  }
+  if (strcmp(prefix.c_str(), "en") == 0) {
+    return OBJECT_TYPE_ENEMY;
+  }
+  if (strcmp(prefix.c_str(), "ma") == 0) {
+    return OBJECT_TYPE_MAP;
+  }
+  if (strcmp(prefix.c_str(), "np") == 0) {
+    return OBJECT_TYPE_NPC;
+  }
+  if (strcmp(prefix.c_str(), "mb") == 0) {
+    return OBJECT_TYPE_MOB;
+  }
+  if (strcmp(prefix.c_str(), "wp") == 0) {
+    return OBJECT_TYPE_PC_WEAPON;
+  }
+  if (strcmp(prefix.c_str(), "oj") == 0) {
+    return OBJECT_TYPE_GIMMICK;
+  }
+  return OBJECT_TYPE_NONE;
+}
 
 int GfAssetName::getValue(const char *text) const { return atoi(text); }
 

@@ -33,6 +33,7 @@ public:
   void create(const CreateInfo &info);
   void dispose();
   void createByGmkBattleLock();
+  void createBy_CHR_EnArrange();
   void update(GF_OBJ_HANDLE *handle, const IGfBehFieldOwner &owner);
   void debugDraw(GF_OBJ_HANDLE *handle, const IGfBehFieldOwner &owner) const;
   bool isPlayerEnter() const;

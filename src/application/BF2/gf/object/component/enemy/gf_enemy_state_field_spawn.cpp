@@ -17,7 +17,7 @@ void StateFieldSpawn::leave(GfComBehaviorEnemy *behavior, ai::State *next) { beh
 void StateFieldSpawn::update(GfComBehaviorEnemy *behavior, const fw::UpdateInfo &info) {
   GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
   if (comAsm != nullptr) {
-    const char *stateName = comAsm->getStateName(ANIM_LAYER_BASE);
+    const char *stateName = comAsm->getStateName(ANIM_LAYER_UNKNOWN_0);
     if (stateName != nullptr && strcmp(stateName, "S_idle") != 0) {
       return;
     }

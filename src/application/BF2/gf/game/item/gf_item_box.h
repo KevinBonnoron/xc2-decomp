@@ -103,8 +103,8 @@ public:
   u32 getFreeStackCount(u32 item);
   virtual ~GfItemBoxBase() {}
 
-  unknown081 unknown08[ITEM_BOX_INDEX_NUM]; // Inferred role: item type infos; original member name unknown.
-  ItemBox *unknown300;                      // Inferred role: item box; original member name unknown.
+  unknown081 unknown08[ITEM_BOX_INDEX_UNKNOWN_19]; // Inferred role: item type infos; original member name unknown.
+  ItemBox *unknown300;                             // Inferred role: item box; original member name unknown.
 };
 
 static_assert(offsetof(GfItemBoxBase, unknown08) == 0x008, "");

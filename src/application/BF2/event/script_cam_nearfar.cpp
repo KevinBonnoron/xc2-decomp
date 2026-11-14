@@ -15,7 +15,7 @@ namespace event {
 
 void ScriptCamNearfar::doit(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CAMERA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_3) {
     return;
   }
   ObjectCamera *camera = static_cast<ObjectCamera *>(object);
@@ -27,7 +27,7 @@ void ScriptCamNearfar::doit(const Param &param) {
 
 void ScriptCamNearfar::undo(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CAMERA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_3) {
     return;
   }
   static_cast<ObjectCamera *>(object)->getCamObj()->getHands()->setNearfar(unknown08, unknown0c);

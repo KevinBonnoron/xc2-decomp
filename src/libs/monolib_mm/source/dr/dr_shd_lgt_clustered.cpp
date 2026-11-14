@@ -7,10 +7,48 @@
 #include "mm_math/mm_vec2.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_array.h"
+#include "mtl/mem_manager.h"
+#include <string.h>
 
 namespace ml {
 
+const DrShdLgtClustered::unknown001 DrShdLgtClustered::c_ClusterSettings[4] = {
+    {20, 12, 16, 20, 256},
+    {5, 3, 4, 5, 16},
+    {5, 3, 4, 20, 128},
+    {5, 3, 4, 5, 16},
+};
+
+DrShdLgtClustered::DrShdLgtClustered(DrMan *drMan, bool isLowResolution)
+    : DrShdLgtDynamic(drMan), unknown18(isLowResolution), unknown660(nullptr), unknown668(0), unknown66c(0), unknown670(nullptr), unknown678(nullptr), unknown680(nullptr), unknown688(nullptr),
+      unknown690(0), unknown694(0), unknown698(nullptr) {
+  createWork();
+}
+
+DrShdLgtClustered::~DrShdLgtClustered() {
+  if (unknown660 != nullptr) {
+    mtl::MemManager::deallocate(unknown660, 0, false);
+    unknown660 = nullptr;
+  }
+}
+
 const DrShdLgtClustered::unknown001 *DrShdLgtClustered::getClusterSetting(u32 cate) const { return &c_ClusterSettings[(unknown18 << 1) | (cate != 0)]; }
+
+void DrShdLgtClustered::stockBegin() {
+  unknown002 &view = unknown20[unknown08];
+  const unknown001 *setting = getClusterSetting(unknown08);
+  view.unknown150 = 0;
+  view.unknown154 = 0;
+  view.unknown158 = 0;
+  unknown668 = view.unknown00.m_size;
+  unknown66c = view.unknown38.m_size;
+  unknown670 = view.unknown00.getBuff();
+  unknown678 = view.unknown38.getBuff();
+  u32 clusterNum = setting->unknown00 * setting->unknown04 * setting->unknown08;
+  memset(unknown680, 0, clusterNum * sizeof(void *));
+  memset(unknown688, 0, clusterNum * sizeof(void *));
+  unknown690 = 0;
+}
 
 void DrShdLgtClustered::convertToViewProj(mm::Vec3 &result, const mm::Vec2 &position) {
   DrMan *man = unknown10;

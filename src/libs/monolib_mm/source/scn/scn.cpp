@@ -13,6 +13,7 @@
 #include "ml/win_view_root.h"
 #include "ml/work_cpu.h"
 #include "ml/work_root.h"
+#include "ml/work_util.h"
 #include "mm_mtl/algorithm.h"
 #include "mtl/mem_manager.h"
 #include "scn/scn_debug.h"
@@ -20,7 +21,22 @@
 
 #include <string.h>
 
+// Scn::move inlines ScnPoolObj::update in the game: keep its definition visible in this unit.
+#include "scn_pool_obj.cpp"
+
 namespace ml {
+
+Scn *Scn::create(const ScnSetup *setup) {
+  ScnSetup defaultSetup;
+  if (setup == nullptr) {
+    setup = &defaultSetup;
+  }
+  Scn *scn = new (WorkUtil::getWorkMem()) Scn(setup);
+  if (scn != nullptr) {
+    scn->addRef();
+  }
+  return scn;
+}
 
 void Scn::setPause(bool isPause) {
   if (unknowndf8 != isPause) {
@@ -38,7 +54,7 @@ void Scn::term() {
     delete unknown20;
     unknown20 = nullptr;
   }
-  WorkCpu::runThread(WorkCpu::getRenderCPUID(), thRenderKillTerminate, this, nullptr, nullptr, true, WKCPU_SYNC_NONE);
+  WorkCpu::runThread(WorkCpu::getRenderCPUID(), thRenderKillTerminate, this, nullptr, nullptr, true, WKCPU_SYNC_UNKNOWN_0);
   if (unknown28 != nullptr) {
     delete unknown28;
     unknown28 = nullptr;
@@ -100,6 +116,76 @@ void Scn::callbackToListener(SCNCB type) {
   }
 }
 
+void Scn::move() {
+  callbackToListener(SCNCB_UNKNOWN_0);
+  unknown28->update();
+  unknown20->update();
+  if (!unknownb0) {
+    unknownb0 = true;
+    if (unknown38 != nullptr) {
+      unknown38->update();
+    }
+  }
+}
+
+void Scn::draw() {
+  if (unknowndf9) {
+    return;
+  }
+  bool isCurrent;
+  DevGraph::cmdOpenDisplayList(0);
+  {
+    CS lock(*unknownce0);
+    isCurrent = unknown28->setCurrentCam() && unknown28->getView(-1) == WinView::getView(true);
+  }
+  DevGraph::cmdCloseDisplayList();
+  if (!isCurrent) {
+    return;
+  }
+  DevGraph::cmdOpenDisplayList(0);
+  {
+    CS lock(*unknownce0);
+    unknown20->apply();
+  }
+  DevGraph::cmdCloseDisplayList();
+  {
+    CS lock(*unknownce0);
+    if (unknown38 != nullptr) {
+      DebDraw::getOnly(0xffffffff)->setForceRenderQueue(true);
+      unknown38->applyBegin();
+      int count = unknown38->applyLoopCnt();
+      for (int i = 0; i < count; i++) {
+        DevGraph::cmdOpenDisplayList(0);
+        unknown38->applyUpdate(i);
+        DevGraph::cmdCloseDisplayList();
+        DevGraph::cmdOpenDisplayList(0);
+        unknown38->applyRender(i);
+        DevGraph::cmdCloseDisplayList();
+      }
+      unknown38->applyEnd();
+      DebDraw::getOnly(0xffffffff)->setForceRenderQueue(false);
+    }
+  }
+  callbackToListener(SCNCB_UNKNOWN_1);
+  DevGraph::cmdOpenDisplayList(0);
+  {
+    CS lock(*unknownce0);
+    DebDraw *debDraw = DebDraw::get(0xffffffff);
+    unknown20->renderDebug(debDraw);
+    if (unknown30 != nullptr) {
+      unknown30->render(debDraw);
+    }
+  }
+  DevGraph::cmdCloseDisplayList();
+}
+
+void Scn::init() {
+  mtl::ALLOC_HANDLE mem = unknown64;
+  unknown30 = new (mem) ScnDebug(this, mem);
+  unknown20 = new (mem) ScnPoolObj(this);
+  unknown28 = new (mem) ScnCamMan(this);
+}
+
 u32 Scn::thUpAfter(void *argument, void *userData) {
   Scn *scn = static_cast<Scn *>(argument);
   for (int i = 0; i < scn->unknown4b8; i++) {
@@ -138,7 +224,7 @@ void Scn::releaseItem(ScnObj *obj) {
 
 void Scn::setDeleteRender() {
   if (unknown38 != nullptr) {
-    WorkCpu::runThread(WorkCpu::getRenderCPUID(), thRenderKillTerminate, this, nullptr, nullptr, true, WKCPU_SYNC_WAIT);
+    WorkCpu::runThread(WorkCpu::getRenderCPUID(), thRenderKillTerminate, this, nullptr, nullptr, true, WKCPU_SYNC_UNKNOWN_1);
   }
 }
 
@@ -279,8 +365,29 @@ ScnObjCam *Scn::getCam(const WinView *view) { return unknown28->getCam(view); }
 
 const ScnObjCam *Scn::getCam(const WinView *view) const { return unknown28->getCam(view); }
 
+bool ScnCamMan::setCurrentCam() {
+  ScnObjCam *cam = getCam(WinView::getView(true));
+  if (cam != nullptr) {
+    unknown40 = cam->m_info;
+    return true;
+  }
+  return false;
+}
+
 template class reslist<ScnObj *>;
 
 } // namespace ml
+
+// The game builds these files in one unit with this one (0x710073fc4c to 0x7100755bfc), in this order. Scn::draw inlines ScnDebug::render and Scn::init the ScnDebug constructor; ScnCamUtil
+// (0x7100742c24 to 0x7100743708) comes before the ScnDebug block (0x71007437a0 to 0x7100751eb0), which follows every function of this file and ends with ScnDebugUtil (0x7100751cc4); ScnObjCam
+// (0x7100751eb0), ScnObj (0x7100753ad4) and ScnUtil (0x7100754c4c) come after it.
+// clang-format off
+#include "scn_cam_util.cpp"
+#include "scn_debug.cpp"
+#include "scn_debug_util.cpp"
+#include "scn_obj_cam.cpp"
+#include "scn_obj.cpp"
+#include "scn_util.cpp"
+// clang-format on
 
 template mm::mtl::PtrSingleton<ml::Scn>::~PtrSingleton();

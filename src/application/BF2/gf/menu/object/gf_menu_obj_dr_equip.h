@@ -6,6 +6,7 @@
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 #include "ui/ui_object_acc.h"
 
 namespace mm {
@@ -26,6 +27,24 @@ class GfMenuReferenceItem;
 
 class GfMenuObjDrEquip : public GfMenuObject {
 public:
+  class MainListener : public ui::UIObjectListener {
+  public:
+    MainListener(GfMenuObjDrEquip *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjDrEquip *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class ItemListener : public ui::UIObjectListener {
+  public:
+    ItemListener(GfMenuObjDrEquip *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjDrEquip *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   GfMenuObjDrEquip(u32 handle);
   ~GfMenuObjDrEquip() override;
 
@@ -79,5 +98,9 @@ static_assert(offsetof(GfMenuObjDrEquip, unknown48) == 0x48, "");
 static_assert(offsetof(GfMenuObjDrEquip, unknown50) == 0x50, "");
 static_assert(offsetof(GfMenuObjDrEquip, unknown2e0) == 0x2e0, "");
 static_assert(offsetof(GfMenuObjDrEquip, unknown2e8) == 0x2e8, "");
+static_assert(offsetof(GfMenuObjDrEquip::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjDrEquip::ItemListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjDrEquip::MainListener) == 0x28, "");
+static_assert(sizeof(GfMenuObjDrEquip::ItemListener) == 0x28, "");
 
 } // namespace gf

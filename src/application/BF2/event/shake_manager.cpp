@@ -6,7 +6,7 @@
 
 namespace event {
 
-static constexpr f32 IDLE_SHAKE_TIME = -1.0f;
+static constexpr f32 unknown025 = -1.0f; // Inferred role: idle shake time; original name unknown.
 
 mm::mtl::FixStr<32> ShakeManager::s_names[TYPE_COUNT] = {"TYPE_SS", "TYPE_S", "TYPE_M", "TYPE_L"};
 
@@ -36,7 +36,7 @@ void ShakeManager::clear() {
 }
 
 void ShakeManager::update() {
-  if ((unknown10 & FLAG_SHAKE) != 0 && !unknown18.isPlay()) {
+  if ((unknown10 & FLAG_UNKNOWN_1) != 0 && !unknown18.isPlay()) {
     idle();
   }
   const FrameInfo &info = mm::mtl::Singleton<FrameManager>::getPtr()->frameInfo();
@@ -46,12 +46,12 @@ void ShakeManager::update() {
 }
 
 void ShakeManager::idle() {
-  if ((unknown10 & FLAG_IDLE_SHAKE) != 0) {
-    unknown18.play(unknowncb8, IDLE_SHAKE_TIME, IDLE_SHAKE_TIME, IDLE_SHAKE_TIME);
+  if ((unknown10 & FLAG_UNKNOWN_0) != 0) {
+    unknown18.play(unknowncb8, unknown025, unknown025, unknown025);
   } else {
     unknown18.stop();
   }
-  unknown10 &= ~FLAG_SHAKE;
+  unknown10 &= ~FLAG_UNKNOWN_1;
 }
 
 void ShakeManager::tail() { unknown18.tail(); }
@@ -67,33 +67,33 @@ void ShakeManager::play(const char *name, f32 life, f32 fadeIn, f32 fadeOut) {
     return;
   }
   unknown18.play(unknownca8[type], life, fadeIn, fadeOut);
-  unknown10 |= FLAG_SHAKE;
+  unknown10 |= FLAG_UNKNOWN_1;
 }
 
 void ShakeManager::setIdleShake(bool isIdleShake) {
-  if (((unknown10 & FLAG_IDLE_SHAKE) != 0) == isIdleShake) {
+  if (((unknown10 & FLAG_UNKNOWN_0) != 0) == isIdleShake) {
     return;
   }
   if (isIdleShake) {
-    unknown10 |= FLAG_IDLE_SHAKE;
+    unknown10 |= FLAG_UNKNOWN_0;
   } else {
-    unknown10 &= ~FLAG_IDLE_SHAKE;
+    unknown10 &= ~FLAG_UNKNOWN_0;
   }
-  if ((unknown10 & FLAG_SHAKE) == 0) {
+  if ((unknown10 & FLAG_UNKNOWN_1) == 0) {
     idle();
   }
 }
 
 void ShakeManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
-  case MSG_TYPE_INIT:
-  case MSG_TYPE_CLEAR:
+  case MSG_TYPE_UNKNOWN_4:
+  case MSG_TYPE_UNKNOWN_12:
     clear();
     break;
-  case MSG_TYPE_UPDATE:
+  case MSG_TYPE_UNKNOWN_14:
     update();
     break;
-  case MSG_TYPE_TAIL:
+  case MSG_TYPE_UNKNOWN_18:
     tail();
     break;
   default:

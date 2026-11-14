@@ -5,6 +5,7 @@
 #include "gf/object/component/behavior/plugin/gf_plugin.h"
 #include "gf/object/component/pc/gf_com_behavior_pc.h" // IWYU pragma: keep
 #include "mm_mtl/intrusive_ptr.h"
+#include "types.h"
 
 namespace mm {
 namespace mtl {
@@ -30,6 +31,8 @@ class LurePlugin : public Plugin {
   GF_PLUGIN(GfComBehaviorPc)
 
 public:
+  static const u32 PLUGIN_INDEX = 15;
+
   LurePlugin();
   static LurePlugin *create();
   virtual bool setup(GfComBehaviorPc &behavior);

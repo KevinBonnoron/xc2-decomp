@@ -43,8 +43,9 @@ public:
   static bool isSaveFreeMode();
   GfGamePlayerCamera();
   ~GfGamePlayerCamera();
-  void gevPartyMemberOK(bool isOK) override;
+  // The order of the overrides follows the game's vtable (0x710118add8).
   bool recieveMessage(fw::MessageObject *sender, fw::Message &message) override;
+  void gevPartyMemberOK(bool isOK) override;
   static void procMsgPcResetCamera(fw::MessageObject *sender, MsgPcResetCamera &message);
 
   mm::mtl::IntrusivePtr<fw::Camera> unknown28;       // Inferred role: camera; original member name unknown.

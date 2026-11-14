@@ -4,26 +4,50 @@
 #include "gf/menu/gf_menu_object.h"
 #include "gf/menu/gf_menu_sequence.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 
 namespace ui {
+class UICtrlCursorSelect;
 class UISelectObjList;
 } // namespace ui
 
 namespace gf {
 class GfMenuCallContext;
+class GfMenuDriverList;
+class GfMenuFieldSkillList;
 
 class GfMenuObjPartyForm2 : public GfMenuObject {
 public:
+  class DrDetailListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjPartyForm2 *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class FieldSkillListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjPartyForm2 *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   struct OpenParam {
     u16 unknown00; // Role and original member name unknown.
   };
 
   GfMenuObjPartyForm2(u32 handle);
   ~GfMenuObjPartyForm2() override;
+  void initialize() override;
+  void finalize() override;
   void update() override;
   static void registOpenParam(const OpenParam &param);
   u32 getCursorID(u32 index);
   void changeCursorMode(u32 mode);
+  void setupPlate(u32 plate, GfMenuDriverList *list, u32 index, bool isNumber);
+  void swapDriver(u32 index, u32 other);
   bool seqStartOpen();
   bool seqAppearTitle();
   bool seqAppearFrame();
@@ -33,16 +57,19 @@ public:
   bool seqStartSwap();
   bool seqTakePlate();
   bool seqMovePlate();
+  bool seqPutPlate();
   bool seqWaitSwapEnd();
 
-  // Inferred role: the object ring of a driver list and a second word; original type name unknown.
+  // Inferred role: the object ring of a driver list and the cursor of its objects; original type name unknown.
   struct unknown001 {
-    ui::UISelectObjList *unknown00; // Inferred role: driver objects; original member name unknown.
-    u64 unknown08;                  // Role and original member name unknown, cleared by the constructor.
+    ui::UISelectObjList *unknown00;    // Inferred role: driver objects; original member name unknown.
+    ui::UICtrlCursorSelect *unknown08; // Inferred role: cursor of the driver objects; original member name unknown.
   };
 
-  u8 _24[0x38 - 0x24];
-  bool unknown38; // Role and original member name unknown, cleared by the constructor.
+  u8 _24[0x28 - 0x24];
+  GfMenuDriverList *unknown28; // Inferred role: current members; original member name unknown.
+  GfMenuDriverList *unknown30; // Inferred role: reserve members; original member name unknown.
+  bool unknown38;              // Role and original member name unknown, cleared by the constructor.
   u8 _39[0x40 - 0x39];
   unknown001 unknown40[2];                          // Inferred role: the two driver rings; original member name unknown.
   u32 unknown60;                                    // Inferred role: ring of the cursor, 0xff at start; original member name unknown.
@@ -55,11 +82,21 @@ public:
   int unknown304; // Inferred role: control of the second plate, -1 when idle; original member name unknown.
   u32 unknown308; // Inferred role: display priority of the plate; original member name unknown.
   u8 _30c[0x310 - 0x30c];
-  GfMenuCallContext *unknown310; // Inferred role: announce call context; original member name unknown.
-  u64 unknown318;                // Role and original member name unknown, cleared by the constructor.
+  GfMenuCallContext *unknown310;    // Inferred role: announce call context; original member name unknown.
+  GfMenuFieldSkillList *unknown318; // Inferred role: field skills of the party; original member name unknown.
+  ui::UISelectObjList *unknown320;  // Inferred role: field skill objects; original member name unknown.
 };
 
+static_assert(offsetof(GfMenuObjPartyForm2::DrDetailListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjPartyForm2::DrDetailListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjPartyForm2::FieldSkillListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjPartyForm2::FieldSkillListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjPartyForm2, unknown28) == 0x28, "");
+static_assert(offsetof(GfMenuObjPartyForm2, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjPartyForm2, unknown38) == 0x38, "");
+static_assert(offsetof(GfMenuObjPartyForm2::unknown001, unknown08) == 0x08, "");
+static_assert(sizeof(GfMenuObjPartyForm2::unknown001) == 0x10, "");
+static_assert(offsetof(GfMenuObjPartyForm2, unknown320) == 0x320, "");
 static_assert(offsetof(GfMenuObjPartyForm2, unknown40) == 0x40, "");
 static_assert(offsetof(GfMenuObjPartyForm2, unknown60) == 0x60, "");
 static_assert(offsetof(GfMenuObjPartyForm2, unknown64) == 0x64, "");

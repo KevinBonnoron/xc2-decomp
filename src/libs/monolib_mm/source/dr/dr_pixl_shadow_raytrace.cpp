@@ -7,8 +7,18 @@
 #include "grlib/cglib_render_target.h"
 #include "mm_math/mm_col4.h"
 #include "mm_mtl/fixed_array.h"
+#include "mtl/alloc_handle.h"
 
 namespace ml {
+
+DrPixlShadowRaytrace::DrPixlShadowRaytrace(DrMan *man) : unknown00(man), unknown10(true) {
+  unknown18 = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
+  for (int i = 0; i < 2; i++) {
+    unknown20[i] = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
+  }
+  unknown30 = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
+  unknown38 = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
+}
 
 DrPixlShadowRaytrace::~DrPixlShadowRaytrace() {
   if (unknown38 != nullptr) {

@@ -90,7 +90,7 @@ bool LocalizeResource::OnFileEvent(ml::EventFileTh *event) {
     return false;
   }
 
-  if (event->type == ml::EventFileTh::TYPE_VALID) {
+  if (event->type == ml::EventFileTh::TYPE_UNKNOWN_9) {
     mm::mtl::FixStr<128> filePath;
     switch (unknown154) {
     case unknown001_2:

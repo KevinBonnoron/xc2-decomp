@@ -5,8 +5,6 @@
 #include "types.h"
 
 namespace mtl {
-struct MEMIMAGE_HEAD;
-struct MemoryInfo1;
 
 class IMemAllocator {
 public:
@@ -16,12 +14,12 @@ public:
   virtual AllocatorType getType() const = 0;
   virtual void *allocate(size_t size, size_t alignment) = 0;
   virtual void *allocate(size_t size, size_t alignment, const char *file, int line) = 0;
-  virtual void *allocate_tail(size_t size, size_t alignment, const char *file, int line) { return nullptr; }
+  virtual void *allocate_tail(size_t size, size_t alignment, const char *file, int line);
   virtual void deallocate(void *pointer, size_t size) = 0;
   virtual void *reallocate(void *pointer, size_t size) = 0;
   virtual void log(MemoryInfo *info, bool isDetail) const = 0;
-  virtual void log_callSTack(void *callStack) const {}
-  virtual void checkLeakMemory() {}
+  virtual void log_callSTack(void *callStack) const;
+  virtual void checkLeakMemory();
   virtual const char *getName() const = 0;
   virtual bool hasMemory(const void *pointer) const = 0;
   virtual size_t getAllocSize(const void *pointer) const = 0;

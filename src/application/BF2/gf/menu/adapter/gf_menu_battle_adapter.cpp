@@ -15,9 +15,12 @@
 
 namespace gf {
 
-constexpr f32 PERCENT = 100.0f;
-constexpr f32 PARTY_GAUGE_MAX = 300.0f;
-constexpr int PARTY_GAUGE_SEGMENT = 100;
+// Inferred role: factor that converts a ratio to a percentage; original name unknown.
+constexpr f32 unknown001 = 100.0f;
+// Inferred role: maximum of the party gauge, three segments of 100; original name unknown.
+constexpr f32 unknown002 = 300.0f;
+// Inferred role: size of one segment of the party gauge; original name unknown.
+constexpr int PARTY_GAUGE_UNKNOWN_100 = 100;
 
 static GfMenuBattleAdapter::TypeInfo TYPE_INFOS[] = {
     {&GfMenuBattleAdapter::update_ArtsSlotRecast, {GfMenuAdapter::unknown004_0, 0, 100}},
@@ -63,7 +66,7 @@ GfMenuBattleAdapter *GfMenuBattleAdapter::create(u32 handle, u32 type) {
     if (plugin != nullptr) {
       // __LINE__ must be 130 as in the original source: it is the line argument of operator new.
 #line 130
-      GfMenuBattleAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuBattleAdapter(plugin);
+      GfMenuBattleAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuBattleAdapter(plugin);
       adapter->unknown38.bind(adapter, info.update);
       plugin->release();
       return adapter;
@@ -74,7 +77,7 @@ GfMenuBattleAdapter *GfMenuBattleAdapter::create(u32 handle, u32 type) {
 
 bool GfMenuBattleAdapter::update_ArtsSlotRecast() {
   const GfMenuReference::ArtsPaletteInfo &info = GfMenuReference::getArtsPaletteInfo(unknown30);
-  setNumber(info.unknown04 * PERCENT);
+  setNumber(info.unknown04 * unknown001);
   return info.unknown04 > 0.0f;
 }
 
@@ -166,8 +169,8 @@ bool GfMenuBattleAdapter::update_ChainCount() {
 }
 
 bool GfMenuBattleAdapter::update_PartyGauge() {
-  int gauge = GfGameParty::getPartyGauge() - unknown30 * PARTY_GAUGE_SEGMENT;
-  setNumber(gauge < 0 ? 0 : (gauge > PARTY_GAUGE_SEGMENT ? PARTY_GAUGE_SEGMENT : gauge));
+  int gauge = GfGameParty::getPartyGauge() - unknown30 * PARTY_GAUGE_UNKNOWN_100;
+  setNumber(gauge < 0 ? 0 : (gauge > PARTY_GAUGE_UNKNOWN_100 ? PARTY_GAUGE_UNKNOWN_100 : gauge));
   return true;
 }
 
@@ -177,12 +180,12 @@ bool GfMenuBattleAdapter::update_PartyGaugeAll() {
     setNumber(0);
     return false;
   }
-  setNumber(gauge / PARTY_GAUGE_MAX * PERCENT);
+  setNumber(gauge / unknown002 * unknown001);
   return true;
 }
 
 bool GfMenuBattleAdapter::update_ChainAttackRecast() {
-  setNumber(GfMenuReference::getChainAttackActionRecast() * PERCENT);
+  setNumber(GfMenuReference::getChainAttackActionRecast() * unknown001);
   return true;
 }
 
@@ -192,12 +195,12 @@ bool GfMenuBattleAdapter::update_ChainAttackCount() {
 }
 
 bool GfMenuBattleAdapter::update_ChainAttackDamageRatio() {
-  setNumber(GfMenuReference::getChainAttackDamageRatio() * PERCENT);
+  setNumber(GfMenuReference::getChainAttackDamageRatio() * unknown001);
   return true;
 }
 
 bool GfMenuBattleAdapter::update_ChainAttackExpBonus() {
-  setNumber(GfMenuReference::getChainAttackExpRatio() * PERCENT);
+  setNumber(GfMenuReference::getChainAttackExpRatio() * unknown001);
   return true;
 }
 
@@ -212,7 +215,7 @@ bool GfMenuBattleAdapter::update_ChainAttackBurstCount() {
 }
 
 bool GfMenuBattleAdapter::update_AwakeningRestTime() {
-  setNumber(GfMenuReference::getAwakeningRestTimeRatio() * PERCENT);
+  setNumber(GfMenuReference::getAwakeningRestTimeRatio() * unknown001);
   return true;
 }
 
@@ -220,7 +223,7 @@ bool GfMenuBattleAdapter::update_ElemComboEffTime() {
   if (GfMenuReference::getElementComboParty(unknown30) == 0) {
     return false;
   }
-  setNumber(GfMenuReference::getElementComboPartyTimeLeft(unknown30) * PERCENT);
+  setNumber(GfMenuReference::getElementComboPartyTimeLeft(unknown30) * unknown001);
   return true;
 }
 
@@ -241,7 +244,7 @@ bool GfMenuBattleAdapter::update_ReverseIconCol() {
 GfMenuBattleAdapter *GfMenuBattleAdapter::createFromReferenceIndex(u32 handle, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number, u32 type) {
   // __LINE__ must be 146 as in the original source: it is the line argument of operator new.
 #line 146
-  ReferenceIndexConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceIndexConverter(number);
+  ReferenceIndexConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceIndexConverter(number);
   GfMenuBattleAdapter *adapter = create(handle, type);
   adapter->unknown58 = converter;
   return adapter;
@@ -257,14 +260,14 @@ void GfMenuBattleAdapter::update(const fw::UpdateInfo &info) {
     }
   }
 
-  if (unknown38.isValid() && (unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
+  if (unknown38.isValid() && (unknown20 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) != 0) {
     if (GfMenuManager::isBattleState(0) || GfMenuManager::isBattleState(1)) {
       if (unknown30 >= 0) {
         setDisp(unknown38());
       } else {
         setDisp(false);
       }
-      unknown20 &= ~FLAG_CHANGED;
+      unknown20 &= ~FLAG_UNKNOWN_0;
     }
   }
 }

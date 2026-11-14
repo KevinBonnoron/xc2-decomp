@@ -11,10 +11,10 @@ namespace threading {
 struct MMTHREAD : nn::os::ThreadType {};
 
 enum CPUID {
-  CPUID_ANY,
-  CPUID_CORE_0,
-  CPUID_CORE_1,
-  CPUID_CORE_2,
+  CPUID_UNKNOWN_0, // Inferred role: any; original name unknown.
+  CPUID_UNKNOWN_1, // Inferred role: core 0; original name unknown.
+  CPUID_UNKNOWN_2, // Inferred role: core 1; original name unknown.
+  CPUID_UNKNOWN_3, // Inferred role: core 2; original name unknown.
 };
 
 class ThreadUtil {

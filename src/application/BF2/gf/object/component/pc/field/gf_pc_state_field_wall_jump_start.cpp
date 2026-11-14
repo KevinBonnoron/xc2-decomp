@@ -16,8 +16,8 @@ void StateFieldWallJumpStart::leave(GfComBehaviorPc *behavior, ai::State *next) 
 
 void StateFieldWallJumpStart::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
   GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
-  if (comAsm->isEnd(ANIM_LAYER_BASE) && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_CLIMBJUMP_01)) {
-    reqState(STATE_ID_FIELD_WALL_JUMP_MOVE);
+  if (comAsm->isEnd(ANIM_LAYER_UNKNOWN_0) && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_CLIMBJUMP_01)) {
+    reqState(STATE_ID_UNKNOWN_51);
   }
 }
 

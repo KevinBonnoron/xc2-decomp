@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "ml/work_obj.h"
+#include "mm_math/mm_pnt.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
@@ -21,6 +22,7 @@ public:
   static WinView *getCurrent();
   static WinView *getFullScreenView();
   static WinView *getRootView(WinView *view);
+  static WinView *getPointedView(const mm::Pnt<int> &pos);
   static WinProc *getCurrentProc();
   static void destroyProc(const WinProc *proc);
   static WinView *getView(u32 wid);
@@ -29,6 +31,7 @@ public:
   static bool isCurrent(const WinView *view);
   static void invalidCurrent(WinView *view);
   static bool isCurrentChild(const WinView *view, const WinView *current);
+  static void cutOff(bool cut);
 
   u8 _1b0[0x1f0 - 0x1b0];
   WinView *unknown1f0; // Inferred role: current view; original member name unknown.

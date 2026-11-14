@@ -28,7 +28,7 @@ public:
     QuestFlagCond unknown0a;    // Inferred role: quest flag; original member name unknown.
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_FIELD_LOCK;
+  static const GmkType GMK_TYPE = GMK_TYPE_FIELD_LOCK; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkFieldLock();
   ~GmkFieldLock() override { dispose(); }
@@ -41,10 +41,8 @@ public:
 
   const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
 
-  u8 _48[0x50 - 0x48];
   GmkCollision unknown50; // Inferred role: collision; original member name unknown.
   f32 unknownc0;          // Inferred role: time since the party leader entered the lock; original member name unknown.
-  u8 _c4[0xd0 - 0xc4];
 };
 
 static_assert(sizeof(GmkFieldLock::BdatInfo) == 0xe, "");

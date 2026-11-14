@@ -26,7 +26,7 @@ struct GF_OBJ_HANDLE;
 
 namespace ai {
 
-AiData::AiData() : m_handle(gf::INVALID_HANDLE), m_id(-1), m_sleep(false), m_frameCount(0.0f) {
+AiData::AiData() : m_handle(gf::unknown020), m_id(-1), m_sleep(false), m_frameCount(0.0f) {
   for (int i = 0; i < 16; i++) {
     m_param[i] = 0;
   }
@@ -41,7 +41,7 @@ void AiData::destroy() {}
 static bool unknown001(gf::GF_OBJ_HANDLE *handle, btl::Utility::CHECK_STATE state) { return btl::Utility::AI_CheckState(handle, state, 0); }
 
 void AiData::update(const fw::UpdateInfo &) {
-  if (m_frameCount > 0.0f && m_handle != gf::INVALID_HANDLE) {
+  if (m_frameCount > 0.0f && m_handle != gf::unknown020) {
     if (!unknown001(m_handle, btl::Utility::CHECK_STATE_UNKNOWN_1)) {
       m_frameCount -= 1.0f;
     }
@@ -53,8 +53,8 @@ gf::GF_OBJ_HANDLE *AiData::getHandle() const { return m_handle; }
 void AiData::setHandle(gf::GF_OBJ_HANDLE *handle) { m_handle = handle; }
 
 gf::GF_OBJ_HANDLE *AiData::getHandleTarget() const {
-  if (m_handle == gf::INVALID_HANDLE) {
-    return gf::INVALID_HANDLE;
+  if (m_handle == gf::unknown020) {
+    return gf::unknown020;
   }
   return btl::Utility::AI_GetCharacterHandle(btl::Utility::AI_GetTargetCharacterID(m_handle));
 }
@@ -71,7 +71,7 @@ bool AiData::isValid() const {
   if (m_sleep) {
     return false;
   }
-  if (m_handle == gf::INVALID_HANDLE) {
+  if (m_handle == gf::unknown020) {
     return false;
   }
   if (gf::GfGameParty::isLeaderDriver(m_handle)) {
@@ -100,7 +100,7 @@ mm::Vec3 AiData::getPosition() const { return getPosition(m_handle); }
 
 mm::Vec3 AiData::getPosition(gf::GF_OBJ_HANDLE *handle) const {
   // The game tests this->m_handle here and then passes the handle parameter.
-  if (m_handle != gf::INVALID_HANDLE) {
+  if (m_handle != gf::unknown020) {
     gf::GfObjAcc objAcc(handle);
     if (objAcc.isValid()) {
       return objAcc.getWorldTransform().unknown00;
@@ -116,12 +116,12 @@ f32 AiData::getRadius() const { return getRadius(m_handle); }
 f32 AiData::getRadius(gf::GF_OBJ_HANDLE *handle) const {
   f32 radius = 0.0f;
   // The game tests this->m_handle here and then passes the handle parameter.
-  if (m_handle != gf::INVALID_HANDLE) {
+  if (m_handle != gf::unknown020) {
     gf::GfObjAcc objAcc(handle);
     if (objAcc.isValid()) {
       u32 type = objAcc.getType();
       if (type != gf::OBJECT_TYPE_ENEMY) {
-        if (type == gf::OBJECT_TYPE_DRIVER) {
+        if (type == gf::OBJECT_TYPE_PC) {
           radius = 0.5f; // The game uses this constant for a driver object.
         }
       } else {
@@ -148,7 +148,7 @@ f32 AiData::getRadius(gf::GF_OBJ_HANDLE *handle) const {
 
 int AiData::getScoutStartHp() const {
   int scoutStartHp = 0;
-  if (m_handle != gf::INVALID_HANDLE) {
+  if (m_handle != gf::unknown020) {
     gf::GfObjAcc objAcc(m_handle);
     if (objAcc.isValid() && objAcc.getType() == gf::OBJECT_TYPE_ENEMY) {
       gf::DataParamAcc dataParam(m_handle);

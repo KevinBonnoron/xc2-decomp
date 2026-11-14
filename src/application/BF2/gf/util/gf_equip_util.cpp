@@ -55,7 +55,7 @@ bool GfEquipUtil::equipDriverAcce(u32 driver, u32 slot, u32 accessory, GfItemHan
   return true;
 }
 
-u32 GfEquipUtil::getEquipAcceResult(u32 driver, u32 slot, u32 accessory) { return getEquipAcceResult(*GfDataDriver::getSDataDriver(driver), slot, accessory); }
+u32 GfEquipUtil::getEquipAcceResult(u32 driver, u32 slot, u32 accessory) { return getEquipAcceResult(GfDataDriver::getSDataDriver(driver), slot, accessory); }
 
 u32 GfEquipUtil::getEquipOrbMax(u32 blade) { return GfDataBlade::getEquipOrbMax(blade); }
 
@@ -87,11 +87,11 @@ bool GfEquipUtil::equipBladeOrb(u32 blade, u32 orb, u32 slot, GfItemHandle handl
 }
 
 u32 GfEquipUtil::getEquipOrbResult(u32 blade, u32 orb, u32 slot) {
-  if (GfDataItem::getItemType(orb) != ItemType::EQUIP_ORB) {
-    return EQUIP_RESULT_INVALID_TYPE;
+  if (GfDataItem::getItemType(orb) != ItemType::ITEM_TYPE_UNKNOWN_3) {
+    return EQUIP_RESULT_UNKNOWN_1;
   }
   if (GfItemUtil::getItemBoxCount(orb) == 0) {
-    return EQUIP_RESULT_NO_ITEM;
+    return EQUIP_RESULT_UNKNOWN_6;
   }
 
   GfBdatItem *bdatItem = GfBdatItem::get();
@@ -101,7 +101,7 @@ u32 GfEquipUtil::getEquipOrbResult(u32 blade, u32 orb, u32 slot) {
   for (u32 i = 0; i < equipOrbMax; i++) {
     u32 equipOrb = GfDataBlade::getEquipOrb(blade, i);
     if (slot != i && equipOrb != 0 && bdatItem->getEquipOrbEnhanceCategory(equipOrb) == enhanceCategory) {
-      return EQUIP_RESULT_SAME_CATEGORY;
+      return EQUIP_RESULT_UNKNOWN_3;
     }
   }
 
@@ -110,26 +110,26 @@ u32 GfEquipUtil::getEquipOrbResult(u32 blade, u32 orb, u32 slot) {
   for (u32 i = 0; i < equipOrbMax; i++) {
     u32 equipOrb = GfDataBlade::getEquipOrb(blade, i);
     if (slot != i && equipOrb != 0 && effect == bdatBtl->getBTL_EnhanceEnhanceEffect(bdatItem->getEquipOrbEnhance(equipOrb))) {
-      return EQUIP_RESULT_SAME_EFFECT;
+      return EQUIP_RESULT_UNKNOWN_4;
     }
   }
 
   if (slot == static_cast<u32>(-1) && GfDataBlade::isEquipOrbFull(blade)) {
-    return EQUIP_RESULT_FULL;
+    return EQUIP_RESULT_UNKNOWN_2;
   }
-  return EQUIP_RESULT_OK;
+  return EQUIP_RESULT_UNKNOWN_0;
 }
 
 u32 GfEquipUtil::execWpUpItem(u32 driver, u32 item, u32 weaponType) {
-  if (item >= ITEM_WP_UP_FIRST && item <= ITEM_WP_UP_LAST) {
+  if (item >= ITEM_UNKNOWN_25405 && item <= ITEM_UNKNOWN_25407) {
     if (GfItemUtil::getItemBoxCount(item) == 0) {
-      return EQUIP_RESULT_NO_ITEM;
+      return EQUIP_RESULT_UNKNOWN_6;
     }
     GfDataDriverArts::addWp(driver, weaponType, GfBdatItem::get()->getPreciousType(item));
     GfItemUtil::addItemBox(item, -1);
-    return EQUIP_RESULT_OK;
+    return EQUIP_RESULT_UNKNOWN_0;
   }
-  return EQUIP_RESULT_INVALID_TYPE;
+  return EQUIP_RESULT_UNKNOWN_1;
 }
 
 } // namespace gf

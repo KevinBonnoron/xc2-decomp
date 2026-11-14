@@ -28,7 +28,7 @@ class WindProbe;
 namespace gf {
 
 bool GfComDynamics::recieveMessage(fw::MessageObject *sender, fw::Message &message) {
-  if (message.unknown00 == MSG_DEBUG_ACTIVATE_COMPONENT_WINDOW) {
+  if (message.unknown00 == MSG_UNKNOWN_16777219) {
     procMsgActivateComponentDebugWindow(sender, static_cast<MsgDebugActivateComponentWindow &>(message));
     return true;
   }
@@ -38,7 +38,7 @@ bool GfComDynamics::recieveMessage(fw::MessageObject *sender, fw::Message &messa
 
 void GfComDynamics::procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message) {}
 
-GfComDynamics::GfComDynamics() : unknowne8(ITERATION_COUNT_DEFAULT), unknownec(false), unknown100(nullptr) { unknownf0.unknown08 = this; }
+GfComDynamics::GfComDynamics() : unknowne8(ITERATION_UNKNOWN_6), unknownec(false), unknown100(nullptr) { unknownf0.unknown08 = this; }
 
 GfComDynamics::~GfComDynamics() {}
 
@@ -60,7 +60,7 @@ void GfComDynamics::setup(const SetupInfo &info) {
   skd::CollisionObject *collisionObject = info.collisionObject;
   bool isCreateCollision = false;
   if (collisionObject == nullptr) {
-    collisionObject = skd::Factory::createColObject(info.resDynamics->unknown18, *pose, getAllocator(ALLOCATOR_DEFAULT));
+    collisionObject = skd::Factory::createColObject(info.resDynamics->unknown18, *pose, getAllocator(ALLOCATOR_UNKNOWN_0));
     isCreateCollision = true;
   }
 
@@ -77,7 +77,7 @@ void GfComDynamics::setup(const SetupInfo &info) {
     }
   }
 
-  skd::Dynamics *dynamics = skd::Factory::createDynamics(collisionObject, *info.resDynamics->unknown20, *pose, unknowne0.get(), getAllocator(ALLOCATOR_DEFAULT));
+  skd::Dynamics *dynamics = skd::Factory::createDynamics(collisionObject, *info.resDynamics->unknown20, *pose, unknowne0.get(), getAllocator(ALLOCATOR_UNKNOWN_0));
   dynamics->unknown48.unknown140 = info.iterationCount;
   fw::DyanmicsManager *manager = fw::DyanmicsManager::get();
   if (manager != nullptr) {
@@ -108,14 +108,14 @@ void GfComDynamics::applyAttribute() {
   }
 
   skd::Dynamics *dynamics = unknown10.unknown18;
-  u64 attribute = comAsm->getAttribute(static_cast<AsmCategory>(0), ANIM_LAYER_BASE);
-  bool isFreeMovement = (attribute & ASM_ATTRIBUTE_LIMIT_MOVEMENT) == 0;
+  u64 attribute = comAsm->getAttribute(static_cast<AsmCategory>(0), ANIM_LAYER_UNKNOWN_0);
+  bool isFreeMovement = (attribute & ASM_ATTRIBUTE_UNKNOWN_2) == 0;
   f32 maxMoveDistance = isFreeMovement ? 0.1f : 0.03f;
   f32 maxRotation = isFreeMovement ? 0.0f : 0.1f;
   dynamics->unknown198 = maxMoveDistance;
   dynamics->unknown19c = maxRotation;
-  if ((attribute & ASM_ATTRIBUTE_MAX_ITERATION) != 0 || unknownec) {
-    dynamics->unknown48.unknown140 = ITERATION_COUNT_MAX;
+  if ((attribute & ASM_ATTRIBUTE_UNKNOWN_6) != 0 || unknownec) {
+    dynamics->unknown48.unknown140 = ITERATION_UNKNOWN_30;
   } else {
     dynamics->unknown48.unknown140 = unknowne8;
   }

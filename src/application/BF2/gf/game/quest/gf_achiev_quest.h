@@ -13,10 +13,10 @@ struct AchievQuest {
   bool incleseCount(u32 count);
   bool decleseCount(u32 count);
 
-  static const u32 COUNT_MASK = 0x3fffffff;
+  static const u32 MASK_UNKNOWN_1073741823 = 0x3fffffff; // Inferred role: count mask; original name unknown.
 
-  u32 getCount() const { return unknown04 & COUNT_MASK; }
-  u32 getTargetCount() const { return unknown08 & COUNT_MASK; }
+  u32 getCount() const { return unknown04 & MASK_UNKNOWN_1073741823; }
+  u32 getTargetCount() const { return unknown08 & MASK_UNKNOWN_1073741823; }
 
   QuestID unknown00; // Inferred role: quest; original member name unknown.
   u32 unknown04;     // Inferred role: count; original member name unknown.

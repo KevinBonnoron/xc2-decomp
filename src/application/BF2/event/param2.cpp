@@ -7,7 +7,7 @@ namespace event {
 Param2::Param2() {}
 
 void Param2::clear() {
-  for (u32 i = 0; i < VARIABLE_COUNT; i++) {
+  for (u32 i = 0; i < VARIABLE_UNKNOWN_10; i++) {
     unknown08[i].clear();
   }
 }
@@ -18,7 +18,7 @@ const ParamVariable2 &Param2::val(u32 index) const { return unknown08[index]; }
 
 void Param2::createString(mm::mtl::FixStr<256> &string) {
   string = "";
-  for (u32 i = 0; i < VARIABLE_COUNT; i++) {
+  for (u32 i = 0; i < VARIABLE_UNKNOWN_10; i++) {
     mm::mtl::FixStr<256> variable;
     unknown08[i].createString(variable);
     string += variable.c_str();

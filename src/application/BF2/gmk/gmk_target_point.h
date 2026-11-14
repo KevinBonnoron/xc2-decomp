@@ -14,7 +14,7 @@ public:
     void create(CBdatWrapper, int, const AGmkBase &) {}
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_TARGET_POINT;
+  static const GmkType GMK_TYPE = GMK_TYPE_TARGET_POINT; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkTargetPoint() {}
   ~GmkTargetPoint() override { dispose(); }

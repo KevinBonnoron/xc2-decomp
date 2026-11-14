@@ -94,6 +94,8 @@ public:
   struct PosInfo {
     void update(const fw::UpdateInfo &info);
     void updateColiOff(ml::ScnObjAccPartsPos &partsPos);
+    void updateAnim(ml::ScnObjAccPartsPos &partsPos, f32 delta);
+    void syncGfTransform(const mm::Mat44 &matrix);
 
     GfFieldLodColiAnim *unknown00; // Inferred role: owner; original member name unknown.
     GfFieldLodEffect unknown08;    // Inferred role: pop/depop effects; original member name unknown.
@@ -131,6 +133,8 @@ public:
   void disposePosInfos();
   void update(const fw::UpdateInfo &info);
   void validateVeSe(const GfFieldLod &lod);
+  bool play(u16 lodId, bool isReverse, bool isSkip);
+  void setFade(u16 lodId, bool isFadeIn, f32 fadeTime);
   void stop(u16 lodId);
   bool isLodIdExist(u16 lodId) const;
   void setPlaySpeed(u16 lodId, f32 speed);
@@ -138,6 +142,7 @@ public:
   bool isPlayEnd(u16 lodId) const;
   f32 getAnimEndTime(u16 lodId) const;
   void clearEffectInsts();
+  bool isPlayLoop(u16 lodId) const;
   void debugDraw() const;
   static GfFieldLodState findStateOfAnimReverse(bool isReverse);
   static GfFieldLodState findStateOfFade(bool isFadeIn, bool isImmediate);
@@ -186,6 +191,7 @@ public:
     void create(u16 bdatId);
     void dispose();
     void dirtyCache();
+    void update();
 
     u16 unknown00;         // Inferred role: lod id; original member name unknown.
     f32 unknown04;         // Inferred role: fade in time; original member name unknown.
@@ -199,8 +205,10 @@ public:
   void initialize(const GfSetupParam &param);
   int findBdatIdByLodId(u16 lodId) const;
   const BdatInfo *findBdatInfo(int bdatId) const;
+  BdatInfo *_findBdatInfo(int bdatId);
   bool isAnimReverse(int bdatId) const;
   bool isPlayAnimEnd(int bdatId) const;
+  bool isPlayAnimLoop(int bdatId) const;
   f32 getAnimEndTime(int bdatId) const;
   void setFade(int bdatId, bool isFadeIn, bool isImmediate);
   void setLodSwitchId(int bdatId, u32 switchId);
@@ -211,7 +219,16 @@ public:
   bool findTransform(mm::Mat44 &matrix, int bdatId) const;
   void gevMapjump(GEV event, const MapjumpCallbackInfo &info);
   void gevPlayEvent(GEV event, u32 value);
+  void createColiAnim(ml::ScnObjModel *model, bool isDebugDraw);
+  void disposeColiAnim();
+  void createBdatInfos();
+  void disposeBdatInfos();
+  void updateBdatInfos();
+  void updateBdatInfosImmidiate();
+  void validateVeSe();
+  void finalize();
   static bool isAnimReverseOfInit(int bdatId);
+  static void validateBySaveData();
   static bool isVisibleOfInit(int bdatId);
   static void validateByInitData();
   static void debugDraw();

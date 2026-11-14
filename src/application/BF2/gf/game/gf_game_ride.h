@@ -11,16 +11,16 @@ namespace gf {
 struct GF_OBJ_HANDLE;
 struct GfSetupParam;
 
-constexpr u32 MSG_GAME_RIDE_EVENT = 0x1000030;
+constexpr u32 EVENT_UNKNOWN_16777264 = 0x1000030; // Inferred role: msg game ride event; original name unknown.
 
 enum {
-  RIDE_EVENT_RIDE_ON = 0,
-  RIDE_EVENT_GET_DOWN = 1,
-  RIDE_EVENT_GET_DOWN_FORCE = 2,
+  RIDE_EVENT_UNKNOWN_0 = 0, // Inferred role: ride event ride on; original name unknown.
+  RIDE_EVENT_UNKNOWN_1 = 1, // Inferred role: ride event get down; original name unknown.
+  RIDE_EVENT_UNKNOWN_2 = 2, // Inferred role: ride event get down force; original name unknown.
 };
 
 struct MsgGameRideEvent : fw::Message {
-  explicit MsgGameRideEvent(u32 event) : fw::Message(MSG_GAME_RIDE_EVENT, 0), unknown08(event) {}
+  explicit MsgGameRideEvent(u32 event) : fw::Message(EVENT_UNKNOWN_16777264, 0), unknown08(event) {}
 
   u32 unknown08; // Inferred role: ride event type; original member name unknown.
 };
@@ -41,8 +41,9 @@ public:
   static bool isRider(GF_OBJ_HANDLE *handle);
   void resetHandles();
   static bool isVehicle(GF_OBJ_HANDLE *handle);
-  void gevPartyReturnFieldState(u32 state) override;
+  // The order of the overrides follows the game's vtable (0x710118b510).
   bool recieveMessage(fw::MessageObject *sender, fw::Message &message) override;
+  void gevPartyReturnFieldState(u32 state) override;
   void procMsgGameRideEvent(fw::MessageObject *sender, MsgGameRideEvent &message);
 
   GF_OBJ_HANDLE *unknown28; // Inferred role: vehicle; original member name unknown.

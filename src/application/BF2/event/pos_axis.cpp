@@ -30,10 +30,10 @@ void PosAxis::set(u32 axis, const mm::Vec3 &pos) {
 mm::Vec3 PosAxis::calcPos() const { return mm::mtl::Singleton<DataManager>::getPtr()->axis2pos(unknown08, unknown10.x, unknown10.y, unknown10.z); }
 
 mm::Vec3 DataManager::axis2pos(u32 axis, f32 x, f32 y, f32 z) {
-  if (axis < PosAxis::AXIS_CHARA) {
+  if (axis < PosAxis::AXIS_UNKNOWN_4) {
     return unknown002(getPosAxis(axis), x, y, z);
   }
-  if (axis < getCharaNum() + PosAxis::AXIS_CHARA) {
+  if (axis < getCharaNum() + PosAxis::AXIS_UNKNOWN_4) {
     return unknown002(getPosAxis(axis), x, y, z);
   }
   return mm::Vec3(x, y, z);
@@ -42,19 +42,19 @@ mm::Vec3 DataManager::axis2pos(u32 axis, f32 x, f32 y, f32 z) {
 mm::Mat44 PosAxis::calcOrigMat() const { return mm::mtl::Singleton<DataManager>::getPtr()->getPosAxis(unknown08); }
 
 mm::Mat44 DataManager::getPosAxis(u32 axis) {
-  if (axis < PosAxis::AXIS_CHARA) {
+  if (axis < PosAxis::AXIS_UNKNOWN_4) {
     mm::Mat44 mat = mm::Mat44::identity;
     switch (axis) {
-    case PosAxis::AXIS_NONE:
+    case PosAxis::AXIS_UNKNOWN_0:
       mat = unknown120->unknownd0;
       break;
-    case PosAxis::AXIS_POS:
+    case PosAxis::AXIS_UNKNOWN_1:
       mat = unknown120->unknownd0;
       break;
-    case PosAxis::AXIS_POS_GLOBAL:
+    case PosAxis::AXIS_UNKNOWN_2:
       mat = unknown120->unknown120;
       break;
-    case PosAxis::AXIS_SAY:
+    case PosAxis::AXIS_UNKNOWN_3:
       if (mm::mtl::Singleton<TextManager>::getPtr()->getTalker() != nullptr) {
         ObjectChara *chara = mm::mtl::Singleton<ObjectManager>::getPtr()->searchByHandle(mm::mtl::Singleton<TextManager>::getPtr()->getTalker()->getHandle());
         if (chara != nullptr) {
@@ -66,8 +66,8 @@ mm::Mat44 DataManager::getPosAxis(u32 axis) {
     }
     return mat;
   }
-  if (axis < getCharaNum() + PosAxis::AXIS_CHARA) {
-    ObjectChara *chara = mm::mtl::Singleton<ObjectManager>::getPtr()->getChara(axis - PosAxis::AXIS_CHARA);
+  if (axis < getCharaNum() + PosAxis::AXIS_UNKNOWN_4) {
+    ObjectChara *chara = mm::mtl::Singleton<ObjectManager>::getPtr()->getChara(axis - PosAxis::AXIS_UNKNOWN_4);
     mm::Mat44 mat;
     mat.setRotXYZ(chara->getRot());
     mat.setTrans(chara->getPos());
@@ -79,20 +79,20 @@ mm::Mat44 DataManager::getPosAxis(u32 axis) {
 const char *PosAxis::getOrigName() const { return mm::mtl::Singleton<DataManager>::getPtr()->getPosName(unknown08); }
 
 inline const char *DataManager::getPosName(u32 axis) {
-  if (axis < PosAxis::AXIS_CHARA) {
+  if (axis < PosAxis::AXIS_UNKNOWN_4) {
     switch (axis) {
-    case PosAxis::AXIS_NONE:
+    case PosAxis::AXIS_UNKNOWN_0:
       return "";
-    case PosAxis::AXIS_POS:
+    case PosAxis::AXIS_UNKNOWN_1:
       return "POS";
-    case PosAxis::AXIS_POS_GLOBAL:
+    case PosAxis::AXIS_UNKNOWN_2:
       return "POS_G";
-    case PosAxis::AXIS_SAY:
+    case PosAxis::AXIS_UNKNOWN_3:
       return "SAY";
     }
   }
-  if (axis < getCharaNum() + PosAxis::AXIS_CHARA) {
-    return mm::mtl::Singleton<ObjectManager>::getPtr()->getChara(axis - PosAxis::AXIS_CHARA)->getName();
+  if (axis < getCharaNum() + PosAxis::AXIS_UNKNOWN_4) {
+    return mm::mtl::Singleton<ObjectManager>::getPtr()->getChara(axis - PosAxis::AXIS_UNKNOWN_4)->getName();
   }
   return "";
 }

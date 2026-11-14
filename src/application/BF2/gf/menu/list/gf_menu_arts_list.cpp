@@ -11,7 +11,7 @@ GfMenuArtsList::~GfMenuArtsList() { ; }
 GfMenuArtsList *GfMenuArtsList::create() {
   // __LINE__ must be 35 as in the original source: it is the line argument of operator new.
 #line 35
-  GfMenuArtsList *list = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuArtsList();
+  GfMenuArtsList *list = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuArtsList();
   list->addRef();
   return list;
 }

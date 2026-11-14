@@ -24,28 +24,28 @@ class Manager : public mm::mtl::PtrSingleton<Manager>, public ml::IWorkEvent, pu
   friend class MemoryManager;
 
 public:
-  static constexpr u32 MANAGER_COUNT = 64;
+  static constexpr u32 MANAGER_UNKNOWN_64 = 64; // Inferred role: manager count; original name unknown.
 
   enum LANGUAGE_MODE {
-    LANGUAGE_MODE_NONE,
-    LANGUAGE_MODE_VOICE_TYPE_0,
-    LANGUAGE_MODE_VOICE_TYPE_1,
+    LANGUAGE_MODE_UNKNOWN_0, // Inferred role: none; original name unknown.
+    LANGUAGE_MODE_UNKNOWN_1, // Inferred role: voice type 0; original name unknown.
+    LANGUAGE_MODE_UNKNOWN_2, // Inferred role: voice type 1; original name unknown.
   };
 
   enum {
-    FLAG_PLAY = 1 << 0,
-    FLAG_PLAY_END = 1 << 1,
-    FLAG_END_FADE_OUT = 1 << 2,
-    FLAG_HIDE_INFO = 1 << 10,
+    FLAG_UNKNOWN_0 = 1 << 0,   // Inferred role: play flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1,   // Inferred role: play end flag; original name unknown.
+    FLAG_UNKNOWN_2 = 1 << 2,   // Inferred role: end fade out flag; original name unknown.
+    FLAG_UNKNOWN_10 = 1 << 10, // Inferred role: hide info flag; original name unknown.
   };
 
   enum {
-    STATE_INIT = 1 << 0,
-    STATE_SETUP_SCENE_END = 1 << 1,
-    STATE_START_SCENE = 1 << 2,
-    STATE_START_PAGE = 1 << 3,
-    STATE_END_SCENE = 1 << 4,
-    STATE_STOP = 1 << 5,
+    STATE_UNKNOWN_0 = 1 << 0, // Inferred role: init; original name unknown.
+    STATE_UNKNOWN_1 = 1 << 1, // Inferred role: setup scene end; original name unknown.
+    STATE_UNKNOWN_2 = 1 << 2, // Inferred role: start scene; original name unknown.
+    STATE_UNKNOWN_3 = 1 << 3, // Inferred role: start page; original name unknown.
+    STATE_UNKNOWN_4 = 1 << 4, // Inferred role: end scene; original name unknown.
+    STATE_UNKNOWN_5 = 1 << 5, // Inferred role: stop; original name unknown.
   };
 
   Manager(ml::Scn *scn);
@@ -54,8 +54,8 @@ public:
   gf::GF_OBJ_HANDLE *getObjHandle() const { return unknown280; }
   ml::Scn *getScn() const { return unknown228; }
   const char *getSceneName() const { return unknown254.c_str(); }
-  bool isEndFadeOut() const { return (unknown18 & FLAG_END_FADE_OUT) != 0; }
-  bool isPlay() const { return (unknown18 & FLAG_PLAY) != 0; }
+  bool isEndFadeOut() const { return (unknown18 & FLAG_UNKNOWN_2) != 0; }
+  bool isPlay() const { return (unknown18 & FLAG_UNKNOWN_0) != 0; }
   u32 getPlayParam(u32 index) const { return unknown288[index]; }
   void failureSkip();
   void nextEvent(int next);
@@ -98,16 +98,16 @@ public:
   virtual void bkgHomeMenu(bool isOpen);
 
 private:
-  u32 unknown18;                                             // Inferred role: flags; original member name unknown.
-  u32 unknown1c;                                             // Inferred role: state; original member name unknown.
-  mm::mtl::FixedVector<IManager *, MANAGER_COUNT> unknown20; // Inferred role: managers; original member name unknown.
-  ml::Scn *unknown228;                                       // Inferred role: scn; original member name unknown.
-  mm::mtl::FixStr<32> unknown230;                            // Inferred role: event name; original member name unknown.
-  mm::mtl::FixStr<32> unknown254;                            // Inferred role: scene name; original member name unknown.
-  int unknown278;                                            // Inferred role: start page id; original member name unknown.
-  gf::GF_OBJ_HANDLE *unknown280;                             // Inferred role: object handle; original member name unknown.
-  u32 unknown288[4];                                         // Inferred role: play params; original member name unknown.
-  LANGUAGE_MODE unknown298;                                  // Inferred role: language mode; original member name unknown.
+  u32 unknown18;                                                  // Inferred role: flags; original member name unknown.
+  u32 unknown1c;                                                  // Inferred role: state; original member name unknown.
+  mm::mtl::FixedVector<IManager *, MANAGER_UNKNOWN_64> unknown20; // Inferred role: managers; original member name unknown.
+  ml::Scn *unknown228;                                            // Inferred role: scn; original member name unknown.
+  mm::mtl::FixStr<32> unknown230;                                 // Inferred role: event name; original member name unknown.
+  mm::mtl::FixStr<32> unknown254;                                 // Inferred role: scene name; original member name unknown.
+  int unknown278;                                                 // Inferred role: start page id; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown280;                                  // Inferred role: object handle; original member name unknown.
+  u32 unknown288[4];                                              // Inferred role: play params; original member name unknown.
+  LANGUAGE_MODE unknown298;                                       // Inferred role: language mode; original member name unknown.
 };
 
 static_assert(sizeof(Manager) == 0x2a0, "");

@@ -6,6 +6,7 @@
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 
 namespace ui {
 class UIObjectAcc;
@@ -18,6 +19,33 @@ class GfMenuReferenceNumber;
 
 class GfMenuObjPartyForm3 : public GfMenuObject {
 public:
+  class MainListener : public ui::UIObjectListener {
+  public:
+    MainListener(GfMenuObjPartyForm3 *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjPartyForm3 *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class BGListener : public ui::UIObjectListener {
+  public:
+    BGListener(GfMenuObjPartyForm3 *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];            // Actively zero-initialized unknown byte range, NOT padding; original name/role unknown.
+    GfMenuObjPartyForm3 *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class DriverSelectListener : public ui::UIObjectListener {
+  public:
+    DriverSelectListener(GfMenuObjPartyForm3 *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];            // Actively zero-initialized unknown byte range, NOT padding; original name/role unknown.
+    GfMenuObjPartyForm3 *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   bool seqWaitOpenEnd();
   struct OpenParam {
     u16 unknown00; // Role and original member name unknown.
@@ -33,6 +61,8 @@ public:
   void finalize() override;
   void update() override;
   static void setupBGLayout(ui::UIObjectAcc &, u32, bool);
+  static void setupDriverSelect(ui::UIObjectAcc &acc, GfMenuDriverList *list, u32 first, u32 second, mm::mtl::FixedArray<mm::mtl::IntrusivePtr<GfMenuReferenceNumber>, 7> &numbers);
+  static void setupDriverLayout(ui::UIObjectAcc &acc, u32 first, u32 second, mm::mtl::FixedArray<mm::mtl::IntrusivePtr<GfMenuReferenceNumber>, 7> &numbers, u32 mode);
   void refreshRemoveAddOperation(u32 handle, int index);
   bool seqAnnounceChange();
 
@@ -62,6 +92,12 @@ static_assert(offsetof(GfMenuObjPartyForm3, unknown40) == 0x40, "");
 static_assert(offsetof(GfMenuObjPartyForm3, unknown44) == 0x44, "");
 static_assert(offsetof(GfMenuObjPartyForm3, unknown48) == 0x48, "");
 static_assert(offsetof(GfMenuObjPartyForm3, unknown80) == 0x80, "");
+static_assert(offsetof(GfMenuObjPartyForm3::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjPartyForm3::BGListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjPartyForm3::MainListener) == 0x28, "");
+static_assert(sizeof(GfMenuObjPartyForm3::BGListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjPartyForm3::DriverSelectListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjPartyForm3::DriverSelectListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjPartyForm3, unknown310) == 0x310, "");
 static_assert(offsetof(GfMenuObjPartyForm3, unknown318) == 0x318, "");
 static_assert(sizeof(GfMenuObjPartyForm3) == 0x320, "");

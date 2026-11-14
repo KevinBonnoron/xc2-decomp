@@ -9,6 +9,8 @@ class Reflection;
 } // namespace fw
 
 namespace mm {
+struct Vec3;
+
 namespace mtl {
 class RTTI;
 } // namespace mtl
@@ -23,7 +25,10 @@ public:
   ~FusionComboCamera() override;
   static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
   void onActivate() override;
+  void update(const fw::UpdateInfo &info) override;
   bool isPlayEnd() const;
+  f32 getYaw(const mm::Vec3 &direction, const mm::Vec3 &reference);
+  f32 getPitch(const mm::Vec3 &direction, const mm::Vec3 &reference);
   static f32 fastOut(f32 t);
   static f32 slowOut(f32 t);
   static f32 curve(f32 a, f32 b, f32 t);

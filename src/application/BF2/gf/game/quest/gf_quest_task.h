@@ -21,7 +21,7 @@ public:
   static void completeTalkTask(u32 npc, QuestID quest);
   static bool isEnableTaskCondition(const QuestTaskParam &param);
   static void completeReachTask(u32 map, u32 place);
-  static void completeItemUseTask(u32 item, u32 count);
+  static void completeItemUseTask(u32 item, u32 driver);
   static void completeGimmickTask(gmk::GmkType type, u32 gimmick);
   static void destroyTaskAchieve(QuestID quest);
   static void refreshTaskParam(QuestID quest);

@@ -1,7 +1,7 @@
 #pragma once
 #include <stddef.h>
 
-#include "gf/data/gf_data_blade.h"
+#include "gf/data/gf_data_driver.h"
 #include "gf/game/quest/gf_quest_id.h"
 #include "mm_mtl/fixed_queue.h"
 #include "mm_mtl/fixed_vector.h"
@@ -53,6 +53,7 @@ public:
   void gevItemAdd(u32 item, int count);
   void gevBladeActivate(u32 blade, ActivateType activateType, ActivateType oldActivateType);
   void gevMercenariesMissionFlag(u32 mission, u32 flag, u32 value);
+  bool getBladeByAchievementSet(mm::mtl::FixedVector<u16, 422> &blades, u32 achievementSet) const;
 
   mm::mtl::FixedQueue<IncQuest, 512> unknown08; // Inferred role: pending achievement count increments; original member name unknown.
 };

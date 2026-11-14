@@ -119,6 +119,22 @@ u32 UILayoutObject::countActiveChild() const {
   return count;
 }
 
+void UILayoutObject::apply() {
+  UIObject::apply();
+  if (unknown98.test(UI_OBJECT_FLAG_SUSPEND)) {
+    return;
+  }
+  UIObjectList *list = unknown108;
+  if (list == nullptr) {
+    return;
+  }
+  for (mm::mtl::IntrusiveList<UIObject>::iterator it = list->unknown08.begin(); it != list->unknown08.end(); ++it) {
+    UIObject &object = *it;
+    object.apply();
+    object.resetDirty();
+  }
+}
+
 void UILayoutObject::setViewport(const mm::Rect<s16> &viewport) {
   layer::LayerAccLayoutObj acc(unknownc8);
   layer::LayerAccManager manager;

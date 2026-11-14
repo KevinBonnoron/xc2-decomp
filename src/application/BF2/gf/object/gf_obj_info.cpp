@@ -26,8 +26,8 @@ GFOBJ_MOUNT::GFOBJ_MOUNT() : unknown00(reinterpret_cast<GF_MOUNT_HANDLE *>(-1)),
 GFOBJ_MOUNT::~GFOBJ_MOUNT() { unknown10.unknown001(); }
 
 GFOBJ_INFO::GFOBJ_INFO()
-    : unknown00(0), unknown02(0), unknown04(4), unknown06(0), unknown08(INVALID_HANDLE), unknown10(reinterpret_cast<GF_ASSET_HANDLE *>(-1)), unknown18(nullptr), unknown30(nullptr), unknown48(0),
-      unknown88(INVALID_HANDLE), unknown90(INVALID_HANDLE), unknown98(nullptr), unknowna0(mm::Vec3::unit), unknownb0(-1), unknown3d8(nullptr) {
+    : unknown00(0), unknown02(0), unknown04(4), unknown06(0), unknown08(unknown020), unknown10(reinterpret_cast<GF_ASSET_HANDLE *>(-1)), unknown18(nullptr), unknown30(nullptr), unknown48(0),
+      unknown88(unknown020), unknown90(unknown020), unknown98(nullptr), unknowna0(mm::Vec3::unit), unknownb0(-1), unknown3d8(nullptr) {
   unknownb8.assign(GFOBJ_MOUNT());
   for (u32 i = 0; i < 3; i++) {
     unknown70[i] = 0;
@@ -49,14 +49,14 @@ GFOBJ_INFO::~GFOBJ_INFO() {
     unknown98 = nullptr;
   }
   unknown00 = 0;
-  unknown08 = INVALID_HANDLE;
+  unknown08 = unknown020;
   unknown10 = reinterpret_cast<GF_ASSET_HANDLE *>(-1);
   unknown18 = nullptr;
   for (u32 i = 0; i < 3; i++) {
     unknown70[i] = 0;
   }
-  unknown88 = INVALID_HANDLE;
-  unknown90 = INVALID_HANDLE;
+  unknown88 = unknown020;
+  unknown90 = unknown020;
 }
 
 void GFOBJ_INFO::createVolumeFade(GfComModel *model) {
@@ -68,7 +68,7 @@ void GFOBJ_INFO::createVolumeFade(GfComModel *model) {
     unknown3d8 = nullptr;
   }
 #line 90
-  unknown3d8 = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfVolumeFade(static_cast<GfObj *>(model->unknown08)->unknownf8, model->unknown18->getInterface());
+  unknown3d8 = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfVolumeFade(static_cast<GfObj *>(model->unknown08)->unknownf8, model->unknown18->getInterface());
 }
 
 } // namespace gf

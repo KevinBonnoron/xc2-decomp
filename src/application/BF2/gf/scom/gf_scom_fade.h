@@ -23,7 +23,7 @@ public:
   bool exec(const fw::UpdateInfo &info) override;
   static GF_SCOM_HANDLE *create(u32 channel, u32 frame, const mm::Col4 &color);
 
-  static unknown001 s_fades[GfMenuFade::FADE_COUNT];
+  static unknown001 s_fades[GfMenuFade::FADE_UNKNOWN_3];
   static GF_SCOM_HANDLE *s_hCreatedReq;
 };
 

@@ -24,7 +24,7 @@ public:
     u16 unknown00; // Inferred role: map rev id; original member name unknown.
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_ANTI_BLADE_AREA;
+  static const GmkType GMK_TYPE = GMK_TYPE_ANTI_BLADE_AREA; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkAntiBladeArea() : unknown60(nullptr) {}
   ~GmkAntiBladeArea() override { dispose(); }

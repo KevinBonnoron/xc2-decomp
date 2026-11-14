@@ -1,5 +1,7 @@
 #include "mm_mtl/hash.h"
 
+#include <string.h>
+
 #include "types.h"
 
 namespace mm {
@@ -7,7 +9,8 @@ namespace mtl {
 
 namespace {
 
-const u32 s_crcTable[256] = {
+// Inferred role: crc table of the hash; original name unknown.
+const u32 unknown001[256] = {
     0x46d1e192, 0x66edf9aa, 0x927fc9e5, 0xa53baacc, 0x29b47658, 0x5a411a01, 0x0e66d5bd, 0x0dd5b1db, 0xcb38340e, 0x04d4ebb6, 0x98bc4f54, 0x36f20f2c, 0x4a3047ed, 0x1ec1e0eb, 0x568c0c1f, 0x6a731432,
     0x81367fc6, 0xe3e25237, 0xe7f64884, 0x0fa59f64, 0x4f3109de, 0xf02d61f5, 0x5daec03b, 0x7f740e83, 0x056ff2d8, 0x2026cc0a, 0x7ac2112d, 0x82c55605, 0xb0911ef2, 0xa7b88e4c, 0x89dca282, 0x4b254d27,
     0x7694a6d3, 0xd229eadd, 0x8e8f3738, 0x5bee7a55, 0x012eb6ab, 0x08dd28c8, 0xb5abc274, 0xbc7931f0, 0xf2396ed5, 0xe4e43d97, 0x943f4b7f, 0x85d0293d, 0xaed83a88, 0xc8f932fc, 0xc5496f20, 0xe9228173,
@@ -26,7 +29,8 @@ const u32 s_crcTable[256] = {
     0x877a978b, 0x99175d86, 0x57dfacbb, 0xceb02de9, 0xcf4d5c09, 0x3a8813d4, 0xb7448816, 0x63fa5568, 0x06be014b, 0xd642fa7b, 0x10aa7c90, 0x8082c88e, 0x1afcba79, 0x7519549d, 0x490a87ff, 0x8820c3a0,
 };
 
-const u32 s_hashSizeTable[] = {
+// Inferred role: sizes of the hash tables; original name unknown.
+const u32 unknown002[] = {
     0x00000000, 0x00000002, 0x00000003, 0x00000007, 0x0000000b, 0x00000013, 0x00000025, 0x00000043, 0x00000083, 0x0000011b, 0x00000209,
     0x00000409, 0x00000805, 0x00001003, 0x0000201b, 0x0000402b, 0x00008003, 0x0001002d, 0x0002001d, 0x00040003, 0x00080015, 0x00100007,
     0x00200011, 0x0040000f, 0x00800009, 0x0100002b, 0x02000023, 0x0400000f, 0x0800001d, 0x10000003, 0x2000000b, 0x40000055, 0x800002d9,
@@ -49,7 +53,7 @@ unsigned int nthHashSize(unsigned int index) {
       break;
     }
   }
-  return s_hashSizeTable[bit - 1];
+  return unknown002[bit - 1];
 }
 
 unsigned int hash32Mix(unsigned int key) {
@@ -72,9 +76,17 @@ unsigned int hash64Mix(unsigned long key) {
   return static_cast<unsigned int>(key);
 }
 
-unsigned int hashFloatMix(float key) { return hash32Mix(*reinterpret_cast<const u32 *>(&key)); }
+unsigned int hashFloatMix(float key) {
+  u32 bits;
+  memcpy(&bits, &key, sizeof(bits));
+  return hash32Mix(bits);
+}
 
-unsigned int hashDoubleMix(double key) { return hash64Mix(*reinterpret_cast<const u64 *>(&key)); }
+unsigned int hashDoubleMix(double key) {
+  u64 bits;
+  memcpy(&bits, &key, sizeof(bits));
+  return hash64Mix(bits);
+}
 
 unsigned int hashPointerMix(const void *key) { return hash64Mix(reinterpret_cast<u64>(key)); }
 
@@ -82,7 +94,7 @@ unsigned int hashCrc(const char *data, size_t size) {
   u32 crc = size;
   const u8 *bytes = reinterpret_cast<const u8 *>(data);
   for (size_t index = 0; index < size; index++) {
-    crc = s_crcTable[static_cast<u8>(crc) ^ bytes[index]] ^ (crc >> 8);
+    crc = unknown001[static_cast<u8>(crc) ^ bytes[index]] ^ (crc >> 8);
   }
   return crc;
 }
@@ -106,24 +118,24 @@ unsigned int hashStrCrc(const char *string) {
   u32 shifted = 0;
   int length = 0;
   for (const char *character = string; *character != '\0' && length < 255; character++) {
-    crc = s_crcTable[static_cast<u8>(crc) ^ static_cast<u8>(*character)] ^ shifted;
+    crc = unknown001[static_cast<u8>(crc) ^ static_cast<u8>(*character)] ^ shifted;
     shifted = crc >> 8;
     length++;
   }
-  return s_crcTable[length] ^ shifted;
+  return unknown001[length] ^ shifted;
 }
 
 unsigned int hashSetCrc(const char *data, size_t size, unsigned int seed) {
   u32 crc = size + sizeof(seed);
   u32 shifted = crc >> 8;
   for (size_t index = 0; index < size; index++) {
-    crc = s_crcTable[static_cast<u8>(crc) ^ static_cast<u8>(data[index])] ^ shifted;
+    crc = unknown001[static_cast<u8>(crc) ^ static_cast<u8>(data[index])] ^ shifted;
     shifted = crc >> 8;
   }
-  crc = s_crcTable[size & 0xff] ^ shifted;
+  crc = unknown001[size & 0xff] ^ shifted;
   const u8 *seedBytes = reinterpret_cast<const u8 *>(&seed);
   for (size_t index = 0; index < sizeof(seed); index++) {
-    crc = s_crcTable[static_cast<u8>(crc) ^ seedBytes[index]] ^ (crc >> 8);
+    crc = unknown001[static_cast<u8>(crc) ^ seedBytes[index]] ^ (crc >> 8);
   }
   return crc;
 }

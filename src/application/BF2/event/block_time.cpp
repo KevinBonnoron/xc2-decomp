@@ -6,7 +6,8 @@ namespace event {
 
 namespace {
 
-const char *const TIME_NAMES[] = {
+// Inferred role: time names; original name unknown.
+const char *const unknown028[] = {
     "TIME_ALL",
     "EARLY_MORNING",
     "MORNING",
@@ -22,7 +23,7 @@ const char *const TIME_NAMES[] = {
 BlockTime::BlockTime() { setRules("TIME_ALL"); }
 
 void BlockTime::setRules(const char *rules) {
-  for (u32 i = 0; i < TIME_COUNT; i++) {
+  for (u32 i = 0; i < TIME_UNKNOWN_8; i++) {
     unknown00[i] = true;
   }
   char buffer[512];
@@ -39,12 +40,12 @@ void BlockTime::setRules(const char *rules) {
     char *token = strtok(next, "|");
     next = token + __builtin_strlen(token) + 1;
     if (__builtin_strcmp(token, "TIME_ALL") == 0) {
-      for (u32 i = 0; i < TIME_COUNT; i++) {
+      for (u32 i = 0; i < TIME_UNKNOWN_8; i++) {
         unknown00[i] = false;
       }
     } else {
       u32 index = 0;
-      while (__builtin_strcmp(TIME_NAMES[index], token) != 0) {
+      while (__builtin_strcmp(unknown028[index], token) != 0) {
         index++;
       }
       unknown00[index] = false;

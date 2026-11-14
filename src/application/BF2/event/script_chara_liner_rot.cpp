@@ -13,7 +13,7 @@ namespace event {
 
 void ScriptCharaLinerRot::doit(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CHARA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_2) {
     return;
   }
   RotAxis axis(param.val(0).getS32(), param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32());
@@ -24,7 +24,7 @@ void ScriptCharaLinerRot::doit(const Param &param) {
 
 void ScriptCharaLinerRot::undo(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CHARA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_2) {
     return;
   }
   static_cast<ObjectChara *>(object)->setRotAxis(unknown10);
@@ -32,7 +32,7 @@ void ScriptCharaLinerRot::undo(const Param &param) {
 
 void ScriptCharaLinerRot::redo(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CHARA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_2) {
     return;
   }
   RotAxis axis(param.val(0).getS32(), param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32());

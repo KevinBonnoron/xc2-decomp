@@ -37,6 +37,14 @@ public:
     m_invoker = &memberFuncInvoker<T>;
   }
 
+  // The game binds const member functions through the same memberFuncInvoker<T> instantiation (fw::PadRelay::bindAction<gf::pc::PadBattle,
+  // void (gf::pc::PadBattle::*)() const> stores the member pointer unchanged and the invoker of PadBattle).
+  template <typename T> void bind(T *object, R (T::*function)(Args...) const) {
+    m_object = object;
+    *reinterpret_cast<R (T::**)(Args...) const>(m_function) = function;
+    m_invoker = &memberFuncInvoker<T>;
+  }
+
   void bind(R (*function)(Args...)) {
     *reinterpret_cast<R (**)(Args...)>(m_function) = function;
     m_invoker = &staticFuncInvoker;

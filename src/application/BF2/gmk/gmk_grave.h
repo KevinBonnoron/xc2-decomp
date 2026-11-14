@@ -46,7 +46,7 @@ public:
     u8 unknown00; // Inferred role: scale in tenths; original member name unknown. The size of this structure is unknown.
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_GRAVE;
+  static const GmkType GMK_TYPE = GMK_TYPE_GRAVE; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkGrave();
   ~GmkGrave() override { dispose(); }

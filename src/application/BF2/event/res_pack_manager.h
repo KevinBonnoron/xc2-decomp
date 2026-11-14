@@ -13,7 +13,7 @@ class ResPack;
 
 class ResPackManager {
 public:
-  static constexpr u32 PACK_COUNT = 16;
+  static constexpr u32 PACK_UNKNOWN_16 = 16; // Inferred role: pack count; original name unknown.
 
   ResPackManager();
   virtual ~ResPackManager() {}
@@ -24,7 +24,7 @@ public:
   bool isLoading() const;
 
 private:
-  mm::mtl::FixedVector<ResPack *, PACK_COUNT> unknown08; // Inferred role: packs; original member name unknown.
+  mm::mtl::FixedVector<ResPack *, PACK_UNKNOWN_16> unknown08; // Inferred role: packs; original member name unknown.
 };
 
 static_assert(sizeof(ResPackManager) == 0x90, "");

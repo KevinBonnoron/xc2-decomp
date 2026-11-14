@@ -5,6 +5,7 @@
 
 #include "framework/object/updatable_object.h"
 #include "fw/fw_coli_check.h"
+#include "fw/fw_transform.h"
 #include "gf/object/component/animation/gf_com_asm.h"
 #include "gf/object/component/pc/gf_com_behavior_pc.h"
 #include "gf/object/component/pc/gf_com_property_pc.h"
@@ -36,13 +37,13 @@ void StateFieldIdle::leave(GfComBehaviorPc *behavior, ai::State *next) {
 void StateFieldIdle::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
-  const char *stateName = comAsm->getStateName(ANIM_LAYER_BASE);
+  const char *stateName = comAsm->getStateName(ANIM_LAYER_UNKNOWN_0);
   StateUtil::setEnableLookIK(*behavior, stateName != nullptr && __builtin_strcmp(stateName, "S_idle") == 0);
   if (property->existInputXY() && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_MOVE)) {
     if (StateUtilField::isInputInverseDir(*property)) {
-      reqState(STATE_ID_FIELD_IDLE_TURN);
+      reqState(STATE_ID_UNKNOWN_4);
     } else {
-      reqState(STATE_ID_FIELD_MOVE);
+      reqState(STATE_ID_UNKNOWN_7);
     }
   }
 }
@@ -60,7 +61,7 @@ bool StateFieldIdle::checkSpace(GfComBehaviorPc *behavior) const {
     config.unknown10 = 0;
     config.unknown04 = 0x80000076;
     f32 length = space - 0.5f;
-    mm::Vec3 base = property->unknown160 + property->unknown1c0 * 0.6f;
+    mm::Vec3 base = property->unknown160.unknown00 + property->unknown1c0 * 0.6f;
     length = fmaxf(length, 0.01f);
     mm::Vec3 start = base + property->unknown1e0 * 0.5f;
     mm::Vec3 end = base + property->unknown1e0 * length;
@@ -73,7 +74,7 @@ bool StateFieldIdle::checkSpace(GfComBehaviorPc *behavior) const {
 
 void StateFieldIdle::procMsgPcFieldHighJump(GfComBehaviorPc *behavior, fw::MessageObject *sender, MsgPcFieldHighJump &message) {
   message.unknown08 = true;
-  reqState(STATE_ID_FIELD_BIG_JUMP);
+  reqState(STATE_ID_UNKNOWN_17);
 }
 
 } // namespace pc

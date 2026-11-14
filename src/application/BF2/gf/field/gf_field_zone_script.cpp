@@ -18,7 +18,7 @@ GfFieldZoneScript::~GfFieldZoneScript() { ; }
 void GfFieldZoneScript::build(const GfSetupParam &param) {
   // __LINE__ must be 22 as in the original file: its value changes the instruction order.
 #line 22
-  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfFieldZoneScript(param);
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfFieldZoneScript(param);
 }
 
 void GfFieldZoneScript::destroy() {
@@ -42,22 +42,22 @@ bool GfFieldZoneScript::isInitialized() {
 
 void GfFieldZoneScript::update(const fw::UpdateInfo &) {}
 
-void GfFieldZoneScript::destroyScript() { SCOM_SCRIPT::create(SCRIPT_SLOT_FIELD, nullptr, false); }
+void GfFieldZoneScript::destroyScript() { SCOM_SCRIPT::create(SCRIPT_SLOT_UNKNOWN_1, nullptr, false); }
 
 bool GfFieldZoneScript::isExecScriptBusy() {
-  if (GfScriptManager::isScriptLoadError(SCRIPT_SLOT_FIELD)) {
+  if (GfScriptManager::isScriptLoadError(SCRIPT_SLOT_UNKNOWN_1)) {
     return false;
   }
 
-  return !GfScriptManager::isScriptActive(SCRIPT_SLOT_FIELD);
+  return !GfScriptManager::isScriptActive(SCRIPT_SLOT_UNKNOWN_1);
 }
 
 bool GfFieldZoneScript::isDestroyScriptBusy() {
-  if (GfScriptManager::isScriptLoadError(SCRIPT_SLOT_FIELD)) {
+  if (GfScriptManager::isScriptLoadError(SCRIPT_SLOT_UNKNOWN_1)) {
     return false;
   }
 
-  return GfScriptManager::isScriptActive(SCRIPT_SLOT_FIELD);
+  return GfScriptManager::isScriptActive(SCRIPT_SLOT_UNKNOWN_1);
 }
 
 } // namespace gf

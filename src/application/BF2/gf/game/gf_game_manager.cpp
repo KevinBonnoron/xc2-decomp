@@ -72,6 +72,7 @@
 #include "gf/request/gf_scom.h"
 #include "gf/sound/gf_sound.h"
 #include "mm_math/mm_col4.h"
+#include "mm_math/mm_math.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_list.h"
@@ -80,22 +81,22 @@
 
 namespace gf {
 
-constexpr u32 PARTY_ID_LEADER = 0;
-constexpr u32 SALVAGE_STATE_COMPLETE = 20;
-constexpr u32 SALVAGE_COUNT_FLAG_SIZE = 16;
-constexpr int SALVAGE_COUNT_FLAG = 1547;
-constexpr u32 SALVAGE_COUNT_MAX = 0xffff;
-constexpr u16 CHILD_QUEST_FORCE_BOSS_BATTLE_BGM = 210;
-constexpr u16 SCENARIO_FLAG_FORCE_BOSS_BATTLE_BGM = 8024;
-constexpr u16 SCENARIO_FLAG_GAME_END = 10033;
-constexpr u16 SCENARIO_FLAG_PER_SCENARIO = 1000;
-constexpr u32 FADE_ALL = 0xffffffff;
-constexpr u32 FADE_LAYER_COUNT = 3;
-constexpr f32 FADEOUT_ALPHA = 0.9f;
-constexpr u32 PAUSE_BITS_GIMMICK = 0x59;
-constexpr u32 TIME_RANGE_DN_NIGHT = 7;
-constexpr u32 ASSET_PACK_MAX = 512;
-constexpr u32 DEPOP_METER_COUNT = 4;
+constexpr u32 PARTY_ID_UNKNOWN_0 = 0;               // Inferred role: party id leader; original name unknown.
+constexpr u32 SALVAGE_UNKNOWN_20 = 20;              // Inferred role: salvage state complete; original name unknown.
+constexpr u32 SALVAGE_UNKNOWN_16 = 16;              // Inferred role: salvage count flag size; original name unknown.
+constexpr int SALVAGE_UNKNOWN_1547 = 1547;          // Inferred role: salvage count flag; original name unknown.
+constexpr u32 SALVAGE_UNKNOWN_65535 = 0xffff;       // Inferred role: salvage count max; original name unknown.
+constexpr u16 CHILD_UNKNOWN_210 = 210;              // Inferred role: child quest force boss battle bgm; original name unknown.
+constexpr u16 SCENARIO_FLAG_UNKNOWN_8024 = 8024;    // Inferred role: scenario flag force boss battle bgm; original name unknown.
+constexpr u16 SCENARIO_FLAG_UNKNOWN_10033 = 10033;  // Inferred role: scenario flag game end; original name unknown.
+constexpr u16 SCENARIO_FLAG_UNKNOWN_1000 = 1000;    // Inferred role: scenario flag per scenario; original name unknown.
+constexpr u32 FADE_UNKNOWN_4294967295 = 0xffffffff; // Inferred role: fade all; original name unknown.
+constexpr u32 FADE_UNKNOWN_3 = 3;                   // Inferred role: fade layer count; original name unknown.
+constexpr f32 unknown023 = 0.9f;                    // Inferred role: fadeout alpha; original name unknown.
+constexpr u32 PAUSE_UNKNOWN_89 = 0x59;              // Inferred role: pause bits gimmick; original name unknown.
+constexpr u32 TIME_UNKNOWN_7 = 7;                   // Inferred role: time range dn night; original name unknown.
+constexpr u32 PACK_UNKNOWN_512 = 512;               // Inferred role: asset pack max; original name unknown.
+constexpr u32 METER_UNKNOWN_4 = 4;                  // Inferred role: depop meter count; original name unknown.
 
 GfGameManager::GfGameManager(const GfSetupParam &param) : unknown18(false), unknown19(false) { initialize(param); }
 
@@ -127,7 +128,7 @@ void GfGameManager::initialize(const GfSetupParam &param) {
   GfGameVisible::build(param);
   GfGamePlayerUniqueScheduler::build(param);
   GfGameScene::build(param);
-  GfGameDepopMeterManager::create(DEPOP_METER_COUNT);
+  GfGameDepopMeterManager::create(METER_UNKNOWN_4);
   GfSmnEnemyManager::create();
   GfGamePlayerCamera::build(param);
   GfGameRide::build(param);
@@ -145,7 +146,7 @@ GfGameManager::~GfGameManager() { ; }
 void GfGameManager::build(const GfSetupParam &param) {
   // __LINE__ must be 124 as in the original file: its value changes the instruction order.
 #line 124
-  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfGameManager(param);
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfGameManager(param);
 }
 
 void GfGameManager::destroy() {
@@ -160,11 +161,11 @@ void GfGameManager::finalize() {
     GfSleep(1);
   }
 
-  if (GfGameState::getState() != GF_STATE_CONTROL) {
+  if (GfGameState::getState() != GF_STATE_UNKNOWN_3) {
     GfSleep(1);
   }
 
-  GfGameState::setState(GF_STATE_DESTROY, false);
+  GfGameState::setState(GF_STATE_UNKNOWN_2, false);
   GfQuestManager::removeEvent(this);
   GfGameInsideBattleLock::destroy();
   GfGameVoice::destroy();
@@ -211,8 +212,8 @@ void GfGameManager::setState(GF_STATE state, bool isForce) { GfGameState::setSta
 
 void GfGameManager::clear() {
   GfGameManager *manager = get();
-  SCOM_ACCESS_TARGET::create(INVALID_HANDLE);
-  SCOM_TARGET_UI::create(INVALID_HANDLE);
+  SCOM_ACCESS_TARGET::create(unknown020);
+  SCOM_TARGET_UI::create(unknown020);
   manager->unknown19 = false;
   GfGameCamera::clear();
   GfGameState::clear();
@@ -274,11 +275,11 @@ void GfGameManager::gevBattleEnd() {
 void GfGameManager::gevPause(u32 resumeBits, u32 pauseBits) {
   GfLayerPause::gevPause(resumeBits, pauseBits);
   GfGameEvent::gevPause(resumeBits, pauseBits);
-  if (pauseBits & PAUSE_BIT_GAME) {
+  if (pauseBits & PAUSE_BIT_UNKNOWN_1) {
     GfGameSpeed::setGlobalSpeed(0.0f);
   }
 
-  if (resumeBits & PAUSE_BIT_GAME) {
+  if (resumeBits & PAUSE_BIT_UNKNOWN_1) {
     GfGameSpeed::setGlobalSpeed(1.0f);
   }
 }
@@ -321,7 +322,7 @@ void GfGameManager::gevDriverActivate(u32 driver, ActivateType activateType, Act
 }
 
 void GfGameManager::gevBladeActivate(u32 blade, ActivateType activateType, ActivateType oldActivateType) {
-  if (activateType == ACTIVATE_TYPE_UNUSE && oldActivateType != ACTIVATE_TYPE_UNUSE) {
+  if (activateType == ACTIVATE_TYPE_UNKNOWN_0 && oldActivateType != ACTIVATE_TYPE_UNKNOWN_0) {
     GfKizunaringManager::orderAchievement(blade);
   }
 
@@ -342,15 +343,15 @@ void GfGameManager::gevBladeUnselect(u32 blade, bool unselect) {
 
 void GfGameManager::gevBladeEnable(u32 blade) {
   GfGameUtilHana::setupDefaultParts(blade);
-  if (blade == BLADE_REAL_ALIAS && GfDataBlade::getCreator(BLADE_REAL_ALIAS) == 0) {
-    GfDataBlade::setCreator(BLADE_REAL_ALIAS, GfDataBlade::getCreator(BLADE_REAL_ALIAS_TARGET));
+  if (blade == BLADE_UNKNOWN_1050 && GfDataBlade::getCreator(BLADE_UNKNOWN_1050) == 0) {
+    GfDataBlade::setCreator(BLADE_UNKNOWN_1050, GfDataBlade::getCreator(BLADE_UNKNOWN_1022));
   }
 
   GfFieldTime *fieldTime = GfFieldTime::get();
   if (fieldTime != nullptr) {
-    SDataBlade *dataBlade = GfDataBlade::getSDataBlade(blade);
-    if (dataBlade->unknown08 == 0) {
-      dataBlade->unknown08 = reinterpret_cast<const u32 &>(fieldTime->getElapseTime());
+    SDataBlade &dataBlade = GfDataBlade::getSDataBlade(blade);
+    if (dataBlade.unknown08 == 0) {
+      dataBlade.unknown08 = reinterpret_cast<const u32 &>(fieldTime->getElapseTime());
     }
   }
 }
@@ -386,19 +387,19 @@ void GfGameManager::gevPartyIDMemberOK(bool isOK, u32 partyId) { GfGameParty::ge
 
 void GfGameManager::gevReloadBdat(RELOAD_BDAT reload, u32 value) {
   GfQuestManager::gevReloadBdat(reload, value);
-  if (reload == RELOAD_BDAT_ALL) {
+  if (reload == RELOAD_BDAT_UNKNOWN_1) {
     GfGameObj::bdatReload();
   }
 }
 
 void GfGameManager::gevSalvageStateChange(u32 state) {
-  if (state == SALVAGE_STATE_COMPLETE) {
-    u16 count = GfGameFlag::getLocal(SALVAGE_COUNT_FLAG_SIZE, SALVAGE_COUNT_FLAG);
-    if (count != SALVAGE_COUNT_MAX) {
+  if (state == SALVAGE_UNKNOWN_20) {
+    u16 count = GfGameFlag::getLocal(SALVAGE_UNKNOWN_16, SALVAGE_UNKNOWN_1547);
+    if (count != SALVAGE_UNKNOWN_65535) {
       count++;
     }
 
-    GfGameFlag::setLocal(SALVAGE_COUNT_FLAG_SIZE, SALVAGE_COUNT_FLAG, count);
+    GfGameFlag::setLocal(SALVAGE_UNKNOWN_16, SALVAGE_UNKNOWN_1547, count);
   }
 }
 
@@ -461,7 +462,7 @@ void GfGameManager::qevCompleteQuest(const QuestCompleteParam &param) {
 void GfGameManager::qevOrderQuest(const QuestOrderParam &param) { GfGameMercenaries::qevOrderQuest(param); }
 
 void GfGameManager::qevCompleteChildQuest(const QuestCompleteChildParam &param) {
-  if (param.unknown04.unknown00 == CHILD_QUEST_FORCE_BOSS_BATTLE_BGM && GfDataUtil::getScenarioFlag() == SCENARIO_FLAG_FORCE_BOSS_BATTLE_BGM) {
+  if (param.unknown04.unknown00 == CHILD_UNKNOWN_210 && GfDataUtil::getScenarioFlag() == SCENARIO_FLAG_UNKNOWN_8024) {
     GfGameScene *scene = GfGameScene::get();
     if (scene != nullptr && !scene->isForceBossBattleBgm()) {
       scene->setForceBossBattleBgm(true);
@@ -478,7 +479,7 @@ GF_OBJ_HANDLE *GfGameManager::getPartyLeader() {
     return leader;
   }
 
-  return INVALID_HANDLE;
+  return unknown020;
 }
 
 GF_OBJ_HANDLE *GfGameManager::getPartyLeaderDriver() {
@@ -488,12 +489,12 @@ GF_OBJ_HANDLE *GfGameManager::getPartyLeaderDriver() {
     return driver;
   }
 
-  return INVALID_HANDLE;
+  return unknown020;
 }
 
 GF_OBJ_HANDLE *GfGameManager::getControlMover() {
   GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
-  if (formation != nullptr && formation->unknown1a0[0].unknown08 != INVALID_HANDLE) {
+  if (formation != nullptr && formation->unknown1a0[0].unknown08 != unknown020) {
     return formation->unknown1a0[0].unknown08;
   }
 
@@ -504,7 +505,7 @@ GF_OBJ_HANDLE *GfGameManager::getControlRider() {
   GfObjAcc moverAcc(getControlMover());
   if (moverAcc.isValid()) {
     u32 partyId = GfGameParty::getPartyId(moverAcc.getHandle());
-    if (partyId != PARTY_ID_NONE) {
+    if (partyId != PARTY_UNKNOWN_4294967295) {
       GF_OBJ_HANDLE *driver = GfGameParty::getHandleDriver(partyId);
       GF_OBJ_HANDLE *blade = GfGameParty::getHandleBlade(partyId, -1);
       GfObjAcc driverAcc(driver);
@@ -513,7 +514,7 @@ GF_OBJ_HANDLE *GfGameManager::getControlRider() {
     }
   }
 
-  return INVALID_HANDLE;
+  return unknown020;
 }
 
 void GfGameManager::collectPadCharList(mm::mtl::FixedArray<GF_OBJ_HANDLE *, 2> *characters) { (*characters)[0] = getControlMover(); }
@@ -540,15 +541,15 @@ bool GfGameManager::isQuestCompleteUI() { return GfPlayComQuestCompleteUI::s_act
 bool GfGameManager::isPartySelect() { return GfPlayComOpenMenu::s_active > 0; }
 
 bool GfGameManager::isEvent(bool isIncludeSequentialPlay) {
-  return get() != nullptr && (GfGameState::test(GF_STATE_FLAG_EVENT) || (isIncludeSequentialPlay && GfSequentialPlay::isInnerState(GF_STATE_EVENT)));
+  return get() != nullptr && (GfGameState::test(GF_STATE_FLAG_UNKNOWN_1) || (isIncludeSequentialPlay && GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_20)));
 }
 
-bool GfGameManager::isEventWait() { return GfGameState::getState() == GF_STATE_WAIT_EVENT; }
+bool GfGameManager::isEventWait() { return GfGameState::getState() == GF_STATE_UNKNOWN_7; }
 
 bool GfGameManager::isPlayEvent() { return GfGameScene::get() != nullptr && GfGameScene::get()->isPlayEvent(); }
 
 bool GfGameManager::isField() {
-  if (get() == nullptr || GfGameState::getState() != GF_STATE_CONTROL) {
+  if (get() == nullptr || GfGameState::getState() != GF_STATE_UNKNOWN_3) {
     return false;
   }
 
@@ -556,7 +557,7 @@ bool GfGameManager::isField() {
     return false;
   }
 
-  return GfGameState::getStateReserve() == GF_STATE_CONTROL;
+  return GfGameState::getStateReserve() == GF_STATE_UNKNOWN_3;
 }
 
 bool GfGameManager::isPlaySequenceClear() { return !GfSequentialPlay::isPlay(); }
@@ -568,21 +569,21 @@ bool GfGameManager::isControlFree(u32 state) {
     return false;
   }
 
-  if (GfGameState::getStateReserve() == GF_STATE_CONTROL) {
+  if (GfGameState::getStateReserve() == GF_STATE_UNKNOWN_3) {
     return true;
   }
 
   return GfGameState::getStateReserve() == state;
 }
 
-bool GfGameManager::isBladeChange() { return isInnerState(GF_STATE_RESET_BLADE); }
+bool GfGameManager::isBladeChange() { return isInnerState(GF_STATE_UNKNOWN_24); }
 
 bool GfGameManager::isDisableBattou() {
-  if (GfPlayComResetBlade::isPlaying(PARTY_ID_LEADER)) {
+  if (GfPlayComResetBlade::isPlaying(PARTY_ID_UNKNOWN_0)) {
     return true;
   }
 
-  GfObjAcc bladeAcc(GfGameParty::getHandleBlade(PARTY_ID_LEADER, -1));
+  GfObjAcc bladeAcc(GfGameParty::getHandleBlade(PARTY_ID_UNKNOWN_0, -1));
   if (bladeAcc.isRebuild()) {
     return true;
   }
@@ -596,11 +597,11 @@ bool GfGameManager::isEnableBattouWithHoodHomura(bool isCheckCondition) {
   }
 
   GfObjAcc moverAcc(getControlMover());
-  if (moverAcc.getType() != OBJECT_TYPE_DRIVER || moverAcc.getDriverId() != DRIVER_REX || GfDataDriver::getBlade(DRIVER_REX, -1) != BLADE_HOMURA) {
+  if (moverAcc.getType() != OBJECT_TYPE_PC || moverAcc.getDriverId() != DRIVER_UNKNOWN_1 || GfDataDriver::getBlade(DRIVER_UNKNOWN_1, -1) != BLADE_HOMURA) {
     return false;
   }
 
-  GfObjAcc bladeAcc(GfGameParty::getHandleBlade(PARTY_ID_LEADER, -1));
+  GfObjAcc bladeAcc(GfGameParty::getHandleBlade(PARTY_ID_UNKNOWN_0, -1));
   if (bladeAcc.getBladeId() != BLADE_HOMURA) {
     return false;
   }
@@ -613,7 +614,7 @@ bool GfGameManager::isEnableBattouWithHoodHomura(bool isCheckCondition) {
     return false;
   }
 
-  if (isCheckCondition && GfPlayComResetBlade::isPlaying(PARTY_ID_LEADER)) {
+  if (isCheckCondition && GfPlayComResetBlade::isPlaying(PARTY_ID_UNKNOWN_0)) {
     return false;
   }
 
@@ -622,7 +623,7 @@ bool GfGameManager::isEnableBattouWithHoodHomura(bool isCheckCondition) {
     return false;
   }
 
-  if (isCheckCondition && !GfGameCond::isGameCond(GfDataBlade::getSDataBlade(bladeAcc.getBladeId())->unknown82a)) {
+  if (isCheckCondition && !GfGameCond::isGameCond(GfDataBlade::getSDataBlade(bladeAcc.getBladeId()).unknown82a)) {
     return false;
   }
 
@@ -644,36 +645,36 @@ bool GfGameManager::isTalking() {
     return true;
   }
 
-  return GfGameState::test(GF_STATE_FLAG_TALK);
+  return GfGameState::test(GF_STATE_FLAG_UNKNOWN_5);
 }
 
 bool GfGameManager::isFullScreenMenu() { return GfMenuManager::isOpenFullScreen(); }
 
-bool GfGameManager::isPlayCommonMenu() { return GfMenuManager::isOpenCommonWindow() && GfPause::isPause(PAUSE_BIT_SYSTEM); }
+bool GfGameManager::isPlayCommonMenu() { return GfMenuManager::isOpenCommonWindow() && GfPause::isPause(PAUSE_BIT_UNKNOWN_0); }
 
 bool GfGameManager::isMapjumpOK() {
-  if (GfGameState::getState() == GF_STATE_MAPJUMP) {
+  if (GfGameState::getState() == GF_STATE_UNKNOWN_8) {
     return false;
   }
 
-  if (GfGameState::getStateReserve() == GF_STATE_MAPJUMP) {
+  if (GfGameState::getStateReserve() == GF_STATE_UNKNOWN_8) {
     return false;
   }
 
-  if (GfGameState::getState() == GF_STATE_MAPJUMP_SKIP_TRAVEL) {
+  if (GfGameState::getState() == GF_STATE_UNKNOWN_9) {
     return false;
   }
 
-  return GfGameState::getStateReserve() != GF_STATE_MAPJUMP_SKIP_TRAVEL;
+  return GfGameState::getStateReserve() != GF_STATE_UNKNOWN_9;
 }
 
 bool GfGameManager::isExecTutorial() { return GfMenuObjTutorial::isWaiting(); }
 
-bool GfGameManager::isGmkTutorialMoverOK() { return GfGameScene::get() != nullptr && GfGameScene::get()->isPlayerStopFlag(PLSTOP_GMK_TUTORIAL_MOVER); }
+bool GfGameManager::isGmkTutorialMoverOK() { return GfGameScene::get() != nullptr && GfGameScene::get()->isPlayerStopFlag(PLSTOP_UNKNOWN_2); }
 
 void GfGameManager::setGmkTutorialMoverOK(bool isOK) {
   if (GfGameScene::get() != nullptr) {
-    GfGameScene::get()->setPlayerStopFlag(PLSTOP_GMK_TUTORIAL_MOVER, isOK);
+    GfGameScene::get()->setPlayerStopFlag(PLSTOP_UNKNOWN_2, isOK);
   }
 }
 
@@ -683,12 +684,12 @@ bool GfGameManager::isGmkTutorialSequenceOK() {
     return false;
   }
 
-  return scene->isPlayerStopFlag(PLSTOP_GMK_TUTORIAL_SEQUENCE) || scene->isPlayerStopFlag(PLSTOP_EVENT) || scene->isPlayerStopFlag(PLSTOP_RESET_BLADE);
+  return scene->isPlayerStopFlag(PLSTOP_UNKNOWN_1) || scene->isPlayerStopFlag(PLSTOP_UNKNOWN_3) || scene->isPlayerStopFlag(PLSTOP_UNKNOWN_4);
 }
 
 void GfGameManager::setGmkTutorialSequenceOK(bool isOK) {
   if (GfGameScene::get() != nullptr) {
-    GfGameScene::get()->setPlayerStopFlag(PLSTOP_GMK_TUTORIAL_SEQUENCE, isOK);
+    GfGameScene::get()->setPlayerStopFlag(PLSTOP_UNKNOWN_1, isOK);
   }
 }
 
@@ -702,12 +703,12 @@ void GfGameManager::setValidCollisionVelocity(bool isValid) {
 
 bool GfGameManager::isLeaveGameForDebug() { return get() != nullptr && (get()->unknown19 || GfManager::isDestroyNow()); }
 
-bool GfGameManager::isGameOver() { return GfDataUtil::getScenarioFlag() > SCENARIO_FLAG_GAME_END; }
+bool GfGameManager::isGameOver() { return GfDataUtil::getScenarioFlag() > SCENARIO_FLAG_UNKNOWN_10033; }
 
 bool GfGameManager::isFieldLockMsgOK() { return isEnableFieldAccess() && isControlFree(); }
 
 bool GfGameManager::isEnableFieldAccess() {
-  if (GfSequentialPlay::isInnerState(GF_STATE_RESET_BLADE) || GfSequentialPlay::isInnerState(GF_STATE_PLAYER_DEAD)) {
+  if (GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_24) || GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_10)) {
     return false;
   }
 
@@ -717,13 +718,13 @@ bool GfGameManager::isEnableFieldAccess() {
 
   GfGameScene *scene = GfGameScene::get();
   if (scene != nullptr) {
-    DataParamAcc driverAcc(GfGameParty::getHandleDriver(PARTY_ID_LEADER));
-    if (driverAcc.isValid() && driverAcc.getValidDriverId() == DRIVER_NIA) {
-      if (scene->isNeedFieldBladeChange(PARTY_ID_LEADER)) {
+    DataParamAcc driverAcc(GfGameParty::getHandleDriver(PARTY_ID_UNKNOWN_0));
+    if (driverAcc.isValid() && driverAcc.getValidDriverId() == DRIVER_UNKNOWN_2) {
+      if (scene->isNeedFieldBladeChange(PARTY_ID_UNKNOWN_0)) {
         return false;
       }
 
-      if (GfDataDriver::getBlade(driverAcc.getValidDriverId(), -1) == BLADE_BYAKKO && GfObjUtil::getParentHandle(driverAcc.unknown10) != GfGameParty::getHandleBlade(PARTY_ID_LEADER, -1)) {
+      if (GfDataDriver::getBlade(driverAcc.getValidDriverId(), -1) == BLADE_BYAKKO && GfObjUtil::getParentHandle(driverAcc.unknown10) != GfGameParty::getHandleBlade(PARTY_ID_UNKNOWN_0, -1)) {
         return false;
       }
     }
@@ -739,7 +740,7 @@ bool GfGameManager::isInGamePauseMenuOK() {
     return false;
   }
 
-  return isControlFree(GF_STATE_MENU);
+  return isControlFree(GF_STATE_UNKNOWN_6);
 }
 
 bool GfGameManager::isRoom() { return GfGameEnv::isRoom(); }
@@ -764,51 +765,51 @@ bool GfGameManager::isEnableFieldBattleTarget() {
     return true;
   }
 
-  if (isInnerState(GF_STATE_MENU)) {
+  if (isInnerState(GF_STATE_UNKNOWN_6)) {
     return false;
   }
 
-  if (isInnerState(GF_STATE_SALVAGE)) {
+  if (isInnerState(GF_STATE_UNKNOWN_11)) {
     return false;
   }
 
-  if (isInnerState(GF_STATE_GIMMICK_TASK)) {
+  if (isInnerState(GF_STATE_UNKNOWN_21)) {
     return false;
   }
 
-  if (isInnerState(GF_STATE_MAP_GIMMICK)) {
+  if (isInnerState(GF_STATE_UNKNOWN_14)) {
     return false;
   }
 
-  if (isInnerState(GF_STATE_COLLECT)) {
+  if (isInnerState(GF_STATE_UNKNOWN_12)) {
     return false;
   }
 
-  if (isInnerState(GF_STATE_FIELD_TBOX)) {
+  if (isInnerState(GF_STATE_UNKNOWN_13)) {
     return false;
   }
 
-  if (isInnerState(GF_STATE_TALK)) {
+  if (isInnerState(GF_STATE_UNKNOWN_4)) {
     return false;
   }
 
-  if (isInnerState(GF_STATE_GMK_CAMERA)) {
+  if (isInnerState(GF_STATE_UNKNOWN_19)) {
     return false;
   }
 
-  if (isInnerState(GF_STATE_JUMP)) {
+  if (isInnerState(GF_STATE_UNKNOWN_16)) {
     return false;
   }
 
-  if (isInnerState(GF_STATE_WARP)) {
+  if (isInnerState(GF_STATE_UNKNOWN_17)) {
     return false;
   }
 
-  if (isInnerState(GF_STATE_GMK_TUTORIAL)) {
+  if (isInnerState(GF_STATE_UNKNOWN_18)) {
     return false;
   }
 
-  return !isInnerState(GF_STATE_EVENT);
+  return !isInnerState(GF_STATE_UNKNOWN_20);
 }
 
 void GfGameManager::setupGame() {
@@ -829,8 +830,8 @@ void GfGameManager::setupGame() {
 }
 
 bool GfGameManager::isFading(u32 fade) {
-  if (fade == FADE_ALL) {
-    for (u32 layer = 0; layer < FADE_LAYER_COUNT; layer++) {
+  if (fade == FADE_UNKNOWN_4294967295) {
+    for (u32 layer = 0; layer < FADE_UNKNOWN_3; layer++) {
       if (GfMenuManager::isFading(layer)) {
         return true;
       }
@@ -843,10 +844,10 @@ bool GfGameManager::isFading(u32 fade) {
 }
 
 bool GfGameManager::isFadeout() {
-  for (u32 layer = 0; layer < FADE_LAYER_COUNT; layer++) {
+  for (u32 layer = 0; layer < FADE_UNKNOWN_3; layer++) {
     mm::Col4 color;
     GfMenuManager::getFadeColor(layer, color);
-    if (color.a >= FADEOUT_ALPHA) {
+    if (color.a >= unknown023) {
       return true;
     }
   }
@@ -857,11 +858,11 @@ bool GfGameManager::isFadeout() {
 void GfGameManager::getFadeColor(u32 fade, mm::Col4 &color) { GfMenuManager::getFadeColor(fade, color); }
 
 bool GfGameManager::isFadeClear() {
-  if (isFadeout() || isFading(FADE_ALL)) {
+  if (isFadeout() || isFading(FADE_UNKNOWN_4294967295)) {
     return false;
   }
 
-  for (u32 layer = 0; layer < FADE_LAYER_COUNT; layer++) {
+  for (u32 layer = 0; layer < FADE_UNKNOWN_3; layer++) {
     mm::Col4 color;
     GfMenuManager::getFadeColor(layer, color);
     if (color.a > 0.0f) {
@@ -874,7 +875,7 @@ bool GfGameManager::isFadeClear() {
 
 f32 GfGameManager::getFadeoutAlpha() {
   f32 alpha = 0.0f;
-  for (u32 layer = 0; layer < FADE_LAYER_COUNT; layer++) {
+  for (u32 layer = 0; layer < FADE_UNKNOWN_3; layer++) {
     mm::Col4 color = mm::Col4::zero;
     GfMenuManager::getFadeColor(layer, color);
     alpha = alpha < color.a ? color.a : alpha;
@@ -964,7 +965,7 @@ bool GfGameManager::isActivateHomuri(bool isCheckLeader) {
   return isActivate;
 }
 
-bool GfGameManager::isInMetJIJI() { return GfGameCond::isGameCond(GfBdatRsc::get()->getDriverParamExtMountCond(DRIVER_REX)); }
+bool GfGameManager::isInMetJIJI() { return GfGameCond::isGameCond(GfBdatRsc::get()->getDriverParamExtMountCond(DRIVER_UNKNOWN_1)); }
 
 OwnerBonus *GfGameManager::getOwnerBonus() { return &GfGameScene::get()->getOwnerBonus(); }
 
@@ -974,7 +975,7 @@ bool GfGameManager::isPlayerFinishBattleState() {
   }
 
   DataParamAcc leaderAcc(GfGameParty::getLeader());
-  if (leaderAcc.getObjType() == OBJECT_TYPE_DRIVER && leaderAcc.getValidDriverId() == DRIVER_NIA && leaderAcc.getBlade(-1, false) == BLADE_BYAKKO) {
+  if (leaderAcc.getObjType() == OBJECT_TYPE_PC && leaderAcc.getValidDriverId() == DRIVER_UNKNOWN_2 && leaderAcc.getBlade(-1, false) == BLADE_BYAKKO) {
     return true;
   }
 
@@ -995,6 +996,16 @@ const mm::Vec3 &GfGameManager::getControlMoverPosition() {
   return mm::Vec3::zero;
 }
 
+mm::Vec3 GfGameManager::getControlMoverRotation() {
+  GfObjAcc moverAcc(getControlMover());
+  if (!moverAcc.isValidTransform()) {
+    return mm::Vec3::zero;
+  }
+  mm::Vec3 rotation;
+  mm::quatToEuler(moverAcc.getWorldTransform().unknown10, rotation);
+  return rotation;
+}
+
 bool GfGameManager::isEnemyChangeBattleOK() {
   if (GfGameScene::get() != nullptr && GfGameScene::get()->isPlayerPauseForBattle()) {
     return false;
@@ -1010,7 +1021,7 @@ bool GfGameManager::isEnemyChangeBattleOK() {
     return false;
   }
 
-  return property->unknown18->unknown00 != PROPERTY_MOVE_CLIMB;
+  return property->unknown18->unknown00 != PROPERTY_MOVE_UNKNOWN_3;
 }
 
 u8 GfGameManager::isPlayEventOK() {
@@ -1025,11 +1036,11 @@ u8 GfGameManager::isPlayEventOK() {
   }
 
   switch (property->unknown18->unknown00) {
-  case PROPERTY_MOVE_WALK:
-  case PROPERTY_MOVE_SWIM_ON_CLOUD:
+  case PROPERTY_MOVE_UNKNOWN_0:
+  case PROPERTY_MOVE_UNKNOWN_2:
   case 5: // Inferred role: move type that allows an event; original name unknown.
     break;
-  case PROPERTY_MOVE_SWIM:
+  case PROPERTY_MOVE_UNKNOWN_1:
     return property->unknown18->unknown7d;
   default:
     return false;
@@ -1038,18 +1049,18 @@ u8 GfGameManager::isPlayEventOK() {
   if (GfGameScene::get() == nullptr || !GfGameScene::get()->isControlFree()) {
     return false;
   }
-  if (GfGameState::getStateReserve() == GF_STATE_CONTROL) {
+  if (GfGameState::getStateReserve() == GF_STATE_UNKNOWN_3) {
     return true;
   }
-  return GfGameState::getStateReserve() == GF_STATE_EVENT;
+  return GfGameState::getStateReserve() == GF_STATE_UNKNOWN_20;
 }
 
 void GfGameManager::callbackBladeActivateForGimmick() {
   mm::mtl::FixedVector<u16, 422> blades;
   GfDataBlade::getListReserver(blades);
   for (const u16 *it = blades.begin(), *end = blades.end(); it != end; ++it) {
-    if (GfDataBlade::getBladeActivateType(*it) == ACTIVATE_TYPE_RESERVER) {
-      GfEvent::callBladeActivate(*it, ACTIVATE_TYPE_RESERVER, ACTIVATE_TYPE_RESERVER);
+    if (GfDataBlade::getBladeActivateType(*it) == ACTIVATE_TYPE_UNKNOWN_1) {
+      GfEvent::callBladeActivate(*it, ACTIVATE_TYPE_UNKNOWN_1, ACTIVATE_TYPE_UNKNOWN_1);
     }
   }
 }
@@ -1067,7 +1078,7 @@ bool GfGameManager::isEnableOpenMainMenuSequence() {
     return false;
   }
 
-  if (GfSequentialPlay::isInnerPause(PAUSE_BIT_MAIN_MENU)) {
+  if (GfSequentialPlay::isInnerPause(PAUSE_BIT_UNKNOWN_6)) {
     return false;
   }
 
@@ -1089,7 +1100,7 @@ bool GfGameManager::isEnableOpenMainMenuSequence() {
     }
   }
 
-  if (GfSequentialPlay::isInnerState(GF_STATE_SALVAGE)) {
+  if (GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_11)) {
     return false;
   }
 
@@ -1104,13 +1115,13 @@ bool GfGameManager::isStartGame() { return GfGameScene::get() == nullptr || GfGa
 
 bool GfGameManager::isStopMainMenuOpenForGimmick() { return GfGameScene::get() != nullptr && GfGameScene::get()->unknown1d0; }
 
-bool GfGameManager::isEnableHoodHomuraScenes() { return !isInnerState(GF_STATE_RESET_BLADE) && !isInnerState(GF_STATE_PLAYER_DEAD); }
+bool GfGameManager::isEnableHoodHomuraScenes() { return !isInnerState(GF_STATE_UNKNOWN_24) && !isInnerState(GF_STATE_UNKNOWN_10); }
 
-bool GfGameManager::isEnableGimmickPhantomDamage() { return !GfSequentialPlay::isInnerPause(PAUSE_BITS_GIMMICK); }
+bool GfGameManager::isEnableGimmickPhantomDamage() { return !GfSequentialPlay::isInnerPause(PAUSE_UNKNOWN_89); }
 
 bool GfGameManager::isEnableGetFieldPrecious() { return isEnableOpenMainMenuSequence() && isEnableOpenMainMenu(); }
 
-bool GfGameManager::isEnableCreateBattleLock() { return !GfSequentialPlay::isInnerPause(PAUSE_BITS_GIMMICK); }
+bool GfGameManager::isEnableCreateBattleLock() { return !GfSequentialPlay::isInnerPause(PAUSE_UNKNOWN_89); }
 
 bool GfGameManager::isPartyMover(GF_OBJ_HANDLE *handle) {
   int partyId = GfObjUtil::getPartyID(handle);
@@ -1118,7 +1129,7 @@ bool GfGameManager::isPartyMover(GF_OBJ_HANDLE *handle) {
 }
 
 bool GfGameManager::isBusyBladeCreateEvent() {
-  if (!GfPause::isPause(PAUSE_BIT_SYSTEM)) {
+  if (!GfPause::isPause(PAUSE_BIT_UNKNOWN_0)) {
     return false;
   }
 
@@ -1186,7 +1197,7 @@ bool GfGameManager::isForceBossBattleBgm() { return GfGameScene::get() != nullpt
 
 bool GfGameManager::isForceEventBgm() { return GfGameScene::get() != nullptr && GfGameScene::get()->isForceEventBgm(); }
 
-bool GfGameManager::isNight() { return GfFieldTime::get() != nullptr && GfFieldTime::get()->getTimeRangeDN() == TIME_RANGE_DN_NIGHT; }
+bool GfGameManager::isNight() { return GfFieldTime::get() != nullptr && GfFieldTime::get()->getTimeRangeDN() == TIME_UNKNOWN_7; }
 
 void GfGameManager::destroyBattleEnemy() {
   for (GF_OBJ_HANDLE *const &handle : *GfGameObj::getList(OBJECT_TYPE_ENEMY)) {
@@ -1213,10 +1224,10 @@ u32 GfGameManager::getScenarioId() {
   }
 
   u16 scenarioFlag = GfDataUtil::getScenarioFlag();
-  return scenarioFlag == 0 ? 1 : scenarioFlag / SCENARIO_FLAG_PER_SCENARIO;
+  return scenarioFlag == 0 ? 1 : scenarioFlag / SCENARIO_FLAG_UNKNOWN_1000;
 }
 
-bool GfGameManager::isRexAwakening() { return GfGameUtil::isCondDriverModel(DRIVER_REX); }
+bool GfGameManager::isRexAwakening() { return GfGameUtil::isCondDriverModel(DRIVER_UNKNOWN_1); }
 
 void GfGameManager::setStartGame() {
   if (GfGameScene::get() != nullptr) {
@@ -1246,7 +1257,7 @@ bool GfGameManager::isPartyMemberPlayVoice() {
     return false;
   }
 
-  for (u32 partyId = 0; partyId < PARTY_MEMBER_NUM; partyId++) {
+  for (u32 partyId = 0; partyId < PARTY_UNKNOWN_3; partyId++) {
     if (voice->isPlayVoice(GfGameParty::getHandleDriver(partyId)) || voice->isPlayVoice(GfGameParty::getHandleBlade(partyId, -1))) {
       return true;
     }
@@ -1271,14 +1282,14 @@ bool GfGameManager::isHoodHomura(GF_OBJ_HANDLE *handle) {
     return false;
   }
 
-  if (!GfGameCond::isGameCond(GfDataBlade::getSDataBlade(objAcc.getBladeId())->unknown82a)) {
+  if (!GfGameCond::isGameCond(GfDataBlade::getSDataBlade(objAcc.getBladeId()).unknown82a)) {
     return false;
   }
 
-  GfWeapon *weapon = GfGameParty::getHandleWeapon(PARTY_ID_LEADER, -1);
+  GfWeapon *weapon = GfGameParty::getHandleWeapon(PARTY_ID_UNKNOWN_0, -1);
   if (weapon != nullptr) {
-    for (u32 index = 0; index < WEAPON_HANDLE_NUM; index++) {
-      if (weapon->getCurrentHandles()[index] != INVALID_HANDLE && (objAcc.isRebuild() || !GfGameObj::isValidGameObj(handle, true, nullptr))) {
+    for (u32 index = 0; index < HANDLE_UNKNOWN_10; index++) {
+      if (weapon->getCurrentHandles()[index] != unknown020 && (objAcc.isRebuild() || !GfGameObj::isValidGameObj(handle, true, nullptr))) {
         return true;
       }
     }
@@ -1289,7 +1300,7 @@ bool GfGameManager::isHoodHomura(GF_OBJ_HANDLE *handle) {
 
 bool GfGameManager::isChangeNormalHomuraForce(u32 blade) { return blade == BLADE_HOMURA && GfPlayComHoodHomuraBattou::get() != nullptr; }
 
-bool GfGameManager::isAssetNumberInvalid() { return GfAssetManager::getUsedAssetPackInfo() >= ASSET_PACK_MAX; }
+bool GfGameManager::isAssetNumberInvalid() { return GfAssetManager::getUsedAssetPackInfo() >= PACK_UNKNOWN_512; }
 
 void GfGameManager::updateParam(const fw::UpdateInfo &info) {
   if (GfGameScene::get() != nullptr) {

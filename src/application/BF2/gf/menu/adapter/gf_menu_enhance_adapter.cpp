@@ -35,7 +35,7 @@ GfMenuEnhanceAdapter *GfMenuEnhanceAdapter::create(u32 handle, u32 type, u32 enh
     if (plugin != nullptr) {
       // __LINE__ must be 211 as in the original source: it is the line argument of operator new.
 #line 211
-      GfMenuEnhanceAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuEnhanceAdapter(plugin, isUpdateAlways);
+      GfMenuEnhanceAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuEnhanceAdapter(plugin, isUpdateAlways);
       adapter->unknown30.bind(adapter, info.update);
       adapter->unknown58 = enhance;
       plugin->release();
@@ -55,6 +55,30 @@ bool GfMenuEnhanceAdapter::update_Caption(u32 enhance) {
   return result;
 }
 
+GfMenuEnhanceAdapter *GfMenuEnhanceAdapter::createFromItem(u32 handle, u32 type, const MenuItemInfo &info, bool isUpdateAlways) {
+  // __LINE__ must be 227 as in the original source: it is the line argument of operator new.
+#line 227
+  ItemConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ItemConverter(info);
+  GfMenuEnhanceAdapter *adapter = create(handle, type, converter->getEnhanceID(), isUpdateAlways);
+  if (adapter == nullptr) {
+    return nullptr;
+  }
+  adapter->unknown50 = converter;
+  return adapter;
+}
+
+GfMenuEnhanceAdapter *GfMenuEnhanceAdapter::createFromItemList(u32 handle, u32 type, GfMenuItemList *list, int listIndex, bool isUpdateAlways) {
+  // __LINE__ must be 236 as in the original source: it is the line argument of operator new.
+#line 236
+  ItemListConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ItemListConverter(list, listIndex);
+  GfMenuEnhanceAdapter *adapter = create(handle, type, converter->getEnhanceID(), isUpdateAlways);
+  if (adapter == nullptr) {
+    return nullptr;
+  }
+  adapter->unknown50 = converter;
+  return adapter;
+}
+
 GfMenuEnhanceAdapter *GfMenuEnhanceAdapter::createFromCoverter(u32 handle, u32 type, IConverter *converter, bool isUpdateAlways) {
   GfMenuEnhanceAdapter *adapter = create(handle, type, converter->getEnhanceID(), isUpdateAlways);
   if (adapter != nullptr) {
@@ -66,7 +90,7 @@ GfMenuEnhanceAdapter *GfMenuEnhanceAdapter::createFromCoverter(u32 handle, u32 t
 GfMenuEnhanceAdapter *GfMenuEnhanceAdapter::createFromReferenceItem(u32 handle, u32 type, mm::mtl::IntrusivePtr<IGfMenuReferenceItem> item, bool isUpdateAlways) {
   // __LINE__ must be 245 as in the original source: it is the line argument of operator new.
 #line 245
-  ReferenceItemConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceItemConverter(item);
+  ReferenceItemConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceItemConverter(item);
   GfMenuEnhanceAdapter *adapter = create(handle, type, converter->getEnhanceID(), isUpdateAlways);
   if (adapter != nullptr) {
     adapter->unknown50 = converter;
@@ -77,7 +101,7 @@ GfMenuEnhanceAdapter *GfMenuEnhanceAdapter::createFromReferenceItem(u32 handle, 
 GfMenuEnhanceAdapter *GfMenuEnhanceAdapter::createFromArts(u32 handle, u32 type, u32 arts, u32 level, bool isUpdateAlways) {
   // __LINE__ must be 254 as in the original source: it is the line argument of operator new.
 #line 254
-  ArtsConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ArtsConverter(arts, level);
+  ArtsConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ArtsConverter(arts, level);
   GfMenuEnhanceAdapter *adapter = create(handle, type, GfDataDriverArts::getEnhance(arts, level), isUpdateAlways);
   if (adapter != nullptr) {
     adapter->unknown50 = converter;
@@ -108,13 +132,13 @@ void GfMenuEnhanceAdapter::update(const fw::UpdateInfo &info) {
     }
   }
 
-  if (unknown30.isValid() && (unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
+  if (unknown30.isValid() && (unknown20 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) != 0) {
     if (unknown58 != 0) {
       setDisp(unknown30(unknown58));
     } else {
       setDisp(false);
     }
-    unknown20 &= ~FLAG_CHANGED;
+    unknown20 &= ~FLAG_UNKNOWN_0;
   }
 }
 
@@ -122,15 +146,15 @@ u32 GfMenuEnhanceAdapter::ItemConverter::getEnhanceID() { return ItemConverter::
 
 u32 GfMenuEnhanceAdapter::ItemConverter::getItemEnhance(const MenuItemInfo &info) {
   u16 enhance = 0;
-  if (info.unknown00 == ItemType::PC_EQUIP) {
+  if (info.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_2) {
     ItemProperty property;
     GfItemUtil::getProperty(property, info.unknown04, 0);
     enhance = property.unknown4a;
-  } else if (info.unknown00 == ItemType::EQUIP_ORB) {
+  } else if (info.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_3) {
     ItemProperty property;
     GfItemUtil::getProperty(property, info.unknown04, 0);
     enhance = property.unknown4a;
-  } else if (info.unknown00 == ItemType::FAVORITE) {
+  } else if (info.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_10) {
     ItemProperty property;
     GfItemUtil::getProperty(property, info.unknown04, 0);
     enhance = property.unknown50;

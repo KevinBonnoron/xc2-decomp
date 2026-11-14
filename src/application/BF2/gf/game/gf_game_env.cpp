@@ -21,10 +21,10 @@
 namespace gf {
 struct GF_LP_HANDLE;
 
-constexpr f32 MIN_LAYER_SPEED = 1e-06f;
-constexpr f32 STOP_ENEMY_SEARCH_SEC = 3.0f;
-constexpr u8 SCREEN_SHOT_DISABLE_FRAMES = 180;
-constexpr int ROOM_COUNT_MAX = 99;
+constexpr f32 unknown021 = 1e-06f;     // Inferred role: min layer speed; original name unknown.
+constexpr f32 unknown022 = 3.0f;       // Inferred role: stop enemy search sec; original name unknown.
+constexpr u8 FRAMES_UNKNOWN_180 = 180; // Inferred role: screen shot disable frames; original name unknown.
+constexpr int ROOM_UNKNOWN_99 = 99;    // Inferred role: room count max; original name unknown.
 
 static void applyLayerPause(u32 layer, bool isPause) {
   if (fw::Framework::isLayerPause(layer) != isPause) {
@@ -47,7 +47,7 @@ GfLayerPause::~GfLayerPause() {}
 void GfLayerPause::build(const GfSetupParam &param) {
   // __LINE__ must be 108 as in the original file: its value changes the instruction order.
 #line 108
-  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfLayerPause(param);
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfLayerPause(param);
 }
 
 void GfLayerPause::destroy() {
@@ -64,20 +64,20 @@ void GfLayerPause::update(const fw::UpdateInfo &) {}
 
 void GfLayerPause::gevPause(u32 resumeBits, u32 pauseBits) {
   GfLayerPause *layerPause = get();
-  if ((resumeBits & PAUSE_BIT_SYSTEM) != 0) {
+  if ((resumeBits & PAUSE_BIT_UNKNOWN_0) != 0) {
     destroyLayerPause(layerPause->unknown20);
     destroyLayerPause(layerPause->unknown28);
     destroyLayerPause(layerPause->unknown30);
     destroyLayerPause(layerPause->unknown38);
-  } else if ((pauseBits & PAUSE_BIT_SYSTEM) != 0) {
+  } else if ((pauseBits & PAUSE_BIT_UNKNOWN_0) != 0) {
     layerPause->unknown20 = setLayerPause(4);
     layerPause->unknown28 = setLayerPause(0);
     layerPause->unknown30 = setLayerPause(1);
     layerPause->unknown38 = setLayerPause(7);
   }
-  if ((resumeBits & PAUSE_BIT_EVENT_SKIP) != 0) {
+  if ((resumeBits & PAUSE_BIT_UNKNOWN_9) != 0) {
     destroyLayerPause(layerPause->unknown40);
-  } else if ((pauseBits & PAUSE_BIT_EVENT_SKIP) != 0) {
+  } else if ((pauseBits & PAUSE_BIT_UNKNOWN_9) != 0) {
     layerPause->unknown40 = setLayerPause(10);
   }
 }
@@ -143,11 +143,11 @@ GfGameSpeed::~GfGameSpeed() {}
 void GfGameSpeed::build(const GfSetupParam &param) {
   // __LINE__ must be 347 as in the original file: its value changes the instruction order.
 #line 347
-  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfGameSpeed(param);
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfGameSpeed(param);
   setGlobalSpeed(param.unknown20);
 }
 
-void GfGameSpeed::setGlobalSpeed(f32 speed) { get()->setSpeed(GF_SPEED_GLOBAL, speed); }
+void GfGameSpeed::setGlobalSpeed(f32 speed) { get()->setSpeed(GF_SPEED_UNKNOWN_0, speed); }
 
 void GfGameSpeed::destroy() {
   GfGameSpeed *gameSpeed = get();
@@ -170,71 +170,71 @@ void GfGameSpeed::updateFrameSpeed(const fw::UpdateInfo &info) {
   if (unknown10 > 0.0f) {
     unknown10 -= info.unknown04;
     if (unknown10 <= 0.0f) {
-      unknown0c = unknown14[GF_SPEED_LAYER_4].unknown00;
+      unknown0c = unknown14[GF_SPEED_UNKNOWN_3].unknown00;
       unknown10 = 0.0f;
     }
     isInterval = true;
   }
-  if (unknown14[GF_SPEED_LAYER_1].unknown08 || unknown14[GF_SPEED_LAYER_4].unknown08 || unknown14[GF_SPEED_PLAY].unknown08 || isInterval) {
-    unknown14[GF_SPEED_LAYER_1].unknown08 = false;
-    unknown14[GF_SPEED_LAYER_4].unknown08 = false;
-    unknown14[GF_SPEED_PLAY].unknown08 = false;
-    unknown14[GF_SPEED_PLAY].unknown04 = unknown14[GF_SPEED_PLAY].unknown00;
-    const f32 &speed4 = isInterval ? unknown0c : unknown14[GF_SPEED_LAYER_4].unknown00;
-    f32 speed = speed4 * unknown68[GF_SPEED_LAYER_4].unknown00 * unknown14[GF_SPEED_PLAY].unknown00;
+  if (unknown14[GF_SPEED_UNKNOWN_4].unknown08 || unknown14[GF_SPEED_UNKNOWN_3].unknown08 || unknown14[GF_SPEED_UNKNOWN_1].unknown08 || isInterval) {
+    unknown14[GF_SPEED_UNKNOWN_4].unknown08 = false;
+    unknown14[GF_SPEED_UNKNOWN_3].unknown08 = false;
+    unknown14[GF_SPEED_UNKNOWN_1].unknown08 = false;
+    unknown14[GF_SPEED_UNKNOWN_1].unknown04 = unknown14[GF_SPEED_UNKNOWN_1].unknown00;
+    const f32 &speed4 = isInterval ? unknown0c : unknown14[GF_SPEED_UNKNOWN_3].unknown00;
+    f32 speed = speed4 * unknown68[GF_SPEED_UNKNOWN_3].unknown00 * unknown14[GF_SPEED_UNKNOWN_1].unknown00;
     if (speed <= 0.0f) {
-      speed = MIN_LAYER_SPEED;
+      speed = unknown021;
     }
-    const f32 &speed1 = isInterval ? unknown0c : unknown14[GF_SPEED_LAYER_1].unknown00;
-    f32 speedLayer1 = speed1 * unknown68[GF_SPEED_LAYER_1].unknown00 * unknown68[GF_SPEED_PLAY].unknown00;
+    const f32 &speed1 = isInterval ? unknown0c : unknown14[GF_SPEED_UNKNOWN_4].unknown00;
+    f32 speedLayer1 = speed1 * unknown68[GF_SPEED_UNKNOWN_4].unknown00 * unknown68[GF_SPEED_UNKNOWN_1].unknown00;
     if (speedLayer1 <= 0.0f) {
-      speedLayer1 = MIN_LAYER_SPEED;
+      speedLayer1 = unknown021;
     }
     fw::Framework::setLayerUpdateSpeed(0, speed);
-    unknown14[GF_SPEED_LAYER_0].unknown04 = speed;
+    unknown14[GF_SPEED_UNKNOWN_2].unknown04 = speed;
     fw::Framework::setLayerUpdateSpeed(4, speed);
-    unknown14[GF_SPEED_LAYER_4].unknown04 = speed;
+    unknown14[GF_SPEED_UNKNOWN_3].unknown04 = speed;
     fw::Framework::setLayerUpdateSpeed(5, speed);
     fw::Framework::setLayerUpdateSpeed(6, speed);
     fw::Framework::setLayerUpdateSpeed(1, speedLayer1);
-    unknown14[GF_SPEED_LAYER_1].unknown04 = speed;
+    unknown14[GF_SPEED_UNKNOWN_4].unknown04 = speed;
     fw::Framework::setLayerUpdateSpeed(2, speedLayer1);
     fw::Framework::setLayerUpdateSpeed(3, speedLayer1);
   }
-  if (unknown14[GF_SPEED_LAYER_7].unknown08) {
-    f32 speed = unknown14[GF_SPEED_LAYER_7].unknown00 * unknown68[GF_SPEED_LAYER_7].unknown00;
-    unknown14[GF_SPEED_LAYER_7].unknown08 = false;
+  if (unknown14[GF_SPEED_UNKNOWN_5].unknown08) {
+    f32 speed = unknown14[GF_SPEED_UNKNOWN_5].unknown00 * unknown68[GF_SPEED_UNKNOWN_5].unknown00;
+    unknown14[GF_SPEED_UNKNOWN_5].unknown08 = false;
     fw::Framework::setLayerUpdateSpeed(7, speed);
-    unknown14[GF_SPEED_LAYER_7].unknown04 = speed;
+    unknown14[GF_SPEED_UNKNOWN_5].unknown04 = speed;
     fw::Framework::setLayerUpdateSpeed(8, speed);
     fw::Framework::setLayerUpdateSpeed(9, speed);
   }
-  if (unknown14[GF_SPEED_LAYER_10].unknown08) {
-    f32 speed = unknown14[GF_SPEED_LAYER_10].unknown00 * unknown68[GF_SPEED_LAYER_10].unknown00;
+  if (unknown14[GF_SPEED_UNKNOWN_6].unknown08) {
+    f32 speed = unknown14[GF_SPEED_UNKNOWN_6].unknown00 * unknown68[GF_SPEED_UNKNOWN_6].unknown00;
     if (speed <= 0.0f) {
-      speed = MIN_LAYER_SPEED;
+      speed = unknown021;
     }
-    unknown14[GF_SPEED_LAYER_10].unknown08 = false;
+    unknown14[GF_SPEED_UNKNOWN_6].unknown08 = false;
     fw::Framework::setLayerUpdateSpeed(10, speed);
-    unknown14[GF_SPEED_LAYER_10].unknown04 = speed;
+    unknown14[GF_SPEED_UNKNOWN_6].unknown04 = speed;
     fw::Framework::setLayerUpdateSpeed(11, speed);
     fw::Framework::setLayerUpdateSpeed(12, speed);
   }
-  if (unknown14[GF_SPEED_LAYER_0].unknown08) {
-    f32 speed = unknown14[GF_SPEED_LAYER_0].unknown00 * unknown68[GF_SPEED_LAYER_0].unknown00 * unknown14[GF_SPEED_PLAY].unknown00;
+  if (unknown14[GF_SPEED_UNKNOWN_2].unknown08) {
+    f32 speed = unknown14[GF_SPEED_UNKNOWN_2].unknown00 * unknown68[GF_SPEED_UNKNOWN_2].unknown00 * unknown14[GF_SPEED_UNKNOWN_1].unknown00;
     if (speed <= 0.0f) {
-      speed = MIN_LAYER_SPEED;
+      speed = unknown021;
     }
-    unknown14[GF_SPEED_LAYER_0].unknown08 = false;
+    unknown14[GF_SPEED_UNKNOWN_2].unknown08 = false;
     fw::Framework::setLayerUpdateSpeed(0, speed);
-    unknown14[GF_SPEED_LAYER_0].unknown04 = speed;
+    unknown14[GF_SPEED_UNKNOWN_2].unknown04 = speed;
   }
-  if (unknown14[GF_SPEED_GLOBAL].unknown08) {
-    unknown14[GF_SPEED_GLOBAL].unknown04 = unknown14[GF_SPEED_GLOBAL].unknown00;
-    unknown14[GF_SPEED_GLOBAL].unknown08 = false;
-    f32 speed = unknown14[GF_SPEED_GLOBAL].unknown04;
+  if (unknown14[GF_SPEED_UNKNOWN_0].unknown08) {
+    unknown14[GF_SPEED_UNKNOWN_0].unknown04 = unknown14[GF_SPEED_UNKNOWN_0].unknown00;
+    unknown14[GF_SPEED_UNKNOWN_0].unknown08 = false;
+    f32 speed = unknown14[GF_SPEED_UNKNOWN_0].unknown04;
     if (speed <= 0.0f) {
-      speed = MIN_LAYER_SPEED;
+      speed = unknown021;
     }
     fw::Framework::setUpdateSpeed(speed);
   }
@@ -253,6 +253,27 @@ void GfGameSpeed::setIntervalSpeed(f32 speed, f32 time) {
   gameSpeed->unknown10 = time;
 }
 
+void GfGameSpeed::setLayerSpeed(u32 layer, f32 speed) {
+  GfGameSpeed *gameSpeed = get();
+  switch (layer) {
+  case 1:
+    gameSpeed->setSpeed(GF_SPEED_UNKNOWN_4, speed);
+    break;
+  case 4:
+    gameSpeed->setSpeed(GF_SPEED_UNKNOWN_3, speed);
+    break;
+  case 7:
+    gameSpeed->setSpeed(GF_SPEED_UNKNOWN_5, speed);
+    break;
+  case 10:
+    gameSpeed->setSpeed(GF_SPEED_UNKNOWN_6, speed);
+    break;
+  case 0:
+    gameSpeed->setSpeed(GF_SPEED_UNKNOWN_2, speed);
+    break;
+  }
+}
+
 void GfGameSpeed::setSpeed(GF_SPEED type, f32 speed) {
   f32 value = speed < 0.0f ? 1.0f : speed;
   if (unknown14[type].unknown00 != value) {
@@ -265,15 +286,15 @@ f32 GfGameSpeed::getLayerSpeed(u32 layer) {
   GfGameSpeed *gameSpeed = get();
   switch (layer) {
   case 1:
-    return gameSpeed->getSpeed(GF_SPEED_LAYER_1);
+    return gameSpeed->getSpeed(GF_SPEED_UNKNOWN_4);
   case 4:
-    return gameSpeed->getSpeed(GF_SPEED_LAYER_4);
+    return gameSpeed->getSpeed(GF_SPEED_UNKNOWN_3);
   case 7:
-    return gameSpeed->getSpeed(GF_SPEED_LAYER_7);
+    return gameSpeed->getSpeed(GF_SPEED_UNKNOWN_5);
   case 10:
-    return gameSpeed->getSpeed(GF_SPEED_LAYER_10);
+    return gameSpeed->getSpeed(GF_SPEED_UNKNOWN_6);
   case 0:
-    return gameSpeed->getSpeed(GF_SPEED_LAYER_0);
+    return gameSpeed->getSpeed(GF_SPEED_UNKNOWN_2);
   }
   return 1.0f;
 }
@@ -284,15 +305,15 @@ f32 GfGameSpeed::getOriginalLayerSpeed(u32 layer) {
   GfGameSpeed *gameSpeed = get();
   switch (layer) {
   case 1:
-    return gameSpeed->getOriginalSpeed(GF_SPEED_LAYER_1);
+    return gameSpeed->getOriginalSpeed(GF_SPEED_UNKNOWN_4);
   case 4:
-    return gameSpeed->getOriginalSpeed(GF_SPEED_LAYER_4);
+    return gameSpeed->getOriginalSpeed(GF_SPEED_UNKNOWN_3);
   case 7:
-    return gameSpeed->getOriginalSpeed(GF_SPEED_LAYER_7);
+    return gameSpeed->getOriginalSpeed(GF_SPEED_UNKNOWN_5);
   case 10:
-    return gameSpeed->getOriginalSpeed(GF_SPEED_LAYER_10);
+    return gameSpeed->getOriginalSpeed(GF_SPEED_UNKNOWN_6);
   case 0:
-    return gameSpeed->getOriginalSpeed(GF_SPEED_LAYER_0);
+    return gameSpeed->getOriginalSpeed(GF_SPEED_UNKNOWN_2);
   }
   return 1.0f;
 }
@@ -301,16 +322,16 @@ f32 GfGameSpeed::getOriginalSpeed(GF_SPEED type) { return unknown14[type].unknow
 
 f32 GfGameSpeed::getGlobalSpeed() {
   if (get() != nullptr) {
-    return get()->getSpeed(GF_SPEED_GLOBAL);
+    return get()->getSpeed(GF_SPEED_UNKNOWN_0);
   }
   return 0.0f;
 }
 
-void GfGameSpeed::setPlaySpeed(f32 speed) { get()->setSpeed(GF_SPEED_PLAY, speed); }
+void GfGameSpeed::setPlaySpeed(f32 speed) { get()->setSpeed(GF_SPEED_UNKNOWN_1, speed); }
 
 f32 GfGameSpeed::getPlaySpeed() {
   if (get() != nullptr) {
-    return get()->getSpeed(GF_SPEED_PLAY);
+    return get()->getSpeed(GF_SPEED_UNKNOWN_1);
   }
   return 0.0f;
 }
@@ -321,16 +342,16 @@ f32 GfGameSpeed::getSpeedSalvage(GF_SPEED type) { return unknown68[type].unknown
 
 void GfGameSpeed::setSalvageSpeed(f32 speed) {
   GfGameSpeed *gameSpeed = get();
-  gameSpeed->unknown68[GF_SPEED_LAYER_4].unknown00 = speed;
-  gameSpeed->unknown14[GF_SPEED_LAYER_4].unknown08 = true;
-  gameSpeed->unknown68[GF_SPEED_LAYER_7].unknown00 = speed;
-  gameSpeed->unknown14[GF_SPEED_LAYER_7].unknown08 = true;
+  gameSpeed->unknown68[GF_SPEED_UNKNOWN_3].unknown00 = speed;
+  gameSpeed->unknown14[GF_SPEED_UNKNOWN_3].unknown08 = true;
+  gameSpeed->unknown68[GF_SPEED_UNKNOWN_5].unknown00 = speed;
+  gameSpeed->unknown14[GF_SPEED_UNKNOWN_5].unknown08 = true;
 }
 
 void GfGameSpeed::setSalvageCharacterSpeed(f32 speed) {
   GfGameSpeed *gameSpeed = get();
-  gameSpeed->unknown68[GF_SPEED_LAYER_7].unknown00 = speed;
-  gameSpeed->unknown14[GF_SPEED_LAYER_7].unknown08 = true;
+  gameSpeed->unknown68[GF_SPEED_UNKNOWN_5].unknown00 = speed;
+  gameSpeed->unknown14[GF_SPEED_UNKNOWN_5].unknown08 = true;
 }
 
 void GfGameEnv::clear() {
@@ -351,7 +372,7 @@ void GfGameEnv::clear() {
 void GfGameEnv::build(const GfSetupParam &param) {
   // __LINE__ must be 720 as in the original file: its value changes the instruction order.
 #line 720
-  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfGameEnv(param);
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfGameEnv(param);
 }
 
 void GfGameEnv::destroy() { delete get(); }
@@ -385,7 +406,7 @@ CFILTER_HANDLE GfGameEnv::createColorFilter(const ColorFilter &filter) {
   gameEnv->unknown168++;
   newFilter.unknown0c = handle;
   bool inserted = false;
-  for (mm::mtl::FixedQueue<ColorFilter, FILTER_MAX>::iterator it = gameEnv->unknown18.begin(); it != gameEnv->unknown18.end(); ++it) {
+  for (mm::mtl::FixedQueue<ColorFilter, FILTER_UNKNOWN_16>::iterator it = gameEnv->unknown18.begin(); it != gameEnv->unknown18.end(); ++it) {
     if ((*it).unknown10 <= newFilter.unknown10) {
       gameEnv->unknown18.insert(it, newFilter);
       inserted = true;
@@ -395,13 +416,13 @@ CFILTER_HANDLE GfGameEnv::createColorFilter(const ColorFilter &filter) {
   if (!inserted) {
     gameEnv->unknown18.push_front(newFilter);
   }
-  fw::RenderParam::setColorFilter(gameEnv->unknown18.front().unknown00, gameEnv->unknown18.front().unknown04, gameEnv->unknown18.front().unknown08, fw::CAMERA_TYPE_MAIN);
+  fw::RenderParam::setColorFilter(gameEnv->unknown18.front().unknown00, gameEnv->unknown18.front().unknown04, gameEnv->unknown18.front().unknown08, fw::CAMERA_TYPE_UNKNOWN_0);
   return newFilter.unknown0c;
 }
 
 void GfGameEnv::destroyColorFilter(CFILTER_HANDLE handle) {
   GfGameEnv *gameEnv = get();
-  mm::mtl::FixedQueue<ColorFilter, FILTER_MAX>::iterator it =
+  mm::mtl::FixedQueue<ColorFilter, FILTER_UNKNOWN_16>::iterator it =
       mm::mtl::find_if(gameEnv->unknown18.begin(), gameEnv->unknown18.end(), [handle](const ColorFilter &colorFilter) { return colorFilter.unknown0c == handle; });
   if (it == gameEnv->unknown18.end()) {
     return;
@@ -413,15 +434,15 @@ void GfGameEnv::destroyColorFilter(CFILTER_HANDLE handle) {
   gameEnv->unknown18.pop_front();
   if (!gameEnv->unknown18.empty()) {
     const ColorFilter &current = gameEnv->unknown18.front();
-    fw::RenderParam::setColorFilter(current.unknown00, current.unknown04, current.unknown08, fw::CAMERA_TYPE_MAIN);
+    fw::RenderParam::setColorFilter(current.unknown00, current.unknown04, current.unknown08, fw::CAMERA_TYPE_UNKNOWN_0);
   } else {
-    fw::RenderParam::resetColorFilter(1.0f, fw::CAMERA_TYPE_MAIN);
+    fw::RenderParam::resetColorFilter(1.0f, fw::CAMERA_TYPE_UNKNOWN_0);
   }
 }
 
 void GfGameEnv::setColorFilter(CFILTER_HANDLE handle, const ColorFilter &filter) {
   GfGameEnv *gameEnv = get();
-  mm::mtl::FixedQueue<ColorFilter, FILTER_MAX>::iterator it =
+  mm::mtl::FixedQueue<ColorFilter, FILTER_UNKNOWN_16>::iterator it =
       mm::mtl::find_if(gameEnv->unknown18.begin(), gameEnv->unknown18.end(), [handle](const ColorFilter &colorFilter) { return colorFilter.unknown0c == handle; });
   if (it == gameEnv->unknown18.end()) {
     return;
@@ -429,7 +450,7 @@ void GfGameEnv::setColorFilter(CFILTER_HANDLE handle, const ColorFilter &filter)
   (*it).unknown08 = filter.unknown08;
   (*it).unknown04 = filter.unknown04;
   (*it).unknown00 = filter.unknown00;
-  fw::RenderParam::setColorFilter(gameEnv->unknown18.back().unknown00, gameEnv->unknown18.back().unknown04, gameEnv->unknown18.back().unknown08, fw::CAMERA_TYPE_MAIN);
+  fw::RenderParam::setColorFilter(gameEnv->unknown18.back().unknown00, gameEnv->unknown18.back().unknown04, gameEnv->unknown18.back().unknown08, fw::CAMERA_TYPE_UNKNOWN_0);
 }
 
 CLOUD_SEA_HANDLE GfGameEnv::createCloudSea(CLOUD_SEA cloudSea, CLOUD_SEA_PRIO prio) {
@@ -441,7 +462,7 @@ CLOUD_SEA_HANDLE GfGameEnv::createCloudSea(CLOUD_SEA cloudSea, CLOUD_SEA_PRIO pr
   gameEnv->unknown240++;
   newCloudSea.unknown08 = handle;
   bool inserted = false;
-  for (mm::mtl::FixedQueue<CloudSea, FILTER_MAX>::iterator it = gameEnv->unknown170.begin(); it != gameEnv->unknown170.end(); ++it) {
+  for (mm::mtl::FixedQueue<CloudSea, FILTER_UNKNOWN_16>::iterator it = gameEnv->unknown170.begin(); it != gameEnv->unknown170.end(); ++it) {
     if ((*it).unknown04 <= prio) {
       gameEnv->unknown170.insert(it, newCloudSea);
       inserted = true;
@@ -457,7 +478,7 @@ CLOUD_SEA_HANDLE GfGameEnv::createCloudSea(CLOUD_SEA cloudSea, CLOUD_SEA_PRIO pr
 
 void GfGameEnv::destroyCloudSea(CLOUD_SEA_HANDLE handle) {
   GfGameEnv *gameEnv = get();
-  mm::mtl::FixedQueue<CloudSea, FILTER_MAX>::iterator it =
+  mm::mtl::FixedQueue<CloudSea, FILTER_UNKNOWN_16>::iterator it =
       mm::mtl::find_if(gameEnv->unknown170.begin(), gameEnv->unknown170.end(), [handle](const CloudSea &cloudSea) { return cloudSea.unknown08 == handle; });
   if (it == gameEnv->unknown170.end()) {
     return;
@@ -472,7 +493,7 @@ void GfGameEnv::destroyCloudSea(CLOUD_SEA_HANDLE handle) {
 
 void GfGameEnv::setCloudSea(CLOUD_SEA_HANDLE handle, CLOUD_SEA cloudSea) {
   GfGameEnv *gameEnv = get();
-  mm::mtl::FixedQueue<CloudSea, FILTER_MAX>::iterator it =
+  mm::mtl::FixedQueue<CloudSea, FILTER_UNKNOWN_16>::iterator it =
       mm::mtl::find_if(gameEnv->unknown170.begin(), gameEnv->unknown170.end(), [handle](const CloudSea &other) { return other.unknown08 == handle; });
   if (it == gameEnv->unknown170.end()) {
     return;
@@ -483,7 +504,7 @@ void GfGameEnv::setCloudSea(CLOUD_SEA_HANDLE handle, CLOUD_SEA cloudSea) {
 
 CLOUD_SEA GfGameEnv::getCloudType(CLOUD_SEA_HANDLE handle) {
   GfGameEnv *gameEnv = get();
-  mm::mtl::FixedQueue<CloudSea, FILTER_MAX>::iterator it =
+  mm::mtl::FixedQueue<CloudSea, FILTER_UNKNOWN_16>::iterator it =
       mm::mtl::find_if(gameEnv->unknown170.begin(), gameEnv->unknown170.end(), [handle](const CloudSea &cloudSea) { return cloudSea.unknown08 == handle; });
   if (it != gameEnv->unknown170.end()) {
     return (*it).unknown00;
@@ -502,23 +523,23 @@ CLOUD_SEA GfGameEnv::getCurrentCloudSea() {
 void GfGameEnv::gevMapjump(GEV event, const MapjumpCallbackInfo &info) {
   GfGameEnv *gameEnv = get();
   switch (event) {
-  case GEV_MAPJUMP_START:
+  case GEV_UNKNOWN_1:
     gameEnv->unknown08 = true;
     gameEnv->unknown0a = info.unknown0c;
     break;
-  case GEV_MAPJUMP_DESTROY_FIELD:
+  case GEV_UNKNOWN_2:
     gameEnv->unknown09 = true;
     break;
-  case GEV_MAPJUMP_CREATE_FIELD:
-    gameEnv->unknown14 = info.unknown10 == MAPJUMP_TYPE_SAVE_DATA ? 0.0f : STOP_ENEMY_SEARCH_SEC;
+  case GEV_UNKNOWN_5:
+    gameEnv->unknown14 = info.unknown10 == MAPJUMP_UNKNOWN_1 ? 0.0f : unknown022;
     break;
-  case GEV_MAPJUMP_FADEIN:
+  case GEV_UNKNOWN_6:
     gameEnv->unknown08 = false;
     gameEnv->unknown09 = false;
     gameEnv->unknown0a = false;
     if (!GfGameManager::isEvent(false)) {
       nn::oe::DisableScreenShot();
-      gameEnv->unknown324 = SCREEN_SHOT_DISABLE_FRAMES;
+      gameEnv->unknown324 = FRAMES_UNKNOWN_180;
     }
     break;
   }
@@ -527,10 +548,10 @@ void GfGameEnv::gevMapjump(GEV event, const MapjumpCallbackInfo &info) {
 void GfGameEnv::gevPlayEvent(GEV, u32) {}
 
 void GfGameEnv::gevGameState(GF_STATE, GF_STATE state) {
-  if (state == GF_STATE_DESTROY) {
-    fw::RenderParam::setMotionBlur(false, fw::CAMERA_TYPE_MAIN);
-  } else if (state == GF_STATE_CONTROL && !GfManager::isExecModeAdvertize()) {
-    fw::RenderParam::setMotionBlur(true, fw::CAMERA_TYPE_MAIN);
+  if (state == GF_STATE_UNKNOWN_2) {
+    fw::RenderParam::setMotionBlur(false, fw::CAMERA_TYPE_UNKNOWN_0);
+  } else if (state == GF_STATE_UNKNOWN_3 && !GfManager::isExecModeAdvertize()) {
+    fw::RenderParam::setMotionBlur(true, fw::CAMERA_TYPE_UNKNOWN_0);
   }
 }
 
@@ -546,7 +567,7 @@ void GfGameEnv::update(const fw::UpdateInfo &info) {
   updateGlobalIBLReferencePos(info);
   if (!gameEnv->unknown18.empty()) {
     const ColorFilter &filter = gameEnv->unknown18.back();
-    fw::RenderParam::setColorFilter(filter.unknown00, filter.unknown04, filter.unknown08, fw::CAMERA_TYPE_MAIN);
+    fw::RenderParam::setColorFilter(filter.unknown00, filter.unknown04, filter.unknown08, fw::CAMERA_TYPE_UNKNOWN_0);
   }
   if (gameEnv->unknown324 != 0 && --gameEnv->unknown324 == 0) {
     nn::oe::EnableScreenShot();
@@ -558,16 +579,16 @@ void GfGameEnv::updateIsInRoom(const fw::UpdateInfo &) {
   if (isMapjumpBlackout()) {
     return;
   }
-  if (fw::RenderParam::isRoom(position, fw::CAMERA_TYPE_MAIN)) {
+  if (fw::RenderParam::isRoom(position, fw::CAMERA_TYPE_UNKNOWN_0)) {
     if (unknown320 <= 0) {
       unknown320 = 1;
-    } else if (unknown320 < ROOM_COUNT_MAX) {
+    } else if (unknown320 < ROOM_UNKNOWN_99) {
       unknown320++;
     }
   } else {
     if (unknown320 >= 0) {
       unknown320 = -1;
-    } else if (unknown320 > -ROOM_COUNT_MAX) {
+    } else if (unknown320 > -ROOM_UNKNOWN_99) {
       unknown320--;
     }
   }
@@ -581,7 +602,7 @@ void GfGameEnv::updateGlobalIBLReferencePos(const fw::UpdateInfo &) {
 
 bool GfGameEnv::isRoom() { return get()->unknown320 > -3; }
 
-void GfGameEnv::sendPlayerPositionToRender(const mm::Vec3 &position) { fw::RenderParam::setPlayerPosition(position, fw::CAMERA_TYPE_MAIN); }
+void GfGameEnv::sendPlayerPositionToRender(const mm::Vec3 &position) { fw::RenderParam::setPlayerPosition(position, fw::CAMERA_TYPE_UNKNOWN_0); }
 
 void GfGameEnv::setWeather(WEATHERID weather) { GfFieldWeather::setMapWeatherID(weather); }
 
@@ -593,7 +614,7 @@ WEATHER_HANDLE GfGameEnv::createTempWeather(WEATHERID weather, WEATHER_PRIO prio
   WEATHER_HANDLE handle = static_cast<WEATHER_HANDLE>((gameEnv->unknown248.size() + 1) | (gameEnv->unknown318 << 8));
   gameEnv->unknown318++;
   newWeather.unknown08 = handle;
-  for (mm::mtl::FixedQueue<WeatherSet, FILTER_MAX>::iterator it = gameEnv->unknown248.begin(); it != gameEnv->unknown248.end(); ++it) {
+  for (mm::mtl::FixedQueue<WeatherSet, FILTER_UNKNOWN_16>::iterator it = gameEnv->unknown248.begin(); it != gameEnv->unknown248.end(); ++it) {
     if ((*it).unknown04 <= prio) {
       gameEnv->unknown248.insert(it, newWeather);
       return newWeather.unknown08;
@@ -605,7 +626,7 @@ WEATHER_HANDLE GfGameEnv::createTempWeather(WEATHERID weather, WEATHER_PRIO prio
 
 void GfGameEnv::destroyTempWeather(WEATHER_HANDLE handle) {
   GfGameEnv *gameEnv = get();
-  mm::mtl::FixedQueue<WeatherSet, FILTER_MAX>::iterator it =
+  mm::mtl::FixedQueue<WeatherSet, FILTER_UNKNOWN_16>::iterator it =
       mm::mtl::find_if(gameEnv->unknown248.begin(), gameEnv->unknown248.end(), [handle](const WeatherSet &weatherSet) { return weatherSet.unknown08 == handle; });
   if (it != gameEnv->unknown248.end()) {
     gameEnv->unknown248.erase(it);
@@ -617,7 +638,7 @@ WEATHERID GfGameEnv::getTempWeather() {
   if (!gameEnv->unknown248.empty()) {
     return gameEnv->unknown248.front().unknown00;
   }
-  return WEATHER_NULL;
+  return WEATHER_UNKNOWN_0;
 }
 
 } // namespace gf

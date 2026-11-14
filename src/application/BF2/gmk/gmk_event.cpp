@@ -21,11 +21,12 @@ GmkEvent::GmkEvent() : IntrusiveListNode(), unknown60(nullptr), unknownf0(false)
 void GmkEvent::debugDraw() const { isValid(); }
 
 void GmkEvent::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
-  unknown06 = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_U16), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_U16));
-  unknown0a = QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_U16), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_U8), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_U8));
-  unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_U16);
-  unknown02 = bdat.getValCheck("EventID", id, BDAT_TYPE_U16);
-  unknown04 = bdat.getValCheck("Icon", id, BDAT_TYPE_U16);
+  unknown06 = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_UNKNOWN_2));
+  unknown0a =
+      QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_UNKNOWN_1), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_UNKNOWN_1));
+  unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_UNKNOWN_2);
+  unknown02 = bdat.getValCheck("EventID", id, BDAT_TYPE_UNKNOWN_2);
+  unknown04 = bdat.getValCheck("Icon", id, BDAT_TYPE_UNKNOWN_2);
 }
 
 bool GmkEvent::BdatInfo::isCondMatched() const {

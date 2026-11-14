@@ -3,6 +3,7 @@
 #include "dr/dr_ap_cache.h"
 #include "dr/dr_ap_gx_type.h"
 #include "dr/dr_man.h"
+#include "dr/dr_pixl_man.h"
 #include "dr/dr_pixl_post_parm.h"
 #include "dr/dr_res_filter_data.h"
 #include "dr/dr_shd_data_list.h"
@@ -100,6 +101,24 @@ void DrPixlPostObj3dLut::render_updateLUT() {
     uniform.setUniformBlock();
     nearVolume->setRenderTarget(slice, *farVolume);
     shdList->renderQuads();
+  }
+}
+
+void DrPixlPostObj3dLut::debugRender() {
+  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  if (postParm->unknown1074 && postParm->m_colTblOn) {
+    DrResFilterData *filterData = unknown00->unknown98;
+    grlib::CGLibTextureBuffer *nearFirst = filterData->findFilterTexture(postParm->unknown26c);
+    grlib::CGLibTextureBuffer *farFirst = filterData->findFilterTexture(postParm->unknown278);
+    grlib::CGLibTextureBuffer *nearSecond = filterData->findFilterTexture(postParm->unknown28c);
+    grlib::CGLibTextureBuffer *farSecond = filterData->findFilterTexture(postParm->unknown290);
+    f32 depth = static_cast<f32>(postParm->unknown1078) * 0.0625f + 0.03125f;
+    unknown08->debugRender3D(*nearFirst, 0, 0, 0x80, 0x80, depth, false);
+    unknown08->debugRender3D(*farFirst, 0x81, 0, 0x80, 0x80, depth, false);
+    unknown08->debugRender3D(*nearSecond, 0x103, 0, 0x80, 0x80, depth, false);
+    unknown08->debugRender3D(*farSecond, 0x184, 0, 0x80, 0x80, depth, false);
+    unknown08->debugRender3D(*unknown20[0]->unknown70, 0, 0x82, 0x80, 0x80, depth, false);
+    unknown08->debugRender3D(*unknown20[1]->unknown70, 0x81, 0x82, 0x80, 0x80, depth, false);
   }
 }
 

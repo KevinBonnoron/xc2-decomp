@@ -124,14 +124,14 @@ void ScnObjCam::renderDebug(DebDraw *debDraw) {}
 
 void ScnObjCam::setCopydataCam(bool isCopydata) {}
 
-ScnObjCam::ScnObjCam(Scn *scn, const char *name) : ScnObj(scn, TYPE_CAM), m_info(-1), m_name(name), unknown5c(false), unknown60(nullptr) {
+ScnObjCam::ScnObjCam(Scn *scn, const char *name) : ScnObj(scn, TYPE_UNKNOWN_2), m_info(-1), m_name(name), unknown5c(false), unknown60(nullptr) {
   infoInit(unknown70.m_back);
   infoInit(unknown70.m_front);
   updateViewMatrix(false);
   DevGraph::getPers(unknown70.m_back->unknown1a0, unknown70.m_front->unknown1e8, unknown70.m_front->unknown1f4, unknown70.m_front->unknown1f8);
   setDefault();
   memcpy(unknown70.m_front, unknown70.m_back, sizeof(RENDER_INFO));
-  unknown70.m_flags.set(threadval<RENDER_INFO>::FLAG_SYNC);
+  unknown70.m_flags.set(threadval<RENDER_INFO>::FLAG_UNKNOWN_0);
 }
 
 ScnObjCam::~ScnObjCam() {
@@ -159,7 +159,7 @@ void ScnObjCam::infoInit(RENDER_INFO *info) {
   }
   info->unknown1f0 = static_cast<f32>(DevGraph::getRootWidth()) / static_cast<f32>(DevGraph::getRootHeight());
   info->unknown00.clear();
-  info->unknown00.unknown130 |= AttrTransform::FLAG_ROTATION_ZXY;
+  info->unknown00.unknown130 |= AttrTransform::FLAG_UNKNOWN_3;
   int width = DevGraph::getRootWidth();
   int height = DevGraph::getRootHeight();
   info->unknown1e0 = width;

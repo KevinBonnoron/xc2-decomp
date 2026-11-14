@@ -13,12 +13,12 @@ namespace event {
 
 class CharaPartUpdater {
 public:
-  static constexpr size_t REQUEST_COUNT = 8;
+  static constexpr size_t REQUEST_UNKNOWN_8 = 8; // Inferred role: request count; original name unknown.
 
   enum TYPE {
-    TYPE_EXT_DISP = 0,
-    TYPE_EXT_DISP_WEAPON = 1,
-    TYPE_EXT_PARAM = 2,
+    TYPE_EXT_UNKNOWN_0 = 0, // Inferred role: disp; original name unknown.
+    TYPE_EXT_UNKNOWN_1 = 1, // Inferred role: disp weapon; original name unknown.
+    TYPE_EXT_UNKNOWN_2 = 2, // Inferred role: param; original name unknown.
   };
 
   // Inferred role: request; original type name unknown.
@@ -40,9 +40,9 @@ public:
   void setExtParam(const char *name, f32 value);
 
 private:
-  gf::GF_OBJ_HANDLE *unknown08;                              // Inferred role: handle; original member name unknown.
-  gf::GfEvtModel *unknown10;                                 // Inferred role: model; original member name unknown.
-  mm::mtl::FixedVector<unknown001, REQUEST_COUNT> unknown18; // Inferred role: requests; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown08;                                  // Inferred role: handle; original member name unknown.
+  gf::GfEvtModel *unknown10;                                     // Inferred role: model; original member name unknown.
+  mm::mtl::FixedVector<unknown001, REQUEST_UNKNOWN_8> unknown18; // Inferred role: requests; original member name unknown.
 };
 
 static_assert(sizeof(CharaPartUpdater) == 0xe0, "");

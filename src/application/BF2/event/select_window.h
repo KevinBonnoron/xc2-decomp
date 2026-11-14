@@ -14,14 +14,14 @@ struct GF_OBJ_HANDLE;
 namespace event {
 
 enum SELECT_TYPE {
-  SELECT_TYPE_BALLOON = 0,
-  SELECT_TYPE_BOX = 1,
+  SELECT_TYPE_UNKNOWN_0 = 0, // Inferred role: balloon; original name unknown.
+  SELECT_TYPE_UNKNOWN_1 = 1, // Inferred role: box; original name unknown.
 };
 
 class SelectWindow {
 public:
   enum {
-    FLAG_OPEN = 0,
+    FLAG_UNKNOWN_0 = 0, // Inferred role: open flag; original name unknown.
   };
 
   SelectWindow();
@@ -31,7 +31,7 @@ public:
   void close();
   void open(SELECT_TYPE type, int textId, const int *selectIds, size_t count, u8 *bdat, gf::GF_OBJ_HANDLE *handle);
   int getResult();
-  bool isOpen() const { return unknown08.test(FLAG_OPEN); }
+  bool isOpen() const { return unknown08.test(FLAG_UNKNOWN_0); }
   int getSelected() const { return unknown0c; }
 
 private:

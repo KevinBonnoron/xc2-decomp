@@ -7,26 +7,26 @@
 
 namespace gf {
 
-constexpr size_t SCRIPT_SIZE = 0x2000;
-constexpr size_t LARGE_SCRIPT_SIZE = 0x100000;
-constexpr size_t AI_SCRIPT_SIZE = 0x4000;
-const ml::FILE_PRIO SCRIPT_FILE_PRIO = static_cast<ml::FILE_PRIO>(7);
+constexpr size_t SIZE_UNKNOWN_8192 = 0x2000;                             // Inferred role: script size; original name unknown.
+constexpr size_t SIZE_UNKNOWN_1048576 = 0x100000;                        // Inferred role: large script size; original name unknown.
+constexpr size_t SIZE_UNKNOWN_16384 = 0x4000;                            // Inferred role: ai script size; original name unknown.
+const ml::FILE_PRIO FILE_PRIO_UNKNOWN_7 = static_cast<ml::FILE_PRIO>(7); // Inferred role: script file prio; original name unknown.
 
 GfScriptManager::GfScriptManager(const GfSetupParam &param) : unknown08(false) { initialize(param); }
 
 void GfScriptManager::initialize(const GfSetupParam &) {
   fw::ScriptManager *scriptManager = fw::ScriptManager::get();
-  scriptManager->createScript(SCRIPT_SLOT_FIELD_SYSTEM, getAllocator(ALLOCATOR_SCRIPT), SCRIPT_SIZE);
-  scriptManager->createScript(SCRIPT_SLOT_FIELD, getAllocator(ALLOCATOR_SCRIPT), SCRIPT_SIZE);
-  scriptManager->createScript(SCRIPT_SLOT_LARGE, getAllocator(ALLOCATOR_SCRIPT), LARGE_SCRIPT_SIZE);
-  scriptManager->createScript(SCRIPT_SLOT_AFTER_EVENT, getAllocator(ALLOCATOR_SCRIPT), SCRIPT_SIZE);
-  for (u32 slot = SCRIPT_SLOT_TUTORIAL; slot < SCRIPT_SLOT_AI; slot++) {
-    scriptManager->createScript(slot, getAllocator(ALLOCATOR_SCRIPT), SCRIPT_SIZE);
+  scriptManager->createScript(SCRIPT_SLOT_UNKNOWN_0, getAllocator(ALLOCATOR_UNKNOWN_2), SIZE_UNKNOWN_8192);
+  scriptManager->createScript(SCRIPT_SLOT_UNKNOWN_1, getAllocator(ALLOCATOR_UNKNOWN_2), SIZE_UNKNOWN_8192);
+  scriptManager->createScript(SCRIPT_SLOT_UNKNOWN_2, getAllocator(ALLOCATOR_UNKNOWN_2), SIZE_UNKNOWN_1048576);
+  scriptManager->createScript(SCRIPT_SLOT_UNKNOWN_3, getAllocator(ALLOCATOR_UNKNOWN_2), SIZE_UNKNOWN_8192);
+  for (u32 slot = SCRIPT_SLOT_UNKNOWN_4; slot < SCRIPT_SLOT_UNKNOWN_36; slot++) {
+    scriptManager->createScript(slot, getAllocator(ALLOCATOR_UNKNOWN_2), SIZE_UNKNOWN_8192);
   }
-  for (u32 slot = SCRIPT_SLOT_AI; slot < SCRIPT_SLOT_GMK_TUTORIAL; slot++) {
-    scriptManager->createScript(slot, getAllocator(ALLOCATOR_SCRIPT), AI_SCRIPT_SIZE);
+  for (u32 slot = SCRIPT_SLOT_UNKNOWN_36; slot < SCRIPT_SLOT_UNKNOWN_68; slot++) {
+    scriptManager->createScript(slot, getAllocator(ALLOCATOR_UNKNOWN_2), SIZE_UNKNOWN_16384);
   }
-  scriptManager->createScript(SCRIPT_SLOT_GMK_TUTORIAL, getAllocator(ALLOCATOR_SCRIPT), SCRIPT_SIZE);
+  scriptManager->createScript(SCRIPT_SLOT_UNKNOWN_68, getAllocator(ALLOCATOR_UNKNOWN_2), SIZE_UNKNOWN_8192);
   unknown08 = true;
 }
 
@@ -35,7 +35,7 @@ GfScriptManager::~GfScriptManager() {}
 void GfScriptManager::build(const GfSetupParam &param) {
   // __LINE__ must be 59 as in the original file: its value changes the instruction order.
 #line 59
-  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfScriptManager(param);
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfScriptManager(param);
 }
 
 void GfScriptManager::destroy() {
@@ -46,17 +46,17 @@ void GfScriptManager::destroy() {
 
 void GfScriptManager::finalize() {
   fw::ScriptManager *scriptManager = fw::ScriptManager::get();
-  scriptManager->destroyScript(SCRIPT_SLOT_GMK_TUTORIAL, true);
-  for (u32 slot = SCRIPT_SLOT_AI; slot < SCRIPT_SLOT_GMK_TUTORIAL; slot++) {
+  scriptManager->destroyScript(SCRIPT_SLOT_UNKNOWN_68, true);
+  for (u32 slot = SCRIPT_SLOT_UNKNOWN_36; slot < SCRIPT_SLOT_UNKNOWN_68; slot++) {
     scriptManager->destroyScript(slot, true);
   }
-  for (u32 slot = SCRIPT_SLOT_TUTORIAL; slot < SCRIPT_SLOT_AI; slot++) {
+  for (u32 slot = SCRIPT_SLOT_UNKNOWN_4; slot < SCRIPT_SLOT_UNKNOWN_36; slot++) {
     scriptManager->destroyScript(slot, true);
   }
-  scriptManager->destroyScript(SCRIPT_SLOT_AFTER_EVENT, true);
-  scriptManager->destroyScript(SCRIPT_SLOT_LARGE, true);
-  scriptManager->destroyScript(SCRIPT_SLOT_FIELD, true);
-  scriptManager->destroyScript(SCRIPT_SLOT_FIELD_SYSTEM, true);
+  scriptManager->destroyScript(SCRIPT_SLOT_UNKNOWN_3, true);
+  scriptManager->destroyScript(SCRIPT_SLOT_UNKNOWN_2, true);
+  scriptManager->destroyScript(SCRIPT_SLOT_UNKNOWN_1, true);
+  scriptManager->destroyScript(SCRIPT_SLOT_UNKNOWN_0, true);
   unknown08 = false;
 }
 
@@ -68,7 +68,7 @@ bool GfScriptManager::isInitialized() {
 void GfScriptManager::loadScript(u32 slot, const char *filename) {
   fw::ScriptManager *scriptManager = fw::ScriptManager::get();
   scriptManager->destroyScript(slot, false);
-  scriptManager->loadScript(slot, filename, SCRIPT_FILE_PRIO);
+  scriptManager->loadScript(slot, filename, FILE_PRIO_UNKNOWN_7);
 }
 
 bool GfScriptManager::isScriptLoadError(u32 slot) { return fw::ScriptManager::get()->unknown20[static_cast<int>(slot)].isLoadErr(); }

@@ -37,7 +37,7 @@ void GfMenuObjActionWindow::initialize() {
       attachExternalCall(unknown001, main);
 // __LINE__ must be 87 as in the original file: it is the line argument of operator new.
 #line 87
-      MainListener *listener = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) MainListener(this);
+      MainListener *listener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) MainListener(this);
       listener->addRef();
       ui::UIEventManager::get()->registObjectListener(main, listener);
       if (listener != nullptr) {
@@ -61,7 +61,7 @@ void GfMenuObjActionWindow::open(const OpenParam &param) {
     if (!ui::UIObjectAcc(object).isTerm()) {
       GF_OBJ_HANDLE *target = param.unknown00;
       GfGameUtil::UiActionWindowInfo info;
-      if (target != INVALID_HANDLE) {
+      if (target != unknown020) {
         info.create(target);
       }
       u16 text = registString(ui::UIStr(info.unknown00, info.unknown08));

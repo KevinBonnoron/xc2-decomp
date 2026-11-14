@@ -4,7 +4,7 @@
 
 namespace event {
 
-CharaWeightPlayer::CharaWeightPlayer() : unknown08(gf::INVALID_HANDLE), unknown10(nullptr) {}
+CharaWeightPlayer::CharaWeightPlayer() : unknown08(gf::unknown020), unknown10(nullptr) {}
 
 void CharaWeightPlayer::create(gf::GF_OBJ_HANDLE *handle, CharaObj *chara) {
   this->unknown08 = handle;
@@ -35,7 +35,7 @@ void CharaWeightPlayer::destroy() {
     delete item;
   }
   unknown18.clear();
-  unknown08 = gf::INVALID_HANDLE;
+  unknown08 = gf::unknown020;
   unknown10 = nullptr;
 }
 

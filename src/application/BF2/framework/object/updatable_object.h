@@ -12,7 +12,7 @@ namespace fw {
 struct UpdateInfo;
 
 enum OBJECT_EVENT {
-  OBJECT_EVENT_UPDATE_END = 0,
+  OBJECT_EVENT_UNKNOWN_0 = 0, // Inferred role: update end; original name unknown.
 };
 
 struct ObjectEvent {
@@ -21,8 +21,8 @@ struct ObjectEvent {
 
 class UpdatableObject : public mm::mtl::IntrusiveListNode<UpdatableObject> {
 public:
-  static const u32 COMPONENT_MAX = 12;
-  static const u32 COMPONENT_SLOT_MAX = 16;
+  static const u32 COMPONENT_UNKNOWN_12 = 12;      // Inferred role: maximum number of components; original name unknown.
+  static const u32 COMPONENT_SLOT_UNKNOWN_16 = 16; // Inferred role: maximum number of component slots; original name unknown.
 
   static mm::mtl::RTTI m_rtti;
 
@@ -43,6 +43,7 @@ public:
   void registComponentLocal(u32 index, ComponentObject *component);
   void removeComponentLocal(u32 index);
 
+  // Inferred name; shared by every component class for getComponent<T>.
   template <typename T> T *getComponent() const {
     ComponentObject *component = unknown38[T::COMPONENT_INDEX];
     if (component == nullptr) {
@@ -57,9 +58,9 @@ public:
   u32 unknown2c;                        // Inferred role: layer; original member name unknown.
   u16 unknown30;                        // Inferred role: flags; original member name unknown.
   u8 _32[0x38 - 0x32];
-  ComponentObject *unknown38[COMPONENT_SLOT_MAX];    // Inferred role: components; original member name unknown.
-  mm::mtl::IntrusiveList<UpdatableObject> unknownb8; // Inferred role: children; original member name unknown.
-  HandlePtr<UpdatableObject> unknownd0;              // Inferred role: parent; original member name unknown.
+  ComponentObject *unknown38[COMPONENT_SLOT_UNKNOWN_16]; // Inferred role: components; original member name unknown.
+  mm::mtl::IntrusiveList<UpdatableObject> unknownb8;     // Inferred role: children; original member name unknown.
+  HandlePtr<UpdatableObject> unknownd0;                  // Inferred role: parent; original member name unknown.
 };
 
 static_assert(offsetof(UpdatableObject, unknown18) == 0x18, "");

@@ -18,7 +18,7 @@ namespace gf {
 namespace enemy {
 
 bool StateFieldBlade::getOwnerDriverPos(mm::Vec3 &position, GF_OBJ_HANDLE *handle) const {
-  GfObjAcc acc(GfMountManager::getHandle(handle, GFATTACH_WEAPON, OPTMNT_WIRE));
+  GfObjAcc acc(GfMountManager::getHandle(handle, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_2));
   if (acc.isValidTransform()) {
     position = acc.getWorldTransform().unknown00;
     return true;

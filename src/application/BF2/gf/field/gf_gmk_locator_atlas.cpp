@@ -13,10 +13,10 @@
 
 namespace gf {
 
-constexpr f32 AREA_LIMIT = 1.0e12f;
+constexpr f32 unknown057 = 1.0e12f; // Inferred role: area limit; original name unknown.
 
 GfGmkLocatorAtlas::GfGmkLocatorAtlas(const CreateInfo *info)
-    : unknown00(0), unknown04(0), unknown10(AREA_LIMIT, AREA_LIMIT, AREA_LIMIT), unknown20(-AREA_LIMIT, -AREA_LIMIT, -AREA_LIMIT), unknown58(-1), unknown60(nullptr), unknown70(nullptr),
+    : unknown00(0), unknown04(0), unknown10(unknown057, unknown057, unknown057), unknown20(-unknown057, -unknown057, -unknown057), unknown58(-1), unknown60(nullptr), unknown70(nullptr),
       unknown438(nullptr) {
   if (info != nullptr) {
     create(*info);
@@ -36,7 +36,7 @@ const GfGmkLocatorAtlas::BdatInfo *GfGmkLocatorAtlas::getBdatInfo(int id) const 
 void GfGmkLocatorAtlas::createBdatInfos() {
   disposeBdatInfos();
   u8 *bdat = GfDataBdat::getFP(BDAT_MNU_MAP_INFO);
-  unknown30.setAllocator(getAllocator(ALLOCATOR_DEFAULT));
+  unknown30.setAllocator(getAllocator(ALLOCATOR_UNKNOWN_0));
   int count = Bdat::getIdCount(bdat);
   unknown30.reserve(count);
   unknown30.resize(count);
@@ -44,8 +44,8 @@ void GfGmkLocatorAtlas::createBdatInfos() {
   for (int i = 0; i < count; i++) {
     BdatInfo &info = unknown30[i];
     int id = unknown58 + i;
-    info.unknown00 = reinterpret_cast<const char *>(Bdat::getValCheck(bdat, "level_name", id, gmk::BDAT_TYPE_STRING));
-    info.unknown08 = Bdat::getValCheck(bdat, "level_priority", id, gmk::BDAT_TYPE_U16);
+    info.unknown00 = reinterpret_cast<const char *>(Bdat::getValCheck(bdat, "level_name", id, gmk::BDAT_TYPE_UNKNOWN_7));
+    info.unknown08 = Bdat::getValCheck(bdat, "level_priority", id, gmk::BDAT_TYPE_UNKNOWN_2);
   }
 }
 

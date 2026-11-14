@@ -4,11 +4,17 @@
 #include "gf/menu/gf_menu_object.h"
 #include "mm_mtl/fixed_vector.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 
 namespace gf {
 
 class GfMenuObjPartyForm : public GfMenuObject {
 public:
+  class MainListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+  };
+
   GfMenuObjPartyForm(u32 handle);
   ~GfMenuObjPartyForm() override;
   void initialize() override;

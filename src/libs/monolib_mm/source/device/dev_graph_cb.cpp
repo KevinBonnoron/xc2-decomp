@@ -6,6 +6,8 @@ namespace ml {
 
 DevGraphCB::DevGraphCB() { DevGraph::entryCb(this); }
 
+DevGraphCB::~DevGraphCB() { DevGraph::removeCb(this); }
+
 void DevGraphCB::viBeginFrame() {}
 
 void DevGraphCB::viBeforeDrawDone() {}

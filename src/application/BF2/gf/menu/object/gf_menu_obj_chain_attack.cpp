@@ -26,6 +26,19 @@ void GfMenuObjChainAttack::update() { GfMenuObject::update(); }
 
 void GfMenuObjChainAttack::changeCharacter(u32) { GfMenuObjUtil::playSE(0x34); }
 
+void GfMenuObjChainAttack::openResult(const ResultParam &param) {
+  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(unknown001));
+  if (acc.isValid()) {
+    ui::UIObjectAcc child(acc.searchChild("LAY_result"));
+    ui::EventData event;
+    event.unknown08 = 0;
+    event.unknown00 = GfMenuTypes::unknown003_33;
+    event.unknown08_u16 = param.unknown00;
+    event.unknown0c = param.unknown04;
+    GfMenuObject::sendEvent(child.unknown10, event, 0.0f);
+  }
+}
+
 void GfMenuObjChainAttack::closeResult() { unknown148(unknown001, "LAY_result", GfMenuTypes::unknown003_34); }
 
 void GfMenuObjChainAttack::closeRoundExtend() { unknown148(unknown001, "LAY_extend", GfMenuTypes::unknown003_34); }
@@ -95,6 +108,85 @@ bool GfMenuObjChainAttack::isEnableSelect(u32 handle, int index) {
   }
 
   return true;
+}
+
+void GfMenuObjChainAttack::StartListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    acc.setDisp(false);
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  case 3:
+    if (event.unknown08 == 1) {
+      GfMenuObject::termCallContext(acc.unknown10);
+    }
+    break;
+  case GfMenuTypes::unknown003_33: {
+    ui::UIObjectAcc base(acc.unknown10, "IMG_start_base");
+    base.startAnimationFromID(1, false);
+    GfMenuObject::hookAnimationEvent(acc.unknown10, base.unknown10);
+    GfMenuObjUtil::CtrlParam param;
+    param.unknown004("fade_in_r");
+    param.unknown11 = true;
+    param.unknown14 = 8;
+    GfMenuObjUtil::startCtrl(acc.unknown10, param, "TXT_start_caption");
+    GfMenuObjUtil::playSE(0x33);
+    acc.setDisp(true);
+    break;
+  }
+  case 0xc: {
+    GfMenuObjUtil::CtrlParam param;
+    param.unknown004("fade_out_l");
+    param.unknown11 = true;
+    param.unknown14 = 10;
+    param.unknown04 = 1;
+    GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
+    break;
+  }
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
+void GfMenuObjChainAttack::ExtendListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    acc.setDisp(false);
+    unknown0c = 0;
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  case 3:
+    break;
+  case GfMenuTypes::unknown003_33:
+    if (unknown0c == 0) {
+      acc.setDisp(true);
+      GfMenuObjUtil::CtrlParam param;
+      param.unknown004("fade_in_l_early");
+      param.unknown04 = 1;
+      param.unknown11 = true;
+      param.unknown14 = 8;
+      GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
+      unknown0c = 1;
+    }
+    break;
+  case GfMenuTypes::unknown003_34:
+    if (unknown0c == 1) {
+      GfMenuObjUtil::CtrlParam param;
+      param.unknown004("fade_out_r_early");
+      param.unknown11 = true;
+      param.unknown04 = 2;
+      param.unknown14 = 10;
+      GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
+      unknown0c = 0;
+    }
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
 }
 
 } // namespace gf

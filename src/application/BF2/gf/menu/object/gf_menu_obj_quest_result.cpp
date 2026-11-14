@@ -29,6 +29,23 @@ const unknown002 unknown003[] = {
     {"TXT_reward05_val", 0x2a},     {"TXT_reward06_val", 0x2b},     {"TXT_reward07_val", 0x2c},     {"TXT_reward08_val", 0x2d},
 };
 
+namespace {
+
+constexpr u32 EVENT_UNKNOWN_1 = 1;   // Inferred role: ui event ignored by the listener; original name unknown.
+constexpr u32 EVENT_UNKNOWN_2 = 2;   // Inferred role: ui event terminating the call context; original name unknown.
+constexpr u32 EVENT_UNKNOWN_3 = 3;   // Inferred role: ui event closing the result screen; original name unknown.
+constexpr u32 EVENT_UNKNOWN_8 = 8;   // Inferred role: ui event of the confirm input; original name unknown.
+constexpr u32 EVENT_UNKNOWN_11 = 11; // Inferred role: ui event of an elapsed timer; original name unknown.
+constexpr u32 EVENT_UNKNOWN_33 = 33; // Inferred role: ui event opening the screen; original name unknown.
+constexpr u32 EVENT_UNKNOWN_34 = 34; // Inferred role: ui event closing the screen; original name unknown.
+
+constexpr u32 TIMER_UNKNOWN_1 = 1; // Inferred role: timer started when the screen opens; original name unknown.
+constexpr u32 TIMER_UNKNOWN_2 = 2; // Inferred role: timer started after the first one; original name unknown.
+constexpr u32 TIMER_UNKNOWN_3 = 3; // Inferred role: timer of the fade out before the result; original name unknown.
+constexpr u32 TIMER_UNKNOWN_4 = 4; // Inferred role: timer started by the confirm input; original name unknown.
+
+} // namespace
+
 GfMenuObjQuestResult::GfMenuObjQuestResult(u32 handle) : GfMenuObject(handle) {}
 
 GfMenuObjQuestResult::~GfMenuObjQuestResult() { ; }
@@ -36,6 +53,85 @@ GfMenuObjQuestResult::~GfMenuObjQuestResult() { ; }
 void GfMenuObjQuestResult::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjQuestResult::update() { GfMenuObject::update(); }
+
+void GfMenuObjQuestResult::ListListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case EVENT_UNKNOWN_1:
+    break;
+  case EVENT_UNKNOWN_2:
+    GfMenuObject::termCallContext(handle);
+    acc.setTerm();
+    break;
+  case EVENT_UNKNOWN_3:
+    if (unknown0c == 3) {
+      GfMenuObject::addResultCallContext(handle, 0, 0);
+      unknown0c = 4;
+      close();
+    }
+    break;
+  case EVENT_UNKNOWN_8:
+    if (event.unknown0c == 1 && unknown0c == 1) {
+      GfMenuObjUtil::setChildDisp(handle, "LAY_comp", false);
+      GfMenuObjUtil::setChildDisp(handle, "LAY_result", true);
+      GfMenuObjUtil::setChildDisp(handle, "IMG_chkbtn02", true);
+      GfMenuObject::registTimer(handle, TIMER_UNKNOWN_4, 0.3f, false);
+      unknown0c = 2;
+      GfMenuObjUtil::playSECommonFromInput(event.unknown0c);
+    }
+    break;
+  case EVENT_UNKNOWN_11:
+    switch (event.unknown08) {
+    case TIMER_UNKNOWN_1:
+      GfMenuObject::releaseTimer(handle);
+      GfMenuObject::registTimer(handle, TIMER_UNKNOWN_2, 1.0f, false);
+      break;
+    case TIMER_UNKNOWN_2:
+      GfMenuObject::releaseTimer(handle);
+      unknown28 = GfMenuObject::registTimer(handle, TIMER_UNKNOWN_3, 0.5f, false);
+      fadeOut(handle);
+      break;
+    case TIMER_UNKNOWN_3:
+      GfMenuObject::releaseTimer(handle);
+      GfMenuObjUtil::setChildDisp(handle, "LAY_comp", false);
+      GfMenuObjUtil::setChildDisp(handle, "LAY_result", true);
+      GfMenuObjUtil::setChildDisp(handle, "IMG_chkbtn02", false);
+      fadeIn(handle);
+      unknown0c = 1;
+      break;
+    case TIMER_UNKNOWN_4:
+      GfMenuObject::releaseTimer(handle);
+      fadeOut(handle);
+      unknown0c = 3;
+      break;
+    }
+    break;
+  case EVENT_UNKNOWN_33: {
+    acc.setDisp(true);
+    u32 quest = event.unknown08;
+    for (int i = 0; i < 19; i++) {
+      createAdapter(handle, unknown003[i].unknown00, toQuestID(quest), unknown003[i].unknown08);
+    }
+    GfMenuObjUtil::setChildDisp(handle, "LAY_comp", true);
+    GfMenuObjUtil::setChildDisp(handle, "LAY_result", false);
+    GfMenuObjUtil::setChildDisp(handle, "IMG_chkbtn02", false);
+    unknown28 = GfMenuObject::registTimer(handle, TIMER_UNKNOWN_1, 0.5f, false);
+    fadeIn(handle);
+    unknown0c = 0;
+    break;
+  }
+  case EVENT_UNKNOWN_34:
+    acc.setDisp(false);
+    GfMenuObjUtil::setChildDisp(handle, "LAY_comp", false);
+    GfMenuObjUtil::setChildDisp(handle, "LAY_result", false);
+    GfMenuObjUtil::setChildDisp(handle, "IMG_chkbtn02", false);
+    GfMenuObject::termCallContext(handle);
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
 
 void GfMenuObjQuestResult::close() { unknown143(unknown001, GfMenuTypes::unknown003_34); }
 
@@ -137,7 +233,7 @@ void GfMenuObjQuestResult::initialize() {
   if (ui::UIObjectAcc(main).isValid()) {
 // __LINE__ must be 126 as in the original file: it is the line argument of operator new.
 #line 126
-    ListListener *listener = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ListListener(this);
+    ListListener *listener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ListListener(this);
     listener->addRef();
     ui::UIEventManager::get()->registObjectListener(main, listener);
     if (listener != nullptr) {

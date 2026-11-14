@@ -6,6 +6,7 @@
 #include "grlib/cglib_render_target.h"
 #include "mm_math/mm_col4.h"
 #include "mm_mtl/fixed_array.h"
+#include "mtl/alloc_handle.h"
 
 namespace ml {
 
@@ -16,6 +17,15 @@ template <typename T> inline void unknown001(T *&object) {
     delete deleted;
     object = nullptr;
   }
+}
+
+DrPixlPostObjTMAA::DrPixlPostObjTMAA(DrMan *drMan, DrPixlMan *pixlMan, DrPixlPostMan *postMan) : DrPixlPostObj(drMan, pixlMan, postMan) {
+  unknown18 = 0;
+  for (int i = 0; i < 2; i++) {
+    unknown20[i] = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
+    m_bloomTexture[i] = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
+  }
+  unknown18 |= 1;
 }
 
 DrPixlPostObjTMAA::~DrPixlPostObjTMAA() {

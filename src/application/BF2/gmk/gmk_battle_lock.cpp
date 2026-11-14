@@ -59,10 +59,10 @@ void GmkBattleLock::createEffect() {
   disposeEffect(false);
   const unknown001 *data = unknown002();
   switch (unknown08.unknown10->unknown0c) {
-  case SHAPE_TYPE_BOX:
+  case SHAPE_TYPE_UNKNOWN_3:
     unknownc0 = fw::EffectManager::get()->create(data->unknown00 ? "cmn_204_001" : "cmn_204_011", nullptr, true);
     break;
-  case SHAPE_TYPE_CAPSULE:
+  case SHAPE_TYPE_UNKNOWN_4:
     unknownc0 = fw::EffectManager::get()->create(data->unknown00 ? "cmn_204_000" : "cmn_204_010", nullptr, true);
     break;
   default:
@@ -82,7 +82,7 @@ void GmkBattleLock::update(f32 deltaTime) {
         createGmkCollision();
         createEffect();
       }
-    } else if (unknown50.unknown58 != nullptr && (gf::GfDataUtil::getScenarioFlag() != SCENARIO_FLAG_KEEP_BATTLE_LOCK_IN_BATTLE || !gf::GfGameManager::isBattle())) {
+    } else if (unknown50.unknown58 != nullptr && (gf::GfDataUtil::getScenarioFlag() != SCENARIO_FLAG_UNKNOWN_7039 || !gf::GfGameManager::isBattle())) {
       unknown50.dispose();
       disposeEffect(true);
     }
@@ -98,3 +98,6 @@ void GmkBattleLock::update(f32 deltaTime) {
 template void mm::mtl::Vector<gmk::GmkBattleLock::BdatInfo>::expand(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkBattleLock::BdatInfo>::extend(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkBattleLock::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkBattleLock>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkBattleLock>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkBattleLock>::resize(size_t);

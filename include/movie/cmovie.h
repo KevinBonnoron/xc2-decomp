@@ -9,7 +9,7 @@ class IAllocator;
 
 class ICMovie : public mm::mtl::PtrSingleton<ICMovie> {
 public:
-  virtual bool initialize(mm::mtl::IAllocator *allocator) = 0;
+  virtual void initialize(mm::mtl::IAllocator *allocator) = 0;
   virtual void finalize() = 0;
   virtual void update(unsigned char *buffer, int width, int height, int pitch) = 0;
   virtual int set_file(const char *path) = 0;

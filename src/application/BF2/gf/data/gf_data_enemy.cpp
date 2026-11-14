@@ -16,12 +16,12 @@
 namespace gf {
 
 enum {
-  FLAG_ENEMY_SUPPRESS = 0x2e,
+  FLAG_UNKNOWN_46 = 0x2e, // Inferred role: flag enemy suppress; original name unknown.
 };
 
-constexpr u32 ENEMY_SUPPRESS_COUNT = 0x5db;
-constexpr u32 ENEMY_SUPPRESS_MAX = 0xffff;
-constexpr f32 PERMILLE = 0.001f;
+constexpr u32 ENEMY_SUPPRESS_UNKNOWN_1499 = 0x5db;   // Inferred role: enemy suppress count; original name unknown.
+constexpr u32 ENEMY_SUPPRESS_UNKNOWN_65535 = 0xffff; // Inferred role: enemy suppress max; original name unknown.
+constexpr f32 unknown015 = 0.001f;                   // Inferred role: permille; original name unknown.
 
 void GfDataEnemy::setupGameParamForLevel(SDataEnemy &dataEnemy, u32 level) {
   GfBdatChrEnParam *bdat = GfBdatChrEnParam::get();
@@ -31,12 +31,12 @@ void GfDataEnemy::setupGameParamForLevel(SDataEnemy &dataEnemy, u32 level) {
   f32 dex = bdat->getChrEnParamTableDexBase(level);
   f32 agility = bdat->getChrEnParamTableAgilityBase(level);
   f32 luck = bdat->getChrEnParamTableLuckBase(level);
-  dataEnemy.unknownac = static_cast<u32>(hpMax * (dataEnemy.unknown50 * PERMILLE));
-  dataEnemy.unknownb0 = static_cast<u32>(strength * (dataEnemy.unknown52 * PERMILLE));
-  dataEnemy.unknownb2 = static_cast<u32>(powerEther * (dataEnemy.unknown54 * PERMILLE));
-  dataEnemy.unknownb4 = static_cast<u32>(dex * (dataEnemy.unknown56 * PERMILLE));
-  dataEnemy.unknownb6 = static_cast<u32>(agility * (dataEnemy.unknown58 * PERMILLE));
-  dataEnemy.unknownb8 = static_cast<u32>(luck * (dataEnemy.unknown5a * PERMILLE));
+  dataEnemy.unknownac = static_cast<u32>(hpMax * (dataEnemy.unknown50 * unknown015));
+  dataEnemy.unknownb0 = static_cast<u32>(strength * (dataEnemy.unknown52 * unknown015));
+  dataEnemy.unknownb2 = static_cast<u32>(powerEther * (dataEnemy.unknown54 * unknown015));
+  dataEnemy.unknownb4 = static_cast<u32>(dex * (dataEnemy.unknown56 * unknown015));
+  dataEnemy.unknownb6 = static_cast<u32>(agility * (dataEnemy.unknown58 * unknown015));
+  dataEnemy.unknownb8 = static_cast<u32>(luck * (dataEnemy.unknown5a * unknown015));
   dataEnemy.unknowna8 = level;
 }
 
@@ -111,18 +111,18 @@ const char *GfDataEnemy::getSePack(u32 resource) {
 }
 
 u32 GfDataEnemy::getEnemySuppress(u32 enemy) {
-  if (enemy < 1 || enemy > ENEMY_SUPPRESS_COUNT) {
+  if (enemy < 1 || enemy > ENEMY_SUPPRESS_UNKNOWN_1499) {
     return 0;
   }
 
-  return GfGameFlag::getLocal(16, FLAG_ENEMY_SUPPRESS + enemy);
+  return GfGameFlag::getLocal(16, FLAG_UNKNOWN_46 + enemy);
 }
 
 bool GfDataEnemy::incEnemySuppress(u32 enemy) {
-  if (enemy >= 1 && enemy <= ENEMY_SUPPRESS_COUNT) {
-    u32 suppress = GfGameFlag::getLocal(16, FLAG_ENEMY_SUPPRESS + enemy);
-    if (suppress < ENEMY_SUPPRESS_MAX) {
-      GfGameFlag::setLocal(16, FLAG_ENEMY_SUPPRESS + enemy, suppress + 1);
+  if (enemy >= 1 && enemy <= ENEMY_SUPPRESS_UNKNOWN_1499) {
+    u32 suppress = GfGameFlag::getLocal(16, FLAG_UNKNOWN_46 + enemy);
+    if (suppress < ENEMY_SUPPRESS_UNKNOWN_65535) {
+      GfGameFlag::setLocal(16, FLAG_UNKNOWN_46 + enemy, suppress + 1);
       return true;
     }
   }
@@ -164,7 +164,7 @@ u32 GfDataEnemy::getWeaponType(u32 arrange) {
     return 0;
   }
 
-  return GfDataBlade::getSDataBlade(blade)->unknown821;
+  return GfDataBlade::getSDataBlade(blade).unknown821;
 }
 
 bool GfDataEnemy::getDriverAddAnim(mm::mtl::FixStr<128> &animName, u32 driver, u32 number) {
@@ -228,7 +228,7 @@ bool GfDataEnemy::isBoss(u32 arrange) {
 }
 
 bool GfDataEnemy::getExtraParts(u32 resource, u32 part) {
-  if (part >= EXTRA_PARTS_COUNT) {
+  if (part >= PARTS_UNKNOWN_4) {
     return true;
   }
 

@@ -30,12 +30,12 @@ bool GfQuestEvent::setQuestEntry(u32 quest) {
 u32 GfQuestEvent::getQuestState(u32 quest) { return GfQuestInfo::getState(toQuestID(quest)); }
 
 void GfQuestEvent::setQuestComp(u32 quest, u32 taskIndex) {
-  QuestTaskParam param(toQuestID(quest), taskIndex, TASK_STATE_NONE);
+  QuestTaskParam param(toQuestID(quest), taskIndex, TASK_STATE_UNKNOWN_0);
   GfQuestTask::completeTask(param);
 }
 
 bool GfQuestEvent::getQuestComp(u32 quest, u32 taskIndex) {
-  QuestTaskParam param(toQuestID(quest), taskIndex, TASK_STATE_NONE);
+  QuestTaskParam param(toQuestID(quest), taskIndex, TASK_STATE_UNKNOWN_0);
   return GfQuestInfo::isCompleteTask(param);
 }
 

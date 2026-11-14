@@ -570,7 +570,7 @@ void LayerShdManager::endShader(const ml::IDrDrawWorkInfo *info) {
 }
 
 bool LayerShdManager::OnFileEvent(ml::EventFileTh *event) {
-  if (event->type == ml::EventFileTh::TYPE_COMPLETE) {
+  if (event->type == ml::EventFileTh::TYPE_UNKNOWN_2) {
     if (unknown28 == event->unknown08) {
       unknown08 = event->moveFileData();
       unknown28 = nullptr;

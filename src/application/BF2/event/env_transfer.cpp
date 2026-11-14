@@ -32,10 +32,10 @@ void EnvTransfer::load() {
   gf::GfGameEvent::setMapWeather(unknown10);
   switch (static_cast<int>(unknown14)) {
   case 0:
-    mm::mtl::Singleton<EnvManager>::getPtr()->setCloudSea(EVT_CLOUDTYPE_LOW);
+    mm::mtl::Singleton<EnvManager>::getPtr()->setCloudSea(CLOUD_LOW);
     break;
   case 1:
-    mm::mtl::Singleton<EnvManager>::getPtr()->setCloudSea(EVT_CLOUDTYPE_HIGH);
+    mm::mtl::Singleton<EnvManager>::getPtr()->setCloudSea(CLOUD_HIGH);
     break;
   }
 }

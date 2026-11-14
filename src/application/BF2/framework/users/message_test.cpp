@@ -1,6 +1,5 @@
 #include "framework/users/message_test.h"
 
-#include "framework/framework.h"
 #include "framework/memory/framework_memory.h"
 #include "framework/message/message_manager.h"
 #include "fw/fw_pad.h"
@@ -21,10 +20,10 @@ void Updatable1::update(const fw::UpdateInfo &info) {}
 
 bool Updatable1::recieveMessage(fw::MessageObject *sender, fw::Message &message) {
   switch (message.unknown00) {
-  case MSG_DAMAGE:
+  case MSG_UNKNOWN_0:
     procMsgDamage(sender, static_cast<MsgDamage &>(message));
     return true;
-  case MSG_GET_LIFE:
+  case MSG_UNKNOWN_1:
     procMsgGetLife(sender, static_cast<MsgGetLife &>(message));
     return true;
   }
@@ -44,17 +43,6 @@ Updatable2::~Updatable2() { ; }
 
 const mm::mtl::RTTI *Updatable2::getRTTI() const { return &m_rtti; }
 
-// Inferred role: queues a message of type T for the receiver after a delay; the game keeps it in message_object.h; original name unknown.
-template <typename T> static void unknown001(fw::MessageObject *sender, fw::MessageObject *receiver, f32 delay, int value) {
-  if (fw::MessageManager::get() != nullptr) {
-// The game compiles this allocation from line 61 of framework/message/message_object.h (its file string and line are
-// arguments of operator new); the helper's original definition there is not reconstructed yet.
-#line 61 "framework/message/message_object.h"
-    T *message = new (fw::Framework::getAllocator(), 4, __FILE__, __LINE__) T(value);
-    fw::MessageManager::get()->push(sender, receiver, message, delay);
-  }
-}
-
 void Updatable2::update(const fw::UpdateInfo &info) {
   u32 trigger = fw::PadManager::getControlPadData(0)->unknown04;
   fw::MessageObject *target = unknownf8.get();
@@ -62,10 +50,10 @@ void Updatable2::update(const fw::UpdateInfo &info) {
     MsgDamage message(2);
     sendMessage(target, message);
   } else if ((trigger & 0x2) != 0) {
-    unknown001<MsgDamage>(this, target, 5.0f, 2);
+    unknown009<MsgDamage>(target, 5.0f, 2);
   } else if ((trigger & 0x1) != 0) {
-    unknown001<MsgDamage>(this, target, 5.0f, 2);
-    unknown001<MsgDamage>(this, target, 6.0f, 3);
+    unknown009<MsgDamage>(target, 5.0f, 2);
+    unknown009<MsgDamage>(target, 6.0f, 3);
   } else if ((trigger & 0x8) != 0) {
     MsgGetLife message;
     sendMessage(target, message);

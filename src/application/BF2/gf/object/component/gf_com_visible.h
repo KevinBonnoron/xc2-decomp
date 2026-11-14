@@ -18,6 +18,7 @@ namespace gf {
 class GfComVisible : public GfComponent {
 public:
   static mm::mtl::RTTI m_rtti;
+  static const u32 COMPONENT_INDEX = 1;
 
   struct SetupInfo {};
 

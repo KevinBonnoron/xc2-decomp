@@ -12,18 +12,18 @@ namespace event {
 class CharaEffectPlayer {
 public:
   enum VF_TYPE {
-    VF_TYPE_MAIN = 0,
-    VF_TYPE_SUB = 1,
+    VF_TYPE_UNKNOWN_0 = 0, // Inferred role: main; original name unknown.
+    VF_TYPE_UNKNOWN_1 = 1, // Inferred role: sub; original name unknown.
     VF_TYPE_MAX = 2,
   };
 
   enum {
-    FLAG_VOLUME_FADE_MAIN = 1 << 0,
-    FLAG_VOLUME_FADE_SUB = 1 << 1,
-    FLAG_RIM_BLOOM = 1 << 2,
-    FLAG_AFTER_IMAGE = 1 << 3,
-    FLAG_VOLUME_FADE_ANIM_MAIN = 1 << 4,
-    FLAG_VOLUME_FADE_ANIM_SUB = 1 << 5,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: volume fade main flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: volume fade sub flag; original name unknown.
+    FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: rim bloom flag; original name unknown.
+    FLAG_UNKNOWN_3 = 1 << 3, // Inferred role: after image flag; original name unknown.
+    FLAG_UNKNOWN_4 = 1 << 4, // Inferred role: volume fade anim main flag; original name unknown.
+    FLAG_UNKNOWN_5 = 1 << 5, // Inferred role: volume fade anim sub flag; original name unknown.
   };
 
   CharaEffectPlayer();

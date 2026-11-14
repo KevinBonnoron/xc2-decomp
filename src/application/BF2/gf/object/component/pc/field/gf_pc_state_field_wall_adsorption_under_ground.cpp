@@ -20,7 +20,7 @@ void StateFieldWallAdsorptionUnderGround::enter(GfComBehaviorPc *behavior, ai::S
   }
   property->unknown310.unknown12_0 = true;
   StateUtil::setEnvSensor(*behavior, 0x40, false);
-  StateUtilField::resetCameraForWall(*behavior, StateUtilField::TIMING_UNDER_GROUND);
+  StateUtilField::resetCameraForWall(*behavior, StateUtilField::TIMING_UNKNOWN_0);
 }
 
 void StateFieldWallAdsorptionUnderGround::leave(GfComBehaviorPc *behavior, ai::State *next) {

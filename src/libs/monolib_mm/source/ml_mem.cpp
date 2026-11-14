@@ -52,6 +52,17 @@ void MlMem::removeExtMem(mtl::ALLOC_HANDLE handle) {
   }
 }
 
+mtl::ALLOC_HANDLE MlMem::getExtMem(u32 index) {
+  u32 i = 0;
+  for (mm::mtl::FixedList<mtl::ALLOC_HANDLE, 64>::iterator it = s_extMems.begin(); it != s_extMems.end(); ++it) {
+    if (i == index) {
+      return *it;
+    }
+    i++;
+  }
+  return mtl::ALLOC_HANDLE();
+}
+
 int MlMem::getExtMemNum() { return s_extMems.size(); }
 
 bool MlMem::isDebug(const void *pointer) { return mtl::MemManager::isArea(s_debugMem, pointer); }

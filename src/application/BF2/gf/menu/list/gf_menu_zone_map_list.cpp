@@ -13,7 +13,7 @@ GfMenuZoneMapList::~GfMenuZoneMapList() { ; }
 GfMenuZoneMapList *GfMenuZoneMapList::create() {
   // __LINE__ must be 36 as in the original source: it is the line argument of operator new.
 #line 36
-  GfMenuZoneMapList *list = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuZoneMapList();
+  GfMenuZoneMapList *list = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuZoneMapList();
   list->addRef();
   return list;
 }

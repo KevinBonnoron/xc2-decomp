@@ -34,19 +34,19 @@ void FadeCtrl::fadeout(int frame, PRIO prio, const mm::Col4 *color) { unknown08[
 void FadeCtrl::fadein(int frame) {
   unknown08[PRIO_LOW].reserve(false, frame, nullptr);
   unknown08[PRIO_MIDDLE].reserve(false, frame, nullptr);
-  if (!(unknown68 & FLAG_EVENT_SKIP)) {
-    unknown08[PRIO_HIGH].reserve(false, frame, nullptr);
+  if (!(unknown68 & FLAG_UNKNOWN_0)) {
+    unknown08[PRIO_UNKNOWN_2].reserve(false, frame, nullptr);
   }
 }
 
 void FadeCtrl::fadeoutEventSkip(int frame) {
-  unknown08[PRIO_HIGH].reserve(true, frame, &s_eventSkipFadeColor);
-  unknown68 |= FLAG_EVENT_SKIP;
+  unknown08[PRIO_UNKNOWN_2].reserve(true, frame, &s_eventSkipFadeColor);
+  unknown68 |= FLAG_UNKNOWN_0;
 }
 
 void FadeCtrl::fadeinEventSkip(int frame) {
-  unknown08[PRIO_HIGH].reserve(false, frame, &s_eventSkipFadeColor);
-  unknown68 &= ~FLAG_EVENT_SKIP;
+  unknown08[PRIO_UNKNOWN_2].reserve(false, frame, &s_eventSkipFadeColor);
+  unknown68 &= ~FLAG_UNKNOWN_0;
 }
 
 } // namespace event

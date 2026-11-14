@@ -1,9 +1,11 @@
 #include "gf/object/component/pc/field/gf_pc_state_field_move.h"
 
 #include "framework/object/updatable_object.h"
+#include "gf/object/component/animation/gf_com_asm.h"
 #include "gf/object/component/pc/gf_com_behavior_pc.h"
 #include "gf/object/component/pc/gf_com_property_pc.h"
 #include "gf/object/component/pc/gf_pc_move_util_field.h"
+#include "gf/object/component/pc/gf_pc_state_id.h"
 #include "gf/object/component/pc/gf_pc_state_util.h"
 #include "gf/object/component/pc/gf_pc_state_util_field.h"
 
@@ -16,6 +18,17 @@ void StateFieldMove::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   StateUtilField::setAsmSpeedMove(*property);
   StateUtil::changePlacementDownDist(*behavior, 0.05f);
   StateUtil::setEnableDownIK(*behavior, false);
+}
+
+void StateFieldMove::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
+  GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
+  behavior->unknown08->getComponent<GfComAsm>();
+  if (StateUtilField::isTurnRange(*property, unknown20)) {
+    reqState(STATE_ID_UNKNOWN_8);
+  } else {
+    MoveUtilField::updateMoveRun(info, *property);
+    StateUtilField::setAsmSpeedMove(*property);
+  }
 }
 
 void StateFieldMove::leave(GfComBehaviorPc *behavior, ai::State *next) { StateUtil::resetPlacementDownDist(*behavior); }

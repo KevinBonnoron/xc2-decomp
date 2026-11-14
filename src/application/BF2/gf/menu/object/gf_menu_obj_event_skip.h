@@ -13,10 +13,11 @@ class GfMenuObjEventSkip : public GfMenuObject {
 public:
   class ListListener : public ui::UIObjectListener {
   public:
-    ListListener(GfMenuObjEventSkip *owner) : _0c(), unknown20(owner) {}
+    ListListener(GfMenuObjEventSkip *owner) : unknown0c(0), _10(), unknown20(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x1c - 0x0c];
+    int unknown0c; // Inferred role: pause layout shown flag; original member name unknown.
+    u8 _10[0x1c - 0x10];
     GfMenuObjEventSkip *unknown20; // Inferred role: owner; original member name unknown.
   };
 
@@ -31,6 +32,7 @@ public:
 };
 
 static_assert(offsetof(GfMenuObjEventSkip::ListListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjEventSkip::ListListener, unknown0c) == 0xc, "");
 static_assert(sizeof(GfMenuObjEventSkip::ListListener) == 0x28, "");
 
 } // namespace gf

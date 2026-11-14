@@ -21,19 +21,19 @@ CharaEvaPlayer::CharaEvaPlayer()
       unknown60(0.0f, 0.0f, 0.0f), unknown70(0), unknown74(0), unknown78(0), unknown7c(1), unknown80(1), unknown84(1) {}
 
 void CharaEvaPlayer::setScaleWeapon(f32 scale) {
-  if (unknown18->unknown18 == gf::GF_EVT_MODEL_WEAPON) {
+  if (unknown18->unknown18 == gf::GF_EVT_MODEL_UNKNOWN_2) {
     unknown10->setScaleWeapon(scale);
   }
 }
 
 void CharaEvaPlayer::playTar(bool isPlay, const mm::Vec3 &tar) {
-  if ((unknown08 & FLAG_CHARA) == 0) {
+  if ((unknown08 & FLAG_UNKNOWN_0) == 0) {
     return;
   }
   if (isPlay) {
-    unknown10->setTar(TarAxis(TarAxis::AXIS_POS, tar), -1.0f, static_cast<EVT_tarcvtype>(0), static_cast<EVT_aimtype>(0), -1.0f, -1.0f);
+    unknown10->setTar(TarAxis(TarAxis::AXIS_UNKNOWN_1, tar), -1.0f, static_cast<EVT_tarcvtype>(0), static_cast<EVT_aimtype>(0), -1.0f, -1.0f);
   } else {
-    unknown10->setTar(TarAxis(TarAxis::AXIS_POS, tar), 0.0f, static_cast<EVT_tarcvtype>(0), static_cast<EVT_aimtype>(0), -1.0f, -1.0f);
+    unknown10->setTar(TarAxis(TarAxis::AXIS_UNKNOWN_1, tar), 0.0f, static_cast<EVT_tarcvtype>(0), static_cast<EVT_aimtype>(0), -1.0f, -1.0f);
   }
   unknown50 = isPlay;
   this->unknown60 = tar;
@@ -44,7 +44,7 @@ void CharaEvaPlayer::playAction(int type) {
     return;
   }
   gf::GfObj *obj = gf::GfObjUtil::getObj(unknown18->unknown20);
-  if (obj == nullptr || (unknown08 & FLAG_CHARA) == 0) {
+  if (obj == nullptr || (unknown08 & FLAG_UNKNOWN_0) == 0) {
     return;
   }
   stopAction();
@@ -62,24 +62,24 @@ void CharaEvaPlayer::playAction(int type) {
 }
 
 void CharaEvaPlayer::setDispWeapon(int type) {
-  if (unknown18->unknown18 == gf::GF_EVT_MODEL_DRIVER) {
-    unknown10->setHideWeapon(WPNHIDEID_EVA, type > 1, false);
-    unknown10->setHideWeapon(WPNHIDEID_EVA, type > 1, true);
-  } else if (unknown18->unknown18 == gf::GF_EVT_MODEL_BLADE) {
-    unknown10->setHideWeapon(WPNHIDEID_EVA, type > 1, false);
-    unknown10->setHideWeapon(WPNHIDEID_EVA, type > 1, true);
+  if (unknown18->unknown18 == gf::GF_EVT_MODEL_UNKNOWN_0) {
+    unknown10->setHideWeapon(WPNHIDEID_UNKNOWN_1, type > 1, false);
+    unknown10->setHideWeapon(WPNHIDEID_UNKNOWN_1, type > 1, true);
+  } else if (unknown18->unknown18 == gf::GF_EVT_MODEL_UNKNOWN_1) {
+    unknown10->setHideWeapon(WPNHIDEID_UNKNOWN_1, type > 1, false);
+    unknown10->setHideWeapon(WPNHIDEID_UNKNOWN_1, type > 1, true);
   }
   unknown7c = type;
 }
 
 void CharaEvaPlayer::setBattleWeapon(int type) {
   CharaWpnAsm::CMD cmd = static_cast<CharaWpnAsm::CMD>(type - 1);
-  if (unknown18->unknown18 == gf::GF_EVT_MODEL_WEAPON) {
+  if (unknown18->unknown18 == gf::GF_EVT_MODEL_UNKNOWN_2) {
     unknown88.execCmd(unknown18, cmd, false, nullptr);
-  } else if (unknown18->unknown18 == gf::GF_EVT_MODEL_DRIVER) {
+  } else if (unknown18->unknown18 == gf::GF_EVT_MODEL_UNKNOWN_0) {
     unknown88.execCmd(unknown18, cmd, false, nullptr);
     unknowne0.execCmd(unknown18, cmd, true, nullptr);
-  } else if (unknown18->unknown18 == gf::GF_EVT_MODEL_BLADE) {
+  } else if (unknown18->unknown18 == gf::GF_EVT_MODEL_UNKNOWN_1) {
     unknown88.execCmd(unknown18, cmd, false, nullptr);
     unknowne0.execCmd(unknown18, cmd, true, nullptr);
   }
@@ -87,10 +87,10 @@ void CharaEvaPlayer::setBattleWeapon(int type) {
 }
 
 void CharaEvaPlayer::setMountWeapon(int type) {
-  if (unknown18->unknown18 == gf::GF_EVT_MODEL_DRIVER) {
+  if (unknown18->unknown18 == gf::GF_EVT_MODEL_UNKNOWN_0) {
     unknown88.mount(unknown18, type > 1, false);
     unknowne0.mount(unknown18, type > 1, true);
-  } else if (unknown18->unknown18 == gf::GF_EVT_MODEL_BLADE) {
+  } else if (unknown18->unknown18 == gf::GF_EVT_MODEL_UNKNOWN_1) {
     unknown88.mount(unknown18, type > 1, false);
     unknowne0.mount(unknown18, type > 1, true);
   }

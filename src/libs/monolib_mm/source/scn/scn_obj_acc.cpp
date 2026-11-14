@@ -252,7 +252,7 @@ void ScnObjAccResMaterial::setDrMdl(ScnObjModel *model) {
 
 DrResMdoMat *ScnObjAccResMaterial::getMatRes(int index) { return &m_matEntries[index]; }
 
-MdsMatInfoHeader *ScnObjAccResMaterial::getMatData(int index) { return &m_matData[index]; }
+const MdsMatInfoHeader *ScnObjAccResMaterial::getMatData(int index) { return &m_matData[index]; }
 
 ScnObjAccResSubMesh::ScnObjAccResSubMesh() : m_meshObj(nullptr) {}
 
@@ -301,7 +301,7 @@ void ScnObjAccResSubMesh::setExtRegisterMatrix(int index, bool isRegister) { m_m
 
 void ScnObjAccResSubMesh::setExtMatrix(int index, const mm::Mat44 &matrix) {
   DrResMdoMeshParts *parts = m_meshObj->getParts(index);
-  if (parts->unknown28 & DrResMdoMeshParts::FLAG_MAT_ADD) {
+  if (parts->unknown28 & DrResMdoMeshParts::FLAG_UNKNOWN_27) {
     parts->setMatrix(matrix);
   }
 }
@@ -468,7 +468,7 @@ void ScnObjAccResAvatar::resetAvatarTexture() {
   m_drMdl->setCreateDisplayList();
 }
 
-static const mm::Col3 s_defaultShaderColor(0.5f, 0.5f, 0.5f);
+static const mm::Col3 unknown001(0.5f, 0.5f, 0.5f); // Inferred role: default shader color; original name unknown.
 
 ScnObjAccResShaderParm::ScnObjAccResShaderParm() : m_shaderParm(nullptr) {}
 
@@ -495,7 +495,7 @@ void ScnObjAccResShaderParm::setVal(int index, f32 value) {
 
 const mm::Col3 *ScnObjAccResShaderParm::getColor(int index) const {
   if (m_shaderParm == nullptr) {
-    return &s_defaultShaderColor;
+    return &unknown001;
   }
   return &m_shaderParm->unknown00[index];
 }
@@ -539,6 +539,54 @@ void ScnObjAccVolumeFade::setRatio(f32 ratio, int index) {
       effect->unknownd4 |= 0x100;
     }
   }
+}
+
+// Inferred role: copies the volume fade parameters into a vanish effect work and flags them as changed; original name unknown.
+static void unknown002(MdoWrkVanishEffect *effect, const VolumeFadeParams &params) {
+  memmove(effect->unknown00, params.unknown00, sizeof(params.unknown00));
+  effect->unknown40 = params.unknown40;
+  effect->unknown50 = params.unknown50;
+  memmove(effect->unknown60, params.unknown60, sizeof(params.unknown60));
+  memmove(effect->unknown74, params.unknown74, sizeof(params.unknown74));
+  memmove(effect->unknown88, params.unknown88, sizeof(params.unknown88));
+  effect->unknown9c = params.unknown9c;
+  effect->unknowna0 = params.unknowna0;
+  effect->unknowna8 = params.unknowna4;
+  effect->unknownd4 |= 0xeff;
+}
+
+void ScnObjAccVolumeFade::setParams(const VolumeFadeParams &params, int index) {
+  if (m_drMdl == nullptr) {
+    return;
+  }
+  if (index >= 0) {
+    MdoWrkVanishEffect *effect = m_drMdl->getVanishEffectWrk(index, DrMan::s_nDblIdx);
+    if (effect != nullptr) {
+      unknown002(effect, params);
+    }
+  } else {
+    for (u32 i = 0; i < m_drMdl->getVanishEffectMax(); i++) {
+      unknown002(m_drMdl->getVanishEffectWrk(i, DrMan::s_nDblIdx), params);
+    }
+  }
+}
+
+f32 ScnObjAccVolumeFade::getRatio(u32 index) const {
+  f32 ratio = 0.0f;
+  if (m_drMdl != nullptr) {
+    MdoWrkVanishEffect *base = m_drMdl->getVanishEffectWrk(index, 2);
+    if (base != nullptr) {
+      MdoWrkVanishEffect *effect = m_drMdl->getVanishEffectWrk(index, DrMan::s_nDblIdx);
+      if (!(effect->unknownd4 & 0x100)) {
+        effect = m_drMdl->getVanishEffectWrk(index, DrMan::s_nDblStockIdx);
+        if (!(effect->unknownd4 & 0x100)) {
+          return base->unknowna4;
+        }
+      }
+      ratio = effect->unknowna4;
+    }
+  }
+  return ratio;
 }
 
 ScnObjAccRimBloom::ScnObjAccRimBloom() : m_drMdl(nullptr) {}
@@ -658,6 +706,33 @@ void ScnObjAccMdlParticle::setActive(bool isActive, u32 index) {
   }
 }
 
+void ScnObjAccMdlParticle::setParams(const MdlVtxParticle &params) {
+  DrResMdoVtxMeshObj *vtxMesh = m_vtxMeshObj;
+  if (vtxMesh != nullptr) {
+    vtxMesh->unknown100 = params.unknown00;
+    vtxMesh->unknown104 = params.unknown04;
+    vtxMesh->unknown108 = params.unknown08;
+    vtxMesh->unknown10c = params.unknown0c;
+    vtxMesh->unknown110 = params.unknown10;
+    vtxMesh->unknown114 = params.unknown14;
+    vtxMesh->unknown120 = params.unknown20;
+    vtxMesh->unknown124 = params.unknown24;
+    vtxMesh->unknown128 = params.unknown28;
+    vtxMesh->unknown12c = params.unknown2c;
+    vtxMesh->unknown130 = params.unknown30;
+    if (vtxMesh->unknown124 > 1.0f) {
+      vtxMesh->unknown124 = 1.0f;
+    } else if (vtxMesh->unknown124 < 0.0f) {
+      vtxMesh->unknown124 = 0.0f;
+    }
+    if (vtxMesh->unknown128 > 1.0f) {
+      vtxMesh->unknown128 = 1.0f;
+    } else if (vtxMesh->unknown128 < 0.0f) {
+      vtxMesh->unknown128 = 0.0f;
+    }
+  }
+}
+
 void ScnObjAccMdlParticle::setInitVector(const mm::Vec3 &vector) {
   if (m_vtxMeshObj != nullptr) {
     m_vtxMeshObj->unknowne0 = vector;
@@ -685,13 +760,13 @@ ScnObjAccStmReadObj::ScnObjAccStmReadObj(DrStmReadObj *readObj) : m_readObj(read
 
 void ScnObjAccStmReadObj::readType(ReadType type) {
   switch (type) {
-  case READ_TYPE_NONE:
+  case READ_TYPE_UNKNOWN_0:
     m_readObj->unknown18 = 0;
     break;
-  case READ_TYPE_LOAD:
+  case READ_TYPE_UNKNOWN_1:
     m_readObj->unknown18 = 1;
     break;
-  case READ_TYPE_SIZE:
+  case READ_TYPE_UNKNOWN_2:
     m_readObj->unknown18 = 2;
     break;
   }
@@ -878,7 +953,7 @@ bool ScnObjAccPartsEtcPos::isDisp(u32 index) const {
   if (!m_etcPos->unknown08) {
     const unknown058 *data = m_etcPos->unknown00;
     u16 group = reinterpret_cast<const u16 *>(reinterpret_cast<const u8 *>(data) + data->unknown24)[index];
-    if (group != 0 && (DrMan::getIns()->unknown1d20[group >> 5] & (1 << (group & 31)))) {
+    if (group != 0 && (DrMan::getIns()->m_gblIdx[group >> 5] & (1 << (group & 31)))) {
       return false;
     }
   }

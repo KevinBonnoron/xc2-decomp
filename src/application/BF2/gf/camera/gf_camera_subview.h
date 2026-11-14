@@ -4,6 +4,7 @@
 #include "fw/fw_camera.h"
 #include "gf/object/gf_init_param.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/intrusive_ptr.h"
 
 namespace mm {
 namespace mtl {
@@ -16,6 +17,9 @@ namespace gf {
 class SubViewCamera : public fw::Camera {
 public:
   static mm::mtl::RTTI m_rtti;
+
+  SubViewCamera();
+  static mm::mtl::IntrusivePtr<fw::Camera> create(VIEWCAM view);
 
   ~SubViewCamera() override;
   void onActivate() override;

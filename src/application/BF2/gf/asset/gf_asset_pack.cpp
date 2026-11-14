@@ -27,7 +27,7 @@ namespace gf {
 
 class GfExtendResource : public mm::mtl::ReferenceObject {};
 
-AssetPackInfo::AssetPackInfo() : unknown08(INVALID_ASSET_HANDLE), unknown2d8(INVALID_HANDLE), unknown300(10) {
+AssetPackInfo::AssetPackInfo() : unknown08(unknown018), unknown2d8(unknown020), unknown300(10) {
   for (u32 i = 0; i < 4; i++) {
     unknown2e0[i] = nullptr;
   }
@@ -35,7 +35,7 @@ AssetPackInfo::AssetPackInfo() : unknown08(INVALID_ASSET_HANDLE), unknown2d8(INV
   unknown305 = false;
   unknown306 = false;
   unknown307 = false;
-  unknown308 = ASSET_TYPE_BASE;
+  unknown308 = ASSET_TYPE_UNKNOWN_0;
   unknown334 = 0;
 }
 
@@ -219,7 +219,7 @@ void AssetPackInfo::setAssetPack(GfAssetType type, GfAssetPack *pack) {
   pack->addRef();
   unknown10.push_back(pack);
   pack->unknown254++;
-  if (unknown308 == ASSET_TYPE_BASE) {
+  if (unknown308 == ASSET_TYPE_UNKNOWN_0) {
     unknown308 = type;
   }
 }
@@ -232,7 +232,7 @@ bool AssetPackInfo::getSlotHandle(mm::mtl::FixedVector<GF_SLOT_HANDLE *, 88> &sl
   GfAssetPack *const *end = unknown10.end();
   for (GfAssetPack *const *it = unknown10.begin(); it != end; ++it) {
     GF_SLOT_HANDLE *slot = (*it)->unknown230;
-    if (slot != INVALID_SLOT_HANDLE) {
+    if (slot != unknown006) {
       slots.push_back(slot);
     }
   }
@@ -244,7 +244,7 @@ GF_SLOT_HANDLE *AssetPackInfo::getSlotHandle(GfFileIdx index) const {
   if (pack != nullptr) {
     return pack->unknown230;
   }
-  return INVALID_SLOT_HANDLE;
+  return unknown006;
 }
 
 GfAssetPack *AssetPackInfo::getAssetPack(GfFileIdx index) const {
@@ -330,7 +330,7 @@ GfAssetResource *GfAssetPack::getResource(GfFileIdx index) const {
   }
   GfFileIdx common = m_assetType.getCommonResource(index);
   GfAssetResource *resource = nullptr;
-  if (common != FILE_IDX_NONE) {
+  if (common != FILE_IDX_UNKNOWN_FFFFFFFF) {
     for (const unknown001 *it = unknown18.begin(); it != unknown18.end(); ++it) {
       if (it->unknown08 == common) {
         resource = it->unknown00;
@@ -394,7 +394,7 @@ void GfAssetPack::releaseEmptySlot() {
   if (!isLoaded(nullptr)) {
     return;
   }
-  if (unknown230 == INVALID_SLOT_HANDLE) {
+  if (unknown230 == unknown006) {
     return;
   }
   for (GfAssetFiles::AssetFile *file : m_assetType.unknown50) {
@@ -407,7 +407,7 @@ void GfAssetPack::releaseEmptySlot() {
 }
 
 void GfAssetPack::createSoundPack() {
-  if (unknown2b0 == FILE_IDX_NONE) {
+  if (unknown2b0 == FILE_IDX_UNKNOWN_FFFFFFFF) {
     return;
   }
   if (unknown2a8 == nullptr) {
@@ -472,7 +472,7 @@ u64 GfAssetPack::getTimeStamp(const char *name) {
 }
 
 bool GfAssetPack::isNeedLoad() const {
-  if (unknown230 == INVALID_SLOT_HANDLE) {
+  if (unknown230 == unknown006) {
     return true;
   }
   for (GfAssetFiles::AssetFile *file : m_assetType.unknown50) {
@@ -586,7 +586,7 @@ bool GfAssetPack::isPreSizeSizeValid() const { return m_assetType.isPreSizeSizeV
 bool GfAssetPack::isExistSameAsset(const GfAssetPack &other) const { return m_assetType.isExistSameAsset(other.m_assetType); }
 
 void GfAssetPack::destroySoundPack() {
-  if (unknown2b0 != FILE_IDX_NONE && unknown2b4 > 0) {
+  if (unknown2b0 != FILE_IDX_UNKNOWN_FFFFFFFF && unknown2b4 > 0) {
     unknown2b4--;
     if (unknown2b4 <= 0 && GfSound::get() != nullptr) {
       GfSound::get()->destroyObjSePack(unknown2a8);
@@ -615,6 +615,36 @@ s64 GfAssetPack::getAllFileSize() {
   return unknown240;
 }
 
+size_t GfAssetPack::getNeedLoadFileSize(size_t blockSize, bool) {
+  size_t total = 0;
+  for (GfAssetFiles::AssetFile *file : m_assetType.unknown50) {
+    GfAssetResource *resource = getResource(file->unknown00);
+    if (resource != nullptr && resource->unknown0c == GfAssetResource::unknown001_3) {
+      continue;
+    }
+    s64 size = m_assetType.calcFileSize(file->unknown00);
+    if (size > 0) {
+      size_t rest = size % blockSize;
+      if (rest != 0) {
+        size = size + blockSize - rest;
+      }
+    }
+    total += size;
+  }
+  return total;
+}
+
+void GfAssetPack::loadStart(mm::mtl::IAllocator *allocator) {
+  m_assetType.unknown100 = allocator;
+  for (GfAssetFiles::AssetFile *file : m_assetType.unknown50) {
+    GfFileIdx index = file->unknown00;
+    const mm::mtl::FixStr<128> &name = m_assetType.getFileName(index);
+    if (getResource(index) == nullptr) {
+      setResource(index, GfAssetResource::create(m_assetType.unknown08.c_str(), name.c_str(), allocator, 10));
+    }
+  }
+}
+
 void GfAssetPack::replaceAssetType(const GfAssetFilesInfo &filesInfo) {
   AssetPackInfo *info = GfAssetManager::getAssetPackInfo(filesInfo.unknown00);
   info->unknown308 = filesInfo.unknown08;
@@ -622,7 +652,7 @@ void GfAssetPack::replaceAssetType(const GfAssetFilesInfo &filesInfo) {
 }
 
 void GfAssetFiles::replaceAssetType(GfAssetType type) {
-  if (type != ASSET_TYPE_BASE) {
+  if (type != ASSET_TYPE_UNKNOWN_0) {
     unknown00 = type;
   }
 }
@@ -686,12 +716,12 @@ GfFileIdx GfAssetFiles::getCommonResource(GfFileIdx index) const {
       return static_cast<GfFileIdx>(*it >> 16);
     }
   }
-  return FILE_IDX_NONE;
+  return FILE_IDX_UNKNOWN_FFFFFFFF;
 }
 
 bool GfAssetFiles::isExistFile(GfFileIdx index) const {
   GfFileIdx common = getCommonResource(index);
-  if (common != FILE_IDX_NONE) {
+  if (common != FILE_IDX_UNKNOWN_FFFFFFFF) {
     index = common;
   }
   for (AssetFile *file : unknown50) {
@@ -705,7 +735,7 @@ bool GfAssetFiles::isExistFile(GfFileIdx index) const {
 const mm::mtl::FixStr<128> &GfAssetFiles::getFileName(GfFileIdx index) const {
   static mm::mtl::FixStr<128> unknown002; // Inferred role: empty name returned for a missing file; original name unknown.
   GfFileIdx common = getCommonResource(index);
-  if (common != FILE_IDX_NONE) {
+  if (common != FILE_IDX_UNKNOWN_FFFFFFFF) {
     index = common;
   }
   for (AssetFile *file : unknown50) {
@@ -718,7 +748,7 @@ const mm::mtl::FixStr<128> &GfAssetFiles::getFileName(GfFileIdx index) const {
 
 bool GfAssetFiles::isNoFile(GfFileIdx index) const {
   GfFileIdx common = getCommonResource(index);
-  if (common != FILE_IDX_NONE) {
+  if (common != FILE_IDX_UNKNOWN_FFFFFFFF) {
     index = common;
   }
   for (AssetFile *file : unknown50) {
@@ -756,16 +786,11 @@ void GfAssetPack::dispAssetLogForDebug() {}
 
 void GfAssetPack::setLoadComplete() {}
 
-AssetPackValue GfAssetPack::calcAssetPackValue(const char *name, GfAssetType type) {
-  AssetPackValue value;
-  value.unknown00 = type;
-  value.unknown04 = mm::mtl::hashStrCrc(name);
-  return value;
-}
+u64 GfAssetPack::calcAssetPackValue(const char *name, GfAssetType type) { return static_cast<u64>(mm::mtl::hashStrCrc(name)) << 32 | static_cast<u32>(type); }
 
 // __LINE__ must be 1029 as in the original file: it is the line argument of operator new.
 #line 1029
-GfAssetPack *GfAssetPack::create(const GfAssetFilesInfo &filesInfo) { return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfAssetPack(filesInfo); }
+GfAssetPack *GfAssetPack::create(const GfAssetFilesInfo &filesInfo) { return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfAssetPack(filesInfo); }
 
 } // namespace gf
 

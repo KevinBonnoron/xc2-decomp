@@ -12,18 +12,18 @@ class CamObj;
 
 class CamManager : public IManager, public mm::mtl::Singleton<CamManager> {
 public:
-  static constexpr u32 CAM_COUNT = 8;
-  static constexpr u32 INTERFACE_COUNT = 4;
+  static constexpr u32 CAM_UNKNOWN_8 = 8;       // Inferred role: cam count; original name unknown.
+  static constexpr u32 INTERFACE_UNKNOWN_4 = 4; // Inferred role: interface count; original name unknown.
 
   enum {
-    FLAG_STREAM_MODE = 1 << 0,
-    FLAG_OFFSCR_MODE = 1 << 1,
-    FLAG_FOCAL = 1 << 2,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: stream mode flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: offscr mode flag; original name unknown.
+    FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: focal flag; original name unknown.
   };
 
   enum {
-    DISP_FLAG_DISP = 1 << 0,
-    DISP_FLAG_FREE_CAM = 1 << 1,
+    DISP_FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: disp flag; original name unknown.
+    DISP_FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: free cam flag; original name unknown.
   };
 
   CamManager();
@@ -68,11 +68,11 @@ private:
     }
   }
 
-  u32 unknown10;                                                   // Inferred role: flags; original member name unknown.
-  u32 unknown14;                                                   // Inferred role: disp flags; original member name unknown.
-  mm::mtl::FixedVector<CamObj *, CAM_COUNT> unknown18;             // Inferred role: cams; original member name unknown.
-  mm::mtl::FixedVector<CamInterface *, INTERFACE_COUNT> unknown60; // Inferred role: interfaces; original member name unknown.
-  CamObj *unknown88;                                               // Inferred role: main cam; original member name unknown.
+  u32 unknown10;                                                       // Inferred role: flags; original member name unknown.
+  u32 unknown14;                                                       // Inferred role: disp flags; original member name unknown.
+  mm::mtl::FixedVector<CamObj *, CAM_UNKNOWN_8> unknown18;             // Inferred role: cams; original member name unknown.
+  mm::mtl::FixedVector<CamInterface *, INTERFACE_UNKNOWN_4> unknown60; // Inferred role: interfaces; original member name unknown.
+  CamObj *unknown88;                                                   // Inferred role: main cam; original member name unknown.
   CamFree m_freeCam;
   u32 m_offscrID;
 };

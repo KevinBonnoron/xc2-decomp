@@ -11,7 +11,7 @@ namespace event {
 
 void ScriptEffectKill::doit(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_EFFECT) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_4) {
     return;
   }
   static_cast<ObjectEffect *>(object)->getEffectObj()->kill();
@@ -19,7 +19,7 @@ void ScriptEffectKill::doit(const Param &param) {
 
 void ScriptEffectKill::redo(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_EFFECT) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_4) {
     return;
   }
   static_cast<ObjectEffect *>(object)->getEffectObj()->kill();

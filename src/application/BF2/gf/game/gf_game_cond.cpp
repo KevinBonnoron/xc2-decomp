@@ -14,6 +14,7 @@
 #include "gf/data/gf_object_type.h"
 #include "gf/field/gf_field_time.h"
 #include "gf/field/gf_field_weather.h"
+#include "gf/game/achiev/gf_achiev_manager.h"
 #include "gf/game/gf_game_util.h"
 #include "gf/game/quest/gf_achiev_quest.h"
 #include "gf/game/quest/gf_quest_id.h"
@@ -29,38 +30,38 @@
 namespace gf {
 
 enum {
-  QUEST_FLAG_COUNT = 2,
+  QUEST_UNKNOWN_2 = 2, // Inferred role: quest flag count; original name unknown.
 };
 
 enum {
-  CLOUD_HEIGHT_ANY,
-  CLOUD_HEIGHT_LOW,
-  CLOUD_HEIGHT_HIGH,
+  CLOUD_HEIGHT_UNKNOWN_0, // Inferred role: cloud height any; original name unknown.
+  CLOUD_HEIGHT_UNKNOWN_1, // Inferred role: cloud height low; original name unknown.
+  CLOUD_HEIGHT_UNKNOWN_2, // Inferred role: cloud height high; original name unknown.
 };
 
 enum {
-  WEATHER_BIT_COUNT = 32,
+  WEATHER_UNKNOWN_32 = 32, // Inferred role: weather bit count; original name unknown.
 };
 
 enum {
-  IDEA_COUNT = 4,
-  IDEA_RESULT_COUNT = 5,
+  IDEA_UNKNOWN_4 = 4, // Inferred role: idea count; original name unknown.
+  IDEA_UNKNOWN_5 = 5, // Inferred role: idea result count; original name unknown.
 };
 
 enum {
-  ACHIEVEMENT_LINE_FIELD_SKILL_FIRST = 6,
+  ACHIEVEMENT_UNKNOWN_6 = 6, // Inferred role: achievement line field skill first; original name unknown.
 };
 
 enum {
-  PARTY_CONDITION_ACTIVATE = 0,
-  PARTY_CONDITION_MEMBER = 1,
-  PARTY_CONDITION_LEADER = 2,
-  PARTY_CONDITION_ACTIVATE_UNUSE = 5,
-  PARTY_CONDITION_CHARACTER_COUNT = 3,
+  PARTY_CONDITION_UNKNOWN_0 = 0, // Inferred role: party condition activate; original name unknown.
+  PARTY_CONDITION_UNKNOWN_1 = 1, // Inferred role: party condition member; original name unknown.
+  PARTY_CONDITION_UNKNOWN_2 = 2, // Inferred role: party condition leader; original name unknown.
+  PARTY_CONDITION_UNKNOWN_5 = 5, // Inferred role: party condition activate unuse; original name unknown.
+  PARTY_CONDITION_UNKNOWN_3 = 3, // Inferred role: party condition character count; original name unknown.
 };
 
 enum {
-  FIELD_SKILL_COUNT = 3,
+  FIELD_UNKNOWN_3 = 3, // Inferred role: field skill count; original name unknown.
 };
 
 static GfBdatCond *s_bdatCond;
@@ -74,7 +75,7 @@ GfGameCond::~GfGameCond() {}
 void GfGameCond::build(const GfSetupParam &param) {
   // __LINE__ must be 87 as in the original file: its value changes the instruction order.
 #line 87
-  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfGameCond(param);
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfGameCond(param);
 }
 
 void GfGameCond::destroy() {
@@ -148,7 +149,7 @@ bool GfGameCond::isQuest(u32 condition) {
     }
   }
 
-  return emptyCount != QUEST_FLAG_COUNT * 2;
+  return emptyCount != QUEST_UNKNOWN_2 * 2;
 }
 
 bool GfGameCond::isScenario(u32 condition) {
@@ -186,11 +187,11 @@ bool GfGameCond::isGameEnv(u32 condition, u32 weatherBits, u32 timeRangeBits, CL
   }
 
   u32 cloudHeight = s_bdatCond->getConditionEnvCloudHeight(condition);
-  if (cloudHeight != CLOUD_HEIGHT_ANY) {
-    if (cloudSea != 0 && cloudHeight == CLOUD_HEIGHT_LOW) {
+  if (cloudHeight != CLOUD_HEIGHT_UNKNOWN_0) {
+    if (cloudSea != 0 && cloudHeight == CLOUD_HEIGHT_UNKNOWN_1) {
       return false;
     }
-    if (cloudSea != 1 && cloudHeight == CLOUD_HEIGHT_HIGH) {
+    if (cloudSea != 1 && cloudHeight == CLOUD_HEIGHT_UNKNOWN_2) {
       return false;
     }
   }
@@ -217,7 +218,7 @@ void GfGameCond::applyGameEnv(u32 condition) {
   u32 weatherBits = s_bdatCond->getConditionEnvWeather(condition);
   if (weatherBits != 0) {
     u32 weather = WEATHER_A;
-    for (u32 bit = 0; bit < WEATHER_BIT_COUNT; bit++, weather++) {
+    for (u32 bit = 0; bit < WEATHER_UNKNOWN_32; bit++, weather++) {
       if ((weatherBits & (1 << bit)) != 0) {
         break;
       }
@@ -317,7 +318,7 @@ bool GfGameCond::isGameCondParam(u32 condition, u32 index, u32 &conditionType, u
 bool GfGameCond::isLevel(u32 condition) {
   u32 driver = s_bdatCond->getConditionLevelPCID(condition);
   u32 level = s_bdatCond->getConditionLevelLevel(condition);
-  DataParamAcc dataParamAcc(OBJECT_TYPE_DRIVER, driver, static_cast<GimmickType>(0));
+  DataParamAcc dataParamAcc(OBJECT_TYPE_PC, driver, static_cast<GimmickType>(0));
   if (!dataParamAcc.isValid()) {
     return false;
   }
@@ -332,38 +333,38 @@ void GfGameCond::applyLevel(u32 condition) {
 }
 
 void GfGameCond::applyParty(u32 condition) {
-  mm::mtl::FixedList<u32, PARTY_CONDITION_CHARACTER_COUNT> activateDrivers;
-  mm::mtl::FixedList<u32, PARTY_CONDITION_CHARACTER_COUNT> activateBlades;
-  mm::mtl::FixedList<u32, PARTY_CONDITION_CHARACTER_COUNT> removeDrivers;
-  mm::mtl::FixedList<u32, PARTY_CONDITION_CHARACTER_COUNT> removeBlades;
+  mm::mtl::FixedList<u32, PARTY_CONDITION_UNKNOWN_3> activateDrivers;
+  mm::mtl::FixedList<u32, PARTY_CONDITION_UNKNOWN_3> activateBlades;
+  mm::mtl::FixedList<u32, PARTY_CONDITION_UNKNOWN_3> removeDrivers;
+  mm::mtl::FixedList<u32, PARTY_CONDITION_UNKNOWN_3> removeBlades;
 
   u32 category = s_bdatCond->getConditionPTCategory(condition);
   u32 index = 0;
   u32 leader = 0;
-  for (; index < PARTY_CONDITION_CHARACTER_COUNT; index++) {
+  for (; index < PARTY_CONDITION_UNKNOWN_3; index++) {
     u32 character = s_bdatCond->getConditionPTPCID(condition, index);
     if (character == 0) {
       break;
     }
 
     switch (category) {
-    case PARTY_CONDITION_LEADER:
+    case PARTY_CONDITION_UNKNOWN_2:
       leader = character;
-    case PARTY_CONDITION_ACTIVATE:
-      if (character < BLADE_ID_FIRST) {
+    case PARTY_CONDITION_UNKNOWN_0:
+      if (character < BLADE_ID_UNKNOWN_1001) {
         activateDrivers.push_back(character);
       } else {
         activateBlades.push_back(character);
       }
       break;
-    case PARTY_CONDITION_MEMBER:
-      if (character < BLADE_ID_FIRST) {
+    case PARTY_CONDITION_UNKNOWN_1:
+      if (character < BLADE_ID_UNKNOWN_1001) {
         removeDrivers.push_back(character);
       } else {
         removeBlades.push_back(character);
       }
       break;
-    case PARTY_CONDITION_ACTIVATE_UNUSE:
+    case PARTY_CONDITION_UNKNOWN_5:
       if (GfDataBlade::isBladeID(character)) {
         activateBlades.push_back(character);
       }
@@ -384,13 +385,13 @@ void GfGameCond::applyParty(u32 condition) {
 
     u32 driver = GfDataBlade::getCreator(blade);
     if (driver == 0 || GfDataDriver::isActivateUnuse(driver)) {
-      driver = DRIVER_REX;
+      driver = DRIVER_UNKNOWN_1;
     }
     GfReqCommand::reqPartyBlade(blade, driver);
   }
 
   if (leader != 0) {
-    SCOM_PARTY_LEADER::create(leader < BLADE_ID_FIRST ? OBJECT_TYPE_DRIVER : OBJECT_TYPE_BLADE, leader);
+    SCOM_PARTY_LEADER::create(leader < BLADE_ID_UNKNOWN_1001 ? OBJECT_TYPE_PC : OBJECT_TYPE_BLADE, leader);
   }
 }
 
@@ -439,7 +440,7 @@ void GfGameCond::applyItem(u32 condition) {
 
   for (u32 id = start; id < end; id++) {
     u32 itemCategory;
-    if (type == ItemType::COLLECTION_LIST) {
+    if (type == ItemType::ITEM_TYPE_UNKNOWN_7) {
       itemCategory = bdatItem->getCollectionListCategory(id);
     } else {
       itemCategory = bdatItem->getFavoriteCategory(id);
@@ -463,9 +464,9 @@ void GfGameCond::applyItem(u32 condition) {
   }
 }
 
-bool GfGameCond::isIdea(u32 condition, u32 blade, mm::mtl::FixedArray<bool, IDEA_RESULT_COUNT> *results) {
+bool GfGameCond::isIdea(u32 condition, u32 blade, mm::mtl::FixedArray<bool, IDEA_UNKNOWN_5> *results) {
   if (results != nullptr) {
-    for (u32 i = 0; i < IDEA_RESULT_COUNT; i++) {
+    for (u32 i = 0; i < IDEA_UNKNOWN_5; i++) {
       (*results)[i] = false;
     }
   }
@@ -479,12 +480,12 @@ bool GfGameCond::isIdea(u32 condition, u32 blade, mm::mtl::FixedArray<bool, IDEA
   }
 
   bool isFailed = false;
-  if (chara < BLADE_ID_FIRST) {
+  if (chara < BLADE_ID_UNKNOWN_1001) {
     bool isValid = false;
-    DataParamAcc dataParamAcc(OBJECT_TYPE_DRIVER, chara, static_cast<GimmickType>(0));
+    DataParamAcc dataParamAcc(OBJECT_TYPE_PC, chara, static_cast<GimmickType>(0));
     if (dataParamAcc.isValid()) {
       DataIdeaAcc dataIdeaAcc(dataParamAcc);
-      for (u32 idea = 0; idea < IDEA_COUNT; idea++) {
+      for (u32 idea = 0; idea < IDEA_UNKNOWN_4; idea++) {
         int level = dataIdeaAcc.getLevel(idea);
         if (level < static_cast<int>(s_bdatCond->getConditionIdeaIdeaLevel(condition, idea))) {
           isFailed = true;
@@ -499,19 +500,19 @@ bool GfGameCond::isIdea(u32 condition, u32 blade, mm::mtl::FixedArray<bool, IDEA
     }
   }
 
-  if (!isFailed && chara >= BLADE_ID_FIRST) {
+  if (!isFailed && chara >= BLADE_ID_UNKNOWN_1001) {
     u32 compatibility = s_bdatCond->getConditionIdeaCompatibility(condition);
     if (compatibility != 0) {
       isFailed |= compatibility > GfGameUtil::getTrustRank(chara);
     }
   }
 
-  if (!isFailed && chara >= BLADE_ID_FIRST) {
+  if (!isFailed && chara >= BLADE_ID_UNKNOWN_1001) {
     u32 trustPoint = s_bdatCond->getConditionIdeaTrustPoint(condition);
     if (trustPoint != 0) {
       isFailed = trustPoint > GfDataBlade::getTrustPoint(blade);
       if (results != nullptr) {
-        (*results)[IDEA_COUNT] = true;
+        (*results)[IDEA_UNKNOWN_4] = true;
       }
     }
   }
@@ -519,9 +520,54 @@ bool GfGameCond::isIdea(u32 condition, u32 blade, mm::mtl::FixedArray<bool, IDEA
   return !isFailed;
 }
 
+bool GfGameCond::isAchievement(u32 condition, u32 blade) {
+  QuestListAcc *questListAcc = QuestListAcc::get();
+  u32 achievementSet = s_bdatCond->getConditionAchievementAchievementSetID(condition);
+  if (achievementSet == 0) {
+    return false;
+  }
+
+  mm::mtl::FixedVector<u16, 422> blades;
+  if (blade == 0) {
+    GfAchievManager *achievManager = GfAchievManager::get();
+    if (achievManager != nullptr && !achievManager->getBladeByAchievementSet(blades, achievementSet)) {
+      return true;
+    }
+  } else {
+    blades.push_back(blade);
+  }
+
+  u32 value = s_bdatCond->getConditionAchievementValue(condition);
+  if (value == 0) {
+    return false;
+  }
+
+  u32 index = value - 1;
+  u32 achievement = questListAcc->getFLD_AchievementSetAchievementID(achievementSet, index);
+  if (achievement == 0) {
+    return false;
+  }
+
+  u32 task = questListAcc->getFLD_AchievementListTask(achievement);
+  if (task == 0) {
+    return false;
+  }
+
+  for (u16 *candidate = blades.begin(), *end = blades.end(); candidate != end; candidate++) {
+    for (u32 line = 0; line < ACHIEVEMENT_UNKNOWN_10; line++) {
+      SDataBladeAchievement *achievInfo = GfDataBlade::getAchievInfo(*candidate, line);
+      if (achievInfo->unknown00 == achievementSet && achievInfo->unknown04[index].unknown00.unknown00 == task && (achievInfo->unknown04[index].unknown0c & 1) != 0) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
 static bool isBladeFieldSkillLevel(u32 blade, u32 fieldSkill, u32 level) {
   DataParamAcc dataParamAcc(OBJECT_TYPE_BLADE, blade, static_cast<GimmickType>(0));
-  for (u32 index = 0; index < FIELD_SKILL_COUNT; index++) {
+  for (u32 index = 0; index < FIELD_UNKNOWN_3; index++) {
     if (dataParamAcc.getFieldSkill(index, false) == fieldSkill) {
       return dataParamAcc.getFieldSkillLevel(index, false) >= level;
     }
@@ -566,13 +612,13 @@ void GfGameCond::applyIdea(u32 condition, u32 blade) {
     return;
   }
 
-  DataParamAcc dataParamAcc(OBJECT_TYPE_DRIVER, driver, static_cast<GimmickType>(0));
+  DataParamAcc dataParamAcc(OBJECT_TYPE_PC, driver, static_cast<GimmickType>(0));
   if (!dataParamAcc.isValid()) {
     return;
   }
 
   DataIdeaAcc dataIdeaAcc(dataParamAcc);
-  for (u32 idea = 0; idea < IDEA_COUNT; idea++) {
+  for (u32 idea = 0; idea < IDEA_UNKNOWN_4; idea++) {
     u32 level = s_bdatCond->getConditionIdeaIdeaLevel(condition, idea);
     if (dataIdeaAcc.getLevel(idea) < static_cast<int>(level)) {
       dataIdeaAcc.setLevel(idea, level);
@@ -586,9 +632,9 @@ void GfGameCond::applyIdea(u32 condition, u32 blade) {
   u32 compatibility = s_bdatCond->getConditionIdeaCompatibility(condition);
   if (compatibility != 0) {
     u32 trustRank = GfGameUtil::getTrustRank(blade);
-    if (compatibility == TRUST_RANK_MAX) {
-      if (static_cast<int>(trustRank) < TRUST_RANK_MAX) {
-        GfDataBlade::setTrustRank(blade, static_cast<GfIdea>(TRUST_RANK_MAX));
+    if (compatibility == RANK_UNKNOWN_6) {
+      if (static_cast<int>(trustRank) < RANK_UNKNOWN_6) {
+        GfDataBlade::setTrustRank(blade, static_cast<GfIdea>(RANK_UNKNOWN_6));
       }
     } else if (trustRank < compatibility) {
       GfDataBlade::setTrustRank(blade, static_cast<GfIdea>(compatibility));
@@ -623,13 +669,13 @@ void GfGameCond::applyAchievement(u32 condition, u32 blade) {
   }
 
   u32 task = questListAcc->getFLD_AchievementListTask(achievement);
-  for (u32 line = 0; line < ACHIEVEMENT_LINE_COUNT; line++) {
+  for (u32 line = 0; line < ACHIEVEMENT_UNKNOWN_10; line++) {
     SDataBladeAchievement *achievInfo = GfDataBlade::getAchievInfo(blade, line);
     if (achievInfo->unknown00 != achievementSet) {
       continue;
     }
 
-    for (u32 level = 0; level < ACHIEVEMENT_LEVEL_COUNT; level++) {
+    for (u32 level = 0; level < ACHIEVEMENT_UNKNOWN_5; level++) {
       AchievQuest &achievQuest = achievInfo->unknown04[level];
       if (achievQuest.unknown00.unknown00 == task && (achievQuest.unknown0c & 1) == 0) {
         achievQuest.setCountComplete();
@@ -637,7 +683,7 @@ void GfGameCond::applyAchievement(u32 condition, u32 blade) {
         achievQuest.setTaskComplete(true, true);
         achievQuest.unknown0c |= 1;
         GfDataBlade::setAchievReleaseLevel(blade, line, level + 1);
-        GfQuestInfo::setState(achievQuest.unknown00, QSTATE_FIN_A);
+        GfQuestInfo::setState(achievQuest.unknown00, QSTATE_UNKNOWN_2);
         return;
       }
     }
@@ -661,17 +707,17 @@ void GfGameCond::applyFieldSkillLevel(u32 condition, u32 blade) {
 
   DataParamAcc dataParamAcc(OBJECT_TYPE_BLADE, blade, static_cast<GimmickType>(0));
   u32 index = 0;
-  for (; index < FIELD_SKILL_COUNT; index++) {
+  for (; index < FIELD_UNKNOWN_3; index++) {
     if (dataParamAcc.getFieldSkill(index, false) == fieldSkill) {
       break;
     }
   }
-  if (index == FIELD_SKILL_COUNT) {
+  if (index == FIELD_UNKNOWN_3) {
     return;
   }
 
   if (dataParamAcc.getFieldSkillLevel(index, false) < level) {
-    GfGameUtil::setAchievementReleaseLevel(blade, ACHIEVEMENT_LINE_FIELD_SKILL_FIRST + index, level);
+    GfGameUtil::setAchievementReleaseLevel(blade, ACHIEVEMENT_UNKNOWN_6 + index, level);
   }
 }
 
@@ -680,7 +726,7 @@ void GfGameCond::applyCond(u32 condition, u32 blade) {
     return;
   }
 
-  for (u32 index = 0; index < CONDITION_LIST_COUNT; index++) {
+  for (u32 index = 0; index < CONDITION_UNKNOWN_8; index++) {
     u32 conditionType = s_bdatCond->getConditionListConditionType(condition, index);
     u32 conditionParam = s_bdatCond->getConditionListCondition(condition, index);
     if (conditionParam == 0) {
@@ -688,34 +734,34 @@ void GfGameCond::applyCond(u32 condition, u32 blade) {
     }
 
     switch (conditionType) {
-    case CONDITION_TYPE_SCENARIO:
+    case CONDITION_TYPE_UNKNOWN_1:
       applyScenario(conditionParam);
       break;
-    case CONDITION_TYPE_QUEST:
+    case CONDITION_TYPE_UNKNOWN_2:
       applyQuest(conditionParam);
       break;
-    case CONDITION_TYPE_ENVIRONMENT:
+    case CONDITION_TYPE_UNKNOWN_3:
       applyGameEnv(conditionParam);
       break;
-    case CONDITION_TYPE_FLAG:
+    case CONDITION_TYPE_UNKNOWN_4:
       applyFlag(conditionParam);
       break;
-    case CONDITION_TYPE_ITEM:
+    case CONDITION_TYPE_UNKNOWN_5:
       applyItem(conditionParam);
       break;
-    case CONDITION_TYPE_PARTY:
+    case CONDITION_TYPE_UNKNOWN_6:
       applyParty(conditionParam);
       break;
-    case CONDITION_TYPE_IDEA:
+    case CONDITION_TYPE_UNKNOWN_7:
       applyIdea(conditionParam, blade);
       break;
-    case CONDITION_TYPE_LEVEL:
+    case CONDITION_TYPE_UNKNOWN_8:
       applyLevel(conditionParam);
       break;
-    case CONDITION_TYPE_ACHIEVEMENT:
+    case CONDITION_TYPE_UNKNOWN_9:
       applyAchievement(conditionParam, blade);
       break;
-    case CONDITION_TYPE_FIELD_SKILL_LEVEL:
+    case CONDITION_TYPE_UNKNOWN_10:
       applyFieldSkillLevel(conditionParam, blade);
       break;
     }

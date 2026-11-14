@@ -15,8 +15,8 @@
 
 namespace ml {
 
-static const GrlPrimitiveType s_primitiveTbl[] = {GRL_PRIMITIVE_TRIANGLES, GRL_PRIMITIVE_QUADS, GRL_PRIMITIVE_TRIANGLE_STRIP};
-static const GrlIndexFormat s_indexFormatTbl[] = {GRL_INDEX_FORMAT_U16, GRL_INDEX_FORMAT_U32};
+static const GrlPrimitiveType unknown001[] = {GRL_PRIMITIVE_TRIANGLES, GRL_PRIMITIVE_QUADS, GRL_PRIMITIVE_TRIANGLE_STRIP}; // Inferred role: primitive types; original name unknown.
+static const GrlIndexFormat unknown066[] = {GRL_INDEX_FORMAT_U16, GRL_INDEX_FORMAT_U32};                                   // Inferred role: index formats; original name unknown.
 
 void DrResMdoVertex::beginVertexSetup() { unknown4e = -1; }
 
@@ -94,7 +94,7 @@ void DrResMdoVertex::setupVertex(const u8 *resource) {
   }
   const unknown047 *indexInfos = reinterpret_cast<const unknown047 *>(resource + indexOffset);
   for (int i = 0; i < unknown4a; i++) {
-    unknown58[i].createMemIndexBuff(unknown68, indexInfos[i].unknown00, indexInfos[i].unknown04, s_primitiveTbl[indexInfos[i].unknown08], s_indexFormatTbl[indexInfos[i].unknown0a]);
+    unknown58[i].createMemIndexBuff(unknown68, indexInfos[i].unknown00, indexInfos[i].unknown04, unknown001[indexInfos[i].unknown08], unknown066[indexInfos[i].unknown0a]);
   }
   if (header->unknown38 != 0) {
     unknown40 = reinterpret_cast<const unknown053 *>(reinterpret_cast<const u8 *>(unknown28) + header->unknown38);

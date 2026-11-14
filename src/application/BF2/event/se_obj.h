@@ -10,15 +10,15 @@ namespace event {
 class SeObj {
 public:
   enum {
-    FLAG_PLAY = 1 << 0,
-    FLAG_END = 1 << 1,
-    FLAG_PAUSE = 1 << 2,
-    FLAG_LIFE = 1 << 3,
-    FLAG_FADE_IN = 1 << 4,
-    FLAG_FADE_OUT = 1 << 5,
-    FLAG_VOLUME_ANM = 1 << 6,
-    FLAG_PAN_ANM = 1 << 7,
-    FLAG_PAN = 1 << 8,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: play flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: end flag; original name unknown.
+    FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: pause flag; original name unknown.
+    FLAG_UNKNOWN_3 = 1 << 3, // Inferred role: life flag; original name unknown.
+    FLAG_UNKNOWN_4 = 1 << 4, // Inferred role: fade in flag; original name unknown.
+    FLAG_UNKNOWN_5 = 1 << 5, // Inferred role: fade out flag; original name unknown.
+    FLAG_UNKNOWN_6 = 1 << 6, // Inferred role: volume anm flag; original name unknown.
+    FLAG_UNKNOWN_7 = 1 << 7, // Inferred role: pan anm flag; original name unknown.
+    FLAG_UNKNOWN_8 = 1 << 8, // Inferred role: pan flag; original name unknown.
   };
 
   SeObj();
@@ -31,8 +31,8 @@ public:
   void changeVolume(f32 volume, f32 frame);
   void pan(f32 pan, f32 frame, CV_TYPE cv);
   void pause(bool isPause);
-  bool isPlay() const { return (unknown08 & FLAG_PLAY) != 0; }
-  bool isEnd() const { return (unknown08 & FLAG_END) != 0; }
+  bool isPlay() const { return (unknown08 & FLAG_UNKNOWN_0) != 0; }
+  bool isEnd() const { return (unknown08 & FLAG_UNKNOWN_1) != 0; }
 
 private:
   void setFlag(u32 flag, bool isSet) {

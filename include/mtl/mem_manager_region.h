@@ -10,8 +10,6 @@
 
 namespace mtl {
 class IMemAllocator;
-struct MEMIMAGE_HEAD;
-struct MemoryInfo1;
 
 class MemManager::Region {
 public:

@@ -35,18 +35,18 @@ void CpuManager::start() {
   m_frame = 0.0f;
   unknown20 = 0.0f;
   unknown18 = calcCpuFrame();
-  unknown10 |= FLAG_START;
+  unknown10 |= FLAG_UNKNOWN_0;
 }
 
 f32 CpuManager::getFrame() const { return m_frame; }
 
 void CpuManager::pause(bool isPause) {
-  if ((unknown10 & FLAG_START) == 0) {
+  if ((unknown10 & FLAG_UNKNOWN_0) == 0) {
     return;
   }
-  bool wasPaused = (unknown10 & (FLAG_PAUSE | FLAG_PAUSE_HOME)) != 0;
-  setFlag(FLAG_PAUSE, isPause);
-  bool isPaused = (unknown10 & (FLAG_PAUSE | FLAG_PAUSE_HOME)) != 0;
+  bool wasPaused = (unknown10 & (FLAG_UNKNOWN_1 | FLAG_UNKNOWN_2)) != 0;
+  setFlag(FLAG_UNKNOWN_1, isPause);
+  bool isPaused = (unknown10 & (FLAG_UNKNOWN_1 | FLAG_UNKNOWN_2)) != 0;
   if (wasPaused != isPaused) {
     f32 frame = calcCpuFrame();
     if (isPaused) {
@@ -59,12 +59,12 @@ void CpuManager::pause(bool isPause) {
 }
 
 void CpuManager::pauseHome(bool isPause) {
-  if ((unknown10 & FLAG_START) == 0) {
+  if ((unknown10 & FLAG_UNKNOWN_0) == 0) {
     return;
   }
-  bool wasPaused = (unknown10 & (FLAG_PAUSE | FLAG_PAUSE_HOME)) != 0;
-  setFlag(FLAG_PAUSE_HOME, isPause);
-  bool isPaused = (unknown10 & (FLAG_PAUSE | FLAG_PAUSE_HOME)) != 0;
+  bool wasPaused = (unknown10 & (FLAG_UNKNOWN_1 | FLAG_UNKNOWN_2)) != 0;
+  setFlag(FLAG_UNKNOWN_2, isPause);
+  bool isPaused = (unknown10 & (FLAG_UNKNOWN_1 | FLAG_UNKNOWN_2)) != 0;
   if (wasPaused != isPaused) {
     f32 frame = calcCpuFrame();
     if (isPaused) {
@@ -78,16 +78,16 @@ void CpuManager::pauseHome(bool isPause) {
 
 void CpuManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
-  case MSG_TYPE_INIT:
+  case MSG_TYPE_UNKNOWN_4:
     init();
     break;
-  case MSG_TYPE_CLEAR:
+  case MSG_TYPE_UNKNOWN_12:
     end();
     break;
-  case MSG_TYPE_UPDATE:
+  case MSG_TYPE_UNKNOWN_14:
     update();
     break;
-  case MSG_TYPE_TAIL_POST:
+  case MSG_TYPE_UNKNOWN_19:
     tailAlways();
     break;
   default:

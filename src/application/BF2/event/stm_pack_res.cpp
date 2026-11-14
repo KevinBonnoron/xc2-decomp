@@ -8,12 +8,12 @@ StmPackRes::StmPackRes()
 StmPackRes::StmPackRes(void *buffer, size_t size, size_t dataOfs, size_t firstFile, size_t lastFile, size_t firstPage, size_t lastPage, int prio, int cut, size_t stream)
     : unknown00(0), unknown08(2), unknown10(buffer), unknown18(size), unknown20(dataOfs), unknown28(firstFile), unknown30(lastFile), unknown38(firstPage), unknown40(lastPage), unknown48(prio),
       unknown4c(cut), unknown50(stream) {
-  unknown04 = FLAG_LOADING;
+  unknown04 = FLAG_UNKNOWN_0;
 }
 
-bool StmPackRes::isLoading() const { return (unknown04 & FLAG_LOADING) != 0; }
+bool StmPackRes::isLoading() const { return (unknown04 & FLAG_UNKNOWN_0) != 0; }
 
-void StmPackRes::loadCompleate() { unknown04 &= ~FLAG_LOADING; }
+void StmPackRes::loadCompleate() { unknown04 &= ~FLAG_UNKNOWN_0; }
 
 void *StmPackRes::getFileAdr(size_t dataOfs) const { return reinterpret_cast<void *>((dataOfs - unknown20) + reinterpret_cast<size_t>(unknown10)); }
 

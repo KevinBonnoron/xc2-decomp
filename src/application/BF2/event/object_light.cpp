@@ -12,7 +12,9 @@
 
 namespace event {
 
-ObjectLight::ObjectLight(const char *name, u32 id) : Object(OBJTYPE_LIGHT, name) { unknown68 = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) LightObj(id); }
+ObjectLight::ObjectLight(const char *name, u32 id) : Object(OBJTYPE_UNKNOWN_5, name) {
+  unknown68 = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) LightObj(id);
+}
 
 ObjectLight::~ObjectLight() {
   if (unknown68 != nullptr) {

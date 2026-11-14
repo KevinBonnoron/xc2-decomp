@@ -497,6 +497,8 @@ void CacheDraw::DRSPHERE_REAL::flush(DebDraw *draw) { draw->renderRealSphere(unk
 
 void CacheDraw::DRSPHERE_REAL_FILL::flush(DebDraw *draw) { draw->renderRealSphereFill(unknown0c, unknown10); }
 
+void CacheDraw::DCOL::flush(DebDraw *draw) { draw->setCol(unknown0c); }
+
 void CacheDraw::DTEX::flush(DebDraw *draw) { draw->setTex(unknown10); }
 
 void CacheDraw::DDOUBLESIDE::flush(DebDraw *draw) { draw->setDoubleSide(unknown0c); }

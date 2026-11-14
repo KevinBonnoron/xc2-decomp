@@ -4,7 +4,9 @@ namespace ml {
 
 class Scn;
 
-enum SCNPRIO_CB {};
+enum SCNPRIO_CB {
+  SCNPRIO_CB_UNKNOWN_19 = 19,
+};
 
 class IScnRender {
 public:

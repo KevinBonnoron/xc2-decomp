@@ -25,6 +25,22 @@ void DrResMdoTexList::createTexInfoList() {
   }
 }
 
+void DrResMdoTexList::createTexList(const u8 *texHeader, const u8 *texData) {
+  unknown6c |= 1;
+  const MdsTexHeader *header = reinterpret_cast<const MdsTexHeader *>(texHeader);
+  const unknown092 *infos = reinterpret_cast<const unknown092 *>(texHeader + header->infoOffset);
+  if (!(unknown6c & 0x20)) {
+    unknown6c |= 0x20;
+    u32 size = infos[unknown68 - 1].unknown08 - infos[0].unknown08 + infos[unknown68 - 1].unknown04;
+    size += -size & 0xfff;
+    unknown28.setupBuffer(const_cast<u8 *>(texData) + infos[0].unknown08, size);
+  }
+  u32 firstOffset = infos[0].unknown08;
+  for (int i = 0; i < unknown68; i++) {
+    grlib::CGLibTexture::createTextureImagePtrs(unknown20[i], infos[i].unknown04, unknown28, infos[i].unknown08 - firstOffset, false, nullptr, true);
+  }
+}
+
 void DrResMdoTexList::createStmTexInfoList(DrCalcStmListObj *stmList, const u8 *stmHeader, bool isCreate) {
   release();
   unknown70 = 0;

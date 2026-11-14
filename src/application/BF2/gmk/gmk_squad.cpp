@@ -37,13 +37,13 @@ void GmkSquadMember::dispose() { AGmkBase::dispose(); }
 void GmkSquadMember::debugUpdateMmf() {}
 
 bool GmkSquad::isValid() const {
-  if (m_bindedGmkSquadLeader == nullptr) {
+  if (unknown003() == nullptr) {
     return false;
   }
-  if (!m_bindedGmkSquadLeader->isValid()) {
+  if (!unknown003()->isValid()) {
     return false;
   }
-  const IGmkList *list = m_bindedGmkSquadLeader->getBindedSquadMemberList();
+  const IGmkList *list = unknown003()->getBindedSquadMemberList();
   if (list == nullptr || list->getInstNum() == 0) {
     return false;
   }
@@ -61,18 +61,18 @@ void GmkSquad::getPosRotY(mm::Vec3 &position, f32 &rotY, u32 index) const {
   rotY = unknownc8[index];
 }
 
-GmkSquadLeader *GmkSquad::getBindedGmkSquadLeader() const {
-  if (m_bindedGmkSquadLeader == nullptr) {
+const GmkSquadLeader *GmkSquad::getBindedGmkSquadLeader() const {
+  if (unknown003() == nullptr) {
     return nullptr;
   }
-  if (!m_bindedGmkSquadLeader->isValid()) {
+  if (!unknown003()->isValid()) {
     return nullptr;
   }
-  const IGmkList *list = m_bindedGmkSquadLeader->getBindedSquadMemberList();
+  const IGmkList *list = unknown003()->getBindedSquadMemberList();
   if (list == nullptr || list->getInstNum() == 0 || unknown70 == 0) {
     return nullptr;
   }
-  return m_bindedGmkSquadLeader;
+  return unknown003();
 }
 
 void GmkSquad::addGmkSquadNavi(GmkSquadNavi *navi) {
@@ -117,14 +117,14 @@ void GmkSquadNavi::create(const CreateInfo &info) {
 }
 
 void GmkSquadNavi::dispose() {
-  if (unknown10.unknown00 != nullptr && unknown10.unknown08 != gf::INVALID_HANDLE) {
+  if (unknown10.unknown00 != nullptr && unknown10.unknown08 != gf::unknown020) {
     unknown10.unknown00->removeGmkSquadNavi(this);
     unknown002();
   }
 }
 
 u32 GmkSquadNavi::getMemberDefType() const {
-  GmkSquadLeader *leader = unknown10.unknown00->getBindedGmkSquadLeader();
+  const GmkSquadLeader *leader = unknown10.unknown00->getBindedGmkSquadLeader();
   if (leader == nullptr) {
     return 0;
   }
@@ -157,7 +157,7 @@ bool GmkSquadNavi::isArrived(const mm::Vec3 &position) const {
 }
 
 void GmkSquad::updateMemberPosRotY_MemberDef_Circle(u32 index) {
-  const GmkSquadLeader::Data *data = m_bindedGmkSquadLeader->getData();
+  const GmkSquadLeader::Data *data = unknown003()->getData();
   const mm::Vec3 &center = unknowna0[0];
   f32 rotY = unknownc8[0];
   f32 halfAngle = ml::mtRandf1() * 6.2831855f * 0.5f;
@@ -177,16 +177,51 @@ void GmkSquadNavi::update(const UpdateInfo &info) {
   if (!unknown001() || !squad->isValid()) {
     return;
   }
-  if (squad->m_bindedGmkSquadLeader != nullptr && squad->m_bindedGmkSquadLeader->getData()->unknown00 == 2 && unknown28 != 0 && isArrived(info.position)) {
+  if (squad->unknown003() != nullptr && squad->unknown003()->getData()->unknown00 == 2 && unknown28 != 0 && isArrived(info.position)) {
     unknown10.unknown00->updateMemberPosRotY_MemberDef_Circle(unknown28);
   }
 }
 
-void GmkSquad::seqInit(f32 deltaTime) {
-  if (m_bindedGmkSquadLeader == nullptr || !m_bindedGmkSquadLeader->isValid()) {
+GmkSquad::GmkSquad(const CreateInfo *info) : unknown2c(1.0f), unknown70(0), unknown78(nullptr) {
+  if (info != nullptr) {
+    create(*info);
+  }
+}
+
+void GmkSquad::create(const CreateInfo &info) {
+  dispose();
+  if (GmkManager::get()->findGmkSet(info.unknown00) == nullptr) {
     return;
   }
-  GmkSquadLeader *leader = m_bindedGmkSquadLeader;
+  unknown20 = info;
+  GmkAcc::CreateInfo accInfo;
+  accInfo.unknown00 = info.unknown00;
+  accInfo.unknown04 = GMK_TYPE_SQUAD_LEADER;
+  accInfo.unknown08 = info.unknown04;
+  m_bindedGmkSquadLeader.create(accInfo);
+  unknown78 = &GmkSquad::seqInit;
+  GmkSquadManager::get()->addGmkSquad(this);
+}
+
+void GmkSquad::dispose() {
+  while (!unknown88.empty()) {
+    unknown88.begin().get()->dispose();
+  }
+  GmkSquadManager::get()->removeGmkSquad(this);
+  unknownf0.destroy();
+  unknownc8.destroy();
+  unknowna0.destroy();
+  unknown70 = 0;
+  unknown78 = nullptr;
+  m_bindedGmkSquadLeader.dispose();
+  unknown20 = CreateInfo();
+}
+
+void GmkSquad::seqInit(f32 deltaTime) {
+  if (unknown003() == nullptr || !unknown003()->isValid()) {
+    return;
+  }
+  const GmkSquadLeader *leader = unknown003();
   if (leader == nullptr) {
     return;
   }
@@ -200,7 +235,7 @@ void GmkSquad::seqInit(f32 deltaTime) {
     unknown70 = data->unknown0c + 1 - data->unknown08;
     break;
   case 2:
-    unknown70 = unknown28;
+    unknown70 = unknown20.unknown08;
     break;
   }
   unknowna0.destroy();
@@ -242,6 +277,22 @@ void GmkSquadManager::update(f32 deltaTime) {
 void GmkSquadManager::addGmkSquad(GmkSquad *squad) {
   if (unknown08.end() == unknown08.unknown002(unknown08.begin(), unknown08.end(), squad)) {
     unknown08.push_back(squad);
+  }
+}
+
+void GmkSquadManager::removeGmkSquad(GmkSquad *squad) {
+  if (squad == nullptr) {
+    return;
+  }
+  mm::mtl::IntrusiveList<GmkSquad>::iterator last = unknown08.end();
+  for (mm::mtl::IntrusiveList<GmkSquad>::iterator it = unknown08.begin(); it != last; ++it) {
+    if (it.get() == squad) {
+      // The game tests the found squad against the end of the list again (cmp, b.eq at 0x71006158d0), although the loop condition already excludes it.
+      if (last.get() != squad) {
+        unknown08.erase(squad);
+      }
+      break;
+    }
   }
 }
 

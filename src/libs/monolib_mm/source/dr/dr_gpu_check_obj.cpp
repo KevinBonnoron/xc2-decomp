@@ -29,13 +29,13 @@ DrGpuCheckObj::~DrGpuCheckObj() { unknown20.release(); }
 
 void DrGpuCheckObj::release() { unknown3c |= 0x100 << DrMan::s_nDblStockIdx; }
 
-bool DrGpuCheckObj::isRender() const { return (unknown3c & FLAG_RENDER) != 0; }
+bool DrGpuCheckObj::isRender() const { return (unknown3c & FLAG_UNKNOWN_4) != 0; }
 
 void DrGpuCheckObj::setPause(bool isPause) {
   if (isPause) {
-    unknown3c |= FLAG_PAUSE;
+    unknown3c |= FLAG_UNKNOWN_7;
   } else {
-    unknown3c &= ~FLAG_PAUSE;
+    unknown3c &= ~FLAG_UNKNOWN_7;
   }
 }
 

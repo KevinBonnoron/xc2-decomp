@@ -1,6 +1,7 @@
 #pragma once
 #include "gf/object/component/behavior/plugin/gf_plugin.h"
 #include "gf/object/component/pc/gf_com_behavior_pc.h" // IWYU pragma: keep
+#include "types.h"
 
 namespace mm {
 namespace mtl {
@@ -19,6 +20,8 @@ class DeadColCheckPlugin : public Plugin {
   GF_PLUGIN(GfComBehaviorPc)
 
 public:
+  static const u32 PLUGIN_INDEX = 19;
+
   DeadColCheckPlugin();
   static DeadColCheckPlugin *create();
   virtual bool setup(GfComBehaviorPc &behavior);

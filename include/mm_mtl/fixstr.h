@@ -41,6 +41,19 @@ public:
     dest.m_nLen = __builtin_strlen(dest.mData);
   }
 
+  // Inferred role: index of the first occurrence of a substring at or after start, -1 when missing; no game symbol, original name unknown. Shape from
+  // fw::ResourceManager::isDelayReleaseExtention (1.0.0: 0x710019c128), which compares at each position with strncmp, and from
+  // mm::mtl::replacestr (0x71001a86e0), which searches again from the end of each replacement.
+  int unknown003(const char *pszStr, int start = 0) const {
+    int len = __builtin_strlen(pszStr);
+    for (int i = start; i < m_nLen; i++) {
+      if (strncmp(mData + i, pszStr, len) == 0) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
   FixStr &operator+=(const char *pszBack) {
     // __LINE__ must be 485 and 487 as in the original header: they are the line arguments of the asserts.
 #line 485
@@ -79,8 +92,13 @@ public:
     mData[len] = 0;
   }
 
+  // A count of -1 erases up to the end (mm::mtl::replacestr inlines this test with the count it passes, 1.0.0: 0x71001a86e0).
   void erase(int pos, int count) {
-    if (pos < m_nLen) {
+    if (count == -1) {
+      if (pos < m_nLen) {
+        resize(pos);
+      }
+    } else if (pos < m_nLen) {
       int end = pos + count < m_nLen ? pos + count : m_nLen;
       __builtin_strcpy(mData + pos, mData + end);
       m_nLen = __builtin_strlen(mData);
@@ -127,19 +145,21 @@ public:
   FixStr &replace(int pos, int count, const char *strNew) {
     MM_ASSERT(strNew);
     int len = __builtin_strlen(strNew);
-    if (count == -1) {
-      if (pos < m_nLen) {
-        resize(pos);
-      }
-    } else {
-      erase(pos, count);
-    }
+    erase(pos, count);
     insert(pos, strNew, len);
     return *this;
   }
 
   const char *c_str() const { return mData; }
   char &operator[](int index) { return mData[index]; }
+
+  // Inferred role: element access with a bounds assert; no game symbol, original name unknown.
+  // __LINE__ must be 302 as in the original header: it is the line argument of the assert.
+#line 301
+  char &unknown002(int nIdx) {
+    MM_ASSERT(nIdx < m_nLen);
+    return mData[nIdx];
+  }
   bool operator<(const FixStr &rhs) const { return strcmp(mData, rhs.mData) < 0; }
   bool empty() const { return m_nLen == 0; }
   int capacity() const { return LEN - 1; }

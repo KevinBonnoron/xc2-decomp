@@ -8,9 +8,9 @@ enum CAMERA_PRIO : int;
 
 namespace event {
 
-static constexpr fw::CAMERA_PRIO CAMERA_PRIO_EVENT = static_cast<fw::CAMERA_PRIO>(15);
+static constexpr fw::CAMERA_PRIO CAMERA_PRIO_UNKNOWN_15 = static_cast<fw::CAMERA_PRIO>(15); // Inferred role: camera prio event; original name unknown.
 
-CamInterface::CamInterface(fw::CAMERA_TYPE type) : fw::Camera(CAMERA_PRIO_EVENT), unknowna8(type), unknownac(false), unknownb0(0.0f), unknownb8(this) {
+CamInterface::CamInterface(fw::CAMERA_TYPE type) : fw::Camera(CAMERA_PRIO_UNKNOWN_15), unknowna8(type), unknownac(false), unknownb0(0.0f), unknownb8(this) {
   setLookAt(mm::Vec3(4.0f, 5.0f, 5.0f), mm::Vec3(0.0f, 1.0f, 0.0f), 0.0f);
 }
 

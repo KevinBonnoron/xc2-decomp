@@ -8,8 +8,8 @@ AnmBase::AnmBase() { clear(); }
 
 void AnmBase::clear() {
   unknown10.clear();
-  m_cv = CV_TYPE_LINEAR;
-  unknown08 = STATE_FIRST;
+  m_cv = CV_TYPE_UNKNOWN_1;
+  unknown08 = STATE_UNKNOWN_0;
   unknown5c = 0.0f;
   unknown68 = 0;
   unknown70 = 0.0f;
@@ -22,17 +22,17 @@ void AnmBase::update(f32 delta) {
   }
   size_t prevIndex = unknown68;
   u32 state = this->unknown08;
-  this->unknown08 = state & ~STATE_UPDATE;
-  if (state & STATE_FIRST) {
+  this->unknown08 = state & ~STATE_UNKNOWN_2;
+  if (state & STATE_UNKNOWN_0) {
     if (delta != 0.0f) {
-      this->unknown08 = state & ~(STATE_FIRST | STATE_UPDATE);
+      this->unknown08 = state & ~(STATE_UNKNOWN_0 | STATE_UNKNOWN_2);
     }
-    this->unknown08 |= STATE_UPDATE;
+    this->unknown08 |= STATE_UNKNOWN_2;
   }
   if (delta != 0.0f && !unknown10.empty()) {
     this->unknown5c += delta;
     mm::clampRef(this->unknown5c, 0.0f, unknown60);
-    if (m_cv == CV_TYPE_LINEAR || unknown60 <= 0.0f) {
+    if (m_cv == CV_TYPE_UNKNOWN_1 || unknown60 <= 0.0f) {
       getIndex_Alpha(unknown68, unknown70, this->unknown5c, unknown68, unknown70);
     } else {
       f32 frame = unknown60 * Curve::getValue(m_cv, this->unknown5c / unknown60);
@@ -41,7 +41,7 @@ void AnmBase::update(f32 delta) {
     }
   }
   if (prevIndex < unknown68) {
-    this->unknown08 |= STATE_UPDATE;
+    this->unknown08 |= STATE_UNKNOWN_2;
   }
 }
 
@@ -75,7 +75,7 @@ void AnmBase::getIndex_Alpha(size_t &index, f32 &alpha, f32 frame, size_t startI
 
 void AnmBase::replay() {
   if (!unknown10.empty()) {
-    unknown08 = STATE_FIRST | STATE_PLAY;
+    unknown08 = STATE_UNKNOWN_0 | STATE_UNKNOWN_1;
     unknown5c = 0.0f;
     unknown68 = 0;
     unknown70 = 0.0f;
@@ -89,7 +89,7 @@ void AnmBase::append(f32 frame) {
   if (!unknown10.empty() && frame < unknown10.back()) {
     frame = unknown10.back();
   }
-  unknown08 |= STATE_PLAY;
+  unknown08 |= STATE_UNKNOWN_1;
   unknown10.push_back(frame);
   unknown60 = frame;
 }

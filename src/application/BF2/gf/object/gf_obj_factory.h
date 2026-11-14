@@ -13,6 +13,7 @@ namespace mm {
 struct Vec3;
 
 namespace mtl {
+class ReferenceObject;
 class RTTI;
 } // namespace mtl
 } // namespace mm
@@ -25,7 +26,12 @@ namespace gf {
 
 struct GF_OBJ_HANDLE;
 class GfComSound;
+class GfAppendHandles;
 class GfInitParamBelonging;
+class GfInitParamBlade;
+class GfInitParamDriver;
+class GfInitParamEnWeapon;
+class GfInitParamEnemy;
 class GfInitParamEventObj;
 class GfInitParamExtra;
 class GfInitParamFobj;
@@ -33,19 +39,22 @@ class GfInitParamGimmick;
 class GfInitParamMap;
 class GfInitParamMapSeamless;
 class GfInitParamMob;
+class GfInitParamNpc;
 class GfInitParamUiObj;
+class GfInitParamWeapon;
 struct GF_ASSET_HANDLE;
 
-// Layout from its constructor, destructor and registerSoundTrigger. The game's destructor is out of line
-// (D1/D2 at 0x710058464c); it is not declared here until it is decompiled.
+// Layout from its constructor, destructor and registerSoundTrigger.
 class GfExtendPacking : public GfExtendResource {
 public:
   static mm::mtl::RTTI m_rtti;
 
+  GfExtendPacking();
+  ~GfExtendPacking() override;
   const mm::mtl::RTTI *getRTTI() const override;
 
-  anm::ResASM *unknown10; // Inferred role: asm resource, released through its anmlib reference count by the destructor; original member name unknown.
-  u8 _18[0x20 - 0x18];
+  anm::ResASM *unknown10;              // Inferred role: asm resource, released through its anmlib reference count by the destructor; original member name unknown.
+  mm::mtl::ReferenceObject *unknown18; // Inferred role: object released by the destructor; original member name unknown.
   mm::mtl::FixedQueue<fw::SoundResTriggerImporter::unknown001 *, 8> unknown20; // Inferred role: sound triggers registered by registerSoundTrigger; original member name unknown.
 };
 
@@ -60,23 +69,33 @@ class GfObjFactory {
 public:
   static GF_OBJ_HANDLE *createGmkMapObj(const CBdatWrapper &bdat, int id);
   static GF_OBJ_HANDLE *createGmkTbox(const CBdatWrapper &bdat, int id);
-  static GF_OBJ_HANDLE *createGmkEnemy(int id, s8 param2, u16 param3, const mm::Vec3 &position, const mm::Vec3 &rotation, bool param6);
+  static GF_OBJ_HANDLE *createGmkEnemy(int id, s8 levelOffset, u16 priority, const mm::Vec3 &position, const mm::Vec3 &rotation, bool flag);
   static GF_OBJ_HANDLE *createGmkNpc(const CBdatWrapper &bdat, int id);
-  static GF_OBJ_HANDLE *createGmkBlade(const CBdatWrapper &bdat, int id, int param3);
+  static GF_OBJ_HANDLE *createGmkCommonBlade(u32 blade);
+  static GF_OBJ_HANDLE *createGmkBlade(const CBdatWrapper &bdat, int id, int blade);
   static GF_OBJ_HANDLE *createGmkCollection(const CBdatWrapper &bdat, int id);
   static GF_OBJ_HANDLE *createGmkEvent(const CBdatWrapper &bdat, int id);
   static GF_OBJ_HANDLE *createGmkMapGimmick(const CBdatWrapper &bdat, int id);
   static GF_OBJ_HANDLE *createMap(const GfInitParamMapSeamless &param);
   static GF_OBJ_HANDLE *createDebugMap(const GfInitParamMap &param);
   static GF_OBJ_HANDLE *createMapObj(const GfInitParamGimmick &param);
+  // Inferred return type: the function returns the object handle (0x7100585a1c) that GfEvtModelDriver stores (0x7100308e64).
+  static GF_OBJ_HANDLE *createDriver(GfInitParamDriver &param);
+  static GF_OBJ_HANDLE *createBlade(GfInitParamBlade &param);
+  static GF_OBJ_HANDLE *createEnemy(GfInitParamEnemy &param);
   static GF_OBJ_HANDLE *createEventObj(const GfInitParamEventObj &param);
   static GF_OBJ_HANDLE *createUiObj(const GfInitParamUiObj &param);
   static GF_OBJ_HANDLE *createMapLodAnim();
   static GF_OBJ_HANDLE *createGmkMob(int id, u16 param2, u16 param3, u16 param4, u16 param5);
+  static GF_OBJ_HANDLE *createNpc(const GfInitParamNpc &param);
   static GF_OBJ_HANDLE *createMob(const GfInitParamMob &param);
   static GF_OBJ_HANDLE *createMobNull();
   static GF_OBJ_HANDLE *createFieldObj(const GfInitParamFobj &param);
+  // Inferred return type: the function returns the result of GfMountManager::getAppendHandles (0x7100589a10) or &param.unknown130 (0x7100589aa8), and the GfEvtModelWeapon constructor copies
+  // a GfAppendHandles from it (0x710030c468).
+  static GfAppendHandles *createDriverWeapon(GfInitParamWeapon &param);
   static GF_OBJ_HANDLE *createBelonging(GfInitParamBelonging &param);
+  static GF_OBJ_HANDLE *createEnWeapon(GfInitParamEnWeapon &param);
   static GF_OBJ_HANDLE *createExtraModel(GfInitParamExtra &param);
   static void destroyObj(GF_OBJ_HANDLE *handle);
   static GF_OBJ_HANDLE *createSmnEnemy(int id, const mm::Vec3 &position, const mm::Vec3 &rotation, bool flag);

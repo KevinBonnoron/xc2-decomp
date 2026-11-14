@@ -15,7 +15,7 @@ namespace event {
 
 class BlockManager : public IManager, public ml::IWorkEvent, public mm::mtl::Singleton<BlockManager> {
 public:
-  static constexpr u32 BLOCK_COUNT = 32;
+  static constexpr u32 BLOCK_UNKNOWN_32 = 32; // Inferred role: block count; original name unknown.
 
   BlockManager();
   virtual ~BlockManager() {}
@@ -27,10 +27,10 @@ public:
   bool isTimeBlock(u32 id);
 
 private:
-  void *unknown18;                                        // Inferred role: wtr data; original member name unknown.
-  void *unknown20;                                        // Inferred role: time data; original member name unknown.
-  mm::mtl::FixedArray<BlockWtr, BLOCK_COUNT> unknown28;   // Inferred role: wtrs; original member name unknown.
-  mm::mtl::FixedArray<BlockTime, BLOCK_COUNT> unknown428; // Inferred role: times; original member name unknown.
+  void *unknown18;                                             // Inferred role: wtr data; original member name unknown.
+  void *unknown20;                                             // Inferred role: time data; original member name unknown.
+  mm::mtl::FixedArray<BlockWtr, BLOCK_UNKNOWN_32> unknown28;   // Inferred role: wtrs; original member name unknown.
+  mm::mtl::FixedArray<BlockTime, BLOCK_UNKNOWN_32> unknown428; // Inferred role: times; original member name unknown.
 };
 
 static_assert(sizeof(BlockManager) == 0x528, "");

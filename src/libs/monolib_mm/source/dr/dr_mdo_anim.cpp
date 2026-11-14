@@ -140,6 +140,60 @@ void DrMdoAnim::calcAnimFrameOnly(const MdsFixAnmCate *cate, f32 frame) {
   }
 }
 
+void DrMdoAnim::setMatAnimFrame(const MdsFixAnmCate *cate, f32 frame) {
+  f32 *frames = &unknown30->unknown100[cate->unknown02];
+  for (int i = 0; i < cate->unknown04; i++, frames++) {
+    *frames = frame;
+  }
+}
+
+void DrMdoAnim::setMatAnmFrme(f32 frame) {
+  const u8 *data = unknown30->unknown50;
+  if (data == nullptr) {
+    return;
+  }
+  const unknown025 *header = reinterpret_cast<const unknown025 *>(data);
+  const unknown016 *ranges = reinterpret_cast<const unknown016 *>(data + header->unknown04);
+  const MdsFixAnmCate *cates = reinterpret_cast<const MdsFixAnmCate *>(data + header->unknown0c);
+  const MdsMatInfoHeader *matInfo = unknown30->unknown28;
+  for (int i = 0; i < unknown30->unknown30; i++, matInfo++) {
+    if (matInfo->unknown04 & (MdsMatInfoHeader::unknown015_16 | MdsMatInfoHeader::unknown015_17 | MdsMatInfoHeader::unknown015_18 | MdsMatInfoHeader::unknown015_19)) {
+      if (matInfo->unknown04 & MdsMatInfoHeader::unknown015_16) {
+        const unknown016 *range = &ranges[matInfo->unknown30];
+        u32 num = range->unknown02;
+        const MdsFixAnmCate *cate = &cates[range->unknown00];
+        for (u32 j = 0; j < num; j++, cate++) {
+          setMatAnimFrame(cate, frame);
+        }
+      }
+      if (matInfo->unknown04 & MdsMatInfoHeader::unknown015_18) {
+        const unknown016 *range = &ranges[matInfo->unknown38];
+        u32 num = range->unknown02;
+        const MdsFixAnmCate *cate = &cates[range->unknown00];
+        for (u32 j = 0; j < num; j++, cate++) {
+          setMatAnimFrame(cate, frame);
+        }
+      }
+      if (matInfo->unknown04 & MdsMatInfoHeader::unknown015_19) {
+        const unknown016 *range = &ranges[matInfo->unknown3c];
+        u32 num = range->unknown02;
+        const MdsFixAnmCate *cate = &cates[range->unknown00];
+        for (u32 j = 0; j < num; j++, cate++) {
+          setMatAnimFrame(cate, frame);
+        }
+      }
+      if (matInfo->unknown04 & MdsMatInfoHeader::unknown015_17) {
+        const unknown016 *range = &ranges[matInfo->unknown34];
+        u32 num = range->unknown02;
+        const MdsFixAnmCate *cate = &cates[range->unknown00];
+        for (u32 j = 0; j < num; j++, cate++) {
+          setMatAnimFrame(cate, frame);
+        }
+      }
+    }
+  }
+}
+
 f32 DrMdoAnim::getNodeAnmHermiteAttr(const MdsMdlNodeAnmInfo *info, f32 frame) {
   const unknown014 *keys = reinterpret_cast<const unknown014 *>(reinterpret_cast<const u8 *>(unknown30->unknown148->unknown00) + info->unknown0c);
   if (frame <= info->unknown04) {

@@ -37,7 +37,8 @@ bool GfDataSound::getFootStepSePackFile(mm::mtl::FixedVector<const char *, 2> &f
 }
 
 const char *GfDataSound::getSeFileByWeaponType(u32 weaponType) {
-  static const char *const seFiles[] = {
+  static const char *const unknown004[] = {
+      // Inferred role: se files; original name unknown.
       "",
       "se_btl_dr_sworda",
       "se_btl_dr_lsword",
@@ -60,11 +61,11 @@ const char *GfDataSound::getSeFileByWeaponType(u32 weaponType) {
       "se_btl_dr_tonfa",
   };
 
-  if (weaponType >= sizeof(seFiles) / sizeof(seFiles[0])) {
+  if (weaponType >= sizeof(unknown004) / sizeof(unknown004[0])) {
     return "";
   }
 
-  return seFiles[weaponType];
+  return unknown004[weaponType];
 }
 
 } // namespace gf

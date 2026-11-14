@@ -30,9 +30,9 @@ void StateFieldStopBrake::update(GfComBehaviorPc *behavior, const fw::UpdateInfo
   GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
   if (property->existInputXY() && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_MOVE)) {
     if (!StateUtilField::isInputInverseDir(*property)) {
-      reqState(STATE_ID_FIELD_MOVE);
+      reqState(STATE_ID_UNKNOWN_7);
     } else {
-      reqState(STATE_ID_FIELD_IDLE_TURN);
+      reqState(STATE_ID_UNKNOWN_4);
     }
     return;
   }
@@ -42,12 +42,12 @@ void StateFieldStopBrake::update(GfComBehaviorPc *behavior, const fw::UpdateInfo
   f32 speed = sqrtf(property->unknown80.x * property->unknown80.x + property->unknown80.y * property->unknown80.y + property->unknown80.z * property->unknown80.z);
   if (speed <= 0.0f) {
     if (param->stopMotionThreshold != 0.0f) {
-      if (__builtin_strcmp(comAsm->getStateName(ANIM_LAYER_BASE), "S_idle") == 0) {
-        reqState(STATE_ID_FIELD_IDLE);
+      if (__builtin_strcmp(comAsm->getStateName(ANIM_LAYER_UNKNOWN_0), "S_idle") == 0) {
+        reqState(STATE_ID_UNKNOWN_3);
         return;
       }
     } else if (StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_IDLE)) {
-      reqState(STATE_ID_FIELD_IDLE);
+      reqState(STATE_ID_UNKNOWN_3);
       return;
     }
   }

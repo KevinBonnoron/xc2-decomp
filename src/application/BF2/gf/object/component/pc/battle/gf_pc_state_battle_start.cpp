@@ -36,19 +36,19 @@ void StateBattleStart::Update(btl::BattleCharacter *character, GfComBehaviorPc *
   const GfPropertyBattle *battle = GetBattlePropertyConst();
   switch (battle->unknown14) {
   case 0:
-    ChangeState(STATE_ID_BATTLE_PUT_OUT_WEAPON, 0);
+    ChangeState(STATE_ID_UNKNOWN_65, 0);
     break;
   case 1:
-    ChangeState(STATE_ID_BATTLE_IDLE, 1);
+    ChangeState(STATE_ID_UNKNOWN_64, 1);
     break;
   case 2:
-    ChangeState(STATE_ID_BATTLE_DEAD, 1);
+    ChangeState(STATE_ID_UNKNOWN_80, 1);
     break;
   case 3:
-    ChangeState(STATE_ID_BATTLE_IDLE, battle->unknown15 << 16 | battle->unknown16);
+    ChangeState(STATE_ID_UNKNOWN_64, battle->unknown15 << 16 | battle->unknown16);
     break;
   default:
-    ChangeState(STATE_ID_BATTLE_PUT_OUT_WEAPON, 0);
+    ChangeState(STATE_ID_UNKNOWN_65, 0);
     break;
   }
 }

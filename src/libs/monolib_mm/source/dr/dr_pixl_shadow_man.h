@@ -11,20 +11,28 @@ struct Vec3;
 namespace ml {
 class DrLightObj;
 class DrMan;
+class DrPixlMan;
 class DrPixlShadowObj;
 class DrPixlShadowObjDir;
 
 class DrPixlShadowMan {
 public:
+  DrPixlShadowMan(DrMan *man, DrPixlMan *pixlMan);
+  ~DrPixlShadowMan();
   void releaseShadow(DrPixlShadowObj *shadow);
   DrPixlShadowObj *createDirCacheShadow(DrLightObj *light, int index);
+  DrPixlShadowObj *createPntShadow(DrLightObj *light, int index);
+  DrPixlShadowObj *createSptShadow(DrLightObj *light, int index);
   void setAddShadowObj(DrPixlShadowObjDir *shadow);
   f32 getShadowTexSize(int index);
   void beforUpdate();
   bool renderShadowObj();
   bool renderDirShadowObj();
+  void shadowRender();
+  void shadowDebugInfRender();
   void afterUpdate();
   bool setAddObjPos(const mm::Vec3 &position, f32 value);
+  bool clipDirShadowChk(const mm::Vec3 &position, f32 radius, bool isCache);
   bool setSptCalcPos(const mm::Vec3 &position, f32 value);
   MdoShdPxlWrkTex *createShdTexWrk(int index, int type);
   void releaseTexWorkOne(MdoShdPxlWrkTex *work);
@@ -34,14 +42,15 @@ public:
   MdoShdPxlWrkTex unknown0800[16];   // Inferred role: shadow textures; original member name unknown.
   s32 unknown8900;                   // Inferred role: shadow object count; original member name unknown.
   u8 _8904[0x8908 - 0x8904];
-  DrMan *unknown8908; // Inferred role: driver manager; original member name unknown.
-  u8 _8910[0x8918 - 0x8910];
-  DrPixlShadowObjDir *unknown8918; // Inferred role: additional shadow object; original member name unknown.
+  DrMan *unknown8908;     // Inferred role: driver manager; original member name unknown.
+  DrPixlMan *unknown8910; // Inferred role: pixel manager; original member name unknown.
+  DrPixlShadowObjDir *m_addShadowObj;
 };
 
 static_assert(offsetof(DrPixlShadowMan, unknown0800) == 0x0800, "");
 static_assert(offsetof(DrPixlShadowMan, unknown8900) == 0x8900, "");
 static_assert(offsetof(DrPixlShadowMan, unknown8908) == 0x8908, "");
-static_assert(offsetof(DrPixlShadowMan, unknown8918) == 0x8918, "");
+static_assert(offsetof(DrPixlShadowMan, unknown8910) == 0x8910, "");
+static_assert(offsetof(DrPixlShadowMan, m_addShadowObj) == 0x8918, "");
 
 } // namespace ml

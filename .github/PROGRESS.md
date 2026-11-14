@@ -34,8 +34,10 @@ submission, remove and re-add the label.
 
 ## Updating the numbers
 
-Run `check --readme` in the local Nix development shell with the extracted game
-binary available, then commit and push the updated README alongside your code.
+The pre-commit hook runs `check --readme` on `main` only, in the local Nix
+development shell with the extracted game binary available, and commits the
+updated README with the change. Pull requests leave the README alone; after a
+pull request is merged, the next commit on `main` refreshes the snapshot.
 The checker only updates the README after successful verification. CI sends
 that snapshot; it does not recalculate progress when only C++ sources change.
 The reported commit identifies the commit containing the snapshot.

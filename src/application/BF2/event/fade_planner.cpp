@@ -18,11 +18,11 @@ void FadePlanner::clear() {
 void FadePlanner::update(f32 delta) {
   for (u32 i = 0; i < TYPE_COUNT; i++) {
     Plan &plan = unknown0c[i];
-    if (plan.unknown00 & Plan::FLAG_WAIT) {
+    if (plan.unknown00 & Plan::FLAG_UNKNOWN_2) {
       plan.unknown20 -= delta;
       if (plan.unknown20 < 0.0f) {
         play(static_cast<TYPE>(i));
-        plan.unknown00 &= ~Plan::FLAG_WAIT;
+        plan.unknown00 &= ~Plan::FLAG_UNKNOWN_2;
       }
     }
   }
@@ -53,11 +53,11 @@ void FadePlanner::plan(TYPE type, bool isEnable, u32 frame, u32 wait, FadeCtrl::
 
 void FadePlanner::request(TYPE type) {
   Plan &plan = unknown0c[type];
-  if (plan.unknown00 & Plan::FLAG_ENABLE) {
+  if (plan.unknown00 & Plan::FLAG_UNKNOWN_0) {
     u32 wait = plan.unknown08;
-    plan.unknown00 |= Plan::FLAG_REQUEST;
+    plan.unknown00 |= Plan::FLAG_UNKNOWN_1;
     if (wait != 0) {
-      plan.unknown00 |= Plan::FLAG_WAIT;
+      plan.unknown00 |= Plan::FLAG_UNKNOWN_2;
       plan.unknown20 = wait;
     } else {
       play(type);

@@ -217,7 +217,7 @@ int DrResMdoSeamRead::getFileHandleNum() {
 
 bool DrResMdoSeamRead::OnFileEvent(EventFileTh *event) {
   for (int i = 0; i < 8; i++) {
-    if (unknown08[i] == event->unknown08 && event->type == EventFileTh::TYPE_COMPLETE) {
+    if (unknown08[i] == event->unknown08 && event->type == EventFileTh::TYPE_UNKNOWN_2) {
       unknown4a |= 1 << i;
       if (unknown4c & FLAG_UNKNOWN_3) {
         unknown08[i] = nullptr;

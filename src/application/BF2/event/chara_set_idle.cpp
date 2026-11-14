@@ -26,7 +26,7 @@ ICmd::RESULT CharaSetIdle::update(const Param &param) {
     unknown18->resetDynamics(0);
     unknown20 = type;
   }
-  return RESULT_END;
+  return RESULT_UNKNOWN_1;
 }
 
 } // namespace event

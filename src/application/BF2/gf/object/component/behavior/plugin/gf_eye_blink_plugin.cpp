@@ -7,7 +7,7 @@
 
 namespace gf {
 
-static const char *const EYE_CLOSE_STATE = "S_eye_close";
+static const char *const unknown010 = "S_eye_close"; // Inferred role: eye close state; original name unknown.
 
 EyeBlinkPlugin::EyeBlinkPlugin() : unknown10(nullptr), unknown18(0.0f), unknown1c(MODE_UNKNOWN_0), unknown20(nullptr) {}
 
@@ -47,12 +47,12 @@ void EyeBlinkPlugin::setMode(Mode mode) {
   }
   case MODE_UNKNOWN_1:
   case MODE_UNKNOWN_3:
-    comAsm->easeIn(EYE_CLOSE_STATE, param->unknown08, ANIM_LAYER_EYE);
+    comAsm->easeIn(unknown010, param->unknown08, ANIM_LAYER_UNKNOWN_3);
     unknown18 = param->unknown08 + param->unknown10;
     break;
   case MODE_UNKNOWN_2:
   case MODE_UNKNOWN_4:
-    comAsm->easeOut(EYE_CLOSE_STATE, param->unknown0c, ANIM_LAYER_EYE);
+    comAsm->easeOut(unknown010, param->unknown0c, ANIM_LAYER_UNKNOWN_3);
     unknown18 = param->unknown0c;
     break;
   default:
@@ -74,7 +74,7 @@ void EyeBlinkPlugin::onDeactivate() {
     const unknown001 *param = getParameter();
     GfComAsm *comAsm = unknown10->unknown08->getComponent<GfComAsm>();
     if (param != nullptr && comAsm != nullptr) {
-      comAsm->easeOut(EYE_CLOSE_STATE, param->unknown0c, ANIM_LAYER_EYE);
+      comAsm->easeOut(unknown010, param->unknown0c, ANIM_LAYER_UNKNOWN_3);
     }
   }
 }

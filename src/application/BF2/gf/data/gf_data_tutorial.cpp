@@ -4,11 +4,11 @@
 namespace gf {
 
 enum {
-  FLAG_TUTORIAL_MENU = 0xc710,
+  FLAG_UNKNOWN_50960 = 0xc710, // Inferred role: flag tutorial menu; original name unknown.
 };
 
-bool GfDataTutorial::isMenuFlag(u32 menu) { return GfGameFlag::getLocal(1, FLAG_TUTORIAL_MENU + menu) != 0; }
+bool GfDataTutorial::isMenuFlag(u32 menu) { return GfGameFlag::getLocal(1, FLAG_UNKNOWN_50960 + menu) != 0; }
 
-void GfDataTutorial::setMenuFlag(u32 menu, bool menuFlag) { GfGameFlag::setLocal(1, FLAG_TUTORIAL_MENU + menu, menuFlag); }
+void GfDataTutorial::setMenuFlag(u32 menu, bool menuFlag) { GfGameFlag::setLocal(1, FLAG_UNKNOWN_50960 + menu, menuFlag); }
 
 } // namespace gf

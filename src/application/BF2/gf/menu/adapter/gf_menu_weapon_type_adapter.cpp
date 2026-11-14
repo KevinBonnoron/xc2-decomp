@@ -14,7 +14,8 @@
 
 namespace gf {
 
-constexpr u32 ARTS_SLOT_MAX = 4;
+// Inferred role: number of art slots; original name unknown.
+constexpr u32 ARTS_SLOT_UNKNOWN_4 = 4;
 
 static GfMenuWeaponTypeAdapter::TypeInfo TYPE_INFOS[] = {
     {&GfMenuWeaponTypeAdapter::update_WpnTypeName, {GfMenuAdapter::unknown004_2, 0, 0}},
@@ -59,7 +60,7 @@ GfMenuWeaponTypeAdapter *GfMenuWeaponTypeAdapter::create(u32 handle, u32 type, u
     if (plugin != nullptr) {
       // __LINE__ must be 203 as in the original source: it is the line argument of operator new.
 #line 203
-      GfMenuWeaponTypeAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuWeaponTypeAdapter(plugin, isUpdateAlways);
+      GfMenuWeaponTypeAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuWeaponTypeAdapter(plugin, isUpdateAlways);
       adapter->unknown30.bind(adapter, info.update);
       adapter->unknown58 = driver;
       adapter->unknown5c = weaponType;
@@ -371,20 +372,20 @@ void GfMenuWeaponTypeAdapter::update(const fw::UpdateInfo &info) {
     }
   }
 
-  if (unknown30.isValid() && (unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
+  if (unknown30.isValid() && (unknown20 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) != 0) {
     if (unknown58 != 0) {
       setDisp(unknown30());
     } else {
       setDisp(false);
     }
-    unknown20 &= ~FLAG_CHANGED;
+    unknown20 &= ~FLAG_UNKNOWN_0;
   }
 }
 
 bool GfMenuWeaponTypeAdapter::getDriverArts(DriverArts &driverArts) {
   mm::mtl::FixedArray<u32, 4> arts;
   if (GfMenuObjUtil::getEnableArts(arts, unknown58, unknown5c)) {
-    if (unknown60 < ARTS_SLOT_MAX) {
+    if (unknown60 < ARTS_SLOT_UNKNOWN_4) {
       driverArts.unknown00 = arts[unknown60];
       driverArts.unknown04 = GfDataDriverArts::getArtsLevel(unknown58, driverArts.unknown00);
       return true;
@@ -398,7 +399,7 @@ GfMenuWeaponTypeAdapter *GfMenuWeaponTypeAdapter::createFromReferenceDriverWpnTy
                                                                                    bool isUpdateAlways) {
   // __LINE__ must be 234 as in the original source: it is the line argument of operator new.
 #line 234
-  ReferenceDriverConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceDriverConverter(driver, wpnType, artsIndex);
+  ReferenceDriverConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceDriverConverter(driver, wpnType, artsIndex);
   return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 
@@ -406,7 +407,7 @@ GfMenuWeaponTypeAdapter *GfMenuWeaponTypeAdapter::createFromReferenceDriverWpnTy
                                                                                             mm::mtl::IntrusivePtr<GfMenuReferenceNumber> artsIndex, bool isUpdateAlways) {
   // __LINE__ must be 242 as in the original source: it is the line argument of operator new.
 #line 242
-  ReferenceDriverWeaponTypeConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceDriverWeaponTypeConverter(driver, wpnType, artsIndex);
+  ReferenceDriverWeaponTypeConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceDriverWeaponTypeConverter(driver, wpnType, artsIndex);
   return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 

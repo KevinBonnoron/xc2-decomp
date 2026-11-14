@@ -94,7 +94,7 @@ void GfObjUtil::addGfObj(GF_OBJ_HANDLE *handle, GfObj *obj) {
 }
 
 bool GfObjUtil::mountToBone(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *parent, const char *bone) {
-  if (parent == INVALID_HANDLE) {
+  if (parent == unknown020) {
     return false;
   }
 
@@ -127,7 +127,7 @@ bool GfObjUtil::mountToBone(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *parent, const 
 }
 
 bool GfObjUtil::unmountFromBone(GF_OBJ_HANDLE *handle) {
-  if (handle == INVALID_HANDLE) {
+  if (handle == unknown020) {
     return false;
   }
 
@@ -500,7 +500,7 @@ void GfObjUtil::setMoveEyeIK(GF_OBJ_HANDLE *handle, f32 moveX, f32 moveY) {
 }
 
 GfObj *GfObjUtil::getObj(GF_OBJ_HANDLE *handle) {
-  if (handle == INVALID_HANDLE) {
+  if (handle == unknown020) {
     return nullptr;
   }
 
@@ -528,7 +528,7 @@ fw::SoundCategory GfObjUtil::getSoundCategoryNormal(GF_OBJ_HANDLE *handle) {
   if (setup != nullptr && isEventCharacter(setup->unknown1c)) {
     return CATEGORY_SYSTEM;
   }
-  return CATEGORY_CHARACTER_SE;
+  return CATEGORY_CH_SE;
 }
 
 fw::SoundCategory GfObjUtil::getSoundCategoryWithoutSlow(GF_OBJ_HANDLE *handle) {
@@ -536,7 +536,7 @@ fw::SoundCategory GfObjUtil::getSoundCategoryWithoutSlow(GF_OBJ_HANDLE *handle) 
   if (setup != nullptr && isEventCharacter(setup->unknown1c)) {
     return CATEGORY_SYSTEM;
   }
-  return CATEGORY_NO_SLOW_SE;
+  return CATEGORY_CH_SE_NS;
 }
 
 GF_ASSET_HANDLE *GfObjUtil::getAssetHandle(GF_OBJ_HANDLE *handle) {
@@ -545,10 +545,10 @@ GF_ASSET_HANDLE *GfObjUtil::getAssetHandle(GF_OBJ_HANDLE *handle) {
 }
 
 void GfObjUtil::destroy(GF_OBJ_HANDLE *handle) {
-  if (handle != INVALID_HANDLE) {
+  if (handle != unknown020) {
     GfObjAcc acc(handle);
     if (acc.isValid()) {
-      if (acc.setFlag(OBJ_FLAG_DESTROY, true)) {
+      if (acc.setFlag(OBJ_FLAG_UNKNOWN_0, true)) {
         if (GfObjManager::get() != nullptr) {
           GfObjManager::get()->addDestroyObj(handle, true);
         }
@@ -578,7 +578,7 @@ GF_OBJ_HANDLE *GfObjUtil::getParentHandle(GF_OBJ_HANDLE *handle) {
     }
   }
 
-  return INVALID_HANDLE;
+  return unknown020;
 }
 
 GfObj *GfObjUtil::getParentObj(GfObj *obj) {
@@ -617,7 +617,7 @@ u32 GfObjUtil::getLayerSection(u32 layer) {
 
 void GfObjUtil::changeLayer(GfObj *obj, u32 layer) {
   u32 oldLayer = obj->unknown2c;
-  for (u32 i = 0; i < fw::UpdatableObject::COMPONENT_MAX; i++) {
+  for (u32 i = 0; i < fw::UpdatableObject::COMPONENT_UNKNOWN_12; i++) {
     fw::ComponentObject *component = obj->unknown38[i];
     if (component != nullptr) {
       GfComponent *gfComponent = mm::mtl::dynamicCast<GfComponent>(component);
@@ -668,13 +668,13 @@ const char *GfObjUtil::getAddResourceName(GF_OBJ_HANDLE *handle) {
 }
 
 void GfObjUtil::resetWeaponMotion(GF_OBJ_HANDLE *handle, OPTMNT type) {
-  GfGameMount *mount = GfMountManager::getMount(getMountHandle(handle, GFATTACH_WEAPON));
+  GfGameMount *mount = GfMountManager::getMount(getMountHandle(handle, GFATTACH_UNKNOWN_0));
   if (mount != nullptr) {
     if (type == OPTMNT_UNKNOWN_FFFFFFFF) {
       type = mount->unknown20;
     }
     GF_OBJ_HANDLE *owner = mount->getHandle(type);
-    if (handle != INVALID_HANDLE) {
+    if (handle != unknown020) {
       for (u32 i = 0; i < 10; i++) {
         GfObj *obj = getObj(handle);
         if (obj != nullptr) {
@@ -853,20 +853,20 @@ int GfObjUtil::getPartyID(GF_OBJ_HANDLE *handle) {
   return info->unknown30->unknown14;
 }
 
-GfWeapon *GfObjUtil::getWeaponMountObject(GF_OBJ_HANDLE *handle) { return GfMountManager::getAppendHandles(handle, GFATTACH_WEAPON); }
+GfWeapon *GfObjUtil::getWeaponMountObject(GF_OBJ_HANDLE *handle) { return GfMountManager::getAppendHandles(handle, GFATTACH_UNKNOWN_0); }
 
-GfWeapon *GfObjUtil::getExtraMountObject(GF_OBJ_HANDLE *handle) { return GfMountManager::getAppendHandles(handle, GFATTACH_APPEND); }
+GfWeapon *GfObjUtil::getExtraMountObject(GF_OBJ_HANDLE *handle) { return GfMountManager::getAppendHandles(handle, GFATTACH_UNKNOWN_1); }
 
 bool GfObjUtil::isValid(GF_OBJ_HANDLE *handle) { return getObj(handle) != nullptr; }
 
 bool GfObjUtil::isLoading(GF_OBJ_HANDLE *handle) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
-  return info != nullptr && info->unknown06 == GFOBJ_STATE_LOADING;
+  return info != nullptr && info->unknown06 == GFOBJ_STATE_UNKNOWN_1;
 }
 
 bool GfObjUtil::isUpdate(GF_OBJ_HANDLE *handle) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
-  return info != nullptr && info->unknown06 == GFOBJ_STATE_UPDATE;
+  return info != nullptr && info->unknown06 == GFOBJ_STATE_UNKNOWN_2;
 }
 
 void GfObjUtil::setOwner(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *owner) {
@@ -878,7 +878,7 @@ void GfObjUtil::setOwner(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *owner) {
 
 GF_OBJ_HANDLE *GfObjUtil::getOwner(GF_OBJ_HANDLE *handle) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
-  return info != nullptr ? info->unknown90 : INVALID_HANDLE;
+  return info != nullptr ? info->unknown90 : unknown020;
 }
 
 void GfObjUtil::reload(GF_OBJ_HANDLE *handle) {}
@@ -938,7 +938,7 @@ void GfObjUtil::saveRebuildInfo(GF_OBJ_HANDLE *handle) {
   mm::Vec3 rotation = mm::quatToEuler(acc.getWorldTransform().unknown10);
   setup->unknown20 = acc.getWorldTransform().unknown00;
   setup->unknown30 = mm::Vec3(0.0f, rotation.y, 0.0f);
-  if (acc.getType() == OBJECT_TYPE_DRIVER) {
+  if (acc.getType() == OBJECT_TYPE_PC) {
     GfObjSetupDriver *driver = getObjSetup<GfObjSetupDriver>(handle);
     GfComPropertyPc *property = acc.getObj()->getComponent<GfComPropertyPc>();
     if (property != nullptr) {
@@ -956,8 +956,8 @@ void GfObjUtil::saveRebuildInfo(GF_OBJ_HANDLE *handle) {
 void GfObjUtil::rebuild(GF_OBJ_HANDLE *handle) {
   GfObjAcc acc(handle);
   if (acc.isValid()) {
-    if (acc.getUserData(OBJ_USER_DATA_GMK) == 0) {
-      acc.setFlag(OBJ_FLAG_REBUILD, true);
+    if (acc.getUserData(OBJ_USER_DATA_UNKNOWN_0) == 0) {
+      acc.setFlag(OBJ_FLAG_UNKNOWN_6, true);
       if (GfObjManager::get() != nullptr) {
         GfObjManager::get()->addDestroyObj(handle, false);
       }
@@ -1043,13 +1043,13 @@ void GfObjUtil::createVolumeFade(GF_OBJ_HANDLE *handle) {
 
 bool GfObjUtil::isVolumeFadeForUser(GF_OBJ_HANDLE *handle) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
-  return info != nullptr && info->unknown38.test(OBJ_FLAG_VOLUME_FADE_FOR_USER);
+  return info != nullptr && info->unknown38.test(OBJ_FLAG_UNKNOWN_20);
 }
 
 void GfObjUtil::setVolumeFadeUserFlag(GF_OBJ_HANDLE *handle, bool isForUser) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
-  if (info != nullptr && info->unknown38.test(OBJ_FLAG_VOLUME_FADE_FOR_USER) != isForUser) {
-    info->unknown38.set(OBJ_FLAG_VOLUME_FADE_FOR_USER, isForUser);
+  if (info != nullptr && info->unknown38.test(OBJ_FLAG_UNKNOWN_20) != isForUser) {
+    info->unknown38.set(OBJ_FLAG_UNKNOWN_20, isForUser);
   }
 }
 
@@ -1072,13 +1072,13 @@ bool GfObjUtil::isStanbyTalkingPlayer(GF_OBJ_HANDLE *handle) {
 void GfObjUtil::setTalking(GF_OBJ_HANDLE *handle, bool isTalking) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
   if (info != nullptr) {
-    info->unknown38.set(OBJ_FLAG_TALKING, isTalking);
+    info->unknown38.set(OBJ_FLAG_UNKNOWN_21, isTalking);
   }
 }
 
 bool GfObjUtil::isTalking(GF_OBJ_HANDLE *handle) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
-  return info != nullptr && info->unknown38.test(OBJ_FLAG_TALKING);
+  return info != nullptr && info->unknown38.test(OBJ_FLAG_UNKNOWN_21);
 }
 
 bool GfObjUtil::isSearchEmptyResource(GF_OBJ_HANDLE *handle) {
@@ -1097,20 +1097,20 @@ GfAssetResource *GfObjUtil::getResourceEab(GF_OBJ_HANDLE *handle) {
   }
 
   switch (obj->unknown28) {
-  case OBJECT_TYPE_DRIVER:
+  case OBJECT_TYPE_PC:
   case OBJECT_TYPE_BLADE:
-    return GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(36), ASSET_TYPE_BASE);
+    return GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(36), ASSET_TYPE_UNKNOWN_0);
   case OBJECT_TYPE_ENEMY:
   case OBJECT_TYPE_NPC:
   case OBJECT_TYPE_MOB:
-    return GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(10), ASSET_TYPE_BASE);
+    return GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(10), ASSET_TYPE_UNKNOWN_0);
   case OBJECT_TYPE_GIMMICK:
-    return GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(4), ASSET_TYPE_BASE);
-  case OBJECT_TYPE_EVENT:
-  case OBJECT_TYPE_BELONGING:
-  case OBJECT_TYPE_UNKNOWN_14:
-  case OBJECT_TYPE_UI:
-    return GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(3), ASSET_TYPE_BASE);
+    return GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(4), ASSET_TYPE_UNKNOWN_0);
+  case OBJECT_TYPE_EVENT_OBJ:
+  case OBJECT_TYPE_OPTION:
+  case OBJECT_TYPE_EXTRA:
+  case OBJECT_TYPE_UI_OBJ:
+    return GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(3), ASSET_TYPE_UNKNOWN_0);
   default:
     return nullptr;
   }
@@ -1123,23 +1123,74 @@ GfAssetResource *GfObjUtil::getResourceEfb(GF_OBJ_HANDLE *handle) {
   }
 
   switch (obj->unknown28) {
-  case OBJECT_TYPE_DRIVER:
+  case OBJECT_TYPE_PC:
   case OBJECT_TYPE_BLADE:
-    return GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(37), ASSET_TYPE_BASE);
+    return GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(37), ASSET_TYPE_UNKNOWN_0);
   case OBJECT_TYPE_ENEMY:
   case OBJECT_TYPE_NPC:
   case OBJECT_TYPE_MOB:
-    return GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(11), ASSET_TYPE_BASE);
+    return GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(11), ASSET_TYPE_UNKNOWN_0);
   case OBJECT_TYPE_GIMMICK:
-    return GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(5), ASSET_TYPE_BASE);
-  case OBJECT_TYPE_EVENT:
-  case OBJECT_TYPE_BELONGING:
-  case OBJECT_TYPE_UNKNOWN_14:
-  case OBJECT_TYPE_UI:
-    return GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(4), ASSET_TYPE_BASE);
+    return GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(5), ASSET_TYPE_UNKNOWN_0);
+  case OBJECT_TYPE_EVENT_OBJ:
+  case OBJECT_TYPE_OPTION:
+  case OBJECT_TYPE_EXTRA:
+  case OBJECT_TYPE_UI_OBJ:
+    return GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(4), ASSET_TYPE_UNKNOWN_0);
   default:
     return nullptr;
   }
+}
+
+// Inferred helper: weapon resource of the object at the given position among the file indices of a range; original name unknown.
+static GfAssetResource *unknown008(GF_OBJ_HANDLE *handle, u32 position, int begin, int end) {
+  DataParamAcc paramAcc(handle);
+  if (!paramAcc.isValid()) {
+    return nullptr;
+  }
+
+  u32 count = 0;
+  for (int index = begin; index < end; index++) {
+    GfAssetResource *resource = GfAssetManager::getResource(GfObjUtil::getAssetHandle(handle), static_cast<GfFileIdx>(index), ASSET_TYPE_UNKNOWN_0);
+    if (resource == nullptr) {
+      continue;
+    }
+    if (count == position) {
+      return resource;
+    }
+    count++;
+  }
+
+  return nullptr;
+}
+
+GfAssetResource *GfObjUtil::getWeaponResourceSwt(GF_OBJ_HANDLE *handle, u32 index) {
+  GfObjAcc objAcc(handle);
+  if (!objAcc.isValid()) {
+    return nullptr;
+  }
+
+  switch (objAcc.getType()) {
+  case OBJECT_TYPE_PC:
+  case OBJECT_TYPE_BLADE:
+    return unknown008(handle, index, 0x65, 0x99);
+  case OBJECT_TYPE_PC_WEAPON:
+    if (!GfObjManager::getObjInfo(handle)->unknown30->unknown54) {
+      return unknown008(GfGameParty::getHandleDriver(GfObjManager::getObjInfo(handle)->unknown30->unknown14), index, 0x65, 0x99);
+    } else {
+      return unknown008(handle, index, 0x65, 0x99);
+    }
+  case OBJECT_TYPE_ENEMY: {
+    GfAssetResource *first = GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(3), ASSET_TYPE_UNKNOWN_0);
+    GfAssetResource *second = GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(0x11), ASSET_TYPE_UNKNOWN_0);
+    if (index == 0) {
+      return first == nullptr ? second : first;
+    }
+    return second;
+  }
+  }
+
+  return nullptr;
 }
 
 // Inferred helper: counts the weapon swt resources of the object; original name unknown.
@@ -1148,7 +1199,7 @@ static u32 unknown005(GF_OBJ_HANDLE *handle) {
   u32 count = 0;
   if (paramAcc.isValid()) {
     for (u32 index = 0x65; index < 0x99; index++) {
-      if (GfAssetManager::getResource(GfObjUtil::getAssetHandle(handle), static_cast<GfFileIdx>(index), ASSET_TYPE_BASE) != nullptr) {
+      if (GfAssetManager::getResource(GfObjUtil::getAssetHandle(handle), static_cast<GfFileIdx>(index), ASSET_TYPE_UNKNOWN_0) != nullptr) {
         count++;
       }
     }
@@ -1165,7 +1216,7 @@ u32 GfObjUtil::getWeaponResourceSwtNum(GF_OBJ_HANDLE *handle) {
 
   u32 count = 0;
   switch (objAcc.getType()) {
-  case OBJECT_TYPE_DRIVER:
+  case OBJECT_TYPE_PC:
     count = unknown005(handle);
     break;
   case OBJECT_TYPE_BLADE:
@@ -1177,8 +1228,8 @@ u32 GfObjUtil::getWeaponResourceSwtNum(GF_OBJ_HANDLE *handle) {
     }
     break;
   case OBJECT_TYPE_ENEMY:
-    count = GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(3), ASSET_TYPE_BASE) != nullptr;
-    count += GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(0x11), ASSET_TYPE_BASE) != nullptr;
+    count = GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(3), ASSET_TYPE_UNKNOWN_0) != nullptr;
+    count += GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(0x11), ASSET_TYPE_UNKNOWN_0) != nullptr;
     break;
   }
 
@@ -1191,7 +1242,7 @@ static u32 unknown006(GF_OBJ_HANDLE *handle) {
   u32 count = 0;
   if (paramAcc.isValid()) {
     for (u32 index = 0x9a; index < 0x26e; index++) {
-      if (GfAssetManager::getResource(GfObjUtil::getAssetHandle(handle), static_cast<GfFileIdx>(index), ASSET_TYPE_BASE) != nullptr) {
+      if (GfAssetManager::getResource(GfObjUtil::getAssetHandle(handle), static_cast<GfFileIdx>(index), ASSET_TYPE_UNKNOWN_0) != nullptr) {
         count++;
       }
     }
@@ -1208,7 +1259,7 @@ u32 GfObjUtil::getWeaponResourceEabNum(GF_OBJ_HANDLE *handle) {
 
   u32 count = 0;
   switch (objAcc.getType()) {
-  case OBJECT_TYPE_DRIVER:
+  case OBJECT_TYPE_PC:
     count = unknown006(handle);
     break;
   case OBJECT_TYPE_BLADE:
@@ -1217,7 +1268,7 @@ u32 GfObjUtil::getWeaponResourceEabNum(GF_OBJ_HANDLE *handle) {
     count = unknown006(handle);
     break;
   case OBJECT_TYPE_ENEMY: {
-    u32 enemyCount = GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(0x12), ASSET_TYPE_BASE) != nullptr;
+    u32 enemyCount = GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(0x12), ASSET_TYPE_UNKNOWN_0) != nullptr;
     count = unknown006(handle);
     count += enemyCount;
     break;
@@ -1227,11 +1278,36 @@ u32 GfObjUtil::getWeaponResourceEabNum(GF_OBJ_HANDLE *handle) {
   return count;
 }
 
+GfAssetResource *GfObjUtil::getWeaponResourceEab(GF_OBJ_HANDLE *handle, u32 index) {
+  GfObjAcc objAcc(handle);
+  if (!objAcc.isValid()) {
+    return nullptr;
+  }
+
+  switch (objAcc.getType()) {
+  case OBJECT_TYPE_PC:
+    return unknown008(handle, index, 0x9a, 0x26e);
+  case OBJECT_TYPE_BLADE:
+  case OBJECT_TYPE_PC_WEAPON:
+    getAssetHandle(handle);
+    return unknown008(handle, index, 0x9a, 0x26e);
+  case OBJECT_TYPE_ENEMY: {
+    GfAssetResource *resource = GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(0x12), ASSET_TYPE_UNKNOWN_0);
+    if (index == 0 && resource != nullptr) {
+      return resource;
+    }
+    return unknown008(handle, index - (resource != nullptr), 0x9a, 0x26e);
+  }
+  }
+
+  return nullptr;
+}
+
 // Inferred helper: counts the weapon efb resources of the asset; original name unknown.
 static u32 unknown007(GF_ASSET_HANDLE *asset) {
   u32 count = 0;
   for (u32 index = 0x26f; index < 0x443; index++) {
-    if (GfAssetManager::getResource(asset, static_cast<GfFileIdx>(index), ASSET_TYPE_BASE) != nullptr) {
+    if (GfAssetManager::getResource(asset, static_cast<GfFileIdx>(index), ASSET_TYPE_UNKNOWN_0) != nullptr) {
       count++;
     }
   }
@@ -1247,7 +1323,7 @@ u32 GfObjUtil::getWeaponResourceEfbNum(GF_OBJ_HANDLE *handle) {
 
   u32 count = 0;
   switch (paramAcc.getObjType()) {
-  case OBJECT_TYPE_DRIVER:
+  case OBJECT_TYPE_PC:
     count = unknown007(getAssetHandle(handle));
     break;
   case OBJECT_TYPE_BLADE:
@@ -1256,8 +1332,8 @@ u32 GfObjUtil::getWeaponResourceEfbNum(GF_OBJ_HANDLE *handle) {
     count = unknown007(getAssetHandle(handle));
     break;
   case OBJECT_TYPE_ENEMY: {
-    u32 enemyCount = GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(0xb), ASSET_TYPE_BASE) != nullptr;
-    enemyCount += GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(0x13), ASSET_TYPE_BASE) != nullptr;
+    u32 enemyCount = GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(0xb), ASSET_TYPE_UNKNOWN_0) != nullptr;
+    enemyCount += GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(0x13), ASSET_TYPE_UNKNOWN_0) != nullptr;
     count = unknown007(getAssetHandle(handle));
     count = enemyCount + count;
     break;
@@ -1267,21 +1343,55 @@ u32 GfObjUtil::getWeaponResourceEfbNum(GF_OBJ_HANDLE *handle) {
   return count;
 }
 
+GfAssetResource *GfObjUtil::getWeaponResourceEfb(GF_OBJ_HANDLE *handle, u32 index) {
+  DataParamAcc paramAcc(handle);
+  if (!paramAcc.isValid()) {
+    return nullptr;
+  }
+
+  switch (paramAcc.getObjType()) {
+  case OBJECT_TYPE_PC:
+    return unknown008(handle, index, 0x26f, 0x443);
+  case OBJECT_TYPE_BLADE:
+  case OBJECT_TYPE_PC_WEAPON:
+    getAssetHandle(handle);
+    return unknown008(handle, index, 0x26f, 0x443);
+  case OBJECT_TYPE_ENEMY: {
+    mm::mtl::FixedVector<GfAssetResource *, 2> resources;
+    GfAssetResource *resource = GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(0xb), ASSET_TYPE_UNKNOWN_0);
+    if (resource != nullptr) {
+      resources.push_back(resource);
+    }
+    resource = GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(0x13), ASSET_TYPE_UNKNOWN_0);
+    if (resource != nullptr) {
+      resources.push_back(resource);
+    }
+    u32 count = resources.size();
+    if (index < count) {
+      return resources[index];
+    }
+    return unknown008(handle, index - count, 0x26f, 0x443);
+  }
+  }
+
+  return nullptr;
+}
+
 fw::SoundPack *GfObjUtil::getSePack(GF_OBJ_HANDLE *handle) {
   u32 type = getObjType(handle);
-  GfFileIdx index = FILE_IDX_NONE;
+  GfFileIdx index = FILE_IDX_UNKNOWN_FFFFFFFF;
   switch (type) {
-  case OBJECT_TYPE_DRIVER:
+  case OBJECT_TYPE_PC:
   case OBJECT_TYPE_BLADE:
   case OBJECT_TYPE_ENEMY:
   case OBJECT_TYPE_NPC:
   case OBJECT_TYPE_MOB:
-    index = FILE_IDX_MODEL;
+    index = FILE_IDX_UNKNOWN_0;
     break;
   default:
     break;
   }
-  if (type - OBJECT_TYPE_DRIVER < 5) {
+  if (type - OBJECT_TYPE_PC < 5) {
     GfAssetManager *assetManager = GfAssetManager::get();
     if (assetManager != nullptr) {
       return assetManager->getSePackByFileIdx(getAssetHandle(handle), index);
@@ -1292,7 +1402,7 @@ fw::SoundPack *GfObjUtil::getSePack(GF_OBJ_HANDLE *handle) {
 }
 
 fw::SoundPack *GfObjUtil::getSePackFoot1(GF_OBJ_HANDLE *handle) {
-  if (getObjType(handle) - OBJECT_TYPE_DRIVER < 5) {
+  if (getObjType(handle) - OBJECT_TYPE_PC < 5) {
     GfAssetManager *assetManager = GfAssetManager::get();
     if (assetManager != nullptr) {
       return assetManager->getSePackByFileIdx(getAssetHandle(handle), static_cast<GfFileIdx>(1));
@@ -1303,7 +1413,7 @@ fw::SoundPack *GfObjUtil::getSePackFoot1(GF_OBJ_HANDLE *handle) {
 }
 
 fw::SoundPack *GfObjUtil::getSePackFoot2(GF_OBJ_HANDLE *handle) {
-  if (getObjType(handle) - OBJECT_TYPE_DRIVER < 5) {
+  if (getObjType(handle) - OBJECT_TYPE_PC < 5) {
     GfAssetManager *assetManager = GfAssetManager::get();
     if (assetManager != nullptr) {
       return assetManager->getSePackByFileIdx(getAssetHandle(handle), static_cast<GfFileIdx>(2));
@@ -1372,8 +1482,8 @@ bool GfObjUtil::isTrinityBlade(GF_OBJ_HANDLE *handle) {
 
 bool GfObjUtil::isUpdateComponent(const GfObj *obj) {
   const GFOBJ_INFO *info = obj->unknown100;
-  if (!obj->unknown114.test(OBJ_STATE_UPDATE_ENABLE) || (info != nullptr && info->unknown38.test(OBJ_FLAG_DESTROY)) || (GfObjManager::get() != nullptr && GfObjManager::get()->isSuspendUpdate()) ||
-      (info != nullptr && info->unknown38.test(OBJ_FLAG_PARTY_OBJ) && !GfGameParty::isPartyMemberInGameObj())) {
+  if (!obj->unknown114.test(OBJ_STATE_UNKNOWN_1) || (info != nullptr && info->unknown38.test(OBJ_FLAG_UNKNOWN_0)) || (GfObjManager::get() != nullptr && GfObjManager::get()->isSuspendUpdate()) ||
+      (info != nullptr && info->unknown38.test(OBJ_FLAG_UNKNOWN_18) && !GfGameParty::isPartyMemberInGameObj())) {
     return false;
   }
 
@@ -1381,6 +1491,29 @@ bool GfObjUtil::isUpdateComponent(const GfObj *obj) {
 }
 
 void GfObjUtil::applyExecUpdate(GF_OBJ_HANDLE *handle) { applyExecUpdate(getObj(handle)); }
+
+bool GfObjUtil::isFollowObjNotReady(GF_OBJ_HANDLE *handle) {
+  GfObjSetup *setup = getObjSetup(handle);
+  if (setup == nullptr || setup->unknown1c != unknown030_1 || handle == unknown020) {
+    return false;
+  }
+  u32 type = getObjType(handle);
+  if (type != OBJECT_TYPE_PC && type != OBJECT_TYPE_BLADE) {
+    return false;
+  }
+  GfComPropertyPc *property = GfObjManager::getObjInfo(handle)->unknown18->getComponent<GfComPropertyPc>();
+  u32 playerId = property->unknown38;
+  if (playerId == PLAYER_ID_UNKNOWN_4294967295) {
+    return false;
+  }
+  GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
+  u32 followId = formation->unknown1a0[playerId].unknown00;
+  if (followId == PLAYER_ID_UNKNOWN_4294967295) {
+    return false;
+  }
+  GfObjAcc acc(formation->unknown1a0[followId].unknown08);
+  return !acc.isValid() || acc.isRebuild() || acc.isReload();
+}
 
 void GfObjUtil::setWarpTransform(GF_OBJ_HANDLE *handle, const fw::Transform &transform, bool isResetState) {
   GfObj *obj = getObj(handle);

@@ -70,7 +70,7 @@ void BattleManager::Update(const fw::UpdateInfo &updateInfo) {
     }
     unknown16 = true;
     if (Utility::IsEnableDeadSequence()) {
-      gf::GfPlayFactory::createPlayerDead(gf::PLAYER_DEAD_GAME_OVER);
+      gf::GfPlayFactory::createPlayerDead(gf::PLAYER_DEAD_UNKNOWN_1);
       unknown16 = false;
     }
   }
@@ -135,6 +135,13 @@ void BattleManager::QuestTaskProc(u32 task) {
   }
 }
 
+void BattleManager::NotifyQuestTask(u32 task) {
+  BattleManager *manager = get();
+  if (manager != nullptr) {
+    manager->QuestTaskProc(task);
+  }
+}
+
 void BattleManager::gevBattleStart() {}
 
 void BattleManager::CheckTargetMode() {
@@ -162,7 +169,7 @@ void BattleManager::CheckTargetMode() {
 void BattleManager::gevBattleEnd() {}
 
 void BattleManager::gevMapjump(gf::GEV gev, const gf::MapjumpCallbackInfo &) {
-  if (gev == gf::GEV_MAPJUMP_DESTROY_FIELD) {
+  if (gev == gf::GEV_UNKNOWN_2) {
     if (BattleGlobal::get() != nullptr) {
       BattleGlobal::get()->NotifyMapChange();
     }
@@ -185,7 +192,7 @@ void BattleManager::gevMapjump(gf::GEV gev, const gf::MapjumpCallbackInfo &) {
       UIManager::get()->NotifyMapChange();
     }
   }
-  unknown15 = gev == gf::GEV_MAPJUMP_END;
+  unknown15 = gev == gf::GEV_UNKNOWN_7;
 }
 
 } // namespace btl

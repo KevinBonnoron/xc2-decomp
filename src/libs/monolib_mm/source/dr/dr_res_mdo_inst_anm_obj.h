@@ -14,12 +14,12 @@ struct MdsPosKeepData;
 
 struct MdsInstObjPosData {
   enum Flag {
-    FLAG_LOOP = 0x1,
-    FLAG_NODE_ANM = 0x8,
-    FLAG_POS_ANM = 0x10,
-    FLAG_POS_MATRIX = 0x20,
-    FLAG_SWITCH = 0x80,
-    FLAG_DISP_OFF = 0x200,
+    FLAG_UNKNOWN_0 = 0x1,   // Inferred role: loop; original name unknown.
+    FLAG_UNKNOWN_3 = 0x8,   // Inferred role: node anm; original name unknown.
+    FLAG_UNKNOWN_4 = 0x10,  // Inferred role: pos anm; original name unknown.
+    FLAG_UNKNOWN_5 = 0x20,  // Inferred role: pos matrix; original name unknown.
+    FLAG_UNKNOWN_7 = 0x80,  // Inferred role: switch; original name unknown.
+    FLAG_UNKNOWN_9 = 0x200, // Inferred role: disp off; original name unknown.
   };
 
   u32 unknown00; // Inferred role: name offset; original member name unknown.
@@ -97,8 +97,8 @@ static_assert(offsetof(MdsInstAnmNodeData, unknown04) == 0x04, "");
 // Inferred role: model data inst anm switch; original type name unknown.
 struct unknown044 {
   enum Flag {
-    FLAG_FRAME = 0x1,
-    FLAG_LOOP = 0x2,
+    FLAG_UNKNOWN_0 = 0x1, // Inferred role: frame; original name unknown.
+    FLAG_UNKNOWN_1 = 0x2, // Inferred role: loop; original name unknown.
   };
 
   u16 unknown00;        // Inferred role: flags; original member name unknown.
@@ -147,15 +147,16 @@ public:
   mm::Mat44 unknown20; // Inferred role: matrix; original member name unknown.
   u8 _060[0x090 - 0x060];
   mm::Mat44 unknown90[2]; // Inferred role: dbl matrices; original member name unknown.
-  u8 _110[0x150 - 0x110];
-  u16 unknown150; // Inferred role: dbl flags; original member name unknown.
-  u16 unknown152; // Inferred role: max frame; original member name unknown.
-  u16 unknown154; // Inferred role: start frame; original member name unknown.
+  mm::Mat44 unknown110;   // Inferred role: animation matrix; original member name unknown.
+  u16 unknown150;         // Inferred role: dbl flags; original member name unknown.
+  u16 unknown152;         // Inferred role: max frame; original member name unknown.
+  u16 unknown154;         // Inferred role: start frame; original member name unknown.
 };
 
 static_assert(offsetof(DrResMdoPosInstAnm, unknown00) == 0x00, "");
 static_assert(offsetof(DrResMdoPosInstAnm, unknown20) == 0x020, "");
 static_assert(offsetof(DrResMdoPosInstAnm, unknown90) == 0x090, "");
+static_assert(offsetof(DrResMdoPosInstAnm, unknown110) == 0x110, "");
 static_assert(offsetof(DrResMdoPosInstAnm, unknown150) == 0x150, "");
 static_assert(offsetof(DrResMdoPosInstAnm, unknown152) == 0x152, "");
 static_assert(offsetof(DrResMdoPosInstAnm, unknown154) == 0x154, "");
@@ -163,7 +164,7 @@ static_assert(offsetof(DrResMdoPosInstAnm, unknown154) == 0x154, "");
 class DrResMdoInstPartsObj {
 public:
   enum Flag {
-    FLAG_LOOP = 0x4,
+    FLAG_UNKNOWN_2 = 0x4, // Inferred role: loop; original name unknown.
   };
 
   DrResMdoInstPartsObj(const u8 *data, const MdsInstObjPosData *info);
@@ -320,6 +321,7 @@ public:
   void setupLink(DrResMdoPos *pos) const;
   void setupLink(DrResMdoPos *pos, int posStart, int posCount, int switchStart, int switchCount) const;
   int getObjIdx(const char *name);
+  void getUniformOldMat(f32 *work, const DrResMdoPos *pos, const mm::Mat44 &matrix);
 
   DrResMdoInstPartsObj *getObj(u32 index) const {
     if (unknown00 == nullptr) {
@@ -333,7 +335,7 @@ public:
   DrResMdoInstPartsAnm *unknown10;  // Inferred role: anm objs; original member name unknown.
   void *unknown18;                  // Inferred role: data; original member name unknown.
   void *unknown20;                  // Inferred role: data; original member name unknown.
-  void *unknown28;                  // Inferred role: data; original member name unknown.
+  DrResMdoPosInstAnm *unknown28;    // Inferred role: pos anm objs; original member name unknown.
 };
 
 static_assert(offsetof(DrResMdoInstAnmObj, unknown08) == 0x08, "");

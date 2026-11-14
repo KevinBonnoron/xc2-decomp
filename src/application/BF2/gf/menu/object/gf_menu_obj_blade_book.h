@@ -6,6 +6,7 @@
 #include "mm_math/mm_pnt.h"
 #include "mm_math/mm_vec2.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 
 namespace ui {
 class UICtrlCursorSelect;
@@ -19,6 +20,11 @@ struct GAME_VOICE_HANDLE;
 
 class GfMenuObjBladeBook : public GfMenuObject {
 public:
+  class MainListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+  };
+
   GfMenuObjBladeBook(u32 handle);
   ~GfMenuObjBladeBook() override;
   void initialize() override;
@@ -27,12 +33,16 @@ public:
   void stopVoice();
   void playVoice(const char *name);
   void getScreenOverSize(u32 handle, f32 scale, s16 &width, s16 &height);
+  void refreshBladeList();
+  bool seqOpenImage();
   bool seqEffReleaseA();
   bool seqEffReleaseB();
   bool seqEffReleaseC();
   bool seqEffReleaseD();
   bool seqConfirmBoosterGet();
   bool seqResumeRelease();
+  bool seqConfirmRelease();
+  bool seqExecRelease();
 
   u8 _24[0x28 - 0x24];
   GfMenuBladeList *unknown28;                      // Inferred role: blades; original member name unknown.
@@ -45,7 +55,7 @@ public:
   mm::Pnt<s16> unknown2e0;       // Role and original member name unknown, cleared by the constructor.
   u8 _2e4[0x2f0 - 0x2e4];
   mm::Vec2 unknown2f0; // Role and original member name unknown, cleared by the constructor.
-  u8 _2f8[0x310 - 0x2f8];
+  u8 _300[0x310 - 0x300];
 };
 
 static_assert(offsetof(GfMenuObjBladeBook, unknown28) == 0x28, "");

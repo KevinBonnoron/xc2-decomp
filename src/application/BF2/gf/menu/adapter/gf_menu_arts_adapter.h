@@ -31,7 +31,7 @@ public:
 
   class ListConverter : public IConverter {
   public:
-    ListConverter(GfMenuArtsList *list, int listIndex, u32 driver) : list(list), listIndex(listIndex), driver(driver) { list->addRef(); }
+    ListConverter(GfMenuArtsList *list, int listIndex, u32 driver) : list(list), listIndex(listIndex), driver(driver) { this->list->addRef(); }
     ~ListConverter() override { mm::mtl::safeRelease(list); }
     void getArtsInfo(MenuArtsInfo &info) override;
     u32 getDriverId() override;
@@ -43,7 +43,7 @@ public:
 
   class ListReferenceDriverConverter : public IConverter {
   public:
-    ListReferenceDriverConverter(GfMenuArtsList *list, int listIndex, u32 driverIndex) : list(list), listIndex(listIndex), driverIndex(driverIndex) { list->addRef(); }
+    ListReferenceDriverConverter(GfMenuArtsList *list, int listIndex, u32 driverIndex) : list(list), listIndex(listIndex), driverIndex(driverIndex) { this->list->addRef(); }
     ~ListReferenceDriverConverter() override { mm::mtl::safeRelease(list); }
     void getArtsInfo(MenuArtsInfo &info) override;
     u32 getDriverId() override;
@@ -56,7 +56,7 @@ public:
   class ListReferenceDriverConverterReferenceIndex : public IConverter {
   public:
     ListReferenceDriverConverterReferenceIndex(GfMenuArtsList *list, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number, u32 driverIndex) : list(list), number(number), driverIndex(driverIndex) {
-      list->addRef();
+      this->list->addRef();
     }
     ~ListReferenceDriverConverterReferenceIndex() override {
       mm::mtl::safeRelease(list);

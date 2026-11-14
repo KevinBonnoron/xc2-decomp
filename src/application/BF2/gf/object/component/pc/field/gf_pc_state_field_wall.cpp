@@ -18,7 +18,7 @@ void StateFieldWall::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &inf
   if (!property->unknown310.unknown10_6) {
     GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
     if (StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_IDLE)) {
-      reqState(STATE_ID_FIELD_IDLE);
+      reqState(STATE_ID_UNKNOWN_3);
     }
   }
 }

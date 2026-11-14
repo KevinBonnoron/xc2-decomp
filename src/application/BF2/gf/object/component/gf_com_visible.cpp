@@ -17,7 +17,7 @@ GfComVisible::~GfComVisible() {}
 void GfComVisible::setup(const SetupInfo &info) {
   fw::VisibleObject::SetupInfo visibleInfo;
   visibleInfo.unknown00 = getLayer();
-  unknown10 = fw::VisibleObject::create(visibleInfo, getAllocator(ALLOCATOR_DEFAULT));
+  unknown10 = fw::VisibleObject::create(visibleInfo, getAllocator(ALLOCATOR_UNKNOWN_0));
   GfComTransform *transform = unknown08->getComponent<GfComTransform>();
   if (transform != nullptr) {
     unknown10->unknown28 = transform->unknown18.get() == nullptr ? transform->unknown10 : transform->unknown18;

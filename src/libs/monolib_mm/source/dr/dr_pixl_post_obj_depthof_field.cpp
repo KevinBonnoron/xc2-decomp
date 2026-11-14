@@ -52,7 +52,7 @@ void DrPixlPostObjDepthofField::update() {
   if (postParm->m_colTblOn) {
     DrResFilterData *filterData = unknown00->unknown98;
     f32 ratio = filterData->unknown10[filterData->unknown100].unknown34;
-    unknown59 = postParm->unknown274;
+    unknown59 = postParm->m_colorFilterTransZ;
     if (ratio == 1.0f && postParm->unknown278 == postParm->unknown26c && filterData->unknown10[filterData->unknown100].unknown26 == postParm->unknown278 &&
         filterData->unknown10[filterData->unknown100].unknown24 == postParm->unknown278) {
       unknown59 = false;

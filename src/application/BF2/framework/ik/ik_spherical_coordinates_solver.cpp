@@ -1,11 +1,14 @@
 #include "framework/ik/ik_spherical_coordinates_solver.h"
 
 #include "anm/anm_pose.h"
+#include "anm/anm_qs_transform.h"
 #include "anm/anm_skeleton.h"
 #include "framework/memory/allocator.h"
 #include "framework/memory/framework_memory.h"
 #include "framework/reflection.h"
 #include "mm_math/mm_math.h"
+#include "mm_math/mm_quat.h"
+#include "mm_math/mm_quat_impl_nx.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/reference_object.h"
 
@@ -56,6 +59,15 @@ void SphericalCoordinatesIkSolver::AngleLimit::createReflection(Reflection *refl
 SphericalCoordinatesIkSolver::SphericalCoordinatesIkSolver() : m_enable(false), unknown78() {}
 
 SphericalCoordinatesIkSolver::~SphericalCoordinatesIkSolver() {}
+
+void SphericalCoordinatesIkSolver::resetLimit() {
+  mm::Quat rotation = unknown18->getBoneModelSpace(unknown70).unknown10;
+  mm::Quat::inverse(rotation);
+  unknown20 = rotation.rotate(mm::Vec3::unitZ);
+  unknown30 = mm::Vec3::unitY;
+  unknown50 = true;
+  resetLimitParam();
+}
 
 void SphericalCoordinatesIkSolver::resetLimitParam() {
   const AngleLimit *limit = unknown78.get<AngleLimit>();

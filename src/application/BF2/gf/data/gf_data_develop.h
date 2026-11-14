@@ -4,13 +4,13 @@
 namespace gf {
 
 enum {
-  NATION_FIRST = 1,
-  NATION_IYASAKI = 5,
-  NATION_ARCADIA = 6,
+  NATION_UNKNOWN_1 = 1, // Inferred role: nation first; original name unknown.
+  NATION_UNKNOWN_5 = 5, // Inferred role: nation iyasaki; original name unknown.
+  NATION_UNKNOWN_6 = 6, // Inferred role: nation arcadia; original name unknown.
 };
 
-constexpr u32 NATION_COUNT = 8;
-constexpr u32 DEVELOP_LEVEL_MAX = 5;
+constexpr u32 NATION_UNKNOWN_8 = 8;        // Inferred role: nation count; original name unknown.
+constexpr u32 DEVELOP_LEVEL_UNKNOWN_5 = 5; // Inferred role: develop level max; original name unknown.
 
 class GfDataDevelop {
 public:

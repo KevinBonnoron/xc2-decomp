@@ -23,9 +23,9 @@ public:
   f32 getValue() const { return unknown108; }
 
 private:
-  mm::mtl::FixedVector<f32, KEY_COUNT> unknown78;     // Inferred role: values; original member name unknown.
-  mm::mtl::FixedVector<CV_TYPE, KEY_COUNT> unknownc0; // Inferred role: cvs; original member name unknown.
-  f32 unknown108;                                     // Inferred role: value; original member name unknown.
+  mm::mtl::FixedVector<f32, KEY_UNKNOWN_16> unknown78;     // Inferred role: values; original member name unknown.
+  mm::mtl::FixedVector<CV_TYPE, KEY_UNKNOWN_16> unknownc0; // Inferred role: cvs; original member name unknown.
+  f32 unknown108;                                          // Inferred role: value; original member name unknown.
 };
 
 static_assert(sizeof(AnmF32) == 0x110, "");

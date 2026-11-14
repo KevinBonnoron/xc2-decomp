@@ -26,12 +26,12 @@ public:
   };
 
   enum Flag {
-    FLAG_DISP = 1 << 0,
-    FLAG_CLIP = 1 << 1,
-    FLAG_WARP = 1 << 4,
-    FLAG_SEAM = 1 << 5,
-    FLAG_FRAME_SPD = 1 << 6,
-    FLAG_DISP_NEXT = 1 << 16,
+    FLAG_UNKNOWN_0 = 1 << 0,   // Inferred role: disp; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1,   // Inferred role: clip; original name unknown.
+    FLAG_UNKNOWN_4 = 1 << 4,   // Inferred role: warp; original name unknown.
+    FLAG_UNKNOWN_5 = 1 << 5,   // Inferred role: seam; original name unknown.
+    FLAG_UNKNOWN_6 = 1 << 6,   // Inferred role: frame spd; original name unknown.
+    FLAG_UNKNOWN_16 = 1 << 16, // Inferred role: disp next; original name unknown.
   };
 
   ScnObjModel(Scn *scn, const char *name);
@@ -54,7 +54,7 @@ public:
 
   virtual void setPosWarp(const mm::Vec3 &position) {
     unknown20.m_back->unknown00.unknown00 = position;
-    unknown34c |= FLAG_WARP;
+    unknown34c |= FLAG_UNKNOWN_4;
   }
 
   virtual void addPos(const mm::Vec3 &position) { unknown20.m_back->unknown00.unknown00 += position; }
@@ -64,7 +64,7 @@ public:
   virtual void addRot(const mm::Quat &rotation) {
     AttrTransform &transform = unknown20.m_back->unknown00;
     transform.unknown110 = rotation;
-    transform.unknown130 |= AttrTransform::FLAG_QUAT;
+    transform.unknown130 |= AttrTransform::FLAG_UNKNOWN_1;
   }
 
   virtual void setScl(const mm::Vec3 &scale) { unknown20.m_back->unknown00.unknown20 = scale; }
@@ -74,7 +74,7 @@ public:
   virtual void setMat(const mm::Mat44 &matrix) {
     AttrTransform &transform = unknown20.m_back->unknown00;
     transform.unknown30 = matrix;
-    transform.unknown130 |= AttrTransform::FLAG_MATRIX;
+    transform.unknown130 |= AttrTransform::FLAG_UNKNOWN_0;
   }
 
   virtual void setAlpha(f32 alpha) = 0;

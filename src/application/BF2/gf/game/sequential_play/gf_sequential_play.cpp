@@ -16,19 +16,19 @@ namespace gf {
 
 namespace {
 
-constexpr f32 BATTLE_START_END_WAIT_TIME = 0.3f;
-constexpr f32 BATTLE_START_END_RIDE_WAIT_TIME = 0.6f;
+constexpr f32 unknown030 = 0.3f; // Inferred role: battle start end wait time; original name unknown.
+constexpr f32 unknown041 = 0.6f; // Inferred role: battle start end ride wait time; original name unknown.
 
 } // namespace
 
-GfSequentialPlay::GfSequentialPlay(const GfSetupParam &) : unknown1228(false), unknown20f0(TYPE_NORMAL), unknown20f4(true) {}
+GfSequentialPlay::GfSequentialPlay(const GfSetupParam &) : unknown1228(false), unknown20f0(TYPE_UNKNOWN_0), unknown20f4(true) {}
 
 void GfSequentialPlay::initialize(const GfSetupParam &) { unknown20f4 = true; }
 
 GfSequentialPlay::~GfSequentialPlay() {}
 
 #line 52
-void GfSequentialPlay::build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfSequentialPlay(param); }
+void GfSequentialPlay::build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfSequentialPlay(param); }
 
 void GfSequentialPlay::destroy() {
   GfSequentialPlay *sequentialPlay = get();
@@ -104,7 +104,7 @@ void GfSequentialPlay::postUpdate(const fw::UpdateInfo &info) {
 }
 
 bool GfSequentialPlay::play() {
-  get()->unknown20f0 = TYPE_NORMAL;
+  get()->unknown20f0 = TYPE_UNKNOWN_0;
   return true;
 }
 
@@ -115,7 +115,7 @@ void GfSequentialPlay::beginCommand(TYPE type) { get()->unknown20f0 = type; }
 void GfSequentialPlay::addCommand(GfPlayCom *command) {
   if (command != nullptr) {
     GfSequentialPlay *sequentialPlay = get();
-    if (sequentialPlay->unknown20f0 == TYPE_SEQUENCE) {
+    if (sequentialPlay->unknown20f0 == TYPE_UNKNOWN_1) {
       sequentialPlay->unknown1850.push_front(command);
     } else {
       sequentialPlay->unknown08.push_back(command);
@@ -141,7 +141,7 @@ GF_STATE GfSequentialPlay::execPushState(GF_STATE state) {
 GF_STATE GfSequentialPlay::execPopState() {
   GfSequentialPlay *sequentialPlay = get();
   GF_STATE state = sequentialPlay->unknown1640.pop_back();
-  GfGameManager::setState(sequentialPlay->unknown1640.empty() ? GF_STATE_CONTROL : sequentialPlay->unknown1640.back(), true);
+  GfGameManager::setState(sequentialPlay->unknown1640.empty() ? GF_STATE_UNKNOWN_3 : sequentialPlay->unknown1640.back(), true);
   return state;
 }
 
@@ -163,7 +163,7 @@ void GfSequentialPlay::pushPause(u32 pauseBits) { addCommand(GfPlayComPause::cre
 
 void GfSequentialPlay::popPause() { addCommand(GfPlayComPause::create(0)); }
 
-void GfSequentialPlay::pushState(GF_STATE state) { addCommand(GfPlayComState::create(state, get()->unknown20f0 != TYPE_NORMAL)); }
+void GfSequentialPlay::pushState(GF_STATE state) { addCommand(GfPlayComState::create(state, get()->unknown20f0 != TYPE_UNKNOWN_0)); }
 
 void GfSequentialPlay::popState() { addCommand(GfPlayComState::create(GF_STATE(0), false)); }
 
@@ -221,9 +221,9 @@ void GfSequentialPlay::addBattleStartEnd() {
   }
   f32 time;
   if (GfGameScene::get() == nullptr) {
-    time = BATTLE_START_END_WAIT_TIME;
+    time = unknown030;
   } else {
-    time = GfGameScene::get()->isRideParty(0) ? BATTLE_START_END_RIDE_WAIT_TIME : BATTLE_START_END_WAIT_TIME;
+    time = GfGameScene::get()->isRideParty(0) ? unknown041 : unknown030;
   }
   addCommand(GfPlayComWait::create(time));
 }
@@ -285,7 +285,7 @@ bool GfSequentialPlay::hasCommand(PCOMTYPE type, GfPlayCom *command) {
 
 bool GfSequentialPlay::isExistResetBladeParty(u32 partyId) {
   for (GfPlayCom *command : get()->unknown08) {
-    if (command != nullptr && command->unknown0c == PCOMTYPE_RESET_BLADE) {
+    if (command != nullptr && command->unknown0c == PCOMTYPE_UNKNOWN_42) {
       if (command->getRTTI()->isKindOf(&GfPlayComResetBlade::m_rtti) && static_cast<GfPlayComResetBlade *>(command)->unknown14 == partyId) {
         return true;
       }
@@ -316,14 +316,14 @@ bool GfSequentialPlay::isInnerState(GF_STATE state) {
 bool GfSequentialPlay::isInnerPause(u32 pauseBits) {
   GfSequentialPlay *sequentialPlay = get();
   for (GfPlayCom *command : sequentialPlay->unknown08) {
-    if (command->unknown0c == PCOMTYPE_PAUSE) {
+    if (command->unknown0c == PCOMTYPE_UNKNOWN_1) {
       if (command->getRTTI()->isKindOf(&GfPlayComPause::m_rtti) && (static_cast<GfPlayComPause *>(command)->unknown10 & pauseBits) == pauseBits) {
         return true;
       }
     }
   }
   for (GfPlayCom *command : sequentialPlay->unknown1850) {
-    if (command->unknown0c == PCOMTYPE_PAUSE) {
+    if (command->unknown0c == PCOMTYPE_UNKNOWN_1) {
       if (command->getRTTI()->isKindOf(&GfPlayComPause::m_rtti) && (static_cast<GfPlayComPause *>(command)->unknown10 & pauseBits) == pauseBits) {
         return true;
       }
@@ -333,7 +333,7 @@ bool GfSequentialPlay::isInnerPause(u32 pauseBits) {
 }
 
 bool GfSequentialPlay::isExistPauseType(GfPlayCom *command, u32 pauseBits) const {
-  if (command->unknown0c == PCOMTYPE_PAUSE) {
+  if (command->unknown0c == PCOMTYPE_UNKNOWN_1) {
     if (command->getRTTI()->isKindOf(&GfPlayComPause::m_rtti) && (static_cast<GfPlayComPause *>(command)->unknown10 & pauseBits) == pauseBits) {
       return true;
     }
@@ -342,7 +342,7 @@ bool GfSequentialPlay::isExistPauseType(GfPlayCom *command, u32 pauseBits) const
 }
 
 bool GfSequentialPlay::isExistState(GfPlayCom *command, GF_STATE state) const {
-  if (command->unknown0c == PCOMTYPE_STATE) {
+  if (command->unknown0c == PCOMTYPE_UNKNOWN_2) {
     if (command->getRTTI()->isKindOf(&GfPlayComState::m_rtti) && static_cast<GfPlayComState *>(command)->unknown10 == state) {
       return true;
     }
@@ -352,14 +352,14 @@ bool GfSequentialPlay::isExistState(GfPlayCom *command, GF_STATE state) const {
 
 int GfSequentialPlay::getRequestEvent() const {
   for (GfPlayCom *command : unknown1850) {
-    if (command != nullptr && command->unknown0c == PCOMTYPE_EVENT) {
+    if (command != nullptr && command->unknown0c == PCOMTYPE_UNKNOWN_9) {
       if (command->getRTTI()->isKindOf(&GfPlayComEvent::m_rtti) && static_cast<GfPlayComEvent *>(command)->unknown18 != 0) {
         return static_cast<GfPlayComEvent *>(command)->unknown18;
       }
     }
   }
   for (GfPlayCom *command : unknown08) {
-    if (command != nullptr && command->unknown0c == PCOMTYPE_EVENT) {
+    if (command != nullptr && command->unknown0c == PCOMTYPE_UNKNOWN_9) {
       if (command->getRTTI()->isKindOf(&GfPlayComEvent::m_rtti) && static_cast<GfPlayComEvent *>(command)->unknown18 != 0) {
         return static_cast<GfPlayComEvent *>(command)->unknown18;
       }

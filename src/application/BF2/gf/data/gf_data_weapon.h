@@ -3,8 +3,8 @@
 
 namespace gf {
 
-constexpr int WEAPON_TYPE_COUNT = 26;
-constexpr u32 CHIP_CREATE_WEAPON_TYPE_COUNT = 16;
+constexpr int WEAPON_TYPE_UNKNOWN_26 = 26;             // Inferred role: weapon type count; original name unknown.
+constexpr u32 CHIP_CREATE_WEAPON_TYPE_UNKNOWN_16 = 16; // Inferred role: chip create weapon type count; original name unknown.
 
 class GfDataWeapon {
 public:

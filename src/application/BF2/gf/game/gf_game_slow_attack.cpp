@@ -47,11 +47,12 @@ void GfSlowAttack::updateForTerm(const fw::UpdateInfo &) {
 }
 
 void GfSlowAttack::setSpeedEnvronment(f32 speed) {
-  static const fw::SoundCategory categories[] = {CATEGORY_FIELD_SE, CATEGORY_GIMMICK_SE, CATEGORY_GAME_ENV, CATEGORY_GAME_WEATHER, CATEGORY_CHARACTER_SE};
+  static const fw::SoundCategory unknown013[] = {
+      CATEGORY_FIELD, CATEGORY_GIMMICK, CATEGORY_ENV, CATEGORY_WEATHER, CATEGORY_CH_SE}; // Inferred role: sound categories slowed by a slow attack; original name unknown.
   GfSound *sound = GfSound::get();
   if (sound != nullptr) {
     for (u32 index = 0; index < 5; index++) {
-      sound->setCategoryPitch(categories[index], speed, 0.0f);
+      sound->setCategoryPitch(unknown013[index], speed, 0.0f);
     }
   }
 }
@@ -62,7 +63,7 @@ GfSlowAttack *GfSlowAttack::create() {
   GfSlowAttack *slowAttack = get();
   if (slowAttack == nullptr) {
 #line 109
-    slowAttack = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfSlowAttack();
+    slowAttack = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfSlowAttack();
   }
   return slowAttack;
 }

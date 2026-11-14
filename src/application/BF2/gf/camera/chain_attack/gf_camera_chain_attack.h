@@ -22,6 +22,7 @@ public:
 
   ~ChainAttackCameraEntity() override;
   void onActivate() override;
+  void update(const fw::UpdateInfo &info) override;
   void setPoint(const mm::Vec3 &startPosition, const mm::Vec3 &startTarget, const mm::Vec3 &endPosition, const mm::Vec3 &endTarget);
   void calcSpeedTypeLinearSpacing();
   void calcSpeedTypeFastOut();
@@ -37,23 +38,18 @@ public:
   const mm::mtl::RTTI *getRTTI() const override;
   const char *getName() const override;
 
-  mm::Vec3 unknownb0;  // Inferred role: start position; original member name unknown.
-  mm::Vec3 unknownc0;  // Inferred role: start target; original member name unknown.
-  mm::Vec3 unknownd0;  // Inferred role: end position; original member name unknown.
-  mm::Vec3 unknowne0;  // Inferred role: end target; original member name unknown.
-  mm::Vec3 unknownf0;  // Inferred role: current position; original member name unknown.
-  mm::Vec3 unknown100; // Inferred role: current target; original member name unknown.
-  f32 unknown110;      // Inferred role: play time rate; original member name unknown.
-  f32 unknown114;      // Inferred role: play time duration; original member name unknown.
-  s32 unknown118;      // Inferred role: move type; original member name unknown.
-  f32 unknown11c;      // Inferred role: elapsed play time; original member name unknown.
-  s32 unknown120;      // Inferred role: unknown; original member name unknown.
-  s32 unknown124;      // Inferred role: unknown; original member name unknown.
-  u64 unknown128;      // Inferred role: unknown; original member name unknown.
-  s32 unknown130;      // Inferred role: unknown; original member name unknown.
-  bool unknown134;     // Inferred role: unknown; original member name unknown.
-  bool unknown135;     // Inferred role: unknown; original member name unknown.
-  u8 _136[0x140 - 0x136];
+  mm::Vec3 unknownb0;             // Inferred role: start position; original member name unknown.
+  mm::Vec3 unknownc0;             // Inferred role: start target; original member name unknown.
+  mm::Vec3 unknownd0;             // Inferred role: end position; original member name unknown.
+  mm::Vec3 unknowne0;             // Inferred role: end target; original member name unknown.
+  mm::Vec3 unknownf0;             // Inferred role: current position; original member name unknown.
+  mm::Vec3 unknown100;            // Inferred role: current target; original member name unknown.
+  f32 unknown110;                 // Inferred role: play time rate; original member name unknown.
+  f32 unknown114;                 // Inferred role: play time duration; original member name unknown.
+  s32 unknown118;                 // Inferred role: move type; original member name unknown.
+  f32 unknown11c;                 // Inferred role: elapsed play time; original member name unknown.
+  fw::ColiCheckConfig unknown120; // Inferred role: collision check; original member name unknown.
+  u8 _138[0x140 - 0x138];
 };
 
 static_assert(offsetof(ChainAttackCameraEntity, unknownb0) == 0xb0, "");
@@ -67,10 +63,6 @@ static_assert(offsetof(ChainAttackCameraEntity, unknown114) == 0x114, "");
 static_assert(offsetof(ChainAttackCameraEntity, unknown118) == 0x118, "");
 static_assert(offsetof(ChainAttackCameraEntity, unknown11c) == 0x11c, "");
 static_assert(offsetof(ChainAttackCameraEntity, unknown120) == 0x120, "");
-static_assert(offsetof(ChainAttackCameraEntity, unknown124) == 0x124, "");
-static_assert(offsetof(ChainAttackCameraEntity, unknown128) == 0x128, "");
-static_assert(offsetof(ChainAttackCameraEntity, unknown130) == 0x130, "");
-static_assert(offsetof(ChainAttackCameraEntity, unknown134) == 0x134, "");
 static_assert(sizeof(ChainAttackCameraEntity) == 0x140, "");
 
 class ChainAttackCamera {
@@ -88,15 +80,17 @@ public:
     mm::Vec3 unknown50; // Inferred role: end target ("E_LookX" to "E_LookZ"); original member name unknown.
   };
 
+  ChainAttackCamera();
   virtual ~ChainAttackCamera();
   void start();
   void end();
   void setCameraParam(const Param &param);
   void destroyCamera(mm::mtl::IntrusivePtr<fw::Camera> *camera, f32 time);
+  u32 lottery(u8 camType);
 
   mm::mtl::IntrusivePtr<fw::Camera> unknown08; // Inferred role: camera; original member name unknown.
   Param unknown10;                             // Inferred role: current parameters; original member name unknown.
-  u8 unknown70;                                // Inferred role: enemy size mask; original member name unknown.
+  s8 unknown70;                                // Inferred role: enemy size mask; original member name unknown.
   GF_OBJ_HANDLE *unknown78;                    // Inferred role: target object; original member name unknown.
   fw::ColiCheckConfig unknown80;               // Inferred role: collision check; original member name unknown.
 };

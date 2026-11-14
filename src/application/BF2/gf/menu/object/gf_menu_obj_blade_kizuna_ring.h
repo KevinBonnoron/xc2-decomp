@@ -5,6 +5,7 @@
 #include "gf/menu/gf_menu_sequence.h"
 #include "mm_mtl/fixed_vector.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 
 namespace ui {
 class UICtrlObject;
@@ -16,6 +17,36 @@ namespace gf {
 
 class GfMenuObjBladeKizunaRing : public GfMenuObject {
 public:
+  class MainListener : public ui::UIObjectListener {
+  public:
+    MainListener(GfMenuObjBladeKizunaRing *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    u8 _1c[0x20 - 0x1c];
+    GfMenuObjBladeKizunaRing *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class RingListener : public ui::UIObjectListener {
+  public:
+    RingListener(GfMenuObjBladeKizunaRing *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    u8 _1c[0x20 - 0x1c];
+    GfMenuObjBladeKizunaRing *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class DetailListener : public ui::UIObjectListener {
+  public:
+    DetailListener(GfMenuObjBladeKizunaRing *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    u8 _1c[0x20 - 0x1c];
+    GfMenuObjBladeKizunaRing *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   struct Achievement {
     Achievement(u16 line, u16 level, u16 state) : unknown00(line), unknown02(level), unknown04(state) {}
 
@@ -30,6 +61,8 @@ public:
   static int setFadeIn(u32 handle);
   static int setFadeOut(u32 handle);
   static void setupName(ui::UIObjectAcc &acc);
+  static void setupDetail(ui::UIObjectAcc &acc);
+  static void setupRing(ui::UIObjectAcc &acc, ui::UISelectObjList *list);
   static int getAchievementList(mm::mtl::FixedVector<Achievement, 50> &list);
   GfMenuObjBladeKizunaRing(u32 handle);
   ~GfMenuObjBladeKizunaRing() override;
@@ -41,10 +74,11 @@ public:
   u8 _24[0x28 - 0x24];
   ui::UISelectObjList *unknown28; // Inferred role: achievement icon objects; original member name unknown.
   ui::UICtrlObject *unknown30;    // Inferred role: ring frame control; original member name unknown.
-  u8 _38[0x3c - 0x38];
-  u16 unknown3c;  // Role and original member name unknown, cleared by the constructor.
-  u16 unknown3e;  // Role and original member name unknown, cleared by the constructor.
-  bool unknown40; // Role and original member name unknown, cleared by the constructor.
+  s16 unknown38;                  // Inferred role: x of the selected achievement icon; original member name unknown.
+  s16 unknown3a;                  // Inferred role: y of the selected achievement icon; original member name unknown.
+  s16 unknown3c;                  // Inferred role: width of the selected achievement icon, cleared by the constructor; original member name unknown.
+  s16 unknown3e;                  // Inferred role: height of the selected achievement icon, cleared by the constructor; original member name unknown.
+  bool unknown40;                 // Role and original member name unknown, cleared by the constructor.
   u8 _41[0x44 - 0x41];
   u32 unknown44; // Role and original member name unknown, cleared by the constructor.
   int unknown48; // Inferred role: control id of the achievement icon, -1 when none; original member name unknown.
@@ -56,8 +90,13 @@ public:
 };
 
 static_assert(sizeof(GfMenuObjBladeKizunaRing::Achievement) == 6, "");
+static_assert(offsetof(GfMenuObjBladeKizunaRing::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjBladeKizunaRing::RingListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjBladeKizunaRing::DetailListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjBladeKizunaRing, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjBladeKizunaRing, unknown30) == 0x30, "");
+static_assert(offsetof(GfMenuObjBladeKizunaRing, unknown38) == 0x38, "");
+static_assert(offsetof(GfMenuObjBladeKizunaRing, unknown3a) == 0x3a, "");
 static_assert(offsetof(GfMenuObjBladeKizunaRing, unknown3c) == 0x3c, "");
 static_assert(offsetof(GfMenuObjBladeKizunaRing, unknown3e) == 0x3e, "");
 static_assert(offsetof(GfMenuObjBladeKizunaRing, unknown40) == 0x40, "");

@@ -54,6 +54,31 @@ public:
     }
   }
 
+  // Inferred helper: links an object at the end of the list; original name unknown.
+  void unknown004(T *obj) {
+    if (unknown08 == nullptr) {
+      unknown00 = obj;
+      unknown08 = obj;
+      obj->unknown08 = nullptr;
+    } else {
+      unknown08->unknown10 = obj;
+      obj->unknown08 = unknown08;
+      unknown08 = obj;
+    }
+    obj->unknown10 = nullptr;
+  }
+
+  // Inferred helper: deletes every object of the list and empties it; original name unknown.
+  void unknown005() {
+    for (T *obj = unknown00; obj != nullptr;) {
+      T *next = obj->unknown10;
+      delete obj;
+      obj = next;
+    }
+    unknown00 = nullptr;
+    unknown08 = nullptr;
+  }
+
   void changeList(T *first, T *second);
 
   T *unknown00; // Inferred role: first object; original member name unknown.

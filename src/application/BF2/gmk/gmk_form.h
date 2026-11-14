@@ -16,7 +16,7 @@ public:
     bool unknown0c;    // Inferred role: event form; original member name unknown.
   };
 
-  static const u32 MAX_NUM = 6;
+  static const u32 MAX_UNKNOWN_6 = 6; // Inferred role: max num; original name unknown.
 
   explicit GmkForm(const CreateInfo *info);
   bool create(const CreateInfo &info);
@@ -27,9 +27,9 @@ public:
   void validatePosRotY();
   void apply(f32 snapDistance);
 
-  u32 unknown00;               // Inferred role: number of members; original member name unknown.
-  mm::Vec3 unknown10[MAX_NUM]; // Inferred role: positions; original member name unknown.
-  f32 unknown70[MAX_NUM];      // Inferred role: rotations around Y; original member name unknown.
+  u32 unknown00;                     // Inferred role: number of members; original member name unknown.
+  mm::Vec3 unknown10[MAX_UNKNOWN_6]; // Inferred role: positions; original member name unknown.
+  f32 unknown70[MAX_UNKNOWN_6];      // Inferred role: rotations around Y; original member name unknown.
   u8 _88[0x90 - 0x88];
 };
 

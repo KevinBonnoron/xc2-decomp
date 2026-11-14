@@ -14,6 +14,8 @@ class DrResMdoVertex;
 class DrCalcStmWork {
 public:
   DrCalcStmWork();
+  ~DrCalcStmWork();
+  void workRelease();
   static int getWorkSize(u32 count);
   int createWork(u8 *work, u32 count);
   grlib::CGLibTextureBuffer *getTexObj(u32 index);
@@ -26,5 +28,6 @@ public:
 
 static_assert(offsetof(DrCalcStmWork, unknown08) == 0x08, "");
 static_assert(offsetof(DrCalcStmWork, unknown10) == 0x10, "");
+static_assert(sizeof(DrCalcStmWork) == 0x18, "");
 
 } // namespace ml

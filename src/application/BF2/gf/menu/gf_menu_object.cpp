@@ -38,11 +38,11 @@ GfMenuObject::GfMenuObject(u32 handle) : unknown18(handle), unknown1c(0) {}
 
 GfMenuObject::~GfMenuObject() { ; }
 
-void GfMenuObject::initialize() { unknown1c |= FLAG_INITIALIZED; }
+void GfMenuObject::initialize() { unknown1c |= FLAG_UNKNOWN_0; }
 
 void GfMenuObject::finalize() {
   unknown18 = 0;
-  unknown1c |= FLAG_FINALIZED;
+  unknown1c |= FLAG_UNKNOWN_1;
 }
 
 void GfMenuObject::update() {}
@@ -473,7 +473,7 @@ void GfMenuObject::clearLayerStatck(u32 handle, u16 group) {
   ui::UIManager::get()->requestGameEvent(handle, event);
 }
 
-void GfMenuObject::registTimer(u32 handle, u16 id, f32 time, bool repeat) { ui::UIManager::get()->registObjectTimer(handle, id, ui::UIUtil::timeSecToUITime(time), repeat); }
+u32 GfMenuObject::registTimer(u32 handle, u16 id, f32 time, bool repeat) { return ui::UIManager::get()->registObjectTimer(handle, id, ui::UIUtil::timeSecToUITime(time), repeat); }
 
 void GfMenuObject::releaseTimer(u32 handle) { ui::UIManager::get()->releaseObjectTimer(handle); }
 

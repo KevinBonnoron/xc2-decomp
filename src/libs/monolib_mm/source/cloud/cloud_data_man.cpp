@@ -61,7 +61,7 @@ bool CloudDataMan::isReadOk() const {
 }
 
 bool CloudDataMan::OnFileEvent(ml::EventFileTh *event) {
-  if (event->type == ml::EventFileTh::TYPE_COMPLETE) {
+  if (event->type == ml::EventFileTh::TYPE_UNKNOWN_2) {
     for (u32 i = 0; i < UNKNOWN001_UNKNOWN_5; i++) {
       if (unknown48[i] == event->unknown08) {
         unknown08[i] = event->moveFileData();

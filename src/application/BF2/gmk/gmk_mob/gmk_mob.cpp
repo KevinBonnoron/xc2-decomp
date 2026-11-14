@@ -1,5 +1,6 @@
 #include "gmk/gmk_mob/gmk_mob.h"
 
+#include "bdat.h"
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_object_type.h"
 #include "gf/gf_allocator.h"
@@ -10,6 +11,7 @@
 #include "gmk/gmk_list_impl.h"        // IWYU pragma: keep
 #include "gmk/gmk_mob/gmk_mob_impl.h" // IWYU pragma: keep
 #include "gmk/gmk_squad.h"
+#include "ml/rand.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/reference_object.h"
 #include "mm_mtl/vector.h"
@@ -19,26 +21,27 @@ namespace gmk {
 template bool TGmkList<GmkMob, GmkMob::BdatInfo, 4345677u, 2u, GmkMobGob>::initGmkBdatInfo(GmkMob::BdatInfo &, int &, const AGmkBase &);
 
 void GmkMobInsts::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
-  unknown02 = bdat.getValCheck("Group", id, BDAT_TYPE_U16);
-  unknown04 = bdat.getValCheck("squadId", id, BDAT_TYPE_U16);
+  unknown02 = bdat.getValCheck("Group", id, BDAT_TYPE_UNKNOWN_2);
+  unknown04 = bdat.getValCheck("squadId", id, BDAT_TYPE_UNKNOWN_2);
   if (unknown02 == 0) {
-    unknown12 = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_U16), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_U16));
-    unknown16 = QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_U16), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_U8), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_U8));
-    u16 timeRange = bdat.getValCheck("TimeRange", id, BDAT_TYPE_U16);
+    unknown12 = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_UNKNOWN_2));
+    unknown16 =
+        QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_UNKNOWN_1), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_UNKNOWN_1));
+    u16 timeRange = bdat.getValCheck("TimeRange", id, BDAT_TYPE_UNKNOWN_2);
     unknown20.unknown08 = timeRange;
-    unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_U16);
+    unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_UNKNOWN_2);
   }
-  unknown06 = bdat.getValCheck("Mot", id, BDAT_TYPE_U16);
-  unknown08 = static_cast<u16>(bdat.getValCheck("Collision", id, BDAT_TYPE_U16));
-  unknown0a = bdat.getValCheck("ReactionRange", id, BDAT_TYPE_U16);
-  unknown0c = static_cast<u16>(bdat.getValCheck("ReactionPercent", id, BDAT_TYPE_U16));
-  unknown0e = bdat.getValCheck("ReactionMot", id, BDAT_TYPE_U16);
-  unknown10 = bdat.getValCheck("BattleReaction", id, BDAT_TYPE_U16);
-  u16 visibleXZ = bdat.getValCheck("Visible_XZ", id, BDAT_TYPE_U16);
-  u16 visibleY = bdat.getValCheck("Visible_Y", id, BDAT_TYPE_U16);
+  unknown06 = bdat.getValCheck("Mot", id, BDAT_TYPE_UNKNOWN_2);
+  unknown08 = static_cast<u16>(bdat.getValCheck("Collision", id, BDAT_TYPE_UNKNOWN_2));
+  unknown0a = bdat.getValCheck("ReactionRange", id, BDAT_TYPE_UNKNOWN_2);
+  unknown0c = static_cast<u16>(bdat.getValCheck("ReactionPercent", id, BDAT_TYPE_UNKNOWN_2));
+  unknown0e = bdat.getValCheck("ReactionMot", id, BDAT_TYPE_UNKNOWN_2);
+  unknown10 = bdat.getValCheck("BattleReaction", id, BDAT_TYPE_UNKNOWN_2);
+  u16 visibleXZ = bdat.getValCheck("Visible_XZ", id, BDAT_TYPE_UNKNOWN_2);
+  u16 visibleY = bdat.getValCheck("Visible_Y", id, BDAT_TYPE_UNKNOWN_2);
   unknown30.set(visibleXZ, visibleY);
-  u16 invisibleXZ = DistHvCond::clampDepopDist(bdat.getValCheck("Invisible_XZ", id, BDAT_TYPE_U16), visibleXZ);
-  u16 invisibleY = DistHvCond::clampDepopDist(bdat.getValCheck("Invisible_Y", id, BDAT_TYPE_U16), visibleY);
+  u16 invisibleXZ = DistHvCond::clampDepopDist(bdat.getValCheck("Invisible_XZ", id, BDAT_TYPE_UNKNOWN_2), visibleXZ);
+  u16 invisibleY = DistHvCond::clampDepopDist(bdat.getValCheck("Invisible_Y", id, BDAT_TYPE_UNKNOWN_2), visibleY);
   unknown38.set(invisibleXZ, invisibleY);
 }
 
@@ -54,6 +57,46 @@ bool GmkMobInsts::BdatInfo::isMobPopDistCondMatched(const mm::Vec3 &position) co
   f32 z = interestPos.z - position.z;
   f32 distSq = x * x + y * y + z * z;
   return !(getMobPopDistSq() < distSq);
+}
+
+void GmkMobInsts::PopInfo::create(CBdatWrapper bdat, int id) {
+  // Inferred role: mob id columns of FLD_MobGroupList; original name unknown.
+  static const char *const unknown001[] = {"MOBID1", "MOBID2", "MOBID3", "MOBID4", "MOBID5", "MOBID6", "MOBID7", "MOBID8"};
+  dispose();
+  unknown00 = bdat.getValCheck("ScaleMin", id, BDAT_TYPE_UNKNOWN_1);
+  unknown01 = bdat.getValCheck("ScaleMax", id, BDAT_TYPE_UNKNOWN_1);
+  unknown02 = bdat.getValCheck("MotSpeedMin", id, BDAT_TYPE_UNKNOWN_1);
+  unknown03 = bdat.getValCheck("MotSpeedMax", id, BDAT_TYPE_UNKNOWN_1);
+  unknown04 = bdat.getValCheck("Group", id, BDAT_TYPE_UNKNOWN_2);
+  unknown0c = bdat.getValCheck("Mot", id, BDAT_TYPE_UNKNOWN_2);
+  unknown0e = bdat.getValCheck("MountPoint", id, BDAT_TYPE_UNKNOWN_2);
+  unknown10 = bdat.getValCheck("MountObject", id, BDAT_TYPE_UNKNOWN_2);
+  unknown12 = bdat.getValCheck("MountPoint2", id, BDAT_TYPE_UNKNOWN_2);
+  unknown14 = bdat.getValCheck("MountObject2", id, BDAT_TYPE_UNKNOWN_2);
+  unknown44 = static_cast<u16>(bdat.getValCheck("squadId", id, BDAT_TYPE_UNKNOWN_2));
+  if (unknown04 != 0) {
+    unknown08 = static_cast<u8>(Bdat::getValCheck(Bdat::getFP("FLD_NpcGroupId"), "memberNum", unknown04, BDAT_TYPE_UNKNOWN_1));
+  }
+  u16 mobId = bdat.getValCheck("MobID", id, BDAT_TYPE_UNKNOWN_2);
+  u16 mobGroupId = bdat.getValCheck("MOBGroupID", id, BDAT_TYPE_UNKNOWN_2);
+  if (!mobId) {
+    if (mobGroupId != 0) {
+      u8 *groupList = Bdat::getFP("FLD_MobGroupList");
+      for (u32 i = 0; i < 8; i++) {
+        u16 mob = Bdat::getValCheck(groupList, unknown001[i], mobGroupId, BDAT_TYPE_UNKNOWN_2);
+        if (mob) {
+          unknown18.push_back(mob);
+        }
+      }
+    } else {
+      unknown18.push_back(0);
+    }
+  } else {
+    unknown18.push_back(mobId);
+  }
+  u32 popMin = static_cast<u8>(bdat.getValCheck("PopMin", id, BDAT_TYPE_UNKNOWN_1));
+  u32 popMax = static_cast<u8>(bdat.getValCheck("PopMax", id, BDAT_TYPE_UNKNOWN_1));
+  unknown40 = ml::mtRand(popMin, popMax + 1);
 }
 
 void GmkMobInsts::PopInfo::dispose() {
@@ -96,7 +139,7 @@ bool GmkMobInsts::isGobInstExist() const {
   }
   size_t num = unknowna8->size();
   for (size_t i = 0; i < num; i++) {
-    if ((*unknowna8)[i] != gf::INVALID_HANDLE) {
+    if ((*unknowna8)[i] != gf::unknown020) {
       return true;
     }
   }
@@ -124,7 +167,7 @@ bool GmkMobInsts::canDepopGobInst(const mm::Vec3 &position) const {
 }
 
 void GmkMobInsts::removeGobInst(gf::GF_OBJ_HANDLE *handle) {
-  if (handle == gf::INVALID_HANDLE || unknowna8->size() == 0) {
+  if (handle == gf::unknown020 || unknowna8->size() == 0) {
     return;
   }
   for (gf::GF_OBJ_HANDLE **it = unknowna8->begin(); it != unknowna8->end(); ++it) {
@@ -148,6 +191,42 @@ void GmkMobInsts::validateDisp() const {
 void GmkMobInsts::update(const UpdateInfo &info) {
   if (isValid() && unknownc0) {
     (this->*unknownc0)(info);
+  }
+}
+
+void GmkMobInsts::updatePopDepopCond(const UpdateInfo &info) {
+  if (unknown18.isPopCommonCondMatched(*unknown00.unknown00)) {
+    unknownb8 |= MATCHED_UNKNOWN_0;
+  } else {
+    unknownb8 &= ~MATCHED_UNKNOWN_0;
+  }
+  const mm::Vec3 &position = *info.unknown08;
+  if (unknown18.unknown30.isMatch(position) && unknown18.isMobPopDistCondMatched(position)) {
+    unknownb8 |= MATCHED_UNKNOWN_1;
+  } else {
+    unknownb8 &= ~MATCHED_UNKNOWN_1;
+  }
+  if (unknown18.unknown38.isMatch(*info.unknown08)) {
+    unknownb8 |= MATCHED_UNKNOWN_2;
+  } else {
+    unknownb8 &= ~MATCHED_UNKNOWN_2;
+  }
+}
+
+void GmkMobInsts::seqUpdatePopDepop(const UpdateInfo &info) {
+  if (!isInterestPosExist()) {
+    return;
+  }
+  updatePopDepopCond(info);
+  if (canPopGobInst(*info.unknown08)) {
+    createGobInsts();
+    u32 num = unknowna8->capacity();
+    info.unknown10->onCreateGobInsts(num);
+  } else if (canDepopGobInst(*info.unknown08)) {
+    disposeGobInsts(true);
+  }
+  if (unknownb8 & MATCHED_UNKNOWN_1) {
+    unknown58.update(*this, *unknowna8, *info.unknown10);
   }
 }
 
@@ -207,7 +286,7 @@ void GmkMobInsts::disposeGobInsts(bool isFadeOut) {
     size_t num = unknowna8->size();
     for (size_t i = 0; i < num; i++) {
       gf::GF_OBJ_HANDLE *handle = (*unknowna8)[i];
-      if (handle != gf::INVALID_HANDLE) {
+      if (handle != gf::unknown020) {
         if (isFadeOut) {
           gmk::disposeGobInst(handle, 1.0f);
         } else {
@@ -230,7 +309,7 @@ void GmkMobInsts::createGobInsts() {
   CBdatWrapper bdat = {unknown00.unknown08};
   unknown58.create(bdat, unknown00.unknown10);
   unknowna8->destroy();
-  unknowna8->setAllocator(gf::getAllocator(gf::ALLOCATOR_DEFAULT));
+  unknowna8->setAllocator(gf::getAllocator(gf::ALLOCATOR_UNKNOWN_0));
   unknowna8->reserve(unknown58.unknown40);
 }
 
@@ -275,10 +354,10 @@ void GmkMobList::onResetUpdateGmkIndex() {
 }
 
 void GmkMob::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) {
-  if (event == gf::IGfObjListener::OBJEVT_DESTROY && handle != gf::INVALID_HANDLE) {
+  if (event == gf::IGfObjListener::OBJEVT_UNKNOWN_3 && handle != gf::unknown020) {
     gf::GfObjAcc acc(handle);
     if (acc.isValid()) {
-      acc.setUserData(gf::OBJ_USER_DATA_GMK, 0);
+      acc.setUserData(gf::OBJ_USER_DATA_UNKNOWN_0, 0);
     }
     unknown48.removeGobInst(handle);
   }
@@ -307,3 +386,6 @@ void GmkMob::debugDraw() const { isValid(); }
 template void mm::mtl::Vector<gmk::GmkMob::BdatInfo>::expand(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkMob::BdatInfo>::extend(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkMob::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkMob>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkMob>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkMob>::resize(size_t);

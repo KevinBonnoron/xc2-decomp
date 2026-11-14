@@ -30,7 +30,7 @@ namespace event {
 class ObjectChara : public Object {
 public:
   enum {
-    FLAG_CREATED = 1 << 0,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: created flag; original name unknown.
   };
 
   ObjectChara(const char *name);

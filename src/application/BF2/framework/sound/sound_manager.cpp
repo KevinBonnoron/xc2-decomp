@@ -64,6 +64,8 @@ bool SoundManager::finalize() {
   return true;
 }
 
+SoundManager::SoundManager(mm::mtl::IAllocator *allocator) : unknown18(nullptr), unknown68(0), unknown94(0), unknown98(false), unknowne0(nullptr), unknowne8() {}
+
 void SoundManager::attachPoolMemory(void *memory, u32 size) {
   if (get() != nullptr && unknown18 != nullptr && unknown98) {
     unknown18->attachPoolMemory(memory, size);
@@ -535,7 +537,7 @@ bool SoundManager::isCommonLoaded() const {
 SoundPack *SoundManager::getBattlePack() { return findPack("se_btl_system", nullptr); }
 
 bool SoundManager::isBattleLoaded() const {
-  for (u32 i = 0; i < BATTLE_RESOURCE_MAX; i++) {
+  for (u32 i = 0; i < BATTLE_RESOURCE_UNKNOWN_3; i++) {
     if (unknowne8[i] != nullptr && !unknowne8[i]->valid()) {
       return false;
     }

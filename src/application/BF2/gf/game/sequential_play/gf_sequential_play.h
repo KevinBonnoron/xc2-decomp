@@ -30,8 +30,8 @@ struct QuestID;
 class GfSequentialPlay : public mm::mtl::PtrSingleton<GfSequentialPlay> {
 public:
   enum TYPE {
-    TYPE_NORMAL,
-    TYPE_SEQUENCE,
+    TYPE_UNKNOWN_0, // Inferred role: type normal; original name unknown.
+    TYPE_UNKNOWN_1, // Inferred role: type sequence; original name unknown.
   };
 
   GfSequentialPlay(const GfSetupParam &param);

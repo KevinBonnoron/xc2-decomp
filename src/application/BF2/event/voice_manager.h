@@ -11,25 +11,19 @@ namespace event {
 class VoiceManager : public IManager, public mm::mtl::Singleton<VoiceManager> {
 public:
   enum {
-    FLAG_AUTO_VOICE_MODE = 1 << 0,
-    FLAG_LIPSYNC = 1 << 1,
-    FLAG_PAUSE = 1 << 2,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: auto voice mode flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: lipsync flag; original name unknown.
+    FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: pause flag; original name unknown.
   };
 
   enum {
-    DISP_FLAG_DISP = 1 << 0,
+    DISP_FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: disp flag; original name unknown.
   };
 
-  bool playAuto(const char *name, f32 delay, IVoiceEvent *event) {
-    if ((unknown10 & FLAG_AUTO_VOICE_MODE) == 0) {
-      return false;
-    }
-    const char *path = unknown18.makePath(name);
-    if (path == nullptr) {
-      return false;
-    }
-    return play(path, delay, event);
-  }
+  bool playAuto(const char *name, f32 delay, IVoiceEvent *event);
+
+  // Inferred role: player accessor; original name unknown.
+  VoicePlayer &unknown001() { return unknown230; }
 
   VoiceManager();
   virtual ~VoiceManager() {}

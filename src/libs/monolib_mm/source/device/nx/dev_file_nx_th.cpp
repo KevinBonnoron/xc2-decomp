@@ -1,13 +1,18 @@
 #include "device/nx/dev_file_nx_th.h"
 
 #include "ml/critical_section.h"
+#include "ml/dev_file_th.h"
 #include "ml/file_handle_th.h"
+#include "ml/thread.h"
+#include "ml/work_cpu.h"
 #include "ml/work_root.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/internal/heap_allocator.h"
+#include "mm_thread/mm_thread_csection.h"
 #include "mtl/mem_manager.h"
 #include "nn/account.h"
 #include "nn/fs.h"
+#include "nn/result.h"
 
 namespace ml {
 
@@ -58,11 +63,13 @@ void DevFileNxTh::deallocate(void *pointer, size_t size) {
 
 u32 DevFileNxTh::addressAlignment() { return 16; }
 
-bool DevFileNxTh::rfIsUsedChannel(u32 channel) { return (&*unknown20 + channel)->unknown10c; }
+bool DevFileNxTh::rfIsUsedChannel(u32 channel) { return unknown20->unknown00[channel].unknown10c; }
 
 void DevFileNxTh::setMediaRootPath(const char *path) { m_rootPath = path; }
 
 DevFileJobTh *DevFileNxTh::createLoader(mtl::ALLOC_HANDLE handle) { return new (handle) DevFileJobTh(); }
+
+DevFileJobTh *DevFileNxTh::createWriter(mtl::ALLOC_HANDLE handle) { return new (handle) DevFileWriterNx; }
 
 DevFileJobTh *DevFileNxTh::createFileValid(mtl::ALLOC_HANDLE handle) { return new (handle) DevFileJobValidNxTh(); }
 
@@ -76,7 +83,7 @@ bool DevFileNxTh::readBlock(FileHandleTh *handle, const char *path) {
 }
 
 bool DevFileNxTh::rfClose(FileHandleTh *handle) {
-  unknown001 *channel = &*get()->unknown20 + handle->unknown1d4;
+  OpenReadParam *channel = &get()->unknown20->unknown00[handle->unknown1d4];
   mm::threading::WriteLockGuard guard(channel->unknown1a8);
   bool isClosed = false;
   if (channel->unknown10f) {
@@ -92,6 +99,125 @@ bool DevFileNxTh::rfClose(FileHandleTh *handle) {
     channel->unknown10c = false;
   }
   return isClosed;
+}
+
+CriticalSection &DevFileNxTh::getWriteLock() {
+  DevFileNxTh *self = get();
+  if (self == nullptr) {
+    static CriticalSection sect;
+    return sect;
+  }
+  return self->unknown20->unknown1800;
+}
+
+bool DevFileNxTh::rfOpen(FileHandleTh *handle, const char *path) {
+  OpenReadParam &channel = get()->unknown20->unknown00[handle->unknown1d4];
+  mm::threading::WriteLockGuard guard(channel.unknown1a8);
+  DevFileTh::makeMediaFileName(channel.unknown08, path, handle->unknown98.c_str());
+  bool isOpened = true;
+  if (!channel.unknown10c) {
+    if (nn::fs::OpenFile(&channel.unknown00, channel.unknown08.c_str(), 1).IsSuccess()) {
+      channel.unknown10c = true;
+      channel.unknown10d = false;
+      channel.unknown10e = false;
+      channel.unknown110 = false;
+    } else {
+      isOpened = false;
+    }
+  }
+  return isOpened;
+}
+
+DevFileNxTh::DevFileNxTh(mtl::ALLOC_HANDLE handle) : unknown14(handle), unknown18(0), unknown20(new (handle) unknown001()) {
+  __atomic_store_n(&unknown20->unknown17fc, 0, __ATOMIC_SEQ_CST);
+  __atomic_store_n(&unknown20->unknown17f8, false, __ATOMIC_SEQ_CST);
+}
+
+DevFileNxTh::~DevFileNxTh() {}
+
+bool DevFileNxTh::initialize() {
+  if (unknown18 == 0) {
+    for (size_t i = 1; i < unknown20->unknown00.size(); i++) {
+      unknown20->unknown00[i].unknown1a0 = this;
+      Thread *thread = Thread::create("rfLoadThread", false, thFileLoader, &unknown20->unknown00[i], 0x10000, WorkCpu::getSubWorkCPUID(), -2);
+      if (thread != nullptr) {
+        unknown20->unknown00[i].unknown198 = thread;
+        thread->resume();
+      }
+    }
+    unknown18 = 1;
+  }
+  return true;
+}
+
+bool DevFileNxTh::finalize() {
+  if (unknown18 == 1) {
+    __atomic_store_n(&unknown20->unknown17f8, true, __ATOMIC_SEQ_CST);
+    for (size_t i = 1; i < unknown20->unknown00.size(); i++) {
+      if (unknown20->unknown00[i].unknown198 != nullptr) {
+        unknown20->unknown00[i].unknown198->setSignalEvent(true);
+      }
+    }
+    unknown18 = 2;
+  } else if (unknown18 == 2) {
+    if (__atomic_load_n(&unknown20->unknown17fc, __ATOMIC_SEQ_CST) == 0) {
+      unknown18 = 3;
+    }
+  } else if (unknown18 == 3) {
+    for (size_t i = 1; i < unknown20->unknown00.size(); i++) {
+      if (unknown20->unknown00[i].unknown198 != nullptr) {
+        unknown20->unknown00[i].unknown198->release();
+      }
+    }
+    unknown18 = 4;
+  }
+  return unknown18 == 4;
+}
+
+bool DevFileNxTh::rfRead(FileHandleTh *handle, const DevFileParamTh &param) {
+  if (handle == nullptr) {
+    return false;
+  }
+  OpenReadParam &channel = get()->unknown20->unknown00[handle->unknown1d4];
+  mm::threading::WriteLockGuard guard(channel.unknown1a8);
+  if (!channel.unknown10c) {
+    return false;
+  }
+  handle->m_currentPtr = 0;
+  handle->setReadAdr(param.unknown50, param.unknown40, param.unknown50);
+  handle->unknown001(param.unknown4c, param.unknown50);
+  handle->unknown94 &= 0xfff0ffff;
+  channel.unknown120 = param;
+  channel.unknown10d = true;
+  channel.unknown118 = handle;
+  channel.unknown10e = false;
+  channel.unknown110 = false;
+  channel.unknown198->setSignalEvent(true);
+  return true;
+}
+
+void DevFileNxTh::tail() {
+  for (OpenReadParam *channel = unknown20->unknown00.begin(); channel != unknown20->unknown00.end(); channel++) {
+    if (channel->unknown10d && channel->unknown118 != nullptr) {
+      mm::threading::WriteLockGuard guard(channel->unknown1a8);
+      if ((channel->unknown118->unknown94 & 0x10000) == 0) {
+        if (channel->unknown118->m_currentPtr != 0 && channel->unknown118->m_currentPtr == channel->unknown118->unknown18) {
+          channel->unknown10d = false;
+          channel->unknown118->call(CBM_UNKNOWN_2);
+          channel->unknown118 = nullptr;
+        }
+      } else if (!channel->unknown10f) {
+        if (channel->unknown110) {
+          nn::fs::CloseFile(channel->unknown00);
+          channel->unknown110 = false;
+        }
+        channel->unknown10c = false;
+        channel->unknown10d = false;
+        channel->unknown118->call(CBM_UNKNOWN_4);
+        channel->unknown118 = nullptr;
+      }
+    }
+  }
 }
 
 bool DevFileBlackListNxTh::check(const char *path) {

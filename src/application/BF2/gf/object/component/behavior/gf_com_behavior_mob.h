@@ -32,6 +32,8 @@ namespace navi {
 class NvmshAcObj;
 } // namespace navi
 
+struct CBdatWrapper;
+
 namespace gf {
 
 struct MsgDebugActivateComponentWindow;
@@ -57,12 +59,16 @@ class GfComBehaviorMob : public GfComBehavior {
 public:
   class Listener {
   public:
+    Listener() : unknown08(nullptr) {}
+
     virtual void onWkStandbyLogout();
 
     GfComBehaviorMob *unknown08; // Inferred role: owner; original member name unknown.
   };
 
   struct BdatInfo {
+    void create(const CBdatWrapper &bdat, int id);
+
     f32 unknown00; // Inferred role: squared reaction range; original member name unknown.
     u16 unknown04; // Inferred role: reaction percent; original member name unknown.
     u16 unknown06; // Inferred role: reaction motion; original member name unknown.
@@ -72,6 +78,7 @@ public:
 
   static mm::mtl::RTTI m_rtti;
 
+  GfComBehaviorMob();
   ~GfComBehaviorMob() override;
   const mm::mtl::RTTI *getRTTI() const override;
   bool recieveMessage(fw::MessageObject *sender, fw::Message &message) override;
@@ -81,6 +88,7 @@ public:
 
   void procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message);
   void procMsgObjectGetVelocity(fw::MessageObject *sender, MsgObjectGetVelocity &message);
+  void setup();
   void cleanup();
   fw::ColiMoveObject *getColiObject() const;
   gmk::AGmkBase *getBindedGmkInst() const;
@@ -94,6 +102,7 @@ public:
   void setActivateCollison(bool isActivate);
   u32 getStateId() const;
   void createNaviMeshObj();
+  void updateNaviMeshObj(f32 deltaTime);
   void createSquadNavi();
   void createFsm();
   void init(bool param1);
@@ -121,30 +130,33 @@ public:
   // Inferred helper: battle reaction; original name unknown.
   u16 unknown008() const { return unknown98.unknown08; }
 
+  // Inferred helper: squad of the squad navi; original name unknown.
+  gmk::GmkSquad *unknown009() const { return unknownc0.unknown10.unknown00; }
+
   BdatInfo unknown98; // Inferred role: bdat parameters; original member name unknown.
   u8 _a4[0xa8 - 0xa4];
   navi::NvmshAcObj *unknowna8; // Inferred role: navi mesh object; original member name unknown.
   u32 unknownb0;               // Inferred role: reset with the navi mesh object; original member name unknown.
   u8 _b4[0xb8 - 0xb4];
-  void *unknownb8;                        // Role and original member name unknown.
-  gmk::GmkSquadNavi unknownc0;            // Inferred role: squad navi; original member name unknown.
-  mm::Vec3 unknown100;                    // Inferred role: velocity; original member name unknown.
-  mm::Vec3 unknown110;                    // Inferred role: goal position; original member name unknown.
-  mm::Quat unknown120;                    // Inferred role: rotation; original member name unknown.
-  GfGameStuckMeter unknown130;            // Inferred role: stuck meter; original member name unknown.
-  GfGameDepopMeter unknown190;            // Inferred role: depop meter; original member name unknown.
-  GfFieldMoveSpeed unknown1e0;            // Inferred role: move speed; original member name unknown.
-  GfFieldLookIk unknown210;               // Inferred role: look ik; original member name unknown.
-  TFieldExecCmdTurn<GfComAsm> unknown250; // Inferred role: turn command; original member name unknown.
-  GfFieldLocalSteer unknown2c0;           // Inferred role: local steer; original member name unknown.
-  u8 _5320[0x5328 - 0x5320];
-  ai::Hfsm unknown5328; // Inferred role: state machine; original member name unknown.
-  bool unknown53b0;     // Inferred role: state machine is not set up, true by default; original member name unknown.
-  void *unknown53b8;    // Inferred role: viewer; original member name unknown.
-  Listener unknown53c0; // Inferred role: listener; original member name unknown.
-  f32 unknown53d0;      // Inferred role: squared distance to the player on the ground plane; original member name unknown.
-  f32 unknown53d4;      // Inferred role: squared height difference to the player; original member name unknown.
-  bool unknown53d8;     // Inferred role: reaction rolled while the player is in range; original member name unknown.
+  void *unknownb8;                                                        // Role and original member name unknown.
+  gmk::GmkSquadNavi unknownc0;                                            // Inferred role: squad navi; original member name unknown.
+  mm::Vec3 unknown100;                                                    // Inferred role: velocity; original member name unknown.
+  mm::Vec3 unknown110;                                                    // Inferred role: goal position; original member name unknown.
+  mm::Quat unknown120;                                                    // Inferred role: rotation; original member name unknown.
+  GfGameStuckMeter unknown130;                                            // Inferred role: stuck meter; original member name unknown.
+  GfGameDepopMeter unknown190;                                            // Inferred role: depop meter; original member name unknown.
+  GfFieldMoveSpeed unknown1e0;                                            // Inferred role: move speed; original member name unknown.
+  GfFieldLookIk unknown210;                                               // Inferred role: look ik; original member name unknown.
+  TFieldExecCmdTurn<GfComAsm> unknown250;                                 // Inferred role: turn command; original member name unknown.
+  GfFieldLocalSteer unknown2c0;                                           // Inferred role: local steer; original member name unknown.
+  GfFieldLocalSteer::TIsTargetNotSameSquad<GfComBehaviorMob> unknown5320; // Inferred role: predicate of the local steer; original member name unknown.
+  ai::Hfsm unknown5328;                                                   // Inferred role: state machine; original member name unknown.
+  bool unknown53b0;                                                       // Inferred role: state machine is not set up, true by default; original member name unknown.
+  void *unknown53b8;                                                      // Inferred role: viewer; original member name unknown.
+  Listener unknown53c0;                                                   // Inferred role: listener; original member name unknown.
+  f32 unknown53d0;                                                        // Inferred role: squared distance to the player on the ground plane; original member name unknown.
+  f32 unknown53d4;                                                        // Inferred role: squared height difference to the player; original member name unknown.
+  bool unknown53d8;                                                       // Inferred role: reaction rolled while the player is in range; original member name unknown.
   u8 _53d9[0x53e0 - 0x53d9];
 };
 
@@ -160,6 +172,7 @@ static_assert(offsetof(GfComBehaviorMob, unknown98) == 0x98, "");
 static_assert(offsetof(GfComBehaviorMob, unknown120) == 0x120, "");
 static_assert(offsetof(GfComBehaviorMob, unknown250) == 0x250, "");
 static_assert(offsetof(GfComBehaviorMob, unknown2c0) == 0x2c0, "");
+static_assert(offsetof(GfComBehaviorMob, unknown5320) == 0x5320, "");
 static_assert(offsetof(GfComBehaviorMob, unknown5328) == 0x5328, "");
 static_assert(offsetof(GfComBehaviorMob, unknown53b0) == 0x53b0, "");
 static_assert(offsetof(GfComBehaviorMob, unknown53b8) == 0x53b8, "");

@@ -100,9 +100,9 @@ public:
   FileResTh *unknown898; // Inferred role: glass breakage res; original member name unknown.
   FileResTh *unknown8a0; // Inferred role: filter lut res; original member name unknown.
   u8 _8a8[0x970 - 0x8a8];
-  DrPixlPostParm unknown970;        // Inferred role: default post parm; original member name unknown.
-  mm::mtl::FixStr<256> unknown1a80; // Inferred role: IBL env texture path; original member name unknown.
-  csvb::CCsvbData *unknown1b88;     // Inferred role: wetness csvb data; original member name unknown.
+  DrPixlPostParm unknown970; // Inferred role: default post parm; original member name unknown.
+  mm::mtl::FixStr<256> m_IBLEnvTexturePath;
+  csvb::CCsvbData *unknown1b88; // Inferred role: wetness csvb data; original member name unknown.
 };
 
 static_assert(offsetof(DrIniSys::WetSetting, unknown04) == 0x04, "");
@@ -116,7 +116,7 @@ static_assert(offsetof(DrIniSys, unknown890) == 0x890, "");
 static_assert(offsetof(DrIniSys, unknown898) == 0x898, "");
 static_assert(offsetof(DrIniSys, unknown8a0) == 0x8a0, "");
 static_assert(offsetof(DrIniSys, unknown970) == 0x970, "");
-static_assert(offsetof(DrIniSys, unknown1a80) == 0x1a80, "");
+static_assert(offsetof(DrIniSys, m_IBLEnvTexturePath) == 0x1a80, "");
 static_assert(offsetof(DrIniSys, unknown1b88) == 0x1b88, "");
 
 } // namespace ml

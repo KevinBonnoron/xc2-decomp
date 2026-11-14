@@ -17,16 +17,19 @@ struct UpdateInfo;
 namespace gf {
 
 class GfComAsm;
+class GfComEvtAnim;
 struct CallBackCache;
 class Plugin;
 
 enum {
-  MSG_PC_GET_LOOK_POINT = 0x1000008,
-  MSG_OBJECT_GET_VELOCITY = 0x1000046,
+  MSG_UNKNOWN_16777224 = 0x1000008, // Inferred role: msg pc get look point; original name unknown.
+  MSG_UNKNOWN_16777228 = 0x100000c, // Inferred role: msg pc field get access type; original name unknown.
+  MSG_UNKNOWN_16777229 = 0x100000d, // Inferred role: msg pc field notify action; original name unknown.
+  MSG_UNKNOWN_16777286 = 0x1000046, // Inferred role: msg object get velocity; original name unknown.
 };
 
 struct MsgPcGetLookPoint : fw::Message {
-  MsgPcGetLookPoint() : fw::Message(MSG_PC_GET_LOOK_POINT, 0x40), unknown10(mm::Vec3::zero), unknown20(false) {}
+  MsgPcGetLookPoint() : fw::Message(MSG_UNKNOWN_16777224, 0x40), unknown10(mm::Vec3::zero), unknown20(false) {}
 
   mm::Vec3 unknown10; // Inferred role: look point; original member name unknown.
   bool unknown20;     // Inferred role: valid; original member name unknown.
@@ -36,13 +39,15 @@ static_assert(offsetof(MsgPcGetLookPoint, unknown10) == 0x10, "");
 static_assert(offsetof(MsgPcGetLookPoint, unknown20) == 0x20, "");
 
 struct MsgObjectGetVelocity : fw::Message {
+  MsgObjectGetVelocity() : fw::Message(MSG_UNKNOWN_16777286, 0x40), unknown10(mm::Vec3::zero) {}
+
   mm::Vec3 unknown10; // Inferred role: velocity; original member name unknown.
 };
 
 static_assert(offsetof(MsgObjectGetVelocity, unknown10) == 0x10, "");
 
 struct MsgPcFieldNotifyAction : fw::Message {
-  MsgPcFieldNotifyAction(u32 action) : fw::Message(0x100000d, 0x40), unknown08(action) {}
+  MsgPcFieldNotifyAction(u32 action) : fw::Message(MSG_UNKNOWN_16777229, 0x40), unknown08(action) {}
 
   u32 unknown08; // Inferred role: action, 0 when the player accesses the object, 1 when the access ends; original member name unknown.
 };
@@ -50,7 +55,7 @@ struct MsgPcFieldNotifyAction : fw::Message {
 static_assert(offsetof(MsgPcFieldNotifyAction, unknown08) == 0x08, "");
 
 struct MsgPcFieldGetAccessType : fw::Message {
-  MsgPcFieldGetAccessType() : fw::Message(0x100000c, 0x40), unknown08(0), unknown0c(true), unknown0d(false) {}
+  MsgPcFieldGetAccessType() : fw::Message(MSG_UNKNOWN_16777228, 0x40), unknown08(0), unknown0c(true), unknown0d(false) {}
 
   u32 unknown08;  // Inferred role: access type; original member name unknown.
   bool unknown0c; // Inferred role: access enabled; original member name unknown.
@@ -68,11 +73,14 @@ public:
 
   GfComBehavior() : unknown10(fw::Allocator::getProcAllocator()) {}
 
+  const mm::mtl::RTTI *getRTTI() const override { return &m_rtti; }
   void changeLayer(u32 oldLayer, u32 newLayer) override {}
   virtual void update(const fw::UpdateInfo &info) = 0;
   virtual void procAnimCallback(GfComAsm *comAsm, const CallBackCache &cache) {}
 
   void callbackAnim(GfComAsm *comAsm, const CallBackCache &cache);
+  void callbackAnimForEvent(GfComEvtAnim *evtAnim, const CallBackCache &cache);
+  bool procAsmCallbackCommon(const CallBackCache &cache);
 
   // Inferred helper: plugin at index when it has the type T; original name unknown.
   template <typename T> T *unknown001(u32 index) const {

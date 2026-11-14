@@ -19,7 +19,7 @@ void GfReqManager::initialize(const GfSetupParam &) {
   unknown18 = ml::MicroThread::get()->createGroup();
   unknown20 = ml::MicroThread::get()->createThread(unknown18, fnReqUpdate, this);
 #line 93
-  unknown1838 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfReqSmallCom();
+  unknown1838 = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfReqSmallCom();
   unknown1848 = true;
 }
 
@@ -27,7 +27,7 @@ GfReqManager::~GfReqManager() {}
 
 void GfReqManager::build(const GfSetupParam &param) {
 #line 53
-  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfReqManager(param);
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfReqManager(param);
 }
 
 void GfReqManager::destroy() {

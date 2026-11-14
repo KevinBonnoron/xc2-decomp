@@ -10,11 +10,11 @@ BitArray::BitArray(int bitCount, int count, bool isSigned) : unknown08(nullptr) 
 
 void BitArray::Initialize(int bitCount, int count, bool isSigned) {
   if (unknown08 != nullptr) {
-    gf::getAllocator(gf::ALLOCATOR_DEFAULT)->deallocate(unknown08);
+    gf::getAllocator(gf::ALLOCATOR_UNKNOWN_0)->deallocate(unknown08);
   }
 
   int size = (bitCount * count + 7) / 8;
-  unknown08 = static_cast<u8 *>(gf::getAllocator(gf::ALLOCATOR_DEFAULT)->allocate(size, 4));
+  unknown08 = static_cast<u8 *>(gf::getAllocator(gf::ALLOCATOR_UNKNOWN_0)->allocate(size, 4));
   __builtin_memset(unknown08, 0, size);
   this->unknown10 = count;
   this->unknown12 = bitCount;
@@ -23,7 +23,7 @@ void BitArray::Initialize(int bitCount, int count, bool isSigned) {
 
 BitArray::~BitArray() {
   if (unknown08 != nullptr) {
-    gf::getAllocator(gf::ALLOCATOR_DEFAULT)->deallocate(unknown08);
+    gf::getAllocator(gf::ALLOCATOR_UNKNOWN_0)->deallocate(unknown08);
   }
 }
 

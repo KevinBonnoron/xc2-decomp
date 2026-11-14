@@ -16,12 +16,12 @@ namespace event {
 
 class CamHands : public CamBase {
 public:
-  static constexpr u32 KEY_COUNT = 16;
+  static constexpr u32 KEY_UNKNOWN_16 = 16; // Inferred role: key count; original name unknown.
 
   enum {
-    FLAG_FOLLOW_POS = 1 << 0,
-    FLAG_FOLLOW_TAR = 1 << 1,
-    FLAG_FOLLOW_TAR_ANGLE = 1 << 2,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: follow pos flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: follow tar flag; original name unknown.
+    FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: follow tar angle flag; original name unknown.
   };
 
   CamHands(bool isFocal);
@@ -56,22 +56,22 @@ public:
 
 private:
   void setFollowTarAngle(u32 axis) {
-    if (axis == TarAxis::AXIS_ANGLE || axis == TarAxis::AXIS_ANGLE_GLOBAL) {
-      unknown40 |= FLAG_FOLLOW_TAR_ANGLE;
+    if (axis == TarAxis::AXIS_UNKNOWN_4 || axis == TarAxis::AXIS_UNKNOWN_5) {
+      unknown40 |= FLAG_UNKNOWN_2;
     } else {
-      unknown40 &= ~FLAG_FOLLOW_TAR_ANGLE;
+      unknown40 &= ~FLAG_UNKNOWN_2;
     }
   }
 
-  u32 unknown40;                                       // Inferred role: flags; original member name unknown.
-  AnmVec unknown50;                                    // Inferred role: pos anm; original member name unknown.
-  AnmVec unknown240;                                   // Inferred role: tar anm; original member name unknown.
-  AnmF32 unknown430;                                   // Inferred role: fov anm; original member name unknown.
-  AnmF32 unknown540;                                   // Inferred role: rot z anm; original member name unknown.
-  mm::mtl::FixedVector<PosAxis, KEY_COUNT> unknown650; // Inferred role: pos axes; original member name unknown.
-  mm::mtl::FixedVector<TarAxis, KEY_COUNT> unknown860; // Inferred role: tar axes; original member name unknown.
-  mm::mtl::FixedVector<f32, KEY_COUNT> unknowna70;     // Inferred role: fovs; original member name unknown.
-  mm::mtl::FixedVector<f32, KEY_COUNT> unknownab8;     // Inferred role: rot zs; original member name unknown.
+  u32 unknown40;                                            // Inferred role: flags; original member name unknown.
+  AnmVec unknown50;                                         // Inferred role: pos anm; original member name unknown.
+  AnmVec unknown240;                                        // Inferred role: tar anm; original member name unknown.
+  AnmF32 unknown430;                                        // Inferred role: fov anm; original member name unknown.
+  AnmF32 unknown540;                                        // Inferred role: rot z anm; original member name unknown.
+  mm::mtl::FixedVector<PosAxis, KEY_UNKNOWN_16> unknown650; // Inferred role: pos axes; original member name unknown.
+  mm::mtl::FixedVector<TarAxis, KEY_UNKNOWN_16> unknown860; // Inferred role: tar axes; original member name unknown.
+  mm::mtl::FixedVector<f32, KEY_UNKNOWN_16> unknowna70;     // Inferred role: fovs; original member name unknown.
+  mm::mtl::FixedVector<f32, KEY_UNKNOWN_16> unknownab8;     // Inferred role: rot zs; original member name unknown.
 };
 
 static_assert(sizeof(CamHands) == 0xb00, "");

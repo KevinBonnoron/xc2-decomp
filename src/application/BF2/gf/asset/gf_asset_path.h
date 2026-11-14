@@ -2,6 +2,7 @@
 
 namespace gf {
 
+// The static locals keep the names of the game's symbols (gf::GfAssetPath::getSePack()::s_szSe, getMdoModel()::s_szMdo, getEvt()::s_szEvt, getMdoMap()::s_szMdo, getEff()::s_szEff, getStp()::s_szStp).
 class GfAssetPath {
 public:
   static const char *getSePack() {

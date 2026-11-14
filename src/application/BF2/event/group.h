@@ -9,7 +9,7 @@ class CharaObj;
 
 class Group {
 public:
-  static constexpr u32 CHARA_COUNT = 128;
+  static constexpr u32 CHARA_UNKNOWN_128 = 128; // Inferred role: chara count; original name unknown.
 
   Group();
   virtual ~Group() {}
@@ -22,10 +22,10 @@ public:
   void updateDir();
 
 private:
-  mm::mtl::FixedVector<const CharaObj *, CHARA_COUNT> unknown08; // Inferred role: charas; original member name unknown.
-  mm::Vec3 unknown410;                                           // Inferred role: pos; original member name unknown.
-  f32 unknown420;                                                // Inferred role: radius; original member name unknown.
-  f32 unknown424;                                                // Inferred role: dir; original member name unknown.
+  mm::mtl::FixedVector<const CharaObj *, CHARA_UNKNOWN_128> unknown08; // Inferred role: charas; original member name unknown.
+  mm::Vec3 unknown410;                                                 // Inferred role: pos; original member name unknown.
+  f32 unknown420;                                                      // Inferred role: radius; original member name unknown.
+  f32 unknown424;                                                      // Inferred role: dir; original member name unknown.
 };
 
 static_assert(sizeof(Group) == 0x430, "");

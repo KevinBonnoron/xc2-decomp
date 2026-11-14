@@ -45,12 +45,12 @@ void StateFieldPrepareBigJump::leave(GfComBehaviorPc *behavior, ai::State *next)
 
 void StateFieldPrepareBigJump::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
   if (!GfGameManager::isPlayerPause()) {
-    reqState(STATE_ID_FIELD_IDLE);
+    reqState(STATE_ID_UNKNOWN_3);
   }
 }
 
 bool StateFieldPrepareBigJump::recieveMessage(void *owner, fw::MessageObject *sender, fw::Message &message) {
-  if (message.unknown00 == MSG_PC_FIELD_NOTIFY_BIG_JUMP) {
+  if (message.unknown00 == MSG_PC_FIELD_NOTIFY_UNKNOWN_16777233) {
     procMsgPcFieldNotifyBigJump(static_cast<GfComBehaviorPc *>(owner), sender, static_cast<MsgPcFieldNotifyBigJump &>(message));
     return true;
   }
@@ -69,7 +69,7 @@ void StateFieldPrepareBigJump::procMsgPcFieldNotifyBigJump(GfComBehaviorPc *beha
       property->unknown310.unknown78 = object->unknownf8;
     }
   }
-  reqState(STATE_ID_FIELD_BIG_JUMP);
+  reqState(STATE_ID_UNKNOWN_17);
 }
 
 } // namespace pc

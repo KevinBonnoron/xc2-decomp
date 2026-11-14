@@ -32,7 +32,7 @@ public:
     int unknown08;         // Role and original member name unknown.
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_TUTORIAL;
+  static const GmkType GMK_TYPE = GMK_TYPE_TUTORIAL; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkTutorial();
   ~GmkTutorial() override { dispose(); }

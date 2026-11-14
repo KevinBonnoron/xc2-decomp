@@ -3,6 +3,7 @@
 
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/object/gf_obj_handle.h"
+#include "gmk/gmk_acc.h"
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
@@ -35,7 +36,7 @@ public:
     int unknown0c; // Inferred role: last member index; original member name unknown. The size of this structure is unknown.
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_SQUAD_LEADER;
+  static const GmkType GMK_TYPE = GMK_TYPE_SQUAD_LEADER; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkSquadLeader() : unknown48(nullptr) {}
   ~GmkSquadLeader() override { dispose(); }
@@ -62,7 +63,7 @@ public:
     void create(CBdatWrapper, int, const AGmkBase &) {}
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_SQUAD_MEMBER;
+  static const GmkType GMK_TYPE = GMK_TYPE_SQUAD_MEMBER; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkSquadMember() : unknown48(nullptr) {}
   ~GmkSquadMember() override { dispose(); }
@@ -81,8 +82,21 @@ typedef TGmkList<GmkSquadMember, GmkSquadMember::BdatInfo, 0x424d5153, 1, GmkSqu
 
 class GmkSquad : public mm::mtl::ReferenceObject, public mm::mtl::IntrusiveListNode<GmkSquad> {
 public:
+  // Layout evidence: create (0x7100614dd8) copies the 12 bytes, the constructor and dispose (0x71006151b8) store -1, -1 and 1.
+  struct CreateInfo {
+    CreateInfo() : unknown00(-1), unknown04(-1), unknown08(1) {}
+
+    int unknown00; // Inferred role: gmk set id; original member name unknown.
+    int unknown04; // Inferred role: index of the squad leader gimmick; original member name unknown.
+    int unknown08; // Inferred role: circle member count; original member name unknown.
+  };
+
+  explicit GmkSquad(const CreateInfo *info);
+  ~GmkSquad() override { dispose(); }
+  void create(const CreateInfo &info);
+  void dispose();
   bool isValid() const;
-  GmkSquadLeader *getBindedGmkSquadLeader() const;
+  const GmkSquadLeader *getBindedGmkSquadLeader() const;
   void getPosRotY(mm::Vec3 &position, f32 &rotY, u32 index) const;
   void update(f32 deltaTime);
   void addGmkSquadNavi(GmkSquadNavi *navi);
@@ -93,11 +107,14 @@ public:
   void seqUpdate(f32 deltaTime);
   void debugDraw() const;
 
-  u8 _20[0x28 - 0x20];
-  int unknown28; // Inferred role: circle member count; original member name unknown.
-  f32 unknown2c; // Inferred role: member distance scale; original member name unknown.
-  u8 _30[0x68 - 0x30];
-  GmkSquadLeader *m_bindedGmkSquadLeader;
+  // Inferred helper: the gimmick of the accessor as the squad leader it was created for; original name unknown.
+  const GmkSquadLeader *unknown003() const { return static_cast<const GmkSquadLeader *>(m_bindedGmkSquadLeader.unknown38); }
+
+  CreateInfo unknown20; // Inferred role: create info; original member name unknown.
+  f32 unknown2c;        // Inferred role: member distance scale; original member name unknown.
+  // Named from getBindedGmkSquadLeader, which returns its gimmick. Layout evidence: the constructor (0x7100614d08) builds a GmkAcc
+  // here, create calls GmkAcc::create on it and dispose inlines GmkAcc::dispose (GmkAccManager::removeGmkAcc at 0x710061518c).
+  GmkAcc m_bindedGmkSquadLeader;
   u32 unknown70; // Inferred role: squad member count; original member name unknown.
   u8 _74[0x78 - 0x74];
   void (GmkSquad::*unknown78)(f32);               // Inferred role: seq; original member name unknown.
@@ -107,9 +124,10 @@ public:
   mm::mtl::Vector<bool> unknownf0;                // Inferred role: member indices in use; original member name unknown.
 };
 
-static_assert(offsetof(GmkSquad, unknown28) == 0x28, "");
+static_assert(sizeof(GmkSquad::CreateInfo) == 0xc, "");
+static_assert(offsetof(GmkSquad, unknown20) == 0x20, "");
 static_assert(offsetof(GmkSquad, unknown2c) == 0x2c, "");
-static_assert(offsetof(GmkSquad, m_bindedGmkSquadLeader) == 0x68, "");
+static_assert(offsetof(GmkSquad, m_bindedGmkSquadLeader) == 0x30, "");
 static_assert(offsetof(GmkSquad, unknown70) == 0x70, "");
 static_assert(offsetof(GmkSquad, unknown78) == 0x78, "");
 static_assert(offsetof(GmkSquad, unknown88) == 0x88, "");
@@ -125,7 +143,7 @@ static_assert(sizeof(GmkSquad) == 0x118, "");
 class GmkSquadNavi : public mm::mtl::IntrusiveListNode<GmkSquadNavi> {
 public:
   struct CreateInfo {
-    CreateInfo() : unknown00(nullptr), unknown08(gf::INVALID_HANDLE) {
+    CreateInfo() : unknown00(nullptr), unknown08(gf::unknown020) {
       unknown10 = 0.1f;
       unknown14 = 1.0f;
     }
@@ -157,7 +175,7 @@ public:
 
   // Inferred helper: whether the navi is bound to a member of its squad; original name unknown.
   bool unknown001() const {
-    if (unknown10.unknown00 != nullptr && unknown10.unknown08 != gf::INVALID_HANDLE && unknown28 >= 0) {
+    if (unknown10.unknown00 != nullptr && unknown10.unknown08 != gf::unknown020 && unknown28 >= 0) {
       if (static_cast<u32>(unknown28) < unknown10.unknown00->unknown70) {
         return true;
       }
@@ -169,7 +187,7 @@ public:
   // Inferred helper: unbinds the navi from its squad; original name unknown.
   void unknown002() {
     unknown10.unknown00 = nullptr;
-    unknown10.unknown08 = gf::INVALID_HANDLE;
+    unknown10.unknown08 = gf::unknown020;
     unknown10.unknown10 = 0.1f;
     unknown10.unknown14 = 1.0f;
   }

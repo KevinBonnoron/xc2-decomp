@@ -199,8 +199,8 @@ u8 *UIUtil::getBdatFP(u8 type) {
 }
 
 void UIUtil::setupAllocator(mtl::ALLOC_HANDLE parent) {
-  mtl::ALLOC_HANDLE program = mtl::MemManager::create(parent, 0x500000, "MenuProgram", false, mtl::ALLOCATOR_TYPE_PROGRAM, 0x10);
-  mtl::ALLOC_HANDLE resource = mtl::MemManager::create(parent, 0x4b00000, "MenuResource", false, mtl::ALLOCATOR_TYPE_RESOURCE, 0x1000);
+  mtl::ALLOC_HANDLE program = mtl::MemManager::create(parent, 0x500000, "MenuProgram", false, mtl::ALLOCATOR_TYPE_UNKNOWN_1, 0x10);
+  mtl::ALLOC_HANDLE resource = mtl::MemManager::create(parent, 0x4b00000, "MenuResource", false, mtl::ALLOCATOR_TYPE_UNKNOWN_2, 0x1000);
   ml::DevGraph::setMemPoolMemHandle(resource);
   s_ProgAllocator.m_name = "MenuProgram";
   s_ProgAllocator.setMemHandle(program);

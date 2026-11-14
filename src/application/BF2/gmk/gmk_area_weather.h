@@ -17,7 +17,7 @@ public:
     void create(CBdatWrapper, int, const AGmkBase &) {}
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_AREA_WEATHER;
+  static const GmkType GMK_TYPE = GMK_TYPE_AREA_WEATHER; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkAreaWeather() : unknown50(nullptr) {}
   ~GmkAreaWeather() override { dispose(); }

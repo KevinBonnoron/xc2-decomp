@@ -4,7 +4,7 @@
 
 namespace gf {
 
-constexpr int CHAPTER_NUMBER_OFFSET = 8;
+constexpr int OFFSET_UNKNOWN_8 = 8; // Inferred role: chapter number offset; original name unknown.
 
 void GfDataSave::getSaveDataPath(mm::mtl::FixStr<256> &path) { path = "save:/"; }
 
@@ -24,12 +24,12 @@ void GfDataSave::addSaveDataPrefix(mm::mtl::FixStr<256> &path, int number) {
 }
 
 void GfDataSave::getFileNameForLoad(mm::mtl::FixStr<256> &path, SAVESLOT slot) {
-  if (slot == SAVESLOT_NONE) {
+  if (slot == SAVESLOT_UNKNOWN_FFFFFFFF) {
     path.clear();
-  } else if (slot == SAVESLOT_DEFAULT) {
+  } else if (slot == SAVESLOT_UNKNOWN_22) {
     getSaveDataPath(path);
     path += getSaveDataFileName();
-  } else if (slot < SAVESLOT_CHAPTER_FIRST) {
+  } else if (slot < SAVESLOT_UNKNOWN_10) {
     getSaveDataPath(path);
     path += getSaveDataFileName();
     mm::mtl::FixStr<16> number;
@@ -37,18 +37,18 @@ void GfDataSave::getFileNameForLoad(mm::mtl::FixStr<256> &path, SAVESLOT slot) {
     path += number.c_str();
   } else {
     mm::mtl::FixStr<16> number;
-    number.format("%d", slot - CHAPTER_NUMBER_OFFSET);
+    number.format("%d", slot - OFFSET_UNKNOWN_8);
     path.format("/work/gf_select/%s%s", getChapterSaveDataFileName(), number.c_str());
   }
 }
 
 void GfDataSave::getFileNameForSave(mm::mtl::FixStr<256> &path, SAVESLOT slot) {
-  if (slot == SAVESLOT_NONE) {
+  if (slot == SAVESLOT_UNKNOWN_FFFFFFFF) {
     path.clear();
-  } else if (slot == SAVESLOT_DEFAULT) {
+  } else if (slot == SAVESLOT_UNKNOWN_22) {
     getSaveDataPath(path);
     path += getSaveDataFileName();
-  } else if (slot < SAVESLOT_CHAPTER_FIRST) {
+  } else if (slot < SAVESLOT_UNKNOWN_10) {
     getSaveDataPath(path);
     path += getSaveDataFileName();
     mm::mtl::FixStr<16> number;
@@ -57,7 +57,7 @@ void GfDataSave::getFileNameForSave(mm::mtl::FixStr<256> &path, SAVESLOT slot) {
   } else {
     getSaveDataPath(path);
     mm::mtl::FixStr<16> number;
-    number.format("%d", slot - CHAPTER_NUMBER_OFFSET);
+    number.format("%d", slot - OFFSET_UNKNOWN_8);
     path += getChapterSaveDataFileName();
     path += number.c_str();
   }

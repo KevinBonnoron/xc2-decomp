@@ -20,17 +20,17 @@ struct GF_OBJ_HANDLE;
 struct GFOBJ_INFO;
 
 enum {
-  OBJ_STATE_UPDATING = 0,
-  OBJ_STATE_UPDATE_ENABLE = 1,
+  OBJ_STATE_UNKNOWN_0 = 0, // Inferred role: obj state updating; original name unknown.
+  OBJ_STATE_UNKNOWN_1 = 1, // Inferred role: obj state update enable; original name unknown.
 };
 
 enum {
-  OBJ_ATTRIBUTE_TARGET_MASK = 0x7,
+  OBJ_UNKNOWN_7 = 0x7, // Inferred role: obj attribute target mask; original name unknown.
 };
 
 enum {
-  MSG_DEBUG_ACTIVATE_OBJECT_WINDOW = 0x1000001,
-  MSG_DEBUG_DEACTIVATE_OBJECT_WINDOW = 0x1000002,
+  MSG_DEBUG_UNKNOWN_16777217 = 0x1000001, // Inferred role: msg debug activate object window; original name unknown.
+  MSG_DEBUG_UNKNOWN_16777218 = 0x1000002, // Inferred role: msg debug deactivate object window; original name unknown.
 };
 
 struct MsgDebugActivateObjectWindow : fw::Message {};
@@ -82,7 +82,7 @@ public:
   static void cleanup();
 
 private:
-  static Info s_info[fw::Framework::LAYER_MAX];
+  static Info s_info[fw::Framework::LAYER_UNKNOWN_32];
 };
 
 static_assert(sizeof(GfObjLayerSpeed::Info) == 0x8, "");

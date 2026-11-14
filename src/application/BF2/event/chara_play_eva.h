@@ -18,10 +18,10 @@ class CharaDysUpdater;
 class CharaPlayEva : public ICmd {
 public:
   enum {
-    FLAG_CHARA = 1 << 0,
-    FLAG_WEAPON = 1 << 1,
-    FLAG_PLAY = 1 << 2,
-    FLAG_LOOP = 1 << 3,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: chara flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: weapon flag; original name unknown.
+    FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: play flag; original name unknown.
+    FLAG_UNKNOWN_3 = 1 << 3, // Inferred role: loop flag; original name unknown.
   };
 
   virtual RESULT update(const Param &param);

@@ -1,6 +1,9 @@
 #include "gf/menu/object/gf_menu_obj_util.h"
 
+#include <string.h>
+
 #include "bdat.h"
+#include "framework/lang_util.h"
 #include "framework/sound/sound_manager.h"
 #include "fw/fw_pad.h"
 #include "fw/fw_param_manager.h"
@@ -30,6 +33,7 @@
 #include "gf/game/quest/gf_quest_id.h"
 #include "gf/game/quest/gf_quest_info.h"
 #include "gf/game/quest/gf_quest_manager.h"
+#include "gf/gf_allocator.h"
 #include "gf/gf_info.h"
 #include "gf/menu/adapter/gf_menu_adapter_manager.h"
 #include "gf/menu/call/gf_menu_call_context.h"
@@ -57,6 +61,7 @@
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/intrusive_ptr.h"
+#include "mtl/mem_manager.h"
 #include "ui/ctrl/ui_ctrl_cursor_select.h"
 #include "ui/ctrl/ui_ctrl_manager.h"
 #include "ui/event/ui_event_manager.h"
@@ -90,32 +95,47 @@ struct unknown078 {
 };
 
 enum MENU_SE {
-  MENU_SE_DECIDE = 1,
-  MENU_SE_CANCEL = 2,
-  MENU_SE_TAB = 5,
-  MENU_SE_CURSOR = 6,
-  MENU_SE_INVALID = 7,
-  MENU_SE_SORT = 11,
-  MENU_SE_OPEN_SUB_MENU = 12,
-  MENU_SE_CLOSE_SUB_MENU = 14,
+  MENU_SE_UNKNOWN_1 = 1,   // Inferred role: sound effect played by playSECommonDecide; original enumerator name unknown.
+  MENU_SE_UNKNOWN_2 = 2,   // Inferred role: sound effect played by playSECommonCancel; original enumerator name unknown.
+  MENU_SE_UNKNOWN_5 = 5,   // Inferred role: sound effect played by playSECommonTab; original enumerator name unknown.
+  MENU_SE_UNKNOWN_6 = 6,   // Inferred role: sound effect played by playSECommonCursor; original enumerator name unknown.
+  MENU_SE_UNKNOWN_7 = 7,   // Inferred role: sound effect of the invalid operation entry of the common sound effects; original enumerator name unknown.
+  MENU_SE_UNKNOWN_11 = 11, // Inferred role: sound effect played by playSECommonSort; original enumerator name unknown.
+  MENU_SE_UNKNOWN_12 = 12, // Inferred role: sound effect played by playSECommonOpenSubMenu; original enumerator name unknown.
+  MENU_SE_UNKNOWN_14 = 14, // Inferred role: sound effect played by playSECommonCloseSubMenu; original enumerator name unknown.
 };
 
-constexpr u32 ICON_NONE = 0xffff;
-constexpr u32 POINTER_SELECT_ICON = 17;
-constexpr u32 PARTY_DRIVER_MAX = 3;
-constexpr u16 SCENARIO_CUSTOM_ENABLE = 2000;
-constexpr u32 BLADE_EXTRA_FIRST = 1043;
-constexpr u32 BLADE_EXTRA_COUNT = 7;
-constexpr u32 BLADE_RANK_MAX = 5;
-constexpr u32 BLADE_RARITY_SCENARIO = 2;
-constexpr int FLAG_BLADE_SLOT_2_OPEN = 0x89ff;
-constexpr int FLAG_BLADE_SLOT_3_OPEN = 0x8a00;
-constexpr u32 ICON_WEAPON_TYPE_BASE = 0x8a;
-constexpr u32 ICON_WEAPON_TYPE_NONE = 0x8b;
-constexpr u32 ICON_ATTRIBUTE_BASE = 0x9e;
-constexpr u32 ICON_TRUST_RANK_BASE = 0x83;
+// Inferred role: icon number returned when no icon matches; original name unknown.
+constexpr u32 ICON_UNKNOWN_65535 = 0xffff;
+// Inferred role: icon number of the pointer select icon (getPointerSelectIconNumber); original name unknown.
+constexpr u32 POINTER_UNKNOWN_17 = 17;
+// Inferred role: number of drivers of the party; original name unknown.
+constexpr u32 PARTY_DRIVER_UNKNOWN_3 = 3;
+// Inferred role: scenario flag above which the blade customization is enabled; original name unknown.
+constexpr u16 SCENARIO_UNKNOWN_2000 = 2000;
+// Inferred role: first extra blade; original name unknown.
+constexpr u32 BLADE_EXTRA_UNKNOWN_1043 = 1043;
+// Inferred role: number of extra blades; original name unknown.
+constexpr u32 BLADE_EXTRA_UNKNOWN_7 = 7;
+// Inferred role: maximum rank of a blade; original name unknown.
+constexpr u32 BLADE_RANK_UNKNOWN_5 = 5;
+// Inferred role: rarity of the scenario blades; original name unknown.
+constexpr u32 BLADE_RARITY_UNKNOWN_2 = 2;
+// Inferred role: local flag id that opens the second blade slot; original name unknown.
+constexpr int FLAG_BLADE_SLOT_UNKNOWN_35327 = 0x89ff;
+// Inferred role: local flag id that opens the third blade slot; original name unknown.
+constexpr int FLAG_BLADE_SLOT_UNKNOWN_35328 = 0x8a00;
+// Inferred role: icon number of the first weapon type; original name unknown.
+constexpr u32 ICON_WEAPON_TYPE_UNKNOWN_138 = 0x8a;
+// Inferred role: icon number returned when the blade has no weapon type; original name unknown.
+constexpr u32 ICON_WEAPON_TYPE_UNKNOWN_139 = 0x8b;
+// Inferred role: icon number of the first attribute; original name unknown.
+constexpr u32 ICON_ATTRIBUTE_UNKNOWN_158 = 0x9e;
+// Inferred role: icon number of the first trust rank; original name unknown.
+constexpr u32 ICON_TRUST_RANK_UNKNOWN_131 = 0x83;
 
-static const unknown078 s_buttonIcons[] = {
+// Inferred role: icon number of each pad button; original name unknown.
+static const unknown078 unknown081[] = {
     {0x1000, 26},
     {0x2000, 29},
     {0x4000, 27},
@@ -134,7 +154,8 @@ static const unknown078 s_buttonIcons[] = {
     {0x100, 8},
 };
 
-static const unknown078 s_padSelectIcons[] = {
+// Inferred role: icon number of each pad selection; original name unknown.
+static const unknown078 unknown082[] = {
     {1, 30},
     {2, 31},
     {6, 5},
@@ -145,9 +166,11 @@ static const unknown078 s_padSelectIcons[] = {
     {8, 17},
 };
 
-static const u32 s_ideaLevelPoints[] = {500, 1500, 3500, 7000, 10000};
+// Inferred role: idea points needed for each level; original name unknown.
+static const u32 unknown083[] = {500, 1500, 3500, 7000, 10000};
 
-static const u16 s_commonSes[] = {MENU_SE_DECIDE, MENU_SE_CANCEL, MENU_SE_INVALID};
+// Inferred role: sound effects of the common sound effect types; original name unknown.
+static const u16 unknown084[] = {MENU_SE_UNKNOWN_1, MENU_SE_UNKNOWN_2, MENU_SE_UNKNOWN_7};
 
 // Inferred role: bdat columns of the class buff types; original name unknown.
 static const char *unknown079[] = {"DamageDown", "DamageUP", "HealUP", "AutoHate", "ArtsHate"};
@@ -156,24 +179,24 @@ static const char *unknown079[] = {"DamageDown", "DamageUP", "HealUP", "AutoHate
 static const char *unknown080[] = {"DamageDownNum", "DamageUPNum", "HealUPNum", "AutoHateNum", "ArtsHateNum"};
 
 s16 GfMenuObjUtil::getBtnIconNumber(u32 button) {
-  for (u32 i = 0; i < sizeof(s_buttonIcons) / sizeof(s_buttonIcons[0]); i++) {
-    if ((button & s_buttonIcons[i].unknown00) != 0) {
-      return s_buttonIcons[i].unknown04;
+  for (u32 i = 0; i < sizeof(unknown081) / sizeof(unknown081[0]); i++) {
+    if ((button & unknown081[i].unknown00) != 0) {
+      return unknown081[i].unknown04;
     }
   }
-  return ICON_NONE;
+  return ICON_UNKNOWN_65535;
 }
 
 u32 GfMenuObjUtil::getPadSelectIconNumber(u32 select) {
-  for (u32 i = 0; i < sizeof(s_padSelectIcons) / sizeof(s_padSelectIcons[0]); i++) {
-    if (s_padSelectIcons[i].unknown00 == select) {
-      return s_padSelectIcons[i].unknown04;
+  for (u32 i = 0; i < sizeof(unknown082) / sizeof(unknown082[0]); i++) {
+    if (unknown082[i].unknown00 == select) {
+      return unknown082[i].unknown04;
     }
   }
-  return ICON_NONE;
+  return ICON_UNKNOWN_65535;
 }
 
-u32 GfMenuObjUtil::getPointerSelectIconNumber() { return POINTER_SELECT_ICON; }
+u32 GfMenuObjUtil::getPointerSelectIconNumber() { return POINTER_UNKNOWN_17; }
 
 void GfMenuObjUtil::setChildDisp(u32 handle, const char *name, bool disp) {
   ui::UIObjectAcc acc(handle, name);
@@ -331,7 +354,7 @@ bool GfMenuObjUtil::isInBattle(GF_OBJ_HANDLE *handle) {
 
 int GfMenuObjUtil::convMenuDriverID(u32 driver) {
   u8 *bdat = GfDataBdat::getFP(BDAT_MNU_DR_IMAGE_ID);
-  DataParamAcc acc(OBJECT_TYPE_DRIVER, driver, GIMMICK_TYPE_NONE);
+  DataParamAcc acc(OBJECT_TYPE_PC, driver, GIMMICK_TYPE_UNKNOWN_0);
   int index = 0;
   if (acc.isValid()) {
     int top = Bdat::getIdTop(bdat);
@@ -354,7 +377,7 @@ int GfMenuObjUtil::convMenuDriverID(u32 driver) {
 
 int GfMenuObjUtil::convMenuBladeID(u32 blade) {
   u8 *bdat = GfDataBdat::getFP(BDAT_MNU_BL_IMAGE_ID);
-  DataParamAcc acc(OBJECT_TYPE_BLADE, blade, GIMMICK_TYPE_NONE);
+  DataParamAcc acc(OBJECT_TYPE_BLADE, blade, GIMMICK_TYPE_UNKNOWN_0);
   int index = 0;
   if (acc.isValid()) {
     int top = Bdat::getIdTop(bdat);
@@ -383,17 +406,17 @@ int GfMenuObjUtil::convMenuBladeID(u32 blade) {
 
 int GfMenuObjUtil::getLeaderPartyType() {
   GF_OBJ_HANDLE *leader = GfGameParty::getLeader();
-  if (leader != INVALID_HANDLE) {
+  if (leader != unknown020) {
     return GfObjAcc(leader).getType();
   }
   return -1;
 }
 
 bool GfMenuObjUtil::isExitDriver(u32 partyId) {
-  if (partyId >= PARTY_DRIVER_MAX) {
-    partyId %= PARTY_DRIVER_MAX;
+  if (partyId >= PARTY_DRIVER_UNKNOWN_3) {
+    partyId %= PARTY_DRIVER_UNKNOWN_3;
   }
-  return GfGameParty::getHandleDriver(partyId) != INVALID_HANDLE;
+  return GfGameParty::getHandleDriver(partyId) != unknown020;
 }
 
 u32 GfMenuObjUtil::setupPartyDriver(const mm::mtl::FixedVector<u16, 16> &drivers) {
@@ -425,7 +448,7 @@ bool GfMenuObjUtil::isBladeEnable(u32 partyId, int slot) {
 bool GfMenuObjUtil::isValidBlade(u32 blade) { return blade != 0 && !GfDataBlade::isDummyBlade(blade); }
 
 int GfMenuObjUtil::getSetBladeID(u32 partyId, int offset, bool isVirtual) {
-  DataParamAcc acc(OBJECT_TYPE_DRIVER, GfDataParty::getDriver(partyId), GIMMICK_TYPE_NONE);
+  DataParamAcc acc(OBJECT_TYPE_PC, GfDataParty::getDriver(partyId), GIMMICK_TYPE_UNKNOWN_0);
   int setId = 0;
   if (acc.isValid()) {
     if (offset == -1) {
@@ -436,7 +459,7 @@ int GfMenuObjUtil::getSetBladeID(u32 partyId, int offset, bool isVirtual) {
         setId = GfSelectBlade::getStartBattleSetId(partyId);
       }
       int slot = setId;
-      if (acc.getValidDriverId() == DRIVER_REX && setId - 3U < 2) {
+      if (acc.getValidDriverId() == DRIVER_UNKNOWN_1 && setId - 3U < 2) {
         if (acc.getBlade(0, false) == BLADE_HOMURA) {
           slot = 0;
         } else if (acc.getBlade(1, false) == BLADE_HOMURA) {
@@ -450,7 +473,7 @@ int GfMenuObjUtil::getSetBladeID(u32 partyId, int offset, bool isVirtual) {
         slot -= getBladeSlotMax();
       }
       setId = slot;
-      if (acc.getValidDriverId() == DRIVER_REX && acc.getBlade(slot, false) == BLADE_HOMURA) {
+      if (acc.getValidDriverId() == DRIVER_UNKNOWN_1 && acc.getBlade(slot, false) == BLADE_HOMURA) {
         setId = acc.getBladeSet(false);
         if (setId == 4) {
           setId = 4;
@@ -501,13 +524,13 @@ bool GfMenuObjUtil::isBladeContorolable(u32 partyId, int slot) {
 GF_OBJ_HANDLE *GfMenuObjUtil::getLeaderBladeHandle(bool isVirtual) {
   int bladeSet = 0;
   {
-    DataParamAcc acc(OBJECT_TYPE_DRIVER, GfDataParty::getDriver(0), GIMMICK_TYPE_NONE);
+    DataParamAcc acc(OBJECT_TYPE_PC, GfDataParty::getDriver(0), GIMMICK_TYPE_UNKNOWN_0);
     if (acc.isValid()) {
       bladeSet = acc.getBladeSet(false);
     }
   }
   if (bladeSet == -1) {
-    return INVALID_HANDLE;
+    return unknown020;
   }
   return GfGameParty::getHandleBlade(0, bladeSet);
 }
@@ -519,7 +542,7 @@ u32 GfMenuObjUtil::getBladeIDFromPartySlot(u32 partyId, int offset, bool isVirtu
     return 0;
   }
 
-  DataParamAcc acc(OBJECT_TYPE_DRIVER, GfDataParty::getDriver(partyId), GIMMICK_TYPE_NONE);
+  DataParamAcc acc(OBJECT_TYPE_PC, GfDataParty::getDriver(partyId), GIMMICK_TYPE_UNKNOWN_0);
   int slot = getSetBladeID(partyId, offset, isVirtual);
   u32 blade = 0;
   if (slot != -1) {
@@ -531,7 +554,7 @@ u32 GfMenuObjUtil::getBladeIDFromPartySlot(u32 partyId, int offset, bool isVirtu
 GF_OBJ_HANDLE *GfMenuObjUtil::getBladeHandleFromPartySlot(u32 partyId, int offset, bool isVirtual) {
   int slot = getSetBladeID(partyId, offset, isVirtual);
   if (slot == -1) {
-    return INVALID_HANDLE;
+    return unknown020;
   }
   return GfGameParty::getHandleBlade(partyId, slot);
 }
@@ -543,17 +566,17 @@ GF_OBJ_HANDLE *GfMenuObjUtil::getBladeHandleFromPartyBackSlot(u32 partyId, int o
 GF_OBJ_HANDLE *GfMenuObjUtil::getBladeHandleOffset(u32 partyId, int offset) {
   int slot = getSetBladeID(partyId, offset, false);
   if (slot == -1) {
-    return INVALID_HANDLE;
+    return unknown020;
   }
   return GfGameParty::getHandleBlade(partyId, slot);
 }
 
 u32 GfMenuObjUtil::getBladeSlotMax() {
   u32 slotMax = 1;
-  if (GfGameFlag::getLocal(1, FLAG_BLADE_SLOT_2_OPEN) == 1) {
+  if (GfGameFlag::getLocal(1, FLAG_BLADE_SLOT_UNKNOWN_35327) == 1) {
     slotMax++;
   }
-  if (GfGameFlag::getLocal(1, FLAG_BLADE_SLOT_3_OPEN) == 1) {
+  if (GfGameFlag::getLocal(1, FLAG_BLADE_SLOT_UNKNOWN_35328) == 1) {
     slotMax = 3;
   }
   return slotMax;
@@ -667,52 +690,52 @@ int GfMenuObjUtil::getDriverPartyID(u32 driver) {
 u16 GfMenuObjUtil::getBladeFaceIconID(GF_OBJ_HANDLE *handle) {
   u32 blade = GfObjAcc(handle).getBdatId();
   if (GfDataBlade::isValid(blade)) {
-    return GfDataBlade::getSDataBlade(blade)->unknown70a;
+    return GfDataBlade::getSDataBlade(blade).unknown70a;
   }
   return GfMenuBdat::getTopBladeIconID();
 }
 
 u16 GfMenuObjUtil::getBladeFaceIconID(u32 blade) {
   if (GfDataBlade::isValid(blade)) {
-    return GfDataBlade::getSDataBlade(blade)->unknown70a;
+    return GfDataBlade::getSDataBlade(blade).unknown70a;
   }
   return GfMenuBdat::getTopBladeIconID();
 }
 
 u32 GfMenuObjUtil::getBladeWeaponTypeIconID(u32 blade) {
   if (GfDataBlade::isValid(blade)) {
-    return GfDataBlade::getSDataBlade(blade)->unknown821 + ICON_WEAPON_TYPE_BASE;
+    return GfDataBlade::getSDataBlade(blade).unknown821 + ICON_WEAPON_TYPE_UNKNOWN_138;
   }
-  return ICON_WEAPON_TYPE_NONE;
+  return ICON_WEAPON_TYPE_UNKNOWN_139;
 }
 
 u16 GfMenuObjUtil::getBladeAttributeIconID(u32 blade) {
   if (GfDataBlade::isValid(blade)) {
-    return GfDataBlade::getAttribute(blade) + ICON_ATTRIBUTE_BASE;
+    return GfDataBlade::getAttribute(blade) + ICON_ATTRIBUTE_UNKNOWN_158;
   }
-  return ICON_ATTRIBUTE_BASE;
+  return ICON_ATTRIBUTE_UNKNOWN_158;
 }
 
 u16 GfMenuObjUtil::getBladeCompatibilityIconID(u32 driver, u32 blade) {
   if (GfDataBlade::isValid(blade)) {
-    return GfGameUtil::getTrustRank(blade) + ICON_TRUST_RANK_BASE;
+    return GfGameUtil::getTrustRank(blade) + ICON_TRUST_RANK_UNKNOWN_131;
   }
-  return ICON_TRUST_RANK_BASE;
+  return ICON_TRUST_RANK_UNKNOWN_131;
 }
 
 u16 GfMenuObjUtil::getBladeAttributeID(u32 blade) {
   if (GfDataBlade::isValid(blade)) {
-    return GfDataBlade::getSDataBlade(blade)->unknown823;
+    return GfDataBlade::getSDataBlade(blade).unknown823;
   }
   return 0;
 }
 
 u32 GfMenuObjUtil::getBladeRank(u32 blade) {
   if (isScenarioBlade(blade)) {
-    return BLADE_RANK_MAX;
+    return BLADE_RANK_UNKNOWN_5;
   }
   if (GfDataBlade::isRareBlade(blade)) {
-    return BLADE_RANK_MAX;
+    return BLADE_RANK_UNKNOWN_5;
   }
   u32 kizunaringMax = GfDataBlade::getKizunaringMax(blade);
   if (kizunaringMax > 37) {
@@ -728,14 +751,14 @@ bool GfMenuObjUtil::isScenarioBlade(u32 blade) { return GfDataBlade::isRegularBl
 
 u32 GfMenuObjUtil::getBladeRarity(u32 blade) {
   if (isScenarioBlade(blade)) {
-    return BLADE_RARITY_SCENARIO;
+    return BLADE_RARITY_UNKNOWN_2;
   }
   return GfDataBlade::isRareBlade(blade);
 }
 
-bool GfMenuObjUtil::isExtraBlade(u32 blade) { return blade - BLADE_EXTRA_FIRST < BLADE_EXTRA_COUNT; }
+bool GfMenuObjUtil::isExtraBlade(u32 blade) { return blade - BLADE_EXTRA_UNKNOWN_1043 < BLADE_EXTRA_UNKNOWN_7; }
 
-bool GfMenuObjUtil::isBladeNoBuildWeapon(u32 blade) { return blade - BLADE_EXTRA_FIRST < BLADE_EXTRA_COUNT; }
+bool GfMenuObjUtil::isBladeNoBuildWeapon(u32 blade) { return blade - BLADE_EXTRA_UNKNOWN_1043 < BLADE_EXTRA_UNKNOWN_7; }
 
 bool GfMenuObjUtil::isBladeCurrent(u32 blade) {
   u32 driver = GfDataBlade::getSetDriver(blade);
@@ -799,9 +822,46 @@ u32 GfMenuObjUtil::canRemoveBladeEx(u32 blade, u32 driver, const mm::mtl::FixedV
 
 bool GfMenuObjUtil::canRemoveBlade(u32 blade, const mm::mtl::FixedVector<u16, 422> *blades) { return canRemoveBladeEx(blade, 0, blades) == 0; }
 
+bool GfMenuObjUtil::isBladeLastOne(u32 blade, const GfMenuBladeList *list) {
+  mm::mtl::FixedVector<u16, 422> blades;
+  GfDataBlade::getListParty(blades);
+  GfDataBlade::getListReserver(blades);
+  u32 creator = GfDataBlade::getCreator(blade);
+  if (blades.empty()) {
+    return true;
+  }
+  u32 count = 0;
+  if (list == nullptr) {
+    for (u32 i = 0; i < blades.size(); i++) {
+      u16 candidate = blades.begin()[i];
+      if ((candidate == BLADE_SUZAKU || !GfDataBlade::isReleaseLock(candidate)) && GfDataBlade::getCreator(candidate) == creator) {
+        count++;
+      }
+    }
+  } else {
+    for (u32 i = 0; i < blades.size(); i++) {
+      u16 candidate = blades.begin()[i];
+      if (candidate == BLADE_SUZAKU || !GfDataBlade::isReleaseLock(candidate)) {
+        bool found = false;
+        for (u32 index = 0; index < list->getSize(); index++) {
+          bool match = list->getContents(index).unknown00 == candidate;
+          found |= match;
+          if (match) {
+            break;
+          }
+        }
+        if (!found && GfDataBlade::getCreator(candidate) == creator) {
+          count++;
+        }
+      }
+    }
+  }
+  return count < 2;
+}
+
 bool GfMenuObjUtil::hasHomura(u32 driver) {
   bool hasHomura = false;
-  DataParamAcc acc(OBJECT_TYPE_DRIVER, driver, GIMMICK_TYPE_NONE);
+  DataParamAcc acc(OBJECT_TYPE_PC, driver, GIMMICK_TYPE_UNKNOWN_0);
   if (acc.isValid()) {
     if (GfDataBlade::getCreator(BLADE_HOMURA) == driver) {
       hasHomura = !GfDataBlade::isActivateUnuse(BLADE_HOMURA);
@@ -856,12 +916,49 @@ bool GfMenuObjUtil::getImageParam(u32 type, u32 id, ImageParam &param, u32 index
   return true;
 }
 
+bool GfMenuObjUtil::getBladeTeamName(u32 blade, ui::UIStr &name) {
+  if (blade != 0) {
+    if (GfDataBlade::isCommonBlade(blade)) {
+      DataParamAcc acc(OBJECT_TYPE_BLADE, blade, GIMMICK_TYPE_UNKNOWN_0);
+      ui::UIStr bladeName = getName(acc);
+      u16 id = getMsgIDFromList(BDAT_MNU_MSG_MERCENARIES, 20);
+      ui::UIStr teamName(GfDataBdat::getFP(BDAT_MENU_MS), id);
+      u32 length = strlen(bladeName.c_str());
+      char *text;
+      if (fw::LangUtil::getLangType() == 12 || fw::LangUtil::getLangType() == 2 || fw::LangUtil::getLangType() == 4 || fw::LangUtil::getLangType() == 5) {
+        u32 teamLength = strlen(teamName.c_str());
+        text = static_cast<char *>(getAllocator(ALLOCATOR_UNKNOWN_0)->allocate(length + teamLength + 2, 4));
+        strcpy(text, teamName.c_str());
+        strcat(text, " ");
+        strcat(text, bladeName.c_str());
+      } else {
+        u32 teamLength = strlen(teamName.c_str());
+        text = static_cast<char *>(getAllocator(ALLOCATOR_UNKNOWN_0)->allocate(length + teamLength + 1, 4));
+        strcpy(text, bladeName.c_str());
+        strcat(text, teamName.c_str());
+      }
+      name.setupAllocated(text);
+      if (text != nullptr) {
+        mtl::MemManager::deallocate(text, 0, false);
+      }
+      return true;
+    }
+    u8 *bdat;
+    u32 textId;
+    if (GfDataBlade::getMercenaryName(bdat, textId, blade)) {
+      name.setupMstxt(bdat, textId);
+      return true;
+    }
+  }
+  return false;
+}
+
 ui::UIStr GfMenuObjUtil::getName(const DataParamAcc &acc) {
   ui::UIStr name;
   u8 *bdat;
   u32 textId = 0;
   switch (acc.getObjType()) {
-  case OBJECT_TYPE_DRIVER:
+  case OBJECT_TYPE_PC:
     if (GfDataDriver::getName(bdat, textId, acc.getValidDriverId())) {
       name.setupMstxt(bdat, textId);
     }
@@ -938,12 +1035,12 @@ bool GfMenuObjUtil::checkCCStart(GfMenuCallContext *context) { return context !=
 bool GfMenuObjUtil::checkCCNext(GfMenuCallContext *context, u32 menu) { return context != nullptr && context->unknown10 == menu; }
 
 u32 GfMenuObjUtil::convIdeaPointToLevel(u32 point) {
-  for (u32 level = 0; level < sizeof(s_ideaLevelPoints) / sizeof(s_ideaLevelPoints[0]); level++) {
-    if (point < s_ideaLevelPoints[level]) {
+  for (u32 level = 0; level < sizeof(unknown083) / sizeof(unknown083[0]); level++) {
+    if (point < unknown083[level]) {
       return level;
     }
   }
-  return sizeof(s_ideaLevelPoints) / sizeof(s_ideaLevelPoints[0]);
+  return sizeof(unknown083) / sizeof(unknown083[0]);
 }
 
 u32 GfMenuObjUtil::playSE(u32 id) {
@@ -963,26 +1060,26 @@ u32 GfMenuObjUtil::playSE(const char *name) {
   return 0;
 }
 
-u32 GfMenuObjUtil::playSECommonDecide() { return playSE(MENU_SE_DECIDE); }
+u32 GfMenuObjUtil::playSECommonDecide() { return playSE(MENU_SE_UNKNOWN_1); }
 
 u32 GfMenuObjUtil::playSECommon(u32 type) {
-  if (type < sizeof(s_commonSes) / sizeof(s_commonSes[0])) {
-    return playSE(s_commonSes[type]);
+  if (type < sizeof(unknown084) / sizeof(unknown084[0])) {
+    return playSE(unknown084[type]);
   }
   return 0;
 }
 
-u32 GfMenuObjUtil::playSECommonCancel() { return playSE(MENU_SE_CANCEL); }
+u32 GfMenuObjUtil::playSECommonCancel() { return playSE(MENU_SE_UNKNOWN_2); }
 
-u32 GfMenuObjUtil::playSECommonCursor() { return playSE(MENU_SE_CURSOR); }
+u32 GfMenuObjUtil::playSECommonCursor() { return playSE(MENU_SE_UNKNOWN_6); }
 
-u32 GfMenuObjUtil::playSECommonTab() { return playSE(MENU_SE_TAB); }
+u32 GfMenuObjUtil::playSECommonTab() { return playSE(MENU_SE_UNKNOWN_5); }
 
-u32 GfMenuObjUtil::playSECommonSort() { return playSE(MENU_SE_SORT); }
+u32 GfMenuObjUtil::playSECommonSort() { return playSE(MENU_SE_UNKNOWN_11); }
 
-u32 GfMenuObjUtil::playSECommonOpenSubMenu() { return playSE(MENU_SE_OPEN_SUB_MENU); }
+u32 GfMenuObjUtil::playSECommonOpenSubMenu() { return playSE(MENU_SE_UNKNOWN_12); }
 
-u32 GfMenuObjUtil::playSECommonCloseSubMenu() { return playSE(MENU_SE_CLOSE_SUB_MENU); }
+u32 GfMenuObjUtil::playSECommonCloseSubMenu() { return playSE(MENU_SE_UNKNOWN_14); }
 
 void GfMenuObjUtil::stopSE(u32 handle, f32 time) {
   if (fw::SoundManager::get() != nullptr) {
@@ -1212,10 +1309,23 @@ bool GfMenuObjUtil::getMenuCondition(u32 id) {
 
 bool GfMenuObjUtil::getMenuFullOpenFlag() { return false; }
 
-bool GfMenuObjUtil::isCustomEnableBlade(u32 blade) { return GfDataUtil::getScenarioFlag() > SCENARIO_CUSTOM_ENABLE; }
+bool GfMenuObjUtil::isCustomEnableBlade(u32 blade) { return GfDataUtil::getScenarioFlag() > SCENARIO_UNKNOWN_2000; }
+
+u32 GfMenuObjUtil::getFavoriteStat(u32 objType, u32 id, FAVORITE favorite) {
+  if (objType != OBJECT_TYPE_BLADE) {
+    if (objType != OBJECT_TYPE_PC || GfDataDriver::getFavorite(id, favorite) == 0) {
+      return 2;
+    }
+    return !GfDataDriver::isUsedFavorite(id, favorite);
+  }
+  if (GfDataBlade::getFavorite(id, favorite) == 0) {
+    return 2;
+  }
+  return !GfDataBlade::isUsedFavorite(id, favorite);
+}
 
 u16 GfMenuObjUtil::getBladeRareIconID(u32 blade) {
-  u32 icon = ICON_WEAPON_TYPE_BASE - 1;
+  u32 icon = ICON_WEAPON_TYPE_UNKNOWN_138 - 1;
   if (GfDataBlade::isValid(blade)) {
     icon += GfDataBlade::isRareBlade(blade);
   }
@@ -1509,6 +1619,31 @@ f32 GfMenuObjUtil::getCtrlMotionTime(const char *name, const char *motion) {
   return 0.0f;
 }
 
+ui::UICtrlCursorSelect *GfMenuObjUtil::createCursor(CursorParam &param) {
+  ui::UISelectObjList::CreateParam createParam;
+  createParam.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
+  ui::UISelectObjList *list = ui::UISelectObjList::create(createParam);
+  if (list == nullptr) {
+    return nullptr;
+  }
+  if (param.unknown08 != nullptr) {
+    list->pickupObject(param.unknown00, param.unknown08, 1);
+  } else if (param.unknown10 != nullptr) {
+    ui::UIObjectAcc objectAcc(param.unknown00);
+    for (u16 i = 0; i < param.unknown18; i++) {
+      u32 child = objectAcc.searchChild(param.unknown10[i]);
+      if (child != 0) {
+        list->addContents(child);
+      }
+    }
+  }
+  list->getSize();
+  param.unknown20.setType(param.unknown1a);
+  ui::UICtrlCursorSelect *cursor = ui::UICtrlCursorSelect::create(param.unknown04, param.unknown20, list);
+  list->release();
+  return cursor;
+}
+
 void GfMenuObjUtil::changeCursorTarget(ui::UICtrlCursorSelect *cursor, u32 handle, const char *format) {
   if (cursor != nullptr && cursor->unknown58 != nullptr) {
     ui::UISelectObjList *list = cursor->unknown58;
@@ -1579,12 +1714,12 @@ QuestID GfMenuObjUtil::getCurrentQuest(u32 type) {
   QuestID quest;
   switch (type) {
   case 0:
-    quest = GfQuestManager::getProgressCurrentQuest(QTYPE_MAIN);
+    quest = GfQuestManager::getProgressCurrentQuest(QTYPE_UNKNOWN_1);
     break;
   case 1:
-    quest = GfQuestManager::getProgressCurrentQuest(QTYPE_NORMAL);
+    quest = GfQuestManager::getProgressCurrentQuest(QTYPE_UNKNOWN_3);
     if (quest.empty()) {
-      quest = GfQuestManager::getProgressCurrentQuest(QTYPE_BLADE);
+      quest = GfQuestManager::getProgressCurrentQuest(QTYPE_UNKNOWN_2);
     }
     break;
   }

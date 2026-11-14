@@ -19,6 +19,8 @@ GimmickCameraParams::GimmickCameraParams() : m_size(0), unknown10(NULL) {}
 
 GimmickCameraParams::GimmickCameraParams(void *data, int version) : m_size(0), unknown10(NULL) { setup(data, version); }
 
+GimmickCameraParams::~GimmickCameraParams() {}
+
 void GimmickCameraParams::setup(void *data, int version) {
   unknown001 *header = static_cast<unknown001 *>(data);
   if (header->unknown00 == 0x504347 && header->unknown08 == version) {

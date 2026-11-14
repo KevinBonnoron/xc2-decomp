@@ -6,6 +6,10 @@
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
+namespace mm {
+struct Vec3;
+} // namespace mm
+
 namespace fw {
 struct UpdateInfo;
 }
@@ -34,6 +38,8 @@ public:
   void updateImpl(const fw::UpdateInfo &info);
   static void cleanup();
   static bool isVisible(GF_OBJ_HANDLE *handle);
+  void searchObj(u32 type, const mm::Vec3 &position);
+  bool checkVisible(GF_OBJ_HANDLE *handle, const mm::Vec3 &position, bool isModel);
 
   mm::mtl::Map<GF_OBJ_HANDLE *, Info *> unknown08; // Inferred role: visibility of the objects; original member name unknown.
   mm::mtl::FixedQueue<Info *, 0x400> unknown20;    // Inferred role: unused infos; original member name unknown.

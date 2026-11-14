@@ -8,18 +8,18 @@ namespace event {
 class FadePlanner {
 public:
   enum TYPE {
-    TYPE_OP_FADE_OUT,
-    TYPE_OP_FADE_IN,
-    TYPE_ED_FADE_OUT,
-    TYPE_ED_FADE_IN,
+    TYPE_UNKNOWN_0, // Inferred role: op fade out; original name unknown.
+    TYPE_UNKNOWN_1, // Inferred role: op fade in; original name unknown.
+    TYPE_UNKNOWN_2, // Inferred role: ed fade out; original name unknown.
+    TYPE_UNKNOWN_3, // Inferred role: ed fade in; original name unknown.
     TYPE_COUNT,
   };
 
   struct Plan {
     enum {
-      FLAG_ENABLE = 1 << 0,
-      FLAG_REQUEST = 1 << 1,
-      FLAG_WAIT = 1 << 2,
+      FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: enable flag; original name unknown.
+      FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: request flag; original name unknown.
+      FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: wait flag; original name unknown.
     };
 
     Plan() { clear(); }

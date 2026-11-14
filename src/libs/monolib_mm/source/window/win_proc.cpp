@@ -15,6 +15,21 @@ WinProc::WinProc(const char *name, WorkObj *parent, s16 childNum) : WorkObj(name
 
 WinProc::~WinProc() {}
 
+WinView *WinProc::pssGetApplicationView() { return pssGetApplicationView(pssGetView(0xffffffff)); }
+
+WinView *WinProc::pssGetApplicationView(WinView *view) {
+  for (; view != nullptr; view = view->getParentView()) {
+    if (ProcDesktop::getView() == view) {
+      return view;
+    }
+    if (view->getParentView() == ProcDesktop::getView()) {
+      return view;
+    }
+  }
+
+  return nullptr;
+}
+
 bool WinProc::wkStandbyLogin() { return WorkObj::wkStandbyLogin(); }
 
 bool WinProc::wkStandbyLogout() {
@@ -84,6 +99,20 @@ WinView *WinProc::pssGetView(u32 wid) {
     return nullptr;
   }
   return static_cast<WinView *>(WorkRootState::getWork(unknown1a8.begin()->value));
+}
+
+bool WinProc::pssDetachView() {
+  for (reslist<u32>::iterator it = unknown1a8.begin(); it != unknown1a8.end(); ++it) {
+    if (WinViewRoot::get() != nullptr) {
+      u32 wid = *it;
+      WinView *view = static_cast<WinView *>(WorkRootState::getWork(wid));
+      if (view != nullptr && (WorkRootState::getWork(WinViewRoot::get(), wid) != nullptr || WorkRootState::isEntryWork(wid, WinViewRoot::get()))) {
+        view->detachRenderWork(this);
+      }
+    }
+  }
+  unknown1a8.clear();
+  return true;
 }
 
 const WinView *WinProc::pssGetView(u32 wid) const {

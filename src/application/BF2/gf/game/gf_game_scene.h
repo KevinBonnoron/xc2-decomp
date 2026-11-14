@@ -1,7 +1,7 @@
 #pragma once
 #include <stddef.h>
 
-#include "gf/data/gf_data_blade.h"
+#include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_util.h"
 #include "gf/event/gf_event.h"
 #include "gf/game/gf_game_manager.h"
@@ -30,10 +30,10 @@ struct QuestCompleteParam;
 struct MsgObjectNotifyDamage;
 
 enum PLSTOP {
-  PLSTOP_GMK_TUTORIAL_SEQUENCE = 1,
-  PLSTOP_GMK_TUTORIAL_MOVER = 2,
-  PLSTOP_EVENT = 3,
-  PLSTOP_RESET_BLADE = 4,
+  PLSTOP_UNKNOWN_1 = 1, // Inferred role: plstop gmk tutorial sequence; original name unknown.
+  PLSTOP_UNKNOWN_2 = 2, // Inferred role: plstop gmk tutorial mover; original name unknown.
+  PLSTOP_UNKNOWN_3 = 3, // Inferred role: plstop event; original name unknown.
+  PLSTOP_UNKNOWN_4 = 4, // Inferred role: plstop reset blade; original name unknown.
 };
 
 namespace _gfgsc {
@@ -47,29 +47,29 @@ bool isPartyMemberGetFieldDamage(u32 partyId);
 class GfGameScene : public mm::mtl::PtrSingleton<GfGameScene> {
 public:
   enum {
-    FLAG_CAMERA_ACTIVATE_ONE_TIME = 1 << 0,
-    FLAG_BATTLE = 1 << 1,
-    FLAG_CAMERA_PAUSE = 1 << 2,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: flag camera activate one time; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: flag battle; original name unknown.
+    FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: flag camera pause; original name unknown.
   };
 
   enum MOVER_STATE {
-    MOVER_STATE_NONE,
-    MOVER_STATE_FIELD,
-    MOVER_STATE_SWIM,
-    MOVER_STATE_CLIMB,
-    MOVER_STATE_JUMP,
-    MOVER_STATE_BUSY,
+    MOVER_STATE_UNKNOWN_0, // Inferred role: mover state none; original name unknown.
+    MOVER_STATE_UNKNOWN_1, // Inferred role: mover state field; original name unknown.
+    MOVER_STATE_UNKNOWN_2, // Inferred role: mover state swim; original name unknown.
+    MOVER_STATE_UNKNOWN_3, // Inferred role: mover state climb; original name unknown.
+    MOVER_STATE_UNKNOWN_4, // Inferred role: mover state jump; original name unknown.
+    MOVER_STATE_UNKNOWN_5, // Inferred role: mover state busy; original name unknown.
   };
 
   class EvtPlayerStop {
   public:
     enum STATE {
-      STATE_NONE,
-      STATE_WAIT_MOVER,
-      STATE_STOP,
+      STATE_UNKNOWN_0, // Inferred role: state none; original name unknown.
+      STATE_UNKNOWN_1, // Inferred role: state wait mover; original name unknown.
+      STATE_UNKNOWN_2, // Inferred role: state stop; original name unknown.
     };
 
-    EvtPlayerStop(GfGameScene *scene, PLSTOP flag) : unknown00(scene), unknown08(STATE_NONE), unknown0c(flag) {}
+    EvtPlayerStop(GfGameScene *scene, PLSTOP flag) : unknown00(scene), unknown08(STATE_UNKNOWN_0), unknown0c(flag) {}
 
     void startPlayerStop();
     void endPlayerStop();
@@ -116,7 +116,7 @@ public:
 
   // Inferred role: party state; original type name unknown.
   struct unknown006 {
-    unknown006() : unknown00(-1), unknown04(MOVER_STATE_NONE), unknown08(0), unknown0c(false), unknown0d(false) {}
+    unknown006() : unknown00(-1), unknown04(MOVER_STATE_UNKNOWN_0), unknown08(0), unknown0c(false), unknown0d(false) {}
 
     u32 unknown00;         // Inferred role: party id; original member name unknown.
     MOVER_STATE unknown04; // Inferred role: mover state; original member name unknown.

@@ -11,8 +11,8 @@
 namespace gf {
 
 bool GfComBehaviorExtra::recieveMessage(fw::MessageObject *sender, fw::Message &message) {
-  if (message.unknown00 != MSG_PC_FIELD_NOTIFY_EXTRA) {
-    if (message.unknown00 != MSG_OBJECT_NOTIFY_ASM_CALLBACK) {
+  if (message.unknown00 != MSG_UNKNOWN_16777249) {
+    if (message.unknown00 != MSG_OBJECT_UNKNOWN_16777279) {
       return false;
     }
 
@@ -36,11 +36,11 @@ void GfComBehaviorExtra::procMsgObjectNotifyAsmCallback(fw::MessageObject *sende
 void GfComBehaviorExtra::procMsgPcFieldNotifyExtra(fw::MessageObject *sender, MsgPcFieldNotifyExtra &message) {
   GfComAsm *comAsm = unknown08->getComponent<GfComAsm>();
   if (comAsm != nullptr) {
-    comAsm->execCmd("C_schedule_00_00", ANIM_LAYER_BASE);
+    comAsm->execCmd("C_schedule_00_00", ANIM_LAYER_UNKNOWN_0);
   }
 }
 
-GfComBehaviorExtra::GfComBehaviorExtra() : unknown98(getAllocator(ALLOCATOR_DEFAULT)) {}
+GfComBehaviorExtra::GfComBehaviorExtra() : unknown98(getAllocator(ALLOCATOR_UNKNOWN_0)) {}
 
 GfComBehaviorExtra::~GfComBehaviorExtra() {}
 
@@ -52,7 +52,7 @@ void GfComBehaviorExtra::update(const fw::UpdateInfo &info) {
   GfComAsm *comAsm = unknown08->getComponent<GfComAsm>();
   if (comAsm != nullptr) {
     for (u32 i = 0; i < unknown98.size(); i++) {
-      comAsm->execCmd(unknown98[i], ANIM_LAYER_BASE);
+      comAsm->execCmd(unknown98[i], ANIM_LAYER_UNKNOWN_0);
     }
     unknown98.clear();
   }

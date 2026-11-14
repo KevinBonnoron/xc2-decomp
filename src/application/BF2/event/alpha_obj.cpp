@@ -7,11 +7,11 @@
 namespace event {
 
 AlphaObj::AlphaObj(gf::GF_OBJ_HANDLE *handle) : unknown10(handle), unknown38(1.0f), unknown3c(1.0f), unknown40(0) {
-  unknown08 = FLAG_ACTIVE;
-  for (u32 i = 0; i < ALPHA_ATTR_COUNT; i++) {
+  unknown08 = FLAG_UNKNOWN_0;
+  for (u32 i = 0; i < ALPHA_ATTR_UNKNOWN_4; i++) {
     unknown18[i] = 1.0f;
   }
-  for (u32 i = 0; i < ALPHA_ATTR_COUNT; i++) {
+  for (u32 i = 0; i < ALPHA_ATTR_UNKNOWN_4; i++) {
     unknown28[i] = 1.0f;
   }
 }
@@ -26,7 +26,32 @@ void AlphaObj::update() {
       return;
     }
   }
-  unknown08 &= ~FLAG_ACTIVE;
+  unknown08 &= ~FLAG_UNKNOWN_0;
+}
+
+void AlphaObj::setAlpha(ALPHA_ATTR attr, f32 alpha, f32 belongingAlpha) {
+  if (gf::GfObjUtil::getObj(unknown10) != nullptr) {
+    f32 oldAlpha = unknown38;
+    if (unknown18[attr] != alpha) {
+      unknown18[attr] = alpha;
+      unknown38 = 1.0f;
+      for (u32 i = 0; i < ALPHA_ATTR_UNKNOWN_4; i++) {
+        unknown38 = unknown18[i] * unknown38;
+      }
+    }
+    f32 oldBelongingAlpha = unknown3c;
+    if (unknown28[attr] != belongingAlpha) {
+      unknown28[attr] = belongingAlpha;
+      unknown3c = 1.0f;
+      for (u32 i = 0; i < ALPHA_ATTR_UNKNOWN_4; i++) {
+        unknown3c = unknown28[i] * unknown3c;
+      }
+    }
+    if (oldAlpha != unknown38 || oldBelongingAlpha != unknown3c) {
+      setEventAlpha(unknown10, unknown38, unknown38 * unknown3c);
+    }
+    unknown40 = 0;
+  }
 }
 
 void AlphaObj::setEventAlpha(gf::GF_OBJ_HANDLE *handle, f32 alpha, f32 belongingAlpha) {

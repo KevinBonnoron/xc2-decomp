@@ -36,14 +36,14 @@ CamHands::CamHands(bool isFocal) : CamBase(isFocal), unknown40(0) {}
 
 void CamHands::update(const FrameInfo &info) {
   f32 delta = info.unknown0c;
-  if ((unknown40 & FLAG_FOLLOW_POS) != 0) {
+  if ((unknown40 & FLAG_UNKNOWN_0) != 0) {
     calcFollowPos();
   }
   if (unknown50.isPlay()) {
     unknown50.update(delta);
     unknown10 = unknown50.getValue();
   }
-  if ((unknown40 & (FLAG_FOLLOW_TAR | FLAG_FOLLOW_TAR_ANGLE)) != 0) {
+  if ((unknown40 & (FLAG_UNKNOWN_1 | FLAG_UNKNOWN_2)) != 0) {
     calcFollowTar();
   }
   if (unknown240.isPlay()) {
@@ -73,7 +73,7 @@ void CamHands::calcFollowTar() {
 }
 
 void CamHands::render(const mm::Col4 &color) {
-  static const mm::Vec3 BOX_SIZE(0.05f, 0.05f, 0.05f);
+  static const mm::Vec3 unknown014(0.05f, 0.05f, 0.05f); // Inferred role: box size; original name unknown.
   if (unknown50.isPlay() && unknown50.count() != 0) {
     for (size_t i = 0; i < unknown50.count(); i++) {
       for (f32 alpha = 0.0f; alpha < 1.0f; alpha += 0.1f) {
@@ -82,7 +82,7 @@ void CamHands::render(const mm::Col4 &color) {
         if (alpha == 0.0f) {
           mm::Mat44 matrix;
           makeTranslation(matrix, pos);
-          fw::debug::drawBoxLine(matrix, BOX_SIZE, color);
+          fw::debug::drawBoxLine(matrix, unknown014, color);
         }
         if (i == unknown50.count() - 1) {
           break;
@@ -98,7 +98,7 @@ void CamHands::render(const mm::Col4 &color) {
         if (alpha == 0.0f) {
           mm::Mat44 matrix;
           makeTranslation(matrix, tar);
-          fw::debug::drawBoxLine(matrix, BOX_SIZE, color);
+          fw::debug::drawBoxLine(matrix, unknown014, color);
         }
         if (i == unknown240.count() - 1) {
           break;
@@ -131,7 +131,7 @@ void CamHands::setPos(const PosAxis &pos, CV_TYPE cv) {
   mm::Vec3 position = pos.calcPos();
   unknown10 = position;
   unknown50.clear();
-  unknown50.append(0.0f, position, CV_TYPE_STEP);
+  unknown50.append(0.0f, position, CV_TYPE_UNKNOWN_0);
   unknown50.setCv(cv);
   unknown650.clear();
   unknown650.push_back(pos);
@@ -163,7 +163,7 @@ void CamHands::setTar(const TarAxis &tar, CV_TYPE cv) {
   mm::Vec3 target = tar.calcTar(unknown10);
   unknown20 = target;
   unknown240.clear();
-  unknown240.append(0.0f, target, CV_TYPE_STEP);
+  unknown240.append(0.0f, target, CV_TYPE_UNKNOWN_0);
   unknown240.setCv(cv);
   unknown860.clear();
   unknown860.push_back(tar);
@@ -197,7 +197,7 @@ void CamHands::setFov(f32 fov, CV_TYPE cv) {
   }
   unknown30 = fov;
   unknown430.clear();
-  unknown430.append(0.0f, fov, CV_TYPE_STEP);
+  unknown430.append(0.0f, fov, CV_TYPE_UNKNOWN_0);
   unknown430.setCv(cv);
   unknowna70.clear();
   unknowna70.push_back(fov);
@@ -227,7 +227,7 @@ void CamHands::setRotZ(f32 rotZ, CV_TYPE cv) {
   }
   unknown34 = rotZ;
   unknown540.clear();
-  unknown540.append(0.0f, rotZ, CV_TYPE_STEP);
+  unknown540.append(0.0f, rotZ, CV_TYPE_UNKNOWN_0);
   unknown540.setCv(cv);
   unknownab8.clear();
   unknownab8.push_back(rotZ);
@@ -260,23 +260,23 @@ void CamHands::replay() {
 
 void CamHands::followPos(bool isFollow) {
   if (isFollow) {
-    unknown40 |= FLAG_FOLLOW_POS;
+    unknown40 |= FLAG_UNKNOWN_0;
   } else {
-    unknown40 &= ~FLAG_FOLLOW_POS;
+    unknown40 &= ~FLAG_UNKNOWN_0;
   }
 }
 
-bool CamHands::isFollowPos() const { return (unknown40 & FLAG_FOLLOW_POS) != 0; }
+bool CamHands::isFollowPos() const { return (unknown40 & FLAG_UNKNOWN_0) != 0; }
 
 void CamHands::followTar(bool isFollow) {
   if (isFollow) {
-    unknown40 |= FLAG_FOLLOW_TAR;
+    unknown40 |= FLAG_UNKNOWN_1;
   } else {
-    unknown40 &= ~FLAG_FOLLOW_TAR;
+    unknown40 &= ~FLAG_UNKNOWN_1;
   }
 }
 
-bool CamHands::isFollowTar() const { return (unknown40 & FLAG_FOLLOW_TAR) != 0; }
+bool CamHands::isFollowTar() const { return (unknown40 & FLAG_UNKNOWN_1) != 0; }
 
 void CamHands::setNearfar(f32 nearClip, f32 farClip) { setNearFar(nearClip, farClip); }
 
@@ -299,11 +299,11 @@ void CamHands::getTarString(mm::mtl::FixStr<256> &string) {
     mm::Vec3 tar = unknown860[i].getTar();
     f32 frame = unknown240.getKeyFrame(i);
     mm::mtl::FixStr<256> line;
-    if (unknown860[i].getAxis() < TarAxis::AXIS_ANGLE) {
+    if (unknown860[i].getAxis() < TarAxis::AXIS_UNKNOWN_4) {
       line.format("%.3f %.3f %.3f %d|", tar.x, tar.y, tar.z, static_cast<int>(frame));
-    } else if (unknown860[i].getAxis() < TarAxis::AXIS_CHARA) {
+    } else if (unknown860[i].getAxis() < TarAxis::AXIS_UNKNOWN_6) {
       line.format("%.3f %.3f %.3f %d|", tar.x * mm::RAD_TO_DEG, tar.y * mm::RAD_TO_DEG, tar.z * mm::RAD_TO_DEG, static_cast<int>(frame));
-    } else if (unknown860[i].getAxis() < mm::mtl::Singleton<ObjectManager>::getPtr()->getCharaCount() + TarAxis::AXIS_CHARA) {
+    } else if (unknown860[i].getAxis() < mm::mtl::Singleton<ObjectManager>::getPtr()->getCharaCount() + TarAxis::AXIS_UNKNOWN_6) {
       line.format("%.3f %.3f %.3f %d|", tar.x, tar.y, tar.z, static_cast<int>(frame));
     }
     string += line.c_str();

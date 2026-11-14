@@ -30,10 +30,10 @@ void StateFieldWaterBrake::update(GfComBehaviorPc *behavior, const fw::UpdateInf
   if (property->existInputXY()) {
     if (!StateUtilField::isInputInverseDir(*property)) {
       StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_SWIM_00);
-      reqState(STATE_ID_FIELD_WATER_SWIM);
+      reqState(STATE_ID_UNKNOWN_22);
     } else {
       StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_SWIM_01);
-      reqState(STATE_ID_FIELD_WATER_IDLE_TURN);
+      reqState(STATE_ID_UNKNOWN_21);
     }
     return;
   }
@@ -42,8 +42,8 @@ void StateFieldWaterBrake::update(GfComBehaviorPc *behavior, const fw::UpdateInf
   MoveUtilField::updateBrake(info, *property);
   f32 speed = sqrtf(property->unknown80.x * property->unknown80.x + property->unknown80.y * property->unknown80.y + property->unknown80.z * property->unknown80.z);
   if (speed <= 0.0f) {
-    if (__builtin_strcmp(comAsm->getStateName(ANIM_LAYER_BASE), "S_wateridle") == 0) {
-      reqState(STATE_ID_FIELD_WATER_IDLE);
+    if (__builtin_strcmp(comAsm->getStateName(ANIM_LAYER_UNKNOWN_0), "S_wateridle") == 0) {
+      reqState(STATE_ID_UNKNOWN_20);
     }
   }
 

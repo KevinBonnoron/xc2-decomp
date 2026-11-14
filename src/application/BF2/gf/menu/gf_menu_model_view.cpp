@@ -1,15 +1,19 @@
 #include "gf/menu/gf_menu_model_view.h"
 
 #include "bdat.h"
-#include "framework/effect/effect_caster.h"
 #include "framework/effect/effect_manager.h"
+#include "framework/effect/effect_pack.h"
+#include "framework/effect/effect_point.h"
 #include "framework/reference_frame.h"
+#include "framework/resource/common_resource.h"
 #include "fw/fw_model_object.h"
+#include "fw/fw_render_resource.h"
 #include "fw/fw_transform.h"
 #include "gf/camera/gimmick/gf_camera_gimmick.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_object_type.h"
+#include "gf/gf_allocator.h"
 #include "gf/menu/gf_menu_bdat.h"
 #include "gf/menu/model_view/gf_menu_model_view_camera.h"
 #include "gf/object/component/animation/gf_com_asm.h"
@@ -22,12 +26,88 @@
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
 #include "mm_math/mm_mat44.h"
+#include "mm_math/mm_math.h"
+#include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixstr.h"
+#include "mm_mtl/reference_object.h"
 #include "mm_mtl/rtti.h"
 #include "scn/scn_obj_acc.h"
+#include "ui/ui_object_acc.h"
+#include "ui/ui_util.h"
+
+namespace fw {
+enum CAMERA_TYPE : unsigned int;
+} // namespace fw
 
 namespace gf {
+
+fw::Transform GfMenuModelView::s_DefTransform;
+
+GfMenuModelView::GfMenuModelView(u32 handle, u32 row) : unknown08(row), unknown0c(handle), unknown18(nullptr), unknown20(nullptr), unknown9a0(nullptr), unknown9a8(), unknownaa8(false) {
+  ui::UIObjectAcc acc(handle);
+  s_DefTransform.unknown00 = mm::Vec3::zero;
+  s_DefTransform.unknown10 = mm::Quat::identity;
+  unknown10 = acc.getRenderIndex();
+
+  u8 *bdat = GfDataBdat::getFP(BDAT_MNU_MODEL_VIEW);
+  GfMenuBdat::isValidBdatID(bdat, row);
+  mm::mtl::FixStr<128> path;
+  unknown18 = nullptr;
+  unknown20 = nullptr;
+  if (bdat != nullptr) {
+    bool hasCamera = false;
+    const char *cameraFile = Bdat::getVal(bdat, "camera_file", row).valueString;
+    if (*cameraFile != '\0') {
+      path.format("camera/%s.%s", cameraFile, "gcp");
+      unknown18 = fw::CommonResource::request(ui::UIUtil::getResourceAllocator(), path.c_str(), 10, false);
+      hasCamera = true;
+    }
+    const char *effectFile = Bdat::getVal(bdat, "efp_file", row).valueString;
+    if (*effectFile != '\0') {
+      path.format("effect/bc/%s.%s", effectFile, "wiefb");
+      unknown20 = fw::RenderResource::request(ui::UIUtil::getResourceAllocator(), path.c_str(), 10);
+    } else if (!hasCamera) {
+      unknownaa8 = true;
+    }
+  } else {
+    unknownaa8 = true;
+  }
+  for (u32 i = 0; i < 16; i++) {
+    unknown9a8[i].unknown00 = 0;
+    unknown9a8[i].unknown08 = unknown020;
+  }
+  unknown930.setAllocator(getAllocator(ALLOCATOR_UNKNOWN_0));
+}
+
+GfMenuModelView::~GfMenuModelView() {
+  unknownab0 = nullptr;
+  if (fw::EffectManager::get() != nullptr && unknown9a0 != nullptr) {
+    for (u32 i = 0; i < 16; i++) {
+      if (unknown9a8[i].unknown00 != 0) {
+        fw::EffectManager::get()->remove(unknown9a8[i].unknown00);
+        unknown9a8[i].unknown00 = 0;
+        unknown9a8[i].unknown08 = unknown020;
+      }
+    }
+    mm::mtl::safeRelease(unknown9a0);
+  }
+  for (u32 i = 0; i < unknown28.size(); i++) {
+    GfObjFactory::destroyObj(unknown28[i].unknown00);
+  }
+  fw::CameraManager *manager = fw::CameraManager::get();
+  if (manager != nullptr) {
+    fw::CameraLayer &layer = manager->unknown20[unknown10 + 1];
+    for (u32 i = 0; i < unknown930.size(); i++) {
+      if (unknown930[i]->unknowna0) {
+        layer.pop(unknown930[i], 0.0f);
+        unknown930[i] = nullptr;
+      }
+    }
+  }
+  mm::mtl::safeRelease(unknown18);
+  mm::mtl::safeRelease(unknown20);
+}
 
 fw::Transform &GfMenuModelView::getObjectTransformLocal(GF_OBJ_HANDLE *handle) {
   static fw::Transform transform;
@@ -61,14 +141,14 @@ u32 GfMenuModelView::getMapObjID(u32 index) {
   return id;
 }
 
-void GfMenuModelView::addWeaponFromBlade(u32 blade, u32 id) { GfObjFactory::createUiWeapon(findGfObj(OBJECT_TYPE_DRIVER, id), blade); }
+void GfMenuModelView::addWeaponFromBlade(u32 blade, u32 id) { GfObjFactory::createUiWeapon(findGfObj(OBJECT_TYPE_PC, id), blade); }
 
-void GfMenuModelView::delWeaponFromBlade(u32 id) { GfObjFactory::createUiWeapon(findGfObj(OBJECT_TYPE_DRIVER, id), 0); }
+void GfMenuModelView::delWeaponFromBlade(u32 id) { GfObjFactory::createUiWeapon(findGfObj(OBJECT_TYPE_PC, id), 0); }
 
 void GfMenuModelView::sendObjectCommand(GF_OBJ_HANDLE *handle, const char *command) {
   GfComAsm *comAsm = GfObjAcc(handle).getObj()->getComponent<GfComAsm>();
-  if (comAsm != nullptr && !comAsm->execCmd(command, ANIM_LAYER_BASE)) {
-    comAsm->setState("S_idle", ANIM_LAYER_BASE);
+  if (comAsm != nullptr && !comAsm->execCmd(command, ANIM_LAYER_UNKNOWN_0)) {
+    comAsm->setState("S_idle", ANIM_LAYER_UNKNOWN_0);
   }
 }
 
@@ -125,7 +205,7 @@ bool GfMenuModelView::getObjectEffectPoint(GF_OBJ_HANDLE *handle, const char *na
 
 void GfMenuModelView::setObjectScale(GF_OBJ_HANDLE *handle, const mm::Vec3 &scale) { GfObjAcc(handle).setModelScaleForMenu(scale); }
 
-void GfMenuModelView::setObjectDisp(GF_OBJ_HANDLE *handle, bool isDisp) { GfObjAcc(handle).setDisp(OBJDISP_UNKNOWN_1, isDisp); }
+void GfMenuModelView::setObjectDisp(GF_OBJ_HANDLE *handle, bool isDisp) { GfObjAcc(handle).setDisp(OBJDISP_UNKNOWN_0, isDisp); }
 
 f32 GfMenuModelView::getVanishRatio(GF_OBJ_HANDLE *handle) {
   GfObjAcc acc(handle);
@@ -161,7 +241,7 @@ bool GfMenuModelView::isObjectAnimationBusy(GF_OBJ_HANDLE *handle) {
       GfObjAcc acc(handle);
       GfComAsm *comAsm = acc.getObj()->getComponent<GfComAsm>();
       if (comAsm != nullptr) {
-        return !comAsm->isEnd(ANIM_LAYER_BASE);
+        return !comAsm->isEnd(ANIM_LAYER_UNKNOWN_0);
       }
     }
   }
@@ -174,7 +254,7 @@ const char *GfMenuModelView::getObjectAnimationState(GF_OBJ_HANDLE *handle) {
       GfObjAcc acc(handle);
       GfComAsm *comAsm = acc.getObj()->getComponent<GfComAsm>();
       if (comAsm != nullptr) {
-        return comAsm->getStateName(ANIM_LAYER_BASE);
+        return comAsm->getStateName(ANIM_LAYER_UNKNOWN_0);
       }
     }
   }
@@ -215,6 +295,22 @@ u32 GfMenuModelView::addCamera(mm::mtl::IntrusivePtr<fw::Camera> camera) {
   u32 index = unknown930.size();
   unknown930.push_back(camera);
   return index;
+}
+
+void GfMenuModelView::pushCamera(u32 index, f32 time) {
+  if (index < unknown930.size()) {
+    if (!unknown930[index]->unknowna0 && fw::CameraManager::get() != nullptr) {
+      fw::CameraManager::get()->push(static_cast<fw::CAMERA_TYPE>(unknown10 + 1), unknown930[index], time);
+      unknown958.push_back(index);
+    }
+  }
+}
+
+void GfMenuModelView::popCamera(f32 time) {
+  if (fw::CameraManager::get() != nullptr) {
+    fw::CameraManager::get()->pop(static_cast<fw::CAMERA_TYPE>(unknown10 + 1), unknown930[unknown958.back()], time);
+    unknown958.pop_back();
+  }
 }
 
 void GfMenuModelView::changeCamera(u32 index, f32 time) {
@@ -344,7 +440,7 @@ void GfMenuModelView::removeEffect(u32 index) {
   if (unknown9a8[index].unknown00 != 0) {
     fw::EffectManager::get()->kill(unknown9a8[index].unknown00);
     unknown9a8[index].unknown00 = 0;
-    unknown9a8[index].unknown08 = INVALID_HANDLE;
+    unknown9a8[index].unknown08 = unknown020;
   }
 }
 
@@ -379,7 +475,7 @@ GF_OBJ_HANDLE *GfMenuModelView::findGfObj(u32 type, u32 id) {
       return unknown28[i].unknown00;
     }
   }
-  return INVALID_HANDLE;
+  return unknown020;
 }
 
 bool GfMenuModelView::checkGfObj(u32 type, u32 id) {
@@ -390,6 +486,20 @@ bool GfMenuModelView::checkGfObj(u32 type, u32 id) {
     }
   }
   return false;
+}
+
+GfMenuModelView::CtrlParam::CtrlParam(GF_OBJ_HANDLE *handle, f32 duration, bool unknown) : unknown00(handle), unknown0a(0), unknown0c(duration), unknown10(unknown) {
+  GfObjAcc acc(handle);
+  const fw::Transform &transform = getObjectTransformLocal(unknown00);
+  m_movePosX = transform.unknown00.x;
+  m_movePosY = transform.unknown00.y;
+  m_movePosZ = transform.unknown00.z;
+  m_moveRotY = mm::quatToEuler(transform.unknown10).y;
+  m_moveSclX = acc.getModelScaleXYZ().x;
+  m_moveSclY = acc.getModelScaleXYZ().y;
+  m_moveSclZ = acc.getModelScaleXYZ().z;
+  m_moveAlpha = acc.getAlpha(OBJ_ALPHA_UNKNOWN_0);
+  m_moveVanish = getVanishRatio(handle);
 }
 
 void GfMenuModelView::CtrlParam::setMovePosX(f32 value) {
@@ -424,6 +534,24 @@ void GfMenuModelView::CtrlParam::setMovePosZ(f32 start, f32 end) {
   getObjectTransformLocal(unknown00).unknown00.x = start;
   unknown08 |= 0x1;
   m_movePosX = end;
+}
+
+void GfMenuModelView::CtrlParam::setAddPosX(f32 value) {
+  fw::Transform &transform = getObjectTransformLocal(unknown00);
+  unknown08 |= 0x1;
+  m_movePosX = transform.unknown00.x + value;
+}
+
+void GfMenuModelView::CtrlParam::setAddPosY(f32 value) {
+  fw::Transform &transform = getObjectTransformLocal(unknown00);
+  unknown08 |= 0x2;
+  m_movePosY = transform.unknown00.y + value;
+}
+
+void GfMenuModelView::CtrlParam::setAddPosZ(f32 value) {
+  fw::Transform &transform = getObjectTransformLocal(unknown00);
+  unknown08 |= 0x4;
+  m_movePosZ = transform.unknown00.z + value;
 }
 
 void GfMenuModelView::CtrlParam::setMoveSclX(f32 value) {

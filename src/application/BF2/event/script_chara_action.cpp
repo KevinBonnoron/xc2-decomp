@@ -16,7 +16,7 @@ namespace event {
 
 void ScriptCharaAction::doit(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CHARA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_2) {
     return;
   }
   ObjectChara *chara = static_cast<ObjectChara *>(object);
@@ -25,13 +25,13 @@ void ScriptCharaAction::doit(const Param &param) {
   bool isLoop = param.val(2).getBool();
   bool isBlend = param.val(3).getBool();
   unknown08 = chara->getCharaObj()->getAction();
-  mm::mtl::Singleton<ScheManager>::getPtr()->setUse(Scheduler::USE_TURN, false, chara->getCharaObj()->getHandle());
+  mm::mtl::Singleton<ScheManager>::getPtr()->setUse(Scheduler::USE_UNKNOWN_2, false, chara->getCharaObj()->getHandle());
   chara->getCharaObj()->playAction(type, frame, isLoop, isBlend);
 }
 
 void ScriptCharaAction::undo(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CHARA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_2) {
     return;
   }
   ObjectChara *chara = static_cast<ObjectChara *>(object);
@@ -44,7 +44,7 @@ void ScriptCharaAction::undo(const Param &param) {
 
 void ScriptCharaAction::redo(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CHARA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_2) {
     return;
   }
   int type = param.val(0).getS32();

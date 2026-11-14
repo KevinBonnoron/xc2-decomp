@@ -58,6 +58,7 @@ public:
   bool createImpl(const Description &description, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose, IKFootGroundInterface *ground);
   ~FootPlacementIKSolver() override;
   void solve(const UpdateInfo &info) override;
+  void solveImpl(anm::RaycastInterface &raycaster);
   // Inferred helper: forces the raycast up distance; original name unknown.
   void unknown001(f32 distance) {
     unknowna0 |= 4;

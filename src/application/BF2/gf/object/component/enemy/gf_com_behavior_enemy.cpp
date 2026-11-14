@@ -27,7 +27,9 @@
 #include "gf/field/gf_field_move_speed.h"
 #include "gf/field/gf_field_pitch_roll_controller.h"
 #include "gf/game/gf_game_mount.h"
+#include "gf/game/gf_game_util.h"
 #include "gf/menu/call/gf_menu_call_context.h"
+#include "gf/menu/gf_menu_bdat.h"
 #include "gf/menu/object/gf_menu_obj_target_info.h"
 #include "gf/object/component/animation/gf_com_asm.h"
 #include "gf/object/component/behavior/plugin/gf_plugin_manager.h"
@@ -91,28 +93,28 @@ const mm::mtl::RTTI *GfComBehaviorEnemy::getRTTI() const { return &m_rtti; }
 
 bool GfComBehaviorEnemy::recieveMessage(fw::MessageObject *sender, fw::Message &message) {
   switch (message.unknown00) {
-  case MSG_OBJECT_NOTIFY_DAMAGE:
+  case MSG_OBJECT_UNKNOWN_16777271:
     procMsgObjectNotifyDamage(sender, static_cast<MsgObjectNotifyDamage &>(message));
     return true;
-  case MSG_OBJECT_NOTIFY_DEAD:
+  case MSG_OBJECT_UNKNOWN_16777272:
     procMsgObjectNotifyDead(sender, static_cast<MsgObjectNotifyDead &>(message));
     return true;
-  case MSG_OBJECT_LURE:
+  case MSG_UNKNOWN_16777281:
     procMsgObjectLure(sender, static_cast<MsgObjectLure &>(message));
     return true;
-  case MSG_OBJECT_GET_VELOCITY:
+  case MSG_UNKNOWN_16777286:
     procMsgObjectGetVelocity(sender, static_cast<MsgObjectGetVelocity &>(message));
     return true;
   default:
     break;
   }
 
-  if (message.unknown00 == MSG_DEBUG_ACTIVATE_COMPONENT_WINDOW) {
+  if (message.unknown00 == MSG_UNKNOWN_16777219) {
     procMsgActivateComponentDebugWindow(sender, static_cast<MsgDebugActivateComponentWindow &>(message));
     return true;
   }
 
-  if (message.unknown00 == MSG_PC_GET_LOOK_POINT) {
+  if (message.unknown00 == MSG_UNKNOWN_16777224) {
     procMsgPcGetLookPoint(sender, static_cast<MsgPcGetLookPoint &>(message));
     return true;
   }
@@ -373,6 +375,20 @@ void GfComBehaviorEnemy::disposeMenuObj() {
   }
 }
 
+void GfComBehaviorEnemy::createMenuObj() {
+  disposeMenuObj();
+  unknown130 = GfMenuCallContext::create();
+  GfMenuObjTargetInfo::OpenEnemyParam param;
+  param.unknown00 = static_cast<GfObj *>(unknown08)->unknownf8;
+  int offsetId = GfGameUtil::getUiOffsetId(param.unknown00);
+  param.unknown10.unknown10 = nullptr;
+  param.unknown10.unknown00 = mm::Vec3::zero.x;
+  param.unknown10.unknown04 = mm::Vec3::zero.y;
+  param.unknown10.unknown08 = mm::Vec3::zero.z;
+  GfMenuBdat::getMenuOffset(offsetId, param.unknown10);
+  GfMenuObjTargetInfo::openEnemy(unknown130, param);
+}
+
 void GfComBehaviorEnemy::validateBattleLock(bool isLock) {
   if ((unknown140.unknownd0.unknown10.unknown48 | unknown140.unknownd0.unknown10.unknown4c) < 0) {
     return;
@@ -420,7 +436,7 @@ bool GfComBehaviorEnemy::extractLoco() {
       const anm::QsTransform &locomotion = comAsm->getLocomotion();
       mm::Quat rotation = mm::Quat::mul(locomotion.unknown10, transform->getRotation());
       transform->setRotation(rotation);
-      f32 speed = comAsm->getSpeed(ANIM_LAYER_BASE);
+      f32 speed = comAsm->getSpeed(ANIM_LAYER_UNKNOWN_0);
       mm::Vec3 offset = transform->getRotation().rotate(mm::Vec3(locomotion.unknown00.x, locomotion.unknown00.y, locomotion.unknown00.z)) * speed;
       transform->setPosition(transform->getPosition() + offset);
       return true;
@@ -554,8 +570,8 @@ void GfComBehaviorEnemy::updateField(const fw::UpdateInfo &info) {
     unknowna0.setState(enemy::STATE_ID_UNKNOWN_13);
   }
 
-  GfMountManager::getHandle(static_cast<GfObj *>(unknown08)->unknownf8, GFATTACH_WEAPON, OPTMNT_UNKNOWN_1);
-  GfMountManager::getHandle(static_cast<GfObj *>(unknown08)->unknownf8, GFATTACH_WEAPON, OPTMNT_BLADE);
+  GfMountManager::getHandle(static_cast<GfObj *>(unknown08)->unknownf8, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_1);
+  GfMountManager::getHandle(static_cast<GfObj *>(unknown08)->unknownf8, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_3);
 }
 
 template <typename T> void GfComBehaviorEnemy::reqChangeBattleToOtherMember() const {

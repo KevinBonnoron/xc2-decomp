@@ -38,19 +38,19 @@ namespace gf {
 
 // __LINE__ must be 23 as in the original header: it is the line argument of operator new.
 #line 23 "gf/object/component/behavior/plugin/gf_lip_sync_plugin.h"
-Plugin *LipSyncPlugin::create() { return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) LipSyncPlugin(); }
+Plugin *LipSyncPlugin::create() { return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) LipSyncPlugin(); }
 
 // __LINE__ must be 26 as in the original header: it is the line argument of operator new.
 #line 26 "gf/object/component/behavior/plugin/gf_foot_step_plugin.h"
-Plugin *FootStepPlugin::create() { return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) FootStepPlugin(); }
+Plugin *FootStepPlugin::create() { return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) FootStepPlugin(); }
 
 // __LINE__ must be 26 as in the original header: it is the line argument of operator new.
 #line 26 "gf/object/component/behavior/plugin/gf_eye_blink_plugin.h"
-Plugin *EyeBlinkPlugin::create() { return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) EyeBlinkPlugin(); }
+Plugin *EyeBlinkPlugin::create() { return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) EyeBlinkPlugin(); }
 
 // __LINE__ must be 24 as in the original header: it is the line argument of operator new.
 #line 24 "gf/object/component/behavior/plugin/gf_foot_ik_controller_plugin.h"
-Plugin *FootIkControllerPlugin::create() { return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) FootIkControllerPlugin(); }
+Plugin *FootIkControllerPlugin::create() { return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) FootIkControllerPlugin(); }
 
 } // namespace gf
 

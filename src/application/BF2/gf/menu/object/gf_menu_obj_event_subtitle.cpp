@@ -18,14 +18,14 @@
 namespace gf {
 
 enum CALL {
-  CALL_EVENT_SUBTITLE = 1,
+  CALL_UNKNOWN_1 = 1, // Inferred role: call id of the event subtitle layout; original enumerator name unknown.
 };
 
 enum EVENT {
-  EVENT_TERM = 2,
-  EVENT_END_TEXT = 0x45,
-  EVENT_DISP_TEXT = 0x100,
-  EVENT_HIDE_TEXT = 0x101,
+  EVENT_UNKNOWN_2 = 2,       // Inferred role: event that terminates the layout; original enumerator name unknown.
+  EVENT_UNKNOWN_69 = 0x45,   // Inferred role: event that ends the text; original enumerator name unknown.
+  EVENT_UNKNOWN_256 = 0x100, // Inferred role: event that shows a text; original enumerator name unknown.
+  EVENT_UNKNOWN_257 = 0x101, // Inferred role: event that hides the text; original enumerator name unknown.
 };
 
 GfMenuObjEventSubtitle::GfMenuObjEventSubtitle(u32 handle) : GfMenuObject(handle) {}
@@ -36,13 +36,13 @@ void GfMenuObjEventSubtitle::initialize() {
   ui::UIObjectAcc main(unknown18, "LAY_main");
 // __LINE__ must be 71 as in the original file: its value changes the instruction order.
 #line 71
-  MainListener *listener = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) MainListener(this);
+  MainListener *listener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) MainListener(this);
   listener->addRef();
   ui::UIEventManager::get()->registObjectListener(main.unknown10, listener);
   if (listener != nullptr) {
     listener->release();
   }
-  attachExternalCall(CALL_EVENT_SUBTITLE, main.unknown10);
+  attachExternalCall(CALL_UNKNOWN_1, main.unknown10);
   if (fw::LangUtil::getLangType() == 0) {
     ui::UIObjectAcc vertical(main.searchChild("TXT_str_v"));
     if (vertical.isValid()) {
@@ -56,7 +56,7 @@ void GfMenuObjEventSubtitle::initialize() {
 }
 
 void GfMenuObjEventSubtitle::finalize() {
-  detachExternalCall(CALL_EVENT_SUBTITLE);
+  detachExternalCall(CALL_UNKNOWN_1);
   GfMenuObject::finalize();
 }
 
@@ -67,10 +67,10 @@ void GfMenuObjEventSubtitle::MainListener::reciveEvent(const ui::EventData &even
   switch (event.unknown00) {
   case 1:
     break;
-  case EVENT_TERM:
+  case EVENT_UNKNOWN_2:
     acc.setTerm();
     break;
-  case EVENT_END_TEXT: {
+  case EVENT_UNKNOWN_69: {
     ui::UIObjectAcc text(acc.unknown10, "TXT_str00");
     ui::UIObjectAcc vertical(acc.unknown10, "TXT_str_v");
     text.setDisp(false);
@@ -79,13 +79,13 @@ void GfMenuObjEventSubtitle::MainListener::reciveEvent(const ui::EventData &even
     vertical.setText(ui::UIStr(" ", false));
     break;
   }
-  case EVENT_DISP_TEXT: {
+  case EVENT_UNKNOWN_256: {
     u32 position = event.unknown0c;
     const ui::UIStr &string = getString(event.unknown08);
     if (ui::UITagParser::get()->parseTag(string.c_str(), "ML:undisp")) {
       releaseString(event.unknown08);
       ui::EventData hide;
-      hide.unknown00 = EVENT_HIDE_TEXT;
+      hide.unknown00 = EVENT_UNKNOWN_257;
       sendEvent(acc.unknown10, hide, 0.0f);
       break;
     }
@@ -122,7 +122,7 @@ void GfMenuObjEventSubtitle::MainListener::reciveEvent(const ui::EventData &even
     }
     break;
   }
-  case EVENT_HIDE_TEXT: {
+  case EVENT_UNKNOWN_257: {
     ui::UIObjectAcc text(acc.unknown10, "TXT_str00");
     ui::UIObjectAcc vertical(acc.unknown10, "TXT_str_v");
     ui::UIObjectAcc text1(acc.unknown10, "TXT_str01");
@@ -140,7 +140,7 @@ void GfMenuObjEventSubtitle::MainListener::reciveEvent(const ui::EventData &even
 }
 
 void GfMenuObjEventSubtitle::dispText(u8 *bdat, u32 textId, u32 position) {
-  u32 object = getAttachedObject(CALL_EVENT_SUBTITLE);
+  u32 object = getAttachedObject(CALL_UNKNOWN_1);
   if (!ui::UIObjectAcc(object).isValid()) {
     return;
   }
@@ -149,23 +149,23 @@ void GfMenuObjEventSubtitle::dispText(u8 *bdat, u32 textId, u32 position) {
   }
   u16 id = registString(ui::UIStr(bdat, textId));
   ui::EventData event;
-  event.unknown00 = EVENT_DISP_TEXT;
+  event.unknown00 = EVENT_UNKNOWN_256;
   event.unknown08 = id;
   event.unknown0c = position;
   ui::UIManager::get()->requestObjectEvent(object, event, 0.0f);
 }
 
 void GfMenuObjEventSubtitle::hideText() {
-  u32 object = getAttachedObject(CALL_EVENT_SUBTITLE);
+  u32 object = getAttachedObject(CALL_UNKNOWN_1);
   ui::EventData event;
-  event.unknown00 = EVENT_HIDE_TEXT;
+  event.unknown00 = EVENT_UNKNOWN_257;
   ui::UIManager::get()->requestObjectEvent(object, event, 0.0f);
 }
 
 void GfMenuObjEventSubtitle::endText() {
-  u32 object = getAttachedObject(CALL_EVENT_SUBTITLE);
+  u32 object = getAttachedObject(CALL_UNKNOWN_1);
   ui::EventData event;
-  event.unknown00 = EVENT_END_TEXT;
+  event.unknown00 = EVENT_UNKNOWN_69;
   ui::UIManager::get()->requestObjectEvent(object, event, 0.0f);
 }
 

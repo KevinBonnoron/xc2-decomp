@@ -58,9 +58,9 @@ void CharaEvaPlayerEff::update(f32 delta) {
       unknown18->getVolumeFadeMesh(mesh, frame);
       unknown18->getVolumeFadeRatio(ratio, frame);
       if (volumeFade == 0) {
-        unknown10->stopVolumeFade(CharaEffectPlayer::VF_TYPE_MAIN);
+        unknown10->stopVolumeFade(CharaEffectPlayer::VF_TYPE_UNKNOWN_0);
       } else {
-        unknown10->playVolumeFade(CharaEffectPlayer::VF_TYPE_MAIN, volumeFadeId, scale, center, distance, directivity, mesh, ratio);
+        unknown10->playVolumeFade(CharaEffectPlayer::VF_TYPE_UNKNOWN_0, volumeFadeId, scale, center, distance, directivity, mesh, ratio);
       }
     }
     {

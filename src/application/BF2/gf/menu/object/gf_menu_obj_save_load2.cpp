@@ -66,7 +66,7 @@ bool GfMenuObjSaveLoad2::seqSave() {
   ui::UIObjectAcc main(unknown18, "LAY_main");
   disableInput(main.unknown10);
   GfMenuObjMainMenu2::setCloseKeyEnable(false);
-  unknown2c0 = GfReqCommand::reqSave(SAVESLOT_DEFAULT);
+  unknown2c0 = GfReqCommand::reqSave(SAVESLOT_UNKNOWN_22);
   GfMenuObjFade::dispSaving(true, 0);
   return true;
 }

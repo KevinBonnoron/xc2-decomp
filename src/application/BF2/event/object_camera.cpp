@@ -1,13 +1,26 @@
 #include "event/object_camera.h"
 
+#include <math.h>
+
 #include "event/cam_hands.h"
 #include "event/cam_manager.h"
 #include "event/cam_motion.h"
 #include "event/cam_obj.h"
+#include "event/debug_manager.h"
+#include "event/frame_manager.h"
+#include "event/object_util.h"
+#include "event/seq_info.h"
 #include "event/seq_manager.h"
+#include "ml/dev_graph.h"
 #include "mm_mtl/singleton.h"
 
 namespace event {
+
+ObjectCamera::ObjectCamera(const char *name, u32 id) : Object(OBJTYPE_UNKNOWN_3, name), unknown68(nullptr), unknown70(id), unknown4e0(0), unknown4e4(0) {
+  unknown68 = mm::mtl::Singleton<CamManager>::getPtr()->createCam(id);
+  unknown80 = PosAxis(PosAxis::AXIS_UNKNOWN_1, unknown68->getPos());
+  unknown2b0 = TarAxis(TarAxis::AXIS_UNKNOWN_1, unknown68->getTarget());
+}
 
 ObjectCamera::~ObjectCamera() {
   mm::mtl::Singleton<CamManager>::getPtr()->destroyCam(unknown68);
@@ -24,6 +37,14 @@ void ObjectCamera::end() {
 }
 
 void ObjectCamera::tail() { unknown68->tail(); }
+
+void ObjectCamera::update() {
+  const FrameInfo &info = mm::mtl::Singleton<FrameManager>::getPtr()->frameInfo();
+  unknown68->update(info);
+  if (unknown70 == 0 && mm::mtl::Singleton<DebugManager>::getPtr()->isSyncFreeCam() && mm::mtl::Singleton<CamManager>::getPtr()->isFreeCam()) {
+    updateSyncFreeCam();
+  }
+}
 
 void ObjectCamera::playMotion(const char *name, const mm::Vec3 &offset) { unknown68->activateMotion()->play(name, offset); }
 
@@ -84,5 +105,28 @@ void ObjectCamera::OnManiRender(IManiCallback::RenderParam &param) { mm::mtl::Si
 bool ObjectCamera::isFollowTar() const { return unknown68->activateHands()->isFollowTar(); }
 
 bool ObjectCamera::OnBouRectSelect(const IBouCallback::SelectParam &param) { return false; }
+
+void ObjectCamera::OnBouRender(const IBouCallback::RenderParam &param) {
+  if (static_cast<int>(mm::mtl::Singleton<SeqManager>::getPtr()->unknown001().unknown54) < 3 && unknown70 == 0) {
+    int x = ml::DevGraph::getRootWidth() - 415;
+    const mm::Vec3 &pos = unknown68->getPos();
+    const mm::Vec3 &target = unknown68->getTarget();
+    mm::Vec3 rot = unknown68->getRot();
+    ObjectUtil::drawCameraInfo(x, 120, pos, target, rot, unknown68->getFov(), unknown68->isFocal());
+  }
+}
+
+mm::Vec3 ObjectCamera::calcRot() const {
+  mm::Vec3 tar = getTar();
+  mm::Vec3 pos = getPos();
+  f32 dx = tar.x - pos.x;
+  f32 dy = tar.y - pos.y;
+  f32 dz = tar.z - pos.z;
+  mm::Vec3 rot;
+  rot.y = -atan2f(dx, -dz);
+  rot.x = atan2f(dy, sqrtf(dx * dx + dz * dz));
+  rot.z = unknown68->getRoll();
+  return rot;
+}
 
 } // namespace event

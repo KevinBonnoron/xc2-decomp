@@ -14,19 +14,19 @@ static inline f32 bezier(f32 rate, f32 point0, f32 point1, f32 point2, f32 point
 
 f32 Curve::getValue(CV_TYPE type, f32 rate) {
   switch (type) {
-  case CV_TYPE_STEP:
+  case CV_TYPE_UNKNOWN_0:
     return rate < 1.0f ? 0.0f : 1.0f;
-  case CV_TYPE_LINEAR:
+  case CV_TYPE_UNKNOWN_1:
     return rate;
-  case CV_TYPE_EASE_IN_OUT:
+  case CV_TYPE_UNKNOWN_2:
     return bezier(rate, 0.0f, 0.0f, 1.0f, 1.0f);
-  case CV_TYPE_EASE_IN:
+  case CV_TYPE_UNKNOWN_3:
     return bezier(rate, 0.0f, 0.0f, 0.1f, 1.0f);
-  case CV_TYPE_EASE_OUT:
+  case CV_TYPE_UNKNOWN_4:
     return bezier(rate, 0.0f, 0.9f, 1.0f, 1.0f);
-  case CV_TYPE_EASE_IN_WEAK:
+  case CV_TYPE_UNKNOWN_5:
     return bezier(rate, 0.0f, 0.0f, 0.66f, 1.0f);
-  case CV_TYPE_EASE_OUT_WEAK:
+  case CV_TYPE_UNKNOWN_6:
     return bezier(rate, 0.0f, 0.33f, 1.0f, 1.0f);
   }
   return rate;

@@ -1,5 +1,8 @@
 #include "gmk/gmk_jump.h"
+#include "framework/debug/debug_draw.h"
 #include "gmk/gmk_list_impl.h" // IWYU pragma: keep
+#include "mm_math/mm_col3.h"
+#include "mm_math/mm_col4.h"
 
 #include "bdat.h"
 #include "framework/effect/effect_manager.h"
@@ -24,14 +27,14 @@ namespace gmk {
 
 template bool TGmkList<GmkJump, GmkJump::BdatInfo, 1347245386u, 3u, GmkJumpGobCustom>::initGmkBdatInfo(GmkJump::BdatInfo &, int &, const AGmkBase &);
 
-constexpr int WILDCARD_JUMP_ICON_DIST_ROW = 1;
-constexpr u32 ICON_FADE_OUT_FRAME = 5;
-const fw::EF_CATEGORY ICON_EFFECT_CATEGORY = static_cast<fw::EF_CATEGORY>(1);
+constexpr int WILDCARD_UNKNOWN_1_2 = 1;                                        // Inferred role: wildcard jump icon dist row; original name unknown.
+constexpr u32 ICON_FADE_OUT_UNKNOWN_5 = 5;                                     // Inferred role: icon fade out frame; original name unknown.
+const fw::EF_CATEGORY EF_CATEGORY_UNKNOWN_1 = static_cast<fw::EF_CATEGORY>(1); // Inferred role: icon effect category; original name unknown.
 
 void GmkJump::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
-  unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_U16);
-  unknown02 = bdat.getValCheck("jumpType", id, BDAT_TYPE_U8);
-  unknown04 = bdat.getValCheck("nameRadius", id, BDAT_TYPE_U16);
+  unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_UNKNOWN_2);
+  unknown02 = bdat.getValCheck("jumpType", id, BDAT_TYPE_UNKNOWN_1);
+  unknown04 = bdat.getValCheck("nameRadius", id, BDAT_TYPE_UNKNOWN_2);
 }
 
 bool GmkJump::BdatInfo::isPopCondMatched() const {
@@ -43,7 +46,7 @@ bool GmkJump::BdatInfo::isPopCondMatched() const {
 
 void GmkJump::BdatInfo::debugDraw(const AGmkBase &gmk) const {}
 
-GmkJump::GmkJump() : _48(), unknown50(false), unknown58(gf::INVALID_HANDLE), unknown60(), unknown68(), unknown74(), unknown78(false), unknown79(true) {}
+GmkJump::GmkJump() : _48(), unknown50(false), unknown58(gf::unknown020), unknown60(), unknown68(), unknown74(), unknown78(false), unknown79(true) {}
 
 void GmkJump::create(const CreateInfo &info) {
   AGmkBase::create(info);
@@ -51,13 +54,13 @@ void GmkJump::create(const CreateInfo &info) {
   if (mapList != nullptr) {
     int map = gf::GfGameManager::getMapID();
     if (map >= Bdat::getIdTop(mapList) && Bdat::getIdTop(mapList) + Bdat::getIdCount(mapList) > map) {
-      u8 displayRadius = Bdat::getValCheck(mapList, "ene_disp_r", map, BDAT_TYPE_U8);
-      u8 displayHeight = Bdat::getValCheck(mapList, "ene_disp_h", map, BDAT_TYPE_U8);
+      u8 displayRadius = Bdat::getValCheck(mapList, "ene_disp_r", map, BDAT_TYPE_UNKNOWN_1);
+      u8 displayHeight = Bdat::getValCheck(mapList, "ene_disp_h", map, BDAT_TYPE_UNKNOWN_1);
       unknown60.set(displayRadius, displayHeight);
-      u8 releaseRadius = Bdat::getValCheck(mapList, "ene_release_r", map, BDAT_TYPE_U8);
-      u8 releaseHeight = Bdat::getValCheck(mapList, "ene_release_h", map, BDAT_TYPE_U8);
+      u8 releaseRadius = Bdat::getValCheck(mapList, "ene_release_r", map, BDAT_TYPE_UNKNOWN_1);
+      u8 releaseHeight = Bdat::getValCheck(mapList, "ene_release_h", map, BDAT_TYPE_UNKNOWN_1);
       unknown68.set(displayRadius + releaseRadius, displayHeight + releaseHeight);
-      f32 iconDistance = Bdat::getValCheck(gf::GfDataBdat::getFP(gf::BDAT_FLD_WILDCARD_DATA), 0, WILDCARD_JUMP_ICON_DIST_ROW, BDAT_TYPE_F32).valueF32;
+      f32 iconDistance = Bdat::getValCheck(gf::GfDataBdat::getFP(gf::BDAT_FLD_WILDCARD_DATA), 0, WILDCARD_UNKNOWN_1_2, BDAT_TYPE_UNKNOWN_8).valueF32;
       unknown74.unknown00 = iconDistance * iconDistance;
       return;
     }
@@ -76,7 +79,7 @@ void GmkJump::disposeIcon(bool isFadeOut) {
     return;
   }
   if (isFadeOut) {
-    fw::EffectManager::get()->fadeOutDead(unknown70, ICON_FADE_OUT_FRAME);
+    fw::EffectManager::get()->fadeOutDead(unknown70, ICON_FADE_OUT_UNKNOWN_5);
   } else {
     fw::EffectManager::get()->remove(unknown70);
   }
@@ -84,7 +87,7 @@ void GmkJump::disposeIcon(bool isFadeOut) {
 }
 
 void GmkJump::disposeGobInst(bool isFadeOut) {
-  if (unknown58 == gf::INVALID_HANDLE) {
+  if (unknown58 == gf::unknown020) {
     return;
   }
   if (isFadeOut) {
@@ -92,7 +95,7 @@ void GmkJump::disposeGobInst(bool isFadeOut) {
   } else {
     unbindToGameObj(unknown58);
     gf::GfObjUtil::destroy(unknown58);
-    unknown58 = gf::INVALID_HANDLE;
+    unknown58 = gf::unknown020;
   }
 }
 
@@ -137,7 +140,7 @@ void GmkJump::update(f32 deltaTime) {
 }
 
 bool GmkJump::canPopGobInst() const {
-  if (unknown58 != gf::INVALID_HANDLE || !unknown50) {
+  if (unknown58 != gf::unknown020 || !unknown50) {
     return false;
   }
   const mm::Vec3 &position = getData()->position;
@@ -145,7 +148,7 @@ bool GmkJump::canPopGobInst() const {
 }
 
 bool GmkJump::canDepopGobInst() const {
-  if (unknown58 == gf::INVALID_HANDLE) {
+  if (unknown58 == gf::unknown020) {
     return false;
   }
   if (!unknown50) {
@@ -180,7 +183,7 @@ void GmkJump::createIcon() {
   if (unknown70 == 0) {
     return;
   }
-  fw::EffectManager::get()->setCategory(unknown70, ICON_EFFECT_CATEGORY);
+  fw::EffectManager::get()->setCategory(unknown70, EF_CATEGORY_UNKNOWN_1);
   validateIconPos();
 }
 
@@ -209,7 +212,7 @@ void GmkJump::reqRecreateIcon() {
 
 void GmkJump::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) {
   AGmkBase::onGobEvent(event, handle);
-  if (event == gf::IGfObjListener::OBJEVT_DESTROY) {
+  if (event == gf::IGfObjListener::OBJEVT_UNKNOWN_3) {
     disposeGobInst(false);
   }
 }
@@ -218,10 +221,27 @@ void GmkJump::validateDisp() const {
   bool isDisp = unknown79 && debugIsDispGmkType(getGmkType());
   gf::GfObjAcc acc(unknown58);
   if (acc.isValid()) {
-    acc.setDisp(gf::OBJDISP_GMK_EVENT, isDisp);
+    acc.setDisp(gf::OBJDISP_UNKNOWN_3, isDisp);
   }
   if (unknown70 != 0) {
     fw::EffectManager::get()->setDisp(unknown70, isDisp);
+  }
+}
+
+void GmkJump::debugDraw() const {
+  if (!isValid()) {
+    return;
+  }
+  const unknown001 *points = unknown016();
+  mm::Col4 color;
+  if (!unknown50) {
+    color = mm::Col4::gray;
+  } else {
+    color = mm::Col4(mm::Col3::yellow.r, mm::Col3::yellow.g, mm::Col3::yellow.b, 1.0f);
+  }
+  for (u32 i = 0; i < 2; i++) {
+    mm::Vec3 end = unknown017(mm::Vec3::unitZ, points[i].unknown0c) + points[i];
+    fw::debug::drawArrow(points[i], end, color);
   }
 }
 

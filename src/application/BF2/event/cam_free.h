@@ -19,10 +19,10 @@ namespace event {
 class CamFree : public CamBase, public ml::IWorkEvent {
 public:
   enum CTRL_MODE {
-    CTRL_MODE_NONE,
-    CTRL_MODE_DOLLY,
-    CTRL_MODE_TRACK,
-    CTRL_MODE_TUMBLE,
+    CTRL_MODE_UNKNOWN_0, // Inferred role: none; original name unknown.
+    CTRL_MODE_UNKNOWN_1, // Inferred role: dolly; original name unknown.
+    CTRL_MODE_UNKNOWN_2, // Inferred role: track; original name unknown.
+    CTRL_MODE_UNKNOWN_3, // Inferred role: tumble; original name unknown.
   };
 
   CamFree(bool isFocal);
@@ -58,22 +58,22 @@ public:
 private:
   // Inferred role: ctrl mode update shared by the mouse button handlers; original name unknown.
   bool unknown001() {
-    unknown50 = CTRL_MODE_NONE;
+    unknown50 = CTRL_MODE_UNKNOWN_0;
     if ((unknown4c & 8) == 0) {
       return false;
     }
     if ((unknown4c & 1) != 0) {
-      unknown50 = CTRL_MODE_DOLLY;
+      unknown50 = CTRL_MODE_UNKNOWN_1;
       return true;
     }
     if ((unknown4c & 2) != 0) {
-      unknown50 = CTRL_MODE_TRACK;
+      unknown50 = CTRL_MODE_UNKNOWN_2;
       return true;
     }
     if ((unknown4c & 4) == 0) {
       return false;
     }
-    unknown50 = CTRL_MODE_TUMBLE;
+    unknown50 = CTRL_MODE_UNKNOWN_3;
     return true;
   }
 

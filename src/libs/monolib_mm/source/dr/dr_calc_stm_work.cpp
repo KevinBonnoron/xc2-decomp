@@ -2,11 +2,25 @@
 
 #include <new>
 
+#include "dr/dr_man.h"
+#include "dr/dr_mdl_man.h"
+#include "dr/dr_mdo_vertex_man.h"
 #include "grlib/cglib_texture_buffer.h"
 
 namespace ml {
 
 DrCalcStmWork::DrCalcStmWork() : unknown00(nullptr), unknown08(0), unknown10(nullptr) {}
+
+DrCalcStmWork::~DrCalcStmWork() { workRelease(); }
+
+void DrCalcStmWork::workRelease() {
+  texRelease();
+  unknown08 = 0;
+  if (unknown10 != nullptr) {
+    DrMan::get()->unknown88->unknown008->releaseVertexObj(unknown10);
+    unknown10 = nullptr;
+  }
+}
 
 int DrCalcStmWork::getWorkSize(u32 count) { return count * sizeof(grlib::CGLibTextureBuffer); }
 

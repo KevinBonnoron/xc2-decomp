@@ -7,9 +7,9 @@
 #include "types.h"
 
 enum EVT_cloudtype {
-  EVT_CLOUDTYPE_DEFAULT,
-  EVT_CLOUDTYPE_HIGH,
-  EVT_CLOUDTYPE_LOW,
+  CLOUD_DEFAULT, // Name of the row of the BDAT table EVT_cloudtype (column name) with the same id.
+  CLOUD_HIGH,    // Name of the row of the BDAT table EVT_cloudtype (column name) with the same id.
+  CLOUD_LOW,     // Name of the row of the BDAT table EVT_cloudtype (column name) with the same id.
 };
 
 namespace event {
@@ -17,22 +17,22 @@ namespace event {
 class EnvManager : public IManager, public mm::mtl::Singleton<EnvManager> {
 public:
   enum COLORFILTER_TYPE {
-    COLORFILTER_TYPE_STOP,
-    COLORFILTER_TYPE_PLAY,
-    COLORFILTER_TYPE_FADE,
+    COLORFILTER_TYPE_UNKNOWN_0, // Inferred role: stop; original name unknown.
+    COLORFILTER_TYPE_UNKNOWN_1, // Inferred role: play; original name unknown.
+    COLORFILTER_TYPE_UNKNOWN_2, // Inferred role: fade; original name unknown.
   };
 
   enum {
-    FLAG_CLOCK_STOP = 1 << 0,
-    FLAG_AUTO_RESET_SCENE = 1 << 1,
-    FLAG_WEATHER_TYPE = 1 << 2,
-    FLAG_GIMMICK_POP_WAIT = 1 << 3,
-    FLAG_MOT_BLUR = 1 << 4,
-    FLAG_TONE_MAP = 1 << 5,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: clock stop flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: auto reset scene flag; original name unknown.
+    FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: weather type flag; original name unknown.
+    FLAG_UNKNOWN_3 = 1 << 3, // Inferred role: gimmick pop wait flag; original name unknown.
+    FLAG_UNKNOWN_4 = 1 << 4, // Inferred role: mot blur flag; original name unknown.
+    FLAG_UNKNOWN_5 = 1 << 5, // Inferred role: tone map flag; original name unknown.
   };
 
   enum {
-    DISP_FLAG_DISP = 1 << 0,
+    DISP_FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: disp flag; original name unknown.
   };
 
   EnvManager();

@@ -16,18 +16,18 @@ class GfGameManager;
 struct GfSetupParam;
 
 enum {
-  GF_STATE_FLAG_CONTROL = 0x1,
-  GF_STATE_FLAG_EVENT = 0x2,
-  GF_STATE_FLAG_MAPJUMP = 0x4,
-  GF_STATE_FLAG_MENU = 0x8,
-  GF_STATE_FLAG_TALK = 0x20,
-  GF_STATE_FLAG_COLLECT = 0x40,
-  GF_STATE_FLAG_FIELD_TBOX = 0x80,
-  GF_STATE_FLAG_MAP_GIMMICK = 0x200,
-  GF_STATE_FLAG_JUMP = 0x400,
-  GF_STATE_FLAG_WARP = 0x800,
-  GF_STATE_FLAG_GMK_TUTORIAL = 0x2000,
-  GF_STATE_FLAG_GMK_CAMERA = 0x4000,
+  GF_STATE_FLAG_UNKNOWN_0 = 0x1,     // Inferred role: gf state flag control; original name unknown.
+  GF_STATE_FLAG_UNKNOWN_1 = 0x2,     // Inferred role: gf state flag event; original name unknown.
+  GF_STATE_FLAG_UNKNOWN_2 = 0x4,     // Inferred role: gf state flag mapjump; original name unknown.
+  GF_STATE_FLAG_UNKNOWN_3 = 0x8,     // Inferred role: gf state flag menu; original name unknown.
+  GF_STATE_FLAG_UNKNOWN_5 = 0x20,    // Inferred role: gf state flag talk; original name unknown.
+  GF_STATE_FLAG_UNKNOWN_6 = 0x40,    // Inferred role: gf state flag collect; original name unknown.
+  GF_STATE_FLAG_UNKNOWN_7 = 0x80,    // Inferred role: gf state flag field tbox; original name unknown.
+  GF_STATE_FLAG_UNKNOWN_9 = 0x200,   // Inferred role: gf state flag map gimmick; original name unknown.
+  GF_STATE_FLAG_UNKNOWN_10 = 0x400,  // Inferred role: gf state flag jump; original name unknown.
+  GF_STATE_FLAG_UNKNOWN_11 = 0x800,  // Inferred role: gf state flag warp; original name unknown.
+  GF_STATE_FLAG_UNKNOWN_13 = 0x2000, // Inferred role: gf state flag gmk tutorial; original name unknown.
+  GF_STATE_FLAG_UNKNOWN_14 = 0x4000, // Inferred role: gf state flag gmk camera; original name unknown.
 };
 
 class StateGfInitialize : public ai::State {

@@ -11,26 +11,26 @@ namespace event {
 class VolumeManager : public IManager, public mm::mtl::Singleton<VolumeManager> {
 public:
   enum CATE {
-    CATE_BGM,
-    CATE_VOI,
-    CATE_BTL,
-    CATE_FLD,
-    CATE_GMK,
-    CATE_ENV,
-    CATE_WEA,
-    CATE_EVTCS,
-    CATE_EVTVOI,
-    CATE_EVTSE,
-    CATE_CHRSE,
-    CATE_NOSLOW,
-    CATE_ENEVOI,
-    CATE_NAREVOI,
+    CATE_UNKNOWN_0,  // Inferred role: bgm; original name unknown.
+    CATE_UNKNOWN_1,  // Inferred role: voi; original name unknown.
+    CATE_UNKNOWN_2,  // Inferred role: btl; original name unknown.
+    CATE_UNKNOWN_3,  // Inferred role: fld; original name unknown.
+    CATE_UNKNOWN_4,  // Inferred role: gmk; original name unknown.
+    CATE_UNKNOWN_5,  // Inferred role: env; original name unknown.
+    CATE_UNKNOWN_6,  // Inferred role: wea; original name unknown.
+    CATE_UNKNOWN_7,  // Inferred role: evtcs (label "EVTCS" of VolumeManager::render); original name unknown.
+    CATE_UNKNOWN_8,  // Inferred role: evtvoi (label "EVTVO" of VolumeManager::render); original name unknown.
+    CATE_UNKNOWN_9,  // Inferred role: evtse (label "EVTSE" of VolumeManager::render); original name unknown.
+    CATE_UNKNOWN_10, // Inferred role: chrse (label "CHRSE" of VolumeManager::render); original name unknown.
+    CATE_UNKNOWN_11, // Inferred role: noslow (label "(NOSLOW)" of VolumeManager::render); original name unknown.
+    CATE_UNKNOWN_12, // Inferred role: enevoi (label "ENEVO" of VolumeManager::render); original name unknown.
+    CATE_UNKNOWN_13, // Inferred role: narevoi (label "NAREVO" of VolumeManager::render); original name unknown.
     CATE_COUNT,
   };
 
   enum {
-    DISP_FLAG_DISP = 1 << 0,
-    DISP_FLAG_DETAIL = 1 << 1,
+    DISP_FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: disp flag; original name unknown.
+    DISP_FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: detail flag; original name unknown.
   };
 
   VolumeManager();
@@ -42,7 +42,7 @@ public:
   void update();
   void render();
   void changeCategoryVolume(CATE cate, f32 volume, f32 frame);
-  void setSeamlessVolume(bool isEnable, f32 volume, u32 target, const mm::mtl::FixedArray<f32, VolumeSeamless::RESET_VOLUME_COUNT> *resetVolumes);
+  void setSeamlessVolume(bool isEnable, f32 volume, u32 target, const mm::mtl::FixedArray<f32, VolumeSeamless::RESET_VOLUME_UNKNOWN_13> *resetVolumes);
   void startSeamlessVolume(f32 frame);
   void endSeamlessVolume(f32 frame);
   void maskSeamlessVolume(VolumeSeamless::MASK_TYPE type, bool isMask);

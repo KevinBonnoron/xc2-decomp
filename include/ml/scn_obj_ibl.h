@@ -16,7 +16,7 @@ class WinProc;
 class ScnObjIBL : public ScnObj {
 public:
   enum Flag {
-    FLAG_DISP = 1 << 0,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: disp; original name unknown.
   };
 
   ScnObjIBL(Scn *scn);
@@ -27,6 +27,7 @@ public:
   virtual const mm::Vec3 &getReferencePos() const = 0;
   virtual void setFromCaptureTool() = 0;
   virtual void dispDebugWindow(bool isOpen, const char *title, WinProc *window) {}
+  virtual void setName(const char *name) = 0;
 
   u32 unknown14; // Inferred role: flags; original member name unknown.
 };

@@ -14,12 +14,12 @@
 
 namespace event {
 
-static constexpr f32 SEAM_POINT_KEEP_FRAME = 5.0f;
+static constexpr f32 unknown023 = 5.0f; // Inferred role: seam point keep frame; original name unknown.
 
 SeamlessManager::SeamlessManager() : unknown10(0), unknown14(0) {}
 
 void SeamlessManager::clear() {
-  if ((unknown10 & FLAG_READ_ENABLE) != 0) {
+  if ((unknown10 & FLAG_UNKNOWN_2) != 0) {
     setReadEnable(false, nullptr);
   }
   unknown540.clear();
@@ -32,11 +32,11 @@ void SeamlessManager::setReadEnable(bool isEnable, const mm::Vec3 *pos) {
     ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
     parmAcc.setSeamMapAddPosMode(true);
     parmAcc.setSeamMapReadPos(*pos);
-    unknown10 |= FLAG_READ_ENABLE;
+    unknown10 |= FLAG_UNKNOWN_2;
   } else {
     ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
     parmAcc.setSeamMapAddPosMode(false);
-    unknown10 &= ~FLAG_READ_ENABLE;
+    unknown10 &= ~FLAG_UNKNOWN_2;
   }
 }
 
@@ -45,33 +45,33 @@ void SeamlessManager::update() {
     return;
   }
   const FrameInfo &info = mm::mtl::Singleton<FrameManager>::getPtr()->frameInfo();
-  while (!unknown540.empty() && unknown540.front().unknown00 + SEAM_POINT_KEEP_FRAME <= info.unknown00) {
+  while (!unknown540.empty() && unknown540.front().unknown00 + unknown023 <= info.unknown00) {
     unknown540.erase(unknown540.begin());
-    unknown10 &= ~FLAG_SEAM;
+    unknown10 &= ~FLAG_UNKNOWN_1;
   }
   if (unknown540.empty()) {
     return;
   }
   unknown2550 = unknown540.front().unknown10;
-  unknown10 = (unknown10 & ~(FLAG_FIRST | FLAG_SEAM)) | FLAG_SEAM;
+  unknown10 = (unknown10 & ~(FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) | FLAG_UNKNOWN_1;
   setReadEnable(true, &unknown2550);
 }
 
 void SeamlessManager::render() {
-  if (!isDisp() || (unknown10 & (FLAG_FIRST | FLAG_SEAM)) == 0) {
+  if (!isDisp() || (unknown10 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) == 0) {
     return;
   }
   int x = ml::DevGraph::getRootWidth() - 415;
   fw::debug::drawSquare2D(mm::Rect<s32>(x, 120, 225, 40), mm::Col4(0.0f, 0.0f, 0.0f, 0.25f));
   fw::debug::drawLineSquare2D(mm::Rect<s32>(x, 120, 225, 40), mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
   fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
-  if ((unknown10 & FLAG_FIRST) != 0) {
+  if ((unknown10 & FLAG_UNKNOWN_0) != 0) {
     fw::debug::drawFont(x + 5, 125, "SEAMLESS(FIRST)");
   } else {
     fw::debug::drawFont(x + 5, 125, "SEAMLESS");
   }
   fw::debug::drawFont(x + 10, 140, "pos:");
-  if ((unknown10 & FLAG_FIRST) != 0) {
+  if ((unknown10 & FLAG_UNKNOWN_0) != 0) {
     fw::debug::drawFont(x + 50, 140, "%.2f %.2f %.2f", unknown530.x, unknown530.y, unknown530.z);
   } else {
     fw::debug::drawFont(x + 50, 140, "%.2f %.2f %.2f", unknown2550.x, unknown2550.y, unknown2550.z);
@@ -95,12 +95,12 @@ void SeamlessManager::readFirstSeamPoint(const char *name) {
     if (__builtin_strcmp(unknown20[i].unknown00.c_str(), name) == 0) {
       unknown20[i].unknown40 = unknown20[i].unknown20.calcPos();
       unknown530 = unknown20[i].unknown40;
-      unknown10 = (unknown10 & ~(FLAG_FIRST | FLAG_SEAM)) | FLAG_FIRST;
+      unknown10 = (unknown10 & ~(FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) | FLAG_UNKNOWN_0;
       setReadEnable(true, &unknown530);
       return;
     }
   }
-  unknown10 &= ~FLAG_FIRST;
+  unknown10 &= ~FLAG_UNKNOWN_0;
 }
 
 void SeamlessManager::readNextSeamPoint(const char *name) {
@@ -110,20 +110,20 @@ void SeamlessManager::readNextSeamPoint(const char *name) {
   for (size_t i = 0; i < unknown20.size() - 1; i++) {
     if (__builtin_strcmp(unknown20[i].unknown00.c_str(), name) == 0) {
       unknown530 = unknown20[i + 1].unknown40;
-      unknown10 = (unknown10 & ~(FLAG_FIRST | FLAG_SEAM)) | FLAG_FIRST;
+      unknown10 = (unknown10 & ~(FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) | FLAG_UNKNOWN_0;
       mm::mtl::Singleton<DebugManager>::getPtr()->playMessage("read next seam point");
       setReadEnable(true, &unknown530);
       return;
     }
   }
-  unknown10 &= ~FLAG_FIRST;
+  unknown10 &= ~FLAG_UNKNOWN_0;
 }
 
 void SeamlessManager::addSeamPoint(f32 frame, const PosAxis &axis) {
   if (!unknown540.empty()) {
     if (frame <= unknown540.front().unknown00) {
       unknown540.clear();
-    } else if (unknown540.size() >= SEAM_POINT_COUNT) {
+    } else if (unknown540.size() >= SEAM_POINT_UNKNOWN_256) {
       unknown540.erase(unknown540.begin());
     }
   }
@@ -134,24 +134,24 @@ bool SeamlessManager::isActiveSeamPoint() const { return !unknown540.empty(); }
 
 void SeamlessManager::setDisp(bool isDisp) {
   if (isDisp) {
-    unknown14 |= DISP_FLAG_DISP;
+    unknown14 |= DISP_FLAG_UNKNOWN_0;
   } else {
-    unknown14 &= ~DISP_FLAG_DISP;
+    unknown14 &= ~DISP_FLAG_UNKNOWN_0;
   }
 }
 
-bool SeamlessManager::isDisp() const { return (unknown14 & DISP_FLAG_DISP) != 0; }
+bool SeamlessManager::isDisp() const { return (unknown14 & DISP_FLAG_UNKNOWN_0) != 0; }
 
 void SeamlessManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
-  case MSG_TYPE_INIT:
-  case MSG_TYPE_CLEAR:
+  case MSG_TYPE_UNKNOWN_4:
+  case MSG_TYPE_UNKNOWN_12:
     clear();
     break;
-  case MSG_TYPE_UPDATE:
+  case MSG_TYPE_UNKNOWN_14:
     update();
     break;
-  case MSG_TYPE_RENDER:
+  case MSG_TYPE_UNKNOWN_16:
     render();
     break;
   default:

@@ -13,54 +13,35 @@ namespace event {
 BouManager::BouManager() : unknown18(), unknown1c() {}
 
 void BouManager::create() {
-  if (!unknown18.test(FLAG_ATTACHED)) {
+  if (!unknown18.test(FLAG_UNKNOWN_1)) {
     Manager::get()->getScn()->getView(-1)->attachWorkEvent(this, false);
-    unknown18.set(FLAG_ATTACHED);
+    unknown18.set(FLAG_UNKNOWN_1);
   }
 }
 
 void BouManager::clear() {
-  unknown18.set(FLAG_ACTIVE, false);
-  if (unknown18.test(FLAG_ATTACHED)) {
+  unknown18.set(FLAG_UNKNOWN_2, false);
+  if (unknown18.test(FLAG_UNKNOWN_1)) {
     Manager::get()->getScn()->getView(-1)->detachWorkEvent(this);
-    unknown18.set(FLAG_ATTACHED, false);
+    unknown18.set(FLAG_UNKNOWN_1, false);
   }
   unknown2040.clear();
   unknown38.clear();
   unknown18.clear();
 }
 
-void BouManager::endActive() { unknown18.set(FLAG_ACTIVE, false); }
-
-void BouManager::startActive(const mm::Pnt<int> &point) {
-  unknown20.x = point.x;
-  unknown20.y = point.y;
-  // The target reloads +0x28 before subtracting. This read preserves that
-  // instruction; it does not establish a volatile original member type.
-  unknown20.width = point.x - *reinterpret_cast<volatile int *>(&unknown20.x);
-  unknown20.height = point.y - unknown20.y;
-  unknown2040.clear();
-  unknown18.set(FLAG_ACTIVE);
-}
+void BouManager::endActive() { unknown18.set(FLAG_UNKNOWN_2, false); }
 
 void BouManager::render() {
   if (!isEnable() || !isDebugEnable()) {
     return;
   }
-  if (unknown18.test(FLAG_ACTIVE)) {
+  if (unknown18.test(FLAG_UNKNOWN_2)) {
     unknown20.render();
   }
   for (IBouCallback **it = unknown2040.begin(); it != unknown2040.end(); ++it) {
     (*it)->OnBouRender(IBouCallback::RenderParam(mm::Col4(1.0f, 1.0f, 0.8f, 0.5f)));
   }
-}
-
-bool BouManager::OnMouseButtonDown(ml::EventView *view) {
-  if (isEnable() && isDebugEnable() && unknown002() && (view->buttons & ml::EventView::BUTTON_LEFT) != 0) {
-    startActive(view->pos);
-    updateActive(view->pos);
-  }
-  return false;
 }
 
 bool BouManager::OnMouseMove(ml::EventView *view) {
@@ -74,21 +55,21 @@ bool BouManager::OnMouseMove(ml::EventView *view) {
 
 bool BouManager::OnMouseButtonUp(ml::EventView *view) {
   if (unknown001()) {
-    unknown18.set(FLAG_ACTIVE, false);
+    unknown18.set(FLAG_UNKNOWN_2, false);
   }
   return false;
 }
 
 bool BouManager::OnKeyDown(ml::EventView *view) {
   if (isEnable() && isDebugEnable()) {
-    unknown18.set(FLAG_KEY_DOWN);
+    unknown18.set(FLAG_UNKNOWN_3);
   }
   return false;
 }
 
 bool BouManager::OnKeyUp(ml::EventView *view) {
   if (isEnable() && isDebugEnable()) {
-    unknown18.set(FLAG_KEY_DOWN, false);
+    unknown18.set(FLAG_UNKNOWN_3, false);
   }
   return false;
 }
@@ -106,20 +87,20 @@ void BouManager::pop(IBouCallback *callback) {
 
 void BouManager::setEnable(bool isEnable) {
   if (isEnable) {
-    unknown18.set(FLAG_ENABLE);
+    unknown18.set(FLAG_UNKNOWN_0);
   } else {
     unknown2040.clear();
-    unknown18.set(FLAG_ENABLE, false);
-    unknown18.set(FLAG_ACTIVE, false);
+    unknown18.set(FLAG_UNKNOWN_0, false);
+    unknown18.set(FLAG_UNKNOWN_2, false);
   }
 }
 
 void BouManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
-  case MSG_TYPE_RENDER:
+  case MSG_TYPE_UNKNOWN_16:
     render();
     break;
-  case MSG_TYPE_CLEAR:
+  case MSG_TYPE_UNKNOWN_12:
     clear();
     break;
   default:
@@ -127,6 +108,6 @@ void BouManager::OnEventProc(MSG_TYPE type) {
   }
 }
 
-void BouManager::setDebugEnable(bool isEnable) { unknown1c.set(DEBUG_FLAG_ENABLE, isEnable); }
+void BouManager::setDebugEnable(bool isEnable) { unknown1c.set(DEBUG_FLAG_UNKNOWN_0, isEnable); }
 
 } // namespace event

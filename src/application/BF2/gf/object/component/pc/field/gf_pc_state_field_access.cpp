@@ -11,8 +11,8 @@ namespace pc {
 
 void StateFieldAccess::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
   GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
-  if (__builtin_strcmp(comAsm->getStateName(ANIM_LAYER_BASE), "S_idle") == 0 && !GfGameManager::isPlayerPause()) {
-    reqState(STATE_ID_FIELD_IDLE);
+  if (__builtin_strcmp(comAsm->getStateName(ANIM_LAYER_UNKNOWN_0), "S_idle") == 0 && !GfGameManager::isPlayerPause()) {
+    reqState(STATE_ID_UNKNOWN_3);
   }
 }
 

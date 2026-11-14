@@ -13,7 +13,7 @@ namespace event {
 
 void ScriptCharaMotionABC::doit(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CHARA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_2) {
     return;
   }
   static_cast<ObjectChara *>(object)->getCharaObj()->playMotionABC(param.val(0).getStr(),

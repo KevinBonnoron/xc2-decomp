@@ -14,7 +14,7 @@ public:
     void create(CBdatWrapper, int, const AGmkBase &) {}
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_FIELD_VOLUME;
+  static const GmkType GMK_TYPE = GMK_TYPE_FIELD_VOLUME; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkFieldVolume() {}
   ~GmkFieldVolume() override { dispose(); }

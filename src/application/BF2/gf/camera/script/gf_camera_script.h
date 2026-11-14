@@ -22,6 +22,7 @@ public:
   static mm::mtl::IntrusivePtr<fw::Camera> create(const mm::Vec3 &position, const mm::Vec3 &rotation);
   ~ScriptCameraEntity() override;
   void onActivate() override;
+  void update(const fw::UpdateInfo &info) override;
   void calcSpeedTypeLinearSpacing();
   void move(const mm::Vec3 &position, const mm::Vec3 &rotation, f32 time);
   const mm::mtl::RTTI *getRTTI() const override;

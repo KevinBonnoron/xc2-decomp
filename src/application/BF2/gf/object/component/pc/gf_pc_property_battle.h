@@ -13,14 +13,14 @@ class PlayerParameter;
 namespace gf {
 
 enum {
-  MSG_PC_BATTLE_START = 0x100000a,
-  MSG_PC_BATTLE_END = 0x100000b,
+  MSG_PC_BATTLE_UNKNOWN_16777226 = 0x100000a, // Inferred role: msg pc battle start; original name unknown.
+  MSG_PC_BATTLE_UNKNOWN_16777227 = 0x100000b, // Inferred role: msg pc battle end; original name unknown.
 };
 
 // Layout evidence: StateField::procMsgObjectNotifyDamage (0x7100553740) builds it on the stack; the flags are left unset by
 // StateField::procMsgObjectNotifyDead.
 struct MsgPcBattleStart : fw::Message {
-  explicit MsgPcBattleStart(u32 type) : fw::Message(MSG_PC_BATTLE_START, 0x40), unknown08(type) {}
+  explicit MsgPcBattleStart(u32 type) : fw::Message(MSG_PC_BATTLE_UNKNOWN_16777226, 0x40), unknown08(type) {}
 
   u32 unknown08; // Inferred role: start condition type, copied by GfPropertyBattle::SetStartCondition; original member name unknown.
   u32 unknown0c; // Inferred role: start condition flag; original member name unknown.

@@ -6,7 +6,13 @@
 #include "mm_math/mm_mat44.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/vector.h"
+#include "ptlib/particle_system.h"
+#include "scn/scn_obj_model_dr_sys.h"
 #include "types.h"
+
+namespace ml {
+class DrMdlObj;
+} // namespace ml
 
 namespace mm {
 namespace mtl {
@@ -46,7 +52,7 @@ void EffectCasterSend::sendData(f32 scale) {
     return;
   }
 
-  unknown88[effect::SystemManager::getPtr()->unknown7824d != 0] = scale;
+  m_mdlScl[effect::SystemManager::getPtr()->unknown7824d != 0] = scale;
 }
 
 void EffectCasterSend::sendDataFrame(f32 frame) {
@@ -54,7 +60,7 @@ void EffectCasterSend::sendDataFrame(f32 frame) {
     return;
   }
 
-  unknown90[effect::SystemManager::getPtr()->unknown7824d != 0] = frame;
+  m_mdlFrame[effect::SystemManager::getPtr()->unknown7824d != 0] = frame;
 }
 
 void EffectCasterSend::sendDataStateName(const char *name) {
@@ -82,16 +88,80 @@ EffectCasterSend::MtxAndName *EffectCasterSend::getBindData(u32 &count) {
   return datas;
 }
 
-f32 EffectCasterSend::getMdlFrame() { return unknown90[effect::SystemManager::getPtr()->unknown7824d == 0]; }
+f32 EffectCasterSend::getMdlFrame() { return m_mdlFrame[effect::SystemManager::getPtr()->unknown7824d == 0]; }
 
-f32 EffectCasterSend::getMdlScl() { return unknown88[effect::SystemManager::getPtr()->unknown7824d == 0]; }
+f32 EffectCasterSend::getMdlScl() { return m_mdlScl[effect::SystemManager::getPtr()->unknown7824d == 0]; }
 
 void EffectCasterSend::tailCopy() {
   u32 src = effect::SystemManager::getPtr()->unknown7824d != 0;
   u32 dst = effect::SystemManager::getPtr()->unknown7824d == 0;
-  unknown88[dst] = unknown88[src];
-  unknown90[dst] = unknown90[src];
+  m_mdlScl[dst] = m_mdlScl[src];
+  m_mdlFrame[dst] = m_mdlFrame[src];
   unknown98[dst] = unknown98[src];
+}
+
+ml::DrMdlObj *EffectCasterSend::getMdl() {
+  unknown80 = m_caster->unknown18->unknown3d8;
+  return unknown80;
+}
+
+// The game repeats the bind search per buffer (a helper is not inlined by clang: 42 vs 191 insns).
+bool EffectCasterSend::getMdlMat(mm::Mat44 &matrix) {
+  if (effect::SystemManager::getPtr() == nullptr) {
+    return true;
+  }
+
+  u8 buffer = effect::SystemManager::getPtr()->unknown7824d;
+  u32 hash = AssetManager::getHash("root");
+  if (buffer == 0) {
+    for (u32 i = 0; i < unknown18[1].size(); i++) {
+      if (hash == unknown18[1][i].unknown00 && strcmp(unknown18[1][i].unknown04, "root") == 0) {
+        matrix = unknown18[1][i].unknown20;
+        return true;
+      }
+    }
+  } else {
+    for (u32 i = 0; i < unknown18[0].size(); i++) {
+      if (hash == unknown18[0][i].unknown00 && strcmp(unknown18[0][i].unknown04, "root") == 0) {
+        matrix = unknown18[0][i].unknown20;
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+// The game repeats the bind search per buffer (a helper is not inlined by clang: 42 vs 191 insns).
+bool EffectCasterSend::getEfpMat(mm::Mat44 &matrix, const char *name) {
+  if (effect::SystemManager::getPtr() == nullptr || name == nullptr) {
+    getMdlMat(matrix);
+    if (name == nullptr) {
+      ptlib::efWng("error EFP null");
+    } else {
+      ptlib::efWng("error EFP %s", name);
+    }
+    return false;
+  }
+
+  u8 buffer = effect::SystemManager::getPtr()->unknown7824d;
+  u32 hash = AssetManager::getHash(name);
+  if (buffer == 0) {
+    for (u32 i = 0; i < unknown18[1].size(); i++) {
+      if (hash == unknown18[1][i].unknown00 && strcmp(unknown18[1][i].unknown04, name) == 0) {
+        matrix = unknown18[1][i].unknown20;
+        return true;
+      }
+    }
+  } else {
+    for (u32 i = 0; i < unknown18[0].size(); i++) {
+      if (hash == unknown18[0][i].unknown00 && strcmp(unknown18[0][i].unknown04, name) == 0) {
+        matrix = unknown18[0][i].unknown20;
+        return true;
+      }
+    }
+  }
+  getMdlMat(matrix);
+  return false;
 }
 
 } // namespace fw

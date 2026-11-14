@@ -12,7 +12,7 @@ GfMovieManager::GfMovieManager() {}
 void GfMovieManager::build(const GfSetupParam &) {
   // __LINE__ must be 31 as in the original file: its value changes the instruction order.
 #line 31
-  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfMovieManager();
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfMovieManager();
 }
 
 void GfMovieManager::destroy() {

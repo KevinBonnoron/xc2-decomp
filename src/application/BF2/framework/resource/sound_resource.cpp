@@ -34,7 +34,7 @@ SoundResource *SoundResource::request(mm::mtl::IAllocator *allocator, const char
 }
 
 SoundResource::SoundResource(mm::mtl::IAllocator *allocator, LOAD_PRIO priority)
-    : ResourceObject(5, allocator, priority, 0x1000), unknownb0(STATE_NONE), unknownb8(nullptr), unknownc0(nullptr), m_soundPack(nullptr) {}
+    : ResourceObject(5, allocator, priority, 0x1000), unknownb0(STATE_UNKNOWN_0), unknownb8(nullptr), unknownc0(nullptr), m_soundPack(nullptr) {}
 
 SoundResource::~SoundResource() {
   if (unknownb8 != nullptr) {
@@ -50,9 +50,9 @@ SoundResource::~SoundResource() {
 }
 
 void SoundResource::update() {
-  while (unknownb0 != STATE_LOADED) {
+  while (unknownb0 != STATE_UNKNOWN_2) {
     switch (unknownb0) {
-    case STATE_NONE: {
+    case STATE_UNKNOWN_0: {
       mm::mtl::FixStr<256> fileName;
       ml::DevFileTh::normalizeDvdFileName(fileName, unknown2c.c_str());
       unknownc0 = AssetData::CreateFromCache(unknown18, fileName.c_str());
@@ -67,16 +67,16 @@ void SoundResource::update() {
         info.unknowna0 = unknownc0->unknown1c;
         m_soundPack = SoundPack::createFromStream(unknown18, info);
         ResourceManager::get()->addSafeObject(unknownc0, static_cast<eResourceType>(5));
-        unknownb0 = STATE_LOADED;
+        unknownb0 = STATE_UNKNOWN_2;
       } else {
         unknownb8 = AssetLoader::Create(unknown18, fileName.c_str(), unknown28, unknown24);
         unknownb0 = static_cast<State>(unknownb0 + 1);
       }
       break;
     }
-    case STATE_LOADING:
+    case STATE_UNKNOWN_1:
       if (unknownb8 == nullptr) {
-        unknownb0 = STATE_LOADED;
+        unknownb0 = STATE_UNKNOWN_2;
         break;
       }
 
@@ -124,7 +124,7 @@ const char *SoundResource::getMemName() {
   return "undifine memory";
 }
 
-bool SoundResource::valid() const { return unknownb0 == STATE_LOADED; }
+bool SoundResource::valid() const { return unknownb0 == STATE_UNKNOWN_2; }
 
 void *SoundResource::getAssetData() {
   if (unknownc0 != nullptr) {

@@ -16,7 +16,7 @@
 
 namespace event {
 
-constexpr int CLOSE_WAIT_FRAMES = 2;
+constexpr int CLOSE_WAIT_UNKNOWN_2 = 2; // Inferred role: close wait frames; original name unknown.
 
 namespace {
 
@@ -31,6 +31,12 @@ void unknown001(mm::mtl::FixStr<256> &name, const char *pattern, int length) {
 } // namespace
 
 MovieManager::MovieManager() : unknown10(0), unknown118(false), unknown220(-1) {}
+
+void MovieManager::clear() {
+  close();
+  captureScreen(false);
+  unknown10 = 0;
+}
 
 bool MovieManager::makePath(mm::mtl::FixStr<256> &path, const char *name) {
   mm::mtl::FixStr<256> movieName = name;
@@ -56,35 +62,35 @@ bool MovieManager::makePath(mm::mtl::FixStr<256> &path, const char *name) {
 
 void MovieManager::close() {
   stop();
-  if (unknown10 & FLAG_OPEN) {
+  if (unknown10 & FLAG_UNKNOWN_0) {
     gf::GfMovieManager::get()->stop();
     gf::GfMovieManager::get()->close();
   }
-  unknown10 &= ~(FLAG_OPEN | FLAG_CLOSE_WAIT);
+  unknown10 &= ~(FLAG_UNKNOWN_0 | FLAG_UNKNOWN_6);
 }
 
 void MovieManager::captureScreen(bool isCapture) {
   if (isCapture) {
-    if (!(unknown10 & FLAG_CAPTURE)) {
+    if (!(unknown10 & FLAG_UNKNOWN_7)) {
       ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
       parmAcc.setCaptureMode(true);
-      unknown10 |= FLAG_CAPTURE;
+      unknown10 |= FLAG_UNKNOWN_7;
     }
-  } else if (unknown10 & FLAG_CAPTURE) {
+  } else if (unknown10 & FLAG_UNKNOWN_7) {
     ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
     parmAcc.setCaptureMode(false);
-    unknown10 &= ~FLAG_CAPTURE;
+    unknown10 &= ~FLAG_UNKNOWN_7;
   }
 }
 
 void MovieManager::render() {
   int x = (ml::DevGraph::getRootWidth() - 210) >> 1;
-  if (unknown10 & FLAG_LOADED) {
+  if (unknown10 & FLAG_UNKNOWN_1) {
     fw::debug::drawFontColor(mm::Col4(0.8f, 0.8f, 1.0f, 1.0f));
     fw::debug::drawFont(x + 25, 105, "MOVIE PRELOADING");
     fw::debug::drawFont(x + 150, 105, unknown118 ? "(OBJ)" : "");
     fw::debug::drawFont(x + 25, 120, mm::mtl::Singleton<Extend>::getPtr()->filename(unknown14.c_str()));
-  } else if (unknown10 & FLAG_PLAY) {
+  } else if (unknown10 & FLAG_UNKNOWN_2) {
     fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
     fw::debug::drawFont(x + 25, 105, "MOVIE PLAYING");
     fw::debug::drawFont(x + 150, 105, unknown118 ? "(OBJ)" : "");
@@ -95,15 +101,15 @@ void MovieManager::render() {
 }
 
 void MovieManager::update() {
-  if ((unknown10 & (FLAG_PLAY | FLAG_AUTO_STOP)) == (FLAG_PLAY | FLAG_AUTO_STOP) && !gf::GfMovieManager::get()->isplaying()) {
+  if ((unknown10 & (FLAG_UNKNOWN_2 | FLAG_UNKNOWN_4)) == (FLAG_UNKNOWN_2 | FLAG_UNKNOWN_4) && !gf::GfMovieManager::get()->isplaying()) {
     stop();
   }
-  if (unknown10 & FLAG_DISP_WAIT) {
+  if (unknown10 & FLAG_UNKNOWN_5) {
     if (unknown228-- <= 0) {
-      unknown10 &= ~FLAG_DISP_WAIT;
+      unknown10 &= ~FLAG_UNKNOWN_5;
     }
   }
-  if (unknown10 & FLAG_CLOSE_WAIT) {
+  if (unknown10 & FLAG_UNKNOWN_6) {
     if (unknown22c-- <= 0) {
       close();
     }
@@ -115,11 +121,11 @@ void MovieManager::play(const char *path, bool isFullSize, bool isAutoStop) {
     clear();
     return;
   }
-  if (!(unknown10 & FLAG_LOADED) || !isSame(unknown14.c_str(), path) || unknown118 != isFullSize) {
+  if (!(unknown10 & FLAG_UNKNOWN_1) || !isSame(unknown14.c_str(), path) || unknown118 != isFullSize) {
     gf::GfMovieManager::get()->stop();
     gf::GfMovieManager::get()->close();
     gf::GfMovieManager *movie = gf::GfMovieManager::get();
-    gf::GfAllocator *allocator = gf::getAllocator(gf::ALLOCATOR_DEBUG);
+    gf::GfAllocator *allocator = gf::getAllocator(gf::ALLOCATOR_UNKNOWN_10);
     if (isFullSize) {
       movie->open(allocator, 1280, 720);
     } else {
@@ -134,41 +140,66 @@ void MovieManager::play(const char *path, bool isFullSize, bool isAutoStop) {
   } else {
     gf::GfMovieManager::get()->play();
     unknown11c = path;
-    unknown10 &= ~FLAG_LOADED;
+    unknown10 &= ~FLAG_UNKNOWN_1;
     unknown14 = "";
     unknown118 = false;
   }
-  unknown10 |= FLAG_OPEN | FLAG_PLAY;
+  unknown10 |= FLAG_UNKNOWN_0 | FLAG_UNKNOWN_2;
   if (isAutoStop) {
-    unknown10 |= FLAG_AUTO_STOP;
+    unknown10 |= FLAG_UNKNOWN_4;
   } else {
-    unknown10 &= ~FLAG_AUTO_STOP;
+    unknown10 &= ~FLAG_UNKNOWN_4;
   }
-  unknown10 &= ~(FLAG_DISP_WAIT | FLAG_CLOSE_WAIT);
+  unknown10 &= ~(FLAG_UNKNOWN_5 | FLAG_UNKNOWN_6);
   if (!isFullSize) {
     unknown228 = 1;
-    unknown10 |= FLAG_DISP_REQUEST | FLAG_DISP_WAIT;
+    unknown10 |= FLAG_UNKNOWN_3 | FLAG_UNKNOWN_5;
   } else {
     dispOff();
   }
 }
 
 void MovieManager::stop() {
-  if (unknown10 & (FLAG_LOADED | FLAG_PLAY)) {
-    if (unknown10 & FLAG_DISP_REQUEST) {
-      unknown10 &= ~(FLAG_DISP_REQUEST | FLAG_DISP_WAIT);
+  if (unknown10 & (FLAG_UNKNOWN_1 | FLAG_UNKNOWN_2)) {
+    if (unknown10 & FLAG_UNKNOWN_3) {
+      unknown10 &= ~(FLAG_UNKNOWN_3 | FLAG_UNKNOWN_5);
     }
-    unknown22c = CLOSE_WAIT_FRAMES;
-    unknown10 = (unknown10 & ~(FLAG_LOADED | FLAG_PLAY | FLAG_DISP_WAIT | FLAG_CLOSE_WAIT)) | FLAG_CLOSE_WAIT;
+    unknown22c = CLOSE_WAIT_UNKNOWN_2;
+    unknown10 = (unknown10 & ~(FLAG_UNKNOWN_1 | FLAG_UNKNOWN_2 | FLAG_UNKNOWN_5 | FLAG_UNKNOWN_6)) | FLAG_UNKNOWN_6;
   }
 }
 
-void MovieManager::dispOff() { unknown10 &= ~FLAG_DISP_WAIT; }
+void MovieManager::dispOff() { unknown10 &= ~FLAG_UNKNOWN_5; }
 
 void MovieManager::preloadAuto(const char *name, bool isFullSize) {
   mm::mtl::FixStr<256> path;
   makePath(path, name);
   preload(path.c_str(), isFullSize);
+}
+
+void MovieManager::preload(const char *path, bool isFullSize) {
+  if (mm::mtl::Singleton<SkipManager>::getPtr()->isSkip()) {
+    close();
+    return;
+  }
+  if (!(unknown10 & FLAG_UNKNOWN_1) || !isSame(unknown14.c_str(), path) || unknown118 != isFullSize) {
+    gf::GfMovieManager::get()->stop();
+    gf::GfMovieManager::get()->close();
+    gf::GfMovieManager *movie = gf::GfMovieManager::get();
+    gf::GfAllocator *allocator = gf::getAllocator(gf::ALLOCATOR_UNKNOWN_10);
+    if (isFullSize) {
+      movie->open(allocator, 1280, 720);
+    } else {
+      movie->open(allocator);
+    }
+    if (!gf::GfMovieManager::get()->set_file(mm::mtl::Singleton<Extend>::getPtr()->webm(path))) {
+      gf::GfMovieManager::get()->close();
+      return;
+    }
+    unknown10 = (unknown10 & ~(FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1 | FLAG_UNKNOWN_6)) | FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1;
+    unknown14 = path;
+    unknown118 = isFullSize;
+  }
 }
 
 bool MovieManager::isSame(const char *path, const char *otherPath) {
@@ -188,7 +219,7 @@ bool MovieManager::isSame(const char *path, const char *otherPath) {
 }
 
 bool MovieManager::isLoading() const {
-  if ((unknown10 & FLAG_LOADED) && !gf::GfMovieManager::get()->isstandby()) {
+  if ((unknown10 & FLAG_UNKNOWN_1) && !gf::GfMovieManager::get()->isstandby()) {
     return true;
   }
   return false;
@@ -200,13 +231,13 @@ void MovieManager::playAuto(const char *name, bool isFullSize, bool isAutoStop) 
   play(path.c_str(), isFullSize, isAutoStop);
 }
 
-void MovieManager::dispOn() { unknown10 &= ~FLAG_DISP_WAIT; }
+void MovieManager::dispOn() { unknown10 &= ~FLAG_UNKNOWN_5; }
 
 void MovieManager::setScriptFlag(bool isScript) {
   if (isScript) {
-    unknown10 |= FLAG_SCRIPT;
+    unknown10 |= FLAG_UNKNOWN_8;
   } else {
-    unknown10 &= ~FLAG_SCRIPT;
+    unknown10 &= ~FLAG_UNKNOWN_8;
   }
 }
 
@@ -217,14 +248,14 @@ bool MovieManager::isLoadedAuto(const char *name, bool isFullSize) const {
 }
 
 bool MovieManager::isLoaded(const char *path, bool isFullSize) const {
-  if ((unknown10 & FLAG_LOADED) && __builtin_strcmp(unknown14.c_str(), path) == 0 && unknown118 == isFullSize) {
+  if ((unknown10 & FLAG_UNKNOWN_1) && __builtin_strcmp(unknown14.c_str(), path) == 0 && unknown118 == isFullSize) {
     return gf::GfMovieManager::get()->isstandby();
   }
   return false;
 }
 
 void MovieManager::pause(bool isPause) {
-  if (unknown10 & FLAG_PLAY) {
+  if (unknown10 & FLAG_UNKNOWN_2) {
     bool isPaused = gf::GfMovieManager::get()->ispause();
     if (isPause) {
       if (!isPaused) {
@@ -238,19 +269,19 @@ void MovieManager::pause(bool isPause) {
 
 void MovieManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
-  case MSG_TYPE_INIT:
+  case MSG_TYPE_UNKNOWN_4:
     clear();
     break;
-  case MSG_TYPE_UPDATE_POST:
+  case MSG_TYPE_UNKNOWN_15:
     update();
     break;
-  case MSG_TYPE_RENDER_POST:
+  case MSG_TYPE_UNKNOWN_17:
     render();
     break;
   default:
     break;
   }
-  if (type == MSG_TYPE_CLEAR) {
+  if (type == MSG_TYPE_UNKNOWN_12) {
     clear();
   }
 }

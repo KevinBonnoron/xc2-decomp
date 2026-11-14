@@ -1,7 +1,11 @@
 #include "dr/dr_pixl_man.h"
 
+#include <string.h>
+
 #include "dr/dr_ap_cache.h"
 #include "dr/dr_ap_gx_type.h"
+#include "dr/dr_calc_man.h"
+#include "dr/dr_calc_view_work.h"
 #include "dr/dr_man.h"
 #include "dr/dr_mdl_man.h"
 #include "dr/dr_pixl_deferred.h"
@@ -21,6 +25,7 @@
 #include "grlib/cglib_depth_ctl.h"
 #include "grlib/cglib_depth_target.h"
 #include "grlib/cglib_polygon.h"
+#include "grlib/cglib_render_array.h"
 #include "grlib/cglib_render_target.h"
 #include "grlib/cglib_shader.h"
 #include "grlib/cglib_state.h"
@@ -29,11 +34,12 @@
 #include "grlib/cglib_uni_base_utility.h"
 #include "grlib/cglib_uniform_array.h"
 #include "mm_math/mm_col4.h"
+#include "mm_math/mm_mat44.h"
 #include "mm_mtl/fixed_array.h"
 
 namespace ml {
 
-static const s32 s_gbuffPixlObjs[] = {0, 1, 2, 3, 4, 8, 5, 6, 7, 15, 18};
+static const s32 unknown003[] = {0, 1, 2, 3, 4, 8, 5, 6, 7, 15, 18}; // Inferred role: pixel objects of the geometry buffers; original name unknown.
 
 static bool isDblPixlObj(int type) { return (0x27200ULL >> type) & 1; }
 
@@ -72,7 +78,7 @@ void DrPixlMan::captureMainFrameBuffer(grlib::CGLibTextureBuffer *buffer, u32 wi
 }
 
 void DrPixlMan::setupGodRay() {
-  if (unknown08->unknown120[unknown08->unknown1c98]->m_bloomOn && (unknown7f0->unknown180->unknownf8 & DrPixlPostMan::FLAG_CALC_VOLUME)) {
+  if (unknown08->unknown120[unknown08->unknown1c98]->m_bloomOn && (unknown7f0->unknown180->unknownf8 & DrPixlPostMan::FLAG_UNKNOWN_16)) {
     unknown7f0->unknown00[7][0]->clearTexture(mm::Col4(0.0f, 0.0f, 0.0f, 0.0f), static_cast<GrlClaerMask>(0xf));
   }
 }
@@ -108,6 +114,294 @@ void DrPixlMan::lastTexRender() {
   uniform.updateData();
   uniform.setUniformBlock();
   shdList->renderQuads();
+}
+
+void DrPixlMan::toneMapRender(bool isDepth) {
+  DrMan *man = unknown08;
+  DrShdDataList *shdList = man->unknown80->unknown00;
+  DrPixlRenderTarget *downDepth = unknown7f0->unknown180->getDownDepth();
+  DrCalcViewWork *viewWork = man->unknown580->unknown10;
+  DrPixlPostParm *postParm = man->unknown120[man->unknown1c98];
+  DrAPCache *apCache = man->unknown5c0;
+  DrAPGxType::setupScreenQuads(false);
+  DrShdDataObj *shader = shdList->getPostShdObj(2);
+  bool isDepthTest = downDepth != nullptr && isDepth;
+  if (isDepthTest) {
+    DrAPGxType::setupDepthContl(true, true, 7);
+    shader->setDeclarationIdx(shader->getDeclarationOfs("PIXL_TYPE"), 2);
+  } else {
+    shader->setDeclarationIdx(shader->getDeclarationOfs("PIXL_TYPE"), 1);
+  }
+  shdList->unknown002(shader);
+  grlib::CGLibUniformEtcUtility uniform(shader);
+  uniform.setUseUniformBlock("U_POST");
+  int location = (shader->unknown38 + shader->unknown58)->getTextureLocation("s0");
+  f32 tone[4];
+  tone[0] = unknown7f0->unknown188;
+  tone[1] = viewWork->unknown180.rows[2][2];
+  tone[2] = viewWork->unknown180.rows[3][2];
+  tone[3] = 0.0f;
+  uniform.setF32SetVec4(0, tone);
+  f32 scale[4];
+  if (!postParm->unknownfb2 || !isDepth) {
+    scale[0] = 1.0f;
+    scale[1] = 1.0f;
+    scale[2] = 0.0f;
+    scale[3] = 0.0f;
+    apCache->beginTexSampling(2, 0);
+  } else {
+    f32 height = static_cast<f32>(unknown7f0->unknown138->unknownc0);
+    f32 width = static_cast<f32>(unknown7f0->unknown138->unknownbc);
+    scale[0] = (width - 1.0f) / width;
+    scale[1] = (height - 1.0f) / height;
+    scale[2] = 1.0f / (width + width);
+    scale[3] = 1.0f / (height + height);
+    apCache->beginTexSampling(2, 1);
+  }
+  apCache->setTexture(*unknown7f0->unknown138->unknown70, location);
+  uniform.setF32SetVec4(0x10, scale);
+  if (isDepthTest) {
+    f32 depthHeight = static_cast<f32>(downDepth->unknownc0);
+    f32 depthWidth = static_cast<f32>(downDepth->unknownbc);
+    tone[0] = (depthWidth - 1.0f) / depthWidth;
+    tone[1] = (depthHeight - 1.0f) / depthHeight;
+    tone[2] = 1.0f / (depthWidth + depthWidth);
+    tone[3] = 1.0f / (depthHeight + depthHeight);
+    uniform.setF32SetVec4(0x20, tone);
+    int depthLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("dep");
+    apCache->beginTexSampling(2, 1);
+    apCache->setTexture(*downDepth->unknown70, depthLocation);
+    uniform.updateData();
+    uniform.setUniformBlock();
+    shdList->renderQuads();
+    DrAPGxType::setupDepthContl(false, false, 7);
+  } else {
+    uniform.updateData();
+    uniform.setUniformBlock();
+    shdList->renderQuads();
+  }
+}
+
+void DrPixlMan::gammaRender(bool isDepth) {
+  DrMan *man = unknown08;
+  DrShdDataList *shdList = man->unknown80->unknown00;
+  DrPixlRenderTarget *downDepth = unknown7f0->unknown180->getDownDepth();
+  DrCalcViewWork *viewWork = man->unknown580->unknown10;
+  DrPixlPostParm *postParm = man->unknown120[man->unknown1c98];
+  DrAPCache *apCache = man->unknown5c0;
+  DrAPGxType::setupScreenQuads(false);
+  DrShdDataObj *shader = shdList->getSelectShdObj(5);
+  bool isDepthTest = downDepth != nullptr && isDepth;
+  if (isDepthTest) {
+    DrAPGxType::setupDepthContl(true, true, 7);
+    shader->setDeclarationIdx(shader->getDeclarationOfs("PIXL_TYPE"), 2);
+  } else {
+    shader->setDeclarationIdx(shader->getDeclarationOfs("PIXL_TYPE"), 1);
+  }
+  shdList->unknown002(shader);
+  grlib::CGLibUniformEtcUtility uniform(shader);
+  uniform.setUseUniformBlock("U_POST");
+  f32 tone[4];
+  tone[0] = unknown7f0->unknown188;
+  tone[1] = viewWork->unknown180.rows[2][2];
+  tone[2] = viewWork->unknown180.rows[3][2];
+  tone[3] = 0.0f;
+  uniform.setF32SetVec4(0, tone);
+  f32 scale[4];
+  if (!postParm->unknownfb2 || !isDepth) {
+    scale[0] = 1.0f;
+    scale[1] = 1.0f;
+    scale[2] = 0.0f;
+    scale[3] = 0.0f;
+    apCache->beginTexSampling(2, 0);
+  } else {
+    scale[0] = 1.0f;
+    scale[1] = 1.0f;
+    scale[2] = 0.0f;
+    scale[3] = 0.0f;
+    apCache->beginTexSampling(2, 1);
+  }
+  int location = (shader->unknown38 + shader->unknown58)->getTextureLocation("s0");
+  apCache->setTexture(*unknown7f0->unknown138->unknown70, location);
+  uniform.setF32SetVec4(0x10, scale);
+  if (isDepthTest) {
+    int depthLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("dep");
+    f32 depthHeight = static_cast<f32>(downDepth->unknownc0);
+    f32 depthWidth = static_cast<f32>(downDepth->unknownbc);
+    tone[0] = (depthWidth - 1.0f) / depthWidth;
+    tone[1] = (depthHeight - 1.0f) / depthHeight;
+    tone[2] = 1.0f / (depthWidth + depthWidth);
+    tone[3] = 1.0f / (depthHeight + depthHeight);
+    uniform.setF32SetVec4(0x20, tone);
+    apCache->beginTexSampling(2, 1);
+    apCache->setTexture(*downDepth->unknown70, depthLocation);
+    uniform.updateData();
+    uniform.setUniformBlock();
+    shdList->renderQuads();
+    DrAPGxType::setupDepthContl(false, false, 7);
+  } else {
+    uniform.updateData();
+    uniform.setUniformBlock();
+    shdList->renderQuads();
+  }
+}
+
+void DrPixlMan::offScreenAlphaRender() {
+  DrAPGxType::setupScreenQuads(false);
+  unknown7f0->unknown1d0->setRenderTarget(*unknown7f0->unknown1a0[DrMan::s_nDblIdx]->unknown120);
+  DrAPGxType::setupStencilTest(false, false, 7, false, 0, 0, 7, 0, 0, 0);
+  DrShdDataList *shdList = unknown08->unknown80->unknown00;
+  DrShdDataObj *shader = shdList->getPostShdObj(0x13);
+  shdList->unknown002(shader);
+  int location0 = (shader->unknown38 + shader->unknown58)->getTextureLocation("s0");
+  int location1 = (shader->unknown38 + shader->unknown58)->getTextureLocation("s1");
+  grlib::CGLibUniformEtcUtility uniform(shader);
+  uniform.setUseUniformBlock("U_POST");
+  f32 tone[4];
+  tone[0] = unknown7f0->unknown188;
+  tone[1] = 0.0f;
+  tone[2] = 0.0f;
+  tone[3] = 0.0f;
+  uniform.setF32SetVec4(0, tone);
+  uniform.updateData();
+  uniform.setUniformBlock();
+  DrAPCache *apCache = unknown08->unknown5c0;
+  apCache->beginTexSampling(2, 0);
+  apCache->setTexture(*unknown7f0->unknown138->unknown70, location0);
+  apCache->setTexture(*unknown7f0->unknown1d0->unknown70, location1);
+  shdList->renderQuads();
+  DrAPGxType::setupAlphaChanel(false);
+}
+
+void DrPixlMan::delViewInfo(int index) {
+  unknown7f0 = &unknown10[index];
+  unknown10[index].unknown1d8 = 0;
+  for (int i = 0; i < 19; i++) {
+    for (int j = 0; j < 2; j++) {
+      grlib::CGLibRenderTarget *target = unknown7f0->unknown00[i][j];
+      if (target != nullptr) {
+        target->releaseWork();
+        delete target;
+        unknown7f0->unknown00[i][j] = nullptr;
+      }
+    }
+  }
+  grlib::CGLibRenderTarget *target = unknown7f0->unknown148;
+  if (target != nullptr) {
+    target->releaseWork();
+    delete target;
+    unknown7f0->unknown148 = nullptr;
+  }
+  target = unknown7f0->unknown150;
+  if (target != nullptr) {
+    target->releaseWork();
+    delete target;
+    unknown7f0->unknown150 = nullptr;
+  }
+  target = unknown7f0->unknown158;
+  if (target != nullptr) {
+    target->releaseWork();
+    delete target;
+    unknown7f0->unknown158 = nullptr;
+  }
+  target = unknown7f0->unknown160;
+  if (target != nullptr) {
+    target->releaseWork();
+    delete target;
+    unknown7f0->unknown160 = nullptr;
+  }
+  target = unknown7f0->unknown168;
+  if (target != nullptr) {
+    target->releaseWork();
+    delete target;
+    unknown7f0->unknown168 = nullptr;
+  }
+  grlib::CGLibDepthTarget *depth;
+  for (int j = 0; j < 2; j++) {
+    depth = unknown7f0->unknown1a0[j];
+    if (depth != nullptr) {
+      delete depth;
+      unknown7f0->unknown1a0[j] = nullptr;
+    }
+  }
+  depth = unknown7f0->unknown1b0;
+  if (depth != nullptr) {
+    delete depth;
+    unknown7f0->unknown1b0 = nullptr;
+  }
+  depth = unknown7f0->unknown1b8;
+  if (depth != nullptr) {
+    delete depth;
+    unknown7f0->unknown1b8 = nullptr;
+  }
+  depth = unknown7f0->unknown1c0;
+  if (depth != nullptr) {
+    delete depth;
+    unknown7f0->unknown1c0 = nullptr;
+  }
+  target = unknown7f0->unknown1e0;
+  if (target != nullptr) {
+    target->releaseWork();
+    delete target;
+    unknown7f0->unknown1e0 = nullptr;
+  }
+  target = unknown7f0->unknown1e8;
+  if (target != nullptr) {
+    target->releaseWork();
+    delete target;
+    unknown7f0->unknown1e8 = nullptr;
+  }
+  grlib::CGLibRenderArrayCubeMap *cubeMap = unknown7f0->unknown1f0;
+  if (cubeMap != nullptr) {
+    cubeMap->releaseWork();
+    delete cubeMap;
+    unknown7f0->unknown1f0 = nullptr;
+  }
+  target = unknown7f0->unknown1d0;
+  if (target != nullptr) {
+    target->releaseWork();
+    delete target;
+    unknown7f0->unknown1d0 = nullptr;
+  }
+  DrPixlDeferred *deferred = unknown7f0->unknown170;
+  if (deferred != nullptr) {
+    delete deferred;
+    unknown7f0->unknown170 = nullptr;
+  }
+  DrPixlShadowMan *shadowMan = unknown7f0->unknown178;
+  if (shadowMan != nullptr) {
+    delete shadowMan;
+    unknown7f0->unknown178 = nullptr;
+  }
+  DrPixlPostMan *postMan = unknown7f0->unknown180;
+  if (postMan != nullptr) {
+    delete postMan;
+    unknown7f0->unknown180 = nullptr;
+  }
+  memset(unknown7f0, 0, sizeof(wkPixlManRes));
+  unknown7f0 = unknown10;
+}
+
+void DrPixlMan::lastUpdate() { unknown7f8->update(); }
+
+void DrPixlMan::lastRender() {
+  unknown7f0->unknown180->render();
+  DrPixlPostParm *postParm = unknown08->unknown120[unknown08->unknown1c98];
+  if (!postParm->unknown1025) {
+    if (postParm->unknown1028) {
+      unknown800->debugShadowCacheRender();
+    }
+  } else {
+    unknown7f0->unknown178->shadowRender();
+  }
+  postParm = unknown08->unknown120[unknown08->unknown1c98];
+  if (postParm->unknown1027) {
+    unknown7f0->unknown170->debugRender();
+    postParm = unknown08->unknown120[unknown08->unknown1c98];
+  }
+  if (postParm->unknown10fe) {
+    debugReductionRender();
+  }
 }
 
 void DrPixlMan::debugIlluminanceRender() {
@@ -286,7 +580,7 @@ bool DrPixlMan::selectGBuffRenderTarget(u32 mask) {
   int mrt = 0;
   for (int i = 0; i < 11; i++) {
     if (mask & (1 << i)) {
-      grlib::CGLibState::setRegisterRenderTarget(*getPixlObj(s_gbuffPixlObjs[i]), static_cast<grlib::GrlMrtType>(mrt));
+      grlib::CGLibState::setRegisterRenderTarget(*getPixlObj(unknown003[i]), static_cast<grlib::GrlMrtType>(mrt));
       mrt++;
     }
   }
@@ -583,3 +877,6 @@ DrPixlRenderTarget *DrPixlMan::getDiffIBLObj() {
 DrPixlRenderTarget *DrPixlMan::getBackFaceDepthTexture() const { return unknown7f0->unknown148; }
 
 } // namespace ml
+
+// The game builds these files in one unit with this one.
+#include "dr_pixl_occ_query.cpp"

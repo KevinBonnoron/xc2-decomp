@@ -1,4 +1,4 @@
-#include "framework/effect/effect_caster.h"
+#include "framework/effect/effect_point.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/delegate.h"
@@ -8,6 +8,7 @@
 #include "types.h"
 
 namespace fw {
+struct UpdateInfo;
 
 EffectPoint::~EffectPoint() {
   for (u32 i = 0; i < unknown10.size(); i++) {
@@ -82,6 +83,16 @@ mm::Mat44 EffectPoint::getOffset(const char *name) {
   }
 
   return mm::Mat44::identity;
+}
+
+void EffectPoint::update(const UpdateInfo &info) {
+  for (u32 i = 0; i < unknown10.size(); i++) {
+    Param &point = unknown10[i];
+    if (point.unknowna8) {
+      calcPoint(point, unknown38[i]);
+      point.unknowna8 = true;
+    }
+  }
 }
 
 } // namespace fw

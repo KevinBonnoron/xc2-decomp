@@ -10,10 +10,10 @@ struct AchievInfo;
 struct QuestTaskParam;
 
 enum QSTATE {
-  QSTATE_NOT_ORDER,
-  QSTATE_ORDER,
-  QSTATE_FIN_A,
-  QSTATE_FIN_B,
+  QSTATE_UNKNOWN_0, // Inferred role: qstate not order; original name unknown.
+  QSTATE_UNKNOWN_1, // Inferred role: qstate order; original name unknown.
+  QSTATE_UNKNOWN_2, // Inferred role: qstate fin a; original name unknown.
+  QSTATE_UNKNOWN_3, // Inferred role: qstate fin b; original name unknown.
 };
 
 class GfQuestInfo {

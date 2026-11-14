@@ -1,6 +1,7 @@
 #include "gmk/gmk_enemy/gmk_routed_enemy.h"
 
 #include "gf/game/gf_game_manager.h"
+#include "gf/gf_allocator.h"
 #include "gf/object/component/enemy/gf_behavior_enemy_field.h"
 #include "gf/object/component/enemy/gf_com_behavior_enemy.h"
 #include "gf/object/component/gf_com_transform.h"
@@ -23,6 +24,8 @@ struct GF_OBJ_HANDLE;
 namespace gmk {
 
 template bool TGmkList<GmkRoutedEnemyPoint, GmkRoutedEnemyPoint::BdatInfo, 1347571269u, 4u, GmkRoutedEnemyPointGobCustom>::initGmkBdatInfo(GmkRoutedEnemyPoint::BdatInfo &, int &, const AGmkBase &);
+
+GmkRoutedEnemy::GmkRoutedEnemy() {}
 
 GmkType GmkRoutedEnemy::getGmkType() const { return GMK_TYPE; }
 
@@ -70,9 +73,33 @@ bool GmkRoutedEnemy::PopXformFinder::onPopGob(gf::GF_OBJ_HANDLE *handle) const {
   return true;
 }
 
+void GmkRoutedEnemy::createRouteNavis(u32 num) {
+  disposeRouteNavis();
+  unknown1d8.setAllocator(gf::getAllocator(gf::ALLOCATOR_UNKNOWN_0));
+  unknown1d8.reserve(num, 16);
+  unknown1d8.resize(num);
+  if (!unknown1d8.empty()) {
+    for (std::pair<gf::GF_OBJ_HANDLE *, GmkRouteNavi> *it = unknown1d8.begin(); it != unknown1d8.end(); ++it) {
+      it->first = gf::unknown020;
+    }
+  }
+}
+
+void GmkRoutedEnemy::dispose() {
+  disposeRouteNavis();
+  unknown50.dispose();
+  AGmkBase::dispose();
+}
+
+void GmkRoutedEnemy::disposeRouteNavis() {
+  if (!unknown1d8.empty()) {
+    unknown1d8.destroy();
+  }
+}
+
 void GmkRoutedEnemy::update(f32 deltaTime) {
   debugUpdateMmf();
-  if (!isValid() || gf::GfGameManager::getControlMover() == gf::INVALID_HANDLE) {
+  if (!isValid() || gf::GfGameManager::getControlMover() == gf::unknown020) {
     return;
   }
   const mm::Vec3 &playerPosition = gf::GfObjUtil::getObj(gf::GfGameManager::getControlMover())->getComponent<gf::GfComTransform>()->getPosition();
@@ -115,6 +142,13 @@ void GmkRoutedEnemyList::update(f32 deltaTime) {
   TGmkList::update(deltaTime);
 }
 
+bool GmkRoutedEnemyList::updateImmediate() {
+  if (!TGmkList::updateImmediate()) {
+    return false;
+  }
+  return unknown240.updateImmediate();
+}
+
 void GmkRoutedEnemyList::setUpdateGmkNumPerFrame(u32 num) {
   TGmkList::setUpdateGmkNumPerFrame(num);
   unknown240.setUpdateGmkNumPerFrame(num);
@@ -150,12 +184,12 @@ void GmkRoutedEnemyList::debugUpdateMmf() {
 }
 
 void GmkRoutedEnemy::unbindRouteNavi(gf::GF_OBJ_HANDLE *handle, bool isDispose) {
-  if (handle == gf::INVALID_HANDLE) {
+  if (handle == gf::unknown020) {
     return;
   }
   for (std::pair<gf::GF_OBJ_HANDLE *, GmkRouteNavi> *it = unknown1d8.begin(); it != unknown1d8.end(); ++it) {
     if (it->first == handle) {
-      it->first = gf::INVALID_HANDLE;
+      it->first = gf::unknown020;
       if (isDispose) {
         it->second.dispose();
       }
@@ -176,7 +210,7 @@ void GmkRoutedEnemy::bindRouteNavi(gf::GF_OBJ_HANDLE *handle, GmkRouteNavi &navi
 
 GmkRouteNavi *GmkRoutedEnemy::findFreeRouteNavi() const {
   for (std::pair<gf::GF_OBJ_HANDLE *, GmkRouteNavi> *it = unknown1d8.begin(); it != unknown1d8.end(); ++it) {
-    if (it->first == gf::INVALID_HANDLE) {
+    if (it->first == gf::unknown020) {
       return &it->second;
     }
   }
@@ -199,7 +233,7 @@ void GmkRoutedEnemy::onEnemyDead(gf::GF_OBJ_HANDLE *handle) {
 
 void GmkRoutedEnemy::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) {
   AGmkBase::onGobEvent(event, handle);
-  if (event == gf::IGfObjListener::OBJEVT_DESTROY) {
+  if (event == gf::IGfObjListener::OBJEVT_UNKNOWN_3) {
     unbindRouteNavi(handle, false);
     unknown50.removeGobInst(handle);
   }
@@ -214,3 +248,4 @@ template void mm::mtl::Vector<gmk::GmkRoutedEnemyPoint>::expand(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkRoutedEnemyPoint>::extend(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkRoutedEnemyPoint>::resize(size_t);
 template void mm::mtl::Vector<gmk::GmkRoutedEnemy>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkRoutedEnemy>::resize(size_t);

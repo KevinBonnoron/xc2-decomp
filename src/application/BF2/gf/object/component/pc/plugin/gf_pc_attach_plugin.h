@@ -37,6 +37,9 @@ public:
   void onDeactivate() override;
   virtual void update(GfComBehaviorPc &behavior, const fw::UpdateInfo &info);
   void dettachObj();
+  void attachObj(GF_OBJ_HANDLE *handle);
+  void notifyMovement();
+  void changeWallMode(bool isWall);
   void notifyExcludeMovementRider(const fw::Transform &transform);
 
   u32 unknown0c;              // Inferred role: flags; original member name unknown.

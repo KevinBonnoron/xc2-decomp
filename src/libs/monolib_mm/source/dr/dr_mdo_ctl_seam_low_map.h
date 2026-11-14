@@ -10,6 +10,7 @@ public:
   DrMdoCtlSeamLowMap(int viewNum);
   void releaseLowMap();
   void releaseFreeSeamLow(DrResMdoSeamWrkLow *low);
+  void initLowMapParts(DrResMdoSeamWrkLow *low);
   DrResMdoSeamWrkLow *createFreeSeamLow();
   void updateLowMap();
   void readLowMapCheck();

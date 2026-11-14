@@ -45,7 +45,7 @@ void EffectEvaPlayer::play(EffectCtrl *ctrl, void *data) {
 
 ICmd::RESULT EffectPlayEff::update(const Param &param) {
   if (unknown10 == nullptr) {
-    return RESULT_END;
+    return RESULT_UNKNOWN_1;
   }
   f32 delta = static_cast<EffectObj *>(param.val(0).getUserdata())->getFrameInfo().unknown04;
   if (param.getFrame() <= 0) {
@@ -65,14 +65,14 @@ ICmd::RESULT EffectPlayEff::update(const Param &param) {
   }
   unknown18 -= delta;
   if (!(unknown18 < 0.0f)) {
-    return RESULT_NEXT;
+    return RESULT_UNKNOWN_2;
   }
   if (!mm::mtl::Singleton<EffectManager>::getPtr()->isStreamMode()) {
     unknown10->dead();
   } else {
     unknown10->kill();
   }
-  return RESULT_END;
+  return RESULT_UNKNOWN_1;
 }
 
 void EffectPlayEff::term() { unknown18 = -1.0f; }
@@ -123,7 +123,7 @@ ICmd::RESULT EffectPlayEva::update(const Param &param) {
         data = mm::mtl::Singleton<MotstmManager>::getPtr()->adr(mm::mtl::Singleton<Extend>::getPtr()->eva(name), &size);
       }
       if (data == nullptr) {
-        return RESULT_END;
+        return RESULT_UNKNOWN_1;
       }
       unknown20.play(unknown08, data);
       unknown18 = param.val(2).getF32();
@@ -132,7 +132,7 @@ ICmd::RESULT EffectPlayEva::update(const Param &param) {
     unknown20.update(delta);
     unknown18 -= delta;
     if (!(unknown18 < 0.0f)) {
-      return RESULT_NEXT;
+      return RESULT_UNKNOWN_2;
     }
   }
   unknown20.stop();
@@ -140,7 +140,7 @@ ICmd::RESULT EffectPlayEva::update(const Param &param) {
     mm::mtl::Singleton<MotstmManager>::getPtr()->free(unknown10);
   }
   unknown10 = nullptr;
-  return RESULT_END;
+  return RESULT_UNKNOWN_1;
 }
 
 void EffectPlayEva::render(const mm::Vec3 &pos) {
@@ -175,69 +175,69 @@ void EffectPlayEva::term() {
 
 ICmd::RESULT EffectLinearPos::update(const Param &param) {
   if (unknown08 == nullptr) {
-    return RESULT_END;
+    return RESULT_UNKNOWN_1;
   }
   EffectObj *obj = static_cast<EffectObj *>(param.val(0).getUserdata());
   f32 delta = obj->getFrameInfo().unknown0c;
   if (param.getFrame() == 0) {
     mm::Vec3 pos(param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32());
     unknown10.clear();
-    unknown10.append(0.0f, obj->getPos(), CV_TYPE_STEP);
+    unknown10.append(0.0f, obj->getPos(), CV_TYPE_UNKNOWN_0);
     unknown10.append(param.val(4).getF32(), pos, static_cast<CV_TYPE>(param.val(5).getS32()));
   }
   unknown10.update(delta);
   unknown08->setPos(unknown10.getValue());
   if (!unknown10.isEnd()) {
-    return RESULT_NEXT;
+    return RESULT_UNKNOWN_2;
   }
   unknown10.clear();
-  return RESULT_END;
+  return RESULT_UNKNOWN_1;
 }
 
 const mm::Vec3 &EffectObj::getPos() const { return unknown50.getPos(); }
 
 ICmd::RESULT EffectLinearRot::update(const Param &param) {
   if (unknown08 == nullptr) {
-    return RESULT_END;
+    return RESULT_UNKNOWN_1;
   }
   EffectObj *obj = static_cast<EffectObj *>(param.val(0).getUserdata());
   f32 delta = obj->getFrameInfo().unknown0c;
   if (param.getFrame() == 0) {
     mm::Vec3 rot(param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32());
     unknown10.clear();
-    unknown10.append(0.0f, obj->getRot(), CV_TYPE_STEP);
+    unknown10.append(0.0f, obj->getRot(), CV_TYPE_UNKNOWN_0);
     unknown10.append(param.val(4).getF32(), rot, static_cast<CV_TYPE>(param.val(5).getS32()));
   }
   unknown10.update(delta);
   unknown08->setRot(unknown10.getValue());
   if (!unknown10.isEnd()) {
-    return RESULT_NEXT;
+    return RESULT_UNKNOWN_2;
   }
   unknown10.clear();
-  return RESULT_END;
+  return RESULT_UNKNOWN_1;
 }
 
 const mm::Vec3 &EffectObj::getRot() const { return unknown50.getRot(); }
 
 ICmd::RESULT EffectLinearCol::update(const Param &param) {
   if (unknown08 == nullptr) {
-    return RESULT_END;
+    return RESULT_UNKNOWN_1;
   }
   EffectObj *obj = static_cast<EffectObj *>(param.val(0).getUserdata());
   f32 delta = obj->getFrameInfo().unknown0c;
   if (param.getFrame() == 0) {
     mm::Col4 color(param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32(), param.val(4).getF32());
     unknown10.clear();
-    unknown10.append(0.0f, obj->getColor(), CV_TYPE_STEP);
+    unknown10.append(0.0f, obj->getColor(), CV_TYPE_UNKNOWN_0);
     unknown10.append(param.val(5).getF32(), color, static_cast<CV_TYPE>(param.val(6).getS32()));
   }
   unknown10.update(delta);
   unknown08->setColor(unknown10.getValue());
   if (unknown10.isEnd()) {
     unknown10.clear();
-    return RESULT_END;
+    return RESULT_UNKNOWN_1;
   }
-  return RESULT_NEXT;
+  return RESULT_UNKNOWN_2;
 }
 
 const mm::Col4 &EffectObj::getColor() const { return unknown50.getColor(); }

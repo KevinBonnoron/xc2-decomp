@@ -55,25 +55,20 @@ template <size_t N, int Type> void CmdQueue<N, Type>::update() {
     if (it->unknown120 != 0x7fffffff) {
       it->unknown120++;
     }
-    switch (result) {
-    case ICmd::RESULT_WAIT:
-      goto end;
-    case ICmd::RESULT_END:
+    if (result == ICmd::RESULT_UNKNOWN_0) {
+      break;
+    }
+    if (result == ICmd::RESULT_UNKNOWN_1) {
       it->unknown08->term();
       mItems.erase(it);
       it = mItems.begin();
       index = 0;
-      break;
-    case ICmd::RESULT_NEXT:
+    } else if (result == ICmd::RESULT_UNKNOWN_2) {
       ++it;
       nextCount++;
       ++index;
-      break;
-    default:
-      break;
     }
   }
-end:
   for (u32 i = 0; i < mItems.size(); i++) {
     if (mItems[i].unknown124 > 0) {
       mItems[i].unknown124--;

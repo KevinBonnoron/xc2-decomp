@@ -6,7 +6,8 @@ namespace event {
 
 namespace {
 
-const char *const WTR_NAMES[] = {
+// Inferred role: wtr names; original name unknown.
+const char *const unknown029[] = {
     "WTR_ALL",
     "WTR_FINE",
     "WTR_SUN_SHOWER",
@@ -41,7 +42,7 @@ const char *const WTR_NAMES[] = {
 BlockWtr::BlockWtr() { setRules("WTR_ALL"); }
 
 void BlockWtr::setRules(const char *rules) {
-  for (u32 i = 0; i < WTR_COUNT; i++) {
+  for (u32 i = 0; i < WTR_UNKNOWN_32; i++) {
     unknown00[i] = true;
   }
   char buffer[512];
@@ -58,12 +59,12 @@ void BlockWtr::setRules(const char *rules) {
     char *token = strtok(next, "|");
     next = token + __builtin_strlen(token) + 1;
     if (__builtin_strcmp(token, "WTR_ALL") == 0) {
-      for (u32 i = 0; i < WTR_COUNT; i++) {
+      for (u32 i = 0; i < WTR_UNKNOWN_32; i++) {
         unknown00[i] = false;
       }
     } else {
       u32 index = 0;
-      while (__builtin_strcmp(WTR_NAMES[index], token) != 0) {
+      while (__builtin_strcmp(unknown029[index], token) != 0) {
         index++;
       }
       unknown00[index] = false;

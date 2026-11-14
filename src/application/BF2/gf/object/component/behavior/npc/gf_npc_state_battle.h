@@ -1,15 +1,19 @@
 #pragma once
 #include <new> // IWYU pragma: keep
 
-#include "ai/ai_state.h"
 #include "bdat.h"
 #include "fw/fw_update_info.h"
 #include "gf/field/gf_field_exec_cmd.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/object/component/behavior/gf_com_behavior_npc.h"
+#include "gf/object/component/enemy/gf_enemy_state_battle.h"
 #include "gf/object/gf_obj.h"
 #include "gmk/gmk_bdat.h"
 #include "types.h"
+
+namespace ai {
+class State;
+} // namespace ai
 
 namespace mm {
 struct Vec3;
@@ -21,7 +25,7 @@ class GfComAsm;
 
 namespace npc {
 
-template <typename T> class StateBattle : public ai::State {
+template <typename T> class StateBattle : public GfStateBase {
 public:
   StateBattle() : unknown18(), unknown50(nullptr), unknown60(0) {}
   static ai::State *create(void *buffer) { return new (buffer) StateBattle; }
@@ -64,7 +68,7 @@ template <typename T> void StateBattle<T>::onEnter(void *owner, ai::State *previ
 }
 
 template <typename T> void StateBattle<T>::seqApplyBattleMot(T &behavior, const fw::UpdateInfo &info) {
-  const char *command = reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("FLD_NpcMobMotionId"), "cmdName", behavior.unknown007(), gmk::BDAT_TYPE_STRING));
+  const char *command = reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("FLD_NpcMobMotionId"), "cmdName", behavior.unknown007(), gmk::BDAT_TYPE_UNKNOWN_7));
   unknown18.create(TFieldExecCmd<GfComAsm>::CreateInfo(static_cast<GfObj *>(behavior.unknown08)->unknownf8, command));
   unknown50 = &StateBattle::seqUpdateBattleMot;
 }

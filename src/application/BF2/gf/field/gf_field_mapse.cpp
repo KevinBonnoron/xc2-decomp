@@ -103,7 +103,7 @@ void GfFieldMapSe::createMapSe() {
     u32 end = rsc->getFLD_actorSEEnd();
     for (; row < end; row++) {
       if (strcmp(parts.getObjName(), rsc->getFLD_actorSELOD(row)) == 0) {
-        SEDATA *data = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, 227, 8) SEDATA(object, parts.getMatrixMax(), row);
+        SEDATA *data = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, 227, 8) SEDATA(object, parts.getMatrixMax(), row);
         unknown10.push_back(data);
         break;
       }
@@ -210,9 +210,9 @@ GfFieldMapSe::SEOBJ *GfFieldMapSe::createSeObj(const SECOND &cond, const SEDATA 
   ml::ScnObjAccPartsEtcPos parts = acc.getObj(data.unknown00);
   SEOBJ *seObj = new (unknown118.unknown003()) SEOBJ();
   GfBdatRsc *rsc = GfBdatRsc::get();
-  SEINFO seInfo = SEINFO_FIELD_COMMON_PACK;
+  SEINFO seInfo = SEINFO_UNKNOWN_2;
   if (rsc->getFLD_actorSEse_type(data.unknown08) != 0 && fieldSound->getMapPack() != nullptr) {
-    seInfo = SEINFO_FIELD_MAP_PACK;
+    seInfo = SEINFO_UNKNOWN_3;
   }
   mm::Vec3 offset(rsc->getFLD_actorSEoffsetX(data.unknown08), rsc->getFLD_actorSEoffsetY(data.unknown08), rsc->getFLD_actorSEoffsetZ(data.unknown08));
   seObj->unknown08 = data.unknown00;

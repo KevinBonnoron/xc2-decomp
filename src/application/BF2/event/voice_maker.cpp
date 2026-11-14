@@ -25,12 +25,12 @@ void VoiceMaker::create(bool isEnable, const char *directory, const char *name) 
   size_t length = __builtin_strlen(name);
   if (isVoiceGroup(name, length, "bf") || isVoiceGroup(name, length, "qst") || isVoiceGroup(name, length, "fev") || isVoiceGroup(name, length, "deb") || isVoiceGroup(name, length, "kizuna")) {
     unknown0c.format("/stream/%s/%s/%s/", directory, fw::LangUtil::getVoiceFolder().c_str(), name);
-    unknown08 |= FLAG_ENABLE;
+    unknown08 |= FLAG_UNKNOWN_0;
   }
 }
 
 const char *VoiceMaker::makePath(const char *file) {
-  if ((unknown08 & FLAG_ENABLE) == 0) {
+  if ((unknown08 & FLAG_UNKNOWN_0) == 0) {
     return nullptr;
   }
   unknown110 = unknown0c.c_str();

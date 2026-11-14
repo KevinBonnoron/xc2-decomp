@@ -23,7 +23,7 @@ void StateFieldWaterDive::enter(GfComBehaviorPc *behavior, ai::State *previous) 
 
 void StateFieldWaterDive::leave(GfComBehaviorPc *behavior, ai::State *next) {
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
-  if (next == nullptr || next->unknown08 != STATE_ID_FIELD_WATER_DEAD_SINK) {
+  if (next == nullptr || next->unknown08 != STATE_ID_UNKNOWN_35) {
     StateUtilField::setWaterDiveMove(*property, false);
     property->unknown90 = 0.0f;
   }
@@ -34,16 +34,16 @@ void StateFieldWaterDive::update(GfComBehaviorPc *behavior, const fw::UpdateInfo
 
 void StateFieldWaterDive::onDead(GfComBehaviorPc *behavior, MsgObjectNotifyDead &message) {
   StateUtil::notifyDead(*behavior, message, true);
-  behavior->unknown08->getComponent<GfComAsm>()->execCmd("C_waterdead", ANIM_LAYER_BASE);
-  reqState(STATE_ID_FIELD_WATER_DEAD_SINK);
+  behavior->unknown08->getComponent<GfComAsm>()->execCmd("C_waterdead", ANIM_LAYER_UNKNOWN_0);
+  reqState(STATE_ID_UNKNOWN_35);
 }
 
 bool StateFieldWaterDive::recieveMessage(void *owner, fw::MessageObject *sender, fw::Message &message) {
   switch (message.unknown00) {
-  case MSG_OBJECT_NOTIFY_DEAD:
+  case MSG_OBJECT_UNKNOWN_16777272:
     procMsgObjectNotifyDead(static_cast<GfComBehaviorPc *>(owner), sender, static_cast<MsgObjectNotifyDead &>(message));
     break;
-  case MSG_PC_FIELD_RELAY_SURVIVE:
+  case MSG_PC_FIELD_UNKNOWN_16777246:
     procMsgPcFieldRelaySurvive(static_cast<GfComBehaviorPc *>(owner), sender, static_cast<MsgPcFieldRelaySurvive &>(message));
     break;
   default:
@@ -63,7 +63,7 @@ void StateFieldWaterDive::procMsgObjectNotifyDead(GfComBehaviorPc *behavior, fw:
 
 void StateFieldWaterDive::procMsgPcFieldRelaySurvive(GfComBehaviorPc *behavior, fw::MessageObject *sender, MsgPcFieldRelaySurvive &message) {
   fw::Message *relayed = message.unknown08;
-  if (relayed != nullptr && relayed->unknown00 == MSG_OBJECT_NOTIFY_DEAD) {
+  if (relayed != nullptr && relayed->unknown00 == MSG_OBJECT_UNKNOWN_16777272) {
     onDead(behavior, static_cast<MsgObjectNotifyDead &>(*relayed));
   }
 }

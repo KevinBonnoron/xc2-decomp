@@ -5,7 +5,7 @@ namespace event {
 CmdParam::CmdParam() {}
 
 void CmdParam::clear() {
-  for (size_t i = 0; i < VARIABLE_COUNT; i++) {
+  for (size_t i = 0; i < VARIABLE_UNKNOWN_11; i++) {
     unknown08[i].clear();
   }
 }

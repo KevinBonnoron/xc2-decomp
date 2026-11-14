@@ -1,7 +1,7 @@
 #pragma once
 #include <stddef.h>
 
-#include "gf/data/gf_data_blade.h"
+#include "gf/data/gf_data_driver.h"
 #include "gf/event/gf_event.h"
 #include "gf/game/gf_game_pad.h"
 #include "gf/game/quest/gf_quest_manager.h"
@@ -24,12 +24,15 @@ struct GF_OBJ_HANDLE;
 struct GfSetupParam;
 
 enum {
-  OWNER_BONUS_UNKNOWN_1 = 1, // Inferred role: movement speed bonus in percent, read by gf::pc::MoveUtilField::getSpeedEffect; original name unknown.
-  OWNER_BONUS_FAVORITE_VALUE_MAX = 3,
-  OWNER_BONUS_IDEA_POINT = 4,
-  OWNER_BONUS_DEVELOP_POINT = 5,
-  OWNER_BONUS_UNKNOWN_9 = 9, // Inferred role: reduction of the enemy sight radius in percent; original name unknown.
-  OWNER_BONUS_BOOSTER_VALUE_MAX = 13,
+  OWNER_BONUS_UNKNOWN_1 = 1,   // Inferred role: movement speed bonus in percent, read by gf::pc::MoveUtilField::getSpeedEffect; original name unknown.
+  OWNER_BONUS_UNKNOWN_2 = 2,   // Inferred role: reduction of the field damage in percent, read by gf::pc::StateUtil::applyDamage; original name unknown.
+  OWNER_BONUS_UNKNOWN_3 = 3,   // Inferred role: owner bonus favorite value max; original name unknown.
+  OWNER_BONUS_UNKNOWN_4 = 4,   // Inferred role: owner bonus idea point; original name unknown.
+  OWNER_BONUS_UNKNOWN_5 = 5,   // Inferred role: owner bonus develop point; original name unknown.
+  OWNER_BONUS_UNKNOWN_9 = 9,   // Inferred role: reduction of the enemy sight radius in percent; original name unknown.
+  OWNER_BONUS_UNKNOWN_10 = 10, // Inferred role: pick up range bonus of the dropitems in percent, read by GfFobjDropitem::canGetItem; original name unknown.
+  OWNER_BONUS_UNKNOWN_11 = 11, // Inferred role: bonus in meters added to the access radius of lure targets, read by gf::pc::isActiveRangeLure; original name unknown.
+  OWNER_BONUS_UNKNOWN_13 = 13, // Inferred role: owner bonus booster value max; original name unknown.
 };
 
 struct OwnerBonus {
@@ -52,6 +55,7 @@ public:
   static void setState(GF_STATE state, bool isForce);
   static void clear();
   static bool isInitialized();
+  // The order of the overrides follows the game's vtable (0x710118a3d8).
   void gevExecBuy(u32 item, u32 count, u32 shop) override;
   void gevChangeParty() override;
   void gevGetArts(u32 driver, u32 arts, bool isPopup) override;
@@ -69,10 +73,10 @@ public:
   void gevBladeUnselect(u32 blade, bool unselect) override;
   void gevBladeEnable(u32 blade) override;
   void gevPlayEvent(GEV event, u32 eventId) override;
-  void gevItemAdd(u32 item, int count) override;
   void gevPartyMemberOK(bool isOK) override;
-  void gevLayerPause(u32 layer, bool isPause) override;
   void gevPartyIDMemberOK(bool isOK, u32 partyId) override;
+  void gevItemAdd(u32 item, int count) override;
+  void gevLayerPause(u32 layer, bool isPause) override;
   void gevReloadBdat(RELOAD_BDAT reload, u32 value) override;
   void gevSalvageStateChange(u32 state) override;
   void gevChangeScenarioFlag(u32 scenarioFlag, u32 oldScenarioFlag) override;
@@ -81,8 +85,8 @@ public:
   void gevGameState(GF_STATE previousState, GF_STATE state) override;
   void gevControllFree(bool isFree) override;
   void gevMercenariesMissionFlag(u32 mission, u32 flag, u32 value) override;
-  void qevCompleteQuest(const QuestCompleteParam &param) override;
   void qevOrderQuest(const QuestOrderParam &param) override;
+  void qevCompleteQuest(const QuestCompleteParam &param) override;
   void qevCompleteChildQuest(const QuestCompleteChildParam &param) override;
   static bool isInnerState(GF_STATE state);
   static GF_OBJ_HANDLE *getPartyLeader();

@@ -15,7 +15,7 @@ void GfPause::initialize(const GfSetupParam &) { unknowne64 = true; }
 
 GfPause::~GfPause() {}
 
-void GfPause::build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfPause(param); }
+void GfPause::build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfPause(param); }
 
 void GfPause::destroy() {
   GfPause *pause = get();

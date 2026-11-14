@@ -37,6 +37,36 @@ static_assert(offsetof(EnvColiPostData, unknown10) == 0x10, "");
 static_assert(offsetof(EnvColiPostData, unknown26) == 0x26, "");
 static_assert(sizeof(EnvColiPostData) == 0x34, "");
 
+template <int Version> struct EnvColiPostParameterVer;
+
+// Only the leading tone map parameters are known (resetToneMapParams); the layout of the rest of the post parameters is not. The size is the 500 byte stride of calcParams.
+template <> struct EnvColiPostParameterVer<10006> {
+  f32 unknown00; // Inferred role: tone max; original member name unknown.
+  f32 unknown04; // Inferred role: tone min; original member name unknown.
+  f32 unknown08; // Inferred role: tone ratio; original member name unknown.
+  f32 unknown0c; // Inferred role: tone ratio last; original member name unknown.
+  f32 unknown10; // Inferred role: tone blm max; original member name unknown.
+  f32 unknown14; // Inferred role: tone blm min; original member name unknown.
+  f32 unknown18; // Inferred role: tone blm ratio; original member name unknown.
+  f32 unknown1c; // Inferred role: tone blm ratio last; original member name unknown.
+  f32 unknown20; // Inferred role: tone ave min rate; original member name unknown.
+  f32 unknown24; // Inferred role: tone ave max rate; original member name unknown.
+  f32 unknown28; // Inferred role: tone map parameter written with the tone ave max rate by resetToneMapParams; original member name unknown.
+  u8 _2c[0x1f4 - 0x2c];
+};
+
+static_assert(offsetof(EnvColiPostParameterVer<10006>, unknown04) == 0x04, "");
+static_assert(offsetof(EnvColiPostParameterVer<10006>, unknown08) == 0x08, "");
+static_assert(offsetof(EnvColiPostParameterVer<10006>, unknown0c) == 0x0c, "");
+static_assert(offsetof(EnvColiPostParameterVer<10006>, unknown10) == 0x10, "");
+static_assert(offsetof(EnvColiPostParameterVer<10006>, unknown14) == 0x14, "");
+static_assert(offsetof(EnvColiPostParameterVer<10006>, unknown18) == 0x18, "");
+static_assert(offsetof(EnvColiPostParameterVer<10006>, unknown1c) == 0x1c, "");
+static_assert(offsetof(EnvColiPostParameterVer<10006>, unknown20) == 0x20, "");
+static_assert(offsetof(EnvColiPostParameterVer<10006>, unknown24) == 0x24, "");
+static_assert(offsetof(EnvColiPostParameterVer<10006>, unknown28) == 0x28, "");
+static_assert(sizeof(EnvColiPostParameterVer<10006>) == 0x1f4, "");
+
 class DrEnvColiObj {
 public:
   // Inferred role: env coli primitive header; original type name unknown.

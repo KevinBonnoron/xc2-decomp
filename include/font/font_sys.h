@@ -43,7 +43,7 @@ public:
     unknown001 *unknown10; // Inferred role: glyph of the character; original member name unknown.
   };
 
-  static const int HASH_SIZE = 101;
+  static const int HASH_UNKNOWN_101 = 101; // Inferred role: hash table size; original name unknown.
 
   FontSys();
   ~FontSys();
@@ -62,7 +62,7 @@ public:
   float get_vh() const;
 
   Header *m_head;
-  unknown002 *unknown08[HASH_SIZE]; // Inferred role: hash table of the glyphs by character code; original member name unknown.
+  unknown002 *unknown08[HASH_UNKNOWN_101]; // Inferred role: hash table of the glyphs by character code; original member name unknown.
   void *m_data;
   float m_width;
   float m_height;

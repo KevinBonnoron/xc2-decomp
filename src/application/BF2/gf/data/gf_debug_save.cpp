@@ -20,7 +20,7 @@ bool GfDebugSave::isExist(SAVESLOT slot) {
     param.unknown00 = path.c_str();
     ml::DevFileTh::readFileBlock(param, nullptr, nullptr);
   }
-  return _gfdsv::s_tempSav.unknown00 == SAVE_DATA_VERSION;
+  return _gfdsv::s_tempSav.unknown00 == SAVE_UNKNOWN_237915;
 }
 
 bool GfDebugSave::loadSavedTime(RealTime &realTime, SAVESLOT slot) {
@@ -36,7 +36,7 @@ bool GfDebugSave::loadSavedTime(RealTime &realTime, SAVESLOT slot) {
     ml::DevFileTh::readFileBlock(param, nullptr, nullptr);
   }
   realTime = _gfdsv::s_tempSav.unknown08;
-  return _gfdsv::s_tempSav.unknown00 == SAVE_DATA_VERSION;
+  return _gfdsv::s_tempSav.unknown00 == SAVE_UNKNOWN_237915;
 }
 
 } // namespace gf

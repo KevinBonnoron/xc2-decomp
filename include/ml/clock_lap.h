@@ -20,12 +20,12 @@ public:
   const s64 &getLapE(u32 index) const;
   u32 getLapCol(u32 index) const;
 
-  s64 unknown08;  // Inferred role: begin clock; original member name unknown.
-  s64 *unknown10; // Inferred role: lap starts; original member name unknown.
-  s64 *unknown18; // Inferred role: lap ends; original member name unknown.
-  u32 *unknown20; // Inferred role: lap colors; original member name unknown.
-  u32 unknown28;  // Inferred role: lap max; original member name unknown.
-  u32 unknown2c;  // Inferred role: lap index; original member name unknown.
+  s64 unknown08; // Inferred role: begin clock; original member name unknown.
+  s64 *m_lapS;
+  s64 *m_lapE;
+  u32 *m_lapCol;
+  u32 unknown28; // Inferred role: lap max; original member name unknown.
+  u32 unknown2c; // Inferred role: lap index; original member name unknown.
   void *m_buffer;
 };
 

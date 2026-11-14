@@ -2,6 +2,7 @@
 
 #include <math.h>
 
+#include "fw/fw_transform.h"
 #include "gf/object/component/pc/gf_com_property_pc.h"
 #include "gf/object/component/pc/gf_pc_agent_util_field.h"
 #include "gf/object/component/pc/gf_pc_ai_agent_field.h"
@@ -32,7 +33,7 @@ void StateFieldWallAiPrepare::setNavi(WallAiContextField *context) {
   BlackBoardField *blackBoard = context->unknown00;
   GfComPropertyPc *property = blackBoard->unknown08;
   navi::NvmshAcObj *naviObject = blackBoard->unknown10;
-  naviObject->setBeginPos(property->unknown160);
+  naviObject->setBeginPos(property->unknown160.unknown00);
   mm::Vec3 preparePosition = StateUtilField::calcWallPreparePosition(*property, blackBoard->unknown60, blackBoard->unknown70);
   naviObject->setEndPos(preparePosition);
 }
@@ -50,7 +51,7 @@ void StateFieldWallAiPrepare::update(WallAiContextField *context, const fw::Upda
     AgentUtilField::setIdleInput(*property);
   } else {
     navi::NvmshAcObj *naviObject = blackBoard->unknown10;
-    mm::Vec3 diff(preparePosition.x - property->unknown160.x, 0.0f, preparePosition.z - property->unknown160.z);
+    mm::Vec3 diff(preparePosition.x - property->unknown160.unknown00.x, 0.0f, preparePosition.z - property->unknown160.unknown00.z);
     AgentUtilField::setFollowInput(sqrtf(diff.x * diff.x + diff.y * diff.y + diff.z * diff.z), naviObject, *property);
   }
   setNavi(context);
@@ -63,7 +64,7 @@ void StateFieldWallAiAdsorption::enter(WallAiContextField *context, ai::State *p
 
 void StateFieldWallAiAdsorption::setNavi(WallAiContextField *context) {
   BlackBoardField *blackBoard = context->unknown00;
-  const mm::Vec3 &position = blackBoard->unknown08->unknown160;
+  const mm::Vec3 &position = blackBoard->unknown08->unknown160.unknown00;
   navi::NvmshAcObj *naviObject = blackBoard->unknown10;
   naviObject->setBeginPos(position);
   naviObject->setEndPos(blackBoard->unknown60);
@@ -75,7 +76,7 @@ void StateFieldWallAiAdsorption::update(WallAiContextField *context, const fw::U
   BlackBoardField *blackBoard = context->unknown00;
   GfComPropertyPc *property = blackBoard->unknown08;
   navi::NvmshAcObj *naviObject = blackBoard->unknown10;
-  mm::Vec3 diff(blackBoard->unknown60.x - property->unknown160.x, 0.0f, blackBoard->unknown60.z - property->unknown160.z);
+  mm::Vec3 diff(blackBoard->unknown60.x - property->unknown160.unknown00.x, 0.0f, blackBoard->unknown60.z - property->unknown160.unknown00.z);
   AgentUtilField::setFollowInput(sqrtf(diff.x * diff.x + diff.y * diff.y + diff.z * diff.z), naviObject, *property);
   setNavi(context);
 }

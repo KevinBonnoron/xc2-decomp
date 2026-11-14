@@ -71,6 +71,8 @@ public:
   static GfAssetResource *getResource(GF_ASSET_HANDLE *handle, GfFileIdx index, GfAssetType type);
   static GfAssetResource *getResource(GF_ASSET_HANDLE *handle, const char *name, GfFileIdx index);
   static bool isLoading();
+  static bool isLoading(const GfAssetPack *pack);
+  static GF_ASSET_HANDLE *getAssetHandle(const char *name);
   static u32 getTimeout(GF_ASSET_HANDLE *handle);
   bool isLoaded(GF_ASSET_HANDLE *handle, mm::mtl::FixStr<128> *name);
   void setupStreamObject(GF_ASSET_HANDLE *handle);

@@ -3,6 +3,7 @@
 #include "ml/critical_section.h"
 #include "ml/device.h"
 #include "ml/reslist.h"
+#include "ml/work_cpu.h"
 #include "ml/work_flow_change_port.h"
 #include "ml/work_flow_setup.h"
 #include "ml/work_flow_shutdown_all.h"
@@ -77,6 +78,14 @@ bool WorkControl::setFlowShutdownAll(bool) {
     WorkFlowShutdownAll *flow = new (WorkRootState::getWorkMem()) WorkFlowShutdownAll("WorkFlowShutdownAll", control);
     WorkRootState::entryWork(flow, control, false);
     return true;
+  }
+  return false;
+}
+
+bool WorkControl::wkStandbyLogin() {
+  if (!WorkCpu::isInitialized()) {
+    setFlowSetup();
+    return WorkObj::wkStandbyLogin();
   }
   return false;
 }

@@ -44,9 +44,9 @@ public:
   void addSafeObject(mm::mtl::ReferenceObject *object, eResourceType type);
   void removeSafeObject(mm::mtl::ReferenceObject *object);
 
-  static const u32 TYPE_MAX = 32;
-  static const u32 SAFE_OBJECT_MAX = 1024;
-  static const u32 DELAY_RELEASE_EXTENSION_MAX = 32;
+  static const u32 TYPE_UNKNOWN_32 = 32;                    // Inferred role: maximum number of resource types; original name unknown.
+  static const u32 SAFE_OBJECT_UNKNOWN_1024 = 1024;         // Inferred role: maximum number of safe objects; original name unknown.
+  static const u32 DELAY_RELEASE_EXTENSION_UNKNOWN_32 = 32; // Inferred role: maximum number of extensions of the delayed release; original name unknown.
 
   // Inferred role: safe object; original type name unknown.
   struct unknown001 {
@@ -55,16 +55,16 @@ public:
     eResourceType unknown0c;             // Inferred role: type; original member name unknown.
   };
 
-  mm::mtl::Vector<ResourceObject *> unknown18[TYPE_MAX];                       // Inferred role: resources per type; original member name unknown.
-  mm::mtl::IAllocator *unknown518;                                             // Inferred role: allocator; original member name unknown.
-  u32 unknown520;                                                              // Inferred role: unknown; original member name unknown.
-  u32 unknown524;                                                              // Role and original member name unknown.
-  u32 unknown528;                                                              // Role and original member name unknown.
-  u32 unknown52c;                                                              // Inferred role: applet state; original member name unknown.
-  bool unknown530;                                                             // Inferred role: finalize applet; original member name unknown.
-  mm::mtl::FixedVector<unknown001, SAFE_OBJECT_MAX> unknown538;                // Inferred role: safe objects; original member name unknown.
-  mm::mtl::FixedVector<unknown001, SAFE_OBJECT_MAX> unknown4540;               // Inferred role: safe objects to release; original member name unknown.
-  mm::mtl::FixedVector<const char *, DELAY_RELEASE_EXTENSION_MAX> unknown8548; // Inferred role: delay release extensions; original member name unknown.
+  mm::mtl::Vector<ResourceObject *> unknown18[TYPE_UNKNOWN_32];                       // Inferred role: resources per type; original member name unknown.
+  mm::mtl::IAllocator *unknown518;                                                    // Inferred role: allocator; original member name unknown.
+  u32 unknown520;                                                                     // Inferred role: unknown; original member name unknown.
+  u32 unknown524;                                                                     // Role and original member name unknown.
+  u32 unknown528;                                                                     // Role and original member name unknown.
+  u32 unknown52c;                                                                     // Inferred role: applet state; original member name unknown.
+  bool unknown530;                                                                    // Inferred role: finalize applet; original member name unknown.
+  mm::mtl::FixedVector<unknown001, SAFE_OBJECT_UNKNOWN_1024> unknown538;              // Inferred role: safe objects; original member name unknown.
+  mm::mtl::FixedVector<unknown001, SAFE_OBJECT_UNKNOWN_1024> unknown4540;             // Inferred role: safe objects to release; original member name unknown.
+  mm::mtl::FixedVector<const char *, DELAY_RELEASE_EXTENSION_UNKNOWN_32> unknown8548; // Inferred role: delay release extensions; original member name unknown.
 };
 
 static_assert(sizeof(ResourceManager::unknown001) == 0x10, "");

@@ -1,5 +1,6 @@
 #include "gf/object/component/behavior/npc/gf_npc_state_approach_pc.h"
 
+#include "ai/ai_state.h"
 #include "fw/fw_update_info.h"
 #include "gf/field/gf_field_exec_cmd_turn.h"
 #include "gf/object/component/behavior/gf_com_behavior_npc.h"

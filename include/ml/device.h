@@ -12,6 +12,8 @@ class LanguageInfo;
 
 class Device : public WorkObj, public mm::mtl::PtrSingleton<Device> {
 public:
+  struct InitParam;
+
   struct SCU {
     void (*unknown00)(void *); // Inferred role: update function; original member name unknown.
     void *unknown08;           // Inferred role: update argument; original member name unknown.
@@ -20,11 +22,18 @@ public:
   Device(const char *name, WorkObj *parent);
   ~Device() override {}
   bool wkStandbyLogout() override;
+  bool wkStandbyLogin() override;
+  static void initializeSDK(const InitParam &param);
+  static void finalizeSDK();
+  static void create();
   static bool isAllReady();
+  static bool isColdStartReady();
+  static bool isHotStartDestructed();
   static void createPort(const char *name);
   static void removeSubCpuUpdate(void (*update)(void *));
   static void updateSubCpu();
   static u32 jobUpdate(void *argument, void *userData);
+  static WorkObj *getException();
   virtual bool createDevice() = 0;
   virtual void createDevicePort(const char *name) = 0;
 

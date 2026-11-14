@@ -5,13 +5,21 @@
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_hana.h"
 #include "gf/game/gf_game_util_hana.h"
+#include "gf/gf_allocator.h"
 #include "gf/menu/adapter/gf_menu_hana_adapter.h"
 #include "gf/menu/adapter/gf_menu_hana_parts_adapter.h"
+#include "gf/menu/adapter/gf_menu_item_adapter.h"
 #include "gf/menu/adapter/gf_menu_reference_adapter.h"
 #include "gf/menu/call/gf_menu_call_context.h"
+#include "gf/menu/gf_menu_reference.h"
 #include "gf/menu/gf_menu_reference_number.h"
+#include "gf/menu/gf_menu_types.h"
 #include "gf/menu/list/gf_menu_id_list.h"
 #include "gf/menu/list/gf_menu_item_list.h"
+#include "gf/menu/object/gf_menu_obj_char_select.h"
+#include "gf/menu/object/gf_menu_obj_hana_custom.h"
+#include "gf/menu/object/gf_menu_obj_mainmenu2.h"
+#include "gf/menu/object/gf_menu_obj_operation_info.h"
 #include "gf/menu/object/gf_menu_obj_sort.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "gf/util/gf_item_util.h"
@@ -20,10 +28,16 @@
 #include "mm_mtl/reference_object.h"
 #include "ui/ctrl/ui_ctrl_cursor_color.h"
 #include "ui/ctrl/ui_ctrl_cursor_select.h"
+#include "ui/event/ui_event_data.h"
+#include "ui/event/ui_event_manager.h"
+#include "ui/list/ui_list_info.h"
 #include "ui/list/ui_select_obj_list.h"
 #include "ui/ui_object_acc.h"
 
 namespace gf {
+
+// Inferred role: call id of the parts make layout; original name unknown.
+constexpr u32 CALL_UNKNOWN_115 = 115;
 
 GfMenuObjHanaPartsMake::GfMenuObjHanaPartsMake(u32 handle)
     : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr), unknown48(nullptr), unknown50(nullptr), unknown58(nullptr), unknown70(0), unknown74(0) {}
@@ -38,6 +52,66 @@ GfMenuObjHanaPartsMake::~GfMenuObjHanaPartsMake() {
   mm::mtl::safeRelease(unknown58);
   unknown60 = nullptr;
   unknown68 = nullptr;
+}
+
+void GfMenuObjHanaPartsMake::initialize() {
+  ui::UIObjectAcc acc(unknown18);
+  u32 main = acc.searchChild("LAY_main");
+// __LINE__ must be 144 as in the original file: it is the line argument of operator new.
+#line 144
+  MainListener *mainListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) MainListener(this);
+  mainListener->addRef();
+  ui::UIEventManager::get()->registObjectListener(main, mainListener);
+  if (mainListener != nullptr) {
+    mainListener->release();
+  }
+  attachExternalCall(CALL_UNKNOWN_115, main);
+  u32 partsWindow = acc.searchChild("LAY_partsmake_window");
+// __LINE__ must be 150 as in the original file: it is the line argument of operator new.
+#line 150
+  PartsListListener *partsListListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) PartsListListener(this);
+  partsListListener->addRef();
+  ui::UIEventManager::get()->registObjectListener(partsWindow, partsListListener);
+  if (partsListListener != nullptr) {
+    partsListListener->release();
+  }
+  u32 itemWindow = acc.searchChild("LAY_metl_window");
+// __LINE__ must be 154 as in the original file: it is the line argument of operator new.
+#line 154
+  ItemListListener *itemListListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ItemListListener(this);
+  itemListListener->addRef();
+  ui::UIEventManager::get()->registObjectListener(itemWindow, itemListListener);
+  if (itemListListener != nullptr) {
+    itemListListener->release();
+  }
+  u32 dialog = acc.searchChild("LAY_make_diarog");
+// __LINE__ must be 158 as in the original file: it is the line argument of operator new.
+#line 158
+  NumSelectListener *numSelectListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) NumSelectListener(this);
+  numSelectListener->addRef();
+  ui::UIEventManager::get()->registObjectListener(dialog, numSelectListener);
+  if (numSelectListener != nullptr) {
+    numSelectListener->release();
+  }
+  unknown40 = GfMenuItemList::create();
+  ui::UISelectObjList::CreateParam createParam;
+  createParam.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
+  unknown48 = ui::UISelectObjList::create(createParam);
+  unknown28 = GfMenuIDList::create();
+  ui::UIListInfoBase::SetupParam setup;
+  setup.unknown08 = 5;
+  setup.unknown10 = true;
+  unknown28->setup(getAllocator(ALLOCATOR_UNKNOWN_0), setup);
+  createParam.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
+  unknown30 = ui::UISelectObjList::create(createParam);
+  unknown58 = GfMenuCallContext::create();
+  unknown60 = unknown160();
+  unknown60->unknown162(0);
+  unknown60->unknown166(99);
+  unknown68 = unknown160();
+  unknown68->unknown162(0);
+  unknown68->unknown166(999999999);
+  GfMenuObject::initialize();
 }
 
 void GfMenuObjHanaPartsMake::finalize() { GfMenuObject::finalize(); }
@@ -147,6 +221,70 @@ void GfMenuObjHanaPartsMake::setupPartsList(ui::UIObjectAcc &acc, GfMenuIDList *
   }
 }
 
+void GfMenuObjHanaPartsMake::refreshItemList(ui::UIObjectAcc &acc, GfMenuItemList *list, ui::UISelectObjList *objects, u32 type, u32 isEquip) {
+  GfMenuReference::getReferenceBladeID(0);
+  {
+    ui::UIObjectAcc baseMake(acc.searchChild("IMG_melist_base_make"));
+    ui::UIObjectAcc baseCrystal(acc.searchChild("IMG_melist_base_crystal"));
+    ui::UIObjectAcc titleMake(acc.searchChild("TXT_melist_title_make"));
+    ui::UIObjectAcc titleCrystal(acc.searchChild("TXT_melist_title_crystal"));
+    ui::UIObjectAcc colMake(acc.searchChild("TXT_melist_col_make"));
+    ui::UIObjectAcc colCrystal(acc.searchChild("TXT_melist_col_crystal"));
+    bool isMake = isEquip == 0;
+    baseMake.setDisp(isMake);
+    baseCrystal.setDisp(!isMake);
+    titleMake.setDisp(isMake);
+    titleCrystal.setDisp(!isMake);
+    colMake.setDisp(isMake);
+    colCrystal.setDisp(!isMake);
+    for (u32 i = 0; i < 9; i++) {
+      mm::mtl::FixStr<32> name;
+      name.format("LAY_sbparts_make@%02d", i + 1);
+      ui::UIObjectAcc make(acc.searchChild(name.c_str()));
+      make.setDisp(isMake);
+      name.format("LAY_sbparts_crystal@%02d", i + 1);
+      ui::UIObjectAcc crystal(acc.searchChild(name.c_str()));
+      crystal.setDisp(!isMake);
+    }
+  }
+  mm::mtl::FixStr<32> name;
+  for (u32 i = 0; i < objects->getSize(); i++) {
+    u32 parts = list->getContents(list->getPageIndex(i)).unknown04;
+    ui::UIObjectAcc object(objects->getObject(i));
+    name.format("TXT_sbpartsname@%02d", i + 1);
+    ui::UIObjectAcc text(object.searchChild(name.c_str()));
+    RESULT_HANA result;
+    const char *color;
+    if (isEquip == 0) {
+      color = GfMenuHanaAdapter::isMakeParts(type, parts, result) ? "txt_normal2" : "txt_disable";
+    } else {
+      color = GfMenuHanaAdapter::isCrystalParts(type, parts, result) ? "txt_normal2" : "txt_disable";
+    }
+    GfMenuObjUtil::setColMulandAdd(text.unknown10, color);
+  }
+}
+
+void GfMenuObjHanaPartsMake::setupItemList(ui::UIObjectAcc &acc, GfMenuItemList *list, ui::UISelectObjList *objects) {
+  mm::mtl::FixStr<32> name;
+  for (u32 i = 0; i < objects->getSize(); i++) {
+    name.format("TXT_sbpartsname@%02d", i + 1);
+    GfMenuItemAdapter *adapter = GfMenuItemAdapter::createFromList(acc.searchChild(name.c_str()), 0, list, i, false);
+    if (adapter != nullptr) {
+      name.format("LAY_sbparts_num@%02d", i + 1);
+      adapter->unknown24 = acc.searchChild(name.c_str());
+    }
+    name.format("IMG_sbpartsicon@%02d", i + 1);
+    GfMenuItemAdapter::createFromList(acc.searchChild(name.c_str()), 2, list, i, false);
+    name.format("TXT_sbparts_num@%02d", i + 1);
+    GfMenuItemAdapter::createFromList(acc.searchChild(name.c_str()), 3, list, i, true);
+    name.format("TXT_sbparts_etlnum@%02d", i + 1);
+    GfMenuItemAdapter::createFromList(acc.searchChild(name.c_str()), 0x10, list, i, false);
+    name.format("TXT_reclist_stcnum@%02d", i + 1);
+    GfMenuItemAdapter::createFromList(acc.searchChild(name.c_str()), 0x11, list, i, false);
+  }
+  GfMenuObjHanaCustom::setupItemInfo(acc, list);
+}
+
 // Inferred role: parts type and item type of a parts category; original name unknown.
 struct unknown001 {
   u32 unknown00;
@@ -155,11 +293,11 @@ struct unknown001 {
 
 // Inferred role: parts categories; original name unknown.
 static const unknown001 unknown002[] = {
-    {1, ItemType::HANA_ROLE},
-    {2, ItemType::HANA_ATR},
-    {3, ItemType::HANA_N_ARTS_SET},
-    {9, ItemType::HANA_ARTS_ENH},
-    {6, ItemType::HANA_ASSIST},
+    {1, ItemType::ITEM_TYPE_UNKNOWN_16},
+    {2, ItemType::ITEM_TYPE_UNKNOWN_17},
+    {3, ItemType::ITEM_TYPE_UNKNOWN_19},
+    {9, ItemType::ITEM_TYPE_UNKNOWN_18},
+    {6, ItemType::ITEM_TYPE_UNKNOWN_20},
 };
 
 void GfMenuObjHanaPartsMake::makeCategoryItemList(GfMenuIDList *idList, GfMenuItemList *itemList, u32 isEquip, u32 sort) {
@@ -173,4 +311,33 @@ void GfMenuObjHanaPartsMake::makeCategoryItemList(GfMenuIDList *idList, GfMenuIt
   }
 }
 
+void GfMenuObjHanaPartsMake::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    setupMain(acc);
+    GfMenuObjOperationInfo::setGuideText(0x19, 0);
+    GfMenuObjMainMenu2::setSubIndexText(0x1a);
+    GfMenuObjMainMenu2::closeCharChange();
+    setFadeIn(handle, 0);
+    break;
+  case 3:
+    if (event.unknown08 == 2) {
+      acc.setDisp(false);
+      acc.setTerm();
+      GfMenuObjCharSelect::returnSubMenu();
+      GfMenuObject::returnFSSubLayer(unknown20);
+    }
+    break;
+  case GfMenuTypes::unknown003_33:
+    acc.setDisp(true);
+    break;
+  case GfMenuTypes::unknown003_34:
+    setFadeOut(handle, 0);
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
 } // namespace gf

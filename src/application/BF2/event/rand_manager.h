@@ -9,8 +9,8 @@ namespace event {
 class RandManager : public IManager, public mm::mtl::Singleton<RandManager> {
 public:
   enum {
-    FLAG_PLAY = 1 << 0,
-    FLAG_WARP = 1 << 1,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: play flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: warp flag; original name unknown.
   };
 
   RandManager();

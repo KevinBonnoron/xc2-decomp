@@ -8,15 +8,15 @@ namespace gf {
 GfItemManager::GfItemManager(const GfSetupParam &param) : unknown08(false) { initialize(param); }
 
 void GfItemManager::initialize(const GfSetupParam &) {
-  _gfit::s_pItemBox = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfItemBox;
-  _gfit::s_pItemBoxP = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfPoolItemBox;
+  _gfit::s_pItemBox = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfItemBox;
+  _gfit::s_pItemBoxP = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfPoolItemBox;
   clear();
   unknown08 = true;
 }
 
 GfItemManager::~GfItemManager() {}
 
-void GfItemManager::build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfItemManager(param); }
+void GfItemManager::build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfItemManager(param); }
 
 void GfItemManager::destroy() {
   GfItemManager *itemManager = get();

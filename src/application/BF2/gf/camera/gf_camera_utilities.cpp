@@ -11,12 +11,12 @@
 namespace gf {
 
 // Height added to the position of the object when it has no camera bone.
-constexpr f32 CAMERA_LOOK_HEIGHT = 1.5f;
+constexpr f32 unknown016 = 1.5f; // Inferred role: camera look height; original name unknown.
 
 void CameraUtilities::getCameraLookBonePosition(GF_OBJ_HANDLE *handle, mm::Vec3 &position) {
   GfObjAcc acc(handle);
   position = acc.getWorldTransform().unknown00;
-  position.y += CAMERA_LOOK_HEIGHT;
+  position.y += unknown016;
   DataParamAcc dataParam(handle);
   const char *bone = dataParam.getCamBone();
   fw::Transform transform;

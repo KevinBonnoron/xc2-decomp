@@ -111,7 +111,7 @@ void ElementalComboManager::Initialize(gf::GF_OBJ_HANDLE *handle) {
 }
 
 void ElementalComboManager::CheckCharacterID() {
-  if (unknown10 >= 0 || unknown08 == gf::INVALID_HANDLE) {
+  if (unknown10 >= 0 || unknown08 == gf::unknown020) {
     return;
   }
 

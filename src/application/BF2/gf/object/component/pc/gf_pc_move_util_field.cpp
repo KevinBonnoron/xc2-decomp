@@ -14,6 +14,7 @@
 #include "gf/object/component/pc/gf_com_property_pc.h"
 #include "gf/object/component/pc/gf_pc_property_field.h"
 #include "gf/object/component/pc/gf_pc_state_util_field.h"
+#include "gf/object/component/pc/param/gf_pc_param.h"
 #include "mm_math/mm_math.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/intrusive_ptr.h"
@@ -43,6 +44,20 @@ void MoveUtilField::enterMoveWalk(GfComPropertyPc &property) {
   property.unknown94 = packet.unknown10;
 }
 
+void setMoveWalkPacket(GfComPropertyPc &property, GfMoveWalkControler::Packet *packet) {
+  packet->unknown00 = property.unknown80;
+  packet->unknown10 = property.unknown94;
+  packet->unknown18 = property.unknown310.unknown004(2);
+  packet->unknown20 = property.unknown2b0 * property.unknown60.unknown04 + property.unknown2d0 * property.unknown60.unknown00;
+  if (!(fabsf(packet->unknown20.x) <= 0.000001f) || !(fabsf(packet->unknown20.y) <= 0.000001f) || !(fabsf(packet->unknown20.z) <= 0.000001f)) {
+    packet->unknown20.unknown001();
+  } else {
+    packet->unknown20 = property.unknown1e0;
+  }
+  packet->unknown30 = property.unknown1e0;
+  packet->unknown40 = MoveUtilField::getSpeedEffect(property) + 1.0f;
+}
+
 void MoveUtilField::updateMoveWalk(const fw::UpdateInfo &info, GfComPropertyPc &property) {
   GfMoveWalkControler controler;
   GfMoveWalkControler::Packet packet;
@@ -51,6 +66,8 @@ void MoveUtilField::updateMoveWalk(const fw::UpdateInfo &info, GfComPropertyPc &
   property.unknown80 = packet.unknown00;
   property.unknown94 = packet.unknown10;
 }
+
+bool IsBuddy(GfComPropertyPc &property) { return property.unknown38 & 1; }
 
 void MoveUtilField::enterMoveRun(GfComPropertyPc &property, bool isInherit) {
   GfMoveRunControler controler;
@@ -110,6 +127,23 @@ void MoveUtilField::updateMoveJump(const fw::UpdateInfo &info, GfComPropertyPc &
   property.unknown94 = packet.unknown10;
 }
 
+void setMoveJumpPacket(GfComPropertyPc &property, GfMoveJumpControler::Packet *packet) {
+  packet->unknown00 = property.unknown80;
+  packet->unknown10 = property.unknown94;
+  packet->unknown18 = property.unknown310.unknown004(6);
+  packet->unknown30 = property.unknown2b0 * property.unknown60.unknown04 + property.unknown2d0 * property.unknown60.unknown00;
+  if (!(fabsf(packet->unknown30.x) <= 0.000001f) || !(fabsf(packet->unknown30.y) <= 0.000001f) || !(fabsf(packet->unknown30.z) <= 0.000001f)) {
+    f32 length = sqrtf(packet->unknown30.x * packet->unknown30.x + packet->unknown30.y * packet->unknown30.y + packet->unknown30.z * packet->unknown30.z);
+    f32 inverse = 1.0f / length;
+    packet->unknown20 = mm::clamp(length, 0.0f, 1.0f);
+    packet->unknown30 *= inverse;
+  } else {
+    packet->unknown20 = 0.0f;
+    packet->unknown30 = property.unknown1e0;
+  }
+  packet->unknown40 = property.unknown1e0;
+}
+
 void MoveUtilField::updateMoveJumpBack(const fw::UpdateInfo &info, GfComPropertyPc &property) {
   GfMoveJumpBackControler controler;
   GfMoveJumpBackControler::Packet packet;
@@ -157,6 +191,30 @@ void MoveUtilField::enterMoveSwim(GfComPropertyPc &property) {
   controler.enter(packet, true);
   property.unknown80 = packet.unknown00;
   property.unknown94 = packet.unknown10;
+}
+
+void setMoveSwimPacket(GfComPropertyPc &property, GfMoveRunControler::Packet *packet) {
+  packet->unknown00 = property.unknown80;
+  packet->unknown10 = property.unknown94;
+  packet->unknown18 = property.unknown310.unknown004(10);
+  const FieldParam *param = property.unknown310.unknown006();
+  packet->unknown30 = property.unknown2b0 * property.unknown60.unknown04 + property.unknown2d0 * property.unknown60.unknown00;
+  if (!(fabsf(packet->unknown30.x) <= 0.000001f) || !(fabsf(packet->unknown30.y) <= 0.000001f) || !(fabsf(packet->unknown30.z) <= 0.000001f)) {
+    f32 length = sqrtf(packet->unknown30.x * packet->unknown30.x + packet->unknown30.y * packet->unknown30.y + packet->unknown30.z * packet->unknown30.z);
+    f32 power = mm::clamp(length, 0.0f, 1.0f);
+    packet->unknown20 = __builtin_fmaxf(power - param->accelThreshold, 0.0f) / __builtin_fmaxf(1.0f - param->accelThreshold, 0.0001f);
+    packet->unknown30 = packet->unknown30 * (1.0f / power);
+  } else {
+    packet->unknown20 = 0.0f;
+    packet->unknown30 = property.unknown1e0;
+  }
+  packet->unknown40 = property.unknown1e0;
+  if (property.unknown111_5) {
+    packet->unknown50 = 1.0f - property.unknown310.unknown001()->poisonSlow;
+  }
+  if (IsBuddy(property)) {
+    packet->unknown54 = static_cast<const MoveParam *>(property.unknown300->unknown10[1].param)->addMaxSpeedBuddySwim;
+  }
 }
 
 void MoveUtilField::updateMoveSwim(const fw::UpdateInfo &info, GfComPropertyPc &property) {

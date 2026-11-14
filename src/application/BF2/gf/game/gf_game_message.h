@@ -7,17 +7,17 @@
 namespace gf {
 
 enum {
-  MSG_GAME_CHANGE_TARGET = 0x100002b,
-  MSG_GAME_DEBUG_TARGET = 0x100002c,
-  MSG_GAME_TALK_ACTION = 0x100002d,
-  MSG_GAME_LIP_ACTION = 0x100002e,
-  MSG_GAME_SET_LIP_WEIGHT = 0x100002f,
+  MSG_GAME_UNKNOWN_16777259 = 0x100002b, // Inferred role: msg game change target; original name unknown.
+  MSG_GAME_UNKNOWN_16777260 = 0x100002c, // Inferred role: msg game debug target; original name unknown.
+  MSG_GAME_UNKNOWN_16777261 = 0x100002d, // Inferred role: msg game talk action; original name unknown.
+  MSG_GAME_UNKNOWN_16777262 = 0x100002e, // Inferred role: msg game lip action; original name unknown.
+  MSG_GAME_UNKNOWN_16777263 = 0x100002f, // Inferred role: msg game set lip weight; original name unknown.
 };
 
 struct MsgGameDebugTarget : fw::Message {};
 
 struct MsgGameTalkAction : fw::Message {
-  MsgGameTalkAction(u32 action, bool isDirect) : fw::Message(MSG_GAME_TALK_ACTION, 0x40), action(action), isDirect(isDirect), isSuccess(false) {}
+  MsgGameTalkAction(u32 action, bool isDirect) : fw::Message(MSG_GAME_UNKNOWN_16777261, 0x40), action(action), isDirect(isDirect), isSuccess(false) {}
 
   u32 action;
   bool isDirect;
@@ -25,7 +25,7 @@ struct MsgGameTalkAction : fw::Message {
 };
 
 struct MsgGameLipAction : fw::Message {
-  MsgGameLipAction(u32 action) : fw::Message(MSG_GAME_LIP_ACTION, 0x40), action(action) {}
+  MsgGameLipAction(u32 action) : fw::Message(MSG_GAME_UNKNOWN_16777262, 0x40), action(action) {}
 
   u32 action;
 };

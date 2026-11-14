@@ -18,6 +18,7 @@ public:
   u32 getDataSize() const;
   void setCRC(u32 crc);
   u32 getCRC() const;
+  static u16 getCRC16(const char *data, unsigned long size);
   static u32 swp(u32 value);
   static int swp(int value);
   static short swp(short value);
@@ -25,7 +26,7 @@ public:
   static char swp(char value);
   static u8 swp(u8 value);
 
-  u32 unknown00; // Inferred role: magic; original member name unknown.
+  char unknown00[4]; // Inferred role: signature "Qf9W"; original member name unknown.
   u8 _04[0x18 - 0x04];
   char unknown18[0x10]; // Inferred role: keyword; original member name unknown.
   u32 m_dataSize;

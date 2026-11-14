@@ -35,6 +35,24 @@ int DrResMdoAlpTbl::setup(const u8 *resource, u8 *work) {
   return alignedCount * sizeof(f32) + words * sizeof(u32) + sizeof(DrResMdoAlpTbl);
 }
 
+int DrResMdoAlpTbl::setupCnt(u32 count, u8 *work) {
+  unknown48 = count;
+  unknown40 = nullptr;
+  u32 alignedCount = count + (-count & 3);
+  unknown30 = reinterpret_cast<f32 *>(work);
+  createInstansBuffer(alignedCount * 8);
+  for (u32 i = 0; i < unknown48; i++) {
+    unknown30[i] = 1.0f;
+  }
+  u32 words = unknown48 >> 5;
+  if ((unknown48 & 0x1f) != 0) {
+    words++;
+  }
+  unknown38 = reinterpret_cast<u32 *>(work + alignedCount * sizeof(f32));
+  memset(unknown38, 0, words * sizeof(u32));
+  return alignedCount * sizeof(f32) + words * sizeof(u32) + sizeof(DrResMdoAlpTbl);
+}
+
 void DrResMdoAlpTbl::updateInstace() {
   beginInstansBuff();
   f32 *buffer = static_cast<f32 *>(getNextInstansBuff());
@@ -103,9 +121,29 @@ int DrResMdoAlpTbl::calcCntWorkSize(u32 count) {
   return (aligned + words) * 4 + 0x50;
 }
 
+int DrResMdoAlpTbl::calcWorkSize(const u8 *resource) {
+  const unknown001 *header = reinterpret_cast<const unknown001 *>(resource);
+  if (!(header->unknown02 & 4)) {
+    return 0;
+  }
+  const unknown002 *data = reinterpret_cast<const unknown002 *>(resource + header->unknown90);
+  s32 count = data->unknown04;
+  s32 padding = (4 - count % 4) % 4;
+  s32 words = count / 32;
+  if ((count & 0x1f) != 0) {
+    words++;
+  }
+  return (count + words + padding) * sizeof(u32) + sizeof(DrResMdoAlpTbl);
+}
+
 int DrResMdoAlpTbl::create(u8 *work, const u8 *resource) {
   DrResMdoAlpTbl *table = new (work) DrResMdoAlpTbl;
   return table->setup(resource, work + sizeof(DrResMdoAlpTbl));
+}
+
+int DrResMdoAlpTbl::createCnt(u8 *work, u32 count) {
+  DrResMdoAlpTbl *table = new (work) DrResMdoAlpTbl;
+  return table->setupCnt(count, work + sizeof(DrResMdoAlpTbl));
 }
 
 } // namespace ml

@@ -62,13 +62,13 @@ LodManager::Obj *LodManager::searchObj(u32 id) {
 
 void LodManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
-  case MSG_TYPE_INIT:
+  case MSG_TYPE_UNKNOWN_4:
     clear();
     break;
-  case MSG_TYPE_CLEAR:
+  case MSG_TYPE_UNKNOWN_12:
     clear();
     break;
-  case MSG_TYPE_END_SCENE:
+  case MSG_TYPE_UNKNOWN_10:
     resetPlayAnm();
     break;
   default:

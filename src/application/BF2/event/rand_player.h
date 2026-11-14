@@ -9,10 +9,10 @@ namespace event {
 
 class RandPlayer {
 public:
-  static constexpr size_t QUEUE_COUNT = 8;
+  static constexpr size_t QUEUE_UNKNOWN_8 = 8; // Inferred role: queue count; original name unknown.
 
   enum {
-    FLAG_PLAY = 1 << 0,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: play flag; original name unknown.
   };
 
   class Warp : public ICmd {
@@ -35,6 +35,8 @@ public:
     virtual RESULT update(const Param &param);
   };
 
+  static const char *MSBDAT; // Name given by the xc2 symbol _ZN5event10RandPlayer6MSBDATE.
+
   RandPlayer();
   virtual ~RandPlayer() {}
   void clear();
@@ -43,12 +45,12 @@ public:
   bool isPlaying() const;
 
 private:
-  Warp unknown08;                     // Inferred role: cmd warp; original member name unknown.
-  Wait unknown10;                     // Inferred role: cmd wait; original member name unknown.
-  Reply unknown18;                    // Inferred role: cmd reply; original member name unknown.
-  Reset unknown20;                    // Inferred role: cmd reset; original member name unknown.
-  CmdQueue<QUEUE_COUNT, 0> unknown28; // Inferred role: queue; original member name unknown.
-  u32 unknown978;                     // Inferred role: flags; original member name unknown.
+  Warp unknown08;                         // Inferred role: cmd warp; original member name unknown.
+  Wait unknown10;                         // Inferred role: cmd wait; original member name unknown.
+  Reply unknown18;                        // Inferred role: cmd reply; original member name unknown.
+  Reset unknown20;                        // Inferred role: cmd reset; original member name unknown.
+  CmdQueue<QUEUE_UNKNOWN_8, 0> unknown28; // Inferred role: queue; original member name unknown.
+  u32 unknown978;                         // Inferred role: flags; original member name unknown.
 };
 
 static_assert(sizeof(RandPlayer) == 0x980, "");

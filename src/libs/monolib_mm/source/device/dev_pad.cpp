@@ -1,11 +1,27 @@
 #include "ml/dev_pad.h"
 
+#include <string.h>
+
+#include "ml/dev_clock.h"
 #include "ml/dev_graph.h"
 #include "ml/lib_main.h"
 #include "ml/reslist.h"
 #include "ml/work_system.h"
 
 namespace ml {
+
+DevPad::DevPad(const char *name, WorkObj *parent) : WorkObj(name, parent, 0), unknown1b8(), unknown1c0(), unknown1ec(), unknown218(), unknown244(), unknown270() {
+  for (int i = 0; i < 11; i++) {
+    memcpy(unknown2c8[i], unknown1ec, sizeof(unknown1ec));
+  }
+  unknown530 = 0;
+  DevClock::getClockNow(unknown538);
+  unknown540 = 0.15f;
+  unknown034 repeat = {0.0f, 0.1f, 0};
+  for (int i = 0; i < 11; i++) {
+    unknown4ac[i] = repeat;
+  }
+}
 
 void DevPad::setWirelessPadMax(u32 max) { s_nMaxWirelessPad = max > 5 ? 5 : max; }
 
@@ -18,7 +34,7 @@ void DevPad::setRepeatTime(float time) {
   if (pad != nullptr) {
     time = time < 0.03f ? 0.03f : time;
     for (int i = 0; i < 11; i++) {
-      pad->unknown4b0[i].unknown00 = time;
+      pad->unknown4ac[i].unknown04 = time;
     }
   }
 }

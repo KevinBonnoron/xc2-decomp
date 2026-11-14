@@ -14,11 +14,11 @@
 namespace ml {
 class Scn;
 
-ScnObjLight::ScnObjLight(Scn *scn) : ScnObj(scn, TYPE_LIGHT), unknown310(0) {
+ScnObjLight::ScnObjLight(Scn *scn) : ScnObj(scn, TYPE_UNKNOWN_4), unknown310(0) {
   unknown60.m_back->unknown00.clear();
   memcpy(unknown60.m_front, unknown60.m_back, sizeof(RENDER_INFO));
-  unknown60.m_flags.set(threadval<RENDER_INFO>::FLAG_SYNC);
-  unknown310 |= FLAG_DISP;
+  unknown60.m_flags.set(threadval<RENDER_INFO>::FLAG_UNKNOWN_0);
+  unknown310 |= FLAG_UNKNOWN_0;
 }
 
 const AttrTransform *ScnObjLight::getTrans(bool isBack) const { return &(isBack ? unknown60.m_back : unknown60.m_front)->unknown00; }
@@ -27,51 +27,51 @@ AttrTransform *ScnObjLight::getTrans(bool isBack) { return &(isBack ? unknown60.
 
 void ScnObjLight::setDisp(bool isDisp) {
   if (isDisp) {
-    unknown310 |= FLAG_DISP;
+    unknown310 |= FLAG_UNKNOWN_0;
   } else {
-    unknown310 &= ~FLAG_DISP;
+    unknown310 &= ~FLAG_UNKNOWN_0;
   }
 }
 
-bool ScnObjLight::isDisp() const { return unknown310 & FLAG_DISP; }
+bool ScnObjLight::isDisp() const { return unknown310 & FLAG_UNKNOWN_0; }
 
 void ScnObjLight::setOfsMatrix(bool isOfsMatrix) {
   if (isOfsMatrix) {
-    unknown310 |= FLAG_OFS_MATRIX;
+    unknown310 |= FLAG_UNKNOWN_1;
   } else {
-    unknown310 &= ~FLAG_OFS_MATRIX;
+    unknown310 &= ~FLAG_UNKNOWN_1;
   }
 }
 
-bool ScnObjLight::isOfsMatrix() const { return unknown310 & FLAG_OFS_MATRIX; }
+bool ScnObjLight::isOfsMatrix() const { return unknown310 & FLAG_UNKNOWN_1; }
 
-ScnObjClip::ScnObjClip(Scn *scn) : ScnObj(scn, TYPE_CLIP), m_name("clipList") {}
+ScnObjClip::ScnObjClip(Scn *scn) : ScnObj(scn, TYPE_UNKNOWN_6), m_name("clipList") {}
 
 ScnObjClip::~ScnObjClip() {}
 
-ScnObjEnvColi::ScnObjEnvColi(Scn *scn) : ScnObj(scn, TYPE_CLIP), m_name("envColi") {}
+ScnObjEnvColi::ScnObjEnvColi(Scn *scn) : ScnObj(scn, TYPE_UNKNOWN_6), m_name("envColi") {}
 
 ScnObjEnvColi::~ScnObjEnvColi() {}
 
-void ScnObjModel::setDelete() { unknown12 = true; }
+void ScnObjModel::setDelete() { m_delete = true; }
 
-void ScnObj::setDelete() { unknown12 = true; }
+void ScnObj::setDelete() { m_delete = true; }
 
 void ScnObjModel::setFrameSpd(f32 speed) { m_frameSpd = speed; }
 
 void ScnObjModel::setDisp(bool isDisp) {
   if (isDisp) {
-    unknown34c |= FLAG_DISP_NEXT;
+    unknown34c |= FLAG_UNKNOWN_16;
   } else {
-    unknown34c &= ~FLAG_DISP_NEXT;
+    unknown34c &= ~FLAG_UNKNOWN_16;
   }
 }
 
 void ScnObjModel::setClip(bool isClip) {
   if (isClip) {
-    unknown34c |= FLAG_CLIP;
+    unknown34c |= FLAG_UNKNOWN_1;
   } else {
-    unknown34c &= ~FLAG_CLIP;
+    unknown34c &= ~FLAG_UNKNOWN_1;
   }
 }
 
@@ -83,24 +83,24 @@ ScnObjModel::RENDER_OFFSET_INFO *ScnObjModel::getOffsetInfo(bool isBack) { retur
 
 const ScnObjModel::RENDER_OFFSET_INFO *ScnObjModel::getOffsetInfo(bool isBack) const { return isBack ? unknown2d0.m_back : unknown2d0.m_front; }
 
-bool ScnObjModel::isDisp() const { return unknown34c & FLAG_DISP; }
+bool ScnObjModel::isDisp() const { return unknown34c & FLAG_UNKNOWN_0; }
 
-bool ScnObjModel::isClip() const { return unknown34c & FLAG_CLIP; }
+bool ScnObjModel::isClip() const { return unknown34c & FLAG_UNKNOWN_1; }
 
 void ScnObjModel::renderDebug(DebDraw *debDraw) {}
 
-ScnObjIBL::ScnObjIBL(Scn *scn) : ScnObj(scn, TYPE_IBL), unknown14(FLAG_DISP) {}
+ScnObjIBL::ScnObjIBL(Scn *scn) : ScnObj(scn, TYPE_UNKNOWN_5), unknown14(FLAG_UNKNOWN_0) {}
 
 ScnObjIBL::~ScnObjIBL() {}
 
 void ScnObjIBL::setDisp(bool isDisp) {
   if (isDisp) {
-    unknown14 |= FLAG_DISP;
+    unknown14 |= FLAG_UNKNOWN_0;
   } else {
-    unknown14 &= ~FLAG_DISP;
+    unknown14 &= ~FLAG_UNKNOWN_0;
   }
 }
 
-bool ScnObjIBL::isDisp() const { return unknown14 & FLAG_DISP; }
+bool ScnObjIBL::isDisp() const { return unknown14 & FLAG_UNKNOWN_0; }
 
 } // namespace ml

@@ -21,7 +21,7 @@ void GfMenuObjOperationInfo::initialize() {
   if (ui::UIObjectAcc(main).isValid()) {
 // __LINE__ must be 107 as in the original file: it is the line argument of operator new.
 #line 107
-    MainListener *listener = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) MainListener(this);
+    MainListener *listener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) MainListener(this);
     listener->addRef();
     ui::UIEventManager::get()->registObjectListener(main, listener);
     if (listener != nullptr) {

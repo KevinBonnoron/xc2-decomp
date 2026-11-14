@@ -1,6 +1,7 @@
 #include "gf/menu/object/gf_menu_obj_lvup_select.h"
 
 #include "gf/data/gf_bdat_btl.h"
+#include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_object_type.h"
 #include "gf/menu/call/gf_menu_call_context.h"
@@ -42,7 +43,7 @@ void GfMenuObjLvupSelect::update() {
 void GfMenuObjLvupSelect::updateBonusExp() {
   u32 driver = GfMenuReference::getReferenceDriverID(0);
   if (driver != 0) {
-    DataParamAcc acc(OBJECT_TYPE_DRIVER, driver, GIMMICK_TYPE_NONE);
+    DataParamAcc acc(OBJECT_TYPE_PC, driver, GIMMICK_TYPE_UNKNOWN_0);
     if (acc.isValid()) {
       u32 battleExp;
       u32 exp = acc.getExp();
@@ -106,6 +107,56 @@ void GfMenuObjLvupSelect::openLevelup(GfMenuCallContext *context, u32 level, u32
   }
 }
 
+void GfMenuObjLvupSelect::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    break;
+  case GfMenuTypes::unknown003_33: {
+    u32 driver = event.unknown0c;
+    GfMenuReference::setReferenceDriverID(0, driver);
+    GfMenuReference::setDriverVirtualLevel(GfDataDriver::getLevel(driver) + 1);
+    unknown20->updateBonusExp();
+    GfMenuObject::sendOpenEvent(acc.searchChild("LAY_lvup_sellect"), 0, 0.0f);
+    GfMenuObject::sendOpenEvent(acc.searchSibiling("LAY_dr_img"), 0, 0.0f);
+    break;
+  }
+  case GfMenuTypes::unknown003_34:
+    GfMenuObject::termCallContext(acc.unknown10);
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
+void GfMenuObjLvupSelect::DrImgListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    acc.setDisp(false);
+    break;
+  case GfMenuTypes::unknown003_33: {
+    GfMenuObjUtil::PresetCtrlParam param;
+    param.unknown00 = 6;
+    param.unknown04 = 0;
+    param.unknown10 = 1;
+    GfMenuObjUtil::startPresetCtrl(acc.unknown10, param);
+    break;
+  }
+  case GfMenuTypes::unknown003_34: {
+    GfMenuObjUtil::PresetCtrlParam param;
+    param.unknown04 = 1;
+    param.unknown00 = 6;
+    param.unknown10 = 1;
+    GfMenuObjUtil::startPresetCtrl(acc.unknown10, param);
+    break;
+  }
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
 } // namespace gf
 
 template bool mm::mtl::Delegate<bool()>::memberFuncInvoker<gf::GfMenuObjLvupSelect>(const mm::mtl::Delegate<bool()> *);

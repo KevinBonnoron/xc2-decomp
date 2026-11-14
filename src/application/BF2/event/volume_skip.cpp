@@ -13,34 +13,34 @@ VolumeSkip::VolumeSkip() { clear(); }
 
 void VolumeSkip::clear() {
   unknown08 = 0;
-  for (u32 i = 0; i < TYPE_COUNT; i++) {
+  for (u32 i = 0; i < TYPE_UNKNOWN_14; i++) {
     unknown0c[i] = 1.0f;
   }
   unknown44 = DEF_VOL;
 }
 
-void VolumeSkip::set(bool isEnable, f32 volume, f32 inFrame, f32 outFrame, const mm::mtl::FixedArray<f32, TYPE_COUNT> *resetVolumes) {
+void VolumeSkip::set(bool isEnable, f32 volume, f32 inFrame, f32 outFrame, const mm::mtl::FixedArray<f32, TYPE_UNKNOWN_14> *resetVolumes) {
   if (isEnable) {
-    unknown08 |= FLAG_ENABLE;
+    unknown08 |= FLAG_UNKNOWN_0;
   } else {
-    unknown08 &= ~FLAG_ENABLE;
+    unknown08 &= ~FLAG_UNKNOWN_0;
   }
   unknown44 = volume;
   unknown48 = inFrame;
   unknown4c = outFrame;
   if (resetVolumes != nullptr) {
-    for (u32 i = 0; i < TYPE_COUNT; i++) {
+    for (u32 i = 0; i < TYPE_UNKNOWN_14; i++) {
       unknown0c[i] = (*resetVolumes)[i];
     }
   } else {
-    for (u32 i = 0; i < TYPE_COUNT; i++) {
+    for (u32 i = 0; i < TYPE_UNKNOWN_14; i++) {
       unknown0c[i] = 1.0f;
     }
   }
 }
 
 void VolumeSkip::start() {
-  if ((unknown08 & (FLAG_ENABLE | FLAG_START)) != FLAG_ENABLE) {
+  if ((unknown08 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) != FLAG_UNKNOWN_0) {
     return;
   }
   mm::mtl::Singleton<VolumePlayer>::get().change(1, unknown44, unknown48);
@@ -57,11 +57,11 @@ void VolumeSkip::start() {
   mm::mtl::Singleton<VolumePlayer>::get().change(14, unknown44, unknown48);
   mm::mtl::Singleton<VolumePlayer>::get().change(15, unknown44, unknown48);
   mm::mtl::Singleton<VolumePlayer>::get().change(16, unknown44, unknown48);
-  unknown08 |= FLAG_START;
+  unknown08 |= FLAG_UNKNOWN_1;
 }
 
 void VolumeSkip::end() {
-  if ((unknown08 & FLAG_START) == 0) {
+  if ((unknown08 & FLAG_UNKNOWN_1) == 0) {
     return;
   }
   mm::mtl::Singleton<VolumePlayer>::get().reset(1, unknown0c[0], unknown4c);
@@ -78,7 +78,7 @@ void VolumeSkip::end() {
   mm::mtl::Singleton<VolumePlayer>::get().reset(14, unknown0c[11], unknown4c);
   mm::mtl::Singleton<VolumePlayer>::get().reset(15, unknown0c[12], unknown4c);
   mm::mtl::Singleton<VolumePlayer>::get().reset(16, unknown0c[13], unknown4c);
-  unknown08 &= ~FLAG_START;
+  unknown08 &= ~FLAG_UNKNOWN_1;
 }
 
 void VolumeSkip::setResetVolume(TYPE type, f32 volume) { unknown0c[type] = volume; }

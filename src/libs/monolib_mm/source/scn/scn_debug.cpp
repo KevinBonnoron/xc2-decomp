@@ -4,7 +4,13 @@
 #include "ml/cache_draw.h"
 #include "ml/ml_mem.h"
 #include "ml/threadval.h"
+#include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
+#include "scn/scn_debug_manipu_rot.h"
+#include "scn/scn_debug_manipu_scale.h"
+#include "scn/scn_debug_manipu_scale_2d.h"
+#include "scn/scn_debug_manipu_trans.h"
+#include "scn/scn_debug_manipu_trans_2d.h"
 
 namespace ml {
 class EventView;
@@ -44,7 +50,7 @@ ScnDebugManipu *ScnDebug::getManipulator() { return m_manipulator; }
 void ScnDebugManipu::setCalcRotationZXY() {
   CS cs(unknown08);
   if (unknown38 != nullptr) {
-    unknown38->unknownb0.m_back->unknown00.unknown130 |= AttrTransform::FLAG_ROTATION_ZXY;
+    unknown38->unknownb0.m_back->unknown00.unknown130 |= AttrTransform::FLAG_UNKNOWN_3;
   }
 }
 
@@ -72,20 +78,55 @@ SCNMANIPU ScnDebug::getManipuType() const { return m_manipulator->getType(); }
 SCNMANIPU ScnDebugManipu::getType() const {
   CS cs(unknown08);
   if (unknown38 == nullptr) {
-    return SCNMANIPU_NONE;
+    return SCNMANIPU_UNKNOWN_FFFFFFFF;
   }
   return unknown38->unknown10;
 }
 
 void ScnDebug::setManipulatorTrans(const mm::Mat44 *matrix, const mm::Vec3 *scale) { m_manipulator->createTrans(matrix, scale); }
 
+void ScnDebugManipu::createTrans(const mm::Mat44 *matrix, const mm::Vec3 *scale) {
+  CS cs(unknown08);
+  clear();
+  unknown38 = new (MlMem::getProductMem()) ScnDebugManipuTrans(unknown30, matrix, scale);
+  setDisp(unknown40);
+}
+
 void ScnDebug::setManipulatorTrans2D(const mm::Mat44 *matrix, const mm::Vec3 *scale) { m_manipulator->createTrans2D(matrix, scale); }
+
+void ScnDebugManipu::createTrans2D(const mm::Mat44 *matrix, const mm::Vec3 *scale) {
+  CS cs(unknown08);
+  clear();
+  unknown38 = new (MlMem::getProductMem()) ScnDebugManipuTrans2D(unknown30, matrix, scale);
+  setDisp(unknown40);
+}
 
 void ScnDebug::setManipulatorRot(const mm::Mat44 *matrix, const mm::Vec3 *scale) { m_manipulator->createRot(matrix, scale); }
 
+void ScnDebugManipu::createRot(const mm::Mat44 *matrix, const mm::Vec3 *scale) {
+  CS cs(unknown08);
+  clear();
+  unknown38 = new (MlMem::getProductMem()) ScnDebugManipuRot(unknown30, matrix, scale);
+  setDisp(unknown40);
+}
+
 void ScnDebug::setManipulatorScale(const mm::Mat44 *matrix, const mm::Vec3 *scale) { m_manipulator->createScale(matrix, scale); }
 
+void ScnDebugManipu::createScale(const mm::Mat44 *matrix, const mm::Vec3 *scale) {
+  CS cs(unknown08);
+  clear();
+  unknown38 = new (MlMem::getProductMem()) ScnDebugManipuScale(unknown30, matrix, scale);
+  setDisp(unknown40);
+}
+
 void ScnDebug::setManipulatorScale2D(const mm::Mat44 *matrix, const mm::Vec3 *scale) { m_manipulator->createScale2D(matrix, scale); }
+
+void ScnDebugManipu::createScale2D(const mm::Mat44 *matrix, const mm::Vec3 *scale) {
+  CS cs(unknown08);
+  clear();
+  unknown38 = new (MlMem::getProductMem()) ScnDebugManipuScale2D(unknown30, matrix, scale);
+  setDisp(unknown40);
+}
 
 void ScnDebug::setManipulatorRadius(f32 radius) { m_manipulator->setRadius(radius); }
 
@@ -197,6 +238,11 @@ bool ScnDebugManipu::getGblMat(mm::Mat44 &matrix, bool isBack) {
   return false;
 }
 
+void ScnDebugManipuObj::getGblMat(mm::Mat44 &matrix, bool isBack) {
+  RENDER_INFO *info = isBack ? unknownb0.m_back : unknownb0.m_front;
+  matrix.unknown009(info->unknown00.unknown70, unknown30);
+}
+
 bool ScnDebugManipu::OnMouseButtonDown(EventView *event) {
   CS cs(unknown08);
   if (unknown38 == nullptr) {
@@ -231,3 +277,12 @@ void ScnDebugManipu::update() {
 template class threadval<ScnDebugManipuObj::RENDER_INFO>;
 
 } // namespace ml
+
+// The game builds the manipulator objects in the same unit: the create functions of ScnDebugManipu inline their constructors.
+// clang-format off
+#include "scn_debug_manipu_rot.cpp"
+#include "scn_debug_manipu_scale.cpp"
+#include "scn_debug_manipu_scale_2d.cpp"
+#include "scn_debug_manipu_trans.cpp"
+#include "scn_debug_manipu_trans_2d.cpp"
+// clang-format on

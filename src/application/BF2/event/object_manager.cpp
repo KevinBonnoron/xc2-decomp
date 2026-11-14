@@ -59,7 +59,7 @@ Object *ObjectManager::searchByName(const char *name) {
   return found;
 }
 
-bool ObjectManager::isDisp() const { return (unknown14 & FLAG_DISP) != 0; }
+bool ObjectManager::isDisp() const { return (unknown14 & FLAG_UNKNOWN_0) != 0; }
 
 ObjectManager::ObjectManager() : unknown10(0), unknown14(0), unknowna0("default") {}
 
@@ -250,35 +250,35 @@ bool ObjectManager::isUsingEffect() {
 
 void ObjectManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
-  case MSG_TYPE_INIT:
+  case MSG_TYPE_UNKNOWN_4:
     unknown10 = 0;
     unknowna0 = "default";
     unknowne4 = "";
     unknown128 = nullptr;
     mm::mtl::Singleton<ObjectPartyList>::getPtr()->init();
     break;
-  case MSG_TYPE_SETUP_SCENE:
+  case MSG_TYPE_UNKNOWN_5:
     setupScene();
     break;
-  case MSG_TYPE_START_SCENE:
+  case MSG_TYPE_UNKNOWN_7:
     startScene();
     break;
-  case MSG_TYPE_START_PAGE:
+  case MSG_TYPE_UNKNOWN_8:
     startPage();
     break;
-  case MSG_TYPE_END_SCENE:
+  case MSG_TYPE_UNKNOWN_10:
     endScene();
     break;
-  case MSG_TYPE_CLEAR:
+  case MSG_TYPE_UNKNOWN_12:
     clear();
     break;
-  case MSG_TYPE_UPDATE:
+  case MSG_TYPE_UNKNOWN_14:
     update();
     break;
-  case MSG_TYPE_RENDER:
+  case MSG_TYPE_UNKNOWN_16:
     render();
     break;
-  case MSG_TYPE_TAIL:
+  case MSG_TYPE_UNKNOWN_18:
     tail();
     break;
   default:
@@ -310,17 +310,17 @@ void ObjectManager::listupObject(mm::mtl::FixedVector<u32, 256> &list, u32 type,
 
 void ObjectManager::setCloneMode(bool isCloneMode) {
   if (isCloneMode) {
-    unknown10 |= MODE_CLONE;
+    unknown10 |= MODE_UNKNOWN_0;
   } else {
-    unknown10 &= ~MODE_CLONE;
+    unknown10 &= ~MODE_UNKNOWN_0;
   }
 }
 
 void ObjectManager::setDisp(bool isDisp) {
   if (isDisp) {
-    unknown14 |= FLAG_DISP;
+    unknown14 |= FLAG_UNKNOWN_0;
   } else {
-    unknown14 &= ~FLAG_DISP;
+    unknown14 &= ~FLAG_UNKNOWN_0;
   }
 }
 
@@ -336,7 +336,7 @@ ObjectList *ObjectManager::searchScene(const char *name) const {
 }
 
 ObjectList *ObjectManager::createScene(const char *name) {
-  ObjectList *scene = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ObjectList(name, (unknown10 & MODE_CLONE) != 0);
+  ObjectList *scene = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ObjectList(name, (unknown10 & MODE_UNKNOWN_0) != 0);
   unknown18.push_back(scene);
   return scene;
 }

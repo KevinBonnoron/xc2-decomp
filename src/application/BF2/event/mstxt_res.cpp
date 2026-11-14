@@ -17,34 +17,34 @@ MstxtRes::MstxtRes(const char *path) : unknown08(0), unknown0c(path) {
   mm::mtl::FixStr<64> bdatPath;
   bdatPath.format("bdat/%s/%s.bdat", fw::LangUtil::getLangFolder().c_str(), unknown30.c_str());
   mm::mtl::Singleton<ResManager>::getPtr()->load(bdatPath.c_str(), this, false);
-  unknown08 |= FLAG_LOADING;
+  unknown08 |= FLAG_UNKNOWN_0;
 }
 
 MstxtRes::~MstxtRes() { unregisterBdat(); }
 
 void MstxtRes::unregisterBdat() {
-  if (unknown08 & FLAG_REGISTERED) {
+  if (unknown08 & FLAG_UNKNOWN_2) {
     gf::GfMenuObjEventSubtitle::endText();
     fw::BdatManager::unregistBdat(2);
-    unknown08 &= ~FLAG_REGISTERED;
+    unknown08 &= ~FLAG_UNKNOWN_2;
   }
 }
 
 void MstxtRes::OnResEvent(const PARAM &param) {
-  if (param.result == RES_RESULT_TYPE_SUCCESS) {
-    unknown08 |= FLAG_LOADED;
-  } else if (param.result == RES_RESULT_TYPE_FAILURE) {
+  if (param.result == RES_RESULT_TYPE_UNKNOWN_3) {
+    unknown08 |= FLAG_UNKNOWN_1;
+  } else if (param.result == RES_RESULT_TYPE_UNKNOWN_4) {
     mm::mtl::PtrSingleton<Manager>::get()->failureSkip();
   }
-  unknown08 &= ~FLAG_LOADING;
+  unknown08 &= ~FLAG_UNKNOWN_0;
 }
 
 void MstxtRes::registerBdat() {
-  if ((unknown08 & (FLAG_LOADING | FLAG_LOADED | FLAG_REGISTERED)) != FLAG_LOADED) {
+  if ((unknown08 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1 | FLAG_UNKNOWN_2)) != FLAG_UNKNOWN_1) {
     return;
   }
   fw::BdatManager::loadBdatFromMemory(2, mm::mtl::Singleton<ResManager>::getPtr()->adr(unknown30.c_str(), nullptr));
-  unknown08 |= FLAG_REGISTERED;
+  unknown08 |= FLAG_UNKNOWN_2;
 }
 
 unsigned char *MstxtRes::getFp() { return fw::BdatManager::getFp(unknown30.c_str()); }

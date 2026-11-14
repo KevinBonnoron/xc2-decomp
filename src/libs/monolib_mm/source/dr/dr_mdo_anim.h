@@ -4,8 +4,13 @@
 #include "dr/dr_mdo_mat.h"
 #include "types.h"
 
+namespace grlib {
+class CGLibEtcUniformBlock;
+} // namespace grlib
+
 namespace mm {
 struct Vec3;
+struct Mat44;
 } // namespace mm
 
 namespace ml {
@@ -56,10 +61,14 @@ public:
   void setMatAnmFrme(f32 frame);
   void changeMemFixAnim(MdoWrkMatRes *matRes, const void *data);
   void setupFixAnim(const void *data);
+  void updateAnim(f32 frame, const u32 *flags, DrResEtcPamObj *pamObj);
+  void updateAnimFast(f32 frame, DrResEtcPamObj *pamObj);
   void updateAnimEnd(f32 frame, const u32 *flags, DrResEtcPamObj *pamObj);
+  void calcPlaneMatrix(mm::Mat44 *matrix, const f32 *work);
   void calcAnim(const MdsFixAnmCate *cate, DrResMdoMat *mat, DrResEtcPamObj *pamObj, f32 *work, f32 frame);
   f32 getHermiteAttr(const MdsFixAnmInf *inf, f32 frame);
   void calcAnimFrameOnly(const MdsFixAnmCate *cate, f32 frame);
+  void setMatAnimFrame(const MdsFixAnmCate *cate, f32 frame);
   f32 getNodeAnmHermiteAttr(const MdsMdlNodeAnmInfo *info, f32 frame);
   static void animcall_UV_Scr_U(DrResMdoMat *mat, f32 *work, f32 value);
   static void animcall_UV_Scr_V(DrResMdoMat *mat, f32 *work, f32 value);
@@ -82,6 +91,23 @@ public:
   static void anmNodeParm_SclZ(mm::Vec3 *transform, f32 value);
 
   static void (*s_pCallAnim[])(DrResMdoMat *mat, f32 *work, f32 value);
+
+  u8 _16c[0x170 - 0x16c];
+  grlib::CGLibEtcUniformBlock *unknown170; // Inferred role: etc uniform; original member name unknown.
+  u8 unknown178;                           // Inferred role: setup flags; original member name unknown.
+  u8 unknown179;                           // Inferred role: seam flag; original member name unknown.
+  s16 unknown17a;                          // Inferred role: uniform index; original member name unknown.
+  s16 unknown17c;                          // Inferred role: material index; original member name unknown.
+  s16 unknown17e;                          // Inferred role: previous material index; original member name unknown.
+  s16 m_nodeMax;
+  u8 _182[0x190 - 0x182];
 };
+
+static_assert(offsetof(DrMdoAnim, unknown170) == 0x170, "");
+static_assert(offsetof(DrMdoAnim, unknown178) == 0x178, "");
+static_assert(offsetof(DrMdoAnim, unknown17a) == 0x17a, "");
+static_assert(offsetof(DrMdoAnim, unknown17c) == 0x17c, "");
+static_assert(offsetof(DrMdoAnim, m_nodeMax) == 0x180, "");
+static_assert(sizeof(DrMdoAnim) == 0x190, "");
 
 } // namespace ml

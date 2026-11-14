@@ -13,7 +13,7 @@ GfMenuQuest::~GfMenuQuest() {}
 void GfMenuQuest::build(const GfSetupParam &param) {
 // __LINE__ must be 47 as in the original file: its value changes the instruction order.
 #line 47
-  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfMenuQuest(param);
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfMenuQuest(param);
 }
 
 void GfMenuQuest::destroy() {

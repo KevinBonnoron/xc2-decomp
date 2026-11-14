@@ -2,10 +2,13 @@
 
 #include "framework/object/updatable_object.h"
 #include "gf/object/component/behavior/gf_com_behavior.h"
+#include "gf/object/component/gf_com_sound.h"
+#include "gf/object/component/model/gf_com_model.h"
 #include "gf/object/component/property/gf_env_property.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_property.h"
 #include "gf/object/gf_obj_util.h"
+#include "gf/request/gf_req_scom.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/unique_ptr.h" // IWYU pragma: keep
 
@@ -50,6 +53,48 @@ void GfComProperty::procMsgObjectDead(fw::MessageObject *object, MsgObjectDead &
     MsgObjectNotifyDead notify(0, static_cast<const MsgObjectDamage *>(static_cast<const fw::Message *>(&message)));
     notify.unknown08 = message.deadType;
     onDead(notify);
+  }
+}
+
+void GfComProperty::onDead(MsgObjectNotifyDead &message) {
+  GfComModel *model = unknown08->getComponent<GfComModel>();
+  if (model != nullptr) {
+    GfObj *object = static_cast<GfObj *>(unknown08);
+    model->recieveMessage(object, message);
+  }
+  GfComBehavior *behavior = unknown08->getComponent<GfComBehavior>();
+  if (behavior != nullptr) {
+    GfObj *object = static_cast<GfObj *>(unknown08);
+    behavior->recieveMessage(object, message);
+  }
+
+  SCOM_CHAR_DEAD::create(static_cast<GfObj *>(unknown08)->unknownf8, message);
+}
+
+void GfComProperty::onDamage(MsgObjectNotifyDamage &message) {
+  GfComBehavior *behavior = unknown08->getComponent<GfComBehavior>();
+  if (behavior != nullptr) {
+    GfObj *object = static_cast<GfObj *>(unknown08);
+    behavior->recieveMessage(object, message);
+  }
+
+  SCOM_CHAR_DMG::create(static_cast<GfObj *>(unknown08)->unknownf8, message);
+}
+
+void GfComProperty::procMsgObjectAlpha(fw::MessageObject *object, MsgObjectAlpha &message) { setAlpha(message.type, message.alpha); }
+
+void GfComProperty::procMsgObjectNotifyChangeAttribute(fw::MessageObject *object, MsgObjectNotifyChangeAttribute &message) {
+  GfComSound *sound = unknown08->getComponent<GfComSound>();
+  if (sound != nullptr) {
+    sound->unknown001(getSoundVariableName(SOUND_VARIABLE_UNKNOWN_1), message.unknown08);
+  }
+}
+
+void GfComProperty::onHeal(MsgObjectNotifyHealHp &message) {
+  GfComBehavior *behavior = unknown08->getComponent<GfComBehavior>();
+  if (behavior != nullptr) {
+    GfObj *object = static_cast<GfObj *>(unknown08);
+    behavior->recieveMessage(object, message);
   }
 }
 

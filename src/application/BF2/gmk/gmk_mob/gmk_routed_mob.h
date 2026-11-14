@@ -33,10 +33,10 @@ public:
     mutable GmkRouteNavi *unknown10; // Inferred role: route navi found by findPosRot; original member name unknown.
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_ROUTED_MOB;
+  static const GmkType GMK_TYPE = GMK_TYPE_ROUTED_MOB; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkRoutedMob();
-  ~GmkRoutedMob() override;
+  ~GmkRoutedMob() override { dispose(); }
   GmkType getGmkType() const override;
   const IGmkList *getBindedRoutePointList() const override;
   bool isValid() const override;
@@ -51,6 +51,7 @@ public:
   GmkRouteNavi *findFreeRouteNavi() const;
   GmkRouteNavi *findRouteNavi(gf::GF_OBJ_HANDLE *handle) const;
   void createRouteNavis(u32 num);
+  void disposeRouteNavis();
 
   GmkMobInsts unknown50;                                                            // Inferred role: mob instances; original member name unknown.
   mutable mm::mtl::Vector<std::pair<gf::GF_OBJ_HANDLE *, GmkRouteNavi>> unknown120; // Inferred role: route navis with the game object they are bound to; original member name unknown.

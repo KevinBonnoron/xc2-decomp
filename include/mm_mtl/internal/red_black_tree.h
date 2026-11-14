@@ -50,6 +50,37 @@ public:
     node *nodePtr;
   };
 
+  class const_iterator {
+  public:
+    explicit const_iterator(const node *node) : nodePtr(node) {}
+
+    const value_type &operator*() const { return nodePtr->unknown18; }
+    const value_type *operator->() const { return &nodePtr->unknown18; }
+
+    bool operator==(const const_iterator &rhs) const { return nodePtr == rhs.nodePtr; }
+    bool operator!=(const const_iterator &rhs) const { return nodePtr != rhs.nodePtr; }
+
+    const node *nodePtr;
+  };
+
+  const_iterator end() const { return const_iterator(nullptr); }
+
+  const_iterator find(const key_type &key) const {
+    const node *current = m_root;
+    while (current != &m_sentinel) {
+      if (Traits::get_key(current->unknown18) < key) {
+        current = current->unknown10;
+        continue;
+      }
+      if (key < Traits::get_key(current->unknown18)) {
+        current = current->unknown00;
+        continue;
+      }
+      return const_iterator(current);
+    }
+    return const_iterator(nullptr);
+  }
+
   iterator begin() {
     node *current = m_root;
     if (current == &m_sentinel) {
@@ -63,16 +94,20 @@ public:
 
   iterator end() { return iterator(this, nullptr); }
 
+  // The continue form gives the game's loop layout (1.0.0: GfGameInsideBattleLock::isInside(GF_OBJ_HANDLE*), 0x7100317410): both
+  // child loads share the loop head. The else if form puts a separate load of the left child on its own path.
   iterator find(const key_type &key) {
     node *current = m_root;
     while (current != &m_sentinel) {
       if (Traits::get_key(current->unknown18) < key) {
         current = current->unknown10;
-      } else if (!(key < Traits::get_key(current->unknown18))) {
-        return iterator(this, current);
-      } else {
-        current = current->unknown00;
+        continue;
       }
+      if (key < Traits::get_key(current->unknown18)) {
+        current = current->unknown00;
+        continue;
+      }
+      return iterator(this, current);
     }
     return iterator(this, nullptr);
   }
@@ -205,7 +240,7 @@ private:
 
   // Inferred helper: finds the node that follows another one in order, null after the last; original name unknown.
   // __LINE__ must be 363 as in the original header: it is the line argument of the assert.
-#line 345
+#line 359
   node *unknown004(node *nodePtr) {
     if (nodePtr->unknown10 == &m_sentinel) {
       node *parent = nodePtr->unknown08;

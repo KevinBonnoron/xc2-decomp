@@ -28,9 +28,9 @@ public:
     u16 unknown04; // Inferred role: event condition; original member name unknown.
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_KIZUNA_TALK;
+  static const GmkType GMK_TYPE = GMK_TYPE_KIZUNA_TALK; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
-  GmkKizunaTalk() : unknown48(gf::INVALID_HANDLE), unknown50(), unknown54(true) {}
+  GmkKizunaTalk() : unknown48(gf::unknown020), unknown50(), unknown54(true) {}
   ~GmkKizunaTalk() override { dispose(); }
   GmkType getGmkType() const override { return GMK_TYPE; }
   int getGameFlagId() const;

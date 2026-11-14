@@ -45,7 +45,7 @@ void GfAssetLog::setAssetPackForLoaded(const GfAssetPack *pack) {
   }
 }
 
-void GfAssetLog::create(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfAssetLog(); }
+void GfAssetLog::create(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfAssetLog(); }
 
 void GfAssetLog::initialize(const GfSetupParam &param) {}
 

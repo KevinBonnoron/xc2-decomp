@@ -1,5 +1,7 @@
 #include "dr/dr_shd_mdo_man.h"
 
+#include "dr/dr_res_list.h"
+
 #include "dr/dr_calc_stm_list_obj.h"
 #include "dr/dr_shd_mdo_dec_res.h"
 #include "dr/dr_shd_mdo_dec_shd_obj.h"
@@ -27,6 +29,18 @@ void DrShdMdoMan::update() {
   for (DrShdMdoDecShdObj *obj = unknown00; obj != nullptr; obj = obj->unknown08) {
     obj->update();
   }
+}
+
+void DrShdMdoMan::releaseShaderObj(DrShdMdoDecShdObj *obj) {
+  obj->unknown18--;
+  if (obj->unknown18 < 0) {
+    obj->unknown18 = 0;
+  }
+  if (obj->unknown18 > 0) {
+    return;
+  }
+  unknown001(unknown00, unknown08, obj);
+  delete obj;
 }
 
 DrShdMdoDecShdObj::~DrShdMdoDecShdObj() { unknown28.release(); }

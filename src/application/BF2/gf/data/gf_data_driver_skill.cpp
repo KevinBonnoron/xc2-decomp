@@ -9,14 +9,15 @@
 namespace gf {
 
 enum {
-  SYSTEM_BALANCE_SKILL_UNLOCK_COLUMN_2 = 0x87,
-  SYSTEM_BALANCE_SKILL_UNLOCK_COLUMN_3 = 0x88,
+  SYSTEM_BALANCE_SKILL_UNLOCK_COLUMN_UNKNOWN_135 = 0x87, // Inferred role: system balance skill unlock column 2; original name unknown.
+  SYSTEM_BALANCE_SKILL_UNLOCK_COLUMN_UNKNOWN_136 = 0x88, // Inferred role: system balance skill unlock column 3; original name unknown.
 };
 
-constexpr u32 SKILL_DRIVER_END = 7;
-constexpr u32 HIDDEN_SKILL_FIRST = 15;
+constexpr u32 DRIVER_UNKNOWN_7_2 = 7; // Inferred role: skill driver end; original name unknown.
+constexpr u32 SKILL_UNKNOWN_15 = 15;  // Inferred role: hidden skill first; original name unknown.
 
-static const char *const skillTables[] = {
+static const char *const unknown013[] = {
+    // Inferred role: skill tables; original name unknown.
     "BTL_Skill_Dr_Table01",
     "BTL_Skill_Dr_Table02",
     "BTL_Skill_Dr_Table03",
@@ -25,17 +26,17 @@ static const char *const skillTables[] = {
     "BTL_Skill_Dr_Table06",
 };
 
-static int getSkillIndex(u32 row, u32 column, bool isHidden) { return row * SKILL_COLUMN_COUNT + column + (isHidden ? HIDDEN_SKILL_FIRST : 0); }
+static int getSkillIndex(u32 row, u32 column, bool isHidden) { return row * SKILL_UNKNOWN_3 + column + (isHidden ? SKILL_UNKNOWN_15 : 0); }
 
 static u32 getSkillUnlockNum(u32 column) {
   u8 *bdat = Bdat::getFP("BTL_SystemBalance");
   u32 unlockNum = 0;
   switch (column) {
   case 2:
-    unlockNum = static_cast<s16>(Bdat::getValCheck(bdat, "Param", SYSTEM_BALANCE_SKILL_UNLOCK_COLUMN_2, 5));
+    unlockNum = static_cast<s16>(Bdat::getValCheck(bdat, "Param", SYSTEM_BALANCE_SKILL_UNLOCK_COLUMN_UNKNOWN_135, 5));
     break;
   case 3:
-    unlockNum = static_cast<s16>(Bdat::getValCheck(bdat, "Param", SYSTEM_BALANCE_SKILL_UNLOCK_COLUMN_3, 5));
+    unlockNum = static_cast<s16>(Bdat::getValCheck(bdat, "Param", SYSTEM_BALANCE_SKILL_UNLOCK_COLUMN_UNKNOWN_136, 5));
     break;
   }
 
@@ -74,8 +75,8 @@ bool GfDataDriverSkill::getEnhanceCaption(u8 *&bdat, u32 &textId, u32 skill) {
 
 u32 GfDataDriverSkill::getSkillFromBdat(u32 driver, u32 row, u32 column, bool isHidden) {
   u16 skill = 0;
-  if (driver < SKILL_DRIVER_END && column != 0) {
-    skill = Bdat::getValCheck(Bdat::getFP(skillTables[driver - 1]), "SkillID", getSkillIndex(row, column, isHidden), 2);
+  if (driver < DRIVER_UNKNOWN_7_2 && column != 0) {
+    skill = Bdat::getValCheck(Bdat::getFP(unknown013[driver - 1]), "SkillID", getSkillIndex(row, column, isHidden), 2);
   }
 
   return skill;
@@ -99,37 +100,37 @@ u32 GfDataDriverSkill::getSkillCategoryFromBdat(u32 driver, u32 row, u32 column,
 
 u32 GfDataDriverSkill::getSkillPointFromBdat(u32 driver, u32 row, u32 column, bool isHidden) {
   u16 skillPoint = 0;
-  if (driver < SKILL_DRIVER_END && column != 0) {
-    skillPoint = Bdat::getValCheck(Bdat::getFP(skillTables[driver - 1]), "NeedSp", getSkillIndex(row, column, isHidden), 2);
+  if (driver < DRIVER_UNKNOWN_7_2 && column != 0) {
+    skillPoint = Bdat::getValCheck(Bdat::getFP(unknown013[driver - 1]), "NeedSp", getSkillIndex(row, column, isHidden), 2);
   }
 
   return skillPoint;
 }
 
 u32 GfDataDriverSkill::getRoundFromBdat(u32 driver, u32 row, u32 column, bool isHidden) {
-  if (driver >= SKILL_DRIVER_END) {
+  if (driver >= DRIVER_UNKNOWN_7_2) {
     return 0;
   }
 
-  u8 value = Bdat::getValCheck(Bdat::getFP(skillTables[driver - 1]), "Round", getSkillIndex(row, column, isHidden), 1);
+  u8 value = Bdat::getValCheck(Bdat::getFP(unknown013[driver - 1]), "Round", getSkillIndex(row, column, isHidden), 1);
   return value;
 }
 
 u32 GfDataDriverSkill::getColumnFromBdat(u32 driver, u32 row, u32 column, bool isHidden) {
-  if (driver >= SKILL_DRIVER_END) {
+  if (driver >= DRIVER_UNKNOWN_7_2) {
     return 0;
   }
 
-  u8 value = Bdat::getValCheck(Bdat::getFP(skillTables[driver - 1]), "ColumnNum", getSkillIndex(row, column, isHidden), 1);
+  u8 value = Bdat::getValCheck(Bdat::getFP(unknown013[driver - 1]), "ColumnNum", getSkillIndex(row, column, isHidden), 1);
   return value;
 }
 
 u32 GfDataDriverSkill::getRowFromBdat(u32 driver, u32 row, u32 column, bool isHidden) {
-  if (driver >= SKILL_DRIVER_END) {
+  if (driver >= DRIVER_UNKNOWN_7_2) {
     return 0;
   }
 
-  u8 value = Bdat::getValCheck(Bdat::getFP(skillTables[driver - 1]), "RowNum", getSkillIndex(row, column, isHidden), 1);
+  u8 value = Bdat::getValCheck(Bdat::getFP(unknown013[driver - 1]), "RowNum", getSkillIndex(row, column, isHidden), 1);
   return value;
 }
 
@@ -144,8 +145,8 @@ u32 GfDataDriverSkill::getEnhanceFromBdat(u32 driver, u32 row, u32 column, bool 
 
 u32 GfDataDriverSkill::getValidSkillNum(u32 driver, bool isHidden) {
   u32 count = 0;
-  for (u32 row = 0; row < SKILL_ROW_COUNT; row++) {
-    for (u32 column = 1; column <= SKILL_COLUMN_COUNT; column++) {
+  for (u32 row = 0; row < SKILL_UNKNOWN_5; row++) {
+    for (u32 column = 1; column <= SKILL_UNKNOWN_3; column++) {
       if (getSkill(driver, row, column, isHidden) != 0) {
         count++;
       }
@@ -160,7 +161,7 @@ u32 GfDataDriverSkill::getSkill(u32 driver, u32 row, u32 column, bool isHidden) 
     return 0;
   }
 
-  return getSkill(*GfDataDriver::getSDataDriver(driver), row, column, isHidden);
+  return getSkill(GfDataDriver::getSDataDriver(driver), row, column, isHidden);
 }
 
 bool GfDataDriverSkill::isSkillLevelUnlock(u32 driver, u32 column, bool isHidden) {
@@ -194,7 +195,7 @@ bool GfDataDriverSkill::isSkillUnlock(u32 driver, u32 row, u32 column, bool isHi
 }
 
 u16 GfDataDriverSkill::getSkill(const SDataDriver &dataDriver, u32 row, u32 column, bool isHidden) {
-  if (column - 1 >= SKILL_COLUMN_COUNT || dataDriver.unknown22 >= SKILL_DRIVER_END) {
+  if (column - 1 >= SKILL_UNKNOWN_3 || dataDriver.unknown22 >= DRIVER_UNKNOWN_7_2) {
     return 0;
   }
 
@@ -203,12 +204,12 @@ u16 GfDataDriverSkill::getSkill(const SDataDriver &dataDriver, u32 row, u32 colu
 }
 
 u32 GfDataDriverSkill::getNextSkillPoint(u32 driver, u32 row, bool isHidden) {
-  if (driver >= SKILL_DRIVER_END) {
+  if (driver >= DRIVER_UNKNOWN_7_2) {
     return 0;
   }
 
-  u32 level = getSkillLevel(*GfDataDriver::getSDataDriver(driver), row, isHidden);
-  if (level >= SKILL_COLUMN_COUNT) {
+  u32 level = getSkillLevel(GfDataDriver::getSDataDriver(driver), row, isHidden);
+  if (level >= SKILL_UNKNOWN_3) {
     return 0;
   }
 
@@ -219,10 +220,10 @@ u32 GfDataDriverSkill::getNextSkillPoint(u32 driver, u32 row, bool isHidden) {
   return getSkillPointFromBdat(driver, row, level + 1, isHidden);
 }
 
-u32 GfDataDriverSkill::getSkillLevel(u32 driver, u32 row, bool isHidden) { return getSkillLevel(*GfDataDriver::getSDataDriver(driver), row, isHidden); }
+u32 GfDataDriverSkill::getSkillLevel(u32 driver, u32 row, bool isHidden) { return getSkillLevel(GfDataDriver::getSDataDriver(driver), row, isHidden); }
 
 u16 GfDataDriverSkill::getSkillLevel(const SDataDriver &dataDriver, u32 row, bool isHidden) {
-  if (dataDriver.unknown22 >= SKILL_DRIVER_END) {
+  if (dataDriver.unknown22 >= DRIVER_UNKNOWN_7_2) {
     return 0;
   }
 
@@ -231,12 +232,12 @@ u16 GfDataDriverSkill::getSkillLevel(const SDataDriver &dataDriver, u32 row, boo
 }
 
 void GfDataDriverSkill::setSkillLevel(u32 driver, u32 row, u32 level, bool isHidden) {
-  if (driver >= SKILL_DRIVER_END) {
+  if (driver >= DRIVER_UNKNOWN_7_2) {
     return;
   }
 
-  SDataDriver *dataDriver = GfDataDriver::getSDataDriver(driver);
-  unknown116 *rows = isHidden ? dataDriver->unknown62 : dataDriver->unknown30;
+  SDataDriver &dataDriver = GfDataDriver::getSDataDriver(driver);
+  unknown116 *rows = isHidden ? dataDriver.unknown62 : dataDriver.unknown30;
   rows[row].unknown08 = static_cast<u8>(level);
   for (u32 column = 1; column <= level; column++) {
     rows[row].unknown00[column - 1] = getSkillFromBdat(driver, row, column, isHidden);
@@ -245,8 +246,8 @@ void GfDataDriverSkill::setSkillLevel(u32 driver, u32 row, u32 level, bool isHid
 
 bool GfDataDriverSkill::getSkillEnhance(mm::mtl::FixedVector<u16, 64> &enhances, u32 driver) {
   GfBdatBtl *bdatBattle = GfBdatBtl::get();
-  for (u32 row = 0; row < SKILL_ROW_COUNT; row++) {
-    for (u32 column = 1; column <= SKILL_COLUMN_COUNT; column++) {
+  for (u32 row = 0; row < SKILL_UNKNOWN_5; row++) {
+    for (u32 column = 1; column <= SKILL_UNKNOWN_3; column++) {
       u16 skill = getSkill(driver, row, column, false);
       if (skill != 0) {
         u32 enhance = bdatBattle->getBTL_Skill_DrEnhance(skill);

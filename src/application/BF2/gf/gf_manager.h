@@ -24,7 +24,7 @@ struct SDataOption;
 struct SDataSystem;
 
 struct GfSetupParam {
-  GfSetupParam() : unknown00(), unknown08(), _10(), unknown18(ml::MlMem::getProductMem()), unknown1c(0), unknown20(1.0f), unknown24(EXEC_STATE_DEBUG) {}
+  GfSetupParam() : unknown00(), unknown08(), _10(), unknown18(ml::MlMem::getProductMem()), unknown1c(0), unknown20(1.0f), unknown24(EXEC_STATE_UNKNOWN_0) {}
 
   ml::Scn *unknown00;     // Inferred role: scn; original member name unknown.
   ml::WinView *unknown08; // Inferred role: view the work event of the asset manager is attached to; original member name unknown.
@@ -44,9 +44,9 @@ void GfSleep(u32 frame);
 class GfManager : public mm::mtl::PtrSingleton<GfManager>, public fw::IPauseTrigger, public IGfEvent {
 public:
   enum GAME_START {
-    GAME_START_NONE,
-    GAME_START_NEW,
-    GAME_START_CONTINUE,
+    GAME_START_UNKNOWN_0, // Inferred role: game start none; original name unknown.
+    GAME_START_UNKNOWN_1, // Inferred role: game start new; original name unknown.
+    GAME_START_UNKNOWN_2, // Inferred role: game start continue; original name unknown.
   };
 
   GfManager(const GfSetupParam &param);

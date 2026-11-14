@@ -13,8 +13,8 @@ namespace gmk {
 template <typename FORM_PC, typename FORM_PCNPC> bool GmkForm::create(const FORM_PC &formPc) {
   dispose();
   unknown00 = formPc.getData()->unknown14 - formPc.getData()->unknown10 + 1;
-  if (unknown00 > MAX_NUM) {
-    unknown00 = MAX_NUM;
+  if (unknown00 > MAX_UNKNOWN_6) {
+    unknown00 = MAX_UNKNOWN_6;
   } else if (unknown00 == 0) {
     return false;
   }

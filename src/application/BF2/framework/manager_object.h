@@ -5,8 +5,8 @@ namespace fw {
 
 class ManagerObject {
 public:
-  static const u32 FLAG_INITIALIZED = 1 << 0;
-  static const u32 FLAG_FINALIZED = 1 << 1;
+  static const u32 FLAG_UNKNOWN_0 = 1 << 0; // Inferred role: initialized; original name unknown.
+  static const u32 FLAG_UNKNOWN_1 = 1 << 1; // Inferred role: finalized; original name unknown.
 
   ManagerObject();
   virtual ~ManagerObject();
@@ -14,8 +14,8 @@ public:
   virtual bool finalize() { return true; }
   virtual void enterFinalizeApplet() {}
   virtual const char *getName() const { return "undefined"; }
-  virtual bool isInitialized() const { return unknown08 & FLAG_INITIALIZED; }
-  virtual bool isFinalized() const { return unknown08 & FLAG_FINALIZED; }
+  virtual bool isInitialized() const { return unknown08 & FLAG_UNKNOWN_0; }
+  virtual bool isFinalized() const { return unknown08 & FLAG_UNKNOWN_1; }
 
   u32 unknown08; // Inferred role: flags; original member name unknown.
 };

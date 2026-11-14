@@ -4,11 +4,13 @@
 #include "ssd/ssd_audio_file.h"
 #include "ssd/ssd_behavior_impl.h" // IWYU pragma: keep
 #include "ssd/ssd_debug.h"
+#include "ssd/ssd_file_stream.h"
 #include "ssd/ssd_io_stream.h"
 #include "types.h"
 
 namespace ssd {
 enum Result : long;
+class TextRef;
 
 AudioContents::AudioContents() {}
 
@@ -47,6 +49,17 @@ AudioFileBase::AudioFileBase()
       unknown30(0), unknown34(0), unknown35(0), unknown38(0), unknown3c(0), unknown40(0), unknown44(0), unknown48(0), unknown4c(0), unknown4e(0), unknown50(false) {}
 
 AudioFileBase::~AudioFileBase() { DeleteReadBuffer(); }
+
+Result AudioFileBase::OpenFileBase(AudioFileBase **file, const TextRef &name) {
+  FileStream *stream = new FileStream();
+  if (stream->Open(name, IoStreamBase::OPEN_MODE_READ) < 0) {
+    delete stream;
+    return static_cast<Result>(-1);
+  }
+  Result result = OpenFileBase(file, stream);
+  (*file)->unknown1a = true;
+  return result;
+}
 
 Result AudioFileBase::CloseFileBase(AudioFileBase **file) {
   if (file != nullptr && *file != nullptr) {

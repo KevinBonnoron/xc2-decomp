@@ -25,6 +25,7 @@
 #include "gf/request/gf_req_scom.h"
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_form.h"
+#include "gmk/gmk_form_impl.h" // IWYU pragma: keep (the game instantiates GmkForm::create<GmkFormPc, GmkFormPcnpc> in this unit, after applyPartyForm, at 0x710037c27c)
 #include "gmk/gmk_form_pc.h"
 #include "gmk/gmk_manager.h"
 #include "gmk/gmk_salvage.h"
@@ -32,6 +33,7 @@
 #include "ml/dev_pad.h"
 #include "ml/rand.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/reference_object.h"
 
 namespace fw {
 enum SoundCategory : int;
@@ -39,12 +41,13 @@ enum SoundCategory : int;
 
 namespace gf {
 
-constexpr u32 SALVAGER_POINT_MAX = 0xff;
-constexpr int SE_CLIMB_BASE = 600;
-constexpr u16 SCENARIO_CHASE_KIKU_START = 0xfbd;
-constexpr u16 SCENARIO_CHASE_KIKU_END = 0xfc9;
+constexpr u32 POINT_UNKNOWN_255 = 0xff;                 // Inferred role: salvager point max; original name unknown.
+constexpr int SE_UNKNOWN_600 = 600;                     // Inferred role: se climb base; original name unknown.
+constexpr u16 SCENARIO_CHASE_KIKU_UNKNOWN_4029 = 0xfbd; // Inferred role: scenario chase kiku start; original name unknown.
+constexpr u16 SCENARIO_CHASE_KIKU_UNKNOWN_4041 = 0xfc9; // Inferred role: scenario chase kiku end; original name unknown.
 
-static const char *CAMERA_NAMES[] = {
+static const char *unknown014[] = {
+    // Inferred role: camera names; original name unknown.
     nullptr,
     "salvage_dive_start",
     "salvage_dive_success",
@@ -57,36 +60,36 @@ static const char *CAMERA_NAMES[] = {
 };
 
 GfGameSalvage::GfGameSalvage(const GfSetupParam &param)
-    : unknown08(getAllocator(ALLOCATOR_DEFAULT)), unknowna0(false), unknownb0(0), unknownb4(0), unknownc0(nullptr), unknownc8(nullptr), m_climbAnimationType(ANIMATION_RESULT_00), unknownd4(0),
+    : unknown08(getAllocator(ALLOCATOR_UNKNOWN_0)), unknowna0(false), unknownb0(0), unknownb4(0), unknownc0(nullptr), unknownc8(nullptr), m_climbAnimationType(ANIMATION_UNKNOWN_5), unknownd4(0),
       unknownd8(0) {
   initialize(param);
 }
 
 void GfGameSalvage::initialize(const GfSetupParam &) {
   unknown08.beginSetup(this, STATE_MAX);
-  unknown08.registerState<StateSalvageWait>(STATE_WAIT);
-  unknown08.registerState<StateSalvageTBoxCheck>(STATE_TBOX_CHECK);
-  unknown08.registerState<StateSalvageErrorMessage>(STATE_ERROR_MESSAGE);
-  unknown08.registerState<StateSalvageItemSelect>(STATE_ITEM_SELECT);
-  unknown08.registerState<StateSalvageSetupFadeOut>(STATE_SETUP_FADE_OUT);
-  unknown08.registerState<StateSalvageLoad>(STATE_LOAD);
-  unknown08.registerState<StateSalvageSetupFadeIn>(STATE_SETUP_FADE_IN);
-  unknown08.registerState<StateSalvageSkillCheck>(STATE_SKILL_CHECK);
-  unknown08.registerState<StateSalvageStartVoice>(STATE_START_VOICE);
-  unknown08.registerState<StateSalvageDiveStart>(STATE_DIVE_START);
-  unknown08.registerState<StateSalvageDiveWait>(STATE_DIVE_WAIT);
-  unknown08.registerState<StateSalvageDiveEnd>(STATE_DIVE_END);
-  unknown08.registerState<StateSalvageDiveFadeOut>(STATE_DIVE_FADE_OUT);
-  unknown08.registerState<StateSalvageDiveFadeWait>(STATE_DIVE_FADE_WAIT);
-  unknown08.registerState<StateSalvageDiveFadeIn>(STATE_DIVE_FADE_IN);
-  unknown08.registerState<StateSalvageClimbStart>(STATE_CLIMB_START);
-  unknown08.registerState<StateSalvageResult>(STATE_RESULT);
-  unknown08.registerState<StateSalvageResultUi>(STATE_RESULT_UI);
-  unknown08.registerState<StateSalvagePartyFormDelay>(STATE_PARTY_FORM_DELAY);
-  unknown08.registerState<StateSalvageCamWait>(STATE_CAM_WAIT);
-  unknown08.registerState<StateSalvageFinish>(STATE_FINISH);
+  unknown08.registerState<StateSalvageWait>(STATE_UNKNOWN_0);
+  unknown08.registerState<StateSalvageTBoxCheck>(STATE_UNKNOWN_1);
+  unknown08.registerState<StateSalvageErrorMessage>(STATE_UNKNOWN_2);
+  unknown08.registerState<StateSalvageItemSelect>(STATE_UNKNOWN_3);
+  unknown08.registerState<StateSalvageSetupFadeOut>(STATE_UNKNOWN_4);
+  unknown08.registerState<StateSalvageLoad>(STATE_UNKNOWN_5);
+  unknown08.registerState<StateSalvageSetupFadeIn>(STATE_UNKNOWN_6);
+  unknown08.registerState<StateSalvageSkillCheck>(STATE_UNKNOWN_7);
+  unknown08.registerState<StateSalvageStartVoice>(STATE_UNKNOWN_8);
+  unknown08.registerState<StateSalvageDiveStart>(STATE_UNKNOWN_9);
+  unknown08.registerState<StateSalvageDiveWait>(STATE_UNKNOWN_10);
+  unknown08.registerState<StateSalvageDiveEnd>(STATE_UNKNOWN_11);
+  unknown08.registerState<StateSalvageDiveFadeOut>(STATE_UNKNOWN_12);
+  unknown08.registerState<StateSalvageDiveFadeWait>(STATE_UNKNOWN_13);
+  unknown08.registerState<StateSalvageDiveFadeIn>(STATE_UNKNOWN_14);
+  unknown08.registerState<StateSalvageClimbStart>(STATE_UNKNOWN_15);
+  unknown08.registerState<StateSalvageResult>(STATE_UNKNOWN_16);
+  unknown08.registerState<StateSalvageResultUi>(STATE_UNKNOWN_17);
+  unknown08.registerState<StateSalvagePartyFormDelay>(STATE_UNKNOWN_18);
+  unknown08.registerState<StateSalvageCamWait>(STATE_UNKNOWN_19);
+  unknown08.registerState<StateSalvageFinish>(STATE_UNKNOWN_20);
   unknown08.endSetup();
-  unknown08.setState(STATE_WAIT);
+  unknown08.setState(STATE_UNKNOWN_0);
   unknowna0 = true;
 }
 
@@ -95,7 +98,7 @@ GfGameSalvage::~GfGameSalvage() {}
 void GfGameSalvage::build(const GfSetupParam &param) {
   // __LINE__ must be 160 as in the original file: its value changes the instruction order.
 #line 160
-  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfGameSalvage(param);
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfGameSalvage(param);
 }
 
 void GfGameSalvage::destroy() {
@@ -119,25 +122,25 @@ void GfGameSalvage::update(const fw::UpdateInfo &info) {
 
 void GfGameSalvage::startSalvage(GF_OBJ_HANDLE *handle) {
   get()->unknowna8 = handle;
-  if (GfGameManager::getState() == GF_STATE_SALVAGE && !GfGameManager::isBattle() && get()->unknown08.getState()->unknown08 == STATE_WAIT) {
-    get()->unknown08.setState(STATE_TBOX_CHECK);
+  if (GfGameManager::getState() == GF_STATE_UNKNOWN_11 && !GfGameManager::isBattle() && get()->unknown08.getState()->unknown08 == STATE_UNKNOWN_0) {
+    get()->unknown08.setState(STATE_UNKNOWN_1);
   }
 }
 
-bool GfGameSalvage::isStateWait() { return get()->unknown08.getState()->unknown08 == STATE_WAIT; }
+bool GfGameSalvage::isStateWait() { return get()->unknown08.getState()->unknown08 == STATE_UNKNOWN_0; }
 
 void GfGameSalvage::cancelSalvage() {}
 
 void GfGameSalvage::createCameraDive(AnimationType animation, const mm::Vec3 &position, f32 rotation) {
   fw::CameraManager *manager = fw::CameraManager::get();
-  unknown88 = GimmickCamera::create(CAMERA_NAMES[animation], position, rotation);
+  unknown88 = GimmickCamera::create(unknown014[animation], position, rotation);
   static_cast<GimmickCamera *>(unknown88.get())->setAuto(false);
   manager->unknown20[0].push(unknown88, 0.0f);
 }
 
 void GfGameSalvage::createCameraClimb(AnimationType animation, const mm::Vec3 &position, f32 rotation) {
   fw::CameraManager *manager = fw::CameraManager::get();
-  unknown90 = GimmickCamera::create(CAMERA_NAMES[animation], position, rotation);
+  unknown90 = GimmickCamera::create(unknown014[animation], position, rotation);
   static_cast<GimmickCamera *>(unknown90.get())->setAuto(false);
   manager->unknown20[0].push(unknown90, 0.0f);
 }
@@ -272,7 +275,7 @@ public:
     u32 count = salvage.unknown88.size();
     for (u32 index = 0; index < count; index++) {
       const gmk::GmkSalvageLocator *locator = salvage.unknown88[index];
-      if (locator != nullptr && locator->getData()->unknown00 == 2 && locator->unknownc0 != INVALID_HANDLE && locator->unknownc8 == 0) {
+      if (locator != nullptr && locator->getData()->unknown00 == 2 && locator->unknownc0 != unknown020 && locator->unknownc8 == 0) {
         unknown10 = true;
         break;
       }
@@ -331,6 +334,8 @@ void GfGameSalvage::execRaffle(const RaffleInfo &info) {
   mm::mtl::PtrSingleton<gmk::GmkManager>::get()->traverseGmkInst(gmk::GMK_TYPE_SALVAGE, traverser);
 }
 
+void GfGameSalvage::execPop() { static_cast<gmk::GmkSalvage *>(gmk::getBindedGmkInst(get()->unknowna8))->popByRaffleResult(); }
+
 bool GfGameSalvage::getEventOrigin(mm::Mat44 &matrix) const {
   gmk::GmkSalvage *salvage = static_cast<gmk::GmkSalvage *>(gmk::getBindedGmkInst(get()->unknowna8));
   if (salvage->unknowna8 != nullptr) {
@@ -372,6 +377,8 @@ void GfGameSalvage::createModel() {
     unknownc0 = GfGameEvent::createSalvage();
   }
 }
+
+void GfGameSalvage::destroyModel() { mm::mtl::safeRelease(unknownc0); }
 
 bool GfGameSalvage::isValidModel() {
   if (unknownc0 != nullptr) {
@@ -452,15 +459,15 @@ void GfGameSalvage::playAnimation(AnimationType animation) {
   if (comAsm != nullptr) {
     const char *name = unknown001[animation];
     if (name[0] == 'S') {
-      comAsm->setState(name, ANIM_LAYER_BASE);
+      comAsm->setState(name, ANIM_LAYER_UNKNOWN_0);
     } else {
-      comAsm->execCmd(name, ANIM_LAYER_BASE);
+      comAsm->execCmd(name, ANIM_LAYER_UNKNOWN_0);
     }
   }
 }
 
 void GfGameSalvage::playClimbReady() {
-  if (unknownc0 != nullptr && unknownc0->unknown20 != INVALID_HANDLE) {
+  if (unknownc0 != nullptr && unknownc0->unknown20 != unknown020) {
     playAnimation(m_climbAnimationType);
     GfGameSpeed::setSalvageCharacterSpeed(0.01f);
   }
@@ -481,10 +488,10 @@ void GfGameSalvage::playDiveVibration() {
 void GfGameSalvage::playClimb() {
   if (unknownc0 != nullptr) {
     GF_OBJ_HANDLE *handle = unknownc0->unknown20;
-    if (handle != INVALID_HANDLE) {
+    if (handle != unknown020) {
       GfGameSpeed::setSalvageCharacterSpeed(1.0f);
       SCOM_SALVAGE_VOICE::createResult(handle, static_cast<CV_SALVAGE_RESULT>(unknownd4));
-      playSE(static_cast<SEID>(SE_CLIMB_BASE + m_climbAnimationType));
+      playSE(static_cast<SEID>(SE_UNKNOWN_600 + m_climbAnimationType));
     }
   }
 }
@@ -492,14 +499,14 @@ void GfGameSalvage::playClimb() {
 void GfGameSalvage::playVoice(VoiceType voice) {
   if (unknownc0 != nullptr) {
     GF_OBJ_HANDLE *handle = unknownc0->unknown20;
-    if (handle != INVALID_HANDLE) {
+    if (handle != unknown020) {
       int random = ml::mtRand() % 2;
       int cv;
       switch (voice) {
-      case VOICE_START:
+      case VOICETYPE_UNKNOWN_0:
         cv = random;
         break;
-      case VOICE_START_SKILL:
+      case VOICETYPE_UNKNOWN_1:
         cv = random + 2;
         break;
       case VOICETYPE_UNKNOWN_2:
@@ -545,17 +552,17 @@ void GfGameSalvage::addSalvagerPoint(u32 point) {
   if (point == 0) {
     return;
   }
-  u32 current = GfGameFlag::getLocal(8, FLAG_SALVAGER_POINT);
-  if (current < SALVAGER_POINT_MAX) {
+  u32 current = GfGameFlag::getLocal(8, FLAG_UNKNOWN_2132);
+  if (current < POINT_UNKNOWN_255) {
     u32 total = current + point;
-    GfGameFlag::setLocal(8, FLAG_SALVAGER_POINT, total > SALVAGER_POINT_MAX ? SALVAGER_POINT_MAX : total);
+    GfGameFlag::setLocal(8, FLAG_UNKNOWN_2132, total > POINT_UNKNOWN_255 ? POINT_UNKNOWN_255 : total);
   }
 }
 
 bool GfGameSalvage::isChaseKikuInSupervia() {
-  if (GfGameManager::getMapID() == MAP_SUPERBIA) {
+  if (GfGameManager::getMapID() == MAP_UNKNOWN_10) {
     u16 scenario = GfDataUtil::getScenarioFlag();
-    return scenario >= SCENARIO_CHASE_KIKU_START && scenario <= SCENARIO_CHASE_KIKU_END;
+    return scenario >= SCENARIO_CHASE_KIKU_UNKNOWN_4029 && scenario <= SCENARIO_CHASE_KIKU_UNKNOWN_4041;
   }
   return false;
 }

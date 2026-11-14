@@ -11,9 +11,9 @@ namespace event {
 class CharaDysUpdater {
 public:
   enum {
-    FLAG_RESET_DYNAMICS = 0,
-    FLAG_RESET_MOVEMENT = 1,
-    FLAG_MAX = 32,
+    FLAG_UNKNOWN_0 = 0,   // Inferred role: reset dynamics flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1,   // Inferred role: reset movement flag; original name unknown.
+    FLAG_UNKNOWN_32 = 32, // Inferred role: max flag; original name unknown.
   };
 
   CharaDysUpdater();
@@ -29,11 +29,11 @@ public:
   void setDynamicsBlendWeight(f32 weight);
 
 private:
-  mm::mtl::unknown027<FLAG_MAX> unknown08; // Inferred role: flags; original member name unknown.
-  gf::GF_OBJ_HANDLE *unknown10;            // Inferred role: handle; original member name unknown.
-  int unknown18;                           // Inferred role: reset dynamics frame; original member name unknown.
-  int unknown1c;                           // Inferred role: reset movement frame; original member name unknown.
-  f32 unknown20;                           // Inferred role: blend weight; original member name unknown.
+  mm::mtl::unknown027<FLAG_UNKNOWN_32> unknown08; // Inferred role: flags; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown10;                   // Inferred role: handle; original member name unknown.
+  int unknown18;                                  // Inferred role: reset dynamics frame; original member name unknown.
+  int unknown1c;                                  // Inferred role: reset movement frame; original member name unknown.
+  f32 unknown20;                                  // Inferred role: blend weight; original member name unknown.
 };
 
 static_assert(sizeof(CharaDysUpdater) == 0x28, "");

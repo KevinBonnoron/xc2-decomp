@@ -80,7 +80,7 @@ void GfPouchUtil::setPouch(u32 driver, u32 slot, const SDataPouch &pouch) {
   }
 }
 
-bool GfPouchUtil::isExistOpenItem() { return GfItemBox::get()->countItem(ITEM_UNKNOWN_62D9) != 0; }
+bool GfPouchUtil::isExistOpenItem() { return GfItemBox::get()->countItem(ITEM_UNKNOWN_25305) != 0; }
 
 void GfPouchUtil::setTimeUpForDebug(u32 driver, u32 slot) {
   SDataPouch pouch = *GfDataDriver::getPouchData(driver, slot);
@@ -91,7 +91,7 @@ void GfPouchUtil::setTimeUpForDebug(u32 driver, u32 slot) {
 }
 
 void GfPouchUtil::execOpen(u32 driver) {
-  if (GfItemBox::get()->countItem(ITEM_UNKNOWN_62D9) != 0) {
+  if (GfItemBox::get()->countItem(ITEM_UNKNOWN_25305) != 0) {
     SDataPouch pouch = *GfDataDriver::getPouchData(driver, 0);
     u32 slot = 0;
     if (pouch._06 != 0) {
@@ -107,8 +107,8 @@ void GfPouchUtil::execOpen(u32 driver) {
     }
     pouch._06 = 1;
     GfDataDriver::setPouchData(driver, slot, pouch);
-    if (GfItemBox::decItem(ITEM_UNKNOWN_62D9, 1)) {
-      GfEvent::callItemAdd(ITEM_UNKNOWN_62D9, -1);
+    if (GfItemBox::decItem(ITEM_UNKNOWN_25305, 1)) {
+      GfEvent::callItemAdd(ITEM_UNKNOWN_25305, -1);
     }
   }
 }
@@ -122,7 +122,7 @@ bool GfPouchUtil::isEnableOpen(u32 driver) {
   return false;
 }
 
-u8 GfPouchUtil::getOpenCount(u32 driver) {
+u32 GfPouchUtil::getOpenCount(u32 driver) {
   u8 count = 0;
   for (u32 slot = 0; slot < 3; slot++) {
     if (GfDataDriver::getPouchData(driver, slot)->_06 != 0) {

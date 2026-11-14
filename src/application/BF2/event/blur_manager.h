@@ -8,7 +8,7 @@ namespace event {
 class BlurManager : public IManager, public mm::mtl::Singleton<BlurManager> {
 public:
   enum {
-    DISP_FLAG_DISP = 1 << 0,
+    DISP_FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: disp flag; original name unknown.
   };
 
   BlurManager();

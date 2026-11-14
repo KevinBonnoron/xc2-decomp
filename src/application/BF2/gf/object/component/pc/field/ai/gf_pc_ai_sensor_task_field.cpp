@@ -2,6 +2,7 @@
 
 #include <math.h>
 
+#include "fw/fw_transform.h"
 #include "gf/object/component/pc/gf_com_property_pc.h"
 #include "gf/object/component/pc/param/gf_pc_param.h"
 #include "mm_math/mm_vec3.h"
@@ -21,7 +22,7 @@ bool isStack(const GfComPropertyPc &property, const SensorAIParam &param, f32 ti
     direction.unknown001();
   }
 
-  mm::Vec3 move = property.unknown160 - property.unknown180;
+  mm::Vec3 move = property.unknown160.unknown00 - property.unknown180.unknown00;
   f32 moveDistance = direction.x * move.x + direction.y * move.y + direction.z * move.z;
   return speed * time - moveDistance >= param.stackThreashold;
 }

@@ -12,11 +12,13 @@
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/reference_object.h"
 #include "mtl/alloc_handle.h"
+#include "nn/os.h"
+#include "nn/time_span.h"
 
 namespace ml {
 
 WorkCpuThread::WorkCpuThread(const char *name, WorkObj *parent)
-    : WorkObj(name, parent, 0), m_CPUID(CPUID_CORE_0), m_threadID(0), unknown1b8(nullptr), unknown1c0(0), unknown1c4(0), m_aboutJobNumC(0), unknown1d0(0), unknown1d8(0), unknown1e0(0.0f),
+    : WorkObj(name, parent, 0), m_CPUID(CPUID_UNKNOWN_1), m_threadID(0), unknown1b8(nullptr), unknown1c0(0), unknown1c4(0), m_aboutJobNumC(0), unknown1d0(0), unknown1d8(0), unknown1e0(0.0f),
       unknown1e4(0.0f), unknown1e8(nullptr), unknown650(nullptr), unknown658(WorkCpu::unknown001(mm::Col3::yellow)), unknown660(0), unknown668(0), m_background(false), unknown671(false),
       m_beginTerm(false) {
   unknown1e8 = new (WorkRootState::getWorkMem()) CriticalSection();
@@ -60,6 +62,44 @@ f32 WorkCpuThread::getJobCost() const { return unknown1e4 / DevGraph::getFrameSy
 int WorkCpuThread::getJobNum() const {
   CS cs(*unknown1e8);
   return unknown1f0.size();
+}
+
+bool WorkCpuThread::addJobThreadList(reslist<TJOB *> *list, u32 mode) {
+  CS cs(*unknown1e8);
+  bool isAdded = false;
+  if (mode == 2) {
+    for (reslist<TJOB *>::Node *node = list->begin(); node != list->end(); node = node->getNext()) {
+      if (node->value->unknown30 == m_CPUID) {
+        unknown1f0.push_back(node->value);
+        unknown1c4++;
+        if (node->value->unknown30 == 0) {
+          m_aboutJobNumC++;
+        }
+        isAdded = true;
+      }
+    }
+  } else if (mode == 1) {
+    for (reslist<TJOB *>::Node *node = list->begin(); node != list->end(); node = node->getNext()) {
+      if (node->value->unknown30 == 0) {
+        unknown1f0.push_back(node->value);
+        unknown1c4++;
+        if (node->value->unknown30 == 0) {
+          m_aboutJobNumC++;
+        }
+        isAdded = true;
+      }
+    }
+  } else {
+    for (reslist<TJOB *>::Node *node = list->begin(); node != list->end(); node = node->getNext()) {
+      unknown1f0.push_back(node->value);
+      unknown1c4++;
+      if (node->value->unknown30 == 0) {
+        m_aboutJobNumC++;
+      }
+      isAdded = true;
+    }
+  }
+  return isAdded;
 }
 
 void WorkCpuThread::setEvent(bool isSignal) {
@@ -153,6 +193,54 @@ bool WorkCpuThread::getJobThread(TJOB *&job, bool isBackground) {
   return true;
 }
 
+u32 WorkCpuThread::threadFunc(void *argument) {
+  WorkCpuThread *thread = static_cast<WorkCpuThread *>(argument);
+  while (thread->m_threadID == 0) {
+    nn::os::SleepThread(nn::TimeSpan::FromNanoSeconds(1000000));
+  }
+  CPUID cpu = thread->m_CPUID;
+  CPUID renderCpu = WorkCpu::getRenderCPUID();
+  TJOB *job = nullptr;
+  for (;;) {
+    if (cpu != CPUID_UNKNOWN_1) {
+      ThreadUtil::setCpuThread(ThreadUtil::getCurrentHandle(), cpu);
+    }
+    if (thread->m_beginTerm) {
+      break;
+    }
+    do {
+      if (!thread->getJobThread(job, false)) {
+        WorkCpu::getWaitingJob(job, thread);
+      }
+      TJOB *current = job;
+      if (current == nullptr) {
+        break;
+      }
+      long clock;
+      DevClock::getClockNow(clock);
+      current->unknown20 = current->unknown00(current->unknown10, current->unknown18);
+      f32 time;
+      DevClock::getTimeNow(time, clock);
+      thread->unknown1e0 += time;
+      DevClock::getClockNow(thread->unknown1d8);
+      current->unknown38 = cpu;
+      thread->terminateWorkingJob(current);
+      DevClock::getClockNow(_mlwcpu::s_aHearBeat[cpu - 1]);
+    } while (!thread->unknown671);
+    if (cpu == CPUID_UNKNOWN_1) {
+      return 0;
+    }
+    thread->waitEvent();
+    if (thread->m_beginTerm) {
+      return 0;
+    }
+    if (cpu == renderCpu && WorkRoot::isErrorLog()) {
+      WorkRootState::renderWork();
+    }
+  }
+  return 0;
+}
+
 u32 WorkCpuThread::getAboutJobNumC() const { return m_aboutJobNumC; }
 
 void WorkCpuThread::beginUpdate() {
@@ -163,7 +251,7 @@ void WorkCpuThread::beginUpdate() {
 
 void WorkCpuThread::calcPerformance(bool isCalc) {
   if (isCalc) {
-    if (m_CPUID == CPUID_CORE_0) {
+    if (m_CPUID == CPUID_UNKNOWN_1) {
       long clock = unknown1d8 - unknown1d0;
       unknown1e4 = DevClock::getClock2Sec(clock);
     } else {
@@ -201,7 +289,7 @@ void WorkCpuThread::setWorkingJob(TJOB *job) {
 
 void WorkCpuThread::setup(CPUID cpuId) {
   m_CPUID = cpuId;
-  if (cpuId == CPUID_CORE_0) {
+  if (cpuId == CPUID_UNKNOWN_1) {
     m_threadID = ThreadUtil::getCurrentID();
     return;
   }

@@ -14,7 +14,7 @@ namespace event {
 class FadeManager : public IManager, public mm::mtl::Singleton<FadeManager> {
 public:
   enum {
-    FLAG_DISABLE_FADE = 1 << 0,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: disable fade flag; original name unknown.
   };
 
   FadeManager();

@@ -65,7 +65,7 @@ GfMenuQuestAdapter *GfMenuQuestAdapter::create(u32 handle, QuestID quest, u32 ty
     }
     // __LINE__ must be 217 as in the original source: it is the line argument of operator new.
 #line 217
-    GfMenuQuestAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuQuestAdapter(plugin, isUpdateAlways);
+    GfMenuQuestAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuQuestAdapter(plugin, isUpdateAlways);
     init(adapter, quest, type, unknown001_0);
     plugin->release();
     return adapter;
@@ -77,7 +77,7 @@ GfMenuQuestAdapter *GfMenuQuestAdapter::create(u32 handle, QuestID quest, u32 ty
     }
     // __LINE__ must be 230 as in the original source: it is the line argument of operator new.
 #line 230
-    GfMenuQuestAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuQuestAdapter(plugin, isUpdateAlways);
+    GfMenuQuestAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuQuestAdapter(plugin, isUpdateAlways);
     init(adapter, quest, type, unknown001_1);
     plugin->release();
     return adapter;
@@ -89,7 +89,7 @@ GfMenuQuestAdapter *GfMenuQuestAdapter::create(u32 handle, QuestID quest, u32 ty
     }
     // __LINE__ must be 243 as in the original source: it is the line argument of operator new.
 #line 243
-    GfMenuQuestAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuQuestAdapter(plugin, isUpdateAlways);
+    GfMenuQuestAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuQuestAdapter(plugin, isUpdateAlways);
     init(adapter, quest, type, unknown001_2);
     plugin->release();
     return adapter;
@@ -101,7 +101,7 @@ GfMenuQuestAdapter *GfMenuQuestAdapter::create(u32 handle, QuestID quest, u32 ty
     }
     // __LINE__ must be 256 as in the original source: it is the line argument of operator new.
 #line 256
-    GfMenuQuestAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuQuestAdapter(plugin, isUpdateAlways);
+    GfMenuQuestAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuQuestAdapter(plugin, isUpdateAlways);
     init(adapter, quest, type, unknown001_3);
     plugin->release();
     return adapter;
@@ -113,7 +113,7 @@ GfMenuQuestAdapter *GfMenuQuestAdapter::create(u32 handle, QuestID quest, u32 ty
     }
     // __LINE__ must be 271 as in the original source: it is the line argument of operator new.
 #line 271
-    GfMenuQuestAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuQuestAdapter(plugin, isUpdateAlways);
+    GfMenuQuestAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuQuestAdapter(plugin, isUpdateAlways);
     init(adapter, quest, type, unknown001_4);
     plugin->release();
     return adapter;
@@ -125,7 +125,7 @@ GfMenuQuestAdapter *GfMenuQuestAdapter::create(u32 handle, QuestID quest, u32 ty
     }
     // __LINE__ must be 284 as in the original source: it is the line argument of operator new.
 #line 284
-    GfMenuQuestAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuQuestAdapter(plugin, isUpdateAlways);
+    GfMenuQuestAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuQuestAdapter(plugin, isUpdateAlways);
     init(adapter, quest, type, unknown001_5);
     plugin->release();
     return adapter;
@@ -147,7 +147,7 @@ void GfMenuQuestAdapter::init(GfMenuQuestAdapter *adapter, QuestID quest, u32 ty
 GfMenuQuestAdapter *GfMenuQuestAdapter::createFromReference(u32 handle, mm::mtl::IntrusivePtr<GfMenuReferenceQuest> reference, u32 type, bool isUpdateAlways) {
   // __LINE__ must be 299 as in the original source: it is the line argument of operator new.
 #line 299
-  ReferenceConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceConverter(reference);
+  ReferenceConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceConverter(reference);
   QuestID quest = {};
   converter->getQuestID(quest);
   GfMenuQuestAdapter *adapter = create(handle, quest, type, isUpdateAlways);
@@ -160,7 +160,7 @@ GfMenuQuestAdapter *GfMenuQuestAdapter::createFromReference(u32 handle, mm::mtl:
 GfMenuQuestAdapter *GfMenuQuestAdapter::createFromList(u32 handle, GfMenuQuestList *list, int listIndex, u32 type, bool isUpdateAlways) {
   // __LINE__ must be 317 as in the original source: it is the line argument of operator new.
 #line 317
-  ListConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ListConverter(list, listIndex);
+  ListConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ListConverter(list, listIndex);
   QuestID quest = {};
   converter->getQuestID(quest);
   GfMenuQuestAdapter *adapter = create(handle, quest, type, isUpdateAlways);
@@ -188,7 +188,7 @@ void GfMenuQuestAdapter::update(const fw::UpdateInfo &info) {
     }
   }
 
-  if ((unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
+  if ((unknown20 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) != 0) {
     if (unknown30.unknown00 != 0) {
       setDisp(true);
     } else {
@@ -260,7 +260,7 @@ void GfMenuQuestAdapter::update(const fw::UpdateInfo &info) {
     setDisp(isDisp);
     unknown3c = false;
   }
-  unknown20 &= ~FLAG_CHANGED;
+  unknown20 &= ~FLAG_UNKNOWN_0;
 }
 
 bool GfMenuQuestAdapter::getParamText(QuestID quest, u32 type, const char **text) {
@@ -292,7 +292,7 @@ bool GfMenuQuestAdapter::getParamText(QuestID quest, u32 type, const char **text
   }
   case unknown002_46: {
     GfQuestTaskLogResult result;
-    QuestTaskParam param(quest, unknown98, TASK_STATE_NONE);
+    QuestTaskParam param(quest, unknown98, TASK_STATE_UNKNOWN_0);
     if (!GfQuestUtil::getMsgQuestTaskLog(result, param)) {
       return false;
     }
@@ -313,7 +313,7 @@ bool GfMenuQuestAdapter::getParamNumber(QuestID quest, u32 type, u32 &number, u3
   case unknown002_22 + 2:
   case unknown002_22 + 3: {
     GfQuestTaskLogResult result;
-    QuestTaskParam param(quest, type - unknown002_22, TASK_STATE_NONE);
+    QuestTaskParam param(quest, type - unknown002_22, TASK_STATE_UNKNOWN_0);
     GfQuestUtil::getMsgQuestTaskLog(result, param);
     number = result.unknown18;
     max = 999;
@@ -324,7 +324,7 @@ bool GfMenuQuestAdapter::getParamNumber(QuestID quest, u32 type, u32 &number, u3
   case unknown002_26 + 2:
   case unknown002_26 + 3: {
     GfQuestTaskLogResult result;
-    QuestTaskParam param(quest, type - unknown002_26, TASK_STATE_NONE);
+    QuestTaskParam param(quest, type - unknown002_26, TASK_STATE_UNKNOWN_0);
     GfQuestUtil::getMsgQuestTaskLog(result, param);
     number = result.unknown14;
     max = 999;
@@ -391,7 +391,7 @@ bool GfMenuQuestAdapter::getParamNumber(QuestID quest, u32 type, u32 &number, u3
   }
   case unknown002_47: {
     GfQuestTaskLogResult result;
-    QuestTaskParam param(quest, unknown98, TASK_STATE_NONE);
+    QuestTaskParam param(quest, unknown98, TASK_STATE_UNKNOWN_0);
     GfQuestUtil::getMsgQuestTaskLog(result, param);
     number = result.unknown18;
     max = 999;
@@ -399,14 +399,14 @@ bool GfMenuQuestAdapter::getParamNumber(QuestID quest, u32 type, u32 &number, u3
   }
   case unknown002_48: {
     GfQuestTaskLogResult result;
-    QuestTaskParam param(quest, unknown98, TASK_STATE_NONE);
+    QuestTaskParam param(quest, unknown98, TASK_STATE_UNKNOWN_0);
     GfQuestUtil::getMsgQuestTaskLog(result, param);
     number = result.unknown14;
     max = 999;
     return true;
   }
   case unknown002_49: {
-    QuestTaskParam param(GfQuestInfo::getProgressQuest(quest), unknown98, TASK_STATE_NONE);
+    QuestTaskParam param(GfQuestInfo::getProgressQuest(quest), unknown98, TASK_STATE_UNKNOWN_0);
     s32 weather = GfQuestInfo::getQuestTaskWeatherInfo(param);
     if (weather == -1) {
       return false;
@@ -415,7 +415,7 @@ bool GfMenuQuestAdapter::getParamNumber(QuestID quest, u32 type, u32 &number, u3
     return true;
   }
   case unknown002_50: {
-    QuestTaskParam param(GfQuestInfo::getProgressQuest(quest), unknown98, TASK_STATE_NONE);
+    QuestTaskParam param(GfQuestInfo::getProgressQuest(quest), unknown98, TASK_STATE_UNKNOWN_0);
     s32 time = GfQuestInfo::getQuestTaskTimeInfo(param);
     if (time == -1) {
       return false;
@@ -424,7 +424,7 @@ bool GfMenuQuestAdapter::getParamNumber(QuestID quest, u32 type, u32 &number, u3
     return true;
   }
   case unknown002_51: {
-    QuestTaskParam param(GfQuestInfo::getProgressQuest(quest), unknown98, TASK_STATE_NONE);
+    QuestTaskParam param(GfQuestInfo::getProgressQuest(quest), unknown98, TASK_STATE_UNKNOWN_0);
     s32 time = GfQuestInfo::getQuestTaskTimeInfo(param);
     if (time == 6) {
       number = 1;
@@ -436,7 +436,7 @@ bool GfMenuQuestAdapter::getParamNumber(QuestID quest, u32 type, u32 &number, u3
     return true;
   }
   case unknown002_52: {
-    QuestTaskParam param(GfQuestInfo::getProgressQuest(quest), unknown98, TASK_STATE_NONE);
+    QuestTaskParam param(GfQuestInfo::getProgressQuest(quest), unknown98, TASK_STATE_UNKNOWN_0);
     s32 time = GfQuestInfo::getQuestTaskTimeInfo(param);
     if (time == 6) {
       number = 2;
@@ -489,11 +489,11 @@ bool GfMenuQuestAdapter::getParamIcon(QuestID quest, u32 type, u32 &icon) {
     }
 
     u32 objectType = GfDataUtil::getObjTypeByCharaId(characters[index]);
-    if (objectType - OBJECT_TYPE_DRIVER >= 2) {
+    if (objectType - OBJECT_TYPE_PC >= 2) {
       return false;
     }
 
-    DataParamAcc acc(objectType, characters[index], GIMMICK_TYPE_NONE);
+    DataParamAcc acc(objectType, characters[index], GIMMICK_TYPE_UNKNOWN_0);
     if (!acc.isValid()) {
       return false;
     }
@@ -522,7 +522,7 @@ bool GfMenuQuestAdapter::getParamTextColor(QuestID quest, u32 type, const char *
   u32 isEmpty = quest.empty();
   if (type - unknown002_18 < 4 && isEmpty == 0) {
     GfQuestTaskLogResult taskLog;
-    QuestTaskParam param(quest, type - unknown002_18, TASK_STATE_NONE);
+    QuestTaskParam param(quest, type - unknown002_18, TASK_STATE_UNKNOWN_0);
     GfQuestUtil::getMsgQuestTaskLog(taskLog, param);
     *color = taskLog.unknown24 ? "cyan" : nullptr;
     return getQuestText(quest, taskLog.unknown00, text);

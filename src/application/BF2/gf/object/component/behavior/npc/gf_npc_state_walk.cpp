@@ -1,5 +1,7 @@
 #include "gf/object/component/behavior/npc/gf_npc_state_walk.h"
 
+#include <math.h>
+
 #include "framework/object/updatable_object.h"
 #include "framework/reference_frame.h"
 #include "fw/fw_transform.h"
@@ -13,6 +15,7 @@
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_manager.h"
 #include "gmk/gmk_route_navi.h"
+#include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/intrusive_ptr.h"
 
@@ -94,6 +97,38 @@ void StateWalk::seqUpdateMove(GfComBehaviorNpc &behavior, const fw::UpdateInfo &
   }
 
   behavior.moveToGoal(info.unknown04);
+}
+
+void StateWalk::seqWaitMoveEnd(GfComBehaviorNpc &behavior, const fw::UpdateInfo &info) {
+  unknown18.update(info.unknown04);
+  if (!unknown18.unknown34) {
+    return;
+  }
+
+  gmk::AGmkBase *gmk = behavior.getBindedGmkInst();
+  if (gmk == nullptr) {
+    return;
+  }
+
+  mm::Vec3 rotation = gmk->unknown08.unknown08->unknown10;
+  f32 halfX = rotation.x * 0.5f;
+  f32 halfY = rotation.y * 0.5f;
+  f32 halfZ = rotation.z * 0.5f;
+  f32 sinX = sinf(halfX);
+  f32 cosX = cosf(halfX);
+  f32 sinY = sinf(halfY);
+  f32 cosY = cosf(halfY);
+  f32 sinZ = sinf(halfZ);
+  f32 cosZ = cosf(halfZ);
+  mm::Quat quat;
+  quat.x = sinX * cosY * cosZ - cosX * sinY * sinZ;
+  quat.y = cosX * sinY * cosZ + sinX * cosY * sinZ;
+  quat.z = cosX * cosY * sinZ - sinX * sinY * cosZ;
+  quat.w = cosX * cosY * cosZ + sinX * sinY * sinZ;
+  mm::Vec3 front = quat.rotate(mm::Vec3::unitZ);
+  behavior.execTurnCmd(atan2f(front.x, front.z));
+  unknown60 = 0.0f;
+  unknown50 = &StateWalk::seqInterpPosRotToGoal;
 }
 
 void StateWalk::seqInterpPosRotToGoal(GfComBehaviorNpc &behavior, const fw::UpdateInfo &info) {

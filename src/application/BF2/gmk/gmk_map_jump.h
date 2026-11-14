@@ -26,7 +26,7 @@ public:
     QuestFlagCond unknown08;    // Inferred role: quest flag; original member name unknown.
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_MAP_JUMP;
+  static const GmkType GMK_TYPE = GMK_TYPE_MAP_JUMP; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkMapJump();
   ~GmkMapJump() override { dispose(); }

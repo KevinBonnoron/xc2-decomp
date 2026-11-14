@@ -9,7 +9,8 @@ namespace mtl {
 
 namespace mtl_detail {
 
-// The element loops are declared inline: the game inlines them into construct_n and copy_construct_n, which then stay out of line in their callers.
+// The element loops are declared inline: the game inlines them into construct_n, copy_construct_n and destruct_n, which then stay out of line in their callers
+// when the element type is heavy (the inline hint of the loops outweighs the threshold of the wrappers; for example 0x71002da30c destruct_n<GfGmkLocators>).
 
 // Value-initialization: the game zero-fills (memset) elements of class types whose default constructor is not user-provided.
 template <typename T> inline void construct_n(T *buffer, size_t count, int_to_type<0>) {
@@ -28,7 +29,7 @@ template <typename T> inline void copy_construct_n(const T *source, size_t count
 
 template <typename T> void copy_construct_n(const T *source, size_t count, T *destination, int_to_type<1>) { mtl::copy_n(source, count, destination); }
 
-template <typename T> void destruct_n(T *buffer, size_t count, int_to_type<0>) {
+template <typename T> inline void destruct_n(T *buffer, size_t count, int_to_type<0>) {
   for (size_t i = 0; i < count; i++) {
     buffer[i].~T();
   }

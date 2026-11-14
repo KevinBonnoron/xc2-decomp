@@ -19,7 +19,7 @@ GfAchievManager::~GfAchievManager() {}
 void GfAchievManager::build(const GfSetupParam &param) {
   // __LINE__ must be 77 as in the original file: its value changes the instruction order.
 #line 77
-  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfAchievManager(param);
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfAchievManager(param);
 }
 
 void GfAchievManager::destroy() { delete get(); }
@@ -41,16 +41,16 @@ void GfAchievManager::flushEventIncAchiev(const IncQuest &incQuest) {
   mm::mtl::FixStr<128> name;
   GfDataAchievement::getAchievementType(type, index, achievQuest->unknown12);
   switch (type) {
-  case ACHIEVEMENT_TYPE_ARTS:
+  case ACHIEVEMENT_TYPE_UNKNOWN_0:
     name.format("アーツアチーブメント[%d]", index + 1);
     break;
-  case ACHIEVEMENT_TYPE_SKILL:
+  case ACHIEVEMENT_TYPE_UNKNOWN_1:
     name.format("ブレイドスキルアチーブメント[%d]", index + 1);
     break;
-  case ACHIEVEMENT_TYPE_FIELD_SKILL:
+  case ACHIEVEMENT_TYPE_UNKNOWN_2:
     name.format("フィールドスキルアチーブメント[%d]", index + 1);
     break;
-  case ACHIEVEMENT_TYPE_KEY:
+  case ACHIEVEMENT_TYPE_UNKNOWN_3:
     name.format("キーアチーブメント");
     break;
   }
@@ -74,7 +74,7 @@ void GfAchievManager::incleaseAchievCount(QuestID quest, u32 count, u32 add) {
 void GfAchievManager::gevItemAdd(u32 item, int count) { GfAchievStats::checkItem(item, count); }
 
 void GfAchievManager::gevBladeActivate(u32 blade, ActivateType activateType, ActivateType oldActivateType) {
-  if (oldActivateType != ACTIVATE_TYPE_UNUSE && activateType != oldActivateType) {
+  if (oldActivateType != ACTIVATE_TYPE_UNKNOWN_0 && activateType != oldActivateType) {
     GfAchievStats::checkBladeActivate(blade);
   }
 }

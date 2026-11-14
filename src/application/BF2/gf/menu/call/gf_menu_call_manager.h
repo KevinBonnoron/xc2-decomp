@@ -6,6 +6,9 @@
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
+namespace fw {
+struct UpdateInfo;
+} // namespace fw
 namespace ui {
 class UIStr;
 } // namespace ui
@@ -17,8 +20,10 @@ struct GfSetupParam;
 
 class GfMenuCallManager : public mm::mtl::PtrSingleton<GfMenuCallManager> {
 public:
-  static const u32 CALL_MAX = 135;
-  static const u32 CONTEXT_MAX = 256;
+  // Inferred role: number of calls; original name unknown.
+  static const u32 CALL_UNKNOWN_135 = 135;
+  // Inferred role: capacity of the call contexts; original name unknown.
+  static const u32 CONTEXT_UNKNOWN_256 = 256;
 
   // Inferred role: call info; original type name unknown.
   struct unknown001 {
@@ -33,6 +38,7 @@ public:
   static void build(const GfSetupParam &param);
   static void destroy();
   static bool isInitialized();
+  static void postUpdate(const fw::UpdateInfo &info);
   void attachCall(u32 call, u32 object);
   void detachCall(u32 call);
   u32 getAttachedObject(u32 call);
@@ -43,9 +49,9 @@ public:
   void nextCallContext(GfMenuCallContext *context, u32 menu);
   void setCallContextEventHandler(GfMenuCallContext *context, u32 handler);
 
-  u32 unknown08[CALL_MAX];                                   // Inferred role: calls; original member name unknown.
-  GfMenuStrLinker unknown228;                                // Inferred role: str linker; original member name unknown.
-  mm::mtl::FixedVector<unknown001, CONTEXT_MAX> unknown1108; // Inferred role: contexts; original member name unknown.
+  u32 unknown08[CALL_UNKNOWN_135];                                   // Inferred role: calls; original member name unknown.
+  GfMenuStrLinker unknown228;                                        // Inferred role: str linker; original member name unknown.
+  mm::mtl::FixedVector<unknown001, CONTEXT_UNKNOWN_256> unknown1108; // Inferred role: contexts; original member name unknown.
 };
 
 static_assert(offsetof(GfMenuCallManager, unknown08) == 0x08, "");

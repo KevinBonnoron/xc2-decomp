@@ -81,10 +81,10 @@ void GmkCtrlVolSe::update(f32 deltaTime) {
   if (unknown20.unknown00 == nullptr || unknown20.unknown08 == 0 || unknown60 == 0 || unknown68) {
     return;
   }
-  if (gf::GfGameManager::getControlMover() == gf::INVALID_HANDLE) {
+  if (gf::GfGameManager::getControlMover() == gf::unknown020) {
     return;
   }
-  if (unknown20.unknown30 != gf::INVALID_HANDLE) {
+  if (unknown20.unknown30 != gf::unknown020) {
     gf::GfObjAcc acc(unknown20.unknown30);
     if (acc.isValidTransform()) {
       unknown70 = mm::Vec3(acc.getWorldTransformNoSync().unknown00);

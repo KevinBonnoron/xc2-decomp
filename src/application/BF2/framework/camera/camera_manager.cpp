@@ -10,7 +10,7 @@ void CameraManager::update(const UpdateInfo &info) {
     unknown360->update(info);
   }
 
-  for (u32 i = 0; i < LAYER_COUNT; i++) {
+  for (u32 i = 0; i < LAYER_UNKNOWN_4; i++) {
     unknown20[i].update(info);
   }
 }

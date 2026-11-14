@@ -10,7 +10,7 @@ class MstxtRes;
 
 class MstxtManager : public IManager, public mm::mtl::Singleton<MstxtManager> {
 public:
-  static constexpr u32 RES_COUNT = 16;
+  static constexpr u32 RES_UNKNOWN_16 = 16; // Inferred role: res count; original name unknown.
 
   MstxtManager();
   virtual ~MstxtManager() {}
@@ -28,8 +28,8 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  mm::mtl::FixedVector<MstxtRes *, RES_COUNT> unknown10; // Inferred role: res list; original member name unknown.
-  MstxtRes *unknown98;                                   // Inferred role: current res; original member name unknown.
+  mm::mtl::FixedVector<MstxtRes *, RES_UNKNOWN_16> unknown10; // Inferred role: res list; original member name unknown.
+  MstxtRes *unknown98;                                        // Inferred role: current res; original member name unknown.
 };
 
 static_assert(sizeof(MstxtManager) == 0xa0, "");

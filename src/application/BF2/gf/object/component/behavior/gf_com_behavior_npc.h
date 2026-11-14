@@ -43,6 +43,7 @@ class GfComAsm;
 class GfMenuCallContext;
 struct MsgDebugActivateComponentWindow;
 struct MsgGameLipAction;
+struct MsgGameTalkAction;
 struct MsgGameSetLipWeight;
 
 namespace npc {
@@ -69,6 +70,7 @@ public:
 
   class Listener {
   public:
+    Listener() : unknown08(nullptr) {}
     virtual void onWkStandbyLogout();
 
     GfComBehaviorNpc *unknown08; // Inferred role: owner; original member name unknown.
@@ -77,6 +79,7 @@ public:
   static mm::mtl::RTTI m_rtti;
 
   struct BdatInfo {
+    BdatInfo() : unknown00(0), unknown04(0.0f), unknown08(1.0f), unknown0c(0.0f), unknown10(0), unknown12(0), unknown14(0), unknown16(0), unknown18(0), unknown1a(false) {}
     void create(const CBdatWrapper &bdat, int id, const GfComBehaviorNpc &npc);
     int getTalkBonusFlagId() const;
     bool isIconTalkBonus() const;
@@ -95,15 +98,20 @@ public:
     bool unknown1a; // Inferred role: talk bonus enabled; original member name unknown.
   };
 
+  GfComBehaviorNpc();
   ~GfComBehaviorNpc() override;
   const mm::mtl::RTTI *getRTTI() const override;
+  bool recieveMessage(fw::MessageObject *sender, fw::Message &message) override;
+  void update(const fw::UpdateInfo &info) override;
   virtual GfComAsm *getComAsm() const;
 
+  void setup();
   void cleanup();
 
   void procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message);
   void procMsgPcFieldNotifyAction(fw::MessageObject *sender, MsgPcFieldNotifyAction &message);
   void procMsgPcFieldGetAccessType(fw::MessageObject *sender, MsgPcFieldGetAccessType &message);
+  void procMsgGameTalkAction(fw::MessageObject *sender, MsgGameTalkAction &message);
   void procMsgPcGetLookPoint(fw::MessageObject *sender, MsgPcGetLookPoint &message);
   void procMsgGameLipAction(fw::MessageObject *sender, MsgGameLipAction &message);
   void procMsgGameSetLipWeight(fw::MessageObject *sender, MsgGameSetLipWeight &message);
@@ -119,6 +127,7 @@ public:
   fw::ColiMoveObject *getColiObject() const;
   void disposeFsm();
   void disposeMenuObj();
+  void createMenuObj();
   u32 getStateId() const;
   void setStateId(npc::STATE_ID stateId);
   void initStateId(npc::STATE_ID stateId);
@@ -129,6 +138,7 @@ public:
   void updateNaviMeshObj(f32 deltaTime);
   void init(bool param1);
   bool isStateCondMatch(npc::STATE_ID stateId);
+  bool isArrivedToGoal() const;
   int getNexStateId();
   void execTurnCmd(f32 angle);
   void execTurnCmd(f32 angle, f32 param2, f32 param3, f32 param4);
@@ -164,7 +174,8 @@ public:
   u8 _e8[0xf0 - 0xe8];
   mm::Vec3 unknownf0; // Inferred role: velocity; original member name unknown.
   bool unknown100;    // Role and original member name unknown.
-  u8 _101[0x108 - 0x101];
+  bool unknown101;    // Inferred role: reaction rolled flag, set by isStateCondMatch; original member name unknown.
+  u8 _102[0x108 - 0x102];
   ai::Hfsm unknown108;                                  // Inferred role: state machine; original member name unknown.
   bool unknown190;                                      // Inferred role: state machine is not set up, true by default; original member name unknown.
   void *unknown198;                                     // Inferred role: viewer; original member name unknown.

@@ -20,7 +20,7 @@ const char *CharaFacialUtil::getFacialBdat(gf::GfObj *obj) {
   int id = acc.getBdatId();
   int asset;
   switch (transferGroup(id, obj->unknown28)) {
-  case gf::OBJECT_TYPE_DRIVER:
+  case gf::OBJECT_TYPE_PC:
     asset = static_cast<u16>(Bdat::getValCheck(Bdat::getFP("CHR_Dr"), "EventAsset", id, 2));
     break;
   case gf::OBJECT_TYPE_BLADE: {
@@ -44,11 +44,11 @@ const char *CharaFacialUtil::getFacialBdat(gf::GfObj *obj) {
 
 u32 CharaFacialUtil::transferGroup(int id, u32 type) {
   switch (type) {
-  case gf::OBJECT_TYPE_DRIVER:
+  case gf::OBJECT_TYPE_PC:
     if (isInBdat(Bdat::getFP("CHR_Dr"), id)) {
-      return gf::OBJECT_TYPE_DRIVER;
+      return gf::OBJECT_TYPE_PC;
     }
-    return transferGroupSub(id, gf::OBJECT_TYPE_DRIVER);
+    return transferGroupSub(id, gf::OBJECT_TYPE_PC);
   case gf::OBJECT_TYPE_BLADE:
     if (isInBdat(Bdat::getFP("CHR_Bl"), id)) {
       return gf::OBJECT_TYPE_BLADE;
@@ -74,7 +74,7 @@ void CharaFacialUtil::getLensLimit(mm::Vec2 &translateMin, mm::Vec2 &translateMa
   unsigned char *bdat;
   int asset;
   switch (transferGroup(id, obj->unknown28)) {
-  case gf::OBJECT_TYPE_DRIVER:
+  case gf::OBJECT_TYPE_PC:
     asset = static_cast<u16>(Bdat::getValCheck(Bdat::getFP("CHR_Dr"), "EventAsset", id, 2));
     break;
   case gf::OBJECT_TYPE_BLADE:
@@ -155,13 +155,13 @@ bool CharaFacialUtil::checkBdatID(gf::GF_OBJ_HANDLE *handle, int id) {
 
   gf::GfObjAcc acc(handle);
   u32 type = obj->unknown28;
-  return transferGroup(acc.getBdatId(), type) == gf::OBJECT_TYPE_DRIVER && acc.getBdatId() == id;
+  return transferGroup(acc.getBdatId(), type) == gf::OBJECT_TYPE_PC && acc.getBdatId() == id;
 }
 
 u32 CharaFacialUtil::transferGroupSub(int id, u32 type) {
   unsigned char *bdat = Bdat::getFP("CHR_Dr");
   if (Bdat::getIdTop(bdat) <= id && id < Bdat::getIdTop(bdat) + Bdat::getIdCount(bdat)) {
-    return gf::OBJECT_TYPE_DRIVER;
+    return gf::OBJECT_TYPE_PC;
   }
   bdat = Bdat::getFP("CHR_Bl");
   if (Bdat::getIdTop(bdat) <= id && id < Bdat::getIdTop(bdat) + Bdat::getIdCount(bdat)) {

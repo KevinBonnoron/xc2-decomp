@@ -14,11 +14,13 @@ public:
   explicit Array(IAllocator *allocator) : m_element(nullptr), m_size(0), m_allocator(allocator) {}
   ~Array() { destroy(); }
 
+  // __LINE__ must be 43 and 45 as in the original header: they are the line arguments of the asserts.
+#line 42
   T *begin() const {
     MM_ASSERT(m_element);
     return m_element;
   }
-
+#line 44
   T *end() const {
     MM_ASSERT(m_element);
     return m_element + m_size;

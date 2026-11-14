@@ -114,6 +114,15 @@ Result RequestUpdateAudioRenderer(AudioRendererHandle handle, const AudioRendere
 
 bool AcquireMemoryPool(AudioRendererConfig *config, MemoryPoolType *pool, void *address, size_t size);
 bool RequestAttachMemoryPool(MemoryPoolType *pool);
+// Import _ZN2nn5audio23RequestDetachMemoryPoolEPNS0_14MemoryPoolTypeE.
+bool RequestDetachMemoryPool(MemoryPoolType *pool);
+enum MemoryPoolState {
+  MemoryPoolState_UNKNOWN_3 = 3, // Compared with 3 in fw::SoundSsdDriver::updatePoolMemory; original name unknown.
+};
+// Import _ZN2nn5audio18GetMemoryPoolStateEPKNS0_14MemoryPoolTypeE.
+MemoryPoolState GetMemoryPoolState(const MemoryPoolType *pool);
+// Import _ZN2nn5audio17ReleaseMemoryPoolEPNS0_19AudioRendererConfigEPNS0_14MemoryPoolTypeE.
+void ReleaseMemoryPool(AudioRendererConfig *config, MemoryPoolType *pool);
 
 bool IsVoiceValid(const VoiceType *voice);
 void ReleaseVoiceSlot(AudioRendererConfig *config, VoiceType *voice);

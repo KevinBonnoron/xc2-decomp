@@ -30,7 +30,7 @@ void GfDataStore::initialize(const GfSetupParam &) {
   mInitialized = true;
 }
 
-void GfDataStore::build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfDataStore(param); }
+void GfDataStore::build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfDataStore(param); }
 
 void GfDataStore::destroy() {
   GfDataStore *dataStore = get();
@@ -59,7 +59,7 @@ void GfDataStore::initSystemData() { get()->mDataSystem.unknown08 = RealTime(); 
 
 void GfDataStore::initGameData() {
   new (&get()->mDataGame) SDataGame();
-  for (u32 nation = 1; nation <= NATION_COUNT; nation++) {
+  for (u32 nation = 1; nation <= NATION_UNKNOWN_8; nation++) {
     GfDataDevelop::setLevel(nation, 0);
   }
 
@@ -69,7 +69,7 @@ void GfDataStore::initGameData() {
   SDataGame *dataGame = GfDataManager::getDataGame();
   GfBdatMaplist *bdatMaplist = GfBdatMaplist::get();
   for (u32 map = bdatMaplist->getMaplistStart(); map < bdatMaplist->getMaplistEnd(); map++) {
-    dataGame->unknown10a53c[map].unknown1c = map == MAP_SUPERBIA;
+    dataGame->unknown10a53c[map].unknown1c = map == MAP_UNKNOWN_10;
   }
 }
 
@@ -97,7 +97,7 @@ void GfDataStore::setGameData(const SDataSystem *dataSystem, const SDataGame *da
     GfDataUtil::refreshBladeSaveData();
     GfDataUtil::refreshBdatParam();
 
-    u32 blade = GfDataDriver::getBlade(DRIVER_REX, -1);
+    u32 blade = GfDataDriver::getBlade(DRIVER_UNKNOWN_1, -1);
     if (GfDataBlade::isHikariCurrent()) {
       if (blade == BLADE_HOMURA && GfDataBlade::isActivateParty(BLADE_HIKARI)) {
         GfDataBlade::setHikariCurrent(false);
@@ -130,19 +130,19 @@ void SSoundUiOption::clear() {
   GfMasterVolume masterVolume;
   _1a = 0x80;
   _1c = true;
-  unknown00 = masterVolume.getEventVoiceVolume() * VOLUME_SCALE;
-  unknown02 = masterVolume.getEventCsVolume() * VOLUME_SCALE;
-  unknown04 = masterVolume.getEventBgmVolume() * VOLUME_SCALE;
-  unknown06 = masterVolume.getEventSeVolume() * VOLUME_SCALE;
-  unknown08 = masterVolume.getGameBgmVolume() * VOLUME_SCALE;
-  unknown0a = masterVolume.getGameEnvVolume() * VOLUME_SCALE;
-  unknown0c = masterVolume.getGameWeatherVolume() * VOLUME_SCALE;
-  unknown0e = masterVolume.getGameSeVolume() * VOLUME_SCALE;
-  unknown10 = masterVolume.getPlayerVoiceVolume() * VOLUME_SCALE;
-  unknown12 = masterVolume.getEnemyVoiceVolume() * VOLUME_SCALE;
-  unknown14 = masterVolume.getNareVoiceVolume() * VOLUME_SCALE;
-  unknown16 = masterVolume.getSystemVolume() * VOLUME_SCALE;
-  unknown18 = masterVolume.getMenuBgmVolume() * VOLUME_SCALE;
+  unknown00 = masterVolume.getEventVoiceVolume() * unknown005;
+  unknown02 = masterVolume.getEventCsVolume() * unknown005;
+  unknown04 = masterVolume.getEventBgmVolume() * unknown005;
+  unknown06 = masterVolume.getEventSeVolume() * unknown005;
+  unknown08 = masterVolume.getGameBgmVolume() * unknown005;
+  unknown0a = masterVolume.getGameEnvVolume() * unknown005;
+  unknown0c = masterVolume.getGameWeatherVolume() * unknown005;
+  unknown0e = masterVolume.getGameSeVolume() * unknown005;
+  unknown10 = masterVolume.getPlayerVoiceVolume() * unknown005;
+  unknown12 = masterVolume.getEnemyVoiceVolume() * unknown005;
+  unknown14 = masterVolume.getNareVoiceVolume() * unknown005;
+  unknown16 = masterVolume.getSystemVolume() * unknown005;
+  unknown18 = masterVolume.getMenuBgmVolume() * unknown005;
 }
 
 bool SSoundUiOption::isDirty(const SSoundUiOption &other) {

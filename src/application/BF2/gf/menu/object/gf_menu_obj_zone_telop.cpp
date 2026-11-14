@@ -15,9 +15,11 @@ namespace gf {
 // Inferred role: call id of the zone telop; original name unknown.
 constexpr u32 unknown001 = 0x45;
 // Inferred role: frames of the fade in and fade out wait; original name unknown.
-constexpr u32 TELOP_FRAME = 0x78;
-constexpr u16 EVENT_OPEN_TELOP = 0x21;
-constexpr u16 EVENT_CLOSE_TELOP = 0x22;
+constexpr u32 FRAME_UNKNOWN_120 = 0x78;
+// Inferred role: event that opens the telop; original name unknown.
+constexpr u16 EVENT_UNKNOWN_33 = 0x21;
+// Inferred role: event that closes the telop; original name unknown.
+constexpr u16 EVENT_UNKNOWN_34 = 0x22;
 
 GfMenuObjZoneTelop::GfMenuObjZoneTelop(u32 handle) : GfMenuObject(handle), unknown28(this), unknown188(false), unknown18c(0.0f) {}
 
@@ -29,7 +31,7 @@ void GfMenuObjZoneTelop::initialize() {
   if (ui::UIObjectAcc(main).isValid()) {
 // __LINE__ must be 70 as in the original file: it is the line argument of operator new.
 #line 70
-    MainListener *listener = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) MainListener(this);
+    MainListener *listener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) MainListener(this);
     listener->addRef();
     ui::UIEventManager::get()->registObjectListener(main, listener);
     if (listener != nullptr) {
@@ -55,7 +57,7 @@ void GfMenuObjZoneTelop::open(GfMenuCallContext *context, u16 zone) {
         startCallContext(context, unknown001, handle);
       }
       ui::EventData event;
-      event.unknown00 = EVENT_OPEN_TELOP;
+      event.unknown00 = EVENT_UNKNOWN_33;
       event.unknown08 = zone;
       GfMenuOrderMgr::setOrder(1, handle, event);
     }
@@ -68,7 +70,7 @@ void GfMenuObjZoneTelop::close(f32 wait) {
     if (!ui::UIObjectAcc(handle).isTerm()) {
       ui::EventData event;
       event.unknown0c = 0;
-      event.unknown00 = EVENT_CLOSE_TELOP;
+      event.unknown00 = EVENT_UNKNOWN_34;
       event.unknown08_f32 = wait;
       sendEvent(handle, event, 0.0f);
     }
@@ -85,18 +87,18 @@ void GfMenuObjZoneTelop::MainListener::reciveEvent(const ui::EventData &event, u
   default:
     ui::UIObjectListener::reciveEvent(event, handle);
     break;
-  case EVENT_OPEN_TELOP: {
+  case EVENT_UNKNOWN_33: {
     ui::UIObjectAcc title(acc.unknown10, "TXT_title");
     title.setText(ui::UIStr(GfDataBdat::getFP(BDAT_MENU_ZONE_TELOP_MS), event.unknown08));
     unknown20->unknown18c = 0.5f;
     unknown20->unknown188 = false;
     unknown20->unknown28.unknown005();
     unknown20->unknown28.unknown002(&GfMenuObjZoneTelop::seqFadeIn);
-    unknown20->unknown28.unknown004(TELOP_FRAME);
+    unknown20->unknown28.unknown004(FRAME_UNKNOWN_120);
     unknown20->unknown28.unknown002(&GfMenuObjZoneTelop::seqFadeOut);
     break;
   }
-  case EVENT_CLOSE_TELOP:
+  case EVENT_UNKNOWN_34:
     if (event.unknown08_f32 == 0.0f) {
       unknown20->unknown188 = false;
       unknown20->unknown28.unknown005();

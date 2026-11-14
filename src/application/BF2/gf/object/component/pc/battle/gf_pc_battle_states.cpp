@@ -28,26 +28,26 @@ namespace gf {
 namespace pc {
 
 void registerBattleStates(ai::Hfsm &hfsm) {
-  hfsm.registerState<StateBattle>(STATE_ID_BATTLE, static_cast<int>(ai::INVALID_STATE_ID));
-  hfsm.registerState<StateBattleStart>(STATE_ID_BATTLE_START, STATE_ID_BATTLE);
-  hfsm.registerState<StateBattleIdle>(STATE_ID_BATTLE_IDLE, STATE_ID_BATTLE);
-  hfsm.registerState<StateBattlePutOutWeapon>(STATE_ID_BATTLE_PUT_OUT_WEAPON, STATE_ID_BATTLE);
-  hfsm.registerState<StateBattlePutAwayWeapon>(STATE_ID_BATTLE_PUT_AWAY_WEAPON, STATE_ID_BATTLE);
-  hfsm.registerState<StateBattleMove>(STATE_ID_BATTLE_MOVE, STATE_ID_BATTLE);
-  hfsm.registerState<StateBattleKizunaMax>(STATE_ID_BATTLE_KIZUNA_MAX, STATE_ID_BATTLE);
-  hfsm.registerState<StateBattleAttack>(STATE_ID_BATTLE_ATTACK, STATE_ID_BATTLE);
-  hfsm.registerState<StateBattleArts>(STATE_ID_BATTLE_ARTS, STATE_ID_BATTLE);
-  hfsm.registerState<StateBattleBladeArts>(STATE_ID_BATTLE_BLADE_ARTS, STATE_ID_BATTLE);
-  hfsm.registerState<StateBattleBladeChange>(STATE_ID_BATTLE_BLADE_CHANGE, STATE_ID_BATTLE);
-  hfsm.registerState<StateBattleSpAttack>(STATE_ID_BATTLE_SP_ATTACK, STATE_ID_BATTLE);
-  hfsm.registerState<StateBattleSupport>(STATE_ID_BATTLE_SUPPORT, STATE_ID_BATTLE);
-  hfsm.registerState<StateBattleBladeGuard>(STATE_ID_BATTLE_BLADE_GUARD, STATE_ID_BATTLE);
-  hfsm.registerState<StateBattleRepelled>(STATE_ID_BATTLE_REPELLED, STATE_ID_BATTLE);
-  hfsm.registerState<StateBattleDown>(STATE_ID_BATTLE_DOWN, STATE_ID_BATTLE);
-  hfsm.registerState<StateBattleKnockBack>(STATE_ID_BATTLE_KNOCK_BACK, STATE_ID_BATTLE);
-  hfsm.registerState<StateBattleBreak>(STATE_ID_BATTLE_BREAK, STATE_ID_BATTLE);
-  hfsm.registerState<StateBattleDead>(STATE_ID_BATTLE_DEAD, STATE_ID_BATTLE);
-  hfsm.registerState<StateBattleRescue>(STATE_ID_BATTLE_RESCUE, STATE_ID_BATTLE);
+  hfsm.registerState<StateBattle>(STATE_ID_UNKNOWN_62, static_cast<int>(ai::INVALID_STATE_ID));
+  hfsm.registerState<StateBattleStart>(STATE_ID_UNKNOWN_63, STATE_ID_UNKNOWN_62);
+  hfsm.registerState<StateBattleIdle>(STATE_ID_UNKNOWN_64, STATE_ID_UNKNOWN_62);
+  hfsm.registerState<StateBattlePutOutWeapon>(STATE_ID_UNKNOWN_65, STATE_ID_UNKNOWN_62);
+  hfsm.registerState<StateBattlePutAwayWeapon>(STATE_ID_UNKNOWN_66, STATE_ID_UNKNOWN_62);
+  hfsm.registerState<StateBattleMove>(STATE_ID_UNKNOWN_67, STATE_ID_UNKNOWN_62);
+  hfsm.registerState<StateBattleKizunaMax>(STATE_ID_UNKNOWN_68, STATE_ID_UNKNOWN_62);
+  hfsm.registerState<StateBattleAttack>(STATE_ID_UNKNOWN_69, STATE_ID_UNKNOWN_62);
+  hfsm.registerState<StateBattleArts>(STATE_ID_UNKNOWN_70, STATE_ID_UNKNOWN_62);
+  hfsm.registerState<StateBattleBladeArts>(STATE_ID_UNKNOWN_71, STATE_ID_UNKNOWN_62);
+  hfsm.registerState<StateBattleBladeChange>(STATE_ID_UNKNOWN_72, STATE_ID_UNKNOWN_62);
+  hfsm.registerState<StateBattleSpAttack>(STATE_ID_UNKNOWN_73, STATE_ID_UNKNOWN_62);
+  hfsm.registerState<StateBattleSupport>(STATE_ID_UNKNOWN_74, STATE_ID_UNKNOWN_62);
+  hfsm.registerState<StateBattleBladeGuard>(STATE_ID_UNKNOWN_75, STATE_ID_UNKNOWN_62);
+  hfsm.registerState<StateBattleRepelled>(STATE_ID_UNKNOWN_76, STATE_ID_UNKNOWN_62);
+  hfsm.registerState<StateBattleDown>(STATE_ID_UNKNOWN_77, STATE_ID_UNKNOWN_62);
+  hfsm.registerState<StateBattleKnockBack>(STATE_ID_UNKNOWN_78, STATE_ID_UNKNOWN_62);
+  hfsm.registerState<StateBattleBreak>(STATE_ID_UNKNOWN_79, STATE_ID_UNKNOWN_62);
+  hfsm.registerState<StateBattleDead>(STATE_ID_UNKNOWN_80, STATE_ID_UNKNOWN_62);
+  hfsm.registerState<StateBattleRescue>(STATE_ID_UNKNOWN_81, STATE_ID_UNKNOWN_62);
 }
 
 } // namespace pc

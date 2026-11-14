@@ -12,7 +12,7 @@ class RTTI;
 namespace gf {
 
 enum {
-  MSG_DEBUG_ACTIVATE_COMPONENT_WINDOW = 0x1000003,
+  MSG_UNKNOWN_16777219 = 0x1000003, // Inferred role: msg debug activate component window; original name unknown.
 };
 
 struct MsgDebugActivateComponentWindow : fw::Message {};

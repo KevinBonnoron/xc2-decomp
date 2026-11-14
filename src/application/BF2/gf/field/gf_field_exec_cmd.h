@@ -15,7 +15,7 @@ class GfComAsm;
 template <typename T> class TFieldExecCmd {
 public:
   struct CreateInfo {
-    CreateInfo() : unknown00(INVALID_HANDLE), unknown08(), unknown2c(5.0f) {}
+    CreateInfo() : unknown00(unknown020), unknown08(), unknown2c(5.0f) {}
     CreateInfo(GF_OBJ_HANDLE *object, const char *command, f32 timeOut = 5.0f) : unknown00(object), unknown08(command), unknown2c(timeOut) {}
 
     GF_OBJ_HANDLE *unknown00;      // Inferred role: object; original member name unknown.
@@ -23,7 +23,7 @@ public:
     f32 unknown2c;                 // Inferred role: time out; original member name unknown.
   };
 
-  TFieldExecCmd() : unknown00(INVALID_HANDLE), unknown08(), unknown2c(5.0f), unknown30(0.0f), unknown34(false), unknown35(false) {}
+  TFieldExecCmd() : unknown00(unknown020), unknown08(), unknown2c(5.0f), unknown30(0.0f), unknown34(false), unknown35(false) {}
 
   ~TFieldExecCmd() { dispose(); }
 

@@ -9,6 +9,7 @@
 namespace ui {
 class UICtrlRevolveSelect;
 class UISelectObjList;
+struct EventData;
 } // namespace ui
 
 namespace gf {
@@ -33,11 +34,20 @@ public:
     u32 unknown04; // Inferred role: selected menu, -1 for none; original member name unknown.
   };
 
+  // Inferred role: visited menu entry, menu then selected index; original type name unknown.
+  struct unknown002 {
+    u16 unknown00; // Inferred role: menu; original member name unknown.
+    u16 unknown02; // Inferred role: selected index; original member name unknown.
+  };
+
   GfMenuObjCommonJog(u32 handle);
   ~GfMenuObjCommonJog() override;
   void initialize() override;
   void finalize() override;
   void update() override;
+  bool setup(u32 menu, int select);
+  void startJogChange(u16 menu, int select);
+  void listenerItemRevlover(const ui::EventData &event);
   static void open(GfMenuCallContext *context, const OpenParam &param);
   static void pop(GfMenuCallContext *context);
   static void enable(GfMenuCallContext *context);
@@ -58,8 +68,8 @@ public:
   u16 unknown5e; // Inferred role: previous selected menu; original member name unknown.
   u16 unknown60; // Inferred role: selected menu; original member name unknown.
   u8 _62[0x64 - 0x62];
-  int unknown64;                          // Inferred role: selected index, -1 when none; original member name unknown.
-  mm::mtl::FixedVector<u32, 4> unknown68; // Inferred role: visited menus; original member name unknown.
+  int unknown64;                                 // Inferred role: selected index, -1 when none; original member name unknown.
+  mm::mtl::FixedVector<unknown002, 4> unknown68; // Inferred role: visited menus; original member name unknown.
 };
 
 static_assert(offsetof(GfMenuObjCommonJog::MainListener, unknown20) == 0x20, "");

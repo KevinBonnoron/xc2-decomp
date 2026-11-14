@@ -31,7 +31,7 @@ public:
     int unknown1c; // Role and original member name unknown.
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_TRIGGER;
+  static const GmkType GMK_TYPE = GMK_TYPE_TRIGGER; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkTrigger();
   ~GmkTrigger() override { dispose(); }

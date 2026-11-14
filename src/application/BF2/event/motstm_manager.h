@@ -15,13 +15,13 @@ namespace event {
 class MotstmManager : public IManager, public mm::mtl::Singleton<MotstmManager> {
 public:
   enum {
-    FLAG_CREATE = 0,
-    FLAG_START = 1,
-    FLAG_PAUSE = 2,
+    FLAG_UNKNOWN_0 = 0, // Inferred role: create flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1, // Inferred role: start flag; original name unknown.
+    FLAG_UNKNOWN_2 = 2, // Inferred role: pause flag; original name unknown.
   };
 
   enum {
-    DISP_FLAG_DISP = 1 << 0,
+    DISP_FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: disp flag; original name unknown.
   };
 
   MotstmManager();

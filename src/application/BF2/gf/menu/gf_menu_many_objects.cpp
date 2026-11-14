@@ -20,7 +20,7 @@ void GfMenuManyObjects::initialize(const GfSetupParam &) {
 
 GfMenuManyObjects::~GfMenuManyObjects() {}
 
-void GfMenuManyObjects::build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfMenuManyObjects(param); }
+void GfMenuManyObjects::build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfMenuManyObjects(param); }
 
 void GfMenuManyObjects::destroy() {
   GfMenuManyObjects *manyObjects = get();

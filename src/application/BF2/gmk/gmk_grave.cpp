@@ -21,20 +21,25 @@ template bool TGmkList<GmkGrave, GmkGrave::BdatInfo, 1447121479u, 4u, GmkGraveGo
 class GmkEnemy;
 class GmkRoutedEnemy;
 
-GmkGrave::GmkGrave() : unknown48(false), unknown50(gf::INVALID_HANDLE), unknown58(), unknown98(false) {}
+GmkGrave::GmkGrave() : unknown48(false), unknown50(gf::unknown020), unknown58(), unknown98(false) {}
+
+void GmkGrave::dispose() {
+  disposeGobInst(false);
+  AGmkBase::dispose();
+}
 
 void GmkGrave::BdatInfo::create(u8 *bdat, int id, const AGmkBase &gmk) {
   dispose();
-  unknown00 = Bdat::getValCheck(bdat, "en_popID", id, BDAT_TYPE_U16);
+  unknown00 = Bdat::getValCheck(bdat, "en_popID", id, BDAT_TYPE_UNKNOWN_2);
   u8 *mapList = gf::GfDataBdat::getFP(gf::BDAT_FLD_MAPLIST);
   if (mapList != nullptr) {
     int map = gf::GfGameManager::getMapID();
     if (map >= Bdat::getIdTop(mapList) && Bdat::getIdTop(mapList) + Bdat::getIdCount(mapList) > map) {
-      u8 displayRadius = Bdat::getValCheck(mapList, "ene_disp_r", map, BDAT_TYPE_U8);
-      u8 displayHeight = Bdat::getValCheck(mapList, "ene_disp_h", map, BDAT_TYPE_U8);
+      u8 displayRadius = Bdat::getValCheck(mapList, "ene_disp_r", map, BDAT_TYPE_UNKNOWN_1);
+      u8 displayHeight = Bdat::getValCheck(mapList, "ene_disp_h", map, BDAT_TYPE_UNKNOWN_1);
       unknown04.set(displayRadius, displayHeight);
-      u8 releaseRadius = Bdat::getValCheck(mapList, "ene_release_r", map, BDAT_TYPE_U8);
-      u8 releaseHeight = Bdat::getValCheck(mapList, "ene_release_h", map, BDAT_TYPE_U8);
+      u8 releaseRadius = Bdat::getValCheck(mapList, "ene_release_r", map, BDAT_TYPE_UNKNOWN_1);
+      u8 releaseHeight = Bdat::getValCheck(mapList, "ene_release_h", map, BDAT_TYPE_UNKNOWN_1);
       unknown0c.set(displayRadius + releaseRadius, displayHeight + releaseHeight);
       const GmkSet *set = gmk.unknown08.unknown00->getCreateInfo().unknown08;
       u8 *enemyBdat;
@@ -47,7 +52,7 @@ void GmkGrave::BdatInfo::create(u8 *bdat, int id, const AGmkBase &gmk) {
           return;
         }
       }
-      unknown02 = Bdat::getValCheck(enemyBdat, "ene1ID", unknown00, BDAT_TYPE_U16);
+      unknown02 = Bdat::getValCheck(enemyBdat, "ene1ID", unknown00, BDAT_TYPE_UNKNOWN_2);
       return;
     }
   }
@@ -61,7 +66,7 @@ bool GmkGrave::BdatInfo::isDepopCondMatched(const mm::Vec3 &position) const { re
 void GmkGrave::BdatInfo::debugDraw(const AGmkBase &gmk) const {}
 
 void GmkGrave::disposeGobInst(bool isFadeOut) {
-  if (unknown50 == gf::INVALID_HANDLE) {
+  if (unknown50 == gf::unknown020) {
     return;
   }
   if (isFadeOut) {
@@ -69,7 +74,7 @@ void GmkGrave::disposeGobInst(bool isFadeOut) {
   } else {
     unbindToGameObj(unknown50);
     gf::GfObjUtil::destroy(unknown50);
-    unknown50 = gf::INVALID_HANDLE;
+    unknown50 = gf::unknown020;
   }
 }
 
@@ -109,14 +114,14 @@ void GmkGrave::update(f32 deltaTime) {
 }
 
 bool GmkGrave::canPopGobInst() const {
-  if (unknown50 != gf::INVALID_HANDLE || !unknown48) {
+  if (unknown50 != gf::unknown020 || !unknown48) {
     return false;
   }
   return getBdatInfo()->isPopCondMatched(unknown08.unknown08->unknown00);
 }
 
 bool GmkGrave::canDepopGobInst() const {
-  if (unknown50 == gf::INVALID_HANDLE) {
+  if (unknown50 == gf::unknown020) {
     return false;
   }
   if (!unknown48) {
@@ -134,7 +139,7 @@ bool GmkGrave::reqPopEnemy() const { return reqPopEnemy<GmkEnemy>() || reqPopEne
 
 void GmkGrave::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) {
   AGmkBase::onGobEvent(event, handle);
-  if (event == gf::IGfObjListener::OBJEVT_DESTROY) {
+  if (event == gf::IGfObjListener::OBJEVT_UNKNOWN_3) {
     disposeGobInst(false);
   }
 }

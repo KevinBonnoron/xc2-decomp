@@ -26,6 +26,8 @@ public:
   WorkObj *pssGetParentView();
   WinView *pssGetView(u32 wid);
   const WinView *pssGetView(u32 wid) const;
+  WinView *pssGetApplicationView();
+  WinView *pssGetApplicationView(WinView *view);
   mm::Rect<int> pssMakeClientRect() const;
 
   reslist<u32> unknown1a8; // Inferred role: attached view wids; original member name unknown.

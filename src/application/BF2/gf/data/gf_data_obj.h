@@ -1,7 +1,6 @@
 #pragma once
 #include <stddef.h>
 
-#include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_enemy.h"
 #include "gf/data/gf_data_param_acc.h"
@@ -14,6 +13,7 @@ namespace gf {
 struct GF_OBJ_HANDLE;
 struct SDataIdea;
 class GfObjSetupEnemy;
+struct SDataBlade;
 
 class IDataObj {
 public:
@@ -156,7 +156,7 @@ public:
   void setup(u32 id);
   DataObjDriver(GF_OBJ_HANDLE *handle);
   virtual ~DataObjDriver();
-  SDataDriver *get(bool isVirtual) const { return isVirtual ? unknown10 : GfDataDriver::getSDataDriver(getBdatId()); }
+  SDataDriver *get(bool isVirtual) const;
   void setupVirtualParam();
   virtual void setVirtualLevel(u32 level);
   virtual void setVirtualEquipWpn(u32 weapon, int slot);
@@ -175,7 +175,7 @@ public:
   virtual const char *getName() const;
   virtual bool getName(u8 *&bdat, u32 &textId) const;
   virtual u32 getBdatId() const;
-  virtual u32 getObjType() const { return OBJECT_TYPE_DRIVER; }
+  virtual u32 getObjType() const { return OBJECT_TYPE_PC; }
   virtual SDataIdea *getIdea() const;
   virtual u32 getDataType() const;
   virtual u32 getHp() const;
@@ -267,7 +267,7 @@ public:
   void setup(u32 id);
   DataObjBlade(GF_OBJ_HANDLE *handle);
   virtual ~DataObjBlade();
-  SDataBlade *get(bool isVirtual) const { return isVirtual ? unknown08 : GfDataBlade::getSDataBlade(getBdatId()); }
+  SDataBlade *get(bool isVirtual) const;
   void setupVirtualParam();
   virtual bool isValid() const;
   virtual void setVirtualEquipWpn(u32 weapon, int slot);
@@ -636,7 +636,7 @@ public:
   virtual const char *getModelResourceName() const;
   virtual const char *getMotionResourceName() const;
   virtual u32 getBdatId() const;
-  virtual u32 getObjType() const { return OBJECT_TYPE_BELONGING; }
+  virtual u32 getObjType() const { return OBJECT_TYPE_OPTION; }
 
   GF_OBJ_HANDLE *unknown08; // Inferred role: handle; original member name unknown.
 };

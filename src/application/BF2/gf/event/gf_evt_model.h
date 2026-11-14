@@ -3,7 +3,7 @@
 
 #include "ai/ai_state.h"
 #include "ai/ai_state_fsm.h"
-#include "gf/game/gf_game_mount.h"
+#include "gf/object/gf_append.h"
 #include "gf/object/gf_obj_manager.h"
 #include "mm_mtl/fixed_list.h"
 #include "mm_mtl/fixstr.h"
@@ -15,6 +15,7 @@ struct UpdateInfo;
 } // namespace fw
 namespace mm {
 struct Vec3;
+
 namespace mtl {
 class RTTI;
 } // namespace mtl
@@ -31,12 +32,12 @@ class GfInitParamWeapon;
 struct GF_OBJ_HANDLE;
 
 enum GF_EVT_MODEL {
-  GF_EVT_MODEL_DRIVER = 0,
-  GF_EVT_MODEL_BLADE = 1,
-  GF_EVT_MODEL_WEAPON = 2,
-  GF_EVT_MODEL_EVENT = 3,
-  GF_EVT_MODEL_NPC = 4,
-  GF_EVT_MODEL_ENEMY = 5,
+  GF_EVT_MODEL_UNKNOWN_0 = 0, // Inferred role: gf evt model driver; original name unknown.
+  GF_EVT_MODEL_UNKNOWN_1 = 1, // Inferred role: gf evt model blade; original name unknown.
+  GF_EVT_MODEL_UNKNOWN_2 = 2, // Inferred role: gf evt model weapon; original name unknown.
+  GF_EVT_MODEL_UNKNOWN_3 = 3, // Inferred role: gf evt model event; original name unknown.
+  GF_EVT_MODEL_UNKNOWN_4 = 4, // Inferred role: gf evt model npc; original name unknown.
+  GF_EVT_MODEL_UNKNOWN_5 = 5, // Inferred role: gf evt model enemy; original name unknown.
 };
 
 class GfEvtModel : public mm::mtl::ReferenceObject, public IGfObjListener {
@@ -64,6 +65,9 @@ public:
   void resetMount(GfEvtModel *parent);
   void setMount(GfEvtModel *parent, const char *bone);
   void setMount(GfEvtModel *parent, const char *bone, const mm::Vec3 &pos, const mm::Vec3 &rot);
+  void execMount(GfEvtModel *child);
+  void execMount(GfEvtModel *child, const mm::Vec3 &position, const mm::Vec3 &rotation);
+  void execUnmount(GfEvtModel *child);
 
   static u32 changeLayerUI(u32 layer);
 
@@ -219,6 +223,7 @@ public:
     void update(GfEvtModelBlade *model, const fw::UpdateInfo &info);
   };
 
+  explicit GfEvtModelBlade(GfInitParamBlade &param);
   static GfEvtModelBlade *create(GfInitParamBlade &param);
   ~GfEvtModelBlade() override;
   const mm::mtl::RTTI *getRTTI() const override;
@@ -342,8 +347,9 @@ public:
   bool isPlayEndAnimCS();
   void setAnimSpeedCS(f32 speed);
 
-  GfWeapon unknown298; // Inferred role: weapon handles; original member name unknown.
-  u32 unknown348;      // Inferred role: driver; original member name unknown.
+  // GfAppendHandles, not GfWeapon: the constructor (0x710030c27c) stores the GfAppendHandles vtable here, the same one the GfInitParamWeapon constructor stores in its unknown130.
+  GfAppendHandles unknown298; // Inferred role: weapon handles; original member name unknown.
+  u32 unknown348;             // Inferred role: driver; original member name unknown.
   u8 _34c[0x350 - 0x34c];
 };
 
@@ -365,6 +371,8 @@ static_assert(sizeof(GfEvtModelEvent) == 0x298, "");
 class GfEvtModelNpc : public GfEvtModel {
 public:
   static mm::mtl::RTTI m_rtti;
+
+  GfEvtModelNpc(GfInitParamNpc &param);
 
   static GfEvtModelNpc *create(GfInitParamNpc &param);
   const mm::mtl::RTTI *getRTTI() const override;

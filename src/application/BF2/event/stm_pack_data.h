@@ -14,7 +14,7 @@ namespace event {
 class StmPackData : public ml::IWorkEvent {
 public:
   enum {
-    FLAG_BUSY = 1 << 0,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: busy flag; original name unknown.
   };
 
   StmPackData();

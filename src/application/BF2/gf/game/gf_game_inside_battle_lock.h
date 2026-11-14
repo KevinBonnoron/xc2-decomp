@@ -19,9 +19,14 @@ struct GfSetupParam;
 
 class GfGameInsideBattleLock : public mm::mtl::PtrSingleton<GfGameInsideBattleLock> {
 public:
+  // Inlined in build (0x7100316e98); the game has no constructor symbol.
+  GfGameInsideBattleLock() : unknown20(false) {}
+
   static void build(const GfSetupParam &param);
   static void destroy();
   static void update(const fw::UpdateInfo &info);
+  void updateInfos();
+  static void updateInfo(GF_OBJ_HANDLE *handle);
   static bool isInside(GF_OBJ_HANDLE *handle);
   static bool isInside(const mm::Vec3 &position);
   bool isInsideBattleLock(GF_OBJ_HANDLE *handle) const;

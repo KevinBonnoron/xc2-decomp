@@ -5,7 +5,7 @@
 
 namespace gf {
 
-constexpr float VOLUME_SCALE = 255.0f;
+constexpr float unknown005 = 255.0f; // Inferred role: volume scale; original name unknown.
 
 struct SSoundUiOption {
   SSoundUiOption() { clear(); }
@@ -36,20 +36,17 @@ static_assert(offsetof(SSoundUiOption, _1c) == 0x1c, "");
 static_assert(sizeof(SSoundUiOption) == 0x1e, "");
 
 struct SDataOption {
-  SDataOption() : unknown00(SAVE_DATA_VERSION), _04(0), _08(0), _09(0), _0a(0), _0b(true), _0c() {}
+  SDataOption() : unknown00(SAVE_UNKNOWN_237915), unknown04{0, 0, 0, 0, 0, 0, 0, 1}, _0c() {}
 
-  u32 unknown00; // Inferred role: version; original member name unknown.
-  u32 _04;
-  u8 _08;
-  u8 _09;
-  u8 _0a;
-  bool _0b;
+  u32 unknown00;   // Inferred role: version; original member name unknown.
+  u8 unknown04[8]; // Eight option bytes from 0x04, compared byte by byte by GfMenuObjOption::MainListener::reciveEvent and written at fixed indices by the option conversions; original member name
+                   // unknown.
   u8 _0c[0x4c - 0x0c];
   SSoundUiOption unknown4c; // Inferred role: sound and screen options; original member name unknown.
   u8 _6a[0x88 - 0x6a];
 };
 
-static_assert(offsetof(SDataOption, _08) == 0x08, "");
+static_assert(offsetof(SDataOption, unknown04) == 0x04, "");
 static_assert(offsetof(SDataOption, _0c) == 0x0c, "");
 static_assert(offsetof(SDataOption, unknown4c) == 0x4c, "");
 static_assert(offsetof(SDataOption, _6a) == 0x6a, "");

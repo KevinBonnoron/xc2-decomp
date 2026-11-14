@@ -1,5 +1,7 @@
 #include "dr/dr_res_mdo_seam_mem_man.h"
 
+#include <string.h>
+
 #include "dr/dr_res_mdo_seam_res.h"
 #include "mtl/mem_manager.h"
 
@@ -28,6 +30,59 @@ void DrResMdoSeamMemMan::releaseMem() {
   unknown10.unknown08 = nullptr;
   unknown00.unknown00 = nullptr;
   unknown00.unknown08 = nullptr;
+}
+
+void DrResMdoSeamMemMan::cntMemUpdate() {
+  if (unknown440 == 0) {
+    for (int i = 0; i < unknown444; i++) {
+      if (unknown240[i] != nullptr) {
+        unknown240[i]->unknown24 &= ~2;
+      }
+    }
+  }
+  if (unknown440++ > 0) {
+    for (int i = 0; i < unknown444; i++) {
+      if (unknown40[i] != nullptr) {
+        clearMemObj(unknown40[i], unknown00);
+        unknown40[i] = nullptr;
+      }
+    }
+    unknown440 = 0;
+    unknown444 = 0;
+    unknown2c &= ~2;
+  }
+}
+
+bool DrResMdoSeamMemMan::memTempCopy() {
+  bool isEmpty = true;
+  for (int i = 0; i < unknown444; i++) {
+    unknown40[i] = copyTempBuff(unknown240[i]);
+    if (unknown40[i] != nullptr) {
+      isEmpty = false;
+      unknown2c |= 2;
+    }
+  }
+  return isEmpty;
+}
+
+DrResMdoSeamMemObj *DrResMdoSeamMemMan::copyMemObj(DrResMdoSeamMemObj *obj, DrResChankList<DrResMdoSeamMemObj> &list) {
+  DrResMdoSeamMemObj *copy = createBackFreeObj(obj->m_size, list, 0);
+  if (copy == nullptr) {
+    return nullptr;
+  }
+  changeListAndCopyMemObj(copy, obj, list);
+  return copy;
+}
+
+void DrResMdoSeamMemMan::changeListAndCopyMemObj(DrResMdoSeamMemObj *first, DrResMdoSeamMemObj *second, DrResChankList<DrResMdoSeamMemObj> &list) {
+  memcpy(first->m_buffer, second->m_buffer, second->m_size);
+  u8 *buffer = first->m_buffer;
+  first->m_buffer = second->m_buffer;
+  second->m_buffer = buffer;
+  u32 size = first->m_size;
+  first->m_size = second->m_size;
+  second->m_size = size;
+  list.changeList(first, second);
 }
 
 int DrResMdoSeamMemMan::getUseMax() const {
@@ -166,6 +221,24 @@ DrResMdoSeamMemObj *DrResMdoSeamMemMan::createFreeObj(u32 size, DrResChankList<D
   return nullptr;
 }
 
+DrResMdoSeamMemObj *DrResMdoSeamMemMan::createBackFreeObj(u32 size) {
+  for (DrResMdoSeamMemObj *obj = unknown00.unknown08; obj != nullptr; obj = obj->unknown08) {
+    if ((obj->unknown24 & 1) == 0 && obj->m_size >= size) {
+      return unknown002(obj, size, unknown00);
+    }
+  }
+  return nullptr;
+}
+
+DrResMdoSeamMemObj *DrResMdoSeamMemMan::createBackFreeObj(u32 size, DrResChankList<DrResMdoSeamMemObj> &list, int index) {
+  for (DrResMdoSeamMemObj *obj = list.unknown08; obj != nullptr; obj = obj->unknown08) {
+    if ((obj->unknown24 & 1) == 0 && obj->m_size >= size) {
+      return unknown002(obj, size, list);
+    }
+  }
+  return nullptr;
+}
+
 DrResMdoSeamMemObj *DrResMdoSeamMemMan::createTopFreeObj(u32 size, DrResChankList<DrResMdoSeamMemObj> &list, int index) {
   for (DrResMdoSeamMemObj *obj = list.unknown00; obj != nullptr; obj = obj->unknown10) {
     if ((obj->unknown24 & 1) == 0) {
@@ -195,5 +268,18 @@ DrResMdoSeamMemObj *DrResMdoSeamMemMan::createParentFreeObj(DrResMdoSeamMemObj *
   unknown00.unknown003(parent, child);
   return child;
 }
+
+void DrResMdoSeamMemMan::releaseFreeObj(DrResMdoSeamMemObj *obj) {
+  clearMemObj(obj, unknown00);
+  if (unknown2c & 2) {
+    for (int i = 0; i < unknown444; i++) {
+      if (unknown240[i] == obj) {
+        unknown240[i] = nullptr;
+      }
+    }
+  }
+}
+
+void DrResMdoSeamMemMan::releaseTempFreeObj(DrResMdoSeamMemObj *obj) { clearMemObj(obj, unknown00); }
 
 } // namespace ml

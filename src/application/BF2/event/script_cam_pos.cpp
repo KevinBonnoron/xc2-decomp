@@ -15,7 +15,7 @@ namespace event {
 
 void ScriptCamPos::doit(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CAMERA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_3) {
     return;
   }
   ObjectCamera *camera = static_cast<ObjectCamera *>(object);
@@ -31,11 +31,11 @@ void ScriptCamPos::doit(const Param &param) {
 
 void ScriptCamPos::undo(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CAMERA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_3) {
     return;
   }
   PosAxis axis = unknown10;
-  static_cast<ObjectCamera *>(object)->setPosAxis(axis, CV_TYPE_LINEAR);
+  static_cast<ObjectCamera *>(object)->setPosAxis(axis, CV_TYPE_UNKNOWN_1);
 }
 
 } // namespace event

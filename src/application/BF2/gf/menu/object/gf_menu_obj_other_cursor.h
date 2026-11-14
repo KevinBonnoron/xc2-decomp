@@ -24,6 +24,7 @@ public:
   ~GfMenuObjOtherCursor() override;
   void initialize() override;
   void finalize() override;
+  void update() override;
   static void disp(bool disp);
 
   u32 unknown24; // Role and original member name unknown, zeroed by the constructor.

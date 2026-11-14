@@ -6,6 +6,7 @@
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 
 namespace ui {
 class UICtrlCursorSelect;
@@ -24,14 +25,65 @@ struct GAME_VOICE_HANDLE;
 
 class GfMenuObjPouch2 : public GfMenuObject {
 public:
+  class MainListener : public ui::UIObjectListener {
+  public:
+    MainListener(GfMenuObjPouch2 *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjPouch2 *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class SlotListener : public ui::UIObjectListener {
+  public:
+    SlotListener(GfMenuObjPouch2 *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjPouch2 *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class ItemListListener : public ui::UIObjectListener {
+  public:
+    ItemListListener(GfMenuObjPouch2 *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjPouch2 *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class FilterListener2 : public ui::UIObjectListener {
+  public:
+    FilterListener2(GfMenuObjPouch2 *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjPouch2 *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class PartyInfoListener : public ui::UIObjectListener {
+  public:
+    PartyInfoListener(GfMenuObjPouch2 *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjPouch2 *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class ResultListener : public ui::UIObjectListener {
+  public:
+    ResultListener(GfMenuObjPouch2 *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjPouch2 *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   // Layout from setFavFlag: a blade, its slot and its four favorite stats; original member names unknown.
   struct FavoriteFlag {
-    u32 unknown00; // Inferred role: blade; original member name unknown.
-    u32 unknown04; // Inferred role: slot; original member name unknown.
-    u32 unknown08; // Inferred role: first favorite stat; original member name unknown.
-    u32 unknown0c; // Inferred role: second favorite stat; original member name unknown.
-    u32 unknown10; // Inferred role: third favorite stat; original member name unknown.
-    u32 unknown14; // Inferred role: fourth favorite stat; original member name unknown.
+    u32 unknown00;    // Inferred role: driver or blade; original member name unknown.
+    u32 unknown04;    // Inferred role: item; original member name unknown.
+    u32 unknown08[4]; // Inferred role: favorite stats of the category and item favorites; original member name unknown.
   };
 
   GfMenuObjPouch2(u32 handle);
@@ -45,7 +97,17 @@ public:
   static void setupSlot(ui::UIObjectAcc &acc, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number);
   static void getFilterText(u32 filter, ui::UIStr &text);
   bool seqFavOpen();
+  static void setupFilter(ui::UIObjectAcc &acc, u32 filter);
+  static void setupItemList(ui::UIObjectAcc &acc, GfMenuItemList *list);
+  static void setupResult(ui::UIObjectAcc &acc);
+  static void refreshResult(ui::UIObjectAcc &acc, const GfMenuBladeList *list);
+  static void setupPartyInfo(ui::UIObjectAcc &acc);
+  static void updateItemList(GfMenuItemList *list, ui::UISelectObjList *selectList, u32 filter, u32 sort);
+  static void refreshSlot(ui::UIObjectAcc &acc, u32 index);
+  bool seqFavPouchIn();
+  bool seqFavLoop();
   static GAME_VOICE_HANDLE *procFavFlag(ui::UIObjectAcc &acc, FavoriteFlag &flag, u32 index, u32 favorite);
+  static void setFavFlag(u32 driver, u32 item, mm::mtl::FixedArray<FavoriteFlag, 4> &flags, const GfMenuBladeList *list);
   static void updateSlotList(GfMenuItemList *list);
   bool seqFavClose();
 
@@ -64,7 +126,8 @@ public:
   mm::mtl::FixedArray<FavoriteFlag, 4> unknown70; // Inferred role: favorite flags; original member name unknown.
   mm::mtl::FixedArray<FavoriteFlag, 4> unknownd0; // Inferred role: favorite flags; original member name unknown.
   GfMenuSequence<GfMenuObjPouch2, 8> unknown130;  // Inferred role: queued steps; original member name unknown.
-  u64 unknown3c0;                                 // Role and original member name unknown.
+  u32 unknown3c0;                                 // Inferred role: current favorite flag; original member name unknown.
+  u32 unknown3c4;                                 // Inferred role: current favorite; original member name unknown.
   bool unknown3c8;                                // Role and original member name unknown.
   bool unknown3c9;                                // Role and original member name unknown, cleared by the constructor.
   u8 _3ca[0x3d0 - 0x3ca];
@@ -76,6 +139,18 @@ public:
   u8 _3e9[0x3f0 - 0x3e9];
 };
 
+static_assert(offsetof(GfMenuObjPouch2::MainListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjPouch2::MainListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjPouch2::SlotListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjPouch2::SlotListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjPouch2::ItemListListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjPouch2::ItemListListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjPouch2::FilterListener2, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjPouch2::FilterListener2) == 0x28, "");
+static_assert(offsetof(GfMenuObjPouch2::PartyInfoListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjPouch2::PartyInfoListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjPouch2::ResultListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjPouch2::ResultListener) == 0x28, "");
 static_assert(sizeof(GfMenuObjPouch2::FavoriteFlag) == 0x18, "");
 static_assert(offsetof(GfMenuObjPouch2, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjPouch2, unknown30) == 0x30, "");

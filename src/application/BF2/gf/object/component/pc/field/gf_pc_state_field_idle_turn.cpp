@@ -24,14 +24,14 @@ void StateFieldIdleTurn::update(GfComBehaviorPc *behavior, const fw::UpdateInfo 
   if (StateUtilField::isTurnEndRangeCacheInput(*property, unknown20)) {
     GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
     if (!property->existInputXY() && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_IDLE)) {
-      reqState(STATE_ID_FIELD_IDLE);
+      reqState(STATE_ID_UNKNOWN_3);
       return;
     }
 
     StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_MOVE);
-    const char *name = comAsm->getStateName(ANIM_LAYER_BASE);
+    const char *name = comAsm->getStateName(ANIM_LAYER_UNKNOWN_0);
     if (name != nullptr && __builtin_strcmp(name, "S_move") == 0) {
-      reqState(STATE_ID_FIELD_MOVE);
+      reqState(STATE_ID_UNKNOWN_7);
       return;
     }
   }

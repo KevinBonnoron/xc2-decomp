@@ -14,18 +14,18 @@
 namespace gf {
 
 enum {
-  FLAG_MAP_COMPLETE = 0x33d2,
-  FLAG_ZONE_COMPLETE = 0x33e1,
+  FLAG_UNKNOWN_13266 = 0x33d2, // Inferred role: flag map complete; original name unknown.
+  FLAG_UNKNOWN_13281 = 0x33e1, // Inferred role: flag zone complete; original name unknown.
 };
 
 enum {
-  SCENARIO_FLAG_ARCADIA_DESTROY = 0x1f65,
+  SCENARIO_UNKNOWN_8037 = 0x1f65, // Inferred role: scenario flag arcadia destroy; original name unknown.
 };
 
-constexpr u32 ZONE_COUNT = 8;
-constexpr u32 ZONE_ELPIS = 8;
-constexpr u32 TIME_INFO_COUNT = 9;
-constexpr u32 WEATHER_COUNT = 4;
+constexpr u32 ZONE_UNKNOWN_8 = 8;    // Inferred role: zone count; original name unknown.
+constexpr u32 ZONE_UNKNOWN_8_2 = 8;  // Inferred role: zone elpis; original name unknown.
+constexpr u32 INFO_UNKNOWN_9 = 9;    // Inferred role: time info count; original name unknown.
+constexpr u32 WEATHER_UNKNOWN_4 = 4; // Inferred role: weather count; original name unknown.
 
 bool GfDataMap::getName(u8 *&bdat, u32 &textId, u32 map) {
   textId = GfBdatMaplist::get()->getMaplistnameID(map);
@@ -49,21 +49,21 @@ const char *GfDataMap::getName(u32 map) {
 bool GfDataMap::getZoneName(u8 *&bdat, u32 &textId, u32 zone) {
   switch (zone) {
   case 1:
-    return getName(bdat, textId, MAP_AVARITIA);
+    return getName(bdat, textId, MAP_UNKNOWN_3);
   case 2:
-    return getName(bdat, textId, MAP_GULA);
+    return getName(bdat, textId, MAP_UNKNOWN_6);
   case 3:
-    return getName(bdat, textId, MAP_INVIDIA);
+    return getName(bdat, textId, MAP_UNKNOWN_9);
   case 4:
-    return getName(bdat, textId, MAP_SUPERBIA);
+    return getName(bdat, textId, MAP_UNKNOWN_10);
   case 5:
-    return getName(bdat, textId, MAP_LIBERALITAS);
+    return getName(bdat, textId, MAP_UNKNOWN_14);
   case 6:
-    return getName(bdat, textId, MAP_ARCADIA);
+    return getName(bdat, textId, MAP_UNKNOWN_12);
   case 7:
-    return getName(bdat, textId, MAP_LUXURIA);
+    return getName(bdat, textId, MAP_UNKNOWN_13);
   case 8:
-    return getName(bdat, textId, MAP_ELPIS);
+    return getName(bdat, textId, MAP_UNKNOWN_15);
   default:
     return false;
   }
@@ -83,8 +83,8 @@ u32 GfDataMap::getZoneIdForGameMap(u32 map) {
     return 0;
   }
 
-  if (map == MAP_ELPIS) {
-    return ZONE_ELPIS;
+  if (map == MAP_UNKNOWN_15) {
+    return ZONE_UNKNOWN_8_2;
   }
 
   return zone;
@@ -122,13 +122,13 @@ u32 GfDataMap::getFieldZoneId(u32 fieldZone) {
   }
 }
 
-bool GfDataMap::isMapCompleteFlag(u32 map) { return GfGameFlag::getLocal(1, FLAG_MAP_COMPLETE + map) != 0; }
+bool GfDataMap::isMapCompleteFlag(u32 map) { return GfGameFlag::getLocal(1, FLAG_UNKNOWN_13266 + map) != 0; }
 
-void GfDataMap::setMapCompleteFlag(u32 map) { GfGameFlag::setLocal(1, FLAG_MAP_COMPLETE + map, 1); }
+void GfDataMap::setMapCompleteFlag(u32 map) { GfGameFlag::setLocal(1, FLAG_UNKNOWN_13266 + map, 1); }
 
 bool GfDataMap::isZoneCompleteFlag(u32 zone) {
-  if (zone >= 1 && zone <= ZONE_COUNT) {
-    return GfGameFlag::getLocal(1, FLAG_ZONE_COMPLETE) != 0;
+  if (zone >= 1 && zone <= ZONE_UNKNOWN_8) {
+    return GfGameFlag::getLocal(1, FLAG_UNKNOWN_13281) != 0;
   }
 
   return false;
@@ -185,7 +185,7 @@ u32 GfDataMap::getMapJumpID(u32 map) {
 }
 
 bool GfDataMap::getTimeRangeName(u8 *&bdat, u32 &textId, u32 time) {
-  if (time < TIME_INFO_COUNT) {
+  if (time < INFO_UNKNOWN_9) {
     GfBdatMaplist *bdatMaplist = GfBdatMaplist::get();
     bdat = GfBdatMsg::getFpMapInfo();
     textId = bdatMaplist->getTimeInfomsg(time);
@@ -218,7 +218,7 @@ bool GfDataMap::getWeatherName(u8 *&bdat, u32 &textId, WEATYPE weatherType) {
 }
 
 const char *GfDataMap::getWeatherName(WEATYPE weatherType) {
-  if (weatherType == WEATYPE_DEFAULT) {
+  if (weatherType == WEATYPE_UNKNOWN_0) {
     return "Default";
   }
 
@@ -233,7 +233,8 @@ const char *GfDataMap::getWeatherName(WEATYPE weatherType) {
 }
 
 const char *GfDataMap::getWeatherIDName(WEATHERID weather) {
-  static const char *const weatherIdNames[] = {
+  static const char *const unknown024[] = {
+      // Inferred role: weather id names; original name unknown.
       "NULL",
       "WEATHER_A",
       "WEATHER_B",
@@ -242,11 +243,11 @@ const char *GfDataMap::getWeatherIDName(WEATHERID weather) {
       "WEATHER_F",
   };
 
-  return weatherIdNames[weather];
+  return unknown024[weather];
 }
 
 const char *GfDataMap::getWeatherEffName(WEATYPE weatherType) {
-  if (weatherType == WEATYPE_DEFAULT) {
+  if (weatherType == WEATYPE_UNKNOWN_0) {
     return "";
   }
 
@@ -254,7 +255,7 @@ const char *GfDataMap::getWeatherEffName(WEATYPE weatherType) {
 }
 
 const char *GfDataMap::getWeatherSndName(WEATYPE weatherType) {
-  if (weatherType == WEATYPE_DEFAULT) {
+  if (weatherType == WEATYPE_UNKNOWN_0) {
     return "";
   }
 
@@ -262,7 +263,7 @@ const char *GfDataMap::getWeatherSndName(WEATYPE weatherType) {
 }
 
 const char *GfDataMap::getWeatherSndBeginName(WEATYPE weatherType) {
-  if (weatherType == WEATYPE_DEFAULT) {
+  if (weatherType == WEATYPE_UNKNOWN_0) {
     return "";
   }
 
@@ -281,8 +282,8 @@ u32 GfDataMap::getWeatherPopRate(u32 map, WEATHERID weather) { return GfBdatMapl
 
 WEATYPE GfDataMap::getWeatherType(u32 map, WEATHERID weather) {
   u32 index = weather - 1;
-  if (index >= WEATHER_COUNT) {
-    return WEATYPE_INVALID;
+  if (index >= WEATHER_UNKNOWN_4) {
+    return WEATYPE_UNKNOWN_21;
   }
 
   return static_cast<WEATYPE>(GfBdatMaplist::get()->getMaplistw_type(map, index));
@@ -323,6 +324,6 @@ void GfDataMap::resetCloudType() {
   }
 }
 
-bool GfDataMap::isArcadiaDestroy() { return GfDataUtil::getScenarioFlag() >= SCENARIO_FLAG_ARCADIA_DESTROY; }
+bool GfDataMap::isArcadiaDestroy() { return GfDataUtil::getScenarioFlag() >= SCENARIO_UNKNOWN_8037; }
 
 } // namespace gf

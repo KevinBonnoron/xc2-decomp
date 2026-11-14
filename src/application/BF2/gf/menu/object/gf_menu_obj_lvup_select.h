@@ -5,6 +5,7 @@
 #include "gf/menu/gf_menu_sequence.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 
 namespace gf {
 class GfMenuCallContext;
@@ -12,6 +13,19 @@ class GfMenuReferenceNumber;
 
 class GfMenuObjLvupSelect : public GfMenuObject {
 public:
+  class MainListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjLvupSelect *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class DrImgListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+  };
+
   GfMenuObjLvupSelect(u32 handle);
   ~GfMenuObjLvupSelect() override;
   static void openLevelSelect(GfMenuCallContext *context, u32 level);
@@ -38,4 +52,5 @@ static_assert(offsetof(GfMenuObjLvupSelect, unknown2c8) == 0x2c8, "");
 static_assert(offsetof(GfMenuObjLvupSelect, unknown2d0) == 0x2d0, "");
 static_assert(offsetof(GfMenuObjLvupSelect, unknown2d8) == 0x2d8, "");
 static_assert(sizeof(GfMenuObjLvupSelect) == 0x2e0, "");
+static_assert(offsetof(GfMenuObjLvupSelect::MainListener, unknown20) == 0x20, "");
 } // namespace gf

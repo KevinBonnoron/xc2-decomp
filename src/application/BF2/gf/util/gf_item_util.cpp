@@ -7,11 +7,12 @@
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/item/gf_item_box.h"
+#include "mm_mtl/fixed_vector.h"
 
 namespace gf {
 
 enum {
-  BOOSTER_VALUE_MAX_DEFAULT = 5,
+  BOOSTER_UNKNOWN_5 = 5, // Inferred role: booster value max default; original name unknown.
 };
 
 u32 GfItemUtil::getCountByType(ItemType::Type type) {
@@ -34,8 +35,8 @@ u32 GfItemUtil::getCountByItemCategory(u32 category) {
   u32 end;
   int count = 0;
   switch (GfDataItem::getTypeByItemCategory(category)) {
-  case ItemType::PRECIOUS:
-    if (GfDataItem::getItemBdatCount(start, end, ItemType::PRECIOUS)) {
+  case ItemType::ITEM_TYPE_UNKNOWN_6:
+    if (GfDataItem::getItemBdatCount(start, end, ItemType::ITEM_TYPE_UNKNOWN_6)) {
       for (u32 id = start; id < end; id++) {
         if (bdatItem->getPreciousCategory(id) == category) {
           count += getItemBoxCount(id);
@@ -43,8 +44,8 @@ u32 GfItemUtil::getCountByItemCategory(u32 category) {
       }
     }
     break;
-  case ItemType::COLLECTION_LIST:
-    if (GfDataItem::getItemBdatCount(start, end, ItemType::COLLECTION_LIST)) {
+  case ItemType::ITEM_TYPE_UNKNOWN_7:
+    if (GfDataItem::getItemBdatCount(start, end, ItemType::ITEM_TYPE_UNKNOWN_7)) {
       for (u32 id = start; id < end; id++) {
         if (bdatItem->getCollectionListCategory(id) == category) {
           count += getItemBoxCount(id);
@@ -52,8 +53,8 @@ u32 GfItemUtil::getCountByItemCategory(u32 category) {
       }
     }
     break;
-  case ItemType::TRESURE:
-    if (GfDataItem::getItemBdatCount(start, end, ItemType::TRESURE)) {
+  case ItemType::ITEM_TYPE_UNKNOWN_8:
+    if (GfDataItem::getItemBdatCount(start, end, ItemType::ITEM_TYPE_UNKNOWN_8)) {
       for (u32 id = start; id < end; id++) {
         if (bdatItem->getTresureCategory(id) == category) {
           count += getItemBoxCount(id);
@@ -61,8 +62,8 @@ u32 GfItemUtil::getCountByItemCategory(u32 category) {
       }
     }
     break;
-  case ItemType::FAVORITE:
-    if (GfDataItem::getItemBdatCount(start, end, ItemType::FAVORITE)) {
+  case ItemType::ITEM_TYPE_UNKNOWN_10:
+    if (GfDataItem::getItemBdatCount(start, end, ItemType::ITEM_TYPE_UNKNOWN_10)) {
       for (u32 id = start; id < end; id++) {
         if (bdatItem->getFavoriteCategory(id) == category) {
           count += getItemBoxCount(id);
@@ -127,21 +128,21 @@ u32 GfItemUtil::getEnableStock(u32 item) {
   GfBdatItem *bdatItem = GfBdatItem::get();
   int stock;
   switch (GfDataItem::getItemType(item)) {
-  case ItemType::PRECIOUS:
+  case ItemType::ITEM_TYPE_UNKNOWN_6:
     stock = bdatItem->getPreciousValueMax(item);
     break;
-  case ItemType::FAVORITE: {
+  case ItemType::ITEM_TYPE_UNKNOWN_10: {
     OwnerBonus *ownerBonus = GfGameManager::getOwnerBonus();
-    stock = bdatItem->getFavoriteValueMax(item) + ownerBonus->unknown00[OWNER_BONUS_FAVORITE_VALUE_MAX];
+    stock = bdatItem->getFavoriteValueMax(item) + ownerBonus->unknown00[OWNER_BONUS_UNKNOWN_3];
     break;
   }
-  case ItemType::CRYSTAL_LIST:
+  case ItemType::ITEM_TYPE_UNKNOWN_11:
     stock = bdatItem->getCrystalListValueMax(item);
     break;
-  case ItemType::BOOSTER: {
+  case ItemType::ITEM_TYPE_UNKNOWN_12: {
     OwnerBonus *ownerBonus = GfGameManager::getOwnerBonus();
     int valueMax = bdatItem->getBoosterValueMax(item);
-    stock = (valueMax == 0 ? BOOSTER_VALUE_MAX_DEFAULT : valueMax) + ownerBonus->unknown00[OWNER_BONUS_BOOSTER_VALUE_MAX];
+    stock = (valueMax == 0 ? BOOSTER_UNKNOWN_5 : valueMax) + ownerBonus->unknown00[OWNER_BONUS_UNKNOWN_13];
     break;
   }
   default:
@@ -182,22 +183,66 @@ GfItem GfItemUtil::getInfo(u32 item) {
   return info;
 }
 
-bool GfItemUtil::isPrecious(u32 item) { return GfDataItem::getItemType(item) == ItemType::PRECIOUS; }
+void GfItemUtil::getInfo(mm::mtl::FixedVector<GfItem, 1024> &items, ItemType::Type type, bool withoutEquip) {
+  switch (type) {
+  case ItemType::ITEM_TYPE_UNKNOWN_2:
+  case ItemType::ITEM_TYPE_UNKNOWN_3:
+  case ItemType::ITEM_TYPE_UNKNOWN_16:
+  case ItemType::ITEM_TYPE_UNKNOWN_17:
+  case ItemType::ITEM_TYPE_UNKNOWN_18:
+  case ItemType::ITEM_TYPE_UNKNOWN_19:
+  case ItemType::ITEM_TYPE_UNKNOWN_20: {
+    GfItemBox::get()->isMulti(type);
+    item_iterator it = GfItemBox::get()->begin(type);
+    item_iterator last = GfItemBox::get()->end(type);
+    while (it != last) {
+      if (it->unknown00_0 != 0) {
+        if (withoutEquip && it->unknown03_6) {
+          continue;
+        }
+        GfItem item;
+        item.unknown02 = it->unknown02_3;
+        item.unknown00 = it->getItemID();
+        item.unknown08 = it->getHandle();
+        item.unknown04 = it->unknown03_6 ? getEquipChar(it->getHandle()) : 0;
+        items.push_back(item);
+      }
+      ++it;
+    }
+    break;
+  }
+  default: {
+    for (item_iterator it = GfItemBox::get()->begin(type), last = GfItemBox::get()->end(type); it != last; ++it) {
+      GfItemInfo &info = *it;
+      if (info.unknown00_0 != 0) {
+        GfItem item;
+        item.unknown00 = info.getItemID();
+        item.unknown02 = info.unknown02_3;
+        item.unknown08 = info.getHandle();
+        items.push_back(item);
+      }
+    }
+    break;
+  }
+  }
+}
+
+bool GfItemUtil::isPrecious(u32 item) { return GfDataItem::getItemType(item) == ItemType::ITEM_TYPE_UNKNOWN_6; }
 
 bool ItemProperty::isAcceEquipDriver(u32 driver) const {
   switch (driver) {
   case 1:
-    return unknown00.test(FLAG_EQUIP_DRIVER + 0);
+    return unknown00.test(FLAG_UNKNOWN_16 + 0);
   case 2:
-    return unknown00.test(FLAG_EQUIP_DRIVER + 1);
+    return unknown00.test(FLAG_UNKNOWN_16 + 1);
   case 3:
-    return unknown00.test(FLAG_EQUIP_DRIVER + 2);
+    return unknown00.test(FLAG_UNKNOWN_16 + 2);
   case 4:
-    return unknown00.test(FLAG_EQUIP_DRIVER + 3);
+    return unknown00.test(FLAG_UNKNOWN_16 + 3);
   case 5:
-    return unknown00.test(FLAG_EQUIP_DRIVER + 4);
+    return unknown00.test(FLAG_UNKNOWN_16 + 4);
   case 6:
-    return unknown00.test(FLAG_EQUIP_DRIVER + 5);
+    return unknown00.test(FLAG_UNKNOWN_16 + 5);
   default:
     return false;
   }
@@ -214,15 +259,15 @@ void GfItemUtil::getPropertyAcce(ItemProperty &property) {
   property.unknown18 = bdatItem->getPcEquipDebugName(property.unknown04);
   property.unknown4a = bdatItem->getPcEquipEnhance1(property.unknown04);
   property.unknown4c = 0;
-  property.unknown00.set(ItemProperty::FLAG_EQUIP_DRIVER + 0, bdatItem->isPcEquipFlagEqPC01(property.unknown04));
-  property.unknown00.set(ItemProperty::FLAG_EQUIP_DRIVER + 1, bdatItem->isPcEquipFlagEqPC02(property.unknown04));
-  property.unknown00.set(ItemProperty::FLAG_EQUIP_DRIVER + 2, bdatItem->isPcEquipFlagEqPC03(property.unknown04));
-  property.unknown00.set(ItemProperty::FLAG_EQUIP_DRIVER + 3, bdatItem->isPcEquipFlagEqPC04(property.unknown04));
-  property.unknown00.set(ItemProperty::FLAG_EQUIP_DRIVER + 4, bdatItem->isPcEquipFlagEqPC05(property.unknown04));
-  property.unknown00.set(ItemProperty::FLAG_EQUIP_DRIVER + 5, bdatItem->isPcEquipFlagEqPC06(property.unknown04));
-  property.unknown00.set(ItemProperty::FLAG_EQUIP_DRIVER + 6, bdatItem->isPcEquipFlagEqPC07(property.unknown04));
-  property.unknown00.set(ItemProperty::FLAG_EQUIP_DRIVER + 7, bdatItem->isPcEquipFlagEqPC08(property.unknown04));
-  property.unknown00.set(ItemProperty::FLAG_EQUIP_DRIVER + 8, bdatItem->isPcEquipFlagEqPC09(property.unknown04));
+  property.unknown00.set(ItemProperty::FLAG_UNKNOWN_16 + 0, bdatItem->isPcEquipFlagEqPC01(property.unknown04));
+  property.unknown00.set(ItemProperty::FLAG_UNKNOWN_16 + 1, bdatItem->isPcEquipFlagEqPC02(property.unknown04));
+  property.unknown00.set(ItemProperty::FLAG_UNKNOWN_16 + 2, bdatItem->isPcEquipFlagEqPC03(property.unknown04));
+  property.unknown00.set(ItemProperty::FLAG_UNKNOWN_16 + 3, bdatItem->isPcEquipFlagEqPC04(property.unknown04));
+  property.unknown00.set(ItemProperty::FLAG_UNKNOWN_16 + 4, bdatItem->isPcEquipFlagEqPC05(property.unknown04));
+  property.unknown00.set(ItemProperty::FLAG_UNKNOWN_16 + 5, bdatItem->isPcEquipFlagEqPC06(property.unknown04));
+  property.unknown00.set(ItemProperty::FLAG_UNKNOWN_16 + 6, bdatItem->isPcEquipFlagEqPC07(property.unknown04));
+  property.unknown00.set(ItemProperty::FLAG_UNKNOWN_16 + 7, bdatItem->isPcEquipFlagEqPC08(property.unknown04));
+  property.unknown00.set(ItemProperty::FLAG_UNKNOWN_16 + 8, bdatItem->isPcEquipFlagEqPC09(property.unknown04));
   property.unknown65 = bdatItem->getPcEquipIcon(property.unknown04);
 }
 
@@ -240,7 +285,7 @@ void GfItemUtil::getPropertyOrbEquip(ItemProperty &property) {
   property.unknown4c = bdatItem->getEquipOrbEnhanceCategory(property.unknown04);
 }
 
-void GfItemUtil::getPropertySalvage(ItemProperty &property) { property.unknown00.set(ItemProperty::FLAG_QUEST, GfBdatItem::get()->getSalvageQuest(property.unknown04) != 0); }
+void GfItemUtil::getPropertySalvage(ItemProperty &property) { property.unknown00.set(ItemProperty::FLAG_UNKNOWN_4, GfBdatItem::get()->getSalvageQuest(property.unknown04) != 0); }
 
 void GfItemUtil::getPropertyPrecious(ItemProperty &property) {
   GfBdatItem *bdatItem = GfBdatItem::get();
@@ -264,7 +309,7 @@ void GfItemUtil::getPropertyTresure(ItemProperty &property) {
   property.unknown5e = bdatItem->getTresureGraphic(property.unknown04);
   property.unknown12 = bdatItem->getTresureZone(property.unknown04);
   property.unknown60 = bdatItem->getTresureFlag(property.unknown04);
-  property.unknown00.set(ItemProperty::FLAG_NO_MULTIPLE, bdatItem->getTresureNoMultiple(property.unknown04) != 0);
+  property.unknown00.set(ItemProperty::FLAG_UNKNOWN_3, bdatItem->getTresureNoMultiple(property.unknown04) != 0);
 }
 
 void GfItemUtil::getPropertyFavorite(ItemProperty &property) {
@@ -336,10 +381,10 @@ bool GfItemUtil::getProperty(ItemProperty &property, u32 item, u32 shop) {
   ItemType::Type type;
   u32 index;
   if (!GfDataItem::getItemType(type, index, item)) {
-    return property.unknown00.test(ItemProperty::FLAG_VALID);
+    return property.unknown00.test(ItemProperty::FLAG_UNKNOWN_0);
   }
 
-  property.unknown00.set(ItemProperty::FLAG_VALID);
+  property.unknown00.set(ItemProperty::FLAG_UNKNOWN_0);
   property.unknown04 = item;
   property.unknown06 = index;
   property.unknown08 = type;
@@ -350,67 +395,67 @@ bool GfItemUtil::getProperty(ItemProperty &property, u32 item, u32 shop) {
   GfDataItem::getCaption(property.unknown20, property.unknown2c, item);
   getPrice(property.unknown30, item, shop);
   property.unknown44 = GfDataItem::getRarity(item);
-  property.unknown00.set(ItemProperty::FLAG_NO_SELL, !GfDataItem::isEnableSell(item));
+  property.unknown00.set(ItemProperty::FLAG_UNKNOWN_2, !GfDataItem::isEnableSell(item));
 
   switch (type) {
-  case ItemType::PC_WPN_CHIP:
+  case ItemType::ITEM_TYPE_UNKNOWN_1:
     getPropertyChip(property);
     break;
-  case ItemType::PC_EQUIP:
+  case ItemType::ITEM_TYPE_UNKNOWN_2:
     getPropertyAcce(property);
     break;
-  case ItemType::EQUIP_ORB:
+  case ItemType::ITEM_TYPE_UNKNOWN_3:
     getPropertyOrbEquip(property);
     break;
-  case ItemType::SALVAGE:
+  case ItemType::ITEM_TYPE_UNKNOWN_5:
     getPropertySalvage(property);
     break;
-  case ItemType::PRECIOUS:
+  case ItemType::ITEM_TYPE_UNKNOWN_6:
     getPropertyPrecious(property);
     break;
-  case ItemType::COLLECTION_LIST:
+  case ItemType::ITEM_TYPE_UNKNOWN_7:
     getPropertyCollect(property);
     break;
-  case ItemType::TRESURE:
+  case ItemType::ITEM_TYPE_UNKNOWN_8:
     getPropertyTresure(property);
     break;
-  case ItemType::EMPTY_ORB:
+  case ItemType::ITEM_TYPE_UNKNOWN_9:
     getPropertyOrb(property);
     break;
-  case ItemType::FAVORITE:
+  case ItemType::ITEM_TYPE_UNKNOWN_10:
     getPropertyFavorite(property);
     break;
-  case ItemType::CRYSTAL_LIST:
+  case ItemType::ITEM_TYPE_UNKNOWN_11:
     getPropertyCrystal(property);
     break;
-  case ItemType::BOOSTER:
+  case ItemType::ITEM_TYPE_UNKNOWN_12:
     getPropertyBooster(property);
     break;
-  case ItemType::INFO:
+  case ItemType::ITEM_TYPE_UNKNOWN_14:
     getPropertyInfo(property);
     break;
-  case ItemType::EVENT:
+  case ItemType::ITEM_TYPE_UNKNOWN_15:
     getPropertyEvent(property);
     break;
-  case ItemType::HANA_ROLE:
+  case ItemType::ITEM_TYPE_UNKNOWN_16:
     getPropertyHanaRole(property);
     break;
-  case ItemType::HANA_ATR:
+  case ItemType::ITEM_TYPE_UNKNOWN_17:
     getPropertyHanaAttribute(property);
     break;
-  case ItemType::HANA_ARTS_ENH:
+  case ItemType::ITEM_TYPE_UNKNOWN_18:
     getPropertyHanaArts(property);
     break;
-  case ItemType::HANA_N_ARTS_SET:
+  case ItemType::ITEM_TYPE_UNKNOWN_19:
     getPropertyHanaNArts(property);
     break;
-  case ItemType::HANA_ASSIST:
+  case ItemType::ITEM_TYPE_UNKNOWN_20:
     getPropertyHanaAssist(property);
     break;
   default:
     return false;
   }
-  return property.unknown00.test(ItemProperty::FLAG_VALID);
+  return property.unknown00.test(ItemProperty::FLAG_UNKNOWN_0);
 }
 
 u32 GfItemUtil::getItemTime(u32 item) { return GfItemBox::get()->getItemTime(item); }
@@ -418,29 +463,29 @@ u32 GfItemUtil::getItemTime(u32 item) { return GfItemBox::get()->getItemTime(ite
 u32 GfItemUtil::getItemTime(u32 item, GfItemHandle handle) { return GfItemBox::get()->getItemTime(item, handle); }
 
 bool GfItemUtil::isFavoriteFood(u32 item) {
-  if (GfDataItem::getItemType(item) != ItemType::FAVORITE) {
+  if (GfDataItem::getItemType(item) != ItemType::ITEM_TYPE_UNKNOWN_10) {
     return false;
   }
   u32 category = GfBdatItem::get()->getFavoriteCategory(item);
-  return category >= FAVORITE_CATEGORY_FOOD_FIRST && category <= FAVORITE_CATEGORY_FOOD_LAST;
+  return category >= FAVORITE_CATEGORY_FOOD_UNKNOWN_12 && category <= FAVORITE_CATEGORY_FOOD_UNKNOWN_17;
 }
 
 ItemType::Type GfItemUtil::getItemCategory(u32 item) {
   ItemType::Type type;
   u32 index;
   if (!GfDataItem::getItemType(type, index, item)) {
-    return ItemType::NONE;
+    return ItemType::ITEM_TYPE_UNKNOWN_0;
   }
-  return index == 0 ? type : ItemType::NONE;
+  return index == 0 ? type : ItemType::ITEM_TYPE_UNKNOWN_0;
 }
 
-u32 GfItemUtil::getCrystalNum() { return getCountByType(ItemType::CRYSTAL_LIST); }
+u32 GfItemUtil::getCrystalNum() { return getCountByType(ItemType::ITEM_TYPE_UNKNOWN_11); }
 
 bool GfItemUtil::isValidCrystal(u32 item) {
   ItemType::Type type;
   u32 index;
   if (GfDataItem::getItemType(type, index, item)) {
-    if (type == ItemType::CRYSTAL_LIST) {
+    if (type == ItemType::ITEM_TYPE_UNKNOWN_11) {
       u32 condition = GfBdatItem::get()->getCrystalListCondition(item);
       if (condition != 0) {
         return GfGameCond::isGameCond(condition);
@@ -501,11 +546,11 @@ void GfItemUtil::setupNewGameParam() {
     }
   }
 
-  GfDataItem::setNoMultiple(ITEM_CRYSTAL_WADATSUMI, false);
-  GfDataItem::setNoMultiple(ITEM_CRYSTAL_SUZAKU, false);
-  GfDataItem::setNoMultiple(ITEM_CRYSTAL_UNNAMED_RARE, false);
-  if (getItemBoxCount(ITEM_CRYSTAL_WADATSUMI) != 0) {
-    GfItemBox::decItemForNewGame(ITEM_CRYSTAL_WADATSUMI, 1);
+  GfDataItem::setNoMultiple(ITEM_UNKNOWN_45005, false);
+  GfDataItem::setNoMultiple(ITEM_UNKNOWN_45009, false);
+  GfDataItem::setNoMultiple(ITEM_UNKNOWN_45010, false);
+  if (getItemBoxCount(ITEM_UNKNOWN_45005) != 0) {
+    GfItemBox::decItemForNewGame(ITEM_UNKNOWN_45005, 1);
   }
 }
 
@@ -515,3 +560,5 @@ template mm::mtl::FixedVector<gf::GfItem, 1024>::~FixedVector();
 
 #include "gf/util/gf_equip_util.cpp"
 #include "gf/util/gf_shop_util.cpp"
+// The game builds GfRecipeOrbUtil in the same unit: three of its functions (0x710035f534 to 0x710035f544) open the unit's block and the others follow GfShopUtil (0x71003623f0 to 0x7100362e34).
+#include "gf/util/gf_recipe_orb_util.cpp"

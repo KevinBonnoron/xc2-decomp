@@ -4,16 +4,14 @@
 #include "dr/dr_mdo_node.h"
 #include "types.h"
 
-namespace grlib {
-class CGLibEtcUniformBlock;
-} // namespace grlib
-
 namespace ml {
 class DrResMdoMat;
 struct DrResMpfSampler;
 class DrShdDataList;
+struct MdoWrkMatSetupArg;
 struct MdsMatInfoHeader;
 struct MdsMpfMatInfoHeader;
+struct MdsMatTechnique;
 
 struct MdsMatVariableTbl {
   u16 unknown00; // Inferred role: variable type; original member name unknown.
@@ -28,7 +26,7 @@ static_assert(sizeof(MdsMatVariableTbl) == 0x08, "");
 
 struct MdsMatValShaderCate {
   enum Flag {
-    FLAG_STORAGE_BUFFER = 1 << 0,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: storage buffer; original name unknown.
   };
 
   u8 _00[0x03 - 0x00];
@@ -91,7 +89,9 @@ public:
   void changeSeamMatInfo();
   void changeShaderMat(bool isChange);
   void changeShaderPos();
+  void getSetupMaterial(MdoWrkMatSetupArg &arg, const MdsMatInfoHeader *header, int mode);
   void createUniformBlock(const MdsMatInfoHeader *header, DrResMdoMat *mat);
+  void setShader(DrResMdoMat *mat, const MdsMatInfoHeader *header, const MdsMatTechnique *technique, u32 matIndex, int mdlIndex, u32 bufferIndex);
   void updateUniformBlock(const u32 *flags);
   void createMpfMatUniformBlock(const MdsMpfMatExtData *data, int index);
   void updateMpfMatUniformBlock();
@@ -170,6 +170,8 @@ public:
   void varStTex_DitherTex(const MdsMatInfoHeader *header, u32 location, u32 index);
   void varStTex_Capture4(const MdsMatInfoHeader *header, u32 location, u32 index);
   void varStTex_Movie0(const MdsMatInfoHeader *header, u32 location, u32 index);
+  void varStTex_Movie2(const MdsMatInfoHeader *header, u32 location, u32 index);
+  void varStTex_Movie3(const MdsMatInfoHeader *header, u32 location, u32 index);
   void varStImg_BaseColor(const MdsMatInfoHeader *header, u32 location, u32 index);
   void varStImg_Etc(const MdsMatInfoHeader *header, u32 location, u32 index);
   void varStImg_Normal(const MdsMatInfoHeader *header, u32 location, u32 index);
@@ -177,20 +179,8 @@ public:
   void varStImg_ZBuff(const MdsMatInfoHeader *header, u32 location, u32 index);
 
   static int (DrMdoSetup::*s_pStockMaterial[])(f32 *work, DrResMdoMat *mat, const MdsMatInfoHeader *header, const MdsMatVariableTbl *variable);
-
-  u8 _16c[0x170 - 0x16c];
-  grlib::CGLibEtcUniformBlock *unknown170; // Inferred role: etc uniform; original member name unknown.
-  u8 unknown178;                           // Inferred role: setup flags; original member name unknown.
-  u8 unknown179;                           // Inferred role: seam flag; original member name unknown.
-  s16 unknown17a;                          // Inferred role: uniform index; original member name unknown.
-  s16 unknown17c;                          // Inferred role: material index; original member name unknown.
-  u16 unknown17e;                          // Inferred role: previous material index; original member name unknown.
 };
 
-static_assert(offsetof(DrMdoSetup, unknown170) == 0x170, "");
-static_assert(offsetof(DrMdoSetup, unknown178) == 0x178, "");
-static_assert(offsetof(DrMdoSetup, unknown17a) == 0x17a, "");
-static_assert(offsetof(DrMdoSetup, unknown17c) == 0x17c, "");
-static_assert(sizeof(DrMdoSetup) == 0x180, "");
+static_assert(sizeof(DrMdoSetup) == 0x190, "");
 
 } // namespace ml

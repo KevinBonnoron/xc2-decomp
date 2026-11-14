@@ -7,6 +7,7 @@
 
 namespace fw {
 class ColiMoveObject;
+class ColiObject;
 } // namespace fw
 
 namespace gf {
@@ -51,16 +52,18 @@ public:
     void dispose();
     void setColiObj(fw::ColiMoveObject *object);
 
-    f32 unknown00;                 // Role and original member name unknown.
-    f32 unknown04;                 // Role and original member name unknown.
-    fw::ColiMoveObject *unknown08; // Inferred role: collision object, reference counted by hand; original member name unknown.
-    f32 unknown10;                 // Role and original member name unknown.
+    f32 unknown00;             // Role and original member name unknown.
+    f32 unknown04;             // Role and original member name unknown.
+    fw::ColiObject *unknown08; // Inferred role: collision object, reference counted by hand; original member name unknown.
+    f32 unknown10;             // Role and original member name unknown.
   };
 
   GfGameStuckMeter(const CreateInfo *info);
   ~GfGameStuckMeter() { dispose(); }
   void create(const CreateInfo &info);
   void dispose();
+  void update(f32 deltaTime);
+  bool checkStuck(f32 deltaTime);
   bool isStuck() const;
 
   CreateInfo unknown00; // Inferred role: create parameters, the collision object is released with the meter; original member name unknown.

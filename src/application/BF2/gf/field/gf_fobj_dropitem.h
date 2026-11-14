@@ -65,8 +65,11 @@ public:
   static u32 getResBdatIdFromItemId(s32 itemId);
   void applyGetItem(GF_OBJ_HANDLE *target) const;
   static bool applyGetItem(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *target);
+  static GF_OBJ_HANDLE *emitDropitem(u8 paramIndex, s32 itemId, f32 param);
+  static GF_OBJ_HANDLE *emitDropgold(u8 paramIndex, u32 gold);
   static f32 emitDropitems(const EmitInfo &info);
   void createGottenEffect(GF_OBJ_HANDLE *target) const;
+  bool canGetItem(GF_OBJ_HANDLE *target, f32 margin) const;
   bool isEnableGet() const;
   void disposeEffect();
 

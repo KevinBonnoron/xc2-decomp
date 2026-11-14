@@ -139,7 +139,7 @@ public:
   GF_OBJ_HANDLE *unknown20; // Inferred role: target; original member name unknown.
 };
 
-class SCOM_PARTY_ADD {
+class SCOM_PARTY_ADD : public SCOM, public mm::mtl::PtrSingleton<SCOM_PARTY_ADD> {
 public:
   // Inferred role: kind of a queued party change (1 add blade, 2 remove blade, 3 add driver, 4 remove driver); original enum and enumerator names unknown.
   enum unknown001 {
@@ -160,6 +160,8 @@ public:
     unknown001 unknown10; // Inferred role: change kind; original member name unknown.
   };
 
+  SCOM_PARTY_ADD(GF_SCOM_HANDLE *handle) : SCOM(handle, SCOM_TYPE_PARTY_ADD, SCOM_EXEC_UNKNOWN_0, 1) {}
+  bool exec(const fw::UpdateInfo &info) override;
   static void addBlade(u32 blade, u32 driver, int slot);
   static GF_SCOM_HANDLE *create();
   static void removeBlade(u32 blade, bool isForce);
@@ -176,6 +178,7 @@ public:
 static_assert(offsetof(SCOM_PARTY_ADD::unknown002, unknown0c) == 0x0c, "");
 static_assert(offsetof(SCOM_PARTY_ADD::unknown002, unknown10) == 0x10, "");
 static_assert(sizeof(SCOM_PARTY_ADD::unknown002) == 0x14, "");
+static_assert(sizeof(SCOM_PARTY_ADD) == 0x28, "");
 
 class SCOM_EXEC_CURRENT_BLADE : public SCOM {
 public:
@@ -200,6 +203,24 @@ public:
 
 static_assert(offsetof(SCOM_CURRENT_BLADE, unknown1c) == 0x1c, "");
 static_assert(sizeof(SCOM_CURRENT_BLADE) == 0x20, "");
+
+class SCOM_REBUILD_PARTY_WEAPON : public SCOM {
+public:
+  SCOM_REBUILD_PARTY_WEAPON(GF_SCOM_HANDLE *handle, u32 blade);
+  bool exec(const fw::UpdateInfo &info) override;
+  static GF_SCOM_HANDLE *create(u32 blade);
+
+  u32 unknown1c; // Inferred role: blade; original member name unknown.
+  u32 unknown20; // Inferred role: party member; original member name unknown.
+  int unknown24; // Inferred role: blade slot; original member name unknown.
+  int unknown28; // Inferred role: command state; original member name unknown.
+};
+
+static_assert(offsetof(SCOM_REBUILD_PARTY_WEAPON, unknown1c) == 0x1c, "");
+static_assert(offsetof(SCOM_REBUILD_PARTY_WEAPON, unknown20) == 0x20, "");
+static_assert(offsetof(SCOM_REBUILD_PARTY_WEAPON, unknown24) == 0x24, "");
+static_assert(offsetof(SCOM_REBUILD_PARTY_WEAPON, unknown28) == 0x28, "");
+static_assert(sizeof(SCOM_REBUILD_PARTY_WEAPON) == 0x30, "");
 
 class SCOM_PARTY_LEADER : public SCOM {
 public:
@@ -269,7 +290,7 @@ public:
   bool exec(const fw::UpdateInfo &info) override;
   static void create();
 
-  mm::mtl::FixedVector<u16, BLADE_COUNT> unknown20; // Inferred role: blades left to complete; original member name unknown.
+  mm::mtl::FixedVector<u16, BLADE_UNKNOWN_422> unknown20; // Inferred role: blades left to complete; original member name unknown.
 };
 
 static_assert(offsetof(SCOM_FSKILLMAX_FOR_DEBUG, unknown20) == 0x20, "");
@@ -315,7 +336,7 @@ public:
 
   // Inferred role: queues a voice to play; original name unknown.
   void unknown002(const ParamObj &object, f32 delay, CV_FIELD voice, CV_PRIO priority) {
-    unknown001 entry = {object, delay, voice, VOICE_RESULT_UNKNOWN_0, priority, nullptr};
+    unknown001 entry = {object, delay, voice, CV_RESULT_UNKNOWN_0, priority, nullptr};
     unknown20.push(entry);
   }
 
@@ -925,6 +946,20 @@ public:
 
 static_assert(offsetof(SCOM_REBUILD, unknown20) == 0x20, "");
 static_assert(sizeof(SCOM_REBUILD) == 0x28, "");
+
+class SCOM_CHANGE_RIDE : public SCOM {
+public:
+  SCOM_CHANGE_RIDE(GF_SCOM_HANDLE *handle, GF_OBJ_HANDLE *driver, bool isRide) : SCOM(handle, SCOM_TYPE_UNKNOWN_61, SCOM_EXEC_UNKNOWN_0, 1), unknown20(driver), unknown28(isRide) {}
+  bool exec(const fw::UpdateInfo &info) override;
+  static GF_SCOM_HANDLE *create(GF_OBJ_HANDLE *driver, bool isRide);
+
+  GF_OBJ_HANDLE *unknown20; // Inferred role: driver; original member name unknown.
+  bool unknown28;           // Inferred role: ride flag; original member name unknown.
+};
+
+static_assert(offsetof(SCOM_CHANGE_RIDE, unknown20) == 0x20, "");
+static_assert(offsetof(SCOM_CHANGE_RIDE, unknown28) == 0x28, "");
+static_assert(sizeof(SCOM_CHANGE_RIDE) == 0x30, "");
 
 class SCOM_ADD_MERCENARIES_POINT : public SCOM {
 public:

@@ -8,32 +8,32 @@ namespace event {
 
 class DebugManager : public IManager, public mm::mtl::Singleton<DebugManager> {
 public:
-  static constexpr u32 EQUIP_SLOT_COUNT = 16;
+  static constexpr u32 EQUIP_SLOT_UNKNOWN_16 = 16; // Inferred role: equip slot count; original name unknown.
 
   enum {
-    FLAG_DISP = 1 << 0,
-    FLAG_MESSAGE = 1 << 1,
-    FLAG_WARNING = 1 << 2,
-    FLAG_PLAY_ONETIME = 1 << 3,
-    FLAG_PLAY_CANCEL = 1 << 4,
-    FLAG_FAST_SKIP_DISABLE = 1 << 5,
-    FLAG_FAST_SKIP_ENABLE_ONE_TIME = 1 << 6,
-    FLAG_AGEING_SKIP_ENABLE = 1 << 7,
-    FLAG_FAILURE_SKIP = 1 << 8,
-    FLAG_DISABLE_BGM = 1 << 9,
-    FLAG_REPLACE_MAXIMUM_EQUIP = 1 << 10,
-    FLAG_REPLACE_MAXIMUM_BLADE = 1 << 11,
-    FLAG_DISABLE_NEW_GAME_WAIT = 1 << 12,
-    FLAG_SYNC_FREE_CAM = 1 << 13,
-    FLAG_SYNC_FREE_CAM_ONE_TIME = 1 << 14,
-    FLAG_DISABLE_REUSE = 1 << 15,
-    FLAG_MOVIE_DEBUG = 1 << 16,
+    FLAG_UNKNOWN_0 = 1 << 0,   // Inferred role: disp flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1,   // Inferred role: message flag; original name unknown.
+    FLAG_UNKNOWN_2 = 1 << 2,   // Inferred role: warning flag; original name unknown.
+    FLAG_UNKNOWN_3 = 1 << 3,   // Inferred role: play onetime flag; original name unknown.
+    FLAG_UNKNOWN_4 = 1 << 4,   // Inferred role: play cancel flag; original name unknown.
+    FLAG_UNKNOWN_5 = 1 << 5,   // Inferred role: fast skip disable flag; original name unknown.
+    FLAG_UNKNOWN_6 = 1 << 6,   // Inferred role: fast skip enable one time flag; original name unknown.
+    FLAG_UNKNOWN_7 = 1 << 7,   // Inferred role: ageing skip enable flag; original name unknown.
+    FLAG_UNKNOWN_8 = 1 << 8,   // Inferred role: failure skip flag; original name unknown.
+    FLAG_UNKNOWN_9 = 1 << 9,   // Inferred role: disable bgm flag; original name unknown.
+    FLAG_UNKNOWN_10 = 1 << 10, // Inferred role: replace maximum equip flag; original name unknown.
+    FLAG_UNKNOWN_11 = 1 << 11, // Inferred role: replace maximum blade flag; original name unknown.
+    FLAG_UNKNOWN_12 = 1 << 12, // Inferred role: disable new game wait flag; original name unknown.
+    FLAG_UNKNOWN_13 = 1 << 13, // Inferred role: sync free cam flag; original name unknown.
+    FLAG_UNKNOWN_14 = 1 << 14, // Inferred role: sync free cam one time flag; original name unknown.
+    FLAG_UNKNOWN_15 = 1 << 15, // Inferred role: disable reuse flag; original name unknown.
+    FLAG_UNKNOWN_16 = 1 << 16, // Inferred role: movie debug flag; original name unknown.
   };
 
   enum {
-    SIGHT_NONE,
-    SIGHT_CROSS,
-    SIGHT_THIRDS,
+    SIGHT_UNKNOWN_0, // Inferred role: none; original name unknown.
+    SIGHT_UNKNOWN_1, // Inferred role: cross; original name unknown.
+    SIGHT_UNKNOWN_2, // Inferred role: thirds; original name unknown.
   };
 
   DebugManager();
@@ -92,7 +92,7 @@ private:
   mm::mtl::FixStr<256> unknown11c; // Inferred role: warning; original member name unknown.
   s32 unknown220;                  // Inferred role: warning timer; original member name unknown.
   int m_dispSight;
-  u32 unknown228[EQUIP_SLOT_COUNT]; // Inferred role: replace default equips; original member name unknown.
+  u32 unknown228[EQUIP_SLOT_UNKNOWN_16]; // Inferred role: replace default equips; original member name unknown.
 };
 
 static_assert(sizeof(DebugManager) == 0x268, "");

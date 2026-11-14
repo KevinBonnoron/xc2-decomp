@@ -24,6 +24,8 @@ public:
   void update();
   void debugRender() const;
   u32 getPremMipCount() const;
+  void relightCubeMap2(DrRequetIBL &request);
+  void generateSH2(DrRequetIBL &request);
 
   mm::mtl::FixedQueue<DrRequetIBL, 30> unknown18; // Inferred role: IBL requests; original member name unknown.
   DrPixlRenderCubeMapMipMap *unknown5c8[2];       // Inferred role: prem textures; original member name unknown.
@@ -32,7 +34,8 @@ public:
   grlib::CGLibVtxVertex unknown650;    // Inferred role: vertex; original member name unknown.
   grlib::CGLibVtxStmOut unknown678[2]; // Inferred role: stream outs; original member name unknown.
   grlib::CGLibVtxFetch unknown6c8;     // Inferred role: vertex fetch; original member name unknown.
-  u8 _6d8[0x6e8 - 0x6d8];
+  u32 unknown6d8;                      // Inferred role: buffer index toggled by render; original member name unknown.
+  u8 _6dc[0x6e8 - 0x6dc];
   DrShdCubeCapFilter *unknown6e8; // Inferred role: cube cap filter; original member name unknown.
 };
 
@@ -43,5 +46,6 @@ static_assert(offsetof(DrPixlPostObjCubeMapMultiIBL, unknown650) == 0x650, "");
 static_assert(offsetof(DrPixlPostObjCubeMapMultiIBL, unknown678) == 0x678, "");
 static_assert(offsetof(DrPixlPostObjCubeMapMultiIBL, unknown6c8) == 0x6c8, "");
 static_assert(offsetof(DrPixlPostObjCubeMapMultiIBL, unknown6e8) == 0x6e8, "");
+static_assert(offsetof(DrPixlPostObjCubeMapMultiIBL, unknown6d8) == 0x6d8, "");
 
 } // namespace ml

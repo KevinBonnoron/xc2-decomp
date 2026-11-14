@@ -8,6 +8,13 @@
 
 namespace ml {
 
+void DrShdMdoDecRes::setVertexParam(DrShdFetchMan *fetchMan, int num, const MdsMatVertexInfo *infos) {
+  if (m_fetch != nullptr) {
+    fetchMan->releaseFetchObj(m_fetch);
+  }
+  m_fetch = fetchMan->createFetchObj(num, infos);
+}
+
 DrShdMdoDecRes::DrShdMdoDecRes() : m_fetch(nullptr) {}
 
 DrShdMdoDecRes::~DrShdMdoDecRes() { releaseObj(); }

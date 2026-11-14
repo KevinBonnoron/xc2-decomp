@@ -56,7 +56,7 @@ public:
     m_end = false;
     unknown21 = false;
     unknown10 = nullptr;
-    unknown08 = INVALID_HANDLE;
+    unknown08 = unknown020;
   }
   virtual void onFsSucceeded() = 0;
   virtual void onFsFailed() {}
@@ -110,6 +110,7 @@ public:
   void seqLod_waitToEndAnim(f32 deltaTime);
   void seqMapObj_nextwait(f32 deltaTime);
 
+  // s_classId keeps the name of the game's static local (gf::GfFieldMapGimmick::getIdStr() const::s_classId, likewise for GfFieldGrave, GfFieldJump and GfFieldWarp).
   const char *getIdStr() const override {
     static const char s_classId[] = "GfFieldMapGimmick";
     return s_classId;
@@ -119,7 +120,7 @@ public:
 
   // __LINE__ must be 208 as in the original header: its value changes the instruction order.
 #line 208
-  static void build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfFieldMapGimmick(param); }
+  static void build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfFieldMapGimmick(param); }
 
   static void destroy() {
     get()->dispose();
@@ -187,7 +188,7 @@ public:
 
   // __LINE__ must be 312 as in the original header: its value changes the instruction order.
 #line 312
-  static void build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfFieldGrave(param); }
+  static void build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfFieldGrave(param); }
 
   static void destroy() {
     get()->dispose();
@@ -216,7 +217,7 @@ public:
 
   // __LINE__ must be 383 as in the original header: its value changes the instruction order.
 #line 383
-  static void build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfFieldJump(param); }
+  static void build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfFieldJump(param); }
 
   static void destroy() {
     get()->dispose();
@@ -238,7 +239,7 @@ public:
 
   // __LINE__ must be 438 as in the original header: its value changes the instruction order.
 #line 438
-  static void build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfFieldWarp(param); }
+  static void build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfFieldWarp(param); }
 
   static void destroy() {
     get()->dispose();
@@ -250,7 +251,7 @@ static_assert(sizeof(GfFieldWarp) == 0x30, "");
 
 class GfFieldGmkTutorial : public mm::mtl::PtrSingleton<GfFieldGmkTutorial> {
 public:
-  GfFieldGmkTutorial() : unknown08(SCRIPT_SLOT_GMK_TUTORIAL), unknown50(0) {}
+  GfFieldGmkTutorial() : unknown08(SCRIPT_SLOT_UNKNOWN_68), unknown50(0) {}
   ~GfFieldGmkTutorial() { dispose(); }
   static void build(const GfSetupParam &param);
   static void destroy();

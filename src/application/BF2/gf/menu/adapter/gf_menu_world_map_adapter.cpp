@@ -20,12 +20,12 @@ struct unknown001 {
 };
 
 static const unknown001 unknown002[] = {
-    {3, NATION_FIRST},
+    {3, NATION_UNKNOWN_1},
     {6, 2},
     {9, 3},
     {10, 4},
-    {14, NATION_IYASAKI},
-    {12, NATION_ARCADIA},
+    {14, NATION_UNKNOWN_5},
+    {12, NATION_UNKNOWN_6},
     {13, 7},
 };
 
@@ -53,7 +53,7 @@ GfMenuWorldMapAdapter *GfMenuWorldMapAdapter::create(u32 handle, u32 type, u16 m
     if (plugin != nullptr) {
       // __LINE__ must be 165 as in the original source: it is the line argument of operator new.
 #line 165
-      GfMenuWorldMapAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuWorldMapAdapter(plugin, isUpdateAlways);
+      GfMenuWorldMapAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuWorldMapAdapter(plugin, isUpdateAlways);
       adapter->unknown30.bind(adapter, info.update);
       adapter->unknown58 = mapId;
       plugin->release();
@@ -107,7 +107,7 @@ GfMenuWorldMapAdapter *GfMenuWorldMapAdapter::createFromList(u32 handle, u32 typ
   }
   // __LINE__ must be 197 as in the original source: it is the line argument of operator new.
 #line 197
-  ListConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ListConverter(list, listIndex, unknown14);
+  ListConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ListConverter(list, listIndex, unknown14);
   GfMenuWorldMapAdapter *adapter = create(handle, type, converter->getMapId(), isUpdateAlways);
   if (adapter != nullptr) {
     adapter->unknown50 = converter;
@@ -121,7 +121,7 @@ GfMenuWorldMapAdapter *GfMenuWorldMapAdapter::createFromReference(u32 handle, u3
   }
   // __LINE__ must be 207 as in the original source: it is the line argument of operator new.
 #line 207
-  ReferenceConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceConverter();
+  ReferenceConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceConverter();
   GfMenuWorldMapAdapter *adapter = create(handle, type, GfMenuReference::getReferenceWorldMapID(), isUpdateAlways);
   if (adapter != nullptr) {
     adapter->unknown50 = converter;
@@ -138,13 +138,13 @@ void GfMenuWorldMapAdapter::update(const fw::UpdateInfo &info) {
     }
   }
 
-  if (unknown30.isValid() && (unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
+  if (unknown30.isValid() && (unknown20 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) != 0) {
     if (unknown58 != 0) {
       setDisp(unknown30());
     } else {
       setDisp(false);
     }
-    unknown20 &= ~FLAG_CHANGED;
+    unknown20 &= ~FLAG_UNKNOWN_0;
   }
 }
 

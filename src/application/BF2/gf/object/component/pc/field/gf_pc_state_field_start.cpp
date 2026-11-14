@@ -16,7 +16,7 @@ namespace pc {
 void StateFieldStart::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   StateUtilField::setSpecialActStatus(*behavior, true);
   if (!behavior->getProperty()->unknown111_2) {
-    StateUtil::setTarget(*behavior, INVALID_HANDLE);
+    StateUtil::setTarget(*behavior, unknown020);
   }
 }
 
@@ -31,27 +31,27 @@ void StateFieldStart::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &in
         return;
       }
 
-      reqState(STATE_ID_FIELD_WATER_SINK);
+      reqState(STATE_ID_UNKNOWN_25);
     } else {
       if (!StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_WATERDEAD)) {
         return;
       }
 
-      reqState(STATE_ID_FIELD_WATER_DEAD_SINK);
+      reqState(STATE_ID_UNKNOWN_35);
     }
   } else if (!property->unknown110_4) {
     if (!StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_FALL)) {
       return;
     }
 
-    reqState(STATE_ID_FIELD_FALL);
+    reqState(STATE_ID_UNKNOWN_15);
   } else {
-    const char *name = comAsm->getStateName(ANIM_LAYER_BASE);
+    const char *name = comAsm->getStateName(ANIM_LAYER_UNKNOWN_0);
     if (name == nullptr || __builtin_strcmp(name, "S_idle") != 0) {
       return;
     }
 
-    reqState(STATE_ID_FIELD_IDLE);
+    reqState(STATE_ID_UNKNOWN_3);
   }
 }
 

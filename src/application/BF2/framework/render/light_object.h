@@ -26,11 +26,11 @@ public:
   void update();
   ml::DrEnvironmentObj *getInterface();
 
-  ml::DrEnvironmentObj *unknown20; // Inferred role: light interface; original member name unknown.
-  u32 unknown28;                   // Inferred role: layer; original member name unknown.
+  ml::DrEnvironmentObj *m_interface;
+  u32 unknown28; // Inferred role: layer; original member name unknown.
 };
 
-static_assert(offsetof(LightObject, unknown20) == 0x20, "");
+static_assert(offsetof(LightObject, m_interface) == 0x20, "");
 static_assert(offsetof(LightObject, unknown28) == 0x28, "");
 static_assert(sizeof(LightObject) == 0x30, "");
 

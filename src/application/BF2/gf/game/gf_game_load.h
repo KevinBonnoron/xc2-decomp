@@ -36,6 +36,8 @@ public:
   void execOptionLoadNonBlock(SDataOption &optionData);
   bool execGameLoadBlockForDebug(SDataSave &saveData);
   bool execOptionLoadBlockForDebug(SDataOption &optionData);
+  void execGameLoadWithMicroThread(SDataSave &saveData);
+  void execOptionLoadWithMicroThread(SDataOption &optionData);
 
   // Inferred role: fills the read parameters of the load buffer, its size rounded up to 16 bytes; original name unknown.
   void unknown001(ml::DevFileParamTh &param, mm::mtl::FixStr<256> &path) {

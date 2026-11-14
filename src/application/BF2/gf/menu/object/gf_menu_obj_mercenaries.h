@@ -5,6 +5,7 @@
 #include "gf/menu/gf_menu_sequence.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 
 namespace mm {
 namespace mtl {
@@ -13,6 +14,7 @@ class ReferenceObject;
 } // namespace mm
 
 namespace ui {
+class UICtrlCursorSelect;
 class UIObjectAcc;
 class UISelectObjList;
 } // namespace ui
@@ -28,11 +30,80 @@ class GfMenuTeamList;
 
 class GfMenuObjMercenaries : public GfMenuObject {
 public:
+  class MainListener : public ui::UIObjectListener {
+  public:
+    MainListener(GfMenuObjMercenaries *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjMercenaries *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class LocationSelectListener : public ui::UIObjectListener {
+  public:
+    LocationSelectListener(GfMenuObjMercenaries *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjMercenaries *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class MissionFieldSkillListener : public ui::UIObjectListener {
+  public:
+    MissionFieldSkillListener(GfMenuObjMercenaries *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjMercenaries *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class MissionListener : public ui::UIObjectListener {
+  public:
+    MissionListener(GfMenuObjMercenaries *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjMercenaries *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class MissionRewardListener : public ui::UIObjectListener {
+  public:
+    MissionRewardListener(GfMenuObjMercenaries *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjMercenaries *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class MissionListListener : public ui::UIObjectListener {
+  public:
+    MissionListListener(GfMenuObjMercenaries *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];             // Actively zero-initialized unknown byte range, NOT padding; original name/role unknown.
+    GfMenuObjMercenaries *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class LaunchListener : public ui::UIObjectListener {
+  public:
+    LaunchListener(GfMenuObjMercenaries *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];             // Actively zero-initialized unknown byte range, NOT padding; original name/role unknown.
+    GfMenuObjMercenaries *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   GfMenuObjMercenaries(u32 handle);
   ~GfMenuObjMercenaries() override;
   static void setupLocationSelect(ui::UIObjectAcc &acc);
   static void setupLocationZone(ui::UIObjectAcc &acc, u16 zone);
   static void setupMission(ui::UIObjectAcc &acc);
+  static void setupLocation(ui::UIObjectAcc &acc);
+  static void setupMissionList(ui::UIObjectAcc &acc, GfMenuMissionList *list);
+  static void setupMissionFieldSkill(ui::UIObjectAcc &acc, const GfMenuBladeList *blades);
+  static void setupFormBladeSelect(ui::UIObjectAcc &acc, const GfMenuBladeList *blades);
+  static void setupReward(ui::UIObjectAcc &acc, const GfMenuBladeList *blades);
+  static void setupMissionDetail(ui::UIObjectAcc &acc, GfMenuBladeList *blades, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number);
   static void setupMercenaries(ui::UIObjectAcc &acc);
   static void updateTeamList(GfMenuTeamList *list);
   static void updateMissionList(GfMenuMissionList *list, u16 zone);
@@ -40,8 +111,10 @@ public:
   static void updateBladeList(GfMenuBladeList *list, u32 team);
   static void updateFieldSkillList(GfMenuFieldSkillList *list, const GfMenuBladeList *blades);
   static bool isExistFieldSkill(u32 mission, u32 index);
+  static void moveFieldSkillStart(ui::UIObjectAcc &acc, u32 mission, u32 index);
   static void moveFieldSkillEnd(ui::UIObjectAcc &acc, u32 mission, u32 index);
   static void setupMercenariesCondParam(ui::UIObjectAcc &acc, int index, u32 type, const char *adapterFormat, const char *iconFormat);
+  static bool isInvokeFieldSkill(u32 mission, u32 team);
   static void sendEvent(u32 handle, u32 type, u32 param);
   static int setFadeIn(u32 handle);
   static int setFadeOut(u32 handle);
@@ -71,7 +144,7 @@ public:
   mm::mtl::ReferenceObject *unknown78; // Inferred role: reference-counted object; type and original member name unknown.
   mm::mtl::ReferenceObject *unknown80; // Inferred role: reference-counted object; type and original member name unknown.
   mm::mtl::ReferenceObject *unknown88; // Inferred role: reference-counted object; type and original member name unknown.
-  mm::mtl::ReferenceObject *unknown90; // Inferred role: reference-counted object; type and original member name unknown.
+  ui::UICtrlCursorSelect *unknown90;   // Inferred role: mission list cursor, made by GfMenuObjUtil::createCursor in MissionListListener::reciveEvent; original member name unknown.
   u32 unknown98;                       // Role and original member name unknown, cleared by the constructor.
   u16 unknown9c;                       // Role and original member name unknown, set to 1 by the constructor.
   u16 unknown9e;                       // Role and original member name unknown, cleared by the constructor.
@@ -94,7 +167,13 @@ public:
 };
 
 static_assert(offsetof(GfMenuObjMercenaries, unknown28) == 0x28, "");
+static_assert(offsetof(GfMenuObjMercenaries::MainListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjMercenaries, unknown30) == 0x30, "");
+static_assert(offsetof(GfMenuObjMercenaries, unknown90) == 0x90, "");
+static_assert(offsetof(GfMenuObjMercenaries::MissionListListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjMercenaries::MissionListListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjMercenaries::LaunchListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjMercenaries::LaunchListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjMercenaries, unknown98) == 0x98, "");
 static_assert(offsetof(GfMenuObjMercenaries, unknown0a8) == 0xa8, "");
 static_assert(offsetof(GfMenuObjMercenaries, unknown0d0) == 0xd0, "");

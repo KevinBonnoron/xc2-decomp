@@ -13,7 +13,7 @@ GfMenuMissionList::~GfMenuMissionList() { ; }
 GfMenuMissionList *GfMenuMissionList::create() {
   // __LINE__ must be 38 as in the original source: it is the line argument of operator new.
 #line 38
-  GfMenuMissionList *list = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuMissionList();
+  GfMenuMissionList *list = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuMissionList();
   list->addRef();
   return list;
 }
@@ -22,7 +22,7 @@ void GfMenuMissionList::setupFromZone(const MissionSetup &setup) {
   mm::mtl::FixedVector<u16, 500> missions;
   GfGameMercenaries::getZoneMission(missions, setup.unknown14);
   SetupParam param = setup.unknown00;
-  UIListInfo<MenuMissionInfo>::setup(getAllocator(ALLOCATOR_DEFAULT), param);
+  UIListInfo<MenuMissionInfo>::setup(getAllocator(ALLOCATOR_UNKNOWN_0), param);
   if (isValid()) {
     MenuMissionInfo info = {};
     for (u32 i = 0; i < missions.size(); i++) {

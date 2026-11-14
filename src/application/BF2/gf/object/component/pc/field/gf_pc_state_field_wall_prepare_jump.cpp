@@ -36,18 +36,18 @@ void StateFieldWallPrepareJump::enter(GfComBehaviorPc *behavior, ai::State *prev
 
 void StateFieldWallPrepareJump::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
   GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
-  if (!StateUtilField::isWallIdleMotion(*comAsm) && comAsm->isEnd(ANIM_LAYER_BASE)) {
+  if (!StateUtilField::isWallIdleMotion(*comAsm) && comAsm->isEnd(ANIM_LAYER_UNKNOWN_0)) {
     StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_CLIMBIDLE);
   }
   if (!unknown18) {
     if (!GfGameManager::isPlayerPause()) {
-      reqState(STATE_ID_FIELD_WALL_IDLE);
+      reqState(STATE_ID_UNKNOWN_46);
     }
   } else if (StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_CLIMBJUMP_00)) {
     GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
     MsgPcFieldNotifyWallJumpStart message(property->unknown310.getWallJumpInfo());
     StateUtil::broadcastMainChar(*behavior, message);
-    reqState(STATE_ID_FIELD_WALL_JUMP_START);
+    reqState(STATE_ID_UNKNOWN_50);
   }
 }
 
@@ -57,7 +57,7 @@ void StateFieldWallPrepareJump::leave(GfComBehaviorPc *behavior, ai::State *next
 }
 
 bool StateFieldWallPrepareJump::recieveMessage(void *owner, fw::MessageObject *sender, fw::Message &message) {
-  if (message.unknown00 == MSG_PC_FIELD_NOTIFY_WALL_JUMP) {
+  if (message.unknown00 == MSG_PC_FIELD_NOTIFY_UNKNOWN_16777232) {
     procMsgPcFieldNotifyWallJump(static_cast<GfComBehaviorPc *>(owner), sender, static_cast<MsgPcFieldNotifyWallJump &>(message));
     return true;
   }

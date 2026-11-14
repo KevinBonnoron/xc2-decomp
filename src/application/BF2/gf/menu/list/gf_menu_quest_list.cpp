@@ -12,7 +12,7 @@ GfMenuQuestList::~GfMenuQuestList() { ; }
 GfMenuQuestList *GfMenuQuestList::create() {
   // __LINE__ must be 41 as in the original source: it is the line argument of operator new.
 #line 41
-  GfMenuQuestList *list = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuQuestList();
+  GfMenuQuestList *list = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuQuestList();
   list->addRef();
   return list;
 }

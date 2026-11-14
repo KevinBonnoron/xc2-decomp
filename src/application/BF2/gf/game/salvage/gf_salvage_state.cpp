@@ -1,6 +1,7 @@
 #include <math.h>
 
 #include "bdat.h"
+#include "fw/fw_pad.h"
 #include "gf/camera/gf_camera_player.h"
 #include "gf/event/gf_event.h"
 #include "gf/field/gf_field_time.h"
@@ -20,6 +21,7 @@
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_manager.h"
 #include "ml/dev_clock.h"
+#include "ml/dev_pad.h"
 #include "ml/rand.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_mat44.h"
@@ -39,22 +41,22 @@ struct UpdateInfo;
 
 namespace gf {
 
-constexpr f32 SETUP_FADE_OUT_SEC = 0.4f;
-constexpr f32 SETUP_FADE_IN_SEC = 0.9f;
-constexpr f32 DIVE_FADE_SEC = 0.9f;
-constexpr f32 DIVE_FADE_WAIT_SEC = 2.0f;
-constexpr f32 PARTY_FORM_DELAY_SEC = 0.2f;
-constexpr f32 CAM_WAIT_SEC = 1.0f;
-constexpr u32 FADE_FRAME = 10;
-constexpr int SALVAGE_ID_NO_TIME_LAPSE = 0x2a;
-constexpr int LAPSED_TIME_RANGE = 120;
-constexpr int LAPSED_TIME_BASE = 300;
+constexpr f32 unknown015 = 0.4f;             // Inferred role: setup fade out sec; original name unknown.
+constexpr f32 unknown016 = 0.9f;             // Inferred role: setup fade in sec; original name unknown.
+constexpr f32 unknown017 = 0.9f;             // Inferred role: dive fade sec; original name unknown.
+constexpr f32 unknown036 = 2.0f;             // Inferred role: dive fade wait sec; original name unknown.
+constexpr f32 unknown038 = 0.2f;             // Inferred role: party form delay sec; original name unknown.
+constexpr f32 unknown039 = 1.0f;             // Inferred role: cam wait sec; original name unknown.
+constexpr u32 FRAME_UNKNOWN_10 = 10;         // Inferred role: fade frame; original name unknown.
+constexpr int SALVAGE_ID_UNKNOWN_42 = 0x2a;  // Inferred role: salvage id no time lapse; original name unknown.
+constexpr int LAPSED_TIME_UNKNOWN_120 = 120; // Inferred role: lapsed time range; original name unknown.
+constexpr int LAPSED_TIME_UNKNOWN_300 = 300; // Inferred role: lapsed time base; original name unknown.
 
 void StateSalvageSkillCheck::leave(GfGameSalvage *, ai::State *) {}
 
 void StateSalvageSkillCheck::update(GfGameSalvage *, const fw::UpdateInfo &) {
   if (GfManager::isDestroyNow()) {
-    reqState(GfGameSalvage::STATE_FINISH);
+    reqState(GfGameSalvage::STATE_UNKNOWN_20);
   }
   if (!GfMenuFieldSkill::isRunning()) {
     reqState(unknown08 + 1);
@@ -73,9 +75,9 @@ void StateSalvageTBoxCheck::leave(GfGameSalvage *, ai::State *) {}
 
 void StateSalvageTBoxCheck::update(GfGameSalvage *salvage, const fw::UpdateInfo &) {
   if (salvage->isTboxExist()) {
-    reqState(GfGameSalvage::STATE_ERROR_MESSAGE);
+    reqState(GfGameSalvage::STATE_UNKNOWN_2);
   } else {
-    reqState(GfGameSalvage::STATE_ITEM_SELECT);
+    reqState(GfGameSalvage::STATE_UNKNOWN_3);
   }
 }
 
@@ -93,10 +95,10 @@ void StateSalvageErrorMessage::leave(GfGameSalvage *, ai::State *) {
 
 void StateSalvageErrorMessage::update(GfGameSalvage *, const fw::UpdateInfo &) {
   if (context->isTerm()) {
-    reqState(GfGameSalvage::STATE_WAIT);
+    reqState(GfGameSalvage::STATE_UNKNOWN_0);
   }
   if (GfManager::isDestroyNow()) {
-    reqState(GfGameSalvage::STATE_FINISH);
+    reqState(GfGameSalvage::STATE_UNKNOWN_20);
   }
 }
 
@@ -107,7 +109,7 @@ void StateSalvageItemSelect::enter(GfGameSalvage *salvage, ai::State *) {
   context = GfMenuCallContext::create();
   GfMenuObjCylinderSelect::open(context, specialItem);
   GfGameUtil::setDispByGmkType(gmk::GMK_TYPE_SALVAGE, false);
-  GfEvent::callSalvageStateChange(GfGameSalvage::STATE_ITEM_SELECT);
+  GfEvent::callSalvageStateChange(GfGameSalvage::STATE_UNKNOWN_3);
 }
 
 void StateSalvageItemSelect::leave(GfGameSalvage *, ai::State *) {
@@ -126,18 +128,18 @@ void StateSalvageItemSelect::update(GfGameSalvage *salvage, const fw::UpdateInfo
       GfItemUtil::addItemBox(result.unknown04, -1);
       reqState(unknown08 + 1);
     } else {
-      reqState(GfGameSalvage::STATE_FINISH);
+      reqState(GfGameSalvage::STATE_UNKNOWN_20);
     }
   }
   if (GfManager::isDestroyNow()) {
-    reqState(GfGameSalvage::STATE_FINISH);
+    reqState(GfGameSalvage::STATE_UNKNOWN_20);
   }
 }
 
 void StateSalvageSetupFadeOut::enter(GfGameSalvage *, ai::State *) {
   ml::DevClock::getClockNow(startClock);
-  SCOM_FADE::create(0, FADE_FRAME, mm::Col4::black);
-  GfEvent::callSalvageStateChange(GfGameSalvage::STATE_SETUP_FADE_OUT);
+  SCOM_FADE::create(0, FRAME_UNKNOWN_10, mm::Col4::black);
+  GfEvent::callSalvageStateChange(GfGameSalvage::STATE_UNKNOWN_4);
 }
 
 void StateSalvageSetupFadeOut::leave(GfGameSalvage *, ai::State *) {}
@@ -145,7 +147,7 @@ void StateSalvageSetupFadeOut::leave(GfGameSalvage *, ai::State *) {}
 void StateSalvageSetupFadeOut::update(GfGameSalvage *, const fw::UpdateInfo &) {
   f32 time = 0.0f;
   ml::DevClock::getTimeNow(time, startClock);
-  if (time >= SETUP_FADE_OUT_SEC) {
+  if (time >= unknown015) {
     reqState(unknown08 + 1);
   }
 }
@@ -167,15 +169,15 @@ void StateSalvageLoad::update(GfGameSalvage *salvage, const fw::UpdateInfo &) {
     reqState(unknown08 + 1);
   }
   if (GfManager::isDestroyNow()) {
-    reqState(GfGameSalvage::STATE_FINISH);
+    reqState(GfGameSalvage::STATE_UNKNOWN_20);
   }
 }
 
 void StateSalvageSetupFadeIn::enter(GfGameSalvage *salvage, ai::State *) {
   ml::DevClock::getClockNow(startClock);
   salvage->setPartyDisp(false);
-  SCOM_FADE::create(0, FADE_FRAME, mm::Col4(0.0f, 0.0f, 0.0f, 0.0f));
-  GfEvent::callSalvageStateChange(GfGameSalvage::STATE_SETUP_FADE_IN);
+  SCOM_FADE::create(0, FRAME_UNKNOWN_10, mm::Col4(0.0f, 0.0f, 0.0f, 0.0f));
+  GfEvent::callSalvageStateChange(GfGameSalvage::STATE_UNKNOWN_6);
 }
 
 void StateSalvageSetupFadeIn::leave(GfGameSalvage *, ai::State *) {}
@@ -183,20 +185,20 @@ void StateSalvageSetupFadeIn::leave(GfGameSalvage *, ai::State *) {}
 void StateSalvageSetupFadeIn::update(GfGameSalvage *, const fw::UpdateInfo &) {
   f32 time = 0.0f;
   ml::DevClock::getTimeNow(time, startClock);
-  if (time >= SETUP_FADE_IN_SEC) {
+  if (time >= unknown016) {
     reqState(unknown08 + 1);
   }
   if (GfManager::isDestroyNow()) {
-    reqState(GfGameSalvage::STATE_FINISH);
+    reqState(GfGameSalvage::STATE_UNKNOWN_20);
   }
 }
 
 void StateSalvageStartVoice::enter(GfGameSalvage *salvage, ai::State *) {
   ml::DevClock::getClockNow(startClock);
   if (salvage->unknownb4 != 0) {
-    salvage->playVoice(GfGameSalvage::VOICE_START_SKILL);
+    salvage->playVoice(GfGameSalvage::VOICETYPE_UNKNOWN_1);
   } else {
-    salvage->playVoice(GfGameSalvage::VOICE_START);
+    salvage->playVoice(GfGameSalvage::VOICETYPE_UNKNOWN_0);
   }
 }
 
@@ -204,7 +206,7 @@ void StateSalvageStartVoice::leave(GfGameSalvage *, ai::State *) {}
 
 void StateSalvageStartVoice::update(GfGameSalvage *salvage, const fw::UpdateInfo &) {
   if (GfManager::isDestroyNow()) {
-    reqState(GfGameSalvage::STATE_FINISH);
+    reqState(GfGameSalvage::STATE_UNKNOWN_20);
   }
   if (salvage->isVoiceEnd()) {
     reqState(unknown08 + 1);
@@ -213,7 +215,7 @@ void StateSalvageStartVoice::update(GfGameSalvage *salvage, const fw::UpdateInfo
 
 void StateSalvageDiveStart::enter(GfGameSalvage *salvage, ai::State *) {
   salvage->clearLogButtonChallenge();
-  salvage->playAnimation(GfGameSalvage::ANIMATION_SALVAGE);
+  salvage->playAnimation(GfGameSalvage::ANIMATION_UNKNOWN_1);
   salvage->playCameraDiveStart();
   unknown30 = 0;
   unknown34 = 0;
@@ -272,7 +274,7 @@ void StateSalvageDiveWait::leave(GfGameSalvage *, ai::State *) {}
 
 void StateSalvageDiveWait::update(GfGameSalvage *salvage, const fw::UpdateInfo &) {
   if (GfManager::isDestroyNow()) {
-    reqState(GfGameSalvage::STATE_FINISH);
+    reqState(GfGameSalvage::STATE_UNKNOWN_20);
   }
   if (salvage->isCameraDive()) {
     salvage->playCameraDive();
@@ -286,7 +288,7 @@ void StateSalvageDiveEnd::leave(GfGameSalvage *, ai::State *) {}
 
 void StateSalvageDiveEnd::update(GfGameSalvage *salvage, const fw::UpdateInfo &) {
   if (GfManager::isDestroyNow()) {
-    reqState(GfGameSalvage::STATE_FINISH);
+    reqState(GfGameSalvage::STATE_UNKNOWN_20);
   }
   if (salvage->isAnimationEnd()) {
     reqState(unknown08 + 1);
@@ -295,7 +297,7 @@ void StateSalvageDiveEnd::update(GfGameSalvage *salvage, const fw::UpdateInfo &)
 
 void StateSalvageDiveFadeOut::enter(GfGameSalvage *, ai::State *) {
   ml::DevClock::getClockNow(startClock);
-  SCOM_FADE::create(0, FADE_FRAME, mm::Col4::black);
+  SCOM_FADE::create(0, FRAME_UNKNOWN_10, mm::Col4::black);
 }
 
 void StateSalvageDiveFadeOut::leave(GfGameSalvage *, ai::State *) {}
@@ -303,18 +305,18 @@ void StateSalvageDiveFadeOut::leave(GfGameSalvage *, ai::State *) {}
 void StateSalvageDiveFadeOut::update(GfGameSalvage *, const fw::UpdateInfo &) {
   f32 time = 0.0f;
   ml::DevClock::getTimeNow(time, startClock);
-  if (time >= DIVE_FADE_SEC) {
+  if (time >= unknown017) {
     reqState(unknown08 + 1);
   }
   if (GfManager::isDestroyNow()) {
-    reqState(GfGameSalvage::STATE_FINISH);
+    reqState(GfGameSalvage::STATE_UNKNOWN_20);
   }
 }
 
 void StateSalvageDiveFadeWait::enter(GfGameSalvage *salvage, ai::State *) {
   ml::DevClock::getClockNow(startClock);
-  if (salvage->getBindedBdatId() != SALVAGE_ID_NO_TIME_LAPSE && !salvage->isChaseKikuInSupervia()) {
-    int lapsedTime = ml::mtRand(-LAPSED_TIME_RANGE, LAPSED_TIME_RANGE + 1) + LAPSED_TIME_BASE;
+  if (salvage->getBindedBdatId() != SALVAGE_ID_UNKNOWN_42 && !salvage->isChaseKikuInSupervia()) {
+    int lapsedTime = ml::mtRand(-LAPSED_TIME_UNKNOWN_120, LAPSED_TIME_UNKNOWN_120 + 1) + LAPSED_TIME_UNKNOWN_300;
     int hour = GfFieldTime::get()->getHour();
     int minute = GfFieldTime::get()->getMin();
     int time = lapsedTime + hour * 60 + minute;
@@ -349,7 +351,7 @@ void StateSalvageDiveFadeWait::enter(GfGameSalvage *salvage, ai::State *) {
     salvage->execRaffle(info);
   }
   salvage->calcClimb();
-  salvage->playSE(GfGameSalvage::SEID_UNKNOWN_25C);
+  salvage->playSE(GfGameSalvage::SEID_UNKNOWN_604);
   salvage->playDiveVibration();
 }
 
@@ -366,17 +368,17 @@ void StateSalvageDiveFadeWait::leave(GfGameSalvage *salvage, ai::State *) {
 void StateSalvageDiveFadeWait::update(GfGameSalvage *, const fw::UpdateInfo &) {
   f32 time = 0.0f;
   ml::DevClock::getTimeNow(time, startClock);
-  if (time >= DIVE_FADE_WAIT_SEC) {
+  if (time >= unknown036) {
     reqState(unknown08 + 1);
   }
   if (GfManager::isDestroyNow()) {
-    reqState(GfGameSalvage::STATE_FINISH);
+    reqState(GfGameSalvage::STATE_UNKNOWN_20);
   }
 }
 
 void StateSalvageDiveFadeIn::enter(GfGameSalvage *salvage, ai::State *) {
   ml::DevClock::getClockNow(startClock);
-  SCOM_FADE::create(0, FADE_FRAME, mm::Col4(0.0f, 0.0f, 0.0f, 0.0f));
+  SCOM_FADE::create(0, FRAME_UNKNOWN_10, mm::Col4(0.0f, 0.0f, 0.0f, 0.0f));
   salvage->playClimbReady();
   salvage->playWireStart(0.0f, 2.0f, 0.3f);
 }
@@ -386,11 +388,11 @@ void StateSalvageDiveFadeIn::leave(GfGameSalvage *, ai::State *) {}
 void StateSalvageDiveFadeIn::update(GfGameSalvage *, const fw::UpdateInfo &) {
   f32 time = 0.0f;
   ml::DevClock::getTimeNow(time, startClock);
-  if (time >= DIVE_FADE_SEC) {
+  if (time >= unknown017) {
     reqState(unknown08 + 1);
   }
   if (GfManager::isDestroyNow()) {
-    reqState(GfGameSalvage::STATE_FINISH);
+    reqState(GfGameSalvage::STATE_UNKNOWN_20);
   }
 }
 
@@ -418,9 +420,35 @@ void StateSalvageClimbStart::leave(GfGameSalvage *salvage, ai::State *) {
   }
 }
 
+void StateSalvageClimbStart::callback() {
+  fw::VibrationID vibration = fw::VIBRATION_ID_UNKNOWN_15;
+  switch (unknown18) {
+  case GfGameSalvage::ANIMATION_UNKNOWN_5:
+    vibration = fw::VIBRATION_ID_UNKNOWN_13;
+    break;
+  case GfGameSalvage::ANIMATION_UNKNOWN_6:
+    vibration = unknown19 == 0 ? fw::VIBRATION_ID_UNKNOWN_10 : fw::VIBRATION_ID_UNKNOWN_13;
+    break;
+  case GfGameSalvage::ANIMATION_UNKNOWN_7:
+    vibration = fw::VIBRATION_ID_UNKNOWN_7;
+    break;
+  case GfGameSalvage::ANIMATION_UNKNOWN_8:
+    vibration = fw::VIBRATION_ID_UNKNOWN_14;
+    break;
+  case GfGameSalvage::ANIMATION_UNKNOWN_9:
+    vibration = fw::VIBRATION_ID_UNKNOWN_22;
+    break;
+  case GfGameSalvage::ANIMATION_UNKNOWN_10:
+    vibration = unknown19 == 0 ? fw::VIBRATION_ID_UNKNOWN_8 : fw::VIBRATION_ID_UNKNOWN_14;
+    break;
+  }
+  fw::PadManager::playVibration(ml::PadVibrationInfo(vibration));
+  unknown19++;
+}
+
 void StateSalvageClimbStart::update(GfGameSalvage *salvage, const fw::UpdateInfo &) {
   if (GfManager::isDestroyNow()) {
-    reqState(GfGameSalvage::STATE_FINISH);
+    reqState(GfGameSalvage::STATE_UNKNOWN_20);
   }
   if (salvage->isClimbEnd() && salvage->isCameraClimbEnd()) {
     reqState(unknown08 + 1);
@@ -448,7 +476,7 @@ void StateSalvageResultUi::leave(GfGameSalvage *salvage, ai::State *) {
 
 void StateSalvageResultUi::update(GfGameSalvage *, const fw::UpdateInfo &) {
   if (GfManager::isDestroyNow()) {
-    reqState(GfGameSalvage::STATE_FINISH);
+    reqState(GfGameSalvage::STATE_UNKNOWN_20);
   }
   if (context->isTerm()) {
     reqState(unknown08 + 1);
@@ -467,7 +495,7 @@ void StateSalvagePartyFormDelay::leave(GfGameSalvage *salvage, ai::State *) {
 void StateSalvagePartyFormDelay::update(GfGameSalvage *, const fw::UpdateInfo &) {
   f32 time = 0.0f;
   ml::DevClock::getTimeNow(time, startClock);
-  if (time >= PARTY_FORM_DELAY_SEC) {
+  if (time >= unknown038) {
     reqState(unknown08 + 1);
   }
 }
@@ -479,7 +507,7 @@ void StateSalvageCamWait::leave(GfGameSalvage *, ai::State *) {}
 void StateSalvageCamWait::update(GfGameSalvage *, const fw::UpdateInfo &) {
   f32 time = 0.0f;
   ml::DevClock::getTimeNow(time, startClock);
-  if (time >= CAM_WAIT_SEC) {
+  if (time >= unknown039) {
     reqState(unknown08 + 1);
   }
 }
@@ -488,9 +516,9 @@ void StateSalvageFinish::enter(GfGameSalvage *, ai::State *) { ml::DevClock::get
 
 void StateSalvageFinish::leave(GfGameSalvage *, ai::State *) {
   GfGameUtil::setDispByGmkType(gmk::GMK_TYPE_SALVAGE, true);
-  GfEvent::callSalvageStateChange(GfGameSalvage::STATE_FINISH);
+  GfEvent::callSalvageStateChange(GfGameSalvage::STATE_UNKNOWN_20);
 }
 
-void StateSalvageFinish::update(GfGameSalvage *, const fw::UpdateInfo &) { reqState(GfGameSalvage::STATE_WAIT); }
+void StateSalvageFinish::update(GfGameSalvage *, const fw::UpdateInfo &) { reqState(GfGameSalvage::STATE_UNKNOWN_0); }
 
 } // namespace gf

@@ -83,7 +83,7 @@ void AiScriptManager::_end(int index) {
   gf::GfScriptManager::destroyScript(_getScriptType(index));
 }
 
-int AiScriptManager::_getScriptType(int index) { return index + gf::SCRIPT_SLOT_AI; }
+int AiScriptManager::_getScriptType(int index) { return index + gf::SCRIPT_SLOT_UNKNOWN_36; }
 
 int AiScriptManager::_searchData(const char *name) {
   for (int i = 0; i < static_cast<int>(unknown003); i++) {

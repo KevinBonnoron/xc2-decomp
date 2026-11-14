@@ -68,14 +68,14 @@ public:
 class GmkPhantom : public mm::mtl::IntrusiveListNode<GmkPhantom>, public fw::ColiUserData {
 public:
   enum ShapeType {
-    SHAPE_TYPE_NONE = 0,
-    SHAPE_TYPE_SPHERE = 1,
-    SHAPE_TYPE_CAPSULE = 2,
-    SHAPE_TYPE_BOX = 3,
+    SHAPE_TYPE_UNKNOWN_0 = 0, // Inferred role: none; original name unknown.
+    SHAPE_TYPE_UNKNOWN_1 = 1, // Inferred role: sphere; original name unknown.
+    SHAPE_TYPE_UNKNOWN_2 = 2, // Inferred role: capsule; original name unknown.
+    SHAPE_TYPE_UNKNOWN_3 = 3, // Inferred role: box; original name unknown.
   };
 
   struct CreateInfo {
-    CreateInfo() : unknown00(SHAPE_TYPE_NONE), unknown10(0.0f, 0.0f, 0.0f), unknown20(0.0f, 0.0f, 0.0f), unknown40(nullptr), unknown48(false) {
+    CreateInfo() : unknown00(SHAPE_TYPE_UNKNOWN_0), unknown10(0.0f, 0.0f, 0.0f), unknown20(0.0f, 0.0f, 0.0f), unknown40(nullptr), unknown48(false) {
       for (u32 i = 0; i < 3; i++) {
         unknown30[i] = 0.0f;
       }
@@ -93,11 +93,14 @@ public:
 
   explicit GmkPhantom(const CreateInfo *info = nullptr);
   void create(const CreateInfo &info);
-  ~GmkPhantom() override;
+  virtual ~GmkPhantom();
   void dispose();
   void create(const AGmkBase &gmk, IGmkPhantomEventListener *listener, bool isCheckParty);
   void update(const GmkPhantomCheckResults &results);
   const mm::mtl::RTTI *getRTTI() const override { return &m_rtti; }
+
+  // Inferred helper: true when there is no phantom or something is inside it; original name unknown.
+  bool unknown001() const { return unknown78 == nullptr || unknown83; }
 
   CreateInfo unknown20;      // Inferred role: create info; original member name unknown.
   const char *unknown70;     // Inferred role: name; original member name unknown.
@@ -119,7 +122,7 @@ static_assert(sizeof(GmkPhantom) == 0x90, "");
 class GmkPhantomSimple {
 public:
   struct CreateInfo {
-    CreateInfo() : unknown00(GmkPhantom::SHAPE_TYPE_NONE), unknown10(0.0f, 0.0f, 0.0f), unknown20(0.0f, 0.0f, 0.0f) {
+    CreateInfo() : unknown00(GmkPhantom::SHAPE_TYPE_UNKNOWN_0), unknown10(0.0f, 0.0f, 0.0f), unknown20(0.0f, 0.0f, 0.0f) {
       for (u32 i = 0; i < 3; i++) {
         unknown30[i] = 0.0f;
       }

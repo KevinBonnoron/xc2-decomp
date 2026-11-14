@@ -69,7 +69,7 @@ namespace mm {
 namespace mtl {
 
 template <> struct is_pod<ui::UIEventManager::EventInfo> {
-  static const bool value = true;
+  static const bool unknown001 = true; // Inferred role: whether the type is plain old data, so it is copied with memcpy; original name unknown.
 };
 
 } // namespace mtl

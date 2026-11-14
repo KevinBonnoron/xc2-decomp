@@ -1,8 +1,10 @@
 #pragma once
 #include <stddef.h>
 
+#include "eflib/effect_send_param.h"
 #include "event/i_attach_actor.h"
 #include "mm_math/mm_col4.h"
+#include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
@@ -14,7 +16,7 @@ enum ATTACH_TYPE : int;
 
 class EffectCtrl {
 public:
-  static constexpr u32 HANDLE_COUNT = 64;
+  static constexpr u32 HANDLE_UNKNOWN_64 = 64; // Inferred role: handle count; original name unknown.
 
   EffectCtrl();
   virtual ~EffectCtrl() {}
@@ -70,10 +72,18 @@ private:
     unknown204 = 0;
   }
 
-  u32 unknown08;                                     // Inferred role: handle; original member name unknown.
-  mm::mtl::FixedVector<u32, HANDLE_COUNT> unknown10; // Inferred role: handles; original member name unknown.
-  mm::mtl::FixStr<64> unknown118;                    // Inferred role: name; original member name unknown.
-  u32 unknown15c;                                    // Inferred role: attribute; original member name unknown.
+  // Inferred helper: fills the parameters sent to the effect manager; original name unknown.
+  void unknown001(effect::SendParam &param) const {
+    param.unknown00.unknown011(m_rot);
+    param.unknown00.setTrans(mm::Vec3(m_pos));
+    param.unknown60 = m_scale;
+    param.unknown40 = m_color;
+  }
+
+  u32 unknown08;                                          // Inferred role: handle; original member name unknown.
+  mm::mtl::FixedVector<u32, HANDLE_UNKNOWN_64> unknown10; // Inferred role: handles; original member name unknown.
+  mm::mtl::FixStr<64> unknown118;                         // Inferred role: name; original member name unknown.
+  u32 unknown15c;                                         // Inferred role: attribute; original member name unknown.
   mm::Vec3 m_pos;
   mm::Vec3 m_rot;
   mm::Vec3 m_scale;

@@ -16,7 +16,7 @@ struct Mat44;
 
 namespace fw {
 
-ModelObject::ModelObject() : unknown20(0), m_interface(nullptr), unknown38(0), m_active(true), unknown3d(false), unknown50(0.0f, 0.0f, 0.0f), unknown60(1.0f) {}
+ModelObject::ModelObject() : unknown20(0), m_interface(nullptr), unknown38(0), m_active(true), unknown3d(false), m_addOffsetPos(0.0f, 0.0f, 0.0f), unknown60(1.0f) {}
 
 ModelObject::~ModelObject() {
   if (unknown28 != nullptr) {
@@ -35,7 +35,7 @@ void ModelObject::update() {
       const mm::Mat44 &matrix = unknown40.get()->unknown60;
       m_interface->setMat(matrix);
       if (unknown3d) {
-        m_interface->getOffsetInfo(true)->unknown00 = unknown50;
+        m_interface->getOffsetInfo(true)->unknown00 = m_addOffsetPos;
       }
     }
   }
@@ -62,6 +62,6 @@ void ModelObject::setActive(bool isActive) { m_active = isActive; }
 
 bool ModelObject::isActive() const { return m_active; }
 
-void ModelObject::setAddOffsetPos(const mm::Vec3 &offset) { unknown50 = offset; }
+void ModelObject::setAddOffsetPos(const mm::Vec3 &offset) { m_addOffsetPos = offset; }
 
 } // namespace fw

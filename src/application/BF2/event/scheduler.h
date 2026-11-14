@@ -16,23 +16,23 @@ public:
   typedef void (Scheduler::*Func)(gf::GfObj *obj);
 
   enum ORDER {
-    ORDER_FLD2EVT,
-    ORDER_EVT2IDLE,
-    ORDER_EVT2FLD,
+    ORDER_UNKNOWN_0, // Inferred role: fld2evt; original name unknown.
+    ORDER_UNKNOWN_1, // Inferred role: evt2idle; original name unknown.
+    ORDER_UNKNOWN_2, // Inferred role: evt2fld; original name unknown.
     ORDER_COUNT,
   };
 
   enum USE {
-    USE_TURN = 1 << 2,
-    USE_RETURN = 1 << 3,
-    USE_LOOK = 1 << 4,
-    USE_LOOK_RESET = 1 << 5,
-    USE_FADE = 1 << 6,
-    USE_ITEM = 1 << 7,
+    USE_UNKNOWN_2 = 1 << 2, // Inferred role: turn; original name unknown.
+    USE_UNKNOWN_3 = 1 << 3, // Inferred role: return; original name unknown.
+    USE_UNKNOWN_4 = 1 << 4, // Inferred role: look; original name unknown.
+    USE_UNKNOWN_5 = 1 << 5, // Inferred role: look reset; original name unknown.
+    USE_UNKNOWN_6 = 1 << 6, // Inferred role: fade; original name unknown.
+    USE_UNKNOWN_7 = 1 << 7, // Inferred role: item; original name unknown.
   };
 
   enum {
-    FLAG_LOOK_START = 1 << 0,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: look start flag; original name unknown.
   };
 
   Scheduler(gf::GF_OBJ_HANDLE *handle, u32 type);

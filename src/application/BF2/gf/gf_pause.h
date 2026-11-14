@@ -9,15 +9,15 @@
 namespace gf {
 
 enum {
-  PAUSE_BIT_SYSTEM = 1 << 0,
-  PAUSE_BIT_GAME = 1 << 1,
-  PAUSE_BIT_EVENT_SOUND = 1 << 2,
-  PAUSE_BIT_GAME_SOUND = 1 << 3,
-  PAUSE_BIT_FIELD_TIME = 1 << 4,
-  PAUSE_BIT_EVENT = 1 << 5,
-  PAUSE_BIT_MAIN_MENU = 1 << 6,
+  PAUSE_BIT_UNKNOWN_0 = 1 << 0, // Inferred role: pause bit system; original name unknown.
+  PAUSE_BIT_UNKNOWN_1 = 1 << 1, // Inferred role: pause bit game; original name unknown.
+  PAUSE_BIT_UNKNOWN_2 = 1 << 2, // Inferred role: pause bit event sound; original name unknown.
+  PAUSE_BIT_UNKNOWN_3 = 1 << 3, // Inferred role: pause bit game sound; original name unknown.
+  PAUSE_BIT_UNKNOWN_4 = 1 << 4, // Inferred role: pause bit field time; original name unknown.
+  PAUSE_BIT_UNKNOWN_5 = 1 << 5, // Inferred role: pause bit event; original name unknown.
+  PAUSE_BIT_UNKNOWN_6 = 1 << 6, // Inferred role: pause bit main menu; original name unknown.
   PAUSE_BIT_UNKNOWN_7 = 1 << 7, // Inferred role: pauses the effects (GfGameEvent::gevPause); original name unknown.
-  PAUSE_BIT_EVENT_SKIP = 1 << 9,
+  PAUSE_BIT_UNKNOWN_9 = 1 << 9, // Inferred role: pause bit event skip; original name unknown.
 };
 
 struct GF_PAUSE_HANDLE;

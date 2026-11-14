@@ -17,14 +17,14 @@ namespace gf {
 
 namespace pc {
 
-LookAtPlugin::LookAtPlugin() : unknown20(INVALID_SEARCH_OBJ), unknown28(getAllocator(ALLOCATOR_DEFAULT)), unknown40(nullptr), unknown68(0), unknown6c(0.0f), unknown70() {}
+LookAtPlugin::LookAtPlugin() : unknown20(unknown012), unknown28(getAllocator(ALLOCATOR_UNKNOWN_0)), unknown40(nullptr), unknown68(0), unknown6c(0.0f), unknown70() {}
 
 LookAtPlugin::~LookAtPlugin() {}
 
 void LookAtPlugin::cleanup(GfComBehaviorPc &) {
-  if (unknown20 != INVALID_SEARCH_OBJ) {
+  if (unknown20 != unknown012) {
     GfGameSearchObj::destroyObj(unknown20);
-    unknown20 = INVALID_SEARCH_OBJ;
+    unknown20 = unknown012;
   }
   unknown10 = nullptr;
 }

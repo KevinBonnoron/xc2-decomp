@@ -241,33 +241,34 @@ private:
 class GfGameSalvage : public mm::mtl::PtrSingleton<GfGameSalvage> {
 public:
   enum STATE {
-    STATE_WAIT,
-    STATE_TBOX_CHECK,
-    STATE_ERROR_MESSAGE,
-    STATE_ITEM_SELECT,
-    STATE_SETUP_FADE_OUT,
-    STATE_LOAD,
-    STATE_SETUP_FADE_IN,
-    STATE_SKILL_CHECK,
-    STATE_START_VOICE,
-    STATE_DIVE_START,
-    STATE_DIVE_WAIT,
-    STATE_DIVE_END,
-    STATE_DIVE_FADE_OUT,
-    STATE_DIVE_FADE_WAIT,
-    STATE_DIVE_FADE_IN,
-    STATE_CLIMB_START,
-    STATE_RESULT,
-    STATE_RESULT_UI,
-    STATE_PARTY_FORM_DELAY,
-    STATE_CAM_WAIT,
-    STATE_FINISH,
+    STATE_UNKNOWN_0,  // Inferred role: state wait; original name unknown.
+    STATE_UNKNOWN_1,  // Inferred role: state tbox check; original name unknown.
+    STATE_UNKNOWN_2,  // Inferred role: state error message; original name unknown.
+    STATE_UNKNOWN_3,  // Inferred role: state item select; original name unknown.
+    STATE_UNKNOWN_4,  // Inferred role: state setup fade out; original name unknown.
+    STATE_UNKNOWN_5,  // Inferred role: state load; original name unknown.
+    STATE_UNKNOWN_6,  // Inferred role: state setup fade in; original name unknown.
+    STATE_UNKNOWN_7,  // Inferred role: state skill check; original name unknown.
+    STATE_UNKNOWN_8,  // Inferred role: state start voice; original name unknown.
+    STATE_UNKNOWN_9,  // Inferred role: state dive start; original name unknown.
+    STATE_UNKNOWN_10, // Inferred role: state dive wait; original name unknown.
+    STATE_UNKNOWN_11, // Inferred role: state dive end; original name unknown.
+    STATE_UNKNOWN_12, // Inferred role: state dive fade out; original name unknown.
+    STATE_UNKNOWN_13, // Inferred role: state dive fade wait; original name unknown.
+    STATE_UNKNOWN_14, // Inferred role: state dive fade in; original name unknown.
+    STATE_UNKNOWN_15, // Inferred role: state climb start; original name unknown.
+    STATE_UNKNOWN_16, // Inferred role: state result; original name unknown.
+    STATE_UNKNOWN_17, // Inferred role: state result ui; original name unknown.
+    STATE_UNKNOWN_18, // Inferred role: state party form delay; original name unknown.
+    STATE_UNKNOWN_19, // Inferred role: state cam wait; original name unknown.
+    STATE_UNKNOWN_20, // Inferred role: state finish; original name unknown.
+    // STATE_MAX is the number of enumerators above.
     STATE_MAX,
   };
 
   enum VoiceType {
-    VOICE_START,
-    VOICE_START_SKILL,
+    VOICETYPE_UNKNOWN_0, // Inferred role: voice start; original name unknown.
+    VOICETYPE_UNKNOWN_1, // Inferred role: voice start skill; original name unknown.
     VOICETYPE_UNKNOWN_2,
     VOICETYPE_UNKNOWN_3,
     VOICETYPE_UNKNOWN_4,
@@ -276,21 +277,21 @@ public:
   };
 
   enum AnimationType {
-    ANIMATION_IDLE,
-    ANIMATION_SALVAGE,
-    ANIMATION_SUCCESS,
-    ANIMATION_GREAT_SUCCESS,
-    ANIMATION_FAILURE,
-    ANIMATION_RESULT_00,
-    ANIMATION_RESULT_01,
-    ANIMATION_RESULT_02,
-    ANIMATION_RESULT_03,
-    ANIMATION_RESULT_04,
-    ANIMATION_RESULT_05,
+    ANIMATION_UNKNOWN_0,  // Inferred role: animation idle; original name unknown.
+    ANIMATION_UNKNOWN_1,  // Inferred role: animation salvage; original name unknown.
+    ANIMATION_UNKNOWN_2,  // Inferred role: animation success; original name unknown.
+    ANIMATION_UNKNOWN_3,  // Inferred role: animation great success; original name unknown.
+    ANIMATION_UNKNOWN_4,  // Inferred role: animation failure; original name unknown.
+    ANIMATION_UNKNOWN_5,  // Inferred role: animation result 00; original name unknown.
+    ANIMATION_UNKNOWN_6,  // Inferred role: animation result 01; original name unknown.
+    ANIMATION_UNKNOWN_7,  // Inferred role: animation result 02; original name unknown.
+    ANIMATION_UNKNOWN_8,  // Inferred role: animation result 03; original name unknown.
+    ANIMATION_UNKNOWN_9,  // Inferred role: animation result 04; original name unknown.
+    ANIMATION_UNKNOWN_10, // Inferred role: animation result 05; original name unknown.
   };
 
   enum SEID {
-    SEID_UNKNOWN_25C = 0x25c, // Inferred role: sound effect played when the dive starts; original name unknown.
+    SEID_UNKNOWN_604 = 0x25c, // Inferred role: sound effect played when the dive starts; original name unknown.
   };
 
   struct RaffleInfo {

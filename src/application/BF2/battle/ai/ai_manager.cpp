@@ -10,7 +10,7 @@ namespace ai {
 void AiManager::init() {
   AiScriptDataManager::init();
   AiScriptManager::init();
-  gf::GfObjManager::addListener(this, gf::IGfObjListener::OBJEVT_ALL);
+  gf::GfObjManager::addListener(this, gf::IGfObjListener::OBJEVT_UNKNOWN_0);
 }
 
 void AiManager::destroy() {
@@ -88,7 +88,7 @@ void AiManager::unregist(gf::GF_OBJ_HANDLE *handle) {
 }
 
 void AiManager::listenerGfObj(OBJEVT event, gf::GF_OBJ_HANDLE *handle, u32) {
-  if (event == gf::IGfObjListener::OBJEVT_DESTROY) {
+  if (event == gf::IGfObjListener::OBJEVT_UNKNOWN_3) {
     unregist(handle);
   }
 }

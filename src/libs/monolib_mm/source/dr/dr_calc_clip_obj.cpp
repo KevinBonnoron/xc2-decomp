@@ -11,27 +11,27 @@ namespace ml {
 namespace {
 
 // Inferred role: clip sphere data; original type name unknown.
-struct unknown001 {
+struct unknown084 {
   f32 unknown00[3]; // Inferred role: center; original member name unknown.
   f32 unknown0c;    // Inferred role: squared radius; original member name unknown.
 };
 
 // Inferred role: clip data of a non rotated cylinder; original type name unknown.
-struct unknown002 {
+struct unknown085 {
   f32 unknown00[3]; // Inferred role: center; original member name unknown.
   f32 unknown0c;    // Inferred role: squared radius; original member name unknown.
   f32 unknown10;    // Inferred role: half height; original member name unknown.
 };
 
 // Inferred role: clip data of a non rotated box; original type name unknown.
-struct unknown003 {
+struct unknown086 {
   f32 unknown00[3]; // Inferred role: center; original member name unknown.
   f32 unknown0c;    // Inferred role: squared radius; original member name unknown.
   f32 unknown10[3]; // Inferred role: half extents; original member name unknown.
 };
 
 // Inferred role: clip data of a rotated box or cylinder; original type name unknown.
-struct unknown004 {
+struct unknown087 {
   f32 unknown00[3][4]; // Inferred role: axes; original member name unknown.
   f32 unknown30[3];    // Inferred role: center; original member name unknown.
   f32 unknown3c;       // Inferred role: squared radius; original member name unknown.
@@ -52,6 +52,11 @@ void DrCalcClipObj::update(DrCalcViewWork *viewWork, u32 *flags) {
   unknown60 = flags;
   unknown3c &= ~0xc;
   seachTree(unknown20, viewWork->unknown400);
+}
+
+DrCalcClipObj::DrCalcClipObj(const void *data, DrMan *man)
+    : DrCalcClipMan::unknown009<DrCalcClipObj>(), unknown28(nullptr), unknown3c(0), unknown40(0), unknown42(0), unknown44(0), unknown58(nullptr), unknown60(nullptr) {
+  setupClip(static_cast<const u8 *>(data), man);
 }
 
 void DrCalcClipObj::setupClip(const u8 *data, DrMan *man) {
@@ -104,7 +109,7 @@ void DrCalcClipObj::seachTree(const MdsClipListTreeData *node, const mm::Vec3 &p
       u32 index = indices[i];
       if (!(unknown60[header->unknown04 >> 5] & (1 << (header->unknown04 & 0x1f)))) {
         const unknown007 *group = &unknown30[index];
-        if (group->unknown02 == 0 || !(DrMan::getIns()->unknown1d20[group->unknown02 >> 5] & (1 << (group->unknown02 & 0x1f)))) {
+        if (group->unknown02 == 0 || !(DrMan::getIns()->m_gblIdx[group->unknown02 >> 5] & (1 << (group->unknown02 & 0x1f)))) {
           if ((this->*s_pColiCheck[header->unknown06])(reinterpret_cast<const u8 *>(unknown10) + header->unknown00, position)) {
             unknown60[header->unknown04 >> 5] |= 1 << (header->unknown04 & 0x1f);
             if (unknown28 != nullptr) {
@@ -150,7 +155,7 @@ void DrCalcClipObj::seachCheckTree(const MdsClipListTreeData *node, const mm::Ve
         continue;
       }
       const unknown007 *group = &unknown30[index];
-      if (group->unknown02 != 0 && (DrMan::getIns()->unknown1d20[group->unknown02 >> 5] & (1 << (group->unknown02 & 0x1f)))) {
+      if (group->unknown02 != 0 && (DrMan::getIns()->m_gblIdx[group->unknown02 >> 5] & (1 << (group->unknown02 & 0x1f)))) {
         continue;
       }
       if (flag->unknown00 < radius) {
@@ -196,7 +201,7 @@ void DrCalcClipObj::seachOffTree(const MdsClipListTreeData *node, const mm::Vec3
         continue;
       }
       const unknown007 *group = &unknown30[index];
-      if (group->unknown02 != 0 && (DrMan::getIns()->unknown1d20[group->unknown02 >> 5] & (1 << (group->unknown02 & 0x1f)))) {
+      if (group->unknown02 != 0 && (DrMan::getIns()->m_gblIdx[group->unknown02 >> 5] & (1 << (group->unknown02 & 0x1f)))) {
         continue;
       }
       if (unknown28[header->unknown04].unknown00 < radius) {
@@ -219,7 +224,7 @@ void DrCalcClipObj::seachOffTree(const MdsClipListTreeData *node, const mm::Vec3
 }
 
 bool DrCalcClipObj::clipcoli_sphere(const u8 *data, const mm::Vec3 &pos) {
-  const unknown001 *sphere = reinterpret_cast<const unknown001 *>(data);
+  const unknown084 *sphere = reinterpret_cast<const unknown084 *>(data);
   f32 dx = pos.x - sphere->unknown00[0];
   f32 dy = pos.y - sphere->unknown00[1];
   f32 dz = pos.z - sphere->unknown00[2];
@@ -227,7 +232,7 @@ bool DrCalcClipObj::clipcoli_sphere(const u8 *data, const mm::Vec3 &pos) {
 }
 
 bool DrCalcClipObj::clipcoli_notrot_cylinder(const u8 *data, const mm::Vec3 &pos) {
-  const unknown002 *cylinder = reinterpret_cast<const unknown002 *>(data);
+  const unknown085 *cylinder = reinterpret_cast<const unknown085 *>(data);
   f32 dy = pos.y - cylinder->unknown00[1];
   if (!(cylinder->unknown10 >= dy && dy >= -cylinder->unknown10)) {
     return false;
@@ -238,7 +243,7 @@ bool DrCalcClipObj::clipcoli_notrot_cylinder(const u8 *data, const mm::Vec3 &pos
 }
 
 bool DrCalcClipObj::clipcoli_notrot_box(const u8 *data, const mm::Vec3 &pos) {
-  const unknown003 *box = reinterpret_cast<const unknown003 *>(data);
+  const unknown086 *box = reinterpret_cast<const unknown086 *>(data);
   f32 dx = pos.x - box->unknown00[0];
   f32 dy = pos.y - box->unknown00[1];
   f32 dz = pos.z - box->unknown00[2];
@@ -258,7 +263,7 @@ bool DrCalcClipObj::clipcoli_notrot_box(const u8 *data, const mm::Vec3 &pos) {
 }
 
 bool DrCalcClipObj::clipcoli_cylinder(const u8 *data, const mm::Vec3 &pos) {
-  const unknown004 *cylinder = reinterpret_cast<const unknown004 *>(data);
+  const unknown087 *cylinder = reinterpret_cast<const unknown087 *>(data);
   f32 dx = pos.x - cylinder->unknown30[0];
   f32 dy = pos.y - cylinder->unknown30[1];
   f32 dz = pos.z - cylinder->unknown30[2];
@@ -275,7 +280,7 @@ bool DrCalcClipObj::clipcoli_cylinder(const u8 *data, const mm::Vec3 &pos) {
 }
 
 bool DrCalcClipObj::clipcoli_box(const u8 *data, const mm::Vec3 &pos) {
-  const unknown004 *box = reinterpret_cast<const unknown004 *>(data);
+  const unknown087 *box = reinterpret_cast<const unknown087 *>(data);
   f32 dx = pos.x - box->unknown30[0];
   f32 dy = pos.y - box->unknown30[1];
   f32 dz = pos.z - box->unknown30[2];

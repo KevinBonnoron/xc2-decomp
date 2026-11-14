@@ -5,7 +5,7 @@
 namespace gf {
 namespace pc {
 
-void StateFieldWallAdsorptionGround::enter(GfComBehaviorPc *behavior, ai::State *previous) { StateUtilField::resetCameraForWall(*behavior, StateUtilField::TIMING_GROUND); }
+void StateFieldWallAdsorptionGround::enter(GfComBehaviorPc *behavior, ai::State *previous) { StateUtilField::resetCameraForWall(*behavior, StateUtilField::TIMING_UNKNOWN_1); }
 
 void StateFieldWallAdsorptionGround::leave(GfComBehaviorPc *behavior, ai::State *next) {}
 

@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "ml/reslist.h"
 #include "ml/work_cpu.h"
 #include "ml/work_obj.h"
 #include "mm_mtl/fixed_list.h"
@@ -27,6 +28,7 @@ public:
   bool isBusyJob(int handle) const;
   TJOB *transferJob(WorkCpuThread *destination);
   bool getJobThread(TJOB *&job, bool isBackground);
+  bool addJobThreadList(reslist<TJOB *> *list, u32 mode);
   bool addJobThread(TJOB *job);
   u32 getAboutJobNumC() const;
   void beginUpdate();

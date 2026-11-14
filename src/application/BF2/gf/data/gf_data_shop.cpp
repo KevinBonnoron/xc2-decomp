@@ -5,11 +5,11 @@
 namespace gf {
 
 enum {
-  SHOP_TYPE_NORMAL = 0,
+  SHOP_UNKNOWN_0 = 0, // Inferred role: shop type normal; original name unknown.
 };
 
-constexpr u32 DEFAULT_ITEM_COUNT = 10;
-constexpr u32 ADD_ITEM_COUNT = 5;
+constexpr u32 ITEM_UNKNOWN_10 = 10; // Inferred role: default item count; original name unknown.
+constexpr u32 ITEM_UNKNOWN_5 = 5;   // Inferred role: add item count; original name unknown.
 
 static u32 getBuyItemBit(const GfBdatShop &bdatShop, u32 table, u32 item) {
   if (bdatShop.getShopNormalDefItem(table, 0) == item) {
@@ -77,21 +77,21 @@ static u32 getBuyItemBit(const GfBdatShop &bdatShop, u32 table, u32 item) {
 
 u32 GfDataShop::getItemBit(u32 shop) {
   GfBdatShop *bdatShop = GfBdatShop::get();
-  if (bdatShop->getShopListShopType(shop) != SHOP_TYPE_NORMAL) {
+  if (bdatShop->getShopListShopType(shop) != SHOP_UNKNOWN_0) {
     return 0;
   }
 
   u32 table = bdatShop->getShopListTableID(shop);
   u32 itemBit = 0;
-  for (u32 index = 0; index < DEFAULT_ITEM_COUNT; index++) {
+  for (u32 index = 0; index < ITEM_UNKNOWN_10; index++) {
     if (bdatShop->getShopNormalDefItem(table, index) != 0) {
       itemBit |= 1 << index;
     }
   }
 
-  for (u32 index = 0; index < ADD_ITEM_COUNT; index++) {
+  for (u32 index = 0; index < ITEM_UNKNOWN_5; index++) {
     if (bdatShop->getShopNormalAddItem(table, index) != 0) {
-      itemBit |= (bdatShop->getShopNormalPrivilegeCheck(table, index) == 0) << (DEFAULT_ITEM_COUNT + index);
+      itemBit |= (bdatShop->getShopNormalPrivilegeCheck(table, index) == 0) << (ITEM_UNKNOWN_10 + index);
     }
   }
 
@@ -117,7 +117,7 @@ void GfDataShop::setBuyItem(u32 shop, u32 item) {
   }
 
   GfBdatShop *bdatShop = GfBdatShop::get();
-  if (bdatShop->getShopListShopType(shop) != SHOP_TYPE_NORMAL) {
+  if (bdatShop->getShopListShopType(shop) != SHOP_UNKNOWN_0) {
     return;
   }
 

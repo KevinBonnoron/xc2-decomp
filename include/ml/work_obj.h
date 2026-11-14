@@ -15,12 +15,12 @@ public:
   enum EVT {};
 
   enum WKSTATE {
-    WKSTATE_NONE,
-    WKSTATE_INIT,
-    WKSTATE_LOGIN,
-    WKSTATE_RUN,
-    WKSTATE_LOGOUT,
-    WKSTATE_SHUTDOWN,
+    WKSTATE_UNKNOWN_0, // Inferred role: none; original name unknown.
+    WKSTATE_UNKNOWN_1, // Inferred role: init; original name unknown.
+    WKSTATE_UNKNOWN_2, // Inferred role: login; original name unknown.
+    WKSTATE_UNKNOWN_3, // Inferred role: run; original name unknown.
+    WKSTATE_UNKNOWN_4, // Inferred role: logout; original name unknown.
+    WKSTATE_UNKNOWN_5, // Inferred role: shutdown; original name unknown.
   };
 
   WorkObj(const char *name, WorkObj *parent, int childNum);
@@ -34,6 +34,8 @@ public:
   void wkRequestShutdown();
   void wkSetEvent(EVT event);
   void wkSetEventCurrent(EVT event);
+  template <class T> void wkSetEvent(EVT event, const T &param);
+  template <class T> void wkSetEventCurrent(EVT event, const T &param);
   void wkSetEventChild(EVT event);
   bool wkCheckTimeout(u32 time, bool isTimeout, const char *message);
   void wkReplaceHasChild(int childNum);
@@ -54,7 +56,7 @@ public:
 
   bool wkIsShutdown() const { return (unknowna0 & 1) | unknown19c; }
   bool wkIsWaitException() const { return (unknowna0 & 0x10) != 0 || unknowna8.find(2) >= 0; }
-  bool wkIsActive() const { return (unknown4c | 1) == WKSTATE_RUN; }
+  bool wkIsActive() const { return (unknown4c | 1) == WKSTATE_UNKNOWN_3; }
 
   mm::mtl::FixStr<64> unknown08;                     // Inferred role: name; original member name unknown.
   int unknown4c;                                     // Inferred role: state; original member name unknown.

@@ -5,6 +5,8 @@
 
 namespace ml {
 
+DrResMdoSampler::DrResMdoSampler(const u8 *data) : unknown00(nullptr), unknown08(nullptr), unknown10(data), unknown18(1), unknown20(nullptr), unknown28(0) { setupSampler(data); }
+
 DrResMdoSampler::~DrResMdoSampler() { samplerRelease(); }
 
 void DrResMdoSampler::samplerRelease() {

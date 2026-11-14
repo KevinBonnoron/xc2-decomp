@@ -19,7 +19,7 @@ BladeArtsManager::BladeArtsManager() : unknown198(0) {}
 BladeArtsManager::~BladeArtsManager() {}
 
 void BladeArtsManager::Create() {
-  BladeArtsManager *manager = new (gf::getAllocator(gf::ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) BladeArtsManager();
+  BladeArtsManager *manager = new (gf::getAllocator(gf::ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) BladeArtsManager();
   manager->Initialize();
 }
 
@@ -89,7 +89,7 @@ gf::GF_OBJ_HANDLE *BladeArtsManager::GetTargetHandle(gf::GF_OBJ_HANDLE *handle) 
       return unknown08[i].unknown10;
     }
   }
-  return gf::INVALID_HANDLE;
+  return gf::unknown020;
 }
 
 bool BladeArtsManager::IsRegister(gf::GF_OBJ_HANDLE *handle) const {

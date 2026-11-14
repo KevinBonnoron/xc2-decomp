@@ -7,7 +7,8 @@
 
 namespace ml {
 
-static const GrlStencil s_stencils[] = {
+// Inferred role: stencil operations; original name unknown.
+static const GrlStencil unknown001[] = {
     GRL_STENCIL_KEEP,
     GRL_STENCIL_ZERO,
     GRL_STENCIL_REPLACE,
@@ -18,7 +19,8 @@ static const GrlStencil s_stencils[] = {
     GRL_STENCIL_DECR_WRAP,
 };
 
-static const GrlCompare s_compares[] = {
+// Inferred role: compare functions; original name unknown.
+static const GrlCompare unknown002[] = {
     GRL_COMPARE_NEVER,
     GRL_COMPARE_LESS,
     GRL_COMPARE_EQUAL,
@@ -110,15 +112,15 @@ void DrAPGxType::setupCullingBack() { grlib::CGLibPolygon::setCullingBack(); }
 void DrAPGxType::setupStencilPrePassReset() { grlib::CGLibDepthCtl::setDepthControl(true, true, GRL_COMPARE_LESS); }
 
 void DrAPGxType::setupStencilTest(u8 isTest, u8 isWrite, int compare, u8 isStencil, u32 ref, u32 mask, int stencilCompare, int fail, int depthFail, int pass) {
-  grlib::CGLibDepthCtl::setDepthStencilControl(isTest, isWrite, s_compares[compare], isStencil, s_compares[stencilCompare], ref, mask, mask, s_stencils[fail], s_stencils[depthFail], s_stencils[pass]);
+  grlib::CGLibDepthCtl::setDepthStencilControl(isTest, isWrite, unknown002[compare], isStencil, unknown002[stencilCompare], ref, mask, mask, unknown001[fail], unknown001[depthFail], unknown001[pass]);
 }
 
 void DrAPGxType::setupStencilTestWriteMask(u8 isTest, u8 isWrite, int compare, u8 isStencil, u32 ref, u32 mask, u32 writeMask, int stencilCompare, int fail, int depthFail, int pass) {
   grlib::CGLibDepthCtl::setDepthStencilControl(
-      isTest, isWrite, s_compares[compare], isStencil, s_compares[stencilCompare], ref, mask, writeMask, s_stencils[fail], s_stencils[depthFail], s_stencils[pass]);
+      isTest, isWrite, unknown002[compare], isStencil, unknown002[stencilCompare], ref, mask, writeMask, unknown001[fail], unknown001[depthFail], unknown001[pass]);
 }
 
-void DrAPGxType::setupDepthContl(u8 isTest, u8 isWrite, int compare) { grlib::CGLibDepthCtl::setDepthControl(isTest, isWrite, s_compares[compare]); }
+void DrAPGxType::setupDepthContl(u8 isTest, u8 isWrite, int compare) { grlib::CGLibDepthCtl::setDepthControl(isTest, isWrite, unknown002[compare]); }
 
 void DrAPGxType::getMainScreenSize(int &width, int &height) {
   width = grlib::CGLibState::getMainRenderTarget()->unknownbc;

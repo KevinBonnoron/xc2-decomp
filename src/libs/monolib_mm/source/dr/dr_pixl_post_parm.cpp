@@ -41,6 +41,33 @@ bool DrPixlPostParm::getBloomOn() const { return m_bloomOn; }
 
 bool DrPixlPostParm::getToneMapOn() const { return m_toneMapOn; }
 
+bool DrPixlPostParm::isMotBlur() const { return unknown1ca || unknown1cb; }
+
+void DrPixlPostParm::setGlassBrk(bool isGlassBreak, u32 type) {
+  unknown4d0 = isGlassBreak;
+  if (isGlassBreak && type != 0xffffffff) {
+    unknown4d8 = 1.0f;
+    unknown4dc = 0.0f;
+    unknown4e0 = 1.0f;
+    unknown4e4 = 0.0f;
+    unknown4e8 = 10.0f;
+    unknown4ec = 1.0f;
+    unknown4f0 = 0.0f;
+    unknown4f4 = 0.0f;
+    unknown4f8 = 8.0f;
+    unknown4fc = 6.0f;
+    unknown500 = 2.0f;
+    unknown504 = 3.0f;
+    unknown508 = 1.0f;
+    unknown50c = 0.05f;
+    if (type == 1) {
+      unknown510 = 30.0f;
+    } else {
+      unknown510 = 0.0f;
+    }
+  }
+}
+
 void DrPixlPostParm::update() {
   if (unknown10fc) {
     unknown10fc = false;
@@ -102,11 +129,11 @@ void DrPixlPostParm::OnCloseAttriMenu() { unknown10fc = true; }
 
 void DrPixlPostParm::resetScene() { unknown1105[DrMan::s_nDblStockIdx] = true; }
 
-void DrPixlPostParm::setWeatherFrame(f32 weatherFrame) { unknown1088[DrMan::s_nDblStockIdx] = weatherFrame; }
+void DrPixlPostParm::setWeatherFrame(f32 weatherFrame) { m_weatherFrame[DrMan::s_nDblStockIdx] = weatherFrame; }
 
-f32 DrPixlPostParm::getWeatherFrame() const { return unknown1088[DrMan::s_nDblIdx]; }
+f32 DrPixlPostParm::getWeatherFrame() const { return m_weatherFrame[DrMan::s_nDblIdx]; }
 
-void DrPixlPostParm::resetWeatherFrame() { unknown1088[DrMan::s_nDblIdx] = 60.0f; }
+void DrPixlPostParm::resetWeatherFrame() { m_weatherFrame[DrMan::s_nDblIdx] = 60.0f; }
 
 void DrPixlPostParm::writeParameter(const char *path, const char *name) {}
 
@@ -126,7 +153,7 @@ void DrPixlPostParm::setDOFDownSec(bool dofDownSec) { unknown514[DrMan::s_nDblId
 
 void DrPixlPostParm::setDOFAutoFocus(bool dofAutoFocus) { unknown514[DrMan::s_nDblIdx].unknown225 = dofAutoFocus; }
 
-void DrPixlPostParm::setDOFAutoFocusDebug(bool dofAutoFocusDebug) { unknown21e = dofAutoFocusDebug; }
+void DrPixlPostParm::setDOFAutoFocusDebug(bool dofAutoFocusDebug) { m_DOFAutoFocusDebug = dofAutoFocusDebug; }
 
 void DrPixlPostParm::setDoFPixlRatio(f32 dofPixlRatio) { unknown514[DrMan::s_nDblIdx].unknown228 = dofPixlRatio; }
 
@@ -158,7 +185,7 @@ void DrPixlPostParm::setColorFilterNum(s32 colorFilterNum) { unknown514[DrMan::s
 
 void DrPixlPostParm::setColorFilterFrm(f32 colorFilterFrm) { unknown514[DrMan::s_nDblIdx].unknown278 = colorFilterFrm; }
 
-void DrPixlPostParm::setColorFilterTransZ(bool colorFilterTransZ) { this->unknown274 = colorFilterTransZ; }
+void DrPixlPostParm::setColorFilterTransZ(bool colorFilterTransZ) { this->m_colorFilterTransZ = colorFilterTransZ; }
 
 void DrPixlPostParm::setColorFilterFarNum(s32 colorFilterFarNum) { unknown514[DrMan::s_nDblIdx].unknown280 = colorFilterFarNum; }
 

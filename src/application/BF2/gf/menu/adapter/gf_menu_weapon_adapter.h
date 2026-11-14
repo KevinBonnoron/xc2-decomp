@@ -84,6 +84,7 @@ public:
   static GfMenuWeaponAdapter *createFromReferenceBlade(u32 handle, u32 type, u32 index, bool isUpdateAlways);
   static GfMenuWeaponAdapter *createFromBladeWithChipList(u32 handle, u32 type, u32 blade, GfMenuItemList *list, u32 index, bool isUpdateAlways);
   static GfMenuWeaponAdapter *createFromReferenceChip(u32 handle, u32 type, const ReferenceChip &chip, bool isUpdateAlways);
+  void update(const fw::UpdateInfo &info) override;
 
   mm::mtl::Delegate<bool(u32)> unknown30; // Inferred role: updater; original member name unknown.
   IConverter *unknown50;                  // Inferred role: converter; original member name unknown.

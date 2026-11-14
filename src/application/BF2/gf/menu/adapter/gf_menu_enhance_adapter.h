@@ -71,6 +71,8 @@ public:
   ~GfMenuEnhanceAdapter() override;
   static GfMenuEnhanceAdapter *create(u32 handle, u32 type, u32 enhance, bool isUpdateAlways);
   bool update_Caption(u32 enhance);
+  static GfMenuEnhanceAdapter *createFromItem(u32 handle, u32 type, const MenuItemInfo &info, bool isUpdateAlways);
+  static GfMenuEnhanceAdapter *createFromItemList(u32 handle, u32 type, GfMenuItemList *list, int listIndex, bool isUpdateAlways);
   static GfMenuEnhanceAdapter *createFromCoverter(u32 handle, u32 type, IConverter *converter, bool isUpdateAlways);
   static GfMenuEnhanceAdapter *createFromReferenceItem(u32 handle, u32 type, mm::mtl::IntrusivePtr<IGfMenuReferenceItem> item, bool isUpdateAlways);
   static GfMenuEnhanceAdapter *createFromArts(u32 handle, u32 type, u32 arts, u32 level, bool isUpdateAlways);

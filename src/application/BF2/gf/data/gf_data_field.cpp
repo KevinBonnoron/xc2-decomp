@@ -9,14 +9,14 @@
 
 namespace gf {
 
-constexpr u32 VOICE_DRIVER_COUNT = 6;
-constexpr u32 VOICE_BLADE_FIRST = 1001;
-constexpr u32 VOICE_BLADE_COUNT = 11;
-constexpr u32 VOICE_RARE_BLADE_FIRST = 1014;
-constexpr u32 VOICE_RARE_BLADE_COUNT = 37;
-constexpr u32 VOICE_COMMON_BLADE_FIRST = 1197;
-constexpr u32 VOICE_COMMON_BLADE_COUNT = 200;
-constexpr u32 PERSONALITY_VOICE_COUNT = 32;
+constexpr u32 VOICE_UNKNOWN_6 = 6;       // Inferred role: voice driver count; original name unknown.
+constexpr u32 VOICE_UNKNOWN_1001 = 1001; // Inferred role: voice blade first; original name unknown.
+constexpr u32 VOICE_UNKNOWN_11 = 11;     // Inferred role: voice blade count; original name unknown.
+constexpr u32 VOICE_UNKNOWN_1014 = 1014; // Inferred role: voice rare blade first; original name unknown.
+constexpr u32 VOICE_UNKNOWN_37 = 37;     // Inferred role: voice rare blade count; original name unknown.
+constexpr u32 VOICE_UNKNOWN_1197 = 1197; // Inferred role: voice common blade first; original name unknown.
+constexpr u32 VOICE_UNKNOWN_200 = 200;   // Inferred role: voice common blade count; original name unknown.
+constexpr u32 VOICE_UNKNOWN_32 = 32;     // Inferred role: personality voice count; original name unknown.
 
 const char *GfDataField::getFieldSkillVoice(u32 chara, u32 voice) {
   if (voice == 0) {
@@ -25,24 +25,24 @@ const char *GfDataField::getFieldSkillVoice(u32 chara, u32 voice) {
 
   GfBdatRsc *bdatResource = GfBdatRsc::get();
   const char *voiceName;
-  if (chara - 1 < VOICE_DRIVER_COUNT) {
+  if (chara - 1 < VOICE_UNKNOWN_6) {
     voiceName = bdatResource->getVoiceTableDriver(voice, chara - 1);
-  } else if (chara - VOICE_BLADE_FIRST < VOICE_BLADE_COUNT) {
-    voiceName = bdatResource->getVoiceTableBladeBlade(voice, chara - VOICE_BLADE_FIRST);
-  } else if (chara - VOICE_RARE_BLADE_FIRST < VOICE_RARE_BLADE_COUNT) {
-    voiceName = bdatResource->getVoiceTableRareBlade(voice, chara - VOICE_RARE_BLADE_FIRST);
+  } else if (chara - VOICE_UNKNOWN_1001 < VOICE_UNKNOWN_11) {
+    voiceName = bdatResource->getVoiceTableBladeBlade(voice, chara - VOICE_UNKNOWN_1001);
+  } else if (chara - VOICE_UNKNOWN_1014 < VOICE_UNKNOWN_37) {
+    voiceName = bdatResource->getVoiceTableRareBlade(voice, chara - VOICE_UNKNOWN_1014);
   } else {
-    if (chara - VOICE_COMMON_BLADE_FIRST >= VOICE_COMMON_BLADE_COUNT) {
+    if (chara - VOICE_UNKNOWN_1197 >= VOICE_UNKNOWN_200) {
       return nullptr;
     }
 
-    u32 personality = GfDataBlade::getSDataBlade(chara)->unknown824;
+    u32 personality = GfDataBlade::getSDataBlade(chara).unknown824;
     u32 personalityVoice = GfBdatBtl::get()->getBTL_Bl_PersonalityVoiceID(personality);
-    if (personalityVoice - PERSONALITY_VOICE_FIRST >= PERSONALITY_VOICE_COUNT) {
+    if (personalityVoice - VOICE_UNKNOWN_61 >= VOICE_UNKNOWN_32) {
       return nullptr;
     }
 
-    voiceName = bdatResource->getVoiceTableCommonCommonBlade(voice, personalityVoice - PERSONALITY_VOICE_FIRST);
+    voiceName = bdatResource->getVoiceTableCommonCommonBlade(voice, personalityVoice - VOICE_UNKNOWN_61);
   }
 
   if (voiceName == nullptr || voiceName[0] == '\0') {

@@ -93,12 +93,12 @@ void KIZUNA_GAUGE_DATA::ResetTimingFlag() {
 void GROUP_BLADE_DATA::Initialize(int blade, int driver, int index) {
   unknown28_0 = index < 3;
   if (index > 2) {
-    gf::DataParamAcc acc(5, blade, gf::GIMMICK_TYPE_NONE);
+    gf::DataParamAcc acc(5, blade, gf::GIMMICK_TYPE_UNKNOWN_0);
     blade = acc.getSDataEnemy()->unknown0a;
   }
 
   unknown24 = static_cast<u16>(blade);
-  gf::DataParamAcc acc(4, blade, gf::GIMMICK_TYPE_NONE);
+  gf::DataParamAcc acc(4, blade, gf::GIMMICK_TYPE_UNKNOWN_0);
   int personality = acc.getPersonality();
   if (personality == 0) {
     personality = 1;
@@ -154,7 +154,7 @@ void GROUP_BLADE_DATA::SynchroHomnuraData(const GROUP_BLADE_DATA &blade) {
 }
 
 void GROUP_DATA::Reset(gf::GF_OBJ_HANDLE *handle, bool isParty) {
-  if (handle == gf::INVALID_HANDLE) {
+  if (handle == gf::unknown020) {
     unknown104 = unknown104 & 0xdfff;
     return;
   }
@@ -172,7 +172,7 @@ void GROUP_DATA::Reset(gf::GF_OBJ_HANDLE *handle, bool isParty) {
   } else {
     gf::GfObjAcc acc(handle);
     int driver = acc.getBdatId();
-    gf::GF_OBJ_HANDLE *mount = gf::GfMountManager::getHandle(handle, gf::GFATTACH_WEAPON, gf::OPTMNT_BLADE);
+    gf::GF_OBJ_HANDLE *mount = gf::GfMountManager::getHandle(handle, gf::GFATTACH_UNKNOWN_0, gf::OPTMNT_UNKNOWN_3);
     gf::GfObjAcc mountAcc(mount);
     int blade = mountAcc.getBdatId();
     if (blade != 0) {

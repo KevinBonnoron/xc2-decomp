@@ -24,7 +24,12 @@ namespace fw {
 class MovieManager : public ManagerObject, public mm::mtl::PtrSingleton<MovieManager>, public ml::IWorkBackground {
 public:
   MovieManager() : unknown20(0), unknown28(nullptr), unknown30(nullptr), unknown38(false), unknown3c(3), unknown40(0) { ml::WorkCpu::addBackgroundListener(this); }
-  ~MovieManager();
+  ~MovieManager() {
+    if (unknown30 != nullptr) {
+      close();
+    }
+    ml::WorkCpu::removeBackgroundListener(this);
+  }
   const char *getName() const override;
   void open(mm::mtl::IAllocator *allocator, u32 layer);
   void open(mm::mtl::IAllocator *allocator, int width, int height, u32 layer);

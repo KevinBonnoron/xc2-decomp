@@ -22,9 +22,10 @@ class CriticalSection;
 class DevGraphCB;
 class DevGraphQue;
 class GraphQue;
+class WorkObj;
 
 enum FONT_STYLE : int {
-  FONT_STYLE_NORMAL = 0,
+  FONT_STYLE_UNKNOWN_0 = 0, // Inferred role: normal; original name unknown.
 };
 
 enum DevGraphModeType {};
@@ -38,6 +39,8 @@ enum RCB : int {
 };
 
 enum RSTAT : int {
+  RSTAT_UNKNOWN_0 = 0, // Inferred role: rendering, the state DevGraphNx::renderBeginSys sets; original name unknown.
+  RSTAT_UNKNOWN_1 = 1,
   RSTAT_UNKNOWN_2 = 2,
 };
 
@@ -54,10 +57,11 @@ CriticalSection &getCriticalSection();
 
 class DevGraph : public DevBase, public mm::mtl::PtrSingleton<DevGraph> {
 public:
-  ~DevGraph() override;
+  DevGraph(const char *name, WorkObj *parent);
+  ~DevGraph() override {}
   static void fontDraw(s16 x, s16 y, f32 scaleX, f32 scaleY, const char *text, const mm::Col4 *color, const mm::Col4 *backColor, bool isShadow);
-  static int fontGetWidth(const char *text, FONT_STYLE style, f32 scale);
-  static f32 fontGetHeight(FONT_STYLE style, f32 scale);
+  static u32 fontGetWidth(const char *text, FONT_STYLE style, f32 scale);
+  static u32 fontGetHeight(FONT_STYLE style, f32 scale);
   static bool isIgnore();
   static void setIgnore(bool isIgnore);
   static void setRenderMode(DevGraphModeType mode);
@@ -109,6 +113,7 @@ public:
   static void renderEnd();
   static void renderSync();
   static bool entryCb(DevGraphCB *callback);
+  static bool removeCb(DevGraphCB *callback);
   static void resetSize(s16 width, s16 height);
   static f32 getCost();
   static DevGraphQue *getGraphQue();
@@ -119,6 +124,9 @@ public:
   static RSTAT getRenderState();
   void wkStandby() override;
   void wkUpdate() override;
+  void wkTail() override;
+  bool wkStandbyLogin() override;
+  bool wkStandbyLogout() override;
   static void setFrameSpd(f32 speed);
   static void addOuterRender(void (*render)());
   static void removeOuterRender(void (*render)());
@@ -138,8 +146,8 @@ public:
   virtual void renderSyncSys() = 0;
   virtual void resetSizeSys(s16 width, s16 height) = 0;
   virtual void fontDrawSys(s16 x, s16 y, f32 scaleX, f32 scaleY, const char *text, const mm::Col4 *color, bool isShadow) = 0;
-  virtual int fontGetWidthSys(const char *text, FONT_STYLE style, f32 scale) = 0;
-  virtual f32 fontGetHeightSys(FONT_STYLE style, f32 scale) = 0;
+  virtual u32 fontGetWidthSys(const char *text, FONT_STYLE style, f32 scale) = 0;
+  virtual u32 fontGetHeightSys(FONT_STYLE style, f32 scale) = 0;
   virtual f32 getCostSys() const = 0;
   virtual void cmdExecDisplayListSys();
   virtual void cmdAddDisplayListSys(void *list, u32 size, u32 flags);
@@ -157,36 +165,39 @@ public:
   virtual bool cmdIsOpenDisplayListSys() const;
 
   reslist<DevGraphCB *> unknown1b8; // Inferred role: graph callbacks; original member name unknown.
-  u8 _1f8[0x208 - 0x1f8];
-  mm::Rect<int> unknown208; // Inferred role: viewport; original member name unknown.
-  mm::Rect<int> unknown218; // Inferred role: render port; original member name unknown.
-  u8 _228[0x230 - 0x228];
-  int unknown230;           // Inferred role: render w; original member name unknown.
-  int unknown234;           // Inferred role: render h; original member name unknown.
-  mm::Rect<int> unknown238; // Inferred role: frustum port; original member name unknown.
+  mm::Rect<int> unknown1f8;         // Inferred role: root rect, set with the other rects in wkStandbyLogin; original member name unknown.
+  mm::Rect<int> m_viewport;
+  mm::Rect<int> m_renderPort;
+  // Inferred role: render rect; wkStandbyLogin (0x7100713f30) builds it whole like its neighbours, setViewport copies the size of
+  // m_renderPort into it, getRenderW and getRenderH read its size. Original member name unknown.
+  mm::Rect<int> unknown228;
+  mm::Rect<int> m_frustumPort;
   u8 _248[0x310 - 0x248];
-  bool unknown310; // Inferred role: enable frustum; original member name unknown.
+  bool m_enableFrustum;
   u8 _311[0x314 - 0x311];
   RSTAT unknown314;    // Inferred role: render state; original member name unknown.
   mm::Col4 unknown318; // Inferred role: clear col; original member name unknown.
   f32 unknown328;      // Inferred role: clear depth; original member name unknown.
   u8 _32c[0x330 - 0x32c];
-  DevGraphQue *unknown330; // Inferred role: graph que; original member name unknown.
-  GraphQue *unknown338;    // Inferred role: display list que; original member name unknown.
-  u8 _340[0x348 - 0x340];
-  f32 unknown348; // Inferred role: frame spd; original member name unknown.
+  DevGraphQue *m_graphQue;
+  GraphQue *unknown338; // Inferred role: display list que; original member name unknown.
+  void *unknown340;     // Inferred role: unknown, cleared by the constructor and wkStandbyLogout; original member name unknown.
+  f32 unknown348;       // Inferred role: frame spd; original member name unknown.
   u8 _34c[0x350 - 0x34c];
   void (*unknown350[4])(); // Inferred role: outer renders; original member name unknown.
 };
 
 static_assert(offsetof(DevGraph, unknown1b8) == 0x1b8, "");
-static_assert(offsetof(DevGraph, unknown208) == 0x208, "");
-static_assert(offsetof(DevGraph, unknown230) == 0x230, "");
-static_assert(offsetof(DevGraph, unknown310) == 0x310, "");
+static_assert(offsetof(DevGraph, unknown1f8) == 0x1f8, "");
+static_assert(offsetof(DevGraph, m_viewport) == 0x208, "");
+static_assert(offsetof(DevGraph, unknown228) == 0x228, "");
+static_assert(offsetof(DevGraph, m_frustumPort) == 0x238, "");
+static_assert(offsetof(DevGraph, m_enableFrustum) == 0x310, "");
 static_assert(offsetof(DevGraph, unknown314) == 0x314, "");
 static_assert(offsetof(DevGraph, unknown318) == 0x318, "");
-static_assert(offsetof(DevGraph, unknown330) == 0x330, "");
+static_assert(offsetof(DevGraph, m_graphQue) == 0x330, "");
 static_assert(offsetof(DevGraph, unknown338) == 0x338, "");
+static_assert(offsetof(DevGraph, unknown340) == 0x340, "");
 static_assert(offsetof(DevGraph, unknown348) == 0x348, "");
 static_assert(offsetof(DevGraph, unknown350) == 0x350, "");
 
@@ -232,6 +243,7 @@ static_assert(offsetof(GraphQue, unknown48) == 0x48, "");
 
 class DevGraphQue {
 public:
+  DevGraphQue();
   ~DevGraphQue();
   u32 getEven();
   bool getOdd();

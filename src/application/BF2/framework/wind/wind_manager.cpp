@@ -54,7 +54,7 @@ bool WindManager::initialize() {
 }
 
 void WindManager::update(const UpdateInfo &info) {
-  int wind = RenderParam::getWindIndex(CAMERA_TYPE_MAIN);
+  int wind = RenderParam::getWindIndex(CAMERA_TYPE_UNKNOWN_0);
   if (wind != getGlobalWind()) {
     setGlobalWind(wind);
   }

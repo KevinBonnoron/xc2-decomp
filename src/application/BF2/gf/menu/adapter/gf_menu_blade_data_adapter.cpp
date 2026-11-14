@@ -39,7 +39,7 @@ GfMenuBladeDataAdapter *GfMenuBladeDataAdapter::create(u32 handle, u32 type, u32
     if (plugin != nullptr) {
       // __LINE__ must be 162 as in the original source: it is the line argument of operator new.
 #line 162
-      GfMenuBladeDataAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuBladeDataAdapter(plugin, isUpdateAlways);
+      GfMenuBladeDataAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuBladeDataAdapter(plugin, isUpdateAlways);
       if (adapter != nullptr) {
         adapter->unknown38.bind(adapter, info.update);
         adapter->unknown60 = blade;
@@ -102,21 +102,21 @@ GfMenuBladeDataAdapter *GfMenuBladeDataAdapter::createFromCoverter(u32 handle, u
 GfMenuBladeDataAdapter *GfMenuBladeDataAdapter::createFromReference(u32 handle, u32 type, u32 bladeIndex, u32 driverIndex, bool isUpdateAlways) {
   // __LINE__ must be 198 as in the original source: it is the line argument of operator new.
 #line 198
-  ReferenceConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceConverter(bladeIndex, driverIndex);
+  ReferenceConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceConverter(bladeIndex, driverIndex);
   return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 
 GfMenuBladeDataAdapter *GfMenuBladeDataAdapter::createFromBladeSet(u32 handle, u32 type, u32 driver, int slot, bool isUpdateAlways) {
   // __LINE__ must be 207 as in the original source: it is the line argument of operator new.
 #line 207
-  BladeSetConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) BladeSetConverter(driver, slot);
+  BladeSetConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) BladeSetConverter(driver, slot);
   return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 
 GfMenuBladeDataAdapter *GfMenuBladeDataAdapter::createFromReferenceBladeSet(u32 handle, u32 type, u32 driverIndex, int slot, bool isUpdateAlways) {
   // __LINE__ must be 216 as in the original source: it is the line argument of operator new.
 #line 216
-  ReferenceBladeSetConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceBladeSetConverter(driverIndex, slot);
+  ReferenceBladeSetConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceBladeSetConverter(driverIndex, slot);
   return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 
@@ -135,9 +135,9 @@ void GfMenuBladeDataAdapter::update(const fw::UpdateInfo &info) {
     }
   }
 
-  if ((unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0 && unknown38.isValid()) {
+  if ((unknown20 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) != 0 && unknown38.isValid()) {
     setDisp(unknown60 != 0 && unknown64 != 0 && unknown38());
-    unknown20 &= ~FLAG_CHANGED;
+    unknown20 &= ~FLAG_UNKNOWN_0;
   }
 }
 
@@ -158,7 +158,7 @@ void GfMenuBladeDataAdapter::ReferenceConverter::getID(u32 &blade, u32 &driver) 
 }
 
 void GfMenuBladeDataAdapter::BladeSetConverter::getID(u32 &blade, u32 &driver) {
-  DataParamAcc acc(OBJECT_TYPE_DRIVER, this->driver, GIMMICK_TYPE_NONE);
+  DataParamAcc acc(OBJECT_TYPE_PC, this->driver, GIMMICK_TYPE_UNKNOWN_0);
   if (acc.isValid()) {
     blade = acc.getBlade(slot, false);
     driver = this->driver;
@@ -169,7 +169,7 @@ void GfMenuBladeDataAdapter::ReferenceBladeSetConverter::getID(u32 &blade, u32 &
   u32 referenceDriver = GfMenuReference::getReferenceDriverID(driverIndex);
   blade = 0;
   driver = 0;
-  DataParamAcc acc(OBJECT_TYPE_DRIVER, referenceDriver, GIMMICK_TYPE_NONE);
+  DataParamAcc acc(OBJECT_TYPE_PC, referenceDriver, GIMMICK_TYPE_UNKNOWN_0);
   if (acc.isValid()) {
     blade = acc.getBlade(slot, false);
     driver = referenceDriver;

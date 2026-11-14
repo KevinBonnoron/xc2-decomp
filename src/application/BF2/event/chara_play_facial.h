@@ -23,14 +23,14 @@ class CharaPlayFacial : public ICmd {
 
 public:
   enum {
-    FLAG_PLAY = 1 << 0,
-    FLAG_LOOP = 1 << 1,
-    FLAG_DISABLE_TALK_LIP = 1 << 2,
-    FLAG_DISABLE_WINK = 1 << 3,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: play flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: loop flag; original name unknown.
+    FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: disable talk lip flag; original name unknown.
+    FLAG_UNKNOWN_3 = 1 << 3, // Inferred role: disable wink flag; original name unknown.
   };
 
   void render(const mm::Vec3 &position, f32 height) {
-    if ((unknown08 & FLAG_PLAY) == 0) {
+    if ((unknown08 & FLAG_UNKNOWN_0) == 0) {
       return;
     }
     ml::ScnObjCam *cam = Manager::get()->getScn()->getCam(-1);
@@ -50,7 +50,7 @@ public:
     s32 titleY = y + 5;
     fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
     fw::debug::drawFont(titleX, titleY, "FACIAL");
-    if ((unknown08 & FLAG_LOOP) != 0) {
+    if ((unknown08 & FLAG_UNKNOWN_1) != 0) {
       fw::debug::drawFont(x + 245, titleY, "life(∞)");
     } else {
       fw::debug::drawFont(x + 245, titleY, "life(%.1f)", unknown24);

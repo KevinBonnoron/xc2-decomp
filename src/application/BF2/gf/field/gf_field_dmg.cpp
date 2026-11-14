@@ -38,7 +38,7 @@ void GfFieldDmgManager::create(const GfSetupParam &) {
   dispose();
   u8 *bdat = GfDataBdat::getFP(BDAT_FLD_DMGFLOOR);
   int count = Bdat::getIdCount(bdat);
-  unknown10.setAllocator(getAllocator(ALLOCATOR_DEFAULT));
+  unknown10.setAllocator(getAllocator(ALLOCATOR_UNKNOWN_0));
   unknown10.reserve(count);
   unknown10.resize(count);
 }
@@ -56,17 +56,17 @@ void GfFieldDmgManager::dispose() {
 
 void GfFieldDmgManager::BdatInfo::create(const CBdatWrapper &bdat, int id) {
   unknown02 = 0;
-  unknown00 = bdat.getValCheck("Condition", id, gmk::BDAT_TYPE_U16);
-  unknown02 = bdat.getValCheck("attributeID", id, gmk::BDAT_TYPE_U16);
+  unknown00 = bdat.getValCheck("Condition", id, gmk::BDAT_TYPE_UNKNOWN_2);
+  unknown02 = bdat.getValCheck("attributeID", id, gmk::BDAT_TYPE_UNKNOWN_2);
   Bdat::Value interval;
-  interval.valueU32 = bdat.getValCheck("DMG_interval", id, gmk::BDAT_TYPE_F32);
+  interval.valueU32 = bdat.getValCheck("DMG_interval", id, gmk::BDAT_TYPE_UNKNOWN_8);
   unknown04 = interval.valueF32;
-  unknown08 = bdat.getValCheck("Pc_dmg", id, gmk::BDAT_TYPE_U8);
-  unknown09 = bdat.getValCheck("EN_dmg", id, gmk::BDAT_TYPE_U8);
+  unknown08 = bdat.getValCheck("Pc_dmg", id, gmk::BDAT_TYPE_UNKNOWN_1);
+  unknown09 = bdat.getValCheck("EN_dmg", id, gmk::BDAT_TYPE_UNKNOWN_1);
 }
 
 void GfFieldDmgManager::gevMapjump(GEV event, const MapjumpCallbackInfo &info) {
-  if (event != GEV_MAPJUMP_CREATE_FIELD) {
+  if (event != GEV_UNKNOWN_5) {
     return;
   }
   unknown10.clear();
@@ -74,7 +74,7 @@ void GfFieldDmgManager::gevMapjump(GEV event, const MapjumpCallbackInfo &info) {
   int count = Bdat::getIdCount(bdat.unknown00);
   for (int i = 0; i < count; i++) {
     int id = Bdat::getIdTop(bdat.unknown00) + i;
-    if (static_cast<u16>(bdat.getValCheck("MAPID", id, gmk::BDAT_TYPE_U16)) == info.unknown04) {
+    if (static_cast<u16>(bdat.getValCheck("MAPID", id, gmk::BDAT_TYPE_UNKNOWN_2)) == info.unknown04) {
       unknown10.push_back(BdatInfo());
       unknown10.back().create(bdat, id);
     }
@@ -84,7 +84,7 @@ void GfFieldDmgManager::gevMapjump(GEV event, const MapjumpCallbackInfo &info) {
 void GfFieldDmgManager::build(const GfSetupParam &param) {
   // __LINE__ must be 275 as in the original file: it is the line argument of operator new.
 #line 275
-  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfFieldDmgManager(&param);
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfFieldDmgManager(&param);
 }
 
 void GfFieldDmgManager::destroy() {

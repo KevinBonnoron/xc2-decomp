@@ -12,6 +12,8 @@
 #include "framework/effect/effect_caster.h"
 #include "framework/effect/effect_data.h"
 #include "framework/effect/effect_pack.h"
+#include "framework/effect/effect_point.h"
+#include "framework/effect/volume_fade_params.h"
 #include "framework/framework.h"
 #include "framework/memory/framework_memory.h"
 #include "fw/fw_render_resource.h"
@@ -23,9 +25,11 @@
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_math/mm_vec3_na.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/reference_object.h"
 #include "mtl/mem_manager.h"
+#include "scn/scn_obj_acc.h"
 
 namespace ml {
 class IDrDrawWorkInfo;
@@ -48,6 +52,21 @@ struct unknown001 {
   f32 unknown18;      // Inferred role: view num; original member name unknown.
   f32 unknown1c;      // Inferred role: display threshold; original member name unknown.
 };
+
+// Inferred role: light parameter handed over by the effect system; original name unknown.
+struct unknown007 {
+  f32 unknown00;      // Inferred role: color intensity, ignored when -1.0 or less; original member name unknown.
+  f32 unknown04;      // Inferred role: size, ignored when -1.0 or less; original member name unknown.
+  mm::Col3 unknown08; // Inferred role: color; original member name unknown.
+  f32 unknown14;      // Inferred role: spot angle; original member name unknown.
+  f32 unknown18;      // Inferred role: spot value; original member name unknown.
+  f32 unknown1c;      // Inferred role: spot value; original member name unknown.
+  f32 unknown20;      // Inferred role: subtract threshold; original member name unknown.
+};
+
+static_assert(offsetof(unknown007, unknown08) == 0x08, "");
+static_assert(offsetof(unknown007, unknown14) == 0x14, "");
+static_assert(offsetof(unknown007, unknown20) == 0x20, "");
 
 } // namespace
 
@@ -123,6 +142,31 @@ void EffectManager::updateLayerPost(const UpdateInfo &info, u32 layers) {
   }
 }
 
+void EffectManager::updateLayer(const UpdateInfo &info, u32 layer) {
+  for (u32 i = 0; i < LAYER_MAX; i++) {
+    if (layer & (1 << i)) {
+      mm::mtl::IntrusiveList<EffectCasterSend> &casters = unknown48[i].unknown00;
+      for (mm::mtl::IntrusiveList<EffectCasterSend>::iterator it = casters.begin(); it != casters.end(); ++it) {
+        EffectCasterSend *send = it.get();
+        EffectCasterBase *caster = send->m_caster;
+        if (caster != nullptr && !caster->_40) {
+          if (send->unknown70 != nullptr) {
+            send->unknown70->update(info);
+          }
+          if (send->m_caster != nullptr) {
+            send->m_caster->unknown001(info);
+          }
+          if (send->unknown70 != nullptr) {
+            for (int j = 0; j < send->unknown70->getPointCount(); j++) {
+              send->unknown70->setDirty(j, true);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 void EffectManager::tail(const UpdateInfo &info, bool flag) {
   if (unknown2fd9) {
     efSystemEnd();
@@ -176,7 +220,7 @@ EffectData *EffectManager::findData(const char *name) {
 }
 
 void EffectManager::setMasterPause(bool isPause) {
-  if (unknown2fd5 == isPause) {
+  if (m_masterPause == isPause) {
     return;
   }
 
@@ -184,11 +228,23 @@ void EffectManager::setMasterPause(bool isPause) {
     return;
   }
 
-  unknown2fd5 = isPause;
-  effect::SystemManager::getPtr()->es_pause(unknown2fd5);
+  m_masterPause = isPause;
+  effect::SystemManager::getPtr()->es_pause(m_masterPause);
 }
 
-bool EffectManager::isMasterPause() const { return unknown2fd5; }
+bool EffectManager::isMasterPause() const { return m_masterPause; }
+
+void EffectManager::removeCaster(EffectCasterBase *caster) {
+  mm::mtl::IntrusiveList<EffectCasterSend> &casters = unknown48[caster->unknown3c].unknown00;
+  for (mm::mtl::IntrusiveList<EffectCasterSend>::iterator it = casters.begin(); it != casters.end(); ++it) {
+    if (it.get()->m_caster == caster) {
+      remove(caster);
+      casters.erase(it);
+      delete it.get();
+      return;
+    }
+  }
+}
 
 EffectCasterSend *EffectManager::getCaster(EffectCasterBase *caster) {
   for (u32 i = 0; i < LAYER_MAX; i++) {
@@ -236,7 +292,7 @@ void EffectManager::sendCaster(EffectCasterBase *caster, f32 scale) {
       if (it.get()->m_caster == caster) {
         EffectCasterSend *send = it.get();
         if (send->m_caster != nullptr && effect::SystemManager::getPtr() != nullptr) {
-          send->unknown88[effect::SystemManager::getPtr()->unknown7824d != 0] = scale;
+          send->m_mdlScl[effect::SystemManager::getPtr()->unknown7824d != 0] = scale;
         }
         return;
       }
@@ -251,7 +307,7 @@ void EffectManager::sendCasterFrame(EffectCasterBase *caster, f32 frame) {
       if (it.get()->m_caster == caster) {
         EffectCasterSend *send = it.get();
         if (send->m_caster != nullptr && effect::SystemManager::getPtr() != nullptr) {
-          send->unknown90[effect::SystemManager::getPtr()->unknown7824d != 0] = frame;
+          send->m_mdlFrame[effect::SystemManager::getPtr()->unknown7824d != 0] = frame;
         }
         return;
       }
@@ -272,6 +328,27 @@ void EffectManager::sendCasterStateName(EffectCasterBase *caster, const char *na
 }
 
 EffectCasterSend *EffectManager::getCasterCB(EffectCasterBase *caster) { return getCaster(caster); }
+
+bool EffectManager::getVolumeFadeParam(u32 index, ml::VolumeFadeParams &params) {
+  if (index < unknown005) {
+    const VolumeFadeParams *source = m_volumeFadeParam[index];
+    if (source != nullptr) {
+      for (u32 i = 0; i < 5; i++) {
+        params.unknown00[i] = source->unknown00[i];
+        params.unknown60[i] = source->unknown54[i];
+        params.unknown74[i] = source->unknown68[i];
+        params.unknown88[i] = source->unknown7c[i];
+      }
+      params.unknown40 = mm::Vec3(source->unknown3c.x, source->unknown3c.y, source->unknown3c.z);
+      params.unknown50 = mm::Vec3(source->unknown48.x, source->unknown48.y, source->unknown48.z);
+      params.unknown9c = source->unknown90;
+      params.unknowna0 = source->unknown94;
+      params.unknowna4 = source->unknown98;
+      return true;
+    }
+  }
+  return false;
+}
 
 void EffectManager::setIBLSaturation(f32 saturation) { effect::SystemManager::getPtr()->setIBLSaturation(saturation); }
 
@@ -519,6 +596,17 @@ void EffectManager::setMatrix(u32 handle, const mm::Mat44 &matrix) {
     param.unknown00 = matrix;
     effect::SystemManager::getPtr()->es_set_param_pos_only(handle, &param);
   }
+}
+
+u32 EffectManager::createKizunaLine() {
+  for (u32 i = 1; i < unknown002; i++) {
+    if (unknown353e0[i].unknown459 == 0) {
+      unknown353e0[i].unknown459 = 1;
+      unknown353e0[i].init();
+      return i;
+    }
+  }
+  return 0;
 }
 
 void EffectManager::destroyKizunaLine(u32 handle) {
@@ -772,6 +860,50 @@ void EffectManager::setLgtMatrix(u32 type, void *light, void *matrix) {
   }
 }
 
+void EffectManager::setLgtParam(u32 type, void *light, void *param) {
+  if (Framework::get() != nullptr && light != nullptr && param != nullptr) {
+    ml::DrMan *drMan = ml::DrMan::getIns();
+    if (drMan != nullptr && drMan->unknown588 != nullptr) {
+      const unknown007 *lightParam = static_cast<const unknown007 *>(param);
+      switch (type) {
+      case 1: {
+        ml::DrLightObjPnt *pointLight = static_cast<ml::DrLightObjPnt *>(light);
+        if (lightParam->unknown00 > -1.0f) {
+          pointLight->unknowna4 = lightParam->unknown00;
+        }
+        pointLight->unknown90 = mm::Col3(lightParam->unknown08.r, lightParam->unknown08.g, lightParam->unknown08.b);
+        if (lightParam->unknown04 > -1.0f) {
+          pointLight->m_size = lightParam->unknown04;
+        }
+        pointLight->unknownb4[0] = lightParam->unknown1c;
+        break;
+      }
+      case 2: {
+        ml::DrLightObjSpt *spotLight = static_cast<ml::DrLightObjSpt *>(light);
+        if (lightParam->unknown00 > -1.0f) {
+          spotLight->unknownc8 = lightParam->unknown00;
+        }
+        spotLight->unknownb0 = mm::Col3(lightParam->unknown08.r, lightParam->unknown08.g, lightParam->unknown08.b);
+        if (lightParam->unknown04 > -1.0f) {
+          spotLight->m_size = lightParam->unknown04;
+        }
+        spotLight->unknownbc = lightParam->unknown14;
+        spotLight->unknowndc = lightParam->unknown1c;
+        spotLight->unknowne0 = lightParam->unknown18;
+        break;
+      }
+      default:
+        return;
+      }
+      if (lightParam->unknown20 > 0.0f) {
+        static_cast<ml::DrLightObj *>(light)->setSubtractOn(true);
+      } else {
+        static_cast<ml::DrLightObj *>(light)->setSubtractOn(false);
+      }
+    }
+  }
+}
+
 void *EffectManager::createGroup(int num, int flags) {
   if (Framework::get() == nullptr) {
     return nullptr;
@@ -989,3 +1121,6 @@ void EffectManager::finalRender(const ml::IDrDrawWorkInfo *info) {
 } // namespace fw
 
 template mm::mtl::PtrSingleton<fw::EffectManager>::~PtrSingleton();
+
+// The game builds this file in the same unit: RimBloomCalc::calcEndFrame (0x710016f138) and getVal (0x7100175e90) sit inside this file's block (0x710016d0a0 to 0x710017779c).
+#include "../render/rim_bloom_calc.cpp"

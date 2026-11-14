@@ -13,14 +13,14 @@ namespace event {
 
 class AlphaManager : public IManager, public mm::mtl::Singleton<AlphaManager> {
 public:
-  static constexpr u32 OBJ_COUNT = 256;
+  static constexpr u32 OBJ_UNKNOWN_256 = 256; // Inferred role: obj count; original name unknown.
 
   enum {
-    FLAG_ACTIVE = 1 << 0,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: active flag; original name unknown.
   };
 
   enum {
-    DISP_FLAG_DISP = 1 << 0,
+    DISP_FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: disp flag; original name unknown.
   };
 
   AlphaManager();
@@ -35,9 +35,9 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  u32 unknown10;                                         // Inferred role: flags; original member name unknown.
-  u32 unknown14;                                         // Inferred role: disp flags; original member name unknown.
-  mm::mtl::FixedVector<AlphaObj *, OBJ_COUNT> unknown18; // Inferred role: objs; original member name unknown.
+  u32 unknown10;                                               // Inferred role: flags; original member name unknown.
+  u32 unknown14;                                               // Inferred role: disp flags; original member name unknown.
+  mm::mtl::FixedVector<AlphaObj *, OBJ_UNKNOWN_256> unknown18; // Inferred role: objs; original member name unknown.
 };
 
 static_assert(sizeof(AlphaManager) == 0x820, "");

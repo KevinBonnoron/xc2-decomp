@@ -20,7 +20,7 @@ public:
 
   GimmickCameraParams();
   GimmickCameraParams(void *data, int version);
-  virtual ~GimmickCameraParams() {}
+  virtual ~GimmickCameraParams();
   void setup(void *data, int version);
   int getSize() const;
   const Param &getParam(int index) const;

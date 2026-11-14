@@ -27,9 +27,9 @@ class GfStatusProperty;
 
 enum CHANGE_BLADE {};
 
-constexpr u32 PARTY_ID_NONE = 0xffffffff;
-constexpr u32 PARTY_MEMBER_NUM = 3;
-constexpr u32 WEAPON_HANDLE_NUM = 10;
+constexpr u32 PARTY_UNKNOWN_4294967295 = 0xffffffff; // Inferred role: party id none; original name unknown.
+constexpr u32 PARTY_UNKNOWN_3 = 3;                   // Inferred role: party member num; original name unknown.
+constexpr u32 HANDLE_UNKNOWN_10 = 10;                // Inferred role: weapon handle num; original name unknown.
 
 struct GfPartyPosInfo {
   // Inferred role: position; original type name unknown.
@@ -102,9 +102,9 @@ static_assert(sizeof(GfSelectBlade) == 0x20, "");
 class GfGameParty : public mm::mtl::PtrSingleton<GfGameParty>, public IGfObjListener {
 public:
   enum PARTYOBJ_STATE {
-    PARTYOBJ_STATE_NONE,
-    PARTYOBJ_STATE_LOADING,
-    PARTYOBJ_STATE_READY,
+    PARTYOBJ_STATE_UNKNOWN_0, // Inferred role: partyobj state none; original name unknown.
+    PARTYOBJ_STATE_UNKNOWN_1, // Inferred role: partyobj state loading; original name unknown.
+    PARTYOBJ_STATE_UNKNOWN_2, // Inferred role: partyobj state ready; original name unknown.
   };
 
   GfGameParty(const GfSetupParam &param);
@@ -213,13 +213,13 @@ static_assert(sizeof(GfGameParty) == 0x118, "");
 class GfPartySelect {
 public:
   enum LIST_TYPE {
-    LIST_TYPE_PARTY,
-    LIST_TYPE_RESERVER,
-    LIST_TYPE_PARTY_AND_RESERVER,
-    LIST_TYPE_ALL,
-    LIST_TYPE_MERCENARY,
-    LIST_TYPE_UNUSE,
-    LIST_TYPE_ACCESSORY,
+    LIST_TYPE_UNKNOWN_0, // Inferred role: list type party; original name unknown.
+    LIST_TYPE_UNKNOWN_1, // Inferred role: list type reserver; original name unknown.
+    LIST_TYPE_UNKNOWN_2, // Inferred role: list type party and reserver; original name unknown.
+    LIST_TYPE_UNKNOWN_3, // Inferred role: list type all; original name unknown.
+    LIST_TYPE_UNKNOWN_4, // Inferred role: list type mercenary; original name unknown.
+    LIST_TYPE_UNKNOWN_5, // Inferred role: list type unuse; original name unknown.
+    LIST_TYPE_UNKNOWN_6, // Inferred role: list type accessory; original name unknown.
   };
 
   static bool getDriverList(mm::mtl::FixedVector<u16, 16> &drivers, LIST_TYPE listType, u32 option);

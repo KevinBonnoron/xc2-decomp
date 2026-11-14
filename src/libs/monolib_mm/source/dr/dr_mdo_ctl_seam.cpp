@@ -1,14 +1,40 @@
 #include "dr/dr_mdo_ctl_seam.h"
 
+#include <string.h>
+
+#include "cloud/cloud_man.h"
+#include "cloud/cloud_mdl_data_obj.h"
 #include "dr/dr_ap_cache.h"
+#include "dr/dr_calc_clip_obj.h"
+#include "dr/dr_calc_cp_plane_obj.h"
+#include "dr/dr_calc_man.h"
+#include "dr/dr_calc_view_work.h"
+#include "dr/dr_env_coli_obj.h"
+#include "dr/dr_environment_obj.h"
+#include "dr/dr_global_ibl_man.h"
 #include "dr/dr_man.h"
 #include "dr/dr_mdl_base.h"
+#include "dr/dr_mdl_man.h"
 #include "dr/dr_mdo_ctl.h"
 #include "dr/dr_mdo_mat.h"
+#include "dr/dr_pixl_man.h"
+#include "dr/dr_pixl_post_parm.h"
+#include "dr/dr_pixl_shadow_cache_man.h"
+#include "dr/dr_res_etc_tex_list.h"
+#include "dr/dr_res_mdo_inst_mdl_info.h"
 #include "dr/dr_res_mdo_mat.h"
+#include "dr/dr_res_mdo_pos_add_list.h"
 #include "dr/dr_res_mdo_seam_coli.h"
+#include "dr/dr_res_mdo_seam_read.h"
 #include "dr/dr_res_mdo_seam_res.h"
+#include "dr/dr_res_mdo_sort.h"
+#include "grlib/cglib_tri_uniform_block.h"
+#include "grlib/cglib_uniform_array.h"
+#include "ml/dev_graph.h"
 #include "mm_math/mm_col4.h"
+#include "mm_math/mm_vec3.h"
+#include "mm_mtl/fixed_array.h"
+#include "mtl/mem_manager.h"
 
 namespace ml {
 
@@ -20,8 +46,8 @@ DrMdoCtlSeam::DrMdoCtlSeam(int viewNum)
       unknownc4c(0), unknownc50(0), unknownc54(0), unknownc58(0), unknownc5c(0), unknownc60(0), unknownc64(0), unknownc68(0), unknownc6c(0), unknownc70(0), unknownc74(0), unknownc78(0), unknownc7c(0),
       unknownc80(0), unknownc84(0), unknownc88(1), unknownc90(0), unknownc98(0), unknownca0(0), unknownca2(0), unknownca4(0), unknownca6(0), unknowncc8(false), unknown14b0(0), unknown14c0(0),
       unknown14c8(0) {
-  unknown650[0] = 0;
-  unknown650[1] = 0;
+  m_coliListMax[0] = 0;
+  m_coliListMax[1] = 0;
   unknowncac = 0;
   for (int i = 0; i < 4; i++) {
     unknowncae[i] = -1;
@@ -32,9 +58,9 @@ DrMdoCtlSeam::DrMdoCtlSeam(int viewNum)
   unknown528.clear();
 }
 
-void *DrMdoCtlSeam::getColiListTbl() { return unknown640[DrMan::s_nDblIdx]; }
+void *DrMdoCtlSeam::getColiListTbl() { return m_coliListTbl[DrMan::s_nDblIdx]; }
 
-u32 DrMdoCtlSeam::getColiListMax() { return unknown650[DrMan::s_nDblIdx]; }
+u32 DrMdoCtlSeam::getColiListMax() { return m_coliListMax[DrMan::s_nDblIdx]; }
 
 u32 DrMdoCtlSeam::isRead(int index) const {
   if (((unknownc7c >> 28) & 1) == 0) {
@@ -43,15 +69,7 @@ u32 DrMdoCtlSeam::isRead(int index) const {
   return 0;
 }
 
-void DrMdoCtlSeam::setErrCode(int code, int param) {
-  unknowncae[unknowncac] = code;
-  unknowncb8[unknowncac] = param;
-  s16 next = unknowncac + 1;
-  if (next > 3) {
-    next = 0;
-  }
-  unknowncac = next;
-}
+void DrMdoCtlSeam::setErrCode(int code, int param) { unknown004(code, param); }
 
 void DrMdoCtlSeam::releaseFreeSeamTexture(DrResMdoSeamTexture *texture, bool isAll) {
   if (isAll) {
@@ -73,14 +91,7 @@ void DrMdoCtlSeam::releaseFreeSeamTexture(DrResMdoSeamTexture *texture, bool isA
   }
 }
 
-int DrMdoCtlSeam::calcSemaAlignment(u32 size, u32 alignment) {
-  u32 remainder = size % alignment;
-  int padding = 0;
-  if (remainder != 0) {
-    padding = alignment - remainder;
-  }
-  return padding + size;
-}
+int DrMdoCtlSeam::calcSemaAlignment(u32 size, u32 alignment) { return unknown005(size, alignment); }
 
 void DrMdoCtlSeam::releaseFreeSeamMemObj(DrResMdoSeamMemObj *mem) { unknown6e0.releaseFreeObj(mem); }
 
@@ -98,6 +109,180 @@ void DrMdoCtlSeam::releaseFreeSeamTexList(DrResMdoSeamTexList *texList, bool isA
       unknown6e0.releaseFreeObj(mem);
     }
   }
+}
+
+void DrMdoCtlSeam::releaseSeam() {
+  resourceRelease();
+  unknown698.release();
+  if (unknown638 != nullptr) {
+    DrResMdoInstMdlInfo::release(unknown638);
+  }
+  if (unknown630 != nullptr) {
+    unknown630->release();
+    unknown630 = nullptr;
+  }
+  if (unknown3e8 != nullptr) {
+    unknown3e8->~DrResMdoSortSeamAll();
+  }
+  if (unknown3f0 != nullptr) {
+    unknown3f0->~DrResMdoSortSeamEnvMap();
+  }
+  unknown3e8 = nullptr;
+  unknown3f0 = nullptr;
+  unknown1b0.unknown003();
+  unknown1e8.unknown003();
+  unknown220.unknown003();
+  unknown258.unknown003();
+  unknown290.unknown003();
+  unknown2c8.unknown003();
+  unknown300.unknown003();
+  unknown338.unknown003();
+  unknown370.unknown003();
+  unknown3a8.unknown003();
+  unknown6e0.releaseMem();
+  if (unknownb28 != nullptr) {
+    unknownb28->unknown001();
+    unknownb28 = nullptr;
+  }
+  DevGraph::releaseMemPoolBuffer(unknownb40);
+  if (unknownb48 != nullptr) {
+    mtl::MemManager::deallocate(unknownb48, 0, false);
+    unknownb48 = nullptr;
+  }
+  if (unknownb40 != nullptr) {
+    mtl::MemManager::deallocate(unknownb40, 0, false);
+    unknownb40 = nullptr;
+  }
+  unknowncd0.release();
+  m_drMan->unknown88->delMpfObj();
+  if (m_drMan->unknown1e00 != nullptr) {
+    m_drMan->unknown1e00->_64 = 1.0f;
+  }
+}
+
+void DrMdoCtlSeam::resourceRelease() {
+  if (unknown638 != nullptr) {
+    unknown638->releaseCall();
+  }
+  if (unknownb30 != nullptr) {
+    unknownb30->release();
+    unknownb30 = nullptr;
+  }
+  if (unknown3f8 != nullptr) {
+    unknown3f8->release();
+    unknown3f8 = nullptr;
+  }
+  if (unknown400 != nullptr) {
+    unknown400->release();
+    unknown400 = nullptr;
+  }
+  if (unknown408 != nullptr) {
+    unknown408->release();
+    unknown408 = nullptr;
+  }
+  if (unknown658 != nullptr) {
+    unknown658->release();
+    unknown658 = nullptr;
+  }
+  if (unknown418 != nullptr) {
+    unknown418->release();
+    unknown418 = nullptr;
+  }
+  DrGlobalIBLMan *globalIBLMan = m_drMan->unknown160[unknown1a];
+  for (DrGlobalIBLPack *pack : unknown420) {
+    globalIBLMan->releaseObj(pack);
+  }
+  unknown420.clear();
+  for (DrEnvironmentObj *environment : unknown528) {
+    if (environment != nullptr) {
+      environment->release();
+    }
+  }
+  unknown528.clear();
+}
+
+bool DrMdoCtlSeam::calcBegin() {
+  unknownc7c &= ~0x29441d;
+  unknownf8 = 0;
+  unknown168 = 0;
+  unknownc84 = 0;
+  u32 deleteCall = 0x40000000 << DrMan::s_nDblIdx;
+  if (deleteCall & unknownc7c) {
+    unknownc7c &= ~deleteCall;
+    unknownc7c |= 0x10000000;
+  }
+  bool isCalc = false;
+  bool isDisp = false;
+  if (((unknownc7c >> 18) & 1) == 0) {
+    if (++unknownc18 > 3) {
+      unknownc7c |= 0x40000;
+    }
+  } else if (((unknownc7c >> 28) & 1) == 0) {
+    isCalc = true;
+    isDisp = true;
+  } else {
+    isCalc = true;
+    unknownc16++;
+    if (!unknowncd0.isRead()) {
+      unknowncd0.release();
+      if (unknownc16 > 3) {
+        unknown20 |= unknown038_3 | unknown038_3 << 1;
+      }
+    }
+    unknownc7c |= 0x80000;
+    if (((unknownc7c >> 12) & 1) == 0) {
+      unknownc7c |= 0x1000;
+      if (unknown1a == 0) {
+        m_drMan->unknown78->unknown800->delShadowCacheUpdate();
+      }
+    }
+    if (unknownc16 > 1) {
+      unknownc7c |= 0x20000000;
+      if (unknownc16 != 2) {
+        unknowncc8 = true;
+      }
+    }
+  }
+  DrCalcViewWork *viewWork = m_drMan->unknown580->unknown10;
+  if (unknown638 != nullptr) {
+    DrResMdlInstMdlArg arg;
+    arg.unknown00 = &viewWork->unknown400;
+    arg.unknown10 = isDisp;
+    arg.unknown14 = unknown1a;
+    arg.unknown18 = unknowndc;
+    arg.unknown08 = unknownd30.unknown40 == 0 ? nullptr : unknownd30.unknown10;
+    unknown638->update(arg);
+  }
+  if (unknownb30 != nullptr) {
+    unknownb30->setCallDisp(isDisp);
+  }
+  if (unknown1a == 0 && ((unknownc7c >> 28) & 1) == 0) {
+    f32 first = 1141.0f;
+    f32 second = -761.0f;
+    f32 third = 0.0f;
+    if (unknown1a8->unknown80 != 0) {
+      const unknown751 *table = reinterpret_cast<const unknown751 *>(reinterpret_cast<const u8 *>(unknown1a8) + unknown1a8->unknown80);
+      const unknown750 *area = reinterpret_cast<const unknown750 *>(reinterpret_cast<const u8 *>(table) + table->unknown04);
+      for (int i = 0; i < table->unknown00; i++, area++) {
+        if (viewWork->unknown400.x > area->unknown08[0] || viewWork->unknown400.y > area->unknown08[1] || viewWork->unknown400.z > area->unknown08[2] || viewWork->unknown400.x < area->unknown14[0] ||
+            viewWork->unknown400.y < area->unknown14[1] || viewWork->unknown400.z < area->unknown14[2]) {
+          continue;
+        }
+        first = area->unknown00;
+        second = area->unknown04;
+        third = area->unknown20;
+        break;
+      }
+    }
+    DrMan *drMan = m_drMan;
+    if (!drMan->unknown1d8e) {
+      DrPixlPostParm *postParm = drMan->unknown120[drMan->unknown1c98];
+      postParm->unknown10d4 = first;
+      postParm->unknown10d8 = second;
+      postParm->unknown10dc = third;
+    }
+  }
+  return isCalc;
 }
 
 void DrMdoCtlSeam::calcEnd() {
@@ -252,6 +437,40 @@ void DrMdoCtlSeam::updateTexutreSeam() {
   }
 }
 
+void DrMdoCtlSeam::updateVertexSeam() {
+  if (unknowncc8) {
+    DrResMdoSeamVertex::SEAMRES_CNTMAX = 10;
+    DrResMdoSeamVertex *vertex = unknown220.unknown10.unknown00;
+    while (vertex != nullptr) {
+      DrResMdoSeamVertex *next = vertex->unknown08;
+      releaseFreeSeamVertex(vertex, false);
+      vertex = next;
+    }
+    unknownc38 = 0;
+  } else {
+    if (unknownd30.unknown40 == 0) {
+      DrResMdoSeamVertex::SEAMRES_CNTMAX = 60;
+    } else {
+      DrResMdoSeamVertex::SEAMRES_CNTMAX = 10;
+    }
+    DrResMdoSeamVertex *vertex = unknown220.unknown10.unknown00;
+    while (vertex != nullptr) {
+      if (vertex->update()) {
+        DrResMdoSeamVertex *next = vertex->unknown08;
+        const unknown136 *table = reinterpret_cast<const unknown136 *>(reinterpret_cast<const u8 *>(unknown1a8) + unknown1a8->unknown54);
+        unknownc38 -= table[vertex->unknown2c].unknown04;
+        releaseFreeSeamVertex(vertex, false);
+        vertex = next;
+      } else {
+        if (vertex->unknown2e != 0) {
+          vertex->changeMemVertex();
+        }
+        vertex = vertex->unknown08;
+      }
+    }
+  }
+}
+
 void DrMdoCtlSeam::releaseFreeSeamVertex(DrResMdoSeamVertex *vertex, bool isAll) {
   if (isAll) {
     vertex->release();
@@ -286,10 +505,45 @@ DrResMdoSeamVertex *DrMdoCtlSeam::createFreeSeamVertex() { return unknown220.unk
 
 DrResMdoSeamColi *DrMdoCtlSeam::createFreeSeamCollision() { return unknown258.unknown001(); }
 
+void DrMdoCtlSeam::releaseFreeSeamCollision(DrResMdoSeamColi *coli, bool isAll) {
+  if (isAll) {
+    unknown258.unknown002(coli);
+  } else {
+    DrResMdoSeamMemObj *mem = coli->m_cache;
+    unknownbb0[coli->unknown40 >> 5] &= ~(1 << (coli->unknown40 & 0x1f));
+    unknownc0a--;
+    if ((coli->unknown42 & 0x400) == 0) {
+      if ((coli->unknown42 & 0x800) == 0) {
+        unknownc30--;
+        if (unknownc30 < 0) {
+          unknownc30 = 0;
+        }
+      } else {
+        unknownc2e--;
+        if (unknownc2e < 0) {
+          unknownc2e = 0;
+        }
+      }
+    } else {
+      unknownc2f--;
+      if (unknownc2f < 0) {
+        unknownc2f = 0;
+      }
+    }
+    int size = coli->unknown38;
+    coli->release();
+    unknown258.unknown002(coli);
+    if (mem != nullptr) {
+      unknownc3c -= size;
+      unknown6e0.releaseFreeObj(mem);
+    }
+  }
+}
+
 void DrMdoCtlSeam::seamZPrePassBegin() {
   unknownf2 = 0;
   unknown001();
-  m_drMan->unknown5c0->setupCulling(DR_AP_CULL_TYPE_OFF);
+  m_drMan->unknown5c0->setupCulling(DR_AP_CULL_TYPE_UNKNOWN_2);
 }
 
 void DrMdoCtlSeam::seamZPrePassEnd() {}
@@ -302,10 +556,32 @@ void DrMdoCtlSeam::seamThicknessPassBegin(bool isFirst) {
   } else {
     m_drMan->unknown5c0->beginThicknessRenderSecond();
   }
-  m_drMan->unknown5c0->setupCulling(isFirst ? DR_AP_CULL_TYPE_FRONT : DR_AP_CULL_TYPE_BACK);
+  m_drMan->unknown5c0->setupCulling(isFirst ? DR_AP_CULL_TYPE_UNKNOWN_1 : DR_AP_CULL_TYPE_UNKNOWN_0);
 }
 
 void DrMdoCtlSeam::seamThicknessPassEnd(bool value) {}
+
+bool DrMdoCtlSeam::calcNormSeamMapMaterial(u32 *bits) {
+  u32 size = (unknown30->unknown30 / 32) * 4 + 4;
+  memset(bits, 0, size);
+  bool isChanged = false;
+  DrResMdoMat *mat = unknown30->unknownc0;
+  for (int i = 0; i < unknown30->unknown30; i++, mat++) {
+    if (mat->unknown08.a <= 0.0f) {
+      if ((mat->unknown1c & 1) != 0) {
+        mat->unknown1c &= ~1;
+        isChanged = true;
+      }
+    } else {
+      bits[i >> 5] |= 1 << (i & 0x1f);
+      if ((mat->unknown1c & 1) == 0) {
+        mat->unknown1c |= 1;
+        isChanged = true;
+      }
+    }
+  }
+  return isChanged;
+}
 
 void DrMdoCtlSeam::calcSeamMapRender(int renderType, u32 flags) {
   unknownf4 = renderType;
@@ -326,14 +602,18 @@ void DrMdoCtlSeam::calcSeamMapRender(int renderType, u32 flags) {
 
 } // namespace ml
 
-// The game builds these files in one unit with this one, in this order.
+// The game builds these files in one unit with this one (0x71007f0d14 to 0x7100836bb4), in this order; this file's own functions (0x7100819e84 to 0x710081c050) sit between dr_mdo_ctl_dammy.cpp and
+// dr_mdo_ctl_seam_all.cpp.
 // clang-format off
 #include "dr_mdo_ctl.cpp"
-#include "dr_mdo_setup.cpp"
-#include "dr_mdo_mat.cpp"
-#include "dr_mdo_zsort.cpp"
+#include "dr_mdo_ctl_cld_mdl.cpp"
+#include "dr_mdo_ctl_mpf.cpp"
+#include "dr_mdo_ctl_mpf_auto.cpp"
+#include "dr_mdo_ctl_mpf_inst.cpp"
+#include "dr_mdo_ctl_mpf_work.cpp"
 #include "dr_mdo_ctl_nom.cpp"
 #include "dr_mdo_ctl_pos.cpp"
+#include "dr_mdo_ctl_dammy.cpp"
 #include "dr_mdo_ctl_seam_all.cpp"
 #include "dr_mdo_ctl_seam_base_map.cpp"
 #include "dr_mdo_ctl_seam_env_map.cpp"
@@ -342,4 +622,16 @@ void DrMdoCtlSeam::calcSeamMapRender(int renderType, u32 flags) {
 #include "dr_mdo_ctl_seam_low_map.cpp"
 #include "dr_mdo_ctl_seam_mpf_map.cpp"
 #include "dr_mdo_ctl_seam_read.cpp"
+#include "dr_mdo_mat.cpp"
+#include "dr_mdo_anim.cpp"
+#include "dr_mdo_nom_after_image.cpp"
+#include "../util/ml_halton.cpp"
+#include "dr_mdo_mpf_man.cpp"
+#include "dr_mdo_node.cpp"
+#include "dr_mdo_setup.cpp"
+#include "dr_mdo_sml_shadow_man.cpp"
+#include "dr_mdo_tex_simple_man.cpp"
+#include "dr_mdo_texture_man.cpp"
+#include "dr_mdo_vertex_man.cpp"
+#include "dr_mdo_zsort.cpp"
 // clang-format on

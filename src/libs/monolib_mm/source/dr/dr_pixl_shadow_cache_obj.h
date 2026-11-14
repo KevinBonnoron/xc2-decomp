@@ -37,7 +37,7 @@ public:
   s32 unknown8e4;       // Inferred role: grid y; original member name unknown.
   u64 unknown8e8;       // Inferred role: id mask; original member name unknown.
   u16 unknown8f0;       // Inferred role: id; original member name unknown.
-  u16 unknown8f2;       // Inferred role: id; original member name unknown.
+  s16 unknown8f2;       // Inferred role: id; original member name unknown.
   u8 _8f4[0x900 - 0x8f4];
   DrCalcClipWorkPlane unknown900; // Inferred role: clip work; original member name unknown.
 };

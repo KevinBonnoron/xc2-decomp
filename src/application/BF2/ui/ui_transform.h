@@ -22,9 +22,8 @@ public:
   mm::Pnt<s16> unknown08; // Inferred role: pos; original member name unknown.
   u8 _0c[0x10 - 0x0c];
   mm::Vec2 unknown10; // Inferred role: scale; original member name unknown.
-  u8 _18[0x20 - 0x18];
-  f32 unknown20;  // Inferred role: rot; original member name unknown.
-  bool unknown24; // Inferred role: dirty; original member name unknown.
+  f32 unknown20;      // Inferred role: rot; original member name unknown.
+  bool unknown24;     // Inferred role: dirty; original member name unknown.
   u8 _25[0x30 - 0x25];
 };
 

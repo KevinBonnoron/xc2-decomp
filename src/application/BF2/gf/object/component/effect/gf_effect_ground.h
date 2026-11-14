@@ -1,8 +1,10 @@
 #pragma once
 #include "types.h"
+namespace effect {
+struct SendParam;
+} // namespace effect
 
 namespace gf {
-
 class GfComEffectCaster;
 class GfEnvProperty;
 
@@ -26,6 +28,7 @@ public:
   static u32 getGroundMaterial(GfEnvProperty *env, const GfComEffectCaster *caster);
   static bool getGroundEffectFileNameImpl(u32 type, u32 effectType, u32 material, const char *&fileName);
   static bool tryGetWaterDepth(const GfComEffectCaster *caster, const GfCharaWaterInfo *waterInfo, f32 &depth);
+  static SwimEffectState calcSwimEffectParam(const GfComEffectCaster *caster, bool unknown1, bool unknown2, effect::SendParam &param);
   static bool isOnWaterSurface(const GfComEffectCaster *caster);
   static u32 getWaterHeightStateImpl(f32 height, f32 first, f32 second);
 };

@@ -32,8 +32,8 @@ void initCommandLauncherReciever(skt::ICommandCallback *callback) {
 
 void finalCommandLauncherReciever() { CommandManager::closeServer(CL_CONNECT_NAME); }
 
-static const u32 FONT_BUFFER_SIZE = 0x400;
-static const u32 CIRCLE_DIVISION = 16;
+static const u32 FONT_BUFFER_UNKNOWN_1024 = 0x400; // Inferred role: size of the font text buffer; original name unknown.
+static const u32 CIRCLE_DIVISION_UNKNOWN_16 = 16;  // Inferred role: number of segments of a circle; original name unknown.
 
 static void makeTranslation(mm::Mat44 &matrix, const mm::Vec3 &position) {
   mm::Vec3 translation = position;
@@ -56,10 +56,10 @@ static void makeTranslation(mm::Mat44 &matrix, const mm::Vec3 &position) {
 }
 
 bool drawFont(int x, int y, const mm::Col4 &color, const char *format, ...) {
-  char text[FONT_BUFFER_SIZE];
+  char text[FONT_BUFFER_UNKNOWN_1024];
   va_list arguments;
   va_start(arguments, format);
-  vsnprintf(text, FONT_BUFFER_SIZE - 1, format, arguments);
+  vsnprintf(text, FONT_BUFFER_UNKNOWN_1024 - 1, format, arguments);
   va_end(arguments);
   ml::CacheDraw *cacheDraw = ml::DebDraw::getCacheDraw();
   bool result = cacheDraw->fontShadow(true);
@@ -69,10 +69,10 @@ bool drawFont(int x, int y, const mm::Col4 &color, const char *format, ...) {
 }
 
 bool drawFont(int x, int y, const char *format, ...) {
-  char text[FONT_BUFFER_SIZE];
+  char text[FONT_BUFFER_UNKNOWN_1024];
   va_list arguments;
   va_start(arguments, format);
-  vsnprintf(text, FONT_BUFFER_SIZE - 1, format, arguments);
+  vsnprintf(text, FONT_BUFFER_UNKNOWN_1024 - 1, format, arguments);
   va_end(arguments);
   ml::CacheDraw *cacheDraw = ml::DebDraw::getCacheDraw();
   bool result = cacheDraw->fontShadow(true);
@@ -83,15 +83,15 @@ bool drawFont(int x, int y, const char *format, ...) {
 bool drawFontColor(const mm::Col4 &color) { return ml::DebDraw::getCacheDraw()->fontColor(color); }
 
 int drawFontGetWidth(const char *format, ...) {
-  char text[FONT_BUFFER_SIZE];
+  char text[FONT_BUFFER_UNKNOWN_1024];
   va_list arguments;
   va_start(arguments, format);
-  vsnprintf(text, FONT_BUFFER_SIZE - 1, format, arguments);
+  vsnprintf(text, FONT_BUFFER_UNKNOWN_1024 - 1, format, arguments);
   va_end(arguments);
-  return ml::DevGraph::fontGetWidth(text, ml::FONT_STYLE_NORMAL, ml::DebDraw::getCacheDraw()->unknown6054);
+  return ml::DevGraph::fontGetWidth(text, ml::FONT_STYLE_UNKNOWN_0, ml::DebDraw::getCacheDraw()->unknown6054);
 }
 
-f32 drawFontGetHeight() { return ml::DevGraph::fontGetHeight(ml::FONT_STYLE_NORMAL, ml::DebDraw::getCacheDraw()->unknown6058); }
+int drawFontGetHeight() { return ml::DevGraph::fontGetHeight(ml::FONT_STYLE_UNKNOWN_0, ml::DebDraw::getCacheDraw()->unknown6058); }
 
 bool drawFontScale(f32 x, f32 y) { return ml::DebDraw::getCacheDraw()->fontScale(x, y); }
 
@@ -356,7 +356,7 @@ bool drawCircleLine(const mm::Mat44 &matrix, f32 radius, const mm::Col4 &color) 
   ml::CacheDraw *cacheDraw = ml::DebDraw::getCacheDraw();
   cacheDraw->setMatrix(mm::Mat44::identity);
   bool result = cacheDraw->setCol(color);
-  result &= cacheDraw->renderCircle(matrix, radius, CIRCLE_DIVISION);
+  result &= cacheDraw->renderCircle(matrix, radius, CIRCLE_DIVISION_UNKNOWN_16);
   return result;
 }
 

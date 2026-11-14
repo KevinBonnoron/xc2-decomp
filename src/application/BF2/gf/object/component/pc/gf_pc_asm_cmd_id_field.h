@@ -3,6 +3,8 @@
 namespace gf {
 namespace pc {
 
+// The enumerators are the entries of the game's TABLE in getASMCmdNameField (gf::pc::getASMCmdNameField(gf::pc::ASM_CMD_ID_FIELD)::TABLE), in value order, without their "C_" prefix, split at each
+// lower-case to upper-case boundary, upper-cased and prefixed with ASM_CMD_ID_FIELD_: "C_uniqueA" gives ASM_CMD_ID_FIELD_UNIQUE_A.
 enum ASM_CMD_ID_FIELD {
   ASM_CMD_ID_FIELD_IDLE = 0,
   ASM_CMD_ID_FIELD_MOVE = 1,

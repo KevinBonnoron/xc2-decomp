@@ -1,6 +1,7 @@
 #include "gf/object/component/pc/plugin/gf_pc_terrain_damage_plugin.h"
 
 #include "framework/object/updatable_object.h"
+#include "fw/fw_transform.h"
 #include "fw/fw_update_info.h"
 #include "gf/field/gf_field_dmg.h"
 #include "gf/object/component/env_sensor/gf_com_env_sensor.h"
@@ -37,7 +38,7 @@ void TerrainDamagePlugin::update(GfComBehaviorPc &behavior, const fw::UpdateInfo
     if (damage != nullptr) {
       GfComPropertyPc *property = behavior.unknown08->getComponent<GfComPropertyPc>();
       f32 range = unknown10 ? 3.0f : 0.0f;
-      if (property->unknown160.y - water->unknown00 <= range) {
+      if (property->unknown160.unknown00.y - water->unknown00 <= range) {
         if (!unknown10) {
           onEnterDamage(behavior);
         }

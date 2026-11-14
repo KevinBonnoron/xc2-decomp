@@ -14,7 +14,7 @@ namespace event {
 
 void ScriptCharaFade::doit(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CHARA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_2) {
     return;
   }
   ObjectChara *chara = static_cast<ObjectChara *>(object);
@@ -26,7 +26,7 @@ void ScriptCharaFade::doit(const Param &param) {
 
 void ScriptCharaFade::undo(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CHARA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_2) {
     return;
   }
   static_cast<ObjectChara *>(object)->getCharaObj()->playFade(unknown08, 0.0f);
@@ -34,7 +34,7 @@ void ScriptCharaFade::undo(const Param &param) {
 
 void ScriptCharaFade::redo(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CHARA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_2) {
     return;
   }
   static_cast<ObjectChara *>(object)->getCharaObj()->playFade(param.val(0).getBool(), 0.0f);

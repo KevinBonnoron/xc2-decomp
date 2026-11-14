@@ -63,8 +63,8 @@ void CharaObj::start() {
     return;
   }
   mm::mtl::Singleton<GroupManager>::getPtr()->push(this);
-  if (unknownd40 != gf::INVALID_HANDLE) {
-    mm::mtl::Singleton<AlphaManager>::getPtr()->setAlpha(unknownd40, ALPHA_ATTR_CHARA, 1.0f, 1.0f);
+  if (unknownd40 != gf::unknown020) {
+    mm::mtl::Singleton<AlphaManager>::getPtr()->setAlpha(unknownd40, ALPHA_ATTR_UNKNOWN_1, 1.0f, 1.0f);
   }
   unknownde0.resetDynamics(0);
   if (unknownca4 == STATE_UNKNOWN_5 || unknownca4 == STATE_UNKNOWN_2) {
@@ -75,8 +75,8 @@ void CharaObj::start() {
 void CharaObj::end() {
   clear();
   if (unknownca4 != STATE_UNKNOWN_1) {
-    if (unknownd40 != gf::INVALID_HANDLE) {
-      mm::mtl::Singleton<AlphaManager>::getPtr()->setAlpha(unknownd40, ALPHA_ATTR_CHARA, 0.0f, 1.0f);
+    if (unknownd40 != gf::unknown020) {
+      mm::mtl::Singleton<AlphaManager>::getPtr()->setAlpha(unknownd40, ALPHA_ATTR_UNKNOWN_1, 0.0f, 1.0f);
     }
     mm::mtl::Singleton<GroupManager>::getPtr()->pop(this);
   }
@@ -229,7 +229,7 @@ void CharaObj::turnRot(const mm::Vec3 &rot, EVT_rotcvtype cv, f32 frame) {
   param.val(3).setF32(rot.z);
   param.val(4).setS32(cv);
   param.val(5).setF32(frame);
-  CmdQueue<QUEUE_COUNT, 0> *target = &unknown1738;
+  CmdQueue<QUEUE_UNKNOWN_8, 0> *target = &unknown1738;
   if (cv == 0) {
     if (unknown1738.isExist(&unknown310)) {
       unknown1738.erase(&unknown310);
@@ -396,7 +396,7 @@ void CharaObj::playMotion(const char *name, f32 frame, f32 blend, f32 speed) {
   }
   if ((unknownca4 & ~1) == 4) {
     initModelStream();
-    unknownca0 |= FLAG_MODEL_STREAM;
+    unknownca0 |= FLAG_UNKNOWN_6;
     unknown3044 = frame;
   }
   unknown2088.erase(&unknown680);
@@ -557,7 +557,7 @@ void CharaObj::mount(CharaObj *target, const char *bone, const mm::Vec3 &pos, co
     param.val(6).setF32(0.0f);
     param.val(7).setF32(0.0f);
     unknown2088.push_back(&unknownb40, param);
-    unknownca0 &= ~FLAG_MOUNT;
+    unknownca0 &= ~FLAG_UNKNOWN_4;
   } else {
     CmdParam param;
     param.val(0).setUserdata(target->unknownd48);
@@ -569,7 +569,7 @@ void CharaObj::mount(CharaObj *target, const char *bone, const mm::Vec3 &pos, co
     param.val(6).setF32(rot.y);
     param.val(7).setF32(rot.z);
     unknown2088.push_back(&unknownb40, param);
-    unknownca0 |= FLAG_MOUNT;
+    unknownca0 |= FLAG_UNKNOWN_4;
   }
 }
 
@@ -586,13 +586,13 @@ void CharaObj::playFade(bool isOut, f32 frame) {
   param.val(2).setF32(frame);
   unknown2088.push_back(&unknownb80, param);
   if (isOut) {
-    unknownca0 |= FLAG_FADE_OUT;
+    unknownca0 |= FLAG_UNKNOWN_5;
   } else {
-    unknownca0 &= ~FLAG_FADE_OUT;
+    unknownca0 &= ~FLAG_UNKNOWN_5;
   }
 }
 
-bool CharaObj::isFadeOut() const { return (unknownca0 & FLAG_FADE_OUT) != 0; }
+bool CharaObj::isFadeOut() const { return (unknownca0 & FLAG_UNKNOWN_5) != 0; }
 
 void CharaObj::playVolumeFade(CharaEffectPlayer::VF_TYPE type, int id, const mm::Vec3 &position, const mm::Vec3 &scale, f32 frame, f32 rate, int mode, f32 speed) {
   unknown1390.playVolumeFade(type, id, position, scale, frame, rate, mode, speed);
@@ -636,7 +636,7 @@ void CharaObj::setScaleWeapon(f32 scale) {
 }
 
 void CharaObj::updateScaleWeapon() {
-  if (unknownd48 != nullptr && unknownd48->unknown18 == gf::GF_EVT_MODEL_WEAPON) {
+  if (unknownd48 != nullptr && unknownd48->unknown18 == gf::GF_EVT_MODEL_UNKNOWN_2) {
     static_cast<gf::GfEvtModelWeapon *>(unknownd48)->setScale(unknown3048);
   }
 }
@@ -646,23 +646,23 @@ void CharaObj::setDispJiji(bool isDisp) {
     return;
   }
   if (isDisp) {
-    unknownca0 |= FLAG_DISP_JIJI;
+    unknownca0 |= FLAG_UNKNOWN_7;
   } else {
-    unknownca0 &= ~FLAG_DISP_JIJI;
+    unknownca0 &= ~FLAG_UNKNOWN_7;
   }
   updateDispJiji();
 }
 
 void CharaObj::updateDispJiji() {
-  if (unknownd48 != nullptr && unknownd48->unknown18 == gf::GF_EVT_MODEL_DRIVER) {
-    bool isDisp = (unknownca0 & FLAG_DISP_JIJI) != 0;
+  if (unknownd48 != nullptr && unknownd48->unknown18 == gf::GF_EVT_MODEL_UNKNOWN_0) {
+    bool isDisp = (unknownca0 & FLAG_UNKNOWN_7) != 0;
     if (gf::GfObjAcc(unknownd48->unknown20).getBdatId() == 1 && unknownd48 != nullptr) {
       static_cast<gf::GfEvtModelDriver *>(unknownd48)->setDispJiji(isDisp);
     }
   }
 }
 
-template void CmdQueue<CharaObj::SUB_QUEUE_COUNT, 0>::update();
-template CmdQueue<CharaObj::SUB_QUEUE_COUNT, 0>::~CmdQueue();
+template void CmdQueue<CharaObj::SUB_QUEUE_UNKNOWN_5, 0>::update();
+template CmdQueue<CharaObj::SUB_QUEUE_UNKNOWN_5, 0>::~CmdQueue();
 
 } // namespace event

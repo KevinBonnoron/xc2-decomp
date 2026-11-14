@@ -47,8 +47,26 @@ f32 AgentUtilField::setFollowInput(f32 distance, navi::NvmshAcObj *naviObject, G
   return funcFollowInput<FollowBuddyPcParam, PARAM_ID_FIELD_AI_UNKNOWN_2, PARAM_ID_FIELD_AI_UNKNOWN_3>(distance, naviObject, property);
 }
 
+mm::Vec2 AgentUtilField::calcFollowWallInput(const mm::Vec3 &position, GfComPropertyPc &property) {
+  mm::Vec2 input = mm::Vec2::zero;
+  mm::Vec3 offset = position - property.unknown160.unknown00;
+  f32 up = offset.x * property.unknown1c0.x + offset.y * property.unknown1c0.y + offset.z * property.unknown1c0.z;
+  if (up >= 0.0f) {
+    input.y = up >= property.unknown310.unknown3c ? 1.0f : 0.0f;
+  } else {
+    input.y = up <= -property.unknown310.unknown40 ? -1.0f : 0.0f;
+  }
+  f32 side = offset.x * property.unknown200.x + offset.y * property.unknown200.y + offset.z * property.unknown200.z;
+  if (side >= 0.0f) {
+    input.x = side >= property.unknown310.unknown44 ? 1.0f : 0.0f;
+  } else {
+    input.x = side <= -property.unknown310.unknown44 ? -1.0f : 0.0f;
+  }
+  return input;
+}
+
 void AgentUtilField::setFollowWallEndInput(const mm::Vec3 &position, GfComPropertyPc &property) {
-  mm::Vec3 offset = position - property.unknown160;
+  mm::Vec3 offset = position - property.unknown160.unknown00;
   property.unknown60.unknown04 = offset.x * property.unknown1c0.x + offset.y * property.unknown1c0.y + offset.z * property.unknown1c0.z >= 0.0f ? 1.0f : -1.0f;
   f32 side = offset.x * property.unknown200.x + offset.y * property.unknown200.y + offset.z * property.unknown200.z;
   if (side >= 0.0f) {
@@ -95,13 +113,13 @@ bool AgentUtilField::calcParentPlayerPush(GfComPropertyPc &property, const mm::V
   }
   GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
   bool isPush = false;
-  for (u32 i = 0; i < GfGamePlayerFormation::PLAYER_NUM; i++) {
+  for (u32 i = 0; i < GfGamePlayerFormation::PLAYER_UNKNOWN_6; i++) {
     if (formation->unknown1a0[i].unknown10) {
       if (i == property.unknown38) {
         return isPush;
       }
       GfObjProperty *other = GfObjUtil::getProperty(formation->unknown1a0[i].unknown08);
-      if (other != nullptr && other->unknown18->unknown00 == PROPERTY_MOVE_CLIMB) {
+      if (other != nullptr && other->unknown18->unknown00 == PROPERTY_MOVE_UNKNOWN_3) {
         mm::Vec3 offset = other->unknown18->unknown10 - position;
         const mm::Vec3 &normal = wallInfo->unknown00.normal;
         f32 dot = offset.x * normal.x + offset.y * normal.y + offset.z * normal.z;
@@ -126,7 +144,7 @@ bool AgentUtilField::calcParentPlayerPush(GfComPropertyPc &property, const mm::V
 bool AgentUtilField::isEnableWallMove(GfComPropertyPc &property, const mm::Vec2 &input) {
   f32 up = input.y * (input.y >= 0.0f ? property.unknown310.unknown3c : property.unknown310.unknown40);
   f32 side = input.x * property.unknown310.unknown44;
-  mm::Vec3 position = property.unknown1c0 * up + property.unknown200 * side + property.unknown160;
+  mm::Vec3 position = property.unknown1c0 * up + property.unknown200 * side + property.unknown160.unknown00;
   const WallAiParam *param = getAIParamAdapter(property, PARAM_ID_FIELD_AI_UNKNOWN_5).get<WallAiParam>();
   mm::Vec3 push;
   return !calcParentPlayerPush(property, position, param->nearRange, &push);
@@ -136,10 +154,10 @@ bool AgentUtilField::existNearChimbPlayer(GfComPropertyPc &property, const mm::V
   GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
   const WallAiParam *param = getAIParamAdapter(property, PARAM_ID_FIELD_AI_UNKNOWN_5).get<WallAiParam>();
   bool isExist = false;
-  for (u32 i = 0; i < GfGamePlayerFormation::PLAYER_NUM; i++) {
+  for (u32 i = 0; i < GfGamePlayerFormation::PLAYER_UNKNOWN_6; i++) {
     if (formation->unknown1a0[i].unknown10) {
       GfObjProperty *other = GfObjUtil::getProperty(formation->unknown1a0[i].unknown08);
-      if (other != nullptr && other->unknown18->unknown00 == PROPERTY_MOVE_CLIMB) {
+      if (other != nullptr && other->unknown18->unknown00 == PROPERTY_MOVE_UNKNOWN_3) {
         mm::Vec3 offset = other->unknown18->unknown10 - position;
         isExist |= sqrtf(offset.x * offset.x + offset.y * offset.y + offset.z * offset.z) - param->nearRange < 0.0f;
       }
@@ -151,7 +169,7 @@ bool AgentUtilField::existNearChimbPlayer(GfComPropertyPc &property, const mm::V
 bool AgentUtilField::isWallJumpAnyPlayer() {
   GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
   bool isWallJump = false;
-  for (u32 i = 0; i < GfGamePlayerFormation::PLAYER_NUM; i++) {
+  for (u32 i = 0; i < GfGamePlayerFormation::PLAYER_UNKNOWN_6; i++) {
     if (formation->unknown1a0[i].unknown10) {
       GfObj *obj = GfObjUtil::getObj(formation->unknown1a0[i].unknown08);
       if (obj != nullptr) {

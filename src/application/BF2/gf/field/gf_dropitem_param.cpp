@@ -50,6 +50,13 @@ void GfDropitemParam::loadFromBdat(int &id) {
   }
 }
 
+} // namespace gf
+
+// The game builds GfDropitemParams in the same unit, between GfDropitemParam and GfDropitemParamInst (0x71002f6cc0 to 0x71002f6f08).
+#include "gf/field/gf_dropitem_params.cpp"
+
+namespace gf {
+
 GfDropitemParamInst::GfDropitemParamInst(const GfDropitemParam *param, f32 height) : unknown00(nullptr), unknown08(0.0f), unknown0c(0.0f) {
   if (param != nullptr) {
     create(*param, height);

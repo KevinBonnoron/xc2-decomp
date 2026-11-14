@@ -7,7 +7,7 @@ namespace event {
 
 class Param2 {
 public:
-  static constexpr u32 VARIABLE_COUNT = 10;
+  static constexpr u32 VARIABLE_UNKNOWN_10 = 10; // Inferred role: variable count; original name unknown.
 
   Param2();
   virtual ~Param2() {}
@@ -17,7 +17,7 @@ public:
   void createString(mm::mtl::FixStr<256> &string);
 
 private:
-  ParamVariable2 unknown08[VARIABLE_COUNT]; // Inferred role: variables; original member name unknown.
+  ParamVariable2 unknown08[VARIABLE_UNKNOWN_10]; // Inferred role: variables; original member name unknown.
 };
 
 static_assert(sizeof(Param2) == 0xaa8, "");

@@ -7,16 +7,18 @@
 namespace gf {
 
 struct MenuZoneMapInfo {
-  MenuZoneMapInfo() : unknown00(0), unknown04(0), unknown08(0), _0c(), unknown14(0) {}
+  MenuZoneMapInfo() : unknown00(0), unknown04(0), unknown08(0), _0c(), unknown10(0), unknown14(0) {}
 
   u32 unknown00; // Inferred role: map id; original member name unknown.
   u32 unknown04; // Inferred role: param; original member name unknown.
   u32 unknown08; // Inferred role: jump condition; original member name unknown.
-  u8 _0c[0x14 - 0xc];
+  u8 _0c[0x10 - 0xc];
+  s32 unknown10; // Inferred role: map icon selection index, set by GfMenuObjWorldMap::seqGimik; original member name unknown.
   u16 unknown14; // Inferred role: priority; original member name unknown.
 };
 
 static_assert(offsetof(MenuZoneMapInfo, unknown08) == 0x8, "");
+static_assert(offsetof(MenuZoneMapInfo, unknown10) == 0x10, "");
 static_assert(offsetof(MenuZoneMapInfo, unknown14) == 0x14, "");
 static_assert(sizeof(MenuZoneMapInfo) == 0x18, "");
 

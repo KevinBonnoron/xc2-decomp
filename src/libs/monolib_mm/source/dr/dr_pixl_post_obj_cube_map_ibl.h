@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "dr/dr_pixl_post_obj.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
 #include "types.h"
@@ -14,9 +15,11 @@ namespace ml {
 
 class DrPixlRenderCubeMapMipMap;
 
-class DrPixlPostObjCubeMapIBL {
+// Derives from DrPixlPostObj: the constructor (1.0.0: 0x7100836c2c) calls the base constructor on this.
+class DrPixlPostObjCubeMapIBL : public DrPixlPostObj {
 public:
   ~DrPixlPostObjCubeMapIBL();
+  void debugRender();
   void render();
   void update();
   void setUniformBlock(u32 index) const;
@@ -27,7 +30,6 @@ public:
   void updateUB_ToProxySpace(u8 *work);
   void updateUB_ShMatrixList(u8 *work);
 
-  u8 _00[0x18];
   bool unknown18; // Inferred role: initialize flag; original member name unknown.
   u8 _19[0x20 - 0x19];
   DrPixlRenderCubeMapMipMap *m_premTexture[2];

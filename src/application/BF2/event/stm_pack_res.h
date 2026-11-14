@@ -7,8 +7,8 @@ namespace event {
 class StmPackRes {
 public:
   enum {
-    FLAG_LOADING = 1 << 0,
-    FLAG_FREE = 1 << 1,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: loading flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: free flag; original name unknown.
   };
 
   StmPackRes();

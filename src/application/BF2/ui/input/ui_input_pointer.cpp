@@ -43,6 +43,14 @@ void UIInputPointer::changeRegionRect(const mm::Rect<s16> &rect) {
   unknown24c = true;
 }
 
+void UIInputPointer::clearExt() {
+  unknown228.unknown00 = 0;
+  unknown228.unknown08 = 0;
+  unknown228.unknown0c = 0;
+  unknown228.unknown10 = 0;
+  unknown228.unknown14 = 0;
+}
+
 const EventData *UIInputPointer::getInputEventExt() { return &unknown228; }
 
 bool UIInputPointer::hasEventExt() const { return unknown228.unknown00 != 0; }

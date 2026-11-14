@@ -8,7 +8,7 @@ namespace event {
 
 CharaPlayTalkAuto::~CharaPlayTalkAuto() {
   gf::GfObj *obj = gf::GfObjUtil::getObj(unknown10);
-  if (obj != nullptr && unknown08.test(FLAG_PLAY) && unknown08.test(FLAG_MESSAGE)) {
+  if (obj != nullptr && unknown08.test(FLAG_UNKNOWN_2) && unknown08.test(FLAG_UNKNOWN_0)) {
     gf::MsgGameLipAction message(1);
     obj->sendMessage(obj, message);
   }
@@ -16,20 +16,20 @@ CharaPlayTalkAuto::~CharaPlayTalkAuto() {
 
 void CharaPlayTalkAuto::stanby(f32 life) {
   this->unknown20 = life;
-  unknown08.set(FLAG_STANBY);
+  unknown08.set(FLAG_UNKNOWN_1);
 }
 
 void CharaPlayTalkAuto::idle() {
   gf::GfObj *obj = gf::GfObjUtil::getObj(unknown10);
-  if (obj != nullptr && unknown08.test(FLAG_PLAY)) {
-    if (unknown08.test(FLAG_MESSAGE)) {
+  if (obj != nullptr && unknown08.test(FLAG_UNKNOWN_2)) {
+    if (unknown08.test(FLAG_UNKNOWN_0)) {
       gf::MsgGameLipAction message(1);
       obj->sendMessage(obj, message);
     }
     unknown20 = -1.0f;
   }
-  unknown08.set(FLAG_STANBY, false);
-  unknown08.set(FLAG_PLAY, false);
+  unknown08.set(FLAG_UNKNOWN_1, false);
+  unknown08.set(FLAG_UNKNOWN_2, false);
 }
 
 void CharaPlayTalkAuto::init() {}

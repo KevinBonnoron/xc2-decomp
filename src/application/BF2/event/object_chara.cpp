@@ -28,7 +28,7 @@ bool ObjectChara::OnBouRectSelect(const IBouCallback::SelectParam &param) {
   return false;
 }
 
-ObjectChara::ObjectChara(const char *name) : Object(OBJTYPE_CHARA, name), unknown68(0), unknown70(nullptr) {}
+ObjectChara::ObjectChara(const char *name) : Object(OBJTYPE_UNKNOWN_2, name), unknown68(0), unknown70(nullptr) {}
 
 ObjectChara::~ObjectChara() {
   if (unknown70 != nullptr) {
@@ -40,25 +40,25 @@ ObjectChara::~ObjectChara() {
 void ObjectChara::createGfObj(gf::GF_OBJ_HANDLE *handle) {
   unknown70 = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) CharaObj(getName());
   unknown70->createGfObj(handle);
-  unknown68 |= FLAG_CREATED;
+  unknown68 |= FLAG_UNKNOWN_0;
 }
 
 void ObjectChara::createGfObj(CHARA_TYPE type, u32 id, u32 param3, u32 param4) {
   unknown70 = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) CharaObj(getName());
   unknown70->createGfObj(type, id, param3, param4);
-  unknown68 |= FLAG_CREATED;
+  unknown68 |= FLAG_UNKNOWN_0;
 }
 
 void ObjectChara::createModel(const char *model, u32 param2, u32 param3) {
   unknown70 = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) CharaObj(getName());
   unknown70->createModel(model, param2, param3);
-  unknown68 &= ~FLAG_CREATED;
+  unknown68 &= ~FLAG_UNKNOWN_0;
 }
 
 void ObjectChara::createGhost() {
   unknown70 = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) CharaObj(getName());
   unknown70->createGhost();
-  unknown68 |= FLAG_CREATED;
+  unknown68 |= FLAG_UNKNOWN_0;
 }
 
 void ObjectChara::clear() {
@@ -138,6 +138,14 @@ mm::Mat44 ObjectChara::getEyeMat() {
   mat.setRotXYZ(getRot());
   mat.setTrans(getEyePos());
   return mat;
+}
+
+void ObjectChara::OnManiSetPos(IManiCallback::SetParam &param) {
+  mm::Vec3 pos = param.matrix.unknown004();
+  PosAxis axis = unknown80;
+  pos = DataManager::unknown001(axis.calcOrigMatInv(), pos.x, pos.y, pos.z);
+  axis.set(axis.getAxis(), pos);
+  setPosAxis(axis);
 }
 
 void ObjectChara::OnManiSetRot(IManiCallback::SetParam &param) {

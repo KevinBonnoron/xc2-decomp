@@ -24,7 +24,7 @@ GfComEnvSensor::GfComEnvSensor() : unknown2bc(0xffff), unknown2d8(nullptr), unkn
 }
 
 bool GfComEnvSensor::recieveMessage(fw::MessageObject *sender, fw::Message &message) {
-  if (message.unknown00 == MSG_DEBUG_ACTIVATE_COMPONENT_WINDOW) {
+  if (message.unknown00 == MSG_UNKNOWN_16777219) {
     procMsgActivateComponentDebugWindow(sender, static_cast<MsgDebugActivateComponentWindow &>(message));
     return true;
   }

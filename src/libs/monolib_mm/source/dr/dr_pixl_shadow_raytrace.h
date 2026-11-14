@@ -16,6 +16,7 @@ class DrPixlRenderTarget;
 
 class DrPixlShadowRaytrace {
 public:
+  explicit DrPixlShadowRaytrace(DrMan *man);
   ~DrPixlShadowRaytrace();
   enum BlurAxis {
     BLUR_AXIS_UNKNOWN_1 = 1,

@@ -1,9 +1,11 @@
 #include "gf/object/component/gf_com_sound.h"
 
+#include <string.h>
+
+#include "framework/message/message_object.h"
 #include "gf/object/component/animation/gf_com_asm.h"      // IWYU pragma: keep
 #include "gf/object/component/animation/gf_com_evt_anim.h" // IWYU pragma: keep
 #include "mm_mtl/delegate.h"                               // IWYU pragma: keep
-#include <string.h>
 
 namespace gf {
 
@@ -45,6 +47,21 @@ const unknown006 unknown007[] = {
 }; // Inferred role: attribute variable values and names; original name unknown.
 
 } // namespace
+
+GfComSound::~GfComSound() {}
+
+bool GfComSound::recieveMessage(fw::MessageObject *sender, fw::Message &message) {
+  if (message.unknown00 == MSG_UNKNOWN_16777219) {
+    procMsgActivateComponentDebugWindow(sender, static_cast<MsgDebugActivateComponentWindow &>(message));
+    return true;
+  }
+
+  return false;
+}
+
+void GfComSound::procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message) {}
+
+const mm::mtl::RTTI *GfComSound::getRTTI() const { return &m_rtti; }
 
 const char *getSoundVariableName(SoundVariable variable) { return unknown001[variable]; }
 

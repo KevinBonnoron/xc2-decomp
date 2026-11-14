@@ -341,7 +341,7 @@ void GfBdatMsg::destroyFP() {
 }
 // Inferred macro name; macros leave no trace in the binary.
 #define NEW_BDAT_WRAPPER(bdat)                                                                                                                                                                         \
-  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper { GfDataBdat::getFP(bdat) }
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper { GfDataBdat::getFP(bdat) }
 
 void GfBdatMsg::createFP() {
 // The line numbers passed to the allocator decide between mov and orr.
@@ -422,19 +422,19 @@ const char *GfBdatMsg::getNameQuest(QuestID quest, u32 line) { return Bdat::getM
 
 u8 *GfBdatMsg::getFpQuest(QuestID quest) {
   switch (GfDataQuest::getListQuestCategory(quest)) {
-  case QTYPE_MAIN:
+  case QTYPE_UNKNOWN_1:
     return m_fpFldQuest->unknown00;
-  case QTYPE_BLADE:
+  case QTYPE_UNKNOWN_2:
     return m_fpFldQuestBlade->unknown00;
-  case QTYPE_NORMAL:
+  case QTYPE_UNKNOWN_3:
     if (quest.unknown00 < 2000) {
       return m_fpFldQuestMini->unknown00;
     }
 
     return m_fpFldQuestNormal->unknown00;
-  case QTYPE_MERCENARIES:
+  case QTYPE_UNKNOWN_5:
     return m_fpFldQuestMercenaries->unknown00;
-  case QTYPE_ACHIEVEMENT:
+  case QTYPE_UNKNOWN_6:
     return m_fpFldQuestAchievement->unknown00;
   }
 

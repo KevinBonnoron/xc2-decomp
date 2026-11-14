@@ -2,10 +2,10 @@
 
 namespace ml {
 
-void DrEnvironmentLgtList::setLgtObjData(const LgtObjData *data) { unknown00 = data; }
+void DrEnvironmentLgtList::setLgtObjData(const LgtObjData *data) { m_lgtObjData = data; }
 
-void DrEnvironmentLgtList::setLgtPosData(const LgtPosData *data) { unknown08 = data; }
+void DrEnvironmentLgtList::setLgtPosData(const LgtPosData *data) { m_lgtPosData = data; }
 
-void DrEnvironmentLgtList::setLightObj(DrLightObj *lightObj) { unknown10 = lightObj; }
+void DrEnvironmentLgtList::setLightObj(DrLightObj *lightObj) { m_lightObj = lightObj; }
 
 } // namespace ml

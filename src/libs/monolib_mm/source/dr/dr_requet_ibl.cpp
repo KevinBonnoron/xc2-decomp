@@ -11,7 +11,7 @@ int DrRequetIBL::getTextureNum() const { return unknown18->unknown14; }
 
 const grlib::CGLibTextureBuffer *DrRequetIBL::getTexture(u32 index) const { return &unknown18->unknown78[index]; }
 
-const mm::Mat44 *DrRequetIBL::getSHMatrix(u32 index, u32 term) const { return unknown18->unknown840 + (index * DrLightObjGlobalIBL::SH_TERM_NUM + term); }
+const mm::Mat44 *DrRequetIBL::getSHMatrix(u32 index, u32 term) const { return unknown18->unknown840 + (index * DrLightObjGlobalIBL::SH_TERM_UNKNOWN_4 + term); }
 
 const f32 *DrRequetIBL::getSHTerm(u32 index, u32 term) const { return unknown18->unknown450[index][term]; }
 

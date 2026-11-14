@@ -56,7 +56,7 @@ constexpr f32 FRAME_TO_SECOND = 1.0f / 30.0f;
 constexpr int ENHANCE_COOL_TIME_UNKNOWN_100 = 0x100;
 constexpr f32 POS_BACKWARD_DISTANCE = 0.7f;
 
-static const u16 s_weaponSeTypes[gf::WEAPON_TYPE_COUNT] = {12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30};
+static const u16 s_weaponSeTypes[gf::WEAPON_TYPE_UNKNOWN_26] = {12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30};
 static const u16 s_attributeSeTypes[ATTRIBUTE_COUNT] = {4, 5, 6, 7, 8, 9, 10, 11};
 static const s8 s_antiAttributes[ATTRIBUTE_COUNT + 1] = {-1, 2, 1, 6, 5, 4, 3, 8, 7};
 
@@ -163,7 +163,7 @@ int Utility::GetSeType(const char *packName) {
 }
 
 int Utility::GetWeaponSeType(int weaponType) {
-  if (weaponType >= 1 && weaponType <= gf::WEAPON_TYPE_COUNT) {
+  if (weaponType >= 1 && weaponType <= gf::WEAPON_TYPE_UNKNOWN_26) {
     return s_weaponSeTypes[weaponType - 1];
   }
 
@@ -352,7 +352,7 @@ gf::GF_OBJ_HANDLE *Utility::AI_GetCharacterHandle(int aiId) {
     }
   }
 
-  return gf::INVALID_HANDLE;
+  return gf::unknown020;
 }
 
 int Utility::AI_ConversionID_AItoBtl(int aiId) {
@@ -378,13 +378,13 @@ int Utility::AI_ConversionID_BtltoAI(int id) {
   return AI_GetCharacterAIID(character);
 }
 
-bool Utility::AI_IsValidID(int aiId) { return AI_GetCharacterHandle(aiId) != gf::INVALID_HANDLE; }
+bool Utility::AI_IsValidID(int aiId) { return AI_GetCharacterHandle(aiId) != gf::unknown020; }
 
 void Utility::AI_GetObjectPosition(gf::GF_OBJ_HANDLE *handle, mm::Vec3 &position) { Misc::GetObjectTransform(handle, position, Misc::TRANS_TYPE_POSITION); }
 
 int Utility::AI_GetTargetCharacterID(gf::GF_OBJ_HANDLE *handle) {
   BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
-  if (character == nullptr || character->unknown120 == gf::INVALID_HANDLE) {
+  if (character == nullptr || character->unknown120 == gf::unknown020) {
     return -1;
   }
 
@@ -398,7 +398,7 @@ int Utility::AI_GetLinkCharacterID(gf::GF_OBJ_HANDLE *handle) {
   }
 
   gf::GF_OBJ_HANDLE *link = BattleGlobal::get()->GetLinkJoinEnemyHandle(character->unknown10);
-  if (link == gf::INVALID_HANDLE) {
+  if (link == gf::unknown020) {
     return -1;
   }
 
@@ -602,7 +602,7 @@ int Utility::AI_GetRescueTargetCharacterID(gf::GF_OBJ_HANDLE *handle) {
   BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
   if (character != nullptr) {
     gf::GF_OBJ_HANDLE *target = character->GetRescueTarget();
-    if (target != gf::INVALID_HANDLE) {
+    if (target != gf::unknown020) {
       return AI_GetCharacterAIID(target);
     }
   }
@@ -907,7 +907,7 @@ bool Utility::AI_StartMoveFriendBack(gf::GF_OBJ_HANDLE *handle, f32 distance, f3
 
   mm::Vec3 position = character->unknown10;
   CharacterManager *characterManager = CharacterManager::get();
-  gf::GF_OBJ_HANDLE *friendHandle = gf::INVALID_HANDLE;
+  gf::GF_OBJ_HANDLE *friendHandle = gf::unknown020;
   f32 nearestLength = FLT_MAX;
   for (u8 id : list) {
     BattleCharacter *friendCharacter = characterManager->GetCharacterConst(id);
@@ -920,7 +920,7 @@ bool Utility::AI_StartMoveFriendBack(gf::GF_OBJ_HANDLE *handle, f32 distance, f3
     }
   }
 
-  if (friendHandle == gf::INVALID_HANDLE) {
+  if (friendHandle == gf::unknown020) {
     return false;
   }
 
@@ -1424,7 +1424,7 @@ bool Utility::AI_IsKillChild() { return BattleGlobal::get()->unknown65e1_0; }
 bool Utility::AI_IsBenkeiWeather() { return DataManager::get()->IsSpecialEffects(SPECIAL_EFFECT_BENKEI_WEATHER); }
 
 f32 Utility::GetBladeCoolTime(int blade) {
-  gf::DataParamAcc acc(4, blade, gf::GIMMICK_TYPE_NONE);
+  gf::DataParamAcc acc(4, blade, gf::GIMMICK_TYPE_UNKNOWN_0);
   f32 coolTime = static_cast<f32>(acc.getCoolTime());
   int trust = gf::GfDataBlade::getTrustRank(blade);
   if (trust != 0) {

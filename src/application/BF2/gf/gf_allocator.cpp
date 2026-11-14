@@ -6,7 +6,7 @@
 
 namespace gf {
 
-constexpr size_t SLOT_ALLOCATE_MIN = 0x20000;
+constexpr size_t SLOT_UNKNOWN_131072 = 0x20000; // Inferred role: slot allocate min; original name unknown.
 
 GfAllocator::GfAllocator() {}
 
@@ -17,15 +17,15 @@ void GfAllocator::setMemHandle(mtl::ALLOC_HANDLE handle) { unknown08 = handle; }
 mtl::ALLOC_HANDLE GfAllocator::getMemHandle() const { return unknown08; }
 
 void *GfAllocator::allocate(size_t size, size_t alignment) {
-  if (getAllocator(ALLOCATOR_UNKNOWN0B) == this) {
+  if (getAllocator(ALLOCATOR_UNKNOWN_11) == this) {
     GfSlotMapping *mapping = GfAssetManager::getSlotMapping();
-    if (size > SLOT_ALLOCATE_MIN && mapping != nullptr) {
+    if (size > SLOT_UNKNOWN_131072 && mapping != nullptr) {
       void *pointer = mapping->allocateSize(size, alignment);
       if (pointer != nullptr) {
         return pointer;
       }
     }
-    void *pointer = getAllocator(ALLOCATOR_DEFAULT)->allocate(size, alignment);
+    void *pointer = getAllocator(ALLOCATOR_UNKNOWN_0)->allocate(size, alignment);
     if (pointer != nullptr) {
       return pointer;
     }
@@ -34,22 +34,22 @@ void *GfAllocator::allocate(size_t size, size_t alignment) {
 }
 
 void *GfAllocator::allocateProgLarge(size_t size, size_t alignment) {
-  if (getAllocator(ALLOCATOR_UNKNOWN0B) != this) {
+  if (getAllocator(ALLOCATOR_UNKNOWN_11) != this) {
     return nullptr;
   }
   GfSlotMapping *mapping = GfAssetManager::getSlotMapping();
-  if (size > SLOT_ALLOCATE_MIN && mapping != nullptr) {
+  if (size > SLOT_UNKNOWN_131072 && mapping != nullptr) {
     void *pointer = mapping->allocateSize(size, alignment);
     if (pointer != nullptr) {
       return pointer;
     }
   }
-  return getAllocator(ALLOCATOR_DEFAULT)->allocate(size, alignment);
+  return getAllocator(ALLOCATOR_UNKNOWN_0)->allocate(size, alignment);
 }
 
 void GfAllocator::deallocate(void *pointer) {
   GfSlotMapping *mapping = nullptr;
-  if (getAllocator(ALLOCATOR_UNKNOWN0B) == this) {
+  if (getAllocator(ALLOCATOR_UNKNOWN_11) == this) {
     mapping = GfAssetManager::getSlotMapping();
   }
   if (mapping != nullptr) {
@@ -63,7 +63,7 @@ void GfAllocator::deallocate(void *pointer) {
 }
 
 bool GfAllocator::deallocateProgLarge(void *pointer) {
-  if (getAllocator(ALLOCATOR_UNKNOWN0B) == this) {
+  if (getAllocator(ALLOCATOR_UNKNOWN_11) == this) {
     GfSlotMapping *mapping = GfAssetManager::getSlotMapping();
     if (mapping != nullptr && mapping->deallocateSize(pointer)) {
       return true;

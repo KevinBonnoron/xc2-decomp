@@ -32,8 +32,8 @@ void StateFieldWaterWarpRise::update(GfComBehaviorPc *behavior, const fw::Update
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
   property->setLocomotion(comAsm->getLocomotion());
-  if (comAsm->isEnd(ANIM_LAYER_BASE) && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_WATERIDLE)) {
-    reqState(STATE_ID_FIELD_WATER_IDLE);
+  if (comAsm->isEnd(ANIM_LAYER_UNKNOWN_0) && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_WATERIDLE)) {
+    reqState(STATE_ID_UNKNOWN_20);
   }
 }
 

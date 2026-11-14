@@ -33,7 +33,7 @@ GfMenuExcTaskAdapter *GfMenuExcTaskAdapter::create(u32 handle, u32 type, u32 tas
     if (plugin != nullptr) {
       // __LINE__ must be 113 as in the original source: it is the line argument of operator new.
 #line 113
-      GfMenuExcTaskAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuExcTaskAdapter(plugin, isUpdateAlways);
+      GfMenuExcTaskAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuExcTaskAdapter(plugin, isUpdateAlways);
       adapter->unknown38.bind(adapter, info.update);
       adapter->unknown30 = taskId;
       plugin->release();
@@ -66,7 +66,7 @@ GfMenuExcTaskAdapter *GfMenuExcTaskAdapter::createFromCoverter(u32 handle, u32 t
 GfMenuExcTaskAdapter *GfMenuExcTaskAdapter::createFromList(u32 handle, u32 type, GfMenuIDList *list, int listIndex, bool isUpdateAlways) {
   // __LINE__ must be 144 as in the original source: it is the line argument of operator new.
 #line 144
-  ListConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ListConverter(list, listIndex);
+  ListConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ListConverter(list, listIndex);
   return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 
@@ -80,13 +80,13 @@ void GfMenuExcTaskAdapter::update(const fw::UpdateInfo &info) {
     }
   }
 
-  if (unknown38.isValid() && (unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
+  if (unknown38.isValid() && (unknown20 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) != 0) {
     if (unknown30 != 0) {
       setDisp(unknown38(unknown30));
     } else {
       setDisp(false);
     }
-    unknown20 &= ~FLAG_CHANGED;
+    unknown20 &= ~FLAG_UNKNOWN_0;
   }
 }
 

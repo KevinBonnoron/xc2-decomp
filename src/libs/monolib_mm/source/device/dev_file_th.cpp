@@ -1,16 +1,24 @@
 #include "ml/dev_file_th.h"
 
+#include "device/dev_file_archiver.h"
+#include "device/nx/dev_file_nx_th.h"
 #include "ml/dev_file_accessor.h"
 #include "ml/dev_file_job_th.h"
+#include "ml/device.h"
 #include "ml/file_handle_th.h"
+#include "ml/lib_main.h"
+#include "ml/reslist.h"
+#include "ml/thread.h"
+#include "ml/work_obj.h"
 #include "ml/work_root.h"
-
-#include "device/nx/dev_file_nx_th.h"
+#include "ml/work_system.h"
 #include "mm_mtl/algorithm.h"
 #include "mm_mtl/construct.h"
 #include "mm_mtl/fixstr.h"
 #include "mtl/mem_manager.h"
 #include "nn/fs.h"
+#include "nn/os.h"
+#include "nn/time_span.h"
 
 namespace ml {
 
@@ -24,6 +32,46 @@ void clearLoadMedia() { g_loadMedia.clear(); }
 } // namespace dvfl_detail
 
 DevFileTh::~DevFileTh() {}
+
+namespace {
+
+// Inferred role: replaces the backslashes of a path by slashes; original name unknown.
+template <int LEN> void unknown108(mm::mtl::FixStr<LEN> &path) {
+  for (int i = 0; i < path.length(); i++) {
+    if (path[i] == '\\') {
+      path[i] = '/';
+    }
+  }
+}
+
+// Inferred role: session hio port name buffer returned by getSessionHioPortName; original name and type unknown.
+// Size evidence: the object is at 0x71014b9cc8 and the next game object (the PtrSingleton<DevClock> instance) at 0x71014b9d08, so it holds at
+// most 0x40 bytes. Its only reference is getSessionHioPortName (0x7100736d94) and nothing writes it in this build: the real size cannot be
+// checked.
+char unknown109[0x40];
+
+} // namespace
+
+void DevFileTh::makeMediaFileName(mm::mtl::FixStr<256> &fileName, const char *directory, const char *path) {
+  if (getMediaType(path) != MEDIA_UNKNOWN_0) {
+    fileName = path;
+    return;
+  }
+  fileName = directory;
+  if (fileName.length() != 0) {
+    unknown108(fileName);
+    if (fileName[fileName.length() - 1] == '/') {
+      fileName.resize(fileName.length() - 1);
+    }
+  }
+  if (path[0] == '\\' || path[0] == '/') {
+    fileName += path;
+  } else {
+    fileName += "/";
+    fileName += path;
+  }
+  unknown108(fileName);
+}
 
 void DevFileTh::flushSave() {
   if (DevFileNxTh::m_mountSave) {
@@ -157,6 +205,47 @@ bool DevFileTh::isLoading(FileHandleTh *handle) {
   return file->unknown1c0->isLoading(handle);
 }
 
+bool DevFileTh::isInitialized() {
+  DevFileTh *file = get();
+  if (file == nullptr) {
+    return false;
+  }
+  // The game compares the safe-bool member pointer with null (csel/cbnz, then the constant adjustment test `orr w9, wzr, #1; tbnz` at
+  // 0x710072ca14-0x710072ca28); `!file->unknown1c0` gives 31 instructions instead of 34.
+  if (file->unknown1c0 == nullptr) {
+    return false;
+  }
+  return file->unknown1c0->isInitialized();
+}
+
+bool DevFileTh::isLoadingBusy() {
+  DevFileTh *file = get();
+  if (file == nullptr) {
+    return false;
+  }
+  return file->unknown1c0->isLoadingBusy();
+}
+
+const char *DevFileTh::getSessionHioPortName() {
+  if (get() == nullptr) {
+    return "";
+  }
+  return unknown109;
+}
+
+u32 DevFileTh::Impl::thFileLoader(void *argument) {
+  Impl *impl = static_cast<Impl *>(argument);
+  impl->unknown5a3a4++;
+  nn::os::SleepThread(nn::TimeSpan::FromNanoSeconds(100000000));
+  while (!impl->unknown5a3a0) {
+    if (DevFileTh::isInitialized()) {
+      impl->thUpdate();
+    }
+  }
+  impl->unknown5a3a4--;
+  return 0;
+}
+
 void DevFileTh::Impl::registAccessor(MEDIA media, DevFileAccessor *accessor) { unknown588b0[media] = accessor; }
 
 void DevFileTh::Impl::removeAccessor(MEDIA media) { unknown588b0[media] = nullptr; }
@@ -176,6 +265,15 @@ void DevFileTh::Impl::setSuspend(bool suspend) {}
 bool DevFileTh::Impl::isSuspend() const { return false; }
 
 bool DevFileTh::Impl::isInitialized() { return m_initialized; }
+
+void DevFileTh::Impl::start() {
+  for (size_t i = 0; i < unknown08808.size(); i++) {
+    Thread *thread = *unknown08808.at(i);
+    if (thread != nullptr) {
+      thread->resume();
+    }
+  }
+}
 
 namespace {
 
@@ -348,6 +446,130 @@ bool DevFileTh::Impl::isLoading(FileHandleTh *handle) {
   return false;
 }
 
+bool DevFileTh::Impl::isLoadingBusy() {
+  CS cs(unknown5a350);
+  for (unknown003::iterator it = unknown02d20.begin(); it != unknown02d20.end(); ++it) {
+    // The game holds the `m_node != 0` assert of operator* (fixed_list.h line 84) at 0x71007347a0-0x71007347b4 without a load of the value,
+    // then returns true: a statement without effect that the game really holds. `!empty()` gives 33 instructions, `if (*it != nullptr)` 54.
+    *it;
+    return true;
+  }
+  return false;
+}
+
+void DevFileTh::Impl::updateCancel() {
+  for (unknown003::iterator it = unknown00000.begin(); it != unknown00000.end();) {
+    DevFileJobTh *job = *it;
+    if (job->unknown18) {
+      it = unknown00000.erase(mm::mtl::find(unknown00000.begin(), unknown00000.end(), job));
+      releaseRequest(job);
+    } else {
+      ++it;
+    }
+  }
+}
+
+void DevFileTh::Impl::tail() {
+  {
+    CS cs(unknown5a350);
+    updateCancel();
+    while (!unknown05a40.empty()) {
+      DevFileJobTh *job = unknown05a40.front();
+      FileHandleTh *handle = job->unknown10;
+      CBM cbm;
+      if (handle->unknown94 & 0x10000) {
+        cbm = CBM_UNKNOWN_4;
+      } else {
+        cbm = handle->unknown1e8;
+      }
+      handle->call(cbm);
+      unknown05a40.pop_front();
+      releaseRequest(job);
+    }
+  }
+  for (u32 i = 0; i < 8; i++) {
+    DevFileAccessor *accessor = unknown588b0[i];
+    if (accessor != nullptr) {
+      accessor->tail();
+    }
+  }
+  for (u32 i = 0; i < 8; i++) {
+    DevFileAccessor *accessor = unknown588f0[i];
+    if (accessor != nullptr) {
+      accessor->tail();
+    }
+  }
+}
+
+namespace {
+
+// Inferred role: gives the path of a file handle and the ratio of its size already transferred; original name unknown.
+void unknown111(const FileHandleTh *handle, mm::mtl::FixStr<256> &name, f32 &ratio) {
+  name = handle->unknown98;
+  if (handle->unknown18 != 0) {
+    ratio = static_cast<f32>(handle->m_currentPtr) / static_cast<f32>(static_cast<u32>(handle->unknown18));
+  } else {
+    ratio = 0.0f;
+  }
+}
+
+} // namespace
+
+bool DevFileTh::Impl::getReadingInfo(mm::mtl::FixStr<256> &name, f32 &ratio) {
+  CS cs(unknown5a350);
+  if (name.length() == 0) {
+    return false;
+  }
+  for (unknown003::iterator it = unknown02d20.begin(); it != unknown02d20.end(); ++it) {
+    const FileHandleTh *handle = (*it)->unknown10;
+    if (handle != nullptr && handle->unknown00 >= FileHandleTh::FTYPE_UNKNOWN_1 && handle->unknown00 <= FileHandleTh::FTYPE_UNKNOWN_3) {
+      unknown111(handle, name, ratio);
+      return true;
+    }
+  }
+  for (unknown003::iterator it = unknown05a40.begin(); it != unknown05a40.end(); ++it) {
+    const DevFileJobTh *job = *it;
+    if (job->unknown08 == 1 || job->unknown08 == 2) {
+      const FileHandleTh *handle = job->unknown10;
+      if (handle != nullptr && handle->unknown00 >= FileHandleTh::FTYPE_UNKNOWN_1 && handle->unknown00 <= FileHandleTh::FTYPE_UNKNOWN_3) {
+        unknown111(handle, name, ratio);
+        return true;
+      }
+    }
+  }
+  ratio = 0.0f;
+  return false;
+}
+
+bool DevFileTh::Impl::getWritingInfo(mm::mtl::FixStr<256> &name, f32 &ratio) {
+  CS cs(unknown5a350);
+  if (name.length() == 0) {
+    return false;
+  }
+  for (unknown003::iterator it = unknown02d20.begin(); it != unknown02d20.end(); ++it) {
+    const DevFileJobTh *job = *it;
+    if (job->unknown08 == 1 || job->unknown08 == 2) {
+      const FileHandleTh *handle = job->unknown10;
+      if (handle != nullptr && handle->unknown00 == FileHandleTh::FTYPE_UNKNOWN_4) {
+        unknown111(handle, name, ratio);
+        return true;
+      }
+    }
+  }
+  for (unknown003::iterator it = unknown05a40.begin(); it != unknown05a40.end(); ++it) {
+    const DevFileJobTh *job = *it;
+    if (job->unknown08 == 1 || job->unknown08 == 2) {
+      const FileHandleTh *handle = job->unknown10;
+      if (handle != nullptr && handle->unknown00 == FileHandleTh::FTYPE_UNKNOWN_4) {
+        unknown111(handle, name, ratio);
+        return true;
+      }
+    }
+  }
+  ratio = 0.0f;
+  return false;
+}
+
 bool DevFileTh::isSuspend() {
   DevFileTh *file = get();
   if (file != nullptr) {
@@ -409,6 +631,43 @@ bool DevFileTh::finalize() {
   return file->unknown1c0->finalize();
 }
 
+bool DevFileTh::Impl::finalize() {
+  bool result = true;
+  for (u32 i = 0; i < 8; i++) {
+    DevFileAccessor *accessor = unknown588f0[i];
+    if (accessor != nullptr) {
+      result &= accessor->finalize();
+    }
+  }
+  for (u32 i = 0; i < 8; i++) {
+    DevFileAccessor *accessor = unknown588b0[i];
+    if (accessor != nullptr) {
+      result &= accessor->finalize();
+    }
+  }
+  return result;
+}
+
+bool DevFileTh::wkStandbyLogin() {
+  if (!Device::isColdStartReady()) {
+    return false;
+  }
+  if (!isInitialized() && !initialize()) {
+    return false;
+  }
+  return WorkObj::wkStandbyLogin();
+}
+
+bool DevFileTh::wkStandbyLogout() {
+  if (unknown60.size() != 0 || WorkSystem::get() != nullptr || LibMain::get() != nullptr) {
+    return false;
+  }
+  if (!finalize()) {
+    return false;
+  }
+  return WorkObj::wkStandbyLogout();
+}
+
 void DevFileTh::initializeEnv(const char *path) {
   char buffer[1024] = {};
   initializePath(buffer, false);
@@ -417,6 +676,13 @@ void DevFileTh::initializeEnv(const char *path) {
 void DevFileTh::addMediaPath(MEDIA media, const char *path, int priority) {
   if (path != nullptr && path[0] != '\0') {
     dvfl_detail::addMediaPath(media, path, priority);
+  }
+}
+
+void DevFileTh::removeArchive(MEDIA media, const char *name) {
+  DevFileArchiver *archiver = DevFileArchiver::get();
+  if (archiver != nullptr) {
+    archiver->removeArchive(media, name);
   }
 }
 
@@ -501,6 +767,13 @@ void DevFileTh::sendCommand(const char *command, const char *argument) {}
 
 void DevFileTh::wkUpdate() {}
 
+void DevFileTh::wkTail() {
+  DevFileTh *file = get();
+  if (file != nullptr) {
+    file->unknown1c0->tail();
+  }
+}
+
 bool DevFileTh::icbError(CERR_STRUCT *error) { return true; }
 
 void DevFileTh::icbDecide(CERR_STRUCT *error, ERR_DECIDE decide) {}
@@ -523,17 +796,17 @@ bool DevFileReaderTh::asyncUpdate() {
   }
   if (unknown18) {
     unknown10->unknown94 |= 0x10000;
-    unknown10->unknown1e8 = 4;
+    unknown10->unknown1e8 = CBM_UNKNOWN_4;
     return false;
   }
   if (isRead) {
     unknown10->unknown94 |= 0x40000;
-    unknown10->unknown1e8 = 2;
+    unknown10->unknown1e8 = CBM_UNKNOWN_2;
     unknown08 = 2;
     return true;
   }
   unknown10->unknown94 |= 0x20000;
-  unknown10->unknown1e8 = 4;
+  unknown10->unknown1e8 = CBM_UNKNOWN_4;
   unknown08 = -1;
   return false;
 }

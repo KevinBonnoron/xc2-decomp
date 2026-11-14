@@ -11,11 +11,11 @@ inline bool isValidFloat(f32 value) {
 }
 
 struct alignas(16) Vec3 {
-  static const Vec3 zero;
-  static const Vec3 unit;
-  static const Vec3 unitX;
-  static const Vec3 unitY;
-  static const Vec3 unitZ;
+  static const Vec3 zero;  // Name from the game symbol _ZN2mm4Vec34zeroE; also in torna and xc1de.
+  static const Vec3 unit;  // Name from the game symbol _ZN2mm4Vec34unitE; also in torna and xc1de.
+  static const Vec3 unitX; // Name from the game symbol _ZN2mm4Vec35unitXE; also in torna and xc1de.
+  static const Vec3 unitY; // Name from the game symbol _ZN2mm4Vec35unitYE; also in torna and xc1de.
+  static const Vec3 unitZ; // Name from the game symbol _ZN2mm4Vec35unitZE; also in torna and xc1de.
 
   Vec3() {}
   Vec3(f32 x, f32 y, f32 z) : x(x), y(y), z(z) {}
@@ -81,6 +81,25 @@ struct alignas(16) Vec3 {
       *this *= 1.0f / length;
     }
   }
+
+  // Inferred role: normalizes through a temporary, zero when shorter than 1e-6; original name unknown.
+  // Evidence: inlined in gf::GimmickCamera::getYaw and gf::FusionComboCamera::getYaw.
+  void unknown002() {
+    f32 length = sqrtf(x * x + y * y + z * z);
+    Vec3 result;
+    if (length <= 0.000001f) {
+      result = Vec3(zero);
+    } else {
+      result.x = x * (1.0f / length);
+      result.y = y * (1.0f / length);
+      result.z = z * (1.0f / length);
+    }
+    *this = result;
+  }
+
+  // Inferred role: true when every component is within 1e-6 of zero; original name unknown.
+  // Evidence: gmk::GmkRoutedNpc::findPopPosRot (1.0.0: 0x71005fa980) and gmk::getYSnapPosRot (0x71005e472c).
+  bool unknown003() const { return fabsf(x) <= 0.000001f && fabsf(y) <= 0.000001f && fabsf(z) <= 0.000001f; }
 
   f32 x;
   f32 y;

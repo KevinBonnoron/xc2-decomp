@@ -27,9 +27,9 @@ namespace gf {
 
 GfMenuAdapter::GfMenuAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAfter, bool isUpdateAlways) : unknown18(nullptr), unknown20(0), unknown24(0), unknown28(nullptr) {
   attachPlugin(plugin);
-  unknown20 |= FLAG_CHANGED;
+  unknown20 |= FLAG_UNKNOWN_0;
   if (isUpdateAlways) {
-    unknown20 |= FLAG_UPDATE_ALWAYS;
+    unknown20 |= FLAG_UNKNOWN_1;
   }
   GfMenuAdapterManager::get()->addAdapter(this, isUpdateAfter);
 }
@@ -40,7 +40,7 @@ GfMenuAdapter::~GfMenuAdapter() {
 }
 
 void GfMenuAdapter::setChange() {
-  unknown20 |= FLAG_CHANGED;
+  unknown20 |= FLAG_UNKNOWN_0;
   if (unknown18 != nullptr) {
     unknown18->unknown18 |= 2;
   }
@@ -436,7 +436,7 @@ void GfMenuAdapter::setColorMode(u32 mode) {
   }
 }
 
-bool GfMenuAdapter::isUpdateAlways() const { return (unknown20 & FLAG_UPDATE_ALWAYS) != 0; }
+bool GfMenuAdapter::isUpdateAlways() const { return (unknown20 & FLAG_UNKNOWN_1) != 0; }
 
 void GfMenuAdapter::setColor(const char *name) {
   ui::UIObjectColorPlugin *colorPlugin = unknown18 != nullptr ? mm::mtl::dynamicCast<ui::UIObjectColorPlugin>(unknown18) : nullptr;
@@ -452,7 +452,7 @@ void GfMenuAdapter::setTextFacePattern(const char *name) {
   }
 }
 
-void GfMenuAdapter::update(const fw::UpdateInfo &info) { unknown20 &= ~FLAG_CHANGED; }
+void GfMenuAdapter::update(const fw::UpdateInfo &info) { unknown20 &= ~FLAG_UNKNOWN_0; }
 
 } // namespace gf
 

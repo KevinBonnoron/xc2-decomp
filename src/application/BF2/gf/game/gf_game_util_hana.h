@@ -17,7 +17,11 @@ enum RESULT_HANA {
   RESULT_HANA_UNKNOWN_6 = 6,   // Inferred role: rank unreachable or unsupported type; original enumerator name unknown.
   RESULT_HANA_UNKNOWN_7 = 7,   // Inferred role: stock full; original enumerator name unknown.
   RESULT_HANA_UNKNOWN_8 = 8,   // Inferred role: no item owned; original enumerator name unknown.
+  RESULT_HANA_UNKNOWN_9 = 9,   // Inferred role: no item handle available; original enumerator name unknown.
   RESULT_HANA_UNKNOWN_10 = 10, // Inferred role: circuit not open; original enumerator name unknown.
+  RESULT_HANA_UNKNOWN_11 = 11, // Inferred role: no parts to equip; original enumerator name unknown.
+  RESULT_HANA_UNKNOWN_12 = 12, // Inferred role: parts not equippable on the blade; original enumerator name unknown.
+  RESULT_HANA_UNKNOWN_13 = 13, // Inferred role: same effect already equipped; original enumerator name unknown.
 };
 
 class GfGameUtilHana {

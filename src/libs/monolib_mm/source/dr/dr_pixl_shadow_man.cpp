@@ -1,12 +1,18 @@
 #include "dr/dr_pixl_shadow_man.h"
 
+#include <string.h>
+
 #include "dr/dr_man.h"
 #include "dr/dr_mdl_man.h"
 #include "dr/dr_pixl_format.h"
+#include "dr/dr_pixl_man.h"
 #include "dr/dr_pixl_post_parm.h"
 #include "dr/dr_pixl_shadow_obj.h"
 #include "dr/dr_pixl_shadow_obj_dir.h"
+#include "dr/dr_pixl_shadow_obj_pnt.h"
+#include "dr/dr_pixl_shadow_obj_spt.h"
 #include "mm_mtl/fixed_array.h"
+#include "mtl/alloc_handle.h"
 
 namespace ml {
 
@@ -21,18 +27,47 @@ f32 DrPixlShadowMan::getShadowTexSize(int index) {
 }
 
 void DrPixlShadowMan::beforUpdate() {
-  unknown8918 = nullptr;
+  m_addShadowObj = nullptr;
   for (int i = 0; i < unknown8900; i++) {
     unknown0000[i]->update();
   }
 }
 
 void DrPixlShadowMan::afterUpdate() {
-  if (unknown8918 != nullptr) {
-    unknown8918->calcLgtMat();
+  if (m_addShadowObj != nullptr) {
+    m_addShadowObj->calcLgtMat();
   }
   for (int i = 0; i < unknown8900; i++) {
     unknown0000[i]->afterUpdate();
+  }
+}
+
+void DrPixlShadowMan::shadowRender() {
+  int size = unknown8908->unknown5b8->unknown28 / 5;
+  int y = 0;
+  int x = 0;
+  int column = 0;
+  for (int i = 0; i < unknown8900; i++) {
+    if (unknown0000[i]->dispChk()) {
+      unknown8910->debugRender(*unknown0000[i]->unknown40->unknown128, x, y, size, size, false, false, 1.0f, true);
+      x += size;
+      column++;
+      if (column > 3) {
+        column = 0;
+        x = 0;
+        y += size;
+      }
+      for (DrPixlShadowObj *shadow = unknown0000[i]->unknown190; shadow != nullptr; shadow = shadow->unknown190) {
+        unknown8910->debugRender(*shadow->unknown40->unknown128, x, y, size, size, false, false, 1.0f, true);
+        x += size;
+        column++;
+        if (column > 3) {
+          column = 0;
+          x = 0;
+          y += size;
+        }
+      }
+    }
   }
 }
 
@@ -64,8 +99,8 @@ bool DrPixlShadowMan::renderDirShadowObj() {
 }
 
 bool DrPixlShadowMan::setAddObjPos(const mm::Vec3 &position, f32 value) {
-  if (unknown8908->unknown120[unknown8908->unknown1c98]->unknown103e && unknown8918 != nullptr) {
-    return unknown8918->setAddObjPos(position, value);
+  if (unknown8908->unknown120[unknown8908->unknown1c98]->unknown103e && m_addShadowObj != nullptr) {
+    return m_addShadowObj->setAddObjPos(position, value);
   }
   return false;
 }
@@ -143,6 +178,46 @@ void DrPixlShadowMan::releaseShadow(DrPixlShadowObj *shadow) {
   }
 }
 
-void DrPixlShadowMan::setAddShadowObj(DrPixlShadowObjDir *shadow) { unknown8918 = shadow; }
+void DrPixlShadowMan::setAddShadowObj(DrPixlShadowObjDir *shadow) { m_addShadowObj = shadow; }
 
+DrPixlShadowMan::DrPixlShadowMan(DrMan *man, DrPixlMan *pixlMan) : unknown8900(0), unknown8908(man), unknown8910(pixlMan), m_addShadowObj(nullptr) {
+  memset(unknown0000, 0, sizeof(unknown0000));
+  for (int i = 0; i < 16; i++) {
+    unknown0800[i].unknown808 = 0;
+    unknown0800[i].unknown80a = 0;
+    unknown0800[i].unknown800 = 0.0f;
+    unknown0800[i].unknown804 = 0;
+  }
+}
+
+DrPixlShadowMan::~DrPixlShadowMan() { releaseTexWork(); }
+
+DrPixlShadowObj *DrPixlShadowMan::createPntShadow(DrLightObj *light, int index) {
+  DrPixlShadowObjPnt *shadow = new (unknown8908->unknown10) DrPixlShadowObjPnt(unknown8908, 0);
+  shadow->unknown190 = new (unknown8908->unknown10) DrPixlShadowObjPnt(unknown8908, 1);
+  unknown0000[unknown8900++] = shadow;
+  return shadow;
+}
+
+DrPixlShadowObj *DrPixlShadowMan::createSptShadow(DrLightObj *light, int index) {
+  MdoShdPxlWrkTex *work = createShdTexWrk(index, 2);
+  if (work == nullptr) {
+    return nullptr;
+  }
+  DrPixlShadowObjSpt *shadow = new (unknown8908->unknown10) DrPixlShadowObjSpt(unknown8908);
+  shadow->createWork(light, 0, work);
+  unknown0000[unknown8900++] = shadow;
+  return shadow;
+}
+
+void DrPixlShadowMan::shadowDebugInfRender() {
+  for (int i = 0; i < unknown8900; i++) {
+    unknown0000[i]->debugInfo();
+    for (DrPixlShadowObj *shadow = unknown0000[i]->unknown190; shadow != nullptr; shadow = shadow->unknown190) {
+      if (shadow->dispChk() && (shadow->unknown50 & DrPixlShadowObj::FLAG_UNKNOWN_0) != 0) {
+        shadow->debugInfo();
+      }
+    }
+  }
+}
 } // namespace ml

@@ -90,8 +90,8 @@ void GmkAreaBgm::dispose() {
 // Inferred role: fills one bgm condition info from the bgm condition bdat; original name unknown.
 static void unknown002(GmkBgmCondInfo &info, GmkAreaBgm *owner, u8 *bdat, u32 id, const char *conditionName, const char *bgmIdName) {
   info.unknown10 = owner;
-  info.unknown18 = Bdat::getValCheck(bdat, conditionName, id, BDAT_TYPE_U16);
-  info.unknown1a = Bdat::getValCheck(bdat, bgmIdName, id, BDAT_TYPE_U16);
+  info.unknown18 = Bdat::getValCheck(bdat, conditionName, id, BDAT_TYPE_UNKNOWN_2);
+  info.unknown1a = Bdat::getValCheck(bdat, bgmIdName, id, BDAT_TYPE_UNKNOWN_2);
 }
 
 void GmkAreaBgm::createBgmCondInfos() {
@@ -133,7 +133,7 @@ void GmkAreaBgm::debugDraw() const {}
 
 void GmkAreaBgm::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   dispose();
-  unknown00 = bdat.getValCheck("bgmCondition", id, BDAT_TYPE_U16);
+  unknown00 = bdat.getValCheck("bgmCondition", id, BDAT_TYPE_UNKNOWN_2);
 }
 
 void GmkAreaBgm::onEnterPhantom(const IGmkPhantomEventListener::OnEnterInfo &info) {}

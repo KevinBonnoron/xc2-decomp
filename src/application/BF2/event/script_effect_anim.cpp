@@ -13,7 +13,7 @@ namespace event {
 
 void ScriptEffectAnim::doit(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_EFFECT) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_4) {
     return;
   }
   static_cast<ObjectEffect *>(object)->getEffectObj()->playAnim(param.val(0).getStr(), param.val(1).getF32());

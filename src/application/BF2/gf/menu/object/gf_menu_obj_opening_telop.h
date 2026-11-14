@@ -34,17 +34,13 @@ public:
   static void openRight(u32 telop);
   static void closeRight();
   static void ctrlFadeIn(u32 handle, u32 type);
-  static void ctrlFadeOut(u32 handle, u32 type);
+  static int ctrlFadeOut(u32 handle, u32 type);
 
-  u32 unknown24;                  // Inferred role: unused; original member name unknown.
-  u32 unknown28;                  // Inferred role: unused; original member name unknown.
-  u32 unknown2c;                  // Inferred role: unused; original member name unknown.
+  u32 unknown24[3];               // Inferred role: image counts of the center, left and right telops; original member name unknown.
   ui::UISelectObjList *unknown30; // Inferred role: telop objects; original member name unknown.
 };
 
 static_assert(offsetof(GfMenuObjOpeningTelop, unknown24) == 0x24, "");
-static_assert(offsetof(GfMenuObjOpeningTelop, unknown28) == 0x28, "");
-static_assert(offsetof(GfMenuObjOpeningTelop, unknown2c) == 0x2c, "");
 static_assert(offsetof(GfMenuObjOpeningTelop, unknown30) == 0x30, "");
 static_assert(sizeof(GfMenuObjOpeningTelop) == 0x38, "");
 

@@ -42,7 +42,7 @@ ICmd::RESULT CharaMount::update(const Param &param) {
       unknown10 = model;
     }
   }
-  return RESULT_NEXT;
+  return RESULT_UNKNOWN_2;
 }
 
 void CharaMount::term() {

@@ -10,7 +10,7 @@ namespace event {
 mm::Vec3 RandUtil::getEyePos(int id) {
   if (id > 0) {
     Object *object = searchByID(id);
-    if (object != nullptr && object->getType() == OBJTYPE_CHARA) {
+    if (object != nullptr && object->getType() == OBJTYPE_UNKNOWN_2) {
       return static_cast<ObjectChara *>(object)->getEyePos();
     }
   }
@@ -40,7 +40,7 @@ mm::Vec3 RandUtil::getEyePos(gf::GF_OBJ_HANDLE *handle) {
 mm::Vec3 RandUtil::getCurentTarPos(int id, bool &isFound) {
   if (id > 0) {
     Object *object = searchByID(id);
-    if (object != nullptr && object->getType() == OBJTYPE_CHARA) {
+    if (object != nullptr && object->getType() == OBJTYPE_UNKNOWN_2) {
       isFound = static_cast<ObjectChara *>(object)->isTar();
       return static_cast<ObjectChara *>(object)->getTar();
     }

@@ -10,7 +10,8 @@
 
 namespace gf {
 
-static const char *const TYPE_NAMES[] = {
+static const char *const unknown041[] = {
+    // Inferred role: type names; original name unknown.
     "NONE",
     "MAP",
     "MAP_LOD",
@@ -35,13 +36,13 @@ GfObj::GfObj(u32 type, const fw::HandlePtr<fw::UpdatableObject> &handle, u32 lay
 GfObj::~GfObj() {}
 
 void GfObj::update(const fw::UpdateInfo &info) {
-  unknown114.set(OBJ_STATE_UPDATING);
+  unknown114.set(OBJ_STATE_UNKNOWN_0);
   GfObjUpdate::updateComponent(this, info);
-  unknown114.set(OBJ_STATE_UPDATING, false);
+  unknown114.set(OBJ_STATE_UNKNOWN_0, false);
 }
 
 void GfObj::onEvent(const fw::ObjectEvent &event) {
-  if (event.type == fw::OBJECT_EVENT_UPDATE_END) {
+  if (event.type == fw::OBJECT_EVENT_UNKNOWN_0) {
     GfComProperty *property = getComponent<GfComProperty>();
     if (property != nullptr) {
       property->flush();
@@ -49,10 +50,10 @@ void GfObj::onEvent(const fw::ObjectEvent &event) {
   }
 }
 
-const char *GfObj::getTypeName(u32 type) { return TYPE_NAMES[type]; }
+const char *GfObj::getTypeName(u32 type) { return unknown041[type]; }
 
 bool GfObj::recieveMessage(fw::MessageObject *sender, fw::Message &message) {
-  for (u32 i = 0; i < COMPONENT_MAX; i++) {
+  for (u32 i = 0; i < COMPONENT_UNKNOWN_12; i++) {
     if ((message.unknown04 & (1 << i)) != 0 && unknown38[i] != nullptr) {
       GfComponent *component = mm::mtl::dynamicCast<GfComponent>(unknown38[i]);
       if (component != nullptr) {
@@ -62,10 +63,10 @@ bool GfObj::recieveMessage(fw::MessageObject *sender, fw::Message &message) {
   }
 
   switch (message.unknown00) {
-  case MSG_DEBUG_ACTIVATE_OBJECT_WINDOW:
+  case MSG_DEBUG_UNKNOWN_16777217:
     procMsgActivateObjectDebugWindow(sender, static_cast<MsgDebugActivateObjectWindow &>(message));
     return true;
-  case MSG_DEBUG_DEACTIVATE_OBJECT_WINDOW:
+  case MSG_DEBUG_UNKNOWN_16777218:
     procMsgDeactivateObjectDebugWindow(sender, static_cast<MsgDebugDeactivateObjectWindow &>(message));
     return true;
   }
@@ -78,14 +79,14 @@ void GfObj::procMsgActivateObjectDebugWindow(fw::MessageObject *sender, MsgDebug
 void GfObj::procMsgDeactivateObjectDebugWindow(fw::MessageObject *sender, MsgDebugDeactivateObjectWindow &message) {}
 
 void GfObj::setUpdateComponent(bool isUpdate) {
-  unknown114.set(OBJ_STATE_UPDATE_ENABLE, isUpdate);
+  unknown114.set(OBJ_STATE_UNKNOWN_1, isUpdate);
   GfObjUtil::applyExecUpdate(this);
 }
 
-GfObjLayerSpeed::Info GfObjLayerSpeed::s_info[fw::Framework::LAYER_MAX];
+GfObjLayerSpeed::Info GfObjLayerSpeed::s_info[fw::Framework::LAYER_UNKNOWN_32];
 
 void GfObjLayerSpeed::initialize() {
-  for (u32 layer = 0; layer < fw::Framework::LAYER_MAX; layer++) {
+  for (u32 layer = 0; layer < fw::Framework::LAYER_UNKNOWN_32; layer++) {
     s_info[layer] = Info();
   }
 }
@@ -102,7 +103,7 @@ bool GfObjLayerSpeed::isRequest(u32 layer) { return s_info[layer].unknown00; }
 f32 GfObjLayerSpeed::getSpeed(u32 layer) { return s_info[layer].unknown04; }
 
 void GfObjLayerSpeed::cleanup() {
-  for (u32 layer = 0; layer < fw::Framework::LAYER_MAX; layer++) {
+  for (u32 layer = 0; layer < fw::Framework::LAYER_UNKNOWN_32; layer++) {
     s_info[layer] = Info();
   }
 }

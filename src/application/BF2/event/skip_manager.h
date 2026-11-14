@@ -8,16 +8,16 @@ namespace event {
 
 class SkipManager : public IManager, public mm::mtl::Singleton<SkipManager> {
 public:
-  static constexpr f32 DEFAULT_END_FRAME = 99999.0f;
+  static constexpr f32 unknown002 = 99999.0f; // Inferred role: default end frame; original name unknown.
 
   enum {
-    FLAG_SKIP = 1 << 0,
-    FLAG_SKIP_VOLUME = 1 << 1,
-    FLAG_SKIP_FAST_ENABLE = 1 << 2,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: skip flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: skip volume flag; original name unknown.
+    FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: skip fast enable flag; original name unknown.
   };
 
   bool isSkipFast() const {
-    if (unknown10 & FLAG_SKIP_FAST_ENABLE) {
+    if (unknown10 & FLAG_UNKNOWN_2) {
       if (mm::mtl::Singleton<DebugManager>::getPtr()->isFastSkipDisable() && !mm::mtl::Singleton<DebugManager>::getPtr()->isFastSkipEnableOneTime()) {
         return false;
       }

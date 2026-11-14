@@ -13,12 +13,12 @@ namespace event {
 
 class ScheManager : public IManager, public mm::mtl::Singleton<ScheManager> {
 public:
-  static constexpr u32 SCHEDULER_COUNT = 16;
+  static constexpr u32 SCHEDULER_UNKNOWN_16 = 16; // Inferred role: scheduler count; original name unknown.
 
   enum {
-    FLAG_FLD2EVT = 1 << 0,
-    FLAG_EVT2IDLE = 1 << 1,
-    FLAG_EVT2FLD = 1 << 2,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: fld2evt flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: evt2idle flag; original name unknown.
+    FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: evt2fld flag; original name unknown.
   };
 
   ScheManager();
@@ -36,8 +36,8 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  u32 unknown10;                                                // Inferred role: flags; original member name unknown.
-  mm::mtl::FixedVector<Scheduler *, SCHEDULER_COUNT> unknown18; // Inferred role: schedulers; original member name unknown.
+  u32 unknown10;                                                     // Inferred role: flags; original member name unknown.
+  mm::mtl::FixedVector<Scheduler *, SCHEDULER_UNKNOWN_16> unknown18; // Inferred role: schedulers; original member name unknown.
 };
 
 static_assert(sizeof(ScheManager) == 0xa0, "");

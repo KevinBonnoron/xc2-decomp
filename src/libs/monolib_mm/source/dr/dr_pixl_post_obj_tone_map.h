@@ -10,13 +10,23 @@ class CGLibRenderTarget;
 } // namespace grlib
 
 namespace ml {
+class DrMan;
+class DrPixlMan;
+class DrPixlPostMan;
 
 class DrPixlPostObjToneMap : public DrPixlPostObj {
 public:
+  DrPixlPostObjToneMap(DrMan *drMan, DrPixlMan *pixlMan, DrPixlPostMan *postMan);
+  ~DrPixlPostObjToneMap();
   void update();
   void fastRender();
   void updateByCompute();
   void updateByRenderTarget();
+  void createSclDow();
+  void createMeasureLuminance();
+  void createMeasureLuminanceByCompute();
+  void creaetMeasureLuminaceByRenderTarget();
+  void debugRender();
 
   grlib::CGLibRenderTarget *unknown18[6]; // Inferred role: scale down targets; original member name unknown.
   grlib::CGLibOneUniformBlock unknown48;  // Inferred role: measured luminance buffer; original member name unknown.

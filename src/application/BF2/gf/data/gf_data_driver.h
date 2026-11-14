@@ -13,9 +13,9 @@ namespace gf {
 
 class GfInitParamDriver;
 
-constexpr u32 DRIVER_LEVEL_MAX = 99;
-constexpr u32 DRIVER_ARTS_LEVEL_MAX = 5;
-constexpr u32 SET_BLADE_NUM_MAX = 5;
+constexpr u32 DRIVER_UNKNOWN_99 = 99;    // Inferred role: driver level max; original name unknown.
+constexpr u32 DRIVER_ARTS_UNKNOWN_5 = 5; // Inferred role: driver arts level max; original name unknown.
+constexpr u32 SET_UNKNOWN_5 = 5;         // Inferred role: set blade num max; original name unknown.
 
 // Inferred role: save data driver weapon; original type name unknown.
 struct unknown114 {
@@ -82,12 +82,21 @@ struct SDataDriver {
   mm::mtl::unknown027<28> unknown59c; // Inferred role: activate weapon types; original member name unknown.
 };
 
-enum DBSLOT {};
+enum ActivateType {
+  ACTIVATE_TYPE_UNKNOWN_0, // Inferred role: activate type unuse; original name unknown.
+  ACTIVATE_TYPE_UNKNOWN_1, // Inferred role: activate type reserver; original name unknown.
+  ACTIVATE_TYPE_UNKNOWN_2, // Inferred role: activate type party; original name unknown.
+  ACTIVATE_TYPE_UNKNOWN_3, // Inferred role: activate type mercenary team; original name unknown.
+};
+
+enum DBSLOT {
+  DBSLOT_UNKNOWN_0, // Inferred role: death blow slot 0; original name unknown.
+};
 enum FAVORITE {
-  FAVORITE_CATEGORY_0,
-  FAVORITE_CATEGORY_1,
-  FAVORITE_ITEM_0,
-  FAVORITE_ITEM_1,
+  FAVORITE_UNKNOWN_0, // Inferred role: favorite category 0; original name unknown.
+  FAVORITE_UNKNOWN_1, // Inferred role: favorite category 1; original name unknown.
+  FAVORITE_UNKNOWN_2, // Inferred role: favorite item 0; original name unknown.
+  FAVORITE_UNKNOWN_3, // Inferred role: favorite item 1; original name unknown.
 };
 
 static_assert(sizeof(unknown114) == 0x14, "");
@@ -124,16 +133,17 @@ static_assert(sizeof(SDataDriver) == 0x5a0, "");
 
 class GfDataDriver {
 public:
-  static SDataDriver *getSDataDriver(u32 driver);
+  static SDataDriver &getSDataDriver(u32 driver);
   static SDataIdea *getSDataIdea(u32 driver);
   static const char *getName(u32 driver);
   static bool getName(u8 *&bdat, u32 &textId, u32 driver);
   static int getRuleSetBlade(u32 driver, u32 blade, int slot);
   static u32 getFavorite(u32 driver, FAVORITE favorite);
   static bool isFavoriteCategory(u32 driver, u32 item);
+  static bool isFavoriteItem(u32 driver, u32 item);
   static bool isKizunaringComplete(u32 driver, bool isSecond);
   static void setKizunaringComplete(u32 driver, bool isSecond);
-  static void setEquipBlade(u32 driver, bool isEquip, int slot);
+  static bool setEquipBlade(u32 driver, bool isEquip, int slot);
   static u32 getExpNextLevel(const SDataDriver &dataDriver);
   static u32 getExpNextLevel(u32 driver);
   static u32 getBattleExpNextLevel(const SDataDriver &dataDriver);
@@ -148,16 +158,18 @@ public:
   static void calcDriverBaseParamByLevel(SDataDriver &dataDriver);
   static u32 getLevel(u32 driver);
   static bool isActivateParty(u32 driver);
-  static u32 getDriverActivateType(u32 driver);
-  static u32 getDriverActivateType(const SDataDriver &dataDriver);
-  static void setBlade(u32 driver, u32 blade, int slot);
+  static ActivateType getDriverActivateType(u32 driver);
+  static ActivateType getDriverActivateType(const SDataDriver &dataDriver);
+  static bool setBlade(u32 driver, u32 blade, int slot);
   static int getSetIdByBlade(u32 driver, u32 blade);
   static int getSetIdByBlade(const SDataDriver &dataDriver, u32 blade);
   static int getMaxSetBladeNum(u32 driver);
   static int getSetIdByDummyBlade(u32 driver);
   static u32 getBlade(u32 driver, int slot);
+  static bool getSetBlade(mm::mtl::FixedVector<u16, 422> &blades, u32 driver);
+  static bool isExistBlade(u32 driver);
   static bool getListBlade(mm::mtl::FixedVector<u16, 422> &blades, u32 driver);
-  static void unsetBlade(u32 blade);
+  static bool unsetBlade(u32 blade);
   static bool leaveOneCommonBlade(u32 driver);
   static bool leaveOneRareBlade(u32 driver);
   static bool leaveOneScenarioBlade(u32 driver);
@@ -165,6 +177,7 @@ public:
   static int getBladeSet(u32 driver);
   static bool isActivateReserver(u32 driver);
   static bool isActivateUnuse(u32 driver);
+  static bool setActivateParty(u32 driver, u32 partyId);
   static bool setActivateUnuse(u32 driver);
   static bool setActivateReserver(u32 driver, u32 partyId);
   static void equipDriverBladeFromReserverBlade(u32 driver);
@@ -202,6 +215,7 @@ public:
   static u32 getBattleExp(const SDataDriver &dataDriver);
   static bool isEnableLevelUp(u32 driver);
   static bool isEnableLevelUp(const SDataDriver &dataDriver);
+  static void getEnableLevel(u32 &level, u32 &maxLevel, u32 driver);
   static u32 getExp(u32 driver);
   static u32 getBattleExp(u32 driver);
   static u32 getBattleExpNextLevelAll(u32 driver);
@@ -255,7 +269,7 @@ public:
   static void addSkillPoint(u32 driver, int skillPoint);
   static void addSkillPoint(SDataDriver &dataDriver, int skillPoint);
   static void getValidEnhance(mm::mtl::FixedVector<u16, 64> &enhances, u32 driver);
-  static void getValidEnhance(mm::mtl::FixedVector<u16, 64> &enhances, const SDataDriver &dataDriver);
+  static bool getValidEnhance(mm::mtl::FixedVector<u16, 64> &enhances, const SDataDriver &dataDriver);
   static u32 getExtraMountNpcRsc(u32 driver);
   static const char *getExtraMountBone(u32 driver);
   static u32 getExtraMountCondition(u32 driver);

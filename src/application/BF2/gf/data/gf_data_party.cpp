@@ -12,17 +12,17 @@
 
 namespace gf {
 
-constexpr u32 PARTY_MEMBER_COUNT = 10;
-constexpr u32 PARTY_BATTLE_MEMBER_COUNT = 3;
-constexpr u32 WEAPON_NUM_PER_BLADE = 8;
-constexpr u32 MEMBER_NONE = 0xffffffff;
+constexpr u32 PARTY_UNKNOWN_10 = 10;                  // Inferred role: party member count; original name unknown.
+constexpr u32 PARTY_UNKNOWN_3 = 3;                    // Inferred role: party battle member count; original name unknown.
+constexpr u32 WEAPON_UNKNOWN_8 = 8;                   // Inferred role: weapon num per blade; original name unknown.
+constexpr u32 MEMBER_UNKNOWN_4294967295 = 0xffffffff; // Inferred role: member none; original name unknown.
 
 bool GfDataParty::isExistBlade(u32 blade) {
   if (blade == 0) {
     return false;
   }
 
-  for (u32 member = 0; member < PARTY_BATTLE_MEMBER_COUNT; member++) {
+  for (u32 member = 0; member < PARTY_UNKNOWN_3; member++) {
     if (isExistBlade(member, blade)) {
       return true;
     }
@@ -38,7 +38,7 @@ int GfDataParty::getDriverPartyID(u32 driver) {
     return -1;
   }
 
-  for (u32 member = 0; member < PARTY_MEMBER_COUNT; member++) {
+  for (u32 member = 0; member < PARTY_UNKNOWN_10; member++) {
     if (getDriver(member) == driver) {
       return member;
     }
@@ -59,7 +59,7 @@ bool GfDataParty::setDriver(u32 member, u32 driver) {
 unknown124 *GfDataParty::getSDataParty() { return &GfDataManager::getDataGame()->unknowne9884; }
 
 bool GfDataParty::isExistDriver(u32 driver) {
-  for (u32 member = 0; member < PARTY_BATTLE_MEMBER_COUNT; member++) {
+  for (u32 member = 0; member < PARTY_UNKNOWN_3; member++) {
     if (getDriver(member) == driver) {
       return true;
     }
@@ -89,7 +89,7 @@ mm::Vec3 *GfDataParty::getSaveRot(u32 member, bool isDriver) {
 }
 
 bool GfDataParty::isEmptyDriver() {
-  for (u32 member = 0; member < PARTY_BATTLE_MEMBER_COUNT; member++) {
+  for (u32 member = 0; member < PARTY_UNKNOWN_3; member++) {
     if (getDriver(member) == 0) {
       return true;
     }
@@ -114,7 +114,7 @@ bool GfDataParty::isExistBlade(u32 member, u32 blade) {
 }
 
 bool GfDataParty::empty() {
-  for (u32 member = 0; member < PARTY_BATTLE_MEMBER_COUNT; member++) {
+  for (u32 member = 0; member < PARTY_UNKNOWN_3; member++) {
     if (getDriver(member) != 0) {
       return false;
     }
@@ -125,10 +125,10 @@ bool GfDataParty::empty() {
 
 u32 GfDataParty::getFixedHandleForDriver(u32 member) { return member; }
 
-u32 GfDataParty::getFixedHandleForBlade(u32 member, int slot) { return PARTY_BATTLE_MEMBER_COUNT + member * SET_BLADE_NUM_MAX + slot; }
+u32 GfDataParty::getFixedHandleForBlade(u32 member, int slot) { return PARTY_UNKNOWN_3 + member * SET_UNKNOWN_5 + slot; }
 
 u32 GfDataParty::getFixedHandleForWeapon(u32 member, int slot, u32 weapon) {
-  return member * SET_BLADE_NUM_MAX * WEAPON_NUM_PER_BLADE + slot * WEAPON_NUM_PER_BLADE + weapon + PARTY_BATTLE_MEMBER_COUNT * (1 + SET_BLADE_NUM_MAX);
+  return member * SET_UNKNOWN_5 * WEAPON_UNKNOWN_8 + slot * WEAPON_UNKNOWN_8 + weapon + PARTY_UNKNOWN_3 * (1 + SET_UNKNOWN_5);
 }
 
 void GfDataParty::getDriver(mm::mtl::FixedArray<u16, 10> &drivers) {
@@ -138,16 +138,16 @@ void GfDataParty::getDriver(mm::mtl::FixedArray<u16, 10> &drivers) {
 }
 
 bool GfDataParty::isNiaByakko(u32 member) {
-  if (member == MEMBER_NONE) {
+  if (member == MEMBER_UNKNOWN_4294967295) {
     return false;
   }
 
   SDataGame *dataGame = GfDataManager::getDataGame();
-  if (dataGame->unknowne9884.unknown00[member].unknown00 != DRIVER_NIA) {
+  if (dataGame->unknowne9884.unknown00[member].unknown00 != DRIVER_UNKNOWN_2) {
     return false;
   }
 
-  DataParamAcc paramAcc(OBJECT_TYPE_DRIVER, DRIVER_NIA, static_cast<GimmickType>(0));
+  DataParamAcc paramAcc(OBJECT_TYPE_PC, DRIVER_UNKNOWN_2, static_cast<GimmickType>(0));
   bool isByakko = false;
   if (paramAcc.getBlade(-1, false) == BLADE_BYAKKO) {
     isByakko = isRideChar(dataGame->unknowne9884.unknown40);
@@ -156,7 +156,7 @@ bool GfDataParty::isNiaByakko(u32 member) {
   return isByakko;
 }
 
-bool GfDataParty::isRideChar(u32 chara) { return chara == DRIVER_NIA || chara == BLADE_BYAKKO; }
+bool GfDataParty::isRideChar(u32 chara) { return chara == DRIVER_UNKNOWN_2 || chara == BLADE_BYAKKO; }
 
 bool GfDataParty::isLeader(u32 chara) {
   if (chara == 0) {

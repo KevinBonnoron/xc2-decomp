@@ -10,14 +10,14 @@ namespace event {
 class CsSndManager : public IManager, public mm::mtl::Singleton<CsSndManager> {
 public:
   enum {
-    FLAG_PRELOAD = 1 << 0,
-    FLAG_PLAY = 1 << 1,
-    FLAG_PAUSE = 1 << 2,
-    FLAG_STALL = 1 << 3,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: preload flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: play flag; original name unknown.
+    FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: pause flag; original name unknown.
+    FLAG_UNKNOWN_3 = 1 << 3, // Inferred role: stall flag; original name unknown.
   };
 
   enum {
-    DISP_FLAG_DISP = 1 << 0,
+    DISP_FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: disp flag; original name unknown.
   };
 
   CsSndManager();
@@ -52,14 +52,14 @@ private:
     fw::SoundManager::get()->stopBgm(unknown18, 1.0f);
     unknown18 = 0;
     unknown20 = "";
-    unknown10 &= ~FLAG_PRELOAD;
+    unknown10 &= ~FLAG_UNKNOWN_0;
   }
 
   void stopPlay() {
     fw::SoundManager::get()->stopBgm(unknown1c, 1.0f);
     unknown1c = 0;
     unknown124 = "";
-    unknown10 &= ~(FLAG_PLAY | FLAG_PAUSE | FLAG_STALL);
+    unknown10 &= ~(FLAG_UNKNOWN_1 | FLAG_UNKNOWN_2 | FLAG_UNKNOWN_3);
   }
 
   u32 unknown10;                   // Inferred role: flags; original member name unknown.

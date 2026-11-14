@@ -11,7 +11,7 @@ namespace mtl {
 
 // The game moves the queued steps with memmove when one is dropped (GfMenuObjChapterTelop::update).
 template <> struct is_pod<Delegate<bool()>> {
-  static const bool value = true;
+  static const bool unknown001 = true; // Inferred role: whether the type is plain old data, so it is copied with memcpy; original name unknown.
 };
 
 } // namespace mtl

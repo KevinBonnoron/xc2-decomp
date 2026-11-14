@@ -45,7 +45,7 @@ BattleGlobal::~BattleGlobal() {}
 void BattleGlobal::Create() {
   // __LINE__ must be 265 as in the original file: its value changes the instruction order.
 #line 265
-  BattleGlobal *global = new (gf::getAllocator(gf::ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) BattleGlobal();
+  BattleGlobal *global = new (gf::getAllocator(gf::ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) BattleGlobal();
   global->Initialize();
 }
 
@@ -185,7 +185,7 @@ int BattleGlobal::GetAttackDamage(u32 attack) const {
 gf::GF_OBJ_HANDLE *BattleGlobal::GetAttackMainTargetHandle(u32 attack) const {
   const ATTACK_DAMAGE_DATA *data = GetAttackDamageDataConst(attack);
   if (data == nullptr) {
-    return gf::INVALID_HANDLE;
+    return gf::unknown020;
   }
 
   return CharacterManager::get()->GetCharacterHandle(data->unknown13);
@@ -721,7 +721,7 @@ void BattleGlobal::NotifyLinkJoinBattle(gf::GF_OBJ_HANDLE *handle) {
 }
 
 gf::GF_OBJ_HANDLE *BattleGlobal::GetLinkJoinEnemyHandle(const mm::Vec3 &position) {
-  gf::GF_OBJ_HANDLE *nearest = gf::INVALID_HANDLE;
+  gf::GF_OBJ_HANDLE *nearest = gf::unknown020;
   f32 nearestLength = FLT_MAX;
   for (const LINK_JOIN_DATA &data : unknown620) {
     mm::Vec3 enemyPosition;
@@ -761,7 +761,7 @@ void BattleGlobal::DeleteElementalComboCamera() {
     fw::CameraManager::get()->unknown20[0].pop(unknown5b00, 0.0f);
     unknown5b00 = nullptr;
   }
-  unknown5af0 = gf::INVALID_HANDLE;
+  unknown5af0 = gf::unknown020;
   unknown65df_0 = false;
 }
 
@@ -772,7 +772,7 @@ void BattleGlobal::NotifyMapChange() {
   unknown6b8 = 0.0f;
   DeleteSlowAll();
   DeleteElementalComboCamera();
-  m_elementalComboImmortal = gf::INVALID_HANDLE;
+  m_elementalComboImmortal = gf::unknown020;
   DeleteUniteComboDirection();
   FinalizeJingle();
   unknown870 = 1;

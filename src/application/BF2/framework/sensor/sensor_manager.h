@@ -42,7 +42,7 @@ static_assert(sizeof(SensorUpdateJob) == 0x28, "");
 
 class SensorManager : public ManagerObject, public mm::mtl::PtrSingleton<SensorManager> {
 public:
-  static const u32 LAYER_MAX = 32;
+  static const u32 LAYER_UNKNOWN_32 = 32; // Inferred role: maximum number of layers; original name unknown.
 
   struct Group {
     mm::mtl::IntrusiveList<SensorUpdater> unknown00; // Inferred role: before game updaters; original member name unknown.
@@ -70,8 +70,8 @@ public:
     unknown618->unknown001(job);
   }
 
-  mm::mtl::FixedArray<Group, LAYER_MAX> unknown18; // Inferred role: groups; original member name unknown.
-  anm::JobQueue *unknown618;                       // Inferred role: job queue; original member name unknown.
+  mm::mtl::FixedArray<Group, LAYER_UNKNOWN_32> unknown18; // Inferred role: groups; original member name unknown.
+  anm::JobQueue *unknown618;                              // Inferred role: job queue; original member name unknown.
 };
 
 static_assert(sizeof(SensorManager::Group) == 0x30, "");

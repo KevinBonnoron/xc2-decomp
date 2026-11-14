@@ -36,29 +36,29 @@ class GfVolumeFade;
 class GfWeapon;
 
 enum {
-  OBJ_FLAG_DESTROY = 0,
-  OBJ_FLAG_DISP_CHANGED = 1,
-  OBJ_FLAG_CLIP = 2,
-  OBJ_FLAG_GPU_CLIP = 3,
-  OBJ_FLAG_RELOAD = 5,
-  OBJ_FLAG_REBUILD = 6,
-  OBJ_FLAG_LOADED_WAIT = 8,
-  OBJ_FLAG_LOADED_WAIT_OK = 9,
-  OBJ_FLAG_CAMERA_FADE = 0xa,
-  OBJ_FLAG_CAMERA_FADE_DISABLE_FOR_EVENT = 0xb,
-  OBJ_FLAG_CAMERA_FADE_DISABLE_FOR_BATTLE = 0xc,
-  OBJ_FLAG_CALC_CAMERA_ALPHA = 0xd,
-  OBJ_FLAG_UNKNOWN_E = 0xe, // Inferred role: flag tested by isDestroyGameObj; original name unknown.
-  OBJ_FLAG_UNKNOWN_F = 0xf, // Inferred role: flag set when an object enters the game; original name unknown.
-  OBJ_FLAG_WAIT = 0x10,
-  OBJ_FLAG_UI_HIDDEN = 0x11,
-  OBJ_FLAG_PARTY_OBJ = 0x12,
-  OBJ_FLAG_UPDATED = 0x13,
-  OBJ_FLAG_VOLUME_FADE_FOR_USER = 0x14,
-  OBJ_FLAG_TALKING = 0x15,
-  OBJ_FLAG_UNKNOWN_17 = 0x17, // Inferred role: set by enemies leaving the battle state; original name unknown.
-  OBJ_FLAG_TOOL_MODE = 0x18,
-  OBJ_FLAG_LOADED_WAIT_BLOCK = 0x1a,
+  OBJ_FLAG_UNKNOWN_0 = 0,     // Inferred role: obj flag destroy; original name unknown.
+  OBJ_FLAG_UNKNOWN_1 = 1,     // Inferred role: obj flag disp changed; original name unknown.
+  OBJ_FLAG_UNKNOWN_2 = 2,     // Inferred role: obj flag clip; original name unknown.
+  OBJ_FLAG_UNKNOWN_3 = 3,     // Inferred role: obj flag gpu clip; original name unknown.
+  OBJ_FLAG_UNKNOWN_5 = 5,     // Inferred role: obj flag reload; original name unknown.
+  OBJ_FLAG_UNKNOWN_6 = 6,     // Inferred role: obj flag rebuild; original name unknown.
+  OBJ_FLAG_UNKNOWN_8 = 8,     // Inferred role: obj flag loaded wait; original name unknown.
+  OBJ_FLAG_UNKNOWN_9 = 9,     // Inferred role: obj flag loaded wait ok; original name unknown.
+  OBJ_FLAG_UNKNOWN_10 = 0xa,  // Inferred role: obj flag camera fade; original name unknown.
+  OBJ_FLAG_UNKNOWN_11 = 0xb,  // Inferred role: obj flag camera fade disable for event; original name unknown.
+  OBJ_FLAG_UNKNOWN_12 = 0xc,  // Inferred role: obj flag camera fade disable for battle; original name unknown.
+  OBJ_FLAG_UNKNOWN_13 = 0xd,  // Inferred role: obj flag calc camera alpha; original name unknown.
+  OBJ_FLAG_UNKNOWN_14 = 0xe,  // Inferred role: flag tested by isDestroyGameObj; original name unknown.
+  OBJ_FLAG_UNKNOWN_15 = 0xf,  // Inferred role: flag set when an object enters the game; original name unknown.
+  OBJ_FLAG_UNKNOWN_16 = 0x10, // Inferred role: obj flag wait; original name unknown.
+  OBJ_FLAG_UNKNOWN_17 = 0x11, // Inferred role: obj flag ui hidden; original name unknown.
+  OBJ_FLAG_UNKNOWN_18 = 0x12, // Inferred role: obj flag party obj; original name unknown.
+  OBJ_FLAG_UNKNOWN_19 = 0x13, // Inferred role: obj flag updated; original name unknown.
+  OBJ_FLAG_UNKNOWN_20 = 0x14, // Inferred role: obj flag volume fade for user; original name unknown.
+  OBJ_FLAG_UNKNOWN_21 = 0x15, // Inferred role: obj flag talking; original name unknown.
+  OBJ_FLAG_UNKNOWN_23 = 0x17, // Inferred role: set by enemies leaving the battle state; original name unknown.
+  OBJ_FLAG_UNKNOWN_24 = 0x18, // Inferred role: obj flag tool mode; original name unknown.
+  OBJ_FLAG_UNKNOWN_26 = 0x1a, // Inferred role: obj flag loaded wait block; original name unknown.
 };
 
 // Layout from GfObjUtil::parseFadeParam (0x71005b3674), which parses "fadeout_<frames>" or "fadein_<frames>" and an
@@ -168,8 +168,11 @@ public:
   static GfAssetResource *getResourceEab(GF_OBJ_HANDLE *handle);
   static GfAssetResource *getResourceEfb(GF_OBJ_HANDLE *handle);
   static u32 getWeaponResourceSwtNum(GF_OBJ_HANDLE *handle);
+  static GfAssetResource *getWeaponResourceSwt(GF_OBJ_HANDLE *handle, u32 index);
   static u32 getWeaponResourceEabNum(GF_OBJ_HANDLE *handle);
+  static GfAssetResource *getWeaponResourceEab(GF_OBJ_HANDLE *handle, u32 index);
   static u32 getWeaponResourceEfbNum(GF_OBJ_HANDLE *handle);
+  static GfAssetResource *getWeaponResourceEfb(GF_OBJ_HANDLE *handle, u32 index);
   static fw::SoundPack *getSePack(GF_OBJ_HANDLE *handle);
   static fw::SoundPack *getSePackFoot1(GF_OBJ_HANDLE *handle);
   static fw::SoundPack *getSePackFoot2(GF_OBJ_HANDLE *handle);
@@ -184,12 +187,14 @@ public:
   static bool parseFadeParam(const char *param, GfFadeInfo *info);
   static void setDeadParticle(GF_OBJ_HANDLE *handle, bool isActive, u32 attribute, f32 alpha);
 
+  // Inferred name; shared by every object setup class for GfObjUtil::getObjSetup<T>.
   template <typename T> static T *getObjSetup(GF_OBJ_HANDLE *handle) {
     GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
     if (info == nullptr || info->unknown30 == nullptr) {
       return nullptr;
     }
 
+    // Inferred name; shared by every object setup class for GfObjUtil::getObjSetup<T>.
     if (info->unknown30->unknown08 != info->unknown18->unknown28 || info->unknown18->unknown28 != T::OBJECT_TYPE) {
       return nullptr;
     }

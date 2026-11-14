@@ -18,6 +18,7 @@ public:
   f32 getObjAlpha(bool unknown001);
   void setAlphaReset(bool unknown001);
   void create(const void *unknown001);
+  void update(f32 speed);
 
   u32 unknown00;         // Inferred role: state flags; original member name unknown.
   f32 unknown04;         // Inferred role: current alpha; original member name unknown.
@@ -32,6 +33,7 @@ static_assert(sizeof(DrResMdoPntAlpha) == 0x10, "");
 class DrResMdoPntAlphaMan {
 public:
   static s32 getWrkSize(s32 unknown001);
+  static int setWrk(DrResMdoPntAlphaMan *&man, int count, u8 *work);
   void setup(DrResMdoPntAlpha *unknown001, DrResMdoPntAlpha **unknown002, s32 unknown003);
   f32 getAlphaObj(const void *unknown001, bool unknown002);
   void setAlphaReset(const void *unknown001, bool unknown002);

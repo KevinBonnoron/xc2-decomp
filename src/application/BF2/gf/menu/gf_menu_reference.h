@@ -11,7 +11,6 @@
 #include "mm_mtl/reference_object.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
-#include "ui/list/ui_list_info.h"
 #include "ui/ui_str.h"
 
 namespace gf {
@@ -19,7 +18,8 @@ namespace gf {
 struct GF_SEARCH_OBJ;
 struct GfSetupParam;
 struct GfSearchParam;
-struct MenuEnemyInfo;
+class GfMenuEnemyList;
+class GfMenuItemList;
 struct MenuItemInfo;
 
 // Inferred role: element of the GfMenuReference object pool; the constructor clears 512 of them in 0x4000 bytes. Members unknown.
@@ -32,8 +32,10 @@ public:
   // 64-bit counts: with u32 counts the index is widened separately in each branch and the address computation becomes
   // a umaddl; the game shares one widened index (mul + add), as getArtsPaletteDisable, getArtsPaletteElementType,
   // isArtsPaletteEnable and setArtsPaletteEnable show.
-  static const u64 ARTS_PALETTE_COUNT = 3;
-  static const u64 ALL_ARTS_PALETTE_COUNT = 9;
+  // Inferred role: number of arts palettes; original name unknown.
+  static const u64 ARTS_PALETTE_UNKNOWN_3 = 3;
+  // Inferred role: number of arts palettes of the whole party; original name unknown.
+  static const u64 ALL_ARTS_PALETTE_UNKNOWN_9 = 9;
 
   enum HOMURA_MODE { HOMURA_MODE_UNKNOWN_1 = 1 };
 
@@ -81,6 +83,12 @@ public:
     u32 unknown1c;                         // Inferred role: element type; original member name unknown.
     bool unknown20;                        // Inferred role: enable; original member name unknown.
     u32 unknown24;                         // Inferred role: disable flags; original member name unknown.
+  };
+
+  // Inferred role: blade virtual equip orb and its slot; original type name unknown.
+  struct unknown006 {
+    u32 unknown00; // Inferred role: orb; original member name unknown.
+    u32 unknown04; // Inferred role: orb slot; original member name unknown.
   };
 
   GfMenuReference(const GfSetupParam &param);
@@ -138,8 +146,8 @@ public:
   static HOMURA_MODE getHomuraModeInBattle();
   static bool isPaletteModeReverse();
   static bool isReversePaletteBtnState(u32 index, u32 button);
-  static ui::UIListInfo<MenuEnemyInfo> *getEnemyLinkList();
-  static ui::UIListInfo<MenuItemInfo> *getItemLinkList();
+  static GfMenuEnemyList *getEnemyLinkList();
+  static GfMenuItemList *getItemLinkList();
   static void addEnemyLink(u32 enemy);
   static void addItemLink(const MenuItemInfo &info);
   static void clearLinkList();
@@ -193,6 +201,7 @@ public:
   static void setPartyStatusLock(u32 index, bool isLock);
   static void clearPartyStatusLock();
   static void setPaletteModeReverse(bool isReverse);
+  static int getBladeSetIDFromParty(u32 partyId, u32 slot);
 
   ml::fixed_size_alloc_inside<MENUREF_OBJ, 512> unknown08; // Inferred role: referenced object pool; original member name unknown.
   ml::fixed_size_alloc_inside<REFLIST, 32> unknown4070;    // Inferred role: reference list pool; original member name unknown.
@@ -201,7 +210,7 @@ public:
   ml::CriticalSection unknown4ca18;                        // Inferred role: critical section; original member name unknown.
   bool unknown4ca40;                                       // Inferred role: initialized; original member name unknown.
   mm::mtl::FixedVector<FieldSkillInfo, 28> unknown4ca48;   // Inferred role: field skills; original member name unknown.
-  unknown005 unknown4cac0[ARTS_PALETTE_COUNT];             // Inferred role: arts palettes; original member name unknown.
+  unknown005 unknown4cac0[ARTS_PALETTE_UNKNOWN_3];         // Inferred role: arts palettes; original member name unknown.
   u8 _4cb38[0x4cb3c - 0x4cb38];
   bool unknown4cb3c;   // Inferred role: just range; original member name unknown.
   f32 unknown4cb40;    // Inferred role: awakening rest time ratio; original member name unknown.
@@ -222,11 +231,11 @@ public:
   bool unknown4cb80;                      // Inferred role: palette reverse; original member name unknown.
   mm::mtl::unknown027<8> unknown4cb84[4]; // Inferred role: reverse palette btn states; original member name unknown.
   u8 _4cb94[0x4cb98 - 0x4cb94];
-  ui::UIListInfo<MenuEnemyInfo> *unknown4cb98; // Inferred role: enemy links; original member name unknown.
-  ui::UIListInfo<MenuItemInfo> *unknown4cba0;  // Inferred role: item links; original member name unknown.
-  ElemComboRoot unknown4cba8[7];               // Inferred role: element combo roots; original member name unknown.
-  unknown003 unknown4cbe0[2];                  // Inferred role: element combo parties; original member name unknown.
-  u32 unknown4cbf0;                            // Inferred role: element combo request; original member name unknown.
+  GfMenuEnemyList *unknown4cb98; // Inferred role: enemy links; original member name unknown.
+  GfMenuItemList *unknown4cba0;  // Inferred role: item links; original member name unknown.
+  ElemComboRoot unknown4cba8[7]; // Inferred role: element combo roots; original member name unknown.
+  unknown003 unknown4cbe0[2];    // Inferred role: element combo parties; original member name unknown.
+  u32 unknown4cbf0;              // Inferred role: element combo request; original member name unknown.
   u8 _4cbf4[0x4cbf8 - 0x4cbf4];
   u32 unknown4cbf8[8];        // Inferred role: reference driver ids; original member name unknown.
   u32 unknown4cc18[8];        // Inferred role: reference blade ids; original member name unknown.
@@ -243,12 +252,11 @@ public:
   u32 unknown4ccbc;           // Inferred role: driver virtual equip acc slot; original member name unknown.
   int unknown4ccc0[4];        // Inferred role: driver add idea lvs; original member name unknown.
   u32 unknown4ccd0;           // Inferred role: blade virtual equip wpn chip; original member name unknown.
-  u32 unknown4ccd4;           // Inferred role: blade virtual equip orb; original member name unknown.
-  u32 unknown4ccd8;           // Inferred role: blade virtual equip orb slot; original member name unknown.
+  unknown006 unknown4ccd4;    // Inferred role: blade virtual equip orb and slot; original member name unknown.
   u8 _4ccdc[0x4cce0 - 0x4ccdc];
-  ui::UIStr unknown4cce0[8];                       // Inferred role: reference strings; original member name unknown.
-  unknown005 unknown4cda0[ALL_ARTS_PALETTE_COUNT]; // Inferred role: all arts palettes; original member name unknown.
-  mm::mtl::unknown027<32> unknown4cf08;            // Inferred role: party status lock; original member name unknown.
+  ui::UIStr unknown4cce0[8];                           // Inferred role: reference strings; original member name unknown.
+  unknown005 unknown4cda0[ALL_ARTS_PALETTE_UNKNOWN_9]; // Inferred role: all arts palettes; original member name unknown.
+  mm::mtl::unknown027<32> unknown4cf08;                // Inferred role: party status lock; original member name unknown.
   u8 _4cf0c[0x4cf10 - 0x4cf0c];
 };
 
@@ -290,7 +298,7 @@ static_assert(offsetof(GfMenuReference, unknown4cca8) == 0x4cca8, "");
 static_assert(offsetof(GfMenuReference, unknown4ccac) == 0x4ccac, "");
 static_assert(offsetof(GfMenuReference, unknown4ccc0) == 0x4ccc0, "");
 static_assert(offsetof(GfMenuReference, unknown4ccd0) == 0x4ccd0, "");
-static_assert(offsetof(GfMenuReference, unknown4ccd8) == 0x4ccd8, "");
+static_assert(offsetof(GfMenuReference, unknown4ccd4) == 0x4ccd4, "");
 static_assert(offsetof(GfMenuReference, unknown4cce0) == 0x4cce0, "");
 static_assert(offsetof(GfMenuReference, unknown4cf08) == 0x4cf08, "");
 static_assert(sizeof(GfMenuReference) == 0x4cf10, "");

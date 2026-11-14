@@ -73,7 +73,7 @@ const btl::PlayerParameter *StateBattleBase::GetPlayerParameterConst() const { r
 bool StateBattleBase::IsDriver() const {
   const btl::PlayerParameter *parameter = GetPlayerParameterConst();
   if (!parameter->m_invalidTarget) {
-    return parameter->unknown10 != INVALID_HANDLE;
+    return parameter->unknown10 != unknown020;
   }
 
   return false;
@@ -82,11 +82,11 @@ bool StateBattleBase::IsDriver() const {
 bool StateBattleBase::IsBlade() const { return GetPlayerParameterConst()->m_invalidTarget; }
 
 bool StateBattleBase::recieveMessage(void *owner, fw::MessageObject *sender, fw::Message &message) {
-  if (message.unknown00 == MSG_OBJECT_NOTIFY_DAMAGE) {
+  if (message.unknown00 == MSG_OBJECT_UNKNOWN_16777271) {
     procMsgObjectNotifyDamage(static_cast<GfComBehaviorPc *>(owner), sender, static_cast<MsgObjectNotifyDamage &>(message));
-  } else if (message.unknown00 == MSG_OBJECT_NOTIFY_DEAD) {
+  } else if (message.unknown00 == MSG_OBJECT_UNKNOWN_16777272) {
     procMsgObjectNotifyDead(static_cast<GfComBehaviorPc *>(owner), sender, static_cast<MsgObjectNotifyDead &>(message));
-  } else if (message.unknown00 == MSG_OBJECT_NOTIFY_HEAL_HP) {
+  } else if (message.unknown00 == MSG_OBJECT_UNKNOWN_16777273) {
     procMsgObjectNotifyHealHp(static_cast<GfComBehaviorPc *>(owner), sender, static_cast<MsgObjectNotifyHealHp &>(message));
   } else {
     return false;
@@ -119,11 +119,11 @@ void StateBattleBase::procMsgObjectNotifyDead(GfComBehaviorPc *behavior, fw::Mes
   btl::BattleCharacter *character = GetBattleCharacter();
   if (character != nullptr) {
     int type = message.unknown08;
-    if (type == DEAD_TYPE_EMERGENCY_ESCAPE && character->IsControlCharacter()) {
+    if (type == DEAD_TYPE_UNKNOWN_4 && character->IsControlCharacter()) {
       btl::BattleGlobal::get()->unknown65df_7 = true;
     }
     if (!character->IsBlade()) {
-      StateUtil::notifyDead(*behavior, message, type == DEAD_TYPE_EMERGENCY_ESCAPE);
+      StateUtil::notifyDead(*behavior, message, type == DEAD_TYPE_UNKNOWN_4);
     }
     character->NotifyDead(message);
   }
@@ -166,9 +166,9 @@ void StateBattleActionBase::BeforeUpdate(btl::BattleCharacter *character, GfComB
 }
 
 bool StateBattleActionBase::recieveMessage(void *owner, fw::MessageObject *sender, fw::Message &message) {
-  if (message.unknown00 == MSG_OBJECT_NOTIFY_ASM_CALLBACK) {
+  if (message.unknown00 == MSG_OBJECT_UNKNOWN_16777279) {
     ProcMessageAsmCallback(static_cast<GfComBehaviorPc *>(owner), sender, static_cast<MsgObjectNotifyAsmCallback &>(message));
-  } else if (message.unknown00 == MSG_PC_BATTLE_END) {
+  } else if (message.unknown00 == MSG_PC_BATTLE_UNKNOWN_16777227) {
     ProcMessageBattleEnd(static_cast<GfComBehaviorPc *>(owner), sender, static_cast<MsgPcBattleEnd &>(message));
   } else {
     return false;

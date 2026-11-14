@@ -13,7 +13,7 @@ GfKizunaringManager::~GfKizunaringManager() {}
 void GfKizunaringManager::build(const GfSetupParam &param) {
   // __LINE__ must be 55 as in the original file: its value changes the instruction order.
 #line 55
-  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfKizunaringManager(param);
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfKizunaringManager(param);
 }
 
 void GfKizunaringManager::destroy() {

@@ -7,8 +7,13 @@
 #include "types.h"
 
 namespace fw {
+class CommonResource;
 struct UpdateInfo;
-}
+} // namespace fw
+
+namespace layer {
+class LayerBase;
+} // namespace layer
 
 namespace mm {
 struct Col4;
@@ -31,13 +36,15 @@ class GfMenuCallContext;
 class GfMenuManager : public mm::mtl::PtrSingleton<GfMenuManager> {
 public:
   enum REGION {
-    REGION_JP,
-    REGION_US,
+    REGION_UNKNOWN_0, // Inferred role: Japanese region; original enumerator name unknown.
+    REGION_UNKNOWN_1, // Inferred role: US region; original enumerator name unknown.
   };
 
   GfMenuManager(const GfSetupParam &param);
   static void build(const GfSetupParam &param);
   static void destroy();
+  void updateHudState();
+  bool selectLanguage();
   void finalize();
   static bool isInitialized();
   static bool isRegionJP();
@@ -153,8 +160,18 @@ public:
   bool unknown4100;   // Inferred role: display all; original member name unknown.
   bool unknown4101;   // Inferred role: quest open enable; original member name unknown.
   REGION unknown4104; // Inferred role: region; original member name unknown.
-  u8 _4108[0x4154 - 0x4108];
-  u32 unknown4154; // Inferred role: latest common window; original member name unknown.
+  u32 unknown4108;    // Inferred role: step of the language selection; original member name unknown.
+  u8 _410c[0x4110 - 0x410c];
+  fw::CommonResource *unknown4110; // Inferred role: language selection layout image; original member name unknown.
+  layer::LayerBase *unknown4118;   // Inferred role: language selection layout object; original member name unknown.
+  fw::CommonResource *unknown4120; // Inferred role: language selection caution image; original member name unknown.
+  layer::LayerBase *unknown4128;   // Inferred role: language selection caution object; original member name unknown.
+  fw::CommonResource *unknown4130; // Inferred role: language selection confirmation image; original member name unknown.
+  fw::CommonResource *unknown4138; // Inferred role: language selection confirmation image of the simplified Chinese; original member name unknown.
+  fw::CommonResource *unknown4140; // Inferred role: language selection confirmation image of the traditional Chinese; original member name unknown.
+  layer::LayerBase *unknown4148;   // Inferred role: language selection confirmation object; original member name unknown.
+  u32 unknown4150;                 // Inferred role: selected language entry; original member name unknown.
+  u32 unknown4154;                 // Inferred role: latest common window; original member name unknown.
 };
 
 static_assert(offsetof(GfMenuManager, unknown4090) == 0x4090, "");
@@ -173,6 +190,9 @@ static_assert(offsetof(GfMenuManager, unknown40fc) == 0x40fc, "");
 static_assert(offsetof(GfMenuManager, unknown40fd) == 0x40fd, "");
 static_assert(offsetof(GfMenuManager, unknown4100) == 0x4100, "");
 static_assert(offsetof(GfMenuManager, unknown4104) == 0x4104, "");
+static_assert(offsetof(GfMenuManager, unknown4108) == 0x4108, "");
+static_assert(offsetof(GfMenuManager, unknown4110) == 0x4110, "");
+static_assert(offsetof(GfMenuManager, unknown4150) == 0x4150, "");
 static_assert(offsetof(GfMenuManager, unknown4154) == 0x4154, "");
 static_assert(sizeof(GfMenuManager) == 0x4158, "");
 

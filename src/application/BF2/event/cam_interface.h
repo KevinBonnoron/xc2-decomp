@@ -8,7 +8,7 @@ struct Vec3;
 }
 
 namespace fw {
-enum CAMERA_TYPE : int;
+enum CAMERA_TYPE : unsigned int;
 }
 
 namespace event {

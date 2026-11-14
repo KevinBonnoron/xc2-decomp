@@ -117,7 +117,7 @@ void StateFieldWalk::enter(GfComBehaviorEnemy *behavior, ai::State *previous) {
     }
   }
 
-  unknown98 = Bdat::getValCheck(GfDataBdat::getFP(BDAT_FLD_WILDCARD_DATA), 0, unknown003, gmk::BDAT_TYPE_F32).valueF32;
+  unknown98 = Bdat::getValCheck(GfDataBdat::getFP(BDAT_FLD_WILDCARD_DATA), 0, unknown003, gmk::BDAT_TYPE_UNKNOWN_8).valueF32;
   validateMoveSpeed(*behavior);
   unknown58 = seq;
 }
@@ -285,7 +285,7 @@ void StateFieldWalk::seqWaitSyncLoco(GfComBehaviorEnemy &behavior, const fw::Upd
   if (obj != nullptr) {
     GfComAsm *comAsm = obj->getComponent<GfComAsm>();
     if (comAsm != nullptr) {
-      const char *stateName = comAsm->getStateName(ANIM_LAYER_BASE);
+      const char *stateName = comAsm->getStateName(ANIM_LAYER_UNKNOWN_0);
       if (stateName == nullptr) {
         return;
       }

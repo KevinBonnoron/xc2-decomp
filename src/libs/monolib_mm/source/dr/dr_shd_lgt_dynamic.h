@@ -19,6 +19,11 @@ enum unknown063 {
 
 class DrShdLgtDynamic {
 public:
+  // DrShdLgtClustered::DrShdLgtClustered (0x71008900e0) and DrShdLgtTileBasedDr::DrShdLgtTileBasedDr (0x710089e5f0) store unknown08 and unknown10
+  // before their member constructors run, which only a base constructor does. DrShdLgtHybrid::DrShdLgtHybrid matches only with assignments in its
+  // body (base constructor form tested: same 45 instructions, different schedule), hence the empty default constructor.
+  DrShdLgtDynamic() {}
+  DrShdLgtDynamic(DrMan *drMan) : unknown08(0), unknown10(drMan) {}
   virtual ~DrShdLgtDynamic() {}
   virtual void stockBegin() = 0;
   virtual void stockEnd() = 0;

@@ -3,10 +3,15 @@
 
 #include "types.h"
 
+namespace mm {
+struct Mat44;
+} // namespace mm
+
 namespace ml {
 
 class DrLightObj;
 class DrResEtcParams;
+class DrResEtcPamObj;
 
 class DrResMdoLight {
 public:
@@ -21,10 +26,20 @@ public:
     s32 unknown00; // Inferred role: light count; original member name unknown.
   };
 
+  // Inferred role: resource header holding the offset of the light data; original type name unknown.
+  struct unknown003 {
+    u8 _00[0x30];
+    u32 unknown30; // Inferred role: offset of the light data; original member name unknown.
+  };
+
   DrResMdoLight();
   ~DrResMdoLight();
   static void release(DrResMdoLight *&light);
   void release();
+  void lgtCreate();
+  int setup(u8 *work, const u8 *resource, const u8 *lightResource);
+  static int create(u8 *work, const u8 *resource, const u8 *lightResource);
+  void update(const mm::Mat44 *prevMatrix, const mm::Mat44 &matrix, DrResEtcPamObj *pamObj, f32 ratio);
   static int calcWorkSize(const u8 *resource);
   void setDisp(bool isDisp);
   static void lgtCall_col_r(f32 *color, DrResEtcParams *params);

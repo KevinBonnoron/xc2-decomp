@@ -3,7 +3,7 @@
 
 #include "mm_math/mm_col3.h"
 #include "mm_math/mm_col4.h"
-#include "mm_math/mm_vec2.h"
+#include "mm_math/mm_pnt.h"
 #include "mm_math/mm_vec3.h"
 #include "types.h"
 
@@ -24,24 +24,24 @@ struct EmitterParam {
   mm::Col4 unknown40;   // Inferred role: color, the alpha of an emitter's is read by the draw sort; original member name unknown.
   mm::Col3 unknown50;   // Inferred role: copied to the emitter; original member name unknown.
   u8 _5c[0x60 - 0x5c];
-  mm::Vec2 unknown60; // Inferred role: copied to the emitter; original member name unknown.
-  f32 unknown68;      // Inferred role: gpu check radius, 0 to disable; original member name unknown.
-  f32 unknown6c;      // Inferred role: scale; original member name unknown.
-  s8 unknown70;       // Inferred role: priority offset; original member name unknown.
-  u8 unknown71;       // Inferred role: disp; original member name unknown.
-  u8 unknown72;       // Inferred role: no wait; original member name unknown.
-  u8 unknown73;       // Original member name unknown.
-  u16 unknown74;      // Inferred role: copied to the emitter; original member name unknown.
-  u8 unknown76;       // Inferred role: copied to the emitter; original member name unknown.
-  u8 unknown77;       // Inferred role: copied to the emitter; original member name unknown.
-  f32 speed;          // Inferred role: negative to keep. Evidence: name from the assertion string "math::isFinite(m_param.speed)" in EmitterObj::update.
-  f32 unknown7c;      // Inferred role: skip frame; original member name unknown.
-  f32 unknown80;      // Inferred role: copied to the emitter; original member name unknown.
-  f32 unknown84;      // Inferred role: copied to the emitter; original member name unknown.
-  f32 unknown88;      // Inferred role: copied to the emitter; original member name unknown.
-  f32 unknown8c;      // Inferred role: copied to the emitter; original member name unknown.
-  u32 unknown90;      // Inferred role: category, -1 to keep; original member name unknown.
-  u8 unknown94;       // Inferred role: copied to the emitter; original member name unknown.
+  mm::Pnt<f32> unknown60; // Inferred role: copied to the emitter; original member name unknown.
+  f32 unknown68;          // Inferred role: gpu check radius, 0 to disable; original member name unknown.
+  f32 unknown6c;          // Inferred role: scale; original member name unknown.
+  s8 unknown70;           // Inferred role: priority offset; original member name unknown.
+  u8 unknown71;           // Inferred role: disp; original member name unknown.
+  u8 unknown72;           // Inferred role: no wait; original member name unknown.
+  u8 unknown73;           // Original member name unknown.
+  u16 unknown74;          // Inferred role: copied to the emitter; original member name unknown.
+  u8 unknown76;           // Inferred role: copied to the emitter; original member name unknown.
+  u8 unknown77;           // Inferred role: copied to the emitter; original member name unknown.
+  f32 speed;              // Inferred role: negative to keep. Evidence: name from the assertion string "math::isFinite(m_param.speed)" in EmitterObj::update.
+  f32 unknown7c;          // Inferred role: skip frame; original member name unknown.
+  f32 unknown80;          // Inferred role: copied to the emitter; original member name unknown.
+  f32 unknown84;          // Inferred role: copied to the emitter; original member name unknown.
+  f32 unknown88;          // Inferred role: copied to the emitter; original member name unknown.
+  f32 unknown8c;          // Inferred role: copied to the emitter; original member name unknown.
+  u32 unknown90;          // Inferred role: category, -1 to keep; original member name unknown.
+  u8 unknown94;           // Inferred role: copied to the emitter; original member name unknown.
 };
 
 static_assert(offsetof(EmitterParam, unknown40) == 0x40, "");

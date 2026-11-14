@@ -14,10 +14,10 @@ class Param;
 
 class TodoManager : public IManager, public mm::mtl::Singleton<TodoManager> {
 public:
-  static constexpr u32 ITEM_COUNT = 128;
+  static constexpr u32 ITEM_UNKNOWN_128 = 128; // Inferred role: item count; original name unknown.
 
   enum {
-    FLAG_DISP = 1 << 0,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: disp flag; original name unknown.
   };
 
   static Param s_zero;
@@ -40,11 +40,11 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  u32 unknown10;                                                      // Inferred role: state; original member name unknown.
-  u32 unknown14;                                                      // Inferred role: flags; original member name unknown.
-  mm::mtl::FixedVector<TodoItem, ITEM_COUNT> unknown18;               // Inferred role: items; original member name unknown.
-  size_t unknown8c20;                                                 // Inferred role: current; original member name unknown.
-  mm::mtl::FixedVector<mm::mtl::FixStr<256>, ITEM_COUNT> unknown8c28; // Inferred role: lines; original member name unknown.
+  u32 unknown10;                                                            // Inferred role: state; original member name unknown.
+  u32 unknown14;                                                            // Inferred role: flags; original member name unknown.
+  mm::mtl::FixedVector<TodoItem, ITEM_UNKNOWN_128> unknown18;               // Inferred role: items; original member name unknown.
+  size_t unknown8c20;                                                       // Inferred role: current; original member name unknown.
+  mm::mtl::FixedVector<mm::mtl::FixStr<256>, ITEM_UNKNOWN_128> unknown8c28; // Inferred role: lines; original member name unknown.
 };
 
 static_assert(sizeof(TodoManager) == 0x10e30, "");

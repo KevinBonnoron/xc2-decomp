@@ -31,7 +31,7 @@
 
 namespace gf {
 
-constexpr u32 ACCESS_TYPE_WATER_HOLE = 4;
+constexpr u32 ACCESS_TYPE_UNKNOWN_4 = 4; // Inferred role: access type water hole; original name unknown.
 
 static bool unknown004; // Inferred role: display target mode flag; original variable name unknown.
 
@@ -74,7 +74,7 @@ class GfGameTarget::StateDriverNotActive : public ai::State {
   GF_STATE_CLASS(StateDriverNotActive, GfGameTarget)
   void enter(GfGameTarget *target, ai::State *) {
     target->destroySearchObj();
-    target->unknownb0 = INVALID_HANDLE;
+    target->unknownb0 = unknown020;
   }
   void leave(GfGameTarget *target, ai::State *next) {
     if (next != nullptr) {
@@ -87,7 +87,7 @@ class GfGameTarget::StateDriverNotActive : public ai::State {
       GfObj *obj = GfObjUtil::getObj(mover);
       if (obj != nullptr && obj->getComponent<GfComTransform>() != nullptr) {
         target->unknownb0 = mover;
-        reqState(STATE_AUTO_TARGET);
+        reqState(STATE_UNKNOWN_1);
       }
     }
   }
@@ -111,7 +111,7 @@ class GfGameTarget::StateAutoTarget : public ai::State {
 class GfGameTarget::StateEnemyTarget : public ai::State {
   GF_STATE_CLASS(StateEnemyTarget, GfGameTarget)
   void enter(GfGameTarget *target, ai::State *) {
-    if (target->unknownb8 == INVALID_HANDLE) {
+    if (target->unknownb8 == unknown020) {
       mm::mtl::FixedList<GfSearchInfo *, 256> *list = GfGameSearchObj::getObj(target->unknowna0);
       if (!target->setTargetNearestEnemyBattle(*list)) {
         target->setTargetNearestEnemy(*list);
@@ -125,7 +125,7 @@ class GfGameTarget::StateEnemyTarget : public ai::State {
 class GfGameTarget::StateBattleTarget : public ai::State {
   GF_STATE_CLASS(StateBattleTarget, GfGameTarget)
   void enter(GfGameTarget *target, ai::State *) {
-    if (target->unknownb8 == INVALID_HANDLE) {
+    if (target->unknownb8 == unknown020) {
       mm::mtl::FixedList<GfSearchInfo *, 256> *list = GfGameSearchObj::getObj(target->unknowna0);
       if (!target->setTargetNearestEnemyBattle(*list)) {
         target->setTargetNearestEnemy(*list);
@@ -172,20 +172,20 @@ bool GfGameTarget::testLockTarget() {
 
 void GfGameTarget::build(const GfSetupParam &param) {
 #line 420
-  GfGameTarget *target = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfGameTarget();
+  GfGameTarget *target = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfGameTarget();
   target->setup(param);
 }
 
 void GfGameTarget::setup(const GfSetupParam &) {
   unknown110 = fw::ParamManager::get()->unknown408[0];
   unknown28.beginSetup(this, 4);
-  unknown28.registerState<StateDriverNotActive>(STATE_DRIVER_NOT_ACTIVE);
-  unknown28.registerState<StateAutoTarget>(STATE_AUTO_TARGET);
-  unknown28.registerState<StateEnemyTarget>(STATE_ENEMY_TARGET);
-  unknown28.registerState<StateBattleTarget>(STATE_BATTLE_TARGET);
+  unknown28.registerState<StateDriverNotActive>(STATE_UNKNOWN_0);
+  unknown28.registerState<StateAutoTarget>(STATE_UNKNOWN_1);
+  unknown28.registerState<StateEnemyTarget>(STATE_UNKNOWN_2);
+  unknown28.registerState<StateBattleTarget>(STATE_UNKNOWN_3);
   unknown28.endSetup();
-  unknown28.setState(STATE_DRIVER_NOT_ACTIVE);
-  unknownd8.bind(0, 3, getAllocator(ALLOCATOR_DEFAULT));
+  unknown28.setState(STATE_UNKNOWN_0);
+  unknownd8.bind(0, 3, getAllocator(ALLOCATOR_UNKNOWN_0));
   unknownd8.bindAction("change_mode", this, &GfGameTarget::changeMode);
   unknownd8.bindAction("select_right", this, &GfGameTarget::selectRight);
   unknownd8.bindAction("select_left", this, &GfGameTarget::selectLeft);
@@ -226,7 +226,7 @@ void GfGameTarget::updateImpl(const fw::UpdateInfo &info) {
   if (!GfGameManager::isEnableFieldBattleTarget() && unknown002(unknown28)) {
     resetTarget();
     notifyTarget();
-    unknown28.setState(STATE_DRIVER_NOT_ACTIVE);
+    unknown28.setState(STATE_UNKNOWN_0);
   }
   const Param *param = getParam();
   if (unknownc2) {
@@ -242,8 +242,8 @@ void GfGameTarget::updateImpl(const fw::UpdateInfo &info) {
 bool GfGameTarget::testActive() { return unknown002(get()->unknown28); }
 
 GfGameTarget::GfGameTarget()
-    : unknown28(getAllocator(ALLOCATOR_DEFAULT)), unknowna0(INVALID_SEARCH_OBJ), unknowna8(INVALID_SEARCH_OBJ), unknownb0(INVALID_HANDLE), unknownb8(INVALID_HANDLE), unknownc0(false),
-      unknownc1(false), unknownc2(false), unknownc4(0.0f), unknownc8(false), unknownc9(false), unknownca(false), unknowncb(false), unknowncc(false), unknownd0(0.0f) {}
+    : unknown28(getAllocator(ALLOCATOR_UNKNOWN_0)), unknowna0(unknown012), unknowna8(unknown012), unknownb0(unknown020), unknownb8(unknown020), unknownc0(false), unknownc1(false), unknownc2(false),
+      unknownc4(0.0f), unknownc8(false), unknownc9(false), unknownca(false), unknowncb(false), unknowncc(false), unknownd0(0.0f) {}
 
 GfGameTarget::~GfGameTarget() {}
 
@@ -293,13 +293,13 @@ void GfGameTarget::judgeNearTarget() {
 }
 
 void GfGameTarget::destroySearchObj() {
-  if (unknowna0 != INVALID_SEARCH_OBJ) {
+  if (unknowna0 != unknown012) {
     GfGameSearchObj::destroyObj(unknowna0);
-    unknowna0 = INVALID_SEARCH_OBJ;
+    unknowna0 = unknown012;
   }
-  if (unknowna8 != INVALID_SEARCH_OBJ) {
+  if (unknowna8 != unknown012) {
     GfGameSearchObj::destroyObj(unknowna8);
-    unknowna8 = INVALID_SEARCH_OBJ;
+    unknowna8 = unknown012;
   }
 }
 
@@ -312,7 +312,7 @@ const GfGameTarget::Param *GfGameTarget::getParam() const {
   return static_cast<const Param *>(list->unknown10[0].param);
 }
 
-void GfGameTarget::resetTarget() { unknown001(INVALID_HANDLE); }
+void GfGameTarget::resetTarget() { unknown001(unknown020); }
 
 void GfGameTarget::notifyTarget() {
   if (unknownc0) {
@@ -348,7 +348,7 @@ void GfGameTarget::updateTarget(const mm::mtl::FixedList<GfSearchInfo *, 256> &l
 }
 
 void GfGameTarget::fadeOutTarget() {
-  if (unknownb8 != INVALID_HANDLE && !unknownc2) {
+  if (unknownb8 != unknown020 && !unknownc2) {
     unknownc2 = true;
     unknownc4 = 0.0f;
   }
@@ -359,7 +359,7 @@ bool GfGameTarget::isWaterHole(GF_OBJ_HANDLE *handle) {
   GfObj *obj = GfObjUtil::getObj(handle);
   if (obj != nullptr) {
     sendMessage(obj, message);
-    return message.unknown08 == ACCESS_TYPE_WATER_HOLE;
+    return message.unknown08 == ACCESS_TYPE_UNKNOWN_4;
   }
   return false;
 }
@@ -387,7 +387,7 @@ bool GfGameTarget::setTargetNearestEnemy(const mm::mtl::FixedList<GfSearchInfo *
 }
 
 bool GfGameTarget::setTargetNearestEnemyBattle(const mm::mtl::FixedList<GfSearchInfo *, 256> &list) {
-  GF_OBJ_HANDLE *hidden = INVALID_HANDLE;
+  GF_OBJ_HANDLE *hidden = unknown020;
   for (mm::mtl::FixedList<GfSearchInfo *, 256>::const_iterator it = list.begin(); it != list.end(); ++it) {
     GfSearchInfo *info = *it;
     if (isEnableTargetBattle(info->unknown00) && GfObjUtil::isBattle(info->unknown00)) {
@@ -395,12 +395,12 @@ bool GfGameTarget::setTargetNearestEnemyBattle(const mm::mtl::FixedList<GfSearch
         unknown001(info->unknown00);
         return true;
       }
-      if (hidden == INVALID_HANDLE) {
+      if (hidden == unknown020) {
         hidden = info->unknown00;
       }
     }
   }
-  if (hidden != INVALID_HANDLE) {
+  if (hidden != unknown020) {
     unknown001(hidden);
     return true;
   }
@@ -412,7 +412,7 @@ void GfGameTarget::gevSwapFormation(u32, u32) {
     GF_OBJ_HANDLE *mover = GfGameManager::getControlMover();
     GfObj *obj = GfObjUtil::getObj(unknownb0);
     if (obj != nullptr) {
-      MsgGameChangeTarget message(INVALID_HANDLE);
+      MsgGameChangeTarget message(unknown020);
       sendMessage(obj, message);
     }
     obj = GfObjUtil::getObj(mover);
@@ -431,13 +431,13 @@ void GfGameTarget::gevSwapFormation(u32, u32) {
 }
 
 void GfGameTarget::changeBattleTarget(bool isEnable) {
-  bool isBattleTarget = unknown28.getState()->unknown08 == STATE_BATTLE_TARGET;
+  bool isBattleTarget = unknown28.getState()->unknown08 == STATE_UNKNOWN_3;
   if (isEnable) {
     if (!isBattleTarget) {
-      unknown28.setState(STATE_BATTLE_TARGET);
+      unknown28.setState(STATE_UNKNOWN_3);
     }
   } else if (isBattleTarget) {
-    unknown28.setState(STATE_AUTO_TARGET);
+    unknown28.setState(STATE_UNKNOWN_1);
   }
   notifyTarget();
 }
@@ -460,10 +460,10 @@ bool GfGameTarget::testDispTargetMode() { return unknown004; }
 
 bool GfGameTarget::recieveMessage(fw::MessageObject *sender, fw::Message &message) {
   switch (message.unknown00) {
-  case MSG_GAME_CHANGE_TARGET:
+  case MSG_GAME_UNKNOWN_16777259:
     procMsgGameChangeTarget(sender, static_cast<MsgGameChangeTarget &>(message));
     return true;
-  case MSG_GAME_DEBUG_TARGET:
+  case MSG_GAME_UNKNOWN_16777260:
     procMsgGameDebugTarget(sender, static_cast<MsgGameDebugTarget &>(message));
     return true;
   }
@@ -486,7 +486,7 @@ void GfGameTarget::StateEnemyTarget::update(GfGameTarget *target, const fw::Upda
       return;
     }
   }
-  reqState(STATE_AUTO_TARGET);
+  reqState(STATE_UNKNOWN_1);
 }
 
 void GfGameTarget::StateBattleTarget::update(GfGameTarget *target, const fw::UpdateInfo &) {

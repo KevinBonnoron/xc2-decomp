@@ -16,13 +16,13 @@ void BlurManager::play() {}
 
 void BlurManager::setDisp(bool isDisp) {
   if (isDisp) {
-    unknown10 |= DISP_FLAG_DISP;
+    unknown10 |= DISP_FLAG_UNKNOWN_0;
   } else {
-    unknown10 &= ~DISP_FLAG_DISP;
+    unknown10 &= ~DISP_FLAG_UNKNOWN_0;
   }
 }
 
-bool BlurManager::isDisp() const { return (unknown10 & DISP_FLAG_DISP) != 0; }
+bool BlurManager::isDisp() const { return (unknown10 & DISP_FLAG_UNKNOWN_0) != 0; }
 
 void BlurManager::OnEventProc(MSG_TYPE type) {}
 

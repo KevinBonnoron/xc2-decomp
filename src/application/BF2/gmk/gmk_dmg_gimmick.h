@@ -67,7 +67,7 @@ public:
     DistCond unknown24;      // Inferred role: effect release dist; original member name unknown.
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_DMG_GIMMICK;
+  static const GmkType GMK_TYPE = GMK_TYPE_DMG_GIMMICK; // Inferred name; shared by every gimmick class for the TGmkList templates.
   static mm::mtl::RTTI m_rtti;
 
   GmkDmgGimmick();
@@ -113,7 +113,7 @@ public:
     void create(CBdatWrapper, int, const AGmkBase &) {}
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_DMG_PHANTOM;
+  static const GmkType GMK_TYPE = GMK_TYPE_DMG_PHANTOM; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   ~GmkDmgPhantom() override { dispose(); }
   GmkType getGmkType() const override;
@@ -141,7 +141,7 @@ public:
     void create(CBdatWrapper, int, const AGmkBase &) {}
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_DMG_EFFECT;
+  static const GmkType GMK_TYPE = GMK_TYPE_DMG_EFFECT; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkDmgEffect() : unknown48(true), unknown4c(0) {}
   ~GmkDmgEffect() override { dispose(); }
@@ -175,7 +175,7 @@ public:
     void create(CBdatWrapper, int, const AGmkBase &) {}
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_DMG_SE;
+  static const GmkType GMK_TYPE = GMK_TYPE_DMG_SE; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkDmgSe() : unknown50(nullptr), unknowne0(false), unknowne4(0), unknowne8(1.0f) {}
   ~GmkDmgSe() override { dispose(); }

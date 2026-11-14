@@ -15,10 +15,10 @@ namespace event {
 
 const char *LightManager::OFF_PATH = "event/offlgt/offlgt01";
 
-bool LightManager::isStreamMode() const { return (unknown14 & FLAG_STREAM_MODE) != 0; }
+bool LightManager::isStreamMode() const { return (unknown14 & FLAG_UNKNOWN_0) != 0; }
 
 LightManager::LightManager() : unknown10(0), unknown14(0), unknown38(nullptr) {
-  for (u32 i = 0; i < OFFSCR_LIGHT_COUNT; i++) {
+  for (u32 i = 0; i < OFFSCR_LIGHT_UNKNOWN_4; i++) {
     unknown18[i] = nullptr;
   }
 }
@@ -26,7 +26,7 @@ LightManager::LightManager() : unknown10(0), unknown14(0), unknown38(nullptr) {
 void LightManager::loadOffScrLight(u32 screenID) { mm::mtl::Singleton<ResManager>::getPtr()->load(mm::mtl::Singleton<Extend>::getPtr()->lgt(OFF_PATH), nullptr, false); }
 
 void LightManager::loadResource(const char *name) {
-  if ((unknown14 & FLAG_STREAM_MODE) == 0) {
+  if ((unknown14 & FLAG_UNKNOWN_0) == 0) {
     mm::mtl::Singleton<ResManager>::getPtr()->load(mm::mtl::Singleton<Extend>::getPtr()->lgt(name), nullptr, true);
   }
 }
@@ -66,7 +66,7 @@ void LightManager::clear() {
 }
 
 void LightManager::update() {
-  for (u32 i = 1; i < OFFSCR_LIGHT_COUNT; i++) {
+  for (u32 i = 1; i < OFFSCR_LIGHT_UNKNOWN_4; i++) {
     if (unknown18[i] != nullptr && unknown18[i]->isPlaying()) {
       unknown18[i]->setPos(mm::mtl::Singleton<CamManager>::getPtr()->unknown001(i)->unknown40);
     }
@@ -74,14 +74,14 @@ void LightManager::update() {
 }
 
 void LightManager::render() {
-  if (!(unknown10 & DISP_FLAG_LIGHT)) {
+  if (!(unknown10 & DISP_FLAG_UNKNOWN_0)) {
     return;
   }
   int x = ml::DevGraph::getRootWidth() - 250;
   if (unknown38 != nullptr && unknown38->isPlaying()) {
     unknown38->render(x, 280);
   }
-  for (u32 i = 1; i < OFFSCR_LIGHT_COUNT; i++) {
+  for (u32 i = 1; i < OFFSCR_LIGHT_UNKNOWN_4; i++) {
     if (unknown18[i] != nullptr && unknown18[i]->isPlaying()) {
       unknown18[i]->render(x, 280 + i * 50);
     }
@@ -90,14 +90,14 @@ void LightManager::render() {
 
 void LightManager::setStreamMode(bool isStreamMode) {
   if (isStreamMode) {
-    unknown14 |= FLAG_STREAM_MODE;
+    unknown14 |= FLAG_UNKNOWN_0;
   } else {
-    unknown14 &= ~FLAG_STREAM_MODE;
+    unknown14 &= ~FLAG_UNKNOWN_0;
   }
 }
 
 void LightManager::clearOffScrLight() {
-  for (u32 i = 0; i < OFFSCR_LIGHT_COUNT; i++) {
+  for (u32 i = 0; i < OFFSCR_LIGHT_UNKNOWN_4; i++) {
     if (unknown18[i] != nullptr) {
       delete unknown18[i];
       unknown18[i] = nullptr;
@@ -114,24 +114,24 @@ void LightManager::clearEvtLight() {
 
 void LightManager::setLightDisp(bool isDisp) {
   if (isDisp) {
-    unknown10 |= DISP_FLAG_LIGHT;
+    unknown10 |= DISP_FLAG_UNKNOWN_0;
   } else {
-    unknown10 &= ~DISP_FLAG_LIGHT;
+    unknown10 &= ~DISP_FLAG_UNKNOWN_0;
   }
 }
 
-bool LightManager::isLightDisp() const { return (unknown10 & DISP_FLAG_LIGHT) != 0; }
+bool LightManager::isLightDisp() const { return (unknown10 & DISP_FLAG_UNKNOWN_0) != 0; }
 
 void LightManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
-  case MSG_TYPE_INIT:
-  case MSG_TYPE_CLEAR:
+  case MSG_TYPE_UNKNOWN_4:
+  case MSG_TYPE_UNKNOWN_12:
     clear();
     break;
-  case MSG_TYPE_RENDER:
+  case MSG_TYPE_UNKNOWN_16:
     render();
     break;
-  case MSG_TYPE_TAIL:
+  case MSG_TYPE_UNKNOWN_18:
     update();
     break;
   default:

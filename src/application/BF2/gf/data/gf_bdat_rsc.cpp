@@ -3694,23 +3694,23 @@ void GfBdatRsc::destroyFP() {
 }
 
 void GfBdatRsc::createFP() {
-  m_rscEn = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_EN)};
-  m_rscEnGenus = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_EN_GENUS)};
-  m_rscEnUnd = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_EN_UND)};
-  m_rscNpcList = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_NPC_LIST)};
-  m_rscNpcWpn = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_NPC_WPN)};
-  m_rscMobList = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_MOB_LIST)};
-  m_RSC_PcWpn = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_PC_WPN)};
-  m_RSC_PcWpnMount = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_PC_WPN_MOUNT)};
-  m_rscEnWpn = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_EN_WPN)};
-  m_RSC_TboxList = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_TBOX_LIST)};
-  m_RSC_MapObjList = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_MAP_OBJ_LIST)};
-  m_driverParam = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_CHR_DRIVER_PARAM)};
-  m_voiceTable = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_VOICE_TABLE)};
-  m_voiceTableBlade = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_VOICE_TABLE_BLADE)};
-  m_voiceTableRare = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_VOICE_TABLE_RARE)};
-  m_voiceTableCommon = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_VOICE_TABLE_COMMON)};
-  m_FLD_actorSE = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_ACTOR_SE)};
+  m_rscEn = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_EN)};
+  m_rscEnGenus = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_EN_GENUS)};
+  m_rscEnUnd = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_EN_UND)};
+  m_rscNpcList = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_NPC_LIST)};
+  m_rscNpcWpn = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_NPC_WPN)};
+  m_rscMobList = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_MOB_LIST)};
+  m_RSC_PcWpn = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_PC_WPN)};
+  m_RSC_PcWpnMount = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_PC_WPN_MOUNT)};
+  m_rscEnWpn = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_EN_WPN)};
+  m_RSC_TboxList = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_TBOX_LIST)};
+  m_RSC_MapObjList = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_MAP_OBJ_LIST)};
+  m_driverParam = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_CHR_DRIVER_PARAM)};
+  m_voiceTable = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_VOICE_TABLE)};
+  m_voiceTableBlade = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_VOICE_TABLE_BLADE)};
+  m_voiceTableRare = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_VOICE_TABLE_RARE)};
+  m_voiceTableCommon = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_VOICE_TABLE_COMMON)};
+  m_FLD_actorSE = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_ACTOR_SE)};
 }
 
 void GfBdatRsc::bdatRefresh() {

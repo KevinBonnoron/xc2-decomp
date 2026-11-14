@@ -6,15 +6,21 @@
 #include "gf/data/gf_data_util.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/game/gf_game_util.h"
 #include "gf/game/gf_game_voice.h"
 #include "gf/menu/gf_menu_manager.h"
+#include "gf/menu/gf_menu_reference.h"
 #include "gf/menu/list/gf_menu_blade_list.h"
+#include "gf/menu/object/gf_menu_obj_cmn_status.h"
 #include "gf/menu/object/gf_menu_obj_mainmenu2.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "mm_math/mm_rect.h"
+#include "mm_mtl/fixstr.h"
 #include "mm_mtl/reference_object.h"
+#include "mm_mtl/vector.h"
 #include "types.h"
 #include "ui/ctrl/ui_ctrl_cursor_select.h"
+#include "ui/event/ui_event_data.h"
 #include "ui/list/ui_select_obj_list.h"
 #include "ui/ui_object_acc.h"
 #include "ui/ui_util.h"
@@ -22,7 +28,7 @@
 namespace gf {
 
 GfMenuObjBladeBook::GfMenuObjBladeBook(u32 handle)
-    : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(this), unknown2d0(false), unknown2d8(nullptr), unknown2e0(0, 0), unknown2f0() {}
+    : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(this), unknown2d0(false), unknown2d8(nullptr), unknown2e0(0, 0), unknown2f0(0.0f, 0.0f) {}
 
 GfMenuObjBladeBook::~GfMenuObjBladeBook() {
   mm::mtl::safeRelease(unknown38);
@@ -57,11 +63,11 @@ bool isUnuseBlade(u32 blade) {
     return GfDataUtil::getScenarioFlag() <= 0xbe7;
   case BLADE_BYAKKO:
     return GfDataUtil::getScenarioFlag() <= 0x7d9;
-  case BLADE_HANA_JS:
+  case BLADE_UNKNOWN_1005:
     return GfDataUtil::getScenarioFlag() <= 0x7f0;
-  case BLADE_HANA_JK:
+  case BLADE_UNKNOWN_1006:
     return GfDataUtil::getScenarioFlag() <= 0xfd5;
-  case BLADE_HANA_JD:
+  case BLADE_UNKNOWN_1007:
     return GfGameFlag::getLocal(1, 0x8a03) == 0;
   case BLADE_SUZAKU:
     return GfDataUtil::getScenarioFlag() <= 0xbc4;
@@ -74,6 +80,103 @@ bool isUnuseBlade(u32 blade) {
   default:
     return true;
   }
+}
+
+void GfMenuObjBladeBook::refreshBladeList() {
+  ui::UIObjectAcc acc(unknown18, "LAY_list_bl");
+  mm::mtl::FixStr<32> name;
+  for (u32 i = 0; i < unknown28->getPageSize(); i++) {
+    u32 blade = unknown28->getContents(unknown28->getPageIndex(i)).unknown00;
+    bool isUnuse = isUnuseBlade(blade);
+    {
+      name.format("IMG_list_bl_face@%02d", i + 1);
+      ui::UIObjectAcc face(acc.unknown10, name.c_str());
+      face.setAlpha(isUnuse ? 0.0f : 1.0f);
+    }
+    {
+      name.format("IMG_list_bl_secret@%02d", i + 1);
+      ui::UIObjectAcc secret(acc.unknown10, name.c_str());
+      secret.setDisp(isUnuse && blade != 0);
+    }
+  }
+}
+
+bool GfMenuObjBladeBook::seqOpenImage() {
+  ui::UIObjectAcc image(unknown18, "IMG_bl_img");
+  if (image.isStreaming()) {
+    image.setAlpha(0.0f);
+    return false;
+  }
+  ui::UIObjectAcc select(unknown18, "LAY_select");
+  u32 blade = GfMenuReference::getReferenceBladeID(0);
+  select.setLayout(image.unknown10, "bl_img01");
+  {
+    mm::Vec2 scale;
+    GfMenuObjUtil::ImageParam imageParam;
+    if (GfMenuObjUtil::getImageParam(1, blade, imageParam, 1)) {
+      image.getScale(scale);
+      scale.x = imageParam.unknown04 * scale.x;
+      scale.y = imageParam.unknown04 * scale.y;
+      image.setScale(scale);
+      GfMenuObjUtil::addPos(image.unknown10, imageParam.unknown00, imageParam.unknown02);
+    }
+  }
+  image.setAlpha(1.0f);
+  GfMenuObjUtil::CtrlParam param;
+  param.unknown004("fade_in_r");
+  param.unknown14 = 8;
+  param.unknown11 = true;
+  GfMenuObjUtil::startCtrl(image.unknown10, param, nullptr);
+  image.setAlpha(0.0f);
+  ui::UIObjectAcc layout(select.unknown10, "LAY_bl_img");
+  if (isUnuseBlade(blade)) {
+    layout.setMulColor("black");
+    layout.setAddColor("txt_list_index_mul");
+  } else {
+    layout.setMulColor("white");
+    layout.setAddColor("black");
+  }
+  return true;
+}
+
+bool GfMenuObjBladeBook::seqConfirmRelease() {
+  if (!unknown2d0) {
+    GfMenuManager::openCommonWindow(0x11);
+    unknown2d0 = true;
+    return false;
+  }
+  if (GfMenuManager::isOpenCommonWindow()) {
+    return false;
+  }
+  u16 result = GfMenuManager::getCommonWindowResult();
+  if (result == 0) {
+    unknown40.unknown002(&GfMenuObjBladeBook::seqEffReleaseA);
+    unknown40.unknown002(&GfMenuObjBladeBook::seqEffReleaseB);
+    unknown40.unknown002(&GfMenuObjBladeBook::seqExecRelease);
+    unknown40.unknown002(&GfMenuObjBladeBook::seqConfirmBoosterGet);
+    unknown40.unknown002(&GfMenuObjBladeBook::seqResumeRelease);
+    GfMenuObjCmnStatus::closeBlStatus();
+  } else {
+    unknown40.unknown002(&GfMenuObjBladeBook::seqResumeRelease);
+  }
+  unknown2d0 = false;
+  return true;
+}
+
+bool GfMenuObjBladeBook::seqExecRelease() {
+  u32 blade = unknown28->getContents(unknown28->getIndex(false)).unknown00;
+  GfGameUtil::execActivateUnuseForBlade(blade, true);
+  for (u32 i = 0; i < unknown28->getSize(); i++) {
+    if (unknown28->getContents(i).unknown00 == blade) {
+      GfMenuBladeList *list = unknown28;
+      list->contents.erase(list->contents.begin() + i);
+      list->subSize(1);
+      list->contentsChanged = true;
+      break;
+    }
+  }
+  GfMenuReference::setReferenceBladeID(0, 0);
+  return true;
 }
 
 void GfMenuObjBladeBook::finalize() {
@@ -230,5 +333,43 @@ bool GfMenuObjBladeBook::seqResumeRelease() {
   sendOpenEvent(list.unknown10, 0, 0.0f);
   GfMenuObjMainMenu2::setCloseKeyEnable(true);
   return true;
+}
+
+void GfMenuObjBladeBook::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1: {
+    GfMenuObjMainMenu2::setSubIndexText(0x1b);
+    GfMenuObjUtil::PresetCtrlParam param;
+    param.unknown10 = 0;
+    param.unknown04 = 0;
+    param.unknown00 = 6;
+    GfMenuObjUtil::startPresetCtrl(acc.unknown10, param);
+    break;
+  }
+  case 2: {
+    GfMenuObjMainMenu2::dispGuide(true);
+    GfMenuObjUtil::PresetCtrlParam param;
+    param.unknown10 = 0;
+    param.unknown04 = 1;
+    param.unknown00 = 6;
+    param.unknown0c = true;
+    GfMenuObjUtil::startPresetCtrl(acc.unknown10, param);
+    break;
+  }
+  case 0x100:
+    GfMenuObjMainMenu2::dispGuide(false);
+    sendCloseEvent(acc.searchChild("LAY_select"), 0, 0.0f);
+    sendOpenEvent(acc.searchChild("LAY_preview"), 0, 0.0f);
+    break;
+  case 0x101:
+    GfMenuObjMainMenu2::dispGuide(true);
+    sendOpenEvent(acc.searchChild("LAY_select"), 1, 0.0f);
+    sendCloseEvent(acc.searchChild("LAY_preview"), 0, 0.0f);
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
 }
 } // namespace gf

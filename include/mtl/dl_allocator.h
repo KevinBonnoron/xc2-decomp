@@ -7,8 +7,9 @@
 #include "mtl/mem_manager.h"
 #include "types.h"
 
+struct malloc_state;
+
 namespace mtl {
-class CallStackInfo;
 
 class DlAllocator : public IMemAllocator {
 public:
@@ -19,11 +20,14 @@ public:
     CallStackInfo *unknown10; // Inferred role: call stack of the allocation; original member name unknown.
   };
 
+  // The space of dlmalloc (an mspace, struct malloc_state of dlmalloc 2.8) made by create_mspace_with_base; its layout
+  // is in src/libs/monolib_mm/source/mtl/dlmalloc.inl.
+
   DlAllocator();
   ~DlAllocator() override;
   void create(void *buffer, size_t size, const char *name) override;
   void destroy() override;
-  AllocatorType getType() const override { return ALLOCATOR_TYPE_PROGRAM; }
+  AllocatorType getType() const override { return ALLOCATOR_TYPE_UNKNOWN_1; }
   void *allocate(size_t size, size_t alignment) override;
   void *allocate(size_t size, size_t alignment, const char *file, int line) override;
   void deallocate(void *pointer, size_t size) override;
@@ -48,7 +52,7 @@ public:
   static void *getNewInfo(const void *pointer, size_t &size);
 
   mm::mtl::FixStr<32> m_name;
-  void *unknown30;            // Inferred role: dlmalloc mspace of the buffer; original member name unknown.
+  malloc_state *unknown30;    // Inferred role: dlmalloc space of the buffer; original member name unknown.
   void *unknown38;            // Inferred role: buffer given to create; original member name unknown.
   size_t unknown40;           // Inferred role: size of the buffer; original member name unknown.
   CallStackManager unknown48; // Inferred role: call stacks of the allocations; original member name unknown.

@@ -6,11 +6,11 @@
 
 namespace gf {
 
-constexpr size_t BASE_BLOCK_SIZE = 0x8000;
+constexpr size_t SIZE_UNKNOWN_32768 = 0x8000; // Inferred role: base block size; original name unknown.
 
 GfSlotBase::GfSlotBase(const char *name, GfSlotAllocator *parent, u32 slotSize, bool useDebugMemory)
-    : m_slotHandle(INVALID_SLOT_HANDLE), m_slotSize(slotSize), m_parentSlot(nullptr), m_multiSlot(1), unknown314(0), unknown318(useDebugMemory) {
-  unknown18.setup(name, parent, slotSize, SLOT_ALIGNMENT, useDebugMemory);
+    : m_slotHandle(unknown006), m_slotSize(slotSize), m_parentSlot(nullptr), m_multiSlot(1), unknown314(0), unknown318(useDebugMemory) {
+  unknown18.setup(name, parent, slotSize, SLOT_UNKNOWN_8192, useDebugMemory);
 }
 
 GfSlotBase::~GfSlotBase() { unknown18.destroy(); }
@@ -25,7 +25,7 @@ const char *GfSlotBase::getName() const { return unknown18.m_name.c_str(); }
 
 size_t GfSlotBase::getBlockSize() const { return unknown18.getBlockSize(); }
 
-bool GfSlotBase::empty() const { return m_parentSlot == nullptr && m_slotHandle == INVALID_SLOT_HANDLE; }
+bool GfSlotBase::empty() const { return m_parentSlot == nullptr && m_slotHandle == unknown006; }
 
 bool GfSlotBase::isChildSlot() const { return m_parentSlot != nullptr; }
 
@@ -39,7 +39,7 @@ GF_SLOT_HANDLE *GfSlotBase::getSlotHandle() const { return m_slotHandle; }
 size_t GfSlotBase::getSlotSize() const { return m_slotSize; }
 
 void GfSlotBase::releaseSlot() {
-  m_slotHandle = INVALID_SLOT_HANDLE;
+  m_slotHandle = unknown006;
   m_parentSlot = nullptr;
   m_multiSlot = 1;
   unknown18.resize(m_slotSize);
@@ -70,13 +70,13 @@ static u32 getHandleIndex(GF_SLOT_HANDLE *handle) { return reinterpret_cast<u64>
 
 GfSlotBase *GfSlotAll::getSlot(GF_SLOT_HANDLE *handle) const {
   u32 index = getHandleIndex(handle);
-  return unknown08[getHandleType(handle) - ASSET_TYPE_MAP][index];
+  return unknown08[getHandleType(handle) - ASSET_TYPE_UNKNOWN_3][index];
 }
 
-const char *GfSlotAll::getSlotName(GfAssetType type) const { return unknown08[type - ASSET_TYPE_MAP][0]->getName(); }
+const char *GfSlotAll::getSlotName(GfAssetType type) const { return unknown08[type - ASSET_TYPE_UNKNOWN_3][0]->getName(); }
 
 f32 GfSlotAll::getSlotUsingRatio(GfAssetType type) const {
-  const SlotList &list = unknown08[type - ASSET_TYPE_MAP];
+  const SlotList &list = unknown08[type - ASSET_TYPE_UNKNOWN_3];
   u32 used = 0;
   for (u32 i = 0; i < list.size(); i++) {
     if (!(*list.at(i))->empty()) {
@@ -86,13 +86,13 @@ f32 GfSlotAll::getSlotUsingRatio(GfAssetType type) const {
   return static_cast<f32>(used) / static_cast<f32>(list.size());
 }
 
-size_t GfSlotAll::getSlotSize(GfAssetType type) const { return unknown08[type - ASSET_TYPE_MAP][0]->getSlotSize(); }
+size_t GfSlotAll::getSlotSize(GfAssetType type) const { return unknown08[type - ASSET_TYPE_UNKNOWN_3][0]->getSlotSize(); }
 
 u32 GfSlotAll::getSlotCount(GfAssetType type) {
   u32 slotCount = getSystemSlotCount(type);
   u32 count = 0;
   for (u32 i = 0; i < slotCount; i++) {
-    if (!unknown08[type - ASSET_TYPE_MAP][i]->isChildSlot()) {
+    if (!unknown08[type - ASSET_TYPE_UNKNOWN_3][i]->isChildSlot()) {
       count++;
     }
   }
@@ -100,8 +100,8 @@ u32 GfSlotAll::getSlotCount(GfAssetType type) {
 }
 
 GF_SLOT_HANDLE *GfSlotAll::getSlotHandle(GfAssetType type, u32 index) const {
-  const SlotList &list = unknown08[type - ASSET_TYPE_MAP];
-  GF_SLOT_HANDLE *handle = INVALID_SLOT_HANDLE;
+  const SlotList &list = unknown08[type - ASSET_TYPE_UNKNOWN_3];
+  GF_SLOT_HANDLE *handle = unknown006;
   u32 slotCount = list.size();
   u32 parentIndex = 0;
   for (u32 i = 0; i < slotCount; i++) {
@@ -116,19 +116,19 @@ GF_SLOT_HANDLE *GfSlotAll::getSlotHandle(GfAssetType type, u32 index) const {
   return handle;
 }
 
-u32 GfSlotAll::getSystemSlotCount(GfAssetType type) { return unknown08[type - ASSET_TYPE_MAP].size(); }
+u32 GfSlotAll::getSystemSlotCount(GfAssetType type) { return unknown08[type - ASSET_TYPE_UNKNOWN_3].size(); }
 
 bool GfSlotAll::isSystemSlotParent(GfAssetType type, u32 index) {
-  SlotList &list = unknown08[type - ASSET_TYPE_MAP];
-  return list[index]->getSlotHandle() != INVALID_SLOT_HANDLE && !list[index]->isChildSlot();
+  SlotList &list = unknown08[type - ASSET_TYPE_UNKNOWN_3];
+  return list[index]->getSlotHandle() != unknown006 && !list[index]->isChildSlot();
 }
 
 bool GfSlotAll::isSystemSlotChild(GfAssetType type, u32 index) {
-  SlotList &list = unknown08[type - ASSET_TYPE_MAP];
-  return list[index]->getSlotHandle() != INVALID_SLOT_HANDLE && list[index]->isChildSlot();
+  SlotList &list = unknown08[type - ASSET_TYPE_UNKNOWN_3];
+  return list[index]->getSlotHandle() != unknown006 && list[index]->isChildSlot();
 }
 
-GF_SLOT_HANDLE *GfSlotAll::getSystemSlotHandle(GfAssetType type, u32 index) const { return unknown08[type - ASSET_TYPE_MAP][index]->getSlotHandle(); }
+GF_SLOT_HANDLE *GfSlotAll::getSystemSlotHandle(GfAssetType type, u32 index) const { return unknown08[type - ASSET_TYPE_UNKNOWN_3][index]->getSlotHandle(); }
 
 void GfSlotAll::destroyMapping() {
   for (SlotList *list = unknown08.begin(); list != unknown08.end(); ++list) {
@@ -147,16 +147,16 @@ void GfSlotAll::destroy(SlotList &list) {
 }
 
 size_t GfSlotAll::getBlockSize(GfAssetType type) const {
-  if (type == ASSET_TYPE_BASE) {
-    return BASE_BLOCK_SIZE;
+  if (type == ASSET_TYPE_UNKNOWN_0) {
+    return SIZE_UNKNOWN_32768;
   }
-  return unknown08[type - ASSET_TYPE_MAP][0]->getBlockSize();
+  return unknown08[type - ASSET_TYPE_UNKNOWN_3][0]->getBlockSize();
 }
 
 GF_SLOT_HANDLE *GfSlotAll::setupSlotByte(GfAssetType type, size_t size, u32 index) { return setupSlotNum(type, getSlotNumByByteSize(type, size), index); }
 
 u32 GfSlotAll::getSlotNumByByteSize(GfAssetType type, size_t size) const {
-  const SlotList &list = unknown08[type - ASSET_TYPE_MAP];
+  const SlotList &list = unknown08[type - ASSET_TYPE_UNKNOWN_3];
   if (list.empty()) {
     return 0;
   }
@@ -170,9 +170,9 @@ u32 GfSlotAll::getSlotNumByByteSize(GfAssetType type, size_t size) const {
 }
 
 GF_SLOT_HANDLE *GfSlotAll::setupSlotNum(GfAssetType type, u32 num, u32 index) {
-  SlotList &list = unknown08[type - ASSET_TYPE_MAP];
+  SlotList &list = unknown08[type - ASSET_TYPE_UNKNOWN_3];
   if (list.empty()) {
-    return INVALID_SLOT_HANDLE;
+    return unknown006;
   }
 
   for (u32 start = 0; start < list.size(); start++) {
@@ -182,7 +182,7 @@ GF_SLOT_HANDLE *GfSlotAll::setupSlotNum(GfAssetType type, u32 num, u32 index) {
     }
 
     for (u32 i = start; i < end; i++) {
-      if (list[i]->getSlotHandle() != INVALID_SLOT_HANDLE) {
+      if (list[i]->getSlotHandle() != unknown006) {
         break;
       }
 
@@ -200,7 +200,7 @@ GF_SLOT_HANDLE *GfSlotAll::setupSlotNum(GfAssetType type, u32 num, u32 index) {
     }
   }
 
-  return INVALID_SLOT_HANDLE;
+  return unknown006;
 }
 
 GF_SLOT_HANDLE *GfSlotAll::createSlotHandle(GfAssetType type, u32 index) {
@@ -212,9 +212,9 @@ GF_SLOT_HANDLE *GfSlotAll::createSlotHandle(GfAssetType type, u32 index) {
 }
 
 GF_SLOT_HANDLE *GfSlotAll::setupSlotNumTail(GfAssetType type, u32 num, u32 index) {
-  SlotList &list = unknown08[type - ASSET_TYPE_MAP];
+  SlotList &list = unknown08[type - ASSET_TYPE_UNKNOWN_3];
   if (list.empty()) {
-    return INVALID_SLOT_HANDLE;
+    return unknown006;
   }
 
   for (s32 start = list.size() - 1; start >= 0; start--) {
@@ -225,7 +225,7 @@ GF_SLOT_HANDLE *GfSlotAll::setupSlotNumTail(GfAssetType type, u32 num, u32 index
     s32 end = start + num;
 
     for (u32 i = start; i < end; i++) {
-      if (list[i]->getSlotHandle() != INVALID_SLOT_HANDLE) {
+      if (list[i]->getSlotHandle() != unknown006) {
         break;
       }
 
@@ -243,12 +243,12 @@ GF_SLOT_HANDLE *GfSlotAll::setupSlotNumTail(GfAssetType type, u32 num, u32 index
     }
   }
 
-  return INVALID_SLOT_HANDLE;
+  return unknown006;
 }
 
 void GfSlotAll::releaseSlot(GF_SLOT_HANDLE *handle) {
   u32 index = getHandleIndex(handle);
-  SlotList &list = unknown08[getHandleType(handle) - ASSET_TYPE_MAP];
+  SlotList &list = unknown08[getHandleType(handle) - ASSET_TYPE_UNKNOWN_3];
   u32 multiSlot = list[index]->getMultiSlot();
   for (u32 i = index + 1; i < index + multiSlot; i++) {
     list[i]->releaseSlot();
@@ -257,37 +257,37 @@ void GfSlotAll::releaseSlot(GF_SLOT_HANDLE *handle) {
 }
 
 void GfSlotAll::createSlot(GfAssetType type, u32 count, const char *name, u32 slotSize, GfSlotAllocator *parent, bool useDebugMemory) {
-  SlotList &list = unknown08[type - ASSET_TYPE_MAP];
+  SlotList &list = unknown08[type - ASSET_TYPE_UNKNOWN_3];
   for (u32 i = 0; i < count; i++) {
     mm::mtl::FixStr<16> slotName;
     slotName.format("%s%d", name, i + 1);
     // __LINE__ must be 502 as in the original source: it is the line argument of operator new.
 #line 502
-    GfSlotBase *slot = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfSlotBase(slotName.c_str(), parent, slotSize, useDebugMemory);
+    GfSlotBase *slot = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfSlotBase(slotName.c_str(), parent, slotSize, useDebugMemory);
     list.push_back(slot);
   }
 }
 
-size_t GfSlotAll::getByteSizeBySlotNum(GfAssetType type, u32 num) const { return unknown08[type - ASSET_TYPE_MAP][0]->getSlotSize() * num; }
+size_t GfSlotAll::getByteSizeBySlotNum(GfAssetType type, u32 num) const { return unknown08[type - ASSET_TYPE_UNKNOWN_3][0]->getSlotSize() * num; }
 
 bool GfSlotAll::isEnableDelete(const SlotList &list, u32 start, u32 num, u32 index) {
   for (u32 i = start; i < start + num; i++) {
-    if (list[i]->getSlotHandle() != INVALID_SLOT_HANDLE && (list[i]->unknown314 >= index || !GfAssetUtil::isEnableDeleteObject(list[i]->getSlotHandle()))) {
+    if (list[i]->getSlotHandle() != unknown006 && (list[i]->unknown314 >= index || !GfAssetUtil::isEnableDeleteObject(list[i]->getSlotHandle()))) {
       return false;
     }
   }
   return true;
 }
 
-bool GfSlotAll::isMemoryDebug(GfAssetType type) const { return unknown08[type - ASSET_TYPE_MAP][0]->unknown318; }
+bool GfSlotAll::isMemoryDebug(GfAssetType type) const { return unknown08[type - ASSET_TYPE_UNKNOWN_3][0]->unknown318; }
 
 bool GfSlotAll::getSlotInfo(mm::mtl::IAllocator *&allocator, void *&buffer, size_t &size, GF_SLOT_HANDLE *handle) {
-  if (handle == INVALID_SLOT_HANDLE) {
+  if (handle == unknown006) {
     return false;
   }
 
   u32 index = getHandleIndex(handle);
-  SlotList &list = unknown08[getHandleType(handle) - ASSET_TYPE_MAP];
+  SlotList &list = unknown08[getHandleType(handle) - ASSET_TYPE_UNKNOWN_3];
   buffer = list[index]->getBuffer();
   size = list[index]->getBufferSize() * list[index]->getMultiSlot();
   allocator = list[index];
@@ -295,7 +295,7 @@ bool GfSlotAll::getSlotInfo(mm::mtl::IAllocator *&allocator, void *&buffer, size
 }
 
 bool GfSlotAll::getSlotInfo(void *&buffer, size_t &size, GfAssetType type) {
-  SlotList &list = unknown08[type - ASSET_TYPE_MAP];
+  SlotList &list = unknown08[type - ASSET_TYPE_UNKNOWN_3];
   if (list.empty()) {
     return false;
   }
@@ -306,11 +306,11 @@ bool GfSlotAll::getSlotInfo(void *&buffer, size_t &size, GfAssetType type) {
 }
 
 bool GfSlotAll::isExistAsset(GF_SLOT_HANDLE *handle) const {
-  if (handle == INVALID_SLOT_HANDLE) {
+  if (handle == unknown006) {
     return false;
   }
   u32 index = getHandleIndex(handle);
-  return unknown08[getHandleType(handle) - ASSET_TYPE_MAP][index]->isExistAsset();
+  return unknown08[getHandleType(handle) - ASSET_TYPE_UNKNOWN_3][index]->isExistAsset();
 }
 
 void *GfSlotAll::allocateSize(GfAssetType type, size_t size, size_t alignment) {
@@ -320,7 +320,7 @@ void *GfSlotAll::allocateSize(GfAssetType type, size_t size, size_t alignment) {
   }
 
   GF_SLOT_HANDLE *handle = setupSlotNumTail(type, num, 0);
-  if (handle == INVALID_SLOT_HANDLE) {
+  if (handle == unknown006) {
     return nullptr;
   }
 
@@ -332,8 +332,8 @@ void *GfSlotAll::allocateSize(GfAssetType type, size_t size, size_t alignment) {
 }
 
 void GfSlotAll::deallocateSize(void *pointer) {
-  for (s32 type = ASSET_TYPE_MAP; type <= ASSET_TYPE_SE; type++) {
-    SlotList &list = unknown08[type - ASSET_TYPE_MAP];
+  for (s32 type = ASSET_TYPE_UNKNOWN_3; type <= ASSET_TYPE_UNKNOWN_19; type++) {
+    SlotList &list = unknown08[type - ASSET_TYPE_UNKNOWN_3];
     void *first = list[0]->getBuffer();
     void *last = list[list.size() - 1]->getBuffer();
     if (first <= pointer && pointer <= last) {

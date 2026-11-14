@@ -5,6 +5,9 @@
 
 namespace ml {
 enum FONT_STYLE : int;
+class WorkObj;
+
+DevFont::DevFont(const char *name, WorkObj *parent) : DevBase(name, parent, 0x200) {}
 
 FontLayer::FontLayer() : unknown08(DevFont::createLayer(this)) {}
 
@@ -45,6 +48,12 @@ IDevFontInfo *DevFont::getFont(FONT_STYLE style) {
     }
   }
   return nullptr;
+}
+
+void DevFont::wkTail() {
+  for (reslist<WorkObj *>::Node *node = wkGetChild()->begin(); node != wkGetChild()->end(); node = node->getNext()) {
+    static_cast<DevFontLayer *>(node->value)->sync();
+  }
 }
 
 bool DevFont::createFont(FONT_STYLE style, void *data) { return get() != nullptr; }

@@ -2,7 +2,7 @@
 
 namespace event {
 
-ObjectTree::ObjectTree(const char *name) : Object(OBJTYPE_TREE, name) {}
+ObjectTree::ObjectTree(const char *name) : Object(OBJTYPE_UNKNOWN_1, name) {}
 
 ObjectTree::~ObjectTree() {}
 

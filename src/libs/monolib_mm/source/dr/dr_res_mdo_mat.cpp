@@ -1,10 +1,18 @@
 #include "dr/dr_res_mdo_mat.h"
 
+#include <math.h>
 #include <string.h>
 
+#include "dr/dr_calc_man.h"
+#include "dr/dr_calc_view_work.h"
 #include "dr/dr_man.h"
+#include "dr/dr_mdo_mat.h"
 #include "dr/dr_res_mdo_mesh_obj.h"
+#include "grlib/cglib_tri_uniform_block.h"
+#include "grlib/cglib_uniform_array.h"
+#include "grlib/shd_util.h"
 #include "mm_math/mm_mat44.h"
+#include "mm_math/mm_vec3.h"
 
 namespace ml {
 
@@ -38,7 +46,7 @@ DrResMdoMeshParts::DrResMdoMeshParts() : unknown28(0) {}
 DrResMdoMeshParts::~DrResMdoMeshParts() {}
 
 DrResMdoMeshParts &DrResMdoMeshParts::operator=(const DrResMdoMeshParts &other) {
-  if (unknown28 & FLAG_MAT_ADD) {
+  if (unknown28 & FLAG_UNKNOWN_27) {
     memcpy(unknown10, other.unknown10, sizeof(mm::Mat44));
   }
   unknown2c[0] = other.unknown2c[0];
@@ -62,7 +70,7 @@ void DrResMdoMeshParts::setMatAdd(mm::Mat44 *matrix, const mm::Mat44 *baseMat, c
 }
 
 void DrResMdoMeshParts::setRegisterMatrix(int index, bool isRegister) {
-  if (unknown28 & FLAG_MAT_ADD) {
+  if (unknown28 & FLAG_UNKNOWN_27) {
     if (isRegister) {
       if (unknown28 & 1) {
         unknown28 &= ~0x100;
@@ -110,6 +118,84 @@ void DrResMdoMeshParts::updateAlpha() {
 DrResMdoMeshObj::DrResMdoMeshObj() : unknown00(nullptr), unknown08(0) {}
 
 DrResMdoMeshObj::~DrResMdoMeshObj() {}
+
+void DrResMdoMeshObj::updateUniforom(grlib::CGLibTriUniformArray *uniforms, bool isOld) {
+  mm::Mat44 viewMat;
+  mm::Mat44 viewProj;
+  f32 params[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+  DrCalcViewWork *view = DrMan::get()->unknown580->unknown10;
+  for (u32 i = 0; i < unknown08; i++) {
+    DrResMdoMeshParts *parts = &unknown00[i];
+    if ((parts->unknown28 & (DrResMdoMeshParts::FLAG_UNKNOWN_0 | 8)) == DrResMdoMeshParts::FLAG_UNKNOWN_0 && 0.0f < parts->unknown34) {
+      grlib::CGLibTriUniformBlock *block = &(*uniforms)[parts->unknown38];
+      f32 *buff = static_cast<f32 *>(block->getBuff());
+      viewProj.unknown009(*parts->unknown10, view->unknown200);
+      viewMat.unknown009(*parts->unknown10, view->unknown40);
+      grlib::ShdMat44TransposeMat44(buff, viewProj);
+      grlib::ShdMat44TransposeMat34(buff + 0x10, *parts->unknown10);
+      grlib::ShdMat44TransposeMat34(buff + 0x1c, viewMat);
+      params[0] = parts->unknown28 & 8 ? 0.0f : parts->unknown34;
+      const mm::Mat44 &matrix = *parts->unknown10;
+      mm::Vec3 axis(matrix.rows[0][0] + matrix.rows[1][0] + matrix.rows[2][0], matrix.rows[0][1] + matrix.rows[1][1] + matrix.rows[2][1], matrix.rows[0][2] + matrix.rows[1][2] + matrix.rows[2][2]);
+      params[1] = sqrtf(axis.x * axis.x + axis.y * axis.y + axis.z * axis.z) * DrMdoMat::MDL_SCALE_PARAMS;
+      grlib::ShdF32SetVec4(buff + 0x28, params);
+      block->updateData();
+      if (isOld) {
+        buff = static_cast<f32 *>(block->getOldBuff());
+        grlib::ShdMat44TransposeMat44(buff, viewProj);
+        grlib::ShdMat44TransposeMat34(buff + 0x10, *parts->unknown10);
+        grlib::ShdMat44TransposeMat34(buff + 0x1c, viewMat);
+        grlib::ShdF32SetVec4(buff + 0x28, params);
+        block->updateOldData();
+      }
+    }
+  }
+}
+
+bool DrResMdoMeshObj::updateDisplayCheck(bool isDisp) {
+  bool isChange = false;
+  for (u32 i = 0; i < unknown08; i++) {
+    DrResMdoMeshParts *parts = &unknown00[i];
+    if (parts->unknown28 & 0x100) {
+      parts->unknown28 &= ~0x100;
+      parts->unknown28 |= 1;
+      isChange = true;
+    }
+    if (parts->unknown28 & 0x200) {
+      parts->unknown28 &= ~0x200;
+      parts->unknown28 &= ~1;
+      isChange = true;
+    }
+    if (getParts(i)->unknown28 & 0x10) {
+      if (isDisp) {
+        getParts(i)->unknown28 |= 8;
+      } else {
+        getParts(i)->unknown28 &= ~8;
+      }
+    }
+    parts->updateAlpha();
+    f32 alpha = parts->unknown28 & 8 ? 0.0f : parts->unknown34;
+    if (alpha <= 0.02f) {
+      if (parts->unknown28 & 0x8000) {
+        parts->unknown28 &= ~0x8000;
+        isChange = true;
+      }
+    } else if (!(parts->unknown28 & 0x8000)) {
+      parts->unknown28 |= 0x8000;
+      isChange = true;
+    }
+    if (alpha < 0.98f) {
+      if (parts->unknown28 & 0x10000) {
+        parts->unknown28 &= ~0x10000;
+        isChange = true;
+      }
+    } else if (!(parts->unknown28 & 0x10000)) {
+      parts->unknown28 |= 0x10000;
+      isChange = true;
+    }
+  }
+  return isChange;
+}
 
 int DrResMdoMeshObj::getIdx(const char *name) const {
   int index = -1;

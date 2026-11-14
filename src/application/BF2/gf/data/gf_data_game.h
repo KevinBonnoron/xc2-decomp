@@ -22,9 +22,18 @@ namespace gf {
 
 // Inferred role: save data task achieve; original type name unknown.
 struct unknown106 {
-  u8 _00[0x0c - 0x00];
+  bool operator==(const unknown106 &other) const { return other.unknown00 == unknown00 && other.unknown02 == unknown02 && other.unknown04 == unknown04; }
+
+  u16 unknown00; // Inferred role: quest; original member name unknown.
+  u16 unknown02; // Inferred role: purpose; original member name unknown.
+  u16 unknown04; // Inferred role: task index; original member name unknown.
+  u32 unknown08; // Inferred role: unused, zero when registered; original member name unknown.
 };
 
+static_assert(offsetof(unknown106, unknown00) == 0x00, "");
+static_assert(offsetof(unknown106, unknown02) == 0x02, "");
+static_assert(offsetof(unknown106, unknown04) == 0x04, "");
+static_assert(offsetof(unknown106, unknown08) == 0x08, "");
 static_assert(sizeof(unknown106) == 0x0c, "");
 
 // Inferred role: save data achievement popup; original type name unknown.

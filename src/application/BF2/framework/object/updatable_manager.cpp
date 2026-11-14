@@ -26,19 +26,19 @@ void UpdatableObjectManager::Impl::removeGroup(u32 group) {
 }
 
 void UpdatableObjectManager::Impl::destroy() {
-  for (int i = GROUP_MAX - 1; i >= 0; i--) {
+  for (int i = GROUP_UNKNOWN_32 - 1; i >= 0; i--) {
     if (unknown08[i] != nullptr) {
       unknown08[i]->destroyAllObject();
     }
   }
 
-  for (int i = GROUP_MAX - 1; i >= 0; i--) {
+  for (int i = GROUP_UNKNOWN_32 - 1; i >= 0; i--) {
     removeGroup(i);
   }
 }
 
 void UpdatableObjectManager::Impl::destroyObject(u32 groupMask) {
-  for (int i = GROUP_MAX - 1; i >= 0; i--) {
+  for (int i = GROUP_UNKNOWN_32 - 1; i >= 0; i--) {
     if (unknown08[i] != nullptr && (groupMask & (1 << i)) != 0) {
       unknown08[i]->destroyAllObject();
     }
@@ -46,7 +46,7 @@ void UpdatableObjectManager::Impl::destroyObject(u32 groupMask) {
 }
 
 void UpdatableObjectManager::Impl::update(const UpdateInfo &info, u32 layerMask) {
-  for (u32 i = 0; i < GROUP_MAX; i++) {
+  for (u32 i = 0; i < GROUP_UNKNOWN_32; i++) {
     if (unknown08[i] != nullptr) {
       unknown08[i]->update(info, layerMask);
     }
@@ -54,7 +54,7 @@ void UpdatableObjectManager::Impl::update(const UpdateInfo &info, u32 layerMask)
 }
 
 void UpdatableObjectManager::Impl::tail(const UpdateInfo &info) {
-  for (int i = GROUP_MAX - 1; i >= 0; i--) {
+  for (int i = GROUP_UNKNOWN_32 - 1; i >= 0; i--) {
     if (unknown08[i] != nullptr) {
       unknown08[i]->tail(info);
     }
@@ -62,7 +62,7 @@ void UpdatableObjectManager::Impl::tail(const UpdateInfo &info) {
 }
 
 void UpdatableObjectManager::Impl::execEvent(const ObjectEvent &event, u32 layerMask) {
-  for (u32 i = 0; i < GROUP_MAX; i++) {
+  for (u32 i = 0; i < GROUP_UNKNOWN_32; i++) {
     if (unknown08[i] != nullptr) {
       unknown08[i]->execEvent(event, layerMask);
     }
@@ -83,7 +83,7 @@ UpdatableObjectManager::~UpdatableObjectManager() {}
 
 bool UpdatableObjectManager::initialize() {
   mm::mtl::IAllocator *allocator = unknown18->unknown00;
-  for (u32 i = 0; i < GROUP_MAX; i++) {
+  for (u32 i = 0; i < GROUP_UNKNOWN_32; i++) {
     // __LINE__ of the game: it is the line argument of the operator new.
 #line 256
     UpdatableGroup *group = new (allocator, 8, __FILE__, __LINE__) UpdatableGroup(allocator, i);

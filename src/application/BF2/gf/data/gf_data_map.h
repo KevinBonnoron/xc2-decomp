@@ -6,12 +6,14 @@
 namespace gf {
 
 enum WEATYPE {
-  WEATYPE_DEFAULT = 0,
-  WEATYPE_INVALID = 0x15,
+  WEATYPE_UNKNOWN_0 = 0,     // Inferred role: weatype default; original name unknown.
+  WEATYPE_UNKNOWN_12 = 12,   // Inferred role: weather type of the second cloud sea; original enumerator name unknown.
+  WEATYPE_UNKNOWN_21 = 0x15, // Inferred role: weatype invalid; original name unknown.
 };
 
+// WEATHER_A to WEATHER_F are the strings of the game's weather id table (GfDataMap::getWeatherIDName: "NULL", "WEATHER_A", "WEATHER_B", "WEATHER_C", "WEATHER_D", "WEATHER_F").
 enum WEATHERID {
-  WEATHER_NULL,
+  WEATHER_UNKNOWN_0, // Inferred role: weather null; original name unknown.
   WEATHER_A,
   WEATHER_B,
   WEATHER_C,
@@ -22,14 +24,17 @@ enum WEATHERID {
 enum CLOUD_SEA {};
 
 enum {
-  MAP_AVARITIA = 3,
-  MAP_GULA = 6,
-  MAP_INVIDIA = 9,
-  MAP_SUPERBIA = 10,
-  MAP_ARCADIA = 12,
-  MAP_LUXURIA = 13,
-  MAP_LIBERALITAS = 14,
-  MAP_ELPIS = 15,
+  MAP_UNKNOWN_3 = 3,   // Inferred role: map avaritia; original name unknown.
+  MAP_UNKNOWN_6 = 6,   // Inferred role: map gula; original name unknown.
+  MAP_UNKNOWN_7 = 7,   // Inferred role: first map shown with the sepia filter; original name unknown.
+  MAP_UNKNOWN_9 = 9,   // Inferred role: map invidia; original name unknown.
+  MAP_UNKNOWN_10 = 10, // Inferred role: map superbia; original name unknown.
+  MAP_UNKNOWN_12 = 12, // Inferred role: map arcadia; original name unknown.
+  MAP_UNKNOWN_13 = 13, // Inferred role: map luxuria; original name unknown.
+  MAP_UNKNOWN_14 = 14, // Inferred role: map liberalitas; original name unknown.
+  MAP_UNKNOWN_15 = 15, // Inferred role: map elpis; original name unknown.
+  MAP_UNKNOWN_17 = 17, // Inferred role: second map shown with the sepia filter; original name unknown.
+  MAP_UNKNOWN_19 = 19, // Inferred role: third map shown with the sepia filter; original name unknown.
 };
 
 // Inferred role: save data map; original type name unknown.
@@ -48,6 +53,9 @@ static_assert(offsetof(unknown118, unknownc0) == 0x0c0, "");
 static_assert(sizeof(unknown118) == 0x0d0, "");
 
 struct WeatherParam {
+  // The game's SDataGame constructor and the weather dummy of gf_field_weather.cpp zero these members in this order, leaving the tail of the resource unset.
+  WeatherParam() : unknown08(WEATYPE_UNKNOWN_0), unknown0c(WEATHER_UNKNOWN_0), unknown10(0.0f), unknown14(0.0f), unknown18(0) { unknown00[0] = '\0'; }
+
   char unknown00[8];   // Inferred role: resource; original member name unknown.
   WEATYPE unknown08;   // Inferred role: type; original member name unknown.
   WEATHERID unknown0c; // Inferred role: weather; original member name unknown.
@@ -60,6 +68,8 @@ static_assert(sizeof(WeatherParam) == 0x1c, "");
 
 // Inferred role: save data map info; original type name unknown.
 struct unknown119 {
+  unknown119() : unknown1c(0) {}
+
   WeatherParam unknown00; // Inferred role: weather param; original member name unknown.
   u32 unknown1c;          // Inferred role: cloud type; original member name unknown.
 };

@@ -11,7 +11,7 @@ namespace pc {
 void StateFieldWallAdsorptionAir::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   unknown18 = 0.0f;
   unknown1c = behavior->getProperty()->unknown310.unknown18;
-  StateUtilField::resetCameraForWall(*behavior, StateUtilField::TIMING_AIR);
+  StateUtilField::resetCameraForWall(*behavior, StateUtilField::TIMING_UNKNOWN_2);
 }
 
 void StateFieldWallAdsorptionAir::leave(GfComBehaviorPc *behavior, ai::State *next) {}

@@ -38,6 +38,8 @@ public:
   static void close2(u32 handle);
   static void removeObject(ui::UIObjectAcc acc);
   static void removeObject2(ui::UIObjectAcc acc);
+  static const char *setupScreen(u32 handle, int type, int amount, int, int bonus);
+  static void sendOpen(u32 handle, const ExpGetInfo &info);
 };
 
 static_assert(offsetof(GfMenuObjExpGet::OpenParam, unknown10) == 0x10, "");

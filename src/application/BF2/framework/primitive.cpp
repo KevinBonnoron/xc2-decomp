@@ -2,6 +2,8 @@
 
 #include <math.h>
 
+#include "mm_math/mm_mat44.h"
+#include "mm_math/mm_math.h"
 #include "mm_math/mm_quat.h"
 
 namespace fw {
@@ -9,6 +11,13 @@ namespace fw {
 void PrimCapsule::setup(const mm::Vec3 &start, const mm::Vec3 &end, f32 radius) {
   set(start, end);
   this->unknown30 = radius;
+}
+
+void PrimCapsule::setup(const mm::Mat44 &matrix, f32 length, f32 radius) {
+  mm::Quat rotation;
+  mm::unknown004(rotation, matrix);
+  mm::Vec3 position(matrix.rows[3][0], matrix.rows[3][1], matrix.rows[3][2]);
+  setup(position, rotation, length, radius);
 }
 
 f32 PrimCapsule::getHeight() const {
@@ -46,6 +55,15 @@ void PrimCapsule::getCenter(mm::Vec3 &center) const {
   center.y = end.y + start.y;
   center.z = end.z + start.z;
   center *= 0.5f;
+}
+
+void PrimCapsule::getMat(mm::Mat44 &matrix) const {
+  mm::Quat rotation;
+  getRot(rotation);
+  mm::Vec3 center;
+  getCenter(center);
+  mm::unknown001(matrix, rotation);
+  matrix.setTrans(center);
 }
 
 bool PrimCapsule::isCollide(const PrimCapsule &capsule) const { return getNearestLength(*this, capsule) <= unknown30 + capsule.unknown30; }

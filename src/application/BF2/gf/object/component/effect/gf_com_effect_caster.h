@@ -13,6 +13,10 @@
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
 
+namespace effect {
+struct SendParam;
+} // namespace effect
+
 namespace anm {
 class ResASM;
 }
@@ -39,6 +43,7 @@ namespace gf {
 struct GF_OBJ_HANDLE;
 struct GF_ASSET_HANDLE;
 struct MsgFxRimBloomEnd;
+
 struct MsgFxRimBloomTarget : fw::Message {
   MsgFxRimBloomTarget() : fw::Message(0x1000054, 0x80) {}
 };
@@ -54,15 +59,15 @@ struct MsgObjectNotifyDamage;
 struct MsgObjectNotifyDead;
 
 struct EffectMountSetupEv {
-  EffectMountSetupEv() : unknown30(mm::Vec3::zero), _40(), unknown41(false), unknown42(false) {}
+  EffectMountSetupEv() : unknown30(mm::Vec3::zero), unknown40(0), unknown41(false), unknown42(false) {}
 
   // Inferred roles from access offsets; original member names are unknown.
   u32 unknown0;                 // Effect identifier.
   mm::mtl::FixStr<32> unknown8; // Bone name.
   mm::Vec3 unknown30;           // Offset.
-  u8 _40[0x41 - 0x40];
-  bool unknown41; // Rotation enabled.
-  bool unknown42; // Follow enabled.
+  u8 unknown40;                 // Setup byte, copied into GfComEffectCaster::EventEfHandleTbl by addMountEffectEv.
+  bool unknown41;               // Rotation enabled.
+  bool unknown42;               // Follow enabled.
 };
 
 static_assert(offsetof(EffectMountSetupEv, unknown30) == 0x30, "");
@@ -151,6 +156,8 @@ public:
   // FixedVector at 0xc3b0; operator= (0x710050b1bc) copies the FixStr, the u32 at 0x24, the IntrusivePtr at 0x28, the
   // Vec3 and the three bytes at 0x40.
   struct EventEfHandleTbl {
+    EventEfHandleTbl() : unknown24(0), unknown30(mm::Vec3::zero), unknown40(0), unknown41(false), unknown42(false) {}
+
     mm::mtl::FixStr<32> unknown00;                       // Inferred role: bone name; original member name unknown.
     u32 unknown24;                                       // Inferred role: effect identifier; original member name unknown.
     mm::mtl::IntrusivePtr<fw::ReferenceFrame> unknown28; // Inferred role: bone reference frame; original member name unknown.
@@ -164,9 +171,14 @@ public:
   static const u32 COMPONENT_INDEX = 7;
 
   static void registerAsmCallbackEffect(GF_OBJ_HANDLE *handle, anm::ResASM *resAsm, fw::EffectResData *effectData);
+  void cleanup();
   bool getEfpMatrix(const char *name, mm::Mat44 &matrix);
+  void calcMtxAndScale(GfComEffectCaster *caster, Param *param, f32 time, bool unknown, effect::SendParam &sendParam);
+  void updateParam(GfComEffectCaster *caster, Param *param, f32 time, bool unknown);
+  void getWpnMat(mm::Mat44 &matrix);
+  u32 calcFollowAnnotetionTag(Param *param, effect::SendParam &sendParam);
   void addMountEffectEv(const EffectMountSetupEv &setup);
-  void removeMountEffectEv(u32 effect);
+  bool removeMountEffectEv(u32 effect);
   u32 calcWeaponID() const;
   void setCaster(u32 effect);
   bool setSpeed(u32 effect, f32 speed);
@@ -184,6 +196,7 @@ public:
   fw::EffectPack *getEffectPack(GF_ASSET_HANDLE *handle);
   const char *getEfpData(const char *name, mm::Mat44 &matrix);
   bool getWeaponEffectPack(mm::mtl::FixedVector<fw::EffectPack *, 8> &packs, int type, int);
+  fw::EffectPack *getWeaponEffectPack(const char *name);
   fw::EffectPoint *getEffectPoint();
   bool getValidEffectName(const char *name) const;
   bool isDynamicAnnotationEffect(u8 type) const;

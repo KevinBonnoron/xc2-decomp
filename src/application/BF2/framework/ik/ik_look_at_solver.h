@@ -38,23 +38,28 @@ public:
   static mm::mtl::RTTI m_rtti;
 
   static LookAtIkSolver *create(const ParamAdapter &param, const char *boneName, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose);
+  bool setupLimit(const ParamAdapter &param, const char *boneName, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose);
   void startTargetFade(f32 time);
   LookAtIkSolver();
   ~LookAtIkSolver() override;
+  void resetLimit();
   void resetLimitParam();
   void drawDebug();
   void onDisable() override;
   void calcIK(const UpdateInfo &info) override;
   const mm::mtl::RTTI *getRTTI() const override;
 
-  u8 _34[0x60 - 0x34];
+  u8 _34[0x40 - 0x34];
+  mm::Vec3 unknown40; // Inferred role: front of the bone, in the space of the bone; original member name unknown.
+  mm::Vec3 unknown50; // Inferred role: zero offset; original member name unknown.
   mm::Vec3 unknown60; // Inferred role: front in model space; original member name unknown.
-  u8 _70[0x80 - 0x70];
-  f32 unknown80; // Inferred role: limit angle up; original member name unknown.
-  f32 unknown84; // Inferred role: limit angle down; original member name unknown.
-  f32 unknown88; // Inferred role: limit angle left; original member name unknown.
-  f32 unknown8c; // Inferred role: limit angle right; original member name unknown.
-  u8 _90[0xa0 - 0x90];
+  f32 unknown70;      // Inferred role: limit angle (pi); original member name unknown.
+  u8 _74[0x80 - 0x74];
+  f32 unknown80;          // Inferred role: limit angle up; original member name unknown.
+  f32 unknown84;          // Inferred role: limit angle down; original member name unknown.
+  f32 unknown88;          // Inferred role: limit angle left; original member name unknown.
+  f32 unknown8c;          // Inferred role: limit angle right; original member name unknown.
+  mm::Vec3 unknown90;     // Inferred role: up; original member name unknown.
   mm::Vec3 unknowna0;     // Inferred role: target; original member name unknown.
   mm::Vec3 unknownb0;     // Inferred role: unknown; original member name unknown.
   ParamAdapter unknownc0; // Inferred role: limit param; original member name unknown.
@@ -70,6 +75,10 @@ public:
 };
 
 static_assert(offsetof(LookAtIkSolver, unknown60) == 0x60, "");
+static_assert(offsetof(LookAtIkSolver, unknown40) == 0x40, "");
+static_assert(offsetof(LookAtIkSolver, unknown50) == 0x50, "");
+static_assert(offsetof(LookAtIkSolver, unknown70) == 0x70, "");
+static_assert(offsetof(LookAtIkSolver, unknown90) == 0x90, "");
 static_assert(offsetof(LookAtIkSolver, unknown80) == 0x80, "");
 static_assert(offsetof(LookAtIkSolver, unknown8c) == 0x8c, "");
 static_assert(offsetof(LookAtIkSolver, unknowna0) == 0xa0, "");

@@ -25,26 +25,26 @@ struct GfQuestReward;
 struct GfSetupParam;
 
 struct QuestOrderParam : QuestParam {
-  QuestOrderParam(QuestID quest) : QuestParam(QUEST_PARAM_ORDER), unknown04(quest) {}
+  QuestOrderParam(QuestID quest) : QuestParam(QUEST_PARAM_UNKNOWN_3), unknown04(quest) {}
 
   QuestID unknown04; // Inferred role: quest; original member name unknown.
 };
 
 struct QuestCompleteParam : QuestParam {
-  QuestCompleteParam(QuestID quest, QSTATE state) : QuestParam(QUEST_PARAM_COMPLETE), unknown04(quest), unknown08(state) {}
+  QuestCompleteParam(QuestID quest, QSTATE state) : QuestParam(QUEST_PARAM_UNKNOWN_1), unknown04(quest), unknown08(state) {}
 
   QuestID unknown04; // Inferred role: quest; original member name unknown.
   QSTATE unknown08;  // Inferred role: state; original member name unknown.
 };
 
 struct QuestPreCompleteParam : QuestParam {
-  QuestPreCompleteParam(QuestID quest) : QuestParam(QUEST_PARAM_PRE_COMPLETE), unknown04(quest) {}
+  QuestPreCompleteParam(QuestID quest) : QuestParam(QUEST_PARAM_UNKNOWN_5), unknown04(quest) {}
 
   QuestID unknown04; // Inferred role: quest; original member name unknown.
 };
 
 struct QuestStateParam : QuestParam {
-  QuestStateParam(QuestID quest, QSTATE oldState, QSTATE state) : QuestParam(QUEST_PARAM_STATE), unknown04(quest), unknown08(oldState), unknown0c(state) {}
+  QuestStateParam(QuestID quest, QSTATE oldState, QSTATE state) : QuestParam(QUEST_PARAM_UNKNOWN_6), unknown04(quest), unknown08(oldState), unknown0c(state) {}
 
   QuestID unknown04; // Inferred role: quest; original member name unknown.
   QSTATE unknown08;  // Inferred role: old state; original member name unknown.
@@ -52,14 +52,14 @@ struct QuestStateParam : QuestParam {
 };
 
 struct QuestChangeParam : QuestParam {
-  QuestChangeParam(QuestID oldQuest, QuestID quest) : QuestParam(QUEST_PARAM_CHANGE), unknown04(oldQuest), unknown08(quest) {}
+  QuestChangeParam(QuestID oldQuest, QuestID quest) : QuestParam(QUEST_PARAM_UNKNOWN_2), unknown04(oldQuest), unknown08(quest) {}
 
   QuestID unknown04; // Inferred role: old quest; original member name unknown.
   QuestID unknown08; // Inferred role: quest; original member name unknown.
 };
 
 struct QuestCompleteChildParam : QuestParam {
-  QuestCompleteChildParam(QuestID quest) : QuestParam(QUEST_PARAM_COMPLETE_CHILD), unknown04(quest) {}
+  QuestCompleteChildParam(QuestID quest) : QuestParam(QUEST_PARAM_UNKNOWN_4), unknown04(quest) {}
 
   QuestID unknown04; // Inferred role: quest; original member name unknown.
 };
@@ -159,7 +159,7 @@ public:
   static void resetBattleTaskForPlayerDead();
   void acceptOrder(QuestID quest);
   void addEntryQuest(QuestID quest);
-  static QuestID getCurrentQuestScenario();
+  QuestID getCurrentQuestScenario();
   static void setCurrentQuestForScenario();
   static void eventCheckTask(QuestID quest);
   static bool openOrder(QuestID quest, bool isEvent);

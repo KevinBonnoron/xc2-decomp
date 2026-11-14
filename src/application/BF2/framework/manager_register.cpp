@@ -38,7 +38,7 @@ bool ManagerRegister::initialize() {
     ManagerObject *manager = *it;
     if (!manager->isInitialized()) {
       if (manager->initialize()) {
-        manager->unknown08 |= ManagerObject::FLAG_INITIALIZED;
+        manager->unknown08 |= ManagerObject::FLAG_UNKNOWN_0;
       }
       isInitialized = false;
     }

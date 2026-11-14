@@ -17,6 +17,7 @@ class WinView;
 
 class ScnPoolObj : public IWorkEvent, public IScnRender {
 public:
+  ScnPoolObj(Scn *scn);
   ~ScnPoolObj() override;
   bool isValidInsert(u16 type) const;
   bool insert(ScnObj *obj);
@@ -26,7 +27,10 @@ public:
   void deleteObj();
   void update();
   void renderDebug(DebDraw *debDraw);
+  ScnObjCam *getCam(int screen);
   ScnObjCam *getCam(const WinView *view);
+  void tail();
+  void apply();
   reslist<ScnObj *> *getList(u16 type);
   const reslist<ScnObj *> *getList(u16 type) const;
 
@@ -40,6 +44,7 @@ public:
   reslist<ScnObj *> unknown168; // Inferred role: ibl list; original member name unknown.
   reslist<ScnObj *> unknown1a8; // Inferred role: clip list; original member name unknown.
   reslist<ScnObj *> unknown1e8; // Inferred role: released object list; original member name unknown.
+  u16 unknown228;               // Inferred role: cleared by the constructor; original member name unknown.
 };
 
 static_assert(offsetof(ScnPoolObj, unknown10) == 0x10, "");
@@ -52,5 +57,6 @@ static_assert(offsetof(ScnPoolObj, unknown128) == 0x128, "");
 static_assert(offsetof(ScnPoolObj, unknown168) == 0x168, "");
 static_assert(offsetof(ScnPoolObj, unknown1a8) == 0x1a8, "");
 static_assert(offsetof(ScnPoolObj, unknown1e8) == 0x1e8, "");
+static_assert(offsetof(ScnPoolObj, unknown228) == 0x228, "");
 
 } // namespace ml

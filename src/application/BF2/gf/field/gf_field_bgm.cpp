@@ -9,6 +9,7 @@
 #include "gf/game/event/gf_evt_bgm.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_scene.h"
+#include "gf/gf_allocator.h"
 #include "gf/gf_manager.h"
 #include "gf/gf_pause.h"
 #include "gf/util/gf_util.h"
@@ -55,6 +56,7 @@ bool BGMCOND::isSilentPlay() const { return strcmp(unknown14.c_str(), "SilentBgm
 
 namespace _gffsn {
 bool s_bStopBGM;
+// s_szStreamPath and s_szBgmPath keep the names of the game's symbols gf::_gffsn::s_szStreamPath and gf::_gffsn::s_szBgmPath.
 const char *s_szStreamPath = "/stream/";
 const char *s_szBgmPath = "/bgm/";
 
@@ -163,7 +165,7 @@ f32 bgmvolFadeNotBattleEvent(ExecFadeParam &param) {
 }
 
 f32 bgmvolFadeEvent(ExecFadeParam &param) {
-  bool isFadeOut = GfGameManager::isInnerState(GF_STATE_EVENT) || GfGameManager::isForceEventBgm();
+  bool isFadeOut = GfGameManager::isInnerState(GF_STATE_UNKNOWN_20) || GfGameManager::isForceEventBgm();
   return bgmvolControlFade(*param.unknown08, isFadeOut ? param.unknown10->unknown20 : param.unknown10->unknown24, isFadeOut);
 }
 
@@ -195,7 +197,7 @@ void BgmTrack::destroy() {
   unknown610 = 1.0f;
   unknown614 = 1.0f;
   unknown618 = 1.0f;
-  m_categoryApply = CATEGORY_GAME_BGM;
+  m_categoryApply = CATEGORY_BGM;
 }
 
 void BgmTrack::setPause(bool pause) {
@@ -529,7 +531,7 @@ bool BgmTrack::makeBgmFile(mm::mtl::FixStr<64> &name, u32 &bgmID, u32 bgmCondID,
 
 BgmTrack::BgmTrack(GfFieldBgm *owner, bool unknown)
     : m_bgmCondID(0), unknown60c(unknown), unknown60e(false), unknown610(1.0f), unknown614(1.0f), unknown618(1.0f), unknown61c(0.0f), unknown620(owner), unknown629(false),
-      m_categoryApply(CATEGORY_GAME_BGM) {
+      m_categoryApply(CATEGORY_BGM) {
   BGMCOND cond;
   unknown08.assign(cond);
   for (u32 i = 0; i < 4; i++) {
@@ -538,8 +540,18 @@ BgmTrack::BgmTrack(GfFieldBgm *owner, bool unknown)
 }
 
 enum {
-  MAPJUMP_TYPE_FIELD_DESTROY = 2,
+  MAPJUMP_UNKNOWN_2 = 2, // Inferred role: mapjump type field destroy; original name unknown.
 };
+
+// __LINE__ must be 308, 309, 310, 311 and 312 as in the original file: they are the line arguments of the allocations.
+GfFieldBgm::GfFieldBgm() : m_rscBossBattleBgmID(0), unknown94(0), m_rscBattleBgmID(3), m_rscGimmickBgmID(0), m_gimmickBgmID(-1), unknowna4(0), m_disableFieldBgmChange(false), unknowna9(false) {
+#line 308
+  unknown08.push_back(new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) BgmField(this));
+  unknown08.push_back(new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) BgmBattle(this));
+  unknown08.push_back(new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) BgmBattleBoss(this));
+  unknown08.push_back(new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) BgmGimmick(this));
+  unknown08.push_back(new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) BgmEvent(this));
+}
 
 u32 GfFieldBgm::getRscFieldBgmID() const {
   u32 map = GfGameManager::getMapID();
@@ -582,10 +594,10 @@ void GfFieldBgm::gevBattleEnd() { m_rscBossBattleBgmID = 0; }
 
 void GfFieldBgm::gevMapjump(GEV gev, const MapjumpCallbackInfo &info) {
   switch (gev) {
-  case GEV_MAPJUMP_START:
+  case GEV_UNKNOWN_1:
     applyMapJumpStart(info);
     break;
-  case GEV_MAPJUMP_FADEIN:
+  case GEV_UNKNOWN_6:
     applyMapJumpFadein(info);
     break;
   default:
@@ -594,7 +606,7 @@ void GfFieldBgm::gevMapjump(GEV gev, const MapjumpCallbackInfo &info) {
 }
 
 void GfFieldBgm::applyMapJumpStart(const MapjumpCallbackInfo &info) {
-  if (info.unknown10 == MAPJUMP_TYPE_FIELD_DESTROY) {
+  if (info.unknown10 == MAPJUMP_UNKNOWN_2) {
     unknowna9 = true;
   }
   m_disableFieldBgmChange = true;
@@ -603,7 +615,7 @@ void GfFieldBgm::applyMapJumpStart(const MapjumpCallbackInfo &info) {
 void GfFieldBgm::applyMapJumpCleanup(const MapjumpCallbackInfo &) {}
 
 void GfFieldBgm::applyMapJumpFadein(const MapjumpCallbackInfo &info) {
-  if (info.unknown10 == MAPJUMP_TYPE_FIELD_DESTROY) {
+  if (info.unknown10 == MAPJUMP_UNKNOWN_2) {
     unknowna9 = false;
   }
   m_disableFieldBgmChange = false;
@@ -658,6 +670,28 @@ void GfFieldBgm::gevPause(u32 resumeBits, u32 pauseBits) {
   }
 }
 
+bool GfFieldBgm::getBgmFileInfo(BgmFileInfo &info, const char *name) const {
+  mm::mtl::FixStr<64> fileName = util::getNoPathExtName(name);
+  GfBdatBgm *bdat = GfBdatBgm::get();
+  for (u32 id = bdat->getBgmConditionStart(), end = bdat->getBgmConditionEnd(); id < end; id++) {
+    for (u32 index = 0; index < 4; index++) {
+      bdat->getBgmConditionCondition(id, index);
+      u32 bgmID = bdat->getBgmConditionBgmID(id, index);
+      if (bgmID != 0) {
+        mm::mtl::FixStr<64> bgmName = util::getNoPathExtName(bdat->getBgmListfilename(bgmID));
+        if (strcmp(fileName.c_str(), bgmName.c_str()) == 0) {
+          info.unknown00 = id;
+          info.unknown08 = index;
+          info.unknown0c = _gffsn::isFieldBgmList(id);
+          info.unknown04 = bgmID;
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
 bool GfFieldBgm::isBossBgmCopied() const {
   if (BgmBattleBoss::get() != nullptr) {
     return BgmBattleBoss::get()->unknown629;
@@ -696,7 +730,7 @@ bool GfFieldBgm::isStopBgmForDebug() { return _gffsn::s_bStopBGM; }
 BgmEvent::BgmEvent(GfFieldBgm *owner) : BgmTrack(owner, false) {}
 
 void BgmEvent::gevPlayEvent(GEV gev, u32) {
-  if (gev == GEV_EVENT_SEQUENCE_END) {
+  if (gev == GEV_UNKNOWN_12) {
     unknown6a0.clear();
   }
 }

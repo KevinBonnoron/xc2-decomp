@@ -23,7 +23,7 @@ public:
     u8 unknown00; // Inferred role: selects the second effect variant when zero; original member name unknown. The size of this structure is unknown.
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_BATTLE_LOCK;
+  static const GmkType GMK_TYPE = GMK_TYPE_BATTLE_LOCK; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkBattleLock();
   ~GmkBattleLock() override { dispose(); }
@@ -41,11 +41,9 @@ public:
   // Inferred helper: gimmick data of the create info; original name unknown.
   const unknown001 *unknown002() const { return static_cast<const unknown001 *>(unknown20.unknown08); }
 
-  u8 _48[0x50 - 0x48];
   GmkCollision unknown50; // Inferred role: collision; original member name unknown.
   u32 unknownc0;          // Inferred role: effect handle; original member name unknown.
   mutable int unknownc4;  // Inferred role: number of enemies that hold the battle lock; original member name unknown.
-  u8 _c8[0xd0 - 0xc8];
 };
 
 static_assert(offsetof(GmkBattleLock, unknown50) == 0x50, "");

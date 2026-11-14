@@ -21,14 +21,74 @@
 #include "gf/object/gf_obj_util.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
+#include "ui/ui_object_plugin.h"
 #include "ui/ui_str.h"
 
 namespace gf {
 
+namespace {
+
+// Inferred role: updater and UI plugin setup for each adapter type; original type name unknown.
+struct unknown007 {
+  bool (GfMenuGfObjAdapter::*unknown00)(GF_OBJ_HANDLE *handle); // Inferred role: updater; original member name unknown.
+  GfMenuAdapter::PluginSetup unknown10;                         // Inferred role: plugin setup; original member name unknown.
+};
+
+static_assert(offsetof(unknown007, unknown10) == 0x10, "");
+static_assert(sizeof(unknown007) == 0x20, "");
+
+// Inferred role: adapter type table; original name unknown.
+static unknown007 unknown008[] = {
+    {&GfMenuGfObjAdapter::update_NowHp, {GfMenuAdapter::unknown004_0, 0, 9999}},
+    {&GfMenuGfObjAdapter::update_Battle, {GfMenuAdapter::unknown004_3, 0, 0}},
+    {&GfMenuGfObjAdapter::update_InfoBody, {GfMenuAdapter::unknown004_3, 0, 0}},
+    {&GfMenuGfObjAdapter::update_InfoDisp, {GfMenuAdapter::unknown004_3, 0, 0}},
+    {&GfMenuGfObjAdapter::update_InfoIcon, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuGfObjAdapter::update_TargetDisp, {GfMenuAdapter::unknown004_3, 0, 0}},
+    {&GfMenuGfObjAdapter::update_AccessDisp, {GfMenuAdapter::unknown004_3, 0, 0}},
+    {&GfMenuGfObjAdapter::update_EN_Lv, {GfMenuAdapter::unknown004_0, 1, 999}},
+    {&GfMenuGfObjAdapter::update_EN_ArtsName, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuGfObjAdapter::update_EN_ArtsID, {GfMenuAdapter::unknown004_0, 0, 0xffff}},
+    {&GfMenuGfObjAdapter::update_EN_ElemComboName, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuGfObjAdapter::update_EN_Aggressive, {GfMenuAdapter::unknown004_3, 0, 0}},
+    {&GfMenuGfObjAdapter::update_EN_Link, {GfMenuAdapter::unknown004_3, 0, 0}},
+    {&GfMenuGfObjAdapter::update_EN_Arts, {GfMenuAdapter::unknown004_3, 0, 0}},
+    {&GfMenuGfObjAdapter::update_EN_FightComboIcon, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuGfObjAdapter::update_EN_FightComboName, {GfMenuAdapter::unknown004_2, 0, 0}},
+    {&GfMenuGfObjAdapter::update_EN_FightComboTime, {GfMenuAdapter::unknown004_0, 0, 100}},
+    {&GfMenuGfObjAdapter::update_EN_FightComboSuspend, {GfMenuAdapter::unknown004_3, 0, 0}},
+    {&GfMenuGfObjAdapter::update_EN_ElemComboLv, {GfMenuAdapter::unknown004_0, 0, 2}},
+    {&GfMenuGfObjAdapter::update_EN_ElemComboTime, {GfMenuAdapter::unknown004_0, 0, 100}},
+    {&GfMenuGfObjAdapter::update_EN_ElemComboState, {GfMenuAdapter::unknown004_3, 0, 0}},
+    {&GfMenuGfObjAdapter::update_EN_ElemComboAttrIcon, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuGfObjAdapter::update_EN_ElemComboAttrCol, {GfMenuAdapter::unknown004_8, 0, 0}},
+    {&GfMenuGfObjAdapter::update_EN_ElemComboAttrPtn, {GfMenuAdapter::unknown004_9, 0, 0}},
+    {&GfMenuGfObjAdapter::update_EN_ElemComboSuspend, {GfMenuAdapter::unknown004_3, 0, 0}},
+    {&GfMenuGfObjAdapter::update_EN_WeakAttrIcon, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuGfObjAdapter::update_EN_WeakAttrColor, {GfMenuAdapter::unknown004_8, 0, 0}},
+    {&GfMenuGfObjAdapter::update_EN_ResAttrOn, {GfMenuAdapter::unknown004_3, 0, 0}},
+    {&GfMenuGfObjAdapter::update_EN_ResAttrTarget, {GfMenuAdapter::unknown004_3, 0, 0}},
+    {&GfMenuGfObjAdapter::update_EN_ResAttrBurst, {GfMenuAdapter::unknown004_3, 0, 0}},
+    {&GfMenuGfObjAdapter::update_EN_ResAttrHP, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuGfObjAdapter::update_EN_ElemEffID, {GfMenuAdapter::unknown004_0, 0, 0xffff}},
+    {&GfMenuGfObjAdapter::update_EN_TypeIcon, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuGfObjAdapter::update_EN_Scout, {GfMenuAdapter::unknown004_1, 0, 0}},
+    {&GfMenuGfObjAdapter::update_BL_Kizuna, {GfMenuAdapter::unknown004_0, 0, 7}},
+    {&GfMenuGfObjAdapter::update_BL_Special, {GfMenuAdapter::unknown004_0, 0, 100}},
+    {&GfMenuGfObjAdapter::update_BL_SpecialLv, {GfMenuAdapter::unknown004_0, 0, 4}},
+    {&GfMenuGfObjAdapter::update_BL_ChangeRecast, {GfMenuAdapter::unknown004_0, 0, 100}},
+    {&GfMenuGfObjAdapter::update_BL_ChangeRecast2, {GfMenuAdapter::unknown004_0, 0, 100}},
+    {&GfMenuGfObjAdapter::update_BL_DispCurrent, {GfMenuAdapter::unknown004_3, 0, 0}},
+    {&GfMenuGfObjAdapter::update_BL_DispComboReady, {GfMenuAdapter::unknown004_3, 0, 0}},
+};
+
+} // namespace
+
 constexpr u32 BATTLE_STATE_UNKNOWN_1 = 1;
 constexpr u32 BATTLE_STATE_UNKNOWN_3 = 3;
 constexpr u32 BATTLE_STATE_UNKNOWN_5 = 5;
-constexpr u32 PARTY_DRIVER_COUNT = 3;
+// Inferred role: number of drivers of the party, bound of the chain attack party index; original name unknown.
+constexpr u32 PARTY_DRIVER_UNKNOWN_3 = 3;
 // Inferred role: object attribute bit that shows the info icon of a hidden object; original name unknown.
 constexpr u32 unknown002 = 1 << 3;
 
@@ -41,14 +101,43 @@ static inline GfObjPropertyBlade *unknown003(GF_OBJ_HANDLE *handle) {
   return property->getBlade();
 }
 
+// Inferred role: reads the attribute at an index of the enemy's attribute list, false when there is none; original name unknown.
+static inline bool unknown006(GfObjPropertyEnemy *enemy, u32 index, u32 &attribute) {
+  if (enemy->unknown120.size() > index) {
+    attribute = enemy->unknown120[index];
+    if (attribute >= 1 && attribute <= 8) {
+      return true;
+    }
+  }
+  return false;
+}
+
 GfMenuGfObjAdapter::GfMenuGfObjAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways, bool isUpdateAfter)
-    : GfMenuAdapter(plugin, isUpdateAfter, isUpdateAlways), unknown48(INVALID_HANDLE), unknown70(0), unknown78(nullptr) {}
+    : GfMenuAdapter(plugin, isUpdateAfter, isUpdateAlways), unknown48(unknown020), unknown70(0), unknown78(nullptr) {}
 
 GfMenuGfObjAdapter::~GfMenuGfObjAdapter() {
   if (unknown78 != nullptr) {
     delete unknown78;
     unknown78 = nullptr;
   }
+}
+
+GfMenuGfObjAdapter *GfMenuGfObjAdapter::create(u32 handle, u32 type, GF_OBJ_HANDLE *objHandle, bool isUpdateAlways) {
+  unknown007 &info = unknown008[type];
+  ui::UIObjectPlugin *plugin = createPlugin(handle, info.unknown10);
+  if (plugin != nullptr) {
+    bool isUpdateAfter = !(type == 2 || type == 3);
+    // __LINE__ must be 261 as in the original source: it is the line argument of operator new.
+#line 261
+    GfMenuGfObjAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuGfObjAdapter(plugin, isUpdateAlways, isUpdateAfter);
+    if (adapter != nullptr) {
+      adapter->unknown50.bind(adapter, info.unknown00);
+      adapter->unknown48 = objHandle;
+      plugin->release();
+      return adapter;
+    }
+  }
+  return nullptr;
 }
 
 bool GfMenuGfObjAdapter::update_NowHp(GF_OBJ_HANDLE *handle) {
@@ -199,7 +288,7 @@ bool GfMenuGfObjAdapter::update_EN_Aggressive(GF_OBJ_HANDLE *handle) {
   }
   GF_OBJ_HANDLE *enemy = acc.getHandle();
   GfGameUtil::UiEnemyStatusIconInfo info;
-  if (enemy != INVALID_HANDLE) {
+  if (enemy != unknown020) {
     info.create(enemy);
   }
   return info.unknown00;
@@ -212,7 +301,7 @@ bool GfMenuGfObjAdapter::update_EN_Link(GF_OBJ_HANDLE *handle) {
   }
   GF_OBJ_HANDLE *enemy = acc.getHandle();
   GfGameUtil::UiEnemyStatusIconInfo info;
-  if (enemy != INVALID_HANDLE) {
+  if (enemy != unknown020) {
     info.create(enemy);
   }
   return info.unknown01;
@@ -396,11 +485,9 @@ bool GfMenuGfObjAdapter::update_EN_ResAttrOn(GF_OBJ_HANDLE *handle) {
     return false;
   }
 
-  if (enemy->unknown120.size() > unknown70) {
-    u32 attribute = enemy->unknown120[unknown70];
-    if (attribute >= 1 && attribute <= 8) {
-      return (enemy->unknownfc[attribute].unknown00 & unknown138::FLAG_UNKNOWN_0) != 0;
-    }
+  u32 attribute;
+  if (unknown006(enemy, unknown70, attribute)) {
+    return (enemy->unknownfc[attribute].unknown00 & unknown138::FLAG_UNKNOWN_0) != 0;
   }
   return false;
 }
@@ -411,13 +498,11 @@ bool GfMenuGfObjAdapter::update_EN_ResAttrTarget(GF_OBJ_HANDLE *handle) {
     return false;
   }
 
-  if (enemy->unknown120.size() > unknown70) {
-    u32 attribute = enemy->unknown120[unknown70];
-    if (attribute >= 1 && attribute <= 8) {
-      u16 flags = enemy->unknownfc[attribute].unknown00;
-      if ((flags & unknown138::FLAG_UNKNOWN_2) == 0) {
-        return (flags & unknown138::FLAG_UNKNOWN_1) != 0;
-      }
+  u32 attribute;
+  if (unknown006(enemy, unknown70, attribute)) {
+    u16 flags = enemy->unknownfc[attribute].unknown00;
+    if ((flags & unknown138::FLAG_UNKNOWN_2) == 0) {
+      return (flags & unknown138::FLAG_UNKNOWN_1) != 0;
     }
   }
   return false;
@@ -429,11 +514,23 @@ bool GfMenuGfObjAdapter::update_EN_ResAttrBurst(GF_OBJ_HANDLE *handle) {
     return false;
   }
 
-  if (enemy->unknown120.size() > unknown70) {
-    u32 attribute = enemy->unknown120[unknown70];
-    if (attribute >= 1 && attribute <= 8) {
-      return (enemy->unknownfc[attribute].unknown00 & unknown138::FLAG_UNKNOWN_2) != 0;
-    }
+  u32 attribute;
+  if (unknown006(enemy, unknown70, attribute)) {
+    return (enemy->unknownfc[attribute].unknown00 & unknown138::FLAG_UNKNOWN_2) != 0;
+  }
+  return false;
+}
+
+bool GfMenuGfObjAdapter::update_EN_ResAttrHP(GF_OBJ_HANDLE *handle) {
+  GfObjPropertyEnemy *enemy = getEnProperty(handle);
+  if (enemy == nullptr) {
+    return false;
+  }
+
+  u32 attribute;
+  if (unknown006(enemy, unknown70, attribute)) {
+    setNumber(3 - enemy->unknownfc[attribute].unknown02 + (attribute - 1) * 4);
+    return true;
   }
   return false;
 }
@@ -560,6 +657,29 @@ bool GfMenuGfObjAdapter::update_BL_ChangeRecast(GF_OBJ_HANDLE *handle) {
   return blade->unknown1b0 > 0.0f;
 }
 
+bool GfMenuGfObjAdapter::update_BL_ChangeRecast2(GF_OBJ_HANDLE *handle) {
+  GfObjAcc acc(handle);
+  if (acc.getType() != OBJECT_TYPE_BLADE) {
+    return false;
+  }
+
+  if (GfMenuManager::isBattleState(BATTLE_STATE_UNKNOWN_5)) {
+    DataParamAcc paramAcc(handle);
+    if (!paramAcc.isValid()) {
+      return false;
+    }
+
+    if (paramAcc.getValidBdatId() == BLADE_HOMURI) {
+      if (GfMenuManager::isBattleState(BATTLE_STATE_UNKNOWN_3)) {
+        return false;
+      }
+      setNumber(GfMenuReference::getAwakeningRestTimeRatio() * 100.0f);
+      return true;
+    }
+  }
+  return false;
+}
+
 bool GfMenuGfObjAdapter::update_BL_DispComboReady(GF_OBJ_HANDLE *handle) {
   GfObjAcc acc(handle);
   if (acc.getType() == OBJECT_TYPE_BLADE && !GfMenuManager::isBattleState(BATTLE_STATE_UNKNOWN_3)) {
@@ -584,7 +704,7 @@ bool GfMenuGfObjAdapter::update_BL_DispCurrent(GF_OBJ_HANDLE *handle) {
 
   if (GfMenuManager::isBattleState(BATTLE_STATE_UNKNOWN_3)) {
     int partyId = GfMenuReference::getChainAttackActionPartyID();
-    if (partyId >= 0 && partyId < PARTY_DRIVER_COUNT) {
+    if (partyId >= 0 && partyId < PARTY_DRIVER_UNKNOWN_3) {
       return false;
     }
   }
@@ -602,28 +722,28 @@ GfMenuGfObjAdapter *GfMenuGfObjAdapter::createFromCoverter(u32 handle, u32 type,
 GfMenuGfObjAdapter *GfMenuGfObjAdapter::createFromPartyDriver(u32 handle, u32 type, u8 partyId, bool isUpdateAlways) {
   // __LINE__ must be 289 as in the original source: it is the line argument of operator new.
 #line 289
-  PartyDriverConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) PartyDriverConverter(partyId);
+  PartyDriverConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) PartyDriverConverter(partyId);
   return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 
 GfMenuGfObjAdapter *GfMenuGfObjAdapter::createFromPartyBlade(u32 handle, u32 type, u8 partyId, int slot, bool isUpdateAlways, bool isVirtual) {
   // __LINE__ must be 296 as in the original source: it is the line argument of operator new.
 #line 296
-  PartyBladeConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) PartyBladeConverter(partyId, slot, isVirtual);
+  PartyBladeConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) PartyBladeConverter(partyId, slot, isVirtual);
   return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 
 GfMenuGfObjAdapter *GfMenuGfObjAdapter::createFromTargetEnemy(u32 handle, u32 type, bool isUpdateAlways) {
   // __LINE__ must be 303 as in the original source: it is the line argument of operator new.
 #line 303
-  TargetEnemyConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) TargetEnemyConverter;
+  TargetEnemyConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) TargetEnemyConverter;
   return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 
 GfMenuGfObjAdapter *GfMenuGfObjAdapter::createFromReference(u32 handle, u32 type, mm::mtl::IntrusivePtr<IGfMenuReferenceGfObj> reference, bool isUpdateAlways) {
   // __LINE__ must be 310 as in the original source: it is the line argument of operator new.
 #line 310
-  ReferenceConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceConverter(reference);
+  ReferenceConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceConverter(reference);
   return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 
@@ -632,9 +752,9 @@ void GfMenuGfObjAdapter::update(const fw::UpdateInfo &info) {
     changeGfObj(unknown78->getGfObjHandle());
   }
 
-  if ((unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0 && unknown50.isValid()) {
-    setDisp(unknown48 != INVALID_HANDLE ? unknown50(unknown48) : false);
-    unknown20 &= ~FLAG_CHANGED;
+  if ((unknown20 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) != 0 && unknown50.isValid()) {
+    setDisp(unknown48 != unknown020 ? unknown50(unknown48) : false);
+    unknown20 &= ~FLAG_UNKNOWN_0;
   }
 }
 
@@ -683,7 +803,7 @@ GF_OBJ_HANDLE *GfMenuGfObjAdapter::PartyBladeConverter::getGfObjHandle() {
   if (partyId == 0) {
     if (GfMenuManager::isBattleState(BATTLE_STATE_UNKNOWN_3)) {
       int chainPartyId = GfMenuReference::getChainAttackActionPartyID();
-      partyId = chainPartyId >= 0 && chainPartyId < PARTY_DRIVER_COUNT ? chainPartyId : 0;
+      partyId = chainPartyId >= 0 && chainPartyId < PARTY_DRIVER_UNKNOWN_3 ? chainPartyId : 0;
     } else {
       partyId = 0;
     }
@@ -699,7 +819,7 @@ GF_OBJ_HANDLE *GfMenuGfObjAdapter::ReferenceConverter::getGfObjHandle() {
   if (unknown08.get() != nullptr) {
     return unknown08.get()->unknown001();
   }
-  return INVALID_HANDLE;
+  return unknown020;
 }
 
 } // namespace gf

@@ -7,12 +7,14 @@ namespace event {
 class CharaWeightPlayer;
 
 class CharaWinkPlayer {
+  friend class CharaPlayWink;
+
 public:
   typedef void (CharaWinkPlayer::*State)();
 
   enum {
-    FLAG_DISABLE_IDLE = 0,
-    FLAG_MAX = 32,
+    FLAG_UNKNOWN_0 = 0,   // Inferred role: disable idle flag; original name unknown.
+    FLAG_UNKNOWN_32 = 32, // Inferred role: max flag; original name unknown.
   };
 
   CharaWinkPlayer();
@@ -43,11 +45,11 @@ public:
   void idle_wink();
 
 private:
-  mm::mtl::unknown027<FLAG_MAX> unknown08; // Inferred role: flags; original member name unknown.
-  CharaWeightPlayer *unknown10;            // Inferred role: weight; original member name unknown.
-  State unknown18;                         // Inferred role: state; original member name unknown.
-  int unknown28;                           // Inferred role: counter; original member name unknown.
-  const char *unknown30;                   // Inferred role: status; original member name unknown.
+  mm::mtl::unknown027<FLAG_UNKNOWN_32> unknown08; // Inferred role: flags; original member name unknown.
+  CharaWeightPlayer *unknown10;                   // Inferred role: weight; original member name unknown.
+  State unknown18;                                // Inferred role: state; original member name unknown.
+  int unknown28;                                  // Inferred role: counter; original member name unknown.
+  const char *unknown30;                          // Inferred role: status; original member name unknown.
 };
 
 static_assert(sizeof(CharaWinkPlayer) == 0x38, "");

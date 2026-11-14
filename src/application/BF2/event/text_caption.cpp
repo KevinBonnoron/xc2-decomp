@@ -41,7 +41,7 @@ void TextCaption::write(const char *text, u8 *bdat, int textId, int position) {
   }
   gf::GfMenuObjEventSubtitle::dispText(bdat, textId, position);
   this->unknown0c = text;
-  unknown08 |= FLAG_DISP;
+  unknown08 |= FLAG_UNKNOWN_0;
 }
 
 } // namespace event

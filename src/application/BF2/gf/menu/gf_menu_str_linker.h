@@ -16,8 +16,10 @@ namespace gf {
 
 class GfMenuStrLinker {
 public:
-  static const u32 STRING_MAX = 128;
-  static const u32 SELECT_STRING_MAX = 8;
+  // Inferred role: capacity of the linked strings; original name unknown.
+  static const u32 STRING_UNKNOWN_128 = 128;
+  // Inferred role: capacity of the select strings; original name unknown.
+  static const u32 SELECT_STRING_UNKNOWN_8 = 8;
 
   GfMenuStrLinker(mm::mtl::IAllocator *allocator);
   virtual ~GfMenuStrLinker();
@@ -27,10 +29,10 @@ public:
   void addSelectString(const ui::UIStr &string);
   void clearSelectString();
 
-  mm::mtl::IAllocator *unknown08;                                // Inferred role: allocator; original member name unknown.
-  mm::mtl::FixedArray<ui::UIStr, STRING_MAX> unknown10;          // Inferred role: strings; original member name unknown.
-  mm::mtl::FixedVector<u32, STRING_MAX> unknownc10;              // Inferred role: free ids; original member name unknown.
-  mm::mtl::FixedVector<ui::UIStr, SELECT_STRING_MAX> unknowne18; // Inferred role: select strings; original member name unknown.
+  mm::mtl::IAllocator *unknown08;                                      // Inferred role: allocator; original member name unknown.
+  mm::mtl::FixedArray<ui::UIStr, STRING_UNKNOWN_128> unknown10;        // Inferred role: strings; original member name unknown.
+  mm::mtl::FixedVector<u32, STRING_UNKNOWN_128> unknownc10;            // Inferred role: free ids; original member name unknown.
+  mm::mtl::FixedVector<ui::UIStr, SELECT_STRING_UNKNOWN_8> unknowne18; // Inferred role: select strings; original member name unknown.
 };
 
 static_assert(offsetof(GfMenuStrLinker, unknown08) == 0x08, "");

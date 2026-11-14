@@ -1,10 +1,14 @@
 #include "framework/ik/ik_two_chara_ground_solver.h"
 
 #include "anm/anm_pose.h"
+#include "anm/anm_skeleton.h"
 #include "framework/ik/ik_foot_placement_solver.h"
+#include "framework/memory/allocator.h"
+#include "framework/memory/framework_memory.h"
 #include "framework/reference_frame.h"
 #include "fw/fw_param_manager.h"
 #include "fw/fw_transform.h"
+#include "mm_mtl/reference_object.h"
 
 namespace anm {
 struct QsTransform;
@@ -18,10 +22,49 @@ class IKFootGroundInterface;
 struct UpdateInfo;
 
 TwoCharaGroundSolver::TwoCharaGroundSolver()
-    : unknown90(0.3f), unknown94(4), unknown98(0), unknowna0(0), unknowna8(0), unknownac(0.0f), unknownb0(0.0f), unknownb4(0xffff), unknownb6(0xffff), unknownb8(false), unknownb9(false),
-      unknownba(true), unknownbb(true), unknownc0(nullptr) {}
+    : unknown90{0.3f, 4, nullptr, nullptr}, unknowna8(0), unknownac(0.0f), unknownb0(0.0f), unknownb4(0xffff), unknownb6(0xffff), unknownb8(false), unknownb9(false), unknownba(true), unknownbb(true),
+      unknownc0(nullptr) {}
 
 TwoCharaGroundSolver::~TwoCharaGroundSolver() {}
+
+TwoCharaGroundSolver *TwoCharaGroundSolver::create(const Description &description, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose, IKGroundInterface *ground) {
+#line 34
+  TwoCharaGroundSolver *solver = new (Allocator::getProcAllocator(), 16, __FILE__, __LINE__) TwoCharaGroundSolver();
+  solver->addRef();
+  if (!solver->createImpl(description, frame, pose, ground)) {
+    mm::mtl::safeRelease(solver);
+    return nullptr;
+  }
+  return solver;
+}
+
+bool TwoCharaGroundSolver::createImpl(const Description &description, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose, IKGroundInterface *ground) {
+  bind(frame, pose);
+  unknown90 = description;
+  unknownc0 = ground;
+  unknown20.resize(description.unknown04, mm::mtl::IntrusivePtr<FootPlacementIKSolver>());
+  unknown58.resize(description.unknown04, mm::mtl::IntrusivePtr<FootPlacementIKSolver>());
+  const anm::Skeleton *skeleton = pose.unknown18;
+  if (skeleton == nullptr) {
+    return false;
+  }
+
+  u16 mainBone = anm::Skeleton::INVALID_BONE;
+  if (description.unknown08 != nullptr) {
+    mainBone = skeleton->getBoneID(description.unknown08);
+  }
+  unknownb4 = mainBone;
+  if (mainBone == anm::Skeleton::INVALID_BONE) {
+    return false;
+  }
+
+  u16 subBone = anm::Skeleton::INVALID_BONE;
+  if (description.unknown10 != nullptr) {
+    subBone = skeleton->getBoneID(description.unknown10);
+  }
+  unknownb6 = subBone;
+  return subBone != anm::Skeleton::INVALID_BONE;
+}
 
 FootPlacementIKSolver *TwoCharaGroundSolver::createFootPlacementIKMain(IKFootIndex index, ParamAdapter param, const char *footName, const char *kneeName, const char *hipName, bool isMirror) {
   if (index >= unknown20.size()) {

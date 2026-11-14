@@ -13,7 +13,7 @@ namespace fw {
 bool BdatManager::Impl::isMsgFile(const char *name) { return __builtin_strstr(name, "_ms.") != nullptr; }
 
 BdatManager::Impl::~Impl() {
-  for (int i = 0; i < BDAT_MAX; i++) {
+  for (int i = 0; i < BDAT_UNKNOWN_16; i++) {
     unregistBdat(i);
   }
 }
@@ -32,7 +32,7 @@ bool BdatManager::Impl::isEnableBdat(int id) const {
     return false;
   }
 
-  return unknown128[id].unknown00 == STATE_ENABLE;
+  return unknown128[id].unknown00 == STATE_UNKNOWN_3;
 }
 
 bool BdatManager::initialize() { return true; }

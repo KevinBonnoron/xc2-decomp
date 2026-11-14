@@ -32,7 +32,7 @@ public:
     BootedGmkCond unknown0c;    // Inferred role: booted gmk; original member name unknown.
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_CLIMBING;
+  static const GmkType GMK_TYPE = GMK_TYPE_CLIMBING; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkClimbing() : unknown48(nullptr), unknown50(mm::Vec3::zero) {}
   ~GmkClimbing() override { dispose(); }

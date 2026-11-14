@@ -15,7 +15,7 @@ GfFieldMoveSpeed::GfFieldMoveSpeed(const CreateInfo *info) {
   }
 }
 
-void GfFieldMoveSpeed::dispose() { unknown00 = INVALID_HANDLE; }
+void GfFieldMoveSpeed::dispose() { unknown00 = unknown020; }
 
 GfComAsm *GfFieldMoveSpeed::getComAsm() const {
   GfObjAcc acc(unknown00);
@@ -58,7 +58,7 @@ void GfEnemyFieldMoveSpeed::setSpeedKmph(f32 speed, f32 time) {
 }
 
 void GfEnemyFieldMoveSpeed::update(f32 deltaTime) {
-  if (unknown00 == INVALID_HANDLE) {
+  if (unknown00 == unknown020) {
     return;
   }
   f32 target = unknown18.unknown0c;

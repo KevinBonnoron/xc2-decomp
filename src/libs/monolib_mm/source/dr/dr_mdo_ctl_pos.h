@@ -3,6 +3,7 @@
 
 #include "dr/dr_mdl_obj.h"
 #include "dr/dr_res_mdo_inst_anm_obj.h"
+#include "mm_math/mm_mat44.h"
 #include "types.h"
 
 namespace grlib {
@@ -14,6 +15,7 @@ namespace ml {
 class DrCalcClipMan;
 class DrCalcCpPlaneObj;
 class DrCalcViewWork;
+class DrMan;
 class DrPixlShadowObj;
 class DrResMdoInstMdlInfo;
 class DrResMdoPntAlphaMan;
@@ -43,9 +45,8 @@ static_assert(offsetof(MdsPosRangeTreeData, unknown1e) == 0x1e, "");
 static_assert(sizeof(MdsPosRangeTreeData) == 0x20, "");
 
 struct MdsPosKeepData {
-  u8 _00[0x30 - 0x00];
-  f32 unknown30[3]; // Inferred role: lod position; original member name unknown.
-  u8 _3c[0x4c - 0x3c];
+  mm::Mat44 unknown00; // Inferred role: matrix; original member name unknown.
+  u8 _40[0x4c - 0x40];
   f32 unknown4c;    // Inferred role: clip radius; original member name unknown.
   f32 unknown50[3]; // Inferred role: clip center; original member name unknown.
   u32 unknown5c;    // Inferred role: lod range index; original member name unknown.
@@ -56,7 +57,6 @@ struct MdsPosKeepData {
   u8 _68[0x70 - 0x68];
 };
 
-static_assert(offsetof(MdsPosKeepData, unknown30) == 0x30, "");
 static_assert(offsetof(MdsPosKeepData, unknown4c) == 0x4c, "");
 static_assert(offsetof(MdsPosKeepData, unknown50) == 0x50, "");
 static_assert(offsetof(MdsPosKeepData, unknown5c) == 0x5c, "");
@@ -79,6 +79,7 @@ static_assert(sizeof(MdoArgInst) == 0x10, "");
 
 class DrMdoCtlPos : public DrMdlObj {
 public:
+  DrMdoCtlPos(const void *data, const char *path, DrMan *drMan, int viewNum);
   // Inferred role: position resource header; original type name unknown.
   struct unknown017 {
     u8 _00[0x28 - 0x00];
@@ -99,7 +100,7 @@ public:
     u32 unknown08; // Inferred role: render list index, bit 31 marks a range tree lod; original member name unknown.
   };
 
-  static const int INS_RENDERBUFF_SIZE = 0xbd000;
+  static const int INS_RENDERBUFF_SIZE = 0xbd000; // Name from the game symbol _ZN2ml11DrMdoCtlPos19INS_RENDERBUFF_SIZEE; also in torna and xc1de.
 
   ~DrMdoCtlPos() override;
   void update() override;
@@ -138,10 +139,10 @@ public:
   void createThicknessRenderDisplayListSub(bool isFirst);
   void createZBuffRenderDisplayList();
   void callPosRender(u32 renderType);
+  void updateInstPosDispCall(const u32 *flags);
+  void createInstUniformBlock(const u32 *flags);
+  void nomTreeListShadowRenderMdl(const MdsPosRangeTreeData *tree, DrPixlShadowObj *shadow);
 
-  u8 _190[0x1a0 - 0x190];
-  u32 unknown1a0; // Inferred role: render count; original member name unknown.
-  u8 _1a4[0x1a8 - 0x1a4];
   const unknown017 *unknown1a8;          // Inferred role: position resource header; original member name unknown.
   const unknown018 *unknown1b0;          // Inferred role: lod range per position; original member name unknown.
   const unknown019 *unknown1b8;          // Inferred role: lod entries; original member name unknown.
@@ -157,9 +158,10 @@ public:
   void **unknown228;             // Inferred role: allocated buffers; original member name unknown.
   void *unknown230;              // Inferred role: allocated memory; original member name unknown.
   s32 unknown238;                // Inferred role: allocated buffer count; original member name unknown.
-  u8 _23c[0x248 - 0x23c];
-  s32 unknown248; // Inferred role: render buffer offset; original member name unknown.
-  u8 _24c[0x250 - 0x24c];
+  u8 _23c[0x240 - 0x23c];
+  u32 *unknown240;                 // Inferred role: display call flags of the positions; original member name unknown.
+  s32 unknown248;                  // Inferred role: render buffer offset; original member name unknown.
+  s32 unknown24c;                  // Inferred role: unknown, cleared by resourceInit; original member name unknown.
   DrResMdoPosAddList *unknown250;  // Inferred role: add list; original member name unknown.
   DrResMdoInstMdlInfo *unknown258; // Inferred role: inst mdl info; original member name unknown.
   u16 unknown260;                  // Inferred role: render list count; original member name unknown.
@@ -186,6 +188,7 @@ public:
   u64 unknown368; // Inferred role: shadow cache mask; original member name unknown.
   u64 unknown370; // Inferred role: shadow cache render mask; original member name unknown.
   u32 unknown378; // Inferred role: shadow cache render count; original member name unknown.
+  u8 _37c[0x420 - 0x37c];
 };
 
 static_assert(offsetof(DrMdoCtlPos, unknown1a0) == 0x1a0, "");
@@ -200,7 +203,9 @@ static_assert(offsetof(DrMdoCtlPos, unknown1e0) == 0x1e0, "");
 static_assert(offsetof(DrMdoCtlPos, unknown1e8) == 0x1e8, "");
 static_assert(offsetof(DrMdoCtlPos, unknown218) == 0x218, "");
 static_assert(offsetof(DrMdoCtlPos, unknown238) == 0x238, "");
+static_assert(offsetof(DrMdoCtlPos, unknown240) == 0x240, "");
 static_assert(offsetof(DrMdoCtlPos, unknown248) == 0x248, "");
+static_assert(offsetof(DrMdoCtlPos, unknown24c) == 0x24c, "");
 static_assert(offsetof(DrMdoCtlPos, unknown250) == 0x250, "");
 static_assert(offsetof(DrMdoCtlPos, unknown258) == 0x258, "");
 static_assert(offsetof(DrMdoCtlPos, unknown260) == 0x260, "");
@@ -220,6 +225,7 @@ static_assert(offsetof(DrMdoCtlPos, unknown360) == 0x360, "");
 static_assert(offsetof(DrMdoCtlPos, unknown368) == 0x368, "");
 static_assert(offsetof(DrMdoCtlPos, unknown370) == 0x370, "");
 static_assert(offsetof(DrMdoCtlPos, unknown378) == 0x378, "");
+static_assert(sizeof(DrMdoCtlPos) == 0x420, "");
 static_assert(sizeof(DrMdoCtlPos::unknown018) == 0x08, "");
 static_assert(offsetof(DrMdoCtlPos::unknown019, unknown04) == 0x04, "");
 static_assert(offsetof(DrMdoCtlPos::unknown019, unknown08) == 0x08, "");

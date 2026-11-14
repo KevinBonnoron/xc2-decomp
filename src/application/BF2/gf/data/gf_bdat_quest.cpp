@@ -12,7 +12,7 @@ GfBdatQuest::GfBdatQuest()
       unknown58(nullptr), unknown60(nullptr), unknown68(nullptr), unknown70(nullptr), unknown78(nullptr), unknown80(nullptr), unknown88(nullptr), unknown90(nullptr), unknown98(nullptr),
       unknowna0(nullptr), unknowna8(nullptr), unknownb0(nullptr), unknownb8(nullptr), unknownc0(nullptr), unknownc8(nullptr), unknownd0(nullptr), unknownd8(nullptr), unknowne0(nullptr),
       unknowne8(nullptr), unknownf0(nullptr), unknownf8(nullptr), unknown100(nullptr), unknown108(nullptr), unknown110(nullptr), unknown118(nullptr), unknown120(nullptr), unknown128(nullptr) {
-  unknown130 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) QuestListAcc();
+  unknown130 = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) QuestListAcc();
   bdatRefresh();
 }
 
@@ -208,7 +208,7 @@ void GfBdatQuest::destroyFP() {
 }
 // Inferred macro name; macros leave no trace in the binary.
 #define NEW_BDAT_WRAPPER(bdat)                                                                                                                                                                         \
-  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper { GfDataBdat::getFP(bdat) }
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper { GfDataBdat::getFP(bdat) }
 
 void GfBdatQuest::createFP() {
 // The line numbers passed to the allocator decide between mov and orr.

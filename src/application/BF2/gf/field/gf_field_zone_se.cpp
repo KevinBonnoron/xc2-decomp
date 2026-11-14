@@ -15,7 +15,7 @@ GfFieldZoneSe::~GfFieldZoneSe() { ; }
 void GfFieldZoneSe::build(const GfSetupParam &param) {
   // __LINE__ must be 39 as in the original file: its value changes the instruction order.
 #line 39
-  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfFieldZoneSe(param);
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfFieldZoneSe(param);
 }
 
 void GfFieldZoneSe::destroy() {

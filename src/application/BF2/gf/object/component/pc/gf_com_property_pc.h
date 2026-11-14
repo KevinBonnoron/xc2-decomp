@@ -7,7 +7,6 @@
 #include "gf/object/component/pc/gf_pc_property_battle.h"
 #include "gf/object/component/pc/gf_pc_property_field.h"
 #include "gf/object/component/property/gf_com_property.h"
-#include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/bitflag.h"
 #include "mm_mtl/intrusive_ptr.h"
@@ -37,31 +36,32 @@ struct MsgPcFieldWarpCancel;
 namespace pc {
 struct MoveParam;
 struct SlideParam;
+struct WarpParam;
 
 enum InputID {
-  INPUT_ID_DECIDE = 0,
-  INPUT_ID_LOCK = 1,
-  INPUT_ID_JUMP = 2,
-  INPUT_ID_WALL_RELEASE = 3,
-  INPUT_ID_LURE = 4,
-  INPUT_ID_BATTLE_START = 5,
-  INPUT_ID_BATTLE_END = 6,
-  INPUT_ID_ART_01 = 7,
-  INPUT_ID_ART_02 = 8,
-  INPUT_ID_ART_03 = 9,
-  INPUT_ID_BLADE_CHANGE_00 = 10,
-  INPUT_ID_BLADE_CHANGE_01 = 11,
-  INPUT_ID_BLADE_CHANGE_02 = 12,
-  INPUT_ID_KAKUSEI = 13,
-  INPUT_ID_REQUEST_PERMIT_01 = 14,
-  INPUT_ID_REQUEST_PERMIT_02 = 15,
-  INPUT_ID_SP_ATTACK = 16,
-  INPUT_ID_CHAIN_ATTACK = 17,
-  INPUT_ID_BATTLE_RESCUE = 18,
-  INPUT_ID_CHANGE_CAMERA_MODE = 19,
-  INPUT_ID_ORDER_RALLY = 20,
-  INPUT_ID_CHANGE_TARGET_R = 21,
-  INPUT_ID_CHANGE_TARGET_L = 22,
+  INPUT_ID_UNKNOWN_0 = 0,   // Inferred role: input id decide; original name unknown.
+  INPUT_ID_UNKNOWN_1 = 1,   // Inferred role: input id lock; original name unknown.
+  INPUT_ID_UNKNOWN_2 = 2,   // Inferred role: input id jump; original name unknown.
+  INPUT_ID_UNKNOWN_3 = 3,   // Inferred role: input id wall release; original name unknown.
+  INPUT_ID_UNKNOWN_4 = 4,   // Inferred role: input id lure; original name unknown.
+  INPUT_ID_UNKNOWN_5 = 5,   // Inferred role: input id battle start; original name unknown.
+  INPUT_ID_UNKNOWN_6 = 6,   // Inferred role: input id battle end; original name unknown.
+  INPUT_ID_UNKNOWN_7 = 7,   // Inferred role: input id art 01; original name unknown.
+  INPUT_ID_UNKNOWN_8 = 8,   // Inferred role: input id art 02; original name unknown.
+  INPUT_ID_UNKNOWN_9 = 9,   // Inferred role: input id art 03; original name unknown.
+  INPUT_ID_UNKNOWN_10 = 10, // Inferred role: input id blade change 00; original name unknown.
+  INPUT_ID_UNKNOWN_11 = 11, // Inferred role: input id blade change 01; original name unknown.
+  INPUT_ID_UNKNOWN_12 = 12, // Inferred role: input id blade change 02; original name unknown.
+  INPUT_ID_UNKNOWN_13 = 13, // Inferred role: input id kakusei; original name unknown.
+  INPUT_ID_UNKNOWN_14 = 14, // Inferred role: input id request permit 01; original name unknown.
+  INPUT_ID_UNKNOWN_15 = 15, // Inferred role: input id request permit 02; original name unknown.
+  INPUT_ID_UNKNOWN_16 = 16, // Inferred role: input id sp attack; original name unknown.
+  INPUT_ID_UNKNOWN_17 = 17, // Inferred role: input id chain attack; original name unknown.
+  INPUT_ID_UNKNOWN_18 = 18, // Inferred role: input id battle rescue; original name unknown.
+  INPUT_ID_UNKNOWN_19 = 19, // Inferred role: input id change camera mode; original name unknown.
+  INPUT_ID_UNKNOWN_20 = 20, // Inferred role: input id order rally; original name unknown.
+  INPUT_ID_UNKNOWN_21 = 21, // Inferred role: input id change target r; original name unknown.
+  INPUT_ID_UNKNOWN_22 = 22, // Inferred role: input id change target l; original name unknown.
 };
 
 } // namespace pc
@@ -76,12 +76,18 @@ public:
 
   static mm::mtl::RTTI m_rtti;
 
+  GfComPropertyPc();
+
   bool existInputXY() const;
   const mm::mtl::RTTI *getRTTI() const override;
+  bool recieveMessage(fw::MessageObject *sender, fw::Message &message) override;
   f32 getGravity() const;
+  void flush();
   const fw::Transform &getLocomotion() const;
   void setPadControl(bool padControl);
   void resetParams();
+  void cleanup();
+  void writeBack();
   void setLocomotion(const anm::QsTransform &locomotion);
   void syncDirection();
   void procMsgObjectGetVelocity(fw::MessageObject *sender, MsgObjectGetVelocity &message);
@@ -93,6 +99,7 @@ public:
   void procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message);
   void procMsgPcFieldNotifyChangePlayerID(fw::MessageObject *object, MsgPcFieldNotifyChangePlayerID &message);
   void procMsgPcFieldWarpCancel(fw::MessageObject *object, MsgPcFieldWarpCancel &message);
+  void procMsgObjectFlushProperty(fw::MessageObject *sender, MsgObjectFlushProperty &message);
 
   // Inferred role: slide param of the pc param list entry 4 ("slide"); original name unknown.
   const pc::SlideParam *unknown001() const { return static_cast<const pc::SlideParam *>(unknown300->unknown10[4].param); }
@@ -105,6 +112,12 @@ public:
   const pc::MoveParam *unknown005() const {
     const fw::ParamList *paramList = unknown300.operator->();
     return paramList->unknown0c > 1 ? static_cast<const pc::MoveParam *>(paramList->unknown10[1].param) : nullptr;
+  }
+
+  // Inferred role: warp param of the pc param list entry 2 ("warp"), null when the list is shorter; original name unknown.
+  const pc::WarpParam *unknown006() const {
+    const fw::ParamList *paramList = unknown300.operator->();
+    return paramList->unknown0c > 2 ? static_cast<const pc::WarpParam *>(paramList->unknown10[2].param) : nullptr;
   }
 
   // Inferred role: moving, from the velocity or the value at 0xc0 (shared by gf::pc::isMainPcMove and isBuddyPcMove); original
@@ -125,9 +138,12 @@ public:
   }
 
   u32 unknown38; // Inferred role: player id set by MsgPcFieldNotifyChangePlayerID; original member name unknown.
-  u8 _3c[0x60 - 0x3c];
-  Input unknown60; // Inferred role: input; original member name unknown.
-  Input unknown6c; // Inferred role: previous input; original member name unknown.
+  u32 unknown3c; // Inferred role: unknown; compared with 2 by StateUtilField::requestBattleStart; original member name unknown.
+  f32 unknown40; // Inferred role: head height, the head collision position is only computed above FLT_EPSILON; original member name unknown.
+  u8 _44[0x50 - 0x44];
+  mm::Vec3 unknown50; // Inferred role: head collision position; original member name unknown.
+  Input unknown60;    // Inferred role: input; original member name unknown.
+  Input unknown6c;    // Inferred role: previous input; original member name unknown.
   u8 _78[0x80 - 0x78];
   mm::Vec3 unknown80; // Inferred role: velocity; original member name unknown.
   f32 unknown90;      // Inferred role: vertical speed; original member name unknown.
@@ -137,8 +153,8 @@ public:
   f32 unknownc0; // Role and original member name unknown.
   u8 _c4[0xd0 - 0xc4];
   mm::Vec3 unknownd0; // Inferred role: slide direction, written by StateUtilField::setSlideDirForce; original member name unknown.
-  u8 _e0[0xf0 - 0xe0];
-  f32 unknownf0; // Role and original member name unknown; compared with the start time of the slide param by StateUtilField::isStartSlidePosuture.
+  mm::Vec3 unknowne0; // Role and original member name unknown; set to zero by the constructor.
+  f32 unknownf0;      // Role and original member name unknown; compared with the start time of the slide param by StateUtilField::isStartSlidePosuture.
   u8 _f4[0x100 - 0xf4];
   mm::Vec3 unknown100;  // Inferred role: offset added to the fall speed; original member name unknown.
   u32 unknown110_0 : 1; // Inferred role: field control; original member name unknown.
@@ -149,7 +165,7 @@ public:
   u32 unknown110_5 : 1; // Inferred role: water warp enabled, tested by AIAgentField::procMsgPcFieldNotifyWaterWarp; original member name unknown.
   u32 unknown110_6 : 1; // Inferred role: battle action running, cleared by StateBattle::Leave; original member name unknown.
   u32 unknown110_7 : 1; // Inferred role: on slide; original member name unknown.
-  u32 : 1;
+  u32 unknown111_0 : 1; // Role and original member name unknown; tested by GfComBehaviorPc::procMsgGameChangeTarget.
   u32 unknown111_1 : 1; // Inferred role: selects mode 2 in getMode; original member name unknown.
   u32 unknown111_2 : 1; // Inferred role: pad control; original member name unknown.
   u32 unknown111_3 : 1; // Inferred role: dead; original member name unknown.
@@ -157,36 +173,44 @@ public:
   u32 unknown111_5 : 1; // Inferred role: poisoned, selects the poison slow of the field param; original member name unknown.
   u32 unknown111_6 : 1; // Inferred role: head detect for the switcher, set by StateUtil::setEnableHeadDetectForSwitcher; original member name unknown.
   u32 unknown111_7 : 1; // Inferred role: cleared with the battle control flag by StateBattle::Leave; original member name unknown.
-  u32 : 10;
+  u32 unknown112_0 : 1; // Inferred role: skips integrateMove; original member name unknown.
+  u32 unknown112_1 : 9; // Role and original member name unknown.
   u32 unknown113_2 : 1; // Inferred role: warp requested, cleared by MsgPcFieldWarpCancel; original member name unknown.
-  u32 : 5;
-  s32 unknown114; // Inferred role: ground type, 3 in water (the field AI then reads the water params); original member name unknown.
-  f32 unknown118; // Inferred role: water height compared by StateUtilField::isInterruptionWater; original member name unknown.
-  f32 unknown11c; // Inferred role: water depth; original member name unknown.
-  s32 unknown120; // Inferred role: mode compared with 1 by StateFieldWaterDeadDive::enter; original member name unknown.
+  u32 unknown113_3 : 4; // Role and original member name unknown.
+  u32 unknown113_7 : 1; // Inferred role: selects the second pair of access params (AccessPlugin::getParamIndex); original member name unknown.
+  s32 unknown114;       // Inferred role: ground type, 3 in water (the field AI then reads the water params); original member name unknown.
+  f32 unknown118;       // Inferred role: water height compared by StateUtilField::isInterruptionWater; original member name unknown.
+  f32 unknown11c;       // Inferred role: water depth; original member name unknown.
+  s32 unknown120;       // Inferred role: mode compared with 1 by StateFieldWaterDeadDive::enter; original member name unknown.
   u8 _124[0x130 - 0x124];
   fw::Transform unknown130; // Inferred role: warp target transform; original member name unknown.
   u32 unknown150;           // Inferred role: warp type; original member name unknown.
   u8 _154[0x160 - 0x154];
-  mm::Vec3 unknown160; // Inferred role: position; original member name unknown.
-  mm::Quat unknown170; // Inferred role: rotation; original member name unknown.
-  mm::Vec3 unknown180; // Inferred role: previous position, compared with the position by gf::pc::isStack; original member name unknown.
-  u8 _190[0x1c0 - 0x190];
-  mm::Vec3 unknown1c0; // Inferred role: up axis, unitY rotated by the rotation in syncDirection; original member name unknown.
-  u8 _1d0[0x1e0 - 0x1d0];
-  mm::Vec3 unknown1e0; // Inferred role: default input direction; original member name unknown.
-  mm::Vec3 unknown1f0; // Inferred role: negated unknown1e0, written by syncDirection; original member name unknown.
-  mm::Vec3 unknown200; // Inferred role: negated X axis, -unitX rotated by the rotation in syncDirection; original member name unknown.
-  u8 _210[0x290 - 0x210];
-  mm::Vec3 unknown290; // Inferred role: input Y axis on the wall, read by TaskFieldWallEscape::update; original member name unknown.
-  u8 _2a0[0x2b0 - 0x2a0];
-  mm::Vec3 unknown2b0; // Inferred role: input Y axis; original member name unknown.
-  u8 _2c0[0x2d0 - 0x2c0];
-  mm::Vec3 unknown2d0; // Inferred role: input X axis; original member name unknown.
-  u8 _2e0[0x2f0 - 0x2e0];
-  f32 unknown2f0; // Inferred role: water offset compared by StateUtilField::isInterruptionWater; original member name unknown.
-  u8 _2f4[0x2f8 - 0x2f4];
-  f32 unknown2f8; // Inferred role: landing height; original member name unknown.
+  fw::Transform unknown160; // Inferred role: position and rotation; original member name unknown.
+  fw::Transform unknown180; // Inferred role: previous position and rotation, compared with the position by gf::pc::isStack; original member name unknown.
+  fw::Transform unknown1a0; // Inferred role: position and rotation saved by flush and restored into unknown180 by writeBack; original member name unknown.
+  mm::Vec3 unknown1c0;      // Inferred role: up axis, unitY rotated by the rotation in syncDirection; original member name unknown.
+  mm::Vec3 unknown1d0;      // Role and original member name unknown; set to zero by the constructor.
+  mm::Vec3 unknown1e0;      // Inferred role: default input direction; original member name unknown.
+  mm::Vec3 unknown1f0;      // Inferred role: negated unknown1e0, written by syncDirection; original member name unknown.
+  mm::Vec3 unknown200;      // Inferred role: negated X axis, -unitX rotated by the rotation in syncDirection; original member name unknown.
+  mm::Vec3 unknown210;      // Role and original member name unknown; set to zero by the constructor.
+  mm::Vec3 unknown220;      // Role and original member name unknown; set to zero by the constructor.
+  mm::Vec3 unknown230;      // Role and original member name unknown; set to zero by the constructor.
+  mm::Vec3 unknown240;      // Role and original member name unknown; set to zero by the constructor.
+  mm::Vec3 unknown250;      // Role and original member name unknown; set to zero by the constructor.
+  mm::Vec3 unknown260;      // Role and original member name unknown; set to zero by the constructor.
+  mm::Vec3 unknown270;      // Role and original member name unknown; set to zero by the constructor.
+  mm::Vec3 unknown280;      // Role and original member name unknown; set to zero by the constructor.
+  mm::Vec3 unknown290;      // Inferred role: input Y axis on the wall, read by TaskFieldWallEscape::update; original member name unknown.
+  mm::Vec3 unknown2a0;      // Role and original member name unknown; set to zero by the constructor.
+  mm::Vec3 unknown2b0;      // Inferred role: input Y axis; original member name unknown.
+  mm::Vec3 unknown2c0;      // Role and original member name unknown; set to zero by the constructor.
+  mm::Vec3 unknown2d0;      // Inferred role: input X axis; original member name unknown.
+  mm::Vec3 unknown2e0;      // Role and original member name unknown; set to zero by the constructor and read as the first axis of the basis inverted by setInputDirPow (not matched yet).
+  f32 unknown2f0;           // Inferred role: water offset compared by StateUtilField::isInterruptionWater; original member name unknown.
+  f32 unknown2f4;           // Role and original member name unknown; set to zero by the constructor in one 64-bit store with unknown2f0, so its type is not proven.
+  f32 unknown2f8;           // Inferred role: landing height; original member name unknown.
   u8 _2fc[0x300 - 0x2fc];
   mm::mtl::IntrusivePtr<fw::ParamList> unknown300; // Inferred role: pc param list; original member name unknown.
   u8 _308[0x310 - 0x308];
@@ -195,6 +219,9 @@ public:
 };
 
 static_assert(offsetof(GfComPropertyPc, unknown38) == 0x38, "");
+static_assert(offsetof(GfComPropertyPc, unknown3c) == 0x3c, "");
+static_assert(offsetof(GfComPropertyPc, unknown40) == 0x40, "");
+static_assert(offsetof(GfComPropertyPc, unknown50) == 0x50, "");
 static_assert(offsetof(GfComPropertyPc, unknown60) == 0x60, "");
 static_assert(offsetof(GfComPropertyPc, unknown6c) == 0x6c, "");
 static_assert(offsetof(GfComPropertyPc, unknown80) == 0x80, "");
@@ -203,6 +230,7 @@ static_assert(offsetof(GfComPropertyPc, unknown94) == 0x94, "");
 static_assert(offsetof(GfComPropertyPc, m_locomotion) == 0xa0, "");
 static_assert(offsetof(GfComPropertyPc, unknownc0) == 0xc0, "");
 static_assert(offsetof(GfComPropertyPc, unknownd0) == 0xd0, "");
+static_assert(offsetof(GfComPropertyPc, unknowne0) == 0xe0, "");
 static_assert(offsetof(GfComPropertyPc, unknownf0) == 0xf0, "");
 static_assert(offsetof(GfComPropertyPc, unknown100) == 0x100, "");
 static_assert(offsetof(GfComPropertyPc, unknown114) == 0x114, "");
@@ -212,16 +240,30 @@ static_assert(offsetof(GfComPropertyPc, unknown120) == 0x120, "");
 static_assert(offsetof(GfComPropertyPc, unknown130) == 0x130, "");
 static_assert(offsetof(GfComPropertyPc, unknown150) == 0x150, "");
 static_assert(offsetof(GfComPropertyPc, unknown160) == 0x160, "");
-static_assert(offsetof(GfComPropertyPc, unknown170) == 0x170, "");
+static_assert(offsetof(GfComPropertyPc, unknown160.unknown10) == 0x170, "");
 static_assert(offsetof(GfComPropertyPc, unknown180) == 0x180, "");
+static_assert(offsetof(GfComPropertyPc, unknown1a0) == 0x1a0, "");
 static_assert(offsetof(GfComPropertyPc, unknown1c0) == 0x1c0, "");
+static_assert(offsetof(GfComPropertyPc, unknown1d0) == 0x1d0, "");
 static_assert(offsetof(GfComPropertyPc, unknown1e0) == 0x1e0, "");
 static_assert(offsetof(GfComPropertyPc, unknown1f0) == 0x1f0, "");
 static_assert(offsetof(GfComPropertyPc, unknown200) == 0x200, "");
+static_assert(offsetof(GfComPropertyPc, unknown210) == 0x210, "");
+static_assert(offsetof(GfComPropertyPc, unknown220) == 0x220, "");
+static_assert(offsetof(GfComPropertyPc, unknown230) == 0x230, "");
+static_assert(offsetof(GfComPropertyPc, unknown240) == 0x240, "");
+static_assert(offsetof(GfComPropertyPc, unknown250) == 0x250, "");
+static_assert(offsetof(GfComPropertyPc, unknown260) == 0x260, "");
+static_assert(offsetof(GfComPropertyPc, unknown270) == 0x270, "");
+static_assert(offsetof(GfComPropertyPc, unknown280) == 0x280, "");
 static_assert(offsetof(GfComPropertyPc, unknown290) == 0x290, "");
+static_assert(offsetof(GfComPropertyPc, unknown2a0) == 0x2a0, "");
 static_assert(offsetof(GfComPropertyPc, unknown2b0) == 0x2b0, "");
+static_assert(offsetof(GfComPropertyPc, unknown2c0) == 0x2c0, "");
 static_assert(offsetof(GfComPropertyPc, unknown2d0) == 0x2d0, "");
+static_assert(offsetof(GfComPropertyPc, unknown2e0) == 0x2e0, "");
 static_assert(offsetof(GfComPropertyPc, unknown2f0) == 0x2f0, "");
+static_assert(offsetof(GfComPropertyPc, unknown2f4) == 0x2f4, "");
 static_assert(offsetof(GfComPropertyPc, unknown2f8) == 0x2f8, "");
 static_assert(offsetof(GfComPropertyPc, unknown300) == 0x300, "");
 static_assert(offsetof(GfComPropertyPc, unknown310) == 0x310, "");

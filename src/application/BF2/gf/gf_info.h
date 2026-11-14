@@ -29,9 +29,9 @@ public:
   static bool isNpcMobDispForDebug();
   static void setNpcMobDispForDebug(bool isDisp);
 
-  static const u32 CAMERA_PLANE_COUNT = 6;
+  static const u32 PLANE_UNKNOWN_6 = 6; // Inferred role: camera plane count; original name unknown.
 
-  static mm::Plane m_camPlanes[CAMERA_PLANE_COUNT];
+  static mm::Plane m_camPlanes[PLANE_UNKNOWN_6];
   static mm::Mat44 m_frustum;
   static mm::Mat44 m_projection;
   static mm::Mat44 m_viewMat;

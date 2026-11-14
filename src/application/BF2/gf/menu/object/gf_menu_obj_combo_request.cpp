@@ -30,6 +30,20 @@ void GfMenuObjComboRequest::update() {
 
 void GfMenuObjComboRequest::attachComboRequest(GfMenuCallContext *context) { unknown152(context, unknown001); }
 
+void GfMenuObjComboRequest::openComboRequest(u16 index, const RequestParam &param) {
+  ui::UIObjectAcc acc(getAttachedObject(unknown001));
+  if (acc.isValid() && !acc.isTerm()) {
+    ui::EventData event;
+    event.unknown0c = 0;
+    event.unknown00 = 0x101;
+    event.unknown08_u16 = index;
+    event.unknown0a = param.unknown00;
+    event.unknown0c_u16 = param.unknown08;
+    event.unknown10 = param.unknown04;
+    ui::UIManager::get()->requestObjectEvent(acc.unknown10, event, 0.0f);
+  }
+}
+
 void GfMenuObjComboRequest::closeComboRequest(u16 index, bool isImmediate) {
   ui::UIObjectAcc acc(getAttachedObject(unknown001));
   if (acc.isValid() && !acc.isTerm()) {
@@ -42,12 +56,26 @@ void GfMenuObjComboRequest::closeComboRequest(u16 index, bool isImmediate) {
   }
 }
 
+void GfMenuObjComboRequest::resetComboRequest(u16 index, const RequestParam &param) {
+  ui::UIObjectAcc acc(getAttachedObject(unknown001));
+  if (acc.isValid() && !acc.isTerm()) {
+    ui::EventData event;
+    event.unknown0c = 0;
+    event.unknown00 = 0x103;
+    event.unknown08_u16 = index;
+    event.unknown0a = param.unknown00;
+    event.unknown0c_u16 = param.unknown08;
+    event.unknown10 = param.unknown04;
+    ui::UIManager::get()->requestObjectEvent(acc.unknown10, event, 0.0f);
+  }
+}
+
 void GfMenuObjComboRequest::initialize() {
   ui::UIObjectAcc acc(unknown18);
   u32 main = acc.searchChild("LAY_main");
 // __LINE__ must be 81 as in the original file: it is the line argument of operator new.
 #line 81
-  MainListener *listener = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) MainListener(this);
+  MainListener *listener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) MainListener(this);
   listener->addRef();
   ui::UIEventManager::get()->registObjectListener(main, listener);
   if (listener != nullptr) {

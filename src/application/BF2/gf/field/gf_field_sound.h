@@ -21,9 +21,12 @@ struct GfSetupParam;
 
 class GfFieldSound : public mm::mtl::PtrSingleton<GfFieldSound> {
 public:
+  GfFieldSound(const GfSetupParam &param);
   ~GfFieldSound() override;
   static void build(const GfSetupParam &param);
+  void initialize(const GfSetupParam &param);
   static void destroy();
+  void finalize();
   void update(const fw::UpdateInfo &info);
   void postUpdate(const fw::UpdateInfo &info);
   void clear();
@@ -33,7 +36,9 @@ public:
   void gevMapjump(GEV event, const MapjumpCallbackInfo &info);
   void gevPause(u32 resumeBits, u32 pauseBits);
   void getMapSeFile(mm::mtl::FixStr<128> &path, const char *name);
+  void createCommonSound();
   void destroyCommonSound();
+  void createMapSound();
   void destroyMapSound();
   void waitLoadMapSound();
   fw::SoundPack *getCommonPack();
@@ -43,7 +48,8 @@ public:
   void setCategorySeFadeinForMapjump(f32 fadeTime);
   void destroyCategorySeForMapjump();
 
-  u8 _08[0x10 - 0x08];
+  bool unknown08; // Inferred role: initialized; original member name unknown.
+  u8 _09[0x10 - 0x09];
   GfFieldBgm *unknown10;        // Inferred role: field bgm; original member name unknown.
   GfFieldMapSe *unknown18;      // Inferred role: field map se; original member name unknown.
   fw::SoundResource *unknown20; // Inferred role: common sound resource; original member name unknown.

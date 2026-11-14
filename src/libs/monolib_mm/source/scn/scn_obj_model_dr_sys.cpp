@@ -20,7 +20,7 @@ void ScnObjModelDrSys::apply() {
   } else if (unknown3d8 != nullptr) {
     unknown3d8->setDisp(true);
     unknown3d8->setClip(isClip());
-    unknown3d8->setFrameSpd((unknown34c & FLAG_FRAME_SPD) ? m_frameSpd : 0.0f);
+    unknown3d8->setFrameSpd((unknown34c & FLAG_UNKNOWN_6) ? m_frameSpd : 0.0f);
   }
 }
 

@@ -16,7 +16,7 @@
 #include "mm/mm_std_base.h"
 #include "mm_math/mm_col3.h"
 #include "mm_math/mm_col4.h"
-#include "mm_math/mm_vec2.h"
+#include "mm_math/mm_pnt.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_math/mm_vec3_na.h"
 #include "mm_mtl/fixed_vector.h"

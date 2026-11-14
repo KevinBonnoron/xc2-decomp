@@ -13,7 +13,7 @@ const f32 VolumeSeamless::DEF_VOL = 0.0f;
 
 VolumeSeamless::VolumeSeamless() : unknown08(), m_target(0) {
   unknown10 = 0;
-  for (u32 i = 0; i < RESET_VOLUME_COUNT; i++) {
+  for (u32 i = 0; i < RESET_VOLUME_UNKNOWN_13; i++) {
     unknown14[i] = 1.0f;
   }
   unknown48 = DEF_VOL;
@@ -23,28 +23,28 @@ void VolumeSeamless::clear() {
   unknown08.clear();
   unknown48 = DEF_VOL;
   unknown4c = 0.0f;
-  for (u32 i = 0; i < RESET_VOLUME_COUNT; i++) {
+  for (u32 i = 0; i < RESET_VOLUME_UNKNOWN_13; i++) {
     unknown14[i] = 1.0f;
   }
   unknown10 = 0;
 }
 
 void VolumeSeamless::update() {
-  if (!unknown08.test(FLAG_START) && !unknown08.test(FLAG_END)) {
+  if (!unknown08.test(FLAG_UNKNOWN_1) && !unknown08.test(FLAG_UNKNOWN_2)) {
     return;
   }
   if (unknown4c >= 0.0f) {
     unknown4c -= 1.0f;
   }
-  if (unknown08.test(FLAG_END) && unknown4c < 0.0f) {
-    unknown08.set(FLAG_END, false);
+  if (unknown08.test(FLAG_UNKNOWN_2) && unknown4c < 0.0f) {
+    unknown08.set(FLAG_UNKNOWN_2, false);
   }
 }
 
 void VolumeSeamless::draw() {
   static bool s_isBlink;
 
-  if (!unknown08.test(FLAG_START) && !unknown08.test(FLAG_END)) {
+  if (!unknown08.test(FLAG_UNKNOWN_1) && !unknown08.test(FLAG_UNKNOWN_2)) {
     return;
   }
   s32 width = ml::DevGraph::getRootWidth();
@@ -60,86 +60,86 @@ void VolumeSeamless::draw() {
   mm::Col4 onColor(1.0f, 1.0f, 1.0f, 1.0f);
   mm::Col4 offColor(0.5f, 0.5f, 0.5f, 1.0f);
   if (s_isBlink) {
-    if (unknown08.test(FLAG_START)) {
+    if (unknown08.test(FLAG_UNKNOWN_1)) {
       onColor = mm::Col4(1.0f, 0.5f, 0.5f, 1.0f);
     }
-    if (unknown08.test(FLAG_END)) {
+    if (unknown08.test(FLAG_UNKNOWN_2)) {
       onColor = mm::Col4(0.5f, 0.5f, 1.0f, 1.0f);
     }
   }
-  if (isActive(TGT_TYPE_BGM) && unknown08.test(FLAG_END)) {
+  if (isActive(TGT_TYPE_UNKNOWN_0) && unknown08.test(FLAG_UNKNOWN_2)) {
     fw::debug::drawFont(x, y, onColor, "BGM");
   } else {
     fw::debug::drawFont(x, y, offColor, "BGM");
   }
   x = width - 465;
-  if (isActive(TGT_TYPE_VOI)) {
+  if (isActive(TGT_TYPE_UNKNOWN_1)) {
     fw::debug::drawFont(x, y, onColor, "VOI");
   } else {
     fw::debug::drawFont(x, y, offColor, "VOI");
   }
   x = width - 435;
-  if (isActive(TGT_TYPE_BTL)) {
+  if (isActive(TGT_TYPE_UNKNOWN_3)) {
     fw::debug::drawFont(x, y, onColor, "BTL");
   } else {
     fw::debug::drawFont(x, y, offColor, "BTL");
   }
   x = width - 405;
-  if (isActive(TGT_TYPE_FLD)) {
+  if (isActive(TGT_TYPE_UNKNOWN_4)) {
     fw::debug::drawFont(x, y, onColor, "FLD");
   } else {
     fw::debug::drawFont(x, y, offColor, "FLD");
   }
   x = width - 375;
-  if (isActive(TGT_TYPE_GMK)) {
+  if (isActive(TGT_TYPE_UNKNOWN_5)) {
     fw::debug::drawFont(x, y, onColor, "GMK");
   } else {
     fw::debug::drawFont(x, y, offColor, "GMK");
   }
   x = width - 345;
-  if (isActive(TGT_TYPE_ENV)) {
+  if (isActive(TGT_TYPE_UNKNOWN_6)) {
     fw::debug::drawFont(x, y, onColor, "ENV");
   } else {
     fw::debug::drawFont(x, y, offColor, "ENV");
   }
   x = width - 315;
-  if (isActive(TGT_TYPE_WEA)) {
+  if (isActive(TGT_TYPE_UNKNOWN_7)) {
     fw::debug::drawFont(x, y, onColor, "WEA");
   } else {
     fw::debug::drawFont(x, y, offColor, "WEA");
   }
   x = width - 285;
-  if (isActive(TGT_TYPE_EVTVOI) && unknown08.test(FLAG_END)) {
+  if (isActive(TGT_TYPE_UNKNOWN_9) && unknown08.test(FLAG_UNKNOWN_2)) {
     fw::debug::drawFont(x, y, onColor, "EVTVOI");
   } else {
     fw::debug::drawFont(x, y, offColor, "EVTVOI");
   }
   x = width - 240;
-  if (isActive(TGT_TYPE_EVTSE) && unknown08.test(FLAG_END)) {
+  if (isActive(TGT_TYPE_UNKNOWN_10) && unknown08.test(FLAG_UNKNOWN_2)) {
     fw::debug::drawFont(x, y, onColor, "EVTSE");
   } else {
     fw::debug::drawFont(x, y, offColor, "EVTSE");
   }
   x = width - 195;
-  if (isActive(TGT_TYPE_CHRSE)) {
+  if (isActive(TGT_TYPE_UNKNOWN_11)) {
     fw::debug::drawFont(x, y, onColor, "CHRSE");
   } else {
     fw::debug::drawFont(x, y, offColor, "CHRSE");
   }
   x = width - 150;
-  if (isActive(TGT_TYPE_NOSLOW)) {
+  if (isActive(TGT_TYPE_UNKNOWN_12)) {
     fw::debug::drawFont(x, y, onColor, "(NOSLOW)");
   } else {
     fw::debug::drawFont(x, y, offColor, "(NOSLOW)");
   }
   x = width - 80;
-  if (isActive(TGT_TYPE_ENEVOI)) {
+  if (isActive(TGT_TYPE_UNKNOWN_13)) {
     fw::debug::drawFont(x, y, onColor, "ENEVOI");
   } else {
     fw::debug::drawFont(x, y, offColor, "ENEVOI");
   }
   x = width - 30;
-  if (isActive(TGT_TYPE_NAREVOI)) {
+  if (isActive(TGT_TYPE_UNKNOWN_14)) {
     fw::debug::drawFont(x, y, onColor, "NAREVOI");
   } else {
     fw::debug::drawFont(x, y, offColor, "NAREVOI");
@@ -147,102 +147,102 @@ void VolumeSeamless::draw() {
   s_isBlink ^= true;
 }
 
-void VolumeSeamless::set(bool isEnable, f32 volume, u32 target, const mm::mtl::FixedArray<f32, RESET_VOLUME_COUNT> *resetVolumes) {
-  unknown08.set(FLAG_ENABLE, isEnable);
+void VolumeSeamless::set(bool isEnable, f32 volume, u32 target, const mm::mtl::FixedArray<f32, RESET_VOLUME_UNKNOWN_13> *resetVolumes) {
+  unknown08.set(FLAG_UNKNOWN_0, isEnable);
   m_target = target;
   unknown48 = volume;
   if (resetVolumes != nullptr) {
-    for (u32 i = 0; i < RESET_VOLUME_COUNT; i++) {
+    for (u32 i = 0; i < RESET_VOLUME_UNKNOWN_13; i++) {
       unknown14[i] = (*resetVolumes)[i];
     }
   } else {
-    for (u32 i = 0; i < RESET_VOLUME_COUNT; i++) {
+    for (u32 i = 0; i < RESET_VOLUME_UNKNOWN_13; i++) {
       unknown14[i] = 1.0f;
     }
   }
 }
 
 void VolumeSeamless::start(f32 frame) {
-  if (unknown08.test(FLAG_ENABLE)) {
-    if (isActive(TGT_TYPE_VOI)) {
+  if (unknown08.test(FLAG_UNKNOWN_0)) {
+    if (isActive(TGT_TYPE_UNKNOWN_1)) {
       mm::mtl::Singleton<VolumePlayer>::get().change(2, unknown48, frame);
     }
-    if (isActive(TGT_TYPE_BTL)) {
+    if (isActive(TGT_TYPE_UNKNOWN_3)) {
       mm::mtl::Singleton<VolumePlayer>::get().change(4, unknown48, frame);
     }
-    if (isActive(TGT_TYPE_FLD)) {
+    if (isActive(TGT_TYPE_UNKNOWN_4)) {
       mm::mtl::Singleton<VolumePlayer>::get().change(5, unknown48, frame);
     }
-    if (isActive(TGT_TYPE_GMK)) {
+    if (isActive(TGT_TYPE_UNKNOWN_5)) {
       mm::mtl::Singleton<VolumePlayer>::get().change(6, unknown48, frame);
     }
-    if (isActive(TGT_TYPE_ENV)) {
+    if (isActive(TGT_TYPE_UNKNOWN_6)) {
       mm::mtl::Singleton<VolumePlayer>::get().change(7, unknown48, frame);
     }
-    if (isActive(TGT_TYPE_WEA)) {
+    if (isActive(TGT_TYPE_UNKNOWN_7)) {
       mm::mtl::Singleton<VolumePlayer>::get().change(8, unknown48, frame);
     }
-    if (isActive(TGT_TYPE_CHRSE)) {
+    if (isActive(TGT_TYPE_UNKNOWN_11)) {
       mm::mtl::Singleton<VolumePlayer>::get().change(13, unknown48, frame);
     }
-    if (isActive(TGT_TYPE_NOSLOW)) {
+    if (isActive(TGT_TYPE_UNKNOWN_12)) {
       mm::mtl::Singleton<VolumePlayer>::get().change(14, unknown48, frame);
     }
-    if (isActive(TGT_TYPE_ENEVOI)) {
+    if (isActive(TGT_TYPE_UNKNOWN_13)) {
       mm::mtl::Singleton<VolumePlayer>::get().change(15, unknown48, frame);
     }
-    if (isActive(TGT_TYPE_NAREVOI)) {
+    if (isActive(TGT_TYPE_UNKNOWN_14)) {
       mm::mtl::Singleton<VolumePlayer>::get().change(16, unknown48, frame);
     }
-    unknown08.set(FLAG_START);
-    unknown08.set(FLAG_END, false);
+    unknown08.set(FLAG_UNKNOWN_1);
+    unknown08.set(FLAG_UNKNOWN_2, false);
     this->unknown4c = frame;
   }
 }
 
 void VolumeSeamless::end(f32 frame) {
-  if (unknown08.test(FLAG_ENABLE)) {
-    if (isActive(TGT_TYPE_BGM)) {
+  if (unknown08.test(FLAG_UNKNOWN_0)) {
+    if (isActive(TGT_TYPE_UNKNOWN_0)) {
       mm::mtl::Singleton<VolumePlayer>::get().reset(1, unknown14[0], frame);
     }
-    if (isActive(TGT_TYPE_VOI)) {
+    if (isActive(TGT_TYPE_UNKNOWN_1)) {
       mm::mtl::Singleton<VolumePlayer>::get().reset(2, unknown14[1], frame);
     }
-    if (isActive(TGT_TYPE_BTL)) {
+    if (isActive(TGT_TYPE_UNKNOWN_3)) {
       mm::mtl::Singleton<VolumePlayer>::get().reset(4, unknown14[2], frame);
     }
-    if (isActive(TGT_TYPE_FLD)) {
+    if (isActive(TGT_TYPE_UNKNOWN_4)) {
       mm::mtl::Singleton<VolumePlayer>::get().reset(5, unknown14[3], frame);
     }
-    if (isActive(TGT_TYPE_GMK)) {
+    if (isActive(TGT_TYPE_UNKNOWN_5)) {
       mm::mtl::Singleton<VolumePlayer>::get().reset(6, unknown14[4], frame);
     }
-    if (isActive(TGT_TYPE_ENV)) {
+    if (isActive(TGT_TYPE_UNKNOWN_6)) {
       mm::mtl::Singleton<VolumePlayer>::get().reset(7, unknown14[5], frame);
     }
-    if (isActive(TGT_TYPE_WEA)) {
+    if (isActive(TGT_TYPE_UNKNOWN_7)) {
       mm::mtl::Singleton<VolumePlayer>::get().reset(8, unknown14[6], frame);
     }
-    if (isActive(TGT_TYPE_EVTVOI)) {
+    if (isActive(TGT_TYPE_UNKNOWN_9)) {
       mm::mtl::Singleton<VolumePlayer>::get().reset(11, unknown14[7], frame);
     }
-    if (isActive(TGT_TYPE_EVTSE)) {
+    if (isActive(TGT_TYPE_UNKNOWN_10)) {
       mm::mtl::Singleton<VolumePlayer>::get().reset(12, unknown14[8], frame);
     }
-    if (isActive(TGT_TYPE_CHRSE)) {
+    if (isActive(TGT_TYPE_UNKNOWN_11)) {
       mm::mtl::Singleton<VolumePlayer>::get().reset(13, unknown14[9], frame);
     }
-    if (isActive(TGT_TYPE_NOSLOW)) {
+    if (isActive(TGT_TYPE_UNKNOWN_12)) {
       mm::mtl::Singleton<VolumePlayer>::get().reset(14, unknown14[10], frame);
     }
-    if (isActive(TGT_TYPE_ENEVOI)) {
+    if (isActive(TGT_TYPE_UNKNOWN_13)) {
       mm::mtl::Singleton<VolumePlayer>::get().reset(15, unknown14[11], frame);
     }
-    if (isActive(TGT_TYPE_NAREVOI)) {
+    if (isActive(TGT_TYPE_UNKNOWN_14)) {
       mm::mtl::Singleton<VolumePlayer>::get().reset(16, unknown14[12], frame);
     }
-    unknown08.set(FLAG_START, false);
-    unknown08.set(FLAG_END);
+    unknown08.set(FLAG_UNKNOWN_1, false);
+    unknown08.set(FLAG_UNKNOWN_2);
     this->unknown4c = frame;
   }
 }

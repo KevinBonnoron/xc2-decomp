@@ -26,7 +26,7 @@ public:
   class Impl {
   public:
     enum State {
-      STATE_ENABLE = 3,
+      STATE_UNKNOWN_3 = 3, // Inferred role: enable; original name unknown.
     };
 
     struct BdatInfo {
@@ -48,7 +48,7 @@ public:
       int unknown70;                 // Inferred role: bdat id; original member name unknown.
     };
 
-    static const u32 BDAT_MAX = 16;
+    static const u32 BDAT_UNKNOWN_16 = 16; // Inferred role: maximum number of registered bdat files; original name unknown.
 
     static bool isMsgFile(const char *name);
     ~Impl();
@@ -67,7 +67,7 @@ public:
     mm::mtl::FixStr<256> unknown08; // Inferred role: base path; original member name unknown.
     u8 _10c[0x110 - 0x10c];
     mm::mtl::Map<u32, SheetFpInfo> unknown110; // Inferred role: sheets by name CRC; original member name unknown.
-    BdatInfo unknown128[BDAT_MAX];             // Inferred role: infos; original member name unknown.
+    BdatInfo unknown128[BDAT_UNKNOWN_16];      // Inferred role: infos; original member name unknown.
   };
 
   explicit BdatManager(mm::mtl::IAllocator *allocator);

@@ -29,6 +29,8 @@ enum SoundOutputType : int;
 
 // Inferred role: sound volume fade; original type name unknown.
 struct unknown129 {
+  unknown129() : unknown00(1.0f), unknown04(1.0f), unknown08(1.0f), unknown0c(0.0f), unknown10(0.0f) {}
+
   void start(f32 target, f32 fadeTime) {
     if (fadeTime > 0.0f) {
       unknown08 = unknown00;
@@ -81,7 +83,7 @@ public:
     u32 unknown08; // Inferred role: max; original member name unknown.
   };
 
-  static const u32 BATTLE_RESOURCE_MAX = 3;
+  static const u32 BATTLE_RESOURCE_UNKNOWN_3 = 3; // Inferred role: maximum number of battle resources; original name unknown.
 
   static unknown130 m_uniqueID;
 
@@ -146,6 +148,7 @@ public:
   void stopBgmAll();
   void stopSeAll();
   void registPack(SoundPack *pack);
+  void removePack(SoundPack *pack);
   void loadCommonSe();
   void loadBattleSe();
   bool isRegistPack(SoundPack *pack) const;
@@ -167,7 +170,7 @@ public:
   u8 _99[0xa0 - 0x99];
   mm::mtl::List<SoundPack *> unknowna0;                         // Inferred role: packs; original member name unknown.
   ResourceObject *unknowne0;                                    // Inferred role: common resource; original member name unknown.
-  ResourceObject *unknowne8[BATTLE_RESOURCE_MAX];               // Inferred role: battle resources; original member name unknown.
+  ResourceObject *unknowne8[BATTLE_RESOURCE_UNKNOWN_3];         // Inferred role: battle resources; original member name unknown.
   mm::mtl::FixedVector<SoundHandleDebugInfo, 128> unknown100;   // Inferred role: handle debug infos; original member name unknown.
   mm::mtl::FixedVector<SoundCategoryDebugInfo, 18> unknown4110; // Inferred role: category debug infos; original member name unknown.
   SoundResSourceManager unknown4478;                            // Inferred role: resource sources; original member name unknown.

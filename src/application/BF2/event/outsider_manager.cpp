@@ -13,46 +13,46 @@
 
 namespace event {
 
-OutsiderManager::OutsiderManager() : unknown10(), unknown14(0), unknown18(OBJ_TYPE_NONE) {}
+OutsiderManager::OutsiderManager() : unknown10(), unknown14(0), unknown18(OBJ_TYPE_UNKNOWN_0) {}
 
 void OutsiderManager::clear() {
-  if (unknown14 & FLAG_ACTIVE) {
+  if (unknown14 & FLAG_UNKNOWN_0) {
     update(false);
   }
   unknown20.clear();
-  unknown18 = OBJ_TYPE_NONE;
+  unknown18 = OBJ_TYPE_UNKNOWN_0;
   unknown14 = 0;
 }
 
 void OutsiderManager::update(bool isHide) {
-  if (unknown20.getType() < OutsiderField::TYPE_CIRCLE) {
+  if (unknown20.getType() < OutsiderField::TYPE_UNKNOWN_1) {
     return;
   }
-  if (unknown18 & OBJ_TYPE_NPC) {
+  if (unknown18 & OBJ_TYPE_UNKNOWN_0_2) {
     updateSub(isHide, gmk::GMK_TYPE_NPC);
   }
-  if (unknown18 & OBJ_TYPE_ROUTED_NPC) {
+  if (unknown18 & OBJ_TYPE_UNKNOWN_1) {
     updateSub(isHide, gmk::GMK_TYPE_ROUTED_NPC);
   }
-  if (unknown18 & OBJ_TYPE_ENEMY) {
+  if (unknown18 & OBJ_TYPE_UNKNOWN_2) {
     updateSub(isHide, gmk::GMK_TYPE_ENEMY);
   }
-  if (unknown18 & OBJ_TYPE_ROUTED_ENEMY) {
+  if (unknown18 & OBJ_TYPE_UNKNOWN_3) {
     updateSub(isHide, gmk::GMK_TYPE_ROUTED_ENEMY);
   }
-  if (unknown18 & OBJ_TYPE_ROUTED_MAP_OBJ) {
+  if (unknown18 & OBJ_TYPE_UNKNOWN_4) {
     updateSub(isHide, gmk::GMK_TYPE_ROUTED_MAP_OBJ);
   }
-  if (unknown18 & OBJ_TYPE_MOB) {
+  if (unknown18 & OBJ_TYPE_UNKNOWN_5) {
     updateSub(isHide, gmk::GMK_TYPE_MOB);
   }
-  if (unknown18 & OBJ_TYPE_ROUTED_MOB) {
+  if (unknown18 & OBJ_TYPE_UNKNOWN_6) {
     updateSub(isHide, gmk::GMK_TYPE_ROUTED_MOB);
   }
 }
 
 void OutsiderManager::update() {
-  if (unknown14 & FLAG_ACTIVE) {
+  if (unknown14 & FLAG_UNKNOWN_0) {
     unknown20.update();
     if (unknown20.getRadius() > 0.0f) {
       update(true);
@@ -93,22 +93,22 @@ void OutsiderManager::updateSub(bool isHide, gf::GF_OBJ_HANDLE *handle) {
 }
 
 void OutsiderManager::render() {
-  if (isDisp() && (unknown14 & FLAG_ACTIVE)) {
+  if (isDisp() && (unknown14 & FLAG_UNKNOWN_0)) {
     unknown20.draw();
   }
 }
 
 void OutsiderManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
-  case MSG_TYPE_INIT:
-  case MSG_TYPE_END_SCENE:
-  case MSG_TYPE_CLEAR:
+  case MSG_TYPE_UNKNOWN_4:
+  case MSG_TYPE_UNKNOWN_10:
+  case MSG_TYPE_UNKNOWN_12:
     clear();
     break;
-  case MSG_TYPE_UPDATE:
+  case MSG_TYPE_UNKNOWN_14:
     update();
     break;
-  case MSG_TYPE_RENDER:
+  case MSG_TYPE_UNKNOWN_16:
     render();
     break;
   default:
@@ -122,14 +122,14 @@ void OutsiderManager::defineFld(OutsiderField::TYPE type, const mm::Vec3 &pos, f
 
 void OutsiderManager::setActive(bool isActive) {
   if (isActive) {
-    unknown14 |= FLAG_ACTIVE;
+    unknown14 |= FLAG_UNKNOWN_0;
   } else {
     clear();
   }
 }
 
-void OutsiderManager::setDisp(bool isDisp) { unknown10.set(DISP_FLAG_DISP, isDisp); }
+void OutsiderManager::setDisp(bool isDisp) { unknown10.set(DISP_FLAG_UNKNOWN_0, isDisp); }
 
-bool OutsiderManager::isDisp() const { return unknown10.test(DISP_FLAG_DISP); }
+bool OutsiderManager::isDisp() const { return unknown10.test(DISP_FLAG_UNKNOWN_0); }
 
 } // namespace event
