@@ -1,17 +1,15 @@
 #pragma once
+#include <stddef.h>
+
 #include "battle/button_challenge.h"
 #include "fw/fw_camera.h" // IWYU pragma: keep
 #include "gf/data/gf_data_weapon.h"
 #include "gf/sound/gf_sound.h"
+#include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
-#include <stddef.h>
-
-namespace mm {
-struct Vec3;
-}
 
 namespace fw {
 struct UpdateInfo;
@@ -86,6 +84,29 @@ public:
   struct LINK_JOIN_DATA {
     gf::GF_OBJ_HANDLE *unknown00; // Inferred role: enemy handle; original member name unknown.
     f32 unknown08;                // Inferred role: join time; original member name unknown.
+  };
+
+  struct SHAKE_CAMERA_RANDOM_PARAM {
+    int unknown00;  // Inferred role: type; original member name unknown.
+    f32 unknown04;  // Inferred role: power; original member name unknown.
+    f32 unknown08;  // Inferred role: interval; original member name unknown.
+    bool unknown0c; // Inferred role: frame time; original member name unknown.
+    f32 unknown10;  // Inferred role: fade in time; original member name unknown.
+    f32 unknown14;  // Inferred role: keep time; original member name unknown.
+    f32 unknown18;  // Inferred role: fade out time; original member name unknown.
+    bool unknown1c; // Inferred role: vertical; original member name unknown.
+  };
+
+  struct SHAKE_CAMERA_AXIS_PARAM {
+    int unknown00;      // Inferred role: type; original member name unknown.
+    f32 unknown04;      // Inferred role: power; original member name unknown.
+    f32 unknown08;      // Inferred role: interval; original member name unknown.
+    bool unknown0c;     // Inferred role: frame time; original member name unknown.
+    mm::Vec3 unknown10; // Inferred role: axis, used when unknown20 is 0; original member name unknown.
+    int unknown20;      // Inferred role: axis type, 0 for unknown10 and 1 to 6 for a camera axis; original member name unknown.
+    int unknown24;      // Inferred role: loop count; original member name unknown.
+    int unknown28;      // Inferred role: fade out loop count; original member name unknown.
+    bool unknown2c;     // Inferred role: both sides; original member name unknown.
   };
 
   struct ELEMENTAL_COMBO_FLOW_DATA {
@@ -193,6 +214,8 @@ public:
   void SetSlowDynamicsSpeed(u32 slow, int characterId, u32 speed);
   void CreateSpecialEffect(int special);
   void DeleteSpecialEffect(int special);
+  void ShakeCameraRandom(const SHAKE_CAMERA_RANDOM_PARAM &param);
+  void ShakeCameraAxis(const SHAKE_CAMERA_AXIS_PARAM &param);
   const SLOW_PROC_DATA *GetSlowProcDataConst(u32 slow) const;
   void SetBGM(u32 bgm);
   void RequestJingle(JINGLE_TYPE jingle);
@@ -314,6 +337,11 @@ static_assert(offsetof(BattleGlobal::SLOW_PROC_DATA, unknown0c) == 0xc, "");
 static_assert(offsetof(BattleGlobal::SLOW_PROC_DATA, unknown10) == 0x10, "");
 static_assert(sizeof(BattleGlobal::ATTACK_DAMAGE_DATA) == 0x14, "");
 static_assert(sizeof(BattleGlobal::MAP_DRIVER_REV_DATA) == 0x4, "");
+static_assert(offsetof(BattleGlobal::SHAKE_CAMERA_RANDOM_PARAM, unknown0c) == 0xc, "");
+static_assert(offsetof(BattleGlobal::SHAKE_CAMERA_RANDOM_PARAM, unknown1c) == 0x1c, "");
+static_assert(offsetof(BattleGlobal::SHAKE_CAMERA_AXIS_PARAM, unknown10) == 0x10, "");
+static_assert(offsetof(BattleGlobal::SHAKE_CAMERA_AXIS_PARAM, unknown20) == 0x20, "");
+static_assert(offsetof(BattleGlobal::SHAKE_CAMERA_AXIS_PARAM, unknown2c) == 0x2c, "");
 static_assert(offsetof(BattleGlobal, unknown18) == 0x18, "");
 static_assert(offsetof(BattleGlobal, unknown5e0) == 0x5e0, "");
 static_assert(sizeof(BattleGlobal::LINK_JOIN_DATA) == 0x10, "");

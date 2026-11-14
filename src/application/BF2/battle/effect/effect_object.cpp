@@ -1,5 +1,8 @@
 #include "battle/effect/effect_object.h"
 
+#include "battle/battle_global.h"
+#include "battle/character/battle_character.h"
+#include "battle/character/character_manager_battle.h"
 #include "bdat.h"
 #include "framework/effect/effect_manager.h"
 #include "gf/data/gf_bdat_id.h"
@@ -117,6 +120,30 @@ bool EffectObject::IsEnd() const {
     return false;
   }
   return unknown24c <= 0.0f;
+}
+
+void EffectObject::ReboundUp() {
+  s32 frame = CharacterManager::get()->GetCharacterConst(unknown48)->GetAnimSpecialProcData(BattleCharacter::ANIM_SPDATA_TYPE_UNKNOWN_0);
+  f32 distance = __builtin_fmaxf(frame - unknown248, 0.0f);
+  EffectMoveComponent::MOVE_PARAM param;
+  param.unknown1c = 0.0f;
+  param.unknown38 = 0;
+  f32 time = distance * (1.0f / 3.0f);
+  param.unknown39 = EffectMoveComponent::MOVE_TYPE_UP;
+  param.unknown40_2 = time;
+  u8 upDist = Bdat::getValCheck(gf::GfDataBdat::getFP(gf::BDAT_BTL_BULLET), "UpDist", unknown250, 1);
+  f32 speed = upDist;
+  if (time <= 0.0f) {
+    param.unknown10 = speed;
+  } else {
+    param.unknown10 = speed / time;
+  }
+  param.unknown00 = mm::Vec3::unitY;
+  f32 lifeTime = distance * (1.0f / FRAME_RATE);
+  param.unknown38 |= 0x10;
+  param.unknown20[4] = lifeTime;
+  unknown190.Initialize(param);
+  unknown24c = lifeTime;
 }
 
 } // namespace btl

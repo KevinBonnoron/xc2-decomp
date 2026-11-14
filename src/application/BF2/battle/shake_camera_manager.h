@@ -1,4 +1,5 @@
 #pragma once
+#include "battle/battle_global.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_vector.h"
 #include "types.h"
@@ -38,6 +39,16 @@ public:
   virtual bool Update(f32 time) = 0;
   virtual void CalcShift(const mm::Vec3 &position, const mm::Vec3 &target, mm::Vec3 &positionShift, mm::Vec3 &targetShift) = 0;
 
+  // Inferred role: sets the common shake parameters; original name unknown. Evidence: the same load/store group
+  // (arguments loaded before the stores, interval clamped to one frame) in BattleGlobal::ShakeCameraRandom and
+  // BattleGlobal::ShakeCameraAxis.
+  void unknown001(int type, f32 power, f32 interval, bool isFrameTime) {
+    unknown08 = type;
+    unknown0c = power;
+    unknown10 = __builtin_fmaxf(interval, 1.0f / FRAME_RATE);
+    unknown18 = isFrameTime;
+  }
+
   int unknown08;  // Inferred role: type; original member name unknown.
   f32 unknown0c;  // Inferred role: power; original member name unknown.
   f32 unknown10;  // Inferred role: interval; original member name unknown.
@@ -63,6 +74,15 @@ public:
   void StopEternalShake() override;
   bool Update(f32 time) override;
   void CalcShift(const mm::Vec3 &position, const mm::Vec3 &target, mm::Vec3 &positionShift, mm::Vec3 &targetShift) override;
+
+  // Inferred role: sets the fade times and the vertical flag; original name unknown. Evidence: BattleGlobal::ShakeCameraRandom
+  // loads all four arguments before the stores.
+  void unknown002(f32 fadeIn, f32 keep, f32 fadeOut, bool isVertical) {
+    unknown40 = fadeIn;
+    unknown44 = keep;
+    unknown48 = fadeOut;
+    unknown54 = isVertical;
+  }
 
   mm::Vec3 unknown20; // Inferred role: previous shift; original member name unknown.
   mm::Vec3 unknown30; // Inferred role: next shift; original member name unknown.
@@ -91,6 +111,16 @@ public:
   ShakeCameraElementAxis();
   bool Update(f32 time) override;
   void CalcShift(const mm::Vec3 &position, const mm::Vec3 &target, mm::Vec3 &positionShift, mm::Vec3 &targetShift) override;
+
+  // Inferred role: sets the axis and the loop counts; original name unknown. Evidence: BattleGlobal::ShakeCameraAxis
+  // loads the three scalar arguments before the stores and copies the axis field by field; the same stores open
+  // ShakeCameraElementCameraAxis::SetData.
+  void unknown003(const mm::Vec3 &axis, int loopCount, int fadeOutLoopCount, bool isBothSides) {
+    unknown20 = axis;
+    unknown30 = loopCount;
+    unknown34 = fadeOutLoopCount;
+    unknown40 = isBothSides;
+  }
 
   mm::Vec3 unknown20; // Inferred role: axis; original member name unknown.
   int unknown30;      // Inferred role: loop count; original member name unknown.

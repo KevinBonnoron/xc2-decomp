@@ -25,7 +25,33 @@ public:
     MOVE_TYPE_UP,
   };
 
-  struct MOVE_PARAM;
+  struct MOVE_PARAM {
+    mm::Vec3 unknown00; // Inferred role: direction; original member name unknown.
+    f32 unknown10;      // Inferred role: speed; original member name unknown.
+    f32 unknown14;      // Inferred role: speed max; original member name unknown.
+    f32 unknown18;      // Inferred role: acceleration; original member name unknown.
+    f32 unknown1c;      // Inferred role: acceleration delay; original member name unknown.
+    f32 unknown20[6];   // Inferred role: end parameters; original member name unknown.
+    u8 unknown38;       // Inferred role: end flags; original member name unknown.
+    u8 unknown39;       // Inferred role: move type; original member name unknown.
+    union {
+      struct {
+        gf::GF_OBJ_HANDLE *unknown40; // Inferred role: handle; original member name unknown.
+        f32 unknown48[3];             // Inferred role: target; original member name unknown.
+        f32 unknown54;                // Inferred role: start time; original member name unknown.
+        f32 unknown58;                // Inferred role: turn speed; original member name unknown.
+        f32 unknown5c;                // Inferred role: turn speed max; original member name unknown.
+        f32 unknown60;                // Inferred role: turn acceleration; original member name unknown.
+      } unknown40_0;                  // Inferred role: homing move parameters; original member name unknown.
+      struct {
+        gf::GF_OBJ_HANDLE *unknown40; // Inferred role: handle; original member name unknown.
+        const char *unknown48;        // Inferred role: bone name; original member name unknown.
+        f32 unknown50[3];             // Inferred role: offset; original member name unknown.
+        f32 unknown5c;                // Inferred role: time; original member name unknown.
+      } unknown40_1;                  // Inferred role: link object parameters; original member name unknown.
+      f32 unknown40_2;                // Inferred role: time of the up move; original member name unknown.
+    };
+  };
 
   EffectMoveComponent();
   void Initialize();
@@ -87,6 +113,14 @@ public:
   u8 unknowna5;       // Inferred role: move type; original member name unknown.
 };
 
+static_assert(offsetof(EffectMoveComponent::MOVE_PARAM, unknown10) == 0x10, "");
+static_assert(offsetof(EffectMoveComponent::MOVE_PARAM, unknown1c) == 0x1c, "");
+static_assert(offsetof(EffectMoveComponent::MOVE_PARAM, unknown20) == 0x20, "");
+static_assert(offsetof(EffectMoveComponent::MOVE_PARAM, unknown38) == 0x38, "");
+static_assert(offsetof(EffectMoveComponent::MOVE_PARAM, unknown39) == 0x39, "");
+static_assert(offsetof(EffectMoveComponent::MOVE_PARAM, unknown40_2) == 0x40, "");
+static_assert(offsetof(EffectMoveComponent::MOVE_PARAM, unknown40_0.unknown60) == 0x60, "");
+static_assert(offsetof(EffectMoveComponent::MOVE_PARAM, unknown40_1.unknown5c) == 0x5c, "");
 static_assert(offsetof(EffectMoveComponent, unknown00_0.unknown38) == 0x38, "");
 static_assert(offsetof(EffectMoveComponent, unknown00_0.unknown3c) == 0x3c, "");
 static_assert(offsetof(EffectMoveComponent, unknown40) == 0x40, "");

@@ -45,7 +45,9 @@ public:
     DELAY_VOICE_TYPE_NORMAL,
   };
   enum ALPHA_PROC_ID {};
-  enum ANIM_SPDATA_TYPE {};
+  enum ANIM_SPDATA_TYPE {
+    ANIM_SPDATA_TYPE_UNKNOWN_0,
+  };
   enum BLADE_TIMER_MODE {};
   enum RIMBLOOM_ID {};
   enum ACTION_ID : u8 {

@@ -832,4 +832,71 @@ void BattleGlobal::UpdateMapRev() {
   }
 }
 
+void BattleGlobal::ShakeCameraRandom(const SHAKE_CAMERA_RANDOM_PARAM &param) {
+  if (unknown5e0 == nullptr) {
+    return;
+  }
+  // __LINE__ must be 3569 as in the original file: it is an argument of operator new.
+#line 3569
+  ShakeCameraElementRandom *element = new (gf::getAllocator(gf::ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ShakeCameraElementRandom();
+  if (element == nullptr) {
+    return;
+  }
+  element->unknown001(param.unknown00, param.unknown04, param.unknown08, param.unknown0c);
+  element->unknown002(param.unknown10, param.unknown14, param.unknown18, param.unknown1c);
+  unknown5e0->RegisterData(element);
+}
+
+void BattleGlobal::ShakeCameraAxis(const SHAKE_CAMERA_AXIS_PARAM &param) {
+  if (unknown5e0 == nullptr) {
+    return;
+  }
+
+  ShakeCameraElement *element;
+  if (param.unknown20 == 0) {
+    // __LINE__ must be 3595 as in the original file: it is an argument of operator new.
+#line 3595
+    ShakeCameraElementAxis *axis = new (gf::getAllocator(gf::ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ShakeCameraElementAxis();
+    if (axis == nullptr) {
+      return;
+    }
+    axis->unknown003(param.unknown10, param.unknown24, param.unknown28, param.unknown2c);
+    element = axis;
+  } else {
+    ShakeCameraElementCameraAxis::SHAKE_AXIS shakeAxis;
+    switch (param.unknown20) {
+    case 1:
+      shakeAxis = ShakeCameraElementCameraAxis::SHAKE_AXIS_RIGHT;
+      break;
+    case 2:
+      shakeAxis = ShakeCameraElementCameraAxis::SHAKE_AXIS_LEFT;
+      break;
+    case 3:
+      shakeAxis = ShakeCameraElementCameraAxis::SHAKE_AXIS_UP;
+      break;
+    case 4:
+      shakeAxis = ShakeCameraElementCameraAxis::SHAKE_AXIS_DOWN;
+      break;
+    case 5:
+      shakeAxis = ShakeCameraElementCameraAxis::SHAKE_AXIS_BACK;
+      break;
+    case 6:
+      shakeAxis = ShakeCameraElementCameraAxis::SHAKE_AXIS_FRONT;
+      break;
+    default:
+      return;
+    }
+    // __LINE__ must be 3615 as in the original file: it is an argument of operator new.
+#line 3615
+    ShakeCameraElementCameraAxis *camera = new (gf::getAllocator(gf::ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ShakeCameraElementCameraAxis();
+    if (camera == nullptr) {
+      return;
+    }
+    camera->SetData(shakeAxis, param.unknown24, param.unknown28, param.unknown2c);
+    element = camera;
+  }
+  element->unknown001(param.unknown00, param.unknown04, param.unknown08, param.unknown0c);
+  unknown5e0->RegisterData(element);
+}
+
 } // namespace btl

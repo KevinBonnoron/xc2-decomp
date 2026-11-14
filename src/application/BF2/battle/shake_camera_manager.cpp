@@ -129,10 +129,7 @@ void ShakeCameraElementAxis::CalcShift(const mm::Vec3 &position, const mm::Vec3 
 }
 
 void ShakeCameraElementCameraAxis::SetData(SHAKE_AXIS shakeAxis, int loopCount, int fadeOutLoopCount, bool isBothSides) {
-  unknown20 = mm::Vec3::zero;
-  this->unknown30 = loopCount;
-  this->unknown34 = fadeOutLoopCount;
-  this->unknown40 = isBothSides;
+  unknown003(mm::Vec3::zero, loopCount, fadeOutLoopCount, isBothSides);
   this->unknown44 = shakeAxis;
   switch (shakeAxis) {
   case SHAKE_AXIS_LEFT:
