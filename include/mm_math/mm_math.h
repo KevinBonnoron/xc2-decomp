@@ -242,4 +242,29 @@ inline f32 unknown003(f32 r) {
   return r;
 }
 
+// Inferred helper: shortest rotation from the unit vector from to the unit vector to (a half turn about Y when they are
+// opposite); original name unknown. Evidence: the same inlined body in fw::PrimCapsule::getRot (from unitY),
+// btl::BattleCharacter::SetWarpPostureByDir and btl::ShakeCameraElementRandom::CalcShift (from unitZ).
+inline void unknown005(Quat &rotation, const Vec3 &from, const Vec3 &to) {
+  f32 dot = from.x * to.x + from.y * to.y + from.z * to.z;
+  if (!(dot < -0.9999f)) {
+    f32 x = from.y * to.z - to.y * from.z;
+    f32 y = to.x * from.z - from.x * to.z;
+    f32 z = from.x * to.y - to.x * from.y;
+    f32 value = dot + 1.0f;
+    value = value + value;
+    f32 length = sqrtf(value);
+    f32 scale = 1.0f / length;
+    rotation.x = x * scale;
+    rotation.y = y * scale;
+    rotation.z = z * scale;
+    rotation.w = length * 0.5f;
+  } else {
+    rotation.x = 0.0f;
+    rotation.y = 1.0f;
+    rotation.z = 0.0f;
+    rotation.w = 0.0f;
+  }
+}
+
 } // namespace mm
