@@ -11,10 +11,10 @@ namespace event {
 
 class SeManager : public IManager, public mm::mtl::Singleton<SeManager> {
 public:
-  static constexpr u32 SE_COUNT = 32;
+  static constexpr u32 SE_UNKNOWN_32 = 32; // Inferred role: se count; original name unknown.
 
   enum {
-    DISP_FLAG_DISP = 1 << 0,
+    DISP_FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: disp flag; original name unknown.
   };
 
   SeManager();
@@ -33,10 +33,10 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  u32 unknown10;                                       // Inferred role: disp flags; original member name unknown.
-  u32 unknown14;                                       // Inferred role: load count; original member name unknown.
-  mm::mtl::FixedArray<SeObj, SE_COUNT> unknown18;      // Inferred role: objs; original member name unknown.
-  mm::mtl::FixedVector<SeObj *, SE_COUNT> unknown5318; // Inferred role: play list; original member name unknown.
+  u32 unknown10;                                            // Inferred role: disp flags; original member name unknown.
+  u32 unknown14;                                            // Inferred role: load count; original member name unknown.
+  mm::mtl::FixedArray<SeObj, SE_UNKNOWN_32> unknown18;      // Inferred role: objs; original member name unknown.
+  mm::mtl::FixedVector<SeObj *, SE_UNKNOWN_32> unknown5318; // Inferred role: play list; original member name unknown.
 };
 
 static_assert(sizeof(SeManager) == 0x5420, "");

@@ -6,6 +6,8 @@
 #include "battle/utility_battle.h"
 #include "framework/coli/coli_object.h"
 #include "framework/effect/effect_manager.h"
+#include "framework/sound/sound_manager.h"
+#include "fw/fw_camera.h"
 #include "fw/fw_transform.h"
 #include "fw/fw_update_info.h"
 #include "gf/data/gf_bdat_chrbl.h"
@@ -15,9 +17,12 @@
 #include "gf/data/gf_character_id.h"
 #include "gf/data/gf_data_achievement.h"
 #include "gf/data/gf_data_blade.h"
+#include "gf/data/gf_data_develop.h"
 #include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_enemy.h"
 #include "gf/data/gf_data_item.h"
+#include "gf/data/gf_data_map.h"
+#include "gf/data/gf_data_mercenaries.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_data_party.h"
 #include "gf/data/gf_data_shop.h"
@@ -30,10 +35,12 @@
 #include "gf/field/gf_field_time.h"
 #include "gf/game/event/gf_game_event.h"
 #include "gf/game/gf_game_cond.h"
+#include "gf/game/gf_game_inside_battle_lock.h"
 #include "gf/game/gf_game_mount.h"
 #include "gf/game/gf_game_obj.h"
 #include "gf/game/gf_game_party.h"
 #include "gf/game/gf_game_ride.h"
+#include "gf/game/gf_game_save.h"
 #include "gf/game/gf_game_slow_attack.h"
 #include "gf/game/gf_game_state.h"
 #include "gf/game/gf_game_trinity_attack.h"
@@ -66,6 +73,7 @@
 #include "gf/util/gf_equip_util.h"
 #include "gf/util/gf_item_util.h"
 #include "gf/util/gf_util.h"
+#include "mm_math/mm_mat44.h"
 #include "mm_mtl/algorithm.h"
 #include "mm_mtl/vector.h"
 
@@ -73,54 +81,64 @@ namespace gf {
 
 namespace {
 
-constexpr u32 ACHIEVEMENT_STATS_WALK = 60;
-constexpr u32 ACHIEVEMENT_STATS_SWIM = 62;
-constexpr u32 ACHIEVEMENT_STATS_BATTLE_DAMAGE = 146;
-constexpr f32 FIELD_BLADE_CHANGE_WAIT_TIME = 0.5f;
-constexpr f32 MONEY_LOG_TIME = 0.5f;
-constexpr int STOP_ENEMY_ATTACK_FRAME = 30;
-constexpr int AFTER_EVENT_COUNT_MAX = 1000;
-constexpr f32 INVALID_SAVE_POS = -999999.0f;
-constexpr f32 INVALID_SAVE_POS_LIMIT = -999998.0f;
-constexpr u32 OBJ_LAYER_PLAYER = 4;
-constexpr int HOMURI_BLADE_SET = 4;
-constexpr int DEAD_COLI_PRIORITY = 900;
-constexpr f32 HIKARI_ROOM_HEIGHT = 100.0f;
-constexpr u32 SAVED_HP_TYPE_FIRST = 1;
-constexpr u32 SAVED_HP_TYPE_LAST = 3;
-constexpr u32 SHOP_PRIVILEGE = 39;
-constexpr int FLAG_PRIVILEGE_ITEM = 50547;
-constexpr int FLAG_CRYSTAL_COUNT = 2133;
-constexpr int FLAG_EVENT_MONEY = 1551;
-constexpr int FLAG_CRYSTAL_POPUP = 54665;
-constexpr u16 SCENARIO_FLAG_SUZAKU_ACTIVATE = 3048;
-constexpr u32 ACHIEVEMENT_STATS_HOMURA_COOK_ITEM = 70;
-constexpr u32 ACHIEVEMENT_STATS_YUOH_COOK_ITEM = 71;
-constexpr u32 ACHIEVEMENT_STATS_MUSUBI_COOK_ITEM = 72;
-constexpr u32 ACHIEVEMENT_STATS_MAY_ITEM = 73;
-constexpr u32 ACHIEVEMENT_STATS_TUKI_ITEM = 74;
-constexpr u32 EVENT_NIA_SET_BYAKKO = 10037;
-constexpr u32 EVENT_SUZAKU_ACTIVATE = 10090;
-constexpr u32 EVENT_SUZAKU_RELEASE = 10091;
-constexpr u32 EVENT_ENV_SILENT = 10150;
-constexpr u32 EVENT_SHIN_SET_DUMMY = 10439;
-constexpr u32 EVENT_LAST_KIZUNA_TALK = 30053;
-constexpr u32 EVENT_KEEP_VOLUME = 30173;
-constexpr u32 EVENT_SAVE_MONEY = 41007;
-constexpr int CONTROL_FREE_FRAME = 10;
-constexpr f32 AUTO_HEAL_INTERVAL = 1.0f;
-constexpr f32 AUTO_HEAL_RATE = 10.0f;
-constexpr f32 MOVE_DISTANCE_MIN = 0.01f;
-constexpr f32 MOVE_DISTANCE_MAX = 5.0f;
-constexpr u32 CRYSTAL_LIST_FIRST = 45005;
-constexpr u32 CRYSTAL_ITEM_FIRST = 38;
+constexpr u32 ACHIEVEMENT_STATS_UNKNOWN_60 = 60;   // Inferred role: achievement stats walk; original name unknown.
+constexpr u32 ACHIEVEMENT_STATS_UNKNOWN_62 = 62;   // Inferred role: achievement stats swim; original name unknown.
+constexpr u32 ACHIEVEMENT_STATS_UNKNOWN_146 = 146; // Inferred role: achievement stats battle damage; original name unknown.
+constexpr f32 unknown018 = 0.5f;                   // Inferred role: field blade change wait time; original name unknown.
+constexpr f32 unknown024 = 0.5f;                   // Inferred role: money log time; original name unknown.
+constexpr int FRAME_UNKNOWN_30 = 30;               // Inferred role: stop enemy attack frame; original name unknown.
+constexpr int AFTER_EVENT_UNKNOWN_1000 = 1000;     // Inferred role: after event count max; original name unknown.
+constexpr f32 unknown025 = -999999.0f;             // Inferred role: invalid save pos; original name unknown.
+constexpr f32 unknown026 = -999998.0f;             // Inferred role: invalid save pos limit; original name unknown.
+constexpr u32 OBJ_LAYER_UNKNOWN_4 = 4;             // Inferred role: obj layer player; original name unknown.
+constexpr int HOMURI_UNKNOWN_4 = 4;                // Inferred role: homuri blade set; original name unknown.
+constexpr int PRIORITY_UNKNOWN_900 = 900;          // Inferred role: dead coli priority; original name unknown.
+constexpr f32 unknown028 = 100.0f;                 // Inferred role: hikari room height; original name unknown.
+constexpr u32 SAVED_HP_TYPE_UNKNOWN_1 = 1;         // Inferred role: saved hp type first; original name unknown.
+constexpr u32 SAVED_HP_TYPE_UNKNOWN_3 = 3;         // Inferred role: saved hp type last; original name unknown.
+constexpr u32 SHOP_UNKNOWN_39 = 39;                // Inferred role: shop privilege; original name unknown.
+constexpr int FLAG_UNKNOWN_50547 = 50547;          // Inferred role: flag privilege item; original name unknown.
+constexpr int FLAG_UNKNOWN_2133 = 2133;            // Inferred role: flag crystal count; original name unknown.
+constexpr int FLAG_UNKNOWN_1551 = 1551;            // Inferred role: flag event money; original name unknown.
+constexpr int FLAG_UNKNOWN_54665 = 54665;          // Inferred role: flag crystal popup; original name unknown.
+constexpr u16 SCENARIO_FLAG_UNKNOWN_3048 = 3048;   // Inferred role: scenario flag suzaku activate; original name unknown.
+constexpr u32 SCENARIO_FLAG_UNKNOWN_1001 = 1001;   // Inferred role: scenario flag new game save; original name unknown.
+constexpr u32 SCENARIO_FLAG_UNKNOWN_1031 = 1031;   // Inferred role: scenario flag clear game blades; original name unknown.
+constexpr u32 SCENARIO_FLAG_UNKNOWN_2005 = 2005;   // Inferred role: scenario flag byakko activate; original name unknown.
+constexpr u32 SCENARIO_FLAG_UNKNOWN_2042 = 2042;   // Inferred role: scenario flag byakko set; original name unknown.
+constexpr u32 SCENARIO_FLAG_UNKNOWN_4009 = 4009;   // Inferred role: scenario flag mercenaries level; original name unknown.
+constexpr u32 SCENARIO_FLAG_UNKNOWN_7024 = 7024;   // Inferred role: scenario flag saika lens; original name unknown.
+constexpr u32 SCENARIO_FLAG_UNKNOWN_8037 = 8037;   // Inferred role: scenario flag develop point move; original name unknown.
+constexpr u16 SCENARIO_FLAG_UNKNOWN_10012 = 10012; // Inferred role: first scenario flag shown with the sepia filter; original name unknown.
+constexpr u16 SCENARIO_FLAG_UNKNOWN_10014 = 10014; // Inferred role: second scenario flag shown with the sepia filter; original name unknown.
+constexpr u16 SCENARIO_FLAG_UNKNOWN_10017 = 10017; // Inferred role: third scenario flag shown with the sepia filter; original name unknown.
+constexpr u32 ACHIEVEMENT_STATS_UNKNOWN_70 = 70;   // Inferred role: achievement stats homura cook item; original name unknown.
+constexpr u32 ACHIEVEMENT_STATS_UNKNOWN_71 = 71;   // Inferred role: achievement stats yuoh cook item; original name unknown.
+constexpr u32 ACHIEVEMENT_STATS_UNKNOWN_72 = 72;   // Inferred role: achievement stats musubi cook item; original name unknown.
+constexpr u32 ACHIEVEMENT_STATS_UNKNOWN_73 = 73;   // Inferred role: achievement stats may item; original name unknown.
+constexpr u32 ACHIEVEMENT_STATS_UNKNOWN_74 = 74;   // Inferred role: achievement stats tuki item; original name unknown.
+constexpr u32 EVENT_UNKNOWN_10037 = 10037;         // Inferred role: event nia set byakko; original name unknown.
+constexpr u32 EVENT_UNKNOWN_10090 = 10090;         // Inferred role: event suzaku activate; original name unknown.
+constexpr u32 EVENT_UNKNOWN_10091 = 10091;         // Inferred role: event suzaku release; original name unknown.
+constexpr u32 EVENT_UNKNOWN_10150 = 10150;         // Inferred role: event env silent; original name unknown.
+constexpr u32 EVENT_UNKNOWN_10439 = 10439;         // Inferred role: event shin set dummy; original name unknown.
+constexpr u32 EVENT_UNKNOWN_30053 = 30053;         // Inferred role: event last kizuna talk; original name unknown.
+constexpr u32 EVENT_UNKNOWN_30173 = 30173;         // Inferred role: event keep volume; original name unknown.
+constexpr u32 EVENT_UNKNOWN_41007 = 41007;         // Inferred role: event save money; original name unknown.
+constexpr int FRAME_UNKNOWN_10 = 10;               // Inferred role: control free frame; original name unknown.
+constexpr f32 unknown029 = 1.0f;                   // Inferred role: auto heal interval; original name unknown.
+constexpr f32 unknown032 = 10.0f;                  // Inferred role: auto heal rate; original name unknown.
+constexpr f32 unknown033 = 0.01f;                  // Inferred role: move distance min; original name unknown.
+constexpr f32 unknown034 = 5.0f;                   // Inferred role: move distance max; original name unknown.
+constexpr u32 CRYSTAL_UNKNOWN_45005 = 45005;       // Inferred role: crystal list first; original name unknown.
+constexpr u32 CRYSTAL_UNKNOWN_38 = 38;             // Inferred role: crystal item first; original name unknown.
 
 bool isEnableBattleMomuri(u32 partyId) {
   DataParamAcc paramAcc(GfGameParty::getHandleBlade(partyId, -1));
   if (paramAcc.isValid() && paramAcc.getBdatId() == BLADE_HOMURI) {
     return false;
   }
-  return GfDataBlade::getSetDriver(BLADE_HOMURI) == DRIVER_REX;
+  return GfDataBlade::getSetDriver(BLADE_HOMURI) == DRIVER_UNKNOWN_1;
 }
 
 void unknown001(const DataParamAcc &paramAcc, bool isDead, bool isSwim) { // Inferred role: updateColiPriority; original function name unknown.
@@ -151,22 +169,22 @@ void unknown001(const DataParamAcc &paramAcc, bool isDead, bool isSwim) { // Inf
   if (priority == currentPriority && isDead) {
     bool isDeadState = isSwim;
     if (!isDeadState) {
-      const char *state = comAsm->getStateName(ANIM_LAYER_BASE);
+      const char *state = comAsm->getStateName(ANIM_LAYER_UNKNOWN_0);
       isDeadState = state != nullptr && (strcmp(state, "S_waterdead_00") == 0 || strcmp(state, "S_waterdead_01") == 0);
     }
-    if (!isDeadState && comAsm->isEnd(ANIM_LAYER_BASE)) {
-      const char *state = comAsm->getStateName(ANIM_LAYER_BASE);
+    if (!isDeadState && comAsm->isEnd(ANIM_LAYER_UNKNOWN_0)) {
+      const char *state = comAsm->getStateName(ANIM_LAYER_UNKNOWN_0);
       isDeadState = state != nullptr && strcmp(state, "S_dead") == 0;
     }
     if (!isDeadState) {
       return;
     }
-    coli->setPriority(DEAD_COLI_PRIORITY);
-    coli->clearState(fw::COLI_STATE_ENABLE);
+    coli->setPriority(PRIORITY_UNKNOWN_900);
+    coli->clearState(fw::COLI_STATE_UNKNOWN_1);
   }
   if (priority != currentPriority && !isDead) {
     coli->setPriority(priority);
-    coli->setState(fw::COLI_STATE_ENABLE);
+    coli->setState(fw::COLI_STATE_UNKNOWN_1);
   }
 }
 
@@ -177,22 +195,22 @@ void addAchievementCount(u32 stats, int count) {
   }
 }
 
-const u16 MAPJUMP_EVENTS[] = {10032, 10081, 10130, 10190, 10241, 10305, 10366, 10417, 10455, 10503};
+const u16 unknown035[] = {10032, 10081, 10130, 10190, 10241, 10305, 10366, 10417, 10455, 10503}; // Inferred role: mapjump events; original name unknown.
 
 } // namespace
 
 namespace _gfgsc {
 
-void setInvalidSavePos(mm::Vec3 &position) { position = mm::Vec3(INVALID_SAVE_POS, INVALID_SAVE_POS, INVALID_SAVE_POS); }
+void setInvalidSavePos(mm::Vec3 &position) { position = mm::Vec3(unknown025, unknown025, unknown025); }
 
-bool isInvalidSavePos(const mm::Vec3 &position) { return position.x < INVALID_SAVE_POS_LIMIT; }
+bool isInvalidSavePos(const mm::Vec3 &position) { return position.x < unknown026; }
 
 } // namespace _gfgsc
 
 void GfGameScene::EvtPlayerStop::startPlayerStop() {
-  if (unknown08 != STATE_WAIT_MOVER) {
+  if (unknown08 != STATE_UNKNOWN_1) {
     unknown00->setPlayerStopFlag(unknown0c, true);
-    unknown08 = STATE_WAIT_MOVER;
+    unknown08 = STATE_UNKNOWN_1;
   }
 }
 
@@ -203,7 +221,7 @@ void GfGameScene::EvtPlayerStop::endPlayerStop() {
     unknown00->setPlayerStopFlag(unknown0c, false);
     GfGameManager::setGmkTutorialMoverOK(false);
   }
-  unknown08 = STATE_NONE;
+  unknown08 = STATE_UNKNOWN_0;
 }
 
 void GfGameScene::EvtPlayerStop::resetState() {
@@ -211,7 +229,7 @@ void GfGameScene::EvtPlayerStop::resetState() {
     unknown00->setPlayerStopFlag(unknown0c, false);
     GfGameManager::setGmkTutorialMoverOK(false);
   }
-  unknown08 = STATE_NONE;
+  unknown08 = STATE_UNKNOWN_0;
 }
 
 bool GfGameScene::isPlayerStopFlag(PLSTOP flag) { return unknown1b8.test(flag); }
@@ -228,22 +246,22 @@ void GfGameScene::EvtPlayerStop::setPlayerStop(bool isStop) {
 }
 
 void GfGameScene::EvtPlayerStop::update(const fw::UpdateInfo &) {
-  if (unknown08 == STATE_WAIT_MOVER && GfGameManager::isGmkTutorialMoverOK()) {
-    unknown08 = STATE_STOP;
+  if (unknown08 == STATE_UNKNOWN_1 && GfGameManager::isGmkTutorialMoverOK()) {
+    unknown08 = STATE_UNKNOWN_2;
   }
 }
 
 void GfGameScene::BattleAchievement::battleStart() {
   unknown00 = true;
   unknown08 = 0;
-  GfDataAchievement::clearTotalCount(ACHIEVEMENT_STATS_BATTLE_DAMAGE);
+  GfDataAchievement::clearTotalCount(ACHIEVEMENT_STATS_UNKNOWN_146);
 }
 
 void GfGameScene::BattleAchievement::battleEnd() {
   if (unknown04 != 0) {
     SCOM_ACHIEV_INC::createBattle();
   }
-  GfDataAchievement::clearTotalCount(ACHIEVEMENT_STATS_BATTLE_DAMAGE);
+  GfDataAchievement::clearTotalCount(ACHIEVEMENT_STATS_UNKNOWN_146);
   unknown00 = false;
   unknown08 = 0;
   unknown04 = 0;
@@ -276,7 +294,7 @@ void GfGameScene::BattleAchievement::addDamage(GF_OBJ_HANDLE *handle, const MsgO
   case OBJECT_TYPE_ENEMY:
     enemyDamage(handle, damage);
     break;
-  case OBJECT_TYPE_DRIVER:
+  case OBJECT_TYPE_PC:
     driverDamage(handle, damage);
     break;
   case OBJECT_TYPE_BLADE:
@@ -300,16 +318,16 @@ void GfGameScene::initialize(const GfSetupParam &) {
   unknown2a0 = false;
   m_playEvent = false;
   unknown648 = false;
-  unknown3f8[2] = INVALID_HANDLE;
-  unknown3f8[1] = INVALID_HANDLE;
-  unknown3f8[0] = INVALID_HANDLE;
+  unknown3f8[2] = unknown020;
+  unknown3f8[1] = unknown020;
+  unknown3f8[0] = unknown020;
   for (unknown007 &savePosition : unknown2b0) {
     savePosition.unknown00 = mm::Vec3::zero;
     savePosition.unknown10 = false;
   }
   clearPartyState();
-  unknown160.push_back(unknown005(AMOVE_SWIM, ACHIEVEMENT_STATS_SWIM, isPlayerSwimOnCloud));
-  unknown160.push_back(unknown005(AMOVE_WALK, ACHIEVEMENT_STATS_WALK, isPlayerWalkAndRun));
+  unknown160.push_back(unknown005(AMOVE_UNKNOWN_1, ACHIEVEMENT_STATS_UNKNOWN_62, isPlayerSwimOnCloud));
+  unknown160.push_back(unknown005(AMOVE_UNKNOWN_0, ACHIEVEMENT_STATS_UNKNOWN_60, isPlayerWalkAndRun));
   unknown1ac[0] = 0;
   unknown1ac[1] = 0;
   unknown1ac[2] = 0;
@@ -329,7 +347,7 @@ GfGameScene::~GfGameScene() {}
 void GfGameScene::build(const GfSetupParam &param) {
   // __LINE__ must be 425 as in the original file: it is an argument of the allocation.
 #line 425
-  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfGameScene(param);
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfGameScene(param);
 }
 
 void GfGameScene::destroy() {
@@ -359,12 +377,12 @@ void GfGameScene::clearPartyState() {
 
 bool GfGameScene::isPlayerSwimOnCloud() {
   GfObjProperty *property = GfObjUtil::getProperty(GfGameManager::getControlMover());
-  return property != nullptr && property->unknown18->unknown00 == PROPERTY_MOVE_SWIM_ON_CLOUD;
+  return property != nullptr && property->unknown18->unknown00 == PROPERTY_MOVE_UNKNOWN_2;
 }
 
 bool GfGameScene::isPlayerWalkAndRun() {
   GfObjProperty *property = GfObjUtil::getProperty(GfGameManager::getControlMover());
-  return property != nullptr && property->unknown18->unknown00 == PROPERTY_MOVE_WALK;
+  return property != nullptr && property->unknown18->unknown00 == PROPERTY_MOVE_UNKNOWN_0;
 }
 
 bool GfGameScene::isInitialized() const { return m_initialized; }
@@ -398,9 +416,9 @@ void GfGameScene::clear() {
   unknown290 = mm::Vec3::zero;
   m_playEvent = false;
   unknown648 = false;
-  unknown3f8[2] = INVALID_HANDLE;
-  unknown3f8[1] = INVALID_HANDLE;
-  unknown3f8[0] = INVALID_HANDLE;
+  unknown3f8[2] = unknown020;
+  unknown3f8[1] = unknown020;
+  unknown3f8[0] = unknown020;
   unknown668 = false;
   unknown669 = false;
   destroySepiaFilter();
@@ -439,9 +457,9 @@ void GfGameScene::setupGame() {
   unknown280 = mm::Vec3::zero;
   unknown290 = mm::Vec3::zero;
   unknown2a0 = false;
-  unknown3f8[2] = INVALID_HANDLE;
-  unknown3f8[1] = INVALID_HANDLE;
-  unknown3f8[0] = INVALID_HANDLE;
+  unknown3f8[2] = unknown020;
+  unknown3f8[1] = unknown020;
+  unknown3f8[0] = unknown020;
   unknown668 = false;
   unknown669 = false;
   destroySepiaFilter();
@@ -464,22 +482,22 @@ void GfGameScene::setEventPlayerStop(bool isStop) { unknown628.setPlayerStop(isS
 void GfGameScene::setResetBladePlayerStop(bool isStop) { unknown638.setPlayerStop(isStop); }
 
 bool GfGameScene::isControlFree() const {
-  if (GfGameState::getState() == GF_STATE_CONTROL && GfGameManager::getState() == GF_STATE_CONTROL && unknown140 == 0) {
-    return GfGameState::getStateReserve() == GF_STATE_CONTROL;
+  if (GfGameState::getState() == GF_STATE_UNKNOWN_3 && GfGameManager::getState() == GF_STATE_UNKNOWN_3 && unknown140 == 0) {
+    return GfGameState::getStateReserve() == GF_STATE_UNKNOWN_3;
   }
   return false;
 }
 
 bool GfGameScene::isControlFreeState() const {
-  if (GfGameState::getState() == GF_STATE_CONTROL && GfGameManager::getState() == GF_STATE_CONTROL && unknown140 == 0) {
-    return GfGameState::getStateReserve() == GF_STATE_CONTROL;
+  if (GfGameState::getState() == GF_STATE_UNKNOWN_3 && GfGameManager::getState() == GF_STATE_UNKNOWN_3 && unknown140 == 0) {
+    return GfGameState::getStateReserve() == GF_STATE_UNKNOWN_3;
   }
   return false;
 }
 
 void GfGameScene::setEraseQuestEnemyForEventStart(QuestID quest) {
-  const mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_OBJ_LIST_CAPACITY> *enemies = GfGameObj::getList(OBJECT_TYPE_ENEMY);
-  for (mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_OBJ_LIST_CAPACITY>::const_iterator it = enemies->begin(); it != enemies->end(); ++it) {
+  const mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> *enemies = GfGameObj::getList(OBJECT_TYPE_ENEMY);
+  for (mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024>::const_iterator it = enemies->begin(); it != enemies->end(); ++it) {
     DataParamAcc paramAcc(*it);
     if (paramAcc.getHp() == 0) {
       if (unknown418.size() != unknown418.capacity()) {
@@ -495,7 +513,7 @@ void GfGameScene::setEraseQuestEnemyForEventStart(QuestID quest) {
 }
 
 void GfGameScene::setEnemyDead(GF_OBJ_HANDLE *handle) {
-  GfObj *obj = GfObjUtil::getObj(GfMountManager::getHandle(handle, GFATTACH_WEAPON, OPTMNT_BLADE));
+  GfObj *obj = GfObjUtil::getObj(GfMountManager::getHandle(handle, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_3));
   if (obj == nullptr) {
     return;
   }
@@ -505,7 +523,7 @@ void GfGameScene::setEnemyDead(GF_OBJ_HANDLE *handle) {
   }
   fw::ColiObject *coli = collider->unknown18[0];
   if (coli != nullptr) {
-    coli->clearState(fw::COLI_STATE_ENABLE);
+    coli->clearState(fw::COLI_STATE_UNKNOWN_1);
   }
 }
 
@@ -513,7 +531,7 @@ void GfGameScene::setHomuriWeaponExtraMesh(bool isVisible, f32 alpha) {
   if (!GfGameManager::isClearGame()) {
     return;
   }
-  u32 partyId = GfGameParty::getPartyId(OBJECT_TYPE_DRIVER, DRIVER_REX);
+  u32 partyId = GfGameParty::getPartyId(OBJECT_TYPE_PC, DRIVER_UNKNOWN_1);
   if (partyId == -1) {
     return;
   }
@@ -523,8 +541,27 @@ void GfGameScene::setHomuriWeaponExtraMesh(bool isVisible, f32 alpha) {
   }
 }
 
+bool GfGameScene::isNeedResetBladeForBattleEndForBattleEnd() const {
+  if (isNeedResetBladeForBattleEndForMenuOpen()) {
+    return true;
+  }
+
+  for (u32 partyId = 0; partyId < 3; partyId++) {
+    u32 driver = GfGameParty::getDriverBdatId(partyId);
+    if (driver != DRIVER_UNKNOWN_1) {
+      continue;
+    }
+
+    if (GfDataDriver::getBlade(driver, -1) == BLADE_HOMURI) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 bool GfGameScene::isEnableFieldBladeChange() const {
-  if (unknown18 >= FIELD_BLADE_CHANGE_WAIT_TIME && GfGameManager::isEnableOpenMainMenu()) {
+  if (unknown18 >= unknown018 && GfGameManager::isEnableOpenMainMenu()) {
     return GfGameManager::isControlFree();
   }
   return false;
@@ -602,10 +639,30 @@ bool GfGameScene::isEnableRideCondition(u32 partyId) const {
   if (unknown240[0].unknown08 < 3) {
     return false;
   }
-  if (GfLayerPause::isLayerPause(OBJ_LAYER_PLAYER)) {
+  if (GfLayerPause::isLayerPause(OBJ_LAYER_UNKNOWN_4)) {
     return false;
   }
-  return unknown240[0].unknown04 != MOVER_STATE_SWIM;
+  return unknown240[0].unknown04 != MOVER_STATE_UNKNOWN_2;
+}
+
+void GfGameScene::checkFieldBladeChangeForRide() {
+  if ((GfGameInsideBattleLock::get() != nullptr && GfGameInsideBattleLock::get()->unknown20) || GfManager::isDestroyNow() || GfGameManager::isGameOver() || GfGameManager::isPlayerDeadSequence() ||
+      GfGameRide::testRideOn()) {
+    unknown668 = false;
+    return;
+  }
+  bool isRide = false;
+  int bladeSet = GfSelectBlade::getStartBattleSetId(0);
+  if (bladeSet >= 0) {
+    DataParamAcc paramAcc(GfGameParty::getHandleDriver(0));
+    isRide = GfDataParty::isRideChar(paramAcc.getValidDriverId()) && GfDataParty::isRideChar(GfDataDriver::getBlade(paramAcc.getValidDriverId(), bladeSet));
+  }
+  bool isRideBlade = unknown668;
+  if (isRide && !isRideBlade) {
+    unknown668 = true;
+  } else if (isRideBlade && !isRide) {
+    unknown668 = false;
+  }
 }
 
 void GfGameScene::setForceBossBattleBgm(bool isForce) { m_forceBossBattleBgm = isForce; }
@@ -662,14 +719,14 @@ int GfGameScene::createPlayerPause() {
 void GfGameScene::destroyPlayerPause(u32 pause) { unknown140 &= ~(1 << pause); }
 
 bool GfGameScene::isPlayerPause() const {
-  if (GfGameManager::getState() == GF_STATE_CONTROL) {
+  if (GfGameManager::getState() == GF_STATE_UNKNOWN_3) {
     return unknown140 != 0;
   }
   return true;
 }
 
 bool GfGameScene::isPlayerPauseForBattle() const {
-  if (GfGameManager::getState() == GF_STATE_CONTROL || GfGameManager::getState() == GF_STATE_RESET_BLADE) {
+  if (GfGameManager::getState() == GF_STATE_UNKNOWN_3 || GfGameManager::getState() == GF_STATE_UNKNOWN_24) {
     return unknown140 != 0;
   }
   return true;
@@ -693,11 +750,11 @@ void GfGameScene::createDriverAppendModelControl(GF_OBJ_HANDLE *handle) {
   if (!obj.isValidModel()) {
     return;
   }
-  GF_OBJ_HANDLE *wire = GfMountManager::getHandle(handle, GFATTACH_BELONGING, OPTMNT_WIRE);
-  if (GfObjUtil::getObjType(wire) == OBJECT_TYPE_DRIVER) {
+  GF_OBJ_HANDLE *wire = GfMountManager::getHandle(handle, GFATTACH_UNKNOWN_2, OPTMNT_UNKNOWN_2);
+  if (GfObjUtil::getObjType(wire) == OBJECT_TYPE_PC) {
     // __LINE__ must be 1206 as in the original file: it is an argument of the allocation.
 #line 1206
-    unknown70.push_back(new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfAppendWire(wire, handle));
+    unknown70.push_back(new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfAppendWire(wire, handle));
   }
 }
 
@@ -715,7 +772,7 @@ void GfGameScene::enterExtraControlForHanaJS(GF_OBJ_HANDLE *handle) {
     return;
   }
   GfObjAcc obj(handle);
-  if (obj.getBdatId() == BLADE_HANA_JS) {
+  if (obj.getBdatId() == BLADE_UNKNOWN_1005) {
     GfObjSetup *setup = GfObjUtil::getObjSetup(handle);
     if (setup != nullptr && !setup->isEvent()) {
       unknown3b0.push_back(handle);
@@ -749,7 +806,7 @@ void GfGameScene::saveBattleHpForEnemy(GF_OBJ_HANDLE *handle) {
     u32 hp = paramAcc.getHp();
     if (hp != 0) {
       u32 savedHpType = GfDataEnemy::getSavedHpType(paramAcc.getValidBdatId());
-      if (savedHpType >= SAVED_HP_TYPE_FIRST && savedHpType <= SAVED_HP_TYPE_LAST) {
+      if (savedHpType >= SAVED_HP_TYPE_UNKNOWN_1 && savedHpType <= SAVED_HP_TYPE_UNKNOWN_3) {
         GfDataEnemy::setSavedHp(savedHpType, hp);
       }
     }
@@ -768,7 +825,7 @@ const mm::Vec3 &GfGameScene::getEnableSavePos() const {
 bool GfGameScene::isDisableJumpForRide() const {
   if (unknown668) {
     GfObjAcc obj(GfGameParty::getHandleDriver(0));
-    if (!isBattle() || obj.isBattle() || unknown240[0].unknown04 == MOVER_STATE_SWIM) {
+    if (!isBattle() || obj.isBattle() || unknown240[0].unknown04 == MOVER_STATE_UNKNOWN_2) {
       return unknown668;
     }
   }
@@ -777,7 +834,7 @@ bool GfGameScene::isDisableJumpForRide() const {
 
 bool GfGameScene::isBattle() const {
   if (get() != nullptr) {
-    return (get()->unknown144 & FLAG_BATTLE) != 0;
+    return (get()->unknown144 & FLAG_UNKNOWN_1) != 0;
   }
   return false;
 }
@@ -801,14 +858,14 @@ void GfGameScene::applyMapjumpForCleanup(const MapjumpCallbackInfo &info) {
 void GfGameScene::applyMapjumpForStart(const MapjumpCallbackInfo &) {
   for (u32 partyId = 0; partyId < 3; partyId++) {
     GF_OBJ_HANDLE *handle = GfGameParty::getHandleDriver(partyId);
-    if (handle == INVALID_HANDLE) {
+    if (handle == unknown020) {
       continue;
     }
     DataParamAcc paramAcc(handle);
     if (paramAcc.isValid()) {
       GfObj *obj = GfObjUtil::getObj(handle);
       if (obj != nullptr) {
-        MsgObjectHealHp message(0, HEAL_TYPE_FULL);
+        MsgObjectHealHp message(0, HEAL_TYPE_UNKNOWN_1);
         obj->sendMessage(obj, message);
       }
     }
@@ -823,18 +880,18 @@ void GfGameScene::applyMapjumpForEnd(const MapjumpCallbackInfo &info) {
   SCOM_ZONE::create(info.unknown04);
   GfSound *sound = GfSound::get();
   if (sound != nullptr) {
-    sound->setCategoryVolume(unknown658, CATEGORY_GAME_WEATHER, 1.0f, 1.0f);
-    sound->setCategoryVolume(unknown658, CATEGORY_GAME_BGM, 1.0f, 1.0f);
-    sound->setCategoryVolume(unknown658, CATEGORY_EVENT_BGM, 1.0f, 1.0f);
-    sound->setCategoryVolume(unknown658, CATEGORY_FIELD_SE, 1.0f, 1.0f);
-    sound->setCategoryVolume(unknown658, CATEGORY_GIMMICK_SE, 1.0f, 1.0f);
-    sound->setCategoryVolume(unknown658, CATEGORY_GAME_ENV, 1.0f, 1.0f);
+    sound->setCategoryVolume(unknown658, CATEGORY_WEATHER, 1.0f, 1.0f);
+    sound->setCategoryVolume(unknown658, CATEGORY_BGM, 1.0f, 1.0f);
+    sound->setCategoryVolume(unknown658, CATEGORY_EVT_BGM, 1.0f, 1.0f);
+    sound->setCategoryVolume(unknown658, CATEGORY_FIELD, 1.0f, 1.0f);
+    sound->setCategoryVolume(unknown658, CATEGORY_GIMMICK, 1.0f, 1.0f);
+    sound->setCategoryVolume(unknown658, CATEGORY_ENV, 1.0f, 1.0f);
   }
 }
 
 void GfGameScene::gevExecBuy(u32, u32, u32 shop) {
-  if (shop == SHOP_PRIVILEGE && GfGameFlag::getLocal(1, FLAG_PRIVILEGE_ITEM) == 0 && GfDataShop::getPrivilegeItem(SHOP_PRIVILEGE) != 0) {
-    GfGameFlag::setLocal(1, FLAG_PRIVILEGE_ITEM, 1);
+  if (shop == SHOP_UNKNOWN_39 && GfGameFlag::getLocal(1, FLAG_UNKNOWN_50547) == 0 && GfDataShop::getPrivilegeItem(SHOP_UNKNOWN_39) != 0) {
+    GfGameFlag::setLocal(1, FLAG_UNKNOWN_50547, 1);
   }
 }
 
@@ -846,8 +903,8 @@ void GfGameScene::gevChangeParty() {
 
 void GfGameScene::gevDriverActivate(u32 driver, ActivateType activateType, ActivateType oldActivateType) {
   if (activateType != 0 && oldActivateType == 0) {
-    if (driver == DRIVER_VANDAMME && GfDataUtil::isVandammeDead()) {
-      GfGameUtil::execDriverDead(DRIVER_VANDAMME);
+    if (driver == DRIVER_UNKNOWN_5 && GfDataUtil::isVandammeDead()) {
+      GfGameUtil::execDriverDead(DRIVER_UNKNOWN_5);
     }
   } else if (activateType == 0 && oldActivateType != 0) {
     GfGameUtil::execEquipDriverDefaultAcce(driver);
@@ -855,12 +912,12 @@ void GfGameScene::gevDriverActivate(u32 driver, ActivateType activateType, Activ
 }
 
 void GfGameScene::gevBladeActivate(u32 blade, ActivateType activateType, ActivateType oldActivateType) {
-  if (blade == BLADE_SUZAKU && activateType != 0 && oldActivateType == 0 && GfDataUtil::getScenarioFlag() == SCENARIO_FLAG_SUZAKU_ACTIVATE) {
+  if (blade == BLADE_SUZAKU && activateType != 0 && oldActivateType == 0 && GfDataUtil::getScenarioFlag() == SCENARIO_FLAG_UNKNOWN_3048) {
     for (u32 slot = 0; slot < GfDataBlade::getEquipOrbMax(BLADE_SUZAKU); slot++) {
       GfEquipUtil::equipBladeOrb(BLADE_SUZAKU, 0, slot, GfItemHandle(0));
     }
-    SDataBlade *dataBlade = GfDataBlade::getSDataBlade(BLADE_SUZAKU);
-    dataBlade->unknown82c = GfBdatChrBl::get()->getChrBlDefWeapon(BLADE_SUZAKU);
+    SDataBlade &dataBlade = GfDataBlade::getSDataBlade(BLADE_SUZAKU);
+    dataBlade.unknown82c = GfBdatChrBl::get()->getChrBlDefWeapon(BLADE_SUZAKU);
   }
   if (activateType == 0 && oldActivateType != 0 && !GfDataBlade::isUnselect(blade)) {
     GfGameUtil::execSaveAchievementPopup(blade);
@@ -875,13 +932,13 @@ void GfGameScene::gevBladeUnselect(u32 blade, bool unselect) {
 
 void GfGameScene::gevMapjump(GEV event, const MapjumpCallbackInfo &info) {
   switch (event) {
-  case GEV_MAPJUMP_CHANGE_MAP:
+  case GEV_UNKNOWN_4:
     applyMapjumpForCleanup(info);
     break;
-  case GEV_MAPJUMP_END:
+  case GEV_UNKNOWN_7:
     applyMapjumpForEnd(info);
     break;
-  case GEV_MAPJUMP_START:
+  case GEV_UNKNOWN_1:
     applyMapjumpForStart(info);
     break;
   default:
@@ -901,18 +958,18 @@ void GfGameScene::gevItemAdd(u32 item, int count) {
   for (u32 crystal = start; crystal < end; crystal++) {
     crystalCount += GfItemUtil::getItemBoxCount(crystal);
   }
-  GfGameFlag::setLocal(8, FLAG_CRYSTAL_COUNT, crystalCount > 0xff ? 0xff : crystalCount);
+  GfGameFlag::setLocal(8, FLAG_UNKNOWN_2133, crystalCount > 0xff ? 0xff : crystalCount);
   if (count > 0) {
     if (GfDataItem::isHomuraCookItem(item)) {
-      addAchievementCount(ACHIEVEMENT_STATS_HOMURA_COOK_ITEM, count);
+      addAchievementCount(ACHIEVEMENT_STATS_UNKNOWN_70, count);
     } else if (GfDataItem::isYuohCookItem(item)) {
-      addAchievementCount(ACHIEVEMENT_STATS_YUOH_COOK_ITEM, count);
+      addAchievementCount(ACHIEVEMENT_STATS_UNKNOWN_71, count);
     } else if (GfDataItem::isMusubiCookItem(item)) {
-      addAchievementCount(ACHIEVEMENT_STATS_MUSUBI_COOK_ITEM, count);
+      addAchievementCount(ACHIEVEMENT_STATS_UNKNOWN_72, count);
     } else if (GfDataItem::isMayItem(item)) {
-      addAchievementCount(ACHIEVEMENT_STATS_MAY_ITEM, count);
+      addAchievementCount(ACHIEVEMENT_STATS_UNKNOWN_73, count);
     } else if (GfDataItem::isTukiItem(item)) {
-      addAchievementCount(ACHIEVEMENT_STATS_TUKI_ITEM, count);
+      addAchievementCount(ACHIEVEMENT_STATS_UNKNOWN_74, count);
     }
   }
 }
@@ -920,7 +977,7 @@ void GfGameScene::gevItemAdd(u32 item, int count) {
 void GfGameScene::gevGameObjEnter(GF_OBJ_HANDLE *handle) {
   GfObjAcc obj(handle);
   switch (obj.getType()) {
-  case OBJECT_TYPE_BELONGING:
+  case OBJECT_TYPE_OPTION:
     createDriverAppendModelControl(handle);
     break;
   case OBJECT_TYPE_NPC:
@@ -937,7 +994,7 @@ void GfGameScene::gevGameObjEnter(GF_OBJ_HANDLE *handle) {
 
 void GfGameScene::gevGameObjLeave(GF_OBJ_HANDLE *handle) {
   switch (GfObjUtil::getObjType(handle)) {
-  case OBJECT_TYPE_DRIVER: {
+  case OBJECT_TYPE_PC: {
     GfObjSetupDriver *setup = GfObjUtil::getObjSetup<GfObjSetupDriver>(handle);
     if (setup != nullptr && setup->unknown14 != -1) {
       unknown228[setup->unknown14] = 0;
@@ -951,7 +1008,7 @@ void GfGameScene::gevGameObjLeave(GF_OBJ_HANDLE *handle) {
   case OBJECT_TYPE_ENEMY:
     saveBattleHpForEnemy(handle);
     break;
-  case OBJECT_TYPE_BELONGING:
+  case OBJECT_TYPE_OPTION:
     destroyDriverAppendModelControl(handle);
     break;
   }
@@ -962,10 +1019,10 @@ void GfGameScene::gevChangeTimeRange(u32 timeRange) {
     return;
   }
   CV_FIELD voice;
-  if (timeRange == TIME_RANGE_MORNING) {
-    voice = CV_FIELD_TIME_MORNING;
-  } else if (timeRange == TIME_RANGE_EVENING) {
-    voice = CV_FIELD_TIME_NIGHT;
+  if (timeRange == TIME_RANGE_UNKNOWN_0) {
+    voice = CV_FIELD_UNKNOWN_31;
+  } else if (timeRange == TIME_RANGE_UNKNOWN_3) {
+    voice = CV_FIELD_UNKNOWN_32;
   } else {
     return;
   }
@@ -993,7 +1050,7 @@ void GfGameScene::gevBattleEnd() {
       if (paramAcc.isValid() && paramAcc.getHp() == 0) {
         GfObj *obj = GfObjUtil::getObj(paramAcc.unknown10);
         if (obj != nullptr) {
-          MsgObjectHealHp message(1, HEAL_TYPE_NORMAL);
+          MsgObjectHealHp message(1, HEAL_TYPE_UNKNOWN_0);
           obj->sendMessage(obj, message);
         }
       }
@@ -1016,28 +1073,28 @@ void GfGameScene::gevMercenariesMissionFlag(u32 mission, u32 flag, u32) {
 
 void GfGameScene::playEventSequenceStart(u32 event) {
   switch (event) {
-  case EVENT_NIA_SET_BYAKKO:
-    GfDataDriver::setBlade(DRIVER_NIA, BLADE_BYAKKO, -1);
+  case EVENT_UNKNOWN_10037:
+    GfDataDriver::setBlade(DRIVER_UNKNOWN_2, BLADE_BYAKKO, -1);
     break;
-  case EVENT_SUZAKU_ACTIVATE: {
-    GfDataBlade::setActivateDriver(BLADE_SUZAKU, -1, DRIVER_VANDAMME, 0);
-    int bladeSet = GfDataDriver::getSetIdByBlade(DRIVER_VANDAMME, BLADE_SUZAKU);
-    DataParamAcc paramAcc(OBJECT_TYPE_DRIVER, DRIVER_VANDAMME, GimmickType());
+  case EVENT_UNKNOWN_10090: {
+    GfDataBlade::setActivateDriver(BLADE_SUZAKU, -1, DRIVER_UNKNOWN_5, 0);
+    int bladeSet = GfDataDriver::getSetIdByBlade(DRIVER_UNKNOWN_5, BLADE_SUZAKU);
+    DataParamAcc paramAcc(OBJECT_TYPE_PC, DRIVER_UNKNOWN_5, GimmickType());
     paramAcc.setBladeSet(bladeSet);
     GfDataBlade::setUnselect(BLADE_SUZAKU, true);
     break;
   }
-  case EVENT_SUZAKU_RELEASE:
+  case EVENT_UNKNOWN_10091:
     GfDataBlade::setUnselect(BLADE_SUZAKU, false);
     GfDataBlade::setActivateUnuse(BLADE_SUZAKU);
     break;
-  case EVENT_SHIN_SET_DUMMY:
-    GfDataDriver::unsetBlade(BLADE_REX_DUMMY);
-    GfDataDriver::setBlade(DRIVER_SHIN, BLADE_SHIN_DUMMY, -1);
+  case EVENT_UNKNOWN_10439:
+    GfDataDriver::unsetBlade(BLADE_UNKNOWN_1012);
+    GfDataDriver::setBlade(DRIVER_UNKNOWN_7, BLADE_UNKNOWN_1013, -1);
     break;
-  case EVENT_SAVE_MONEY: {
+  case EVENT_UNKNOWN_41007: {
     u32 money = GfDataUtil::getMoney();
-    GfGameFlag::setLocal(16, FLAG_EVENT_MONEY, money > 0xffff ? 0xffff : money);
+    GfGameFlag::setLocal(16, FLAG_UNKNOWN_1551, money > 0xffff ? 0xffff : money);
     break;
   }
   }
@@ -1048,24 +1105,24 @@ void GfGameScene::playEventSequenceStart(u32 event) {
   }
   GfSound *sound = GfSound::get();
   if (sound != nullptr) {
-    sound->setCategoryVolume(unknown650, CATEGORY_CHARACTER_SE, 0.0f, 0.5f);
-    sound->setCategoryVolume(unknown650, CATEGORY_NO_SLOW_SE, 0.0f, 0.5f);
+    sound->setCategoryVolume(unknown650, CATEGORY_CH_SE, 0.0f, 0.5f);
+    sound->setCategoryVolume(unknown650, CATEGORY_CH_SE_NS, 0.0f, 0.5f);
   }
 }
 
 void GfGameScene::playEventSequenceEnd(u32 event) {
-  if (event == EVENT_LAST_KIZUNA_TALK) {
+  if (event == EVENT_UNKNOWN_30053) {
     GfGameUtil::addTrusuPointByLastKizunaTalk();
   }
   m_playEvent = false;
   GfSound *sound = GfSound::get();
   if (sound != nullptr) {
-    sound->setCategoryVolume(unknown650, CATEGORY_CHARACTER_SE, 1.0f, 0.2f);
-    sound->setCategoryVolume(unknown650, CATEGORY_NO_SLOW_SE, 1.0f, 0.2f);
-    sound->setCategoryVolume(unknown660, CATEGORY_GAME_ENV, 1.0f, 0.2f);
-    sound->setCategoryVolume(unknown660, CATEGORY_GIMMICK_SE, 1.0f, 0.2f);
-    sound->setCategoryVolume(unknown660, CATEGORY_GAME_WEATHER, 1.0f, 0.2f);
-    sound->setCategoryVolume(unknown660, CATEGORY_GAME_BGM, 1.0f, 0.2f);
+    sound->setCategoryVolume(unknown650, CATEGORY_CH_SE, 1.0f, 0.2f);
+    sound->setCategoryVolume(unknown650, CATEGORY_CH_SE_NS, 1.0f, 0.2f);
+    sound->setCategoryVolume(unknown660, CATEGORY_ENV, 1.0f, 0.2f);
+    sound->setCategoryVolume(unknown660, CATEGORY_GIMMICK, 1.0f, 0.2f);
+    sound->setCategoryVolume(unknown660, CATEGORY_WEATHER, 1.0f, 0.2f);
+    sound->setCategoryVolume(unknown660, CATEGORY_BGM, 1.0f, 0.2f);
   }
   if (GfManager::isExecModeThater()) {
     return;
@@ -1085,26 +1142,26 @@ void GfGameScene::playEventPlayStart(u32) {
 
 void GfGameScene::playEventPlayEnd(u32 event) {
   m_playEvent = false;
-  if (event != EVENT_KEEP_VOLUME) {
+  if (event != EVENT_UNKNOWN_30173) {
     GfSound *sound = GfSound::get();
     if (sound != nullptr) {
-      sound->setCategoryVolume(unknown650, CATEGORY_CHARACTER_SE, 0.0f, 0.0f);
-      sound->setCategoryVolume(unknown650, CATEGORY_NO_SLOW_SE, 0.0f, 0.0f);
-      for (u16 mapjumpEvent : MAPJUMP_EVENTS) {
+      sound->setCategoryVolume(unknown650, CATEGORY_CH_SE, 0.0f, 0.0f);
+      sound->setCategoryVolume(unknown650, CATEGORY_CH_SE_NS, 0.0f, 0.0f);
+      for (u16 mapjumpEvent : unknown035) {
         if (mapjumpEvent == event) {
-          sound->setCategoryVolume(unknown658, CATEGORY_GAME_WEATHER, 0.0f, 0.0f);
-          sound->setCategoryVolume(unknown658, CATEGORY_GAME_BGM, 0.0f, 0.0f);
-          sound->setCategoryVolume(unknown658, CATEGORY_EVENT_BGM, 0.0f, 0.0f);
-          sound->setCategoryVolume(unknown658, CATEGORY_FIELD_SE, 0.0f, 0.0f);
-          sound->setCategoryVolume(unknown658, CATEGORY_GIMMICK_SE, 0.0f, 0.0f);
-          sound->setCategoryVolume(unknown658, CATEGORY_GAME_ENV, 0.0f, 0.0f);
+          sound->setCategoryVolume(unknown658, CATEGORY_WEATHER, 0.0f, 0.0f);
+          sound->setCategoryVolume(unknown658, CATEGORY_BGM, 0.0f, 0.0f);
+          sound->setCategoryVolume(unknown658, CATEGORY_EVT_BGM, 0.0f, 0.0f);
+          sound->setCategoryVolume(unknown658, CATEGORY_FIELD, 0.0f, 0.0f);
+          sound->setCategoryVolume(unknown658, CATEGORY_GIMMICK, 0.0f, 0.0f);
+          sound->setCategoryVolume(unknown658, CATEGORY_ENV, 0.0f, 0.0f);
         }
       }
-      if (event == EVENT_ENV_SILENT) {
-        sound->setCategoryVolume(unknown660, CATEGORY_GAME_ENV, 0.0f, 0.0f);
-        sound->setCategoryVolume(unknown660, CATEGORY_GIMMICK_SE, 0.0f, 0.0f);
-        sound->setCategoryVolume(unknown660, CATEGORY_GAME_WEATHER, 0.0f, 0.0f);
-        sound->setCategoryVolume(unknown660, CATEGORY_GAME_BGM, 0.0f, 0.0f);
+      if (event == EVENT_UNKNOWN_10150) {
+        sound->setCategoryVolume(unknown660, CATEGORY_ENV, 0.0f, 0.0f);
+        sound->setCategoryVolume(unknown660, CATEGORY_GIMMICK, 0.0f, 0.0f);
+        sound->setCategoryVolume(unknown660, CATEGORY_WEATHER, 0.0f, 0.0f);
+        sound->setCategoryVolume(unknown660, CATEGORY_BGM, 0.0f, 0.0f);
       }
     }
   }
@@ -1119,42 +1176,42 @@ void GfGameScene::playEventStartFrame(u32) {
   }
   GfSound *sound = GfSound::get();
   if (sound != nullptr) {
-    sound->setCategoryVolume(unknown650, CATEGORY_CHARACTER_SE, 1.0f, 0.0f);
-    sound->setCategoryVolume(unknown650, CATEGORY_NO_SLOW_SE, 1.0f, 0.0f);
+    sound->setCategoryVolume(unknown650, CATEGORY_CH_SE, 1.0f, 0.0f);
+    sound->setCategoryVolume(unknown650, CATEGORY_CH_SE_NS, 1.0f, 0.0f);
   }
 }
 
 void GfGameScene::updatePlayerState() {
   for (unknown006 &state : unknown240) {
-    state.unknown04 = MOVER_STATE_NONE;
+    state.unknown04 = MOVER_STATE_UNKNOWN_0;
     state.unknown0d = false;
     GfObjProperty *property = GfObjUtil::getProperty(GfGameParty::getHandleMover(state.unknown00));
     if (property != nullptr && property->unknown18 != nullptr) {
       unknown070 *move = property->unknown18;
-      state.unknown04 = MOVER_STATE_FIELD;
+      state.unknown04 = MOVER_STATE_UNKNOWN_1;
       switch (move->unknown00) {
-      case PROPERTY_MOVE_SWIM:
-        state.unknown04 = MOVER_STATE_SWIM;
+      case PROPERTY_MOVE_UNKNOWN_1:
+        state.unknown04 = MOVER_STATE_UNKNOWN_2;
         break;
-      case PROPERTY_MOVE_CLIMB:
-        state.unknown04 = MOVER_STATE_CLIMB;
+      case PROPERTY_MOVE_UNKNOWN_3:
+        state.unknown04 = MOVER_STATE_UNKNOWN_3;
         break;
-      case PROPERTY_MOVE_ACTION:
-        state.unknown04 = MOVER_STATE_BUSY;
+      case PROPERTY_MOVE_UNKNOWN_4:
+        state.unknown04 = MOVER_STATE_UNKNOWN_5;
         break;
       }
       if (move->unknown80) {
-        state.unknown04 = MOVER_STATE_JUMP;
+        state.unknown04 = MOVER_STATE_UNKNOWN_4;
       }
-      if (move->unknownc0 != INVALID_HANDLE) {
-        state.unknown04 = MOVER_STATE_BUSY;
+      if (move->unknownc0 != unknown020) {
+        state.unknown04 = MOVER_STATE_UNKNOWN_5;
       }
       if (move->unknownc8 != 0.0f) {
         state.unknown0d = true;
       }
     }
-    if (state.unknown04 == MOVER_STATE_FIELD && !GfGameManager::isControlFree()) {
-      state.unknown04 = MOVER_STATE_BUSY;
+    if (state.unknown04 == MOVER_STATE_UNKNOWN_1 && !GfGameManager::isControlFree()) {
+      state.unknown04 = MOVER_STATE_UNKNOWN_5;
     }
     state.unknown0c = _gfgsc::isPartyMemberGetFieldDamage(state.unknown00);
     GfObjAcc obj(GfGameParty::getHandleMover(state.unknown00));
@@ -1164,33 +1221,34 @@ void GfGameScene::updatePlayerState() {
 
 void GfGameScene::gevPlayEvent(GEV event, u32 eventId) {
   switch (event) {
-  case GEV_EVENT_END:
+  case GEV_UNKNOWN_9:
     playEventPlayStart(eventId);
     break;
-  case GEV_EVENT_PLAY_END:
+  case GEV_UNKNOWN_10:
     playEventPlayEnd(eventId);
     break;
-  case GEV_EVENT_SEQUENCE_START:
+  case GEV_UNKNOWN_11:
     playEventSequenceStart(eventId);
     break;
-  case GEV_EVENT_SEQUENCE_END:
+  case GEV_UNKNOWN_12:
     playEventSequenceEnd(eventId);
     break;
-  case GEV_EVENT_START_FRAME:
+  case GEV_UNKNOWN_13:
     playEventStartFrame(eventId);
     break;
   }
 }
 
 void GfGameScene::gevSelectHikari(bool) {
-  if (GfDataBlade::getSetDriver(BLADE_HOMURA) != DRIVER_REX || GfDataBlade::getSetDriver(BLADE_HIKARI) != DRIVER_REX) {
+  if (GfDataBlade::getSetDriver(BLADE_HOMURA) != DRIVER_UNKNOWN_1 || GfDataBlade::getSetDriver(BLADE_HIKARI) != DRIVER_UNKNOWN_1) {
     return;
   }
-  if ((GfDataBlade::isHikariCurrent() && GfDataDriver::getBlade(DRIVER_REX, -1) == BLADE_HOMURA) || (!GfDataBlade::isHikariCurrent() && GfDataDriver::getBlade(DRIVER_REX, -1) == BLADE_HIKARI)) {
-    int bladeSet = GfDataDriver::getSetIdByBlade(DRIVER_REX, GfDataBlade::isHikariCurrent() ? BLADE_HIKARI : BLADE_HOMURA);
-    GF_OBJ_HANDLE *driver = GfGameParty::getHandleDriverByBdatID(DRIVER_REX);
+  if ((GfDataBlade::isHikariCurrent() && GfDataDriver::getBlade(DRIVER_UNKNOWN_1, -1) == BLADE_HOMURA) ||
+      (!GfDataBlade::isHikariCurrent() && GfDataDriver::getBlade(DRIVER_UNKNOWN_1, -1) == BLADE_HIKARI)) {
+    int bladeSet = GfDataDriver::getSetIdByBlade(DRIVER_UNKNOWN_1, GfDataBlade::isHikariCurrent() ? BLADE_HIKARI : BLADE_HOMURA);
+    GF_OBJ_HANDLE *driver = GfGameParty::getHandleDriverByBdatID(DRIVER_UNKNOWN_1);
     if (!GfObjUtil::isValid(driver)) {
-      DataParamAcc paramAcc(OBJECT_TYPE_DRIVER, DRIVER_REX, GimmickType());
+      DataParamAcc paramAcc(OBJECT_TYPE_PC, DRIVER_UNKNOWN_1, GimmickType());
       paramAcc.setBladeSet(bladeSet);
     } else {
       GfGameUtil::setBladeSelect(driver, bladeSet);
@@ -1221,43 +1279,43 @@ void GfGameScene::postUpdate(const fw::UpdateInfo &info) { updateAppendModel(inf
 
 OwnerBonus &GfGameScene::getOwnerBonus() const { return m_ownerBonus; }
 
-void GfGameScene::setCameraAvtivateOneTime() { unknown144 |= FLAG_CAMERA_ACTIVATE_ONE_TIME; }
+void GfGameScene::setCameraAvtivateOneTime() { unknown144 |= FLAG_UNKNOWN_0; }
 
 bool GfGameScene::isPlayerCameraPause() {
-  if (unknown144 & FLAG_CAMERA_PAUSE) {
+  if (unknown144 & FLAG_UNKNOWN_2) {
     return true;
   }
-  if (unknown144 & FLAG_CAMERA_ACTIVATE_ONE_TIME) {
-    unknown144 &= ~FLAG_CAMERA_ACTIVATE_ONE_TIME;
+  if (unknown144 & FLAG_UNKNOWN_0) {
+    unknown144 &= ~FLAG_UNKNOWN_0;
     return false;
   }
-  return GfPause::isPause(PAUSE_BIT_SYSTEM);
+  return GfPause::isPause(PAUSE_BIT_UNKNOWN_0);
 }
 
 void GfGameScene::setPlayerCameraPause(bool isPause) {
   if (isPause) {
-    unknown144 |= FLAG_CAMERA_PAUSE;
+    unknown144 |= FLAG_UNKNOWN_2;
   } else {
-    unknown144 &= ~FLAG_CAMERA_PAUSE;
+    unknown144 &= ~FLAG_UNKNOWN_2;
   }
 }
 
 void GfGameScene::enterBattle(bool isBattle) {
-  if (isBattle != ((unknown144 & FLAG_BATTLE) != 0)) {
+  if (isBattle != ((unknown144 & FLAG_UNKNOWN_1) != 0)) {
     if (!isBattle) {
-      unknown144 &= ~FLAG_BATTLE;
+      unknown144 &= ~FLAG_UNKNOWN_1;
       GfEvent::callBattleEnd();
       unknown1cb = false;
       return;
     }
-    unknown144 |= FLAG_BATTLE;
+    unknown144 |= FLAG_UNKNOWN_1;
     GfEvent::callBattleStart();
   }
   unknown1cb = false;
   if (!isBattle) {
     return;
   }
-  u32 partyId = GfGameParty::getPartyId(OBJECT_TYPE_DRIVER, DRIVER_REX);
+  u32 partyId = GfGameParty::getPartyId(OBJECT_TYPE_PC, DRIVER_UNKNOWN_1);
   if (partyId == -1) {
     return;
   }
@@ -1284,7 +1342,7 @@ void GfGameScene::addDamage(GF_OBJ_HANDLE *handle, const MsgObjectNotifyDamage &
   setDamageCharacter(handle);
 }
 
-void GfGameScene::addMoneyLog() { unknown118 = MONEY_LOG_TIME; }
+void GfGameScene::addMoneyLog() { unknown118 = unknown024; }
 
 QuestID GfGameScene::getQuestIdForTaskLog() const { return m_questIdForTaskLog; }
 
@@ -1301,12 +1359,12 @@ void GfGameScene::updatePartyMover(const fw::UpdateInfo &) {
   movers[1] = GfGameParty::getHandleMover(1);
   movers[2] = GfGameParty::getHandleMover(2);
   for (GF_OBJ_HANDLE *mover : movers) {
-    if (mover != INVALID_HANDLE && unknown3f8[0] != mover && unknown3f8[1] != mover && unknown3f8[2] != mover) {
+    if (mover != unknown020 && unknown3f8[0] != mover && unknown3f8[1] != mover && unknown3f8[2] != mover) {
       GfEvent::callPartyMover(mover, true);
     }
   }
   for (GF_OBJ_HANDLE *mover : unknown3f8) {
-    if (mover != INVALID_HANDLE && mover != movers[0] && mover != movers[1] && mover != movers[2]) {
+    if (mover != unknown020 && mover != movers[0] && mover != movers[1] && mover != movers[2]) {
       GfEvent::callPartyMover(mover, false);
     }
   }
@@ -1317,8 +1375,8 @@ void GfGameScene::updateParam(const fw::UpdateInfo &info) {
   updateOwnerBonus(info);
   {
     mm::mtl::FixedVector<u16, 16> drivers;
-    GfPartySelect::getDriverList(drivers, GfPartySelect::LIST_TYPE_RESERVER, 0);
-    GfPartySelect::getDriverList(drivers, GfPartySelect::LIST_TYPE_PARTY, 0);
+    GfPartySelect::getDriverList(drivers, GfPartySelect::LIST_TYPE_UNKNOWN_1, 0);
+    GfPartySelect::getDriverList(drivers, GfPartySelect::LIST_TYPE_UNKNOWN_0, 0);
     for (u16 driver : drivers) {
       GfGameUtil::refreshEnhanceState(driver);
     }
@@ -1329,7 +1387,7 @@ void GfGameScene::updateParam(const fw::UpdateInfo &info) {
 void GfGameScene::updateExtraControlForHanaJS(const fw::UpdateInfo &) {
   for (GF_OBJ_HANDLE *handle : unknown3b0) {
     GfObjAcc obj(handle);
-    if (obj.getBdatId() == BLADE_HANA_JS) {
+    if (obj.getBdatId() == BLADE_UNKNOWN_1005) {
       int index = obj.getEtcParamIndex("skin_line");
       if (index >= 0 && GfDataUtil::getScenarioFlag() < 2034) {
         obj.setEtcParam(index, 0.0f);
@@ -1369,12 +1427,12 @@ void GfGameScene::updateStopEnemyAttackForEvent(const fw::UpdateInfo &) {
     unknown620--;
   }
   if (GfGameManager::isEvent(false) || GfGameManager::isTalking()) {
-    unknown620 = STOP_ENEMY_ATTACK_FRAME;
+    unknown620 = FRAME_UNKNOWN_30;
   }
 }
 
 void GfGameScene::updatePartyObjFlag(const fw::UpdateInfo &) {
-  for (GF_OBJ_HANDLE *handle : *GfGameObj::getList(OBJECT_TYPE_DRIVER)) {
+  for (GF_OBJ_HANDLE *handle : *GfGameObj::getList(OBJECT_TYPE_PC)) {
     GfObjUtil::applyExecUpdate(handle);
   }
   for (GF_OBJ_HANDLE *handle : *GfGameObj::getList(OBJECT_TYPE_BLADE)) {
@@ -1392,7 +1450,7 @@ void GfGameScene::updateBattleMomuri(const fw::UpdateInfo &) {
   if (unknown1cb || GfGameManager::isMapjump()) {
     return;
   }
-  u32 partyId = GfGameParty::getPartyId(OBJECT_TYPE_DRIVER, DRIVER_REX);
+  u32 partyId = GfGameParty::getPartyId(OBJECT_TYPE_PC, DRIVER_UNKNOWN_1);
   if (partyId == -1) {
     return;
   }
@@ -1405,7 +1463,7 @@ void GfGameScene::updateBattleMomuri(const fw::UpdateInfo &) {
     if (obj.isBattle() && enArrange->isChrEnArrangeFlagHomuri(obj.getEnArrangeId())) {
       if (GfGameManager::isControlFree()) {
         unknown1cb = true;
-        unknown1cc = GfReqCommand::reqChangeBladeWithSetId(GfGameParty::getPartyId(OBJECT_TYPE_DRIVER, DRIVER_REX), HOMURI_BLADE_SET, false);
+        unknown1cc = GfReqCommand::reqChangeBladeWithSetId(GfGameParty::getPartyId(OBJECT_TYPE_PC, DRIVER_UNKNOWN_1), HOMURI_UNKNOWN_4, false);
       }
       return;
     }
@@ -1417,7 +1475,7 @@ void GfGameScene::updateHikariLv4Room(const fw::UpdateInfo &) {
   if (GfGameManager::isMapjump()) {
     return;
   }
-  u32 partyId = GfGameParty::getPartyId(OBJECT_TYPE_DRIVER, DRIVER_REX);
+  u32 partyId = GfGameParty::getPartyId(OBJECT_TYPE_PC, DRIVER_UNKNOWN_1);
   if (partyId == -1) {
     return;
   }
@@ -1430,14 +1488,14 @@ void GfGameScene::updateHikariLv4Room(const fw::UpdateInfo &) {
     GfObjAcc obj(GfGameParty::getHandleDriver(0));
     mm::Vec3 hit;
     mm::Vec3 position = obj.getWorldTransform().unknown00 + mm::Vec3(0.0f, 1.0f, 0.0f);
-    if (!util::getUpperHitCollision(hit, position, HIKARI_ROOM_HEIGHT)) {
+    if (!util::getUpperHitCollision(hit, position, unknown028)) {
       unknown1ca = true;
     }
   }
 }
 
 void GfGameScene::updateStartGame(const fw::UpdateInfo &) {
-  if (unknown1c9 && GfGameManager::isControlFree() && !GfGameManager::isFadeout() && unknown1c4 == GEV_PLAYER_CONTROL_FREE) {
+  if (unknown1c9 && GfGameManager::isControlFree() && !GfGameManager::isFadeout() && unknown1c4 == GEV_UNKNOWN_14) {
     unknown1c9 = false;
   }
 }
@@ -1445,21 +1503,21 @@ void GfGameScene::updateStartGame(const fw::UpdateInfo &) {
 void GfGameScene::updateAfterEventCount(const fw::UpdateInfo &) {
   if (!GfGameManager::isPlaySequenceClear()) {
     unknown624 = 0;
-  } else if (unknown624 < AFTER_EVENT_COUNT_MAX) {
+  } else if (unknown624 < AFTER_EVENT_UNKNOWN_1000) {
     unknown624++;
   }
 }
 
 void GfGameScene::updateControlFreeEvent(const fw::UpdateInfo &) {
-  if (GfPlayComGmkTutorialSeq::s_activate <= 0 && (!GfGameManager::isBladeChange() || GfSequentialPlay::isInnerState(GF_STATE_SALVAGE)) && !GfGameManager::isControlFree()) {
-    if (unknown1c0 > 0 && --unknown1c0 == 0 && unknown1c4 != GEV_PLAYER_CONTROL_LOCK) {
-      unknown1c4 = GEV_PLAYER_CONTROL_LOCK;
-      GfEvent::callPlayerControl(GEV_PLAYER_CONTROL_LOCK);
+  if (GfPlayComGmkTutorialSeq::s_activate <= 0 && (!GfGameManager::isBladeChange() || GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_11)) && !GfGameManager::isControlFree()) {
+    if (unknown1c0 > 0 && --unknown1c0 == 0 && unknown1c4 != GEV_UNKNOWN_15) {
+      unknown1c4 = GEV_UNKNOWN_15;
+      GfEvent::callPlayerControl(GEV_UNKNOWN_15);
     }
   } else if (!GfManager::isExecModeAdvertize()) {
-    if (unknown1c0 < CONTROL_FREE_FRAME && ++unknown1c0 == CONTROL_FREE_FRAME && unknown1c4 != GEV_PLAYER_CONTROL_FREE) {
-      unknown1c4 = GEV_PLAYER_CONTROL_FREE;
-      GfEvent::callPlayerControl(GEV_PLAYER_CONTROL_FREE);
+    if (unknown1c0 < FRAME_UNKNOWN_10 && ++unknown1c0 == FRAME_UNKNOWN_10 && unknown1c4 != GEV_UNKNOWN_14) {
+      unknown1c4 = GEV_UNKNOWN_14;
+      GfEvent::callPlayerControl(GEV_UNKNOWN_14);
     }
   }
 }
@@ -1553,9 +1611,9 @@ void GfGameScene::updateBladeChangeInField(const fw::UpdateInfo &info) {
 void GfGameScene::updateColiPrio(const fw::UpdateInfo &) {
   for (u32 partyId = 0; partyId < 3; partyId++) {
     DataParamAcc driverAcc(GfGameParty::getHandleDriver(partyId));
-    unknown001(driverAcc, driverAcc.getHp() == 0, unknown240[partyId].unknown04 == MOVER_STATE_SWIM);
+    unknown001(driverAcc, driverAcc.getHp() == 0, unknown240[partyId].unknown04 == MOVER_STATE_UNKNOWN_2);
     DataParamAcc bladeAcc(GfGameParty::getHandleBlade(partyId, -1));
-    unknown001(bladeAcc, driverAcc.getHp() == 0, unknown240[partyId].unknown04 == MOVER_STATE_SWIM);
+    unknown001(bladeAcc, driverAcc.getHp() == 0, unknown240[partyId].unknown04 == MOVER_STATE_UNKNOWN_2);
   }
 }
 
@@ -1568,15 +1626,15 @@ void GfGameScene::updateAutoHeal(const fw::UpdateInfo &info) {
     }
     return;
   }
-  if (GfSequentialPlay::isInnerState(GF_STATE_PLAYER_DEAD)) {
+  if (GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_10)) {
     return;
   }
   for (u32 partyId = 0; partyId < 3; partyId++) {
     unknown004 &character = unknown20[partyId];
     GF_OBJ_HANDLE *driver = GfGameParty::getHandleDriver(partyId);
-    if (driver == INVALID_HANDLE) {
-      if (character.unknown00 != INVALID_HANDLE) {
-        character.unknown00 = INVALID_HANDLE;
+    if (driver == unknown020) {
+      if (character.unknown00 != unknown020) {
+        character.unknown00 = unknown020;
       }
       continue;
     }
@@ -1591,12 +1649,12 @@ void GfGameScene::updateAutoHeal(const fw::UpdateInfo &info) {
     u32 maxHp = paramAcc.getHpMax(false);
     if (hp != maxHp) {
       character.unknown08 += info.unknown04;
-      if (!(character.unknown08 < AUTO_HEAL_INTERVAL)) {
+      if (!(character.unknown08 < unknown029)) {
         character.unknown08 = 0.0f;
         GfObj *obj = GfObjUtil::getObj(driver);
         if (obj != nullptr) {
-          u32 heal = floorf(maxHp * AUTO_HEAL_RATE * 0.01f + 0.000001f);
-          MsgObjectHealHp message(hp + heal > maxHp ? maxHp - hp : heal, HEAL_TYPE_NORMAL);
+          u32 heal = floorf(maxHp * unknown032 * 0.01f + 0.000001f);
+          MsgObjectHealHp message(hp + heal > maxHp ? maxHp - hp : heal, HEAL_TYPE_UNKNOWN_0);
           obj->sendMessage(obj, message);
         }
       }
@@ -1616,10 +1674,27 @@ void GfGameScene::updateMaxHp(const fw::UpdateInfo &) {
     paramAcc.getHp();
     paramAcc.getHpMax(false);
     if (paramAcc.getHp() > paramAcc.getHpMax(false)) {
-      MsgObjectHealHp message(0, HEAL_TYPE_FULL);
+      MsgObjectHealHp message(0, HEAL_TYPE_UNKNOWN_1);
       obj->sendMessage(obj, message);
     }
   }
+}
+
+void GfGameScene::updateListeningPoint(const fw::UpdateInfo &) {
+  mm::Mat44 matrix;
+  if (unknown2a0) {
+    matrix.unknown007(unknown290);
+    unknown2a0 = false;
+  } else {
+    fw::CameraManager::get()->unknown20[0].getMtx(matrix);
+    GfObjAcc obj(GfGameManager::getControlMover());
+    if (obj.isValidTransform()) {
+      const mm::Vec3 &position = obj.getWorldTransform().unknown00;
+      matrix.setTrans(mm::Vec3(position.x, position.y + 1.5f, position.z));
+    }
+  }
+  fw::SoundManager::get()->setListeningPoint(matrix);
+  unknown280 = matrix.unknown004();
 }
 
 void GfGameScene::updateLog(const fw::UpdateInfo &info) {
@@ -1632,7 +1707,7 @@ void GfGameScene::updateLog(const fw::UpdateInfo &info) {
 }
 
 void GfGameScene::updateQuestTaskLog(const fw::UpdateInfo &) {
-  QuestID quest = GfQuestManager::getProgressCurrentQuest(QTYPE_NONE);
+  QuestID quest = GfQuestManager::getProgressCurrentQuest(QTYPE_UNKNOWN_0);
   if (m_questIdForTaskLog.empty()) {
     if (!quest.empty()) {
       m_questIdForTaskLog.unknown00 = quest.unknown00;
@@ -1647,7 +1722,7 @@ void GfGameScene::updateQuestTaskLog(const fw::UpdateInfo &) {
 }
 
 void GfGameScene::updateForceBattle(const fw::UpdateInfo &info) {
-  if (!GfPause::isPause(PAUSE_BIT_SYSTEM) && unknown12c > 0.0f) {
+  if (!GfPause::isPause(PAUSE_BIT_UNKNOWN_0) && unknown12c > 0.0f) {
     unknown12c -= info.unknown04;
     if (unknown12c < 0.0f) {
       unknown12c = 0.0f;
@@ -1660,18 +1735,18 @@ void GfGameScene::updateMoveAchievement(const fw::UpdateInfo &) {
   if (!obj.isValidTransform()) {
     return;
   }
-  if (!GfPause::isPause(PAUSE_BIT_SYSTEM) && GfGameManager::isControlFree()) {
+  if (!GfPause::isPause(PAUSE_BIT_UNKNOWN_0) && GfGameManager::isControlFree()) {
     const mm::Vec3 &position = obj.getWorldTransform().unknown00;
     f32 x = position.x - unknown150.x;
     f32 y = position.y - unknown150.y;
     f32 z = position.z - unknown150.z;
     f32 distance = sqrtf(x * x + y * y + z * z);
-    if (!(distance < MOVE_DISTANCE_MIN)) {
+    if (!(distance < unknown033)) {
       for (unknown005 &achievement : unknown160) {
         if (!achievement.unknown08()) {
           continue;
         }
-        f32 moveDistance = distance < MOVE_DISTANCE_MAX ? distance + GfDataUtil::getMoveDistance(achievement.unknown00) : GfDataUtil::getMoveDistance(achievement.unknown00);
+        f32 moveDistance = distance < unknown034 ? distance + GfDataUtil::getMoveDistance(achievement.unknown00) : GfDataUtil::getMoveDistance(achievement.unknown00);
         u32 meter = moveDistance;
         if (meter != 0) {
           moveDistance -= meter;
@@ -1713,13 +1788,13 @@ void GfGameScene::updateAutoFlag(const fw::UpdateInfo &) {
 void GfGameScene::updateCrystalPopup(const fw::UpdateInfo &) {
   GfBdatItem *bdatItem = GfBdatItem::get();
   for (u32 index = 0; index < 4; index++) {
-    if (GfGameFlag::getLocal(1, FLAG_CRYSTAL_POPUP + index) != 0) {
+    if (GfGameFlag::getLocal(1, FLAG_UNKNOWN_54665 + index) != 0) {
       continue;
     }
-    u16 condition = bdatItem->getCrystalListCondition(CRYSTAL_LIST_FIRST + index);
+    u16 condition = bdatItem->getCrystalListCondition(CRYSTAL_UNKNOWN_45005 + index);
     if (condition != 0 && GfGameCond::isGameCond(condition)) {
-      SCOM_POPUP::createCrystalOK(CRYSTAL_ITEM_FIRST + index * 2);
-      GfGameFlag::setLocal(1, FLAG_CRYSTAL_POPUP + index, 1);
+      SCOM_POPUP::createCrystalOK(CRYSTAL_UNKNOWN_38 + index * 2);
+      GfGameFlag::setLocal(1, FLAG_UNKNOWN_54665 + index, 1);
     }
   }
 }
@@ -1730,7 +1805,7 @@ void GfGameScene::updateEnableSavePos(const fw::UpdateInfo &) {
     unknown2b0[i].unknown10 = unknown2b0[i - 1].unknown10;
   }
   bool isEnable;
-  if (!GfGameManager::isEnableOpenMainMenu() || GfPause::isPause(PAUSE_BIT_SYSTEM)) {
+  if (!GfGameManager::isEnableOpenMainMenu() || GfPause::isPause(PAUSE_BIT_UNKNOWN_0)) {
     isEnable = false;
   } else if (GfSequentialPlay::isPlay()) {
     isEnable = false;
@@ -1759,8 +1834,8 @@ void GfGameScene::updateRideRequest(const fw::UpdateInfo &) {
 }
 
 void GfGameScene::updateEnemySaveHp(const fw::UpdateInfo &) {
-  const mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_OBJ_LIST_CAPACITY> *enemies = GfGameObj::getList(OBJECT_TYPE_ENEMY);
-  for (mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_OBJ_LIST_CAPACITY>::const_iterator it = enemies->begin(); it != enemies->end(); ++it) {
+  const mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> *enemies = GfGameObj::getList(OBJECT_TYPE_ENEMY);
+  for (mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024>::const_iterator it = enemies->begin(); it != enemies->end(); ++it) {
     GfObjSetupEnemy *setup = GfObjUtil::getObjSetup<GfObjSetupEnemy>(*it);
     if (setup != nullptr && setup->unknownb4 != 0) {
       GfObjAcc obj(*it);
@@ -1786,4 +1861,98 @@ void GfGameScene::setRideOn(u32 partyId) {
   }
 }
 
+void GfGameScene::gevChangeScenarioFlag(u32 scenarioFlag, u32 oldScenarioFlag) {
+  GfWeapon *extra = GfObjUtil::getExtraMountObject(GfGameParty::getHandleDriverByBdatID(DRIVER_UNKNOWN_1));
+  if (extra != nullptr) {
+    f32 alpha = GfGameManager::isInMetJIJI() ? 1.0f : 0.0f;
+    for (u32 index = 0; index < HANDLE_UNKNOWN_10; index++) {
+      GF_OBJ_HANDLE *handle = extra->getCurrentHandles()[index];
+      if (handle != unknown020) {
+        GfObjAcc obj(handle);
+        if (obj.isValid()) {
+          obj.setAlphaNormal(alpha);
+        }
+      }
+    }
+  }
+  bool isDispRexCrystal = unknown1bc;
+  unknown1bc = !(GfGameUtil::isDispRexCrystal() || scenarioFlag == 0);
+  if (unknown1bc != isDispRexCrystal) {
+    GfGameUtil::dispRexCrystal(GfGameParty::getHandleDriverByBdatID(DRIVER_UNKNOWN_1), unknown1bc);
+  }
+  bool isDispHomuraCrystal = unknown1bd;
+  unknown1bd = !(GfGameUtil::isDispHomuraCrystal() || scenarioFlag == 0);
+  if (unknown1bd != isDispHomuraCrystal) {
+    GfGameUtil::dispHomuraCrystal(GfGameParty::getHandleBladeByBdatID(BLADE_HOMURA), unknown1bd);
+  }
+  switch (scenarioFlag) {
+  case SCENARIO_FLAG_UNKNOWN_2005: {
+    GfDataBlade::setActivateDriver(BLADE_BYAKKO, -1, DRIVER_UNKNOWN_2, 0);
+    int bladeSet = GfDataDriver::getSetIdByBlade(DRIVER_UNKNOWN_2, BLADE_BYAKKO);
+    DataParamAcc paramAcc(OBJECT_TYPE_PC, DRIVER_UNKNOWN_2, GimmickType());
+    paramAcc.setBladeSet(bladeSet);
+    break;
+  }
+  case SCENARIO_FLAG_UNKNOWN_2042: {
+    int bladeSet = GfDataDriver::getSetIdByBlade(DRIVER_UNKNOWN_2, BLADE_BYAKKO);
+    DataParamAcc paramAcc(OBJECT_TYPE_PC, DRIVER_UNKNOWN_2, GimmickType());
+    paramAcc.setBladeSet(bladeSet);
+    break;
+  }
+  }
+  if ((scenarioFlag > SCENARIO_FLAG_UNKNOWN_7024) != (oldScenarioFlag > SCENARIO_FLAG_UNKNOWN_7024)) {
+    GfGameUtil::setSaikaLensOff();
+  }
+  switch (scenarioFlag) {
+  case SCENARIO_FLAG_UNKNOWN_4009:
+    if (GfDataMercenaries::getLevel() == 0) {
+      GfDataMercenaries::setLevel(1);
+    }
+    break;
+  case SCENARIO_FLAG_UNKNOWN_8037:
+    GfDataDevelop::setPoint(NATION_UNKNOWN_5, GfDataDevelop::getPoint(NATION_UNKNOWN_6) + GfDataDevelop::getPoint(NATION_UNKNOWN_5));
+    break;
+  }
+  if (scenarioFlag == SCENARIO_FLAG_UNKNOWN_1001 && oldScenarioFlag == 0) {
+    GfGameSave::makeNewGameSaveData();
+  }
+  if (GfGameManager::isClearGame()) {
+    if (scenarioFlag == SCENARIO_FLAG_UNKNOWN_1031) {
+      unknown124 *dataParty = GfDataParty::getSDataParty();
+      if (dataParty->unknown4e[0] != 0) {
+        GfDataBlade::setActivateDriver(dataParty->unknown4e[0], -1, DRIVER_UNKNOWN_1, 0);
+      }
+      if (dataParty->unknown4e[1] != 0) {
+        GfDataBlade::setActivateDriver(dataParty->unknown4e[1], -1, DRIVER_UNKNOWN_1, 0);
+      }
+      for (u32 index = 0; index < BLADE_UNKNOWN_422; index++) {
+        u32 blade = GfDataBlade::getBladeID(index);
+        if (blade != 0 && GfDataBlade::isUnselect(blade)) {
+          GfDataBlade::setUnselect(blade, false);
+        }
+      }
+    }
+  }
+}
+
+void GfGameScene::updateSepia(const fw::UpdateInfo &) {
+  if (unknown66c != 0) {
+    if (fw::EffectManager::get() == nullptr || !fw::EffectManager::get()->isExist(unknown66c)) {
+      unknown66c = 0;
+    }
+  }
+
+  bool isExist = unknown66c != 0;
+  u32 map = GfGameManager::getMapID();
+  bool isMap = map == MAP_UNKNOWN_7 || map == MAP_UNKNOWN_17 || map == MAP_UNKNOWN_19;
+  bool isNotEvent = !GfGameManager::isPlayEvent();
+  u16 flag = GfDataUtil::getScenarioFlag();
+  bool isScenario = flag == SCENARIO_FLAG_UNKNOWN_10012 || flag == SCENARIO_FLAG_UNKNOWN_10014 || flag == SCENARIO_FLAG_UNKNOWN_10017;
+  bool isSepia = isMap && isScenario && isNotEvent;
+  if (isSepia && !isExist) {
+    createSepiaFilter();
+  } else if (!isSepia && isExist) {
+    destroySepiaFilter();
+  }
+}
 } // namespace gf

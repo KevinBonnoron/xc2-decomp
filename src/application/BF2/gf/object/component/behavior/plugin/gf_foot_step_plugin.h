@@ -41,6 +41,7 @@ public:
   virtual bool setup(GfComBehavior &behavior);
   void setAnkleHeight(GfComBehavior &behavior);
   virtual void cleanup(GfComBehavior &behavior);
+  void notifyStep(GfComBehavior &behavior, const char *name);
   void onActivate() override;
   void onDeactivate() override;
   virtual void update(GfComBehavior &behavior, const fw::UpdateInfo &info);

@@ -29,6 +29,7 @@ public:
   GfComBehaviorEvent();
   const mm::mtl::RTTI *getRTTI() const override;
   bool recieveMessage(fw::MessageObject *sender, fw::Message &message) override;
+  void setup();
   void update(const fw::UpdateInfo &info) override;
   void cleanup();
   void setFootIK(bool isEnable);

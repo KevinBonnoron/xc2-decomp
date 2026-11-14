@@ -30,16 +30,16 @@ void StateFieldWaterDead::onAlive(GfComBehaviorPc *behavior, MsgObjectNotifyHeal
   GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   if (StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_WATERIDLE)) {
-    reqState(STATE_ID_FIELD_WATER_IDLE);
+    reqState(STATE_ID_UNKNOWN_20);
   }
 }
 
 bool StateFieldWaterDead::recieveMessage(void *owner, fw::MessageObject *sender, fw::Message &message) {
   switch (message.unknown00) {
-  case MSG_OBJECT_NOTIFY_HEAL_HP:
+  case MSG_OBJECT_UNKNOWN_16777273:
     procMsgObjectNotifyHealHp(static_cast<GfComBehaviorPc *>(owner), sender, static_cast<MsgObjectNotifyHealHp &>(message));
     break;
-  case MSG_PC_FIELD_RELAY_SURVIVE:
+  case MSG_PC_FIELD_UNKNOWN_16777246:
     procMsgPcFieldRelaySurvive(static_cast<GfComBehaviorPc *>(owner), sender, static_cast<MsgPcFieldRelaySurvive &>(message));
     break;
   default:
@@ -59,7 +59,7 @@ void StateFieldWaterDead::procMsgObjectNotifyHealHp(GfComBehaviorPc *behavior, f
 
 void StateFieldWaterDead::procMsgPcFieldRelaySurvive(GfComBehaviorPc *behavior, fw::MessageObject *sender, MsgPcFieldRelaySurvive &message) {
   fw::Message *relayed = message.unknown08;
-  if (relayed != nullptr && relayed->unknown00 == MSG_OBJECT_NOTIFY_HEAL_HP && static_cast<MsgObjectNotifyHealHp *>(relayed)->unknown10 == 0) {
+  if (relayed != nullptr && relayed->unknown00 == MSG_OBJECT_UNKNOWN_16777273 && static_cast<MsgObjectNotifyHealHp *>(relayed)->unknown10 == 0) {
     onAlive(behavior, *static_cast<MsgObjectNotifyHealHp *>(relayed));
   }
 }

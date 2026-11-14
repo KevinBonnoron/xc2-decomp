@@ -14,11 +14,11 @@ namespace gf {
 class GfMenuDiffAdapter : public GfMenuAdapter {
 public:
   enum Type {
-    TYPE_ICON,
-    TYPE_MUL_COL,
-    TYPE_SUB,
-    TYPE_DISP_SAME_ON,
-    TYPE_DISP_SAME_OFF,
+    TYPE_UNKNOWN_0, // Inferred role: index of update_Icon in the type table; original enumerator name unknown.
+    TYPE_UNKNOWN_1, // Inferred role: index of update_MulCol in the type table; original enumerator name unknown.
+    TYPE_UNKNOWN_2, // Inferred role: index of update_Sub in the type table; original enumerator name unknown.
+    TYPE_UNKNOWN_3, // Inferred role: index of update_DispSameOn in the type table; original enumerator name unknown.
+    TYPE_UNKNOWN_4, // Inferred role: index of update_DispSameOff in the type table; original enumerator name unknown.
   };
 
   struct TypeInfo {

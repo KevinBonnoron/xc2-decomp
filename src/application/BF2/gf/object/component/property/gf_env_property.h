@@ -11,7 +11,8 @@ namespace gf {
 // Evidence: layout read from the GfEnvProperty constructor (0x71005a30cc, 0x2e0 bytes allocated by GfObjFactory), the loop over eight samples of 0x50 bytes,
 // the water sample initialised at 0x280, and the accesses of GfEffectGround (flags at 0x2d0: bit 0 water sample, bit n + 1 ground sample n).
 struct GfEnvProperty {
-  // Values from gf::getFootGroundIndex: 1, 3, 5 for the "left", "left01", "left02" step names, 2, 4, 6 for the "right" ones.
+  // Values from gf::getFootGroundIndex: 1, 3, 5 for the "left", "left01", "left02" step names, 2, 4, 6 for the "right" ones. GfComIK::Ground reads sample 0
+  // (getPlane, getHitPos) and sample 7 (getPlaneSub, getHitPosSub).
   enum GROUND_INDEX {
     GROUND_INDEX_UNKNOWN_0,
     GROUND_INDEX_UNKNOWN_1,
@@ -20,6 +21,7 @@ struct GfEnvProperty {
     GROUND_INDEX_UNKNOWN_4,
     GROUND_INDEX_UNKNOWN_5,
     GROUND_INDEX_UNKNOWN_6,
+    GROUND_INDEX_UNKNOWN_7,
   };
 
   struct unknown001 {
@@ -33,6 +35,11 @@ struct GfEnvProperty {
     mm::Col4 unknown38; // Inferred role: ground color; original member name unknown.
     s32 unknown48;      // Inferred role: ground material kind; original member name unknown.
   };
+
+  // Inferred helper: tests the valid bit of a ground sample; original name unknown.
+  bool unknown003(int index) const { return ((1 << (index + 1)) & unknown2d0) != 0; }
+  // Inferred helper: ground sample, null when it is not valid; original name unknown.
+  const unknown002 *unknown004(int index) const { return unknown003(index) ? &unknown00[index] : nullptr; }
 
   unknown002 unknown00[8]; // Inferred role: ground samples; original member name unknown.
   unknown001 unknown280;   // Inferred role: water sample, its x holds the surface height; original member name unknown.

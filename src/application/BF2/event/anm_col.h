@@ -21,9 +21,9 @@ public:
   const mm::Col4 &getValue() const { return unknown1c8; }
 
 private:
-  mm::mtl::FixedVector<mm::Col4, KEY_COUNT> unknown78; // Inferred role: values; original member name unknown.
-  mm::mtl::FixedVector<CV_TYPE, KEY_COUNT> unknown180; // Inferred role: cvs; original member name unknown.
-  mm::Col4 unknown1c8;                                 // Inferred role: value; original member name unknown.
+  mm::mtl::FixedVector<mm::Col4, KEY_UNKNOWN_16> unknown78; // Inferred role: values; original member name unknown.
+  mm::mtl::FixedVector<CV_TYPE, KEY_UNKNOWN_16> unknown180; // Inferred role: cvs; original member name unknown.
+  mm::Col4 unknown1c8;                                      // Inferred role: value; original member name unknown.
 };
 
 static_assert(sizeof(AnmCol) == 0x1d8, "");

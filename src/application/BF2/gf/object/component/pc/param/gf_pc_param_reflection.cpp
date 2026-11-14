@@ -4,7 +4,6 @@
 #include "framework/memory/allocator.h"
 #include "framework/memory/framework_memory.h"
 #include "framework/reflection.h"
-#include "gf/object/component/pc/field/gf_pc_param_field.h"
 #include "gf/object/component/pc/param/gf_pc_param.h"
 #include "mm_mtl/vector.h"
 

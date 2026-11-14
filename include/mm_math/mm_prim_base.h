@@ -16,9 +16,9 @@ struct Obb;
 class PrimBase {
 public:
   enum Type {
-    PRIM_CUBE = 0,
-    PRIM_CYLINDER = 1,
-    PRIM_SPHERE = 2,
+    PRIM_CUBE = 0,     // Name from the assertion string "prim.getType()==PRIM_CUBE".
+    PRIM_CYLINDER = 1, // Name from the assertion string "prim.getType()==PRIM_CYLINDER".
+    PRIM_SPHERE = 2,   // Name from the assertion string "prim.getType()==PRIM_SPHERE".
   };
 
   virtual ~PrimBase() {}

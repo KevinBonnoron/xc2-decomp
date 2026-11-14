@@ -14,25 +14,27 @@
 namespace gf {
 
 enum {
-  FLAG_ACHIEVEMENT_TOTAL_COUNT = 0x102,
+  FLAG_UNKNOWN_258 = 0x102, // Inferred role: flag achievement total count; original name unknown.
 };
 
 enum {
-  STATS_WAIT_CONTROLL_FREE_FIRST = 0x22,
-  STATS_WAIT_CONTROLL_FREE_SECOND = 0x23,
-  STATS_WAIT_CONTROLL_FREE_THIRD = 0x25,
+  STATS_WAIT_CONTROLL_FREE_UNKNOWN_34 = 0x22, // Inferred role: stats wait controll free first; original name unknown.
+  STATS_WAIT_CONTROLL_FREE_UNKNOWN_35 = 0x23, // Inferred role: stats wait controll free second; original name unknown.
+  STATS_WAIT_CONTROLL_FREE_UNKNOWN_37 = 0x25, // Inferred role: stats wait controll free third; original name unknown.
 };
 
-constexpr u32 ACHIEVEMENT_TYPE_COUNT_PER_TYPE = 3;
-constexpr u32 ACHIEVEMENT_LAST = 9;
-constexpr u32 TOTAL_COUNT_STATS_COUNT = 64;
+constexpr u32 ACHIEVEMENT_UNKNOWN_3 = 3;   // Inferred role: achievement type count per type; original name unknown.
+constexpr u32 ACHIEVEMENT_UNKNOWN_9_2 = 9; // Inferred role: achievement last; original name unknown.
+constexpr u32 STATS_UNKNOWN_64 = 64;       // Inferred role: total count stats count; original name unknown.
 
-static const u16 totalCountStats[TOTAL_COUNT_STATS_COUNT] = {
+static const u16 unknown018[STATS_UNKNOWN_64] = {
+    // Inferred role: total count stats; original name unknown.
     49, 54, 60, 62, 99, 114, 116, 118, 120, 122, 124, 126, 128, 130, 132, 134, 136, 138, 140, 142, 144, 146, 148, 51, 52, 53, 22, 2,
     4,  23, 20, 32, 33, 5,   14,  19,  1,   57,  59,  34,  58,  35,  37,  101, 65,  151, 152, 153, 154, 69,  70,  71, 72, 73, 74,
 };
 
-static const u16 bonusCountStats[] = {
+static const u16 unknown019[] = {
+    // Inferred role: bonus count stats; original name unknown.
     6,   7,   8,   9,   10,  11,  12,  13,  15,  16,  17,  18,  67,  24,  25,  26,  27,  28,  29,  30,  31,  50,  55,  61,  63,  66,  68,  93,  94,  95,  98,  97,  100, 102,
     103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 151, 152, 153, 154, 115, 117, 119, 121, 123, 125, 127, 129, 131, 133, 135, 137, 139, 141, 143, 145, 149, 150,
 };
@@ -44,25 +46,25 @@ static u32 statsQuestIcons[] = {
 };
 
 bool GfDataAchievement::getAchievementType(ACHIEVEMENT_TYPE &type, u32 &index, u32 achievement) {
-  if (achievement < ACHIEVEMENT_TYPE_COUNT_PER_TYPE) {
+  if (achievement < ACHIEVEMENT_UNKNOWN_3) {
     type = static_cast<ACHIEVEMENT_TYPE>(0);
     index = achievement;
     return true;
   }
 
-  if (achievement < ACHIEVEMENT_TYPE_COUNT_PER_TYPE * 2) {
+  if (achievement < ACHIEVEMENT_UNKNOWN_3 * 2) {
     type = static_cast<ACHIEVEMENT_TYPE>(1);
-    index = achievement - ACHIEVEMENT_TYPE_COUNT_PER_TYPE;
+    index = achievement - ACHIEVEMENT_UNKNOWN_3;
     return true;
   }
 
-  if (achievement < ACHIEVEMENT_TYPE_COUNT_PER_TYPE * 3) {
+  if (achievement < ACHIEVEMENT_UNKNOWN_3 * 3) {
     type = static_cast<ACHIEVEMENT_TYPE>(2);
-    index = achievement - ACHIEVEMENT_TYPE_COUNT_PER_TYPE * 2;
+    index = achievement - ACHIEVEMENT_UNKNOWN_3 * 2;
     return true;
   }
 
-  if (achievement == ACHIEVEMENT_LAST) {
+  if (achievement == ACHIEVEMENT_UNKNOWN_9_2) {
     type = static_cast<ACHIEVEMENT_TYPE>(3);
     index = 0;
     return true;
@@ -107,9 +109,9 @@ int GfDataAchievement::getAchievementTotalFlgIndex(u16 stats) {
     return -1;
   }
 
-  for (int index = 0; index < static_cast<int>(TOTAL_COUNT_STATS_COUNT); index++) {
-    if (totalCountStats[index] == stats) {
-      return index + FLAG_ACHIEVEMENT_TOTAL_COUNT;
+  for (int index = 0; index < static_cast<int>(STATS_UNKNOWN_64); index++) {
+    if (unknown018[index] == stats) {
+      return index + FLAG_UNKNOWN_258;
     }
   }
 
@@ -117,18 +119,18 @@ int GfDataAchievement::getAchievementTotalFlgIndex(u16 stats) {
 }
 
 bool GfDataAchievement::isAddAchievementBonusCount(const AchievQuest &achievQuest) {
-  for (size_t index = 0; index < sizeof(bonusCountStats) / sizeof(bonusCountStats[0]); index++) {
-    if (bonusCountStats[index] == achievQuest.unknown0e) {
+  for (size_t index = 0; index < sizeof(unknown019) / sizeof(unknown019[0]); index++) {
+    if (unknown019[index] == achievQuest.unknown0e) {
       return true;
     }
   }
 
-  QuestTaskParam taskParam(GfDataQuest::getListNextQuestA(achievQuest.unknown00), 0, TASK_STATE_NONE);
+  QuestTaskParam taskParam(GfDataQuest::getListNextQuestA(achievQuest.unknown00), 0, TASK_STATE_UNKNOWN_0);
   switch (taskParam.unknown10) {
-  case TASK_TYPE_BATTLE:
-  case TASK_TYPE_USE:
-  case TASK_TYPE_TALK:
-  case TASK_TYPE_FIELD_SKILL_COUNT:
+  case TASK_TYPE_UNKNOWN_1:
+  case TASK_TYPE_UNKNOWN_4:
+  case TASK_TYPE_UNKNOWN_6:
+  case TASK_TYPE_UNKNOWN_11:
     return true;
   default:
     return false;
@@ -161,9 +163,9 @@ void GfDataAchievement::addTotalCount(u32 stats, u32 count) {
 
 bool GfDataAchievement::isWaitControllFreeStats(u32 stats) {
   switch (stats) {
-  case STATS_WAIT_CONTROLL_FREE_FIRST:
-  case STATS_WAIT_CONTROLL_FREE_SECOND:
-  case STATS_WAIT_CONTROLL_FREE_THIRD:
+  case STATS_WAIT_CONTROLL_FREE_UNKNOWN_34:
+  case STATS_WAIT_CONTROLL_FREE_UNKNOWN_35:
+  case STATS_WAIT_CONTROLL_FREE_UNKNOWN_37:
     return true;
   default:
     return false;

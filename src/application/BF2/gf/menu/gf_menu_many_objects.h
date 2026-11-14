@@ -1,9 +1,17 @@
 #pragma once
 #include <stddef.h>
 
+#include "framework/memory/allocator.h"
+#include "framework/memory/framework_memory.h" // IWYU pragma: keep
 #include "mm_mtl/queue.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
+
+namespace mm {
+namespace mtl {
+class IAllocator;
+} // namespace mtl
+} // namespace mm
 
 namespace fw {
 struct UpdateInfo;
@@ -43,6 +51,8 @@ public:
   void finalize();
   static bool isInitialized();
   void postUpdate(const fw::UpdateInfo &info);
+  // Inferred role: creates the queue of a pooled object kind; the game inlines it; original name unknown.
+  template <typename T> static void unknown002(u32 type, size_t capacity);
   template <typename T> static void remove(u32 type, u32 handle);
   template <typename T> static void destroy(u32 type);
   template <typename T> static void closeAll(u32 type, void (*callback)(u32));
@@ -96,6 +106,24 @@ template <typename T> void GfMenuManyObjects::closeAll(u32 type, void (*callback
         }
         info.dispose();
         it = queue->erase(it);
+      }
+    }
+  }
+}
+
+template <typename T> void GfMenuManyObjects::unknown002(u32 type, size_t capacity) {
+  if (type < 8) {
+    void *&slot = get()->unknown10[type];
+    if (slot == nullptr) {
+      mm::mtl::IAllocator *allocator = fw::Allocator::getProcAllocator();
+      if (allocator != nullptr) {
+// __LINE__ must be 105 as in the original header: it is the line argument of operator new.
+#line 105
+        mm::mtl::Queue<T> *queue = new (allocator, 16, __FILE__, __LINE__) mm::mtl::Queue<T>(allocator);
+        if (queue != nullptr) {
+          queue->reserve(capacity);
+          slot = queue;
+        }
       }
     }
   }

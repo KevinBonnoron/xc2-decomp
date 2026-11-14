@@ -3,10 +3,10 @@
 
 namespace gf {
 
-constexpr u32 MONEY_MAX = 999'999'999;
-constexpr u32 COIN_MAX = 9'999;
+constexpr u32 MONEY_UNKNOWN_999999999 = 999'999'999; // Inferred role: money max; original name unknown.
+constexpr u32 COIN_UNKNOWN_9999 = 9'999;             // Inferred role: coin max; original name unknown.
 
-enum AMOVE { AMOVE_WALK, AMOVE_SWIM };
+enum AMOVE { AMOVE_UNKNOWN_0, AMOVE_UNKNOWN_1 }; // Inferred role: amove swim; original name unknown.
 
 class GfDataUtil {
 public:

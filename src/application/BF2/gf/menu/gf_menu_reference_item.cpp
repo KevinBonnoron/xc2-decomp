@@ -23,9 +23,9 @@ void GfMenuReferenceQuest::getQuest(QuestID &quest) const { quest = unknown0c; }
 void GfMenuReferenceDriverEquipItem::getItem(MenuItemInfo &info) const {
   u32 driver = GfMenuReference::getReferenceDriverID(unknown0c);
   if (driver != 0) {
-    DataParamAcc acc(OBJECT_TYPE_DRIVER, driver, GIMMICK_TYPE_NONE);
+    DataParamAcc acc(OBJECT_TYPE_PC, driver, GIMMICK_TYPE_UNKNOWN_0);
     if (unknown10 == 0) {
-      info.unknown00 = ItemType::PC_EQUIP;
+      info.unknown00 = ItemType::ITEM_TYPE_UNKNOWN_2;
       info.unknown04 = acc.getEquipAcce(0, false);
       info.unknown08 = 1;
     }
@@ -35,7 +35,7 @@ void GfMenuReferenceDriverEquipItem::getItem(MenuItemInfo &info) const {
 void GfMenuReferenceDriverFavoriteItem::getItem(MenuItemInfo &info) const {
   u32 driver = GfMenuReference::getReferenceDriverID(unknown0c);
   if (driver != 0) {
-    info.unknown04 = GfDataDriver::getFavorite(driver, static_cast<FAVORITE>(unknown10 + FAVORITE_ITEM_0));
+    info.unknown04 = GfDataDriver::getFavorite(driver, static_cast<FAVORITE>(unknown10 + FAVORITE_UNKNOWN_2));
     info.unknown00 = GfItemUtil::getType(info.unknown04);
     info.unknown08 = 1;
   }
@@ -44,11 +44,11 @@ void GfMenuReferenceDriverFavoriteItem::getItem(MenuItemInfo &info) const {
 void GfMenuReferenceBladeEquipItem::getItem(MenuItemInfo &info) const {
   u32 blade = GfMenuReference::getReferenceBladeID(unknown0c);
   if (blade != 0) {
-    DataParamAcc acc(OBJECT_TYPE_BLADE, blade, GIMMICK_TYPE_NONE);
+    DataParamAcc acc(OBJECT_TYPE_BLADE, blade, GIMMICK_TYPE_UNKNOWN_0);
     if (unknown10 < 3) {
       mm::mtl::FixedArray<u16, 3> orbs;
       acc.getEquipOrb(orbs, false);
-      info.unknown00 = ItemType::EQUIP_ORB;
+      info.unknown00 = ItemType::ITEM_TYPE_UNKNOWN_3;
       info.unknown04 = orbs[unknown10];
       info.unknown08 = 1;
     }
@@ -58,12 +58,12 @@ void GfMenuReferenceBladeEquipItem::getItem(MenuItemInfo &info) const {
 void GfMenuReferenceBladeFavoriteItem::getItem(MenuItemInfo &info) const {
   u32 blade = GfMenuReference::getReferenceBladeID(unknown0c);
   if (blade != 0) {
-    DataParamAcc acc(OBJECT_TYPE_BLADE, blade, GIMMICK_TYPE_NONE);
+    DataParamAcc acc(OBJECT_TYPE_BLADE, blade, GIMMICK_TYPE_UNKNOWN_0);
     u32 bladeId = 0;
     if (acc.isValid()) {
       bladeId = acc.getBdatId();
     }
-    info.unknown04 = GfDataBlade::getFavorite(bladeId, static_cast<FAVORITE>(unknown10 + FAVORITE_ITEM_0));
+    info.unknown04 = GfDataBlade::getFavorite(bladeId, static_cast<FAVORITE>(unknown10 + FAVORITE_UNKNOWN_2));
     info.unknown00 = GfItemUtil::getType(info.unknown04);
     info.unknown08 = 1;
   }

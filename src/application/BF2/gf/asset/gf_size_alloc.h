@@ -14,7 +14,7 @@ namespace gf {
 
 class GfSizeAlloc {
 public:
-  static const u32 FREE_BLOCK_MAX = 64;
+  static const u32 BLOCK_UNKNOWN_64 = 64; // Inferred role: free block max; original name unknown.
 
   GfSizeAlloc() : unknown08(nullptr), unknown10(0), unknown18(nullptr), unknown20(0), unknown28(0), unknown288(nullptr) {}
   virtual ~GfSizeAlloc() { destroy(); }
@@ -25,14 +25,14 @@ public:
   bool free(void *pointer);
   void logFreeBlock();
 
-  void *unknown08;                                   // Inferred role: buffer; original member name unknown.
-  size_t unknown10;                                  // Inferred role: buffer size; original member name unknown.
-  u32 *unknown18;                                    // Inferred role: block table; original member name unknown.
-  u32 unknown20;                                     // Inferred role: allocs; original member name unknown.
-  u32 unknown24;                                     // Inferred role: block count; original member name unknown.
-  size_t unknown28;                                  // Inferred role: block size; original member name unknown.
-  mm::mtl::FixedList<u32, FREE_BLOCK_MAX> unknown30; // Inferred role: free blocks; original member name unknown.
-  mm::mtl::IAllocator *unknown288;                   // Inferred role: allocator; original member name unknown.
+  void *unknown08;                                     // Inferred role: buffer; original member name unknown.
+  size_t unknown10;                                    // Inferred role: buffer size; original member name unknown.
+  u32 *unknown18;                                      // Inferred role: block table; original member name unknown.
+  u32 unknown20;                                       // Inferred role: allocs; original member name unknown.
+  u32 unknown24;                                       // Inferred role: block count; original member name unknown.
+  size_t unknown28;                                    // Inferred role: block size; original member name unknown.
+  mm::mtl::FixedList<u32, BLOCK_UNKNOWN_64> unknown30; // Inferred role: free blocks; original member name unknown.
+  mm::mtl::IAllocator *unknown288;                     // Inferred role: allocator; original member name unknown.
 };
 
 static_assert(offsetof(GfSizeAlloc, unknown08) == 0x08, "");

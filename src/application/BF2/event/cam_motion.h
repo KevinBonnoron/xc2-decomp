@@ -13,9 +13,9 @@ namespace event {
 class CamMotion : public CamBase {
 public:
   enum {
-    FLAG_STREAM_MODE = 1 << 0,
-    FLAG_PLAY_EVA = 1 << 1,
-    FLAG_PLAY_EFF = 1 << 2,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: stream mode flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: play eva flag; original name unknown.
+    FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: play eff flag; original name unknown.
   };
 
   CamMotion(bool isFocal, bool isStreamMode);

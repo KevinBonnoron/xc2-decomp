@@ -23,6 +23,11 @@ public:
   class PouchConverter;
   class MissionConverter;
 
+  struct TypeInfo {
+    bool (GfMenuItemAdapter::*update)(const MenuItemInfo &info);
+    PluginSetup setup;
+  };
+
   class IConverter {
   public:
     virtual ~IConverter() {}

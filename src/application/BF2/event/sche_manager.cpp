@@ -40,7 +40,7 @@ void ScheManager::update() {
   do {
     isErased = false;
     for (Scheduler **it = unknown18.begin(); it != unknown18.end(); it++) {
-      if ((*it)->isPlay(Scheduler::ORDER_EVT2FLD)) {
+      if ((*it)->isPlay(Scheduler::ORDER_UNKNOWN_2)) {
         continue;
       }
       if (*it != nullptr) {
@@ -55,7 +55,7 @@ void ScheManager::update() {
 }
 
 bool ScheManager::isPlay(Scheduler::ORDER order, gf::GF_OBJ_HANDLE *handle) {
-  if (handle == gf::INVALID_HANDLE) {
+  if (handle == gf::unknown020) {
     for (Scheduler **it = unknown18.begin(); it != unknown18.end(); it++) {
       if ((*it)->isPlay(order)) {
         return true;
@@ -74,11 +74,11 @@ bool ScheManager::isPlay(Scheduler::ORDER order, gf::GF_OBJ_HANDLE *handle) {
 
 void ScheManager::init() {
   gf::GF_OBJ_HANDLE *handle = mm::mtl::PtrSingleton<Manager>::get()->getObjHandle();
-  if (handle != gf::INVALID_HANDLE) {
+  if (handle != gf::unknown020) {
     push(handle, mm::mtl::PtrSingleton<Manager>::get()->getPlayParam(1));
   }
   gf::GF_OBJ_HANDLE *leader = gf::GfGameParty::getLeader();
-  if (leader != gf::INVALID_HANDLE) {
+  if (leader != gf::unknown020) {
     push(leader, 0);
   }
   unknown10 = 0;
@@ -111,7 +111,7 @@ bool ScheManager::isExist(gf::GF_OBJ_HANDLE *handle) {
 }
 
 void ScheManager::play(Scheduler::ORDER order, gf::GF_OBJ_HANDLE *handle) {
-  if (handle == gf::INVALID_HANDLE) {
+  if (handle == gf::unknown020) {
     for (Scheduler **it = unknown18.begin(); it != unknown18.end(); it++) {
       (*it)->play(order);
     }
@@ -144,24 +144,24 @@ bool ScheManager::chkUse(Scheduler::USE use, gf::GF_OBJ_HANDLE *handle) {
 
 void ScheManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
-  case MSG_TYPE_INIT_BEGIN:
+  case MSG_TYPE_UNKNOWN_1:
     init();
-    play(Scheduler::ORDER_FLD2EVT, gf::INVALID_HANDLE);
-    unknown10 |= FLAG_FLD2EVT;
+    play(Scheduler::ORDER_UNKNOWN_0, gf::unknown020);
+    unknown10 |= FLAG_UNKNOWN_0;
     break;
-  case MSG_TYPE_START_SCENE:
-    if ((unknown10 & FLAG_EVT2IDLE) == 0) {
-      play(Scheduler::ORDER_EVT2IDLE, gf::INVALID_HANDLE);
-      unknown10 |= FLAG_EVT2IDLE;
+  case MSG_TYPE_UNKNOWN_7:
+    if ((unknown10 & FLAG_UNKNOWN_1) == 0) {
+      play(Scheduler::ORDER_UNKNOWN_1, gf::unknown020);
+      unknown10 |= FLAG_UNKNOWN_1;
     }
     break;
-  case MSG_TYPE_CLEAR:
-    if ((unknown10 & FLAG_EVT2FLD) == 0) {
-      play(Scheduler::ORDER_EVT2FLD, gf::INVALID_HANDLE);
-      unknown10 |= FLAG_EVT2FLD;
+  case MSG_TYPE_UNKNOWN_12:
+    if ((unknown10 & FLAG_UNKNOWN_2) == 0) {
+      play(Scheduler::ORDER_UNKNOWN_2, gf::unknown020);
+      unknown10 |= FLAG_UNKNOWN_2;
     }
     break;
-  case MSG_TYPE_UPDATE_POST:
+  case MSG_TYPE_UNKNOWN_15:
     update();
     break;
   default:

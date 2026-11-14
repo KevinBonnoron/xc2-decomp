@@ -15,26 +15,26 @@ LipsyncRes::LipsyncRes(const char *name) : unknown08(0), m_name(name), unknown50
     mm::mtl::FixStr<256> path;
     path.format("event/lip/%s/%s", fw::LangUtil::getVoiceFolder().c_str(), name);
     mm::mtl::Singleton<ResManager>::getPtr()->load(Extend::get().lip(path.c_str()), this, false);
-    unknown08 |= FLAG_LOADING;
+    unknown08 |= FLAG_UNKNOWN_0;
   }
 }
 
 const char *LipsyncRes::getName() const { return m_name.c_str(); }
 
-bool LipsyncRes::isLoading() const { return (unknown08 & FLAG_LOADING) != 0; }
+bool LipsyncRes::isLoading() const { return (unknown08 & FLAG_UNKNOWN_0) != 0; }
 
 void LipsyncRes::OnResEvent(const PARAM &param) {
-  if (param.result == RES_RESULT_TYPE_SUCCESS) {
+  if (param.result == RES_RESULT_TYPE_UNKNOWN_3) {
     unknown50.setData(param.adr);
-    unknown08 |= FLAG_LOADED;
+    unknown08 |= FLAG_UNKNOWN_1;
   } else {
-    unknown08 &= ~FLAG_LOADED;
+    unknown08 &= ~FLAG_UNKNOWN_1;
   }
-  unknown08 &= ~FLAG_LOADING;
+  unknown08 &= ~FLAG_UNKNOWN_0;
 }
 
 void *LipsyncRes::searchCsv(const char *name, int &size) {
-  if ((unknown08 & FLAG_LOADED) != 0) {
+  if ((unknown08 & FLAG_UNKNOWN_1) != 0) {
     mm::mtl::FixStr<64> baseName(Extend::get().filename(name));
     mm::mtl::FixStr<64> fileName(Extend::get().xxlip(baseName.c_str()));
     u32 count = unknown50.getFiles();

@@ -16,11 +16,12 @@ namespace gmk {
 template bool TGmkList<GmkClimbing, GmkClimbing::BdatInfo, 1112362051u, 2u, GmkClimbingGob>::initGmkBdatInfo(GmkClimbing::BdatInfo &, int &, const AGmkBase &);
 
 void GmkClimbing::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
-  unknown04 = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_U16), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_U16));
-  unknown08 = QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_U16), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_U8), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_U8));
-  unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_U16);
+  unknown04 = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_UNKNOWN_2));
+  unknown08 =
+      QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_UNKNOWN_1), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_UNKNOWN_1));
+  unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_UNKNOWN_2);
   unknown0c = BootedGmkCond(bdat, id, "OP_");
-  unknown02 = bdat.getValCheck("climiconRadius", id, BDAT_TYPE_U16);
+  unknown02 = bdat.getValCheck("climiconRadius", id, BDAT_TYPE_UNKNOWN_2);
 }
 
 bool GmkClimbing::BdatInfo::isPopCondMatched() const {
@@ -76,7 +77,7 @@ void GmkClimbing::createIcon() {
   unknown48 = gf::GfMenuCallContext::create();
   gf::GfMenuObjFieldIcon::OpenParam param;
   const int unknown001 = 38; // Inferred role: wildcard data column of the climbing icon; original name unknown.
-  param.unknown00 = Bdat::getValCheck(gf::GfDataBdat::getFP(gf::BDAT_FLD_WILDCARD_DATA), 1, unknown001, BDAT_TYPE_U16).valueU16;
+  param.unknown00 = Bdat::getValCheck(gf::GfDataBdat::getFP(gf::BDAT_FLD_WILDCARD_DATA), 1, unknown001, BDAT_TYPE_UNKNOWN_2).valueU16;
   param.unknown10 = unknown50;
   gf::GfMenuObjFieldIcon::open(unknown48, param);
 }

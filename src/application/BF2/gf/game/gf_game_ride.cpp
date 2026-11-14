@@ -29,7 +29,7 @@ namespace gf {
 void GfGameRide::build(const GfSetupParam &) {
 // __LINE__ of the operator new call is 0x28 in the game.
 #line 40
-  GfGameRide *ride = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfGameRide();
+  GfGameRide *ride = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfGameRide();
   ride->setup();
 }
 
@@ -45,8 +45,8 @@ void GfGameRide::cleanup() { GfEvent::removeEventCallback(this); }
 
 bool GfGameRide::testRideOn() {
   GfGameRide *ride = get();
-  if (ride->unknown28 != INVALID_HANDLE) {
-    return ride->unknown30 != INVALID_HANDLE;
+  if (ride->unknown28 != unknown020) {
+    return ride->unknown30 != unknown020;
   }
 
   return false;
@@ -62,7 +62,7 @@ void GfGameRide::setRideOn(bool isRide) {
 }
 
 void GfGameRide::rideOn() {
-  if (unknown28 != INVALID_HANDLE && unknown30 != INVALID_HANDLE) {
+  if (unknown28 != unknown020 && unknown30 != unknown020) {
     getDown(GfGameManager::getPartyLeader());
   }
   GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
@@ -71,14 +71,14 @@ void GfGameRide::rideOn() {
   }
   GF_OBJ_HANDLE *leader = formation->unknown1a0[0].unknown08;
   u32 partyId = GfGameParty::getPartyId(leader);
-  if (partyId == PARTY_ID_NONE) {
+  if (partyId == PARTY_UNKNOWN_4294967295) {
     return;
   }
   unknown30 = GfGameParty::getHandleDriver(partyId);
   unknown28 = GfGameParty::getHandleBlade(partyId, -1);
-  if (unknown28 == INVALID_HANDLE || unknown30 == INVALID_HANDLE) {
-    unknown28 = INVALID_HANDLE;
-    unknown30 = INVALID_HANDLE;
+  if (unknown28 == unknown020 || unknown30 == unknown020) {
+    unknown28 = unknown020;
+    unknown30 = unknown020;
     return;
   }
   if (leader == unknown30) {
@@ -132,7 +132,7 @@ void GfGameRide::rideOn() {
 
 void GfGameRide::getDown(GF_OBJ_HANDLE *handle) {
   GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
-  if (formation == nullptr || unknown28 == INVALID_HANDLE || unknown30 == INVALID_HANDLE) {
+  if (formation == nullptr || unknown28 == unknown020 || unknown30 == unknown020) {
     return;
   }
   GfObj *driverObj = GfObjUtil::getObj(unknown30);
@@ -147,7 +147,7 @@ void GfGameRide::getDown(GF_OBJ_HANDLE *handle) {
   f32 cloudLimit;
   if (unknown30 == handle) {
     unknown070 *move = GfObjUtil::getProperty(unknown28)->unknown18;
-    isOnCloud = move->unknown00 == PROPERTY_MOVE_SWIM_ON_CLOUD;
+    isOnCloud = move->unknown00 == PROPERTY_MOVE_UNKNOWN_2;
     cloudHeight = move->unknown74;
     cloudLimit = move->unknown78;
     formation->swapFormation(unknown30, unknown28);
@@ -189,12 +189,12 @@ void GfGameRide::getDown(GF_OBJ_HANDLE *handle) {
       sendMessage(obj, warp);
     }
   }
-  unknown28 = INVALID_HANDLE;
-  unknown30 = INVALID_HANDLE;
+  unknown28 = unknown020;
+  unknown30 = unknown020;
 }
 
 bool GfGameRide::isVehicle(GF_OBJ_HANDLE *handle) {
-  if (handle != INVALID_HANDLE) {
+  if (handle != unknown020) {
     return get()->unknown28 == handle;
   }
 
@@ -202,33 +202,33 @@ bool GfGameRide::isVehicle(GF_OBJ_HANDLE *handle) {
 }
 
 bool GfGameRide::isRider(GF_OBJ_HANDLE *handle) {
-  if (handle != INVALID_HANDLE) {
+  if (handle != unknown020) {
     return get()->unknown30 == handle;
   }
 
   return false;
 }
 
-GfGameRide::GfGameRide() : unknown28(INVALID_HANDLE), unknown30(INVALID_HANDLE) {}
+GfGameRide::GfGameRide() : unknown28(unknown020), unknown30(unknown020) {}
 
 GfGameRide::~GfGameRide() {}
 
 void GfGameRide::resetHandles() {
-  unknown28 = INVALID_HANDLE;
-  unknown30 = INVALID_HANDLE;
+  unknown28 = unknown020;
+  unknown30 = unknown020;
 }
 
 void GfGameRide::gevPartyReturnFieldState(u32 state) {
   if (state == 0) {
     GfObjSetup *setup = GfObjUtil::getObjSetup(GfGameManager::getPartyLeaderDriver());
-    if (setup != nullptr && GfGameScene::get() != nullptr && GfGameScene::get()->isRideParty(setup->unknown14) && (unknown28 == INVALID_HANDLE || unknown30 == INVALID_HANDLE)) {
+    if (setup != nullptr && GfGameScene::get() != nullptr && GfGameScene::get()->isRideParty(setup->unknown14) && (unknown28 == unknown020 || unknown30 == unknown020)) {
       rideOn();
     }
   }
 }
 
 bool GfGameRide::recieveMessage(fw::MessageObject *sender, fw::Message &message) {
-  if (message.unknown00 == MSG_GAME_RIDE_EVENT) {
+  if (message.unknown00 == EVENT_UNKNOWN_16777264) {
     procMsgGameRideEvent(sender, static_cast<MsgGameRideEvent &>(message));
     return true;
   }
@@ -240,13 +240,13 @@ void GfGameRide::procMsgGameRideEvent(fw::MessageObject *, MsgGameRideEvent &mes
   GfObjSetup *setup = GfObjUtil::getObjSetup(GfGameManager::getPartyLeaderDriver());
   if (setup != nullptr && GfGameScene::get() != nullptr && GfGameScene::get()->isRideParty(setup->unknown14)) {
     switch (message.unknown08) {
-    case RIDE_EVENT_RIDE_ON:
+    case RIDE_EVENT_UNKNOWN_0:
       rideOn();
       break;
-    case RIDE_EVENT_GET_DOWN: {
+    case RIDE_EVENT_UNKNOWN_1: {
       GF_OBJ_HANDLE *driver = GfGameManager::getPartyLeaderDriver();
       getDown(driver);
-      if (get()->unknown28 == INVALID_HANDLE || get()->unknown30 == INVALID_HANDLE) {
+      if (get()->unknown28 == unknown020 || get()->unknown30 == unknown020) {
         GfGameTarget::disableTargetWithoutEnemy();
         GfObj *obj = GfObjUtil::getObj(driver);
         if (obj != nullptr) {
@@ -256,7 +256,7 @@ void GfGameRide::procMsgGameRideEvent(fw::MessageObject *, MsgGameRideEvent &mes
       }
       break;
     }
-    case RIDE_EVENT_GET_DOWN_FORCE:
+    case RIDE_EVENT_UNKNOWN_2:
       getDown(GfGameManager::getPartyLeaderDriver());
       break;
     }

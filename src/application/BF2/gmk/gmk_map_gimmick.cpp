@@ -19,13 +19,13 @@ namespace gmk {
 template bool TGmkList<GmkMapGimmick, GmkMapGimmick::BdatInfo, 1196441933u, 2u, GmkMapGimmickGob>::initGmkBdatInfo(GmkMapGimmick::BdatInfo &, int &, const AGmkBase &);
 
 void GmkMapGimmick::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
-  u16 popTime = bdat.getValCheck("popTime", id, BDAT_TYPE_U32);
+  u16 popTime = bdat.getValCheck("popTime", id, BDAT_TYPE_UNKNOWN_3);
   unknown08.unknown08 = popTime;
-  unknown18.unknown08 = bdat.getValCheck("popWeather", id, BDAT_TYPE_U8);
+  unknown18.unknown08 = bdat.getValCheck("popWeather", id, BDAT_TYPE_UNKNOWN_1);
   unknown28 = BootedGmkCond(bdat, id, nullptr);
-  unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_U16);
-  unknown02 = bdat.getValCheck("nameRadius", id, BDAT_TYPE_U16);
-  unknown04 = bdat.getValCheck("mapobjID", id, BDAT_TYPE_U16);
+  unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_UNKNOWN_2);
+  unknown02 = bdat.getValCheck("nameRadius", id, BDAT_TYPE_UNKNOWN_2);
+  unknown04 = bdat.getValCheck("mapobjID", id, BDAT_TYPE_UNKNOWN_2);
   unknown06 = Bdat::getFlagVal(bdat.unknown00, "flag", id, "MSG_ray") != 0;
 }
 
@@ -46,6 +46,8 @@ bool GmkMapGimmick::BdatInfo::isPopCondMatched() const {
 }
 
 void GmkMapGimmick::BdatInfo::debugDraw(const AGmkBase &gmk) const {}
+
+GmkMapGimmick::GmkMapGimmick() : unknown48(0.0f), unknown50(nullptr), unknown60(gf::unknown020), unknown68(true), unknowna8(false), unknowna9(false) {}
 
 void GmkMapGimmick::update(f32 deltaTime) {
   AGmkBase::update(deltaTime);
@@ -84,16 +86,16 @@ void GmkMapGimmick::createGobInst() {
 }
 
 void GmkMapGimmick::disposeGobInst() {
-  if (unknown60 != gf::INVALID_HANDLE) {
+  if (unknown60 != gf::unknown020) {
     unbindToGameObj(unknown60);
     gf::GfObjUtil::destroy(unknown60);
-    unknown60 = gf::INVALID_HANDLE;
+    unknown60 = gf::unknown020;
   }
 }
 void GmkMapGimmick::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) {
   AGmkBase::onGobEvent(event, handle);
-  if (event == gf::IGfObjListener::OBJEVT_DESTROY) {
-    unknown60 = gf::INVALID_HANDLE;
+  if (event == gf::IGfObjListener::OBJEVT_UNKNOWN_3) {
+    unknown60 = gf::unknown020;
   }
 }
 
@@ -123,7 +125,7 @@ void GmkMapGimmick::create(const CreateInfo &info) {
 }
 
 bool GmkMapGimmick::canPopGobInst() const {
-  if (unknown60 != gf::INVALID_HANDLE) {
+  if (unknown60 != gf::unknown020) {
     return false;
   }
   if (!isNotSolved()) {
@@ -144,7 +146,7 @@ bool GmkMapGimmick::canPopGobInst() const {
 }
 
 bool GmkMapGimmick::canDepopGobInst() const {
-  if (unknown60 == gf::INVALID_HANDLE) {
+  if (unknown60 == gf::unknown020) {
     return false;
   }
   if (!isNotSolved()) {
@@ -215,3 +217,5 @@ template void mm::mtl::Vector<gmk::GmkMapGimmick>::expand(size_t, size_t);
 
 template void mm::mtl::Vector<gmk::GmkMapGimmick::BdatInfo>::extend(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkMapGimmick::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkMapGimmick>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkMapGimmick>::resize(size_t);

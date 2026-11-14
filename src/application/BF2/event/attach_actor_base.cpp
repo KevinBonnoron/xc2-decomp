@@ -21,7 +21,7 @@
 
 namespace event {
 
-AttachActorBase::AttachActorBase(const char *name) : m_name(name), m_actor(gf::INVALID_HANDLE), unknown60(mm::Mat44::identity) {}
+AttachActorBase::AttachActorBase(const char *name) : m_name(name), m_actor(gf::unknown020), unknown60(mm::Mat44::identity) {}
 
 AttachActorBase::AttachActorBase(const char *name, gf::GF_OBJ_HANDLE *actor) : m_name(name), m_actor(actor), unknown60(mm::Mat44::identity) {}
 

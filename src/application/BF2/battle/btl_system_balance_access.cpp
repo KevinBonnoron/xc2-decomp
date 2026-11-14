@@ -11,7 +11,7 @@ BtlSystemBalanceAccess::~BtlSystemBalanceAccess() {}
 void BtlSystemBalanceAccess::Create() {
   // __LINE__ must be 47 as in the original file: its value changes the instruction order.
 #line 47
-  BtlSystemBalanceAccess *balance = new (gf::getAllocator(gf::ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) BtlSystemBalanceAccess();
+  BtlSystemBalanceAccess *balance = new (gf::getAllocator(gf::ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) BtlSystemBalanceAccess();
   balance->Initialize();
 }
 

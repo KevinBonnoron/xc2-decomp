@@ -10,7 +10,7 @@ class WorkObj;
 
 class DevClockNx : public DevClock {
 public:
-  static const f32 NANO_TO_SEC;
+  static const f32 NANO_TO_SEC; // Name from the game symbol _ZN2ml10DevClockNx11NANO_TO_SECE; also in torna and xc1de.
 
   DevClockNx(const char *name, WorkObj *parent);
   f32 getPowerOnTimeSys() const override;

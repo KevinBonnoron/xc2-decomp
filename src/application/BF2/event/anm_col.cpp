@@ -16,7 +16,7 @@ void AnmCol::clear() {
 
 void AnmCol::update(f32 delta) {
   AnmBase::update(delta);
-  if (unknown08 & STATE_PLAY) {
+  if (unknown08 & STATE_UNKNOWN_1) {
     unknown1c8 = calcEvalute(unknown68, unknown70);
   }
 }

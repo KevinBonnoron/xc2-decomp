@@ -37,7 +37,7 @@ public:
     f32 unknown04; // Inferred role: dropitem height offset; original member name unknown.
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_COLLECTION;
+  static const GmkType GMK_TYPE = GMK_TYPE_COLLECTION; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkCollection();
   ~GmkCollection() override { dispose(); }
@@ -98,7 +98,6 @@ public:
 
   void create(const CreateInfo &info) override;
 
-private:
   BdatInfo unknown228; // Inferred role: bdat info; original member name unknown.
 };
 

@@ -11,7 +11,7 @@ void CharaPlayFacial::init() { unknown08 = 0; }
 
 ICmd::RESULT CharaPlayFacial::update(const Param &param) {
   if (gf::GfObjUtil::getObj(unknown10) == nullptr) {
-    return RESULT_END;
+    return RESULT_UNKNOWN_1;
   }
   f32 delta = static_cast<CharaObj *>(param.val(0).getUserdata())->getFrameInfo().unknown04;
   if (param.getFrame() <= 0) {
@@ -26,14 +26,14 @@ ICmd::RESULT CharaPlayFacial::update(const Param &param) {
          param.val(9).getF32(),
          param.val(10).getF32());
   }
-  if ((unknown08 & FLAG_LOOP) == 0) {
+  if ((unknown08 & FLAG_UNKNOWN_1) == 0) {
     unknown24 -= delta;
     if (unknown24 < 0.0f) {
       idle();
-      return RESULT_END;
+      return RESULT_UNKNOWN_1;
     }
   }
-  return RESULT_NEXT;
+  return RESULT_UNKNOWN_2;
 }
 
 void CharaPlayFacial::term() { idle(); }

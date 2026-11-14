@@ -41,23 +41,23 @@ void CsSndManager::clear() {
 }
 
 void CsSndManager::stop() {
-  if ((unknown10 & FLAG_PRELOAD) != 0) {
+  if ((unknown10 & FLAG_UNKNOWN_0) != 0) {
     stopPreload();
   }
-  if ((unknown10 & FLAG_PLAY) != 0) {
+  if ((unknown10 & FLAG_UNKNOWN_1) != 0) {
     stopPlay();
   }
 }
 
 void CsSndManager::update() {
-  if ((unknown10 & FLAG_PLAY) == 0) {
+  if ((unknown10 & FLAG_UNKNOWN_1) == 0) {
     return;
   }
   if (!fw::SoundManager::get()->isPlaying(unknown1c)) {
     unknown1c = 0;
-    unknown10 &= ~(FLAG_PLAY | FLAG_STALL);
+    unknown10 &= ~(FLAG_UNKNOWN_1 | FLAG_UNKNOWN_3);
   }
-  if ((unknown10 & FLAG_PAUSE) != 0 || !fw::SoundManager::get()->isPlaying(unknown1c)) {
+  if ((unknown10 & FLAG_UNKNOWN_2) != 0 || !fw::SoundManager::get()->isPlaying(unknown1c)) {
     return;
   }
   f32 time = 0.0f;
@@ -80,14 +80,14 @@ void CsSndManager::update() {
 }
 
 void CsSndManager::render() {
-  if (!(unknown14 & DISP_FLAG_DISP) || !(unknown10 & FLAG_PLAY)) {
+  if (!(unknown14 & DISP_FLAG_UNKNOWN_0) || !(unknown10 & FLAG_UNKNOWN_1)) {
     return;
   }
   fw::debug::drawCompareZ(false);
   fw::debug::drawSquare2D(mm::Rect<s32>(20, 490, 350, 60), mm::Col4(0.0f, 0.0f, 0.0f, 0.25f));
   fw::debug::drawLineSquare2D(mm::Rect<s32>(20, 490, 350, 60), mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
   fw::debug::drawFont(25, 495, mm::Col4::white, "CS");
-  if (unknown10 & FLAG_PAUSE) {
+  if (unknown10 & FLAG_UNKNOWN_2) {
     ml::mtInit(0);
   }
   for (s32 i = 0; i < 7; i++) {
@@ -98,7 +98,7 @@ void CsSndManager::render() {
   fw::debug::drawSquare2D(mm::Rect<s32>(210, 530, 8, -30), mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
   fw::debug::drawFont(225, 510, "vol");
   fw::debug::drawFont(200, 530, "%.2f", 1.0);
-  if (unknown10 & FLAG_PAUSE) {
+  if (unknown10 & FLAG_UNKNOWN_2) {
     fw::debug::drawFont(270, 525, "PAUSE");
   }
 }
@@ -132,7 +132,7 @@ void CsSndManager::preloadAuto(const char *name) {
 void CsSndManager::preload(const char *path) {}
 
 bool CsSndManager::isLoading() const {
-  if ((unknown10 & FLAG_PRELOAD) != 0 && fw::SoundManager::get()->isPreparing(unknown18)) {
+  if ((unknown10 & FLAG_UNKNOWN_0) != 0 && fw::SoundManager::get()->isPreparing(unknown18)) {
     return true;
   }
   return false;
@@ -145,8 +145,8 @@ void CsSndManager::playAuto(const char *name) {
 }
 
 void CsSndManager::play(const char *path) {
-  if ((unknown10 & FLAG_PRELOAD) == 0 && __builtin_strcmp(unknown20.c_str(), path) != 0) {
-    if ((unknown10 & FLAG_PLAY) != 0) {
+  if ((unknown10 & FLAG_UNKNOWN_0) == 0 && __builtin_strcmp(unknown20.c_str(), path) != 0) {
+    if ((unknown10 & FLAG_UNKNOWN_1) != 0) {
       stopPlay();
     }
     const char *file = mm::mtl::Singleton<Extend>::getPtr()->wav(path);
@@ -163,13 +163,13 @@ void CsSndManager::play(const char *path) {
     fw::SoundManager::get()->startBgm(unknown18);
     unknown18 = 0;
     unknown20 = "";
-    unknown10 &= ~FLAG_PRELOAD;
+    unknown10 &= ~FLAG_UNKNOWN_0;
   }
   unknown124 = path;
   unknown228 = -1.0f;
   unknown22c = 0;
   unknown230 = 0;
-  unknown10 |= FLAG_PLAY;
+  unknown10 |= FLAG_UNKNOWN_1;
 }
 
 u32 CsSndManager::playBgm(const char *path, f32 volume, bool isPause) {
@@ -180,16 +180,16 @@ u32 CsSndManager::playBgm(const char *path, f32 volume, bool isPause) {
   return handle;
 }
 
-bool CsSndManager::isPlay() const { return (unknown10 & FLAG_PLAY) != 0; }
+bool CsSndManager::isPlay() const { return (unknown10 & FLAG_UNKNOWN_1) != 0; }
 
 void CsSndManager::pause(bool isPause) {
-  if ((unknown10 & FLAG_PLAY) == 0 || ((unknown10 & FLAG_PAUSE) != 0) == isPause) {
+  if ((unknown10 & FLAG_UNKNOWN_1) == 0 || ((unknown10 & FLAG_UNKNOWN_2) != 0) == isPause) {
     return;
   }
   if (isPause) {
-    unknown10 |= FLAG_PAUSE;
+    unknown10 |= FLAG_UNKNOWN_2;
   } else {
-    unknown10 &= ~FLAG_PAUSE;
+    unknown10 &= ~FLAG_UNKNOWN_2;
   }
   f32 playTime = 0.0f;
   f32 totalTime = 0.0f;
@@ -205,13 +205,13 @@ void CsSndManager::pause(bool isPause) {
 
 void CsSndManager::setDisp(bool isDisp) {
   if (isDisp) {
-    unknown14 |= DISP_FLAG_DISP;
+    unknown14 |= DISP_FLAG_UNKNOWN_0;
   } else {
-    unknown14 &= ~DISP_FLAG_DISP;
+    unknown14 &= ~DISP_FLAG_UNKNOWN_0;
   }
 }
 
-bool CsSndManager::isDisp() const { return (unknown14 & DISP_FLAG_DISP) != 0; }
+bool CsSndManager::isDisp() const { return (unknown14 & DISP_FLAG_UNKNOWN_0) != 0; }
 
 f32 CsSndManager::getSyncFrame() const {
   f32 frame = 0.0f;
@@ -237,16 +237,16 @@ void CsSndManager::setSyncFrameOffset(f32 offset) { m_syncFrameOffset = offset; 
 
 void CsSndManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
-  case MSG_TYPE_INIT:
+  case MSG_TYPE_UNKNOWN_4:
     clear();
     break;
-  case MSG_TYPE_CLEAR:
+  case MSG_TYPE_UNKNOWN_12:
     clear();
     break;
-  case MSG_TYPE_UPDATE:
+  case MSG_TYPE_UNKNOWN_14:
     update();
     break;
-  case MSG_TYPE_RENDER:
+  case MSG_TYPE_UNKNOWN_16:
     render();
     break;
   default:

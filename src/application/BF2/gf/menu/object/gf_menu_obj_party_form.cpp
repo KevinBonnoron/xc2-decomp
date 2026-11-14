@@ -1,6 +1,8 @@
 #include "gf/menu/object/gf_menu_obj_party_form.h"
 
+#include "gf/menu/object/gf_menu_obj_util.h"
 #include "mm_mtl/fixstr.h"
+#include "ui/event/ui_event_data.h"
 #include "ui/ui_object_acc.h"
 
 namespace gf {
@@ -36,5 +38,29 @@ GfMenuObjPartyForm::~GfMenuObjPartyForm() {}
 void GfMenuObjPartyForm::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjPartyForm::update() { GfMenuObject::update(); }
+
+void GfMenuObjPartyForm::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1: {
+    GfMenuObjUtil::CtrlParam param;
+    param.unknown08 = 1;
+    param.unknown00 = 0.5f;
+    GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
+    break;
+  }
+  case 2: {
+    GfMenuObjUtil::CtrlParam param;
+    param.unknown08 = 2;
+    param.unknown14 = 1;
+    param.unknown00 = 0.5f;
+    GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
+    break;
+  }
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
 
 } // namespace gf

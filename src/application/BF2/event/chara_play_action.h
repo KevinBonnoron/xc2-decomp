@@ -23,22 +23,22 @@ class CharaDysUpdater;
 class CharaPlayAction : public ICmd {
 public:
   enum {
-    FLAG_MESSAGE = 1 << 0,
-    FLAG_KEEP = 1 << 1,
-    FLAG_STANBY = 1 << 2,
-    FLAG_BLEND_IN = 1 << 3,
-    FLAG_BLEND_OUT = 1 << 4,
-    FLAG_LOOP = 1 << 5,
-    FLAG_PLAY = 1 << 6,
-    FLAG_NONE = 1 << 7,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: message flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: keep flag; original name unknown.
+    FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: stanby flag; original name unknown.
+    FLAG_UNKNOWN_3 = 1 << 3, // Inferred role: blend in flag; original name unknown.
+    FLAG_UNKNOWN_4 = 1 << 4, // Inferred role: blend out flag; original name unknown.
+    FLAG_UNKNOWN_5 = 1 << 5, // Inferred role: loop flag; original name unknown.
+    FLAG_UNKNOWN_6 = 1 << 6, // Inferred role: play flag; original name unknown.
+    FLAG_UNKNOWN_7 = 1 << 7, // Inferred role: none flag; original name unknown.
   };
 
   enum {
-    TYPE_COMBAT = 22,
+    ACT_BATTLE = 22, // Name of row 22 of the BDAT table EVT_acttype (column name).
   };
 
   void render(const mm::Vec3 &position, f32 height) {
-    if ((unknown08 & FLAG_STANBY) == 0 || gf::GfObjUtil::getObj(unknown10) == nullptr) {
+    if ((unknown08 & FLAG_UNKNOWN_2) == 0 || gf::GfObjUtil::getObj(unknown10) == nullptr) {
       return;
     }
     mm::Vec3 head;
@@ -58,7 +58,7 @@ public:
     s32 titleY = y - 55;
     fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
     fw::debug::drawFont(titleX, titleY, "[ACTION]");
-    if ((unknown08 & FLAG_LOOP) != 0) {
+    if ((unknown08 & FLAG_UNKNOWN_5) != 0) {
       fw::debug::drawFont(x - 5, titleY, "life(∞)");
     } else {
       fw::debug::drawFont(x - 5, titleY, "life(%.1f)", unknown34);
@@ -77,9 +77,9 @@ public:
   virtual RESULT update(const Param &param);
   virtual void term();
 
-  void keep() { unknown08 |= FLAG_KEEP; }
+  void keep() { unknown08 |= FLAG_UNKNOWN_1; }
   int getType() const { return unknown30; }
-  f32 getLastFrame() const { return (unknown08 & FLAG_STANBY) != 0 ? unknown34 : 9999.0f; }
+  f32 getLastFrame() const { return (unknown08 & FLAG_UNKNOWN_2) != 0 ? unknown34 : 9999.0f; }
 
 private:
   u32 unknown08;                // Inferred role: flags; original member name unknown.

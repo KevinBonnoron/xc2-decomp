@@ -15,15 +15,15 @@
 
 namespace gf {
 
-constexpr u32 DROPITEM_ITEM_MAX = 1024;
-constexpr u32 GOTTEN_EFFECT_COUNT = 32;
-constexpr int WILDCARD_FOBJ_SE_INTERVAL_ROW = 68;
-constexpr int WILDCARD_FOBJ_SE_MAX_ROW = 69;
+constexpr u32 ITEM_UNKNOWN_1024 = 1024;         // Inferred role: dropitem item max; original name unknown.
+constexpr u32 GOTTEN_EFFECT_UNKNOWN_32 = 32;    // Inferred role: gotten effect count; original name unknown.
+constexpr int WILDCARD_FOBJ_SE_UNKNOWN_68 = 68; // Inferred role: wildcard fobj se interval row; original name unknown.
+constexpr int WILDCARD_FOBJ_SE_UNKNOWN_69 = 69; // Inferred role: wildcard fobj se max row; original name unknown.
 
 GfFobjManager::GfFobjManager(const GfSetupParam &param)
     : unknown9058(false), unknown9060(nullptr), unknown9068(nullptr), unknown9070(nullptr), unknown9078(true), unknown907c(0.0f), unknown9080(false), unknown9088(nullptr), unknown90d0(nullptr) {
   initialize(param);
-  GfObjManager::addListener(this, OBJEVT_ALL);
+  GfObjManager::addListener(this, OBJEVT_UNKNOWN_0);
 }
 
 void GfFobjManager::initialize(const GfSetupParam &) {
@@ -32,21 +32,21 @@ void GfFobjManager::initialize(const GfSetupParam &) {
     delete unknown9060;
     unknown9060 = nullptr;
   }
-  unknown9060 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfDropitemParams();
+  unknown9060 = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfDropitemParams();
   GfFobjGottenEffectManager::CreateInfo effectInfo;
-  effectInfo.unknown00 = GOTTEN_EFFECT_COUNT;
+  effectInfo.unknown00 = GOTTEN_EFFECT_UNKNOWN_32;
   unknown9088.create(effectInfo);
   u8 *bdat = GfDataBdat::getFP(BDAT_FLD_WILDCARD_DATA);
   GfFobjSeManager::CreateInfo seInfo;
-  seInfo.unknown00 = Bdat::getValCheck(bdat, 0, WILDCARD_FOBJ_SE_INTERVAL_ROW, gmk::BDAT_TYPE_F32).valueF32;
-  seInfo.unknown04 = Bdat::getValCheck(bdat, 1, WILDCARD_FOBJ_SE_MAX_ROW, gmk::BDAT_TYPE_U16).valueU16;
+  seInfo.unknown00 = Bdat::getValCheck(bdat, 0, WILDCARD_FOBJ_SE_UNKNOWN_68, gmk::BDAT_TYPE_UNKNOWN_8).valueF32;
+  seInfo.unknown04 = Bdat::getValCheck(bdat, 1, WILDCARD_FOBJ_SE_UNKNOWN_69, gmk::BDAT_TYPE_UNKNOWN_2).valueU16;
   unknown90d0.create(seInfo);
   unknown9058 = true;
 }
 
 GfFobjManager::~GfFobjManager() { GfObjManager::removeListener(this); }
 
-void GfFobjManager::build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfFobjManager(param); }
+void GfFobjManager::build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfFobjManager(param); }
 
 void GfFobjManager::destroy() {
   GfFobjManager *manager = get();
@@ -124,12 +124,12 @@ void GfFobjManager::debugRecreateBdat_dropitem() {
 }
 
 void GfFobjManager::listenerGfObj(OBJEVT event, GF_OBJ_HANDLE *handle, u32 objectType) {
-  if (objectType == OBJECT_TYPE_FOBJ) {
-    if (event == OBJEVT_LOADED) {
+  if (objectType == OBJECT_TYPE_FIELD_OBJ) {
+    if (event == OBJEVT_UNKNOWN_2) {
       for (auto it = unknown18.begin(); it != unknown18.end(); ++it) {
         GfFobjDropitem *dropitem = *it;
         if (dropitem->unknown10 == handle) {
-          if (unknown4838.size() == DROPITEM_ITEM_MAX) {
+          if (unknown4838.size() == ITEM_UNKNOWN_1024) {
             GF_OBJ_HANDLE *oldest = unknown4838.front()->unknown10;
             GfObjUtil::destroy(oldest);
             leaveGameField(oldest);
@@ -140,7 +140,7 @@ void GfFobjManager::listenerGfObj(OBJEVT event, GF_OBJ_HANDLE *handle, u32 objec
           return;
         }
       }
-    } else if (event == OBJEVT_DESTROY) {
+    } else if (event == OBJEVT_UNKNOWN_3) {
       leaveGameField(handle);
     }
   }
@@ -173,7 +173,7 @@ void GfFobjManager::leaveGameField(GF_OBJ_HANDLE *handle) {
 
 void GfFobjManager::registFiledObj(GfFobjDropitem *dropitem) {
   GfFobjManager *manager = get();
-  if (manager->unknown18.size() == DROPITEM_ITEM_MAX) {
+  if (manager->unknown18.size() == ITEM_UNKNOWN_1024) {
     GF_OBJ_HANDLE *oldest = manager->unknown18.front()->unknown10;
     GfObjUtil::destroy(oldest);
     manager->leaveGameField(oldest);
@@ -202,9 +202,9 @@ void GfFobjManager::destroyObj() {
 
 void GfFobjManager::gevPlayEvent(GEV event, u32 value) {
   if (GfDataEvent::getEventType(value) != 1) {
-    if (event == GEV_EVENT_END) {
+    if (event == GEV_UNKNOWN_9) {
       unknown9078 = false;
-    } else if (event == GEV_EVENT_PLAY_END) {
+    } else if (event == GEV_UNKNOWN_10) {
       unknown9078 = true;
     }
     for (auto it = unknown18.begin(); it != unknown18.end(); ++it) {

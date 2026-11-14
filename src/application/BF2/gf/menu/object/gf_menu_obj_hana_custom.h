@@ -8,6 +8,7 @@
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 
 namespace mm {
 namespace mtl {
@@ -25,11 +26,20 @@ namespace gf {
 class GfMenuCallContext;
 class GfMenuIDList;
 class GfMenuItemList;
+struct MenuItemInfo;
 class GfMenuReferenceItem;
 class GfMenuReferenceNumber;
 
 class GfMenuObjHanaCustom : public GfMenuObject {
 public:
+  class MainListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjHanaCustom *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   GfMenuObjHanaCustom(u32 handle);
   ~GfMenuObjHanaCustom() override;
   static void sendEvent(u32 handle, u32 type, u32 param);
@@ -51,7 +61,16 @@ public:
   static void setupPlan(ui::UIObjectAcc &acc, GfMenuIDList *list);
   static void setupItemInfo2(ui::UIObjectAcc &acc, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number, u32 blade);
   static u32 chkSameSlot(mm::mtl::FixedArray<GfMenuIDList *, 7> &lists, u32 parts);
-  static u8 getEquipSlot(mm::mtl::FixedArray<GfMenuIDList *, 7> &lists, u32 parts);
+  static bool refreshEquipListSub(ui::UIObjectAcc &acc, u32 type, u32 item, u32 index);
+  static void refreshEquipList(ui::UIObjectAcc &acc, u32 blade);
+  static void refreshPartsList(ui::UIObjectAcc &acc, mm::mtl::FixedArray<GfMenuIDList *, 7> &lists);
+  static void refreshItemList(GfMenuItemList *list, ui::UISelectObjList *selectList, u32 type);
+  static void setupItemInfo(ui::UIObjectAcc &acc, GfMenuItemList *list);
+  static void getEquipItem(u32 blade, u32 parts, MenuItemInfo &info);
+  static void refreshItemInfo(ui::UIObjectAcc &acc, GfMenuItemList *list, u32 type, u32 index);
+  static void updatePartsList(ui::UIObjectAcc &acc, GfMenuIDList *list, ui::UISelectObjList *selectList, mm::mtl::FixedArray<GfMenuIDList *, 7> &lists);
+  static void setupPartsList(ui::UIObjectAcc &acc, GfMenuIDList *list, ui::UISelectObjList *selectList, GfMenuReferenceItem *item, mm::mtl::FixedArray<GfMenuIDList *, 7> &lists);
+  static u32 getEquipSlot(mm::mtl::FixedArray<GfMenuIDList *, 7> &lists, u32 parts);
   static void clearPLanSelect(ui::UIObjectAcc &acc);
   static u32 searchIdList(GfMenuIDList *list, u32 id);
 
@@ -77,6 +96,7 @@ public:
   mm::mtl::IntrusivePtr<GfMenuReferenceNumber> unknown358; // Inferred role: reference number; original member name unknown.
 };
 
+static_assert(offsetof(GfMenuObjHanaCustom::MainListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjHanaCustom, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjHanaCustom, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjHanaCustom, unknown38) == 0x38, "");

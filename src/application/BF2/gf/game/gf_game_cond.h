@@ -9,20 +9,20 @@ namespace gf {
 struct GfSetupParam;
 
 enum {
-  CONDITION_TYPE_NONE,
-  CONDITION_TYPE_SCENARIO,
-  CONDITION_TYPE_QUEST,
-  CONDITION_TYPE_ENVIRONMENT,
-  CONDITION_TYPE_FLAG,
-  CONDITION_TYPE_ITEM,
-  CONDITION_TYPE_PARTY,
-  CONDITION_TYPE_IDEA,
-  CONDITION_TYPE_LEVEL,
-  CONDITION_TYPE_ACHIEVEMENT,
-  CONDITION_TYPE_FIELD_SKILL_LEVEL,
+  CONDITION_TYPE_UNKNOWN_0,  // Inferred role: condition type none; original name unknown.
+  CONDITION_TYPE_UNKNOWN_1,  // Inferred role: condition type scenario; original name unknown.
+  CONDITION_TYPE_UNKNOWN_2,  // Inferred role: condition type quest; original name unknown.
+  CONDITION_TYPE_UNKNOWN_3,  // Inferred role: condition type environment; original name unknown.
+  CONDITION_TYPE_UNKNOWN_4,  // Inferred role: condition type flag; original name unknown.
+  CONDITION_TYPE_UNKNOWN_5,  // Inferred role: condition type item; original name unknown.
+  CONDITION_TYPE_UNKNOWN_6,  // Inferred role: condition type party; original name unknown.
+  CONDITION_TYPE_UNKNOWN_7,  // Inferred role: condition type idea; original name unknown.
+  CONDITION_TYPE_UNKNOWN_8,  // Inferred role: condition type level; original name unknown.
+  CONDITION_TYPE_UNKNOWN_9,  // Inferred role: condition type achievement; original name unknown.
+  CONDITION_TYPE_UNKNOWN_10, // Inferred role: condition type field skill level; original name unknown.
 };
 
-constexpr u32 CONDITION_LIST_COUNT = 8;
+constexpr u32 CONDITION_UNKNOWN_8 = 8; // Inferred role: condition list count; original name unknown.
 
 class GfGameCond : public mm::mtl::PtrSingleton<GfGameCond> {
 public:

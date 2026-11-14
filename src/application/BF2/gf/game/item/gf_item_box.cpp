@@ -6,8 +6,8 @@
 namespace gf {
 
 enum {
-  ITEM_TYPE_LIMIT = 64,
-  ITEM_SERIAL_MASK = 0x3ffffff,
+  ITEM_UNKNOWN_64 = 64,              // Inferred role: item type limit; original name unknown.
+  ITEM_UNKNOWN_67108863 = 0x3ffffff, // Inferred role: item serial mask; original name unknown.
 };
 
 namespace _gfit {
@@ -19,44 +19,44 @@ GfPoolItemBox *s_pItemBoxP;
 
 static ITEM_BOX_INDEX getItemBoxIndex(ItemType::Type type) {
   switch (type) {
-  case ItemType::PC_WPN_CHIP:
-    return ITEM_BOX_INDEX_PC_WPN_CHIP;
-  case ItemType::PC_EQUIP:
-    return ITEM_BOX_INDEX_PC_EQUIP;
-  case ItemType::EQUIP_ORB:
-    return ITEM_BOX_INDEX_EQUIP_ORB;
-  case ItemType::SALVAGE:
-    return ITEM_BOX_INDEX_SALVAGE;
-  case ItemType::PRECIOUS:
-    return ITEM_BOX_INDEX_PRECIOUS;
-  case ItemType::COLLECTION_LIST:
-    return ITEM_BOX_INDEX_COLLECTION_LIST;
-  case ItemType::TRESURE:
-    return ITEM_BOX_INDEX_TRESURE;
-  case ItemType::EMPTY_ORB:
-    return ITEM_BOX_INDEX_EMPTY_ORB;
-  case ItemType::FAVORITE:
-    return ITEM_BOX_INDEX_FAVORITE;
-  case ItemType::CRYSTAL_LIST:
-    return ITEM_BOX_INDEX_CRYSTAL_LIST;
-  case ItemType::BOOSTER:
-    return ITEM_BOX_INDEX_BOOSTER;
-  case ItemType::INFO:
-    return ITEM_BOX_INDEX_INFO;
-  case ItemType::EVENT:
-    return ITEM_BOX_INDEX_EVENT;
-  case ItemType::HANA_ROLE:
-    return ITEM_BOX_INDEX_HANA_ROLE;
-  case ItemType::HANA_ATR:
-    return ITEM_BOX_INDEX_HANA_ATR;
-  case ItemType::HANA_ARTS_ENH:
-    return ITEM_BOX_INDEX_HANA_ARTS_ENH;
-  case ItemType::HANA_N_ARTS_SET:
-    return ITEM_BOX_INDEX_HANA_N_ARTS_SET;
-  case ItemType::HANA_ASSIST:
-    return ITEM_BOX_INDEX_HANA_ASSIST;
+  case ItemType::ITEM_TYPE_UNKNOWN_1:
+    return ITEM_BOX_INDEX_UNKNOWN_1;
+  case ItemType::ITEM_TYPE_UNKNOWN_2:
+    return ITEM_BOX_INDEX_UNKNOWN_2;
+  case ItemType::ITEM_TYPE_UNKNOWN_3:
+    return ITEM_BOX_INDEX_UNKNOWN_3;
+  case ItemType::ITEM_TYPE_UNKNOWN_5:
+    return ITEM_BOX_INDEX_UNKNOWN_4;
+  case ItemType::ITEM_TYPE_UNKNOWN_6:
+    return ITEM_BOX_INDEX_UNKNOWN_5;
+  case ItemType::ITEM_TYPE_UNKNOWN_7:
+    return ITEM_BOX_INDEX_UNKNOWN_8;
+  case ItemType::ITEM_TYPE_UNKNOWN_8:
+    return ITEM_BOX_INDEX_UNKNOWN_9;
+  case ItemType::ITEM_TYPE_UNKNOWN_9:
+    return ITEM_BOX_INDEX_UNKNOWN_10;
+  case ItemType::ITEM_TYPE_UNKNOWN_10:
+    return ITEM_BOX_INDEX_UNKNOWN_11;
+  case ItemType::ITEM_TYPE_UNKNOWN_11:
+    return ITEM_BOX_INDEX_UNKNOWN_12;
+  case ItemType::ITEM_TYPE_UNKNOWN_12:
+    return ITEM_BOX_INDEX_UNKNOWN_13;
+  case ItemType::ITEM_TYPE_UNKNOWN_14:
+    return ITEM_BOX_INDEX_UNKNOWN_6;
+  case ItemType::ITEM_TYPE_UNKNOWN_15:
+    return ITEM_BOX_INDEX_UNKNOWN_7;
+  case ItemType::ITEM_TYPE_UNKNOWN_16:
+    return ITEM_BOX_INDEX_UNKNOWN_14;
+  case ItemType::ITEM_TYPE_UNKNOWN_17:
+    return ITEM_BOX_INDEX_UNKNOWN_15;
+  case ItemType::ITEM_TYPE_UNKNOWN_18:
+    return ITEM_BOX_INDEX_UNKNOWN_16;
+  case ItemType::ITEM_TYPE_UNKNOWN_19:
+    return ITEM_BOX_INDEX_UNKNOWN_17;
+  case ItemType::ITEM_TYPE_UNKNOWN_20:
+    return ITEM_BOX_INDEX_UNKNOWN_18;
   default:
-    return ITEM_BOX_INDEX_NONE;
+    return ITEM_BOX_INDEX_UNKNOWN_0;
   }
 }
 
@@ -92,24 +92,24 @@ void GfItemBoxBase::setItemBox(ItemBox *itemBox, bool isClear) {
   if (isClear) {
     __builtin_memset(itemBox, 0, sizeof(ItemBox));
   }
-  setItems(this, itemBox, ITEM_BOX_INDEX_PC_WPN_CHIP, itemBox->unknown00, 99, true);
-  setItems(this, itemBox, ITEM_BOX_INDEX_PC_EQUIP, itemBox->unknown960, 1, false);
-  setItems(this, itemBox, ITEM_BOX_INDEX_EQUIP_ORB, itemBox->unknown3390, 1, false);
-  setItems(this, itemBox, ITEM_BOX_INDEX_SALVAGE, itemBox->unknown4b00, 99, true);
-  setItems(this, itemBox, ITEM_BOX_INDEX_PRECIOUS, itemBox->unknown5460, 99, true);
-  setItems(this, itemBox, ITEM_BOX_INDEX_INFO, itemBox->unknown6bd0, 1, true);
-  setItems(this, itemBox, ITEM_BOX_INDEX_EVENT, itemBox->unknown7530, 1, true);
-  setItems(this, itemBox, ITEM_BOX_INDEX_COLLECTION_LIST, itemBox->unknown79e0, 999, true);
-  setItems(this, itemBox, ITEM_BOX_INDEX_TRESURE, itemBox->unknown9150, 99, true);
-  setItems(this, itemBox, ITEM_BOX_INDEX_EMPTY_ORB, itemBox->unknown9ab0, 99, true);
-  setItems(this, itemBox, ITEM_BOX_INDEX_FAVORITE, itemBox->unknownb220, 99, true);
-  setItems(this, itemBox, ITEM_BOX_INDEX_CRYSTAL_LIST, itemBox->unknownc990, 99, true);
-  setItems(this, itemBox, ITEM_BOX_INDEX_BOOSTER, itemBox->unknownd2f0, 99, true);
-  setItems(this, itemBox, ITEM_BOX_INDEX_HANA_ROLE, itemBox->unknowndc50, 1, false);
-  setItems(this, itemBox, ITEM_BOX_INDEX_HANA_ATR, itemBox->unknowne5b0, 1, false);
-  setItems(this, itemBox, ITEM_BOX_INDEX_HANA_ARTS_ENH, itemBox->unknownef10, 1, false);
-  setItems(this, itemBox, ITEM_BOX_INDEX_HANA_N_ARTS_SET, itemBox->unknownf870, 1, false);
-  setItems(this, itemBox, ITEM_BOX_INDEX_HANA_ASSIST, itemBox->unknown101d0, 1, false);
+  setItems(this, itemBox, ITEM_BOX_INDEX_UNKNOWN_1, itemBox->unknown00, 99, true);
+  setItems(this, itemBox, ITEM_BOX_INDEX_UNKNOWN_2, itemBox->unknown960, 1, false);
+  setItems(this, itemBox, ITEM_BOX_INDEX_UNKNOWN_3, itemBox->unknown3390, 1, false);
+  setItems(this, itemBox, ITEM_BOX_INDEX_UNKNOWN_4, itemBox->unknown4b00, 99, true);
+  setItems(this, itemBox, ITEM_BOX_INDEX_UNKNOWN_5, itemBox->unknown5460, 99, true);
+  setItems(this, itemBox, ITEM_BOX_INDEX_UNKNOWN_6, itemBox->unknown6bd0, 1, true);
+  setItems(this, itemBox, ITEM_BOX_INDEX_UNKNOWN_7, itemBox->unknown7530, 1, true);
+  setItems(this, itemBox, ITEM_BOX_INDEX_UNKNOWN_8, itemBox->unknown79e0, 999, true);
+  setItems(this, itemBox, ITEM_BOX_INDEX_UNKNOWN_9, itemBox->unknown9150, 99, true);
+  setItems(this, itemBox, ITEM_BOX_INDEX_UNKNOWN_10, itemBox->unknown9ab0, 99, true);
+  setItems(this, itemBox, ITEM_BOX_INDEX_UNKNOWN_11, itemBox->unknownb220, 99, true);
+  setItems(this, itemBox, ITEM_BOX_INDEX_UNKNOWN_12, itemBox->unknownc990, 99, true);
+  setItems(this, itemBox, ITEM_BOX_INDEX_UNKNOWN_13, itemBox->unknownd2f0, 99, true);
+  setItems(this, itemBox, ITEM_BOX_INDEX_UNKNOWN_14, itemBox->unknowndc50, 1, false);
+  setItems(this, itemBox, ITEM_BOX_INDEX_UNKNOWN_15, itemBox->unknowne5b0, 1, false);
+  setItems(this, itemBox, ITEM_BOX_INDEX_UNKNOWN_16, itemBox->unknownef10, 1, false);
+  setItems(this, itemBox, ITEM_BOX_INDEX_UNKNOWN_17, itemBox->unknownf870, 1, false);
+  setItems(this, itemBox, ITEM_BOX_INDEX_UNKNOWN_18, itemBox->unknown101d0, 1, false);
 }
 
 void GfItemBoxBase::setItemTypeInfo(ItemBox *itemBox, u32 index, GfItemInfo *first, GfItemInfo *last, u32 capacity, u32 itemSize, u32 maxStock, bool isMulti) {
@@ -128,7 +128,7 @@ void GfItemBoxBase::setupSerial(ItemBox *itemBox) {
     return;
   }
 
-  for (u32 index = ITEM_BOX_INDEX_PC_WPN_CHIP; index < ITEM_BOX_INDEX_NUM; index++) {
+  for (u32 index = ITEM_BOX_INDEX_UNKNOWN_1; index < ITEM_BOX_INDEX_UNKNOWN_19; index++) {
     setSerialInfo(itemBox, index);
   }
 }
@@ -140,7 +140,7 @@ unknown081 *GfItemBoxBase::getItemTypeInfo(ItemType::Type type) { return &unknow
 const unknown081 *GfItemBoxBase::getItemTypeInfo(ItemType::Type type) const { return &unknown08[getItemBoxIndex(type)]; }
 
 item_iterator GfItemBoxBase::begin(ItemType::Type type) {
-  if (type >= ITEM_TYPE_LIMIT) {
+  if (type >= ITEM_UNKNOWN_64) {
     return item_iterator(nullptr, nullptr, 0, false, type);
   }
 
@@ -191,7 +191,7 @@ u32 GfItemBoxBase::getSerial(ItemType::Type type) { return *getItemTypeInfo(type
 
 u32 GfItemBoxBase::updateSerialLocal(ItemType::Type type) {
   u32 *serial = getItemTypeInfo(type)->unknown18;
-  u32 next = (*serial + 1) & ITEM_SERIAL_MASK;
+  u32 next = (*serial + 1) & ITEM_UNKNOWN_67108863;
   if (next == 0) {
     next++;
   }
@@ -201,7 +201,7 @@ u32 GfItemBoxBase::updateSerialLocal(ItemType::Type type) {
 
 void GfItemBoxBase::setSerial(ItemType::Type type, u32 serial) {
   unknown081 *info = getItemTypeInfo(type);
-  *info->unknown18 = serial & ITEM_SERIAL_MASK;
+  *info->unknown18 = serial & ITEM_UNKNOWN_67108863;
 }
 
 bool GfItemBoxBase::findSerial(ItemType::Type type, u32 serial) {
@@ -214,7 +214,7 @@ bool GfItemBoxBase::findSerial(ItemType::Type type, u32 serial) {
 }
 
 void GfItemBoxBase::clear() {
-  for (u32 type = ItemType::PC_WPN_CHIP; type <= ItemType::HANA_ASSIST; type++) {
+  for (u32 type = ItemType::ITEM_TYPE_UNKNOWN_1; type <= ItemType::ITEM_TYPE_UNKNOWN_20; type++) {
     ItemType::Type itemType = static_cast<ItemType::Type>(type);
     for (item_iterator it = begin(itemType), last = end(itemType); it != last; ++it) {
       *it = GfItemInfo();
@@ -241,7 +241,7 @@ bool GfItemBoxBase::canAddItem(u32 item) {
   u32 index;
   GfDataItem::getItemType(type, index, item);
   u32 stock = GfItemUtil::getEnableStock(item);
-  if (getItemBoxIndex(type) == ITEM_BOX_INDEX_NONE) {
+  if (getItemBoxIndex(type) == ITEM_BOX_INDEX_UNKNOWN_0) {
     return false;
   }
 
@@ -431,7 +431,7 @@ GfItemInfo::GfItemInfo(const GfItemInfo &other) : unknown117(other) {}
 
 u16 GfItemInfo::getMaxStock() const {
   ItemType::Type itemType = getType();
-  if (itemType == ItemType::NONE) {
+  if (itemType == ItemType::ITEM_TYPE_UNKNOWN_0) {
     return 0;
   }
   return GfItemBox::get()->getItemTypeInfo(itemType)->unknown24;

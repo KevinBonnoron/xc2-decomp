@@ -7,6 +7,10 @@
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
 
+namespace anm {
+class Pose;
+} // namespace anm
+
 namespace mm {
 struct Vec3;
 
@@ -19,10 +23,19 @@ namespace fw {
 
 class FootPlacementIKSolver;
 class ParamAdapter;
+class ReferenceFrame;
 
 class PlacementGroundSolver : public IkSolver {
 public:
+  // Layout evidence: gf::GfComIK::createPlacementGroundIK builds it on the stack (8 bytes).
+  struct Description {
+    f32 unknown00; // Inferred role: constructor argument of GfComIK::createPlacementGroundIK; original member name unknown.
+    u32 unknown04; // Inferred role: foot count of the owner; original member name unknown.
+  };
+
   static mm::mtl::RTTI m_rtti;
+
+  static PlacementGroundSolver *create(const Description &description, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose, IKGroundInterface *ground);
 
   PlacementGroundSolver();
   ~PlacementGroundSolver() override;
@@ -45,6 +58,9 @@ public:
   u8 _66[0x68 - 0x66];
   IKGroundInterface *unknown68; // Inferred role: ground interface; original member name unknown.
 };
+
+static_assert(offsetof(PlacementGroundSolver::Description, unknown04) == 0x4, "");
+static_assert(sizeof(PlacementGroundSolver::Description) == 0x8, "");
 
 static_assert(offsetof(PlacementGroundSolver, unknown20) == 0x20, "");
 static_assert(offsetof(PlacementGroundSolver, unknown58) == 0x58, "");

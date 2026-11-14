@@ -164,6 +164,8 @@ public:
   LogTimeStamp::Type GetLogTimeStampType() const;
 
   static SoundCore *instance_;
+  // Real game symbol _ZN3ssd9SoundCore24audioRendererConfigName_E (a const char * read by fw::SoundSsdDriver::attachPoolMemory).
+  static const char *audioRendererConfigName_;
 
   Result unknown08; // Inferred role: last result; original member name unknown.
   bool m_init;

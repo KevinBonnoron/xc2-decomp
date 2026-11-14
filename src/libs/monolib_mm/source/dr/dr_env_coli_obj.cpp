@@ -5,8 +5,10 @@
 #include "dr/dr_env_coli_man.h"
 #include "dr/dr_env_coli_parameter.h"
 #include "dr/dr_environment_man.h"
+#include "dr/dr_ini_sys.h"
 #include "dr/dr_man.h"
 #include "dr/dr_pixl_post_parm.h"
+#include "dr/dr_res_list.h"
 #include "mm_math/mm_math.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_array.h"
@@ -69,20 +71,6 @@ struct unknown008 {
   u8 _0c[0x18 - 0x0c];
 };
 
-// Inferred role: appends an object to the end of a list; original name unknown.
-void unknown009(DrEnvColiObj *&first, DrEnvColiObj *&last, DrEnvColiObj *object) {
-  if (last == nullptr) {
-    first = object;
-    last = object;
-    object->unknown00 = nullptr;
-  } else {
-    last->unknown08 = object;
-    object->unknown00 = last;
-    last = object;
-  }
-  object->unknown08 = nullptr;
-}
-
 // Inferred role: deletes every object of a list; original name unknown.
 void unknown010(DrEnvColiObj *&first, DrEnvColiObj *&last) {
   DrEnvColiObj *object = first;
@@ -107,7 +95,7 @@ DrEnvColiObj::COLITEST DrEnvColiObj::s_pColiTest[5] = {
 
 DrEnvColiObj *DrEnvColiMan::createObj(const void *data) {
   DrEnvColiObj *object = new (unknown30->unknown10) DrEnvColiObj(unknown30, data);
-  unknown009(unknown10[DrMan::s_nDblStockIdx][0], unknown10[DrMan::s_nDblStockIdx][1], object);
+  unknown101(unknown10[DrMan::s_nDblStockIdx][0], unknown10[DrMan::s_nDblStockIdx][1], object);
   return object;
 }
 
@@ -118,7 +106,7 @@ void DrEnvColiMan::update() {
   DrEnvColiObj *object = unknown10[DrMan::s_nDblIdx][0];
   while (object != nullptr) {
     DrEnvColiObj *next = object->unknown08;
-    unknown009(unknown00, unknown08, object);
+    unknown101(unknown00, unknown08, object);
     object = next;
     isChanged = true;
   }
@@ -207,6 +195,77 @@ void DrEnvColiParameter::calcPostEffectParams(bool isReset) {
   calcParams(postIndex->unknown04, postIndex->unknown08, isReset);
 }
 
+void DrEnvColiParameter::updateBloomParams() {
+  DrMan *man = DrMan::getIns();
+  DrPixlPostParm *postParm = man->unknown120[man->unknown1c98];
+  const DrPixlPostParm &defaultParm = DrMan::getIns()->unknown70->unknown970;
+  postParm->unknown40 = defaultParm.unknown40;
+  postParm->m_borderBlmMul = defaultParm.m_borderBlmMul;
+  postParm->unknown48 = defaultParm.unknown48;
+  postParm->unknown4c = defaultParm.unknown4c;
+  postParm->unknown50 = defaultParm.unknown50;
+  for (int i = 0; i < 3; i++) {
+    postParm->unknown54[i] = defaultParm.unknown54[i];
+  }
+  for (int i = 0; i < 7; i++) {
+    postParm->unknown60[i] = defaultParm.unknown60[i];
+  }
+  for (int i = 0; i < 3; i++) {
+    postParm->unknown7c[i] = defaultParm.unknown7c[i];
+  }
+  for (int i = 0; i < 2; i++) {
+    postParm->unknown88[i] = defaultParm.unknown88[i];
+  }
+  for (int i = 0; i < 3; i++) {
+    postParm->unknown90[i] = defaultParm.unknown90[i];
+  }
+  for (int i = 0; i < 7; i++) {
+    postParm->unknown9c[i] = defaultParm.unknown9c[i];
+  }
+  for (int i = 0; i < 2; i++) {
+    postParm->unknownc0[i] = defaultParm.unknownc0[i];
+  }
+  postParm->unknownc8 = defaultParm.unknownc8;
+  postParm->unknowncc = defaultParm.unknowncc;
+  postParm->unknownd0 = defaultParm.unknownd0;
+  postParm->unknownd4 = defaultParm.unknownd4;
+  postParm->unknownd8 = defaultParm.unknownd8;
+  postParm->unknowndc = defaultParm.unknowndc;
+  postParm->unknowne0 = defaultParm.unknowne0;
+  postParm->unknowne4 = defaultParm.unknowne4;
+  postParm->unknowne8 = defaultParm.unknowne8;
+}
+
+void DrEnvColiParameter::resetToneMapParams(const EnvColiPostParameterVer<10006> *from, const EnvColiPostParameterVer<10006> *to, f32 ratio) {
+  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  if (ratio != 0.0f) {
+    f32 inverse = 1.0f - ratio;
+    postParm->unknown08 = from->unknown00 * ratio + inverse * to->unknown00;
+    postParm->unknown0c = from->unknown04 * ratio + inverse * to->unknown04;
+    postParm->unknown10 = from->unknown08 * ratio + inverse * to->unknown08;
+    postParm->unknown14 = from->unknown0c * ratio + inverse * to->unknown0c;
+    postParm->unknown18 = from->unknown10 * ratio + inverse * to->unknown10;
+    postParm->unknown1c = from->unknown14 * ratio + inverse * to->unknown14;
+    postParm->unknown20 = from->unknown18 * ratio + inverse * to->unknown18;
+    postParm->unknown24 = from->unknown1c * ratio + inverse * to->unknown1c;
+    postParm->unknown28 = from->unknown20 * ratio + inverse * to->unknown20;
+    postParm->unknown2c = from->unknown24 * ratio + inverse * to->unknown24;
+    postParm->unknown30 = from->unknown28 * ratio + inverse * to->unknown28;
+  } else {
+    postParm->unknown08 = from->unknown00;
+    postParm->unknown0c = from->unknown04;
+    postParm->unknown10 = from->unknown08;
+    postParm->unknown14 = from->unknown0c;
+    postParm->unknown18 = from->unknown10;
+    postParm->unknown1c = from->unknown14;
+    postParm->unknown20 = from->unknown18;
+    postParm->unknown24 = from->unknown1c;
+    postParm->unknown28 = from->unknown20;
+    postParm->unknown2c = from->unknown24;
+    postParm->unknown30 = from->unknown28;
+  }
+}
+
 bool DrEnvColiMan::testEnvColi(DrEnvColiResult *result, const mm::Vec3 &position, f32 radius) {
   if (result == nullptr) {
     result = &unknown40;
@@ -260,11 +319,8 @@ bool DrEnvColiObj::testTreeColi(DrEnvColiResult *result, const EnvColiListTreeDa
           continue;
         }
         u16 gblId = primitive->unknown0c;
-        if (gblId != 0) {
-          u32 *gblTbl = unknown30->unknown1d20;
-          if (gblTbl[gblId >> 5] & (1 << (gblId & 31))) {
-            continue;
-          }
+        if (gblId != 0 && unknown30->isGblIdx(gblId)) {
+          continue;
         }
         if (!(this->*s_pColiTest[primitive->unknown04])(unknown10 + primitive->unknown00, position, radius, unknown28[index])) {
           continue;
@@ -409,7 +465,7 @@ u32 DrEnvColiObj::isDeleteCall() const { return unknown38 & (1 << DrMan::s_nDblI
 u32 DrEnvColiObj::isDeleteAll() const { return unknown38 & 3; }
 
 bool DrEnvColiObj::envcoli_box(const u8 *data, const mm::Vec3 &position, f32 margin, const mm::Vec3 *axes) {
-  const unknown004 *box = reinterpret_cast<const unknown004 *>(data);
+  const struct unknown004 *box = reinterpret_cast<const struct unknown004 *>(data);
   f32 cx = box->unknown30[0];
   f32 cy = box->unknown30[1];
   f32 cz = box->unknown30[2];
@@ -442,7 +498,7 @@ bool DrEnvColiObj::envcoli_box(const u8 *data, const mm::Vec3 &position, f32 mar
 }
 
 bool DrEnvColiObj::envcoli_sphere(const u8 *data, const mm::Vec3 &position, f32 margin, const mm::Vec3 *center) {
-  const unknown001 *sphere = reinterpret_cast<const unknown001 *>(data);
+  const struct unknown001 *sphere = reinterpret_cast<const struct unknown001 *>(data);
   f32 dx = position.x - center->x;
   f32 dy = position.y - center->y;
   f32 dz = position.z - center->z;
@@ -451,7 +507,7 @@ bool DrEnvColiObj::envcoli_sphere(const u8 *data, const mm::Vec3 &position, f32 
 }
 
 bool DrEnvColiObj::envcoli_cylinder(const u8 *data, const mm::Vec3 &position, f32 margin, const mm::Vec3 *axes) {
-  const unknown004 *cylinder = reinterpret_cast<const unknown004 *>(data);
+  const struct unknown004 *cylinder = reinterpret_cast<const struct unknown004 *>(data);
   f32 cx = cylinder->unknown30[0];
   f32 cy = cylinder->unknown30[1];
   f32 cz = cylinder->unknown30[2];
@@ -476,7 +532,7 @@ bool DrEnvColiObj::envcoli_cylinder(const u8 *data, const mm::Vec3 &position, f3
 }
 
 bool DrEnvColiObj::envcoli_notrot_box(const u8 *data, const mm::Vec3 &position, f32 margin, const mm::Vec3 *center) {
-  const unknown003 *box = reinterpret_cast<const unknown003 *>(data);
+  const struct unknown003 *box = reinterpret_cast<const struct unknown003 *>(data);
   f32 dx = position.x - center->x;
   f32 dy = position.y - center->y;
   f32 dz = position.z - center->z;

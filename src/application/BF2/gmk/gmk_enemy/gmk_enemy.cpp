@@ -9,6 +9,7 @@
 #include "gf/data/gf_object_type.h"
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/object/gf_obj_handle.h"
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 #include "gmk/gmk_squad.h"
@@ -26,36 +27,37 @@ namespace gmk {
 template bool TGmkList<GmkEnemy, GmkEnemy::BdatInfo, 1296387653u, 5u, GmkEnemyGob>::initGmkBdatInfo(GmkEnemy::BdatInfo &, int &, const AGmkBase &);
 
 static u32 getU8OrU16(const CBdatWrapper &bdat, const char *name, int id) {
-  if (Bdat::getVarType(bdat.unknown00, name) == BDAT_TYPE_U16) {
-    return static_cast<u16>(bdat.getValCheck(name, id, BDAT_TYPE_U16));
+  if (Bdat::getVarType(bdat.unknown00, name) == BDAT_TYPE_UNKNOWN_2) {
+    return static_cast<u16>(bdat.getValCheck(name, id, BDAT_TYPE_UNKNOWN_2));
   }
-  return static_cast<u8>(bdat.getValCheck(name, id, BDAT_TYPE_U8));
+  return static_cast<u8>(bdat.getValCheck(name, id, BDAT_TYPE_UNKNOWN_1));
 }
 
 void GmkEnemyInsts::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
-  unknown0e = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_U16), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_U16));
-  unknown12 = QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_U16), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_U8), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_U8));
-  unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_U16);
-  unknown18.unknown08 = bdat.getValCheck("POP_TIME", id, BDAT_TYPE_U32);
-  unknown28.unknown08 = bdat.getValCheck("popWeather", id, BDAT_TYPE_U8);
+  unknown0e = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_UNKNOWN_2));
+  unknown12 =
+      QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_UNKNOWN_1), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_UNKNOWN_1));
+  unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_UNKNOWN_2);
+  unknown18.unknown08 = bdat.getValCheck("POP_TIME", id, BDAT_TYPE_UNKNOWN_3);
+  unknown28.unknown08 = bdat.getValCheck("popWeather", id, BDAT_TYPE_UNKNOWN_1);
   if (Bdat::getFlagVal(bdat.unknown00, "flag", id, "popCloud") != 0) {
-    unknown38.unknown08 = CloudCond::TYPE_CLOUD_SEA;
+    unknown38.unknown08 = CloudCond::TYPE_UNKNOWN_1;
   }
   unknown02 = Bdat::getFlagVal(bdat.unknown00, "flag", id, "ene_priority") != 0;
   unknown03 = Bdat::getFlagVal(bdat.unknown00, "flag", id, "pop_smn") != 0;
-  unknown04 = bdat.getValCheck("squadId", id, BDAT_TYPE_U16);
-  s16 squadScale = bdat.getValCheck("squadScale", id, BDAT_TYPE_U16);
+  unknown04 = bdat.getValCheck("squadId", id, BDAT_TYPE_UNKNOWN_2);
+  s16 squadScale = bdat.getValCheck("squadScale", id, BDAT_TYPE_UNKNOWN_2);
   unknown06 = squadScale == 0 ? 100 : squadScale;
-  unknown08 = bdat.getValCheck("form", id, BDAT_TYPE_U8);
-  unknown09 = bdat.getValCheck("form_range", id, BDAT_TYPE_U8);
-  u16 mutekiQuest = bdat.getValCheck("muteki_QuestFlag", id, BDAT_TYPE_U16);
-  u8 mutekiQuestMin = bdat.getValCheck("muteki_QuestFlagMin", id, BDAT_TYPE_U8);
-  u8 mutekiQuestMax = bdat.getValCheck("muteki_QuestFlagMax", id, BDAT_TYPE_U8);
+  unknown08 = bdat.getValCheck("form", id, BDAT_TYPE_UNKNOWN_1);
+  unknown09 = bdat.getValCheck("form_range", id, BDAT_TYPE_UNKNOWN_1);
+  u16 mutekiQuest = bdat.getValCheck("muteki_QuestFlag", id, BDAT_TYPE_UNKNOWN_2);
+  u8 mutekiQuestMin = bdat.getValCheck("muteki_QuestFlagMin", id, BDAT_TYPE_UNKNOWN_1);
+  u8 mutekiQuestMax = bdat.getValCheck("muteki_QuestFlagMax", id, BDAT_TYPE_UNKNOWN_1);
   if (mutekiQuestMax >= mutekiQuestMin) {
     unknown48 = QuestFlagCond(mutekiQuest, mutekiQuestMin, mutekiQuestMax);
   }
-  unknown0a = bdat.getValCheck("muteki_Condition", id, BDAT_TYPE_U16);
-  const char *name = reinterpret_cast<const char *>(bdat.getValCheck("name", id, BDAT_TYPE_STRING));
+  unknown0a = bdat.getValCheck("muteki_Condition", id, BDAT_TYPE_UNKNOWN_2);
+  const char *name = reinterpret_cast<const char *>(bdat.getValCheck("name", id, BDAT_TYPE_UNKNOWN_7));
   if (name != nullptr && (__builtin_strcmp("ma20a_b05_23", name) == 0 || __builtin_strcmp("ma20a_b05_24", name) == 0)) {
     unknown0c = true;
   }
@@ -114,7 +116,7 @@ void GmkEnemy::debugDraw() const {
 }
 
 void GmkEnemy::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
-  unknown00 = bdat.getValCheck("tagetpoint_name", id, BDAT_TYPE_U16);
+  unknown00 = bdat.getValCheck("tagetpoint_name", id, BDAT_TYPE_UNKNOWN_2);
   unknown02 = Bdat::getFlagVal(bdat.unknown00, "flag", id, "pop_smn") != 0;
   unknown04 = getU8OrU16(bdat, "ene_disp_r", id);
   unknown06 = getU8OrU16(bdat, "ene_disp_h", id);
@@ -131,11 +133,11 @@ bool GmkEnemyList::BdatInfo::create() {
     unknown00 = -1;
     return false;
   }
-  unknown04 = Bdat::getValCheck(mapList, "ene_disp_r", unknown00, BDAT_TYPE_U8);
-  unknown05 = Bdat::getValCheck(mapList, "ene_disp_h", unknown00, BDAT_TYPE_U8);
-  unknown06 = Bdat::getValCheck(mapList, "ene_release_r", unknown00, BDAT_TYPE_U8);
-  unknown07 = Bdat::getValCheck(mapList, "ene_release_h", unknown00, BDAT_TYPE_U8);
-  unknown08 = Bdat::getValCheck(mapList, "e_repoptime", unknown00, BDAT_TYPE_U8);
+  unknown04 = Bdat::getValCheck(mapList, "ene_disp_r", unknown00, BDAT_TYPE_UNKNOWN_1);
+  unknown05 = Bdat::getValCheck(mapList, "ene_disp_h", unknown00, BDAT_TYPE_UNKNOWN_1);
+  unknown06 = Bdat::getValCheck(mapList, "ene_release_r", unknown00, BDAT_TYPE_UNKNOWN_1);
+  unknown07 = Bdat::getValCheck(mapList, "ene_release_h", unknown00, BDAT_TYPE_UNKNOWN_1);
+  unknown08 = Bdat::getValCheck(mapList, "e_repoptime", unknown00, BDAT_TYPE_UNKNOWN_1);
   return true;
 }
 
@@ -152,6 +154,10 @@ void GmkEnemyInsts::PopInfo::PopEnemyInfo::dispose() {
   unknown003(unknown18);
   unknown24 = 0;
 }
+
+// Unrolled by hand in the original (the game's constructor merges the last member of an entry with the first members of the next entry into one block of zero stores, which the construction loop of an
+// array does not).
+GmkEnemyInsts::PopInfo::PopInfo() : unknown00(0), unknown02(0), unknown08{PopEnemyInfo(), PopEnemyInfo(), PopEnemyInfo(), PopEnemyInfo()} {}
 
 void GmkEnemyInsts::PopInfo::dispose() {
   unknown08[0].dispose();
@@ -260,6 +266,26 @@ int GmkEnemyInsts::getGobInstCapa() const {
   return capacity;
 }
 
+gf::GF_OBJ_HANDLE *GmkEnemyInsts::getGobInst(u32 index) const {
+  for (u32 i = 0; i < 4; i++) {
+    const PopInfo::PopEnemyInfo &info = unknown98.unknown08[i];
+    u32 num = info.unknown001();
+    if (index < num) {
+      u8 slot = index;
+      if (slot < info.unknown18->size()) {
+        return (*info.unknown18)[slot];
+      }
+      return (*info.unknown10)[slot - info.unknown18->size()];
+    }
+    index -= num;
+  }
+  return gf::unknown020;
+}
+
+GmkEnemyInsts::GmkEnemyInsts()
+    : unknown00(), unknown38(), unknown88(), unknown90(), unknown98(), unknown140(true), unknown141(false), unknown144(), unknown150(nullptr), unknown158(false), unknown159(false), unknown15a(false),
+      unknown160(nullptr), unknown170(-1.0f), unknown178(0), unknown180(false) {}
+
 void GmkEnemyInsts::create(const CreateInfo &info) {
   dispose();
   unknown00 = info;
@@ -268,8 +294,9 @@ void GmkEnemyInsts::create(const CreateInfo &info) {
   unknown88.unknown04 = info.unknown18 * info.unknown18;
   unknown90.unknown00 = info.unknown1c * info.unknown1c;
   unknown90.unknown04 = info.unknown20 * info.unknown20;
-  u32 enemyNum = static_cast<u8>(info.unknown08.getValCheck("ene1num", info.unknown10, BDAT_TYPE_U8)) + static_cast<u8>(info.unknown08.getValCheck("ene2num", info.unknown10, BDAT_TYPE_U8)) +
-                 static_cast<u8>(info.unknown08.getValCheck("ene3num", info.unknown10, BDAT_TYPE_U8)) + static_cast<u8>(info.unknown08.getValCheck("ene4num", info.unknown10, BDAT_TYPE_U8));
+  u32 enemyNum =
+      static_cast<u8>(info.unknown08.getValCheck("ene1num", info.unknown10, BDAT_TYPE_UNKNOWN_1)) + static_cast<u8>(info.unknown08.getValCheck("ene2num", info.unknown10, BDAT_TYPE_UNKNOWN_1)) +
+      static_cast<u8>(info.unknown08.getValCheck("ene3num", info.unknown10, BDAT_TYPE_UNKNOWN_1)) + static_cast<u8>(info.unknown08.getValCheck("ene4num", info.unknown10, BDAT_TYPE_UNKNOWN_1));
   createSquad(unknown38.unknown04, enemyNum, unknown38.unknown06 * 0.01f);
   unknown160 = &GmkEnemyInsts::seqUpdatePopDepop;
 }
@@ -398,7 +425,7 @@ bool GmkEnemy::isPointInsideRandomWalk(const mm::Vec3 &position) const {
 
 void GmkEnemy::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) {
   AGmkBase::onGobEvent(event, handle);
-  if (event == gf::IGfObjListener::OBJEVT_DESTROY) {
+  if (event == gf::IGfObjListener::OBJEVT_UNKNOWN_3) {
     unknown48.removeGobInst(handle);
   }
 }
@@ -450,6 +477,13 @@ void GmkEnemyList::update(f32 deltaTime) {
   TGmkList::update(deltaTime);
 }
 
+bool GmkEnemyList::updateImmediate() {
+  if (!TGmkList::updateImmediate()) {
+    return false;
+  }
+  return unknown240.updateImmediate();
+}
+
 const AGmkBase *GmkEnemyList::getInst(u32 index) const { return &gmkInsts[index]; }
 
 void GmkEnemyList::setUpdateGmkNumPerFrame(u32 num) {
@@ -474,3 +508,5 @@ template void mm::mtl::Vector<gmk::GmkEnemy::BdatInfo>::expand(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkEnemy::BdatInfo>::extend(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkEnemy::BdatInfo>::resize(size_t);
 template void mm::mtl::Vector<gmk::GmkEnemy>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkEnemy>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkEnemy>::resize(size_t);

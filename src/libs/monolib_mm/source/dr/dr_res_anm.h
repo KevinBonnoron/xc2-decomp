@@ -26,6 +26,8 @@ static_assert(sizeof(_AOM_DataHead) == 0x10, "");
 
 class DrResAnm {
 public:
+  virtual ~DrResAnm();
+
   f32 calcAnm(f32 frame, const _AOM_DataHead *head);
   f32 calcAnmLiner(f32 frame, const _AOM_DataHead *head);
   f32 calcAnmRot(f32 *values, f32 frame, const _AOM_DataHead *head);

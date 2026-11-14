@@ -23,14 +23,14 @@ namespace gf {
 struct GF_OBJ_HANDLE;
 
 enum {
-  MSG_OBJECT_COLI_ENTER = 0x100003c,
-  MSG_OBJECT_COLI_LEAVE = 0x100003d,
-  MSG_OBJECT_COLI_CONTACT = 0x100003e,
+  MSG_OBJECT_COLI_UNKNOWN_16777276 = 0x100003c, // Inferred role: msg object coli enter; original name unknown.
+  MSG_OBJECT_COLI_UNKNOWN_16777277 = 0x100003d, // Inferred role: msg object coli leave; original name unknown.
+  MSG_OBJECT_COLI_UNKNOWN_16777278 = 0x100003e, // Inferred role: msg object coli contact; original name unknown.
 };
 
 // Inferred role: object collision enter message; original type name unknown.
 struct unknown095 : fw::Message {
-  unknown095() : fw::Message(MSG_OBJECT_COLI_ENTER, 0x40), unknown08(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown10(nullptr) {}
+  unknown095() : fw::Message(MSG_OBJECT_COLI_UNKNOWN_16777276, 0x40), unknown08(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown10(nullptr) {}
 
   GF_OBJ_HANDLE *unknown08;                           // Inferred role: handle; original member name unknown.
   const fw::IColiEventListener::EnterInfo *unknown10; // Inferred role: info; original member name unknown.
@@ -38,7 +38,7 @@ struct unknown095 : fw::Message {
 
 // Inferred role: object collision leave message; original type name unknown.
 struct unknown096 : fw::Message {
-  unknown096() : fw::Message(MSG_OBJECT_COLI_LEAVE, 0x40), unknown08(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown10(nullptr) {}
+  unknown096() : fw::Message(MSG_OBJECT_COLI_UNKNOWN_16777277, 0x40), unknown08(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown10(nullptr) {}
 
   GF_OBJ_HANDLE *unknown08;                           // Inferred role: handle; original member name unknown.
   const fw::IColiEventListener::LeaveInfo *unknown10; // Inferred role: info; original member name unknown.
@@ -46,7 +46,7 @@ struct unknown096 : fw::Message {
 
 // Inferred role: object collision contact message; original type name unknown.
 struct unknown097 : fw::Message {
-  unknown097() : fw::Message(MSG_OBJECT_COLI_CONTACT, 0x40), unknown08(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown10(nullptr) {}
+  unknown097() : fw::Message(MSG_OBJECT_COLI_UNKNOWN_16777278, 0x40), unknown08(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown10(nullptr) {}
 
   GF_OBJ_HANDLE *unknown08;                           // Inferred role: handle; original member name unknown.
   const fw::IColiEventListener::EnterInfo *unknown10; // Inferred role: info; original member name unknown.
@@ -70,8 +70,11 @@ public:
     GfComCollider *unknown08; // Inferred role: owner; original member name unknown.
   };
 
+  struct SetupInfo;
+
   GfComCollider();
   ~GfComCollider() override;
+  void setup(const SetupInfo &info);
   void cleanup();
   void createColiCharacter(u32 index, const fw::ColiCharacterInfo &info, mm::mtl::IntrusivePtr<fw::ReferenceFrame> frame);
   template <typename Info, typename Creator> void createColi(const Creator &creator, u32 index, const Info &info, mm::mtl::IntrusivePtr<fw::ReferenceFrame> &frame);

@@ -68,6 +68,9 @@ public:
   virtual bool setup(GfComBehaviorPc &behavior);
   virtual void cleanup(GfComBehaviorPc &behavior);
   virtual void update(GfComBehaviorPc &behavior, const fw::UpdateInfo &info);
+  void updateHoldHandles(GfComBehaviorPc &behavior);
+  bool changeTarget();
+  void onReloadBdat();
   const unknown002 *getParam() const;
   bool getTargetTransform(const TargetInfo &info, fw::Transform *transform) const;
   void drawDebugTarget();

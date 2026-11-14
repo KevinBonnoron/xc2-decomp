@@ -53,7 +53,7 @@ void GmkNpcIdInfo::addGmkNpc(AGmkNpc *npc) {
 inline void GmkNpcIdInfo::unknown001() {
   unknown18->unbindToGameObj(unknown30);
   gf::GfObjUtil::destroy(unknown30);
-  unknown30 = gf::INVALID_HANDLE;
+  unknown30 = gf::unknown020;
   unknown18 = nullptr;
   for (mm::mtl::IntrusiveList<AGmkNpc>::iterator it = unknown10->begin(); it != unknown10->end(); ++it) {
     if (it.get()->isPopCondMatched()) {
@@ -64,7 +64,7 @@ inline void GmkNpcIdInfo::unknown001() {
 }
 
 void GmkNpcIdInfo::dispose() {
-  if (unknown30 != gf::INVALID_HANDLE) {
+  if (unknown30 != gf::unknown020) {
     unknown001();
   }
   setActiveGmkNpc(nullptr);
@@ -77,7 +77,7 @@ void GmkNpcIdInfo::dispose() {
 }
 
 void GmkNpcIdInfo::disposeGobInst(bool isFadeOut) {
-  if (unknown30 == gf::INVALID_HANDLE) {
+  if (unknown30 == gf::unknown020) {
     return;
   }
   if (isFadeOut) {
@@ -116,7 +116,7 @@ void GmkNpcIdInfo::update(f32 deltaTime, bool isCreate) {
       break;
     }
   }
-  if (unknown30 == gf::INVALID_HANDLE) {
+  if (unknown30 == gf::unknown020) {
     if (isCreate && unknown18 != nullptr && unknown18->isPopDistCondMatched()) {
       createGobInst();
     }
@@ -126,11 +126,11 @@ void GmkNpcIdInfo::update(f32 deltaTime, bool isCreate) {
 }
 
 void GmkNpcIdInfo::createGobInst() {
-  if (unknown30 != gf::INVALID_HANDLE) {
+  if (unknown30 != gf::unknown020) {
     unknown001();
   }
   unknown30 = gf::GfObjFactory::createGmkNpc({unknown18->getBindedBdatFp()}, unknown18->getBindedBdatId());
-  if (unknown30 != gf::INVALID_HANDLE) {
+  if (unknown30 != gf::unknown020) {
     unknown18->bindToGameObj(unknown30);
     unknown18->validateDisp();
     gf::GfObjSetupNpc *setup = gf::GfObjUtil::getObjSetup<gf::GfObjSetupNpc>(unknown30);
@@ -180,7 +180,7 @@ void GmkNpcIdInfo::removeGmkNpc(AGmkNpc *npc) {
   }
   npc->unknown18 = nullptr;
   if (unknown18 == npc) {
-    if (unknown30 != gf::INVALID_HANDLE) {
+    if (unknown30 != gf::unknown020) {
       unknown001();
     }
     unknown18 = nullptr;

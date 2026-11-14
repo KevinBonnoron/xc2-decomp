@@ -14,12 +14,16 @@ class GfMenuObjQuestOrder : public GfMenuObject {
 public:
   class ListListener : public ui::UIObjectListener {
   public:
-    ListListener(GfMenuObjQuestOrder *owner) : _0c(), unknown20(owner) {}
+    ListListener(GfMenuObjQuestOrder *owner) : unknown0c(0), unknown10(0), _14(), unknown20(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x1c - 0x0c];
+    int unknown0c; // Inferred role: whether the confirmation window is open; original member name unknown.
+    u32 unknown10; // Inferred role: displayed quest, as packed QuestID; original member name unknown.
+    u8 _14[0x1c - 0x14];
+    u8 _1c[0x20 - 0x1c];
     GfMenuObjQuestOrder *unknown20; // Inferred role: owner; original member name unknown.
-    u8 _28[0x38 - 0x28];
+    u8 _28[0x30 - 0x28];
+    GfMenuCallContext *unknown30; // Inferred role: confirmation window call; original member name unknown.
   };
 
   static void close();

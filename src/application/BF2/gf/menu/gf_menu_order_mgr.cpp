@@ -4,6 +4,10 @@
 #include "gf/gf_allocator.h"
 #include "ui/ui_manager.h"
 
+// pushLogOrder calls FixedQueue<sLog, 20>::insert out of line; its instantiation is not defined here.
+extern template mm::mtl::FixedQueue<gf::GfMenuOrderMgr::sLog, 20>::iterator mm::mtl::FixedQueue<gf::GfMenuOrderMgr::sLog, 20>::insert(mm::mtl::FixedQueue<gf::GfMenuOrderMgr::sLog, 20>::iterator,
+                                                                                                                                      const gf::GfMenuOrderMgr::sLog &);
+
 namespace gf {
 
 // Inferred role: order and its priority; original type name unknown.
@@ -13,8 +17,9 @@ struct unknown001 {
 };
 
 // Inferred role: priority of each order; original table name unknown.
-static const unknown001 PRIORITY_TABLE[] = {{ORDER_ZONE_TELOP, 6}, {ORDER_LOCATION_TELOP, 5}};
-constexpr u32 PRIORITY_TABLE_COUNT = sizeof(PRIORITY_TABLE) / sizeof(PRIORITY_TABLE[0]);
+static const unknown001 unknown003[] = {{ORDER_UNKNOWN_1, 6}, {ORDER_UNKNOWN_2, 5}};
+// Inferred role: number of entries of the priority table; original name unknown.
+constexpr u32 unknown004 = sizeof(unknown003) / sizeof(unknown003[0]);
 
 void GfMenuOrderMgr::initialize(const GfSetupParam &) {
   unknown08 = true;
@@ -26,7 +31,7 @@ GfMenuOrderMgr::~GfMenuOrderMgr() {}
 void GfMenuOrderMgr::build(const GfSetupParam &param) {
   // __LINE__ must be 64 as in the original file: it is the line argument of operator new.
 #line 64
-  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfMenuOrderMgr(param);
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfMenuOrderMgr(param);
 }
 
 void GfMenuOrderMgr::destroy() {
@@ -55,13 +60,37 @@ void GfMenuOrderMgr::postUpdate(const fw::UpdateInfo &) {
 }
 
 int GfMenuOrderMgr::getPrioOrder(int order) {
-  for (u32 i = 0; i < PRIORITY_TABLE_COUNT; i++) {
-    if (PRIORITY_TABLE[i].unknown00 == order) {
-      return PRIORITY_TABLE[i].unknown04;
+  for (u32 i = 0; i < unknown004; i++) {
+    if (unknown003[i].unknown00 == order) {
+      return unknown003[i].unknown04;
     }
   }
   return 0;
 }
+
+void GfMenuOrderMgr::setOrder(int order, u32 handle, const ui::EventData &event) {
+  sLog log(order, handle, event);
+  log.unknown20 = get()->getPrioOrder(order);
+  get()->pushLogOrder(log);
+}
+
+void GfMenuOrderMgr::pushLogOrder(const sLog &log) {
+  if (!unknown10.full()) {
+    for (mm::mtl::FixedQueue<sLog, LOG_UNKNOWN_20>::iterator it = unknown10.begin(); it != unknown10.end(); ++it) {
+      if ((*it).unknown00 == log.unknown00 && (*it).unknown00 == ORDER_UNKNOWN_2 && (*it).unknown08.unknown14 == 0) {
+        *it = log;
+        return;
+      }
+      if ((*it).unknown20 < log.unknown20) {
+        unknown10.insert(it, log);
+        return;
+      }
+    }
+    unknown10.push(log);
+  }
+}
+
+void GfMenuOrderMgr::cancelOrder(int order) { get()->cancelLogOrder(order); }
 
 void GfMenuOrderMgr::finishOrder(int order) {
   if (get()->unknown340.unknown00 == order) {

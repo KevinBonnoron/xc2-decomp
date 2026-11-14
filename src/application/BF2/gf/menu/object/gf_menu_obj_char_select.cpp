@@ -1,5 +1,11 @@
 #include "gf/menu/object/gf_menu_obj_char_select.h"
 
+#include "bdat.h"
+#include "gf/data/gf_bdat_id.h"
+#include "gf/data/gf_character_id.h"
+#include "gf/data/gf_data_bdat.h"
+#include "gf/data/gf_data_blade.h"
+#include "gf/game/gf_game_party.h"
 #include "gf/game/gf_game_util.h"
 #include "gf/menu/adapter/gf_menu_adapter_manager.h"
 #include "gf/menu/adapter/gf_menu_char_data_adapter.h"
@@ -12,13 +18,18 @@
 #include "gf/menu/list/gf_menu_driver_list.h"
 #include "gf/menu/object/gf_menu_obj_cmn_status.h"
 #include "gf/menu/object/gf_menu_obj_mainmenu2.h"
+#include "gf/menu/object/gf_menu_obj_operation_info.h"
 #include "gf/menu/object/gf_menu_obj_party_status.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
+#include "gf/request/gf_req_command.h"
 #include "gf/request/gf_req_scom.h"
+#include "mm_math/mm_rect.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/reference_object.h"
 #include "types.h"
 #include "ui/ctrl/ui_ctrl_cursor_select.h"
+#include "ui/event/ui_event_data.h"
+#include "ui/ui_manager.h"
 #include "ui/ui_object_acc.h"
 
 namespace gf {
@@ -38,10 +49,14 @@ struct unknown006 {
 static unknown006 unknown007;
 // Inferred role: layer names of the driver and the three blades of the character select; original name unknown.
 static const char *const unknown008[4] = {"LAY_char_dr", "LAY_char_bl@01", "LAY_char_bl@02", "LAY_char_bl@03"};
+// Inferred role: common window ids confirming the special operations; original name unknown.
+static const u32 unknown009[4] = {0xb9, 0xba, 0xbb, 0xbc};
+// Inferred role: layer names of the status of the driver and the three blades of the character select; original name unknown.
+static const char *const unknown010[4] = {"LAY_status_dr", "LAY_status_bl@01", "LAY_status_bl@02", "LAY_status_bl@03"};
 
 GfMenuObjCharSelect::GfMenuObjCharSelect(u32 handle)
-    : GfMenuObject(handle), unknown48(nullptr), unknown3f8(0), unknown3fc(0), unknown428(0), unknown430(this), unknown6c0(false), unknown6d8(0), unknown6e8(-1), unknown740(true), unknown741(false),
-      unknown742(0), unknown744(0), unknown748(0xff), unknown768(false) {
+    : GfMenuObject(handle), unknown48(nullptr), unknown3f8(0), unknown3fc(0), unknown428(false), unknown429(false), unknown430(this), unknown6c0(false), unknown6d8(0), unknown6e8(-1),
+      unknown740(true), unknown741(false), unknown742(0), unknown744(0), unknown748(0xff), unknown768(false) {
   unknown400.assign(-1);
   unknown28 = nullptr;
   unknown30.assign(nullptr);
@@ -426,6 +441,484 @@ bool GfMenuObjCharSelect::seqWaitSelect() {
 bool GfMenuObjCharSelect::getCharBusy() { return unknown007.unknown00; }
 
 bool GfMenuObjCharSelect::getSelectBusy() { return unknown007.unknown01; }
+
+void GfMenuObjCharSelect::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1: {
+    setupCharSelect(acc, unknown20->unknown28, unknown20->unknown30);
+    setupCharSelectCopy(acc);
+    GfDataBlade::getListReserverWithSolo(unknown20->unknown50);
+    for (u16 *it = unknown20->unknown50.begin(); it != unknown20->unknown50.end();) {
+      if (*it == BLADE_HIKARI || *it == BLADE_HOMURI) {
+        it = unknown20->unknown50.erase(it);
+      } else {
+        ++it;
+      }
+    }
+    setPartyData(unknown20->unknown3a8, unknown20->unknown28);
+    GfMenuObjOperationInfo::setGuideText(1, 0);
+    GfMenuObjMainMenu2::setSubIndexText(1);
+    acc.setDisp(false);
+    unknown20->unknown768 = !unknown20->unknown741;
+    unknown20->unknown430.unknown005();
+    unknown20->unknown430.unknown002(&GfMenuObjCharSelect::seqStreamWait);
+    unknown20->unknown6f0.clear();
+    u8 *driverOrder = GfDataBdat::getFP(BDAT_MNU_CHAR_DRIVER_ORDER);
+    for (int i = 0; i < 5; i++) {
+      int id = Bdat::getIdTop(driverOrder) + i;
+      if (GfMenuObjUtil::getMenuCondition(Bdat::getVal(driverOrder, "useCond", id).valueU16)) {
+        unknown20->unknown6f0.push_back(id);
+      }
+    }
+    unknown20->unknown710.clear();
+    u8 *bladeOrder = GfDataBdat::getFP(BDAT_MNU_CHAR_BLADE_ORDER);
+    for (int i = 0; i < 3; i++) {
+      int id = Bdat::getIdTop(bladeOrder) + i;
+      if (GfMenuObjUtil::getMenuCondition(Bdat::getVal(bladeOrder, "useCond", id).valueU16)) {
+        unknown20->unknown710.push_back(id);
+      }
+    }
+    unknown20->unknown728.clear();
+    u8 *hanaOrder = GfDataBdat::getFP(BDAT_MNU_CHAR_HANA_ORDER);
+    for (int i = 0; i < 4; i++) {
+      int id = Bdat::getIdTop(hanaOrder) + i;
+      if (GfMenuObjUtil::getMenuCondition(Bdat::getVal(hanaOrder, "useCond", id).valueU16)) {
+        unknown20->unknown728.push_back(id);
+      }
+    }
+    unknown20->unknown740 = true;
+    break;
+  }
+  case 2:
+    unknown20->unknown430.unknown005();
+    GfMenuObjMainMenu2::closeCharChange();
+    if (unknown20->unknown428) {
+      RQ_SETUP_PARTY party;
+      RQ_SETUP_PARTY::Member *member = party.unknown00;
+      for (u32 i = 0; i < 5; i++, member++) {
+        const DriverData &driver = unknown20->unknown3a8[i];
+        member->unknown00 = driver.unknown00;
+        member->unknown04 = 0;
+        member->unknown08[0] = driver.unknown04[0];
+        member->unknown08[1] = driver.unknown04[1];
+        member->unknown08[2] = driver.unknown04[2];
+      }
+      party.unknownc8 = 3;
+      party.unknowncc = 0;
+      GfReqCommand::reqChangeParty(party);
+    }
+    if (!unknown20->unknown740) {
+      ui::EventData sendData;
+      sendData.unknown00 = 3;
+      sendData.unknown08 = 2;
+      ui::UIManager::get()->requestObjectEvent(handle, sendData, 0.0f);
+    } else {
+      setFadeOut(handle, 0);
+    }
+    break;
+  case GfMenuTypes::unknown003_33:
+    acc.setDisp(true);
+    break;
+  case GfMenuTypes::unknown003_34:
+    setFadeOutSub(handle, 0);
+    disableInput(acc.searchChild("LAY_char"));
+    break;
+  case 0x24:
+    disableInput(acc.searchChild("LAY_char"));
+    hookCtrlEvent(0, unknown005(handle, 0));
+    unknown20->unknown740 = false;
+    break;
+  case GfMenuTypes::unknown003_260:
+    unknown164(acc.searchChild("LAY_sub_menu"), GfMenuTypes::unknown003_260);
+    break;
+  case 0x109: {
+    unknown20->unknown764 = event.unknown08;
+    if (unknown20->unknown764 == 0) {
+      GfMenuObjUtil::setChildDisp(acc.unknown10, "LAY_char_dr_move", false);
+    } else {
+      GfMenuObjUtil::setChildDisp(acc.unknown10, "LAY_char_bl_move", false);
+    }
+    unknown007.unknown00 = true;
+    if (unknown20->unknown764 == 0) {
+      unknown20->seqStreamWaitStatDrBefore();
+    } else {
+      unknown20->seqStreamWaitStatBlBefore();
+    }
+    GfMenuObjUtil::CtrlParam param;
+    param.unknown08 = 0;
+    param.unknown04 = 4;
+    param.unknown00 = 0.06f;
+    int ctrl = GfMenuObjUtil::startCtrl(acc.searchChild("LAY_bg"), param, nullptr);
+    hookCtrlEvent(acc.unknown10, ctrl);
+    break;
+  }
+  case 3:
+    switch (event.unknown08) {
+    case 2:
+      acc.setTerm();
+      break;
+    case 1:
+      if (!unknown20->unknown741) {
+        ui::UIObjectAcc layer(acc.searchChild("LAY_char"));
+        GfMenuObjMainMenu2::openCharChange(layer.unknown10, 3, true);
+        enableInput(layer.unknown10);
+        GfMenuObjMainMenu2::setSystemKeyEnable(true);
+      }
+      break;
+    case 4: {
+      int kind = unknown20->unknown764;
+      unknown20->unknown430.unknown005();
+      unknown20->unknown430.unknown004(1);
+      if (kind == 0) {
+        unknown20->unknown430.unknown002(&GfMenuObjCharSelect::seqStreamWaitStatDr);
+        setCharPosScale(0, GfMenuReference::getReferenceDriverID(0), 4, false);
+      } else {
+        unknown20->unknown430.unknown002(&GfMenuObjCharSelect::seqStreamWaitStatBl);
+        setCharPosScale(1, GfMenuReference::getReferenceBladeID(0), 4, false);
+      }
+      break;
+    }
+    }
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
+void GfMenuObjCharSelect::DetailListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    unknown0c = 0;
+    break;
+  case 8:
+    if (event.unknown0c == 2) {
+      GfMenuObjMainMenu2::setSubIndexText(unknown0c == 0 ? 2 : 3);
+    }
+    break;
+  case GfMenuTypes::unknown003_33: {
+    int type = event.unknown08;
+    acc.setDisp(true);
+    GfMenuObjMainMenu2::setSubIndexText(type == 0 ? 0x12 : 0x13);
+    enableInput(acc.unknown10);
+    unknown0c = type;
+    break;
+  }
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
+void GfMenuObjCharSelect::StatusListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  ui::UIObjectAcc owner(unknown20->unknown18);
+  switch (event.unknown00) {
+  case 1:
+    break;
+  case 0x105: {
+    acc.getPos(unknown20->unknown6d4);
+    mm::Rect<s16> rect;
+    switch (event.unknown08) {
+    case 0x1d:
+    case 0x20: {
+      const char *name = event.unknown08 == 0x1d ? "drindex_atst" : "drindex_acs";
+      ui::UIObjectAcc main(owner.searchChild("LAY_main"));
+      main.getLayoutRect(name, rect);
+      mm::Pnt<s16> pos;
+      pos.x = rect.x;
+      pos.y = rect.y;
+      acc.setPos(pos);
+      break;
+    }
+    case 0x1e: {
+      ui::UIObjectAcc main(owner.searchChild("LAY_main"));
+      main.getLayoutRect("drindex_atst", rect);
+      mm::Pnt<s16> pos;
+      pos.x = -(unknown20->unknown6d4.x + rect.width);
+      pos.y = rect.y;
+      acc.setPos(pos);
+      break;
+    }
+    }
+    break;
+  }
+  case 0x106:
+    acc.setPos(unknown20->unknown6d4);
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
+void GfMenuObjCharSelect::CharDrListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(unknown20->unknown18);
+  if (event.unknown00 != 1) {
+    if (event.unknown00 == 3) {
+      if (event.unknown08 == 0) {
+        return;
+      }
+      if (event.unknown08 == 1) {
+        unknown007.unknown01 = false;
+        enableInput(acc.searchChild("LAY_char"));
+      }
+    }
+    ui::UIObjectListener::reciveEvent(event, handle);
+  }
+}
+
+void GfMenuObjCharSelect::CharDrSoloListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(unknown20->unknown18);
+  if (event.unknown00 != 1) {
+    if (event.unknown00 == 3) {
+      if (event.unknown08 == 0) {
+        return;
+      }
+      if (event.unknown08 == 1) {
+        unknown007.unknown01 = false;
+        enableInput(acc.searchChild("LAY_char"));
+      }
+    }
+    ui::UIObjectListener::reciveEvent(event, handle);
+  }
+}
+
+void GfMenuObjCharSelect::CharBlMoveListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  if (event.unknown00 == 1) {
+    return;
+  }
+  if (event.unknown00 == 3) {
+    if (event.unknown08 == 0) {
+      return;
+    }
+    if (event.unknown08 == 1) {
+      unknown007.unknown00 = false;
+    }
+  }
+  ui::UIObjectListener::reciveEvent(event, handle);
+}
+
+void GfMenuObjCharSelect::CharDrMoveListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  if (event.unknown00 == 1) {
+    return;
+  }
+  if (event.unknown00 == 3) {
+    if (event.unknown08 == 0) {
+      return;
+    }
+    if (event.unknown08 == 1) {
+      unknown007.unknown00 = false;
+    }
+  }
+  ui::UIObjectListener::reciveEvent(event, handle);
+}
+
+bool GfMenuObjCharSelect::seqSpUpdateParty() {
+  u32 driver = unknown28->getContents(unknown28->getIndex(false)).unknown00;
+  GfMenuDriverList::PartySetup setup;
+  setup.unknown18 = false;
+  setup.unknown14 = GfPartySelect::LIST_TYPE_UNKNOWN_2;
+  unknown28->setupFromParty(setup);
+  unknown28->setIndex(0);
+  for (u32 i = 0; i < unknown28->getSize(); i++) {
+    if (unknown28->getContents(i).unknown00 == driver) {
+      unknown28->setIndex(i);
+      break;
+    }
+  }
+  setPartyData(unknown3a8, unknown28);
+  return true;
+}
+
+bool GfMenuObjCharSelect::seqConfSpecial() {
+  ui::UIObjectAcc acc(unknown18, "LAY_char");
+  if (!unknown6c0) {
+    if (unknown748 == 3 && GfMenuObjUtil::isBladeLastOneInSlot(0x3f3, nullptr)) {
+      GfMenuManager::openCommonWindow(0xdf);
+      unknown430.unknown002(&GfMenuObjCharSelect::seqConfSpecialWaitError);
+      return true;
+    }
+    GfMenuManager::openCommonWindow(unknown009[unknown748]);
+    unknown6c0 = true;
+    return false;
+  }
+  if (GfMenuManager::isOpenCommonWindow()) {
+    return false;
+  }
+  s16 result = GfMenuManager::getCommonWindowResult();
+  if (result == 0) {
+    switch (unknown748) {
+    case 0:
+      unknown430.unknown002(&GfMenuObjCharSelect::seqSpHomuraToHikari);
+      break;
+    case 1:
+      unknown430.unknown002(&GfMenuObjCharSelect::seqSpHikariToHomura);
+      break;
+    case 2:
+      unknown430.unknown002(&GfMenuObjCharSelect::seqSpNiaChangeBl);
+      break;
+    case 3:
+      unknown430.unknown002(&GfMenuObjCharSelect::seqSpNiaChangeDr);
+      break;
+    default:
+      unknown430.unknown002(&GfMenuObjCharSelect::seqReturn);
+      return true;
+    }
+    unknown430.unknown004(2);
+    unknown430.unknown002(&GfMenuObjCharSelect::seqSpUpdateParty);
+    unknown430.unknown002(&GfMenuObjCharSelect::seqReturnChange);
+  } else {
+    unknown430.unknown002(&GfMenuObjCharSelect::seqReturn);
+  }
+  return true;
+}
+
+bool GfMenuObjCharSelect::seqStreamWait() {
+  mm::mtl::FixStr<32> name;
+  ui::UIObjectAcc acc(unknown18);
+  int bladeNum = getEquipBladeNum(GfMenuReference::getReferenceDriverID(0), unknown3a8);
+  if (bladeNum == 0) {
+    ui::UIObjectAcc layer(acc.searchChild("LAY_char_dr_solo"));
+    if (layer.isStreaming()) {
+      return false;
+    }
+  } else {
+    ui::UIObjectAcc layer(acc.searchChild("LAY_char_dr"));
+    if (layer.isStreaming()) {
+      return false;
+    }
+  }
+  for (u32 i = 0; i < 3; i++) {
+    name.format("IMG_char_bl_img@%02d", i + 1);
+    ui::UIObjectAcc image(acc.searchChild(name.c_str()));
+    if (image.isStreaming()) {
+      return false;
+    }
+  }
+  if (unknown768) {
+    return false;
+  }
+  setFadeIn(acc.searchChild("LAY_main"), 0);
+  return true;
+}
+
+void GfMenuObjCharSelect::setupCharSubMenu(ui::UIObjectAcc &acc, mm::mtl::FixedVector<u32, 5> &drivers, mm::mtl::FixedVector<u32, 3> &blades, mm::mtl::FixedVector<u32, 4> &hanas) {
+  u8 *driverBdat = GfDataBdat::getFP(BDAT_MNU_CHAR_DRIVER_ORDER);
+  for (u32 i = 0; i < 5; i++) {
+    mm::mtl::FixStr<32> name;
+    name.format("IMG_sub_menu_icon_dr@%02d", i + 1);
+    ui::UIObjectAcc icon(acc.searchChild(name.c_str()));
+    if (i < drivers.size()) {
+      icon.setImageIndex(getMenuIconID(Bdat::getVal(driverBdat, "layer", drivers[i]).valueU16));
+      icon.setDisp(true);
+    } else {
+      icon.setDisp(false);
+    }
+  }
+  mm::mtl::FixStr<32> name;
+  u8 *bladeBdat = GfDataBdat::getFP(BDAT_MNU_CHAR_BLADE_ORDER);
+  for (u32 i = 0; i < 3; i++) {
+    if (i < blades.size()) {
+      setupCharSubMenuBl(acc, Bdat::getVal(bladeBdat, "layer", blades[i]).valueU16, i);
+    } else {
+      name.format("IMG_sub_menu_icon_bl@%02d", i + 1);
+      ui::UIObjectAcc icon(acc.searchChild(name.c_str()));
+      icon.setDisp(false);
+    }
+  }
+  u8 *hanaBdat = GfDataBdat::getFP(BDAT_MNU_CHAR_HANA_ORDER);
+  for (u32 i = 0; i < 4; i++) {
+    if (i < hanas.size()) {
+      setupCharSubMenuHana(acc, Bdat::getVal(hanaBdat, "layer", hanas[i]).valueU16, i);
+    } else {
+      name.format("IMG_sub_menu_icon_hana@%02d", i + 1);
+      ui::UIObjectAcc icon(acc.searchChild(name.c_str()));
+      icon.setDisp(false);
+    }
+  }
+}
+
+u8 GfMenuObjCharSelect::refreshDriver(ui::UIObjectAcc acc, u32 driver) {
+  setPartyData(unknown3a8, unknown28);
+  adjustBladeList(unknown3a8, unknown50, unknown30, driver);
+  for (u32 i = 0; i < unknown28->getSize(); i++) {
+    if (unknown28->getContents(i).unknown00 == driver) {
+      unknown28->setIndex(i);
+      break;
+    }
+  }
+  u32 index = unknown28->getIndex(false);
+  u8 count = 0;
+  for (u32 i = 0; i < 3; i++) {
+    u32 blade = unknown3a8[index].unknown04[i];
+    ui::UIObjectAcc layer(acc.searchChild(unknown008[i + 1]));
+    ui::UIObjectAcc status(acc.searchChild(unknown010[i + 1]));
+    if (GfMenuObjUtil::isValidBlade(blade)) {
+      layer.setDisp(true);
+      status.setDisp(true);
+      count++;
+    } else {
+      layer.setDisp(false);
+      status.setDisp(false);
+    }
+  }
+  return count;
+}
+
+void GfMenuObjCharSelect::setupCharSelect(ui::UIObjectAcc &acc, GfMenuDriverList *list, mm::mtl::FixedArray<GfMenuBladeList *, 3> &blades) {
+  GfMenuDriverList::PartySetup partySetup;
+  partySetup.unknown18 = false;
+  partySetup.unknown14 = GfPartySelect::LIST_TYPE_UNKNOWN_2;
+  list->setupFromParty(partySetup);
+  if (list->getSize() != 0) {
+    GfMenuReference::setReferenceDriverID(0, list->getContents(0).unknown00);
+  }
+  for (u32 i = 0; i < 3; i++) {
+    GfMenuBladeList::DriverSetup setup;
+    setup.unknown14 = 1;
+    setup.unknown18 = list->getContents(list->getIndex(false)).unknown00;
+    if (setup.unknown18 == 0) {
+      blades[i]->clear();
+    } else {
+      blades[i]->setupFromDriver(setup);
+    }
+  }
+  GfMenuAdapterManager::beginAddAfter();
+  GfMenuCharDataAdapter::createFromReferenceDriver(acc.searchChild("IMG_char_dr_img"), 0x1c, 0, false);
+  GfMenuCharDataAdapter::createFromReferenceDriver(acc.searchChild("IMG_char_dr_glow"), 0x1c, 0, false);
+  GfMenuCharDataAdapter::createFromReferenceDriver(acc.searchChild("IMG_char_dr_img_solo"), 0x1c, 0, false);
+  GfMenuCharDataAdapter::createFromReferenceDriver(acc.searchChild("IMG_char_dr_glow_solo"), 0x1c, 0, false);
+  GfMenuCharDataAdapter::createFromReferenceDriver(acc.searchChild("TXT_status_dr_name"), 2, 0, false);
+  GfMenuCharDataAdapter::createFromReferenceDriver(acc.searchChild("TXT_status_dr_class"), 0x24, 0, true);
+  GfMenuCharDataAdapter::createFromReferenceDriver(acc.searchChild("TXT_status_dr_lv_num"), 1, 0, true);
+  GfMenuCharDataAdapter::createFromReferenceDriver(acc.searchChild("TXT_status_dr_hp_num"), 0, 0, true);
+  mm::mtl::FixStr<32> name;
+  for (u32 i = 0; i < 3; i++) {
+    name.format("IMG_char_bl_img@%02d", i + 1);
+    GfMenuCharDataAdapter *image = GfMenuCharDataAdapter::createFromBladeList(acc.searchChild(name.c_str()), 0x36, blades[i], -1, false);
+    name.format("IMG_char_bl_glow@%02d", i + 1);
+    GfMenuCharDataAdapter::createFromBladeList(acc.searchChild(name.c_str()), 0x36, blades[i], -1, false);
+    ui::UIObjectAcc(acc.searchChild(name.c_str())).setAlpha(0.0f);
+    name.format("TXT_status_bl_name@%02d", i + 1);
+    GfMenuCharDataAdapter::createFromBladeList(acc.searchChild(name.c_str()), 2, blades[i], -1, false);
+    if (image != nullptr) {
+      image->unknown24 = acc.searchChild(unknown010[i + 1]);
+    }
+    name.format("IMG_status_bl_wpn_icon@%02d", i + 1);
+    ui::UIObjectAcc(acc.searchChild(name.c_str())).setDisp(false);
+    name.format("IMG_status_bl_elem_icon@%02d", i + 1);
+    GfMenuCharDataAdapter::createFromBladeList(acc.searchChild(name.c_str()), 0x2a, blades[i], -1, false);
+    GfMenuCharDataAdapter::createFromBladeList(acc.searchChild(name.c_str()), 0x39, blades[i], -1, false);
+    name.format("IMG_status_bl_rank_rarity@%02d", i + 1);
+    GfMenuCharDataAdapter::createFromBladeList(acc.searchChild(name.c_str()), 0x55, blades[i], -1, false);
+    name.format("IMG_status_bl_rank@%02d", i + 1);
+    GfMenuCharDataAdapter::createFromBladeList(acc.searchChild(name.c_str()), 0x54, blades[i], -1, false);
+  }
+  GfMenuAdapterManager::endAddAfter();
+}
 
 } // namespace gf
 

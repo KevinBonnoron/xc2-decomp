@@ -12,7 +12,7 @@ EffectRes::EffectRes(const char *name) : unknown08(0), m_name(name), m_resPack(n
   mm::mtl::FixStr<256> path;
   path.format("event/evpa/%s", name);
   mm::mtl::Singleton<ResManager>::getPtr()->load(mm::mtl::Singleton<Extend>::getPtr()->pack_efb(path.c_str()), this, true);
-  unknown08 |= FLAG_LOADING;
+  unknown08 |= FLAG_UNKNOWN_0;
 }
 
 EffectRes::~EffectRes() { mm::mtl::safeRelease(m_resPack); }
@@ -21,16 +21,16 @@ const char *EffectRes::getName() const { return m_name.c_str(); }
 
 fw::EffectPack *EffectRes::getResPack() const { return m_resPack; }
 
-bool EffectRes::isLoading() const { return (unknown08 & FLAG_LOADING) != 0; }
+bool EffectRes::isLoading() const { return (unknown08 & FLAG_UNKNOWN_0) != 0; }
 
 void EffectRes::OnResEvent(const PARAM &param) {
-  if (param.result == RES_RESULT_TYPE_SUCCESS) {
+  if (param.result == RES_RESULT_TYPE_UNKNOWN_3) {
     m_resPack = fw::EffectPack::createFromMemory(param.adr, param.size, param.path, false);
-    unknown08 &= ~FLAG_LOADING;
+    unknown08 &= ~FLAG_UNKNOWN_0;
     return;
   }
   m_resPack = nullptr;
-  unknown08 &= ~FLAG_LOADING;
+  unknown08 &= ~FLAG_UNKNOWN_0;
 }
 
 } // namespace event

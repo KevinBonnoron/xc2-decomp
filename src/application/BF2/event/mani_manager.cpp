@@ -16,7 +16,7 @@
 namespace event {
 
 ManiManager::ManiManager()
-    : unknown22030(MANI_TYPE_POS), unknown22040(mm::Mat44::identity), unknown22080(mm::Mat44::identity), unknown220c0(mm::Mat44::identity), unknown22100(mm::Mat44::identity),
+    : unknown22030(MANI_TYPE_UNKNOWN_1), unknown22040(mm::Mat44::identity), unknown22080(mm::Mat44::identity), unknown220c0(mm::Mat44::identity), unknown22100(mm::Mat44::identity),
       unknown22140(mm::Mat44::identity) {}
 
 void ManiManager::adjestPosY(mm::Vec3 &position) {
@@ -30,7 +30,7 @@ void ManiManager::adjestPosY(mm::Vec3 &position) {
   }
 }
 
-bool ManiManager::exist(mm::mtl::FixedVector<Item, ITEM_COUNT> &items, IManiCallback *callback) {
+bool ManiManager::exist(mm::mtl::FixedVector<Item, ITEM_UNKNOWN_512> &items, IManiCallback *callback) {
   for (u32 i = 0; i < items.size(); i++) {
     if (items[i].unknown00 == callback) {
       return true;
@@ -39,39 +39,89 @@ bool ManiManager::exist(mm::mtl::FixedVector<Item, ITEM_COUNT> &items, IManiCall
   return false;
 }
 
+void ManiManager::removeManipulate(IManiCallback *callback) {
+  if (!unknown18.test(FLAG_UNKNOWN_0) || !unknown1c.test(DEBUG_FLAG_UNKNOWN_0)) {
+    return;
+  }
+  if (!exist(unknown20, callback)) {
+    return;
+  }
+  for (Item *it = unknown20.begin(); it != unknown20.end(); ++it) {
+    if (it->unknown00 == callback) {
+      unknown20.erase(it);
+      break;
+    }
+  }
+  if (unknown20.empty()) {
+    clearManipulate();
+  }
+}
+
+void ManiManager::changeManipulate(MANI_TYPE type) {
+  switch (type) {
+  case MANI_TYPE_UNKNOWN_0:
+    clearManipulate();
+    break;
+  case MANI_TYPE_UNKNOWN_1: {
+    mm::mtl::FixedVector<Item, ITEM_UNKNOWN_512> items = unknown20;
+    clearManipulate();
+    for (u32 i = 0; i < items.size(); i++) {
+      addManipulate(items[i].unknown00, MANI_TYPE_UNKNOWN_1);
+    }
+    break;
+  }
+  case MANI_TYPE_UNKNOWN_2: {
+    mm::mtl::FixedVector<Item, ITEM_UNKNOWN_512> items = unknown20;
+    clearManipulate();
+    for (u32 i = 0; i < items.size(); i++) {
+      addManipulate(items[i].unknown00, MANI_TYPE_UNKNOWN_2);
+    }
+    break;
+  }
+  case MANI_TYPE_UNKNOWN_3: {
+    mm::mtl::FixedVector<Item, ITEM_UNKNOWN_512> items = unknown20;
+    clearManipulate();
+    for (u32 i = 0; i < items.size(); i++) {
+      addManipulate(items[i].unknown00, MANI_TYPE_UNKNOWN_3);
+    }
+    break;
+  }
+  }
+}
+
 void ManiManager::create() {
-  if (!unknown18.test(FLAG_ATTACHED)) {
+  if (!unknown18.test(FLAG_UNKNOWN_1)) {
     Manager::get()->getScn()->getView(-1)->attachWorkEvent(this, false);
-    unknown18.set(FLAG_ATTACHED);
+    unknown18.set(FLAG_UNKNOWN_1);
   }
   unknown20.clear();
 }
 
 void ManiManager::clear() {
   clearManipulate();
-  if (unknown18.test(FLAG_ATTACHED)) {
+  if (unknown18.test(FLAG_UNKNOWN_1)) {
     Manager::get()->getScn()->getView(-1)->detachWorkEvent(this);
-    unknown18.set(FLAG_ATTACHED, false);
+    unknown18.set(FLAG_UNKNOWN_1, false);
   }
   unknown20.clear();
   unknown18.clear();
 }
 
 void ManiManager::update() {
-  if (unknown18.test(FLAG_ENABLE) && unknown1c.test(DEBUG_FLAG_ENABLE) && unknown18.test(FLAG_ACTIVE)) {
+  if (unknown18.test(FLAG_UNKNOWN_0) && unknown1c.test(DEBUG_FLAG_UNKNOWN_0) && unknown18.test(FLAG_UNKNOWN_2)) {
     updateManipulate();
   }
 }
 
 void ManiManager::clearManipulate() {
   unknown20.clear();
-  unknown22030 = MANI_TYPE_POS;
+  unknown22030 = MANI_TYPE_UNKNOWN_1;
   Manager::get()->getScn()->unknown30->clrManipulator();
-  unknown18.set(FLAG_ACTIVE, false);
+  unknown18.set(FLAG_UNKNOWN_2, false);
 }
 
 void ManiManager::render() {
-  if (!unknown18.test(FLAG_ENABLE) || !unknown1c.test(DEBUG_FLAG_ENABLE)) {
+  if (!unknown18.test(FLAG_UNKNOWN_0) || !unknown1c.test(DEBUG_FLAG_UNKNOWN_0)) {
     return;
   }
   for (Item *it = unknown20.begin(); it != unknown20.end(); ++it) {
@@ -86,21 +136,21 @@ void ManiManager::render() {
   fw::debug::drawSquare2D(mm::Rect<s32>(width - 160, 145, 150, 25), mm::Col4(0.0f, 0.0f, 0.0f, 0.25f));
   fw::debug::drawLineSquare2D(mm::Rect<s32>(width - 160, 145, 150, 25), mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
   int textX = width - 155;
-  if (unknown22030 == MANI_TYPE_POS) {
+  if (unknown22030 == MANI_TYPE_UNKNOWN_1) {
     fw::debug::drawFontColor(mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
   } else {
     fw::debug::drawFontColor(mm::Col4(0.8f, 0.8f, 0.8f, 1.0f));
   }
   fw::debug::drawFont(textX, 150, "W:Pos");
   textX = width - 110;
-  if (unknown22030 == MANI_TYPE_ROT) {
+  if (unknown22030 == MANI_TYPE_UNKNOWN_2) {
     fw::debug::drawFontColor(mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
   } else {
     fw::debug::drawFontColor(mm::Col4(0.8f, 0.8f, 0.8f, 1.0f));
   }
   fw::debug::drawFont(textX, 150, "E:Rot");
   textX = width - 65;
-  if (unknown22030 == MANI_TYPE_TAR) {
+  if (unknown22030 == MANI_TYPE_UNKNOWN_3) {
     fw::debug::drawFontColor(mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
   } else {
     fw::debug::drawFontColor(mm::Col4(0.8f, 0.8f, 0.8f, 1.0f));
@@ -110,35 +160,35 @@ void ManiManager::render() {
 
 void ManiManager::setEnable(bool isEnable) {
   if (isEnable) {
-    unknown18.set(FLAG_ENABLE, true);
+    unknown18.set(FLAG_UNKNOWN_0, true);
   } else {
     clearManipulate();
-    unknown18.set(FLAG_ENABLE, false);
+    unknown18.set(FLAG_UNKNOWN_0, false);
   }
 }
 
-void ManiManager::setAdjestPosEnable(bool isEnable) { unknown18.set(FLAG_ADJEST_POS, isEnable); }
+void ManiManager::setAdjestPosEnable(bool isEnable) { unknown18.set(FLAG_UNKNOWN_3, isEnable); }
 
-bool ManiManager::isAdjestPosEnable() const { return unknown18.test(FLAG_ADJEST_POS); }
+bool ManiManager::isAdjestPosEnable() const { return unknown18.test(FLAG_UNKNOWN_3); }
 
-void ManiManager::setDebugEnable(bool isEnable) { unknown1c.set(DEBUG_FLAG_ENABLE, isEnable); }
+void ManiManager::setDebugEnable(bool isEnable) { unknown1c.set(DEBUG_FLAG_UNKNOWN_0, isEnable); }
 
 bool ManiManager::OnKeyDown(ml::EventView *view) {
-  if (!unknown18.test(FLAG_ENABLE) || !unknown1c.test(DEBUG_FLAG_ENABLE) || !unknown18.test(FLAG_ACTIVE)) {
+  if (!unknown18.test(FLAG_UNKNOWN_0) || !unknown1c.test(DEBUG_FLAG_UNKNOWN_0) || !unknown18.test(FLAG_UNKNOWN_2)) {
     return false;
   }
   switch (view->unknown33) {
   case 'E':
-    changeManipulate(MANI_TYPE_ROT);
+    changeManipulate(MANI_TYPE_UNKNOWN_2);
     return true;
   case 'Q':
     clearManipulate();
     return true;
   case 'R':
-    changeManipulate(MANI_TYPE_TAR);
+    changeManipulate(MANI_TYPE_UNKNOWN_3);
     return true;
   case 'W':
-    changeManipulate(MANI_TYPE_POS);
+    changeManipulate(MANI_TYPE_UNKNOWN_1);
     return true;
   }
   return false;
@@ -146,13 +196,13 @@ bool ManiManager::OnKeyDown(ml::EventView *view) {
 
 void ManiManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
-  case MSG_TYPE_UPDATE:
+  case MSG_TYPE_UNKNOWN_14:
     update();
     break;
-  case MSG_TYPE_RENDER:
+  case MSG_TYPE_UNKNOWN_16:
     render();
     break;
-  case MSG_TYPE_CLEAR:
+  case MSG_TYPE_UNKNOWN_12:
     clear();
     break;
   default:
@@ -164,5 +214,5 @@ bool ManiManager::OnMouseButtonDown(ml::EventView *view) { return false; }
 
 } // namespace event
 
-template void mm::mtl::FixedVector<event::ManiManager::Item, event::ManiManager::ITEM_COUNT>::push_back(const event::ManiManager::Item &);
+template void mm::mtl::FixedVector<event::ManiManager::Item, event::ManiManager::ITEM_UNKNOWN_512>::push_back(const event::ManiManager::Item &);
 template void mm::mtl::mtl_detail::copy_construct_n<event::ManiManager::Item>(const event::ManiManager::Item *, size_t, event::ManiManager::Item *, mm::mtl::int_to_type<0>);

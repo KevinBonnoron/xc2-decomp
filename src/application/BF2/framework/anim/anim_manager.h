@@ -116,7 +116,7 @@ static_assert(sizeof(AnimIkResolveJob) == 0x28, "");
 
 class AnimationManager : public ManagerObject, public mm::mtl::PtrSingleton<AnimationManager> {
 public:
-  static const u32 LAYER_MAX = 32;
+  static const u32 LAYER_UNKNOWN_32 = 32; // Inferred role: maximum number of layers; original name unknown.
 
   struct Group {
     mm::mtl::IntrusiveList<AnimControlUpdaterInterface> unknown00; // Inferred role: control updaters; original member name unknown.
@@ -171,9 +171,9 @@ public:
     }
   }
 
-  Group unknown18[LAYER_MAX];  // Inferred role: groups; original member name unknown.
-  anm::ThreadPool *unknownf18; // Inferred role: job thread pool; original member name unknown.
-  anm::JobQueue *unknownf20;   // Inferred role: job queue; original member name unknown.
+  Group unknown18[LAYER_UNKNOWN_32]; // Inferred role: groups; original member name unknown.
+  anm::ThreadPool *unknownf18;       // Inferred role: job thread pool; original member name unknown.
+  anm::JobQueue *unknownf20;         // Inferred role: job queue; original member name unknown.
 };
 
 static_assert(sizeof(AnimationManager::Group) == 0x78, "");

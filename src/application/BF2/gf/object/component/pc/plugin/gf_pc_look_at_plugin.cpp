@@ -2,8 +2,11 @@
 
 #include "framework/ik/ik_look_at_solver.h"
 #include "fw/fw_transform.h"
+#include "fw/fw_update_info.h"
 #include "gf/game/gf_game_search_obj.h"
 #include "gf/gf_allocator.h"
+#include "gf/object/component/behavior/gf_com_behavior.h"
+#include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_util.h"
 #include "mm_math/mm_quat.h"
@@ -11,20 +14,45 @@
 #include "mm_mtl/map.h" // IWYU pragma: keep
 
 namespace gf {
-class GfObj;
 
 namespace pc {
 
-LookAtPlugin::LookAtPlugin() : unknown20(INVALID_SEARCH_OBJ), unknown28(getAllocator(ALLOCATOR_DEFAULT)), unknown40(nullptr), unknown68(0), unknown6c(0.0f), unknown70() {}
+LookAtPlugin::LookAtPlugin() : unknown20(unknown012), unknown28(getAllocator(ALLOCATOR_UNKNOWN_0)), unknown40(nullptr), unknown68(0), unknown6c(0.0f), unknown70() {}
 
 LookAtPlugin::~LookAtPlugin() {}
 
 void LookAtPlugin::cleanup(GfComBehaviorPc &) {
-  if (unknown20 != INVALID_SEARCH_OBJ) {
+  if (unknown20 != unknown012) {
     GfGameSearchObj::destroyObj(unknown20);
-    unknown20 = INVALID_SEARCH_OBJ;
+    unknown20 = unknown012;
   }
   unknown10 = nullptr;
+}
+
+void LookAtPlugin::update(GfComBehaviorPc &behavior, const fw::UpdateInfo &info) {
+  updateHoldHandles(behavior);
+  for (u32 i = 0; i < 5; i++) {
+    if (unknown70[i] > 0.0f) {
+      unknown70[i] -= info.unknown04;
+    }
+  }
+  if (unknown6c > 0.0f) {
+    unknown6c -= info.unknown04;
+  }
+  if (unknown6c <= 0.0f && changeTarget()) {
+    unknown6c = unknown40->unknown10->unknown0c;
+  }
+  if (unknown40 == nullptr) {
+    unknown68 = 0;
+  } else {
+    GfObj *obj = GfObjUtil::getObj(unknown40->unknown00);
+    if (obj != nullptr) {
+      MsgPcGetLookPoint message;
+      if (static_cast<GfObj *>(behavior.unknown08)->sendMessage(obj, message)) {
+        unknown10->setTarget(message.unknown10);
+      }
+    }
+  }
 }
 
 const unknown002 *LookAtPlugin::getParam() const {

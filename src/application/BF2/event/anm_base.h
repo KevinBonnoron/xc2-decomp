@@ -8,12 +8,12 @@ namespace event {
 
 class AnmBase {
 public:
-  static constexpr size_t KEY_COUNT = 16;
+  static constexpr size_t KEY_UNKNOWN_16 = 16; // Inferred role: key count; original name unknown.
 
   enum {
-    STATE_FIRST = 1 << 0,
-    STATE_PLAY = 1 << 1,
-    STATE_UPDATE = 1 << 2,
+    STATE_UNKNOWN_0 = 1 << 0, // Inferred role: first; original name unknown.
+    STATE_UNKNOWN_1 = 1 << 1, // Inferred role: play; original name unknown.
+    STATE_UNKNOWN_2 = 1 << 2, // Inferred role: update; original name unknown.
   };
 
   AnmBase();
@@ -26,12 +26,12 @@ public:
   void append(f32 frame);
   void setCv(CV_TYPE cv);
   bool isEnd() const { return unknown60 <= unknown5c; }
-  bool isPlay() const { return (unknown08 & STATE_PLAY) != 0; }
+  bool isPlay() const { return (unknown08 & STATE_UNKNOWN_1) != 0; }
   f32 getKeyFrame(size_t index) const { return unknown10[index]; }
 
 protected:
-  u32 unknown08;                                  // Inferred role: state; original member name unknown.
-  mm::mtl::FixedVector<f32, KEY_COUNT> unknown10; // Inferred role: frames; original member name unknown.
+  u32 unknown08;                                       // Inferred role: state; original member name unknown.
+  mm::mtl::FixedVector<f32, KEY_UNKNOWN_16> unknown10; // Inferred role: frames; original member name unknown.
   CV_TYPE m_cv;
   f32 unknown5c;    // Inferred role: frame; original member name unknown.
   f32 unknown60;    // Inferred role: end frame; original member name unknown.

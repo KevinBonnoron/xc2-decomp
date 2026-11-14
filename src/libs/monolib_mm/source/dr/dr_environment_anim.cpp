@@ -107,7 +107,7 @@ void DrEnvironmentAnim::envlgt_amb_color_Intensity(const LgtAnimInf *inf, f32 fr
 
 void DrEnvironmentAnim::envlgt_amb_non(const LgtAnimInf *inf, f32 frame) {}
 
-inline f32 DrEnvironmentAnim::getHermiteAttr(const LgtAnimInf *inf, f32 frame) {
+f32 DrEnvironmentAnim::getHermiteAttr(const LgtAnimInf *inf, f32 frame) {
   if (inf->unknown04 >= frame) {
     return unknown10[inf->unknown00].unknown08;
   }
@@ -115,7 +115,8 @@ inline f32 DrEnvironmentAnim::getHermiteAttr(const LgtAnimInf *inf, f32 frame) {
     return unknown10[inf->unknown00 + inf->unknown0e - 1].unknown08;
   }
   const unknown086 *key = &unknown10[inf->unknown00 + 1];
-  for (int i = 1; i < inf->unknown0e; i++, key++) {
+  int num = inf->unknown0e;
+  for (int i = 1; i < num; i++, key++) {
     f32 keyFrame = key->unknown0c;
     if (frame < keyFrame) {
       const unknown086 *prev = key - 1;

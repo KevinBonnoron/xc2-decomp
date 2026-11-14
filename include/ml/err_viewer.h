@@ -13,6 +13,8 @@ struct CERR_STRUCT;
 
 enum ERR_CALL {};
 
+const char *SYS_TAG_ERR();
+
 // Name from the game symbol of ml::ErrViewer::reqError.
 class ICBError {
 public:
@@ -35,7 +37,7 @@ public:
     s32 unknownb0; // Inferred role: wait reset value; original member name unknown.
   };
 
-  static bool standby();
+  static void standby();
   static bool isValid(CERR_STRUCT *error);
   static void reqCancel(CERR_STRUCT *error);
   bool isExistError() const;
@@ -44,17 +46,20 @@ public:
   void deleteError();
   static bool isInitialized();
   static bool isErrorDisp();
-  static void setup();
-  static void upErrViewer();
+  virtual void setup();
+  virtual void term();
+  virtual void upErrViewer();
+  void bkgHomeMenu(bool isEnter) override;
+  void bkgHomeMenuDenied() override;
   static void renderDRC();
   static void fnRender();
   ErrViewer();
+  ~ErrViewer() override;
   static ErrViewer *create();
   static void tail();
   static bool destroy();
   s32 createHandle() const;
   void callbackError(ERR_CALL call);
-  void term();
 
   static s32 s_nHandle;
 
@@ -68,7 +73,9 @@ public:
   bool unknown26a; // Inferred role: terminated; original member name unknown.
   bool unknown26b; // Inferred role: error displayed; original member name unknown.
   bool unknown26c; // Inferred role: error cooldown; original member name unknown.
-  u8 _26d[0x278 - 0x26d];
+  u8 _26d[0x270 - 0x26d];
+  s32 unknown270; // Inferred role: unknown, cleared by the constructor; original member name unknown.
+  u8 _274[0x278 - 0x274];
   void *unknown278; // Inferred role: memory; original member name unknown.
 };
 

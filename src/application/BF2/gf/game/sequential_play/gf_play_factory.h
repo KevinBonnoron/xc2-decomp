@@ -20,14 +20,14 @@ struct ParamReturnTitle;
 struct QuestID;
 
 enum MAINMENU {
-  MAINMENU_TOP,
-  MAINMENU_SYSTEM,
-  MAINMENU_SKIP_TRAVEL,
+  MAINMENU_UNKNOWN_0, // Inferred role: mainmenu top; original name unknown.
+  MAINMENU_UNKNOWN_1, // Inferred role: mainmenu system; original name unknown.
+  MAINMENU_UNKNOWN_2, // Inferred role: mainmenu skip travel; original name unknown.
 };
 
 enum GfPlayerDead {
-  PLAYER_DEAD_NONE,
-  PLAYER_DEAD_GAME_OVER,
+  PLAYER_DEAD_UNKNOWN_0, // Inferred role: player dead none; original name unknown.
+  PLAYER_DEAD_UNKNOWN_1, // Inferred role: player dead game over; original name unknown.
   PLAYER_DEAD_UNKNOWN_4 = 4,
 };
 

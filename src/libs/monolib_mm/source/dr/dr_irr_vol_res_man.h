@@ -53,7 +53,9 @@ static_assert(sizeof(DrIrrVolResObj) == 0x28, "");
 
 class DrIrrVolResMan : public IWorkEvent {
 public:
+  DrIrrVolResMan(mtl::ALLOC_HANDLE handle, u32 cascadeIndex, u32 sectorCount, const char *name);
   ~DrIrrVolResMan() override;
+  bool OnFileEvent(EventFileTh *event) override;
   DrIrrVolResObj *loadSector(u32 index);
   void update();
   void drawDebugInfo(DebDraw *debDraw);

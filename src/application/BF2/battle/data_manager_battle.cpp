@@ -66,12 +66,12 @@ bool DataManager::IsPouchBuffTiming(int pouch) const {
 }
 
 int DataManager::RegisterEnemyGroup(gf::GF_OBJ_HANDLE *leader, gf::GF_OBJ_HANDLE *member) {
-  if (leader == gf::INVALID_HANDLE || member == gf::INVALID_HANDLE) {
+  if (leader == gf::unknown020 || member == gf::unknown020) {
     return -1;
   }
 
   for (int i = 0; i < ENEMY_GROUP_NUM; i++) {
-    if (unknown12e88[i].unknown00 == gf::INVALID_HANDLE) {
+    if (unknown12e88[i].unknown00 == gf::unknown020) {
       unknown12e88[i].unknown00 = leader;
       unknown12e88[i].unknown08 = member;
       return i + ENEMY_GROUP_INDEX_OFFSET;
@@ -82,7 +82,7 @@ int DataManager::RegisterEnemyGroup(gf::GF_OBJ_HANDLE *leader, gf::GF_OBJ_HANDLE
 }
 
 int DataManager::GetEnemyGroupIndex(gf::GF_OBJ_HANDLE *handle) {
-  if (handle == gf::INVALID_HANDLE) {
+  if (handle == gf::unknown020) {
     return -1;
   }
 
@@ -107,12 +107,12 @@ void DataManager::PreUpdate(const fw::UpdateInfo &updateInfo) {
 
 void DataManager::PreUpdateProc(const fw::UpdateInfo &updateInfo) {
   for (int i = 0; i < PLAYER_PARAMETER_COUNT; i++) {
-    if (unknown08[i].unknown08 != gf::INVALID_HANDLE) {
+    if (unknown08[i].unknown08 != gf::unknown020) {
       unknown08[i].PreUpdate(updateInfo);
     }
   }
   for (EnemyParameter *parameter : unknown7358) {
-    if (parameter != nullptr && parameter->unknown08 != gf::INVALID_HANDLE) {
+    if (parameter != nullptr && parameter->unknown08 != gf::unknown020) {
       parameter->PreUpdate(updateInfo);
     }
   }
@@ -144,12 +144,12 @@ void DataManager::PostUpdate(const fw::UpdateInfo &updateInfo) { get()->PostUpda
 
 void DataManager::PostUpdateProc(const fw::UpdateInfo &updateInfo) {
   for (int i = 0; i < PLAYER_PARAMETER_COUNT; i++) {
-    if (unknown08[i].unknown08 != gf::INVALID_HANDLE) {
+    if (unknown08[i].unknown08 != gf::unknown020) {
       unknown08[i].PostUpdate(updateInfo);
     }
   }
   for (EnemyParameter *parameter : unknown7358) {
-    if (parameter != nullptr && parameter->unknown08 != gf::INVALID_HANDLE) {
+    if (parameter != nullptr && parameter->unknown08 != gf::unknown020) {
       parameter->PostUpdate(updateInfo);
     }
   }
@@ -172,7 +172,7 @@ bool DataManager::IsValidDeadEnhance(int enhance) {
 }
 
 const CharacterParameter *DataManager::SearchCharacterParameterConst(gf::GF_OBJ_HANDLE *handle, bool) const {
-  if (handle == gf::INVALID_HANDLE) {
+  if (handle == gf::unknown020) {
     return nullptr;
   }
   for (const PlayerParameter &parameter : unknown08) {
@@ -295,7 +295,7 @@ void DataManager::Initialize() {
 void DataManager::Create() {
   // __LINE__ must be 104 as in the original file: it is an argument of operator new.
 #line 104
-  DataManager *manager = new (gf::getAllocator(gf::ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) DataManager();
+  DataManager *manager = new (gf::getAllocator(gf::ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) DataManager();
   manager->Initialize();
 }
 

@@ -45,6 +45,7 @@ class AgentUtilField {
 public:
   static void setIdleInput(GfComPropertyPc &property);
   static f32 setFollowInput(f32 distance, navi::NvmshAcObj *naviObject, GfComPropertyPc &property);
+  static mm::Vec2 calcFollowWallInput(const mm::Vec3 &position, GfComPropertyPc &property);
   static fw::ParamAdapter getAIParamAdapter(GfComPropertyPc &property, PARAM_ID_FIELD_AI id);
   static void setFollowWallEndInput(const mm::Vec3 &position, GfComPropertyPc &property);
   static bool getWallFollowTransform(const BlackBoardField &blackBoard, fw::Transform *transform);

@@ -9,8 +9,8 @@ namespace event {
 class LipsyncRes : public IResEvent {
 public:
   enum {
-    FLAG_LOADING = 1 << 0,
-    FLAG_LOADED = 1 << 1,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: loading flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: loaded flag; original name unknown.
   };
 
   LipsyncRes(const char *name);

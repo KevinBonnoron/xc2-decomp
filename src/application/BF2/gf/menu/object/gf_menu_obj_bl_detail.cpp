@@ -7,7 +7,8 @@
 
 namespace gf {
 
-constexpr u32 CALL_BL_DETAIL = 80;
+// Inferred role: call id of the blade detail layout; original name unknown.
+constexpr u32 CALL_UNKNOWN_80 = 80;
 
 GfMenuObjBlDetail::GfMenuObjBlDetail(u32 handle) : GfMenuObject(handle) {}
 
@@ -16,7 +17,7 @@ GfMenuObjBlDetail::~GfMenuObjBlDetail() { ; }
 void GfMenuObjBlDetail::initialize() {
   ui::UIObjectAcc main(unknown18, "LAY_main");
   if (main.isValid()) {
-    attachExternalCall(CALL_BL_DETAIL, main.unknown10);
+    attachExternalCall(CALL_UNKNOWN_80, main.unknown10);
     GfMenuObject::initialize();
   }
 }
@@ -26,15 +27,24 @@ void GfMenuObjBlDetail::finalize() { GfMenuObject::finalize(); }
 void GfMenuObjBlDetail::update() { GfMenuObject::update(); }
 
 void GfMenuObjBlDetail::open(GfMenuCallContext *context) {
-  if (context != nullptr && GfMenuObjUtil::checkCCNext(context, CALL_BL_DETAIL)) {
+  if (context != nullptr && GfMenuObjUtil::checkCCNext(context, CALL_UNKNOWN_80)) {
     ui::EventData event;
     event.unknown00 = 0x21;
     GfMenuObject::sendEvent(context->unknown14, event, 0.0f);
   }
 }
 
+void GfMenuObjBlDetail::close(GfMenuCallContext *context, bool flag) {
+  if (context != nullptr && GfMenuObjUtil::checkCCNext(context, CALL_UNKNOWN_80)) {
+    ui::EventData event;
+    event.unknown00 = 0x22;
+    event.unknown08 = flag;
+    GfMenuObject::sendEvent(context->unknown14, event, 0.0f);
+  }
+}
+
 void GfMenuObjBlDetail::nextPage(GfMenuCallContext *context) {
-  if (context != nullptr && GfMenuObjUtil::checkCCNext(context, CALL_BL_DETAIL)) {
+  if (context != nullptr && GfMenuObjUtil::checkCCNext(context, CALL_UNKNOWN_80)) {
     ui::EventData event;
     event.unknown00 = 0x102;
     GfMenuObject::sendEvent(context->unknown14, event, 0.0f);
@@ -42,9 +52,18 @@ void GfMenuObjBlDetail::nextPage(GfMenuCallContext *context) {
 }
 
 void GfMenuObjBlDetail::prevPage(GfMenuCallContext *context) {
-  if (context != nullptr && GfMenuObjUtil::checkCCNext(context, CALL_BL_DETAIL)) {
+  if (context != nullptr && GfMenuObjUtil::checkCCNext(context, CALL_UNKNOWN_80)) {
     ui::EventData event;
     event.unknown00 = 0x103;
+    GfMenuObject::sendEvent(context->unknown14, event, 0.0f);
+  }
+}
+
+void GfMenuObjBlDetail::disp(GfMenuCallContext *context, bool flag) {
+  if (context != nullptr && GfMenuObjUtil::checkCCNext(context, CALL_UNKNOWN_80)) {
+    ui::EventData event;
+    event.unknown00 = 0x104;
+    event.unknown08 = flag;
     GfMenuObject::sendEvent(context->unknown14, event, 0.0f);
   }
 }

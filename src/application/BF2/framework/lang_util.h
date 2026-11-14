@@ -11,9 +11,9 @@ enum LangType : u32;
 
 class LangUtil {
 public:
-  static const int LANG_TYPE_MAX = 15;
+  static const int LANG_TYPE_UNKNOWN_15 = 15; // Inferred role: number of languages; original name unknown.
 
-  typedef mm::mtl::FixedVector<std::pair<LangType, mm::mtl::FixStr<16>>, LANG_TYPE_MAX> LangList;
+  typedef mm::mtl::FixedVector<std::pair<LangType, mm::mtl::FixStr<16>>, LANG_TYPE_UNKNOWN_15> LangList;
 
   static void initialize();
   static void finalize();

@@ -52,7 +52,7 @@ void GfAssetResource::reloadPre() {
 
 #line 71
 GfAssetResource *GfAssetResource::create(const char *assetName, const char *name, mtl::ALLOC_HANDLE handle, int priority) {
-  GfAssetResource *resource = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfAssetResource();
+  GfAssetResource *resource = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfAssetResource();
   resource->setup(assetName, name, handle, priority);
   return resource;
 }
@@ -68,7 +68,7 @@ void GfAssetResource::setup(const char *assetName, const char *name, mtl::ALLOC_
 
 #line 99
 GfAssetResource *GfAssetResource::create(const char *assetName, const char *name, mm::mtl::IAllocator *allocator, void *data, u32 size) {
-  GfAssetResource *resource = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfAssetResource();
+  GfAssetResource *resource = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfAssetResource();
   resource->setup(assetName, name, allocator, data, size);
   return resource;
 }
@@ -91,7 +91,7 @@ void GfAssetResource::checkMemoryForDebug() {}
 
 #line 147
 GfAssetResource *GfAssetResource::create(const char *assetName, const char *name, void *data, u32 size) {
-  GfAssetResource *resource = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfAssetResource();
+  GfAssetResource *resource = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfAssetResource();
   resource->setup(assetName, name, data, size);
   return resource;
 }
@@ -107,7 +107,7 @@ void GfAssetResource::setup(const char *assetName, const char *name, void *data,
 
 #line 172
 GfAssetResource *GfAssetResource::create(const char *assetName, const char *name, mm::mtl::IAllocator *allocator, int priority) {
-  GfAssetResource *resource = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfAssetResource();
+  GfAssetResource *resource = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfAssetResource();
   resource->setup(assetName, name, allocator, priority);
   return resource;
 }

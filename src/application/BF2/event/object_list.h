@@ -19,14 +19,14 @@ class ObjectChara;
 
 class ObjectList {
 public:
-  static const char ROOT[64];
-  static const char CHR_TREE[64];
-  static const char CAM_TREE[64];
-  static const char EFF_TREE[64];
-  static const char LGT_TREE[64];
+  static const char ROOT[64];     // Name given by the xc2 symbol _ZN5event10ObjectList4ROOTE.
+  static const char CHR_TREE[64]; // Name given by the xc2 symbol _ZN5event10ObjectList8CHR_TREEE.
+  static const char CAM_TREE[64]; // Name given by the xc2 symbol _ZN5event10ObjectList8CAM_TREEE.
+  static const char EFF_TREE[64]; // Name given by the xc2 symbol _ZN5event10ObjectList8EFF_TREEE.
+  static const char LGT_TREE[64]; // Name given by the xc2 symbol _ZN5event10ObjectList8LGT_TREEE.
 
   enum {
-    FLAG_CLONE_MODE = 1 << 0,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: clone mode flag; original name unknown.
   };
 
   ObjectList(const char *name, bool isCloneMode);

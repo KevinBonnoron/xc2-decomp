@@ -20,6 +20,12 @@ struct alignas(8) ReaderWriterLockType {
   u8 _00[0x20];
 };
 
+// The type name comes from the import _ZN2nn2os19ReceiveMessageQueueEPmPNS0_16MessageQueueTypeE; its size from the
+// two queues MovieDecoderPlayer stores at 0xa68 and 0xab8, 0x50 apart; the next member starts at 0xb08.
+struct alignas(8) MessageQueueType {
+  u8 _00[0x50];
+};
+
 struct alignas(8) ThreadType {
   u8 _00[0x1c0];
 };
@@ -99,6 +105,8 @@ void SignalEvent(EventType *event);
 void WaitEvent(EventType *event);
 bool TimedWaitEvent(EventType *event, TimeSpan timeout);
 void ClearEvent(EventType *event);
+
+void SendMessageQueue(MessageQueueType *queue, size_t message);
 
 Tick GetSystemTick();
 Tick GetSystemTickFrequency();

@@ -37,4 +37,16 @@ void DrResEtcUniformObj::end() {
 
 void DrResEtcUniformObj::setUniformBlock(s16 index, u32 binding) { unknown30.setUniformBlock(binding, unknown28[index].unknown00, unknown28[index].unknown04); }
 
+void DrResEtcUniformObj::setStorageBuffer(s16 index, u32 binding, u32 offset) { unknown30.setStorageBuffer(binding, unknown28[index].unknown00 + offset, unknown28[index].unknown04 - offset); }
+
+void *DrResEtcUniformObj::createUniformBuff(int size) {
+  int alignedSize = size + (0x100 - size % 0x100) % 0x100;
+  u8 *buffer = static_cast<u8 *>(unknown30.getBuff()) + unknown0c;
+  unknown28[unknown08].unknown00 = unknown0c;
+  unknown28[unknown08].unknown04 = size;
+  unknown0c += alignedSize;
+  unknown08++;
+  return buffer;
+}
+
 } // namespace ml

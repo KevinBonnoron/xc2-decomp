@@ -38,14 +38,14 @@ DevPerfOperationMode DevPerf::getOperationMode() {
   if (get() != nullptr) {
     return get()->unknown1b0->getOperationMode();
   }
-  return DEV_PERF_OPERATION_MODE_CONSOLE;
+  return DEV_PERF_OPERATION_MODE_UNKNOWN_1;
 }
 
 DevPerfMode DevPerf::getPerformanceMode() {
   if (get() != nullptr) {
     return get()->unknown1b0->getPerformanceMode();
   }
-  return DEV_PERF_MODE_NORMAL;
+  return DEV_PERF_MODE_UNKNOWN_1;
 }
 
 int DevPerf::getFocusState() {
@@ -65,7 +65,7 @@ DevPerfConfig DevPerf::getPerfConfig(DevPerfMode mode) {
   if (get() != nullptr) {
     return get()->unknown1b0->getPerfConfig(mode);
   }
-  return DEV_PERF_CONFIG_HIGH;
+  return DEV_PERF_CONFIG_UNKNOWN_2;
 }
 
 } // namespace ml

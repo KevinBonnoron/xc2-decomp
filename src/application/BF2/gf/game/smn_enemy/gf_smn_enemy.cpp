@@ -20,12 +20,12 @@
 #include "mm_mtl/fixed_list.h"
 #include "mm_mtl/vector.h"
 
-constexpr size_t SMN_ENEMY_CAPACITY = 40;
+constexpr size_t CAPACITY_UNKNOWN_40 = 40; // Inferred role: smn enemy capacity; original name unknown.
 
 namespace gf {
 
 GfRelSmnEnemy::GfRelSmnEnemy(const CreateInfo *info) : unknown40(1.0f), unknown44(5.0f), unknown48() {
-  GfObjManager::addListener(this, OBJEVT_ALL);
+  GfObjManager::addListener(this, OBJEVT_UNKNOWN_0);
   if (info != nullptr) {
     create(*info);
   }
@@ -46,7 +46,7 @@ void GfRelSmnEnemy::dispose() {
 }
 
 void GfRelSmnEnemy::update(f32 deltaTime) {
-  if (unknown10.unknown00 == INVALID_HANDLE || unknown10.unknown08 < 1) {
+  if (unknown10.unknown00 == unknown020 || unknown10.unknown08 < 1) {
     return;
   }
   if (isOwnerValid()) {
@@ -60,11 +60,11 @@ void GfRelSmnEnemy::update(f32 deltaTime) {
 
 bool GfRelSmnEnemy::isOwnerValid() const {
   GfObjAcc acc(unknown10.unknown00);
-  return !acc.isDestroy() && !acc.testFlag(OBJ_FLAG_UI_HIDDEN) && acc.getObj() != nullptr;
+  return !acc.isDestroy() && !acc.testFlag(OBJ_FLAG_UNKNOWN_17) && acc.getObj() != nullptr;
 }
 
 u32 GfRelSmnEnemy::getEnemyNum() const {
-  if (unknown10.unknown00 == INVALID_HANDLE) {
+  if (unknown10.unknown00 == unknown020) {
     return 0;
   }
   if (unknown10.unknown08 > 0) {
@@ -74,8 +74,8 @@ u32 GfRelSmnEnemy::getEnemyNum() const {
 }
 
 GF_OBJ_HANDLE *GfRelSmnEnemy::getEnemy(u32 index) const {
-  if (unknown10.unknown00 == INVALID_HANDLE || unknown10.unknown08 < 1) {
-    return INVALID_HANDLE;
+  if (unknown10.unknown00 == unknown020 || unknown10.unknown08 < 1) {
+    return unknown020;
   }
   return unknowna0[index];
 }
@@ -83,7 +83,7 @@ GF_OBJ_HANDLE *GfRelSmnEnemy::getEnemy(u32 index) const {
 void GfRelSmnEnemy::disposeWaitEnemies() {
   if (!unknown78.empty()) {
     for (std::pair<PopInfo *, GF_OBJ_HANDLE *> *enemy = unknown78.begin(), *end = unknown78.end(); enemy != end; ++enemy) {
-      if (enemy->second != INVALID_HANDLE) {
+      if (enemy->second != unknown020) {
         GfObjUtil::destroy(enemy->second);
       }
     }
@@ -95,7 +95,7 @@ void GfRelSmnEnemy::disposeEnemies(bool isFade) {
   disposeWaitEnemies();
   if (!unknowna0.empty()) {
     for (GF_OBJ_HANDLE **enemy = unknowna0.begin(), **end = unknowna0.end(); enemy != end; ++enemy) {
-      if (*enemy != INVALID_HANDLE) {
+      if (*enemy != unknown020) {
         if (isFade) {
           SCOM_DESTROY_GAME_OBJ::create(*enemy, 0.5f, 0);
         } else {
@@ -108,7 +108,7 @@ void GfRelSmnEnemy::disposeEnemies(bool isFade) {
 }
 
 void GfRelSmnEnemy::debugDraw() const {
-  if (unknown10.unknown00 != INVALID_HANDLE && unknown10.unknown08 > 0) {
+  if (unknown10.unknown00 != unknown020 && unknown10.unknown08 > 0) {
     GfObjAcc acc(unknown10.unknown00);
     if (acc.getObj() != nullptr) {
       mm::Mat44 matrix;
@@ -151,8 +151,8 @@ void GfRelSmnEnemy::removeEnemy(GF_OBJ_HANDLE *handle) {
 }
 
 GfSmnEnemyManager::GfSmnEnemyManager() {
-  unknown08.setAllocator(getAllocator(ALLOCATOR_DEFAULT));
-  unknown08.reserve(SMN_ENEMY_CAPACITY);
+  unknown08.setAllocator(getAllocator(ALLOCATOR_UNKNOWN_0));
+  unknown08.reserve(CAPACITY_UNKNOWN_40);
 }
 
 GfSmnEnemyManager::~GfSmnEnemyManager() {
@@ -184,7 +184,7 @@ void GfSmnEnemyManager::create() {
   dispose();
   // __LINE__ must be 716 as in the original file: its value changes the instruction order.
 #line 716
-  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfSmnEnemyManager();
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfSmnEnemyManager();
 }
 
 void GfSmnEnemyManager::dispose() {
@@ -198,7 +198,7 @@ void GfSmnEnemyManager::update(f32 deltaTime) {
     for (GfRelSmnEnemy **enemy = get()->unknown08.begin(); enemy != get()->unknown08.end(); ++enemy) {
       GfRelSmnEnemy *smnEnemy = *enemy;
       smnEnemy->update(deltaTime);
-      if (smnEnemy->unknown10.unknown00 != INVALID_HANDLE && smnEnemy->unknown10.unknown08 > 0) {
+      if (smnEnemy->unknown10.unknown00 != unknown020 && smnEnemy->unknown10.unknown08 > 0) {
         continue;
       }
       delete smnEnemy;
@@ -212,7 +212,7 @@ bool GfSmnEnemyManager::execRelSummon(const RelSmnInfo &info) {
     GfRelSmnEnemy::CreateInfo createInfo;
     createInfo.unknown00 = info.unknown00;
     createInfo.unknown08 = info.unknown08;
-    GfRelSmnEnemy *enemy = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfRelSmnEnemy(&createInfo);
+    GfRelSmnEnemy *enemy = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfRelSmnEnemy(&createInfo);
     get()->unknown08.push_back(enemy);
     return true;
   }
@@ -229,7 +229,7 @@ void GfSmnEnemyManager::debugDraw() {
 }
 
 void GfRelSmnEnemy::listenerGfObj(OBJEVT event, GF_OBJ_HANDLE *handle, u32 objectType) {
-  if (event == OBJEVT_DESTROY) {
+  if (event == OBJEVT_UNKNOWN_3) {
     removeEnemy(handle);
   }
 }

@@ -56,6 +56,17 @@ void DrResEtcTexList::releaseTexture() {
 
 void DrResEtcTexList::release() { unknown30 |= 1; }
 
+bool DrResEtcTexList::isTexFormat(const void *data) {
+  const unknown001 *resource = static_cast<const unknown001 *>(data);
+  const unknown002 *entry = reinterpret_cast<const unknown002 *>(static_cast<const u8 *>(data) + resource->unknown0c);
+  for (int i = 0; i < resource->unknown08; i++, entry++) {
+    if (!grlib::CGLibTexture::isTextureImagePtrs(static_cast<const u8 *>(data) + entry->unknown04, entry->unknown00)) {
+      return false;
+    }
+  }
+  return true;
+}
+
 grlib::CGLibTextureBuffer *DrResEtcTexList::getTextureID(u32 id) {
   if ((unknown30 & 1) != 0) {
     return nullptr;

@@ -40,6 +40,21 @@ struct EquipHana {
 
   void setArtsParts(u32 parts, u32 handle, u32 index);
   void setNArtsParts(u32 parts, u32 handle, u32 index);
+  // u16: the game calls the u32 getter with bl + ret (no tail call, no extension), so the result is narrowed, and their caller
+  // GfDataBlade::getEquipOrbEnance (0x71002a4760) tests and pushes the 16-bit result.
+  u16 getCondenserEnahnce(u32 slot) const;
+  u16 getExtendCondenserEnahnce(u32 slot) const;
+  // Inferred role: sets a condenser parts and its handle; original name unknown.
+  void unknown001(u32 parts, u32 handle, u32 slot) {
+    unknown4c[slot] = parts;
+    unknown60[slot] = handle;
+  }
+
+  // Inferred role: sets an extend condenser parts and its handle; original name unknown.
+  void unknown002(u32 parts, u32 handle, u32 slot) {
+    unknown52[slot] = parts;
+    unknown6c[slot] = handle;
+  }
 
   u16 unknown00;                                // Inferred role: role; original member name unknown.
   u16 unknown02;                                // Inferred role: attribute; original member name unknown.
@@ -47,10 +62,10 @@ struct EquipHana {
   mm::mtl::FixedArray<unknown066, 3> unknown28; // Inferred role: n arts; original member name unknown.
   mm::mtl::FixedArray<u16, 3> unknown4c;        // Inferred role: condenser; original member name unknown.
   mm::mtl::FixedArray<u16, 3> unknown52;        // Inferred role: extend condenser; original member name unknown.
-  GfItemHandle unknown58;                       // Inferred role: role handle; original member name unknown.
-  GfItemHandle unknown5c;                       // Inferred role: attribute handle; original member name unknown.
-  GfItemHandle unknown60[3];                    // Inferred role: condenser handles; original member name unknown.
-  GfItemHandle unknown6c[3];                    // Inferred role: extend condenser handles; original member name unknown.
+  u32 unknown58;                                // Inferred role: role handle; original member name unknown.
+  u32 unknown5c;                                // Inferred role: attribute handle; original member name unknown.
+  u32 unknown60[3];                             // Inferred role: condenser handles; original member name unknown.
+  u32 unknown6c[3];                             // Inferred role: extend condenser handles; original member name unknown.
 };
 
 static_assert(offsetof(EquipHana, unknown04) == 0x04, "");
@@ -129,6 +144,8 @@ public:
   static bool isEquipArtsParts(u32 blade, u32 parts);
   static bool isEquipNArtsParts(u32 blade, u32 parts);
   static bool isEquipCondenserParts(u32 blade, u32 parts);
+  static bool isExistSameEffectNArtsParts(u32 blade, u32 parts, u32 slot);
+  static bool isExistSameEffectCondenserParts(u32 blade, u32 parts, u32 slot, bool isExtend);
   static const char *getRoleName(u32 parts);
   static const char *getAttributeName(u32 parts);
   static const char *getNArtsName(u32 parts);

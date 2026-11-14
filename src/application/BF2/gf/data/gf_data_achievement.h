@@ -5,10 +5,10 @@ namespace gf {
 struct AchievQuest;
 
 enum ACHIEVEMENT_TYPE {
-  ACHIEVEMENT_TYPE_ARTS,
-  ACHIEVEMENT_TYPE_SKILL,
-  ACHIEVEMENT_TYPE_FIELD_SKILL,
-  ACHIEVEMENT_TYPE_KEY,
+  ACHIEVEMENT_TYPE_UNKNOWN_0, // Inferred role: achievement type arts; original name unknown.
+  ACHIEVEMENT_TYPE_UNKNOWN_1, // Inferred role: achievement type skill; original name unknown.
+  ACHIEVEMENT_TYPE_UNKNOWN_2, // Inferred role: achievement type field skill; original name unknown.
+  ACHIEVEMENT_TYPE_UNKNOWN_3, // Inferred role: achievement type key; original name unknown.
 };
 
 class GfDataAchievement {

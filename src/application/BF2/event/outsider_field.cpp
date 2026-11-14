@@ -5,7 +5,7 @@ namespace event {
 OutsiderField::OutsiderField() { clear(); }
 
 void OutsiderField::clear() {
-  unknown00 = TYPE_CIRCLE;
+  unknown00 = TYPE_UNKNOWN_1;
   unknown10 = mm::Vec3::zero;
   unknown20 = 0.0f;
   unknown30 = mm::Vec3::zero;
@@ -19,7 +19,7 @@ void OutsiderField::setField(TYPE type, const mm::Vec3 &pos, f32 radius) {
 }
 
 bool OutsiderField::isInside(const mm::Vec3 &pos) const {
-  if (unknown00 < TYPE_CIRCLE) {
+  if (unknown00 < TYPE_UNKNOWN_1) {
     return false;
   }
   if (unknown40 <= 0.0f) {

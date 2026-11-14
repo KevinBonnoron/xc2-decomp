@@ -6,29 +6,29 @@ namespace event {
 
 class CharaWalkCalculator {
 public:
-  static constexpr u32 LENGTH_COUNT = 50;
+  static constexpr u32 LENGTH_UNKNOWN_50 = 50; // Inferred role: length count; original name unknown.
 
   enum TYPE {
-    TYPE_NONE = 0,
-    TYPE_WALK = 1,
-    TYPE_WALK_START = 2,
-    TYPE_WALK_STOP = 3,
-    TYPE_RUN = 4,
-    TYPE_RUN_START = 5,
-    TYPE_RUN_STOP = 6,
+    TYPE_UNKNOWN_0 = 0, // Inferred role: none; original name unknown.
+    TYPE_UNKNOWN_1 = 1, // Inferred role: walk; original name unknown.
+    TYPE_UNKNOWN_2 = 2, // Inferred role: walk start; original name unknown.
+    TYPE_UNKNOWN_3 = 3, // Inferred role: walk stop; original name unknown.
+    TYPE_UNKNOWN_4 = 4, // Inferred role: run; original name unknown.
+    TYPE_UNKNOWN_5 = 5, // Inferred role: run start; original name unknown.
+    TYPE_UNKNOWN_6 = 6, // Inferred role: run stop; original name unknown.
   };
 
   enum {
-    FLAG_ACTIVE = 1 << 0,
-    FLAG_RUN = 1 << 1,
-    FLAG_ACC = 1 << 2,
-    FLAG_DEC = 1 << 3,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: active flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: run flag; original name unknown.
+    FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: acc flag; original name unknown.
+    FLAG_UNKNOWN_3 = 1 << 3, // Inferred role: dec flag; original name unknown.
   };
 
   static bool s_initializeAcc;
   static bool s_initializeDec;
-  static f32 s_lengthAcc[2][LENGTH_COUNT];
-  static f32 s_lengthDec[2][LENGTH_COUNT];
+  static f32 s_lengthAcc[2][LENGTH_UNKNOWN_50];
+  static f32 s_lengthDec[2][LENGTH_UNKNOWN_50];
 
   CharaWalkCalculator();
   void clear();

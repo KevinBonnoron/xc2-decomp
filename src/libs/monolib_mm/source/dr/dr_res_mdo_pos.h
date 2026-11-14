@@ -13,6 +13,10 @@ struct MdsPosKeepData;
 
 class DrResMdoPos {
 public:
+  enum Flag {
+    FLAG_UNKNOWN_12 = 0x1000, // Inferred role: animated by an inst anm; original name unknown.
+  };
+
   // Inferred role: linked object, only its back pointer at 0x28 is known; original type name unknown.
   struct unknown001 {
     u8 _00[0x28];

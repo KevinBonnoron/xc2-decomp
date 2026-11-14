@@ -1,15 +1,21 @@
 #include "gf/object/component/gf_com_collider.h"
 
 #include "framework/anim/anim_manager.h"
+#include "framework/object/updatable_object.h"
+#include "framework/reference_frame.h"
 #include "gf/gf_allocator.h"
+#include "gf/object/component/gf_com_transform.h"
+#include "gf/object/component/model/gf_com_model.h"
 #include "gf/object/gf_obj.h"
 #include "mm_mtl/rtti.h"
 
 namespace gf {
 
-GfComCollider::GfComCollider() : unknown18(getAllocator(ALLOCATOR_DEFAULT)) { unknown40.unknown08 = this; }
+GfComCollider::GfComCollider() : unknown18(getAllocator(ALLOCATOR_UNKNOWN_0)) { unknown40.unknown08 = this; }
 
 GfComCollider::~GfComCollider() {}
+
+void GfComCollider::setup(const SetupInfo &) { unknown18.resize(2, nullptr); }
 
 void GfComCollider::cleanup() {
   if (unknown50.unknown18 != nullptr && unknown50.unknown20 != nullptr) {
@@ -33,6 +39,29 @@ void GfComCollider::cleanup() {
   }
 
   unknown18.clear();
+}
+
+template <typename Info, typename Creator> void GfComCollider::createColi(const Creator &creator, u32 index, const Info &info, mm::mtl::IntrusivePtr<fw::ReferenceFrame> &frame) {
+  mm::mtl::IntrusivePtr<fw::ReferenceFrame> coliFrame = frame;
+  if (coliFrame.get() == nullptr) {
+    coliFrame = unknown08->getComponent<GfComTransform>()->unknown001();
+  }
+  unknown18[index] = creator(info, coliFrame);
+  fw::unknown136 events;
+  events.unknown00 = info.unknown28.unknown00;
+  events.unknown08 = this;
+  unknown18[index]->unknown48 = events;
+  unknown18[index]->setColiUserData(&unknown40);
+  if (info.unknown80 != nullptr && info.unknown80->unknown00 == fw::unknown031::TYPE_UNKNOWN_5) {
+    GfComModel *model = unknown08->getComponent<GfComModel>();
+    if (model != nullptr) {
+      unknown50.bind(model->unknown18, unknown18[index], getAllocator(ALLOCATOR_UNKNOWN_0));
+      fw::AnimationManager *manager = fw::AnimationManager::get();
+      if (manager != nullptr) {
+        manager->addAfterModifier(getLayer(), unknown50);
+      }
+    }
+  }
 }
 
 void GfComCollider::createColiCharacter(u32 index, const fw::ColiCharacterInfo &info, mm::mtl::IntrusivePtr<fw::ReferenceFrame> frame) {

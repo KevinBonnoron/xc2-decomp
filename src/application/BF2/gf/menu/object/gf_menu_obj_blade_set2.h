@@ -4,6 +4,7 @@
 #include "gf/menu/gf_menu_object.h"
 #include "gf/menu/gf_menu_sequence.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 
 namespace mm {
 namespace mtl {
@@ -17,6 +18,7 @@ class UIObjectAcc;
 } // namespace ui
 
 namespace gf {
+struct RQ_SETUP_BLADE;
 struct GF_SCOM_HANDLE;
 class GfMenuBladeList;
 class GfMenuCallContext;
@@ -24,6 +26,35 @@ class GfMenuDriverList;
 
 class GfMenuObjBladeSet2 : public GfMenuObject {
 public:
+  class MainListener : public ui::UIObjectListener {
+  public:
+    MainListener(GfMenuObjBladeSet2 *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjBladeSet2 *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class BladeSlotListener : public ui::UIObjectListener {
+  public:
+    BladeSlotListener(GfMenuObjBladeSet2 *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjBladeSet2 *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class BladeListListener : public ui::UIObjectListener {
+  public:
+    BladeListListener(GfMenuObjBladeSet2 *owner) : unknown0c(0), unknown10(0), _14(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u32 unknown0c; // Inferred role: selected blade index; original member name unknown.
+    u32 unknown10; // Role and original member name unknown, cleared by the constructor.
+    u8 _14[0x1c - 0x14];
+    GfMenuObjBladeSet2 *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   GfMenuObjBladeSet2(u32 handle);
   ~GfMenuObjBladeSet2() override;
   static void sendEvent(u32 handle, u32 type, u32 param, f32 delay);
@@ -39,8 +70,16 @@ public:
   static void setCloseToFSClose();
   bool seqWaitCommand();
   bool seqReturnBlSlot();
+  bool seqOpenImage();
   static void refreshBladeSlot(GfMenuBladeList *list);
   void refreshBladeList();
+  void createBladeList(u32 driver, GfMenuBladeList *list);
+  static void refreshBladeInfo(ui::UIObjectAcc &acc, u32 type);
+  static void setupBldeSlot(ui::UIObjectAcc &acc, const GfMenuBladeList *list);
+  static void setupBldeList(ui::UIObjectAcc &acc, const GfMenuBladeList *list, GfMenuBladeList *slotList);
+  static void setupDriverList(ui::UIObjectAcc &acc, const GfMenuDriverList *list);
+  static bool checkBladeSet(u32 blade, GfMenuBladeList *list);
+  static void makeSetupBlade_Remove(RQ_SETUP_BLADE &info, u32 driver, u32 blade);
 
   u8 _24[0x28 - 0x24];
   GfMenuBladeList *unknown28;          // Inferred role: blades; original member name unknown.
@@ -59,11 +98,11 @@ public:
   GfMenuCallContext *unknown80; // Inferred role: call context; original member name unknown.
   bool unknown88;               // Role and original member name unknown, cleared by the constructor.
   u8 _89[0x8c - 0x89];
-  u32 unknown8c; // Role and original member name unknown, cleared by the constructor.
-  u32 unknown90; // Inferred role: sort type; original member name unknown, cleared by the constructor.
-  u32 unknown94; // Role and original member name unknown, cleared by the constructor.
-  u32 unknown98; // Role and original member name unknown, cleared by the constructor.
-  u8 _9c[0xa0 - 0x9c];
+  u32 unknown8c;                                    // Role and original member name unknown, cleared by the constructor.
+  u32 unknown90;                                    // Inferred role: sort type; original member name unknown, cleared by the constructor.
+  u32 unknown94;                                    // Role and original member name unknown, cleared by the constructor.
+  u32 unknown98;                                    // Inferred role: owner mode; original member name unknown, cleared by the constructor.
+  u32 unknown9c;                                    // Inferred role: number of blade face layouts; original member name unknown.
   GfMenuSequence<GfMenuObjBladeSet2, 8> unknowna0;  // Inferred role: blade set steps; original member name unknown.
   GF_SCOM_HANDLE *unknown330;                       // Inferred role: pending blade set command; original member name unknown.
   GfMenuSequence<GfMenuObjBladeSet2, 4> unknown338; // Inferred role: image steps; original member name unknown.
@@ -85,9 +124,18 @@ static_assert(offsetof(GfMenuObjBladeSet2, unknown8c) == 0x8c, "");
 static_assert(offsetof(GfMenuObjBladeSet2, unknown90) == 0x90, "");
 static_assert(offsetof(GfMenuObjBladeSet2, unknown94) == 0x94, "");
 static_assert(offsetof(GfMenuObjBladeSet2, unknown98) == 0x98, "");
+static_assert(offsetof(GfMenuObjBladeSet2, unknown9c) == 0x9c, "");
 static_assert(offsetof(GfMenuObjBladeSet2, unknowna0) == 0xa0, "");
 static_assert(offsetof(GfMenuObjBladeSet2, unknown330) == 0x330, "");
 static_assert(offsetof(GfMenuObjBladeSet2, unknown338) == 0x338, "");
 static_assert(sizeof(GfMenuObjBladeSet2) == 0x498, "");
+static_assert(offsetof(GfMenuObjBladeSet2::MainListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjBladeSet2::MainListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjBladeSet2::BladeSlotListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjBladeSet2::BladeSlotListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjBladeSet2::BladeListListener, unknown0c) == 0x0c, "");
+static_assert(offsetof(GfMenuObjBladeSet2::BladeListListener, unknown10) == 0x10, "");
+static_assert(offsetof(GfMenuObjBladeSet2::BladeListListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjBladeSet2::BladeListListener) == 0x28, "");
 
 } // namespace gf

@@ -10,9 +10,13 @@ class CGLibRenderTarget;
 } // namespace grlib
 
 namespace ml {
+class DrMan;
+class DrPixlMan;
+class DrPixlPostMan;
 
 class DrPixlPostObjMotionBlur : public DrPixlPostObj {
 public:
+  DrPixlPostObjMotionBlur(DrMan *drMan, DrPixlMan *pixlMan, DrPixlPostMan *postMan);
   ~DrPixlPostObjMotionBlur();
   void update();
   void render();
@@ -26,13 +30,16 @@ public:
   void lastRender();
   void calcVelocityBlur();
 
-  u8 _18[0x20 - 0x18];
+  f32 unknown18;                         // Inferred role: unknown, only cleared by the constructor; original member name unknown.
+  f32 unknown1c;                         // Inferred role: unknown, only cleared by the constructor; original member name unknown.
   grlib::CGLibRenderTarget *unknown20;   // Inferred role: render target; original member name unknown.
   grlib::CGLibRenderTarget *unknown28;   // Inferred role: velocity map; original member name unknown.
   grlib::CGLibRenderTarget *unknown30;   // Inferred role: render target; original member name unknown.
   grlib::CGLibDblUniformBlock unknown38; // Inferred role: uniform block; original member name unknown.
 };
 
+static_assert(offsetof(DrPixlPostObjMotionBlur, unknown18) == 0x18, "");
+static_assert(offsetof(DrPixlPostObjMotionBlur, unknown1c) == 0x1c, "");
 static_assert(offsetof(DrPixlPostObjMotionBlur, unknown20) == 0x20, "");
 static_assert(offsetof(DrPixlPostObjMotionBlur, unknown28) == 0x28, "");
 static_assert(offsetof(DrPixlPostObjMotionBlur, unknown30) == 0x30, "");

@@ -18,18 +18,18 @@ namespace users {
 
 // Inferred enumerator names from the message types MsgDamage and MsgGetLife; the values come from the receivers.
 enum {
-  MSG_DAMAGE = 0,
-  MSG_GET_LIFE = 1,
+  MSG_UNKNOWN_0 = 0, // Inferred role: damage; original name unknown.
+  MSG_UNKNOWN_1 = 1, // Inferred role: get life; original name unknown.
 };
 
 struct MsgDamage : fw::Message {
-  explicit MsgDamage(int damage) : fw::Message(MSG_DAMAGE, 0), unknown08(damage) {}
+  explicit MsgDamage(int damage) : fw::Message(MSG_UNKNOWN_0, 0), unknown08(damage) {}
 
   int unknown08; // Inferred role: damage; original member name unknown.
 };
 
 struct MsgGetLife : fw::Message {
-  MsgGetLife() : fw::Message(MSG_GET_LIFE, 0), unknown08(0) {}
+  MsgGetLife() : fw::Message(MSG_UNKNOWN_1, 0), unknown08(0) {}
 
   int unknown08; // Inferred role: life; original member name unknown.
 };

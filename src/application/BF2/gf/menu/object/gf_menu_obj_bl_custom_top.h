@@ -4,6 +4,7 @@
 #include "gf/menu/gf_menu_object.h"
 #include "gf/menu/gf_menu_sequence.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 
 namespace ui {
 class UICtrlRevolveSelect;
@@ -16,6 +17,24 @@ class GfMenuCallContext;
 
 class GfMenuObjBlCustomTop : public GfMenuObject {
 public:
+  class MainListener : public ui::UIObjectListener {
+  public:
+    MainListener(GfMenuObjBlCustomTop *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjBlCustomTop *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class DrSelectListener : public ui::UIObjectListener {
+  public:
+    DrSelectListener(GfMenuObjBlCustomTop *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjBlCustomTop *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   GfMenuObjBlCustomTop(u32 handle);
   ~GfMenuObjBlCustomTop() override;
   void initialize() override;
@@ -26,13 +45,16 @@ public:
   bool seqStartOpen();
   bool seqAppearPhase1();
   bool seqAppearPhase2();
+  bool seqAppearPhase3();
   bool seqAppearPhase4();
   bool seqEndOpen();
   bool seqStartAddLayer();
+  bool seqAddLayerPhase1();
   bool seqAddLayerPhase2();
   bool seqAddLayerPhase3_BlWeapon();
   bool seqAddLayerPhase3_BlOrb();
   bool seqAddLayerPhase4();
+  bool seqAddLayerPhase5();
   bool seqEndAddLayer();
 
   u8 _24[0x28 - 0x24];
@@ -56,5 +78,10 @@ static_assert(offsetof(GfMenuObjBlCustomTop, unknown50) == 0x50, "");
 static_assert(offsetof(GfMenuObjBlCustomTop, unknown58) == 0x58, "");
 static_assert(offsetof(GfMenuObjBlCustomTop, unknown2e8) == 0x2e8, "");
 static_assert(offsetof(GfMenuObjBlCustomTop, unknown2ec) == 0x2ec, "");
+
+static_assert(offsetof(GfMenuObjBlCustomTop::MainListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjBlCustomTop::MainListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjBlCustomTop::DrSelectListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjBlCustomTop::DrSelectListener) == 0x28, "");
 
 } // namespace gf

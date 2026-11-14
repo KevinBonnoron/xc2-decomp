@@ -4,6 +4,7 @@
 
 #include "framework/object/updatable_object.h"
 #include "fw/fw_param_manager.h"
+#include "fw/fw_transform.h"
 #include "fw/fw_update_info.h"
 #include "gf/object/component/animation/gf_com_asm.h"
 #include "gf/object/component/env_sensor/gf_com_env_sensor.h"
@@ -24,7 +25,7 @@ namespace pc {
 void StateFieldWallJumpMove::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   unknown18 = 0.0f;
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
-  unknown30 = property->unknown160;
+  unknown30 = property->unknown160.unknown00;
   f32 height = property->unknown310.unknown48;
   const MsgPcFieldNotifyWallJump *info = property->unknown310.getWallJumpInfo();
   unknown20 = info->unknown10;
@@ -38,8 +39,8 @@ void StateFieldWallJumpMove::enter(GfComBehaviorPc *behavior, ai::State *previou
   unknown1c = __builtin_fmaxf(distance / static_cast<const WallCommonParam *>(property->unknown310.unknown08->unknown10[15].param)->jumpSpeed, 1.0f / 30.0f);
   GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
   f32 time = 0.0f;
-  comAsm->getPlaybackTime(comAsm->getStateName(ANIM_LAYER_BASE), &time);
-  comAsm->setSpeed(time / unknown1c, ANIM_LAYER_BASE);
+  comAsm->getPlaybackTime(comAsm->getStateName(ANIM_LAYER_UNKNOWN_0), &time);
+  comAsm->setSpeed(time / unknown1c, ANIM_LAYER_UNKNOWN_0);
 }
 
 void StateFieldWallJumpMove::leave(GfComBehaviorPc *behavior, ai::State *next) {}
@@ -59,11 +60,11 @@ void StateFieldWallJumpMove::update(GfComBehaviorPc *behavior, const fw::UpdateI
   }
   f32 inverse = 1.0f - weight;
   mm::Vec3 position = unknown30 * inverse + unknown20 * weight;
-  property->unknown160.y = position.y;
-  property->unknown160.x = position.x;
-  property->unknown160.z = position.z;
-  if (unknown18 >= unknown1c && comAsm->isEnd(ANIM_LAYER_BASE) && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_CLIMBJUMP_02)) {
-    reqState(STATE_ID_FIELD_WALL_JUMP_END);
+  property->unknown160.unknown00.y = position.y;
+  property->unknown160.unknown00.x = position.x;
+  property->unknown160.unknown00.z = position.z;
+  if (unknown18 >= unknown1c && comAsm->isEnd(ANIM_LAYER_UNKNOWN_0) && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_CLIMBJUMP_02)) {
+    reqState(STATE_ID_UNKNOWN_52);
   }
 }
 

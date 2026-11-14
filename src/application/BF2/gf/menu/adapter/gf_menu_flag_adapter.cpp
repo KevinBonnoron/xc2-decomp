@@ -24,7 +24,7 @@ GfMenuFlagAdapter *GfMenuFlagAdapter::create(u32 handle, u32 type, u16 flagBits,
     if (plugin != nullptr) {
       // __LINE__ must be 58 as in the original source: it is the line argument of operator new.
 #line 58
-      GfMenuFlagAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuFlagAdapter(plugin, isUpdateAlways);
+      GfMenuFlagAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuFlagAdapter(plugin, isUpdateAlways);
       adapter->unknown30.bind(adapter, info.update);
       adapter->unknown50 = flagBits;
       adapter->unknown52 = flagIndex;
@@ -50,9 +50,9 @@ bool GfMenuFlagAdapter::update_FlagNum() {
 }
 
 void GfMenuFlagAdapter::update(const fw::UpdateInfo &info) {
-  if (unknown30.isValid() && (unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
+  if (unknown30.isValid() && (unknown20 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) != 0) {
     setDisp(unknown30());
-    unknown20 &= ~FLAG_CHANGED;
+    unknown20 &= ~FLAG_UNKNOWN_0;
   }
 }
 

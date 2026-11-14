@@ -17,6 +17,8 @@ class PrimSphere;
 class PrimCapsule : public mm::Line2 {
 public:
   void setup(const mm::Vec3 &start, const mm::Vec3 &end, f32 radius);
+  void setup(const mm::Vec3 &position, const mm::Quat &rotation, f32 length, f32 radius);
+  void setup(const mm::Mat44 &matrix, f32 length, f32 radius);
   f32 getHeight() const;
   void getCenter(mm::Vec3 &center) const;
   void getRot(mm::Quat &rotation) const;

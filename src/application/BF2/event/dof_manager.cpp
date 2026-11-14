@@ -24,7 +24,7 @@ f32 getValF32(unsigned char *bdat, const char *name, int id) {
 } // namespace
 
 void DofManager::render() {
-  if (!(unknown10 & DISP_FLAG_DISP)) {
+  if (!(unknown10 & DISP_FLAG_UNKNOWN_0)) {
     return;
   }
   ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
@@ -133,7 +133,7 @@ void DofManager::stop() {
 void DofManager::clear() { stop(); }
 
 void DofManager::update() {
-  if (!(unknown14 & FLAG_ENABLE)) {
+  if (!(unknown14 & FLAG_UNKNOWN_0)) {
     return;
   }
   if (unknown28) {
@@ -155,7 +155,7 @@ void DofManager::update() {
     if (m_axis == 0) {
       return;
     }
-    if (unknown14 & FLAG_CHANGED) {
+    if (unknown14 & FLAG_UNKNOWN_1) {
       unknown20 = calcDist(m_axis, m_dist);
     }
     ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
@@ -173,11 +173,11 @@ void DofManager::update() {
     parmAcc.setDofPixlLv(unknown44);
     parmAcc.setDofHLvMode(unknown48);
   }
-  unknown14 &= ~FLAG_CHANGED;
+  unknown14 &= ~FLAG_UNKNOWN_1;
 }
 
 void DofManager::play(int axis, f32 dist, f32 range, f32 pixel, f32 lens, f32 strength, f32 blend, int pixelLv, bool isHlv, const char *name) {
-  unknown14 |= FLAG_ENABLE | FLAG_CHANGED;
+  unknown14 |= FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1;
   m_axis = axis;
   m_dist = dist;
   unknown20 = dist;
@@ -208,7 +208,7 @@ void DofManager::play(int axis, int id) {
 
 void DofManager::playSimple(int focusNum, f32 focusMin, f32 pixel, f32 lens, f32 strength, f32 blend, int pixelLv, bool isHlv, const char *name) {
   unknown28 = true;
-  unknown14 |= FLAG_ENABLE | FLAG_CHANGED;
+  unknown14 |= FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1;
   unknown2c = focusNum;
   unknown30 = focusMin;
   unknown34 = pixel;
@@ -233,9 +233,9 @@ void DofManager::playSimple(int focusNum, int id) {
              reinterpret_cast<const char *>(Bdat::getValCheck(bdat, "name", id, 7)));
 }
 
-void DofManager::setEnable(bool isEnable) { setFlag(FLAG_ENABLE | FLAG_CHANGED, isEnable); }
+void DofManager::setEnable(bool isEnable) { setFlag(FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1, isEnable); }
 
-bool DofManager::isEnable() const { return (unknown14 & FLAG_ENABLE) != 0; }
+bool DofManager::isEnable() const { return (unknown14 & FLAG_UNKNOWN_0) != 0; }
 
 void DofManager::setAxis(int axis) {
   setChanged();
@@ -303,29 +303,29 @@ void DofManager::setHlv(bool isHlv) {
 
 void DofManager::setDisp(bool isDisp) {
   if (isDisp) {
-    unknown10 |= DISP_FLAG_DISP;
+    unknown10 |= DISP_FLAG_UNKNOWN_0;
   } else {
-    unknown10 &= ~DISP_FLAG_DISP;
+    unknown10 &= ~DISP_FLAG_UNKNOWN_0;
   }
 }
 
-bool DofManager::isDisp() const { return (unknown10 & DISP_FLAG_DISP) != 0; }
+bool DofManager::isDisp() const { return (unknown10 & DISP_FLAG_UNKNOWN_0) != 0; }
 
 void DofManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
-  case MSG_TYPE_INIT:
+  case MSG_TYPE_UNKNOWN_4:
     clear();
     break;
-  case MSG_TYPE_UPDATE:
+  case MSG_TYPE_UNKNOWN_14:
     update();
     break;
-  case MSG_TYPE_RENDER_POST:
+  case MSG_TYPE_UNKNOWN_17:
     render();
     break;
   default:
     break;
   }
-  if (type == MSG_TYPE_CLEAR) {
+  if (type == MSG_TYPE_UNKNOWN_12) {
     clear();
   }
 }

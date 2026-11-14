@@ -37,13 +37,14 @@ static_assert(sizeof(PadVibrationInfo) == 0x18, "");
 
 // Inferred role: dev pad repeat; original type name unknown.
 struct unknown034 {
-  f32 unknown00; // Inferred role: time; original member name unknown.
-  u8 _04[0xc - 0x4];
+  f32 unknown00; // Inferred role: elapsed time; original member name unknown.
+  f32 unknown04; // Inferred role: time to repeat; original member name unknown.
+  s32 unknown08; // Inferred role: is repeating; original member name unknown.
 };
 
 class DevPad : public WorkObj, public mm::mtl::PtrSingleton<DevPad>, public DevGraphCB {
 public:
-  ~DevPad() override;
+  DevPad(const char *name, WorkObj *parent);
   static void setWirelessPadMax(u32 max);
   static u32 getWirelessPadMax();
   static int getPadMax();
@@ -97,21 +98,34 @@ public:
   static u32 s_nMaxWirelessPad;
   static int s_debugPadNo;
 
-  u8 _1b8[0x1ec - 0x1b8];
-  u32 unknown1ec[11]; // Inferred role: down; original member name unknown.
-  u32 unknown218[11]; // Inferred role: up; original member name unknown.
-  u32 unknown244[11]; // Inferred role: btn; original member name unknown.
-  u32 unknown270[11]; // Inferred role: dbl; original member name unknown.
-  u32 unknown29c[11]; // Inferred role: repeat; original member name unknown.
-  u8 _2c8[0x4b0 - 0x2c8];
-  unknown034 unknown4b0[11]; // Inferred role: repeats; original member name unknown.
-  u8 _534[0x540 - 0x534];
-  f32 unknown540; // Inferred role: low analog; original member name unknown.
+  u64 unknown1b8;            // Inferred role: zero-initialised by the constructor; original member name unknown.
+  u32 unknown1c0[11];        // Inferred role: btn of the previous update; original member name unknown.
+  u32 unknown1ec[11];        // Inferred role: down; original member name unknown.
+  u32 unknown218[11];        // Inferred role: up; original member name unknown.
+  u32 unknown244[11];        // Inferred role: btn; original member name unknown.
+  u32 unknown270[11];        // Inferred role: dbl; original member name unknown.
+  u32 unknown29c[11];        // Inferred role: repeat; original member name unknown.
+  u32 unknown2c8[11][11];    // Inferred role: down history; original member name unknown.
+  unknown034 unknown4ac[11]; // Inferred role: repeats; original member name unknown.
+  s32 unknown530;            // Inferred role: index of the down history; original member name unknown.
+  u8 _534[0x538 - 0x534];
+  long unknown538; // Inferred role: clock of the last update; original member name unknown.
+  f32 unknown540;  // Inferred role: low analog; original member name unknown.
 };
 
+static_assert(offsetof(DevPad, unknown1b8) == 0x1b8, "");
+static_assert(offsetof(DevPad, unknown1c0) == 0x1c0, "");
 static_assert(offsetof(DevPad, unknown1ec) == 0x1ec, "");
+static_assert(offsetof(DevPad, unknown218) == 0x218, "");
+static_assert(offsetof(DevPad, unknown244) == 0x244, "");
+static_assert(offsetof(DevPad, unknown270) == 0x270, "");
 static_assert(offsetof(DevPad, unknown29c) == 0x29c, "");
-static_assert(offsetof(DevPad, unknown4b0) == 0x4b0, "");
+static_assert(offsetof(DevPad, unknown2c8) == 0x2c8, "");
+static_assert(offsetof(DevPad, unknown4ac) == 0x4ac, "");
+static_assert(offsetof(DevPad, unknown530) == 0x530, "");
+static_assert(offsetof(DevPad, unknown538) == 0x538, "");
 static_assert(offsetof(DevPad, unknown540) == 0x540, "");
+static_assert(sizeof(unknown034) == 0xc, "");
+static_assert(sizeof(DevPad) == 0x548, "");
 
 } // namespace ml

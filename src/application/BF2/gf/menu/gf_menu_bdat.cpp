@@ -17,7 +17,8 @@ struct unknown001 {
   const char *unknown08; // Inferred role: sort key column name of the language; original member name unknown.
 };
 
-const unknown001 s_sortKeyNames[] = {
+// Inferred role: sort key column name of each language; original name unknown.
+const unknown001 unknown002[] = {
     {0, "sortJP"},
     {3, "sortGE"},
     {2, "sortFR"},
@@ -40,10 +41,11 @@ u8 *GfMenuBdat::getFP(u32 bdat) {
 }
 
 void GfMenuBdat::initialize() {
-  static const char *const names[] = {"MNU_OffsetList", "MNU_IconList", "MNU_Layer", "FLD_FieldSkillList", "ITM_CollectionList", "itm_collection", "BTL_Arts_Dr"};
+  // Inferred role: BDAT table names loaded by initialize; original name unknown.
+  static const char *const unknown003[] = {"MNU_OffsetList", "MNU_IconList", "MNU_Layer", "FLD_FieldSkillList", "ITM_CollectionList", "itm_collection", "BTL_Arts_Dr"};
 
-  for (u32 i = 0; i < sizeof(names) / sizeof(names[0]); i++) {
-    s_BdatArray[i] = Bdat::getFP(names[i]);
+  for (u32 i = 0; i < sizeof(unknown003) / sizeof(unknown003[0]); i++) {
+    s_BdatArray[i] = Bdat::getFP(unknown003[i]);
   }
 }
 
@@ -109,41 +111,41 @@ int GfMenuBdat::getFieldSkillTypeMax() { return Bdat::getIdCount(s_BdatArray[3])
 
 u8 *GfMenuBdat::getItemDataFP(u8 itemType, u16 item) {
   switch (itemType) {
-  case ItemType::PC_WPN_CHIP:
+  case ItemType::ITEM_TYPE_UNKNOWN_1:
     return GfDataBdat::getFP(BDAT_ITM_PC_WPN_CHIP);
-  case ItemType::PC_EQUIP:
+  case ItemType::ITEM_TYPE_UNKNOWN_2:
     return GfDataBdat::getFP(BDAT_ITM_PC_EQUIP);
-  case ItemType::EQUIP_ORB:
+  case ItemType::ITEM_TYPE_UNKNOWN_3:
     return GfDataBdat::getFP(BDAT_ITM_ORB_EQUIP);
-  case ItemType::SALVAGE:
+  case ItemType::ITEM_TYPE_UNKNOWN_5:
     return GfDataBdat::getFP(BDAT_ITM_SALVAGE_LIST);
-  case ItemType::PRECIOUS:
+  case ItemType::ITEM_TYPE_UNKNOWN_6:
     return GfDataBdat::getFP(BDAT_ITM_PRECIOUS_LIST);
-  case ItemType::COLLECTION_LIST:
+  case ItemType::ITEM_TYPE_UNKNOWN_7:
     return GfDataBdat::getFP(BDAT_ITM_COLLECTION_LIST);
-  case ItemType::TRESURE:
+  case ItemType::ITEM_TYPE_UNKNOWN_8:
     return GfDataBdat::getFP(BDAT_ITM_TRESURE_LIST);
-  case ItemType::EMPTY_ORB:
+  case ItemType::ITEM_TYPE_UNKNOWN_9:
     return GfDataBdat::getFP(BDAT_ITM_ORB);
-  case ItemType::FAVORITE:
+  case ItemType::ITEM_TYPE_UNKNOWN_10:
     return GfDataBdat::getFP(BDAT_ITM_FAVORITE_LIST);
-  case ItemType::CRYSTAL_LIST:
+  case ItemType::ITEM_TYPE_UNKNOWN_11:
     return GfDataBdat::getFP(BDAT_ITM_CRYSTAL_LIST);
-  case ItemType::BOOSTER:
+  case ItemType::ITEM_TYPE_UNKNOWN_12:
     return GfDataBdat::getFP(BDAT_ITM_BOOSTER_LIST);
-  case ItemType::INFO:
+  case ItemType::ITEM_TYPE_UNKNOWN_14:
     return GfDataBdat::getFP(BDAT_ITM_INFO_LIST);
-  case ItemType::EVENT:
+  case ItemType::ITEM_TYPE_UNKNOWN_15:
     return GfDataBdat::getFP(BDAT_ITM_EVENT_LIST);
-  case ItemType::HANA_ROLE:
+  case ItemType::ITEM_TYPE_UNKNOWN_16:
     return GfDataBdat::getFP(BDAT_ITM_HANA_ROLE);
-  case ItemType::HANA_ATR:
+  case ItemType::ITEM_TYPE_UNKNOWN_17:
     return GfDataBdat::getFP(BDAT_ITM_HANA_ATR);
-  case ItemType::HANA_ARTS_ENH:
+  case ItemType::ITEM_TYPE_UNKNOWN_18:
     return GfDataBdat::getFP(BDAT_ITM_HANA_ARTS_ENH);
-  case ItemType::HANA_N_ARTS_SET:
+  case ItemType::ITEM_TYPE_UNKNOWN_19:
     return GfDataBdat::getFP(BDAT_ITM_HANA_NARTS_SET);
-  case ItemType::HANA_ASSIST:
+  case ItemType::ITEM_TYPE_UNKNOWN_20:
     return GfDataBdat::getFP(BDAT_ITM_HANA_ASSIST);
   default:
     return nullptr;
@@ -152,41 +154,41 @@ u8 *GfMenuBdat::getItemDataFP(u8 itemType, u16 item) {
 
 u8 *GfMenuBdat::getItemTextFP(u8 itemType, u16 item) {
   switch (itemType) {
-  case ItemType::PC_WPN_CHIP:
+  case ItemType::ITEM_TYPE_UNKNOWN_1:
     return GfDataBdat::getFP(BDAT_ITM_PCWPNCHIP_MS);
-  case ItemType::PC_EQUIP:
+  case ItemType::ITEM_TYPE_UNKNOWN_2:
     return GfDataBdat::getFP(BDAT_ITM_PCEQUIP);
-  case ItemType::EQUIP_ORB:
+  case ItemType::ITEM_TYPE_UNKNOWN_3:
     return GfDataBdat::getFP(BDAT_ITM_ORB_MS);
-  case ItemType::SALVAGE:
+  case ItemType::ITEM_TYPE_UNKNOWN_5:
     return GfDataBdat::getFP(BDAT_ITM_SALVAGE);
-  case ItemType::PRECIOUS:
+  case ItemType::ITEM_TYPE_UNKNOWN_6:
     return GfDataBdat::getFP(BDAT_ITM_PRECIOUS);
-  case ItemType::COLLECTION_LIST:
+  case ItemType::ITEM_TYPE_UNKNOWN_7:
     return GfDataBdat::getFP(BDAT_ITM_COLLECTION);
-  case ItemType::TRESURE:
+  case ItemType::ITEM_TYPE_UNKNOWN_8:
     return GfDataBdat::getFP(BDAT_ITM_TRESURE);
-  case ItemType::EMPTY_ORB:
+  case ItemType::ITEM_TYPE_UNKNOWN_9:
     return GfDataBdat::getFP(BDAT_ITM_ORB_MS);
-  case ItemType::FAVORITE:
+  case ItemType::ITEM_TYPE_UNKNOWN_10:
     return GfDataBdat::getFP(BDAT_ITM_FAVORITE);
-  case ItemType::CRYSTAL_LIST:
+  case ItemType::ITEM_TYPE_UNKNOWN_11:
     return GfDataBdat::getFP(BDAT_ITM_CRYSTAL);
-  case ItemType::BOOSTER:
+  case ItemType::ITEM_TYPE_UNKNOWN_12:
     return GfDataBdat::getFP(BDAT_ITM_BOOSTER);
-  case ItemType::INFO:
+  case ItemType::ITEM_TYPE_UNKNOWN_14:
     return GfDataBdat::getFP(BDAT_ITM_INFO);
-  case ItemType::EVENT:
+  case ItemType::ITEM_TYPE_UNKNOWN_15:
     return GfDataBdat::getFP(BDAT_ITM_EVT);
-  case ItemType::HANA_ROLE:
+  case ItemType::ITEM_TYPE_UNKNOWN_16:
     return GfDataBdat::getFP(BDAT_ITM_HANA_ROLE_MS);
-  case ItemType::HANA_ATR:
+  case ItemType::ITEM_TYPE_UNKNOWN_17:
     return GfDataBdat::getFP(BDAT_ITM_HANA_ATR_MS);
-  case ItemType::HANA_ARTS_ENH:
+  case ItemType::ITEM_TYPE_UNKNOWN_18:
     return GfDataBdat::getFP(BDAT_ITM_ORB_MS);
-  case ItemType::HANA_N_ARTS_SET:
+  case ItemType::ITEM_TYPE_UNKNOWN_19:
     return GfDataBdat::getFP(BDAT_ITM_HANA_NARTS_SET_MS);
-  case ItemType::HANA_ASSIST:
+  case ItemType::ITEM_TYPE_UNKNOWN_20:
     return GfDataBdat::getFP(BDAT_ITM_ORB_MS);
   default:
     return nullptr;
@@ -206,9 +208,9 @@ int GfMenuBdat::getIconIDFromWeatherType(u32 weatherType) { return weatherType +
 
 const char *GfMenuBdat::getSortKeyName() {
   u32 lang = fw::LangUtil::getLangType();
-  for (u32 i = 0; i < sizeof(s_sortKeyNames) / sizeof(s_sortKeyNames[0]); i++) {
-    if (s_sortKeyNames[i].unknown00 == lang) {
-      return s_sortKeyNames[i].unknown08;
+  for (u32 i = 0; i < sizeof(unknown002) / sizeof(unknown002[0]); i++) {
+    if (unknown002[i].unknown00 == lang) {
+      return unknown002[i].unknown08;
     }
   }
   return nullptr;

@@ -7,6 +7,9 @@
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_manager.h"
+#include "mm/mm_std_base.h"
+#include "mm_mtl/fixed_list.h"
+#include "mm_mtl/fixed_vector.h"
 
 namespace gf {
 
@@ -28,12 +31,38 @@ void GfAssetUtil::addDestroyObject(GF_ASSET_HANDLE *handle, bool flag) {
   }
 }
 
+void GfAssetUtil::destroyAsset(const mm::mtl::FixedVector<GF_SLOT_HANDLE *, 88> &slots) {
+  GfAssetManager *manager = GfAssetManager::get();
+  for (GF_SLOT_HANDLE *const *slot = slots.begin(); slot != slots.end(); ++slot) {
+    if (GfAssetManager::getAssetPack(*slot) != nullptr) {
+      for (mm::mtl::FixedList<GF_ASSET_HANDLE *, 1024>::iterator it = manager->unknownd70f8.begin(); it != manager->unknownd70f8.end(); ++it) {
+        AssetPackInfo *info = GfAssetManager::getAssetPackInfo(*it);
+        if (info != nullptr && info->getAssetPack(*slot) != nullptr) {
+          MM_VERIFY(GfAssetManager::getAssetPackInfo(*it));
+          GfObjManager *objManager = GfObjManager::get();
+          if (objManager != nullptr) {
+            objManager->destroyAssetObj(getObjHandle(*it));
+          }
+        }
+      }
+    }
+  }
+}
+
 GF_OBJ_HANDLE *GfAssetUtil::getObjHandle(GF_ASSET_HANDLE *handle) {
   AssetPackInfo *info = GfAssetManager::getAssetPackInfo(handle);
   if (info != nullptr) {
     return info->unknown2d8;
   }
-  return INVALID_HANDLE;
+  return unknown020;
+}
+
+void GfAssetUtil::getAssetHandleBySlotHandle(mm::mtl::FixedList<GF_ASSET_HANDLE *, 1024> &assets, const mm::mtl::FixedList<GF_ASSET_HANDLE *, 1024> &handles, GF_SLOT_HANDLE *slot) {
+  for (mm::mtl::FixedList<GF_ASSET_HANDLE *, 1024>::const_iterator it = handles.begin(); it != handles.end(); ++it) {
+    if (GfAssetManager::getAssetPack(slot) != nullptr) {
+      assets.push_back(*it);
+    }
+  }
 }
 
 u32 GfAssetUtil::getAssetPrio(GF_ASSET_HANDLE *handle) {

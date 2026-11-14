@@ -12,14 +12,14 @@ namespace event {
 class FadeCtrl : public mm::mtl::NoncopyableBase {
 public:
   enum PRIO {
-    PRIO_LOW,
-    PRIO_MIDDLE,
-    PRIO_HIGH,
+    PRIO_LOW,       // Name of row 0 of the BDAT table EVT_priotype (column name).
+    PRIO_MIDDLE,    // Name of row 1 of the BDAT table EVT_priotype (column name).
+    PRIO_UNKNOWN_2, // Inferred role: high; original name unknown.
     PRIO_COUNT,
   };
 
   enum {
-    FLAG_EVENT_SKIP = 1 << 0,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: event skip flag; original name unknown.
   };
 
   FadeCtrl();

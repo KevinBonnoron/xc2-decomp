@@ -18,27 +18,27 @@ ICmd::RESULT CharaFade::update(const Param &param) {
   f32 delta = chara->getFrameInfo().unknown0c;
   if (param.getFrame() == 0) {
     f32 from = 1.0f;
-    if (unknown08 != gf::INVALID_HANDLE) {
+    if (unknown08 != gf::unknown020) {
       from = gf::GfObjAcc(unknown08).getAlphaEvent();
     }
     f32 to = param.val(1).getBool() ? 0.0f : 1.0f;
     f32 frame = param.val(2).getF32();
     unknown10.clear();
-    unknown10.append(0.0f, from, CV_TYPE_STEP);
-    unknown10.append(frame, to, CV_TYPE_LINEAR);
+    unknown10.append(0.0f, from, CV_TYPE_UNKNOWN_0);
+    unknown10.append(frame, to, CV_TYPE_UNKNOWN_1);
   }
   unknown10.update(delta);
-  if (unknown08 != gf::INVALID_HANDLE) {
-    mm::mtl::Singleton<AlphaManager>::getPtr()->setAlpha(unknown08, ALPHA_ATTR_CHARA, unknown10.getValue(), 1.0f);
+  if (unknown08 != gf::unknown020) {
+    mm::mtl::Singleton<AlphaManager>::getPtr()->setAlpha(unknown08, ALPHA_ATTR_UNKNOWN_1, unknown10.getValue(), 1.0f);
   }
   if (unknown10.isEnd()) {
     unknown10.clear();
-    if (unknown08 != gf::INVALID_HANDLE) {
-      mm::mtl::Singleton<AlphaManager>::getPtr()->setAlpha(unknown08, ALPHA_ATTR_CHARA, param.val(1).getBool() ? 0.0f : 1.0f, 1.0f);
+    if (unknown08 != gf::unknown020) {
+      mm::mtl::Singleton<AlphaManager>::getPtr()->setAlpha(unknown08, ALPHA_ATTR_UNKNOWN_1, param.val(1).getBool() ? 0.0f : 1.0f, 1.0f);
     }
-    return RESULT_END;
+    return RESULT_UNKNOWN_1;
   }
-  return RESULT_NEXT;
+  return RESULT_UNKNOWN_2;
 }
 
 } // namespace event

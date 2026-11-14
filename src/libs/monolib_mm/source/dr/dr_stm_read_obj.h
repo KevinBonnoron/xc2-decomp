@@ -15,13 +15,15 @@ public:
   virtual bool update() = 0;
   virtual u64 getAdder() = 0;
 
-  DrStmReadObj *unknown08; // Inferred role: next; original member name unknown.
-  DrStmReadObj *unknown10; // Inferred role: prev; original member name unknown.
+  DrStmReadObj *unknown08; // Inferred role: previous object; original member name unknown.
+  DrStmReadObj *unknown10; // Inferred role: next object; original member name unknown.
   u32 unknown18;           // Inferred role: read type; original member name unknown.
   u32 unknown1c;           // Inferred role: flags; original member name unknown.
 };
 
 static_assert(offsetof(DrStmReadObj, unknown18) == 0x18, "");
+static_assert(offsetof(DrStmReadObj, unknown08) == 0x08, "");
+static_assert(offsetof(DrStmReadObj, unknown10) == 0x10, "");
 static_assert(offsetof(DrStmReadObj, unknown1c) == 0x1c, "");
 
 class DrStmReadCheck : public DrStmReadObj {

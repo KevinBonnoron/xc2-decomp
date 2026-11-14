@@ -75,7 +75,7 @@ public:
     SE_TYPE_UNKNOWN_3, // Inferred role: index of unknown2b0; original enumerator name unknown.
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_ELEVATOR;
+  static const GmkType GMK_TYPE = GMK_TYPE_ELEVATOR; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkElevator();
   ~GmkElevator() override { dispose(); }
@@ -159,7 +159,7 @@ public:
     void create(CBdatWrapper, int, const AGmkBase &) {}
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_ELEVATOR_LOCATOR;
+  static const GmkType GMK_TYPE = GMK_TYPE_ELEVATOR_LOCATOR; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkElevatorLocator() {}
   ~GmkElevatorLocator() override { dispose(); }

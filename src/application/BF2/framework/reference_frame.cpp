@@ -13,7 +13,7 @@ ReferenceFrame::ReferenceFrame() : unknowna0(0), unknowna8(nullptr) {
   unknown40.unknown00 = mm::Vec3::zero;
   unknown40.unknown10 = mm::Quat::identity;
   unknown60 = mm::Mat44::identity;
-  unknowna0 |= FLAG_LOCAL_SYNCED | FLAG_WORLD_SYNCED | FLAG_MATRIX_SYNCED;
+  unknowna0 |= FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1 | FLAG_UNKNOWN_2;
   unknownc8 = 0.0f;
   unknowncc = 0.0f;
   unknownd0 = 0.0f;
@@ -39,26 +39,26 @@ static void toLocalTransform(const Transform &parentWorld, const Transform &worl
 }
 
 void ReferenceFrame::syncLocalTransform() {
-  if ((unknowna0 & FLAG_LOCAL_SYNCED) == 0) {
+  if ((unknowna0 & FLAG_UNKNOWN_0) == 0) {
     if (unknowna8 != nullptr) {
       toLocalTransform(unknowna8->getSyncedWorldTransform(), unknown40, &unknown20);
     } else {
       unknown20 = unknown40;
     }
 
-    unknowna0 |= FLAG_LOCAL_SYNCED;
+    unknowna0 |= FLAG_UNKNOWN_0;
   }
 }
 
 void ReferenceFrame::syncWorldTransform() {
-  if ((unknowna0 & FLAG_WORLD_SYNCED) == 0) {
+  if ((unknowna0 & FLAG_UNKNOWN_1) == 0) {
     if (unknowna8 != nullptr) {
       Transform::mul(unknowna8->getSyncedWorldTransform(), unknown20, &unknown40);
     } else {
       unknown40 = unknown20;
     }
 
-    unknowna0 = (unknowna0 & ~(FLAG_WORLD_SYNCED | FLAG_MATRIX_SYNCED)) | FLAG_WORLD_SYNCED;
+    unknowna0 = (unknowna0 & ~(FLAG_UNKNOWN_1 | FLAG_UNKNOWN_2)) | FLAG_UNKNOWN_1;
   }
 }
 
@@ -79,8 +79,22 @@ void ReferenceFrame::unlinkParent(ReferenceFrame &frame) {
   }
 }
 
+void ReferenceFrame::unlinkChild(ReferenceFrame &frame) {
+  const Transform &world = frame.getSyncedWorldTransform();
+  for (mm::mtl::IntrusiveList<ReferenceFrame>::iterator it = frame.unknownb0.begin(); it != frame.unknownb0.end(); ++it) {
+    ReferenceFrame &child = *it;
+    if (child.unknowna8 == &frame) {
+      child.invalidateWorld();
+      child.unknown20.unknown00 += world.unknown00;
+      child.unknown20.unknown10 = mm::Quat::mul(world.unknown10, child.unknown20.unknown10);
+      child.unknowna8 = nullptr;
+    }
+  }
+  frame.unknownb0.clear();
+}
+
 void TransformManager::update(u32 layerMask) {
-  for (u32 layer = 0; layer < LAYER_MAX; layer++) {
+  for (u32 layer = 0; layer < LAYER_UNKNOWN_32; layer++) {
     if ((1 << layer & layerMask) != 0) {
       for (mm::mtl::IntrusiveList<TransformUpdater>::iterator it = unknown08[layer].unknown00.begin(); it != unknown08[layer].unknown00.end(); ++it) {
         (*it).resolveWorldTrasform();

@@ -22,7 +22,7 @@ void AlphaManager::clear() {
 }
 
 void AlphaManager::update() {
-  if ((unknown10 & FLAG_ACTIVE) == 0) {
+  if ((unknown10 & FLAG_UNKNOWN_0) == 0) {
     return;
   }
   for (size_t i = 0; i < unknown18.size(); i++) {
@@ -43,12 +43,12 @@ void AlphaManager::update() {
     }
   }
   if (unknown18.empty()) {
-    unknown10 &= ~FLAG_ACTIVE;
+    unknown10 &= ~FLAG_UNKNOWN_0;
   }
 }
 
 void AlphaManager::render() {
-  if (!(unknown14 & DISP_FLAG_DISP) || !(unknown10 & FLAG_ACTIVE)) {
+  if (!(unknown14 & DISP_FLAG_UNKNOWN_0) || !(unknown10 & FLAG_UNKNOWN_0)) {
     return;
   }
   int height = unknown18.size() * 20 + 50;
@@ -75,7 +75,7 @@ void AlphaManager::setAlpha(gf::GF_OBJ_HANDLE *handle, ALPHA_ATTR attr, f32 alph
     obj->setAlpha(attr, alpha, belongingAlpha);
     unknown18.push_back(obj);
   }
-  unknown10 |= FLAG_ACTIVE;
+  unknown10 |= FLAG_UNKNOWN_0;
 }
 
 AlphaObj *AlphaManager::search(gf::GF_OBJ_HANDLE *handle) const {
@@ -89,23 +89,23 @@ AlphaObj *AlphaManager::search(gf::GF_OBJ_HANDLE *handle) const {
 
 void AlphaManager::setDisp(bool isDisp) {
   if (isDisp) {
-    unknown14 |= DISP_FLAG_DISP;
+    unknown14 |= DISP_FLAG_UNKNOWN_0;
   } else {
-    unknown14 &= ~DISP_FLAG_DISP;
+    unknown14 &= ~DISP_FLAG_UNKNOWN_0;
   }
 }
 
-bool AlphaManager::isDisp() const { return (unknown14 & DISP_FLAG_DISP) != 0; }
+bool AlphaManager::isDisp() const { return (unknown14 & DISP_FLAG_UNKNOWN_0) != 0; }
 
 void AlphaManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
-  case MSG_TYPE_UPDATE:
+  case MSG_TYPE_UNKNOWN_14:
     update();
     break;
-  case MSG_TYPE_CLEAR:
+  case MSG_TYPE_UNKNOWN_12:
     clear();
     break;
-  case MSG_TYPE_RENDER:
+  case MSG_TYPE_UNKNOWN_16:
     render();
     break;
   default:

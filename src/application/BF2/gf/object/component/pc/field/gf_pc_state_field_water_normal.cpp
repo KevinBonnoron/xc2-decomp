@@ -28,7 +28,7 @@ void StateFieldWaterNormal::enter(GfComBehaviorPc *behavior, ai::State *previous
 }
 
 void StateFieldWaterNormal::leave(GfComBehaviorPc *behavior, ai::State *next) {
-  if (next != nullptr && next->unknown08 != STATE_ID_FIELD_WATER_PREPARE_WARP) {
+  if (next != nullptr && next->unknown08 != STATE_ID_UNKNOWN_29) {
     StateUtilField::setAccessFlag(*behavior, false);
   }
   AccessPlugin *plugin = behavior->unknown001<AccessPlugin>(4);
@@ -40,33 +40,33 @@ void StateFieldWaterNormal::leave(GfComBehaviorPc *behavior, ai::State *next) {
 void StateFieldWaterNormal::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   GfObj *target = StateUtilField::getAccessTarget(*behavior);
-  if (target != nullptr && property->unknown60.unknown08.test(INPUT_ID_DECIDE)) {
+  if (target != nullptr && property->unknown60.unknown08.test(INPUT_ID_UNKNOWN_0)) {
     MsgPcFieldGetAccessType message;
     static_cast<GfObj *>(behavior->unknown08)->sendMessage(target, message);
     if (message.unknown08 == 4) {
-      reqState(STATE_ID_FIELD_WATER_PREPARE_WARP);
+      reqState(STATE_ID_UNKNOWN_29);
     }
   }
 }
 
 void StateFieldWaterNormal::onDead(GfComBehaviorPc *behavior, MsgObjectNotifyDead &message) {
   StateUtil::notifyDead(*behavior, message, true);
-  behavior->unknown08->getComponent<GfComAsm>()->execCmd("C_waterdead", ANIM_LAYER_BASE);
-  reqState(STATE_ID_FIELD_WATER_DEAD_SINK);
+  behavior->unknown08->getComponent<GfComAsm>()->execCmd("C_waterdead", ANIM_LAYER_UNKNOWN_0);
+  reqState(STATE_ID_UNKNOWN_35);
 }
 
 bool StateFieldWaterNormal::recieveMessage(void *owner, fw::MessageObject *sender, fw::Message &message) {
   switch (message.unknown00) {
-  case MSG_PC_FIELD_WATER_WARP:
+  case MSG_PC_FIELD_UNKNOWN_16777240:
     procMsgPcFieldWaterWarp(static_cast<GfComBehaviorPc *>(owner), sender, static_cast<MsgPcFieldWaterWarp &>(message));
     break;
-  case MSG_PC_FIELD_WATER_WARP_BUDDY:
+  case MSG_PC_FIELD_UNKNOWN_16777248:
     procMsgPcFieldWaterWarpBuddy(static_cast<GfComBehaviorPc *>(owner), sender, static_cast<MsgPcFieldWaterWarpBuddy &>(message));
     break;
-  case MSG_OBJECT_NOTIFY_DEAD:
+  case MSG_OBJECT_UNKNOWN_16777272:
     procMsgObjectNotifyDead(static_cast<GfComBehaviorPc *>(owner), sender, static_cast<MsgObjectNotifyDead &>(message));
     break;
-  case MSG_PC_FIELD_RELAY_SURVIVE:
+  case MSG_PC_FIELD_UNKNOWN_16777246:
     procMsgPcFieldRelaySurvive(static_cast<GfComBehaviorPc *>(owner), sender, static_cast<MsgPcFieldRelaySurvive &>(message));
     break;
   default:
@@ -80,16 +80,16 @@ void StateFieldWaterNormal::procMsgPcFieldWaterWarp(GfComBehaviorPc *behavior, f
   GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
   MsgPcGetState getState;
   behavior->recieveMessage(static_cast<GfObj *>(behavior->unknown08), getState);
-  if (getState.unknown08 == STATE_ID_FIELD_WATER_IDLE && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_WATERHOLE_00)) {
+  if (getState.unknown08 == STATE_ID_UNKNOWN_20 && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_WATERHOLE_00)) {
     message.unknown08 = true;
-    reqState(STATE_ID_FIELD_WATER_WARP_DIVE);
+    reqState(STATE_ID_UNKNOWN_30);
   }
 }
 
 void StateFieldWaterNormal::procMsgPcFieldWaterWarpBuddy(GfComBehaviorPc *behavior, fw::MessageObject *sender, MsgPcFieldWaterWarpBuddy &message) {
   GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
   message.unknown08 = true;
-  reqState(STATE_ID_FIELD_WATER_WARP_RISE_BUDDY);
+  reqState(STATE_ID_UNKNOWN_32);
 }
 
 void StateFieldWaterNormal::procMsgObjectNotifyDead(GfComBehaviorPc *behavior, fw::MessageObject *sender, MsgObjectNotifyDead &message) {
@@ -102,7 +102,7 @@ void StateFieldWaterNormal::procMsgObjectNotifyDead(GfComBehaviorPc *behavior, f
 
 void StateFieldWaterNormal::procMsgPcFieldRelaySurvive(GfComBehaviorPc *behavior, fw::MessageObject *sender, MsgPcFieldRelaySurvive &message) {
   fw::Message *relayed = message.unknown08;
-  if (relayed != nullptr && relayed->unknown00 == MSG_OBJECT_NOTIFY_DEAD) {
+  if (relayed != nullptr && relayed->unknown00 == MSG_OBJECT_UNKNOWN_16777272) {
     onDead(behavior, static_cast<MsgObjectNotifyDead &>(*relayed));
   }
 }

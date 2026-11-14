@@ -8,7 +8,7 @@ namespace event {
 class QuestManager : public IManager, public mm::mtl::Singleton<QuestManager> {
 public:
   enum {
-    FLAG_ACTIVE = 1 << 0,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: active flag; original name unknown.
   };
 
   QuestManager();

@@ -93,12 +93,15 @@ public:
   mm::mtl::FixStr<256> unknown98;                       // Inferred role: path; original member name unknown.
   mm::mtl::FixStr<32> unknown19c;                       // Role and original member name unknown.
   u64 m_time;
-  u64 unknown1c8;  // Inferred role: file time; original member name unknown.
-  s32 unknown1d0;  // Role and original member name unknown.
-  u32 unknown1d4;  // Inferred role: file channel; original member name unknown.
-  s32 unknown1d8;  // Role and original member name unknown.
-  u64 unknown1e0;  // Role and original member name unknown.
-  s32 unknown1e8;  // Inferred role: job state (2 loaded, 4 load failed); original member name unknown.
+  u64 unknown1c8; // Inferred role: file time; original member name unknown.
+  s32 unknown1d0; // Role and original member name unknown.
+  u32 unknown1d4; // Inferred role: file channel; original member name unknown.
+  s32 unknown1d8; // Role and original member name unknown.
+  u64 unknown1e0; // Role and original member name unknown.
+  // Inferred role: callback mode of the finished job (2 loaded, 4 load failed); original member name unknown. Evidence for the type:
+  // DevFileTh::Impl::tail passes it unchanged to FileHandleTh::call(CBM) (_ZN2ml12FileHandleTh4callENS_3CBME; load at 0x71007325dc), whose
+  // inlined body tests it against 4/6 and 5/2.
+  CBM unknown1e8;
   s32 unknown1ec;  // Role and original member name unknown.
   s32 unknown1f0;  // Role and original member name unknown.
   bool unknown1f4; // Role and original member name unknown.

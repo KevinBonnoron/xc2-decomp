@@ -27,7 +27,7 @@ void StateFieldRideOn::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &i
   while (!unknown18.empty()) {
     GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
     mm::mtl::FixStr<32> command = unknown18.front();
-    comAsm->execCmd(command.c_str(), ANIM_LAYER_BASE);
+    comAsm->execCmd(command.c_str(), ANIM_LAYER_UNKNOWN_0);
     unknown18.pop_front();
   }
 }
@@ -44,81 +44,81 @@ void StateFieldRideOn::syncMotion(GfComBehaviorPc *behavior) {
     switch (vehicleType) {
     case unknown001_0:
       if (StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_MOVE_RIDE)) {
-        comAsm->setLocalTime(buddyAsm->getLocalTime(ANIM_LAYER_BASE), ANIM_LAYER_BASE);
+        comAsm->setLocalTime(buddyAsm->getLocalTime(ANIM_LAYER_UNKNOWN_0), ANIM_LAYER_UNKNOWN_0);
         unknown18.clear();
       }
       break;
     case unknown001_1:
       if (StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_RIDEUP_00)) {
-        comAsm->setLocalTime(buddyAsm->getLocalTime(ANIM_LAYER_BASE), ANIM_LAYER_BASE);
+        comAsm->setLocalTime(buddyAsm->getLocalTime(ANIM_LAYER_UNKNOWN_0), ANIM_LAYER_UNKNOWN_0);
         unknown18.clear();
       }
       break;
     case unknown001_2:
       if (StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_RIDEUP_01)) {
-        comAsm->setLocalTime(buddyAsm->getLocalTime(ANIM_LAYER_BASE), ANIM_LAYER_BASE);
+        comAsm->setLocalTime(buddyAsm->getLocalTime(ANIM_LAYER_UNKNOWN_0), ANIM_LAYER_UNKNOWN_0);
         unknown18.clear();
       }
       break;
     case unknown001_3:
       if (StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_RIDEDOWN_00)) {
-        comAsm->setLocalTime(buddyAsm->getLocalTime(ANIM_LAYER_BASE), ANIM_LAYER_BASE);
+        comAsm->setLocalTime(buddyAsm->getLocalTime(ANIM_LAYER_UNKNOWN_0), ANIM_LAYER_UNKNOWN_0);
         unknown18.clear();
       }
       break;
     case unknown001_4:
       if (StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_RIDEDOWN_01)) {
-        comAsm->setLocalTime(buddyAsm->getLocalTime(ANIM_LAYER_BASE), ANIM_LAYER_BASE);
+        comAsm->setLocalTime(buddyAsm->getLocalTime(ANIM_LAYER_UNKNOWN_0), ANIM_LAYER_UNKNOWN_0);
         unknown18.clear();
       }
       break;
     case unknown001_5:
       if (StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_RIDEJUMP_00)) {
-        comAsm->setLocalTime(buddyAsm->getLocalTime(ANIM_LAYER_BASE), ANIM_LAYER_BASE);
+        comAsm->setLocalTime(buddyAsm->getLocalTime(ANIM_LAYER_UNKNOWN_0), ANIM_LAYER_UNKNOWN_0);
         unknown18.clear();
       }
       break;
     case unknown001_6:
       if (StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_RIDEJUMP_02)) {
-        comAsm->setLocalTime(buddyAsm->getLocalTime(ANIM_LAYER_BASE), ANIM_LAYER_BASE);
+        comAsm->setLocalTime(buddyAsm->getLocalTime(ANIM_LAYER_UNKNOWN_0), ANIM_LAYER_UNKNOWN_0);
         unknown18.clear();
       }
       break;
     case unknown001_7:
       if (StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_RIDEJUMPDMG)) {
-        comAsm->setLocalTime(buddyAsm->getLocalTime(ANIM_LAYER_BASE), ANIM_LAYER_BASE);
+        comAsm->setLocalTime(buddyAsm->getLocalTime(ANIM_LAYER_UNKNOWN_0), ANIM_LAYER_UNKNOWN_0);
         unknown18.clear();
       }
       break;
     case unknown001_8:
       if (StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_RIDEHIGHJUMP_00)) {
-        comAsm->setLocalTime(buddyAsm->getLocalTime(ANIM_LAYER_BASE), ANIM_LAYER_BASE);
-        comAsm->setSpeed(buddyAsm->getSpeed(ANIM_LAYER_BASE), ANIM_LAYER_BASE);
+        comAsm->setLocalTime(buddyAsm->getLocalTime(ANIM_LAYER_UNKNOWN_0), ANIM_LAYER_UNKNOWN_0);
+        comAsm->setSpeed(buddyAsm->getSpeed(ANIM_LAYER_UNKNOWN_0), ANIM_LAYER_UNKNOWN_0);
         unknown18.clear();
       }
       break;
     case unknown001_9:
       if (StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_RIDEHIGHJUMP_01)) {
-        comAsm->setLocalTime(buddyAsm->getLocalTime(ANIM_LAYER_BASE), ANIM_LAYER_BASE);
-        comAsm->setSpeed(buddyAsm->getSpeed(ANIM_LAYER_BASE), ANIM_LAYER_BASE);
+        comAsm->setLocalTime(buddyAsm->getLocalTime(ANIM_LAYER_UNKNOWN_0), ANIM_LAYER_UNKNOWN_0);
+        comAsm->setSpeed(buddyAsm->getSpeed(ANIM_LAYER_UNKNOWN_0), ANIM_LAYER_UNKNOWN_0);
         unknown18.clear();
       }
       break;
     case unknown001_10:
       if (StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_RIDEFALL)) {
-        comAsm->setLocalTime(buddyAsm->getLocalTime(ANIM_LAYER_BASE), ANIM_LAYER_BASE);
+        comAsm->setLocalTime(buddyAsm->getLocalTime(ANIM_LAYER_UNKNOWN_0), ANIM_LAYER_UNKNOWN_0);
         unknown18.clear();
       }
       break;
     case unknown001_11:
       if (StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_RIDEWATERHOLE_00)) {
-        comAsm->setLocalTime(buddyAsm->getLocalTime(ANIM_LAYER_BASE), ANIM_LAYER_BASE);
+        comAsm->setLocalTime(buddyAsm->getLocalTime(ANIM_LAYER_UNKNOWN_0), ANIM_LAYER_UNKNOWN_0);
         unknown18.clear();
       }
       break;
     case unknown001_12:
-      if (comAsm->setState("S_ridewaterhole_01", ANIM_LAYER_BASE)) {
-        comAsm->setLocalTime(buddyAsm->getLocalTime(ANIM_LAYER_BASE), ANIM_LAYER_BASE);
+      if (comAsm->setState("S_ridewaterhole_01", ANIM_LAYER_UNKNOWN_0)) {
+        comAsm->setLocalTime(buddyAsm->getLocalTime(ANIM_LAYER_UNKNOWN_0), ANIM_LAYER_UNKNOWN_0);
         unknown18.clear();
       }
       break;
@@ -150,7 +150,7 @@ void StateFieldRideOn::syncMotion(GfComBehaviorPc *behavior) {
 }
 
 StateFieldRideOn::unknown001 StateFieldRideOn::getVehicleMotType(GfComAsm &comAsm) const {
-  const char *stateName = comAsm.getStateName(ANIM_LAYER_BASE);
+  const char *stateName = comAsm.getStateName(ANIM_LAYER_UNKNOWN_0);
   if (stateName == nullptr) {
     return unknown001_13;
   }
@@ -197,7 +197,7 @@ StateFieldRideOn::unknown001 StateFieldRideOn::getVehicleMotType(GfComAsm &comAs
 }
 
 StateFieldRideOn::unknown001 StateFieldRideOn::getRiderMotType(GfComAsm &comAsm) const {
-  const char *stateName = comAsm.getStateName(ANIM_LAYER_BASE);
+  const char *stateName = comAsm.getStateName(ANIM_LAYER_UNKNOWN_0);
   if (stateName == nullptr) {
     return unknown001_13;
   }
@@ -243,7 +243,7 @@ StateFieldRideOn::unknown001 StateFieldRideOn::getRiderMotType(GfComAsm &comAsm)
   return unknown001_13;
 }
 bool StateFieldRideOn::recieveMessage(void *owner, fw::MessageObject *sender, fw::Message &message) {
-  if (message.unknown00 == MSG_PC_FIELD_NOTIFY_RIDER_EVENT) {
+  if (message.unknown00 == MSG_PC_FIELD_UNKNOWN_16777252) {
     procMsgPcFieldNotifyRiderEvent(static_cast<GfComBehaviorPc *>(owner), sender, static_cast<MsgPcFieldNotifyRiderEvent &>(message));
     return true;
   }
@@ -254,7 +254,7 @@ bool StateFieldRideOn::recieveMessage(void *owner, fw::MessageObject *sender, fw
 void StateFieldRideOn::procMsgPcFieldNotifyRiderEvent(GfComBehaviorPc *behavior, fw::MessageObject *sender, MsgPcFieldNotifyRiderEvent &message) {
   if (message.unknown08 == VEHICLE_EVENT_UNKNOWN_2) {
     unknown18.clear();
-    behavior->unknown08->getComponent<GfComAsm>()->setState("S_ride", ANIM_LAYER_BASE);
+    behavior->unknown08->getComponent<GfComAsm>()->setState("S_ride", ANIM_LAYER_UNKNOWN_0);
     return;
   }
 

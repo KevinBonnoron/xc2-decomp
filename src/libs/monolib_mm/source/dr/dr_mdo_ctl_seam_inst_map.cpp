@@ -4,12 +4,23 @@
 #include "dr/dr_mdo_ctl_seam.h"
 #include "dr/dr_pixl_shadow_cache_obj.h"
 #include "dr/dr_res_mdo_seam_mem_man.h"
+#include "dr/dr_res_mdo_seam_res.h"
 #include "dr/dr_res_mdo_seam_wrk_inst.h"
 
 namespace ml {
-class DrResMdoSeamMemObj;
 
 DrMdoCtlSeamInstMap::DrMdoCtlSeamInstMap(int viewNum) : DrMdoCtlSeamLowMap(viewNum) {}
+
+void DrMdoCtlSeamInstMap::changeMemInstMapParts(DrResMdoSeamWrkInst *inst) {
+  MdoWrkMatRes *matRes = inst->unknown50;
+  const u8 *data = inst->unknown108->m_buffer;
+  const MdsSeamInstMapHead *head = reinterpret_cast<const MdsSeamInstMapHead *>(data);
+  unknown30 = matRes;
+  resetInstMapMaterial(matRes, data + head->unknown10, data + head->unknown0c, data + head->unknown44, nullptr, head->unknown24);
+  if (head->unknown14 != 0) {
+    changeMemFixAnim(matRes, data + head->unknown14);
+  }
+}
 
 void DrMdoCtlSeamInstMap::releaseInstMap() {
   DrResMdoSeamWrkInst *inst = unknown300.unknown10.unknown00;
@@ -38,8 +49,6 @@ void DrMdoCtlSeamInstMap::releaseFreeSeamInst(DrResMdoSeamWrkInst *inst) {
     unknown6e0.releaseFreeObj(mem);
   }
 }
-
-struct MdoWrkMatRes;
 
 void DrMdoCtlSeamInstMap::callRenderSeamInstMap() { renderSeamInstMap(0); }
 

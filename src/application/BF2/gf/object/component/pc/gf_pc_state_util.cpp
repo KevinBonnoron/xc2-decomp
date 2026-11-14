@@ -4,6 +4,7 @@
 #include "framework/object/updatable_object.h"
 #include "framework/pad/pad_relay_util.h"
 #include "fw/fw_pad.h"
+#include "gf/field/gf_field_dmg.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_party.h"
 #include "gf/game/gf_game_player_camera.h"
@@ -25,6 +26,8 @@
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
 #include "ml/dev_pad.h"
+#include "mm_math/mm_math.h"
+#include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/rtti.h"
 #include "mm_mtl/unique_ptr.h"
 #include "mm_mtl/vector.h"
@@ -167,6 +170,26 @@ EnviromentSensor::GroundInfo *StateUtil::getGroundInfo(GfComBehaviorPc &behavior
   return sensor->unknown24_0 ? &sensor->unknown30 : nullptr;
 }
 
+void StateUtil::applyDamage(GfComBehaviorPc &behavior, u32 rate, bool isTerrain) {
+  GfComPropertyPc *property = behavior.unknown08->getComponent<GfComPropertyPc>();
+  GfStatusProperty *status = property->unknown10.get();
+  if (status->unknown10 != 0 && !status->unknown1b) {
+    OwnerBonus *bonus = GfGameManager::getOwnerBonus();
+    u32 maxHp = status->unknown0c;
+    f32 reduction = static_cast<f32>(bonus->unknown00[OWNER_BONUS_UNKNOWN_2]) * 0.01f;
+    mm::clampRef(reduction, 0.0f, 0.8f);
+    u32 damage = GfFieldDmg::calculateDamage(maxHp, rate, reduction);
+    if (!property->unknown111_2 && damage >= status->unknown10 - 1) {
+      damage = status->unknown10 - 1;
+    }
+    if (damage != 0) {
+      MsgObjectDamage message(damage, isTerrain ? 2 : 3);
+      GfObj *obj = static_cast<GfObj *>(behavior.unknown08);
+      obj->sendMessage(obj, message);
+    }
+  }
+}
+
 EnviromentSensor::unknown003 *StateUtil::getClimbWallInfo(GfComBehaviorPc &behavior) {
   EnviromentSensor *sensor = behavior.unknown08->getComponent<GfComPropertyPc>()->getEnvSensor();
   EnviromentSensor::unknown003 *info = &sensor->unknown150.unknown60;
@@ -215,7 +238,7 @@ GF_OBJ_HANDLE *StateUtil::getBuddyHandle(GfComBehaviorPc &behavior) {
   u32 playerId = behavior.getProperty()->unknown38;
   GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
   if (formation == nullptr) {
-    return INVALID_HANDLE;
+    return unknown020;
   }
 
   u32 buddyId = (playerId & 1) != 0 ? playerId - 1 : playerId + 1;
@@ -290,7 +313,7 @@ void StateUtil::broadcastPlayer(GfComBehaviorPc &behavior, fw::Message &message)
 void StateUtil::broadcastMainChar(GfComBehaviorPc &behavior, fw::Message &message) {
   GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
   behavior.unknown08->getComponent<GfComPropertyPc>();
-  for (u32 i = 0; i < GfGamePlayerFormation::PLAYER_NUM; i++) {
+  for (u32 i = 0; i < GfGamePlayerFormation::PLAYER_UNKNOWN_6; i++) {
     if (formation->unknown1a0[i].unknown10 && formation->unknown1a0[i].unknown08 != static_cast<GfObj *>(behavior.unknown08)->unknownf8) {
       GfObj *obj = GfObjUtil::getObj(formation->unknown1a0[i].unknown08);
       if (obj != nullptr) {

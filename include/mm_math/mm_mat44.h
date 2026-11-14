@@ -11,7 +11,7 @@
 namespace mm {
 
 struct alignas(16) Mat44 {
-  static const Mat44 identity;
+  static const Mat44 identity; // Name from the game symbol _ZN2mm5Mat448identityE; also in torna and xc1de.
 
   Mat44() {}
 
@@ -101,6 +101,33 @@ struct alignas(16) Mat44 {
     rows[2][0] = 0.0f;
     rows[2][1] = 0.0f;
     rows[2][2] = scaleZ;
+    rows[2][3] = 0.0f;
+    rows[3][0] = 0.0f;
+    rows[3][1] = 0.0f;
+    rows[3][2] = 0.0f;
+    rows[3][3] = 1.0f;
+  }
+
+  // Inferred helper: rotation matrix of Euler angles, the 3x3 part written before the cleared last column and
+  // row; original name unknown. Evidence: event::EffectCtrl::update and gmk::GmkDmgEffect::applyEffectParam.
+  void unknown011(Vec3 rotation) {
+    f32 sinX = sinf(rotation.x);
+    f32 cosX = cosf(rotation.x);
+    f32 sinY = sinf(rotation.y);
+    f32 cosY = cosf(rotation.y);
+    f32 sinZ = sinf(rotation.z);
+    f32 cosZ = cosf(rotation.z);
+    rows[0][0] = cosY * cosZ;
+    rows[0][1] = cosY * sinZ;
+    rows[0][2] = -sinY;
+    rows[1][0] = sinX * sinY * cosZ - cosX * sinZ;
+    rows[1][1] = sinX * sinY * sinZ + cosX * cosZ;
+    rows[1][2] = sinX * cosY;
+    rows[2][0] = cosX * sinY * cosZ + sinX * sinZ;
+    rows[2][1] = cosX * sinY * sinZ - sinX * cosZ;
+    rows[2][2] = cosX * cosY;
+    rows[0][3] = 0.0f;
+    rows[1][3] = 0.0f;
     rows[2][3] = 0.0f;
     rows[3][0] = 0.0f;
     rows[3][1] = 0.0f;

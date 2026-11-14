@@ -48,7 +48,7 @@ public:
   f32 getRadiusTarget() const;
   int getScoutStartHp() const;
 
-  gf::GF_OBJ_HANDLE *m_handle; // Named by getHandle and setHandle; INVALID_HANDLE when unused.
+  gf::GF_OBJ_HANDLE *m_handle; // Named by getHandle and setHandle; unknown020 when unused.
   int m_id;                    // Named by getId and setId.
   bool m_sleep;                // Named by isSleep and setSleep.
   f32 m_frameCount;            // Named by setFrameCount and isFrameCountEnd.

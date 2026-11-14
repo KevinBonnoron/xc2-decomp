@@ -12,7 +12,7 @@ namespace gf {
 
 struct GF_SLOT_HANDLE;
 
-static GF_SLOT_HANDLE *const INVALID_SLOT_HANDLE = reinterpret_cast<GF_SLOT_HANDLE *>(-1);
+static GF_SLOT_HANDLE *const unknown006 = reinterpret_cast<GF_SLOT_HANDLE *>(-1); // Inferred role: invalid slot handle; original name unknown.
 
 class GfSlotBase : public mm::mtl::IAllocator {
 public:
@@ -56,10 +56,11 @@ static_assert(sizeof(GfSlotBase) == 0x320, "");
 
 class GfSlotAll {
 public:
-  static const u32 SLOT_MAX = 1304;
-  static const u32 SLOT_TYPE_COUNT = ASSET_TYPE_SE - ASSET_TYPE_MAP + 1;
+  static const u32 SLOT_UNKNOWN_1304 = 1304; // Inferred role: slot max; original name unknown.
+  // Inferred role: number of asset types that own a slot, ASSET_TYPE_UNKNOWN_3 to ASSET_TYPE_UNKNOWN_19; original name unknown.
+  static const u32 SLOT_TYPE_UNKNOWN_17 = ASSET_TYPE_UNKNOWN_19 - ASSET_TYPE_UNKNOWN_3 + 1;
 
-  typedef mm::mtl::FixedVector<GfSlotBase *, SLOT_MAX> SlotList;
+  typedef mm::mtl::FixedVector<GfSlotBase *, SLOT_UNKNOWN_1304> SlotList;
 
   GfSlotAll() : unknown00(0) {}
   GfSlotBase *getSlot(GF_SLOT_HANDLE *handle) const;
@@ -91,8 +92,8 @@ public:
   void *allocateSize(GfAssetType type, size_t size, size_t alignment);
   void deallocateSize(void *pointer);
 
-  u64 unknown00;                                            // Inferred role: handle serial; original member name unknown.
-  mm::mtl::FixedArray<SlotList, SLOT_TYPE_COUNT> unknown08; // Inferred role: slots; original member name unknown.
+  u64 unknown00;                                                 // Inferred role: handle serial; original member name unknown.
+  mm::mtl::FixedArray<SlotList, SLOT_TYPE_UNKNOWN_17> unknown08; // Inferred role: slots; original member name unknown.
 };
 
 static_assert(offsetof(GfSlotAll, unknown08) == 0x08, "");

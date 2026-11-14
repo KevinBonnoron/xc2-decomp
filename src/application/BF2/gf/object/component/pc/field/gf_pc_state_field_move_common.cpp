@@ -19,7 +19,7 @@ void StateFieldMoveCommon::update(GfComBehaviorPc *behavior, const fw::UpdateInf
   unknown18 = property->existInputXY() ? 0 : unknown18 + 1;
   behavior->unknown08->getComponent<GfComAsm>();
   if (StateUtilField::isStop(*property, unknown18)) {
-    reqState(STATE_ID_FIELD_STOP_BRAKE);
+    reqState(STATE_ID_UNKNOWN_5);
   }
 }
 

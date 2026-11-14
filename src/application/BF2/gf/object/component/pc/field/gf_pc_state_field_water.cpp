@@ -31,10 +31,10 @@ void StateFieldWater::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &in
     GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
     if (!property->existInputXY()) {
       if (StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_IDLE)) {
-        reqState(STATE_ID_FIELD_IDLE);
+        reqState(STATE_ID_UNKNOWN_3);
       }
     } else if (StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_MOVE)) {
-      reqState(STATE_ID_FIELD_MOVE);
+      reqState(STATE_ID_UNKNOWN_7);
     }
   }
 }

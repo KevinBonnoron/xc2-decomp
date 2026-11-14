@@ -156,7 +156,7 @@ void IDColiGrandMesh::stockTbl(IDColiCallArg &arg, const IDCmfPoliData *poli, f3
     unknown08->unknowne0++;
   }
   if (unknown08->unknown100 != nullptr) {
-    unknown08->unknown100->unknown01(unknown08->unknownf0, &arg);
+    unknown08->unknown100->coli_param_callback(unknown08->unknownf0, arg);
   }
 }
 
@@ -166,7 +166,7 @@ void IDColiGrandMesh::stockInstTbl(IDColiCallArg &arg, const IDCmfPoliData *poli
     unknown08->unknown10.unknown30 = arg.unknown30;
     unknown092(unknown08->unknown10.unknown10);
     (this->*unknown70)(unknown08->unknown10, poli);
-    unknown08->unknown100->unknown01(unknown08->unknownf0, &unknown08->unknown10);
+    unknown08->unknown100->coli_param_callback(unknown08->unknownf0, unknown08->unknown10);
     if (unknown08->unknowne4 > unknown08->unknowne0) {
       if (unknown08->unknownb8 != nullptr) {
         unknown08->unknownb8[unknown08->unknowne0] = unknown08->unknown10.unknown00;
@@ -211,7 +211,7 @@ void IDColiGrandMesh::stockInstTbl(IDColiCallArg &arg, const IDCmfPoliData *poli
 
 void IDColiGrandMesh::vecotrDef(IDColiCallArg &arg, const IDCmfPoliData *poli) {
   const f32 *vector = &mm::Vec3::zero.x;
-  if (arg.unknown30[2] & 0x80) {
+  if (arg.unknown30->unknown08 & 0x80) {
     const u16 *index = reinterpret_cast<const u16 *>(unknown00->unknown00 + poli->unknown00) + poli->unknown04 * 2 + 2;
     vector = &unknown00->unknown28[poli->unknown05][*index].unknown00;
     arg.unknown20.x = vector[0];
@@ -226,7 +226,7 @@ void IDColiGrandMesh::vecotrDef(IDColiCallArg &arg, const IDCmfPoliData *poli) {
 void IDColiGrandMesh::vecotrNon(IDColiCallArg &arg, const IDCmfPoliData *poli) {}
 
 void IDColiGrandMesh::vecotrInst(IDColiCallArg &arg, const IDCmfPoliData *poli) {
-  if (!(arg.unknown30[2] & 0x80)) {
+  if (!(arg.unknown30->unknown08 & 0x80)) {
     arg.unknown20 = mm::Vec3::zero;
     return;
   }

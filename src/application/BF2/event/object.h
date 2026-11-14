@@ -10,12 +10,12 @@ struct Col4;
 namespace event {
 
 enum OBJTYPE {
-  OBJTYPE_NONE = 0,
-  OBJTYPE_TREE = 1,
-  OBJTYPE_CHARA = 2,
-  OBJTYPE_CAMERA = 3,
-  OBJTYPE_EFFECT = 4,
-  OBJTYPE_LIGHT = 5,
+  OBJTYPE_UNKNOWN_0 = 0, // Inferred role: none; original name unknown.
+  OBJTYPE_UNKNOWN_1 = 1, // Inferred role: tree; original name unknown.
+  OBJTYPE_UNKNOWN_2 = 2, // Inferred role: chara; original name unknown.
+  OBJTYPE_UNKNOWN_3 = 3, // Inferred role: camera; original name unknown.
+  OBJTYPE_UNKNOWN_4 = 4, // Inferred role: effect; original name unknown.
+  OBJTYPE_UNKNOWN_5 = 5, // Inferred role: light; original name unknown.
 };
 
 class Object : public IBouCallback, public IManiCallback {

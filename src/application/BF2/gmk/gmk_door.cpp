@@ -1,8 +1,13 @@
 #include "gmk/gmk_door.h"
 
 #include "bdat.h"
+#include "framework/coli/coli_object.h"
+#include "framework/debug/debug_draw.h"
 #include "framework/sound/sound_manager.h"
+#include "fw/fw_coli_check.h"
 #include "gf/data/gf_bdat_wrapper.h"
+#include "gf/data/gf_data_enemy.h"
+#include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/data/gf_object_type.h"
 #include "gf/field/gf_field_lod.h"
@@ -11,6 +16,7 @@
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/quest/gf_quest_util.h"
 #include "gf/gf_allocator.h"
+#include "gf/object/component/gf_com_collider.h"
 #include "gf/object/component/gf_com_transform.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
@@ -23,6 +29,8 @@
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 #include "gmk/gmk_phantom.h"
+#include "mm_math/mm_col3.h"
+#include "mm_math/mm_col4.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixstr.h"
@@ -130,40 +138,40 @@ bool GmkDoor::BdatInfo::isPopCondMatched() const {
 }
 
 void GmkDoor::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
-  unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_U16);
+  unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_UNKNOWN_2);
   unknown3a = BootedGmkCond(bdat, id, nullptr);
   unknown3e = BootedGmkCond(bdat, id, "OP_");
-  unknown02 = bdat.getValCheck("response_type", id, BDAT_TYPE_U8);
-  unknown03 = bdat.getValCheck("response_CHR", id, BDAT_TYPE_U8);
-  unknown04 = bdat.getValCheck("nameRadius", id, BDAT_TYPE_U16);
-  unknown06 = bdat.getValCheck("LODmodel", id, BDAT_TYPE_U16);
-  unknown08 = bdat.getValCheck("missMSG_ID", id, BDAT_TYPE_U16);
+  unknown02 = bdat.getValCheck("response_type", id, BDAT_TYPE_UNKNOWN_1);
+  unknown03 = bdat.getValCheck("response_CHR", id, BDAT_TYPE_UNKNOWN_1);
+  unknown04 = bdat.getValCheck("nameRadius", id, BDAT_TYPE_UNKNOWN_2);
+  unknown06 = bdat.getValCheck("LODmodel", id, BDAT_TYPE_UNKNOWN_2);
+  unknown08 = bdat.getValCheck("missMSG_ID", id, BDAT_TYPE_UNKNOWN_2);
   unknown0a = Bdat::getFlagVal(bdat.unknown00, "flag", id, "open_LODanime") != 0;
   unknown0b = Bdat::getFlagVal(bdat.unknown00, "flag", id, "open_SE_type") != 0;
-  unknown0c = bdat.getValCheck("open_SE", id, BDAT_TYPE_U16);
-  unknown0e = bdat.getValCheck("open_SE_size", id, BDAT_TYPE_U8);
-  unknown10 = reinterpret_cast<const char *>(bdat.getValCheck("open_camGim_ID", id, BDAT_TYPE_STRING));
-  unknown18 = bdat.getValCheck("open_camGim_ATR", id, BDAT_TYPE_U8);
+  unknown0c = bdat.getValCheck("open_SE", id, BDAT_TYPE_UNKNOWN_2);
+  unknown0e = bdat.getValCheck("open_SE_size", id, BDAT_TYPE_UNKNOWN_1);
+  unknown10 = reinterpret_cast<const char *>(bdat.getValCheck("open_camGim_ID", id, BDAT_TYPE_UNKNOWN_7));
+  unknown18 = bdat.getValCheck("open_camGim_ATR", id, BDAT_TYPE_UNKNOWN_1);
   unknown19 = Bdat::getFlagVal(bdat.unknown00, "flag", id, "close_LODanime") != 0;
   unknown1a = Bdat::getFlagVal(bdat.unknown00, "flag", id, "close_SE_type") != 0;
-  unknown1c = bdat.getValCheck("close_SE", id, BDAT_TYPE_U16);
-  unknown1e = bdat.getValCheck("close_SE_size", id, BDAT_TYPE_U8);
-  unknown20 = reinterpret_cast<const char *>(bdat.getValCheck("close_camGim_ID", id, BDAT_TYPE_STRING));
-  unknown28 = bdat.getValCheck("close_camGim_ATR", id, BDAT_TYPE_U8);
-  unknown2c = toBdatF32(bdat.getValCheck("door_nextwait", id, BDAT_TYPE_F32));
-  unknown30 = reinterpret_cast<const char *>(bdat.getValCheck("sp_close_camGim_ID", id, BDAT_TYPE_STRING));
-  unknown38 = bdat.getValCheck("sp_close_camGim_ATR", id, BDAT_TYPE_U8);
+  unknown1c = bdat.getValCheck("close_SE", id, BDAT_TYPE_UNKNOWN_2);
+  unknown1e = bdat.getValCheck("close_SE_size", id, BDAT_TYPE_UNKNOWN_1);
+  unknown20 = reinterpret_cast<const char *>(bdat.getValCheck("close_camGim_ID", id, BDAT_TYPE_UNKNOWN_7));
+  unknown28 = bdat.getValCheck("close_camGim_ATR", id, BDAT_TYPE_UNKNOWN_1);
+  unknown2c = toBdatF32(bdat.getValCheck("door_nextwait", id, BDAT_TYPE_UNKNOWN_8));
+  unknown30 = reinterpret_cast<const char *>(bdat.getValCheck("sp_close_camGim_ID", id, BDAT_TYPE_UNKNOWN_7));
+  unknown38 = bdat.getValCheck("sp_close_camGim_ATR", id, BDAT_TYPE_UNKNOWN_1);
   unknown42 = BootedGmkCond(bdat, id, "SPOP_");
   unknown39 = Bdat::getFlagVal(bdat.unknown00, "flag", id, "gmkCamPos") != 0;
 }
 
 u32 GmkDoorPhantomTargetInfo::getTargetType() const {
-  if (unknown00 == gf::INVALID_HANDLE) {
+  if (unknown00 == gf::unknown020) {
     return 0;
   }
   gf::GfObjAcc acc(unknown00);
   switch (acc.getType()) {
-  case gf::OBJECT_TYPE_DRIVER:
+  case gf::OBJECT_TYPE_PC:
   case gf::OBJECT_TYPE_BLADE:
     return 1;
   case gf::OBJECT_TYPE_ENEMY:
@@ -173,7 +181,7 @@ u32 GmkDoorPhantomTargetInfo::getTargetType() const {
   }
 }
 
-GmkDoor::GmkDoor() : unknown60(nullptr), unknown2b0(false), unknown2b1(false), unknown2b8(gf::INVALID_HANDLE), unknown2c0(0.0f), unknown2c8(nullptr) {}
+GmkDoor::GmkDoor() : unknown60(nullptr), unknown2b0(false), unknown2b1(false), unknown2b8(gf::unknown020), unknown2c0(0.0f), unknown2c8(nullptr) {}
 
 void GmkDoor::setProgress(Progress progress) {
   gf::GfGameFlag::setLocal(2, getGameFlagId(), progress);
@@ -275,7 +283,7 @@ void GmkDoor::update(f32 deltaTime) {
   const BdatInfo *info = getBdatInfo();
   unknown2b0 = false;
   if (info->isPopCondMatched()) {
-    if (unknown2b8 == gf::INVALID_HANDLE && info->isGfObjMustExist()) {
+    if (unknown2b8 == gf::unknown020 && info->isGfObjMustExist()) {
       createGfObjHandle();
     }
     if (unknown1c0.unknown78 == nullptr && unknown250.unknown50 == nullptr && info->isPhantomMustExist()) {
@@ -316,9 +324,9 @@ void GmkDoor::createGmkPhantom() {
     return;
   }
   switch (unknown08.unknown10->unknown0c) {
-  case SHAPE_TYPE_SPHERE:
-  case SHAPE_TYPE_BOX:
-  case SHAPE_TYPE_CAPSULE:
+  case SHAPE_TYPE_UNKNOWN_2:
+  case SHAPE_TYPE_UNKNOWN_3:
+  case SHAPE_TYPE_UNKNOWN_4:
     if ((getBdatInfo()->unknown03 & 2) == 0) {
       unknown1c0.create(*this, this, true);
     } else {
@@ -339,13 +347,13 @@ void GmkDoor::disposeGmkPhantom() {
 }
 
 void GmkDoor::disposeGfObjHandle() {
-  if (unknown2b8 != gf::INVALID_HANDLE) {
+  if (unknown2b8 != gf::unknown020) {
     gf::GfObjAcc acc(unknown2b8);
     if (acc.isValid()) {
-      acc.setUserData(gf::OBJ_USER_DATA_GMK, 0);
+      acc.setUserData(gf::OBJ_USER_DATA_UNKNOWN_0, 0);
     }
     gf::GfObjUtil::destroy(unknown2b8);
-    unknown2b8 = gf::INVALID_HANDLE;
+    unknown2b8 = gf::unknown020;
   }
 }
 
@@ -397,8 +405,8 @@ bool GmkDoor::isGmkFinished() const {
 
 void GmkDoor::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) {
   AGmkBase::onGobEvent(event, handle);
-  if (event == gf::IGfObjListener::OBJEVT_DESTROY) {
-    unknown2b8 = gf::INVALID_HANDLE;
+  if (event == gf::IGfObjListener::OBJEVT_UNKNOWN_3) {
+    unknown2b8 = gf::unknown020;
   }
 }
 
@@ -436,6 +444,18 @@ bool GmkDoor::isDoorOpened() const {
   return !lod->isAnimReverse(info->unknown06);
 }
 
+void GmkDoor::debugDraw() const {
+  if (isValid()) {
+    if (getBdatInfo()->unknown02 == 5) {
+      const Xform *xform = unknown08.unknown08;
+      mm::Vec3 end = unknown095(mm::Vec3::unitZ, xform->unknown10) + xform->unknown00;
+      mm::Col4 color(mm::Col3::yellow.r, mm::Col3::yellow.g, mm::Col3::yellow.b, 1.0f);
+      fw::debug::drawArrow(xform->unknown00, end, color);
+    }
+    isDoorOpened();
+  }
+}
+
 void GmkDoor::createSe(bool isMapPack, u16 seId, u8 distance) {
   unknown2e0.dispose();
   GmkCtrlVolSe::CreateInfo info;
@@ -470,7 +490,7 @@ void GmkDoor::openDoor(bool isImmediate) {
   }
   const BdatInfo *info = getBdatInfo();
   gf::GfFieldLod::get()->setAnimReverse(info->unknown06, false, isImmediate);
-  if (unknown2b8 != gf::INVALID_HANDLE) {
+  if (unknown2b8 != gf::unknown020) {
     unknown002(unknown2b8, false);
   }
   if (info->unknown0c != 0) {
@@ -496,7 +516,7 @@ void GmkDoor::closeDoor(bool isImmediate) {
   }
   const BdatInfo *info = getBdatInfo();
   gf::GfFieldLod::get()->setAnimReverse(info->unknown06, true, isImmediate);
-  if (unknown2b8 != gf::INVALID_HANDLE) {
+  if (unknown2b8 != gf::unknown020) {
     unknown002(unknown2b8, true);
   }
   if (info->unknown1c != 0) {
@@ -610,7 +630,7 @@ void GmkDoor::seqDoor_SpBooted(f32 deltaTime) {
 void GmkDoor::onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) {
   const BdatInfo *info = getBdatInfo();
   if (info->unknown02 == 5) {
-    if (gf::GfGameManager::getControlMover() == gf::INVALID_HANDLE) {
+    if (gf::GfGameManager::getControlMover() == gf::unknown020) {
       return;
     }
     const mm::Vec3 &position = gf::GfObjUtil::getObj(gf::GfGameManager::getControlMover())->getComponent<gf::GfComTransform>()->getPosition();
@@ -632,7 +652,7 @@ void GmkDoor::onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) {
 }
 
 GmkDoorPhantomManager::GmkDoorPhantomManager() {
-  gf::GfObjManager::addListener(this, OBJEVT_ALL);
+  gf::GfObjManager::addListener(this, OBJEVT_UNKNOWN_0);
   create();
 }
 
@@ -643,7 +663,7 @@ GmkDoorPhantomManager::~GmkDoorPhantomManager() {
 
 void GmkDoorPhantomManager::create() {
   dispose();
-  unknown08.setAllocator(gf::getAllocator(gf::ALLOCATOR_DEFAULT));
+  unknown08.setAllocator(gf::getAllocator(gf::ALLOCATOR_UNKNOWN_0));
   int capacity = gf::GfObjManager::getGfObjCapacity(5);
   unknown08.reserve(capacity > 0 ? static_cast<u32>(capacity + 3) : 3);
 }
@@ -659,7 +679,7 @@ void GmkDoorPhantomManager::addTargetInfo(gf::GF_OBJ_HANDLE *handle) {
 }
 
 void GmkDoorPhantomManager::removeTargetInfo(gf::GF_OBJ_HANDLE *handle) {
-  if (handle == gf::INVALID_HANDLE) {
+  if (handle == gf::unknown020) {
     return;
   }
   for (GmkDoorPhantomTargetInfo *it = unknown08.begin(); it != unknown08.end(); it++) {
@@ -670,9 +690,85 @@ void GmkDoorPhantomManager::removeTargetInfo(gf::GF_OBJ_HANDLE *handle) {
   }
 }
 
+void GmkDoorPhantomManager::listenerGfObj(OBJEVT event, gf::GF_OBJ_HANDLE *handle, u32 objectType) {
+  gf::GfObjAcc acc(handle);
+  if (objectType != gf::OBJECT_TYPE_PC && objectType != gf::OBJECT_TYPE_BLADE) {
+    if (objectType != gf::OBJECT_TYPE_ENEMY) {
+      return;
+    }
+    gf::DataParamAcc dataParam(handle);
+    const gf::SDataEnemy *data = dataParam.getSDataEnemy();
+    if (data == nullptr) {
+      return;
+    }
+    if ((data->unknown04 & gf::ENEMY_FLAG_UNKNOWN_10) == 0) {
+      return;
+    }
+  }
+  if (event == OBJEVT_UNKNOWN_2) {
+    addTargetInfo(handle);
+  } else if (event == OBJEVT_UNKNOWN_3) {
+    removeTargetInfo(handle);
+  }
+}
+
+void GmkDoorPhantomManager::update(f32 deltaTime) {
+  if (unknown08.capacity() == 0) {
+    return;
+  }
+  fw::ColiCheckConfig config;
+  config.unknown14 = true;
+  config.unknown08 = 0.0f;
+  config.unknown0c = 0.0f;
+  config.unknown15 = false;
+  config.unknown00 = fw::ColiCheckConfig::FLAG_UNKNOWN_2;
+  config.unknown04 = 0x100000;
+  config.unknown10 = 0;
+  fw::TColiCheckResult<256> result;
+  for (GmkDoorPhantomTargetInfo &info : unknown08) {
+    gf::GfObjAcc acc(info.unknown00);
+    gf::GfObj *obj = acc.getObj();
+    if (obj == nullptr) {
+      continue;
+    }
+    const gf::GfComCollider *collider = obj->getComponent<gf::GfComCollider>();
+    if (collider == nullptr) {
+      continue;
+    }
+    fw::ColiObject *coli = collider->unknown18[0];
+    if (coli == nullptr) {
+      continue;
+    }
+    result.clear();
+    if (!fw::ColiCheck::testObjectPhantom(result, coli, config)) {
+      continue;
+    }
+    u32 hitNum = result.getCount();
+    for (u32 i = 0; i < hitNum; i++) {
+      fw::ColiUserData *userData = result.unknown002(i);
+      GmkDoor *door = nullptr;
+      if (userData != nullptr) {
+        door = mm::mtl::dynamicCast<GmkDoor>(userData);
+      }
+      if (door != nullptr) {
+        if (door->isValid()) {
+          door->unknown2b0 = true;
+          if (&GmkDoor::seqDoor_BeforeBoot != door->unknown2c8 && &GmkDoor::seqDoor_Booted != door->unknown2c8 && &GmkDoor::seqDoor_Shutdowned != door->unknown2c8) {
+            break;
+          }
+          door->pollBootGmk();
+        }
+        break;
+      }
+    }
+  }
+}
+
 } // namespace gmk
 
 template void mm::mtl::Vector<gmk::GmkDoor::BdatInfo>::expand(size_t, size_t);
 
 template void mm::mtl::Vector<gmk::GmkDoor::BdatInfo>::extend(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkDoor::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkDoor>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkDoor>::extend(size_t, size_t);

@@ -136,15 +136,7 @@ public:
   };
 
   // Inferred role: tells whether the DrMan global table hides the light of index id (0 is never hidden); original name unknown.
-  bool unknown006(u32 id) const {
-    if (id != 0) {
-      u32 *table = unknown18->unknown1d20;
-      if (table[id >> 5] & (1 << (id & 31))) {
-        return true;
-      }
-    }
-    return false;
-  }
+  bool unknown006(u32 id) const { return id != 0 && unknown18->isGblIdx(id); }
 
   // Inferred role: swaps the render list buffers and starts an empty frame list; original name unknown.
   void unknown007() {

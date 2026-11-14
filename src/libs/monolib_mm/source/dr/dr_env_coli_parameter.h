@@ -10,11 +10,14 @@ class DrEnvColiObj;
 class DrMan;
 struct DrEnvColiResult;
 
+template <int Version> struct EnvColiPostParameterVer;
+
 class DrEnvColiParameter {
 public:
   DrEnvColiParameter(DrEnvColiObj *object, DrEnvColiResult *result, DrMan *man, DrEnvColiMan *coliMan);
   ~DrEnvColiParameter();
   static void updateBloomParams();
+  void resetToneMapParams(const EnvColiPostParameterVer<10006> *from, const EnvColiPostParameterVer<10006> *to, f32 ratio);
   void calcPostEffectParams(bool isReset);
   void calcParams(u32 index, s32 num, bool isReset);
 

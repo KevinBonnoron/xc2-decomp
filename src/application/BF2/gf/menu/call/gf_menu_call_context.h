@@ -10,9 +10,9 @@ namespace gf {
 class GfMenuCallContext : public mm::mtl::ReferenceObject {
 public:
   enum STATE {
-    STATE_IDLE,
-    STATE_ACTIVE,
-    STATE_TERM,
+    STATE_UNKNOWN_0, // Inferred role: no UI object attached; original enumerator name unknown.
+    STATE_UNKNOWN_1, // Inferred role: UI object attached and running; original enumerator name unknown.
+    STATE_UNKNOWN_2, // Inferred role: UI object terminating; original enumerator name unknown.
   };
 
   struct GfMenuResult {

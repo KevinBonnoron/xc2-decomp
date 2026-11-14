@@ -5,14 +5,14 @@ namespace event {
 
 class BlockWtr {
 public:
-  static constexpr u32 WTR_COUNT = 32;
+  static constexpr u32 WTR_UNKNOWN_32 = 32; // Inferred role: wtr count; original name unknown.
 
   BlockWtr();
   void setRules(const char *rules);
   bool isBlock(u32 index) const { return unknown00[index]; }
 
 private:
-  bool unknown00[WTR_COUNT]; // Inferred role: is block; original member name unknown.
+  bool unknown00[WTR_UNKNOWN_32]; // Inferred role: is block; original member name unknown.
 };
 
 static_assert(sizeof(BlockWtr) == 0x20, "");

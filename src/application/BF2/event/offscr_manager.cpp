@@ -11,7 +11,7 @@
 namespace event {
 
 OffscrManager::OffscrManager() {
-  for (u32 i = 0; i < SCREEN_COUNT; i++) {
+  for (u32 i = 0; i < SCREEN_UNKNOWN_4; i++) {
     unknown10[i] = nullptr;
   }
 }
@@ -39,7 +39,7 @@ void OffscrManager::createScreen(u32 screenID) {
 }
 
 void OffscrManager::clear() {
-  for (u32 i = 1; i < SCREEN_COUNT; i++) {
+  for (u32 i = 1; i < SCREEN_UNKNOWN_4; i++) {
     if (unknown10[i] != nullptr) {
       ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
       parmAcc.deleteAddRenderView(unknown10[i]);
@@ -54,7 +54,7 @@ void OffscrManager::clear() {
 bool OffscrManager::isScreenExist(u32 screenID) const { return unknown10[screenID] != nullptr; }
 
 void OffscrManager::OnEventProc(MSG_TYPE type) {
-  if (type == MSG_TYPE_CLEAR) {
+  if (type == MSG_TYPE_UNKNOWN_12) {
     clear();
   }
 }

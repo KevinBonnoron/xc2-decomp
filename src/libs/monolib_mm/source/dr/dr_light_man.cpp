@@ -1,5 +1,6 @@
 #include "dr/dr_light_man.h"
 
+#include "dr/dr_ap_gx_type.h"
 #include "dr/dr_light_obj.h"
 #include "dr/dr_man.h"
 #include "dr/dr_pixl_post_parm.h"
@@ -8,26 +9,18 @@
 #include "dr/dr_shd_man.h"
 #include "ml/critical_section.h"
 #include "mm_mtl/fixed_array.h"
+#include "mtl/alloc_handle.h"
 
 namespace ml {
 
 namespace {
 
 // Inferred role: appends every light of a request list to a light list and empties the request list; original name unknown.
-void unknown001(DrLightObj *&first, DrLightObj *&last, DrLightObj **request) {
+void unknown022(DrLightObj *&first, DrLightObj *&last, DrLightObj **request) {
   DrLightObj *light = request[0];
   while (light != nullptr) {
     DrLightObj *next = light->unknown10;
-    if (last == nullptr) {
-      first = light;
-      last = light;
-      light->unknown08 = nullptr;
-    } else {
-      last->unknown10 = light;
-      light->unknown08 = last;
-      last = light;
-    }
-    light->unknown10 = nullptr;
+    unknown100<DrLightObj>(first, last, light);
     light = next;
   }
   request[0] = nullptr;
@@ -57,6 +50,64 @@ void DrLightMan::stockEnd() {
   updateAfterPnt();
   updateAfterSpt();
   unknowne0->unknown80->unknown18->stockEnd();
+}
+
+DrLightMan::~DrLightMan() { releaseAll(); }
+
+void DrLightMan::releaseAll() {
+  unknown2100(unknown000, unknown008);
+  unknown2100(unknown010, unknown018);
+  unknown2100(unknown020, unknown028);
+  unknown2100(unknown030, unknown038);
+  unknown2100(unknown040[0][0], unknown040[0][1]);
+  unknown2100(unknown040[1][0], unknown040[1][1]);
+  unknown2100(unknown060[0][0], unknown060[0][1]);
+  unknown2100(unknown060[1][0], unknown060[1][1]);
+  unknown2100(unknown080[0][0], unknown080[0][1]);
+  unknown2100(unknown080[1][0], unknown080[1][1]);
+  unknown2100(unknown0c0[0], unknown0c0[1]);
+  unknown2100(unknown0a0[0][0], unknown0a0[0][1]);
+  unknown2100(unknown0a0[1][0], unknown0a0[1][1]);
+  unknown2100(unknown0d0[0], unknown0d0[1]);
+  unknown100 = 0;
+  unknown104 = 0;
+  unknown108 = 0;
+  unknown10c = 0;
+  unknown0f0 = nullptr;
+  unknown0f8 = nullptr;
+}
+
+void DrLightMan::renderDebugPnt() {
+  DrShdLgtMan *shdLgtMan = unknowne0->unknown80->unknown18;
+  DrAPGxType::setupCullingFront();
+  DrAPGxType::setupDepthContl(1, 0, 3);
+  for (DrLightObj *light = unknown020; light != nullptr; light = light->unknown10) {
+    if (!light->isCullON()) {
+      shdLgtMan->renderDebugPnt(static_cast<DrLightObjPnt *>(light));
+    }
+  }
+}
+
+void DrLightMan::renderDebugSpt() {
+  DrShdLgtMan *shdLgtMan = unknowne0->unknown80->unknown18;
+  for (DrLightObj *light = unknown030; light != nullptr; light = light->unknown10) {
+    if (!light->isCullON()) {
+      shdLgtMan->renderDebugSpt(static_cast<DrLightObjSpt *>(light));
+    }
+  }
+}
+
+void DrLightMan::debugRender() {
+  renderDebugPnt();
+  renderDebugSpt();
+}
+
+DrLightObjDir *DrLightMan::createDirLight() {
+  CS lock(DrMan::getCriticalSection());
+  DrLightObjDir *light = new (unknowne0->unknown10) DrLightObjDir(unknowne0->unknown78);
+  ml::unknown100<DrLightObj>(unknown060[DrMan::s_nDblStockIdx][0], unknown060[DrMan::s_nDblStockIdx][1], light);
+  unknown104++;
+  return light;
 }
 
 void DrLightMan::releaseAmbLight(DrLightObjAmb *light) {
@@ -136,7 +187,7 @@ void DrLightMan::releaseInstantSptLight(DrLightObjSpt *light) {
 
 void DrLightMan::updateAmb() {
   int index = DrMan::s_nDblIdx;
-  unknown001(unknown000, unknown008, unknown040[index]);
+  unknown022(unknown000, unknown008, unknown040[index]);
   unknown12c = mm::Col3(0.2f, 0.2f, 0.2f);
   bool isFirst = true;
   DrLightObj *light = unknown000;
@@ -159,8 +210,8 @@ void DrLightMan::updateAmb() {
   }
 }
 
-void DrLightMan::updatePnt() { unknown001(unknown020, unknown028, unknown080[DrMan::s_nDblIdx]); }
+void DrLightMan::updatePnt() { unknown022(unknown020, unknown028, unknown080[DrMan::s_nDblIdx]); }
 
-void DrLightMan::updateSpt() { unknown001(unknown030, unknown038, unknown0a0[DrMan::s_nDblIdx]); }
+void DrLightMan::updateSpt() { unknown022(unknown030, unknown038, unknown0a0[DrMan::s_nDblIdx]); }
 
 } // namespace ml

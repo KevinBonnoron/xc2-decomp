@@ -3,6 +3,7 @@
 
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_pnt.h"
+#include "mm_math/mm_rect.h"
 #include "types.h"
 
 namespace ml {
@@ -53,6 +54,20 @@ public:
   FMOVE getFramePick(const mm::Pnt<int> &pos) const;
   MCURSOR evtMouseSelect(const mm::Pnt<int> &pos) const;
   void render(WinView *parent) const;
+  bool checkMFrame(const mm::Rect<int> &rect, const mm::Pnt<int> &pos) const;
+  bool checkTFrame(const mm::Rect<int> &rect, const mm::Pnt<int> &pos) const;
+  bool checkLFrame(const mm::Rect<int> &rect, const mm::Pnt<int> &pos) const;
+  bool checkBFrame(const mm::Rect<int> &rect, const mm::Pnt<int> &pos) const;
+  bool checkLTFrame(const mm::Rect<int> &rect, const mm::Pnt<int> &pos) const;
+  bool checkRFrame(const mm::Rect<int> &rect, const mm::Pnt<int> &pos) const;
+  bool checkRTFrame(const mm::Rect<int> &rect, const mm::Pnt<int> &pos) const;
+  bool checkLBFrame(const mm::Rect<int> &rect, const mm::Pnt<int> &pos) const;
+  bool checkRBFrame(const mm::Rect<int> &rect, const mm::Pnt<int> &pos) const;
+  mm::Rect<int> getFrame2ViewRect(const mm::Rect<int> &rect) const;
+  mm::Rect<int> getFrameRect(bool isBack) const;
+  // Inferred helper: frame rect computed by the WinViewFrame code that WinView::getFrameRect and WinView::getFrameAbsRect inline;
+  // the out-of-line getFrameRect above compiles differently (see blockers.json); defined in win_view.h after WinView; original name unknown.
+  inline mm::Rect<int> unknown001(bool isBack) const;
 
   WinView *m_info;
   mm::Col4 unknown08;     // Inferred role: color; original member name unknown.

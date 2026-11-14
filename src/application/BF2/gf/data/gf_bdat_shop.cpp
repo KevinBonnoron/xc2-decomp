@@ -1008,13 +1008,13 @@ void GfBdatShop::destroyFP() {
 void GfBdatShop::createFP() {
   // __LINE__ of the game: it is the line argument of the operator new.
 #line 1112
-  m_shopList = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_MNU_SHOP_LIST)};
-  m_shopNormal = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_MNU_SHOP_NORMAL)};
-  m_shopInn = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_MNU_SHOP_INN)};
-  m_shopChange = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_MNU_SHOP_CHANGE)};
-  m_shopChangeTask = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_MNU_SHOP_CHANGE_TASK)};
-  m_shopCategoryName = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_MNU_SHOP_CATEGORY_NAME)};
-  m_MNU_EventTheater = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_MNU_EVENT_THEATER)};
+  m_shopList = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_MNU_SHOP_LIST)};
+  m_shopNormal = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_MNU_SHOP_NORMAL)};
+  m_shopInn = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_MNU_SHOP_INN)};
+  m_shopChange = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_MNU_SHOP_CHANGE)};
+  m_shopChangeTask = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_MNU_SHOP_CHANGE_TASK)};
+  m_shopCategoryName = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_MNU_SHOP_CATEGORY_NAME)};
+  m_MNU_EventTheater = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_MNU_EVENT_THEATER)};
 }
 
 void GfBdatShop::bdatRefresh() {

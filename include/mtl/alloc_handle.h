@@ -17,6 +17,8 @@ public:
   }
 
 private:
+  friend class MemManager;
+
   unsigned int unknown00; // Inferred role: handle; original member name unknown.
 };
 

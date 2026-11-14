@@ -6,6 +6,7 @@
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 
 namespace ui {
 class UICtrlCursorSelect;
@@ -22,6 +23,37 @@ class GfMenuReferenceNumber;
 
 class GfMenuObjMercenaryForm : public GfMenuObject {
 public:
+  class MainListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+  };
+
+  class FormListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    int unknown0c; // Role and original member name unknown, cleared by the opening event.
+    int unknown10; // Role and original member name unknown, cleared by the opening event.
+    u8 _14[0x20 - 0x14];
+    GfMenuObjMercenaryForm *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class BlImgListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjMercenaryForm *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class StartListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjMercenaryForm *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   GfMenuObjMercenaryForm(u32 handle);
   ~GfMenuObjMercenaryForm() override;
   bool chkTempUnlink(u32 blade);
@@ -43,6 +75,7 @@ public:
   bool seqEndActiveFS();
   bool seqLeaveBlade();
   bool seqOpenActiveFS();
+  bool seqOpenImage();
   bool seqPresetEnd();
   bool seqPresetLoad();
   bool seqPresetSave();
@@ -84,6 +117,11 @@ public:
   GAME_VOICE_HANDLE *unknown8f8;                             // Inferred role: leader voice; original member name unknown.
 };
 
+static_assert(offsetof(GfMenuObjMercenaryForm::FormListener, unknown0c) == 0x0c, "");
+static_assert(offsetof(GfMenuObjMercenaryForm::FormListener, unknown10) == 0x10, "");
+static_assert(offsetof(GfMenuObjMercenaryForm::FormListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjMercenaryForm::BlImgListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjMercenaryForm::StartListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjMercenaryForm, unknown24) == 0x24, "");
 static_assert(offsetof(GfMenuObjMercenaryForm, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjMercenaryForm, unknown50) == 0x50, "");

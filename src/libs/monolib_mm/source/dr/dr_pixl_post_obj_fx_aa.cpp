@@ -8,12 +8,22 @@
 #include "dr/dr_shd_data_list.h"
 #include "dr/dr_shd_data_obj.h"
 #include "dr/dr_shd_man.h"
-#include "grlib/cglib_render_target.h"
 #include "grlib/cglib_shader.h"
+#include "mtl/alloc_handle.h"
 
 namespace ml {
 
-DrPixlPostObjFxAA::~DrPixlPostObjFxAA() { unknown001(unknown18); }
+DrPixlPostObjFxAA::DrPixlPostObjFxAA(DrMan *drMan, DrPixlMan *pixlMan, DrPixlPostMan *postMan) : DrPixlPostObj(drMan, pixlMan, postMan) {
+  unknown18 = new (drMan->unknown0c) DrPixlRenderTarget(drMan);
+  resetColorBuff();
+}
+
+DrPixlPostObjFxAA::~DrPixlPostObjFxAA() {
+  if (unknown18 != nullptr) {
+    delete unknown18;
+    unknown18 = nullptr;
+  }
+}
 
 void DrPixlPostObjFxAA::releaseColorBuff() { unknown18->releaseTexture(); }
 
@@ -47,6 +57,11 @@ void DrPixlPostObjFxAA::calcLuminosity() {
   apCache->setTexture(*source->unknown70, location);
   shdList->renderTriangle();
   unknown18->setColorInvalidate();
+}
+
+void DrPixlPostObjFxAA::debugRender() {
+  const unknown057 *screen = unknown00->unknown5b8;
+  unknown18->debugRender(0, 0, screen->unknown18 / 2, screen->unknown1c / 2, false, false, 1.0f, true);
 }
 
 } // namespace ml

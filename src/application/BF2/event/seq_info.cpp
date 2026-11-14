@@ -6,7 +6,7 @@
 
 namespace event {
 
-constexpr f32 DEGREE_TO_RADIAN = 3.14159265f / 180.0f;
+constexpr f32 unknown024 = 3.14159265f / 180.0f; // Inferred role: degree to radian; original name unknown.
 
 SeqInfo::SeqInfo() { clear(); }
 
@@ -181,7 +181,7 @@ void SeqInfo::setup(const CBdatWrapper &bdat, const char *name, int id) {
   unknown11c = Bdat::getMember(bdat.unknown00, "centerX") ? Bdat::getVal(bdat.unknown00, "centerX", id).valueF32 : 0.0f;
   unknown120 = Bdat::getMember(bdat.unknown00, "centerY") ? Bdat::getVal(bdat.unknown00, "centerY", id).valueF32 : 0.0f;
   unknown124 = Bdat::getMember(bdat.unknown00, "centerZ") ? Bdat::getVal(bdat.unknown00, "centerZ", id).valueF32 : 0.0f;
-  unknown128 = Bdat::getMember(bdat.unknown00, "centerR") ? Bdat::getVal(bdat.unknown00, "centerR", id).valueF32 * DEGREE_TO_RADIAN : 0.0f;
+  unknown128 = Bdat::getMember(bdat.unknown00, "centerR") ? Bdat::getVal(bdat.unknown00, "centerR", id).valueF32 * unknown024 : 0.0f;
 }
 
 bool SeqInfo::exist() const { return unknown00; }

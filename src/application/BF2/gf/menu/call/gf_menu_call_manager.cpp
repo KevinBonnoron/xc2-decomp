@@ -2,13 +2,14 @@
 
 #include "gf/gf_allocator.h"
 #include "gf/menu/call/gf_menu_call_context.h"
+#include "mm_mtl/reference_object.h"
 
 namespace gf {
 
-GfMenuCallManager::GfMenuCallManager(const GfSetupParam &param) : unknown08(), unknown228(getAllocator(ALLOCATOR_DEFAULT)), unknown1108() { reset(); }
+GfMenuCallManager::GfMenuCallManager(const GfSetupParam &param) : unknown08(), unknown228(getAllocator(ALLOCATOR_UNKNOWN_0)), unknown1108() { reset(); }
 
 void GfMenuCallManager::reset() {
-  for (u32 i = 0; i < CALL_MAX; i++) {
+  for (u32 i = 0; i < CALL_UNKNOWN_135; i++) {
     unknown08[i] = 0;
   }
 }
@@ -24,13 +25,13 @@ GfMenuCallManager::~GfMenuCallManager() {
 }
 
 bool GfMenuCallManager::canCall(u32 call) const {
-  if (call < CALL_MAX) {
+  if (call < CALL_UNKNOWN_135) {
     return unknown08[call] != 0;
   }
   return false;
 }
 
-void GfMenuCallManager::build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfMenuCallManager(param); }
+void GfMenuCallManager::build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfMenuCallManager(param); }
 
 void GfMenuCallManager::destroy() {
   if (get() != nullptr) {
@@ -40,16 +41,30 @@ void GfMenuCallManager::destroy() {
 
 bool GfMenuCallManager::isInitialized() { return true; }
 
+void GfMenuCallManager::postUpdate(const fw::UpdateInfo &) {
+  GfMenuCallManager *self = get();
+  if (self != nullptr) {
+    for (unknown001 *info = self->unknown1108.begin(); info != self->unknown1108.end();) {
+      if (info->unknown00->isTerm()) {
+        mm::mtl::safeRelease(info->unknown00);
+        info = self->unknown1108.erase(info);
+      } else {
+        ++info;
+      }
+    }
+  }
+}
+
 void GfMenuCallManager::attachCall(u32 call, u32 object) { unknown08[call] = object; }
 
 void GfMenuCallManager::detachCall(u32 call) {
-  if (call < CALL_MAX && unknown08[call] != 0) {
+  if (call < CALL_UNKNOWN_135 && unknown08[call] != 0) {
     unknown08[call] = 0;
   }
 }
 
 u32 GfMenuCallManager::getAttachedObject(u32 call) {
-  if (call < CALL_MAX) {
+  if (call < CALL_UNKNOWN_135) {
     return unknown08[call];
   }
   return 0;

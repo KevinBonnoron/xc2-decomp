@@ -20,10 +20,10 @@ void AnimVolumeFadeModifier::bind(ModelObject *modelObject) {
   if (modelObject != nullptr) {
     unknown18 = modelObject;
     modelObject->addRef();
-    for (u32 i = 0; i < RATIO_MAX; i++) {
+    for (u32 i = 0; i < RATIO_UNKNOWN_6; i++) {
       unknown20[i] = 1.0f;
     }
-    for (u32 i = 0; i < RATIO_MAX; i++) {
+    for (u32 i = 0; i < RATIO_UNKNOWN_6; i++) {
       unknown38[i] = -1;
     }
     ml::ScnObjAccEtcParams params(unknown18->getInterface());
@@ -43,7 +43,7 @@ void AnimVolumeFadeModifier::apply() {
   if (!unknown50.isValid() || unknown50()) {
     if (!unknown70) {
       ml::ScnObjAccEtcParams params(unknown18->getInterface());
-      for (u32 i = 0; i < RATIO_MAX; i++) {
+      for (u32 i = 0; i < RATIO_UNKNOWN_6; i++) {
         if (unknown38[i] >= 0) {
           params.setParams(unknown38[i], unknown20[i]);
         }

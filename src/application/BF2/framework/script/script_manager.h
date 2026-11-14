@@ -49,17 +49,18 @@ class ScriptManager;
 class ScriptInfo : public ml::IWorkEvent {
 public:
   enum State {
-    STATE_EMPTY = 0,
-    STATE_LOADED = 1,
-    STATE_FINISH = 3,
+    STATE_UNKNOWN_0 = 0, // Inferred role: empty; original name unknown.
+    STATE_UNKNOWN_1 = 1, // Inferred role: loaded; original name unknown.
+    STATE_UNKNOWN_2 = 2, // Inferred role: running; original name unknown.
+    STATE_UNKNOWN_3 = 3, // Inferred role: finish; original name unknown.
   };
 
-  static const u32 FLAG_LOADING = 1 << 0;
-  static const u32 FLAG_LOADED = 1 << 1;
-  static const u32 FLAG_STARTED = 1 << 2;
-  static const u32 FLAG_LINKED = 1 << 3;
-  static const u32 FLAG_LOAD_ERROR = 1 << 5;
-  static const u32 FLAG_ACTIVE = 1 << 6;
+  static const u32 FLAG_UNKNOWN_0 = 1 << 0; // Inferred role: loading; original name unknown.
+  static const u32 FLAG_UNKNOWN_1 = 1 << 1; // Inferred role: loaded; original name unknown.
+  static const u32 FLAG_UNKNOWN_2 = 1 << 2; // Inferred role: started; original name unknown.
+  static const u32 FLAG_UNKNOWN_3 = 1 << 3; // Inferred role: linked; original name unknown.
+  static const u32 FLAG_UNKNOWN_5 = 1 << 5; // Inferred role: load error; original name unknown.
+  static const u32 FLAG_UNKNOWN_6 = 1 << 6; // Inferred role: active; original name unknown.
 
   ScriptInfo();
   ~ScriptInfo() override;
@@ -67,6 +68,8 @@ public:
   void clear();
   void unlink();
   void relink();
+  void load(const mm::mtl::FixStr<256> &path, ml::FILE_PRIO priority);
+  void loadFromMemory(const mm::mtl::FixStr<256> &path, const char *data, size_t size);
   void start();
   void destroy();
   void execute();
@@ -115,6 +118,8 @@ public:
   bool isScriptLoaded(int type) const;
   bool isScriptFree(int type) const;
   void addEvent(IScriptEvent *event);
+  void makeFullPath(mm::mtl::FixStr<256> &path, const char *name);
+  void loadScriptFromMemory(int type, const char *name, const char *data, size_t size);
   void removeEvent(IScriptEvent *event);
   void loadScript(int type, const char *name, ml::FILE_PRIO priority);
   void notifyEvent(int type, ScriptEventParam::State state);

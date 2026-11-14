@@ -2,6 +2,9 @@
 
 #include <math.h>
 
+#include "battle/character/battle_character.h"
+#include "battle/character/character_manager_battle.h"
+#include "battle/character/character_parameter_battle.h"
 #include "battle/utility_battle.h"
 #include "bdat.h"
 #include "fw/fw_coli_check.h"
@@ -179,7 +182,7 @@ void Misc::RandomVectorXZ(mm::Vec3 &vector) {
 }
 
 bool Misc::GetObjectTransform(gf::GF_OBJ_HANDLE *handle, mm::Vec3 &transform, TRANS_TYPE type) {
-  if (handle == gf::INVALID_HANDLE) {
+  if (handle == gf::unknown020) {
     return false;
   }
 
@@ -235,7 +238,7 @@ int Misc::GetPartyID(gf::GF_OBJ_HANDLE *handle) {
 
   for (int i = 0; i < 3; i++) {
     gf::GF_OBJ_HANDLE *driver = gf::GfGameParty::getHandleDriver(i);
-    if (driver == gf::INVALID_HANDLE) {
+    if (driver == gf::unknown020) {
       continue;
     }
     gf::GfObjAcc acc(driver);
@@ -286,8 +289,51 @@ bool Misc::CheckInRange(const mm::Vec3 &position, const mm::Vec3 &target, f32 ra
   return length <= range;
 }
 
+// Inferred role: battle parameter of the character owning the handle, or null; original name unknown.
+static const CharacterParameter *unknown001(gf::GF_OBJ_HANDLE *handle) {
+  BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
+  if (character == nullptr) {
+    return nullptr;
+  }
+  return character->GetCharacterParameterConst(true);
+}
+
+bool Misc::CheckInRange(const mm::Vec3 &position, BattleCharacter *character, f32 range, bool isXZ) {
+  if (character == nullptr) {
+    return false;
+  }
+
+  const CharacterParameter *parameter = character->GetCharacterParameterConst(true);
+  if (parameter != nullptr) {
+    range += parameter->unknown2c;
+  }
+
+  return CheckInRange(position, character->unknown10, range, isXZ);
+}
+
+bool Misc::CheckInRange(const mm::Vec3 &position, gf::GF_OBJ_HANDLE *handle, f32 range, bool isXZ) {
+  if (handle == gf::unknown020) {
+    return false;
+  }
+
+  gf::GfObj *obj = gf::GfObjUtil::getObj(handle);
+  if (obj == nullptr) {
+    return false;
+  }
+
+  gf::GfObjAcc acc(obj);
+  mm::Vec3 objPosition = acc.getWorldTransform().unknown00;
+
+  const CharacterParameter *parameter = unknown001(handle);
+  if (parameter != nullptr) {
+    range += parameter->unknown2c;
+  }
+
+  return CheckInRange(position, objPosition, range, isXZ);
+}
+
 bool Misc::GetObjectDirection(gf::GF_OBJ_HANDLE *handle, mm::Vec3 &direction, bool isXZ) {
-  if (handle == gf::INVALID_HANDLE) {
+  if (handle == gf::unknown020) {
     return false;
   }
 

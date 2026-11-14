@@ -15,15 +15,15 @@
 namespace gf {
 struct GF_MOUNT_HANDLE;
 
-GfTrinityAttack::GfTrinityAttack() : m_state(0), m_blade(INVALID_HANDLE) { unknown10.clear(); }
+GfTrinityAttack::GfTrinityAttack() : m_state(0), m_blade(unknown020) { unknown10.clear(); }
 
 GfTrinityAttack::~GfTrinityAttack() {}
 
 u32 GfTrinityAttack::getBladeId() const {
-  if (GfGameParty::getDriverBdatId(0) == DRIVER_REX) {
-    int bladeSet = GfDataDriver::getBladeSet(DRIVER_REX);
+  if (GfGameParty::getDriverBdatId(0) == DRIVER_UNKNOWN_1) {
+    int bladeSet = GfDataDriver::getBladeSet(DRIVER_UNKNOWN_1);
     if (GfGameParty::getBladeBdatId(0, bladeSet) == BLADE_HOMURA) {
-      int bladeNum = GfDataDriver::getMaxSetBladeNum(DRIVER_REX);
+      int bladeNum = GfDataDriver::getMaxSetBladeNum(DRIVER_UNKNOWN_1);
       for (int slot = 0; slot < bladeNum; slot++) {
         if (bladeSet != slot && GfGameParty::getBladeBdatId(0, slot) == BLADE_UNKNOWN_1011) {
           return BLADE_UNKNOWN_1011;
@@ -31,10 +31,10 @@ u32 GfTrinityAttack::getBladeId() const {
       }
     }
   }
-  if (GfGameParty::getDriverBdatId(0) == DRIVER_REX) {
-    int bladeSet = GfDataDriver::getBladeSet(DRIVER_REX);
+  if (GfGameParty::getDriverBdatId(0) == DRIVER_UNKNOWN_1) {
+    int bladeSet = GfDataDriver::getBladeSet(DRIVER_UNKNOWN_1);
     if (GfGameParty::getBladeBdatId(0, bladeSet) == BLADE_UNKNOWN_1011) {
-      int bladeNum = GfDataDriver::getMaxSetBladeNum(DRIVER_REX);
+      int bladeNum = GfDataDriver::getMaxSetBladeNum(DRIVER_UNKNOWN_1);
       for (int slot = 0; slot < bladeNum; slot++) {
         if (bladeSet != slot && GfGameParty::getBladeBdatId(0, slot) == BLADE_HOMURA) {
           return BLADE_HOMURA;
@@ -51,11 +51,11 @@ bool GfTrinityAttack::isLoading() const {
   if (!GfGameObj::isValidGameObj(m_blade, true, nullptr)) {
     return true;
   }
-  GfWeapon *weapon = GfMountManager::getGfWeapon(m_blade, GFATTACH_WEAPON_EXTRA);
+  GfWeapon *weapon = GfMountManager::getGfWeapon(m_blade, GFATTACH_UNKNOWN_3);
   if (weapon != nullptr) {
     for (u32 index = 0; index < 10; index++) {
       GF_OBJ_HANDLE *handle = weapon->getCurrentHandles()[index];
-      if (handle != INVALID_HANDLE && !GfGameObj::isValidGameObj(handle, true, nullptr)) {
+      if (handle != unknown020 && !GfGameObj::isValidGameObj(handle, true, nullptr)) {
         return true;
       }
     }
@@ -72,11 +72,11 @@ void GfTrinityAttack::updateForSetup(const fw::UpdateInfo &) {
 
 void GfTrinityAttack::endAttack() {
   GF_OBJ_HANDLE *leader = GfGameManager::getPartyLeaderDriver();
-  if (GfObjUtil::getMountHandle(leader, GFATTACH_WEAPON_EXTRA) != reinterpret_cast<GF_MOUNT_HANDLE *>(-1)) {
-    GfMountManager::removeMountHandle(leader, GFATTACH_WEAPON_EXTRA);
+  if (GfObjUtil::getMountHandle(leader, GFATTACH_UNKNOWN_3) != reinterpret_cast<GF_MOUNT_HANDLE *>(-1)) {
+    GfMountManager::removeMountHandle(leader, GFATTACH_UNKNOWN_3);
   }
   GfObjUtil::destroy(m_blade);
-  m_blade = INVALID_HANDLE;
+  m_blade = unknown020;
   unknown10.clear();
   m_state = 0;
 }
@@ -93,7 +93,7 @@ GfTrinityAttack *GfTrinityAttack::create() {
   GfTrinityAttack *trinityAttack = get();
   if (trinityAttack == nullptr) {
 #line 189
-    trinityAttack = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfTrinityAttack();
+    trinityAttack = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfTrinityAttack();
   }
   return trinityAttack;
 }
@@ -107,9 +107,9 @@ void GfTrinityAttack::destroy() {
 }
 
 void GfTrinityAttack::finish() {
-  if (m_blade != INVALID_HANDLE) {
+  if (m_blade != unknown020) {
     GfGameObj::destroyGameObj(m_blade, 0.0f);
-    m_blade = INVALID_HANDLE;
+    m_blade = unknown020;
   }
   unknown10.clear();
   m_state = 0;
@@ -119,6 +119,6 @@ s32 GfTrinityAttack::getState() const { return m_state; }
 
 GF_OBJ_HANDLE *GfTrinityAttack::getBlade() const { return m_blade; }
 
-GfWeapon *GfTrinityAttack::getWeapon() const { return GfMountManager::getGfWeapon(m_blade, GFATTACH_WEAPON_EXTRA); }
+GfWeapon *GfTrinityAttack::getWeapon() const { return GfMountManager::getGfWeapon(m_blade, GFATTACH_UNKNOWN_3); }
 
 } // namespace gf

@@ -10,8 +10,8 @@
 namespace event {
 
 int RandCalc::calc(int type) {
-  mm::mtl::FixedVector<int, TALK_COUNT> talks;
-  mm::mtl::FixedVector<int, TALK_COUNT> typeTalks;
+  mm::mtl::FixedVector<int, TALK_UNKNOWN_1024> talks;
+  mm::mtl::FixedVector<int, TALK_UNKNOWN_1024> typeTalks;
   listup(talks);
   if (talks.empty()) {
     return -1;
@@ -28,7 +28,7 @@ int RandCalc::calc(int type) {
   return typeTalks[0];
 }
 
-void RandCalc::listup(mm::mtl::FixedVector<int, TALK_COUNT> &list) {
+void RandCalc::listup(mm::mtl::FixedVector<int, TALK_UNKNOWN_1024> &list) {
   unsigned char *bdat = Bdat::getFP("FLD_randomTalk");
   int top = Bdat::getIdTop(bdat);
   u32 count = Bdat::getIdCount(bdat);
@@ -38,7 +38,7 @@ void RandCalc::listup(mm::mtl::FixedVector<int, TALK_COUNT> &list) {
   }
 }
 
-void RandCalc::listupType(mm::mtl::FixedVector<int, TALK_COUNT> &list, mm::mtl::FixedVector<int, TALK_COUNT> &source, int type) {
+void RandCalc::listupType(mm::mtl::FixedVector<int, TALK_UNKNOWN_1024> &list, mm::mtl::FixedVector<int, TALK_UNKNOWN_1024> &source, int type) {
   unsigned char *bdat = Bdat::getFP("FLD_randomTalk");
   list.clear();
   for (size_t i = 0; i < source.size(); i++) {
@@ -49,7 +49,7 @@ void RandCalc::listupType(mm::mtl::FixedVector<int, TALK_COUNT> &list, mm::mtl::
   }
 }
 
-void RandCalc::listupParty(mm::mtl::FixedVector<int, TALK_COUNT> &list, mm::mtl::FixedVector<int, TALK_COUNT> &source) {
+void RandCalc::listupParty(mm::mtl::FixedVector<int, TALK_UNKNOWN_1024> &list, mm::mtl::FixedVector<int, TALK_UNKNOWN_1024> &source) {
   unsigned char *bdat = Bdat::getFP("FLD_randomTalk");
   list.clear();
   for (size_t i = 0; i < source.size(); i++) {
@@ -66,7 +66,7 @@ void RandCalc::listupParty(mm::mtl::FixedVector<int, TALK_COUNT> &list, mm::mtl:
   }
 }
 
-void RandCalc::listupRand(mm::mtl::FixedVector<int, TALK_COUNT> &list, mm::mtl::FixedVector<int, TALK_COUNT> &source) {
+void RandCalc::listupRand(mm::mtl::FixedVector<int, TALK_UNKNOWN_1024> &list, mm::mtl::FixedVector<int, TALK_UNKNOWN_1024> &source) {
   int id = source[ml::mtRand(source.size())];
   list.clear();
   list.push_back(id);
@@ -74,7 +74,7 @@ void RandCalc::listupRand(mm::mtl::FixedVector<int, TALK_COUNT> &list, mm::mtl::
 
 bool RandCalc::exist(int id) { return RandUtil::searchByID(id) != nullptr; }
 
-void RandCalc::dump(mm::mtl::FixedVector<int, TALK_COUNT> &list) {
+void RandCalc::dump(mm::mtl::FixedVector<int, TALK_UNKNOWN_1024> &list) {
   char text[512] = {};
   char number[512] = {};
   __builtin_strcat(text, "[ev]");

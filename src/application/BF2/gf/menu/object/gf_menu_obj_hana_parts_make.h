@@ -6,6 +6,7 @@
 #include "gf/menu/gf_menu_object.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 
 namespace ui {
 class UICtrlCursorColor;
@@ -23,6 +24,42 @@ class GfMenuReferenceNumber;
 
 class GfMenuObjHanaPartsMake : public GfMenuObject {
 public:
+  class MainListener : public ui::UIObjectListener {
+  public:
+    MainListener(GfMenuObjHanaPartsMake *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];               // Actively zero-initialized unknown byte range, NOT padding; original name/role unknown.
+    GfMenuObjHanaPartsMake *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class PartsListListener : public ui::UIObjectListener {
+  public:
+    PartsListListener(GfMenuObjHanaPartsMake *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];               // Actively zero-initialized unknown byte range, NOT padding; original name/role unknown.
+    GfMenuObjHanaPartsMake *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class ItemListListener : public ui::UIObjectListener {
+  public:
+    ItemListListener(GfMenuObjHanaPartsMake *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];               // Actively zero-initialized unknown byte range, NOT padding; original name/role unknown.
+    GfMenuObjHanaPartsMake *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class NumSelectListener : public ui::UIObjectListener {
+  public:
+    NumSelectListener(GfMenuObjHanaPartsMake *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];               // Actively zero-initialized unknown byte range, NOT padding; original name/role unknown.
+    GfMenuObjHanaPartsMake *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   GfMenuObjHanaPartsMake(u32 handle);
   ~GfMenuObjHanaPartsMake() override;
   static void sendEvent(u32 handle, u32 type, u32 param);
@@ -40,8 +77,10 @@ public:
   static void setupNumSelect(ui::UIObjectAcc &acc, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> price);
   static void updatePartsList(ui::UIObjectAcc &acc, GfMenuIDList *list, ui::UISelectObjList *objects);
   static void setupPartsList(ui::UIObjectAcc &acc, GfMenuIDList *list, ui::UISelectObjList *objects);
+  static void setupItemList(ui::UIObjectAcc &acc, GfMenuItemList *list, ui::UISelectObjList *objects);
   static void makeCategoryItemList(GfMenuIDList *idList, GfMenuItemList *itemList, u32 isEquip, u32 sort);
   static void updateItemList(GfMenuItemList *list, ItemType::Type type, u32 isEquip);
+  static void refreshItemList(ui::UIObjectAcc &acc, GfMenuItemList *list, ui::UISelectObjList *objects, u32 type, u32 isEquip);
 
   u8 _24[0x28 - 0x24];
   GfMenuIDList *unknown28;                                // Inferred role: parts types; original member name unknown.
@@ -69,5 +108,13 @@ static_assert(offsetof(GfMenuObjHanaPartsMake, unknown68) == 0x68, "");
 static_assert(offsetof(GfMenuObjHanaPartsMake, unknown70) == 0x70, "");
 static_assert(offsetof(GfMenuObjHanaPartsMake, unknown74) == 0x74, "");
 static_assert(sizeof(GfMenuObjHanaPartsMake) == 0x78, "");
+static_assert(offsetof(GfMenuObjHanaPartsMake::MainListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjHanaPartsMake::MainListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjHanaPartsMake::PartsListListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjHanaPartsMake::PartsListListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjHanaPartsMake::ItemListListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjHanaPartsMake::ItemListListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjHanaPartsMake::NumSelectListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjHanaPartsMake::NumSelectListener) == 0x28, "");
 
 } // namespace gf

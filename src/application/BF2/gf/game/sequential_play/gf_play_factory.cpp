@@ -20,19 +20,19 @@ namespace gf {
 
 namespace {
 
-constexpr u32 PAUSE_BITS_MENU = PAUSE_BIT_SYSTEM | PAUSE_BIT_GAME_SOUND | PAUSE_BIT_FIELD_TIME | PAUSE_BIT_MAIN_MENU;
-constexpr u32 PAUSE_BITS_SYSTEM_MENU = PAUSE_BIT_SYSTEM | PAUSE_BIT_FIELD_TIME;
+constexpr u32 PAUSE_BITS_UNKNOWN_89 = PAUSE_BIT_UNKNOWN_0 | PAUSE_BIT_UNKNOWN_3 | PAUSE_BIT_UNKNOWN_4 | PAUSE_BIT_UNKNOWN_6; // Inferred role: pause bits menu; original name unknown.
+constexpr u32 PAUSE_BITS_SYSTEM_UNKNOWN_17 = PAUSE_BIT_UNKNOWN_0 | PAUSE_BIT_UNKNOWN_4;                                      // Inferred role: pause bits system menu; original name unknown.
 
-constexpr int EVENT_CATEGORY_STOP_FIELD_TIME = 2;
-constexpr u32 EVENT_ALWAYS_PLAYABLE = 10001;
+constexpr int EVENT_UNKNOWN_2 = 2;         // Inferred role: event category stop field time; original name unknown.
+constexpr u32 EVENT_UNKNOWN_10001 = 10001; // Inferred role: event always playable; original name unknown.
 
-constexpr f32 EVENT_END_WAIT_TIME = 0.5f;
+constexpr f32 unknown040 = 0.5f; // Inferred role: event end wait time; original name unknown.
 
 u32 getEventPauseBits(u32 event) {
-  if (GfDataEvent::getEventType(event) == EVENT_CATEGORY_STOP_FIELD_TIME) {
-    return PAUSE_BIT_EVENT | PAUSE_BIT_FIELD_TIME;
+  if (GfDataEvent::getEventType(event) == EVENT_UNKNOWN_2) {
+    return PAUSE_BIT_UNKNOWN_5 | PAUSE_BIT_UNKNOWN_4;
   }
-  return PAUSE_BIT_EVENT;
+  return PAUSE_BIT_UNKNOWN_5;
 }
 
 } // namespace
@@ -41,8 +41,8 @@ bool GfPlayFactory::createReturnTitle(const ParamReturnTitle &param) {
   if (GfPlayComReturnTitle::get() != nullptr) {
     return false;
   }
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
-  GfSequentialPlay::pushState(GF_STATE_MENU);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_0);
+  GfSequentialPlay::pushState(GF_STATE_UNKNOWN_6);
   GfSequentialPlay::addReturnTitle(param);
   GfSequentialPlay::popState();
   GfSequentialPlay::play();
@@ -53,14 +53,14 @@ bool GfPlayFactory::createOpenMenu(u32 type, GfSequentialPlaySignal *signal) {
   if (GfGameManager::isLeaveGameForDebug()) {
     return false;
   }
-  if (GfSequentialPlay::isInnerState(GF_STATE_MAPJUMP_SKIP_TRAVEL)) {
+  if (GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_9)) {
     return false;
   }
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_SEQUENCE);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_1);
   GfSequentialPlay::startSignal(signal);
-  GfSequentialPlay::pushState(GF_STATE_MENU);
+  GfSequentialPlay::pushState(GF_STATE_UNKNOWN_6);
   GfSequentialPlay::addWaitBattleEnd(0);
-  GfSequentialPlay::pushPause(PAUSE_BITS_MENU);
+  GfSequentialPlay::pushPause(PAUSE_BITS_UNKNOWN_89);
   GfSequentialPlay::endSignal(signal);
   GfSequentialPlay::addOpenMenu(type);
   GfSequentialPlay::popPause();
@@ -73,14 +73,14 @@ bool GfPlayFactory::createOpenMenu2(u32 type, MAINMENU menu, GfSequentialPlaySig
   if (GfGameManager::isLeaveGameForDebug()) {
     return false;
   }
-  if (GfGameManager::isEvent(false) || GfSequentialPlay::isInnerState(GF_STATE_EVENT) || GfSequentialPlay::isInnerState(GF_STATE_TALK) ||
-      GfSequentialPlay::isInnerState(GF_STATE_MAPJUMP_SKIP_TRAVEL) || GfSequentialPlay::isInnerPause(PAUSE_BITS_SYSTEM_MENU)) {
+  if (GfGameManager::isEvent(false) || GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_20) || GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_4) ||
+      GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_9) || GfSequentialPlay::isInnerPause(PAUSE_BITS_SYSTEM_UNKNOWN_17)) {
     return false;
   }
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_SEQUENCE);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_1);
   GfSequentialPlay::startSignal(signal);
-  GfSequentialPlay::pushState(GF_STATE_MENU);
-  GfSequentialPlay::pushPause(PAUSE_BITS_MENU);
+  GfSequentialPlay::pushState(GF_STATE_UNKNOWN_6);
+  GfSequentialPlay::pushPause(PAUSE_BITS_UNKNOWN_89);
   GfSequentialPlay::endSignal(signal);
   GfSequentialPlay::addOpenMenu2(type, menu);
   GfSequentialPlay::popPause();
@@ -93,13 +93,13 @@ bool GfPlayFactory::createStartTutorial(u32 tutorial, GfSequentialPlaySignal *si
   if (GfGameManager::isLeaveGameForDebug()) {
     return false;
   }
-  if (GfSequentialPlay::isInnerState(GF_STATE_MAPJUMP_SKIP_TRAVEL)) {
+  if (GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_9)) {
     return false;
   }
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_SEQUENCE);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_1);
   GfSequentialPlay::startSignal(signal);
   GfSequentialPlay::addBattleStartEnd();
-  GfSequentialPlay::pushPause(PAUSE_BIT_SYSTEM);
+  GfSequentialPlay::pushPause(PAUSE_BIT_UNKNOWN_0);
   GfSequentialPlay::addStartTutorial(tutorial);
   GfSequentialPlay::popPause();
   GfSequentialPlay::endSignal(signal);
@@ -108,11 +108,11 @@ bool GfPlayFactory::createStartTutorial(u32 tutorial, GfSequentialPlaySignal *si
 }
 
 void GfPlayFactory::createMiniGame() {
-  if (!GfGameManager::isLeaveGameForDebug() && !GfSequentialPlay::isInnerState(GF_STATE_MAPJUMP_SKIP_TRAVEL)) {
-    GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_SEQUENCE);
-    GfSequentialPlay::pushState(GF_STATE_MENU);
+  if (!GfGameManager::isLeaveGameForDebug() && !GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_9)) {
+    GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_1);
+    GfSequentialPlay::pushState(GF_STATE_UNKNOWN_6);
     GfSequentialPlay::addWaitBattleEnd(0);
-    GfSequentialPlay::pushPause(PAUSE_BITS_MENU);
+    GfSequentialPlay::pushPause(PAUSE_BITS_UNKNOWN_89);
     GfSequentialPlay::addMiniGame();
     GfSequentialPlay::popPause();
     GfSequentialPlay::popState();
@@ -125,9 +125,9 @@ bool GfPlayFactory::createMenuQuestList() {
     return false;
   }
   if (GfGameManager::isInGamePauseMenuOK()) {
-    GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
-    GfSequentialPlay::pushPause(PAUSE_BITS_SYSTEM_MENU);
-    GfSequentialPlay::pushState(GF_STATE_MENU);
+    GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_0);
+    GfSequentialPlay::pushPause(PAUSE_BITS_SYSTEM_UNKNOWN_17);
+    GfSequentialPlay::pushState(GF_STATE_UNKNOWN_6);
     GfSequentialPlay::addMenuQuestList();
     GfSequentialPlay::popState();
     GfSequentialPlay::popPause();
@@ -139,10 +139,10 @@ bool GfPlayFactory::createMenuQuestList() {
 
 bool GfPlayFactory::createMenuKizunaring(u32 blade) {
   if (!GfGameManager::isLeaveGameForDebug() && GfGameManager::isInGamePauseMenuOK()) {
-    GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
-    GfSequentialPlay::pushState(GF_STATE_MENU);
+    GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_0);
+    GfSequentialPlay::pushState(GF_STATE_UNKNOWN_6);
     GfSequentialPlay::addWaitBattleEnd(0);
-    GfSequentialPlay::pushPause(PAUSE_BITS_SYSTEM_MENU);
+    GfSequentialPlay::pushPause(PAUSE_BITS_SYSTEM_UNKNOWN_17);
     GfSequentialPlay::addMenuKizunaring(blade);
     GfSequentialPlay::popPause();
     GfSequentialPlay::popState();
@@ -153,12 +153,11 @@ bool GfPlayFactory::createMenuKizunaring(u32 blade) {
 }
 
 bool GfPlayFactory::createSalvage(GF_OBJ_HANDLE *handle) {
-  if (!GfGameManager::isLeaveGameForDebug() && !GfSequentialPlay::isInnerState(GF_STATE_MAPJUMP_SKIP_TRAVEL) && !GfSequentialPlay::isInnerState(GF_STATE_RESET_BLADE) &&
-      GfGameManager::isControlFree()) {
-    GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
-    GfSequentialPlay::pushState(GF_STATE_SALVAGE);
+  if (!GfGameManager::isLeaveGameForDebug() && !GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_9) && !GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_24) && GfGameManager::isControlFree()) {
+    GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_0);
+    GfSequentialPlay::pushState(GF_STATE_UNKNOWN_11);
     GfSequentialPlay::addWaitBattleEnd(0);
-    GfSequentialPlay::pushPause(PAUSE_BIT_FIELD_TIME);
+    GfSequentialPlay::pushPause(PAUSE_BIT_UNKNOWN_4);
     GfSequentialPlay::addSalvage(handle);
     GfSequentialPlay::popPause();
     GfSequentialPlay::popState();
@@ -172,16 +171,16 @@ bool GfPlayFactory::createCollect(GF_OBJ_HANDLE *handle) {
   if (GfGameManager::isLeaveGameForDebug()) {
     return false;
   }
-  if (GfSequentialPlay::isInnerState(GF_STATE_MAPJUMP_SKIP_TRAVEL)) {
+  if (GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_9)) {
     return false;
   }
-  if (GfSequentialPlay::isInnerState(GF_STATE_EVENT)) {
+  if (GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_20)) {
     return false;
   }
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
-  GfSequentialPlay::pushState(GF_STATE_COLLECT);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_0);
+  GfSequentialPlay::pushState(GF_STATE_UNKNOWN_12);
   GfSequentialPlay::addWaitBattleEnd(0);
-  GfSequentialPlay::pushPause(PAUSE_BIT_FIELD_TIME);
+  GfSequentialPlay::pushPause(PAUSE_BIT_UNKNOWN_4);
   GfSequentialPlay::addCollect(handle);
   GfSequentialPlay::popPause();
   GfSequentialPlay::popState();
@@ -196,13 +195,13 @@ bool GfPlayFactory::createFieldTbox(GF_OBJ_HANDLE *handle) {
   if (GfGameManager::isLeaveGameForDebug()) {
     return false;
   }
-  if (GfSequentialPlay::isInnerState(GF_STATE_MAPJUMP_SKIP_TRAVEL)) {
+  if (GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_9)) {
     return false;
   }
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
-  GfSequentialPlay::pushState(GF_STATE_FIELD_TBOX);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_0);
+  GfSequentialPlay::pushState(GF_STATE_UNKNOWN_13);
   GfSequentialPlay::addWaitBattleEnd(0);
-  GfSequentialPlay::pushPause(PAUSE_BIT_FIELD_TIME);
+  GfSequentialPlay::pushPause(PAUSE_BIT_UNKNOWN_4);
   GfSequentialPlay::addFieldTbox(handle);
   GfSequentialPlay::popPause();
   GfSequentialPlay::popState();
@@ -214,13 +213,13 @@ bool GfPlayFactory::createMapGimmick(GF_OBJ_HANDLE *handle) {
   if (GfGameManager::isLeaveGameForDebug()) {
     return false;
   }
-  if (GfSequentialPlay::isInnerState(GF_STATE_MAPJUMP_SKIP_TRAVEL)) {
+  if (GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_9)) {
     return false;
   }
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
-  GfSequentialPlay::pushState(GF_STATE_MAP_GIMMICK);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_0);
+  GfSequentialPlay::pushState(GF_STATE_UNKNOWN_14);
   GfSequentialPlay::addWaitBattleEnd(0);
-  GfSequentialPlay::pushPause(PAUSE_BIT_FIELD_TIME);
+  GfSequentialPlay::pushPause(PAUSE_BIT_UNKNOWN_4);
   GfSequentialPlay::addMapGimmick(handle);
   GfSequentialPlay::popPause();
   GfSequentialPlay::popState();
@@ -232,13 +231,13 @@ bool GfPlayFactory::createGrave(GF_OBJ_HANDLE *handle) {
   if (GfGameManager::isLeaveGameForDebug()) {
     return false;
   }
-  if (GfSequentialPlay::isInnerState(GF_STATE_MAPJUMP_SKIP_TRAVEL)) {
+  if (GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_9)) {
     return false;
   }
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
-  GfSequentialPlay::pushState(GF_STATE_GRAVE);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_0);
+  GfSequentialPlay::pushState(GF_STATE_UNKNOWN_15);
   GfSequentialPlay::addWaitBattleEnd(0);
-  GfSequentialPlay::pushPause(PAUSE_BIT_FIELD_TIME);
+  GfSequentialPlay::pushPause(PAUSE_BIT_UNKNOWN_4);
   GfSequentialPlay::addGrave(handle);
   GfSequentialPlay::popPause();
   GfSequentialPlay::popState();
@@ -250,13 +249,13 @@ bool GfPlayFactory::createJump(GF_OBJ_HANDLE *handle) {
   if (GfGameManager::isLeaveGameForDebug()) {
     return false;
   }
-  if (GfSequentialPlay::isInnerState(GF_STATE_MAPJUMP_SKIP_TRAVEL)) {
+  if (GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_9)) {
     return false;
   }
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
-  GfSequentialPlay::pushState(GF_STATE_JUMP);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_0);
+  GfSequentialPlay::pushState(GF_STATE_UNKNOWN_16);
   GfSequentialPlay::addWaitBattleEnd(0);
-  GfSequentialPlay::pushPause(PAUSE_BIT_FIELD_TIME);
+  GfSequentialPlay::pushPause(PAUSE_BIT_UNKNOWN_4);
   GfSequentialPlay::addJump(handle);
   GfSequentialPlay::popPause();
   GfSequentialPlay::popState();
@@ -268,13 +267,13 @@ bool GfPlayFactory::createWarp(GF_OBJ_HANDLE *handle) {
   if (GfGameManager::isLeaveGameForDebug()) {
     return false;
   }
-  if (GfSequentialPlay::isInnerState(GF_STATE_MAPJUMP_SKIP_TRAVEL)) {
+  if (GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_9)) {
     return false;
   }
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
-  GfSequentialPlay::pushState(GF_STATE_WARP);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_0);
+  GfSequentialPlay::pushState(GF_STATE_UNKNOWN_17);
   GfSequentialPlay::addWaitBattleEnd(0);
-  GfSequentialPlay::pushPause(PAUSE_BIT_FIELD_TIME);
+  GfSequentialPlay::pushPause(PAUSE_BIT_UNKNOWN_4);
   GfSequentialPlay::addWarp(handle);
   GfSequentialPlay::popPause();
   GfSequentialPlay::popState();
@@ -286,15 +285,15 @@ bool GfPlayFactory::createGmkTutorial(const char *name, u32 tutorial) {
   if (GfGameManager::isLeaveGameForDebug()) {
     return false;
   }
-  if (!GfGameManager::isGmkTutorialOK() || GfSequentialPlay::isInnerState(GF_STATE_MAPJUMP_SKIP_TRAVEL)) {
+  if (!GfGameManager::isGmkTutorialOK() || GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_9)) {
     return false;
   }
   GfGameManager::setGmkTutorialSequenceOK(true);
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
-  GfSequentialPlay::pushState(GF_STATE_GMK_TUTORIAL);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_0);
+  GfSequentialPlay::pushState(GF_STATE_UNKNOWN_18);
   GfSequentialPlay::addWaitBattleEnd(0);
   GfSequentialPlay::addWaitPlayerToStartGmkTuto();
-  GfSequentialPlay::pushPause(PAUSE_BIT_FIELD_TIME);
+  GfSequentialPlay::pushPause(PAUSE_BIT_UNKNOWN_4);
   GfSequentialPlay::addGmkTutorial(name, tutorial);
   GfSequentialPlay::popPause();
   GfSequentialPlay::popState();
@@ -306,15 +305,15 @@ bool GfPlayFactory::createGmkCamera(mm::mtl::IntrusivePtr<fw::Camera> camera) {
   if (GfGameManager::isLeaveGameForDebug()) {
     return false;
   }
-  if (!GfGameManager::isGmkTutorialOK() || GfSequentialPlay::isInnerState(GF_STATE_MAPJUMP_SKIP_TRAVEL)) {
+  if (!GfGameManager::isGmkTutorialOK() || GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_9)) {
     return false;
   }
   GfGameManager::setGmkTutorialSequenceOK(true);
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
-  GfSequentialPlay::pushState(GF_STATE_GMK_CAMERA);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_0);
+  GfSequentialPlay::pushState(GF_STATE_UNKNOWN_19);
   GfSequentialPlay::addWaitBattleEnd(0);
   GfSequentialPlay::addWaitPlayerToStartGmkTuto();
-  GfSequentialPlay::pushPause(PAUSE_BIT_FIELD_TIME);
+  GfSequentialPlay::pushPause(PAUSE_BIT_UNKNOWN_4);
   GfSequentialPlay::addWaitGmkCameraEnd(camera);
   GfSequentialPlay::popPause();
   GfSequentialPlay::popState();
@@ -330,8 +329,8 @@ bool GfPlayFactory::createPlayerDead(GfPlayerDead dead) {
     if (GfGameManager::isGameOver()) {
       return createGameOver();
     }
-    GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
-    GfSequentialPlay::pushState(GF_STATE_PLAYER_DEAD);
+    GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_0);
+    GfSequentialPlay::pushState(GF_STATE_UNKNOWN_10);
     GfSequentialPlay::addPlayerDead(dead);
     GfSequentialPlay::popState();
     GfSequentialPlay::play();
@@ -345,10 +344,10 @@ bool GfPlayFactory::createGameOver() {
   }
   GfGameScene *scene = GfGameScene::get();
   if (scene != nullptr) {
-    if (scene->getDeadType() != PLAYER_DEAD_NONE) {
+    if (scene->getDeadType() != PLAYER_DEAD_UNKNOWN_0) {
       return false;
     }
-    scene->setDeadType(PLAYER_DEAD_GAME_OVER);
+    scene->setDeadType(PLAYER_DEAD_UNKNOWN_1);
   }
   ParamReturnTitle param;
   param.unknown00 = true;
@@ -357,20 +356,20 @@ bool GfPlayFactory::createGameOver() {
 }
 
 bool GfPlayFactory::createTalk(const GfSetupPfTalk &talk) {
-  if (GfGameManager::isLeaveGameForDebug() || GfSequentialPlay::isInnerState(GF_STATE_MAPJUMP_SKIP_TRAVEL) || !GfGameManager::isTalkOK()) {
+  if (GfGameManager::isLeaveGameForDebug() || GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_9) || !GfGameManager::isTalkOK()) {
     return false;
   }
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_0);
   GfSequentialPlay::addCallbackEventSequence(talk.unknown00, true);
-  GfSequentialPlay::pushState(GF_STATE_TALK);
+  GfSequentialPlay::pushState(GF_STATE_UNKNOWN_4);
   GfSequentialPlay::addWaitBattleEnd(0);
   GfSequentialPlay::addEventPlayerStop(true);
-  GfSequentialPlay::pushPause(PAUSE_BIT_FIELD_TIME);
+  GfSequentialPlay::pushPause(PAUSE_BIT_UNKNOWN_4);
   GfSequentialPlay::addTalk(talk);
   GfSequentialPlay::popPause();
   GfSequentialPlay::popState();
   GfSequentialPlay::addEventFade();
-  GfSequentialPlay::addWait(EVENT_END_WAIT_TIME);
+  GfSequentialPlay::addWait(unknown040);
   GfSequentialPlay::addCallbackEventSequence(talk.unknown00, false);
   GfSequentialPlay::play();
   GfSequentialPlay::addEventPlayerStop(false);
@@ -378,11 +377,11 @@ bool GfPlayFactory::createTalk(const GfSetupPfTalk &talk) {
 }
 
 void GfPlayFactory::createMapjump(const GfMapjumpInfo &info) {
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_0);
   if (info.unknown104) {
     GfSequentialPlay::addEventPlayerStop(true);
   }
-  GfSequentialPlay::pushState(info.unknown104 ? GF_STATE_MAPJUMP_SKIP_TRAVEL : GF_STATE_MAPJUMP);
+  GfSequentialPlay::pushState(info.unknown104 ? GF_STATE_UNKNOWN_9 : GF_STATE_UNKNOWN_8);
   GfSequentialPlay::addWaitBattleEnd(0);
   GfSequentialPlay::addMapjump(info);
   GfSequentialPlay::popState();
@@ -393,9 +392,9 @@ void GfPlayFactory::createMapjump(const GfMapjumpInfo &info) {
 }
 
 bool GfPlayFactory::createEventMapjump(const GfMapjumpInfo &info) {
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
-  GfSequentialPlay::pushState(GF_STATE_EVENT);
-  GfSequentialPlay::pushState(GF_STATE_MAPJUMP);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_0);
+  GfSequentialPlay::pushState(GF_STATE_UNKNOWN_20);
+  GfSequentialPlay::pushState(GF_STATE_UNKNOWN_8);
   GfSequentialPlay::addCallbackEventSequence(0, true);
   GfSequentialPlay::addWaitBattleEnd(0);
   GfSequentialPlay::addMapjump(info);
@@ -407,7 +406,7 @@ bool GfPlayFactory::createEventMapjump(const GfMapjumpInfo &info) {
 }
 
 bool GfPlayFactory::createOneEventForGimmick(u32 event) {
-  if (GfSequentialPlay::isInnerState(GF_STATE_MENU) || GfSequentialPlay::isInnerState(GF_STATE_COLLECT)) {
+  if (GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_6) || GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_12)) {
     return false;
   }
   return createOneEvent(event);
@@ -420,14 +419,14 @@ bool GfPlayFactory::createOneEvent(u32 event) {
   if (GfGameManager::isLeaveGameForDebug()) {
     return false;
   }
-  if (GfSequentialPlay::isInnerState(GF_STATE_MAPJUMP_SKIP_TRAVEL)) {
+  if (GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_9)) {
     return false;
   }
-  if (GfSequentialPlay::get() != nullptr && GfSequentialPlay::get()->isExistEvent(event) && event != EVENT_ALWAYS_PLAYABLE) {
+  if (GfSequentialPlay::get() != nullptr && GfSequentialPlay::get()->isExistEvent(event) && event != EVENT_UNKNOWN_10001) {
     return true;
   }
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
-  GfSequentialPlay::pushState(GF_STATE_EVENT);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_0);
+  GfSequentialPlay::pushState(GF_STATE_UNKNOWN_20);
   GfSequentialPlay::addCallbackEventSequence(event, true);
   GfSequentialPlay::addWaitBattleEnd(event);
   GfSequentialPlay::addEventPlayerStop(true);
@@ -446,9 +445,9 @@ bool GfPlayFactory::createBlEvent(u32 event, u32 param0, u32 param1, GfSequentia
   if (GfGameManager::isLeaveGameForDebug()) {
     return false;
   }
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_SEQUENCE);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_1);
   GfSequentialPlay::startSignal(signal);
-  GfSequentialPlay::pushState(GF_STATE_EVENT);
+  GfSequentialPlay::pushState(GF_STATE_UNKNOWN_20);
   GfSequentialPlay::addCallbackEventSequence(event, true);
   GfSequentialPlay::pushPause(getEventPauseBits(event));
   GfSequentialPlay::addEvent(event, param0, param1, false);
@@ -468,12 +467,12 @@ bool GfPlayFactory::createTheaterEvent(int event) {
   if (GfGameManager::isLeaveGameForDebug()) {
     return false;
   }
-  if (GfSequentialPlay::get() != nullptr && GfSequentialPlay::get()->isExistEvent(event) && event != EVENT_ALWAYS_PLAYABLE) {
+  if (GfSequentialPlay::get() != nullptr && GfSequentialPlay::get()->isExistEvent(event) && event != EVENT_UNKNOWN_10001) {
     return true;
   }
   u32 isBladeCreate = GfDataEvent::isBladeCreateEvent(event);
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
-  GfSequentialPlay::pushState(GF_STATE_EVENT);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_0);
+  GfSequentialPlay::pushState(GF_STATE_UNKNOWN_20);
   GfSequentialPlay::addCallbackEventSequence(event, true);
   GfSequentialPlay::addWaitBattleEnd(0);
   GfSequentialPlay::pushPause(getEventPauseBits(event));
@@ -491,8 +490,8 @@ bool GfPlayFactory::createReserveEvent(const char *name) {
   if (event == 0) {
     return false;
   }
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
-  GfSequentialPlay::pushState(GF_STATE_EVENT);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_0);
+  GfSequentialPlay::pushState(GF_STATE_UNKNOWN_20);
   GfSequentialPlay::addEventPlayerStop(true);
   GfSequentialPlay::pushPause(getEventPauseBits(event));
   GfSequentialPlay::addEvent(event, 0, 0, false);
@@ -508,9 +507,9 @@ bool GfPlayFactory::createEventAfterScript(int event) {
   if (!GfGameManager::isScenarioGame() || GfGameManager::isLeaveGameForDebug()) {
     return false;
   }
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_SEQUENCE);
-  GfSequentialPlay::pushPause(PAUSE_BITS_SYSTEM_MENU);
-  GfSequentialPlay::pushState(GF_STATE_MENU);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_1);
+  GfSequentialPlay::pushPause(PAUSE_BITS_SYSTEM_UNKNOWN_17);
+  GfSequentialPlay::pushState(GF_STATE_UNKNOWN_6);
   GfSequentialPlay::addAfterEventScript(event);
   GfSequentialPlay::popState();
   GfSequentialPlay::popPause();
@@ -525,8 +524,8 @@ bool GfPlayFactory::createQuestUIOrder(QuestID quest, bool isEntry, bool isForce
     return false;
   }
   GfSequentialPlay::beginCommand(static_cast<GfSequentialPlay::TYPE>(isEntry));
-  GfSequentialPlay::pushPause(PAUSE_BITS_SYSTEM_MENU);
-  GfSequentialPlay::pushState(GF_STATE_MENU);
+  GfSequentialPlay::pushPause(PAUSE_BITS_SYSTEM_UNKNOWN_17);
+  GfSequentialPlay::pushState(GF_STATE_UNKNOWN_6);
   GfSequentialPlay::addQuestUIOrder(quest, isForce);
   GfSequentialPlay::popState();
   GfSequentialPlay::popPause();
@@ -538,9 +537,9 @@ bool GfPlayFactory::createQuestUIComplete(QuestID quest, QuestID child, QSTATE s
   if (GfGameManager::isLeaveGameForDebug()) {
     return false;
   }
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
-  GfSequentialPlay::pushPause(PAUSE_BITS_SYSTEM_MENU);
-  GfSequentialPlay::pushState(GF_STATE_MENU);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_0);
+  GfSequentialPlay::pushPause(PAUSE_BITS_SYSTEM_UNKNOWN_17);
+  GfSequentialPlay::pushState(GF_STATE_UNKNOWN_6);
   GfSequentialPlay::addQuestUIComplete(quest, child, state);
   GfSequentialPlay::popState();
   GfSequentialPlay::popPause();
@@ -552,8 +551,8 @@ bool GfPlayFactory::createQuestUIComplete(QuestID quest) {
   if (!GfGameManager::isScenarioGame() || GfGameManager::isLeaveGameForDebug()) {
     return false;
   }
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_SEQUENCE);
-  GfSequentialPlay::addQuestUIComplete(quest, toQuestID(0), QSTATE_NOT_ORDER);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_1);
+  GfSequentialPlay::addQuestUIComplete(quest, toQuestID(0), QSTATE_UNKNOWN_0);
   GfSequentialPlay::play();
   return true;
 }
@@ -563,8 +562,8 @@ bool GfPlayFactory::createMenuPrecious(u32 item, bool isSequence) {
     return false;
   }
   GfSequentialPlay::beginCommand(static_cast<GfSequentialPlay::TYPE>(isSequence));
-  GfSequentialPlay::pushPause(PAUSE_BITS_SYSTEM_MENU);
-  GfSequentialPlay::pushState(GF_STATE_MENU);
+  GfSequentialPlay::pushPause(PAUSE_BITS_SYSTEM_UNKNOWN_17);
+  GfSequentialPlay::pushState(GF_STATE_UNKNOWN_6);
   GfSequentialPlay::addMenuPrecious(item);
   GfSequentialPlay::popState();
   GfSequentialPlay::popPause();
@@ -576,8 +575,8 @@ bool GfPlayFactory::createEventWait(f32 time, GF_OBJ_HANDLE *handle) {
   if (GfGameManager::isLeaveGameForDebug()) {
     return false;
   }
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
-  GfSequentialPlay::pushState(GF_STATE_WAIT_EVENT);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_0);
+  GfSequentialPlay::pushState(GF_STATE_UNKNOWN_7);
   GfSequentialPlay::addWaitEvent(time, handle);
   GfSequentialPlay::popState();
   GfSequentialPlay::play();
@@ -588,23 +587,23 @@ int GfPlayFactory::createCommonMessage(u32 window) {
   int result = -1;
   if ((GfGameManager::isScenarioGame() || GfManager::isExecModeDebug()) && !GfGameManager::isLeaveGameForDebug()) {
     if (!GfGameManager::isControlFree()) {
-      GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_SEQUENCE);
-      GfSequentialPlay::pushPause(PAUSE_BITS_SYSTEM_MENU);
-      GfSequentialPlay::pushState(GF_STATE_MENU);
+      GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_1);
+      GfSequentialPlay::pushPause(PAUSE_BITS_SYSTEM_UNKNOWN_17);
+      GfSequentialPlay::pushState(GF_STATE_UNKNOWN_6);
       GfSequentialPlay::addEventFade();
       result = GfSequentialPlay::addMenuCommon(window);
       GfSequentialPlay::popState();
       GfSequentialPlay::popPause();
       GfSequentialPlay::play();
     } else if (!GfSequentialPlay::isPlay()) {
-      GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_SEQUENCE);
-      GfSequentialPlay::pushState(GF_STATE_MENU);
-      GfSequentialPlay::pushPause(PAUSE_BITS_SYSTEM_MENU);
+      GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_1);
+      GfSequentialPlay::pushState(GF_STATE_UNKNOWN_6);
+      GfSequentialPlay::pushPause(PAUSE_BITS_SYSTEM_UNKNOWN_17);
       GfSequentialPlay::addEventFade();
       result = GfSequentialPlay::addMenuCommon(window);
       GfSequentialPlay::popPause();
       GfSequentialPlay::popState();
-      GfSequentialPlay::addWait(EVENT_END_WAIT_TIME);
+      GfSequentialPlay::addWait(unknown040);
       GfSequentialPlay::play();
     }
   }
@@ -615,23 +614,23 @@ int GfPlayFactory::createCommonMessage(const MenuCommonWindowParam &param) {
   int result = -1;
   if ((GfGameManager::isScenarioGame() || GfManager::isExecModeDebug()) && !GfGameManager::isLeaveGameForDebug()) {
     if (!GfGameManager::isControlFree()) {
-      GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_SEQUENCE);
-      GfSequentialPlay::pushPause(PAUSE_BITS_SYSTEM_MENU);
-      GfSequentialPlay::pushState(GF_STATE_MENU);
+      GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_1);
+      GfSequentialPlay::pushPause(PAUSE_BITS_SYSTEM_UNKNOWN_17);
+      GfSequentialPlay::pushState(GF_STATE_UNKNOWN_6);
       GfSequentialPlay::addEventFade();
       result = GfSequentialPlay::addMenuCommon(param);
       GfSequentialPlay::popState();
       GfSequentialPlay::popPause();
       GfSequentialPlay::play();
     } else if (!GfSequentialPlay::isPlay()) {
-      GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_SEQUENCE);
-      GfSequentialPlay::pushState(GF_STATE_MENU);
-      GfSequentialPlay::pushPause(PAUSE_BITS_SYSTEM_MENU);
+      GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_1);
+      GfSequentialPlay::pushState(GF_STATE_UNKNOWN_6);
+      GfSequentialPlay::pushPause(PAUSE_BITS_SYSTEM_UNKNOWN_17);
       GfSequentialPlay::addEventFade();
       result = GfSequentialPlay::addMenuCommon(param);
       GfSequentialPlay::popPause();
       GfSequentialPlay::popState();
-      GfSequentialPlay::addWait(EVENT_END_WAIT_TIME);
+      GfSequentialPlay::addWait(unknown040);
       GfSequentialPlay::play();
     }
   }
@@ -644,9 +643,9 @@ u32 GfPlayFactory::getDispCommonMessage(u32 window) { return GfPlayComMenuCommon
 
 void GfPlayFactory::createOpenChapterSave(u32 chapter) {
   if (GfGameManager::isScenarioGame() && !GfGameManager::isLeaveGameForDebug()) {
-    GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_SEQUENCE);
-    GfSequentialPlay::pushPause(PAUSE_BITS_SYSTEM_MENU);
-    GfSequentialPlay::pushState(GF_STATE_MENU);
+    GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_1);
+    GfSequentialPlay::pushPause(PAUSE_BITS_SYSTEM_UNKNOWN_17);
+    GfSequentialPlay::pushState(GF_STATE_UNKNOWN_6);
     GfSequentialPlay::addMenuChapterSave(chapter);
     GfSequentialPlay::popState();
     GfSequentialPlay::popPause();
@@ -660,7 +659,7 @@ void GfPlayFactory::createOpenZoneUI(u32 zone) {
   if (GfGameManager::isLeaveGameForDebug()) {
     return;
   }
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_0);
   GfSequentialPlay::addEventFade();
   GfSequentialPlay::addMenuZone(zone);
   GfSequentialPlay::play();
@@ -670,7 +669,7 @@ void GfPlayFactory::createOpenChapterUI(u32 chapter) {
   if (GfGameManager::isLeaveGameForDebug()) {
     return;
   }
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_SEQUENCE);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_1);
   GfSequentialPlay::addEventFade();
   GfSequentialPlay::addMenuChapter(chapter);
   GfSequentialPlay::play();
@@ -680,7 +679,7 @@ void GfPlayFactory::createOpenChapterEndUI(u32 chapter) {
   if (GfGameManager::isLeaveGameForDebug()) {
     return;
   }
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_SEQUENCE);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_1);
   GfSequentialPlay::addMenuChapterEnd(chapter);
   GfSequentialPlay::play();
 }
@@ -689,7 +688,7 @@ void GfPlayFactory::createOpenDummyTutorial(u32 tutorial) {
   if (GfGameManager::isLeaveGameForDebug()) {
     return;
   }
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_SEQUENCE);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_1);
   GfSequentialPlay::addMenuDummyTutorial(tutorial);
   GfSequentialPlay::play();
 }
@@ -698,7 +697,7 @@ void GfPlayFactory::createBattleStart(bool isStart) {
   if (GfGameManager::isLeaveGameForDebug()) {
     return;
   }
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_0);
   GfSequentialPlay::addBattleStart(isStart);
   GfSequentialPlay::play();
 }
@@ -707,8 +706,8 @@ void GfPlayFactory::createGimmickTaskComplete(gmk::GmkType type, u32 task, f32 t
   if (GfGameManager::isLeaveGameForDebug()) {
     return;
   }
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_SEQUENCE);
-  GfSequentialPlay::pushState(GF_STATE_GIMMICK_TASK);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_1);
+  GfSequentialPlay::pushState(GF_STATE_UNKNOWN_21);
   GfSequentialPlay::addGimmickTaskComplete(type, task, time);
   GfSequentialPlay::popState();
   GfSequentialPlay::play();
@@ -719,9 +718,9 @@ bool GfPlayFactory::createChainAttack() {
     return false;
   }
   if (GfGameManager::isControlFree()) {
-    GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
-    GfSequentialPlay::pushPause(PAUSE_BITS_SYSTEM_MENU);
-    GfSequentialPlay::pushState(GF_STATE_CHAIN_ATTACK);
+    GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_0);
+    GfSequentialPlay::pushPause(PAUSE_BITS_SYSTEM_UNKNOWN_17);
+    GfSequentialPlay::pushState(GF_STATE_UNKNOWN_22);
     GfSequentialPlay::addChainAttack();
     GfSequentialPlay::popState();
     GfSequentialPlay::popPause();
@@ -733,9 +732,9 @@ bool GfPlayFactory::createChainAttack() {
 
 bool GfPlayFactory::createArtsMovie(const char *name) {
   if (!GfGameManager::isLeaveGameForDebug() && GfGameManager::isControlFree()) {
-    GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
-    GfSequentialPlay::pushPause(PAUSE_BITS_SYSTEM_MENU);
-    GfSequentialPlay::pushState(GF_STATE_ARTS_MOVIE);
+    GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_0);
+    GfSequentialPlay::pushPause(PAUSE_BITS_SYSTEM_UNKNOWN_17);
+    GfSequentialPlay::pushState(GF_STATE_UNKNOWN_23);
     GfSequentialPlay::addArtsMovie(name);
     GfSequentialPlay::popState();
     GfSequentialPlay::popPause();
@@ -765,18 +764,18 @@ bool GfPlayFactory::createResetBladeForBattleEnd(u32 partyId, int blade, bool is
     GfReqCommand::reqChangeBladeWithSetId(partyId, blade, true);
     return true;
   }
-  if (GfSequentialPlay::isInnerState(GF_STATE_EVENT) || GfSequentialPlay::isSequenceSpecialAction() || GfSequentialPlay::isExistResetBladeParty(partyId)) {
+  if (GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_20) || GfSequentialPlay::isSequenceSpecialAction() || GfSequentialPlay::isExistResetBladeParty(partyId)) {
     return false;
   }
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_0);
   if (isPlayerStop) {
     GfSequentialPlay::addResetBladePlayerStop(true);
-    GfSequentialPlay::pushState(GF_STATE_RESET_BLADE);
+    GfSequentialPlay::pushState(GF_STATE_UNKNOWN_24);
     GfSequentialPlay::addResetBlade(partyId, blade);
     GfSequentialPlay::popState();
     GfSequentialPlay::addResetBladePlayerStop(false);
   } else {
-    GfSequentialPlay::pushState(GF_STATE_RESET_BLADE);
+    GfSequentialPlay::pushState(GF_STATE_UNKNOWN_24);
     GfSequentialPlay::addResetBlade(partyId, blade);
     GfSequentialPlay::popState();
   }
@@ -796,11 +795,11 @@ bool GfPlayFactory::createResetBladeForBladeSwitch(u32 partyId, int blade) {
     GfReqCommand::reqChangeBladeWithSetId(partyId, blade, true);
     return true;
   }
-  if (GfSequentialPlay::isInnerState(GF_STATE_EVENT) || GfSequentialPlay::isSequenceSpecialAction() || GfSequentialPlay::isExistResetBladeParty(partyId)) {
+  if (GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_20) || GfSequentialPlay::isSequenceSpecialAction() || GfSequentialPlay::isExistResetBladeParty(partyId)) {
     return false;
   }
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
-  GfSequentialPlay::pushState(GF_STATE_RESET_BLADE);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_0);
+  GfSequentialPlay::pushState(GF_STATE_UNKNOWN_24);
   GfSequentialPlay::addResetBlade(partyId, blade);
   GfSequentialPlay::popState();
   GfSequentialPlay::play();
@@ -811,8 +810,8 @@ void GfPlayFactory::createHomuraHikariCurrent(u32 partyId, int blade) {
   if (GfPlayComResetBlade::isPlaying(partyId)) {
     return;
   }
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_SEQUENCE);
-  GfSequentialPlay::pushState(GF_STATE_RESET_BLADE);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_1);
+  GfSequentialPlay::pushState(GF_STATE_UNKNOWN_24);
   GfSequentialPlay::addResetBlade(partyId, blade);
   GfSequentialPlay::popState();
   GfSequentialPlay::play();
@@ -820,9 +819,9 @@ void GfPlayFactory::createHomuraHikariCurrent(u32 partyId, int blade) {
 
 void GfPlayFactory::createMoverSwitch() {
   GfObjAcc leader(GfGameManager::getPartyLeaderDriver());
-  if (!leader.isBattle() && !GfSequentialPlay::isInnerState(GF_STATE_EVENT)) {
-    GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
-    GfSequentialPlay::pushState(GF_STATE_RESET_BLADE);
+  if (!leader.isBattle() && !GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_20)) {
+    GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_0);
+    GfSequentialPlay::pushState(GF_STATE_UNKNOWN_24);
     GfSequentialPlay::addMoverSwitch();
     GfSequentialPlay::popState();
     GfSequentialPlay::play();
@@ -831,9 +830,9 @@ void GfPlayFactory::createMoverSwitch() {
 
 bool GfPlayFactory::createMenuObjCommonText(GfMenuObjCommonText::OpenKizunaParam &param) {
   if ((GfGameManager::isScenarioGame() || GfManager::isExecModeDebug()) && !GfGameManager::isLeaveGameForDebug()) {
-    GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_SEQUENCE);
-    GfSequentialPlay::pushPause(PAUSE_BITS_SYSTEM_MENU);
-    GfSequentialPlay::pushState(GF_STATE_MENU);
+    GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_1);
+    GfSequentialPlay::pushPause(PAUSE_BITS_SYSTEM_UNKNOWN_17);
+    GfSequentialPlay::pushState(GF_STATE_UNKNOWN_6);
     GfSequentialPlay::addEventFade();
     GfSequentialPlay::addMenuObjCommonText(param);
     GfSequentialPlay::popState();
@@ -845,8 +844,8 @@ bool GfPlayFactory::createMenuObjCommonText(GfMenuObjCommonText::OpenKizunaParam
 }
 
 void GfPlayFactory::createHoodHomuraBattou() {
-  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
-  GfSequentialPlay::pushState(GF_STATE_RESET_BLADE);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_UNKNOWN_0);
+  GfSequentialPlay::pushState(GF_STATE_UNKNOWN_24);
   GfSequentialPlay::addHoodHomuraBattou();
   GfSequentialPlay::popState();
   GfSequentialPlay::play();

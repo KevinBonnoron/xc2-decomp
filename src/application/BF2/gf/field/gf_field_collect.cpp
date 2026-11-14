@@ -30,7 +30,7 @@ enum unknown001 {
   unknown001_66 = 0x42,
 };
 
-GfFieldCollect::GfFieldCollect(const GfSetupParam &param) : unknown19(false), unknown20(INVALID_HANDLE), unknown1c0(0.0f), unknown1c4(0.0f), unknown1c8(0) { create(param); }
+GfFieldCollect::GfFieldCollect(const GfSetupParam &param) : unknown19(false), unknown20(unknown020), unknown1c0(0.0f), unknown1c4(0.0f), unknown1c8(0) { create(param); }
 
 void GfFieldCollect::seqEnd(f32) {}
 
@@ -52,14 +52,14 @@ bool GfFieldCollect::isDropitemsEmitted() const {
 }
 
 void GfFieldCollect::gevMapjump(GEV event, const MapjumpCallbackInfo &) {
-  if (event == GEV_MAPJUMP_START) {
+  if (event == GEV_UNKNOWN_1) {
     end();
   }
 }
 
 void GfFieldCollect::end() {
   unknown30.clear();
-  unknown20 = INVALID_HANDLE;
+  unknown20 = unknown020;
   unknown08 = &GfFieldCollect::seqEnd;
 }
 
@@ -88,7 +88,7 @@ void GfFieldCollect::update(f32 deltaTime) {
 void GfFieldCollect::build(const GfSetupParam &param) {
   // __LINE__ must be 185 as in the original file: it is the line argument of operator new.
 #line 185
-  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfFieldCollect(param);
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfFieldCollect(param);
 }
 
 void GfFieldCollect::destroy() {
@@ -132,13 +132,13 @@ void GfFieldCollect::seqDo(f32) {
     u8 *collectionBdat = collection->getBindedBdatFp();
     info.unknown28 = collectionBdat;
     info.unknown30 = collection->unknown20.unknown18;
-    info.unknown20 = gmk::toBdatF32(Bdat::getValCheck(collectionBdat, "initWaitTime", info.unknown30, gmk::BDAT_TYPE_F32));
-    info.unknown24 = gmk::toBdatF32(Bdat::getValCheck(collectionBdat, "initWaitTimeRand", info.unknown30, gmk::BDAT_TYPE_F32));
+    info.unknown20 = gmk::toBdatF32(Bdat::getValCheck(collectionBdat, "initWaitTime", info.unknown30, gmk::BDAT_TYPE_UNKNOWN_8));
+    info.unknown24 = gmk::toBdatF32(Bdat::getValCheck(collectionBdat, "initWaitTimeRand", info.unknown30, gmk::BDAT_TYPE_UNKNOWN_8));
   }
   createDropitemEmitter(info);
   u8 *bdat = GfDataBdat::getFP(BDAT_FLD_WILDCARD_DATA);
-  f32 waitTime = Bdat::getValCheck(bdat, 0, 5, gmk::BDAT_TYPE_F32).valueF32;
-  f32 distance = Bdat::getValCheck(bdat, 0, 6, gmk::BDAT_TYPE_F32).valueF32;
+  f32 waitTime = Bdat::getValCheck(bdat, 0, 5, gmk::BDAT_TYPE_UNKNOWN_8).valueF32;
+  f32 distance = Bdat::getValCheck(bdat, 0, 6, gmk::BDAT_TYPE_UNKNOWN_8).valueF32;
   for (u32 i = 0; i < unknown1d0.size(); i++) {
     info.unknown1c += waitTime;
     info.unknown18 = distance * (i + 1);

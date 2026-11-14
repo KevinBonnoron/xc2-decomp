@@ -68,7 +68,11 @@ struct MsgObjectStopAutoHeal;
 struct MsgObjectLimitHP;
 struct MsgObjectDead;
 struct MsgObjectNotifyDead;
+struct MsgObjectNotifyDamage;
+struct MsgObjectNotifyHealHp;
 struct MsgGameChangeTarget;
+struct MsgObjectAlpha;
+struct MsgObjectNotifyChangeAttribute;
 
 class GfComProperty : public GfComponent {
 public:
@@ -81,6 +85,8 @@ public:
   void changeLayer(u32 oldLayer, u32 newLayer) override;
   const mm::mtl::RTTI *getRTTI() const override;
   void onDead(MsgObjectNotifyDead &message);
+  void onDamage(MsgObjectNotifyDamage &message);
+  void onHeal(MsgObjectNotifyHealHp &message);
   void procMsgObjectDead(fw::MessageObject *object, MsgObjectDead &message);
   void procMsgGameChangeTarget(fw::MessageObject *object, MsgGameChangeTarget &message);
   void flush();
@@ -89,6 +95,9 @@ public:
   void procMsgObjectSetHp(fw::MessageObject *object, MsgObjectSetHp &message);
   void procMsgObjectStopAutoHeal(fw::MessageObject *object, MsgObjectStopAutoHeal &message);
   void procMsgObjectLimitHP(fw::MessageObject *object, MsgObjectLimitHP &message);
+  void procMsgObjectAlpha(fw::MessageObject *object, MsgObjectAlpha &message);
+  void procMsgObjectNotifyChangeAttribute(fw::MessageObject *object, MsgObjectNotifyChangeAttribute &message);
+  void setAlpha(u32 type, f32 alpha);
 
   mm::mtl::IntrusivePtr<GfStatusProperty> unknown10;   // Inferred role: status; original member name unknown.
   mm::mtl::UniquePtr<GfTargetProperty> unknown18;      // Inferred role: target; original member name unknown.
@@ -104,25 +113,25 @@ static_assert(offsetof(GfComProperty, unknown28) == 0x28, "");
 static_assert(offsetof(GfComProperty, unknown30) == 0x30, "");
 
 enum {
-  HEAL_TYPE_NORMAL = 0,
-  HEAL_TYPE_FULL = 1,
-  HEAL_TYPE_SET = 2,
+  HEAL_TYPE_UNKNOWN_0 = 0, // Inferred role: heal type normal; original name unknown.
+  HEAL_TYPE_UNKNOWN_1 = 1, // Inferred role: heal type full; original name unknown.
+  HEAL_TYPE_UNKNOWN_2 = 2, // Inferred role: heal type set; original name unknown.
 };
 
 enum {
-  MSG_OBJECT_DAMAGE = 0x1000032,
-  MSG_OBJECT_NOTIFY_DAMAGE = 0x1000037,
-  MSG_OBJECT_NOTIFY_DEAD = 0x1000038,
-  MSG_OBJECT_NOTIFY_HEAL_HP = 0x1000039,
-  MSG_OBJECT_FLUSH_PROPERTY = 0x100003b,
+  MSG_OBJECT_UNKNOWN_16777266 = 0x1000032, // Inferred role: msg object damage; original name unknown.
+  MSG_OBJECT_UNKNOWN_16777271 = 0x1000037, // Inferred role: msg object notify damage; original name unknown.
+  MSG_OBJECT_UNKNOWN_16777272 = 0x1000038, // Inferred role: msg object notify dead; original name unknown.
+  MSG_OBJECT_UNKNOWN_16777273 = 0x1000039, // Inferred role: msg object notify heal hp; original name unknown.
+  MSG_OBJECT_UNKNOWN_16777275 = 0x100003b, // Inferred role: msg object flush property; original name unknown.
 };
 
 // Layout evidence: GfComBehaviorEnemy::procMsgObjectLure (0x7100513fc4) and GfFieldDmg::update build it on the stack and the
 // handlers of GfComBehaviorEnemy read the members at 0x20, 0x2a and 0x2e.
 struct MsgObjectDamage : fw::Message {
   MsgObjectDamage(u32 damage, u32 type)
-      : fw::Message(MSG_OBJECT_DAMAGE, 0x20), unknown08(damage), unknown0c(damage), unknown10(type), unknown18(nullptr), unknown20(INVALID_HANDLE), unknown28_0(0), unknown28_1(0), unknown28_2(0),
-        unknown29(0), unknown2a(false), unknown2b(0), unknown2c(0), unknown2e(false), unknown2f(true), unknown30(false), unknown34(0), unknown38(false) {}
+      : fw::Message(MSG_OBJECT_UNKNOWN_16777266, 0x20), unknown08(damage), unknown0c(damage), unknown10(type), unknown18(nullptr), unknown20(unknown020), unknown28_0(0), unknown28_1(0),
+        unknown28_2(0), unknown29(0), unknown2a(false), unknown2b(0), unknown2c(0), unknown2e(false), unknown2f(true), unknown30(false), unknown34(0), unknown38(false) {}
 
   u32 unknown08;             // Inferred role: damage; original member name unknown.
   u32 unknown0c;             // Role and original member name unknown.
@@ -154,7 +163,7 @@ static_assert(sizeof(MsgObjectDamage) == 0x40, "");
 
 // Layout evidence: SCOM_CHAR_DEAD::create builds it on the stack.
 struct MsgObjectNotifyDamage : fw::Message {
-  MsgObjectNotifyDamage(const MsgObjectDamage *damage) : fw::Message(MSG_OBJECT_NOTIFY_DAMAGE, 0x40), unknown08(damage), unknown18(0) {}
+  MsgObjectNotifyDamage(const MsgObjectDamage *damage) : fw::Message(MSG_OBJECT_UNKNOWN_16777271, 0x40), unknown08(damage), unknown18(0) {}
 
   const MsgObjectDamage *unknown08; // Inferred role: damage; original member name unknown.
   GF_OBJ_HANDLE *unknown10;         // Inferred role: attacker; original member name unknown.
@@ -167,7 +176,7 @@ static_assert(offsetof(MsgObjectNotifyDamage, unknown18) == 0x18, "");
 // Layout evidence: GfComProperty::procMsgObjectDead and StateBattleDead::Update (0x710053dfec) build it on the stack.
 struct MsgObjectNotifyDead : fw::Message {
   MsgObjectNotifyDead(int deadType, const MsgObjectDamage *damage)
-      : fw::Message(MSG_OBJECT_NOTIFY_DEAD, 0x40), unknown08(deadType), unknown10(damage), unknown18(INVALID_HANDLE), unknown20(0), unknown24(90), unknown28(false) {}
+      : fw::Message(MSG_OBJECT_UNKNOWN_16777272, 0x40), unknown08(deadType), unknown10(damage), unknown18(unknown020), unknown20(0), unknown24(90), unknown28(false) {}
 
   int unknown08;                    // Inferred role: dead type; original member name unknown.
   const MsgObjectDamage *unknown10; // Inferred role: damage; original member name unknown.
@@ -219,7 +228,7 @@ struct MsgObjectAlpha : fw::Message {
 };
 
 struct MsgObjectFlushProperty : fw::Message {
-  MsgObjectFlushProperty() : fw::Message(MSG_OBJECT_FLUSH_PROPERTY, 0x20) {}
+  MsgObjectFlushProperty() : fw::Message(MSG_OBJECT_UNKNOWN_16777275, 0x20) {}
 };
 
 struct MsgGameChangeTarget : fw::Message {
@@ -252,7 +261,7 @@ struct MsgObjectNotifyChangeAttribute : fw::Message {
 enum {
   DEAD_TYPE_UNKNOWN_1 = 1, // Inferred role: game over of the controlled character, sent by StateBattleDead::Update; original name unknown.
   DEAD_TYPE_UNKNOWN_3 = 3, // Inferred role: death that the pc water states do not relay to the buddy; original name unknown.
-  DEAD_TYPE_EMERGENCY_ESCAPE = 4,
+  DEAD_TYPE_UNKNOWN_4 = 4, // Inferred role: dead type emergency escape; original name unknown.
   DEAD_TYPE_UNKNOWN_7 = 7, // Inferred role: death by staying inside the collision, sent by FallIntoColiPlugin::update; original name unknown.
 };
 

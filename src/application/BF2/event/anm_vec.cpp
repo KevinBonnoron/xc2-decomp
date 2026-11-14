@@ -15,7 +15,7 @@ void AnmVec::clear() {
 
 void AnmVec::update(f32 delta) {
   AnmBase::update(delta);
-  if (unknown08 & STATE_PLAY) {
+  if (unknown08 & STATE_UNKNOWN_1) {
     unknown1e0 = calcEvalute(unknown68, unknown70);
   }
 }
@@ -40,7 +40,7 @@ CV_TYPE AnmVec::getCv(size_t index) const {
   if (index < unknown190.size()) {
     return unknown190[index];
   }
-  return CV_TYPE_LINEAR;
+  return CV_TYPE_UNKNOWN_1;
 }
 
 const mm::Vec3 &AnmVec::getValue(size_t index) const {

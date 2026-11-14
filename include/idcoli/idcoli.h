@@ -41,12 +41,12 @@ enum unknown098 {
 };
 
 enum ShapeType : unsigned int {
-  SHAPE_TYPE_SPHERE = 0,
-  SHAPE_TYPE_BOX = 1,
-  SHAPE_TYPE_CAPSULE = 2,
-  SHAPE_TYPE_CHARACTER = 3,
-  SHAPE_TYPE_BOX_ROTATE = 6,
-  SHAPE_TYPE_CAPSULE_ROTATE = 7,
+  SHAPE_TYPE_UNKNOWN_0 = 0, // Inferred role: sphere; original name unknown.
+  SHAPE_TYPE_UNKNOWN_1 = 1, // Inferred role: box; original name unknown.
+  SHAPE_TYPE_UNKNOWN_2 = 2, // Inferred role: capsule; original name unknown.
+  SHAPE_TYPE_UNKNOWN_3 = 3, // Inferred role: character; original name unknown.
+  SHAPE_TYPE_UNKNOWN_6 = 6, // Inferred role: box rotate; original name unknown.
+  SHAPE_TYPE_UNKNOWN_7 = 7, // Inferred role: capsule rotate; original name unknown.
 };
 
 template <typename T> struct ColiLinkList {
@@ -90,7 +90,7 @@ static_assert(sizeof(unknown003) == 0x10, "");
 class IDColiTreeTop {
 public:
   static const u8 COLI_TBL_GRID[5];
-  static const u8 COLI_TBL_INDEX[5];
+  static const u8 COLI_TBL_INDEX[5]; // Name from the game symbol _ZN6idcoli13IDColiTreeTop14COLI_TBL_INDEXE; also in torna and xc1de.
 
   IDColiTreeTop();
   ~IDColiTreeTop();
@@ -127,15 +127,15 @@ static_assert(sizeof(IDColiTreeTop) == 0x2c10, "");
 
 class IDColiObj {
 public:
-  static const u32 FLAG_LANDING = 1 << 0;
-  static const u32 FLAG_OUT_RANGE = 1 << 1;
-  static const u32 FLAG_CONTACT_WALL = 1 << 2;
+  static const u32 FLAG_UNKNOWN_0 = 1 << 0; // Inferred role: landing; original name unknown.
+  static const u32 FLAG_UNKNOWN_1 = 1 << 1; // Inferred role: out range; original name unknown.
+  static const u32 FLAG_UNKNOWN_2 = 1 << 2; // Inferred role: contact wall; original name unknown.
 
-  static const u32 UPDATE_MATRIX = 1 << 3;
-  static const u32 UPDATE_SIZE = 1 << 5;
-  static const u32 UPDATE_ROTATE = 1 << 10;
+  static const u32 UPDATE_UNKNOWN_3 = 1 << 3;   // Inferred role: matrix; original name unknown.
+  static const u32 UPDATE_UNKNOWN_5 = 1 << 5;   // Inferred role: size; original name unknown.
+  static const u32 UPDATE_UNKNOWN_10 = 1 << 10; // Inferred role: rotate; original name unknown.
 
-  static const f32 OBJ_CALC_RADIUS;
+  static const f32 OBJ_CALC_RADIUS; // Name from the game symbol _ZN6idcoli9IDColiObj15OBJ_CALC_RADIUSE; also in torna and xc1de.
 
   bool isDeleteCall() const;
   IDColiObj();
@@ -345,11 +345,14 @@ static_assert(sizeof(CHCLBaseData) == 0x50, "");
 
 struct CHCLBaseInfo {
   u16 unknown00; // Inferred role: primitive type; original member name unknown.
-  u8 _02[0x0c - 0x02];
+  u8 _02[0x06 - 0x02];
+  u16 unknown06; // Inferred role: index of the link bone matrix; original member name unknown.
+  u8 _08[0x0c - 0x08];
   u32 unknown0c; // Inferred role: index of the grand record; original member name unknown.
   u8 _10[0x18 - 0x10];
 };
 
+static_assert(offsetof(CHCLBaseInfo, unknown06) == 0x6, "");
 static_assert(offsetof(CHCLBaseInfo, unknown0c) == 0xc, "");
 static_assert(sizeof(CHCLBaseInfo) == 0x18, "");
 
@@ -483,7 +486,7 @@ public:
   void primset_box(void *work, IDColiBaseType &type, const CHCLBaseData *data, const CHCLBaseInfo *info);
   void primset_poli(void *work, IDColiBaseType &type, const CHCLBaseData *data, const CHCLBaseInfo *info);
 
-  static const ShapeType s_TypePrimiteve[7];
+  static const ShapeType s_TypePrimiteve[7]; // Name from the game symbol _ZN6idcoli13IDColiObjData15s_TypePrimiteveE; also in torna and xc1de.
 
   // Inferred helper: releases the ground character object created from the binary; original name unknown.
   void unknown021() {
@@ -523,7 +526,8 @@ public:
   void update() override;
   bool SweepAndPruneUpdate() override;
   void consistentUpdate() override;
-  virtual void moveUpdate();
+  // Not virtual: the game's vtable of IDColiObjChar (1.0.0: 0x71011b6fd8) is 0x48 bytes and ends at consistentUpdate.
+  void moveUpdate();
 
   u8 _208[0x210 - 0x208];
   mm::Vec3 unknown210; // Inferred role: unknown; original member name unknown.
@@ -826,6 +830,17 @@ public:
   bool instAaBbHit(u32 index);
   bool instAaBbHitParts(const IDCmfPosData *posData, const IDCmfPosInfo *posInfo);
 
+  // Inferred helper: callbacks of a test that only checks for a hit (stops at the first one, no stock, no vector data); original name unknown.
+  // Evidence: the same five stores in IDColiGrandObj::testLine, testRay, testSphere and testCapsule (1.0.0: 0x71008e3f18, 0x71008e4d98,
+  // 0x71008e5074 and 0x71008e5434) when the result type is 0.
+  void unknown099() {
+    unknown90 = &IDColiGrandTree::treeHitEnd;
+    unknown30 = nullptr;
+    unknown40 = nullptr;
+    unknown70 = &IDColiGrandMesh::vecotrNon;
+    unknown80 = &IDColiGrandMesh::vecotrNon;
+  }
+
   bool (IDColiGrandTree::*unknown90)(u32);                          // Inferred role: hit test of a tree cell object; original member name unknown.
   bool (IDColiGrandTree::*unknowna0)(u32);                          // Inferred role: hit test of a moved instance; original member name unknown.
   bool (IDColiGrandTree::*unknownb0)(const float *, const float *); // Inferred role: bounds test; original member name unknown.
@@ -1080,14 +1095,15 @@ public:
   bool testSphere(const mm::Vec3 &center, f32 radius);
   bool testCapsule(const mm::Vec3 &start, const mm::Vec3 &end, f32 radius);
   bool testAaBb(const mm::Vec3 &max, const mm::Vec3 &min);
+  bool testCharColiObj(IDColiObj *object, f32 range);
   bool getAaBbPoliAaBb(mm::Vec3 &max, mm::Vec3 &min, const mm::Vec3 &inputMax, const mm::Vec3 &inputMin);
 
-  bool unknown00;         // Inferred role: test the character objects; original member name unknown.
-  bool unknown01;         // Inferred role: test the ground objects; original member name unknown.
-  bool unknown02;         // Inferred role: test the ground character objects; original member name unknown.
-  f32 unknown04;          // Inferred role: squared range of the inputs; original member name unknown.
-  unknown005 *unknown08;  // Inferred role: callback; original member name unknown.
-  IDColiResult unknown10; // Inferred role: collision result; original member name unknown.
+  bool unknown00;            // Inferred role: test the character objects; original member name unknown.
+  bool unknown01;            // Inferred role: test the ground objects; original member name unknown.
+  bool unknown02;            // Inferred role: test the ground character objects; original member name unknown.
+  f32 unknown04;             // Inferred role: squared range of the inputs; original member name unknown.
+  IDColiCallBack *unknown08; // Inferred role: callback; original member name unknown.
+  IDColiResult unknown10;    // Inferred role: collision result; original member name unknown.
 };
 
 static_assert(offsetof(IDColiDef, unknown04) == 0x4, "");
@@ -1102,14 +1118,15 @@ public:
   bool testRay(const mm::Vec3 &start, const mm::Vec3 &direction, f32 length, f32 backLength);
   bool testSphere(const mm::Vec3 &center, f32 radius);
   bool testCapsule(const mm::Vec3 &start, const mm::Vec3 &end, f32 radius);
+  bool testCharColiObj(IDColiObj *object, f32 range);
   bool testPhantomColiObj(IDColiObj *object, f32 range);
 
-  bool unknown00;         // Inferred role: unknown, initialized like IDColiDef::unknown00; original member name unknown.
-  bool unknown01;         // Inferred role: unknown, initialized like IDColiDef::unknown01; original member name unknown.
-  bool unknown02;         // Inferred role: unknown, initialized like IDColiDef::unknown02; original member name unknown.
-  f32 unknown04;          // Inferred role: squared range of the inputs; original member name unknown.
-  unknown005 *unknown08;  // Inferred role: callback; original member name unknown.
-  IDColiResult unknown10; // Inferred role: collision result; original member name unknown.
+  bool unknown00;            // Inferred role: unknown, initialized like IDColiDef::unknown00; original member name unknown.
+  bool unknown01;            // Inferred role: unknown, initialized like IDColiDef::unknown01; original member name unknown.
+  bool unknown02;            // Inferred role: unknown, initialized like IDColiDef::unknown02; original member name unknown.
+  f32 unknown04;             // Inferred role: squared range of the inputs; original member name unknown.
+  IDColiCallBack *unknown08; // Inferred role: callback; original member name unknown.
+  IDColiResult unknown10;    // Inferred role: collision result; original member name unknown.
 };
 
 static_assert(offsetof(IDColiPhantom, unknown04) == 0x4, "");
@@ -1125,12 +1142,12 @@ public:
   bool testSphere(const IDColiObj *object, const mm::Vec3 &center, f32 radius);
   bool testCapsule(const IDColiObj *object, const mm::Vec3 &start, const mm::Vec3 &end, f32 radius);
 
-  bool unknown00;         // Inferred role: unknown, initialized like IDColiDef::unknown00; original member name unknown.
-  bool unknown01;         // Inferred role: unknown, initialized like IDColiDef::unknown01; original member name unknown.
-  bool unknown02;         // Inferred role: unknown, initialized like IDColiDef::unknown02; original member name unknown.
-  f32 unknown04;          // Inferred role: squared range of the inputs; original member name unknown.
-  unknown005 *unknown08;  // Inferred role: callback; original member name unknown.
-  IDColiResult unknown10; // Inferred role: collision result; original member name unknown.
+  bool unknown00;            // Inferred role: unknown, initialized like IDColiDef::unknown00; original member name unknown.
+  bool unknown01;            // Inferred role: unknown, initialized like IDColiDef::unknown01; original member name unknown.
+  bool unknown02;            // Inferred role: unknown, initialized like IDColiDef::unknown02; original member name unknown.
+  f32 unknown04;             // Inferred role: squared range of the inputs; original member name unknown.
+  IDColiCallBack *unknown08; // Inferred role: callback; original member name unknown.
+  IDColiResult unknown10;    // Inferred role: collision result; original member name unknown.
 };
 
 static_assert(offsetof(IDColiCheckObj, unknown04) == 0x4, "");
@@ -1146,9 +1163,9 @@ public:
     f32 unknown04; // Inferred role: z; original member name unknown.
   };
 
-  static const f32 s_fBaseWallDot;
-  static const f32 s_fLandingAngle;
-  static const f32 s_fLandingVecChk;
+  static const f32 s_fBaseWallDot;   // Name from the game symbol _ZN6idcoli10IDColiMove14s_fBaseWallDotE; also in torna and xc1de.
+  static const f32 s_fLandingAngle;  // Name from the game symbol _ZN6idcoli10IDColiMove15s_fLandingAngleE; also in torna and xc1de.
+  static const f32 s_fLandingVecChk; // Name from the game symbol _ZN6idcoli10IDColiMove16s_fLandingVecChkE; also in torna and xc1de.
 
   IDColiMove();
   void setShapeParms(f32 radius, f32 height);

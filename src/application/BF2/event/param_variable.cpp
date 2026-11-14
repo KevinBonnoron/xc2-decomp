@@ -4,52 +4,52 @@
 
 namespace event {
 
-ParamVariable::ParamVariable() : unknown08(VARIABLE_TYPE_NONE) { unknown10.integer = 0; }
+ParamVariable::ParamVariable() : unknown08(VARIABLE_TYPE_UNKNOWN_0) { unknown10.integer = 0; }
 
 ParamVariable::~ParamVariable() {}
 
-void ParamVariable::clear() { unknown08 = VARIABLE_TYPE_NONE; }
+void ParamVariable::clear() { unknown08 = VARIABLE_TYPE_UNKNOWN_0; }
 
 void ParamVariable::setS32(s32 value) {
-  unknown08 = VARIABLE_TYPE_S32;
+  unknown08 = VARIABLE_TYPE_UNKNOWN_1;
   this->unknown10.integer = value;
 }
 
 s32 ParamVariable::getS32() const {
-  if (unknown08 == VARIABLE_TYPE_F32) {
+  if (unknown08 == VARIABLE_TYPE_UNKNOWN_2) {
     return unknown10.real;
   }
   return unknown10.integer;
 }
 
 void ParamVariable::setF32(f32 value) {
-  unknown08 = VARIABLE_TYPE_F32;
+  unknown08 = VARIABLE_TYPE_UNKNOWN_2;
   this->unknown10.real = value;
 }
 
 f32 ParamVariable::getF32() const {
-  if (unknown08 == VARIABLE_TYPE_S32) {
+  if (unknown08 == VARIABLE_TYPE_UNKNOWN_1) {
     return unknown10.integer;
   }
   return unknown10.real;
 }
 
 void ParamVariable::setBool(bool value) {
-  unknown08 = VARIABLE_TYPE_BOOL;
+  unknown08 = VARIABLE_TYPE_UNKNOWN_3;
   this->unknown10.boolean = value;
 }
 
 bool ParamVariable::getBool() const { return unknown10.boolean; }
 
 void ParamVariable::setStr(const char *value) {
-  unknown08 = VARIABLE_TYPE_STR;
+  unknown08 = VARIABLE_TYPE_UNKNOWN_4;
   this->unknown10.string = value;
 }
 
 const char *ParamVariable::getStr() const { return unknown10.string; }
 
 void ParamVariable::setUserdata(void *value) {
-  unknown08 = VARIABLE_TYPE_USERDATA;
+  unknown08 = VARIABLE_TYPE_UNKNOWN_5;
   this->unknown10.userdata = value;
 }
 
@@ -58,19 +58,19 @@ void *ParamVariable::getUserdata() const { return unknown10.userdata; }
 void ParamVariable::createString(mm::mtl::FixStr<256> &string) {
   string = "";
   switch (unknown08) {
-  case VARIABLE_TYPE_S32:
+  case VARIABLE_TYPE_UNKNOWN_1:
     string.format("%d", unknown10.integer);
     break;
-  case VARIABLE_TYPE_F32:
+  case VARIABLE_TYPE_UNKNOWN_2:
     string.format("%f", unknown10.integer);
     break;
-  case VARIABLE_TYPE_BOOL:
+  case VARIABLE_TYPE_UNKNOWN_3:
     string = unknown10.boolean ? "true" : "false";
     break;
-  case VARIABLE_TYPE_STR:
+  case VARIABLE_TYPE_UNKNOWN_4:
     string = unknown10.string;
     break;
-  case VARIABLE_TYPE_USERDATA:
+  case VARIABLE_TYPE_UNKNOWN_5:
     string.format("%lld", unknown10.userdata);
     break;
   default:

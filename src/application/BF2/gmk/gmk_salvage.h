@@ -75,7 +75,7 @@ public:
     u16 unknown00; // Inferred role: condition; original member name unknown.
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_SALVAGE;
+  static const GmkType GMK_TYPE = GMK_TYPE_SALVAGE; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkSalvage();
   ~GmkSalvage() override { dispose(); }
@@ -88,6 +88,7 @@ public:
   void disposeGfObjHandle();
   void disposeRaffle(bool isFadeOut);
   void createRaffle(const RaffleInfo &info);
+  void popByRaffleResult();
   void seqUpdatePopDepop(f32 deltaTime);
   void seqValidateGmkSalvageLocatorDetails(f32 deltaTime);
   void disposeTboxes(bool isFadeOut);
@@ -117,7 +118,6 @@ public:
   RaffleResult unknownd8;  // Inferred role: raffle result; original member name unknown.
   mutable bool unknown128; // Inferred role: display enabled; original member name unknown.
   bool unknown129;         // Inferred role: request to sync the depop of the treasure boxes; original member name unknown.
-  u8 _12a[0x130 - 0x12a];
 };
 
 static_assert(sizeof(GmkSalvage::RaffleResult) == 0x50, "");
@@ -176,8 +176,9 @@ public:
     u8 unknown00; // Role and original member name unknown.
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_SALVAGE_LOCATOR;
+  static const GmkType GMK_TYPE = GMK_TYPE_SALVAGE_LOCATOR; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
+  GmkSalvageLocator();
   ~GmkSalvageLocator() override { dispose(); }
   GmkType getGmkType() const override;
   bool isValid() const override;
@@ -207,18 +208,16 @@ public:
   gf::GfDropitemEmitter unknown60;           // Inferred role: dropitem emitter of the collect locator; original member name unknown.
   gf::GF_OBJ_HANDLE *unknownc0;              // Inferred role: game object; original member name unknown.
   u8 unknownc8;                              // Role and original member name unknown.
-  u8 _c9[0xd0 - 0xc9];
-  GmkSalvage *unknownd0; // Inferred role: owner salvage, set by GmkSalvage; original member name unknown.
-  f32 unknownd8;         // Role and original member name unknown.
-  f32 unknowndc;         // Role and original member name unknown.
-  mutable f32 unknowne0; // Role and original member name unknown.
-  mutable f32 unknowne4; // Inferred role: elapsed time before the depop of the treasure box; original member name unknown.
-  int unknowne8;         // Role and original member name unknown.
-  int unknownec;         // Role and original member name unknown.
-  s8 unknownf0;          // Role and original member name unknown.
-  bool unknownf1;        // Role and original member name unknown.
-  bool unknownf2;        // Role and original member name unknown.
-  u8 _f3[0x100 - 0xf3];
+  GmkSalvage *unknownd0;                     // Inferred role: owner salvage, set by GmkSalvage; original member name unknown.
+  f32 unknownd8;                             // Role and original member name unknown.
+  f32 unknowndc;                             // Role and original member name unknown.
+  mutable f32 unknowne0;                     // Role and original member name unknown.
+  mutable f32 unknowne4;                     // Inferred role: elapsed time before the depop of the treasure box; original member name unknown.
+  int unknowne8;                             // Role and original member name unknown.
+  int unknownec;                             // Role and original member name unknown.
+  s8 unknownf0;                              // Role and original member name unknown.
+  bool unknownf1;                            // Role and original member name unknown.
+  bool unknownf2;                            // Role and original member name unknown.
 };
 
 static_assert(offsetof(GmkSalvageLocator, unknown48) == 0x48, "");

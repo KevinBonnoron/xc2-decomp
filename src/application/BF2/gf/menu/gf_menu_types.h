@@ -8,6 +8,7 @@ namespace GfMenuTypes {
 enum unknown003 {
   unknown003_33 = 0x21,   // Inferred role: open; original name unknown.
   unknown003_34 = 0x22,   // Inferred role: close; original name unknown.
+  unknown003_256 = 0x100, // Inferred role: start; original name unknown.
   unknown003_257 = 0x101, // Inferred role: suspend; original name unknown.
   unknown003_258 = 0x102, // Inferred role: resume; original name unknown.
   unknown003_259 = 0x103, // Inferred role: end; original name unknown.

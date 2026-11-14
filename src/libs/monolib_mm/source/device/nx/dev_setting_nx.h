@@ -10,7 +10,7 @@ public:
   void initialize() override;
   void finalize() override;
   LangType getLang() const override;
-  mm::mtl::FixedVector<LangType, DEV_LANG_NUM> &getLangList(mm::mtl::FixedVector<LangType, DEV_LANG_NUM> &list) const override;
+  mm::mtl::FixedVector<LangType, DEV_LANG_UNKNOWN_15> &getLangList(mm::mtl::FixedVector<LangType, DEV_LANG_UNKNOWN_15> &list) const override;
   void setAutoSleepExtended(SleepExtendType type) override;
   bool isAutoSleepExtended() const override;
 };

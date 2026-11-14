@@ -27,6 +27,7 @@ public:
   void initialize() override;
   void finalize() override;
   void update() override;
+  void updateFace(u32 index);
   static void enableAwakening(bool);
   static void pushBladeChange(unsigned int blade);
   static void dispInfo(bool isDisp);

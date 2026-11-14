@@ -10,16 +10,16 @@ namespace event {
 class ShakeManager : public IManager, public mm::mtl::Singleton<ShakeManager> {
 public:
   enum TYPE {
-    TYPE_SS,
-    TYPE_S,
-    TYPE_M,
-    TYPE_L,
+    TYPE_SS, // Name given by the game string "TYPE_SS" of ShakeManager::s_names[0] (built inline by its initializer, 0x7100140fc8); row 2 of EVT_shaketype has the same text.
+    TYPE_S,  // Name given by the game string "TYPE_S" of ShakeManager::s_names[1]; row 3 of EVT_shaketype has the same text.
+    TYPE_M,  // Name given by the game string "TYPE_M" of ShakeManager::s_names[2]; row 4 of EVT_shaketype has the same text.
+    TYPE_L,  // Name given by the game string "TYPE_L" of ShakeManager::s_names[3]; row 5 of EVT_shaketype has the same text.
     TYPE_COUNT,
   };
 
   enum {
-    FLAG_IDLE_SHAKE = 1 << 0,
-    FLAG_SHAKE = 1 << 1,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: idle shake flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: shake flag; original name unknown.
   };
 
   static mm::mtl::FixStr<32> s_names[TYPE_COUNT];

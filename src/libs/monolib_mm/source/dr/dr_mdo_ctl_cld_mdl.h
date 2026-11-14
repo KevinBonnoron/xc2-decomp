@@ -2,7 +2,6 @@
 #include <stddef.h>
 
 #include "dr/dr_mdl_obj.h"
-#include "types.h"
 
 namespace cloud {
 class CloudMdlDataObj;
@@ -20,7 +19,6 @@ public:
   void update() override;
   void dispOffUpdate() override;
 
-  u8 _190[0x1a8 - 0x190];
   cloud::CloudMdlDataObj *unknown1a8; // Inferred role: cloud model data; original member name unknown.
   const void *unknown1b0;             // Inferred role: cloud model resource; original member name unknown.
 };

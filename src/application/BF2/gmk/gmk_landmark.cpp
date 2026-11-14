@@ -18,9 +18,9 @@ namespace gmk {
 template bool TGmkList<GmkLandmark, GmkLandmark::BdatInfo, 1263354956u, 2u, GmkLandmarkGob>::initGmkBdatInfo(GmkLandmark::BdatInfo &, int &, const AGmkBase &);
 
 void GmkLandmark::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
-  unknown00 = bdat.getValCheck("MSGID", id, BDAT_TYPE_U16);
-  unknown02 = bdat.getValCheck("category", id, BDAT_TYPE_U8);
-  unknown04 = bdat.getValCheck("cndID", id, BDAT_TYPE_U16);
+  unknown00 = bdat.getValCheck("MSGID", id, BDAT_TYPE_UNKNOWN_2);
+  unknown02 = bdat.getValCheck("category", id, BDAT_TYPE_UNKNOWN_1);
+  unknown04 = bdat.getValCheck("cndID", id, BDAT_TYPE_UNKNOWN_2);
   unknown06 = Bdat::getFlagVal(bdat.unknown00, "flag", id, "noTelop") != 0;
   if (unknown00 != 0) {
     unknown08 = Bdat::getMSText(gf::GfDataBdat::getFP(gf::BDAT_FLD_LANDMARK), unknown00);

@@ -36,8 +36,9 @@ public:
     BootedGmkCond unknown28; // Inferred role: booted gmk; original member name unknown.
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_MAP_GIMMICK;
+  static const GmkType GMK_TYPE = GMK_TYPE_MAP_GIMMICK; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
+  GmkMapGimmick();
   ~GmkMapGimmick() override { dispose(); }
   GmkType getGmkType() const override;
   int getGameFlagId() const;
@@ -61,7 +62,8 @@ public:
   f32 unknown48;                         // Inferred role: pop distance squared; original member name unknown.
   void (GmkMapGimmick::*unknown50)(f32); // Inferred role: sequence; original member name unknown.
   gf::GF_OBJ_HANDLE *unknown60;          // Inferred role: gob instance handle; original member name unknown.
-  u8 _68[0x70 - 0x68];
+  bool unknown68;                        // Inferred role: message ray clear; original member name unknown.
+  u8 _69[0x70 - 0x69];
   gf::GfFieldLodEffect unknown70; // Inferred role: lod effect; original member name unknown.
   bool unknowna8;                 // Inferred role: pop condition flag; original member name unknown.
   bool unknowna9;                 // Inferred role: pop condition matched; original member name unknown.

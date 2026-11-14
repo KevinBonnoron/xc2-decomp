@@ -8,11 +8,15 @@
 #include "dr/dr_irr_vol_cascade.h"
 #include "dr/dr_irr_vol_res_man.h"
 #include "dr/dr_irr_vol_sector.h"
+#include "dr/dr_man.h"
+#include "grlib/cglib_acc_util_texture.h"
 #include "ml/cache_draw.h"
 #include "ml/dev_file_th.h"
 #include "mm_math/mm_aabb.h"
 #include "mm_math/mm_col3.h"
 #include "mm_math/mm_mat44.h"
+#include "mm_math/mm_vec3.h"
+#include "mm_math/mm_vec4.h"
 #include "mm_mtl/algorithm.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/list.h"
@@ -41,6 +45,15 @@ void convertSHMatrix(mm::Mat44 &matrix, const f32 *coefficients) {
   matrix.rows[3][1] = coefficients[1] * 0.511664f;
   matrix.rows[3][2] = coefficients[2] * 0.511664f;
   matrix.rows[3][3] = coefficients[0] * 0.886227f + coefficients[6] * -0.247708f;
+}
+
+f32 calcIrradiance(const mm::Mat44 &matrix, const mm::Vec4 &normal) {
+  mm::Vec4 result;
+  result.x = normal.x * matrix.rows[0][0] + normal.y * matrix.rows[1][0] + normal.z * matrix.rows[2][0] + normal.w * matrix.rows[3][0];
+  result.y = normal.x * matrix.rows[0][1] + normal.y * matrix.rows[1][1] + normal.z * matrix.rows[2][1] + normal.w * matrix.rows[3][1];
+  result.z = normal.x * matrix.rows[0][2] + normal.y * matrix.rows[1][2] + normal.z * matrix.rows[2][2] + normal.w * matrix.rows[3][2];
+  result.w = normal.x * matrix.rows[0][3] + normal.y * matrix.rows[1][3] + normal.z * matrix.rows[2][3] + normal.w * matrix.rows[3][3];
+  return normal.x * result.x + normal.y * result.y + normal.z * result.z + normal.w * result.w;
 }
 
 void lerpSH(const f32 *from, const f32 *to, f32 ratio, f32 *result) {
@@ -74,6 +87,16 @@ DrIrrVolSector::~DrIrrVolSector() {}
 
 const SLightProbe *DrIrrVolSector::getProbe(int index) const { return unknown00->unknown40 + index; }
 
+DrIrrVolCascade::DrIrrVolCascade(const SGlobalInfo *globalInfo, u32 index, const char *name)
+    : unknown00(globalInfo), unknown08(&globalInfo->unknown28[index]), unknown10(index), unknown18(nullptr), unknown5e0(0), unknown890(nullptr) {
+  mm::Vec3 size = unknown08->unknown00.max - unknown08->unknown00.min;
+  unknown548 = static_cast<u32>(size.x / unknown08->unknown24 + 0.5f);
+  unknown54c = static_cast<u32>(size.z / unknown08->unknown24 + 0.5f);
+  memset(unknown20, 0, sizeof(unknown20));
+  memset(unknown2a8, 0, sizeof(unknown2a8));
+  unknown18 = new (DrMan::get()->unknown0c) DrIrrVolResMan(DrMan::get()->unknown14, unknown10, unknown548 * unknown54c, name);
+}
+
 DrIrrVolCascade::~DrIrrVolCascade() {
   for (int i = 0; i < 81; i++) {
     if (unknown20[i] != nullptr) {
@@ -89,6 +112,24 @@ DrIrrVolCascade::~DrIrrVolCascade() {
 }
 
 void DrIrrVolCascade::createSector(void *buffer, u32 index) {}
+
+// Inferred role: directions the irradiance of a global probe is evaluated for; original name unknown.
+static const mm::Vec4 unknown003[4] = {
+    mm::Vec4(-0.408248f, 0.5773503f, -0.707107f, 1.0f),
+    mm::Vec4(-0.408248f, 0.5773503f, 0.707107f, 1.0f),
+    mm::Vec4(0.816497f, 0.5773503f, 0.0f, 1.0f),
+    mm::Vec4(0.0f, -1.0f, 0.0f, 1.0f),
+};
+
+void DrIrrVolCascade::updateIrrVolByGlobalProbe(u32 x, u32 y, u32 z, u32 index, const SHTerms &terms, grlib::CGLibAcc3DTexture &texture) {
+  mm::Mat44 matrix;
+  convertSHMatrix(matrix, terms.unknown00[index]);
+  f32 irradiance[4];
+  for (int i = 0; i < 4; i++) {
+    irradiance[i] = calcIrradiance(matrix, unknown003[i]);
+  }
+  texture.setFloat(irradiance[0], irradiance[1], irradiance[2], irradiance[3], x, y, z);
+}
 
 // Inferred role: rounds a file buffer size up to 16 bytes; original name unknown.
 template <typename T> static inline T unknown002(T size) { return size % 0x10 != 0 ? size + 0x10 - size % 0x10 : size; }
@@ -152,6 +193,20 @@ void DrIrrVolResMan::update() {
   param.unknown60 = this;
   param.unknown68 = 1;
   unknown08 = DevFileTh::readFile(param);
+}
+
+void DrIrrVolCascade::drawDebugInfo(DebDraw *debDraw) {
+  debDraw->setMatrix(mm::Mat44::identity);
+  debDraw->setZComp(true);
+  debDraw->setZWrite(false);
+  debDraw->setCol(mm::Col3::gray, 1.0f);
+  for (int i = 0; i < 81; i++) {
+    if (unknown20[i] != nullptr) {
+      const mm::Aabb &bounds = unknown20[i]->unknown00->unknown00;
+      debDraw->renderCube(bounds.min, bounds.max);
+    }
+  }
+  unknown18->drawDebugInfo(debDraw);
 }
 
 void DrIrrVolResMan::drawDebugInfo(DebDraw *debDraw) {

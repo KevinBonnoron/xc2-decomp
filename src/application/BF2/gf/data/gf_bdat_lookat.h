@@ -55,7 +55,7 @@ static_assert(offsetof(GfBdatLookAt, unknown28) == 0x28, "");
 static_assert(sizeof(GfBdatLookAt) == 0x30, "");
 
 struct CategoryTable {
-  CategoryTable() : unknown00(getAllocator(ALLOCATOR_DEFAULT)), unknown28(0), unknown2c(false) {}
+  CategoryTable() : unknown00(getAllocator(ALLOCATOR_UNKNOWN_0)), unknown28(0), unknown2c(false) {}
 
   mm::mtl::Vector<GfBdatLookAt::CharactorInfo> unknown00; // Inferred role: characters indexed by ref id; original member name unknown.
   int unknown28;                                          // Inferred role: first ref id; original member name unknown.

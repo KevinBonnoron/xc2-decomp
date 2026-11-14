@@ -14,6 +14,7 @@
 #include "gmk/gmk_route_navi.h"
 #include "gmk/gmk_set.h"
 #include "ml/rand.h"
+#include "mm_math/mm_col3.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_math.h"
@@ -117,13 +118,38 @@ void GmkRouteNavi::dispose() {
 
 void GmkRouteNavi::initIsReverse() {
   u32 flags = getRoute()->getData()->unknown0c;
-  if ((flags & (GmkRoute::FLAG_FORWARD | GmkRoute::FLAG_REVERSE)) == (GmkRoute::FLAG_FORWARD | GmkRoute::FLAG_REVERSE)) {
+  if ((flags & (GmkRoute::FLAG_UNKNOWN_1 | GmkRoute::FLAG_UNKNOWN_2)) == (GmkRoute::FLAG_UNKNOWN_1 | GmkRoute::FLAG_UNKNOWN_2)) {
     unknowna4 = ml::mtRandf1() > 0.5f;
-  } else if (flags & GmkRoute::FLAG_FORWARD) {
+  } else if (flags & GmkRoute::FLAG_UNKNOWN_1) {
     unknowna4 = false;
-  } else if (flags & GmkRoute::FLAG_REVERSE) {
+  } else if (flags & GmkRoute::FLAG_UNKNOWN_2) {
     unknowna4 = true;
   }
+}
+
+bool GmkRouteNavi::initAtRandom(InitResult &result) {
+  if (!isValid()) {
+    return false;
+  }
+  const GmkRoute *route = getRoute();
+  if (route == nullptr) {
+    return false;
+  }
+  u32 pointNum = route->getRoutePointNum();
+  if (pointNum <= 1) {
+    return false;
+  }
+  u32 index;
+  if (unknowna4) {
+    index = ml::mtRand(0, pointNum - 1);
+  } else {
+    index = ml::mtRand(1, pointNum);
+  }
+  f32 ratio = ml::mtRandf1();
+  if (!route->isClosed() && ((unknowna4 && index == 0) || (!unknowna4 && pointNum - 1 == index))) {
+    ratio = 0.0f;
+  }
+  return init(result, index, ratio);
 }
 
 void GmkRouteNavi::seqInit(const UpdateInfo &info) {
@@ -312,7 +338,7 @@ bool GmkRouteNavi::getPosDirOnCurve(mm::Vec3 &position, mm::Vec3 &direction, u32
 
 u32 GmkRoute::getRoutePointNum() const { return getData()->unknown04 - getData()->unknown00; }
 
-bool GmkRoute::isClosed() const { return (getData()->unknown0c & FLAG_CLOSED) != 0; }
+bool GmkRoute::isClosed() const { return (getData()->unknown0c & FLAG_UNKNOWN_0) != 0; }
 
 void GmkRouteNavi::update(const UpdateInfo &info) {
   if (isValid() && unknown70) {
@@ -409,7 +435,7 @@ f32 GmkRouteNavi::getWidthRatio() const {
 bool GmkRouteNavi::isRouteCurve(int index) const {
   const GmkRoute *route = getRoute();
   const GmkRoutePoint *point = route->getRoutePoint(index);
-  if (point != nullptr && (point->getData()->unknown1c & GmkRoutePoint::FLAG_LINE) != 0) {
+  if (point != nullptr && (point->getData()->unknown1c & GmkRoutePoint::FLAG_UNKNOWN_0) != 0) {
     return false;
   }
   if (!route->isClosed() && (index == static_cast<int>(route->getRoutePointNum()) - 1 || index == 0)) {
@@ -485,6 +511,21 @@ void GmkRoutePoint::create(const CreateInfo &info) { AGmkBase::create(info); }
 
 void GmkRoutePoint::dispose() { AGmkBase::dispose(); }
 
+void GmkRoutePoint::debugDraw() const {
+  isValid();
+  if (isValid()) {
+    mm::Col4 color;
+    color.r = mm::Col3::cyan.r;
+    color.g = mm::Col3::cyan.g;
+    color.b = mm::Col3::cyan.b;
+    color.a = 0.8f;
+    const Data *data = getData();
+    mm::Vec3 start(data->unknown00.x + data->unknown10, data->unknown00.y + data->unknown14, data->unknown00.z + data->unknown18);
+    mm::Vec3 end(data->unknown00.x - data->unknown10, data->unknown00.y - data->unknown14, data->unknown00.z - data->unknown18);
+    fw::debug::drawLine(start, end, color);
+  }
+}
+
 void GmkRoutePoint::debugUpdateMmf() {}
 
 } // namespace gmk
@@ -503,3 +544,6 @@ template void mm::mtl::Vector<gmk::GmkRoutePoint>::extend(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkRoutePoint>::resize(size_t);
 template void mm::mtl::Vector<std::pair<gf::GF_OBJ_HANDLE *, gmk::GmkRouteNavi>>::pop_back();
 template void mm::mtl::construct_n<std::pair<gf::GF_OBJ_HANDLE *, gmk::GmkRouteNavi>>(std::pair<gf::GF_OBJ_HANDLE *, gmk::GmkRouteNavi> *, size_t);
+template void mm::mtl::Vector<std::pair<gf::GF_OBJ_HANDLE *, gmk::GmkRouteNavi>>::expand(size_t, size_t);
+template void mm::mtl::Vector<std::pair<gf::GF_OBJ_HANDLE *, gmk::GmkRouteNavi>>::extend(size_t, size_t);
+template void mm::mtl::Vector<std::pair<gf::GF_OBJ_HANDLE *, gmk::GmkRouteNavi>>::resize(size_t);

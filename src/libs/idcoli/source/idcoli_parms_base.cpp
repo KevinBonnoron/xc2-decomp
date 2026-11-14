@@ -46,7 +46,7 @@ u32 IDColiParmsBase::getOffMaterialBit() const { return m_object->unknownc8; }
 
 void IDColiParmsBase::setMatrix(const mm::Mat44 &matrix) {
   m_object->unknown70 = matrix;
-  m_object->unknown1c |= IDColiObj::UPDATE_MATRIX << IDColiManager::s_nStkIdx;
+  m_object->unknown1c |= IDColiObj::UPDATE_UNKNOWN_3 << IDColiManager::s_nStkIdx;
 }
 
 const mm::Mat44 &IDColiParmsBase::getMatrix() const { return m_object->unknown70; }
@@ -57,7 +57,7 @@ const mm::Vec3 &IDColiParmsBase::getMin() const { return m_object->unknown60; }
 
 void IDColiParmsBase::setInstantlyMatrix(const mm::Mat44 &matrix) {
   m_object->unknown70 = matrix;
-  m_object->unknown1c |= IDColiObj::UPDATE_MATRIX << IDColiManager::s_nStkIdx;
+  m_object->unknown1c |= IDColiObj::UPDATE_UNKNOWN_3 << IDColiManager::s_nStkIdx;
   m_object->sizeUpdate();
 }
 

@@ -12,13 +12,13 @@ GfBdatLookAt::Impl::~Impl() {}
 
 #line 80
 GfBdatLookAt::GfBdatLookAt() {
-  unknown28.reset(new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) Impl());
+  unknown28.reset(new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) Impl());
   unknown28->build();
 }
 
 #line 90
 void GfBdatLookAt::bdatRefresh() {
-  unknown28.reset(new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) Impl());
+  unknown28.reset(new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) Impl());
   unknown28->build();
 
   if (GfGameParty::get() != nullptr) {
@@ -52,7 +52,7 @@ const GfBdatLookAt::unknown001 *GfBdatLookAt::Impl::getLookInfo(u32 category, u3
 }
 
 const GfBdatLookAt::CharactorInfo &GfBdatLookAt::getCharactorInfo(u32 category, u32 refId) const {
-  static const CharactorInfo defaultInfo;
+  static const CharactorInfo unknown022; // Inferred role: default info; original name unknown.
   const CharactorInfo *info = nullptr;
   if (unknown28) {
     info = unknown28->getCharactorInfo(category, refId);
@@ -60,12 +60,12 @@ const GfBdatLookAt::CharactorInfo &GfBdatLookAt::getCharactorInfo(u32 category, 
   if (info != nullptr) {
     return *info;
   }
-  return defaultInfo;
+  return unknown022;
 }
 
 const GfBdatLookAt::unknown001 &GfBdatLookAt::getLookInfo(u32 category, u32 charaCategory, u32 target, u32 targetRefId) const {
-  static const unknown001 defaultInfo;
-  const unknown001 *result = &defaultInfo;
+  static const unknown001 unknown023; // Inferred role: default info; original name unknown.
+  const unknown001 *result = &unknown023;
   if (target != 8) {
     const CharactorInfo &character = getCharactorInfo(category, charaCategory);
     const CharactorInfo &targetCharacter = getCharactorInfo(target, targetRefId);

@@ -82,17 +82,17 @@ static_assert(sizeof(unknown077) == 0x10, "");
 class Framework : public mm::mtl::PtrSingleton<Framework> {
 public:
   enum State {
-    STATE_NONE = 0,
-    STATE_INITIALIZED = 1,
-    STATE_MANAGER_INITIALIZED = 2,
-    STATE_ENTERED = 3,
-    STATE_FINALIZING = 4,
-    STATE_FINALIZED = 5,
+    STATE_UNKNOWN_0 = 0, // Inferred role: none; original name unknown.
+    STATE_UNKNOWN_1 = 1, // Inferred role: initialized; original name unknown.
+    STATE_UNKNOWN_2 = 2, // Inferred role: manager initialized; original name unknown.
+    STATE_UNKNOWN_3 = 3, // Inferred role: entered; original name unknown.
+    STATE_UNKNOWN_4 = 4, // Inferred role: finalizing; original name unknown.
+    STATE_UNKNOWN_5 = 5, // Inferred role: finalized; original name unknown.
   };
 
-  static const u32 LAYER_MAX = 32;
-  static const u32 PAUSE_TRIGGER_MAX = 32;
-  static const u32 unknown001 = 14; // Inferred role: count of the layers run by update; original name unknown.
+  static const u32 LAYER_UNKNOWN_32 = 32;         // Inferred role: maximum number of layers; original name unknown.
+  static const u32 PAUSE_TRIGGER_UNKNOWN_32 = 32; // Inferred role: maximum number of pause triggers; original name unknown.
+  static const u32 unknown001 = 14;               // Inferred role: count of the layers run by update; original name unknown.
 
   Framework();
   ~Framework();
@@ -136,7 +136,7 @@ public:
   static void addPauseCallback(IPauseTrigger *trigger);
   static void removePauseCallback(IPauseTrigger *trigger);
 
-  bool isUpdating() const { return unknown84 >= STATE_MANAGER_INITIALIZED && unknown84 <= STATE_FINALIZING; }
+  bool isUpdating() const { return unknown84 >= STATE_UNKNOWN_2 && unknown84 <= STATE_UNKNOWN_4; }
 
   Applet *m_applet;
   FrameworkConfig unknown10;   // Inferred role: config; original member name unknown.
@@ -153,9 +153,9 @@ public:
   u8 _8b[0x8c - 0x8b];
   f32 unknown8c; // Inferred role: update speed; original member name unknown.
   u8 _90[0x98 - 0x90];
-  unknown077 unknown98[LAYER_MAX];                                     // Inferred role: layers; original member name unknown.
-  mm::mtl::FixedVector<IPauseTrigger *, PAUSE_TRIGGER_MAX> unknown298; // Inferred role: pause triggers; original member name unknown.
-  MemHandlebaseAllocator unknown3a0;                                   // Inferred role: allocator; original member name unknown.
+  unknown077 unknown98[LAYER_UNKNOWN_32];                                     // Inferred role: layers; original member name unknown.
+  mm::mtl::FixedVector<IPauseTrigger *, PAUSE_TRIGGER_UNKNOWN_32> unknown298; // Inferred role: pause triggers; original member name unknown.
+  MemHandlebaseAllocator unknown3a0;                                          // Inferred role: allocator; original member name unknown.
 };
 
 static_assert(offsetof(Framework, unknown10) == 0x10, "");

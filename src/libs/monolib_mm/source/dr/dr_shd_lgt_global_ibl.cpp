@@ -5,8 +5,11 @@
 #include "dr/dr_pixl_post_parm.h"
 #include "grlib/cglib_dbl_uniform_block.h"
 #include "grlib/shd_util.h"
+#include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_array.h"
+#include "mm_mtl/fixed_list.h" // IWYU pragma: keep
 #include "types.h"
+#include <string.h>
 
 namespace ml {
 
@@ -61,6 +64,16 @@ void DrShdLgtGlobalIBL::updateUB_ToProxySpace(u8 *work, int viewNum) {
   }
 }
 
+void DrShdLgtGlobalIBL::getSHAverage(mm::Vec3 &average, u32 index) const {
+  const unknown001 &view = unknown10[unknown00->unknown1c98];
+  average.x = view.unknown340[index * 3].rows[3][3];
+  average.y = view.unknown340[index * 3 + 1].rows[3][3];
+  average.z = view.unknown340[index * 3 + 2].rows[3][3];
+  if (average.isError()) {
+    average = mm::Vec3::zero;
+  }
+}
+
 void DrShdLgtGlobalIBL::update(int viewNum) {
   if (viewNum == 0 || (viewNum > 0 && unknown00->unknown059(viewNum))) {
     updateView(viewNum);
@@ -69,6 +82,32 @@ void DrShdLgtGlobalIBL::update(int viewNum) {
 
 void DrShdLgtGlobalIBL::updateUniformBlock(int viewNum) { updateUniformBlockImpl(viewNum); }
 
+void DrShdLgtGlobalIBL::getLowestPrioritySH(mm::Mat44 &red, mm::Mat44 &green, mm::Mat44 &blue) const {
+  const unknown001 &view = unknown10[unknown00->unknown1c98];
+  int index = -1;
+  for (DrLightObjGlobalIBL *const *it = view.unknown1b40.end(); it != view.unknown1b40.begin(); --it) {
+    const unknown002 &slot = view.unknown40[0];
+    if (slot.unknown10 == nullptr) {
+      break;
+    }
+    if (slot.unknown10 == it[-1] && slot.unknown04[(slot.unknown08 + 2) % 3] != 3 && (slot.unknown04[0] == 2 || slot.unknown04[1] == 2 || slot.unknown04[2] == 2)) {
+      index = slot.unknown00;
+    }
+  }
+  if (index != -1) {
+    red = view.unknown340[index * 3];
+    green = view.unknown340[index * 3 + 1];
+    blue = view.unknown340[index * 3 + 2];
+  } else {
+    memset(&red, 0, sizeof(mm::Mat44));
+    memset(&green, 0, sizeof(mm::Mat44));
+    memset(&blue, 0, sizeof(mm::Mat44));
+  }
+}
+
 void DrShdLgtGlobalIBL::addObj(DrLightObjGlobalIBL *obj, int viewNum) { unknown10[viewNum].unknown00.push_back(obj); }
 
 } // namespace ml
+
+template mm::mtl::FixedList<ml::DrShdLgtGlobalIBL::SlotCandidate, 32>::iterator
+    mm::mtl::FixedList<ml::DrShdLgtGlobalIBL::SlotCandidate, 32>::erase(mm::mtl::FixedList<ml::DrShdLgtGlobalIBL::SlotCandidate, 32>::iterator);

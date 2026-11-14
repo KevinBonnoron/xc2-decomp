@@ -14,8 +14,8 @@ class CharaEffectPlayer;
 class CharaPlayEvaEff : public ICmd {
 public:
   enum {
-    FLAG_PLAY = 1 << 0,
-    FLAG_LOOP = 1 << 1,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: play flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: loop flag; original name unknown.
   };
 
   virtual RESULT update(const Param &param);

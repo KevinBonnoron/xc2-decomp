@@ -15,7 +15,7 @@ namespace btl {
 constexpr int HATE_ENEMY_NUM_SHIFT = 10;
 
 void HateRingManager::RING_DATA::Reset(bool isDestroyEffect) {
-  unknown10 = gf::INVALID_HANDLE;
+  unknown10 = gf::unknown020;
   unknown18 = -1;
   unknown1c = 0.0f;
   if (isDestroyEffect) {
@@ -42,7 +42,7 @@ HateRingManager::~HateRingManager() {}
 void HateRingManager::Create() {
   // __LINE__ must be 91 as in the original file: it is an argument of operator new.
 #line 91
-  HateRingManager *manager = new (gf::getAllocator(gf::ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) HateRingManager();
+  HateRingManager *manager = new (gf::getAllocator(gf::ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) HateRingManager();
   manager->Initialize();
 }
 
@@ -77,7 +77,7 @@ void HateRingManager::UpdateProc(const fw::UpdateInfo &updateInfo) {
   if (BattleGlobal::get()->IsEnableBattle()) {
     RING_DATA *ring = unknown10;
     for (int i = 0; i < CHARACTER_COUNT; i++, ring++) {
-      if (ring->unknown10 == gf::INVALID_HANDLE) {
+      if (ring->unknown10 == gf::unknown020) {
         continue;
       }
       BattleCharacter *character = CharacterManager::get()->GetCharacterConst(i);
@@ -120,7 +120,7 @@ void HateRingManager::UpdateRing(int target, mm::Vec3 position, mm::Vec3 directi
 void HateRingManager::SetData(int id, gf::GF_OBJ_HANDLE *handle, int target) {
   RING_DATA &ring = unknown10[id];
   if (target < 0) {
-    if (ring.unknown10 != gf::INVALID_HANDLE) {
+    if (ring.unknown10 != gf::unknown020) {
       ring.Reset(true);
     }
     return;
@@ -216,7 +216,7 @@ int HateRingManager::GetHateEnemyNum(int target) const {
   int num = 0;
   const RING_DATA *ring = unknown10;
   for (int i = 0; i < CHARACTER_COUNT; i++, ring++) {
-    if (ring->unknown10 != gf::INVALID_HANDLE && ring->unknown18 == target) {
+    if (ring->unknown10 != gf::unknown020 && ring->unknown18 == target) {
       num++;
     }
   }
@@ -228,7 +228,7 @@ u32 HateRingManager::GetHateEnemyNumAll() const {
   u32 nums[HATE_TARGET_COUNT] = {};
   const RING_DATA *ring = unknown10;
   for (int i = 0; i < CHARACTER_COUNT; i++, ring++) {
-    if (ring->unknown10 == gf::INVALID_HANDLE) {
+    if (ring->unknown10 == gf::unknown020) {
       continue;
     }
 

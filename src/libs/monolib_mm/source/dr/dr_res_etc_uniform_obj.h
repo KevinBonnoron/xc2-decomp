@@ -21,6 +21,8 @@ public:
   void begin();
   void end();
   void setUniformBlock(s16 index, u32 binding);
+  void setStorageBuffer(s16 index, u32 binding, u32 offset);
+  void *createUniformBuff(int size);
 
   s32 unknown00; // Inferred role: block size; original member name unknown.
   s32 unknown04; // Inferred role: range max; original member name unknown.

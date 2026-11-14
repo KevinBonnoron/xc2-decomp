@@ -21,6 +21,7 @@ namespace pc {
 
 struct SlideParam;
 
+bool IsBuddy(GfComPropertyPc &property);
 void setMoveWalkPacket(GfComPropertyPc &property, GfMoveWalkControler::Packet *packet);
 void setMoveRunPacket(GfComPropertyPc &property, GfMoveRunControler::Packet *packet);
 void setMoveJumpPacket(GfComPropertyPc &property, GfMoveJumpControler::Packet *packet);

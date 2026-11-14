@@ -6,10 +6,11 @@ enum CAMERA_PRIO : int;
 
 namespace gf {
 
-static constexpr fw::CAMERA_PRIO CAMERA_PRIO_MENU_BLADE_CREATE = static_cast<fw::CAMERA_PRIO>(55);
+// Inferred role: camera priority of the blade creation; original name unknown.
+static constexpr fw::CAMERA_PRIO CAMERA_PRIO_UNKNOWN_55 = static_cast<fw::CAMERA_PRIO>(55);
 
 GfMenuBladeCreateCamera::GfMenuBladeCreateCamera()
-    : fw::Camera(CAMERA_PRIO_MENU_BLADE_CREATE), unknownf0(0.0f), unknownf4(0.0f), m_rotOffsetY(0.0f), unknownfc(0.0f), unknown100(0.0f), unknown104(0.0f), unknown108(0) {}
+    : fw::Camera(CAMERA_PRIO_UNKNOWN_55), unknownf0(0.0f), unknownf4(0.0f), m_rotOffsetY(0.0f), unknownfc(0.0f), unknown100(0.0f), unknown104(0.0f), unknown108(0) {}
 
 GfMenuBladeCreateCamera::~GfMenuBladeCreateCamera() {}
 

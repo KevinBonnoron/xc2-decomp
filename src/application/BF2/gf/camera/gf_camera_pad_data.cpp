@@ -7,7 +7,7 @@
 
 namespace gf {
 
-constexpr int CAMERA_PAD_TYPE = 2;
+constexpr int TYPE_UNKNOWN_2 = 2; // Inferred role: camera pad type; original name unknown.
 
 CameraPadData::CameraPadData() {
   reset();
@@ -27,7 +27,7 @@ void CameraPadData::reset() {
 }
 
 void CameraPadData::bind() {
-  PadRelay::bind(0, CAMERA_PAD_TYPE, getAllocator(ALLOCATOR_DEFAULT));
+  PadRelay::bind(0, TYPE_UNKNOWN_2, getAllocator(ALLOCATOR_UNKNOWN_0));
   bindAction("reset", this, &CameraPadData::resetAction);
   bindAction("zoom", this, &CameraPadData::zoomCamera);
   bindAction("height", this, &CameraPadData::heightCamera);

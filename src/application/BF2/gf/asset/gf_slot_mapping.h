@@ -49,7 +49,7 @@ public:
     mtl::ALLOC_HANDLE unknown10; // Inferred role: handle; original member name unknown.
   };
 
-  static const u32 REQUEST_MAX = 256;
+  static const u32 REQUEST_UNKNOWN_256 = 256; // Inferred role: request max; original name unknown.
 
   static size_t getAllSize();
   void createMapping(const GfSetupParam &param);
@@ -85,11 +85,11 @@ public:
   void *allocateSize(size_t size, size_t alignment);
   bool deallocateSize(void *pointer);
 
-  GfSlotAllocator *unknown00;                       // Inferred role: allocator; original member name unknown.
-  GfSlotAll *unknown08;                             // Inferred role: slot all; original member name unknown.
-  mm::mtl::FixedVector<REQ, REQUEST_MAX> unknown10; // Inferred role: requests; original member name unknown.
-  u64 unknown1818;                                  // Inferred role: top address; original member name unknown.
-  u64 unknown1820;                                  // Inferred role: end address; original member name unknown.
+  GfSlotAllocator *unknown00;                               // Inferred role: allocator; original member name unknown.
+  GfSlotAll *unknown08;                                     // Inferred role: slot all; original member name unknown.
+  mm::mtl::FixedVector<REQ, REQUEST_UNKNOWN_256> unknown10; // Inferred role: requests; original member name unknown.
+  u64 unknown1818;                                          // Inferred role: top address; original member name unknown.
+  u64 unknown1820;                                          // Inferred role: end address; original member name unknown.
 };
 
 static_assert(sizeof(GfSlotMapping::REQ) == 0x18, "");

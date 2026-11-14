@@ -4,6 +4,7 @@
 #include "gf/menu/gf_menu_object.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 
 namespace mm {
 namespace mtl {
@@ -25,6 +26,22 @@ class GfMenuReferenceItem;
 
 class GfMenuObjDrEquip2 : public GfMenuObject {
 public:
+  class MainListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjDrEquip2 *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class EquipItemListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjDrEquip2 *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   GfMenuObjDrEquip2(u32 handle);
   ~GfMenuObjDrEquip2() override;
   static void sendEvent(u32 handle, u32 type, u32 param);
@@ -34,6 +51,9 @@ public:
   void finalize() override;
   void update() override;
   static void setupEquipItem(ui::UIObjectAcc &acc, GfMenuItemList *list);
+  static void updateEquipItemList(GfMenuItemList *list, u32 driverIndex);
+  static void setupSlot(ui::UIObjectAcc &acc, GfMenuItemList *list, u32 driverIndex);
+  static void setupItemList(ui::UIObjectAcc &acc, GfMenuItemList *list, ui::UISelectObjList *objects);
 
   u32 unknown24;  // Role and original member name unknown, cleared by the constructor.
   bool unknown28; // Role and original member name unknown, cleared by the constructor.
@@ -51,6 +71,8 @@ public:
   u32 unknown7c; // Role and original member name unknown, cleared by the constructor.
 };
 
+static_assert(offsetof(GfMenuObjDrEquip2::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjDrEquip2::EquipItemListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjDrEquip2, unknown24) == 0x24, "");
 static_assert(offsetof(GfMenuObjDrEquip2, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjDrEquip2, unknown30) == 0x30, "");

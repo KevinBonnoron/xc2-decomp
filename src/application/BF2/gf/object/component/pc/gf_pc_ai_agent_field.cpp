@@ -135,7 +135,7 @@ void AIAgentField::update(const fw::UpdateInfo &info, GfComPropertyPc &property)
   GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
   u32 leaderId = formation->unknown1a0[property.unknown38].unknown00;
   bool isLeaderMoving = false;
-  if (leaderId != PLAYER_ID_NONE) {
+  if (leaderId != PLAYER_ID_UNKNOWN_4294967295) {
     GfObj *obj = GfObjUtil::getObj(formation->unknown1a0[leaderId].unknown08);
     if (obj != nullptr) {
       GfComPropertyPc *leader = obj->getComponent<GfComPropertyPc>();
@@ -160,8 +160,8 @@ void AIAgentField::update(const fw::UpdateInfo &info, GfComPropertyPc &property)
                      offset.x * side.y + offset.y * up.y + offset.z * front.y + 0.0f,
                      offset.x * side.z + offset.y * up.z + offset.z * front.z + 0.0f);
     mm::Vec3 target = blackBoard->unknown60 + rotated;
-    if (fw::NaviUtil::testNaviStraightLine(blackBoard->unknown1f0, property.unknown160, target, 1.0f, 3.0f) == 0) {
-      blackBoard->unknown1f0 = property.unknown160;
+    if (fw::NaviUtil::testNaviStraightLine(blackBoard->unknown1f0, property.unknown160.unknown00, target, 1.0f, 3.0f) == 0) {
+      blackBoard->unknown1f0 = property.unknown160.unknown00;
     }
   }
   unknown08.execute();
@@ -181,19 +181,19 @@ bool AIAgentField::recieveMessage(GfComPropertyPc &property, fw::MessageObject *
     procMsgPcFieldNotifyWall(sender, static_cast<MsgPcFieldNotifyWall &>(message));
     result = true;
     break;
-  case MSG_PC_FIELD_NOTIFY_WALL_JUMP_START:
+  case MSG_PC_FIELD_NOTIFY_UNKNOWN_16777234:
     procMsgPcFieldNotifyWallJumpStart(sender, static_cast<MsgPcFieldNotifyWallJumpStart &>(message));
     result = true;
     break;
-  case MSG_PC_FIELD_NOTIFY_HIGH_JUMP:
+  case MSG_PC_FIELD_NOTIFY_UNKNOWN_16777237:
     procMsgPcFieldHighJump(sender, static_cast<MsgPcFieldNotifyHighJump &>(message));
     result = true;
     break;
-  case MSG_PC_FIELD_NOTIFY_WATER_WARP:
+  case MSG_PC_FIELD_NOTIFY_UNKNOWN_16777239:
     procMsgPcFieldNotifyWaterWarp(sender, static_cast<MsgPcFieldNotifyWaterWarp &>(message));
     result = true;
     break;
-  case MSG_PC_FIELD_NOTIFY_WATER_WARP_BUDDY:
+  case MSG_PC_FIELD_NOTIFY_UNKNOWN_16777247:
     procMsgPcFieldNotifyWaterWarpBuddy(sender, static_cast<MsgPcFieldNotifyWaterWarpBuddy &>(message));
     result = true;
     break;

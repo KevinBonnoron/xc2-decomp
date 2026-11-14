@@ -15,7 +15,7 @@ void GfGameSearchObj::initialize(const GfSetupParam &) { unknown9097c = true; }
 
 GfGameSearchObj::~GfGameSearchObj() {}
 
-void GfGameSearchObj::build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfGameSearchObj(param); }
+void GfGameSearchObj::build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfGameSearchObj(param); }
 
 void GfGameSearchObj::destroy() {
   GfGameSearchObj *search = get();
@@ -56,7 +56,7 @@ bool GfGameSearchObj::isInitialized() {
 
 GfGameSearchObj::GFSEARCH_INFO *GfGameSearchObj::getInfo(GF_SEARCH_OBJ *searchObj) {
   GfGameSearchObj *search = get();
-  if (searchObj != INVALID_SEARCH_OBJ && search != nullptr) {
+  if (searchObj != unknown012 && search != nullptr) {
     return &search->unknown08.unknown007[reinterpret_cast<u64>(searchObj) & 0x3f];
   }
   return nullptr;
@@ -67,9 +67,20 @@ mm::mtl::FixedList<GfSearchInfo *, 256> *GfGameSearchObj::getObj(GF_SEARCH_OBJ *
   return infos[reinterpret_cast<u64>(searchObj) & 0x3f].unknown78;
 }
 
+void GfGameSearchObj::setEnable(GF_SEARCH_OBJ *searchObj, bool isEnable) {
+  GfGameSearchObj *search = get();
+  if (searchObj != unknown012 && search != nullptr) {
+    if (isEnable) {
+      search->unknown08.unknown007[reinterpret_cast<u64>(searchObj) & 0x3f].unknown80 &= ~1;
+    } else {
+      search->unknown08.unknown007[reinterpret_cast<u64>(searchObj) & 0x3f].unknown80 |= 1;
+    }
+  }
+}
+
 bool GfGameSearchObj::isEnable(GF_SEARCH_OBJ *searchObj) {
   GfGameSearchObj *search = get();
-  if (searchObj != INVALID_SEARCH_OBJ && search != nullptr) {
+  if (searchObj != unknown012 && search != nullptr) {
     return (search->unknown08.unknown007[reinterpret_cast<u64>(searchObj) & 0x3f].unknown80 & 1) == 0;
   }
   return false;
@@ -87,14 +98,14 @@ u64 GfGameSearchObj::createHandle(u32 index) {
 
 GF_SEARCH_OBJ *GfGameSearchObj::createObj(const GfSearchParam &param) {
   GfGameSearchObj *search = get();
-  GF_SEARCH_OBJ *searchObj = INVALID_SEARCH_OBJ;
+  GF_SEARCH_OBJ *searchObj = unknown012;
   if (search != nullptr) {
     u32 index = 0;
     GFSEARCH_INFO *info = new (search->unknown08.unknown003(&index)) GFSEARCH_INFO;
     searchObj = reinterpret_cast<GF_SEARCH_OBJ *>(search->createHandle(index));
     info->unknown70 = searchObj;
     info->unknown00 = param;
-    info->unknown78 = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) mm::mtl::FixedList<GfSearchInfo *, 256>;
+    info->unknown78 = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) mm::mtl::FixedList<GfSearchInfo *, 256>;
     search->unknown2438.push_back(searchObj);
   }
   return searchObj;
@@ -116,6 +127,14 @@ void GfGameSearchObj::destroyObj(GF_SEARCH_OBJ *searchObj) {
     if (it != search->unknown2438.end()) {
       search->unknown2438.erase(it);
     }
+  }
+}
+
+void GfGameSearchObj::update(const fw::UpdateInfo &) {
+  GfGameSearchObj *search = get();
+  search->unknowne940.unknown001();
+  for (mm::mtl::FixedList<GF_SEARCH_OBJ *, 64>::iterator it = search->unknown2438.begin(); it != search->unknown2438.end(); ++it) {
+    search->updateObj(*it);
   }
 }
 

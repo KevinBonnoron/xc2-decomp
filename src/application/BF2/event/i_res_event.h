@@ -4,11 +4,11 @@
 namespace event {
 
 enum RES_RESULT_TYPE {
-  RES_RESULT_TYPE_WAIT,
-  RES_RESULT_TYPE_LOADING,
-  RES_RESULT_TYPE_LOADED,
-  RES_RESULT_TYPE_SUCCESS,
-  RES_RESULT_TYPE_FAILURE,
+  RES_RESULT_TYPE_UNKNOWN_0, // Inferred role: wait; original name unknown.
+  RES_RESULT_TYPE_UNKNOWN_1, // Inferred role: loading; original name unknown.
+  RES_RESULT_TYPE_UNKNOWN_2, // Inferred role: loaded; original name unknown.
+  RES_RESULT_TYPE_UNKNOWN_3, // Inferred role: success; original name unknown.
+  RES_RESULT_TYPE_UNKNOWN_4, // Inferred role: failure; original name unknown.
 };
 
 class IResEvent {

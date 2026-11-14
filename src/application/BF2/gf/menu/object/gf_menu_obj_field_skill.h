@@ -5,6 +5,7 @@
 #include "gf/menu/gf_menu_sequence.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 
 namespace gf {
 class GfMenuCallContext;
@@ -15,6 +16,19 @@ struct GAME_VOICE_HANDLE;
 
 class GfMenuObjFieldSkill : public GfMenuObject {
 public:
+  class MainListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjFieldSkill *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class InputListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+  };
+
   struct OpenSkillInfoParam {
     u32 unknown00_0 : 16; // Inferred role: skill; original member name unknown.
     u32 unknown00_16 : 8; // Inferred role: level; original member name unknown.
@@ -59,7 +73,9 @@ public:
   bool unknown5a;                                         // Role and original member name unknown, cleared by the constructor.
   u8 _5b[0x5c - 0x5b];
   u16 unknown5c; // Role and original member name unknown, cleared by the constructor.
-  u8 _5e[0x68 - 0x5e];
+  u8 _5e[0x60 - 0x5e];
+  u32 unknown60; // Inferred role: main object handle, set by the closing event of the main listener; original member name unknown.
+  u8 _64[0x68 - 0x64];
   GAME_VOICE_HANDLE *unknown68;                     // Inferred role: playing voice; original member name unknown.
   GfMenuSequence<GfMenuObjFieldSkill, 4> unknown70; // Inferred role: queued steps; original member name unknown.
 };
@@ -70,6 +86,8 @@ static_assert(offsetof(GfMenuObjFieldSkill, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown38) == 0x38, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown40) == 0x40, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown50) == 0x50, "");
+static_assert(offsetof(GfMenuObjFieldSkill::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjFieldSkill, unknown60) == 0x60, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown58) == 0x58, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown5a) == 0x5a, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown5c) == 0x5c, "");

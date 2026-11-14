@@ -25,6 +25,14 @@ template <typename T, size_t N> class FixedQueue {
     typedef u64 Unit;
   };
 
+  // 16 byte aligned elements (mm::Vec2): the queue itself is 16 byte aligned, as in StateFieldMove (queue at 0x20, size 0x50).
+  template <typename Dummy> struct Storage<16, Dummy> {
+    struct alignas(16) Unit {
+      u64 unknown00; // Inferred role: storage low half; original member name unknown.
+      u64 unknown08; // Inferred role: storage high half; original member name unknown.
+    };
+  };
+
   typedef typename Storage<alignof(T)>::Unit Unit;
 
   T *buffer() { return reinterpret_cast<T *>(mBuffer); }

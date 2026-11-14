@@ -8,7 +8,7 @@
 
 namespace event {
 
-CamFree::CamFree(bool isFocal) : CamBase(isFocal), unknown48(0), unknown4c(0), unknown50(CTRL_MODE_NONE), unknown54(5.0f) {}
+CamFree::CamFree(bool isFocal) : CamBase(isFocal), unknown48(0), unknown4c(0), unknown50(CTRL_MODE_UNKNOWN_0), unknown54(5.0f) {}
 
 CamFree::~CamFree() {
   if ((unknown48 & 1) != 0) {
@@ -78,7 +78,7 @@ bool CamFree::OnKeyUp(ml::EventView *view) {
     return false;
   }
   unknown4c &= ~8;
-  unknown50 = CTRL_MODE_NONE;
+  unknown50 = CTRL_MODE_UNKNOWN_0;
   return true;
 }
 

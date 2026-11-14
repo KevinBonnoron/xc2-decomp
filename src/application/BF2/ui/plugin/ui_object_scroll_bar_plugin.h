@@ -34,8 +34,7 @@ public:
   mm::Pnt<s16> unknown30;          // Inferred role: base pos; original member name unknown.
   u8 _34[0x40 - 0x34];
   mm::Vec2 unknown40; // Inferred role: base scale; original member name unknown.
-  u8 _48[0x50 - 0x48];
-  bool unknown50; // Inferred role: scale enable; original member name unknown.
+  bool unknown50;     // Inferred role: scale enable; original member name unknown.
   u8 _51[0x60 - 0x51];
 };
 

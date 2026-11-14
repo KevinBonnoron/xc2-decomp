@@ -11,13 +11,17 @@
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
+namespace fw {
+struct UpdateInfo;
+} // namespace fw
+
 namespace gf {
 
 struct GF_OBJ_HANDLE;
 struct GF_SEARCH_OBJ;
 struct GfSetupParam;
 
-static GF_SEARCH_OBJ *const INVALID_SEARCH_OBJ = reinterpret_cast<GF_SEARCH_OBJ *>(-1);
+static GF_SEARCH_OBJ *const unknown012 = reinterpret_cast<GF_SEARCH_OBJ *>(-1); // Inferred role: invalid search obj; original name unknown.
 
 // Size from the GfSearchInfo pool of GfGameSearchObj (1024 elements in 0xc000 bytes). Members from the consumers GfGameTarget::selectTarget
 // and GfGameSearchObj::updateObj, which fills them.
@@ -36,8 +40,8 @@ static_assert(sizeof(GfSearchInfo) == 0x30, "");
 
 struct GfSearchParam {
   explicit GfSearchParam(u32 type = 0)
-      : unknown00(0), unknown04(type), unknown10(mm::Vec3::zero), unknown20(mm::Quat::identity), unknown30(0.0f), unknown34(0.0f), unknown38(0.0f), unknown3c(0.0f), unknown40(INVALID_HANDLE),
-        unknown50(true), unknown58(0), unknown60(INVALID_HANDLE) {}
+      : unknown00(0), unknown04(type), unknown10(mm::Vec3::zero), unknown20(mm::Quat::identity), unknown30(0.0f), unknown34(0.0f), unknown38(0.0f), unknown3c(0.0f), unknown40(unknown020),
+        unknown50(true), unknown58(0), unknown60(unknown020) {}
 
   u32 unknown00;                                       // Inferred role: search kind; original member name unknown.
   u32 unknown04;                                       // Inferred role: searched object type bits; original member name unknown.
@@ -69,7 +73,7 @@ static_assert(sizeof(GfSearchParam) == 0x70, "");
 class GfGameSearchObj : public mm::mtl::PtrSingleton<GfGameSearchObj> {
 public:
   struct GFSEARCH_INFO {
-    GFSEARCH_INFO() : unknown70(INVALID_SEARCH_OBJ), unknown78(nullptr), unknown80(0) {}
+    GFSEARCH_INFO() : unknown70(unknown012), unknown78(nullptr), unknown80(0) {}
 
     GfSearchParam unknown00;                            // Inferred role: search parameters; original member name unknown.
     GF_SEARCH_OBJ *unknown70;                           // Inferred role: handle; original member name unknown.
@@ -106,6 +110,8 @@ public:
   void finalize();
   void destroyList(mm::mtl::FixedList<GfSearchInfo *, 256> *list);
   static GF_SEARCH_OBJ *createObj(const GfSearchParam &param);
+  static void update(const fw::UpdateInfo &info);
+  void updateObj(GF_SEARCH_OBJ *searchObj);
   static void destroyObj(GF_SEARCH_OBJ *searchObj);
   static void setEnable(GF_SEARCH_OBJ *searchObj, bool isEnable);
   static bool isEnable(GF_SEARCH_OBJ *searchObj);

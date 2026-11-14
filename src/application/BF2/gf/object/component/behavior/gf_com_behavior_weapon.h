@@ -19,12 +19,12 @@ struct MsgObjectNotifyAsmCallback;
 enum OPTMNT : u32;
 
 enum {
-  MSG_OBJECT_FORCE_WEAPON_MOUNT = 0x1000040,
+  MSG_UNKNOWN_16777280 = 0x1000040, // Inferred role: msg object force weapon mount; original name unknown.
 };
 
 // Layout from GfObjUtil::resetWeaponMotion (0x71005afca0), which sends it to the weapons of an object.
 struct MsgObjectForceWeaponMount : fw::Message {
-  MsgObjectForceWeaponMount(OPTMNT type, GF_OBJ_HANDLE *owner) : fw::Message(MSG_OBJECT_FORCE_WEAPON_MOUNT, 0x40), unknown08(type), unknown10(owner) {}
+  MsgObjectForceWeaponMount(OPTMNT type, GF_OBJ_HANDLE *owner) : fw::Message(MSG_UNKNOWN_16777280, 0x40), unknown08(type), unknown10(owner) {}
 
   OPTMNT unknown08;         // Inferred role: weapon mount option; original member name unknown.
   GF_OBJ_HANDLE *unknown10; // Inferred role: owner of the weapon motion; original member name unknown.

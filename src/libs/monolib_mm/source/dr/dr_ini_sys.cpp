@@ -22,7 +22,7 @@ namespace ml {
 namespace {
 
 // Inferred role: path buffer of the loaded files; original name unknown.
-char unknown002[0x200];
+char unknown015[0x200];
 
 // Inferred helper: reloads the volume textures; original name unknown.
 inline void unknown001(DrIniSys *self) {
@@ -52,10 +52,10 @@ inline FileResTh *unknown003(const DrIniSys *self, const char *path) {
 } // namespace
 
 DrIniSys::DrIniSys(DrMan *drMan)
-    : unknown00(drMan), unknown878(nullptr), unknown880(nullptr), m_updateMirrorBallPos(true), unknown890(nullptr), unknown898(nullptr), unknown8a0(nullptr), unknown1a80(DUMMY_CUBEMAP_FILE),
+    : unknown00(drMan), unknown878(nullptr), unknown880(nullptr), m_updateMirrorBallPos(true), unknown890(nullptr), unknown898(nullptr), unknown8a0(nullptr), m_IBLEnvTexturePath(DUMMY_CUBEMAP_FILE),
       unknown1b88(nullptr) {
   memset(unknown08, 0, sizeof(unknown08));
-  unknown1a80.format("%sshader/%s.witex", "/monolib/", DUMMY_CUBEMAP_FILE);
+  m_IBLEnvTexturePath.format("%sshader/%s.witex", "/monolib/", DUMMY_CUBEMAP_FILE);
 }
 
 DrIniSys::~DrIniSys() { dataWorkClear(); }
@@ -103,8 +103,8 @@ void DrIniSys::getdrColor3Work(mm::Col3 &color, const char *value) {
   for (int i = 0; i < 0x400; i++) {
     char c = value[i];
     if (c == ',') {
-      unknown002[length] = '\0';
-      rgb[count] = getFloatWork(unknown002);
+      unknown015[length] = '\0';
+      rgb[count] = getFloatWork(unknown015);
       count++;
       if (count >= 3) {
         break;
@@ -113,12 +113,12 @@ void DrIniSys::getdrColor3Work(mm::Col3 &color, const char *value) {
     } else if (c == '\0') {
       break;
     } else {
-      unknown002[length++] = c;
+      unknown015[length++] = c;
     }
   }
   if (length > 1 && count < 3) {
-    unknown002[length] = '\0';
-    rgb[count] = getFloatWork(unknown002);
+    unknown015[length] = '\0';
+    rgb[count] = getFloatWork(unknown015);
   }
   color.r = rgb[0];
   color.g = rgb[1];
@@ -136,8 +136,8 @@ int DrIniSys::getToonDirType(const char *value) {
 }
 
 FileResTh *DrIniSys::readTextureMapFile(const char *name) {
-  snprintf(unknown002, sizeof(unknown002), "/monolib/shader/%s.witex", name);
-  return unknown003(this, unknown002);
+  snprintf(unknown015, sizeof(unknown015), "/monolib/shader/%s.witex", name);
+  return unknown003(this, unknown015);
 }
 
 int DrIniSys::getIntWork(const char *value) { return atoi(value); }
@@ -173,11 +173,11 @@ void DrIniSys::loadVolumeTexture() { unknown001(this); }
 
 void DrIniSys::loadIBLEnvTexture() {
   Scn *scn = Scn::get();
-  if (scn != nullptr && scn->allocEntryRes(unknown1a80.c_str()) != nullptr) {
+  if (scn != nullptr && scn->allocEntryRes(m_IBLEnvTexturePath.c_str()) != nullptr) {
     return;
   }
   FileResTh *res = new (WorkUtil::getWorkMem()) FileResTh();
-  if (res->loadBlock(unknown00->unknown1c, unknown1a80.c_str(), 0x1000, 0)) {
+  if (res->loadBlock(unknown00->unknown1c, m_IBLEnvTexturePath.c_str(), 0x1000, 0)) {
     if (unknown08[12] != nullptr) {
       unknown08[12]->Release();
       unknown08[12] = nullptr;
@@ -191,13 +191,13 @@ void DrIniSys::loadWetnessCSVBFile() {
   if (unknown1b88 == nullptr) {
     unknown1b88 = new (unknown00->unknown1c) csvb::CCsvbData();
   }
-  snprintf(unknown002, sizeof(unknown002), "/monolib/shader/%s.bin", WETNESS_CSVB_FILE);
-  unknown1b88->Load(unknown00->unknown1c, unknown002);
+  snprintf(unknown015, sizeof(unknown015), "/monolib/shader/%s.bin", WETNESS_CSVB_FILE);
+  unknown1b88->Load(unknown00->unknown1c, unknown015);
 }
 
 void DrIniSys::loadFilterLutTexture() {
-  snprintf(unknown002, sizeof(unknown002), "/monolib/shader/filterlut.wiltp");
-  FileResTh *res = unknown003(this, unknown002);
+  snprintf(unknown015, sizeof(unknown015), "/monolib/shader/filterlut.wiltp");
+  FileResTh *res = unknown003(this, unknown015);
   if (unknown8a0 != nullptr) {
     unknown8a0->Release();
     unknown8a0 = nullptr;
@@ -207,13 +207,13 @@ void DrIniSys::loadFilterLutTexture() {
 }
 
 void DrIniSys::loadGlassBreakage() {
-  snprintf(unknown002, sizeof(unknown002), "/monolib/shader/%s", GLASS_BREAKAGE);
-  unknown898 = unknown003(this, unknown002);
+  snprintf(unknown015, sizeof(unknown015), "/monolib/shader/%s", GLASS_BREAKAGE);
+  unknown898 = unknown003(this, unknown015);
 }
 
 void DrIniSys::loadCameraLight() {
-  snprintf(unknown002, sizeof(unknown002), "/monolib/shader/%s.wilgt", CAM_LGT_FILE);
-  unknown890 = unknown003(this, unknown002);
+  snprintf(unknown015, sizeof(unknown015), "/monolib/shader/%s.wilgt", CAM_LGT_FILE);
+  unknown890 = unknown003(this, unknown015);
 }
 
 void DrIniSys::loadTextureImpl(u32 index, const char *name) {
@@ -230,7 +230,7 @@ void DrIniSys::loadFlagWaveTexture() {
   loadTextureImpl(17, FLAG_WAVE1_FILE);
 }
 
-void DrIniSys::setIBLEnvTexturePath(const char *path) { unknown1a80 = path; }
+void DrIniSys::setIBLEnvTexturePath(const char *path) { m_IBLEnvTexturePath = path; }
 
 void DrIniSys::reloadToonGradTexture() { loadToonGradTexture(); }
 
@@ -264,8 +264,8 @@ void DrIniSys::setDispMirrorBall(bool isDisp) {
 }
 
 void DrIniSys::loadMirrorBallModel() {
-  snprintf(unknown002, sizeof(unknown002), "/monolib/shader/%s.wimdo", MIRROR_BALL_MDL_FILE);
-  FileResTh *res = unknown003(this, unknown002);
+  snprintf(unknown015, sizeof(unknown015), "/monolib/shader/%s.wimdo", MIRROR_BALL_MDL_FILE);
+  FileResTh *res = unknown003(this, unknown015);
   if (res == nullptr) {
     return;
   }
@@ -277,7 +277,7 @@ void DrIniSys::loadMirrorBallModel() {
     unknown878 = nullptr;
   }
   unknown878 = res;
-  unknown880 = Scn::get()->createMdl(res->unknownc8, unknown002, 0);
+  unknown880 = Scn::get()->createMdl(res->unknownc8, unknown015, 0);
 }
 
 bool DrIniSys::getUpdateMirrorBallPos() const { return m_updateMirrorBallPos; }
@@ -304,9 +304,9 @@ void DrIniSys::setStrWork(char *dst, const char *src) {
 }
 
 FileResTh *DrIniSys::readWorkFile(const char *name) {
-  snprintf(unknown002, sizeof(unknown002), "monolib/shader/%s.wilut", name);
+  snprintf(unknown015, sizeof(unknown015), "monolib/shader/%s.wilut", name);
   FileResTh *res = new (WorkUtil::getWorkMem()) FileResTh();
-  res->loadBlock(unknown00->unknown1c, unknown002, 0x1000, 0);
+  res->loadBlock(unknown00->unknown1c, unknown015, 0x1000, 0);
   return res;
 }
 

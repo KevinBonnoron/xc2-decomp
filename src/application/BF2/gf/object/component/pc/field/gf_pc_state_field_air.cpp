@@ -27,7 +27,7 @@ void StateFieldAir::leave(GfComBehaviorPc *behavior, ai::State *next) {
   StateUtilField::setEnableFallIntoColi(*behavior, false);
   StateUtilField::setAirStatus(*behavior, false);
   StateUtil::setEnableFallDistChecker(*behavior, false);
-  if (next != nullptr && next->unknown08 == STATE_ID_FIELD_SLIDE_MOVE) {
+  if (next != nullptr && next->unknown08 == STATE_ID_UNKNOWN_54) {
     StateUtilField::setSlideDirForce(*behavior->unknown08->getComponent<GfComPropertyPc>());
   }
 }
@@ -36,7 +36,7 @@ void StateFieldAir::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
   if (StateUtilField::isWallAdsorptionAir(*property) && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_CLIMBIDLE)) {
-    reqState(STATE_ID_FIELD_WALL_ADSORPTION_AIR);
+    reqState(STATE_ID_UNKNOWN_41);
     return;
   }
 
@@ -51,29 +51,29 @@ void StateFieldAir::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info
       }
 
       if (!StateUtilField::isSwimMoveFromAir(*property)) {
-        reqState(STATE_ID_FIELD_WATER_SINK);
+        reqState(STATE_ID_UNKNOWN_25);
       } else {
-        reqState(STATE_ID_FIELD_WATER_SWIM_SINK);
+        reqState(STATE_ID_UNKNOWN_27);
       }
     } else if (!StateUtilField::isSwimMoveFromAir(*property)) {
       if (!StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_WATERIDLE)) {
         return;
       }
 
-      reqState(STATE_ID_FIELD_WATER_IDLE);
+      reqState(STATE_ID_UNKNOWN_20);
     } else {
       if (!StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_SWIM_00)) {
         return;
       }
 
-      reqState(STATE_ID_FIELD_WATER_SWIM);
+      reqState(STATE_ID_UNKNOWN_22);
     }
   } else {
     if (!StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_WATERDEAD)) {
       return;
     }
 
-    reqState(STATE_ID_FIELD_WATER_DEAD_SINK);
+    reqState(STATE_ID_UNKNOWN_35);
   }
 }
 

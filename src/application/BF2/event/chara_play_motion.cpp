@@ -79,7 +79,7 @@ void CharaPlayMotion::term() {
   if (obj != nullptr) {
     stop(obj);
   }
-  unknown18->setFootIK(true, CharaIKUpdater::FOOT_TYPE_2);
+  unknown18->setFootIK(true, CharaIKUpdater::FOOT_TYPE_UNKNOWN_2);
   if (CharaManager::getPtr()->isStreamMode() && unknown28 != nullptr) {
     MotstmManager::getPtr()->free(unknown28);
   }
@@ -94,7 +94,7 @@ void CharaPlayMotion::stop(gf::GfObj *obj) {
   gf::GfComEvtAnim *anim = obj->getComponent<gf::GfComEvtAnim>();
   if (anim != nullptr) {
     anim->stop();
-    anim->setSpeed(1.0f, gf::ANIM_LAYER_BASE);
+    anim->setSpeed(1.0f, gf::ANIM_LAYER_UNKNOWN_0);
   }
   unknown20->resetDynamics(0);
   unknown08 &= ~4;

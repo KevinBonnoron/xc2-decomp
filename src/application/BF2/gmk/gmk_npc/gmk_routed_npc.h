@@ -21,10 +21,10 @@ class GmkRouteNavi;
 
 class GmkRoutedNpc : public GmkRoute, public AGmkNpc {
 public:
-  static const GmkType GMK_TYPE = GMK_TYPE_ROUTED_NPC;
+  static const GmkType GMK_TYPE = GMK_TYPE_ROUTED_NPC; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkRoutedNpc() : unknown70(nullptr), unknown78(true), unknown79(true), unknown80(mm::Vec3::zero), unknown90(mm::Quat::zero) {}
-  ~GmkRoutedNpc() override;
+  ~GmkRoutedNpc() override { dispose(); }
   GmkType getGmkType() const override;
   const IGmkList *getBindedRoutePointList() const override;
   void create(const CreateInfo &info) override;
@@ -47,7 +47,7 @@ public:
   const GmkNpc::BdatInfo *getBdatInfo() const { return reinterpret_cast<const GmkNpc::BdatInfo *>(GmkRoute::unknown20.unknown10); }
 
   GmkRouteNavi *unknown70;    // Inferred role: route navi; original member name unknown.
-  bool unknown78;             // Role and original member name unknown.
+  mutable bool unknown78;     // Role and original member name unknown.
   mutable bool unknown79;     // Inferred role: display enabled; original member name unknown.
   mutable mm::Vec3 unknown80; // Inferred role: position; original member name unknown.
   mutable mm::Quat unknown90; // Inferred role: rotation; original member name unknown.

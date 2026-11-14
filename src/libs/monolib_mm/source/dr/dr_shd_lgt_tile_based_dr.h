@@ -35,11 +35,11 @@ public:
   void stockEnd() override;
 
   unknown001 unknown18[4]; // Inferred role: view infos; original member name unknown.
-  u8 _378[0x380 - 0x378];
-  u32 unknown380;   // Inferred role: pnt light buffer size; original member name unknown.
-  u32 unknown384;   // Inferred role: spt light buffer size; original member name unknown.
-  void *unknown388; // Inferred role: pnt light buffer; original member name unknown.
-  void *unknown390; // Inferred role: spt light buffer; original member name unknown.
+  void *unknown378;        // Inferred role: allocated work, freed by the destructor; original member name unknown.
+  u32 unknown380;          // Inferred role: pnt light buffer size; original member name unknown.
+  u32 unknown384;          // Inferred role: spt light buffer size; original member name unknown.
+  void *unknown388;        // Inferred role: pnt light buffer; original member name unknown.
+  void *unknown390;        // Inferred role: spt light buffer; original member name unknown.
 };
 
 static_assert(offsetof(DrShdLgtTileBasedDr::unknown001, unknown38) == 0x38, "");

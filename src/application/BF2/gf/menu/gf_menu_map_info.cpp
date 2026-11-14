@@ -176,3 +176,6 @@ bool GfMenuMapInfo::getCurMapAreaInfo(MapAreaInfo &area) {
 } // namespace gf
 
 template mm::mtl::PtrSingleton<gf::GfMenuMapInfo>::~PtrSingleton();
+template void mm::mtl::Vector<gf::GfMenuMapInfo::MiniIcon>::expand(size_t, size_t);
+template void mm::mtl::Vector<gf::GfMenuMapInfo::MiniIcon>::push_back(const gf::GfMenuMapInfo::MiniIcon &);
+template void mm::mtl::Vector<gf::GfMenuMapInfo::SegInfo>::expand(size_t, size_t);

@@ -37,7 +37,7 @@ public:
     WeatherCond unknown20;      // Inferred role: weather cond; original member name unknown.
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_PRECIOUS;
+  static const GmkType GMK_TYPE = GMK_TYPE_PRECIOUS; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkPrecious();
   ~GmkPrecious() override { dispose(); }

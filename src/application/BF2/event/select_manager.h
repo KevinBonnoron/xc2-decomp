@@ -12,9 +12,9 @@ class CharaObj;
 class SelectManager : public IManager, public mm::mtl::Singleton<SelectManager> {
 public:
   enum {
-    FLAG_ACTIVE = 1 << 0,
-    FLAG_SELECT = 1 << 1,
-    FLAG_WAIT = 1 << 2,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: active flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: select flag; original name unknown.
+    FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: wait flag; original name unknown.
   };
 
   SelectManager();

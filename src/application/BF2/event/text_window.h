@@ -13,8 +13,8 @@ namespace event {
 class TextWindow {
 public:
   enum {
-    FLAG_WRITE = 1 << 0,
-    FLAG_CLOSE = 1 << 1,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: write flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: close flag; original name unknown.
   };
 
   TextWindow();
@@ -25,13 +25,13 @@ public:
   void render();
   void write(const char *text, const char *name, u8 *bdat, u32 textId, gf::GF_OBJ_HANDLE *handle);
   bool isWriting() const;
-  bool isDisp() const { return (unknown08 & FLAG_WRITE) != 0; }
+  bool isDisp() const { return (unknown08 & FLAG_UNKNOWN_0) != 0; }
   void hide() {
     erase();
-    unknown218 = gf::INVALID_HANDLE;
+    unknown218 = gf::unknown020;
     unknown110 = "";
     unknown0c = "";
-    unknown08 &= ~(FLAG_WRITE | FLAG_CLOSE);
+    unknown08 &= ~(FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1);
   }
 
 private:

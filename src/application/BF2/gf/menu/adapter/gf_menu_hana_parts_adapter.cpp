@@ -34,7 +34,7 @@ GfMenuHanaPartsAdapter *GfMenuHanaPartsAdapter::create(u32 handle, u32 type, u32
     if (plugin != nullptr) {
       // __LINE__ must be 148 as in the original source: it is the line argument of operator new.
 #line 148
-      GfMenuHanaPartsAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuHanaPartsAdapter(plugin, isUpdateAlways);
+      GfMenuHanaPartsAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuHanaPartsAdapter(plugin, isUpdateAlways);
       adapter->unknown30.bind(adapter, info.update);
       adapter->unknown5c = partsId;
       plugin->release();
@@ -128,7 +128,7 @@ bool GfMenuHanaPartsAdapter::update_partsIcon() {
 GfMenuHanaPartsAdapter *GfMenuHanaPartsAdapter::createFromList(u32 handle, u32 type, GfMenuIDList *list, int listIndex, bool isUpdateAlways) {
   // __LINE__ must be 164 as in the original source: it is the line argument of operator new.
 #line 164
-  ListConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ListConverter(list, listIndex);
+  ListConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ListConverter(list, listIndex);
   return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 
@@ -143,7 +143,7 @@ GfMenuHanaPartsAdapter *GfMenuHanaPartsAdapter::createFromCoverter(u32 handle, u
 GfMenuHanaPartsAdapter *GfMenuHanaPartsAdapter::createFromReference(u32 handle, u32 type, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number, bool isUpdateAlways) {
   // __LINE__ must be 172 as in the original source: it is the line argument of operator new.
 #line 172
-  ReferenceNumberConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceNumberConverter(number);
+  ReferenceNumberConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceNumberConverter(number);
   return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 
@@ -170,9 +170,9 @@ void GfMenuHanaPartsAdapter::update(const fw::UpdateInfo &info) {
     }
   }
 
-  if (unknown30.isValid() && (unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
+  if (unknown30.isValid() && (unknown20 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) != 0) {
     setDisp(unknown30());
-    unknown20 &= ~FLAG_CHANGED;
+    unknown20 &= ~FLAG_UNKNOWN_0;
   }
 }
 

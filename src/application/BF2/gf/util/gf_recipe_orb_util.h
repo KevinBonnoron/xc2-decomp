@@ -18,6 +18,19 @@ static_assert(sizeof(OrbRecipe) == 0x4, "");
 // 0x0c and the item entries from 0x10 (at most eight).
 class RecipeInfo {
 public:
+  RecipeInfo() : unknown00(0), unknown04(0), m_resultRarity(), m_resultColleCategory(), m_resultItems() {}
+
+  // Inferred helper: empties the recipe; original name unknown.
+  void unknown001() {
+    unknown00 = 0;
+    unknown04 = 0;
+    m_resultRarity.unknown00 = 0;
+    m_resultRarity.unknown02 = 0;
+    m_resultColleCategory.unknown00 = 0;
+    m_resultColleCategory.unknown02 = 0;
+    m_resultItems.clear();
+  }
+
   const OrbRecipe *getResultRarity() const;
   const OrbRecipe *getResultColleCategory() const;
   const mm::mtl::FixedVector<OrbRecipe, 8> *getResultItems() const;
@@ -40,9 +53,12 @@ public:
   static bool isEnabaleOrbRecipeCategory(u32 recipe, const mm::mtl::FixedVector<OrbRecipe, 128> &items);
   static bool isEnabaleOrbRecipeRare(u32 recipe, const mm::mtl::FixedVector<OrbRecipe, 128> &items);
   static bool isEnableRecipe(u32 id);
+  static bool isExistItem(const mm::mtl::FixedVector<OrbRecipe, 128> &items, u32 id, u32 count);
   static u32 getRecipeID(u32 id);
   static u32 getEquipOrb(u32 id);
   static bool getRecipeInfo(RecipeInfo &info, u32 id);
+  static bool isEnabaleOrbRecipe(u32 recipe, const mm::mtl::FixedVector<OrbRecipe, 128> &items);
+  static void execOrbRecipe(u32 item, const mm::mtl::FixedVector<OrbRecipe, 128> *items);
 };
 
 } // namespace gf

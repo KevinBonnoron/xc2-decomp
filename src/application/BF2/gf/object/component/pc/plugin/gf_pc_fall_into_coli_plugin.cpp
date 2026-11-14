@@ -22,9 +22,9 @@ FallIntoColiPlugin::FallIntoColiPlugin() : unknown0c(0.0f), unknown10(0.0f) {}
 FallIntoColiPlugin::~FallIntoColiPlugin() {}
 
 void FallIntoColiPlugin::cleanup(GfComBehaviorPc &) {
-  if (unknown18 != INVALID_SEARCH_OBJ) {
+  if (unknown18 != unknown012) {
     GfGameSearchObj::destroyObj(unknown18);
-    unknown18 = INVALID_SEARCH_OBJ;
+    unknown18 = unknown012;
   }
 }
 

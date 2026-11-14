@@ -21,6 +21,7 @@ public:
   void renderLUT();
   void render_applyLUT(bool isFirst, bool isSecond);
   void render_updateLUT();
+  void debugRender();
 
   DrMan *unknown00;         // Inferred role: driver manager; original member name unknown.
   DrPixlMan *unknown08;     // Inferred role: pixel manager; original member name unknown.

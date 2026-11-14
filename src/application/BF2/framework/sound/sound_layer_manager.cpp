@@ -7,7 +7,7 @@ SoundLayerManager::SoundLayerManager() {}
 SoundLayerManager::~SoundLayerManager() {}
 
 void SoundLayerManager::update(u32 layerMask) {
-  for (u32 i = 0; i < LAYER_MAX; i++) {
+  for (u32 i = 0; i < LAYER_UNKNOWN_32; i++) {
     if ((layerMask & 1 << i) != 0) {
       mm::mtl::IntrusiveList<SoundUpdater> &updaters = unknown08[i];
       for (mm::mtl::IntrusiveList<SoundUpdater>::iterator it = updaters.begin(); it != updaters.end(); ++it) {

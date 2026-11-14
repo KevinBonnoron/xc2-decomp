@@ -5,7 +5,7 @@ class DrMan;
 
 DrMdoCtlDammy::DrMdoCtlDammy(const void *data, DrMan *drMan, int viewNum) : DrMdlObj(viewNum) {
   m_drMan = drMan;
-  unknown50 = const_cast<void *>(data);
+  unknown50 = data;
   unknown1c = 6;
 }
 

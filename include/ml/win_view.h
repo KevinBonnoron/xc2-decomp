@@ -1,6 +1,5 @@
 #pragma once
 #include <stddef.h>
-#include <string.h>
 
 #include "ml/critical_section.h"
 #include "ml/dev_font.h"
@@ -31,22 +30,21 @@ public:
   };
 
   WinView(const char *name, WorkObj *parent);
+  ~WinView() override;
   static WinView *getView(bool isResetShadow);
   static void setDefaultFrameColor(const mm::Col4 &color);
   static void setInitialBackCol(const mm::Col4 &color);
   static const mm::Col4 &getDefaultTitleBarColor();
   void updateViewPort(const mm::Rect<int> &rect);
   void renderView();
-
-  void setRect(const mm::Rect<int> &rect) {
-    updateViewPort(rect);
-    if (unknown53c) {
-      memcpy(unknown1b8.m_front, unknown1b8.m_back, sizeof(RENDER_INFO));
-    }
-  }
-
+  void setRect(const mm::Rect<int> &rect);
   void setTitle(const char *title);
-  void attachWorkEvent(IWorkEvent *event, bool isFront);
+  void setSize(int width, int height);
+  void setFrameRect(const mm::Rect<int> &rect);
+  void setSplitLine(int line);
+  void createSplitView(bool isHorizontal, WinView *view1, WinView *view2);
+  bool attachWorkEvent(IWorkEvent *event, bool isFront);
+  WinView *getPointedView(const mm::Pnt<int> &pos);
   const mm::Pnt<int> &getFramePos(bool isBack) const;
   void addFramePos(const mm::Pnt<int> &pos);
   void addScroll(const mm::Pnt<int> &scroll);
@@ -56,11 +54,12 @@ public:
   mm::Rect<int> getRect(bool isBack) const;
   mm::Pnt<int> getClientPos(bool isBack) const;
   mm::Pnt<int> getClientSize(bool isBack) const;
+  mm::Rect<int> getClientRect(bool isBack) const;
   bool isSplitHolizon() const;
   bool isCurrent() const;
   WorkObj *getRootProc();
   void setRootRenderWID(WinView *view);
-  void attachRenderWork(const WorkObj *work);
+  bool attachRenderWork(const WorkObj *work);
   WinView *getSplitView1();
   WinView *getSplitView2();
   const WinView *getSplitView1() const;
@@ -75,6 +74,12 @@ public:
   mm::Rect<int> getAbsRect(bool isBack) const;
   mm::Rect<int> getRealAbsRect(bool isBack) const;
   void normalizeAbsRect(mm::Rect<int> &rect, bool isBack) const;
+  mm::Rect<int> getFrameRect(bool isBack) const;
+  mm::Rect<int> getFrameAbsRect(bool isBack) const;
+  mm::Rect<int> getScissorRect(bool isBack) const;
+  mm::Rect<int> getScissorAbsRect(bool isBack) const;
+  mm::Rect<int> getSplitRect(const WinView *view, bool isBack) const;
+  mm::Rect<int> getClientSplitRect(const WinView *view, bool isBack) const;
   mm::Rect<int> getClientAbsRect(bool isBack) const;
   mm::Rect<int> getClientScissorAbsRect(bool isBack) const;
   mm::Rect<int> getClientScissorRect(bool isBack) const;
@@ -83,12 +88,10 @@ public:
   s32 getSplitLine(bool isBack) const;
   WinView *getParentView();
   const WinView *getParentView() const;
-  // evtFocusOn stays the first declared virtual: it is the key function, so the vtable and the implicit destructors are
-  // only emitted once it is defined.
-  virtual void evtFocusOn();
-  virtual void evtFocusOff();
-  virtual void detachRenderWork(const WorkObj *work);
-  virtual void detachWorkEvent(const IWorkEvent *event);
+  virtual bool evtFocusOn();
+  virtual bool evtFocusOff();
+  virtual bool detachRenderWork(const WorkObj *work);
+  virtual bool detachWorkEvent(const IWorkEvent *event);
   virtual void destroyCtrlMemory();
   virtual void applyRect();
   virtual void getViewOfs(mm::Rect<int> &rect, bool isBack);
@@ -113,6 +116,23 @@ public:
   CriticalSection unknown540;        // Inferred role: lock of the message queue; original member name unknown.
   CriticalSection unknown568;        // Inferred role: lock of the work event list; original member name unknown.
 };
+
+inline mm::Rect<int> WinViewFrame::unknown001(bool isBack) const {
+  const WinView::RENDER_INFO *viewInfo = isBack ? m_info->unknown1b8.m_back : m_info->unknown1b8.m_front;
+  mm::Pnt<int> size = m_info->getSize(isBack);
+  mm::Rect<int> rect(viewInfo->unknown48.unknown58, size);
+  u32 frameFlags = m_info->unknown3bc;
+  if ((frameFlags & 1) && (m_info->unknown3b8 & 3) == 0) {
+    s16 border = unknown60;
+    rect.width = size.x + border * 2;
+    if (frameFlags & 2) {
+      rect.height = size.y + border * 3 + 0x16;
+    } else {
+      rect.height = size.y + border * 2;
+    }
+  }
+  return rect;
+}
 
 static_assert(sizeof(WinView::RENDER_INFO) == 0xb0, "");
 static_assert(offsetof(WinView::RENDER_INFO, unknown28) == 0x28, "");

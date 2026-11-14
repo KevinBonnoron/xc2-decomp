@@ -18,11 +18,12 @@ void GmkFieldLock::dispose() {
 }
 
 void GmkFieldLock::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
-  unknown06 = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_U16), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_U16));
-  unknown0a = QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_U16), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_U8), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_U8));
-  unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_U16);
-  unknown02 = bdat.getValCheck("rockTYPE", id, BDAT_TYPE_U8);
-  unknown04 = bdat.getValCheck("txtID", id, BDAT_TYPE_U16);
+  unknown06 = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_UNKNOWN_2));
+  unknown0a =
+      QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_UNKNOWN_1), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_UNKNOWN_1));
+  unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_UNKNOWN_2);
+  unknown02 = bdat.getValCheck("rockTYPE", id, BDAT_TYPE_UNKNOWN_1);
+  unknown04 = bdat.getValCheck("txtID", id, BDAT_TYPE_UNKNOWN_2);
 }
 
 bool GmkFieldLock::BdatInfo::isCondMatched() const {
@@ -80,3 +81,6 @@ template void mm::mtl::Vector<gmk::GmkFieldLock::BdatInfo>::expand(size_t, size_
 
 template void mm::mtl::Vector<gmk::GmkFieldLock::BdatInfo>::extend(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkFieldLock::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkFieldLock>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkFieldLock>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkFieldLock>::resize(size_t);

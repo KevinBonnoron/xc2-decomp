@@ -8,9 +8,9 @@ namespace event {
 class MstxtRes : public IResEvent {
 public:
   enum {
-    FLAG_LOADING = 1 << 0,
-    FLAG_LOADED = 1 << 1,
-    FLAG_REGISTERED = 1 << 2,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: loading flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: loaded flag; original name unknown.
+    FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: registered flag; original name unknown.
   };
 
   MstxtRes(const char *path);
@@ -24,8 +24,8 @@ public:
   int getCount() const;
   virtual void OnResEvent(const PARAM &param);
 
-  bool isLoading() const { return (unknown08 & FLAG_LOADING) != 0; }
-  bool isLoaded() const { return (unknown08 & FLAG_LOADED) != 0; }
+  bool isLoading() const { return (unknown08 & FLAG_UNKNOWN_0) != 0; }
+  bool isLoaded() const { return (unknown08 & FLAG_UNKNOWN_1) != 0; }
   const char *getPath() const { return unknown0c.c_str(); }
   const char *getName() const { return unknown30.c_str(); }
 

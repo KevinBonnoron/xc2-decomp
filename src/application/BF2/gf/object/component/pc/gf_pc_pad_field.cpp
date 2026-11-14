@@ -8,12 +8,12 @@ namespace gf {
 
 namespace pc {
 
-constexpr int PAD_TYPE_FIELD = 0;
+constexpr int PAD_TYPE_UNKNOWN_0 = 0; // Inferred role: pad type field; original name unknown.
 
 PadField::PadField() : unknown40(nullptr) {}
 
 void PadField::setup(int padNo, GfComPropertyPc &property) {
-  unknown08.bind(padNo, PAD_TYPE_FIELD, getAllocator(ALLOCATOR_DEFAULT));
+  unknown08.bind(padNo, PAD_TYPE_UNKNOWN_0, getAllocator(ALLOCATOR_UNKNOWN_0));
   unknown08.bindAction("decide", this, &PadField::decideAction);
   unknown08.bindAction("jump", this, &PadField::jumpAction);
   unknown08.bindAction("lock", this, &PadField::lockAction);
@@ -23,23 +23,23 @@ void PadField::setup(int padNo, GfComPropertyPc &property) {
   unknown08.bindAxis("move_side", this, &PadField::moveSide);
 }
 
-void PadField::decideAction() const { setInput(INPUT_ID_DECIDE); }
+void PadField::decideAction() const { setInput(INPUT_ID_UNKNOWN_0); }
 
 void PadField::jumpAction() const {
   if (!GfGameManager::isDisableJumpForRide()) {
-    setInput(INPUT_ID_JUMP);
+    setInput(INPUT_ID_UNKNOWN_2);
   }
 }
 
 void PadField::lockAction() const {
   if (!GfGameManager::isDisableAutoRun()) {
-    setInput(INPUT_ID_LOCK);
+    setInput(INPUT_ID_UNKNOWN_1);
   }
 }
 
-void PadField::wallReleaseAction() const { setInput(INPUT_ID_WALL_RELEASE); }
+void PadField::wallReleaseAction() const { setInput(INPUT_ID_UNKNOWN_3); }
 
-void PadField::lureAction() const { setInput(INPUT_ID_LURE); }
+void PadField::lureAction() const { setInput(INPUT_ID_UNKNOWN_4); }
 
 void PadField::moveFront(f32 value) {
   if (unknown40 != nullptr && unknown40->unknown110_0) {

@@ -42,6 +42,7 @@ public:
   void update() override;
   static void start(f32 time, int type);
   static void fadeout();
+  u32 createText(u32 index, const CreditReader::Column &column);
 
   u8 _24[0x28 - 0x24];
   fw::CommonResource *unknown28; // Inferred role: credits resource; original member name unknown.

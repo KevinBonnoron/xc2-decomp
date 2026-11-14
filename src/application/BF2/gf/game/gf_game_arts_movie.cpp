@@ -10,15 +10,15 @@
 
 namespace gf {
 
-constexpr size_t MOVIE_SLOT_SIZE = 0x500000;
+constexpr size_t MOVIE_SLOT_UNKNOWN_5242880 = 0x500000; // Inferred role: movie slot size; original name unknown.
 
-GfArtsMovie::GfArtsMovie() : unknown10(INVALID_SLOT_HANDLE), unknown18(nullptr), unknown20(0), m_state(0) { unknown28.clear(); }
+GfArtsMovie::GfArtsMovie() : unknown10(unknown006), unknown18(nullptr), unknown20(0), m_state(0) { unknown28.clear(); }
 
 GfArtsMovie::~GfArtsMovie() { ; }
 
 void GfArtsMovie::startSetup(const char *name) {
-  unknown10 = GfAssetManager::allocateFromAssetTypeSlot(ASSET_TYPE_TEMPORARY, MOVIE_SLOT_SIZE);
-  if (unknown10 != INVALID_SLOT_HANDLE) {
+  unknown10 = GfAssetManager::allocateFromAssetTypeSlot(ASSET_TYPE_UNKNOWN_18, MOVIE_SLOT_UNKNOWN_5242880);
+  if (unknown10 != unknown006) {
     size_t size;
     {
       void *buffer;
@@ -51,7 +51,7 @@ void GfArtsMovie::updateForPlay(const fw::UpdateInfo &) {
 void GfArtsMovie::updateForMemorySafe(const fw::UpdateInfo &) {
   GfMovieManager::get()->close();
   GfAssetManager::releaseSlotHandle(unknown10);
-  unknown10 = INVALID_SLOT_HANDLE;
+  unknown10 = unknown006;
   unknown18 = nullptr;
   m_state = 3;
   unknown28.clear();
@@ -70,7 +70,7 @@ GfArtsMovie *GfArtsMovie::createSiren() {
   GfArtsMovie *artsMovie = get();
   if (artsMovie == nullptr) {
 #line 127
-    artsMovie = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfArtsMovie();
+    artsMovie = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfArtsMovie();
   }
   return artsMovie;
 }

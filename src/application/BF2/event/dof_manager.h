@@ -10,12 +10,12 @@ class CharaObj;
 class DofManager : public IManager, public mm::mtl::Singleton<DofManager> {
 public:
   enum {
-    FLAG_ENABLE = 1 << 0,
-    FLAG_CHANGED = 1 << 1,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: enable flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: changed flag; original name unknown.
   };
 
   enum {
-    DISP_FLAG_DISP = 1 << 0,
+    DISP_FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: disp flag; original name unknown.
   };
 
   DofManager();
@@ -60,8 +60,8 @@ private:
   }
 
   void setChanged() {
-    setFlag(FLAG_ENABLE, isEnable());
-    setFlag(FLAG_CHANGED, isEnable());
+    setFlag(FLAG_UNKNOWN_0, isEnable());
+    setFlag(FLAG_UNKNOWN_1, isEnable());
   }
 
   u32 unknown10; // Inferred role: disp flags; original member name unknown.

@@ -31,11 +31,11 @@ bool StateBattle::Enter(GfComBehaviorPc *behavior, ai::State *previous) {
   if (static_cast<GfObj *>(behavior->unknown08)->unknownf8 == leader) {
     GF_OBJ_HANDLE *target = StateUtil::getTarget(*behavior);
     btl::BattleGlobal *global = btl::BattleGlobal::get();
-    global->unknown65de_4 = target != INVALID_HANDLE;
+    global->unknown65de_4 = target != unknown020;
   }
   property->unknown470.unknown18 = false;
   GfObjAcc acc(static_cast<GfObj *>(behavior->unknown08));
-  acc.setFlag(OBJ_FLAG_UNKNOWN_17, false);
+  acc.setFlag(OBJ_FLAG_UNKNOWN_23, false);
   return true;
 }
 
@@ -59,17 +59,17 @@ void StateBattle::Leave(GfComBehaviorPc *behavior, ai::State *next) {
   property->unknown470.unknown17 = false;
   property->unknown10.get()->unknown1b = false;
   GfObjAcc acc(static_cast<GfObj *>(behavior->unknown08));
-  acc.setFlag(OBJ_FLAG_UNKNOWN_17, true);
+  acc.setFlag(OBJ_FLAG_UNKNOWN_23, true);
 }
 
 void StateBattle::Update(btl::BattleCharacter *character, GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
   GF_OBJ_HANDLE *leader = btl::Utility::GetLeader();
   if (static_cast<GfObj *>(behavior->unknown08)->unknownf8 == leader) {
-    if (behavior->getProperty()->unknown60.unknown08.test(INPUT_ID_CHANGE_CAMERA_MODE)) {
+    if (behavior->getProperty()->unknown60.unknown08.test(INPUT_ID_UNKNOWN_19)) {
       if (StateUtil::isManualCamera()) {
         GF_OBJ_HANDLE *target = StateUtil::getTarget(*behavior);
         btl::BattleGlobal *global = btl::BattleGlobal::get();
-        global->unknown65de_4 = target != INVALID_HANDLE;
+        global->unknown65de_4 = target != unknown020;
       }
     } else if (btl::BattleGlobal::get()->unknown65de_4) {
       btl::BattleGlobal::get()->unknown65de_4 = !StateUtil::isManualCamera();

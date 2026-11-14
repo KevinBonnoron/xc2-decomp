@@ -11,17 +11,17 @@ namespace event {
 
 class SeamlessManager : public IManager, public mm::mtl::Singleton<SeamlessManager> {
 public:
-  static constexpr u32 FIRST_KEY_COUNT = 16;
-  static constexpr u32 SEAM_POINT_COUNT = 256;
+  static constexpr u32 FIRST_KEY_UNKNOWN_16 = 16;    // Inferred role: first key count; original name unknown.
+  static constexpr u32 SEAM_POINT_UNKNOWN_256 = 256; // Inferred role: seam point count; original name unknown.
 
   enum {
-    FLAG_FIRST = 1 << 0,
-    FLAG_SEAM = 1 << 1,
-    FLAG_READ_ENABLE = 1 << 2,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: first flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: seam flag; original name unknown.
+    FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: read enable flag; original name unknown.
   };
 
   enum {
-    DISP_FLAG_DISP = 1 << 0,
+    DISP_FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: disp flag; original name unknown.
   };
 
   struct FirstKey {
@@ -59,12 +59,12 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  u32 unknown10;                                                 // Inferred role: flags; original member name unknown.
-  u32 unknown14;                                                 // Inferred role: disp flags; original member name unknown.
-  mm::mtl::FixedVector<FirstKey, FIRST_KEY_COUNT> unknown20;     // Inferred role: first keys; original member name unknown.
-  mm::Vec3 unknown530;                                           // Inferred role: read pos; original member name unknown.
-  mm::mtl::FixedVector<unknown001, SEAM_POINT_COUNT> unknown540; // Inferred role: seam points; original member name unknown.
-  mm::Vec3 unknown2550;                                          // Inferred role: current pos; original member name unknown.
+  u32 unknown10;                                                       // Inferred role: flags; original member name unknown.
+  u32 unknown14;                                                       // Inferred role: disp flags; original member name unknown.
+  mm::mtl::FixedVector<FirstKey, FIRST_KEY_UNKNOWN_16> unknown20;      // Inferred role: first keys; original member name unknown.
+  mm::Vec3 unknown530;                                                 // Inferred role: read pos; original member name unknown.
+  mm::mtl::FixedVector<unknown001, SEAM_POINT_UNKNOWN_256> unknown540; // Inferred role: seam points; original member name unknown.
+  mm::Vec3 unknown2550;                                                // Inferred role: current pos; original member name unknown.
 };
 
 static_assert(sizeof(SeamlessManager::FirstKey) == 0x50, "");

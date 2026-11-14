@@ -1,7 +1,9 @@
 #pragma once
 #include <stddef.h>
 
+#include "framework/ik/ik_look_at_solver.h"
 #include "framework/ik/ik_solver.h"
+#include "framework/ik/ik_spine_solver.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
 
@@ -21,13 +23,11 @@ namespace fw {
 
 class ParamAdapter;
 class ReferenceFrame;
-class LookAtIkSolver;
-class SpineIkSolver;
 
 class LookIkSolver : public IkSolver {
 public:
   struct Description {
-    Description(f32 fadeOutTime, f32 fadeInTime) : unknown00(fadeOutTime), unknown04(fadeInTime) {}
+    Description() : unknown00(0.5f), unknown04(0.5f) {}
 
     f32 unknown00; // Inferred role: spine fade out time; original member name unknown.
     f32 unknown04; // Inferred role: spine fade in time; original member name unknown.
@@ -52,6 +52,20 @@ public:
   void solve(const UpdateInfo &info) override;
   const mm::mtl::RTTI *getRTTI() const override;
   virtual bool isEnable() const;
+
+  // Inferred helper: fade state of the look at solver, of the spine solver when there is none; original name unknown.
+  // Evidence: gf::pc::TargetIKPlugin::update (1.0.0: 0x710057c5d0 and 0x710057c640) reads it twice, each time behind one
+  // IntrusivePtr::operator-> check of the look solver, and gf::GfFieldLookIk::updateIkSolver<fw::LookIkSolver>
+  // (0x7100341e30..0x7100341e48) reads the same chain where its LookAtIkSolver instantiation (0x7100341f2c) reads unknown24.
+  IkFadeSolver::unknown002 unknown001() const {
+    if (unknown28.get() != nullptr) {
+      return unknown28.get()->unknown24;
+    }
+    if (unknown20.get() != nullptr) {
+      return unknown20.get()->unknown24;
+    }
+    return IkFadeSolver::unknown002_0;
+  }
 
   mm::mtl::IntrusivePtr<SpineIkSolver> unknown20;  // Inferred role: spine solver; original member name unknown.
   mm::mtl::IntrusivePtr<LookAtIkSolver> unknown28; // Inferred role: look at solver; original member name unknown.

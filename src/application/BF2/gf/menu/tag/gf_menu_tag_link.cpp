@@ -45,7 +45,7 @@ const char *GfMenuTagLink::convBegin(const ParamList &params, u16 id) {
         if ((Bdat::getVal(bdat, "Name", row).valueU32 & 0xffff) == name) {
           if (row != 0) {
             MenuItemInfo info;
-            info.unknown00 = ItemType::COLLECTION_LIST;
+            info.unknown00 = ItemType::ITEM_TYPE_UNKNOWN_7;
             info.unknown04 = row;
             GfMenuReference::addItemLink(info);
           }

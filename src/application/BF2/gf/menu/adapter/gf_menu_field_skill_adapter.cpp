@@ -32,7 +32,7 @@ GfMenuFieldSkillAdapter *GfMenuFieldSkillAdapter::create(u32 handle, u32 type, c
     if (plugin != nullptr) {
       // __LINE__ must be 176 as in the original source: it is the line argument of operator new.
 #line 176
-      GfMenuFieldSkillAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuFieldSkillAdapter(plugin, false);
+      GfMenuFieldSkillAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuFieldSkillAdapter(plugin, false);
       adapter->unknown30.bind(adapter, info.update);
       adapter->unknown58 = fieldSkill;
       plugin->release();
@@ -73,21 +73,21 @@ GfMenuFieldSkillAdapter *GfMenuFieldSkillAdapter::createFromCoverter(u32 handle,
 GfMenuFieldSkillAdapter *GfMenuFieldSkillAdapter::createFromBlade(u32 handle, u32 type, u32 blade, u32 option) {
   // __LINE__ must be 206 as in the original source: it is the line argument of operator new.
 #line 206
-  BladeConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) BladeConverter(blade, 0);
+  BladeConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) BladeConverter(blade, 0);
   return createFromCoverter(handle, type, converter, false);
 }
 
 GfMenuFieldSkillAdapter *GfMenuFieldSkillAdapter::createFromList(u32 handle, u32 type, GfMenuFieldSkillList *list, int listIndex) {
   // __LINE__ must be 214 as in the original source: it is the line argument of operator new.
 #line 214
-  ListConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ListConverter(list, listIndex);
+  ListConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ListConverter(list, listIndex);
   return createFromCoverter(handle, type, converter, false);
 }
 
 GfMenuFieldSkillAdapter *GfMenuFieldSkillAdapter::createFromReference(u32 handle, u32 type, mm::mtl::IntrusivePtr<GfMenuReferenceFs> reference) {
   // __LINE__ must be 222 as in the original source: it is the line argument of operator new.
 #line 222
-  ReferenceConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceConverter(reference);
+  ReferenceConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceConverter(reference);
   return createFromCoverter(handle, type, converter, false);
 }
 
@@ -105,14 +105,14 @@ void GfMenuFieldSkillAdapter::update(const fw::UpdateInfo &info) {
     }
   }
 
-  if ((unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0 && unknown30.isValid()) {
+  if ((unknown20 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) != 0 && unknown30.isValid()) {
     setDisp(unknown58.unknown00 != 0 && unknown30(unknown58));
-    unknown20 &= ~FLAG_CHANGED;
+    unknown20 &= ~FLAG_UNKNOWN_0;
   }
 }
 
 void GfMenuFieldSkillAdapter::BladeConverter::getFieldSkill(MenuFieldSkill &fieldSkill) {
-  DataParamAcc acc(OBJECT_TYPE_BLADE, blade, GIMMICK_TYPE_NONE);
+  DataParamAcc acc(OBJECT_TYPE_BLADE, blade, GIMMICK_TYPE_UNKNOWN_0);
   if (acc.isValid() && acc.getObjType() == OBJECT_TYPE_BLADE) {
     fieldSkill.unknown00 = acc.getFieldSkill(slot, false);
     fieldSkill.unknown02 = acc.getFieldSkillLevel(slot, false);

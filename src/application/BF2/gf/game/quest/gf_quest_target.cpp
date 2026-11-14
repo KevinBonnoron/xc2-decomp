@@ -23,10 +23,10 @@ namespace gf {
 namespace {
 
 // Inferred role: frames after which a target cache expires; original constant name unknown.
-constexpr u16 TARGET_CACHE_LIFE_FRAMES = 300;
+constexpr u16 TARGET_CACHE_UNKNOWN_300 = 300; // Inferred role: target cache life frames; original name unknown.
 
 // Inferred role: frames an empty quest target cache waits before it takes the progress quest again; original constant name unknown.
-constexpr u8 TARGET_CACHE_REFRESH_FRAMES = 31;
+constexpr u8 TARGET_CACHE_UNKNOWN_31 = 31; // Inferred role: target cache refresh frames; original name unknown.
 
 // Inferred role: battle task data; original type name unknown.
 struct unknown002 {
@@ -51,9 +51,9 @@ struct unknown002 {
 };
 
 // Inferred role: collects the uncompleted tasks of the target quest matching the target type; original name unknown.
-bool unknown003(mm::mtl::FixedVector<QuestTaskParam, QUEST_TASK_COUNT> &tasks, const TargetInfo &target) {
-  for (u32 taskIndex = 0; taskIndex < QUEST_TASK_COUNT; taskIndex++) {
-    QuestTaskParam param(target.unknown0c, taskIndex, TASK_STATE_NONE);
+bool unknown003(mm::mtl::FixedVector<QuestTaskParam, QUEST_UNKNOWN_4> &tasks, const TargetInfo &target) {
+  for (u32 taskIndex = 0; taskIndex < QUEST_UNKNOWN_4; taskIndex++) {
+    QuestTaskParam param(target.unknown0c, taskIndex, TASK_STATE_UNKNOWN_0);
     if (param.unknown10 == 0) {
       break;
     }
@@ -62,27 +62,27 @@ bool unknown003(mm::mtl::FixedVector<QuestTaskParam, QUEST_TASK_COUNT> &tasks, c
     }
     switch (target.unknown18) {
     case 1:
-      if (param.unknown10 == TASK_TYPE_COLLECT) {
+      if (param.unknown10 == TASK_TYPE_UNKNOWN_3) {
         tasks.push_back(param);
       }
       break;
     case 2:
-      if (param.unknown10 == TASK_TYPE_REACH) {
+      if (param.unknown10 == TASK_TYPE_UNKNOWN_5) {
         tasks.push_back(param);
       }
       break;
     case 3:
-      if (param.unknown10 == TASK_TYPE_BATTLE || param.unknown10 == TASK_TYPE_COLLECT) {
+      if (param.unknown10 == TASK_TYPE_UNKNOWN_1 || param.unknown10 == TASK_TYPE_UNKNOWN_3) {
         tasks.push_back(param);
       }
       break;
     case 4:
-      if (param.unknown10 == TASK_TYPE_UNKNOWN_2 || param.unknown10 == TASK_TYPE_COLLECT || param.unknown10 == TASK_TYPE_TALK || param.unknown10 == TASK_TYPE_CONDITION) {
+      if (param.unknown10 == TASK_TYPE_UNKNOWN_2 || param.unknown10 == TASK_TYPE_UNKNOWN_3 || param.unknown10 == TASK_TYPE_UNKNOWN_6 || param.unknown10 == TASK_TYPE_UNKNOWN_10) {
         tasks.push_back(param);
       }
       break;
     case 5:
-      if (param.unknown10 == TASK_TYPE_GIMMICK || param.unknown10 == TASK_TYPE_COLLECT) {
+      if (param.unknown10 == TASK_TYPE_UNKNOWN_8 || param.unknown10 == TASK_TYPE_UNKNOWN_3) {
         tasks.push_back(param);
       }
       break;
@@ -93,13 +93,13 @@ bool unknown003(mm::mtl::FixedVector<QuestTaskParam, QUEST_TASK_COUNT> &tasks, c
 
 // Inferred role: icon type of a matched target quest (1 scenario, 3 current quest); original name unknown.
 int unknown004(const TargetInfo &target) {
-  if (GfDataQuest::getQuestCategory(target.unknown0c) == QTYPE_MAIN) {
+  if (GfDataQuest::getQuestCategory(target.unknown0c) == QTYPE_UNKNOWN_1) {
     return 1;
   }
   int iconType = 3;
-  if (target.unknown14 && !(GfQuestManager::getCurrentQuest(QTYPE_NONE) == target.unknown0c || GfQuestManager::getProgressCurrentQuest(QTYPE_NONE) == target.unknown0c)) {
+  if (target.unknown14 && !(GfQuestManager::getCurrentQuest(QTYPE_UNKNOWN_0) == target.unknown0c || GfQuestManager::getProgressCurrentQuest(QTYPE_UNKNOWN_0) == target.unknown0c)) {
     QuestID linked = toQuestID(QuestListAcc::get()->getListLinkedQuestID(target.unknown0c));
-    if (!(GfQuestManager::getCurrentQuest(QTYPE_NONE) == linked || GfQuestManager::getProgressCurrentQuest(QTYPE_NONE) == linked)) {
+    if (!(GfQuestManager::getCurrentQuest(QTYPE_UNKNOWN_0) == linked || GfQuestManager::getProgressCurrentQuest(QTYPE_UNKNOWN_0) == linked)) {
       iconType = 0;
     }
   }
@@ -142,7 +142,7 @@ int unknown014(u32 condition, const TargetInfo &target) {
       return 0;
     }
   }
-  if (target.unknown00 != INVALID_HANDLE) {
+  if (target.unknown00 != unknown020) {
     GfObjSetupNpc *setup = GfObjUtil::getObjSetup<GfObjSetupNpc>(target.unknown00);
     if (setup != nullptr && setup->isEvent()) {
       return 0;
@@ -156,18 +156,18 @@ int unknown015(u32 talk, const TargetInfo &target) {
   QuestListAcc *questListAcc = QuestListAcc::get();
   if (questListAcc->getTalkMapID(talk) == target.unknown10 && questListAcc->getTalkNpcID(talk) == target.unknown08) {
     QSTATE state = GfQuestInfo::getState(target.unknown0c);
-    if (state == QSTATE_NOT_ORDER) {
+    if (state == QSTATE_UNKNOWN_0) {
       if (GfQuestInfo::isParent(target.unknown0c)) {
         return 2;
       }
-    } else if (state != QSTATE_ORDER) {
+    } else if (state != QSTATE_UNKNOWN_1) {
       return 0;
     }
   } else {
     u32 group;
     u32 npcIndex;
     if (!GfQuestUtil::getDummyTalkGroup(group, npcIndex, target.unknown10, target.unknown08, target.unknown0c) || GfQuestInfo::isDummuTalkGroupFlag(group, npcIndex) ||
-        GfQuestInfo::getState(target.unknown0c) != QSTATE_ORDER) {
+        GfQuestInfo::getState(target.unknown0c) != QSTATE_UNKNOWN_1) {
       return 0;
     }
   }
@@ -219,7 +219,7 @@ int unknown017(u32 battle, const TargetInfo &target) {
   switch (battleType) {
   case 1:
     if (data.unknown10 == target.unknown08) {
-      if (target.unknown00 == INVALID_HANDLE) {
+      if (target.unknown00 == unknown020) {
         isMatch = true;
       } else {
         DataParamAcc paramAcc(target.unknown00);
@@ -228,7 +228,7 @@ int unknown017(u32 battle, const TargetInfo &target) {
     }
     break;
   case 2:
-    if (target.unknown00 != INVALID_HANDLE) {
+    if (target.unknown00 != unknown020) {
       DataParamAcc paramAcc(target.unknown00);
       if (paramAcc.getHp() != 0) {
         isMatch = GfQuestUtil::isEnemyGroup(data.unknown0c, paramAcc.getValidBdatId());
@@ -238,7 +238,7 @@ int unknown017(u32 battle, const TargetInfo &target) {
     }
     break;
   case 3:
-    if (target.unknown00 == INVALID_HANDLE) {
+    if (target.unknown00 == unknown020) {
       isMatch = data.unknown14 == target.unknown08;
     } else {
       DataParamAcc paramAcc(target.unknown00);
@@ -305,7 +305,7 @@ int unknown019(GF_OBJ_HANDLE *handle, QuestID quest) {
         return GfQuestTarget::getIconTypeTalk(handle, GfQuestInfo::getProgressQuest(quest), GfGameManager::getMapID(), false);
       }
       break;
-    case OBJECT_TYPE_FOBJ:
+    case OBJECT_TYPE_FIELD_OBJ:
       if (GfQuestInfo::isQuestNotOrder(quest) && !GfGameManager::isEvent(false)) {
         return 2;
       }
@@ -317,27 +317,27 @@ int unknown019(GF_OBJ_HANDLE *handle, QuestID quest) {
 
 // Inferred role: icon type of a talk target; original name unknown.
 int unknown006(const TargetInfo &target) {
-  mm::mtl::FixedVector<QuestTaskParam, QUEST_TASK_COUNT> tasks;
+  mm::mtl::FixedVector<QuestTaskParam, QUEST_UNKNOWN_4> tasks;
   if (!unknown003(tasks, target)) {
     return 0;
   }
   for (const QuestTaskParam &task : tasks) {
     switch (task.unknown10) {
-    case TASK_TYPE_TALK: {
+    case TASK_TYPE_UNKNOWN_6: {
       int iconType = unknown015(task.unknown14, target);
       if (iconType != 0) {
         return iconType;
       }
       break;
     }
-    case TASK_TYPE_COLLECT: {
+    case TASK_TYPE_UNKNOWN_3: {
       int iconType = unknown005(task.unknown14, target);
       if (iconType != 0) {
         return iconType;
       }
       break;
     }
-    case TASK_TYPE_CONDITION: {
+    case TASK_TYPE_UNKNOWN_10: {
       int iconType = unknown014(task.unknown14, target);
       if (iconType != 0) {
         return iconType;
@@ -373,7 +373,7 @@ int unknown007(GF_OBJ_HANDLE *handle, QuestID quest) {
       return GfQuestTarget::getIconTypeTalk(handle, quest, GfGameManager::getMapID(), false);
     case OBJECT_TYPE_GIMMICK:
       return GfQuestTarget::getIconTypeGimmick(handle, quest, GfGameManager::getMapID(), false);
-    case OBJECT_TYPE_FOBJ:
+    case OBJECT_TYPE_FIELD_OBJ:
       return GfQuestTarget::getIconTypeFieldObj(handle, quest, GfGameManager::getMapID(), false);
     }
   }
@@ -420,7 +420,7 @@ GfQuestTarget::~GfQuestTarget() { GfQuestManager::removeEvent(this); }
 void GfQuestTarget::update(const fw::UpdateInfo &) {
   for (mm::mtl::FixedList<TargetCache, 512>::iterator it = unknown10.begin(); it != unknown10.end(); ++it) {
     TargetCache &cache = *it;
-    if (!cache.unknown16 && ++cache.unknown14 > TARGET_CACHE_LIFE_FRAMES) {
+    if (!cache.unknown16 && ++cache.unknown14 > TARGET_CACHE_UNKNOWN_300) {
       cache.unknown16 = true;
     }
   }
@@ -433,7 +433,7 @@ void GfQuestTarget::update(const fw::UpdateInfo &) {
 }
 
 void GfQuestTarget::gevMapjump(GEV event, const MapjumpCallbackInfo &) {
-  if (event == GEV_MAPJUMP_CHANGE_MAP) {
+  if (event == GEV_UNKNOWN_4) {
     unknown10.clear();
   }
 }
@@ -483,7 +483,7 @@ int GfQuestTarget::getIconTypeReachPlace(u32 category, u32 placeId, QuestID ques
     mapId = GfGameManager::getMapID();
   }
   target.unknown008(category, placeId, quest, mapId, isCheckCurrent);
-  mm::mtl::FixedVector<QuestTaskParam, QUEST_TASK_COUNT> tasks;
+  mm::mtl::FixedVector<QuestTaskParam, QUEST_UNKNOWN_4> tasks;
   if (unknown003(tasks, target)) {
     for (const QuestTaskParam &task : tasks) {
       int iconType = unknown016(task.unknown14, target);
@@ -501,7 +501,7 @@ int GfQuestTarget::getIconTypeCollect(u32 type, u32 id, QuestID quest, u32 mapId
     mapId = GfGameManager::getMapID();
   }
   target.setupForCollect(quest, static_cast<TargetInfo::COLLECT_CATEGORY>(type), id, mapId, isCheckCurrent);
-  mm::mtl::FixedVector<QuestTaskParam, QUEST_TASK_COUNT> tasks;
+  mm::mtl::FixedVector<QuestTaskParam, QUEST_UNKNOWN_4> tasks;
   if (unknown003(tasks, target)) {
     for (const QuestTaskParam &task : tasks) {
       int iconType = unknown005(task.unknown14, target);
@@ -516,18 +516,18 @@ int GfQuestTarget::getIconTypeCollect(u32 type, u32 id, QuestID quest, u32 mapId
 int GfQuestTarget::getIconTypeBattle(u32 type, u32 id, QuestID quest, GF_OBJ_HANDLE *handle, bool isCheckCurrent) {
   TargetInfo target;
   target.unknown010(type, id, quest, handle, isCheckCurrent);
-  mm::mtl::FixedVector<QuestTaskParam, QUEST_TASK_COUNT> tasks;
+  mm::mtl::FixedVector<QuestTaskParam, QUEST_UNKNOWN_4> tasks;
   if (unknown003(tasks, target)) {
     for (const QuestTaskParam &task : tasks) {
       switch (task.unknown10) {
-      case TASK_TYPE_BATTLE: {
+      case TASK_TYPE_UNKNOWN_1: {
         int iconType = unknown017(task.unknown14, target);
         if (iconType != 0) {
           return iconType;
         }
         break;
       }
-      case TASK_TYPE_COLLECT: {
+      case TASK_TYPE_UNKNOWN_3: {
         int iconType = getIconTypeCollect(TargetInfo::COLLECT_CATEGORY_UNKNOWN_3, target.unknown08, task.unknown04, 0, target.unknown14);
         if (iconType != 0) {
           return iconType;
@@ -545,7 +545,7 @@ int GfQuestTarget::getIconTypeTalk(u32 npcId, QuestID quest, u32 mapId, bool isC
   if (mapId == 0) {
     mapId = GfGameManager::getMapID();
   }
-  target.unknown011(INVALID_HANDLE, npcId, quest, mapId, isCheckCurrent);
+  target.unknown011(unknown020, npcId, quest, mapId, isCheckCurrent);
   return unknown006(target);
 }
 
@@ -567,11 +567,11 @@ int GfQuestTarget::getIconTypeGimmick(GF_OBJ_HANDLE *handle, QuestID quest, u32 
     currentMapId = GfGameManager::getMapID();
   }
   target.setupForGimmick(quest, currentMapId, handle, isCheckCurrent);
-  mm::mtl::FixedVector<QuestTaskParam, QUEST_TASK_COUNT> tasks;
+  mm::mtl::FixedVector<QuestTaskParam, QUEST_UNKNOWN_4> tasks;
   if (unknown003(tasks, target)) {
     for (const QuestTaskParam &task : tasks) {
       switch (task.unknown10) {
-      case TASK_TYPE_GIMMICK:
+      case TASK_TYPE_UNKNOWN_8:
         if (target.unknown18 == 5) {
           int iconType = unknown018(task.unknown14, target);
           if (iconType != 0) {
@@ -579,7 +579,7 @@ int GfQuestTarget::getIconTypeGimmick(GF_OBJ_HANDLE *handle, QuestID quest, u32 
           }
         }
         break;
-      case TASK_TYPE_COLLECT: {
+      case TASK_TYPE_UNKNOWN_3: {
         QuestListAcc *questListAcc = QuestListAcc::get();
         TargetInfo::COLLECT_CATEGORY collectCategory;
         if (questListAcc->getCollectTresureID(task.unknown14) != 0) {
@@ -606,7 +606,7 @@ int GfQuestTarget::getIconTypeGimmick(GF_OBJ_HANDLE *handle, QuestID quest, u32 
 int GfQuestTarget::getIconTypeFieldObj(GF_OBJ_HANDLE *handle, QuestID quest, u32, bool isCheckCurrent) {
   TargetInfo target;
   target.setupForFieldObj(quest, handle, isCheckCurrent);
-  mm::mtl::FixedVector<QuestTaskParam, QUEST_TASK_COUNT> tasks;
+  mm::mtl::FixedVector<QuestTaskParam, QUEST_UNKNOWN_4> tasks;
   if (unknown003(tasks, target)) {
     for (const QuestTaskParam &task : tasks) {
       int iconType = unknown005(task.unknown14, target);
@@ -620,7 +620,7 @@ int GfQuestTarget::getIconTypeFieldObj(GF_OBJ_HANDLE *handle, QuestID quest, u32
 
 int GfQuestTarget::getIconType(GF_OBJ_HANDLE *handle, QuestID quest) {
   if (!quest.empty()) {
-    if (!GfQuestInfo::isDispUI(quest) && GfDataQuest::getQuestCategory(quest) != QTYPE_MAIN) {
+    if (!GfQuestInfo::isDispUI(quest) && GfDataQuest::getQuestCategory(quest) != QTYPE_UNKNOWN_1) {
       return 0;
     }
     if (!GfQuestInfo::isParent(quest)) {
@@ -635,22 +635,22 @@ int GfQuestTarget::getIconType(GF_OBJ_HANDLE *handle, QuestID quest) {
       quest = cache->unknown10;
       cache->unknown14 = 0;
       if (cache->unknown10.empty()) {
-        if (++cache->unknown17 < TARGET_CACHE_REFRESH_FRAMES) {
+        if (++cache->unknown17 < TARGET_CACHE_UNKNOWN_31) {
           return 0;
         }
         cache->unknown17 = 0;
-        cache->unknown10 = GfQuestManager::getProgressCurrentQuest(QTYPE_NONE);
+        cache->unknown10 = GfQuestManager::getProgressCurrentQuest(QTYPE_UNKNOWN_0);
       }
       quest = cache->unknown10;
-      if (quest == GfQuestManager::getProgressCurrentQuest(QTYPE_NONE) && !GfQuestInfo::isDispUI(quest) && GfDataQuest::getQuestCategory(quest) != QTYPE_MAIN) {
+      if (quest == GfQuestManager::getProgressCurrentQuest(QTYPE_UNKNOWN_0) && !GfQuestInfo::isDispUI(quest) && GfDataQuest::getQuestCategory(quest) != QTYPE_UNKNOWN_1) {
         return 0;
       }
       return unknown007(handle, quest);
     }
   }
 
-  quest = GfQuestManager::getProgressCurrentQuest(QTYPE_NONE);
-  if (!quest.empty() && (GfQuestInfo::isDispUI(quest) || GfDataQuest::getQuestCategory(quest) == QTYPE_MAIN)) {
+  quest = GfQuestManager::getProgressCurrentQuest(QTYPE_UNKNOWN_0);
+  if (!quest.empty() && (GfQuestInfo::isDispUI(quest) || GfDataQuest::getQuestCategory(quest) == QTYPE_UNKNOWN_1)) {
     int iconType = unknown007(handle, quest);
     if (iconType != 0) {
       get()->entryTargetCache(handle, quest);

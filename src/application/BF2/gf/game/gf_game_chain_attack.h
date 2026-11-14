@@ -18,6 +18,7 @@ public:
   GfChainAttack();
   ~GfChainAttack();
   void update(const fw::UpdateInfo &info);
+  void createPartyDriver();
   void startSetup();
   void updateForSetup(const fw::UpdateInfo &info);
   void updateForPlay(const fw::UpdateInfo &info);

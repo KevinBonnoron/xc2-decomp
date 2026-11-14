@@ -2,6 +2,8 @@
 
 namespace ml {
 
+DrResAnm::~DrResAnm() {}
+
 f32 DrResAnm::calcAnm(f32 frame, const _AOM_DataHead *head) {
   const unknown001 *keys = reinterpret_cast<const unknown001 *>(head + 1);
   if (frame <= head->unknown00) {

@@ -11,7 +11,7 @@ const char *AgelogManager::LOG_DIR = "C:/MonolithSoft/BF2/agelog";
 
 AgelogManager::AgelogManager() : unknown10() {}
 
-void AgelogManager::clear() { unknown10.set(FLAG_ACTIVE, false); }
+void AgelogManager::clear() { unknown10.set(FLAG_UNKNOWN_1, false); }
 
 void AgelogManager::render() {
   if (!isReserved()) {
@@ -32,10 +32,10 @@ void AgelogManager::render() {
   fw::debug::drawFont(x, y, "agelog path[%s]", LOG_DIR);
 }
 
-void AgelogManager::reserve(bool isReserve) { unknown10.set(FLAG_RESERVE, isReserve); }
+void AgelogManager::reserve(bool isReserve) { unknown10.set(FLAG_UNKNOWN_0, isReserve); }
 
 void AgelogManager::start() {
-  unknown10.set(FLAG_ACTIVE);
+  unknown10.set(FLAG_UNKNOWN_1);
   if (unknown14.c_str()[0] == '\0') {
     char dateName[64];
     mlGetDateName(dateName, 64);
@@ -45,20 +45,20 @@ void AgelogManager::start() {
 
 void AgelogManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
-  case MSG_TYPE_START_SCENE:
+  case MSG_TYPE_UNKNOWN_7:
     if (isReserved()) {
       start();
     }
     break;
-  case MSG_TYPE_END_SCENE:
-    if (unknown10.test(FLAG_ACTIVE)) {
+  case MSG_TYPE_UNKNOWN_10:
+    if (unknown10.test(FLAG_UNKNOWN_1)) {
       stop();
     }
     break;
-  case MSG_TYPE_CLEAR:
+  case MSG_TYPE_UNKNOWN_12:
     clear();
     break;
-  case MSG_TYPE_RENDER_POST:
+  case MSG_TYPE_UNKNOWN_17:
     render();
     break;
   default:
@@ -66,6 +66,6 @@ void AgelogManager::OnEventProc(MSG_TYPE type) {
   }
 }
 
-void AgelogManager::stop() { unknown10.set(FLAG_ACTIVE, false); }
+void AgelogManager::stop() { unknown10.set(FLAG_UNKNOWN_1, false); }
 
 } // namespace event

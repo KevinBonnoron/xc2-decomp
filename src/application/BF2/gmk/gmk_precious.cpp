@@ -35,7 +35,7 @@ template bool TGmkList<GmkPrecious, GmkPrecious::BdatInfo, 1396920912u, 2u, GmkP
 
 template class TGmkActiveList<GmkPrecious>;
 
-GmkPrecious::GmkPrecious() : IntrusiveListNode(), unknown58(gf::INVALID_HANDLE), unknown60(0), unknown68(nullptr), unknown70{0.0f}, unknown74(true) {}
+GmkPrecious::GmkPrecious() : IntrusiveListNode(), unknown58(gf::unknown020), unknown60(0), unknown68(nullptr), unknown70{0.0f}, unknown74(true) {}
 
 // Inferred role: pick up area of the pc param list; original type name unknown.
 struct unknown091 {
@@ -44,18 +44,19 @@ struct unknown091 {
   f32 unknown08; // Inferred role: depth below; original member name unknown.
 };
 
-constexpr int WILDCARD_PRECIOUS_POP_DIST_ROW = 34;
+constexpr int WILDCARD_UNKNOWN_34 = 34; // Inferred role: wildcard precious pop dist row; original name unknown.
 
 void GmkPrecious::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   dispose();
-  unknown00 = bdat.getValCheck("itmID", id, BDAT_TYPE_U16);
+  unknown00 = bdat.getValCheck("itmID", id, BDAT_TYPE_UNKNOWN_2);
   gf::GfItemUtil::isPrecious(unknown00);
-  unknown02 = bdat.getValCheck("Condition", id, BDAT_TYPE_U16);
-  unknown04 = bdat.getValCheck("QuestID", id, BDAT_TYPE_U16);
-  unknown06 = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_U16), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_U16));
-  unknown0a = QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_U16), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_U8), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_U8));
-  unknown10.unknown08 = bdat.getValCheck("POP_TIME", id, BDAT_TYPE_U32);
-  unknown20.unknown08 = bdat.getValCheck("popWeather", id, BDAT_TYPE_U8);
+  unknown02 = bdat.getValCheck("Condition", id, BDAT_TYPE_UNKNOWN_2);
+  unknown04 = bdat.getValCheck("QuestID", id, BDAT_TYPE_UNKNOWN_2);
+  unknown06 = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_UNKNOWN_2));
+  unknown0a =
+      QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_UNKNOWN_1), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_UNKNOWN_1));
+  unknown10.unknown08 = bdat.getValCheck("POP_TIME", id, BDAT_TYPE_UNKNOWN_3);
+  unknown20.unknown08 = bdat.getValCheck("popWeather", id, BDAT_TYPE_UNKNOWN_1);
 }
 
 void GmkPrecious::BdatInfo::dispose() { unknown00 = 0; }
@@ -85,7 +86,7 @@ int GmkPrecious::getGameFlagId() const { return unknown20.unknown18 + 0xb7ef; }
 
 void GmkPrecious::create(const CreateInfo &info) {
   AGmkBase::create(info);
-  f32 popDist = Bdat::getValCheck(gf::GfDataBdat::getFP(gf::BDAT_FLD_WILDCARD_DATA), 0, WILDCARD_PRECIOUS_POP_DIST_ROW, BDAT_TYPE_F32).valueF32;
+  f32 popDist = Bdat::getValCheck(gf::GfDataBdat::getFP(gf::BDAT_FLD_WILDCARD_DATA), 0, WILDCARD_UNKNOWN_34, BDAT_TYPE_UNKNOWN_8).valueF32;
   unknown70.unknown00 = popDist * popDist;
 }
 
@@ -117,7 +118,7 @@ void GmkPrecious::dispose() {
 }
 
 void GmkPrecious::disposeGobInst(bool isFadeOut) {
-  if (unknown58 == gf::INVALID_HANDLE) {
+  if (unknown58 == gf::unknown020) {
     return;
   }
   if (intoNode() && TGmkActiveList<GmkPrecious>::get() != nullptr) {
@@ -128,7 +129,7 @@ void GmkPrecious::disposeGobInst(bool isFadeOut) {
   } else {
     unbindToGameObj(unknown58);
     gf::GfObjUtil::destroy(unknown58);
-    unknown58 = gf::INVALID_HANDLE;
+    unknown58 = gf::unknown020;
   }
 }
 
@@ -157,7 +158,7 @@ bool GmkPrecious::isPopCondMatched() const {
 
 void GmkPrecious::validateDisp() const {
   bool isDisp = unknown74 && debugIsDispGmkType(getGmkType());
-  if (unknown58 != gf::INVALID_HANDLE) {
+  if (unknown58 != gf::unknown020) {
     setEventDisp(unknown58, isDisp);
   }
   if (unknown60 != 0) {
@@ -183,7 +184,7 @@ void GmkPrecious::update(f32 deltaTime) {
     disposeEffectIcon(true);
     disposeMenuIcon();
   }
-  if (unknown58 != gf::INVALID_HANDLE && unknown68 == nullptr) {
+  if (unknown58 != gf::unknown020 && unknown68 == nullptr) {
     createMenuIcon();
   }
   updateMenuIcon();
@@ -195,7 +196,7 @@ void GmkPrecious::update(f32 deltaTime) {
 }
 
 void GmkPrecious::updateInActiveList(f32 deltaTime) {
-  if (gf::GfGameManager::getControlMover() == gf::INVALID_HANDLE || isObtained() || gf::GfGameManager::isBattle() || !gf::GfGameManager::isEnableGetFieldPrecious()) {
+  if (gf::GfGameManager::getControlMover() == gf::unknown020 || isObtained() || gf::GfGameManager::isBattle() || !gf::GfGameManager::isEnableGetFieldPrecious()) {
     return;
   }
   const mm::Vec3 &moverPosition = gf::GfObjUtil::getObj(gf::GfGameManager::getControlMover())->getComponent<gf::GfComTransform>()->getPosition();
@@ -214,7 +215,7 @@ void GmkPrecious::updateInActiveList(f32 deltaTime) {
 
 void GmkPrecious::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) {
   AGmkBase::onGobEvent(event, handle);
-  if (event != gf::IGfObjListener::OBJEVT_DESTROY) {
+  if (event != gf::IGfObjListener::OBJEVT_UNKNOWN_3) {
     return;
   }
   disposeGobInst(false);

@@ -6,10 +6,10 @@ namespace ml {
 class DrMan;
 
 DrPixlShadowObjSpt::DrPixlShadowObjSpt(DrMan *man) : DrPixlShadowObj(man, 1, 0) {
-  unknown200[3] = 1.0f;
-  unknown200[2] = 1.0f;
-  unknown200[1] = 1.0f;
-  unknown200[0] = 1.0f;
+  m_parmTbl[3] = 1.0f;
+  m_parmTbl[2] = 1.0f;
+  m_parmTbl[1] = 1.0f;
+  m_parmTbl[0] = 1.0f;
   unknown220[0] = 1.0f;
   unknown220[1] = 1.0f;
   unknown220[2] = -1.0f;
@@ -39,6 +39,6 @@ int DrPixlShadowObjSpt::clipTypeChk(const mm::Vec3 &position, f32 value) {
 
 void DrPixlShadowObjSpt::renderLight() {}
 
-const f32 *DrPixlShadowObjSpt::getParmTbl() const { return unknown200; }
+const f32 *DrPixlShadowObjSpt::getParmTbl() const { return m_parmTbl; }
 
 } // namespace ml

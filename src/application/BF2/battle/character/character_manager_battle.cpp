@@ -23,7 +23,7 @@ CharacterManager::~CharacterManager() {}
 void CharacterManager::Create() {
   // __LINE__ must be 71 as in the original file: its value changes the instruction order.
 #line 71
-  CharacterManager *manager = new (gf::getAllocator(gf::ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CharacterManager();
+  CharacterManager *manager = new (gf::getAllocator(gf::ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CharacterManager();
   manager->Initialize();
 }
 
@@ -38,7 +38,7 @@ void CharacterManager::Destroy() {
 void CharacterManager::Finalize() {}
 
 int CharacterManager::SearchCharacter(gf::GF_OBJ_HANDLE *handle) const {
-  if (handle == gf::INVALID_HANDLE) {
+  if (handle == gf::unknown020) {
     return -1;
   }
 
@@ -98,7 +98,7 @@ BattleCharacter *CharacterManager::GetCharacterConst(int id) const {
 gf::GF_OBJ_HANDLE *CharacterManager::GetCharacterHandle(int id) const {
   const BattleCharacter *character = GetCharacterConst(id);
   if (character == nullptr) {
-    return gf::INVALID_HANDLE;
+    return gf::unknown020;
   }
 
   return character->unknown118;

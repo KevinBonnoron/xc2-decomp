@@ -10,13 +10,18 @@
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_data_quest.h"
 #include "gf/data/gf_object_type.h"
+#include "gf/game/achiev/gf_achiev_manager.h"
 #include "gf/game/gf_game_cond.h"
+#include "gf/game/gf_game_util.h"
 #include "gf/game/kizunaring/gf_kizunaring_manager.h"
+#include "gf/game/kizunaring/gf_kizunaring_util.h"
 #include "gf/game/quest/gf_achiev_quest.h"
 #include "gf/game/quest/gf_quest_id.h"
 #include "gf/game/quest/gf_quest_info.h"
 #include "gf/game/quest/gf_quest_manager.h"
+#include "gf/game/quest/gf_quest_task.h"
 #include "gf/game/quest/gf_quest_task_param.h"
+#include "gf/game/quest/gf_quest_util.h"
 #include "gf/request/gf_req_scom.h"
 #include "types.h"
 
@@ -32,7 +37,7 @@ void GfKizunaringBlade::orderAchievement(u32 blade, u32 line, u32 level) {
   }
 
   u32 keyReleaseLevel = GfDataBlade::getKeyReleaseLevel(blade);
-  if (line != ACHIEVEMENT_LINE_KEY && level > keyReleaseLevel) {
+  if (line != ACHIEVEMENT_UNKNOWN_9 && level > keyReleaseLevel) {
     return;
   }
 
@@ -41,13 +46,60 @@ void GfKizunaringBlade::orderAchievement(u32 blade, u32 line, u32 level) {
     return;
   }
 
-  if (line == ACHIEVEMENT_LINE_KEY) {
+  if (line == ACHIEVEMENT_UNKNOWN_9) {
     if (!GfQuestInfo::isQuestFin(achievQuest.unknown00) && !GfQuestInfo::isQuestOrder(achievQuest.unknown00)) {
       GfQuestManager::openOrder(achievQuest.unknown00, false);
     }
   } else if (GfQuestInfo::isQuestNotOrder(achievQuest.unknown00)) {
     GfQuestManager::openOrder(achievQuest.unknown00, false);
   }
+}
+
+void GfKizunaringBlade::releaseAchievement(u32 blade, u32 line, u32 level) {
+  if (blade == 0) {
+    return;
+  }
+
+  SDataBladeAchievement *achievement = GfDataBlade::getAchievInfo(blade, line);
+  achievement->unknown04[level - 1].unknown0c |= 1;
+  if (GfDataBlade::getAchievReleaseLevel(blade, line) < level) {
+    GfGameUtil::setAchievementReleaseLevel(blade, line, level);
+    if (line == ACHIEVEMENT_UNKNOWN_9 && GfDataBlade::getTrustRank(blade) < static_cast<int>(level)) {
+      GfGameUtil::addTrustRankForKizunaRing(blade);
+    }
+
+    if (GfDataBlade::isCompleteAchievement(blade)) {
+      if (GfDataBlade::getTrustRank(blade) < RANK_UNKNOWN_6) {
+        GfGameUtil::addTrustRankForKizunaRing(blade);
+      }
+      GfQuestReward reward;
+      if (GfKizunaringUtil::getCompleteKizunaringReward(reward, blade)) {
+        GfQuestUtil::execReward(reward);
+      }
+    }
+
+    for (u32 next = level + 1; next <= ACHIEVEMENT_UNKNOWN_5; next++) {
+      AchievQuest &achievQuest = achievement->unknown04[next - 1];
+      if (GfQuestInfo::isQuestOrder(achievQuest.unknown00)) {
+        s32 count = GfAchievStats::getAchievementTotalCount(achievQuest);
+        if (count > 0) {
+          achievQuest.setCount(count);
+        } else {
+          GfQuestTask::setupOrderTask(achievQuest.unknown00);
+        }
+        break;
+      }
+    }
+
+    if (level < ACHIEVEMENT_UNKNOWN_5) {
+      const AchievQuest &achievQuest = GfDataBlade::getAchievInfo(blade, line)->unknown04[level];
+      if (achievQuest.isCountComplete()) {
+        GfQuestTask::updateQuestTask(GfDataQuest::getListNextQuestA(achievQuest.unknown00));
+      }
+    }
+  }
+
+  GfAchievStats::checkBladeActivate(achievement->unknown04[level - 1].unknown16);
 }
 
 u32 GfKizunaringBlade::getAchievementCategory(u32 blade, u32 line, u32 level) {
@@ -179,9 +231,9 @@ u16 GfKizunaringBlade::getAchievementResultEnhance(u32 blade, u32 line, u32 leve
   u32 index;
   GfDataAchievement::getAchievementType(type, index, line);
   u16 enhance = 0;
-  if (type == ACHIEVEMENT_TYPE_ARTS) {
+  if (type == ACHIEVEMENT_TYPE_UNKNOWN_0) {
     enhance = GfDataBladeArts::getEnhance(dataParamAcc.getBladeArts(index, false), level);
-  } else if (type == ACHIEVEMENT_TYPE_SKILL) {
+  } else if (type == ACHIEVEMENT_TYPE_UNKNOWN_1) {
     enhance = GfDataBladeSkill::getEnhance(dataParamAcc.getBladeSkill(index, false), level);
   }
 
@@ -194,7 +246,7 @@ bool GfKizunaringBlade::isNetabareOK(u32 blade, u32 line, u32 level) {
   if (!achievQuest->unknown00.empty()) {
     QuestID nextQuest = GfDataQuest::getListNextQuestA(achievQuest->unknown00);
     QuestListAcc *questListAcc = QuestListAcc::get();
-    QuestTaskParam taskParam(nextQuest, 0, TASK_STATE_NONE);
+    QuestTaskParam taskParam(nextQuest, 0, TASK_STATE_UNKNOWN_0);
     u32 condition = questListAcc->getTaskTaskCondition1(taskParam.unknown08);
     if (condition != 0) {
       return GfGameCond::isGameCond(condition);
@@ -257,11 +309,11 @@ bool GfKizunaringBlade::getAchievementResultMsg(u8 *&bdat, u32 &textId, u32 blad
   u32 index;
   GfDataAchievement::getAchievementType(type, index, line);
   bool hasMsg = false;
-  if (type == ACHIEVEMENT_TYPE_ARTS) {
+  if (type == ACHIEVEMENT_TYPE_UNKNOWN_0) {
     hasMsg = GfDataBladeArts::getEnhanceCaption(bdat, textId, dataParamAcc.getBladeArts(index, false), level);
-  } else if (type == ACHIEVEMENT_TYPE_SKILL) {
+  } else if (type == ACHIEVEMENT_TYPE_UNKNOWN_1) {
     hasMsg = GfDataBladeSkill::getEnhanceCaption(bdat, textId, dataParamAcc.getBladeSkill(index, false), level);
-  } else if (type == ACHIEVEMENT_TYPE_FIELD_SKILL) {
+  } else if (type == ACHIEVEMENT_TYPE_UNKNOWN_2) {
     hasMsg = GfDataFieldSkill::getCaption(bdat, textId, dataParamAcc.getFieldSkill(index, false));
   }
 

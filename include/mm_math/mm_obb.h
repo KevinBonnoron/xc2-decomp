@@ -8,6 +8,8 @@
 namespace mm {
 
 struct Aabb;
+struct Line;
+struct Line2;
 struct Plane;
 class Sphere;
 
@@ -21,10 +23,12 @@ struct Obb {
   Obb &operator=(const Obb &obb);
   void setMat(const Mat44 &matrix, const Vec3 &size);
   void getVertices(Vec3 *vertices) const;
-  void getAABB(Aabb &aabb) const;
   void getPlane(Plane *planes) const;
-  bool isInner(const Sphere &sphere) const;
+  void getAABB(Aabb &aabb) const;
+  bool getCross(Vec3 &first, Vec3 &second, const Line &line) const;
+  u32 getCross(Vec3 &first, Vec3 &second, const Line2 &line) const;
   bool isInner(const Vec3 &point) const;
+  bool isInner(const Sphere &sphere) const;
 
   Mat44 matrix;
   Vec3 size;

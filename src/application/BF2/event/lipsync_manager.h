@@ -15,11 +15,11 @@ class LipsyncRes;
 
 class LipsyncManager : public IManager, public mm::mtl::Singleton<LipsyncManager> {
 public:
-  static constexpr u32 RES_COUNT = 8;
+  static constexpr u32 RES_UNKNOWN_8 = 8; // Inferred role: res count; original name unknown.
 
   enum {
-    FLAG_EVENT = 1 << 0,
-    FLAG_ACTIVE = 1 << 1,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: event flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: active flag; original name unknown.
   };
 
   LipsyncManager();
@@ -44,11 +44,11 @@ private:
     }
   }
 
-  u32 unknown10;                                           // Inferred role: flags; original member name unknown.
-  mm::mtl::FixedVector<LipsyncRes *, RES_COUNT> unknown18; // Inferred role: res list; original member name unknown.
-  LipsyncRes *unknown60;                                   // Inferred role: current res; original member name unknown.
-  mm::mtl::FixStr<128> unknown68;                          // Inferred role: target; original member name unknown.
-  csvb::CCsvbData *unknownf0;                              // Inferred role: csv; original member name unknown.
+  u32 unknown10;                                               // Inferred role: flags; original member name unknown.
+  mm::mtl::FixedVector<LipsyncRes *, RES_UNKNOWN_8> unknown18; // Inferred role: res list; original member name unknown.
+  LipsyncRes *unknown60;                                       // Inferred role: current res; original member name unknown.
+  mm::mtl::FixStr<128> unknown68;                              // Inferred role: target; original member name unknown.
+  csvb::CCsvbData *unknownf0;                                  // Inferred role: csv; original member name unknown.
 };
 
 static_assert(sizeof(LipsyncManager) == 0xf8, "");

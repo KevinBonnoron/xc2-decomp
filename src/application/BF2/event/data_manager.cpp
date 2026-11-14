@@ -119,16 +119,16 @@ void DataManager::setOffsetDes(const mm::Vec3 &pos, f32 rotY, bool isKeep) {
 
 void DataManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
-  case MSG_TYPE_INIT:
+  case MSG_TYPE_UNKNOWN_4:
     clear();
     break;
-  case MSG_TYPE_SETUP_SCENE:
+  case MSG_TYPE_UNKNOWN_5:
     setupScene();
     break;
-  case MSG_TYPE_START_SCENE:
+  case MSG_TYPE_UNKNOWN_7:
     startScene();
     break;
-  case MSG_TYPE_CLEAR:
+  case MSG_TYPE_UNKNOWN_12:
     clear();
     break;
   default:

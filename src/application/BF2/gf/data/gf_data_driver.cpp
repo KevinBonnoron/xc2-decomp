@@ -28,35 +28,35 @@
 namespace gf {
 
 enum {
-  FLAG_USED_FAVORITE = 0xf8c,
+  FLAG_UNKNOWN_3980 = 0xf8c, // Inferred role: flag used favorite; original name unknown.
 };
 
-constexpr u32 DRIVER_COUNT = 16;
-constexpr u32 SET_BLADE_NUM_NORMAL = 3;
-constexpr u32 SET_BLADE_NUM_REX = 5;
-constexpr u32 POUCH_COUNT = 3;
-constexpr int DEATH_BLOW_PER_SLOT = 5;
-constexpr int FILE_INDEX_WEAPON_ANM = 0x30;
-constexpr int FILE_INDEX_WEAPON_SWT = 0x65;
-constexpr int FILE_INDEX_WEAPON_EAB = 0x9a;
-constexpr int FILE_INDEX_DEATH_BLOW_EAB = 0xb4;
-constexpr int FILE_INDEX_DEBUG_APPEND_DEATH_BLOW_EAB = 0xb5;
-constexpr int FILE_INDEX_WEAPON_EFB = 0x26f;
-constexpr int FILE_INDEX_DEATH_BLOW_EFB = 0x289;
-constexpr int FILE_INDEX_DEBUG_APPEND_DEATH_BLOW_EFB = 0x28f;
+constexpr u32 DRIVER_UNKNOWN_16 = 16;         // Inferred role: driver count; original name unknown.
+constexpr u32 SET_BLADE_UNKNOWN_3 = 3;        // Inferred role: set blade num normal; original name unknown.
+constexpr u32 SET_BLADE_UNKNOWN_5 = 5;        // Inferred role: set blade num rex; original name unknown.
+constexpr u32 POUCH_UNKNOWN_3 = 3;            // Inferred role: pouch count; original name unknown.
+constexpr int SLOT_UNKNOWN_5 = 5;             // Inferred role: death blow per slot; original name unknown.
+constexpr int FILE_INDEX_UNKNOWN_48 = 0x30;   // Inferred role: file index weapon anm; original name unknown.
+constexpr int FILE_INDEX_UNKNOWN_101 = 0x65;  // Inferred role: file index weapon swt; original name unknown.
+constexpr int FILE_INDEX_UNKNOWN_154 = 0x9a;  // Inferred role: file index weapon eab; original name unknown.
+constexpr int FILE_INDEX_UNKNOWN_180 = 0xb4;  // Inferred role: file index death blow eab; original name unknown.
+constexpr int FILE_INDEX_UNKNOWN_181 = 0xb5;  // Inferred role: file index debug append death blow eab; original name unknown.
+constexpr int FILE_INDEX_UNKNOWN_623 = 0x26f; // Inferred role: file index weapon efb; original name unknown.
+constexpr int FILE_INDEX_UNKNOWN_649 = 0x289; // Inferred role: file index death blow efb; original name unknown.
+constexpr int FILE_INDEX_UNKNOWN_655 = 0x28f; // Inferred role: file index debug append death blow efb; original name unknown.
 
-SDataDriver *GfDataDriver::getSDataDriver(u32 driver) {
+SDataDriver &GfDataDriver::getSDataDriver(u32 driver) {
   u32 index = driver - 1;
   SDataGame *dataGame = GfDataManager::getDataGame();
-  return &dataGame->unknown2c[index < DRIVER_COUNT ? index : 1];
+  return dataGame->unknown2c[index < DRIVER_UNKNOWN_16 ? index : 1];
 }
 
-SDataIdea *GfDataDriver::getSDataIdea(u32 driver) { return &getSDataDriver(driver)->unknown00; }
+SDataIdea *GfDataDriver::getSDataIdea(u32 driver) { return &getSDataDriver(driver).unknown00; }
 
 bool GfDataDriver::getPouchEnhance(mm::mtl::FixedVector<u16, 64> &enhances, u32 driver) {
   GfBdatItem *bdatItem = GfBdatItem::get();
-  for (u32 slot = 0; slot < POUCH_COUNT; slot++) {
-    u32 item = getSDataDriver(driver)->unknown584[slot].unknown04;
+  for (u32 slot = 0; slot < POUCH_UNKNOWN_3; slot++) {
+    u32 item = getSDataDriver(driver).unknown584[slot].unknown04;
     if (item != 0) {
       u32 enhance = bdatItem->getFavoriteType(item);
       if (enhance != 0) {
@@ -72,16 +72,16 @@ u8 GfDataDriver::getFavoritePouchNum(u32 driver, FAVORITE favorite) {
   u8 count = 0;
   if (static_cast<u32>(favorite) < 2) {
     u32 category = getFavorite(driver, favorite);
-    for (u32 slot = 0; slot < POUCH_COUNT; slot++) {
-      u32 item = getSDataDriver(driver)->unknown584[slot].unknown04;
+    for (u32 slot = 0; slot < POUCH_UNKNOWN_3; slot++) {
+      u32 item = getSDataDriver(driver).unknown584[slot].unknown04;
       if (item != 0 && GfDataItem::getCategory(item) == category) {
         count++;
       }
     }
   } else if ((static_cast<u32>(favorite) & 0xfffffffe) == 2) {
     u32 favoriteItem = getFavorite(driver, favorite);
-    for (u32 slot = 0; slot < POUCH_COUNT; slot++) {
-      u32 item = getSDataDriver(driver)->unknown584[slot].unknown04;
+    for (u32 slot = 0; slot < POUCH_UNKNOWN_3; slot++) {
+      u32 item = getSDataDriver(driver).unknown584[slot].unknown04;
       if (item != 0 && item == favoriteItem) {
         count++;
       }
@@ -99,22 +99,22 @@ void GfDataDriver::calcDriverBaseParamByLevel(SDataDriver &dataDriver) {
   }
 
   u16 level = dataDriver.unknown94;
-  dataDriver.unknown96 = bdatDriver->getChrDrHpMaxLv1(id) + (bdatDriver->getChrDrHpMaxLv99(id) - bdatDriver->getChrDrHpMaxLv1(id)) * (level - 1) / (DRIVER_LEVEL_MAX - 1);
-  dataDriver.unknown98 = bdatDriver->getChrDrStrengthLv1(id) + (bdatDriver->getChrDrStrengthLv99(id) - bdatDriver->getChrDrStrengthLv1(id)) * (level - 1) / (DRIVER_LEVEL_MAX - 1);
-  dataDriver.unknown9a = bdatDriver->getChrDrPowEtherLv1(id) + (bdatDriver->getChrDrPowEtherLv99(id) - bdatDriver->getChrDrPowEtherLv1(id)) * (level - 1) / (DRIVER_LEVEL_MAX - 1);
-  dataDriver.unknown9c = bdatDriver->getChrDrDexLv1(id) + (bdatDriver->getChrDrDexLv99(id) - bdatDriver->getChrDrDexLv1(id)) * (level - 1) / (DRIVER_LEVEL_MAX - 1);
-  dataDriver.unknown9e = bdatDriver->getChrDrAgilityLv1(id) + (bdatDriver->getChrDrAgilityLv99(id) - bdatDriver->getChrDrAgilityLv1(id)) * (level - 1) / (DRIVER_LEVEL_MAX - 1);
-  dataDriver.unknowna0 = bdatDriver->getChrDrLuckLv1(id) + (bdatDriver->getChrDrLuckLv99(id) - bdatDriver->getChrDrLuckLv1(id)) * (level - 1) / (DRIVER_LEVEL_MAX - 1);
+  dataDriver.unknown96 = bdatDriver->getChrDrHpMaxLv1(id) + (bdatDriver->getChrDrHpMaxLv99(id) - bdatDriver->getChrDrHpMaxLv1(id)) * (level - 1) / (DRIVER_UNKNOWN_99 - 1);
+  dataDriver.unknown98 = bdatDriver->getChrDrStrengthLv1(id) + (bdatDriver->getChrDrStrengthLv99(id) - bdatDriver->getChrDrStrengthLv1(id)) * (level - 1) / (DRIVER_UNKNOWN_99 - 1);
+  dataDriver.unknown9a = bdatDriver->getChrDrPowEtherLv1(id) + (bdatDriver->getChrDrPowEtherLv99(id) - bdatDriver->getChrDrPowEtherLv1(id)) * (level - 1) / (DRIVER_UNKNOWN_99 - 1);
+  dataDriver.unknown9c = bdatDriver->getChrDrDexLv1(id) + (bdatDriver->getChrDrDexLv99(id) - bdatDriver->getChrDrDexLv1(id)) * (level - 1) / (DRIVER_UNKNOWN_99 - 1);
+  dataDriver.unknown9e = bdatDriver->getChrDrAgilityLv1(id) + (bdatDriver->getChrDrAgilityLv99(id) - bdatDriver->getChrDrAgilityLv1(id)) * (level - 1) / (DRIVER_UNKNOWN_99 - 1);
+  dataDriver.unknowna0 = bdatDriver->getChrDrLuckLv1(id) + (bdatDriver->getChrDrLuckLv99(id) - bdatDriver->getChrDrLuckLv1(id)) * (level - 1) / (DRIVER_UNKNOWN_99 - 1);
 }
 
-u32 GfDataDriver::getLevel(u32 driver) { return getLevel(*getSDataDriver(driver)); }
+u32 GfDataDriver::getLevel(u32 driver) { return getLevel(getSDataDriver(driver)); }
 
 int GfDataDriver::getMaxSetBladeNum(u32 driver) {
   if (driver == 0) {
     return 0;
   }
 
-  return getMaxSetBladeNum(*getSDataDriver(driver));
+  return getMaxSetBladeNum(getSDataDriver(driver));
 }
 
 u32 GfDataDriver::getBlade(u32 driver, int slot) {
@@ -122,17 +122,17 @@ u32 GfDataDriver::getBlade(u32 driver, int slot) {
     return 0;
   }
 
-  return getBlade(*getSDataDriver(driver), slot);
+  return getBlade(getSDataDriver(driver), slot);
 }
 
-SDataPouch *GfDataDriver::getPouchData(u32 driver, u32 slot) { return &getSDataDriver(driver)->unknown584[slot]; }
+SDataPouch *GfDataDriver::getPouchData(u32 driver, u32 slot) { return &getSDataDriver(driver).unknown584[slot]; }
 
 int GfDataDriver::getBladeSet(u32 driver) {
   if (driver == 0) {
     return -1;
   }
 
-  return getBladeSet(*getSDataDriver(driver));
+  return getBladeSet(getSDataDriver(driver));
 }
 
 void GfDataDriver::setLevel(SDataDriver &dataDriver, u32 level) {
@@ -140,16 +140,16 @@ void GfDataDriver::setLevel(SDataDriver &dataDriver, u32 level) {
   calcDriverBaseParamByLevel(dataDriver);
 }
 
-void GfDataDriver::setLevel(u32 driver, u32 level) { setLevel(*getSDataDriver(driver), level); }
+void GfDataDriver::setLevel(u32 driver, u32 level) { setLevel(getSDataDriver(driver), level); }
 
-void GfDataDriver::setExp(u32 driver, u32 exp) { getSDataDriver(driver)->unknownb0 = exp; }
+void GfDataDriver::setExp(u32 driver, u32 exp) { getSDataDriver(driver).unknownb0 = exp; }
 
-void GfDataDriver::setBattleExp(u32 driver, u32 battleExp) { getSDataDriver(driver)->unknownb4 = battleExp; }
+void GfDataDriver::setBattleExp(u32 driver, u32 battleExp) { getSDataDriver(driver).unknownb4 = battleExp; }
 
 namespace {
 
 // Inferred role: adds a blade to the list unless it is already in it; original name unknown.
-void unknown007(mm::mtl::FixedVector<u16, BLADE_COUNT> &blades, u16 blade) {
+void unknown007(mm::mtl::FixedVector<u16, BLADE_UNKNOWN_422> &blades, u16 blade) {
   if (mm::mtl::find(blades.begin(), blades.end(), blade) == blades.end()) {
     blades.push_back(blade);
   }
@@ -157,7 +157,7 @@ void unknown007(mm::mtl::FixedVector<u16, BLADE_COUNT> &blades, u16 blade) {
 
 // Inferred role: releases the driver arts of a driver for the weapon types it can use with the blades (all the party blades when no blade is given); original name unknown.
 void unknown006(u32 driver, u32 blade, bool isNew) {
-  mm::mtl::FixedVector<u16, BLADE_COUNT> blades;
+  mm::mtl::FixedVector<u16, BLADE_UNKNOWN_422> blades;
   if (blade == 0) {
     GfDataBlade::getListParty(blades, true, true);
   }
@@ -170,7 +170,7 @@ void unknown006(u32 driver, u32 blade, bool isNew) {
     u16 *it = blades.begin();
     do {
       if (blade == 0 || *it == blade) {
-        DataParamAcc bladeAcc(OBJECT_TYPE_BLADE, *it, GIMMICK_TYPE_NONE);
+        DataParamAcc bladeAcc(OBJECT_TYPE_BLADE, *it, GIMMICK_TYPE_UNKNOWN_0);
         for (u32 arts = artsStart; arts < artsEnd; arts++) {
           u32 weaponType = bdatBattle->getArtsDrWpnType(arts);
           if (GfDataDriver::isActivateWeaponType(driver, weaponType)) {
@@ -178,7 +178,7 @@ void unknown006(u32 driver, u32 blade, bool isNew) {
             int priority = bdatBattle->getArtsDrPriority(arts);
             if (!bdatBattle->isArtsDrFlagNormal(arts) && weaponType == bladeAcc.getWeaponType(-1, false) && artsDriver == driver) {
               if (GfDataDriver::isEnableEquipWeapon(driver, weaponType)) {
-                DataParamAcc driverAcc(OBJECT_TYPE_DRIVER, driver, GIMMICK_TYPE_NONE);
+                DataParamAcc driverAcc(OBJECT_TYPE_PC, driver, GIMMICK_TYPE_UNKNOWN_0);
                 GfBdatBtl *bdatBattleRelease = GfBdatBtl::get();
                 if (driverAcc.isValid()) {
                   u32 level = driverAcc.getLevel(false);
@@ -197,6 +197,17 @@ void unknown006(u32 driver, u32 blade, bool isNew) {
       it++;
     } while (it != blades.end());
   }
+}
+
+// Inferred role: removes a driver from its party slot, which also clears the party leader when it is the driver; original name unknown.
+bool unknown012(u32 driver, u32 partyId) {
+  unknown124 *party = GfDataParty::getSDataParty();
+  if (party->unknown40 == driver) {
+    party->unknown40 = 0;
+    party->unknown3c = 0;
+  }
+
+  return GfDataParty::setDriver(partyId, 0);
 }
 
 } // namespace
@@ -224,10 +235,10 @@ int GfDataDriver::getMaxSetBladeNum(const SDataDriver &dataDriver) {
     return 0;
   }
 
-  return dataDriver.unknown22 == DRIVER_REX ? SET_BLADE_NUM_REX : SET_BLADE_NUM_NORMAL;
+  return dataDriver.unknown22 == DRIVER_UNKNOWN_1 ? SET_BLADE_UNKNOWN_5 : SET_BLADE_UNKNOWN_3;
 }
 
-bool GfDataDriver::isEnableEquipWeapon(u32 driver, u32 weaponType) { return isEnableEquipWeapon(*getSDataDriver(driver), weaponType); }
+bool GfDataDriver::isEnableEquipWeapon(u32 driver, u32 weaponType) { return isEnableEquipWeapon(getSDataDriver(driver), weaponType); }
 
 bool GfDataDriver::isEnableEquipWeapon(const SDataDriver &dataDriver, u32 weaponType) {
   GfBdatChrDr *bdatDriver = GfBdatChrDr::get();
@@ -251,7 +262,42 @@ bool GfDataDriver::isEnableEquipWeapon(const SDataDriver &dataDriver, u32 weapon
   return isEnable;
 }
 
-u16 GfDataDriver::getDriverWeapon(u32 driver) { return getDriverWeapon(*getSDataDriver(driver)); }
+bool GfDataDriver::getSetBlade(mm::mtl::FixedVector<u16, 422> &blades, u32 driver) {
+  blades.clear();
+  DataParamAcc dataParamAcc(OBJECT_TYPE_PC, driver, GIMMICK_TYPE_UNKNOWN_0);
+  if (!dataParamAcc.isValid()) {
+    return false;
+  }
+
+  int setBladeNum = getMaxSetBladeNum(driver);
+  for (int slot = 0; slot < setBladeNum; slot++) {
+    u32 blade = dataParamAcc.getBlade(slot, false);
+    if (!GfDataBlade::isDummyBlade(blade) && blade != 0) {
+      blades.push_back(blade);
+    }
+  }
+
+  return !blades.empty();
+}
+
+bool GfDataDriver::isExistBlade(u32 driver) {
+  mm::mtl::FixedVector<u16, 422> blades;
+  return getListBlade(blades, driver);
+}
+
+bool GfDataDriver::getListBlade(mm::mtl::FixedVector<u16, 422> &blades, u32 driver) {
+  int setBladeNum = getMaxSetBladeNum(driver);
+  for (int slot = 0; slot < setBladeNum; slot++) {
+    u32 blade = getBlade(driver, slot);
+    if (blade != 0) {
+      blades.push_back(blade);
+    }
+  }
+
+  return !blades.empty();
+}
+
+u16 GfDataDriver::getDriverWeapon(u32 driver) { return getDriverWeapon(getSDataDriver(driver)); }
 
 u16 GfDataDriver::getDriverWeapon(const SDataDriver &dataDriver) {
   u32 blade = getBlade(dataDriver, -1);
@@ -259,10 +305,10 @@ u16 GfDataDriver::getDriverWeapon(const SDataDriver &dataDriver) {
     return 0;
   }
 
-  return GfDataBlade::getSDataBlade(blade)->unknown82c;
+  return GfDataBlade::getSDataBlade(blade).unknown82c;
 }
 
-u8 GfDataDriver::getDriverWpnType(u32 driver) { return getDriverWpnType(*getSDataDriver(driver)); }
+u8 GfDataDriver::getDriverWpnType(u32 driver) { return getDriverWpnType(getSDataDriver(driver)); }
 
 u8 GfDataDriver::getDriverWpnType(const SDataDriver &dataDriver) {
   u32 blade = getBlade(dataDriver, -1);
@@ -270,10 +316,10 @@ u8 GfDataDriver::getDriverWpnType(const SDataDriver &dataDriver) {
     return 0;
   }
 
-  return GfDataBlade::getSDataBlade(blade)->unknown821;
+  return GfDataBlade::getSDataBlade(blade).unknown821;
 }
 
-u16 GfDataDriver::getDefaultWpnType(u32 driver) { return getDefaultWpnType(*getSDataDriver(driver)); }
+u16 GfDataDriver::getDefaultWpnType(u32 driver) { return getDefaultWpnType(getSDataDriver(driver)); }
 
 u16 GfDataDriver::getDefaultWpnType(const SDataDriver &dataDriver) {
   u8 weaponType = getDriverWpnType(dataDriver);
@@ -308,7 +354,7 @@ u32 GfDataDriver::getDriverArtsID(u32 driver, u32 blade, u32 index) {
 
 u32 GfDataDriver::getDriverArtsLevel(u32 driver, u32 blade, u32 index) {
   u32 arts = getDriverArtsID(driver, blade, index);
-  DataParamAcc dataParamAcc(OBJECT_TYPE_DRIVER, driver, static_cast<GimmickType>(0));
+  DataParamAcc dataParamAcc(OBJECT_TYPE_PC, driver, static_cast<GimmickType>(0));
   return dataParamAcc.getDriverArtsLevel(arts);
 }
 
@@ -352,7 +398,7 @@ u32 GfDataDriver::getAiID(u32 driver) { return GfBdatChrDr::get()->getChrDrAiID(
 
 bool GfDataDriver::getDriverAddAnim(mm::mtl::FixStr<128> &animName, u32 driver, u32 weaponType) {
   GfBdatChrDr *bdatDriver = GfBdatChrDr::get();
-  DataParamAcc dataParamAcc(OBJECT_TYPE_DRIVER, driver, static_cast<GimmickType>(0));
+  DataParamAcc dataParamAcc(OBJECT_TYPE_PC, driver, static_cast<GimmickType>(0));
   if (!dataParamAcc.isValid()) {
     return false;
   }
@@ -371,11 +417,11 @@ bool GfDataDriver::getDriverAddAnim(mm::mtl::FixStr<128> &animName, u32 driver, 
   return true;
 }
 
-u32 GfDataDriver::getDriverID(u32 index) { return index < DRIVER_COUNT ? index + 1 : 1; }
+u32 GfDataDriver::getDriverID(u32 index) { return index < DRIVER_UNKNOWN_16 ? index + 1 : 1; }
 
 u32 GfDataDriver::getDriverRelativeID(u32 driver) {
   u32 relativeID = driver - 1;
-  return relativeID < DRIVER_COUNT ? relativeID : 1;
+  return relativeID < DRIVER_UNKNOWN_16 ? relativeID : 1;
 }
 
 u32 GfDataDriver::getLevel(const SDataDriver &dataDriver) { return dataDriver.unknown94; }
@@ -384,13 +430,13 @@ u32 GfDataDriver::getExp(const SDataDriver &dataDriver) { return dataDriver.unkn
 
 u32 GfDataDriver::getBattleExp(const SDataDriver &dataDriver) { return dataDriver.unknownb4; }
 
-bool GfDataDriver::isEnableLevelUp(u32 driver) { return isEnableLevelUp(*getSDataDriver(driver)); }
+bool GfDataDriver::isEnableLevelUp(u32 driver) { return isEnableLevelUp(getSDataDriver(driver)); }
 
 bool GfDataDriver::isEnableLevelUp(const SDataDriver &dataDriver) {
   u32 level = dataDriver.unknown94;
   GfBdatBtl *bdatBattle = GfBdatBtl::get();
   u32 growEnd = bdatBattle->getGrowEnd();
-  if (level >= DRIVER_LEVEL_MAX || level >= growEnd - 1) {
+  if (level >= DRIVER_UNKNOWN_99 || level >= growEnd - 1) {
     return false;
   }
 
@@ -398,23 +444,23 @@ bool GfDataDriver::isEnableLevelUp(const SDataDriver &dataDriver) {
   return totalExp >= bdatBattle->getGrowLevelExp(level + 1);
 }
 
-u32 GfDataDriver::getExp(u32 driver) { return getExp(*getSDataDriver(driver)); }
+u32 GfDataDriver::getExp(u32 driver) { return getExp(getSDataDriver(driver)); }
 
-u32 GfDataDriver::getBattleExp(u32 driver) { return getBattleExp(*getSDataDriver(driver)); }
+u32 GfDataDriver::getBattleExp(u32 driver) { return getBattleExp(getSDataDriver(driver)); }
 
-u32 GfDataDriver::getBattleExpNextLevelAll(u32 driver) { return getBattleExpNextLevelAll(*getSDataDriver(driver)); }
+u32 GfDataDriver::getBattleExpNextLevelAll(u32 driver) { return getBattleExpNextLevelAll(getSDataDriver(driver)); }
 
 u32 GfDataDriver::getBattleExpNextLevelAll(const SDataDriver &dataDriver) {
   u32 level = dataDriver.unknown94;
   return GfBdatBtl::get()->getGrowLevelExp(level + 1);
 }
 
-u32 GfDataDriver::getExpSetLevel(u32 driver, u32 level) { return getExpSetLevel(*getSDataDriver(driver), level); }
+u32 GfDataDriver::getExpSetLevel(u32 driver, u32 level) { return getExpSetLevel(getSDataDriver(driver), level); }
 
 u32 GfDataDriver::getExpSetLevel(const SDataDriver &, u32 level) { return GfBdatBtl::get()->getGrowLevelExp(level); }
 
 u32 GfDataDriver::getExpUsed(u32 driver) {
-  u32 level = getSDataDriver(driver)->unknown94;
+  u32 level = getSDataDriver(driver).unknown94;
   u32 expUsed = 0;
   GfBdatBtl *bdatBattle = GfBdatBtl::get();
   for (u32 usedLevel = 0; usedLevel < level; usedLevel++) {
@@ -436,12 +482,12 @@ bool GfDataDriver::isScenarioMask(u32 driver) {
     return false;
   }
 
-  return getSDataDriver(driver)->unknown570 == 1;
+  return getSDataDriver(driver).unknown570 == 1;
 }
 
 void GfDataDriver::setScenarioMask(u32 driver, bool scenarioMask) {
-  SDataDriver *dataDriver = getSDataDriver(driver);
-  dataDriver->unknown570 = scenarioMask;
+  SDataDriver &dataDriver = getSDataDriver(driver);
+  dataDriver.unknown570 = scenarioMask;
 }
 
 u32 GfDataDriver::getHpMaxRev(const SDataDriver &dataDriver) {
@@ -457,7 +503,7 @@ u32 GfDataDriver::getHpMaxRev(const SDataDriver &dataDriver) {
     }
   }
 
-  if (dataDriver.unknown22 == DRIVER_REX && GfDataBlade::getSDataBlade(BLADE_HIKARI)->unknown00 != 0 && !hasHikari) {
+  if (dataDriver.unknown22 == DRIVER_UNKNOWN_1 && GfDataBlade::getSDataBlade(BLADE_HIKARI).unknown00 != 0 && !hasHikari) {
     hpMaxRev += GfDataBlade::getHpMaxRev(BLADE_HIKARI);
   }
 
@@ -477,7 +523,7 @@ u32 GfDataDriver::getStrengthRev(const SDataDriver &dataDriver) {
     }
   }
 
-  if (dataDriver.unknown22 == DRIVER_REX && GfDataBlade::getSDataBlade(BLADE_HIKARI)->unknown00 != 0 && !hasHikari) {
+  if (dataDriver.unknown22 == DRIVER_UNKNOWN_1 && GfDataBlade::getSDataBlade(BLADE_HIKARI).unknown00 != 0 && !hasHikari) {
     strengthRev += GfDataBlade::getStrengthRev(BLADE_HIKARI);
   }
 
@@ -497,7 +543,7 @@ u32 GfDataDriver::getPowEtherRev(const SDataDriver &dataDriver) {
     }
   }
 
-  if (dataDriver.unknown22 == DRIVER_REX && GfDataBlade::getSDataBlade(BLADE_HIKARI)->unknown00 != 0 && !hasHikari) {
+  if (dataDriver.unknown22 == DRIVER_UNKNOWN_1 && GfDataBlade::getSDataBlade(BLADE_HIKARI).unknown00 != 0 && !hasHikari) {
     powEtherRev += GfDataBlade::getPowerEtherRev(BLADE_HIKARI);
   }
 
@@ -517,7 +563,7 @@ u32 GfDataDriver::getDexRev(const SDataDriver &dataDriver) {
     }
   }
 
-  if (dataDriver.unknown22 == DRIVER_REX && GfDataBlade::getSDataBlade(BLADE_HIKARI)->unknown00 != 0 && !hasHikari) {
+  if (dataDriver.unknown22 == DRIVER_UNKNOWN_1 && GfDataBlade::getSDataBlade(BLADE_HIKARI).unknown00 != 0 && !hasHikari) {
     dexRev += GfDataBlade::getDexRev(BLADE_HIKARI);
   }
 
@@ -537,7 +583,7 @@ u32 GfDataDriver::getAgilityRev(const SDataDriver &dataDriver) {
     }
   }
 
-  if (dataDriver.unknown22 == DRIVER_REX && GfDataBlade::getSDataBlade(BLADE_HIKARI)->unknown00 != 0 && !hasHikari) {
+  if (dataDriver.unknown22 == DRIVER_UNKNOWN_1 && GfDataBlade::getSDataBlade(BLADE_HIKARI).unknown00 != 0 && !hasHikari) {
     agilityRev += GfDataBlade::getAgilityRev(BLADE_HIKARI);
   }
 
@@ -557,30 +603,30 @@ u32 GfDataDriver::getLuckRev(const SDataDriver &dataDriver) {
     }
   }
 
-  if (dataDriver.unknown22 == DRIVER_REX && GfDataBlade::getSDataBlade(BLADE_HIKARI)->unknown00 != 0 && !hasHikari) {
+  if (dataDriver.unknown22 == DRIVER_UNKNOWN_1 && GfDataBlade::getSDataBlade(BLADE_HIKARI).unknown00 != 0 && !hasHikari) {
     luckRev += GfDataBlade::getLuckRev(BLADE_HIKARI);
   }
 
   return luckRev;
 }
 
-u32 GfDataDriver::getHpMaxRev(u32 driver) { return getHpMaxRev(*getSDataDriver(driver)); }
+u32 GfDataDriver::getHpMaxRev(u32 driver) { return getHpMaxRev(getSDataDriver(driver)); }
 
-u32 GfDataDriver::getStrengthRev(u32 driver) { return getStrengthRev(*getSDataDriver(driver)); }
+u32 GfDataDriver::getStrengthRev(u32 driver) { return getStrengthRev(getSDataDriver(driver)); }
 
-u32 GfDataDriver::getPowEtherRev(u32 driver) { return getPowEtherRev(*getSDataDriver(driver)); }
+u32 GfDataDriver::getPowEtherRev(u32 driver) { return getPowEtherRev(getSDataDriver(driver)); }
 
-u32 GfDataDriver::getDexRev(u32 driver) { return getDexRev(*getSDataDriver(driver)); }
+u32 GfDataDriver::getDexRev(u32 driver) { return getDexRev(getSDataDriver(driver)); }
 
-u32 GfDataDriver::getAgilityRev(u32 driver) { return getAgilityRev(*getSDataDriver(driver)); }
+u32 GfDataDriver::getAgilityRev(u32 driver) { return getAgilityRev(getSDataDriver(driver)); }
 
-u32 GfDataDriver::getLuckRev(u32 driver) { return getLuckRev(*getSDataDriver(driver)); }
+u32 GfDataDriver::getLuckRev(u32 driver) { return getLuckRev(getSDataDriver(driver)); }
 
-u32 GfDataDriver::getClass(u32 driver) { return getClass(*getSDataDriver(driver)); }
+u32 GfDataDriver::getClass(u32 driver) { return getClass(getSDataDriver(driver)); }
 
 int GfDataDriver::getWeaponEabFileIdx(u32 driver, int slot) {
   {
-    DataParamAcc dataParamAcc(OBJECT_TYPE_DRIVER, driver, static_cast<GimmickType>(0));
+    DataParamAcc dataParamAcc(OBJECT_TYPE_PC, driver, static_cast<GimmickType>(0));
     if (!dataParamAcc.isValid()) {
       slot = -1;
     } else if (slot < 0) {
@@ -588,12 +634,12 @@ int GfDataDriver::getWeaponEabFileIdx(u32 driver, int slot) {
     }
   }
 
-  return slot < 0 ? -1 : slot + FILE_INDEX_WEAPON_EAB;
+  return slot < 0 ? -1 : slot + FILE_INDEX_UNKNOWN_154;
 }
 
 int GfDataDriver::getWeaponEfbFileIdx(u32 driver, int slot) {
   {
-    DataParamAcc dataParamAcc(OBJECT_TYPE_DRIVER, driver, static_cast<GimmickType>(0));
+    DataParamAcc dataParamAcc(OBJECT_TYPE_PC, driver, static_cast<GimmickType>(0));
     if (!dataParamAcc.isValid()) {
       slot = -1;
     } else if (slot < 0) {
@@ -604,11 +650,11 @@ int GfDataDriver::getWeaponEfbFileIdx(u32 driver, int slot) {
   return getWeaponEfbFileIdx(slot);
 }
 
-int GfDataDriver::getWeaponEfbFileIdx(int slot) { return (slot < 0 ? 0 : slot) + FILE_INDEX_WEAPON_EFB; }
+int GfDataDriver::getWeaponEfbFileIdx(int slot) { return (slot < 0 ? 0 : slot) + FILE_INDEX_UNKNOWN_623; }
 
 int GfDataDriver::getWeaponSwtFileIdx(u32 driver, int slot) {
   {
-    DataParamAcc dataParamAcc(OBJECT_TYPE_DRIVER, driver, static_cast<GimmickType>(0));
+    DataParamAcc dataParamAcc(OBJECT_TYPE_PC, driver, static_cast<GimmickType>(0));
     if (!dataParamAcc.isValid()) {
       slot = -1;
     } else if (slot < 0) {
@@ -616,12 +662,12 @@ int GfDataDriver::getWeaponSwtFileIdx(u32 driver, int slot) {
     }
   }
 
-  return slot < 0 ? -1 : slot + FILE_INDEX_WEAPON_SWT;
+  return slot < 0 ? -1 : slot + FILE_INDEX_UNKNOWN_101;
 }
 
-bool GfDataDriver::getEquipAcceEnahnce(mm::mtl::FixedVector<u16, 64> &enhances, u32 driver) { return getEquipAcceEnhance(enhances, *getSDataDriver(driver)); }
+bool GfDataDriver::getEquipAcceEnahnce(mm::mtl::FixedVector<u16, 64> &enhances, u32 driver) { return getEquipAcceEnhance(enhances, getSDataDriver(driver)); }
 
-u32 GfDataDriver::getEquipAcceEnahnce(u32 driver, u32 slot) { return getEquipAcceEnhance(*getSDataDriver(driver), slot); }
+u32 GfDataDriver::getEquipAcceEnahnce(u32 driver, u32 slot) { return getEquipAcceEnhance(getSDataDriver(driver), slot); }
 
 u32 GfDataDriver::getEquipAcceEnhance(const SDataDriver &dataDriver, u32 slot) {
   if (dataDriver.unknown574[slot].unknown04 == 0) {
@@ -648,9 +694,9 @@ bool GfDataDriver::getEquipAcceEnhance(mm::mtl::FixedVector<u16, 64> &enhances, 
 
 u32 GfDataDriver::getEquipAcce(const SDataDriver &dataDriver, u32 slot) { return dataDriver.unknown574[slot].unknown04; }
 
-u32 GfDataDriver::getEquipAcce(u32 driver, u32 slot) { return getEquipAcce(*getSDataDriver(driver), slot); }
+u32 GfDataDriver::getEquipAcce(u32 driver, u32 slot) { return getEquipAcce(getSDataDriver(driver), slot); }
 
-GfItemHandle GfDataDriver::getEquipAcceHandle(u32 driver, u32 slot) { return getEquipAcceHandle(*getSDataDriver(driver), slot); }
+GfItemHandle GfDataDriver::getEquipAcceHandle(u32 driver, u32 slot) { return getEquipAcceHandle(getSDataDriver(driver), slot); }
 
 GfItemHandle GfDataDriver::getEquipAcceHandle(const SDataDriver &dataDriver, u32 slot) { return dataDriver.unknown574[slot].unknown00; }
 
@@ -659,7 +705,7 @@ void GfDataDriver::setEquipAcce(u32 driver, u32 slot, u32 item) {
     return;
   }
 
-  setEquipAcce(*getSDataDriver(driver), slot, item);
+  setEquipAcce(getSDataDriver(driver), slot, item);
 }
 
 void GfDataDriver::setEquipAcce(SDataDriver &dataDriver, u32 slot, u32 item) { dataDriver.unknown574[slot].unknown04 = item; }
@@ -669,31 +715,31 @@ void GfDataDriver::setEquipAcceHandle(u32 driver, u32 slot, GfItemHandle handle)
     return;
   }
 
-  setEquipAcceHandle(*getSDataDriver(driver), slot, handle);
+  setEquipAcceHandle(getSDataDriver(driver), slot, handle);
 }
 
 void GfDataDriver::setEquipAcceHandle(SDataDriver &dataDriver, u32 slot, GfItemHandle handle) { dataDriver.unknown574[slot].unknown00.value = handle.value; }
 
-void GfDataDriver::getEquipWpnType(mm::mtl::FixedVector<u32, 27> &weaponTypes, u32 driver) { getEquipWpnType(weaponTypes, *getSDataDriver(driver)); }
+void GfDataDriver::getEquipWpnType(mm::mtl::FixedVector<u32, 27> &weaponTypes, u32 driver) { getEquipWpnType(weaponTypes, getSDataDriver(driver)); }
 
 void GfDataDriver::getEquipWpnType(mm::mtl::FixedVector<u32, 27> &weaponTypes, const SDataDriver &dataDriver) {
   weaponTypes.clear();
-  for (u32 weaponType = 1; weaponType <= WEAPON_TYPE_COUNT; weaponType++) {
+  for (u32 weaponType = 1; weaponType <= WEAPON_TYPE_UNKNOWN_26; weaponType++) {
     if (isEnableEquipWeapon(dataDriver.unknown22, weaponType)) {
       weaponTypes.push_back(weaponType);
     }
   }
 }
 
-const char *GfDataDriver::getVoiceStr(u32 driver) { return getVoiceStr(*getSDataDriver(driver)); }
+const char *GfDataDriver::getVoiceStr(u32 driver) { return getVoiceStr(getSDataDriver(driver)); }
 
 const char *GfDataDriver::getVoiceStr(const SDataDriver &dataDriver) { return GfBdatChrDr::get()->getChrDrVoice(dataDriver.unknown22); }
 
-u32 GfDataDriver::getSkillPoint(u32 driver) { return getSkillPoint(*getSDataDriver(driver)); }
+u32 GfDataDriver::getSkillPoint(u32 driver) { return getSkillPoint(getSDataDriver(driver)); }
 
 u32 GfDataDriver::getSkillPoint(const SDataDriver &dataDriver) { return dataDriver.unknownb8; }
 
-void GfDataDriver::addSkillPoint(u32 driver, int skillPoint) { addSkillPoint(*getSDataDriver(driver), skillPoint); }
+void GfDataDriver::addSkillPoint(u32 driver, int skillPoint) { addSkillPoint(getSDataDriver(driver), skillPoint); }
 
 void GfDataDriver::addSkillPoint(SDataDriver &dataDriver, int skillPoint) {
   dataDriver.unknownb8 += skillPoint;
@@ -702,7 +748,7 @@ void GfDataDriver::addSkillPoint(SDataDriver &dataDriver, int skillPoint) {
   }
 }
 
-void GfDataDriver::getValidEnhance(mm::mtl::FixedVector<u16, 64> &enhances, u32 driver) { getValidEnhance(enhances, *getSDataDriver(driver)); }
+void GfDataDriver::getValidEnhance(mm::mtl::FixedVector<u16, 64> &enhances, u32 driver) { getValidEnhance(enhances, getSDataDriver(driver)); }
 
 u32 GfDataDriver::getExtraMountNpcRsc(u32 driver) { return GfBdatRsc::get()->getDriverParamExtMountNpc(driver); }
 
@@ -710,19 +756,19 @@ const char *GfDataDriver::getExtraMountBone(u32 driver) { return GfBdatRsc::get(
 
 u32 GfDataDriver::getExtraMountCondition(u32 driver) { return GfBdatRsc::get()->getDriverParamExtMountCond(driver); }
 
-int GfDataDriver::getDeathBlowEfbFileIdx(DBSLOT slot, int index) { return (index < 0 ? slot + 1 : slot * DEATH_BLOW_PER_SLOT + index) + FILE_INDEX_DEATH_BLOW_EFB; }
+int GfDataDriver::getDeathBlowEfbFileIdx(DBSLOT slot, int index) { return (index < 0 ? slot + 1 : slot * SLOT_UNKNOWN_5 + index) + FILE_INDEX_UNKNOWN_649; }
 
-int GfDataDriver::getDebugAppendDeathBlowEfbFileIdx(u32 index) { return index + FILE_INDEX_DEBUG_APPEND_DEATH_BLOW_EFB; }
+int GfDataDriver::getDebugAppendDeathBlowEfbFileIdx(u32 index) { return index + FILE_INDEX_UNKNOWN_655; }
 
-int GfDataDriver::getWeaponEabFileIdx(int slot) { return (slot < 0 ? 0 : slot) + FILE_INDEX_WEAPON_EAB; }
+int GfDataDriver::getWeaponEabFileIdx(int slot) { return (slot < 0 ? 0 : slot) + FILE_INDEX_UNKNOWN_154; }
 
-int GfDataDriver::getDeathBlowEabFileIdx(DBSLOT slot, int index) { return (index < 0 ? slot + 1 : slot * DEATH_BLOW_PER_SLOT + index) + FILE_INDEX_DEATH_BLOW_EAB; }
+int GfDataDriver::getDeathBlowEabFileIdx(DBSLOT slot, int index) { return (index < 0 ? slot + 1 : slot * SLOT_UNKNOWN_5 + index) + FILE_INDEX_UNKNOWN_180; }
 
-int GfDataDriver::getDebugAppendDeathBlowEabFileIdx(u32 index) { return index + FILE_INDEX_DEBUG_APPEND_DEATH_BLOW_EAB; }
+int GfDataDriver::getDebugAppendDeathBlowEabFileIdx(u32 index) { return index + FILE_INDEX_UNKNOWN_181; }
 
-int GfDataDriver::getWeaponSwtFileIdx(int slot) { return (slot < 0 ? 0 : slot) + FILE_INDEX_WEAPON_SWT; }
+int GfDataDriver::getWeaponSwtFileIdx(int slot) { return (slot < 0 ? 0 : slot) + FILE_INDEX_UNKNOWN_101; }
 
-int GfDataDriver::getWeaponAnmFileIdx(int slot) { return (slot < 0 ? 0 : slot) + FILE_INDEX_WEAPON_ANM; }
+int GfDataDriver::getWeaponAnmFileIdx(int slot) { return (slot < 0 ? 0 : slot) + FILE_INDEX_UNKNOWN_48; }
 
 const char *GfDataDriver::getBelongingMountBone() { return "MT_wire"; }
 
@@ -736,8 +782,8 @@ u32 GfDataDriver::getPouchItemNum(u32 driver, u32 item) {
   }
 
   u32 itemNum = 0;
-  for (u32 slot = 0; slot < POUCH_COUNT; slot++) {
-    if (getSDataDriver(driver)->unknown584[slot].unknown04 == item) {
+  for (u32 slot = 0; slot < POUCH_UNKNOWN_3; slot++) {
+    if (getSDataDriver(driver).unknown584[slot].unknown04 == item) {
       itemNum++;
     }
   }
@@ -745,7 +791,7 @@ u32 GfDataDriver::getPouchItemNum(u32 driver, u32 item) {
   return itemNum;
 }
 
-bool GfDataDriver::isUsedFavorite(u32 driver, FAVORITE favorite) { return (GfGameFlag::getLocal(8, FLAG_USED_FAVORITE + driver) & 1 << favorite) != 0; }
+bool GfDataDriver::isUsedFavorite(u32 driver, FAVORITE favorite) { return (GfGameFlag::getLocal(8, FLAG_UNKNOWN_3980 + driver) & 1 << favorite) != 0; }
 
 u32 GfDataDriver::getFootStep(u32 driver) { return GfBdatChrDr::get()->getChrDrFootStep(driver); }
 
@@ -756,7 +802,7 @@ bool GfDataDriver::isActivateWeaponType(u32 driver, u32 weaponType) {
     return false;
   }
 
-  return getSDataDriver(driver)->unknown59c.test(weaponType);
+  return getSDataDriver(driver).unknown59c.test(weaponType);
 }
 
 void GfDataDriver::setActivateWeaponType(u32 driver, u32 weaponType) {
@@ -764,10 +810,10 @@ void GfDataDriver::setActivateWeaponType(u32 driver, u32 weaponType) {
     return;
   }
 
-  getSDataDriver(driver)->unknown59c.set(weaponType);
+  getSDataDriver(driver).unknown59c.set(weaponType);
 }
 
-bool GfDataDriver::isDriver(u32 driver) { return driver >= DRIVER_REX && driver <= DRIVER_SHIN_2; }
+bool GfDataDriver::isDriver(u32 driver) { return driver >= DRIVER_UNKNOWN_1 && driver <= DRIVER_UNKNOWN_9; }
 
 u32 GfDataDriver::getEyeRotControl(u32 driver) {
   if (driver == 0) {
@@ -782,19 +828,19 @@ bool GfDataDriver::isEnableEquipBlade(u32 driver, u32 blade) {
     return false;
   }
 
-  u32 setDriver = GfDataBlade::getSDataBlade(blade)->unknown04;
+  u32 setDriver = GfDataBlade::getSDataBlade(blade).unknown04;
   if (setDriver != 0 && setDriver != driver) {
     return false;
   }
 
-  u32 creator = GfDataBlade::getSDataBlade(blade)->unknown02;
-  if (driver != DRIVER_REX) {
+  u32 creator = GfDataBlade::getSDataBlade(blade).unknown02;
+  if (driver != DRIVER_UNKNOWN_1) {
     return creator != 0 && creator == driver;
   }
   if (creator == 0) {
     return false;
   }
-  if (creator == DRIVER_REX) {
+  if (creator == DRIVER_UNKNOWN_1) {
     return true;
   }
   if (GfGameManager::isRexAwakening()) {
@@ -809,7 +855,7 @@ bool GfDataDriver::isAttachedParty(u32 driver) {
     return false;
   }
 
-  return getSDataDriver(driver)->unknown571 != 0;
+  return getSDataDriver(driver).unknown571 != 0;
 }
 
 bool GfDataDriver::isEquipDefaultAcce(u32 driver) {
@@ -817,7 +863,7 @@ bool GfDataDriver::isEquipDefaultAcce(u32 driver) {
     return false;
   }
 
-  return getSDataDriver(driver)->unknown572 != 0;
+  return getSDataDriver(driver).unknown572 != 0;
 }
 
 u32 GfDataDriver::getExpNextLevel(const SDataDriver &dataDriver) {
@@ -827,15 +873,15 @@ u32 GfDataDriver::getExpNextLevel(const SDataDriver &dataDriver) {
   if (exp > growExp) {
     return growExp;
   }
-  if (level >= DRIVER_LEVEL_MAX) {
+  if (level >= DRIVER_UNKNOWN_99) {
     return 0;
   }
   return growExp - exp;
 }
 
-u32 GfDataDriver::getExpNextLevel(u32 driver) { return getExpNextLevel(*getSDataDriver(driver)); }
+u32 GfDataDriver::getExpNextLevel(u32 driver) { return getExpNextLevel(getSDataDriver(driver)); }
 
-u32 GfDataDriver::getBattleExpNextLevel(u32 driver) { return getExpNextLevel(*getSDataDriver(driver)); }
+u32 GfDataDriver::getBattleExpNextLevel(u32 driver) { return getExpNextLevel(getSDataDriver(driver)); }
 
 int GfDataDriver::getSetIdByBlade(const SDataDriver &dataDriver, u32 blade) {
   int count = getMaxSetBladeNum(dataDriver);
@@ -848,18 +894,18 @@ int GfDataDriver::getSetIdByBlade(const SDataDriver &dataDriver, u32 blade) {
   return -1;
 }
 
-int GfDataDriver::getSetIdByBlade(u32 driver, u32 blade) { return getSetIdByBlade(*getSDataDriver(driver), blade); }
+int GfDataDriver::getSetIdByBlade(u32 driver, u32 blade) { return getSetIdByBlade(getSDataDriver(driver), blade); }
 
-u32 GfDataDriver::getDriverBySetBlade(u32 blade) { return GfDataBlade::getSDataBlade(blade)->unknown04; }
+u32 GfDataDriver::getDriverBySetBlade(u32 blade) { return GfDataBlade::getSDataBlade(blade).unknown04; }
 
 u32 GfDataDriver::getDummyBlade(const SDataDriver &dataDriver) {
-  if (dataDriver.unknown22 == DRIVER_REX) {
-    return BLADE_REX_DUMMY;
+  if (dataDriver.unknown22 == DRIVER_UNKNOWN_1) {
+    return BLADE_UNKNOWN_1012;
   }
 
-  if (dataDriver.unknown22 != DRIVER_SHIN_2) {
-    if (dataDriver.unknown22 == DRIVER_SHIN) {
-      return BLADE_SHIN_DUMMY;
+  if (dataDriver.unknown22 != DRIVER_UNKNOWN_9) {
+    if (dataDriver.unknown22 == DRIVER_UNKNOWN_7) {
+      return BLADE_UNKNOWN_1013;
     }
     return 0;
   }
@@ -868,7 +914,7 @@ u32 GfDataDriver::getDummyBlade(const SDataDriver &dataDriver) {
 }
 
 u32 GfDataDriver::getDummyBlade(u32 driver) {
-  if (driver == DRIVER_REX) {
+  if (driver == DRIVER_UNKNOWN_1) {
     return 0x3f4;
   }
 
@@ -890,24 +936,24 @@ const char *GfDataDriver::getBelongingModelName(const GfInitParamDriver &param) 
   return nullptr;
 }
 
-u32 GfDataDriver::getDriverActivateType(const SDataDriver &dataDriver) {
+ActivateType GfDataDriver::getDriverActivateType(const SDataDriver &dataDriver) {
   if (dataDriver.unknown20 != 1) {
-    return 0;
+    return ACTIVATE_TYPE_UNKNOWN_0;
   }
 
   if (GfDataParty::isExistDriver(dataDriver.unknown22)) {
-    return 2;
+    return ACTIVATE_TYPE_UNKNOWN_2;
   }
 
-  return 1;
+  return ACTIVATE_TYPE_UNKNOWN_1;
 }
 
-u32 GfDataDriver::getDriverActivateType(u32 driver) {
+ActivateType GfDataDriver::getDriverActivateType(u32 driver) {
   if (driver == 0) {
-    return 0;
+    return ACTIVATE_TYPE_UNKNOWN_0;
   }
 
-  return getDriverActivateType(*getSDataDriver(driver));
+  return getDriverActivateType(getSDataDriver(driver));
 }
 
 bool GfDataDriver::isActivateParty(u32 driver) {
@@ -915,7 +961,7 @@ bool GfDataDriver::isActivateParty(u32 driver) {
     return false;
   }
 
-  if (getSDataDriver(driver)->unknown20 != 1) {
+  if (getSDataDriver(driver).unknown20 != 1) {
     return false;
   }
 
@@ -923,21 +969,42 @@ bool GfDataDriver::isActivateParty(u32 driver) {
 }
 
 bool GfDataDriver::isActivateReserver(u32 driver) {
-  if (getSDataDriver(driver)->unknown20 != 1) {
+  if (getSDataDriver(driver).unknown20 != 1) {
     return false;
   }
 
   return static_cast<u32>(GfDataParty::getDriverPartyID(driver) - 3) < 7;
 }
 
-bool GfDataDriver::isActivateUnuse(u32 driver) { return getSDataDriver(driver)->unknown20 == 0; }
+bool GfDataDriver::isActivateUnuse(u32 driver) { return getSDataDriver(driver).unknown20 == 0; }
+
+bool GfDataDriver::setActivateUnuse(u32 driver) {
+  if (driver == 0) {
+    return false;
+  }
+
+  ActivateType activateType = getDriverActivateType(getSDataDriver(driver));
+  SDataDriver &dataDriver = getSDataDriver(driver);
+  if (dataDriver.unknown20 != 0) {
+    dataDriver.unknown20 = 0;
+  }
+
+  bool isChanged = false;
+  int partyId = GfDataParty::getDriverPartyID(driver);
+  if (partyId != -1) {
+    isChanged = unknown012(driver, partyId);
+  }
+
+  GfEvent::callDriverActivate(driver, activateType, getDriverActivateType(getSDataDriver(driver)));
+  return isChanged;
+}
 
 bool GfDataDriver::isActivatePartyAll(u32 driver) {
   if (driver == 0) {
     return false;
   }
 
-  return getSDataDriver(driver)->unknown20 == 1;
+  return getSDataDriver(driver).unknown20 == 1;
 }
 
 bool GfDataDriver::leaveOneRareBlade(u32 driver) {
@@ -982,11 +1049,11 @@ bool GfDataDriver::leaveOneScenarioBlade(u32 driver) {
   return false;
 }
 
-bool GfDataDriver::isKizunaringComplete(u32 driver, bool isSecond) { return (getSDataDriver(driver)->unknown573 & (isSecond ? 2 : 1)) != 0; }
+bool GfDataDriver::isKizunaringComplete(u32 driver, bool isSecond) { return (getSDataDriver(driver).unknown573 & (isSecond ? 2 : 1)) != 0; }
 
 void GfDataDriver::setKizunaringComplete(u32 driver, bool isSecond) {
-  SDataDriver *dataDriver = getSDataDriver(driver);
-  dataDriver->unknown573 = dataDriver->unknown573 | (isSecond ? 2 : 1);
+  SDataDriver &dataDriver = getSDataDriver(driver);
+  dataDriver.unknown573 = dataDriver.unknown573 | (isSecond ? 2 : 1);
 }
 
 bool GfDataDriver::isFavoriteCategory(u32 driver, u32 item) {
@@ -1019,18 +1086,32 @@ u32 GfDataDriver::getFavorite(u32 driver, FAVORITE favorite) {
   return 0;
 }
 
+bool GfDataDriver::isFavoriteItem(u32 driver, u32 item) {
+  if (item == 0) {
+    return false;
+  }
+
+  for (u32 favorite = FAVORITE_UNKNOWN_2; favorite <= FAVORITE_UNKNOWN_3; favorite++) {
+    if (getFavorite(driver, static_cast<FAVORITE>(favorite)) == item) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 void GfDataDriver::setPouchData(u32 driver, u32 slot, const SDataPouch &pouch) {
-  SDataPouch *dataPouch = &getSDataDriver(driver)->unknown584[slot];
+  SDataPouch *dataPouch = &getSDataDriver(driver).unknown584[slot];
   dataPouch->_06 = pouch._06;
   dataPouch->unknown04 = pouch.unknown04;
   dataPouch->unknown00 = pouch.unknown00;
 }
 
 int GfDataDriver::getSetIdByDummyBlade(u32 driver) {
-  SDataDriver *dataDriver = getSDataDriver(driver);
+  SDataDriver &dataDriver = getSDataDriver(driver);
   if (driver != 0) {
     for (int slot = 0; slot < getMaxSetBladeNum(driver); slot++) {
-      if (GfDataBlade::isDummyBlade(dataDriver->unknown26[slot])) {
+      if (GfDataBlade::isDummyBlade(dataDriver.unknown26[slot])) {
         return slot;
       }
     }

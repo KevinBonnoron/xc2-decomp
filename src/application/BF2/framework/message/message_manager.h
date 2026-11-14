@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "framework/framework.h"
 #include "framework/manager_object.h"
 #include "framework/message/message_object.h"
 #include "framework/pointer_map.h"
@@ -25,10 +26,10 @@ class MessageManager : public ManagerObject, public mm::mtl::PtrSingleton<Messag
 public:
   class Impl {
   public:
-    static const u32 OBJECT_CAPACITY = 0x600;
-    static const u32 MESSAGE_RESERVE = 0x800;
-    static const u32 MESSAGE_ID_MIN = 1;
-    static const u32 MESSAGE_ID_MAX = 0xffffffff;
+    static const u32 OBJECT_CAPACITY_UNKNOWN_1536 = 0x600;       // Inferred role: capacity of the object table; original name unknown.
+    static const u32 MESSAGE_RESERVE_UNKNOWN_2048 = 0x800;       // Inferred role: reserved size of the message queue; original name unknown.
+    static const u32 MESSAGE_ID_UNKNOWN_1 = 1;                   // Inferred role: first message id; original name unknown.
+    static const u32 MESSAGE_ID_UNKNOWN_4294967295 = 0xffffffff; // Inferred role: last message id; original name unknown.
 
     class MessageHolder : public mm::mtl::ReferenceObject {
     public:
@@ -51,9 +52,9 @@ public:
       u32 unknown30;                                  // Inferred role: id; original member name unknown.
     };
 
-    explicit Impl(mm::mtl::IAllocator *allocator) : unknown00(allocator), unknown40(0), unknown44(MESSAGE_ID_MIN), unknown48(MESSAGE_ID_MAX), unknown50(allocator) {
-      unknown08.reserve(allocator, OBJECT_CAPACITY);
-      unknown50.reserve(MESSAGE_RESERVE);
+    explicit Impl(mm::mtl::IAllocator *allocator) : unknown00(allocator), unknown40(0), unknown44(MESSAGE_ID_UNKNOWN_1), unknown48(MESSAGE_ID_UNKNOWN_4294967295), unknown50(allocator) {
+      unknown08.reserve(allocator, OBJECT_CAPACITY_UNKNOWN_1536);
+      unknown50.reserve(MESSAGE_RESERVE_UNKNOWN_2048);
     }
 
     ~Impl() { destroy(); }
@@ -95,5 +96,15 @@ static_assert(offsetof(MessageManager::Impl, unknown40) == 0x40, "");
 static_assert(offsetof(MessageManager::Impl, unknown50) == 0x50, "");
 static_assert(sizeof(MessageManager::Impl) == 0xc0, "");
 static_assert(offsetof(MessageManager, unknown18) == 0x18, "");
+
+template <typename T> void MessageObject::unknown009(MessageObject *receiver, f32 delay, int value) {
+  if (MessageManager::get() != nullptr) {
+// The game compiles this allocation from line 61 of framework/message/message_object.h (its file string and line are
+// arguments of operator new); the helper's original definition there is not reconstructed yet.
+#line 61 "framework/message/message_object.h"
+    T *message = new (Framework::getAllocator(), 4, __FILE__, __LINE__) T(value);
+    MessageManager::get()->push(this, receiver, message, delay);
+  }
+}
 
 } // namespace fw

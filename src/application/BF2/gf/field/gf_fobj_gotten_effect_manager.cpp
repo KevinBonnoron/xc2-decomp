@@ -17,7 +17,7 @@ void GfFobjGottenEffectManager::create(const CreateInfo &info) {
   dispose();
   unknown00 = info.unknown00;
   createResHandles();
-  unknown20.setAllocator(getAllocator(ALLOCATOR_DEFAULT));
+  unknown20.setAllocator(getAllocator(ALLOCATOR_UNKNOWN_0));
   unknown20.reserve(info.unknown00, 16);
 }
 

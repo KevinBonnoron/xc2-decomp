@@ -1,10 +1,14 @@
 #pragma once
 #include <stddef.h>
 
-#include "ai/ai_state.h"
 #include "gf/field/gf_field_exec_cmd.h"
 #include "gf/gf_state.h"
+#include "gf/object/component/enemy/gf_enemy_state_battle.h"
 #include "types.h"
+
+namespace ai {
+class State;
+} // namespace ai
 
 namespace fw {
 struct UpdateInfo;
@@ -17,7 +21,7 @@ class GfComBehaviorMob;
 
 namespace mob {
 
-class StateSquadMember : public ai::State {
+class StateSquadMember : public GfStateBase {
   GF_STATE_CLASS(StateSquadMember, GfComBehaviorMob)
   StateSquadMember() : unknown18(0.5f), unknown20(), unknown58(nullptr), unknown68(false) {}
   static bool isCondMatch(const GfComBehaviorMob &behavior);

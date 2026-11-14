@@ -18,7 +18,7 @@ class CamObj;
 
 class ObjectCamera : public Object {
 public:
-  static constexpr size_t KEY_COUNT = 16;
+  static constexpr size_t KEY_UNKNOWN_16 = 16; // Inferred role: key count; original name unknown.
 
   ObjectCamera(const char *name, u32 id);
   virtual ~ObjectCamera();
@@ -65,11 +65,12 @@ private:
   CamObj *unknown68; // Inferred role: cam object; original member name unknown.
   u32 unknown70;     // Inferred role: id; original member name unknown.
   u8 _74[0x80 - 0x74];
-  PosAxis unknown80;                                   // Inferred role: pos axis; original member name unknown.
-  mm::mtl::FixedVector<PosAxis, KEY_COUNT> unknowna0;  // Inferred role: pos axes; original member name unknown.
-  TarAxis unknown2b0;                                  // Inferred role: tar axis; original member name unknown.
-  mm::mtl::FixedVector<TarAxis, KEY_COUNT> unknown2d0; // Inferred role: tar axes; original member name unknown.
-  u8 unknown4e0[0x4e8 - 0x4e0];                        // Inferred role: 4 e0; original member name unknown.
+  PosAxis unknown80;                                        // Inferred role: pos axis; original member name unknown.
+  mm::mtl::FixedVector<PosAxis, KEY_UNKNOWN_16> unknowna0;  // Inferred role: pos axes; original member name unknown.
+  TarAxis unknown2b0;                                       // Inferred role: tar axis; original member name unknown.
+  mm::mtl::FixedVector<TarAxis, KEY_UNKNOWN_16> unknown2d0; // Inferred role: tar axes; original member name unknown.
+  u32 unknown4e0;                                           // Inferred role: pos axis key index; original member name unknown.
+  u32 unknown4e4;                                           // Inferred role: tar axis key index; original member name unknown.
   mm::mtl::FixStr<64> m_cutName;
   u8 _52c[0x530 - 0x52c];
 };

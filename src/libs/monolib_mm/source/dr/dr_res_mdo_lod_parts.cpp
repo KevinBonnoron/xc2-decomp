@@ -61,3 +61,27 @@ void DrResMdoLodParts::calcAutoPixel(const DrResMdlLodArg &arg, bool &isDisp) {
 }
 
 } // namespace ml
+
+// The game builds these files in one unit with this one, in this order (0x710086e64c to 0x710088f99c): DrResEtcParams::getParams (0x710086e558) sits before this file's block, its other functions
+// after DrResMdoAlpTbl's. The seam work files (dr_res_mdo_seam_wrk_base.cpp and the files it includes) inline functions of the files before them: DrResMdoPos::release (0x7100872660),
+// DrResMdoSeamParmRead::setStockTexList, DrResMdoPntAlphaMan::setup and DrResMdoAlpTbl::updateInstace.
+// clang-format off
+#include "dr_res_mdo_lod_grp.cpp"
+#include "dr_res_mdo_lod_obj.cpp"
+#include "dr_res_mdo_alp_tbl.cpp"
+#include "dr_res_etc_params.cpp"
+#include "dr_res_mdo_mat.cpp"
+#include "dr_res_mdo_shd_obj.cpp"
+#include "dr_res_mdo_morp_obj.cpp"
+#include "dr_res_mdo_pnt_alpha.cpp"
+#include "dr_res_mdo_pos.cpp"
+#include "dr_res_mdo_inst_anm_obj.cpp"
+#include "dr_res_mdo_inst_mdl.cpp"
+#include "dr_res_mdo_seam_coli.cpp"
+#include "dr_res_mdo_seam_mem_man.cpp"
+#include "dr_res_mdo_seam_parm_read.cpp"
+#include "dr_res_mdo_seam_read.cpp"
+#include "dr_res_mdo_seam_res.cpp"
+#include "dr_res_mdo_vtx_mesh_obj.cpp"
+#include "dr_res_mdo_seam_wrk_base.cpp"
+// clang-format on

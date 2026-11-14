@@ -1,5 +1,6 @@
 #include "gf/object/component/pc/field/gf_pc_state_field_water_dead_sink.h"
 
+#include "framework/object/updatable_object.h"
 #include "fw/fw_param_manager.h"
 #include "fw/fw_update_info.h"
 #include "gf/object/component/pc/field/gf_pc_param_field.h"
@@ -14,6 +15,13 @@
 namespace gf {
 namespace pc {
 
+void StateFieldWaterDeadSink::enter(GfComBehaviorPc *behavior, ai::State *previous) {
+  unknown18 = 0.0f;
+  GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
+  const WaterCommonParam *param = property->unknown310.unknown002();
+  property->unknown90 = property->unknown90 < -param->waterDeadVelMin ? property->unknown90 : -param->waterDeadVelMin;
+}
+
 void StateFieldWaterDeadSink::leave(GfComBehaviorPc *behavior, ai::State *next) {}
 
 void StateFieldWaterDeadSink::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
@@ -23,7 +31,7 @@ void StateFieldWaterDeadSink::update(GfComBehaviorPc *behavior, const fw::Update
   const WaterCommonParam *param = entry != nullptr ? static_cast<const WaterCommonParam *>(entry->param) : nullptr;
   unknown18 += info.unknown04;
   if (property->unknown110_4 || unknown18 >= param->sinkTime) {
-    reqState(STATE_ID_FIELD_WATER_DEAD_RISE);
+    reqState(STATE_ID_UNKNOWN_36);
   } else if (StateUtilField::getChildFrameHeight(*behavior) <= -param->sinkDepth) {
     property->unknown90 = 0.0f;
   } else {

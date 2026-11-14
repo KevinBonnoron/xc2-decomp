@@ -3,6 +3,10 @@
 #include "dr/dr_mdo_ctl_seam_low_map.h"
 #include "types.h"
 
+namespace mm {
+struct Vec3;
+} // namespace mm
+
 namespace grlib {
 class CGLibVtxInstans;
 } // namespace grlib
@@ -21,9 +25,12 @@ class DrMdoCtlSeamInstMap : public DrMdoCtlSeamLowMap {
 public:
   DrMdoCtlSeamInstMap(int viewNum);
   void releaseInstMap();
+  void initInstMapParts(DrResMdoSeamWrkInst *inst, DrResMdoSeamWrkInst *linked);
+  void changeMemInstMapParts(DrResMdoSeamWrkInst *inst);
   void releaseFreeSeamInst(DrResMdoSeamWrkInst *inst);
   DrResMdoSeamWrkInst *createFreeSeamInst();
   void updateInstMap(MdoArgSeamUpdate &arg);
+  bool readInstModelCheck(const mm::Vec3 &position, bool unknown001, bool isFirst);
   void readInstMapCheck();
   void updateInstMapRenderList(MdoArgSeamUpdate &arg);
   void createInstMapDisplayList();

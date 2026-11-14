@@ -32,7 +32,7 @@ public:
   static void createUniformRimBloomCalcObj(grlib::CGLibDblUniformArray *uniforms);
   static void createUniformMpfMaterialObj(grlib::CGLibDblUniformArray *uniforms, const MdsMpfMatTopHeader *header);
 
-  static const u16 s_nMatChackTbl[10];
+  static const u16 s_nMatChackTbl[10]; // Name from the game symbol _ZN2ml20DrShdUniformBlockMan14s_nMatChackTblE; also in torna and xc1de.
 };
 
 } // namespace ml

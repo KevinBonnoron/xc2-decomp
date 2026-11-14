@@ -16,8 +16,8 @@ public:
   u8 _c0[0x170 - 0x0c0];
   f32 unknown170; // Inferred role: cloud density; original member name unknown.
   u8 _174[0x1d4 - 0x174];
-  f32 m_fogTbl[24]; // Name from CloudCalcParams::getFogTbl; original member name unknown.
-  u8 _234[0x420 - 0x234];
+  f32 m_fogTbl[27]; // Name from CloudCalcParams::getFogTbl; original member name unknown.
+  u8 _240[0x420 - 0x240];
   mm::Mat44 m_shadowMatrix[3]; // Name from CloudCalcParams::getShadowMatrix; original member name unknown.
   f32 m_shadowOfs[3];          // Name from CloudCalcParams::getShadowOfs; original member name unknown.
   f32 unknown4ec;              // Role unknown; original member name unknown.
@@ -30,7 +30,9 @@ public:
   u32 unknown554; // Inferred role: screen height; original member name unknown.
   u8 _558[0x560 - 0x558];
   int unknown560; // Inferred role: loop; original member name unknown.
-  u8 _564[0x580 - 0x564];
+  u8 _564[0x568 - 0x564];
+  bool unknown568; // Inferred role: copy of DrMan::unknown1d62; original member name unknown.
+  u8 _569[0x580 - 0x569];
 };
 
 static_assert(offsetof(IDrDrawWorkInfo, m_shadowTex) == 0x90, "");
@@ -46,6 +48,7 @@ static_assert(offsetof(IDrDrawWorkInfo, unknown540) == 0x540, "");
 static_assert(offsetof(IDrDrawWorkInfo, unknown550) == 0x550, "");
 static_assert(offsetof(IDrDrawWorkInfo, unknown554) == 0x554, "");
 static_assert(offsetof(IDrDrawWorkInfo, unknown560) == 0x560, "");
+static_assert(offsetof(IDrDrawWorkInfo, unknown568) == 0x568, "");
 static_assert(sizeof(IDrDrawWorkInfo) == 0x580, "");
 
 } // namespace ml

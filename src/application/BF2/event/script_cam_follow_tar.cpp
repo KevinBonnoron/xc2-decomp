@@ -12,7 +12,7 @@ namespace event {
 
 void ScriptCamFollowTar::doit(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CAMERA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_3) {
     return;
   }
   ObjectCamera *camera = static_cast<ObjectCamera *>(object);
@@ -22,7 +22,7 @@ void ScriptCamFollowTar::doit(const Param &param) {
 
 void ScriptCamFollowTar::undo(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CAMERA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_3) {
     return;
   }
   static_cast<ObjectCamera *>(object)->followTar(unknown08);

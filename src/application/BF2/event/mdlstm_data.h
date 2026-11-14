@@ -8,7 +8,7 @@ namespace event {
 
 class MdlstmData : public mm::mtl::Singleton<MdlstmData> {
 public:
-  static constexpr u32 INFO_COUNT = 1;
+  static constexpr u32 INFO_UNKNOWN_1 = 1; // Inferred role: info count; original name unknown.
 
   struct Info {
     mm::mtl::FixStr<128> unknown00; // Inferred role: resource name; original member name unknown.
@@ -24,7 +24,7 @@ public:
   bool getReplaceInfo(Info &info, const char *name);
 
 private:
-  mm::mtl::FixedVector<Info, INFO_COUNT> unknown08; // Inferred role: replace infos; original member name unknown.
+  mm::mtl::FixedVector<Info, INFO_UNKNOWN_1> unknown08; // Inferred role: replace infos; original member name unknown.
 };
 
 static_assert(sizeof(MdlstmData::Info) == 0x94, "");

@@ -8,7 +8,7 @@ class WorkObj;
 
 class DevClock : public DevBase, public mm::mtl::PtrSingleton<DevClock> {
 public:
-  DevClock(const char *name, WorkObj *parent) : DevBase(name, parent) {}
+  DevClock(const char *name, WorkObj *parent) : DevBase(name, parent, 0) {}
   static bool getClockNow(long &clock);
   static void getSec2Clock(long &clock, f32 sec);
   static bool getTimeNow(long &time, const long &clock);

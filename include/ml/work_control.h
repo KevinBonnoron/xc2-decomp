@@ -30,12 +30,14 @@ public:
   ~WorkControl() override;
   void wkTail() override;
   bool wkStandbyLogout() override;
+  bool wkStandbyLogin() override;
   static WorkControl *create(WorkObj *parent);
   static bool setFlowSetup();
   static bool setFlowChangePort(const char *name);
   static bool setFlowSystemPause(u32 wid);
   static bool setFlowShutdownAll(bool);
   static void pause(bool isPause, const char *name);
+  static void endFrame();
   static bool hasFlow();
   static CriticalSection &getCriticalSection();
 

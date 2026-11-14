@@ -11,7 +11,7 @@ namespace event {
 
 class CamObj : public CamBase {
 public:
-  static constexpr u32 CMD_COUNT = 8;
+  static constexpr u32 CMD_UNKNOWN_8 = 8; // Inferred role: cmd count; original name unknown.
 
   class SetEnable : public ICmd {
   public:
@@ -64,11 +64,11 @@ private:
   u8 _60[0x64 - 0x60];
   u32 unknown64; // Inferred role: screen id; original member name unknown.
   u8 _68[0x70 - 0x68];
-  CamField unknown70;                // Inferred role: field; original member name unknown.
-  CamHands unknownb0;                // Inferred role: hands; original member name unknown.
-  CamMotion unknownbb0;              // Inferred role: motion; original member name unknown.
-  CamBase *unknownc70;               // Inferred role: active; original member name unknown.
-  CmdQueue<CMD_COUNT, 0> unknownc78; // Inferred role: cmd queue; original member name unknown.
+  CamField unknown70;                    // Inferred role: field; original member name unknown.
+  CamHands unknownb0;                    // Inferred role: hands; original member name unknown.
+  CamMotion unknownbb0;                  // Inferred role: motion; original member name unknown.
+  CamBase *unknownc70;                   // Inferred role: active; original member name unknown.
+  CmdQueue<CMD_UNKNOWN_8, 0> unknownc78; // Inferred role: cmd queue; original member name unknown.
 };
 
 static_assert(sizeof(CamObj) == 0x15d0, "");

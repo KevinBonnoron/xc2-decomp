@@ -26,7 +26,7 @@ void StmPackMemory::changeStream(const char *name) {
   }
 }
 
-void StmPackMemory::stopStream() { unknown08 |= FLAG_STOP; }
+void StmPackMemory::stopStream() { unknown08 |= FLAG_UNKNOWN_2; }
 
 bool StmPackMemory::isBusy() {
   for (size_t i = 0; i < unknown5860.size(); i++) {
@@ -53,7 +53,7 @@ StmPackMemory::~StmPackMemory() {
 }
 
 void StmPackMemory::update() {
-  if (!(unknown08 & FLAG_ALLOCATED)) {
+  if (!(unknown08 & FLAG_UNKNOWN_0)) {
     for (size_t i = 0; i < unknown5860.size(); i++) {
       if (unknown5860[i]->unknown88.isLoading()) {
         return;
@@ -62,21 +62,21 @@ void StmPackMemory::update() {
     if (!getCurrentStream()->unknown98.open()) {
       return;
     }
-    unknown18 = mtl::MemManager::maxAllocSize(unknown0c) / PAGE_SIZE - 2;
-    unknown10 = mtl::MemManager::allocate(unknown0c, unknown18 * PAGE_SIZE, PAGE_SIZE, false, "no name", 0);
-    unknown08 |= FLAG_ALLOCATED;
+    unknown18 = mtl::MemManager::maxAllocSize(unknown0c) / PAGE_UNKNOWN_4096 - 2;
+    unknown10 = mtl::MemManager::allocate(unknown0c, unknown18 * PAGE_UNKNOWN_4096, PAGE_UNKNOWN_4096, false, "no name", 0);
+    unknown08 |= FLAG_UNKNOWN_0;
   }
-  if (!(unknown08 & FLAG_ALLOCATED)) {
+  if (!(unknown08 & FLAG_UNKNOWN_0)) {
     return;
   }
   freeCut();
-  if (unknown08 & FLAG_WAIT_CUT) {
+  if (unknown08 & FLAG_UNKNOWN_1) {
     if (waitCut()) {
-      unknown08 &= ~FLAG_WAIT_CUT;
+      unknown08 &= ~FLAG_UNKNOWN_1;
     }
-  } else if (!(unknown08 & FLAG_STOP)) {
+  } else if (!(unknown08 & FLAG_UNKNOWN_2)) {
     if (loadCut()) {
-      unknown08 |= FLAG_WAIT_CUT;
+      unknown08 |= FLAG_UNKNOWN_1;
     }
   }
 }
@@ -86,7 +86,7 @@ void StmPackMemory::freeCut() {
     return;
   }
   StmPackRes &res = unknown30.front();
-  if (!(res.unknown04 & StmPackRes::FLAG_FREE) || res.unknown00 > 0 || (res.unknown08 >= 0 && res.unknown08-- != 0)) {
+  if (!(res.unknown04 & StmPackRes::FLAG_UNKNOWN_1) || res.unknown00 > 0 || (res.unknown08 >= 0 && res.unknown08-- != 0)) {
     if (res.unknown50 >= unknown58f0) {
       return;
     }
@@ -98,6 +98,13 @@ void StmPackMemory::freeCut() {
   } else {
     unknown20 = unknown30.front().unknown38;
   }
+}
+void StmPackMemory::loadCut(void *buffer, size_t size, size_t firstFile, size_t lastFile, size_t firstPage, size_t lastPage, int prio) {
+  size_t dataOfs = getLoadStream()->unknown88.getDataOfs(firstFile);
+  getLoadStream()->unknown98.read(buffer, size, dataOfs);
+  StmPackRes res(buffer, size, dataOfs, firstFile, lastFile, firstPage, lastPage, prio, unknown5858, unknown58e8);
+  unknown5858++;
+  unknown30.push_back(res);
 }
 
 bool StmPackMemory::waitCut() {
@@ -141,7 +148,7 @@ void StmPackMemory::free(void *adr, int frame) {
       continue;
     }
     if (reinterpret_cast<size_t>(res->unknown10) <= reinterpret_cast<size_t>(adr) && reinterpret_cast<size_t>(adr) < res->unknown18 + reinterpret_cast<size_t>(res->unknown10)) {
-      res->unknown04 |= StmPackRes::FLAG_FREE;
+      res->unknown04 |= StmPackRes::FLAG_UNKNOWN_1;
       res->unknown00--;
       return;
     }

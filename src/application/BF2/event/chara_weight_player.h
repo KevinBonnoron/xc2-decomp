@@ -25,7 +25,7 @@ class CharaObj;
 
 class CharaWeightPlayer {
 public:
-  static constexpr size_t ITEM_COUNT = 12;
+  static constexpr size_t ITEM_UNKNOWN_12 = 12; // Inferred role: item count; original name unknown.
 
   CharaWeightPlayer();
   virtual ~CharaWeightPlayer() {}
@@ -53,9 +53,9 @@ public:
   void setAddWeight(const char *stat, f32 weight, WeightLayer weightLayer);
 
 private:
-  gf::GF_OBJ_HANDLE *unknown08;                                  // Inferred role: handle; original member name unknown.
-  CharaObj *unknown10;                                           // Inferred role: chara; original member name unknown.
-  mm::mtl::FixedVector<CharaWeightItem *, ITEM_COUNT> unknown18; // Inferred role: items; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown08;                                       // Inferred role: handle; original member name unknown.
+  CharaObj *unknown10;                                                // Inferred role: chara; original member name unknown.
+  mm::mtl::FixedVector<CharaWeightItem *, ITEM_UNKNOWN_12> unknown18; // Inferred role: items; original member name unknown.
 };
 
 static_assert(sizeof(CharaWeightPlayer) == 0x80, "");

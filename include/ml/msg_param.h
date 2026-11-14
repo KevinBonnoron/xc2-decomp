@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include "mm_mtl/fixed_queue.h"
+#include "mm_mtl/fixstr.h"
 #include "types.h"
 
 namespace ml {
@@ -11,6 +12,8 @@ public:
   // Inferred role: param type; original type name unknown.
   enum unknown001 {
     unknown001_0 = 0,   // Inferred role: none; original name unknown.
+    unknown001_3 = 3,   // Inferred role: unsigned integer; original name unknown.
+    unknown001_4 = 4,   // Inferred role: pointer; original name unknown.
     unknown001_16 = 16, // Inferred role: string; original name unknown.
   };
 
@@ -38,6 +41,18 @@ public:
     m_queue[m_index].type = unknown001_16;
     strcpy(m_queue[m_index].data, string);
   }
+
+  void set(const u32 &value) {
+    m_queue[m_index].type = unknown001_3;
+    memcpy(m_queue[m_index].data, &value, sizeof(value));
+  }
+
+  void set(const void *pointer) {
+    m_queue[m_index].type = unknown001_4;
+    memcpy(m_queue[m_index].data, &pointer, sizeof(pointer));
+  }
+
+  void set(const mm::mtl::FixStr<16> &string) { set(string.c_str()); }
 
   int size() const { return m_queue.size(); }
   Param &get(u32 index) { return m_queue[index]; }

@@ -2,7 +2,9 @@
 
 #include <math.h>
 
+#include "bdat.h"
 #include "gf/data/gf_bdat_btl.h"
+#include "gf/data/gf_bdat_chrbl.h"
 #include "gf/data/gf_bdat_cond.h"
 #include "gf/data/gf_bdat_msg.h"
 #include "gf/data/gf_bdat_quest.h"
@@ -16,66 +18,67 @@
 #include "gf/data/gf_object_type.h"
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/quest/gf_quest_task_param.h"
+#include "gf/util/gf_util.h"
 #include "mm_mtl/fixstr.h"
 
 namespace gf {
 
 enum {
-  FLAG_MERCENARIES_LEVEL = 0x2,
-  FLAG_MERCENARIES_POINT = 0x3,
-  FLAG_MERCENARIES_MISSION = 0x5,
-  FLAG_MERCENARIES_MISSION_PROGRESS = 0x87cf,
-  FLAG_MERCENARIES_MISSION_PROGRESS_DISPLAY = 0x89c4,
-  FLAG_MERCENARIES_MISSION_SEEN = 0x9a97,
-  FLAG_MERCENARIES_MISSION_COMPLETE = 0xb4cd,
+  FLAG_MERCENARIES_UNKNOWN_2 = 0x2,        // Inferred role: flag mercenaries level; original name unknown.
+  FLAG_MERCENARIES_UNKNOWN_3 = 0x3,        // Inferred role: flag mercenaries point; original name unknown.
+  FLAG_MERCENARIES_UNKNOWN_5 = 0x5,        // Inferred role: flag mercenaries mission; original name unknown.
+  FLAG_MERCENARIES_UNKNOWN_34767 = 0x87cf, // Inferred role: flag mercenaries mission progress; original name unknown.
+  FLAG_MERCENARIES_UNKNOWN_35268 = 0x89c4, // Inferred role: flag mercenaries mission progress display; original name unknown.
+  FLAG_MERCENARIES_UNKNOWN_39575 = 0x9a97, // Inferred role: flag mercenaries mission seen; original name unknown.
+  FLAG_MERCENARIES_UNKNOWN_46285 = 0xb4cd, // Inferred role: flag mercenaries mission complete; original name unknown.
 };
 
 enum {
-  MISSION_STATE_NONE = 0,
-  MISSION_STATE_ORDER_ENABLE = 1,
-  MISSION_STATE_EXPEDITION = 2,
-  MISSION_STATE_REWARD = 3,
-  MISSION_STATE_COMPLETE = 4,
+  MISSION_STATE_UNKNOWN_0 = 0, // Inferred role: mission state none; original name unknown.
+  MISSION_STATE_UNKNOWN_1 = 1, // Inferred role: mission state order enable; original name unknown.
+  MISSION_STATE_UNKNOWN_2 = 2, // Inferred role: mission state expedition; original name unknown.
+  MISSION_STATE_UNKNOWN_3 = 3, // Inferred role: mission state reward; original name unknown.
+  MISSION_STATE_UNKNOWN_4 = 4, // Inferred role: mission state complete; original name unknown.
 };
 
 enum {
-  MERCENARIES_CONFIG_REWARD_ACHIEVMENT_RATIO = 0x10,
-  MERCENARIES_CONFIG_MISSION_PERFORMANCE_RATIO = 0x11,
+  MERCENARIES_CONFIG_UNKNOWN_16 = 0x10, // Inferred role: mercenaries config reward achievment ratio; original name unknown.
+  MERCENARIES_CONFIG_UNKNOWN_17 = 0x11, // Inferred role: mercenaries config mission performance ratio; original name unknown.
 };
 
 enum {
-  WILDCARD_MERCENARIES_POINT_LIMIT = 0x3e,
+  WILDCARD_UNKNOWN_62 = 0x3e, // Inferred role: wildcard mercenaries point limit; original name unknown.
 };
 
 enum {
-  REQUEST_GENDER_ANY = 4,
+  REQUEST_UNKNOWN_4 = 4, // Inferred role: request gender any; original name unknown.
 };
 
 enum {
-  REQUEST_BLADE_CATEGORY = 1,
-  REQUEST_BLADE_PERFORMANCE = 2,
-  REQUEST_BLADE_RACE = 3,
-  REQUEST_BLADE_GENDER = 4,
-  REQUEST_BLADE_ARTS = 5,
-  REQUEST_BLADE_FIELD_SKILL = 6,
-  REQUEST_BLADE_ATTRIBUTE = 7,
+  REQUEST_BLADE_UNKNOWN_1 = 1, // Inferred role: request blade category; original name unknown.
+  REQUEST_BLADE_UNKNOWN_2 = 2, // Inferred role: request blade performance; original name unknown.
+  REQUEST_BLADE_UNKNOWN_3 = 3, // Inferred role: request blade race; original name unknown.
+  REQUEST_BLADE_UNKNOWN_4 = 4, // Inferred role: request blade gender; original name unknown.
+  REQUEST_BLADE_UNKNOWN_5 = 5, // Inferred role: request blade arts; original name unknown.
+  REQUEST_BLADE_UNKNOWN_6 = 6, // Inferred role: request blade field skill; original name unknown.
+  REQUEST_BLADE_UNKNOWN_7 = 7, // Inferred role: request blade attribute; original name unknown.
 };
 
 enum {
-  CONDITION_PARTY_CATEGORY_BLADE = 4,
+  CONDITION_UNKNOWN_4 = 4, // Inferred role: condition party category blade; original name unknown.
 };
 
-constexpr u32 CONDITION_PARTY_MEMBER_COUNT = 3;
+constexpr u32 CONDITION_UNKNOWN_3 = 3; // Inferred role: condition party member count; original name unknown.
 
-constexpr u32 BLADE_ARTS_COUNT = 3;
-constexpr u32 BLADE_FIELD_SKILL_COUNT = 3;
+constexpr u32 BLADE_UNKNOWN_3 = 3;       // Inferred role: blade arts count; original name unknown.
+constexpr u32 BLADE_FIELD_UNKNOWN_3 = 3; // Inferred role: blade field skill count; original name unknown.
 
-constexpr u32 RESERVER_PER_LEVEL = 24;
-constexpr u32 RESERVER_GAME_CLEAR_BONUS = 48;
-constexpr u32 REWARD_ACHIEVMENT_RATIO_PER_LEVEL = 5;
-constexpr u32 MISSION_TASK_COUNT = 4;
-constexpr u32 MISSION_FIELD_SKILL_COUNT = 3;
-constexpr f32 FIELD_SKILL_TIME_REDUCTION_PER_LEVEL = 6.0f;
+constexpr u32 RESERVER_UNKNOWN_24 = 24; // Inferred role: reserver per level; original name unknown.
+constexpr u32 RESERVER_UNKNOWN_48 = 48; // Inferred role: reserver game clear bonus; original name unknown.
+constexpr u32 LEVEL_UNKNOWN_5 = 5;      // Inferred role: reward achievment ratio per level; original name unknown.
+constexpr u32 MISSION_UNKNOWN_4 = 4;    // Inferred role: mission task count; original name unknown.
+constexpr u32 MISSION_UNKNOWN_3 = 3;    // Inferred role: mission field skill count; original name unknown.
+constexpr f32 unknown025 = 6.0f;        // Inferred role: field skill time reduction per level; original name unknown.
 
 static f32 getBladeFieldSkillLevel(u32 blade, u32 fieldSkill) {
   DataParamAcc paramAcc(OBJECT_TYPE_BLADE, blade, static_cast<GimmickType>(0));
@@ -97,31 +100,31 @@ static f32 getBladeFieldSkillLevel(u32 blade, u32 fieldSkill) {
   return level;
 }
 
-u32 GfDataMercenaries::getReserverMax() { return getLevel() * RESERVER_PER_LEVEL + RESERVER_PER_LEVEL + (GfDataManager::getDataGame()->unknown109b2c != 0 ? RESERVER_GAME_CLEAR_BONUS : 0); }
+u32 GfDataMercenaries::getReserverMax() { return getLevel() * RESERVER_UNKNOWN_24 + RESERVER_UNKNOWN_24 + (GfDataManager::getDataGame()->unknown109b2c != 0 ? RESERVER_UNKNOWN_48 : 0); }
 
 unknown122 *GfDataMercenaries::getSDataMercenaries() { return &GfDataManager::getDataGame()->unknown1098c8; }
 
-u32 GfDataMercenaries::getLevel() { return GfGameFlag::getLocal(4, FLAG_MERCENARIES_LEVEL); }
+u32 GfDataMercenaries::getLevel() { return GfGameFlag::getLocal(4, FLAG_MERCENARIES_UNKNOWN_2); }
 
-u32 GfDataMercenaries::getLevelMax() { return MERCENARIES_LEVEL_MAX; }
+u32 GfDataMercenaries::getLevelMax() { return MERCENARIES_LEVEL_UNKNOWN_5; }
 
-void GfDataMercenaries::setLevel(u32 level) { GfGameFlag::setLocal(4, FLAG_MERCENARIES_LEVEL, level); }
+void GfDataMercenaries::setLevel(u32 level) { GfGameFlag::setLocal(4, FLAG_MERCENARIES_UNKNOWN_2, level); }
 
-u32 GfDataMercenaries::getPoint() { return GfGameFlag::getLocal(16, FLAG_MERCENARIES_POINT); }
+u32 GfDataMercenaries::getPoint() { return GfGameFlag::getLocal(16, FLAG_MERCENARIES_UNKNOWN_3); }
 
 u32 GfDataMercenaries::getPointMax() {
-  static const u16 pointMaxWildcards[] = {0, 59, 60, 61, 62, 0};
+  static const u16 unknown026[] = {0, 59, 60, 61, 62, 0}; // Inferred role: point max wildcards; original name unknown.
   u32 level = getLevel();
-  if (level == 0 || level == MERCENARIES_LEVEL_MAX) {
+  if (level == 0 || level == MERCENARIES_LEVEL_UNKNOWN_5) {
     return 0;
   }
 
-  return GfBdatBtl::get()->getWildcardDatavalueU2(pointMaxWildcards[level]);
+  return GfBdatBtl::get()->getWildcardDatavalueU2(unknown026[level]);
 }
 
-u32 GfDataMercenaries::getPointLimit() { return GfBdatBtl::get()->getWildcardDatavalueU2(WILDCARD_MERCENARIES_POINT_LIMIT); }
+u32 GfDataMercenaries::getPointLimit() { return GfBdatBtl::get()->getWildcardDatavalueU2(WILDCARD_UNKNOWN_62); }
 
-void GfDataMercenaries::setPoint(u32 point) { GfGameFlag::setLocal(16, FLAG_MERCENARIES_POINT, point); }
+void GfDataMercenaries::setPoint(u32 point) { GfGameFlag::setLocal(16, FLAG_MERCENARIES_UNKNOWN_3, point); }
 
 u32 GfDataMercenaries::getTeamMax() {
   u32 level = getLevel();
@@ -290,7 +293,7 @@ int GfDataMercenaries::getTeamAnimalNum(u32 teamID) {
 
   int animalNum = 0;
   for (u32 i = 0; i < 6; i++) {
-    if (team->unknown00[i] != 0 && GfDataBlade::getSDataBlade(team->unknown00[i])->unknown846 == QUEST_RACE_ANIMAL) {
+    if (team->unknown00[i] != 0 && GfDataBlade::getSDataBlade(team->unknown00[i]).unknown846 == QUEST_RACE_UNKNOWN_2) {
       animalNum++;
     }
   }
@@ -301,7 +304,7 @@ int GfDataMercenaries::getTeamAnimalNum(u32 teamID) {
 bool GfDataMercenaries::getTeamByZoneMissionWorking(mm::mtl::FixedVector<u16, 3> &teams, u32 zone) {
   mm::mtl::FixedVector<unknown120, 3> &mercenariesTeams = GfDataManager::getDataGame()->unknown1098c8.unknown00;
   for (unknown120 *team = mercenariesTeams.begin(); team != mercenariesTeams.end(); team++) {
-    if (team->unknown14 != 0 && GfGameFlag::getLocal(4, FLAG_MERCENARIES_MISSION + team->unknown14) == MISSION_STATE_EXPEDITION) {
+    if (team->unknown14 != 0 && GfGameFlag::getLocal(4, FLAG_MERCENARIES_UNKNOWN_5 + team->unknown14) == MISSION_STATE_UNKNOWN_2) {
       u32 map = getMissionMapID(team->unknown14);
       if (map != 0 && GfDataMap::getZoneIdForGameMap(map) == zone) {
         teams.push_back(team->unknown10);
@@ -327,7 +330,7 @@ u32 GfDataMercenaries::getMissionFlag(u32 mission) {
     return 0;
   }
 
-  return GfGameFlag::getLocal(4, FLAG_MERCENARIES_MISSION + mission);
+  return GfGameFlag::getLocal(4, FLAG_MERCENARIES_UNKNOWN_5 + mission);
 }
 
 u32 GfDataMercenaries::getMissionMapID(u32 mission) {
@@ -346,8 +349,8 @@ u32 GfDataMercenaries::getMissionMapID(u32 mission) {
   }
 
   u32 map = QuestListAcc::get()->getHintsZoneID(hints);
-  if (GfDataMap::isArcadiaDestroy() && map == MAP_ARCADIA) {
-    return MAP_LIBERALITAS;
+  if (GfDataMap::isArcadiaDestroy() && map == MAP_UNKNOWN_12) {
+    return MAP_UNKNOWN_14;
   }
 
   return map;
@@ -359,7 +362,7 @@ bool GfDataMercenaries::isTeamStateReward(u32 teamID) {
     return false;
   }
 
-  return GfGameFlag::getLocal(4, FLAG_MERCENARIES_MISSION + team->unknown14) == MISSION_STATE_REWARD;
+  return GfGameFlag::getLocal(4, FLAG_MERCENARIES_UNKNOWN_5 + team->unknown14) == MISSION_STATE_UNKNOWN_3;
 }
 
 bool GfDataMercenaries::getTeamByZoneMissionComplete(mm::mtl::FixedVector<u16, 3> &teams, u32 zone) {
@@ -377,21 +380,21 @@ bool GfDataMercenaries::getTeamByZoneMissionComplete(mm::mtl::FixedVector<u16, 3
 }
 
 void GfDataMercenaries::setMissionFlag(u32 mission, u32 missionFlag) {
-  GfGameFlag::setLocal(4, FLAG_MERCENARIES_MISSION + mission, missionFlag);
-  int progress = GfGameFlag::getLocal(2, FLAG_MERCENARIES_MISSION_PROGRESS + mission);
+  GfGameFlag::setLocal(4, FLAG_MERCENARIES_UNKNOWN_5 + mission, missionFlag);
+  int progress = GfGameFlag::getLocal(2, FLAG_MERCENARIES_UNKNOWN_34767 + mission);
   if (progress >= 2) {
     return;
   }
 
   int newProgress;
   switch (missionFlag) {
-  case MISSION_STATE_EXPEDITION:
+  case MISSION_STATE_UNKNOWN_2:
     newProgress = 1;
     break;
-  case MISSION_STATE_REWARD:
+  case MISSION_STATE_UNKNOWN_3:
     newProgress = 1;
     break;
-  case MISSION_STATE_COMPLETE:
+  case MISSION_STATE_UNKNOWN_4:
     newProgress = 2;
     break;
   default:
@@ -400,14 +403,14 @@ void GfDataMercenaries::setMissionFlag(u32 mission, u32 missionFlag) {
   }
 
   if (progress != newProgress) {
-    GfGameFlag::setLocal(2, FLAG_MERCENARIES_MISSION_PROGRESS + mission, newProgress);
-    GfGameFlag::setLocal(2, FLAG_MERCENARIES_MISSION_PROGRESS_DISPLAY + mission, newProgress);
+    GfGameFlag::setLocal(2, FLAG_MERCENARIES_UNKNOWN_34767 + mission, newProgress);
+    GfGameFlag::setLocal(2, FLAG_MERCENARIES_UNKNOWN_35268 + mission, newProgress);
   }
 }
 
-bool GfDataMercenaries::isMissionCompleteFlag(u32 mission) { return GfGameFlag::getLocal(1, FLAG_MERCENARIES_MISSION_COMPLETE + mission) != 0; }
+bool GfDataMercenaries::isMissionCompleteFlag(u32 mission) { return GfGameFlag::getLocal(1, FLAG_MERCENARIES_UNKNOWN_46285 + mission) != 0; }
 
-void GfDataMercenaries::setMissionCompleteFlag(u32 mission) { GfGameFlag::setLocal(1, FLAG_MERCENARIES_MISSION_COMPLETE + mission, 1); }
+void GfDataMercenaries::setMissionCompleteFlag(u32 mission) { GfGameFlag::setLocal(1, FLAG_MERCENARIES_UNKNOWN_46285 + mission, 1); }
 
 u32 GfDataMercenaries::getRequestPerformance(u32 mission) { return QuestListAcc::get()->getFLD_MercenariesMissionRequestPerformance(mission); }
 
@@ -421,7 +424,7 @@ u32 GfDataMercenaries::getTeamMissionTime(u32 teamID, u32 mission) {
   unknown120 *team = getTeamByTeamID(teamID);
   if (team != nullptr) {
     f32 fieldSkillLevel = 0.0f;
-    for (u32 index = 0; index < MISSION_FIELD_SKILL_COUNT; index++) {
+    for (u32 index = 0; index < MISSION_UNKNOWN_3; index++) {
       u32 fieldSkill = getFieldSkill(mission, index);
       if (fieldSkill == 0) {
         continue;
@@ -436,7 +439,7 @@ u32 GfDataMercenaries::getTeamMissionTime(u32 teamID, u32 mission) {
       }
     }
 
-    f32 reducedTime = time * (fieldSkillLevel * -FIELD_SKILL_TIME_REDUCTION_PER_LEVEL + 100.0f) * 0.01f;
+    f32 reducedTime = time * (fieldSkillLevel * -unknown025 + 100.0f) * 0.01f;
     f32 minTime = time * getMissionPerformanceRatio();
     time = reducedTime < minTime ? minTime : reducedTime;
 
@@ -461,7 +464,7 @@ u32 GfDataMercenaries::getFieldSkill(u32 mission, u32 index) {
   }
 }
 
-f32 GfDataMercenaries::getMissionPerformanceRatio() { return QuestListAcc::get()->getFLD_MercenariesConfigValue(MERCENARIES_CONFIG_MISSION_PERFORMANCE_RATIO) * 0.01f + 0.001f; }
+f32 GfDataMercenaries::getMissionPerformanceRatio() { return QuestListAcc::get()->getFLD_MercenariesConfigValue(MERCENARIES_CONFIG_UNKNOWN_17) * 0.01f + 0.001f; }
 
 u32 GfDataMercenaries::getStartMissionID() { return QuestListAcc::get()->getFLD_MercenariesMissionStart(); }
 
@@ -527,7 +530,7 @@ bool GfDataMercenaries::isTeamStateExpedition(u32 teamID) {
     return false;
   }
 
-  return GfGameFlag::getLocal(4, FLAG_MERCENARIES_MISSION + team->unknown14) == MISSION_STATE_EXPEDITION;
+  return GfGameFlag::getLocal(4, FLAG_MERCENARIES_UNKNOWN_5 + team->unknown14) == MISSION_STATE_UNKNOWN_2;
 }
 
 u32 GfDataMercenaries::getMissionTaskType(u32 mission, u32 index) {
@@ -542,9 +545,9 @@ u32 GfDataMercenaries::getMissionTaskType(u32 mission, u32 index) {
 
 u32 GfDataMercenaries::getMissionTaskType(u32 mission) {
   u32 taskType = 0;
-  for (u32 index = 0; index < MISSION_TASK_COUNT; index++) {
+  for (u32 index = 0; index < MISSION_UNKNOWN_4; index++) {
     u32 type = getMissionTaskType(mission, index);
-    if (type != TASK_TYPE_REQUEST_BLADE) {
+    if (type != TASK_TYPE_UNKNOWN_9) {
       taskType = type;
       break;
     }
@@ -587,7 +590,7 @@ bool GfDataMercenaries::isMissionOrderTeam(u32 mission) {
 bool GfDataMercenaries::isMissionComplete(u32 mission) {
   bool complete = false;
   if (mission != 0) {
-    complete = GfGameFlag::getLocal(4, FLAG_MERCENARIES_MISSION + mission) == MISSION_STATE_COMPLETE;
+    complete = GfGameFlag::getLocal(4, FLAG_MERCENARIES_UNKNOWN_5 + mission) == MISSION_STATE_UNKNOWN_4;
   }
 
   return complete;
@@ -625,7 +628,7 @@ bool GfDataMercenaries::isEnableMissionBlade(u32 blade, u32 requestBlade) {
   }
 
   u32 gender = questListAcc->getRequestBladeRequestGender(requestBlade);
-  if (gender != 0 && gender != REQUEST_GENDER_ANY && gender != paramAcc.getGender()) {
+  if (gender != 0 && gender != REQUEST_UNKNOWN_4 && gender != paramAcc.getGender()) {
     return false;
   }
 
@@ -634,7 +637,7 @@ bool GfDataMercenaries::isEnableMissionBlade(u32 blade, u32 requestBlade) {
     u32 index = 0;
     while (paramAcc.getBladeArts(index, false) != arts) {
       index++;
-      if (index >= BLADE_ARTS_COUNT) {
+      if (index >= BLADE_UNKNOWN_3) {
         return false;
       }
     }
@@ -648,7 +651,7 @@ bool GfDataMercenaries::isEnableMissionBlade(u32 blade, u32 requestBlade) {
   u32 fieldSkill = questListAcc->getRequestBladeRequestFSkill(requestBlade);
   if (fieldSkill != 0) {
     u32 fieldSkillLevel = 0;
-    for (u32 index = 0; index < BLADE_FIELD_SKILL_COUNT; index++) {
+    for (u32 index = 0; index < BLADE_FIELD_UNKNOWN_3; index++) {
       if (paramAcc.getFieldSkill(index, false) == fieldSkill) {
         fieldSkillLevel = paramAcc.getFieldSkillLevel(index, false);
         break;
@@ -681,22 +684,22 @@ bool GfDataMercenaries::isEnableOrder(u32 mission) {
     return true;
   }
 
-  u32 missionFlag = GfGameFlag::getLocal(4, FLAG_MERCENARIES_MISSION + mission);
-  if (missionFlag == MISSION_STATE_NONE) {
+  u32 missionFlag = GfGameFlag::getLocal(4, FLAG_MERCENARIES_UNKNOWN_5 + mission);
+  if (missionFlag == MISSION_STATE_UNKNOWN_0) {
     return true;
   }
 
   QuestListAcc *questListAcc = QuestListAcc::get();
-  if (missionFlag == MISSION_STATE_COMPLETE) {
+  if (missionFlag == MISSION_STATE_UNKNOWN_4) {
     return questListAcc->getFLD_MercenariesMissionRepeatable(mission) != 0;
   }
 
   return false;
 }
 
-bool GfDataMercenaries::isNewMission(u32 mission) { return GfGameFlag::getLocal(1, FLAG_MERCENARIES_MISSION_SEEN + mission) == 0; }
+bool GfDataMercenaries::isNewMission(u32 mission) { return GfGameFlag::getLocal(1, FLAG_MERCENARIES_UNKNOWN_39575 + mission) == 0; }
 
-void GfDataMercenaries::clearNewMission(u32 mission) { GfGameFlag::setLocal(1, FLAG_MERCENARIES_MISSION_SEEN + mission, 1); }
+void GfDataMercenaries::clearNewMission(u32 mission) { GfGameFlag::setLocal(1, FLAG_MERCENARIES_UNKNOWN_39575 + mission, 1); }
 
 u32 GfDataMercenaries::getFieldSkill1(u32 mission) {
   QuestID quest = getMissionQuestID(mission);
@@ -790,8 +793,8 @@ bool GfDataMercenaries::getFieldSkillInfo(u8 *&bdat, u32 &textId, u32 mission, u
 }
 
 u32 GfDataMercenaries::getRewardAchievmentRatio() {
-  u32 ratio = QuestListAcc::get()->getFLD_MercenariesConfigValue(MERCENARIES_CONFIG_REWARD_ACHIEVMENT_RATIO);
-  return getLevel() * REWARD_ACHIEVMENT_RATIO_PER_LEVEL + ratio;
+  u32 ratio = QuestListAcc::get()->getFLD_MercenariesConfigValue(MERCENARIES_CONFIG_UNKNOWN_16);
+  return getLevel() * LEVEL_UNKNOWN_5 + ratio;
 }
 
 bool GfDataMercenaries::getMsgTitleName(u8 *&bdat, u32 &textId, u32 mission) {
@@ -857,6 +860,37 @@ bool GfDataMercenaries::isTeamMemberEmpty(u32 teamID) {
   return true;
 }
 
+bool GfDataMercenaries::getTeamNameByTeamIDForDebug(mm::mtl::FixStr<128> &name, u32 teamID) {
+  if (teamID != 0) {
+    unknown120 *team = getTeamByTeamID(teamID);
+    if (team != nullptr) {
+      u16 leader = team->unknown00[0];
+      if (leader != 0) {
+        name = "";
+        if (!GfDataBlade::isCommonBlade(leader)) {
+          u32 textId = GfBdatChrBl::get()->getChrBlMerceName(leader);
+          u8 *bdat = GfBdatMsg::getFpMerceName();
+          if (textId != 0) {
+            const char *text = Bdat::getMSText(bdat, textId);
+            if (text != nullptr) {
+              name = util::debugUTF8ToSJIS(text);
+            }
+          }
+        }
+
+        if (name.length() == 0) {
+          name.format("%s隊", util::debugUTF8ToSJIS(GfDataBlade::getName(leader, 0)));
+        }
+
+        return true;
+      }
+    }
+  }
+
+  name.format("第%d傭兵部隊", teamID);
+  return true;
+}
+
 u8 GfDataMercenaries::getTeamMemberNum(u32 teamID) {
   unknown120 *team = getTeamByTeamID(teamID);
   u8 memberNum = 0;
@@ -872,11 +906,11 @@ u8 GfDataMercenaries::getTeamMemberNum(u32 teamID) {
 bool GfDataMercenaries::getRequestCondition(GfRequestBladeData &requestBladeData, u32 mission, u32 task) {
   QuestListAcc *questListAcc = QuestListAcc::get();
   u32 purpose = getMissionPurposeID(mission);
-  if (task >= MISSION_TASK_COUNT || purpose == 0) {
+  if (task >= MISSION_UNKNOWN_4 || purpose == 0) {
     return false;
   }
 
-  if (questListAcc->getTaskTaskType(purpose, task) != TASK_TYPE_REQUEST_BLADE) {
+  if (questListAcc->getTaskTaskType(purpose, task) != TASK_TYPE_UNKNOWN_9) {
     return false;
   }
 
@@ -888,39 +922,39 @@ bool GfDataMercenaries::getRequestCondition(GfRequestBladeData &requestBladeData
   requestBladeData.unknown0c = questListAcc->getRequestBladeRequestNumber(requestBlade);
   u32 category = questListAcc->getRequestBladeRequestCategory(requestBlade);
   if (category != 0) {
-    requestBladeData.unknown00 = REQUEST_BLADE_CATEGORY;
+    requestBladeData.unknown00 = REQUEST_BLADE_UNKNOWN_1;
     requestBladeData.unknown04 = category;
     return true;
   }
 
   u32 attribute = questListAcc->getRequestBladeRequestAtr(requestBlade);
   if (attribute != 0) {
-    requestBladeData.unknown00 = REQUEST_BLADE_ATTRIBUTE;
+    requestBladeData.unknown00 = REQUEST_BLADE_UNKNOWN_7;
     requestBladeData.unknown04 = attribute;
     return true;
   }
 
   u32 performance = questListAcc->getRequestBladeRequestPerformance(requestBlade);
   if (performance != 0) {
-    requestBladeData.unknown00 = REQUEST_BLADE_PERFORMANCE;
+    requestBladeData.unknown00 = REQUEST_BLADE_UNKNOWN_2;
     requestBladeData.unknown08 = performance;
     return true;
   }
 
   int race = questListAcc->getRequestBladeRequestRace(requestBlade);
   if (race != 0) {
-    if (race > QUEST_RACE_ANIMAL) {
-      race = QUEST_RACE_HUMAN;
+    if (race > QUEST_RACE_UNKNOWN_2) {
+      race = QUEST_RACE_UNKNOWN_1;
     }
 
-    requestBladeData.unknown00 = REQUEST_BLADE_RACE;
+    requestBladeData.unknown00 = REQUEST_BLADE_UNKNOWN_3;
     requestBladeData.unknown04 = race;
     return true;
   }
 
   u32 gender = questListAcc->getRequestBladeRequestGender(requestBlade);
   if (gender != 0) {
-    requestBladeData.unknown00 = REQUEST_BLADE_GENDER;
+    requestBladeData.unknown00 = REQUEST_BLADE_UNKNOWN_4;
     requestBladeData.unknown04 = gender;
     return true;
   }
@@ -928,7 +962,7 @@ bool GfDataMercenaries::getRequestCondition(GfRequestBladeData &requestBladeData
   u32 arts = questListAcc->getRequestBladeRequestArts(requestBlade);
   u32 artsLevel = questListAcc->getRequestBladeRequestArtsLevel(requestBlade);
   if (arts != 0) {
-    requestBladeData.unknown00 = REQUEST_BLADE_ARTS;
+    requestBladeData.unknown00 = REQUEST_BLADE_UNKNOWN_5;
     requestBladeData.unknown04 = arts;
     requestBladeData.unknown08 = artsLevel;
     return true;
@@ -940,7 +974,7 @@ bool GfDataMercenaries::getRequestCondition(GfRequestBladeData &requestBladeData
     return false;
   }
 
-  requestBladeData.unknown00 = REQUEST_BLADE_FIELD_SKILL;
+  requestBladeData.unknown00 = REQUEST_BLADE_UNKNOWN_6;
   requestBladeData.unknown04 = fieldSkill;
   requestBladeData.unknown08 = fieldSkillLevel;
   return true;
@@ -948,34 +982,34 @@ bool GfDataMercenaries::getRequestCondition(GfRequestBladeData &requestBladeData
 
 void GfDataMercenaries::setFullEnableOrderMissionForDebug() {
   for (u32 mission = getStartMissionID(); mission < getEndMissionID(); mission++) {
-    if (getMissionFlag(mission) == MISSION_STATE_NONE) {
-      setMissionFlag(mission, MISSION_STATE_ORDER_ENABLE);
+    if (getMissionFlag(mission) == MISSION_STATE_UNKNOWN_0) {
+      setMissionFlag(mission, MISSION_STATE_UNKNOWN_1);
     }
   }
 
-  setLevel(MERCENARIES_LEVEL_MAX);
+  setLevel(MERCENARIES_LEVEL_UNKNOWN_5);
 }
 
 u32 GfDataMercenaries::getBladeWithLeader(u32 mission) {
   QuestListAcc *questListAcc = QuestListAcc::get();
   QuestID quest = toQuestID(questListAcc->getFLD_MercenariesMissionQuestID(mission));
   u32 purpose = questListAcc->getListPurposeID(GfDataQuest::getListNextQuestA(quest));
-  for (u32 task = 0; task < MISSION_TASK_COUNT; task++) {
+  for (u32 task = 0; task < MISSION_UNKNOWN_4; task++) {
     u32 condition = questListAcc->getTaskTaskCondition(purpose, task);
     GfBdatCond *bdatCond = GfBdatCond::get();
-    for (u32 index = 0; index < CONDITION_LIST_COUNT; index++) {
-      if (bdatCond->getConditionListConditionType(condition, index) != CONDITION_TYPE_PARTY) {
+    for (u32 index = 0; index < CONDITION_UNKNOWN_8; index++) {
+      if (bdatCond->getConditionListConditionType(condition, index) != CONDITION_TYPE_UNKNOWN_6) {
         continue;
       }
 
       u32 partyCondition = bdatCond->getConditionListCondition(condition, index);
-      if (bdatCond->getConditionPTCategory(partyCondition) != CONDITION_PARTY_CATEGORY_BLADE) {
+      if (bdatCond->getConditionPTCategory(partyCondition) != CONDITION_UNKNOWN_4) {
         continue;
       }
 
-      for (u32 member = 0; member < CONDITION_PARTY_MEMBER_COUNT; member++) {
+      for (u32 member = 0; member < CONDITION_UNKNOWN_3; member++) {
         u32 blade = bdatCond->getConditionPTPCID(partyCondition, member);
-        if (blade - BLADE_ID_FIRST < BLADE_COUNT) {
+        if (blade - BLADE_ID_UNKNOWN_1001 < BLADE_UNKNOWN_422) {
           return blade;
         }
       }

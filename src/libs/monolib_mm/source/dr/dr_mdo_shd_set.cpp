@@ -407,6 +407,50 @@ void DrMdoShdSetPrePass::preshd_InstT_Al(int index, const MdsMatInfoHeader *head
   setOneTexShaderSet(header->unknown62, prePass->unknown08[0]);
 }
 
+void DrMdoShdSetPrePass::preshd_Inst_Bill_Al(int index, const MdsMatInfoHeader *header, int uniformIndex, int unused, DrShdDataList *list, PrePassType type) {
+  DrResShdPrePass *prePass = list->getPrePassObj(index);
+  if (unknown00->unknown17c != index) {
+    unknown00->unknown17c = index;
+    prePass->setupShader(0, type);
+    f32 alphaRef;
+    if (header->unknown1c == 0.0f) {
+      alphaRef = 0.5f;
+    } else {
+      alphaRef = header->unknown1c;
+    }
+    list->getAlphaTestUniform(alphaRef)->setUniformBlock(prePass->unknown08[8]);
+    if (!(unknown00->unknownf8 & 0x20000000)) {
+      setDitherShaderSet(prePass->unknown08[1], prePass->unknown08[9], 1);
+      unknown00->unknownf8 |= 0x40000000;
+    } else {
+      setDitherShaderSet(prePass->unknown08[1], prePass->unknown08[9], 2);
+      unknown00->unknownf8 &= ~0x40000000;
+    }
+    DrMan::get()->unknown580->unknown10->unknown7b0.setUniformBlock(prePass->unknown08[6]);
+  } else {
+    f32 alphaRef;
+    if (header->unknown1c == 0.0f) {
+      alphaRef = 0.5f;
+    } else {
+      alphaRef = header->unknown1c;
+    }
+    list->getAlphaTestUniform(alphaRef)->setUniformBlock(prePass->unknown08[8]);
+    bool isCurrent = (unknown00->unknownf8 & 0x40000000) != 0;
+    if (!(unknown00->unknownf8 & 0x20000000)) {
+      if (!isCurrent) {
+        setDitherShaderSet(prePass->unknown08[1], prePass->unknown08[9], 1);
+        unknown00->unknownf8 |= 0x40000000;
+      }
+    } else {
+      if (isCurrent) {
+        setDitherShaderSet(prePass->unknown08[1], prePass->unknown08[9], 2);
+        unknown00->unknownf8 &= ~0x40000000;
+      }
+    }
+  }
+  (*unknown08->unknown120_1->unknown08)[uniformIndex].setUniformBlock(prePass->unknown08[5]);
+}
+
 void DrMdoShdSetPrePass::preshd_Fw(int index, const MdsMatInfoHeader *header, int uniformIndex, int flagWaveIndex, DrShdDataList *list, PrePassType type) {
   DrResShdPrePass *prePass = list->getPrePassObj(index);
   setupMofFetchShader(header);

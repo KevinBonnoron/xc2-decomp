@@ -7,6 +7,11 @@
     }                                                                                                                                                                                                  \
   } while (0)
 
+// Inferred macro name; macros leave no trace in the binary.
+// The game evaluates the expression and discards the result where a debug build would check it. Use it only where the game
+// visibly computes a value it ignores right before the operation that value would guard.
+#define MM_VERIFY(expr) ((void)(expr))
+
 namespace mm {
 
 class MMStdBase {

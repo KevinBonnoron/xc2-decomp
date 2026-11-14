@@ -33,7 +33,7 @@ GfMenuZoneMapAdapter *GfMenuZoneMapAdapter::create(u32 handle, u32 type, u32 map
     if (plugin != nullptr) {
       // __LINE__ must be 195 as in the original source: it is the line argument of operator new.
 #line 195
-      GfMenuZoneMapAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuZoneMapAdapter(plugin, isUpdateAlways);
+      GfMenuZoneMapAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuZoneMapAdapter(plugin, isUpdateAlways);
       adapter->unknown30.bind(adapter, info.update);
       adapter->unknown58 = mapId;
       adapter->unknown5c = param;
@@ -74,7 +74,7 @@ GfMenuZoneMapAdapter *GfMenuZoneMapAdapter::createFromList(u32 handle, u32 type,
   }
   // __LINE__ must be 231 as in the original source: it is the line argument of operator new.
 #line 231
-  ListConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ListConverter(list, listIndex, isPageIndex);
+  ListConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ListConverter(list, listIndex, isPageIndex);
   return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 
@@ -97,13 +97,13 @@ void GfMenuZoneMapAdapter::update(const fw::UpdateInfo &info) {
     }
   }
 
-  if (unknown30.isValid() && (unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
+  if (unknown30.isValid() && (unknown20 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) != 0) {
     if (unknown58 != 0) {
       setDisp(unknown30());
     } else {
       setDisp(false);
     }
-    unknown20 &= ~FLAG_CHANGED;
+    unknown20 &= ~FLAG_UNKNOWN_0;
   }
 }
 

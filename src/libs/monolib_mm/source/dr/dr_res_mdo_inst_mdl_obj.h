@@ -5,6 +5,7 @@
 
 namespace ml {
 class DrMdlObj;
+struct DrResMdlInstMdlArg;
 
 class DrResMdoInstMdlObj {
 public:
@@ -12,6 +13,7 @@ public:
   ~DrResMdoInstMdlObj();
   void releaseWork();
   void releaseCall();
+  void update(DrResMdlInstMdlArg &arg);
 
   DrMdlObj *unknown00; // Inferred role: model object; original member name unknown.
   s32 unknown08;       // Inferred role: remaining display count; original member name unknown.

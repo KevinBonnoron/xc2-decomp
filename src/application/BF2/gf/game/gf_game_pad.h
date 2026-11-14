@@ -17,7 +17,7 @@ enum DWPAD {};
 
 class GfGamePad : public mm::mtl::PtrSingleton<GfGamePad>, public IGfEvent {
 public:
-  static const u32 INTERRUPT_PAD_MAX = 64;
+  static const u32 PAD_UNKNOWN_64 = 64; // Inferred role: interrupt pad max; original name unknown.
 
   GfGamePad(const GfSetupParam &param);
   void initialize(const GfSetupParam &param);
@@ -45,12 +45,12 @@ public:
   void eventInGameOpenQuestListMenu();
 
 private:
-  bool unknown10;                                           // Inferred role: initialized; original member name unknown.
-  bool unknown11;                                           // Inferred role: event pause; original member name unknown.
-  fw::PadRelay unknown18;                                   // Inferred role: pad relay; original member name unknown.
-  fw::PadData unknown50;                                    // Inferred role: pad data; original member name unknown.
-  mm::mtl::FixedVector<DWPAD, INTERRUPT_PAD_MAX> unknown98; // Inferred role: interrupt pads; original member name unknown.
-  u8 unknown1a0;                                            // Inferred role: emergency escape frame; original member name unknown.
+  bool unknown10;                                        // Inferred role: initialized; original member name unknown.
+  bool unknown11;                                        // Inferred role: event pause; original member name unknown.
+  fw::PadRelay unknown18;                                // Inferred role: pad relay; original member name unknown.
+  fw::PadData unknown50;                                 // Inferred role: pad data; original member name unknown.
+  mm::mtl::FixedVector<DWPAD, PAD_UNKNOWN_64> unknown98; // Inferred role: interrupt pads; original member name unknown.
+  u8 unknown1a0;                                         // Inferred role: emergency escape frame; original member name unknown.
 };
 
 static_assert(sizeof(GfGamePad) == 0x1a8, "");

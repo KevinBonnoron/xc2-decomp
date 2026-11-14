@@ -22,7 +22,7 @@ void GfMenuScriptManager::initialize(const GfSetupParam &) {
 
   // __LINE__ must be 234 as in the original file: it is the line argument of operator new.
 #line 234
-  unknown4118 = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ScriptListener();
+  unknown4118 = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ScriptListener();
   unknown4118->addRef();
   unknown08 = true;
 }
@@ -32,7 +32,7 @@ GfMenuScriptManager::~GfMenuScriptManager() {}
 void GfMenuScriptManager::build(const GfSetupParam &param) {
   // __LINE__ must be 38 as in the original file: it is the line argument of operator new.
 #line 38
-  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfMenuScriptManager(param);
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfMenuScriptManager(param);
 }
 
 void GfMenuScriptManager::destroy() {

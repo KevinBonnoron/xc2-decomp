@@ -22,17 +22,17 @@ class CharaDysUpdater;
 class CharaPlayActionAuto : public ICmd {
 public:
   enum {
-    FLAG_MESSAGE = 1 << 0,
-    FLAG_STANBY = 1 << 1,
-    FLAG_PLAY = 1 << 2,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: message flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: stanby flag; original name unknown.
+    FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: play flag; original name unknown.
   };
 
   enum {
-    TYPE_TALK = 1,
+    ACT_TALK_A = 1, // Name of row 1 of the BDAT table EVT_acttype (column name).
   };
 
   void render(const mm::Vec3 &position, f32 height) {
-    if ((unknown08 & FLAG_STANBY) == 0 || gf::GfObjUtil::getObj(unknown10) == nullptr) {
+    if ((unknown08 & FLAG_UNKNOWN_1) == 0 || gf::GfObjUtil::getObj(unknown10) == nullptr) {
       return;
     }
     mm::Vec3 head;

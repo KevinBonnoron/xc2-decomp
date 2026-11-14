@@ -29,17 +29,17 @@ class ColiManager : public ManagerObject, public mm::mtl::PtrSingleton<ColiManag
 public:
   class Impl {
   public:
-    static const u32 CONTACT_TABLE_MAX = 512;
-    static const u32 CONTACT_LIST_RESERVE = 8;
-    static const u32 HANDLE_ID_MAX = 0x7fffffff;
-    static const u32 HANDLE_FLAG = 0x80000000;
-    static const u32 CONTACT_ATTRIBUTE_MASK = ~(1u << 20);
+    static const u32 CONTACT_TABLE_UNKNOWN_512 = 512;                         // Inferred role: size of the contact table; original name unknown.
+    static const u32 CONTACT_LIST_RESERVE_UNKNOWN_8 = 8;                      // Inferred role: reserved size of a contact list; original name unknown.
+    static const u32 HANDLE_ID_UNKNOWN_2147483647 = 0x7fffffff;               // Inferred role: maximum handle id; original name unknown.
+    static const u32 HANDLE_FLAG_UNKNOWN_31 = 0x80000000;                     // Inferred role: flag bit of a handle; original name unknown.
+    static const u32 CONTACT_ATTRIBUTE_MASK_UNKNOWN_4293918719 = ~(1u << 20); // Inferred role: mask of the contact attributes, all bits but bit 20; original name unknown.
 
-    static const u32 CONTACT_FLAG_ENTER = 1 << 0;
-    static const u32 CONTACT_FLAG_CONTACT = 1 << 1;
-    static const u32 CONTACT_FLAG_LEAVE = 1 << 2;
-    static const u32 CONTACT_FLAG_CONTACTED = 1 << 3;
-    static const u32 CONTACT_FLAG_ENTERED = 1 << 4;
+    static const u32 CONTACT_FLAG_UNKNOWN_0 = 1 << 0; // Inferred role: enter; original name unknown.
+    static const u32 CONTACT_FLAG_UNKNOWN_1 = 1 << 1; // Inferred role: contact; original name unknown.
+    static const u32 CONTACT_FLAG_UNKNOWN_2 = 1 << 2; // Inferred role: leave; original name unknown.
+    static const u32 CONTACT_FLAG_UNKNOWN_3 = 1 << 3; // Inferred role: contacted; original name unknown.
+    static const u32 CONTACT_FLAG_UNKNOWN_4 = 1 << 4; // Inferred role: entered; original name unknown.
 
     struct ContactParam {
       ContactParam() : unknown38(0) {}
@@ -59,7 +59,7 @@ public:
       mm::mtl::List<ContactParam> *unknown08; // Inferred role: contacts; original member name unknown.
     };
 
-    typedef mm::mtl::FixedList<ListParam, CONTACT_TABLE_MAX> ContactTable;
+    typedef mm::mtl::FixedList<ListParam, CONTACT_TABLE_UNKNOWN_512> ContactTable;
 
     Impl(mm::mtl::IAllocator *allocator, u32 capacity);
     ~Impl() { finalize(); }

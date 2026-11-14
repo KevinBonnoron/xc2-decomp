@@ -4,7 +4,7 @@
 
 namespace gf {
 
-constexpr u32 SIZE_ALLOC_BLOCK_SIZE = 0x2000;
+constexpr u32 SIZE_UNKNOWN_8192 = 0x2000; // Inferred role: size alloc block size; original name unknown.
 
 GfSlotAllocator::GfSlotAllocator() : unknown08(nullptr), unknown10(nullptr), unknown2ec(true) {}
 
@@ -27,7 +27,7 @@ void GfSlotAllocator::setupSizeAlloc(const char *name, mm::mtl::IAllocator *allo
   this->unknown2ec = useDebugMemory;
   unknown10 = unknown08->allocate(size, alignment);
   if (unknown10 != nullptr) {
-    unknown18.setup(getAllocator(ALLOCATOR_DEFAULT), SIZE_ALLOC_BLOCK_SIZE, unknown10, size);
+    unknown18.setup(getAllocator(ALLOCATOR_UNKNOWN_0), SIZE_UNKNOWN_8192, unknown10, size);
   }
 }
 
@@ -39,7 +39,7 @@ void *GfSlotAllocator::allocate(size_t size, size_t alignment) {
   void *pointer = unknown18.alloc(size, false);
   if (pointer == nullptr) {
     if (unknown2ec) {
-      return getAllocator(ALLOCATOR_DEBUG)->allocate(size, alignment);
+      return getAllocator(ALLOCATOR_UNKNOWN_10)->allocate(size, alignment);
     }
     pointer = nullptr;
   }
@@ -48,7 +48,7 @@ void *GfSlotAllocator::allocate(size_t size, size_t alignment) {
 
 void GfSlotAllocator::deallocate(void *pointer) {
   if (!unknown18.free(pointer) && unknown2ec) {
-    getAllocator(ALLOCATOR_DEBUG)->deallocate(pointer);
+    getAllocator(ALLOCATOR_UNKNOWN_10)->deallocate(pointer);
   }
 }
 

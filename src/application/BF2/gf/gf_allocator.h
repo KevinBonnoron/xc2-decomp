@@ -31,18 +31,19 @@ static_assert(offsetof(GfAllocator, unknown0c) == 0x0c, "");
 static_assert(sizeof(GfAllocator) == 0x50, "");
 
 enum ALLOCATOR {
-  ALLOCATOR_DEFAULT = 0,
-  ALLOCATOR_SYSTEM = 1,
-  ALLOCATOR_SCRIPT = 2,
-  ALLOCATOR_ASSET = 3,
-  ALLOCATOR_BDAT = 4,
-  ALLOCATOR_UNKNOWN05 = 5, // Inferred role: font resources (GfMemManager::s_hMemFontRsc); original name unknown.
-  ALLOCATOR_UNKNOWN06 = 6, // Inferred role: menu (GfMemManager::s_hMemMenu); original name unknown.
-  ALLOCATOR_ANIMATION = 7,
-  ALLOCATOR_UNKNOWN08 = 8, // Inferred role: gimmick sets (GfFieldGimmick::createGmkSet); original name unknown.
-  ALLOCATOR_UNKNOWN09 = 9, // Inferred role: gimmick manager (GfFieldGimmick::initialize); original name unknown.
-  ALLOCATOR_DEBUG = 10,
-  ALLOCATOR_UNKNOWN0B = 11, // Inferred role: slot allocator; original name unknown.
+  ALLOCATOR_UNKNOWN_0 = 0,   // Inferred role: allocator default; original name unknown.
+  ALLOCATOR_UNKNOWN_1 = 1,   // Inferred role: allocator system; original name unknown.
+  ALLOCATOR_UNKNOWN_2 = 2,   // Inferred role: allocator script; original name unknown.
+  ALLOCATOR_UNKNOWN_3 = 3,   // Inferred role: allocator asset; original name unknown.
+  ALLOCATOR_UNKNOWN_4 = 4,   // Inferred role: allocator bdat; original name unknown.
+  ALLOCATOR_UNKNOWN_5 = 5,   // Inferred role: font resources (GfMemManager::s_hMemFontRsc); original name unknown.
+  ALLOCATOR_UNKNOWN_6 = 6,   // Inferred role: menu (GfMemManager::s_hMemMenu); original name unknown.
+  ALLOCATOR_UNKNOWN_7 = 7,   // Inferred role: allocator animation; original name unknown.
+  ALLOCATOR_UNKNOWN_8 = 8,   // Inferred role: gimmick sets (GfFieldGimmick::createGmkSet); original name unknown.
+  ALLOCATOR_UNKNOWN_9 = 9,   // Inferred role: gimmick manager (GfFieldGimmick::initialize); original name unknown.
+  ALLOCATOR_UNKNOWN_10 = 10, // Inferred role: allocator debug; original name unknown.
+  ALLOCATOR_UNKNOWN_11 = 11, // Inferred role: slot allocator; original name unknown.
+  // ALLOCATOR_MAX is the number of enumerators above.
   ALLOCATOR_MAX = 12,
 };
 

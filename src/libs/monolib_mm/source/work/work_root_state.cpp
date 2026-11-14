@@ -3,17 +3,23 @@
 
 #include "ml/critical_section.h"
 #include "ml/dev_graph.h"
+#include "ml/device.h"
+#include "ml/lib_main.h"
 #include "ml/reslist.h"
 #include "ml/win_view_root.h"
+#include "ml/work_control.h"
 #include "ml/work_cpu.h"
 #include "ml/work_obj.h"
 #include "ml/work_root.h"
 #include "ml/work_system.h"
+#include "ml/work_util.h"
 #include "mm_mtl/algorithm.h"
 #include "mm_mtl/fixed_list.h"
 #include "mm_mtl/fixstr.h"
 #include "mtl/alloc_handle.h"
 #include "mtl/mem_manager.h"
+#include "nn/os.h"
+#include "nn/time_span.h"
 #include "types.h"
 
 namespace ml {
@@ -22,6 +28,7 @@ namespace _wrootst {
 
 class WorkRoot : public WorkObj {
 public:
+  WorkRoot(const char *name, WorkObj *parent);
   void procParent();
   ~WorkRoot() override;
   bool wkStandbyLogout() override;
@@ -45,7 +52,7 @@ WorkObj **s_apBitWID;
 s32 s_nWidCount;
 CriticalSectionNC s_lockEntry;
 s32 s_nEntry;
-unknown001 s_aEntry[100];
+unknown001 s_aEntry[384]; // The symbol of the game is 0x1200 bytes, 384 entries of 12 bytes.
 mm::mtl::FixedList<WorkObj *, 32> s_frameEnd;
 bool s_bThreadRenderReq;
 bool s_bThreadRender;
@@ -70,6 +77,103 @@ void WorkRootState::standbyWork() {
   entryWork();
   _wrootst::s_pWorkRoot->procParent();
   standbyWork(_wrootst::s_pWorkRoot);
+}
+
+void WorkRootState::standbyWork(WorkObj *work) {
+  work->wkStandby();
+  for (reslist<WorkObj *>::Node *node = work->wkGetChild()->begin(); node != work->wkGetChild()->end(); node = node->getNext()) {
+    standbyWork(node->value);
+  }
+  reslist<WorkObj *>::iterator it = work->wkGetChild()->begin();
+  while (it != work->wkGetChild()->end()) {
+    reslist<WorkObj *>::iterator next = it;
+    ++next;
+    if ((*it)->unknown4c == WorkObj::WKSTATE_UNKNOWN_5) {
+      work->wkRemoveChild(*it);
+      if (*it != nullptr) {
+        delete *it;
+        *it = nullptr;
+      }
+    }
+    it = next;
+  }
+}
+
+void WorkRootState::initialize() {
+  _wrootst::s_bThreadRender = _wrootst::s_bThreadRenderReq;
+  {
+    CS cs(_wrootst::getCriticalSection());
+    _wrootst::s_aBitWID = static_cast<u32 *>(mtl::MemManager::allocate(WorkRootMem::getMemState(), 0x100, 4, false, "no name", 0));
+    _wrootst::s_apBitWID = static_cast<WorkObj **>(mtl::MemManager::allocate(WorkRootMem::getMemState(), 0x4000, 4, false, "no name", 0));
+    for (int i = 0; i < 0x40; i++) {
+      _wrootst::s_aBitWID[i] = 0;
+    }
+    for (int i = 0; i < 0x800; i++) {
+      _wrootst::s_apBitWID[i] = nullptr;
+    }
+  }
+  WorkUtil::createWork<_wrootst::WorkRoot>("WorkRoot", nullptr, false);
+  entryWork();
+  WorkCpu::create(_wrootst::s_pWorkRoot);
+  WorkControl::create(_wrootst::s_pWorkRoot);
+  Device::create();
+  LibMain::create();
+  WorkSystem::create();
+  do {
+    do {
+      standbyWork();
+    } while (Device::get() == nullptr);
+  } while (!Device::isColdStartReady());
+}
+
+void WorkRootState::finalize() {
+  if (_wrootst::s_pWorkRoot != nullptr) {
+    delete _wrootst::s_pWorkRoot;
+    _wrootst::s_pWorkRoot = nullptr;
+  }
+  CS cs(_wrootst::getCriticalSection());
+  if (_wrootst::s_aBitWID != nullptr) {
+    mtl::MemManager::deallocate(_wrootst::s_aBitWID, 0, false);
+    _wrootst::s_aBitWID = nullptr;
+  }
+  if (_wrootst::s_apBitWID != nullptr) {
+    mtl::MemManager::deallocate(_wrootst::s_apBitWID, 0, false);
+    _wrootst::s_apBitWID = nullptr;
+  }
+}
+
+u32 WorkRootState::allocWID(WorkObj *work) {
+  CS cs(_wrootst::getCriticalSection());
+  u32 wid = 0xffffffff;
+  for (u32 i = 0; i < 0x40; i++) {
+    u32 bits = _wrootst::s_aBitWID[i];
+    if (bits != 0xffffffff) {
+      u32 mask = 1;
+      for (u32 j = 0; j < 0x20; j++, mask <<= 1) {
+        if ((bits & mask) == 0) {
+          wid = j + i * 0x20;
+          _wrootst::s_aBitWID[i] |= mask;
+          _wrootst::s_apBitWID[wid] = work;
+          wid |= _wrootst::s_nWidCount++ << 20;
+          break;
+        }
+      }
+      break;
+    }
+  }
+  return wid;
+}
+
+WorkObj *WorkRootState::getWork(u32 wid) {
+  CS cs(_wrootst::getCriticalSection());
+  if (wid == 0xffffffff) {
+    return nullptr;
+  }
+  WorkObj *work = _wrootst::s_apBitWID[wid & 0xffff];
+  if (work != nullptr && work->unknown50 != wid) {
+    return nullptr;
+  }
+  return work;
 }
 
 bool WorkRootState::isUsedWID(u32 wid) {
@@ -104,7 +208,7 @@ WorkObj *WorkRootState::getWork(WorkObj *parent, u32 wid) {
     }
     for (reslist<WorkObj *>::Node *node = parent->wkGetChild()->begin(); node != parent->wkGetChild()->end(); node = node->getNext()) {
       WorkObj *work = getWork(node->value, wid);
-      if (work != nullptr && work->unknown4c != WorkObj::WKSTATE_SHUTDOWN) {
+      if (work != nullptr && work->unknown4c != WorkObj::WKSTATE_UNKNOWN_5) {
         return work;
       }
     }
@@ -120,7 +224,7 @@ WorkObj *WorkRootState::getWork(WorkObj *parent, const char *name) {
     }
     for (reslist<WorkObj *>::Node *node = parent->wkGetChild()->begin(); node != parent->wkGetChild()->end(); node = node->getNext()) {
       WorkObj *work = getWork(node->value, name);
-      if (work != nullptr && work->unknown4c != WorkObj::WKSTATE_SHUTDOWN) {
+      if (work != nullptr && work->unknown4c != WorkObj::WKSTATE_UNKNOWN_5) {
         return work;
       }
     }
@@ -136,7 +240,7 @@ const WorkObj *WorkRootState::getWork(const WorkObj *parent, const char *name) {
     }
     for (reslist<WorkObj *>::Node *node = parent->wkGetChild()->begin(); node != parent->wkGetChild()->end(); node = node->getNext()) {
       WorkObj *work = getWork(node->value, name);
-      if (work != nullptr && work->unknown4c != WorkObj::WKSTATE_SHUTDOWN) {
+      if (work != nullptr && work->unknown4c != WorkObj::WKSTATE_UNKNOWN_5) {
         return work;
       }
     }
@@ -152,7 +256,7 @@ WorkObj *WorkRootState::getActiveWork(WorkObj *parent, const char *name) {
     }
     for (reslist<WorkObj *>::Node *node = parent->wkGetChild()->begin(); node != parent->wkGetChild()->end(); node = node->getNext()) {
       WorkObj *work = getActiveWork(node->value, name);
-      if (work != nullptr && work->unknown4c != WorkObj::WKSTATE_SHUTDOWN && !parent->wkIsShutdown()) {
+      if (work != nullptr && work->unknown4c != WorkObj::WKSTATE_UNKNOWN_5 && !parent->wkIsShutdown()) {
         return work;
       }
     }
@@ -262,6 +366,50 @@ void WorkRootState::tailWork(WorkObj *work) {
 void WorkRootState::updateWork() { updateWork(_wrootst::s_pWorkRoot); }
 
 void WorkRootState::tailWork() { tailWork(_wrootst::s_pWorkRoot); }
+
+bool WorkRootState::runSingle() {
+  while (WorkRoot::isErrorStop()) {
+    WorkCpu::resumeThread();
+    WorkCpu::backgroundProcess();
+    nn::os::SleepThread(nn::TimeSpan::FromNanoSeconds(1000000));
+  }
+  WorkCpu::beginFrame();
+  standbyWork();
+  if (_wrootst::s_bThreadRender) {
+    WorkCpu::beginRender();
+  }
+  WorkCpu::beginUpdate();
+  updateWork(_wrootst::s_pWorkRoot);
+  WorkCpu::endUpdate();
+  if (!_wrootst::s_bThreadRender) {
+    WorkCpu::beginRender();
+  }
+  WorkCpu::endRender();
+  tailWork(_wrootst::s_pWorkRoot);
+  WorkCpu::endFrame();
+  for (mm::mtl::FixedList<WorkObj *, 32>::iterator it = _wrootst::s_frameEnd.begin(); it != _wrootst::s_frameEnd.end(); ++it) {
+    (*it)->wkFrameEnd();
+  }
+  _wrootst::s_bThreadRender = _wrootst::s_bThreadRenderReq;
+  return _wrootst::s_pWorkRoot->unknown60.size() != 0;
+}
+
+void _wrootst::WorkRoot::procParent() {
+  while (unknown1a8.size() != 0) {
+    WorkObj *work = unknown1a8.begin()->value;
+    WorkObj *parent = unknown1e8.begin()->value;
+    if (!work->wkIsWaitException()) {
+      if (work->wkIsActive() && !parent->wkIsWaitException() && parent->wkIsActive()) {
+        unknown1a8.erase(unknown1a8.begin());
+        unknown1e8.erase(unknown1e8.begin());
+        work->unknown58->wkRemoveChild(work);
+        parent->wkEntryChild(work, false);
+      }
+    }
+  }
+  unknown1a8.clear();
+  unknown1e8.clear();
+}
 
 bool _wrootst::WorkRoot::wkStandbyLogout() {
   if (unknown60.size() != 0) {

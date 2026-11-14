@@ -1,5 +1,6 @@
 #pragma once
 #include "gf/event/gf_event.h"
+#include "gf/field/gf_real_time.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
@@ -12,17 +13,17 @@ namespace gf {
 
 struct GfSetupParam;
 
-constexpr u32 SECONDS_PER_MINUTE = 60;
+constexpr u32 SECONDS_UNKNOWN_60 = 60; // Inferred role: seconds per minute; original name unknown.
 
 enum TIME_RANGE {
-  TIME_RANGE_MORNING,
-  TIME_RANGE_NOONTIME,
-  TIME_RANGE_AFTERNOON,
-  TIME_RANGE_EVENING,
-  TIME_RANGE_LATE_NIGHT,
-  TIME_RANGE_DAWN,
-  TIME_RANGE_DAYTIME,
-  TIME_RANGE_NIGHTTIME,
+  TIME_RANGE_UNKNOWN_0, // Inferred role: time range morning; original name unknown.
+  TIME_RANGE_UNKNOWN_1, // Inferred role: time range noontime; original name unknown.
+  TIME_RANGE_UNKNOWN_2, // Inferred role: time range afternoon; original name unknown.
+  TIME_RANGE_UNKNOWN_3, // Inferred role: time range evening; original name unknown.
+  TIME_RANGE_UNKNOWN_4, // Inferred role: time range late night; original name unknown.
+  TIME_RANGE_UNKNOWN_5, // Inferred role: time range dawn; original name unknown.
+  TIME_RANGE_UNKNOWN_6, // Inferred role: time range daytime; original name unknown.
+  TIME_RANGE_UNKNOWN_7, // Inferred role: time range nighttime; original name unknown.
 };
 
 struct ElapseTime {
@@ -47,20 +48,6 @@ struct GameTime {
 
 static_assert(sizeof(GameTime) == 4, "");
 
-struct RealTime {
-  u64 : 6;
-  u64 unknown00_6 : 10; // Inferred role: millisecond; original member name unknown.
-  u64 unknown02_0 : 6;  // Inferred role: second; original member name unknown.
-  u64 unknown02_6 : 6;  // Inferred role: minute; original member name unknown.
-  u64 unknown03_4 : 5;  // Inferred role: hour; original member name unknown.
-  u64 unknown04_1 : 5;  // Inferred role: day; original member name unknown.
-  u64 unknown04_6 : 9;  // Inferred role: day of year; original member name unknown.
-  u64 unknown05_7 : 4;  // Inferred role: month; original member name unknown.
-  u64 unknown06_3 : 13; // Inferred role: year; original member name unknown.
-};
-
-static_assert(sizeof(RealTime) == 8, "");
-
 // Inferred role: time range data; original type name unknown.
 struct unknown131 {
   u16 unknown00; // Inferred role: start hour; original member name unknown.
@@ -74,8 +61,8 @@ static_assert(sizeof(unknown131) == 8, "");
 class GfFieldTime : public mm::mtl::PtrSingleton<GfFieldTime> {
 public:
   enum {
-    TIME_STOP_BIT_GAME = 1 << 0,
-    TIME_STOP_BIT_FIELD_SCRIPT = 1 << 1,
+    TIME_STOP_BIT_UNKNOWN_0 = 1 << 0, // Inferred role: time stop bit game; original name unknown.
+    TIME_STOP_BIT_UNKNOWN_1 = 1 << 1, // Inferred role: time stop bit field script; original name unknown.
   };
 
   GfFieldTime(const GfSetupParam &param);

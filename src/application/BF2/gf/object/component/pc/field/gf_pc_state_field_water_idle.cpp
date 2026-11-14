@@ -26,9 +26,9 @@ void StateFieldWaterIdle::update(GfComBehaviorPc *behavior, const fw::UpdateInfo
   if (property->existInputXY()) {
     GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
     if (StateUtilField::isInputInverseDir(*property)) {
-      reqState(STATE_ID_FIELD_WATER_IDLE_TURN);
+      reqState(STATE_ID_UNKNOWN_21);
     } else if (StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_SWIM_00)) {
-      reqState(STATE_ID_FIELD_WATER_SWIM);
+      reqState(STATE_ID_UNKNOWN_22);
     }
   }
 }

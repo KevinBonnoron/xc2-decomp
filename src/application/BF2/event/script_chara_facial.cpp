@@ -14,7 +14,7 @@ namespace event {
 
 void ScriptCharaFacial::doit(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CHARA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_2) {
     return;
   }
   ObjectChara *chara = static_cast<ObjectChara *>(object);
@@ -34,7 +34,7 @@ void ScriptCharaFacial::doit(const Param &param) {
 
 void ScriptCharaFacial::undo(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CHARA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_2) {
     return;
   }
   static_cast<ObjectChara *>(object)->getCharaObj()->playFacial(unknown08, 30.0f, -1, -1.0f, -1, -1.0f, -1, -1.0f, -1.0f, -1.0f);

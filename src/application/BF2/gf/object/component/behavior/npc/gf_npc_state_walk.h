@@ -1,10 +1,14 @@
 #pragma once
 #include <stddef.h>
 
-#include "ai/ai_state.h"
 #include "gf/field/gf_field_exec_cmd.h"
 #include "gf/gf_state.h"
+#include "gf/object/component/enemy/gf_enemy_state_battle.h"
 #include "types.h"
+
+namespace ai {
+class State;
+} // namespace ai
 
 namespace fw {
 struct UpdateInfo;
@@ -17,7 +21,7 @@ class GfComBehaviorNpc;
 
 namespace npc {
 
-class StateWalk : public ai::State {
+class StateWalk : public GfStateBase {
   GF_STATE_CLASS(StateWalk, GfComBehaviorNpc)
   StateWalk() : unknown18(), unknown50(nullptr), unknown60(0.0f) {}
   void updateGoalPos(GfComBehaviorNpc &behavior);

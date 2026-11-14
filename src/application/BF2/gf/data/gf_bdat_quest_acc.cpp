@@ -1,6 +1,9 @@
+#include <string.h>
+
 #include "bdat.h"
 #include "gf/data/gf_bdat_quest.h"
 #include "gf/data/gf_bdat_wrapper.h"
+#include "gf/data/gf_data_quest.h"
 #include "gf/data/gf_data_util.h"
 #include "gf/game/quest/gf_quest_id.h"
 #include "gf/game/quest/gf_quest_task_param.h"
@@ -9,7 +12,7 @@
 
 namespace gf {
 
-constexpr u32 COLLECT_FLAG_USE_OFFSET = 350;
+constexpr u32 COLLECT_FLAG_UNKNOWN_350 = 350; // Inferred role: collect flag use offset; original name unknown.
 
 namespace _gfbqa {
 
@@ -2259,8 +2262,8 @@ CBdatWrapper *QuestListAcc::getFp(QuestID &quest) const {
 
   QIDXINFO info(quest);
   getQuestInfo(info);
-  if (info.unknown08 == QTYPE_NONE) {
-    return unknown00[QTYPE_BLADE - 1].fp;
+  if (info.unknown08 == QTYPE_UNKNOWN_0) {
+    return unknown00[QTYPE_UNKNOWN_2 - 1].fp;
   }
 
   quest.unknown00 = info.unknown10.unknown00;
@@ -2513,8 +2516,8 @@ u32 QuestListAcc::getTaskPreCondition(u32 purpose) const {
 CBdatWrapper *QuestListAcc::getTaskFp(u32 purpose) const {
   QIDXINFO info(purpose);
   getQuestInfo(info);
-  if (info.unknown08 == QTYPE_NONE) {
-    return unknown27648[QTYPE_BLADE - 1].fp;
+  if (info.unknown08 == QTYPE_UNKNOWN_0) {
+    return unknown27648[QTYPE_UNKNOWN_2 - 1].fp;
   }
 
   return unknown27648[info.unknown08 - 1].getFp(info.unknown00);
@@ -3056,7 +3059,9 @@ u32 QuestListAcc::getHintsMainChar(u32 id, u32 index) const {
 }
 
 u32 QuestListAcc::getHintsFSkillID(u32 id, u32 index) const {
-  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbqa::getHintsFSkillID1, _gfbqa::getHintsFSkillID2, _gfbqa::getHintsFSkillID3};
+  // The game's table (0x71011879b8) holds the first two getters only: the table of getRewardItemID starts at 0x71011879c8,
+  // right behind it (getHintsFSkillID3 is reached through QuestListAcc::getHintsFSkillID3).
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbqa::getHintsFSkillID1, _gfbqa::getHintsFSkillID2};
   CBdatWrapper *fp = GfBdatQuest::get()->unknownc8;
   return getters[index](*fp, id);
 }
@@ -3326,7 +3331,7 @@ bool QuestListAcc::getTaskInfoByIndex(CBdatWrapper *&fp, u16 &purpose, u32 index
 void QuestListAcc::getQuestInfo(QIDXINFO &info) const {
   if (info.unknown0c == 0) {
     if (info.unknown10.empty()) {
-      info.unknown08 = QTYPE_NONE;
+      info.unknown08 = QTYPE_UNKNOWN_0;
       info.unknown00 = 0;
       info.unknown04 = 0;
       return;
@@ -3346,27 +3351,27 @@ void QuestListAcc::getQuestInfo(QIDXINFO &info) const {
 
 u32 QuestListAcc::getQuestListCount(QTYPE type) const {
   switch (type) {
-  case QTYPE_NONE:
+  case QTYPE_UNKNOWN_0:
     return unknown17c40.unknownfa00;
-  case QTYPE_MAIN:
-  case QTYPE_BLADE:
-  case QTYPE_NORMAL:
-  case QTYPE_UNUSED:
-  case QTYPE_MERCENARIES:
-  case QTYPE_ACHIEVEMENT:
+  case QTYPE_UNKNOWN_1:
+  case QTYPE_UNKNOWN_2:
+  case QTYPE_UNKNOWN_3:
+  case QTYPE_UNKNOWN_4:
+  case QTYPE_UNKNOWN_5:
+  case QTYPE_UNKNOWN_6:
     return unknown00[type - 1].ids.size();
   }
 
   return 0;
 }
 
-const QuestListCategory *QuestListAcc::getCategory(QTYPE type) const { return type != QTYPE_NONE ? &unknown00[type - 1] : nullptr; }
+const QuestListCategory *QuestListAcc::getCategory(QTYPE type) const { return type != QTYPE_UNKNOWN_0 ? &unknown00[type - 1] : nullptr; }
 
-const QuestTaskCategory *QuestListAcc::getTaskCategory(QTYPE type) const { return type != QTYPE_NONE ? &unknown27648[type - 1] : nullptr; }
+const QuestTaskCategory *QuestListAcc::getTaskCategory(QTYPE type) const { return type != QTYPE_UNKNOWN_0 ? &unknown27648[type - 1] : nullptr; }
 
 qlist_iterator QuestListAcc::begin(QTYPE type) const {
   qlist_iterator it(type);
-  if (type == QTYPE_NONE || (type >= QTYPE_MAIN && type <= QTYPE_ACHIEVEMENT && unknown00[type - 1].ids.size() != 0)) {
+  if (type == QTYPE_UNKNOWN_0 || (type >= QTYPE_UNKNOWN_1 && type <= QTYPE_UNKNOWN_6 && unknown00[type - 1].ids.size() != 0)) {
     it.unknown0c = 0;
   }
 
@@ -3381,7 +3386,7 @@ qlist_iterator QuestListAcc::end(QTYPE type) const {
 
 tlist_iterator QuestListAcc::beginTask(QTYPE type) const {
   tlist_iterator it(type);
-  if (type == QTYPE_NONE || (type >= QTYPE_MAIN && type <= QTYPE_ACHIEVEMENT && unknown27648[type - 1].ids.size() != 0)) {
+  if (type == QTYPE_UNKNOWN_0 || (type >= QTYPE_UNKNOWN_1 && type <= QTYPE_UNKNOWN_6 && unknown27648[type - 1].ids.size() != 0)) {
     it.unknown0c = 0;
   }
 
@@ -3397,7 +3402,7 @@ tlist_iterator QuestListAcc::endTask(QTYPE type) const {
 qlist_iterator qlist_iterator::operator++() {
   if (unknown0c >= 0) {
     bool isValid;
-    if (unknown08 != QTYPE_NONE) {
+    if (unknown08 != QTYPE_UNKNOWN_0) {
       isValid = static_cast<s32>(unknown10->ids.size()) > unknown0c + 1;
     } else {
       CBdatWrapper *fp;
@@ -3415,6 +3420,26 @@ qlist_iterator qlist_iterator::operator++() {
   return *this;
 }
 
+void QuestListAcc::makeQuestTaskInfo() {
+  memset(unknown4310c, 0, sizeof(unknown4310c));
+  unknown62510.clear();
+  u16 count = 0;
+  for (qlist_iterator it = begin(QTYPE_UNKNOWN_0); it != end(QTYPE_UNKNOWN_0); ++it) {
+    u32 purpose = GfDataQuest::getListPurposeID(it.getQuestID());
+    if (purpose == 0) {
+      continue;
+    }
+    for (u32 task = 0; task < QUEST_UNKNOWN_4; task++) {
+      u32 type = getTaskTaskType(purpose, task);
+      if (type == TASK_TYPE_UNKNOWN_3 || type == TASK_TYPE_UNKNOWN_4) {
+        count++;
+        unknown62510.push_back(count);
+        unknown4310c[it.getQuestID().unknown00 * QUEST_UNKNOWN_4 + task] = unknown62510.size();
+      }
+    }
+  }
+}
+
 u32 QuestListAcc::getCollectUseFlagIndex(const QuestTaskParam &param) const {
   if (GfDataUtil::isCollectFlagNewVersion()) {
     return getCollectUseFlagIndexNewVersion(param);
@@ -3425,17 +3450,17 @@ u32 QuestListAcc::getCollectUseFlagIndex(const QuestTaskParam &param) const {
 
 u32 QuestListAcc::getCollectUseFlagIndexNewVersion(const QuestTaskParam &param) const {
   switch (param.unknown10) {
-  case TASK_TYPE_COLLECT:
+  case TASK_TYPE_UNKNOWN_3:
     return param.unknown14;
-  case TASK_TYPE_USE:
-    return param.unknown14 + COLLECT_FLAG_USE_OFFSET;
+  case TASK_TYPE_UNKNOWN_4:
+    return param.unknown14 + COLLECT_FLAG_UNKNOWN_350;
   }
 
   return 0;
 }
 
 u32 QuestListAcc::getCollectUseFlagIndexOldVersion(const QuestTaskParam &param) const {
-  u16 index = unknown4310c[param.unknown04.unknown00 * QUEST_TASK_COUNT + param.unknown0c];
+  u16 index = unknown4310c[param.unknown04.unknown00 * QUEST_UNKNOWN_4 + param.unknown0c];
   if (index == 0) {
     return 0;
   }
@@ -3664,19 +3689,19 @@ u32 QuestListAcc::getTaskFlag(u32 purpose, u32 taskIndex) const {
   getQuestInfo(info);
   u32 base;
   switch (info.unknown08) {
-  case QTYPE_MAIN:
+  case QTYPE_UNKNOWN_1:
     base = 0xfa2;
     break;
-  case QTYPE_BLADE:
+  case QTYPE_UNKNOWN_2:
     base = 0x9bc4;
     break;
-  case QTYPE_NORMAL:
+  case QTYPE_UNKNOWN_3:
     base = 0x16ac;
     break;
-  case QTYPE_MERCENARIES:
+  case QTYPE_UNKNOWN_5:
     base = 0x9fad;
     break;
-  case QTYPE_ACHIEVEMENT:
+  case QTYPE_UNKNOWN_6:
     base = 0x11fb;
     break;
   default:
@@ -3684,7 +3709,7 @@ u32 QuestListAcc::getTaskFlag(u32 purpose, u32 taskIndex) const {
     break;
   }
 
-  u32 offset = (info.unknown00 - info.unknown04) * QUEST_TASK_COUNT;
+  u32 offset = (info.unknown00 - info.unknown04) * QUEST_UNKNOWN_4;
   return base + taskIndex + offset;
 }
 
@@ -3699,7 +3724,7 @@ tlist_iterator::tlist_iterator(QTYPE type) : unknown08(type), unknown0c(-1) {
 }
 
 QuestID qlist_iterator::getQuestID() const {
-  if (unknown08 == QTYPE_NONE) {
+  if (unknown08 == QTYPE_UNKNOWN_0) {
     return unknown00->getQuestID(unknown0c);
   }
 
@@ -3707,7 +3732,7 @@ QuestID qlist_iterator::getQuestID() const {
 }
 
 u16 tlist_iterator::getPurposeID() const {
-  if (unknown08 == QTYPE_NONE) {
+  if (unknown08 == QTYPE_UNKNOWN_0) {
     CBdatWrapper *fp;
     u16 purpose;
     unknown00->getTaskInfoByIndex(fp, purpose, unknown0c);
@@ -3720,7 +3745,7 @@ u16 tlist_iterator::getPurposeID() const {
 tlist_iterator tlist_iterator::operator++() {
   if (unknown0c >= 0) {
     bool isValid;
-    if (unknown08 != QTYPE_NONE) {
+    if (unknown08 != QTYPE_UNKNOWN_0) {
       isValid = static_cast<s32>(unknown10->ids.size()) > unknown0c + 1;
     } else {
       CBdatWrapper *fp;

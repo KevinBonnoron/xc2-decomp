@@ -28,10 +28,10 @@ public:
     const char *unknown08; // Inferred role: name; original member name unknown.
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_LANDMARK;
+  static const GmkType GMK_TYPE = GMK_TYPE_LANDMARK; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkLandmark();
-  ~GmkLandmark() override;
+  ~GmkLandmark() override { dispose(); }
   GmkType getGmkType() const override;
   int getGameFlagId() const;
   bool isFound() const;
@@ -40,7 +40,7 @@ public:
   void update(f32 deltaTime) override;
   void debugDraw() const override;
   void onEnterPhantom(const IGmkPhantomEventListener::OnEnterInfo &info) override;
-  void onLeavePhantom(const IGmkPhantomEventListener::OnLeaveInfo &info) override { endEvent(); }
+  void onLeavePhantom(const IGmkPhantomEventListener::OnLeaveInfo &info) override;
   void createGmkPhantom();
   void disposeGmkPhantom();
   void beginEvent();

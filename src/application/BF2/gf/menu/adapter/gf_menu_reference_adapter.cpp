@@ -22,7 +22,7 @@ GfMenuReferenceAdapter *GfMenuReferenceAdapter::create(u32 handle, mm::mtl::Intr
     if (plugin != nullptr) {
       // __LINE__ must be 52 as in the original source: it is the line argument of operator new.
 #line 52
-      GfMenuReferenceAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuReferenceAdapter(plugin, isUpdateAlways);
+      GfMenuReferenceAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuReferenceAdapter(plugin, isUpdateAlways);
       if (adapter != nullptr) {
         adapter->unknown30 = reference;
         plugin->release();
@@ -35,7 +35,7 @@ GfMenuReferenceAdapter *GfMenuReferenceAdapter::create(u32 handle, mm::mtl::Intr
 }
 
 void GfMenuReferenceAdapter::update(const fw::UpdateInfo &info) {
-  bool isChanged = (unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0;
+  bool isChanged = (unknown20 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) != 0;
   if (!isChanged) {
     isChanged = unknown38 != unknown30->unknown0c;
     isChanged |= unknown3c != unknown30->unknown14;
@@ -50,7 +50,7 @@ void GfMenuReferenceAdapter::update(const fw::UpdateInfo &info) {
     unknown3c = unknown30->unknown14;
     unknown40 = unknown30->unknown10;
     setDisp(number >= unknown30->unknown10 && number <= unknown30->unknown14);
-    unknown20 &= ~FLAG_CHANGED;
+    unknown20 &= ~FLAG_UNKNOWN_0;
   }
 }
 

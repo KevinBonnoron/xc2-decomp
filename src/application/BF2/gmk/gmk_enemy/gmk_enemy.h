@@ -27,6 +27,8 @@ class GmkSquad;
 // Layout evidence: gmk::GmkEnemyInsts::reqForcePopGobInst (0x71005efab8) copies these 8 bytes to offset 0x144 of the
 // instances and GfSmnEnemyManager fills them; GmkEnemyInsts::createGobInsts copies the first byte to PopInfo::CreateInfo::unknown0c.
 struct ForcePopEnemyInfo {
+  ForcePopEnemyInfo() : unknown00(0), unknown04(0) {}
+
   u8 unknown00; // Role and original member name unknown.
   u8 _01[0x04 - 0x01];
   u32 unknown04; // Role and original member name unknown.
@@ -66,6 +68,10 @@ public:
   };
 
   struct BdatInfo {
+    BdatInfo()
+        : unknown00(0), unknown02(false), unknown03(false), unknown04(0), unknown06(100), unknown08(0), unknown09(0), unknown0a(0), unknown0c(false), unknown0e(), unknown12(), unknown18(),
+          unknown28(), unknown38(), unknown48() {}
+
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isInvincibleCondMatched() const;
     bool isPopCondMatchedOfSmn() const;
@@ -96,6 +102,9 @@ public:
     };
 
     struct PopEnemyInfo {
+      PopEnemyInfo()
+          : unknown00(0), unknown02(0), unknown03(0), unknown04(0), unknown05(0), unknown06(0), unknown07(0), unknown08(0.0f), unknown0c(0), unknown10(nullptr), unknown18(nullptr), unknown20(0),
+            unknown24(0) {}
       ~PopEnemyInfo() { dispose(); }
       void dispose();
 
@@ -111,12 +120,15 @@ public:
       u8 unknown002() const { return unknown20 >> 8; }
 
       u16 unknown00; // Inferred role: enemy id; original member name unknown.
-      u8 unknown02;  // Role and original member name unknown.
-      u8 unknown03;  // Role and original member name unknown.
+      u8 unknown02;  // Inferred role: enemy level; original member name unknown.
+      u8 unknown03;  // Inferred role: enemy pop percent; original member name unknown.
       u8 unknown04;  // Inferred role: enemy num; original member name unknown.
-      u8 _05[0x07 - 0x05];
-      u8 unknown07; // Inferred role: type genus; original member name unknown.
-      u8 _08[0x10 - 0x08];
+      u8 unknown05;  // Inferred role: field move type; original member name unknown.
+      u8 unknown06;  // Inferred role: act type; original member name unknown.
+      u8 unknown07;  // Inferred role: type genus; original member name unknown.
+      f32 unknown08; // Inferred role: chest height; original member name unknown.
+      u8 unknown0c;  // Inferred role: whether the act type is not 3; original member name unknown.
+      u8 _0d[0x10 - 0x0d];
       mm::mtl::Vector<gf::GF_OBJ_HANDLE *> *unknown10; // Inferred role: game objects; original member name unknown.
       mm::mtl::Vector<gf::GF_OBJ_HANDLE *> *unknown18; // Inferred role: game objects; original member name unknown.
       u16 unknown20;                                   // Inferred role: counts, the low byte then the defeated num in the high byte; original member name unknown.
@@ -124,6 +136,7 @@ public:
       u32 unknown24; // Role and original member name unknown.
     };
 
+    PopInfo();
     ~PopInfo() { dispose(); }
     void dispose();
     void create(const CreateInfo &info);
@@ -147,6 +160,7 @@ public:
     unknown004_2 = 1 << 2, // Inferred role: depop distance condition matched; original name unknown.
   };
 
+  GmkEnemyInsts();
   ~GmkEnemyInsts() { dispose(); }
   bool isPopFinished() const;
   void validateDisp(gf::GF_OBJ_HANDLE *handle) const;
@@ -251,8 +265,9 @@ public:
     GmkEnemy *unknown08; // Inferred role: owner; original member name unknown.
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_ENEMY;
+  static const GmkType GMK_TYPE = GMK_TYPE_ENEMY; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
+  GmkEnemy() {}
   ~GmkEnemy() override { dispose(); }
   GmkType getGmkType() const override;
   bool isValid() const override;

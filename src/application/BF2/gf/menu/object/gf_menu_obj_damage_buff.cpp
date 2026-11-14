@@ -3,9 +3,11 @@
 #include "bdat.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
+#include "gf/gf_allocator.h"
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "ui/event/ui_event_data.h"
+#include "ui/event/ui_event_manager.h"
 #include "ui/ui_object_acc.h"
 #include "ui/ui_str.h"
 #include "ui/ui_util.h"
@@ -26,6 +28,25 @@ GfMenuObjDamageBuff::GfMenuObjDamageBuff(u32 handle) : GfMenuObject(handle) {}
 GfMenuObjDamageBuff::~GfMenuObjDamageBuff() { GfMenuManyObjects::destroy<DamageInfo>(GfMenuManyObjects::unknown001_1); }
 
 void GfMenuObjDamageBuff::finalize() { GfMenuObject::finalize(); }
+
+void GfMenuObjDamageBuff::initialize() {
+  ui::UIObjectAcc acc(unknown18);
+  u32 main = acc.searchChild("LAY_main");
+  if (ui::UIObjectAcc(main).isValid()) {
+    attachExternalCall(unknown001, main);
+// __LINE__ must be 99 as in the original file: it is the line argument of operator new.
+#line 99
+    ListListener *listener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ListListener(this);
+    listener->addRef();
+    ui::UIEventManager::get()->registObjectListener(main, listener);
+    if (listener != nullptr) {
+      listener->release();
+    }
+  }
+  ui::UIObjectAcc(unknown18).setTerm();
+  GfMenuObject::initialize();
+  GfMenuManyObjects::unknown002<DamageInfo>(GfMenuManyObjects::unknown001_1, 32);
+}
 
 void GfMenuObjDamageBuff::close(u32 handle) {
   ui::UIObjectAcc root(getAttachedObject(unknown001));

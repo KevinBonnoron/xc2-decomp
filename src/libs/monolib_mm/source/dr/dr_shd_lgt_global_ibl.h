@@ -6,6 +6,10 @@
 #include "mm_mtl/list.h"
 #include "types.h"
 
+namespace mm {
+struct Vec3;
+} // namespace mm
+
 namespace grlib {
 class CGLibDblUniformBlock;
 } // namespace grlib
@@ -45,6 +49,15 @@ public:
     u8 _2051[0x2060 - 0x2051];
   };
 
+  // Name from the game symbol of mm::mtl::FixedList<ml::DrShdLgtGlobalIBL::SlotCandidate, 32ul>::erase. Layout from
+  // DrShdLgtGlobalIBL::updateView (1.0.0: 0x710089428c): 0x18 byte list nodes, the object at 0x0 compared with the slot
+  // objects, the candidates ordered by the unsigned value at 0x8 and the byte at 0xc cleared for each new candidate.
+  struct SlotCandidate {
+    DrLightObjGlobalIBL *unknown00; // Inferred role: light object; original member name unknown.
+    u32 unknown08;                  // Inferred role: priority; original member name unknown.
+    u8 unknown0c;                   // Inferred role: unknown, 0 for a new candidate; original member name unknown.
+  };
+
   DrShdLgtGlobalIBL(DrMan *drMan);
   ~DrShdLgtGlobalIBL();
   void update(int viewNum);
@@ -58,7 +71,9 @@ public:
   void setUniformBlock(u32 index) const;
   void setStorageBuffer(u32 index) const;
   const mm::Mat44 &getSHMatrix(u32 row, u32 column) const;
+  void getLowestPrioritySH(mm::Mat44 &red, mm::Mat44 &green, mm::Mat44 &blue) const;
   void updateUB_ShMatrixList(u8 *work, int viewNum);
+  void getSHAverage(mm::Vec3 &average, u32 index) const;
   void updateUB_ToProxySpace(u8 *work, int viewNum);
   void addObj(DrLightObjGlobalIBL *obj, int viewNum);
   void removeObj(DrLightObjGlobalIBL *obj, int viewNum);
@@ -72,6 +87,9 @@ static_assert(sizeof(DrShdLgtGlobalIBL::unknown002) == 0x18, "");
 static_assert(offsetof(DrShdLgtGlobalIBL::unknown002, unknown04) == 0x4, "");
 static_assert(offsetof(DrShdLgtGlobalIBL::unknown002, unknown08) == 0x8, "");
 static_assert(offsetof(DrShdLgtGlobalIBL::unknown002, unknown10) == 0x10, "");
+static_assert(offsetof(DrShdLgtGlobalIBL::SlotCandidate, unknown08) == 0x8, "");
+static_assert(offsetof(DrShdLgtGlobalIBL::SlotCandidate, unknown0c) == 0xc, "");
+static_assert(sizeof(DrShdLgtGlobalIBL::SlotCandidate) == 0x10, "");
 static_assert(offsetof(DrShdLgtGlobalIBL::unknown001, unknown40) == 0x40, "");
 static_assert(offsetof(DrShdLgtGlobalIBL::unknown001, unknown340) == 0x340, "");
 static_assert(offsetof(DrShdLgtGlobalIBL::unknown001, unknown1b40) == 0x1b40, "");

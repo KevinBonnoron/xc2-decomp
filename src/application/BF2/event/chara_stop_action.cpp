@@ -14,7 +14,7 @@ ICmd::RESULT CharaStopAction::update(const Param &param) {
   if (obj != nullptr) {
     CharaUtil::execCmd(obj, "C_idle", "S_idle", "S_idle");
   }
-  return RESULT_END;
+  return RESULT_UNKNOWN_1;
 }
 
 } // namespace event

@@ -1,7 +1,14 @@
 #include "dr/dr_calc_tex_stream_man.h"
 
+#include <string.h>
+
+#include "dr/dr_calc_stm_list_obj.h"
+#include "dr/dr_man.h"
 #include "ml/critical_section.h"
+#include "ml/dev_graph.h"
 #include "ml/work_cpu.h"
+#include "mtl/mem_manager.h"
+#include "nn/os.h"
 
 namespace ml {
 
@@ -202,6 +209,29 @@ DrCalcTexStmObj *DrCalcTexStreamMan::createChildObj(DrCalcTexStmObj *parent, u32
   return child;
 }
 
+void DrCalcTexStreamMan::changeListAndCopyMemObj(DrCalcTexStmObj *first, DrCalcTexStmObj *second) {
+  memcpy(first->unknown18, second->unknown18, second->unknown20);
+  nn::os::FlushDataCache(first->unknown18, second->unknown20);
+  u8 *address = first->unknown18;
+  first->unknown18 = second->unknown18;
+  second->unknown18 = address;
+  u32 size = first->unknown20;
+  first->unknown20 = second->unknown20;
+  second->unknown20 = size;
+  unknown08.changeList(first, second);
+}
+
+void DrCalcTexStreamMan::changeListAndMoveMemObj(DrCalcTexStmObj *object) {
+  DrCalcTexStmObj *prev = object->unknown08;
+  memmove(prev->unknown18, object->unknown18, object->unknown20);
+  nn::os::FlushDataCache(prev->unknown18, object->unknown20);
+  u8 *address = prev->unknown18;
+  prev->unknown18 = address + object->unknown20;
+  object->unknown18 = address;
+  unknown08.changeList(prev, object);
+  object->unknown24 |= 0x10;
+}
+
 void DrCalcTexStreamMan::releaseFreeObj(DrCalcTexStmObj *&object) {
   if (object != nullptr) {
     clearMemObj(object);
@@ -209,7 +239,7 @@ void DrCalcTexStreamMan::releaseFreeObj(DrCalcTexStmObj *&object) {
   }
 }
 
-void DrCalcTexStreamMan::jobWait() { WorkCpu::sync(unknown2498, WKCPU_SYNC_NONE, CPUID_ANY); }
+void DrCalcTexStreamMan::jobWait() { WorkCpu::sync(unknown2498, WKCPU_SYNC_UNKNOWN_0, CPUID_UNKNOWN_0); }
 
 void DrCalcTexStreamMan::callHlvTexOptimization() { unknown248c = 0xa0; }
 
@@ -221,7 +251,81 @@ void DrCalcTexStreamMan::callReadStopMode() {
   unknown248e = 0x000a;
 }
 
+bool DrCalcTexStreamMan::callReadType(DrTxtmType type) {
+  if (unknown2490 < type) {
+    return false;
+  }
+  unknown2490 = type;
+  return type <= unknown2494;
+}
+
+void DrCalcTexStreamMan::apiUpdate() {
+  u32 count = unknown2058[DrMan::s_nDblStockIdx];
+  DrCalcStmListObj **list = unknown58[DrMan::s_nDblStockIdx];
+  for (u32 i = 0; i < count; i++) {
+    list[i]->apiUpdate();
+  }
+  unknown2058[DrMan::s_nDblStockIdx] = 0;
+}
+
+DrCalcTexStreamMan::~DrCalcTexStreamMan() { release(); }
+
+void DrCalcTexStreamMan::release() {
+  if (unknown2078 != nullptr) {
+    jobWait();
+    WorkCpu::releaseGroupHandle(unknown2498);
+    for (int i = 0; i < 2; i++) {
+      unknown38[i].unknown005();
+    }
+    unknown28.unknown005();
+    for (u32 i = 0; i < unknown206c; i++) {
+      unknown2070[i].~DrCalcTexStmObj();
+    }
+    unknown206c = 0;
+    if (unknown2070 != nullptr) {
+      mtl::MemManager::deallocate(unknown2070, 0, false);
+      unknown2070 = nullptr;
+    }
+    unknown18.unknown00 = nullptr;
+    unknown18.unknown08 = nullptr;
+    unknown08.unknown00 = nullptr;
+    unknown08.unknown08 = nullptr;
+    DevGraph::releaseMemPoolBuffer(unknown2078);
+    if (unknown2078 != nullptr) {
+      mtl::MemManager::deallocate(unknown2078, 0, false);
+      unknown2078 = nullptr;
+    }
+  }
+  unknown2068 = 0;
+}
+
+bool DrCalcTexStreamMan::memTempCopy(u32 size) {
+  s32 count = unknown2484;
+  unknown2480 = 0;
+  unknown2484 = 0;
+  bool isEmpty = true;
+  u32 copySize = 0;
+  for (s32 i = 0; i < count; i++) {
+    unknown2080[unknown2484] = copyTempBuff(unknown2280[i]);
+    if (unknown2080[unknown2484] != nullptr) {
+      isEmpty = false;
+      copySize += unknown2080[unknown2484]->unknown20;
+      unknown2068 |= 1;
+      unknown2484++;
+      if (size < copySize) {
+        return false;
+      }
+    }
+  }
+  return isEmpty;
+}
+
 } // namespace ml
+
+// The game compiles DrCalcStmWork and DrCalcStmListObj in this unit (their functions are interleaved with the DrCalcTexStreamMan ones from 0x71008b2c8c on):
+// release inlines DrCalcTexStreamMan::getCriticalSection and the destructor inlines releaseFreeObj and DrCalcStmWork::workRelease.
+#include "dr_calc_stm_list_obj.cpp"
+#include "dr_calc_stm_work.cpp"
 
 template mm::mtl::PtrSingleton<ml::DrCalcTexStreamMan>::~PtrSingleton();
 template void ml::DrResChankList<ml::DrCalcTexStmObj>::changeList(ml::DrCalcTexStmObj *first, ml::DrCalcTexStmObj *second);

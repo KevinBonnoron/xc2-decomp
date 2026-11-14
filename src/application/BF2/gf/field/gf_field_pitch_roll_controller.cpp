@@ -22,7 +22,7 @@ void GfFieldPitchRollController::create(const CreateInfo &info) {
 }
 
 void GfFieldPitchRollController::dispose() {
-  unknown00 = INVALID_HANDLE;
+  unknown00 = unknown020;
   unknown18 = nullptr;
   unknown08 = unknown001();
   unknown10 = nullptr;
@@ -55,7 +55,7 @@ void GfFieldPitchRollController::seqInit(const gmk::GmkRouteNavi &navi) {
 }
 
 void GfFieldPitchRollController::update(const gmk::GmkRouteNavi &navi) {
-  if (unknown00 != INVALID_HANDLE) {
+  if (unknown00 != unknown020) {
     if (unknown18) {
       (this->*unknown18)(navi);
     }

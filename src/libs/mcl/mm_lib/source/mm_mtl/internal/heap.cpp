@@ -16,11 +16,11 @@ namespace mtl {
 
 namespace {
 
-const size_t block_header_free_bit = 1 << 0;
-const size_t block_header_prev_free_bit = 1 << 1;
-const size_t block_header_overhead = sizeof(size_t);
-const size_t block_start_offset = offsetof(HeapAllocUtil::block_header_t, size) + sizeof(size_t);
-const size_t block_size_max = static_cast<size_t>(1) << HeapAllocUtil::FL_INDEX_MAX;
+const size_t BLOCK_HEADER_UNKNOWN_0 = 1 << 0;        // Inferred role: free bit of a block header; original name unknown.
+const size_t BLOCK_HEADER_UNKNOWN_1 = 1 << 1;        // Inferred role: previous block free bit of a block header; original name unknown.
+const size_t block_header_overhead = sizeof(size_t); // Name from the assertion string "block_size(block) == remain_size + size + block_header_overhead".
+const size_t BLOCK_START_UNKNOWN_16 = offsetof(HeapAllocUtil::block_header_t, size) + sizeof(size_t);      // Inferred role: offset of the user data in a block; original name unknown.
+const size_t BLOCK_SIZE_UNKNOWN_4294967296 = static_cast<size_t>(1) << HeapAllocUtil::FL_INDEX_UNKNOWN_32; // Inferred role: maximum block size; original name unknown.
 
 // Inferred role: heap integrity walk counters; original type name unknown.
 struct unknown133 {
@@ -75,32 +75,32 @@ int heap_fls_sizet(size_t size) {
 
 void HeapAllocUtil::buildChecker() {}
 
-size_t HeapAllocUtil::block_size(const block_header_t *block) { return block->size & ~(block_header_free_bit | block_header_prev_free_bit); }
+size_t HeapAllocUtil::block_size(const block_header_t *block) { return block->size & ~(BLOCK_HEADER_UNKNOWN_0 | BLOCK_HEADER_UNKNOWN_1); }
 
 void HeapAllocUtil::block_set_size(block_header_t *block, size_t size) {
   const size_t oldsize = block->size;
-  block->size = size | (oldsize & (block_header_free_bit | block_header_prev_free_bit));
+  block->size = size | (oldsize & (BLOCK_HEADER_UNKNOWN_0 | BLOCK_HEADER_UNKNOWN_1));
 }
 
 bool HeapAllocUtil::block_is_last(const block_header_t *block) { return block_size(block) == 0; }
 
-bool HeapAllocUtil::block_is_free(const block_header_t *block) { return block->size & block_header_free_bit; }
+bool HeapAllocUtil::block_is_free(const block_header_t *block) { return block->size & BLOCK_HEADER_UNKNOWN_0; }
 
-void HeapAllocUtil::block_set_free(block_header_t *block) { block->size |= block_header_free_bit; }
+void HeapAllocUtil::block_set_free(block_header_t *block) { block->size |= BLOCK_HEADER_UNKNOWN_0; }
 
-void HeapAllocUtil::block_set_used(block_header_t *block) { block->size &= ~block_header_free_bit; }
+void HeapAllocUtil::block_set_used(block_header_t *block) { block->size &= ~BLOCK_HEADER_UNKNOWN_0; }
 
-bool HeapAllocUtil::block_is_prev_free(const block_header_t *block) { return block->size & block_header_prev_free_bit; }
+bool HeapAllocUtil::block_is_prev_free(const block_header_t *block) { return block->size & BLOCK_HEADER_UNKNOWN_1; }
 
-void HeapAllocUtil::block_set_prev_free(block_header_t *block) { block->size |= block_header_prev_free_bit; }
+void HeapAllocUtil::block_set_prev_free(block_header_t *block) { block->size |= BLOCK_HEADER_UNKNOWN_1; }
 
-void HeapAllocUtil::block_set_prev_used(block_header_t *block) { block->size &= ~block_header_prev_free_bit; }
+void HeapAllocUtil::block_set_prev_used(block_header_t *block) { block->size &= ~BLOCK_HEADER_UNKNOWN_1; }
 
 HeapAllocUtil::block_header_t *HeapAllocUtil::block_from_ptr(const void *ptr) {
-  return reinterpret_cast<block_header_t *>(const_cast<unsigned char *>(static_cast<const unsigned char *>(ptr)) - block_start_offset);
+  return reinterpret_cast<block_header_t *>(const_cast<unsigned char *>(static_cast<const unsigned char *>(ptr)) - BLOCK_START_UNKNOWN_16);
 }
 
-void *HeapAllocUtil::block_to_ptr(const block_header_t *block) { return const_cast<unsigned char *>(reinterpret_cast<const unsigned char *>(block)) + block_start_offset; }
+void *HeapAllocUtil::block_to_ptr(const block_header_t *block) { return const_cast<unsigned char *>(reinterpret_cast<const unsigned char *>(block)) + BLOCK_START_UNKNOWN_16; }
 
 HeapAllocUtil::block_header_t *HeapAllocUtil::offset_to_block(const void *ptr, ptrdiff_t size) { return reinterpret_cast<block_header_t *>(reinterpret_cast<ptrdiff_t>(ptr) + size); }
 
@@ -156,7 +156,7 @@ void *HeapAllocUtil::align_ptr(const void *ptr, size_t align) {
 
 size_t HeapAllocUtil::adjust_request_size(size_t size, size_t align) {
   size_t adjust = 0;
-  if (size && size < block_size_max) {
+  if (size && size < BLOCK_SIZE_UNKNOWN_4294967296) {
     const size_t aligned = align_up(size, align);
     adjust = aligned > heap_block_size_min() ? aligned : heap_block_size_min();
   }
@@ -165,21 +165,21 @@ size_t HeapAllocUtil::adjust_request_size(size_t size, size_t align) {
 
 void HeapAllocUtil::mapping_insert(size_t size, int *fli, int *sli) {
   int fl, sl;
-  if (size < SMALL_BLOCK_SIZE) {
+  if (size < SMALL_BLOCK_UNKNOWN_256) {
     fl = 0;
-    sl = static_cast<int>(size) / (SMALL_BLOCK_SIZE / SL_INDEX_COUNT);
+    sl = static_cast<int>(size) / (SMALL_BLOCK_UNKNOWN_256 / SL_INDEX_UNKNOWN_32);
   } else {
     fl = heap_fls_sizet(size);
-    sl = static_cast<int>(size >> (fl - SL_INDEX_COUNT_LOG2)) ^ (1 << SL_INDEX_COUNT_LOG2);
-    fl -= (FL_INDEX_SHIFT - 1);
+    sl = static_cast<int>(size >> (fl - SL_INDEX_UNKNOWN_5)) ^ (1 << SL_INDEX_UNKNOWN_5);
+    fl -= (FL_INDEX_UNKNOWN_8 - 1);
   }
   *fli = fl;
   *sli = sl;
 }
 
 void HeapAllocUtil::mapping_search(size_t size, int *fli, int *sli) {
-  if (size >= (1 << SL_INDEX_COUNT_LOG2)) {
-    const size_t round = (1 << (heap_fls_sizet(size) - SL_INDEX_COUNT_LOG2)) - 1;
+  if (size >= (1 << SL_INDEX_UNKNOWN_5)) {
+    const size_t round = (1 << (heap_fls_sizet(size) - SL_INDEX_UNKNOWN_5)) - 1;
     size += round;
   }
   mapping_insert(size, fli, sli);
@@ -376,9 +376,9 @@ void HeapAllocUtil::control_construct(control_t *control) {
   control->block_null.next_free = &control->block_null;
   control->block_null.prev_free = &control->block_null;
   control->fl_bitmap = 0;
-  for (i = 0; i < FL_INDEX_COUNT; ++i) {
+  for (i = 0; i < FL_INDEX_UNKNOWN_25; ++i) {
     control->sl_bitmap[i] = 0;
-    for (j = 0; j < SL_INDEX_COUNT; ++j) {
+    for (j = 0; j < SL_INDEX_UNKNOWN_32; ++j) {
       control->blocks[i][j] = &control->block_null;
     }
   }
@@ -403,8 +403,8 @@ int HeapAllocUtil::heap_check(void *heap) {
   int i, j;
   control_t *control = static_cast<control_t *>(heap);
   int status = 0;
-  for (i = 0; i < FL_INDEX_COUNT; ++i) {
-    for (j = 0; j < SL_INDEX_COUNT; ++j) {
+  for (i = 0; i < FL_INDEX_UNKNOWN_25; ++i) {
+    for (j = 0; j < SL_INDEX_UNKNOWN_32; ++j) {
       const int fl_map = control->fl_bitmap & (1 << i);
       const int sl_list = control->sl_bitmap[i];
       const int sl_map = sl_list & (1 << j);
@@ -481,13 +481,13 @@ size_t HeapAllocUtil::heap_align_size() { return ALIGN_SIZE; }
 
 size_t HeapAllocUtil::heap_block_size_min() { return sizeof(block_header_t) - sizeof(block_header_t *); }
 
-size_t HeapAllocUtil::heap_block_size_max() { return block_size_max; }
+size_t HeapAllocUtil::heap_block_size_max() { return BLOCK_SIZE_UNKNOWN_4294967296; }
 
 size_t HeapAllocUtil::heap_pool_overhead() { return 2 * block_header_overhead; }
 
 size_t HeapAllocUtil::heap_alloc_overhead() { return block_header_overhead; }
 
-size_t HeapAllocUtil::heap_alloc_max() { return FL_INDEX_COUNT * SL_INDEX_COUNT; }
+size_t HeapAllocUtil::heap_alloc_max() { return FL_INDEX_UNKNOWN_25 * SL_INDEX_UNKNOWN_32; }
 
 void *HeapAllocUtil::heap_add_pool(void *heap, void *mem, size_t bytes) {
   block_header_t *block;
@@ -498,10 +498,10 @@ void *HeapAllocUtil::heap_add_pool(void *heap, void *mem, size_t bytes) {
     MMStdBase::mmPrint("heap_add_pool: Memory must be aligned by %u bytes.\n", static_cast<unsigned int>(ALIGN_SIZE));
     return nullptr;
   }
-  if (pool_bytes < heap_block_size_min() || pool_bytes > block_size_max) {
+  if (pool_bytes < heap_block_size_min() || pool_bytes > BLOCK_SIZE_UNKNOWN_4294967296) {
     MMStdBase::mmPrint("heap_add_pool: Memory size must be between 0x%x and 0x%x00 bytes.\n",
                        static_cast<unsigned int>(pool_overhead + heap_block_size_min()),
-                       static_cast<unsigned int>((pool_overhead + block_size_max) / 256));
+                       static_cast<unsigned int>((pool_overhead + BLOCK_SIZE_UNKNOWN_4294967296) / 256));
     return nullptr;
   }
   block = offset_to_block(mem, -static_cast<ptrdiff_t>(block_header_overhead));

@@ -104,6 +104,6 @@ static_assert(offsetof(UIObject, unknowne0) == 0xe0, "");
 static_assert(offsetof(UIObject, unknowne8) == 0xe8, "");
 static_assert(offsetof(UIObject, unknownec) == 0xec, "");
 static_assert(offsetof(UIObject, unknownf0) == 0xf0, "");
-static_assert(sizeof(UIObject) == 0x108, "");
+static_assert(sizeof(UIObject) == 0x110, "");
 
 } // namespace ui

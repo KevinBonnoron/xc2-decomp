@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stddef.h>
+
 #include "types.h"
 
 namespace mtl {
@@ -26,12 +28,25 @@ public:
   static void regist(const char *path);
   static void unregist();
   static u32 getColorNum();
-  static bool getColorName(u32 index, char *name, u32 size);
+  static bool getColor(const char *name, LMSColor *color);
   static bool getColor(u32 index, LMSColor *color);
+  static bool getColorName(u32 index, char *name, u32 size);
+  static s32 getTagGroupNum();
   static s32 getTagNum(s32 group);
-  static const char *getTagName(s32 group, s32 tag);
+  static s32 getTagParamNum(s32 group, s32 tag);
   static s32 getTagParamListItemNum(s32 group, s32 tag, s32 param);
+  static const char *getTagGroupName(s32 group);
+  static const char *getTagName(s32 group, s32 tag);
+  static const char *getTagParamName(s32 group, s32 tag, s32 param);
   static const char *getTagParamListItemName(s32 group, s32 tag, s32 param, s32 item);
+  static s32 getTagParamType(s32 group, s32 tag, s32 param);
+
+private:
+  static void *myAlloc(size_t size);
+  static void myFree(void *pointer);
+
+  static void *m_pProj;
+  static mtl::ALLOC_HANDLE m_allocHandle;
 };
 
 } // namespace ms

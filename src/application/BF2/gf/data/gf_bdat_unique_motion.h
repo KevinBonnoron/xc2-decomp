@@ -29,6 +29,12 @@ public:
   };
 
   struct PresetKey {
+    PresetKey() {}
+
+    // Inferred: GfGamePlayerUniqueScheduler::rebuildPreset loads the six characters before it stores any of them, as a constructor call does;
+    // the constructor is always inlined and the original parameter names are unknown.
+    PresetKey(u16 id0, u16 id1, u16 id2, u16 id3, u16 id4, u16 id5) : ids{id0, id1, id2, id3, id4, id5} {}
+
     bool isContain(const PresetKey &key) const;
 
     u16 ids[6];
@@ -36,6 +42,8 @@ public:
 
   // Inferred role: motion of one character of a preset; original type name unknown.
   struct unknown001 {
+    unknown001() : unknown00(0), unknown02(0), unknown04(0.0f) {}
+
     u16 unknown00; // Inferred role: character ("Chara0" to "Chara5"); original member name unknown.
     u16 unknown02; // Inferred role: motion ("Motion0" to "Motion5"); original member name unknown.
     f32 unknown04; // Inferred role: delay ("Delay0" to "Delay5"); original member name unknown.
@@ -52,6 +60,7 @@ public:
   GfBdatUniqueMotion();
   void bdatRefresh() override;
   static void queryPreset(mm::mtl::FixedQueue<const PresetInfo *, 32> *presets, const PresetKey &key);
+  static CharaInfo *getCharaInfo(u16 id);
 
   mm::mtl::UniquePtr<Impl> unknown28; // Inferred role: implementation; original member name unknown.
 };
@@ -61,6 +70,7 @@ public:
   Impl();
   ~Impl();
   void build();
+  CharaInfo *getCharaInfo(u16 id);
   void queryPreset(mm::mtl::FixedQueue<const PresetInfo *, 32> *presets, const PresetKey &key);
 
   mm::mtl::Vector<PresetInfo> unknown00;  // Inferred role: presets; original member name unknown.

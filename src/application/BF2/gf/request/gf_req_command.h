@@ -4,6 +4,7 @@
 #include "gf/data/gf_data_save.h"
 #include "gf/game/gf_game_party.h"
 #include "mm_mtl/fixed_array.h"
+#include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "types.h"
 
@@ -14,13 +15,17 @@ struct Vec3;
 namespace gf {
 struct GF_OBJ_HANDLE;
 struct GfReqParam;
+struct SDataOption;
+struct SDataSave;
 
 struct RQ_SETUP_BLADE {
   RQ_SETUP_BLADE();
 
-  u16 unknown00;                         // Inferred role: driver; original member name unknown.
-  u16 unknown02;                         // Inferred role: current blade; original member name unknown.
-  mm::mtl::FixedArray<u16, 5> unknown04; // Inferred role: blades; original member name unknown.
+  u16 unknown00; // Inferred role: driver; original member name unknown.
+  u16 unknown02; // Inferred role: current blade; original member name unknown.
+  // A plain array, not a FixedArray: the game's SCOM_SET_BLADE destructor is the one of SCOM (the vtable slot at 0x71011a1828
+  // is SCOM::~SCOM), which only happens when every member is trivially destructible.
+  u16 unknown04[5]; // Inferred role: blades; original member name unknown.
 };
 
 static_assert(offsetof(RQ_SETUP_BLADE, unknown04) == 0x04, "");
@@ -51,6 +56,7 @@ struct RQ_SETUP_PARTY {
     }
   }
 
+  void getAllBlade(mm::mtl::FixedVector<u32, 16> &blades) const;
   void replaceActBlade();
 
   Member unknown00[10]; // Inferred role: members; original member name unknown.
@@ -109,12 +115,21 @@ static_assert(sizeof(GfMapjumpInfo) == 0x110, "");
 class GfReqCommand {
 public:
   static void reqPartyBlade(u32 blade, u32 driver);
-  static void reqRebuildPartyWeapon(u32 blade);
+  static void reqLoad(SAVESLOT slot, SDataSave *saveData, SDataOption *optionData);
+  static void execLoad(const GfReqParam *param);
+  static void reqChangeBladeWithBladeId(u32 partyId, u32 blade);
+  static void execChangeBladeWithBladeId(const GfReqParam *param);
+  static void execChangeBladeWithSetId(const GfReqParam *param);
+  static void execChangeParty(const GfReqParam *param);
+  static void execMapjump(const GfReqParam *param);
+  static void execDestroyGf(const GfReqParam *param);
+  static u32 reqRebuildPartyWeapon(u32 blade);
+  static void execRebuildPartyWeapon(const GfReqParam *param);
   static void reqChangeAttribute(u32 objectType, u32 blade, u32 attribute);
-  static void reqChangeParty(const RQ_SETUP_PARTY &info);
+  static u32 reqChangeParty(const RQ_SETUP_PARTY &info);
   static u32 reqChangeParty(const RQ_SETUP_PARTY_DRIVER &info);
   static u32 reqChangeBladeWithSetId(u32 partyId, int bladeSet, bool isForce);
-  static void reqDestroyGf();
+  static u32 reqDestroyGf();
   static u32 reqMapjump(const GfMapjumpInfo &info);
   static u32 reqWaitEvent(f32 time, GF_OBJ_HANDLE *handle);
   static u32 reqSave(SAVESLOT slot);

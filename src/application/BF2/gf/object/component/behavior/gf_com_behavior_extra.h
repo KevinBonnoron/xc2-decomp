@@ -16,7 +16,7 @@ namespace gf {
 struct MsgObjectNotifyAsmCallback;
 
 enum {
-  MSG_PC_FIELD_NOTIFY_EXTRA = 0x1000021,
+  MSG_UNKNOWN_16777249 = 0x1000021, // Inferred role: msg pc field notify extra; original name unknown.
 };
 
 struct MsgPcFieldNotifyExtra : fw::Message {};
@@ -30,8 +30,8 @@ public:
   void procMsgPcFieldNotifyExtra(fw::MessageObject *sender, MsgPcFieldNotifyExtra &message);
   GfComBehaviorExtra();
   ~GfComBehaviorExtra() override;
-  virtual void setup();
-  virtual void cleanup();
+  void setup();
+  void cleanup();
   void update(const fw::UpdateInfo &info) override;
   const mm::mtl::RTTI *getRTTI() const override;
 

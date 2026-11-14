@@ -12,6 +12,7 @@ public:
   static void setupOptionSaveData(SDataOption &optionData);
   static void getSaveData(SDataSystem &dataSystem);
   static SDataOption *getValidOptionData();
+  static void flushOptionSaveData();
   static void setTitleSaveData(const SDataSave &saveData);
 };
 

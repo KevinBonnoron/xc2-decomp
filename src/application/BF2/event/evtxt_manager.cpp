@@ -33,16 +33,16 @@ void EvtxtManager::write() {}
 
 void EvtxtManager::reserve(bool isReserve) {
   if (isReserve) {
-    unknown10 |= FLAG_RESERVE;
+    unknown10 |= FLAG_UNKNOWN_0;
   } else {
-    unknown10 &= ~FLAG_RESERVE;
+    unknown10 &= ~FLAG_UNKNOWN_0;
   }
 }
 
-bool EvtxtManager::isReserve() const { return (unknown10 & FLAG_RESERVE) != 0; }
+bool EvtxtManager::isReserve() const { return (unknown10 & FLAG_UNKNOWN_0) != 0; }
 
 void EvtxtManager::OnEventProc(MSG_TYPE type) {
-  if (type == MSG_TYPE_RENDER_POST) {
+  if (type == MSG_TYPE_UNKNOWN_17) {
     render();
   }
 }

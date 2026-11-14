@@ -11,7 +11,7 @@ AIAgent::AIAgent() : unknown08(0) {}
 AIAgent::~AIAgent() {}
 
 void AIAgent::setup(GfComPropertyPc &property) {
-  if (property.unknown38 != PLAYER_ID_NONE) {
+  if (property.unknown38 != PLAYER_ID_UNKNOWN_4294967295) {
     unknown10.setup(property);
   }
   unknowna0.setup(property);
@@ -19,13 +19,13 @@ void AIAgent::setup(GfComPropertyPc &property) {
 
 void AIAgent::cleanup(GfComPropertyPc &property) {
   unknowna0.cleanup(property);
-  if (property.unknown38 != PLAYER_ID_NONE) {
+  if (property.unknown38 != PLAYER_ID_UNKNOWN_4294967295) {
     unknown10.cleanup(property);
   }
 }
 
 void AIAgent::update(const fw::UpdateInfo &info, GfComPropertyPc &property) {
-  if (property.unknown38 != PLAYER_ID_NONE && testFiledAI()) {
+  if (property.unknown38 != PLAYER_ID_UNKNOWN_4294967295 && testFiledAI()) {
     unknown10.update(info, property);
   }
   if (testBattleAI()) {

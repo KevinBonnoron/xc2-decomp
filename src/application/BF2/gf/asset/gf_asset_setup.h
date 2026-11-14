@@ -54,7 +54,7 @@ public:
     u32 unknown94;                  // Inferred role: index; original member name unknown.
   };
 
-  static const u32 REF_RESOURCE_MAX = 24;
+  static const u32 RESOURCE_UNKNOWN_24 = 24; // Inferred role: ref resource max; original name unknown.
 
   GfAssetSetup();
   virtual const mm::mtl::RTTI *getRTTI() const { return &m_rtti; }
@@ -77,27 +77,27 @@ public:
   virtual const char *getEvtStpFile(GfAssetType type) { return nullptr; }
   virtual const char *getUiStpFile(GfAssetType type) { return nullptr; }
   virtual const char *getSalvageStpFile(GfAssetType type) { return nullptr; }
-  virtual GfFileIdx getMdlSlot() const { return FILE_IDX_NONE; }
-  virtual GfFileIdx getArcSlot() const { return FILE_IDX_NONE; }
-  virtual GfFileIdx getMotSlot() const { return FILE_IDX_NONE; }
-  virtual GfFileIdx getRetargetMotSlot() const { return FILE_IDX_NONE; }
-  virtual GfFileIdx getEvtMotSlot() const { return FILE_IDX_NONE; }
-  virtual GfFileIdx getSalvageMotSlot() const { return FILE_IDX_NONE; }
-  virtual GfFileIdx getUiMotSlot() const { return FILE_IDX_NONE; }
-  virtual GfFileIdx getEfpSlot() const { return FILE_IDX_NONE; }
-  virtual GfFileIdx getEabSlot() const { return FILE_IDX_NONE; }
-  virtual GfFileIdx getEfbSlot() const { return FILE_IDX_NONE; }
-  virtual GfFileIdx getStpSlot() const { return FILE_IDX_NONE; }
-  virtual GfFileIdx getEvtStpSlot() const { return FILE_IDX_NONE; }
-  virtual GfFileIdx getUiStpSlot() const { return FILE_IDX_NONE; }
-  virtual GfFileIdx getSalvageStpSlot() const { return FILE_IDX_NONE; }
+  virtual GfFileIdx getMdlSlot() const { return FILE_IDX_UNKNOWN_FFFFFFFF; }
+  virtual GfFileIdx getArcSlot() const { return FILE_IDX_UNKNOWN_FFFFFFFF; }
+  virtual GfFileIdx getMotSlot() const { return FILE_IDX_UNKNOWN_FFFFFFFF; }
+  virtual GfFileIdx getRetargetMotSlot() const { return FILE_IDX_UNKNOWN_FFFFFFFF; }
+  virtual GfFileIdx getEvtMotSlot() const { return FILE_IDX_UNKNOWN_FFFFFFFF; }
+  virtual GfFileIdx getSalvageMotSlot() const { return FILE_IDX_UNKNOWN_FFFFFFFF; }
+  virtual GfFileIdx getUiMotSlot() const { return FILE_IDX_UNKNOWN_FFFFFFFF; }
+  virtual GfFileIdx getEfpSlot() const { return FILE_IDX_UNKNOWN_FFFFFFFF; }
+  virtual GfFileIdx getEabSlot() const { return FILE_IDX_UNKNOWN_FFFFFFFF; }
+  virtual GfFileIdx getEfbSlot() const { return FILE_IDX_UNKNOWN_FFFFFFFF; }
+  virtual GfFileIdx getStpSlot() const { return FILE_IDX_UNKNOWN_FFFFFFFF; }
+  virtual GfFileIdx getEvtStpSlot() const { return FILE_IDX_UNKNOWN_FFFFFFFF; }
+  virtual GfFileIdx getUiStpSlot() const { return FILE_IDX_UNKNOWN_FFFFFFFF; }
+  virtual GfFileIdx getSalvageStpSlot() const { return FILE_IDX_UNKNOWN_FFFFFFFF; }
   virtual const char *getPath() const { return ""; }
   virtual const char *getEvtPath() const { return ""; }
   virtual const char *getEffPath() const { return GfAssetPath::getEff(); }
   virtual const char *getStpPath() const { return GfAssetPath::getStp(); }
   virtual const char *getSePackPath() const { return GfAssetPath::getSePack(); }
   virtual void requestCoreResource(GfAssetPack *pack, GF_ASSET_HANDLE *handle);
-  virtual GfAssetType getAssetType() const { return ASSET_TYPE_BASE; }
+  virtual GfAssetType getAssetType() const { return ASSET_TYPE_UNKNOWN_0; }
 
   void setupParam(GF_ASSET_HANDLE *handle, const GfInitParam &param);
   bool setupReference(GfAssetPack *pack, const char *name, GfFileIdx index);
@@ -109,14 +109,14 @@ public:
   static void requestFootStepSePackFile(GfAssetFilesInfo &info, u32 footStep, GfFileIdx firstIndex, GfFileIdx secondIndex);
   static void requestWpnSePackFile(GfAssetFilesInfo &info, u32 weaponType, GfFileIdx index);
 
-  u32 unknown08;                                                  // Inferred role: id; original member name unknown.
-  GF_ASSET_HANDLE *unknown10;                                     // Inferred role: handle; original member name unknown.
-  CBdatWrapper *unknown18;                                        // Inferred role: bdat; original member name unknown.
-  mm::mtl::FixedVector<unknown002 *, REF_RESOURCE_MAX> unknown20; // Inferred role: ref resources; original member name unknown.
-  const GfInitParam *unknowne8;                                   // Inferred role: init param; original member name unknown.
-  bool unknownf0;                                                 // Inferred role: has ref resource; original member name unknown.
-  mm::mtl::FixStr<128> unknownf4;                                 // Inferred role: debug model name; original member name unknown.
-  mm::mtl::FixStr<128> unknown178;                                // Inferred role: debug motion name; original member name unknown.
+  u32 unknown08;                                                     // Inferred role: id; original member name unknown.
+  GF_ASSET_HANDLE *unknown10;                                        // Inferred role: handle; original member name unknown.
+  CBdatWrapper *unknown18;                                           // Inferred role: bdat; original member name unknown.
+  mm::mtl::FixedVector<unknown002 *, RESOURCE_UNKNOWN_24> unknown20; // Inferred role: ref resources; original member name unknown.
+  const GfInitParam *unknowne8;                                      // Inferred role: init param; original member name unknown.
+  bool unknownf0;                                                    // Inferred role: has ref resource; original member name unknown.
+  mm::mtl::FixStr<128> unknownf4;                                    // Inferred role: debug model name; original member name unknown.
+  mm::mtl::FixStr<128> unknown178;                                   // Inferred role: debug motion name; original member name unknown.
 };
 
 static_assert(sizeof(GfAssetSetup::unknown002) == 0x98, "");
@@ -155,9 +155,9 @@ public:
   GfFileIdx getEabSlot() const override { return static_cast<GfFileIdx>(36); }
   GfFileIdx getEfbSlot() const override { return static_cast<GfFileIdx>(37); }
   GfFileIdx getStpSlot() const override { return static_cast<GfFileIdx>(44); }
-  GfAssetType getAssetType() const override { return ASSET_TYPE_PC; }
-  virtual GfAssetType getAssetTypeMot() const { return ASSET_TYPE_PC_MOTION; }
-  virtual GfAssetType getAssetTypeEvtMot() const { return ASSET_TYPE_TEMPORARY; }
+  GfAssetType getAssetType() const override { return ASSET_TYPE_UNKNOWN_4; }
+  virtual GfAssetType getAssetTypeMot() const { return ASSET_TYPE_UNKNOWN_5; }
+  virtual GfAssetType getAssetTypeEvtMot() const { return ASSET_TYPE_UNKNOWN_18; }
 
   GfFileIdx unknown1fc; // Inferred role: reserved file index; original member name unknown.
 };
@@ -202,7 +202,7 @@ public:
   const mm::mtl::RTTI *getRTTI() const override { return &m_rtti; }
   GfFileIdx getUiMotSlot() const override { return static_cast<GfFileIdx>(40); }
   GfFileIdx getUiStpSlot() const override { return static_cast<GfFileIdx>(46); }
-  GfAssetType getAssetTypeEvtMot() const override { return ASSET_TYPE_TEMPORARY; }
+  GfAssetType getAssetTypeEvtMot() const override { return ASSET_TYPE_UNKNOWN_18; }
 };
 
 class GfAssetSetupBlade : public GfAssetSetup {
@@ -232,10 +232,10 @@ public:
   GfFileIdx getEabSlot() const override { return static_cast<GfFileIdx>(36); }
   GfFileIdx getEfbSlot() const override { return static_cast<GfFileIdx>(37); }
   GfFileIdx getStpSlot() const override { return static_cast<GfFileIdx>(44); }
-  GfAssetType getAssetType() const override { return ASSET_TYPE_BLADE; }
-  virtual GfAssetType getAssetTypeMot() const { return ASSET_TYPE_BLADE_MOTION; }
-  virtual GfAssetType getAssetTypeEventMot() const { return ASSET_TYPE_TEMPORARY; }
-  virtual GfAssetType getAssetTypeEfb() const { return ASSET_TYPE_WEAPON_EFFECT; }
+  GfAssetType getAssetType() const override { return ASSET_TYPE_UNKNOWN_6; }
+  virtual GfAssetType getAssetTypeMot() const { return ASSET_TYPE_UNKNOWN_7; }
+  virtual GfAssetType getAssetTypeEventMot() const { return ASSET_TYPE_UNKNOWN_18; }
+  virtual GfAssetType getAssetTypeEfb() const { return ASSET_TYPE_UNKNOWN_9; }
 
   bool unknown1fc; // Inferred role: use cond model; original member name unknown.
 };
@@ -267,10 +267,10 @@ public:
   const mm::mtl::RTTI *getRTTI() const override { return &m_rtti; }
   GfFileIdx getUiMotSlot() const override { return static_cast<GfFileIdx>(40); }
   GfFileIdx getUiStpSlot() const override { return static_cast<GfFileIdx>(46); }
-  GfAssetType getAssetType() const override { return ASSET_TYPE_TEMPORARY; }
-  GfAssetType getAssetTypeMot() const override { return ASSET_TYPE_TEMPORARY; }
-  GfAssetType getAssetTypeEventMot() const override { return ASSET_TYPE_TEMPORARY; }
-  GfAssetType getAssetTypeEfb() const override { return ASSET_TYPE_TEMPORARY; }
+  GfAssetType getAssetType() const override { return ASSET_TYPE_UNKNOWN_18; }
+  GfAssetType getAssetTypeMot() const override { return ASSET_TYPE_UNKNOWN_18; }
+  GfAssetType getAssetTypeEventMot() const override { return ASSET_TYPE_UNKNOWN_18; }
+  GfAssetType getAssetTypeEfb() const override { return ASSET_TYPE_UNKNOWN_18; }
 };
 
 class GfAssetSetupEnemy : public GfAssetSetup {
@@ -305,10 +305,10 @@ public:
   GfFileIdx getEabSlot() const override { return static_cast<GfFileIdx>(10); }
   GfFileIdx getEfbSlot() const override { return static_cast<GfFileIdx>(11); }
   GfFileIdx getStpSlot() const override { return static_cast<GfFileIdx>(4); }
-  GfAssetType getAssetType() const override { return ASSET_TYPE_ENEMY; }
+  GfAssetType getAssetType() const override { return ASSET_TYPE_UNKNOWN_10; }
   virtual GfFileIdx getAddMotSlot() const { return static_cast<GfFileIdx>(15); }
-  virtual GfAssetType getAssetTypeMot() const { return ASSET_TYPE_ENEMY_MOTION; }
-  virtual GfAssetType getAssetTypeArc() const { return ASSET_TYPE_ENEMY_ARC; }
+  virtual GfAssetType getAssetTypeMot() const { return ASSET_TYPE_UNKNOWN_11; }
+  virtual GfAssetType getAssetTypeArc() const { return ASSET_TYPE_UNKNOWN_12; }
 
   const GfInitParamEnemy *unknown200; // Inferred role: init param enemy; original member name unknown.
 };
@@ -369,9 +369,9 @@ public:
   GfFileIdx getEabSlot() const override { return static_cast<GfFileIdx>(10); }
   GfFileIdx getEfbSlot() const override { return static_cast<GfFileIdx>(11); }
   GfFileIdx getStpSlot() const override { return static_cast<GfFileIdx>(4); }
-  GfAssetType getAssetType() const override { return ASSET_TYPE_ENEMY; }
-  virtual GfAssetType getAssetTypeMot() const { return ASSET_TYPE_ENEMY_MOTION; }
-  virtual GfAssetType getAssetTypeArc() const { return ASSET_TYPE_ENEMY_ARC; }
+  GfAssetType getAssetType() const override { return ASSET_TYPE_UNKNOWN_10; }
+  virtual GfAssetType getAssetTypeMot() const { return ASSET_TYPE_UNKNOWN_11; }
+  virtual GfAssetType getAssetTypeArc() const { return ASSET_TYPE_UNKNOWN_12; }
 };
 
 class GfAssetSetupEventNpc : public GfAssetSetupNpc {
@@ -385,8 +385,8 @@ public:
   const mm::mtl::RTTI *getRTTI() const override { return &m_rtti; }
   const char *getAssetCategoryName() const override { return "Evt"; }
   GfFileIdx getEvtStpSlot() const override { return static_cast<GfFileIdx>(5); }
-  GfAssetType getAssetType() const override { return ASSET_TYPE_ENEMY; }
-  GfAssetType getAssetTypeMot() const override { return ASSET_TYPE_TEMPORARY; }
+  GfAssetType getAssetType() const override { return ASSET_TYPE_UNKNOWN_10; }
+  GfAssetType getAssetTypeMot() const override { return ASSET_TYPE_UNKNOWN_18; }
 };
 
 class GfAssetSetupMob : public GfAssetSetup {
@@ -414,7 +414,7 @@ public:
   GfFileIdx getEabSlot() const override { return static_cast<GfFileIdx>(10); }
   GfFileIdx getEfbSlot() const override { return static_cast<GfFileIdx>(11); }
   GfFileIdx getStpSlot() const override { return static_cast<GfFileIdx>(4); }
-  GfAssetType getAssetType() const override { return ASSET_TYPE_MAP_OBJECT; }
+  GfAssetType getAssetType() const override { return ASSET_TYPE_UNKNOWN_15; }
 };
 
 class GfAssetSetupEventMob : public GfAssetSetupMob {
@@ -451,7 +451,7 @@ public:
   GfFileIdx getEabSlot() const override { return static_cast<GfFileIdx>(4); }
   GfFileIdx getEfbSlot() const override { return static_cast<GfFileIdx>(5); }
   GfFileIdx getStpSlot() const override { return static_cast<GfFileIdx>(6); }
-  GfAssetType getAssetType() const override { return ASSET_TYPE_MAP_OBJECT; }
+  GfAssetType getAssetType() const override { return ASSET_TYPE_UNKNOWN_15; }
 
   u32 unknown1fc; // Inferred role: gimmick type; original member name unknown.
 };
@@ -474,7 +474,7 @@ public:
   GfFileIdx getArcSlot() const override { return static_cast<GfFileIdx>(1); }
   GfFileIdx getMotSlot() const override { return static_cast<GfFileIdx>(2); }
   GfFileIdx getEabSlot() const override { return static_cast<GfFileIdx>(4); }
-  GfAssetType getAssetType() const override { return ASSET_TYPE_MAP_OBJECT; }
+  GfAssetType getAssetType() const override { return ASSET_TYPE_UNKNOWN_15; }
 };
 
 class GfAssetSetupFobj : public GfAssetSetup {
@@ -489,7 +489,7 @@ public:
   const mm::mtl::RTTI *getRTTI() const override { return &m_rtti; }
   GfFileIdx getMdlSlot() const override { return static_cast<GfFileIdx>(0); }
   GfFileIdx getEabSlot() const override { return static_cast<GfFileIdx>(4); }
-  GfAssetType getAssetType() const override { return ASSET_TYPE_FIELD_OBJECT; }
+  GfAssetType getAssetType() const override { return ASSET_TYPE_UNKNOWN_14; }
 };
 
 class GfAssetSetupWeapon : public GfAssetSetup {
@@ -510,7 +510,7 @@ public:
   GfFileIdx getMotSlot() const override { return static_cast<GfFileIdx>(2); }
   GfFileIdx getEfpSlot() const override { return static_cast<GfFileIdx>(3); }
   GfFileIdx getStpSlot() const override { return static_cast<GfFileIdx>(5); }
-  GfAssetType getAssetType() const override { return ASSET_TYPE_WEAPON; }
+  GfAssetType getAssetType() const override { return ASSET_TYPE_UNKNOWN_8; }
 
   GfAppend unknown200; // Inferred role: append; original member name unknown.
 };
@@ -547,7 +547,7 @@ public:
   GfFileIdx getMotSlot() const override { return static_cast<GfFileIdx>(6); }
   GfFileIdx getEfpSlot() const override { return static_cast<GfFileIdx>(2); }
   GfFileIdx getStpSlot() const override { return static_cast<GfFileIdx>(5); }
-  GfAssetType getAssetType() const override { return ASSET_TYPE_OPTION; }
+  GfAssetType getAssetType() const override { return ASSET_TYPE_UNKNOWN_17; }
 
   GfAppend unknown200; // Inferred role: append; original member name unknown.
 };
@@ -567,7 +567,7 @@ public:
   const mm::mtl::RTTI *getRTTI() const override { return &m_rtti; }
   GfFileIdx getMdlSlot() const override { return static_cast<GfFileIdx>(0); }
   GfFileIdx getArcSlot() const override { return static_cast<GfFileIdx>(1); }
-  GfAssetType getAssetType() const override { return ASSET_TYPE_OPTION; }
+  GfAssetType getAssetType() const override { return ASSET_TYPE_UNKNOWN_17; }
 
   GfAppend unknown200; // Inferred role: append; original member name unknown.
 };
@@ -590,7 +590,7 @@ public:
   GfFileIdx getArcSlot() const override { return static_cast<GfFileIdx>(1); }
   GfFileIdx getMotSlot() const override { return static_cast<GfFileIdx>(6); }
   GfFileIdx getStpSlot() const override { return static_cast<GfFileIdx>(5); }
-  GfAssetType getAssetType() const override { return ASSET_TYPE_OPTION; }
+  GfAssetType getAssetType() const override { return ASSET_TYPE_UNKNOWN_17; }
 
   GfAppend unknown200; // Inferred role: append; original member name unknown.
 };
@@ -613,8 +613,8 @@ public:
   const char *getPath() const override;
   const mm::mtl::RTTI *getRTTI() const override { return &m_rtti; }
   GfFileIdx getMdlSlot() const override { return static_cast<GfFileIdx>(0); }
-  GfAssetType getAssetType() const override { return ASSET_TYPE_MAP; }
-  virtual GfFileIdx getColSlot() const { return MAP_FILE_IDX_COLLISION; }
+  GfAssetType getAssetType() const override { return ASSET_TYPE_UNKNOWN_3; }
+  virtual GfFileIdx getColSlot() const { return MAP_FILE_IDX_UNKNOWN_1; }
   virtual GfFileIdx getNaviSlot() const { return static_cast<GfFileIdx>(2); }
   virtual GfFileIdx getEpkSlot() const { return static_cast<GfFileIdx>(6); }
   virtual GfFileIdx getGIblSlot() const { return static_cast<GfFileIdx>(7); }
@@ -647,8 +647,8 @@ public:
   const char *getPath() const override;
   const mm::mtl::RTTI *getRTTI() const override { return &m_rtti; }
   GfFileIdx getMdlSlot() const override { return static_cast<GfFileIdx>(0); }
-  GfAssetType getAssetType() const override { return ASSET_TYPE_MAP; }
-  virtual GfFileIdx getColSlot() const { return MAP_FILE_IDX_COLLISION; }
+  GfAssetType getAssetType() const override { return ASSET_TYPE_UNKNOWN_3; }
+  virtual GfFileIdx getColSlot() const { return MAP_FILE_IDX_UNKNOWN_1; }
   virtual GfFileIdx getLodSlot() const { return static_cast<GfFileIdx>(4); }
   virtual GfFileIdx getMpfSlot() const { return static_cast<GfFileIdx>(5); }
   virtual GfFileIdx getLgtSlot() const { return static_cast<GfFileIdx>(3); }
@@ -679,7 +679,7 @@ public:
   GfFileIdx getEfpSlot() const override { return static_cast<GfFileIdx>(2); }
   GfFileIdx getEabSlot() const override { return static_cast<GfFileIdx>(3); }
   GfFileIdx getEfbSlot() const override { return static_cast<GfFileIdx>(4); }
-  GfAssetType getAssetType() const override { return ASSET_TYPE_TEMPORARY; }
+  GfAssetType getAssetType() const override { return ASSET_TYPE_UNKNOWN_18; }
 };
 
 class GfAssetSetupUiObj : public GfAssetSetup {
@@ -695,7 +695,7 @@ public:
   const char *getAssetCategoryName() const override { return "Sal"; }
   GfFileIdx getMdlSlot() const override { return static_cast<GfFileIdx>(0); }
   GfFileIdx getArcSlot() const override { return static_cast<GfFileIdx>(1); }
-  GfAssetType getAssetType() const override { return ASSET_TYPE_TEMPORARY; }
+  GfAssetType getAssetType() const override { return ASSET_TYPE_UNKNOWN_18; }
 };
 
 } // namespace gf

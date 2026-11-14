@@ -43,7 +43,7 @@ public:
   void requestGameEvent(u32 handle, const EventData &event);
   void setGameEventLisenter(UIGameListener *listener);
   void setUpdateCallback(UIUpdateCallback *callback);
-  void registObjectTimer(u32 handle, u16 id, u64 time, bool repeat);
+  u32 registObjectTimer(u32 handle, u16 id, u64 time, bool repeat);
   void releaseObjectTimer(u32 handle);
   void setDisp(u16 group, bool disp);
   bool isLoading() const;

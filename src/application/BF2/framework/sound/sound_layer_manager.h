@@ -22,13 +22,13 @@ static_assert(offsetof(SoundUpdater, unknown31) == 0x31, "");
 
 class SoundLayerManager : public mm::mtl::PtrSingleton<SoundLayerManager> {
 public:
-  static const u32 LAYER_MAX = 32;
+  static const u32 LAYER_UNKNOWN_32 = 32; // Inferred role: maximum number of layers; original name unknown.
 
   SoundLayerManager();
   ~SoundLayerManager() override;
   void update(u32 layerMask);
 
-  mm::mtl::FixedArray<mm::mtl::IntrusiveList<SoundUpdater>, LAYER_MAX> unknown08; // Inferred role: updaters per layer; original member name unknown.
+  mm::mtl::FixedArray<mm::mtl::IntrusiveList<SoundUpdater>, LAYER_UNKNOWN_32> unknown08; // Inferred role: updaters per layer; original member name unknown.
 };
 
 static_assert(offsetof(SoundLayerManager, unknown08) == 0x08, "");

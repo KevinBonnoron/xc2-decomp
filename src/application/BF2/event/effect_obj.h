@@ -121,7 +121,7 @@ static_assert(sizeof(EffectLinearCol) == 0x1e8, "");
 
 class EffectObj {
 public:
-  static constexpr size_t QUEUE_COUNT = 6;
+  static constexpr size_t QUEUE_UNKNOWN_6 = 6; // Inferred role: queue count; original name unknown.
 
   const mm::Vec3 &getPos() const;
   const mm::Vec3 &getRot() const;
@@ -156,15 +156,15 @@ public:
   const FrameInfo &getFrameInfo() const { return unknownfa8; }
 
 private:
-  mm::mtl::FixStr<64> unknown08;       // Inferred role: name; original member name unknown.
-  EffectCtrl unknown50;                // Inferred role: ctrl; original member name unknown.
-  CmdQueue<QUEUE_COUNT, 0> unknown260; // Inferred role: queue; original member name unknown.
-  EffectPlayEff unknown960;            // Inferred role: cmd play eff; original member name unknown.
-  EffectPlayEva unknown980;            // Inferred role: cmd play eva; original member name unknown.
-  EffectLinearPos unknown9c0;          // Inferred role: cmd linear pos; original member name unknown.
-  EffectLinearRot unknownbc0;          // Inferred role: cmd linear rot; original member name unknown.
-  EffectLinearCol unknowndc0;          // Inferred role: cmd linear col; original member name unknown.
-  FrameInfo unknownfa8;                // Inferred role: frame info; original member name unknown.
+  mm::mtl::FixStr<64> unknown08;           // Inferred role: name; original member name unknown.
+  EffectCtrl unknown50;                    // Inferred role: ctrl; original member name unknown.
+  CmdQueue<QUEUE_UNKNOWN_6, 0> unknown260; // Inferred role: queue; original member name unknown.
+  EffectPlayEff unknown960;                // Inferred role: cmd play eff; original member name unknown.
+  EffectPlayEva unknown980;                // Inferred role: cmd play eva; original member name unknown.
+  EffectLinearPos unknown9c0;              // Inferred role: cmd linear pos; original member name unknown.
+  EffectLinearRot unknownbc0;              // Inferred role: cmd linear rot; original member name unknown.
+  EffectLinearCol unknowndc0;              // Inferred role: cmd linear col; original member name unknown.
+  FrameInfo unknownfa8;                    // Inferred role: frame info; original member name unknown.
 };
 
 static_assert(sizeof(EffectObj) == 0xfc0, "");

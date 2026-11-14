@@ -11,6 +11,8 @@ struct Mat44;
 struct Quat;
 
 struct Aabb {
+  // Evidence: ml::irrvol::DrIrrVolCascade keeps two Aabb members (0x560) that its constructor (1.0.0: 0x71007ea8fc) leaves unset.
+  Aabb() {}
   Aabb(const Vec3 &a, const Vec3 &b);
   void set(const Vec3 &a, const Vec3 &b);
   void setExtend(const Vec3 &center, const Vec3 &corner);

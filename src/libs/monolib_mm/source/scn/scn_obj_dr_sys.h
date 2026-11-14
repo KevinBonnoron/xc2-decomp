@@ -58,7 +58,7 @@ public:
   void setFromCaptureTool() override;
   void dispDebugWindow(bool isOpen, const char *title, WinProc *window) override;
   void apply() override;
-  virtual void setName(const char *name);
+  void setName(const char *name) override;
   const char *getName() const override;
 
   DrGlobalIBLPack *unknown18; // Inferred role: pack; original member name unknown.

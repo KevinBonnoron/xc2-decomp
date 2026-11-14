@@ -1,7 +1,10 @@
 #include "dr/dr_mdo_sampler_man.h"
 
+#include "dr/dr_man.h"
+#include "dr/dr_pixl_mdl_sampler.h"
 #include "dr/dr_res_list.h"
 #include "dr/dr_res_mdo_sampler.h"
+#include "mtl/alloc_handle.h"
 
 namespace ml {
 
@@ -16,6 +19,34 @@ DrMdoSamplerMan::~DrMdoSamplerMan() {
   }
   unknown00 = nullptr;
   unknown08 = nullptr;
+}
+
+void DrMdoSamplerMan::begin() {
+  if (DrMan::get()->unknown188->update()) {
+    for (DrResMdoSampler *sampler = unknown00; sampler != nullptr; sampler = sampler->unknown08) {
+      sampler->setup();
+    }
+  }
+}
+
+DrResMdoSampler *DrMdoSamplerMan::createSamplerObj(const u8 *data) {
+  DrResMdoSampler *sampler = unknown003(unknown00, data);
+  if (sampler != nullptr) {
+    return sampler;
+  }
+  sampler = new (unknown10->unknown10) DrResMdoSampler(data);
+  if (sampler != nullptr) {
+    unknown101(unknown00, unknown08, sampler);
+  }
+  return sampler;
+}
+
+DrResMdoSampler *DrMdoSamplerMan::createSamplerSeamObj(const u8 *data) {
+  DrResMdoSampler *sampler = new (unknown10->unknown10) DrResMdoSampler(data);
+  if (sampler != nullptr) {
+    unknown101(unknown00, unknown08, sampler);
+  }
+  return sampler;
 }
 
 void DrMdoSamplerMan::releaseSamplerObj(DrResMdoSampler *sampler) {

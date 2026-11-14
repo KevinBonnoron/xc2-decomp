@@ -30,49 +30,51 @@ struct GF_SE_CATEGORY_HANDLE;
 class GfAssetResource;
 struct GfSetupParam;
 
-GF_SE_CATEGORY_HANDLE *const INVALID_CATEGORY_HANDLE = reinterpret_cast<GF_SE_CATEGORY_HANDLE *>(-1);
+GF_SE_CATEGORY_HANDLE *const unknown019 = reinterpret_cast<GF_SE_CATEGORY_HANDLE *>(-1); // Inferred role: invalid category handle; original name unknown.
 
-constexpr fw::SoundCategory CATEGORY_GAME_BGM = static_cast<fw::SoundCategory>(1);
-constexpr fw::SoundCategory CATEGORY_PLAYER_VOICE = static_cast<fw::SoundCategory>(2);
+// The category names are the labels of the game's "name(id)" category setup in fw::SoundManager: "BGM" 1, "VOICE" 2, "SYSTEM" 3, "BATTLE" 4, "FIELD" 5, "GIMMICK" 6, "ENV" 7, "WEATHER" 8, "EVT_CS" 9,
+// "EVT_BGM" 10, "EVT_VOICE" 11, "EVT_SE" 12, "CH_SE" 13, "CH_SE NS" 14 (written CH_SE_NS), "ENE_VO" 15, "NAREVO" 16, "MENU_BGM" 17.
+constexpr fw::SoundCategory CATEGORY_BGM = static_cast<fw::SoundCategory>(1);   // Original label "BGM" (1) of fw::SoundManager's category setup.
+constexpr fw::SoundCategory CATEGORY_VOICE = static_cast<fw::SoundCategory>(2); // Original label "VOICE" (2) of fw::SoundManager's category setup.
 constexpr fw::SoundCategory CATEGORY_SYSTEM = static_cast<fw::SoundCategory>(3);
-constexpr fw::SoundCategory CATEGORY_BATTLE_SE = static_cast<fw::SoundCategory>(4);
-constexpr fw::SoundCategory CATEGORY_FIELD_SE = static_cast<fw::SoundCategory>(5);
-constexpr fw::SoundCategory CATEGORY_GIMMICK_SE = static_cast<fw::SoundCategory>(6);
-constexpr fw::SoundCategory CATEGORY_GAME_ENV = static_cast<fw::SoundCategory>(7);
-constexpr fw::SoundCategory CATEGORY_GAME_WEATHER = static_cast<fw::SoundCategory>(8);
-constexpr fw::SoundCategory CATEGORY_EVENT_CS = static_cast<fw::SoundCategory>(9);
-constexpr fw::SoundCategory CATEGORY_EVENT_BGM = static_cast<fw::SoundCategory>(10);
-constexpr fw::SoundCategory CATEGORY_EVENT_VOICE = static_cast<fw::SoundCategory>(11);
-constexpr fw::SoundCategory CATEGORY_EVENT_SE = static_cast<fw::SoundCategory>(12);
-constexpr fw::SoundCategory CATEGORY_CHARACTER_SE = static_cast<fw::SoundCategory>(13);
-constexpr fw::SoundCategory CATEGORY_NO_SLOW_SE = static_cast<fw::SoundCategory>(14);
-constexpr fw::SoundCategory CATEGORY_ENEMY_VOICE = static_cast<fw::SoundCategory>(15);
-constexpr fw::SoundCategory CATEGORY_NARE_VOICE = static_cast<fw::SoundCategory>(16);
+constexpr fw::SoundCategory CATEGORY_BATTLE = static_cast<fw::SoundCategory>(4);     // Original label "BATTLE" (4) of fw::SoundManager's category setup.
+constexpr fw::SoundCategory CATEGORY_FIELD = static_cast<fw::SoundCategory>(5);      // Original label "FIELD" (5) of fw::SoundManager's category setup.
+constexpr fw::SoundCategory CATEGORY_GIMMICK = static_cast<fw::SoundCategory>(6);    // Original label "GIMMICK" (6) of fw::SoundManager's category setup.
+constexpr fw::SoundCategory CATEGORY_ENV = static_cast<fw::SoundCategory>(7);        // Original label "ENV" (7) of fw::SoundManager's category setup.
+constexpr fw::SoundCategory CATEGORY_WEATHER = static_cast<fw::SoundCategory>(8);    // Original label "WEATHER" (8) of fw::SoundManager's category setup.
+constexpr fw::SoundCategory CATEGORY_EVT_CS = static_cast<fw::SoundCategory>(9);     // Original label "EVT_CS" (9) of fw::SoundManager's category setup.
+constexpr fw::SoundCategory CATEGORY_EVT_BGM = static_cast<fw::SoundCategory>(10);   // Original label "EVT_BGM" (10) of fw::SoundManager's category setup.
+constexpr fw::SoundCategory CATEGORY_EVT_VOICE = static_cast<fw::SoundCategory>(11); // Original label "EVT_VOICE" (11) of fw::SoundManager's category setup.
+constexpr fw::SoundCategory CATEGORY_EVT_SE = static_cast<fw::SoundCategory>(12);    // Original label "EVT_SE" (12) of fw::SoundManager's category setup.
+constexpr fw::SoundCategory CATEGORY_CH_SE = static_cast<fw::SoundCategory>(13);     // Original label "CH_SE" (13) of fw::SoundManager's category setup.
+constexpr fw::SoundCategory CATEGORY_CH_SE_NS = static_cast<fw::SoundCategory>(14);  // Original label "CH_SE NS" (14) of fw::SoundManager's category setup; spaces become underscores.
+constexpr fw::SoundCategory CATEGORY_ENE_VO = static_cast<fw::SoundCategory>(15);    // Original label "ENE_VO" (15) of fw::SoundManager's category setup.
+constexpr fw::SoundCategory CATEGORY_NAREVO = static_cast<fw::SoundCategory>(16);    // Original label "NAREVO" (16) of fw::SoundManager's category setup.
 constexpr fw::SoundCategory CATEGORY_MENU_BGM = static_cast<fw::SoundCategory>(17);
 
 enum SEINFO {
-  SEINFO_SEARCH,
-  SEINFO_COMMON_PACK,
-  SEINFO_FIELD_COMMON_PACK,
-  SEINFO_FIELD_MAP_PACK,
-  SEINFO_OBJ_PACK,
-  SEINFO_NAME,
+  SEINFO_UNKNOWN_0, // Inferred role: seinfo search; original name unknown.
+  SEINFO_UNKNOWN_1, // Inferred role: seinfo common pack; original name unknown.
+  SEINFO_UNKNOWN_2, // Inferred role: seinfo field common pack; original name unknown.
+  SEINFO_UNKNOWN_3, // Inferred role: seinfo field map pack; original name unknown.
+  SEINFO_UNKNOWN_4, // Inferred role: seinfo obj pack; original name unknown.
+  SEINFO_UNKNOWN_5, // Inferred role: seinfo name; original name unknown.
 };
 
 enum SOUND_TRANSFORM {
-  SOUND_TRANSFORM_NONE,
-  SOUND_TRANSFORM_GLOBAL,
-  SOUND_TRANSFORM_OBJ,
-  SOUND_TRANSFORM_BONE,
+  SOUND_TRANSFORM_UNKNOWN_0, // Inferred role: sound transform none; original name unknown.
+  SOUND_TRANSFORM_UNKNOWN_1, // Inferred role: sound transform global; original name unknown.
+  SOUND_TRANSFORM_UNKNOWN_2, // Inferred role: sound transform obj; original name unknown.
+  SOUND_TRANSFORM_UNKNOWN_3, // Inferred role: sound transform bone; original name unknown.
 };
 
 struct SoundParam {
   SoundParam() {
     unknown28 = 1.0f;
     unknown38 = 0;
-    unknown39 = SOUND_TRANSFORM_NONE;
-    unknown3a = SEINFO_SEARCH;
-    unknown30 = INVALID_HANDLE;
+    unknown39 = SOUND_TRANSFORM_UNKNOWN_0;
+    unknown3a = SEINFO_UNKNOWN_0;
+    unknown30 = unknown020;
     unknown00 = 0;
   }
 
@@ -82,6 +84,12 @@ struct SoundParam {
     if (!unknown04.empty()) {
       unknown04.clear();
     }
+  }
+
+  SoundParam(u32 id, const char *name) : unknown00(0) {
+    clear();
+    unknown00 = id;
+    unknown04 = name;
   }
 
   void clear();
@@ -123,8 +131,8 @@ static_assert(alignof(SoundHandle) == 0x04, "");
 
 class GfSound : public mm::mtl::PtrSingleton<GfSound>, public IGfEvent {
 public:
-  static const u32 CATEGORY_NUM = 18;
-  static const u32 CATEGORY_VOLUME_NUM = 32;
+  static const u32 CATEGORY_UNKNOWN_18 = 18; // Inferred role: category num; original name unknown.
+  static const u32 CATEGORY_UNKNOWN_32 = 32; // Inferred role: category volume num; original name unknown.
 
   struct SeParam {
     void clear();
@@ -163,11 +171,21 @@ public:
       f32 unknown10; // Inferred role: time; original member name unknown.
     };
 
-    CategoryVolume();
+    // The game constructor (0x71005d6094) stores the 18 volumes twice, once for the member initialisation and once for this clear loop.
+    CategoryVolume() : unknown168(-1), unknown16c(true) {
+      for (Volume &volume : unknown00) {
+        volume.clear();
+      }
+    }
 
-    Volume unknown00[CATEGORY_NUM]; // Inferred role: volumes; original member name unknown.
-    int unknown168;                 // Inferred role: index; original member name unknown.
-    bool unknown16c;                // Inferred role: changed; original member name unknown.
+    // Inferred role: tells whether the category volume is in use; original name unknown. A member function:
+    // isNeedUpdateCategoryVolume (0x71005d62bc) only gets the game's loop (pointer step before the counter step) with
+    // the index test coming from an inlined call.
+    bool unknown001() const { return unknown168 >= 0; }
+
+    Volume unknown00[CATEGORY_UNKNOWN_18]; // Inferred role: volumes; original member name unknown.
+    int unknown168;                        // Inferred role: index; original member name unknown.
+    bool unknown16c;                       // Inferred role: changed; original member name unknown.
   };
 
   GfSound(const GfSetupParam &param);
@@ -227,7 +245,7 @@ public:
   bool unknown10;                                                     // Inferred role: initialized; original member name unknown.
   bool unknown11;                                                     // Inferred role: released; original member name unknown.
   u64 unknown18;                                                      // Inferred role: handle serial; original member name unknown.
-  mm::mtl::FixedArray<CategoryVolume, CATEGORY_VOLUME_NUM> unknown20; // Inferred role: category volumes; original member name unknown.
+  mm::mtl::FixedArray<CategoryVolume, CATEGORY_UNKNOWN_32> unknown20; // Inferred role: category volumes; original member name unknown.
   ml::fixed_size_alloc_inside<SeParam, 384> unknown2e20;              // Inferred role: se params; original member name unknown.
   mm::mtl::FixedList<u16, 512> unknown5278;                           // Inferred role: playing se param indices; original member name unknown.
   GfMasterVolume unknown6690;                                         // Inferred role: master volume; original member name unknown.

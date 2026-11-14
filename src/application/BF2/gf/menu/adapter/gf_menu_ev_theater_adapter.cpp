@@ -32,7 +32,7 @@ GfMenuEvTherterAdapter *GfMenuEvTherterAdapter::create(u32 handle, u32 type, u32
     if (plugin != nullptr) {
       // __LINE__ must be 138 as in the original source: it is the line argument of operator new.
 #line 138
-      GfMenuEvTherterAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuEvTherterAdapter(plugin, isUpdateAlways);
+      GfMenuEvTherterAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuEvTherterAdapter(plugin, isUpdateAlways);
       adapter->unknown30.bind(adapter, info.update);
       adapter->unknown50 = evTheater;
       plugin->release();
@@ -75,7 +75,7 @@ GfMenuEvTherterAdapter *GfMenuEvTherterAdapter::createFromCoverter(u32 handle, u
 GfMenuEvTherterAdapter *GfMenuEvTherterAdapter::createFromReference(u32 handle, u32 type, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number, bool isUpdateAlways) {
   // __LINE__ must be 163 as in the original source: it is the line argument of operator new.
 #line 163
-  ReferenceConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceConverter(number);
+  ReferenceConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceConverter(number);
   GfMenuEvTherterAdapter *adapter = create(handle, type, converter->getEvTheaterID(), isUpdateAlways);
   if (adapter != nullptr) {
     adapter->unknown58 = converter;
@@ -92,13 +92,13 @@ void GfMenuEvTherterAdapter::update(const fw::UpdateInfo &info) {
     }
   }
 
-  if (unknown30.isValid() && (unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
+  if (unknown30.isValid() && (unknown20 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) != 0) {
     if (unknown50 != 0) {
       setDisp(unknown30(unknown50));
     } else {
       setDisp(false);
     }
-    unknown20 &= ~FLAG_CHANGED;
+    unknown20 &= ~FLAG_UNKNOWN_0;
   }
 }
 

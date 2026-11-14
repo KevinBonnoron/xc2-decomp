@@ -19,19 +19,14 @@ struct alignas(16) DevTouchInfo {
   DevTouchInfo();
   void initialize();
 
-  u64 unknown00; // Inferred role: contact data; original member name unknown.
-  s32 unknown08; // Inferred role: state; original member name unknown.
-  s32 unknown0c; // Inferred role: contact id; original member name unknown.
-  u16 unknown10; // Inferred role: flags; original member name unknown.
-  u8 _12[0x20 - 0x12];
+  long unknown00;     // Inferred role: clock at the start of the contact; original member name unknown.
+  f32 unknown08;      // Inferred role: seconds since the start of the contact; original member name unknown.
+  s32 unknown0c;      // Inferred role: contact id; original member name unknown.
+  u16 unknown10;      // Inferred role: flags; original member name unknown.
   mm::Vec2 unknown20; // Inferred role: initial position; original member name unknown.
-  u8 _28[0x30 - 0x28];
   mm::Vec2 unknown30; // Inferred role: position; original member name unknown.
-  u8 _38[0x40 - 0x38];
   mm::Vec2 unknown40; // Inferred role: previous position; original member name unknown.
-  u8 _48[0x50 - 0x48];
   mm::Vec2 unknown50; // Inferred role: move; original member name unknown.
-  u8 _58[0x60 - 0x58];
 };
 
 static_assert(offsetof(DevTouchInfo, unknown0c) == 0x0c, "");
@@ -54,12 +49,15 @@ public:
   ~DevTouch() override {}
   static bool isInitialized();
   static int getTouchCount();
-  void itUp(u32 index, f32 x, f32 y) override;
-  void itMove(u32 index, f32 x, f32 y) override;
-  void itDown(u32 index, f32 x, f32 y) override;
+  // The first declared virtual function stays one we define (wkUpdate): it is the key function that places the vtable
+  // in this unit. itDown, itUp and itMove follow the order of the game's vtable (slots 0x98, 0xa0, 0xa8).
   void wkUpdate() override;
   bool wkStandbyLogin() override;
   bool wkStandbyLogout() override;
+  void itDown(u32 index, f32 x, f32 y) override;
+  void itUp(u32 index, f32 x, f32 y) override;
+  void itMove(u32 index, f32 x, f32 y) override;
+  int getContactIndex(u32 contactId);
   void releseContact(u32 contactId);
   static DevTouchInfo *getInfo(u32 index);
   virtual void updateDevice();

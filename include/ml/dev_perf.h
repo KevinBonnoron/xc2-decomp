@@ -7,21 +7,21 @@
 namespace ml {
 
 enum DevPerfOperationMode {
-  DEV_PERF_OPERATION_MODE_HANDHELD,
-  DEV_PERF_OPERATION_MODE_CONSOLE,
+  DEV_PERF_OPERATION_MODE_UNKNOWN_0, // Inferred role: handheld; original name unknown.
+  DEV_PERF_OPERATION_MODE_UNKNOWN_1, // Inferred role: console; original name unknown.
 };
 
 enum DevPerfMode {
-  DEV_PERF_MODE_NONE,
-  DEV_PERF_MODE_NORMAL,
-  DEV_PERF_MODE_BOOST,
-  DEV_PERF_MODE_NUM,
+  DEV_PERF_MODE_UNKNOWN_0, // Inferred role: none; original name unknown.
+  DEV_PERF_MODE_UNKNOWN_1, // Inferred role: normal; original name unknown.
+  DEV_PERF_MODE_UNKNOWN_2, // Inferred role: boost; original name unknown.
+  DEV_PERF_MODE_UNKNOWN_3, // Inferred role: number of performance modes; original name unknown.
 };
 
 enum DevPerfConfig {
-  DEV_PERF_CONFIG_LOW,
-  DEV_PERF_CONFIG_MIDDLE,
-  DEV_PERF_CONFIG_HIGH,
+  DEV_PERF_CONFIG_UNKNOWN_0, // Inferred role: low; original name unknown.
+  DEV_PERF_CONFIG_UNKNOWN_1, // Inferred role: middle; original name unknown.
+  DEV_PERF_CONFIG_UNKNOWN_2, // Inferred role: high; original name unknown.
 };
 
 // Inferred role: device interface perf; original type name unknown.

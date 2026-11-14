@@ -24,11 +24,11 @@ void StateFieldWaterIdleTurn::update(GfComBehaviorPc *behavior, const fw::Update
   if (StateUtilField::isTurnEndRangeCacheInput(*property, unknown20)) {
     GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
     if (!property->existInputXY()) {
-      reqState(STATE_ID_FIELD_WATER_IDLE);
+      reqState(STATE_ID_UNKNOWN_20);
       return;
     }
     if (StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_SWIM_00)) {
-      reqState(STATE_ID_FIELD_WATER_SWIM);
+      reqState(STATE_ID_UNKNOWN_22);
       return;
     }
   }

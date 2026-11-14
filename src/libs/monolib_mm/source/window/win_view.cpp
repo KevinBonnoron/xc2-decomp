@@ -1,5 +1,7 @@
 #include "ml/win_view.h"
 
+#include <string.h>
+
 #include "ml/cache_draw.h"
 #include "ml/dev_graph.h"
 #include "ml/lib_main.h"
@@ -19,6 +21,79 @@ namespace {
 WinView *unknown002;
 
 } // namespace
+
+WinView::~WinView() {}
+
+bool WinView::evtFocusOn() { return true; }
+
+bool WinView::evtFocusOff() { return unknown1b8.m_back->unknown48.evtFocusOff(); }
+
+void WinView::setRect(const mm::Rect<int> &rect) {
+  updateViewPort(rect);
+  if (unknown53c) {
+    memcpy(unknown1b8.m_front, unknown1b8.m_back, sizeof(RENDER_INFO));
+  }
+}
+
+void WinView::setTitle(const char *title) {
+  unknown4d0 = title;
+  WorkObj::unknown08 = title;
+}
+
+void WinView::setSplitLine(int line) {
+  unknown1b8.m_back->unknown28.setSplitLine(line);
+  applyRect();
+}
+
+void WinView::createSplitView(bool isHorizontal, WinView *view1, WinView *view2) {
+  unknown1b8.m_back->unknown28.setup(this, isHorizontal, view1, view2);
+  unknown3bc |= isHorizontal ? 0x18 : 0x28;
+  memcpy(unknown1b8.m_front, unknown1b8.m_back, sizeof(RENDER_INFO));
+}
+
+mm::Rect<int> WinView::getSplitRect(const WinView *view, bool isBack) const {
+  const RENDER_INFO *info = isBack ? unknown1b8.m_back : unknown1b8.m_front;
+  if (getSplitView1() != view) {
+    return info->unknown28.getScissorRect2();
+  }
+  return info->unknown28.getScissorRect1();
+}
+
+// The game body is identical to getSplitRect: it calls WinSplitFrame::getScissorRect1/2 here too, not the client variants.
+mm::Rect<int> WinView::getClientSplitRect(const WinView *view, bool isBack) const {
+  const RENDER_INFO *info = isBack ? unknown1b8.m_back : unknown1b8.m_front;
+  if (getSplitView1() != view) {
+    return info->unknown28.getScissorRect2();
+  }
+  return info->unknown28.getScissorRect1();
+}
+
+mm::Rect<int> WinView::getScissorRect(bool isBack) const {
+  const WinView *parent = getParentView();
+  if (parent == nullptr || !parent->isSplit(isBack)) {
+    return getRect(isBack);
+  }
+  return parent->getSplitRect(this, isBack);
+}
+
+mm::Rect<int> WinView::getFrameRect(bool isBack) const {
+  const RENDER_INFO *info = isBack ? unknown1b8.m_back : unknown1b8.m_front;
+  return info->unknown48.unknown001(isBack);
+}
+
+mm::Rect<int> WinView::getFrameAbsRect(bool isBack) const {
+  const RENDER_INFO *info = isBack ? unknown1b8.m_back : unknown1b8.m_front;
+  mm::Pnt<int> pos = getFrameAbsPos(isBack);
+  mm::Rect<int> rect = info->unknown48.unknown001(isBack);
+  return mm::Rect<int>(pos.x, pos.y, rect.width, rect.height);
+}
+
+void WinView::setSize(int width, int height) {
+  mm::Rect<int> rect = getFrameRect(true);
+  rect.width = width;
+  rect.height = height;
+  updateViewPort(rect);
+}
 
 void WinView::setDefaultFrameColor(const mm::Col4 &color) { unknown004.m_defaultFrameColor = color; }
 
@@ -269,6 +344,27 @@ mm::Rect<int> WinView::getRealAbsRect(bool isBack) const {
   return rect;
 }
 
+WinView *WinView::getPointedView(const mm::Pnt<int> &pos) {
+  if (!(unknown3b8 & 0x48) && !wkIsWaitException() && wkIsActive() && !wkIsShutdown()) {
+    mm::Rect<int> rect = getFrameAbsRect(false);
+    WinView *pointed = nullptr;
+    if (pos.x >= rect.x && pos.x < rect.x + rect.width) {
+      pointed = this;
+      if (pos.y < rect.y || pos.y >= rect.y + rect.height) {
+        pointed = nullptr;
+      }
+    }
+    for (reslist<WorkObj *>::Node *node = wkGetChild()->begin(); node != wkGetChild()->end(); node = node->getNext()) {
+      WinView *child = static_cast<WinView *>(node->value)->getPointedView(pos);
+      if (child != nullptr) {
+        pointed = child;
+      }
+    }
+    return pointed;
+  }
+  return nullptr;
+}
+
 void WinView::wkTail() {
   applyRect();
   updateMsg();
@@ -303,7 +399,7 @@ void WinView::renderView() {
   bool isEmpty = true;
   if (size.x > 0 && size.y > 0 && rect.width > 0 && rect.height > 0) {
     const WinViewPort *port = unknown1b8.m_front;
-    isEmpty = port->unknown08.x <= 0 && port->unknown08.y <= 0;
+    isEmpty = port->m_workSize.x <= 0 && port->m_workSize.y <= 0;
   }
   if (!isSkip) {
     if (!isSplit(false) && !(unknown3b8 & 1) && !isEmpty) {
@@ -314,8 +410,8 @@ void WinView::renderView() {
     mm::Rect<int> viewport = getClientAbsRect(false);
     // The viewport part of the render info, picking for each axis the larger of the view size and the work size.
     const WinViewPort *port = unknown1b8.m_front;
-    const mm::Pnt<int> &widthSrc = port->unknown00.x > port->unknown08.x ? port->unknown00 : port->unknown08;
-    const mm::Pnt<int> &heightSrc = port->unknown00.y > port->unknown08.y ? port->unknown00 : port->unknown08;
+    const mm::Pnt<int> &widthSrc = port->unknown00.x > port->m_workSize.x ? port->unknown00 : port->m_workSize;
+    const mm::Pnt<int> &heightSrc = port->unknown00.y > port->m_workSize.y ? port->unknown00 : port->m_workSize;
     mm::Rect<int> renderRect;
     renderRect.x = port->unknown10.x;
     renderRect.y = port->unknown10.y;
@@ -397,6 +493,27 @@ bool WinView::wkStandbyLogout() {
   }
   WinViewRoot::invalidCurrent(this);
   return WorkObj::wkStandbyLogout();
+}
+
+bool WinView::attachRenderWork(const WorkObj *work) {
+  unknown3c0.add(0);
+  u32 wid = work->unknown50;
+  unknown3c0.set(wid);
+  unknown3c0.add(1);
+  unknown3c0.set(work);
+  return true;
+}
+
+bool WinView::attachWorkEvent(IWorkEvent *event, bool isFront) {
+  CS lock(unknown540);
+  if (isFront) {
+    unknown3c0.add(2);
+    unknown3c0.set(event);
+  } else {
+    unknown3c0.add(1);
+    unknown3c0.set(event);
+  }
+  return true;
 }
 
 template class threadval<WinView::RENDER_INFO>;

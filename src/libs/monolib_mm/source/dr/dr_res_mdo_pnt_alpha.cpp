@@ -37,6 +37,21 @@ void DrResMdoPntAlpha::create(const void *unknown001) {
   unknown00 = unknown004_1;
 }
 
+void DrResMdoPntAlpha::update(f32 speed) {
+  unknown00 &= ~unknown004_2;
+  if (unknown00 & unknown004_4) {
+    unknown04 += speed;
+    if (unknown04 > 1.0f) {
+      unknown04 = 1.0f;
+    }
+  } else {
+    unknown04 -= speed;
+    if (unknown04 < 0.0f) {
+      unknown04 = 0.0f;
+    }
+  }
+}
+
 s32 DrResMdoPntAlphaMan::getWrkSize(s32 unknown001) { return unknown001 * (sizeof(DrResMdoPntAlpha) + sizeof(DrResMdoPntAlpha *)) + sizeof(DrResMdoPntAlphaMan); }
 
 void DrResMdoPntAlphaMan::setup(DrResMdoPntAlpha *unknown001, DrResMdoPntAlpha **unknown002, s32 unknown003) {
@@ -47,6 +62,22 @@ void DrResMdoPntAlphaMan::setup(DrResMdoPntAlpha *unknown001, DrResMdoPntAlpha *
   for (s32 i = 0; i < unknown10; i++) {
     unknown00[i].init();
   }
+}
+
+void DrResMdoPntAlphaMan::update(f32 speed) {
+  s32 count = 0;
+  for (s32 i = 0; i < unknown14; i++) {
+    unknown08[count] = unknown08[i];
+    DrResMdoPntAlpha *item = unknown08[i];
+    if (item->unknown00 & DrResMdoPntAlpha::unknown004_2) {
+      item->update(speed * 0.1f);
+      count++;
+    } else {
+      item->unknown00 = 0;
+      item->unknown04 = 1.0f;
+    }
+  }
+  unknown14 = count;
 }
 
 f32 DrResMdoPntAlphaMan::getAlphaObj(const void *unknown001, bool unknown002) {

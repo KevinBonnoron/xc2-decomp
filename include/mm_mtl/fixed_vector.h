@@ -2,7 +2,6 @@
 #include "mm/mm_std_base.h"
 #include "mm_mtl/algorithm.h"
 #include "mm_mtl/construct.h"
-#include "mm_mtl/type_traits.h"
 #include <new>
 #include <stddef.h>
 
@@ -42,10 +41,16 @@ template <typename T, size_t N> class FixedVector {
 
 public:
   FixedVector() : m_size(0) {}
+  FixedVector(const FixedVector &other) : m_size(0) { *this = other; }
   ~FixedVector() { clear(); }
 
   T &front() { return *at(0); }
-  const T &front() const { return *at(0); }
+  // __LINE__ must be 163 as in the original header: it is the line argument of the assert.
+  const T &front() const {
+#line 163
+    MM_ASSERT(0 < m_size);
+    return *at(0);
+  }
 
   // __LINE__ must be 165, 166, 170, 181, 192, 203 and 227 as in the original header: they are the line arguments of the asserts.
   T &back() {
@@ -171,13 +176,16 @@ public:
     return *this;
   }
 
+  // __LINE__ must be 270 and 275 as in the original header: they are the line arguments of the asserts.
   void assign(const T *first, const T *last) {
+#line 270
     MM_ASSERT(first <= last);
     clear();
     if (first == last) {
       return;
     }
     size_t newSize = last - first;
+#line 275
     MM_ASSERT(newSize <= N);
     copy_construct_n(first, newSize, begin());
     m_size = newSize;
@@ -187,17 +195,6 @@ public:
   const T *at(size_t index) const { return reinterpret_cast<const T *>(&mBuffer[index * sizeof(T) / sizeof(Unit)]); }
 
 private:
-  static void copy(const T *first, const T *last, T *dest) {
-    if (is_pod<T>::value) {
-      size_t count = last - first;
-      __builtin_memcpy(dest, first, count * sizeof(T));
-    } else {
-      while (first != last) {
-        *dest++ = *first++;
-      }
-    }
-  }
-
   static void construct(T *it, const T &value) {
     if (it != nullptr) {
       new (static_cast<void *>(it)) T(value);

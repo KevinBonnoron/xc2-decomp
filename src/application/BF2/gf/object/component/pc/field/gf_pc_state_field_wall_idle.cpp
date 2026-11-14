@@ -26,7 +26,7 @@ void StateFieldWallIdle::update(GfComBehaviorPc *behavior, const fw::UpdateInfo 
     GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
     if (StateUtilField::execAsmCmd(*comAsm, StateUtilField::getAsmID(mode))) {
       property->unknown310.unknown14 = mode;
-      reqState(STATE_ID_FIELD_WALL_MOVE);
+      reqState(STATE_ID_UNKNOWN_47);
     }
   } else if (!StateUtilField::isWallUpMove(mode)) {
     property->unknown310.unknown10_7 = false;

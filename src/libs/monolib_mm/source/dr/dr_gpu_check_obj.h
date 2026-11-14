@@ -19,8 +19,8 @@ public:
   };
 
   enum Flag {
-    FLAG_RENDER = 0x10,
-    FLAG_PAUSE = 0x80,
+    FLAG_UNKNOWN_4 = 0x10, // Inferred role: render; original name unknown.
+    FLAG_UNKNOWN_7 = 0x80, // Inferred role: pause; original name unknown.
   };
 
   DrGpuCheckObj(int type, bool isWorld);
@@ -29,10 +29,14 @@ public:
   bool isRender() const override;
   void setPause(bool isPause) override;
   u32 isDeleteCall() const override;
+  void setPos(const mm::Vec3 &position, f32 radius) override;
+  void setWorldPos(const mm::Vec3 &position, f32 radius) override;
+  bool update() override;
+  void render() override;
 
-  void *unknown08; // Inferred role: unknown; original member name unknown.
-  void *unknown10; // Inferred role: unknown; original member name unknown.
-  s32 unknown18;   // Inferred role: type; original member name unknown.
+  DrGpuCheckObj *unknown08; // Inferred role: previous object; original member name unknown.
+  DrGpuCheckObj *unknown10; // Inferred role: next object; original member name unknown.
+  s32 unknown18;            // Inferred role: type; original member name unknown.
   u8 _1c[0x20 - 0x1c];
   grlib::CGLibOcclusionQuery unknown20; // Inferred role: query; original member name unknown.
   u32 unknown38;                        // Inferred role: unknown; original member name unknown.
@@ -40,6 +44,7 @@ public:
   unknown001 unknown40[2];              // Inferred role: positions per buffer; original member name unknown.
   unknown001 unknown60;                 // Inferred role: current position; original member name unknown.
   s32 unknown70;                        // Inferred role: unknown; original member name unknown.
+  u8 _74[0x80 - 0x74];
 };
 
 static_assert(offsetof(DrGpuCheckObj, unknown18) == 0x18, "");
@@ -48,5 +53,8 @@ static_assert(offsetof(DrGpuCheckObj, unknown3c) == 0x3c, "");
 static_assert(offsetof(DrGpuCheckObj, unknown40) == 0x40, "");
 static_assert(offsetof(DrGpuCheckObj, unknown60) == 0x60, "");
 static_assert(offsetof(DrGpuCheckObj, unknown70) == 0x70, "");
+static_assert(offsetof(DrGpuCheckObj, unknown08) == 0x08, "");
+static_assert(offsetof(DrGpuCheckObj, unknown10) == 0x10, "");
+static_assert(sizeof(DrGpuCheckObj) == 0x80, "");
 
 } // namespace ml

@@ -8,7 +8,8 @@
 
 namespace gf {
 
-constexpr u32 SKILL_LEVEL_FIRST = 1;
+// Inferred role: first level of a skill, always unlocked; original name unknown.
+constexpr u32 SKILL_LEVEL_UNKNOWN_1 = 1;
 
 static GfMenuSkillAdapter::TypeInfo TYPE_INFOS[] = {
     {&GfMenuSkillAdapter::update_SkillName, {GfMenuAdapter::unknown004_2, 0, 0}},
@@ -42,7 +43,7 @@ GfMenuSkillAdapter *GfMenuSkillAdapter::create(u32 handle, u32 type, u32 driver,
     if (plugin != nullptr) {
       // __LINE__ must be 192 as in the original source: it is the line argument of operator new.
 #line 192
-      GfMenuSkillAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuSkillAdapter(plugin, isUpdateAlways);
+      GfMenuSkillAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuSkillAdapter(plugin, isUpdateAlways);
       adapter->unknown30.bind(adapter, info.update);
       adapter->unknown5c = driver;
       adapter->unknown60 = line;
@@ -56,7 +57,7 @@ GfMenuSkillAdapter *GfMenuSkillAdapter::create(u32 handle, u32 type, u32 driver,
 }
 
 bool GfMenuSkillAdapter::update_SkillName() {
-  if (unknown60 >= SKILL_ROW_COUNT) {
+  if (unknown60 >= SKILL_UNKNOWN_5) {
     return false;
   }
   u32 skill = GfDataDriverSkill::getSkillFromBdat(unknown5c, unknown60, unknown64, unknown68 != 0);
@@ -74,7 +75,7 @@ bool GfMenuSkillAdapter::update_SkillName() {
 }
 
 bool GfMenuSkillAdapter::update_SkillCaption() {
-  if (unknown60 >= SKILL_ROW_COUNT) {
+  if (unknown60 >= SKILL_UNKNOWN_5) {
     return false;
   }
   bool isHidden = unknown68 != 0;
@@ -95,7 +96,7 @@ bool GfMenuSkillAdapter::update_SkillCaption() {
 }
 
 bool GfMenuSkillAdapter::update_SkillPoint() {
-  if (unknown60 >= SKILL_ROW_COUNT) {
+  if (unknown60 >= SKILL_UNKNOWN_5) {
     return false;
   }
   bool isHidden = unknown68 != 0;
@@ -110,7 +111,7 @@ bool GfMenuSkillAdapter::update_SkillPoint() {
 }
 
 bool GfMenuSkillAdapter::update_SkillReleaseFlagIcon() {
-  if (unknown60 >= SKILL_ROW_COUNT) {
+  if (unknown60 >= SKILL_UNKNOWN_5) {
     return false;
   }
   bool isHidden = unknown68 != 0;
@@ -123,7 +124,7 @@ bool GfMenuSkillAdapter::update_SkillReleaseFlagIcon() {
 }
 
 bool GfMenuSkillAdapter::update_SkillReleaseFlagColor() {
-  if (unknown60 >= SKILL_ROW_COUNT) {
+  if (unknown60 >= SKILL_UNKNOWN_5) {
     return false;
   }
   bool isHidden = unknown68 != 0;
@@ -137,7 +138,7 @@ bool GfMenuSkillAdapter::update_SkillReleaseFlagColor() {
 }
 
 bool GfMenuSkillAdapter::update_SkillReleaseFlagColorIcon() {
-  if (unknown60 >= SKILL_ROW_COUNT) {
+  if (unknown60 >= SKILL_UNKNOWN_5) {
     return false;
   }
   setNumber(GfDataDriverSkill::getSkillCategoryFromBdat(unknown5c, unknown60, unknown64, unknown68 != 0) + 18);
@@ -145,7 +146,7 @@ bool GfMenuSkillAdapter::update_SkillReleaseFlagColorIcon() {
 }
 
 bool GfMenuSkillAdapter::update_SkillLearnDisp() {
-  if (unknown60 >= SKILL_ROW_COUNT) {
+  if (unknown60 >= SKILL_UNKNOWN_5) {
     return false;
   }
   bool isHidden = unknown68 != 0;
@@ -161,7 +162,7 @@ bool GfMenuSkillAdapter::update_SkillLearnDisp() {
 }
 
 bool GfMenuSkillAdapter::update_SkillLevelLockIcon() {
-  setNumber(unknown64 == SKILL_LEVEL_FIRST || GfDataDriverSkill::isSkillLevelUnlock(unknown5c, unknown64, unknown68 != 0) ? 5 : 11);
+  setNumber(unknown64 == SKILL_LEVEL_UNKNOWN_1 || GfDataDriverSkill::isSkillLevelUnlock(unknown5c, unknown64, unknown68 != 0) ? 5 : 11);
   return true;
 }
 
@@ -171,12 +172,12 @@ bool GfMenuSkillAdapter::update_SkillLearnNum() {
 }
 
 bool GfMenuSkillAdapter::update_SkillLearnMax() {
-  setNumber(SKILL_ROW_COUNT * SKILL_COLUMN_COUNT);
+  setNumber(SKILL_UNKNOWN_5 * SKILL_UNKNOWN_3);
   return true;
 }
 
 bool GfMenuSkillAdapter::update_SkillLevelUnlockNum() {
-  if (unknown60 == SKILL_ROW_COUNT) {
+  if (unknown60 == SKILL_UNKNOWN_5) {
     u32 num = GfDataDriverSkill::getSkillLevelUnlockNum(unknown5c, unknown64, unknown68 != 0);
     if (num != 0) {
       setNumber(num);
@@ -201,14 +202,14 @@ GfMenuSkillAdapter *GfMenuSkillAdapter::createFromCoverter(u32 handle, u32 type,
 GfMenuSkillAdapter *GfMenuSkillAdapter::createFromReferenceDriver(u32 handle, u32 type, u32 driverIndex, u16 line, u16 level, u16 roundIndex, bool isUpdateAlways) {
   // __LINE__ must be 225 as in the original source: it is the line argument of operator new.
 #line 225
-  ReferenceDriverConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceDriverConverter(driverIndex, line, level, roundIndex);
+  ReferenceDriverConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceDriverConverter(driverIndex, line, level, roundIndex);
   return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 
 GfMenuSkillAdapter *GfMenuSkillAdapter::createFromReferenceDriverLineLevel(u32 handle, u32 type, u32 driverIndex, u16 lineIndex, u16 levelIndex, u16 roundIndex, bool isUpdateAlways) {
   // __LINE__ must be 233 as in the original source: it is the line argument of operator new.
 #line 233
-  ReferenceDriverLineLevelConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceDriverLineLevelConverter(driverIndex, lineIndex, levelIndex, roundIndex);
+  ReferenceDriverLineLevelConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceDriverLineLevelConverter(driverIndex, lineIndex, levelIndex, roundIndex);
   return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 
@@ -236,9 +237,9 @@ void GfMenuSkillAdapter::update(const fw::UpdateInfo &info) {
     }
   }
 
-  if (unknown30.isValid() && (unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
+  if (unknown30.isValid() && (unknown20 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) != 0) {
     setDisp(unknown30());
-    unknown20 &= ~FLAG_CHANGED;
+    unknown20 &= ~FLAG_UNKNOWN_0;
   }
 }
 

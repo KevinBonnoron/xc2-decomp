@@ -18,7 +18,7 @@
 namespace gf {
 namespace util {
 
-constexpr u32 UTF16_BUFFER_LENGTH = 0x400;
+constexpr u32 LENGTH_UNKNOWN_1024 = 0x400; // Inferred role: utf16 buffer length; original name unknown.
 
 void getViewLocalToDeviceCoord(mm::Vec3 &device, const mm::Mat44 &frustum, const mm::Vec3 &local) {
   device.x = frustum.rows[0][0] * (local.x / local.z) - frustum.rows[2][0];
@@ -120,8 +120,10 @@ void getEulerRotateModel(mm::Vec3 &euler, const mm::Quat &quat) {
   }
 }
 
+void getEulerRotateCamera(mm::Vec3 &euler, const mm::Quat &quat) { mm::quatToEuler(quat, euler); }
+
 bool isInsideView(const mm::Vec3 &position, f32 radius) {
-  for (u32 i = 0; i < GfInfo::CAMERA_PLANE_COUNT; i++) {
+  for (u32 i = 0; i < GfInfo::PLANE_UNKNOWN_6; i++) {
     const mm::Plane &plane = GfInfo::m_camPlanes[i];
     if (position.x * plane.normal.x + position.y * plane.normal.y + position.z * plane.normal.z + plane.distance < -radius) {
       return false;
@@ -163,8 +165,8 @@ void utf8Toutf16(const char *source, u16 *destination, u32 destinationLength) { 
 void utf16Tosjis(const u16 *source, char *destination, u32 destinationSize) { mlUTF16toSJIS(destination, destinationSize, source); }
 
 bool utf8Tosjis(const char *source, char *destination, u32 destinationSize) {
-  u16 buffer[UTF16_BUFFER_LENGTH];
-  mlUTF8toUTF16(buffer, UTF16_BUFFER_LENGTH, source);
+  u16 buffer[LENGTH_UNKNOWN_1024];
+  mlUTF8toUTF16(buffer, LENGTH_UNKNOWN_1024, source);
   return mlUTF16toSJIS(destination, destinationSize, buffer);
 }
 

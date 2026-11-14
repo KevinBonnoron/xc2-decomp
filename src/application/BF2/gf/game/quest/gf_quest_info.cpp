@@ -23,21 +23,21 @@ namespace gf {
 
 namespace {
 
-constexpr u32 COLLECT_USE_FLAG_OFFSET = 0x5ef;
-constexpr u32 DUMMY_TALK_GROUP_FLAG_OFFSET = 0xe8b;
-constexpr u32 COUNT_FLAG_MAX = 0xff;
-constexpr u32 ENEMY_GROUP_COUNT = 8;
-constexpr u32 WEATHER_NONE = 4;
+constexpr u32 COLLECT_USE_FLAG_UNKNOWN_1519 = 0x5ef;      // Inferred role: collect use flag offset; original name unknown.
+constexpr u32 DUMMY_TALK_GROUP_FLAG_UNKNOWN_3723 = 0xe8b; // Inferred role: dummy talk group flag offset; original name unknown.
+constexpr u32 COUNT_FLAG_UNKNOWN_255 = 0xff;              // Inferred role: count flag max; original name unknown.
+constexpr u32 GROUP_UNKNOWN_8 = 8;                        // Inferred role: enemy group count; original name unknown.
+constexpr u32 WEATHER_UNKNOWN_4 = 4;                      // Inferred role: weather none; original name unknown.
 
 } // namespace
 
-bool GfQuestInfo::isQuestOrder(QuestID quest) { return getState(quest) == QSTATE_ORDER; }
+bool GfQuestInfo::isQuestOrder(QuestID quest) { return getState(quest) == QSTATE_UNKNOWN_1; }
 
-bool GfQuestInfo::isQuestProgress(QuestID quest) { return getState(quest) == QSTATE_ORDER; }
+bool GfQuestInfo::isQuestProgress(QuestID quest) { return getState(quest) == QSTATE_UNKNOWN_1; }
 
-bool GfQuestInfo::isQuestFin(QuestID quest) { return getState(quest) > QSTATE_ORDER; }
+bool GfQuestInfo::isQuestFin(QuestID quest) { return getState(quest) > QSTATE_UNKNOWN_1; }
 
-bool GfQuestInfo::isQuestNotOrder(QuestID quest) { return getState(quest) == QSTATE_NOT_ORDER; }
+bool GfQuestInfo::isQuestNotOrder(QuestID quest) { return getState(quest) == QSTATE_UNKNOWN_0; }
 
 QuestID GfQuestInfo::getParentQuest(QuestID quest) {
   QuestID parent = GfDataQuest::getListPRTQuestID(quest);
@@ -50,11 +50,40 @@ QuestID GfQuestInfo::getParentQuest(QuestID quest) {
 }
 
 u32 GfQuestInfo::getPlayEvent(QuestID quest, QSTATE state) {
-  if (state == QSTATE_FIN_A) {
+  if (state == QSTATE_UNKNOWN_2) {
     return GfDataQuest::getListCallEventA(quest);
   }
 
   return GfDataQuest::getListCallEventB(quest);
+}
+
+QuestID GfQuestInfo::getProgressQuest(QuestID quest) {
+  if (quest.empty()) {
+    return quest;
+  }
+
+  if (!isParent(quest)) {
+    quest = getParentQuest(quest);
+  }
+
+  if (getState(quest) != QSTATE_UNKNOWN_1) {
+    return QuestID();
+  }
+
+  QuestID child = GfDataQuest::getListNextQuestA(quest);
+  while (GfDataQuest::getListPRTQuestID(child) == quest) {
+    if (getState(child) == QSTATE_UNKNOWN_1) {
+      return child;
+    }
+
+    QuestID current = child;
+    child = GfDataQuest::getListNextQuestA(current);
+    if (child.empty() || isQuestNotOrder(child)) {
+      child = GfDataQuest::getListNextQuestB(current);
+    }
+  }
+
+  return QuestID();
 }
 
 bool GfQuestInfo::isParent(QuestID quest) { return GfDataQuest::getListPRTQuestID(quest).empty(); }
@@ -63,7 +92,7 @@ QuestID GfQuestInfo::getChildQuestID(QuestID quest) {
   QSTATE state = getState(quest);
   QuestID parent = GfDataQuest::getListPRTQuestID(quest);
   bool isChildQuest = !parent.empty();
-  bool isNextB = state == QSTATE_FIN_B && isChildQuest;
+  bool isNextB = state == QSTATE_UNKNOWN_3 && isChildQuest;
   if (isNextB) {
     QuestID child = GfDataQuest::getListNextQuestB(quest);
     if (!child.empty()) {
@@ -78,7 +107,7 @@ bool GfQuestInfo::incSuppressCount(const QuestTaskParam &param) {
   if (param.unknown04.unknown02 == 0) {
     u32 flag = QuestListAcc::get()->getBattleCountFlag(param.unknown14);
     u32 count = GfGameFlag::getLocal(8, flag);
-    if (count < COUNT_FLAG_MAX) {
+    if (count < COUNT_FLAG_UNKNOWN_255) {
       GfGameFlag::setLocal(8, flag, count + 1);
     }
 
@@ -96,7 +125,7 @@ bool GfQuestInfo::incSuppressCount(const QuestTaskParam &param) {
 
 void GfQuestInfo::resetSuppressCount(const QuestTaskParam &param) {
   if (param.unknown04.unknown02 == 0) {
-    if (GfDataQuest::getListQuestCategory(param.unknown04) != QTYPE_ACHIEVEMENT) {
+    if (GfDataQuest::getListQuestCategory(param.unknown04) != QTYPE_UNKNOWN_6) {
       GfGameFlag::setLocal(8, QuestListAcc::get()->getBattleCountFlag(param.unknown14), 0);
     }
   } else {
@@ -127,9 +156,9 @@ u32 GfQuestInfo::getSuppressLimit(const QuestTaskParam &param) {
 
 bool GfQuestInfo::incCollectUseCount(const QuestTaskParam &param) {
   if (param.unknown04.unknown02 == 0) {
-    u32 flag = QuestListAcc::get()->getCollectUseFlagIndex(param) + COLLECT_USE_FLAG_OFFSET;
+    u32 flag = QuestListAcc::get()->getCollectUseFlagIndex(param) + COLLECT_USE_FLAG_UNKNOWN_1519;
     u32 count = GfGameFlag::getLocal(8, flag);
-    if (count >= COUNT_FLAG_MAX) {
+    if (count >= COUNT_FLAG_UNKNOWN_255) {
       return false;
     }
 
@@ -147,7 +176,7 @@ bool GfQuestInfo::incCollectUseCount(const QuestTaskParam &param) {
 
 bool GfQuestInfo::decCollectUseCount(const QuestTaskParam &param) {
   if (param.unknown04.unknown02 == 0) {
-    u32 flag = QuestListAcc::get()->getCollectUseFlagIndex(param) + COLLECT_USE_FLAG_OFFSET;
+    u32 flag = QuestListAcc::get()->getCollectUseFlagIndex(param) + COLLECT_USE_FLAG_UNKNOWN_1519;
     u32 count = GfGameFlag::getLocal(8, flag);
     if (count != 0) {
       GfGameFlag::setLocal(8, flag, count - 1);
@@ -171,7 +200,7 @@ u32 GfQuestInfo::getCollectUseCount(const QuestTaskParam &param) {
     return achievQuest != nullptr ? achievQuest->getCount() : 0;
   }
 
-  return GfGameFlag::getLocal(8, QuestListAcc::get()->getCollectUseFlagIndex(param) + COLLECT_USE_FLAG_OFFSET);
+  return GfGameFlag::getLocal(8, QuestListAcc::get()->getCollectUseFlagIndex(param) + COLLECT_USE_FLAG_UNKNOWN_1519);
 }
 
 u32 GfQuestInfo::getCollectUseLimit(const QuestTaskParam &param) {
@@ -181,11 +210,11 @@ u32 GfQuestInfo::getCollectUseLimit(const QuestTaskParam &param) {
   }
 
   QuestListAcc *questListAcc = QuestListAcc::get();
-  if (param.unknown10 == TASK_TYPE_COLLECT) {
+  if (param.unknown10 == TASK_TYPE_UNKNOWN_3) {
     return questListAcc->getCollectCount(param.unknown14);
   }
 
-  if (param.unknown10 == TASK_TYPE_USE) {
+  if (param.unknown10 == TASK_TYPE_UNKNOWN_4) {
     return questListAcc->getUseItemNumber(param.unknown14);
   }
 
@@ -194,11 +223,11 @@ u32 GfQuestInfo::getCollectUseLimit(const QuestTaskParam &param) {
 
 u32 GfQuestInfo::getCollectUseItem(const QuestTaskParam &param) {
   QuestListAcc *questListAcc = QuestListAcc::get();
-  if (param.unknown10 == TASK_TYPE_COLLECT) {
+  if (param.unknown10 == TASK_TYPE_UNKNOWN_3) {
     return questListAcc->getCollectItemID(param.unknown14);
   }
 
-  if (param.unknown10 == TASK_TYPE_USE) {
+  if (param.unknown10 == TASK_TYPE_UNKNOWN_4) {
     return questListAcc->getUseItemID(param.unknown14);
   }
 
@@ -207,11 +236,11 @@ u32 GfQuestInfo::getCollectUseItem(const QuestTaskParam &param) {
 
 u32 GfQuestInfo::getCollectUseItemCategory(const QuestTaskParam &param) {
   QuestListAcc *questListAcc = QuestListAcc::get();
-  if (param.unknown10 == TASK_TYPE_COLLECT) {
+  if (param.unknown10 == TASK_TYPE_UNKNOWN_3) {
     return questListAcc->getCollectCategory(param.unknown14);
   }
 
-  if (param.unknown10 == TASK_TYPE_USE) {
+  if (param.unknown10 == TASK_TYPE_UNKNOWN_4) {
     return questListAcc->getUseCategory(param.unknown14);
   }
 
@@ -220,8 +249,8 @@ u32 GfQuestInfo::getCollectUseItemCategory(const QuestTaskParam &param) {
 
 void GfQuestInfo::resetCollectUseCount(const QuestTaskParam &param) {
   if (param.unknown04.unknown02 == 0) {
-    if (GfDataQuest::getListQuestCategory(param.unknown04) != QTYPE_ACHIEVEMENT) {
-      GfGameFlag::setLocal(8, QuestListAcc::get()->getCollectUseFlagIndex(param) + COLLECT_USE_FLAG_OFFSET, 0);
+    if (GfDataQuest::getListQuestCategory(param.unknown04) != QTYPE_UNKNOWN_6) {
+      GfGameFlag::setLocal(8, QuestListAcc::get()->getCollectUseFlagIndex(param) + COLLECT_USE_FLAG_UNKNOWN_1519, 0);
     }
   } else {
     AchievQuest *achievQuest = GfDataQuest::getAchievQuest(param.unknown04);
@@ -257,13 +286,13 @@ u32 GfQuestInfo::getTaskHide(const QuestTaskParam &param) { return QuestListAcc:
 
 bool GfQuestInfo::isCompletePrevQuest(QuestID quest) {
   QuestListAcc *questListAcc = QuestListAcc::get();
-  for (qlist_iterator it = questListAcc->begin(QTYPE_NONE); it != questListAcc->end(QTYPE_NONE); ++it) {
+  for (qlist_iterator it = questListAcc->begin(QTYPE_UNKNOWN_0); it != questListAcc->end(QTYPE_UNKNOWN_0); ++it) {
     QuestID prev(it.getQuestID().unknown00, quest.unknown02);
     if (GfDataQuest::getListFlagPRT(prev) == 0) {
-      if (GfDataQuest::getListNextQuestA(prev) == quest && getState(prev) < QSTATE_FIN_A) {
+      if (GfDataQuest::getListNextQuestA(prev) == quest && getState(prev) < QSTATE_UNKNOWN_2) {
         return false;
       }
-      if (GfDataQuest::getListNextQuestB(prev) == quest && getState(prev) < QSTATE_FIN_A) {
+      if (GfDataQuest::getListNextQuestB(prev) == quest && getState(prev) < QSTATE_UNKNOWN_2) {
         return false;
       }
     }
@@ -272,9 +301,9 @@ bool GfQuestInfo::isCompletePrevQuest(QuestID quest) {
   return true;
 }
 
-bool GfQuestInfo::canQuestOrder(QuestID quest) { return getState(quest) == QSTATE_NOT_ORDER && !isQuestProgress(quest); }
+bool GfQuestInfo::canQuestOrder(QuestID quest) { return getState(quest) == QSTATE_UNKNOWN_0 && !isQuestProgress(quest); }
 
-bool GfQuestInfo::isScenarioQuest(QuestID quest) { return GfDataQuest::getQuestCategory(quest) == QTYPE_MAIN; }
+bool GfQuestInfo::isScenarioQuest(QuestID quest) { return GfDataQuest::getQuestCategory(quest) == QTYPE_UNKNOWN_1; }
 
 bool GfQuestInfo::isCompleteTask(const QuestTaskParam &param) {
   if (param.unknown08 == 0) {
@@ -289,7 +318,7 @@ bool GfQuestInfo::isDispUI(QuestID quest) { return QuestListAcc::get()->getListV
 bool GfQuestInfo::getQuestNeedTaskCond(QuestID quest) {
   QuestListAcc *questListAcc = QuestListAcc::get();
   if (quest.empty()) {
-    QuestID current = GfQuestManager::getProgressCurrentQuest(QTYPE_NONE);
+    QuestID current = GfQuestManager::getProgressCurrentQuest(QTYPE_UNKNOWN_0);
     quest.unknown00 = current.unknown00;
     quest.unknown02 = current.unknown02;
   }
@@ -362,7 +391,7 @@ bool GfQuestInfo::getBattleTaskEnemy(mm::mtl::FixedVector<u16, 128> &enemies, co
     u32 group = questListAcc->getBattleEnemyGroupID(param.unknown14);
     if (group != 0) {
       GfBdatChrEnParam *chrEnParam = GfBdatChrEnParam::get();
-      for (u32 index = 0; index < ENEMY_GROUP_COUNT; index++) {
+      for (u32 index = 0; index < GROUP_UNKNOWN_8; index++) {
         u32 groupEnemy = chrEnParam->getEnemyGroupEnemyID(group, index);
         if (groupEnemy != 0 && enemies.size() != enemies.capacity()) {
           enemies.push_back(groupEnemy);
@@ -405,15 +434,15 @@ const char *GfQuestInfo::getTaskLog(u32 purpose, u32 taskIndex) {
 }
 
 bool GfQuestInfo::getTaskCount(u32 &count, u32 &limit, u32 &item, u32 &itemCategory, u32 purpose, u32 taskIndex) {
-  QuestTaskParam param(GfQuestManager::getOrderQuestId(purpose), taskIndex, purpose, TASK_STATE_NONE);
+  QuestTaskParam param(GfQuestManager::getOrderQuestId(purpose), taskIndex, purpose, TASK_STATE_UNKNOWN_0);
   return GfQuestTask::getTaskCount(param, limit, count, item, itemCategory);
 }
 
-bool GfQuestInfo::isDummuTalkGroupFlag(u32 group, u32 npcIndex) { return (GfGameFlag::getLocal(8, group + DUMMY_TALK_GROUP_FLAG_OFFSET) & 1 << npcIndex) != 0; }
+bool GfQuestInfo::isDummuTalkGroupFlag(u32 group, u32 npcIndex) { return (GfGameFlag::getLocal(8, group + DUMMY_TALK_GROUP_FLAG_UNKNOWN_3723) & 1 << npcIndex) != 0; }
 
 void GfQuestInfo::setDummuTalkGroupFlag(u32 group, u32 npcIndex) {
-  u8 flags = GfGameFlag::getLocal(8, group + DUMMY_TALK_GROUP_FLAG_OFFSET);
-  GfGameFlag::setLocal(8, group + DUMMY_TALK_GROUP_FLAG_OFFSET, flags | 1 << npcIndex);
+  u8 flags = GfGameFlag::getLocal(8, group + DUMMY_TALK_GROUP_FLAG_UNKNOWN_3723);
+  GfGameFlag::setLocal(8, group + DUMMY_TALK_GROUP_FLAG_UNKNOWN_3723, flags | 1 << npcIndex);
 }
 
 bool GfQuestInfo::isEnableSetupCount(const AchievInfo &info, u32 level) {
@@ -433,8 +462,8 @@ void GfQuestInfo::getQuestTaskInfo(u32 &taskCount, u32 &completeCount, QuestID q
 
   taskCount = 0;
   completeCount = 0;
-  for (u32 taskIndex = 0; taskIndex < QUEST_TASK_COUNT; taskIndex++) {
-    QuestTaskParam param(quest, taskIndex, TASK_STATE_NONE);
+  for (u32 taskIndex = 0; taskIndex < QUEST_UNKNOWN_4; taskIndex++) {
+    QuestTaskParam param(quest, taskIndex, TASK_STATE_UNKNOWN_0);
     if (param.unknown14 == 0) {
       continue;
     }
@@ -458,8 +487,8 @@ static s32 unknown001(const QuestTaskParam &param, u32 condition) { // Inferred 
     return -1;
   }
 
-  for (u32 index = 0; index < CONDITION_LIST_COUNT; index++) {
-    if (bdatCond->getConditionListConditionType(condition, index) != CONDITION_TYPE_ENVIRONMENT) {
+  for (u32 index = 0; index < CONDITION_UNKNOWN_8; index++) {
+    if (bdatCond->getConditionListConditionType(condition, index) != CONDITION_TYPE_UNKNOWN_3) {
       continue;
     }
 
@@ -475,7 +504,7 @@ static s32 unknown001(const QuestTaskParam &param, u32 condition) { // Inferred 
 
     for (u32 weather = 0; weather < 32; weather++) {
       if ((weathers & 1 << weather) != 0) {
-        if (weather == WEATHER_NONE) {
+        if (weather == WEATHER_UNKNOWN_4) {
           return 0;
         }
 
@@ -494,7 +523,7 @@ s32 GfQuestInfo::getQuestTaskWeatherInfo(const QuestTaskParam &param) {
     return weather;
   }
 
-  if (param.unknown10 == TASK_TYPE_CONDITION) {
+  if (param.unknown10 == TASK_TYPE_UNKNOWN_10) {
     return unknown001(param, questListAcc->getConditionConditionID(param.unknown14));
   }
 
@@ -508,8 +537,8 @@ static s32 getConditionTimeRange(u32 condition) {
 
   QuestListAcc::get();
   GfBdatCond *bdatCond = GfBdatCond::get();
-  for (u32 index = 0; index < CONDITION_LIST_COUNT; index++) {
-    if (bdatCond->getConditionListConditionType(condition, index) != CONDITION_TYPE_ENVIRONMENT) {
+  for (u32 index = 0; index < CONDITION_UNKNOWN_8; index++) {
+    if (bdatCond->getConditionListConditionType(condition, index) != CONDITION_TYPE_UNKNOWN_3) {
       continue;
     }
 
@@ -540,7 +569,7 @@ s32 GfQuestInfo::getQuestTaskTimeInfo(const QuestTaskParam &param) {
     return timeRange;
   }
 
-  if (param.unknown10 == TASK_TYPE_CONDITION) {
+  if (param.unknown10 == TASK_TYPE_UNKNOWN_10) {
     return getConditionTimeRange(questListAcc->getConditionConditionID(param.unknown14));
   }
 

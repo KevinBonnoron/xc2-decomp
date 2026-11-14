@@ -44,16 +44,16 @@ static_assert(sizeof(CloudSea) == 0xc, "");
 
 // The first member has a default initializer: FixedQueue::insert stores it apart from the other zeroed members.
 struct WeatherSet {
-  WEATHERID unknown00 = WEATHER_NULL; // Inferred role: weather; original member name unknown.
-  WEATHER_PRIO unknown04;             // Inferred role: priority; original member name unknown.
-  WEATHER_HANDLE unknown08;           // Inferred role: handle; original member name unknown.
+  WEATHERID unknown00 = WEATHER_UNKNOWN_0; // Inferred role: weather; original member name unknown.
+  WEATHER_PRIO unknown04;                  // Inferred role: priority; original member name unknown.
+  WEATHER_HANDLE unknown08;                // Inferred role: handle; original member name unknown.
 };
 
 static_assert(sizeof(WeatherSet) == 0xc, "");
 
 class GfGameEnv : public mm::mtl::PtrSingleton<GfGameEnv> {
 public:
-  static const u32 FILTER_MAX = 16;
+  static const u32 FILTER_UNKNOWN_16 = 16; // Inferred role: filter max; original name unknown.
 
   static void clear();
   static void build(const GfSetupParam &param);
@@ -89,20 +89,20 @@ public:
   static WEATHERID getTempWeather();
 
 private:
-  bool unknown08;                                         // Inferred role: map jump; original member name unknown.
-  bool unknown09;                                         // Inferred role: map jump blackout; original member name unknown.
-  bool unknown0a;                                         // Inferred role: map jump with save data; original member name unknown.
-  u32 unknown0c;                                          // Inferred role: map id; original member name unknown.
-  u32 unknown10;                                          // Inferred role: map jump id; original member name unknown.
-  f32 unknown14;                                          // Inferred role: stop enemy search time; original member name unknown.
-  mm::mtl::FixedQueue<ColorFilter, FILTER_MAX> unknown18; // Inferred role: color filters; original member name unknown.
-  u64 unknown168;                                         // Inferred role: color filter serial; original member name unknown.
-  mm::mtl::FixedQueue<CloudSea, FILTER_MAX> unknown170;   // Inferred role: cloud seas; original member name unknown.
-  u64 unknown240;                                         // Inferred role: cloud sea serial; original member name unknown.
-  mm::mtl::FixedQueue<WeatherSet, FILTER_MAX> unknown248; // Inferred role: temporary weathers; original member name unknown.
-  u64 unknown318;                                         // Inferred role: temporary weather serial; original member name unknown.
-  int unknown320;                                         // Inferred role: room count; original member name unknown.
-  u8 unknown324;                                          // Inferred role: screenshot disable timer; original member name unknown.
+  bool unknown08;                                                // Inferred role: map jump; original member name unknown.
+  bool unknown09;                                                // Inferred role: map jump blackout; original member name unknown.
+  bool unknown0a;                                                // Inferred role: map jump with save data; original member name unknown.
+  u32 unknown0c;                                                 // Inferred role: map id; original member name unknown.
+  u32 unknown10;                                                 // Inferred role: map jump id; original member name unknown.
+  f32 unknown14;                                                 // Inferred role: stop enemy search time; original member name unknown.
+  mm::mtl::FixedQueue<ColorFilter, FILTER_UNKNOWN_16> unknown18; // Inferred role: color filters; original member name unknown.
+  u64 unknown168;                                                // Inferred role: color filter serial; original member name unknown.
+  mm::mtl::FixedQueue<CloudSea, FILTER_UNKNOWN_16> unknown170;   // Inferred role: cloud seas; original member name unknown.
+  u64 unknown240;                                                // Inferred role: cloud sea serial; original member name unknown.
+  mm::mtl::FixedQueue<WeatherSet, FILTER_UNKNOWN_16> unknown248; // Inferred role: temporary weathers; original member name unknown.
+  u64 unknown318;                                                // Inferred role: temporary weather serial; original member name unknown.
+  int unknown320;                                                // Inferred role: room count; original member name unknown.
+  u8 unknown324;                                                 // Inferred role: screenshot disable timer; original member name unknown.
 };
 
 static_assert(sizeof(GfGameEnv) == 0x328, "");

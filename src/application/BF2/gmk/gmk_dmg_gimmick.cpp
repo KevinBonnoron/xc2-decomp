@@ -1,22 +1,33 @@
 #include "gmk/gmk_dmg_gimmick.h"
 
 #include "eflib/effect_send_param.h"
+#include "framework/coli/coli_object.h"
 #include "framework/effect/effect_manager.h"
 #include "framework/sound/sound_manager.h"
+#include "fw/fw_coli_check.h"
 #include "gf/data/gf_bdat_wrapper.h"
+#include "gf/data/gf_data_enemy.h"
+#include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_object_type.h"
+#include "gf/field/gf_field_dmg.h"
 #include "gf/field/gf_field_manager.h"
 #include "gf/field/gf_field_sound.h"
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/game/gf_game_player_formation.h"
 #include "gf/gf_allocator.h"
+#include "gf/object/component/gf_com_collider.h"
+#include "gf/object/component/pc/gf_com_behavior_pc.h"
+#include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
+#include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 #include "gmk/gmk_set.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/rtti.h"
 #include "mm_mtl/vector.h"
 
 namespace gf {
@@ -44,22 +55,22 @@ void GmkDmgGimmick::debugDraw() const {
   isValid();
 }
 
-const fw::SoundCategory DMG_SE_CATEGORY = static_cast<fw::SoundCategory>(7);
+const fw::SoundCategory SOUND_CATEGORY_UNKNOWN_7 = static_cast<fw::SoundCategory>(7); // Inferred role: dmg se category; original name unknown.
 
 void GmkDmgGimmick::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
-  unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_U16);
+  unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_UNKNOWN_2);
   unknown1c = BootedGmkCond(bdat, id, "DEPOP_");
-  unknown02 = bdat.getValCheck("DEPOP_Condition", id, BDAT_TYPE_U16);
-  unknown04 = toBdatF32(bdat.getValCheck("DMG_interval", id, BDAT_TYPE_F32));
-  unknown08 = bdat.getValCheck("Pc_dmg", id, BDAT_TYPE_U8);
-  unknown09 = bdat.getValCheck("EN_dmg", id, BDAT_TYPE_U8);
-  unknown10 = reinterpret_cast<const char *>(bdat.getValCheck("effect_name", id, BDAT_TYPE_STRING));
-  unknown18 = bdat.getValCheck("SE_name", id, BDAT_TYPE_U8);
-  unknown19 = bdat.getValCheck("volumeMAX", id, BDAT_TYPE_U8);
-  unknown1a = bdat.getValCheck("volumeMIN", id, BDAT_TYPE_U8);
-  u16 effectDispRadius = bdat.getValCheck("effect_disp_r", id, BDAT_TYPE_U16);
+  unknown02 = bdat.getValCheck("DEPOP_Condition", id, BDAT_TYPE_UNKNOWN_2);
+  unknown04 = toBdatF32(bdat.getValCheck("DMG_interval", id, BDAT_TYPE_UNKNOWN_8));
+  unknown08 = bdat.getValCheck("Pc_dmg", id, BDAT_TYPE_UNKNOWN_1);
+  unknown09 = bdat.getValCheck("EN_dmg", id, BDAT_TYPE_UNKNOWN_1);
+  unknown10 = reinterpret_cast<const char *>(bdat.getValCheck("effect_name", id, BDAT_TYPE_UNKNOWN_7));
+  unknown18 = bdat.getValCheck("SE_name", id, BDAT_TYPE_UNKNOWN_1);
+  unknown19 = bdat.getValCheck("volumeMAX", id, BDAT_TYPE_UNKNOWN_1);
+  unknown1a = bdat.getValCheck("volumeMIN", id, BDAT_TYPE_UNKNOWN_1);
+  u16 effectDispRadius = bdat.getValCheck("effect_disp_r", id, BDAT_TYPE_UNKNOWN_2);
   unknown20.unknown00 = static_cast<f32>(effectDispRadius) * static_cast<f32>(effectDispRadius);
-  u8 effectReleaseRadius = bdat.getValCheck("effect_release_r", id, BDAT_TYPE_U8);
+  u8 effectReleaseRadius = bdat.getValCheck("effect_release_r", id, BDAT_TYPE_UNKNOWN_1);
   f32 effectReleaseDistance = effectDispRadius + effectReleaseRadius;
   unknown24.unknown00 = effectReleaseDistance * effectReleaseDistance;
 }
@@ -82,9 +93,9 @@ void GmkDmgSe::createGmkPhantom() const {
     return;
   }
   switch (unknown08.unknown10->unknown0c) {
-  case SHAPE_TYPE_SPHERE:
-  case SHAPE_TYPE_BOX:
-  case SHAPE_TYPE_CAPSULE:
+  case SHAPE_TYPE_UNKNOWN_2:
+  case SHAPE_TYPE_UNKNOWN_3:
+  case SHAPE_TYPE_UNKNOWN_4:
     unknown50.create(*this, nullptr, false);
     break;
   default:
@@ -97,7 +108,7 @@ void GmkDmgSe::createSeInst(fw::SoundPack *pack, u32 id) const {
     return;
   }
   disposeSeInst(false);
-  unknowne4 = fw::SoundManager::get()->playSe(id, pack, 1.0f, DMG_SE_CATEGORY);
+  unknowne4 = fw::SoundManager::get()->playSe(id, pack, 1.0f, SOUND_CATEGORY_UNKNOWN_7);
   if (unknowne4 != 0) {
     const mm::Vec3 &position = unknown08.unknown08->unknown00;
     fw::SoundManager::get()->setPos(unknowne4, position);
@@ -203,7 +214,7 @@ void GmkDmgEffect::applyEffectParam() const {
     return;
   }
   effect::SendParam param;
-  unknown005(param.unknown00, unknown08.unknown08->unknown10);
+  param.unknown00.unknown011(unknown08.unknown08->unknown10);
   mm::Vec3 position = unknown08.unknown08->unknown00;
   param.unknown00.rows[3][0] += position.x;
   param.unknown00.rows[3][1] += position.y;
@@ -220,7 +231,7 @@ const AGmkBase *GmkDmgEffectList::getInst(u32 index) const { return &gmkInsts[in
 const AGmkBase *GmkDmgSeList::getInst(u32 index) const { return &gmkInsts[index]; }
 
 u32 GmkDmgPhantomTargetInfo::getTargetType() const {
-  if (unknown00 == gf::INVALID_HANDLE) {
+  if (unknown00 == gf::unknown020) {
     return 0;
   }
   if (unknown08 <= 0) {
@@ -228,7 +239,7 @@ u32 GmkDmgPhantomTargetInfo::getTargetType() const {
   }
   gf::GfObjAcc acc(unknown00);
   switch (acc.getType()) {
-  case gf::OBJECT_TYPE_DRIVER:
+  case gf::OBJECT_TYPE_PC:
   case gf::OBJECT_TYPE_BLADE:
     return 1;
   case gf::OBJECT_TYPE_ENEMY:
@@ -239,7 +250,7 @@ u32 GmkDmgPhantomTargetInfo::getTargetType() const {
 }
 
 bool GmkDmgPhantomTargetInfo::isTargetPlayer() const {
-  if (gf::GfGameManager::getControlMover() == gf::INVALID_HANDLE) {
+  if (gf::GfGameManager::getControlMover() == gf::unknown020) {
     return false;
   }
   return unknown00 == gf::GfGameManager::getControlMover();
@@ -318,8 +329,64 @@ GmkDmgSe *GmkDmgGimmick::getGmkDmgSe(u32 index) const {
 
 void GmkDmgGimmick::validateDisp() const { bool isDisp = unknown80 && debugIsDispGmkType(getGmkType()); }
 
+void GmkDmgGimmick::seqUpdatePopDepop(f32 deltaTime) {
+  const BdatInfo *info = getBdatInfo();
+  bool isPop = info->isCondMatched();
+  bool wasPop = unknown50;
+  unknown50 = isPop;
+  if (isPop != wasPop) {
+    u32 phantomNum = getData()->unknown02 - getData()->unknown00;
+    for (u32 i = 0; i < phantomNum; i++) {
+      GmkDmgPhantom *phantom = getGmkDmgPhantom(i);
+      if (phantom != nullptr) {
+        if (isPop) {
+          phantom->createGmkPhantom(this);
+        } else {
+          phantom->disposeGmkPhantom();
+        }
+      }
+    }
+  }
+  u32 effectNum = getData()->unknown06 - getData()->unknown04;
+  for (u32 i = 0; i < effectNum; i++) {
+    GmkDmgEffect *effect = getGmkDmgEffect(i);
+    if (effect != nullptr) {
+      const mm::Vec3 &position = effect->unknown08.unknown08->unknown00;
+      if (!isPop) {
+        effect->disposeEffectInst(true);
+      } else if (effect->unknown4c == 0) {
+        if (unknown58 != nullptr && DistCond::isMatch(info->unknown20.unknown00, position)) {
+          effect->createEffectInst(unknown58);
+        }
+      } else if (!DistCond::isMatch(info->unknown24.unknown00, position)) {
+        effect->disposeEffectInst(true);
+      }
+    }
+  }
+  u32 seNum = getData()->unknown0a - getData()->unknown08;
+  for (u32 i = 0; i < seNum; i++) {
+    GmkDmgSe *se = getGmkDmgSe(i);
+    if (se != nullptr) {
+      if (isPop != wasPop) {
+        if (isPop) {
+          se->createGmkPhantom();
+        } else {
+          se->unknown50.dispose();
+        }
+      }
+      if (se->unknown50.unknown001() && isPop) {
+        if (se->unknowne4 == 0) {
+          se->createSeInst(unknown60, info->unknown18);
+        }
+      } else {
+        se->disposeSeInst(true);
+      }
+    }
+  }
+}
+
 GmkDmgPhantomManager::GmkDmgPhantomManager() : unknown38(false) {
-  gf::GfObjManager::addListener(this, OBJEVT_ALL);
+  gf::GfObjManager::addListener(this, OBJEVT_UNKNOWN_0);
   gf::GfEvent::addEventCallback(this);
   create();
 }
@@ -332,7 +399,7 @@ GmkDmgPhantomManager::~GmkDmgPhantomManager() {
 
 void GmkDmgPhantomManager::create() {
   dispose();
-  unknown10.setAllocator(gf::getAllocator(gf::ALLOCATOR_DEFAULT));
+  unknown10.setAllocator(gf::getAllocator(gf::ALLOCATOR_UNKNOWN_0));
   int capacity = gf::GfObjManager::getGfObjCapacity(5);
   unknown10.reserve(capacity > 0 ? static_cast<u32>(capacity + 3) : 3);
 }
@@ -358,13 +425,145 @@ void GmkDmgPhantomManager::addTargetInfo(gf::GF_OBJ_HANDLE *handle) {
 }
 
 void GmkDmgPhantomManager::removeTargetInfo(gf::GF_OBJ_HANDLE *handle) {
-  if (handle == gf::INVALID_HANDLE) {
+  if (handle == gf::unknown020) {
     return;
   }
   for (GmkDmgPhantomTargetInfo *it = unknown10.begin(); it != unknown10.end(); it++) {
     if (it->unknown00 == handle) {
       unknown10.erase(it);
       return;
+    }
+  }
+}
+
+void GmkDmgPhantomManager::listenerGfObj(OBJEVT event, gf::GF_OBJ_HANDLE *handle, u32 objectType) {
+  gf::GfObjAcc acc(handle);
+  if (objectType == gf::OBJECT_TYPE_PC || objectType == gf::OBJECT_TYPE_BLADE) {
+    u32 playerId = gf::GfGamePlayerFormation::get()->findPlayer(handle);
+    if (playerId == gf::PLAYER_ID_UNKNOWN_4294967295) {
+      return;
+    }
+    if (!gf::GfGamePlayerFormation::get()->unknown1a0[playerId].unknown10) {
+      return;
+    }
+  } else {
+    if (objectType != gf::OBJECT_TYPE_ENEMY) {
+      return;
+    }
+    gf::DataParamAcc dataParam(handle);
+    const gf::SDataEnemy *data = dataParam.getSDataEnemy();
+    if (data == nullptr) {
+      return;
+    }
+    if ((data->unknown04 & gf::ENEMY_FLAG_UNKNOWN_9) == 0) {
+      return;
+    }
+  }
+  if (event == OBJEVT_UNKNOWN_2) {
+    addTargetInfo(handle);
+  } else if (event == OBJEVT_UNKNOWN_3) {
+    removeTargetInfo(handle);
+  }
+}
+
+void GmkDmgPhantomManager::gevPartyMover(gf::GF_OBJ_HANDLE *handle, bool isJoin) {
+  u32 objectType = gf::GfObjUtil::getObjType(handle);
+  if (objectType != gf::OBJECT_TYPE_PC && objectType != gf::OBJECT_TYPE_BLADE) {
+    return;
+  }
+  if (isJoin) {
+    if (gf::GfGameManager::isPartyMover(handle)) {
+      addTargetInfo(handle);
+    }
+  } else {
+    removeTargetInfo(handle);
+  }
+}
+
+void GmkDmgPhantomManager::update(f32 deltaTime) {
+  unknown38 = false;
+  if (unknown10.capacity() == 0) {
+    return;
+  }
+  fw::ColiCheckConfig config;
+  config.unknown14 = true;
+  config.unknown08 = 0.0f;
+  config.unknown0c = 0.0f;
+  config.unknown15 = false;
+  config.unknown00 = fw::ColiCheckConfig::FLAG_UNKNOWN_2;
+  config.unknown04 = 0x100000;
+  config.unknown10 = 0;
+  fw::TColiCheckResult<256> result;
+  for (GmkDmgPhantomTargetInfo &info : unknown10) {
+    gf::GfObjAcc acc(info.unknown00);
+    gf::GfObj *obj = acc.getObj();
+    if (obj == nullptr) {
+      continue;
+    }
+    const gf::GfComCollider *collider = obj->getComponent<gf::GfComCollider>();
+    if (collider == nullptr) {
+      continue;
+    }
+    fw::ColiObject *coli = collider->unknown18[0];
+    if (coli == nullptr || !coli->isActivate()) {
+      continue;
+    }
+    result.clear();
+    if (!fw::ColiCheck::testObjectPhantom(result, coli, config)) {
+      info.unknown08 = 0;
+      info.unknown0c = 0.0f;
+      continue;
+    }
+    bool isInside = false;
+    u32 hitNum = result.getCount();
+    for (u32 i = 0; i < hitNum; i++) {
+      fw::ColiUserData *userData = result.unknown002(i);
+      GmkDmgGimmick *gimmick = nullptr;
+      if (userData != nullptr) {
+        gimmick = mm::mtl::dynamicCast<GmkDmgGimmick>(userData);
+      }
+      if (gimmick != nullptr) {
+        if (gimmick->isValid()) {
+          isInside = true;
+          if (info.isTargetPlayer()) {
+            unknown38 = true;
+          }
+          f32 interval = gimmick->getBdatInfo()->unknown04;
+          int bdatIndex = gimmick->unknown20.unknown18;
+          if (info.unknown08 != bdatIndex) {
+            info.unknown08 = bdatIndex;
+            info.unknown0c = interval;
+          }
+          info.unknown0c += deltaTime;
+          if (info.unknown0c < interval) {
+            break;
+          }
+          info.unknown0c = 0.0f;
+          if (!gf::GfGameManager::isEnableGimmickPhantomDamage()) {
+            break;
+          }
+          switch (info.getTargetType()) {
+          case 1: {
+            gf::GfObj *target = gf::GfObjUtil::getObj(info.unknown00);
+            if (target != nullptr) {
+              gf::MsgPcApplyFieldDamage message(gimmick->getBdatInfo()->unknown08);
+              target->sendMessage(target, message);
+            }
+            break;
+          }
+          case 2:
+            gf::GfFieldDmg::applyDamage(info.unknown00, gimmick->getBdatInfo()->unknown09);
+            break;
+          default:
+            break;
+          }
+        }
+        break;
+      }
+    }
+    if (!isInside) {
+      info.unknown08 = 0;
+      info.unknown0c = 0.0f;
     }
   }
 }
@@ -379,6 +578,7 @@ template void mm::mtl::Vector<gmk::GmkDmgGimmick::BdatInfo>::expand(size_t, size
 template void mm::mtl::Vector<gmk::GmkDmgPhantom::BdatInfo>::expand(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkDmgPhantom::BdatInfo>::extend(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkDmgPhantom::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkDmgPhantom>::expand(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkDmgSe::BdatInfo>::expand(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkDmgSe::BdatInfo>::extend(size_t, size_t);
 template void mm::mtl::Vector<gmk::GmkDmgSe::BdatInfo>::resize(size_t);

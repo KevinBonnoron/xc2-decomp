@@ -18,49 +18,49 @@
 namespace event {
 
 EnvManager::EnvManager()
-    : unknown10(0), unknown14(0), unknown18(-1), unknown1c(-1), unknown20(EVT_CLOUDTYPE_DEFAULT), unknown24(COLORFILTER_TYPE_STOP), unknown28(-1), unknown2c(-1), unknown30(0.0f), unknown34(0),
+    : unknown10(0), unknown14(0), unknown18(-1), unknown1c(-1), unknown20(CLOUD_DEFAULT), unknown24(COLORFILTER_TYPE_UNKNOWN_0), unknown28(-1), unknown2c(-1), unknown30(0.0f), unknown34(0),
       unknown38(0) {}
 
 void EnvManager::clear() {
-  if (unknown10 & FLAG_WEATHER_TYPE) {
+  if (unknown10 & FLAG_UNKNOWN_2) {
     gf::GfGameEvent::resetWeaType();
-    unknown10 &= ~FLAG_WEATHER_TYPE;
+    unknown10 &= ~FLAG_UNKNOWN_2;
   }
-  if (unknown10 & FLAG_AUTO_RESET_SCENE) {
+  if (unknown10 & FLAG_UNKNOWN_1) {
     ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
     parmAcc.setAutoResetScene(false);
-    unknown10 &= ~FLAG_AUTO_RESET_SCENE;
+    unknown10 &= ~FLAG_UNKNOWN_1;
   }
   endGimmickPopWait();
-  if (unknown10 & FLAG_CLOCK_STOP) {
+  if (unknown10 & FLAG_UNKNOWN_0) {
     if (gf::GfFieldTime::get() != nullptr) {
       gf::GfFieldTime::get()->setTimeStop(false);
     }
-    unknown10 &= ~FLAG_CLOCK_STOP;
+    unknown10 &= ~FLAG_UNKNOWN_0;
   }
-  if (unknown20 != EVT_CLOUDTYPE_DEFAULT) {
+  if (unknown20 != CLOUD_DEFAULT) {
     gf::GfGameEvent::setCloudSea(false, false);
   }
-  if (unknown24 != COLORFILTER_TYPE_STOP) {
+  if (unknown24 != COLORFILTER_TYPE_UNKNOWN_0) {
     gf::GfGameEvent::setColorFilter(false, -1, -1, 0.0f);
   }
   if (unknown38 != 0) {
     fw::EffectManager::get()->remove(unknown38);
   }
-  if (unknown10 & FLAG_MOT_BLUR) {
+  if (unknown10 & FLAG_UNKNOWN_4) {
     ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
     parmAcc.setMotBlurOverride(true);
     parmAcc.setMotBlur(true);
-    unknown10 &= ~FLAG_MOT_BLUR;
+    unknown10 &= ~FLAG_UNKNOWN_4;
   }
-  if (unknown10 & FLAG_TONE_MAP) {
-    unknown10 &= ~FLAG_TONE_MAP;
+  if (unknown10 & FLAG_UNKNOWN_5) {
+    unknown10 &= ~FLAG_UNKNOWN_5;
     unknown3c = 0.0f;
   }
   unknown18 = -1;
   unknown1c = -1;
-  unknown20 = EVT_CLOUDTYPE_DEFAULT;
-  unknown24 = COLORFILTER_TYPE_STOP;
+  unknown20 = CLOUD_DEFAULT;
+  unknown24 = COLORFILTER_TYPE_UNKNOWN_0;
   unknown28 = -1;
   unknown2c = -1;
   unknown30 = 0.0f;
@@ -71,13 +71,13 @@ void EnvManager::clear() {
 void EnvManager::setCloudSea(EVT_cloudtype cloudType) {
   if (unknown20 != cloudType) {
     switch (cloudType) {
-    case EVT_CLOUDTYPE_DEFAULT:
+    case CLOUD_DEFAULT:
       gf::GfGameEvent::setCloudSea(false, false);
       break;
-    case EVT_CLOUDTYPE_HIGH:
+    case CLOUD_HIGH:
       gf::GfGameEvent::setCloudSea(true, true);
       break;
-    case EVT_CLOUDTYPE_LOW:
+    case CLOUD_LOW:
       gf::GfGameEvent::setCloudSea(true, false);
       break;
     }
@@ -86,22 +86,22 @@ void EnvManager::setCloudSea(EVT_cloudtype cloudType) {
 }
 
 void EnvManager::setMotBlur(bool isEnable) {
-  if (isEnable == ((unknown10 & FLAG_MOT_BLUR) != 0)) {
+  if (isEnable == ((unknown10 & FLAG_UNKNOWN_4) != 0)) {
     ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
     parmAcc.setMotBlurOverride(true);
     parmAcc.setMotBlur(isEnable);
-    unknown10 = isEnable ? unknown10 & ~FLAG_MOT_BLUR : unknown10 | FLAG_MOT_BLUR;
+    unknown10 = isEnable ? unknown10 & ~FLAG_UNKNOWN_4 : unknown10 | FLAG_UNKNOWN_4;
   }
 }
 
 void EnvManager::setToneMap(bool isEnable, f32 toneMap) {
-  if (isEnable != ((unknown10 & FLAG_TONE_MAP) != 0)) {
+  if (isEnable != ((unknown10 & FLAG_UNKNOWN_5) != 0)) {
     if (isEnable) {
       ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
       parmAcc.setOverrideToneMap(toneMap);
-      unknown10 |= FLAG_TONE_MAP;
+      unknown10 |= FLAG_UNKNOWN_5;
     } else {
-      unknown10 &= ~FLAG_TONE_MAP;
+      unknown10 &= ~FLAG_UNKNOWN_5;
     }
     unknown3c = toneMap;
   }
@@ -121,19 +121,19 @@ void EnvManager::update() {
 }
 
 void EnvManager::updateColorFilter() {
-  if (unknown24 != COLORFILTER_TYPE_FADE) {
+  if (unknown24 != COLORFILTER_TYPE_UNKNOWN_2) {
     return;
   }
   if (static_cast<int>(unknown30) <= unknown34++) {
     gf::GfGameEvent::setColorFilter(false, -1, -1, 0.0f);
-    unknown24 = COLORFILTER_TYPE_STOP;
+    unknown24 = COLORFILTER_TYPE_UNKNOWN_0;
     unknown30 = 0.0f;
     stopVignette();
   }
 }
 
 void EnvManager::updateMotBlur() {
-  if ((unknown10 & FLAG_MOT_BLUR) != 0) {
+  if ((unknown10 & FLAG_UNKNOWN_4) != 0) {
     ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
     parmAcc.setMotBlurOverride(true);
     parmAcc.setMotBlur(false);
@@ -141,14 +141,14 @@ void EnvManager::updateMotBlur() {
 }
 
 void EnvManager::updateToneMap() {
-  if ((unknown10 & FLAG_TONE_MAP) != 0) {
+  if ((unknown10 & FLAG_UNKNOWN_5) != 0) {
     ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
     parmAcc.setOverrideToneMap(unknown3c);
   }
 }
 
 void EnvManager::render() {
-  if (!(unknown14 & DISP_FLAG_DISP)) {
+  if (!(unknown14 & DISP_FLAG_UNKNOWN_0)) {
     return;
   }
   gf::GfFieldTime *fieldTime = gf::GfFieldTime::get();
@@ -178,16 +178,16 @@ void EnvManager::render() {
 }
 
 void EnvManager::setClockStop(bool isStop) {
-  if (((unknown10 & FLAG_CLOCK_STOP) != 0) == isStop) {
+  if (((unknown10 & FLAG_UNKNOWN_0) != 0) == isStop) {
     return;
   }
   if (gf::GfFieldTime::get() != nullptr) {
     gf::GfFieldTime::get()->setTimeStop(isStop);
   }
   if (isStop) {
-    unknown10 |= FLAG_CLOCK_STOP;
+    unknown10 |= FLAG_UNKNOWN_0;
   } else {
-    unknown10 &= ~FLAG_CLOCK_STOP;
+    unknown10 &= ~FLAG_UNKNOWN_0;
   }
 }
 
@@ -242,18 +242,18 @@ void EnvManager::startGimmickPopWait() {
   gimmick->unknownf4ac.unknown02 = false;
   gimmick->unknownf4ac.unknown01 = false;
   gimmick->unknownf4ac.unknown04 = 0;
-  unknown10 |= FLAG_GIMMICK_POP_WAIT;
+  unknown10 |= FLAG_UNKNOWN_3;
 }
 
 void EnvManager::endGimmickPopWait() {
-  if (unknown10 & FLAG_GIMMICK_POP_WAIT) {
+  if (unknown10 & FLAG_UNKNOWN_3) {
     mm::mtl::PtrSingleton<gf::GfFieldGimmick>::get()->unknownf4ac.unknown00 = false;
-    unknown10 &= ~FLAG_GIMMICK_POP_WAIT;
+    unknown10 &= ~FLAG_UNKNOWN_3;
   }
 }
 
 bool EnvManager::isGimmickPopWaiting() const {
-  if (!(unknown10 & FLAG_GIMMICK_POP_WAIT)) {
+  if (!(unknown10 & FLAG_UNKNOWN_3)) {
     return false;
   }
   return !mm::mtl::PtrSingleton<gf::GfFieldGimmick>::get()->unknownf4ac.unknown02;
@@ -261,33 +261,33 @@ bool EnvManager::isGimmickPopWaiting() const {
 
 void EnvManager::setWeatherType(gf::WEATYPE type) {
   gf::GfGameEvent::setWeaType(type);
-  unknown10 |= FLAG_WEATHER_TYPE;
+  unknown10 |= FLAG_UNKNOWN_2;
 }
 
 void EnvManager::setColorFilter(COLORFILTER_TYPE type, int filter, int subFilter, f32 frame) {
   switch (type) {
-  case COLORFILTER_TYPE_STOP:
-    if (unknown24 != COLORFILTER_TYPE_STOP) {
+  case COLORFILTER_TYPE_UNKNOWN_0:
+    if (unknown24 != COLORFILTER_TYPE_UNKNOWN_0) {
       gf::GfGameEvent::setColorFilter(false, -1, -1, frame / 30.0f);
-      unknown24 = COLORFILTER_TYPE_STOP;
+      unknown24 = COLORFILTER_TYPE_UNKNOWN_0;
       unknown30 = frame;
       stopVignette();
     }
     break;
-  case COLORFILTER_TYPE_PLAY:
-    if (unknown24 != COLORFILTER_TYPE_PLAY || unknown28 != filter || unknown2c != subFilter || unknown30 != frame) {
+  case COLORFILTER_TYPE_UNKNOWN_1:
+    if (unknown24 != COLORFILTER_TYPE_UNKNOWN_1 || unknown28 != filter || unknown2c != subFilter || unknown30 != frame) {
       gf::GfGameEvent::setColorFilter(true, filter, subFilter, frame / 30.0f);
-      unknown24 = COLORFILTER_TYPE_PLAY;
+      unknown24 = COLORFILTER_TYPE_UNKNOWN_1;
       unknown28 = filter;
       unknown2c = subFilter;
       unknown30 = frame;
       playVignette(filter, subFilter);
     }
     break;
-  case COLORFILTER_TYPE_FADE:
-    if (unknown24 == COLORFILTER_TYPE_PLAY) {
+  case COLORFILTER_TYPE_UNKNOWN_2:
+    if (unknown24 == COLORFILTER_TYPE_UNKNOWN_1) {
       gf::GfGameEvent::setColorFilter(true, -1, -1, frame / 30.0f);
-      unknown24 = COLORFILTER_TYPE_FADE;
+      unknown24 = COLORFILTER_TYPE_UNKNOWN_2;
       unknown30 = frame;
       unknown34 = 0;
       stopVignette();
@@ -316,9 +316,9 @@ void EnvManager::setAutoResetSceneEnable(bool isEnable) {
   ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
   parmAcc.setAutoResetScene(isEnable);
   if (isEnable) {
-    unknown10 |= FLAG_AUTO_RESET_SCENE;
+    unknown10 |= FLAG_UNKNOWN_1;
   } else {
-    unknown10 &= ~FLAG_AUTO_RESET_SCENE;
+    unknown10 &= ~FLAG_UNKNOWN_1;
   }
 }
 
@@ -329,27 +329,27 @@ void EnvManager::resetScene() {
 
 void EnvManager::setDisp(bool isDisp) {
   if (isDisp) {
-    unknown14 |= DISP_FLAG_DISP;
+    unknown14 |= DISP_FLAG_UNKNOWN_0;
   } else {
-    unknown14 &= ~DISP_FLAG_DISP;
+    unknown14 &= ~DISP_FLAG_UNKNOWN_0;
   }
 }
 
-bool EnvManager::isDisp() const { return (unknown14 & DISP_FLAG_DISP) != 0; }
+bool EnvManager::isDisp() const { return (unknown14 & DISP_FLAG_UNKNOWN_0) != 0; }
 
 void EnvManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
-  case MSG_TYPE_INIT_BEGIN:
+  case MSG_TYPE_UNKNOWN_1:
     login();
     break;
-  case MSG_TYPE_INIT:
-  case MSG_TYPE_CLEAR:
+  case MSG_TYPE_UNKNOWN_4:
+  case MSG_TYPE_UNKNOWN_12:
     clear();
     break;
-  case MSG_TYPE_UPDATE:
+  case MSG_TYPE_UNKNOWN_14:
     update();
     break;
-  case MSG_TYPE_RENDER_POST:
+  case MSG_TYPE_UNKNOWN_17:
     render();
     break;
   default:

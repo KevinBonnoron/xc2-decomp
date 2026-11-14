@@ -13,18 +13,18 @@ namespace event {
 
 void ScriptCamMoveFov::doit(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CAMERA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_3) {
     return;
   }
-  static_cast<ObjectCamera *>(object)->moveFov(param.val(0).getF32(), param.val(1).getF32(), CV_TYPE_LINEAR);
+  static_cast<ObjectCamera *>(object)->moveFov(param.val(0).getF32(), param.val(1).getF32(), CV_TYPE_UNKNOWN_1);
 }
 
 void ScriptCamMoveFov::redo(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CAMERA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_3) {
     return;
   }
-  static_cast<ObjectCamera *>(object)->moveFov(param.val(0).getF32(), 0.0f, CV_TYPE_LINEAR);
+  static_cast<ObjectCamera *>(object)->moveFov(param.val(0).getF32(), 0.0f, CV_TYPE_UNKNOWN_1);
 }
 
 } // namespace event

@@ -167,6 +167,41 @@ void IDColiMove::calcCheckParams(const mm::Vec3 &move) {
   unknown1b4 = sqrtf(unknown190.x * unknown190.x + unknown190.y * unknown190.y + unknown190.z * unknown190.z);
 }
 
+bool IDColiMove::testWallCheck() {
+  for (int i = 2; i >= 0; i--) {
+    unknown10.unknownd8[i] = 0;
+  }
+  IDColiInput input;
+  IDColiInputUtil::getSphere(input, unknown150, unknown1b8, true);
+  input.unknowna0 = unknown04;
+  unknown10.unknown030();
+  unknown10.unknownf8 = nullptr;
+  unknown10.unknown100 = nullptr;
+  bool isHit = false;
+  if (unknown01) {
+    for (IDColiObj *object = IDColiManager::get()->unknown08[0].m_head; object != nullptr; object = object->unknown10) {
+      isHit |= static_cast<IDColiObjGrand *>(object)->unknown053(unknown10, input, true);
+    }
+  }
+  if (unknown02) {
+    for (IDColiObj *object = IDColiManager::get()->unknown08[3].m_head; object != nullptr; object = object->unknown10) {
+      isHit |= static_cast<IDColiObjGrdChar *>(object)->testWallSphere(unknown10, input);
+    }
+  }
+  if (unknown00) {
+    IDColiUtilTreeAcc tree(IDColiManager::get()->unknownd8[0]);
+    tree.startTreeAaBbMode(input.unknown00, input.unknown10);
+    ColiLinkList<IDColiTreeObj> *list = tree.unknown033();
+    for (; list != nullptr; list = tree.unknown033()) {
+      for (IDColiTreeObj *node = list->m_head; node != nullptr; node = node->unknown08) {
+        IDColiObjCharCheck *object = static_cast<IDColiObjCharCheck *>(reinterpret_cast<unknown031 *>(node)->unknown10);
+        isHit |= object->testResultSphere(unknown10, input);
+      }
+    }
+  }
+  return isHit;
+}
+
 void IDColiMove::calcDownVec() {
   unknown150.y -= unknown1b8;
   unknown190 = mm::Vec3(unknown150.x, unknown150.y + unknown1b8 * 2.0f, unknown150.z);
@@ -180,6 +215,74 @@ void IDColiMove::calcDownVec() {
     }
   } else {
     unknown1d8 = 0.0f;
+  }
+}
+
+void IDColiMove::calcColiYVecParms(f32 y) {
+  f32 base = unknown150.y;
+  f32 ceilingY = base;
+  f32 groundY = base;
+  bool isLanding = false;
+  bool isGround = false;
+  bool isStep = false;
+  u32 count = unknown10.unknowne0;
+  for (u32 i = 0; i < count; i++) {
+    if (unknown10.unknownc0[i].y < 0.0f) {
+      f32 position = unknown10.unknownb8[i].y;
+      if (position < y && position > base) {
+        groundY = position - unknown1b8;
+        isStep = true;
+        y = position;
+      }
+    }
+  }
+  f32 limit = y;
+  if (isStep) {
+    limit = y + 0.1f;
+  }
+  f32 top = base + unknown1b8 * 2.0f;
+  bool isCeiling = false;
+  isStep = false;
+  for (u32 i = 0; i < count; i++) {
+    f32 normalY = unknown10.unknownc0[i].y;
+    if (normalY > 0.0f) {
+      f32 position = unknown10.unknownb8[i].y;
+      if (base <= position && position < top) {
+        if (ceilingY <= position) {
+          ceilingY = position;
+        }
+        if (normalY > unknown1d0) {
+          isGround |= unknown124 > i;
+          isLanding = true;
+        }
+        isCeiling = true;
+      } else if (position < limit) {
+        if (isStep) {
+          if (position > groundY) {
+            groundY = position;
+          }
+        } else {
+          groundY = position;
+        }
+        if (normalY > unknown1d0) {
+          isGround |= unknown124 > i;
+          isLanding = true;
+        }
+        isStep = true;
+      }
+    }
+  }
+  // The game keeps the first two arms apart although both store the same height (str s5 at 0x71008cbfc8, str s1 at 0x71008cc000); one merged condition does not compile to its code.
+  if (isCeiling) {
+    unknown130 = mm::Vec3(unknown150.x, ceilingY, unknown150.z);
+  } else if (unknown1b8 < fabsf(groundY)) {
+    unknown130 = mm::Vec3(unknown150.x, ceilingY, unknown150.z);
+  } else {
+    unknown130 = mm::Vec3(unknown150.x, groundY, unknown150.z);
+  }
+  if (unknown140.y <= 0.01f) {
+    unknown1eb |= isLanding;
+    unknown1ec |= isGround;
   }
 }
 
@@ -218,7 +321,7 @@ bool IDColiMove::moveColi(IDColiObj *object, const mm::Vec3 &move) {
   m_down = static_cast<IDColiObjChar *>(object)->unknown220;
   calcCheckParams(unknown140);
   unknown1f5 = false;
-  if ((object->unknown18 & 8) && !(object->unknown20 & IDColiObj::FLAG_LANDING)) {
+  if ((object->unknown18 & 8) && !(object->unknown20 & IDColiObj::FLAG_UNKNOWN_0)) {
     unknown1f5 = true;
   }
   if (object->unknown1c & 0x100) {

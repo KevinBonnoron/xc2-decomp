@@ -154,7 +154,7 @@ void UIManager::NotifyInput(INPUT_TYPE type, int value) {
 }
 
 void UIManager::UpdateRescueUI() {
-  if (unknown20 == gf::INVALID_HANDLE) {
+  if (unknown20 == gf::unknown020) {
     if (unknown28) {
       gf::GfMenuObjActionWindow::closeBattle();
       unknown28 = false;
@@ -167,13 +167,13 @@ void UIManager::UpdateRescueUI() {
     gf::GfMenuObjActionWindow::openBattle(param);
     unknown28 = true;
   }
-  unknown20 = gf::INVALID_HANDLE;
+  unknown20 = gf::unknown020;
 }
 
 void UIManager::UpdateTutorial(const fw::UpdateInfo &updateInfo) {
   u32 tutorials = unknown30;
   if (tutorials != 0) {
-    if (BattleGlobal::get()->unknown65de_0 && CharacterManager::get()->IsExistBattleEnemy(nullptr, gf::INVALID_HANDLE, false) && BattleGlobal::get()->IsEnableBattle()) {
+    if (BattleGlobal::get()->unknown65de_0 && CharacterManager::get()->IsExistBattleEnemy(nullptr, gf::unknown020, false) && BattleGlobal::get()->IsEnableBattle()) {
       unknown34 -= updateInfo.unknown00;
       if (unknown34 > 0.0f) {
         return;

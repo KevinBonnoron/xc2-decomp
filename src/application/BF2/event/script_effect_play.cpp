@@ -12,7 +12,7 @@ namespace event {
 
 void ScriptEffectPlay::doit(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_EFFECT) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_4) {
     return;
   }
   static_cast<ObjectEffect *>(object)->play(param.val(0).getStr(), param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32(), param.val(4).getS32(), param.val(5).getS32());
@@ -20,7 +20,7 @@ void ScriptEffectPlay::doit(const Param &param) {
 
 void ScriptEffectPlay::undo(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_EFFECT) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_4) {
     return;
   }
   static_cast<ObjectEffect *>(object)->stop();
@@ -28,7 +28,7 @@ void ScriptEffectPlay::undo(const Param &param) {
 
 void ScriptEffectPlay::redo(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_EFFECT) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_4) {
     return;
   }
   static_cast<ObjectEffect *>(object)->play(param.val(0).getStr(), param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32(), param.val(4).getS32(), 0);

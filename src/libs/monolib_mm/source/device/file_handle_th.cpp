@@ -36,7 +36,7 @@ void FileHandleTh::init(FTYPE type) {
   unknown1d4 = 0;
   unknown1d8 = 0;
   unknown24 = 0;
-  unknown1e8 = 0;
+  unknown1e8 = CBM_UNKNOWN_0;
 }
 
 void FileHandleTh::setup(const DevFileParamTh &param) {

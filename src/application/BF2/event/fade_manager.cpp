@@ -16,7 +16,7 @@ void FadeManager::update() {
 }
 
 void FadeManager::playEventSkip(bool isFadeOut, int frame) {
-  if (unknown10 & FLAG_DISABLE_FADE) {
+  if (unknown10 & FLAG_UNKNOWN_0) {
     return;
   }
   int fadeFrame = mm::mtl::Singleton<SkipManager>::getPtr()->isSkip() ? 0 : frame;
@@ -36,35 +36,35 @@ void FadeManager::clear() {
 bool FadeManager::isFading() const { return mm::mtl::Singleton<FadeCtrl>::getPtr()->isFading(); }
 
 void FadeManager::plan(FadePlanner::TYPE type, bool isEnable, u32 frame, u32 wait, FadeCtrl::PRIO prio, const mm::Col4 &color) {
-  if (!(unknown10 & FLAG_DISABLE_FADE)) {
+  if (!(unknown10 & FLAG_UNKNOWN_0)) {
     unknown18.plan(type, isEnable, frame, wait, prio, color);
   }
 }
 
 void FadeManager::request(FadePlanner::TYPE type) {
-  if (!(unknown10 & FLAG_DISABLE_FADE)) {
+  if (!(unknown10 & FLAG_UNKNOWN_0)) {
     unknown18.request(type);
   }
 }
 
-bool FadeManager::isSkipFading() const { return mm::mtl::Singleton<FadeCtrl>::getPtr()->isFading(FadeCtrl::PRIO_HIGH); }
+bool FadeManager::isSkipFading() const { return mm::mtl::Singleton<FadeCtrl>::getPtr()->isFading(FadeCtrl::PRIO_UNKNOWN_2); }
 
 void FadeManager::setDisableFade(bool isDisable) {
   if (isDisable) {
-    unknown10 |= FLAG_DISABLE_FADE;
+    unknown10 |= FLAG_UNKNOWN_0;
   } else {
-    unknown10 &= ~FLAG_DISABLE_FADE;
+    unknown10 &= ~FLAG_UNKNOWN_0;
   }
 }
 
-bool FadeManager::isDisableFade() const { return (unknown10 & FLAG_DISABLE_FADE) != 0; }
+bool FadeManager::isDisableFade() const { return (unknown10 & FLAG_UNKNOWN_0) != 0; }
 
 void FadeManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
-  case MSG_TYPE_INIT_BEGIN:
+  case MSG_TYPE_UNKNOWN_1:
     clear();
     break;
-  case MSG_TYPE_UPDATE_POST:
+  case MSG_TYPE_UNKNOWN_15:
     update();
     break;
   default:

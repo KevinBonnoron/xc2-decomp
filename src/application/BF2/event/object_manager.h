@@ -21,14 +21,14 @@ class ObjectChara;
 
 class ObjectManager : public IManager, public mm::mtl::Singleton<ObjectManager> {
 public:
-  static constexpr u32 SCENE_COUNT = 16;
+  static constexpr u32 SCENE_UNKNOWN_16 = 16; // Inferred role: scene count; original name unknown.
 
   enum {
-    MODE_CLONE = 1 << 0,
+    MODE_UNKNOWN_0 = 1 << 0, // Inferred role: clone; original name unknown.
   };
 
   enum {
-    FLAG_DISP = 1 << 0,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: disp flag; original name unknown.
   };
 
   u32 getCharaCount() const;
@@ -89,12 +89,12 @@ public:
   }
 
 private:
-  u32 unknown10;                                             // Inferred role: mode; original member name unknown.
-  u32 unknown14;                                             // Inferred role: flags; original member name unknown.
-  mm::mtl::FixedVector<ObjectList *, SCENE_COUNT> unknown18; // Inferred role: scenes; original member name unknown.
-  mm::mtl::FixStr<64> unknowna0;                             // Inferred role: scene name; original member name unknown.
-  mm::mtl::FixStr<64> unknowne4;                             // Inferred role: next scene name; original member name unknown.
-  ObjectList *unknown128;                                    // Inferred role: current; original member name unknown.
+  u32 unknown10;                                                  // Inferred role: mode; original member name unknown.
+  u32 unknown14;                                                  // Inferred role: flags; original member name unknown.
+  mm::mtl::FixedVector<ObjectList *, SCENE_UNKNOWN_16> unknown18; // Inferred role: scenes; original member name unknown.
+  mm::mtl::FixStr<64> unknowna0;                                  // Inferred role: scene name; original member name unknown.
+  mm::mtl::FixStr<64> unknowne4;                                  // Inferred role: next scene name; original member name unknown.
+  ObjectList *unknown128;                                         // Inferred role: current; original member name unknown.
 };
 
 static_assert(sizeof(ObjectManager) == 0x130, "");

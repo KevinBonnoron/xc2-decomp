@@ -19,7 +19,7 @@ TalkManager::~TalkManager() {}
 void TalkManager::Create() {
   // __LINE__ must be 92 as in the original file: it is an argument of operator new.
 #line 92
-  TalkManager *manager = new (gf::getAllocator(gf::ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) TalkManager();
+  TalkManager *manager = new (gf::getAllocator(gf::ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) TalkManager();
   manager->Initialize();
 }
 
@@ -154,7 +154,7 @@ gf::GAME_VOICE_HANDLE *TalkManager::PlayVoice(int id, int voice) {
 gf::GAME_VOICE_HANDLE *TalkManager::PlayVoice(int id, const char *name) {
   gf::GAME_VOICE_HANDLE *voice = nullptr;
   BattleCharacter *character = CharacterManager::get()->GetCharacterConst(id);
-  if (character != nullptr && character->unknown118 != gf::INVALID_HANDLE) {
+  if (character != nullptr && character->unknown118 != gf::unknown020) {
     voice = gf::GfGameVoice::playVoice(character->unknown118, name, gf::CV_PRIO_UNKNOWN_2);
     if (voice != nullptr) {
       CHR_VOICE_DATA data;

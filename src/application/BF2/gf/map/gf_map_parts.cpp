@@ -32,11 +32,11 @@ struct GF_ASSET_HANDLE;
 MapEff::~MapEff() {}
 
 void MapEff::create(GF_ASSET_HANDLE *handle, fw::ModelObject *model) {
-  if (handle == INVALID_ASSET_HANDLE) {
+  if (handle == unknown018) {
     return;
   }
 
-  GfAssetResource *resource = GfAssetManager::getResource(handle, MAP_FILE_IDX_UNKNOWN_6, ASSET_TYPE_BASE);
+  GfAssetResource *resource = GfAssetManager::getResource(handle, MAP_FILE_IDX_UNKNOWN_6, ASSET_TYPE_UNKNOWN_0);
   if (resource != nullptr && unknown08 == nullptr) {
     unknown08 = fw::EffectPack::createFromMemory(resource->getAssetData(), resource->getAssetSize(), resource->getAssetName(), false);
   }
@@ -73,7 +73,7 @@ MapNavi::~MapNavi() {}
 
 void MapNavi::create(GF_ASSET_HANDLE *handle) {
   if (!unknown00) {
-    GfAssetResource *resource = GfAssetManager::getResource(handle, MAP_FILE_IDX_UNKNOWN_2, ASSET_TYPE_BASE);
+    GfAssetResource *resource = GfAssetManager::getResource(handle, MAP_FILE_IDX_UNKNOWN_2, ASSET_TYPE_UNKNOWN_0);
     if (resource != nullptr) {
       unknown00 = fw::NaviManager::get()->createNaviMesh(resource->getAssetData(), resource->getAssetName());
     }
@@ -91,7 +91,7 @@ MapColi::~MapColi() {}
 
 void MapColi::create(GF_ASSET_HANDLE *handle) {
   if (unknown00 == nullptr) {
-    GfAssetResource *resource = GfAssetManager::getResource(handle, MAP_FILE_IDX_COLLISION, ASSET_TYPE_BASE);
+    GfAssetResource *resource = GfAssetManager::getResource(handle, MAP_FILE_IDX_UNKNOWN_1, ASSET_TYPE_UNKNOWN_0);
     if (resource != nullptr) {
       unknown00 = fw::ColiObject::createColiGrand(resource->getAssetData());
     }
@@ -105,7 +105,7 @@ namespace {
 // Original name unknown: common body of MapMdl::createLod and MapMdl::createMpf.
 void unknown001(MapMdl &map, GF_ASSET_HANDLE *handle, GfFileIdx index) {
   if (map.unknown00 == nullptr) {
-    GfAssetResource *resource = GfAssetManager::getResource(handle, index, ASSET_TYPE_BASE);
+    GfAssetResource *resource = GfAssetManager::getResource(handle, index, ASSET_TYPE_UNKNOWN_0);
     if (resource != nullptr) {
       map.unknown00 = GfManager::getSetupParam().unknown00->createMdl(resource->getAssetData(), resource->getAssetName(), 0);
     }
@@ -143,7 +143,7 @@ MapGIBL::~MapGIBL() {}
 
 void MapGIBL::create(GF_ASSET_HANDLE *handle) {
   if (unknown00 == nullptr) {
-    GfAssetResource *resource = GfAssetManager::getResource(handle, MAP_FILE_IDX_UNKNOWN_7, ASSET_TYPE_BASE);
+    GfAssetResource *resource = GfAssetManager::getResource(handle, MAP_FILE_IDX_UNKNOWN_7, ASSET_TYPE_UNKNOWN_0);
     if (resource != nullptr) {
       unknown00 = GfManager::getSetupParam().unknown00->createIBL(resource->getAssetData(), 0);
     }
@@ -162,7 +162,7 @@ MapLIBL::~MapLIBL() {}
 
 void MapLIBL::create(GF_ASSET_HANDLE *handle) {
   if (unknown00 == nullptr) {
-    GfAssetResource *resource = GfAssetManager::getResource(handle, MAP_FILE_IDX_UNKNOWN_8, ASSET_TYPE_BASE);
+    GfAssetResource *resource = GfAssetManager::getResource(handle, MAP_FILE_IDX_UNKNOWN_8, ASSET_TYPE_UNKNOWN_0);
     if (resource != nullptr) {
       unknown00 = GfManager::getSetupParam().unknown00->createLgt(resource->getAssetData(), 0);
     }
@@ -174,7 +174,7 @@ void MapLIBL::destroy() { unknown002(unknown00); }
 MapLgt::~MapLgt() {}
 
 void MapLgt::create(GF_ASSET_HANDLE *handle) {
-  GfAssetResource *resource = GfAssetManager::getResource(handle, MAP_FILE_IDX_UNKNOWN_3, ASSET_TYPE_BASE);
+  GfAssetResource *resource = GfAssetManager::getResource(handle, MAP_FILE_IDX_UNKNOWN_3, ASSET_TYPE_UNKNOWN_0);
   if (resource != nullptr && unknown00 == nullptr) {
     unknown00 = GfManager::getSetupParam().unknown00->createLgt(resource->getAssetData(), 0);
   }
@@ -186,7 +186,7 @@ MapClip::~MapClip() {}
 
 void MapClip::create(GF_ASSET_HANDLE *handle) {
   if (unknown00 == nullptr) {
-    GfAssetResource *resource = GfAssetManager::getResource(handle, MAP_FILE_IDX_UNKNOWN_10, ASSET_TYPE_BASE);
+    GfAssetResource *resource = GfAssetManager::getResource(handle, MAP_FILE_IDX_UNKNOWN_10, ASSET_TYPE_UNKNOWN_0);
     if (resource != nullptr) {
       unknown00 = GfManager::getSetupParam().unknown00->createClip(resource->getAssetData(), 0);
     }
@@ -198,7 +198,7 @@ void MapClip::destroy() { unknown002(unknown00); }
 MapAco::~MapAco() {}
 
 void MapAco::create(GF_ASSET_HANDLE *handle) {
-  GfAssetResource *resource = GfAssetManager::getResource(handle, MAP_FILE_IDX_UNKNOWN_9, ASSET_TYPE_BASE);
+  GfAssetResource *resource = GfAssetManager::getResource(handle, MAP_FILE_IDX_UNKNOWN_9, ASSET_TYPE_UNKNOWN_0);
   if (resource != nullptr && unknown00 == nullptr) {
     unknown00 = GfManager::getSetupParam().unknown00->createEnvColi(resource->getAssetData(), 0);
   }
@@ -208,7 +208,7 @@ void MapAco::destroy() { unknown002(unknown00); }
 
 MapSe::~MapSe() {}
 
-void MapSe::create(GF_ASSET_HANDLE *handle) { GfAssetManager::getResource(handle, MAP_FILE_IDX_UNKNOWN_9, ASSET_TYPE_BASE); }
+void MapSe::create(GF_ASSET_HANDLE *handle) { GfAssetManager::getResource(handle, MAP_FILE_IDX_UNKNOWN_9, ASSET_TYPE_UNKNOWN_0); }
 
 void MapSe::destroy() {}
 

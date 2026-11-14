@@ -11,23 +11,23 @@
 
 namespace gf {
 
-constexpr u32 TIME_RANGE_COUNT = 6;
-constexpr u32 TIME_RANGE_BIT_COUNT = 32;
-constexpr u32 START_HOUR = 7;
-constexpr u32 HOURS_PER_DAY = 24;
-constexpr u32 MINUTES_PER_HOUR = 60;
-constexpr u32 SECONDS_PER_HOUR = 3600;
-constexpr u32 SECONDS_PER_DAY = 86400;
-constexpr u32 SECONDS_PER_YEAR = 5184000;
-constexpr u32 MINUTES_PER_YEAR = 86400;
-constexpr u32 MINUTES_PER_DAY = 1440;
-constexpr u32 YEAR_DIFF_MAX = 4;
-constexpr f32 GAME_TIME_PER_HOUR = 1800.0f;
-constexpr f32 GAME_TIME_PER_MINUTE = 30.0f;
-constexpr f32 GAME_TIME_PER_DAY = 43200.0f;
-constexpr f32 GAME_TIME_SCALE = 60.0f;
+constexpr u32 TIME_RANGE_UNKNOWN_6_2 = 6;            // Inferred role: time range count; original name unknown.
+constexpr u32 TIME_RANGE_UNKNOWN_32 = 32;            // Inferred role: time range bit count; original name unknown.
+constexpr u32 START_UNKNOWN_7 = 7;                   // Inferred role: start hour; original name unknown.
+constexpr u32 HOURS_UNKNOWN_24 = 24;                 // Inferred role: hours per day; original name unknown.
+constexpr u32 MINUTES_PER_UNKNOWN_60 = 60;           // Inferred role: minutes per hour; original name unknown.
+constexpr u32 SECONDS_PER_UNKNOWN_3600 = 3600;       // Inferred role: seconds per hour; original name unknown.
+constexpr u32 SECONDS_PER_UNKNOWN_86400 = 86400;     // Inferred role: seconds per day; original name unknown.
+constexpr u32 SECONDS_PER_UNKNOWN_5184000 = 5184000; // Inferred role: seconds per year; original name unknown.
+constexpr u32 MINUTES_PER_UNKNOWN_86400 = 86400;     // Inferred role: minutes per year; original name unknown.
+constexpr u32 MINUTES_PER_UNKNOWN_1440 = 1440;       // Inferred role: minutes per day; original name unknown.
+constexpr u32 DIFF_UNKNOWN_4 = 4;                    // Inferred role: year diff max; original name unknown.
+constexpr f32 unknown041 = 1800.0f;                  // Inferred role: game time per hour; original name unknown.
+constexpr f32 unknown042 = 30.0f;                    // Inferred role: game time per minute; original name unknown.
+constexpr f32 unknown043 = 43200.0f;                 // Inferred role: game time per day; original name unknown.
+constexpr f32 unknown044 = 60.0f;                    // Inferred role: game time scale; original name unknown.
 
-static unknown131 s_rangeData[TIME_RANGE_COUNT] = {
+static unknown131 s_rangeData[TIME_RANGE_UNKNOWN_6_2] = {
     {7, 0, 11, 59},
     {12, 0, 15, 59},
     {16, 0, 18, 59},
@@ -61,22 +61,22 @@ void GfFieldTime::clear() {
   unknown48 = getTimeRangeDN();
   getRealTime(unknown20);
   unknown18 = unknown20;
-  setTime(START_HOUR, 0);
+  setTime(START_UNKNOWN_7, 0);
   GfDataManager::getDataGame()->unknown1098c0 = m_gameTime;
 }
 
 u32 GfFieldTime::getTimeRange(u32 hour, u32 minute) const {
-  for (u32 i = 0; i < TIME_RANGE_COUNT; i++) {
+  for (u32 i = 0; i < TIME_RANGE_UNKNOWN_6_2; i++) {
     const unknown131 &rangeData = s_rangeData[i];
     if (rangeData.unknown00 <= hour && hour <= rangeData.unknown04 && rangeData.unknown02 <= minute && minute <= rangeData.unknown06) {
       return i;
     }
   }
 
-  return TIME_RANGE_MORNING;
+  return TIME_RANGE_UNKNOWN_0;
 }
 
-u32 GfFieldTime::getTimeRangeDN() const { return m_timeRange < TIME_RANGE_EVENING ? TIME_RANGE_DAYTIME : TIME_RANGE_NIGHTTIME; }
+u32 GfFieldTime::getTimeRangeDN() const { return m_timeRange < TIME_RANGE_UNKNOWN_3 ? TIME_RANGE_UNKNOWN_6 : TIME_RANGE_UNKNOWN_7; }
 
 void GfFieldTime::getRealTime(RealTime &realTime) const {
   ml::TimeInfo info;
@@ -117,7 +117,7 @@ void GfFieldTime::setElapseTime(const ElapseTime &elapseTime) {
 }
 
 void GfFieldTime::setGameTime(const GameTime &gameTime) {
-  unknown30 = unknown34 = calcGameTime(fmodf(gameTime.unknown01_4, HOURS_PER_DAY), fmodf(gameTime.unknown00_6, MINUTES_PER_HOUR));
+  unknown30 = unknown34 = calcGameTime(fmodf(gameTime.unknown01_4, HOURS_UNKNOWN_24), fmodf(gameTime.unknown00_6, MINUTES_PER_UNKNOWN_60));
   m_gameTime = gameTime;
   m_timeRange = getTimeRange(gameTime.unknown01_4, gameTime.unknown00_6);
   unknown48 = getTimeRangeDN();
@@ -126,15 +126,15 @@ void GfFieldTime::setGameTime(const GameTime &gameTime) {
 
 void GfFieldTime::setTimeStop(bool isStop) {
   if (isStop) {
-    unknown0c |= TIME_STOP_BIT_GAME;
+    unknown0c |= TIME_STOP_BIT_UNKNOWN_0;
   } else {
-    unknown0c &= ~TIME_STOP_BIT_GAME;
+    unknown0c &= ~TIME_STOP_BIT_UNKNOWN_0;
   }
 }
 
 void GfFieldTime::gevReloadBdat(RELOAD_BDAT, u32) {}
 
-void GfFieldTime::build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfFieldTime(param); }
+void GfFieldTime::build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfFieldTime(param); }
 
 void GfFieldTime::destroy() {
   GfFieldTime *time = get();
@@ -144,21 +144,34 @@ void GfFieldTime::destroy() {
 
 void GfFieldTime::finalize() { unknown08 = false; }
 
-bool GfFieldTime::isTimeStop() const { return (unknown0c & (TIME_STOP_BIT_GAME | TIME_STOP_BIT_FIELD_SCRIPT)) != 0; }
+bool GfFieldTime::isTimeStop() const { return (unknown0c & (TIME_STOP_BIT_UNKNOWN_0 | TIME_STOP_BIT_UNKNOWN_1)) != 0; }
 
 void GfFieldTime::saveRealTime() { getRealTime(unknown18); }
 
+void GfFieldTime::updateElapseTime(const fw::UpdateInfo &) {
+  RealTime realTime;
+  getRealTime(realTime);
+  s32 diff = diffRealTimeSec(realTime, unknown20);
+  if (diff > 0) {
+    ElapseTime elapseTime;
+    elapseTime.unknown00_0 = diff % SECONDS_PER_UNKNOWN_3600 % SECONDS_UNKNOWN_60;
+    elapseTime.unknown00_6 = diff % SECONDS_PER_UNKNOWN_3600 / SECONDS_UNKNOWN_60;
+    elapseTime.unknown01_4 = diff / SECONDS_PER_UNKNOWN_3600;
+    m_elapseTime = unknown10 + elapseTime;
+  }
+}
+
 s32 GfFieldTime::diffRealTimeSec(const RealTime &realTime, const RealTime &baseRealTime) const {
-  s32 diff = (realTime.unknown02_0 - baseRealTime.unknown02_0) + (realTime.unknown02_6 - baseRealTime.unknown02_6) * SECONDS_PER_MINUTE +
-             (realTime.unknown03_4 - baseRealTime.unknown03_4) * SECONDS_PER_HOUR + (realTime.unknown04_6 - baseRealTime.unknown04_6) * SECONDS_PER_DAY;
-  if (realTime.unknown06_3 < baseRealTime.unknown06_3 + YEAR_DIFF_MAX) {
-    diff += (realTime.unknown06_3 - baseRealTime.unknown06_3) * SECONDS_PER_YEAR;
+  s32 diff = (realTime.unknown02_0 - baseRealTime.unknown02_0) + (realTime.unknown02_6 - baseRealTime.unknown02_6) * SECONDS_UNKNOWN_60 +
+             (realTime.unknown03_4 - baseRealTime.unknown03_4) * SECONDS_PER_UNKNOWN_3600 + (realTime.unknown04_6 - baseRealTime.unknown04_6) * SECONDS_PER_UNKNOWN_86400;
+  if (realTime.unknown06_3 < baseRealTime.unknown06_3 + DIFF_UNKNOWN_4) {
+    diff += (realTime.unknown06_3 - baseRealTime.unknown06_3) * SECONDS_PER_UNKNOWN_5184000;
   }
 
   return diff;
 }
 
-f32 GfFieldTime::calcGameTime(f32 hour, f32 minute) const { return hour * GAME_TIME_PER_HOUR + minute * GAME_TIME_PER_MINUTE; }
+f32 GfFieldTime::calcGameTime(f32 hour, f32 minute) const { return hour * unknown041 + minute * unknown042; }
 
 const char *GfFieldTime::getTimeRangeName() const { return GfDataMap::getTimeRangeName(m_timeRange); }
 
@@ -224,16 +237,16 @@ void GfFieldTime::setMin(u32 minute) {
 
 u32 GfFieldTime::getTime(u32 &hour, u32 &minute) const {
   f32 time = unknown30;
-  hour = fmodf(time / GAME_TIME_PER_HOUR, HOURS_PER_DAY);
-  minute = fmodf(time / GAME_TIME_PER_MINUTE, MINUTES_PER_HOUR);
-  return fmodf(time, GAME_TIME_PER_DAY) * 2.0f;
+  hour = fmodf(time / unknown041, HOURS_UNKNOWN_24);
+  minute = fmodf(time / unknown042, MINUTES_PER_UNKNOWN_60);
+  return fmodf(time, unknown043) * 2.0f;
 }
 
 u32 GfFieldTime::getDay() const { return m_gameTime.unknown02_1; }
 
 u32 GfFieldTime::getSec() const { return m_gameTime.unknown00_0; }
 
-u32 GfFieldTime::getTime() const { return m_gameTime.unknown01_4 * SECONDS_PER_HOUR + m_gameTime.unknown00_6 * SECONDS_PER_MINUTE + m_gameTime.unknown00_0; }
+u32 GfFieldTime::getTime() const { return m_gameTime.unknown01_4 * SECONDS_PER_UNKNOWN_3600 + m_gameTime.unknown00_6 * SECONDS_UNKNOWN_60 + m_gameTime.unknown00_0; }
 
 void GfFieldTime::setTimeSpeed(f32 timeSpeed) { m_timeSpeed = timeSpeed; }
 
@@ -242,12 +255,12 @@ ElapseTime operator+(const ElapseTime &elapseTime, const ElapseTime &otherElapse
   s32 minute = elapseTime.unknown00_6 + otherElapseTime.unknown00_6;
   s32 second = elapseTime.unknown00_0 + otherElapseTime.unknown00_0;
   while (second >= 60) {
-    second -= 60;
     minute++;
+    second -= 60;
   }
   while (minute >= 60) {
-    minute -= 60;
     hour++;
+    minute -= 60;
   }
 
   ElapseTime result;
@@ -263,9 +276,9 @@ ElapseTime operator+(const ElapseTime &elapseTime, const ElapseTime &otherElapse
   return result;
 }
 
-f32 GfFieldTime::toRealTime(f32 gameTime) const { return gameTime / GAME_TIME_SCALE; }
+f32 GfFieldTime::toRealTime(f32 gameTime) const { return gameTime / unknown044; }
 
-f32 GfFieldTime::toGameTime(f32 realTime) const { return realTime * GAME_TIME_SCALE; }
+f32 GfFieldTime::toGameTime(f32 realTime) const { return realTime * unknown044; }
 
 const unknown131 *GfFieldTime::getRangeData(u32 timeRange) const { return &s_rangeData[timeRange]; }
 
@@ -280,7 +293,7 @@ void GfFieldTime::setTimeRangeBit(u32 timeRangeBits) {
   }
 
   u32 bit = 1;
-  for (u32 i = 0; i < TIME_RANGE_BIT_COUNT; i++) {
+  for (u32 i = 0; i < TIME_RANGE_UNKNOWN_32; i++) {
     if ((timeRangeBits & bit) != 0) {
       setTimeRange(i);
       return;
@@ -292,8 +305,8 @@ void GfFieldTime::setTimeRangeBit(u32 timeRangeBits) {
 u32 GfFieldTime::getTimeRangeBits(u32 timeRange) const { return 1 << timeRange; }
 
 s32 GfFieldTime::diffRealTimeMin(const RealTime &realTime, const RealTime &baseRealTime) const {
-  return (realTime.unknown02_6 - baseRealTime.unknown02_6) + (realTime.unknown03_4 - baseRealTime.unknown03_4) * MINUTES_PER_HOUR +
-         (realTime.unknown04_6 - baseRealTime.unknown04_6) * MINUTES_PER_DAY + (realTime.unknown06_3 - baseRealTime.unknown06_3) * MINUTES_PER_YEAR;
+  return (realTime.unknown02_6 - baseRealTime.unknown02_6) + (realTime.unknown03_4 - baseRealTime.unknown03_4) * MINUTES_PER_UNKNOWN_60 +
+         (realTime.unknown04_6 - baseRealTime.unknown04_6) * MINUTES_PER_UNKNOWN_1440 + (realTime.unknown06_3 - baseRealTime.unknown06_3) * MINUTES_PER_UNKNOWN_86400;
 }
 
 f32 GfFieldTime::diffRealTime(const RealTime &realTime, const RealTime &baseRealTime) const {
@@ -302,9 +315,9 @@ f32 GfFieldTime::diffRealTime(const RealTime &realTime, const RealTime &baseReal
 
 void GfFieldTime::setFieldScriptTimeStop(bool isStop) {
   if (isStop) {
-    unknown0c |= TIME_STOP_BIT_FIELD_SCRIPT;
+    unknown0c |= TIME_STOP_BIT_UNKNOWN_1;
   } else {
-    unknown0c &= ~TIME_STOP_BIT_FIELD_SCRIPT;
+    unknown0c &= ~TIME_STOP_BIT_UNKNOWN_1;
   }
 }
 
@@ -317,16 +330,16 @@ GameTime operator+(const GameTime &gameTime, const GameTime &otherGameTime) {
   u32 minute = gameTime.unknown00_6 + otherGameTime.unknown00_6;
   u32 hour = gameTime.unknown01_4 + otherGameTime.unknown01_4;
   u32 day = gameTime.unknown02_1 + otherGameTime.unknown02_1;
-  if (second >= SECONDS_PER_MINUTE) {
-    second -= SECONDS_PER_MINUTE;
+  if (second >= SECONDS_UNKNOWN_60) {
+    second -= SECONDS_UNKNOWN_60;
     minute++;
   }
-  if (minute >= MINUTES_PER_HOUR) {
-    minute -= MINUTES_PER_HOUR;
+  if (minute >= MINUTES_PER_UNKNOWN_60) {
+    minute -= MINUTES_PER_UNKNOWN_60;
     hour++;
   }
-  if (hour >= HOURS_PER_DAY) {
-    hour -= HOURS_PER_DAY;
+  if (hour >= HOURS_UNKNOWN_24) {
+    hour -= HOURS_UNKNOWN_24;
     day++;
   }
 
@@ -344,15 +357,15 @@ GameTime operator-(const GameTime &gameTime, const GameTime &otherGameTime) {
   s32 hour = gameTime.unknown01_4 - otherGameTime.unknown01_4;
   s32 day = gameTime.unknown02_1 - otherGameTime.unknown02_1;
   if (second < 0) {
-    second += SECONDS_PER_MINUTE;
+    second += SECONDS_UNKNOWN_60;
     minute--;
   }
   if (minute < 0) {
-    minute += MINUTES_PER_HOUR;
+    minute += MINUTES_PER_UNKNOWN_60;
     hour--;
   }
   if (hour < 0) {
-    hour += HOURS_PER_DAY;
+    hour += HOURS_UNKNOWN_24;
     day--;
   }
 
@@ -364,20 +377,20 @@ GameTime operator-(const GameTime &gameTime, const GameTime &otherGameTime) {
   return result;
 }
 
-u32 GameTime::convMin() const { return unknown02_1 * MINUTES_PER_DAY + unknown01_4 * MINUTES_PER_HOUR + unknown00_6; }
+u32 GameTime::convMin() const { return unknown02_1 * MINUTES_PER_UNKNOWN_1440 + unknown01_4 * MINUTES_PER_UNKNOWN_60 + unknown00_6; }
 
-u32 GameTime::convSec() const { return unknown02_1 * SECONDS_PER_DAY + unknown01_4 * SECONDS_PER_HOUR + unknown00_6 * SECONDS_PER_MINUTE + unknown00_0; }
+u32 GameTime::convSec() const { return unknown02_1 * SECONDS_PER_UNKNOWN_86400 + unknown01_4 * SECONDS_PER_UNKNOWN_3600 + unknown00_6 * SECONDS_UNKNOWN_60 + unknown00_0; }
 
 ElapseTime operator-(const ElapseTime &elapseTime, const ElapseTime &otherElapseTime) {
   s32 hour = elapseTime.unknown01_4 - otherElapseTime.unknown01_4;
   s32 minute = elapseTime.unknown00_6 - otherElapseTime.unknown00_6;
   s32 second = elapseTime.unknown00_0 - otherElapseTime.unknown00_0;
   if (second < 0) {
-    second += SECONDS_PER_MINUTE;
+    second += SECONDS_UNKNOWN_60;
     minute--;
   }
   if (minute < 0) {
-    minute += MINUTES_PER_HOUR;
+    minute += MINUTES_PER_UNKNOWN_60;
     hour--;
   }
 

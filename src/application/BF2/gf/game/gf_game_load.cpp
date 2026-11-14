@@ -7,6 +7,7 @@
 #include "gf/data/gf_data_mercenaries.h"
 #include "gf/data/gf_data_option.h"
 #include "gf/data/gf_data_system.h"
+#include "gf/field/gf_real_time.h"
 #include "gf/gf_allocator.h"
 #include "gf/gf_manager.h"
 #include "ml/dev_file_th.h"
@@ -20,7 +21,7 @@ GfGameLoad::GfGameLoad(SAVESLOT slot)
       unknown150(0) {}
 
 GfGameLoad::GfGameLoad(const char *path)
-    : unknown08(SAVESLOT_NONE), unknown110(nullptr), unknown118(nullptr), unknown120(0), unknown128(nullptr), unknown130(0), unknown134(-1), unknown138(nullptr), unknown140(nullptr),
+    : unknown08(SAVESLOT_UNKNOWN_FFFFFFFF), unknown110(nullptr), unknown118(nullptr), unknown120(0), unknown128(nullptr), unknown130(0), unknown134(-1), unknown138(nullptr), unknown140(nullptr),
       unknown148(nullptr), unknown150(0) {
   unknown0c = path;
 }
@@ -58,11 +59,11 @@ void GfGameLoad::phaseBinData() {
   if (saveData != nullptr) {
     saveData->unknown10.unknown109b30.clear();
     saveData->unknown10.unknown1098c8.unknown00.clear();
-    getAllocator(ALLOCATOR_DEFAULT)->deallocate(unknown110);
+    getAllocator(ALLOCATOR_UNKNOWN_0)->deallocate(unknown110);
     unknown110 = nullptr;
   }
   if (unknown118 != nullptr) {
-    getAllocator(ALLOCATOR_DEFAULT)->deallocate(unknown118);
+    getAllocator(ALLOCATOR_UNKNOWN_0)->deallocate(unknown118);
     unknown118 = nullptr;
   }
   unknown148 = nullptr;
@@ -79,7 +80,7 @@ void GfGameLoad::startNonBlockBin(mm::mtl::FixStr<256> &path) {
 void GfGameLoad::createGameLoadDataBin(SDataSave &saveData, mm::mtl::FixStr<256> &path) {
   unknown138 = &saveData;
   saveData.unknown00 = 0;
-  void *buffer = getAllocator(ALLOCATOR_DEFAULT)->allocate(sizeof(SDataSave), 16);
+  void *buffer = getAllocator(ALLOCATOR_UNKNOWN_0)->allocate(sizeof(SDataSave), 16);
   unknown110 = new (buffer) SDataSave();
   unknown110->unknown00 = 0;
   unknown148 = unknown110;
@@ -97,7 +98,7 @@ void GfGameLoad::execGameLoadNonBlock(SDataSave &saveData) {
 void GfGameLoad::createOptionLoadDataBin(SDataOption &optionData, mm::mtl::FixStr<256> &path) {
   unknown140 = &optionData;
   optionData.unknown00 = 0;
-  void *buffer = getAllocator(ALLOCATOR_DEFAULT)->allocate((sizeof(SDataOption) + 15) & ~15, 16);
+  void *buffer = getAllocator(ALLOCATOR_UNKNOWN_0)->allocate((sizeof(SDataOption) + 15) & ~15, 16);
   unknown118 = new (buffer) SDataOption();
   unknown118->unknown00 = 0;
   unknown148 = unknown118;
@@ -123,7 +124,7 @@ bool GfGameLoad::execGameLoadBlockForDebug(SDataSave &saveData) {
     endNonBlockBin();
   }
   unknown120 = 0;
-  return saveData.unknown00 == SAVE_DATA_VERSION;
+  return saveData.unknown00 == SAVE_UNKNOWN_237915;
 }
 
 bool GfGameLoad::execOptionLoadBlockForDebug(SDataOption &optionData) {
@@ -137,7 +138,7 @@ bool GfGameLoad::execOptionLoadBlockForDebug(SDataOption &optionData) {
     endNonBlockBin();
   }
   unknown120 = 0;
-  return optionData.unknown00 == SAVE_DATA_VERSION;
+  return optionData.unknown00 == SAVE_UNKNOWN_237915;
 }
 
 void GfGameLoad::getGameFileNameBin(mm::mtl::FixStr<256> &path) {
@@ -161,7 +162,7 @@ void GfGameLoad::getOptionFileNameBin(mm::mtl::FixStr<256> &path) {
 bool GfGameLoad::OnFileEvent(ml::EventFileTh *event) {
   if (unknown128 == event->unknown08) {
     unknown130 = event->type;
-    if (unknown130 == ml::EventFileTh::TYPE_COMPLETE) {
+    if (unknown130 == ml::EventFileTh::TYPE_UNKNOWN_2) {
       unknown134 = event->unknown30;
     }
     unknown128 = nullptr;

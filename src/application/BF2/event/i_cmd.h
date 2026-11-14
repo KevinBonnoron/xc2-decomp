@@ -10,9 +10,9 @@ class CmdVariable;
 class ICmd {
 public:
   enum RESULT {
-    RESULT_WAIT,
-    RESULT_END,
-    RESULT_NEXT,
+    RESULT_UNKNOWN_0, // Inferred role: wait; original name unknown.
+    RESULT_UNKNOWN_1, // Inferred role: end; original name unknown.
+    RESULT_UNKNOWN_2, // Inferred role: next; original name unknown.
   };
 
   class Param {

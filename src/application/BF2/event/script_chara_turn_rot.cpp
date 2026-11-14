@@ -17,19 +17,19 @@ namespace event {
 
 void ScriptCharaTurnRot::doit(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CHARA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_2) {
     return;
   }
   ObjectChara *chara = static_cast<ObjectChara *>(object);
   RotAxis axis(param.val(0).getS32(), param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32());
   unknown10 = chara->getRotAxis();
-  mm::mtl::Singleton<ScheManager>::getPtr()->setUse(Scheduler::USE_TURN, false, chara->getCharaObj()->getHandle());
+  mm::mtl::Singleton<ScheManager>::getPtr()->setUse(Scheduler::USE_UNKNOWN_2, false, chara->getCharaObj()->getHandle());
   chara->turnRotAxis(axis, static_cast<EVT_rotcvtype>(param.val(4).getS32()), param.val(5).getF32());
 }
 
 void ScriptCharaTurnRot::undo(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CHARA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_2) {
     return;
   }
   RotAxis axis = unknown10;
@@ -38,7 +38,7 @@ void ScriptCharaTurnRot::undo(const Param &param) {
 
 void ScriptCharaTurnRot::redo(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CHARA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_2) {
     return;
   }
   RotAxis axis(param.val(0).getS32(), param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32());

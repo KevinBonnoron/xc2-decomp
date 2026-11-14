@@ -10,9 +10,9 @@ enum CAMERA_PRIO : int;
 
 namespace gf {
 
-static constexpr fw::CAMERA_PRIO CAMERA_PRIO_SALVAGE = static_cast<fw::CAMERA_PRIO>(55);
+static constexpr fw::CAMERA_PRIO CAMERA_PRIO_UNKNOWN_55 = static_cast<fw::CAMERA_PRIO>(55); // Inferred role: camera prio salvage; original name unknown.
 
-GfSalvageCam::GfSalvageCam(GF_OBJ_HANDLE *target) : fw::Camera(CAMERA_PRIO_SALVAGE), unknowna8(target) {}
+GfSalvageCam::GfSalvageCam(GF_OBJ_HANDLE *target) : fw::Camera(CAMERA_PRIO_UNKNOWN_55), unknowna8(target) {}
 
 GfSalvageCam::~GfSalvageCam() {}
 

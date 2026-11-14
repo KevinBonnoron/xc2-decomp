@@ -10,12 +10,12 @@ class CommonResource;
 
 namespace gmk {
 
-constexpr int BDAT_TYPE_U8 = 1;
-constexpr int BDAT_TYPE_U16 = 2;
-constexpr int BDAT_TYPE_U32 = 3;
-constexpr int BDAT_TYPE_S16 = 5;
-constexpr int BDAT_TYPE_STRING = 7;
-constexpr int BDAT_TYPE_F32 = 8;
+constexpr int BDAT_TYPE_UNKNOWN_1 = 1; // Inferred role: bdat type u8; original name unknown.
+constexpr int BDAT_TYPE_UNKNOWN_2 = 2; // Inferred role: bdat type u16; original name unknown.
+constexpr int BDAT_TYPE_UNKNOWN_3 = 3; // Inferred role: bdat type u32; original name unknown.
+constexpr int BDAT_TYPE_UNKNOWN_5 = 5; // Inferred role: bdat type s16; original name unknown.
+constexpr int BDAT_TYPE_UNKNOWN_7 = 7; // Inferred role: bdat type string; original name unknown.
+constexpr int BDAT_TYPE_UNKNOWN_8 = 8; // Inferred role: bdat type f32; original name unknown.
 
 inline f32 toBdatF32(unsigned long value) {
   union {

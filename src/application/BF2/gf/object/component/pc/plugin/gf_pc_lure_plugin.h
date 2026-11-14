@@ -5,6 +5,7 @@
 #include "gf/object/component/behavior/plugin/gf_plugin.h"
 #include "gf/object/component/pc/gf_com_behavior_pc.h" // IWYU pragma: keep
 #include "mm_mtl/intrusive_ptr.h"
+#include "types.h"
 
 namespace mm {
 namespace mtl {
@@ -19,15 +20,19 @@ struct UpdateInfo;
 namespace gf {
 
 struct GF_OBJ_HANDLE;
+class GfComPropertyPc;
+struct AccessParam;
 
 namespace pc {
 
-struct LureParam;
+bool isActiveRangeLure(GfComPropertyPc &property, const AccessParam &param, GF_OBJ_HANDLE *target);
 
 class LurePlugin : public Plugin {
   GF_PLUGIN(GfComBehaviorPc)
 
 public:
+  static const u32 PLUGIN_INDEX = 15;
+
   LurePlugin();
   static LurePlugin *create();
   virtual bool setup(GfComBehaviorPc &behavior);
@@ -35,7 +40,7 @@ public:
   void onActivate() override;
   void onDeactivate() override;
   virtual void update(GfComBehaviorPc &behavior, const fw::UpdateInfo &info);
-  const LureParam *getParam() const;
+  const AccessParam *getParam() const;
   void drawDebug(GfComBehaviorPc &behavior);
 
   GF_OBJ_HANDLE *unknown10;                       // Inferred role: target; original member name unknown.

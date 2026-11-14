@@ -1,19 +1,23 @@
 #pragma once
+#include <stddef.h>
+
 #include "framework/manager_object.h"
 #include "framework/pad/pad_res_event_manager.h"
 #include "ml/dev_graph_cb.h"
 #include "mm_mtl/bitflag.h"
+#include "mm_mtl/delegate.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_queue.h"
+#include "mm_mtl/fixstr.h"
+#include "mm_mtl/map.h"
 #include "mm_mtl/reference_object.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
-#include <stddef.h>
 
 namespace mm {
 namespace mtl {
 class IAllocator;
-}
+} // namespace mtl
 } // namespace mm
 
 namespace ml {
@@ -23,25 +27,38 @@ struct PadVibrationInfo;
 namespace fw {
 
 struct UpdateInfo;
+struct ResAction;
+struct ResActionInfo;
+struct ResAxisInfo;
+class PadResEvent;
 
 enum VibrationID : int {
   VIBRATION_ID_UNKNOWN_2 = 2,
+  VIBRATION_ID_UNKNOWN_7 = 7,
+  VIBRATION_ID_UNKNOWN_8 = 8,
+  VIBRATION_ID_UNKNOWN_10 = 10,
+  VIBRATION_ID_UNKNOWN_13 = 13,
+  VIBRATION_ID_UNKNOWN_14 = 14,
+  VIBRATION_ID_UNKNOWN_15 = 15,
+  VIBRATION_ID_UNKNOWN_16 = 16,
+  VIBRATION_ID_UNKNOWN_22 = 22,
 };
 
 struct PadData {
   PadData()
-      : unknown00(0), unknown04(0), unknown08(0), unknown0c(0), _10(), unknown1c(0.0f), unknown20(0.0f), _24(), _28(), unknown2c(0.2f), unknown30(0.2f), unknown34(0.2f), unknown38(0.2f),
-        unknown3c(-1), unknown40(), unknown44() {}
+      : unknown00(0), unknown04(0), unknown08(0), unknown0c(0), unknown10(0), _14(), unknown1c(0.0f), unknown20(0.0f), unknown24(0.0f), unknown28(0.0f), unknown2c(0.2f), unknown30(0.2f),
+        unknown34(0.2f), unknown38(0.2f), unknown3c(-1), unknown40(), unknown44() {}
 
   u32 unknown00; // Inferred role: hold; original member name unknown.
   u32 unknown04; // Inferred role: trigger; original member name unknown.
   u32 unknown08; // Inferred role: release; original member name unknown.
   u32 unknown0c; // Inferred role: repeat; original member name unknown.
-  u8 _10[0x1c - 0x10];
-  f32 unknown1c; // Inferred role: stick x read by LeverReduceProc; original member name unknown.
-  f32 unknown20; // Inferred role: stick y read by LeverReduceProc; original member name unknown.
-  u8 _24[0x28 - 0x24];
-  u8 _28[0x2c - 0x28];
+  u32 unknown10; // Inferred role: double press; original member name unknown.
+  u8 _14[0x1c - 0x14];
+  f32 unknown1c;  // Inferred role: stick x read by LeverReduceProc; original member name unknown.
+  f32 unknown20;  // Inferred role: stick y read by LeverReduceProc; original member name unknown.
+  f32 unknown24;  // Inferred role: right stick x; original member name unknown.
+  f32 unknown28;  // Inferred role: right stick y; original member name unknown.
   f32 unknown2c;  // Inferred role: arx threshold; original member name unknown.
   f32 unknown30;  // Inferred role: ary threshold; original member name unknown.
   f32 unknown34;  // Inferred role: alx threshold; original member name unknown.
@@ -51,7 +68,10 @@ struct PadData {
   u32 unknown44;  // Inferred role: style; original member name unknown.
 };
 
+static_assert(offsetof(PadData, unknown10) == 0x10, "");
 static_assert(offsetof(PadData, unknown1c) == 0x1c, "");
+static_assert(offsetof(PadData, unknown24) == 0x24, "");
+static_assert(offsetof(PadData, unknown28) == 0x28, "");
 static_assert(offsetof(PadData, unknown20) == 0x20, "");
 static_assert(offsetof(PadData, unknown2c) == 0x2c, "");
 static_assert(offsetof(PadData, unknown40) == 0x40, "");
@@ -69,7 +89,10 @@ public:
   virtual ~IPadFilter() {}
 };
 
-class PadFilterStd : public IPadFilter, public mm::mtl::ReferenceObject, public mm::mtl::Singleton<PadFilterStd> {
+// Evidence: the vtable of the game (1.0.0: 0x71011794f0, 0x70 bytes) holds the vtables of IPadFilter and ReferenceObject only,
+// so the class does not derive from mm::mtl::Singleton (polymorphic): the game only has the function-local instance of
+// mm::mtl::Singleton<fw::PadFilterStd>::getPtr (0x710125d170).
+class PadFilterStd : public IPadFilter, public mm::mtl::ReferenceObject {
 public:
   u32 filterBtn(u32 button) override;
   f32 filterALX(f32 x, f32 y) override;
@@ -90,10 +113,10 @@ static_assert(sizeof(PadConfigData) == 0x54, "");
 
 class PadManager : public ManagerObject, public mm::mtl::PtrSingleton<PadManager>, public ml::DevGraphCB {
 public:
-  static const u32 PAD_MAX = 12;
+  static const u32 PAD_UNKNOWN_12 = 12; // Inferred role: maximum number of pads; original name unknown.
 
-  static const u32 BUTTON_MAX = 32;
-  static const u32 LISTENER_MAX = 16;
+  static const u32 BUTTON_UNKNOWN_32 = 32;   // Inferred role: maximum number of buttons; original name unknown.
+  static const u32 LISTENER_UNKNOWN_16 = 16; // Inferred role: maximum number of listeners; original name unknown.
 
   struct PadWork {
     f32 unknown00; // Inferred role: repeat time; original member name unknown.
@@ -101,7 +124,7 @@ public:
     u32 unknown08; // Inferred role: repeat; original member name unknown.
   };
 
-  typedef mm::mtl::FixedArray<mm::mtl::FixedArray<PadWork, BUTTON_MAX>, PAD_MAX> PadWorkArray;
+  typedef mm::mtl::FixedArray<mm::mtl::FixedArray<PadWork, BUTTON_UNKNOWN_32>, PAD_UNKNOWN_12> PadWorkArray;
 
   static PadData m_nullPad;
 
@@ -120,6 +143,9 @@ public:
   virtual void update(const UpdateInfo &info);
   void viBeginFrame() override;
   static int getPadMax();
+  void makePadData(int padNo);
+  void updatePadData(int padNo, PadData &pad, u32 prev, PadWorkArray &works, f32 deltaTime);
+  void replacePadData(int padNo);
   u32 updateRepeat(int padNo, const PadData &pad, PadWorkArray &works, f32 deltaTime);
   u32 updateCnt(int padNo, const PadData &pad, PadWorkArray &works, f32 deltaTime);
   u32 updateHold(int padNo, const PadData &pad, PadWorkArray &works, f32 deltaTime);
@@ -142,32 +168,34 @@ public:
   static void enableDebugDraw(bool isEnable);
   static bool isDebugDraw();
   static void setConfigData(int padNo, const PadConfigData &data);
+  static const PadConfigData &getConfigData(int padNo);
   void updateControlPadNo(int padNo);
 
-  IPadFilter *unknown20[PAD_MAX];      // Inferred role: filters; original member name unknown.
-  PadData unknown80[PAD_MAX];          // Inferred role: pads; original member name unknown.
-  PadData unknown3e0[PAD_MAX];         // Inferred role: pads updated by the second updatePadData loop; original member name unknown.
-  PadWorkArray unknown740;             // Inferred role: button works of unknown80; original member name unknown.
-  PadWorkArray unknown1940;            // Inferred role: button works of unknown3e0; original member name unknown.
-  PadData unknown2b40[PAD_MAX];        // Inferred role: control pad data; original member name unknown.
-  PadData unknown2ea0[PAD_MAX];        // Inferred role: debug pad data; original member name unknown.
-  PadConfigData unknown3200[PAD_MAX];  // Inferred role: configs; original member name unknown.
-  int unknown35f0[PAD_MAX];            // Inferred role: control pad nos; original member name unknown.
-  int unknown3620[PAD_MAX];            // Inferred role: debug pad nos; original member name unknown.
-  mm::mtl::unknown027<32> unknown3650; // Inferred role: enable flags; original member name unknown.
-  bool unknown3654;                    // Inferred role: debug draw enable; original member name unknown.
-  u8 _3655[0x3660 - 0x3655];
-  f32 unknown3660; // Inferred role: repeat time; original member name unknown.
-  f32 unknown3664; // Inferred role: repeat time first; original member name unknown.
-  f32 unknown3668; // Inferred role: cnt time; original member name unknown.
-  f32 unknown366c; // Inferred role: hold time; original member name unknown.
+  IPadFilter *m_filter[PAD_UNKNOWN_12];
+  PadData unknown80[PAD_UNKNOWN_12];         // Inferred role: pads; original member name unknown.
+  PadData unknown3e0[PAD_UNKNOWN_12];        // Inferred role: pads updated by the second updatePadData loop; original member name unknown.
+  PadWorkArray unknown740;                   // Inferred role: button works of unknown80; original member name unknown.
+  PadWorkArray unknown1940;                  // Inferred role: button works of unknown3e0; original member name unknown.
+  PadData unknown2b40[PAD_UNKNOWN_12];       // Inferred role: control pad data; original member name unknown.
+  PadData unknown2ea0[PAD_UNKNOWN_12];       // Inferred role: debug pad data; original member name unknown.
+  PadConfigData unknown3200[PAD_UNKNOWN_12]; // Inferred role: configs; original member name unknown.
+  int unknown35f0[PAD_UNKNOWN_12];           // Inferred role: control pad nos; original member name unknown.
+  int unknown3620[PAD_UNKNOWN_12];           // Inferred role: debug pad nos; original member name unknown.
+  mm::mtl::unknown027<32> unknown3650;       // Inferred role: enable flags; original member name unknown.
+  bool unknown3654;                          // Inferred role: debug draw enable; original member name unknown.
+  u8 _3655[0x3658 - 0x3655];
+  long unknown3658; // Inferred role: clock of the last frame begin; original member name unknown.
+  f32 unknown3660;  // Inferred role: repeat time; original member name unknown.
+  f32 unknown3664;  // Inferred role: repeat time first; original member name unknown.
+  f32 m_cntTime;
+  f32 m_holdTime;
   int unknown3670; // Inferred role: user select pad no; original member name unknown.
   u8 _3674[0x3678 - 0x3674];
-  mm::mtl::FixedQueue<IPadListener *, LISTENER_MAX> unknown3678; // Inferred role: listeners; original member name unknown.
-  PadResEventManager unknown3708;                                // Inferred role: pad res event manager; original member name unknown.
+  mm::mtl::FixedQueue<IPadListener *, LISTENER_UNKNOWN_16> unknown3678; // Inferred role: listeners; original member name unknown.
+  PadResEventManager unknown3708;                                       // Inferred role: pad res event manager; original member name unknown.
 };
 
-static_assert(offsetof(PadManager, unknown20) == 0x20, "");
+static_assert(offsetof(PadManager, m_filter) == 0x20, "");
 static_assert(offsetof(PadManager, unknown80) == 0x80, "");
 static_assert(offsetof(PadManager, unknown3e0) == 0x3e0, "");
 static_assert(offsetof(PadManager, unknown740) == 0x740, "");
@@ -178,6 +206,7 @@ static_assert(offsetof(PadManager, unknown35f0) == 0x35f0, "");
 static_assert(offsetof(PadManager, unknown3650) == 0x3650, "");
 static_assert(offsetof(PadManager, unknown3200) == 0x3200, "");
 static_assert(offsetof(PadManager, unknown3660) == 0x3660, "");
+static_assert(offsetof(PadManager, unknown3658) == 0x3658, "");
 static_assert(offsetof(PadManager, unknown3678) == 0x3678, "");
 static_assert(offsetof(PadManager, unknown3708) == 0x3708, "");
 
@@ -200,12 +229,38 @@ public:
   void bind(int padNo, int, mm::mtl::IAllocator *allocator);
   void unbind();
   void update();
+  void updateAction(const PadResEvent &event);
+  void updateAxis(const PadResEvent &event);
+  bool checkAction(const ResAction &action);
+  void invokeAction(const ResActionInfo &info);
+  void invokeAxis(const ResAxisInfo &info);
   template <typename T, typename F> void bindAction(const char *name, T *object, F function);
   template <typename T, typename F> void bindAxis(const char *name, T *object, F function);
 
-  u8 _00[0x38 - 0x00];
+  s32 unknown00;                                                               // Inferred role: pad number; original member name unknown.
+  u32 unknown04;                                                               // Inferred role: pad type; original member name unknown.
+  mm::mtl::Map<mm::mtl::FixStr<32>, mm::mtl::Delegate<void()>> unknown08;      // Inferred role: action delegates by name; original member name unknown.
+  mm::mtl::Map<mm::mtl::FixStr<32>, mm::mtl::Delegate<void(float)>> unknown20; // Inferred role: axis delegates by name; original member name unknown.
 };
 
 static_assert(sizeof(PadRelay) == 0x38, "");
+
+template <typename T, typename F> void PadRelay::bindAction(const char *name, T *object, F function) {
+  mm::mtl::FixStr<32> key(name);
+  unknown08.insert(mm::mtl::MapPair<mm::mtl::FixStr<32>, mm::mtl::Delegate<void()>>(key, mm::mtl::Delegate<void()>()));
+  mm::mtl::Map<mm::mtl::FixStr<32>, mm::mtl::Delegate<void()>>::iterator it = unknown08.find(key);
+  if (it != unknown08.end()) {
+    it->second.bind(object, function);
+  }
+}
+
+template <typename T, typename F> void PadRelay::bindAxis(const char *name, T *object, F function) {
+  mm::mtl::FixStr<32> key(name);
+  unknown20.insert(mm::mtl::MapPair<mm::mtl::FixStr<32>, mm::mtl::Delegate<void(float)>>(key, mm::mtl::Delegate<void(float)>()));
+  mm::mtl::Map<mm::mtl::FixStr<32>, mm::mtl::Delegate<void(float)>>::iterator it = unknown20.find(key);
+  if (it != unknown20.end()) {
+    it->second.bind(object, function);
+  }
+}
 
 } // namespace fw

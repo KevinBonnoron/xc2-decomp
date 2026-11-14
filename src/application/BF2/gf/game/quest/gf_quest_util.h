@@ -12,7 +12,6 @@ namespace gf {
 
 struct AchievQuest;
 struct GF_OBJ_HANDLE;
-struct GfQuestScinario;
 struct QuestTaskParam;
 
 // Index of GfQuestReward::unknown00.
@@ -61,6 +60,14 @@ static_assert(sizeof(GfQuestReward::Param) == 0x48, "");
 static_assert(offsetof(GfQuestReward, unknown360) == 0x360, "");
 static_assert(sizeof(GfQuestReward) == 0x364, "");
 
+struct GfQuestScinario {
+  const char *unknown00; // Inferred role: topic text; original member name unknown.
+  u32 unknown08;         // Inferred role: talker; original member name unknown.
+};
+
+static_assert(offsetof(GfQuestScinario, unknown08) == 0x08, "");
+static_assert(sizeof(GfQuestScinario) == 0x10, "");
+
 struct GfQuestTaskLogResult {
   GfQuestTaskLogResult() : unknown00(0), unknown08(nullptr), unknown10(0), unknown14(0), unknown18(0), unknown1c(0), unknown20(0), unknown24(false), unknown26() {}
 
@@ -88,12 +95,12 @@ static_assert(sizeof(GfQuestTaskLogResult) == 0x30, "");
 
 class GfQuestUtil {
 public:
-  static void getScenarioTopic(GfQuestScinario &scenario);
+  static bool getScenarioTopic(GfQuestScinario &scenario);
   static bool getMsgQuestTaskLog(GfQuestTaskLogResult &result, const QuestTaskParam &param);
   static QuestID getCurrentEnemyWithEvent(u32 enemy);
   static bool isExtstActivateEnemy(const QuestTaskParam &param);
   static bool isEnemyGroup(u32 group, u32 enemy);
-  static u32 getCurrentItemWithEvent(u32 item);
+  static QuestID getCurrentItemWithEvent(u32 item);
   static QuestID getCurrentTBoxWithEvent(GF_OBJ_HANDLE *handle);
   static u32 getQuestNeedChar(u32 index, QuestID quest);
   static void finishTalkNpc(u32 map, u32 npc, QuestID quest);
@@ -124,7 +131,7 @@ public:
   static u32 getQuestIconType(QuestID quest);
   static bool getDispCount(u32 &count, u32 &limit, const AchievQuest &achievQuest);
   static void incFieldSkillTask(u32 blade, u32 fieldSkill);
-  static bool getTaskInfoForAutoPilot(mm::mtl::FixStr<256> &info);
+  static void getTaskInfoForAutoPilot(mm::mtl::FixStr<256> &info);
   static void completeCurrentQuestForAutoPilot();
   static u32 getClearChildQuest(QuestID quest);
   static u32 getEnemyPopRemainNumber(u32 enemy);

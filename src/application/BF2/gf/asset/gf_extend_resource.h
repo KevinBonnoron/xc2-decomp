@@ -17,6 +17,7 @@ class GfExtendResource {
 public:
   static mm::mtl::RTTI m_rtti;
 
+  explicit GfExtendResource(u32 kind) : unknown08(kind) {}
   virtual ~GfExtendResource() {}
   virtual const mm::mtl::RTTI *getRTTI() const { return &m_rtti; }
 

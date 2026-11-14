@@ -3,6 +3,7 @@
 
 #include "framework/ik/ik_solver.h"
 #include "fw/fw_param_manager.h"
+#include "mm_math/mm_vec3.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
 
@@ -44,18 +45,23 @@ public:
   const mm::mtl::RTTI *getRTTI() const override;
   virtual bool isEnable() const;
 
-  u8 _20[0x40 - 0x20];
-  f32 unknown40; // Inferred role: limit up; original member name unknown.
-  f32 unknown44; // Inferred role: limit down; original member name unknown.
-  f32 unknown48; // Inferred role: limit left; original member name unknown.
-  f32 unknown4c; // Inferred role: limit right; original member name unknown.
-  u8 _50[0x70 - 0x50];
+  mm::Vec3 unknown20; // Inferred role: forward axis in bone space; original member name unknown.
+  mm::Vec3 unknown30; // Inferred role: up axis; original member name unknown.
+  f32 unknown40;      // Inferred role: limit up; original member name unknown.
+  f32 unknown44;      // Inferred role: limit down; original member name unknown.
+  f32 unknown48;      // Inferred role: limit left; original member name unknown.
+  f32 unknown4c;      // Inferred role: limit right; original member name unknown.
+  bool unknown50;     // Inferred role: limit initialised, set by resetLimit; original member name unknown.
+  u8 _51[0x70 - 0x51];
   u16 unknown70; // Inferred role: bone index; original member name unknown.
   bool m_enable;
   ParamAdapter unknown78; // Inferred role: limit param; original member name unknown.
 };
 
+static_assert(offsetof(SphericalCoordinatesIkSolver, unknown20) == 0x20, "");
+static_assert(offsetof(SphericalCoordinatesIkSolver, unknown30) == 0x30, "");
 static_assert(offsetof(SphericalCoordinatesIkSolver, unknown40) == 0x40, "");
+static_assert(offsetof(SphericalCoordinatesIkSolver, unknown50) == 0x50, "");
 static_assert(offsetof(SphericalCoordinatesIkSolver, unknown70) == 0x70, "");
 static_assert(offsetof(SphericalCoordinatesIkSolver, m_enable) == 0x72, "");
 static_assert(offsetof(SphericalCoordinatesIkSolver, unknown78) == 0x78, "");

@@ -28,7 +28,7 @@ void GfMenuObjSalvage::initialize() {
       ui::UIObjectAcc result(main.unknown10, "LAY_result");
 // __LINE__ must be 78 as in the original file: it is the line argument of operator new.
 #line 78
-      ResultListener *listener = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ResultListener(this);
+      ResultListener *listener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ResultListener(this);
       listener->addRef();
       ui::UIEventManager::get()->registObjectListener(main.searchChild("LAY_result"), listener);
       if (listener != nullptr) {

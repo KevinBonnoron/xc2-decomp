@@ -2,8 +2,10 @@
 
 #include <new>
 
+#include "gf/data/gf_character_id.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_object_type.h"
+#include "gf/game/gf_game_party.h"
 #include "gf/game/gf_game_search_obj.h"
 #include "gf/gf_allocator.h"
 #include "gf/gf_manager.h"
@@ -25,10 +27,12 @@
 namespace gf {
 struct GF_OBJ_HANDLE;
 
+GfMenuReference::~GfMenuReference() {}
+
 void GfMenuReference::build(const GfSetupParam &param) {
 // __LINE__ must be 67 as in the original file: its value changes the instruction order.
 #line 67
-  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfMenuReference(param);
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfMenuReference(param);
 }
 
 void GfMenuReference::destroy() {
@@ -78,6 +82,14 @@ void GfMenuReference::resetDriverVirtual() {
   }
 }
 
+void GfMenuReference::resetBladeVirtual() {
+  GfMenuReference *reference = get();
+  if (reference != nullptr) {
+    reference->unknown4ccd0 = 0;
+    reference->unknown4ccd4 = unknown006();
+  }
+}
+
 void GfMenuReference::postReset() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
@@ -107,11 +119,11 @@ const GfMenuReference::ArtsPaletteInfo &GfMenuReference::getArtsPaletteInfo(u8 i
   GfMenuReference *reference = get();
   const ArtsPaletteInfo *info = &empty;
   if (reference != nullptr) {
-    if (index < ARTS_PALETTE_COUNT) {
+    if (index < ARTS_PALETTE_UNKNOWN_3) {
       info = &reference->unknown4cac0[index].unknown00;
     } else {
       info = &reference->unknown4cda0[index].unknown00;
-      if (!(index < ALL_ARTS_PALETTE_COUNT)) {
+      if (!(index < ALL_ARTS_PALETTE_UNKNOWN_9)) {
         info = &empty;
       }
     }
@@ -125,11 +137,11 @@ const GfMenuObjUtil::ArtsIconInfo &GfMenuReference::getArtsPaletteIconInfo(u8 in
   if (reference == nullptr) {
     return empty;
   }
-  if (index < ARTS_PALETTE_COUNT) {
+  if (index < ARTS_PALETTE_UNKNOWN_3) {
     return reference->unknown4cac0[index].unknown08;
   }
   const GfMenuObjUtil::ArtsIconInfo *info = &reference->unknown4cda0[index].unknown08;
-  if (!(index < ALL_ARTS_PALETTE_COUNT)) {
+  if (!(index < ALL_ARTS_PALETTE_UNKNOWN_9)) {
     info = &empty;
   }
   return *info;
@@ -138,11 +150,11 @@ const GfMenuObjUtil::ArtsIconInfo &GfMenuReference::getArtsPaletteIconInfo(u8 in
 void GfMenuReference::setArtsPaletteEnable(u8 index, bool isEnable, u32 disableFlags) {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    if (index < ARTS_PALETTE_COUNT) {
+    if (index < ARTS_PALETTE_UNKNOWN_3) {
       reference->unknown4cac0[index].unknown20 = isEnable;
       reference->unknown4cac0[index].unknown24 = disableFlags;
     }
-    if (index < ALL_ARTS_PALETTE_COUNT) {
+    if (index < ALL_ARTS_PALETTE_UNKNOWN_9) {
       reference->unknown4cda0[index].unknown20 = isEnable;
       reference->unknown4cda0[index].unknown24 = disableFlags;
     }
@@ -154,10 +166,10 @@ u32 GfMenuReference::getArtsPaletteElementType(u8 index) {
   if (reference == nullptr) {
     return 0;
   }
-  if (index < ARTS_PALETTE_COUNT) {
+  if (index < ARTS_PALETTE_UNKNOWN_3) {
     return reference->unknown4cac0[index].unknown1c;
   }
-  if (index < ALL_ARTS_PALETTE_COUNT) {
+  if (index < ALL_ARTS_PALETTE_UNKNOWN_9) {
     return reference->unknown4cda0[index].unknown1c;
   }
   return 0;
@@ -168,10 +180,10 @@ bool GfMenuReference::isArtsPaletteEnable(u8 index) {
   if (reference == nullptr) {
     return false;
   }
-  if (index < ARTS_PALETTE_COUNT) {
+  if (index < ARTS_PALETTE_UNKNOWN_3) {
     return reference->unknown4cac0[index].unknown20;
   }
-  if (index < ALL_ARTS_PALETTE_COUNT) {
+  if (index < ALL_ARTS_PALETTE_UNKNOWN_9) {
     return reference->unknown4cda0[index].unknown20;
   }
   return false;
@@ -182,10 +194,10 @@ u32 GfMenuReference::getArtsPaletteDisable(u8 index) {
   if (reference == nullptr) {
     return 0;
   }
-  if (index < ARTS_PALETTE_COUNT) {
+  if (index < ARTS_PALETTE_UNKNOWN_3) {
     return reference->unknown4cac0[index].unknown24;
   }
-  if (index < ALL_ARTS_PALETTE_COUNT) {
+  if (index < ALL_ARTS_PALETTE_UNKNOWN_9) {
     return reference->unknown4cda0[index].unknown24;
   }
   return 0;
@@ -380,7 +392,7 @@ u32 GfMenuReference::getElementComboRootCurrent() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
     GF_OBJ_HANDLE *handle = GfMenuManager::getTargetObjHandle();
-    if (handle != INVALID_HANDLE && GfObjAcc(handle).getType() == OBJECT_TYPE_ENEMY) {
+    if (handle != unknown020 && GfObjAcc(handle).getType() == OBJECT_TYPE_ENEMY) {
       GfObjProperty *property = GfObjUtil::getProperty(handle);
       if (property != nullptr) {
         GfObjPropertyEnemy *enemy = property->getEnemy();
@@ -429,9 +441,10 @@ u32 GfMenuReference::getActiveElementComboID(u32 level) {
 }
 
 u32 GfMenuReference::getElementComboRootLevel(u32 index) {
-  static const u32 levels[7] = {1, 2, 2, 3, 3, 3, 3};
+  // Inferred role: root level of each element combo route; original name unknown.
+  static const u32 unknown028[7] = {1, 2, 2, 3, 3, 3, 3};
   if (index < 7) {
-    return levels[index];
+    return unknown028[index];
   }
   return 0;
 }
@@ -516,7 +529,7 @@ bool GfMenuReference::isReversePaletteBtnState(u32 index, u32 button) {
   return false;
 }
 
-ui::UIListInfo<MenuEnemyInfo> *GfMenuReference::getEnemyLinkList() {
+GfMenuEnemyList *GfMenuReference::getEnemyLinkList() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
     return reference->unknown4cb98;
@@ -524,7 +537,7 @@ ui::UIListInfo<MenuEnemyInfo> *GfMenuReference::getEnemyLinkList() {
   return nullptr;
 }
 
-ui::UIListInfo<MenuItemInfo> *GfMenuReference::getItemLinkList() {
+GfMenuItemList *GfMenuReference::getItemLinkList() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
     return reference->unknown4cba0;
@@ -593,7 +606,7 @@ u32 GfMenuReference::getReferenceBladeID(u32 index) {
 void GfMenuReference::setReferenceBladeIDFromDriver(u32 driver) {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    DataParamAcc acc(OBJECT_TYPE_DRIVER, driver, GIMMICK_TYPE_NONE);
+    DataParamAcc acc(OBJECT_TYPE_PC, driver, GIMMICK_TYPE_UNKNOWN_0);
     if (acc.isValid()) {
       reference->unknown4cc18[0] = acc.getBlade(0, false);
       reference->unknown4cc18[1] = acc.getBlade(1, false);
@@ -839,14 +852,14 @@ u32 GfMenuReference::getBladeVirtualEquipWpnChip() {
 void GfMenuReference::setBladeVirtualEquipOrb(u32 id) {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    reference->unknown4ccd4 = id;
+    reference->unknown4ccd4.unknown00 = id;
   }
 }
 
 u32 GfMenuReference::getBladeVirtualEquipOrb() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->unknown4ccd4;
+    return reference->unknown4ccd4.unknown00;
   }
   return 0;
 }
@@ -854,20 +867,20 @@ u32 GfMenuReference::getBladeVirtualEquipOrb() {
 void GfMenuReference::setBladeVirtualEquipOrbSlot(u32 slot) {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    reference->unknown4ccd8 = slot;
+    reference->unknown4ccd4.unknown04 = slot;
   }
 }
 
 u32 GfMenuReference::getBladeVirtualEquipOrbSlot() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->unknown4ccd8;
+    return reference->unknown4ccd4.unknown04;
   }
   return 0;
 }
 
 GF_SEARCH_OBJ *GfMenuReference::createList(GF_SEARCH_OBJ *searchObj) {
-  if (searchObj != INVALID_SEARCH_OBJ) {
+  if (searchObj != unknown012) {
     REFLIST *list = new (unknown4070.unknown003()) REFLIST;
     list->unknown00 = searchObj;
     list->unknown08.clear();
@@ -920,6 +933,35 @@ void GfMenuReference::clearPartyStatusLock() {
     reference->unknown4cf08.clear();
   }
   GfMenuObjPartyStatus::lock(false);
+}
+
+int GfMenuReference::getBladeSetIDFromParty(u32 partyId, u32 slot) {
+  DataParamAcc acc(GfGameParty::getHandleDriver(partyId));
+  int result = -1;
+  if (acc.isValid()) {
+    u32 slotMax = GfMenuObjUtil::getBladeSlotMax();
+    if (slot < slotMax) {
+      int setId = acc.getBladeSet(false);
+      if (GfMenuManager::isBattleState(0) || GfMenuManager::isBattleState(1)) {
+        setId = GfSelectBlade::getStartBattleSetId(partyId);
+      }
+      if (acc.getValidDriverId() == DRIVER_UNKNOWN_1 && (setId == 3 || setId == 4)) {
+        if (acc.getBlade(0, false) == BLADE_HOMURA) {
+          setId = 0;
+        } else if (acc.getBlade(1, false) == BLADE_HOMURA) {
+          setId = 1;
+        } else if (acc.getBlade(2, false) == BLADE_HOMURA) {
+          setId = 2;
+        }
+      }
+      u32 index = setId + slot;
+      if (index >= slotMax) {
+        index -= slotMax;
+      }
+      result = index;
+    }
+  }
+  return result;
 }
 
 } // namespace gf

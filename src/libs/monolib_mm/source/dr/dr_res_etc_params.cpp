@@ -3,12 +3,14 @@
 #include <new>
 
 #include "dr/dr_man.h"
+#include "dr/dr_mdo_mat.h"
+#include "dr/dr_res_mdo_mesh_obj.h"
 
 namespace ml {
 
-DrResEtcParams::DrResEtcParams() : unknown00(0), unknown04{0, 0}, unknown0c{0, 0}, unknown14(0) {}
+DrResEtcParams::DrResEtcParams() : unknown00(0), unknown04{0, 0}, unknown0c{0, 0}, m_params(0) {}
 
-f32 DrResEtcParams::getParams() const { return unknown14; }
+f32 DrResEtcParams::getParams() const { return m_params; }
 
 void DrResEtcParams::setParams(f32 value) {
   unknown00 |= 1 << DrMan::s_nDblStockIdx;
@@ -23,12 +25,22 @@ void DrResEtcParams::setPreParams(f32 value) {
 void DrResEtcParams::update() {
   if (unknown00 & (1 << DrMan::s_nDblMemIdx)) {
     unknown00 &= ~(1 << DrMan::s_nDblMemIdx);
-    unknown14 = unknown04[DrMan::s_nDblMemIdx];
+    m_params = unknown04[DrMan::s_nDblMemIdx];
   }
   if (unknown00 & (4 << DrMan::s_nDblMemIdx)) {
     unknown00 &= ~(4 << DrMan::s_nDblMemIdx);
-    unknown14 = unknown0c[DrMan::s_nDblMemIdx];
+    m_params = unknown0c[DrMan::s_nDblMemIdx];
   }
+}
+
+f32 DrResEtcParams::getValParams() const {
+  if (unknown00 & (4 << DrMan::s_nDblStockIdx)) {
+    return unknown0c[DrMan::s_nDblStockIdx];
+  }
+  if (unknown00 & (1 << DrMan::s_nDblStockIdx)) {
+    return unknown04[DrMan::s_nDblStockIdx];
+  }
+  return m_params;
 }
 
 DrResEtcPamObj::~DrResEtcPamObj() {}
@@ -62,12 +74,43 @@ void DrResEtcParams::setInitParams(f32 value) {
   unknown0c[0] = value;
   unknown04[1] = value;
   unknown04[0] = value;
-  unknown14 = value;
+  m_params = value;
 }
 
 void DrResEtcPamObj::release(DrResEtcPamObj *&obj) {
   if (obj != nullptr) {
     obj = nullptr;
+  }
+}
+
+void DrResEtcPamObj::mdonode_etcpam_etcmesh_disp(const MdsEtcParamsCallBack *callback, DrResEtcParams *param, wrkCallbackArg &arg) {
+  f32 value = 1.0f;
+  if (param->getParams() <= 0.5f) {
+    value = 0.0f;
+  }
+  DrResMdoMeshParts *parts = arg.unknown00->getParts(callback->unknown04);
+  parts->unknown34 = value;
+  parts->unknown2c[1] = value;
+  parts->unknown2c[0] = value;
+  parts->unknown28 &= ~6;
+}
+
+void DrResEtcPamObj::mdonode_etcpam_volfadeanm(const MdsEtcParamsCallBack *callback, DrResEtcParams *param, wrkCallbackArg &arg) {
+  if ((unknown1c & 1) != 0) {
+    f32 value = param->getParams();
+    u32 index = arg.unknown00->getParts(callback->unknown04)->unknown3a * 3 + 2;
+    if (value <= 0.01f) {
+      arg.unknown08[index].unknowna4 = arg.unknown08[index].unknownd0;
+    } else if (value > 1.0f) {
+      arg.unknown08[index].unknowna4 = arg.unknown08[index].unknownd0 + 1.0f;
+    } else {
+      arg.unknown08[index].unknowna4 = value + arg.unknown08[index].unknownd0;
+    }
+    if (arg.unknown08[index].unknowna4 > 1.0f) {
+      arg.unknown08[index].unknowna4 = 1.0f;
+    } else if (arg.unknown08[index].unknowna4 < 0.0f) {
+      arg.unknown08[index].unknowna4 = 0.0f;
+    }
   }
 }
 

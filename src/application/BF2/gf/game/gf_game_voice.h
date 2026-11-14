@@ -54,16 +54,17 @@ enum CV_FIELD {
   CV_FIELD_UNKNOWN_27 = 27,
   CV_FIELD_UNKNOWN_29 = 29,
   CV_FIELD_UNKNOWN_30 = 30,
-  CV_FIELD_TIME_MORNING = 31,
-  CV_FIELD_TIME_NIGHT = 32,
+  CV_FIELD_UNKNOWN_31 = 31, // Inferred role: cv field time morning; original name unknown.
+  CV_FIELD_UNKNOWN_32 = 32, // Inferred role: cv field time night; original name unknown.
   CV_FIELD_UNKNOWN_36 = 36,
 };
 
-enum {
-  VOICE_RESULT_UNKNOWN_0 = 0, // Inferred role: not started; original name unknown.
-  VOICE_RESULT_UNKNOWN_1 = 1, // Inferred role: waiting to play; original name unknown.
-  VOICE_RESULT_PLAY = 2,
-  VOICE_RESULT_UNKNOWN_3 = 3, // Inferred role: finished; original name unknown.
+// The enum keeps the name of the game's symbol gf::GfGameVoice::addResult(gf::ParamObj const&, gf::GAME_VOICE_HANDLE*, gf::CV_RESULT).
+enum CV_RESULT {
+  CV_RESULT_UNKNOWN_0 = 0, // Inferred role: not started; original name unknown.
+  CV_RESULT_UNKNOWN_1 = 1, // Inferred role: waiting to play; original name unknown.
+  CV_RESULT_UNKNOWN_2 = 2, // Inferred role: voice result play; original name unknown.
+  CV_RESULT_UNKNOWN_3 = 3, // Inferred role: finished; original name unknown.
 };
 
 struct GfVoiceName {
@@ -100,7 +101,7 @@ public:
     u32 unknown08;                // Inferred role: object type; original member name unknown.
     u32 unknown0c;                // Inferred role: object id; original member name unknown.
     GAME_VOICE_HANDLE *unknown10; // Inferred role: voice handle; original member name unknown.
-    u32 unknown18;                // Inferred role: result; original member name unknown.
+    CV_RESULT unknown18;          // Inferred role: result; original member name unknown.
   };
 
   GfGameVoice(const GfSetupParam &param);

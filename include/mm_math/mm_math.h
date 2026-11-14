@@ -9,7 +9,9 @@
 
 namespace mm {
 
+// Inferred name; kept as an exception to the unknown-name rule (AGENTS.md).
 const f32 DEG_TO_RAD = 0.017453292f;
+// Inferred name; kept as an exception to the unknown-name rule (AGENTS.md).
 const f32 RAD_TO_DEG = 180.0f / 3.1415927f;
 
 template <typename T> T clamp(T value, T mi, T ma) {
@@ -71,12 +73,11 @@ inline f32 asin(f32 r) {
   return asinf(r);
 }
 
-__attribute__((always_inline)) inline Vec3 matrixToEuler(const Mat44 &matrix) {
+__attribute__((always_inline)) inline void matrixToEuler(const Mat44 &matrix, Vec3 &euler) {
   f32 r = matrix.rows[2][1];
   // __LINE__ must be 581 as in the original header: it is the line argument of the assert.
 #line 581
   MM_ASSERT(mm::fabs(r) < 1.001f);
-  Vec3 euler;
   if (mm::fabs(r) >= 1.0f) {
     euler.x = -r > 0.0f ? 1.5707964f : -1.5707964f;
   } else {
@@ -87,13 +88,18 @@ __attribute__((always_inline)) inline Vec3 matrixToEuler(const Mat44 &matrix) {
       euler.z = atan2f(matrix.rows[0][1], matrix.rows[1][1]);
       euler.y = atan2f(matrix.rows[2][0], matrix.rows[2][2]);
     } else {
-      euler.y = 0.0f;
       euler.z = -atan2f(matrix.rows[0][2], matrix.rows[0][0]);
+      euler.y = 0.0f;
     }
   } else {
-    euler.y = 0.0f;
     euler.z = atan2f(matrix.rows[0][2], matrix.rows[0][0]);
+    euler.y = 0.0f;
   }
+}
+
+__attribute__((always_inline)) inline Vec3 matrixToEuler(const Mat44 &matrix) {
+  Vec3 euler;
+  matrixToEuler(matrix, euler);
   return euler;
 }
 
@@ -153,10 +159,68 @@ inline void unknown001(Mat44 &matrix, const Quat &quat) {
   matrix.rows[3][3] = 1.0f;
 }
 
-__attribute__((always_inline)) inline Vec3 quatToEuler(const Quat &quat) {
+// Inferred helper: quaternion of the rotation of a matrix; original name unknown. Evidence: inlined in fw::PrimCapsule::setup
+// (1.0.0: 0x7100197934), whose stack holds the four values and the pointers to the four components below the quaternion of
+// the caller, and in gf::GfFieldLodColiAnim::PosInfo::syncGfTransform (0x71002e2728).
+// Internal linkage: the game inlines it into the single caller of each unit.
+static inline void unknown004(Quat &rotation, const Mat44 &matrix) {
+  f32 values[4];
+  values[0] = ((matrix.rows[0][0] - matrix.rows[1][1]) - matrix.rows[2][2]) + 1.0f;
+  values[1] = ((matrix.rows[1][1] - matrix.rows[0][0]) - matrix.rows[2][2]) + 1.0f;
+  values[2] = (-matrix.rows[0][0] - matrix.rows[1][1]) + matrix.rows[2][2] + 1.0f;
+  values[3] = matrix.rows[0][0] + matrix.rows[1][1] + matrix.rows[2][2] + 1.0f;
+  u32 largest = 0;
+  if (values[1] > values[0]) {
+    largest = 1;
+  }
+  if (values[2] > values[largest]) {
+    largest = 2;
+  }
+  if (values[3] > values[largest]) {
+    largest = 3;
+  }
+  if (values[largest] < 0.0f) {
+    rotation = mm::Quat::identity;
+  } else {
+    f32 *components[4] = {&rotation.x, &rotation.y, &rotation.z, &rotation.w};
+    f32 root = sqrtf(values[largest]);
+    *components[largest] = root * 0.5f;
+    f32 scale = 0.25f / (root * 0.5f);
+    switch (largest) {
+    case 3:
+      rotation.x = scale * (matrix.rows[1][2] - matrix.rows[2][1]);
+      rotation.y = scale * (matrix.rows[2][0] - matrix.rows[0][2]);
+      rotation.z = scale * (matrix.rows[0][1] - matrix.rows[1][0]);
+      break;
+    case 1:
+      rotation.x = scale * (matrix.rows[0][1] + matrix.rows[1][0]);
+      rotation.z = scale * (matrix.rows[1][2] + matrix.rows[2][1]);
+      rotation.w = scale * (matrix.rows[2][0] - matrix.rows[0][2]);
+      break;
+    case 2:
+      rotation.x = scale * (matrix.rows[2][0] + matrix.rows[0][2]);
+      rotation.y = scale * (matrix.rows[1][2] + matrix.rows[2][1]);
+      rotation.w = scale * (matrix.rows[0][1] - matrix.rows[1][0]);
+      break;
+    default:
+      rotation.y = scale * (matrix.rows[0][1] + matrix.rows[1][0]);
+      rotation.z = scale * (matrix.rows[2][0] + matrix.rows[0][2]);
+      rotation.w = scale * (matrix.rows[1][2] - matrix.rows[2][1]);
+      break;
+    }
+  }
+}
+
+__attribute__((always_inline)) inline void quatToEuler(const Quat &quat, Vec3 &euler) {
   Mat44 matrix;
   quatToMatrix(matrix, quat);
-  return matrixToEuler(matrix);
+  matrixToEuler(matrix, euler);
+}
+
+__attribute__((always_inline)) inline Vec3 quatToEuler(const Quat &quat) {
+  Vec3 euler;
+  quatToEuler(quat, euler);
+  return euler;
 }
 
 inline bool isFinite(f32 r) { return isValidFloat(r); }

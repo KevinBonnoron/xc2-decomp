@@ -22,6 +22,8 @@ class TerrainDamagePlugin : public Plugin {
   GF_PLUGIN(GfComBehaviorPc)
 
 public:
+  static const u32 PLUGIN_INDEX = 16;
+
   TerrainDamagePlugin();
   static TerrainDamagePlugin *create();
   virtual bool setup(GfComBehaviorPc &behavior);

@@ -79,7 +79,7 @@ bool GfPlayComPause::update(const fw::UpdateInfo &, bool) { return true; }
 GfPlayComPause *GfPlayComPause::create(u32 pauseBits) {
   // __LINE__ must be 243 as in the original file: its value changes the instruction order.
 #line 243
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComPause(pauseBits);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComPause(pauseBits);
 }
 
 void GfPlayComState::start() {
@@ -97,8 +97,8 @@ bool GfPlayComState::update(const fw::UpdateInfo &, bool) { return true; }
 GfPlayComState *GfPlayComState::create(GF_STATE state, bool isSequence) {
   // __LINE__ must be 285 as in the original file: its value changes the instruction order.
 #line 285
-  GfPlayComState *command = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComState(state, isSequence);
-  if (!isSequence || GfGameState::getStateReserve() == GF_STATE_CONTROL) {
+  GfPlayComState *command = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComState(state, isSequence);
+  if (!isSequence || GfGameState::getStateReserve() == GF_STATE_UNKNOWN_3) {
     GfGameState::setStateReserve(state);
   }
   return command;
@@ -119,7 +119,7 @@ bool GfPlayComWait::update(const fw::UpdateInfo &info, bool isCancel) {
 GfPlayComWait *GfPlayComWait::create(f32 time) {
   // __LINE__ must be 327 as in the original file: its value changes the instruction order.
 #line 327
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComWait(time);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComWait(time);
 }
 
 void GfPlayComWaitEvent::start() { unknown20 = GfReqCommand::reqWaitEvent(unknown10, unknown18); }
@@ -137,7 +137,7 @@ bool GfPlayComWaitEvent::update(const fw::UpdateInfo &, bool isCancel) {
 GfPlayComWaitEvent *GfPlayComWaitEvent::create(f32 time, GF_OBJ_HANDLE *handle) {
   // __LINE__ must be 385 as in the original file: its value changes the instruction order.
 #line 385
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComWaitEvent(time, handle);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComWaitEvent(time, handle);
 }
 
 int GfPlayComWaitBattleEnd::s_activate;
@@ -160,13 +160,13 @@ void GfPlayComWaitBattleEnd::end() {
 GfPlayComWaitBattleEnd *GfPlayComWaitBattleEnd::create(u32 battle) {
   // __LINE__ must be 518 as in the original file: its value changes the instruction order.
 #line 518
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComWaitBattleEnd(battle);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComWaitBattleEnd(battle);
 }
 
 int GfPlayComEvent::m_activate;
 
 GfPlayComEvent::GfPlayComEvent(u32 event, u32 param0, u32 param1, bool isEndFadeOut)
-    : GfPlayCom(PCOMTYPE_EVENT, false), unknown18(event), unknown1c(param0), unknown20(param1), unknown24(isEndFadeOut), unknown25(false), unknown26(false) {
+    : GfPlayCom(PCOMTYPE_UNKNOWN_9, false), unknown18(event), unknown1c(param0), unknown20(param1), unknown24(isEndFadeOut), unknown25(false), unknown26(false) {
   m_activate++;
   GfObjAcc leaderAcc(GfGameManager::getPartyLeaderDriver());
   unknown26 = leaderAcc.isBattle();
@@ -202,7 +202,7 @@ bool GfPlayComEvent::update(const fw::UpdateInfo &, bool isCancel) {
 }
 
 void GfPlayComEvent::gevPlayEvent(GEV event, u32) {
-  if (event == GEV_EVENT_END) {
+  if (event == GEV_UNKNOWN_9) {
     unknown25 = true;
   }
 }
@@ -210,12 +210,12 @@ void GfPlayComEvent::gevPlayEvent(GEV event, u32) {
 GfPlayComEvent *GfPlayComEvent::create(u32 event, u32 param0, u32 param1, bool isEndFadeOut) {
   // __LINE__ must be 752 as in the original file: its value changes the instruction order.
 #line 752
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComEvent(event, param0, param1, isEndFadeOut);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComEvent(event, param0, param1, isEndFadeOut);
 }
 
 GfPlayComEvent *GfPlayComEvent::create(const char *name, u32 param0, u32 param1, bool isEndFadeOut) { return create(GfDataEvent::getEventID(name), param0, param1, isEndFadeOut); }
 
-GfPlayComEventPlayerStop::GfPlayComEventPlayerStop(bool isStop) : GfPlayCom(PCOMTYPE_PLAYER_STOP, true), unknown10(isStop) {
+GfPlayComEventPlayerStop::GfPlayComEventPlayerStop(bool isStop) : GfPlayCom(PCOMTYPE_UNKNOWN_6, true), unknown10(isStop) {
   if (unknown10 && GfGameScene::get() != nullptr) {
     GfGameScene::get()->setEventPlayerStop(true);
   }
@@ -230,10 +230,10 @@ void GfPlayComEventPlayerStop::start() {
 GfPlayComEventPlayerStop *GfPlayComEventPlayerStop::create(bool isStop) {
   // __LINE__ must be 548 as in the original file: its value changes the instruction order.
 #line 548
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComEventPlayerStop(isStop);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComEventPlayerStop(isStop);
 }
 
-GfPlayComResetBladePlayerStop::GfPlayComResetBladePlayerStop(bool isStop) : GfPlayCom(PCOMTYPE_PLAYER_STOP, true), unknown10(isStop) {
+GfPlayComResetBladePlayerStop::GfPlayComResetBladePlayerStop(bool isStop) : GfPlayCom(PCOMTYPE_UNKNOWN_6, true), unknown10(isStop) {
   if (unknown10 && GfGameScene::get() != nullptr) {
     GfGameScene::get()->setResetBladePlayerStop(true);
   }
@@ -248,12 +248,12 @@ void GfPlayComResetBladePlayerStop::start() {
 GfPlayComResetBladePlayerStop *GfPlayComResetBladePlayerStop::create(bool isStop) {
   // __LINE__ must be 578 as in the original file: its value changes the instruction order.
 #line 578
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComResetBladePlayerStop(isStop);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComResetBladePlayerStop(isStop);
 }
 
 int GfPlayComAfterEventScript::s_activate;
 
-GfPlayComAfterEventScript::GfPlayComAfterEventScript(u32 event) : GfPlayCom(PCOMTYPE_AFTER_EVENT_SCRIPT, false), unknown10(0), unknown14(event), unknown18(reinterpret_cast<GF_SCOM_HANDLE *>(-1)) {
+GfPlayComAfterEventScript::GfPlayComAfterEventScript(u32 event) : GfPlayCom(PCOMTYPE_UNKNOWN_8, false), unknown10(0), unknown14(event), unknown18(reinterpret_cast<GF_SCOM_HANDLE *>(-1)) {
   s_activate++;
 }
 
@@ -264,7 +264,7 @@ void GfPlayComAfterEventScript::start() {
   const char *name = GfDataEvent::getEventAfterScriptName(unknown14);
   if (name != nullptr && name[0] != '\0') {
     GfGameEvent::setAfterEventStartID(startID);
-    unknown18 = SCOM_SCRIPT::create(SCRIPT_SLOT_AFTER_EVENT, name, true);
+    unknown18 = SCOM_SCRIPT::create(SCRIPT_SLOT_UNKNOWN_3, name, true);
   }
 }
 
@@ -272,7 +272,7 @@ void GfPlayComAfterEventScript::end() { GfGameEvent::setAfterEventStartID(0); }
 
 bool GfPlayComAfterEventScript::update(const fw::UpdateInfo &, bool isCancel) {
   if (isCancel) {
-    SCOM_SCRIPT::create(SCRIPT_SLOT_AFTER_EVENT, nullptr, false);
+    SCOM_SCRIPT::create(SCRIPT_SLOT_UNKNOWN_3, nullptr, false);
     return true;
   }
   return !GfReqSmallCom::get()->isValid(unknown18);
@@ -284,10 +284,10 @@ GfPlayComAfterEventScript *GfPlayComAfterEventScript::create(u32 event) {
   }
   // __LINE__ must be 655 as in the original file: its value changes the instruction order.
 #line 655
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComAfterEventScript(event);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComAfterEventScript(event);
 }
 
-void GfPlayComCallbackEventSequence::start() { GfEvent::callEventPlay(unknown14 ? GEV_EVENT_SEQUENCE_START : GEV_EVENT_SEQUENCE_END, unknown10); }
+void GfPlayComCallbackEventSequence::start() { GfEvent::callEventPlay(unknown14 ? GEV_UNKNOWN_11 : GEV_UNKNOWN_12, unknown10); }
 
 void GfPlayComCallbackEventSequence::end() {}
 
@@ -296,12 +296,12 @@ bool GfPlayComCallbackEventSequence::update(const fw::UpdateInfo &, bool) { retu
 GfPlayComCallbackEventSequence *GfPlayComCallbackEventSequence::create(int sequence, bool isStart) {
   // __LINE__ must be 790 as in the original file: its value changes the instruction order.
 #line 790
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComCallbackEventSequence(sequence, isStart);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComCallbackEventSequence(sequence, isStart);
 }
 
 int GfPlayComOpenMenu::s_active;
 
-GfPlayComOpenMenu::GfPlayComOpenMenu() : GfPlayCom(PCOMTYPE_OPEN_MENU, false) { s_active++; }
+GfPlayComOpenMenu::GfPlayComOpenMenu() : GfPlayCom(PCOMTYPE_UNKNOWN_11, false) { s_active++; }
 
 GfPlayComOpenMenu::~GfPlayComOpenMenu() { s_active--; }
 
@@ -324,7 +324,7 @@ bool GfPlayComOpenMenu::update(const fw::UpdateInfo &, bool isCancel) {
 GfPlayComOpenMenu *GfPlayComOpenMenu::create(u32 menu) {
   // __LINE__ must be 845 as in the original file: its value changes the instruction order.
 #line 845
-  GfPlayComOpenMenu *command = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComOpenMenu();
+  GfPlayComOpenMenu *command = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComOpenMenu();
   command->unknown10 = menu;
   return command;
 }
@@ -345,10 +345,10 @@ bool GfPlayComOpenMenu2::update(const fw::UpdateInfo &, bool isCancel) {
         return true;
       }
       switch (unknown14) {
-      case MAINMENU_SYSTEM:
+      case MAINMENU_UNKNOWN_1:
         GfMenuManager::setMainmenuOpenSystem();
         break;
-      case MAINMENU_SKIP_TRAVEL:
+      case MAINMENU_UNKNOWN_2:
         GfMenuManager::setMainmenuOpenMap();
         break;
       default:
@@ -376,7 +376,7 @@ bool GfPlayComOpenMenu2::update(const fw::UpdateInfo &, bool isCancel) {
 GfPlayComOpenMenu2 *GfPlayComOpenMenu2::create(u32 type, MAINMENU menu) {
   // __LINE__ must be 921 as in the original file: its value changes the instruction order.
 #line 921
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComOpenMenu2(type, menu);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComOpenMenu2(type, menu);
 }
 
 int GfPlayComStartTutorial::s_activateCount;
@@ -384,20 +384,20 @@ int GfPlayComStartTutorial::s_activateCount;
 void GfPlayComStartTutorial::start() {
   u8 *bdat = GfDataBdat::getFP(BDAT_MNU_TUTORIAL);
   if (bdat != nullptr && static_cast<int>(unknown10) >= Bdat::getIdTop(bdat) && static_cast<int>(unknown10) - Bdat::getIdTop(bdat) < Bdat::getIdCount(bdat)) {
-    GfScriptManager::loadScript(SCRIPT_SLOT_TUTORIAL, Bdat::getVal(bdat, "script_file", unknown10).valueString);
-    GfScriptManager::startScript(SCRIPT_SLOT_TUTORIAL);
+    GfScriptManager::loadScript(SCRIPT_SLOT_UNKNOWN_4, Bdat::getVal(bdat, "script_file", unknown10).valueString);
+    GfScriptManager::startScript(SCRIPT_SLOT_UNKNOWN_4);
     s_activateCount++;
   }
 }
 
 void GfPlayComStartTutorial::end() { s_activateCount--; }
 
-bool GfPlayComStartTutorial::update(const fw::UpdateInfo &, bool) { return GfScriptManager::isScriptFinish(SCRIPT_SLOT_TUTORIAL); }
+bool GfPlayComStartTutorial::update(const fw::UpdateInfo &, bool) { return GfScriptManager::isScriptFinish(SCRIPT_SLOT_UNKNOWN_4); }
 
 GfPlayComStartTutorial *GfPlayComStartTutorial::create(u32 tutorial) {
   // __LINE__ must be 973 as in the original file: its value changes the instruction order.
 #line 973
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComStartTutorial(tutorial);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComStartTutorial(tutorial);
 }
 
 void GfPlayComMiniGame::start() { GfMenuManager::openFullScreen(4, true, true); }
@@ -419,7 +419,7 @@ bool GfPlayComMiniGame::update(const fw::UpdateInfo &, bool isCancel) {
 GfPlayComMiniGame *GfPlayComMiniGame::create() {
   // __LINE__ must be 1016 as in the original file: its value changes the instruction order.
 #line 1016
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComMiniGame();
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComMiniGame();
 }
 
 bool GfPlayComMenuChapterSave::s_bExist;
@@ -448,14 +448,14 @@ bool GfPlayComMenuChapterSave::isDisp() { return s_bExist; }
 GfPlayComMenuChapterSave *GfPlayComMenuChapterSave::create(u32 chapter) {
   // __LINE__ must be 1100 as in the original file: its value changes the instruction order.
 #line 1100
-  GfPlayComMenuChapterSave *command = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComMenuChapterSave(chapter);
+  GfPlayComMenuChapterSave *command = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComMenuChapterSave(chapter);
   s_bExist = true;
   return command;
 }
 
 int GfPlayComMenuChapter::s_activate;
 
-GfPlayComMenuChapter::GfPlayComMenuChapter(u32 chapter) : GfPlayCom(PCOMTYPE_MENU_CHAPTER, false), unknown10(chapter) { s_activate++; }
+GfPlayComMenuChapter::GfPlayComMenuChapter(u32 chapter) : GfPlayCom(PCOMTYPE_UNKNOWN_14, false), unknown10(chapter) { s_activate++; }
 
 GfPlayComMenuChapter::~GfPlayComMenuChapter() { s_activate--; }
 
@@ -468,12 +468,12 @@ bool GfPlayComMenuChapter::update(const fw::UpdateInfo &, bool) { return !GfMenu
 GfPlayComMenuChapter *GfPlayComMenuChapter::create(u32 chapter) {
   // __LINE__ must be 1149 as in the original file: its value changes the instruction order.
 #line 1149
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComMenuChapter(chapter);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComMenuChapter(chapter);
 }
 
 int GfPlayComMenuChapterEnd::s_activate;
 
-GfPlayComMenuChapterEnd::GfPlayComMenuChapterEnd(u32 chapter) : GfPlayCom(PCOMTYPE_MENU_CHAPTER_END, false), unknown10(chapter) { s_activate++; }
+GfPlayComMenuChapterEnd::GfPlayComMenuChapterEnd(u32 chapter) : GfPlayCom(PCOMTYPE_UNKNOWN_15, false), unknown10(chapter) { s_activate++; }
 
 GfPlayComMenuChapterEnd::~GfPlayComMenuChapterEnd() { s_activate--; }
 
@@ -486,12 +486,12 @@ bool GfPlayComMenuChapterEnd::update(const fw::UpdateInfo &, bool) { return !GfM
 GfPlayComMenuChapterEnd *GfPlayComMenuChapterEnd::create(u32 chapter) {
   // __LINE__ must be 1197 as in the original file: its value changes the instruction order.
 #line 1197
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComMenuChapterEnd(chapter);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComMenuChapterEnd(chapter);
 }
 
 int GfPlayComMenuZone::s_activate;
 
-GfPlayComMenuZone::GfPlayComMenuZone(u32 zone) : GfPlayCom(PCOMTYPE_MENU_ZONE, false), unknown10(zone) { s_activate++; }
+GfPlayComMenuZone::GfPlayComMenuZone(u32 zone) : GfPlayCom(PCOMTYPE_UNKNOWN_16, false), unknown10(zone) { s_activate++; }
 
 GfPlayComMenuZone::~GfPlayComMenuZone() { s_activate--; }
 
@@ -513,12 +513,12 @@ bool GfPlayComMenuZone::update(const fw::UpdateInfo &info, bool) {
 GfPlayComMenuZone *GfPlayComMenuZone::create(u32 zone) {
   // __LINE__ must be 1253 as in the original file: its value changes the instruction order.
 #line 1253
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComMenuZone(zone);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComMenuZone(zone);
 }
 
 int GfPlayComMenuDummyTutorial::s_activate;
 
-GfPlayComMenuDummyTutorial::GfPlayComMenuDummyTutorial(u32 tutorial) : GfPlayCom(PCOMTYPE_MENU_DUMMY_TUTORIAL, false), unknown10(tutorial) { s_activate++; }
+GfPlayComMenuDummyTutorial::GfPlayComMenuDummyTutorial(u32 tutorial) : GfPlayCom(PCOMTYPE_UNKNOWN_17, false), unknown10(tutorial) { s_activate++; }
 
 GfPlayComMenuDummyTutorial::~GfPlayComMenuDummyTutorial() { s_activate--; }
 
@@ -531,7 +531,7 @@ bool GfPlayComMenuDummyTutorial::update(const fw::UpdateInfo &, bool) { return !
 GfPlayComMenuDummyTutorial *GfPlayComMenuDummyTutorial::create(u32 tutorial) {
   // __LINE__ must be 1297 as in the original file: its value changes the instruction order.
 #line 1297
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComMenuDummyTutorial(tutorial);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComMenuDummyTutorial(tutorial);
 }
 
 void GfPlayComMenuQuestList::start() { GfMenuManager::openFullScreen(1, true, true); }
@@ -553,7 +553,7 @@ bool GfPlayComMenuQuestList::update(const fw::UpdateInfo &, bool isCancel) {
 GfPlayComMenuQuestList *GfPlayComMenuQuestList::create() {
   // __LINE__ must be 1337 as in the original file: its value changes the instruction order.
 #line 1337
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComMenuQuestList();
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComMenuQuestList();
 }
 
 void GfPlayComMenuKizunaring::start() { GfMenuKizunaring::openMenu(unknown10); }
@@ -575,12 +575,12 @@ bool GfPlayComMenuKizunaring::update(const fw::UpdateInfo &, bool isCancel) {
 GfPlayComMenuKizunaring *GfPlayComMenuKizunaring::create(u32 blade) {
   // __LINE__ must be 1378 as in the original file: its value changes the instruction order.
 #line 1378
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComMenuKizunaring(blade);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComMenuKizunaring(blade);
 }
 
 int GfPlayComMenuPrecious::s_activate;
 
-GfPlayComMenuPrecious::GfPlayComMenuPrecious(u32 item) : GfPlayCom(PCOMTYPE_MENU_PRECIOUS, false), unknown10(item) { s_activate++; }
+GfPlayComMenuPrecious::GfPlayComMenuPrecious(u32 item) : GfPlayCom(PCOMTYPE_UNKNOWN_22, false), unknown10(item) { s_activate++; }
 
 GfPlayComMenuPrecious::~GfPlayComMenuPrecious() { s_activate--; }
 
@@ -593,13 +593,13 @@ bool GfPlayComMenuPrecious::update(const fw::UpdateInfo &, bool) { return !GfMen
 GfPlayComMenuPrecious *GfPlayComMenuPrecious::create(u32 item) {
   // __LINE__ must be 1428 as in the original file: its value changes the instruction order.
 #line 1428
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComMenuPrecious(item);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComMenuPrecious(item);
 }
 
 mm::mtl::FixedQueue<u32, 32> GfPlayComMenuCommon::s_list;
 u32 GfPlayComMenuCommon::s_gblHandle;
 
-GfPlayComMenuCommon::GfPlayComMenuCommon(u32 window, u32 handle) : GfPlayCom(PCOMTYPE_MENU_COMMON, false), unknown10(window) {
+GfPlayComMenuCommon::GfPlayComMenuCommon(u32 window, u32 handle) : GfPlayCom(PCOMTYPE_UNKNOWN_23, false), unknown10(window) {
   unknown14 = handle & 0xffffff;
   if (s_list.size() >= 32) {
     s_list.pop_front();
@@ -655,14 +655,13 @@ GfPlayComMenuCommon *GfPlayComMenuCommon::create(u32 window) {
   u32 handle = s_gblHandle++;
   // __LINE__ must be 1526 as in the original file: its value changes the instruction order.
 #line 1526
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComMenuCommon(window, handle);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComMenuCommon(window, handle);
 }
 
 mm::mtl::FixedQueue<u32, 32> GfPlayComMenuCommonFromParam::s_list;
 u32 GfPlayComMenuCommonFromParam::s_gblHandle;
 
-GfPlayComMenuCommonFromParam::GfPlayComMenuCommonFromParam(const MenuCommonWindowParam &param, u32 handle)
-    : GfPlayCom(PCOMTYPE_MENU_COMMON_FROM_PARAM, false), unknown10(param), unknown60(handle & 0xffffff) {
+GfPlayComMenuCommonFromParam::GfPlayComMenuCommonFromParam(const MenuCommonWindowParam &param, u32 handle) : GfPlayCom(PCOMTYPE_UNKNOWN_24, false), unknown10(param), unknown60(handle & 0xffffff) {
   if (s_list.size() >= 32) {
     s_list.pop_front();
   }
@@ -717,10 +716,10 @@ GfPlayComMenuCommonFromParam *GfPlayComMenuCommonFromParam::create(const MenuCom
   u32 handle = s_gblHandle++;
   // __LINE__ must be 1624 as in the original file: its value changes the instruction order.
 #line 1624
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComMenuCommonFromParam(param, handle);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComMenuCommonFromParam(param, handle);
 }
 
-GfPlayComSalvage::GfPlayComSalvage(GF_OBJ_HANDLE *handle) : GfPlayCom(PCOMTYPE_SALVAGE, false), unknown18(handle), unknown20(3), unknown24(STATE_WAIT) {
+GfPlayComSalvage::GfPlayComSalvage(GF_OBJ_HANDLE *handle) : GfPlayCom(PCOMTYPE_UNKNOWN_25, false), unknown18(handle), unknown20(3), unknown24(STATE_UNKNOWN_0) {
   if (GfGameScene::get() != nullptr) {
     unknown10 = GfGameScene::get()->createPlayerPause();
   }
@@ -739,10 +738,10 @@ bool GfPlayComSalvage::updateForWait(const fw::UpdateInfo &info) {
     if (GfSequentialPlay::isSequenceSpecialAction()) {
       return true;
     }
-    if (GfPause::isPause(PAUSE_BIT_MAIN_MENU)) {
+    if (GfPause::isPause(PAUSE_BIT_UNKNOWN_6)) {
       return true;
     }
-    unknown24 = STATE_SALVAGE;
+    unknown24 = STATE_UNKNOWN_1;
     GfGameSalvage::startSalvage(unknown18);
   }
   return false;
@@ -760,9 +759,9 @@ bool GfPlayComSalvage::updateForSalvage(const fw::UpdateInfo &info, bool isCance
 
 bool GfPlayComSalvage::update(const fw::UpdateInfo &info, bool isCancel) {
   switch (unknown24) {
-  case STATE_WAIT:
+  case STATE_UNKNOWN_0:
     return updateForWait(info);
-  case STATE_SALVAGE:
+  case STATE_UNKNOWN_1:
     return updateForSalvage(info, isCancel);
   }
   return false;
@@ -771,7 +770,7 @@ bool GfPlayComSalvage::update(const fw::UpdateInfo &info, bool isCancel) {
 GfPlayComSalvage *GfPlayComSalvage::create(GF_OBJ_HANDLE *handle) {
   // __LINE__ must be 1715 as in the original file: its value changes the instruction order.
 #line 1715
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComSalvage(handle);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComSalvage(handle);
 }
 
 bool GfPlayComWaitPlayerToStartGmkTuto::update(const fw::UpdateInfo &info, bool isCancel) {
@@ -788,11 +787,11 @@ bool GfPlayComWaitPlayerToStartGmkTuto::update(const fw::UpdateInfo &info, bool 
 GfPlayComWaitPlayerToStartGmkTuto *GfPlayComWaitPlayerToStartGmkTuto::create() {
   // __LINE__ must be 2009 as in the original file: its value changes the instruction order.
 #line 2009
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComWaitPlayerToStartGmkTuto();
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComWaitPlayerToStartGmkTuto();
 }
 
 GfPlayComGimmickTaskComplete::GfPlayComGimmickTaskComplete(gmk::GmkType gmkType, u32 gimmick, f32 time)
-    : GfPlayCom(PCOMTYPE_QUEST_COMPLETE_UI, false), unknown10(gmkType), unknown14(gimmick), unknown18(time) {}
+    : GfPlayCom(PCOMTYPE_UNKNOWN_35, false), unknown10(gmkType), unknown14(gimmick), unknown18(time) {}
 
 bool GfPlayComGimmickTaskComplete::update(const fw::UpdateInfo &info, bool) {
   unknown18 -= info.unknown04;
@@ -806,7 +805,7 @@ bool GfPlayComGimmickTaskComplete::update(const fw::UpdateInfo &info, bool) {
 GfPlayComGimmickTaskComplete *GfPlayComGimmickTaskComplete::create(gmk::GmkType gmkType, u32 gimmick, f32 time) {
   // __LINE__ must be 2596 as in the original file: its value changes the instruction order.
 #line 2596
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComGimmickTaskComplete(gmkType, gimmick, time);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComGimmickTaskComplete(gmkType, gimmick, time);
 }
 
 u32 GfPlayComTalk::s_questTargetNpc;
@@ -820,7 +819,7 @@ u32 GfPlayComTalk::getQuestTargetNpc(u32 condId) {
 }
 
 void GfPlayComTalk::start() {
-  QuestID progress = GfQuestManager::getProgressCurrentQuest(QTYPE_NONE);
+  QuestID progress = GfQuestManager::getProgressCurrentQuest(QTYPE_UNKNOWN_0);
   unknown3c.unknown00 = progress.unknown00;
   unknown3c.unknown02 = progress.unknown02;
   QuestID lastOrder = GfQuestManager::getLastOrder();
@@ -867,7 +866,7 @@ bool GfPlayComTalk::update(const fw::UpdateInfo &, bool isCancel) {
   return !GfGameTalk::isPlaying();
 }
 
-GfPlayComQuestOrderUI::GfPlayComQuestOrderUI(QuestID quest, bool isForce) : GfPlayCom(PCOMTYPE_QUEST_ORDER_UI, false), unknown10(quest), unknown14(isForce), unknown18(nullptr) {
+GfPlayComQuestOrderUI::GfPlayComQuestOrderUI(QuestID quest, bool isForce) : GfPlayCom(PCOMTYPE_UNKNOWN_34, false), unknown10(quest), unknown14(isForce), unknown18(nullptr) {
   if (GfGameScene::get() != nullptr) {
     GfGameScene::get()->setPlayerTalkForce(true);
   }
@@ -901,7 +900,7 @@ bool GfPlayComQuestOrderUI::update(const fw::UpdateInfo &, bool) {
 GfPlayComQuestOrderUI *GfPlayComQuestOrderUI::create(QuestID quest, bool isForce) {
   // __LINE__ must be 2502 as in the original file: its value changes the instruction order.
 #line 2502
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComQuestOrderUI(quest, isForce);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComQuestOrderUI(quest, isForce);
 }
 
 bool GfPlayComBattleStart::update(const fw::UpdateInfo &info, bool) {
@@ -930,14 +929,14 @@ bool GfPlayComBattleStart::update(const fw::UpdateInfo &info, bool) {
 GfPlayComBattleStart *GfPlayComBattleStart::create(bool isStart) {
   // __LINE__ must be 2689 as in the original file: its value changes the instruction order.
 #line 2689
-  GfPlayComBattleStart *command = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComBattleStart(isStart);
+  GfPlayComBattleStart *command = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComBattleStart(isStart);
   if (GfGameScene::get() != nullptr) {
     GfGameScene::get()->setAutoBattle(true);
   }
   return command;
 }
 
-GfPlayComExecuteSignal::GfPlayComExecuteSignal(bool isStart, GfSequentialPlaySignal *signal) : GfPlayCom(PCOMTYPE_EXECUTE_SIGNAL, true), unknown10(isStart), unknown18(signal) {
+GfPlayComExecuteSignal::GfPlayComExecuteSignal(bool isStart, GfSequentialPlaySignal *signal) : GfPlayCom(PCOMTYPE_UNKNOWN_38, true), unknown10(isStart), unknown18(signal) {
   if (unknown10) {
     unknown18->isActive = true;
   }
@@ -955,7 +954,7 @@ GfPlayComExecuteSignal *GfPlayComExecuteSignal::create(bool isStart, GfSequentia
   }
   // __LINE__ must be 2722 as in the original file: its value changes the instruction order.
 #line 2722
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComExecuteSignal(isStart, signal);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComExecuteSignal(isStart, signal);
 }
 
 void GfPlayComMenuObjCommonText::start() {
@@ -979,7 +978,7 @@ bool GfPlayComMenuObjCommonText::update(const fw::UpdateInfo &, bool isCancel) {
 
 int GfPlayComMenuObjCommonText::s_activate;
 
-GfPlayComMenuObjCommonText::GfPlayComMenuObjCommonText(GfMenuObjCommonText::OpenKizunaParam &param) : GfPlayCom(PCOMTYPE_MENU_COMMON, false), unknown20(nullptr) {
+GfPlayComMenuObjCommonText::GfPlayComMenuObjCommonText(GfMenuObjCommonText::OpenKizunaParam &param) : GfPlayCom(PCOMTYPE_UNKNOWN_23, false), unknown20(nullptr) {
   this->unknown10 = param;
   s_activate++;
 }
@@ -989,10 +988,10 @@ GfPlayComMenuObjCommonText::~GfPlayComMenuObjCommonText() { s_activate--; }
 GfPlayComMenuObjCommonText *GfPlayComMenuObjCommonText::create(GfMenuObjCommonText::OpenKizunaParam &param) {
   // __LINE__ must be 3127 as in the original file: its value changes the instruction order.
 #line 3127
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComMenuObjCommonText(param);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComMenuObjCommonText(param);
 }
 
-GfPlayComChainAttack::GfPlayComChainAttack() : GfPlayCom(PCOMTYPE_CHAIN_ATTACK, true), unknown10(0), unknown14(0) {}
+GfPlayComChainAttack::GfPlayComChainAttack() : GfPlayCom(PCOMTYPE_UNKNOWN_40, true), unknown10(0), unknown14(0) {}
 
 void GfPlayComChainAttack::start() { unknown14 = 3; }
 
@@ -1002,7 +1001,7 @@ bool GfPlayComChainAttack::update(const fw::UpdateInfo &info, bool) {
   switch (unknown10) {
   case 0:
     if (--unknown14 <= 0) {
-      if (GfSequentialPlay::isInnerState(GF_STATE_EVENT)) {
+      if (GfSequentialPlay::isInnerState(GF_STATE_UNKNOWN_20)) {
         return true;
       }
       if (GfChainAttack::get() != nullptr) {
@@ -1024,10 +1023,10 @@ bool GfPlayComChainAttack::update(const fw::UpdateInfo &info, bool) {
 GfPlayComChainAttack *GfPlayComChainAttack::create() {
   // __LINE__ must be 2783 as in the original file: its value changes the instruction order.
 #line 2783
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComChainAttack();
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComChainAttack();
 }
 
-GfPlayComArtsMovie::GfPlayComArtsMovie(const char *name) : GfPlayCom(PCOMTYPE_ARTS_MOVIE, true) {
+GfPlayComArtsMovie::GfPlayComArtsMovie(const char *name) : GfPlayCom(PCOMTYPE_UNKNOWN_41, true) {
   if (name != nullptr) {
     unknown10 = name;
   }
@@ -1052,7 +1051,7 @@ bool GfPlayComArtsMovie::update(const fw::UpdateInfo &info, bool) {
 GfPlayComArtsMovie *GfPlayComArtsMovie::create(const char *name) {
   // __LINE__ must be 2826 as in the original file: its value changes the instruction order.
 #line 2826
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComArtsMovie(name);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComArtsMovie(name);
 }
 
 void GfPlayComMapjump::start() { unknown10 = GfReqCommand::reqMapjump(unknown20); }
@@ -1069,12 +1068,12 @@ bool GfPlayComMapjump::update(const fw::UpdateInfo &, bool isCancel) {
 GfPlayComMapjump *GfPlayComMapjump::create(const GfMapjumpInfo &info) {
   // __LINE__ must be 424 as in the original file: its value changes the instruction order.
 #line 424
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComMapjump(info);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComMapjump(info);
 }
 
 int GfPlayComGmkTutorialSeq::s_activate;
 
-GfPlayComGmkTutorialSeq::GfPlayComGmkTutorialSeq(const char *name, u32 tutorial) : GfPlayCom(PCOMTYPE_GMK_TUTORIAL_SEQ, false) {
+GfPlayComGmkTutorialSeq::GfPlayComGmkTutorialSeq(const char *name, u32 tutorial) : GfPlayCom(PCOMTYPE_UNKNOWN_30, false) {
   unknown10 = name;
   unknown54 = tutorial;
   if (GfGameScene::get() != nullptr) {
@@ -1108,12 +1107,12 @@ bool GfPlayComGmkTutorialSeq::update(const fw::UpdateInfo &, bool isCancel) {
 GfPlayComGmkTutorialSeq *GfPlayComGmkTutorialSeq::create(const char *name, u32 tutorial) {
   // __LINE__ must be 2082 as in the original file: its value changes the instruction order.
 #line 2082
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComGmkTutorialSeq(name, tutorial);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComGmkTutorialSeq(name, tutorial);
 }
 
 int GfPlayComGmkCameraSeq::s_activate;
 
-GfPlayComGmkCameraSeq::GfPlayComGmkCameraSeq(mm::mtl::IntrusivePtr<fw::Camera> camera) : GfPlayCom(PCOMTYPE_GMK_CAMERA_SEQ, false) {
+GfPlayComGmkCameraSeq::GfPlayComGmkCameraSeq(mm::mtl::IntrusivePtr<fw::Camera> camera) : GfPlayCom(PCOMTYPE_UNKNOWN_31, false) {
   unknown10 = camera;
   if (GfGameScene::get() != nullptr) {
     unknown18 = GfGameScene::get()->createPlayerPause();
@@ -1142,13 +1141,13 @@ bool GfPlayComGmkCameraSeq::update(const fw::UpdateInfo &, bool isCancel) {
 
 GfPlayComGmkCameraSeq *GfPlayComGmkCameraSeq::create(mm::mtl::IntrusivePtr<fw::Camera> camera) {
 #line 2139
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComGmkCameraSeq(camera);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComGmkCameraSeq(camera);
 }
 
 int GfPlayComQuestCompleteUI::s_active;
 
 GfPlayComQuestCompleteUI::GfPlayComQuestCompleteUI(QuestID quest, QuestID child, QSTATE state)
-    : GfPlayCom(PCOMTYPE_QUEST_COMPLETE_UI, false), unknown10(quest), unknown14(child), unknown18(state), unknown20(nullptr) {
+    : GfPlayCom(PCOMTYPE_UNKNOWN_35, false), unknown10(quest), unknown14(child), unknown18(state), unknown20(nullptr) {
   s_active++;
 }
 
@@ -1175,12 +1174,12 @@ bool GfPlayComQuestCompleteUI::update(const fw::UpdateInfo &, bool) {
 GfPlayComQuestCompleteUI *GfPlayComQuestCompleteUI::create(QuestID quest, QuestID child, QSTATE state) {
   // __LINE__ must be 2561 as in the original file: its value changes the instruction order.
 #line 2561
-  GfPlayComQuestCompleteUI *command = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComQuestCompleteUI(quest, child, state);
+  GfPlayComQuestCompleteUI *command = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComQuestCompleteUI(quest, child, state);
   GfQuestManager::setCompleteQuest(quest, child, state);
   return command;
 }
 
-GfPlayComCollect::GfPlayComCollect(GF_OBJ_HANDLE *handle) : GfPlayCom(PCOMTYPE_COLLECT, false), unknown20(handle) {
+GfPlayComCollect::GfPlayComCollect(GF_OBJ_HANDLE *handle) : GfPlayCom(PCOMTYPE_UNKNOWN_26, false), unknown20(handle) {
   if (GfGameScene::get() != nullptr) {
     unknown18 = GfGameScene::get()->createPlayerPause();
   }
@@ -1189,7 +1188,7 @@ GfPlayComCollect::GfPlayComCollect(GF_OBJ_HANDLE *handle) : GfPlayCom(PCOMTYPE_C
 GfPlayComCollect *GfPlayComCollect::create(GF_OBJ_HANDLE *handle) {
   // __LINE__ must be 1769 as in the original file: its value changes the instruction order.
 #line 1769
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComCollect(handle);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComCollect(handle);
 }
 
 void GfPlayComCollect::start() {
@@ -1203,14 +1202,14 @@ void GfPlayComCollect::end() {
   }
 }
 
-GfPlayComFieldTbox::GfPlayComFieldTbox(GF_OBJ_HANDLE *handle) : GfPlayCom(PCOMTYPE_FIELD_TBOX, false), unknown20(handle), unknown2c(0), unknown30(0.0f) {
+GfPlayComFieldTbox::GfPlayComFieldTbox(GF_OBJ_HANDLE *handle) : GfPlayCom(PCOMTYPE_UNKNOWN_27, false), unknown20(handle), unknown2c(0), unknown30(0.0f) {
   if (GfGameScene::get() != nullptr) {
     unknown18 = GfGameScene::get()->createPlayerPause();
   }
   unknown28 = GfQuestUtil::getCurrentTBoxWithEvent(handle);
   gmk::AGmkBase *gmk = gmk::getBindedGmkInst(handle);
   if (gmk != nullptr && gmk->getGmkType() == gmk::GMK_TYPE_TBOX && static_cast<gmk::GmkTbox *>(gmk)->getBdatInfo()->unknown02 &&
-      static_cast<gmk::GmkTbox *>(gmk)->getProgress() == gmk::GmkTbox::PROGRESS_CLOSED) {
+      static_cast<gmk::GmkTbox *>(gmk)->getProgress() == gmk::GmkTbox::PROGRESS_UNKNOWN_0) {
     unknown28 = toQuestID(0);
   }
 }
@@ -1258,7 +1257,7 @@ bool GfPlayComFieldTbox::updateForWaitItemDrop(const fw::UpdateInfo &info) {
 GfPlayComFieldTbox *GfPlayComFieldTbox::create(GF_OBJ_HANDLE *handle) {
   // __LINE__ must be 1910 as in the original file: its value changes the instruction order.
 #line 1910
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComFieldTbox(handle);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComFieldTbox(handle);
 }
 
 void GfPlayComFieldSeq::start() { unknown18->create(unknown20); }
@@ -1277,7 +1276,7 @@ bool GfPlayComFieldSeq::update(const fw::UpdateInfo &, bool isCancel) {
   return unknown18->isEnd();
 }
 
-GfPlayComFieldSeq::GfPlayComFieldSeq(IFieldSeq *sequence, GF_OBJ_HANDLE *handle) : GfPlayCom(PCOMTYPE_FIELD_SEQ, false), unknown18(sequence), unknown20(handle) {
+GfPlayComFieldSeq::GfPlayComFieldSeq(IFieldSeq *sequence, GF_OBJ_HANDLE *handle) : GfPlayCom(PCOMTYPE_UNKNOWN_28, false), unknown18(sequence), unknown20(handle) {
   if (GfGameScene::get() != nullptr) {
     unknown28 = GfGameScene::get()->createPlayerPause();
   }
@@ -1286,7 +1285,7 @@ GfPlayComFieldSeq::GfPlayComFieldSeq(IFieldSeq *sequence, GF_OBJ_HANDLE *handle)
 GfPlayComFieldSeq *GfPlayComFieldSeq::create(IFieldSeq *sequence, GF_OBJ_HANDLE *handle) {
   // __LINE__ must be 1972 as in the original file: its value changes the instruction order.
 #line 1972
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComFieldSeq(sequence, handle);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComFieldSeq(sequence, handle);
 }
 
 GfPlayComResetBlade::~GfPlayComResetBlade() {
@@ -1305,7 +1304,7 @@ void GfPlayComResetBlade::end() {}
 
 bool GfPlayComResetBlade::isPlaying(u32 partyId) { return mm::mtl::find(s_execFlag.begin(), s_execFlag.end(), static_cast<u8>(partyId)) != s_execFlag.end(); }
 
-GfPlayComMoverSwitch::GfPlayComMoverSwitch() : GfPlayCom(PCOMTYPE_MOVER_SWITCH, true), unknown10(-1), unknown14(0), unknown18(0) {}
+GfPlayComMoverSwitch::GfPlayComMoverSwitch() : GfPlayCom(PCOMTYPE_UNKNOWN_43, true), unknown10(-1), unknown14(0), unknown18(0) {}
 
 GfPlayComMoverSwitch::~GfPlayComMoverSwitch() {}
 
@@ -1316,7 +1315,19 @@ void GfPlayComMoverSwitch::end() {}
 GfPlayComMoverSwitch *GfPlayComMoverSwitch::create() {
   // __LINE__ must be 2999 as in the original file: its value changes the instruction order.
 #line 2999
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComMoverSwitch();
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComMoverSwitch();
+}
+
+GfPlayComHoodHomuraBattou::GfPlayComHoodHomuraBattou() : GfPlayCom(PCOMTYPE_UNKNOWN_43, true) {
+  GfObjAcc bladeAcc(GfGameParty::getHandleBlade(0, -1));
+  GfObjSetupBlade *setup = GfObjUtil::getObjSetup<GfObjSetupBlade>(bladeAcc.getHandle());
+  if (setup != nullptr) {
+    setup->unknown71 = false;
+    GfObjUtil::rebuild(bladeAcc.getHandle());
+    setup->unknown50 = 1.0f;
+    setup->unknown60 = true;
+    setup->unknown64 = VFACC_UNKNOWN_FFFFFFFF;
+  }
 }
 
 void GfPlayComHoodHomuraBattou::start() {}
@@ -1332,9 +1343,15 @@ bool GfPlayComHoodHomuraBattou::update(const fw::UpdateInfo &, bool) {
     return false;
   }
   if (GfGameManager::isEnableBattouWithHoodHomura(false)) {
-    GfGameUtil::enterPlayerBattle(false, INVALID_HANDLE, false);
+    GfGameUtil::enterPlayerBattle(false, unknown020, false);
   }
   return true;
+}
+
+GfPlayComHoodHomuraBattou *GfPlayComHoodHomuraBattou::create() {
+  // __LINE__ must be 3069 as in the original file: its value changes the instruction order.
+#line 3069
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComHoodHomuraBattou();
 }
 
 void GfPlayComReturnTitle::start() { GfMenuObjPopup::closeAll(); }
@@ -1344,15 +1361,15 @@ void GfPlayComReturnTitle::end() {}
 GfPlayComReturnTitle *GfPlayComReturnTitle::create(const ParamReturnTitle &param) {
   // __LINE__ must be 2650 as in the original file: its value changes the instruction order.
 #line 2650
-  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComReturnTitle(param);
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComReturnTitle(param);
 }
 
 bool GfPlayComPlayerDead::isDead() { return get() != nullptr && get()->m_dead; }
 
 void GfPlayComPlayerDead::gevMapjump(GEV event, const MapjumpCallbackInfo &) {
-  if (event == GEV_MAPJUMP_CHANGE_MAP) {
+  if (event == GEV_UNKNOWN_4) {
     m_dead = false;
-  } else if (event == GEV_MAPJUMP_FADEIN) {
+  } else if (event == GEV_UNKNOWN_6) {
     unknown39 = true;
   }
 }
@@ -1360,7 +1377,7 @@ void GfPlayComPlayerDead::gevMapjump(GEV event, const MapjumpCallbackInfo &) {
 GfPlayComPlayerDead *GfPlayComPlayerDead::create(GfPlayerDead dead) {
   // __LINE__ must be 2329 as in the original file: its value changes the instruction order.
 #line 2329
-  GfPlayComPlayerDead *command = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComPlayerDead(dead);
+  GfPlayComPlayerDead *command = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComPlayerDead(dead);
   if (GfGameScene::get() != nullptr) {
     GfGameScene::get()->setDeadType(dead);
   }

@@ -13,6 +13,12 @@ public:
   // Inferred helper: sets the number; original name unknown.
   void unknown162(int number) { unknown0c = number; }
 
+  // Inferred helper: sets the min; original name unknown.
+  void unknown165(int min) { unknown10 = min; }
+
+  // Inferred helper: sets the max; original name unknown.
+  void unknown166(int max) { unknown14 = max; }
+
   int unknown0c; // Inferred role: number; original member name unknown.
   int unknown10; // Inferred role: min; original member name unknown.
   int unknown14; // Inferred role: max; original member name unknown.
@@ -25,6 +31,6 @@ static_assert(offsetof(GfMenuReferenceNumber, unknown14) == 0x14, "");
 // Inferred helper: allocates a reference number; original name unknown.
 // __LINE__ must be 46 as in the original header: it is the line argument of operator new.
 #line 46
-inline GfMenuReferenceNumber *unknown160() { return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuReferenceNumber(); }
+inline GfMenuReferenceNumber *unknown160() { return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuReferenceNumber(); }
 
 } // namespace gf

@@ -8,21 +8,21 @@ namespace event {
 
 class BgmManager : public IManager, public mm::mtl::Singleton<BgmManager> {
 public:
-  static constexpr f32 TO_FR = 30.0f;
-  static constexpr f32 TO_SEC = 1.0f / 30.0f;
+  static constexpr f32 TO_FR = 30.0f;         // Name given by the xc2 symbol _ZN5event10BgmManager5TO_FRE.
+  static constexpr f32 TO_SEC = 1.0f / 30.0f; // Name given by the xc2 symbol _ZN5event10BgmManager6TO_SECE.
 
   enum {
-    FLAG_HAND_OVER = 1 << 0,
-    FLAG_PLAY = 1 << 1,
-    FLAG_DELAY = 1 << 2,
-    FLAG_ENDLESS = 1 << 3,
-    FLAG_KEEP = 1 << 4,
-    FLAG_STOP = 1 << 5,
-    FLAG_SYNC = 1 << 6,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: hand over flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: play flag; original name unknown.
+    FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: delay flag; original name unknown.
+    FLAG_UNKNOWN_3 = 1 << 3, // Inferred role: endless flag; original name unknown.
+    FLAG_UNKNOWN_4 = 1 << 4, // Inferred role: keep flag; original name unknown.
+    FLAG_UNKNOWN_5 = 1 << 5, // Inferred role: stop flag; original name unknown.
+    FLAG_UNKNOWN_6 = 1 << 6, // Inferred role: sync flag; original name unknown.
   };
 
   enum {
-    DISP_FLAG_DISP = 1 << 0,
+    DISP_FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: disp flag; original name unknown.
   };
 
   BgmManager();

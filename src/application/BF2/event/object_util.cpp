@@ -31,13 +31,13 @@ bool ObjectUtil::isBackSide(const mm::Vec3 &position) {
 }
 
 const char *ObjectUtil::num2str(u32 number) {
-  static const char *const NUMBERS[] = {"", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
-  return NUMBERS[number];
+  static const char *const unknown020[] = {"", "2", "3", "4", "5", "6", "7", "8", "9", "10"}; // Inferred role: numbers; original name unknown.
+  return unknown020[number];
 }
 
 const char *ObjectUtil::num2strMulti(u32 number) {
-  static const char *const NUMBERS[] = {"", "２", "３", "４", "５", "６", "７", "８", "９", "１０"};
-  return NUMBERS[number];
+  static const char *const unknown021[] = {"", "２", "３", "４", "５", "６", "７", "８", "９", "１０"}; // Inferred role: numbers; original name unknown.
+  return unknown021[number];
 }
 
 int ObjectUtil::getElementCount(const char *string) {
@@ -50,6 +50,59 @@ int ObjectUtil::getElementCount(const char *string) {
     }
   }
   return count;
+}
+
+void ObjectUtil::getElement(mm::mtl::FixStr<128> &element, const char *string, int index, int group) {
+  while (group > 0) {
+    if (string == nullptr || *string == '\0') {
+      element = "";
+      return;
+    }
+    string = __builtin_strchr(string, '|');
+    if (string != nullptr) {
+      string++;
+      group--;
+    }
+  }
+  if (string != nullptr && *string != '\0') {
+    const char *end = __builtin_strchr(string, '|');
+    if (end == nullptr) {
+      end = string + __builtin_strlen(string);
+    }
+    char character;
+    while (index > 0) {
+      if (string == nullptr) {
+        element = "";
+        return;
+      }
+      character = *string;
+      if (string >= end || character == '\0') {
+        break;
+      }
+      string = __builtin_strchr(string, ' ');
+      if (string != nullptr) {
+        string++;
+        index--;
+      }
+    }
+    if (string != nullptr) {
+      character = *string;
+    }
+    if (string != nullptr && character != '\0') {
+      const char *number = string;
+      while (character != '\0' && isNumber(character)) {
+        number++;
+        character = *number;
+      }
+      size_t length = number - string;
+      char buffer[256];
+      __builtin_memset(buffer, 0, sizeof(buffer));
+      __builtin_memcpy(buffer, string, length);
+      element = buffer;
+      return;
+    }
+  }
+  element = "";
 }
 
 s32 ObjectUtil::getElementS32(const char *string, int index, int group) {
@@ -137,7 +190,7 @@ void ObjectUtil::drawChara(const char *name, const mm::Vec3 &position, const mm:
     s32 textY = y - 10;
     fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
     fw::debug::drawFont(textX, textY, name);
-    if (handle != gf::INVALID_HANDLE) {
+    if (handle != gf::unknown020) {
       gf::GfObjAcc acc(handle);
       fw::debug::drawFont(x + 15, textY, "ID:%d", acc.getBdatId());
     }
@@ -179,7 +232,7 @@ void ObjectUtil::drawState(const mm::Vec3 &position, f32 height, gf::GF_OBJ_HAND
   }
   gf::GfComAsm *comAsm = obj->getComponent<gf::GfComAsm>();
   if (comAsm != nullptr) {
-    state = comAsm->getStateName(gf::ANIM_LAYER_BASE);
+    state = comAsm->getStateName(gf::ANIM_LAYER_UNKNOWN_0);
   }
   if (state == nullptr) {
     return;

@@ -13,6 +13,7 @@ class RTTI;
 } // namespace mm
 
 namespace fw {
+class Reflection;
 struct UpdateInfo;
 } // namespace fw
 
@@ -20,20 +21,28 @@ namespace gf {
 namespace pc {
 
 struct FadeParam {
+  static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
+
+  f32 fadeInTime;
+  f32 blackOutTime;
   f32 fadeOutTime;
-  f32 blackTime;
-  f32 fadeTime;
 };
+
+static_assert(offsetof(FadeParam, blackOutTime) == 0x04, "");
+static_assert(offsetof(FadeParam, fadeOutTime) == 0x08, "");
+static_assert(sizeof(FadeParam) == 0x0c, "");
 
 class FadePlugin : public Plugin {
   GF_PLUGIN(GfComBehaviorPc)
 
 public:
+  static const u32 PLUGIN_INDEX = 11;
+
   enum Mode {
-    MODE_NONE,
-    MODE_FADE_IN,
-    MODE_BLACK,
-    MODE_FADE_OUT,
+    MODE_UNKNOWN_0, // Inferred role: mode none; original name unknown.
+    MODE_UNKNOWN_1, // Inferred role: mode fade in; original name unknown.
+    MODE_UNKNOWN_2, // Inferred role: mode black; original name unknown.
+    MODE_UNKNOWN_3, // Inferred role: mode fade out; original name unknown.
   };
 
   FadePlugin();

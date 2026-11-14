@@ -104,5 +104,8 @@ public:
   u8 unknown00[0x38]; // Inferred role: connection state; original member name unknown.
 };
 
+// Name from the import of the game nn::hid::InitializeTouchScreen(), called by ml::DevTouchNx::createDevice.
+void InitializeTouchScreen();
+
 } // namespace hid
 } // namespace nn

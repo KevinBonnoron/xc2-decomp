@@ -7,11 +7,13 @@ namespace ml {
 
 class DrMan;
 class DrShdFetchObj;
+struct MdsMatVertexInfo;
 
 class DrShdFetchMan {
 public:
   DrShdFetchMan(DrMan *drMan);
   ~DrShdFetchMan();
+  DrShdFetchObj *createFetchObj(int num, const MdsMatVertexInfo *infos);
   void releaseFetchObj(DrShdFetchObj *obj);
 
   DrShdFetchObj *unknown00; // Inferred role: first fetch object; original member name unknown.

@@ -6,12 +6,14 @@
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_item.h"
+#include "gf/game/quest/gf_quest_util.h"
 #include "gf/gf_allocator.h"
 #include "gf/menu/gf_menu_bdat.h"
 #include "gf/menu/gf_menu_item_util.h"
 #include "gf/menu/list/gf_menu_sort_type.h"
 #include "gf/request/gf_req_scom.h"
 #include "gf/util/gf_item_util.h"
+#include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/vector.h"
 
 namespace gf {
@@ -45,8 +47,8 @@ template <bool Ascending> bool unknown002(const MenuItemInfo &info, const MenuIt
   ItemProperty otherProperty;
   GfItemUtil::getProperty(property, info.unknown04, 0);
   GfItemUtil::getProperty(otherProperty, other.unknown04, 0);
-  if (property.unknown08 == ItemType::EMPTY_ORB) {
-    if (otherProperty.unknown08 == ItemType::EMPTY_ORB) {
+  if (property.unknown08 == ItemType::ITEM_TYPE_UNKNOWN_9) {
+    if (otherProperty.unknown08 == ItemType::ITEM_TYPE_UNKNOWN_9) {
       GfItemUtil::getProperty(property, property.unknown56, 0);
       GfItemUtil::getProperty(otherProperty, otherProperty.unknown56, 0);
       if (property.unknown4c == otherProperty.unknown4c) {
@@ -92,7 +94,7 @@ GfMenuItemList::~GfMenuItemList() { ; }
 GfMenuItemList *GfMenuItemList::create() {
   // __LINE__ must be 55 as in the original source: it is the line argument of operator new.
 #line 55
-  GfMenuItemList *list = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuItemList();
+  GfMenuItemList *list = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuItemList();
   list->addRef();
   return list;
 }
@@ -104,7 +106,7 @@ void GfMenuItemList::sort(u32 type, bool ascending) {
   std::function<bool(const MenuItemInfo &, const MenuItemInfo &)> compare;
   switch (type) {
   case unknown093_1: {
-    u32 *times = new (getAllocator(ALLOCATOR_DEFAULT), nullptr, 0, 8) u32[getSize()];
+    u32 *times = new (getAllocator(ALLOCATOR_UNKNOWN_0), nullptr, 0, 8) u32[getSize()];
     for (u32 i = 0; i < getSize(); i++) {
       times[i] = GfItemUtil::getItemTime(getContents(i).unknown04, getContents(i).unknown0c);
       getContents(i).unknown0a = i;
@@ -145,22 +147,22 @@ void GfMenuItemList::sort(u32 type, bool ascending) {
     break;
   case unknown093_9:
     switch (GfItemUtil::getType(getContents(0).unknown04)) {
-    case ItemType::EQUIP_ORB:
+    case ItemType::ITEM_TYPE_UNKNOWN_3:
       compare = ascending ? sortTypeAsCoreEquipAscending : sortTypeAsCoreEquipDescending;
       break;
-    case ItemType::COLLECTION_LIST:
+    case ItemType::ITEM_TYPE_UNKNOWN_7:
       compare = ascending ? sortTypeCollectionAscending : sortTypeCollectionDescending;
       break;
-    case ItemType::TRESURE:
+    case ItemType::ITEM_TYPE_UNKNOWN_8:
       compare = ascending ? sortTypeTreasureAscending : sortTypeTreasureDescending;
       break;
-    case ItemType::EMPTY_ORB:
+    case ItemType::ITEM_TYPE_UNKNOWN_9:
       compare = ascending ? sortTypeAsCoreAscending : sortTypeAsCoreDescending;
       break;
-    case ItemType::FAVORITE:
+    case ItemType::ITEM_TYPE_UNKNOWN_10:
       compare = ascending ? sortTypeFavoriteAscending : sortTypeFavoriteDescending;
       break;
-    case ItemType::BOOSTER:
+    case ItemType::ITEM_TYPE_UNKNOWN_12:
       compare = ascending ? sortTypeBoosterAscending : sortTypeBoosterDescending;
       break;
     default:
@@ -229,7 +231,7 @@ bool GfMenuItemList::sortSellPriceDescending(const MenuItemInfo &info, const Men
 bool GfMenuItemList::sortGetAreaAscending(const MenuItemInfo &info, const MenuItemInfo &other) {
   u32 area;
   u32 otherArea;
-  if (info.unknown00 == ItemType::TRESURE) {
+  if (info.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_8) {
     u8 *bdat = GfDataBdat::getFP(BDAT_ITM_TRESURE_LIST);
     area = Bdat::getVal(bdat, "Zone", info.unknown04).valueU16;
     otherArea = Bdat::getVal(bdat, "Zone", other.unknown04).valueU16;
@@ -246,7 +248,7 @@ bool GfMenuItemList::sortGetAreaAscending(const MenuItemInfo &info, const MenuIt
 bool GfMenuItemList::sortGetAreaDescending(const MenuItemInfo &info, const MenuItemInfo &other) {
   u32 area;
   u32 otherArea;
-  if (info.unknown00 == ItemType::TRESURE) {
+  if (info.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_8) {
     u8 *bdat = GfDataBdat::getFP(BDAT_ITM_TRESURE_LIST);
     area = Bdat::getVal(bdat, "Zone", info.unknown04).valueU16;
     otherArea = Bdat::getVal(bdat, "Zone", other.unknown04).valueU16;
@@ -264,37 +266,47 @@ bool GfMenuItemList::sortNameAscending(const MenuItemInfo &info, const MenuItemI
 
 bool GfMenuItemList::sortNameDescending(const MenuItemInfo &info, const MenuItemInfo &other) { return unknown003<false>(info, other); }
 
-bool GfMenuItemList::sortTypeAsCoreEquipAscending(const MenuItemInfo &info, const MenuItemInfo &other) { return unknown001(info, other, ItemType::EQUIP_ORB, &ItemProperty::unknown4c, true); }
+bool GfMenuItemList::sortTypeAsCoreEquipAscending(const MenuItemInfo &info, const MenuItemInfo &other) {
+  return unknown001(info, other, ItemType::ITEM_TYPE_UNKNOWN_3, &ItemProperty::unknown4c, true);
+}
 
-bool GfMenuItemList::sortTypeAsCoreEquipDescending(const MenuItemInfo &info, const MenuItemInfo &other) { return unknown001(info, other, ItemType::EQUIP_ORB, &ItemProperty::unknown4c, false); }
+bool GfMenuItemList::sortTypeAsCoreEquipDescending(const MenuItemInfo &info, const MenuItemInfo &other) {
+  return unknown001(info, other, ItemType::ITEM_TYPE_UNKNOWN_3, &ItemProperty::unknown4c, false);
+}
 
-bool GfMenuItemList::sortTypeBoosterAscending(const MenuItemInfo &info, const MenuItemInfo &other) { return unknown001(info, other, ItemType::BOOSTER, &ItemProperty::unknown45, true); }
+bool GfMenuItemList::sortTypeBoosterAscending(const MenuItemInfo &info, const MenuItemInfo &other) { return unknown001(info, other, ItemType::ITEM_TYPE_UNKNOWN_12, &ItemProperty::unknown45, true); }
 
-bool GfMenuItemList::sortTypeBoosterDescending(const MenuItemInfo &info, const MenuItemInfo &other) { return unknown001(info, other, ItemType::BOOSTER, &ItemProperty::unknown45, false); }
+bool GfMenuItemList::sortTypeBoosterDescending(const MenuItemInfo &info, const MenuItemInfo &other) { return unknown001(info, other, ItemType::ITEM_TYPE_UNKNOWN_12, &ItemProperty::unknown45, false); }
 
-bool GfMenuItemList::sortWpnRankAscending(const MenuItemInfo &info, const MenuItemInfo &other) { return unknown001(info, other, ItemType::PC_WPN_CHIP, &ItemProperty::unknown64, true); }
+bool GfMenuItemList::sortWpnRankAscending(const MenuItemInfo &info, const MenuItemInfo &other) { return unknown001(info, other, ItemType::ITEM_TYPE_UNKNOWN_1, &ItemProperty::unknown64, true); }
 
-bool GfMenuItemList::sortWpnRankDescending(const MenuItemInfo &info, const MenuItemInfo &other) { return unknown001(info, other, ItemType::PC_WPN_CHIP, &ItemProperty::unknown64, false); }
+bool GfMenuItemList::sortWpnRankDescending(const MenuItemInfo &info, const MenuItemInfo &other) { return unknown001(info, other, ItemType::ITEM_TYPE_UNKNOWN_1, &ItemProperty::unknown64, false); }
 
 bool GfMenuItemList::sortTypeAsCoreAscending(const MenuItemInfo &info, const MenuItemInfo &other) { return unknown002<true>(info, other); }
 
 bool GfMenuItemList::sortTypeAsCoreDescending(const MenuItemInfo &info, const MenuItemInfo &other) { return unknown002<false>(info, other); }
 
-bool GfMenuItemList::sortTypeCollectionAscending(const MenuItemInfo &info, const MenuItemInfo &other) { return unknown001(info, other, ItemType::COLLECTION_LIST, &ItemProperty::unknown4d, true); }
+bool GfMenuItemList::sortTypeCollectionAscending(const MenuItemInfo &info, const MenuItemInfo &other) { return unknown001(info, other, ItemType::ITEM_TYPE_UNKNOWN_7, &ItemProperty::unknown4d, true); }
 
-bool GfMenuItemList::sortTypeCollectionDescending(const MenuItemInfo &info, const MenuItemInfo &other) { return unknown001(info, other, ItemType::COLLECTION_LIST, &ItemProperty::unknown4d, false); }
+bool GfMenuItemList::sortTypeCollectionDescending(const MenuItemInfo &info, const MenuItemInfo &other) {
+  return unknown001(info, other, ItemType::ITEM_TYPE_UNKNOWN_7, &ItemProperty::unknown4d, false);
+}
 
-bool GfMenuItemList::sortTypeFavoriteAscending(const MenuItemInfo &info, const MenuItemInfo &other) { return unknown001(info, other, ItemType::FAVORITE, &ItemProperty::unknown4e, true); }
+bool GfMenuItemList::sortTypeFavoriteAscending(const MenuItemInfo &info, const MenuItemInfo &other) { return unknown001(info, other, ItemType::ITEM_TYPE_UNKNOWN_10, &ItemProperty::unknown4e, true); }
 
-bool GfMenuItemList::sortTypeFavoriteDescending(const MenuItemInfo &info, const MenuItemInfo &other) { return unknown001(info, other, ItemType::FAVORITE, &ItemProperty::unknown4e, false); }
+bool GfMenuItemList::sortTypeFavoriteDescending(const MenuItemInfo &info, const MenuItemInfo &other) {
+  return unknown001(info, other, ItemType::ITEM_TYPE_UNKNOWN_10, &ItemProperty::unknown4e, false);
+}
 
-bool GfMenuItemList::sortTypeTreasureAscending(const MenuItemInfo &info, const MenuItemInfo &other) { return unknown001(info, other, ItemType::TRESURE, &ItemProperty::unknown5d, true); }
+bool GfMenuItemList::sortTypeTreasureAscending(const MenuItemInfo &info, const MenuItemInfo &other) { return unknown001(info, other, ItemType::ITEM_TYPE_UNKNOWN_8, &ItemProperty::unknown5d, true); }
 
-bool GfMenuItemList::sortTypeTreasureDescending(const MenuItemInfo &info, const MenuItemInfo &other) { return unknown001(info, other, ItemType::TRESURE, &ItemProperty::unknown5d, false); }
+bool GfMenuItemList::sortTypeTreasureDescending(const MenuItemInfo &info, const MenuItemInfo &other) { return unknown001(info, other, ItemType::ITEM_TYPE_UNKNOWN_8, &ItemProperty::unknown5d, false); }
 
-bool GfMenuItemList::sortFavoriteTimeAscending(const MenuItemInfo &info, const MenuItemInfo &other) { return unknown001(info, other, ItemType::FAVORITE, &ItemProperty::unknown52, true); }
+bool GfMenuItemList::sortFavoriteTimeAscending(const MenuItemInfo &info, const MenuItemInfo &other) { return unknown001(info, other, ItemType::ITEM_TYPE_UNKNOWN_10, &ItemProperty::unknown52, true); }
 
-bool GfMenuItemList::sortFavoriteTimeDescending(const MenuItemInfo &info, const MenuItemInfo &other) { return unknown001(info, other, ItemType::FAVORITE, &ItemProperty::unknown52, false); }
+bool GfMenuItemList::sortFavoriteTimeDescending(const MenuItemInfo &info, const MenuItemInfo &other) {
+  return unknown001(info, other, ItemType::ITEM_TYPE_UNKNOWN_10, &ItemProperty::unknown52, false);
+}
 
 bool GfMenuItemList::sortIdAscending(const MenuItemInfo &info, const MenuItemInfo &other) { return info.unknown04 < other.unknown04; }
 
@@ -303,7 +315,7 @@ bool GfMenuItemList::sortIdDescending(const MenuItemInfo &info, const MenuItemIn
 bool GfMenuItemList::isValidItem(const MenuItemInfo &info) { return info.unknown04 != 0 && info.unknown08 > 0; }
 
 u32 GfMenuItemList::getSortRarity(const MenuItemInfo &info) {
-  if (info.unknown00 == ItemType::PRECIOUS || info.unknown00 == ItemType::INFO || info.unknown00 == ItemType::EVENT) {
+  if (info.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_6 || info.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_14 || info.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_15) {
     return 0;
   }
   return GfDataItem::getRarity(info.unknown04);
@@ -336,7 +348,7 @@ void GfMenuItemList::filterCollectionType(const FiltertInfo &filter) {
     MenuItemInfo info = getContents(i);
     ItemProperty property;
     GfItemUtil::getProperty(property, info.unknown04, 0);
-    if (property.unknown08 == ItemType::COLLECTION_LIST && property.unknown4d == filter.unknown05) {
+    if (property.unknown08 == ItemType::ITEM_TYPE_UNKNOWN_7 && property.unknown4d == filter.unknown05) {
       i++;
     } else {
       decItem(info, false);
@@ -349,7 +361,7 @@ void GfMenuItemList::filterFavoriteType(const FiltertInfo &filter) {
     MenuItemInfo info = getContents(i);
     ItemProperty property;
     GfItemUtil::getProperty(property, info.unknown04, 0);
-    if (property.unknown08 == ItemType::FAVORITE && property.unknown4e == filter.unknown06) {
+    if (property.unknown08 == ItemType::ITEM_TYPE_UNKNOWN_10 && property.unknown4e == filter.unknown06) {
       i++;
     } else {
       decItem(info, false);
@@ -378,9 +390,9 @@ int GfMenuItemList::findItem(ItemType::Type type, u32 item) {
 
 void GfMenuItemList::setupFromHanaParts(const HanaPartsSetup &setup) {
   SetupParam param = setup.unknown00;
-  UIListInfo<MenuItemInfo>::setup(getAllocator(ALLOCATOR_DEFAULT), param);
-  if (isValid() && setup.unknown14 >= ItemType::HANA_ROLE && setup.unknown14 <= ItemType::HANA_ASSIST) {
-    u8 *bdat = GfDataBdat::getFP(setup.unknown14 - ItemType::HANA_ROLE + BDAT_ITM_HANA_ROLE);
+  UIListInfo<MenuItemInfo>::setup(getAllocator(ALLOCATOR_UNKNOWN_0), param);
+  if (isValid() && setup.unknown14 >= ItemType::ITEM_TYPE_UNKNOWN_16 && setup.unknown14 <= ItemType::ITEM_TYPE_UNKNOWN_20) {
+    u8 *bdat = GfDataBdat::getFP(setup.unknown14 - ItemType::ITEM_TYPE_UNKNOWN_16 + BDAT_ITM_HANA_ROLE);
     u32 top = Bdat::getIdTop(bdat);
     u32 end = Bdat::getIdEnd(bdat);
     for (u32 id = top; id <= end; id++) {
@@ -392,6 +404,33 @@ void GfMenuItemList::setupFromHanaParts(const HanaPartsSetup &setup) {
         info.unknown04 = id;
         info.unknown08 = GfItemUtil::getItemBoxCount(id);
         addContents(info);
+      }
+    }
+  }
+}
+
+void GfMenuItemList::setupFromQuestReward(const QuestRewardSetup &setup) {
+  mm::mtl::FixedVector<MenuItemInfo, 4> items;
+  GfQuestReward reward;
+  if (setup.unknown14 != 0 && GfQuestUtil::getReward(reward, setup.unknown14, false)) {
+    for (u32 slot = QUEST_REWARD_UNKNOWN_8; slot <= QUEST_REWARD_UNKNOWN_11; slot++) {
+      u16 item = reward.unknown00[slot].unknown44;
+      if (item != 0) {
+        MenuItemInfo info;
+        info.unknown00 = GfDataItem::getItemType(item);
+        info.unknown04 = item;
+        info.unknown08 = reward.unknown00[slot].m_developZone;
+        items.push_back(info);
+      }
+    }
+    if (items.size() == 0) {
+      clear();
+    } else {
+      UIListInfo<MenuItemInfo>::setup(getAllocator(ALLOCATOR_UNKNOWN_0), setup.unknown00);
+      if (isValid()) {
+        for (u32 i = 0; i < items.size(); i++) {
+          addContents(items[i]);
+        }
       }
     }
   }

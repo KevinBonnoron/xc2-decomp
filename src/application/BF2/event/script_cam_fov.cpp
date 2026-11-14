@@ -13,7 +13,7 @@ namespace event {
 
 void ScriptCamFov::doit(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CAMERA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_3) {
     return;
   }
   ObjectCamera *camera = static_cast<ObjectCamera *>(object);
@@ -25,10 +25,10 @@ void ScriptCamFov::doit(const Param &param) {
 
 void ScriptCamFov::undo(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CAMERA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_3) {
     return;
   }
-  static_cast<ObjectCamera *>(object)->setFov(unknown08, CV_TYPE_LINEAR);
+  static_cast<ObjectCamera *>(object)->setFov(unknown08, CV_TYPE_UNKNOWN_1);
 }
 
 } // namespace event

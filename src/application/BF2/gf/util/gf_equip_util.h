@@ -7,13 +7,13 @@ namespace gf {
 struct SDataDriver;
 
 enum {
-  EQUIP_RESULT_OK = 0,
-  EQUIP_RESULT_INVALID_TYPE = 1,
-  EQUIP_RESULT_FULL = 2,
-  EQUIP_RESULT_SAME_CATEGORY = 3,
-  EQUIP_RESULT_SAME_EFFECT = 4,
-  EQUIP_RESULT_INVALID_DRIVER = 5,
-  EQUIP_RESULT_NO_ITEM = 6,
+  EQUIP_RESULT_UNKNOWN_0 = 0, // Inferred role: equip result ok; original name unknown.
+  EQUIP_RESULT_UNKNOWN_1 = 1, // Inferred role: equip result invalid type; original name unknown.
+  EQUIP_RESULT_UNKNOWN_2 = 2, // Inferred role: equip result full; original name unknown.
+  EQUIP_RESULT_UNKNOWN_3 = 3, // Inferred role: equip result same category; original name unknown.
+  EQUIP_RESULT_UNKNOWN_4 = 4, // Inferred role: equip result same effect; original name unknown.
+  EQUIP_RESULT_UNKNOWN_5 = 5, // Inferred role: equip result invalid driver; original name unknown.
+  EQUIP_RESULT_UNKNOWN_6 = 6, // Inferred role: equip result no item; original name unknown.
 };
 
 class GfEquipUtil {

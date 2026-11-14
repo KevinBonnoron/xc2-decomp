@@ -15,7 +15,7 @@ IDColiObjBase::IDColiObjBase(IDColiTreeTop *tree) {
   m_size.y = 2.0f;
   m_size.z = 0.5f;
   unknown70 = mm::Mat44::identity;
-  unknownc0 = SHAPE_TYPE_CHARACTER;
+  unknownc0 = SHAPE_TYPE_UNKNOWN_3;
   unknown198[0] = nullptr;
   unknown198[1] = nullptr;
   unknownc4 = IDColiBaseType_UNKNOWN_3;

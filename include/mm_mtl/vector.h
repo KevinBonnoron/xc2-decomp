@@ -64,7 +64,7 @@ private:
   }
 
   // __LINE__ must be 154 as in the original header: it is the line argument of the assert.
-#line 145
+#line 144
   void extend(size_t size, size_t alignment) {
     size_t oldSize = m_size;
     T *ptr = static_cast<T *>(m_allocator->allocate(size * sizeof(T), alignment));
@@ -216,8 +216,9 @@ public:
     }
   }
 
+  // The size test is in the source: the game tests it before calling the out of line destruct_n (0x71002d9134 in ~GfGmkLocatorAtlas).
   void clear() {
-    if (m_buffer != nullptr) {
+    if (m_buffer != nullptr && m_size != 0) {
       destruct_n(m_buffer, m_size);
     }
     m_size = 0;
@@ -303,7 +304,7 @@ public:
 };
 
 template <typename T> void Vector<T>::copy(const T *first, const T *last, T *result) {
-  if (is_pod<T>::value) {
+  if (is_pod<T>::unknown001) {
     __builtin_memcpy(result, first, (last - first) * sizeof(T));
   } else {
     while (first != last) {

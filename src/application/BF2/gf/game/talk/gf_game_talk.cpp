@@ -16,7 +16,7 @@ GfGameTalk::~GfGameTalk() {}
 void GfGameTalk::build(const GfSetupParam &param) {
   // __LINE__ must be 48 as in the original file: its value changes the instruction order.
 #line 48
-  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfGameTalk(param);
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfGameTalk(param);
 }
 
 void GfGameTalk::destroy() {
@@ -33,7 +33,7 @@ void GfGameTalk::update(const fw::UpdateInfo &) {}
 
 bool GfGameTalk::isPlaying() { return event::Manager::get()->isPlay(); }
 
-bool GfGameTalk::isError() { return (event::Manager::get()->unknown18 & event::Manager::FLAG_PLAY_END) != 0; }
+bool GfGameTalk::isError() { return (event::Manager::get()->unknown18 & event::Manager::FLAG_UNKNOWN_1) != 0; }
 
 void GfGameTalk::play(const GfSetupPfTalk &talk) {
   u8 *list = Bdat::getFP("EVT_listList");

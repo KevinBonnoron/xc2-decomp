@@ -9,7 +9,7 @@ class CreditReader {
 public:
   struct Column {
     bool unknown00;        // Inferred role: column is used; original member name unknown.
-    u32 unknown04;         // Inferred role: first value of the column; original member name unknown.
+    int unknown04;         // Inferred role: first value of the column, compared as signed; original member name unknown.
     u32 unknown08;         // Inferred role: second value of the column; original member name unknown.
     const char *unknown10; // Inferred role: text; original member name unknown.
   };

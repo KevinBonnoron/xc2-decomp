@@ -18,39 +18,39 @@ namespace event {
 class UIManager : public IManager, public mm::mtl::Singleton<UIManager> {
 public:
   enum OPTELOP_TYPE {
-    OPTELOP_TYPE_CENTER,
-    OPTELOP_TYPE_LEFT,
-    OPTELOP_TYPE_RIGHT,
+    OPTELOP_TYPE_UNKNOWN_0, // Inferred role: center; original name unknown.
+    OPTELOP_TYPE_UNKNOWN_1, // Inferred role: left; original name unknown.
+    OPTELOP_TYPE_UNKNOWN_2, // Inferred role: right; original name unknown.
   };
 
   enum {
-    FLAG_SKIP = 1 << 0,
-    FLAG_COMMON = 1 << 1,
-    FLAG_COMMON_FADE = 1 << 2,
-    FLAG_FIELD_SKILL = 1 << 3,
-    FLAG_SHOP = 1 << 4,
-    FLAG_PAYOFF = 1 << 5,
-    FLAG_REWARD = 1 << 6,
-    FLAG_BLADE_NAME = 1 << 7,
-    FLAG_CHAP_TELOP = 1 << 8,
-    FLAG_CHAP_TELOP_WAIT = 1 << 9,
-    FLAG_AVAN_TITLE = 1 << 10,
-    FLAG_ZONE_TELOP = 1 << 11,
-    FLAG_OPENING_TELOP = 1 << 12,
-    FLAG_STAFFROLL = 1 << 13,
-    FLAG_HOMURA_ANM = 1 << 14,
-    FLAG_NAME_SELECT = 1 << 15,
-    FLAG_HIKARI_ANM = 1 << 16,
-    FLAG_HOMURA_HIKARI = FLAG_HOMURA_ANM | FLAG_NAME_SELECT | FLAG_HIKARI_ANM,
-    FLAG_NEW_GAME_WAIT = 1 << 17,
-    FLAG_NEW_GAME_WAIT_END = 1 << 18,
-    FLAG_MINIGAME = 1 << 19,
-    FLAG_PAD_DISABLE = 1 << 20,
-    FLAG_PAD_ENABLE_WAIT = 1 << 21,
+    FLAG_UNKNOWN_0 = 1 << 0,                                                   // Inferred role: skip flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1,                                                   // Inferred role: common flag; original name unknown.
+    FLAG_UNKNOWN_2 = 1 << 2,                                                   // Inferred role: common fade flag; original name unknown.
+    FLAG_UNKNOWN_3 = 1 << 3,                                                   // Inferred role: field skill flag; original name unknown.
+    FLAG_UNKNOWN_4 = 1 << 4,                                                   // Inferred role: shop flag; original name unknown.
+    FLAG_UNKNOWN_5 = 1 << 5,                                                   // Inferred role: payoff flag; original name unknown.
+    FLAG_UNKNOWN_6 = 1 << 6,                                                   // Inferred role: reward flag; original name unknown.
+    FLAG_UNKNOWN_7 = 1 << 7,                                                   // Inferred role: blade name flag; original name unknown.
+    FLAG_UNKNOWN_8 = 1 << 8,                                                   // Inferred role: chap telop flag; original name unknown.
+    FLAG_UNKNOWN_9 = 1 << 9,                                                   // Inferred role: chap telop wait flag; original name unknown.
+    FLAG_UNKNOWN_10 = 1 << 10,                                                 // Inferred role: avan title flag; original name unknown.
+    FLAG_UNKNOWN_11 = 1 << 11,                                                 // Inferred role: zone telop flag; original name unknown.
+    FLAG_UNKNOWN_12 = 1 << 12,                                                 // Inferred role: opening telop flag; original name unknown.
+    FLAG_UNKNOWN_13 = 1 << 13,                                                 // Inferred role: staffroll flag; original name unknown.
+    FLAG_UNKNOWN_14 = 1 << 14,                                                 // Inferred role: homura anm flag; original name unknown.
+    FLAG_UNKNOWN_15 = 1 << 15,                                                 // Inferred role: name select flag; original name unknown.
+    FLAG_UNKNOWN_16 = 1 << 16,                                                 // Inferred role: hikari anm flag; original name unknown.
+    FLAG_UNKNOWN_114688 = FLAG_UNKNOWN_14 | FLAG_UNKNOWN_15 | FLAG_UNKNOWN_16, // Inferred role: homura hikari flag; original name unknown.
+    FLAG_UNKNOWN_17 = 1 << 17,                                                 // Inferred role: new game wait flag; original name unknown.
+    FLAG_UNKNOWN_18 = 1 << 18,                                                 // Inferred role: new game wait end flag; original name unknown.
+    FLAG_UNKNOWN_19 = 1 << 19,                                                 // Inferred role: minigame flag; original name unknown.
+    FLAG_UNKNOWN_20 = 1 << 20,                                                 // Inferred role: pad disable flag; original name unknown.
+    FLAG_UNKNOWN_21 = 1 << 21,                                                 // Inferred role: pad enable wait flag; original name unknown.
   };
 
   enum {
-    DISP_FLAG_NOW_LOADING = 1 << 0,
+    DISP_FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: now loading flag; original name unknown.
   };
 
   void setPadDisable(bool isDisable);

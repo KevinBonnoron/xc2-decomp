@@ -29,6 +29,9 @@ public:
   virtual bool recieveMessage(MessageObject *sender, Message &message) { return false; }
 
   bool sendMessage(MessageObject *receiver, Message &message) { return receiver->recieveMessage(this, message); }
+  // Inferred role: queues a message of type T for the receiver after a delay (defined in message_manager.h); original name unknown.
+  // Evidence: inlined in users::Updatable2::update and gf::pc::StateUtilField::requestBattleStart.
+  template <typename T> void unknown009(MessageObject *receiver, f32 delay, int value);
 
   HandlePtr<MessageObject> unknown08; // Inferred role: self handle; original member name unknown.
 };

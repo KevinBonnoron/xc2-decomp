@@ -13,12 +13,12 @@
 
 namespace gf {
 
-constexpr u32 NPC_DRIVER_END = 10;
-constexpr u32 NPC_BLADE_FIRST = 1001;
-constexpr u32 NPC_BLADE_END = 2001;
-constexpr u32 NPC_BLADE_NAME_RANGE_FIRST = 1197;
-constexpr u32 NPC_BLADE_NAME_RANGE_COUNT = 226;
-constexpr f32 NPC_SCALE_PERCENT = 100.0f;
+constexpr u32 NPC_UNKNOWN_10 = 10;     // Inferred role: npc driver end; original name unknown.
+constexpr u32 NPC_UNKNOWN_1001 = 1001; // Inferred role: npc blade first; original name unknown.
+constexpr u32 NPC_UNKNOWN_2001 = 2001; // Inferred role: npc blade end; original name unknown.
+constexpr u32 NPC_UNKNOWN_1197 = 1197; // Inferred role: npc blade name range first; original name unknown.
+constexpr u32 NPC_UNKNOWN_226 = 226;   // Inferred role: npc blade name range count; original name unknown.
+constexpr f32 unknown017 = 100.0f;     // Inferred role: npc scale percent; original name unknown.
 
 const char *GfDataNpc::getName(u32 npc) {
   u8 *bdat;
@@ -31,15 +31,15 @@ const char *GfDataNpc::getName(u32 npc) {
 }
 
 bool GfDataNpc::getName(u8 *&bdat, u32 &textId, u32 npc) {
-  if (npc < NPC_DRIVER_END) {
+  if (npc < NPC_UNKNOWN_10) {
     textId = GfBdatChrDr::get()->getChrDrName(npc);
     bdat = GfBdatMsg::getFpChrDr();
     return textId != 0;
   }
 
-  if (npc < NPC_BLADE_END) {
+  if (npc < NPC_UNKNOWN_2001) {
     textId = 0;
-    return GfDataBlade::getNameWithMsgID(bdat, textId, *GfDataBlade::getSDataBlade(npc));
+    return GfDataBlade::getNameWithMsgID(bdat, textId, GfDataBlade::getSDataBlade(npc));
   }
 
   bdat = getNameBdatFp(npc);
@@ -49,11 +49,11 @@ bool GfDataNpc::getName(u8 *&bdat, u32 &textId, u32 npc) {
 
 u8 *GfDataNpc::getNameBdatFp(int npc) {
   u8 *bdat = GfDataBdat::getFP(BDAT_RSC_NPC_LIST);
-  if (npc < static_cast<int>(NPC_DRIVER_END)) {
+  if (npc < static_cast<int>(NPC_UNKNOWN_10)) {
     bdat = GfDataBdat::getFP(BDAT_CHR_DR_MS);
   } else if (npc < static_cast<int>(GfBdatChrBl::get()->getChrBlEnd())) {
     bdat = GfDataBdat::getFP(BDAT_CHR_BL_MS);
-  } else if (npc - NPC_BLADE_NAME_RANGE_FIRST < NPC_BLADE_NAME_RANGE_COUNT) {
+  } else if (npc - NPC_UNKNOWN_1197 < NPC_UNKNOWN_226) {
     bdat = GfDataBdat::getFP(BDAT_BLD_BLADENAME);
   } else {
     bdat = GfDataBdat::getFP(BDAT_FLD_NPCNAME);
@@ -68,55 +68,55 @@ u32 GfDataNpc::getRscRelativeID(u32 npc) {
 }
 
 u32 GfDataNpc::getRace(u32 npc) {
-  if (npc < NPC_DRIVER_END) {
+  if (npc < NPC_UNKNOWN_10) {
     return GfBdatChrDr::get()->getChrDrRace(npc);
   }
 
-  if (npc < NPC_BLADE_END) {
-    return GfDataBlade::getSDataBlade(npc)->unknown708;
+  if (npc < NPC_UNKNOWN_2001) {
+    return GfDataBlade::getSDataBlade(npc).unknown708;
   }
 
   return GfBdatRsc::get()->getRscNpcListRace(npc);
 }
 
 u32 GfDataNpc::getGender(u32 npc) {
-  if (npc < NPC_DRIVER_END) {
+  if (npc < NPC_UNKNOWN_10) {
     return GfBdatChrDr::get()->getChrDrGender(npc);
   }
 
-  if (npc < NPC_BLADE_END) {
-    return GfDataBlade::getSDataBlade(npc)->unknown709;
+  if (npc < NPC_UNKNOWN_2001) {
+    return GfDataBlade::getSDataBlade(npc).unknown709;
   }
 
   return GfBdatRsc::get()->getRscNpcListGender(npc);
 }
 
 const char *GfDataNpc::getModelName(u32 npc) {
-  if (npc < NPC_DRIVER_END) {
+  if (npc < NPC_UNKNOWN_10) {
     return GfBdatChrDr::get()->getChrDrModel(npc);
   }
 
-  if (npc < NPC_BLADE_END) {
-    return GfDataBlade::getSDataBlade(npc)->unknown70c.c_str();
+  if (npc < NPC_UNKNOWN_2001) {
+    return GfDataBlade::getSDataBlade(npc).unknown70c.c_str();
   }
 
   return GfBdatRsc::get()->getRscNpcListModel(npc);
 }
 
 const char *GfDataNpc::getMotionName(u32 npc) {
-  if (npc < NPC_DRIVER_END) {
+  if (npc < NPC_UNKNOWN_10) {
     return GfBdatChrDr::get()->getChrDrMotion(npc);
   }
 
-  if (npc < NPC_BLADE_END) {
-    return GfDataBlade::getSDataBlade(npc)->unknown734.c_str();
+  if (npc < NPC_UNKNOWN_2001) {
+    return GfDataBlade::getSDataBlade(npc).unknown734.c_str();
   }
 
   return GfBdatRsc::get()->getRscNpcListMotion(npc);
 }
 
 const char *GfDataNpc::getAddMotionName(u32 npc) {
-  if (npc >= NPC_BLADE_END) {
+  if (npc >= NPC_UNKNOWN_2001) {
     const char *addMotionName = GfBdatRsc::get()->getRscNpcListAddMotion(npc);
     if (addMotionName != nullptr && addMotionName[0] != '\0') {
       return addMotionName;
@@ -127,7 +127,7 @@ const char *GfDataNpc::getAddMotionName(u32 npc) {
 }
 
 const char *GfDataNpc::getEffectName(u32 npc) {
-  if (npc >= NPC_BLADE_END) {
+  if (npc >= NPC_UNKNOWN_2001) {
     const char *effectName = GfBdatRsc::get()->getRscNpcListComp_Eff(npc);
     if (effectName != nullptr && effectName[0] != '\0') {
       return effectName;
@@ -138,36 +138,36 @@ const char *GfDataNpc::getEffectName(u32 npc) {
 }
 
 f32 GfDataNpc::getScale(u32 npc) {
-  if (npc < NPC_DRIVER_END) {
+  if (npc < NPC_UNKNOWN_10) {
     return 1.0f;
   }
 
-  if (npc < NPC_BLADE_END) {
-    return GfDataBlade::getSDataBlade(npc)->unknown836 * 0.01f;
+  if (npc < NPC_UNKNOWN_2001) {
+    return GfDataBlade::getSDataBlade(npc).unknown836 * 0.01f;
   }
 
-  return GfBdatRsc::get()->getRscNpcListScale(npc) / NPC_SCALE_PERCENT;
+  return GfBdatRsc::get()->getRscNpcListScale(npc) / unknown017;
 }
 
 u32 GfDataNpc::getCollisionId(u32 npc) {
-  if (npc < NPC_DRIVER_END) {
+  if (npc < NPC_UNKNOWN_10) {
     return GfBdatChrDr::get()->getChrDrCollisionId(npc);
   }
 
-  if (npc < NPC_BLADE_END) {
-    return GfDataBlade::getSDataBlade(npc)->unknown83c;
+  if (npc < NPC_UNKNOWN_2001) {
+    return GfDataBlade::getSDataBlade(npc).unknown83c;
   }
 
   return GfBdatRsc::get()->getRscNpcListCollisionId(npc);
 }
 
 u32 GfDataNpc::getOffsetID(u32 npc) {
-  if (npc < NPC_DRIVER_END) {
+  if (npc < NPC_UNKNOWN_10) {
     return GfBdatChrDr::get()->getChrDrOffsetID(npc);
   }
 
-  if (npc < NPC_BLADE_END) {
-    return GfDataBlade::getSDataBlade(npc)->unknown83a;
+  if (npc < NPC_UNKNOWN_2001) {
+    return GfDataBlade::getSDataBlade(npc).unknown83a;
   }
 
   return GfBdatRsc::get()->getRscNpcListOffsetID(npc);
@@ -195,20 +195,20 @@ u8 *GfDataNpc::getRscBdatFp(int npc) {
 }
 
 bool GfDataNpc::getExtraParts(u32 npc, u32 part) {
-  if (npc < NPC_DRIVER_END) {
+  if (npc < NPC_UNKNOWN_10) {
     return true;
   }
 
-  if (npc < NPC_BLADE_END) {
-    SDataBlade *dataBlade = GfDataBlade::getSDataBlade(npc);
-    return dataBlade->unknownc0[part] != 0;
+  if (npc < NPC_UNKNOWN_2001) {
+    SDataBlade &dataBlade = GfDataBlade::getSDataBlade(npc);
+    return dataBlade.unknownc0[part] != 0;
   }
 
   return GfBdatRsc::get()->getRscNpcListExtraParts(npc, part) != 0;
 }
 
 bool GfDataNpc::isNeedResourceEvent(u32 npc) {
-  if (npc < NPC_BLADE_END) {
+  if (npc < NPC_UNKNOWN_2001) {
     return false;
   }
 
@@ -217,31 +217,31 @@ bool GfDataNpc::isNeedResourceEvent(u32 npc) {
 }
 
 u32 GfDataNpc::getFootStep(u32 npc) {
-  if (npc < NPC_BLADE_FIRST) {
+  if (npc < NPC_UNKNOWN_1001) {
     return GfBdatChrDr::get()->getChrDrFootStep(npc);
   }
 
-  if (npc < NPC_BLADE_END) {
-    return GfDataBlade::getSDataBlade(npc)->unknown848;
+  if (npc < NPC_UNKNOWN_2001) {
+    return GfDataBlade::getSDataBlade(npc).unknown848;
   }
 
   return GfBdatRsc::get()->getRscNpcListFootStep(npc);
 }
 
 u32 GfDataNpc::getFootStepEffect(u32 npc) {
-  if (npc < NPC_BLADE_FIRST) {
+  if (npc < NPC_UNKNOWN_1001) {
     return GfBdatChrDr::get()->getChrDrFootStepEffect(npc);
   }
 
-  if (npc < NPC_BLADE_END) {
-    return GfDataBlade::getSDataBlade(npc)->unknown849;
+  if (npc < NPC_UNKNOWN_2001) {
+    return GfDataBlade::getSDataBlade(npc).unknown849;
   }
 
   return GfBdatRsc::get()->getRscNpcListFootStepEffect(npc);
 }
 
 u32 GfDataNpc::getEyeRotControl(u32 npc) {
-  if (npc < NPC_BLADE_FIRST) {
+  if (npc < NPC_UNKNOWN_1001) {
     if (npc == 0) {
       return 0;
     }
@@ -249,8 +249,8 @@ u32 GfDataNpc::getEyeRotControl(u32 npc) {
     return GfBdatChrDr::get()->getChrDrEyeRot(npc);
   }
 
-  if (npc < NPC_BLADE_END) {
-    return GfDataBlade::getSDataBlade(npc)->unknown826;
+  if (npc < NPC_UNKNOWN_2001) {
+    return GfDataBlade::getSDataBlade(npc).unknown826;
   }
 
   return GfBdatRsc::get()->getRscNpcListEyeRot(npc);

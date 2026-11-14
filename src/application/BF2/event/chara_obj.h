@@ -60,29 +60,29 @@ class ModelObj;
 class TarAxis;
 
 enum CHARA_TYPE {
-  CHARA_TYPE_DRIVER = 1,
-  CHARA_TYPE_BLADE = 2,
-  CHARA_TYPE_NPC = 3,
-  CHARA_TYPE_ENEMY = 5,
+  CHARA_TYPE_UNKNOWN_1 = 1, // Inferred role: driver; original name unknown.
+  CHARA_TYPE_UNKNOWN_2 = 2, // Inferred role: blade; original name unknown.
+  CHARA_TYPE_UNKNOWN_3 = 3, // Inferred role: npc; original name unknown.
+  CHARA_TYPE_UNKNOWN_5 = 5, // Inferred role: enemy; original name unknown.
 };
 
 enum WPNHIDEID {
-  WPNHIDEID_SEQ = 0,
-  WPNHIDEID_EVA = 1,
-  WPNHIDEID_HIDE_WPN = 2,
+  WPNHIDEID_UNKNOWN_0 = 0, // Inferred role: seq; original name unknown.
+  WPNHIDEID_UNKNOWN_1 = 1, // Inferred role: eva; original name unknown.
+  WPNHIDEID_UNKNOWN_2 = 2, // Inferred role: hide wpn; original name unknown.
 };
 
 class CharaObj {
 public:
-  static constexpr size_t QUEUE_COUNT = 8;
-  static constexpr size_t SUB_QUEUE_COUNT = 5;
+  static constexpr size_t QUEUE_UNKNOWN_8 = 8;     // Inferred role: queue count; original name unknown.
+  static constexpr size_t SUB_QUEUE_UNKNOWN_5 = 5; // Inferred role: sub queue count; original name unknown.
 
   enum {
-    FLAG_READY = 1 << 3,
-    FLAG_MOUNT = 1 << 4,
-    FLAG_FADE_OUT = 1 << 5,
-    FLAG_MODEL_STREAM = 1 << 6,
-    FLAG_DISP_JIJI = 1 << 7,
+    FLAG_UNKNOWN_3 = 1 << 3, // Inferred role: ready flag; original name unknown.
+    FLAG_UNKNOWN_4 = 1 << 4, // Inferred role: mount flag; original name unknown.
+    FLAG_UNKNOWN_5 = 1 << 5, // Inferred role: fade out flag; original name unknown.
+    FLAG_UNKNOWN_6 = 1 << 6, // Inferred role: model stream flag; original name unknown.
+    FLAG_UNKNOWN_7 = 1 << 7, // Inferred role: disp jiji flag; original name unknown.
   };
 
   enum {
@@ -174,7 +174,7 @@ public:
   void updateDispJiji();
 
   const char *getName() const;
-  bool isReady() const { return (unknownca0 & FLAG_READY) != 0; }
+  bool isReady() const { return (unknownca0 & FLAG_UNKNOWN_3) != 0; }
   gf::GF_OBJ_HANDLE *getHandle() const { return unknownd40; }
   IAttachActor *getAttachActor() const { return unknownd58; }
   const FrameInfo &getFrameInfo() const { return unknown3030; }
@@ -227,19 +227,19 @@ private:
   CharaEffectPlayer unknown1390;  // Inferred role: effect player; original member name unknown.
   CharaPartUpdater unknown1650;   // Inferred role: part updater; original member name unknown.
   f32 m_eyeOffset;
-  CmdQueue<QUEUE_COUNT, 0> unknown1738;     // Inferred role: queue; original member name unknown.
-  CmdQueue<QUEUE_COUNT, 0> unknown2088;     // Inferred role: sub queue; original member name unknown.
-  CmdQueue<SUB_QUEUE_COUNT, 0> unknown29d8; // Inferred role: fade queue; original member name unknown.
-  mm::Vec3 unknown2fb0;                     // Inferred role: pos; original member name unknown.
-  mm::Vec3 unknown2fc0;                     // Inferred role: pos to; original member name unknown.
-  mm::Vec3 unknown2fd0;                     // Inferred role: rot; original member name unknown.
-  mm::Vec3 unknown2fe0;                     // Inferred role: rot to; original member name unknown.
-  u8 unknown2ff0[0x3030 - 0x2ff0];          // Inferred role: 2 ff0; original member name unknown.
-  FrameInfo unknown3030;                    // Inferred role: frame info; original member name unknown.
-  f32 unknown3044;                          // Inferred role: stream frame; original member name unknown.
-  f32 unknown3048;                          // Inferred role: weapon scale; original member name unknown.
-  u32 unknown304c[2];                       // Inferred role: hide weapon flags; original member name unknown.
-  int unknown3054;                          // Inferred role: reuse flag; original member name unknown.
+  CmdQueue<QUEUE_UNKNOWN_8, 0> unknown1738;     // Inferred role: queue; original member name unknown.
+  CmdQueue<QUEUE_UNKNOWN_8, 0> unknown2088;     // Inferred role: sub queue; original member name unknown.
+  CmdQueue<SUB_QUEUE_UNKNOWN_5, 0> unknown29d8; // Inferred role: fade queue; original member name unknown.
+  mm::Vec3 unknown2fb0;                         // Inferred role: pos; original member name unknown.
+  mm::Vec3 unknown2fc0;                         // Inferred role: pos to; original member name unknown.
+  mm::Vec3 unknown2fd0;                         // Inferred role: rot; original member name unknown.
+  mm::Vec3 unknown2fe0;                         // Inferred role: rot to; original member name unknown.
+  u8 unknown2ff0[0x3030 - 0x2ff0];              // Inferred role: 2 ff0; original member name unknown.
+  FrameInfo unknown3030;                        // Inferred role: frame info; original member name unknown.
+  f32 unknown3044;                              // Inferred role: stream frame; original member name unknown.
+  f32 unknown3048;                              // Inferred role: weapon scale; original member name unknown.
+  u32 unknown304c[2];                           // Inferred role: hide weapon flags; original member name unknown.
+  int unknown3054;                              // Inferred role: reuse flag; original member name unknown.
 };
 
 static_assert(sizeof(CharaObj) == 0x3060, "");

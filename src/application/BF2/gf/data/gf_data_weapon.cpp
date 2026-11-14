@@ -6,7 +6,7 @@
 
 namespace gf {
 
-constexpr u32 WEAPON_TYPE_SPECIAL = 0x11;
+constexpr u32 WEAPON_TYPE_UNKNOWN_17 = 0x11; // Inferred role: weapon type special; original name unknown.
 
 const char *GfDataWeapon::getName(u32 weapon) {
   u32 textId = GfBdatItem::get()->getPcWpnName(weapon);
@@ -34,7 +34,7 @@ const char *GfDataWeapon::getMotionName(u32 weapon) { return GfBdatRsc::get()->g
 u32 GfDataWeapon::getNewWeapon(u32 weapon, u32 chip) {
   GfBdatItem *bdatItem = GfBdatItem::get();
   u32 weaponTypeIndex = bdatItem->getPcWpnWpnType(weapon) - 1;
-  if (weaponTypeIndex < CHIP_CREATE_WEAPON_TYPE_COUNT) {
+  if (weaponTypeIndex < CHIP_CREATE_WEAPON_TYPE_UNKNOWN_16) {
     return bdatItem->getPcWpnChipCreateWpn(chip, weaponTypeIndex);
   }
 
@@ -96,8 +96,8 @@ u32 GfDataWeapon::getEffWeaponType(u32 weaponType) {
     return 0;
   }
 
-  if (weaponType == WEAPON_TYPE_SPECIAL) {
-    return WEAPON_TYPE_SPECIAL;
+  if (weaponType == WEAPON_TYPE_UNKNOWN_17) {
+    return WEAPON_TYPE_UNKNOWN_17;
   }
 
   return GfBdatItem::get()->getPcWpnTypeMotion(weaponType);

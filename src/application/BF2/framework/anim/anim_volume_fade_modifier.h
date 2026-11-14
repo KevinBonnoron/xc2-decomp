@@ -11,7 +11,7 @@ class ModelObject;
 
 class AnimVolumeFadeModifier : public AnimAfterModifierInterface {
 public:
-  static const u32 RATIO_MAX = 6;
+  static const u32 RATIO_UNKNOWN_6 = 6; // Inferred role: maximum number of ratios; original name unknown.
 
   AnimVolumeFadeModifier();
   ~AnimVolumeFadeModifier() override;
@@ -20,8 +20,8 @@ public:
   void apply() override;
 
   ModelObject *unknown18;              // Inferred role: model object; original member name unknown.
-  f32 unknown20[RATIO_MAX];            // Inferred role: fade ratios; original member name unknown.
-  s32 unknown38[RATIO_MAX];            // Inferred role: etc param index per ratio; original member name unknown.
+  f32 unknown20[RATIO_UNKNOWN_6];      // Inferred role: fade ratios; original member name unknown.
+  s32 unknown38[RATIO_UNKNOWN_6];      // Inferred role: etc param index per ratio; original member name unknown.
   mm::mtl::Delegate<bool()> unknown50; // Inferred role: enable check; original member name unknown.
   bool unknown70;                      // Inferred role: use volume fade accessor; original member name unknown.
 };

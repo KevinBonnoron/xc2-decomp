@@ -6,9 +6,10 @@ enum CAMERA_PRIO : int;
 
 namespace gf {
 
-static constexpr fw::CAMERA_PRIO CAMERA_PRIO_MENU_MODEL_VIEW = static_cast<fw::CAMERA_PRIO>(55);
+// Inferred role: camera priority of the model view; original name unknown.
+static constexpr fw::CAMERA_PRIO CAMERA_PRIO_UNKNOWN_55 = static_cast<fw::CAMERA_PRIO>(55);
 
-GfMenuModelViewCamera::GfMenuModelViewCamera(const GimmickCameraParams::Param &param) : fw::Camera(CAMERA_PRIO_MENU_MODEL_VIEW) {
+GfMenuModelViewCamera::GfMenuModelViewCamera(const GimmickCameraParams::Param &param) : fw::Camera(CAMERA_PRIO_UNKNOWN_55) {
   unknownb0 = mm::Vec3(param.unknown00, param.unknown04, param.unknown08);
   unknownc0 = mm::Vec3(param.unknown0c, param.unknown10, param.unknown14);
   updateLookAt();

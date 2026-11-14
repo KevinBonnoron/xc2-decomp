@@ -10,6 +10,7 @@ class GfAssetName {
 public:
   GfAssetName(const char *name);
   void set(const char *name);
+  void set(u32 type, u32 idUpper, u32 idMiddle, u32 idLower);
   bool isValid() const;
   int getValue(const char *text) const;
   u32 getObjType() const;

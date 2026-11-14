@@ -933,7 +933,7 @@ void GfBdatChrEnParam::destroyFP() {
 }
 // Inferred macro name; macros leave no trace in the binary.
 #define NEW_BDAT_WRAPPER(bdat)                                                                                                                                                                         \
-  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper { GfDataBdat::getFP(bdat) }
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper { GfDataBdat::getFP(bdat) }
 
 // __LINE__ of the allocations changes the instruction order.
 #line 1030

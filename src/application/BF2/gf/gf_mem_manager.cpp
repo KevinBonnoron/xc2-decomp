@@ -39,30 +39,30 @@ void GfMemManager::buildCoreMemory(const GfSetupParam &param) {
 
 void GfMemManager::initializeCore(const GfSetupParam &param) {
   mtl::ALLOC_HANDLE parent = param.unknown18;
-  s_hMemProg = mtl::MemManager::create(parent, 0x2400000, "GfProg", false, mtl::ALLOCATOR_TYPE_PROGRAM, 0x10);
-  s_allocator.buildAllocator(ALLOCATOR_DEFAULT, s_hMemProg);
-  s_hMemInitial = mtl::MemManager::create(parent, 0xe00000, "GfInitial", false, mtl::ALLOCATOR_TYPE_PROGRAM, 0x10);
-  s_allocator.buildAllocator(ALLOCATOR_SYSTEM, s_hMemInitial);
-  s_hMemScript = mtl::MemManager::create(parent, 0x200000, "GfScript", false, mtl::ALLOCATOR_TYPE_RESOURCE, 0x1000);
-  s_allocator.buildAllocator(ALLOCATOR_SCRIPT, s_hMemScript);
-  s_hMemBdat = mtl::MemManager::create(parent, 0x100000, "GfBdat", false, mtl::ALLOCATOR_TYPE_RESOURCE, 0x1000);
-  s_allocator.buildAllocator(ALLOCATOR_BDAT, s_hMemBdat);
-  s_hMemFontRsc = mtl::MemManager::create(parent, 0x1e00000, "GfFontRsc", false, mtl::ALLOCATOR_TYPE_RESOURCE, 0x1000);
-  s_allocator.buildAllocator(ALLOCATOR_UNKNOWN05, s_hMemFontRsc);
-  s_hMemMenu = mtl::MemManager::create(parent, 0x5000000, "GfMenu", false, mtl::ALLOCATOR_TYPE_RESOURCE, 0x1000);
-  s_allocator.buildAllocator(ALLOCATOR_UNKNOWN06, s_hMemMenu);
-  s_hMemAnimation = mtl::MemManager::create(parent, 0xe00000, "GfAnim", false, mtl::ALLOCATOR_TYPE_PROGRAM, 0x10);
-  s_allocator.buildAllocator(ALLOCATOR_ANIMATION, s_hMemAnimation);
-  s_hMemGimmick = mtl::MemManager::create(parent, 0x400000, "GfGmk", false, mtl::ALLOCATOR_TYPE_PROGRAM, 0x10);
-  s_allocator.buildAllocator(ALLOCATOR_UNKNOWN08, s_hMemGimmick);
-  s_hMemGmkBdat = mtl::MemManager::create(parent, 0x200000, "GfGmkBdat", false, mtl::ALLOCATOR_TYPE_PROGRAM, 0x10);
-  s_allocator.buildAllocator(ALLOCATOR_UNKNOWN09, s_hMemGmkBdat);
-  s_allocator.buildAllocator(ALLOCATOR_DEBUG, ml::MlMem::getDebugMem());
-  s_hMemAsset = mtl::MemManager::create(parent, GfSlotMapping::getAllSize(), "AssetMain", false, mtl::ALLOCATOR_TYPE_RESOURCE, 0x1000);
-  s_allocator.buildAllocator(ALLOCATOR_ASSET, s_hMemAsset);
+  s_hMemProg = mtl::MemManager::create(parent, 0x2400000, "GfProg", false, mtl::ALLOCATOR_TYPE_UNKNOWN_1, 0x10);
+  s_allocator.buildAllocator(ALLOCATOR_UNKNOWN_0, s_hMemProg);
+  s_hMemInitial = mtl::MemManager::create(parent, 0xe00000, "GfInitial", false, mtl::ALLOCATOR_TYPE_UNKNOWN_1, 0x10);
+  s_allocator.buildAllocator(ALLOCATOR_UNKNOWN_1, s_hMemInitial);
+  s_hMemScript = mtl::MemManager::create(parent, 0x200000, "GfScript", false, mtl::ALLOCATOR_TYPE_UNKNOWN_2, 0x1000);
+  s_allocator.buildAllocator(ALLOCATOR_UNKNOWN_2, s_hMemScript);
+  s_hMemBdat = mtl::MemManager::create(parent, 0x100000, "GfBdat", false, mtl::ALLOCATOR_TYPE_UNKNOWN_2, 0x1000);
+  s_allocator.buildAllocator(ALLOCATOR_UNKNOWN_4, s_hMemBdat);
+  s_hMemFontRsc = mtl::MemManager::create(parent, 0x1e00000, "GfFontRsc", false, mtl::ALLOCATOR_TYPE_UNKNOWN_2, 0x1000);
+  s_allocator.buildAllocator(ALLOCATOR_UNKNOWN_5, s_hMemFontRsc);
+  s_hMemMenu = mtl::MemManager::create(parent, 0x5000000, "GfMenu", false, mtl::ALLOCATOR_TYPE_UNKNOWN_2, 0x1000);
+  s_allocator.buildAllocator(ALLOCATOR_UNKNOWN_6, s_hMemMenu);
+  s_hMemAnimation = mtl::MemManager::create(parent, 0xe00000, "GfAnim", false, mtl::ALLOCATOR_TYPE_UNKNOWN_1, 0x10);
+  s_allocator.buildAllocator(ALLOCATOR_UNKNOWN_7, s_hMemAnimation);
+  s_hMemGimmick = mtl::MemManager::create(parent, 0x400000, "GfGmk", false, mtl::ALLOCATOR_TYPE_UNKNOWN_1, 0x10);
+  s_allocator.buildAllocator(ALLOCATOR_UNKNOWN_8, s_hMemGimmick);
+  s_hMemGmkBdat = mtl::MemManager::create(parent, 0x200000, "GfGmkBdat", false, mtl::ALLOCATOR_TYPE_UNKNOWN_1, 0x10);
+  s_allocator.buildAllocator(ALLOCATOR_UNKNOWN_9, s_hMemGmkBdat);
+  s_allocator.buildAllocator(ALLOCATOR_UNKNOWN_10, ml::MlMem::getDebugMem());
+  s_hMemAsset = mtl::MemManager::create(parent, GfSlotMapping::getAllSize(), "AssetMain", false, mtl::ALLOCATOR_TYPE_UNKNOWN_2, 0x1000);
+  s_allocator.buildAllocator(ALLOCATOR_UNKNOWN_3, s_hMemAsset);
   ml::DevGraph::setMemPoolMemHandle(s_hMemAsset);
-  s_hMemProgLarge = mtl::MemManager::create(parent, 0x4000, "ProgLarge", false, mtl::ALLOCATOR_TYPE_RESOURCE, 0x1000);
-  s_allocator.buildAllocator(ALLOCATOR_UNKNOWN0B, s_hMemProgLarge);
+  s_hMemProgLarge = mtl::MemManager::create(parent, 0x4000, "ProgLarge", false, mtl::ALLOCATOR_TYPE_UNKNOWN_2, 0x1000);
+  s_allocator.buildAllocator(ALLOCATOR_UNKNOWN_11, s_hMemProgLarge);
 }
 
 void GfMemManager::destroyCoreMemory() {
@@ -71,18 +71,18 @@ void GfMemManager::destroyCoreMemory() {
 }
 
 void GfMemManager::finalizeCore() {
-  s_allocator.destroyAllocator(ALLOCATOR_UNKNOWN09, s_hMemGmkBdat);
-  s_allocator.destroyAllocator(ALLOCATOR_UNKNOWN08, s_hMemGimmick);
-  s_allocator.destroyAllocator(ALLOCATOR_ANIMATION, s_hMemAnimation);
-  s_allocator.destroyAllocator(ALLOCATOR_UNKNOWN06, s_hMemMenu);
-  s_allocator.destroyAllocator(ALLOCATOR_UNKNOWN05, s_hMemFontRsc);
-  s_allocator.destroyAllocator(ALLOCATOR_BDAT, s_hMemBdat);
-  s_allocator.destroyAllocator(ALLOCATOR_ASSET, s_hMemAsset);
-  s_allocator.destroyAllocator(ALLOCATOR_SCRIPT, s_hMemScript);
-  s_allocator.destroyAllocator(ALLOCATOR_DEBUG, ml::MlMem::getDebugMem());
-  s_allocator.destroyAllocator(ALLOCATOR_SYSTEM, s_hMemInitial);
-  s_allocator.destroyAllocator(ALLOCATOR_DEFAULT, s_hMemProg);
-  s_allocator.destroyAllocator(ALLOCATOR_UNKNOWN0B, s_hMemProgLarge);
+  s_allocator.destroyAllocator(ALLOCATOR_UNKNOWN_9, s_hMemGmkBdat);
+  s_allocator.destroyAllocator(ALLOCATOR_UNKNOWN_8, s_hMemGimmick);
+  s_allocator.destroyAllocator(ALLOCATOR_UNKNOWN_7, s_hMemAnimation);
+  s_allocator.destroyAllocator(ALLOCATOR_UNKNOWN_6, s_hMemMenu);
+  s_allocator.destroyAllocator(ALLOCATOR_UNKNOWN_5, s_hMemFontRsc);
+  s_allocator.destroyAllocator(ALLOCATOR_UNKNOWN_4, s_hMemBdat);
+  s_allocator.destroyAllocator(ALLOCATOR_UNKNOWN_3, s_hMemAsset);
+  s_allocator.destroyAllocator(ALLOCATOR_UNKNOWN_2, s_hMemScript);
+  s_allocator.destroyAllocator(ALLOCATOR_UNKNOWN_10, ml::MlMem::getDebugMem());
+  s_allocator.destroyAllocator(ALLOCATOR_UNKNOWN_1, s_hMemInitial);
+  s_allocator.destroyAllocator(ALLOCATOR_UNKNOWN_0, s_hMemProg);
+  s_allocator.destroyAllocator(ALLOCATOR_UNKNOWN_11, s_hMemProgLarge);
   if (s_hMemAsset.isValid()) {
     ml::DevGraph::releaseMemPoolMemHandle(s_hMemAsset);
   }
@@ -132,7 +132,7 @@ void GfMemManager::finalizeCore() {
   }
 }
 
-void GfMemManager::build(const GfSetupParam &param) { new (GfAllocatorManager::getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfMemManager(param); }
+void GfMemManager::build(const GfSetupParam &param) { new (GfAllocatorManager::getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfMemManager(param); }
 
 void GfMemManager::destroy() {
   GfMemManager *manager = get();
@@ -156,29 +156,29 @@ void GfMemManager::finalizeGame() {}
 
 mtl::ALLOC_HANDLE GfMemManager::getMemHandle(ALLOCATOR allocator) {
   switch (allocator) {
-  case ALLOCATOR_DEFAULT:
+  case ALLOCATOR_UNKNOWN_0:
     return s_hMemProg;
-  case ALLOCATOR_SYSTEM:
+  case ALLOCATOR_UNKNOWN_1:
     return s_hMemInitial;
-  case ALLOCATOR_SCRIPT:
+  case ALLOCATOR_UNKNOWN_2:
     return s_hMemScript;
-  case ALLOCATOR_ASSET:
+  case ALLOCATOR_UNKNOWN_3:
     return s_hMemAsset;
-  case ALLOCATOR_BDAT:
+  case ALLOCATOR_UNKNOWN_4:
     return s_hMemBdat;
-  case ALLOCATOR_UNKNOWN05:
+  case ALLOCATOR_UNKNOWN_5:
     return s_hMemFontRsc;
-  case ALLOCATOR_UNKNOWN06:
+  case ALLOCATOR_UNKNOWN_6:
     return s_hMemMenu;
-  case ALLOCATOR_ANIMATION:
+  case ALLOCATOR_UNKNOWN_7:
     return s_hMemAnimation;
-  case ALLOCATOR_UNKNOWN08:
+  case ALLOCATOR_UNKNOWN_8:
     return s_hMemGimmick;
-  case ALLOCATOR_UNKNOWN09:
+  case ALLOCATOR_UNKNOWN_9:
     return s_hMemGmkBdat;
-  case ALLOCATOR_DEBUG:
+  case ALLOCATOR_UNKNOWN_10:
     return ml::MlMem::getDebugMem();
-  case ALLOCATOR_UNKNOWN0B:
+  case ALLOCATOR_UNKNOWN_11:
     return s_hMemProgLarge;
   }
   return mtl::ALLOC_HANDLE();

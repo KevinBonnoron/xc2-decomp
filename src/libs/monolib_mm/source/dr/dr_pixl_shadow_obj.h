@@ -17,14 +17,13 @@ class MdoShdPxlWrkTex;
 
 class DrPixlShadowObj {
 public:
-  // Inferred type: owned object released by the derived classes; the original type name is unknown.
-  struct unknown001 {
-    virtual ~unknown001() {}
-  };
-
   enum Flag {
+    FLAG_UNKNOWN_0 = 1 << 0,
     FLAG_UNKNOWN_1 = 1 << 1,
     FLAG_UNKNOWN_3 = 1 << 3,
+    FLAG_UNKNOWN_4 = 1 << 4,
+    FLAG_UNKNOWN_5 = 1 << 5,
+    FLAG_UNKNOWN_6 = 1 << 6,
   };
 
   DrPixlShadowObj(DrMan *man, int type, int index) : unknown48(index), unknown4a(0), unknown4c(type), unknown50(0), unknown170(5.0f), unknown174(0.0001f), unknown178(man), unknown190(nullptr) {}
@@ -45,6 +44,7 @@ public:
   void renderSetup();
   bool renderEnd();
   static void getScaleTranslateToFit(mm::Mat44 *mat, const mm::Vec3 &max, const mm::Vec3 &min);
+  static void getLightMatrix(mm::Mat44 &matrix, const mm::Vec3 &position, const mm::Vec3 &target, const mm::Vec3 &up);
 
   grlib::CGLibDblUniformBlock unknown08; // Inferred role: shadow uniform; original member name unknown.
   MdoShdPxlWrkTex *unknown40;            // Inferred role: shadow work texture; original member name unknown.
@@ -54,13 +54,18 @@ public:
   u8 _4e[0x50 - 0x4e];
   u32 unknown50; // Inferred role: flags; original member name unknown.
   u8 _54[0x60 - 0x54];
-  mm::Mat44 unknown60; // Inferred role: light matrix; original member name unknown.
-  u8 _a0[0x170 - 0xa0];
+  mm::Mat44 unknown60;  // Inferred role: light matrix; original member name unknown.
+  mm::Mat44 unknowna0;  // Inferred role: light view projection matrix; original member name unknown.
+  mm::Mat44 unknowne0;  // Inferred role: light view matrix; original member name unknown.
+  mm::Mat44 unknown120; // Inferred role: shadow texture matrix; original member name unknown.
+  u8 _160[0x170 - 0x160];
   f32 unknown170;    // Inferred role: shadow distance; original member name unknown.
   f32 unknown174;    // Inferred role: shadow bias; original member name unknown.
   DrMan *unknown178; // Inferred role: owner; original member name unknown.
   u8 _180[0x190 - 0x180];
-  unknown001 *unknown190; // Inferred role: owned shadow object; original member name unknown.
+  // Inferred role: next shadow of the same light; DrPixlShadowMan::createPntShadow (0x7100861d4c) chains a second point shadow here and
+  // shadowDebugInfRender (0x710086262c) walks the chain. Original member name unknown.
+  DrPixlShadowObj *unknown190;
   DrLightObj *unknown198; // Inferred role: light; original member name unknown.
 };
 
@@ -70,6 +75,9 @@ static_assert(offsetof(DrPixlShadowObj, unknown48) == 0x48, "");
 static_assert(offsetof(DrPixlShadowObj, unknown4c) == 0x4c, "");
 static_assert(offsetof(DrPixlShadowObj, unknown50) == 0x50, "");
 static_assert(offsetof(DrPixlShadowObj, unknown60) == 0x60, "");
+static_assert(offsetof(DrPixlShadowObj, unknowna0) == 0xa0, "");
+static_assert(offsetof(DrPixlShadowObj, unknowne0) == 0xe0, "");
+static_assert(offsetof(DrPixlShadowObj, unknown120) == 0x120, "");
 static_assert(offsetof(DrPixlShadowObj, unknown170) == 0x170, "");
 static_assert(offsetof(DrPixlShadowObj, unknown178) == 0x178, "");
 static_assert(offsetof(DrPixlShadowObj, unknown190) == 0x190, "");

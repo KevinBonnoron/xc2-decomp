@@ -20,13 +20,13 @@ void SelectManager::update() {
 
 void SelectManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
-  case MSG_TYPE_INIT:
+  case MSG_TYPE_UNKNOWN_4:
     clear();
     break;
-  case MSG_TYPE_CLEAR:
+  case MSG_TYPE_UNKNOWN_12:
     clear();
     break;
-  case MSG_TYPE_UPDATE:
+  case MSG_TYPE_UNKNOWN_14:
     update();
     break;
   default:
@@ -36,6 +36,6 @@ void SelectManager::OnEventProc(MSG_TYPE type) {
 
 int SelectManager::getResult() const { return m_result; }
 
-bool SelectManager::isActive() const { return (unknown10 & FLAG_ACTIVE) != 0; }
+bool SelectManager::isActive() const { return (unknown10 & FLAG_UNKNOWN_0) != 0; }
 
 } // namespace event

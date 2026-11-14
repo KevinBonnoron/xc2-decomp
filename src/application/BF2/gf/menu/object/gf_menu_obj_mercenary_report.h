@@ -5,6 +5,7 @@
 #include "gf/menu/gf_menu_sequence.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 
 namespace gf {
 class GfMenuBladeList;
@@ -13,6 +14,24 @@ class GfMenuReferenceNumber;
 
 class GfMenuObjMercenaryReport : public GfMenuObject {
 public:
+  class MainListener : public ui::UIObjectListener {
+  public:
+    MainListener(GfMenuObjMercenaryReport *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjMercenaryReport *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class RewardListener : public ui::UIObjectListener {
+  public:
+    RewardListener(GfMenuObjMercenaryReport *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjMercenaryReport *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   GfMenuObjMercenaryReport(u32 handle);
   ~GfMenuObjMercenaryReport() override;
   void initialize() override;
@@ -20,9 +39,11 @@ public:
   void update() override;
   bool seqCheckAchive();
   bool seqClose();
+  bool seqDispBlade();
   bool seqDispInfo();
   bool seqDispReward();
   bool seqEnd();
+  bool seqStart();
   bool seqWaitEndKizuna();
   bool seqWaitLoadKizuna();
 
@@ -36,6 +57,10 @@ public:
   GfMenuCallContext *unknown370;                           // Inferred role: kizuna ring call context; original member name unknown.
 };
 
+static_assert(offsetof(GfMenuObjMercenaryReport::MainListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjMercenaryReport::MainListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjMercenaryReport::RewardListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjMercenaryReport::RewardListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjMercenaryReport, unknown24) == 0x24, "");
 static_assert(offsetof(GfMenuObjMercenaryReport, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjMercenaryReport, unknown30) == 0x30, "");

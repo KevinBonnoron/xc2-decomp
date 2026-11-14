@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "fw/fw_camera.h"
+#include "gf/object/gf_obj_handle.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/vector.h"
@@ -13,7 +14,9 @@ struct Vec3;
 } // namespace mm
 
 namespace fw {
+class CommonResource;
 class EffectPack;
+class RenderResource;
 struct Transform;
 } // namespace fw
 
@@ -31,6 +34,9 @@ public:
     void setMovePosY(f32 start, f32 end);
     void setMovePosZ(f32 value);
     void setMovePosZ(f32 start, f32 end);
+    void setAddPosX(f32 value);
+    void setAddPosY(f32 value);
+    void setAddPosZ(f32 value);
     void setMoveSclX(f32 value);
     void setMoveSclX(f32 start, f32 end);
     void setMoveSclY(f32 value);
@@ -68,11 +74,12 @@ public:
 
   // Inferred role: effect slot, handle 0 when unused.
   struct unknown002 {
-    u32 unknown00; // Inferred role: effect handle; original member name unknown.
+    u32 unknown00 = 0; // Inferred role: effect handle; original member name unknown.
     u8 _04[0x08 - 0x04];
-    GF_OBJ_HANDLE *unknown08; // Inferred role: effect owner, invalid handle when unused; original member name unknown.
+    GF_OBJ_HANDLE *unknown08 = unknown020; // Inferred role: effect owner, invalid handle when unused; original member name unknown.
   };
 
+  GfMenuModelView(u32 handle, u32 row);
   virtual ~GfMenuModelView();
   void update();
   static void setVanishRatio(GF_OBJ_HANDLE *handle, f32 ratio);
@@ -102,6 +109,8 @@ public:
   int getCurrentCameraIndex();
   mm::Vec3 getCameraPos(u32 index);
   mm::Vec3 getCameraRot(u32 index);
+  void setCameraPos(u32 index, const mm::Vec3 &position);
+  void setCameraRotY(u32 index, f32 rotation);
   bool playCameraMotion(const char *name, const mm::Vec3 &position, f32 rotation);
   void resetCamera(u32 index, f32 time);
   void stopCameraMotion();
@@ -115,6 +124,8 @@ public:
   void delGfObj(u32 type, u32 id);
   GF_OBJ_HANDLE *findGfObj(u32 type, u32 id);
   void addEnemyObject(u32 id, const fw::Transform &transform);
+  void addDriverObject(u32 id, const fw::Transform &transform);
+  void addBladeObject(u32 id, const fw::Transform &transform);
   void startObjectCtrl(const CtrlParam &param);
   bool checkGfObj(u32 type, u32 id);
 
@@ -122,7 +133,9 @@ public:
   int unknown08; // Inferred role: row of the model view bdat; original member name unknown.
   u32 unknown0c; // Inferred role: ui object handle; original member name unknown.
   u32 unknown10; // Inferred role: render index; original member name unknown.
-  u8 _14[0x28 - 0x14];
+  u8 _14[0x18 - 0x14];
+  fw::CommonResource *unknown18;                                 // Inferred role: camera file resource; original member name unknown.
+  fw::RenderResource *unknown20;                                 // Inferred role: effect file resource; original member name unknown.
   mm::mtl::FixedVector<unknown001, 16> unknown28;                // Inferred role: running object controls; original member name unknown.
   mm::mtl::Vector<mm::mtl::IntrusivePtr<fw::Camera>> unknown930; // Inferred role: cameras; original member name unknown.
   mm::mtl::FixedVector<u32, 16> unknown958;                      // Inferred role: pushed camera indices; original member name unknown.
@@ -131,6 +144,8 @@ public:
   bool unknownaa8;                                               // Inferred role: resources loaded; original member name unknown.
   u8 _aa9[0xab0 - 0xaa9];
   mm::mtl::IntrusivePtr<fw::Camera> unknownab0; // Inferred role: camera of the camera motion; original member name unknown.
+
+  static fw::Transform s_DefTransform;
 };
 
 static_assert(sizeof(GfMenuModelView::unknown001) == 0x90, "");
@@ -143,5 +158,7 @@ static_assert(offsetof(GfMenuModelView, unknown10) == 0x10, "");
 static_assert(offsetof(GfMenuModelView, unknown9a0) == 0x9a0, "");
 static_assert(offsetof(GfMenuModelView, unknownaa8) == 0xaa8, "");
 static_assert(sizeof(GfMenuModelView) == 0xab8, "");
+static_assert(offsetof(GfMenuModelView, unknown18) == 0x18, "");
+static_assert(offsetof(GfMenuModelView, unknown20) == 0x20, "");
 
 } // namespace gf

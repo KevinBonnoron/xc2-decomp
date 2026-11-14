@@ -25,6 +25,8 @@ class FallIntoColiPlugin : public Plugin {
   GF_PLUGIN(GfComBehaviorPc)
 
 public:
+  static const u32 PLUGIN_INDEX = 9;
+
   FallIntoColiPlugin();
   static FallIntoColiPlugin *create();
   ~FallIntoColiPlugin();

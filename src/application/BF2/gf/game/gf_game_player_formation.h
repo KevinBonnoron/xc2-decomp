@@ -1,7 +1,7 @@
 #pragma once
 #include "framework/message/message_object.h"
 #include "fw/fw_transform.h"
-#include "mm_math/mm_vec2.h"
+#include "mm_math/mm_pnt.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
@@ -17,7 +17,7 @@ namespace gf {
 struct GF_OBJ_HANDLE;
 struct GfSetupParam;
 
-constexpr u32 PLAYER_ID_NONE = 0xffffffff;
+constexpr u32 PLAYER_ID_UNKNOWN_4294967295 = 0xffffffff; // Inferred role: player id none; original name unknown.
 
 struct MsgPcFieldNotifyChangePlayerID : fw::Message {
   MsgPcFieldNotifyChangePlayerID(u32 playerId) : fw::Message(0x100001c, 0x20), playerId(playerId) {}
@@ -28,14 +28,17 @@ struct MsgPcFieldNotifyChangePlayerID : fw::Message {
 struct FormationParam {
   static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
 
-  mm::Vec2 offsets[5];
+  // FormationParam::createReflection registers a 0x28 byte struct (five OffsetX/OffsetY float pairs), so the pairs are 8 bytes wide: not mm::Vec2.
+  mm::Pnt<f32> offsets[5];
 };
+
+static_assert(sizeof(FormationParam) == 0x28, "");
 
 struct WarpForRandomTalkParam {
   static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
 
-  f32 height;
-  f32 distance;
+  f32 distVert;
+  f32 distHorz;
 };
 
 const FormationParam *getFormationParam(u32 formation);
@@ -43,7 +46,7 @@ const WarpForRandomTalkParam *getWarpForRandomTalkParam();
 
 class GfGamePlayerFormation : public mm::mtl::PtrSingleton<GfGamePlayerFormation>, public fw::MessageObject {
 public:
-  static const u32 PLAYER_NUM = 6;
+  static const u32 PLAYER_UNKNOWN_6 = 6; // Inferred role: player num; original name unknown.
 
   // Inferred role: player; original type name unknown.
   struct unknown004 {
@@ -73,12 +76,12 @@ public:
   void changeFormation(u32 formation);
   bool isFarRandomTalk(GF_OBJ_HANDLE *handle);
 
-  mm::Vec3 unknown20[PLAYER_NUM];      // Inferred role: target positions; original member name unknown.
-  mm::Vec3 unknown80[PLAYER_NUM];      // Inferred role: formation positions; original member name unknown.
-  fw::Transform unknowne0[PLAYER_NUM]; // Inferred role: transforms; original member name unknown.
-  unknown004 unknown1a0[PLAYER_NUM];   // Inferred role: players; original member name unknown.
-  u32 unknown230;                      // Inferred role: formation; original member name unknown.
-  bool unknown234;                     // Inferred role: mirror; original member name unknown.
+  mm::Vec3 unknown20[PLAYER_UNKNOWN_6];      // Inferred role: target positions; original member name unknown.
+  mm::Vec3 unknown80[PLAYER_UNKNOWN_6];      // Inferred role: formation positions; original member name unknown.
+  fw::Transform unknowne0[PLAYER_UNKNOWN_6]; // Inferred role: transforms; original member name unknown.
+  unknown004 unknown1a0[PLAYER_UNKNOWN_6];   // Inferred role: players; original member name unknown.
+  u32 unknown230;                            // Inferred role: formation; original member name unknown.
+  bool unknown234;                           // Inferred role: mirror; original member name unknown.
 };
 
 static_assert(offsetof(GfGamePlayerFormation, unknown20) == 0x20, "");

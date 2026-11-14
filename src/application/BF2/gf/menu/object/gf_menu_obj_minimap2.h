@@ -26,6 +26,7 @@ public:
   bool refreshMapPosition();
   void initialize() override;
   void finalize() override;
+  void update() override;
 
   static void enable();
   static void disable();

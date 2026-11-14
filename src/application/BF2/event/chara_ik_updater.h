@@ -14,29 +14,29 @@ namespace event {
 class CharaIKUpdater {
 public:
   enum FOOT_TYPE {
-    FOOT_TYPE_0 = 0,
-    FOOT_TYPE_1 = 1,
-    FOOT_TYPE_2 = 2,
+    FOOT_TYPE_UNKNOWN_0 = 0, // Inferred role: 0; original name unknown.
+    FOOT_TYPE_UNKNOWN_1 = 1, // Inferred role: 1; original name unknown.
+    FOOT_TYPE_UNKNOWN_2 = 2, // Inferred role: 2; original name unknown.
   };
 
   enum {
-    FLAG_ALL_IK = 0,
-    FLAG_FOOT_IK_0 = 1,
-    FLAG_FOOT_IK_1 = 2,
-    FLAG_FOOT_IK_2 = 3,
-    FLAG_TARGET_IK = 4,
-    FLAG_TARGET_IK_NO_SPINE = 5,
-    FLAG_LENS_IK = 6,
-    FLAG_MAX = 32,
+    FLAG_UNKNOWN_0 = 0,   // Inferred role: all ik flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1,   // Inferred role: foot ik 0 flag; original name unknown.
+    FLAG_UNKNOWN_2 = 2,   // Inferred role: foot ik 1 flag; original name unknown.
+    FLAG_UNKNOWN_3 = 3,   // Inferred role: foot ik 2 flag; original name unknown.
+    FLAG_UNKNOWN_4 = 4,   // Inferred role: target ik flag; original name unknown.
+    FLAG_UNKNOWN_5 = 5,   // Inferred role: target ik no spine flag; original name unknown.
+    FLAG_UNKNOWN_6 = 6,   // Inferred role: lens ik flag; original name unknown.
+    FLAG_UNKNOWN_32 = 32, // Inferred role: max flag; original name unknown.
   };
 
   enum {
-    REQUEST_ALL_IK = 0,
-    REQUEST_FOOT_IK = 1,
-    REQUEST_TARGET_IK = 2,
-    REQUEST_TARGET_POS = 3,
-    REQUEST_LENS_IK = 4,
-    REQUEST_MAX = 32,
+    REQUEST_UNKNOWN_0 = 0,   // Inferred role: all ik; original name unknown.
+    REQUEST_UNKNOWN_1 = 1,   // Inferred role: foot ik; original name unknown.
+    REQUEST_UNKNOWN_2 = 2,   // Inferred role: target ik; original name unknown.
+    REQUEST_UNKNOWN_3 = 3,   // Inferred role: target pos; original name unknown.
+    REQUEST_UNKNOWN_4 = 4,   // Inferred role: lens ik; original name unknown.
+    REQUEST_UNKNOWN_32 = 32, // Inferred role: max; original name unknown.
   };
 
   CharaIKUpdater();
@@ -53,16 +53,16 @@ public:
   static bool checkField(gf::GfObj *obj);
 
 private:
-  mm::mtl::unknown027<FLAG_MAX> unknown08;    // Inferred role: flags; original member name unknown.
-  mm::mtl::unknown027<REQUEST_MAX> unknown0c; // Inferred role: requests; original member name unknown.
-  gf::GF_OBJ_HANDLE *unknown10;               // Inferred role: handle; original member name unknown.
-  f32 unknown18;                              // Inferred role: target frame; original member name unknown.
-  mm::Vec3 unknown20;                         // Inferred role: target pos; original member name unknown.
-  alignas(16) mm::Vec2 unknown30;             // Inferred role: lens move; original member name unknown.
-  alignas(16) mm::Vec2 unknown40;             // Inferred role: lens translate min; original member name unknown.
-  alignas(16) mm::Vec2 unknown50;             // Inferred role: lens translate max; original member name unknown.
-  alignas(16) mm::Vec2 unknown60;             // Inferred role: lens rotate min; original member name unknown.
-  alignas(16) mm::Vec2 unknown70;             // Inferred role: lens rotate max; original member name unknown.
+  mm::mtl::unknown027<FLAG_UNKNOWN_32> unknown08;    // Inferred role: flags; original member name unknown.
+  mm::mtl::unknown027<REQUEST_UNKNOWN_32> unknown0c; // Inferred role: requests; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown10;                      // Inferred role: handle; original member name unknown.
+  f32 unknown18;                                     // Inferred role: target frame; original member name unknown.
+  mm::Vec3 unknown20;                                // Inferred role: target pos; original member name unknown.
+  mm::Vec2 unknown30;                                // Inferred role: lens move; original member name unknown.
+  mm::Vec2 unknown40;                                // Inferred role: lens translate min; original member name unknown.
+  mm::Vec2 unknown50;                                // Inferred role: lens translate max; original member name unknown.
+  mm::Vec2 unknown60;                                // Inferred role: lens rotate min; original member name unknown.
+  mm::Vec2 unknown70;                                // Inferred role: lens rotate max; original member name unknown.
 };
 
 static_assert(sizeof(CharaIKUpdater) == 0x80, "");

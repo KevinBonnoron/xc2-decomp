@@ -39,8 +39,8 @@ public:
   u8 _3e[0x40 - 0x3e];
   mm::mtl::IntrusivePtr<ReferenceFrame> unknown40; // Inferred role: reference frame; original member name unknown.
   u8 _48[0x50 - 0x48];
-  mm::Vec3 unknown50; // Inferred role: add offset pos; original member name unknown.
-  f32 unknown60;      // Inferred role: scale; original member name unknown.
+  mm::Vec3 m_addOffsetPos;
+  f32 unknown60; // Inferred role: scale; original member name unknown.
 };
 
 static_assert(offsetof(ModelObject, unknown20) == 0x20, "");
@@ -50,7 +50,7 @@ static_assert(offsetof(ModelObject, unknown38) == 0x38, "");
 static_assert(offsetof(ModelObject, unknown40) == 0x40, "");
 static_assert(offsetof(ModelObject, m_active) == 0x3c, "");
 static_assert(offsetof(ModelObject, unknown3d) == 0x3d, "");
-static_assert(offsetof(ModelObject, unknown50) == 0x50, "");
+static_assert(offsetof(ModelObject, m_addOffsetPos) == 0x50, "");
 static_assert(offsetof(ModelObject, unknown60) == 0x60, "");
 
 } // namespace fw

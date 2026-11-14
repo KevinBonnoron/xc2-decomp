@@ -10,6 +10,7 @@ public:
   DrShdMdoMan();
   ~DrShdMdoMan();
   void update();
+  void releaseShaderObj(DrShdMdoDecShdObj *obj);
 
   DrShdMdoDecShdObj *unknown00; // Inferred role: first shader object; original member name unknown.
   DrShdMdoDecShdObj *unknown08; // Inferred role: last shader object; original member name unknown.

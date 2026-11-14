@@ -22,7 +22,8 @@ struct GfSetupParam;
 
 class GfMenuFade : public mm::mtl::PtrSingleton<GfMenuFade> {
 public:
-  static const u32 FADE_COUNT = 3;
+  // Inferred role: number of fade channels; original name unknown.
+  static const u32 FADE_UNKNOWN_3 = 3;
 
   GfMenuFade(const GfSetupParam &param);
   void initialize(const GfSetupParam &param);
@@ -38,8 +39,8 @@ public:
   static bool isFading(u32 type);
   static void reciveEvent(const ui::EventData &event, u32 handle);
 
-  bool unknown08;             // Inferred role: initialized; original member name unknown.
-  bool unknown09[FADE_COUNT]; // Inferred role: fading; original member name unknown.
+  bool unknown08;                 // Inferred role: initialized; original member name unknown.
+  bool unknown09[FADE_UNKNOWN_3]; // Inferred role: fading; original member name unknown.
 };
 
 static_assert(offsetof(GfMenuFade, unknown08) == 0x08, "");

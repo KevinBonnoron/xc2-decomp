@@ -7,7 +7,8 @@
 
 namespace gf {
 
-constexpr u32 CALL_COMMON_DETAIL = 79;
+// Inferred role: call id of the common detail layout; original name unknown.
+constexpr u32 CALL_UNKNOWN_79 = 79;
 
 GfMenuObjCommonDetail::GfMenuObjCommonDetail(u32 handle) : GfMenuObject(handle) {}
 
@@ -16,7 +17,7 @@ GfMenuObjCommonDetail::~GfMenuObjCommonDetail() { ; }
 void GfMenuObjCommonDetail::initialize() {
   ui::UIObjectAcc main(unknown18, "LAY_main");
   if (main.isValid()) {
-    attachExternalCall(CALL_COMMON_DETAIL, main.unknown10);
+    attachExternalCall(CALL_UNKNOWN_79, main.unknown10);
     GfMenuObject::initialize();
   }
 }
@@ -26,7 +27,7 @@ void GfMenuObjCommonDetail::finalize() { GfMenuObject::finalize(); }
 void GfMenuObjCommonDetail::update() { GfMenuObject::update(); }
 
 void GfMenuObjCommonDetail::close(GfMenuCallContext *context) {
-  if (context != nullptr && GfMenuObjUtil::checkCCNext(context, CALL_COMMON_DETAIL)) {
+  if (context != nullptr && GfMenuObjUtil::checkCCNext(context, CALL_UNKNOWN_79)) {
     ui::EventData event;
     event.unknown00 = 0x22;
     GfMenuObject::sendEvent(context->unknown14, event, 0.0f);

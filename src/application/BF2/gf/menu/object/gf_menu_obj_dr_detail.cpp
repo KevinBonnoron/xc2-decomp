@@ -7,7 +7,8 @@
 
 namespace gf {
 
-constexpr u32 CALL_DR_DETAIL = 81;
+// Inferred role: call id of the driver detail layout; original name unknown.
+constexpr u32 CALL_UNKNOWN_81 = 81;
 
 GfMenuObjDrDetail::GfMenuObjDrDetail(u32 handle) : GfMenuObject(handle) {}
 
@@ -16,7 +17,7 @@ GfMenuObjDrDetail::~GfMenuObjDrDetail() { ; }
 void GfMenuObjDrDetail::initialize() {
   ui::UIObjectAcc main(unknown18, "LAY_main");
   if (main.isValid()) {
-    attachExternalCall(CALL_DR_DETAIL, main.unknown10);
+    attachExternalCall(CALL_UNKNOWN_81, main.unknown10);
     GfMenuObject::initialize();
   }
 }
@@ -26,7 +27,7 @@ void GfMenuObjDrDetail::finalize() { GfMenuObject::finalize(); }
 void GfMenuObjDrDetail::update() { GfMenuObject::update(); }
 
 void GfMenuObjDrDetail::open(GfMenuCallContext *context) {
-  if (context != nullptr && GfMenuObjUtil::checkCCNext(context, CALL_DR_DETAIL)) {
+  if (context != nullptr && GfMenuObjUtil::checkCCNext(context, CALL_UNKNOWN_81)) {
     ui::EventData event;
     event.unknown00 = 0x21;
     GfMenuObject::sendEvent(context->unknown14, event, 0.0f);
@@ -34,7 +35,7 @@ void GfMenuObjDrDetail::open(GfMenuCallContext *context) {
 }
 
 void GfMenuObjDrDetail::close(GfMenuCallContext *context, bool flag) {
-  if (context != nullptr && GfMenuObjUtil::checkCCNext(context, CALL_DR_DETAIL)) {
+  if (context != nullptr && GfMenuObjUtil::checkCCNext(context, CALL_UNKNOWN_81)) {
     ui::EventData event;
     event.unknown00 = 0x22;
     event.unknown08 = flag;
@@ -43,7 +44,7 @@ void GfMenuObjDrDetail::close(GfMenuCallContext *context, bool flag) {
 }
 
 void GfMenuObjDrDetail::nextPage(GfMenuCallContext *context) {
-  if (context != nullptr && GfMenuObjUtil::checkCCNext(context, CALL_DR_DETAIL)) {
+  if (context != nullptr && GfMenuObjUtil::checkCCNext(context, CALL_UNKNOWN_81)) {
     ui::EventData event;
     event.unknown00 = 0x102;
     GfMenuObject::sendEvent(context->unknown14, event, 0.0f);
@@ -51,7 +52,7 @@ void GfMenuObjDrDetail::nextPage(GfMenuCallContext *context) {
 }
 
 void GfMenuObjDrDetail::prevPage(GfMenuCallContext *context) {
-  if (context != nullptr && GfMenuObjUtil::checkCCNext(context, CALL_DR_DETAIL)) {
+  if (context != nullptr && GfMenuObjUtil::checkCCNext(context, CALL_UNKNOWN_81)) {
     ui::EventData event;
     event.unknown00 = 0x103;
     GfMenuObject::sendEvent(context->unknown14, event, 0.0f);
@@ -59,7 +60,7 @@ void GfMenuObjDrDetail::prevPage(GfMenuCallContext *context) {
 }
 
 void GfMenuObjDrDetail::disp(GfMenuCallContext *context, bool flag) {
-  if (context != nullptr && GfMenuObjUtil::checkCCNext(context, CALL_DR_DETAIL)) {
+  if (context != nullptr && GfMenuObjUtil::checkCCNext(context, CALL_UNKNOWN_81)) {
     ui::EventData event;
     event.unknown00 = 0x104;
     event.unknown08 = flag;

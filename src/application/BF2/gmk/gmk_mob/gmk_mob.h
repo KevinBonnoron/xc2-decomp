@@ -55,6 +55,7 @@ public:
 
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     void debugDraw(const AGmkBase &gmk) const;
+    bool isPopCommonCondMatched(const AGmkBase &gmk) const;
     bool isMobPopDistCondMatched(const mm::Vec3 &position) const;
 
     u16 unknown00;              // Inferred role: condition; original member name unknown.
@@ -80,6 +81,7 @@ public:
 
     void create(CBdatWrapper bdat, int id);
     void dispose();
+    void update(GmkMobInsts &insts, mm::mtl::Vector<gf::GF_OBJ_HANDLE *> &handles, const IPopXformFinder &finder);
 
     u8 unknown00;                           // Inferred role: scale min; original member name unknown.
     u8 unknown01;                           // Inferred role: scale max; original member name unknown.
@@ -111,6 +113,7 @@ public:
   void create(const CreateInfo &info);
   void createGobInsts();
   void createSquad(u16 squadId);
+  void updatePopDepopCond(const UpdateInfo &info);
   void seqUpdatePopDepop(const UpdateInfo &info);
   void seqWaitToFadeOutOfGobInst(const UpdateInfo &info);
   void disposeGobInsts(bool isFadeOut);
@@ -163,8 +166,9 @@ public:
     GmkMob *unknown08; // Inferred role: owner; original member name unknown.
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_MOB;
+  static const GmkType GMK_TYPE = GMK_TYPE_MOB; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
+  GmkMob() {}
   ~GmkMob() override { dispose(); }
   GmkType getGmkType() const override;
   bool isValid() const override;

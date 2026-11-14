@@ -14,7 +14,6 @@ public:
     u32 unknown00; // Inferred role: offset of the clip list; original member name unknown.
     s32 unknown04; // Inferred role: clip count; original member name unknown.
   };
-
   static int calcWorkSize(const u8 *data, u32 offset);
   void changeMemCall(const u8 *data, u32 offset);
   int setupWork(u8 *work, const u8 *data, u32 offset);

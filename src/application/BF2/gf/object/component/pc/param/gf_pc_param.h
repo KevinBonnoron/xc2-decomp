@@ -43,6 +43,26 @@ static_assert(offsetof(MoveParam, jumpRatio) == 0x20, "");
 static_assert(offsetof(MoveParam, addMaxSpeedBuddySwim) == 0x28, "");
 static_assert(sizeof(MoveParam) == 0x2c, "");
 
+// Field names and offsets from the reflection built by gf::pc::WarpParam::createReflection (gf_pc_param.cpp).
+struct WarpParam {
+  static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
+
+  f32 distanceHorz;
+  f32 distanceVert;
+  f32 stackTime;
+  f32 naviSearchUp;
+  f32 naviSearchDown;
+  f32 fadeTime;
+  f32 wallSearchDist;
+  f32 distanceHorzWall;
+  f32 distanceVertWall;
+};
+
+static_assert(offsetof(WarpParam, stackTime) == 0x08, "");
+static_assert(offsetof(WarpParam, distanceHorzWall) == 0x1c, "");
+static_assert(offsetof(WarpParam, distanceVertWall) == 0x20, "");
+static_assert(sizeof(WarpParam) == 0x24, "");
+
 // Field names and offsets from the reflection built by gf::pc::SlideParam::createReflection (gf_pc_param.cpp).
 struct SlideParam {
   static void createReflection(fw::Reflection *reflection, const char *name, u32 index);

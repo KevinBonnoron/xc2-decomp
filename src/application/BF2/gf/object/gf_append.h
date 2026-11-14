@@ -1,6 +1,8 @@
 #pragma once
+#include "gf/object/gf_obj_handle.h"
 #include <stddef.h>
 
+#include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
@@ -15,12 +17,11 @@ class MessageObject;
 namespace gf {
 
 struct GF_OBJ_HANDLE;
-class GfInitParamDriver;
 enum OPTMNT : u32;
 
 class GfAppend {
 public:
-  static const u32 MOUNT_MAX = 4;
+  static const u32 MOUNT_UNKNOWN_4 = 4; // Inferred role: mount max; original name unknown.
 
   struct MOUNT_INFO {
     mm::mtl::FixStr<16> unknown00; // Inferred role: bone; original member name unknown.
@@ -38,7 +39,7 @@ public:
   u16 getMountIndex() const;
   u16 getRscID() const;
 
-  mm::mtl::FixedVector<MOUNT_INFO, MOUNT_MAX> unknown00; // Inferred role: mounts; original member name unknown.
+  mm::mtl::FixedVector<MOUNT_INFO, MOUNT_UNKNOWN_4> unknown00; // Inferred role: mounts; original member name unknown.
   const char *m_modelName;
   const char *m_motionName;
   u16 m_mountIndex;
@@ -58,6 +59,10 @@ static_assert(sizeof(GfAppend) == 0x88, "");
 
 class GfAppendHandles {
 public:
+  GfAppendHandles() : unknowna8(false) {
+    unknown08.assign(unknown020);
+    unknown58.assign(unknown020);
+  }
   virtual ~GfAppendHandles() {}
   void destroy();
   void destroy(mm::mtl::FixedArray<GF_OBJ_HANDLE *, 10> &handles);
@@ -86,22 +91,32 @@ public:
   void startWire(GF_OBJ_HANDLE *target, f32 time);
   void startWireWithClose(GF_OBJ_HANDLE *target, f32 time, f32 closeTime, f32 closeDistance);
   void startWireWithBone(GF_OBJ_HANDLE *target, const char *bone, f32 time);
+  void checkAndSetupSalvagePoint();
   void update(const fw::UpdateInfo &info);
   static GF_OBJ_HANDLE *getWireObject(GF_OBJ_HANDLE *handle);
 
   GF_OBJ_HANDLE *unknown00; // Inferred role: wire; original member name unknown.
   GF_OBJ_HANDLE *unknown08; // Inferred role: owner; original member name unknown.
-  u8 _10[0x50 - 0x10];
+  u8 _10[0x18 - 0x10];
+  GF_OBJ_HANDLE *unknown18; // Inferred role: target; original member name unknown.
+  mm::Vec3 unknown20;       // Inferred role: target position; original member name unknown.
+  s16 unknown30;            // Inferred role: target bone; original member name unknown.
+  u8 _32[0x34 - 0x32];
+  s32 unknown34;  // Inferred role: state; original member name unknown.
+  f32 unknown38;  // Inferred role: elapsed time; original member name unknown.
+  f32 unknown3c;  // Inferred role: duration; original member name unknown.
+  f32 unknown40;  // Inferred role: close time; original member name unknown.
+  f32 unknown44;  // Inferred role: close distance; original member name unknown.
+  bool unknown48; // Inferred role: keeps the position; original member name unknown.
+  u8 _49[0x50 - 0x49];
 };
 
 static_assert(offsetof(GfAppendWire, unknown08) == 0x08, "");
+static_assert(offsetof(GfAppendWire, unknown18) == 0x18, "");
+static_assert(offsetof(GfAppendWire, unknown20) == 0x20, "");
+static_assert(offsetof(GfAppendWire, unknown30) == 0x30, "");
+static_assert(offsetof(GfAppendWire, unknown34) == 0x34, "");
+static_assert(offsetof(GfAppendWire, unknown48) == 0x48, "");
 static_assert(sizeof(GfAppendWire) == 0x50, "");
-
-class GfAppendUtil {
-public:
-  static void setupBelonging(GF_OBJ_HANDLE *handle, u32 param2, u32 param3, u32 param4, u32 param5);
-  static void setupBelongingForDriver(GF_OBJ_HANDLE *handle, const GfInitParamDriver &param);
-  static void setupExtraModel(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *owner);
-};
 
 } // namespace gf

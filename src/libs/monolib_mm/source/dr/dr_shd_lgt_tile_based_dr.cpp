@@ -1,6 +1,15 @@
 #include "dr/dr_shd_lgt_tile_based_dr.h"
 
+#include "mtl/mem_manager.h"
+
 namespace ml {
+
+DrShdLgtTileBasedDr::~DrShdLgtTileBasedDr() {
+  if (unknown378 != nullptr) {
+    mtl::MemManager::deallocate(unknown378, 0, false);
+    unknown378 = nullptr;
+  }
+}
 
 void DrShdLgtTileBasedDr::createWork() {
   for (int i = 0; i < 4; i++) {

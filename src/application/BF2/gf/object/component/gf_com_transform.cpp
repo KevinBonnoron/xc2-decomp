@@ -10,7 +10,7 @@
 namespace gf {
 
 bool GfComTransform::recieveMessage(fw::MessageObject *sender, fw::Message &message) {
-  if (message.unknown00 == MSG_DEBUG_ACTIVATE_COMPONENT_WINDOW) {
+  if (message.unknown00 == MSG_UNKNOWN_16777219) {
     procMsgActivateComponentDebugWindow(sender, static_cast<MsgDebugActivateComponentWindow &>(message));
     return true;
   }
@@ -29,7 +29,7 @@ void GfComTransform::setup(const SetupInfo &setup_info) {
 #line 46
   MM_ASSERT(setup_info.frame_max != 0);
 
-  unknown10 = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) fw::ReferenceFrame();
+  unknown10 = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) fw::ReferenceFrame();
   fw::ReferenceFrame *referenceFrame = unknown10.get();
   referenceFrame->invalidateLocal();
   referenceFrame->unknown40.unknown00 = setup_info.unknown00;
@@ -38,15 +38,15 @@ void GfComTransform::setup(const SetupInfo &setup_info) {
   if (setup_info.unknown24) {
     // __LINE__ must be 62 as in the original source: it is the line argument of operator new.
 #line 62
-    unknown18 = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) fw::ReferenceFrame();
+    unknown18 = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) fw::ReferenceFrame();
     unknown10->addChild(*unknown18.get());
     unknown18->invalidateWorld();
     unknown18->syncWorldTransform();
   }
 
-  unknown20.unknown10.setAllocator(getAllocator(ALLOCATOR_DEFAULT));
+  unknown20.unknown10.setAllocator(getAllocator(ALLOCATOR_UNKNOWN_0));
   unknown20.unknown10.reserve(setup_info.frame_max);
-  unknown20.unknown38.setAllocator(getAllocator(ALLOCATOR_DEFAULT));
+  unknown20.unknown38.setAllocator(getAllocator(ALLOCATOR_UNKNOWN_0));
   unknown20.unknown38.reserve(setup_info.frame_max);
   unknown20.unknown10.push_back(unknown10.get());
   if (unknown18.get() != nullptr) {

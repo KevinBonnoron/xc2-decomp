@@ -39,16 +39,16 @@ class GfComEvtAnim : public GfComAnimation {
 public:
   static mm::mtl::RTTI m_rtti;
   static const u32 COMPONENT_INDEX = 2;
-  static const u32 CALLBACK_MAX = 5;
-  static const u32 EASE_MAX = 16;
-  static const u32 MOTION_MAX = 8;
+  static const u32 CALLBACK_UNKNOWN_5 = 5; // Inferred role: callback max; original name unknown.
+  static const u32 EASE_UNKNOWN_16 = 16;   // Inferred role: ease max; original name unknown.
+  static const u32 MOTION_UNKNOWN_8 = 8;   // Inferred role: motion max; original name unknown.
 
   enum {
-    FLAG_REGISTERED = 0,
+    FLAG_UNKNOWN_0 = 0, // Inferred role: flag registered; original name unknown.
   };
 
   enum {
-    FLAG_SETUP = 0,
+    FLAG_UNKNOWN_0_2 = 0, // Inferred role: flag setup; original name unknown.
   };
 
   typedef mm::mtl::Delegate<void(GfComEvtAnim *, const CallBackCache &)> CallBackDelegate;
@@ -115,7 +115,7 @@ public:
     anm::ASMControl *unknown10;                // Inferred role: asm control; original member name unknown.
     fw::AnimAsmUpdater unknown18;              // Inferred role: updater; original member name unknown.
     fw::AnimEventAsmPoseSampler unknown38;     // Inferred role: pose sampler; original member name unknown.
-    CallBack unknown70[CALLBACK_MAX];          // Inferred role: callbacks; original member name unknown.
+    CallBack unknown70[CALLBACK_UNKNOWN_5];    // Inferred role: callbacks; original member name unknown.
     AsmLisener unknown138;                     // Inferred role: listener; original member name unknown.
     mm::mtl::Vector<CallBackCache> unknown148; // Inferred role: callback caches; original member name unknown.
     ViewerListener unknown170;                 // Inferred role: viewer listener; original member name unknown.
@@ -140,19 +140,19 @@ public:
     bool setEaseWeight(const char *state, AnimLayer layer, f32 weight);
     bool setEaseSpeed(const char *state, AnimLayer layer, f32 speed);
 
-    mm::mtl::unknown027<32> unknown00;                              // Inferred role: flags; original member name unknown.
-    GfComModel *unknown08;                                          // Inferred role: model; original member name unknown.
-    anm::ResASM *unknown10;                                         // Inferred role: res asm; original member name unknown.
-    anm::Blender *unknown18;                                        // Inferred role: blender; original member name unknown.
-    fw::AnimBlenderUpdater unknown20;                               // Inferred role: blender updater; original member name unknown.
-    fw::AnimEventMotPoseSamper unknown40;                           // Inferred role: pose sampler; original member name unknown.
-    mm::mtl::FixedVector<anm::Control *, EASE_MAX> unknown78;       // Inferred role: ease controls; original member name unknown.
-    mm::mtl::FixedVector<mm::mtl::FixStr<32>, EASE_MAX> unknown100; // Inferred role: ease names; original member name unknown.
-    anm::Control *unknown348[MOTION_MAX];                           // Inferred role: controls; original member name unknown.
-    f32 unknown388[MOTION_MAX];                                     // Inferred role: play back times; original member name unknown.
-    u64 unknown3a8;                                                 // Inferred role: control count; original member name unknown.
-    u32 unknown3b0;                                                 // Inferred role: current; original member name unknown.
-    f32 unknown3b4;                                                 // Inferred role: speed; original member name unknown.
+    mm::mtl::unknown027<32> unknown00;                                     // Inferred role: flags; original member name unknown.
+    GfComModel *unknown08;                                                 // Inferred role: model; original member name unknown.
+    anm::ResASM *unknown10;                                                // Inferred role: res asm; original member name unknown.
+    anm::Blender *unknown18;                                               // Inferred role: blender; original member name unknown.
+    fw::AnimBlenderUpdater unknown20;                                      // Inferred role: blender updater; original member name unknown.
+    fw::AnimEventMotPoseSamper unknown40;                                  // Inferred role: pose sampler; original member name unknown.
+    mm::mtl::FixedVector<anm::Control *, EASE_UNKNOWN_16> unknown78;       // Inferred role: ease controls; original member name unknown.
+    mm::mtl::FixedVector<mm::mtl::FixStr<32>, EASE_UNKNOWN_16> unknown100; // Inferred role: ease names; original member name unknown.
+    anm::Control *unknown348[MOTION_UNKNOWN_8];                            // Inferred role: controls; original member name unknown.
+    f32 unknown388[MOTION_UNKNOWN_8];                                      // Inferred role: play back times; original member name unknown.
+    u64 unknown3a8;                                                        // Inferred role: control count; original member name unknown.
+    u32 unknown3b0;                                                        // Inferred role: current; original member name unknown.
+    f32 unknown3b4;                                                        // Inferred role: speed; original member name unknown.
   };
 
   bool recieveMessage(fw::MessageObject *sender, fw::Message &message) override;

@@ -29,9 +29,9 @@ LangType DevSettingNx::getLang() const {
   return setting_detail::convertLangType(code.string);
 }
 
-mm::mtl::FixedVector<LangType, DEV_LANG_NUM> &DevSettingNx::getLangList(mm::mtl::FixedVector<LangType, DEV_LANG_NUM> &list) const {
+mm::mtl::FixedVector<LangType, DEV_LANG_UNKNOWN_15> &DevSettingNx::getLangList(mm::mtl::FixedVector<LangType, DEV_LANG_UNKNOWN_15> &list) const {
   list.clear();
-  nn::settings::LanguageCode codes[DEV_LANG_NUM];
+  nn::settings::LanguageCode codes[DEV_LANG_UNKNOWN_15];
   int count = nn::settings::GetAvailableLanguageCodes(codes, nn::settings::GetAvailableLanguageCodeCount());
   for (int i = 0; i < count; i++) {
     LangType lang = setting_detail::convertLangType(codes[i].string);
@@ -43,12 +43,12 @@ mm::mtl::FixedVector<LangType, DEV_LANG_NUM> &DevSettingNx::getLangList(mm::mtl:
 }
 
 void DevSettingNx::setAutoSleepExtended(SleepExtendType type) {
-  if (type != SLEEP_EXTEND_TYPE_NONE) {
+  if (type != SLEEP_EXTEND_TYPE_UNKNOWN_0) {
     switch (type) {
-    case SLEEP_EXTEND_TYPE_EXTENDED:
+    case SLEEP_EXTEND_TYPE_UNKNOWN_1:
       nn::oe::SetUserInactivityDetectionTimeExtended(true);
       break;
-    case SLEEP_EXTEND_TYPE_EXTENDED_UNSAFE:
+    case SLEEP_EXTEND_TYPE_UNKNOWN_2:
       nn::oe::SetUserInactivityDetectionTimeExtendedUnsafe(true);
       break;
     }

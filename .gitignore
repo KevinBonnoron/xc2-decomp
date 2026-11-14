@@ -3,6 +3,7 @@
 __pycache__/
 .direnv
 .claude
+.worktrees
 
 # Local game dumps, extracted resources, keys and build products.
 *.xci

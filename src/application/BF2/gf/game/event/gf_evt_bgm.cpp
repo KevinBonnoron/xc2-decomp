@@ -2,6 +2,8 @@
 
 namespace gf {
 
+GfEvtBgm::GfEvtBgm(const GfSetupParam &param) : unknown0c(), m_playState(PLAY_STATE_UNKNOWN_0), unknown478(nullptr), unknown480(nullptr), unknown488(nullptr) { initialize(param); }
+
 GfEvtBgm::~GfEvtBgm() { ; }
 
 void GfEvtBgm::destroy() {
@@ -18,7 +20,7 @@ void GfEvtBgm::finalize() { m_initialized = false; }
 
 bool GfEvtBgm::isInitialized() { return m_initialized; }
 
-void GfEvtBgm::setPlayBgmVolume(f32 volume) { m_playBgmVolume = volume; }
+void GfEvtBgm::setPlayBgmVolume(f32 volume) { unknown0c.unknown44 = volume; }
 
 void GfEvtBgm::setPlayState(PLAY_STATE playState) { m_playState = playState; }
 

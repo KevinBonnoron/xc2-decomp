@@ -12,7 +12,7 @@ namespace fw {
 
 ColiManager::Impl::Impl(mm::mtl::IAllocator *allocator, u32 capacity) : unknown18(nullptr), unknown20(nullptr), unknown28(1), unknown30(allocator) {
   unknown38.reserve(allocator, capacity);
-  unknown38.setRange(1, HANDLE_ID_MAX, HANDLE_ID_MAX);
+  unknown38.setRange(1, HANDLE_ID_UNKNOWN_2147483647, HANDLE_ID_UNKNOWN_2147483647);
   initializeContact();
 }
 
@@ -78,16 +78,16 @@ void ColiManager::Impl::updateContact() {
       if (contacts != nullptr) {
         for (mm::mtl::List<ContactParam>::iterator contact = contacts->begin(); contact != contacts->end(); ++contact) {
           ContactParam &param = *contact;
-          if ((param.unknown38 & CONTACT_FLAG_CONTACTED) != 0) {
-            param.unknown38 |= CONTACT_FLAG_LEAVE;
+          if ((param.unknown38 & CONTACT_FLAG_UNKNOWN_3) != 0) {
+            param.unknown38 |= CONTACT_FLAG_UNKNOWN_2;
           }
-          param.unknown38 &= ~(CONTACT_FLAG_CONTACT | CONTACT_FLAG_CONTACTED);
+          param.unknown38 &= ~(CONTACT_FLAG_UNKNOWN_1 | CONTACT_FLAG_UNKNOWN_3);
         }
       }
     } else {
       ColiCheckConfig config;
       config.unknown14 = true;
-      config.unknown04 = CONTACT_ATTRIBUTE_MASK;
+      config.unknown04 = CONTACT_ATTRIBUTE_MASK_UNKNOWN_4293918719;
       config.unknown08 = 0.0f;
       config.unknown15 = false;
       config.unknown10 = 2;
@@ -122,49 +122,49 @@ void ColiManager::Impl::sendContactEvent() {
       IColiEventListener::EnterInfo otherEnterInfo = {other, object, param.unknown00, param.unknown20};
       IColiEventListener::LeaveInfo leaveInfo = {object, other};
       IColiEventListener::LeaveInfo otherLeaveInfo = {other, object};
-      if ((param.unknown38 & (CONTACT_FLAG_ENTER | CONTACT_FLAG_LEAVE)) == CONTACT_FLAG_ENTER) {
-        param.unknown38 |= CONTACT_FLAG_ENTERED;
+      if ((param.unknown38 & (CONTACT_FLAG_UNKNOWN_0 | CONTACT_FLAG_UNKNOWN_2)) == CONTACT_FLAG_UNKNOWN_0) {
+        param.unknown38 |= CONTACT_FLAG_UNKNOWN_4;
       }
 
-      if ((param.unknown38 & (CONTACT_FLAG_ENTERED | CONTACT_FLAG_CONTACTED | CONTACT_FLAG_CONTACT)) == (CONTACT_FLAG_ENTERED | CONTACT_FLAG_CONTACTED)) {
-        param.unknown38 |= CONTACT_FLAG_LEAVE;
+      if ((param.unknown38 & (CONTACT_FLAG_UNKNOWN_4 | CONTACT_FLAG_UNKNOWN_3 | CONTACT_FLAG_UNKNOWN_1)) == (CONTACT_FLAG_UNKNOWN_4 | CONTACT_FLAG_UNKNOWN_3)) {
+        param.unknown38 |= CONTACT_FLAG_UNKNOWN_2;
       }
 
-      if ((param.unknown38 & CONTACT_FLAG_ENTER) != 0) {
+      if ((param.unknown38 & CONTACT_FLAG_UNKNOWN_0) != 0) {
         object->enter(enterInfo);
         if (!other->isChar()) {
           other->enter(otherEnterInfo);
         }
       }
 
-      if ((param.unknown38 & CONTACT_FLAG_CONTACT) != 0) {
+      if ((param.unknown38 & CONTACT_FLAG_UNKNOWN_1) != 0) {
         object->contact(enterInfo);
         if (!other->isChar()) {
           other->contact(otherEnterInfo);
         }
       }
 
-      if ((param.unknown38 & CONTACT_FLAG_LEAVE) != 0) {
+      if ((param.unknown38 & CONTACT_FLAG_UNKNOWN_2) != 0) {
         object->leave(leaveInfo);
         if (!other->isChar()) {
           other->leave(otherLeaveInfo);
         }
       }
 
-      if ((param.unknown38 & CONTACT_FLAG_CONTACT) != 0) {
-        param.unknown38 |= CONTACT_FLAG_CONTACTED;
+      if ((param.unknown38 & CONTACT_FLAG_UNKNOWN_1) != 0) {
+        param.unknown38 |= CONTACT_FLAG_UNKNOWN_3;
       } else {
-        param.unknown38 &= ~CONTACT_FLAG_CONTACTED;
+        param.unknown38 &= ~CONTACT_FLAG_UNKNOWN_3;
       }
 
-      param.unknown38 &= ~CONTACT_FLAG_ENTER;
-      if ((param.unknown38 & CONTACT_FLAG_LEAVE) != 0) {
+      param.unknown38 &= ~CONTACT_FLAG_UNKNOWN_0;
+      if ((param.unknown38 & CONTACT_FLAG_UNKNOWN_2) != 0) {
         contact = contacts->erase(contact);
       } else {
         ++contact;
       }
 
-      param.unknown38 &= ~(CONTACT_FLAG_ENTER | CONTACT_FLAG_CONTACT | CONTACT_FLAG_LEAVE);
+      param.unknown38 &= ~(CONTACT_FLAG_UNKNOWN_0 | CONTACT_FLAG_UNKNOWN_1 | CONTACT_FLAG_UNKNOWN_2);
     }
   }
 }
@@ -239,7 +239,7 @@ void ColiManager::Impl::sendRemoveEvent(u32 handle) {
         ColiObject *other = static_cast<ColiObject *>(unknown38.getPtr((*contact).unknown34));
         IColiEventListener::LeaveInfo leaveInfo = {object, other};
         IColiEventListener::LeaveInfo otherLeaveInfo = {other, object};
-        if (((*contact).unknown38 & CONTACT_FLAG_ENTER) != 0) {
+        if (((*contact).unknown38 & CONTACT_FLAG_UNKNOWN_0) != 0) {
           object->leave(leaveInfo);
           other->leave(otherLeaveInfo);
         }
@@ -265,7 +265,7 @@ void ColiManager::Impl::sendRemoveEvent(u32 handle) {
 bool ColiManager::Impl::isValidObject(u32 handle) { return unknown38.isValid(handle); }
 
 void ColiManager::Impl::registObject(ColiObject *object) {
-  object->setHandle(unknown38.regist(object) | HANDLE_FLAG);
+  object->setHandle(unknown38.regist(object) | HANDLE_FLAG_UNKNOWN_31);
   object->addRef();
   unknown00.push_back(object);
   if (object->isGrand()) {
@@ -276,7 +276,7 @@ void ColiManager::Impl::registObject(ColiObject *object) {
     // __LINE__ of the game: it is the line argument of the operator new.
 #line 771
     mm::mtl::List<ContactParam> *contacts = new (unknown30, 16, __FILE__, __LINE__) mm::mtl::List<ContactParam>(unknown30);
-    contacts->reserve(CONTACT_LIST_RESERVE);
+    contacts->reserve(CONTACT_LIST_RESERVE_UNKNOWN_8);
     unknown70.push_back(ListParam(object->unknownf0.unknown08, contacts));
   }
 }

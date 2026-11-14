@@ -56,10 +56,11 @@ public:
     const _ReslistBase *m_list;
   };
 
-  explicit _ReslistBase(IAllocator *allocator = nullptr) : m_capacity(0), m_size(0), m_alignment(alignof(Node)), m_allocator(allocator) {
+  explicit _ReslistBase(IAllocator *allocator = nullptr) : m_capacity(0), m_size(0), m_allocator(allocator) {
     m_head = &m_terminator;
     m_head->m_next = m_head;
     m_head->m_prev = m_head;
+    m_alignment = alignof(Node);
   }
   virtual ~_ReslistBase() { clear(); }
 

@@ -3,7 +3,7 @@
 
 namespace gf {
 
-constexpr u32 QUEST_ID_END = 30000;
+constexpr u32 QUEST_ID_UNKNOWN_30000 = 30000; // Inferred role: quest id end; original name unknown.
 
 struct QuestID {
   // User-provided: the game returns a QuestID as two separately merged halves (and/orr of 32-bit words) as soon as a

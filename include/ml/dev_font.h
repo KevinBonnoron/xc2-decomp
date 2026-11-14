@@ -13,6 +13,7 @@ struct Col4;
 namespace ml {
 class DevFontLayer;
 enum FONT_STYLE : int;
+class WorkObj;
 
 // Only the vtable slots called by DevFont are known.
 class IDevFontInfo {
@@ -46,6 +47,13 @@ public:
 
 class DevFont : public FontLayer, public DevBase, public mm::mtl::PtrSingleton<DevFont> {
 public:
+  DevFont(const char *name, WorkObj *parent);
+  bool wkStandbyLogin() override;
+  bool wkStandbyLogout() override;
+  void wkUpdate() override;
+  void wkTail() override;
+  virtual bool createFont() = 0;
+  virtual bool releaseFont() = 0;
   static bool isInitialized();
   static DevFontLayer *createLayer(const FontLayer *layer);
   static void fontLayer(const FontLayer *layer, int x, int y, const char *text);

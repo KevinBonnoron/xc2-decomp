@@ -15,6 +15,11 @@ class GfObjPropertyEnemy;
 
 class GfMenuElementComboAdapter : public GfMenuAdapter {
 public:
+  struct TypeInfo {
+    bool (GfMenuElementComboAdapter::*update)();
+    PluginSetup setup;
+  };
+
   class IConverter {
   public:
     virtual ~IConverter() {}
@@ -41,12 +46,18 @@ public:
 
   GfMenuElementComboAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways);
   ~GfMenuElementComboAdapter() override;
+  static GfMenuElementComboAdapter *create(u32 handle, u32 type, u32 elementCombo, bool isUpdateAlways);
   bool update_ComboRouteColor();
   bool update_ComboRouteIcon();
   bool update_ComboRouteEffectName();
   bool update_ComboRouteEffect();
   bool update_ComboRouteAttrPtn();
+  bool update_ComboRoutePassedDisp();
   bool update_ComboRouteCurrentDisp();
+  static GfMenuElementComboAdapter *createFromCoverter(u32 handle, u32 type, IConverter *converter, bool isUpdateAlways);
+  static GfMenuElementComboAdapter *createReferenceRoute(u32 handle, u32 type, u32 routeNo, bool isUpdateAlways);
+  static GfMenuElementComboAdapter *createTargetEnemy(u32 handle, u32 type, bool isUpdateAlways);
+  bool idDispComboRouteNo(u32 routeNo);
   static GfObjPropertyEnemy *getTargetProperty();
   static u32 getTargetElementComboId();
   static u32 getTargetElementComboLv();

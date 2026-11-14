@@ -5,6 +5,7 @@
 #include "gf/menu/gf_menu_reference_list.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 
 namespace ui {
 class UICtrlCursorSelect;
@@ -18,6 +19,33 @@ class GfMenuItemList;
 
 class GfMenuObjItemList : public GfMenuObject {
 public:
+  class MainListener : public ui::UIObjectListener {
+  public:
+    MainListener(GfMenuObjItemList *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];          // Actively zero-initialized unknown byte range, NOT padding; original name/role unknown.
+    GfMenuObjItemList *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class TypeListener : public ui::UIObjectListener {
+  public:
+    TypeListener(GfMenuObjItemList *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];          // Actively zero-initialized unknown byte range, NOT padding; original name/role unknown.
+    GfMenuObjItemList *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class ListListener : public ui::UIObjectListener {
+  public:
+    ListListener(GfMenuObjItemList *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];          // Actively zero-initialized unknown byte range, NOT padding; original name/role unknown.
+    GfMenuObjItemList *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   GfMenuObjItemList(u32 handle);
   ~GfMenuObjItemList() override;
   void initialize() override;
@@ -33,6 +61,12 @@ public:
   mm::mtl::IntrusivePtr<GfMenuReferenceList<GfMenuItemList>> unknownf0; // Inferred role: reference to the first item list; original member name unknown.
 };
 
+static_assert(offsetof(GfMenuObjItemList::MainListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjItemList::MainListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjItemList::TypeListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjItemList::TypeListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjItemList::ListListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjItemList::ListListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjItemList, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjItemList, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjItemList, unknown38) == 0x38, "");

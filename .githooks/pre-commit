@@ -15,9 +15,18 @@ if [ ${#files[@]} -gt 0 ]; then
     exit 1
   }
 fi
-run check --readme || {
-  echo "pre-commit: \`check\` must match every function, with no compile error and nothing NOT IN GAME" >&2
-  exit 1
-}
-run python3 tools/status.py --quiet --areas
-git add README.md progress/areas.json
+# The progress snapshot (README.md, progress/areas.json) is only written on main: branches and pull requests
+# leave it alone, so they never conflict on it; the next commit on main refreshes it.
+if [ "$(git symbolic-ref --quiet --short HEAD)" = main ]; then
+  run check --readme --strict-data || {
+    echo "pre-commit: \`check\` must match every function, with no compile error, nothing NOT IN GAME and no data problem outside tools/data_baseline.txt" >&2
+    exit 1
+  }
+  run python3 tools/status.py --quiet --areas
+  git add README.md progress/areas.json
+else
+  run check --strict-data || {
+    echo "pre-commit: \`check\` must match every function, with no compile error, nothing NOT IN GAME and no data problem outside tools/data_baseline.txt" >&2
+    exit 1
+  }
+fi

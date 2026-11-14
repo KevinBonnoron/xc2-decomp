@@ -16,7 +16,7 @@ class GfComAsm;
 template <typename T> class TFieldExecCmdTurn {
 public:
   struct CreateInfo {
-    CreateInfo() : unknown00(INVALID_HANDLE), unknown08(0.0f), unknown0c(0.7853982f), unknown10(1.5707964f), unknown14(1.0f), unknown18(0.0f) {}
+    CreateInfo() : unknown00(unknown020), unknown08(0.0f), unknown0c(0.7853982f), unknown10(1.5707964f), unknown14(1.0f), unknown18(0.0f) {}
     CreateInfo(GF_OBJ_HANDLE *object, f32 angle) : unknown00(object), unknown08(angle), unknown0c(0.7853982f), unknown10(1.5707964f), unknown14(1.0f), unknown18(0.0f) {}
 
     GF_OBJ_HANDLE *unknown00; // Inferred role: object; original member name unknown.
@@ -39,6 +39,7 @@ public:
   }
 
   void create(const CreateInfo &info);
+  void update(f32 deltaTime);
 
   CreateInfo unknown00;       // Inferred role: create info; original member name unknown.
   TFieldExecCmd<T> unknown20; // Inferred role: turn command; original member name unknown.

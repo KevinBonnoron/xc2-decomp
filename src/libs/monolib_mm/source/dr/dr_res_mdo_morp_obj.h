@@ -4,6 +4,8 @@
 #include "types.h"
 
 namespace ml {
+class DrResEtcPamObj;
+struct MdoWrkMatRes;
 
 class DrResMdoMorpObj {
 public:
@@ -35,6 +37,7 @@ public:
 
   DrResMdoMorpObj();
   ~DrResMdoMorpObj();
+  void update(MdoWrkMatRes *matRes, DrResEtcPamObj *pamObj);
   static u32 calcWorkSize(const u8 *resource);
   static void release(DrResMdoMorpObj *&morpObj);
 

@@ -22,7 +22,7 @@ void StateFieldWaterSwimRise::update(GfComBehaviorPc *behavior, const fw::Update
   MoveUtilField::updateMoveWaterRise(info, *property);
   f32 distance = info.unknown04 * property->unknown90;
   if (StateUtilField::getChildFrameHeight(*behavior) + distance >= 0.0f) {
-    reqState(STATE_ID_FIELD_WATER_SWIM);
+    reqState(STATE_ID_UNKNOWN_22);
   }
 }
 

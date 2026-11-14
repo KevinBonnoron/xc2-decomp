@@ -8,7 +8,7 @@ namespace btl {
 void EffectManager::Create() {
   // __LINE__ must be 57 as in the original file: it is an argument of operator new.
 #line 57
-  EffectManager *manager = new (gf::getAllocator(gf::ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) EffectManager();
+  EffectManager *manager = new (gf::getAllocator(gf::ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) EffectManager();
   manager->Initialize();
 }
 

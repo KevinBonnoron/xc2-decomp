@@ -62,7 +62,7 @@ void GfComPackAnim::Mot::play(u32 layer, void *motion, bool isLocalSpace) {
   anm::ExtraTruckBuffer *extraTruckBuffer = unknown00->unknown38;
   anm::Binding *binding = anm::AnimationImporter::import(motion);
   unknown68 = anm::Util::getPlayBackTime(*binding);
-  unknown08 = anm::Factory::createControl(binding, getAllocator(ALLOCATOR_ANIMATION));
+  unknown08 = anm::Factory::createControl(binding, getAllocator(ALLOCATOR_UNKNOWN_7));
   if (binding != nullptr) {
     binding->release();
   }
@@ -137,7 +137,7 @@ void GfComPackAnim::setup(const SetupInfo &info) {
     if (*data != nullptr) {
       // __LINE__ must be 208 as in the original source: it is the line argument of operator new.
 #line 208
-      unknown80.push_back(new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) arc::CArcData(*data));
+      unknown80.push_back(new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) arc::CArcData(*data));
     }
   }
 

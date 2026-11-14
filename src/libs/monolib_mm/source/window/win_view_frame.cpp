@@ -77,4 +77,46 @@ MCURSOR WinViewFrame::getMove2MCursor(FMOVE move) const {
 
 MCURSOR WinViewFrame::getFrameSelect(const mm::Pnt<int> &pos) const { return getMove2MCursor(getFramePick(pos)); }
 
+bool WinViewFrame::checkLTFrame(const mm::Rect<int> &rect, const mm::Pnt<int> &pos) const {
+  mm::Rect<int> r(rect);
+  s16 border = unknown60;
+  int right = r.x + border;
+  if (pos.x >= r.x && pos.x < right && pos.y >= r.y && pos.y < r.y + 0x10) {
+    return true;
+  }
+  if (pos.x >= r.x && pos.x < r.x + 0x10) {
+    if (pos.y < r.y) {
+      return false;
+    }
+    return pos.y < border + r.y;
+  }
+  return false;
+}
+
+bool WinViewFrame::checkTFrame(const mm::Rect<int> &rect, const mm::Pnt<int> &pos) const {
+  int top = rect.y;
+  int left = static_cast<s16>(rect.x + 0x10);
+  int right = left + static_cast<s16>(rect.width - 0x20);
+  if (pos.x >= right || pos.x < left) {
+    return false;
+  }
+  if (pos.y < top) {
+    return false;
+  }
+  return pos.y < unknown60 + top;
+}
+
+bool WinViewFrame::checkBFrame(const mm::Rect<int> &rect, const mm::Pnt<int> &pos) const {
+  int top = static_cast<s16>(rect.y + rect.height - unknown60);
+  int left = static_cast<s16>(rect.x + 0x10);
+  int right = left + static_cast<s16>(rect.width - 0x20);
+  if (pos.x >= right || pos.x < left) {
+    return false;
+  }
+  if (pos.y < top) {
+    return false;
+  }
+  return pos.y < top + unknown60;
+}
+
 } // namespace ml

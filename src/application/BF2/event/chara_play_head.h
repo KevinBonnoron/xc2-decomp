@@ -21,13 +21,13 @@ class CharaWeightPlayer;
 class CharaPlayHead : public ICmd {
 public:
   enum {
-    FLAG_PLAY = 1 << 0,
-    FLAG_LOOP = 1 << 1,
-    FLAG_BLEND_OUT = 1 << 2,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: play flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: loop flag; original name unknown.
+    FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: blend out flag; original name unknown.
   };
 
   void render(const mm::Vec3 &position, f32 height) {
-    if ((unknown08 & FLAG_PLAY) == 0) {
+    if ((unknown08 & FLAG_UNKNOWN_0) == 0) {
       return;
     }
     ml::ScnObjCam *cam = Manager::get()->getScn()->getCam(-1);
@@ -48,7 +48,7 @@ public:
     fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
     fw::debug::drawFont(titleX, titleY, "HEAD");
     fw::debug::drawFont(x + 110, y - 65, "head:");
-    if ((unknown08 & FLAG_LOOP) != 0) {
+    if ((unknown08 & FLAG_UNKNOWN_1) != 0) {
       fw::debug::drawFont(x + 170, y - 65, "life(∞)");
     } else {
       fw::debug::drawFont(x + 170, y - 65, "life(%.1f)", unknown24);

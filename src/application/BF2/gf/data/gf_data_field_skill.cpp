@@ -7,12 +7,12 @@
 namespace gf {
 
 enum {
-  FLAG_FIELD_SKILL_SETTING = 0xe91b,
+  FLAG_UNKNOWN_59675 = 0xe91b, // Inferred role: flag field skill setting; original name unknown.
 };
 
 enum {
-  FIELD_SKILL_SETTING_ACCESSED = 1,
-  FIELD_SKILL_SETTING_COMPLETE = 2,
+  FIELD_SKILL_SETTING_UNKNOWN_1 = 1, // Inferred role: field skill setting accessed; original name unknown.
+  FIELD_SKILL_SETTING_UNKNOWN_2 = 2, // Inferred role: field skill setting complete; original name unknown.
 };
 
 const char *GfDataFieldSkill::getName(u32 fieldSkill) {
@@ -38,26 +38,26 @@ bool GfDataFieldSkill::getName(u8 *&bdat, u32 &textId, u32 fieldSkill) {
 
 bool GfDataFieldSkill::isFieldSkillSettingAccessed(u32 setting) {
   int start = QuestListAcc::get()->getFLD_FieldSkillSettingStart();
-  int flag = setting + FLAG_FIELD_SKILL_SETTING - start;
-  return (GfGameFlag::getLocal(2, flag) & FIELD_SKILL_SETTING_ACCESSED) != 0;
+  int flag = setting + FLAG_UNKNOWN_59675 - start;
+  return (GfGameFlag::getLocal(2, flag) & FIELD_SKILL_SETTING_UNKNOWN_1) != 0;
 }
 
 bool GfDataFieldSkill::isFieldSkillSettingComplete(u32 setting) {
   int start = QuestListAcc::get()->getFLD_FieldSkillSettingStart();
-  int flag = setting + FLAG_FIELD_SKILL_SETTING - start;
-  return (GfGameFlag::getLocal(2, flag) & FIELD_SKILL_SETTING_COMPLETE) != 0;
+  int flag = setting + FLAG_UNKNOWN_59675 - start;
+  return (GfGameFlag::getLocal(2, flag) & FIELD_SKILL_SETTING_UNKNOWN_2) != 0;
 }
 
 void GfDataFieldSkill::setFieldSkillSettingAccessed(u32 setting) {
   int start = QuestListAcc::get()->getFLD_FieldSkillSettingStart();
-  int flag = setting + FLAG_FIELD_SKILL_SETTING - start;
-  GfGameFlag::setLocal(2, flag, GfGameFlag::getLocal(2, flag) | FIELD_SKILL_SETTING_ACCESSED);
+  int flag = setting + FLAG_UNKNOWN_59675 - start;
+  GfGameFlag::setLocal(2, flag, GfGameFlag::getLocal(2, flag) | FIELD_SKILL_SETTING_UNKNOWN_1);
 }
 
 void GfDataFieldSkill::setFieldSkillSettingComplete(u32 setting) {
   int start = QuestListAcc::get()->getFLD_FieldSkillSettingStart();
-  int flag = setting + FLAG_FIELD_SKILL_SETTING - start;
-  GfGameFlag::setLocal(2, flag, GfGameFlag::getLocal(2, flag) | FIELD_SKILL_SETTING_COMPLETE);
+  int flag = setting + FLAG_UNKNOWN_59675 - start;
+  GfGameFlag::setLocal(2, flag, GfGameFlag::getLocal(2, flag) | FIELD_SKILL_SETTING_UNKNOWN_2);
 }
 
 bool GfDataFieldSkill::getCaption(u8 *&bdat, u32 &textId, u32 fieldSkill) {

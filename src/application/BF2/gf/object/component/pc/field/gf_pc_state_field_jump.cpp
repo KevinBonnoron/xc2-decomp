@@ -32,7 +32,7 @@ void StateFieldJump::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   unknown18 = 0.0f;
   unknown20 = 0.0f;
   unknown1c = false;
-  if (previous != nullptr && previous->unknown08 == STATE_ID_FIELD_SLIDE_MOVE) {
+  if (previous != nullptr && previous->unknown08 == STATE_ID_UNKNOWN_54) {
     unknown1c = true;
   }
 
@@ -41,7 +41,7 @@ void StateFieldJump::enter(GfComBehaviorPc *behavior, ai::State *previous) {
 }
 
 void StateFieldJump::leave(GfComBehaviorPc *behavior, ai::State *next) {
-  if (next == nullptr || next->unknown08 == STATE_ID_FIELD_LAND || next->unknown08 == STATE_ID_FIELD_FALL) {
+  if (next == nullptr || next->unknown08 == STATE_ID_UNKNOWN_13 || next->unknown08 == STATE_ID_UNKNOWN_15) {
     return;
   }
   StateUtilField::notifyJumpEnd(*behavior);
@@ -61,32 +61,32 @@ void StateFieldJump::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &inf
   if (!StateUtilField::ignoreOnGroundJump(*property, unknown18)) {
     if (!property->unknown110_4) {
       if (StateUtilField::isSlideSlope(*property) && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_SLOPE)) {
-        reqState(STATE_ID_FIELD_SLIDE_MOVE);
+        reqState(STATE_ID_UNKNOWN_54);
         return;
       }
     } else if (StateUtilField::isSlideGroundLanding(*property) && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_SLOPE)) {
-      reqState(STATE_ID_FIELD_SLIDE_MOVE);
+      reqState(STATE_ID_UNKNOWN_54);
       return;
     } else if (property->unknownc0 > 0.0f && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_MOVE)) {
       StateUtilField::onLandSliding(*behavior);
-      reqState(STATE_ID_FIELD_SLIDE_LAND_BRAKE);
+      reqState(STATE_ID_UNKNOWN_55);
       return;
     } else if (StateUtilField::isBigLandDistance(*behavior)) {
       StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_JUMPDMG);
-      reqState(STATE_ID_FIELD_LAND_BIG);
+      reqState(STATE_ID_UNKNOWN_14);
       return;
     } else {
       StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_JUMP_END);
-      reqState(STATE_ID_FIELD_LAND);
+      reqState(STATE_ID_UNKNOWN_13);
       return;
     }
   }
 
-  if (comAsm->isEnd(ANIM_LAYER_BASE) && __builtin_strcmp(comAsm->getStateName(ANIM_LAYER_BASE), "S_jump_01") == 0) {
+  if (comAsm->isEnd(ANIM_LAYER_UNKNOWN_0) && __builtin_strcmp(comAsm->getStateName(ANIM_LAYER_UNKNOWN_0), "S_jump_01") == 0) {
     property->unknown90 = unknown20;
     property->unknown110_2 = false;
     if (StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_FALL)) {
-      reqState(STATE_ID_FIELD_FALL);
+      reqState(STATE_ID_UNKNOWN_15);
       return;
     }
   }

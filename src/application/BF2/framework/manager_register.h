@@ -10,7 +10,7 @@ class ManagerObject;
 
 class ManagerRegister : public mm::mtl::PtrSingleton<ManagerRegister> {
 public:
-  static const size_t MANAGER_MAX = 256;
+  static const size_t MANAGER_UNKNOWN_256 = 256; // Inferred role: maximum number of managers; original name unknown.
 
   ManagerRegister();
   ~ManagerRegister();
@@ -20,7 +20,7 @@ public:
   bool finalize();
   void enterFinalizeApplet();
 
-  mm::mtl::FixedVector<ManagerObject *, MANAGER_MAX> unknown08; // Inferred role: managers; original member name unknown.
+  mm::mtl::FixedVector<ManagerObject *, MANAGER_UNKNOWN_256> unknown08; // Inferred role: managers; original member name unknown.
 };
 
 static_assert(offsetof(ManagerRegister, unknown08) == 0x08, "");

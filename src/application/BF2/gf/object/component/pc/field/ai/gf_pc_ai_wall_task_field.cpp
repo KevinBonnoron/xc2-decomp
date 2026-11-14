@@ -1,6 +1,7 @@
 #include "gf/object/component/pc/field/ai/gf_pc_ai_wall_task_field.h"
 
 #include "fw/fw_param_manager.h"
+#include "fw/fw_transform.h"
 #include "fw/fw_update_info.h"
 #include "gf/gf_allocator.h"
 #include "gf/object/component/pc/field/gf_pc_param_field.h"
@@ -10,6 +11,7 @@
 #include "gf/object/component/pc/gf_pc_state_util.h"
 #include "gf/object/gf_obj.h"
 #include "mm/mm_std_base.h"
+#include "mm_math/mm_vec2.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/bitflag.h"
 #include "mm_mtl/rtti.h"
@@ -46,7 +48,7 @@ void TaskFieldWallPrepare::onChangeActivate(BlackBoardField &blackBoard, const a
 void TaskFieldWallPrepare::onCreate(BlackBoardField &blackBoard, const ai::CreateEvent &event) {
   // __LINE__ must be 83 as in the original file: it is the line argument of the allocation.
 #line 83
-  unknown38.reset(new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ai::Fsm(getAllocator(ALLOCATOR_DEFAULT)));
+  unknown38.reset(new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ai::Fsm(getAllocator(ALLOCATOR_UNKNOWN_0)));
   unknown38->beginSetup(&unknown40, 3);
   unknown38->registerState<StateFieldWallAiWait>(0);
   unknown38->registerState<StateFieldWallAiPrepare>(1);
@@ -78,6 +80,24 @@ void TaskFieldWallPrepare::update(BlackBoardField &blackBoard) {
 }
 
 bool TaskFieldWallFollow::testCondition(const BlackBoardField &blackBoard) { return blackBoard.unknown08->unknown310.unknown10_5; }
+
+void TaskFieldWallFollow::update(BlackBoardField &blackBoard) {
+  GfComPropertyPc *property = blackBoard.unknown08;
+  fw::Transform transform;
+  if (AgentUtilField::getWallFollowTransform(blackBoard, &transform)) {
+    mm::Vec2 input = AgentUtilField::calcFollowWallInput(transform.unknown00, *property);
+    if (AgentUtilField::isEnableWallMove(*property, input)) {
+      property->unknown60.unknown00 = input.x;
+      property->unknown60.unknown04 = input.y;
+      return;
+    }
+  }
+  if (AgentUtilField::isWallEndMove(blackBoard)) {
+    AgentUtilField::setFollowWallEndInput(blackBoard.unknown90, *property);
+  } else {
+    AgentUtilField::setIdleInput(*property);
+  }
+}
 
 void TaskFieldWallFall::onEvent(ai::BlackBoard &blackBoard, const ai::Event &event) {
   BlackBoardField *pBB = mm::mtl::dynamicCast<BlackBoardField>(&blackBoard);
@@ -120,7 +140,7 @@ bool TaskFieldWallEscape::testCondition(const BlackBoardField &blackBoard) {
     return false;
   }
 
-  return AgentUtilField::calcParentPlayerPush(*property, property->unknown160, param->escapeRange, &unknown40);
+  return AgentUtilField::calcParentPlayerPush(*property, property->unknown160.unknown00, param->escapeRange, &unknown40);
 }
 
 void TaskFieldWallEscape::update(BlackBoardField &blackBoard) {

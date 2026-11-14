@@ -1,6 +1,7 @@
 #include "gf/event/gf_event.h"
 
 #include "gf/gf_allocator.h"
+#include "mm/mm_std_base.h"
 
 namespace gf {
 
@@ -13,7 +14,7 @@ GfEvent::~GfEvent() {}
 void GfEvent::build(const GfSetupParam &param) {
   // __LINE__ must be 40 as in the original file: its value changes the instruction order.
 #line 40
-  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfEvent(param);
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfEvent(param);
 }
 
 void GfEvent::destroy() {
@@ -25,6 +26,12 @@ void GfEvent::destroy() {
 void GfEvent::finalize() { unknown118 = false; }
 
 bool GfEvent::isInitialized() { return get() != nullptr && get()->unknown118; }
+
+void GfEvent::addEventCallback(IGfEvent *event) {
+  GfEvent *gfEvent = get();
+  MM_VERIFY(gfEvent->unknown08.find(event));
+  gfEvent->unknown08.push(event);
+}
 
 void GfEvent::removeEventCallback(IGfEvent *event) {
   GfEvent *gfEvent = get();

@@ -19,12 +19,31 @@ public:
     GfMenuObjTutorial *unknown20; // Inferred role: owner; original member name unknown.
   };
 
+  struct TextParam {
+    u32 unknown00; // Inferred role: text id in the tutorial bdat; original member name unknown.
+  };
+
+  struct FocusParam {
+    u16 unknown00; // Inferred role: event parameter; original member name unknown.
+    u16 unknown02; // Inferred role: event parameter; original member name unknown.
+    u16 unknown04; // Inferred role: event parameter; original member name unknown.
+  };
+
+  struct IconParam {
+    u16 unknown00; // Inferred role: event parameter; original member name unknown.
+    u16 unknown02; // Inferred role: event parameter; original member name unknown.
+  };
+
   GfMenuObjTutorial(u32 handle);
   ~GfMenuObjTutorial() override;
   static void closeAll();
+  static void openText(u32 param, const TextParam &text);
   static void closeText(u32 param);
+  static void openFocus(u32 param, const FocusParam &focus);
   static void closeFocus(u32 param);
+  static void openIcon(u32 param, const IconParam &icon);
   static void closeIcon(u32 param);
+  static void start();
   void initialize() override;
   void finalize() override;
   void update() override;
@@ -42,6 +61,12 @@ static_assert(offsetof(GfMenuObjTutorial, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjTutorial, unknown2b8) == 0x2b8, "");
 static_assert(offsetof(GfMenuObjTutorial, unknown2bc) == 0x2bc, "");
 static_assert(sizeof(GfMenuObjTutorial) == 0x2c0, "");
+
+static_assert(sizeof(GfMenuObjTutorial::TextParam) == 0x4, "");
+static_assert(offsetof(GfMenuObjTutorial::FocusParam, unknown04) == 0x4, "");
+static_assert(sizeof(GfMenuObjTutorial::FocusParam) == 0x6, "");
+static_assert(offsetof(GfMenuObjTutorial::IconParam, unknown02) == 0x2, "");
+static_assert(sizeof(GfMenuObjTutorial::IconParam) == 0x4, "");
 
 static_assert(offsetof(GfMenuObjTutorial::MainListener, unknown20) == 0x20, "");
 static_assert(sizeof(GfMenuObjTutorial::MainListener) == 0x28, "");

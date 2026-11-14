@@ -9,10 +9,10 @@ struct AchievQuest;
 struct QuestTaskParam;
 struct unknown106;
 
-constexpr u32 ACHIEVEMENT_PER_BLADE = 50;
-constexpr u32 ACHIEVEMENT_LEVEL_COUNT = 5;
-constexpr u32 ACHIEVEMENT_LINE_COUNT = 10;
-constexpr u32 ACHIEVEMENT_LINE_KEY = 9;
+constexpr u32 ACHIEVEMENT_UNKNOWN_50 = 50; // Inferred role: achievement per blade; original name unknown.
+constexpr u32 ACHIEVEMENT_UNKNOWN_5 = 5;   // Inferred role: achievement level count; original name unknown.
+constexpr u32 ACHIEVEMENT_UNKNOWN_10 = 10; // Inferred role: achievement line count; original name unknown.
+constexpr u32 ACHIEVEMENT_UNKNOWN_9 = 9;   // Inferred role: achievement line key; original name unknown.
 
 class GfDataQuest {
 public:

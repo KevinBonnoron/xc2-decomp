@@ -20,6 +20,7 @@ public:
   void releaseAll();
   void setZoneObj(DrEnvironmentObj *obj, bool isOn);
   void updateCameraLight();
+  void update();
 
   DrMan *unknown00;        // Inferred role: dr man; original member name unknown.
   DrLightMan *unknown08;   // Inferred role: light man; original member name unknown.

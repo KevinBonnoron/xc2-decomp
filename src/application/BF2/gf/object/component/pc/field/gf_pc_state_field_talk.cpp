@@ -27,7 +27,7 @@ static const char *const unknown002[] = {"S_talkA_00", "S_talkA_01", "S_talkA_02
 static const char *const unknown003[] = {"C_talkA_00", nullptr, "C_talkA_02", nullptr};
 
 void StateFieldTalk::enter(GfComBehaviorPc *behavior, ai::State *previous) {
-  unknown18 = INVALID_HANDLE;
+  unknown18 = unknown020;
   GfObj *target = StateUtilField::getAccessTarget(*behavior);
   if (target != nullptr) {
     unknown18 = target->unknownf8;
@@ -58,24 +58,24 @@ void StateFieldTalk::leave(GfComBehaviorPc *behavior, ai::State *next) {
 void StateFieldTalk::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
   if (!GfGameManager::isPlayerPause()) {
     GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
-    const char *stateName = comAsm->getStateName(ANIM_LAYER_BASE);
+    const char *stateName = comAsm->getStateName(ANIM_LAYER_UNKNOWN_0);
     bool isIdle = __builtin_strcmp(stateName, "S_idle") == 0;
     bool isTalkEnd = __builtin_strcmp(stateName, "S_talkA_02") == 0;
     if ((isIdle | isTalkEnd) || StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_IDLE)) {
-      reqState(STATE_ID_FIELD_IDLE);
+      reqState(STATE_ID_UNKNOWN_3);
     }
   }
 }
 
 bool StateFieldTalk::recieveMessage(void *owner, fw::MessageObject *sender, fw::Message &message) {
   switch (message.unknown00) {
-  case MSG_GAME_TALK_ACTION:
+  case MSG_GAME_UNKNOWN_16777261:
     procMsgGameTalkAction(static_cast<GfComBehaviorPc *>(owner), sender, static_cast<MsgGameTalkAction &>(message));
     break;
-  case MSG_GAME_LIP_ACTION:
+  case MSG_GAME_UNKNOWN_16777262:
     procMsgGameLipAction(static_cast<GfComBehaviorPc *>(owner), sender, static_cast<MsgGameLipAction &>(message));
     break;
-  case MSG_GAME_SET_LIP_WEIGHT:
+  case MSG_GAME_UNKNOWN_16777263:
     procMsgGameSetLipWeight(static_cast<GfComBehaviorPc *>(owner), sender, static_cast<MsgGameSetLipWeight &>(message));
     break;
   default:
@@ -88,13 +88,13 @@ bool StateFieldTalk::recieveMessage(void *owner, fw::MessageObject *sender, fw::
 void StateFieldTalk::procMsgGameTalkAction(GfComBehaviorPc *behavior, fw::MessageObject *sender, MsgGameTalkAction &message) {
   GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
   if (message.isDirect) {
-    message.isSuccess = comAsm->setState(unknown002[message.action], ANIM_LAYER_BASE);
+    message.isSuccess = comAsm->setState(unknown002[message.action], ANIM_LAYER_UNKNOWN_0);
   } else {
     if (unknown003[message.action] != nullptr) {
-      message.isSuccess = comAsm->execCmd(unknown003[message.action], ANIM_LAYER_BASE);
+      message.isSuccess = comAsm->execCmd(unknown003[message.action], ANIM_LAYER_UNKNOWN_0);
     }
     if (!message.isSuccess && unknown003[message.action] != nullptr) {
-      message.isSuccess = comAsm->setState(unknown002[message.action], ANIM_LAYER_BASE);
+      message.isSuccess = comAsm->setState(unknown002[message.action], ANIM_LAYER_UNKNOWN_0);
     }
   }
 }

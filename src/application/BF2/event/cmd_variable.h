@@ -4,12 +4,12 @@
 namespace event {
 
 enum VARIABLE_TYPE {
-  VARIABLE_TYPE_NONE,
-  VARIABLE_TYPE_S32,
-  VARIABLE_TYPE_F32,
-  VARIABLE_TYPE_BOOL,
-  VARIABLE_TYPE_STR,
-  VARIABLE_TYPE_USERDATA,
+  VARIABLE_TYPE_UNKNOWN_0, // Inferred role: none; original name unknown.
+  VARIABLE_TYPE_UNKNOWN_1, // Inferred role: s32; original name unknown.
+  VARIABLE_TYPE_UNKNOWN_2, // Inferred role: f32; original name unknown.
+  VARIABLE_TYPE_UNKNOWN_3, // Inferred role: bool; original name unknown.
+  VARIABLE_TYPE_UNKNOWN_4, // Inferred role: str; original name unknown.
+  VARIABLE_TYPE_UNKNOWN_5, // Inferred role: userdata; original name unknown.
 };
 
 class CmdVariable {

@@ -47,14 +47,14 @@ s32 ThreadUtil::getCpuNum() { return 3; }
 u32 ThreadUtil::getCpuMask() { return nn::os::GetThreadAvailableCoreMask(); }
 
 void ThreadUtil::setCpuThread(MLTHREAD *thread, CPUID cpuId) {
-  if (cpuId == CPUID_ANY) {
+  if (cpuId == CPUID_UNKNOWN_0) {
     return;
   }
   s32 coreID = convertCoreID(cpuId);
   nn::os::SetThreadCoreMask(thread, coreID, 1UL << coreID);
 }
 
-s32 ThreadUtil::convertCoreID(CPUID cpuId) { return cpuId > CPUID_ANY ? cpuId - 1 : -1; }
+s32 ThreadUtil::convertCoreID(CPUID cpuId) { return cpuId > CPUID_UNKNOWN_0 ? cpuId - 1 : -1; }
 
 u64 ThreadUtil::getID(MLTHREAD *thread) { return reinterpret_cast<u64>(thread); }
 
@@ -65,7 +65,7 @@ CPUID ThreadUtil::getCurrentCPUID() { return static_cast<CPUID>(nn::os::GetCurre
 MLTHREAD *ThreadUtil::getCurrentHandle() { return static_cast<MLTHREAD *>(nn::os::GetCurrentThread()); }
 
 ThreadNx::ThreadNx(Thread **thread, const char *name, bool isStart, ThreadFunc func, void *argument, u32 stackSize, CPUID cpuId, int priority)
-    : m_CPUID(cpuId), unknown1e8(false, false), unknown248(nullptr), unknown250(argument), unknown258(func), unknown260(STATE_RUNNING) {
+    : m_CPUID(cpuId), unknown1e8(false, false), unknown248(nullptr), unknown250(argument), unknown258(func), unknown260(STATE_UNKNOWN_0) {
   *thread = this;
   if (stackSize == 0) {
     stackSize = 0x10000;
@@ -73,7 +73,7 @@ ThreadNx::ThreadNx(Thread **thread, const char *name, bool isStart, ThreadFunc f
   unknown248 = mtl::MemManager::allocate(WorkCpu::getMemStack(), stackSize, 0x1000, false, "no name", 0);
   memset(unknown248, 0xa5, stackSize);
   int threadPriority = nn::os::DefaultThreadPriority - priority;
-  if (cpuId != CPUID_ANY) {
+  if (cpuId != CPUID_UNKNOWN_0) {
     nn::os::CreateThread(&unknown28, threadCallback, this, unknown248, stackSize, threadPriority, cpuId - 1);
   } else {
     nn::os::CreateThread(&unknown28, threadCallback, this, unknown248, stackSize, threadPriority);
@@ -94,11 +94,11 @@ ThreadNx::ThreadNx(Thread **thread, const char *name, bool isStart, ThreadFunc f
 
 void ThreadNx::threadCallback(void *param) {
   ThreadNx *thread = static_cast<ThreadNx *>(param);
-  thread->unknown260 = STATE_RUNNING;
+  thread->unknown260 = STATE_UNKNOWN_0;
   if (thread->unknown258 != nullptr) {
     thread->unknown258(thread->unknown250);
   }
-  thread->unknown260 = STATE_TERMINATED;
+  thread->unknown260 = STATE_UNKNOWN_2;
 }
 
 bool ThreadNx::isSuspended() const { return false; }
@@ -107,7 +107,7 @@ bool ThreadNx::isTerminated() {
   if (m_handle == nullptr) {
     return true;
   }
-  return unknown260 == STATE_TERMINATED;
+  return unknown260 == STATE_UNKNOWN_2;
 }
 
 s32 ThreadNx::exitThread() {
@@ -115,7 +115,7 @@ s32 ThreadNx::exitThread() {
     nn::os::DestroyThread(m_handle);
     m_handle = nullptr;
   }
-  unknown260 = STATE_TERMINATED;
+  unknown260 = STATE_UNKNOWN_2;
   return 0;
 }
 

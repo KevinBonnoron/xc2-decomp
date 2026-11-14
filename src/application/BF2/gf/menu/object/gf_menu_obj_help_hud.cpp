@@ -1,6 +1,8 @@
 #include "gf/menu/object/gf_menu_obj_help_hud.h"
 
 #include "gf/gf_allocator.h"
+#include "gf/menu/gf_menu_manager.h"
+#include "gf/menu/object/gf_menu_obj_tutorial.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "mm_mtl/delegate.h" // IWYU pragma: keep
 #include "types.h"
@@ -24,7 +26,7 @@ void GfMenuObjHelpHud::initialize() {
   ui::UIObjectAcc main(unknown18, "LAY_main");
 // __LINE__ must be 111 as in the original file: it is the line argument of operator new.
 #line 111
-  MainListener *listener = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) MainListener(this);
+  MainListener *listener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) MainListener(this);
   listener->addRef();
   ui::UIEventManager::get()->registObjectListener(main.unknown10, listener);
   if (listener != nullptr) {
@@ -35,6 +37,24 @@ void GfMenuObjHelpHud::initialize() {
 }
 
 void GfMenuObjHelpHud::finalize() { GfMenuObject::finalize(); }
+
+void GfMenuObjHelpHud::update() {
+  if (unknown24 != 0) {
+    if (GfMenuManager::isOpenFullScreen()) {
+      ui::UIObjectAcc acc(unknown18, "IMG_help");
+      acc.setImageIndex(0);
+      unknown24 = 0;
+      unknown30.unknown005();
+    } else if (GfMenuObjTutorial::isWaiting()) {
+      unknown24 = 0;
+      unknown30.unknown005();
+      unknown30.unknown002(&GfMenuObjHelpHud::seqPageFadeOut);
+      unknown30.unknown002(&GfMenuObjHelpHud::seqPageLoad);
+    }
+  }
+  unknown30.unknown003();
+  GfMenuObject::update();
+}
 
 void GfMenuObjHelpHud::enable() { unknown144(unknown001, unknown002); }
 

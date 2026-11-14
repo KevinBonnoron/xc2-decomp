@@ -17,21 +17,21 @@ class CharaObj;
 class TextManager : public IManager, public mm::mtl::Singleton<TextManager> {
 public:
   enum {
-    FLAG_CAPTION = 1 << 0,
-    FLAG_AUTO_TALK_MODE = 1 << 1,
-    FLAG_AUTO_VOICE_MODE = 1 << 2,
-    FLAG_BLADE_NAME_MODE = 1 << 3,
-    FLAG_REPLACE_MODE = 1 << 4,
-    FLAG_CUT_CHANGE_FRAME = 1 << 5,
-    FLAG_LOCK_FRAME = 1 << 6,
-    FLAG_PLAY = 1 << 7,
-    FLAG_WRITE = 1 << 8,
-    FLAG_ERASE = 1 << 9,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: caption flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: auto talk mode flag; original name unknown.
+    FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: auto voice mode flag; original name unknown.
+    FLAG_UNKNOWN_3 = 1 << 3, // Inferred role: blade name mode flag; original name unknown.
+    FLAG_UNKNOWN_4 = 1 << 4, // Inferred role: replace mode flag; original name unknown.
+    FLAG_UNKNOWN_5 = 1 << 5, // Inferred role: cut change frame flag; original name unknown.
+    FLAG_UNKNOWN_6 = 1 << 6, // Inferred role: lock frame flag; original name unknown.
+    FLAG_UNKNOWN_7 = 1 << 7, // Inferred role: play flag; original name unknown.
+    FLAG_UNKNOWN_8 = 1 << 8, // Inferred role: write flag; original name unknown.
+    FLAG_UNKNOWN_9 = 1 << 9, // Inferred role: erase flag; original name unknown.
   };
 
   enum {
-    DISP_FLAG_DISP = 1 << 0,
-    DISP_FLAG_USE_SKIP = 1 << 1,
+    DISP_FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: disp flag; original name unknown.
+    DISP_FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: use skip flag; original name unknown.
   };
 
   TextManager();

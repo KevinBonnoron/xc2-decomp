@@ -11,6 +11,7 @@
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_manager.h"
 #include "gf/object/gf_obj_setup.h"
+#include "ml/rand.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/rtti.h"
@@ -22,20 +23,20 @@ void StateFieldIdle::leave(GfComBehaviorEnemy *behavior, ai::State *next) {
   GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
   if (comAsm != nullptr) {
     if (unknown08 == STATE_ID_UNKNOWN_4) {
-      comAsm->execCmd("C_specialA_02", ANIM_LAYER_BASE);
+      comAsm->execCmd("C_specialA_02", ANIM_LAYER_UNKNOWN_0);
     } else if (unknown08 == STATE_ID_UNKNOWN_5) {
-      comAsm->execCmd("C_specialB_02", ANIM_LAYER_BASE);
+      comAsm->execCmd("C_specialB_02", ANIM_LAYER_UNKNOWN_0);
     }
   }
 }
 
 void StateFieldIdle::update(GfComBehaviorEnemy *behavior, const fw::UpdateInfo &info) {
   unknown20.update(info.unknown04);
-  if (unknown20.unknown00 == INVALID_HANDLE || unknown20.unknown08.empty() || unknown20.unknown34) {
+  if (unknown20.unknown00 == unknown020 || unknown20.unknown08.empty() || unknown20.unknown34) {
     if (unknown20.unknown35 && unknown5c < 0.0f) {
       GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
       if (comAsm != nullptr) {
-        const char *stateName = comAsm->getStateName(ANIM_LAYER_BASE);
+        const char *stateName = comAsm->getStateName(ANIM_LAYER_UNKNOWN_0);
         if (stateName != nullptr) {
           comAsm->getPlaybackTime(stateName, &unknown5c);
         }
@@ -60,6 +61,23 @@ void StateFieldIdle::update(GfComBehaviorEnemy *behavior, const fw::UpdateInfo &
     if (unknown60) {
       (this->*unknown60)(*behavior, info);
     }
+  }
+}
+
+void StateFieldIdle::seqFlyInsectIdle(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info) {
+  if (unknown20.unknown35) {
+    mm::Vec3 position = behavior.getTransform().unknown00;
+    GfObjSetupEnemy *setup = mm::mtl::dynamicCast<GfObjSetupEnemy>(GfObjManager::getObjInfo(static_cast<GfObj *>(behavior.unknown08)->unknownf8)->unknown30);
+    position.y = setup->unknown20.y + ml::mtRandf1(-1.0f, 1.0f) * 3.0f;
+    behavior.unknown140.unknownc0 = position;
+  }
+
+  if (unknown20.unknown34) {
+    behavior.unknown003(info.unknown04);
+  }
+
+  if (behavior.unknown140.isArrivedToGoal()) {
+    unknown58 = unknown5c;
   }
 }
 

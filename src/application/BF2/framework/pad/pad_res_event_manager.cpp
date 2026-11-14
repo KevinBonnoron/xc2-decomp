@@ -9,6 +9,11 @@ PadResEventManager::PadResEventManager() {}
 
 PadResEventManager::~PadResEventManager() {}
 
+void PadResEventManager::setup(u32 count, mm::mtl::IAllocator *allocator) {
+  unknown08.setAllocator(allocator);
+  unknown08.resize(count, mm::mtl::IntrusivePtr<const PadResEvent>());
+}
+
 void PadResEventManager::cleanup() {
   unknown08.clear();
   unknown08.setAllocator(nullptr);

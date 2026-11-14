@@ -33,6 +33,11 @@ public:
   UICtrlCursorSelect(u32 object);
   virtual ~UICtrlCursorSelect();
 
+  // _ZN2ui18UICtrlCursorSelect6createEjRKNS0_13CursorSettingEPNS_15UISelectObjListE
+  static UICtrlCursorSelect *create(u32 object, const CursorSetting &setting, UISelectObjList *list);
+  // _ZN2ui18UICtrlCursorSelect4openEi
+  void open(int index);
+
   void setIndex(u32 index);
   bool inputChange(u32 index);
   void setSelIndex(u32 index, bool immediate);

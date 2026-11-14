@@ -20,16 +20,16 @@
 #include "mtl/alloc_handle.h"
 
 namespace fw {
-enum CAMERA_TYPE : int;
+enum CAMERA_TYPE : unsigned int;
 } // namespace fw
 
 namespace event {
 
-bool CamManager::isOffscrMode() const { return (unknown10 & FLAG_OFFSCR_MODE) != 0; }
+bool CamManager::isOffscrMode() const { return (unknown10 & FLAG_UNKNOWN_1) != 0; }
 
 u32 CamManager::getOffscrID() const { return m_offscrID; }
 
-bool CamManager::isFreeCam() const { return (unknown14 & DISP_FLAG_FREE_CAM) != 0; }
+bool CamManager::isFreeCam() const { return (unknown14 & DISP_FLAG_UNKNOWN_1) != 0; }
 
 CamManager::CamManager() : unknown10(0), unknown14(0), unknown88(nullptr), m_freeCam(false), m_offscrID(0) {}
 
@@ -50,7 +50,7 @@ void CamManager::clear() {
   while (!unknown18.empty()) {
     destroyCam(unknown18[0]);
   }
-  for (size_t i = 0; i < INTERFACE_COUNT; i++) {
+  for (size_t i = 0; i < INTERFACE_UNKNOWN_4; i++) {
     if (unknown60[i]) {
       delete unknown60[i];
       unknown60[i] = nullptr;
@@ -59,14 +59,14 @@ void CamManager::clear() {
   unknown60.clear();
   m_freeCam.setActive(false);
   unknown10 = 0;
-  unknown14 &= ~DISP_FLAG_FREE_CAM;
+  unknown14 &= ~DISP_FLAG_UNKNOWN_1;
   unknown88 = nullptr;
   m_offscrID = 0;
 }
 
 void CamManager::init() {
   unknown10 = 0;
-  for (size_t i = 0; i < INTERFACE_COUNT; i++) {
+  for (size_t i = 0; i < INTERFACE_UNKNOWN_4; i++) {
     CamInterface *cam = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) CamInterface(static_cast<fw::CAMERA_TYPE>(i));
     cam->addRef();
     unknown60.push_back(cam);
@@ -74,7 +74,7 @@ void CamManager::init() {
 }
 
 void CamManager::update() {
-  if ((unknown14 & DISP_FLAG_FREE_CAM) != 0) {
+  if ((unknown14 & DISP_FLAG_UNKNOWN_1) != 0) {
     mm::mtl::Singleton<FrameManager>::getPtr()->frameInfo();
     mm::Vec3 pos = m_freeCam.getPos();
     mm::Vec3 target = m_freeCam.getTarget();
@@ -90,8 +90,8 @@ void CamManager::update() {
 }
 
 void CamManager::render() {
-  if (!unknown18.empty() && (unknown14 & (DISP_FLAG_DISP | DISP_FLAG_FREE_CAM)) != 0) {
-    CamBase *cam = (unknown14 & DISP_FLAG_FREE_CAM) != 0 ? static_cast<CamBase *>(&m_freeCam) : unknown88;
+  if (!unknown18.empty() && (unknown14 & (DISP_FLAG_UNKNOWN_0 | DISP_FLAG_UNKNOWN_1)) != 0) {
+    CamBase *cam = (unknown14 & DISP_FLAG_UNKNOWN_1) != 0 ? static_cast<CamBase *>(&m_freeCam) : unknown88;
     if (cam != nullptr) {
       mm::Vec3 pos = cam->getPos();
       mm::Vec3 target = cam->getTarget();
@@ -126,7 +126,7 @@ void CamManager::render() {
       }
     }
   }
-  if ((unknown14 & DISP_FLAG_FREE_CAM) != 0) {
+  if ((unknown14 & DISP_FLAG_UNKNOWN_1) != 0) {
     int width = ml::DevGraph::getRootWidth();
     int x = width - 520;
     int y = 30;
@@ -137,10 +137,10 @@ void CamManager::render() {
   }
 }
 
-void CamManager::setStreamMode(bool isStreamMode) { setFlag(FLAG_STREAM_MODE, isStreamMode); }
+void CamManager::setStreamMode(bool isStreamMode) { setFlag(FLAG_UNKNOWN_0, isStreamMode); }
 
 void CamManager::loadResource(const char *name) {
-  if ((unknown10 & FLAG_STREAM_MODE) != 0) {
+  if ((unknown10 & FLAG_UNKNOWN_0) != 0) {
     return;
   }
   mm::mtl::Singleton<ResManager>::getPtr()->load(mm::mtl::Singleton<Extend>::getPtr()->eva(name), nullptr, false);
@@ -148,16 +148,16 @@ void CamManager::loadResource(const char *name) {
 
 void CamManager::setOffscrMode(bool isOffscrMode, u32 offscrID) {
   if (isOffscrMode) {
-    unknown10 |= FLAG_OFFSCR_MODE;
+    unknown10 |= FLAG_UNKNOWN_1;
     m_offscrID = offscrID;
   } else {
-    unknown10 &= ~FLAG_OFFSCR_MODE;
+    unknown10 &= ~FLAG_UNKNOWN_1;
     m_offscrID = 0;
   }
 }
 
 CamObj *CamManager::createCam(u32 screenID) {
-  CamObj *cam = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) CamObj(screenID, (unknown10 & FLAG_FOCAL) != 0, (unknown10 & FLAG_STREAM_MODE) != 0);
+  CamObj *cam = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) CamObj(screenID, (unknown10 & FLAG_UNKNOWN_2) != 0, (unknown10 & FLAG_UNKNOWN_0) != 0);
   unknown18.push_back(cam);
   if (screenID == 0) {
     unknown88 = cam;
@@ -167,16 +167,16 @@ CamObj *CamManager::createCam(u32 screenID) {
 
 void CamManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
-  case MSG_TYPE_INIT:
+  case MSG_TYPE_UNKNOWN_4:
     init();
     break;
-  case MSG_TYPE_CLEAR:
+  case MSG_TYPE_UNKNOWN_12:
     clear();
     break;
-  case MSG_TYPE_UPDATE:
+  case MSG_TYPE_UNKNOWN_14:
     update();
     break;
-  case MSG_TYPE_RENDER:
+  case MSG_TYPE_UNKNOWN_16:
     render();
     break;
   default:
@@ -188,24 +188,24 @@ CamFree *CamManager::getFreeCam() { return &m_freeCam; }
 
 void CamManager::setFreeCam(bool isFreeCam) {
   if (isFreeCam) {
-    if ((unknown14 & DISP_FLAG_FREE_CAM) != 0 || unknown88 == nullptr) {
+    if ((unknown14 & DISP_FLAG_UNKNOWN_1) != 0 || unknown88 == nullptr) {
       return;
     }
     m_freeCam.setActive(true);
     m_freeCam.unknown002(*unknown88);
-    unknown14 |= DISP_FLAG_FREE_CAM;
+    unknown14 |= DISP_FLAG_UNKNOWN_1;
   } else {
     m_freeCam.setActive(false);
-    unknown14 &= ~DISP_FLAG_FREE_CAM;
+    unknown14 &= ~DISP_FLAG_UNKNOWN_1;
   }
 }
 
-void CamManager::setDisp(bool isDisp) { setDispFlag(DISP_FLAG_DISP, isDisp); }
+void CamManager::setDisp(bool isDisp) { setDispFlag(DISP_FLAG_UNKNOWN_0, isDisp); }
 
-bool CamManager::isDisp() const { return (unknown14 & DISP_FLAG_DISP) != 0; }
+bool CamManager::isDisp() const { return (unknown14 & DISP_FLAG_UNKNOWN_0) != 0; }
 
-void CamManager::setFocal(bool isFocal) { setFlag(FLAG_FOCAL, isFocal); }
+void CamManager::setFocal(bool isFocal) { setFlag(FLAG_UNKNOWN_2, isFocal); }
 
-bool CamManager::isFocal() const { return (unknown10 & FLAG_FOCAL) != 0; }
+bool CamManager::isFocal() const { return (unknown10 & FLAG_UNKNOWN_2) != 0; }
 
 } // namespace event

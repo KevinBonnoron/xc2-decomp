@@ -6,6 +6,7 @@
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 
 namespace mm {
 namespace mtl {
@@ -27,6 +28,42 @@ class GfMenuReferenceNumber;
 
 class GfMenuObjDrArtsSet2 : public GfMenuObject {
 public:
+  class MainListener : public ui::UIObjectListener {
+  public:
+    MainListener(GfMenuObjDrArtsSet2 *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjDrArtsSet2 *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class WpnTypeListener : public ui::UIObjectListener {
+  public:
+    WpnTypeListener(GfMenuObjDrArtsSet2 *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjDrArtsSet2 *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class ArtsListListener : public ui::UIObjectListener {
+  public:
+    ArtsListListener(GfMenuObjDrArtsSet2 *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjDrArtsSet2 *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class LevelupListener : public ui::UIObjectListener {
+  public:
+    LevelupListener(GfMenuObjDrArtsSet2 *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjDrArtsSet2 *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   GfMenuObjDrArtsSet2(u32 handle);
   ~GfMenuObjDrArtsSet2() override;
   // Inferred role: result of checkArtsLvUp, 0 when the arts can be leveled up, 4 at the maximum level and 5 without enough WP; original type name unknown.
@@ -39,6 +76,12 @@ public:
   static unknown001 checkArtsLvUp(u32 driver, u32 weaponType, u32 arts, u32 level);
   static unknown001 checkArtsLvUp(u32 driver, u32 weaponType, GfMenuArtsList *list, u32 index);
   static void refreshParam(ui::UIObjectAcc &acc, u32 driver, u32 weaponType, GfMenuArtsList *list, u32 index);
+  static void refreshLvUp(ui::UIObjectAcc &acc, u32 driver, u32 weaponType, GfMenuArtsList *list);
+  static void refreshArtsSelect(ui::UIObjectAcc &acc, int selected, int held);
+  static void refreshLvCap(ui::UIObjectAcc &acc, u32 driver, u32 weaponType, GfMenuArtsList *list, u32 index);
+  static void setupWpnType(ui::UIObjectAcc &acc, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number, GfMenuArtsList *list, GfMenuBladeList *blades);
+  static void refreshArtsList(ui::UIObjectAcc &acc, GfMenuArtsList *list, u32 driver, u32 weaponType, GfMenuBladeList *blades);
+  static void setupArtsList(ui::UIObjectAcc &acc, GfMenuArtsList *list, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> wpnType, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> artsIndex);
   static void refreshArtsNeedWP(ui::UIObjectAcc &acc, GfMenuArtsList *list, u32 driver, u32 weaponType);
   static void refreshLvUpWpn(ui::UIObjectAcc &acc, u32 driver, const mm::mtl::FixedVector<u32, 27> &weaponTypes);
   static void setupArtsDetail(ui::UIObjectAcc &acc, GfMenuArtsList *list, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number);

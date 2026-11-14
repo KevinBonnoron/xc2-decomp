@@ -7,8 +7,10 @@ struct Vec3;
 
 namespace fw {
 
-enum CAMERA_TYPE : int {
-  CAMERA_TYPE_MAIN = 0,
+// Unsigned underlying type: fw::CameraManager::pop indexes the layers with it through a zero extension. Evidence: Xenoblade Chronicles: Definitive Edition has the function out of line,
+// _ZN2fw13CameraManager3popENS_11CAMERA_TYPEERN2mm3mtl12IntrusivePtrINS_6CameraEEEf (umaddl x8, w1, w8, x0), and GfMenuModelView::popCamera has the same umaddl.
+enum CAMERA_TYPE : unsigned int {
+  CAMERA_TYPE_UNKNOWN_0 = 0, // Inferred role: main; original name unknown.
 };
 
 class RenderParam {

@@ -7,7 +7,7 @@
 
 namespace gf {
 
-constexpr u32 MSG_PC_RESET_CAMERA = 0x1000006;
+constexpr u32 MSG_UNKNOWN_16777222 = 0x1000006; // Inferred role: msg pc reset camera; original name unknown.
 
 static PlayerCamera *getPlayerCamera() {
   GfGamePlayerCamera *playerCamera = GfGamePlayerCamera::get();
@@ -26,7 +26,7 @@ static PlayerCamera *getPlayerCamera() {
 void GfGamePlayerCamera::build(const GfSetupParam &) {
 // __LINE__ of the operator new call changes the instruction order.
 #line 29
-  GfGamePlayerCamera *playerCamera = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfGamePlayerCamera();
+  GfGamePlayerCamera *playerCamera = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfGamePlayerCamera();
   playerCamera->setup();
 }
 
@@ -214,7 +214,7 @@ void GfGamePlayerCamera::gevPartyMemberOK(bool isOK) {
 }
 
 bool GfGamePlayerCamera::recieveMessage(fw::MessageObject *sender, fw::Message &message) {
-  if (message.unknown00 == MSG_PC_RESET_CAMERA) {
+  if (message.unknown00 == MSG_UNKNOWN_16777222) {
     procMsgPcResetCamera(sender, static_cast<MsgPcResetCamera &>(message));
     return true;
   }

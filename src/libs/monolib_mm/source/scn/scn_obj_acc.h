@@ -29,7 +29,6 @@ class DrStmReadObj;
 class ScnObjModel;
 struct unknown059;
 struct unknown060;
-struct MdlVtxParticle;
 struct unknown023;
 class DrResMdoMat;
 struct unknown024;
@@ -59,6 +58,27 @@ static_assert(offsetof(VolumeFadeParams, unknown88) == 0x88, "");
 static_assert(offsetof(VolumeFadeParams, unknown9c) == 0x9c, "");
 static_assert(offsetof(VolumeFadeParams, unknowna4) == 0xa4, "");
 static_assert(sizeof(VolumeFadeParams) == 0xb0, "");
+
+// Layout evidence: ScnObjAccMdlParticle::setParams (0x7107b48a0) copies 0x34 bytes into DrResMdoVtxMeshObj 0x100..0x134 with the members at 0x24 and 0x28 clamped to 0..1.
+struct MdlVtxParticle {
+  f32 unknown00;      // Inferred role: life time; original member name unknown.
+  f32 unknown04;      // Inferred role: scale divisor; original member name unknown.
+  f32 unknown08;      // Inferred role: speed; original member name unknown.
+  f32 unknown0c;      // Inferred role: gravity; original member name unknown.
+  u32 unknown10;      // Inferred role: particle count limit; original member name unknown.
+  mm::Col3 unknown14; // Inferred role: color; original member name unknown.
+  f32 unknown20;      // Role and original member name unknown.
+  f32 unknown24;      // Inferred role: ratio clamped to 0..1; original member name unknown.
+  f32 unknown28;      // Inferred role: ratio clamped to 0..1; original member name unknown.
+  f32 unknown2c;      // Role and original member name unknown.
+  f32 unknown30;      // Role and original member name unknown.
+};
+
+static_assert(offsetof(MdlVtxParticle, unknown10) == 0x10, "");
+static_assert(offsetof(MdlVtxParticle, unknown14) == 0x14, "");
+static_assert(offsetof(MdlVtxParticle, unknown20) == 0x20, "");
+static_assert(offsetof(MdlVtxParticle, unknown30) == 0x30, "");
+static_assert(sizeof(MdlVtxParticle) == 0x34, "");
 
 struct DrMdlAfterImageParams {
   f32 unknown00;      // Inferred role: count; original member name unknown.
@@ -174,10 +194,10 @@ public:
   ScnObjAccResMaterial(ScnObjModel *model);
   void setDrMdl(ScnObjModel *model);
   DrResMdoMat *getMatRes(int index);
-  MdsMatInfoHeader *getMatData(int index);
+  const MdsMatInfoHeader *getMatData(int index);
 
 private:
-  MdsMatInfoHeader *m_matData;
+  const MdsMatInfoHeader *m_matData;
   DrResMdoMat *m_matEntries;
   u32 m_matCount;
 };
@@ -325,9 +345,9 @@ private:
 class ScnObjAccStmReadObj {
 public:
   enum ReadType {
-    READ_TYPE_NONE,
-    READ_TYPE_LOAD,
-    READ_TYPE_SIZE,
+    READ_TYPE_UNKNOWN_0, // Inferred role: none; original name unknown.
+    READ_TYPE_UNKNOWN_1, // Inferred role: load; original name unknown.
+    READ_TYPE_UNKNOWN_2, // Inferred role: size; original name unknown.
   };
 
   ScnObjAccStmReadObj(DrStmReadObj *readObj);

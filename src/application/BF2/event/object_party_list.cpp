@@ -11,13 +11,13 @@ struct GF_OBJ_HANDLE;
 
 namespace event {
 
-mm::mtl::FixedVector<gf::GF_OBJ_HANDLE *, ObjectPartyList::MEMBER_COUNT> ObjectPartyList::s_drlist;
-mm::mtl::FixedVector<gf::GF_OBJ_HANDLE *, ObjectPartyList::MEMBER_COUNT> ObjectPartyList::s_bllist;
+mm::mtl::FixedVector<gf::GF_OBJ_HANDLE *, ObjectPartyList::MEMBER_UNKNOWN_3> ObjectPartyList::s_drlist;
+mm::mtl::FixedVector<gf::GF_OBJ_HANDLE *, ObjectPartyList::MEMBER_UNKNOWN_3> ObjectPartyList::s_bllist;
 
-bool ObjectPartyList::isInvalidChara(gf::GF_OBJ_HANDLE *handle) { return handle == gf::INVALID_HANDLE; }
+bool ObjectPartyList::isInvalidChara(gf::GF_OBJ_HANDLE *handle) { return handle == gf::unknown020; }
 
 bool ObjectPartyList::isTemporaryChara(gf::GF_OBJ_HANDLE *handle) {
-  if (handle != gf::INVALID_HANDLE) {
+  if (handle != gf::unknown020) {
     u32 id = gf::GfObjAcc(handle).getBdatId();
     if (gf::GfGameEvent::isLeaderCharaNG(id)) {
       return true;
@@ -35,7 +35,7 @@ u32 ObjectPartyList::getLeaderDriverId() const {
     return 1;
   }
   gf::GF_OBJ_HANDLE *handle = s_drlist.front();
-  if (handle == gf::INVALID_HANDLE) {
+  if (handle == gf::unknown020) {
     return 1;
   }
   return gf::GfObjAcc(handle).getBdatId();

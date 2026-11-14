@@ -8,13 +8,13 @@ namespace gf {
 
 struct GfSetupParam;
 
-constexpr u32 SCRIPT_SLOT_FIELD_SYSTEM = 0;
-constexpr u32 SCRIPT_SLOT_FIELD = 1;
-constexpr u32 SCRIPT_SLOT_LARGE = 2;
-constexpr u32 SCRIPT_SLOT_AFTER_EVENT = 3;
-constexpr u32 SCRIPT_SLOT_TUTORIAL = 4;
-constexpr u32 SCRIPT_SLOT_AI = 0x24;
-constexpr u32 SCRIPT_SLOT_GMK_TUTORIAL = 0x44;
+constexpr u32 SCRIPT_SLOT_UNKNOWN_0 = 0;     // Inferred role: script slot field system; original name unknown.
+constexpr u32 SCRIPT_SLOT_UNKNOWN_1 = 1;     // Inferred role: script slot field; original name unknown.
+constexpr u32 SCRIPT_SLOT_UNKNOWN_2 = 2;     // Inferred role: script slot large; original name unknown.
+constexpr u32 SCRIPT_SLOT_UNKNOWN_3 = 3;     // Inferred role: script slot after event; original name unknown.
+constexpr u32 SCRIPT_SLOT_UNKNOWN_4 = 4;     // Inferred role: script slot tutorial; original name unknown.
+constexpr u32 SCRIPT_SLOT_UNKNOWN_36 = 0x24; // Inferred role: script slot ai; original name unknown.
+constexpr u32 SCRIPT_SLOT_UNKNOWN_68 = 0x44; // Inferred role: script slot gmk tutorial; original name unknown.
 
 class GfScriptManager : public mm::mtl::PtrSingleton<GfScriptManager> {
 public:

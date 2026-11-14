@@ -29,14 +29,14 @@ class UpdatableObject;
 extern const u32 COLI_INVALID_DAMAGE_ID;
 
 enum ColiType : int {
-  COLI_TYPE_STATIC = 0,
+  COLI_TYPE_UNKNOWN_0 = 0, // Inferred role: static; original name unknown.
   COLI_TYPE_UNKNOWN_1 = 1, // Inferred role: set by GfComBehaviorNpc::init while the npc moves on its own; original name unknown.
 };
 
 enum ColiState : int {
   COLI_STATE_UNKNOWN_0 = 0,
-  COLI_STATE_ENABLE = 1,
-  COLI_STATE_INACTIVE = 2,
+  COLI_STATE_UNKNOWN_1 = 1, // Inferred role: enable; original name unknown.
+  COLI_STATE_UNKNOWN_2 = 2, // Inferred role: inactive; original name unknown.
 };
 
 enum ColiAtrr : int {
@@ -72,10 +72,10 @@ struct IColiEventListener::LeaveInfo {
 // Inferred role: coli shape, the base of the sphere, capsule, box and character shapes; original type name unknown.
 struct unknown031 {
   enum Type {
-    TYPE_SPHERE = 0,
-    TYPE_CAPSULE = 1,
-    TYPE_BOX = 2,
-    TYPE_CHARACTER = 3,
+    TYPE_UNKNOWN_0 = 0, // Inferred role: sphere; original name unknown.
+    TYPE_UNKNOWN_1 = 1, // Inferred role: capsule; original name unknown.
+    TYPE_UNKNOWN_2 = 2, // Inferred role: box; original name unknown.
+    TYPE_UNKNOWN_3 = 3, // Inferred role: character; original name unknown.
     TYPE_UNKNOWN_4 = 4,
     TYPE_UNKNOWN_5 = 5,
   };
@@ -91,14 +91,14 @@ struct unknown031 {
 
 // Inferred role: sphere coli shape; original type name unknown.
 struct unknown131 : unknown031 {
-  explicit unknown131(f32 radius) : unknown031(TYPE_SPHERE), unknown04(radius) {}
+  explicit unknown131(f32 radius) : unknown031(TYPE_UNKNOWN_0), unknown04(radius) {}
 
   f32 unknown04; // Inferred role: radius; original member name unknown.
 };
 
 // Inferred role: capsule coli shape; original type name unknown.
 struct unknown132 : unknown031 {
-  unknown132(f32 radius, f32 height) : unknown031(TYPE_CAPSULE), unknown04(radius), unknown08(height) {}
+  unknown132(f32 radius, f32 height) : unknown031(TYPE_UNKNOWN_1), unknown04(radius), unknown08(height) {}
 
   f32 unknown04;  // Inferred role: radius; original member name unknown.
   f32 unknown08;  // Inferred role: height; original member name unknown.
@@ -114,7 +114,7 @@ struct unknown137 {
 
 // Inferred role: box coli shape; original type name unknown.
 struct unknown133 : unknown031 {
-  explicit unknown133(const mm::Vec3 &size) : unknown031(TYPE_BOX) { unknown10.unknown00 = size; }
+  explicit unknown133(const mm::Vec3 &size) : unknown031(TYPE_UNKNOWN_2) { unknown10.unknown00 = size; }
 
   unknown137 unknown10; // Inferred role: size and flag; original member name unknown.
 };
@@ -145,12 +145,15 @@ static_assert(sizeof(unknown134) == 0xc, "");
 static_assert(offsetof(unknown135, unknown08) == 0x08, "");
 static_assert(sizeof(unknown135) == 0x10, "");
 
+// Evidence: the game's vtables of ColiObjUserData, gf::GfComCollider::UserData (0x710119c240) and gf::GfFieldLodColiAnim::ColiUserData
+// (0x7101188678) hold only the getRTTI slot (24 bytes), so the class has no virtual destructor.
 class ColiUserData {
 public:
   static mm::mtl::RTTI m_rtti;
 
+  // The game's vtables of the classes deriving from it (gf::GfFieldLodColiAnim::ColiUserData at 0x7101188678)
+  // hold only getRTTI, so it has no virtual destructor.
   virtual const mm::mtl::RTTI *getRTTI() const { return &m_rtti; }
-  virtual ~ColiUserData() {}
 };
 
 class ColiObjUserData {
@@ -228,10 +231,10 @@ static_assert(offsetof(ColiPhantomInfo, unknown80) == 0x80, "");
 
 class ColiObject : public mm::mtl::ReferenceObject, public mm::mtl::IntrusiveListNode<ColiObject> {
 public:
-  static const u16 FLAG_MATRIX_DIRTY = 1 << 0;
-  static const u32 EVENT_ENTER = 0;
-  static const u32 EVENT_CONTACT = 1;
-  static const u32 EVENT_LEAVE = 2;
+  static const u16 FLAG_UNKNOWN_0 = 1 << 0; // Inferred role: matrix dirty; original name unknown.
+  static const u32 EVENT_UNKNOWN_0 = 0;     // Inferred role: enter; original name unknown.
+  static const u32 EVENT_UNKNOWN_1 = 1;     // Inferred role: contact; original name unknown.
+  static const u32 EVENT_UNKNOWN_2 = 2;     // Inferred role: leave; original name unknown.
 
   static mm::mtl::RTTI m_rtti;
 
@@ -321,7 +324,7 @@ static_assert(sizeof(ColiObject) == 0x100, "");
 
 class ColiMoveObject : public ColiObject {
 public:
-  static const u32 FLAG_ACCURACY = 1 << 1;
+  static const u32 FLAG_UNKNOWN_1 = 1 << 1; // Inferred role: accuracy; original name unknown.
 
   static mm::mtl::RTTI m_rtti;
 
@@ -333,11 +336,11 @@ public:
   void postUpdate() override;
   void setDir(const mm::Vec3 &direction) override;
 
-  mm::Vec3 unknown100; // Inferred role: move direction; original member name unknown.
-  u32 unknown110;      // Inferred role: flags; original member name unknown.
+  mm::Vec3 m_dir;
+  u32 unknown110; // Inferred role: flags; original member name unknown.
 };
 
-static_assert(offsetof(ColiMoveObject, unknown100) == 0x100, "");
+static_assert(offsetof(ColiMoveObject, m_dir) == 0x100, "");
 static_assert(offsetof(ColiMoveObject, unknown110) == 0x110, "");
 static_assert(sizeof(ColiMoveObject) == 0x120, "");
 

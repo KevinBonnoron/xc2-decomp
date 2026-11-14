@@ -4,6 +4,7 @@
 
 #include "framework/framework.h"
 #include "framework/resource/resource_object.h"
+#include "ml/path_util.h"
 #include "mm_mtl/algorithm.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/hash.h"
@@ -64,6 +65,22 @@ void ResourceManager::addDelayReleaseExtention(const char *extension) {
   if (mm::mtl::find(manager->unknown8548.begin(), manager->unknown8548.end(), extension) == manager->unknown8548.end()) {
     manager->unknown8548.push_back(extension);
   }
+}
+
+bool ResourceManager::isDelayReleaseExtention(const char *path) {
+  ResourceManager *manager = get();
+  if (manager != nullptr) {
+    const char *extension = ml::PathUtil::getFileExtPtr(path);
+    if (extension != nullptr) {
+      mm::mtl::FixStr<16> name(extension);
+      for (const char *delayExtension : manager->unknown8548) {
+        if (name.unknown003(delayExtension) != -1) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
 }
 
 void ResourceManager::update(const UpdateInfo &info) {

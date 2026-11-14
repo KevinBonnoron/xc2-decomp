@@ -5,8 +5,8 @@
 namespace gf {
 struct SDataDriver;
 
-constexpr u32 SKILL_ROW_COUNT = 5;
-constexpr u32 SKILL_COLUMN_COUNT = 3;
+constexpr u32 SKILL_UNKNOWN_5 = 5; // Inferred role: skill row count; original name unknown.
+constexpr u32 SKILL_UNKNOWN_3 = 3; // Inferred role: skill column count; original name unknown.
 
 class GfDataDriverSkill {
 public:

@@ -6,7 +6,7 @@
 
 namespace event {
 
-static constexpr f32 PLAY_FRAME_MAX = 99999.0f;
+static constexpr f32 unknown026 = 99999.0f; // Inferred role: play frame max; original name unknown.
 
 Shaker::Shaker() : unknown08(0), unknown310(1), unknown318(nullptr) {}
 
@@ -30,7 +30,7 @@ void Shaker::exec(f32 delta, f32 streamDelta) {
   if (!isPlay()) {
     return;
   }
-  if ((unknown08 & FLAG_LIFE) != 0) {
+  if ((unknown08 & FLAG_UNKNOWN_1) != 0) {
     unknown328 -= delta;
     if (unknown328 < 0.0f) {
       stop();
@@ -54,15 +54,15 @@ void Shaker::exec(f32 delta, f32 streamDelta) {
     unknown338.reserve(mm::Vec3(alpha * pos.x, alpha * pos.y, alpha * pos.z), mm::Vec3(alpha * rot.x, alpha * rot.y, alpha * rot.z));
   }
   unknown324 += streamDelta;
-  if (unknown324 > PLAY_FRAME_MAX) {
-    unknown324 = PLAY_FRAME_MAX;
+  if (unknown324 > unknown026) {
+    unknown324 = unknown026;
   }
 }
 
 void Shaker::stop() { unknown08 = 0; }
 
 f32 Shaker::getAlpha() const {
-  if (unknown330 > 0.0f && (unknown08 & FLAG_LIFE) != 0 && unknown328 <= unknown330) {
+  if (unknown330 > 0.0f && (unknown08 & FLAG_UNKNOWN_1) != 0 && unknown328 <= unknown330) {
     return __builtin_fmaxf(unknown328 - 1.0f, 0.0f) / unknown330;
   }
   if (unknown32c > 0.0f && unknown324 < unknown32c) {
@@ -94,9 +94,9 @@ u32 Shaker::search(const char *name) {
 
 bool Shaker::play(u32 index, f32 life, f32 fadeIn, f32 fadeOut) {
   if (life > 0.0f) {
-    unknown08 |= FLAG_PLAY | FLAG_LIFE;
+    unknown08 |= FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1;
   } else {
-    unknown08 = (unknown08 & ~(FLAG_PLAY | FLAG_LIFE)) | FLAG_PLAY;
+    unknown08 = (unknown08 & ~(FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) | FLAG_UNKNOWN_0;
   }
   unknown318 = &unknown10[index];
   unknown320 = 0.0f;

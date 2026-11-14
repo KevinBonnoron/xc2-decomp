@@ -10,10 +10,10 @@
 
 namespace event {
 
-bool LipsyncManager::isActive() const { return (unknown10 & FLAG_ACTIVE) != 0; }
+bool LipsyncManager::isActive() const { return (unknown10 & FLAG_UNKNOWN_1) != 0; }
 
 f32 LipsyncManager::getVolume(f32 frame) const {
-  if (!(unknown10 & FLAG_ACTIVE))
+  if (!(unknown10 & FLAG_UNKNOWN_1))
     return 0.0f;
   int row = frame;
   if (unknownf0->GetRowCount() <= row)
@@ -66,7 +66,7 @@ bool LipsyncManager::isLoading() const {
 }
 
 f32 LipsyncManager::getFrameMax() const {
-  if (!(unknown10 & FLAG_ACTIVE)) {
+  if (!(unknown10 & FLAG_UNKNOWN_1)) {
     return 0.0f;
   }
   return unknownf0->GetRowCount() - 1;
@@ -81,18 +81,18 @@ void LipsyncManager::setEvent(const char *name) {
     }
   }
   unknown60 = res;
-  setFlag(FLAG_EVENT, unknown60 != nullptr);
+  setFlag(FLAG_UNKNOWN_0, unknown60 != nullptr);
 }
 
 bool LipsyncManager::setTarget(const char *name) {
-  if ((unknown10 & FLAG_EVENT) == 0) {
+  if ((unknown10 & FLAG_UNKNOWN_0) == 0) {
     return false;
   }
   int size;
   void *data = unknown60->searchCsv(name, size);
   if (data == nullptr) {
     unknown68 = "";
-    setFlag(FLAG_ACTIVE, false);
+    setFlag(FLAG_UNKNOWN_1, false);
     return false;
   }
   if (unknownf0 == nullptr) {
@@ -100,16 +100,16 @@ bool LipsyncManager::setTarget(const char *name) {
   }
   unknownf0->Load(mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), data, size);
   unknown68 = name;
-  setFlag(FLAG_ACTIVE, true);
+  setFlag(FLAG_UNKNOWN_1, true);
   return true;
 }
 
 void LipsyncManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
-  case MSG_TYPE_INIT:
+  case MSG_TYPE_UNKNOWN_4:
     clear();
     break;
-  case MSG_TYPE_CLEAR:
+  case MSG_TYPE_UNKNOWN_12:
     clear();
     break;
   default:

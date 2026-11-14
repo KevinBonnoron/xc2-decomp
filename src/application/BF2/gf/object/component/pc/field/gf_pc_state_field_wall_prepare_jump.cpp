@@ -2,10 +2,15 @@
 
 #include "framework/message/message_object.h"
 #include "framework/object/updatable_object.h"
+#include "gf/game/gf_game_manager.h"
+#include "gf/object/component/animation/gf_com_asm.h"
 #include "gf/object/component/behavior/gf_com_behavior.h"
 #include "gf/object/component/pc/gf_com_behavior_pc.h"
 #include "gf/object/component/pc/gf_com_property_pc.h"
+#include "gf/object/component/pc/gf_pc_asm_cmd_id_field.h"
 #include "gf/object/component/pc/gf_pc_property_field.h"
+#include "gf/object/component/pc/gf_pc_state_id.h"
+#include "gf/object/component/pc/gf_pc_state_util.h"
 #include "gf/object/component/pc/gf_pc_state_util_field.h"
 #include "gf/object/gf_obj.h"
 #include "mm_math/mm_vec3.h"
@@ -29,13 +34,30 @@ void StateFieldWallPrepareJump::enter(GfComBehaviorPc *behavior, ai::State *prev
   unknown18 = false;
 }
 
+void StateFieldWallPrepareJump::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
+  GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
+  if (!StateUtilField::isWallIdleMotion(*comAsm) && comAsm->isEnd(ANIM_LAYER_UNKNOWN_0)) {
+    StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_CLIMBIDLE);
+  }
+  if (!unknown18) {
+    if (!GfGameManager::isPlayerPause()) {
+      reqState(STATE_ID_UNKNOWN_46);
+    }
+  } else if (StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_CLIMBJUMP_00)) {
+    GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
+    MsgPcFieldNotifyWallJumpStart message(property->unknown310.getWallJumpInfo());
+    StateUtil::broadcastMainChar(*behavior, message);
+    reqState(STATE_ID_UNKNOWN_50);
+  }
+}
+
 void StateFieldWallPrepareJump::leave(GfComBehaviorPc *behavior, ai::State *next) {
   StateUtilField::setSpecialActStatus(*behavior, false);
   StateUtilField::setAccessFlag(*behavior, false);
 }
 
 bool StateFieldWallPrepareJump::recieveMessage(void *owner, fw::MessageObject *sender, fw::Message &message) {
-  if (message.unknown00 == MSG_PC_FIELD_NOTIFY_WALL_JUMP) {
+  if (message.unknown00 == MSG_PC_FIELD_NOTIFY_UNKNOWN_16777232) {
     procMsgPcFieldNotifyWallJump(static_cast<GfComBehaviorPc *>(owner), sender, static_cast<MsgPcFieldNotifyWallJump &>(message));
     return true;
   }

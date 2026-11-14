@@ -39,21 +39,22 @@ namespace gf {
 namespace {
 
 enum EXEC_FLAG {
-  EXEC_FLAG_KILL_PARTY_CREATE = 1 << 0,
-  EXEC_FLAG_TOOL = 1 << 1,
-  EXEC_FLAG_SCENARIO_GAME = 1 << 2,
-  EXEC_FLAG_ADVERTIZE = 1 << 3,
+  EXEC_FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: exec flag kill party create; original name unknown.
+  EXEC_FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: exec flag tool; original name unknown.
+  EXEC_FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: exec flag scenario game; original name unknown.
+  EXEC_FLAG_UNKNOWN_3 = 1 << 3, // Inferred role: exec flag advertize; original name unknown.
 };
 
-const u16 EXEC_FLAGS[] = {
+const u16 unknown092[] = {
+    // Inferred role: exec flags; original name unknown.
     0,
-    EXEC_FLAG_SCENARIO_GAME,
-    EXEC_FLAG_KILL_PARTY_CREATE | EXEC_FLAG_ADVERTIZE,
-    EXEC_FLAG_ADVERTIZE,
-    EXEC_FLAG_KILL_PARTY_CREATE | EXEC_FLAG_TOOL,
+    EXEC_FLAG_UNKNOWN_2,
+    EXEC_FLAG_UNKNOWN_0 | EXEC_FLAG_UNKNOWN_3,
+    EXEC_FLAG_UNKNOWN_3,
+    EXEC_FLAG_UNKNOWN_0 | EXEC_FLAG_UNKNOWN_1,
 };
 
-constexpr u32 FINALIZE_WAIT_FRAME = 30;
+constexpr u32 FRAME_UNKNOWN_30 = 30; // Inferred role: finalize wait frame; original name unknown.
 
 } // namespace
 
@@ -65,18 +66,18 @@ ml::TimeCount s_loadGameTimer;
 
 } // namespace
 
-GfManager::GfManager(const GfSetupParam &param) : unknown40(false), unknown41(false), unknown48(0), unknown4c(GAME_START_NONE), unknown50(0), unknown54(-1.0f), unknown58(false) {
+GfManager::GfManager(const GfSetupParam &param) : unknown40(false), unknown41(false), unknown48(0), unknown4c(GAME_START_UNKNOWN_0), unknown50(0), unknown54(-1.0f), unknown58(false) {
   s_pThis = this;
   unknown18 = param;
   unknown44 = param.unknown24;
-  unknown48 = EXEC_FLAGS[unknown44];
+  unknown48 = unknown092[unknown44];
 }
 
 void GfManager::setExec(EXEC_STATE exec) {
   GfManager *manager = s_pThis;
   if (manager != nullptr) {
     manager->unknown44 = exec;
-    manager->unknown48 = EXEC_FLAGS[exec];
+    manager->unknown48 = unknown092[exec];
     if (manager->unknown40) {
       GfEvent::callExecState(exec);
     }
@@ -90,7 +91,7 @@ void GfManager::build(const GfSetupParam &param) {
   GfMemManager::buildCoreMemory(param);
   // __LINE__ must be 100 as in the original file: it is an argument of the allocation.
 #line 100
-  GfManager *manager = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfManager(param);
+  GfManager *manager = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfManager(param);
   manager->initialize();
   setupDeafult();
 }
@@ -114,7 +115,7 @@ void GfManager::initialize() {
   GfGameManager::build(unknown18);
   GfFieldManager::build(unknown18);
   GfMenuManager::build(unknown18);
-  GfGameManager::setState(GF_STATE_CONTROL, false);
+  GfGameManager::setState(GF_STATE_UNKNOWN_3, false);
   GfMovieManager::build(unknown18);
   GfEvent::addEventCallback(this);
   while (!GfMenuManager::isInitialized()) {
@@ -125,7 +126,7 @@ void GfManager::initialize() {
 }
 
 void GfManager::setupDeafult() {
-  s_pThis->unknown4c = GAME_START_NONE;
+  s_pThis->unknown4c = GAME_START_UNKNOWN_0;
   GfDataManager::clear();
   GfAssetManager::clear();
   GfFieldManager::clear();
@@ -145,7 +146,7 @@ void GfManager::destroy() {
 
 void GfManager::finalize() {
   GfGameManager::leaveGameForDebug();
-  GfSleep(FINALIZE_WAIT_FRAME);
+  GfSleep(FRAME_UNKNOWN_30);
   GfGameManager::destroyBattleEnemy();
   while (!GfGameManager::isField()) {
     GfSleep(1);
@@ -158,7 +159,7 @@ void GfManager::finalize() {
   GfEvent::removeEventCallback(this);
   btl::BattleManager::destroy();
   GfMovieManager::destroy();
-  GfGameManager::setState(GF_STATE_DESTROY, false);
+  GfGameManager::setState(GF_STATE_UNKNOWN_2, false);
   GfMenuManager::destroy();
   GfFieldManager::destroy();
   GfGameManager::destroy();
@@ -218,48 +219,48 @@ u32 GfManager::getFrameCount() {
 
 bool GfManager::isExecKillPartyCreate() {
   if (s_pThis != nullptr) {
-    return s_pThis->unknown48 & EXEC_FLAG_KILL_PARTY_CREATE;
+    return s_pThis->unknown48 & EXEC_FLAG_UNKNOWN_0;
   }
   return false;
 }
 
 bool GfManager::isExecModeScenarioGame() {
   if (s_pThis != nullptr) {
-    return s_pThis->unknown48 & EXEC_FLAG_SCENARIO_GAME;
+    return s_pThis->unknown48 & EXEC_FLAG_UNKNOWN_2;
   }
   return false;
 }
 
 bool GfManager::isExecModeAdvertize() {
   if (s_pThis != nullptr) {
-    return s_pThis->unknown48 & EXEC_FLAG_ADVERTIZE;
+    return s_pThis->unknown48 & EXEC_FLAG_UNKNOWN_3;
   }
   return false;
 }
 
 bool GfManager::isExecModeTool() {
   if (s_pThis != nullptr) {
-    return s_pThis->unknown44 == EXEC_STATE_TOOL;
+    return s_pThis->unknown44 == EXEC_STATE_UNKNOWN_4;
   }
   return false;
 }
 
 bool GfManager::isExecModeDebug() {
   if (s_pThis != nullptr) {
-    return s_pThis->unknown44 == EXEC_STATE_DEBUG;
+    return s_pThis->unknown44 == EXEC_STATE_UNKNOWN_0;
   }
   return false;
 }
 
 bool GfManager::isExecModeThater() {
   if (s_pThis != nullptr) {
-    return s_pThis->unknown44 == EXEC_STATE_THEATER;
+    return s_pThis->unknown44 == EXEC_STATE_UNKNOWN_3;
   }
   return false;
 }
 
 void GfManager::setupNewGame() {
-  s_pThis->unknown4c = GAME_START_NEW;
+  s_pThis->unknown4c = GAME_START_UNKNOWN_1;
   GfGameParty::setupNewGameParty();
 }
 
@@ -270,7 +271,7 @@ void GfManager::setupPowerNewGame(const SDataSystem &, const SDataGame &dataGame
 }
 
 void GfManager::setupContinueGame(const SDataSystem &dataSystem, const SDataGame &dataGame, const SDataOption &dataOption) {
-  s_pThis->unknown4c = GAME_START_CONTINUE;
+  s_pThis->unknown4c = GAME_START_UNKNOWN_2;
   GfDataManager::clear();
   GfAssetManager::clear();
   GfFieldManager::clear();
@@ -295,14 +296,14 @@ void GfManager::setupOptionData(const SDataOption &dataOption) {
 
 bool GfManager::isContinueGame() {
   if (s_pThis != nullptr) {
-    return s_pThis->unknown4c == GAME_START_CONTINUE;
+    return s_pThis->unknown4c == GAME_START_UNKNOWN_2;
   }
   return false;
 }
 
 bool GfManager::isNewGame() {
   if (s_pThis != nullptr) {
-    return s_pThis->unknown4c == GAME_START_NEW;
+    return s_pThis->unknown4c == GAME_START_UNKNOWN_1;
   }
   return false;
 }
@@ -324,7 +325,7 @@ void GfManager::startGame(bool isExistSaveData, bool isClearGameCheck) {
   if (get() != nullptr) {
     get()->unknown58 = isExistSaveData;
   }
-  setExec(EXEC_STATE_SCENARIO_GAME);
+  setExec(EXEC_STATE_UNKNOWN_1);
   if (isContinueGame()) {
     GfMapjumpInfo info;
     info.setupForSaveData(GfDataUtil::getSkipTravelID(), *GfDataParty::getSavePos(0, true), *GfDataParty::getSaveRot(0, true) * mm::DEG_TO_RAD, GfDataUtil::isStartChapterSave());
@@ -344,7 +345,7 @@ void GfManager::startGame(bool isExistSaveData, bool isClearGameCheck) {
 }
 
 void GfManager::startEventTheater(const mm::mtl::FixedVector<u16, 8> &events) {
-  setExec(EXEC_STATE_THEATER);
+  setExec(EXEC_STATE_UNKNOWN_3);
   u32 mapjumpId = GfDataEvent::getMapjumpID(events[0]);
   GfMapjumpInfo info;
   info.setMapjump(mapjumpId);
@@ -363,7 +364,7 @@ void GfManager::startEventTheater(const mm::mtl::FixedVector<u16, 8> &events) {
 }
 
 void GfManager::execToAdvertize() {
-  setExec(EXEC_STATE_ADVERTIZE);
+  setExec(EXEC_STATE_UNKNOWN_2);
   GfGameManager::leaveGameForDebug();
   GfMapjumpInfo info;
   info.setMapjump(-1);
@@ -373,10 +374,10 @@ void GfManager::execToAdvertize() {
 void GfManager::gevGameState(GF_STATE, GF_STATE state) {
   if (unknown54 == 0.0f) {
     switch (state) {
-    case GF_STATE_NONE:
-    case GF_STATE_INITIALIZE:
-    case GF_STATE_DESTROY:
-    case GF_STATE_MAPJUMP:
+    case GF_STATE_UNKNOWN_0:
+    case GF_STATE_UNKNOWN_1:
+    case GF_STATE_UNKNOWN_2:
+    case GF_STATE_UNKNOWN_8:
       break;
     default:
       unknown54 = s_loadGameTimer.getSecLap();

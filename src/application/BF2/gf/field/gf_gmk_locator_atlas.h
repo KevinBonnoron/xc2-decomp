@@ -20,6 +20,9 @@ static_assert(sizeof(GfGmkLocators) == 0x30, "");
 class GfGmkLocatorAtlas {
 public:
   struct CreateInfo {
+    // Inline in the game: the GfMenuObjWorldMap constructor (0x71004e5950) builds its member at 0x2fa0 with these values.
+    CreateInfo() : unknown00(0), unknown04(0), unknown10(1.0e12f, 1.0e12f, 1.0e12f), unknown20(-1.0e12f, -1.0e12f, -1.0e12f) {}
+
     int unknown00;      // Inferred role: map; original member name unknown.
     int unknown04;      // Inferred role: map of the area; original member name unknown.
     mm::Vec3 unknown10; // Inferred role: area minimum; original member name unknown.

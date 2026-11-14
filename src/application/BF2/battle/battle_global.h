@@ -258,16 +258,16 @@ public:
   u8 _5b6c[0x5b88 - 0x5b6c];
   u32 unknown5b88; // Inferred role: debuff flags; original member name unknown.
   u8 _5b8c[0x5b8e - 0x5b8c];
-  u16 unknown5b8e;                                   // Inferred role: enemy kill count; original member name unknown.
-  u16 unknown5b90[16][gf::WEAPON_TYPE_COUNT + 1][3]; // Inferred role: normal attack arts ids; original member name unknown.
-  u16 unknown65b0[17];                               // Inferred role: condition parameters; original member name unknown.
-  u16 unknown65d2;                                   // Inferred role: BGM id; original member name unknown.
-  u8 unknown65d4;                                    // Inferred role: BGM priority; original member name unknown.
-  u8 unknown65d5;                                    // Inferred role: requested jingle; original member name unknown.
-  u8 unknown65d6[6];                                 // Inferred role: pause flags; original member name unknown.
-  s8 unknown65dc;                                    // Inferred role: blade change type; original member name unknown.
-  u8 unknown65dd;                                    // Inferred role: link join max level; original member name unknown.
-  u64 unknown65de_0 : 1;                             // Inferred role: lock arts palette; original member name unknown.
+  u16 unknown5b8e;                                        // Inferred role: enemy kill count; original member name unknown.
+  u16 unknown5b90[16][gf::WEAPON_TYPE_UNKNOWN_26 + 1][3]; // Inferred role: normal attack arts ids; original member name unknown.
+  u16 unknown65b0[17];                                    // Inferred role: condition parameters; original member name unknown.
+  u16 unknown65d2;                                        // Inferred role: BGM id; original member name unknown.
+  u8 unknown65d4;                                         // Inferred role: BGM priority; original member name unknown.
+  u8 unknown65d5;                                         // Inferred role: requested jingle; original member name unknown.
+  u8 unknown65d6[6];                                      // Inferred role: pause flags; original member name unknown.
+  s8 unknown65dc;                                         // Inferred role: blade change type; original member name unknown.
+  u8 unknown65dd;                                         // Inferred role: link join max level; original member name unknown.
+  u64 unknown65de_0 : 1;                                  // Inferred role: lock arts palette; original member name unknown.
   u64 : 3;
   u64 unknown65de_4 : 1; // Inferred role: leader has a target, written by the pc battle state; original member name unknown.
   u64 : 1;

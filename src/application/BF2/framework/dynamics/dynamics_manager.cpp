@@ -33,7 +33,7 @@ DyanmicsManager::~DyanmicsManager() {
 
 void DyanmicsManager::updateColObjects(u32 layers) {
   anm::ThreadPool *pool = AnimationManager::get()->unknownf18;
-  for (u32 layer = 0; layer < LAYER_MAX; layer++) {
+  for (u32 layer = 0; layer < LAYER_UNKNOWN_32; layer++) {
     if ((layers & 1 << layer) != 0) {
       mm::mtl::IntrusiveList<DynamicsColObjUpdaterInterface> &list = unknown18[layer].unknown18;
       mm::mtl::IntrusiveList<DynamicsColObjUpdaterInterface>::iterator it = list.begin();
@@ -52,7 +52,7 @@ void DyanmicsManager::updateColObjects(u32 layers) {
 
 void DyanmicsManager::updateDynamics(const UpdateInfo &info, u32 layers) {
   anm::ThreadPool *pool = AnimationManager::get()->unknownf18;
-  for (u32 layer = 0; layer < LAYER_MAX; layer++) {
+  for (u32 layer = 0; layer < LAYER_UNKNOWN_32; layer++) {
     if ((layers & 1 << layer) != 0) {
       mm::mtl::IntrusiveList<DynamicsUpdaterInterface> &list = unknown18[layer].unknown00;
       mm::mtl::IntrusiveList<DynamicsUpdaterInterface>::iterator it = list.begin();

@@ -10,6 +10,7 @@
 #include "gf/object/component/pc/gf_com_property_pc.h"
 #include "gf/object/component/pc/gf_pc_agent_util_field.h"
 #include "gf/object/component/pc/gf_pc_property_field.h"
+#include "gf/object/component/pc/param/gf_pc_param.h"
 #include "gf/object/gf_obj_property.h"
 #include "gf/object/gf_obj_util.h"
 #include "mm/mm_std_base.h"
@@ -52,8 +53,7 @@ bool TaskFieldCheckWarp::testCondition(const BlackBoardField &blackBoard) {
 
 void TaskFieldCheckWarp::update(BlackBoardField &blackBoard) {
   GfComPropertyPc *property = blackBoard.unknown08;
-  const fw::ParamList *paramList = property->unknown300.operator->();
-  const WarpParam *param = paramList->unknown0c > 2 ? static_cast<const WarpParam *>(paramList->unknown10[2].param) : nullptr;
+  const WarpParam *param = property->unknown006();
   if (blackBoard.unknown200.test(0)) {
     unknown38 += blackBoard.unknown18->unknown04;
   } else {
@@ -64,7 +64,7 @@ void TaskFieldCheckWarp::update(BlackBoardField &blackBoard) {
     GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
     GfObjProperty *mainProperty = GfObjUtil::getProperty(formation->unknown1a0[formation->unknown1a0[property->unknown38].unknown00].unknown08);
     if (mainProperty->unknown18 != nullptr) {
-      if (mainProperty->unknown18->unknown00 == PROPERTY_MOVE_SWIM || mainProperty->unknown18->unknown00 == PROPERTY_MOVE_UNKNOWN_5) {
+      if (mainProperty->unknown18->unknown00 == PROPERTY_MOVE_UNKNOWN_1 || mainProperty->unknown18->unknown00 == PROPERTY_MOVE_UNKNOWN_5) {
         return;
       }
       if (mainProperty->unknown18->unknown80) {
@@ -73,10 +73,10 @@ void TaskFieldCheckWarp::update(BlackBoardField &blackBoard) {
     }
     fw::Transform transform = formation->getFollowTransform(property->unknown38);
     transform.unknown00 = formation->unknown80[property->unknown38];
-    if (unknown38 >= param->stackTime || fabsf(transform.unknown00.y - property->unknown160.y) >= param->distanceVert) {
+    if (unknown38 >= param->stackTime || fabsf(transform.unknown00.y - property->unknown160.unknown00.y) >= param->distanceVert) {
       property->unknown003(transform, 0);
     } else {
-      mm::Vec3 diff = transform.unknown00 - property->unknown160;
+      mm::Vec3 diff = transform.unknown00 - property->unknown160.unknown00;
       diff.y = 0.0f;
       if (sqrtf(diff.x * diff.x + diff.y * diff.y + diff.z * diff.z) >= param->distanceHorz) {
         property->unknown003(transform, 0);
@@ -95,7 +95,7 @@ void TaskFieldCheckWarp::update(BlackBoardField &blackBoard) {
     if (AgentUtilField::calcParentPlayerPush(*property, transform.unknown00, wallParam->escapeRange, &push)) {
       return;
     }
-    mm::Vec3 diff = transform.unknown00 - property->unknown160;
+    mm::Vec3 diff = transform.unknown00 - property->unknown160.unknown00;
     if (fabsf(diff.y) >= param->distanceVertWall) {
       property->unknown003(transform, 1);
     } else {
@@ -143,7 +143,7 @@ void TaskFieldCheckWarpFallDead::update(BlackBoardField &blackBoard) {
   GfComPropertyPc *property = blackBoard.unknown08;
   GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
   GfObjProperty *mainProperty = GfObjUtil::getProperty(formation->unknown1a0[formation->unknown1a0[property->unknown38].unknown00].unknown08);
-  if (mainProperty->unknown18 == nullptr || mainProperty->unknown18->unknown00 == PROPERTY_MOVE_WALK) {
+  if (mainProperty->unknown18 == nullptr || mainProperty->unknown18->unknown00 == PROPERTY_MOVE_UNKNOWN_0) {
     fw::Transform transform = formation->getFollowTransform(property->unknown38);
     transform.unknown00 = formation->unknown80[property->unknown38];
     property->unknown003(transform, 3);

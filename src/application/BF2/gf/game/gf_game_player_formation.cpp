@@ -15,8 +15,8 @@
 
 namespace gf {
 
-constexpr u32 FORMATION_NUM = 4;
-constexpr u32 PARAM_WARP_FOR_RANDOM_TALK = 2;
+constexpr u32 FORMATION_UNKNOWN_4 = 4; // Inferred role: formation num; original name unknown.
+constexpr u32 PARAM_UNKNOWN_2 = 2;     // Inferred role: param warp for random talk; original name unknown.
 
 static void notifyChangePlayerID(GfGamePlayerFormation *formation, u32 playerId) {
   MsgPcFieldNotifyChangePlayerID message(playerId);
@@ -34,16 +34,16 @@ const FormationParam *getFormationParam(u32 formation) {
 
 const WarpForRandomTalkParam *getWarpForRandomTalkParam() {
   const fw::ParamList *paramList = fw::ParamManager::get()->unknown408[6].operator->();
-  return paramList->unknown0c > PARAM_WARP_FOR_RANDOM_TALK ? static_cast<const WarpForRandomTalkParam *>(paramList->unknown10[PARAM_WARP_FOR_RANDOM_TALK].param) : nullptr;
+  return paramList->unknown0c > PARAM_UNKNOWN_2 ? static_cast<const WarpForRandomTalkParam *>(paramList->unknown10[PARAM_UNKNOWN_2].param) : nullptr;
 }
 
 void GfGamePlayerFormation::build(const GfSetupParam &param) {
-  GfGamePlayerFormation *formation = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfGamePlayerFormation();
+  GfGamePlayerFormation *formation = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfGamePlayerFormation();
   formation->setup(param);
 }
 
 void GfGamePlayerFormation::setup(const GfSetupParam &) {
-  for (u32 playerId = 0; playerId < PLAYER_NUM; playerId++) {
+  for (u32 playerId = 0; playerId < PLAYER_UNKNOWN_6; playerId++) {
     unknown20[playerId] = mm::Vec3::zero;
     unknown80[playerId] = mm::Vec3::zero;
     unknowne0[playerId].unknown00 = mm::Vec3::zero;
@@ -67,7 +67,7 @@ GfGamePlayerFormation::~GfGamePlayerFormation() {}
 
 const fw::Transform &GfGamePlayerFormation::getFollowTransform(u32 playerId) const {
   u32 followIndex = unknown1a0[playerId].unknown00;
-  if (followIndex != PLAYER_ID_NONE) {
+  if (followIndex != PLAYER_ID_UNKNOWN_4294967295) {
     playerId = followIndex;
   }
 
@@ -76,32 +76,32 @@ const fw::Transform &GfGamePlayerFormation::getFollowTransform(u32 playerId) con
 
 bool GfGamePlayerFormation::isFarRandomTalk(GF_OBJ_HANDLE *handle) {
   u32 playerId = findPlayer(handle);
-  if (playerId == PLAYER_ID_NONE) {
+  if (playerId == PLAYER_ID_UNKNOWN_4294967295) {
     return false;
   }
   const WarpForRandomTalkParam *param = getWarpForRandomTalkParam();
   mm::Vec3 delta = unknowne0[0].unknown00 - unknowne0[playerId].unknown00;
-  if (fabsf(delta.y) >= param->height) {
+  if (fabsf(delta.y) >= param->distVert) {
     return true;
   }
-  f32 distanceSq = param->distance * param->distance;
+  f32 distanceSq = param->distHorz * param->distHorz;
   return delta.x * delta.x + delta.z * delta.z >= distanceSq;
 }
 
 void GfGamePlayerFormation::swapFormation(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *otherHandle) { swapFormation(findPlayer(handle), findPlayer(otherHandle)); }
 
 u32 GfGamePlayerFormation::findPlayer(GF_OBJ_HANDLE *handle) {
-  for (u32 playerId = 0; playerId < PLAYER_NUM; playerId++) {
+  for (u32 playerId = 0; playerId < PLAYER_UNKNOWN_6; playerId++) {
     if (unknown1a0[playerId].unknown08 == handle) {
       return playerId;
     }
   }
 
-  return PLAYER_ID_NONE;
+  return PLAYER_ID_UNKNOWN_4294967295;
 }
 
 void GfGamePlayerFormation::swapFormation(u32 playerId, u32 otherPlayerId) {
-  if (playerId == PLAYER_ID_NONE || otherPlayerId == PLAYER_ID_NONE) {
+  if (playerId == PLAYER_ID_UNKNOWN_4294967295 || otherPlayerId == PLAYER_ID_UNKNOWN_4294967295) {
     return;
   }
 
@@ -119,11 +119,11 @@ void GfGamePlayerFormation::drawDebugRandomTalk() {
   const WarpForRandomTalkParam *param = getWarpForRandomTalkParam();
   mm::Mat44 matrix;
   matrix.unknown007(unknowne0[0].unknown00);
-  fw::debug::drawCylinderLine(matrix, param->height * 2.0f, param->distance, mm::Col4::cyan, 8);
+  fw::debug::drawCylinderLine(matrix, param->distVert * 2.0f, param->distHorz, mm::Col4::cyan, 8);
 }
 
 void GfGamePlayerFormation::changeFormation(u32 formation) {
-  if (formation < FORMATION_NUM) {
+  if (formation < FORMATION_UNKNOWN_4) {
     this->unknown230 = formation;
   }
 }

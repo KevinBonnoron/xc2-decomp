@@ -52,15 +52,15 @@ void CGLibMemHandle::setup(const ArgMemInfo &info) {
   release();
   u32 defSize = info.unknown00 + info.unknown20 + info.unknown24 + info.unknown28 + info.unknown2c + info.unknown30;
   u32 topSize = defSize + info.unknown04 + info.unknown08 + info.unknown0c + info.unknown10 + info.unknown14 + info.unknown18 + 0x20000;
-  s_hTop = mtl::MemManager::create(ml::MlMem::getGraphicMem(), topSize, "GLIBTOP", false, mtl::ALLOCATOR_TYPE_PROGRAM, 0x10000);
-  s_hCntHandle = mtl::MemManager::create(ml::MlMem::getGraphicMem(), info.unknown1c, "GLIBCNT", true, mtl::ALLOCATOR_TYPE_PROGRAM, 0x1000);
-  s_hDefHandle = mtl::MemManager::create(s_hTop, defSize, "GLIBDEF", true, mtl::ALLOCATOR_TYPE_PROGRAM, 0x1000);
-  s_hPxlHandle = mtl::MemManager::create(s_hTop, info.unknown04, "GLIBPXL", true, mtl::ALLOCATOR_TYPE_PROGRAM, 0x10000);
-  s_hVtxHandle = mtl::MemManager::create(s_hTop, info.unknown08, "GLIBVTX", false, mtl::ALLOCATOR_TYPE_PROGRAM, 0x1000);
-  s_hUniHandle = mtl::MemManager::create(s_hTop, info.unknown0c, "GLIBUNI", false, mtl::ALLOCATOR_TYPE_PROGRAM, 0x1000);
-  s_hMemHandle = mtl::MemManager::create(s_hTop, info.unknown10, "GLIBMEM", true, mtl::ALLOCATOR_TYPE_PROGRAM, 0x1000);
-  s_hFchHandle = mtl::MemManager::create(s_hTop, info.unknown14, "GLIBFET", true, mtl::ALLOCATOR_TYPE_PROGRAM, 0x1000);
-  s_hShdHandle = mtl::MemManager::create(s_hTop, info.unknown18, "GLIBSHD", true, mtl::ALLOCATOR_TYPE_PROGRAM, 0x1000);
+  s_hTop = mtl::MemManager::create(ml::MlMem::getGraphicMem(), topSize, "GLIBTOP", false, mtl::ALLOCATOR_TYPE_UNKNOWN_1, 0x10000);
+  s_hCntHandle = mtl::MemManager::create(ml::MlMem::getGraphicMem(), info.unknown1c, "GLIBCNT", true, mtl::ALLOCATOR_TYPE_UNKNOWN_1, 0x1000);
+  s_hDefHandle = mtl::MemManager::create(s_hTop, defSize, "GLIBDEF", true, mtl::ALLOCATOR_TYPE_UNKNOWN_1, 0x1000);
+  s_hPxlHandle = mtl::MemManager::create(s_hTop, info.unknown04, "GLIBPXL", true, mtl::ALLOCATOR_TYPE_UNKNOWN_1, 0x10000);
+  s_hVtxHandle = mtl::MemManager::create(s_hTop, info.unknown08, "GLIBVTX", false, mtl::ALLOCATOR_TYPE_UNKNOWN_1, 0x1000);
+  s_hUniHandle = mtl::MemManager::create(s_hTop, info.unknown0c, "GLIBUNI", false, mtl::ALLOCATOR_TYPE_UNKNOWN_1, 0x1000);
+  s_hMemHandle = mtl::MemManager::create(s_hTop, info.unknown10, "GLIBMEM", true, mtl::ALLOCATOR_TYPE_UNKNOWN_1, 0x1000);
+  s_hFchHandle = mtl::MemManager::create(s_hTop, info.unknown14, "GLIBFET", true, mtl::ALLOCATOR_TYPE_UNKNOWN_1, 0x1000);
+  s_hShdHandle = mtl::MemManager::create(s_hTop, info.unknown18, "GLIBSHD", true, mtl::ALLOCATOR_TYPE_UNKNOWN_1, 0x1000);
 }
 
 void CGLibMemHandle::release() {

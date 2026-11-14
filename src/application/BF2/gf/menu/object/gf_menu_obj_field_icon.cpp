@@ -8,7 +8,8 @@
 
 namespace gf {
 
-constexpr u32 CALL_FIELD_ICON = 120;
+// Inferred role: call id of the field icon layout; original name unknown.
+constexpr u32 CALL_UNKNOWN_120 = 120;
 
 GfMenuObjFieldIcon::GfMenuObjFieldIcon(u32 handle) : GfMenuObject(handle) {}
 
@@ -18,7 +19,7 @@ void GfMenuObjFieldIcon::open(GfMenuCallContext *context, const OpenParam &param
   if (context == nullptr || param.unknown00 == 0) {
     return;
   }
-  ui::UIObjectAcc root(getAttachedObject(CALL_FIELD_ICON));
+  ui::UIObjectAcc root(getAttachedObject(CALL_UNKNOWN_120));
   if (GfMenuObjUtil::checkCCStart(context) && root.isValid()) {
     ui::UIObjectAcc icon(root.duplicateChild("LAY_icon"));
     if (icon.isValid()) {
@@ -28,13 +29,13 @@ void GfMenuObjFieldIcon::open(GfMenuCallContext *context, const OpenParam &param
       mm::Vec3 position = param.unknown10;
       position += param.unknown20;
       GfMenuPosAdapter::createFixedPoint(icon.unknown10, position, false);
-      startCallContext(context, CALL_FIELD_ICON, icon.unknown10);
+      startCallContext(context, CALL_UNKNOWN_120, icon.unknown10);
     }
   }
 }
 
 void GfMenuObjFieldIcon::close(GfMenuCallContext *context) {
-  if (GfMenuObjUtil::checkCCNext(context, CALL_FIELD_ICON)) {
+  if (GfMenuObjUtil::checkCCNext(context, CALL_UNKNOWN_120)) {
     ui::UIObjectAcc icon(context->unknown14);
     if (icon.isValid()) {
       icon.setTerm();
@@ -43,7 +44,7 @@ void GfMenuObjFieldIcon::close(GfMenuCallContext *context) {
 }
 
 void GfMenuObjFieldIcon::disp(GfMenuCallContext *context, bool isDisp) {
-  if (GfMenuObjUtil::checkCCNext(context, CALL_FIELD_ICON)) {
+  if (GfMenuObjUtil::checkCCNext(context, CALL_UNKNOWN_120)) {
     ui::UIObjectAcc icon(context->unknown14);
     if (icon.isValid()) {
       icon.setDispChild(isDisp, "IMG_icon");
@@ -51,12 +52,12 @@ void GfMenuObjFieldIcon::disp(GfMenuCallContext *context, bool isDisp) {
   }
 }
 
-void GfMenuObjFieldIcon::dispAll(bool isDisp) { ui::UIObjectAcc(getAttachedObject(CALL_FIELD_ICON)).setDisp(isDisp); }
+void GfMenuObjFieldIcon::dispAll(bool isDisp) { ui::UIObjectAcc(getAttachedObject(CALL_UNKNOWN_120)).setDisp(isDisp); }
 
 void GfMenuObjFieldIcon::initialize() {
   ui::UIObjectAcc main(unknown18, "LAY_main");
   if (main.isValid()) {
-    attachExternalCall(CALL_FIELD_ICON, main.unknown10);
+    attachExternalCall(CALL_UNKNOWN_120, main.unknown10);
     GfMenuObject::initialize();
   }
 }

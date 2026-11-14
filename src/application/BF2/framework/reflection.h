@@ -12,7 +12,19 @@ namespace fw {
 
 enum ValueType : int {};
 
-class ReflectionValue : public mm::mtl::IntrusiveListNode<ReflectionValue>, public mm::mtl::ReferenceObject {
+class ReflectionValue;
+
+// Inferred role: the list node base of ReflectionValue; original type name unknown.
+// Evidence: the game emits fw::ReflectionValue::~ReflectionValue (base destructor, 1.0.0: 0x71001808b4) as a function of
+// its own and the vtables of ReflectionValue, ReflectionValueF32 and ReflectionValueFlag point to it, whereas Clang
+// aliases the destructor of a class to its base's (mm::mtl::ReferenceObject::~ReferenceObject) when only one base has a
+// non-trivial destructor, as for fw::Camera. A user-provided destructor here gives the second one.
+class unknown001 : public mm::mtl::IntrusiveListNode<ReflectionValue> {
+public:
+  ~unknown001() {}
+};
+
+class ReflectionValue : public unknown001, public mm::mtl::ReferenceObject {
 public:
   ReflectionValue(const char *name, ValueType type) : unknown20(name), unknown64(type), unknown68(0), unknown70(0) {}
   ReflectionValue(const char *name, ValueType type, s64 offset) : unknown20(name), unknown64(type), unknown68(0), unknown70(offset) {}
@@ -53,8 +65,19 @@ public:
   ReflectionValueF32(const char *name, s64 offset, f32 minimum, f32 maximum, f32 value) : ReflectionValuePodF32(name, offset, minimum, maximum, value) {}
 };
 
+class ReflectionValueU32 : public ReflectionValuePod<u32, static_cast<ValueType>(2)> {
+public:
+  ReflectionValueU32(const char *name, s64 offset, u32 minimum, u32 maximum, u32 value) : ReflectionValuePod<u32, static_cast<ValueType>(2)>(name, offset, minimum, maximum, value) {}
+};
+
+class ReflectionValueS32 : public ReflectionValuePod<int, static_cast<ValueType>(5)> {
+public:
+  ReflectionValueS32(const char *name, s64 offset, int minimum, int maximum, int value) : ReflectionValuePod<int, static_cast<ValueType>(5)>(name, offset, minimum, maximum, value) {}
+};
+
 class ReflectionValueFlag : public ReflectionValue {
 public:
+  ReflectionValueFlag(const char *name, u32 mask, bool value) : ReflectionValue(name, static_cast<ValueType>(8)), unknown78(mask), unknown7c(value) {}
   virtual void writeDefaultFlag(u32 &flags) const;
 
   u32 unknown78;  // Inferred role: flag mask; original member name unknown.
@@ -91,6 +114,20 @@ static_assert(offsetof(ReflectionValueStruct, unknown90) == 0x90, "");
 
 class ReflectionValueBitset32 : public ReflectionValue {
 public:
+  ReflectionValueBitset32(const char *name, s64 offset) : ReflectionValue(name, static_cast<ValueType>(7), offset) { unknown68 = 4; }
+  void add(ReflectionValueFlag *flag) {
+    flag->addRef();
+    unknown78.push_back(flag);
+  }
+  ~ReflectionValueBitset32() override {
+    while (!unknown78.empty()) {
+      ReflectionValueFlag *value = unknown78.begin().get();
+      unknown78.pop_front();
+      value->release();
+    }
+  }
+  void writeDefault(u8 *data) const override;
+
   mm::mtl::IntrusiveList<ReflectionValueFlag> unknown78; // Inferred role: flags; original member name unknown.
 };
 
@@ -98,6 +135,15 @@ static_assert(offsetof(ReflectionValueBitset32, unknown78) == 0x78, "");
 
 class ReflectionValueEnum : public ReflectionValue {
 public:
+  ~ReflectionValueEnum() override {
+    while (!unknown78.empty()) {
+      ReflectionValueEnumElem *value = unknown78.begin().get();
+      unknown78.pop_front();
+      value->release();
+    }
+  }
+  void writeDefault(u8 *data) const override;
+
   mm::mtl::IntrusiveList<ReflectionValueEnumElem> unknown78; // Inferred role: elements; original member name unknown.
   int unknown90;                                             // Inferred role: default value; original member name unknown.
 };

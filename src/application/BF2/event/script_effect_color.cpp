@@ -13,7 +13,7 @@ namespace event {
 
 void ScriptEffectColor::doit(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_EFFECT) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_4) {
     return;
   }
   ObjectEffect *effect = static_cast<ObjectEffect *>(object);
@@ -24,7 +24,7 @@ void ScriptEffectColor::doit(const Param &param) {
 
 void ScriptEffectColor::undo(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_EFFECT) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_4) {
     return;
   }
   static_cast<ObjectEffect *>(object)->setColor(unknown08);
@@ -32,7 +32,7 @@ void ScriptEffectColor::undo(const Param &param) {
 
 void ScriptEffectColor::redo(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_EFFECT) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_4) {
     return;
   }
   mm::Col4 color(param.val(0).getF32(), param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32());

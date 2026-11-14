@@ -248,7 +248,7 @@ void DrMdoSetup::uniformBlock_GlobalIBL(const MdsMatValShaderCate *cate, int par
 void DrMdoSetup::uniformBlock_ClusterParam(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter, u32 bufferIndex) {
   DrShdLgtClustered *clustered = m_drMan->unknown80->unknown18->getHybridLight()->unknown18;
   u32 index = unknown38->getValGlobalParam(paramIndex);
-  if (cate->unknown03 & MdsMatValShaderCate::FLAG_STORAGE_BUFFER) {
+  if (cate->unknown03 & MdsMatValShaderCate::FLAG_UNKNOWN_0) {
     clustered->setParamStorageBuffer(m_drMan->unknown1c98, index);
   } else {
     clustered->setParamUniformBlock(m_drMan->unknown1c98, index);
@@ -258,7 +258,7 @@ void DrMdoSetup::uniformBlock_ClusterParam(const MdsMatValShaderCate *cate, int 
 void DrMdoSetup::uniformBlock_ClusterPntList(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter, u32 bufferIndex) {
   DrShdLgtClustered *clustered = m_drMan->unknown80->unknown18->getHybridLight()->unknown18;
   u32 index = unknown38->getValGlobalParam(paramIndex);
-  if (cate->unknown03 & MdsMatValShaderCate::FLAG_STORAGE_BUFFER) {
+  if (cate->unknown03 & MdsMatValShaderCate::FLAG_UNKNOWN_0) {
     clustered->setPntLightStorageBuffer(m_drMan->unknown1c98, index);
   } else {
     clustered->setPntLightUniformBlock(m_drMan->unknown1c98, index);
@@ -268,7 +268,7 @@ void DrMdoSetup::uniformBlock_ClusterPntList(const MdsMatValShaderCate *cate, in
 void DrMdoSetup::uniformBlock_ClusterSptList(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter, u32 bufferIndex) {
   DrShdLgtClustered *clustered = m_drMan->unknown80->unknown18->getHybridLight()->unknown18;
   u32 index = unknown38->getValGlobalParam(paramIndex);
-  if (cate->unknown03 & MdsMatValShaderCate::FLAG_STORAGE_BUFFER) {
+  if (cate->unknown03 & MdsMatValShaderCate::FLAG_UNKNOWN_0) {
     clustered->setSptLightStorageBuffer(m_drMan->unknown1c98, index);
   } else {
     clustered->setSptLightUniformBlock(m_drMan->unknown1c98, index);
@@ -278,7 +278,7 @@ void DrMdoSetup::uniformBlock_ClusterSptList(const MdsMatValShaderCate *cate, in
 void DrMdoSetup::uniformBlock_ClusterIdxList(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter, u32 bufferIndex) {
   DrShdLgtClustered *clustered = m_drMan->unknown80->unknown18->getHybridLight()->unknown18;
   u32 index = unknown38->getValGlobalParam(paramIndex);
-  if (cate->unknown03 & MdsMatValShaderCate::FLAG_STORAGE_BUFFER) {
+  if (cate->unknown03 & MdsMatValShaderCate::FLAG_UNKNOWN_0) {
     clustered->setLightListStorageBuffer(m_drMan->unknown1c98, index);
   } else {
     clustered->setLightListUniformBlock(m_drMan->unknown1c98, index);
@@ -288,7 +288,7 @@ void DrMdoSetup::uniformBlock_ClusterIdxList(const MdsMatValShaderCate *cate, in
 void DrMdoSetup::uniformBlock_ClusterAddressList(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter, u32 bufferIndex) {
   DrShdLgtClustered *clustered = m_drMan->unknown80->unknown18->getHybridLight()->unknown18;
   u32 index = unknown38->getValGlobalParam(paramIndex);
-  if (cate->unknown03 & MdsMatValShaderCate::FLAG_STORAGE_BUFFER) {
+  if (cate->unknown03 & MdsMatValShaderCate::FLAG_UNKNOWN_0) {
     clustered->setPointerListStorageBuffer(m_drMan->unknown1c98, index);
   } else {
     clustered->setPointerListUniformBlock(m_drMan->unknown1c98, index);
@@ -357,19 +357,19 @@ int DrMdoSetup::unimate_AvatarMapWrk(f32 *work, DrResMdoMat *mat, const MdsMatIn
 int DrMdoSetup::unimate_texMatrix(f32 *work, DrResMdoMat *mat, const MdsMatInfoHeader *header, const MdsMatVariableTbl *variable) {
   MdoWrkMatRes *matRes = unknown30;
   grlib::ShdF32SetF32Array(work, &matRes->unknownf8[header->unknown40 + variable->unknown02], variable->unknown06 * 8);
-  return DrResMdoUniformBlock::s_nVarSizeTbl[DrResMdoUniformBlock::VAR_TYPE_TEX_MATRIX] * variable->unknown06;
+  return DrResMdoUniformBlock::s_nVarSizeTbl[DrResMdoUniformBlock::VAR_TYPE_UNKNOWN_17] * variable->unknown06;
 }
 
 int DrMdoSetup::unimate_workFloat4(f32 *work, DrResMdoMat *mat, const MdsMatInfoHeader *header, const MdsMatVariableTbl *variable) {
   MdoWrkMatRes *matRes = unknown30;
   grlib::ShdF32SetF32Array(work, &matRes->unknownf8[header->unknown40 + variable->unknown02], variable->unknown06 * 4);
-  return DrResMdoUniformBlock::s_nVarSizeTbl[DrResMdoUniformBlock::VAR_TYPE_WORK_FLOAT4] * variable->unknown06;
+  return DrResMdoUniformBlock::s_nVarSizeTbl[DrResMdoUniformBlock::VAR_TYPE_UNKNOWN_18] * variable->unknown06;
 }
 
 int DrMdoSetup::unimate_workColor(f32 *work, DrResMdoMat *mat, const MdsMatInfoHeader *header, const MdsMatVariableTbl *variable) {
   MdoWrkMatRes *matRes = unknown30;
   grlib::ShdF32SetF32Array(work, &matRes->unknownf8[header->unknown40 + variable->unknown02], variable->unknown06 * 4);
-  return DrResMdoUniformBlock::s_nVarSizeTbl[DrResMdoUniformBlock::VAR_TYPE_WORK_COLOR] * variable->unknown06;
+  return DrResMdoUniformBlock::s_nVarSizeTbl[DrResMdoUniformBlock::VAR_TYPE_UNKNOWN_19] * variable->unknown06;
 }
 
 int DrMdoSetup::unimate_ProjectionMat(f32 *work, DrResMdoMat *mat, const MdsMatInfoHeader *header, const MdsMatVariableTbl *variable) {
@@ -378,7 +378,7 @@ int DrMdoSetup::unimate_ProjectionMat(f32 *work, DrResMdoMat *mat, const MdsMatI
   for (int i = 0; i < variable->unknown06; i++, work += 12) {
     grlib::ShdF32TransposeMat34(work, &values[i * 16]);
   }
-  return DrResMdoUniformBlock::s_nVarSizeTbl[DrResMdoUniformBlock::VAR_TYPE_PROJECTION_MAT] * variable->unknown06;
+  return DrResMdoUniformBlock::s_nVarSizeTbl[DrResMdoUniformBlock::VAR_TYPE_UNKNOWN_20] * variable->unknown06;
 }
 
 int DrMdoSetup::unimate_NomProjectionMat(f32 *work, DrResMdoMat *mat, const MdsMatInfoHeader *header, const MdsMatVariableTbl *variable) {
@@ -387,7 +387,7 @@ int DrMdoSetup::unimate_NomProjectionMat(f32 *work, DrResMdoMat *mat, const MdsM
   for (int i = 0; i < variable->unknown06; i++, work += 12) {
     grlib::ShdF32TransposeMat34(work, &values[i * 16]);
   }
-  return DrResMdoUniformBlock::s_nVarSizeTbl[DrResMdoUniformBlock::VAR_TYPE_NOM_PROJECTION_MAT] * variable->unknown06;
+  return DrResMdoUniformBlock::s_nVarSizeTbl[DrResMdoUniformBlock::VAR_TYPE_UNKNOWN_50] * variable->unknown06;
 }
 
 void DrMdoSetup::varStTex_ColorTex(const MdsMatInfoHeader *header, u32 location, u32 index) {
@@ -663,6 +663,42 @@ void DrMdoSetup::varStTex_Movie0(const MdsMatInfoHeader *header, u32 location, u
   DrAPCache *cache = m_drMan->unknown5c0;
   grlib::CGLibTextureBuffer *texture = pixlMan->unknown808[0];
   if (pixlMan->unknown828[0] != 0) {
+    cache->beginTexSampling(2, 1);
+  } else {
+    cache->beginTexSampling(2, 0);
+  }
+  if (texture == nullptr) {
+    cache->setMipMapOn(*pixlMan->getDammyTexObj());
+    cache->setTexture(*pixlMan->getDammyTexObj(), location);
+  } else {
+    cache->setMipMapOn(*texture);
+    cache->setTexture(*texture, location);
+  }
+}
+
+void DrMdoSetup::varStTex_Movie2(const MdsMatInfoHeader *header, u32 location, u32 index) {
+  DrPixlMan *pixlMan = m_drMan->unknown78;
+  DrAPCache *cache = m_drMan->unknown5c0;
+  grlib::CGLibTextureBuffer *texture = pixlMan->unknown808[2];
+  if (pixlMan->unknown828[2] != 0) {
+    cache->beginTexSampling(2, 1);
+  } else {
+    cache->beginTexSampling(2, 0);
+  }
+  if (texture == nullptr) {
+    cache->setMipMapOn(*pixlMan->getDammyTexObj());
+    cache->setTexture(*pixlMan->getDammyTexObj(), location);
+  } else {
+    cache->setMipMapOn(*texture);
+    cache->setTexture(*texture, location);
+  }
+}
+
+void DrMdoSetup::varStTex_Movie3(const MdsMatInfoHeader *header, u32 location, u32 index) {
+  DrPixlMan *pixlMan = m_drMan->unknown78;
+  DrAPCache *cache = m_drMan->unknown5c0;
+  grlib::CGLibTextureBuffer *texture = pixlMan->unknown808[3];
+  if (pixlMan->unknown828[3] != 0) {
     cache->beginTexSampling(2, 1);
   } else {
     cache->beginTexSampling(2, 0);

@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "anm/anm_array-inl.h"
+#include "anm/anm_reference_object.h"
 #include "types.h"
 
 namespace anm {
@@ -31,7 +32,7 @@ static_assert(offsetof(ResStateArray, unknown28) == 0x28, "");
 static_assert(offsetof(ResStateArray, unknown50) == 0x50, "");
 static_assert(sizeof(ResAppendix) == 0x10, "");
 
-class ResASM {
+class ResASM : public ReferenceObject {
 public:
   ResStateData *findStateData(const char *name);
   const ResStateData *findResStateData(const char *name) const;
@@ -47,7 +48,6 @@ public:
   void clearAttribute(u32 category);
   void clearFrameAnnotation(u32 type);
 
-  u8 _00[0x18];
   const Skeleton *m_pSkeleton;
   const ResStateArray *unknown20; // Inferred role: p res state array; original member name unknown.
   Array<ResStateData> unknown28;  // Inferred role: states, sorted by name; original member name unknown.

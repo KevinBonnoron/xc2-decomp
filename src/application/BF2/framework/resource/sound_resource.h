@@ -21,9 +21,9 @@ enum SoundPriority : int;
 class SoundResource : public ResourceObject {
 public:
   enum State {
-    STATE_NONE = 0,
-    STATE_LOADING = 1,
-    STATE_LOADED = 2,
+    STATE_UNKNOWN_0 = 0, // Inferred role: none; original name unknown.
+    STATE_UNKNOWN_1 = 1, // Inferred role: loading; original name unknown.
+    STATE_UNKNOWN_2 = 2, // Inferred role: loaded; original name unknown.
   };
 
   struct SetupInfo {

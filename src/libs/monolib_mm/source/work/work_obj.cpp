@@ -9,7 +9,7 @@
 namespace ml {
 
 WorkObj::WorkObj(const char *name, WorkObj *parent, int childNum)
-    : unknown4c(WKSTATE_NONE), unknown50(-1), unknown58(parent), unknowna0(0), unknown188(-1), unknown190(0), unknown198(10), unknown19c(false), unknown1a0(nullptr) {
+    : unknown4c(WKSTATE_UNKNOWN_0), unknown50(-1), unknown58(parent), unknowna0(0), unknown188(-1), unknown190(0), unknown198(10), unknown19c(false), unknown1a0(nullptr) {
   unknown54 = WorkUtil::getWorkMem();
   unknown08 = name;
   unknown50 = WorkRootState::allocWID(this);
@@ -94,12 +94,34 @@ void WorkObj::wkSetEventChild(EVT event) {
   }
 }
 
+template <class T> void WorkObj::wkSetEvent(EVT event, const T &param) {
+  if (event == 0) {
+    unknowna0 |= 1;
+  } else {
+    unknowna8.add(event);
+    unknowna8.set(param);
+  }
+
+  for (reslist<WorkObj *>::Node *node = unknown60.begin(); node != unknown60.end(); node = node->getNext()) {
+    node->value->wkSetEvent(event, param);
+  }
+}
+
+template <class T> void WorkObj::wkSetEventCurrent(EVT event, const T &param) {
+  if (event == 0) {
+    unknowna0 |= 1;
+  } else {
+    unknowna8.add(event);
+    unknowna8.set(param);
+  }
+}
+
 bool WorkObj::wkCheckTimeout(u32 time, bool isTimeout, const char *message) {
   if (unknowna0 & 2) {
     return true;
   }
 
-  return unknown4c < WKSTATE_INIT || unknown4c > WKSTATE_RUN || isTimeout;
+  return unknown4c < WKSTATE_UNKNOWN_1 || unknown4c > WKSTATE_UNKNOWN_3 || isTimeout;
 }
 
 void WorkObj::wkReplaceHasChild(int childNum) {
@@ -183,42 +205,42 @@ void WorkObj::wkStandby() {
   }
 
   switch (unknown4c) {
-  case WKSTATE_NONE:
+  case WKSTATE_UNKNOWN_0:
     wkStandbyInit();
-  case WKSTATE_INIT:
+  case WKSTATE_UNKNOWN_1:
     if (!wkStandbyLogin()) {
       return;
     }
-  case WKSTATE_LOGIN:
+  case WKSTATE_UNKNOWN_2:
     if (!wkStandbyRun()) {
       return;
     }
-  case WKSTATE_RUN:
+  case WKSTATE_UNKNOWN_3:
     if (!wkStandbyLogout()) {
       return;
     }
-  case WKSTATE_LOGOUT:
+  case WKSTATE_UNKNOWN_4:
     wkStandbyShutdown();
   }
 }
 
 bool WorkObj::wkStandbyInit() {
-  unknown4c = WKSTATE_INIT;
+  unknown4c = WKSTATE_UNKNOWN_1;
   wkTimeoutInit();
   return true;
 }
 
 bool WorkObj::wkStandbyRun() {
   if (unknowna0 & 1) {
-    unknown4c = WKSTATE_RUN;
+    unknown4c = WKSTATE_UNKNOWN_3;
     wkTimeoutInit();
   }
 
-  return unknown4c == WKSTATE_RUN;
+  return unknown4c == WKSTATE_UNKNOWN_3;
 }
 
 bool WorkObj::wkStandbyShutdown() {
-  unknown4c = WKSTATE_SHUTDOWN;
+  unknown4c = WKSTATE_UNKNOWN_5;
   wkTimeoutInit();
   return true;
 }
@@ -226,16 +248,19 @@ bool WorkObj::wkStandbyShutdown() {
 bool WorkObj::wkStandbyDestruct() { return false; }
 
 bool WorkObj::wkStandbyLogin() {
-  unknown4c = WKSTATE_LOGIN;
+  unknown4c = WKSTATE_UNKNOWN_2;
   wkTimeoutInit();
   return true;
 }
 
 bool WorkObj::wkStandbyLogout() {
-  unknown4c = WKSTATE_LOGOUT;
+  unknown4c = WKSTATE_UNKNOWN_4;
   wkTimeoutInit();
   return true;
 }
+
+template void WorkObj::wkSetEvent<mm::mtl::FixStr<16>>(EVT event, const mm::mtl::FixStr<16> &param);
+template void WorkObj::wkSetEventCurrent<u32>(EVT event, const u32 &param);
 
 template class reslist<IWorkEvent *>;
 template class reslist<unsigned int>;

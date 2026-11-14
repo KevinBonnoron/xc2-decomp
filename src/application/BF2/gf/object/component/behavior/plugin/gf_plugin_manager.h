@@ -33,6 +33,27 @@ public:
     unknown50[index] = isEnable;
   }
 
+  // Inferred name; shared by every plugin class for GfPluginManager::createPlugin<T> and destroyPlugin<T>.
+  template <typename T> void createPlugin() {
+    // Inferred name; shared by every plugin class for the GfPluginManager templates.
+    if (unknown00[T::PLUGIN_INDEX] != nullptr) {
+      unknown28[T::PLUGIN_INDEX] = unknown00[T::PLUGIN_INDEX]();
+      if (unknown28[T::PLUGIN_INDEX] != nullptr) {
+        unknown28[T::PLUGIN_INDEX]->onSetup(*unknown78);
+      }
+    }
+  }
+
+  template <typename T> void destroyPlugin() {
+    if (unknown28[T::PLUGIN_INDEX] != nullptr) {
+      unknown28[T::PLUGIN_INDEX]->onCleanup(*unknown78);
+      if (unknown28[T::PLUGIN_INDEX] != nullptr) {
+        delete unknown28[T::PLUGIN_INDEX];
+        unknown28[T::PLUGIN_INDEX] = nullptr;
+      }
+    }
+  }
+
   mm::mtl::Vector<Plugin *(*)()> unknown00; // Inferred role: plugin creators; original member name unknown.
   mm::mtl::Vector<Plugin *> unknown28;      // Inferred role: plugins; original member name unknown.
   mm::mtl::Vector<bool> unknown50;          // Inferred role: plugin enables; original member name unknown.

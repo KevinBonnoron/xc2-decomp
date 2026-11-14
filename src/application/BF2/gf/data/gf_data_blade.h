@@ -13,10 +13,10 @@
 
 namespace gf {
 
-constexpr u32 BLADE_ID_FIRST = 1001;
-constexpr u32 BLADE_COUNT = 422;
-constexpr int TRUST_RANK_MAX = 6;
-constexpr int FLAG_BLADE_HOMURI_NAME_HIKARI = 0x89fb;
+constexpr u32 BLADE_ID_UNKNOWN_1001 = 1001; // Inferred role: blade id first; original name unknown.
+constexpr u32 BLADE_UNKNOWN_422 = 422;      // Inferred role: blade count; original name unknown.
+constexpr int RANK_UNKNOWN_6 = 6;           // Inferred role: trust rank max; original name unknown.
+constexpr int FLAG_UNKNOWN_35323 = 0x89fb;  // Inferred role: flag blade homuri name hikari; original name unknown.
 
 enum GfIdea {};
 
@@ -41,11 +41,14 @@ static_assert(sizeof(unknown108) == 0x0c, "");
 
 // Inferred role: save data blade skill; original type name unknown.
 struct unknown109 {
+  // Evidence: GfObjPropertyBlade::GfObjPropertyBlade builds three of them (0x71005aade8-0x71005aae10) and assigns them again (0x71005aae9c-0x71005aaebc).
+  unknown109() : unknown00(0), unknown02(0), unknown03(0), unknown04(1), unknown05(0) {}
+
   u16 unknown00; // Inferred role: id; original member name unknown.
   u8 unknown02;  // Inferred role: achiev release level; original member name unknown.
   u8 unknown03;  // Inferred role: level; original member name unknown.
   u8 unknown04;  // Inferred role: level max; original member name unknown.
-  u8 _05[0x06 - 0x05];
+  u8 unknown05;  // Inferred role: zeroed by the constructor; original member name unknown.
 };
 
 static_assert(offsetof(unknown109, unknown02) == 0x02, "");
@@ -78,30 +81,23 @@ static_assert(offsetof(unknown112, unknown04) == 0x04, "");
 static_assert(offsetof(unknown112, unknown06) == 0x06, "");
 static_assert(sizeof(unknown112) == 0x08, "");
 
-enum ActivateType {
-  ACTIVATE_TYPE_UNUSE,
-  ACTIVATE_TYPE_RESERVER,
-  ACTIVATE_TYPE_PARTY,
-  ACTIVATE_TYPE_MERCENARY_TEAM,
+enum {
+  BLADE_ACTIVATE_UNKNOWN_0 = 0, // Inferred role: blade activate unuse; original name unknown.
+  BLADE_ACTIVATE_UNKNOWN_1 = 1, // Inferred role: blade activate driver; original name unknown.
+  BLADE_ACTIVATE_UNKNOWN_2 = 2, // Inferred role: blade activate mercenary team; original name unknown.
 };
 
 enum {
-  BLADE_ACTIVATE_UNUSE = 0,
-  BLADE_ACTIVATE_DRIVER = 1,
-  BLADE_ACTIVATE_MERCENARY_TEAM = 2,
+  GENDER_UNKNOWN_1 = 1, // Inferred role: gender male; original name unknown.
+  GENDER_UNKNOWN_2 = 2, // Inferred role: gender female; original name unknown.
 };
 
 enum {
-  GENDER_MALE = 1,
-  GENDER_FEMALE = 2,
+  QUEST_RACE_UNKNOWN_1 = 1, // Inferred role: quest race human; original name unknown.
+  QUEST_RACE_UNKNOWN_2 = 2, // Inferred role: quest race animal; original name unknown.
 };
 
-enum {
-  QUEST_RACE_HUMAN = 1,
-  QUEST_RACE_ANIMAL = 2,
-};
-
-constexpr u32 PERSONALITY_VOICE_FIRST = 61;
+constexpr u32 VOICE_UNKNOWN_61 = 61; // Inferred role: personality voice first; original name unknown.
 
 struct SDataBlade {
   u16 unknown00;       // Inferred role: activate; original member name unknown.
@@ -280,8 +276,8 @@ public:
   static void setUsedFavoriteItemForPouch(u32 blade, u32 item);
   static u32 getMenuCastName(u32 blade);
   static u32 getMenuIlustName(u32 blade);
-  static void setActivateDriver(u32 bladeId, int slot, u32 driverId, u32 option);
-  static SDataBlade *getSDataBlade(u32 blade);
+  static bool setActivateDriver(u32 bladeId, int slot, u32 driverId, u32 option);
+  static SDataBlade &getSDataBlade(u32 blade);
   static void initSaveData(SDataGame &dataGame);
   static void setupSDataBlade(SDataBlade &dataBlade, u32 blade, bool unknown001);
   static void setupSDataBladeAchievement(SDataBlade &dataBlade, bool unknown001);
@@ -317,6 +313,7 @@ public:
   static const char *getCommonBladeName(u32 nameList);
   static bool getCommonBladeName(u8 *&bdat, u32 &textId, u32 nameList);
   static u32 getFavorite(u32 blade, FAVORITE favorite);
+  static bool isFavoriteItem(u32 blade, u32 item);
   static const char *getFieldSkillVoice(u32 blade, u32 skill);
   static u32 getAchievementQuestPrefix(u32 blade, u32 line, u32 level);
   static void setupAchievQuest(AchievQuest &achievQuest);
@@ -394,6 +391,10 @@ public:
   static u32 getKeyReleaseLevel(u32 blade);
   static u32 getSkillLineId(u32 blade, u32 line);
   static bool setAchievReleaseLevel(u32 blade, u32 line, u32 level);
+  // Return type inferred: GfKizunaringBlade::releaseAchievement compares the result with the level unsigned (cmp w0, w20; b.hs at 0x7100363c48).
+  static u32 getAchievReleaseLevel(u32 blade, u32 line);
+  // Return type inferred: GfBladeCreate::isEnableAddBlade (0x7100301f64) only tests w0 against zero.
+  static u32 getEnableCountForCreateBlade();
   static bool getTaskSkillMessage(u8 *&bdat, u32 &textId, u32 blade, u32 line);
   static bool getTaskTitleMessage(u8 *&bdat, u32 &textId, u32 blade, u32 line, u32 level);
   static bool getTaskResultMessage(u8 *&bdat, u32 &textId, u32 blade, u32 line, u32 level);

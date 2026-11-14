@@ -56,15 +56,15 @@ void SpAttackManager::DeleteCamera(bool isFade) {
 
   gf::GF_OBJ_HANDLE *handle = unknown10;
   unknown001(handle);
-  unknown10 = gf::INVALID_HANDLE;
+  unknown10 = gf::unknown020;
 
   handle = unknown18;
   unknown001(handle);
-  unknown18 = gf::INVALID_HANDLE;
+  unknown18 = gf::unknown020;
 
   handle = unknown20;
   unknown001(handle);
-  unknown20 = gf::INVALID_HANDLE;
+  unknown20 = gf::unknown020;
 }
 
 void SpAttackManager::PreUpdate(const fw::UpdateInfo &updateInfo) { get()->PreUpdateProc(updateInfo); }
@@ -134,7 +134,7 @@ int SpAttackManager::GetSpAttackSlot(gf::GF_OBJ_HANDLE *handle) const {
 gf::GF_OBJ_HANDLE *SpAttackManager::GetTargetHandle(gf::GF_OBJ_HANDLE *handle) const {
   const PROC_DATA *proc = GetProcDataConst(handle);
   if (proc == nullptr) {
-    return gf::INVALID_HANDLE;
+    return gf::unknown020;
   }
 
   return proc->unknown20;

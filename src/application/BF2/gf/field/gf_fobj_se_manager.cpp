@@ -20,9 +20,9 @@ void GfFobjSeManager::create(const CreateInfo &info) {
     dispose();
     return;
   }
-  unknown10.setAllocator(getAllocator(ALLOCATOR_DEFAULT));
+  unknown10.setAllocator(getAllocator(ALLOCATOR_UNKNOWN_0));
   unknown10.reserve(info.unknown04);
-  unknown38.setAllocator(getAllocator(ALLOCATOR_DEFAULT));
+  unknown38.setAllocator(getAllocator(ALLOCATOR_UNKNOWN_0));
 }
 
 void GfFobjSeManager::dispose() {

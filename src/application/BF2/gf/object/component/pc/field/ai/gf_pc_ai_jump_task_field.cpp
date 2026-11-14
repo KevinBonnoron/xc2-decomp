@@ -25,7 +25,7 @@ void TaskFieldJump::update(BlackBoardField &blackBoard) {
   GfComPropertyPc *property = blackBoard.unknown08;
   const JumpAIParam *param = AgentUtilField::getAIParamAdapter(*property, PARAM_ID_FIELD_AI_UNKNOWN_4).get<JumpAIParam>();
   const mm::Vec3 &velocity = property->unknown80;
-  property->unknown60.unknown08.set(INPUT_ID_JUMP);
+  property->unknown60.unknown08.set(INPUT_ID_UNKNOWN_2);
   f32 speed = sqrtf(velocity.x * velocity.x + velocity.y * velocity.y + velocity.z * velocity.z);
   property->unknown80 = property->unknown1e0 * (speed > param->minVel ? speed : param->minVel);
 }

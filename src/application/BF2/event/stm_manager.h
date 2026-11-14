@@ -14,7 +14,7 @@ class StmPackMemory;
 class StmManager {
 public:
   enum {
-    FLAG_PAUSE = 1 << 0,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: pause flag; original name unknown.
   };
 
   StmManager(const char *name);

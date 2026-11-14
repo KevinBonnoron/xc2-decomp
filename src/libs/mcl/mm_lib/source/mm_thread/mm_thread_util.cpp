@@ -12,7 +12,7 @@ s32 ThreadUtil::getCpuNum() { return 3; }
 u32 ThreadUtil::getCpuMask() { return nn::os::GetThreadAvailableCoreMask(); }
 
 void ThreadUtil::setCpuThread(MMTHREAD *thread, CPUID cpuId) {
-  if (cpuId == CPUID_ANY) {
+  if (cpuId == CPUID_UNKNOWN_0) {
     return;
   }
 
@@ -22,7 +22,7 @@ void ThreadUtil::setCpuThread(MMTHREAD *thread, CPUID cpuId) {
   nn::os::SetThreadCoreMask(thread, coreID, 1UL << coreID);
 }
 
-s32 ThreadUtil::convertCoreID(CPUID cpuId) { return cpuId > CPUID_ANY ? cpuId - 1 : -1; }
+s32 ThreadUtil::convertCoreID(CPUID cpuId) { return cpuId > CPUID_UNKNOWN_0 ? cpuId - 1 : -1; }
 
 u64 ThreadUtil::getID(MMTHREAD *thread) { return reinterpret_cast<u64>(thread); }
 

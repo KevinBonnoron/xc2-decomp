@@ -3,11 +3,14 @@
 #include "anm/anm_array-inl.h"
 #include "anm/anm_qs_transform.h"
 #include "anm/anm_skeleton.h"
+#include "framework/anim/anim_manager.h"
+#include "framework/message/message_object.h"
 #include "framework/object/updatable_object.h"
 #include "fw/fw_model_object.h"
 #include "fw/fw_transform.h"
 #include "gf/gf_allocator.h"
 #include "gf/object/component/gf_com_transform.h"
+#include "gf/object/component/property/gf_com_property.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_util.h"
 #include "mm/mm_std_base.h"
@@ -15,10 +18,6 @@
 #include "mm_math/mm_vec3.h"
 #include "mm_math/mm_vec4.h"
 #include "mm_mtl/algorithm.h"
-
-namespace fw {
-class MessageObject;
-} // namespace fw
 
 namespace gf {
 
@@ -43,6 +42,22 @@ bool GfComModel::isRender() const {
 }
 
 bool GfComModel::isVolumeFadeForUser() const { return GfObjUtil::isVolumeFadeForUser(static_cast<GfObj *>(unknown08)->unknownf8); }
+
+bool GfComModel::recieveMessage(fw::MessageObject *sender, fw::Message &message) {
+  switch (message.unknown00) {
+  case MSG_UNKNOWN_16777219:
+    procMsgActivateComponentDebugWindow(sender, static_cast<MsgDebugActivateComponentWindow &>(message));
+    return true;
+  case MSG_OBJECT_UNKNOWN_16777271:
+    procMsgObjectNotifyDamage(sender, static_cast<MsgObjectNotifyDamage &>(message));
+    return true;
+  case MSG_OBJECT_UNKNOWN_16777272:
+    procMsgObjectNotifyDead(sender, static_cast<MsgObjectNotifyDead &>(message));
+    return true;
+  default:
+    return false;
+  }
+}
 
 void GfComModel::procMsgObjectNotifyDead(fw::MessageObject *, MsgObjectNotifyDead &) {}
 
@@ -167,7 +182,7 @@ void GfComModel::removeBoneReferenceFrame(const char *name, mm::mtl::IntrusivePt
 // __LINE__ must be 544 and 549 as in the original source: they are the line arguments of operator new and of the assert.
 mm::mtl::IntrusivePtr<fw::ReferenceFrame> GfComModel::createBoneReferenceFrameImpl(u16 bone) {
 #line 544
-  mm::mtl::IntrusivePtr<fw::ReferenceFrame> frame = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) fw::ReferenceFrame();
+  mm::mtl::IntrusivePtr<fw::ReferenceFrame> frame = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) fw::ReferenceFrame();
   bindReferenceFrameToBone(bone, frame);
   GfComTransform *com_trans = unknown08->getComponent<GfComTransform>();
 #line 549
@@ -188,7 +203,7 @@ void GfComModel::destroyBoneReferenceFrameImpl(mm::mtl::IntrusivePtr<fw::Referen
 // __LINE__ must be 580 and 583 as in the original source: they are the line arguments of operator new and of the assert.
 mm::mtl::IntrusivePtr<fw::ReferenceFrame> GfComModel::createMountReferenceFrameImpl(u16 mount) {
 #line 580
-  mm::mtl::IntrusivePtr<fw::ReferenceFrame> frame = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) fw::ReferenceFrame();
+  mm::mtl::IntrusivePtr<fw::ReferenceFrame> frame = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) fw::ReferenceFrame();
   GfComTransform *com_trans = unknown08->getComponent<GfComTransform>();
 #line 583
   MM_ASSERT(com_trans != NULL);
@@ -227,6 +242,23 @@ void GfComModel::unbindReferenceFrameToBone(mm::mtl::IntrusivePtr<fw::ReferenceF
     com_trans->unknown001().get()->removeChild(*frame.get());
   }
 }
+
+void GfComModel::changeLayer(u32 oldLayer, u32 newLayer) {
+  if (oldLayer == newLayer) {
+    return;
+  }
+
+  fw::AnimationManager *manager = fw::AnimationManager::get();
+  if (manager != nullptr && unknown18 != nullptr && unknown28 != nullptr) {
+    manager->removePoseModifier(getLayer(), unknown40);
+    manager->addPoseModifier(newLayer, unknown40);
+    manager->removeAfterModifier(getLayer(), unknown10c8);
+    manager->addAfterModifier(newLayer, unknown10c8);
+  }
+  unknown18->changeLayer(newLayer);
+}
+
+const mm::mtl::RTTI *GfComModel::getRTTI() const { return &m_rtti; }
 
 } // namespace gf
 

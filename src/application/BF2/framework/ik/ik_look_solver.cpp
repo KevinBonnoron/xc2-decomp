@@ -24,7 +24,7 @@ bool LookIkSolver::createImpl(const Description &description, mm::mtl::Intrusive
   return true;
 }
 
-LookIkSolver::LookIkSolver() : unknown30(0.5f, 0.5f), unknown38(true) {}
+LookIkSolver::LookIkSolver() : unknown38(true) {}
 
 LookIkSolver::~LookIkSolver() {}
 

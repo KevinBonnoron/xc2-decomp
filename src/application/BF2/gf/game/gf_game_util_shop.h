@@ -16,6 +16,7 @@ public:
   static void execPayInn(u32 shop, u32 money, bool isDouble);
   static u32 getNeedMoneyForInn(u32 shop);
   static bool getChangeTask(ShopTaskInfo &info, u32 shop);
+  static void execChangeItem(u32 task, u32 table);
 };
 
 } // namespace gf

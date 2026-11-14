@@ -14,7 +14,7 @@ namespace event {
 
 void ScriptCamRotZ::doit(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CAMERA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_3) {
     return;
   }
   ObjectCamera *camera = static_cast<ObjectCamera *>(object);
@@ -26,10 +26,10 @@ void ScriptCamRotZ::doit(const Param &param) {
 
 void ScriptCamRotZ::undo(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CAMERA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_3) {
     return;
   }
-  static_cast<ObjectCamera *>(object)->setRotZ(unknown08, CV_TYPE_LINEAR);
+  static_cast<ObjectCamera *>(object)->setRotZ(unknown08, CV_TYPE_UNKNOWN_1);
 }
 
 } // namespace event

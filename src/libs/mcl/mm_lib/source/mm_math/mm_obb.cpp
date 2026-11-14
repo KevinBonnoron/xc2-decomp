@@ -1,5 +1,7 @@
 #include "mm_math/mm_obb.h"
 
+#include "mm_math/mm_line.h"
+#include "mm_math/mm_line2.h"
 #include "mm_math/mm_plane.h"
 #include "mm_math/mm_sphere.h"
 
@@ -37,6 +39,30 @@ Obb &Obb::operator=(const Obb &obb) {
 void Obb::setMat(const Mat44 &matrix, const Vec3 &size) {
   this->matrix = matrix;
   this->size = size;
+}
+
+u32 Obb::getCross(Vec3 &first, Vec3 &second, const Line2 &line) const {
+  Line infinite;
+  infinite.unknown00 = line.direction;
+  infinite.unknown00.unknown001();
+  infinite.unknown10 = line.end;
+  if (!getCross(first, second, infinite)) {
+    return 0;
+  }
+  Vec3 firstStart = line.start - first;
+  Vec3 firstEnd = line.end - first;
+  bool firstInner = firstStart.x * firstEnd.x + firstStart.y * firstEnd.y + firstStart.z * firstEnd.z < 0.0f;
+  Vec3 secondStart = line.start - second;
+  Vec3 secondEnd = line.end - second;
+  bool secondInner = secondStart.x * secondEnd.x + secondStart.y * secondEnd.y + secondStart.z * secondEnd.z < 0.0f;
+  if (!firstInner && secondInner) {
+    first = second;
+    return 1;
+  }
+  if (firstInner && !secondInner) {
+    return 1;
+  }
+  return firstInner && secondInner ? 2 : 0;
 }
 
 bool Obb::isInner(const Vec3 &point) const {

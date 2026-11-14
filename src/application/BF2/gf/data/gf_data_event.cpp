@@ -11,21 +11,21 @@
 namespace gf {
 
 enum {
-  FLAG_EVENT_PLAY = 0x8a5f,
-  FLAG_WATCHED_BLADE_QUEST_EVENT = 0xb6c2,
-  FLAG_WATCHED_BLADE_CREATE_EVENT = 0xb78b,
+  FLAG_UNKNOWN_35423 = 0x8a5f, // Inferred role: flag event play; original name unknown.
+  FLAG_UNKNOWN_46786 = 0xb6c2, // Inferred role: flag watched blade quest event; original name unknown.
+  FLAG_UNKNOWN_46987 = 0xb78b, // Inferred role: flag watched blade create event; original name unknown.
 };
 
 enum {
-  EVENT_SCENARIO_FIRST = 10001,
-  EVENT_BLADE_CREATE_FIRST = 19001,
-  EVENT_BLADE_QUEST_FIRST = 20707,
+  EVENT_UNKNOWN_10001 = 10001, // Inferred role: event scenario first; original name unknown.
+  EVENT_UNKNOWN_19001 = 19001, // Inferred role: event blade create first; original name unknown.
+  EVENT_UNKNOWN_20707 = 20707, // Inferred role: event blade quest first; original name unknown.
 };
 
-constexpr u32 EVENT_SCENARIO_COUNT = 604;
-constexpr u32 EVENT_BLADE_CREATE_COUNT = 58;
-constexpr u32 EVENT_BLADE_QUEST_COUNT = 504;
-constexpr int EVENT_PLAY_FLAG_COUNT = 2000;
+constexpr u32 EVENT_UNKNOWN_604 = 604;   // Inferred role: event scenario count; original name unknown.
+constexpr u32 EVENT_UNKNOWN_58 = 58;     // Inferred role: event blade create count; original name unknown.
+constexpr u32 EVENT_UNKNOWN_504 = 504;   // Inferred role: event blade quest count; original name unknown.
+constexpr int EVENT_UNKNOWN_2000 = 2000; // Inferred role: event play flag count; original name unknown.
 
 // Inferred role: event list bdat; original type name unknown.
 struct unknown067 {
@@ -33,7 +33,8 @@ struct unknown067 {
   int playFlagCount;
 };
 
-static const unknown067 eventListBdats[] = {
+static const unknown067 unknown014[] = {
+    // Inferred role: event list bdats; original name unknown.
     {BDAT_EVT_LIST_BF, 100},
     {BDAT_EVT_LIST_BL, 100},
     {BDAT_EVT_LIST_QST01, 100},
@@ -41,7 +42,8 @@ static const unknown067 eventListBdats[] = {
     {BDAT_EVT_LIST_TLK01, 100},
 };
 
-static const u16 saveScenarioEvents[] = {
+static const u16 unknown016[] = {
+    // Inferred role: save scenario events; original name unknown.
     10001, 10003, 10007, 10008, 10009, 10011, 10012, 10013, 10015, 10018, 10022, 10023, 10025, 10026, 10029, 10032, 10033, 10035, 10037, 10039, 10043, 10044, 10049, 10051, 10052, 10055, 10058,
     10062, 10064, 10067, 10068, 10069, 10072, 10073, 10075, 10076, 10077, 10078, 10079, 10082, 10085, 10086, 10090, 10091, 10092, 10093, 10094, 10095, 10096, 10097, 10098, 10099, 10100, 10102,
     10105, 10106, 10108, 10109, 10110, 10112, 10113, 10114, 10116, 10119, 10125, 10128, 10130, 10131, 10139, 10140, 10141, 10145, 10146, 10148, 10149, 10150, 10151, 10152, 10153, 10154, 10156,
@@ -54,7 +56,7 @@ static const u16 saveScenarioEvents[] = {
 
 // Inferred role: bdat id of the event list holding the event; original name unknown.
 static u32 unknown001(u32 event) {
-  for (const unknown067 *list = eventListBdats; list != eventListBdats + sizeof(eventListBdats) / sizeof(eventListBdats[0]); list++) {
+  for (const unknown067 *list = unknown014; list != unknown014 + sizeof(unknown014) / sizeof(unknown014[0]); list++) {
     u8 *bdat = GfDataBdat::getFP(list->bdat);
     u32 top = Bdat::getIdTop(bdat);
     u32 end = top + Bdat::getIdCount(bdat);
@@ -71,19 +73,19 @@ int GfDataEvent::getEventPlayFlag(u32 event) {
     return -1;
   }
 
-  for (int list = 0; list < static_cast<int>(sizeof(eventListBdats) / sizeof(eventListBdats[0])); list++) {
-    u8 *bdat = GfDataBdat::getFP(eventListBdats[list].bdat);
+  for (int list = 0; list < static_cast<int>(sizeof(unknown014) / sizeof(unknown014[0])); list++) {
+    u8 *bdat = GfDataBdat::getFP(unknown014[list].bdat);
     if (static_cast<int>(event) < Bdat::getIdTop(bdat) + Bdat::getIdCount(bdat)) {
-      if (Bdat::getIdCount(bdat) >= eventListBdats[list].playFlagCount) {
+      if (Bdat::getIdCount(bdat) >= unknown014[list].playFlagCount) {
         return -1;
       }
 
       int flag = Bdat::getIdTop(bdat) - event + list * 100;
-      if (flag >= EVENT_PLAY_FLAG_COUNT) {
+      if (flag >= EVENT_UNKNOWN_2000) {
         return -1;
       }
 
-      return flag + FLAG_EVENT_PLAY;
+      return flag + FLAG_UNKNOWN_35423;
     }
   }
 
@@ -130,15 +132,15 @@ const char *GfDataEvent::getEventName(u32 event) {
   return name;
 }
 
-bool GfDataEvent::isBladeCreateEvent(u32 event) { return event - EVENT_BLADE_CREATE_FIRST < EVENT_BLADE_CREATE_COUNT; }
+bool GfDataEvent::isBladeCreateEvent(u32 event) { return event - EVENT_UNKNOWN_19001 < EVENT_UNKNOWN_58; }
 
-bool GfDataEvent::isBladeQuestEvent(u32 event) { return event - EVENT_BLADE_QUEST_FIRST < EVENT_BLADE_QUEST_COUNT; }
+bool GfDataEvent::isBladeQuestEvent(u32 event) { return event - EVENT_UNKNOWN_20707 < EVENT_UNKNOWN_504; }
 
-bool GfDataEvent::isScenarioEvent(u32 event) { return event - EVENT_SCENARIO_FIRST < EVENT_SCENARIO_COUNT; }
+bool GfDataEvent::isScenarioEvent(u32 event) { return event - EVENT_UNKNOWN_10001 < EVENT_UNKNOWN_604; }
 
 bool GfDataEvent::isSaveScenarioEvent(u32 event) {
-  for (u32 index = 0; index < sizeof(saveScenarioEvents) / sizeof(saveScenarioEvents[0]); index++) {
-    if (saveScenarioEvents[index] == event) {
+  for (u32 index = 0; index < sizeof(unknown016) / sizeof(unknown016[0]); index++) {
+    if (unknown016[index] == event) {
       return true;
     }
   }
@@ -150,9 +152,9 @@ void GfDataEvent::setWatchedEventFlag(u32 event) {
   GfBdatShop *bdatShop = GfBdatShop::get();
   u32 flagBase;
   if (isBladeQuestEvent(event)) {
-    flagBase = FLAG_WATCHED_BLADE_QUEST_EVENT;
+    flagBase = FLAG_UNKNOWN_46786;
   } else if (isBladeCreateEvent(event)) {
-    flagBase = FLAG_WATCHED_BLADE_CREATE_EVENT;
+    flagBase = FLAG_UNKNOWN_46987;
   } else {
     return;
   }
@@ -214,7 +216,7 @@ u32 GfDataEvent::getBladeQuestDriver(u32 event) {
         return blade;
       }
 
-      return GfDataBlade::getSDataBlade(blade)->unknown02;
+      return GfDataBlade::getSDataBlade(blade).unknown02;
     }
   }
 

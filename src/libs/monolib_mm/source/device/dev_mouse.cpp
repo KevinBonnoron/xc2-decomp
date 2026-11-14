@@ -14,11 +14,11 @@ mm::Pnt<int> s_clipMove;
 } // namespace
 
 DevMouse::DevMouse(const char *name, WorkObj *parent)
-    : WorkObj(name, parent, 0), unknown1d0(0), unknown1d4(0), unknown1d8(0), unknown1dc(0), unknown1e0(0), unknown1e4(0), unknown1e8(0), unknown1ec(0), unknown1f0(0), unknown1f4(true),
-      unknown1f8(0.0f), unknown1fc(false) {
-  unknown1b8 = mm::Pnt<int>(0, 0);
+    : WorkObj(name, parent, 0), unknown1d0(0), m_wheel(0), unknown1d8(0), unknown1dc(0), unknown1e0(0), unknown1e4(0), unknown1e8(0), unknown1ec(0), unknown1f0(0), m_padMouse(true), unknown1f8(0.0f),
+      unknown1fc(false) {
+  m_pos = mm::Pnt<int>(0, 0);
   unknown1c0 = mm::Pnt<int>(0, 0);
-  unknown1c8 = mm::Pnt<int>(0, 0);
+  m_move = mm::Pnt<int>(0, 0);
   s_clipMove = mm::Pnt<int>(0, 0);
 }
 
@@ -41,11 +41,11 @@ void DevMouse::getClipMove(mm::Pnt<int> &move) {
   s_clipMove = mm::Pnt<int>(0, 0);
 }
 
-const mm::Pnt<int> &DevMouse::getPos() { return get()->unknown1b8; }
+const mm::Pnt<int> &DevMouse::getPos() { return get()->m_pos; }
 
-const mm::Pnt<int> &DevMouse::getMove() { return get()->unknown1c8; }
+const mm::Pnt<int> &DevMouse::getMove() { return get()->m_move; }
 
-int DevMouse::getWheel() { return get()->unknown1d4; }
+int DevMouse::getWheel() { return get()->m_wheel; }
 
 u32 DevMouse::buttonOn() { return get()->unknown1e0; }
 
@@ -56,9 +56,9 @@ u32 DevMouse::button() { return get()->unknown1e8; }
 u32 DevMouse::buttonDbl() { return get()->unknown1ec; }
 
 void DevMouse::imPos(int x, int y) {
-  imMove(x - unknown1b8.x, y - unknown1b8.y);
-  unknown1b8.x = x;
-  unknown1b8.y = y;
+  imMove(x - m_pos.x, y - m_pos.y);
+  m_pos.x = x;
+  m_pos.y = y;
 }
 
 void DevMouse::imMove(int x, int y) {
@@ -105,7 +105,7 @@ void DevMouse::imMButtonDbl() { unknown1f0 |= 0x2; }
 void DevMouse::imRButtonDbl() { unknown1f0 |= 0x4; }
 
 void DevMouse::updateDevice() {
-  if (unknown1f4 && !unknown1fc) {
+  if (m_padMouse && !unknown1fc) {
     if (!(DevPad::getBtn(9) & 0xf000)) {
       unknown1f8 = 0.7f;
     } else {
@@ -121,9 +121,9 @@ void DevMouse::updateDevice() {
 
 void DevMouse::wkUpdate() {
   updateDevice();
-  unknown1c8 = unknown1c0;
+  m_move = unknown1c0;
   unknown1c0 = mm::Pnt<int>(0, 0);
-  unknown1d4 = unknown1d0;
+  m_wheel = unknown1d0;
   unknown1d0 = 0;
   unknown1e0 = unknown1d8;
   unknown1d8 = 0;
@@ -150,9 +150,9 @@ bool DevMouse::wkStandbyLogout() {
   return false;
 }
 
-void DevMouse::setPadMouse(bool isPadMouse) { get()->unknown1f4 = isPadMouse; }
+void DevMouse::setPadMouse(bool isPadMouse) { get()->m_padMouse = isPadMouse; }
 
-bool DevMouse::isPadMouse() { return get()->unknown1f4; }
+bool DevMouse::isPadMouse() { return get()->m_padMouse; }
 
 void DevMouse::resetMouse() { get()->imMove(700, 700); }
 

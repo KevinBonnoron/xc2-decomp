@@ -47,9 +47,9 @@ public:
     f32 unknown0c;    // Inferred role: rotation; original member name unknown.
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_WARP;
+  static const GmkType GMK_TYPE = GMK_TYPE_WARP; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
-  static const u32 POINT_NUM = 2;
+  static const u32 POINT_UNKNOWN_2 = 2; // Inferred role: point num; original name unknown.
 
   GmkWarp();
   ~GmkWarp() override { dispose(); }
@@ -79,11 +79,11 @@ public:
   void onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) override {}
 
   u8 _48[0x50 - 0x48];
-  gf::GF_OBJ_HANDLE *unknown50[POINT_NUM]; // Inferred role: handles; original member name unknown.
-  u32 unknown60[POINT_NUM];                // Inferred role: icon handles; original member name unknown.
-  DistCond unknown68;                      // Inferred role: icon dist; original member name unknown.
-  bool unknown6c;                          // Inferred role: icon dead; original member name unknown.
-  mutable bool unknown6d;                  // Inferred role: disp; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown50[POINT_UNKNOWN_2]; // Inferred role: handles; original member name unknown.
+  u32 unknown60[POINT_UNKNOWN_2];                // Inferred role: icon handles; original member name unknown.
+  DistCond unknown68;                            // Inferred role: icon dist; original member name unknown.
+  bool unknown6c;                                // Inferred role: icon dead; original member name unknown.
+  mutable bool unknown6d;                        // Inferred role: disp; original member name unknown.
 };
 
 static_assert(offsetof(GmkWarp, unknown50) == 0x50, "");

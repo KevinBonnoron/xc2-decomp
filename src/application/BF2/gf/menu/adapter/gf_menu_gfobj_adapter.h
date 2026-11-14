@@ -105,6 +105,7 @@ public:
   bool update_EN_ResAttrOn(GF_OBJ_HANDLE *handle);
   bool update_EN_ResAttrTarget(GF_OBJ_HANDLE *handle);
   bool update_EN_ResAttrBurst(GF_OBJ_HANDLE *handle);
+  bool update_EN_ResAttrHP(GF_OBJ_HANDLE *handle);
   bool update_EN_ElemEffID(GF_OBJ_HANDLE *handle);
   bool update_EN_TypeIcon(GF_OBJ_HANDLE *handle);
   bool update_EN_Scout(GF_OBJ_HANDLE *handle);
@@ -112,6 +113,7 @@ public:
   bool update_BL_Special(GF_OBJ_HANDLE *handle);
   bool update_BL_SpecialLv(GF_OBJ_HANDLE *handle);
   bool update_BL_ChangeRecast(GF_OBJ_HANDLE *handle);
+  bool update_BL_ChangeRecast2(GF_OBJ_HANDLE *handle);
   bool update_BL_DispComboReady(GF_OBJ_HANDLE *handle);
   bool update_BL_DispCurrent(GF_OBJ_HANDLE *handle);
   void update(const fw::UpdateInfo &info) override;

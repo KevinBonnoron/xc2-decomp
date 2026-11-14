@@ -2,6 +2,7 @@
 
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
+#include "mm_mtl/fixstr.h"
 #include "types.h"
 #include "ui/event/ui_event_data.h"
 #include "ui/ui_object_acc.h"
@@ -26,6 +27,19 @@ void GfMenuObjBladeChange::finalize() { GfMenuObject::finalize(); }
 void GfMenuObjBladeChange::update() {
   ui::UIObjectAcc(unknown18).setAlpha(1.0f);
   GfMenuObject::update();
+}
+
+void GfMenuObjBladeChange::updateFace(u32 index) {
+  mm::mtl::FixStr<32> name;
+  name.format("IMG_face@%02d", index + 1);
+  ui::UIObjectAcc face(unknown18, name.c_str());
+  if (face.isValid()) {
+    if ((!unknown2e && (unknown30[index].unknown04 & 4)) || (unknown30[index].unknown04 & 2)) {
+      face.setMulColor("select");
+    } else {
+      face.setMulColor("gray");
+    }
+  }
 }
 
 void GfMenuObjBladeChange::enableAwakening(bool) {}

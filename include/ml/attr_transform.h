@@ -11,9 +11,9 @@ namespace ml {
 class AttrTransform {
 public:
   enum Flag {
-    FLAG_MATRIX = 1 << 0,
-    FLAG_QUAT = 1 << 1,
-    FLAG_ROTATION_ZXY = 1 << 3,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: matrix; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: quat; original name unknown.
+    FLAG_UNKNOWN_3 = 1 << 3, // Inferred role: rotation zxy; original name unknown.
   };
 
   AttrTransform() : unknown130(0) {}

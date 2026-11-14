@@ -17,7 +17,7 @@
 namespace event {
 enum ATTACH_TYPE : int;
 
-AttachActorCS::AttachActorCS(const char *name) : AttachActorBase(name), unknowna0(gf::INVALID_HANDLE) {}
+AttachActorCS::AttachActorCS(const char *name) : AttachActorBase(name), unknowna0(gf::unknown020) {}
 
 AttachActorCS::~AttachActorCS() {
   while (!unknowna8.empty()) {
@@ -49,7 +49,7 @@ void AttachActorCS::render() { AttachActorBase::render(); }
 
 void AttachActorCS::setEffectCaster(bool isSet, u32 effect) {
   if (isSet) {
-    if (unknowna8.size() >= EFFECT_COUNT) {
+    if (unknowna8.size() >= EFFECT_UNKNOWN_128) {
       return;
     }
     u32 *caster = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) u32(effect);
@@ -70,7 +70,7 @@ void AttachActorCS::setEffectCaster(bool isSet, u32 effect) {
 
 void AttachActorCS::setEffectMount(bool isSet, u32 effect, const char *bone, const mm::Vec3 &offset, bool isRotate, ATTACH_TYPE type) {
   if (isSet) {
-    if (unknown4b0.size() >= EFFECT_COUNT) {
+    if (unknown4b0.size() >= EFFECT_UNKNOWN_128) {
       return;
     }
     unknown001 *mount = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) unknown001(effect, bone, offset, isRotate, type);

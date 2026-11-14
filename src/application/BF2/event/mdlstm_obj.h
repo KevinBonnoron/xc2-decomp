@@ -1,4 +1,6 @@
 #pragma once
+#include <stddef.h>
+
 #include "event/i_res_event.h"
 #include "event/model_obj.h"
 #include "mm_mtl/fixstr.h"
@@ -17,16 +19,16 @@ namespace event {
 class MdlstmObj : public IResEvent {
 public:
   enum STATE {
-    STATE_NONE,
-    STATE_INIT,
-    STATE_LOAD,
-    STATE_LOADING,
-    STATE_LOADED,
-    STATE_MODEL,
-    STATE_DELAY,
-    STATE_BUSY,
-    STATE_ACTIVE,
-    STATE_DISPOSE,
+    STATE_UNKNOWN_0, // Inferred role: none; original name unknown.
+    STATE_UNKNOWN_1, // Inferred role: init; original name unknown.
+    STATE_UNKNOWN_2, // Inferred role: load; original name unknown.
+    STATE_UNKNOWN_3, // Inferred role: loading; original name unknown.
+    STATE_UNKNOWN_4, // Inferred role: loaded; original name unknown.
+    STATE_UNKNOWN_5, // Inferred role: model; original name unknown.
+    STATE_UNKNOWN_6, // Inferred role: delay; original name unknown.
+    STATE_UNKNOWN_7, // Inferred role: busy; original name unknown.
+    STATE_UNKNOWN_8, // Inferred role: active; original name unknown.
+    STATE_UNKNOWN_9, // Inferred role: dispose; original name unknown.
   };
 
   MdlstmObj();
@@ -35,10 +37,14 @@ public:
   void finishFree();
   void init(f32 frame, const char *path, u32 value, bool isActive, int param);
   void init(f32 frame, MODEL_TYPE type, u32 id, u32 value, bool isActive, int param);
+  void finishLoad();
   void finishLoaded();
+  void finishModel();
   void finishDelay();
   void finishBusy();
   void load();
+  void exec(f32 minFrame, f32 maxFrame);
+  ModelObj *build();
   void dispose();
   bool isLoaded() const;
   bool isDisposeable(ModelObj *model) const;
@@ -58,14 +64,12 @@ private:
   mm::mtl::FixStr<128> unknown14; // Inferred role: path; original member name unknown.
   u32 _98;
   u32 _9c;
-  u32 _a0;
-  bool _a4;
-  bool _a5;
+  ModelObj::OPTION _a0;
   u32 _a8;
   void *_b0;
-  void *_b8;
+  size_t _b8;
   void *_c0;
-  void *_c8;
+  size_t _c8;
   ml::DrStmReadObj *_d0;
   ModelObj *unknownd8; // Inferred role: reuse model; original member name unknown.
   ModelObj *unknowne0; // Inferred role: model; original member name unknown.

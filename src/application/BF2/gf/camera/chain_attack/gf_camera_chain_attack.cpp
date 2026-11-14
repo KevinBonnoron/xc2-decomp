@@ -2,7 +2,14 @@
 
 #include <math.h>
 
+#include "bdat.h"
 #include "fw/fw_camera.h"
+#include "gf/data/gf_bdat_id.h"
+#include "gf/data/gf_data_bdat.h"
+#include "gf/object/gf_obj_handle.h"
+#include "gmk/gmk_bdat.h"
+#include "ml/rand.h"
+#include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/intrusive_ptr.h"
 
 namespace gf {
@@ -70,6 +77,16 @@ const mm::mtl::RTTI *ChainAttackCameraEntity::getRTTI() const { return &m_rtti; 
 
 const char *ChainAttackCameraEntity::getName() const { return "ChainAttackCameraEntity"; }
 
+ChainAttackCamera::ChainAttackCamera() : unknown70(0xf), unknown78(unknown020) {
+  unknown80.unknown08 = 0.0f;
+  unknown80.unknown0c = 0.0f;
+  unknown80.unknown14 = false;
+  unknown80.unknown15 = false;
+  unknown80.unknown10 = 1;
+  unknown80.unknown00 = 9;
+  unknown80.unknown04 = -9;
+}
+
 ChainAttackCamera::~ChainAttackCamera() {}
 
 void ChainAttackCamera::start() {}
@@ -98,6 +115,28 @@ void ChainAttackCamera::setCameraParam(const Param &param) {
     entity->setMoveType(param.unknown08);
     entity->setPoint(param.unknown10, param.unknown20, param.unknown40, param.unknown50);
   }
+}
+
+u32 ChainAttackCamera::lottery(u8 camType) {
+  u8 *bdat = GfDataBdat::getFP(BDAT_BTL_CHAIN_ATTACK_CAM);
+  s32 top = Bdat::getIdTop(bdat);
+  s32 count = Bdat::getIdCount(bdat);
+  mm::mtl::FixedVector<u32, 64> candidates;
+  for (s32 id = top; id < top + count; id++) {
+    u8 enSize = Bdat::getValCheck(bdat, "EnSize", id, gmk::BDAT_TYPE_UNKNOWN_1);
+    if ((enSize & unknown70) != 0 && static_cast<u8>(Bdat::getValCheck(bdat, "CamType", id, gmk::BDAT_TYPE_UNKNOWN_1)) == camType) {
+      candidates.push_back(id);
+    }
+  }
+  if (candidates.size() == 0) {
+    for (s32 id = top; id < top + count; id++) {
+      if (static_cast<u8>(Bdat::getValCheck(bdat, "CamType", id, gmk::BDAT_TYPE_UNKNOWN_1)) == camType) {
+        candidates.push_back(id);
+      }
+    }
+  }
+  int index = ml::mtRand() % candidates.size();
+  return candidates[index];
 }
 
 } // namespace gf

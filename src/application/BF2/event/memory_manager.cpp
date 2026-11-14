@@ -54,10 +54,10 @@ void MemoryManager::create() {
   m_sysMemSize = 0x4eb000;
   m_resMemSize = 0x1600000;
   unknown38 = 0x800000;
-  unknown1c = heapMemory("EvStatic", gf::GfGameEvent::getEventMem(), unknown2c, mtl::ALLOCATOR_TYPE_RESOURCE);
-  unknown20 = heapMemory("EvSys", gf::GfGameEvent::getEventMem(), m_sysMemSize, mtl::ALLOCATOR_TYPE_PROGRAM);
-  unknown24 = heapMemory("EvRes", gf::GfGameEvent::getEventMem(), m_resMemSize, mtl::ALLOCATOR_TYPE_RESOURCE);
-  unknown28 = heapMemory("EvMotstm", gf::GfGameEvent::getEventMem(), unknown38, mtl::ALLOCATOR_TYPE_RESOURCE);
+  unknown1c = heapMemory("EvStatic", gf::GfGameEvent::getEventMem(), unknown2c, mtl::ALLOCATOR_TYPE_UNKNOWN_2);
+  unknown20 = heapMemory("EvSys", gf::GfGameEvent::getEventMem(), m_sysMemSize, mtl::ALLOCATOR_TYPE_UNKNOWN_1);
+  unknown24 = heapMemory("EvRes", gf::GfGameEvent::getEventMem(), m_resMemSize, mtl::ALLOCATOR_TYPE_UNKNOWN_2);
+  unknown28 = heapMemory("EvMotstm", gf::GfGameEvent::getEventMem(), unknown38, mtl::ALLOCATOR_TYPE_UNKNOWN_2);
   unknown18 = 0;
   grlib::CGLibGPUCache::setMemPoolMemHandle(unknown24);
 }
@@ -85,8 +85,8 @@ void MemoryManager::login() {
       m_resMemSize = 0x1600000;
       unknown38 = 0x800000;
     }
-    unknown24 = heapMemory("EvRes", gf::GfGameEvent::getEventMem(), m_resMemSize, mtl::ALLOCATOR_TYPE_RESOURCE);
-    unknown28 = heapMemory("EvMotstm", gf::GfGameEvent::getEventMem(), unknown38, mtl::ALLOCATOR_TYPE_RESOURCE);
+    unknown24 = heapMemory("EvRes", gf::GfGameEvent::getEventMem(), m_resMemSize, mtl::ALLOCATOR_TYPE_UNKNOWN_2);
+    unknown28 = heapMemory("EvMotstm", gf::GfGameEvent::getEventMem(), unknown38, mtl::ALLOCATOR_TYPE_UNKNOWN_2);
     unknown18 = isLarge;
     grlib::CGLibGPUCache::setMemPoolMemHandle(unknown24);
   }
@@ -163,16 +163,16 @@ void MemoryManager::update() {}
 
 void MemoryManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
-  case MSG_TYPE_INIT_BEGIN:
+  case MSG_TYPE_UNKNOWN_1:
     login();
     break;
-  case MSG_TYPE_UPDATE_SEQUENCE:
+  case MSG_TYPE_UNKNOWN_2:
     clear();
     break;
-  case MSG_TYPE_INIT:
+  case MSG_TYPE_UNKNOWN_4:
     clearHighestMemHeap();
     break;
-  case MSG_TYPE_RENDER:
+  case MSG_TYPE_UNKNOWN_16:
     render();
     break;
   default:
@@ -192,12 +192,12 @@ u32 MemoryManager::getResMemSize() const { return m_resMemSize; }
 
 void MemoryManager::setDisp(bool isDisp) {
   if (isDisp) {
-    unknown10 |= FLAG_DISP;
+    unknown10 |= FLAG_UNKNOWN_0;
   } else {
-    unknown10 &= ~FLAG_DISP;
+    unknown10 &= ~FLAG_UNKNOWN_0;
   }
 }
 
-bool MemoryManager::isDisp() const { return (unknown10 & FLAG_DISP) != 0; }
+bool MemoryManager::isDisp() const { return (unknown10 & FLAG_UNKNOWN_0) != 0; }
 
 } // namespace event

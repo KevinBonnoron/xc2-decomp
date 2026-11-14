@@ -16,10 +16,10 @@ class CharaObj;
 class CharaEvaPlayer {
 public:
   enum {
-    FLAG_CHARA = 1 << 0,
-    FLAG_WEAPON = 1 << 1,
-    FLAG_SP_MOTION = 1 << 2,
-    FLAG_WEAPON_OBJ = 1 << 3,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: chara flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: weapon flag; original name unknown.
+    FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: sp motion flag; original name unknown.
+    FLAG_UNKNOWN_3 = 1 << 3, // Inferred role: weapon obj flag; original name unknown.
   };
 
   CharaEvaPlayer();

@@ -30,7 +30,7 @@ public:
     const mm::Vec3 &unknown001() const { return *reinterpret_cast<const mm::Vec3 *>(this); }
   };
 
-  static const GmkType GMK_TYPE = TYPE;
+  static const GmkType GMK_TYPE = TYPE; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   TGmkFormPcnpc() : _48() {}
   ~TGmkFormPcnpc() override;
@@ -64,7 +64,7 @@ public:
     u32 unknown14; // Inferred role: last following member index; original member name unknown.
   };
 
-  static const GmkType GMK_TYPE = TYPE;
+  static const GmkType GMK_TYPE = TYPE; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   TGmkFormPc() : _48() {}
   ~TGmkFormPc() override;
@@ -105,8 +105,8 @@ template <typename T, u32 MAGIC, u32 VERSION, typename GOB> using TGmkFormList =
 
 typedef TGmkFormPc<GMK_TYPE_FORM_PC, TGmkFormPcnpc<GMK_TYPE_FORM_PCNPC>> GmkFormPc;
 typedef TGmkFormPcnpc<GMK_TYPE_FORM_PCNPC> GmkFormPcnpc;
-typedef TGmkFormPc<GMK_TYPE_FORM_PC_EV, TGmkFormPcnpc<GMK_TYPE_FORM_PCNPC_EV>> GmkFormPcEv;
-typedef TGmkFormPcnpc<GMK_TYPE_FORM_PCNPC_EV> GmkFormPcnpcEv;
+typedef TGmkFormPc<GMK_TYPE_UNKNOWN_26, TGmkFormPcnpc<GMK_TYPE_UNKNOWN_27>> GmkFormPcEv;
+typedef TGmkFormPcnpc<GMK_TYPE_UNKNOWN_27> GmkFormPcnpcEv;
 
 typedef TGmkFormPcList<GmkFormPc, TGmkFormList<GmkFormPc, 0x43505246, 3, GmkFormPcGob>> GmkFormPcList;
 typedef TGmkFormPcnpcList<GmkFormPcnpc, TGmkFormList<GmkFormPcnpc, 0x504e5246, 2, GmkFormPcnpcGob>> GmkFormPcnpcList;

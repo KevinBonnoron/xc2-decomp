@@ -9,9 +9,9 @@ namespace event {
 class CpuManager : public IManager, public mm::mtl::Singleton<CpuManager> {
 public:
   enum {
-    FLAG_START = 1 << 0,
-    FLAG_PAUSE = 1 << 1,
-    FLAG_PAUSE_HOME = 1 << 2,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: start flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: pause flag; original name unknown.
+    FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: pause home flag; original name unknown.
   };
 
   CpuManager();
@@ -28,7 +28,7 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  bool isRunning() const { return (unknown10 & (FLAG_START | FLAG_PAUSE | FLAG_PAUSE_HOME)) == FLAG_START; }
+  bool isRunning() const { return (unknown10 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1 | FLAG_UNKNOWN_2)) == FLAG_UNKNOWN_0; }
 
   void setFlag(u32 flag, bool isSet) {
     if (isSet) {

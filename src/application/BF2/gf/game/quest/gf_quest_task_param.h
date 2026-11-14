@@ -6,33 +6,34 @@
 namespace gf {
 
 enum {
-  TASK_TYPE_BATTLE = 1,
-  TASK_TYPE_UNKNOWN_2 = 2, // Inferred role: request item set (FLD_RequestItemSet); original name unknown.
-  TASK_TYPE_COLLECT = 3,
-  TASK_TYPE_USE = 4,
-  TASK_TYPE_REACH = 5,
-  TASK_TYPE_TALK = 6,
-  TASK_TYPE_UNKNOWN_7 = 7, // Inferred role: talk to a dummy group (FLD_QuestTalkDummyGroup); original name unknown.
-  TASK_TYPE_GIMMICK = 8,
-  TASK_TYPE_REQUEST_BLADE = 9,
-  TASK_TYPE_CONDITION = 10,
-  TASK_TYPE_FIELD_SKILL_COUNT = 11,
-  TASK_TYPE_ACHIEVEMENT = 12,
+  TASK_TYPE_UNKNOWN_1 = 1,   // Inferred role: task type battle; original name unknown.
+  TASK_TYPE_UNKNOWN_2 = 2,   // Inferred role: request item set (FLD_RequestItemSet); original name unknown.
+  TASK_TYPE_UNKNOWN_3 = 3,   // Inferred role: task type collect; original name unknown.
+  TASK_TYPE_UNKNOWN_4 = 4,   // Inferred role: task type use; original name unknown.
+  TASK_TYPE_UNKNOWN_5 = 5,   // Inferred role: task type reach; original name unknown.
+  TASK_TYPE_UNKNOWN_6 = 6,   // Inferred role: task type talk; original name unknown.
+  TASK_TYPE_UNKNOWN_7 = 7,   // Inferred role: talk to a dummy group (FLD_QuestTalkDummyGroup); original name unknown.
+  TASK_TYPE_UNKNOWN_8 = 8,   // Inferred role: task type gimmick; original name unknown.
+  TASK_TYPE_UNKNOWN_9 = 9,   // Inferred role: task type request blade; original name unknown.
+  TASK_TYPE_UNKNOWN_10 = 10, // Inferred role: task type condition; original name unknown.
+  TASK_TYPE_UNKNOWN_11 = 11, // Inferred role: task type field skill count; original name unknown.
+  TASK_TYPE_UNKNOWN_12 = 12, // Inferred role: task type achievement; original name unknown.
 };
 
 enum TASK_STATE {
-  TASK_STATE_NONE,
+  TASK_STATE_UNKNOWN_0, // Inferred role: task state none; original name unknown.
   TASK_STATE_UNKNOWN_1, // Inferred role: task completed; original name unknown.
+  TASK_STATE_UNKNOWN_2, // Inferred role: task state of the suppress count; original name unknown.
 };
 
 enum QUEST_PARAM {
-  QUEST_PARAM_TASK,
-  QUEST_PARAM_COMPLETE,
-  QUEST_PARAM_CHANGE,
-  QUEST_PARAM_ORDER,
-  QUEST_PARAM_COMPLETE_CHILD,
-  QUEST_PARAM_PRE_COMPLETE,
-  QUEST_PARAM_STATE,
+  QUEST_PARAM_UNKNOWN_0, // Inferred role: quest param task; original name unknown.
+  QUEST_PARAM_UNKNOWN_1, // Inferred role: quest param complete; original name unknown.
+  QUEST_PARAM_UNKNOWN_2, // Inferred role: quest param change; original name unknown.
+  QUEST_PARAM_UNKNOWN_3, // Inferred role: quest param order; original name unknown.
+  QUEST_PARAM_UNKNOWN_4, // Inferred role: quest param complete child; original name unknown.
+  QUEST_PARAM_UNKNOWN_5, // Inferred role: quest param pre complete; original name unknown.
+  QUEST_PARAM_UNKNOWN_6, // Inferred role: quest param state; original name unknown.
 };
 
 struct QuestParam {
@@ -44,6 +45,9 @@ struct QuestParam {
 struct QuestTaskParam : QuestParam {
   QuestTaskParam(QuestID quest, u32 taskIndex, TASK_STATE state);
   QuestTaskParam(QuestID quest, u32 taskIndex, u32 purpose, TASK_STATE state);
+  // The game gives QuestTaskParam a non-trivial destructor (no out-of-line symbol: it is empty and inline): with a trivial one
+  // the exits of the task loops in GfQuestUtil::getScenarioTopic and getQuestIconType lose their cleanup destination flag.
+  ~QuestTaskParam() {}
 
   QuestID unknown04;    // Inferred role: quest; original member name unknown.
   u32 unknown08;        // Inferred role: purpose; original member name unknown.

@@ -9,15 +9,15 @@ namespace event {
 class MovieManager : public IManager, public mm::mtl::Singleton<MovieManager> {
 public:
   enum {
-    FLAG_OPEN = 1 << 0,
-    FLAG_LOADED = 1 << 1,
-    FLAG_PLAY = 1 << 2,
-    FLAG_DISP_REQUEST = 1 << 3,
-    FLAG_AUTO_STOP = 1 << 4,
-    FLAG_DISP_WAIT = 1 << 5,
-    FLAG_CLOSE_WAIT = 1 << 6,
-    FLAG_CAPTURE = 1 << 7,
-    FLAG_SCRIPT = 1 << 8,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: open flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: loaded flag; original name unknown.
+    FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: play flag; original name unknown.
+    FLAG_UNKNOWN_3 = 1 << 3, // Inferred role: disp request flag; original name unknown.
+    FLAG_UNKNOWN_4 = 1 << 4, // Inferred role: auto stop flag; original name unknown.
+    FLAG_UNKNOWN_5 = 1 << 5, // Inferred role: disp wait flag; original name unknown.
+    FLAG_UNKNOWN_6 = 1 << 6, // Inferred role: close wait flag; original name unknown.
+    FLAG_UNKNOWN_7 = 1 << 7, // Inferred role: capture flag; original name unknown.
+    FLAG_UNKNOWN_8 = 1 << 8, // Inferred role: script flag; original name unknown.
   };
 
   MovieManager();

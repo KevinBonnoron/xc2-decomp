@@ -16,7 +16,7 @@ BladeChangeManager::BladeChangeManager() : unknown470(0), unknown474(false) {}
 BladeChangeManager::~BladeChangeManager() {}
 
 void BladeChangeManager::Create() {
-  BladeChangeManager *manager = new (gf::getAllocator(gf::ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) BladeChangeManager();
+  BladeChangeManager *manager = new (gf::getAllocator(gf::ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) BladeChangeManager();
   manager->Initialize();
 }
 

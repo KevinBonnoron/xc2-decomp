@@ -18,6 +18,8 @@ public:
   static void clear();
   static void setCameraControlType(int type);
   static bool isInitialized();
+  void createSubViewCamera();
+  void destroySubViewCamera();
 
   mm::mtl::FixedArray<mm::mtl::IntrusivePtr<fw::Camera>, 3> unknown08; // Inferred role: sub view cameras; original member name unknown.
   bool unknown20;                                                      // Inferred role: initialized; original member name unknown.

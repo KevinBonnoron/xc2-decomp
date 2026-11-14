@@ -1,5 +1,7 @@
 #include "dr/dr_creator.h"
 
+#include "dr/dr_calc_clip_man.h"
+#include "dr/dr_calc_man.h"
 #include "dr/dr_env_coli_man.h"
 #include "dr/dr_environment_man.h"
 #include "dr/dr_man.h"
@@ -21,6 +23,8 @@ DrMdoGrpObj *DrCreator::createInstantGrp(int num, u32 flags) { return unknown00-
 DrEnvironmentObj *DrCreator::createLgt(const void *data, int screen) { return unknown00->unknown100[screen]->createObj(data); }
 
 DrEnvColiObj *DrCreator::createEnvColi(const void *data, int screen) { return unknown00->unknown100[screen]->unknown18->createObj(data); }
+
+DrCalcClipObj *DrCreator::createClipObj(const void *data, int screen) { return unknown00->unknowna0[screen]->unknown18->createClipObj(data); }
 
 DrGpuCheckBase *DrCreator::createGpuCheckObj(int type) { return unknown00->unknown88->createGpuCheckObj(type); }
 

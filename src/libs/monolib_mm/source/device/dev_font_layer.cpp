@@ -75,7 +75,7 @@ void DevFontLayer::sync() {
 }
 
 DevFontLayer::DevFontLayer(const char *name, WorkObj *parent)
-    : WorkObj(name, parent, 0), unknown1a8(nullptr), unknown1b4(1.0f), unknown1b8(1.0f), unknown1bc(FONT_STYLE_NORMAL), unknown1c0(nullptr), unknown1c8(false), unknown1ec(false), unknown1f0(0x400),
+    : WorkObj(name, parent, 0), unknown1a8(nullptr), unknown1b4(1.0f), unknown1b8(1.0f), unknown1bc(FONT_STYLE_UNKNOWN_0), unknown1c0(nullptr), unknown1c8(false), unknown1ec(false), unknown1f0(0x400),
       unknown1f4(0) {
   sync();
 }

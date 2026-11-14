@@ -1,7 +1,7 @@
 #pragma once
 #include <stddef.h>
 
-#include "mm_mtl/fixstr.h"
+#include "gf/game/event/gf_event_bgm_setup.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
@@ -11,7 +11,6 @@ struct UpdateInfo;
 
 namespace gf {
 
-struct EventBgmSetup;
 struct GfSetupParam;
 
 class GfEvtBgm : public mm::mtl::PtrSingleton<GfEvtBgm> {
@@ -47,22 +46,19 @@ public:
 
   bool m_initialized;
   u8 _09[0x0c - 0x09];
-  mm::mtl::FixStr<64> unknown0c; // Inferred role: name of the playing event bgm; original member name unknown.
-  f32 m_playBgmVolume;
-  u8 _54[0x70 - 0x54];
-  bool unknown70; // Inferred role: audible flag; original member name unknown.
-  u8 _71[0x74 - 0x71];
+  EventBgmSetup unknown0c; // Inferred role: setup of the playing event bgm; original member name unknown.
   PLAY_STATE m_playState;
   u8 _78[0x478 - 0x78];
   void *unknown478; // Role and original member name unknown.
-  u8 _480[0x490 - 0x480];
+  void *unknown480; // Role and original member name unknown.
+  void *unknown488; // Role and original member name unknown.
 };
 
 static_assert(offsetof(GfEvtBgm, m_initialized) == 0x08, "");
 static_assert(offsetof(GfEvtBgm, unknown0c) == 0x0c, "");
-static_assert(offsetof(GfEvtBgm, m_playBgmVolume) == 0x50, "");
-static_assert(offsetof(GfEvtBgm, unknown70) == 0x70, "");
 static_assert(offsetof(GfEvtBgm, m_playState) == 0x74, "");
+static_assert(offsetof(GfEvtBgm, unknown480) == 0x480, "");
+static_assert(offsetof(GfEvtBgm, unknown488) == 0x488, "");
 static_assert(offsetof(GfEvtBgm, unknown478) == 0x478, "");
 static_assert(sizeof(GfEvtBgm) == 0x490, "");
 

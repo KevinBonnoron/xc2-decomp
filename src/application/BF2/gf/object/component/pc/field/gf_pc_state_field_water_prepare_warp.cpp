@@ -2,12 +2,15 @@
 
 #include "framework/message/message_object.h"
 #include "framework/object/updatable_object.h"
+#include "gf/game/gf_game_manager.h"
 #include "gf/object/component/animation/gf_com_asm.h"
 #include "gf/object/component/behavior/gf_com_behavior.h"
 #include "gf/object/component/pc/gf_com_behavior_pc.h"
 #include "gf/object/component/pc/gf_com_property_pc.h"
 #include "gf/object/component/pc/gf_pc_asm_cmd_id_field.h"
 #include "gf/object/component/pc/gf_pc_property_field.h"
+#include "gf/object/component/pc/gf_pc_state_id.h"
+#include "gf/object/component/pc/gf_pc_state_util.h"
 #include "gf/object/component/pc/gf_pc_state_util_field.h"
 #include "gf/object/gf_obj.h"
 #include "mm_math/mm_vec3.h"
@@ -32,10 +35,24 @@ void StateFieldWaterPrepareWarp::enter(GfComBehaviorPc *behavior, ai::State *pre
   unknown18 = false;
 }
 
+void StateFieldWaterPrepareWarp::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
+  GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
+  if (!unknown18) {
+    if (!GfGameManager::isPlayerPause()) {
+      reqState(STATE_ID_UNKNOWN_20);
+    }
+  } else if (StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_WATERHOLE_00)) {
+    GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
+    MsgPcFieldNotifyWaterWarp message(property->unknown310.getWarpInfo());
+    StateUtil::broadcastMainChar(*behavior, message);
+    reqState(STATE_ID_UNKNOWN_30);
+  }
+}
+
 void StateFieldWaterPrepareWarp::leave(GfComBehaviorPc *behavior, ai::State *next) { StateUtilField::setSpecialActStatus(*behavior, false); }
 
 bool StateFieldWaterPrepareWarp::recieveMessage(void *owner, fw::MessageObject *sender, fw::Message &message) {
-  if (message.unknown00 == MSG_PC_FIELD_NOTIFY_WARP) {
+  if (message.unknown00 == MSG_PC_FIELD_NOTIFY_UNKNOWN_16777236) {
     procMsgPcFieldNotifyWarp(static_cast<GfComBehaviorPc *>(owner), sender, static_cast<MsgPcFieldNotifyWarp &>(message));
     return true;
   }

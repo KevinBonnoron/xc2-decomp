@@ -22,24 +22,25 @@ namespace event {
 class IManiCallback;
 
 enum MANI_TYPE {
-  MANI_TYPE_POS = 1,
-  MANI_TYPE_ROT = 2,
-  MANI_TYPE_TAR = 3,
+  MANI_TYPE_UNKNOWN_0 = 0, // Inferred role: clear; original name unknown.
+  MANI_TYPE_UNKNOWN_1 = 1, // Inferred role: pos; original name unknown.
+  MANI_TYPE_UNKNOWN_2 = 2, // Inferred role: rot; original name unknown.
+  MANI_TYPE_UNKNOWN_3 = 3, // Inferred role: tar; original name unknown.
 };
 
 class ManiManager : public IManager, public mm::mtl::NoncopyableBase, public ml::IWorkEvent {
 public:
-  static constexpr u32 ITEM_COUNT = 512;
+  static constexpr u32 ITEM_UNKNOWN_512 = 512; // Inferred role: item count; original name unknown.
 
   enum {
-    FLAG_ENABLE = 0,
-    FLAG_ATTACHED = 1,
-    FLAG_ACTIVE = 2,
-    FLAG_ADJEST_POS = 3,
+    FLAG_UNKNOWN_0 = 0, // Inferred role: enable flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1, // Inferred role: attached flag; original name unknown.
+    FLAG_UNKNOWN_2 = 2, // Inferred role: active flag; original name unknown.
+    FLAG_UNKNOWN_3 = 3, // Inferred role: adjest pos flag; original name unknown.
   };
 
   enum {
-    DEBUG_FLAG_ENABLE = 0,
+    DEBUG_FLAG_UNKNOWN_0 = 0, // Inferred role: enable flag; original name unknown.
   };
 
   struct Item {
@@ -60,7 +61,7 @@ public:
   void render();
   static void adjestPosY(mm::Vec3 &position);
   void addManipulate(IManiCallback *callback, MANI_TYPE type);
-  static bool exist(mm::mtl::FixedVector<Item, ITEM_COUNT> &items, IManiCallback *callback);
+  static bool exist(mm::mtl::FixedVector<Item, ITEM_UNKNOWN_512> &items, IManiCallback *callback);
   void removeManipulate(IManiCallback *callback);
   void changeManipulate(MANI_TYPE type);
   void setAdjestPosEnable(bool isEnable);
@@ -72,10 +73,10 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  mm::mtl::unknown027<32> unknown18;                // Inferred role: flags; original member name unknown.
-  mm::mtl::unknown027<32> unknown1c;                // Inferred role: debug flags; original member name unknown.
-  mm::mtl::FixedVector<Item, ITEM_COUNT> unknown20; // Inferred role: items; original member name unknown.
-  MANI_TYPE unknown22030;                           // Inferred role: type; original member name unknown.
+  mm::mtl::unknown027<32> unknown18;                      // Inferred role: flags; original member name unknown.
+  mm::mtl::unknown027<32> unknown1c;                      // Inferred role: debug flags; original member name unknown.
+  mm::mtl::FixedVector<Item, ITEM_UNKNOWN_512> unknown20; // Inferred role: items; original member name unknown.
+  MANI_TYPE unknown22030;                                 // Inferred role: type; original member name unknown.
   u8 _22034[0x22040 - 0x22034];
   mm::Mat44 unknown22040; // Inferred role: matrix; original member name unknown.
   mm::Mat44 unknown22080; // Inferred role: matrix; original member name unknown.

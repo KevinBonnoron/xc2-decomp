@@ -13,6 +13,8 @@ namespace gmk {
 class GmkRouteNavi {
 public:
   struct InitResult {
+    InitResult() : position(0.0f, 0.0f, 0.0f), direction(0.0f, 0.0f, 1.0f) {}
+
     mm::Vec3 position;
     mm::Vec3 direction;
   };

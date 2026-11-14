@@ -15,7 +15,7 @@ namespace event {
 ResManager::Item::Item(const char *path, IResEvent *event, bool isPackOnly, RES_RESULT_TYPE result, void *adr, size_t size, bool isPackLoaded)
     : unknown00(path), unknown408(isPackOnly), unknown40c(0), unknown410(1), unknown418(nullptr), unknown420(adr), unknown428(size), unknown430(result), unknown434(isPackLoaded) {
   unknown108[0] = event;
-  for (u32 i = 1; i < EVENT_COUNT; i++) {
+  for (u32 i = 1; i < EVENT_UNKNOWN_96; i++) {
     unknown108[i] = nullptr;
   }
 }
@@ -60,29 +60,29 @@ void ResManager::updateNormal() {
   }
   for (Item **it = unknown20.begin(); it != unknown20.end(); it++) {
     Item *item = *it;
-    if (item->unknown430 == RES_RESULT_TYPE_WAIT && item->unknown408) {
-      item->unknown430 = RES_RESULT_TYPE_LOADED;
+    if (item->unknown430 == RES_RESULT_TYPE_UNKNOWN_0 && item->unknown408) {
+      item->unknown430 = RES_RESULT_TYPE_UNKNOWN_2;
     }
   }
   for (Item **it = unknown20.begin(); it != unknown20.end(); it++) {
     Item *item = *it;
-    if (item->unknown430 == RES_RESULT_TYPE_WAIT) {
+    if (item->unknown430 == RES_RESULT_TYPE_UNKNOWN_0) {
       item->unknown418 = fw::RenderResource::request(mm::mtl::Singleton<MemoryManager>::getPtr()->getResHandle(), item->unknown00.c_str(), 0);
-      item->unknown430 = RES_RESULT_TYPE_LOADING;
+      item->unknown430 = RES_RESULT_TYPE_UNKNOWN_1;
     }
   }
   for (Item **it = unknown20.begin(); it != unknown20.end(); it++) {
     Item *item = *it;
-    if (item->unknown430 == RES_RESULT_TYPE_LOADING && item->unknown418->valid()) {
+    if (item->unknown430 == RES_RESULT_TYPE_UNKNOWN_1 && item->unknown418->valid()) {
       item->unknown420 = item->unknown418->getAssetData();
       item->unknown428 = item->unknown418->getAssetSize();
-      item->unknown430 = RES_RESULT_TYPE_LOADED;
+      item->unknown430 = RES_RESULT_TYPE_UNKNOWN_2;
     }
   }
   for (Item **it = unknown20.begin(); it != unknown20.end(); it++) {
     Item *item = *it;
-    if (item->unknown430 == RES_RESULT_TYPE_LOADED) {
-      item->unknown430 = item->unknown420 != nullptr ? RES_RESULT_TYPE_SUCCESS : RES_RESULT_TYPE_FAILURE;
+    if (item->unknown430 == RES_RESULT_TYPE_UNKNOWN_2) {
+      item->unknown430 = item->unknown420 != nullptr ? RES_RESULT_TYPE_UNKNOWN_3 : RES_RESULT_TYPE_UNKNOWN_4;
       unknown10b8--;
       if (unknown10b8 < 0) {
         unknown10b8 = 0;
@@ -112,7 +112,7 @@ const char *ResManager::filename(const char *path) {
 }
 
 void ResManager::render() {
-  if (!(unknown18 & FLAG_DISP)) {
+  if (!(unknown18 & FLAG_UNKNOWN_0)) {
     return;
   }
   fw::debug::drawSquare2D(mm::Rect<s32>(530, 150, 490, 450), mm::Col4(0.0f, 0.0f, 0.0f, 0.25f));
@@ -127,10 +127,10 @@ void ResManager::render() {
   fw::debug::drawFont(930, 180, "packonly");
   const fw::PadData *pad = fw::PadManager::getControlPadData(0);
   u32 buttons = pad->unknown0c;
-  if (buttons & SCROLL_UP_BUTTON) {
+  if (buttons & SCROLL_UNKNOWN_12) {
     unknown10bc--;
   }
-  if (buttons & SCROLL_DOWN_BUTTON) {
+  if (buttons & SCROLL_UNKNOWN_14) {
     unknown10bc++;
   }
   if (unknown10bc < 0) {
@@ -142,7 +142,7 @@ void ResManager::render() {
     Item *item = unknown20[index];
     index++;
     const char *name = filename(item->unknown00.c_str());
-    if (static_cast<s32>(item->unknown430) >= RES_RESULT_TYPE_SUCCESS) {
+    if (static_cast<s32>(item->unknown430) >= RES_RESULT_TYPE_UNKNOWN_3) {
       if (item->unknown420 == nullptr) {
         fw::debug::drawFontColor(mm::Col4(0.5f, 0.5f, 0.5f, 1.0f));
       } else {
@@ -167,7 +167,7 @@ void ResManager::render() {
       } else {
         fw::debug::drawFont(820, y, "%d", item->unknown428);
       }
-    } else if (static_cast<s32>(item->unknown430) >= RES_RESULT_TYPE_LOADING) {
+    } else if (static_cast<s32>(item->unknown430) >= RES_RESULT_TYPE_UNKNOWN_1) {
       fw::debug::drawFontColor(mm::Col4(1.0f, 0.7f, 0.7f, 1.0f));
       fw::debug::drawFont(550, y, name);
       fw::debug::drawFont(750, y, "LOADING..");
@@ -189,12 +189,12 @@ void ResManager::load(const char *path, IResEvent *event, bool isPackOnly) {
   Item *item = search(path);
   if (item != nullptr) {
     item->addRef(event);
-    if (static_cast<s32>(item->unknown430) < RES_RESULT_TYPE_SUCCESS) {
+    if (static_cast<s32>(item->unknown430) < RES_RESULT_TYPE_UNKNOWN_3) {
       return;
     }
-    item->unknown430 = RES_RESULT_TYPE_LOADED;
+    item->unknown430 = RES_RESULT_TYPE_UNKNOWN_2;
   } else {
-    item = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle()) Item(path, event, isPackOnly, RES_RESULT_TYPE_WAIT, nullptr, 0, false);
+    item = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle()) Item(path, event, isPackOnly, RES_RESULT_TYPE_UNKNOWN_0, nullptr, 0, false);
     unknown20.push_back(item);
   }
   unknown10b8++;
@@ -228,41 +228,41 @@ void ResManager::OnPackEvent(const PARAM &param) {
   size_t size = param.size;
   Item *item = search(path);
   if (item == nullptr) {
-    item = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle()) Item(path, nullptr, false, RES_RESULT_TYPE_SUCCESS, adr, size, true);
+    item = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle()) Item(path, nullptr, false, RES_RESULT_TYPE_UNKNOWN_3, adr, size, true);
   } else if (item->unknown420 == nullptr) {
-    item->unknown430 = RES_RESULT_TYPE_LOADED;
+    item->unknown430 = RES_RESULT_TYPE_UNKNOWN_2;
     item->unknown420 = adr;
     item->unknown428 = size;
     item->unknown434 = true;
     return;
   } else {
-    item = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle()) Item(path, nullptr, false, RES_RESULT_TYPE_SUCCESS, adr, size, true);
+    item = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle()) Item(path, nullptr, false, RES_RESULT_TYPE_UNKNOWN_3, adr, size, true);
   }
   unknown20.push_back(item);
 }
 
 void ResManager::setDisp(bool isDisp) {
   if (isDisp) {
-    unknown18 |= FLAG_DISP;
+    unknown18 |= FLAG_UNKNOWN_0;
   } else {
-    unknown18 &= ~FLAG_DISP;
+    unknown18 &= ~FLAG_UNKNOWN_0;
   }
 }
 
-bool ResManager::isDisp() const { return (unknown18 & FLAG_DISP) != 0; }
+bool ResManager::isDisp() const { return (unknown18 & FLAG_UNKNOWN_0) != 0; }
 
 void ResManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
-  case MSG_TYPE_CLEAR:
+  case MSG_TYPE_UNKNOWN_12:
     clear();
     return;
-  case MSG_TYPE_UPDATE:
+  case MSG_TYPE_UNKNOWN_14:
     update();
     return;
-  case MSG_TYPE_RENDER:
+  case MSG_TYPE_UNKNOWN_16:
     render();
     return;
-  case MSG_TYPE_INIT:
+  case MSG_TYPE_UNKNOWN_4:
     clear();
     return;
   default:

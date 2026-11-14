@@ -3,6 +3,8 @@
 
 #include "gf/gf_state.h"
 #include "gf/object/component/enemy/gf_enemy_state_battle.h"
+#include "mm_math/mm_vec2.h"
+#include "mm_mtl/fixed_queue.h"
 #include "types.h"
 
 namespace ai {
@@ -25,17 +27,11 @@ class StateFieldMove : public GfStateBase {
   void leave(GfComBehaviorPc *behavior, ai::State *next);
   void update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info);
 
-  StateFieldMove() : unknown40(0), unknown48(0) {}
-
   u8 _18[0x20 - 0x18];
-  // FixedQueue<mm::Vec2, 2> of the game, whose mm::Vec2 is 16 bytes wide.
-  u8 unknown20[0x40 - 0x20]; // Inferred role: direction queue; original member name unknown.
-  size_t unknown40;          // Inferred role: direction queue size; original member name unknown.
-  size_t unknown48;          // Inferred role: direction queue front; original member name unknown.
+  mm::mtl::FixedQueue<mm::Vec2, 2> unknown20; // Inferred role: direction queue; original member name unknown.
 };
 
 static_assert(offsetof(StateFieldMove, unknown20) == 0x20, "");
-static_assert(offsetof(StateFieldMove, unknown40) == 0x40, "");
 static_assert(sizeof(StateFieldMove) == 0x50, "");
 
 } // namespace pc

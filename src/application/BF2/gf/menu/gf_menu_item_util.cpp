@@ -6,6 +6,7 @@
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_driver.h"
+#include "gf/data/gf_data_hana.h"
 #include "gf/data/gf_data_item.h"
 #include "gf/data/gf_data_util.h"
 #include "gf/game/gf_game_party.h"
@@ -13,6 +14,7 @@
 #include "gf/util/gf_equip_util.h"
 #include "gf/util/gf_item_util.h"
 #include "gf/util/gf_recipe_orb_util.h"
+#include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_vector.h"
 #include "ui/ui_str.h"
 
@@ -31,23 +33,23 @@ struct unknown002 {
 
 const unknown002 unknown003[] = {
     // Inferred role: shop icon conversion table; original name unknown.
-    {428, ItemType::SALVAGE, 0},
-    {429, ItemType::INFO, 0},
-    {430, ItemType::PC_WPN_CHIP, 0},
-    {432, ItemType::EQUIP_ORB, 0},
-    {434, ItemType::FAVORITE, 12},
-    {435, ItemType::FAVORITE, 13},
-    {436, ItemType::FAVORITE, 14},
-    {437, ItemType::FAVORITE, 15},
-    {438, ItemType::FAVORITE, 16},
-    {439, ItemType::FAVORITE, 17},
-    {440, ItemType::FAVORITE, 18},
-    {441, ItemType::FAVORITE, 19},
-    {442, ItemType::FAVORITE, 20},
-    {443, ItemType::FAVORITE, 21},
-    {444, ItemType::FAVORITE, 22},
-    {445, ItemType::FAVORITE, 23},
-    {446, ItemType::PC_EQUIP, 0},
+    {428, ItemType::ITEM_TYPE_UNKNOWN_5, 0},
+    {429, ItemType::ITEM_TYPE_UNKNOWN_14, 0},
+    {430, ItemType::ITEM_TYPE_UNKNOWN_1, 0},
+    {432, ItemType::ITEM_TYPE_UNKNOWN_3, 0},
+    {434, ItemType::ITEM_TYPE_UNKNOWN_10, 12},
+    {435, ItemType::ITEM_TYPE_UNKNOWN_10, 13},
+    {436, ItemType::ITEM_TYPE_UNKNOWN_10, 14},
+    {437, ItemType::ITEM_TYPE_UNKNOWN_10, 15},
+    {438, ItemType::ITEM_TYPE_UNKNOWN_10, 16},
+    {439, ItemType::ITEM_TYPE_UNKNOWN_10, 17},
+    {440, ItemType::ITEM_TYPE_UNKNOWN_10, 18},
+    {441, ItemType::ITEM_TYPE_UNKNOWN_10, 19},
+    {442, ItemType::ITEM_TYPE_UNKNOWN_10, 20},
+    {443, ItemType::ITEM_TYPE_UNKNOWN_10, 21},
+    {444, ItemType::ITEM_TYPE_UNKNOWN_10, 22},
+    {445, ItemType::ITEM_TYPE_UNKNOWN_10, 23},
+    {446, ItemType::ITEM_TYPE_UNKNOWN_2, 0},
 };
 
 } // namespace
@@ -73,13 +75,13 @@ void GfMenuItemUtil::getItemTypeName(u8 itemType, ui::UIStr &name) {
 
 bool GfMenuItemUtil::canCountStack(u32 itemType) {
   switch (itemType) {
-  case ItemType::PC_EQUIP:
-  case ItemType::EQUIP_ORB:
-  case ItemType::HANA_ROLE:
-  case ItemType::HANA_ATR:
-  case ItemType::HANA_ARTS_ENH:
-  case ItemType::HANA_N_ARTS_SET:
-  case ItemType::HANA_ASSIST:
+  case ItemType::ITEM_TYPE_UNKNOWN_2:
+  case ItemType::ITEM_TYPE_UNKNOWN_3:
+  case ItemType::ITEM_TYPE_UNKNOWN_16:
+  case ItemType::ITEM_TYPE_UNKNOWN_17:
+  case ItemType::ITEM_TYPE_UNKNOWN_18:
+  case ItemType::ITEM_TYPE_UNKNOWN_19:
+  case ItemType::ITEM_TYPE_UNKNOWN_20:
     return false;
   default:
     return true;
@@ -94,8 +96,8 @@ bool GfMenuItemUtil::canBuyItem(u32 item, u32 shop) {
     return false;
   }
 
-  if (GfDataItem::getItemType(item) == ItemType::PC_EQUIP) {
-    u32 count = GfItemUtil::getCountByType(ItemType::PC_EQUIP);
+  if (GfDataItem::getItemType(item) == ItemType::ITEM_TYPE_UNKNOWN_2) {
+    u32 count = GfItemUtil::getCountByType(ItemType::ITEM_TYPE_UNKNOWN_2);
     u32 stock = GfItemUtil::getEnableStock(item);
     if (count >= stock) {
       return false;
@@ -112,7 +114,7 @@ bool GfMenuItemUtil::canBuyItem(u32 item, u32 shop) {
 }
 
 bool GfMenuItemUtil::canSellItem(u32 item, u32 shop) {
-  if (GfDataUtil::getMoney() >= MONEY_MAX) {
+  if (GfDataUtil::getMoney() >= MONEY_UNKNOWN_999999999) {
     return false;
   }
 
@@ -121,16 +123,16 @@ bool GfMenuItemUtil::canSellItem(u32 item, u32 shop) {
 
 bool GfMenuItemUtil::canSellItemType(u32 itemType) {
   switch (itemType) {
-  case ItemType::PC_WPN_CHIP:
-  case ItemType::PC_EQUIP:
-  case ItemType::EQUIP_ORB:
-  case ItemType::SALVAGE:
-  case ItemType::COLLECTION_LIST:
-  case ItemType::TRESURE:
-  case ItemType::EMPTY_ORB:
-  case ItemType::FAVORITE:
-  case ItemType::CRYSTAL_LIST:
-  case ItemType::BOOSTER:
+  case ItemType::ITEM_TYPE_UNKNOWN_1:
+  case ItemType::ITEM_TYPE_UNKNOWN_2:
+  case ItemType::ITEM_TYPE_UNKNOWN_3:
+  case ItemType::ITEM_TYPE_UNKNOWN_5:
+  case ItemType::ITEM_TYPE_UNKNOWN_7:
+  case ItemType::ITEM_TYPE_UNKNOWN_8:
+  case ItemType::ITEM_TYPE_UNKNOWN_9:
+  case ItemType::ITEM_TYPE_UNKNOWN_10:
+  case ItemType::ITEM_TYPE_UNKNOWN_11:
+  case ItemType::ITEM_TYPE_UNKNOWN_12:
     return true;
   default:
     return false;
@@ -146,20 +148,56 @@ u32 GfMenuItemUtil::canEquipAcc(u32 accessory, u32 driver, u32 slot) {
   }
 
   switch (GfEquipUtil::getEquipAcceResult(driver, slot, accessory)) {
-  case EQUIP_RESULT_OK:
+  case EQUIP_RESULT_UNKNOWN_0:
     return 0;
-  case EQUIP_RESULT_INVALID_DRIVER:
+  case EQUIP_RESULT_UNKNOWN_5:
     return 3;
-  case EQUIP_RESULT_NO_ITEM:
+  case EQUIP_RESULT_UNKNOWN_6:
     return 2;
   default:
     return 4;
   }
 }
 
+u32 GfMenuItemUtil::canEquipAcc(u32 accessory, GfItemHandle handle, u32 driver, u32 slot) {
+  if (driver == 0) {
+    return 0;
+  }
+  u32 result = GfEquipUtil::getEquipAcceResult(driver, slot, accessory);
+  switch (result) {
+  case EQUIP_RESULT_UNKNOWN_6: {
+    for (u32 i = 0; i < 2; i++) {
+      u32 equip = GfEquipUtil::getEquipDriverAcce(driver, i);
+      if (equip != 0 && equip == accessory && GfDataDriver::getEquipAcceHandle(driver, i).value == handle.value) {
+        return 1;
+      }
+    }
+    return 2;
+  }
+  case EQUIP_RESULT_UNKNOWN_5:
+    return 3;
+  case EQUIP_RESULT_UNKNOWN_0:
+    break;
+  default:
+    if (result == EQUIP_RESULT_UNKNOWN_3 || result == EQUIP_RESULT_UNKNOWN_4) {
+      u32 equipDriver = searchEquipAcc(accessory, handle, nullptr);
+      if (equipDriver == 0) {
+        return 4;
+      }
+      return equipDriver == driver ? 1 : 4;
+    }
+    return 0;
+  }
+  u32 equipDriver = searchEquipAcc(accessory, handle, nullptr);
+  if (equipDriver == 0) {
+    return 0;
+  }
+  return equipDriver == driver ? 1 : 2;
+}
+
 u32 GfMenuItemUtil::searchEquipAcc(u32 accessory, GfItemHandle handle, u32 *slot) {
   mm::mtl::FixedVector<u16, 16> drivers;
-  GfPartySelect::getDriverList(drivers, GfPartySelect::LIST_TYPE_ACCESSORY, 0);
+  GfPartySelect::getDriverList(drivers, GfPartySelect::LIST_TYPE_UNKNOWN_6, 0);
   for (u32 i = 0; i < drivers.size(); i++) {
     u32 driver = drivers[i];
     if (driver == 0) {
@@ -185,10 +223,47 @@ u32 GfMenuItemUtil::canEquipOrb(u32 orb, u32 blade, u32 slot) {
   if (GfEquipUtil::getEquipBladeOrb(blade, slot) == orb) {
     return 1;
   }
-  if (GfEquipUtil::getEquipOrbResult(blade, orb, slot) == EQUIP_RESULT_SAME_CATEGORY) {
+  if (GfEquipUtil::getEquipOrbResult(blade, orb, slot) == EQUIP_RESULT_UNKNOWN_3) {
     return 4;
   }
   return 0;
+}
+
+u32 GfMenuItemUtil::canEquipOrb(u32 orb, GfItemHandle handle, u32 blade, u32 slot) {
+  if (blade == 0) {
+    return 0;
+  }
+  u32 result = GfEquipUtil::getEquipOrbResult(blade, orb, slot);
+  switch (result) {
+  case EQUIP_RESULT_UNKNOWN_6: {
+    u32 equipOrbMax = GfEquipUtil::getEquipOrbMax(blade);
+    for (u32 i = 0; i < equipOrbMax; i++) {
+      u32 equip = GfEquipUtil::getEquipBladeOrb(blade, i);
+      if (equip != 0 && equip == orb && GfDataBlade::getEquipOrbHandle(blade, i).value == handle.value) {
+        return 1;
+      }
+    }
+    return 2;
+  }
+  case EQUIP_RESULT_UNKNOWN_5:
+    return 3;
+  case EQUIP_RESULT_UNKNOWN_0:
+    break;
+  default:
+    if (result == EQUIP_RESULT_UNKNOWN_3 || result == EQUIP_RESULT_UNKNOWN_4) {
+      u32 equipBlade = searchEquipOrb(orb, handle, nullptr);
+      if (equipBlade == 0) {
+        return 4;
+      }
+      return equipBlade == blade ? 1 : 4;
+    }
+    return 0;
+  }
+  u32 equipBlade = searchEquipOrb(orb, handle, nullptr);
+  if (equipBlade == 0) {
+    return 0;
+  }
+  return equipBlade == blade ? 1 : 2;
 }
 
 u32 GfMenuItemUtil::searchEquipOrb(u32 orb, GfItemHandle handle, u32 *slot) {
@@ -215,6 +290,71 @@ u32 GfMenuItemUtil::searchEquipOrb(u32 orb, GfItemHandle handle, u32 *slot) {
   return 0;
 }
 
+u32 GfMenuItemUtil::searchEquipHanaParts(u32 type, u32 parts, GfItemHandle handle) {
+  if (parts == 0) {
+    return 0;
+  }
+  mm::mtl::FixedVector<u16, 422> blades;
+  if (!GfDataBlade::getListUse(blades)) {
+    return 0;
+  }
+  for (u32 i = 0; i < blades.size(); i++) {
+    u32 blade = blades[i];
+    if (blade == 0 || !GfDataHana::isValid(blade)) {
+      continue;
+    }
+    EquipHana *equip = GfDataHana::getEquipParts(blade);
+    switch (type) {
+    case 1:
+      if (equip->unknown00 == parts && equip->unknown58 == handle.value) {
+        return blade;
+      }
+      break;
+    case 2:
+      if (equip->unknown02 == parts && equip->unknown5c == handle.value) {
+        return blade;
+      }
+      break;
+    case 3:
+    case 4:
+    case 5:
+      for (u32 j = 0; j < 3; j++) {
+        if (equip->unknown28[j].unknown04 == parts && equip->unknown28[j].unknown0a == handle.value) {
+          return blade;
+        }
+      }
+      break;
+    case 6:
+    case 7:
+    case 8:
+    case 12:
+    case 13:
+    case 14:
+      for (u32 j = 0; j < 3; j++) {
+        if (equip->unknown4c[j] == parts && equip->unknown60[j] == handle.value) {
+          return blade;
+        }
+      }
+      for (u32 j = 0; j < 3; j++) {
+        if (equip->unknown52[j] == parts && equip->unknown6c[j] == handle.value) {
+          return blade;
+        }
+      }
+      break;
+    case 9:
+    case 10:
+    case 11:
+      for (u32 j = 0; j < 3; j++) {
+        if (equip->unknown04[j].unknown04 == parts && equip->unknown04[j].unknown0a == handle.value) {
+          return blade;
+        }
+      }
+      break;
+    }
+  }
+  return 0;
+}
+
 u32 GfMenuItemUtil::canCreateOrb(u32 item) {
   u32 recipe = GfRecipeOrbUtil::getRecipeID(item);
   if (recipe == 0) {
@@ -227,7 +367,7 @@ u32 GfMenuItemUtil::canCreateOrb(u32 item) {
   u64 count;
   {
     mm::mtl::FixedVector<GfItem, 1024> items;
-    GfItemUtil::getInfo(items, ItemType::EQUIP_ORB, false);
+    GfItemUtil::getInfo(items, ItemType::ITEM_TYPE_UNKNOWN_3, false);
     count = items.size() + 1;
   }
   return count > 500;

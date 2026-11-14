@@ -28,25 +28,25 @@ ICmd::RESULT CharaPlayEvaEff::update(const Param &param) {
         data = mm::mtl::Singleton<MotstmManager>::getPtr()->adr(mm::mtl::Singleton<Extend>::getPtr()->effeva(name), &size);
       }
       if (data == nullptr) {
-        return RESULT_END;
+        return RESULT_UNKNOWN_1;
       }
       unknown30.play(unknown10, unknown18, data);
       f32 life = param.val(2).getF32();
       this->unknown28 = life;
       this->unknown20 = data;
       if (life <= 0.0f) {
-        unknown08 |= FLAG_PLAY | FLAG_LOOP;
+        unknown08 |= FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1;
       } else {
-        unknown08 = (unknown08 & ~FLAG_LOOP) | FLAG_PLAY;
+        unknown08 = (unknown08 & ~FLAG_UNKNOWN_1) | FLAG_UNKNOWN_0;
       }
     }
     unknown30.update(delta * param.val(3).getF32());
-    if ((unknown08 & FLAG_LOOP) != 0) {
-      return RESULT_NEXT;
+    if ((unknown08 & FLAG_UNKNOWN_1) != 0) {
+      return RESULT_UNKNOWN_2;
     }
     unknown28 -= delta;
     if (!(unknown28 < 0.0f)) {
-      return RESULT_NEXT;
+      return RESULT_UNKNOWN_2;
     }
     unknown30.stop();
   }
@@ -54,17 +54,17 @@ ICmd::RESULT CharaPlayEvaEff::update(const Param &param) {
     mm::mtl::Singleton<MotstmManager>::getPtr()->free(unknown20);
   }
   unknown20 = nullptr;
-  unknown08 &= ~FLAG_PLAY;
-  return RESULT_END;
+  unknown08 &= ~FLAG_UNKNOWN_0;
+  return RESULT_UNKNOWN_1;
 }
 
 void CharaPlayEvaEff::term() {
-  if ((unknown08 & FLAG_PLAY) != 0) {
+  if ((unknown08 & FLAG_UNKNOWN_0) != 0) {
     if (mm::mtl::Singleton<CharaManager>::getPtr()->isStreamMode() && unknown20 != nullptr) {
       mm::mtl::Singleton<MotstmManager>::getPtr()->free(unknown20);
     }
     unknown20 = nullptr;
-    unknown08 &= ~FLAG_PLAY;
+    unknown08 &= ~FLAG_UNKNOWN_0;
   }
 }
 

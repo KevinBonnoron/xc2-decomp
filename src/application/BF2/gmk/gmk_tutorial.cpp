@@ -27,15 +27,16 @@ GmkTutorial::GmkTutorial() : IntrusiveListNode(), unknown60(nullptr), unknownf0(
 
 bool GmkTutorial::isValid() const { return AGmkBase::unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
 
-constexpr int GAME_FLAG_SYS_MULTI_FLAG = 35322;
+constexpr int GAME_FLAG_UNKNOWN_35322 = 35322; // Inferred role: game flag sys multi flag; original name unknown.
 
 void GmkTutorial::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
-  ScenarioFlagCond minScenarioFlag(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_U16), 0xffff);
+  ScenarioFlagCond minScenarioFlag(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_UNKNOWN_2), 0xffff);
   if (minScenarioFlag.unknown00 != 0) {
     unknown02 = minScenarioFlag;
   }
-  unknown06 = QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_U16), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_U8), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_U8));
-  unknown00 = bdat.getValCheck("SysMultiFlag", id, BDAT_TYPE_U8);
+  unknown06 =
+      QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_UNKNOWN_1), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_UNKNOWN_1));
+  unknown00 = bdat.getValCheck("SysMultiFlag", id, BDAT_TYPE_UNKNOWN_1);
 }
 
 bool GmkTutorial::BdatInfo::isCondMatched() const {
@@ -51,7 +52,7 @@ bool GmkTutorial::BdatInfo::isCondMatched() const {
   if (unknown06.isEnable() && !unknown06.isMatch()) {
     return false;
   }
-  if (unknown00 != 0 && gf::GfGameFlag::getLocal(1, unknown00 + GAME_FLAG_SYS_MULTI_FLAG) == 0) {
+  if (unknown00 != 0 && gf::GfGameFlag::getLocal(1, unknown00 + GAME_FLAG_UNKNOWN_35322) == 0) {
     return false;
   }
   return true;

@@ -37,7 +37,7 @@ public:
     DistHvCond unknown0c; // Inferred role: depop dist; original member name unknown.
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_MAP_OBJ;
+  static const GmkType GMK_TYPE = GMK_TYPE_MAP_OBJ; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkMapObj();
   ~GmkMapObj() override { dispose(); }
@@ -75,7 +75,7 @@ typedef TGmkList<GmkMapObj, GmkMapObj::BdatInfo, 0x4f50414d, 3, GmkMapObjGob> Gm
 
 class GmkRoutedMapObj : public GmkRoute {
 public:
-  static const GmkType GMK_TYPE = GMK_TYPE_ROUTED_MAP_OBJ;
+  static const GmkType GMK_TYPE = GMK_TYPE_ROUTED_MAP_OBJ; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
   GmkRoutedMapObj();
   ~GmkRoutedMapObj() override { dispose(); }

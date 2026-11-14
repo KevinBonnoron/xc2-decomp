@@ -13,12 +13,13 @@ public:
     f32 unknown10;      // Inferred role: plane distance; original member name unknown.
   };
 
-  virtual bool clipLineTest(const mm::Vec3 &start, const mm::Vec3 &end, f32 radius) const;
+  // Declared in the order of the game's vtable (slots 0x10 to 0x38 of every DrCalcClipWork vtable).
+  virtual bool clipTest(const mm::Vec3 &position, f32 radius) const;
+  virtual bool clipLineTest(const mm::Vec3 &start, const mm::Vec3 &direction, f32 radius) const;
   virtual bool clipTest(const f32 *min, const f32 *max) const;
   virtual bool clipTest(const mm::Vec3 *points, int count) const;
-  virtual void debugDraw();
-  virtual bool clipTest(const mm::Vec3 &position, f32 radius) const;
   virtual int clipTypeTest(const mm::Vec3 &position, f32 radius) const;
+  virtual void debugDraw();
 
   s32 unknown08; // Inferred role: clip type; original member name unknown.
 };

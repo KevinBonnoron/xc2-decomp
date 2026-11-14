@@ -17,16 +17,16 @@ namespace pc {
 
 void StateFieldFall::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   for (ai::State *state = previous; state != nullptr; state = state->unknown10) {
-    if (state->unknown08 == STATE_ID_FIELD_WALL) {
-      StateUtil::setActivateTimer(*behavior, TimerPlugin::TYPE_FALL, true);
+    if (state->unknown08 == STATE_ID_UNKNOWN_38) {
+      StateUtil::setActivateTimer(*behavior, TimerPlugin::TYPE_UNKNOWN_0, true);
       return;
     }
   }
 }
 
 void StateFieldFall::leave(GfComBehaviorPc *behavior, ai::State *next) {
-  StateUtil::setActivateTimer(*behavior, TimerPlugin::TYPE_FALL, false);
-  if (next == nullptr || next->unknown08 == STATE_ID_FIELD_LAND) {
+  StateUtil::setActivateTimer(*behavior, TimerPlugin::TYPE_UNKNOWN_0, false);
+  if (next == nullptr || next->unknown08 == STATE_ID_UNKNOWN_13) {
     return;
   }
   StateUtilField::notifyJumpEnd(*behavior);
@@ -37,7 +37,7 @@ void StateFieldFall::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &inf
   GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
   if (!property->unknown110_4) {
     if (StateUtilField::isSlideSlope(*property) && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_SLOPE)) {
-      reqState(STATE_ID_FIELD_SLIDE_MOVE);
+      reqState(STATE_ID_UNKNOWN_54);
       return;
     }
 
@@ -48,16 +48,16 @@ void StateFieldFall::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &inf
     }
     MoveUtilField::updateFallDown(info, *property);
   } else if (StateUtilField::isSlideGroundLanding(*property) && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_SLOPE)) {
-    reqState(STATE_ID_FIELD_SLIDE_MOVE);
+    reqState(STATE_ID_UNKNOWN_54);
   } else if (property->unknownc0 > 0.0f && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_MOVE)) {
     StateUtilField::onLandSliding(*behavior);
-    reqState(STATE_ID_FIELD_SLIDE_LAND_BRAKE);
+    reqState(STATE_ID_UNKNOWN_55);
   } else if (StateUtilField::isBigLandDistance(*behavior)) {
     StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_JUMPDMG);
-    reqState(STATE_ID_FIELD_LAND_BIG);
+    reqState(STATE_ID_UNKNOWN_14);
   } else {
     StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_JUMP_END);
-    reqState(STATE_ID_FIELD_LAND);
+    reqState(STATE_ID_UNKNOWN_13);
   }
 }
 } // namespace pc

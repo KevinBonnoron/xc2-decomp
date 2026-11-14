@@ -12,6 +12,8 @@ namespace gf {
 struct GF_OBJ_HANDLE;
 struct GF_SCOM_HANDLE;
 
+// The enumerators that keep a name are the script command names of the game's string table with SCOM_TYPE_ added: "CREATE_PARTY_OBJ", "DESTROY_PARTY_OBJ", "CREATE_MAP_OBJ", "FADE", "PARTY_ADD",
+// "PARTY_LEADER", "SET_BLADE", "NIA_BLADE".
 enum SCOM_TYPE {
   SCOM_TYPE_UNKNOWN_0 = 0,
   SCOM_TYPE_UNKNOWN_1 = 1,
@@ -60,6 +62,7 @@ enum SCOM_TYPE {
   SCOM_TYPE_UNKNOWN_58 = 58,
   SCOM_TYPE_UNKNOWN_59 = 59,
   SCOM_TYPE_UNKNOWN_60 = 60,
+  SCOM_TYPE_UNKNOWN_61 = 61,
   SCOM_TYPE_UNKNOWN_62 = 62,
   SCOM_TYPE_UNKNOWN_63 = 0x3f,
   SCOM_TYPE_UNKNOWN_64 = 0x40,

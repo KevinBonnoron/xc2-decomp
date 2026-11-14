@@ -1,9 +1,14 @@
 #include "gf/object/gf_volume_fade.h"
 
+#include "framework/anim/anim_volume_fade_modifier.h"
 #include "framework/effect/effect_manager.h"
 #include "framework/effect/volume_fade_params.h"
 #include "gf/gf_info.h"
+#include "gf/object/component/model/gf_com_model.h"
+#include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_setup.h"
+#include "gf/object/gf_obj_util.h"
+#include "mm/mm_std_base.h"
 #include "mm_math/mm_col3.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_math/mm_vec3_na.h"
@@ -48,6 +53,27 @@ bool GfVolumeFade::setupVolumeFadeParamForDead(ml::VolumeFadeParams &params, VFE
     }
   }
   return false;
+}
+
+void GfVolumeFade::applyFadeRatio() {
+  if (GfObjUtil::isValid(unknown00) && unknown10) {
+    unknown10 = false;
+    if (unknown140 != VFEFF_UNKNOWN_0) {
+      ml::ScnObjAccVolumeFade acc(unknown08);
+      MM_VERIFY(acc.getMax());
+      for (u32 i = 0; i < fw::AnimVolumeFadeModifier::RATIO_UNKNOWN_6; i++) {
+        f32 ratio = getFadeRatioForParts(static_cast<VFPARTS>(i));
+        acc.setParams(unknown90, -1);
+        GfObj *obj = GfObjUtil::getObj(unknown00);
+        if (obj != nullptr) {
+          GfComModel *model = obj->getComponent<GfComModel>();
+          if (model != nullptr) {
+            model->unknown10c8.unknown20[i] = 1.0f - ratio;
+          }
+        }
+      }
+    }
+  }
 }
 
 f32 GfVolumeFade::getFadeRatio(VFACC acc, VFPARTS parts) const {

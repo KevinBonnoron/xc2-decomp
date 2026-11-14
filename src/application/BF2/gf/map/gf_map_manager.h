@@ -33,7 +33,7 @@ struct GF_OBJ_HANDLE;
 struct GfSetupParam;
 class GfAssetResource;
 
-const GfFileIdx MAP_FILE_IDX_COLLISION = static_cast<GfFileIdx>(1);
+const GfFileIdx MAP_FILE_IDX_UNKNOWN_1 = static_cast<GfFileIdx>(1); // Inferred role: map file idx collision; original name unknown.
 const GfFileIdx MAP_FILE_IDX_UNKNOWN_2 = static_cast<GfFileIdx>(2);
 const GfFileIdx MAP_FILE_IDX_UNKNOWN_3 = static_cast<GfFileIdx>(3);
 const GfFileIdx MAP_FILE_IDX_UNKNOWN_4 = static_cast<GfFileIdx>(4);

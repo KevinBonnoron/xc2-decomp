@@ -11,10 +11,14 @@ extern SDataSave s_SDataSave;
 extern SDataOption s_SDataOption;
 } // namespace _gfgsv
 
+namespace _gfdsv {
+extern SDataSave s_tempSav;
+} // namespace _gfdsv
+
 enum SAVESLOT {
-  SAVESLOT_NONE = -1,
-  SAVESLOT_CHAPTER_FIRST = 10,
-  SAVESLOT_DEFAULT = 22,
+  SAVESLOT_UNKNOWN_FFFFFFFF = -1, // Inferred role: saveslot none; original name unknown.
+  SAVESLOT_UNKNOWN_10 = 10,       // Inferred role: saveslot chapter first; original name unknown.
+  SAVESLOT_UNKNOWN_22 = 22,       // Inferred role: saveslot default; original name unknown.
 };
 
 class GfDataSave {

@@ -2,3 +2,11 @@
 #include "dr/dr_pixl_mem_man.h"
 
 template mm::mtl::PtrSingleton<ml::DrPixlMemMan>::~PtrSingleton();
+
+namespace ml {
+
+DrPixlMemMan::DrPixlMemMan() { setupMemBuff(); }
+
+DrPixlMemMan::~DrPixlMemMan() { ; }
+
+} // namespace ml

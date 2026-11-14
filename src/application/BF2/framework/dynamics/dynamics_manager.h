@@ -31,7 +31,7 @@ public:
 
 class DynamicsColUpdateJob : public anm::Job {
 public:
-  static const char *_TYPE_NAME;
+  static const char *_TYPE_NAME; // Name from the game symbol _ZN2fw20DynamicsColUpdateJob10_TYPE_NAMEE; also in torna and xc1de.
 
   explicit DynamicsColUpdateJob(u32 count);
   static void exec(anm::Job &job);
@@ -70,7 +70,7 @@ static_assert(sizeof(DynamicsGroup) == 0x30, "");
 
 class DyanmicsManager : public ManagerObject, public mm::mtl::PtrSingleton<DyanmicsManager> {
 public:
-  static const u32 LAYER_MAX = 32;
+  static const u32 LAYER_UNKNOWN_32 = 32; // Inferred role: maximum number of layers; original name unknown.
 
   DyanmicsManager();
   ~DyanmicsManager() override;
@@ -83,8 +83,8 @@ public:
   void addUpdater(u32 layer, DynamicsUpdaterInterface &updater);
   void removeUpdater(u32 layer, DynamicsUpdaterInterface &updater);
 
-  mm::mtl::FixedArray<DynamicsGroup, LAYER_MAX> unknown18; // Inferred role: groups; original member name unknown.
-  anm::JobQueue *unknown618;                               // Inferred role: job queue; original member name unknown.
+  mm::mtl::FixedArray<DynamicsGroup, LAYER_UNKNOWN_32> unknown18; // Inferred role: groups; original member name unknown.
+  anm::JobQueue *unknown618;                                      // Inferred role: job queue; original member name unknown.
 };
 
 static_assert(offsetof(DyanmicsManager, unknown18) == 0x18, "");

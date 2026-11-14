@@ -20,6 +20,7 @@ public:
   static void addExtMem(mtl::ALLOC_HANDLE handle);
   static void removeExtMem(mtl::ALLOC_HANDLE handle);
   static int getExtMemNum();
+  static mtl::ALLOC_HANDLE getExtMem(unsigned int index);
   static bool isDebug(const void *pointer);
   static void setMemoryPermission(void *address, size_t size, AccessMode mode);
 };

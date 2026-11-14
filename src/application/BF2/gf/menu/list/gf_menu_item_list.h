@@ -9,7 +9,7 @@
 namespace gf {
 
 struct MenuItemInfo {
-  MenuItemInfo() : unknown00(ItemType::NONE), unknown04(0), unknown08(0), unknown0c(0) {}
+  MenuItemInfo() : unknown00(ItemType::ITEM_TYPE_UNKNOWN_0), unknown04(0), unknown08(0), unknown0c(0) {}
 
   ItemType::Type unknown00; // Inferred role: type; original member name unknown.
   u32 unknown04;            // Inferred role: item; original member name unknown.
@@ -38,7 +38,7 @@ public:
   };
 
   struct ItemBoxSetup {
-    ItemBoxSetup() : unknown14(ItemType::NONE), unknown18(nullptr), unknown20(0), unknown2a(false), unknown2b(false) {}
+    ItemBoxSetup() : unknown14(ItemType::ITEM_TYPE_UNKNOWN_0), unknown18(nullptr), unknown20(0), unknown28(true), unknown29(true), unknown2a(false), unknown2b(false) {}
 
     SetupParam unknown00;     // Inferred role: param; original member name unknown.
     ItemType::Type unknown14; // Inferred role: item type of the item box; original member name unknown.
@@ -48,6 +48,34 @@ public:
     bool unknown29;           // Inferred role: keep items whose count is zero; original member name unknown.
     bool unknown2a;           // Inferred role: skip items that cannot be sold; original member name unknown.
     bool unknown2b;           // Inferred role: skip items equipped by a character; original member name unknown.
+  };
+
+  struct ItemShopSetup {
+    SetupParam unknown00; // Inferred role: param; original member name unknown.
+    u32 unknown14;        // Inferred role: shop; original member name unknown.
+  };
+
+  struct ItemShopExcSetup {
+    ItemShopExcSetup() : unknown14(0) {}
+
+    SetupParam unknown00; // Inferred role: param; original member name unknown.
+    u32 unknown14;        // Inferred role: exchange task; original member name unknown.
+  };
+
+  struct QuestRewardSetup {
+    // Evidence: GfMenuObjQuestReward::RewardListener::reciveEvent clears unknown14 of its two setup locals (str wzr, [sp, #0x14] at 0x71004c6cf8 and 0x71004c6e80).
+    QuestRewardSetup() : unknown14(0) {}
+
+    SetupParam unknown00; // Inferred role: param; original member name unknown.
+    u32 unknown14;        // Inferred role: reward set; original member name unknown.
+  };
+
+  struct MissionRewardSetup {
+    // Evidence: GfMenuObjQuestReward::RewardListener::reciveEvent clears unknown14 of its two setup locals (str wzr, [sp, #0x14] at 0x71004c6cf8 and 0x71004c6e80).
+    MissionRewardSetup() : unknown14(0) {}
+
+    SetupParam unknown00; // Inferred role: param; original member name unknown.
+    u32 unknown14;        // Inferred role: mission; original member name unknown.
   };
 
   GfMenuItemList();
@@ -94,6 +122,11 @@ public:
   void addItem(const MenuItemInfo &info, bool isAddItemBox);
   void setupFromHanaParts(const HanaPartsSetup &setup);
   void setupFromBox(const ItemBoxSetup &setup);
+  void addListFromBox(const ItemBoxSetup &setup);
+  void setupFromShop(const ItemShopSetup &setup);
+  void setupFromShopExcTask(const ItemShopExcSetup &setup);
+  void setupFromQuestReward(const QuestRewardSetup &setup);
+  void setupFromMissionReward(const MissionRewardSetup &setup);
 };
 
 static_assert(offsetof(GfMenuItemList::HanaPartsSetup, unknown14) == 0x14, "");
@@ -105,6 +138,14 @@ static_assert(offsetof(GfMenuItemList::ItemBoxSetup, unknown29) == 0x29, "");
 static_assert(offsetof(GfMenuItemList::ItemBoxSetup, unknown2a) == 0x2a, "");
 static_assert(offsetof(GfMenuItemList::ItemBoxSetup, unknown2b) == 0x2b, "");
 static_assert(sizeof(GfMenuItemList::ItemBoxSetup) == 0x30, "");
+static_assert(offsetof(GfMenuItemList::ItemShopSetup, unknown14) == 0x14, "");
+static_assert(sizeof(GfMenuItemList::ItemShopSetup) == 0x18, "");
+static_assert(offsetof(GfMenuItemList::ItemShopExcSetup, unknown14) == 0x14, "");
+static_assert(sizeof(GfMenuItemList::ItemShopExcSetup) == 0x18, "");
+static_assert(offsetof(GfMenuItemList::QuestRewardSetup, unknown14) == 0x14, "");
+static_assert(sizeof(GfMenuItemList::QuestRewardSetup) == 0x18, "");
+static_assert(offsetof(GfMenuItemList::MissionRewardSetup, unknown14) == 0x14, "");
+static_assert(sizeof(GfMenuItemList::MissionRewardSetup) == 0x18, "");
 
 static_assert(offsetof(GfMenuItemList::FiltertInfo, unknown04) == 0x4, "");
 static_assert(offsetof(GfMenuItemList::FiltertInfo, unknown05) == 0x5, "");

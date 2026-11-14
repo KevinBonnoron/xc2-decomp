@@ -16,7 +16,7 @@ public:
   virtual void setPos(const mm::Vec3 &position, f32 radius);
   virtual void setWorldPos(const mm::Vec3 &position, f32 radius);
   virtual u32 isDeleteCall() const;
-  virtual void update();
+  virtual bool update();
   virtual void render();
 
   static bool isClip(const mm::Vec3 &position, f32 radius);

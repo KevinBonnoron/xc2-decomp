@@ -1,8 +1,13 @@
 #include "gf/object/gf_init_param.h"
 
+#include "gf/data/gf_bdat_chrbl.h"
+#include "gf/data/gf_bdat_chrdr.h"
 #include "gf/data/gf_bdat_chrenarrange.h"
 #include "gf/data/gf_bdat_chrenparam.h"
+#include "gf/data/gf_character_id.h"
 #include "gf/data/gf_data_blade.h"
+#include "gf/data/gf_data_driver.h"
+#include "mm/mm_std_base.h"
 
 namespace gf {
 
@@ -176,6 +181,43 @@ void GfInitParamEnemy::setupForActViewerEvent(u32 resource, const CBdatWrapper *
   unknown18 = bdat;
   unknown82 = false;
   unknown40 = 7;
+}
+
+void GfInitParamWeapon::setupForEvent(u32 driver, u32 blade) {
+  if (driver == 0) {
+    if (blade == BLADE_UNKNOWN_1042) {
+      driver = DRIVER_UNKNOWN_8;
+    }
+    if (blade == BLADE_UNKNOWN_1043 || blade == BLADE_UNKNOWN_1044) {
+      driver = DRIVER_UNKNOWN_7;
+    }
+    if (blade == BLADE_UNKNOWN_1045) {
+      driver = DRIVER_UNKNOWN_7;
+    }
+  }
+  DataParamAcc acc(OBJECT_TYPE_PC, driver, GIMMICK_TYPE_UNKNOWN_0);
+  unknown08 = unknown030_2;
+  bool hasBlade = false;
+  if (blade == 0) {
+    blade = acc.getBlade(-1, false);
+  }
+  if (blade != 0) {
+    m_bladeID = GfDataBlade::getBladeWeapon(blade);
+    hasBlade = true;
+  }
+  if (m_bladeID == 0) {
+    m_bladeID = GfBdatChrBl::get()->getChrBlDefWeapon(GfBdatChrDr::get()->getChrDrDefBlade1(driver));
+  }
+  if (hasBlade) {
+    mm::mtl::FixedVector<u32, 27> weaponTypes;
+    GfDataDriver::getEquipWpnType(weaponTypes, driver);
+    MM_VERIFY(GfDataBlade::getBladeWpnType(blade));
+  }
+  unknown90 = false;
+  unknown40 = 9;
+  unknown128 = driver;
+  unknown81 = false;
+  unknown12c = blade;
 }
 
 void GfInitParamWeapon::setupBladeForEvent(u32 blade) {

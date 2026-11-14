@@ -4,6 +4,6 @@ namespace gf {
 
 struct GF_OBJ_HANDLE;
 
-static GF_OBJ_HANDLE *const INVALID_HANDLE = reinterpret_cast<GF_OBJ_HANDLE *>(-1);
+static GF_OBJ_HANDLE *const unknown020 = reinterpret_cast<GF_OBJ_HANDLE *>(-1); // Inferred role: invalid handle; original name unknown.
 
 } // namespace gf

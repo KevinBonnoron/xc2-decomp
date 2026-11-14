@@ -42,7 +42,8 @@ public:
     u16 unknown04; // Inferred role: sub layer index; original member name unknown.
   };
 
-  static const u32 LAYER_COUNT = 4;
+  // Inferred role: number of layer groups; original name unknown.
+  static const u32 LAYER_UNKNOWN_4 = 4;
 
   static void build(const GfSetupParam &param);
   GfMenuFullScreen(const GfSetupParam &param);
@@ -97,7 +98,7 @@ public:
   u32 unknown0c;  // Inferred role: current screen; original member name unknown.
   u32 unknown10;  // Inferred role: requested screen; original member name unknown.
   u8 _14[0x18 - 0x14];
-  unknown001 unknown18[LAYER_COUNT];              // Inferred role: layers; original member name unknown.
+  unknown001 unknown18[LAYER_UNKNOWN_4];          // Inferred role: layers; original member name unknown.
   bool unknownf8;                                 // Inferred role: unknown flag; original member name unknown.
   bool unknownf9;                                 // Inferred role: switching; original member name unknown.
   u32 unknownfc;                                  // Inferred role: fade in frame override; original member name unknown.

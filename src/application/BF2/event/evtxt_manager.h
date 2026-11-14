@@ -7,10 +7,10 @@ namespace event {
 
 class EvtxtManager : public IManager, public mm::mtl::Singleton<EvtxtManager> {
 public:
-  static const char *EVTXT_PATH;
+  static const char *EVTXT_PATH; // Name given by the xc2 symbol _ZN5event12EvtxtManager10EVTXT_PATHE.
 
   enum {
-    FLAG_RESERVE = 1 << 0,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: reserve flag; original name unknown.
   };
 
   EvtxtManager();

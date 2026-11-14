@@ -34,6 +34,7 @@ public:
   static u8 *getFP(u32 bdat);
   static u32 getReloadCount();
 
+  // BDAT_COUNT is the number of BDAT table ids of gf_bdat_id.h (the number of entries of the game's s_aszGfBdatName).
   static const u32 BDAT_COUNT = 0x19d;
 
 private:

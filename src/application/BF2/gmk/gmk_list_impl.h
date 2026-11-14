@@ -22,7 +22,7 @@ bool TGmkList<T, BDAT_INFO, MAGIC, VERSION, GOB>::initGmkBdatInfo(BDAT_INFO &bda
   int end = top + Bdat::getIdCount(bdat);
   int found = -1;
   for (int id = top; id < end; id++) {
-    const char *rowName = reinterpret_cast<const char *>(Bdat::getValCheck(bdat, "name", id, BDAT_TYPE_STRING));
+    const char *rowName = reinterpret_cast<const char *>(Bdat::getValCheck(bdat, "name", id, BDAT_TYPE_UNKNOWN_7));
     if (rowName == nullptr) {
       continue;
     }

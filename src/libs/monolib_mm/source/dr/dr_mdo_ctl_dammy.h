@@ -14,4 +14,6 @@ public:
   void dispOffUpdate() override;
 };
 
+static_assert(sizeof(DrMdoCtlDammy) == 0x1b0, "");
+
 } // namespace ml

@@ -39,6 +39,51 @@ void EffectCtrl::destroy() {
   unknown10.clear();
 }
 
+void EffectCtrl::update() {
+  while (!unknown10.empty()) {
+    u32 *handle = unknown10.begin();
+    if (fw::EffectManager::get()->isExist(*handle)) {
+      break;
+    }
+    if (unknown1b0 != nullptr) {
+      unknown1b0->setEffectCaster(false, *handle);
+    }
+    if (unknown1c0 != nullptr) {
+      unknown1c0->setEffectMount(false, *handle, "", mm::Vec3::zero, false, static_cast<ATTACH_TYPE>(0));
+    }
+    unknown10.erase(handle);
+  }
+  if (unknown08 != 0) {
+    if (unknown1b0 != nullptr) {
+      unknown1b0->setEffectCaster(true, unknown08);
+    }
+    if (unknown1c0 != nullptr) {
+      unknown1c0->setEffectMount(true, unknown08, unknown1c8.c_str(), unknown1f0, unknown200, static_cast<ATTACH_TYPE>(unknown204));
+    }
+    effect::SendParam param;
+    unknown001(param);
+    param.unknown80 = 1.0f;
+    param.unknown84 = m_skip;
+    param.unknowna2 = m_prio;
+    fw::EffectManager::get()->setViewnum(unknown08, unknown15c);
+    fw::EffectManager::get()->setParam(unknown08, &param);
+  }
+  if (!unknown10.empty()) {
+    effect::SendParam param;
+    unknown001(param);
+    param.unknown80 = m_speed;
+    param.unknown84 = 0.0f;
+    param.unknowna2 = m_prio;
+    for (size_t i = 0; i < unknown10.size(); i++) {
+      fw::EffectManager::get()->setParam(unknown10[i], &param);
+    }
+  }
+  if (unknown08 != 0) {
+    unknown10.push_back(unknown08);
+    unknown08 = 0;
+  }
+}
+
 void EffectCtrl::genelate() {
   unknown08 = fw::EffectManager::get()->create(unknown118.c_str(), mm::mtl::Singleton<EffectManager>::getPtr()->getResPack(), true);
   fw::EffectManager::get()->setCategory(unknown08, static_cast<fw::EF_CATEGORY>(3));

@@ -79,7 +79,7 @@ void ColiObject::setupColiCharacter(ColiObject *object, const ColiCharacterInfo 
   const mm::Mat44 &offset = info.unknown40;
   object->unknown60 = offset;
   object->unknowne0 = info.unknown18;
-  for (int state = COLI_STATE_UNKNOWN_0; state <= COLI_STATE_ENABLE; state++) {
+  for (int state = COLI_STATE_UNKNOWN_0; state <= COLI_STATE_UNKNOWN_1; state++) {
     if ((info.unknown0c & (1 << state)) != 0) {
       object->setState(static_cast<ColiState>(state));
     } else {
@@ -89,20 +89,20 @@ void ColiObject::setupColiCharacter(ColiObject *object, const ColiCharacterInfo 
 
   const unknown031 *shape = info.unknown80;
   switch (shape->unknown00) {
-  case unknown031::TYPE_SPHERE:
+  case unknown031::TYPE_UNKNOWN_0:
     // __LINE__ of the game: it is the line argument of the operator new.
 #line 156
     object->unknowne8.reset(new (FrameworkMemory::getAllocator(5), 16, __FILE__, __LINE__) unknown131(*static_cast<const unknown131 *>(shape)));
     object->bindReferenceFrame(frame);
     object->resetSphere(static_cast<const unknown131 *>(shape)->unknown04);
     break;
-  case unknown031::TYPE_CAPSULE:
+  case unknown031::TYPE_UNKNOWN_1:
 #line 165
     object->unknowne8.reset(new (FrameworkMemory::getAllocator(5), 16, __FILE__, __LINE__) unknown132(*static_cast<const unknown132 *>(shape)));
     object->bindReferenceFrame(frame);
     object->resetCapsule(static_cast<const unknown132 *>(shape)->unknown04, static_cast<const unknown132 *>(shape)->unknown08, static_cast<const unknown132 *>(shape)->unknown0c);
     break;
-  case unknown031::TYPE_BOX: {
+  case unknown031::TYPE_UNKNOWN_2: {
     const unknown137 &box = static_cast<const unknown133 *>(shape)->unknown10;
 #line 174
     object->unknowne8.reset(new (FrameworkMemory::getAllocator(5), 16, __FILE__, __LINE__) unknown133(*static_cast<const unknown133 *>(shape)));
@@ -110,7 +110,7 @@ void ColiObject::setupColiCharacter(ColiObject *object, const ColiCharacterInfo 
     object->resetBox(box.unknown00, box.unknown10);
     break;
   }
-  case unknown031::TYPE_CHARACTER:
+  case unknown031::TYPE_UNKNOWN_3:
 #line 183
     object->unknowne8.reset(new (FrameworkMemory::getAllocator(5), 16, __FILE__, __LINE__) unknown134(*static_cast<const unknown134 *>(shape)));
     object->bindReferenceFrame(frame);
@@ -161,7 +161,7 @@ void ColiObject::setupColiPhantom(ColiObject *object, const ColiPhantomInfo &inf
   const mm::Mat44 &offset = info.unknown40;
   object->unknown60 = offset;
   object->unknowne0 = info.unknown18;
-  for (int state = COLI_STATE_UNKNOWN_0; state <= COLI_STATE_ENABLE; state++) {
+  for (int state = COLI_STATE_UNKNOWN_0; state <= COLI_STATE_UNKNOWN_1; state++) {
     if ((info.unknown0c & (1 << state)) != 0) {
       object->setState(static_cast<ColiState>(state));
     } else {
@@ -171,20 +171,20 @@ void ColiObject::setupColiPhantom(ColiObject *object, const ColiPhantomInfo &inf
 
   const unknown031 *shape = info.unknown80;
   switch (shape->unknown00) {
-  case unknown031::TYPE_SPHERE:
+  case unknown031::TYPE_UNKNOWN_0:
     // __LINE__ of the game: it is the line argument of the operator new.
 #line 245
     object->unknowne8.reset(new (FrameworkMemory::getAllocator(5), 16, __FILE__, __LINE__) unknown131(*static_cast<const unknown131 *>(shape)));
     object->bindReferenceFrame(frame);
     object->resetSphere(static_cast<const unknown131 *>(shape)->unknown04);
     break;
-  case unknown031::TYPE_CAPSULE:
+  case unknown031::TYPE_UNKNOWN_1:
 #line 254
     object->unknowne8.reset(new (FrameworkMemory::getAllocator(5), 16, __FILE__, __LINE__) unknown132(*static_cast<const unknown132 *>(shape)));
     object->bindReferenceFrame(frame);
     object->resetCapsule(static_cast<const unknown132 *>(shape)->unknown04, static_cast<const unknown132 *>(shape)->unknown08, false);
     break;
-  case unknown031::TYPE_BOX: {
+  case unknown031::TYPE_UNKNOWN_2: {
     const unknown137 &box = static_cast<const unknown133 *>(shape)->unknown10;
 #line 263
     object->unknowne8.reset(new (FrameworkMemory::getAllocator(5), 16, __FILE__, __LINE__) unknown133(*static_cast<const unknown133 *>(shape)));
@@ -203,8 +203,8 @@ void ColiObject::setupColiPhantom(ColiObject *object, const ColiPhantomInfo &inf
 
 void ColiObject::setColiType(ColiType type) {
   this->unknown30 = type;
-  if (type == COLI_TYPE_STATIC) {
-    unknown34 |= FLAG_MATRIX_DIRTY;
+  if (type == COLI_TYPE_UNKNOWN_0) {
+    unknown34 |= FLAG_UNKNOWN_0;
   }
 }
 
@@ -253,7 +253,7 @@ void ColiObject::clearState(ColiState state) {
 void ColiObject::bindReferenceFrame(const mm::mtl::IntrusivePtr<ReferenceFrame> &frame) { unknown28 = frame; }
 
 void ColiObject::resetSphere(f32 radius) {
-  if (unknowne8.get() == nullptr || unknowne8.get()->unknown00 != unknown031::TYPE_SPHERE) {
+  if (unknowne8.get() == nullptr || unknowne8.get()->unknown00 != unknown031::TYPE_UNKNOWN_0) {
     return;
   }
 
@@ -280,7 +280,7 @@ void ColiObject::resetSphere(f32 radius) {
 
 void ColiObject::resetCapsule(f32 radius, f32 height, bool flag) {
   unknown031 *coliShape = unknowne8.get();
-  if (coliShape == nullptr || coliShape->unknown00 != unknown031::TYPE_CAPSULE) {
+  if (coliShape == nullptr || coliShape->unknown00 != unknown031::TYPE_UNKNOWN_1) {
     return;
   }
 
@@ -307,7 +307,7 @@ void ColiObject::resetCapsule(f32 radius, f32 height, bool flag) {
 }
 
 void ColiObject::resetBox(const mm::Vec3 &size, bool flag) {
-  if (unknowne8.get() == nullptr || unknowne8.get()->unknown00 != unknown031::TYPE_BOX) {
+  if (unknowne8.get() == nullptr || unknowne8.get()->unknown00 != unknown031::TYPE_UNKNOWN_2) {
     return;
   }
 
@@ -334,7 +334,7 @@ void ColiObject::resetBox(const mm::Vec3 &size, bool flag) {
 
 void ColiObject::resetCharacter(f32 radius, f32 height) {
   unknown031 *coliShape = unknowne8.get();
-  if (coliShape == nullptr || coliShape->unknown00 != unknown031::TYPE_CHARACTER) {
+  if (coliShape == nullptr || coliShape->unknown00 != unknown031::TYPE_UNKNOWN_3) {
     return;
   }
 
@@ -505,13 +505,13 @@ bool ColiObject::testState(ColiState state) const {
 
 void ColiObject::setActivate(bool isActivate) {
   if (isActivate) {
-    clearState(COLI_STATE_INACTIVE);
+    clearState(COLI_STATE_UNKNOWN_2);
   } else {
-    setState(COLI_STATE_INACTIVE);
+    setState(COLI_STATE_UNKNOWN_2);
   }
 }
 
-bool ColiObject::isActivate() const { return !testState(COLI_STATE_INACTIVE); }
+bool ColiObject::isActivate() const { return !testState(COLI_STATE_UNKNOWN_2); }
 
 u32 ColiObject::getHitMaterialFlag() const {
   if (m_coliObject == nullptr) {
@@ -571,7 +571,7 @@ f32 ColiObject::getAdsorption() const {
 
 bool ColiObject::isLanding() const {
   if (m_coliObject != nullptr && m_coliObject->unknown24 == idcoli::unknown098_1) {
-    return m_coliObject->unknown20 & idcoli::IDColiObj::FLAG_LANDING;
+    return m_coliObject->unknown20 & idcoli::IDColiObj::FLAG_UNKNOWN_0;
   }
 
   return false;
@@ -579,7 +579,7 @@ bool ColiObject::isLanding() const {
 
 bool ColiObject::isContactWall() const {
   if (m_coliObject != nullptr && m_coliObject->unknown24 == idcoli::unknown098_1) {
-    return m_coliObject->unknown20 & idcoli::IDColiObj::FLAG_CONTACT_WALL;
+    return m_coliObject->unknown20 & idcoli::IDColiObj::FLAG_UNKNOWN_2;
   }
 
   return false;
@@ -587,7 +587,7 @@ bool ColiObject::isContactWall() const {
 
 bool ColiObject::isOutRange() const {
   if (m_coliObject != nullptr && m_coliObject->unknown24 == idcoli::unknown098_1) {
-    return m_coliObject->unknown20 & idcoli::IDColiObj::FLAG_OUT_RANGE;
+    return m_coliObject->unknown20 & idcoli::IDColiObj::FLAG_UNKNOWN_1;
   }
 
   return false;
@@ -617,14 +617,14 @@ bool ColiObject::getAABB(mm::Vec3 &min, mm::Vec3 &max) const {
 }
 
 void ColiObject::enter(const IColiEventListener::EnterInfo &info) {
-  bool isEnable = unknown48.unknown001(EVENT_ENTER);
+  bool isEnable = unknown48.unknown001(EVENT_UNKNOWN_0);
   if (unknown48.unknown08 != nullptr && isEnable) {
     unknown48.unknown08->enter(info);
   }
 }
 
 void ColiObject::leave(const IColiEventListener::LeaveInfo &info) {
-  bool isEnable = unknown48.unknown001(EVENT_LEAVE);
+  bool isEnable = unknown48.unknown001(EVENT_UNKNOWN_2);
   if (unknown48.unknown08 != nullptr && isEnable) {
     unknown48.unknown08->leave(info);
   }
@@ -633,7 +633,7 @@ void ColiObject::leave(const IColiEventListener::LeaveInfo &info) {
 void IColiEventListener::contact(const EnterInfo &info) {}
 
 void ColiObject::contact(const IColiEventListener::EnterInfo &info) {
-  if (unknown48.unknown08 != nullptr && unknown48.unknown001(EVENT_CONTACT)) {
+  if (unknown48.unknown08 != nullptr && unknown48.unknown001(EVENT_UNKNOWN_1)) {
     unknown48.unknown08->contact(info);
   }
 }
@@ -641,12 +641,12 @@ void ColiObject::contact(const IColiEventListener::EnterInfo &info) {
 void ColiObject::update() {}
 
 void ColiObject::postUpdate() {
-  if (unknown30 == COLI_TYPE_STATIC && !(unknown34 & FLAG_MATRIX_DIRTY)) {
+  if (unknown30 == COLI_TYPE_UNKNOWN_0 && !(unknown34 & FLAG_UNKNOWN_0)) {
     return;
   }
 
   if (unknown28.get() != nullptr && m_coliObject != nullptr) {
-    unknown34 &= ~FLAG_MATRIX_DIRTY;
+    unknown34 &= ~FLAG_UNKNOWN_0;
     setMatrix(unknown28->getSyncedWorldMatrix());
   }
 }

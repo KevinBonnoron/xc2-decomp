@@ -46,7 +46,8 @@ class IAllocator;
 namespace fw {
 
 Framework::Framework()
-    : m_applet(nullptr), unknown50(nullptr), unknown58(nullptr), unknown60(nullptr), unknown70(nullptr), unknown84(STATE_NONE), unknown88(false), unknown89(false), unknown8a(false), unknown8c(1.0f) {}
+    : m_applet(nullptr), unknown50(nullptr), unknown58(nullptr), unknown60(nullptr), unknown70(nullptr), unknown84(STATE_UNKNOWN_0), unknown88(false), unknown89(false), unknown8a(false),
+      unknown8c(1.0f) {}
 
 Framework::~Framework() { destroyManager(); }
 
@@ -58,7 +59,7 @@ void Framework::createMemorySection() {
   info.unknown10 = 0x1000;
   info.unknown14 = true;
   info.unknown18 = "fw::SoundCommon";
-  info.unknown5c = mtl::ALLOCATOR_TYPE_PROGRAM;
+  info.unknown5c = mtl::ALLOCATOR_TYPE_UNKNOWN_1;
   FrameworkMemory::get().createSection(info);
 
   info.unknown00 = 8;
@@ -67,7 +68,7 @@ void Framework::createMemorySection() {
   info.unknown10 = 0x1000;
   info.unknown14 = true;
   info.unknown18 = "fw::SoundPool";
-  info.unknown5c = mtl::ALLOCATOR_TYPE_PROGRAM;
+  info.unknown5c = mtl::ALLOCATOR_TYPE_UNKNOWN_1;
   FrameworkMemory::get().createSection(info);
 
   info.unknown00 = 7;
@@ -76,7 +77,7 @@ void Framework::createMemorySection() {
   info.unknown10 = 0x20;
   info.unknown14 = true;
   info.unknown18 = "fw::SoundProc";
-  info.unknown5c = mtl::ALLOCATOR_TYPE_PROGRAM;
+  info.unknown5c = mtl::ALLOCATOR_TYPE_UNKNOWN_1;
   FrameworkMemory::get().createSection(info);
 
   info.unknown00 = 9;
@@ -85,7 +86,7 @@ void Framework::createMemorySection() {
   info.unknown10 = 0x1000;
   info.unknown14 = false;
   info.unknown18 = "fw::Movie";
-  info.unknown5c = mtl::ALLOCATOR_TYPE_PROGRAM;
+  info.unknown5c = mtl::ALLOCATOR_TYPE_UNKNOWN_1;
   FrameworkMemory::get().createSection(info);
 }
 
@@ -161,7 +162,7 @@ bool Framework::initializeManager() {
   if (ManagerRegister::get()->initialize() && BdatManager::isEnableBdat(0) && BdatManager::isEnableBdat(1) && EffectManager::get()->isCommonLoaded() && SoundManager::get()->isCommonLoaded() &&
       SoundManager::get()->isBattleLoaded()) {
     PadManager::initVibData();
-    unknown84 = STATE_MANAGER_INITIALIZED;
+    unknown84 = STATE_UNKNOWN_2;
     return true;
   }
 
@@ -199,11 +200,11 @@ void Framework::destroyManager() {
 
 bool Framework::finalizeManager() {
   bool isFinalized = ManagerRegister::get()->finalize();
-  unknown84 = isFinalized ? STATE_FINALIZED : STATE_FINALIZING;
+  unknown84 = isFinalized ? STATE_UNKNOWN_5 : STATE_UNKNOWN_4;
   return isFinalized;
 }
 
-void Framework::prepareEnter() { unknown84 = STATE_ENTERED; }
+void Framework::prepareEnter() { unknown84 = STATE_UNKNOWN_3; }
 
 void Framework::prepareExit() {}
 
@@ -228,7 +229,7 @@ void Framework::beginFrame(const UpdateState &updateState) {
     unknown78.unknown00 = 1.0f / unknown10.unknown04;
     unknown78.unknown08 = 0.0f;
     unknown78.unknown04 = unknown78.unknown00 * unknown78.unknown08;
-    for (u32 i = 0; i < LAYER_MAX; i++) {
+    for (u32 i = 0; i < LAYER_UNKNOWN_32; i++) {
       unknown98[i].unknown04 = 0.0f;
     }
   } else {
@@ -238,7 +239,7 @@ void Framework::beginFrame(const UpdateState &updateState) {
       unknown78.unknown00 = 1.0f / unknown10.unknown04;
       unknown78.unknown04 = speed * unknown78.unknown00;
     }
-    for (u32 i = 0; i < LAYER_MAX; i++) {
+    for (u32 i = 0; i < LAYER_UNKNOWN_32; i++) {
       unknown98[i].unknown08 = unknown98[i].unknown00;
       unknown98[i].unknown04 = unknown98[i].unknown00 * unknown78.unknown08;
       unknown98[i].unknown0d = unknown98[i].unknown0c;
@@ -354,7 +355,7 @@ void Framework::update() {
   }
 
   if (UpdatableObjectManager::get() != nullptr) {
-    ObjectEvent event = {OBJECT_EVENT_UPDATE_END};
+    ObjectEvent event = {OBJECT_EVENT_UNKNOWN_0};
     UpdatableObjectManager::get()->execEvent(event, (1 << unknown001) - 1);
   }
   if (EffectManager::get() != nullptr) {
@@ -378,7 +379,7 @@ bool Framework::canUpdate() {
     return false;
   }
 
-  return framework->unknown84 == STATE_ENTERED;
+  return framework->unknown84 == STATE_UNKNOWN_3;
 }
 
 void Framework::tail(const UpdateState &updateState) {
@@ -438,7 +439,7 @@ bool Framework::isInitialized() {
     return false;
   }
 
-  return framework->unknown84 >= STATE_MANAGER_INITIALIZED && framework->unknown84 <= STATE_ENTERED;
+  return framework->unknown84 >= STATE_UNKNOWN_2 && framework->unknown84 <= STATE_UNKNOWN_3;
 }
 
 mtl::ALLOC_HANDLE Framework::getMemHandle() {

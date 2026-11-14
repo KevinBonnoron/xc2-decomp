@@ -23,25 +23,27 @@ struct GF_OBJ_HANDLE;
 class GfObj;
 
 enum OBJ_ALPHA {
-  OBJ_ALPHA_NORMAL,
-  OBJ_ALPHA_FADE,
-  OBJ_ALPHA_CAMERA,
-  OBJ_ALPHA_EVENT,
-  OBJ_ALPHA_LIFE,
-  OBJ_ALPHA_EVT_DISP,
+  OBJ_ALPHA_UNKNOWN_0, // Inferred role: obj alpha normal; original name unknown.
+  OBJ_ALPHA_UNKNOWN_1, // Inferred role: obj alpha fade; original name unknown.
+  OBJ_ALPHA_UNKNOWN_2, // Inferred role: obj alpha camera; original name unknown.
+  OBJ_ALPHA_UNKNOWN_3, // Inferred role: obj alpha event; original name unknown.
+  OBJ_ALPHA_UNKNOWN_4, // Inferred role: obj alpha life; original name unknown.
+  OBJ_ALPHA_UNKNOWN_5, // Inferred role: obj alpha evt disp; original name unknown.
+  // OBJ_ALPHA_MAX is the number of enumerators above.
   OBJ_ALPHA_MAX,
 };
 
 enum OBJDISP {
-  OBJDISP_UNKNOWN_1 = 0x1,
-  OBJDISP_EVENT = 0x2,
-  OBJDISP_GMK_EVENT = 0x8,
-  OBJDISP_UNKNOWN10 = 0x10, // Inferred role: hidden by a gimmick camera; original name unknown.
-  OBJDISP_KOSMOS_ARTS_3 = 0x20,
+  OBJDISP_UNKNOWN_0 = 0x1,
+  OBJDISP_UNKNOWN_1 = 0x2,  // Inferred role: objdisp event; original name unknown.
+  OBJDISP_UNKNOWN_2 = 0x4,  // Inferred role: hidden while the layer is paused, cleared by GfObjManager::isFinishLoadState; original name unknown.
+  OBJDISP_UNKNOWN_3 = 0x8,  // Inferred role: objdisp gmk event; original name unknown.
+  OBJDISP_UNKNOWN_4 = 0x10, // Inferred role: hidden by a gimmick camera; original name unknown.
+  OBJDISP_UNKNOWN_5 = 0x20, // Inferred role: objdisp kosmos arts 3; original name unknown.
 };
 
 enum GfObjUserData {
-  OBJ_USER_DATA_GMK = 0,
+  OBJ_USER_DATA_UNKNOWN_0 = 0, // Inferred role: obj user data gmk; original name unknown.
   OBJ_USER_DATA_UNKNOWN_1 = 1, // Inferred role: lod anim position info (GfFieldLodColiAnim::PosInfo); original enumerator name unknown.
   OBJ_USER_DATA_UNKNOWN_2 = 2,
 };
@@ -53,6 +55,9 @@ public:
 
   int getBoneIdx(const char *name);
   bool getBoneTransform(fw::Transform &transform, int bone);
+  bool getBoneTransform(fw::Transform &transform, const char *name);
+  bool getBoneTransformModelSpace(fw::Transform &transform, int bone);
+  bool getBoneTransformModelSpace(fw::Transform &transform, const char *name);
 
   const fw::Transform &getWorldTransformNoSync() const;
   bool getObjPosRot(mm::Vec3 &position, f32 &rotation);
@@ -164,8 +169,9 @@ public:
   void setEnableCollideModelClip(bool isEnable);
   void setCollisionGround(bool isCollisionGround);
 
-private:
   GFOBJ_INFO *unknown00; // Inferred role: info; original member name unknown.
+
+private:
   GfObj *m_obj;
 };
 

@@ -24,7 +24,7 @@ void ScriptPlayText::doit(const Param &param) {
   CharaObj *chara;
   if (index < 0) {
     Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-    if (ScriptUtil::getObjType(object) != OBJTYPE_CHARA) {
+    if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_2) {
       chara = nullptr;
     } else {
       chara = static_cast<ObjectChara *>(object)->getCharaObj();

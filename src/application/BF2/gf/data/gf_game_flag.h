@@ -9,8 +9,8 @@ namespace gf {
 struct GfSetupParam;
 
 enum {
-  FLAG_SALVAGER_POINT = 0x854,
-  FLAG_GAME_CLEAR = 0xbdcd,
+  FLAG_UNKNOWN_2132 = 0x854,   // Inferred role: flag salvager point; original name unknown.
+  FLAG_UNKNOWN_48589 = 0xbdcd, // Inferred role: flag game clear; original name unknown.
 };
 
 struct GameFlag {

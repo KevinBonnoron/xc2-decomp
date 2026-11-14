@@ -11,13 +11,14 @@ namespace gf {
 struct GfSetupParam;
 
 enum GF_SPEED {
-  GF_SPEED_GLOBAL,
-  GF_SPEED_PLAY,
-  GF_SPEED_LAYER_0,
-  GF_SPEED_LAYER_4,
-  GF_SPEED_LAYER_1,
-  GF_SPEED_LAYER_7,
-  GF_SPEED_LAYER_10,
+  GF_SPEED_UNKNOWN_0, // Inferred role: gf speed global; original name unknown.
+  GF_SPEED_UNKNOWN_1, // Inferred role: gf speed play; original name unknown.
+  GF_SPEED_UNKNOWN_2, // Inferred role: gf speed layer 0; original name unknown.
+  GF_SPEED_UNKNOWN_3, // Inferred role: gf speed layer 4; original name unknown.
+  GF_SPEED_UNKNOWN_4, // Inferred role: gf speed layer 1; original name unknown.
+  GF_SPEED_UNKNOWN_5, // Inferred role: gf speed layer 7; original name unknown.
+  GF_SPEED_UNKNOWN_6, // Inferred role: gf speed layer 10; original name unknown.
+  // GF_SPEED_MAX is the number of enumerators above.
   GF_SPEED_MAX,
 };
 

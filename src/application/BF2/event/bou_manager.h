@@ -21,17 +21,17 @@ class IBouCallback;
 
 class BouManager : public IManager, public mm::mtl::NoncopyableBase, public ml::IWorkEvent {
 public:
-  static constexpr u32 CALLBACK_COUNT = 1024;
+  static constexpr u32 CALLBACK_UNKNOWN_1024 = 1024; // Inferred role: callback count; original name unknown.
 
   enum {
-    FLAG_ENABLE = 0,
-    FLAG_ATTACHED = 1,
-    FLAG_ACTIVE = 2,
-    FLAG_KEY_DOWN = 3,
+    FLAG_UNKNOWN_0 = 0, // Inferred role: enable flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1, // Inferred role: attached flag; original name unknown.
+    FLAG_UNKNOWN_2 = 2, // Inferred role: active flag; original name unknown.
+    FLAG_UNKNOWN_3 = 3, // Inferred role: key down flag; original name unknown.
   };
 
   enum {
-    DEBUG_FLAG_ENABLE = 0,
+    DEBUG_FLAG_UNKNOWN_0 = 0, // Inferred role: enable flag; original name unknown.
   };
 
   BouManager();
@@ -55,17 +55,17 @@ public:
 
 private:
   // Inferred role: a selection is being dragged; original name unknown.
-  bool unknown001() const { return isEnable() && isDebugEnable() && unknown18.test(FLAG_ACTIVE) && !unknown18.test(FLAG_KEY_DOWN); }
+  bool unknown001() const { return isEnable() && isDebugEnable() && unknown18.test(FLAG_UNKNOWN_2) && !unknown18.test(FLAG_UNKNOWN_3); }
   // Inferred role: no key is held down; original name unknown.
-  bool unknown002() const { return !unknown18.test(FLAG_KEY_DOWN); }
-  bool isEnable() const { return unknown18.test(FLAG_ENABLE); }
-  bool isDebugEnable() const { return unknown1c.test(DEBUG_FLAG_ENABLE); }
+  bool unknown002() const { return !unknown18.test(FLAG_UNKNOWN_3); }
+  bool isEnable() const { return unknown18.test(FLAG_UNKNOWN_0); }
+  bool isDebugEnable() const { return unknown1c.test(DEBUG_FLAG_UNKNOWN_0); }
 
-  mm::mtl::unknown027<32> unknown18;                                // Inferred role: flags; original member name unknown.
-  mm::mtl::unknown027<32> unknown1c;                                // Inferred role: debug flags; original member name unknown.
-  BouRect unknown20;                                                // Inferred role: rect; original member name unknown.
-  mm::mtl::FixedVector<IBouCallback *, CALLBACK_COUNT> unknown38;   // Inferred role: callbacks; original member name unknown.
-  mm::mtl::FixedVector<IBouCallback *, CALLBACK_COUNT> unknown2040; // Inferred role: selected; original member name unknown.
+  mm::mtl::unknown027<32> unknown18;                                       // Inferred role: flags; original member name unknown.
+  mm::mtl::unknown027<32> unknown1c;                                       // Inferred role: debug flags; original member name unknown.
+  BouRect unknown20;                                                       // Inferred role: rect; original member name unknown.
+  mm::mtl::FixedVector<IBouCallback *, CALLBACK_UNKNOWN_1024> unknown38;   // Inferred role: callbacks; original member name unknown.
+  mm::mtl::FixedVector<IBouCallback *, CALLBACK_UNKNOWN_1024> unknown2040; // Inferred role: selected; original member name unknown.
 };
 
 static_assert(sizeof(BouManager) == 0x4048, "");

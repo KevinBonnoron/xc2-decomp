@@ -10,11 +10,11 @@ class SimpleMapper;
 
 class ResResolver {
 public:
-  virtual const Binding *unknown00(const char *name, u32 id) const = 0;
-  virtual void unknown08(const char *name, u32 id) const = 0;
-  virtual const Skeleton *unknown10() const = 0;
-  virtual const MirrorMapper *unknown18() const = 0;
-  virtual const SimpleMapper *unknown20() const = 0;
+  virtual const Binding *importBinding(const char *name, u32 id) const = 0;
+  virtual void restoreBinding(const char *name, u32 id) const = 0;
+  virtual const Skeleton *getSkekelton() const = 0;
+  virtual const MirrorMapper *getMirrorMapper() const = 0;
+  virtual const SimpleMapper *getSimpleMapper() const = 0;
 };
 
 } // namespace anm

@@ -12,14 +12,14 @@ namespace gf {
 
 u32 GfShopUtil::execBuy(u32 item, u32 count, u32 shop) {
   if (!GfItemUtil::isEnableAddItemBox(item, count)) {
-    return SHOP_RESULT_ITEM_FULL;
+    return SHOP_RESULT_UNKNOWN_1;
   }
 
   ItemPrice price;
   GfItemUtil::getPrice(price, item, shop);
   u32 money = price.unknown04 * count;
   if (GfDataUtil::getMoney() < money) {
-    return SHOP_RESULT_NO_MONEY;
+    return SHOP_RESULT_UNKNOWN_3;
   }
 
   GfItemUtil::addItemBox(item, count);
@@ -28,15 +28,15 @@ u32 GfShopUtil::execBuy(u32 item, u32 count, u32 shop) {
   GfDataShop::setBuyItem(shop, item);
   GfAchievStats::checkBuyItemFromShop(item, count, shop, money);
   GfEvent::callExecBuy(item, count, shop);
-  return SHOP_RESULT_OK;
+  return SHOP_RESULT_UNKNOWN_0;
 }
 
 u32 GfShopUtil::execSell(u32 item, u32 count, u32 shop) {
   if (!GfDataItem::isEnableSell(item)) {
-    return SHOP_RESULT_NOT_SELLABLE;
+    return SHOP_RESULT_UNKNOWN_4;
   }
   if (GfItemUtil::getItemBoxCount(item) < count) {
-    return SHOP_RESULT_NO_ITEM;
+    return SHOP_RESULT_UNKNOWN_2;
   }
 
   ItemPrice price;
@@ -46,7 +46,7 @@ u32 GfShopUtil::execSell(u32 item, u32 count, u32 shop) {
   SCOM_ADD_MONEY::create(money);
   SCOM_ADD_DEVELOP::create(GfGameManager::getMapZoneID(), price.unknown10 * count);
   GfAchievStats::checkSellItemFromShop(item, count, shop, money);
-  return SHOP_RESULT_OK;
+  return SHOP_RESULT_UNKNOWN_0;
 }
 
 } // namespace gf

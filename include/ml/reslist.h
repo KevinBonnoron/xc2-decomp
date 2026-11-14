@@ -3,6 +3,37 @@
 
 namespace ml {
 
+template <typename T> class _reslist_base;
+
+// Name and template shape from the symbols of the sibling build Xenoblade Chronicles: Definitive Edition
+// (ml::_reslist_iterator<xefb::TrailPoint, xefb::TrailPoint&, xefb::TrailPoint*>, _ZN4xefb13CTrailHermite6createEPKN2ml17_reslist_iteratorINS_10TrailPointERS3_PS3_EE);
+// the members are inferred from DevGraph::removeCb (0x7100713dd4), whose loop only matches when the next node is
+// copied through an iterator: the erase then reloads the links of the node instead of reusing that copy.
+template <typename T, typename Ref, typename Ptr> class _reslist_iterator {
+public:
+  typedef typename _reslist_base<T>::Node Node;
+
+  _reslist_iterator(Node *node) : unknown00(node) {}
+
+  Ref operator*() const { return unknown00->value; }
+
+  _reslist_iterator &operator++() {
+    unknown00 = unknown00->getNext();
+    return *this;
+  }
+
+  _reslist_iterator operator++(int) {
+    _reslist_iterator previous = *this;
+    unknown00 = unknown00->getNext();
+    return previous;
+  }
+
+  bool operator==(const _reslist_iterator &other) const { return unknown00 == other.unknown00; }
+  bool operator!=(const _reslist_iterator &other) const { return unknown00 != other.unknown00; }
+
+  Node *unknown00; // Inferred role: current node; original member name unknown.
+};
+
 template <typename T> class _reslist_base {
 public:
   // Inferred role: node base; original type name unknown.
@@ -19,9 +50,9 @@ public:
   };
 
   _reslist_base() : m_pool(nullptr), m_capacity(0), m_size(0), m_isExternal(false) {
+    m_end = &m_root;
     m_root.next = &m_root;
     m_root.prev = &m_root;
-    m_end = &m_root;
   }
 
   virtual ~_reslist_base() {
@@ -35,6 +66,8 @@ public:
   Node *begin() const { return static_cast<Node *>(m_end->next); }
   Node *end() const { return static_cast<Node *>(m_end); }
   int size() const { return m_size; }
+
+  typedef _reslist_iterator<T, T &, T *> iterator;
 
   void release() {
     clear();
@@ -68,13 +101,26 @@ public:
     m_size++;
   }
 
-  void erase(Node *node) {
-    unknown001 *next = node->next;
-    unknown001 *prev = node->prev;
+  void erase(iterator position) {
+    Node *next = position.unknown00->getNext();
+    Node *prev = position.unknown00->getPrev();
     prev->next = next;
     next->prev = prev;
-    node->next = nullptr;
+    position.unknown00->next = nullptr;
     m_size--;
+  }
+
+  void remove(const T &value) {
+    iterator first = begin();
+    iterator last = end();
+    while (first != last) {
+      iterator next = first;
+      ++next;
+      if (*first == value) {
+        erase(first);
+      }
+      first = next;
+    }
   }
 
   void clear() {

@@ -231,6 +231,13 @@ void DebDraw::setForceRenderQueue(bool isForce) {
   unknown210->setForceRenderQueue(isForce);
 }
 
+void DebDraw::renderRectUpFill(const mm::Rect<int> &rect) {
+  begin(9, 1);
+  add(rect);
+  end();
+  renderRectUp(rect);
+}
+
 void DebDraw::fontColor(const mm::Col4 &color) { unknown210->fontColor(color); }
 
 void DebDraw::fontBack(const mm::Col4 &color) { unknown210->fontBack(color); }
@@ -278,7 +285,7 @@ void DebDrawCmd::release() {}
 DebDrawCmd::DebDrawCmd()
     : unknown219(false), unknown21c(mm::Col4::white), unknown230(mm::Vec3::unitY), unknown240(mm::Col4::white), unknown250(mm::Col4::white), unknown260(mm::Col4::white), unknown270(false),
       unknown2d0(nullptr), unknown2d8(0), unknown2e8(nullptr) {
-  WorkCpu::runThread(WorkCpu::getRenderCPUID(), thInitialize, this, nullptr, nullptr, false, WKCPU_SYNC_NONE);
+  WorkCpu::runThread(WorkCpu::getRenderCPUID(), thInitialize, this, nullptr, nullptr, false, WKCPU_SYNC_UNKNOWN_0);
 }
 
 u32 DebDrawCmd::thInitialize(void *argument, void *userData) {
@@ -292,7 +299,7 @@ u32 DebDrawCmd::thInitialize(void *argument, void *userData) {
 
 DebDrawCmd::~DebDrawCmd() {
   unknown008 = unknown2d0;
-  WorkCpu::runThread(WorkCpu::getRenderCPUID(), thDestroy, &unknown008, nullptr, nullptr, false, WKCPU_SYNC_NONE);
+  WorkCpu::runThread(WorkCpu::getRenderCPUID(), thDestroy, &unknown008, nullptr, nullptr, false, WKCPU_SYNC_UNKNOWN_0);
 }
 
 u32 DebDrawCmd::thDestroy(void *argument, void *userData) {
@@ -647,6 +654,8 @@ void DebDraw::renderPoint(const mm::Vec3 &position) {
   }
 }
 
+void CacheDraw::DRPNT::flush(DebDraw *draw) { draw->renderPoint(unknown0c); }
+
 void DebDraw::renderLine(const mm::Vec3 &start, const mm::Vec3 &end) {
   if (!unknown210->renderLine(start, end)) {
     begin(2, 1);
@@ -816,6 +825,142 @@ void DebDraw::renderAxis(f32 length) {
   }
 }
 
+void DebDraw::renderArrowAxisX(const mm::Vec3 &position, int size, const mm::Col4 *color, bool isCube) {
+  mm::Vec3 screenStart;
+  if (!getScreenPos(screenStart, position)) {
+    return;
+  }
+  mm::Vec3 screenEnd;
+  if (!getScreenPos(screenEnd,
+                    mm::Vec3(mm::Vec3::unitX.x * unknown80.rows[0][0] + mm::Vec3::unitX.y * unknown80.rows[1][0] + mm::Vec3::unitX.z * unknown80.rows[2][0],
+                             mm::Vec3::unitX.x * unknown80.rows[0][1] + mm::Vec3::unitX.y * unknown80.rows[1][1] + mm::Vec3::unitX.z * unknown80.rows[2][1],
+                             mm::Vec3::unitX.x * unknown80.rows[0][2] + mm::Vec3::unitX.y * unknown80.rows[1][2] + mm::Vec3::unitX.z * unknown80.rows[2][2]) +
+                        position)) {
+    return;
+  }
+  screenStart.z = 0.0f;
+  screenEnd.z = 0.0f;
+  f32 length = sqrtf((screenStart.x - screenEnd.x) * (screenStart.x - screenEnd.x) + (screenStart.y - screenEnd.y) * (screenStart.y - screenEnd.y) +
+                     (screenStart.z - screenEnd.z) * (screenStart.z - screenEnd.z));
+  f32 scale = size / length;
+  mm::Col4 saved = unknown0c;
+  if (color == nullptr) {
+    setCol(mm::Col3::red, 1.0f);
+  } else {
+    setCol(*color);
+  }
+  if (isCube) {
+    renderCubeArrow(position, position + mm::Vec3(scale, 0.0f, 0.0f));
+  } else {
+    renderArrow(position, position + mm::Vec3(scale, 0.0f, 0.0f));
+  }
+  setCol(saved);
+}
+
+void DebDraw::renderArrowAxisY(const mm::Vec3 &position, int size, const mm::Col4 *color, bool isCube) {
+  mm::Vec3 screenStart;
+  if (!getScreenPos(screenStart, position)) {
+    return;
+  }
+  mm::Vec3 screenEnd;
+  if (!getScreenPos(screenEnd,
+                    mm::Vec3(mm::Vec3::unitX.x * unknown80.rows[0][0] + mm::Vec3::unitX.y * unknown80.rows[1][0] + mm::Vec3::unitX.z * unknown80.rows[2][0],
+                             mm::Vec3::unitX.x * unknown80.rows[0][1] + mm::Vec3::unitX.y * unknown80.rows[1][1] + mm::Vec3::unitX.z * unknown80.rows[2][1],
+                             mm::Vec3::unitX.x * unknown80.rows[0][2] + mm::Vec3::unitX.y * unknown80.rows[1][2] + mm::Vec3::unitX.z * unknown80.rows[2][2]) +
+                        position)) {
+    return;
+  }
+  screenStart.z = 0.0f;
+  screenEnd.z = 0.0f;
+  f32 length = sqrtf((screenStart.x - screenEnd.x) * (screenStart.x - screenEnd.x) + (screenStart.y - screenEnd.y) * (screenStart.y - screenEnd.y) +
+                     (screenStart.z - screenEnd.z) * (screenStart.z - screenEnd.z));
+  f32 scale = size / length;
+  mm::Col4 saved = unknown0c;
+  if (color == nullptr) {
+    setCol(mm::Col3::green, 1.0f);
+  } else {
+    setCol(*color);
+  }
+  if (isCube) {
+    renderCubeArrow(position, position + mm::Vec3(0.0f, scale, 0.0f));
+  } else {
+    renderArrow(position, position + mm::Vec3(0.0f, scale, 0.0f));
+  }
+  setCol(saved);
+}
+
+void DebDraw::renderArrowAxisZ(const mm::Vec3 &position, int size, const mm::Col4 *color, bool isCube) {
+  mm::Vec3 screenStart;
+  if (!getScreenPos(screenStart, position)) {
+    return;
+  }
+  mm::Vec3 screenEnd;
+  if (!getScreenPos(screenEnd,
+                    mm::Vec3(mm::Vec3::unitX.x * unknown80.rows[0][0] + mm::Vec3::unitX.y * unknown80.rows[1][0] + mm::Vec3::unitX.z * unknown80.rows[2][0],
+                             mm::Vec3::unitX.x * unknown80.rows[0][1] + mm::Vec3::unitX.y * unknown80.rows[1][1] + mm::Vec3::unitX.z * unknown80.rows[2][1],
+                             mm::Vec3::unitX.x * unknown80.rows[0][2] + mm::Vec3::unitX.y * unknown80.rows[1][2] + mm::Vec3::unitX.z * unknown80.rows[2][2]) +
+                        position)) {
+    return;
+  }
+  screenStart.z = 0.0f;
+  screenEnd.z = 0.0f;
+  f32 length = sqrtf((screenStart.x - screenEnd.x) * (screenStart.x - screenEnd.x) + (screenStart.y - screenEnd.y) * (screenStart.y - screenEnd.y) +
+                     (screenStart.z - screenEnd.z) * (screenStart.z - screenEnd.z));
+  f32 scale = size / length;
+  mm::Col4 saved = unknown0c;
+  if (color == nullptr) {
+    setCol(mm::Col3::blue, 1.0f);
+  } else {
+    setCol(*color);
+  }
+  if (isCube) {
+    renderCubeArrow(position, position + mm::Vec3(0.0f, 0.0f, scale));
+  } else {
+    renderArrow(position, position + mm::Vec3(0.0f, 0.0f, scale));
+  }
+  setCol(saved);
+}
+
+void DebDraw::renderArrowAxis(const mm::Vec3 &position, int size, bool isCube) {
+  mm::Vec3 screenStart;
+  if (!getScreenPos(screenStart, position)) {
+    return;
+  }
+  mm::Vec3 screenEnd;
+  if (!getScreenPos(screenEnd,
+                    mm::Vec3(mm::Vec3::unitX.x * unknown80.rows[0][0] + mm::Vec3::unitX.y * unknown80.rows[1][0] + mm::Vec3::unitX.z * unknown80.rows[2][0],
+                             mm::Vec3::unitX.x * unknown80.rows[0][1] + mm::Vec3::unitX.y * unknown80.rows[1][1] + mm::Vec3::unitX.z * unknown80.rows[2][1],
+                             mm::Vec3::unitX.x * unknown80.rows[0][2] + mm::Vec3::unitX.y * unknown80.rows[1][2] + mm::Vec3::unitX.z * unknown80.rows[2][2]) +
+                        position)) {
+    return;
+  }
+  screenStart.z = 0.0f;
+  screenEnd.z = 0.0f;
+  f32 length = sqrtf((screenStart.x - screenEnd.x) * (screenStart.x - screenEnd.x) + (screenStart.y - screenEnd.y) * (screenStart.y - screenEnd.y) +
+                     (screenStart.z - screenEnd.z) * (screenStart.z - screenEnd.z));
+  f32 scale = size / length;
+  mm::Col4 saved = unknown0c;
+  setCol(mm::Col3::red, 1.0f);
+  if (isCube) {
+    renderCubeArrow(position, position + mm::Vec3(scale, 0.0f, 0.0f));
+  } else {
+    renderArrow(position, position + mm::Vec3(scale, 0.0f, 0.0f));
+  }
+  setCol(mm::Col3::green, 1.0f);
+  if (isCube) {
+    renderCubeArrow(position, position + mm::Vec3(0.0f, scale, 0.0f));
+  } else {
+    renderArrow(position, position + mm::Vec3(0.0f, scale, 0.0f));
+  }
+  setCol(mm::Col3::blue, 1.0f);
+  if (isCube) {
+    renderCubeArrow(position, position + mm::Vec3(0.0f, 0.0f, scale));
+  } else {
+    renderArrow(position, position + mm::Vec3(0.0f, 0.0f, scale));
+  }
+  setCol(saved);
+}
+
 void DebDraw::renderOBB(const mm::Obb &obb) {
   if (!unknown210->renderOBB(obb)) {
     mm::Vec3 vertices[8];
@@ -941,6 +1086,48 @@ void DebDraw::renderRectFill(const mm::Rect<int> &first, const mm::Rect<int> &se
   add(first.x, first.y + first.height, second.x, second.y + second.height);
   add(first.x + first.width, first.y + first.height, second.x + second.width, second.y + second.height);
   end();
+}
+
+void DebDraw::renderDiamondUp(const mm::Rect<int> &rect) {
+  mm::Col4 color = unknown0c;
+  setCol(mm::Col4(color.r * 1.3f, color.g * 1.3f, color.b * 1.3f, color.a));
+  begin(2, 1);
+  add(rect.x, rect.y + rect.height / 2, rect.x + rect.width / 2, rect.y);
+  end();
+  setCol(mm::Col4(color.r * 1.1f, color.g * 1.1f, color.b * 1.1f, color.a));
+  begin(2, 1);
+  add(rect.x + rect.width / 2, rect.y, rect.x + rect.width, rect.y + rect.height / 2);
+  end();
+  setCol(mm::Col4(color.r * 0.7f, color.g * 0.7f, color.b * 0.7f, color.a));
+  begin(2, 1);
+  add(rect.x + rect.width, rect.y + rect.height / 2, rect.x + rect.width / 2, rect.y + rect.height);
+  end();
+  setCol(mm::Col4(color.r * 0.9f, color.g * 0.9f, color.b * 0.9f, color.a));
+  begin(2, 1);
+  add(rect.x + rect.width / 2, rect.y + rect.height, rect.x, rect.y + rect.height / 2);
+  end();
+  setCol(color);
+}
+
+void DebDraw::renderDiamondDown(const mm::Rect<int> &rect) {
+  mm::Col4 color = unknown0c;
+  setCol(mm::Col4(color.r * 0.7f, color.g * 0.7f, color.b * 0.7f, color.a));
+  begin(2, 1);
+  add(rect.x, rect.y + rect.height / 2, rect.x + rect.width / 2, rect.y);
+  end();
+  setCol(mm::Col4(color.r * 0.9f, color.g * 0.9f, color.b * 0.9f, color.a));
+  begin(2, 1);
+  add(rect.x + rect.width / 2, rect.y, rect.x + rect.width, rect.y + rect.height / 2);
+  end();
+  setCol(mm::Col4(color.r * 1.3f, color.g * 1.3f, color.b * 1.3f, color.a));
+  begin(2, 1);
+  add(rect.x + rect.width / 2, rect.y + rect.height, rect.x + rect.width, rect.y + rect.height / 2);
+  end();
+  setCol(mm::Col4(color.r * 1.1f, color.g * 1.1f, color.b * 1.1f, color.a));
+  begin(2, 1);
+  add(rect.x, rect.y + rect.height / 2, rect.x + rect.width / 2, rect.y + rect.height);
+  end();
+  setCol(color);
 }
 
 void DebDraw::renderDiamondFill(const mm::Rect<int> &rect) {
@@ -1126,6 +1313,35 @@ void DebDraw::renderCylinder(f32 radius, f32 height, u32 division) {
       mm::Vec3 top(angleSin * height, radius * 0.5f, angleCos * height);
       mm::Vec3 bottom(angleSin * height, radius * -0.5f, angleCos * height);
       add(top, bottom);
+    }
+    end();
+  }
+}
+
+void DebDraw::renderCylinderFill(f32 radius, f32 height, u32 division) {
+  if (!unknown210->renderCylinderFill(radius, height, division)) {
+    u32 count = 8;
+    if (division >= 8) {
+      count = division;
+    }
+    begin(5, count * 2);
+    for (u32 i = 0; i < count; i++) {
+      f32 angle = (6.2831855f / count) * i;
+      f32 nextIndex = 0.0f;
+      if (i != count - 1) {
+        nextIndex = i + 1;
+      }
+      f32 nextAngle = (6.2831855f / count) * nextIndex;
+      f32 firstSin = sinf(angle);
+      f32 firstCos = cosf(angle);
+      f32 secondSin = sinf(nextAngle);
+      f32 secondCos = cosf(nextAngle);
+      mm::Vec3 topFirst(firstSin * height, radius * 0.5f, firstCos * height);
+      mm::Vec3 topSecond(secondSin * height, radius * 0.5f, secondCos * height);
+      mm::Vec3 bottomFirst(firstSin * height, radius * -0.5f, firstCos * height);
+      mm::Vec3 bottomSecond(secondSin * height, radius * -0.5f, secondCos * height);
+      add(topFirst, bottomFirst, bottomSecond);
+      add(topFirst, bottomSecond, topSecond);
     }
     end();
   }

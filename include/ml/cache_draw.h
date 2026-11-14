@@ -83,6 +83,11 @@ public:
     mm::Vec3 unknown0c; // Inferred role: position; original member name unknown.
   };
 
+  struct DRPNT : unknown001 {
+    void flush(DebDraw *draw) override;
+    mm::Vec3 unknown0c; // Inferred role: position; original member name unknown.
+  };
+
   struct DPERS : unknown001 {
     void flush(DebDraw *draw) override;
     mm::Mat44 unknown0c; // Inferred role: matrix; original member name unknown.
@@ -234,6 +239,11 @@ public:
     grlib::CGLibTextureBuffer *unknown10; // Inferred role: texture; original member name unknown.
   };
 
+  struct DCOL : unknown001 {
+    void flush(DebDraw *draw) override;
+    mm::Col4 unknown0c; // Inferred role: color; original member name unknown.
+  };
+
   struct DDOUBLESIDE : unknown001 {
     DDOUBLESIDE(const bool &isEnable) : unknown001(6, sizeof(DDOUBLESIDE), 0), unknown0c(isEnable) {}
     void flush(DebDraw *draw) override;
@@ -375,6 +385,7 @@ public:
   bool clear();
   void flush(int priority, const mm::Mat44 &projection, const mm::Mat44 &view);
   bool setMatrix(const mm::Mat44 &matrix);
+  bool setPers(const mm::Mat44 &view, f32 fovy, f32 nearClip, f32 farClip, const mm::Vec3 *position);
   bool setCol(const mm::Col4 &color);
   bool setZComp(bool isEnable);
   bool setZWrite(bool isEnable);
@@ -387,6 +398,7 @@ public:
   bool renderCircle(const mm::Mat44 &matrix, f32 radius, u32 division);
   bool renderCircle(const mm::Vec3 &center, f32 radius, u32 division);
   bool renderFanFill(const mm::Vec3 &center, f32 radius, f32 direction, f32 angle);
+  bool renderFan(const mm::Vec3 &center, f32 radius, f32 direction, f32 angle);
   bool renderAxis(f32 length);
   bool renderArrow(const mm::Vec3 &start, const mm::Vec3 &end);
   bool renderCubeFill(const mm::Vec3 &min, const mm::Vec3 &max);
@@ -460,6 +472,7 @@ static_assert(sizeof(CacheDraw::DFONT64) == 0x58, "");
 static_assert(sizeof(CacheDraw::DFONT128) == 0x98, "");
 static_assert(sizeof(CacheDraw::DFONT256) == 0x118, "");
 static_assert(sizeof(CacheDraw::DFONT_COL) == 0x20, "");
+static_assert(offsetof(CacheDraw::DCOL, unknown0c) == 0xc, "");
 static_assert(offsetof(CacheDraw::DBEGIN, unknown10) == 0x10, "");
 static_assert(offsetof(CacheDraw::DPERS, unknown4c) == 0x4c, "");
 static_assert(offsetof(CacheDraw::DPERS, unknown58) == 0x58, "");
@@ -516,10 +529,11 @@ public:
   virtual void add(const mm::Vec3 &first, const mm::Vec3 &second, const mm::Col4 &color) = 0;
   virtual void add(const mm::Rect<int> &rect) = 0;
   virtual void add(const mm::Vec3 &first, const mm::Vec3 &second, const mm::Vec3 &third) = 0;
-  virtual void setPerspective(f32 first, f32 second, f32 third, const mm::Mat44 &matrix, const mm::Vec3 *position);
+  virtual void setPerspective(f32 fovy, f32 nearClip, f32 farClip, const mm::Mat44 &view, const mm::Vec3 *position);
   virtual void setOrtho();
   virtual void clear();
   void renderAxis(f32 length);
+  void setPerspective(const mm::Mat44 &projection, const mm::Mat44 &view);
   void renderCamera();
   void renderOBB(const mm::Obb &obb);
   void renderRect(const mm::Rect<int> &rect);
@@ -538,11 +552,23 @@ public:
   void renderCircle(const mm::Vec3 &center, f32 radius, int division);
   void renderCircleFill(const mm::Vec3 &center, f32 radius, int division);
   void renderFanFill(const mm::Vec3 &center, f32 radius, f32 direction, f32 angle);
+  void renderFan(const mm::Vec3 &center, f32 radius, f32 direction, f32 angle);
   void renderRealSphere(f32 radius, int division);
+  void renderArrow(const mm::Vec3 &start, const mm::Vec3 &end);
+  void renderCubeArrow(const mm::Vec3 &start, const mm::Vec3 &end);
+  void renderArrowAxisX(const mm::Vec3 &position, int size, const mm::Col4 *color, bool isCube);
+  void renderArrowAxisY(const mm::Vec3 &position, int size, const mm::Col4 *color, bool isCube);
+  void renderArrowAxisZ(const mm::Vec3 &position, int size, const mm::Col4 *color, bool isCube);
+  void renderArrowAxisX(const mm::Mat44 &matrix, int size, const mm::Col4 *color, bool isCube);
+  void renderArrowAxisY(const mm::Mat44 &matrix, int size, const mm::Col4 *color, bool isCube);
+  void renderArrowAxisZ(const mm::Mat44 &matrix, int size, const mm::Col4 *color, bool isCube);
+  void renderArrowAxis(const mm::Vec3 &position, int size, bool isCube);
+  void renderArrowAxis(const mm::Mat44 &matrix, int size, bool isCube);
   void renderRealSphereFill(f32 radius, int division);
   void renderCube(const mm::Vec3 &min, const mm::Vec3 &max);
   void renderCubeFill(const mm::Vec3 &min, const mm::Vec3 &max);
   void setMatrix(const mm::Mat44 &matrix);
+  bool getScreenPos(mm::Vec3 &result, const mm::Vec3 &position);
   void setZComp(bool isEnable);
   void setZWrite(bool isEnable);
   void setDoubleSide(bool isEnable);
@@ -556,7 +582,13 @@ public:
   void renderRect(int x, int y, int width, int height);
   void renderRectFill(int x, int y, int width, int height);
   void renderRectFill(const mm::Rect<int> &first, const mm::Rect<int> &second);
+  void renderRectUp(const mm::Rect<int> &rect);
+  void renderRectDown(const mm::Rect<int> &rect);
+  void renderRectUpFill(const mm::Rect<int> &rect);
+  void renderRectDownFill(const mm::Rect<int> &rect);
   void renderDiamondFill(const mm::Rect<int> &rect);
+  void renderDiamondUp(const mm::Rect<int> &rect);
+  void renderDiamondDown(const mm::Rect<int> &rect);
   void renderPrim(const mm::PrimBase *prim);
   void renderPrimFill(const mm::PrimBase *prim);
   void cubeFill(const mm::Cube *cube);

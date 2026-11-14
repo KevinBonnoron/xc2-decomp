@@ -2,7 +2,7 @@
 
 namespace ml {
 
-DrResMdoSeamColi::DrResMdoSeamColi(int index) : unknown08(nullptr), unknown18(nullptr), unknown28(nullptr), unknown38(0), unknown3c(index), unknown3e(0), unknown40(0), unknown42(0) {
+DrResMdoSeamColi::DrResMdoSeamColi(int index) : unknown08(nullptr), m_cache(nullptr), unknown28(nullptr), unknown38(0), unknown3c(index), unknown3e(0), unknown40(0), unknown42(0) {
   unknown10 = nullptr;
 }
 
@@ -25,9 +25,9 @@ void DrResMdoSeamColi::release() {
   unknown28 = nullptr;
   unknown3e = 0;
   unknown42 = 0;
-  unknown18 = nullptr;
+  m_cache = nullptr;
 }
 
-void DrResMdoSeamColi::setCache(DrResMdoSeamMemObj *cache) { unknown18 = cache; }
+void DrResMdoSeamColi::setCache(DrResMdoSeamMemObj *cache) { m_cache = cache; }
 
 } // namespace ml

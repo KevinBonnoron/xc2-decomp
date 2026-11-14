@@ -1,4 +1,5 @@
 #pragma once
+#include <atomic>
 #include <stddef.h>
 
 #include "ml/critical_section.h"
@@ -21,6 +22,8 @@ class IAllocator;
 
 namespace ml {
 
+class Thread;
+
 class DevFileAccessor;
 class DevFileJobTh;
 class DevFileJob;
@@ -29,12 +32,14 @@ class IDevFileEvent;
 class IWorkEvent;
 
 enum CBM : int {
+  CBM_UNKNOWN_0 = 0, // Inferred role: no callback yet, value set by FileHandleTh::init; original name unknown.
   CBM_UNKNOWN_2 = 2,
   CBM_UNKNOWN_4 = 4,
   CBM_UNKNOWN_5 = 5,
   CBM_UNKNOWN_6 = 6,
 };
 enum MEDIA {
+  MEDIA_UNKNOWN_0 = 0, // Inferred role: path without media prefix.
   MEDIA_UNKNOWN_8 = 8, // Inferred role: media count, unset media of a DevFileArchiver list.
 };
 
@@ -69,8 +74,8 @@ void addMediaPath(MEDIA media, const char *path, int priority);
 class EventFileTh {
 public:
   enum {
-    TYPE_COMPLETE = 2,
-    TYPE_VALID = 9,
+    TYPE_UNKNOWN_2 = 2, // Inferred role: complete; original name unknown.
+    TYPE_UNKNOWN_9 = 9, // Inferred role: valid; original name unknown.
   };
 
   EventFileTh(CBM cbm, FileHandleTh *handle);
@@ -78,17 +83,17 @@ public:
   void *moveFileData();
 
   int type;
-  FileHandleTh *unknown08;     // Inferred role: file handle; original member name unknown.
-  mtl::ALLOC_HANDLE unknown10; // Inferred role: mem handle; original member name unknown.
-  void *unknown18;             // Inferred role: file size; original member name unknown.
-  const char *unknown20;       // Inferred role: path; original member name unknown.
-  void *unknown28;             // Inferred role: file data; original member name unknown.
-  s32 unknown30;               // Inferred role: read size; original member name unknown.
-  void *unknown38;             // Inferred role: event; original member name unknown.
+  FileHandleTh *unknown08; // Inferred role: file handle; original member name unknown.
+  mtl::ALLOC_HANDLE m_memHandle;
+  void *unknown18;       // Inferred role: file size; original member name unknown.
+  const char *unknown20; // Inferred role: path; original member name unknown.
+  void *unknown28;       // Inferred role: file data; original member name unknown.
+  s32 unknown30;         // Inferred role: read size; original member name unknown.
+  void *unknown38;       // Inferred role: event; original member name unknown.
 };
 
 static_assert(offsetof(EventFileTh, unknown08) == 0x08, "");
-static_assert(offsetof(EventFileTh, unknown10) == 0x10, "");
+static_assert(offsetof(EventFileTh, m_memHandle) == 0x10, "");
 static_assert(offsetof(EventFileTh, unknown38) == 0x38, "");
 
 struct DevFileParamTh {
@@ -120,6 +125,11 @@ public:
   class Impl {
   public:
     ~Impl();
+    static u32 thFileLoader(void *argument);
+    void thUpdate();
+    void releaseRequest(DevFileJobTh *job);
+    void updateCancel();
+    bool isLoadingBusy();
     FileHandleTh *checkValidFile(const char *path, IWorkEvent *event);
     bool writeFileBlock(const char *path, const void *data, u32 size, int priority);
     FileHandleTh *writeFile(const char *path, IWorkEvent *event, const void *data, int size, int priority);
@@ -152,6 +162,8 @@ public:
     void rfCancel(FileHandleTh *handle);
     bool isBusy();
     bool isLoading(FileHandleTh *handle);
+    void start();
+    void tail();
     bool isLapTimeForDebug() { return false; }
     static void enableLapTimeForDebug(bool enable) {}
 
@@ -166,21 +178,27 @@ public:
     mm::mtl::FixedList<DevFileJobTh *, 640> unknown00000; // Inferred role: waiting jobs; original member name unknown.
     mm::mtl::FixedList<DevFileJobTh *, 640> unknown02d20; // Inferred role: loading jobs; original member name unknown.
     mm::mtl::FixedList<DevFileJobTh *, 640> unknown05a40; // Inferred role: finished jobs; original member name unknown.
-    u8 _08760[0x588b0 - 0x8760];
+    u8 _08760[0x8808 - 0x8760];
+    mm::mtl::FixedVector<Thread *, 8> unknown08808; // Inferred role: file loader threads; original member name unknown.
+    u8 _08850[0x588b0 - 0x8850];
     DevFileAccessor *unknown588b0[8]; // Inferred role: accessor per media; original member name unknown.
     DevFileAccessor *unknown588f0[8]; // Inferred role: archive accessor per media; original member name unknown.
     u8 _58930[0x58934 - 0x58930];
     bool m_initialized;
     u8 _58935[0x5a348 - 0x58935];
-    IWorkEvent *unknown5a348;     // Inferred role: registered event callback; original member name unknown.
-    CriticalSection unknown5a350; // Inferred role: job lock; original member name unknown.
-    CriticalSection unknown5a378; // Inferred role: read lock; original member name unknown.
+    IWorkEvent *unknown5a348;       // Inferred role: registered event callback; original member name unknown.
+    CriticalSection unknown5a350;   // Inferred role: job lock; original member name unknown.
+    CriticalSection unknown5a378;   // Inferred role: read lock; original member name unknown.
+    std::atomic<bool> unknown5a3a0; // Inferred role: loader thread stop request; original member name unknown.
+    u8 _5a3a1[0x5a3a4 - 0x5a3a1];
+    std::atomic<s32> unknown5a3a4; // Inferred role: running loader threads; original member name unknown.
   };
 
   ~DevFileTh() override;
 
-  static const int INVALID_FILE_CHANNEL;
+  static const int INVALID_FILE_CHANNEL; // Name from the game symbol _ZN2ml9DevFileTh20INVALID_FILE_CHANNELE; also in torna and xc1de.
   static void normalizeDvdFileName(mm::mtl::FixStr<256> &fileName, const char *path);
+  static void makeMediaFileName(mm::mtl::FixStr<256> &fileName, const char *directory, const char *path);
   static FileHandleTh *checkValidFile(const char *path, IWorkEvent *event);
   static const char *getDvdRoot();
   static MEDIA getMediaType(const char *path);
@@ -206,11 +224,14 @@ public:
   static void removeAccessor(MEDIA media);
   static void registArchiveAccessor(MEDIA media, DevFileAccessor *accessor);
   static void removeArchiveAccessor(MEDIA media);
+  static const char *getSessionHioPortName();
+  static bool isLoadingBusy();
   static bool initialize();
   static bool finalize();
   static void initializeEnv(const char *path);
   static void initializePath(const char *path, bool flag);
   static void addMediaPath(MEDIA media, const char *path, int priority);
+  static void removeArchive(MEDIA media, const char *name);
   static bool removeFileJob(DevFileJob *job);
   static bool getReadingInfo(mm::mtl::FixStr<256> &name, f32 &ratio);
   static bool getWritingInfo(mm::mtl::FixStr<256> &name, f32 &ratio);
@@ -227,6 +248,8 @@ public:
   static int getFileSize(const char *path, mm::VAL64 *size);
   static bool checkValidFileBlock(const char *path);
   static void sendCommand(const char *command, const char *argument);
+  bool wkStandbyLogout() override;
+  bool wkStandbyLogin() override;
   void wkTail() override;
   void wkUpdate() override;
   bool icbError(CERR_STRUCT *error) override;
@@ -239,12 +262,15 @@ public:
 
 static_assert(offsetof(DevFileTh::Impl, unknown02d20) == 0x2d20, "");
 static_assert(offsetof(DevFileTh::Impl, unknown05a40) == 0x5a40, "");
+static_assert(offsetof(DevFileTh::Impl, unknown08808) == 0x8808, "");
 static_assert(offsetof(DevFileTh::Impl, unknown588b0) == 0x588b0, "");
 static_assert(offsetof(DevFileTh::Impl, unknown588f0) == 0x588f0, "");
 static_assert(offsetof(DevFileTh::Impl, m_initialized) == 0x58934, "");
 static_assert(offsetof(DevFileTh::Impl, unknown5a348) == 0x5a348, "");
 static_assert(offsetof(DevFileTh::Impl, unknown5a350) == 0x5a350, "");
 static_assert(offsetof(DevFileTh::Impl, unknown5a378) == 0x5a378, "");
+static_assert(offsetof(DevFileTh::Impl, unknown5a3a0) == 0x5a3a0, "");
+static_assert(offsetof(DevFileTh::Impl, unknown5a3a4) == 0x5a3a4, "");
 static_assert(offsetof(DevFileTh, unknown1c0) == 0x1c0, "");
 static_assert(offsetof(DevFileTh, unknown1c9) == 0x1c9, "");
 

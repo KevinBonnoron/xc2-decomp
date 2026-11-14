@@ -46,13 +46,13 @@ public:
   };
 
   enum Progress {
-    PROGRESS_CLOSED = 0,
-    PROGRESS_OPENED = 1,
-    PROGRESS_DUG = 2,
+    PROGRESS_UNKNOWN_0 = 0, // Inferred role: closed; original name unknown.
+    PROGRESS_UNKNOWN_1 = 1, // Inferred role: opened; original name unknown.
+    PROGRESS_UNKNOWN_2 = 2, // Inferred role: dug; original name unknown.
   };
 
-  static const GmkType GMK_TYPE = GMK_TYPE_TBOX;
-  static const int GAME_FLAG_PROGRESS = 0x7c15;
+  static const GmkType GMK_TYPE = GMK_TYPE_TBOX;     // Inferred name; shared by every gimmick class for the TGmkList templates.
+  static const int GAME_FLAG_UNKNOWN_31765 = 0x7c15; // Inferred role: game flag progress; original name unknown.
 
   u32 getProgress() const;
   GmkTbox();

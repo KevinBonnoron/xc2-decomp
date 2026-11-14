@@ -18,7 +18,7 @@ struct GfRequestBladeData {
 
 static_assert(sizeof(GfRequestBladeData) == 0x10, "");
 
-constexpr u32 MERCENARIES_LEVEL_MAX = 5;
+constexpr u32 MERCENARIES_LEVEL_UNKNOWN_5 = 5; // Inferred role: mercenaries level max; original name unknown.
 
 // Inferred role: save data mercenaries team; original type name unknown.
 struct unknown120 {
@@ -136,6 +136,7 @@ public:
   static bool getRequestBladeTextForDebug(mm::mtl::FixStr<128> &text, const GfRequestBladeData &requestBladeData);
   static bool isTeamMemberFill(u32 teamID);
   static bool isTeamMemberEmpty(u32 teamID);
+  static bool getTeamNameByTeamIDForDebug(mm::mtl::FixStr<128> &name, u32 teamID);
   static u8 getTeamMemberNum(u32 teamID);
   static bool getRequestCondition(GfRequestBladeData &requestBladeData, u32 mission, u32 task);
   static void setFullEnableOrderMissionForDebug();

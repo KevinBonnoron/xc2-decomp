@@ -24,8 +24,8 @@ void StateFieldWallMove::leave(GfComBehaviorPc *behavior, ai::State *next) {
   if (property->unknown310.unknown10_6) {
     MsgPcFieldNotifyWall message;
     message.unknown10 = property->unknown310.unknown130.unknown00;
-    message.unknown30.unknown00 = property->unknown160;
-    message.unknown30.unknown10 = property->unknown170;
+    message.unknown30.unknown00 = property->unknown160.unknown00;
+    message.unknown30.unknown10 = property->unknown160.unknown10;
     message.unknown50 = 3;
     StateUtilField::sendMessageWallChilds(*property, message);
   }
@@ -38,20 +38,20 @@ void StateFieldWallMove::update(GfComBehaviorPc *behavior, const fw::UpdateInfo 
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
   if (StateUtilField::isWallClimbEnd(*property) && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_UPLANDING_01)) {
-    reqState(STATE_ID_FIELD_WALL_CLIMB_END);
+    reqState(STATE_ID_UNKNOWN_43);
     return;
   }
-  if (comAsm->isEnd(ANIM_LAYER_BASE)) {
+  if (comAsm->isEnd(ANIM_LAYER_UNKNOWN_0)) {
     GfPropertyField::WALL_MOVE_MODE mode = StateUtilField::decideWallMoveMode(*property);
     if (StateUtilField::isMovableWall(*property, mode)) {
       if (StateUtilField::execAsmCmd(*comAsm, StateUtilField::getAsmID(mode))) {
         property->unknown310.unknown14 = mode;
-        reqState(STATE_ID_FIELD_WALL_MOVE);
+        reqState(STATE_ID_UNKNOWN_47);
         return;
       }
     } else if (StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_CLIMBIDLE)) {
-      property->unknown310.unknown14 = GfPropertyField::WALL_MOVE_MODE_INVALID;
-      reqState(STATE_ID_FIELD_WALL_IDLE);
+      property->unknown310.unknown14 = GfPropertyField::WALL_MOVE_MODE_UNKNOWN_FFFFFFFF;
+      reqState(STATE_ID_UNKNOWN_46);
       return;
     }
   }

@@ -27,7 +27,7 @@ GfDataManager::~GfDataManager() {}
 void GfDataManager::build(const GfSetupParam &param) {
   // __LINE__ must be 48 as in the original file: its value changes the instruction order.
 #line 48
-  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfDataManager(param);
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfDataManager(param);
 }
 
 void GfDataManager::destroy() {

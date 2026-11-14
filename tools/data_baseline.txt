@@ -1,0 +1,29 @@
+# The data problems that `check` accepts for now: what its data report lists (DATA, DUPLICATE, PREFIX).
+# `check --strict-data`, run by the pre-commit hook, fails on a problem that is not listed here (or listed without a
+# reason) and prints `fixed:` for a listed problem the check no longer reports.
+#
+# One problem per line: KIND SYMBOL WHERE  # reason. SYMBOL is the mangled name; WHERE is the offset in the object
+# (+0x20), `size`, or a game address (@0x...), and a DUPLICATE has none. No address of our own objects is part of a
+# line, so it survives code moving.
+# `check --write-data-baseline` rewrites this file from the report: it drops the fixed lines, adds the new ones with
+# an empty reason and keeps the other reasons. Every line needs a reason, reviewed like a code change.
+
+DATA _ZN5cloud12CloudObjFlow13FLOW_TEX_SIZEE +0x3  # known when the baseline was added, in an area of an outside contributor: byte 3 holds 42, the game's 43
+DATA _ZTVN2fw14PlaneRayCasterE +0x20  # castRay has no natural matching form: our slot at +0x20 points to Raycaster::castRay, the game's to its own PlaneRayCaster::castRay
+DATA _ZTVN2gf12GfSpeedTweenE +0x10  # weak destructor: our slot at +0x10 points to TGfTween<float>::~TGfTween, the game's to GfSpeedTween::~GfSpeedTween
+DATA _ZTVN2ui14UIInputPointerE +0x58  # known when the baseline was added, in an area of an outside contributor: slot at +0x58 refers to __cxa_pure_virtual, which the game has no symbol for
+DATA _ZTVN2ui14UILayoutObjectE +0x58  # known when the baseline was added, in an area of an outside contributor: slot at +0x58 refers to __cxa_pure_virtual, which the game has no symbol for
+DATA _ZTVN2ui15UIShapeParticleE +0x28  # known when the baseline was added, in an area of an outside contributor: slot at +0x28 points to UIShape::update, the game's UIShapeParticle::update
+DATA _ZTVN2ui18UICtrlCursorSelectE +0x20  # known when the baseline was added, in an area of an outside contributor: slot at +0x20 refers to __cxa_pure_virtual, which the game has no symbol for
+DATA _ZTVN2ui21UIObjectArrangePluginE +0x30  # known when the baseline was added, in an area of an outside contributor: slot at +0x30 points to UIObjectDispPlugin::execute, the game's UIObjectArrangePlugin::execute
+DATA _ZTVN3anm14CubicAnimationE +0x10  # known when the baseline was added, in an area of an outside contributor: slot at +0x10 is ReferenceObject::~ReferenceObject, the game's AnimationObject::~AnimationObject
+DATA _ZTVN3anm14EmptyAnimationE +0x10  # known when the baseline was added, in an area of an outside contributor: slot at +0x10 is ReferenceObject::~ReferenceObject, the game's AnimationObject::~AnimationObject
+DATA _ZTVN3anm21FootPlacementIKSolverE +0x10  # known when the baseline was added, in an area of an outside contributor: slot at +0x10 is ReferenceObject::~ReferenceObject, the game's AnimationObject::~AnimationObject
+DATA _ZTVN3btl13BattleManagerE +0x20  # known when the baseline was added, in an area of an outside contributor: slot at +0x20 is gevMapjump, the game's gevBattleStart
+DATA _ZTVN4navi14NvmshAcObjBaseE size  # known when the baseline was added, in an area of an outside contributor: the vtable has 16 bytes (two slots) less than the game's
+DATA _ZTVN4navi17NvmshAcObjBaseDefE size  # known when the baseline was added, in an area of an outside contributor: the vtable has 16 bytes (two slots) less than the game's
+DATA _ZTVN4navi17NvmshAcObjBaseGblE size  # known when the baseline was added, in an area of an outside contributor: the vtable has 16 bytes (two slots) less than the game's
+DATA _ZTVN5layer12LayerFontTagE +0x40  # known when the baseline was added, in an area of an outside contributor: slot at +0x40 points to LayerTag::callTagStart, the game's LayerFontTag::callTagStart
+DATA _ZTVN5layer15LayerFontResObjE size  # known when the baseline was added, in an area of an outside contributor: the vtable has 8 bytes (one slot) less than the game's
+DATA _ZTVN5layer17LayerObjTopLayoutE +0x60  # known when the baseline was added, in an area of an outside contributor: slot at +0x60 points to LayerActBase::updatePartsAction, the game's LayerActLayout::updatePartsAction
+DATA _ZTVN5layer18LayerObjTopMaskObjE +0x58  # known when the baseline was added, in an area of an outside contributor: slot at +0x58 points to LayerObj::applyParams, the game's LayerObjTopMaskObj::applyParams

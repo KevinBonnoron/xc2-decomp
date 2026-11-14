@@ -19,22 +19,22 @@ namespace event {
 class OutsiderManager : public IManager, public mm::mtl::Singleton<OutsiderManager> {
 public:
   enum OBJ_TYPE {
-    OBJ_TYPE_NONE = 0,
-    OBJ_TYPE_NPC = 1 << 0,
-    OBJ_TYPE_ROUTED_NPC = 1 << 1,
-    OBJ_TYPE_ENEMY = 1 << 2,
-    OBJ_TYPE_ROUTED_ENEMY = 1 << 3,
-    OBJ_TYPE_ROUTED_MAP_OBJ = 1 << 4,
-    OBJ_TYPE_MOB = 1 << 5,
-    OBJ_TYPE_ROUTED_MOB = 1 << 6,
+    OBJ_TYPE_UNKNOWN_0 = 0,        // Inferred role: none; original name unknown.
+    OBJ_TYPE_UNKNOWN_0_2 = 1 << 0, // Inferred role: npc; original name unknown.
+    OBJ_TYPE_UNKNOWN_1 = 1 << 1,   // Inferred role: routed npc; original name unknown.
+    OBJ_TYPE_UNKNOWN_2 = 1 << 2,   // Inferred role: enemy; original name unknown.
+    OBJ_TYPE_UNKNOWN_3 = 1 << 3,   // Inferred role: routed enemy; original name unknown.
+    OBJ_TYPE_UNKNOWN_4 = 1 << 4,   // Inferred role: routed map obj; original name unknown.
+    OBJ_TYPE_UNKNOWN_5 = 1 << 5,   // Inferred role: mob; original name unknown.
+    OBJ_TYPE_UNKNOWN_6 = 1 << 6,   // Inferred role: routed mob; original name unknown.
   };
 
   enum {
-    FLAG_ACTIVE = 1 << 0,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: active flag; original name unknown.
   };
 
   enum {
-    DISP_FLAG_DISP = 0,
+    DISP_FLAG_UNKNOWN_0 = 0, // Inferred role: disp flag; original name unknown.
   };
 
   OutsiderManager();

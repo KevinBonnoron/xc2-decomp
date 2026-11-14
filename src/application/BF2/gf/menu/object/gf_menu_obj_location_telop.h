@@ -19,10 +19,18 @@ public:
 
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjLocationTelop *owner) : _0c(), unknown20(owner) {}
+    // Inferred role: frame and flag of the telop; original type name unknown.
+    struct unknown001 {
+      u32 unknown00; // Inferred role: telop frame; original member name unknown.
+      u32 unknown04; // Inferred role: telop flag; original member name unknown.
+    };
+
+    MainListener(GfMenuObjLocationTelop *owner) : unknown0c(0), unknown10(), _18(), unknown20(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x1c - 0x0c];
+    int unknown0c; // Inferred role: telop state, 0 closed, 1 opened, 3 closing; original member name unknown.
+    unknown001 unknown10;
+    u8 _18[0x1c - 0x18];
     GfMenuObjLocationTelop *unknown20; // Inferred role: owner; original member name unknown.
   };
 

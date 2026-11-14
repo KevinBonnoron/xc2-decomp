@@ -4,7 +4,7 @@ namespace event {
 
 OBJTYPE ScriptUtil::getObjType(Object *object) {
   if (object == nullptr) {
-    return OBJTYPE_NONE;
+    return OBJTYPE_UNKNOWN_0;
   }
   return object->getType();
 }

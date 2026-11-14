@@ -1,5 +1,6 @@
 #include "ml/win_view_root.h"
 
+#include "ml/cache_draw.h"
 #include "ml/dev_graph.h"
 #include "ml/device.h"
 #include "ml/lib_main.h"
@@ -7,12 +8,22 @@
 #include "ml/reslist.h"
 #include "ml/win_proc_root.h"
 #include "ml/win_view.h"
+#include "ml/work_obj_flow_system_pause.h"
 #include "ml/work_root.h"
 #include "ml/work_util.h"
+#include "mm_math/mm_pnt.h"
 #include "mm_math/mm_rect.h"
 #include "mtl/alloc_handle.h"
 
 namespace ml {
+
+namespace {
+
+// Inferred role: stops WinViewRoot::renderView, set by WinViewRoot::cutOff; original name unknown. Numbered after the
+// unknown001 to unknown004 of the other files of the window.cpp unit.
+bool unknown005;
+
+} // namespace
 
 WinView *WinViewRoot::getView(u32 wid) {
   if (get() == nullptr) {
@@ -49,6 +60,22 @@ WinView *WinViewRoot::getRootView(WinView *view) {
     return view;
   }
   return getRootView(static_cast<WinView *>(parent));
+}
+
+WinView *WinViewRoot::getPointedView(const mm::Pnt<int> &pos) {
+  WinView *pointed = nullptr;
+  if (get() != nullptr) {
+    for (reslist<WorkObj *>::Node *node = get()->wkGetChild()->begin(); node != get()->wkGetChild()->end(); node = node->getNext()) {
+      WinView *view = static_cast<WinView *>(node->value);
+      if (!view->wkIsWaitException() && view->wkIsActive() && !view->wkIsShutdown()) {
+        WinView *child = view->getPointedView(pos);
+        if (child != nullptr) {
+          pointed = child;
+        }
+      }
+    }
+  }
+  return pointed;
 }
 
 WinProc *WinViewRoot::getCurrentProc() {
@@ -152,6 +179,27 @@ WinViewRoot *WinViewRoot::create(WorkObj *parent) {
   WinViewRoot *root = new (WorkUtil::getWorkMem()) WinViewRoot("WinViewRoot", parent);
   WorkRootState::entryWork(root, parent, false);
   return root;
+}
+
+void WinViewRoot::cutOff(bool cut) { unknown005 = cut; }
+
+void WinViewRoot::renderView() {
+  WinViewRoot *root = get();
+  if (root == nullptr || unknown005 || root->wkIsShutdown() || ProcDesktop::get() == nullptr) {
+    return;
+  }
+  for (reslist<WorkObj *>::Node *node = get()->wkGetChild()->begin(); node != get()->wkGetChild()->end(); node = node->getNext()) {
+    static_cast<WinView *>(node->value)->renderView();
+  }
+  f32 rate = WorkObjFlowSystemPause::getRate();
+  if (rate != 0.0f) {
+    DebDraw *draw = DebDraw::get(0xffffffff);
+    draw->setOrtho();
+    draw->setZComp(false);
+    draw->setZWrite(false);
+    draw->setCol(0.0f, 0.0f, 0.0f, rate);
+    draw->renderRectFill(0, 0, DevGraph::getRootWidth(), DevGraph::getRootHeight());
+  }
 }
 
 } // namespace ml

@@ -9,7 +9,7 @@ namespace gf {
 namespace npc {
 
 void StateIdle::update(GfComBehaviorNpc *behavior, const fw::UpdateInfo &info) {
-  if (unknown18.unknown00 != INVALID_HANDLE && !unknown18.unknown08.empty()) {
+  if (unknown18.unknown00 != unknown020 && !unknown18.unknown08.empty()) {
     unknown18.update(info.unknown04);
     if (!unknown18.unknown34) {
       return;

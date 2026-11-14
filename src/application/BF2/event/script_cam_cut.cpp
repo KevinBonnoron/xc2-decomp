@@ -12,7 +12,7 @@ namespace event {
 
 void ScriptCamCut::doit(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_CAMERA) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_3) {
     return;
   }
   ObjectCamera *camera = static_cast<ObjectCamera *>(object);
@@ -23,7 +23,7 @@ void ScriptCamCut::doit(const Param &param) {
 
 void ScriptCamCut::undo(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) == OBJTYPE_CAMERA) {
+  if (ScriptUtil::getObjType(object) == OBJTYPE_UNKNOWN_3) {
     static_cast<ObjectCamera *>(object)->setCutName(unknown08.c_str());
   }
 }

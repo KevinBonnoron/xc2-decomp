@@ -8,8 +8,8 @@ namespace ml {
 DrPixlTileParm::~DrPixlTileParm() {}
 
 void DrPixlTileParm::begin(TileType type) {
-  if (unknown04[unknown00][TILE_TYPE_MAIN].unknown00) {
-    if (type != TILE_TYPE_MAIN) {
+  if (unknown04[unknown00][TILE_TYPE_UNKNOWN_0].unknown00) {
+    if (type != TILE_TYPE_UNKNOWN_0) {
       return;
     }
   } else if (!unknown04[unknown00][type].unknown00) {
@@ -20,8 +20,8 @@ void DrPixlTileParm::begin(TileType type) {
 }
 
 void DrPixlTileParm::end(TileType type) {
-  if (unknown04[unknown00][TILE_TYPE_MAIN].unknown00) {
-    if (type != TILE_TYPE_MAIN) {
+  if (unknown04[unknown00][TILE_TYPE_UNKNOWN_0].unknown00) {
+    if (type != TILE_TYPE_UNKNOWN_0) {
       return;
     }
   } else if (!unknown04[unknown00][type].unknown00) {

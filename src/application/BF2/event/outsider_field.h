@@ -7,8 +7,8 @@ namespace event {
 class OutsiderField {
 public:
   enum TYPE {
-    TYPE_NONE,
-    TYPE_CIRCLE,
+    TYPE_UNKNOWN_0, // Inferred role: none; original name unknown.
+    TYPE_UNKNOWN_1, // Inferred role: circle; original name unknown.
   };
 
   OutsiderField();

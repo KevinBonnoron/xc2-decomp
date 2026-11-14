@@ -2,7 +2,7 @@
 
 namespace ml {
 
-bool DrCalcClipWork::clipLineTest(const mm::Vec3 &start, const mm::Vec3 &end, f32 radius) const { return false; }
+bool DrCalcClipWork::clipLineTest(const mm::Vec3 &start, const mm::Vec3 &direction, f32 radius) const { return false; }
 
 bool DrCalcClipWork::clipTest(const f32 *min, const f32 *max) const { return false; }
 

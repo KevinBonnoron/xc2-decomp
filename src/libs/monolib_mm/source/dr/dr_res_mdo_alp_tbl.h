@@ -33,12 +33,15 @@ public:
   DrResMdoAlpTbl();
   ~DrResMdoAlpTbl();
   int setup(const u8 *resource, u8 *work);
+  int setupCnt(u32 count, u8 *work);
   void updateInstace();
   void update(f32 alpha, const DrResMdoLodObj *lodObj, const DrResMdoMeshObj *meshObj);
   void update();
   static void release(DrResMdoAlpTbl *&table);
   static int calcCntWorkSize(u32 count);
+  static int calcWorkSize(const u8 *resource);
   static int create(u8 *work, const u8 *resource);
+  static int createCnt(u8 *work, u32 count);
 
   f32 *unknown30;              // Inferred role: alpha values; original member name unknown.
   u32 *unknown38;              // Inferred role: inverted alpha bits; original member name unknown.

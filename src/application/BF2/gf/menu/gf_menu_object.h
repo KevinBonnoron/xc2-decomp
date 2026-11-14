@@ -29,8 +29,8 @@ struct Param;
 class GfMenuObject : public mm::mtl::IntrusiveListNode<GfMenuObject> {
 public:
   enum FLAG {
-    FLAG_INITIALIZED = 1 << 0,
-    FLAG_FINALIZED = 1 << 1,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: initialized; original enumerator name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: finalized; original enumerator name unknown.
   };
 
   GfMenuObject(u32 handle);
@@ -104,7 +104,7 @@ public:
   static void disableFSSwitching();
   static void overrideFadeOutTime(u32 frame);
   static void clearLayerStatck(u32 handle, u16 group);
-  static void registTimer(u32 handle, u16 id, f32 time, bool repeat);
+  static u32 registTimer(u32 handle, u16 id, f32 time, bool repeat);
   static void releaseTimer(u32 handle);
   static void setTimerSpeedFactor(u32 handle, f32 speedFactor);
   static void setText(u32 handle, u16 id);
@@ -290,6 +290,23 @@ inline void unknown158(u32 handle, u16 type, u32 param, f32 delay) {
   event.unknown00 = type;
   event.unknown08 = param;
   ui::UIManager::get()->requestObjectEvent(handle, event, delay);
+}
+
+// Inferred helper: requests an event with its first parameter on a UI object, the second parameter cleared first (unlike
+// unknown158, which leaves it to the event's constructor); original name unknown.
+inline void unknown163(u32 handle, u16 type, u32 param) {
+  ui::EventData event;
+  event.unknown0c = 0;
+  event.unknown00 = type;
+  event.unknown08 = param;
+  ui::UIManager::get()->requestObjectEvent(handle, event, 0.0f);
+}
+
+// Inferred helper: requests an event with only its type on a UI object (parameters left to the event's constructor); original name unknown.
+inline void unknown164(u32 handle, u16 type) {
+  ui::EventData event;
+  event.unknown00 = type;
+  ui::UIManager::get()->requestObjectEvent(handle, event, 0.0f);
 }
 
 // Inferred helper: requests an event with a parameter on the object attached to a call unless it is terminating; original name unknown.

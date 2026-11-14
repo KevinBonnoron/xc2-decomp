@@ -6,6 +6,7 @@
 #include "gf/data/gf_data_manager.h"
 #include "gf/data/gf_data_mercenaries.h"
 #include "gf/data/gf_data_option.h"
+#include "gf/field/gf_real_time.h"
 #include "gf/game/gf_game_util_save_data.h"
 #include "gf/gf_allocator.h"
 #include "gf/gf_manager.h"
@@ -26,11 +27,11 @@ void GfGameSave::destroySaveData() {
   if (saveData != nullptr) {
     saveData->unknown10.unknown109b30.clear();
     saveData->unknown10.unknown1098c8.unknown00.clear();
-    getAllocator(ALLOCATOR_DEFAULT)->deallocate(unknown10);
+    getAllocator(ALLOCATOR_UNKNOWN_0)->deallocate(unknown10);
     unknown10 = nullptr;
   }
   if (unknown18 != nullptr) {
-    getAllocator(ALLOCATOR_DEFAULT)->deallocate(unknown18);
+    getAllocator(ALLOCATOR_UNKNOWN_0)->deallocate(unknown18);
     unknown18 = nullptr;
   }
 }
@@ -75,7 +76,7 @@ void GfGameSave::execGameSaveWithMicroThread() {
 }
 
 void GfGameSave::createGameSaveData(mm::mtl::FixStr<256> &path) {
-  void *buffer = getAllocator(ALLOCATOR_DEFAULT)->allocate(sizeof(SDataSave), 16);
+  void *buffer = getAllocator(ALLOCATOR_UNKNOWN_0)->allocate(sizeof(SDataSave), 16);
   unknown10 = new (buffer) SDataSave();
   GfGameUtilSaveData::setupGameSaveData(*unknown10);
   unknown20 = unknown10;
@@ -85,7 +86,7 @@ void GfGameSave::createGameSaveData(mm::mtl::FixStr<256> &path) {
   _gfgsv::s_SDataSave.unknown00 = unknown10->unknown00;
   _gfgsv::s_SDataSave.unknown08 = unknown10->unknown08;
   _gfgsv::s_SDataSave.unknown10 = unknown10->unknown10;
-  if (unknown0c == SAVESLOT_DEFAULT) {
+  if (unknown0c == SAVESLOT_UNKNOWN_22) {
     GfManager::setSaveDataCreated();
     GfGameUtilSaveData::setTitleSaveData(_gfgsv::s_SDataSave);
   }
@@ -101,7 +102,7 @@ void GfGameSave::execOptionSaveWithMicroThread() {
 }
 
 void GfGameSave::createOptionSaveData(mm::mtl::FixStr<256> &path) {
-  void *buffer = getAllocator(ALLOCATOR_DEFAULT)->allocate((sizeof(SDataOption) + 15) & ~15, 16);
+  void *buffer = getAllocator(ALLOCATOR_UNKNOWN_0)->allocate((sizeof(SDataOption) + 15) & ~15, 16);
   unknown18 = new (buffer) SDataOption();
   if (!GfManager::isExecModeThater() && !GfManager::isExecModeAdvertize()) {
     GfGameUtilSaveData::setupOptionSaveData(*unknown18);

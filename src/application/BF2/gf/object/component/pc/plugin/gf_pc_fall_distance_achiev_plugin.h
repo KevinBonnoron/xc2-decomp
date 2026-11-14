@@ -25,6 +25,8 @@ class FallDistanceAchievPlugin : public Plugin {
   GF_PLUGIN(GfComBehaviorPc)
 
 public:
+  static const u32 PLUGIN_INDEX = 21;
+
   FallDistanceAchievPlugin();
   static FallDistanceAchievPlugin *create();
   ~FallDistanceAchievPlugin();

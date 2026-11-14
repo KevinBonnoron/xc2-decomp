@@ -88,10 +88,10 @@ CommonResource *CommonResource::blockRequest(mtl::ALLOC_HANDLE handle, const cha
 CommonResource *CommonResource::blockRequest(mm::mtl::IAllocator *allocator, const char *path, bool isSafe) { return request_detail(allocator, path, 10, isSafe, true); }
 
 CommonResource::CommonResource(mtl::ALLOC_HANDLE handle, LOAD_PRIO priority, u32 type, int option)
-    : ResourceObject(type, handle, priority, option), unknownb0(STATE_NONE), unknownb4(false), unknownb8(nullptr), unknownc0(nullptr) {}
+    : ResourceObject(type, handle, priority, option), unknownb0(STATE_UNKNOWN_0), unknownb4(false), unknownb8(nullptr), unknownc0(nullptr) {}
 
 CommonResource::CommonResource(mm::mtl::IAllocator *allocator, LOAD_PRIO priority, u32 type, int option)
-    : ResourceObject(type, allocator, priority, option), unknownb0(STATE_NONE), unknownb4(false), unknownb8(nullptr), unknownc0(nullptr) {}
+    : ResourceObject(type, allocator, priority, option), unknownb0(STATE_UNKNOWN_0), unknownb4(false), unknownb8(nullptr), unknownc0(nullptr) {}
 
 CommonResource::~CommonResource() {
   if (unknownb8 != nullptr) {
@@ -109,9 +109,9 @@ CommonResource::~CommonResource() {
 }
 
 void CommonResource::update() {
-  while (unknownb0 != STATE_LOADED) {
+  while (unknownb0 != STATE_UNKNOWN_2) {
     switch (unknownb0) {
-    case STATE_NONE:
+    case STATE_UNKNOWN_0:
       if (unknown10.isValid()) {
         unknownc0 = AssetData::CreateFromCache(unknown10, unknown2c.c_str());
       } else if (unknown18 != nullptr) {
@@ -123,7 +123,7 @@ void CommonResource::update() {
           ResourceManager::get()->addSafeObject(unknownc0, static_cast<eResourceType>(0));
         }
 
-        unknownb0 = STATE_LOADED;
+        unknownb0 = STATE_UNKNOWN_2;
       } else {
         mm::mtl::FixStr<256> fileName;
         ml::DevFileTh::normalizeDvdFileName(fileName, unknown2c.c_str());
@@ -136,9 +136,9 @@ void CommonResource::update() {
         unknownb0 = static_cast<State>(unknownb0 + 1);
       }
       break;
-    case STATE_LOADING:
+    case STATE_UNKNOWN_1:
       if (unknownb8 == nullptr) {
-        unknownb0 = STATE_LOADED;
+        unknownb0 = STATE_UNKNOWN_2;
         break;
       }
 
@@ -188,7 +188,7 @@ const char *CommonResource::getMemName() {
   return "undifine memory";
 }
 
-bool CommonResource::valid() const { return unknownb0 == STATE_LOADED; }
+bool CommonResource::valid() const { return unknownb0 == STATE_UNKNOWN_2; }
 
 void *CommonResource::getAssetData() {
   if (unknownc0 != nullptr) {

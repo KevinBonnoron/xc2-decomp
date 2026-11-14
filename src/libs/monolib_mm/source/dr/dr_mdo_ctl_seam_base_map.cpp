@@ -5,10 +5,12 @@
 #include "dr/dr_man.h"
 #include "dr/dr_pixl_shadow_cache_obj.h"
 #include "dr/dr_res_mdo_seam_mem_man.h"
+#include "dr/dr_res_mdo_seam_parm_read.h"
 #include "dr/dr_res_mdo_seam_wrk_base.h"
 #include "grlib/cglib_etc_uniform_block.h"
 #include "grlib/shd_util.h"
 #include "mm_math/mm_mat44.h"
+#include "mm_math/mm_vec3.h"
 
 namespace ml {
 class DrResMdoSeamMemObj;
@@ -40,7 +42,7 @@ void DrMdoCtlSeamBaseMap::releaseFreeSeamBase(DrResMdoSeamWrkBase *base) {
   if (base->unknown68 != nullptr) {
     mem = base->unknown158;
     unknownb50[base->unknown84 >> 5] &= ~(1 << (base->unknown84 & 0x1f));
-    unknownb60[base->unknown84 >> 5] &= ~(1 << (base->unknown84 & 0x1f));
+    unknownb60.unknown00[base->unknown84 >> 5] &= ~(1 << (base->unknown84 & 0x1f));
     unknownc40 -= base->unknownb4;
     releaseBaseMapSeamMat(base->unknown68);
     base->releaseCache(this);
@@ -122,6 +124,36 @@ void DrMdoCtlSeamBaseMap::callBaseShadowCacheRender(DrPixlShadowCacheObj &cache)
     unknownc90 &= ~cache.unknown8e8;
   } else {
     unknownc90 |= cache.unknown8e8;
+  }
+}
+
+void DrMdoCtlSeamBaseMap::checkBaseMapMode() {
+  const unknown700 *entry = reinterpret_cast<const unknown700 *>(reinterpret_cast<const u8 *>(unknown1a8) + unknown1a8->unknown1c);
+  for (s32 i = 0; i < unknown1a8->m_seamBaseMdlMax; i++, entry++) {
+    if (entry->unknown28 & 1) {
+      if (entry->unknown00[0] >= unknownd30.unknown50.x && entry->unknown0c[0] <= unknownd30.unknown50.x && entry->unknown00[2] >= unknownd30.unknown50.z &&
+          entry->unknown0c[2] <= unknownd30.unknown50.z && entry->unknown00[1] + 500.0f >= unknownd30.unknown50.y && entry->unknown0c[1] - 400.0f <= unknownd30.unknown50.y) {
+        unknownc7c |= 0x80;
+        unknownc22 = 0;
+        if (entry->unknown00[0] - unknownd30.unknown50.x >= 160.0f && entry->unknown00[2] - unknownd30.unknown50.z >= 160.0f && unknownd30.unknown50.x - entry->unknown0c[0] >= 160.0f &&
+            unknownd30.unknown50.z - entry->unknown0c[2] >= 160.0f && entry->unknown00[1] + 350.0f >= unknownd30.unknown50.y) {
+          unknownc7c |= 0x100;
+          unknownc24 = 0;
+        }
+      }
+      return;
+    }
+  }
+}
+
+void DrMdoCtlSeamBaseMap::basemapReadCheck() {
+  bool isRead = false;
+  if (unknownc00 < 5 && (unknownc7c & 0x1000) == 0 && readBaseModelCheck(isRead, unknownd30.unknown50, true) && unknownd30.unknown40 > 0) {
+    for (s32 i = 0; i < unknownd30.unknown40; i++) {
+      if (!readBaseModelCheck(isRead, unknownd30.unknown10[i], false)) {
+        return;
+      }
+    }
   }
 }
 

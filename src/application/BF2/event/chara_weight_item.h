@@ -12,24 +12,24 @@ class GfObj;
 namespace event {
 
 enum WeightLayer {
-  WEIGHT_LAYER_PLAY = 0,
-  WEIGHT_LAYER_WINK = 1,
+  WEIGHT_LAYER_UNKNOWN_0 = 0, // Inferred role: play; original name unknown.
+  WEIGHT_LAYER_UNKNOWN_1 = 1, // Inferred role: wink; original name unknown.
   WEIGHT_LAYER_MAX = 2,
 };
 
 class CharaWeightItem {
 public:
   enum {
-    FLAG_EASE_IN = 0,
-    FLAG_ACTIVE = 1,
-    FLAG_MAX = 32,
+    FLAG_UNKNOWN_0 = 0,   // Inferred role: ease in flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1,   // Inferred role: active flag; original name unknown.
+    FLAG_UNKNOWN_32 = 32, // Inferred role: max flag; original name unknown.
   };
 
   CharaWeightItem() : unknown08(), m_stat(""), unknown238(0.0f) {
-    unknown23c[WEIGHT_LAYER_PLAY] = 1.0f;
-    unknown23c[WEIGHT_LAYER_WINK] = 1.0f;
-    unknown244[WEIGHT_LAYER_PLAY] = 1.0f;
-    unknown244[WEIGHT_LAYER_WINK] = 1.0f;
+    unknown23c[WEIGHT_LAYER_UNKNOWN_0] = 1.0f;
+    unknown23c[WEIGHT_LAYER_UNKNOWN_1] = 1.0f;
+    unknown244[WEIGHT_LAYER_UNKNOWN_0] = 1.0f;
+    unknown244[WEIGHT_LAYER_UNKNOWN_1] = 1.0f;
   }
 
   virtual ~CharaWeightItem() {}
@@ -44,8 +44,8 @@ public:
   void setAddWeight(f32 weight, WeightLayer layer);
 
 private:
-  mm::mtl::unknown027<FLAG_MAX> unknown08; // Inferred role: flags; original member name unknown.
-  gf::AnimLayer unknown0c;                 // Inferred role: layer; original member name unknown.
+  mm::mtl::unknown027<FLAG_UNKNOWN_32> unknown08; // Inferred role: flags; original member name unknown.
+  gf::AnimLayer unknown0c;                        // Inferred role: layer; original member name unknown.
   const char *m_stat;
   AnmF32 unknown18[WEIGHT_LAYER_MAX]; // Inferred role: weight anms; original member name unknown.
   f32 unknown238;                     // Inferred role: weight; original member name unknown.

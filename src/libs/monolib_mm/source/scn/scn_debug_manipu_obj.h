@@ -17,12 +17,12 @@ class EventView;
 class Scn;
 
 enum SCNMANIPU {
-  SCNMANIPU_NONE = -1,
-  SCNMANIPU_TRANS,
-  SCNMANIPU_ROT,
-  SCNMANIPU_SCALE,
-  SCNMANIPU_TRANS_2D,
-  SCNMANIPU_SCALE_2D,
+  SCNMANIPU_UNKNOWN_FFFFFFFF = -1, // Inferred role: none; original name unknown.
+  SCNMANIPU_UNKNOWN_0,             // Inferred role: trans; original name unknown.
+  SCNMANIPU_UNKNOWN_1,             // Inferred role: rot; original name unknown.
+  SCNMANIPU_UNKNOWN_2,             // Inferred role: scale; original name unknown.
+  SCNMANIPU_UNKNOWN_3,             // Inferred role: trans 2d; original name unknown.
+  SCNMANIPU_UNKNOWN_4,             // Inferred role: scale 2d; original name unknown.
 };
 
 enum SCNAXIS {};

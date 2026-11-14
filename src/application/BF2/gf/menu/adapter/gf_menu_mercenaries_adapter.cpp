@@ -67,7 +67,7 @@ GfMenuMercenariesAdapter *GfMenuMercenariesAdapter::create(u32 handle, u32 type,
     if (plugin != nullptr) {
       // __LINE__ must be 150 as in the original source: it is the line argument of operator new.
 #line 150
-      GfMenuMercenariesAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuMercenariesAdapter(plugin, isUpdateAlways);
+      GfMenuMercenariesAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuMercenariesAdapter(plugin, isUpdateAlways);
       adapter->unknown30.bind(adapter, info.update);
       adapter->unknown58 = teamId;
       plugin->release();
@@ -99,7 +99,7 @@ bool GfMenuMercenariesAdapter::update_TeamBlFace() {
   if (leader == 0) {
     return false;
   }
-  DataParamAcc acc(OBJECT_TYPE_BLADE, leader, GIMMICK_TYPE_NONE);
+  DataParamAcc acc(OBJECT_TYPE_BLADE, leader, GIMMICK_TYPE_UNKNOWN_0);
   if (!acc.isValid()) {
     return false;
   }
@@ -322,7 +322,7 @@ bool GfMenuMercenariesAdapter::update_TeamFieldSkillDiffIcon() {
       GfMenuFieldSkillList *list = GfMenuFieldSkillList::create();
       if (list != nullptr) {
         ui::UIListInfoBase::SetupParam param;
-        list->setup(getAllocator(ALLOCATOR_DEFAULT), param);
+        list->setup(getAllocator(ALLOCATOR_UNKNOWN_0), param);
         for (u16 member : team->unknown00) {
           list->addFieldSkillFromBlade(member);
         }
@@ -354,7 +354,7 @@ bool GfMenuMercenariesAdapter::update_TeamNameRes() {
   u32 index = unknown70 + offset;
   switch (GfMenuReference::getReferenceNumber(0)) {
   case 0: {
-    DataParamAcc acc(OBJECT_TYPE_DRIVER, GfDataParty::getPartyMember(index)->unknown00, GIMMICK_TYPE_NONE);
+    DataParamAcc acc(OBJECT_TYPE_PC, GfDataParty::getPartyMember(index)->unknown00, GIMMICK_TYPE_UNKNOWN_0);
     if (!acc.isValid()) {
       return false;
     }
@@ -395,7 +395,7 @@ bool GfMenuMercenariesAdapter::update_TeamIconResFace() {
     u32 offset = unknown60->getRowOffset();
     u32 index = unknown70;
     if (GfMenuReference::getReferenceNumber(0) == 0) {
-      DataParamAcc acc(OBJECT_TYPE_DRIVER, GfDataParty::getPartyMember(index + offset)->unknown00, GIMMICK_TYPE_NONE);
+      DataParamAcc acc(OBJECT_TYPE_PC, GfDataParty::getPartyMember(index + offset)->unknown00, GIMMICK_TYPE_UNKNOWN_0);
       if (acc.isValid()) {
         setNumber(GfMenuBdat::getIconImageIndex(acc.getIconData()));
         return true;
@@ -418,7 +418,7 @@ GfMenuMercenariesAdapter *GfMenuMercenariesAdapter::createFromCoverter(u32 handl
 GfMenuMercenariesAdapter *GfMenuMercenariesAdapter::createFromReferenceTeam(u32 handle, u32 type, bool isUpdateAlways) {
   // __LINE__ must be 178 as in the original source: it is the line argument of operator new.
 #line 178
-  ReferenceTeamConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceTeamConverter();
+  ReferenceTeamConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceTeamConverter();
   GfMenuMercenariesAdapter *adapter = create(handle, type, GfMenuReference::getReferenceTeamID(), isUpdateAlways);
   if (adapter != nullptr) {
     adapter->unknown50 = converter;
@@ -429,7 +429,7 @@ GfMenuMercenariesAdapter *GfMenuMercenariesAdapter::createFromReferenceTeam(u32 
 GfMenuMercenariesAdapter *GfMenuMercenariesAdapter::createFromReferenceTeamBladeList(u32 handle, u32 type, GfMenuBladeList *list, bool isUpdateAlways) {
   // __LINE__ must be 186 as in the original source: it is the line argument of operator new.
 #line 186
-  ReferenceTeamConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceTeamConverter();
+  ReferenceTeamConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceTeamConverter();
   GfMenuMercenariesAdapter *adapter = create(handle, type, GfMenuReference::getReferenceTeamID(), isUpdateAlways);
   if (adapter != nullptr) {
     adapter->unknown50 = converter;
@@ -442,7 +442,7 @@ GfMenuMercenariesAdapter *GfMenuMercenariesAdapter::createFromReferenceTeamBlade
 GfMenuMercenariesAdapter *GfMenuMercenariesAdapter::createFromReferenceTeamFieldSkillList(u32 handle, u32 type, GfMenuFieldSkillList *list, u32 index, bool isUpdateAlways) {
   // __LINE__ must be 200 as in the original source: it is the line argument of operator new.
 #line 200
-  ReferenceTeamConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceTeamConverter();
+  ReferenceTeamConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceTeamConverter();
   GfMenuMercenariesAdapter *adapter = create(handle, type, GfMenuReference::getReferenceTeamID(), isUpdateAlways);
   if (adapter != nullptr) {
     adapter->unknown50 = converter;
@@ -466,7 +466,7 @@ GfMenuMercenariesAdapter *GfMenuMercenariesAdapter::createFromBladeList(u32 hand
 GfMenuMercenariesAdapter *GfMenuMercenariesAdapter::createFromReferenceBlade(u32 handle, u32 type, u32 index, bool isUpdateAlways) {
   // __LINE__ must be 232 as in the original source: it is the line argument of operator new.
 #line 232
-  ReferenceBladeConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceBladeConverter(index);
+  ReferenceBladeConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceBladeConverter(index);
   u32 blade = GfMenuReference::getReferenceBladeID(index);
   u32 teamId = 0;
   if (blade != 0) {
@@ -498,9 +498,9 @@ void GfMenuMercenariesAdapter::update(const fw::UpdateInfo &info) {
   if (unknown68 != nullptr && (unknown68->contentsChanged || unknown68->unknown30)) {
     setChange();
   }
-  if (unknown30.isValid() && (unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
+  if (unknown30.isValid() && (unknown20 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) != 0) {
     setDisp(unknown58 != 0 ? unknown30() : false);
-    unknown20 &= ~FLAG_CHANGED;
+    unknown20 &= ~FLAG_UNKNOWN_0;
   }
 }
 

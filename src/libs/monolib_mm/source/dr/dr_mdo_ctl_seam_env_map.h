@@ -13,6 +13,8 @@ public:
   DrMdoCtlSeamEnvMap(int viewNum);
   void releaseEnvMap();
   void releaseFreeSeamEnvMap(DrResMdoSeamWrkEnv *env);
+  void initEnvMapParts(DrResMdoSeamWrkEnv *env);
+  void changeMemEnvMapParts(DrResMdoSeamWrkEnv *env);
   DrResMdoSeamWrkEnv *createFreeSeamEnvMap();
   void updateEnvMap();
   void readEnvMapCheck();

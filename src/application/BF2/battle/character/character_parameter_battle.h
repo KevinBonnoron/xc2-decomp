@@ -343,10 +343,10 @@ public:
   bool IsPlayerParameter() const override { return true; }
   int GetBladeChangeType() const override { return m_bladeChangeType; }
 
-  ARTS_PALETTE_DATA *unknown5e8;             // Inferred role: arts palettes; original member name unknown.
-  u32 unknown5f0[gf::WEAPON_TYPE_COUNT + 1]; // Inferred role: use weapon counts; original member name unknown.
-  u32 unknown65c;                            // Inferred role: total weapon use; original member name unknown.
-  int unknown660;                            // Inferred role: pouch damage armor; original member name unknown.
+  ARTS_PALETTE_DATA *unknown5e8;                  // Inferred role: arts palettes; original member name unknown.
+  u32 unknown5f0[gf::WEAPON_TYPE_UNKNOWN_26 + 1]; // Inferred role: use weapon counts; original member name unknown.
+  u32 unknown65c;                                 // Inferred role: total weapon use; original member name unknown.
+  int unknown660;                                 // Inferred role: pouch damage armor; original member name unknown.
   u8 m_artsPaletteNum;
   u8 m_bladeChangeType;
 };

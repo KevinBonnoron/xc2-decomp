@@ -37,7 +37,7 @@ template <typename T> static T *castSolver(const mm::mtl::IntrusivePtr<fw::IkSol
 }
 
 GfFieldLookIk::GfFieldLookIk(GF_OBJ_HANDLE *handle) {
-  if (handle != INVALID_HANDLE) {
+  if (handle != unknown020) {
     create(handle);
   }
 }
@@ -53,11 +53,11 @@ void GfFieldLookIk::create(GF_OBJ_HANDLE *handle, const CBdatWrapper &bdat, int 
 
   dispose();
   unknown00 = handle;
-  u8 lookAt = bdat.getValCheck("LookAt", id, gmk::BDAT_TYPE_U8);
+  u8 lookAt = bdat.getValCheck("LookAt", id, gmk::BDAT_TYPE_UNKNOWN_1);
   if (lookAt == 0) {
     unknown1c = false;
   } else {
-    unknown0c = static_cast<u16>(bdat.getValCheck("LookAtRange", id, gmk::BDAT_TYPE_U16));
+    unknown0c = static_cast<u16>(bdat.getValCheck("LookAtRange", id, gmk::BDAT_TYPE_UNKNOWN_2));
     if (lookAt > 2) {
       dispose();
       return;
@@ -69,9 +69,9 @@ void GfFieldLookIk::create(GF_OBJ_HANDLE *handle, const CBdatWrapper &bdat, int 
 
 void GfFieldLookIk::dispose() {
   unknown30 = false;
-  if (unknown00 != INVALID_HANDLE) {
+  if (unknown00 != unknown020) {
     GfObjAcc acc(unknown00);
-    if (!acc.isDestroy() && !acc.testFlag(OBJ_FLAG_UI_HIDDEN)) {
+    if (!acc.isDestroy() && !acc.testFlag(OBJ_FLAG_UNKNOWN_17)) {
       GfObj *obj = acc.getObj();
       if (obj != nullptr) {
         GfComIK *ik = obj->getComponent<GfComIK>();
@@ -84,12 +84,12 @@ void GfFieldLookIk::dispose() {
         }
       }
     }
-    unknown00 = INVALID_HANDLE;
+    unknown00 = unknown020;
   }
 }
 
 void GfFieldLookIk::update(f32 deltaTime) {
-  if (unknown00 == INVALID_HANDLE || !unknown1c) {
+  if (unknown00 == unknown020 || !unknown1c) {
     return;
   }
 

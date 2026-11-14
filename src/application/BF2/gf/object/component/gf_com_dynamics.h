@@ -26,12 +26,12 @@ class GfComDynamics : public GfComponent {
 public:
   static mm::mtl::RTTI m_rtti;
   static const u32 COMPONENT_INDEX = 8;
-  static const u32 ITERATION_COUNT_DEFAULT = 6;
-  static const u32 ITERATION_COUNT_MAX = 30;
+  static const u32 ITERATION_UNKNOWN_6 = 6;   // Inferred role: iteration count default; original name unknown.
+  static const u32 ITERATION_UNKNOWN_30 = 30; // Inferred role: iteration count max; original name unknown.
 
   enum {
-    ASM_ATTRIBUTE_LIMIT_MOVEMENT = 1 << 2,
-    ASM_ATTRIBUTE_MAX_ITERATION = 1 << 6,
+    ASM_ATTRIBUTE_UNKNOWN_2 = 1 << 2, // Inferred role: asm attribute limit movement; original name unknown.
+    ASM_ATTRIBUTE_UNKNOWN_6 = 1 << 6, // Inferred role: asm attribute max iteration; original name unknown.
   };
 
   struct SetupInfo {

@@ -14,7 +14,7 @@ class ModelObject;
 
 class ModelManager : public ManagerObject, public mm::mtl::PtrSingleton<ModelManager> {
 public:
-  static const u32 LAYER_MAX = 32;
+  static const u32 LAYER_UNKNOWN_32 = 32; // Inferred role: maximum number of layers; original name unknown.
 
   struct Group {
     mm::mtl::IntrusiveList<ModelObject> unknown00; // Inferred role: models; original member name unknown.
@@ -22,7 +22,7 @@ public:
 
   virtual void update(const UpdateInfo &info, u32 layer);
 
-  mm::mtl::FixedArray<Group, LAYER_MAX> unknown18; // Inferred role: groups; original member name unknown.
+  mm::mtl::FixedArray<Group, LAYER_UNKNOWN_32> unknown18; // Inferred role: groups; original member name unknown.
 };
 
 static_assert(sizeof(ModelManager::Group) == 0x18, "");

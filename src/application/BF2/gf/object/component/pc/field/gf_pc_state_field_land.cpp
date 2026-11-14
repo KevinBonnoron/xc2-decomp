@@ -39,28 +39,28 @@ void StateFieldLand::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &inf
   if (!property->unknown111_2 || !GfGameManager::isGmkTutorialSequenceOK()) {
     if (property->existInputXY() && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_MOVE)) {
       if (!StateUtilField::isInputInverseDir(*property)) {
-        reqState(STATE_ID_FIELD_MOVE);
+        reqState(STATE_ID_UNKNOWN_7);
       } else {
-        reqState(STATE_ID_FIELD_IDLE_TURN);
+        reqState(STATE_ID_UNKNOWN_4);
       }
       return;
     }
 
     if (!property->unknown110_4 && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_FALL)) {
-      reqState(STATE_ID_FIELD_FALL);
+      reqState(STATE_ID_UNKNOWN_15);
       return;
     }
 
-    if (property->unknown60.unknown08.test(INPUT_ID_JUMP) && property->unknown310.unknown12_1 && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_JUMP)) {
+    if (property->unknown60.unknown08.test(INPUT_ID_UNKNOWN_2) && property->unknown310.unknown12_1 && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_JUMP)) {
       property->unknownc0 = 0.0f;
-      reqState(STATE_ID_FIELD_JUMP);
+      reqState(STATE_ID_UNKNOWN_12);
       return;
     }
   }
 
   MoveUtilField::updateLandBrake(info, *property);
-  if (comAsm->isEnd(ANIM_LAYER_BASE) && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_IDLE)) {
-    reqState(STATE_ID_FIELD_IDLE);
+  if (comAsm->isEnd(ANIM_LAYER_UNKNOWN_0) && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_IDLE)) {
+    reqState(STATE_ID_UNKNOWN_3);
   }
 }
 

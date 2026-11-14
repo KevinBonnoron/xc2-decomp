@@ -32,6 +32,7 @@ public:
   void createTexture(const void *data);
   void releaseTexture();
   void release();
+  static bool isTexFormat(const void *data);
   grlib::CGLibTextureBuffer *getTextureID(u32 id);
   grlib::CGLibTextureBuffer *getTextureName(const char *name);
 

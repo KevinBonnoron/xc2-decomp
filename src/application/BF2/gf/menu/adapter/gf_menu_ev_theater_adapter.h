@@ -13,6 +13,8 @@ class UIObjectPlugin;
 
 namespace gf {
 
+class GfMenuIDList;
+
 class GfMenuEvTherterAdapter : public GfMenuAdapter {
 public:
   struct TypeInfo {
@@ -42,6 +44,7 @@ public:
   bool update_Thumb(u32 evTheater);
   static GfMenuEvTherterAdapter *createFromCoverter(u32 handle, u32 type, IConverter *converter, bool isUpdateAlways);
   static GfMenuEvTherterAdapter *createFromReference(u32 handle, u32 type, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number, bool isUpdateAlways);
+  static GfMenuEvTherterAdapter *createFromList(u32 handle, u32 type, GfMenuIDList *list, int listIndex, bool isUpdateAlways);
   void update(const fw::UpdateInfo &info) override;
 
   mm::mtl::Delegate<bool(u32)> unknown30; // Inferred role: updater; original member name unknown.

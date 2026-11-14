@@ -272,7 +272,7 @@ void GfBehaviorEnemyField::createSquadNavi() {
     GF_OBJ_HANDLE *handle = unknown08.unknown08;
     info.unknown08 = handle;
     GfObjUtil::getObjSetup<GfObjSetupEnemy>(handle);
-    if (info.unknown00 != nullptr && info.unknown08 != INVALID_HANDLE) {
+    if (info.unknown00 != nullptr && info.unknown08 != unknown020) {
       unknown50.create(info);
     }
   }
@@ -297,14 +297,14 @@ void GfBehaviorEnemyField::disposeNaviMeshObj() {
 }
 
 void GfBehaviorEnemyField::update(f32 deltaTime) {
-  if (unknown08.unknown00 == nullptr || unknown08.unknown08 == INVALID_HANDLE) {
+  if (unknown08.unknown00 == nullptr || unknown08.unknown08 == unknown020) {
     return;
   }
 
   unknowna0.z = 0.0f;
   unknowna0.x = 0.0f;
   fw::ColiMoveObject *coli = getColiObject();
-  if (coli == nullptr || coli->testAttribute(fw::COLI_ATRR_UNKNOWN_0) || coli->unknown30 == fw::COLI_TYPE_STATIC || !unknown90) {
+  if (coli == nullptr || coli->testAttribute(fw::COLI_ATRR_UNKNOWN_0) || coli->unknown30 == fw::COLI_TYPE_UNKNOWN_0 || !unknown90) {
     unknowna0.y = 0.0f;
   } else {
     unknowna0.y += deltaTime * -9.8f;
@@ -358,7 +358,7 @@ void GfBehaviorEnemyField::update(f32 deltaTime) {
 }
 
 void GfBehaviorEnemyField::updateNaviMeshObj(f32 deltaTime) {
-  if (unknown40 != nullptr && (unknown40->unknown10 & 2) != 0 && unknown1d0.unknown00 != INVALID_HANDLE && !isArrivedToGoal()) {
+  if (unknown40 != nullptr && (unknown40->unknown10 & 2) != 0 && unknown1d0.unknown00 != unknown020 && !isArrivedToGoal()) {
     const mm::Vec3 &position = unknown08.unknown00->getTransform().unknown00;
     unknown40->setBeginPos(position);
     unknown40->setEndPos(unknownc0);

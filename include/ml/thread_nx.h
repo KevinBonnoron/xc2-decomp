@@ -12,8 +12,8 @@ namespace ml {
 class ThreadNx : public Thread {
 public:
   enum State {
-    STATE_RUNNING = 0,
-    STATE_TERMINATED = 2,
+    STATE_UNKNOWN_0 = 0, // Inferred role: running; original name unknown.
+    STATE_UNKNOWN_2 = 2, // Inferred role: terminated; original name unknown.
   };
 
   static void create(Thread **thread, const char *name, bool isStart, ThreadFunc func, void *argument, u32 stackSize, CPUID cpuId, int priority);

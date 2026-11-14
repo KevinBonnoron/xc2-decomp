@@ -101,11 +101,11 @@ void GmkCamera::setDispOfParty(bool isDisp, bool isExceptMover) {
   for (u32 i = 0; i < 3; i++) {
     gf::GF_OBJ_HANDLE *driver = gf::GfGameParty::getHandleDriver(i);
     if (!isExceptMover || mover != driver) {
-      gf::GfObjAcc(driver).setDisp(gf::OBJDISP_UNKNOWN10, isDisp);
+      gf::GfObjAcc(driver).setDisp(gf::OBJDISP_UNKNOWN_4, isDisp);
     }
     gf::GF_OBJ_HANDLE *blade = gf::GfGameParty::getHandleBlade(i, -1);
     if (!isExceptMover || mover != blade) {
-      gf::GfObjAcc(blade).setDisp(gf::OBJDISP_UNKNOWN10, isDisp);
+      gf::GfObjAcc(blade).setDisp(gf::OBJDISP_UNKNOWN_4, isDisp);
     }
   }
 }

@@ -36,7 +36,7 @@ void GfComBehaviorUI::update(const fw::UpdateInfo &info) {
   GfComAsm *comAsm = unknown08->getComponent<GfComAsm>();
   EyeBlinkPlugin *plugin = unknown001<EyeBlinkPlugin>(1);
   if (comAsm != nullptr && plugin != nullptr) {
-    const char *state = comAsm->getStateName(ANIM_LAYER_BASE);
+    const char *state = comAsm->getStateName(ANIM_LAYER_UNKNOWN_0);
     bool isActive = true;
     if (state != nullptr) {
       if (strcmp(state, "S_hold_00") == 0 || strcmp(state, "S_hold_01") == 0) {

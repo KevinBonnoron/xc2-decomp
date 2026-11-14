@@ -10,7 +10,8 @@
 
 namespace gf {
 
-constexpr u32 CALL_CHAIN_COUNT = 64;
+// Inferred role: call id of the chain count layout; original name unknown.
+constexpr u32 CALL_UNKNOWN_64 = 64;
 
 // Inferred helper: starts the preset 1 fade in (0) or fade out (1) control of a UI object on a control id; original name unknown.
 static int unknown001(u32 handle, int ctrl, u32 type) {
@@ -34,13 +35,13 @@ void GfMenuObjChainCount::initialize() {
   }
 // __LINE__ must be 58 as in the original file: it is the line argument of operator new.
 #line 58
-  MainListener *listener = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) MainListener(this);
+  MainListener *listener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) MainListener(this);
   listener->addRef();
   ui::UIEventManager::get()->registObjectListener(main.unknown10, listener);
   if (listener != nullptr) {
     listener->release();
   }
-  attachExternalCall(CALL_CHAIN_COUNT, main.unknown10);
+  attachExternalCall(CALL_UNKNOWN_64, main.unknown10);
   GfMenuBattleAdapter::create(main.searchChild("TXT_num"), 11);
   addNumberEventCondition(main.unknown10, "TXT_num", 0, 0, 0.0f);
   GfMenuObject::initialize();
@@ -102,8 +103,8 @@ void GfMenuObjChainCount::MainListener::reciveEvent(const ui::EventData &event, 
   }
 }
 
-void GfMenuObjChainCount::open() { unknown146(CALL_CHAIN_COUNT, GfMenuTypes::unknown003_33); }
+void GfMenuObjChainCount::open() { unknown146(CALL_UNKNOWN_64, GfMenuTypes::unknown003_33); }
 
-void GfMenuObjChainCount::close() { unknown146(CALL_CHAIN_COUNT, GfMenuTypes::unknown003_34); }
+void GfMenuObjChainCount::close() { unknown146(CALL_UNKNOWN_64, GfMenuTypes::unknown003_34); }
 
 } // namespace gf

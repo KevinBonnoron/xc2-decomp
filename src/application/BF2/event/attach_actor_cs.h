@@ -20,7 +20,7 @@ enum ATTACH_TYPE : int;
 
 class AttachActorCS : public AttachActorBase {
 public:
-  static constexpr u32 EFFECT_COUNT = 128;
+  static constexpr u32 EFFECT_UNKNOWN_128 = 128; // Inferred role: effect count; original name unknown.
 
   // Inferred role: mount; original type name unknown.
   struct unknown001 {
@@ -47,9 +47,9 @@ public:
 
 private:
   // Inferred roles from access offsets; original member names are unknown.
-  gf::GF_OBJ_HANDLE *unknowna0;                                // Owner handle.
-  mm::mtl::FixedVector<u32 *, EFFECT_COUNT> unknowna8;         // Caster identifiers.
-  mm::mtl::FixedVector<unknown001 *, EFFECT_COUNT> unknown4b0; // Mount records.
+  gf::GF_OBJ_HANDLE *unknowna0;                                      // Owner handle.
+  mm::mtl::FixedVector<u32 *, EFFECT_UNKNOWN_128> unknowna8;         // Caster identifiers.
+  mm::mtl::FixedVector<unknown001 *, EFFECT_UNKNOWN_128> unknown4b0; // Mount records.
 };
 
 static_assert(offsetof(AttachActorCS::unknown001, unknown30) == 0x30, "");

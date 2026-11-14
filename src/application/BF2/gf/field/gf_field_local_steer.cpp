@@ -8,12 +8,15 @@
 #include "fw/fw_transform.h"
 #include "gf/asset/gf_asset_manager.h"
 #include "gf/object/component/animation/gf_com_asm.h"
+#include "gf/object/component/behavior/gf_com_behavior_mob.h"
+#include "gf/object/component/enemy/gf_com_behavior_enemy.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_acc.h"
 #include "gmk/gmk_route_navi.h"
+#include "gmk/gmk_squad.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_math.h"
 #include "mm_math/mm_vec3.h"
@@ -22,7 +25,7 @@
 
 namespace gf {
 
-constexpr f32 COLLIDE_TIME_OUT = 5.0f;
+constexpr f32 unknown040 = 5.0f; // Inferred role: collide time out; original name unknown.
 
 GfFieldLocalSteer::GfFieldLocalSteer(const CreateInfo *info) : unknown20(false), unknown24(0.0f) {
   if (info != nullptr) {
@@ -42,8 +45,8 @@ void GfFieldLocalSteer::create(const CreateInfo &info) {
 }
 
 bool GfFieldLocalSteer::isTimeOutCollide() const {
-  if (unknown00.unknown00 != INVALID_HANDLE) {
-    return COLLIDE_TIME_OUT < unknown24;
+  if (unknown00.unknown00 != unknown020) {
+    return unknown040 < unknown24;
   }
   return false;
 }
@@ -58,7 +61,7 @@ f32 GfFieldLocalSteer::getCurAngle() const {
 }
 
 void GfFieldLocalSteer::dispose() {
-  unknown00.unknown00 = INVALID_HANDLE;
+  unknown00.unknown00 = unknown020;
   unknown00.unknown08 = 2.0f;
   unknown00.unknown0c = 1.0f;
   unknown00.unknown10 = 0.5f;
@@ -76,7 +79,7 @@ bool GfFieldLocalSteer::isUseLocalSteer(GF_OBJ_HANDLE *handle) {
 
 void GfFieldLocalSteer::castRay(const mm::Vec3 &position) {
   unknown40.clear();
-  if (unknown00.unknown00 == INVALID_HANDLE) {
+  if (unknown00.unknown00 == unknown020) {
     return;
   }
   GfObjAcc acc(unknown00.unknown00);
@@ -120,7 +123,7 @@ void GfFieldLocalSteer::apply(mm::Vec3 &result, const mm::Vec3 &direction) const
 }
 
 void validateGmkRouteNaviConsideringGfLocalSteer(gmk::GmkRouteNavi &navi, const GfFieldLocalSteer &steer, const mm::Vec3 &position) {
-  if (navi.unknown00.isValid() && navi.unknown28.isValid() && navi.unknown80 && steer.unknown00.unknown00 != INVALID_HANDLE && steer.unknown20) {
+  if (navi.unknown00.isValid() && navi.unknown28.isValid() && navi.unknown80 && steer.unknown00.unknown00 != unknown020 && steer.unknown20) {
     f32 dx = navi.unknown90.x - position.x;
     f32 dy = navi.unknown90.y - position.y;
     f32 dz = navi.unknown90.z - position.z;
@@ -149,15 +152,45 @@ bool getMoveVec(mm::Vec3 &vector, const navi::NvmshAcObj *navi) {
 bool execEndSchedule(fw::ComponentObject &component) {
   GfComAsm *comAsm = static_cast<GfObj *>(component.unknown08)->getComponent<GfComAsm>();
   if (comAsm != nullptr) {
-    const char *state = comAsm->getStateName(ANIM_LAYER_BASE);
+    const char *state = comAsm->getStateName(ANIM_LAYER_UNKNOWN_0);
     if (state != nullptr && strstr(state, "S_schedule_") != nullptr) {
       mm::mtl::FixStr<32> command(state);
       command[0] = 'C';
       command[command.length() - 1] = '2';
-      return comAsm->execCmd(command.c_str(), ANIM_LAYER_BASE);
+      return comAsm->execCmd(command.c_str(), ANIM_LAYER_UNKNOWN_0);
     }
   }
   return false;
 }
 
+// Inferred helper: squad of the behavior component T of an object; original name unknown.
+template <typename T> static gmk::GmkSquad *unknown002(GF_OBJ_HANDLE *handle) {
+  GfObjAcc acc(handle);
+  GfObj *obj = acc.getObj();
+  if (obj != nullptr) {
+    T *behavior = obj->getComponent<T>();
+    if (behavior != nullptr) {
+      return behavior->unknown009();
+    }
+  }
+  return nullptr;
+}
+
+template <typename T> bool GfFieldLocalSteer::TIsTargetNotSameSquad<T>::operator()(const GfFieldLocalSteer &steer, GF_OBJ_HANDLE *handle) const {
+  gmk::GmkSquad *squad = unknown002<T>(steer.unknown00.unknown00);
+  if (squad == nullptr) {
+    return true;
+  }
+  if (squad == unknown002<T>(handle)) {
+    const gmk::GmkSquadLeader *leader = squad->getBindedGmkSquadLeader();
+    if (leader != nullptr && leader->getData()->unknown00 == 1) {
+      return false;
+    }
+  }
+  return true;
+}
+
 } // namespace gf
+
+template class gf::GfFieldLocalSteer::TIsTargetNotSameSquad<gf::GfComBehaviorEnemy>;
+template class gf::GfFieldLocalSteer::TIsTargetNotSameSquad<gf::GfComBehaviorMob>;

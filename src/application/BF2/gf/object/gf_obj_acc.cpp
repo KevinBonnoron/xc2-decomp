@@ -1,5 +1,7 @@
 #include "gf/object/gf_obj_acc.h"
 
+#include "anm/anm_pose.h"
+#include "anm/anm_qs_transform.h"
 #include "anm/anm_skeleton.h"
 #include "battle/character/battle_character.h"
 #include "battle/character/character_manager_battle.h"
@@ -29,6 +31,7 @@
 #include "mm_math/mm_aabb.h"
 #include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_math/mm_vec4.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/intrusive_list.h"
 #include "mm_mtl/intrusive_ptr.h"
@@ -39,7 +42,8 @@
 
 namespace gf {
 
-static const char *EXTRA_PARTS_NAMES[] = {
+static const char *unknown021[] = {
+    // Inferred role: extra parts names; original name unknown.
     "ExtraPartsA",
     "ExtraPartsB",
     "ExtraPartsC",
@@ -72,6 +76,50 @@ int GfObjAcc::getBoneIdx(const char *name) {
   }
 
   return -1;
+}
+
+bool GfObjAcc::getBoneTransform(fw::Transform &transform, const char *name) { return getBoneTransform(transform, getBoneIdx(name)); }
+
+bool GfObjAcc::getBoneTransform(fw::Transform &transform, int bone) {
+  if (m_obj == nullptr || bone == -1) {
+    return false;
+  }
+
+  GfComModel *model = m_obj->getComponent<GfComModel>();
+  if (model == nullptr) {
+    return false;
+  }
+
+  anm::Pose *pose = model->unknown30;
+  if (pose == nullptr) {
+    return false;
+  }
+
+  fw::TransformUtil::mul(getWorldTransform(), pose->getBoneModelSpace(bone), model->m_modelScale, &transform);
+  return true;
+}
+
+bool GfObjAcc::getBoneTransformModelSpace(fw::Transform &transform, const char *name) { return getBoneTransformModelSpace(transform, getBoneIdx(name)); }
+
+bool GfObjAcc::getBoneTransformModelSpace(fw::Transform &transform, int bone) {
+  if (m_obj == nullptr || bone == -1) {
+    return false;
+  }
+
+  GfComModel *model = m_obj->getComponent<GfComModel>();
+  if (model == nullptr) {
+    return false;
+  }
+
+  anm::Pose *pose = model->unknown30;
+  if (pose == nullptr) {
+    return false;
+  }
+
+  const anm::QsTransform &boneTransform = pose->getBoneModelSpace(bone);
+  transform.unknown00 = mm::Vec3(boneTransform.unknown00.x, boneTransform.unknown00.y, boneTransform.unknown00.z);
+  transform.unknown10 = boneTransform.unknown10;
+  return true;
 }
 
 bool GfObjAcc::isValidTransform() const {
@@ -157,29 +205,29 @@ void GfObjAcc::addApplyParam() {
   }
 }
 
-void GfObjAcc::setAlphaEvent(f32 alpha) { setAlpha(OBJ_ALPHA_EVENT, alpha); }
+void GfObjAcc::setAlphaEvent(f32 alpha) { setAlpha(OBJ_ALPHA_UNKNOWN_3, alpha); }
 
-f32 GfObjAcc::getAlphaEvent() const { return getAlpha(OBJ_ALPHA_EVENT); }
+f32 GfObjAcc::getAlphaEvent() const { return getAlpha(OBJ_ALPHA_UNKNOWN_3); }
 
-void GfObjAcc::setAlphaEvtDisp(f32 alpha) { setAlpha(OBJ_ALPHA_EVT_DISP, alpha); }
+void GfObjAcc::setAlphaEvtDisp(f32 alpha) { setAlpha(OBJ_ALPHA_UNKNOWN_5, alpha); }
 
-f32 GfObjAcc::getAlphaEvtDisp() const { return getAlpha(OBJ_ALPHA_EVT_DISP); }
+f32 GfObjAcc::getAlphaEvtDisp() const { return getAlpha(OBJ_ALPHA_UNKNOWN_5); }
 
-void GfObjAcc::setAlphaFade(f32 alpha) { setAlpha(OBJ_ALPHA_FADE, alpha); }
+void GfObjAcc::setAlphaFade(f32 alpha) { setAlpha(OBJ_ALPHA_UNKNOWN_1, alpha); }
 
-f32 GfObjAcc::getAlphaFade() const { return getAlpha(OBJ_ALPHA_FADE); }
+f32 GfObjAcc::getAlphaFade() const { return getAlpha(OBJ_ALPHA_UNKNOWN_1); }
 
-void GfObjAcc::setAlphaCamera(f32 alpha) { setAlpha(OBJ_ALPHA_CAMERA, alpha); }
+void GfObjAcc::setAlphaCamera(f32 alpha) { setAlpha(OBJ_ALPHA_UNKNOWN_2, alpha); }
 
-f32 GfObjAcc::getAlphaCamera() const { return getAlpha(OBJ_ALPHA_CAMERA); }
+f32 GfObjAcc::getAlphaCamera() const { return getAlpha(OBJ_ALPHA_UNKNOWN_2); }
 
-void GfObjAcc::setAlphaLife(f32 alpha) { setAlpha(OBJ_ALPHA_LIFE, alpha); }
+void GfObjAcc::setAlphaLife(f32 alpha) { setAlpha(OBJ_ALPHA_UNKNOWN_4, alpha); }
 
-f32 GfObjAcc::getAlphaLife() const { return getAlpha(OBJ_ALPHA_LIFE); }
+f32 GfObjAcc::getAlphaLife() const { return getAlpha(OBJ_ALPHA_UNKNOWN_4); }
 
-void GfObjAcc::setAlphaNormal(f32 alpha) { setAlpha(OBJ_ALPHA_NORMAL, alpha); }
+void GfObjAcc::setAlphaNormal(f32 alpha) { setAlpha(OBJ_ALPHA_UNKNOWN_0, alpha); }
 
-f32 GfObjAcc::getAlphaNormal() const { return getAlpha(OBJ_ALPHA_NORMAL); }
+f32 GfObjAcc::getAlphaNormal() const { return getAlpha(OBJ_ALPHA_UNKNOWN_0); }
 
 f32 GfObjAcc::getAlpha() const {
   f32 alpha = 1.0f;
@@ -260,7 +308,7 @@ void GfObjAcc::setFrameSpeed(f32 speed) {
   }
 }
 
-void GfObjAcc::setCameraFade(bool isEnable) { GfObjUtil::setFlag(unknown00, OBJ_FLAG_CAMERA_FADE, isEnable); }
+void GfObjAcc::setCameraFade(bool isEnable) { GfObjUtil::setFlag(unknown00, OBJ_FLAG_UNKNOWN_10, isEnable); }
 
 void GfObjAcc::setRenderCameraFade(bool isEnable) {
   ml::ScnObjModel *model = getScnModel();
@@ -277,17 +325,17 @@ void GfObjAcc::setRenderCameraFade(bool isEnable) {
 
 bool GfObjAcc::setFlag(u32 flag, bool value) { return GfObjUtil::setFlag(unknown00, flag, value); }
 
-bool GfObjAcc::isCameraFadeEnable() const { return GfObjUtil::testFlag(unknown00, OBJ_FLAG_CAMERA_FADE); }
+bool GfObjAcc::isCameraFadeEnable() const { return GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_10); }
 
 bool GfObjAcc::testFlag(u32 flag) const { return GfObjUtil::testFlag(unknown00, flag); }
 
-bool GfObjAcc::isCameraFadeDisableForEvent() const { return GfObjUtil::testFlag(unknown00, OBJ_FLAG_CAMERA_FADE_DISABLE_FOR_EVENT); }
+bool GfObjAcc::isCameraFadeDisableForEvent() const { return GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_11); }
 
-void GfObjAcc::setCameraFadeDisableForEvent(bool isDisable) { GfObjUtil::setFlag(unknown00, OBJ_FLAG_CAMERA_FADE_DISABLE_FOR_EVENT, isDisable); }
+void GfObjAcc::setCameraFadeDisableForEvent(bool isDisable) { GfObjUtil::setFlag(unknown00, OBJ_FLAG_UNKNOWN_11, isDisable); }
 
-bool GfObjAcc::isCameraFadeDisableForBattle() const { return GfObjUtil::testFlag(unknown00, OBJ_FLAG_CAMERA_FADE_DISABLE_FOR_BATTLE); }
+bool GfObjAcc::isCameraFadeDisableForBattle() const { return GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_12); }
 
-void GfObjAcc::setCameraFadeDisableForBattle(bool isDisable) { GfObjUtil::setFlag(unknown00, OBJ_FLAG_CAMERA_FADE_DISABLE_FOR_BATTLE, isDisable); }
+void GfObjAcc::setCameraFadeDisableForBattle(bool isDisable) { GfObjUtil::setFlag(unknown00, OBJ_FLAG_UNKNOWN_12, isDisable); }
 
 void GfObjAcc::setCollisionChar(bool isEnable) {
   if (m_obj == nullptr) {
@@ -302,9 +350,9 @@ void GfObjAcc::setCollisionChar(bool isEnable) {
   for (u32 i = 0; i < collider->unknown18.size(); i++) {
     if (collider->unknown18[i] != nullptr) {
       if (isEnable) {
-        collider->unknown18[i]->setState(fw::COLI_STATE_ENABLE);
+        collider->unknown18[i]->setState(fw::COLI_STATE_UNKNOWN_1);
       } else {
-        collider->unknown18[i]->clearState(fw::COLI_STATE_ENABLE);
+        collider->unknown18[i]->clearState(fw::COLI_STATE_UNKNOWN_1);
       }
     }
   }
@@ -314,7 +362,7 @@ bool GfObjAcc::hasParent() const { return m_obj != nullptr && GfObjUtil::getPare
 
 GfObj *GfObjAcc::getObj() const { return m_obj; }
 
-GF_OBJ_HANDLE *GfObjAcc::getHandle() const { return unknown00 != nullptr ? unknown00->unknown08 : INVALID_HANDLE; }
+GF_OBJ_HANDLE *GfObjAcc::getHandle() const { return unknown00 != nullptr ? unknown00->unknown08 : unknown020; }
 
 bool GfObjAcc::isDisp(OBJDISP disp) const {
   if (m_obj == nullptr) {
@@ -342,9 +390,9 @@ void GfObjAcc::setDisp(OBJDISP disp, bool isDisp) {
       flags |= disp;
     }
     unknown00->unknown48 = flags;
-    GfObjUtil::setFlag(unknown00, OBJ_FLAG_DISP_CHANGED, true);
+    GfObjUtil::setFlag(unknown00, OBJ_FLAG_UNKNOWN_1, true);
     for (mm::mtl::IntrusiveList<fw::UpdatableObject>::iterator it = m_obj->unknownb8.begin(), last = m_obj->unknownb8.end(); it != last; ++it) {
-      GfObjUtil::setFlag(GfObjManager::getObjInfo(mm::mtl::dynamicCast<GfObj>(it.operator->())->unknownf8), OBJ_FLAG_DISP_CHANGED, true);
+      GfObjUtil::setFlag(GfObjManager::getObjInfo(mm::mtl::dynamicCast<GfObj>(it.operator->())->unknownf8), OBJ_FLAG_UNKNOWN_1, true);
     }
   }
 
@@ -352,9 +400,9 @@ void GfObjAcc::setDisp(OBJDISP disp, bool isDisp) {
   if (weapon != nullptr) {
     for (u32 index = 0; index < 10; index++) {
       GF_OBJ_HANDLE *handle = weapon->getCurrentHandles()[index];
-      if (handle != INVALID_HANDLE && handle != getHandle()) {
+      if (handle != unknown020 && handle != getHandle()) {
         GfObjAcc weaponAcc(handle);
-        weaponAcc.setDisp(OBJDISP_EVENT, isDisp);
+        weaponAcc.setDisp(OBJDISP_UNKNOWN_1, isDisp);
       }
     }
   }
@@ -370,7 +418,7 @@ bool GfObjAcc::isDispChanged() const {
     return true;
   }
 
-  return GfObjUtil::testFlag(unknown00, OBJ_FLAG_DISP_CHANGED);
+  return GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_1);
 }
 
 void GfObjAcc::applyDisp() {
@@ -395,14 +443,14 @@ void GfObjAcc::applyDisp() {
     model->setDisp(isDisp);
   }
 
-  if (GfObjUtil::testFlag(unknown00, OBJ_FLAG_DISP_CHANGED)) {
-    GfObjUtil::setFlag(unknown00, OBJ_FLAG_DISP_CHANGED, false);
+  if (GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_1)) {
+    GfObjUtil::setFlag(unknown00, OBJ_FLAG_UNKNOWN_1, false);
   }
 }
 
-void GfObjAcc::setClip(bool isClip) { GfObjUtil::setFlag(unknown00, OBJ_FLAG_CLIP, isClip); }
+void GfObjAcc::setClip(bool isClip) { GfObjUtil::setFlag(unknown00, OBJ_FLAG_UNKNOWN_2, isClip); }
 
-void GfObjAcc::setGpuClip(bool isClip) { GfObjUtil::setFlag(unknown00, OBJ_FLAG_GPU_CLIP, isClip); }
+void GfObjAcc::setGpuClip(bool isClip) { GfObjUtil::setFlag(unknown00, OBJ_FLAG_UNKNOWN_3, isClip); }
 
 void GfObjAcc::setModelScaleForMenu(const mm::Vec3 &scale) {
   if (m_obj == nullptr) {
@@ -461,18 +509,18 @@ void GfObjAcc::setGravity(bool isGravity) {}
 bool GfObjAcc::isGravity() const { return false; }
 
 bool GfObjAcc::isReload() const {
-  if (GfObjUtil::testFlag(unknown00, OBJ_FLAG_RELOAD)) {
+  if (GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_5)) {
     return true;
   }
 
   return GfAssetManager::isReload(unknown00->unknown10);
 }
 
-bool GfObjAcc::isRebuild() const { return GfObjUtil::testFlag(unknown00, OBJ_FLAG_REBUILD); }
+bool GfObjAcc::isRebuild() const { return GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_6); }
 
-void GfObjAcc::setToolMode(bool isToolMode) { GfObjUtil::setFlag(unknown00, OBJ_FLAG_TOOL_MODE, isToolMode); }
+void GfObjAcc::setToolMode(bool isToolMode) { GfObjUtil::setFlag(unknown00, OBJ_FLAG_UNKNOWN_24, isToolMode); }
 
-bool GfObjAcc::isToolMode() const { return GfObjUtil::testFlag(unknown00, OBJ_FLAG_TOOL_MODE); }
+bool GfObjAcc::isToolMode() const { return GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_24); }
 
 void GfObjAcc::setAttribute(u32 attribute) {
   if (m_obj != nullptr) {
@@ -485,7 +533,7 @@ u32 GfObjAcc::getAttribute() const { return m_obj != nullptr ? m_obj->unknown110
 void GfObjAcc::applyClip() {
   ml::ScnObjModel *model = getScnModel();
   if (model != nullptr) {
-    model->setClip(GfObjUtil::testFlag(unknown00, OBJ_FLAG_CLIP));
+    model->setClip(GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_2));
   }
 }
 
@@ -493,7 +541,7 @@ void GfObjAcc::applyClipGpu() {
   ml::ScnObjModel *model = getScnModel();
   if (model != nullptr) {
     ml::ScnObjAccResMdlInfo modelInfo(model);
-    modelInfo.setGpuClip(GfObjUtil::testFlag(unknown00, OBJ_FLAG_GPU_CLIP));
+    modelInfo.setGpuClip(GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_3));
   }
 }
 
@@ -513,11 +561,11 @@ bool GfObjAcc::isValidModel() const {
   return m_obj->unknown38[GfComModel::COMPONENT_INDEX]->getRTTI()->isKindOf(&GfComModel::m_rtti);
 }
 
-bool GfObjAcc::isDestroy() const { return GfObjUtil::testFlag(unknown00, OBJ_FLAG_DESTROY); }
+bool GfObjAcc::isDestroy() const { return GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_0); }
 
 u32 GfObjAcc::getType() const { return m_obj != nullptr ? m_obj->unknown28 : 0; }
 
-void GfObjAcc::setCalcCameraAlpha() { GfObjUtil::setFlag(unknown00, OBJ_FLAG_CALC_CAMERA_ALPHA, true); }
+void GfObjAcc::setCalcCameraAlpha() { GfObjUtil::setFlag(unknown00, OBJ_FLAG_UNKNOWN_13, true); }
 
 u32 GfObjAcc::getMultiBindUniqId() const { return unknown00 != nullptr ? unknown00->unknown00 : 0; }
 
@@ -539,10 +587,10 @@ GF_OBJ_HANDLE *GfObjAcc::getTarget() const {
     }
   }
 
-  return INVALID_HANDLE;
+  return unknown020;
 }
 
-GF_OBJ_HANDLE *GfObjAcc::getMaster() const { return unknown00 != nullptr ? unknown00->unknown88 : INVALID_HANDLE; }
+GF_OBJ_HANDLE *GfObjAcc::getMaster() const { return unknown00 != nullptr ? unknown00->unknown88 : unknown020; }
 
 void GfObjAcc::setUserData(GfObjUserData type, u64 data) {
   if (unknown00 != nullptr) {
@@ -560,7 +608,7 @@ u32 GfObjAcc::getBdatId() const {
   switch (m_obj->unknown28) {
   case OBJECT_TYPE_MAP:
     return mm::mtl::dynamicCast<GfObjSetupMap>(GfObjManager::getObjInfo(getHandle())->unknown30)->unknown6c;
-  case OBJECT_TYPE_DRIVER:
+  case OBJECT_TYPE_PC:
   case OBJECT_TYPE_BLADE:
   case OBJECT_TYPE_NPC:
   case OBJECT_TYPE_MOB:
@@ -624,7 +672,7 @@ u32 GfObjAcc::getPcWeaponId() const { return getBdatId(); }
 u32 GfObjAcc::getUiObjId() const { return getBdatId(); }
 
 bool GfObjAcc::isMasterObjValid() const {
-  if (unknown00 != nullptr && unknown00->unknown88 != INVALID_HANDLE && GfObjUtil::isValid(unknown00->unknown88)) {
+  if (unknown00 != nullptr && unknown00->unknown88 != unknown020 && GfObjUtil::isValid(unknown00->unknown88)) {
     return GfObjUtil::isUpdate(unknown00->unknown88);
   }
 
@@ -632,12 +680,12 @@ bool GfObjAcc::isMasterObjValid() const {
 }
 
 bool GfObjAcc::isLoadedWaitOK() const {
-  if (!isMasterObjValid() || GfObjUtil::testFlag(unknown00, OBJ_FLAG_LOADED_WAIT_BLOCK)) {
+  if (!isMasterObjValid() || GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_26)) {
     return false;
   }
 
-  if (GfObjUtil::testFlag(unknown00, OBJ_FLAG_LOADED_WAIT)) {
-    return GfObjUtil::testFlag(unknown00, OBJ_FLAG_LOADED_WAIT_OK);
+  if (GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_8)) {
+    return GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_9);
   }
 
   return true;
@@ -699,7 +747,7 @@ const char *GfObjAcc::getExtMeshName(int index) const {
   return "";
 }
 
-bool GfObjAcc::isUpdated() const { return GfObjUtil::testFlag(unknown00, OBJ_FLAG_UPDATED); }
+bool GfObjAcc::isUpdated() const { return GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_19); }
 
 const char *GfObjAcc::getDebugName() const { return ""; }
 
@@ -727,10 +775,10 @@ void GfObjAcc::setupExtraParts() {
 
   ml::ScnObjAccResSubMesh subMesh(model);
   subMesh.getExtMax();
-  DataParamAcc paramAcc(getType(), getBdatId(), GIMMICK_TYPE_NONE);
+  DataParamAcc paramAcc(getType(), getBdatId(), GIMMICK_TYPE_UNKNOWN_0);
   int count = paramAcc.getObjType() == OBJECT_TYPE_ENEMY ? 4 : 6;
   for (int i = 0; i < count; i++) {
-    int index = subMesh.getExtIdx(EXTRA_PARTS_NAMES[i]);
+    int index = subMesh.getExtIdx(unknown021[i]);
     if (index >= 0) {
       subMesh.setExtAlpha(index, paramAcc.isDispInitExtraParts(i) ? 1.0f : 0.0f);
     }
@@ -755,7 +803,7 @@ int GfObjAcc::getEtcParamIndex(const char *name) const {
   return -1;
 }
 
-bool GfObjAcc::isPartyObj() const { return GfObjUtil::testFlag(unknown00, OBJ_FLAG_PARTY_OBJ); }
+bool GfObjAcc::isPartyObj() const { return GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_18); }
 
 int GfObjAcc::getPartyID() const { return GfObjUtil::getPartyID(getHandle()); }
 

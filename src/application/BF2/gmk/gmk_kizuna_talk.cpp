@@ -22,12 +22,12 @@ namespace gmk {
 
 template bool TGmkList<GmkKizunaTalk, GmkKizunaTalk::BdatInfo, 1414421067u, 1u, GmkKizunaTalkGob>::initGmkBdatInfo(GmkKizunaTalk::BdatInfo &, int &, const AGmkBase &);
 
-constexpr int WILDCARD_KIZUNA_TALK_POP_DIST_ROW = 30;
+constexpr int WILDCARD_UNKNOWN_30 = 30; // Inferred role: wildcard kizuna talk pop dist row; original name unknown.
 
 void GmkKizunaTalk::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
-  unknown00 = bdat.getValCheck("ConditionID", id, BDAT_TYPE_U16);
-  unknown02 = bdat.getValCheck("Title", id, BDAT_TYPE_U16);
-  unknown04 = bdat.getValCheck("EVCondition", id, BDAT_TYPE_U16);
+  unknown00 = bdat.getValCheck("ConditionID", id, BDAT_TYPE_UNKNOWN_2);
+  unknown02 = bdat.getValCheck("Title", id, BDAT_TYPE_UNKNOWN_2);
+  unknown04 = bdat.getValCheck("EVCondition", id, BDAT_TYPE_UNKNOWN_2);
 }
 
 bool GmkKizunaTalk::BdatInfo::isCondMatched() const {
@@ -41,7 +41,7 @@ int GmkKizunaTalk::getGameFlagId() const { return unknown20.unknown18; }
 
 void GmkKizunaTalk::create(const CreateInfo &info) {
   AGmkBase::create(info);
-  f32 popDist = Bdat::getValCheck(gf::GfDataBdat::getFP(gf::BDAT_FLD_WILDCARD_DATA), 0, WILDCARD_KIZUNA_TALK_POP_DIST_ROW, BDAT_TYPE_F32).valueF32;
+  f32 popDist = Bdat::getValCheck(gf::GfDataBdat::getFP(gf::BDAT_FLD_WILDCARD_DATA), 0, WILDCARD_UNKNOWN_30, BDAT_TYPE_UNKNOWN_8).valueF32;
   unknown50.unknown00 = popDist * popDist;
 }
 
@@ -51,10 +51,10 @@ void GmkKizunaTalk::dispose() {
 }
 
 void GmkKizunaTalk::disposeGfObjHandle() {
-  if (unknown48 != gf::INVALID_HANDLE) {
+  if (unknown48 != gf::unknown020) {
     unbindToGameObj(unknown48);
     gf::GfObjUtil::destroy(unknown48);
-    unknown48 = gf::INVALID_HANDLE;
+    unknown48 = gf::unknown020;
   }
 }
 
@@ -79,7 +79,7 @@ void GmkKizunaTalk::update(f32 deltaTime) {
     return;
   }
   if (getBdatInfo()->isCondMatched() && DistCond::isMatch(unknown50.unknown00, unknown08.unknown08->unknown00)) {
-    if (unknown48 == gf::INVALID_HANDLE) {
+    if (unknown48 == gf::unknown020) {
       createGfObjHandle();
     }
   } else {
@@ -96,19 +96,19 @@ void GmkKizunaTalk::debugDraw() const {
 
 void GmkKizunaTalk::validateDisp() const {
   bool isDisp = unknown54 && debugIsDispGmkType(getGmkType());
-  if (unknown48 == gf::INVALID_HANDLE) {
+  if (unknown48 == gf::unknown020) {
     return;
   }
   gf::GfObjAcc acc(unknown48);
   if (acc.isValid()) {
-    acc.setDisp(gf::OBJDISP_GMK_EVENT, isDisp);
+    acc.setDisp(gf::OBJDISP_UNKNOWN_3, isDisp);
   }
 }
 
 void GmkKizunaTalk::onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) {
   disposeGfObjHandle();
   if (getBdatInfo()->unknown04 == 0 || gf::GfGameCond::isGameCond(getBdatInfo()->unknown04)) {
-    u16 eventId = Bdat::getValCheck(getBindedBdatFp(), "EventID", unknown20.unknown18, BDAT_TYPE_U16);
+    u16 eventId = Bdat::getValCheck(getBindedBdatFp(), "EventID", unknown20.unknown18, BDAT_TYPE_UNKNOWN_2);
     gf::GfPlayFactory::createOneEvent(eventId);
     gf::GfGameFlag::setLocal(2, unknown20.unknown18, 2);
   } else {

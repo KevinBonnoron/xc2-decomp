@@ -1,6 +1,10 @@
 #include "gf/menu/object/gf_menu_obj_popup.h"
 
+#include "bdat.h"
+#include "gf/data/gf_bdat_id.h"
+#include "gf/data/gf_data_bdat.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/gf_allocator.h"
 #include "gf/menu/gf_menu_bdat.h"
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
@@ -8,8 +12,10 @@
 #include "mm_mtl/reference_object.h"
 #include "types.h"
 #include "ui/event/ui_event_data.h"
+#include "ui/event/ui_event_manager.h"
 #include "ui/plugin/ui_object_number_plugin.h"
 #include "ui/ui_manager.h"
+#include "ui/ui_str.h"
 
 namespace gf {
 
@@ -31,6 +37,53 @@ GfMenuObjPopup::~GfMenuObjPopup() {
   mm::mtl::safeRelease(unknown50);
   mm::mtl::safeRelease(unknown58);
   GfMenuManyObjects::destroy<PopupInfo>(GfMenuManyObjects::unknown001_7);
+}
+
+void GfMenuObjPopup::initialize() {
+  ui::UIObjectAcc acc(unknown18);
+  u32 main = acc.searchChild("LAY_main");
+// __LINE__ must be 123 as in the original file: it is the line argument of operator new.
+#line 123
+  MainListener *listener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) MainListener(this);
+  listener->addRef();
+  ui::UIEventManager::get()->registObjectListener(main, listener);
+  if (listener != nullptr) {
+    listener->release();
+  }
+  attachExternalCall(unknown001, main);
+  {
+    u8 *bdat = GfDataBdat::getFP(BDAT_MNU_MSG_POPUP);
+    u8 *countBdat = GfDataBdat::getFP(BDAT_MNU_MSG_POPUP);
+    u8 *msBdat = GfDataBdat::getFP(BDAT_MENU_POPUP_MS);
+    u32 name = Bdat::getVal(countBdat, "name", 7).valueU16;
+    ui::UIObjectAcc text1(acc.searchChild("TXT_text@05_1"));
+    text1.setText(ui::UIStr(msBdat, name));
+    name = Bdat::getVal(countBdat, "name", 8).valueU16;
+    ui::UIObjectAcc text2(acc.searchChild("TXT_text@05_2"));
+    text2.setText(ui::UIStr(msBdat, name));
+    name = Bdat::getVal(countBdat, "name", 9).valueU16;
+    ui::UIObjectAcc text3(acc.searchChild("TXT_text@05_3"));
+    text3.setText(ui::UIStr(msBdat, name));
+    name = Bdat::getVal(countBdat, "name", 10).valueU16;
+    ui::UIObjectAcc text4(acc.searchChild("TXT_text@05_4"));
+    text4.setText(ui::UIStr(msBdat, name));
+    name = Bdat::getVal(bdat, "name", 4).valueU16;
+    msBdat = GfDataBdat::getFP(BDAT_MENU_POPUP_MS);
+    ui::UIObjectAcc text9(acc.searchChild("TXT_text@09"));
+    text9.setText(ui::UIStr(msBdat, name));
+    name = Bdat::getVal(bdat, "name", 3).valueU16;
+    msBdat = GfDataBdat::getFP(BDAT_MENU_POPUP_MS);
+    ui::UIObjectAcc text11(acc.searchChild("TXT_text@11"));
+    text11.setText(ui::UIStr(msBdat, name));
+  }
+  unknown30 = ui::UIObjectNumberPlugin::create(acc.searchChild("TXT_text@05_1"));
+  unknown38 = ui::UIObjectNumberPlugin::create(acc.searchChild("TXT_text@05_2"));
+  unknown40 = ui::UIObjectNumberPlugin::create(acc.searchChild("TXT_text@05_3"));
+  unknown48 = ui::UIObjectNumberPlugin::create(acc.searchChild("TXT_text@05_4"));
+  unknown50 = ui::UIObjectNumberPlugin::create(acc.searchChild("TXT_text@09"));
+  unknown58 = ui::UIObjectNumberPlugin::create(acc.searchChild("TXT_text@11"));
+  GfMenuObject::initialize();
+  GfMenuManyObjects::unknown002<PopupInfo>(GfMenuManyObjects::unknown001_7, 64);
 }
 
 void GfMenuObjPopup::finalize() { GfMenuObject::finalize(); }
@@ -160,6 +213,7 @@ void GfMenuObjPopup::closeAll() { GfMenuManyObjects::closeAll<PopupInfo>(GfMenuM
 } // namespace gf
 
 template bool mm::mtl::Delegate<bool()>::memberFuncInvoker<gf::GfMenuObjPopup>(const mm::mtl::Delegate<bool()> *);
+template bool gf::GfMenuSequence<gf::GfMenuObjPopup, 8>::wait();
 template bool mm::mtl::Delegate<bool()>::memberFuncInvoker<gf::GfMenuSequence<gf::GfMenuObjPopup, 8>>(const mm::mtl::Delegate<bool()> *);
 
 template void gf::GfMenuManyObjects::remove<gf::GfMenuObjPopup::PopupInfo>(u32, u32);

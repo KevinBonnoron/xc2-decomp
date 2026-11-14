@@ -30,19 +30,20 @@ struct ItemProperty {
   ItemProperty() : unknown30() {}
 
   enum {
-    FLAG_VALID = 0,
-    FLAG_NO_SELL = 2,
-    FLAG_NO_MULTIPLE = 3,
-    FLAG_QUEST = 4,
-    FLAG_EQUIP_DRIVER = 16,
+    FLAG_UNKNOWN_0 = 0,   // Inferred role: flag valid; original name unknown.
+    FLAG_UNKNOWN_2 = 2,   // Inferred role: flag no sell; original name unknown.
+    FLAG_UNKNOWN_3 = 3,   // Inferred role: flag no multiple; original name unknown.
+    FLAG_UNKNOWN_4 = 4,   // Inferred role: flag quest; original name unknown.
+    FLAG_UNKNOWN_16 = 16, // Inferred role: flag equip driver; original name unknown.
   };
 
   void clear() {
+    // Named as the game's static local gf::ItemProperty::clear()::szNull.
     static const char *szNull = "";
     unknown00.clear();
     unknown04 = 0;
     unknown06 = 0;
-    unknown08 = ItemType::NONE;
+    unknown08 = ItemType::ITEM_TYPE_UNKNOWN_0;
     unknown0c = 0;
     _0e = 0;
     unknown10 = 0;

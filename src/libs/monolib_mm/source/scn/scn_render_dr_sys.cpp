@@ -86,7 +86,7 @@ ScnObj *ScnRenderDrSys::createIBL(Scn *scn, const void *data, int screen) { retu
 
 ScnObj *ScnRenderDrSys::createEnvColi(Scn *scn, const void *data, int screen) { return ScnObjEnvColiDr::create(scn, data, screen); }
 
-void ScnRenderDrSys::createDrRender(Scn *scn) { WorkCpu::runThread(WorkCpu::getRenderCPUID(), thDrSysInitialize, scn, nullptr, nullptr, true, WKCPU_SYNC_WAIT); }
+void ScnRenderDrSys::createDrRender(Scn *scn) { WorkCpu::runThread(WorkCpu::getRenderCPUID(), thDrSysInitialize, scn, nullptr, nullptr, true, WKCPU_SYNC_UNKNOWN_1); }
 
 u32 ScnRenderDrSys::thDrSysInitialize(void *argument, void *userData) {
   Scn *scn = static_cast<Scn *>(argument);

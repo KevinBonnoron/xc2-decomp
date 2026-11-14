@@ -20,8 +20,8 @@ public:
   };
 
   enum Flag {
-    FLAG_DISP = 1 << 0,
-    FLAG_OFS_MATRIX = 1 << 1,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: disp; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: ofs matrix; original name unknown.
   };
 
   ScnObjLight(Scn *scn);
@@ -50,7 +50,7 @@ public:
   virtual void setMat(const mm::Mat44 &matrix) {
     AttrTransform &transform = unknown60.m_back->unknown00;
     transform.unknown30 = matrix;
-    transform.unknown130 |= AttrTransform::FLAG_MATRIX;
+    transform.unknown130 |= AttrTransform::FLAG_UNKNOWN_0;
   }
 
   virtual void setDeugDisp2D(bool isDisp) {}

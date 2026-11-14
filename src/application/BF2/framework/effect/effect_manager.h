@@ -83,6 +83,7 @@ public:
     KizunaWork();
     ~KizunaWork();
     void term();
+    void init();
 
     f32 unknown00; // Inferred role: gravity; original member name unknown.
     u32 unknown04; // Inferred role: line level; original member name unknown.
@@ -132,6 +133,8 @@ public:
   EffectData *searchData(const char *name);
   void setMasterPause(bool isPause);
   bool isMasterPause() const;
+  void addCaster(EffectCasterBase *caster);
+  void removeCaster(EffectCasterBase *caster);
   EffectCasterSend *getCaster(EffectCasterBase *caster);
   void remove(EffectCasterBase *caster);
   void changeLayerCaster(EffectCasterBase *caster, u32 layer, u32 newLayer);
@@ -159,6 +162,7 @@ public:
   void kill(u32 handle);
   void remove(u32 handle);
   void dead(u32 handle);
+  u32 createKizunaLine();
   void destroyKizunaLine(u32 handle);
   void setDispAllKizunaLine(bool isDisp);
   void updateKizunaLine(u32 handle, const mm::Vec3 &start, const mm::Vec3 &end, u32 level);
@@ -264,7 +268,7 @@ public:
   mm::mtl::FixedVector<unknown008, unknown003> unknown27c8; // Inferred role: kizuna line texture resources; original member name unknown.
   u32 unknown2fd0;                                          // Inferred role: kizuna line texture load step; original member name unknown.
   u8 _2fd4[0x2fd5 - 0x2fd4];
-  bool unknown2fd5; // Inferred role: master pause; original member name unknown.
+  bool m_masterPause;
   bool unknown2fd6; // Inferred role: finalizing; original member name unknown.
   u8 _2fd7[0x2fd8 - 0x2fd7];
   u8 unknown2fd8;   // Inferred role: caster buffer index flipped every tail; original member name unknown.
@@ -301,7 +305,7 @@ static_assert(offsetof(EffectManager, unknown1fb8) == 0x1fb8, "");
 static_assert(offsetof(EffectManager, unknown27c0) == 0x27c0, "");
 static_assert(offsetof(EffectManager, unknown27c8) == 0x27c8, "");
 static_assert(offsetof(EffectManager, unknown2fd0) == 0x2fd0, "");
-static_assert(offsetof(EffectManager, unknown2fd5) == 0x2fd5, "");
+static_assert(offsetof(EffectManager, m_masterPause) == 0x2fd5, "");
 static_assert(offsetof(EffectManager, unknown2fd6) == 0x2fd6, "");
 static_assert(offsetof(EffectManager, unknown2fd8) == 0x2fd8, "");
 static_assert(offsetof(EffectManager, unknown2fd9) == 0x2fd9, "");

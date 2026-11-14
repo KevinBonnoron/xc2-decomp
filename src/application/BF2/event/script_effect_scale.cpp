@@ -13,7 +13,7 @@ namespace event {
 
 void ScriptEffectScale::doit(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_EFFECT) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_4) {
     return;
   }
   ObjectEffect *effect = static_cast<ObjectEffect *>(object);
@@ -24,7 +24,7 @@ void ScriptEffectScale::doit(const Param &param) {
 
 void ScriptEffectScale::undo(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_EFFECT) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_4) {
     return;
   }
   static_cast<ObjectEffect *>(object)->setScale(unknown10);
@@ -32,7 +32,7 @@ void ScriptEffectScale::undo(const Param &param) {
 
 void ScriptEffectScale::redo(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
-  if (ScriptUtil::getObjType(object) != OBJTYPE_EFFECT) {
+  if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_4) {
     return;
   }
   f32 scale = param.val(0).getF32();

@@ -17,10 +17,6 @@ class IAllocator;
 } // namespace mtl
 } // namespace mm
 
-namespace skt {
-enum SERVER_OPTION : int;
-} // namespace skt
-
 namespace fw {
 namespace debug {
 
@@ -29,7 +25,7 @@ public:
   static bool sendCommand(const char *server, const char *command);
   static bool sendCommandHtcs(const char *server, const char *command);
   static bool openServer(const skt::PortRegistInfo &info);
-  static bool closeServer(const char *server);
+  static void closeServer(const char *server);
   static bool isConnectedHtcs(const char *server);
   static bool setServerOption(const char *server, skt::SERVER_OPTION option);
   static skt::SERVER_OPTION getServerOption(const char *server);

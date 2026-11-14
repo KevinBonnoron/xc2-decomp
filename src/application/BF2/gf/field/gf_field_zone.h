@@ -23,7 +23,7 @@ public:
 
 class GfFieldZone : public mm::mtl::PtrSingleton<GfFieldZone> {
 public:
-  static const u32 EVENT_MAX = 16;
+  static const u32 EVENT_UNKNOWN_16 = 16; // Inferred role: event max; original name unknown.
 
   GfFieldZone(const GfSetupParam &param);
   void initialize(const GfSetupParam &param);
@@ -38,8 +38,8 @@ public:
   void gevMapjump(GEV gev, const MapjumpCallbackInfo &info);
 
 private:
-  mm::mtl::FixedQueue<IEventZone *, EVENT_MAX> unknown08; // Inferred role: events; original member name unknown.
-  bool unknown98;                                         // Inferred role: initialized; original member name unknown.
+  mm::mtl::FixedQueue<IEventZone *, EVENT_UNKNOWN_16> unknown08; // Inferred role: events; original member name unknown.
+  bool unknown98;                                                // Inferred role: initialized; original member name unknown.
 };
 
 static_assert(sizeof(GfFieldZone) == 0xa0, "");

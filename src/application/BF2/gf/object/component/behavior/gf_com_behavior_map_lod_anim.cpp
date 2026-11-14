@@ -15,7 +15,7 @@ void GfComBehaviorMapLodAnim::update(const fw::UpdateInfo &info) {
 
 GfFieldLodColiAnim::PosInfo *GfComBehaviorMapLodAnim::getBindedPosInfo() const {
   GfObjAcc acc(static_cast<GfObj *>(unknown08)->unknownf8);
-  if (!acc.isValid() || acc.isDestroy() || acc.testFlag(OBJ_FLAG_UI_HIDDEN) || acc.getObj() == nullptr) {
+  if (!acc.isValid() || acc.isDestroy() || acc.testFlag(OBJ_FLAG_UNKNOWN_17) || acc.getObj() == nullptr) {
     return nullptr;
   }
 

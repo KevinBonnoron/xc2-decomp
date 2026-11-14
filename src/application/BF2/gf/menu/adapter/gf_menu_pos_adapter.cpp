@@ -9,7 +9,7 @@
 namespace gf {
 
 GfMenuPosAdapter::GfMenuPosAdapter(ui::UIObjectPlugin *plugin)
-    : GfMenuAdapter(plugin, false, true), unknown30(INVALID_HANDLE), unknown80(false), unknown81(false), unknown82(false), unknown84(0, 0), unknown88(nullptr) {}
+    : GfMenuAdapter(plugin, false, true), unknown30(unknown020), unknown80(false), unknown81(false), unknown82(false), unknown84(0, 0), unknown88(nullptr) {}
 
 GfMenuPosAdapter::~GfMenuPosAdapter() {
   if (unknown88 != nullptr) {
@@ -27,7 +27,7 @@ GfMenuPosAdapter *GfMenuPosAdapter::create(u32 handle, GF_OBJ_HANDLE *objHandle,
   }
   // __LINE__ must be 103 as in the original source: it is the line argument of operator new.
 #line 103
-  GfMenuPosAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuPosAdapter(plugin);
+  GfMenuPosAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuPosAdapter(plugin);
   if (adapter != nullptr) {
     adapter->setup(objHandle, menuOffset);
     adapter->unknown70 = adapter->unknown40;
@@ -62,7 +62,7 @@ GfMenuPosAdapter *GfMenuPosAdapter::createDiffOffset(u32 handle, GF_OBJ_HANDLE *
   }
   // __LINE__ must be 131 as in the original source: it is the line argument of operator new.
 #line 131
-  GfMenuPosAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuPosAdapter(plugin);
+  GfMenuPosAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuPosAdapter(plugin);
   if (adapter != nullptr) {
     adapter->setup(objHandle, menuOffset);
     adapter->unknown70 = adapter->unknown40;
@@ -76,7 +76,7 @@ GfMenuPosAdapter *GfMenuPosAdapter::createDiffOffset(u32 handle, GF_OBJ_HANDLE *
 GfMenuPosAdapter *GfMenuPosAdapter::createFromPartyDriver(u32 handle, u8 partyIndex, const MenuOffset *menuOffset) {
   // __LINE__ must be 153 as in the original source: it is the line argument of operator new.
 #line 153
-  PartyDriverConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) PartyDriverConverter(partyIndex);
+  PartyDriverConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) PartyDriverConverter(partyIndex);
   GfMenuPosAdapter *adapter = create(handle, converter->getGfObjHandle(), menuOffset);
   adapter->unknown88 = converter;
   return adapter;
@@ -91,7 +91,7 @@ GfMenuPosAdapter *GfMenuPosAdapter::createWorld(u32 handle, GF_OBJ_HANDLE *objHa
   }
   // __LINE__ must be 175 as in the original source: it is the line argument of operator new.
 #line 175
-  GfMenuPosAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuPosAdapter(plugin);
+  GfMenuPosAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuPosAdapter(plugin);
   if (adapter != nullptr) {
     adapter->setup(objHandle, menuOffset);
     adapter->unknown70 = adapter->unknown40;
@@ -110,9 +110,9 @@ GfMenuPosAdapter *GfMenuPosAdapter::createFixedPoint(u32 handle, const mm::Vec3 
   }
   // __LINE__ must be 210 as in the original source: it is the line argument of operator new.
 #line 210
-  GfMenuPosAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuPosAdapter(plugin);
+  GfMenuPosAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuPosAdapter(plugin);
   if (adapter != nullptr) {
-    adapter->setup(INVALID_HANDLE, nullptr);
+    adapter->setup(unknown020, nullptr);
     adapter->changeFixedPoint(pos);
     adapter->unknown80 = isWorld;
     adapter->unknown81 = true;

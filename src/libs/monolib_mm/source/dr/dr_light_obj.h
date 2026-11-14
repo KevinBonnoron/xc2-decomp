@@ -15,30 +15,30 @@ class DrPixlShadowObj;
 class DrLightObj {
 public:
   enum Type {
-    TYPE_AMB,
-    TYPE_DIR,
-    TYPE_PNT,
-    TYPE_SPT,
+    TYPE_UNKNOWN_0, // Inferred role: amb; original name unknown.
+    TYPE_UNKNOWN_1, // Inferred role: dir; original name unknown.
+    TYPE_UNKNOWN_2, // Inferred role: pnt; original name unknown.
+    TYPE_UNKNOWN_3, // Inferred role: spt; original name unknown.
   };
 
   enum Flag {
-    FLAG_SHADOW = 1 << 0,
-    FLAG_SOFT_SHADOW = 1 << 1,
-    FLAG_CACHE_SHADOW = 1 << 2,
-    FLAG_TEX = 1 << 3,
-    FLAG_TEX_LOOP = 1 << 4,
+    FLAG_UNKNOWN_0 = 1 << 0,   // Inferred role: shadow; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1,   // Inferred role: soft shadow; original name unknown.
+    FLAG_UNKNOWN_2 = 1 << 2,   // Inferred role: cache shadow; original name unknown.
+    FLAG_UNKNOWN_3 = 1 << 3,   // Inferred role: tex; original name unknown.
+    FLAG_UNKNOWN_4 = 1 << 4,   // Inferred role: tex loop; original name unknown.
     FLAG_UNKNOWN_16 = 1 << 16, // Inferred role: release per buffer; original name unknown.
-    FLAG_AMB_MODE_ON = 1 << 11,
-    FLAG_OUT_LGT_OFF = 1 << 12,
-    FLAG_IN_LGT_OFF = 1 << 13,
-    FLAG_CHAR_LGT_OFF = 1 << 14,
-    FLAG_MAP_LGT_OFF = 1 << 15,
-    FLAG_CHAR_SHADOW = 1 << 18,
-    FLAG_BASE_MAP_SHADOW = 1 << 19,
-    FLAG_INST_MAP_SHADOW = 1 << 20,
-    FLAG_INST_SEL_MAP_SHADOW = 1 << 21,
-    FLAG_SUBTRACT = 1 << 22,
-    FLAG_CULL_ON = 1 << 30,
+    FLAG_UNKNOWN_11 = 1 << 11, // Inferred role: amb mode on; original name unknown.
+    FLAG_UNKNOWN_12 = 1 << 12, // Inferred role: out lgt off; original name unknown.
+    FLAG_UNKNOWN_13 = 1 << 13, // Inferred role: in lgt off; original name unknown.
+    FLAG_UNKNOWN_14 = 1 << 14, // Inferred role: char lgt off; original name unknown.
+    FLAG_UNKNOWN_15 = 1 << 15, // Inferred role: map lgt off; original name unknown.
+    FLAG_UNKNOWN_18 = 1 << 18, // Inferred role: char shadow; original name unknown.
+    FLAG_UNKNOWN_19 = 1 << 19, // Inferred role: base map shadow; original name unknown.
+    FLAG_UNKNOWN_20 = 1 << 20, // Inferred role: inst map shadow; original name unknown.
+    FLAG_UNKNOWN_21 = 1 << 21, // Inferred role: inst sel map shadow; original name unknown.
+    FLAG_UNKNOWN_22 = 1 << 22, // Inferred role: subtract; original name unknown.
+    FLAG_UNKNOWN_30 = 1 << 30, // Inferred role: cull on; original name unknown.
   };
 
   void setSoftShadow(bool isEnable);

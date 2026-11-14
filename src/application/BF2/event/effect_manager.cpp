@@ -18,13 +18,13 @@ fw::EffectPack *EffectManager::getResPack() const {
   return nullptr;
 }
 
-bool EffectManager::isStreamMode() const { return (unknown10 & FLAG_STREAM_MODE) != 0; }
+bool EffectManager::isStreamMode() const { return (unknown10 & FLAG_UNKNOWN_0) != 0; }
 
-bool EffectManager::isOffscrMode() const { return (unknown10 & FLAG_OFFSCR_MODE) != 0; }
+bool EffectManager::isOffscrMode() const { return (unknown10 & FLAG_UNKNOWN_1) != 0; }
 
 u32 EffectManager::getOffscrID() const { return m_offscrID; }
 
-bool EffectManager::isReplaceMode() const { return (unknown10 & FLAG_REPLACE_MODE) != 0; }
+bool EffectManager::isReplaceMode() const { return (unknown10 & FLAG_UNKNOWN_2) != 0; }
 
 EffectManager::EffectManager() : unknown10(0), unknown14(0), unknowna0(nullptr), m_offscrID(0), unknownac(0) {}
 
@@ -69,7 +69,7 @@ bool EffectManager::isLoading() const {
 
 void EffectManager::setEvent(const char *name) { unknowna0 = searchRes(name); }
 
-void EffectManager::setStreamMode(bool isStreamMode) { setFlag(FLAG_STREAM_MODE, isStreamMode); }
+void EffectManager::setStreamMode(bool isStreamMode) { setFlag(FLAG_UNKNOWN_0, isStreamMode); }
 
 void EffectManager::loadResource(const char *name) {
   if (isStreamMode()) {
@@ -80,38 +80,38 @@ void EffectManager::loadResource(const char *name) {
 
 void EffectManager::setOffscrMode(bool isOffscrMode, u32 offscrID) {
   if (isOffscrMode) {
-    unknown10 |= FLAG_OFFSCR_MODE;
+    unknown10 |= FLAG_UNKNOWN_1;
     m_offscrID = offscrID;
   } else {
-    unknown10 &= ~FLAG_OFFSCR_MODE;
+    unknown10 &= ~FLAG_UNKNOWN_1;
     m_offscrID = 0;
   }
 }
 
 void EffectManager::setReplaceMode(bool isReplaceMode, u32 replaceID) {
   if (isReplaceMode) {
-    unknown10 |= FLAG_REPLACE_MODE;
+    unknown10 |= FLAG_UNKNOWN_2;
     unknownac = replaceID;
   } else {
-    unknown10 &= ~FLAG_REPLACE_MODE;
+    unknown10 &= ~FLAG_UNKNOWN_2;
     unknownac = 0;
   }
 }
 
-void EffectManager::setEffectDisp(bool isDisp) { setDispFlag(DISP_FLAG_EFFECT, isDisp); }
+void EffectManager::setEffectDisp(bool isDisp) { setDispFlag(DISP_FLAG_UNKNOWN_0, isDisp); }
 
-bool EffectManager::isEffectDisp() const { return (unknown14 & DISP_FLAG_EFFECT) != 0; }
+bool EffectManager::isEffectDisp() const { return (unknown14 & DISP_FLAG_UNKNOWN_0) != 0; }
 
-void EffectManager::setEffectDisable(bool isDisable) { setDispFlag(DISP_FLAG_DISABLE, isDisable); }
+void EffectManager::setEffectDisable(bool isDisable) { setDispFlag(DISP_FLAG_UNKNOWN_1, isDisable); }
 
-bool EffectManager::isEffectDisable() const { return (unknown14 & DISP_FLAG_DISABLE) != 0; }
+bool EffectManager::isEffectDisable() const { return (unknown14 & DISP_FLAG_UNKNOWN_1) != 0; }
 
 void EffectManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
-  case MSG_TYPE_INIT:
+  case MSG_TYPE_UNKNOWN_4:
     clear();
     break;
-  case MSG_TYPE_CLEAR:
+  case MSG_TYPE_UNKNOWN_12:
     clear();
     break;
   default:

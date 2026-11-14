@@ -17,7 +17,7 @@ public:
 template <typename T> class threadval : public IThreadValue {
 public:
   enum Flag {
-    FLAG_SYNC = 1 << 0,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: sync; original name unknown.
   };
 
   // Inferred role: flags; original type name unknown.
@@ -37,7 +37,7 @@ public:
   ~threadval() override { WorkCpu::removeSwap(this); }
 
   void tvSwap() override {
-    if (m_flags.test(FLAG_SYNC)) {
+    if (m_flags.test(FLAG_UNKNOWN_0)) {
       memcpy(m_front, m_back, sizeof(T));
     }
     m_bank = 1 - m_bank;

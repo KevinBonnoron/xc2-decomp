@@ -11,7 +11,7 @@ class ScheduleItem {
 public:
   typedef void (ScheduleItem::*Func)(gf::GF_OBJ_HANDLE *handle);
 
-  static const f32 FADE_SP;
+  static const f32 FADE_SP; // Name given by the xc2 symbol _ZN5event12ScheduleItem7FADE_SPE.
 
   ScheduleItem(gf::GF_OBJ_HANDLE *handle);
   virtual ~ScheduleItem() {}

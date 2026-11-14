@@ -10,6 +10,8 @@
 
 namespace ml {
 
+f32 DrResMdoSeamWrkMpf::SEAM_MPFMAP_READ_CHECK = 60.0f;
+
 DrResMdoSeamWrkMpf::DrResMdoSeamWrkMpf()
     : unknown18(nullptr), unknown4c(0), unknown54(0), unknown56(0), unknown58(0), unknown5c(0), unknown60(0), unknown64(0), unknown68(0), unknown6c(0), unknown70(nullptr), unknown78(nullptr),
       unknownc0(nullptr), unknownc8(nullptr), unknownd0(nullptr), unknownd8(nullptr), unknowne8(0) {}

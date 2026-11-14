@@ -4,7 +4,8 @@
 #include "mtl/alloc_handle.h"
 #include "mtl/mem_manager.h"
 
-void pluginRegist();
+#include "plugin/plugin_regist.h"
+
 extern "C" void vmExec();
 
 namespace fw {
@@ -102,5 +103,17 @@ bool ScriptManager::isScriptFree(int type) const {
 }
 
 u32 ScriptManager::getTypeMax() const { return unknown20.size(); }
+
+void ScriptManager::loadScript(int type, const char *name, ml::FILE_PRIO priority) {
+  mm::mtl::FixStr<256> path;
+  makeFullPath(path, name);
+  unknown20[type].load(path, priority);
+}
+
+void ScriptManager::loadScriptFromMemory(int type, const char *name, const char *data, size_t size) {
+  mm::mtl::FixStr<256> path;
+  makeFullPath(path, name);
+  unknown20[type].loadFromMemory(path, data, size);
+}
 
 } // namespace fw

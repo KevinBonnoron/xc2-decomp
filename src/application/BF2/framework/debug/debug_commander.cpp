@@ -6,10 +6,6 @@
 #include "mm_math/mm_rect.h"
 #include "mm_mtl/algorithm.h"
 
-namespace skt {
-enum SERVER_OPTION : int;
-} // namespace skt
-
 namespace fw {
 namespace debug {
 
@@ -27,7 +23,7 @@ bool CommandManager::sendCommandHtcs(const char *server, const char *command) { 
 
 bool CommandManager::openServer(const skt::PortRegistInfo &info) { return skt::CommandManager::openServer(info, static_cast<skt::SERVER_OPTION>(0)); }
 
-bool CommandManager::closeServer(const char *server) { return skt::CommandManager::closeServer(server); }
+void CommandManager::closeServer(const char *server) { skt::CommandManager::closeServer(server); }
 
 bool CommandManager::isConnectedHtcs(const char *server) { return skt::CommandManager::isConnectedHtcs(server); }
 
@@ -153,5 +149,3 @@ void DebugCommander::setDebugInput(IDebugInput *input) {
 
 } // namespace debug
 } // namespace fw
-
-template mm::mtl::PtrSingleton<skt::CommandManager>::~PtrSingleton();

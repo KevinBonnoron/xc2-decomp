@@ -866,7 +866,7 @@ void GfBdatCond::destroyFP() {
 }
 // Inferred macro name; macros leave no trace in the binary.
 #define NEW_BDAT_WRAPPER(bdat)                                                                                                                       \
-  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper { GfDataBdat::getFP(bdat) }
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) CBdatWrapper { GfDataBdat::getFP(bdat) }
 
 void GfBdatCond::createFP() {
   m_conditionList = NEW_BDAT_WRAPPER(BDAT_FLD_CONDITION_LIST);

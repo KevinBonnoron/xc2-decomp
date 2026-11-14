@@ -30,7 +30,7 @@ public:
     RENDER_DEBUG_TYPE_UNKNOWN_0 = 0, // Inferred role: point light.
   };
 
-  static const char *s_DeclarationNames[19];
+  static const char *s_DeclarationNames[19]; // Name from the game symbol _ZN2ml11DrShdLgtMan18s_DeclarationNamesE; also in torna and xc1de.
 
   DrShdLgtMan(DrMan *drMan);
   ~DrShdLgtMan();

@@ -14,11 +14,11 @@
 
 namespace gf {
 
-constexpr f32 CAMERA_FOV = 40.0f;
-constexpr f32 CAMERA_FAR = 8000.0f;
-constexpr f32 CAMERA_NEAR = 0.1f;
+constexpr f32 unknown089 = 40.0f;   // Inferred role: camera fov; original name unknown.
+constexpr f32 unknown090 = 8000.0f; // Inferred role: camera far; original name unknown.
+constexpr f32 unknown091 = 0.1f;    // Inferred role: camera near; original name unknown.
 
-mm::Plane GfInfo::m_camPlanes[CAMERA_PLANE_COUNT];
+mm::Plane GfInfo::m_camPlanes[PLANE_UNKNOWN_6];
 mm::Mat44 GfInfo::m_frustum;
 mm::Mat44 GfInfo::m_projection;
 mm::Mat44 GfInfo::m_viewMat;
@@ -44,7 +44,7 @@ void GfInfo::initialize(const GfSetupParam &) {
   m_nScreenH = ml::DevGraph::getRootHeight();
   mm::Plane plane;
   plane.set(mm::Vec3::unitY, mm::Vec3::zero);
-  for (u32 i = 0; i < CAMERA_PLANE_COUNT; i++) {
+  for (u32 i = 0; i < PLANE_UNKNOWN_6; i++) {
     m_camPlanes[i] = plane;
   }
   m_frustum = mm::Mat44::identity;
@@ -56,9 +56,9 @@ void GfInfo::initialize(const GfSetupParam &) {
   m_camTgt = mm::Vec3::zero;
   m_camSize.x = m_nScreenW;
   m_camSize.y = m_nScreenH;
-  m_camFov = CAMERA_FOV;
-  m_camFar = CAMERA_FAR;
-  m_camNear = CAMERA_NEAR;
+  m_camFov = unknown089;
+  m_camFar = unknown090;
+  m_camNear = unknown091;
   m_camAspect = 1.0f;
   m_camLength = 1.0f;
   m_fSecPerFrame = ml::DevGraph::getFrameSyncSec();
@@ -70,7 +70,7 @@ GfInfo::~GfInfo() {}
 void GfInfo::build(const GfSetupParam &param) {
   // __LINE__ must be 70 as in the original file: its value changes the instruction order.
 #line 70
-  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfInfo(param);
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfInfo(param);
 }
 
 void GfInfo::destroy() {

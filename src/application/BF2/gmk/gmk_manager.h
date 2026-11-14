@@ -28,16 +28,19 @@ struct Vec3;
 
 namespace gmk {
 
+// Enumerator names are the game class names without the Gmk prefix (symbols gmk::GmkEnemy, gmk::GmkRoutedEnemy, gmk::GmkNpc, gmk::GmkTbox, ...);
+// GMK_TYPE_FORM_PC and GMK_TYPE_FORM_PCNPC (24 and 25) follow the template symbols gmk::TGmkFormPc<(GmkType)24, gmk::TGmkFormPcnpc<(GmkType)25>>
+// and gmk::TGmkFormPcnpc<(GmkType)25>. The others have no name in the game.
 enum GmkType {
   GMK_TYPE_ENEMY = 0,
   GMK_TYPE_ROUTED_ENEMY = 1,
   GMK_TYPE_ROUTED_ENEMY_POINT = 2,
   GMK_TYPE_NPC = 3,
   GMK_TYPE_ROUTED_NPC = 4,
-  GMK_TYPE_NPC_ROUTE_POINT = 5,
+  GMK_TYPE_UNKNOWN_5 = 5, // Inferred role: npc route point; original name unknown.
   GMK_TYPE_MAP_OBJ = 6,
   GMK_TYPE_ROUTED_MAP_OBJ = 7,
-  GMK_TYPE_MAP_OBJ_ROUTE_POINT = 8,
+  GMK_TYPE_UNKNOWN_8 = 8, // Inferred role: map obj route point; original name unknown.
   GMK_TYPE_TBOX = 9,
   GMK_TYPE_EVENT = 10,
   GMK_TYPE_BATTLE_LOCK = 11,
@@ -49,14 +52,14 @@ enum GmkType {
   GMK_TYPE_SE_LINE_POINT = 17,
   GMK_TYPE_MOB = 18,
   GMK_TYPE_ROUTED_MOB = 19,
-  GMK_TYPE_MOB_ROUTE_POINT = 20,
+  GMK_TYPE_UNKNOWN_20 = 20, // Inferred role: mob route point; original name unknown.
   GMK_TYPE_LANDMARK = 21,
   GMK_TYPE_ROUTE = 22,
   GMK_TYPE_ROUTE_POINT = 23,
   GMK_TYPE_FORM_PC = 24,
   GMK_TYPE_FORM_PCNPC = 25,
-  GMK_TYPE_FORM_PC_EV = 26,
-  GMK_TYPE_FORM_PCNPC_EV = 27,
+  GMK_TYPE_UNKNOWN_26 = 26, // Inferred role: form pc ev; original name unknown.
+  GMK_TYPE_UNKNOWN_27 = 27, // Inferred role: form pcnpc ev; original name unknown.
   GMK_TYPE_COLLECTION = 28,
   GMK_TYPE_AREA_BGM = 29,
   GMK_TYPE_AREA_WEATHER = 30,
@@ -87,22 +90,23 @@ enum GmkType {
   GMK_TYPE_ROUTED_FOOT_PRINT_POINT = 55,
   GMK_TYPE_ANTI_BLADE_AREA = 56,
   GMK_TYPE_TUTORIAL = 57,
-  GMK_TYPE_NUM = 58,
-  GMK_TYPE_INVALID = 59,
+  GMK_TYPE_NUM = 58,        // Number of gimmick types: bound of the per-type tables (unknown014, GmkSet::unknown1b8) and loops; GMK_TYPE_UNKNOWN_59 follows it.
+  GMK_TYPE_UNKNOWN_59 = 59, // Inferred role: invalid; original name unknown.
 };
 
-constexpr u16 SCENARIO_FLAG_KEEP_BATTLE_LOCK_IN_BATTLE = 7039;
+constexpr u16 SCENARIO_FLAG_UNKNOWN_7039 = 7039; // Inferred role: scenario flag keep battle lock in battle; original name unknown.
 
 enum ShapeType {
-  SHAPE_TYPE_NONE = 0,
-  SHAPE_TYPE_POINT = 1,
-  SHAPE_TYPE_SPHERE = 2,
-  SHAPE_TYPE_BOX = 3,
-  SHAPE_TYPE_CAPSULE = 4,
+  SHAPE_TYPE_UNKNOWN_0 = 0, // Inferred role: none; original name unknown.
+  SHAPE_TYPE_UNKNOWN_1 = 1, // Inferred role: point; original name unknown.
+  SHAPE_TYPE_UNKNOWN_2 = 2, // Inferred role: sphere; original name unknown.
+  SHAPE_TYPE_UNKNOWN_3 = 3, // Inferred role: box; original name unknown.
+  SHAPE_TYPE_UNKNOWN_4 = 4, // Inferred role: capsule; original name unknown.
 };
 
 // Inferred table: phantom shape type of each gimmick shape type; original name unknown.
-const GmkPhantom::ShapeType unknown006[] = {GmkPhantom::SHAPE_TYPE_NONE, GmkPhantom::SHAPE_TYPE_NONE, GmkPhantom::SHAPE_TYPE_SPHERE, GmkPhantom::SHAPE_TYPE_BOX, GmkPhantom::SHAPE_TYPE_CAPSULE};
+const GmkPhantom::ShapeType unknown006[] = {
+    GmkPhantom::SHAPE_TYPE_UNKNOWN_0, GmkPhantom::SHAPE_TYPE_UNKNOWN_0, GmkPhantom::SHAPE_TYPE_UNKNOWN_1, GmkPhantom::SHAPE_TYPE_UNKNOWN_3, GmkPhantom::SHAPE_TYPE_UNKNOWN_2};
 
 // Inferred role: interest type; original type name unknown.
 enum unknown080 {
@@ -160,6 +164,7 @@ public:
   ~GmkSquadManager() override { clearGmkSquads(); }
   void update(f32 deltaTime);
   void addGmkSquad(GmkSquad *squad);
+  void removeGmkSquad(GmkSquad *squad);
   void clearGmkSquads();
   void debugDraw() const;
 
@@ -261,6 +266,7 @@ bool isPlayerInDoor();
 gf::GF_OBJ_HANDLE *getPlayer();
 bool toScreenPos(mm::Vec2 &screenPos, const mm::Vec3 &position);
 AGmkBase *getBindedGmkInst(gf::GF_OBJ_HANDLE *handle);
+bool hasEyeBlink(const AGmkBase &gmk);
 GmkType getBindedGmkInstType(gf::GF_OBJ_HANDLE *handle);
 void setEventDisp(gf::GF_OBJ_HANDLE *handle, bool isDisp);
 bool getGobPosRot(mm::Vec3 &position, mm::Quat &rotation, gf::GF_OBJ_HANDLE *handle);

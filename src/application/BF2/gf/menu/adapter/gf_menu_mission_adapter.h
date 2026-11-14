@@ -3,6 +3,7 @@
 
 #include "gf/menu/adapter/gf_menu_adapter.h"
 #include "gf/menu/gf_menu_reference_number.h"
+#include "gf/menu/list/gf_menu_id_list.h"
 #include "gf/menu/list/gf_menu_mission_list.h"
 #include "mm_mtl/delegate.h"
 #include "mm_mtl/intrusive_ptr.h"
@@ -27,6 +28,7 @@ public:
 
   class MissionListConverter : public IConverter {
   public:
+    MissionListConverter(GfMenuMissionList *list, u32 listIndex) : list(list), listIndex(listIndex) { list->addRef(); }
     ~MissionListConverter() override { mm::mtl::safeRelease(list); }
     u32 getMissionId() override;
 
@@ -36,18 +38,45 @@ public:
 
   class ReferenceConverter : public IConverter {
   public:
+    ReferenceConverter(mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number) : number(number) {}
     ~ReferenceConverter() override { number = nullptr; }
     u32 getMissionId() override;
 
     mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number;
   };
 
+  class ListConverter : public IConverter {
+  public:
+    ListConverter(GfMenuIDList *list, u32 listIndex) : list(list), listIndex(listIndex) { list->addRef(); }
+    ~ListConverter() override { mm::mtl::safeRelease(list); }
+    u32 getMissionId() override;
+
+    GfMenuIDList *list;
+    u32 listIndex;
+  };
+
+  class ReferenceMissionConverter : public IConverter {
+  public:
+    u32 getMissionId() override;
+  };
+
   static GfMenuMissionAdapter *createFromReferenceMission(u32 handle, u32 type, u32 index, bool isUpdateAlways);
+  static GfMenuMissionAdapter *createFromCoverter(u32 handle, u32 type, IConverter *converter, bool isUpdateAlways);
+  static GfMenuMissionAdapter *createFromList(u32 handle, u32 type, GfMenuIDList *list, u32 index, GfMenuBladeList *bladeList, bool isUpdateAlways);
+  static GfMenuMissionAdapter *createFromMissionList(u32 handle, u32 type, GfMenuMissionList *list, u32 index, bool isUpdateAlways);
+  static GfMenuMissionAdapter *createFromReference(u32 handle, u32 type, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number, bool isUpdateAlways);
+  static GfMenuMissionAdapter *createFromBladeList(u32 handle, u32 type, u32 mission, GfMenuBladeList *list, bool isUpdateAlways);
+  static GfMenuMissionAdapter *createFromReferenceMissionBladeList(u32 handle, u32 type, int index, GfMenuBladeList *list, bool isUpdateAlways);
   GfMenuMissionAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways);
   ~GfMenuMissionAdapter() override;
   static GfMenuMissionAdapter *create(u32 handle, u32 type, u32 mission, bool isUpdateAlways);
   bool update_MissionName();
+  bool update_MissionSummary();
   bool update_MissionCategoryIcon();
+  bool update_MissionTime();
+  bool update_MissionStatusIcon();
+  bool update_MissionStatus();
+  bool update_MissionStatusColor();
   bool update_MissionRewardGold();
   bool update_MissionRewardGoldBonus();
   bool update_MissionRewardExp();
@@ -57,10 +86,16 @@ public:
   bool update_MissionRewardIdeaPoint();
   bool update_MissionRewardMerPoint();
   bool update_MissionFieldSkill();
+  bool update_MissionCond();
   bool update_MissionCondIcon();
   bool update_MissionCondParam();
+  bool update_MissionCondLv();
   bool update_MissionCondBladeMax();
+  bool update_MissionCondBladeCount();
+  bool update_MissionCondCheckIcon();
+  bool update_MissionCondCheckDisp();
   bool update_MissionTeamIcon();
+  bool update_MissionPartyIcon();
   bool update_MissionStateIcon();
   bool update_MissionNewDisp();
   bool update_MissionCondParamIcon();
@@ -71,8 +106,11 @@ public:
   bool update_MissionTimeOriginal();
   bool update_MissionTimeAdjust();
   bool update_MissionFieldSkillDisp();
+  bool update_MissionFieldSkillLevelCount();
+  bool update_MissionFieldSkillBladeCount();
   bool update_MissionFieldSkillBladeMax();
   void update(const fw::UpdateInfo &info) override;
+  int getStat(u32 mission, bool isOrderParty);
 
   mm::mtl::Delegate<bool()> unknown30; // Inferred role: updater; original member name unknown.
   IConverter *unknown50;               // Inferred role: converter; original member name unknown.

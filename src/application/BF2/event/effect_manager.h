@@ -15,17 +15,17 @@ class EffectRes;
 
 class EffectManager : public IManager, public mm::mtl::Singleton<EffectManager> {
 public:
-  static constexpr u32 RES_COUNT = 16;
+  static constexpr u32 RES_UNKNOWN_16 = 16; // Inferred role: res count; original name unknown.
 
   enum {
-    FLAG_STREAM_MODE = 1 << 0,
-    FLAG_OFFSCR_MODE = 1 << 1,
-    FLAG_REPLACE_MODE = 1 << 2,
+    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: stream mode flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: offscr mode flag; original name unknown.
+    FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: replace mode flag; original name unknown.
   };
 
   enum {
-    DISP_FLAG_EFFECT = 1 << 0,
-    DISP_FLAG_DISABLE = 1 << 1,
+    DISP_FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: effect flag; original name unknown.
+    DISP_FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: disable flag; original name unknown.
   };
 
   fw::EffectPack *getResPack() const;
@@ -68,10 +68,10 @@ private:
     }
   }
 
-  u32 unknown10;                                          // Inferred role: flags; original member name unknown.
-  u32 unknown14;                                          // Inferred role: disp flags; original member name unknown.
-  mm::mtl::FixedVector<EffectRes *, RES_COUNT> unknown18; // Inferred role: res list; original member name unknown.
-  EffectRes *unknowna0;                                   // Inferred role: current res; original member name unknown.
+  u32 unknown10;                                               // Inferred role: flags; original member name unknown.
+  u32 unknown14;                                               // Inferred role: disp flags; original member name unknown.
+  mm::mtl::FixedVector<EffectRes *, RES_UNKNOWN_16> unknown18; // Inferred role: res list; original member name unknown.
+  EffectRes *unknowna0;                                        // Inferred role: current res; original member name unknown.
   u32 m_offscrID;
   u32 unknownac; // Inferred role: replace id; original member name unknown.
 };

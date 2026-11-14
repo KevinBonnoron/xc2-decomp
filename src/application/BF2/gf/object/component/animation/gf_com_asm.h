@@ -27,25 +27,25 @@ class GfComAsm;
 struct MsgDebugActivateComponentWindow;
 
 enum AnimLayer {
-  ANIM_LAYER_BASE = 0,
-  ANIM_LAYER_HEAD = 2,
-  ANIM_LAYER_EYE = 3,
-  ANIM_LAYER_LIP = 4,
-  ANIM_LAYER_BROW = 5,
+  ANIM_LAYER_UNKNOWN_0 = 0, // Inferred role: anim layer base; original name unknown.
+  ANIM_LAYER_UNKNOWN_2 = 2, // Inferred role: anim layer head; original name unknown.
+  ANIM_LAYER_UNKNOWN_3 = 3, // Inferred role: anim layer eye; original name unknown.
+  ANIM_LAYER_UNKNOWN_4 = 4, // Inferred role: anim layer lip; original name unknown.
+  ANIM_LAYER_UNKNOWN_5 = 5, // Inferred role: anim layer brow; original name unknown.
 };
 
 enum AsmCategory {};
 
 enum {
-  MSG_OBJECT_NOTIFY_ASM_CALLBACK = 0x100003f,
-  MSG_OBJECT_SET_ASM_PLAYBACK_SPEED = 0x1000047,
+  MSG_OBJECT_UNKNOWN_16777279 = 0x100003f, // Inferred role: msg object notify asm callback; original name unknown.
+  MSG_OBJECT_UNKNOWN_16777287 = 0x1000047, // Inferred role: msg object set asm playback speed; original name unknown.
 };
 
 // Inferred role: kind of the asm annotations whose parameter is a string; original name unknown.
 constexpr s32 ANNOTATION_KIND_UNKNOWN_1 = 1;
 
 struct MsgObjectNotifyAsmCallback : fw::Message {
-  MsgObjectNotifyAsmCallback(GfComAsm *comAsm, const anm::AsmAnnotetion *annotation) : fw::Message(MSG_OBJECT_NOTIFY_ASM_CALLBACK, 0x40), unknown08(comAsm), unknown10(annotation) {}
+  MsgObjectNotifyAsmCallback(GfComAsm *comAsm, const anm::AsmAnnotetion *annotation) : fw::Message(MSG_OBJECT_UNKNOWN_16777279, 0x40), unknown08(comAsm), unknown10(annotation) {}
 
   GfComAsm *unknown08;                 // Inferred role: sender; original member name unknown.
   const anm::AsmAnnotetion *unknown10; // Inferred role: annotation; original member name unknown.
@@ -82,7 +82,7 @@ class GfComAsm : public GfComAnimation {
 public:
   static mm::mtl::RTTI m_rtti;
   static const u32 COMPONENT_INDEX = 2;
-  static const u32 CALLBACK_MAX = 5;
+  static const u32 CALLBACK_UNKNOWN_5 = 5; // Inferred role: callback max; original name unknown.
 
   typedef mm::mtl::Delegate<void(GfComAsm *, const CallBackCache &)> CallBackDelegate;
 
@@ -137,8 +137,8 @@ public:
   const void *getAppendix(const char *name) const;
   bool existState(const char *state);
   void executeCallback();
-  bool execCmd(const char *command, AnimLayer layer = ANIM_LAYER_BASE);
-  const char *getStateName(AnimLayer layer = ANIM_LAYER_BASE) const;
+  bool execCmd(const char *command, AnimLayer layer = ANIM_LAYER_UNKNOWN_0);
+  const char *getStateName(AnimLayer layer = ANIM_LAYER_UNKNOWN_0) const;
   bool setState(const char *state, AnimLayer layer);
   void clearState(AnimLayer layer);
   bool resetState(const char *state, AnimLayer layer);
@@ -168,7 +168,7 @@ public:
   anm::ASMControl *unknown10;                // Inferred role: asm control; original member name unknown.
   fw::AnimAsmUpdater unknown18;              // Inferred role: updater; original member name unknown.
   fw::AnimAsmPoseSampler unknown38;          // Inferred role: pose sampler; original member name unknown.
-  unknown008 unknown70[CALLBACK_MAX];        // Inferred role: callbacks; original member name unknown.
+  unknown008 unknown70[CALLBACK_UNKNOWN_5];  // Inferred role: callbacks; original member name unknown.
   AsmLisener unknown138;                     // Inferred role: listener; original member name unknown.
   mm::mtl::Vector<CallBackCache> unknown148; // Inferred role: callback caches; original member name unknown.
   ViewerListener unknown170;                 // Inferred role: viewer listener; original member name unknown.

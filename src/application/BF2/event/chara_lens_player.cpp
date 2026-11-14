@@ -48,7 +48,7 @@ void CharaLensPlayer::render(const mm::Vec3 &position, f32 height) {
   s32 textY = y - 100;
   fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
   fw::debug::drawFont(textX, textY, "LENS");
-  if (unknown08.test(FLAG_MANUAL)) {
+  if (unknown08.test(FLAG_UNKNOWN_1)) {
     fw::debug::drawFont(x - 35, textY, "(manual)");
   } else {
     fw::debug::drawFont(x - 35, textY, "(auto)");
@@ -63,18 +63,18 @@ void CharaLensPlayer::render(const mm::Vec3 &position, f32 height) {
 
 void CharaLensPlayer::setManualTarget(bool isManual, const mm::Vec2 &target, bool isDirect) {
   if (isManual) {
-    unknown08.set(FLAG_MANUAL, true);
+    unknown08.set(FLAG_UNKNOWN_1, true);
     unknown20 = target;
   } else {
-    unknown08.set(FLAG_MANUAL, false);
+    unknown08.set(FLAG_UNKNOWN_1, false);
     unknown20 = mm::Vec2::zero;
   }
-  unknown08.set(FLAG_DIRECT, isDirect);
+  unknown08.set(FLAG_UNKNOWN_0, isDirect);
 }
 
 void CharaLensPlayer::setAutoTarget(const mm::Vec2 &target, bool isDirect) {
   unknown30 = target;
-  unknown08.set(FLAG_DIRECT, isDirect);
+  unknown08.set(FLAG_UNKNOWN_0, isDirect);
 }
 
 const mm::Vec2 &CharaLensPlayer::getTarget() const { return m_target; }

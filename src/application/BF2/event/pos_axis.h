@@ -8,11 +8,11 @@ namespace event {
 class PosAxis {
 public:
   enum {
-    AXIS_NONE = 0,
-    AXIS_POS = 1,
-    AXIS_POS_GLOBAL = 2,
-    AXIS_SAY = 3,
-    AXIS_CHARA = 4,
+    AXIS_UNKNOWN_0 = 0, // Inferred role: none; original name unknown.
+    AXIS_UNKNOWN_1 = 1, // Inferred role: pos; original name unknown.
+    AXIS_UNKNOWN_2 = 2, // Inferred role: pos global; original name unknown.
+    AXIS_UNKNOWN_3 = 3, // Inferred role: say; original name unknown.
+    AXIS_UNKNOWN_4 = 4, // Inferred role: chara; original name unknown.
   };
 
   PosAxis();
@@ -23,6 +23,7 @@ public:
   void set(u32 axis, const mm::Vec3 &pos);
   mm::Vec3 calcPos() const;
   mm::Mat44 calcOrigMat() const;
+  mm::Mat44 calcOrigMatInv() const;
   const char *getOrigName() const;
   u32 getAxis() const { return unknown08; }
   const mm::Vec3 &getPos() const { return unknown10; }

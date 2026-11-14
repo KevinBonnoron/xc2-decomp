@@ -20,7 +20,7 @@ void GfComPropertyEvent::setMoveSpeed(f32 speed) { m_moveSpeed = speed; }
 f32 GfComPropertyEvent::getMoveSpeed() const { return m_moveSpeed; }
 
 bool GfComPropertyEvent::recieveMessage(fw::MessageObject *sender, fw::Message &message) {
-  if (message.unknown00 == MSG_OBJECT_GET_VELOCITY) {
+  if (message.unknown00 == MSG_UNKNOWN_16777286) {
     procMsgObjectGetVelocity(sender, static_cast<MsgObjectGetVelocity &>(message));
     return true;
   }

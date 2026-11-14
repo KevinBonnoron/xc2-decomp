@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "dr/dr_calc_clip_man.h"
 #include "types.h"
 
 namespace mm {
@@ -27,7 +28,7 @@ static_assert(offsetof(MdsClipListTreeData, unknown1c) == 0x1c, "");
 static_assert(offsetof(MdsClipListTreeData, unknown20) == 0x20, "");
 static_assert(offsetof(MdsClipListTreeData, unknown22) == 0x22, "");
 
-class DrCalcClipObj {
+class DrCalcClipObj : public DrCalcClipMan::unknown009<DrCalcClipObj> {
 public:
   // Inferred role: clip data header of the clip data file; original type name unknown.
   struct unknown005 {
@@ -66,6 +67,7 @@ public:
     u32 unknown60; // Inferred role: offset of the clip tree of the cleared clip data; original member name unknown.
   };
 
+  DrCalcClipObj(const void *data, DrMan *man);
   ~DrCalcClipObj();
   void setupClip(const u8 *data, DrMan *man);
   void update(DrCalcViewWork *viewWork, u32 *flags);
@@ -83,14 +85,12 @@ public:
 
   static bool (DrCalcClipObj::*s_pColiCheck[5])(const u8 *data, const mm::Vec3 &pos);
 
-  u8 _00[0x08 - 0x00];
-  DrCalcClipObj *unknown08;             // Inferred role: next; original member name unknown.
   const unknown008 *unknown10;          // Inferred role: clip data file; original member name unknown.
   const unknown005 *unknown18;          // Inferred role: clip data headers; original member name unknown.
   const MdsClipListTreeData *unknown20; // Inferred role: clip tree; original member name unknown.
   const unknown006 *unknown28;          // Inferred role: clip flag data; original member name unknown.
   const unknown007 *unknown30;          // Inferred role: clip data groups; original member name unknown.
-  u32 unknown38;                        // Inferred role: unknown; original member name unknown.
+  s32 unknown38;                        // Inferred role: clip flag count; original member name unknown.
   u32 unknown3c;                        // Inferred role: state flags; original member name unknown.
   s16 unknown40;                        // Inferred role: size of the flag table; original member name unknown.
   s16 unknown42;                        // Inferred role: priority of the flagged clip data; original member name unknown.

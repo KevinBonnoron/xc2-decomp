@@ -4,18 +4,21 @@
 #include "gf/data/gf_bdat_cond.h"
 #include "gf/data/gf_bdat_msg.h"
 #include "gf/data/gf_bdat_quest.h"
+#include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_game.h"
 #include "gf/data/gf_data_manager.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/game/gf_game_cond.h"
+#include "gf/game/quest/gf_achiev_quest.h"
 #include "gf/game/quest/gf_quest_task_param.h"
+#include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_vector.h"
 
 namespace gf {
 
 enum {
-  FLAG_ORDER_TIMMING_FIRST = 0x619,
-  FLAG_ORDER_TIMMING_END = 0x763,
+  FLAG_ORDER_TIMMING_UNKNOWN_1561 = 0x619, // Inferred role: flag order timming first; original name unknown.
+  FLAG_ORDER_TIMMING_UNKNOWN_1891 = 0x763, // Inferred role: flag order timming end; original name unknown.
 };
 
 // Inferred role: first game flag of the range getHanyouFlg accepts; original name unknown (numbered across gf_data.cpp, which
@@ -25,8 +28,8 @@ constexpr u32 unknown010 = 0x8b0;
 constexpr u32 unknown011 = 0x5dc;
 
 enum {
-  QUEST_NEXT_NONE = 30000,
-  QUEST_NEXT_NONE_ALTERNATE = 30001,
+  QUEST_NEXT_UNKNOWN_30000 = 30000, // Inferred role: quest next none; original name unknown.
+  QUEST_NEXT_UNKNOWN_30001 = 30001, // Inferred role: quest next none alternate; original name unknown.
 };
 
 void GfDataQuest::registAchievementBlade(u32 achievement, u16 blade) { m_achieve2blade[achievement] = blade; }
@@ -35,7 +38,7 @@ QuestID GfDataQuest::getListNextQuestA(QuestID quest) {
   QuestID next;
   if (!quest.empty()) {
     u16 nextId = QuestListAcc::get()->getListNextQuestA(quest);
-    if (nextId != QUEST_NEXT_NONE && nextId != QUEST_NEXT_NONE_ALTERNATE) {
+    if (nextId != QUEST_NEXT_UNKNOWN_30000 && nextId != QUEST_NEXT_UNKNOWN_30001) {
       next.unknown00 = nextId;
       next.unknown02 = quest.unknown02;
     }
@@ -52,16 +55,16 @@ u32 GfDataQuest::getListPurposeID(QuestID quest) {
   return QuestListAcc::get()->getListPurposeID(quest);
 }
 
-u32 GfDataQuest::getAchievementLine(u32 achievement) { return (achievement - 1) % ACHIEVEMENT_PER_BLADE / ACHIEVEMENT_LEVEL_COUNT; }
+u32 GfDataQuest::getAchievementLine(u32 achievement) { return (achievement - 1) % ACHIEVEMENT_UNKNOWN_50 / ACHIEVEMENT_UNKNOWN_5; }
 
-u32 GfDataQuest::getAchievementLevel(u32 achievement) { return (achievement - 1) % ACHIEVEMENT_PER_BLADE % ACHIEVEMENT_LEVEL_COUNT + 1; }
+u32 GfDataQuest::getAchievementLevel(u32 achievement) { return (achievement - 1) % ACHIEVEMENT_UNKNOWN_50 % ACHIEVEMENT_UNKNOWN_5 + 1; }
 
 void GfDataQuest::setOrderTimming(QuestID quest) {
   if (getListQuestCategory(quest) >= 5 || QuestListAcc::get()->getListAutoStart(quest) != 0) {
     return;
   }
 
-  for (u32 flag = FLAG_ORDER_TIMMING_FIRST; flag < FLAG_ORDER_TIMMING_END; flag++) {
+  for (u32 flag = FLAG_ORDER_TIMMING_UNKNOWN_1561; flag < FLAG_ORDER_TIMMING_UNKNOWN_1891; flag++) {
     u32 orderQuest = GfGameFlag::getLocal(16, flag);
     if (orderQuest == quest.unknown00) {
       return;
@@ -75,7 +78,7 @@ void GfDataQuest::setOrderTimming(QuestID quest) {
 }
 
 bool GfDataQuest::getOrderTimming(mm::mtl::FixedVector<QuestID, 330> &quests) {
-  for (u32 flag = FLAG_ORDER_TIMMING_FIRST; flag < FLAG_ORDER_TIMMING_END; flag++) {
+  for (u32 flag = FLAG_ORDER_TIMMING_UNKNOWN_1561; flag < FLAG_ORDER_TIMMING_UNKNOWN_1891; flag++) {
     u32 orderQuest = GfGameFlag::getLocal(16, flag);
     if (orderQuest == 0) {
       break;
@@ -225,7 +228,7 @@ QuestID GfDataQuest::getListNextQuestB(QuestID quest) {
   QuestID next;
   if (!quest.empty()) {
     u16 nextId = QuestListAcc::get()->getListNextQuestB(quest);
-    if (nextId != QUEST_NEXT_NONE && nextId != QUEST_NEXT_NONE_ALTERNATE) {
+    if (nextId != QUEST_NEXT_UNKNOWN_30000 && nextId != QUEST_NEXT_UNKNOWN_30001) {
       next.unknown00 = nextId;
       next.unknown02 = quest.unknown02;
     }
@@ -339,6 +342,38 @@ void GfDataQuest::setSelect(QuestID select) {
 
 QuestID GfDataQuest::getSelect() { return GfDataManager::getDataGame()->unknown1097e8; }
 
+AchievQuest *GfDataQuest::getAchievQuest(QuestID quest) {
+  if (quest.unknown02 == 0) {
+    return nullptr;
+  }
+  getListPRTQuestID(quest);
+  u16 blade = getAchievementBlade(quest.unknown02);
+  if (blade == 0) {
+    return nullptr;
+  }
+  SDataBlade &dataBlade = GfDataBlade::getSDataBlade(blade);
+  u32 line = getAchievementLine(quest.unknown02);
+  u32 level = getAchievementLevel(quest.unknown02) - 1;
+  switch (line) {
+  case 0:
+  case 1:
+  case 2:
+    return &dataBlade.unknownc4[line].unknown04[level];
+  case 3:
+  case 4:
+  case 5:
+    return &dataBlade.unknown274[line - 3].unknown04[level];
+  case 6:
+  case 7:
+  case 8:
+    return &dataBlade.unknown424[line - 6].unknown04[level];
+  case 9:
+    return &dataBlade.unknown5d4.unknown04[level];
+  default:
+    return nullptr;
+  }
+}
+
 bool GfDataQuest::getHanyouFlg(u32 &flag, u32 &flagMin, u32 &flagMax, const QuestTaskParam &param) {
   QuestListAcc *questListAcc = QuestListAcc::get();
   u32 purpose = param.unknown08;
@@ -348,7 +383,7 @@ bool GfDataQuest::getHanyouFlg(u32 &flag, u32 &flagMin, u32 &flagMax, const Ques
   }
 
   GfBdatCond *bdatCond = GfBdatCond::get();
-  if (questListAcc->getTaskTaskType(purpose, param.unknown0c) != TASK_TYPE_CONDITION) {
+  if (questListAcc->getTaskTaskType(purpose, param.unknown0c) != TASK_TYPE_UNKNOWN_10) {
     return false;
   }
 
@@ -357,8 +392,8 @@ bool GfDataQuest::getHanyouFlg(u32 &flag, u32 &flagMin, u32 &flagMax, const Ques
     return false;
   }
 
-  for (u32 index = 0; index < CONDITION_LIST_COUNT; index++) {
-    if (bdatCond->getConditionListConditionType(condition, index) != CONDITION_TYPE_FLAG) {
+  for (u32 index = 0; index < CONDITION_UNKNOWN_8; index++) {
+    if (bdatCond->getConditionListConditionType(condition, index) != CONDITION_TYPE_UNKNOWN_4) {
       continue;
     }
 

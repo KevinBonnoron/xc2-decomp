@@ -10,7 +10,7 @@ template bool TGmkList<GmkAntiBladeArea, GmkAntiBladeArea::BdatInfo, 1095516737u
 
 void GmkAntiBladeArea::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   dispose();
-  unknown00 = bdat.getValCheck("BTL_MapRevId", id, BDAT_TYPE_U16);
+  unknown00 = bdat.getValCheck("BTL_MapRevId", id, BDAT_TYPE_UNKNOWN_2);
 }
 
 GmkType GmkAntiBladeArea::getGmkType() const { return GMK_TYPE; }

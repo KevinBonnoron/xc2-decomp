@@ -3,7 +3,7 @@
 namespace fw {
 
 UpdatableObject::UpdatableObject(u32 type, const HandlePtr<UpdatableObject> &handle, u32 layer) : unknown18(handle), unknown28(type), unknown2c(layer), unknown30(0), unknownd0() {
-  for (u32 i = 0; i < COMPONENT_SLOT_MAX; i++) {
+  for (u32 i = 0; i < COMPONENT_SLOT_UNKNOWN_16; i++) {
     unknown38[i] = nullptr;
   }
 }

@@ -21,7 +21,7 @@ public:
   static bool checkFileType(const void *data);
 
   enum Flag {
-    FLAG_DISP_OFF = 1 << 0,
+    FLAG_UNKNOWN_0 = 1 << 0,   // Inferred role: disp off; original name unknown.
     FLAG_UNKNOWN_30 = 1 << 30, // Inferred role: release per buffer; original name unknown.
   };
 
@@ -45,16 +45,57 @@ static_assert(offsetof(DrGlobalIBLPack, unknown60) == 0x60, "");
 
 class DrGlobalIBLMan {
 public:
+  // Inferred role: first and last pack of an intrusive list of packs; original type name unknown.
+  struct unknown001 {
+    unknown001() : unknown00(nullptr), unknown08(nullptr) {}
+
+    // Inferred helper: appends a pack at the end of the list; original name unknown.
+    void unknown002(DrGlobalIBLPack *pack) {
+      if (unknown08 == nullptr) {
+        unknown00 = pack;
+        unknown08 = pack;
+        pack->unknown08 = nullptr;
+      } else {
+        unknown08->unknown10 = pack;
+        pack->unknown08 = unknown08;
+        unknown08 = pack;
+      }
+      pack->unknown10 = nullptr;
+    }
+
+    // Inferred helper: deletes every pack and empties the list; original name unknown.
+    void unknown003() {
+      DrGlobalIBLPack *pack = unknown00;
+      while (pack != nullptr) {
+        DrGlobalIBLPack *next = pack->unknown10;
+        delete pack;
+        pack = next;
+      }
+      unknown00 = nullptr;
+      unknown08 = nullptr;
+    }
+
+    DrGlobalIBLPack *unknown00; // Inferred role: first pack; original member name unknown.
+    DrGlobalIBLPack *unknown08; // Inferred role: last pack; original member name unknown.
+  };
+
   DrGlobalIBLMan(DrMan *man, int index);
+  ~DrGlobalIBLMan();
+  void releaseAll();
   DrGlobalIBLPack *createObj(const void *data);
   void releaseObj(DrGlobalIBLPack *pack);
+  void update();
 
-  DrMan *unknown00;              // Inferred role: dr man; original member name unknown.
-  s32 unknown08;                 // Inferred role: view index; original member name unknown.
-  DrGlobalIBLPack *unknown10[8]; // Inferred role: packs; original member name unknown.
+  DrMan *unknown00;        // Inferred role: dr man; original member name unknown.
+  s32 unknown08;           // Inferred role: view index; original member name unknown.
+  unknown001 unknown10[2]; // Inferred role: packs created per double buffer; original member name unknown.
+  unknown001 unknown30;    // Inferred role: running packs; original member name unknown.
+  unknown001 unknown40;    // Inferred role: released packs; original member name unknown.
 };
 
 static_assert(offsetof(DrGlobalIBLMan, unknown10) == 0x10, "");
+static_assert(offsetof(DrGlobalIBLMan, unknown30) == 0x30, "");
+static_assert(offsetof(DrGlobalIBLMan, unknown40) == 0x40, "");
 static_assert(sizeof(DrGlobalIBLMan) == 0x50, "");
 
 } // namespace ml

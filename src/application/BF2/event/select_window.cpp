@@ -14,7 +14,7 @@
 
 namespace event {
 
-static constexpr int MENU_OFFSET_SELECT = 1;
+static constexpr int MENU_OFFSET_UNKNOWN_1 = 1; // Inferred role: menu offset select; original name unknown.
 
 SelectWindow::SelectWindow() : unknown08(), unknown0c(0), unknown10(nullptr) {}
 
@@ -46,21 +46,21 @@ void SelectWindow::open(SELECT_TYPE type, int textId, const int *selectIds, size
     return;
   }
   unknown10 = gf::GfMenuCallContext::create();
-  if (type == SELECT_TYPE_BALLOON) {
+  if (type == SELECT_TYPE_UNKNOWN_0) {
     gf::GfMenuObjBalloon::OpenSelectParam param;
     param.unknown00 = bdat;
     param.unknown08 = textId;
     param.unknown20 = handle;
-    gf::GfMenuBdat::getMenuOffset(MENU_OFFSET_SELECT, param.unknown30);
+    gf::GfMenuBdat::getMenuOffset(MENU_OFFSET_UNKNOWN_1, param.unknown30);
     param.unknown50 = bdat;
     for (size_t i = 0; i < count && i < param.unknown58.capacity(); i++) {
       param.unknown58.push_back(selectIds[i]);
     }
-    if (handle != gf::INVALID_HANDLE) {
+    if (handle != gf::unknown020) {
       gf::DataParamAcc paramAcc(handle);
       switch (paramAcc.getObjType()) {
-      case gf::OBJECT_TYPE_DRIVER:
-        gf::GfDataDriver::getName(param.unknown10, param.unknown18, paramAcc.isValid() && paramAcc.getObjType() == gf::OBJECT_TYPE_DRIVER ? paramAcc.getBdatId() : 0);
+      case gf::OBJECT_TYPE_PC:
+        gf::GfDataDriver::getName(param.unknown10, param.unknown18, paramAcc.isValid() && paramAcc.getObjType() == gf::OBJECT_TYPE_PC ? paramAcc.getBdatId() : 0);
         break;
       case gf::OBJECT_TYPE_BLADE:
         gf::GfDataBlade::getName(param.unknown10, param.unknown18, paramAcc.isValid() ? paramAcc.getBdatId() : 0);
@@ -74,7 +74,7 @@ void SelectWindow::open(SELECT_TYPE type, int textId, const int *selectIds, size
       }
     }
     gf::GfMenuObjBalloon::openEventSelect(unknown10, param);
-  } else if (type == SELECT_TYPE_BOX) {
+  } else if (type == SELECT_TYPE_UNKNOWN_1) {
     gf::GfMenuObjBalloon::OpenSelectBoxParam param;
     param.unknown00 = bdat;
     param.unknown08 = textId;
@@ -84,7 +84,7 @@ void SelectWindow::open(SELECT_TYPE type, int textId, const int *selectIds, size
     }
     gf::GfMenuObjBalloon::openEventSelectBox(unknown10, param);
   }
-  unknown08.set(FLAG_OPEN);
+  unknown08.set(FLAG_UNKNOWN_0);
 }
 
 int SelectWindow::getResult() {

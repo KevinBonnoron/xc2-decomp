@@ -2,8 +2,8 @@
 #include <stddef.h>
 
 #include "fw/fw_camera.h"
+#include "fw/fw_transform.h"
 #include "gf/event/gf_event.h"
-#include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
@@ -31,8 +31,7 @@ public:
   void gevPartyMemberOK(bool isOK) override;
   void writeTargetInfo();
 
-  mm::Vec3 unknown20;       // Inferred role: position of the player; original member name unknown.
-  mm::Quat unknown30;       // Inferred role: rotation of the player; original member name unknown.
+  fw::Transform unknown20;  // Inferred role: position and rotation of the player; original member name unknown.
   bool unknown40;           // Role and original member name unknown.
   bool unknown41;           // Role and original member name unknown.
   bool unknown42;           // Role and original member name unknown.
@@ -50,7 +49,6 @@ public:
 };
 
 static_assert(offsetof(PlayerCameraTarget, unknown20) == 0x20, "");
-static_assert(offsetof(PlayerCameraTarget, unknown30) == 0x30, "");
 static_assert(offsetof(PlayerCameraTarget, unknown40) == 0x40, "");
 static_assert(offsetof(PlayerCameraTarget, unknown48) == 0x48, "");
 static_assert(offsetof(PlayerCameraTarget, unknown50) == 0x50, "");

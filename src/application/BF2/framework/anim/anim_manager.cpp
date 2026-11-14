@@ -44,7 +44,7 @@ AnimationManager::~AnimationManager() {
 }
 
 void AnimationManager::samplePose(u32 layers) {
-  for (u32 layer = 0; layer < LAYER_MAX; layer++) {
+  for (u32 layer = 0; layer < LAYER_UNKNOWN_32; layer++) {
     if ((layers & 1 << layer) != 0) {
       unknown002<AnimSamplePoseJob, AnimPoseSamplerInterface>(unknown18[layer].unknown18);
     }
@@ -55,7 +55,7 @@ void AnimationManager::samplePose(u32 layers) {
 }
 
 void AnimationManager::applyPose(u32 layers) {
-  for (u32 layer = 0; layer < LAYER_MAX; layer++) {
+  for (u32 layer = 0; layer < LAYER_UNKNOWN_32; layer++) {
     if ((layers & 1 << layer) != 0) {
       unknown002<AnimModifyPoseJob, AnimPoseModifierInterface>(unknown18[layer].unknown30);
     }
@@ -66,7 +66,7 @@ void AnimationManager::applyPose(u32 layers) {
 }
 
 void AnimationManager::applyAfterModifyPose(u32 layers) {
-  for (u32 layer = 0; layer < LAYER_MAX; layer++) {
+  for (u32 layer = 0; layer < LAYER_UNKNOWN_32; layer++) {
     if ((layers & 1 << layer) != 0) {
       unknown002<AnimAfterModifyJob, AnimAfterModifierInterface>(unknown18[layer].unknown48);
     }
@@ -77,7 +77,7 @@ void AnimationManager::applyAfterModifyPose(u32 layers) {
 }
 
 void AnimationManager::solveIK(const UpdateInfo &info, u32 layers) {
-  for (u32 layer = 0; layer < LAYER_MAX; layer++) {
+  for (u32 layer = 0; layer < LAYER_UNKNOWN_32; layer++) {
     if ((layers & 1 << layer) != 0) {
       mm::mtl::IntrusiveList<IkResolver> &list = unknown18[layer].unknown60;
       mm::mtl::IntrusiveList<IkResolver>::iterator it = list.begin();

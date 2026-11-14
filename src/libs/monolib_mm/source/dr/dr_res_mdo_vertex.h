@@ -76,9 +76,23 @@ static_assert(sizeof(unknown050) == 0x10, "");
 static_assert(offsetof(unknown050, unknown04) == 0x4, "");
 static_assert(offsetof(unknown050, unknown0e) == 0xe, "");
 
+// Inferred role: model data mof blend entry; original type name unknown.
+struct unknown137 {
+  u8 _00[0x04 - 0x00];
+  u32 unknown04; // Inferred role: first mof blend uniform index; original member name unknown.
+  u8 _08[0x10 - 0x08];
+  s8 unknown10; // Inferred role: declaration index; original member name unknown.
+  u8 _11[0x14 - 0x11];
+};
+
+static_assert(offsetof(unknown137, unknown04) == 0x04, "");
+static_assert(offsetof(unknown137, unknown10) == 0x10, "");
+static_assert(sizeof(unknown137) == 0x14, "");
+
 // Inferred role: model data mof blend header; original type name unknown.
 struct unknown051 {
-  u8 _00[0x8 - 0x0];
+  s32 unknown00; // Inferred role: entry count; original member name unknown.
+  u32 unknown04; // Inferred role: offset of the entries; original member name unknown.
   s32 unknown08; // Inferred role: info count; original member name unknown.
   u32 infoOffset;
 };

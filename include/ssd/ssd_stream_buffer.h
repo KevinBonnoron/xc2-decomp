@@ -28,6 +28,10 @@ public:
   Result OutData16(void *buffer, u64 size, u64 *outSize, bool *isMark);
   Result OutData32(void *buffer, u64 size, u64 *outSize, bool *isMark);
   Result OutData64(void *buffer, u64 size, u64 *outSize, bool *isMark);
+  Result InData8(const void *buffer, u64 size, bool isMark);
+  Result InData16(const void *buffer, u64 size, bool isMark);
+  Result InData32(const void *buffer, u64 size, bool isMark);
+  Result InData64(const void *buffer, u64 size, bool isMark);
 
   Allocator *unknown08; // Inferred role: allocator; original member name unknown.
   u8 *unknown10;        // Inferred role: buffer; original member name unknown.

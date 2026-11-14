@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "gf/object/gf_append.h"
 #include "gf/object/gf_obj_manager.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_list.h"
@@ -23,15 +24,15 @@ class GfAppendInfo;
 enum OPTMNT : u32 {
   OPTMNT_UNKNOWN_0 = 0,
   OPTMNT_UNKNOWN_1 = 1,
-  OPTMNT_WIRE = 2,
-  OPTMNT_BLADE = 3,
+  OPTMNT_UNKNOWN_2 = 2, // Inferred role: optmnt wire; original name unknown.
+  OPTMNT_UNKNOWN_3 = 3, // Inferred role: optmnt blade; original name unknown.
   OPTMNT_UNKNOWN_4 = 4,
   OPTMNT_UNKNOWN_FFFFFFFF = 0xffffffff,
 };
 
-class GfWeapon {
+class GfWeapon : public GfAppendHandles {
 public:
-  virtual ~GfWeapon() {}
+  ~GfWeapon() override {}
 
   mm::mtl::FixedArray<GF_OBJ_HANDLE *, 10> &getCurrentHandles() { return unknowna8 ? unknown58 : unknown08; }
   const mm::mtl::FixedArray<GF_OBJ_HANDLE *, 10> &getCurrentHandles() const { return unknowna8 ? unknown58 : unknown08; }
@@ -50,18 +51,18 @@ public:
 
   u32 getRscRight() const;
   u32 getRscLeft() const;
-
-  mm::mtl::FixedArray<GF_OBJ_HANDLE *, 10> unknown08; // Inferred role: handles; original member name unknown.
-  mm::mtl::FixedArray<GF_OBJ_HANDLE *, 10> unknown58; // Inferred role: alternate handles; original member name unknown.
-  bool unknowna8;                                     // Inferred role: alternate; original member name unknown.
 };
 
 static_assert(offsetof(GfWeapon, unknown08) == 0x08, "");
 static_assert(offsetof(GfWeapon, unknown58) == 0x58, "");
 static_assert(offsetof(GfWeapon, unknowna8) == 0xa8, "");
+static_assert(sizeof(GfWeapon) == 0xb0, "");
 
 class GfGameMount : public mm::mtl::ReferenceObject {
 public:
+  GfGameMount(GF_OBJ_HANDLE *owner, GfWeapon *weapon, OPTMNT type, GFATTACH attach)
+      : unknown10(owner), unknown18(weapon), unknown20(OPTMNT_UNKNOWN_FFFFFFFF), unknown24(type), unknown28(true), unknown2c(attach) {}
+
   virtual bool execMount(OPTMNT type);
   virtual bool setWeaponOwner(OPTMNT type);
   virtual GF_OBJ_HANDLE *getHandle(OPTMNT type);
@@ -97,6 +98,8 @@ public:
   GF_OBJ_HANDLE *getHandle(OPTMNT type) override;
   GfAppendInfo *getAppendInfo() override;
 
+  GfGameMountBlade(GF_OBJ_HANDLE *owner, GfWeapon *weapon, OPTMNT type, GFATTACH attach, GF_OBJ_HANDLE *blade) : GfGameMount(owner, weapon, type, attach), unknown30(blade) {}
+
   GF_OBJ_HANDLE *unknown30; // Inferred role: blade handle; original member name unknown.
 };
 
@@ -110,8 +113,12 @@ public:
     GF_MOUNT_HANDLE *unknown08; // Inferred role: mount handle; original member name unknown.
   };
 
+  GfMountManager(const GfSetupParam &param);
   ~GfMountManager() override;
+  void initialize(const GfSetupParam &param);
   static void build(const GfSetupParam &param);
+  static GF_MOUNT_HANDLE *createMount(GF_OBJ_HANDLE *handle, GFATTACH attach, OPTMNT type);
+  static GF_MOUNT_HANDLE *createMount(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *blade, GFATTACH attach, OPTMNT type);
   static void destroy();
   void finalize();
   static bool isInitialized();
@@ -131,6 +138,9 @@ public:
   static GF_OBJ_HANDLE *getOptionLeft(GF_OBJ_HANDLE *handle, GFATTACH attach);
   void execDetachMount(GF_OBJ_HANDLE *handle, GFATTACH attach);
   void execAttachMount(GF_OBJ_HANDLE *handle, GFATTACH attach);
+  static void setScaleMount(GF_OBJ_HANDLE *handle, GFATTACH attach, f32 scale);
+  static f32 getScaleMount(GF_OBJ_HANDLE *handle, GFATTACH attach);
+  static bool getAlphaMount(GF_OBJ_HANDLE *handle, GFATTACH attach, f32 &alpha);
   static void gevGameObjEnter(GF_OBJ_HANDLE *handle);
   static void gevGameObjLeave(GF_OBJ_HANDLE *handle);
   static void setAlphaMount(GF_OBJ_HANDLE *handle, GFATTACH attach, f32 alpha);

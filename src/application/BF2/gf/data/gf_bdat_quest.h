@@ -15,18 +15,18 @@ struct QuestTaskParam;
 class QuestListAcc;
 
 enum QTYPE {
-  QTYPE_NONE,
-  QTYPE_MAIN,
-  QTYPE_BLADE,
-  QTYPE_NORMAL,
-  QTYPE_UNUSED,
-  QTYPE_MERCENARIES,
-  QTYPE_ACHIEVEMENT,
+  QTYPE_UNKNOWN_0, // Inferred role: qtype none; original name unknown.
+  QTYPE_UNKNOWN_1, // Inferred role: qtype main; original name unknown.
+  QTYPE_UNKNOWN_2, // Inferred role: qtype blade; original name unknown.
+  QTYPE_UNKNOWN_3, // Inferred role: qtype normal; original name unknown.
+  QTYPE_UNKNOWN_4, // Inferred role: qtype unused; original name unknown.
+  QTYPE_UNKNOWN_5, // Inferred role: qtype mercenaries; original name unknown.
+  QTYPE_UNKNOWN_6, // Inferred role: qtype achievement; original name unknown.
 };
 
 constexpr u32 QTYPE_COUNT = 6;
-constexpr u32 QUEST_ID_COUNT = 16000;
-constexpr u32 QUEST_TASK_COUNT = 4;
+constexpr u32 QUEST_UNKNOWN_16000 = 16000; // Inferred role: quest id count; original name unknown.
+constexpr u32 QUEST_UNKNOWN_4 = 4;         // Inferred role: quest task count; original name unknown.
 
 struct QIDXINFO {
   QIDXINFO(QuestID quest) : unknown0c(0), unknown10(quest) {}
@@ -70,8 +70,8 @@ static_assert(sizeof(QuestTaskCategory) == 0x2020, "");
 
 // Inferred role: quest index table; original type name unknown.
 struct unknown100 {
-  u32 unknown00[QUEST_ID_COUNT]; // Inferred role: indices; original member name unknown.
-  u32 unknownfa00;               // Inferred role: count; original member name unknown.
+  u32 unknown00[QUEST_UNKNOWN_16000]; // Inferred role: indices; original member name unknown.
+  u32 unknownfa00;                    // Inferred role: count; original member name unknown.
 };
 
 class qlist_iterator {
@@ -401,12 +401,12 @@ public:
   u32 getTaskFlag(u32 purpose, u32 taskIndex) const;
 
 private:
-  QuestListCategory unknown00[QTYPE_COUNT];            // Inferred role: list categories; original member name unknown.
-  unknown100 unknown17c40;                             // Inferred role: list indices; original member name unknown.
-  QuestTaskCategory unknown27648[QTYPE_COUNT];         // Inferred role: task categories; original member name unknown.
-  unknown100 unknown33708;                             // Inferred role: task indices; original member name unknown.
-  u16 unknown4310c[QUEST_ID_COUNT * QUEST_TASK_COUNT]; // Inferred role: collect flag indices; original member name unknown.
-  mm::mtl::FixedVector<u16, 0x400> unknown62510;       // Inferred role: collect flags; original member name unknown.
+  QuestListCategory unknown00[QTYPE_COUNT];                // Inferred role: list categories; original member name unknown.
+  unknown100 unknown17c40;                                 // Inferred role: list indices; original member name unknown.
+  QuestTaskCategory unknown27648[QTYPE_COUNT];             // Inferred role: task categories; original member name unknown.
+  unknown100 unknown33708;                                 // Inferred role: task indices; original member name unknown.
+  u16 unknown4310c[QUEST_UNKNOWN_16000 * QUEST_UNKNOWN_4]; // Inferred role: collect flag indices; original member name unknown.
+  mm::mtl::FixedVector<u16, 0x400> unknown62510;           // Inferred role: collect flags; original member name unknown.
 
   friend struct QuestListAccLayout;
 };

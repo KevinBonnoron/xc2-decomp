@@ -31,7 +31,7 @@ SensorManager::~SensorManager() {
 
 void SensorManager::flushBeforeGame(const UpdateInfo &info, u32 layers) {
   anm::ThreadPool *pool = AnimationManager::get()->unknownf18;
-  for (u32 layer = 0; layer < LAYER_MAX; layer++) {
+  for (u32 layer = 0; layer < LAYER_UNKNOWN_32; layer++) {
     if ((layers & 1 << layer) != 0) {
       mm::mtl::IntrusiveList<SensorUpdater> &list = unknown18[layer].unknown00;
       u32 count = list.size();
@@ -54,7 +54,7 @@ void SensorManager::flushBeforeGame(const UpdateInfo &info, u32 layers) {
 
 void SensorManager::flushAfterAnimation(const UpdateInfo &info, u32 layers) {
   anm::ThreadPool *pool = AnimationManager::get()->unknownf18;
-  for (u32 layer = 0; layer < LAYER_MAX; layer++) {
+  for (u32 layer = 0; layer < LAYER_UNKNOWN_32; layer++) {
     if ((layers & 1 << layer) != 0) {
       mm::mtl::IntrusiveList<SensorUpdater> &list = unknown18[layer].unknown18;
       u32 count = list.size();

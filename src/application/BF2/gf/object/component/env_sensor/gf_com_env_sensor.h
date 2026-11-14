@@ -19,6 +19,7 @@ class RTTI;
 
 namespace fw {
 class MessageObject;
+class Reflection;
 struct Transform;
 } // namespace fw
 
@@ -91,15 +92,17 @@ public:
   // searchHorizon writes the planes at +0x00 (bit 4), +0x30 (bit 5) and +0x60 (bit 6, climb wall) and the handle at +0x90;
   // original type name unknown.
   struct unknown006 {
-    unknown003 unknown00; // Inferred role: horizontal wall info (search bit 4); original member name unknown.
-    unknown003 unknown30; // Inferred role: horizontal info of the search bit 5; original member name unknown.
-    unknown003 unknown60; // Inferred role: climb wall info (search bit 6); original member name unknown.
-    u64 unknown90;        // Inferred role: climb wall object handle, -1 when none; original member name unknown.
+    unknown003 unknown00;     // Inferred role: horizontal wall info (search bit 4); original member name unknown.
+    unknown003 unknown30;     // Inferred role: horizontal info of the search bit 5; original member name unknown.
+    unknown003 unknown60;     // Inferred role: climb wall info (search bit 6); original member name unknown.
+    GF_OBJ_HANDLE *unknown90; // Inferred role: climb wall object handle, unknown020 when none; original member name unknown.
   };
 
   // Field names and offsets from the reflection built by gf::EnviromentSensor::Parameter::createReflection; the names are
   // the reflection strings of the game.
   struct Parameter {
+    static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
+
     f32 searchVertUp;
     f32 searchVertDown;
     f32 obstacleHeightBase;
@@ -239,6 +242,7 @@ public:
   void cleanup();
   void changeLayer(u32 oldLayer, u32 newLayer) override;
   void setEnableSensor(bool isEnable);
+  void flushEnv(const fw::Transform &transform);
   void resolveTransform();
   const fw::Transform &getTransform();
   const mm::mtl::RTTI *getRTTI() const override;
