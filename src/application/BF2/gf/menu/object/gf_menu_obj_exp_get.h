@@ -14,6 +14,10 @@ class GfMenuObjExpGet : public GfMenuObject {
 public:
   // Layout from open, which reads it, and from the copy the queued ExpGetInfo keeps.
   struct OpenParam {
+    // Decision 2026-11-14 #22: an empty user-provided constructor (language rule, as GmkDmgPhantom). Its proof is the game's Queue<ExpGetInfo>::erase, which copies
+    // 28 of the 32 bytes of the element and matches only with it; that instantiation is not on main yet (its Queue change waits for an answer about the anm job queue).
+    OpenParam() {}
+
     int unknown00; // Inferred role: kind of gain (0 exp, 1 sp, 2 wp, 3 level up, from setupScreen); original member name unknown.
     int unknown04; // Inferred role: amount, open does nothing when 0; original member name unknown.
     u8 unknown08;  // Inferred role: bonus flag; original member name unknown.

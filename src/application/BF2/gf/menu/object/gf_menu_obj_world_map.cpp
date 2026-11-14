@@ -5,6 +5,8 @@
 #include "bdat.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
+#include "gf/data/gf_data_blade.h"
+#include "gf/data/gf_data_field_skill.h"
 #include "gf/data/gf_data_map.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_data_util.h"
@@ -29,6 +31,7 @@
 #include "gf/menu/object/gf_menu_obj_mainmenu2.h"
 #include "gf/menu/object/gf_menu_obj_operation_info.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
+#include "gmk/gmk_bdat.h"
 #include "gmk/gmk_manager.h"
 #include "mm_math/mm_aabb.h"
 #include "mm_math/mm_pnt.h"
@@ -38,6 +41,8 @@
 #include "ui/ctrl/ui_ctrl_cursor_select.h"
 #include "ui/ctrl/ui_ctrl_object.h"
 #include "ui/event/ui_event_data.h"
+#include "ui/event/ui_event_manager.h"
+#include "ui/list/ui_list_info.h"
 #include "ui/list/ui_select_obj_list.h"
 #include "ui/stream/ui_stream_manager.h"
 #include "ui/ui_manager.h"
@@ -80,6 +85,157 @@ GfMenuObjWorldMap::~GfMenuObjWorldMap() {
   mm::mtl::safeRelease(unknown2f68);
   mm::mtl::safeRelease(unknown2f88);
   mm::mtl::safeRelease(unknown2f90);
+}
+
+void GfMenuObjWorldMap::initialize() {
+  ui::UIObjectAcc acc(unknown18);
+  u32 main = acc.searchChild("LAY_main");
+// __LINE__ must be 272 as in the original file: it is the line argument of operator new.
+#line 272
+  MainListener *mainListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) MainListener(this);
+  mainListener->addRef();
+  ui::UIEventManager::get()->registObjectListener(main, mainListener);
+  if (mainListener != nullptr) {
+    mainListener->release();
+  }
+  u32 world = acc.searchChild("LAY_world");
+// __LINE__ must be 277 as in the original file: it is the line argument of operator new.
+#line 277
+  WorldListener *worldListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) WorldListener(this);
+  worldListener->addRef();
+  ui::UIEventManager::get()->registObjectListener(world, worldListener);
+  if (worldListener != nullptr) {
+    worldListener->release();
+  }
+  u32 worldMap = acc.searchChild("LAY_worldmap");
+// __LINE__ must be 281 as in the original file: it is the line argument of operator new.
+#line 281
+  WorldMapListener *worldMapListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) WorldMapListener(this);
+  worldMapListener->addRef();
+  ui::UIEventManager::get()->registObjectListener(worldMap, worldMapListener);
+  if (worldMapListener != nullptr) {
+    worldMapListener->release();
+  }
+  u32 mapSelect = acc.searchChild("LAY_map_sellect");
+// __LINE__ must be 285 as in the original file: it is the line argument of operator new.
+#line 285
+  MapSelectListener *mapSelectListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) MapSelectListener(this);
+  mapSelectListener->addRef();
+  ui::UIEventManager::get()->registObjectListener(mapSelect, mapSelectListener);
+  if (mapSelectListener != nullptr) {
+    mapSelectListener->release();
+  }
+  setFSInputObject(0, mapSelect);
+  u32 zoneSelect = acc.searchChild("LAY_zone_sellect");
+// __LINE__ must be 290 as in the original file: it is the line argument of operator new.
+#line 290
+  ZoneSelectListener *zoneSelectListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ZoneSelectListener(this);
+  zoneSelectListener->addRef();
+  ui::UIEventManager::get()->registObjectListener(zoneSelect, zoneSelectListener);
+  if (zoneSelectListener != nullptr) {
+    zoneSelectListener->release();
+  }
+  setFSInputObject(1, zoneSelect);
+  u32 pointSelect = acc.searchChild("LAY_point_sellect");
+// __LINE__ must be 295 as in the original file: it is the line argument of operator new.
+#line 295
+  PointSelectListener *pointSelectListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) PointSelectListener(this);
+  pointSelectListener->addRef();
+  ui::UIEventManager::get()->registObjectListener(pointSelect, pointSelectListener);
+  if (pointSelectListener != nullptr) {
+    pointSelectListener->release();
+  }
+  setFSInputObject(2, pointSelect);
+  u32 zoneMap = acc.searchChild("LAY_zonemap");
+// __LINE__ must be 300 as in the original file: it is the line argument of operator new.
+#line 300
+  ZoneMapListener *zoneMapListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ZoneMapListener(this);
+  zoneMapListener->addRef();
+  ui::UIEventManager::get()->registObjectListener(zoneMap, zoneMapListener);
+  if (zoneMapListener != nullptr) {
+    zoneMapListener->release();
+  }
+  u32 iconFilter = acc.searchChild("LAY_icon_filter");
+// __LINE__ must be 304 as in the original file: it is the line argument of operator new.
+#line 304
+  IconFilterListener *iconFilterListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) IconFilterListener(this);
+  iconFilterListener->addRef();
+  ui::UIEventManager::get()->registObjectListener(iconFilter, iconFilterListener);
+  if (iconFilterListener != nullptr) {
+    iconFilterListener->release();
+  }
+  // Ruling 3 (2026-11-13): the game shares stack slots between locals whose lifetimes do not overlap (the first three
+  // UISelectObjList::CreateParam sit in the slot of the UIObjectAcc `filter`, the CreateParam of the filter block has its own slot,
+  // the last CreateParam and the three UIListInfoBase::SetupParam sit in the slot of the CursorSetting): five block scopes.
+  {
+    ui::UISelectObjList::CreateParam param;
+    param.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
+    unknown30 = ui::UISelectObjList::create(param);
+    unknown30->pickupObject(acc.unknown10, "LAY_area_tag@%02d", 1);
+    unknown28 = GfMenuIDList::create();
+    ui::UIListInfoBase::SetupParam setup;
+    setup.unknown08 = unknown30->getSize();
+    setup.unknown10 = true;
+    unknown28->setup(getAllocator(ALLOCATOR_UNKNOWN_0), setup);
+  }
+  {
+    ui::UISelectObjList::CreateParam param;
+    param.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
+    unknown48 = ui::UISelectObjList::create(param);
+    unknown48->pickupObject(acc.unknown10, "LAY_zonespot@%02d", 1);
+    unknown40 = GfMenuZoneMapList::create();
+    ui::UIListInfoBase::SetupParam setup;
+    setup.unknown08 = unknown48->getSize();
+    setup.unknown10 = true;
+    unknown40->setup(getAllocator(ALLOCATOR_UNKNOWN_0), setup);
+  }
+  {
+    ui::UISelectObjList::CreateParam param;
+    param.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
+    unknown2f8 = ui::UISelectObjList::create(param);
+    unknown2f8->pickupObject(acc.unknown10, "LAY_pointspot@%02d", 1);
+    unknown2f0 = GfMenuZoneMapList::create();
+    ui::UIListInfoBase::SetupParam setup;
+    setup.unknown08 = unknown2f8->getSize();
+    setup.unknown10 = true;
+    unknown2f0->setup(getAllocator(ALLOCATOR_UNKNOWN_0), setup);
+    unknown320 = GfMenuZoneMapList::create();
+    unknown320->setup(getAllocator(ALLOCATOR_UNKNOWN_0), setup);
+    unknown328 = GfMenuZoneMapList::create();
+    unknown328->setup(getAllocator(ALLOCATOR_UNKNOWN_0), setup);
+    setup.unknown08 = 2;
+    unknown330 = GfMenuFieldSkillList::create();
+    unknown330->setup(getAllocator(ALLOCATOR_UNKNOWN_0), setup);
+  }
+  {
+    ui::UIObjectAcc filter(acc.unknown10, "LAY_icon_filter");
+    ui::UISelectObjList::CreateParam param;
+    param.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
+    unknown2f88 = ui::UISelectObjList::create(param);
+    unknown2f88->pickupObject(acc.unknown10, "LAY_icon_filter@%02d", 1);
+    ui::UICtrlCursorSelect::CursorSetting setting;
+    setting.setType(0);
+    setting.unknown18 = 0;
+    unknown2f90 = ui::UICtrlCursorSelect::create(filter.searchChild("IMG_icon_filter_cursor"), setting, unknown2f88);
+  }
+  {
+    ui::UISelectObjList::CreateParam param;
+    param.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
+    unknown6b8 = ui::UISelectObjList::create(param);
+  }
+  unknown2f68 = GfMenuCallContext::create();
+  unknown2f84 = 0;
+  for (u32 i = 0; i < 9; i++) {
+    if (GfMenuFlag::get1(0x28 + i) == 1) {
+      unknown2f84 |= 1 << i;
+    }
+  }
+  GfDataBlade::getListForFieldSkill(unknown338);
+  GfMenuObject::initialize();
+  GfFieldGimmick *fieldGimmick = GfFieldGimmick::get();
+  if (fieldGimmick != nullptr) {
+    unknown2fa0 = fieldGimmick->unknownf4c0.unknown00;
+  }
 }
 
 void GfMenuObjWorldMap::finalize() {
@@ -1050,7 +1206,7 @@ bool GfMenuObjWorldMap::seqTexLoadWait() {
 
 bool GfMenuObjWorldMap::seqGimik() {
   ui::UIObjectAcc main(ui::UIObjectAcc(unknown18).searchChild("LAY_main"));
-  if (GfFieldGimmick::get()->unknownf4c0.unknown00 <= 0 || !(nullptr == GfFieldGimmick::get()->unknownf4c0.unknown438)) {
+  if (GfFieldGimmick::get()->unknownf4c0.unknown00.unknown00 <= 0 || !(nullptr == GfFieldGimmick::get()->unknownf4c0.unknown438)) {
     return false;
   }
   if (unknown2f60) {
@@ -1108,6 +1264,30 @@ void GfMenuObjWorldMap::getFloorAABB(u32 map, u32 floor, mm::Aabb &aabb, mm::Pnt
       center.y = static_cast<s16>((min.z + max.z) * 0.5f);
     }
   }
+}
+
+u32 GfMenuObjWorldMap::getFieldSkillFromGimmik(u8 *bdat, u32 id, u32 type) {
+  if (type == 3 || type == 4) {
+    mm::mtl::FixStr<32> name;
+    for (int i = 1; i <= 5; i++) {
+      name.format("FSID%d", i);
+      if (Bdat::getMember(bdat, name.c_str()) != nullptr) {
+        u16 skill = Bdat::getValCheck(bdat, name.c_str(), id, gmk::BDAT_TYPE_UNKNOWN_2);
+        if (skill != 0 && GfDataFieldSkill::isFieldSkillSettingAccessed(skill) && !GfDataFieldSkill::isFieldSkillSettingComplete(skill)) {
+          return skill;
+        }
+      }
+    }
+    return 0;
+  }
+  // Decision 2026-11-14 #8: the game keeps the raw FSID2 value in x22 and its 16-bit extension in w21 (0x71004ee2fc-0x71004ee308),
+  // so the raw u16 and the widened u32 are two variables; the test reads the raw one.
+  u16 fsid2 = Bdat::getValCheck(bdat, "FSID2", id, gmk::BDAT_TYPE_UNKNOWN_2);
+  u32 skill = fsid2;
+  if (Bdat::getMember(bdat, "FSID") != nullptr && (!fsid2 || GfDataFieldSkill::isFieldSkillSettingComplete(fsid2))) {
+    skill = static_cast<u16>(Bdat::getValCheck(bdat, "FSID", id, gmk::BDAT_TYPE_UNKNOWN_2));
+  }
+  return skill;
 }
 
 u32 GfMenuObjWorldMap::setupIconTableSub(ui::UIObjectAcc &acc, mm::mtl::FixedVector<u32, 256> &icons, u32 type, mm::Pnt<s16> pos, mm::Vec2) {

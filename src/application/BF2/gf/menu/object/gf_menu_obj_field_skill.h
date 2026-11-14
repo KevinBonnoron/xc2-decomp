@@ -38,6 +38,16 @@ public:
     int unknown0c; // Inferred role: shown flag; original member name unknown.
   };
 
+  class BaseListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    int unknown0c; // Inferred role: row of the animation name table; original member name unknown.
+    int unknown10; // Inferred role: skill animation started flag; original member name unknown.
+    u8 _14[0x20 - 0x14];
+    GfMenuObjFieldSkill *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   struct OpenSkillInfoParam {
     u32 unknown00_0 : 16; // Inferred role: skill; original member name unknown.
     u32 unknown00_16 : 8; // Inferred role: level; original member name unknown.
@@ -81,7 +91,10 @@ public:
   u16 unknown58;                                          // Role and original member name unknown, cleared by the constructor.
   bool unknown5a;                                         // Role and original member name unknown, cleared by the constructor.
   u8 _5b[0x5c - 0x5b];
-  u16 unknown5c; // Role and original member name unknown, cleared by the constructor.
+  // Decision 2026-11-14 #19: two bools instead of the former u16, as the byte accesses of two game functions show: BaseListener::reciveEvent (ldrb at 0x7100468ad4, and ldrh then and w10, w9, #0xff /
+  // cmp w9, #0x100 at 0x7100468a14) and TotalListener::reciveEvent (strb at 0x7100469600, 0x710046960c, 0x7100469798).
+  bool unknown5c; // Inferred role: treasure request flag, read as a byte by BaseListener::reciveEvent (0x7100468ad4); original member name unknown.
+  bool unknown5d; // Inferred role: treasure without skill object flag, tested with unknown5c by BaseListener::reciveEvent (0x7100468a14); original member name unknown.
   u8 _5e[0x60 - 0x5e];
   u32 unknown60; // Inferred role: main object handle, set by the closing event of the main listener; original member name unknown.
   u8 _64[0x68 - 0x64];
@@ -97,10 +110,14 @@ static_assert(offsetof(GfMenuObjFieldSkill, unknown40) == 0x40, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown50) == 0x50, "");
 static_assert(offsetof(GfMenuObjFieldSkill::MainListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjFieldSkill::BladeListener, unknown0c) == 0x0c, "");
+static_assert(offsetof(GfMenuObjFieldSkill::BaseListener, unknown0c) == 0x0c, "");
+static_assert(offsetof(GfMenuObjFieldSkill::BaseListener, unknown10) == 0x10, "");
+static_assert(offsetof(GfMenuObjFieldSkill::BaseListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown60) == 0x60, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown58) == 0x58, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown5a) == 0x5a, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown5c) == 0x5c, "");
+static_assert(offsetof(GfMenuObjFieldSkill, unknown5d) == 0x5d, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown68) == 0x68, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown70) == 0x70, "");
 static_assert(sizeof(GfMenuObjFieldSkill) == 0x1d0, "");

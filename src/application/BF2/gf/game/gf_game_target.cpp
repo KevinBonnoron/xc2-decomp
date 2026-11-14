@@ -332,6 +332,34 @@ void GfGameTarget::notifyTarget() {
   }
 }
 
+void GfGameTarget::createSearchObj() {
+  const Param *param = getParam();
+  mm::mtl::IntrusivePtr<fw::ReferenceFrame> frame;
+  GfObj *obj = GfObjUtil::getObj(unknownb0);
+  if (obj != nullptr) {
+    frame = obj->getComponent<GfComTransform>()->unknown001();
+  }
+  {
+    GfSearchParam searchParam(1 << OBJECT_TYPE_ENEMY);
+    // Decision 2026-11-14 #13: the same statement as in the second block (the constructor stored it already; the game's two stp at 0x71003457cc, then 0x71003457d0 swap without it), repeated as the
+    // source pattern repeats.
+    searchParam.unknown40 = unknown020;
+    searchParam.unknown48 = frame;
+    unknowna0 = GfGameSearchObj::createObj(searchParam);
+  }
+  {
+    GfSearchParam searchParam((1 << OBJECT_TYPE_NPC) | (1 << OBJECT_TYPE_GIMMICK));
+    f32 radius = param->nearRadius;
+    searchParam.unknown00 = 1;
+    searchParam.unknown3c = radius;
+    // The game stores the searching object again after the constructor (str x24, [sp, #64] twice in this block).
+    searchParam.unknown40 = unknown020;
+    searchParam.unknown60 = unknownb0;
+    searchParam.unknown48 = frame;
+    unknowna8 = GfGameSearchObj::createObj(searchParam);
+  }
+}
+
 void GfGameTarget::setTarget(GF_OBJ_HANDLE *handle) {
   if (unknownb8 != handle) {
     unknownb8 = handle;

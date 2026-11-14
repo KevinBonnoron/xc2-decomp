@@ -13,18 +13,14 @@
 
 namespace gf {
 
-constexpr f32 unknown057 = 1.0e12f; // Inferred role: area limit; original name unknown.
-
-GfGmkLocatorAtlas::GfGmkLocatorAtlas(const CreateInfo *info)
-    : unknown00(0), unknown04(0), unknown10(unknown057, unknown057, unknown057), unknown20(-unknown057, -unknown057, -unknown057), unknown58(-1), unknown60(nullptr), unknown70(nullptr),
-      unknown438(nullptr) {
+GfGmkLocatorAtlas::GfGmkLocatorAtlas(const CreateInfo *info) : unknown00(), unknown58(-1), unknown60(nullptr), unknown70(nullptr), unknown438(nullptr) {
   if (info != nullptr) {
     create(*info);
   }
 }
 
 const GfGmkLocatorAtlas::BdatInfo *GfGmkLocatorAtlas::getBdatInfo(int id) const {
-  if (unknown00 > 0) {
+  if (unknown00.unknown00 > 0) {
     s32 index = id - unknown58;
     if (index >= 0 && !(unknown30.size() <= static_cast<size_t>(index))) {
       return &unknown30[index];
@@ -55,7 +51,7 @@ void GfGmkLocatorAtlas::disposeBdatInfos() {
 }
 
 void GfGmkLocatorAtlas::update(f32 deltaTime) {
-  if (unknown00 > 0) {
+  if (unknown00.unknown00 > 0) {
     if (unknown70.isValid()) {
       unknown70.update(deltaTime);
     }
@@ -66,14 +62,14 @@ void GfGmkLocatorAtlas::update(f32 deltaTime) {
 }
 
 bool GfGmkLocatorAtlas::isBelongToCurMap(const mm::Vec3 &position) const {
-  if (unknown00 <= 0 || unknown04 <= 0) {
+  if (unknown00.unknown00 <= 0 || unknown00.unknown04 <= 0) {
     return false;
   }
-  const BdatInfo *info = getBdatInfo(unknown04);
+  const BdatInfo *info = getBdatInfo(unknown00.unknown04);
   if (info == nullptr || GfMenuMapInfo::get() == nullptr) {
     return false;
   }
-  const char *mapName = GfDataMap::getMapResourceNameByMapID(unknown00);
+  const char *mapName = GfDataMap::getMapResourceNameByMapID(unknown00.unknown00);
   if (mapName == nullptr) {
     return false;
   }

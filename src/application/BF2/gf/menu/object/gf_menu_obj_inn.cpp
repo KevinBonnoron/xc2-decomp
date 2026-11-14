@@ -15,6 +15,7 @@
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_pnt.h"
+#include "mm_math/mm_rect.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/reference_object.h"
@@ -171,7 +172,6 @@ void GfMenuObjInn::detailOpen(GfMenuObjInn *object, ui::UIObjectAcc &acc, const 
   object->unknown30->reset();
   GfMenuObjCommonDetail::OpenParam param;
   param.unknown00.push_back(0x10c);
-  param.unknown1c = 0;
   param.unknown28 = true;
   param.unknown30 = 0;
   acc.getLayoutRect(layout, param.unknown20);
@@ -328,6 +328,126 @@ void GfMenuObjInn::MainListener::reciveEvent(const ui::EventData &event, u32 han
     unknown20->unknown0a0.unknown005();
     unknown20->unknown0a0.unknown002(&GfMenuObjInn::seqFadeOut);
     unknown20->unknown0a0.unknown002(&GfMenuObjInn::seqFadeOutWait);
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
+void GfMenuObjInn::DriverListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  ui::UIObjectAcc owner(unknown20->unknown18);
+  switch (event.unknown00) {
+  case 1:
+    unknown20->unknown48 = GfMenuDriverList::create();
+    if (unknown20->unknown48 != nullptr) {
+      GfMenuDriverList::PartySetup setup;
+      setup.unknown18 = false;
+      setup.unknown14 = GfPartySelect::LIST_TYPE_UNKNOWN_2;
+      setup.unknown00.unknown08 = 5;
+      unknown20->unknown48->setupFromParty(setup);
+    }
+    setupDriverAdapter(acc, unknown20->unknown48);
+    unknown163(handle, GfMenuTypes::unknown003_33, 0);
+    break;
+  case 3:
+    switch (event.unknown08) {
+    case 1:
+      unknown163(owner.searchChild("LAY_mode_select"), GfMenuTypes::unknown003_33, 0);
+      break;
+    case 2:
+      unknown163(owner.searchChild("LAY_main"), GfMenuTypes::unknown003_34, 0);
+      break;
+    }
+    break;
+  case GfMenuTypes::unknown003_257:
+    for (u32 i = 0; i < 5; i++) {
+      mm::mtl::FixStr<32> name;
+      name.format("LAY_dr@%02d", i + 1);
+      u32 driver = acc.searchChild(name.c_str());
+      ui::UIObjectAcc driverAcc(driver);
+      if (i == unknown20->unknown48->getIndex(true)) {
+        driverAcc.setDispPriority(driverAcc.getDispPriority() + 1);
+        GfMenuReference::setReferenceDriverID(0, unknown20->unknown48->getContents(i).unknown00);
+      }
+      GfMenuObjUtil::CtrlParam param;
+      driverAcc.getPos(param.unknown26);
+      param.unknown26.x = 0;
+      param.unknown08 = 0x80;
+      param.unknown0c = 1;
+      // Decision 2026-11-14 #2: the game writes 0.2f and 0 to unknown00/unknown04 with one 64-bit store
+      // (str x20, [sp, #16] at 0x7100478618) after the getPos call; the constructor's store of the zero is
+      // not the one it keeps, so the zero is written again.
+      param.unknown04 = 0;
+      param.unknown00 = 0.2f;
+      GfMenuObjUtil::startCtrl(driver, param, nullptr);
+    }
+    break;
+  case GfMenuTypes::unknown003_258:
+    for (u32 i = 0; i < 5; i++) {
+      mm::mtl::FixStr<32> name;
+      name.format("LAY_dr@%02d", i + 1);
+      u32 driver = acc.searchChild(name.c_str());
+      ui::UIObjectAcc driverAcc(driver);
+      driverAcc.setDisp(true);
+      if (i == unknown20->unknown48->getIndex(true)) {
+        driverAcc.setDispPriority(driverAcc.getDispPriority() - 1);
+      }
+      name.format("driver%02d", i + 1);
+      mm::Rect<s16> rect;
+      acc.getLayoutRect(name.c_str(), rect);
+      GfMenuObjUtil::CtrlParam param;
+      driverAcc.getPos(param.unknown26);
+      param.unknown26.x = rect.unknown00.x;
+      param.unknown26.y = rect.unknown00.y;
+      param.unknown08 = 0x80;
+      param.unknown0c = 1;
+      param.unknown04 = 0;
+      param.unknown00 = 0.2f;
+      GfMenuObjUtil::startCtrl(driver, param, nullptr);
+    }
+    break;
+  case GfMenuTypes::unknown003_259:
+    for (u32 i = 0; i < 5; i++) {
+      mm::mtl::FixStr<32> name;
+      name.format("LAY_dr@%02d", i + 1);
+      ui::UIObjectAcc driver(acc.searchChild(name.c_str()));
+      driver.setDisp(false);
+    }
+    break;
+  case GfMenuTypes::unknown003_33:
+    acc.setDisp(true);
+    for (u32 i = 0; i < 5; i++) {
+      mm::mtl::FixStr<32> name;
+      name.format("LAY_dr@%02d", i + 1);
+      u32 driver = acc.searchChild(name.c_str());
+      GfMenuObjUtil::CtrlParam param;
+      param.unknown08 = i < 3 ? 0x200 : 0x100;
+      param.unknown0c = 1;
+      param.unknown04 = 1;
+      param.unknown00 = 0.5f;
+      int ctrl = GfMenuObjUtil::startCtrl(driver, param, nullptr);
+      if (i == 0) {
+        GfMenuObject::hookCtrlEvent(acc.unknown10, ctrl);
+      }
+    }
+    break;
+  case GfMenuTypes::unknown003_34:
+    for (u32 i = 0; i < 5; i++) {
+      mm::mtl::FixStr<32> name;
+      name.format("LAY_dr@%02d", i + 1);
+      u32 driver = acc.searchChild(name.c_str());
+      GfMenuObjUtil::CtrlParam param;
+      param.unknown08 = i < 3 ? 0x2000 : 0x1000;
+      param.unknown0c = 1;
+      param.unknown04 = 2;
+      param.unknown00 = 0.5f;
+      int ctrl = GfMenuObjUtil::startCtrl(driver, param, nullptr);
+      if (i == 0) {
+        GfMenuObject::hookCtrlEvent(acc.unknown10, ctrl);
+      }
+    }
     break;
   default:
     ui::UIObjectListener::reciveEvent(event, handle);

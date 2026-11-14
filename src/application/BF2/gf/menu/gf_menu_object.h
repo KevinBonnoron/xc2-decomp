@@ -121,6 +121,18 @@ static_assert(offsetof(GfMenuObject, unknown1c) == 0x1c, "");
 static_assert(offsetof(GfMenuObject, unknown20) == 0x20, "");
 static_assert(sizeof(GfMenuObject) == 0x28, "");
 
+// Inferred role: work values every menu listener keeps at 0x0c; original type name unknown.
+// Decision 2026-11-14 #36: a listener with other members clears the 16 bytes at 0x0c..0x1c as one unit in its constructor
+// body, by assigning a default value, after the other members are built and without merging that clear with theirs
+// (stp xzr, xzr, [x22, #0x30] before stur xzr, [x22, #0x14], stur xzr, [x22, #0x0c], str xzr, [x22, #0x20] at 0x71004c65a0
+// in GfMenuObjQuestReward::create); the same pattern is in GfMenuObjCommonDetail::open, GfMenuObjBlDetail::create and
+// GfMenuObjDrDetail::create. A member initialiser or a memset cannot give that order.
+struct unknown142 {
+  int unknown00[4]; // Inferred role: work values; original member name unknown.
+};
+
+static_assert(sizeof(unknown142) == 0x10, "");
+
 // Inferred helper: requests an event with a parameter on a UI object after a delay; original name unknown.
 inline void unknown140(u32 handle, u16 type, u32 param, f32 delay) {
   ui::EventData event;

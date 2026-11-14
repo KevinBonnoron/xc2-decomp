@@ -45,6 +45,15 @@ constexpr u32 unknown008 = 0x38;
 // Inferred role: ui event type, enables or disables the input; original name unknown.
 constexpr u16 unknown009 = 0x10b;
 
+// Inferred role: animation names of the treasure base (in, in with a skill, repeat, out), one row per BaseListener::unknown0c; original name unknown.
+static const char *const unknown010[5][4] = {
+    {"treasure_in", "treasure_in_skill", "treasure_repeat", "treasure_out"},
+    {"non_one_in", nullptr, nullptr, "non_one_out"},
+    {"non_two_in", nullptr, nullptr, "non_two_out"},
+    {"obj_one_in", "obj_one_in_skill", "obj_one_repeat", "obj_one_out"},
+    {"obj_two_in", "obj_two_in_skill", "obj_two_repeat", "obj_two_out"},
+};
+
 GfMenuObjFieldSkill::~GfMenuObjFieldSkill() {
   unknown50 = nullptr;
   unknown38 = nullptr;
@@ -319,6 +328,82 @@ void GfMenuObjFieldSkill::BladeListener::reciveEvent(const ui::EventData &event,
       unknown0c = 0;
     }
     break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
+void GfMenuObjFieldSkill::BaseListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  ui::UIObjectAcc shadow(acc.searchSibiling("LAY_shadow"));
+  switch (event.unknown00) {
+  case 1:
+    acc.setDisp(false);
+    unknown0c = 0;
+    unknown10 = 0;
+    break;
+  case 0xc:
+    if (unknown20->unknown60 != 0) {
+      ui::EventData sendData;
+      sendData.unknown00 = 0x10d;
+      GfMenuObject::sendEvent(unknown20->unknown60, sendData, 0.0f);
+    }
+    break;
+  case GfMenuTypes::unknown003_33: {
+    ui::UIObjectAcc base(acc.unknown10, "IMG_base");
+    ui::UIObjectAcc image(shadow.unknown10, "IMG_shadow");
+    int type = event.unknown08;
+    acc.setDisp(true);
+    image.setDisp(true);
+    int kind = 0;
+    if (unknown20->unknown5c) {
+      if (unknown20->unknown5d) {
+        image.setDisp(false);
+        kind = unknown20->unknown48->getSize() == 1 ? 1 : 2;
+      } else {
+        kind = unknown20->unknown48->getSize() == 1 ? 3 : 4;
+      }
+    }
+    unknown0c = kind;
+    if (type == 0) {
+      if (unknown20->unknown5c) {
+        GfMenuObject::sendOpenEvent(acc.searchSibiling("LAY_request"), 0, 0.0f);
+      }
+      base.startAnimation(unknown010[unknown0c][0], false);
+      image.startAnimation(unknown010[unknown0c][0], false);
+    } else if (type == 1) {
+      if (unknown10 == 0) {
+        if (unknown010[unknown0c][1] != nullptr) {
+          base.startAnimation(unknown010[unknown0c][1], false);
+          image.startAnimation(unknown010[unknown0c][1], false);
+        }
+        unknown10 = 1;
+      } else if (unknown010[unknown0c][2] != nullptr) {
+        base.startAnimation(unknown010[unknown0c][2], false);
+        image.startAnimation(unknown010[unknown0c][2], false);
+      }
+    }
+    GfMenuObject::hookAnimationEvent(acc.unknown10, base.unknown10);
+    break;
+  }
+  case GfMenuTypes::unknown003_34: {
+    ui::UIObjectAcc base(acc.unknown10, "IMG_base");
+    ui::UIObjectAcc image(shadow.unknown10, "IMG_shadow");
+    base.startAnimation(unknown010[unknown0c][3], false);
+    image.startAnimation(unknown010[unknown0c][3], false);
+    GfMenuObject::hookAnimationEvent(acc.unknown10, base.unknown10);
+    break;
+  }
+  case 0x10a: {
+    ui::UIObjectAcc base(acc.unknown10, "IMG_base");
+    if (unknown0c == 3) {
+      base.startAnimation("obj_one_special", false);
+    } else if (unknown0c == 4) {
+      base.startAnimation("obj_two_special", false);
+    }
+    break;
+  }
   default:
     ui::UIObjectListener::reciveEvent(event, handle);
     break;

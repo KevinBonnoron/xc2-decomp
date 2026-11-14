@@ -26,9 +26,14 @@ public:
 
   class RewardListener : public ui::UIObjectListener {
   public:
+    RewardListener() {
+      unknown0c = unknown142();
+      unknown20 = nullptr;
+    }
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x28 - 0x0c];
+    unknown142 unknown0c;                                   // Inferred role: work values, unused by this listener; original member name unknown.
+    GfMenuObjQuestReward *unknown20;                        // Inferred role: owner, always null; original member name unknown.
     GfMenuItemList *unknown28;                              // Inferred role: reward items; original member name unknown.
     mm::mtl::IntrusivePtr<GfMenuReferenceQuest> unknown30;  // Inferred role: quest of the reward; original member name unknown.
     mm::mtl::IntrusivePtr<GfMenuReferenceNumber> unknown38; // Inferred role: mission of the reward; original member name unknown.
@@ -50,6 +55,7 @@ static_assert(offsetof(GfMenuObjQuestReward::OpenParam, unknown08) == 0x08, "");
 static_assert(offsetof(GfMenuObjQuestReward::OpenParam, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfMenuObjQuestReward::OpenParam, unknown10) == 0x10, "");
 static_assert(sizeof(GfMenuObjQuestReward::OpenParam) == 0x18, "");
+static_assert(offsetof(GfMenuObjQuestReward::RewardListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjQuestReward::RewardListener, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjQuestReward::RewardListener, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjQuestReward::RewardListener, unknown38) == 0x38, "");

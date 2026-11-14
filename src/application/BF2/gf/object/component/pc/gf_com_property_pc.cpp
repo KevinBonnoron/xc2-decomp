@@ -11,6 +11,7 @@
 #include "gf/object/component/gf_com_transform.h"
 #include "gf/object/component/pc/gf_pc_agent.h" // IWYU pragma: keep
 #include "gf/object/component/pc/param/gf_pc_param.h"
+#include "mm_math/mm_mat44.h"
 #include "mm_math/mm_quat.h"
 #include "mm_mtl/rtti.h"
 #include "mm_mtl/unique_ptr.h" // IWYU pragma: keep
@@ -133,6 +134,37 @@ void GfComPropertyPc::resetInput() {
   unknown6c.unknown00 = 0.0f;
   unknown6c.unknown04 = 0.0f;
   unknown6c.unknown08.clear();
+}
+
+void GfComPropertyPc::setInputDirPow(const mm::Vec3 &direction, f32 power) {
+  // Decision 2026-11-14 #5: the three axes of the input basis are written as the columns of the matrix (0x7100570be4);
+  // written row by row the same 169 instructions load the axes in another order.
+  mm::Mat44 axes;
+  axes.rows[0][0] = unknown2e0.x;
+  axes.rows[1][0] = unknown290.x;
+  axes.rows[2][0] = unknown2b0.x;
+  axes.rows[3][0] = 0.0f;
+  axes.rows[0][1] = unknown2e0.y;
+  axes.rows[1][1] = unknown290.y;
+  axes.rows[2][1] = unknown2b0.y;
+  axes.rows[3][1] = 0.0f;
+  axes.rows[0][2] = unknown2e0.z;
+  axes.rows[1][2] = unknown290.z;
+  axes.rows[2][2] = unknown2b0.z;
+  axes.rows[3][2] = 0.0f;
+  axes.rows[0][3] = 0.0f;
+  axes.rows[1][3] = 0.0f;
+  axes.rows[2][3] = 0.0f;
+  axes.rows[3][3] = 1.0f;
+  mm::Mat44 inverse = axes.unknown003();
+  mm::Vec3 input(direction.x * inverse.rows[0][0] + direction.y * inverse.rows[1][0] + direction.z * inverse.rows[2][0] + inverse.rows[3][0],
+                 0.0f,
+                 direction.x * inverse.rows[0][2] + direction.y * inverse.rows[1][2] + direction.z * inverse.rows[2][2] + inverse.rows[3][2]);
+  if (!input.unknown003()) {
+    input.unknown001();
+  }
+  unknown60.unknown00 = -(input.x * power);
+  unknown60.unknown04 = input.z * power;
 }
 
 EnviromentSensor *GfComPropertyPc::getEnvSensor() const { return &unknown08->getComponent<GfComEnvSensor>()->unknown10; }

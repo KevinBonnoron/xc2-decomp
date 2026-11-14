@@ -34,53 +34,80 @@ struct MenuZoneMapInfo;
 
 class GfMenuObjWorldMap : public GfMenuObject {
 public:
+  // Decision 2026-11-14: the listeners are constructed inline by GfMenuObjWorldMap::initialize: 0x28 bytes from the allocator, 0x0c-0x1b cleared, owner at 0x20.
   class MainListener : public ui::UIObjectListener {
   public:
+    MainListener(GfMenuObjWorldMap *owner) : _0c(), unknown20(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x20 - 0x0c];
+    u8 _0c[0x1c - 0x0c];
     GfMenuObjWorldMap *unknown20; // Inferred role: owner; original member name unknown.
   };
 
   class WorldListener : public ui::UIObjectListener {
   public:
+    WorldListener(GfMenuObjWorldMap *owner) : _0c(), unknown20(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x20 - 0x0c];
+    u8 _0c[0x1c - 0x0c];
     GfMenuObjWorldMap *unknown20; // Inferred role: owner; original member name unknown.
   };
 
   class WorldMapListener : public ui::UIObjectListener {
   public:
+    WorldMapListener(GfMenuObjWorldMap *owner) : _0c(), unknown20(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x20 - 0x0c];
+    u8 _0c[0x1c - 0x0c];
     GfMenuObjWorldMap *unknown20; // Inferred role: owner; original member name unknown.
   };
 
   class MapSelectListener : public ui::UIObjectListener {
   public:
+    MapSelectListener(GfMenuObjWorldMap *owner) : unknown0c(0), _10(), unknown20(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     int unknown0c; // Inferred role: step; original member name unknown.
-    u8 _10[0x20 - 0x10];
+    u8 _10[0x1c - 0x10];
     GfMenuObjWorldMap *unknown20; // Inferred role: owner; original member name unknown.
   };
 
   class ZoneSelectListener : public ui::UIObjectListener {
   public:
+    ZoneSelectListener(GfMenuObjWorldMap *owner) : unknown0c(0), _10(), unknown20(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     int unknown0c; // Inferred role: step; original member name unknown.
-    u8 _10[0x20 - 0x10];
+    u8 _10[0x1c - 0x10];
+    GfMenuObjWorldMap *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  // Not matched yet (PointSelectListener::reciveEvent has a blocker); declared for the constructor inlined by initialize.
+  class PointSelectListener : public ui::UIObjectListener {
+  public:
+    PointSelectListener(GfMenuObjWorldMap *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjWorldMap *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  // Not matched yet (blocked); declared for the constructor inlined by initialize.
+  class ZoneMapListener : public ui::UIObjectListener {
+  public:
+    ZoneMapListener(GfMenuObjWorldMap *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
     GfMenuObjWorldMap *unknown20; // Inferred role: owner; original member name unknown.
   };
 
   class IconFilterListener : public ui::UIObjectListener {
   public:
+    IconFilterListener(GfMenuObjWorldMap *owner) : _0c(), unknown20(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x20 - 0x0c];
+    u8 _0c[0x1c - 0x0c];
     GfMenuObjWorldMap *unknown20; // Inferred role: owner; original member name unknown.
   };
 
@@ -187,6 +214,8 @@ static_assert(offsetof(GfMenuObjWorldMap::MapSelectListener, unknown0c) == 0x0c,
 static_assert(offsetof(GfMenuObjWorldMap::MapSelectListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjWorldMap::ZoneSelectListener, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfMenuObjWorldMap::ZoneSelectListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjWorldMap::PointSelectListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjWorldMap::ZoneMapListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjWorldMap::IconFilterListener, unknown20) == 0x20, "");
 static_assert(sizeof(GfMenuObjWorldMap::MapJumpInfo) == 0x8, "");
 static_assert(offsetof(GfMenuObjWorldMap, unknown28) == 0x28, "");

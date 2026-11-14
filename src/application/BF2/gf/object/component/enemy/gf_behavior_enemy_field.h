@@ -72,6 +72,7 @@ public:
   void updateSensor(f32 deltaTime);
   void updatePitchRollController();
   void moveToGoal(f32 deltaTime);
+  void applyLinearVelocityAndRotY(f32 deltaTime);
   void getMoveDir(mm::Vec3 &direction) const;
   void applyFieldMoveSpeed(MoveSpeed moveSpeed, GfComBehaviorEnemy &behavior);
   void applyFieldMoveSpeed(enemy::STATE_ID stateId, GfComBehaviorEnemy &behavior);
@@ -111,7 +112,8 @@ public:
   bool unknown90;              // Inferred role: gravity; original member name unknown.
   u8 _91[0xa0 - 0x91];
   mm::Vec3 unknowna0; // Inferred role: velocity; original member name unknown.
-  u32 unknownb0;      // Role and original member name unknown.
+  f32 unknownb0; // Inferred role: y rotation applied by applyLinearVelocityAndRotY; original member name unknown. Decision 2026-11-14 #18: typed f32 as the game's accesses show (ldr s0, [x19, #0xb0]
+                 // at 0x710051362c feeding sinf/cosf, and moveToGoal at 0x7100512ff8 stores angle * 0.1 there).
   u8 _b4[0xc0 - 0xb4];
   mm::Vec3 unknownc0;                                                       // Inferred role: position; original member name unknown.
   GfFieldEnemySensor unknownd0;                                             // Inferred role: sensor; original member name unknown.
@@ -136,6 +138,7 @@ static_assert(offsetof(GfBehaviorEnemyField, unknown40) == 0x40, "");
 static_assert(offsetof(GfBehaviorEnemyField, unknown50) == 0x50, "");
 static_assert(offsetof(GfBehaviorEnemyField, unknown90) == 0x90, "");
 static_assert(offsetof(GfBehaviorEnemyField, unknowna0) == 0xa0, "");
+static_assert(offsetof(GfBehaviorEnemyField, unknownb0) == 0xb0, "");
 static_assert(offsetof(GfBehaviorEnemyField, unknownc0) == 0xc0, "");
 static_assert(offsetof(GfBehaviorEnemyField, unknownd0) == 0xd0, "");
 static_assert(offsetof(GfBehaviorEnemyField, unknown1d0) == 0x1d0, "");
