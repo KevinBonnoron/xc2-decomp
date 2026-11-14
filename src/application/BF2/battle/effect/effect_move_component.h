@@ -55,6 +55,10 @@ public:
         f32 unknown5c;                // Inferred role: time; original member name unknown.
       } unknown40_1;                  // Inferred role: link object parameters; original member name unknown.
       f32 unknown40_2;                // Inferred role: time of the up move; original member name unknown.
+      struct {
+        f32 unknown40[3]; // Inferred role: start position; original member name unknown.
+        f32 unknown4c[3]; // Inferred role: target position; original member name unknown.
+      } unknown40_3;      // Inferred role: parabola move parameters; original member name unknown.
     };
   };
 
@@ -127,6 +131,7 @@ static_assert(offsetof(EffectMoveComponent::MOVE_PARAM, unknown39) == 0x39, "");
 static_assert(offsetof(EffectMoveComponent::MOVE_PARAM, unknown40_2) == 0x40, "");
 static_assert(offsetof(EffectMoveComponent::MOVE_PARAM, unknown40_0.unknown60) == 0x60, "");
 static_assert(offsetof(EffectMoveComponent::MOVE_PARAM, unknown40_1.unknown5c) == 0x5c, "");
+static_assert(offsetof(EffectMoveComponent::MOVE_PARAM, unknown40_3.unknown4c) == 0x4c, "");
 static_assert(offsetof(EffectMoveComponent, unknown00_0.unknown38) == 0x38, "");
 static_assert(offsetof(EffectMoveComponent, unknown00_0.unknown3c) == 0x3c, "");
 static_assert(offsetof(EffectMoveComponent, unknown40) == 0x40, "");

@@ -3,13 +3,21 @@
 #include "battle/battle_global.h"
 #include "battle/character/battle_character.h"
 #include "battle/character/character_manager_battle.h"
+#include "battle/misc_battle.h"
 #include "bdat.h"
 #include "framework/effect/effect_manager.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
+#include "gf/game/gf_game_mount.h"
 #include "gf/object/component/gf_com_transform.h"
+#include "gf/object/gf_append.h"
 #include "gf/object/gf_obj.h"
+#include "gf/object/gf_obj_manager.h"
 #include "gf/object/gf_obj_util.h"
+#include "ml/rand.h"
+#include "mm_math/mm_math.h"
+
+#include <math.h>
 
 namespace btl {
 
@@ -122,6 +130,28 @@ bool EffectObject::IsEnd() const {
   return unknown24c <= 0.0f;
 }
 
+void EffectObject::ReturnLinkObj() {
+  EffectMoveComponent::MOVE_PARAM param;
+  param.unknown39 = EffectMoveComponent::MOVE_TYPE_LINK_OBJ;
+  param.unknown10 = unknown190.unknown6c * 0.6f;
+  param.unknown00 = mm::Vec3::unitY;
+  param.unknown40_1.unknown40 = unknown48;
+  gf::GfAppend *append = gf::GfObjUtil::getAppend(unknownc0_0, gf::GFATTACH_UNKNOWN_0);
+  const BattleCharacter *character = CharacterManager::get()->GetCharacterConst(unknown48);
+  param.unknown40_1.unknown48 = append->getBone(character->IsBlade() ? gf::OPTMNT_UNKNOWN_3 : gf::OPTMNT_UNKNOWN_1);
+  param.unknown40_1.unknown50[0] = unknown80.x;
+  param.unknown40_1.unknown50[1] = unknown80.y;
+  param.unknown40_1.unknown50[2] = unknown80.z;
+  s32 frame = character->GetAnimSpecialProcData(BattleCharacter::ANIM_SPDATA_TYPE_UNKNOWN_0);
+  f32 time = __builtin_fmaxf(frame - unknown248, 0.0f);
+  param.unknown40_1.unknown5c = time;
+  f32 lifeTime = time * (1.0f / FRAME_RATE);
+  param.unknown38 |= 0x10;
+  param.unknown20[4] = lifeTime;
+  unknown190.Initialize(param);
+  unknown24c = lifeTime;
+}
+
 void EffectObject::ReboundUp() {
   s32 frame = CharacterManager::get()->GetCharacterConst(unknown48)->GetAnimSpecialProcData(BattleCharacter::ANIM_SPDATA_TYPE_UNKNOWN_0);
   f32 distance = __builtin_fmaxf(frame - unknown248, 0.0f);
@@ -142,6 +172,61 @@ void EffectObject::ReboundUp() {
   param.unknown20[4] = lifeTime;
   unknown190.Initialize(param);
   unknown24c = lifeTime;
+}
+
+void EffectObject::StartAdditionalAttack() {
+  mm::Vec3 target;
+  mm::Vec3 way;
+  {
+    mm::Vec3 direction = unknown190.unknown50;
+    direction.x = -direction.x;
+    direction.z = -direction.z;
+    if (!Misc::NormalizeXZ(direction)) {
+      direction = mm::Vec3::unitZ;
+    }
+    {
+      mm::Vec3 cross;
+      Misc::GetCrossDirection(direction, cross, ml::mtRandf1() < 0.5f ? Misc::CROSS_MODE_RIGHT : Misc::CROSS_MODE_LEFT);
+      Misc::TurnDirectionAngle(direction, cross, ml::mtRandf1() * (50.0f * mm::DEG_TO_RAD), true);
+    }
+    direction.y = tanf(ml::mtRandf1(40.0f * mm::DEG_TO_RAD, 60.0f * mm::DEG_TO_RAD));
+    Misc::Normalize(direction);
+    target = direction * 3.5f;
+    target += unknown80;
+    way = direction;
+    Misc::NormalizeXZ(way);
+    way.y = tanf(78.0f * mm::DEG_TO_RAD);
+    Misc::Normalize(way);
+  }
+
+  EffectMoveComponent::MOVE_PARAM param;
+  param.unknown39 = EffectMoveComponent::MOVE_TYPE_PARABOLA;
+  param.unknown00 = way;
+  u8 delay = Bdat::getValCheck(gf::GfDataBdat::getFP(gf::BDAT_BTL_BULLET), "AddAtkDelay", unknown250, 1);
+  f32 time = __builtin_fmaxf(delay, 1.0f);
+  f32 cosine = sqrtf(1.0f - way.y * way.y);
+  f32 speed = Misc::CalcLengthXZ(unknown80, target) / time / cosine;
+  param.unknown10 = speed;
+  param.unknown14 = speed;
+  param.unknown18 = 0.0f;
+  param.unknown1c = 0.0f;
+  param.unknown40_3.unknown40[0] = unknown80.x;
+  param.unknown40_3.unknown40[1] = unknown80.y;
+  param.unknown40_3.unknown40[2] = unknown80.z;
+  param.unknown40_3.unknown4c[0] = target.x;
+  param.unknown40_3.unknown4c[1] = target.y;
+  param.unknown40_3.unknown4c[2] = target.z;
+  f32 length = Misc::CalcLengthXZ(unknown80, target);
+  param.unknown38 |= 0x4;
+  param.unknown20[2] = length;
+  unknown190.Initialize(param);
+  unknown25a_0 = false;
+  if (unknown258 == HIT_TYPE_ONE_SHOT) {
+    unknownc8_0.unknown04 = false;
+    unknownc8_0.unknown05 = false;
+    unknownc8_0.unknown06 = false;
+    unknownc8_0.unknown07 = false;
+  }
 }
 
 } // namespace btl
