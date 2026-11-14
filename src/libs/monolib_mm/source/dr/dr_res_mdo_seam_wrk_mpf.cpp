@@ -9,6 +9,9 @@
 #include "mtl/mem_manager.h"
 
 namespace ml {
+struct MdsMpfAutoPosData;
+struct MdsMpfAutoPosTree;
+struct MdsMpfAutoTree;
 
 f32 DrResMdoSeamWrkMpf::SEAM_MPFMAP_READ_CHECK = 60.0f;
 
@@ -148,6 +151,35 @@ void DrResMdoSeamWrkMpf::setMpfPoliCache(int id, DrResMdoSeamMemObj *memObj) {
       unknown58++;
       return;
     }
+  }
+}
+
+void DrResMdoSeamWrkMpf::setupMpfPoliWork(int index) {
+  _wkMpfAutoBuff *buff = unknownb0[index];
+  const unknown005 *data = reinterpret_cast<const unknown005 *>(unknownb8[index]->m_buffer);
+  buff->unknown00 = data->unknown24;
+  buff->unknown08 = data->unknown2c;
+  buff->unknown04 = data->unknown28;
+  buff->unknown0c = data->unknown30;
+  buff->unknown10 = reinterpret_cast<const u8 *>(data) + data->unknown00;
+  buff->unknown18 = reinterpret_cast<const u8 *>(data) + data->unknown04;
+  buff->unknown20 = reinterpret_cast<const u8 *>(data) + data->unknown08;
+  buff->unknown28 = reinterpret_cast<const u8 *>(data) + data->unknown0c;
+  buff->unknown30 = reinterpret_cast<const u8 *>(data) + data->unknown10;
+  if (data->unknown14 == 0) {
+    buff->unknown38 = nullptr;
+  } else {
+    buff->unknown38 = reinterpret_cast<const MdsMpfAutoTree *>(reinterpret_cast<const u8 *>(data) + data->unknown14);
+  }
+  buff->unknown40 = reinterpret_cast<const u32 *>(reinterpret_cast<const u8 *>(data) + data->unknown18);
+  buff->unknown48 = reinterpret_cast<const u32 *>(reinterpret_cast<const u8 *>(data) + data->unknown1c);
+  buff->unknown50 = reinterpret_cast<const f32 *>(reinterpret_cast<const u8 *>(data) + data->unknown20);
+  if (data->unknown34 != 0) {
+    buff->unknown58 = reinterpret_cast<const MdsMpfAutoPosData *>(reinterpret_cast<const u8 *>(data) + data->unknown34);
+    buff->unknown60 = reinterpret_cast<const MdsMpfAutoPosTree *>(reinterpret_cast<const u8 *>(data) + data->unknown38);
+    buff->unknown68 = reinterpret_cast<const u32 *>(reinterpret_cast<const u8 *>(data) + data->unknown3c);
+  } else {
+    buff->unknown58 = nullptr;
   }
 }
 

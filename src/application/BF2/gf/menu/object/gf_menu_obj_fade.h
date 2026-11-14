@@ -13,6 +13,17 @@ namespace gf {
 
 class GfMenuObjFade : public GfMenuObject {
 public:
+  class FadeListener : public ui::UIObjectListener {
+  public:
+    FadeListener(GfMenuObjFade *owner) : unknown0c(0), unknown10(0), _14(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u32 unknown0c; // Inferred role: fade layer index, sent back as the parameter of the finish event; original member name unknown.
+    int unknown10; // Inferred role: running alpha control, -1 when none; original member name unknown.
+    u8 _14[0x20 - 0x14];
+    GfMenuObjFade *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   class LoadingListener : public ui::UIObjectListener {
   public:
     void reciveEvent(const ui::EventData &event, u32 handle) override;
@@ -44,6 +55,10 @@ public:
   s8 unknown28;  // Inferred role: loading display count; original member name unknown.
 };
 
+static_assert(offsetof(GfMenuObjFade::FadeListener, unknown0c) == 0x0c, "");
+static_assert(offsetof(GfMenuObjFade::FadeListener, unknown10) == 0x10, "");
+static_assert(offsetof(GfMenuObjFade::FadeListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjFade::FadeListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjFade::LoadingListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjFade::StartParam, unknown02) == 0x02, "");
 static_assert(offsetof(GfMenuObjFade::StartParam, unknown04) == 0x04, "");

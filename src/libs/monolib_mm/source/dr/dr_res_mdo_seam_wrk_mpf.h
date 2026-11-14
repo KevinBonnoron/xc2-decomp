@@ -71,6 +71,27 @@ public:
     u8 _04[0x14 - 0x04];
   };
 
+  // Inferred role: header of the data of a cached polygon memory object (offsets relative to the header, bounds); original type name unknown.
+  // Layout evidence: setupMpfPoliWork (0x710088c3a0). sizeof 0x40 is the end of the last field it reads (nothing else proves the size).
+  struct unknown005 {
+    u32 unknown00; // Inferred role: poli data offset; original member name unknown.
+    u32 unknown04; // Inferred role: hlv poli data offset; original member name unknown.
+    u32 unknown08; // Inferred role: unknown data offset; original member name unknown.
+    u32 unknown0c; // Inferred role: unknown data offset; original member name unknown.
+    u32 unknown10; // Inferred role: unknown data offset; original member name unknown.
+    u32 unknown14; // Inferred role: tree data offset, 0 when absent; original member name unknown.
+    u32 unknown18; // Inferred role: poli index table offset; original member name unknown.
+    u32 unknown1c; // Inferred role: grid table offset; original member name unknown.
+    u32 unknown20; // Inferred role: float table offset; original member name unknown.
+    f32 unknown24; // Inferred role: maximum x; original member name unknown.
+    f32 unknown28; // Inferred role: maximum z; original member name unknown.
+    f32 unknown2c; // Inferred role: minimum x; original member name unknown.
+    f32 unknown30; // Inferred role: minimum z; original member name unknown.
+    u32 unknown34; // Inferred role: position data offset, 0 when absent; original member name unknown.
+    u32 unknown38; // Inferred role: position tree offset; original member name unknown.
+    u32 unknown3c; // Inferred role: position index table offset; original member name unknown.
+  };
+
   DrResMdoSeamWrkMpf();
   virtual ~DrResMdoSeamWrkMpf();
   void release();
@@ -142,5 +163,8 @@ static_assert(offsetof(DrResMdoSeamWrkMpf, unknownc8) == 0xc8, "");
 static_assert(offsetof(DrResMdoSeamWrkMpf, unknowne0) == 0xe0, "");
 static_assert(offsetof(DrResMdoSeamWrkMpf, unknowne8) == 0xe8, "");
 static_assert(sizeof(DrResMdoSeamWrkMpf) == 0xf0, "");
+static_assert(offsetof(DrResMdoSeamWrkMpf::unknown005, unknown24) == 0x24, "");
+static_assert(offsetof(DrResMdoSeamWrkMpf::unknown005, unknown34) == 0x34, "");
+static_assert(sizeof(DrResMdoSeamWrkMpf::unknown005) == 0x40, "");
 
 } // namespace ml

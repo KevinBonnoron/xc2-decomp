@@ -187,6 +187,106 @@ void GfMenuObjInn::setupLvUpAdapter(ui::UIObjectAcc &acc) {
 
 void GfMenuObjInn::sendEvent(u32 handle, u32 type, u32 param) { unknown140(handle, type, param, 0.0f); }
 
+void GfMenuObjInn::ModeListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  ui::UIObjectAcc owner(unknown20->unknown18);
+  switch (event.unknown00) {
+  case 1: {
+    GfMenuObjUtil::setChildDisp(handle, "IMG_mode_select_cursor", true);
+    GfMenuObjUtil::CursorParam param;
+    param.unknown00 = handle;
+    param.unknown04 = acc.searchChild("IMG_mode_select_cursor");
+    param.unknown08 = "TXT_mode_select@%02d";
+    param.unknown1a = 1;
+    param.unknown20.unknown18 = 1;
+    unknown20->unknown38 = GfMenuObjUtil::createCursor(param);
+    unknown20->unknown38->open(0);
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+  case 6: {
+    // The game loads the parameter before the cursor pointer unknown38 (0x7100478b80/0x7100478b84); without the local the cursor pointer is loaded first.
+    u32 index = event.unknown08;
+    unknown20->unknown38->inputChange(index);
+    break;
+  }
+  case 8:
+    if (event.unknown0c == 1) {
+      acc.setDisp(false);
+      if (event.unknown08 == 0) {
+        unknown20->unknown28->reset();
+        GfMenuObjCommonText::open(unknown20->unknown28, 0xf, 0);
+        GfMenuObject::setCallContextEventHandler(unknown20->unknown28, handle);
+        unknown20->unknown88 = 0;
+        break;
+      }
+      if (event.unknown08 == 1) {
+        unknown163(owner.searchChild("LAY_dr_select"), GfMenuTypes::unknown003_33, 0);
+        unknown20->unknown88 = 1;
+        break;
+      }
+      if (event.unknown08 == 2) {
+        unknown163(owner.searchChild("LAY_dr_select"), GfMenuTypes::unknown003_33, 0);
+        unknown20->unknown88 = 2;
+        break;
+      }
+    } else if (event.unknown0c == 2) {
+      if (unknown20->unknown98) {
+        unknown163(owner.searchChild("LAY_lv_up"), 0x105, 0);
+        acc.setDisp(false);
+        break;
+      }
+    } else {
+      break;
+    }
+    unknown164(handle, GfMenuTypes::unknown003_34);
+    unknown163(owner.searchChild("LAY_dr_list"), GfMenuTypes::unknown003_34, 0);
+    break;
+  case GfMenuTypes::unknown003_33:
+    GfMenuObject::setupInputSelection(handle, 0, 4);
+    GfMenuObject::enableInput(handle);
+    setFadeIn(handle);
+    break;
+  case GfMenuTypes::unknown003_34:
+    GfMenuObject::disableInput(handle);
+    setFadeOut(handle);
+    break;
+  case 0x41:
+    if (unknown20->unknown28 == nullptr || unknown20->unknown28->unknown0c != event.unknown08) {
+      break;
+    }
+    if (event.unknown10_u16 != 0) {
+      acc.setDisp(true);
+      break;
+    }
+    unknown20->unknown60.clear();
+    for (u32 i = 0; i < unknown20->unknown48->getSize(); i++) {
+      u32 driver = unknown20->unknown48->getContents(i).unknown00;
+      if (GfDataDriver::isEnableLevelUp(driver)) {
+        unknown20->unknown60.push(driver);
+      }
+    }
+    unknown164(handle, 0x104);
+    unknown163(owner.searchChild("LAY_dr_list"), 0x103, 0);
+    break;
+  case 0x104:
+    if (!unknown20->unknown60.empty()) {
+      unknown20->unknown60.unknown002(unknown20->unknown8c);
+      u32 maxLevel;
+      GfDataDriver::getEnableLevel(unknown20->unknown90, maxLevel, unknown20->unknown8c);
+      unknown163(owner.searchChild("LAY_lv_up"), GfMenuTypes::unknown003_33, 0);
+      GfMenuReference::setReferenceDriverID(0, unknown20->unknown8c);
+    } else {
+      unknown163(owner.searchChild("LAY_dr_list"), 0x102, 0);
+      unknown163(owner.searchChild("LAY_lv_up"), 0x105, 0);
+    }
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
 int GfMenuObjInn::setFadeIn(u32 handle) {
   int ctrl = GfMenuObjUtil::setCommonFadeIn(handle, 1, 0);
   GfMenuObject::hookCtrlEvent(handle, ctrl);
