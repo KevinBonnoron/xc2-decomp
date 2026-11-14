@@ -1,5 +1,6 @@
 #include "ml/win_view.h"
 
+#include <algorithm>
 #include <string.h>
 
 #include "ml/cache_draw.h"
@@ -495,12 +496,113 @@ bool WinView::wkStandbyLogout() {
   return WorkObj::wkStandbyLogout();
 }
 
+// The u32 reads of the message data follow WorkObj::wkStandby; the pointer is read back the way MsgParam::set(const void *) wrote it (memcpy).
+// The message data is read through the queue entry each time (the game recomputes the entry address from the queue front after every call).
+// The three lookups (0x7100765c74, 0x7100765cfc, 0x7100765d84) keep the list ends in locals read before the value: with the value as a reference
+// into the queue, or with the value read first, the find loop is rotated or the registers differ. The node is compared with the end node as
+// base pointers, as in ScnPoolObj::release (0x7100740b58).
+void WinView::updateMsg() {
+  CS lock(unknown540);
+  while (unknown3c0.size() != 0) {
+    switch (unknown3c0.get(0).msg) {
+    case 0: {
+      WorkObj *work = WorkRootState::getWork(*reinterpret_cast<u32 *>(unknown3c0.get(0).data));
+      if (work != nullptr && !work->wkIsShutdown()) {
+        reslist<u32>::iterator first = unknown338.begin();
+        reslist<u32>::iterator last = unknown338.end();
+        u32 wid = *reinterpret_cast<u32 *>(unknown3c0.get(0).data);
+        reslist<u32>::iterator found = std::find<reslist<u32>::iterator, u32>(first, last, wid);
+        if (found.unknown00 == unknown338.m_end) {
+          unknown338.insert(found, wid);
+        }
+        if (getParentView() != nullptr) {
+          WorkObj *attach = WorkRootState::getWork(*reinterpret_cast<u32 *>(unknown3c0.get(0).data));
+          for (reslist<WorkObj *>::iterator it = wkGetChild()->begin(); it != wkGetChild()->end(); ++it) {
+            if (*it != nullptr) {
+              static_cast<WinView *>(*it)->attachRenderWork(attach);
+            }
+          }
+        }
+      }
+      break;
+    }
+    case 1: {
+      CS eventLock(unknown568);
+      reslist<IWorkEvent *>::iterator first = unknown378.begin();
+      reslist<IWorkEvent *>::iterator last = unknown378.end();
+      IWorkEvent *event;
+      memcpy(&event, unknown3c0.get(0).data, sizeof(event));
+      reslist<IWorkEvent *>::iterator found = std::find<reslist<IWorkEvent *>::iterator, IWorkEvent *>(first, last, event);
+      if (found.unknown00 == unknown378.m_end) {
+        unknown378.insert(found, event);
+      }
+      break;
+    }
+    case 2: {
+      CS eventLock(unknown568);
+      reslist<IWorkEvent *>::iterator first = unknown378.begin();
+      reslist<IWorkEvent *>::iterator last = unknown378.end();
+      IWorkEvent *event;
+      memcpy(&event, unknown3c0.get(0).data, sizeof(event));
+      reslist<IWorkEvent *>::iterator found = std::find<reslist<IWorkEvent *>::iterator, IWorkEvent *>(first, last, event);
+      if (found.unknown00 == unknown378.m_end) {
+        unknown378.insert(unknown378.begin(), event);
+      }
+      break;
+    }
+    case 3:
+      unknown338.remove(*reinterpret_cast<u32 *>(unknown3c0.get(0).data));
+      break;
+    case 4:
+      unknown3b8 |= 3;
+      break;
+    case 5:
+      unknown3b8 |= 4;
+      break;
+    case 6:
+      unknown3b8 &= ~4u;
+      break;
+    case 7:
+      WinViewRoot::setCurrent(this);
+      break;
+    case 8:
+      if (*reinterpret_cast<u32 *>(unknown3c0.get(0).data) == 0) {
+        unknown3b8 |= 0x20;
+      } else {
+        unknown3b8 &= ~0x20u;
+      }
+      break;
+    case 9:
+      for (reslist<u32>::iterator it = unknown338.begin(); it != unknown338.end(); ++it) {
+        WorkObj *work = WorkRootState::getWork(*it);
+        if (work != nullptr) {
+          work->wkSetEvent(static_cast<EVT>(0));
+        }
+      }
+      break;
+    }
+    unknown3c0.pop();
+  }
+}
+
 bool WinView::attachRenderWork(const WorkObj *work) {
   unknown3c0.add(0);
   u32 wid = work->unknown50;
   unknown3c0.set(wid);
   unknown3c0.add(1);
   unknown3c0.set(work);
+  return true;
+}
+
+bool WinView::detachRenderWork(const WorkObj *work) {
+  unknown338.remove(work->unknown50);
+  if (getSplitView1() != nullptr) {
+    getSplitView1()->detachRenderWork(work);
+  }
+  if (getSplitView2() != nullptr) {
+    getSplitView2()->detachRenderWork(work);
+  }
+  detachWorkEvent(work);
   return true;
 }
 
@@ -512,6 +614,18 @@ bool WinView::attachWorkEvent(IWorkEvent *event, bool isFront) {
   } else {
     unknown3c0.add(1);
     unknown3c0.set(event);
+  }
+  return true;
+}
+
+bool WinView::detachWorkEvent(const IWorkEvent *event) {
+  CS lock(unknown568);
+  unknown378.remove(event);
+  if (getSplitView1() != nullptr) {
+    getSplitView1()->detachWorkEvent(event);
+  }
+  if (getSplitView2() != nullptr) {
+    getSplitView2()->detachWorkEvent(event);
   }
   return true;
 }

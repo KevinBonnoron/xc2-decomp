@@ -1,11 +1,14 @@
 #include "ml/win_view_root.h"
 
+#include <algorithm>
+
 #include "ml/cache_draw.h"
 #include "ml/dev_graph.h"
 #include "ml/device.h"
 #include "ml/lib_main.h"
 #include "ml/proc_desktop.h"
 #include "ml/reslist.h"
+#include "ml/win_proc.h"
 #include "ml/win_proc_root.h"
 #include "ml/win_view.h"
 #include "ml/work_obj_flow_system_pause.h"
@@ -98,6 +101,73 @@ bool WinViewRoot::isCurrent(const WinView *view) {
     return current == view && current != nullptr;
   }
   return false;
+}
+
+void WinViewRoot::invalidCurrent(WinView *view) {
+  WinViewRoot *root = get();
+  if (root != nullptr) {
+    reslist<u32>::iterator found = std::find<reslist<u32>::iterator, u32>(root->unknown1b0.begin(), root->unknown1b0.end(), view->unknown50);
+    if (found != root->unknown1b0.end()) {
+      root->unknown1b0.erase(found);
+    }
+    if (root->unknown1b0.size() > 0) {
+      reslist<u32>::iterator best = root->unknown1b0.begin();
+      for (reslist<u32>::iterator it = root->unknown1b0.begin(); it != root->unknown1b0.end(); ++it) {
+        if (getView(*it)->unknown528 <= getView(*best)->unknown528) {
+          best = it;
+        }
+        if (getView(*it)->unknown50 == root->unknown208) {
+          best = it;
+          break;
+        }
+      }
+      if (root->unknown1f0 == view) {
+        root->unknown1f0 = getView(*best);
+      }
+    } else {
+      root->unknown1f0 = nullptr;
+    }
+  }
+}
+
+void WinViewRoot::setCurrent(WinView *view) {
+  WinViewRoot *root = get();
+  if (root != nullptr && !view->wkIsShutdown() && view->unknown338.size() != 0 && root->unknown1f0 != view) {
+    WinProc *proc = static_cast<WinProc *>(WorkRootState::getWork(view->unknown338.begin()->value));
+    WinProc *rootProc = WinProc::pssGetRoot(proc);
+    if (proc != nullptr) {
+      WinView *current = root->unknown1f0;
+      if (current != nullptr) {
+        if (root->unknown1f8 != nullptr && root->unknown200 == rootProc && root->unknown1f8->unknown1ec == 0 && proc->unknown1ec != 0) {
+          return;
+        }
+        root->unknown208 = current->unknown50;
+        current->evtFocusOff();
+      }
+      root->unknown200 = rootProc;
+      root->unknown1f0 = view;
+      root->unknown1f8 = proc;
+      // The game reads the list ends before the wid (0x71007660c8: end, begin, then the wid load of the find loop), which only the
+      // locals give; the node is compared with the end node as base pointers, as in ScnPoolObj::release (0x7100740b58).
+      reslist<u32>::iterator first = root->unknown1b0.begin();
+      reslist<u32>::iterator last = root->unknown1b0.end();
+      u32 wid = view->unknown50;
+      reslist<u32>::iterator found = std::find<reslist<u32>::iterator, u32>(first, last, wid);
+      if (found.unknown00 == root->unknown1b0.m_end) {
+        root->unknown1b0.insert(found, wid);
+      }
+      if (root->unknown1f0 != nullptr) {
+        root->unknown1f0->evtFocusOn();
+        WinView *focus = root->unknown1f0;
+        if (focus != nullptr) {
+          WinView *parent = focus->getParentView();
+          if (get() != nullptr && parent != nullptr) {
+            WorkRootState::requestParent(focus, parent);
+          }
+        }
+      }
+    }
+  }
 }
 
 bool WinViewRoot::isCurrentChild(const WinView *view, const WinView *current) {

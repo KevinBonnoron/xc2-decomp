@@ -148,3 +148,6 @@ void GfMenuObjStaffroll::MainListener::reciveEvent(const ui::EventData &event, u
 }
 
 } // namespace gf
+
+template void mm::mtl::Vector<gf::GfMenuObjStaffroll::RowInfo>::push_back(const gf::GfMenuObjStaffroll::RowInfo &);
+template void mm::mtl::Vector<gf::GfMenuObjStaffroll::RowInfo>::expand(size_t, size_t);

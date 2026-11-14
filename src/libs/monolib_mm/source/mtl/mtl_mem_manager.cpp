@@ -12,6 +12,7 @@
 #include "mm_mtl/fixed_vector.h" // IWYU pragma: keep
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/internal/heap_allocator.h"
+#include "mm_mtl/noncopyable.h" // IWYU pragma: keep
 #include "mtl/alloc_handle.h"
 #include "mtl/allocator_wrapper.h"
 #include "mtl/asset_allocator.h"
@@ -1029,6 +1030,8 @@ void MemHandlebaseAllocator::deallocate(void *pointer) { MemManager::deallocate(
 const char *MemHandlebaseAllocator::getName() const { return "MemHandlebaseAllocator"; }
 
 } // namespace mtl
+
+template mm::mtl::Noncopyable<mtl::MemManager>::~Noncopyable();
 
 template mm::mtl::FixedVector<mtl::MemManager::HandleRegion, 512>::~FixedVector();
 

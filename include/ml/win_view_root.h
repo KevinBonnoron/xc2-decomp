@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "ml/reslist.h"
 #include "ml/work_obj.h"
 #include "mm_math/mm_pnt.h"
 #include "mm_mtl/singleton.h"
@@ -30,19 +31,23 @@ public:
   static void renderView();
   static bool isCurrent(const WinView *view);
   static void invalidCurrent(WinView *view);
+  static void setCurrent(WinView *view);
   static bool isCurrentChild(const WinView *view, const WinView *current);
   static void cutOff(bool cut);
 
-  u8 _1b0[0x1f0 - 0x1b0];
-  WinView *unknown1f0; // Inferred role: current view; original member name unknown.
-  WinProc *unknown1f8; // Inferred role: current proc; original member name unknown.
-  WinProc *unknown200; // Inferred role: render proc; original member name unknown.
-  u8 _208[0x210 - 0x208];
+  reslist<u32> unknown1b0; // Inferred role: wids of the views that were current; original member name unknown.
+  WinView *unknown1f0;     // Inferred role: current view; original member name unknown.
+  WinProc *unknown1f8;     // Inferred role: current proc; original member name unknown.
+  WinProc *unknown200;     // Inferred role: render proc; original member name unknown.
+  u32 unknown208;          // Inferred role: wid of the previous current view; original member name unknown.
+  u8 _20c[0x210 - 0x20c];
 };
 
+static_assert(offsetof(WinViewRoot, unknown1b0) == 0x1b0, "");
 static_assert(offsetof(WinViewRoot, unknown1f0) == 0x1f0, "");
 static_assert(offsetof(WinViewRoot, unknown1f8) == 0x1f8, "");
 static_assert(offsetof(WinViewRoot, unknown200) == 0x200, "");
+static_assert(offsetof(WinViewRoot, unknown208) == 0x208, "");
 static_assert(sizeof(WinViewRoot) == 0x210, "");
 
 } // namespace ml

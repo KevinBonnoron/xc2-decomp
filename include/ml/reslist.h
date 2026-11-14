@@ -127,7 +127,10 @@ public:
     m_size--;
   }
 
-  void remove(const T &value) {
+  // The value is taken by value: WinView::detachRenderWork (0x71007661c8) loads the wid of its argument once before the loop; with a
+  // reference the load stays in the loop and the loop is rotated differently. Its type is its own parameter because
+  // WinView::detachWorkEvent (0x7100766550) compares a `const IWorkEvent *` with the `IWorkEvent *` entries, no cast needed.
+  template <typename U> void remove(U value) {
     iterator first = begin();
     iterator last = end();
     while (first != last) {

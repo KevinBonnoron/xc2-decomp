@@ -30,8 +30,17 @@ public:
   };
 
   // Inferred role: scrolled row; original member names unknown.
+  // Layout evidence: update (0x71004d8f04) loads the u32 at 0x00 (ldr w8,[x27]), the height at 0x04 (ldr w8,[x8,#4]), the row index at 0x08 for
+  // CreditReader::getRow (ldr w1,[x8,#8]), the bytes at 0x0c (ldrb at 0x71004d906c) and 0x0d (strb at 0x71004d92f4), builds the stack row at
+  // 0x71004d9620 to 0x71004d9628 (strh wzr over 0xc and 0xd) and steps by the element size 0x28 (mov w26,#0x28).
+  // The mtl_detail::copy_construct_n<RowInfo> of the game (0x71004d9e1c) has its loop unswitched on the
+  // copy of the FixedVector only when the leading POD run is made of scalar members and not of a byte array.
   struct RowInfo {
-    u8 unknown00[0xe];                      // Inferred role: row values and flags; original member name unknown.
+    u32 unknown00;                          // Inferred role: scroll position of the row; original member name unknown.
+    s32 unknown04;                          // Inferred role: height of the row image; original member name unknown.
+    u32 unknown08;                          // Inferred role: credit row index; original member name unknown.
+    bool unknown0c;                         // Inferred role: row objects created; original member name unknown.
+    bool unknown0d;                         // Inferred role: row displayed; original member name unknown.
     mm::mtl::FixedVector<u32, 4> unknown10; // Inferred role: row text objects; original member name unknown.
   };
 
@@ -61,6 +70,12 @@ public:
 static_assert(offsetof(GfMenuObjStaffroll::MainListener, unknown20) == 0x20, "");
 static_assert(sizeof(GfMenuObjStaffroll::MainListener) == 0x28, "");
 static_assert(sizeof(GfMenuObjStaffroll::RowInfo) == 0x28, "");
+static_assert(offsetof(GfMenuObjStaffroll::RowInfo, unknown00) == 0x00, "");
+static_assert(offsetof(GfMenuObjStaffroll::RowInfo, unknown04) == 0x04, "");
+static_assert(offsetof(GfMenuObjStaffroll::RowInfo, unknown08) == 0x08, "");
+static_assert(offsetof(GfMenuObjStaffroll::RowInfo, unknown0c) == 0x0c, "");
+static_assert(offsetof(GfMenuObjStaffroll::RowInfo, unknown0d) == 0x0d, "");
+static_assert(offsetof(GfMenuObjStaffroll::RowInfo, unknown10) == 0x10, "");
 static_assert(offsetof(GfMenuObjStaffroll, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjStaffroll, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjStaffroll, unknown58) == 0x58, "");
