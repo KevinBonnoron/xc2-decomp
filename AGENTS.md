@@ -34,7 +34,9 @@
     existence only the match proves; rename if a sibling build gives a
     symbol.`, and list in a comment the forms tried without the helper and
     the game address of its user. Helpers with several users stay
-    `unknownNNN`.
+    `unknownNNN`, except the private `setFlag`/`setDispFlag` helpers of the
+    event classes, which keep their descriptive names with an `// Inferred
+    name` comment (decision of 2026-11-14 #26).
 - A macro leaves no trace in the binary, so its original name can never be
   recovered: give it a descriptive upper-case name and say in a comment that
   the name is inferred (`// Inferred macro name; macros leave no trace in the
