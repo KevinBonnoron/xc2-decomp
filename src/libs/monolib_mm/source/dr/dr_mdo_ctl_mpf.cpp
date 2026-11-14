@@ -10,6 +10,8 @@ namespace ml {
 
 DrMdoCtlMpf::~DrMdoCtlMpf() { releaseMpf(); }
 
+void DrMdoCtlMpf::resourceInit() { setupMpfResource(); }
+
 void DrMdoCtlMpf::updateMpf() {
   m_AABBMax = mm::Vec3(1.0f, 1.0f, 1.0f);
   m_AABBMin = mm::Vec3(-1.0f, -1.0f, -1.0f);
@@ -42,5 +44,7 @@ void DrMdoCtlMpf::callRenderMpf() {
   defMpfrender();
   DrMan::get()->unknown180->end(DrPixlTileParm::TILE_TYPE_UNKNOWN_3);
 }
+
+void DrMdoCtlMpf::createDisplaList() {}
 
 } // namespace ml

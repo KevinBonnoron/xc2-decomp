@@ -41,6 +41,7 @@ public:
   void wkUpdate() override;
   void wkTail() override;
   bool wkStandbyLogout() override;
+  void font(int x, int y, const char *text);
   void fontColor(const mm::Col4 &color, bool isFlush);
   void fontBack(const mm::Col4 &color);
   void fontScale(f32 x, f32 y);

@@ -7,6 +7,17 @@
 
 namespace ml {
 
+void DevFontLayer::font(int x, int y, const char *text) {
+  if (unknown1a8 != nullptr) {
+    writeLayer(text, strlen(text) + 1);
+    LAYER_FONT layer;
+    layer.unknown00 = 0;
+    layer.unknown04 = x;
+    layer.unknown06 = y;
+    unknown1a8[unknown1b0++] = static_cast<LAYER_FONT *>(writeLayer(&layer, sizeof(layer)));
+  }
+}
+
 void DevFontLayer::fontColor(const mm::Col4 &color, bool isFlush) {
   if (unknown1a8 != nullptr) {
     LAYER_COLOR *layer = static_cast<LAYER_COLOR *>(allocLayer(sizeof(LAYER_COLOR)));

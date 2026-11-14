@@ -19,6 +19,7 @@ public:
   void callRenderMpf();
   void defMpfZPreRender();
   void defMpfrender();
+  void createDisplaList();
 
   u8 _1a8[0x200 - 0x1a8];
 };

@@ -12,6 +12,8 @@
 #include "gf/menu/gf_menu_reference.h"
 #include "gf/menu/gf_menu_reference_number.h"
 #include "gf/menu/list/gf_menu_item_list.h"
+#include "gf/menu/object/gf_menu_obj_common_text.h"
+#include "gf/util/gf_equip_util.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/reference_object.h"
 #include "types.h"
@@ -209,6 +211,60 @@ void GfMenuObjBlWeapon::MainListener::reciveEvent(const ui::EventData &event, u3
     GfMenuReference::getReferenceBladeID(unknown20->unknown24);
     if (result == 2) {
       GfMenuObject::returnFSSubLayer(acc.unknown10, 2);
+    }
+    break;
+  }
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
+void GfMenuObjBlWeapon::ItemListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 8: {
+    u32 index = event.unknown08;
+    int result = event.unknown0c;
+    const MenuItemInfo &info = unknown20->unknown30->getContents(unknown20->unknown30->getIndex(false));
+    u32 blade = GfMenuReference::getReferenceBladeID(unknown20->unknown24);
+    if (index != 0xffffffff && result == 1) {
+      unknown20->unknown2e8->reset();
+      if (unknown20->isSameWeapon(blade, info.unknown04)) {
+        GfMenuObjCommonText::open(unknown20->unknown2e8, 0x1c, 0);
+      } else {
+        GfMenuObjCommonText::open(unknown20->unknown2e8, 0x1d, 0);
+        unknown20->unknown28 = 1;
+      }
+      GfMenuObject::setCallContextEventHandler(unknown20->unknown2e8, acc.unknown10);
+      unknown20->suspendInput();
+    }
+    break;
+  }
+  case 1:
+    break;
+  case 6: {
+    u32 index = event.unknown08;
+    if (index != 0xffffffff) {
+      unknown20->unknown30->setIndex(index);
+      unknown20->unknown38->setIndex(unknown20->unknown30->getIndex(true));
+      unknown20->unknown48->unknown162(unknown20->unknown30->getContents(unknown20->unknown30->getIndex(false)).unknown04);
+    }
+    acc.setDispChild(index != 0xffffffff, "IMG_item_cursor");
+    break;
+  }
+  case 0x41: {
+    u32 blade = GfMenuReference::getReferenceBladeID(unknown20->unknown24);
+    u32 call = event.unknown08;
+    if (unknown20->unknown2e8->unknown0c == call) {
+      if (event.unknown10 == 0 && unknown20->unknown28 == 1) {
+        const MenuItemInfo &item = unknown20->unknown30->getContents(unknown20->unknown30->getIndex(false));
+        GfEquipUtil::equipBladeChip(blade, item.unknown04);
+        MenuItemInfo info = item;
+        info.unknown08 = 1;
+        unknown20->unknown30->decItem(info, false);
+      }
+      unknown20->resumeInput();
     }
     break;
   }

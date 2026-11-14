@@ -107,6 +107,7 @@ template mm::mtl::PtrSingleton<ml::Device>::~PtrSingleton();
 #include "dev_file_job_read_dvd.cpp"
 #include "wii_filer_common.cpp"
 #include "nx/dev_clock_nx.cpp"
+#include "nx/dev_font_nx.cpp"
 #include "nx/dev_graph_nx.cpp"
 #include "nx/dev_keyboard_nx.cpp"
 #include "nx/dev_mouse_nx.cpp"
