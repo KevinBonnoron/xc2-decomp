@@ -64,6 +64,87 @@ public:
     GfMenuObjShop *unknown20; // Inferred role: owner; original member name unknown.
   };
 
+  class SubListener : public ui::UIObjectListener {
+  public:
+    SubListener(GfMenuObjShop *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjShop *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class StoreActListener : public ui::UIObjectListener {
+  public:
+    StoreActListener(GfMenuObjShop *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjShop *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class StoreListListener : public ui::UIObjectListener {
+  public:
+    StoreListListener(GfMenuObjShop *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjShop *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class SellListListener : public ui::UIObjectListener {
+  public:
+    SellListListener(GfMenuObjShop *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjShop *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class SellFilterListener : public ui::UIObjectListener {
+  public:
+    SellFilterListener(GfMenuObjShop *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjShop *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class InnActListener : public ui::UIObjectListener {
+  public:
+    InnActListener(GfMenuObjShop *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjShop *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class OrbRecipeListener : public ui::UIObjectListener {
+  public:
+    OrbRecipeListener(GfMenuObjShop *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjShop *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class ExcTaskListListener : public ui::UIObjectListener {
+  public:
+    ExcTaskListListener(GfMenuObjShop *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjShop *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class NumSelectListener : public ui::UIObjectListener {
+  public:
+    NumSelectListener(GfMenuObjShop *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjShop *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   GfMenuObjShop(u32 handle);
   ~GfMenuObjShop() override;
   static void open(GfMenuCallContext *context, const OpenParam &param);
@@ -150,9 +231,9 @@ public:
   int unknown4d8;                              // Inferred role: sleep interval frames; original member name unknown.
   bool unknown4dc;                             // Inferred role: sleep fade started flag; original member name unknown.
   u8 _4dd[0x4e0 - 0x4dd];
-  u32 unknown4e0; // Inferred role: call result type; original member name unknown.
-  int unknown4e4; // Inferred role: call result value; original member name unknown.
-  u8 _4e8[0x4f0 - 0x4e8];
+  u32 unknown4e0;                       // Inferred role: call result type; original member name unknown.
+  int unknown4e4;                       // Inferred role: call result value; original member name unknown.
+  ui::UISelectObjList *unknown4e8;      // Inferred role: item objects; original member name unknown.
   mm::mtl::ReferenceObject *unknown4f0; // Inferred role: reference-counted object; type and original member name unknown.
   u32 unknown4f8;                       // Inferred role: dialog object; original member name unknown.
   u8 _4fc[0x500 - 0x4fc];
@@ -165,6 +246,25 @@ public:
   GfMenuCallContext *unknown570; // Inferred role: blade weapon call context; original member name unknown.
   GfMenuCallContext *unknown578; // Inferred role: item get call context; original member name unknown.
 };
+
+static_assert(offsetof(GfMenuObjShop::SubListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjShop::SubListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjShop::StoreActListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjShop::StoreActListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjShop::StoreListListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjShop::StoreListListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjShop::SellListListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjShop::SellListListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjShop::SellFilterListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjShop::SellFilterListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjShop::InnActListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjShop::InnActListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjShop::OrbRecipeListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjShop::OrbRecipeListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjShop::ExcTaskListListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjShop::ExcTaskListListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjShop::NumSelectListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjShop::NumSelectListener) == 0x28, "");
 
 static_assert(offsetof(GfMenuObjShop::MainListener, unknown20) == 0x20, "");
 static_assert(sizeof(GfMenuObjShop::MainListener) == 0x28, "");
@@ -202,6 +302,7 @@ static_assert(offsetof(GfMenuObjShop, unknownf8) == 0xf8, "");
 static_assert(offsetof(GfMenuObjShop, unknown240) == 0x240, "");
 static_assert(offsetof(GfMenuObjShop, unknown4dc) == 0x4dc, "");
 static_assert(offsetof(GfMenuObjShop, unknown4e0) == 0x4e0, "");
+static_assert(offsetof(GfMenuObjShop, unknown4e8) == 0x4e8, "");
 static_assert(offsetof(GfMenuObjShop, unknown500) == 0x500, "");
 static_assert(offsetof(GfMenuObjShop, unknown504) == 0x504, "");
 static_assert(offsetof(GfMenuObjShop, unknown508) == 0x508, "");

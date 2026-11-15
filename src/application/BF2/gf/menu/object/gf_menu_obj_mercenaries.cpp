@@ -1,6 +1,8 @@
 #include "gf/menu/object/gf_menu_obj_mercenaries.h"
 
 #include "gf/data/gf_data_mercenaries.h"
+#include "gf/data/gf_data_param_acc.h"
+#include "gf/data/gf_object_type.h"
 #include "gf/game/mercenaries/gf_game_mercenaries.h"
 #include "gf/menu/adapter/gf_menu_char_data_adapter.h"
 #include "gf/menu/adapter/gf_menu_game_adapter.h"
@@ -90,6 +92,32 @@ void GfMenuObjMercenaries::finalize() { GfMenuObject::finalize(); }
 void GfMenuObjMercenaries::update() {
   unknown0e8.unknown003();
   GfMenuObject::update();
+}
+
+bool GfMenuObjMercenaries::isInvokeFieldSkill(u32 mission, u32 team) {
+  if (GfDataMercenaries::getTeamMission(team) == 0 && GfGameMercenaries::orderMission(team, mission)) {
+    for (u32 index = 0; index < 3; index++) {
+      u32 fieldSkill = GfDataMercenaries::getFieldSkill(mission, index);
+      if (fieldSkill != 0) {
+        unknown120 *members = GfDataMercenaries::getTeamMember(team);
+        for (u16 *member = members->unknown00; member != members->unknown00 + 6; member++) {
+          if (*member != 0) {
+            DataParamAcc acc(OBJECT_TYPE_BLADE, *member, GIMMICK_TYPE_UNKNOWN_0);
+            for (u32 slot = 0; slot < 3; slot++) {
+              // Ruling 5 (P3): the game (0x710048bcfc) calls getFieldSkill(slot, false) twice for each slot and drops
+              // the first result; the original expression cannot be checked.
+              acc.getFieldSkill(slot, false);
+              if (fieldSkill == acc.getFieldSkill(slot, false)) {
+                return true;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return false;
 }
 
 void GfMenuObjMercenaries::sendEvent(u32 handle, u32 type, u32 param) { unknown140(handle, type, param, 0.0f); }

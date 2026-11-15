@@ -35,6 +35,7 @@ public:
   bool isEnd() const { return (unknown08 & FLAG_UNKNOWN_1) != 0; }
 
 private:
+  // Inferred name; kept as an exception to the unknown-name rule (AGENTS.md, decision 2026-11-14 #26): inline flag helper, no game symbol gives its name; rename if a sibling build gives a symbol.
   void setFlag(u32 flag, bool isSet) {
     if (isSet) {
       unknown08 |= flag;

@@ -739,6 +739,36 @@ bool BgmEvent::isPlaying() const { return BgmTrack::isPlaying(); }
 
 void BgmEvent::cancelOverTime() { unknown638.unknown5c = 0.0f; }
 
+bool BgmEvent::isInvalidRequestBgmFile() const {
+  GfEvtBgm *event = GfEvtBgm::get();
+  if (event != nullptr) {
+    // The game forms the event name address (add x1) before the playing name address (add x0), 0x71002d260c; the
+    // single-use local places that computation first (ruling 2026-11-13 #2, P2). Also inlined in updatePlaying.
+    const char *eventName = event->unknown0c.unknown00.c_str();
+    return strcmp(unknown08[0].unknown14.c_str(), eventName) != 0;
+  }
+  return false;
+}
+
+void BgmEvent::updatePlaying(const fw::UpdateInfo &info) {
+  GfEvtBgm *event = GfEvtBgm::get();
+  if (event->unknown0c.unknown64) {
+    unknown618 = event->unknown0c.unknown44;
+  }
+  if (isInvalidRequestBgmFile()) {
+    stopBGM(unknown638.unknown62 ? unknown638.unknown4c : 0.5f);
+  } else if (!unknown60d && event->isPlayBgm()) {
+    event->setFadeoutVolume();
+  }
+  if (unknown638.unknown5c > 0.0f && !GfGameManager::isEvent(false)) {
+    unknown638.unknown5c -= info.unknown04;
+    if (unknown638.unknown5c <= 0.0f) {
+      unknown638.unknown5c = 0.0f;
+      event->setFadeoutVolume();
+    }
+  }
+}
+
 const char *BgmEvent::getTrackName() const { return "EventBGM"; }
 
 const char *BgmBattle::getTrackName() const { return "BattleBGM"; }

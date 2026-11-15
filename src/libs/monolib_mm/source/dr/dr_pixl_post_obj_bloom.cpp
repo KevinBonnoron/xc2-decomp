@@ -8,6 +8,7 @@
 #include "dr/dr_pixl_man.h"
 #include "dr/dr_pixl_post_man.h"
 #include "dr/dr_pixl_post_obj.h"
+#include "dr/dr_pixl_post_obj_tmaa.h"
 #include "dr/dr_pixl_post_obj_volume.h"
 #include "dr/dr_pixl_post_parm.h"
 #include "dr/dr_pixl_render_target.h"
@@ -23,6 +24,20 @@
 #include "mtl/alloc_handle.h"
 
 namespace ml {
+
+// Decision 2026-11-14 #35: the release helper for the bloom members, which are DrPixlRenderTarget *. It deletes through the base pointer, as the
+// game's releaseBloomTexture does (0x7100853b84, 151 instructions; a helper deleting through DrPixlRenderTarget * gives 179). It lives here and
+// not in dr_pixl_post_obj.h because DrPixlPostObjTMAA (own unit) needs the file-local `template unknown001(T *&)` for its DrPixlRenderTarget
+// members, which a shared non-template overload would capture; here, in the dr.cpp unit, it is preferred to the template of dr_pixl_deferred.cpp.
+// Inferred role: releases and deletes a render target; original name unknown.
+inline void unknown001(DrPixlRenderTarget *&target) {
+  grlib::CGLibRenderTarget *renderTarget = target;
+  if (renderTarget != nullptr) {
+    renderTarget->releaseWork();
+    delete renderTarget;
+    target = nullptr;
+  }
+}
 
 namespace _dppob {
 
@@ -131,7 +146,7 @@ grlib::CGLibRenderTarget *DrPixlPostObjBloom::getLgtDownTarget() { return m_lgtD
 void DrPixlPostObjBloom::bloomLensFlare() {
   DrAPGxType::setupBlend(2);
   unknown38[2]->setRenderTarget();
-  setScaleShader(static_cast<DrPixlRenderTarget *>(unknown30));
+  setScaleShader(unknown30);
   unknown38[2]->setColorInvalidate();
   DrAPGxType::setupBlend(0);
 }
@@ -144,6 +159,109 @@ void DrPixlPostObjBloom::calculateGaussBlur() {
     calculateLensFlare();
     bloomLensFlare();
   }
+}
+
+// Decision 2026-11-14 #35 (with rulings 1 and 2): matches (277 instructions) with the six bloom members typed DrPixlRenderTarget *, so that
+// `source` (a DrPixlRenderTarget * like getPixlObj(6) and getBloomTexture()) takes unknown20 without a cast. extType and pass are the single-use
+// locals that place the `add`/`cinc` before the getDeclarationOfs calls.
+void DrPixlPostObjBloom::calculateDownScaleImpl(DownScaleType type) {
+  DrPixlRenderTarget *color = unknown08->unknown7f0->unknown138;
+  DrPixlRenderTarget *source;
+  if (!unknown00->unknown120[unknown00->unknown1c98]->m_TMAAOn) {
+    source = unknown08->getPixlObj(6);
+  } else {
+    source = unknown08->unknown7f0->unknown180->unknown68->getBloomTexture();
+  }
+  if (type == DOWN_SCALE_TYPE_UNKNOWN_2) {
+    source = unknown20;
+  }
+  source->setColorInvalidate();
+  color->setColorInvalidate();
+  grlib::CGLibRenderTarget *target = type == DOWN_SCALE_TYPE_UNKNOWN_1 ? unknown20 : unknown18;
+  target->setRenderTarget();
+  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  bool isTwoPass = type == DOWN_SCALE_TYPE_UNKNOWN_1 || type == DOWN_SCALE_TYPE_UNKNOWN_2;
+  DrShdDataObj *shader = shdList->getPostShdObj(isTwoPass ? 0x41 : 4);
+  u32 extType = type + 1;
+  shader->setDeclarationIdx(shader->getDeclarationOfs("EXT_TYPE"), extType);
+  if (isTwoPass) {
+    u32 pass = type == DOWN_SCALE_TYPE_UNKNOWN_1 ? 1 : 2;
+    shader->setDeclarationIdx(shader->getDeclarationOfs("DECL_PASS"), pass);
+  }
+  shdList->unknown002(shader);
+  grlib::CGLibUniformEtcUtility uniform(shader);
+  uniform.setUseUniformBlock("U_POST");
+  int sourceLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("s0");
+  int colorLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("s1");
+  u32 scaleOffset = uniform.unknown001("gScal");
+  u32 ratioOffset = uniform.unknown001("ratio[0]");
+  u32 ofsOffset = uniform.unknown001("ofs[0]");
+  bool isOffset = postParm->unknownf71;
+  u32 width = target->unknownbc;
+  u32 height = target->unknownc0;
+  bool isReduction = false;
+  if (isOffset && (type == DOWN_SCALE_TYPE_UNKNOWN_0 || type == DOWN_SCALE_TYPE_UNKNOWN_1)) {
+    isReduction = true;
+  }
+  f32 work[8];
+  if (isReduction) {
+    f32 targetWidth = static_cast<f32>(width);
+    f32 targetHeight = static_cast<f32>(height);
+    width = source->unknownbc;
+    height = source->unknownc0;
+    work[0] = 1.0f / targetWidth * 2.0f + 1.0f;
+    work[1] = 1.0f / targetHeight * 2.0f + 1.0f;
+    work[2] = 0.5f - work[0] * 0.5f + 0.0f;
+    work[3] = 0.5f - work[1] * 0.5f + 0.0f;
+  } else {
+    work[0] = 1.0f;
+    work[1] = 1.0f;
+    work[2] = 0.0f;
+    work[3] = 0.0f;
+  }
+  uniform.setF32SetVec4(scaleOffset, work);
+  work[0] = postParm->unknown40;
+  work[1] = postParm->m_borderBlmMul * (1.0f / 3.0f);
+  work[2] = postParm->unknownc0[0] * 0.25f;
+  work[3] = unknown08->unknown7f0->unknown188;
+  work[4] = postParm->unknown48;
+  work[5] = postParm->unknown4c * (1.0f / 3.0f);
+  work[6] = unknown08->unknown7f0->unknown18c;
+  work[7] = 1.0f / unknown08->unknown7f0->unknown188;
+  uniform.setF32SetF32Array(ratioOffset, work, 8);
+  if (isReduction) {
+    f32 pixelV = 1.0f / static_cast<f32>(color->unknownc0);
+    f32 pixelU = 1.0f / static_cast<f32>(color->unknownbc);
+    work[0] = -pixelU;
+    work[1] = -pixelV;
+    work[2] = -pixelU;
+    work[3] = pixelV;
+    work[4] = pixelU;
+    work[5] = -pixelV;
+    work[6] = pixelU;
+    work[7] = pixelV;
+  } else {
+    f32 pixelU = 1.0f / static_cast<f32>(width) / static_cast<f32>(width);
+    f32 pixelV = 1.0f / static_cast<f32>(height) / static_cast<f32>(height);
+    work[0] = pixelU;
+    work[1] = pixelV;
+    work[2] = pixelU * 3.0f;
+    work[3] = pixelV;
+    work[4] = pixelU * 3.0f;
+    work[5] = pixelV * 3.0f;
+    work[6] = pixelU;
+    work[7] = pixelV * 3.0f;
+  }
+  uniform.setF32SetF32Array(ofsOffset, work, 8);
+  DrAPCache *apCache = unknown00->unknown5c0;
+  apCache->beginTexSampling(2, 1);
+  apCache->setTexture(*source->unknown70, sourceLocation);
+  apCache->setTexture(*color->unknown70, colorLocation);
+  uniform.updateData();
+  uniform.setUniformBlock();
+  shdList->renderQuads();
+  target->setColorInvalidate();
 }
 
 void DrPixlPostObjBloom::calculateFlareBuff() {
@@ -234,6 +352,7 @@ void DrPixlPostObjBloom::calculateLensFlare() {
       work[0] = stepU * cosf(angle);
       work[1] = stepV * sinf(angle);
       if (postParm->unknownfb3) {
+        // Decision 2026-11-14 (ruling 2): the two locals put both loads before the first store (241 instructions, 242 without them).
         f32 reductionX = postParm->unknownfc0;
         f32 reductionY = postParm->unknownfc4;
         work[0] /= reductionX;
@@ -254,6 +373,7 @@ void DrPixlPostObjBloom::calcCollectRender(bool isVolume) {
   DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
   DrShdDataList *shdList = unknown00->unknown80->unknown00;
   DrShdDataObj *shader = shdList->getPostShdObj(9);
+  // Decision 2026-11-14 (ruling 1): the single-use local places the `cinc` before the getDeclarationOfs call (245 instructions, 244 without it).
   u32 withVolume = isVolume ? 1 : 2;
   shader->setDeclarationIdx(shader->getDeclarationOfs("DECL_WITH_VOLUME"), withVolume);
   u32 useLuma4 = postParm->unknownf58 == 1 ? 1 : 2;
@@ -276,6 +396,7 @@ void DrPixlPostObjBloom::calcCollectRender(bool isVolume) {
   work[3] = 1.0f / (height + height);
   uniform.setF32SetVec4(scaleOffset, work);
   u32 parmOffset = uniform.unknown001("gParm");
+  // Decision 2026-11-14 (P3): plain statements in the order the game stores them (work[3], work[2], work[1]) instead of a chained assignment.
   work[0] = unknown08->unknown7f0->unknown188;
   work[3] = 0.0f;
   work[2] = 0.0f;
@@ -313,6 +434,37 @@ void DrPixlPostObjBloom::calcCollectRender(bool isVolume) {
     secondUniform.setUniformBlock();
     shdList->renderQuads();
   }
+}
+
+void DrPixlPostObjBloom::debugRender() {
+  if (!unknown00->unknown120[unknown00->unknown1c98]->unknown3d) {
+    return;
+  }
+  // Inferred role: debug view entry, a render target with its index and kind; original type name unknown. Stride 0x10 at sp+0x10.
+  struct unknown010 {
+    DrPixlRenderTarget *unknown00; // Inferred role: render target; original member name unknown.
+    u16 unknown08;                 // Inferred role: index in its group; original member name unknown.
+    u16 unknown0a;                 // Inferred role: group, 1 for the blur chains; original member name unknown.
+  };
+  static_assert(offsetof(unknown010, unknown08) == 0x08, "");
+  static_assert(offsetof(unknown010, unknown0a) == 0x0a, "");
+  static_assert(sizeof(unknown010) == 0x10, "");
+  DrPixlRenderTarget *color = unknown08->getPixlObj(6);
+  unknown010 targets[13];
+  targets[0] = {unknown18, 0, 0};
+  targets[1] = {color, 1, 0};
+  targets[2] = {unknown20, 2, 0};
+  for (u16 i = 0; i < 5; i++) {
+    targets[3 + i] = {unknown38[i], i, 1};
+  }
+  for (u16 i = 0; i < 5; i++) {
+    targets[8 + i] = {unknown60[i], i, 1};
+  }
+  u32 index = unknown00->unknown120[unknown00->unknown1c98]->unknownf74;
+  if (index > 11) {
+    index = 12;
+  }
+  targets[index].unknown00->debugRender(0, 0, unknown00->unknown5b8->unknown18, unknown00->unknown5b8->unknown1c, false, true, 1.0f, true);
 }
 
 } // namespace ml

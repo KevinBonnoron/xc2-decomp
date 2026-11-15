@@ -35,50 +35,72 @@ public:
 
   class ListListener : public ui::UIObjectListener {
   public:
+    ListListener(GfMenuObjQuestList *owner) : _0c(), unknown20(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x20 - 0x0c];
+    u8 _0c[0x1c - 0x0c];
+    u8 _1c[0x20 - 0x1c];
     GfMenuObjQuestList *unknown20; // Inferred role: owner; original member name unknown.
   };
 
   class TabListener : public ui::UIObjectListener {
   public:
+    TabListener(GfMenuObjQuestList *owner) : _0c(), unknown20(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x20 - 0x0c];
+    u8 _0c[0x1c - 0x0c];
+    u8 _1c[0x20 - 0x1c];
+    GfMenuObjQuestList *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class TabSelectListener : public ui::UIObjectListener {
+  public:
+    TabSelectListener(GfMenuObjQuestList *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    u8 _1c[0x20 - 0x1c];
     GfMenuObjQuestList *unknown20; // Inferred role: owner; original member name unknown.
   };
 
   class TabOpenListener : public ui::UIObjectListener {
   public:
+    TabOpenListener(GfMenuObjQuestList *owner) : _0c(), unknown20(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x20 - 0x0c];
+    u8 _0c[0x1c - 0x0c];
+    u8 _1c[0x20 - 0x1c];
     GfMenuObjQuestList *unknown20; // Inferred role: owner; original member name unknown.
   };
 
   class TaskListener : public ui::UIObjectListener {
   public:
+    TaskListener(GfMenuObjQuestList *owner) : _0c(), unknown20(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x20 - 0x0c];
+    u8 _0c[0x1c - 0x0c];
+    u8 _1c[0x20 - 0x1c];
     GfMenuObjQuestList *unknown20; // Inferred role: owner; original member name unknown.
   };
 
   class ThumbListener : public ui::UIObjectListener {
   public:
+    ThumbListener(GfMenuObjQuestList *owner) : _0c(), unknown20(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x20 - 0x0c];
+    u8 _0c[0x1c - 0x0c];
+    u8 _1c[0x20 - 0x1c];
     GfMenuObjQuestList *unknown20; // Inferred role: owner; original member name unknown.
   };
 
   class DetailListener : public ui::UIObjectListener {
   public:
+    DetailListener(GfMenuObjQuestList *owner) : unknown0c(0), _10(), unknown20(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     int unknown0c; // Inferred role: quest is finished; original member name unknown.
-    u8 _10[0x20 - 0x10];
+    u8 _10[0x1c - 0x10];
+    u8 _1c[0x20 - 0x1c];
     GfMenuObjQuestList *unknown20; // Inferred role: owner; original member name unknown.
   };
 
@@ -142,6 +164,8 @@ static_assert(offsetof(GfMenuObjQuestList::ListListener, unknown20) == 0x20, "")
 static_assert(sizeof(GfMenuObjQuestList::ListListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjQuestList::TabListener, unknown20) == 0x20, "");
 static_assert(sizeof(GfMenuObjQuestList::TabListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjQuestList::TabSelectListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjQuestList::TabSelectListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjQuestList::TabOpenListener, unknown20) == 0x20, "");
 static_assert(sizeof(GfMenuObjQuestList::TabOpenListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjQuestList::TaskListener, unknown20) == 0x20, "");

@@ -7,6 +7,8 @@
 #include "gf/data/gf_data_option.h"
 #include "gf/data/gf_data_system.h"
 #include "gf/field/gf_real_time.h"
+#include "gf/gf_manager.h"
+#include "gf/menu/gf_menu_manager.h"
 #include "gf/sound/gf_master_volume.h"
 #include "gf/sound/gf_sound.h"
 
@@ -24,6 +26,24 @@ void GfGameUtilSaveData::setTitleSaveData(const SDataSave &saveData) {
     titleSaveData->unknown00 = saveData.unknown00;
     titleSaveData->unknown08 = saveData.unknown08;
     titleSaveData->unknown10 = saveData.unknown10;
+  }
+}
+
+// Returns a reference (P1: its callers read it without a null test): the game calls tl::TitleMain::getOptionBuffer with `bl` and shares the epilogue (0x7100355c20),
+// while a pointer return makes clang tail-call it (`b`, epilogue duplicated).
+SDataOption &GfGameUtilSaveData::getValidOptionData() {
+  SDataOption *optionData = GfDataManager::getDataOption();
+  if ((GfManager::isExecModeThater() || GfManager::isExecModeAdvertize()) && tl::TitleMain::get() != nullptr) {
+    optionData = tl::TitleMain::get()->getOptionBuffer();
+  }
+  return *optionData;
+}
+
+void GfGameUtilSaveData::flushOptionSaveData() {
+  GfMenuManager::applyOptionData(getValidOptionData());
+  GfSound *sound = GfSound::get();
+  if (sound != nullptr) {
+    sound->setupGame();
   }
 }
 

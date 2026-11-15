@@ -84,9 +84,9 @@ bool GfMenuBdat::isValidBdatID(u8 *bdat, int id) {
 void GfMenuBdat::getMenuOffset(int id, MenuOffset &offset) {
   u8 *bdat = s_BdatArray[0];
   if (isValidBdatID(bdat, id)) {
-    offset.unknown00 = Bdat::getVal(bdat, "offs_x", id).valueF32;
-    offset.unknown04 = Bdat::getVal(bdat, "offs_y", id).valueF32;
-    offset.unknown08 = Bdat::getVal(bdat, "offs_z", id).valueF32;
+    offset.unknown00.x = Bdat::getVal(bdat, "offs_x", id).valueF32;
+    offset.unknown00.y = Bdat::getVal(bdat, "offs_y", id).valueF32;
+    offset.unknown00.z = Bdat::getVal(bdat, "offs_z", id).valueF32;
     offset.unknown10 = Bdat::getVal(bdat, "bone_name", id).valueString;
     if (*offset.unknown10 == '\0') {
       offset.unknown10 = nullptr;

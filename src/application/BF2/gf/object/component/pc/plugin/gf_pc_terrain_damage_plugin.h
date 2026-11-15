@@ -25,7 +25,7 @@ public:
   static const u32 PLUGIN_INDEX = 16;
 
   TerrainDamagePlugin();
-  static TerrainDamagePlugin *create();
+  static Plugin *create();
   virtual bool setup(GfComBehaviorPc &behavior);
   virtual void cleanup(GfComBehaviorPc &behavior);
   void onActivate() override;

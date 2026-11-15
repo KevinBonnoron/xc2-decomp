@@ -115,6 +115,12 @@ public:
     }
   }
 
+  // Inferred name; kept as an exception to the unknown-name rule (AGENTS.md): single-user helper whose existence only the match proves; rename if a sibling build gives a symbol.
+  // Role: x scale of the setup (unknown40). User: GfComBehaviorMob::getMoveSpeedMps (0x710052bb40, 26 instructions), inlined in updateNaviMeshObj (0x710052bf60) and
+  // moveToGoal (0x710052cc40). Forms tried without it: reading `setup->unknown40` in getMoveSpeedMps puts the float literal load (adrp + ldr) before the isKindOf test while
+  // the game loads it after (NO MATCH in the three functions); a local speed, a split expression and a getPos local first (the old blocker) also failed.
+  f32 getScaleX() const { return unknown40; }
+
   u32 unknown08;      // Inferred role: object type; original member name unknown.
   u32 unknown0c;      // Inferred role: layer; original member name unknown.
   u32 unknown10;      // Inferred role: id; original member name unknown.

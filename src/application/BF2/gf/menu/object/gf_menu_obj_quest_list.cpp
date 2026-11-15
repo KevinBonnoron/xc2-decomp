@@ -7,6 +7,10 @@
 #include "gf/game/quest/gf_quest_task_param.h"
 #include "gf/game/quest/gf_quest_util.h"
 #include "gf/gf_allocator.h"
+#include "gf/menu/adapter/gf_menu_adapter_manager.h"
+#include "gf/menu/adapter/gf_menu_item_adapter.h"
+#include "gf/menu/adapter/gf_menu_quest_adapter.h"
+#include "gf/menu/adapter/gf_menu_reference_adapter.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_flag.h"
 #include "gf/menu/gf_menu_fullscreen.h"
@@ -26,6 +30,7 @@
 #include "ui/ctrl/ui_ctrl_cursor_select.h"
 #include "ui/event/ui_event_data.h"
 #include "ui/event/ui_event_manager.h"
+#include "ui/list/ui_list_info.h"
 #include "ui/list/ui_select_obj_list.h"
 #include "ui/ui_object_acc.h"
 
@@ -95,6 +100,259 @@ void GfMenuObjQuestList::initialize() {
     disableInput(main.searchChild("LAY_detail_task"));
     GfMenuObject::initialize();
   }
+}
+
+// Braced scopes around the CreateParam, CursorSetting and SetupParam locals (ruling 3 of 2026-11-13): the game keeps
+// them, the UIObjectAcc temporaries of the inlined send events and the item reference parameter in shared stack slots
+// (the frame is 368 bytes), so each lifetime ends before the next one starts. The SetupParam of the last
+// setup() call is a temporary built after getAllocator() (0x71004bcb78 stores it after the call).
+void GfMenuObjQuestList::initializeSub(ui::UIObjectAcc &acc) {
+  mm::mtl::FixStr<32> name;
+  GfMenuAdapterManager::beginAddAfter();
+  {
+    ui::UIObjectAcc list(acc.unknown10, "LAY_list");
+    {
+      ui::UISelectObjList::CreateParam createParam;
+      createParam.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
+      unknown68 = ui::UISelectObjList::create(createParam);
+    }
+    unknown68->pickupObject(list.unknown10, "LAY_list_item@%02d", 1);
+    for (u32 i = 0; i < unknown68->getSize(); i++) {
+      name.format("TXT_list_item_title@%02d", i + 1);
+      GfMenuQuestAdapter *adapter = GfMenuQuestAdapter::createFromList(list.searchChild(name.c_str()), unknown28, i, 0, false);
+      if (adapter != nullptr) {
+        adapter->unknown24 = unknown68->getObject(i);
+      }
+      name.format("IMG_list_item_clear@%02d", i + 1);
+      GfMenuQuestAdapter::createFromList(list.searchChild(name.c_str()), unknown28, i, 0x37, false);
+      name.format("IMG_list_item_active@%02d", i + 1);
+      GfMenuQuestAdapter::createFromList(list.searchChild(name.c_str()), unknown28, i, 0x38, true);
+      name.format("LAY_list_base@%02d", i + 1);
+      GfMenuObjUtil::createFollowDispPlugin(list.searchChild(name.c_str()), unknown68->getObject(i));
+    }
+    {
+      ui::UICtrlCursorSelect::CursorSetting setting;
+      setting.setType(0);
+      setting.unknown18 = 0;
+      unknown38 = ui::UICtrlCursorSelect::create(list.searchChild("IMG_list_cursor"), setting, unknown68);
+    }
+    GfMenuObjUtil::createVScrollBarPlugin(list.searchChild("IMG_list_scroll_bar"), unknown28, "IMG_list_scroll_base", true);
+// __LINE__ must be 247 as in the original file: it is the line argument of operator new.
+#line 247
+    ListListener *listListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ListListener(this);
+    listListener->addRef();
+    ui::UIEventManager::get()->registObjectListener(list.unknown10, listListener);
+    if (listListener != nullptr) {
+      listListener->release();
+    }
+    if (unknown58 == 1) {
+      sendUpdateEvent(list.unknown10, 0);
+      sendOpenEvent(list.unknown10, 0, 0.0f);
+      if (!unknown368) {
+        sendResumeEvent(list.unknown10, 0);
+      }
+    }
+  }
+  {
+    ui::UIObjectAcc thumb(acc.unknown10, "LAY_thumb");
+    {
+      ui::UISelectObjList::CreateParam createParam;
+      createParam.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
+      unknown70 = ui::UISelectObjList::create(createParam);
+    }
+    unknown70->pickupObject(thumb.unknown10, "LAY_thumb@%02d", 1);
+    for (u32 i = 0; i < unknown70->getSize(); i++) {
+      name.format("TXT_thumb_title@%02d", i + 1);
+      GfMenuQuestAdapter *adapter = GfMenuQuestAdapter::createFromList(thumb.searchChild(name.c_str()), unknown30, i, 0, false);
+      if (adapter != nullptr) {
+        adapter->unknown24 = unknown70->getObject(i);
+      }
+      name.format("IMG_thumb@%02d", i + 1);
+      GfMenuQuestAdapter::createFromList(thumb.searchChild(name.c_str()), unknown30, i, 0x39, false);
+      name.format("IMG_thumb_clear@%02d", i + 1);
+      GfMenuQuestAdapter::createFromList(thumb.searchChild(name.c_str()), unknown30, i, 0x37, false);
+      name.format("IMG_thumb_active@%02d", i + 1);
+      GfMenuQuestAdapter::createFromList(thumb.searchChild(name.c_str()), unknown30, i, 0x38, true);
+      name.format("LAY_thumb_base@%02d", i + 1);
+      GfMenuObjUtil::createFollowDispPlugin(thumb.searchChild(name.c_str()), unknown70->getObject(i));
+      name.format("LAY_thumb_ac@%02d", i + 1);
+      GfMenuObjUtil::createFollowDispPlugin(thumb.searchChild(name.c_str()), unknown70->getObject(i));
+    }
+    {
+      GfMenuQuestList::SetupParam param;
+      param.unknown08 = unknown68->getSize();
+      param.unknown14 = 0;
+      param.unknown18 = 0;
+      unknown30->setup(param);
+    }
+    {
+      ui::UICtrlCursorSelect::CursorSetting setting;
+      setting.setType(0);
+      setting.unknown18 = 0;
+      unknown40 = ui::UICtrlCursorSelect::create(thumb.searchChild("IMG_thumb_cursor"), setting, unknown70);
+    }
+    unknown90 = unknown160();
+    unknown98 = unknown160();
+    GfMenuReferenceAdapter *pageAdapter = GfMenuReferenceAdapter::create(thumb.searchChild("TXT_thumb_page_num"), unknown90, true);
+    if (pageAdapter != nullptr) {
+      pageAdapter->unknown44 = 1;
+    }
+    GfMenuReferenceAdapter::create(thumb.searchChild("TXT_thumb_page_max"), unknown98, true);
+// __LINE__ must be 340 as in the original file: it is the line argument of operator new.
+#line 340
+    ThumbListener *thumbListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ThumbListener(this);
+    thumbListener->addRef();
+    ui::UIEventManager::get()->registObjectListener(thumb.unknown10, thumbListener);
+    if (thumbListener != nullptr) {
+      thumbListener->release();
+    }
+    if (unknown58 == 0) {
+      sendUpdateEvent(thumb.unknown10, 0);
+      sendOpenEvent(thumb.unknown10, 0, 0.0f);
+      if (!unknown368) {
+        sendResumeEvent(thumb.unknown10, 0);
+      }
+    }
+  }
+  GfMenuAdapterManager::endAddAfter();
+  {
+    ui::UIObjectAcc tab(acc.unknown10, "LAY_tab");
+    {
+      ui::UISelectObjList::CreateParam createParam;
+      createParam.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
+      unknown78 = ui::UISelectObjList::create(createParam);
+      unknown78->pickupObject(tab.unknown10, "TXT_tab_title@%02d", 1);
+      createParam.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
+      unknown80 = ui::UISelectObjList::create(createParam);
+      unknown80->pickupObject(tab.unknown10, "LAY_tab_select_item@%02d", 1);
+    }
+    ui::UICtrlCursorSelect::CursorSetting setting;
+    setting.setType(0);
+    setting.unknown18 = 0;
+    unknown48 = ui::UICtrlCursorSelect::create(tab.searchChild("IMG_tab_select_cursor"), setting, unknown80);
+// __LINE__ must be 381 as in the original file: it is the line argument of operator new.
+#line 381
+    TabListener *tabListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) TabListener(this);
+    tabListener->addRef();
+    ui::UIEventManager::get()->registObjectListener(tab.unknown10, tabListener);
+    if (tabListener != nullptr) {
+      tabListener->release();
+    }
+// __LINE__ must be 382 as in the original file: it is the line argument of operator new.
+#line 382
+    TabSelectListener *tabSelectListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) TabSelectListener(this);
+    tabSelectListener->addRef();
+    ui::UIEventManager::get()->registObjectListener(tab.searchChild("LAY_tab_select"), tabSelectListener);
+    if (tabSelectListener != nullptr) {
+      tabSelectListener->release();
+    }
+    tab.setDisp(false);
+    tab.setDispChild(false, "LAY_tab_select");
+  }
+  {
+    ui::UIObjectAcc tabOpen(acc.unknown10, "LAY_tab_open");
+    GfMenuObjUtil::setDockPos(tabOpen.searchChild("IMG_tab_open_btn"), tabOpen.searchChild("TXT_tab_open"), 1, true);
+    GfMenuObjUtil::addPos(tabOpen.searchChild("IMG_tab_open_btn"), -4, 0);
+// __LINE__ must be 401 as in the original file: it is the line argument of operator new.
+#line 401
+    TabOpenListener *tabOpenListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) TabOpenListener(this);
+    tabOpenListener->addRef();
+    ui::UIEventManager::get()->registObjectListener(tabOpen.unknown10, tabOpenListener);
+    if (tabOpenListener != nullptr) {
+      tabOpenListener->release();
+    }
+    tabOpen.setDisp(false);
+  }
+  {
+    ui::UIObjectAcc detail(acc.unknown10, "LAY_detail");
+    mm::mtl::FixStr<32> taskName;
+    unknown348 = unknown161();
+    unknown350 = unknown160();
+    unknown358 = GfMenuItemList::create();
+    unknown358->setup(getAllocator(ALLOCATOR_UNKNOWN_0), ui::UIListInfoBase::SetupParam());
+    GfMenuQuestAdapter::createFromReference(detail.searchChild("TXT_detail_win_title"), unknown348, 0, false);
+    GfMenuQuestAdapter::createFromReference(detail.searchChild("IMG_detail_thumb"), unknown348, 0x39, false);
+    GfMenuQuestAdapter::createFromReference(detail.searchChild("TXT_detail_win_info"), unknown348, 1, false);
+    GfMenuQuestAdapter::createFromReference(detail.searchChild("TXT_detail_win_result"), unknown348, 2, false);
+    GfMenuQuestAdapter::createFromReference(detail.searchChild("TXT_detail_task_list_step"), unknown348, 0x3a, false);
+    for (u32 type = 3; type < 15; type++) {
+      taskName.format("IMG_detail_task_cond_pt_face@%02d", type - 2);
+      GfMenuQuestAdapter *adapter = GfMenuQuestAdapter::createFromReference(detail.searchChild(taskName.c_str()), unknown348, type, false);
+      if (adapter != nullptr) {
+        adapter->unknown98 = 0;
+      }
+    }
+    for (u32 i = 0; i < 4; i++) {
+      taskName.format("TXT_detail_task_info@%02d", i + 1);
+      GfMenuQuestAdapter *adapter = GfMenuQuestAdapter::createFromReference(detail.searchChild(taskName.c_str()), unknown348, 0x2e, false);
+      if (adapter != nullptr) {
+        adapter->unknown98 = i;
+      }
+      taskName.format("TXT_detail_task_item_name@%02d", i + 1);
+      GfMenuItemAdapter::createFromList(detail.searchChild(taskName.c_str()), 0, unknown358, i, false);
+      taskName.format("TXT_detail_task_item_num@%02d", i + 1);
+      adapter = GfMenuQuestAdapter::createFromReference(detail.searchChild(taskName.c_str()), unknown348, 0x2f, false);
+      if (adapter != nullptr) {
+        adapter->unknown98 = i;
+      }
+      taskName.format("TXT_detail_task_item_max@%02d", i + 1);
+      adapter = GfMenuQuestAdapter::createFromReference(detail.searchChild(taskName.c_str()), unknown348, 0x30, false);
+      if (adapter != nullptr) {
+        adapter->unknown98 = i;
+      }
+      taskName.format("IMG_detail_task_cond_tzone@%02d", i + 1);
+      adapter = GfMenuQuestAdapter::createFromReference(detail.searchChild(taskName.c_str()), unknown348, 0x32, false);
+      if (adapter != nullptr) {
+        adapter->unknown98 = i;
+      }
+      taskName.format("IMG_detail_task_cond_tzone2@%02d", i + 1);
+      adapter = GfMenuQuestAdapter::createFromReference(detail.searchChild(taskName.c_str()), unknown348, 0x33, false);
+      if (adapter != nullptr) {
+        adapter->unknown98 = i;
+      }
+      taskName.format("IMG_detail_task_cond_tzone3@%02d", i + 1);
+      adapter = GfMenuQuestAdapter::createFromReference(detail.searchChild(taskName.c_str()), unknown348, 0x34, false);
+      if (adapter != nullptr) {
+        adapter->unknown98 = i;
+      }
+      taskName.format("IMG_detail_task_cond_weather@%02d", i + 1);
+      adapter = GfMenuQuestAdapter::createFromReference(detail.searchChild(taskName.c_str()), unknown348, 0x31, false);
+      if (adapter != nullptr) {
+        adapter->unknown98 = i;
+      }
+    }
+    {
+      GfMenuObjQuestReward::OpenParam rewardParam;
+      rewardParam.unknown00 = unknown348;
+      rewardParam.unknown08 = detail.searchChild("LAY_detail_reward");
+      GfMenuObjQuestReward::create(unknown0a8, rewardParam, true);
+    }
+// __LINE__ must be 497 as in the original file: it is the line argument of operator new.
+#line 497
+    DetailListener *detailListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) DetailListener(this);
+    detailListener->addRef();
+    ui::UIEventManager::get()->registObjectListener(detail.unknown10, detailListener);
+    if (detailListener != nullptr) {
+      detailListener->release();
+    }
+    disableInput(detail.unknown10);
+// __LINE__ must be 500 as in the original file: it is the line argument of operator new.
+#line 500
+    TaskListener *taskListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) TaskListener(this);
+    taskListener->addRef();
+    ui::UIEventManager::get()->registObjectListener(detail.searchChild("LAY_detail_task"), taskListener);
+    if (taskListener != nullptr) {
+      taskListener->release();
+    }
+    if (!unknown368) {
+      sendOpenEvent(acc.searchSibiling("LAY_tab_open"), 0, 0.0f);
+    } else {
+      sendCloseEvent(acc.searchSibiling("LAY_tab_open"), 0, 0.0f);
+      sendOpenEvent(detail.unknown10, 0, 0.0f);
+      unknown340 = unknown364;
+    }
+  }
+  setupList(unknown364);
 }
 
 void GfMenuObjQuestList::setupList(u32 quest) {

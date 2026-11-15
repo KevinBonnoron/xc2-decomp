@@ -107,7 +107,7 @@ void GfGameSave::createOptionSaveData(mm::mtl::FixStr<256> &path) {
   if (!GfManager::isExecModeThater() && !GfManager::isExecModeAdvertize()) {
     GfGameUtilSaveData::setupOptionSaveData(*unknown18);
   } else {
-    *unknown18 = *GfGameUtilSaveData::getValidOptionData();
+    *unknown18 = GfGameUtilSaveData::getValidOptionData();
   }
   unknown20 = unknown18;
   unknown28 = sizeof(SDataOption);

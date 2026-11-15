@@ -28,7 +28,7 @@ public:
   static const u32 PLUGIN_INDEX = 9;
 
   FallIntoColiPlugin();
-  static FallIntoColiPlugin *create();
+  static Plugin *create();
   ~FallIntoColiPlugin();
   virtual bool setup(GfComBehaviorPc &behavior);
   virtual void cleanup(GfComBehaviorPc &behavior);

@@ -24,17 +24,30 @@ static_assert(offsetof(EnvColiListTreeData, unknown22) == 0x22, "");
 static_assert(sizeof(EnvColiListTreeData) == 0x24, "");
 
 struct EnvColiPostData {
+  // Inferred role: parameter groups present in the post data; original names unknown.
+  enum {
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: cloud plane colors.
+    FLAG_UNKNOWN_3 = 1 << 3, // Inferred role: cloud sky colors.
+    FLAG_UNKNOWN_4 = 1 << 4, // Inferred role: cloud model colors.
+    FLAG_UNKNOWN_5 = 1 << 5, // Inferred role: cloud light colors.
+  };
+
   u8 _00[0x04];
   u32 unknown04; // Inferred role: weather mask; original member name unknown.
-  u8 _08[0x10 - 0x08];
+  u32 unknown08; // Inferred role: parameter group flags; original member name unknown.
+  u8 _0c[0x10 - 0x0c];
   u16 unknown10; // Inferred role: start time in minutes; original member name unknown.
   u8 _12[0x26 - 0x12];
   u16 unknown26; // Inferred role: wind id; original member name unknown.
-  u8 _28[0x34 - 0x28];
+  u8 _28[0x2c - 0x28];
+  u16 unknown2c; // Inferred role: cloud parameter index; original member name unknown.
+  u8 _2e[0x34 - 0x2e];
 };
 
+static_assert(offsetof(EnvColiPostData, unknown08) == 0x08, "");
 static_assert(offsetof(EnvColiPostData, unknown10) == 0x10, "");
 static_assert(offsetof(EnvColiPostData, unknown26) == 0x26, "");
+static_assert(offsetof(EnvColiPostData, unknown2c) == 0x2c, "");
 static_assert(sizeof(EnvColiPostData) == 0x34, "");
 
 template <int Version> struct EnvColiPostParameterVer;

@@ -9,6 +9,10 @@
 #include "gf/game/quest/gf_quest_task.h"
 #include "gf/game/quest/gf_quest_task_param.h"
 #include "gf/game/quest/gf_quest_util.h"
+#include "gf/gf_allocator.h"
+#include "gf/menu/adapter/gf_menu_item_adapter.h"
+#include "gf/menu/adapter/gf_menu_quest_adapter.h"
+#include "gf/menu/adapter/gf_menu_reference_adapter.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_flag.h"
 #include "gf/menu/gf_menu_manager.h"
@@ -24,6 +28,7 @@
 #include "mm_mtl/reference_object.h"
 #include "types.h"
 #include "ui/event/ui_event_data.h"
+#include "ui/event/ui_event_manager.h"
 #include "ui/ui_object_acc.h"
 
 namespace gf {
@@ -49,6 +54,98 @@ GfMenuObjQuestLog::~GfMenuObjQuestLog() {
   unknown48 = nullptr;
   unknown50 = nullptr;
   mm::mtl::safeRelease(unknown820);
+}
+
+void GfMenuObjQuestLog::initialize() {
+  ui::UIObjectAcc main(unknown18, "LAY_main");
+  if (main.isValid()) {
+    attachExternalCall(unknown001, main.unknown10);
+    unknown28 = unknown161();
+    unknown30 = unknown161();
+    unknown38 = unknown161();
+    unknown40 = unknown160();
+    unknown48 = unknown160();
+    unknown50 = GfMenuReferenceItem::unknown001();
+    unknown38->unknown0c = QuestID();
+    {
+      ui::UIObjectAcc title(main.unknown10, "LAY_title");
+      GfMenuQuestAdapter::createFromReference(title.searchChild("TXT_title"), unknown28, 0, false);
+// The four listener registrations of this function (here and at lines 175, 197 and 217 of the original file) repeat the same statements
+// (add a reference, register, release): written out because a file-local helper taking the listener compiles to 1023 instructions
+// against the game's 1019 (ruling 8; the same block is written out in the other menu objects' initialize).
+// __LINE__ must be 138 as in the original file: it is the line argument of operator new.
+#line 138
+      TitleListener *titleListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) TitleListener(this);
+      titleListener->addRef();
+      ui::UIEventManager::get()->registObjectListener(title.unknown10, titleListener);
+      if (titleListener != nullptr) {
+        titleListener->release();
+      }
+    }
+    {
+      ui::UIObjectAcc log(main.unknown10, "LAY_log");
+      GfMenuQuestAdapter *adapter = GfMenuQuestAdapter::createFromReference(log.searchChild("TXT_log_info_task"), unknown30, 0x2e, false);
+      if (adapter != nullptr) {
+        adapter->unknown008(unknown40);
+      }
+      adapter = GfMenuQuestAdapter::createFromReference(log.searchChild("TXT_log_info_task_item_num"), unknown30, 0x2f, true);
+      if (adapter != nullptr) {
+        adapter->unknown008(unknown40);
+      }
+      adapter = GfMenuQuestAdapter::createFromReference(log.searchChild("TXT_log_info_task_item_max"), unknown30, 0x30, false);
+      if (adapter != nullptr) {
+        adapter->unknown008(unknown40);
+      }
+      adapter = GfMenuQuestAdapter::createFromReference(log.searchChild("IMG_log_cond"), unknown30, 0x35, false);
+      if (adapter != nullptr) {
+        adapter->unknown008(unknown40);
+      }
+      GfMenuItemAdapter::createFromReference(log.searchChild("TXT_log_info_task_item"), 0, unknown50.get(), false);
+      GfMenuReferenceAdapter *pageAdapter = GfMenuReferenceAdapter::create(log.searchChild("TXT_log_info_task_page_num"), unknown40, true);
+      if (pageAdapter != nullptr) {
+        pageAdapter->unknown44 = 1;
+      }
+      GfMenuReferenceAdapter::create(log.searchChild("TXT_log_info_task_page_max"), unknown48, true);
+// __LINE__ must be 175 as in the original file: it is the line argument of operator new.
+#line 175
+      LogListener *logListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) LogListener(this);
+      logListener->addRef();
+      ui::UIEventManager::get()->registObjectListener(log.unknown10, logListener);
+      if (logListener != nullptr) {
+        logListener->release();
+      }
+      addNumberEventCondition(log.unknown10, "TXT_log_info_task_item_num", 1, 0);
+      ui::UIObjectAcc base(log.unknown10, "IMG_log_base");
+      base.startAnimation("log_fade_in", false);
+      log.setDispChild(true, "LAY_log_index@01");
+    }
+    {
+      ui::UIObjectAcc order(main.unknown10, "LAY_order");
+// __LINE__ must be 197 as in the original file: it is the line argument of operator new.
+#line 197
+      OrderListener *orderListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) OrderListener(this);
+      orderListener->addRef();
+      ui::UIEventManager::get()->registObjectListener(order.unknown10, orderListener);
+      if (orderListener != nullptr) {
+        orderListener->release();
+      }
+    }
+    {
+      ui::UIObjectAcc complete(main.unknown10, "LAY_complete");
+      GfMenuQuestAdapter::createFromReference(complete.searchChild("TXT_comp_ret_win_title"), unknown38, 0, false);
+      GfMenuQuestAdapter::createFromReference(complete.searchChild("TXT_comp_ret_win_result"), unknown38, 2, false);
+      GfMenuQuestAdapter::createFromReference(complete.searchChild("IMG_comp_ret_thumb"), unknown38, 0x39, false);
+// __LINE__ must be 217 as in the original file: it is the line argument of operator new.
+#line 217
+      CompleteListener *completeListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) CompleteListener(this);
+      completeListener->addRef();
+      ui::UIEventManager::get()->registObjectListener(complete.unknown10, completeListener);
+      if (completeListener != nullptr) {
+        completeListener->release();
+      }
+    }
+    GfMenuObject::initialize();
+  }
 }
 
 void GfMenuObjQuestLog::finalize() { GfMenuObject::finalize(); }

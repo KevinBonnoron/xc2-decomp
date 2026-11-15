@@ -87,4 +87,34 @@ void DrPixlShadowRaytrace::releaseColorBuff() {
   unknown38->releaseTexture();
 }
 
+void DrPixlShadowRaytrace::debugRender() {
+  int width = unknown00->unknown5b8->unknown28;
+  int height = unknown00->unknown5b8->unknown2c;
+  DrPixlRenderTarget *target = nullptr;
+  switch (unknown00->unknown120[unknown00->unknown1c98]->unknown1008) {
+  case 2:
+    target = unknown18;
+    break;
+  case 3:
+    target = unknown38;
+    break;
+  case 4:
+    target = unknown20[DrMan::s_nDblIdx];
+    break;
+  }
+  if (target != nullptr) {
+    target->debugRender(0, 0, width, height, false, false, 1.0f, true);
+  }
+  if (unknown00->unknown120[unknown00->unknown1c98]->unknown1008 == 1) {
+    int halfWidth = unknown00->unknown5b8->unknown28 / 2;
+    int halfHeight = unknown00->unknown5b8->unknown2c / 2;
+    unknown18->debugRender(0, 0, halfWidth, halfHeight, false, false, 1.0f, true);
+    unknown38->debugRender(halfWidth + 1, 0, halfWidth, halfHeight, false, false, 1.0f, true);
+    // Decision 2026-11-14 #17 (P2): the local places the `add w2, w21, #1` before the load of the target in the tail call
+    // (0x71008c6ea4-0x71008c6ecc); the plain call, `1 + halfHeight`, a target local or an early return give the load first (96 instructions, one swap).
+    int y = halfHeight + 1;
+    unknown20[DrMan::s_nDblIdx]->debugRender(0, y, halfWidth, halfHeight, false, false, 1.0f, true);
+  }
+}
+
 } // namespace ml

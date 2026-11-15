@@ -28,7 +28,7 @@ public:
   static const u32 PLUGIN_INDEX = 21;
 
   FallDistanceAchievPlugin();
-  static FallDistanceAchievPlugin *create();
+  static Plugin *create();
   ~FallDistanceAchievPlugin();
   virtual bool setup(GfComBehaviorPc &behavior);
   virtual void cleanup(GfComBehaviorPc &behavior);

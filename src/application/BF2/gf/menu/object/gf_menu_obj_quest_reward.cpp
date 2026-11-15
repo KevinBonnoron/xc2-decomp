@@ -3,6 +3,7 @@
 #include "gf/data/gf_data_quest.h"
 #include "gf/game/quest/gf_quest_id.h"
 #include "gf/game/quest/gf_quest_info.h"
+#include "gf/gf_allocator.h"
 #include "gf/menu/adapter/gf_menu_item_adapter.h"
 #include "gf/menu/adapter/gf_menu_mission_adapter.h"
 #include "gf/menu/adapter/gf_menu_quest_adapter.h"
@@ -13,6 +14,7 @@
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/reference_object.h"
 #include "ui/event/ui_event_data.h"
+#include "ui/event/ui_event_manager.h"
 #include "ui/ui_object_acc.h"
 
 namespace gf {
@@ -23,6 +25,36 @@ constexpr u32 CALL_UNKNOWN_33 = 33;
 GfMenuObjQuestReward::GfMenuObjQuestReward(u32 handle) : GfMenuObject(handle) {}
 
 GfMenuObjQuestReward::~GfMenuObjQuestReward() { ; }
+
+void GfMenuObjQuestReward::create(GfMenuCallContext *context, const OpenParam &param, bool isAnim) {
+  if (GfMenuObjUtil::checkCCStart(context)) {
+    ui::UIObjectAcc main(getAttachedObject(CALL_UNKNOWN_33));
+    if (main.isValid()) {
+      ui::UIObjectAcc reward(main.searchChild("LAY_reward"));
+      ui::UIObjectAcc acc(reward.duplicate(param.unknown08));
+// __LINE__ must be 63 as in the original file: it is the line argument of operator new.
+#line 63
+      RewardListener *listener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) RewardListener();
+      listener->addRef();
+      ui::UIEventManager::get()->registObjectListener(acc.unknown10, listener);
+      if (listener != nullptr) {
+        listener->release();
+      }
+      ui::EventData event;
+// __LINE__ must be 68 as in the original file: it is the line argument of operator new.
+#line 68
+      OpenParam *copy = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) OpenParam();
+      *copy = param;
+      event.unknown00 = GfMenuTypes::unknown003_257;
+      event.unknown08_u64 = reinterpret_cast<u64>(copy);
+      sendEvent(acc.unknown10, event, 0.0f);
+      startCallContext(context, CALL_UNKNOWN_33, acc.unknown10);
+      if (isAnim) {
+        open(context, false);
+      }
+    }
+  }
+}
 
 void GfMenuObjQuestReward::initialize() {
   ui::UIObjectAcc main(unknown18, "LAY_main");

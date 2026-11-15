@@ -276,6 +276,7 @@ public:
   static void setUsedFavoriteItemForPouch(u32 blade, u32 item);
   static u32 getMenuCastName(u32 blade);
   static u32 getMenuIlustName(u32 blade);
+  static const char *getMenuVoiceName(u32 blade, u32 index);
   static bool setActivateDriver(u32 bladeId, int slot, u32 driverId, u32 option);
   static SDataBlade &getSDataBlade(u32 blade);
   static void initSaveData(SDataGame &dataGame);
@@ -423,8 +424,8 @@ public:
   static GfItemHandle getEquipOrbHandle(u32 blade, u32 slot);
   static bool getEquipOrb(mm::mtl::FixedArray<u16, 3> &equipOrbs, u32 blade);
   static bool getEquipOrbHandle(mm::mtl::FixedArray<u32, 3> &equipOrbHandles, u32 blade);
-  static void setEquipOrb(u32 blade, u16 orb, u32 slot);
-  static void setEquipOrbHandle(u32 blade, GfItemHandle handle, u32 slot);
+  static bool setEquipOrb(u32 blade, u16 orb, u32 slot);
+  static bool setEquipOrbHandle(u32 blade, GfItemHandle handle, u32 slot);
   static bool isEquipOrbFull(u32 blade);
   static bool getEquipOrbEnance(mm::mtl::FixedVector<u16, 64> &enhances, u32 blade);
   static bool getEquipOrbEnance(mm::mtl::FixedVector<u16, 64> &enhances, SDataBlade &dataBlade);

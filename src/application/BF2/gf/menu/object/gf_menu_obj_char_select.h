@@ -142,6 +142,7 @@ public:
   static void execCharPosScale(u32 type);
   static bool getCharBusy();
   static bool getSelectBusy();
+  bool chkSubMenuSpec(u32 character);
   static int getEquipBladeNum(u32 driver, const mm::mtl::FixedArray<DriverData, 5> &party);
   static void adjustBladeList(mm::mtl::FixedArray<DriverData, 5> &party, mm::mtl::FixedVector<u16, 422> &blades, mm::mtl::FixedArray<GfMenuBladeList *, 3> &lists, u32 driver);
   static int setDriverPos(ui::UIObjectAcc &acc, mm::mtl::FixedArray<DriverData, 5> &party, u32 driver);

@@ -7,7 +7,10 @@
 #include "fw/fw_transform.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
+#include "gf/data/gf_object_type.h"
+#include "gf/field/gf_field_lod.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/game/gf_game_obj.h"
 #include "gf/game/gf_game_util.h"
 #include "gf/game/sequential_play/gf_play_factory.h"
 #include "gf/menu/call/gf_menu_call_context.h"
@@ -21,12 +24,14 @@
 #include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_bdat.h"
+#include "gmk/gmk_elevator.h"
 #include "gmk/gmk_jump.h"
 #include "gmk/gmk_manager.h"
 #include "gmk/gmk_route_navi.h"
 #include "gmk/gmk_salvage.h"
 #include "gmk/gmk_warp.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/fixed_list.h"
 #include "mm_mtl/reference_object.h"
 #include "mm_mtl/rtti.h"
 #include "mm_mtl/vector.h"
@@ -185,6 +190,34 @@ void GfComBehaviorGmk::procMsgPcFieldNotifySkillEvent(fw::MessageObject *sender,
   }
 }
 
+void GfComBehaviorGmk::procMsgPcGetElvLift(fw::MessageObject *sender, MsgPcGetElvLift &message) {
+  message.unknown08.clear();
+  gmk::AGmkBase *gmk = gmk::getBindedGmkInst(static_cast<GfObj *>(unknown08)->unknownf8);
+  if (gmk != nullptr && gmk->getGmkType() == gmk::GMK_TYPE_ELEVATOR) {
+    gmk::GmkElevator *elevator = static_cast<gmk::GmkElevator *>(gmk);
+    u16 liftLod = elevator->getBdatInfo()->unknown06;
+    const GfFieldLod::BdatInfo *lodInfo = GfFieldLod::get()->findBdatInfo(liftLod);
+    if (lodInfo != nullptr) {
+      u16 lodId = lodInfo->unknown00;
+      for (GF_OBJ_HANDLE *const &handle : *GfGameObj::getList(OBJECT_TYPE_MAP_LOD)) {
+        GfObjSetupMapLodAnim *setup = mm::mtl::dynamicCast<GfObjSetupMapLodAnim>(GfObjManager::getObjInfo(handle)->unknown30);
+        if (setup->unknown6c == lodId) {
+          if (message.unknown08.size() == message.unknown08.capacity()) {
+            // Ruling 5 (P3): the game (0x710052a4a0) calls GfFieldLod::findBdatInfo again with the lift lod id when the
+            // list of riding objects is full and drops the result; the original expression cannot be checked.
+            GfFieldLod::get()->findBdatInfo(liftLod);
+          } else {
+            // Ruling 1/2 (P2): the game loads the handle (0x710052a5c0) before the size assertion of push_back.
+            GF_OBJ_HANDLE *rider = handle;
+            message.unknown08.push_back(rider);
+          }
+        }
+      }
+    }
+    message.unknown90 = elevator->isLiftSwitch(static_cast<GfObj *>(unknown08)->unknownf8);
+  }
+}
+
 void GfComBehaviorGmk::createMenuObj() {
   disposeMenuObj();
   if (!mm::mtl::dynamicCast<GfObjSetupGimmick>(GfObjManager::getObjInfo(static_cast<GfObj *>(unknown08)->unknownf8)->unknown30)->unknowna1) {
@@ -222,9 +255,7 @@ void GfComBehaviorGmk::createMenuObj() {
   }
   int offsetId = GfGameUtil::getUiOffsetId(param.unknown00);
   param.unknown10.unknown10 = nullptr;
-  param.unknown10.unknown00 = mm::Vec3::zero.x;
-  param.unknown10.unknown04 = mm::Vec3::zero.y;
-  param.unknown10.unknown08 = mm::Vec3::zero.z;
+  param.unknown10.unknown00 = mm::Vec3::zero;
   GfMenuBdat::getMenuOffset(offsetId, param.unknown10);
   unknowna8 = GfMenuCallContext::create();
   GfMenuObjTargetInfo::openOther(unknowna8, param);

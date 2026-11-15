@@ -57,6 +57,7 @@ public:
   static bool isNiaByakko(u32 member);
   static bool isRideChar(u32 chara);
   static bool isLeader(u32 chara);
+  static bool isActivateMember(u32 chara);
 };
 
 } // namespace gf

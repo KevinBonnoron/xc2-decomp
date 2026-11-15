@@ -103,6 +103,7 @@ public:
   static void refreshResult(ui::UIObjectAcc &acc, const GfMenuBladeList *list);
   static void setupPartyInfo(ui::UIObjectAcc &acc);
   static void updateItemList(GfMenuItemList *list, ui::UISelectObjList *selectList, u32 filter, u32 sort);
+  static void refreshItemList(ui::UIObjectAcc &acc, GfMenuItemList *list, ui::UISelectObjList *selectList, u32 item);
   static void refreshSlot(ui::UIObjectAcc &acc, u32 index);
   bool seqFavPouchIn();
   bool seqFavLoop();

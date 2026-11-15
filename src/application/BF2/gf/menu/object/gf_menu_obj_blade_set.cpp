@@ -334,6 +334,8 @@ void GfMenuObjBladeSet::setupReleaseSlot(ui::UIObjectAcc &acc, const GfMenuBlade
 void GfMenuObjBladeSet::detailOpen(GfMenuObjBladeSet *object, ui::UIObjectAcc &acc, const char *layout, u32 unknown) {
   object->unknown48->reset();
   GfMenuObjCommonDetail::OpenParam param;
+  // Decision 2026-11-14 #3: the game stores unknown18 = 0 and unknown1c = 1 with one stp (stp wzr, w8, [sp, #0x20] at 0x7100407d24), after the constructor's own zeroing.
+  param.unknown18 = 0;
   param.unknown1c = 1;
   param.unknown00.push_back(0x21f);
   if (layout == nullptr) {

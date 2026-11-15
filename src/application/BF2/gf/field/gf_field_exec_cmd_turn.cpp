@@ -56,10 +56,7 @@ template <typename T> void TFieldExecCmdTurn<T>::create(const CreateInfo &info) 
         if (transform != nullptr) {
           mm::Quat rotation;
           f32 half = info.unknown08 * 0.5f;
-          rotation.y = sinf(half);
-          rotation.w = cosf(half);
-          rotation.x = 0.0f;
-          rotation.z = 0.0f;
+          rotation.unknown001(half);
           transform->setRotation(rotation);
         }
         unknown6c = true;

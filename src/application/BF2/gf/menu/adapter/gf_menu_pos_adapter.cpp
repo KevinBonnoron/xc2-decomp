@@ -41,12 +41,12 @@ void GfMenuPosAdapter::setup(GF_OBJ_HANDLE *objHandle, const MenuOffset *menuOff
   unknown40 = mm::Vec3(0.0f, 0.0f, 0.0f);
   unknown50 = "";
   if (menuOffset != nullptr) {
-    unknown40.x = menuOffset->unknown00;
-    unknown40.y = menuOffset->unknown04;
-    unknown40.z = menuOffset->unknown08;
-    unknown70.x = menuOffset->unknown00;
-    unknown70.y = menuOffset->unknown04;
-    unknown70.z = menuOffset->unknown08;
+    unknown40.x = menuOffset->unknown00.x;
+    unknown40.y = menuOffset->unknown00.y;
+    unknown40.z = menuOffset->unknown00.z;
+    unknown70.x = menuOffset->unknown00.x;
+    unknown70.y = menuOffset->unknown00.y;
+    unknown70.z = menuOffset->unknown00.z;
     if (menuOffset->unknown10 != nullptr && menuOffset->unknown10[0] != '\0') {
       unknown50 = menuOffset->unknown10;
     }

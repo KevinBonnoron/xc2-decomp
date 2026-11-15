@@ -1,6 +1,7 @@
 #include "gf/data/gf_data_blade.h"
 
 #include <math.h>
+#include <string.h>
 
 #include "bdat.h"
 #include "gf/data/gf_bdat_blade.h"
@@ -46,7 +47,6 @@ enum {
 };
 
 enum {
-  BLADE_UNKNOWN_1051 = 1051, // Inferred role: blade act first; original name unknown.
   BLADE_UNKNOWN_1039 = 1039, // Inferred role: blade change weapon; original name unknown.
 };
 
@@ -107,6 +107,26 @@ const char *const unknown002[] = {
 constexpr u32 unknown990 = 0x439;
 // Inferred role: blade id named without a weapon type suffix; original name unknown.
 constexpr u32 unknown991 = 0x44f;
+
+// Inferred role: resolves the blade whose menu texts a common blade uses; original name unknown.
+// Ruling 5 (P3) and P2: the three menu name getters (0x710029b408, 0x710029b4bc, 0x710029b570) hold this loop: for a
+// common blade it reads the se pack once before the loop (the call getDataGame at +0x30 of each function), then walks
+// the 22 act blades from 1051 and, each round, reads the se pack of the SAME blade again (second getDataGame call in
+// the loop, the loop variable is never read) and compares both with strcmp; the first round compares equal and returns
+// the blade, a full miss returns 1051. The original expression cannot be checked.
+u32 unknown004(u32 blade) {
+  if (blade - BLADE_UNKNOWN_1197 < BLADE_COMMON_UNKNOWN_226) {
+    const char *sePack = GfDataBlade::getSePack(blade);
+    for (u32 act = BLADE_UNKNOWN_1051; act < BLADE_UNKNOWN_1051 + BLADE_ACT_UNKNOWN_22; act++) {
+      if (strcmp(GfDataBlade::getSePack(blade), sePack) == 0) {
+        return blade;
+      }
+    }
+    return BLADE_UNKNOWN_1051;
+  }
+
+  return blade;
+}
 
 } // namespace
 
@@ -263,6 +283,21 @@ u32 GfDataBlade::getBornTime(u32 blade) {
   }
 
   return getSDataBlade(blade).unknown08;
+}
+
+u32 GfDataBlade::getMenuCastName(u32 blade) {
+  blade = unknown004(blade);
+  return GfBdatChrBl::get()->getChrBlMnuCastName(blade);
+}
+
+u32 GfDataBlade::getMenuIlustName(u32 blade) {
+  blade = unknown004(blade);
+  return GfBdatChrBl::get()->getChrBlMnuIlustName(blade);
+}
+
+const char *GfDataBlade::getMenuVoiceName(u32 blade, u32 index) {
+  blade = unknown004(blade);
+  return GfBdatChrBl::get()->getChrBlMnuVoice(blade, index);
 }
 
 u8 GfDataBlade::getEyeRotControl(u32 blade) {
@@ -1034,6 +1069,34 @@ bool GfDataBlade::getEquipOrbHandle(mm::mtl::FixedArray<u32, 3> &equipOrbHandles
   }
 
   equipOrbHandles = getSDataBlade(blade).unknown680;
+  return true;
+}
+
+bool GfDataBlade::setEquipOrb(u32 blade, u16 orb, u32 slot) {
+  if (blade == 0) {
+    return false;
+  }
+
+  SDataBlade &dataBlade = getSDataBlade(blade);
+  // Ruling 5 (P3): the game calls GfDataManager::getDataGame() a second time after the one of
+  // getSDataBlade and discards the result (0x71002a4510); the call is the getSDataBlade inside
+  // getEquipOrbMax, whose value is dead. Probably the operand of a compiled-out assertion on
+  // slot; the original expression cannot be checked.
+  getEquipOrbMax(blade);
+  dataBlade.unknown678[slot] = orb;
+  return true;
+}
+
+bool GfDataBlade::setEquipOrbHandle(u32 blade, GfItemHandle handle, u32 slot) {
+  if (blade == 0) {
+    return false;
+  }
+
+  SDataBlade &dataBlade = getSDataBlade(blade);
+  // Ruling 5 (P3): same discarded getEquipOrbMax call as setEquipOrb (second getDataGame call
+  // at 0x71002a45a8).
+  getEquipOrbMax(blade);
+  dataBlade.unknown680[slot] = handle.value;
   return true;
 }
 

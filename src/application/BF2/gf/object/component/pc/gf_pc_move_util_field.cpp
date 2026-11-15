@@ -69,6 +69,39 @@ void MoveUtilField::updateMoveWalk(const fw::UpdateInfo &info, GfComPropertyPc &
 
 bool IsBuddy(GfComPropertyPc &property) { return property.unknown38 & 1; }
 
+void setMoveRunPacket(GfComPropertyPc &property, GfMoveRunControler::Packet *packet) {
+  packet->unknown00 = property.unknown80;
+  packet->unknown10 = property.unknown94;
+  packet->unknown18 = property.unknown310.unknown004(3);
+  const FieldParam *fieldParam = property.unknown310.unknown006();
+  // The game reads both input components (0x60, 0x64) into callee-saved registers before the assertions below.
+  f32 inputX = property.unknown60.unknown00;
+  f32 inputY = property.unknown60.unknown04;
+  // Ruling 5 (P3): the game (0x7100547ed0) evaluates the sqrtf of isUnit() on both input axes and drops the results
+  // (two sqrtf with the NaN call): the operands of two compiled-out assertions. The original expression cannot be
+  // checked. Same as setMoveSlidePacket (0x71005496ac).
+  // The clamp/power block below repeats the one of setMoveSwimPacket and setMoveSlidePacket. A shared template helper
+  // matches slide and swim but not run (222 against 216 instructions: the game forms the addresses of unknown1e0
+  // before the join, 0x7100547ed0), so the block stays written out in all three (ruling 8, P4).
+  property.unknown2b0.isUnit();
+  property.unknown2d0.isUnit();
+  packet->unknown30 = property.unknown2b0 * inputY + property.unknown2d0 * inputX;
+  if (!(fabsf(packet->unknown30.x) <= 0.000001f) || !(fabsf(packet->unknown30.y) <= 0.000001f) || !(fabsf(packet->unknown30.z) <= 0.000001f)) {
+    f32 length = sqrtf(packet->unknown30.x * packet->unknown30.x + packet->unknown30.y * packet->unknown30.y + packet->unknown30.z * packet->unknown30.z);
+    f32 power = mm::clamp(length, 0.0f, 1.0f);
+    packet->unknown20 = __builtin_fmaxf(power - fieldParam->accelThreshold, 0.0f) / __builtin_fmaxf(1.0f - fieldParam->accelThreshold, 0.0001f);
+    packet->unknown30 = packet->unknown30 * (1.0f / power);
+  } else {
+    packet->unknown20 = 0.0f;
+    packet->unknown30 = property.unknown1e0;
+  }
+  packet->unknown40 = property.unknown1e0;
+  packet->unknown50 = MoveUtilField::getSpeedEffect(property) + 1.0f;
+  if (IsBuddy(property)) {
+    packet->unknown54 = static_cast<const MoveParam *>(property.unknown300->unknown10[1].param)->addMaxSpeedBuddy;
+  }
+}
+
 void MoveUtilField::enterMoveRun(GfComPropertyPc &property, bool isInherit) {
   GfMoveRunControler controler;
   GfMoveRunControler::Packet packet;
@@ -266,6 +299,38 @@ void MoveUtilField::updateMoveWaterHoleRise(const fw::UpdateInfo &info, GfComPro
   packet.unknown10 = fabsf(StateUtilField::getChildFrameHeight(property)) <= param->riseBrakeHeight;
   controler.update(info, packet);
   property.unknown90 = packet.unknown00;
+}
+
+void setMoveSlidePacket(GfComPropertyPc &property, const SlideParam &param, GfMoveSlideControler::Packet *packet) {
+  packet->unknown00 = property.unknown80;
+  packet->unknown10 = property.unknown94;
+  packet->unknown14 = property.unknownc0;
+  packet->unknown18 = property.unknown310.unknown004(17);
+  const FieldParam *fieldParam = property.unknown310.unknown006();
+  // The game reads both input components (0x60, 0x64) into callee-saved registers before the assertions below.
+  f32 inputX = property.unknown60.unknown00;
+  f32 inputY = property.unknown60.unknown04;
+  // Ruling 5 (P3): the game (0x71005496ac) evaluates the sqrtf of isUnit() on both input axes and drops the results
+  // (two sqrtf with the NaN call at +0x58 and +0x84): the operands of two compiled-out assertions. The original
+  // expression cannot be checked.
+  // The clamp/power block below repeats the one of setMoveSwimPacket and setMoveRunPacket. A shared template helper
+  // matches slide and swim but not run (222 against 216 instructions in run, 0x7100547ed0), so the block stays
+  // written out in all three (ruling 8, P4).
+  property.unknown2b0.isUnit();
+  property.unknown2d0.isUnit();
+  packet->unknown30 = property.unknown2b0 * inputY + property.unknown2d0 * inputX;
+  if (!(fabsf(packet->unknown30.x) <= 0.000001f) || !(fabsf(packet->unknown30.y) <= 0.000001f) || !(fabsf(packet->unknown30.z) <= 0.000001f)) {
+    f32 length = sqrtf(packet->unknown30.x * packet->unknown30.x + packet->unknown30.y * packet->unknown30.y + packet->unknown30.z * packet->unknown30.z);
+    f32 power = mm::clamp(length, 0.0f, 1.0f);
+    packet->unknown20 = __builtin_fmaxf(power - fieldParam->accelThreshold, 0.0f) / __builtin_fmaxf(1.0f - fieldParam->accelThreshold, 0.0001f);
+    packet->unknown30 = packet->unknown30 * (1.0f / power);
+  } else {
+    packet->unknown20 = 0.0f;
+    packet->unknown30 = mm::Vec3::zero;
+  }
+  packet->unknown40 = property.unknown1e0;
+  packet->unknown50 = property.unknownd0;
+  packet->unknown60 = param.startVel;
 }
 
 void MoveUtilField::updateMoveSlide(const fw::UpdateInfo &info, GfComPropertyPc &property) {

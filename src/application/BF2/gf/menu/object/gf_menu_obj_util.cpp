@@ -559,6 +559,42 @@ GF_OBJ_HANDLE *GfMenuObjUtil::getBladeHandleFromPartySlot(u32 partyId, int offse
   return GfGameParty::getHandleBlade(partyId, slot);
 }
 
+u32 GfMenuObjUtil::getBladeIDFromPartyBackSlot(u32 partyId, int offset, bool isVirtual) {
+  if (GfDataParty::getDriver(partyId) != DRIVER_UNKNOWN_1) {
+    return 0;
+  }
+
+  int homuraSlot = -1;
+  for (int slot = 0; slot < 3; slot++) {
+    if (GfDataDriver::getBlade(DRIVER_UNKNOWN_1, slot) == BLADE_HOMURA) {
+      homuraSlot = slot;
+      break;
+    }
+  }
+  if (homuraSlot < 0) {
+    return 0;
+  }
+
+  int setSlot = getSetBladeID(partyId, offset, isVirtual);
+  if (setSlot != -1 && setSlot == homuraSlot) {
+    int backSlot = 3;
+    {
+      DataParamAcc acc(OBJECT_TYPE_PC, DRIVER_UNKNOWN_1, GIMMICK_TYPE_UNKNOWN_0);
+      u32 bladeSet = acc.getBladeSet(false);
+      if (bladeSet > 2) {
+        // Ruling 5 (P3): the game (0x71004e235c) calls getBladeSet(false) a second time in this branch and drops the
+        // result; the original expression cannot be checked. The unsigned compare (b.lo) and the destructor before
+        // the getBlade call (the acc lifetime ends before it) are the game's.
+        acc.getBladeSet(false);
+        backSlot = homuraSlot;
+      }
+    }
+    return GfDataDriver::getBlade(DRIVER_UNKNOWN_1, backSlot);
+  }
+
+  return 0;
+}
+
 GF_OBJ_HANDLE *GfMenuObjUtil::getBladeHandleFromPartyBackSlot(u32 partyId, int offset, bool isVirtual) {
   return GfGameParty::getHandleBladeByBdatID(getBladeIDFromPartyBackSlot(partyId, offset, isVirtual));
 }

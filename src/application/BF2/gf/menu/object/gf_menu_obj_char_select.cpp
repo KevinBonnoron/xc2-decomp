@@ -5,6 +5,7 @@
 #include "gf/data/gf_character_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_blade.h"
+#include "gf/data/gf_data_driver.h"
 #include "gf/game/gf_game_party.h"
 #include "gf/game/gf_game_util.h"
 #include "gf/menu/adapter/gf_menu_adapter_manager.h"
@@ -441,6 +442,20 @@ bool GfMenuObjCharSelect::seqWaitSelect() {
 bool GfMenuObjCharSelect::getCharBusy() { return unknown007.unknown00; }
 
 bool GfMenuObjCharSelect::getSelectBusy() { return unknown007.unknown01; }
+
+bool GfMenuObjCharSelect::chkSubMenuSpec(u32 character) {
+  // The game's code (1.0.0: 0x710042e1bc) has one shared `return true` block (`tbnz` after isCustomEnableDriver, `tbz` after isCustomEnableBlade). Without
+  // the bool scoped to the if/else, the same source gives a second `return true` block in the driver branch and one instruction more (21 against 20);
+  // the variable changes the block shape, not the register allocation.
+  if (bool isDriver = GfDataDriver::isDriver(character)) {
+    if (GfMenuObjUtil::isCustomEnableDriver(character)) {
+      return true;
+    }
+  } else if (GfMenuObjUtil::isCustomEnableBlade(character)) {
+    return true;
+  }
+  return false;
+}
 
 void GfMenuObjCharSelect::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
   ui::UIObjectAcc acc(handle);

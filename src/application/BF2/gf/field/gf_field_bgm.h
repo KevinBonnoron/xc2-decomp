@@ -192,6 +192,8 @@ public:
   void update(const fw::UpdateInfo &info) override;
   void gevPlayEvent(GEV gev, u32 value);
   void cancelOverTime();
+  bool isInvalidRequestBgmFile() const;
+  void updatePlaying(const fw::UpdateInfo &info);
 
   EventBgmSetup unknown638;        // Inferred role: setup of the playing event bgm; original member name unknown.
   mm::mtl::FixStr<128> unknown6a0; // Inferred role: name of the hand over bgm; original member name unknown.

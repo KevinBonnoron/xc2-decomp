@@ -20,6 +20,7 @@ public:
   DrPixlShadowMan(DrMan *man, DrPixlMan *pixlMan);
   ~DrPixlShadowMan();
   void releaseShadow(DrPixlShadowObj *shadow);
+  DrPixlShadowObj *createDirShadow(DrLightObj *light, int index);
   DrPixlShadowObj *createDirCacheShadow(DrLightObj *light, int index);
   DrPixlShadowObj *createPntShadow(DrLightObj *light, int index);
   DrPixlShadowObj *createSptShadow(DrLightObj *light, int index);

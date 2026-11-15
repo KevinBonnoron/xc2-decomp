@@ -141,6 +141,32 @@ bool GfGameLoad::execOptionLoadBlockForDebug(SDataOption &optionData) {
   return optionData.unknown00 == SAVE_UNKNOWN_237915;
 }
 
+// The statements of execGameLoadNonBlock are written out again (ruling 8 of 2026-11-13): the game's function (0x7100333ab0, 83 instructions) holds the bodies of
+// createGameLoadDataBin and startNonBlockBin inline, while execGameLoadNonBlock(saveData); waitNonBlockBin(); endNonBlockBin(); compiles to 22 instructions here
+// (measured 2026-11-15: clang keeps execGameLoadNonBlock as a call).
+bool GfGameLoad::execGameLoadWithMicroThread(SDataSave &saveData) {
+  unknown120 = 2;
+  mm::mtl::FixStr<256> path;
+  createGameLoadDataBin(saveData, path);
+  startNonBlockBin(path);
+  waitNonBlockBin();
+  endNonBlockBin();
+  unknown120 = 0;
+  return saveData.unknown00 == SAVE_UNKNOWN_237915;
+}
+
+// Same as execGameLoadWithMicroThread, for the option data (0x7100333d50, 91 instructions; the call form of execOptionLoadNonBlock compiles to 22 instructions here).
+bool GfGameLoad::execOptionLoadWithMicroThread(SDataOption &optionData) {
+  unknown120 = 2;
+  mm::mtl::FixStr<256> path;
+  createOptionLoadDataBin(optionData, path);
+  startNonBlockBin(path);
+  waitNonBlockBin();
+  endNonBlockBin();
+  unknown120 = 0;
+  return optionData.unknown00 == SAVE_UNKNOWN_237915;
+}
+
 void GfGameLoad::getGameFileNameBin(mm::mtl::FixStr<256> &path) {
   mm::mtl::FixStr<256> fileName;
   if (unknown0c.empty()) {

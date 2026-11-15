@@ -8,6 +8,8 @@
 #include "bdat.h"
 #include "framework/coli/coli_object.h"
 #include "framework/navi/navi_manager.h"
+#include "framework/reference_frame.h"
+#include "fw/fw_param_manager.h"
 #include "fw/fw_transform.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
@@ -20,6 +22,7 @@
 #include "gf/object/component/enemy/gf_com_behavior_enemy.h"
 #include "gf/object/component/enemy/gf_com_property_enemy.h"
 #include "gf/object/component/gf_com_collider.h"
+#include "gf/object/component/gf_com_transform.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
@@ -34,6 +37,8 @@
 #include "gmk/gmk_manager.h"
 #include "gmk/gmk_route_navi.h"
 #include "mm_math/mm_math.h"
+#include "mm_math/mm_quat.h"
+#include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/rtti.h"
 #include "mm_mtl/vector.h"
 #include "navi/nvmsh_ac_obj.h"
@@ -42,7 +47,7 @@ namespace gf {
 
 GfBehaviorEnemyField::GfBehaviorEnemyField(const CreateInfo *info)
     : unknown28(50), unknown2c(10.0f), unknown30(0.7853982f), unknown34(50), unknown35(100), unknown36(0), unknown37(0), unknown38(false), unknown40(nullptr), unknown90(true),
-      unknowna0(mm::Vec3::zero), unknownb0(0), unknownc0(mm::Vec3::zero), unknown52a0(0.0f), unknown52a4(0.0f), unknown52a8(true), unknown52a9(false) {
+      unknowna0(mm::Vec3::zero), unknownb0(0.0f), unknownc0(mm::Vec3::zero), unknown52a0(0.0f), unknown52a4(0.0f), unknown52a8(true), unknown52a9(false) {
   if (info != nullptr) {
     create(*info);
   }
@@ -310,7 +315,7 @@ void GfBehaviorEnemyField::update(f32 deltaTime) {
     unknowna0.y += deltaTime * -9.8f;
   }
 
-  unknownb0 = 0;
+  unknownb0 = 0.0f;
   updateNaviMeshObj(deltaTime);
   updateSensor(deltaTime);
   unknown1d0.update(deltaTime);
@@ -375,6 +380,51 @@ void GfBehaviorEnemyField::updatePitchRollController() {
   gmk::GmkRouteNavi *navi = getGmkRouteNavi();
   if (navi != nullptr) {
     unknown5268.update(*navi);
+  }
+}
+
+// Inferred role: param of the list 8 of fw::ParamManager, read for the ground offset; original type name unknown.
+struct unknown003 {
+  f32 unknown00; // Role and original member name unknown.
+  f32 unknown04; // Inferred role: ground offset; original member name unknown.
+};
+
+static_assert(offsetof(unknown003, unknown04) == 0x04, "");
+
+void GfBehaviorEnemyField::applyLinearVelocityAndRotY(f32 deltaTime) {
+  if (deltaTime <= 0.000001f) {
+    return;
+  }
+  fw::ColiMoveObject *coli = getColiObject();
+  if (coli != nullptr) {
+    if (unknowna0.y < 0.0f) {
+      mm::mtl::IntrusivePtr<fw::ParamList> paramList = fw::ParamManager::get()->unknown408[8];
+      const fw::ParamList::unknown005 *entry = paramList->unknown0c > 0 ? &paramList->unknown10[0] : nullptr;
+      const unknown003 *param = entry != nullptr ? static_cast<const unknown003 *>(entry->param) : nullptr;
+      if (param != nullptr) {
+        f32 limit = -(param->unknown04 - 0.1f);
+        if (unknowna0.y * deltaTime < limit) {
+          unknowna0.y = limit / deltaTime;
+        }
+      }
+    }
+    coli->setDir(unknowna0 * deltaTime);
+  }
+  GfObjAcc acc(unknown08.unknown08);
+  GfObj *obj = acc.getObj();
+  if (obj != nullptr) {
+    mm::mtl::IntrusivePtr<fw::ReferenceFrame> &frame = obj->getComponent<GfComTransform>()->unknown001();
+    mm::Quat &rotation = frame->unknown003().unknown10;
+    f32 half = unknownb0 * 0.5f;
+    f32 sine = sinf(half);
+    f32 cosine = cosf(half);
+    // The new x and y read the z and w that the next two statements overwrite.
+    f32 x = sine * rotation.z + cosine * rotation.x;
+    f32 y = sine * rotation.w + cosine * rotation.y;
+    rotation.z = cosine * rotation.z - sine * rotation.x;
+    rotation.w = cosine * rotation.w - sine * rotation.y;
+    rotation.x = x;
+    rotation.y = y;
   }
 }
 

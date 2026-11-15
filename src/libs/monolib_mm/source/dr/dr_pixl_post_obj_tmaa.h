@@ -4,10 +4,6 @@
 #include "dr/dr_pixl_post_obj.h"
 #include "types.h"
 
-namespace grlib {
-class CGLibTextureBuffer;
-} // namespace grlib
-
 namespace ml {
 
 class DrMan;
@@ -32,7 +28,7 @@ public:
   void update();
   void debugRender();
   void releaseColorBuff();
-  grlib::CGLibTextureBuffer *getBloomTexture();
+  DrPixlRenderTarget *getBloomTexture();
 
   u32 unknown18; // Inferred role: flags; original member name unknown.
   u8 _1c[0x20 - 0x1c];

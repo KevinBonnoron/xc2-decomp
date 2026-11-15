@@ -3,6 +3,7 @@
 #include "ml/dev_graph.h"
 #include "ml/threadval.h"
 #include "ml/win_view.h"
+#include "ml/win_view_frame.h"
 #include "ml/win_view_root.h"
 #include "mm_math/mm_pnt.h"
 
@@ -38,6 +39,21 @@ mm::Rect<int> WinSplitFrame::getWorkRect1(bool isBack) const {
     rect.height = unknown10;
   } else {
     rect.width = unknown0c;
+  }
+  return rect;
+}
+
+mm::Rect<int> WinSplitFrame::getWorkRect2(bool isBack) const {
+  const WinView::RENDER_INFO *info = isBack ? unknown00->unknown1b8.m_back : unknown00->unknown1b8.m_front;
+  mm::Rect<int> rect(mm::Pnt<int>::zero, info->m_workSize);
+  if (unknown08) {
+    // The game loads the front frame again in each branch after the stores to the rect (ldr x9, [x9] at 1.0.0: 0x71007632cc
+    // and 0x71007632f0). The border is a 16 bit value added to the split line and truncated to s16 (ldrh, add, sxth).
+    rect.y = static_cast<s16>(unknown10 + unknown00->unknown1b8.m_front->unknown48.unknown60);
+    rect.height -= rect.y;
+  } else {
+    rect.x = static_cast<s16>(unknown0c + unknown00->unknown1b8.m_front->unknown48.unknown60);
+    rect.width -= rect.x;
   }
   return rect;
 }

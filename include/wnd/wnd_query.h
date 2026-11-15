@@ -2,7 +2,12 @@
 #include <stddef.h>
 
 #include "mm_mtl/fixed_queue.h"
-#include "mm_mtl/rtti.h"
+
+namespace mm {
+namespace mtl {
+class RTTI;
+} // namespace mtl
+} // namespace mm
 
 namespace wnd {
 

@@ -11,11 +11,13 @@
 #include "fw/fw_param_manager.h"
 #include "fw/fw_transform.h"
 #include "gf/camera/gf_camera_player.h"
+#include "gf/game/gf_game_mount.h"
 #include "gf/game/gf_game_mover_switcher.h"
 #include "gf/game/gf_game_player_camera.h"
 #include "gf/game/gf_game_player_formation.h"
 #include "gf/game/gf_game_ride.h"
 #include "gf/object/component/animation/gf_com_asm.h"
+#include "gf/object/component/behavior/gf_com_behavior_extra.h"
 #include "gf/object/component/behavior/movement/gf_move_run.h"
 #include "gf/object/component/env_sensor/gf_com_env_sensor.h"
 #include "gf/object/component/gf_com_transform.h"
@@ -327,6 +329,14 @@ void StateUtilField::notifySkillAct(GfComBehaviorPc &behavior, bool isSkillAct) 
         property->unknown310.unknown78 = unknown020;
       }
     }
+  }
+}
+
+void StateUtilField::notifyJumpEnd(GfComBehaviorPc &behavior) {
+  GfWeapon *weapon = GfObjUtil::getExtraMountObject(static_cast<GfObj *>(behavior.unknown08)->unknownf8);
+  if (weapon != nullptr) {
+    MsgPcFieldNotifyExtra message;
+    weapon->sendMessage(static_cast<GfObj *>(behavior.unknown08), message);
   }
 }
 

@@ -94,6 +94,24 @@ u32 GfQuestInfo::getPlayEvent(QuestID quest, QSTATE state) {
   return GfDataQuest::getListCallEventB(quest);
 }
 
+void GfQuestInfo::setState(QuestID quest, QSTATE state) {
+  u32 flag = getQuestFlag2No(quest);
+  if (flag == 0) {
+    return;
+  }
+
+  QSTATE oldState = getState(quest);
+  GfGameFlag::setLocal(2, flag, state);
+  // Ruling 8 (P4): repeats the statement of GfQuestInfo::isParent(quest), getListPRTQuestID(quest).empty(). The call
+  // matches in getQuestFlag2No but here it gives 67 instructions as well with different stack slots for the QuestID
+  // temporaries (oc-dec-rb1 record), so the game has the body written out at this place.
+  if (state > QSTATE_UNKNOWN_1 && GfDataQuest::getListPRTQuestID(quest).empty()) {
+    GfQuestManager::addCompleteQuest(quest);
+  }
+
+  GfQuestManager::eventChangeQuestState(quest, oldState, state);
+}
+
 QuestID GfQuestInfo::getProgressQuest(QuestID quest) {
   if (quest.empty()) {
     return quest;

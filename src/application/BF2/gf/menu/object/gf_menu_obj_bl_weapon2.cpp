@@ -489,6 +489,36 @@ void GfMenuObjBlWeapon2::MainListener::reciveEvent(const ui::EventData &event, u
   }
 }
 
+void GfMenuObjBlWeapon2::WeaponListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1: {
+    GfMenuWeaponAdapter::ReferenceChip chip;
+    chip.unknown00 = 0;
+    chip.unknown08 = unknown20->unknown38;
+    // setupWeapon never reads its list parameter, so the game never sets x1 for it (0x710041e344): the compiler
+    // erased the argument (ruling 2026-11-13 #6). The original expression cannot be checked; the owner's chip
+    // list, read just below, is the plausible one.
+    setupWeapon(acc, unknown20->unknown28, chip);
+    if (unknown20->unknown28->getSize() == 0) {
+      acc.setDispChild(false, "LAY_wpn_img@02");
+    }
+    break;
+  }
+  case GfMenuTypes::unknown003_33:
+    GfMenuObjUtil::setCommonFadeIn(acc.searchChild("LAY_bl_weapon@01"), 0, 2);
+    GfMenuObjUtil::setCommonFadeIn(acc.searchChild("LAY_bl_weapon@02"), 0, 1);
+    break;
+  case GfMenuTypes::unknown003_34:
+    GfMenuObjUtil::setCommonFadeOut(acc.searchChild("LAY_bl_weapon@01"), 0, 2);
+    GfMenuObjUtil::setCommonFadeOut(acc.searchChild("LAY_bl_weapon@02"), 0, 1);
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
 void GfMenuObjBlWeapon2::ItemSelectListener::reciveEvent(const ui::EventData &event, u32 handle) {
   ui::UIObjectAcc owner(unknown20->unknown18);
   ui::UIObjectAcc acc(handle);

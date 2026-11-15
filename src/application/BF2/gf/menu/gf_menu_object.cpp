@@ -413,6 +413,31 @@ void GfMenuObject::closeFSLayer(u32 handle, bool fade, bool keep) {
   ui::UIManager::get()->requestGameEvent(handle, event);
 }
 
+void GfMenuObject::changeFSSubLayer(u32 handle, u16 group, u16 layer, bool keep) {
+  // The game widens group to 32 bits (zext, constant in w10) before the ui::EventData constructor stores
+  // (0x71003ca4ac); the single-use local places that conversion ahead of the constructor (ruling 2026-11-13 #2, P2).
+  u32 layerGroup = group;
+  ui::EventData event;
+  event.unknown00 = 1;
+  event.unknown08 = layer;
+  event.unknown0c = layerGroup;
+  event.unknown10 = keep;
+  event.unknown14 = 0;
+  ui::UIManager::get()->requestGameEvent(handle, event);
+}
+
+void GfMenuObject::returnFSSubLayer(u32 handle, u16 group) {
+  // Same widening of group as in changeFSSubLayer (0x71003ca4fc); the game stores unknown0c before unknown00.
+  u32 layerGroup = group;
+  ui::EventData event;
+  event.unknown0c = 0;
+  event.unknown00 = 3;
+  event.unknown08 = layerGroup;
+  ui::UIManager::get()->requestGameEvent(handle, event);
+}
+
+void GfMenuObject::returnFSSubLayer(GfMenuObject *object) { returnFSSubLayer(object->unknown18, GfMenuFullScreen::getLayerGroup(object->unknown20)); }
+
 u32 GfMenuObject::getMenuLayerID(u32 id) {
   u8 *bdat = GfDataBdat::getFP(BDAT_MNU_FSMENU);
   if (bdat == nullptr || !GfMenuBdat::isValidBdatID(bdat, id)) {

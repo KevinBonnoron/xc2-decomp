@@ -24,7 +24,6 @@ class WindProbe;
 class BroadPhazeInterface;
 class Dispatcher;
 class WindObject;
-struct ResConpoundWind;
 struct UpdateInfo;
 
 static_assert(sizeof(Array<const ResConpoundWind *>) == 0x10, "");

@@ -38,6 +38,7 @@
 #include "gmk/gmk_manager.h"
 #include "gmk/gmk_mob/gmk_mob.h"
 #include "gmk/gmk_mob/gmk_routed_mob.h"
+#include "mm_math/mm_math.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/rtti.h"
 #include "mm_mtl/unique_ptr.h"
@@ -151,6 +152,11 @@ void GfComBehaviorMob::update(const fw::UpdateInfo &info) {
 gmk::AGmkBase *GfComBehaviorMob::getBindedGmkInst() const { return gmk::getBindedGmkInst(static_cast<GfObj *>(unknown08)->unknownf8); }
 
 bool GfComBehaviorMob::isSquadMember() const { return unknownc0.unknown001() && unknownc0.unknown28 != 0; }
+
+f32 GfComBehaviorMob::getMoveSpeedMps() const {
+  GfObjSetupMob *setup = mm::mtl::dynamicCast<GfObjSetupMob>(GfObjManager::getObjInfo(static_cast<GfObj *>(unknown08)->unknownf8)->unknown30);
+  return unknown1e0.unknown10 * 0.2777778f * setup->getScaleX();
+}
 
 bool GfComBehaviorMob::isMove() const {
   if (unknown250.unknown00.unknown00 == unknown020 ||
@@ -337,6 +343,44 @@ u32 GfComBehaviorMob::getStateId() const {
   }
 
   return ai::INVALID_STATE_ID;
+}
+
+void GfComBehaviorMob::updateNaviMeshObj(f32 deltaTime) {
+  if (unknowna8 != nullptr && (unknowna8->unknown10 & 2) != 0 && unknown1e0.unknown00 != unknown020) {
+    const mm::Vec3 &position = getPos();
+    unknowna8->setBeginPos(position);
+    unknowna8->setEndPos(unknown110);
+    f32 speed = getMoveSpeedMps();
+    unknowna8->setMoveSpd(speed * deltaTime);
+    unknownb0++;
+  }
+}
+
+void GfComBehaviorMob::moveToGoal(f32 deltaTime) {
+  const mm::Vec3 &position = getPos();
+  mm::Vec3 direction(0.0f, 0.0f, 0.0f);
+  if (!getMoveVec(direction, unknowna8)) {
+    direction = unknown110 - position;
+    direction.y = 0.0f;
+  }
+
+  if (!direction.unknown003()) {
+    direction.unknown001();
+  }
+
+  direction *= getMoveSpeedMps();
+  unknown100.x = direction.x;
+  unknown100.z = direction.z;
+  if (unknown2c0.unknown00.unknown00 != unknown020) {
+    unknown2c0.apply(unknown100, unknown100);
+  }
+
+  fw::Transform &transform = unknown08->getComponent<GfComTransform>()->unknown001()->unknown003();
+  f32 goalAngle = atan2f(unknown100.x, unknown100.z);
+  mm::Vec3 front = transform.unknown10.rotate(mm::Vec3::unitZ);
+  f32 angle = atan2f(front.x, front.z);
+  f32 half = (angle + mm::unknown003(goalAngle - angle) * 0.1f) * 0.5f;
+  transform.unknown10.unknown001(half);
 }
 
 void GfComBehaviorMob::createNaviMeshObj() {

@@ -1,4 +1,5 @@
 // Original file name inferred from the job type strings and the skd_detect_info.h assertion file path.
+#include "anm/anm_array-inl.h"
 #include "anm/anm_job.h"
 #include "anm/anm_job_queue.h"
 #include "anm/anm_pose.h"

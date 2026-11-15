@@ -18,9 +18,9 @@ public:
 // Inferred role: quaternion of the Euler angles (half-angle products); original name unknown. Evidence: inlined in
 // gf::GimmickCamera::updateParams (1.0.0: 0x71001e2598), gf::GimmickCamera::setLookLock,
 // gf::ScriptCameraEntity::ScriptCameraEntity (0x71001e5960) and gf::ScriptCameraEntity::update (0x71001e5c68).
-// Not the Euler helper of fw::FootPlacementIKSolver and gf::npc::StateWalk: here w is sin * sin * sin + cos * cos * cos (operand
-// order of the fadd at 0x71001e264c); with cos * cos * cos + sin * sin * sin the three camera functions stop matching, while
-// ik_foot_placement_solver.cpp and gf_npc_state_walk.cpp need that other order.
+// Not mm::unknown005 (mm_quat.h, shared by fw::FootPlacementIKSolver, gf::npc::StateWalk and event::CharaEvaPlayer): here w is sin * sin * sin +
+// cos * cos * cos (operand order of the fadd at 0x71001e264c); with cos * cos * cos + sin * sin * sin the three camera functions stop matching,
+// while ik_foot_placement_solver.cpp, gf_npc_state_walk.cpp and chara_eva_player.cpp need that other order.
 // Internal linkage: with external linkage (plain inline) one fmul has its operands swapped in GimmickCamera::updateParams
 // (0x71001e2658) and ScriptCameraEntity::update (0x71001e5e00).
 static inline mm::Quat unknown169(f32 pitch, f32 yaw, f32 roll) {

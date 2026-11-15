@@ -34,7 +34,7 @@ public:
   static const u32 PLUGIN_INDEX = 15;
 
   LurePlugin();
-  static LurePlugin *create();
+  static Plugin *create();
   virtual bool setup(GfComBehaviorPc &behavior);
   virtual void cleanup(GfComBehaviorPc &behavior);
   void onActivate() override;

@@ -30,8 +30,6 @@ struct SoundCategoryDebugInfo {
 
 static_assert(sizeof(SoundCategoryDebugInfo) == 0x30, "");
 
-struct SoundPlayInfo;
-struct SoundResult;
 struct UpdateInfo;
 
 enum SoundPriority : int {
@@ -41,6 +39,39 @@ enum SoundPriority : int {
 
 enum SoundCategory : int;
 enum SoundOutputType : int;
+
+// Inferred role: request of ISoundDriver::playSeEx; original member names unknown. Types from the accesses of
+// SoundSsdDriver::playSeEx (0x71001a9580): the pack (x), the id (w), the volume (s) and the category (w) that it passes to
+// playSeLocal, the flag (b) that selects the position (a Vec3 passed by address) at 0x20. The game (0x71001a1bbc,
+// SoundManager::playSeEx) copies the request field by field (one load and store per member, the Vec3 through its own copy
+// constructor, nothing from the padding), where the implicit copy constructor moves the members before the position as
+// one block (81 instructions against 84): the original declares a copy constructor, which has no symbol, being inline
+// (P1, decision of 2026-11-14).
+struct SoundPlayInfo {
+  SoundPlayInfo(const SoundPlayInfo &other)
+      : unknown00(other.unknown00), unknown08(other.unknown08), unknown0c(other.unknown0c), unknown10(other.unknown10), unknown14(other.unknown14), unknown20(other.unknown20) {}
+
+  SoundPack *unknown00;    // Inferred role: pack, the common pack when null; original member name unknown.
+  u32 unknown08;           // Inferred role: sound id; original member name unknown.
+  f32 unknown0c;           // Inferred role: volume; original member name unknown.
+  SoundCategory unknown10; // Inferred role: category; original member name unknown.
+  bool unknown14;          // Inferred role: set when the position is used; original member name unknown.
+  mm::Vec3 unknown20;      // Inferred role: position; original member name unknown.
+};
+
+// Inferred role: result of ISoundDriver::playSeEx; original member names unknown.
+struct SoundResult {
+  u32 unknown00; // Inferred role: handle; original member name unknown.
+  u32 unknown04; // Inferred role: status, 3 until a sound is started and 0 once it is; original member name unknown.
+};
+
+static_assert(offsetof(SoundPlayInfo, unknown08) == 0x08, "");
+static_assert(offsetof(SoundPlayInfo, unknown0c) == 0x0c, "");
+static_assert(offsetof(SoundPlayInfo, unknown10) == 0x10, "");
+static_assert(offsetof(SoundPlayInfo, unknown14) == 0x14, "");
+static_assert(offsetof(SoundPlayInfo, unknown20) == 0x20, "");
+static_assert(sizeof(SoundPlayInfo) == 0x30, "");
+static_assert(sizeof(SoundResult) == 0x08, "");
 
 enum SoundType : int {
   SOUND_TYPE_UNKNOWN_1 = 1, // Inferred role: bgm; original name unknown.

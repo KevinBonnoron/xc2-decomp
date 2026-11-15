@@ -138,6 +138,7 @@ public:
   static const char *getName(u32 driver);
   static bool getName(u8 *&bdat, u32 &textId, u32 driver);
   static int getRuleSetBlade(u32 driver, u32 blade, int slot);
+  static bool isEmptySetBlade(u32 blade, u32 driver, int slot);
   static u32 getFavorite(u32 driver, FAVORITE favorite);
   static bool isFavoriteCategory(u32 driver, u32 item);
   static bool isFavoriteItem(u32 driver, u32 item);

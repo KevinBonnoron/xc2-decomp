@@ -11,7 +11,7 @@ public:
   unknown027() { clear(); }
 
   unknown027 &operator=(const unknown027 &other) {
-    if (&other != this) {
+    if (this != &other) {
       copy(other.mBits, unknown003, mBits);
     }
     return *this;

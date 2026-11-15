@@ -3,6 +3,7 @@
 #include "gf/data/gf_data_item.h"
 #include "gf/gf_allocator.h"
 #include "gf/menu/adapter/gf_menu_item_adapter.h"
+#include "gf/menu/gf_menu_item_util.h"
 #include "gf/menu/gf_menu_reference_list.h"
 #include "gf/menu/list/gf_menu_item_list.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
@@ -15,6 +16,7 @@
 #include "ui/event/ui_event_manager.h"
 #include "ui/list/ui_select_obj_list.h"
 #include "ui/ui_object_acc.h"
+#include "ui/ui_str.h"
 
 namespace gf {
 
@@ -160,6 +162,35 @@ void GfMenuObjItemList::MainListener::reciveEvent(const ui::EventData &event, u3
       GfMenuObject::returnFSSubLayer(acc.unknown10, 1);
     }
     break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
+void GfMenuObjItemList::TypeListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    break;
+  case 6: {
+    int index = event.unknown08;
+    if (index != -1 && index < unknown20->unknown48.size()) {
+      unknown20->unknownf0->unknown001(unknown20->unknown48[index]);
+      ui::UISelectObjList *list = unknown20->unknown38;
+      list->setIndex((index + 2) % list->getSize());
+      {
+        ui::UIObjectAcc name(acc.unknown10, "TXT_item_cate_name");
+        ui::UIStr text;
+        GfMenuItemUtil::getItemTypeName(index, text);
+        name.setText(text);
+      }
+      ui::EventData data;
+      data.unknown00 = 0x100;
+      GfMenuObject::sendEvent(acc.searchSibiling("LAY_item_list"), data, 0.0f);
+    }
+    break;
+  }
   default:
     ui::UIObjectListener::reciveEvent(event, handle);
     break;

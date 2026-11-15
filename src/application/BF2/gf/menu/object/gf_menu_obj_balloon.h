@@ -63,7 +63,6 @@ public:
     GF_OBJ_HANDLE *unknown20; // Inferred role: handle; original member name unknown.
     u8 _28[0x30 - 0x28];
     MenuOffset unknown30; // Inferred role: offset; original member name unknown.
-    u8 _48[0x50 - 0x48];
   };
 
   struct OpenSelectParam : OpenParam {

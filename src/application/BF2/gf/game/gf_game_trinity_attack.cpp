@@ -7,6 +7,8 @@
 #include "gf/game/gf_game_obj.h"
 #include "gf/game/gf_game_party.h"
 #include "gf/gf_allocator.h"
+#include "gf/object/gf_init_param.h"
+#include "gf/object/gf_obj_factory.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_manager.h"
 #include "gf/object/gf_obj_util.h"
@@ -43,6 +45,25 @@ u32 GfTrinityAttack::getBladeId() const {
     }
   }
   return 0;
+}
+
+void GfTrinityAttack::createBlade() {
+  // The game calls getBladeId (0x71003474ec) before the GfInitParamBlade constructor's stores; the single-use
+  // local places that call (ruling 2026-11-13 #1, P2).
+  u32 blade = getBladeId();
+  GfInitParamBlade param;
+  // The game calls getPartyId before every member store and stores the id after unknown81 (0x71003474ec); the
+  // single-use local places that call (ruling 2026-11-13 #1, P2).
+  u32 partyId = GfGameParty::getPartyId(GfGameManager::getPartyLeaderDriver());
+  param.unknown08 = unknown030_8;
+  param.m_bladeID = blade;
+  param.unknown40 = 4;
+  param.unknown81 = false;
+  param.unknown20 = partyId;
+  param.unknowna0 = 3;
+  param.unknown50 = 0.0f;
+  param.unknown38 = GfGameManager::getPartyLeaderDriver();
+  m_blade = GfObjFactory::createBlade(param);
 }
 
 bool GfTrinityAttack::isEnableAttackMember() const { return getBladeId() != 0; }

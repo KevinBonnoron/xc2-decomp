@@ -53,7 +53,7 @@ public:
   static const u32 PLUGIN_INDEX = 7;
 
   FallDamagePlugin();
-  static FallDamagePlugin *create();
+  static Plugin *create();
   ~FallDamagePlugin();
   virtual bool setup(GfComBehaviorPc &behavior);
   virtual void cleanup(GfComBehaviorPc &behavior);

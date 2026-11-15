@@ -8,11 +8,14 @@
 #include "mm/mm_std_base.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_queue.h"
+#include "mm_mtl/rtti.h"
 #include "types.h"
 #include "wnd/wnd_dispatcher.h"
+#include "wnd/wnd_object.h"
 #include "wnd/wnd_overlapping_cache.h"
 #include "wnd/wnd_probe.h"
 #include "wnd/wnd_query.h"
+#include "wnd/wnd_shape.h"
 
 namespace wnd {
 

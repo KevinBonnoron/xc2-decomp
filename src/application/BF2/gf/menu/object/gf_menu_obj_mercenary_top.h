@@ -25,9 +25,31 @@ class GfMenuObjMercenaryTop : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
+    MainListener(GfMenuObjMercenaryTop *owner) : _0c(), unknown20(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x20 - 0x0c];
+    u8 _0c[0x1c - 0x0c];
+    u8 _1c[0x20 - 0x1c];
+    GfMenuObjMercenaryTop *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class ZoneListener : public ui::UIObjectListener {
+  public:
+    ZoneListener(GfMenuObjMercenaryTop *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    u8 _1c[0x20 - 0x1c];
+    GfMenuObjMercenaryTop *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class MissionListener : public ui::UIObjectListener {
+  public:
+    MissionListener(GfMenuObjMercenaryTop *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    u8 _1c[0x20 - 0x1c];
     GfMenuObjMercenaryTop *unknown20; // Inferred role: owner; original member name unknown.
   };
 

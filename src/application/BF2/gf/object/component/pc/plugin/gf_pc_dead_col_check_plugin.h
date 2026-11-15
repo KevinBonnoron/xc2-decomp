@@ -23,7 +23,7 @@ public:
   static const u32 PLUGIN_INDEX = 19;
 
   DeadColCheckPlugin();
-  static DeadColCheckPlugin *create();
+  static Plugin *create();
   virtual bool setup(GfComBehaviorPc &behavior);
   virtual void cleanup(GfComBehaviorPc &behavior);
   void onActivate() override;

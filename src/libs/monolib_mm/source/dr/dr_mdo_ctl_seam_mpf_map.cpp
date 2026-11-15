@@ -16,6 +16,7 @@
 #include "dr/dr_res_mdo_seam_res.h"
 #include "dr/dr_res_mdo_seam_wrk_mpf.h"
 #include "dr/dr_res_mdo_vertex.h"
+#include "mm_math/mm_vec3.h"
 #include "mtl/alloc_handle.h"
 #include "types.h"
 
@@ -153,6 +154,36 @@ void DrMdoCtlSeamMpfMap::updateMpfMapRenderList() {
       unknownc68 += mpf->unknown6c;
     }
   }
+}
+
+bool DrMdoCtlSeamMpfMap::readMpfModelCheck(const mm::Vec3 &position) {
+  bool isEmpty = true;
+  // Decision 2026-11-14 (rulings 7 and 8). unknownb90 is tested with the unsigned cast `static_cast<u32>(i) >> 5` (lsr at 0x7100825c90 from
+  // the signed counter): the shared word helper unknown723 was tried and swaps the pointer and index registers (0x7100825c8c: it loads the
+  // table first, the game evaluates the index first), which suggests that the original expanded a bit-table macro with an unsigned cast.
+  // The bit test of DrMan::isGblIdx is written out under ruling 8: the game loads m_gblIdx once before the loop (x26 at 0x7100825c24), and
+  // `m_drMan->isGblIdx(entry->unknown24)` is 89 instructions too but reloads m_gblIdx in the loop (x26 is not saved).
+  const u32 *gblIdx = m_drMan->m_gblIdx;
+  const unknown722 *entry = reinterpret_cast<const unknown722 *>(reinterpret_cast<const u8 *>(unknown1a8) + unknown1a8->unknown68);
+  s32 max = unknown1a8->m_seamMpfMdlMax;
+  for (s32 i = 0; i < max; i++, entry++) {
+    if ((unknownb90[static_cast<u32>(i) >> 5] & (1 << (i & 0x1f))) != 0) {
+      continue;
+    }
+    if (entry->unknown24 != 0 && (gblIdx[entry->unknown24 >> 5] & (1 << (entry->unknown24 & 0x1f))) != 0) {
+      continue;
+    }
+    if ((unknownc7c & 0x100) != 0 && (entry->unknown28 & 1) == 0) {
+      continue;
+    }
+    if (entry->unknown00[0] + 40.0f < position.x || entry->unknown0c[0] - 40.0f > position.x || entry->unknown00[1] + 40.0f < position.y || entry->unknown0c[1] - 40.0f > position.y ||
+        entry->unknown00[2] + 40.0f < position.z || entry->unknown0c[2] - 40.0f > position.z) {
+      continue;
+    }
+    unknownd30.setStockMpfMdl(i);
+    isEmpty = false;
+  }
+  return isEmpty;
 }
 
 void DrMdoCtlSeamMpfMap::createMpfMapDisplayList() {

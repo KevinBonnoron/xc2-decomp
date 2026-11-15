@@ -231,6 +231,24 @@ void GfReqCommand::reqPartyBlade(u32 blade, u32 driver) {
   GfReqManager::addCommand(param, execPartyBlade);
 }
 
+void GfReqCommand::execPartyBlade(const GfReqParam *param) {
+  const unknown003 *request = static_cast<const unknown003 *>(param);
+  if (!GfDataDriver::isEmptySetBlade(request->unknown00, request->unknown04, -1)) {
+    DataParamAcc acc(OBJECT_TYPE_PC, request->unknown04, GIMMICK_TYPE_UNKNOWN_0);
+    int bladeNum = GfDataDriver::getMaxSetBladeNum(request->unknown04);
+    u32 highestBlade = 0;
+    for (int slot = 0; slot < bladeNum; slot++) {
+      if (slot != acc.getBladeSet(false) && highestBlade < acc.getBlade(slot, false)) {
+        highestBlade = acc.getBlade(slot, false);
+      }
+    }
+    if (highestBlade != 0) {
+      SCOM_PARTY_ADD::removeBlade(highestBlade, true);
+    }
+  }
+  SCOM_PARTY_ADD::addBlade(request->unknown00, request->unknown04, -1);
+}
+
 u32 GfReqCommand::reqRebuildPartyWeapon(u32 blade) {
 #line 140
   unknown014 *param = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) unknown014;

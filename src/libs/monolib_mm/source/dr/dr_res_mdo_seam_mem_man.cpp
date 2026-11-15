@@ -282,4 +282,31 @@ void DrResMdoSeamMemMan::releaseFreeObj(DrResMdoSeamMemObj *obj) {
 
 void DrResMdoSeamMemMan::releaseTempFreeObj(DrResMdoSeamMemObj *obj) { clearMemObj(obj, unknown00); }
 
+bool DrResMdoSeamMemMan::memDefOptimization(u32 limit) {
+  // Declaration order, which only changes the register allocation: the game (1.0.0: 0x7100876e2c) zeroes total in w10, isFree in w11 and isFound
+  // in w9, and isFound, isFree, total is the order that matches (as is the capacity test before the limit test below).
+  bool isFound = false;
+  bool isFree = false;
+  u32 total = 0;
+  for (DrResMdoSeamMemObj *obj = unknown00.unknown00; obj != nullptr; obj = obj->unknown10) {
+    if ((obj->unknown24 & 1) == 0) {
+      isFree = true;
+    } else if (isFree) {
+      if ((obj->unknown24 & 6) != 0) {
+        break;
+      }
+      total += obj->m_size;
+      if (unknown444 != 0 && total >= limit) {
+        break;
+      }
+      unknown240[unknown444++] = obj;
+      isFound = true;
+      if (unknown444 >= 64 || total >= limit) {
+        break;
+      }
+    }
+  }
+  return isFound;
+}
+
 } // namespace ml

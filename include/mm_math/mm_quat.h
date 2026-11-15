@@ -16,6 +16,15 @@ struct alignas(16) Quat {
   Vec3 rotate(const Vec3 &vector) const;
   static Quat mul(const Quat &qa, const Quat &qb);
   static void inverse(Quat &qa);
+  // Inferred role: sets the rotation about the y axis of half the angle; original name unknown. Evidence: the same four stores in the order y, w, x, z are in
+  // gf::GfComBehaviorMob::moveToGoal (0x710052cc40), gf::AIAgentField::procMsgPcFieldHighJump, procMsgPcFieldNotifyWaterWarp and procMsgPcFieldNotifyWaterWarpBuddy,
+  // gf_pc_state_field_big_jump.cpp (unknown50 and target) and gf_field_exec_cmd_turn.cpp (rotation and half).
+  void unknown001(f32 half) {
+    y = sinf(half);
+    w = cosf(half);
+    x = 0.0f;
+    z = 0.0f;
+  }
 
   f32 x;
   f32 y;
@@ -93,6 +102,29 @@ static inline Quat slerp(const Quat &qs, const Quat &qe, f32 t) {
   end.z = qs.z * startWeight + end.z * endWeight;
   end.w = qs.w * startWeight + end.w * endWeight;
   return end;
+}
+
+// Inferred helper: quaternion of Euler angles, the products of the sines and cosines of the half angles (the three half angles are computed before
+// the first sinf call); original name unknown. Evidence: the same statements are inlined in event::CharaEvaPlayer::update (0x71000c98c4),
+// fw::FootPlacementIKSolver::setGroundAngle and gf::npc::StateWalk::seqWaitMoveEnd. Not the helper of gf_camera_utilities.h (w with the sines
+// first) nor those of event::CharaSetRot and gf_req_scom.cpp (the sign of the second product differs).
+// Internal linkage: as a member function (external linkage) or with always_inline, CharaEvaPlayer::update loads its 0.5 constant into another register.
+static inline Quat unknown005(const Vec3 &rotation) {
+  f32 halfX = rotation.x * 0.5f;
+  f32 halfY = rotation.y * 0.5f;
+  f32 halfZ = rotation.z * 0.5f;
+  f32 sinX = sinf(halfX);
+  f32 cosX = cosf(halfX);
+  f32 sinY = sinf(halfY);
+  f32 cosY = cosf(halfY);
+  f32 sinZ = sinf(halfZ);
+  f32 cosZ = cosf(halfZ);
+  Quat quat;
+  quat.x = sinX * cosY * cosZ - cosX * sinY * sinZ;
+  quat.y = cosX * sinY * cosZ + sinX * cosY * sinZ;
+  quat.z = cosX * cosY * sinZ - sinX * sinY * cosZ;
+  quat.w = cosX * cosY * cosZ + sinX * sinY * sinZ;
+  return quat;
 }
 
 } // namespace mm

@@ -189,18 +189,23 @@ bool GmkRoutedMapObj::canDepopGobInst() const {
   const GmkMapObj::BdatInfo *info = getBdatInfo();
   const mm::Vec3 &position = gf::GfObjUtil::getObj(gf::GfGameManager::getControlMover())->getComponent<gf::GfComTransform>()->getPosition();
   mm::Vec3 nearest;
-  if (!GmkRoute::getNearestPos(nearest, position)) {
+  if (GmkRoute::getNearestPos(nearest, position) && info->isDepopCondMatched(nearest)) {
+    return true;
+  }
+  return false;
+}
+
+bool GmkRoutedMapObj::canPopGobInst() const {
+  if (unknown50 != gf::unknown020 || gf::GfGameManager::getControlMover() == gf::unknown020) {
     return false;
   }
-  if (info->unknown0c.isMatch(nearest)) {
-    if (info->unknown00 == 0) {
-      return false;
-    }
-    if (gf::GfGameCond::isGameCond(info->unknown00)) {
-      return false;
-    }
+  const GmkMapObj::BdatInfo *info = getBdatInfo();
+  const mm::Vec3 &position = gf::GfObjUtil::getObj(gf::GfGameManager::getControlMover())->getComponent<gf::GfComTransform>()->getPosition();
+  mm::Vec3 nearest;
+  if (GmkRoute::getNearestPos(nearest, position) && info->isPopCondMatched(nearest)) {
+    return true;
   }
-  return true;
+  return false;
 }
 
 void GmkRoutedMapObj::createGobInst() {

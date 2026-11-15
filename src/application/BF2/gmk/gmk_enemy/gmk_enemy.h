@@ -141,6 +141,12 @@ public:
     void dispose();
     void create(const CreateInfo &info);
     int getGobInstNum() const;
+    // Inferred helper: number of game objects of the four enemies, written out; original name unknown.
+    // Repeats the body of getGobInstNum (0x71005ed0ac) on purpose (ruling 8, P4): isGobInstExist (0x71005eecd0), seqWaitToFadeOutOfGobInst (0x71005efcb8), canDepopGobInst (0x71005efd78) and
+    // disposeGobInsts (0x71005ef3f4) have the sum as add(e1, e0), add(acc, e2), cmn(acc, e3). The call to getGobInstNum (loop over the index, or over a pointer) inlines with the same instruction
+    // counts (isGobInstExist 58, seqWaitToFadeOutOfGobInst 48, canDepopGobInst 87, disposeGobInsts 237) but with add(e0, e1) and cmn(e3, acc) (operand order only); the written-out sum matches all
+    // four. getGobInstNum itself and its other callers (validateDisp, removeGobInst, reqForcePopGobInst) match with the loop.
+    int unknown001() const { return unknown08[0].unknown001() + unknown08[1].unknown001() + unknown08[2].unknown001() + unknown08[3].unknown001(); }
     bool isPopFinished() const;
     void removeGobInst(gf::GF_OBJ_HANDLE *handle, bool isDead);
     void removeDefeatedNamedEnemyInfo();
@@ -163,6 +169,7 @@ public:
   GmkEnemyInsts();
   ~GmkEnemyInsts() { dispose(); }
   bool isPopFinished() const;
+  bool isGobInstExist() const;
   void validateDisp(gf::GF_OBJ_HANDLE *handle) const;
   void validateDisp() const;
   bool reqForcePopGobInst(const ForcePopEnemyInfo &info) const;
@@ -171,6 +178,8 @@ public:
   gf::GF_OBJ_HANDLE *getGobInst(u32 index) const;
   void update(const UpdateInfo &info);
   void seqUpdatePopDepop(const UpdateInfo &info);
+  void seqWaitToFadeOutOfGobInst(const UpdateInfo &info);
+  bool canDepopGobInst() const;
   void removeGobInst(gf::GF_OBJ_HANDLE *handle);
   void disposeGobInsts(bool isFadeOut, bool isCheckBattle);
   bool reqClearRepopCounter() const;

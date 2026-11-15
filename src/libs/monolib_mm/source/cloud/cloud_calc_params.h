@@ -74,33 +74,53 @@ public:
   bool unknown1a0; // Inferred role: original member name unknown.
   u8 _1a1[0x1b8 - 0x1a1];
   mm::Col3 unknown1b8[2]; // Inferred role: plane cols; original member name unknown.
-  u8 _1d0[0x2fc - 0x1d0];
-  f32 unknown2fc; // Inferred role: sky color; original member name unknown.
-  f32 unknown300; // Inferred role: sky color; original member name unknown.
-  f32 unknown304; // Inferred role: sky color; original member name unknown.
-  f32 unknown308; // Inferred role: sky color; original member name unknown.
-  f32 unknown30c; // Inferred role: sky color; original member name unknown.
-  f32 unknown310; // Inferred role: sky color; original member name unknown.
-  u8 _314[0x318 - 0x314];
-  f32 unknown318; // Inferred role: sky height; original member name unknown.
-  f32 unknown31c; // Inferred role: sky height range; original member name unknown.
-  u8 _320[0x32c - 0x320];
-  f32 unknown32c; // Inferred role: detail uniform color; original member name unknown.
-  f32 unknown330; // Inferred role: detail uniform color; original member name unknown.
-  f32 unknown334; // Inferred role: detail uniform color; original member name unknown.
-  u8 _338[0x340 - 0x338];
-  f32 unknown340; // Inferred role: sky scale; original member name unknown.
-  f32 unknown344; // Inferred role: sky scale; original member name unknown.
-  f32 unknown348; // Inferred role: sky parameter; original member name unknown.
-  f32 unknown34c; // Inferred role: sky parameter; original member name unknown.
-  u8 _350[0x360 - 0x350];
+  f32 unknown1d0;         // Inferred role: cloud color blended by updateCloudParams; original member name unknown.
+  f32 unknown1d4;         // Inferred role: cloud color blended by updateCloudParams; original member name unknown.
+  f32 unknown1d8;         // Inferred role: cloud color copied by updateCloudParams (version 0x1001); original member name unknown.
+  f32 unknown1dc;         // Inferred role: cloud color blended by updateCloudParams; original member name unknown.
+  f32 unknown1e0[20];     // Inferred role: cloud colors blended by updateCloudParams; original member name unknown.
+  f32 unknown230[8];      // Inferred role: cloud colors copied by updateCloudParams (version 0x1001); original member name unknown.
+  u8 _250[0x254 - 0x250];
+  f32 unknown254[6];  // Inferred role: cloud colors blended by updateCloudParams; original member name unknown.
+  f32 unknown26c;     // Inferred role: cloud color blended by updateCloudParams; original member name unknown.
+  f32 unknown270;     // Inferred role: cloud color blended by updateCloudParams; original member name unknown.
+  f32 unknown274;     // Inferred role: cloud color copied by updateCloudParams; original member name unknown.
+  f32 unknown278;     // Inferred role: cloud color blended by updateCloudParams; original member name unknown.
+  f32 unknown27c[20]; // Inferred role: cloud colors blended by updateCloudParams; original member name unknown.
+  u8 _2cc[0x2f0 - 0x2cc];
+  f32 unknown2f0[3]; // Inferred role: cloud colors blended by updateCloudParams; original member name unknown.
+  f32 unknown2fc;    // Inferred role: sky color; original member name unknown.
+  f32 unknown300;    // Inferred role: sky color; original member name unknown.
+  f32 unknown304;    // Inferred role: sky color; original member name unknown.
+  f32 unknown308;    // Inferred role: sky color; original member name unknown.
+  f32 unknown30c;    // Inferred role: sky color; original member name unknown.
+  f32 unknown310;    // Inferred role: sky color; original member name unknown.
+  f32 unknown314;    // Inferred role: sky color copied by updateCloudParams (version 0x1001); original member name unknown.
+  f32 unknown318;    // Inferred role: sky height; original member name unknown.
+  f32 unknown31c;    // Inferred role: sky height range; original member name unknown.
+  f32 unknown320;    // Inferred role: sky color blended by updateCloudParams; original member name unknown.
+  f32 unknown324;    // Inferred role: sky color blended by updateCloudParams; original member name unknown.
+  f32 unknown328;    // Inferred role: sky color blended by updateCloudParams; original member name unknown.
+  f32 unknown32c;    // Inferred role: detail uniform color; original member name unknown.
+  f32 unknown330;    // Inferred role: detail uniform color; original member name unknown.
+  f32 unknown334;    // Inferred role: detail uniform color; original member name unknown.
+  f32 unknown338;    // Inferred role: sky parameter blended by updateCloudParams; original member name unknown.
+  f32 unknown33c;    // Inferred role: sky parameter blended by updateCloudParams; original member name unknown.
+  f32 unknown340;    // Inferred role: sky scale; original member name unknown.
+  f32 unknown344;    // Inferred role: sky scale; original member name unknown.
+  f32 unknown348;    // Inferred role: sky parameter; original member name unknown.
+  f32 unknown34c;    // Inferred role: sky parameter; original member name unknown.
+  f32 unknown350;    // Inferred role: sky parameter blended by updateCloudParams; original member name unknown.
+  f32 unknown354;    // Inferred role: sky parameter blended by updateCloudParams; original member name unknown.
+  u8 _358[0x360 - 0x358];
   f32 unknown360; // Inferred role: model color; original member name unknown.
   f32 unknown364; // Inferred role: model color; original member name unknown.
   f32 unknown368; // Inferred role: model color; original member name unknown.
   f32 unknown36c; // Inferred role: model color; original member name unknown.
   f32 unknown370; // Inferred role: model color; original member name unknown.
   f32 unknown374; // Inferred role: model color; original member name unknown.
-  u8 _378[0x380 - 0x378];
+  f32 unknown378; // Inferred role: model color blended by updateCloudParams; original member name unknown.
+  f32 unknown37c; // Inferred role: model color blended by updateCloudParams; original member name unknown.
   f32 unknown380; // Inferred role: original member name unknown.
   f32 unknown384; // Inferred role: original member name unknown.
   u8 _388[0x3cc - 0x388];
@@ -144,6 +164,29 @@ static_assert(offsetof(CloudCalcParams, unknown188) == 0x188, "");
 static_assert(offsetof(CloudCalcParams, unknown194) == 0x194, "");
 static_assert(offsetof(CloudCalcParams, unknown19c) == 0x19c, "");
 static_assert(offsetof(CloudCalcParams, unknown1b8) == 0x1b8, "");
+static_assert(offsetof(CloudCalcParams, unknown1d0) == 0x1d0, "");
+static_assert(offsetof(CloudCalcParams, unknown1d4) == 0x1d4, "");
+static_assert(offsetof(CloudCalcParams, unknown1d8) == 0x1d8, "");
+static_assert(offsetof(CloudCalcParams, unknown1dc) == 0x1dc, "");
+static_assert(offsetof(CloudCalcParams, unknown1e0) == 0x1e0, "");
+static_assert(offsetof(CloudCalcParams, unknown230) == 0x230, "");
+static_assert(offsetof(CloudCalcParams, unknown254) == 0x254, "");
+static_assert(offsetof(CloudCalcParams, unknown26c) == 0x26c, "");
+static_assert(offsetof(CloudCalcParams, unknown270) == 0x270, "");
+static_assert(offsetof(CloudCalcParams, unknown274) == 0x274, "");
+static_assert(offsetof(CloudCalcParams, unknown278) == 0x278, "");
+static_assert(offsetof(CloudCalcParams, unknown27c) == 0x27c, "");
+static_assert(offsetof(CloudCalcParams, unknown2f0) == 0x2f0, "");
+static_assert(offsetof(CloudCalcParams, unknown314) == 0x314, "");
+static_assert(offsetof(CloudCalcParams, unknown320) == 0x320, "");
+static_assert(offsetof(CloudCalcParams, unknown324) == 0x324, "");
+static_assert(offsetof(CloudCalcParams, unknown328) == 0x328, "");
+static_assert(offsetof(CloudCalcParams, unknown338) == 0x338, "");
+static_assert(offsetof(CloudCalcParams, unknown33c) == 0x33c, "");
+static_assert(offsetof(CloudCalcParams, unknown350) == 0x350, "");
+static_assert(offsetof(CloudCalcParams, unknown354) == 0x354, "");
+static_assert(offsetof(CloudCalcParams, unknown378) == 0x378, "");
+static_assert(offsetof(CloudCalcParams, unknown37c) == 0x37c, "");
 static_assert(offsetof(CloudCalcParams, unknown2fc) == 0x2fc, "");
 static_assert(offsetof(CloudCalcParams, unknown318) == 0x318, "");
 static_assert(offsetof(CloudCalcParams, unknown32c) == 0x32c, "");

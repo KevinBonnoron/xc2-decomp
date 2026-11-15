@@ -142,6 +142,29 @@ void DrResMdoTexList::update() {
   unknown6c &= ~0x30000;
 }
 
+void DrResMdoTexList::texStmUpdate() {
+  if (unknown6c & 0x8000) {
+    if (!(unknown6c & 0x10000)) {
+      unknown58->setUseMode(DrCalcStmListObj::DR_TEX_USE_MODE_UNKNOWN_0);
+    } else if (!(unknown6c & 0x20000)) {
+      unknown58->setUseMode(DrCalcStmListObj::DR_TEX_USE_MODE_UNKNOWN_1);
+    } else {
+      unknown58->setUseMode(DrCalcStmListObj::DR_TEX_USE_MODE_UNKNOWN_2);
+    }
+    if (unknown58->isResSub() && (unknown58->unknown80 & 0x400)) {
+      unknown035 *lowTex = unknown58->getResLowTexObj();
+      if (lowTex->unknown10 & 1) {
+        changeCallTexMemTexList(unknown80, lowTex->unknown00);
+      }
+    }
+    if (unknown58->isResTex()) {
+      unknown70 = 2;
+    } else {
+      unknown70 = 1;
+    }
+  }
+}
+
 void DrResMdoTexList::callStmRead(int mode) {
   if (mode != 0) {
     unknown6c |= 0x10000;
@@ -161,25 +184,16 @@ void DrResMdoTexList::changeCallTexMemTexList(const u8 *texHeader, const u8 *tex
   u32 size = infos[unknown68 - 1].unknown08 - infos[0].unknown08 + infos[unknown68 - 1].unknown04;
   size += -size & 0xfff;
   unknown28.setupBuffer(const_cast<u8 *>(texData) + infos[0].unknown08, size);
-  for (int i = 0; i < unknown68; i++) {
-    grlib::CGLibTexture::changeTextureImagePtrs(unknown20[i], infos[i].unknown04, unknown28, infos[i].unknown08 - firstOffset);
+  // The entries are walked with a pointer: of the loop forms tried (index, locals, while, unsigned counter) it is the one that gives the game's
+  // order of the counters once this function is inlined into texStmUpdate (0x710088dae4) and changeMemTexList (0x710088ddb8) as well as
+  // standing alone (0x710088dc54).
+  const unknown092 *info = infos;
+  for (int i = 0; i < unknown68; i++, info++) {
+    grlib::CGLibTexture::changeTextureImagePtrs(unknown20[i], info->unknown04, unknown28, info->unknown08 - firstOffset);
   }
 }
 
-void DrResMdoTexList::changeMemTexList(const u8 *texData) {
-  unknown80 = texData;
-  unknown88 = texData;
-  const MdsTexHeader *header = reinterpret_cast<const MdsTexHeader *>(texData);
-  const unknown092 *infos = reinterpret_cast<const unknown092 *>(texData + header->infoOffset);
-  u32 firstOffset = infos[0].unknown08;
-  unknown6c |= 0x20;
-  u32 size = infos[unknown68 - 1].unknown08 - infos[0].unknown08 + infos[unknown68 - 1].unknown04;
-  size += -size & 0xfff;
-  unknown28.setupBuffer(const_cast<u8 *>(texData) + infos[0].unknown08, size);
-  for (int i = 0; i < unknown68; i++) {
-    grlib::CGLibTexture::changeTextureImagePtrs(unknown20[i], infos[i].unknown04, unknown28, infos[i].unknown08 - firstOffset);
-  }
-}
+void DrResMdoTexList::changeMemTexList(const u8 *texData) { changeCallTexMemTexList(texData, texData); }
 
 grlib::CGLibTextureBuffer *DrResMdoTexList::getTexObj(u32 index) { return &unknown20[index]; }
 

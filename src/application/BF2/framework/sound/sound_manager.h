@@ -120,6 +120,7 @@ public:
   SoundPack *findPack(const char *name, mm::mtl::IAllocator *allocator);
   u32 playSe(const char *name, SoundPack *pack, f32 volume, SoundCategory category);
   u32 playSe(u32 id, SoundPack *pack, f32 volume, SoundCategory category);
+  u32 playSeEx(const SoundPlayInfo &info, SoundResult &result);
   void stopSe(u32 handle, f32 time);
   u32 findSe(const char *name) const;
   u32 getSoundType(u32 handle) const;

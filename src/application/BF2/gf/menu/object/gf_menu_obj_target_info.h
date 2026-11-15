@@ -47,13 +47,12 @@ public:
     GF_OBJ_HANDLE *unknown00; // Inferred role: gimmick object; original member name unknown.
     u8 _08[0x10 - 0x08];
     MenuOffset unknown10; // Inferred role: offset; original member name unknown.
-    u8 _28[0x30 - 0x28];
-    u8 *unknown30;  // Inferred role: bdat of the gimmick names; original member name unknown.
-    u32 unknown38;  // Inferred role: name id; original member name unknown.
-    bool unknown3c; // Inferred role: shows the name; original member name unknown.
-    u32 unknown40;  // Inferred role: kind of the display, 0 salvage point, 1 kizuna talk, 2 collection; original member name unknown.
-    u8 *unknown48;  // Inferred role: bdat of the salvage point names; original member name unknown.
-    u32 unknown50;  // Inferred role: salvage point name id; original member name unknown.
+    u8 *unknown30;        // Inferred role: bdat of the gimmick names; original member name unknown.
+    u32 unknown38;        // Inferred role: name id; original member name unknown.
+    bool unknown3c;       // Inferred role: shows the name; original member name unknown.
+    u32 unknown40;        // Inferred role: kind of the display, 0 salvage point, 1 kizuna talk, 2 collection; original member name unknown.
+    u8 *unknown48;        // Inferred role: bdat of the salvage point names; original member name unknown.
+    u32 unknown50;        // Inferred role: salvage point name id; original member name unknown.
     u8 _54[0x60 - 0x54];
   };
 
@@ -63,7 +62,6 @@ public:
     GF_OBJ_HANDLE *unknown00; // Inferred role: enemy object; original member name unknown.
     u8 _08[0x10 - 0x08];
     MenuOffset unknown10; // Inferred role: offset; original member name unknown.
-    u8 _28[0x30 - 0x28];
   };
 
   // Layout from openOther (1.0.0: 0x71004dc238), which builds it on the stack from its OpenOtherParam before openSymbol; the 0x50 byte
@@ -72,12 +70,11 @@ public:
     GF_OBJ_HANDLE *unknown00; // Inferred role: gimmick object; original member name unknown.
     u8 _08[0x10 - 0x08];
     MenuOffset unknown10; // Inferred role: offset; original member name unknown.
-    u8 _28[0x30 - 0x28];
-    u8 *unknown30; // Inferred role: bdat of the gimmick names; original member name unknown.
-    u32 unknown38; // Inferred role: name id; original member name unknown.
-    u8 *unknown40; // Inferred role: bdat of the point names; original member name unknown.
-    u32 unknown48; // Inferred role: point name id; original member name unknown.
-    u32 unknown4c; // Inferred role: icon image index; original member name unknown.
+    u8 *unknown30;        // Inferred role: bdat of the gimmick names; original member name unknown.
+    u32 unknown38;        // Inferred role: name id; original member name unknown.
+    u8 *unknown40;        // Inferred role: bdat of the point names; original member name unknown.
+    u32 unknown48;        // Inferred role: point name id; original member name unknown.
+    u32 unknown4c;        // Inferred role: icon image index; original member name unknown.
   };
 
   GfMenuObjTargetInfo(u32 handle);

@@ -48,10 +48,9 @@ public:
   void seqWaitToCreateCurMapGmkSet(f32 deltaTime);
   void seqWaitToCreateGmkSet(f32 deltaTime);
 
-  int unknown00;                              // Inferred role: map; original member name unknown.
-  int unknown04;                              // Inferred role: map of the area; original member name unknown.
-  mm::Vec3 unknown10;                         // Inferred role: area minimum; original member name unknown.
-  mm::Vec3 unknown20;                         // Inferred role: area maximum; original member name unknown.
+  // The first four members are those of CreateInfo: the constructor gives them its default values, and GfMenuObjWorldMap::initialize copies them
+  // with the implicit CreateInfo assignment (one 64-bit load and store for the two ints, 0x71004e6a68, then the two vectors component by component).
+  CreateInfo unknown00;                       // Inferred role: map, map of the area and area bounds that the atlas was created with; original member name unknown.
   mm::mtl::Vector<BdatInfo> unknown30;        // Inferred role: level bdat infos; original member name unknown.
   int unknown58;                              // Inferred role: first level bdat id; original member name unknown.
   gmk::GmkSet *unknown60;                     // Inferred role: gimmick set of the locators; original member name unknown.
@@ -60,8 +59,9 @@ public:
   void (GfGmkLocatorAtlas::*unknown438)(f32); // Inferred role: seq; original member name unknown.
 };
 
-static_assert(offsetof(GfGmkLocatorAtlas, unknown10) == 0x10, "");
-static_assert(offsetof(GfGmkLocatorAtlas, unknown20) == 0x20, "");
+static_assert(offsetof(GfGmkLocatorAtlas::CreateInfo, unknown10) == 0x10, "");
+static_assert(offsetof(GfGmkLocatorAtlas::CreateInfo, unknown20) == 0x20, "");
+static_assert(sizeof(GfGmkLocatorAtlas::CreateInfo) == 0x30, "");
 static_assert(offsetof(GfGmkLocatorAtlas, unknown30) == 0x30, "");
 static_assert(offsetof(GfGmkLocatorAtlas, unknown58) == 0x58, "");
 static_assert(offsetof(GfGmkLocatorAtlas, unknown60) == 0x60, "");

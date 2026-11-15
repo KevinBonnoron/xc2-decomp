@@ -3,6 +3,7 @@
 #include "gf/gf_allocator.h"
 #include "gf/menu/adapter/gf_menu_gfobj_adapter.h"
 #include "gf/menu/adapter/gf_menu_pos_adapter.h"
+#include "gf/menu/adapter/gf_menu_shop_adapter.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
@@ -256,6 +257,89 @@ void GfMenuObjTargetInfo::SymbolListener::reciveEvent(const ui::EventData &event
   default:
     ui::UIObjectListener::reciveEvent(event, handle);
     break;
+  }
+}
+
+void GfMenuObjTargetInfo::openOther(GfMenuCallContext *context, const OpenOtherParam &param) {
+  if (param.unknown3c) {
+    OpenSymbolParam symbolParam;
+    symbolParam.unknown30 = param.unknown30;
+    symbolParam.unknown38 = param.unknown38;
+    symbolParam.unknown40 = param.unknown48;
+    symbolParam.unknown48 = param.unknown50;
+    symbolParam.unknown00 = param.unknown00;
+    symbolParam.unknown10 = param.unknown10;
+    symbolParam.unknown4c = param.unknown40;
+    openSymbol(context, symbolParam);
+    return;
+  }
+  ui::UIObjectAcc root(GfMenuObject::getAttachedObject(0xd));
+  if (root.isValid() && !root.isTerm()) {
+    ui::UIObjectAcc main(root.duplicateChild("LAY_other_main"));
+    if (main.isValid()) {
+      {
+        ui::UIObjectAcc acc(main.unknown10);
+        if (acc.isValid()) {
+          GfMenuPosAdapter::create(acc.unknown10, param.unknown00, &param.unknown10)->setPosOffsMode(1);
+          GfMenuGfObjAdapter *adapter = GfMenuGfObjAdapter::create(acc.unknown10, 3, param.unknown00, true);
+          adapter->setDispFadeMode(0.25f);
+          adapter->setDispSuspendMode(true);
+        }
+      }
+      {
+        ui::UIObjectAcc info(main.searchChild("LAY_other_info"));
+        if (info.isValid()) {
+          GfMenuGfObjAdapter::create(info.unknown10, 2, param.unknown00, true)->setDispFadeMode(0.25f);
+        }
+        ui::UIObjectAcc base(main.searchChild("IMG_other_base"));
+        if (base.isValid()) {
+          GfMenuGfObjAdapter *adapter = GfMenuGfObjAdapter::create(base.unknown10, 2, param.unknown00, true);
+          adapter->setDispReverseMode(true);
+          adapter->setDispFadeMode(0.25f);
+        }
+        ui::UIObjectAcc active(main.searchChild("IMG_other_active"));
+        if (active.isValid()) {
+          GfMenuGfObjAdapter::create(active.unknown10, 6, param.unknown00, true)->setDispReverseMode(true);
+          {
+            ui::UIObjectAcc name(main.unknown10, "TXT_other_name");
+            GfMenuObjUtil::createSyncPlugin(name.unknown10, active.unknown10, 0x20);
+          }
+          ui::UIObjectAcc access(main.searchChild("IMG_other_access"));
+          if (access.isValid()) {
+            GfMenuGfObjAdapter::create(access.unknown10, 6, param.unknown00, true);
+            GfMenuObjUtil::createSyncPlugin(access.unknown10, active.unknown10, 1);
+            ui::UIObjectAcc name(main.unknown10, "TXT_other_name_access");
+            GfMenuObjUtil::createSyncPlugin(name.unknown10, access.unknown10, 0x20);
+          }
+        }
+      }
+      if (param.unknown30 != nullptr && param.unknown38 != 0) {
+        ui::UIObjectAcc name(main.unknown10, "TXT_other_name");
+        ui::UIObjectAcc nameAccess(main.unknown10, "TXT_other_name_access");
+        name.setText(ui::UIStr(param.unknown30, param.unknown38));
+        name.saveDefColor();
+        nameAccess.setText(ui::UIStr(param.unknown30, param.unknown38));
+        nameAccess.setMulColor(unknown001);
+        nameAccess.setAddColor(unknown002);
+      }
+      if (param.unknown40 != 0) {
+        ui::UIObjectAcc shopName(main.unknown10, "TXT_other_shop_name");
+        ui::UIObjectAcc ownerIcon(main.unknown10, "IMG_other_owner_icon");
+        GfMenuShopAdapter::create(shopName.unknown10, 0, param.unknown40, false);
+        GfMenuShopAdapter::create(ownerIcon.unknown10, 4, param.unknown40, true);
+        GfMenuObjUtil::createDockPlugin(ownerIcon.unknown10, shopName.unknown10, 1, mm::Pnt<s16>(0, 0), 0);
+      } else {
+        main.setDispChild(false, "TXT_other_shop_name");
+      }
+      {
+        ui::UIObjectAcc icon(main.searchChild("IMG_other_icon"));
+        if (icon.isValid()) {
+          GfMenuGfObjAdapter::create(icon.unknown10, 4, param.unknown00, true);
+        }
+      }
+      startOpen(root.unknown10, main.unknown10, 0, 0);
+      GfMenuObject::startCallContext(context, 0xd, main.unknown10);
+    }
   }
 }
 

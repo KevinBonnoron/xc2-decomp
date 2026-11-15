@@ -13,6 +13,13 @@ namespace ml {
 
 DrAPCache *DrAPCache::s_pIns;
 
+DrAPCache::DrAPCache() {
+  s_pIns = this;
+  unknown30 = nullptr;
+  createSampler();
+  begin();
+}
+
 void DrAPCache::begin() {
   unknown10 = DR_AP_CULL_TYPE_UNKNOWN_4;
   unknown08 = -1;

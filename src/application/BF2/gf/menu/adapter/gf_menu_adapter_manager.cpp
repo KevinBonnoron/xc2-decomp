@@ -1,5 +1,6 @@
 #include "gf/menu/adapter/gf_menu_adapter_manager.h"
 
+#include "gf/gf_allocator.h"
 #include "gf/menu/adapter/gf_menu_adapter.h"
 #include "ui/ui_object_plugin.h"
 
@@ -34,6 +35,12 @@ GfMenuAdapterManager::~GfMenuAdapterManager() {
   }
   unknown80.clear();
 }
+
+// The constructor never reads param, so the game never sets x1 for it (tail call at 0x710039793c): the compiler
+// erased the argument (ruling 2026-11-13 #6); the original expression cannot be checked, param is the plausible one.
+// __LINE__ must be 90 as in the original file: it is the line argument of operator new.
+#line 90
+void GfMenuAdapterManager::build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfMenuAdapterManager(param); }
 
 void GfMenuAdapterManager::destroy() { delete get(); }
 

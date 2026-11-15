@@ -1,7 +1,5 @@
 #include "gf/object/component/pc/gf_pc_ai_agent_field.h"
 
-#include <math.h>
-
 #include "framework/memory/allocator.h"
 #include "framework/message/message_object.h"
 #include "framework/navi/navi_manager.h"
@@ -242,10 +240,7 @@ void AIAgentField::procMsgPcFieldHighJump(fw::MessageObject *sender, MsgPcFieldN
     fw::Transform transform;
     transform.unknown00 = info->unknown10;
     f32 angle = info->unknown20 * 0.5f;
-    transform.unknown10.y = sinf(angle);
-    transform.unknown10.w = cosf(angle);
-    transform.unknown10.x = 0.0f;
-    transform.unknown10.z = 0.0f;
+    transform.unknown10.unknown001(angle);
     GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
     MsgPcFieldNotifyBigJump bigJump;
     bigJump = *info;
@@ -267,10 +262,7 @@ void AIAgentField::procMsgPcFieldNotifyWaterWarp(fw::MessageObject *sender, MsgP
     fw::Transform transform;
     transform.unknown00 = info->unknown10;
     f32 angle = info->unknown20 * 0.5f;
-    transform.unknown10.y = sinf(angle);
-    transform.unknown10.w = cosf(angle);
-    transform.unknown10.x = 0.0f;
-    transform.unknown10.z = 0.0f;
+    transform.unknown10.unknown001(angle);
     GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
     MsgPcFieldNotifyWarp warp;
     warp = *info;
@@ -292,10 +284,7 @@ void AIAgentField::procMsgPcFieldNotifyWaterWarpBuddy(fw::MessageObject *sender,
     fw::Transform transform;
     transform.unknown00 = info->unknown10;
     f32 angle = info->unknown20 * 0.5f;
-    transform.unknown10.y = sinf(angle);
-    transform.unknown10.w = cosf(angle);
-    transform.unknown10.x = 0.0f;
-    transform.unknown10.z = 0.0f;
+    transform.unknown10.unknown001(angle);
     GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
     MsgPcFieldNotifyWarp warp;
     warp = *info;

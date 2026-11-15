@@ -168,9 +168,7 @@ void GfAutoTalk::createMenuObj() {
     GfMenuBdat::getMenuOffset(static_cast<u16>(Bdat::getValCheck(GfDataBdat::getFP(BDAT_RSC_MOB_LIST), "OffsetID", mobId, gmk::BDAT_TYPE_UNKNOWN_2)), param.unknown30);
   } else {
     param.unknown30.unknown10 = nullptr;
-    param.unknown30.unknown00 = mm::Vec3::zero.x;
-    param.unknown30.unknown04 = mm::Vec3::zero.y;
-    param.unknown30.unknown08 = mm::Vec3::zero.z;
+    param.unknown30.unknown00 = mm::Vec3::zero;
   }
   GfMenuObjBalloon::openAutoTalk(unknown78, param);
 }

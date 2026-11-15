@@ -32,6 +32,7 @@
 #include "gf/data/gf_data_mercenaries.h"
 #include "gf/data/gf_data_nanakoori.h"
 #include "gf/data/gf_data_param_acc.h"
+#include "gf/data/gf_data_party.h"
 #include "gf/data/gf_data_util.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/data/gf_item_handle.h"
@@ -40,6 +41,7 @@
 #include "gf/field/gf_field_exec_cmd_turn.h"
 #include "gf/field/gf_field_gimmick.h"
 #include "gf/field/gf_field_manager.h"
+#include "gf/field/gf_field_time.h"
 #include "gf/field/gf_field_weather.h"
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
@@ -1987,6 +1989,240 @@ void GfGameUtil::setMaxPartyGauge() {
 }
 
 GF_OBJ_HANDLE *GfGameUtil::getBlade(GF_OBJ_HANDLE *handle) { return GfMountManager::getHandle(handle, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_3); }
+
+// Inferred helper: copies one game flag of a size from one save game to another; original name unknown (inlined in GfGameUtil::setupNewGameParam, 0x7100351354).
+static void unknown039(SDataGame &dst, const SDataGame &src, u32 size, int flag) { GfGameFlag::setLocal(dst.unknownfbbc4, size, flag, GfGameFlag::getLocal(src.unknownfbbc4, size, flag)); }
+
+// Inferred helper: copies the game flags of a size from first up to last (excluded), the loops of 0x71003517e4 starting at the first flag; original name unknown.
+static void unknown040(SDataGame &dst, const SDataGame &src, u32 size, int first, int last) {
+  for (int flag = first; flag < last; flag++) {
+    unknown039(dst, src, size, flag);
+  }
+}
+
+// Inferred helper: copies count game flags of a size from a base flag, the loops of 0x7100351370 that add the base to a counter; original name unknown.
+static void unknown041(SDataGame &dst, const SDataGame &src, u32 size, int base, int count) {
+  for (int i = 0; i < count; i++) {
+    unknown039(dst, src, size, base + i);
+  }
+}
+
+// Inferred role: tells the blades whose driver and activation setupNewGameParam resets (the bit test of mask 0x27f7 at 0x710035273c, 0x7100352788, 0x71003527d8 and 0x7100352a00); original name
+// unknown.
+static bool unknown042(u32 blade) {
+  switch (blade) {
+  case BLADE_HOMURA:
+  case BLADE_HIKARI:
+  case BLADE_HOMURI:
+  case BLADE_UNKNOWN_1005:
+  case BLADE_UNKNOWN_1006:
+  case BLADE_UNKNOWN_1007:
+  case BLADE_SUZAKU:
+  case BLADE_KAGUTSUCHI:
+  case BLADE_SAIKA:
+  case BLADE_UNKNOWN_1011:
+  case BLADE_WADATSUMI:
+    return true;
+  default:
+    return false;
+  }
+}
+
+// Inferred name; kept as an exception to the unknown-name rule (AGENTS.md): single-user helper whose existence only the match proves; rename if a sibling build gives a symbol.
+// Takes a blade out of the set of its driver and moves the selected slot of the driver to its first other blade (inlined in GfGameUtil::setupNewGameParam at 0x7100352a48).
+// Forms tried without the helper: the same body inlined in the loop with `break` and the end of the search re-tested (1708 instructions against the game's 1705), the same body with `goto`
+// (matches, but gotos are not accepted).
+static void removeFromDriverSet(SDataBlade &dataBlade, u32 blade) {
+  if (dataBlade.unknown04 != 0) {
+    SDataDriver &dataDriver = GfDataDriver::getSDataDriver(dataBlade.unknown04);
+    for (int slot = 0; slot < GfDataDriver::getMaxSetBladeNum(dataBlade.unknown04); slot++) {
+      if (dataDriver.unknown26[slot] == blade) {
+        dataDriver.unknown26[slot] = 0;
+        if (dataDriver.unknown24 == slot) {
+          for (int next = 0; next < GfDataDriver::getMaxSetBladeNum(dataBlade.unknown04); next++) {
+            if (dataDriver.unknown26[next] != 0) {
+              dataDriver.unknown24 = next;
+              return;
+            }
+          }
+          dataDriver.unknown24 = -1;
+        }
+        return;
+      }
+    }
+  }
+}
+
+// Inferred role: blades of the new game, read by GfGameUtil::setupNewGameParam from the rodata at 0x7100f6ab54; original name unknown.
+static const u16 unknown044[12] = {BLADE_HOMURA,
+                                   BLADE_HIKARI,
+                                   BLADE_HOMURI,
+                                   BLADE_BYAKKO,
+                                   BLADE_SUZAKU,
+                                   BLADE_KAGUTSUCHI,
+                                   BLADE_SAIKA,
+                                   BLADE_UNKNOWN_1005,
+                                   BLADE_UNKNOWN_1006,
+                                   BLADE_UNKNOWN_1007,
+                                   BLADE_UNKNOWN_1011,
+                                   BLADE_WADATSUMI};
+
+void GfGameUtil::setupNewGameParam(const SDataGame &dataGame) {
+  SDataGame *currentGame = GfDataManager::getDataGame();
+  currentGame->unknown2c = dataGame.unknown2c;
+  currentGame->unknown5a2c = dataGame.unknown5a2c;
+  currentGame->unknown10ad4c = dataGame.unknown10ad4c;
+  currentGame->unknown10ad48 = dataGame.unknown10ad48;
+  currentGame->unknown10ae7e = dataGame.unknown10ae7e;
+  currentGame->unknown109b28 = dataGame.unknown109b28;
+  currentGame->unknown10ae7c = dataGame.unknown10ae7c;
+  currentGame->unknown10ae78 = dataGame.unknown10ae78;
+  currentGame->unknown10ae74 = dataGame.unknown10ae74;
+  currentGame->unknown10ad70 = dataGame.unknown10ad70;
+  currentGame->unknown109b2c = dataGame.unknown109b2c;
+  currentGame->unknown10ad3c = dataGame.unknown10ad3c;
+  currentGame->unknown1098c0 = dataGame.unknown1098c0;
+  currentGame->unknowne98d8 = dataGame.unknowne98d8;
+  currentGame->unknown10ad74 = dataGame.unknown10ad74;
+  currentGame->unknown10ad40 = dataGame.unknown10ad40;
+  currentGame->unknown10ad44 = dataGame.unknown10ad44;
+  currentGame->unknown10ad54 = dataGame.unknown10ad54;
+  currentGame->unknown10ae80 = dataGame.unknown10ae80;
+  currentGame->unknown00 = dataGame.unknown00;
+  currentGame->unknown1098c4 = dataGame.unknown1098c4;
+  currentGame->unknown10ad50 = dataGame.unknown10ad50;
+  currentGame->unknown10ad68 = dataGame.unknown10ad68;
+  currentGame->unknown109b30 = dataGame.unknown109b30;
+  currentGame->unknown24 = dataGame.unknown24;
+  // The game flag ranges copied from the save game. The numbers are indices into the flags of one width (the first argument, in bits), not the ids GfGameFlag::getFlag takes, and the game gives them
+  // no name. Each range is a loop of its own in the game, some with a base and a count and the others with a first and a last index (unknown041, unknown040): a table of ranges walked by one loop
+  // would give a single loop, so the calls stay written out (ruling 8; the quality gate reports the repeated statements).
+  unknown039(*currentGame, dataGame, 1, 0xbdcd);
+  unknown041(*currentGame, dataGame, 1, 0xd651, 300);
+  unknown041(*currentGame, dataGame, 1, 0xd588, 200);
+  unknown041(*currentGame, dataGame, 1, 0xc775, 100);
+  unknown041(*currentGame, dataGame, 1, 0xc710, 100);
+  unknown041(*currentGame, dataGame, 1, 0xc25e, 200);
+  unknown041(*currentGame, dataGame, 1, 0xc1b8, 64);
+  unknown041(*currentGame, dataGame, 1, 0xbdcf, 1000);
+  unknown041(*currentGame, dataGame, 1, 0xb78b, 100);
+  unknown041(*currentGame, dataGame, 1, 0x9fad, 1000);
+  unknown041(*currentGame, dataGame, 1, 0x9bc4, 1000);
+  unknown041(*currentGame, dataGame, 1, 0x9a97, 300);
+  unknown041(*currentGame, dataGame, 1, 0x8a5f, 2000);
+  unknown041(*currentGame, dataGame, 1, 0x88cd, 300);
+  unknown041(*currentGame, dataGame, 1, 0x7129, 50);
+  unknown041(*currentGame, dataGame, 1, 0x33d2, 100);
+  unknown041(*currentGame, dataGame, 1, 0x32d1, 256);
+  unknown041(*currentGame, dataGame, 1, 0x2f4a, 200);
+  unknown041(*currentGame, dataGame, 1, 0x16ac, 6000);
+  unknown041(*currentGame, dataGame, 1, 0x11fb, 1200);
+  unknown040(*currentGame, dataGame, 1, 0xfa2, 0x11fa);
+  unknown040(*currentGame, dataGame, 1, 0x1, 0xfa1);
+  unknown041(*currentGame, dataGame, 2, 0xe91a, 1000);
+  unknown040(*currentGame, dataGame, 2, 0xc209, 0xe919);
+  unknown040(*currentGame, dataGame, 2, 0x9af8, 0xc208);
+  unknown041(*currentGame, dataGame, 2, 0x8ce6, 2000);
+  unknown041(*currentGame, dataGame, 2, 0x8bb9, 300);
+  unknown041(*currentGame, dataGame, 2, 0x89c4, 500);
+  unknown041(*currentGame, dataGame, 2, 0x87cf, 500);
+  unknown041(*currentGame, dataGame, 2, 0x40fc, 15000);
+  unknown041(*currentGame, dataGame, 2, 0x663, 15000);
+  unknown040(*currentGame, dataGame, 2, 0x27a, 0x662);
+  unknown040(*currentGame, dataGame, 2, 0x25b, 0x279);
+  unknown040(*currentGame, dataGame, 4, 0x27b, 0x28b);
+  unknown040(*currentGame, dataGame, 4, 0x205, 0x20a);
+  unknown039(*currentGame, dataGame, 4, 0x1);
+  unknown040(*currentGame, dataGame, 4, 0x5, 0x1f9);
+  unknown040(*currentGame, dataGame, 8, 0xf8d, 0xf9d);
+  unknown040(*currentGame, dataGame, 8, 0x12, 0x5ee);
+  unknown040(*currentGame, dataGame, 8, 0x5ef, 0x847);
+  unknown040(*currentGame, dataGame, 16, 0x763, 0xb4b);
+  unknown039(*currentGame, dataGame, 16, 0x60b);
+  unknown040(*currentGame, dataGame, 16, 0x2e, 0x60a);
+  unknown040(*currentGame, dataGame, 16, 0x28, 0x2d);
+  unknown040(*currentGame, dataGame, 16, 0x22, 0x27);
+  unknown040(*currentGame, dataGame, 16, 0x1c, 0x21);
+  unknown040(*currentGame, dataGame, 16, 0x16, 0x1b);
+  unknown040(*currentGame, dataGame, 16, 0x5, 0x15);
+  unknown039(*currentGame, dataGame, 16, 0x3);
+  unknown040(*currentGame, dataGame, 32, 0x915, 0xcfd);
+  unknown040(*currentGame, dataGame, 32, 0x52c, 0x914);
+  unknown040(*currentGame, dataGame, 32, 0x143, 0x52b);
+  unknown040(*currentGame, dataGame, 32, 0x102, 0x142);
+  unknown040(*currentGame, dataGame, 32, 0x1, 0x101);
+  unknown039(*currentGame, dataGame, 1, 0x89fc);
+  unknown040(*currentGame, dataGame, 1, 0x89ff, 0x8a04);
+  unknown039(*currentGame, dataGame, 1, 0xc3de);
+  unknown039(*currentGame, dataGame, 1, 0xc3e9);
+  unknown039(*currentGame, dataGame, 1, 0xc400);
+  unknown039(*currentGame, dataGame, 1, 0xc40b);
+  unknown039(*currentGame, dataGame, 1, 0xc410);
+  unknown041(*currentGame, dataGame, 1, 0xc430, 29);
+  unknown040(*currentGame, dataGame, 1, 0xc44e, 0xc451);
+  unknown039(*currentGame, dataGame, 1, 0xc4a2);
+  unknown040(*currentGame, dataGame, 1, 0xc4d6, 0xc4d8);
+  unknown039(*currentGame, dataGame, 1, 0xc51c);
+  unknown040(*currentGame, dataGame, 1, 0xc559, 0xc55d);
+  unknown039(*currentGame, dataGame, 8, 0x84e);
+  unknown040(*currentGame, dataGame, 8, 0x854, 0x859);
+  unknown040(*currentGame, dataGame, 8, 0x85d, 0x862);
+
+  // The blade list of the first driver is scoped: the game gives it and the list below one stack slot (0x7100352728, 0x71003527c4).
+  {
+    mm::mtl::FixedVector<u16, BLADE_UNKNOWN_422> blades;
+    for (int slot = 0; slot < 3; slot++) {
+      u32 blade = GfDataDriver::getSDataDriver(1).unknown26[slot];
+      if (blade != 0 && !unknown042(blade) && !GfDataBlade::isDummyBlade(blade)) {
+        blades.push_back(blade);
+      }
+    }
+    if (blades.size() != 0) {
+      GfDataParty::getSDataParty()->unknown4e[0] = blades[0];
+      if (blades.size() != 1) {
+        GfDataParty::getSDataParty()->unknown4e[1] = blades[1];
+      }
+    }
+  }
+  GfDataDriver::getSDataDriver(2).unknown20 = 0;
+  GfDataDriver::getSDataDriver(4).unknown20 = 0;
+  GfDataDriver::getSDataDriver(5).unknown20 = 0;
+  GfDataDriver::getSDataDriver(6).unknown20 = 0;
+  GfDataDriver::getSDataDriver(3).unknown20 = 0;
+  for (int slot = 0; slot < GfDataDriver::getMaxSetBladeNum(1); slot++) {
+    u32 setBlade = GfDataDriver::getBlade(1, slot);
+    if (setBlade != 0 && setBlade != BLADE_UNKNOWN_1012) {
+      GfDataDriver::unsetBlade(setBlade);
+    }
+  }
+  GfDataBlade::setCreator(BLADE_SUZAKU, 5);
+  {
+    mm::mtl::FixedVector<u16, BLADE_UNKNOWN_422> blades;
+    for (u32 i = 0; i < 12; i++) {
+      blades.push_back(unknown044[i]);
+    }
+    // 0x412 is the blade id the game tests (BLADE_UNKNOWN_1042 has the same value but another role).
+    for (u32 blade = BLADE_WADATSUMI; blade < 0x412; blade++) {
+      blades.push_back(blade);
+    }
+    for (u32 blade = GfDataBlade::getStartCommonBlade(); blade < GfDataBlade::getEndCommonBlade(); blade++) {
+      blades.push_back(blade);
+    }
+    for (u16 blade : blades) {
+      SDataBlade &dataBlade = GfDataBlade::getSDataBlade(blade);
+      if (unknown042(blade)) {
+        removeFromDriverSet(dataBlade, blade);
+        dataBlade.unknown04 = 0;
+        dataBlade.unknown00 = 0;
+      } else if (dataBlade.unknown00 != 0) {
+        GfDataBlade::setUnselect(blade, true);
+      }
+    }
+  }
+  GfQuestUtil::setupNewGameParam();
+  GfGameMercenaries::setupNewGameParam();
+  GfItemUtil::setupNewGameParam();
+}
 
 bool GfGameUtil::getDriverAcceList(mm::mtl::FixedVector<u16, 16> &drivers) {
   for (u32 driver = DRIVER_UNKNOWN_1; driver <= DRIVER_UNKNOWN_8; driver++) {

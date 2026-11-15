@@ -2,6 +2,7 @@
 #include "gf/data/gf_data_system.h"
 #include "types.h"
 #include <stddef.h>
+#include <string.h>
 
 namespace gf {
 
@@ -37,6 +38,21 @@ static_assert(sizeof(SSoundUiOption) == 0x1e, "");
 
 struct SDataOption {
   SDataOption() : unknown00(SAVE_UNKNOWN_237915), unknown04{0, 0, 0, 0, 0, 0, 0, 1}, _0c() {}
+
+  // Inferred role: sets the option bytes to their defaults and clears the data after them and the sound options, but not the version; original name unknown.
+  // Evidence: the same stores are inline in gf::GfMenuObjOption::initOptionData and in tl::TitleStateMainScreen::checkLoadSlotForDebug (0x7100146fc8, no store at offset 0).
+  void unknown001() {
+    unknown04[6] = 0;
+    unknown04[4] = 0;
+    unknown04[5] = 0;
+    unknown04[0] = false;
+    unknown04[1] = false;
+    unknown04[2] = 0;
+    unknown04[3] = 0;
+    unknown04[7] = true;
+    memset(_0c, 0, sizeof(_0c));
+    unknown4c.clear();
+  }
 
   u32 unknown00;   // Inferred role: version; original member name unknown.
   u8 unknown04[8]; // Eight option bytes from 0x04, compared byte by byte by GfMenuObjOption::MainListener::reciveEvent and written at fixed indices by the option conversions; original member name

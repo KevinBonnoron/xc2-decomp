@@ -125,6 +125,7 @@ public:
   static void setWaterDiveMove(GfComPropertyPc &property, bool isDive);
   static f32 getChildFrameHeight(GfComponent &component);
   static GfPropertyField::WALL_MOVE_MODE decideWallMoveMode(GfComPropertyPc &property);
+  static void setWallMoveMode(GfComBehaviorPc &behavior, bool isWallMove);
   static bool isWallUpMove(GfPropertyField::WALL_MOVE_MODE mode);
   static bool isMovableWall(GfComPropertyPc &property, GfPropertyField::WALL_MOVE_MODE mode);
   static ASM_CMD_ID_FIELD getAsmID(GfPropertyField::WALL_MOVE_MODE mode);

@@ -25,6 +25,7 @@ public:
   void finish();
   void endAttack();
   u32 getBladeId() const;
+  void createBlade();
   bool isEnableAttackMember() const;
   bool isLoading() const;
   s32 getState() const;

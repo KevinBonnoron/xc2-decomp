@@ -1,7 +1,5 @@
 #include "framework/ik/ik_foot_placement_solver.h"
 
-#include <math.h>
-
 #include "anm/anm_foot_placement_ik_solver.h"
 #include "anm/anm_pose.h"
 #include "anm/anm_qs_transform.h"
@@ -73,24 +71,7 @@ f32 FootPlacementIKSolver::getRaycastDown() const {
   return __builtin_fmaxf(height - solver->m_desc.minAnkleHeightMS, 0.0f) + 0.1f;
 }
 
-// Inferred helper: quaternion of three euler angles, as the other fw and gf euler conversions; original name unknown.
-static inline mm::Quat unknown004(const mm::Vec3 &rotation) {
-  mm::Vec3 half = rotation * 0.5f;
-  f32 sinX = sinf(half.x);
-  f32 cosX = cosf(half.x);
-  f32 sinY = sinf(half.y);
-  f32 cosY = cosf(half.y);
-  f32 sinZ = sinf(half.z);
-  f32 cosZ = cosf(half.z);
-  mm::Quat quat;
-  quat.x = sinX * cosY * cosZ - cosX * sinY * sinZ;
-  quat.y = cosX * sinY * cosZ + sinX * cosY * sinZ;
-  quat.z = cosX * cosY * sinZ - sinX * sinY * cosZ;
-  quat.w = cosX * cosY * cosZ + sinX * sinY * sinZ;
-  return quat;
-}
-
-void FootPlacementIKSolver::setGroundAngle(const mm::Vec3 &angle) { unknownb0 = unknown004(angle); }
+void FootPlacementIKSolver::setGroundAngle(const mm::Vec3 &angle) { unknownb0 = mm::unknown005(angle); }
 
 void FootPlacementIKSolver::drawDebug() {
   if (unknowna0 & 2) {

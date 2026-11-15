@@ -12,16 +12,28 @@
 #include "framework/object/updatable_object.h"
 #include "framework/reference_frame.h"
 #include "fw/fw_param_manager.h"
+#include "gf/game/gf_game_player_formation.h"
 #include "gf/gf_allocator.h"
 #include "gf/object/component/animation/gf_com_asm.h"
+#include "gf/object/component/behavior/plugin/gf_eye_blink_plugin.h"
+#include "gf/object/component/behavior/plugin/gf_foot_ik_controller_plugin.h"
+#include "gf/object/component/behavior/plugin/gf_foot_step_plugin.h"
+#include "gf/object/component/behavior/plugin/gf_lip_sync_plugin.h"
+#include "gf/object/component/behavior/plugin/gf_plugin.h"
 #include "gf/object/component/behavior/plugin/gf_plugin_manager.h"
+#include "gf/object/component/effect/gf_com_effect_caster.h"
 #include "gf/object/component/enemy/gf_enemy_state_battle.h"
 #include "gf/object/component/env_sensor/gf_com_env_sensor.h"
 #include "gf/object/component/gf_com_collider.h"
 #include "gf/object/component/gf_com_dynamics.h"
+#include "gf/object/component/gf_com_sound.h"
 #include "gf/object/component/gf_com_transform.h"
 #include "gf/object/component/model/gf_com_model.h"
+#include "gf/object/component/pc/battle/gf_pc_battle_states.h"
+#include "gf/object/component/pc/field/gf_pc_field_states.h"
 #include "gf/object/component/pc/gf_pc_agent.h"
+#include "gf/object/component/pc/gf_pc_ai_agent.h"
+#include "gf/object/component/pc/gf_pc_pad_agent.h"
 #include "gf/object/component/pc/gf_pc_property_field.h"
 #include "gf/object/component/pc/gf_pc_state_id.h"
 #include "gf/object/component/pc/gf_pc_state_util.h"
@@ -54,6 +66,7 @@
 #include "mm_math/mm_plane.h"
 #include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/delegate.h"
 #include "mm_mtl/vector.h"
 
 namespace fw {
@@ -66,105 +79,119 @@ bool isAttenuationPack(const char *name) {
   return strcmp(name, "se_mov_pc_default") == 0 || strcmp(name, "se_fld_move_nopon") == 0 || strcmp(name, "se_fld_move_large") == 0 || strcmp(name, "se_fld_move_hana") == 0 ||
          strcmp(name, "se_fld_move_beast") == 0 || strcmp(name, "se_fld_move_float") == 0 || strcmp(name, "se_fld_allmap") == 0;
 }
+
+// Inferred helper: activates the plugin at an index when it exists, repeated by GfComBehaviorPc::setup (0x71005646e4) for six plugins; original name unknown. The game reloads the plugin table for
+// each one: a loop over an index table does not match (1231 instructions instead of 1323), so the six calls are written out.
+static void unknown002(PluginManager &manager, u32 index) {
+  Plugin *plugin = manager.unknown28[index];
+  if (plugin != nullptr) {
+    plugin->setActivate(true);
+  }
+}
+
 namespace pc {
 
-AccessPlugin *AccessPlugin::create() {
+// Named as the game's global symbols gf::pc::ASM_CB_NAME_FIELD and gf::pc::ASM_CB_NAME_BATTLE.
+const char *ASM_CB_NAME_FIELD = "field";
+const char *ASM_CB_NAME_BATTLE = "battle";
+
+Plugin *AccessPlugin::create() {
   // __LINE__ must be 31 as in the original header: it is the line argument of operator new.
 #line 31 "gf/object/component/pc/plugin/gf_pc_access_plugin.h"
   return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) AccessPlugin();
 }
 
-AttachPlugin *AttachPlugin::create() {
+Plugin *AttachPlugin::create() {
   // __LINE__ must be 26 as in the original header: it is the line argument of operator new.
 #line 26 "gf/object/component/pc/plugin/gf_pc_attach_plugin.h"
   return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) AttachPlugin();
 }
 
-ColVelCalculatorPlugin *ColVelCalculatorPlugin::create() {
+Plugin *ColVelCalculatorPlugin::create() {
   // __LINE__ must be 27 as in the original header: it is the line argument of operator new.
 #line 27 "gf/object/component/pc/plugin/gf_pc_col_velocity_plugin.h"
   return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ColVelCalculatorPlugin();
 }
 
-DeadColCheckPlugin *DeadColCheckPlugin::create() {
+Plugin *DeadColCheckPlugin::create() {
   // __LINE__ must be 27 as in the original header: it is the line argument of operator new.
 #line 27 "gf/object/component/pc/plugin/gf_pc_dead_col_check_plugin.h"
   return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) DeadColCheckPlugin();
 }
 
-FadePlugin *FadePlugin::create() {
+Plugin *FadePlugin::create() {
   // __LINE__ must be 34 as in the original header: it is the line argument of operator new.
 #line 34 "gf/object/component/pc/plugin/gf_pc_fade_plugin.h"
   return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) FadePlugin();
 }
 
-FallDamagePlugin *FallDamagePlugin::create() {
+Plugin *FallDamagePlugin::create() {
   // __LINE__ must be 27 as in the original header: it is the line argument of operator new.
 #line 27 "gf/object/component/pc/plugin/gf_pc_fall_damage_plugin.h"
   return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) FallDamagePlugin();
 }
 
-FallDistanceAchievPlugin *FallDistanceAchievPlugin::create() {
+Plugin *FallDistanceAchievPlugin::create() {
   // __LINE__ must be 26 as in the original header: it is the line argument of operator new.
 #line 26 "gf/object/component/pc/plugin/gf_pc_fall_distance_achiev_plugin.h"
   return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) FallDistanceAchievPlugin();
 }
 
-FallDistancePlugin *FallDistancePlugin::create() {
+Plugin *FallDistancePlugin::create() {
   // __LINE__ must be 26 as in the original header: it is the line argument of operator new.
 #line 26 "gf/object/component/pc/plugin/gf_pc_fall_distance_plugin.h"
   return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) FallDistancePlugin();
 }
 
-FallIntoColiPlugin *FallIntoColiPlugin::create() {
+Plugin *FallIntoColiPlugin::create() {
   // __LINE__ must be 25 as in the original header: it is the line argument of operator new.
 #line 25 "gf/object/component/pc/plugin/gf_pc_fall_into_coli_plugin.h"
   return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) FallIntoColiPlugin();
 }
 
-LookAxisPlugin *LookAxisPlugin::create() {
+Plugin *LookAxisPlugin::create() {
   // __LINE__ must be 27 as in the original header: it is the line argument of operator new.
 #line 27 "gf/object/component/pc/plugin/gf_pc_look_axis_plugin.h"
   return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) LookAxisPlugin();
 }
 
-LurePlugin *LurePlugin::create() {
+Plugin *LurePlugin::create() {
   // __LINE__ must be 29 as in the original header: it is the line argument of operator new.
 #line 29 "gf/object/component/pc/plugin/gf_pc_lure_plugin.h"
   return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) LurePlugin();
 }
 
-LookAtPlugin *LookAtPlugin::create() {
+Plugin *LookAtPlugin::create() {
   // __LINE__ must be 39 as in the original header: it is the line argument of operator new.
 #line 39 "gf/object/component/pc/plugin/gf_pc_lookat_plugin.h"
   return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) LookAtPlugin();
 }
 
-SlidePlugin *SlidePlugin::create() {
+Plugin *SlidePlugin::create() {
   // __LINE__ must be 26 as in the original header: it is the line argument of operator new.
 #line 26 "gf/object/component/pc/plugin/gf_pc_slide_plugin.h"
   return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) SlidePlugin();
 }
 
-TargetIKPlugin *TargetIKPlugin::create() {
+Plugin *TargetIKPlugin::create() {
   // __LINE__ must be 33 as in the original header: it is the line argument of operator new.
 #line 33 "gf/object/component/pc/plugin/gf_pc_target_ik_plugin.h"
   return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) TargetIKPlugin();
 }
 
-TerrainDamagePlugin *TerrainDamagePlugin::create() {
+Plugin *TerrainDamagePlugin::create() {
   // __LINE__ must be 26 as in the original header: it is the line argument of operator new.
 #line 26 "gf/object/component/pc/plugin/gf_pc_terrain_damage_plugin.h"
   return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) TerrainDamagePlugin();
 }
 
-TimerPlugin *TimerPlugin::create() {
+Plugin *TimerPlugin::create() {
   // __LINE__ must be 25 as in the original header: it is the line argument of operator new.
 #line 25 "gf/object/component/pc/plugin/gf_pc_timer_plugin.h"
   return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) TimerPlugin();
 }
 
-WaterInPlugin *WaterInPlugin::create() {
+Plugin *WaterInPlugin::create() {
   // __LINE__ must be 25 as in the original header: it is the line argument of operator new.
 #line 25 "gf/object/component/pc/plugin/gf_pc_water_in_plugin.h"
   return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) WaterInPlugin();
@@ -577,6 +604,89 @@ void GfComBehaviorPc::procMsgGameChangeTarget(fw::MessageObject *sender, MsgGame
     }
   }
   targetIK->procMsgGameChangeTarget(sender, message);
+}
+
+void GfComBehaviorPc::setup(const SetupInfo &info) {
+  static_cast<GfObj *>(unknown08)->unknown110 |= 2;
+  // The first two statements of this block repeat GfComBehaviorSalvage::setup (0x710057e86c) and GfComBehaviorUI::setup (0x7100580990): the game inlines the same registration of the
+  // "system" callback in each, with no call to a shared function.
+  GfComAsm *comAsm = unknown08->getComponent<GfComAsm>();
+  if (comAsm != nullptr) {
+    comAsm->unknown70[0].unknown00 = "system";
+    comAsm->unknown70[0].unknown08.bind<GfComBehavior>(this, &GfComBehavior::callbackAnim);
+    comAsm->unknown70[1].unknown00 = pc::ASM_CB_NAME_FIELD;
+    comAsm->unknown70[1].unknown08.bind<GfComBehaviorPc>(this, &GfComBehaviorPc::callbackField);
+    comAsm->unknown70[2].unknown00 = pc::ASM_CB_NAME_BATTLE;
+    comAsm->unknown70[2].unknown08.bind<GfComBehaviorPc>(this, &GfComBehaviorPc::callbackBattle);
+  }
+  GfComSound *comSound = unknown08->getComponent<GfComSound>();
+  if (comSound != nullptr) {
+    comSound->unknown130.bind<GfComBehaviorPc>(this, &GfComBehaviorPc::callbackSound);
+  }
+  GfComPropertyPc *property = unknown08->getComponent<GfComPropertyPc>();
+  bool isPad = property->unknown111_2;
+  if (isPad) {
+// __LINE__ must be 156 as in the original file: it is the line argument of operator new.
+#line 156 "gf/object/component/pc/gf_com_behavior_pc.cpp"
+    unknown98.reset(new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) pc::PadAgent(0));
+  } else {
+// __LINE__ must be 161 as in the original file: it is the line argument of operator new.
+#line 161 "gf/object/component/pc/gf_com_behavior_pc.cpp"
+    unknown98.reset(new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) pc::AIAgent());
+  }
+  unknown98->setup(*property);
+  GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
+  bool isMainPc = false;
+  if (formation != nullptr && property->unknown38 != PLAYER_ID_UNKNOWN_4294967295) {
+    isMainPc = formation->unknown1a0[property->unknown38].unknown10;
+  }
+  unknown10.beginSetup(*this, 0x16);
+  unknown10.unknown001<FootStepPlugin>(0, true);
+  unknown10.unknown001<EyeBlinkPlugin>(1, info.unknown04);
+  unknown10.unknown001<LipSyncPlugin>(2, true);
+  unknown10.unknown001<FootIkControllerPlugin>(3, true);
+  unknown10.unknown001<pc::AccessPlugin>(4, isPad);
+  unknown10.unknown001<pc::FallIntoColiPlugin>(9, isPad);
+  unknown10.unknown001<pc::FadePlugin>(11, isPad);
+  unknown10.unknown001<pc::LurePlugin>(15, isPad);
+  unknown10.unknown001<pc::LookAtPlugin>(5, true);
+  unknown10.unknown001<pc::TargetIKPlugin>(6, true);
+  unknown10.unknown001<pc::FallDamagePlugin>(7, isMainPc);
+  unknown10.unknown001<pc::TimerPlugin>(8, true);
+  unknown10.unknown001<pc::SlidePlugin>(10, true);
+  unknown10.unknown001<pc::AttachPlugin>(12, true);
+  unknown10.unknown001<pc::ColVelCalculatorPlugin>(13, true);
+  unknown10.unknown001<pc::TerrainDamagePlugin>(16, isMainPc);
+  unknown10.unknown001<pc::FallDistancePlugin>(17, true);
+  unknown10.unknown001<pc::WaterInPlugin>(18, true);
+  unknown10.unknown001<pc::DeadColCheckPlugin>(19, isMainPc);
+  unknown10.unknown001<pc::LookAxisPlugin>(20, true);
+  unknown10.unknown001<pc::FallDistanceAchievPlugin>(21, isMainPc);
+  unknown10.endSetup();
+  unknown002(unknown10, 13);
+  unknown002(unknown10, 16);
+  unknown002(unknown10, 2);
+  unknown002(unknown10, 3);
+  unknown002(unknown10, 19);
+  unknown002(unknown10, 20);
+  unknowna0.beginSetup(this, 0x52, 8);
+  pc::registerFieldStates(unknowna0);
+  pc::registerBattleStates(unknowna0);
+  unknowna0.endSetup();
+  unknowna0.setState(info.unknown00);
+  GfComModel *model = unknown08->getComponent<GfComModel>();
+  unknown128 = model->createBoneReferenceFrame("JU_neck");
+  if (unknown128.get() == nullptr) {
+    unknown128 = model->createBoneReferenceFrame("JU_spA");
+    if (unknown128.get() == nullptr) {
+      GfComTransform *transform = unknown08->getComponent<GfComTransform>();
+      unknown128 = transform->unknown18.get() == nullptr ? transform->unknown10 : transform->unknown18;
+    }
+  }
+  GfComEffectCaster *effectCaster = unknown08->getComponent<GfComEffectCaster>();
+  if (effectCaster != nullptr) {
+    effectCaster->unknown28 = property->unknown2f0;
+  }
 }
 
 void GfComBehaviorPc::cleanup() {

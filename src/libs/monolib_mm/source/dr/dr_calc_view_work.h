@@ -68,15 +68,21 @@ public:
   mm::Mat44 unknown300; // Inferred role: diff pre orij matrix; original member name unknown.
   mm::Mat44 unknown340; // Inferred role: view proj non jitter; original member name unknown.
   mm::Mat44 unknown380; // Inferred role: proj non jitter; original member name unknown.
-  u8 _3c0[0x400 - 0x3c0];
-  mm::Vec3 unknown400; // Inferred role: view pos; original member name unknown.
-  u8 _410[0x430 - 0x410];
+  mm::Mat44 unknown3c0; // Inferred role: inverse proj non jitter (gProjInv of DrPixlPostObjTSSAO::passTemporalFiltering, passed as a Mat44 at 0x71008c2f80); original member name unknown.
+  mm::Vec3 unknown400;  // Inferred role: view pos; original member name unknown.
+  mm::Vec3 unknown410;  // Inferred role: view direction (DrPixlPostObjMotionBlur2::calcBlurWork, 0x71008bcbe4: scaled by unknown4c8 and added to the view position); original member name unknown.
+  u8 _420[0x430 - 0x420];
   mm::Vec3 unknown430; // Inferred role: depth parm; original member name unknown.
   u8 _440[0x460 - 0x440];
   mm::Vec3 unknown460; // Inferred role: view y vec; original member name unknown.
   u8 _470[0x490 - 0x470];
   f32 unknown490[12]; // Inferred role: fades; original member name unknown.
-  u8 _4c0[0x4d0 - 0x4c0];
+  f32 unknown4c0; // Inferred role: aspect factor of the screen to view position (gScreenToViewPos of DrPixlPostObjTSSAO::passTemporalFiltering, loaded at 0x71008c2ec4 and multiplied by the tangent);
+                  // original member name unknown.
+  f32 unknown4c4; // Inferred role: field of view of the screen to view position (gScreenToViewPos of DrPixlPostObjTSSAO::passTemporalFiltering, halved and passed to tanf at 0x71008c2eb0); original
+                  // member name unknown.
+  f32 unknown4c8; // Inferred role: distance along the view direction (DrPixlPostObjMotionBlur2::calcBlurWork, 0x71008bcbe0, times the direction and 10); original member name unknown.
+  u8 _4cc[0x4d0 - 0x4cc];
   f32 unknown4d0; // Inferred role: pixl scale; original member name unknown.
   u8 _4d4[0x4e0 - 0x4d4];
   DrCalcClipWorkViewPlane unknown4e0; // Inferred role: view clip plane; original member name unknown.
@@ -84,7 +90,9 @@ public:
   DrMan *unknown700;                  // Inferred role: dr man; original member name unknown.
   u8 _708[0x770 - 0x708];
   mm::Vec3 unknown770; // Inferred role: prev view pos; original member name unknown.
-  u8 _780[0x7b0 - 0x780];
+  u8 _780[0x798 - 0x780];
+  f32 unknown798; // Inferred role: scale of the blur parameter (DrPixlPostObjMotionBlur2::calcBlurWork, 0x71008bc2b4); original member name unknown.
+  u8 _79c[0x7b0 - 0x79c];
   grlib::CGLibDblUniformBlock unknown7b0; // Inferred role: static uniform; original member name unknown.
   grlib::CGLibDblUniformBlock unknown7e8; // Inferred role: uniform block, destroyed by the destructor; original member name unknown.
   grlib::CGLibDblUniformBlock unknown820; // Inferred role: fog uniform; original member name unknown.
@@ -119,15 +127,21 @@ static_assert(offsetof(DrCalcViewWork, unknown200) == 0x200, "");
 static_assert(offsetof(DrCalcViewWork, unknown280) == 0x280, "");
 static_assert(offsetof(DrCalcViewWork, unknown2c0) == 0x2c0, "");
 static_assert(offsetof(DrCalcViewWork, unknown380) == 0x380, "");
+static_assert(offsetof(DrCalcViewWork, unknown3c0) == 0x3c0, "");
 static_assert(offsetof(DrCalcViewWork, unknown400) == 0x400, "");
+static_assert(offsetof(DrCalcViewWork, unknown410) == 0x410, "");
 static_assert(offsetof(DrCalcViewWork, unknown430) == 0x430, "");
 static_assert(offsetof(DrCalcViewWork, unknown460) == 0x460, "");
 static_assert(offsetof(DrCalcViewWork, unknown490) == 0x490, "");
+static_assert(offsetof(DrCalcViewWork, unknown4c0) == 0x4c0, "");
+static_assert(offsetof(DrCalcViewWork, unknown4c4) == 0x4c4, "");
+static_assert(offsetof(DrCalcViewWork, unknown4c8) == 0x4c8, "");
 static_assert(offsetof(DrCalcViewWork, unknown4d0) == 0x4d0, "");
 static_assert(offsetof(DrCalcViewWork, unknown4e0) == 0x4e0, "");
 static_assert(offsetof(DrCalcViewWork, unknown590) == 0x590, "");
 static_assert(offsetof(DrCalcViewWork, unknown700) == 0x700, "");
 static_assert(offsetof(DrCalcViewWork, unknown770) == 0x770, "");
+static_assert(offsetof(DrCalcViewWork, unknown798) == 0x798, "");
 static_assert(offsetof(DrCalcViewWork, unknown7b0) == 0x7b0, "");
 static_assert(offsetof(DrCalcViewWork, unknown7e8) == 0x7e8, "");
 static_assert(offsetof(DrCalcViewWork, unknown820) == 0x820, "");

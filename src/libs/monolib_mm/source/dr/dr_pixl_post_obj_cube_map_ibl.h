@@ -33,6 +33,7 @@ public:
   const mm::Mat44 &getSHMatrix(u32 index) const;
   void updateUB_ToProxySpace(u8 *work);
   void updateUB_ShMatrixList(u8 *work);
+  void updateUB_IBLPos_WS(u8 *work);
 
   bool unknown18; // Inferred role: initialize flag; original member name unknown.
   u8 _19[0x20 - 0x19];

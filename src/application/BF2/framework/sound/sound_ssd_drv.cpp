@@ -1220,6 +1220,26 @@ void SoundSsdDriver::registBank(const char *name, SoundSsdBank *bank) {
   bank->addRef();
 }
 
+SoundSsdBank::SoundSsdBank(const SoundBankSetup &setup) : unknown268(setup.unknown00) {
+  unknown25c = setup.unknown08;
+  unknown154 = setup.unknown10;
+  unknown258 = mm::mtl::hashStrCrc(unknown154.c_str());
+  unknown150 = setup.unknown18;
+  // The game computes the capacity (0x71001a4bc8, csel) before it sets the allocator of the list (P2: places the
+  // computation before the load of the allocator).
+  u32 capacity = setup.unknown1c < 256 ? 256 : setup.unknown1c;
+  unknown270.setAllocator(unknown268);
+  unknown270.reserve(capacity);
+  unknown10.Init(unknown25c, unknown154.c_str());
+  // The game stores the default group values again after Init, as one 64-bit store (0x71001a4bc8, str x8, [x19,
+  // #0x148] right before the stores of setMaxSound): the same values as the SoundGroup constructor (P3: a store the
+  // asm shows, repeated where the source repeats it).
+  unknown130.unknown18 = 0;
+  unknown130.unknown1c = 256;
+  setMaxSound(setup.unknown1c);
+  unknown10.AddSoundGroup(&unknown130);
+}
+
 void SoundSsdBank::setMaxSound(int maxSound) {
   unknown130.unknown18 = unknown25c;
   unknown130.unknown1c = maxSound;

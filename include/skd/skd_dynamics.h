@@ -122,7 +122,7 @@ struct ResNode {
   f32 unknown14;         // Inferred role: local space restore rate ("restoreLS"); original member name unknown.
   f32 unknown18;         // Inferred role: damping ("damping"); original member name unknown.
   f32 unknown1c;         // Inferred role: power gain ("powergain"); original member name unknown.
-  f32 unknown20;         // Inferred role: float attribute of the node; original member name unknown.
+  f32 unknown20;         // Inferred role: mass, CalcUtil::applyAccel divides the force by it; original member name unknown.
   u16 unknown24;         // Inferred role: flag set from an integer attribute; original member name unknown.
 };
 
@@ -200,7 +200,7 @@ struct Node {
   mm::Vec3 unknown30; // Inferred role: vector, use not determined; original member name unknown.
   mm::Quat unknown40; // Inferred role: rotation; original member name unknown.
   mm::Vec3 unknown50; // Inferred role: current position; original member name unknown.
-  mm::Vec3 unknown60; // Inferred role: vector, use not determined; original member name unknown.
+  mm::Vec3 unknown60; // Inferred role: acceleration, written by CalcUtil::applyAccel; original member name unknown.
   mm::Vec3 unknown70; // Inferred role: blended position target; original member name unknown.
   mm::Vec3 unknown80; // Inferred role: vector, use not determined; original member name unknown.
   mm::Vec3 unknown90; // Inferred role: vector, use not determined; original member name unknown.
@@ -419,6 +419,9 @@ public:
 void limitCone(const ResConstraint &constraint, const ResConeLimit &limit, NodeArray *nodes);
 void limitDistance(const ResConstraint &constraint, NodeArray *nodes);
 void limitHinge(const ResHingeConstraint &constraint, NodeArray *nodes);
+void detectCollisionSpheres(const ResNodeCollision &nodeCollision, const CollionArray &collisions, u32 mask, NodeArray *nodes);
+void detectCollisionCapsules(const ResNodeCollision &nodeCollision, const CollionArray &collisions, u32 mask, NodeArray *nodes);
+void detectCollisionPlanes(const ResNodeCollision &nodeCollision, const CollionArray &collisions, u32 mask, NodeArray *nodes);
 
 void executeApplyDetectJob(anm::Job &job);
 void executeDetectSphereJob(anm::Job &job);

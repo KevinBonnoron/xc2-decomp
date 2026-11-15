@@ -47,7 +47,7 @@ class TargetIKPlugin : public Plugin {
 public:
   TargetIKPlugin();
   ~TargetIKPlugin() override;
-  static TargetIKPlugin *create();
+  static Plugin *create();
   virtual bool setup(GfComBehaviorPc &behavior);
   virtual void cleanup(GfComBehaviorPc &behavior);
   void onActivate() override;

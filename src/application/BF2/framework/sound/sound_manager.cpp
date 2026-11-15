@@ -299,6 +299,33 @@ u32 SoundManager::playSe(u32 id, SoundPack *pack, f32 volume, SoundCategory cate
   return handle;
 }
 
+u32 SoundManager::playSeEx(const SoundPlayInfo &info, SoundResult &result) {
+  result.unknown00 = 0;
+  result.unknown04 = 3;
+  SoundPlayInfo playInfo = info;
+  if (!isSoundEbable()) {
+    return 0;
+  }
+
+  if (playInfo.unknown00 == nullptr) {
+    playInfo.unknown00 = findPack("common", nullptr);
+    if (playInfo.unknown00 == nullptr) {
+      return 0;
+    }
+  }
+
+  if (!isRegistPack(playInfo.unknown00)) {
+    return 0;
+  }
+
+  u32 handle = unknown18->playSeEx(playInfo, result);
+  if (handle != 0 && isPauseAll()) {
+    pause(handle, true, 0.0f);
+  }
+
+  return handle;
+}
+
 void SoundManager::stopSe(u32 handle, f32 time) {
   if (isSoundEbable() && handle != 0) {
     unknown18->stopSe(handle, time);

@@ -97,6 +97,7 @@ public:
   static bool isExistOuterResource();
   static mm::mtl::FixedList<GF_ASSET_HANDLE *, 1024> *getLoadingAsset();
   bool getObjectByUsingAssetPackLocal(mm::mtl::FixedList<GF_OBJ_HANDLE *, 1024> &objects, const mm::mtl::FixedList<GF_ASSET_HANDLE *, 1024> &handles, GF_ASSET_HANDLE *handle) const;
+  static bool getObjectByUsingAssetHandle(mm::mtl::FixedList<GF_OBJ_HANDLE *, 1024> &objects, GF_ASSET_HANDLE *handle);
   static bool getSlotHandle(mm::mtl::FixedVector<GF_SLOT_HANDLE *, 88> &slots, GF_ASSET_HANDLE *handle);
   static GF_SLOT_HANDLE *allocateFromAssetTypeSlot(GfAssetType type, size_t size);
   static bool getSlotInfo(mm::mtl::IAllocator *&allocator, void *&buffer, size_t &size, GF_SLOT_HANDLE *handle);

@@ -3,6 +3,7 @@
 
 #include "gf/game/quest/gf_quest_id.h"
 #include "gf/menu/adapter/gf_menu_adapter.h"
+#include "gf/menu/gf_menu_reference_number.h"
 #include "gf/menu/gf_menu_reference_quest.h"
 #include "gf/menu/list/gf_menu_quest_list.h"
 #include "mm_mtl/fixstr.h"
@@ -15,7 +16,6 @@ class UIObjectPlugin;
 } // namespace ui
 
 namespace gf {
-class GfMenuReferenceNumber;
 
 class GfMenuQuestAdapter : public GfMenuAdapter {
 public:
@@ -95,6 +95,11 @@ public:
   bool getQuestText(QuestID quest, u32 line, const char **text);
   bool getFaceIcon(u32 icon, u32 &image);
   u32 getTimeZoneIconNumber(int time, u32 zone);
+
+  // Inferred helper: sets the task index reference, taking the pointer by value; original name unknown.
+  // Evidence: GfMenuObjQuestLog::initialize (0x71004c0c34) raises the reference count by two, stores, then releases the previous
+  // reference and one count (a copy for the argument and a copy for the assignment).
+  void unknown008(mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number) { unknown90 = number; }
 
   QuestID unknown30;                                      // Inferred role: quest; original member name unknown.
   u32 unknown34;                                          // Inferred role: parameter; original member name unknown.

@@ -514,6 +514,16 @@ bool GfAssetManager::getObjectByUsingAssetPackLocal(mm::mtl::FixedList<GF_OBJ_HA
   return objects.size() != 0;
 }
 
+bool GfAssetManager::getObjectByUsingAssetHandle(mm::mtl::FixedList<GF_OBJ_HANDLE *, 1024> &objects, GF_ASSET_HANDLE *handle) {
+  // getObjectByUsingAssetPackLocal never reads its this pointer, so the game never sets it (0x71001b5138: x0 is the
+  // object list, then the first result): the compiler erased the argument (ruling 2026-11-13 #6). The original
+  // expression cannot be checked; the singleton instance is the plausible one.
+  GfAssetManager *manager = get();
+  manager->getObjectByUsingAssetPackLocal(objects, manager->unknownd70f8, handle);
+  manager->getObjectByUsingAssetPackLocal(objects, manager->unknownce0b8, handle);
+  return objects.size() != 0;
+}
+
 bool GfAssetManager::getSlotHandle(mm::mtl::FixedVector<GF_SLOT_HANDLE *, 88> &slots, GF_ASSET_HANDLE *handle) {
   AssetPackInfo *info = getAssetPackInfo(handle);
   if (info == nullptr) {

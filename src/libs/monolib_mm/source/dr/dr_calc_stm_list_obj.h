@@ -82,6 +82,7 @@ public:
   bool texstm_notfileWait();
   bool texstm_oldVerWait();
   bool texstm_stmchk_setWait();
+  bool texstm_stmchk_topLast();
   bool texstm_defErrWait();
   bool texstm_defMidtexErrWait();
   bool texstm_defMidTexUpdate();

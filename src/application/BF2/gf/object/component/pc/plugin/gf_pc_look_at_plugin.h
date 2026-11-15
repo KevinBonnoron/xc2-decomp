@@ -62,7 +62,7 @@ public:
 
   LookAtPlugin();
   ~LookAtPlugin() override;
-  static LookAtPlugin *create();
+  static Plugin *create();
   void onActivate() override;
   void onDeactivate() override;
   virtual bool setup(GfComBehaviorPc &behavior);

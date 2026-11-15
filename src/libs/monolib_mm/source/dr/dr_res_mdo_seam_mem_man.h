@@ -34,6 +34,7 @@ public:
   DrResMdoSeamMemObj *createBackFreeObj(u32 size, DrResChankList<DrResMdoSeamMemObj> &list, int index);
   DrResMdoSeamMemObj *createParentFreeObj(DrResMdoSeamMemObj *parent, u32 size);
   DrResMdoSeamMemObj *createTopFreeObj(u32 size, DrResChankList<DrResMdoSeamMemObj> &list, int index);
+  bool memDefOptimization(u32 limit);
 
   // Inferred helper: takes the start of a free object for a used object of the given size; original name unknown.
   DrResMdoSeamMemObj *unknown001(DrResMdoSeamMemObj *obj, u32 size, DrResChankList<DrResMdoSeamMemObj> &list) {

@@ -55,7 +55,7 @@ struct SDataGame {
   u16 unknown26;      // Inferred role: start chapter save; original member name unknown.
   u16 unknown28;      // Inferred role: event chapter save; original member name unknown.
   u8 _00002a[0x00002c - 0x00002a];
-  SDataDriver unknown2c[16];                        // Inferred role: drivers; original member name unknown.
+  mm::mtl::FixedArray<SDataDriver, 16> unknown2c;   // Inferred role: drivers; original member name unknown.
   mm::mtl::FixedArray<SDataBlade, 422> unknown5a2c; // Inferred role: blades; original member name unknown.
   unknown124 unknowne9884;                          // Inferred role: party; original member name unknown.
   ItemBox unknowne98d8;                             // Inferred role: item box; original member name unknown.
@@ -80,19 +80,19 @@ struct SDataGame {
   u32 unknown10ad4c;                                   // Inferred role: assure count; original member name unknown.
   u16 unknown10ad50;                                   // Inferred role: rare blade appear type; original member name unknown.
   u8 _10ad52[0x10ad54 - 0x10ad52];
-  u32 unknown10ad54;    // Inferred role: coin; original member name unknown.
-  u32 unknown10ad58[4]; // Inferred role: saved hp; original member name unknown.
-  u64 unknown10ad68;    // Inferred role: save real time; original member name unknown.
-  f32 unknown10ad70;    // Inferred role: camera height; original member name unknown.
-  u8 _10ad74[0x10ae74 - 0x10ad74];
-  f32 unknown10ae74; // Inferred role: camera yaw; original member name unknown.
-  f32 unknown10ae78; // Inferred role: camera pitch; original member name unknown.
-  u8 unknown10ae7c;  // Inferred role: camera free mode; original member name unknown.
-  u8 unknown10ae7d;  // Inferred role: hikari current; original member name unknown.
-  u16 unknown10ae7e; // Inferred role: auto event after load; original member name unknown.
-  u8 unknown10ae80;  // Inferred role: collect flag new version; original member name unknown.
-  u8 unknown10ae81;  // Inferred role: clear save data; original member name unknown.
-  u8 unknown10ae82;  // Inferred role: camera side; original member name unknown.
+  u32 unknown10ad54;                                          // Inferred role: coin; original member name unknown.
+  u32 unknown10ad58[4];                                       // Inferred role: saved hp; original member name unknown.
+  u64 unknown10ad68;                                          // Inferred role: save real time; original member name unknown.
+  f32 unknown10ad70;                                          // Inferred role: camera height; original member name unknown.
+  mm::mtl::FixedArray<u8, 0x10ae74 - 0x10ad74> unknown10ad74; // Inferred role: block of 0x100 bytes copied by GfGameUtil::setupNewGameParam (memcpy at 0x71003511c8); original member name unknown.
+  f32 unknown10ae74;                                          // Inferred role: camera yaw; original member name unknown.
+  f32 unknown10ae78;                                          // Inferred role: camera pitch; original member name unknown.
+  u8 unknown10ae7c;                                           // Inferred role: camera free mode; original member name unknown.
+  u8 unknown10ae7d;                                           // Inferred role: hikari current; original member name unknown.
+  u16 unknown10ae7e;                                          // Inferred role: auto event after load; original member name unknown.
+  u8 unknown10ae80;                                           // Inferred role: collect flag new version; original member name unknown.
+  u8 unknown10ae81;                                           // Inferred role: clear save data; original member name unknown.
+  u8 unknown10ae82;                                           // Inferred role: camera side; original member name unknown.
   u8 _10ae83[0x10ae84 - 0x10ae83];
   unknown125 unknown10ae84[500]; // Inferred role: saved events; original member name unknown.
   u32 unknown1171d4;             // Inferred role: saved event num; original member name unknown.
@@ -138,6 +138,7 @@ static_assert(offsetof(SDataGame, unknown10ad54) == 0x10ad54, "");
 static_assert(offsetof(SDataGame, unknown10ad58) == 0x10ad58, "");
 static_assert(offsetof(SDataGame, unknown10ad68) == 0x10ad68, "");
 static_assert(offsetof(SDataGame, unknown10ad70) == 0x10ad70, "");
+static_assert(offsetof(SDataGame, unknown10ad74) == 0x10ad74, "");
 static_assert(offsetof(SDataGame, unknown10ae74) == 0x10ae74, "");
 static_assert(offsetof(SDataGame, unknown10ae78) == 0x10ae78, "");
 static_assert(offsetof(SDataGame, unknown10ae7c) == 0x10ae7c, "");

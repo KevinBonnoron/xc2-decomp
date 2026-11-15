@@ -440,26 +440,7 @@ bool BattleCharacter::IsInputStick(mm::Vec3 *stick, bool isCamera) const {
 }
 
 void BattleCharacter::SetWarpPostureByDir(const mm::Vec3 &direction) {
-  const mm::Vec3 &axis = mm::Vec3::unitZ;
-  f32 dot = axis.x * direction.x + axis.y * direction.y + axis.z * direction.z;
-  if (!(dot < -0.9999f)) {
-    f32 x = axis.y * direction.z - direction.y * axis.z;
-    f32 y = direction.x * axis.z - axis.x * direction.z;
-    f32 z = axis.x * direction.y - direction.x * axis.y;
-    f32 value = dot + 1.0f;
-    value = value + value;
-    f32 length = sqrtf(value);
-    f32 scale = 1.0f / length;
-    unknowna0.x = x * scale;
-    unknowna0.y = y * scale;
-    unknowna0.z = z * scale;
-    unknowna0.w = length * 0.5f;
-  } else {
-    unknowna0.x = 0.0f;
-    unknowna0.y = 1.0f;
-    unknowna0.z = 0.0f;
-    unknowna0.w = 0.0f;
-  }
+  mm::unknown005(unknowna0, mm::Vec3::unitZ, direction);
   unknownf8d_7 = true;
 }
 

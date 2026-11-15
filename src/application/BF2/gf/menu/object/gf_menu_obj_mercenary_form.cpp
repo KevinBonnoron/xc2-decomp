@@ -4,6 +4,11 @@
 #include "gf/data/gf_data_mercenaries.h"
 #include "gf/game/gf_game_voice.h"
 #include "gf/game/mercenaries/gf_game_mercenaries.h"
+#include "gf/gf_allocator.h"
+#include "gf/menu/adapter/gf_menu_adapter_manager.h"
+#include "gf/menu/adapter/gf_menu_char_data_adapter.h"
+#include "gf/menu/adapter/gf_menu_mission_adapter.h"
+#include "gf/menu/adapter/gf_menu_reference_adapter.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_manager.h"
 #include "gf/menu/gf_menu_reference.h"
@@ -15,6 +20,7 @@
 #include "gf/menu/object/gf_menu_obj_mainmenu2.h"
 #include "gf/menu/object/gf_menu_obj_mercenary_top.h"
 #include "gf/menu/object/gf_menu_obj_operation_info.h"
+#include "gf/menu/object/gf_menu_obj_sort.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "gf/request/gf_req_scom.h"
 #include "mm_math/mm_pnt.h"
@@ -26,6 +32,8 @@
 #include "mm_mtl/vector.h"
 #include "ui/ctrl/ui_ctrl_cursor_select.h"
 #include "ui/event/ui_event_data.h"
+#include "ui/event/ui_event_manager.h"
+#include "ui/list/ui_list_info.h"
 #include "ui/list/ui_select_obj_list.h"
 #include "ui/ui_object_acc.h"
 
@@ -62,6 +70,297 @@ GfMenuObjMercenaryForm::~GfMenuObjMercenaryForm() {
   mm::mtl::safeRelease(unknown50[0]);
   mm::mtl::safeRelease(unknown50[1]);
   mm::mtl::safeRelease(unknown50[2]);
+}
+
+void GfMenuObjMercenaryForm::initialize() {
+  ui::UIObjectAcc main(unknown18, "LAY_main");
+  mm::mtl::FixStr<32> name;
+  unknown24 = GfMenuReference::getReferenceTeamID();
+  unknown28 = GfMenuBladeList::create();
+  unknown30 = GfMenuBladeList::create();
+  {
+    // Braced scope (ruling 3): the game keeps the parameters of these setup calls in the stack slot shared with the
+    // TeamSetup and the cursor settings below.
+    ui::UIListInfoBase::SetupParam bladeParam;
+    bladeParam.unknown08 = 6;
+    unknown28->setup(getAllocator(ALLOCATOR_UNKNOWN_0), bladeParam);
+    unknown38 = GfMenuBladeList::create();
+    bladeParam.unknown08 = 6;
+    unknown38->setup(getAllocator(ALLOCATOR_UNKNOWN_0), bladeParam);
+    unknown40 = GfMenuBladeList::create();
+    bladeParam.unknown08 = 6;
+    unknown40->setup(getAllocator(ALLOCATOR_UNKNOWN_0), bladeParam);
+    unknown48 = GfMenuBladeList::create();
+    bladeParam.unknown08 = 6;
+    unknown48->setup(getAllocator(ALLOCATOR_UNKNOWN_0), bladeParam);
+  }
+  {
+    GfMenuBladeList::TeamSetup setup;
+    setup.unknown14 = 3;
+    setup.unknown00.unknown08 = 3;
+    setup.unknown00.unknown0c = 5;
+    setup.unknown1c = false;
+    unknown30->clear();
+    unknown30->setupFromTeam(setup);
+  }
+  u16 sortId = GfMenuObjSort::getSortID(0xe, 0);
+  if (sortId >= 4 && sortId <= 6) {
+    unknown30->sort(sortId, true);
+  } else {
+    unknown30->sort(sortId, false);
+  }
+  {
+    ui::UIObjectAcc form(main.unknown10, "LAY_form");
+// __LINE__ must be 226 as in the original file: it is the line argument of operator new.
+#line 226
+    FormListener *formListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) FormListener(this);
+    formListener->addRef();
+    ui::UIEventManager::get()->registObjectListener(form.unknown10, formListener);
+    if (formListener != nullptr) {
+      formListener->release();
+    }
+  }
+  GfMenuAdapterManager::beginAddAfter();
+  {
+    ui::UIObjectAcc unit(main.unknown10, "LAY_form_unit_bl");
+    {
+      ui::UISelectObjList::CreateParam createParam;
+      createParam.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
+      unknown78 = ui::UISelectObjList::create(createParam);
+    }
+    unknown78->pickupObject(unit.unknown10, "LAY_form_unit_bl_face@%02d", 1);
+    {
+      ui::UICtrlCursorSelect::CursorSetting setting;
+      setting.setType(0);
+      setting.unknown18 = 0;
+      unknown80 = ui::UICtrlCursorSelect::create(main.searchChild("IMG_form_unit_bl_cursor"), setting, unknown78);
+    }
+    for (u32 i = 0; i < unknown78->getSize(); i++) {
+      name.format("IMG_form_unit_bl_face@%02d", i + 1);
+      GfMenuCharDataAdapter::createFromBladeList(unit.searchChild(name.c_str()), 3, unknown28, i, false);
+      name.format("IMG_form_unit_bl_info_elem@%02d", i + 1);
+      GfMenuCharDataAdapter::createFromBladeList(unit.searchChild(name.c_str()), 0x2a, unknown28, i, false);
+      name.format("IMG_form_unit_bl_info_wpn@%02d", i + 1);
+      GfMenuCharDataAdapter::createFromBladeList(unit.searchChild(name.c_str()), 0x29, unknown28, i, false);
+    }
+// __LINE__ must be 263 as in the original file: it is the line argument of operator new.
+#line 263
+    UnitListener *unitListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) UnitListener(this);
+    unitListener->addRef();
+    ui::UIEventManager::get()->registObjectListener(unit.unknown10, unitListener);
+    if (unitListener != nullptr) {
+      unitListener->release();
+    }
+    setFSInputObject(1, unit.unknown10);
+  }
+// __LINE__ must be 271 as in the original file: it is the line argument of operator new.
+#line 271
+  ApplyListener *applyListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ApplyListener(this);
+  applyListener->addRef();
+  ui::UIEventManager::get()->registObjectListener(main.searchChild("LAY_form_apply"), applyListener);
+  if (applyListener != nullptr) {
+    applyListener->release();
+  }
+  {
+    ui::UIObjectAcc list(main.unknown10, "LAY_form_list_bl");
+    {
+      ui::UISelectObjList::CreateParam createParam;
+      createParam.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
+      unknown98 = ui::UISelectObjList::create(createParam);
+    }
+    unknown98->pickupObject(list.unknown10, "LAY_form_lsit_bl_face@%02d", 1);
+    {
+      ui::UICtrlCursorSelect::CursorSetting setting;
+      setting.setType(0);
+      setting.unknown18 = 0;
+      unknowna0 = ui::UICtrlCursorSelect::create(main.searchChild("IMG_form_list_bl_cursor"), setting, unknown98);
+    }
+    for (u32 i = 0; i < unknown98->getSize(); i++) {
+      name.format("IMG_form_list_bl_face@%02d", i + 1);
+      GfMenuCharDataAdapter *adapter = GfMenuCharDataAdapter::createFromBladeList(list.searchChild(name.c_str()), 3, unknown30, i, false);
+      if (adapter != nullptr) {
+        adapter->setSlotList(unknown28);
+      }
+      name.format("IMG_form_list_bl_info_elem@%02d", i + 1);
+      GfMenuCharDataAdapter::createFromBladeList(list.searchChild(name.c_str()), 0x2a, unknown30, i, false);
+      name.format("IMG_form_list_bl_info_wpn@%02d", i + 1);
+      GfMenuCharDataAdapter::createFromBladeList(list.searchChild(name.c_str()), 0x29, unknown30, i, false);
+    }
+// __LINE__ must be 312 as in the original file: it is the line argument of operator new.
+#line 312
+    ListListener *listListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ListListener(this);
+    listListener->addRef();
+    ui::UIEventManager::get()->registObjectListener(list.unknown10, listListener);
+    if (listListener != nullptr) {
+      listListener->release();
+    }
+    setFSInputObject(2, list.unknown10);
+    GfMenuObjUtil::createVScrollBarPlugin(list.searchChild("IMG_form_list_bl_scroll_bar"), unknown30, "IMG_form_list_bl_scroll_base", true);
+  }
+  {
+    ui::UIObjectAcc mission(main.unknown10, "LAY_form_mission");
+    for (u32 i = 0; i < 3; i++) {
+      name.format("IMG_form_mis_cond_icon@%02d", i + 1);
+      GfMenuMissionAdapter *adapter = GfMenuMissionAdapter::createFromReferenceMission(mission.searchChild(name.c_str()), 0x12, i, false);
+      if (adapter != nullptr) {
+        name.format("LAY_form_mis_cond@%02d", i + 1);
+        adapter->unknown24 = mission.searchChild(name.c_str());
+      }
+      name.format("TXT_form_mis_cond_txt@%02d", i + 1);
+      GfMenuMissionAdapter::createFromReferenceMission(mission.searchChild(name.c_str()), 0x11, i, false);
+      u32 text = mission.searchChild(name.c_str());
+      if (text != 0) {
+        name.format("TXT_form_mis_cond_val@%02d", i + 1);
+        GfMenuMissionAdapter::createFromReferenceMission(mission.searchChild(name.c_str()), 0x13, i, false);
+        GfMenuObjUtil::createDockPlugin(mission.searchChild(name.c_str()), text, 1, mm::Pnt<s16>(12, 0), 0);
+        name.format("TXT_form_mis_cond_lv@%02d", i + 1);
+        GfMenuMissionAdapter::createFromReferenceMission(mission.searchChild(name.c_str()), 0x14, i, false);
+        GfMenuObjUtil::createDockPlugin(mission.searchChild(name.c_str()), text, 1, mm::Pnt<s16>(12, 0), 0);
+        name.format("TXT_form_mis_cond_num@%02d", i + 1);
+        GfMenuReferenceAdapter::create(mission.searchChild(name.c_str()), unknownc0[i], true);
+        name.format("TXT_form_mis_cond_max@%02d", i + 1);
+        GfMenuMissionAdapter::createFromReferenceMission(mission.searchChild(name.c_str()), 0x16, i, false);
+      }
+    }
+    for (u32 i = 0; i < 3; i++) {
+      name.format("TXT_form_mis_fs_name@%02d", i + 1);
+      GfMenuMissionAdapter *adapter = GfMenuMissionAdapter::createFromReferenceMission(mission.searchChild(name.c_str()), 0x10, i, false);
+      if (adapter != nullptr) {
+        name.format("LAY_form_mis_fs@%02d", i + 1);
+        adapter->unknown24 = mission.searchChild(name.c_str());
+      }
+      name.format("TXT_form_mis_fs_bl_num@%02d", i + 1);
+      GfMenuReferenceAdapter::create(mission.searchChild(name.c_str()), unknownc0[i + 4], true);
+    }
+  }
+  {
+    ui::UIObjectAcc leader(main.unknown10, "LAY_leader");
+// __LINE__ must be 395 as in the original file: it is the line argument of operator new.
+#line 395
+    LeaderListener *leaderListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) LeaderListener(this);
+    leaderListener->addRef();
+    ui::UIEventManager::get()->registObjectListener(leader.unknown10, leaderListener);
+    if (leaderListener != nullptr) {
+      leaderListener->release();
+    }
+    setFSInputObject(4, leader.unknown10);
+    {
+      ui::UISelectObjList::CreateParam createParam;
+      createParam.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
+      unknown88 = ui::UISelectObjList::create(createParam);
+    }
+    {
+      ui::UICtrlCursorSelect::CursorSetting setting;
+      setting.setType(0);
+      setting.unknown18 = 0;
+      unknown90 = ui::UICtrlCursorSelect::create(main.searchChild("IMG_leader_sel_list_bl_cursor"), setting, unknown88);
+    }
+    GfMenuCharDataAdapter::createFromReferenceBlade(leader.searchChild("TXT_leader_sel_index_name"), 2, 0, false);
+    GfMenuCharDataAdapter::createFromReferenceBlade(leader.searchChild("TXT_leader_sel_info_name"), 0x58, 0, false);
+    for (u32 i = 0; i < unknown78->getSize(); i++) {
+      name.format("IMG_leader_sel_list_bl_face@%02d", i + 1);
+      GfMenuCharDataAdapter::createFromBladeList(leader.searchChild(name.c_str()), 3, unknown28, i, false);
+    }
+  }
+  GfMenuAdapterManager::endAddAfter();
+  {
+    ui::UIObjectAcc start(main.unknown10, "LAY_start");
+    for (u32 i = 1; i < 6; i++) {
+      name.format("IMG_mis_start_bl@%02d", i);
+      GfMenuCharDataAdapter::createFromBladeList(start.searchChild(name.c_str()), 0x36, unknown28, i, false);
+    }
+// __LINE__ must be 440 as in the original file: it is the line argument of operator new.
+#line 440
+    StartListener *startListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) StartListener(this);
+    startListener->addRef();
+    ui::UIEventManager::get()->registObjectListener(start.unknown10, startListener);
+    if (startListener != nullptr) {
+      startListener->release();
+    }
+  }
+  {
+    ui::UIObjectAcc blImg(main.unknown10, "LAY_bl_img");
+    GfMenuCharDataAdapter::createFromReferenceBlade(blImg.searchChild("IMG_leader_bl_img"), 0x36, 0, false);
+// __LINE__ must be 453 as in the original file: it is the line argument of operator new.
+#line 453
+    BlImgListener *blImgListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) BlImgListener(this);
+    blImgListener->addRef();
+    ui::UIEventManager::get()->registObjectListener(blImg.unknown10, blImgListener);
+    if (blImgListener != nullptr) {
+      blImgListener->release();
+    }
+  }
+  {
+    ui::UIObjectAcc preset(main.unknown10, "LAY_preset");
+    {
+      ui::UISelectObjList::CreateParam createParam;
+      createParam.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
+      unknowna8 = ui::UISelectObjList::create(createParam);
+    }
+    // The game passes the handle of LAY_main, not the one of LAY_preset, to pickupObject (1.0.0: 0x7100491d88 loads the saved main handle from the stack).
+    unknowna8->pickupObject(main.unknown10, "LAY_preset_bl_base@%02d", 1);
+    {
+      ui::UICtrlCursorSelect::CursorSetting setting;
+      setting.setType(0);
+      setting.unknown18 = 0;
+      unknownb0 = ui::UICtrlCursorSelect::create(main.searchChild("IMG_preset_cursor"), setting, unknowna8);
+    }
+    {
+      ui::UIListInfoBase::SetupParam presetParam;
+      unknown68 = GfMenuIDList::create();
+      presetParam.unknown08 = 3;
+      unknown68->setup(getAllocator(ALLOCATOR_UNKNOWN_0), presetParam);
+      for (u32 i = 0; i < 8; i++) {
+        unknown68->addContents(MenuID{i});
+      }
+    }
+    GfMenuObjUtil::createVScrollBarPlugin(preset.searchChild("IMG_preset_scroll_bar"), unknown68, "IMG_preset_scroll_base", false);
+    // The game's preheader (1.0.0: 0x7100491ee0-0x7100491f00) keeps the addresses of the face and wpn formats and the constants 0x39 and 0x29 in registers. The for forms tried (u32, int and size_t
+    // counter, `!= 3`, `<= 2`, a while with an entry test) all end with another preheader (the for with a u32 counter rematerialises 0x29 in the body); only the do-while matches.
+    u32 i = 0;
+    do {
+      {
+        ui::UIListInfoBase::SetupParam presetBladeParam;
+        presetBladeParam.unknown08 = 6;
+        unknown50[i] = GfMenuBladeList::create();
+        unknown50[i]->setup(getAllocator(ALLOCATOR_UNKNOWN_0), presetBladeParam);
+      }
+      name.format("TXT_preset_bl_no@%02d", i + 1);
+      GfMenuReferenceAdapter::create(preset.searchChild(name.c_str()), unknownc0[i + 4], false);
+      for (u32 j = 0; j < 6; j++) {
+        name.format("IMG_preset_bl_face@%02d%02d", i + 1, j + 1);
+        GfMenuCharDataAdapter::createFromBladeList(preset.searchChild(name.c_str()), 3, unknown50[i], j, false);
+        GfMenuCharDataAdapter::createFromBladeList(preset.searchChild(name.c_str()), 0x49, unknown50[i], j, false);
+        name.format("IMG_preset_bl_info_elem@%02d%02d", i + 1, j + 1);
+        GfMenuCharDataAdapter::createFromBladeList(preset.searchChild(name.c_str()), 0x2a, unknown50[i], j, false);
+        GfMenuCharDataAdapter::createFromBladeList(preset.searchChild(name.c_str()), 0x39, unknown50[i], j, false);
+        name.format("IMG_preset_bl_info_wpn@%02d%02d", i + 1, j + 1);
+        GfMenuCharDataAdapter::createFromBladeList(preset.searchChild(name.c_str()), 0x29, unknown50[i], j, false);
+      }
+      i++;
+    } while (i < 3);
+// __LINE__ must be 524 as in the original file: it is the line argument of operator new.
+#line 524
+    PresetListener *presetListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) PresetListener(this);
+    presetListener->addRef();
+    ui::UIEventManager::get()->registObjectListener(preset.unknown10, presetListener);
+    if (presetListener != nullptr) {
+      presetListener->release();
+    }
+    setFSInputObject(3, preset.unknown10);
+  }
+  refreshBladeInfo();
+// __LINE__ must be 532 as in the original file: it is the line argument of operator new.
+#line 532
+  MainListener *mainListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) MainListener(this);
+  mainListener->addRef();
+  ui::UIEventManager::get()->registObjectListener(main.unknown10, mainListener);
+  if (mainListener != nullptr) {
+    mainListener->release();
+  }
+  sendOpenEvent(main.searchChild("LAY_form_list_bl"), 0, 0.0f);
+  disableFSInput();
+  GfMenuObject::initialize();
 }
 
 void GfMenuObjMercenaryForm::sendOpenEvent(u32 handle, int type, f32 delay) {

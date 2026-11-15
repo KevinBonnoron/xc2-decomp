@@ -164,6 +164,12 @@ public:
   // Inferred helper: battle reaction; original name unknown.
   u16 unknown008() const { return unknown98.unknown14; }
 
+  // Inferred helper: navi mesh object; original name unknown.
+  navi::NvmshAcObj *unknown012() const { return unknownb8; }
+
+  // Inferred helper: move speed; original name unknown.
+  GfFieldMoveSpeed &unknown013() { return unknown270; }
+
   BdatInfo unknown98; // Inferred role: bdat parameters; original member name unknown.
   u8 _b4[0xb8 - 0xb4];
   navi::NvmshAcObj *unknownb8; // Inferred role: navi mesh object; original member name unknown.

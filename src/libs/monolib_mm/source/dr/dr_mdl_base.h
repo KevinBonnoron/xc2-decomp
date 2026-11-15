@@ -15,6 +15,7 @@ enum unknown037 {
   unknown037_2, // Inferred role: mpf; original name unknown.
   unknown037_3, // Inferred role: seam; original name unknown.
   unknown037_4, // Inferred role: cloud model; original name unknown.
+  unknown037_5, // Inferred role: group; original name unknown.
 };
 
 class DrMdlBase {
@@ -27,6 +28,18 @@ public:
     unknown038_5 = 1 << 5, // Inferred role: view state, cleared when a view is removed; original name unknown.
     unknown038_6 = 1 << 6, // Inferred role: view state, cleared when a view is removed; original name unknown.
   };
+
+  // Inferred role: stores of the constructor of the base, inlined in the constructors of the game (no DrMdlBase symbol); original body unknown.
+  DrMdlBase(int viewNum) {
+    unknown10 = nullptr;
+    unknown1a = viewNum;
+    unknown18 = 0;
+    unknown1c = unknown037_0;
+    unknown1d = 0;
+    unknown08 = nullptr;
+    unknown1e = 0;
+    unknown20 = unknown038_0 | unknown038_1;
+  }
 
   virtual ~DrMdlBase() {}
   virtual void update() = 0;

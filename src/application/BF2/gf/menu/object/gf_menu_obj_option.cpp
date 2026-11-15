@@ -1,7 +1,5 @@
 #include "gf/menu/object/gf_menu_obj_option.h"
 
-#include <string.h>
-
 #include "bdat.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
@@ -165,7 +163,7 @@ void GfMenuObjOption::initialize() {
       disSettingListener->release();
     }
   }
-  unknown98 = *GfGameUtilSaveData::getValidOptionData();
+  unknown98 = GfGameUtilSaveData::getValidOptionData();
   unknown3c0 = GfManager::isExecModeAdvertize();
   if (!unknown3c0) {
     GfMenuObjMainMenu2::setSubIndexText(0x18);
@@ -273,16 +271,7 @@ void GfMenuObjOption::dispItemBase(u32 type, u32 index, bool isDisp) {
 
 void GfMenuObjOption::initOptionData(SDataOption &option) {
   mm::mtl::FixedVector<Level, 32> levels;
-  option.unknown04[6] = 0;
-  option.unknown04[4] = 0;
-  option.unknown04[5] = 0;
-  option.unknown04[0] = false;
-  option.unknown04[1] = false;
-  option.unknown04[2] = 0;
-  option.unknown04[3] = 0;
-  option.unknown04[7] = true;
-  memset(option._0c, 0, sizeof(option._0c));
-  option.unknown4c.clear();
+  option.unknown001();
   getDefaultLevel(0, levels);
   convLevelListToOptionData(0, levels, option);
   getDefaultLevel(1, levels);
@@ -422,7 +411,7 @@ void GfMenuObjOption::MainListener::reciveEvent(const ui::EventData &event, u32 
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 2: {
-    SDataOption *saved = GfGameUtilSaveData::getValidOptionData();
+    SDataOption &saved = GfGameUtilSaveData::getValidOptionData();
     if (unknown20->unknown3c2 != -1) {
       convLevelListToOptionData(unknown20->unknown3c2, unknown20->unknown50, unknown20->unknown98);
     }
@@ -433,17 +422,17 @@ void GfMenuObjOption::MainListener::reciveEvent(const ui::EventData &event, u32 
     unknown20->unknown98.unknown4c.unknown0c = unknown20->unknown98.unknown4c.unknown0a;
     unknown20->unknown98.unknown4c.unknown18 = unknown20->unknown98.unknown4c.unknown16;
     bool isSame = true;
-    for (u32 i = 0; i < sizeof(saved->unknown04); i++) {
-      if (saved->unknown04[i] != unknown20->unknown98.unknown04[i]) {
+    for (u32 i = 0; i < sizeof(saved.unknown04); i++) {
+      if (saved.unknown04[i] != unknown20->unknown98.unknown04[i]) {
         isSame = false;
         break;
       }
     }
     u32 fade;
-    if (isSame && !saved->unknown4c.isDirty(unknown20->unknown98.unknown4c)) {
+    if (isSame && !saved.unknown4c.isDirty(unknown20->unknown98.unknown4c)) {
       fade = 2;
     } else {
-      *saved = unknown20->unknown98;
+      saved = unknown20->unknown98;
       GfGameUtilSaveData::flushOptionSaveData();
       unknown20->unknown128.unknown005();
       unknown20->unknown128.unknown002(&GfMenuObjOption::seqSave);

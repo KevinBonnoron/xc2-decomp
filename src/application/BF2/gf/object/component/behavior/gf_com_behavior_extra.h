@@ -4,6 +4,7 @@
 #include "framework/message/message_object.h"
 #include "gf/object/component/behavior/gf_com_behavior.h"
 #include "mm_mtl/vector.h"
+#include "types.h"
 
 namespace mm {
 namespace mtl {
@@ -19,7 +20,13 @@ enum {
   MSG_UNKNOWN_16777249 = 0x1000021, // Inferred role: msg pc field notify extra; original name unknown.
 };
 
-struct MsgPcFieldNotifyExtra : fw::Message {};
+// Layout from StateUtilField::notifyJumpEnd (1.0.0: 0x7100550778): it builds the message on the stack as id 0x1000021, size 0x40 and a zero
+// word at 0x08, which the receiver never reads.
+struct MsgPcFieldNotifyExtra : fw::Message {
+  MsgPcFieldNotifyExtra() : fw::Message(MSG_UNKNOWN_16777249, 0x40), unknown08(0) {}
+
+  u32 unknown08; // Role and original member name unknown, zero in the jump end notification.
+};
 
 class GfComBehaviorExtra : public GfComBehavior {
 public:

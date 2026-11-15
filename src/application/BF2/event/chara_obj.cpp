@@ -12,6 +12,7 @@
 #include "event/group_manager.h"
 #include "event/light_manager.h"
 #include "event/model_manager.h"
+#include "event/model_obj.h"
 #include "event/offscr_manager.h"
 #include "event/skip_manager.h"
 #include "event/tar_axis.h"
@@ -25,6 +26,49 @@
 namespace event {
 
 const char *CharaObj::getName() const { return m_name.c_str(); }
+
+void CharaObj::createGfObj(CHARA_TYPE type, u32 id, u32 param3, u32 param4) {
+  // The game loads CharaManager::unknown10 before the first call (0x71000bef20, ldr w25) and tests
+  // the bit later (0x71000bf12c, ubfx): this local places that load (ruling 2, P2).
+  bool isUseHood = mm::mtl::Singleton<CharaManager>::getPtr()->isUseHood();
+  if (param3 != 0) {
+    mm::mtl::Singleton<OffscrManager>::getPtr()->createScreen(param3);
+    mm::mtl::Singleton<LightManager>::getPtr()->loadOffScrLight(param3);
+  }
+  if (mm::mtl::Singleton<CharaManager>::getPtr()->isOffscrMode()) {
+    param3 = mm::mtl::Singleton<CharaManager>::getPtr()->getOffscrID();
+  }
+  unknownd3c = param3;
+  unknowncec = type;
+  m_eyeOffset = 1.5f;
+  unknowncf0 = id;
+  if (mm::mtl::Singleton<CharaManager>::getPtr()->isStreamMode()) {
+    unknownca4 = STATE_UNKNOWN_5;
+    return;
+  }
+  ModelObj::OPTION option;
+  option.unknown05 = isUseHood;
+  option.unknown00 = param4;
+  switch (type) {
+  case CHARA_TYPE_UNKNOWN_1:
+    // Second store of the same value, kept on purpose (ruling 5, P3): the game stores the OPTION
+    // word before the switch (0x71000bf140, str w21,[sp,#8]) and again at the start of case 1
+    // (0x71000bf15c); no other case stores it.
+    option.unknown00 = param4;
+    unknownd50 = mm::mtl::Singleton<ModelManager>::getPtr()->createModel(MODEL_TYPE_UNKNOWN_1, id, option, false, unknownd3c, unknown3054);
+    break;
+  case CHARA_TYPE_UNKNOWN_2:
+    unknownd50 = mm::mtl::Singleton<ModelManager>::getPtr()->createModel(MODEL_TYPE_UNKNOWN_2, id, option, false, unknownd3c, unknown3054);
+    break;
+  case CHARA_TYPE_UNKNOWN_3:
+    unknownd50 = mm::mtl::Singleton<ModelManager>::getPtr()->createModel(MODEL_TYPE_UNKNOWN_3, id, option, false, unknownd3c, unknown3054);
+    break;
+  case CHARA_TYPE_UNKNOWN_5:
+    unknownd50 = mm::mtl::Singleton<ModelManager>::getPtr()->createModel(MODEL_TYPE_UNKNOWN_4, id, option, false, unknownd3c, unknown3054);
+    break;
+  }
+  unknownca4 = STATE_UNKNOWN_2;
+}
 
 void CharaObj::createModel(const char *model, u32 param2, u32 param3) {
   if (param3 != 0) {

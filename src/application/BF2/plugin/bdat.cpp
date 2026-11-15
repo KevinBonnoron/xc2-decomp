@@ -20,7 +20,12 @@ struct unknown001 {
   u32 unknown08[1]; // Inferred role: offsets of the sheets from the archive start; original member name unknown.
 };
 
-// Inferred role: header of a bdat sheet; original name unknown.
+// Inferred role: header of a bdat sheet; original name unknown. Packed (file format layout): with the natural alignment of 4 the
+// flags byte at 0x04 and the u16 at 0x06 are merged into one 32-bit load in decodeScramble, where the game (0x71006b45c4) has
+// a byte load, so the game's type is not 4-aligned. Alignment 1 follows the precedent of the vm unknown004 (decision 15 of
+// 2026-11-14); alignment 2 matches too, and no access of the game tells the two apart (every sheet offset of the game's
+// archives is a multiple of 4).
+#pragma pack(push, 1)
 struct unknown002 {
   u8 unknown00[4];
   u8 unknown04;  // Inferred role: flags, bit 1 is set while the sheet is scrambled; original member name unknown.
@@ -39,6 +44,7 @@ struct unknown002 {
   u16 unknown20; // Inferred role: offset of the member table; original member name unknown.
   u16 unknown22; // Inferred role: member count; original member name unknown.
 };
+#pragma pack(pop)
 
 // Inferred role: entry of the member table and of the member hash chains; original name unknown.
 struct unknown003 {
@@ -47,8 +53,11 @@ struct unknown003 {
   u16 unknown04; // Inferred role: offset of the member name; original member name unknown.
 };
 
-// Inferred role: variable description (1 scalar, 2 array, 3 flag); original name unknown. The 16 and 32 bit values
-// are stored unaligned in the data, so they are read through the byte arrays.
+// Inferred role: variable description (1 scalar, 2 array, 3 flag); original name unknown. Packed (file format layout): with
+// the natural alignment of 2 clang widens the kind byte load into one 16 bit load that also covers the type byte (GVN),
+// where the game (0x71006b5020 getVar) loads the two bytes separately, so the game's type is not 2-aligned (same case
+// as unknown002, decision 15 of 2026-11-14).
+#pragma pack(push, 1)
 struct unknown004 {
   u8 unknown00;  // Inferred role: kind; original member name unknown.
   u8 unknown01;  // Inferred role: value type, or shift of a flag; original member name unknown.
@@ -56,6 +65,7 @@ struct unknown004 {
   u16 unknown04; // Inferred role: array count; original member name unknown.
   u16 unknown06; // Inferred role: unused here; original member name unknown.
 };
+#pragma pack(pop)
 
 static_assert(offsetof(unknown001, unknown08) == 0x08, "");
 static_assert(offsetof(unknown002, unknown04) == 0x04, "");
@@ -76,6 +86,17 @@ static_assert(offsetof(unknown004, unknown02) == 0x02, "");
 static_assert(offsetof(unknown004, unknown04) == 0x04, "");
 static_assert(offsetof(unknown004, unknown06) == 0x06, "");
 
+// Inferred role: address of the sheet with a signed index in an archive; original name unknown. The game reads the
+// offset table as bytes at (index << 2) + 8, never as an array of u32 (0x71006b4980 getFileName, 0x71006b4b60 getFP and
+// the binary searches): a u32 array member gives a scaled address mode instead (P1, decision of 2026-11-14). The 32 bit
+// shift is sign extended and the 8 stays in the load.
+u8 *unknown005(u8 *bin, int index) { return bin + *reinterpret_cast<u32 *>(bin + ((index << 2) + 8)); }
+
+// Inferred role: address of the sheet with an unsigned index in an archive; original name unknown. Same byte offset
+// table as unknown005, but the loops of 0x71006b45c4 decodeScramble and 0x71006b47b4 calcCheckSum add the 8 in 32 bits
+// before the zero extension (P1).
+u8 *unknown006(u8 *bin, u32 index) { return bin + *reinterpret_cast<u32 *>(bin + ((index << 2) + 8)); }
+
 } // namespace
 
 void *m_pBin[BDAT_FILE_MAX];
@@ -93,10 +114,39 @@ void regist(int idx, void *data) {
   decodeScramble(data);
 }
 
+void decodeScramble(void *data) {
+  unknown001 *archive = static_cast<unknown001 *>(data);
+  u8 *bin = static_cast<u8 *>(data);
+  u32 count = archive->unknown00;
+  for (int i = 0; i < count; i++) {
+    unknown002 *header = reinterpret_cast<unknown002 *>(unknown006(bin, i));
+    u16 key = header->unknown16;
+    if (header->unknown04 & 2) {
+      u8 *bdat = reinterpret_cast<u8 *>(header);
+      decodeScrambleSub(bdat, key, header->unknown18, header->unknown18 + header->unknown1c);
+      decodeScrambleSub(bdat, key, header->unknown06, header->unknown0a);
+      header->unknown04 &= ~2;
+    }
+  }
+}
+
 void unregist(int idx) {
 #line 43
   assert(idx < BDAT_FILE_MAX);
   m_pBin[idx] = nullptr;
+}
+
+bool calcCheckSum(int idx) {
+#line 55
+  assert(idx < BDAT_FILE_MAX);
+  unknown001 *archive = static_cast<unknown001 *>(m_pBin[idx]);
+  u8 *bin = static_cast<u8 *>(m_pBin[idx]);
+  for (int i = 0; i < archive->unknown00; i++) {
+    if (!calcCheckSumSub(unknown006(bin, i))) {
+      return false;
+    }
+  }
+  return true;
 }
 
 bool calcCheckSumSub(unsigned char *bdat) {
@@ -115,7 +165,64 @@ u32 getFileCount(int idx) {
   return static_cast<unknown001 *>(m_pBin[idx])->unknown00;
 }
 
+const char *getFileName(int idx, int fileIdx) {
+#line 79
+  assert(idx < BDAT_FILE_MAX);
+  unknown001 *archive = static_cast<unknown001 *>(m_pBin[idx]);
+  u8 *bin = static_cast<u8 *>(m_pBin[idx]);
+  if (static_cast<u32>(fileIdx) < archive->unknown00) {
+    return getSheetName(unknown005(bin, fileIdx));
+  }
+  return nullptr;
+}
+
+unsigned char *getFP(const char *name) {
+  unsigned char *bdat = getFPSub(name);
+  // The game keeps the null test of the sheet address (0x71006b4a80, cbnz x20) although errFile is empty; with a
+  // plain `if (bdat == nullptr) { errFile(name); }` the test is removed.
+  if (bdat == nullptr) {
+    errFile(name);
+    return nullptr;
+  }
+  return bdat;
+}
+
+unsigned char *getFPSub(const char *name) {
+  for (int i = 0; i < BDAT_FILE_MAX; i++) {
+    unknown001 *archive = static_cast<unknown001 *>(m_pBin[i]);
+    u8 *bin = static_cast<u8 *>(m_pBin[i]);
+    if (archive != nullptr) {
+      int low = 0;
+      int high = archive->unknown00;
+      while (low < high) {
+        int mid = (low + high) / 2;
+        u8 *bdat = unknown005(bin, mid);
+        int cmp = __builtin_strcmp(getSheetName(bdat), name);
+        if (cmp < 0) {
+          low = mid + 1;
+        } else if (cmp == 0) {
+          return bdat;
+        } else {
+          high = mid;
+        }
+      }
+    }
+  }
+  return nullptr;
+}
+
 void errFile(const char *name) {}
+
+unsigned char *getFP(int fileIdx, int idx) {
+#line 105
+  assert(idx < BDAT_FILE_MAX);
+  u32 binCount = getFileCount(idx);
+#line 110
+  assert((u32)fileIdx < binCount);
+  return unknown005(static_cast<u8 *>(m_pBin[idx]), fileIdx);
+}
+
+unsigned char *isExistFP(const char *name) { return getFPSub(name); }
 
 const char *getSheetName(unsigned char *bdat) { return reinterpret_cast<const char *>(bdat + reinterpret_cast<unknown002 *>(bdat)->unknown06); }
 
@@ -167,6 +274,19 @@ void errMember(unsigned char *bdat, const char *name) {}
 
 void clearVal(uVal *value) { value->valueString = nullptr; }
 
+uVal getVal(unsigned char *pBdat, unsigned char *pVarName, int id) {
+#line 206
+  assert(pVarName != 0L);
+#line 209
+  assert(pBdat != 0L);
+  if (calcId(pBdat, &id)) {
+    return getVar(pBdat, pVarName, id);
+  }
+  uVal value;
+  clearVal(&value);
+  return value;
+}
+
 bool calcId(unsigned char *bdat, int *id) {
   unknown002 *header = reinterpret_cast<unknown002 *>(bdat);
   if (static_cast<u32>(*id - header->unknown12) < header->unknown10) {
@@ -174,6 +294,17 @@ bool calcId(unsigned char *bdat, int *id) {
     return true;
   }
   return false;
+}
+
+uVal getVar(unsigned char *bdat, unsigned char *member, int row) {
+  unknown004 *var = reinterpret_cast<unknown004 *>(bdat + reinterpret_cast<unknown003 *>(member)->unknown00);
+  if (var->unknown00 == 1) {
+    unknown002 *header = reinterpret_cast<unknown002 *>(bdat);
+    return getVarVal(bdat, bdat + header->unknown0e + header->unknown08 * row + var->unknown02, var->unknown01);
+  }
+  uVal value;
+  clearVal(&value);
+  return value;
 }
 
 uVal getVal(unsigned char *bdat, int column, int id) { return getVal(bdat, getMember(bdat, column), id); }

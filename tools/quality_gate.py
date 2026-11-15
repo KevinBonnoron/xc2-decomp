@@ -18,6 +18,9 @@ from collections import defaultdict
 BASE = sys.argv[1] if len(sys.argv) > 1 else "main"
 HEAD = sys.argv[2] if len(sys.argv) > 2 else "HEAD"
 PATHS = ["src", "include"]
+# Declarations under these directories are imports from the Nintendo SDK: the SDK defines them out of line and the
+# game calls them through the import table, so they can never be defined in this repository.
+SDK_IMPORTS = ("include/nn/", "include/nvn/")
 # (block size, functions): a run of statements repeated in that many functions is reported.
 RULES = [(4, 3), (3, 5)]
 
@@ -169,7 +172,7 @@ def main():
     sources = git("grep", "-h", "-E", r"~\w+\(\)", HEAD, "--", *PATHS)
     for path, at, text in texts:
         m = re.search(r"^\s*(virtual )?~(\w+)\(\)( override)?;", text)
-        if m and not re.search(rf"(::|\b){m.group(2)}::~{m.group(2)}\(\)|~{m.group(2)}\(\)[^;]*\{{|~{m.group(2)}\(\) = default", sources):
+        if m and not path.startswith(SDK_IMPORTS) and not re.search(rf"(::|\b){m.group(2)}::~{m.group(2)}\(\)|~{m.group(2)}\(\)[^;]*\{{|~{m.group(2)}\(\) = default", sources):
             print(f"{path}:{at}: ~{m.group(2)}() has no definition")
             problems += 1
 

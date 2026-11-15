@@ -1,6 +1,7 @@
 #include "gf/data/gf_data_party.h"
 
 #include "gf/data/gf_character_id.h"
+#include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_game.h"
 #include "gf/data/gf_data_manager.h"
@@ -164,6 +165,23 @@ bool GfDataParty::isLeader(u32 chara) {
   }
 
   return GfDataManager::getDataGame()->unknowne9884.unknown40 == chara;
+}
+
+bool GfDataParty::isActivateMember(u32 chara) {
+  if (chara < BLADE_HOMURA) {
+    return !GfDataDriver::isActivateUnuse(chara);
+  }
+  if (chara < BLADE_UNKNOWN_1051) {
+    if (chara != BLADE_UNKNOWN_1011) {
+      u32 driver = GfDataBlade::getSetDriver(chara);
+      if (driver == 0 || GfDataDriver::isActivateUnuse(driver)) {
+        return false;
+      }
+    }
+    return !GfDataBlade::isActivateMercenaryTeam(chara) && !GfDataBlade::isActivateUnuse(chara);
+  }
+
+  return false;
 }
 
 } // namespace gf

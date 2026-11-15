@@ -4,9 +4,14 @@
 
 #include "framework/debug/debug_draw.h"
 #include "fw/fw_transform.h"
+#include "gf/data/gf_data_enemy.h"
+#include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_object_type.h"
 #include "gf/game/gf_game_obj.h"
 #include "gf/gf_allocator.h"
+#include "gf/object/component/enemy/gf_com_behavior_enemy.h"
+#include "gf/object/component/gf_com_transform.h"
+#include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_setup.h"
@@ -15,6 +20,7 @@
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_enemy/gmk_enemy.h"
 #include "gmk/gmk_manager.h"
+#include "gmk/gmk_set.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_mtl/fixed_list.h"
@@ -205,6 +211,79 @@ void GfSmnEnemyManager::update(f32 deltaTime) {
       enemy = get()->unknown08.erase(enemy) - 1;
     }
   }
+}
+
+namespace {
+
+// Inferred role: asks the summoned enemy gimmicks around a position to pop their enemies; original name unknown.
+struct unknown004 {
+  void onTraverse(const gmk::AGmkBase &gmk) {
+    if (!gmk.isValid()) {
+      return;
+    }
+    const gmk::GmkEnemy &enemy = static_cast<const gmk::GmkEnemy &>(gmk);
+    if (!enemy.unknown48.unknown38.unknown03) {
+      return;
+    }
+    mm::Vec3 distance = unknown00 - enemy.unknown08.unknown08->unknown00;
+    if (unknown08 < distance.x * distance.x + distance.y * distance.y + distance.z * distance.z) {
+      return;
+    }
+    if (enemy.unknown48.unknown38.isPopCondMatchedOfSmn()) {
+      gmk::ForcePopEnemyInfo info;
+      info.unknown00 = unknown0c;
+      enemy.unknown48.reqForcePopGobInst(info);
+    }
+  }
+
+  const mm::Vec3 &unknown00; // Inferred role: summon position; original member name unknown.
+  f32 unknown08;             // Inferred role: squared summon radius; original member name unknown.
+  u8 unknown0c;              // Inferred role: enemy genus; original member name unknown.
+};
+
+} // namespace
+
+bool GfSmnEnemyManager::execAbsSummon(const AbsSmnInfo &info) {
+  GfObj *owner = GfObjUtil::getObj(info.unknown00);
+  if (owner == nullptr) {
+    return false;
+  }
+  GfComTransform *transform = owner->getComponent<GfComTransform>();
+  if (transform == nullptr) {
+    return false;
+  }
+  const mm::Vec3 &position = transform->getPosition();
+  f32 radiusSq = info.unknown08 * info.unknown08;
+  for (GF_OBJ_HANDLE *handle : *GfGameObj::getList(OBJECT_TYPE_ENEMY)) {
+    if (info.unknown0c != 0) {
+      DataParamAcc paramAcc(handle);
+      if (!paramAcc.isValid()) {
+        continue;
+      }
+      // Decision 2026-11-14 #12: the game keeps the accessor's data in a local across the destructor of paramAcc (csel w24, wzr, w28, eq then cbnz w24); testing it in the `if` duplicates the
+      // destructor call (206 instructions instead of 207).
+      const SDataEnemy *data = paramAcc.getSDataEnemy();
+      if (data->unknown99 != info.unknown0c) {
+        continue;
+      }
+    }
+    GfObjAcc acc(handle);
+    GfObj *obj = acc.getObj();
+    if (obj == nullptr) {
+      continue;
+    }
+    GfComBehaviorEnemy *behavior = obj->getComponent<GfComBehaviorEnemy>();
+    if (behavior == nullptr) {
+      continue;
+    }
+    mm::Vec3 distance = position - acc.getWorldTransformNoSync().unknown00;
+    if (radiusSq < distance.x * distance.x + distance.y * distance.y + distance.z * distance.z) {
+      continue;
+    }
+    behavior->reqChangeBattle();
+  }
+  unknown004 traverser = {position, radiusSq, info.unknown0c};
+  return gmk::GmkManager::get()->traverseGmkInst(gmk::GMK_TYPE_ENEMY, traverser);
 }
 
 bool GfSmnEnemyManager::execRelSummon(const RelSmnInfo &info) {

@@ -16,7 +16,15 @@ class TitleMain;
 
 class TitleStateDebugSaveContinue : public ai::State {
   GF_STATE_CLASS(TitleStateDebugSaveContinue, TitleMain)
-  static const u32 SLOT_UNKNOWN_21 = 21; // Inferred role: number of save slots; original name unknown.
+  static const int SLOT_UNKNOWN_21 = 21; // Inferred role: number of save slots, signed as the game compares it with the selected slot (updateButton: cmp w9, #19 and b.gt); original name unknown.
+
+  // Inferred role: bits of the control pad read by updateButton; original names unknown.
+  enum {
+    PAD_BUTTON_UNKNOWN_1 = 1 << 1,
+    PAD_BUTTON_UNKNOWN_2 = 1 << 2,
+    PAD_BUTTON_UNKNOWN_12 = 1 << 12,
+    PAD_BUTTON_UNKNOWN_14 = 1 << 14,
+  };
 
   // Inferred role: a save slot of the debug menu; original type name unknown.
   struct unknown001 {

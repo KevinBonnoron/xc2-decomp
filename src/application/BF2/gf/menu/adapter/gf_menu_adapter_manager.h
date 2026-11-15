@@ -25,6 +25,7 @@ public:
   static bool isAdapterFull();
   static bool isInitialized();
   static void destroy();
+  static void build(const GfSetupParam &param);
   static void beginCategory(u32 category);
   static void endCategory();
   static void beginAddAfter();

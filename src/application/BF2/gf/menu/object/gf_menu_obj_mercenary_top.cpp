@@ -1,7 +1,15 @@
 #include "gf/menu/object/gf_menu_obj_mercenary_top.h"
 
 #include "gf/data/gf_data_mercenaries.h"
+#include "gf/game/gf_game_manager.h"
 #include "gf/game/mercenaries/gf_game_mercenaries.h"
+#include "gf/game/quest/gf_quest_id.h"
+#include "gf/gf_allocator.h"
+#include "gf/menu/adapter/gf_menu_adapter_manager.h"
+#include "gf/menu/adapter/gf_menu_game_adapter.h"
+#include "gf/menu/adapter/gf_menu_mercenaries_adapter.h"
+#include "gf/menu/adapter/gf_menu_mission_adapter.h"
+#include "gf/menu/adapter/gf_menu_zone_adapter.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_fullscreen.h"
 #include "gf/menu/gf_menu_manager.h"
@@ -12,14 +20,17 @@
 #include "gf/menu/list/gf_menu_blade_list.h"
 #include "gf/menu/list/gf_menu_id_list.h"
 #include "gf/menu/object/gf_menu_obj_common_text.h"
+#include "gf/menu/object/gf_menu_obj_quest_reward.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "mm_math/mm_pnt.h"
 #include "mm_math/mm_rect.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/reference_object.h"
+#include "ui/ctrl/ui_ctrl_curve.h"
 #include "ui/ctrl/ui_ctrl_object.h"
 #include "ui/ctrl/ui_ctrl_revolve_select.h"
 #include "ui/event/ui_event_data.h"
+#include "ui/event/ui_event_manager.h"
 #include "ui/list/ui_list_info.h"
 #include "ui/list/ui_select_obj_list.h"
 #include "ui/ui_object_acc.h"
@@ -66,6 +77,236 @@ void GfMenuObjMercenaryTop::registOpenParam(const OpenParam &param) {
   GfMenuTypes::Param layerParam;
   layerParam.set(param);
   GfMenuFullScreen::registLayerParam(unknown001, layerParam);
+}
+
+void GfMenuObjMercenaryTop::initialize() {
+  ui::UIObjectAcc main(unknown18, "LAY_main");
+  u32 mission = 0;
+  {
+    GfMenuTypes::Param layerParam;
+    if (getFSLayerParam(unknown20, layerParam)) {
+      mission = layerParam.get<OpenParam>().unknown00;
+      removeFSLayerParam(unknown20);
+    }
+  }
+  updateTargetTeam();
+  u32 zoneId = GfGameManager::getMapZoneID();
+  unknown28 = GfMenuIDList::create();
+  {
+    ui::UIListInfoBase::SetupParam zoneParam;
+    unknown28->setupMercenaryZoneList(zoneParam, true);
+  }
+  if (unknown28->getSize() != 0) {
+    if (mission != 0) {
+      zoneId = GfDataMercenaries::getMissionZoneID(mission);
+    }
+    for (u32 i = 0; i < unknown28->getSize(); i++) {
+      if (zoneId == unknown28->getContents(i).unknown00) {
+        unknown28->setIndex(i);
+        break;
+      }
+    }
+    unknown80->unknown162(unknown28->getContents(unknown28->getIndex(false)).unknown00);
+  }
+  unknown38 = GfMenuBladeList::create();
+  unknown40 = GfMenuBladeList::create();
+  updateBladeList();
+  {
+    ui::UIObjectAcc zone(main.unknown10, "LAY_zone");
+    mm::mtl::FixStr<32> name;
+// __LINE__ must be 208 as in the original file: it is the line argument of operator new.
+#line 208
+    ZoneListener *zoneListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ZoneListener(this);
+    zoneListener->addRef();
+    ui::UIEventManager::get()->registObjectListener(zone.unknown10, zoneListener);
+    if (zoneListener != nullptr) {
+      zoneListener->release();
+    }
+    {
+      ui::UISelectObjList::CreateParam createParam;
+      createParam.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
+      unknown48 = ui::UISelectObjList::create(createParam);
+    }
+    for (u32 i = 0; i < unknown28->getSize(); i++) {
+      name.format("IMG_zone_sel_flag@%02d", unknown28->getContents(i).unknown00);
+      ui::UIObjectAcc flag(zone.unknown10, name.c_str());
+      flag.setImageIndex(unknown28->getContents(i).unknown00 - 1);
+      name.format("LAY_zone_sel_flag@%02d", unknown28->getContents(i).unknown00);
+      unknown48->addObject(zone.searchChild(name.c_str()));
+    }
+    {
+      ui::UISelectObjList::CreateParam createParam;
+      createParam.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
+      unknown60 = ui::UISelectObjList::create(createParam);
+    }
+    {
+      ui::UISelectObjList::CreateParam createParam;
+      createParam.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
+      unknown68 = ui::UISelectObjList::create(createParam);
+    }
+    {
+      mm::Rect<s16> rect;
+      zone.getLayoutRect("mnu090_icon_flag_select", rect);
+      ui::UICtrlRevolveSelect::RevolveSetting setting;
+      setting.unknown02 = 2;
+      setting.unknown0c = 500;
+      setting.unknown08 = mm::Pnt<s16>(rect.x + rect.width / 2, rect.y + rect.height / 2);
+      setting.unknown04 = 0.25f;
+      setting.unknown18 = 0.0f;
+      setting.unknown28 = ui::CURVE_TYPE_SIN90;
+      setting.unknown24 = ui::CURVE_TYPE_SIN90;
+      setting.unknown03 = 1;
+      if (unknown28->getSize() == 7) {
+        setting.unknown00 = 360;
+      } else if (unknown28->getSize() != 1) {
+        // The game converts the angle to an unsigned integer (fcvtzu) before the 16-bit store; a direct float to u16 assignment does not match.
+        setting.unknown00 = static_cast<u32>(unknown28->getSize() * 51.42857f);
+      }
+      unknown50 = ui::UICtrlRevolveSelect::create(zone.unknown10, setting, unknown48);
+      if (unknown50 != nullptr) {
+        unknown50->setupEventHanding(main.unknown10, 1);
+      }
+    }
+    GfMenuZoneAdapter::createFromReference(zone.searchChild("TXT_zone_info_name"), 0, unknown80, false);
+    GfMenuZoneAdapter::createFromReference(zone.searchChild("IMG_zone_info_lv"), 3, unknown80, false);
+    {
+      ui::UIObjectAcc zoneMer(main.unknown10, "LAY_zone_mer");
+      GfMenuGameAdapter::create(zoneMer.searchChild("TXT_zone_info_mer_lv"), 0xb, false);
+      {
+        ui::UIObjectAcc gauge(zoneMer.unknown10, "IMG_zone_mer_lv_gauge");
+        GfMenuGameAdapter::create(gauge.unknown10, 0xc, false);
+        gauge.setExtType(1);
+        if (GfDataMercenaries::getLevel() == 5) {
+          gauge.setAlpha(0.0f);
+        }
+      }
+      GfMenuGameAdapter::create(zoneMer.searchChild("TXT_zone_mer_lv_next_num"), 0xc, false);
+      GfMenuGameAdapter::create(zoneMer.searchChild("TXT_zone_mer_lv_next_max"), 0xd, false);
+    }
+    {
+      mm::mtl::FixStr<32> unitName;
+      for (u32 i = 0; i < 3; i++) {
+        unitName.format("TXT_zone_unit_name@%02d", i + 1);
+        GfMenuMercenariesAdapter::create(zone.searchChild(unitName.c_str()), 0, i + 1, false);
+        unitName.format("TXT_zone_unit_mission_name@%02d", i + 1);
+        GfMenuMercenariesAdapter::create(zone.searchChild(unitName.c_str()), 9, i + 1, false);
+        unitName.format("IMG_zone_unit_bl_icon@%02d", i + 1);
+        GfMenuMercenariesAdapter::create(zone.searchChild(unitName.c_str()), 1, i + 1, false);
+        unitName.format("IMG_zone_unit_flag@%02d", i + 1);
+        GfMenuMercenariesAdapter::create(zone.searchChild(unitName.c_str()), 8, i + 1, false);
+        unitName.format("TXT_zone_unit_mission_time@%02d", i + 1);
+        ui::UIObjectAcc time(zone.unknown10, unitName.c_str());
+        GfMenuMercenariesAdapter::create(zone.searchChild(unitName.c_str()), 10, i + 1, true);
+        unitName.format("TXT_zone_unit_mission_inf@%02d", i + 1);
+        GfMenuObjUtil::createSyncPlugin(zone.searchChild(unitName.c_str()), time.unknown10, 0x40);
+        unitName.format("TXT_zone_unit_come_back@%02d", i + 1);
+        GfMenuMercenariesAdapter::create(zone.searchChild(unitName.c_str()), 0xb, i + 1, true);
+        addDispEventCondition(zone.unknown10, unitName.c_str(), 1, i, false);
+      }
+    }
+    mm::Rect<s16> nonSelectRect;
+    zone.getLayoutRect("mnu090_icon_flag_nonselect", nonSelectRect);
+    mm::Rect<s16> selectRect;
+    zone.getLayoutRect("mnu090_icon_flag_select", selectRect);
+    unknown58 = static_cast<f32>(selectRect.width) / static_cast<f32>(nonSelectRect.width) - 1.0f;
+    setFSInputObject(0, zone.unknown10);
+  }
+  {
+    ui::UIObjectAcc missionSelect(main.unknown10, "LAY_mis_sel");
+    mm::mtl::FixStr<32> name;
+    {
+      ui::UISelectObjList::CreateParam createParam;
+      createParam.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
+      unknown70 = ui::UISelectObjList::create(createParam);
+    }
+    unknown70->pickupObject(missionSelect.unknown10, "LAY_mis_sel_item@%02d", 1);
+    unknown30 = GfMenuIDList::create();
+    updateMissionList();
+    GfMenuAdapterManager::beginAddAfter();
+    for (u32 i = 0; i < unknown70->getSize(); i++) {
+      name.format("TXT_mis_sel_title@%02d", i + 1);
+      GfMenuMissionAdapter *adapter = GfMenuMissionAdapter::createFromList(missionSelect.searchChild(name.c_str()), 0, unknown30, i, nullptr, false);
+      if (adapter != nullptr) {
+        adapter->unknown24 = unknown70->getObject(i);
+      }
+      name.format("TXT_mis_sel_time@%02d", i + 1);
+      ui::UIObjectAcc time(missionSelect.unknown10, name.c_str());
+      GfMenuMissionAdapter::createFromList(time.unknown10, 0x23, unknown30, i, nullptr, false);
+      name.format("TXT_mis_sel_time_inf@%02d", i + 1);
+      GfMenuObjUtil::createSyncPlugin(missionSelect.searchChild(name.c_str()), time.unknown10, 0x40);
+      name.format("IMG_mis_sel_icon@%02d", i + 1);
+      GfMenuMissionAdapter::createFromList(missionSelect.searchChild(name.c_str()), 2, unknown30, i, nullptr, false);
+      name.format("IMG_mis_sel_new@%02d", i + 1);
+      GfMenuMissionAdapter::createFromList(missionSelect.searchChild(name.c_str()), 0x1c, unknown30, i, nullptr, true);
+    }
+    {
+      GfMenuObjQuestReward::OpenParam rewardParam;
+      rewardParam.unknown10 = unknown88;
+      rewardParam.unknown08 = missionSelect.searchChild("LAY_mis_sel_detail_reward");
+      rewardParam.unknown0c = 1;
+      GfMenuObjQuestReward::create(unknown98, rewardParam, true);
+    }
+    GfMenuMissionAdapter::createFromReferenceMission(missionSelect.searchChild("TXT_mis_sel_detail_info"), 1, 0, false);
+    GfMenuZoneAdapter::createFromReference(missionSelect.searchChild("IMG_mis_sel_detail_flag"), 2, unknown80, false);
+    for (u32 i = 0; i < 3; i++) {
+      name.format("IMG_mis_sel_cond_icon@%02d", i + 1);
+      GfMenuMissionAdapter *adapter = GfMenuMissionAdapter::createFromReferenceMission(missionSelect.searchChild(name.c_str()), 0x12, i, false);
+      if (adapter != nullptr) {
+        name.format("LAY_mis_sel_cond@%02d", i + 1);
+        adapter->unknown24 = missionSelect.searchChild(name.c_str());
+      }
+      name.format("TXT_mis_sel_cond_txt@%02d", i + 1);
+      GfMenuMissionAdapter::createFromReferenceMission(missionSelect.searchChild(name.c_str()), 0x11, i, false);
+      u32 text = missionSelect.searchChild(name.c_str());
+      if (text != 0) {
+        name.format("TXT_mis_sel_cond_val@%02d", i + 1);
+        GfMenuObjUtil::createDockPlugin(missionSelect.searchChild(name.c_str()), text, 1, mm::Pnt<s16>(12, 0), 0);
+        GfMenuMissionAdapter::createFromReferenceMission(missionSelect.searchChild(name.c_str()), 0x13, i, false);
+        name.format("TXT_mis_sel_cond_lv@%02d", i + 1);
+        GfMenuObjUtil::createDockPlugin(missionSelect.searchChild(name.c_str()), text, 1, mm::Pnt<s16>(12, 0), 0);
+        GfMenuMissionAdapter::createFromReferenceMission(missionSelect.searchChild(name.c_str()), 0x14, i, false);
+        name.format("TXT_mis_sel_cond_max@%02d", i + 1);
+        GfMenuMissionAdapter::createFromReferenceMission(missionSelect.searchChild(name.c_str()), 0x16, i, false);
+      }
+    }
+    GfMenuAdapterManager::endAddAfter();
+    GfMenuObjUtil::createVScrollBarPlugin(missionSelect.searchChild("IMG_mis_sel_scroll_bar"), unknown30, "IMG_mis_sel_scroll_base", true);
+// __LINE__ must be 480 as in the original file: it is the line argument of operator new.
+#line 480
+    MissionListener *missionListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) MissionListener(this);
+    missionListener->addRef();
+    ui::UIEventManager::get()->registObjectListener(missionSelect.unknown10, missionListener);
+    if (missionListener != nullptr) {
+      missionListener->release();
+    }
+    setFSInputObject(1, missionSelect.unknown10);
+  }
+  if (mission == 0) {
+    sendOpenEvent(main.searchChild("LAY_zone"), 0);
+  } else {
+    for (u32 i = 0; i < unknown30->getSize(); i++) {
+      if (mission == unknown30->getContents(i).unknown00) {
+        unknown30->setIndex(i);
+        break;
+      }
+    }
+    unknown80->unknown162(unknown28->getContents(unknown28->getIndex(false)).unknown00);
+    unknown88->unknown162(unknown30->getContents(unknown30->getIndex(false)).unknown00);
+    unknown90->unknown0c = GfDataMercenaries::getMissionQuestID(mission);
+    GfMenuReference::setReferenceZoneID(unknown28->getContents(unknown28->getIndex(false)).unknown00);
+    GfMenuReference::setReferenceMissionID(unknown30->getContents(unknown30->getIndex(false)).unknown00);
+    sendOpenEvent(main.searchChild("LAY_mis_sel"), 0);
+  }
+  disableFSInput();
+// __LINE__ must be 520 as in the original file: it is the line argument of operator new.
+#line 520
+  MainListener *mainListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) MainListener(this);
+  mainListener->addRef();
+  ui::UIEventManager::get()->registObjectListener(main.unknown10, mainListener);
+  if (mainListener != nullptr) {
+    mainListener->release();
+  }
+  GfMenuObject::initialize();
 }
 
 void GfMenuObjMercenaryTop::sendOpenEvent(u32 handle, int type) {

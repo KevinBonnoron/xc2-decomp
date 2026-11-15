@@ -34,7 +34,9 @@ struct wkPixlManRes {
   DrPixlShadowMan *unknown178;          // Inferred role: shadow man; original member name unknown.
   DrPixlPostMan *unknown180;            // Inferred role: post man; original member name unknown.
   f32 unknown188;                       // Inferred role: tone strength, first value of setToneStr; original member name unknown.
-  u8 _18c[0x194 - 0x18c];
+  f32 unknown18c; // Inferred role: second tone value, sent with the tone strength by DrPixlPostObjBloom::calculateDownScaleImpl; original member name unknown. `str s1, [x8, #0x18c]` in
+                  // DrPixlMan::setToneStr 0x710083df60; also read as the high half of the 64-bit load at 0x7100854524.
+  u8 _190[0x194 - 0x190];
   f32 unknown194; // Inferred role: tone ave min; original member name unknown.
   f32 unknown198; // Inferred role: tone ave max; original member name unknown.
   u8 _19c[0x1a0 - 0x19c];
@@ -61,6 +63,7 @@ static_assert(offsetof(wkPixlManRes, unknown170) == 0x170, "");
 static_assert(offsetof(wkPixlManRes, unknown178) == 0x178, "");
 static_assert(offsetof(wkPixlManRes, unknown180) == 0x180, "");
 static_assert(offsetof(wkPixlManRes, unknown188) == 0x188, "");
+static_assert(offsetof(wkPixlManRes, unknown18c) == 0x18c, "");
 static_assert(offsetof(wkPixlManRes, unknown194) == 0x194, "");
 static_assert(offsetof(wkPixlManRes, unknown198) == 0x198, "");
 static_assert(offsetof(wkPixlManRes, unknown1a0) == 0x1a0, "");

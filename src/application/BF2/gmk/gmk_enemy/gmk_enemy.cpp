@@ -9,7 +9,9 @@
 #include "gf/data/gf_object_type.h"
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
+#include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 #include "gmk/gmk_squad.h"
@@ -233,6 +235,13 @@ bool GmkEnemyInsts::PopInfo::hasTypeGenus(u8 genus, bool flag) const {
   return false;
 }
 
+bool GmkEnemyInsts::isGobInstExist() const {
+  if (unknown00.unknown00 == nullptr || unknown00.unknown08.unknown00 == nullptr || unknown00.unknown10 <= 0) {
+    return false;
+  }
+  return unknown98.unknown001() != 0;
+}
+
 bool GmkEnemyInsts::isPopFinished() const {
   if (!isGfObjNumFull(gf::OBJECT_TYPE_ENEMY) && (unknown178 & unknown004_0) && (unknown178 & unknown004_1)) {
     return unknown98.isPopFinished();
@@ -299,6 +308,37 @@ void GmkEnemyInsts::create(const CreateInfo &info) {
       static_cast<u8>(info.unknown08.getValCheck("ene3num", info.unknown10, BDAT_TYPE_UNKNOWN_1)) + static_cast<u8>(info.unknown08.getValCheck("ene4num", info.unknown10, BDAT_TYPE_UNKNOWN_1));
   createSquad(unknown38.unknown04, enemyNum, unknown38.unknown06 * 0.01f);
   unknown160 = &GmkEnemyInsts::seqUpdatePopDepop;
+}
+
+void GmkEnemyInsts::disposeGobInsts(bool isFadeOut, bool isCheckBattle) {
+  if (isGobInstExist()) {
+    u32 num = unknown98.unknown001();
+    for (u32 i = 0; i < num; i++) {
+      gf::GF_OBJ_HANDLE *handle = getGobInst(i);
+      if (handle != gf::unknown020) {
+        if (isCheckBattle) {
+          gf::GfObjAcc acc(handle);
+          if (acc.isBattle()) {
+            continue;
+          }
+        }
+        if (isFadeOut) {
+          gmk::disposeGobInst(handle, 1.0f);
+        } else {
+          unknown00.unknown00->unbindToGameObj(handle);
+          gf::GfObjUtil::destroy(handle);
+        }
+      }
+    }
+    if (isFadeOut && !unknown180) {
+      unknown160 = &GmkEnemyInsts::seqWaitToFadeOutOfGobInst;
+    } else {
+      unknown98.dispose();
+    }
+    if (unknown158) {
+      unknown159 = false;
+    }
+  }
 }
 
 void GmkEnemyInsts::disposeSquad() { mm::mtl::safeRelease(unknown150); }
@@ -384,6 +424,26 @@ void GmkEnemyInsts::onEnemyDead(gf::GF_OBJ_HANDLE *handle) {
       unknown160 = &GmkEnemyInsts::seqUpdateRepopCounter;
     }
   }
+}
+
+void GmkEnemyInsts::seqWaitToFadeOutOfGobInst(const UpdateInfo &info) {
+  if (unknown98.unknown001() == 0) {
+    unknown160 = &GmkEnemyInsts::seqUpdatePopDepop;
+  }
+}
+
+bool GmkEnemyInsts::canDepopGobInst() const {
+  if (!isGobInstExist()) {
+    return false;
+  }
+  if (!unknown38.unknown03) {
+    if (!(unknown178 & unknown004_0) && !unknown180) {
+      return true;
+    }
+  } else if (unknown38.unknown0e.isEnable() && !unknown38.unknown0e.isMatch()) {
+    return true;
+  }
+  return !(unknown178 & unknown004_2);
 }
 
 bool GmkEnemy::PopXformFinder::isYSnap() const { return unknown08->getData()->unknown04; }

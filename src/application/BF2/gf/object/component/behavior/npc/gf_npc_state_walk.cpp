@@ -111,20 +111,7 @@ void StateWalk::seqWaitMoveEnd(GfComBehaviorNpc &behavior, const fw::UpdateInfo 
   }
 
   mm::Vec3 rotation = gmk->unknown08.unknown08->unknown10;
-  f32 halfX = rotation.x * 0.5f;
-  f32 halfY = rotation.y * 0.5f;
-  f32 halfZ = rotation.z * 0.5f;
-  f32 sinX = sinf(halfX);
-  f32 cosX = cosf(halfX);
-  f32 sinY = sinf(halfY);
-  f32 cosY = cosf(halfY);
-  f32 sinZ = sinf(halfZ);
-  f32 cosZ = cosf(halfZ);
-  mm::Quat quat;
-  quat.x = sinX * cosY * cosZ - cosX * sinY * sinZ;
-  quat.y = cosX * sinY * cosZ + sinX * cosY * sinZ;
-  quat.z = cosX * cosY * sinZ - sinX * sinY * cosZ;
-  quat.w = cosX * cosY * cosZ + sinX * sinY * sinZ;
+  mm::Quat quat = mm::unknown005(rotation);
   mm::Vec3 front = quat.rotate(mm::Vec3::unitZ);
   behavior.execTurnCmd(atan2f(front.x, front.z));
   unknown60 = 0.0f;

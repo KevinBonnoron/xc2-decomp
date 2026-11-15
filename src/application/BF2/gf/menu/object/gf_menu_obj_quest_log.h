@@ -21,17 +21,28 @@ class GfMenuObjQuestLog : public GfMenuObject {
 public:
   class TitleListener : public ui::UIObjectListener {
   public:
+    TitleListener(GfMenuObjQuestLog *owner) : _0c(), unknown20(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x20 - 0x0c];
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjQuestLog *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class LogListener : public ui::UIObjectListener {
+  public:
+    LogListener(GfMenuObjQuestLog *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
     GfMenuObjQuestLog *unknown20; // Inferred role: owner; original member name unknown.
   };
 
   class OrderListener : public ui::UIObjectListener {
   public:
+    OrderListener(GfMenuObjQuestLog *owner) : _0c(), unknown20(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x20 - 0x0c];
+    u8 _0c[0x1c - 0x0c];
     GfMenuObjQuestLog *unknown20; // Inferred role: owner; original member name unknown.
   };
 
@@ -143,6 +154,7 @@ static_assert(offsetof(GfMenuObjQuestLog, unknown59) == 0x59, "");
 static_assert(offsetof(GfMenuObjQuestLog, unknown5b) == 0x5b, "");
 static_assert(offsetof(GfMenuObjQuestLog, unknown60) == 0x60, "");
 static_assert(offsetof(GfMenuObjQuestLog::TitleListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjQuestLog::LogListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjQuestLog::OrderListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjQuestLog::CompleteListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjQuestLog, unknown2f0) == 0x2f0, "");

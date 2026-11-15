@@ -179,4 +179,29 @@ void ResourceManager::addSafeObject(mm::mtl::ReferenceObject *object, eResourceT
   }
 }
 
+void ResourceManager::removeSafeObject(mm::mtl::ReferenceObject *object) {
+  unknown001 *it = unknown538.begin();
+  while (it != unknown538.end()) {
+    // The game (1.0.0: 0x710019c314) loads the object of the entry in the loop and then compares it, with the byte-offset induction
+    // (`add x9, x19, x21; add x21, x21, #16; ldr x9, [x9, #1336]; cmp x9, x1`); comparing the member directly, as addSafeObject does
+    // (0x710019c238), gives a pointer loop and 79 instructions instead of 83.
+    mm::mtl::ReferenceObject *current = it->unknown00;
+    if (current == object) {
+      break;
+    }
+    it++;
+  }
+  if (it != unknown538.end()) {
+    it->unknown08--;
+    if (it->unknown08 == 0) {
+      unknown001 safeObject;
+      safeObject.unknown00 = it->unknown00;
+      safeObject.unknown08 = 3;
+      safeObject.unknown0c = it->unknown0c;
+      unknown4540.push_back(safeObject);
+      unknown538.erase(it);
+    }
+  }
+}
+
 } // namespace fw

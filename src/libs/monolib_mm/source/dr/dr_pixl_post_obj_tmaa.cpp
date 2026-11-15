@@ -90,6 +90,6 @@ void DrPixlPostObjTMAA::update() {}
 
 void DrPixlPostObjTMAA::debugRender() {}
 
-grlib::CGLibTextureBuffer *DrPixlPostObjTMAA::getBloomTexture() { return m_bloomTexture[DrMan::s_nDblIdx]; }
+DrPixlRenderTarget *DrPixlPostObjTMAA::getBloomTexture() { return m_bloomTexture[DrMan::s_nDblIdx]; }
 
 } // namespace ml

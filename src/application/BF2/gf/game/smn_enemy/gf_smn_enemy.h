@@ -87,6 +87,13 @@ public:
     s32 unknown08;            // Inferred role: bdat id of the summon enemy table row; original member name unknown.
   };
 
+  // Layout evidence: execAbsSummon (0x710038c188) reads the owner at 0x00, the radius at 0x08 and the genus at 0x0c.
+  struct AbsSmnInfo {
+    GF_OBJ_HANDLE *unknown00; // Inferred role: owner object; original member name unknown.
+    f32 unknown08;            // Inferred role: radius; original member name unknown.
+    u8 unknown0c;             // Inferred role: enemy genus (SDataEnemy::unknown99), 0 for any; original member name unknown.
+  };
+
   GfSmnEnemyManager();
   ~GfSmnEnemyManager();
   static void create();
@@ -94,6 +101,7 @@ public:
   static void update(f32 deltaTime);
   static void clearSmnEnemies();
   static void debugDraw();
+  static bool execAbsSummon(const AbsSmnInfo &info);
   static bool execRelSummon(const RelSmnInfo &info);
 
   mm::mtl::Vector<GfRelSmnEnemy *> unknown08; // Inferred role: relative summon enemies; original member name unknown.
@@ -101,5 +109,8 @@ public:
 
 static_assert(offsetof(GfSmnEnemyManager, unknown08) == 0x08, "");
 static_assert(sizeof(GfSmnEnemyManager) == 0x30, "");
+static_assert(offsetof(GfSmnEnemyManager::AbsSmnInfo, unknown08) == 0x08, "");
+static_assert(offsetof(GfSmnEnemyManager::AbsSmnInfo, unknown0c) == 0x0c, "");
+static_assert(sizeof(GfSmnEnemyManager::AbsSmnInfo) == 0x10, "");
 
 } // namespace gf

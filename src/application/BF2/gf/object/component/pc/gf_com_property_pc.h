@@ -208,7 +208,7 @@ public:
   mm::Vec3 unknown2b0;      // Inferred role: input Y axis; original member name unknown.
   mm::Vec3 unknown2c0;      // Inferred role: negated unknown2b0, written by updateWorldDirs; original member name unknown.
   mm::Vec3 unknown2d0;      // Inferred role: input X axis; original member name unknown.
-  mm::Vec3 unknown2e0;      // Inferred role: negated unknown2d0, written by updateWorldDirs; first axis of the basis inverted by setInputDirPow (not matched yet); original member name unknown.
+  mm::Vec3 unknown2e0;      // Inferred role: negated unknown2d0, written by updateWorldDirs; first axis of the basis inverted by setInputDirPow; original member name unknown.
   f32 unknown2f0;           // Inferred role: water offset compared by StateUtilField::isInterruptionWater; original member name unknown.
   f32 unknown2f4;           // Role and original member name unknown; set to zero by the constructor in one 64-bit store with unknown2f0, so its type is not proven.
   f32 unknown2f8;           // Inferred role: landing height; original member name unknown.

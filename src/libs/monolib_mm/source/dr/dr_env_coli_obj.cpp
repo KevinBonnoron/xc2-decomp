@@ -1,5 +1,8 @@
 #include "dr/dr_env_coli_obj.h"
 
+#include "cloud/cloud_calc_params.h"
+#include "cloud/cloud_man.h"
+#include "cloud/cloud_obj_man.h"
 #include "dr/dr_calc_man.h"
 #include "dr/dr_calc_view_work.h"
 #include "dr/dr_env_coli_man.h"
@@ -9,6 +12,7 @@
 #include "dr/dr_man.h"
 #include "dr/dr_pixl_post_parm.h"
 #include "dr/dr_res_list.h"
+#include "mm_math/mm_col3.h"
 #include "mm_math/mm_math.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_array.h"
@@ -61,6 +65,46 @@ struct unknown007 {
   u32 unknown04; // Inferred role: post parameter index list offset; original member name unknown.
   u8 _08[0x0c - 0x08];
   u32 unknown0c; // Inferred role: post data list offset; original member name unknown.
+  u8 _10[0x1c - 0x10];
+  u32 unknown1c; // Inferred role: cloud sky parameter list offset; original member name unknown.
+  u8 _20[0x24 - 0x20];
+  u32 unknown24; // Inferred role: cloud plane parameter list offset; original member name unknown.
+  u8 _28[0x2c - 0x28];
+  u32 unknown2c; // Inferred role: cloud parameter list offset; original member name unknown.
+  u8 _30[0x34 - 0x30];
+  u32 unknown34; // Inferred role: cloud model parameter list offset; original member name unknown.
+  u32 unknown38; // Inferred role: version, 0x1001 has the longer parameter records; original member name unknown.
+  u8 _3c[0x40 - 0x3c];
+  u32 unknown40; // Inferred role: cloud light parameter list offset; original member name unknown.
+};
+
+// Inferred role: cloud parameter record; original type name unknown.
+struct unknown011 {
+  f32 unknown00[2]; // Inferred role: cloud height; original member name unknown.
+  u16 unknown08[2]; // Inferred role: sky parameter index; original member name unknown.
+  u16 unknown0c[2]; // Inferred role: plane parameter index; original member name unknown.
+  u16 unknown10[2]; // Inferred role: model parameter index; original member name unknown.
+  u16 unknown14;    // Inferred role: light parameter index; original member name unknown.
+};
+
+// Inferred role: cloud plane parameters; original type name unknown.
+struct unknown012 {
+  f32 unknown00[0x27];
+};
+
+// Inferred role: cloud sky parameters; original type name unknown.
+struct unknown013 {
+  f32 unknown00[0x19];
+};
+
+// Inferred role: cloud light parameters; original type name unknown.
+struct unknown014 {
+  f32 unknown00[0x22];
+};
+
+// Inferred role: cloud model parameters; original type name unknown.
+struct unknown015 {
+  f32 unknown00[10];
 };
 
 // Inferred role: post parameter index; original type name unknown.
@@ -234,6 +278,283 @@ void DrEnvColiParameter::updateBloomParams() {
   postParm->unknowne0 = defaultParm.unknowne0;
   postParm->unknowne4 = defaultParm.unknowne4;
   postParm->unknowne8 = defaultParm.unknowne8;
+}
+
+// Written statement by statement as in the original (0x71007d5770): the game's code is straight-line, one blend or fade statement per parameter, in the order of the destination members (source
+// indices 7, 8, 6 for the plane and light groups). Checked with Clang 3.9.1: a loop over a run of up to 14 elements (6 or 10 elements, or the 3-entry index table 7, 8, 6) is fully unrolled and gives
+// the same code, but the runs of 20, 22 or 29 elements (a loop over the 29-entry index table of the plane group included) stay rolled loops (1172 to 1243 instructions against 1328), and the fade
+// statements write distinct members of CloudCalcParams. So the blocks cannot be loops; the statements the game holds are written out (decisions of 2026-11-13 ruling 8 and 2026-11-14 P3).
+void DrEnvColiParameter::updateCloudParams(f32 ratio, bool, const EnvColiPostData *from, const EnvColiPostData *to) {
+  unknown012 blendPlane;
+  unknown013 blendSky;
+  unknown015 blendModel;
+  unknown014 blendLight;
+  cloud::CloudMan *cloudMan = unknown00->unknown1e00;
+  u32 cldNum = cloudMan->getCldNum();
+  const unknown007 *header = reinterpret_cast<const unknown007 *>(unknown20);
+  u32 sizeCloud = header->unknown38 == 0x1001 ? 0x20 : 0x14;
+  u32 sizePlane = header->unknown38 == 0x1001 ? 0x9c : 0x78;
+  u32 sizeSky = header->unknown38 == 0x1001 ? 100 : 0x60;
+  const u8 *clouds = unknown20 + header->unknown2c;
+  const u8 *listPlane = unknown20 + header->unknown24;
+  const u8 *listSky = unknown20 + header->unknown1c;
+  const u8 *listModel = unknown20 + header->unknown34;
+  const u8 *listLight = unknown20 + header->unknown40;
+  const unknown011 *other = reinterpret_cast<const unknown011 *>(clouds + to->unknown2c * sizeCloud);
+  const unknown011 *cloud = reinterpret_cast<const unknown011 *>(clouds + from->unknown2c * sizeCloud);
+  const unknown012 *paramPlane = reinterpret_cast<const unknown012 *>(listPlane + cloud->unknown0c[cldNum] * sizePlane);
+  const unknown013 *paramSky = reinterpret_cast<const unknown013 *>(listSky + cloud->unknown08[cldNum] * sizeSky);
+  const unknown015 *paramModel = reinterpret_cast<const unknown015 *>(listModel + cloud->unknown10[cldNum] * 0x28);
+  const unknown014 *paramLight = reinterpret_cast<const unknown014 *>(listLight + cloud->unknown14 * 0x88);
+  cloudMan->setHeight(cloud->unknown00[cldNum]);
+  if (ratio != 0.0f) {
+    f32 inverse = 1.0f - ratio;
+    if ((from->unknown08 & EnvColiPostData::FLAG_UNKNOWN_1) != 0 && (to->unknown08 & EnvColiPostData::FLAG_UNKNOWN_1) != 0) {
+      const unknown012 *otherPlane = reinterpret_cast<const unknown012 *>(listPlane + other->unknown0c[cldNum] * sizePlane);
+      blendPlane.unknown00[0] = paramPlane->unknown00[0] * ratio + inverse * otherPlane->unknown00[0];
+      blendPlane.unknown00[1] = paramPlane->unknown00[1] * ratio + inverse * otherPlane->unknown00[1];
+      blendPlane.unknown00[2] = paramPlane->unknown00[2] * ratio + inverse * otherPlane->unknown00[2];
+      blendPlane.unknown00[3] = paramPlane->unknown00[3] * ratio + inverse * otherPlane->unknown00[3];
+      blendPlane.unknown00[4] = paramPlane->unknown00[4] * ratio + inverse * otherPlane->unknown00[4];
+      blendPlane.unknown00[5] = paramPlane->unknown00[5] * ratio + inverse * otherPlane->unknown00[5];
+      blendPlane.unknown00[7] = paramPlane->unknown00[7] * ratio + inverse * otherPlane->unknown00[7];
+      blendPlane.unknown00[8] = paramPlane->unknown00[8] * ratio + inverse * otherPlane->unknown00[8];
+      blendPlane.unknown00[6] = paramPlane->unknown00[6] * ratio + inverse * otherPlane->unknown00[6];
+      blendPlane.unknown00[9] = paramPlane->unknown00[9] * ratio + inverse * otherPlane->unknown00[9];
+      blendPlane.unknown00[10] = paramPlane->unknown00[10] * ratio + inverse * otherPlane->unknown00[10];
+      blendPlane.unknown00[11] = paramPlane->unknown00[11] * ratio + inverse * otherPlane->unknown00[11];
+      blendPlane.unknown00[12] = paramPlane->unknown00[12] * ratio + inverse * otherPlane->unknown00[12];
+      blendPlane.unknown00[13] = paramPlane->unknown00[13] * ratio + inverse * otherPlane->unknown00[13];
+      blendPlane.unknown00[14] = paramPlane->unknown00[14] * ratio + inverse * otherPlane->unknown00[14];
+      blendPlane.unknown00[15] = paramPlane->unknown00[15] * ratio + inverse * otherPlane->unknown00[15];
+      blendPlane.unknown00[16] = paramPlane->unknown00[16] * ratio + inverse * otherPlane->unknown00[16];
+      blendPlane.unknown00[17] = paramPlane->unknown00[17] * ratio + inverse * otherPlane->unknown00[17];
+      blendPlane.unknown00[18] = paramPlane->unknown00[18] * ratio + inverse * otherPlane->unknown00[18];
+      blendPlane.unknown00[19] = paramPlane->unknown00[19] * ratio + inverse * otherPlane->unknown00[19];
+      blendPlane.unknown00[20] = paramPlane->unknown00[20] * ratio + inverse * otherPlane->unknown00[20];
+      blendPlane.unknown00[21] = paramPlane->unknown00[21] * ratio + inverse * otherPlane->unknown00[21];
+      blendPlane.unknown00[22] = paramPlane->unknown00[22] * ratio + inverse * otherPlane->unknown00[22];
+      blendPlane.unknown00[23] = paramPlane->unknown00[23] * ratio + inverse * otherPlane->unknown00[23];
+      blendPlane.unknown00[24] = paramPlane->unknown00[24] * ratio + inverse * otherPlane->unknown00[24];
+      blendPlane.unknown00[25] = paramPlane->unknown00[25] * ratio + inverse * otherPlane->unknown00[25];
+      blendPlane.unknown00[26] = paramPlane->unknown00[26] * ratio + inverse * otherPlane->unknown00[26];
+      blendPlane.unknown00[27] = paramPlane->unknown00[27] * ratio + inverse * otherPlane->unknown00[27];
+      blendPlane.unknown00[28] = paramPlane->unknown00[28] * ratio + inverse * otherPlane->unknown00[28];
+      if (header->unknown38 == 0x1001) {
+        blendPlane.unknown00[0x1e] = paramPlane->unknown00[0x1e];
+        blendPlane.unknown00[0x1f] = paramPlane->unknown00[0x1f];
+        blendPlane.unknown00[0x20] = paramPlane->unknown00[0x20];
+        blendPlane.unknown00[0x21] = paramPlane->unknown00[0x21];
+        blendPlane.unknown00[0x22] = paramPlane->unknown00[0x22];
+        blendPlane.unknown00[0x23] = paramPlane->unknown00[0x23];
+        blendPlane.unknown00[0x24] = paramPlane->unknown00[0x24];
+        blendPlane.unknown00[0x25] = paramPlane->unknown00[0x25];
+        blendPlane.unknown00[0x26] = paramPlane->unknown00[0x26];
+      }
+      paramPlane = &blendPlane;
+    }
+    if ((from->unknown08 & EnvColiPostData::FLAG_UNKNOWN_5) != 0 && (to->unknown08 & EnvColiPostData::FLAG_UNKNOWN_5) != 0) {
+      const unknown014 *otherLight = reinterpret_cast<const unknown014 *>(listLight + other->unknown14 * 0x88);
+      blendLight.unknown00[0] = paramLight->unknown00[0] * ratio + inverse * otherLight->unknown00[0];
+      blendLight.unknown00[1] = paramLight->unknown00[1] * ratio + inverse * otherLight->unknown00[1];
+      blendLight.unknown00[2] = paramLight->unknown00[2] * ratio + inverse * otherLight->unknown00[2];
+      blendLight.unknown00[3] = paramLight->unknown00[3] * ratio + inverse * otherLight->unknown00[3];
+      blendLight.unknown00[4] = paramLight->unknown00[4] * ratio + inverse * otherLight->unknown00[4];
+      blendLight.unknown00[5] = paramLight->unknown00[5] * ratio + inverse * otherLight->unknown00[5];
+      blendLight.unknown00[7] = paramLight->unknown00[7] * ratio + inverse * otherLight->unknown00[7];
+      blendLight.unknown00[8] = paramLight->unknown00[8] * ratio + inverse * otherLight->unknown00[8];
+      blendLight.unknown00[6] = paramLight->unknown00[6] * ratio + inverse * otherLight->unknown00[6];
+      blendLight.unknown00[9] = paramLight->unknown00[9] * ratio + inverse * otherLight->unknown00[9];
+      blendLight.unknown00[10] = paramLight->unknown00[10] * ratio + inverse * otherLight->unknown00[10];
+      blendLight.unknown00[11] = paramLight->unknown00[11] * ratio + inverse * otherLight->unknown00[11];
+      blendLight.unknown00[12] = paramLight->unknown00[12] * ratio + inverse * otherLight->unknown00[12];
+      blendLight.unknown00[13] = paramLight->unknown00[13] * ratio + inverse * otherLight->unknown00[13];
+      blendLight.unknown00[14] = paramLight->unknown00[14] * ratio + inverse * otherLight->unknown00[14];
+      blendLight.unknown00[15] = paramLight->unknown00[15] * ratio + inverse * otherLight->unknown00[15];
+      blendLight.unknown00[16] = paramLight->unknown00[16] * ratio + inverse * otherLight->unknown00[16];
+      blendLight.unknown00[17] = paramLight->unknown00[17] * ratio + inverse * otherLight->unknown00[17];
+      blendLight.unknown00[18] = paramLight->unknown00[18] * ratio + inverse * otherLight->unknown00[18];
+      blendLight.unknown00[19] = paramLight->unknown00[19] * ratio + inverse * otherLight->unknown00[19];
+      blendLight.unknown00[20] = paramLight->unknown00[20] * ratio + inverse * otherLight->unknown00[20];
+      blendLight.unknown00[21] = paramLight->unknown00[21] * ratio + inverse * otherLight->unknown00[21];
+      blendLight.unknown00[22] = paramLight->unknown00[22] * ratio + inverse * otherLight->unknown00[22];
+      blendLight.unknown00[23] = paramLight->unknown00[23] * ratio + inverse * otherLight->unknown00[23];
+      blendLight.unknown00[24] = paramLight->unknown00[24] * ratio + inverse * otherLight->unknown00[24];
+      blendLight.unknown00[25] = paramLight->unknown00[25] * ratio + inverse * otherLight->unknown00[25];
+      blendLight.unknown00[26] = paramLight->unknown00[26] * ratio + inverse * otherLight->unknown00[26];
+      blendLight.unknown00[27] = paramLight->unknown00[27] * ratio + inverse * otherLight->unknown00[27];
+      blendLight.unknown00[28] = paramLight->unknown00[28] * ratio + inverse * otherLight->unknown00[28];
+      blendLight.unknown00[0x1f] = paramLight->unknown00[0x1f] * ratio + inverse * otherLight->unknown00[0x1f];
+      blendLight.unknown00[0x20] = paramLight->unknown00[0x20] * ratio + inverse * otherLight->unknown00[0x20];
+      blendLight.unknown00[0x21] = paramLight->unknown00[0x21] * ratio + inverse * otherLight->unknown00[0x21];
+      blendLight.unknown00[0x1e] = paramLight->unknown00[0x1e];
+      paramLight = &blendLight;
+    }
+    if ((from->unknown08 & EnvColiPostData::FLAG_UNKNOWN_3) != 0 && (to->unknown08 & EnvColiPostData::FLAG_UNKNOWN_3) != 0) {
+      const unknown013 *otherSky = reinterpret_cast<const unknown013 *>(listSky + other->unknown08[cldNum] * sizeSky);
+      blendSky.unknown00[0] = paramSky->unknown00[0] * ratio + inverse * otherSky->unknown00[0];
+      blendSky.unknown00[1] = paramSky->unknown00[1] * ratio + inverse * otherSky->unknown00[1];
+      blendSky.unknown00[2] = paramSky->unknown00[2] * ratio + inverse * otherSky->unknown00[2];
+      blendSky.unknown00[3] = paramSky->unknown00[3] * ratio + inverse * otherSky->unknown00[3];
+      blendSky.unknown00[4] = paramSky->unknown00[4] * ratio + inverse * otherSky->unknown00[4];
+      blendSky.unknown00[5] = paramSky->unknown00[5] * ratio + inverse * otherSky->unknown00[5];
+      blendSky.unknown00[6] = paramSky->unknown00[6] * ratio + inverse * otherSky->unknown00[6];
+      blendSky.unknown00[7] = paramSky->unknown00[7] * ratio + inverse * otherSky->unknown00[7];
+      blendSky.unknown00[8] = paramSky->unknown00[8] * ratio + inverse * otherSky->unknown00[8];
+      blendSky.unknown00[9] = paramSky->unknown00[9] * ratio + inverse * otherSky->unknown00[9];
+      blendSky.unknown00[10] = paramSky->unknown00[10] * ratio + inverse * otherSky->unknown00[10];
+      blendSky.unknown00[11] = paramSky->unknown00[11] * ratio + inverse * otherSky->unknown00[11];
+      blendSky.unknown00[12] = paramSky->unknown00[12] * ratio + inverse * otherSky->unknown00[12];
+      blendSky.unknown00[13] = paramSky->unknown00[13] * ratio + inverse * otherSky->unknown00[13];
+      blendSky.unknown00[14] = paramSky->unknown00[14] * ratio + inverse * otherSky->unknown00[14];
+      blendSky.unknown00[15] = paramSky->unknown00[15] * ratio + inverse * otherSky->unknown00[15];
+      blendSky.unknown00[16] = paramSky->unknown00[16] * ratio + inverse * otherSky->unknown00[16];
+      blendSky.unknown00[17] = paramSky->unknown00[17] * ratio + inverse * otherSky->unknown00[17];
+      blendSky.unknown00[18] = paramSky->unknown00[18] * ratio + inverse * otherSky->unknown00[18];
+      blendSky.unknown00[19] = paramSky->unknown00[19] * ratio + inverse * otherSky->unknown00[19];
+      blendSky.unknown00[20] = paramSky->unknown00[20] * ratio + inverse * otherSky->unknown00[20];
+      blendSky.unknown00[21] = paramSky->unknown00[21] * ratio + inverse * otherSky->unknown00[21];
+      if (header->unknown38 == 0x1001) {
+        blendSky.unknown00[0x18] = paramSky->unknown00[0x18];
+      }
+      paramSky = &blendSky;
+    }
+    if ((from->unknown08 & EnvColiPostData::FLAG_UNKNOWN_4) != 0 && (to->unknown08 & EnvColiPostData::FLAG_UNKNOWN_4) != 0) {
+      const unknown015 *otherModel = reinterpret_cast<const unknown015 *>(listModel + other->unknown10[cldNum] * 0x28);
+      blendModel.unknown00[0] = paramModel->unknown00[0] * ratio + inverse * otherModel->unknown00[0];
+      blendModel.unknown00[1] = paramModel->unknown00[1] * ratio + inverse * otherModel->unknown00[1];
+      blendModel.unknown00[2] = paramModel->unknown00[2] * ratio + inverse * otherModel->unknown00[2];
+      blendModel.unknown00[3] = paramModel->unknown00[3] * ratio + inverse * otherModel->unknown00[3];
+      blendModel.unknown00[4] = paramModel->unknown00[4] * ratio + inverse * otherModel->unknown00[4];
+      blendModel.unknown00[5] = paramModel->unknown00[5] * ratio + inverse * otherModel->unknown00[5];
+      blendModel.unknown00[6] = paramModel->unknown00[6] * ratio + inverse * otherModel->unknown00[6];
+      blendModel.unknown00[7] = paramModel->unknown00[7] * ratio + inverse * otherModel->unknown00[7];
+      blendModel.unknown00[8] = paramModel->unknown00[8] * ratio + inverse * otherModel->unknown00[8];
+      blendModel.unknown00[9] = paramModel->unknown00[9] * ratio + inverse * otherModel->unknown00[9];
+      paramModel = &blendModel;
+    }
+  }
+  f32 fade = unknown08->unknown88;
+  if ((from->unknown08 & EnvColiPostData::FLAG_UNKNOWN_1) != 0) {
+    cloud::CloudCalcParams *params = cloudMan->unknown50->unknown38;
+    params->unknown1b8[0].r += fade * (paramPlane->unknown00[0] - params->unknown1b8[0].r);
+    params->unknown1b8[0].g += fade * (paramPlane->unknown00[1] - params->unknown1b8[0].g);
+    params->unknown1b8[0].b += fade * (paramPlane->unknown00[2] - params->unknown1b8[0].b);
+    params->unknown1b8[1].r += fade * (paramPlane->unknown00[3] - params->unknown1b8[1].r);
+    params->unknown1b8[1].g += fade * (paramPlane->unknown00[4] - params->unknown1b8[1].g);
+    params->unknown1b8[1].b += fade * (paramPlane->unknown00[5] - params->unknown1b8[1].b);
+    params->unknown1d0 += fade * (paramPlane->unknown00[7] - params->unknown1d0);
+    params->unknown1d4 += fade * (paramPlane->unknown00[8] - params->unknown1d4);
+    params->unknown1dc += fade * (paramPlane->unknown00[6] - params->unknown1dc);
+    params->unknown1e0[0] += fade * (paramPlane->unknown00[9] - params->unknown1e0[0]);
+    params->unknown1e0[1] += fade * (paramPlane->unknown00[10] - params->unknown1e0[1]);
+    params->unknown1e0[2] += fade * (paramPlane->unknown00[11] - params->unknown1e0[2]);
+    params->unknown1e0[3] += fade * (paramPlane->unknown00[12] - params->unknown1e0[3]);
+    params->unknown1e0[4] += fade * (paramPlane->unknown00[13] - params->unknown1e0[4]);
+    params->unknown1e0[5] += fade * (paramPlane->unknown00[14] - params->unknown1e0[5]);
+    params->unknown1e0[6] += fade * (paramPlane->unknown00[15] - params->unknown1e0[6]);
+    params->unknown1e0[7] += fade * (paramPlane->unknown00[16] - params->unknown1e0[7]);
+    params->unknown1e0[8] += fade * (paramPlane->unknown00[17] - params->unknown1e0[8]);
+    params->unknown1e0[9] += fade * (paramPlane->unknown00[18] - params->unknown1e0[9]);
+    params->unknown1e0[10] += fade * (paramPlane->unknown00[19] - params->unknown1e0[10]);
+    params->unknown1e0[11] += fade * (paramPlane->unknown00[20] - params->unknown1e0[11]);
+    params->unknown1e0[12] += fade * (paramPlane->unknown00[21] - params->unknown1e0[12]);
+    params->unknown1e0[13] += fade * (paramPlane->unknown00[22] - params->unknown1e0[13]);
+    params->unknown1e0[14] += fade * (paramPlane->unknown00[23] - params->unknown1e0[14]);
+    params->unknown1e0[15] += fade * (paramPlane->unknown00[24] - params->unknown1e0[15]);
+    params->unknown1e0[16] += fade * (paramPlane->unknown00[25] - params->unknown1e0[16]);
+    params->unknown1e0[17] += fade * (paramPlane->unknown00[26] - params->unknown1e0[17]);
+    params->unknown1e0[18] += fade * (paramPlane->unknown00[27] - params->unknown1e0[18]);
+    params->unknown1e0[19] += fade * (paramPlane->unknown00[28] - params->unknown1e0[19]);
+    if (header->unknown38 == 0x1001) {
+      params->unknown1d8 = paramPlane->unknown00[0x1e];
+      params->unknown230[0] = paramPlane->unknown00[0x1f];
+      params->unknown230[1] = paramPlane->unknown00[0x20];
+      params->unknown230[2] = paramPlane->unknown00[0x21];
+      params->unknown230[3] = paramPlane->unknown00[0x22];
+      params->unknown230[4] = paramPlane->unknown00[0x23];
+      params->unknown230[5] = paramPlane->unknown00[0x24];
+      params->unknown230[6] = paramPlane->unknown00[0x25];
+      params->unknown230[7] = paramPlane->unknown00[0x26];
+    }
+  }
+  if ((from->unknown08 & EnvColiPostData::FLAG_UNKNOWN_5) != 0) {
+    cloud::CloudCalcParams *params = cloudMan->unknown50->unknown38;
+    params->unknown254[0] += fade * (paramLight->unknown00[0] - params->unknown254[0]);
+    params->unknown254[1] += fade * (paramLight->unknown00[1] - params->unknown254[1]);
+    params->unknown254[2] += fade * (paramLight->unknown00[2] - params->unknown254[2]);
+    params->unknown254[3] += fade * (paramLight->unknown00[3] - params->unknown254[3]);
+    params->unknown254[4] += fade * (paramLight->unknown00[4] - params->unknown254[4]);
+    params->unknown254[5] += fade * (paramLight->unknown00[5] - params->unknown254[5]);
+    params->unknown26c += fade * (paramLight->unknown00[7] - params->unknown26c);
+    params->unknown270 += fade * (paramLight->unknown00[8] - params->unknown270);
+    params->unknown278 += fade * (paramLight->unknown00[6] - params->unknown278);
+    params->unknown27c[0] += fade * (paramLight->unknown00[9] - params->unknown27c[0]);
+    params->unknown27c[1] += fade * (paramLight->unknown00[10] - params->unknown27c[1]);
+    params->unknown27c[2] += fade * (paramLight->unknown00[11] - params->unknown27c[2]);
+    params->unknown27c[3] += fade * (paramLight->unknown00[12] - params->unknown27c[3]);
+    params->unknown27c[4] += fade * (paramLight->unknown00[13] - params->unknown27c[4]);
+    params->unknown27c[5] += fade * (paramLight->unknown00[14] - params->unknown27c[5]);
+    params->unknown27c[6] += fade * (paramLight->unknown00[15] - params->unknown27c[6]);
+    params->unknown27c[7] += fade * (paramLight->unknown00[16] - params->unknown27c[7]);
+    params->unknown27c[8] += fade * (paramLight->unknown00[17] - params->unknown27c[8]);
+    params->unknown27c[9] += fade * (paramLight->unknown00[18] - params->unknown27c[9]);
+    params->unknown27c[10] += fade * (paramLight->unknown00[19] - params->unknown27c[10]);
+    params->unknown27c[11] += fade * (paramLight->unknown00[20] - params->unknown27c[11]);
+    params->unknown27c[12] += fade * (paramLight->unknown00[21] - params->unknown27c[12]);
+    params->unknown27c[13] += fade * (paramLight->unknown00[22] - params->unknown27c[13]);
+    params->unknown27c[14] += fade * (paramLight->unknown00[23] - params->unknown27c[14]);
+    params->unknown27c[15] += fade * (paramLight->unknown00[24] - params->unknown27c[15]);
+    params->unknown27c[16] += fade * (paramLight->unknown00[25] - params->unknown27c[16]);
+    params->unknown27c[17] += fade * (paramLight->unknown00[26] - params->unknown27c[17]);
+    params->unknown27c[18] += fade * (paramLight->unknown00[27] - params->unknown27c[18]);
+    params->unknown27c[19] += fade * (paramLight->unknown00[28] - params->unknown27c[19]);
+    params->unknown274 = paramLight->unknown00[0x1e];
+    params->unknown2f0[0] += fade * (paramLight->unknown00[0x1f] - params->unknown2f0[0]);
+    params->unknown2f0[1] += fade * (paramLight->unknown00[0x20] - params->unknown2f0[1]);
+    params->unknown2f0[2] += fade * (paramLight->unknown00[0x21] - params->unknown2f0[2]);
+  }
+  if ((from->unknown08 & EnvColiPostData::FLAG_UNKNOWN_3) != 0) {
+    cloud::CloudCalcParams *params = cloudMan->unknown50->unknown38;
+    params->unknown2fc += fade * (paramSky->unknown00[0] - params->unknown2fc);
+    params->unknown300 += fade * (paramSky->unknown00[1] - params->unknown300);
+    params->unknown304 += fade * (paramSky->unknown00[2] - params->unknown304);
+    params->unknown308 += fade * (paramSky->unknown00[3] - params->unknown308);
+    params->unknown30c += fade * (paramSky->unknown00[4] - params->unknown30c);
+    params->unknown310 += fade * (paramSky->unknown00[5] - params->unknown310);
+    params->unknown318 += fade * (paramSky->unknown00[6] - params->unknown318);
+    params->unknown31c += fade * (paramSky->unknown00[7] - params->unknown31c);
+    params->unknown320 += fade * (paramSky->unknown00[8] - params->unknown320);
+    params->unknown324 += fade * (paramSky->unknown00[9] - params->unknown324);
+    params->unknown328 += fade * (paramSky->unknown00[10] - params->unknown328);
+    params->unknown32c += fade * (paramSky->unknown00[11] - params->unknown32c);
+    params->unknown330 += fade * (paramSky->unknown00[12] - params->unknown330);
+    params->unknown334 += fade * (paramSky->unknown00[13] - params->unknown334);
+    params->unknown338 += fade * (paramSky->unknown00[14] - params->unknown338);
+    params->unknown33c += fade * (paramSky->unknown00[15] - params->unknown33c);
+    params->unknown340 += fade * (paramSky->unknown00[16] - params->unknown340);
+    params->unknown344 += fade * (paramSky->unknown00[17] - params->unknown344);
+    params->unknown348 += fade * (paramSky->unknown00[18] - params->unknown348);
+    params->unknown34c += fade * (paramSky->unknown00[19] - params->unknown34c);
+    params->unknown350 += fade * (paramSky->unknown00[20] - params->unknown350);
+    params->unknown354 += fade * (paramSky->unknown00[21] - params->unknown354);
+    if (header->unknown38 == 0x1001) {
+      params->unknown314 = paramSky->unknown00[0x18];
+    }
+  }
+  if ((from->unknown08 & EnvColiPostData::FLAG_UNKNOWN_4) != 0) {
+    cloud::CloudCalcParams *params = cloudMan->unknown50->unknown38;
+    params->unknown360 += fade * (paramModel->unknown00[0] - params->unknown360);
+    params->unknown364 += fade * (paramModel->unknown00[1] - params->unknown364);
+    params->unknown368 += fade * (paramModel->unknown00[2] - params->unknown368);
+    params->unknown36c += fade * (paramModel->unknown00[3] - params->unknown36c);
+    params->unknown370 += fade * (paramModel->unknown00[4] - params->unknown370);
+    params->unknown374 += fade * (paramModel->unknown00[5] - params->unknown374);
+    params->unknown378 += fade * (paramModel->unknown00[6] - params->unknown378);
+    params->unknown37c += fade * (paramModel->unknown00[7] - params->unknown37c);
+    params->unknown380 += fade * (paramModel->unknown00[8] - params->unknown380);
+    params->unknown384 += fade * (paramModel->unknown00[9] - params->unknown384);
+  }
 }
 
 void DrEnvColiParameter::resetToneMapParams(const EnvColiPostParameterVer<10006> *from, const EnvColiPostParameterVer<10006> *to, f32 ratio) {

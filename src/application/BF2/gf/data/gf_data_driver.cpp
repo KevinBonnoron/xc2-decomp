@@ -883,6 +883,21 @@ u32 GfDataDriver::getExpNextLevel(u32 driver) { return getExpNextLevel(getSDataD
 
 u32 GfDataDriver::getBattleExpNextLevel(u32 driver) { return getExpNextLevel(getSDataDriver(driver)); }
 
+u32 GfDataDriver::getBattleExpNextLevel(const SDataDriver &dataDriver) {
+  // Ruling 8 (P4): repeats the statements of getExpNextLevel(const SDataDriver &). The game's copy at 0x71002a9ad8 has
+  // 17 instructions (subs + b.lo); a call to getExpNextLevel inlines it as 18 instructions with a csel and does not match.
+  u32 level = dataDriver.unknown94;
+  u32 exp = dataDriver.unknownb4;
+  u32 growExp = GfBdatBtl::get()->getGrowLevelExp(level + 1);
+  if (exp > growExp) {
+    return growExp;
+  }
+  if (level >= DRIVER_UNKNOWN_99) {
+    return 0;
+  }
+  return growExp - exp;
+}
+
 int GfDataDriver::getSetIdByBlade(const SDataDriver &dataDriver, u32 blade) {
   int count = getMaxSetBladeNum(dataDriver);
   for (int slot = 0; slot < count; slot++) {
@@ -1005,6 +1020,44 @@ bool GfDataDriver::isActivatePartyAll(u32 driver) {
   }
 
   return getSDataDriver(driver).unknown20 == 1;
+}
+
+int GfDataDriver::getRuleSetBlade(u32 driver, u32 blade, int slot) {
+  if (driver == DRIVER_UNKNOWN_1) {
+    switch (blade) {
+    case BLADE_HIKARI: {
+      // The game inlines GfDataBlade::getDriverSetID(BLADE_HOMURA) here (0x71002a0974). The miss test is the game's
+      // separate "return slot" path (0x71002a0a10 jumps straight to the return when the search ends without a hit);
+      // without `else if (id < 0) return slot;` the call gives 51 instructions against the game's 47.
+      int id = GfDataBlade::getDriverSetID(BLADE_HOMURA);
+      if (id == 0) {
+        slot = 3;
+      } else if (id < 0) {
+        return slot;
+      }
+      break;
+    }
+    case BLADE_HOMURI:
+      slot = 4;
+      break;
+    }
+  }
+
+  return slot;
+}
+
+bool GfDataDriver::isEmptySetBlade(u32 blade, u32 driver, int slot) {
+  if (driver == 0) {
+    return false;
+  }
+
+  SDataDriver &dataDriver = getSDataDriver(driver);
+  slot = getRuleSetBlade(driver, blade, slot);
+  if (slot < 0) {
+    return dataDriver.unknown26[0] == 0 || dataDriver.unknown26[1] == 0 || dataDriver.unknown26[2] == 0;
+  }
+
+  return dataDriver.unknown26[slot] == 0;
 }
 
 bool GfDataDriver::leaveOneRareBlade(u32 driver) {

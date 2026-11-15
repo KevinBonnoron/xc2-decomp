@@ -8,8 +8,10 @@
 #include "gf/menu/object/gf_menu_obj_bl_orb.h"
 #include "gf/menu/object/gf_menu_obj_bl_weapon.h"
 #include "gf/menu/object/gf_menu_obj_blade_set.h"
+#include "gf/menu/object/gf_menu_obj_common_detail.h"
 #include "gf/menu/object/gf_menu_obj_common_jog.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
+#include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/reference_object.h"
 #include "ui/ctrl/ui_ctrl_revolve_select.h"
 #include "ui/event/ui_event_data.h"
@@ -133,6 +135,31 @@ bool GfMenuObjBlCustomTop::seqAppearPhase2() {
   }
   unknown2e8 = -1;
   return true;
+}
+
+bool GfMenuObjBlCustomTop::seqAppearPhase3() {
+  if (unknown40 == nullptr) {
+    ui::UIObjectAcc acc(unknown18, "LAY_main");
+    GfMenuObjCommonJog::OpenParam jogParam;
+    unknown40 = GfMenuCallContext::create();
+    jogParam.unknown00 = 6;
+    GfMenuObjCommonJog::open(unknown40, jogParam);
+    GfMenuObject::setCallContextEventHandler(unknown40, acc.unknown10);
+    GfMenuObjCommonDetail::OpenParam detailParam;
+    unknown48 = GfMenuCallContext::create();
+    detailParam.unknown18 = 0;
+    detailParam.unknown1c = 1;
+    detailParam.unknown00.push_back(0xff);
+    detailParam.unknown2c = acc.searchChild("LAY_bl_detail");
+    // The game ignores the result of getLayoutRect, as the other menu objects do, and keeps the rect as it is.
+    acc.getLayoutRect("driver_detail", detailParam.unknown20);
+    GfMenuObjCommonDetail::open(unknown48, detailParam);
+  }
+  GfMenuCallContext::GfMenuResult result;
+  if (!unknown40->isActive() || (!unknown40->unknown18.empty() && unknown40->popResult(result) && result.unknown04 == 0)) {
+    return true;
+  }
+  return false;
 }
 
 bool GfMenuObjBlCustomTop::seqAppearPhase4() {

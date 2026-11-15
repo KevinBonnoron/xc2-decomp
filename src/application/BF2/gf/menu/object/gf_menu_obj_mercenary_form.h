@@ -25,41 +25,94 @@ class GfMenuObjMercenaryForm : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
+    MainListener(GfMenuObjMercenaryForm *owner) : _0c(), unknown20(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    u8 _1c[0x20 - 0x1c];
+    GfMenuObjMercenaryForm *unknown20; // Inferred role: owner; original member name unknown.
   };
 
   class FormListener : public ui::UIObjectListener {
   public:
+    FormListener(GfMenuObjMercenaryForm *owner) : unknown0c(0), unknown10(0), _14(), unknown20(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     int unknown0c; // Role and original member name unknown, cleared by the opening event.
     int unknown10; // Role and original member name unknown, cleared by the opening event.
-    u8 _14[0x20 - 0x14];
+    u8 _14[0x1c - 0x14];
+    u8 _1c[0x20 - 0x1c];
     GfMenuObjMercenaryForm *unknown20; // Inferred role: owner; original member name unknown.
   };
 
-  // Only the member that reciveEvent (1.0.0: 0x7100494870) reads or writes is declared: the constructor is inlined in GfMenuObjMercenaryForm::initialize, which is not matched, so the rest of the
-  // layout and the size are not proven.
+  class UnitListener : public ui::UIObjectListener {
+  public:
+    UnitListener(GfMenuObjMercenaryForm *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    u8 _1c[0x20 - 0x1c];
+    GfMenuObjMercenaryForm *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   class ApplyListener : public ui::UIObjectListener {
   public:
+    ApplyListener(GfMenuObjMercenaryForm *owner) : unknown0c(0), _10(), unknown20(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     int unknown0c; // Inferred role: caption shown flag; original member name unknown.
+    u8 _10[0x1c - 0x10];
+    u8 _1c[0x20 - 0x1c];
+    GfMenuObjMercenaryForm *unknown20; // Inferred role: owner; original member name unknown.
   };
 
-  class BlImgListener : public ui::UIObjectListener {
+  class ListListener : public ui::UIObjectListener {
   public:
+    ListListener(GfMenuObjMercenaryForm *owner) : _0c(), unknown20(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x20 - 0x0c];
+    u8 _0c[0x1c - 0x0c];
+    u8 _1c[0x20 - 0x1c];
+    GfMenuObjMercenaryForm *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class PresetListener : public ui::UIObjectListener {
+  public:
+    PresetListener(GfMenuObjMercenaryForm *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    u8 _1c[0x20 - 0x1c];
+    GfMenuObjMercenaryForm *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class LeaderListener : public ui::UIObjectListener {
+  public:
+    LeaderListener(GfMenuObjMercenaryForm *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    u8 _1c[0x20 - 0x1c];
     GfMenuObjMercenaryForm *unknown20; // Inferred role: owner; original member name unknown.
   };
 
   class StartListener : public ui::UIObjectListener {
   public:
+    StartListener(GfMenuObjMercenaryForm *owner) : _0c(), unknown20(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x20 - 0x0c];
+    u8 _0c[0x1c - 0x0c];
+    u8 _1c[0x20 - 0x1c];
+    GfMenuObjMercenaryForm *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class BlImgListener : public ui::UIObjectListener {
+  public:
+    BlImgListener(GfMenuObjMercenaryForm *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    u8 _1c[0x20 - 0x1c];
     GfMenuObjMercenaryForm *unknown20; // Inferred role: owner; original member name unknown.
   };
 
@@ -132,6 +185,15 @@ static_assert(offsetof(GfMenuObjMercenaryForm::FormListener, unknown20) == 0x20,
 static_assert(offsetof(GfMenuObjMercenaryForm::ApplyListener, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfMenuObjMercenaryForm::BlImgListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjMercenaryForm::StartListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjMercenaryForm::MainListener) == 0x28, "");
+static_assert(sizeof(GfMenuObjMercenaryForm::FormListener) == 0x28, "");
+static_assert(sizeof(GfMenuObjMercenaryForm::UnitListener) == 0x28, "");
+static_assert(sizeof(GfMenuObjMercenaryForm::ApplyListener) == 0x28, "");
+static_assert(sizeof(GfMenuObjMercenaryForm::ListListener) == 0x28, "");
+static_assert(sizeof(GfMenuObjMercenaryForm::PresetListener) == 0x28, "");
+static_assert(sizeof(GfMenuObjMercenaryForm::LeaderListener) == 0x28, "");
+static_assert(sizeof(GfMenuObjMercenaryForm::StartListener) == 0x28, "");
+static_assert(sizeof(GfMenuObjMercenaryForm::BlImgListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjMercenaryForm, unknown24) == 0x24, "");
 static_assert(offsetof(GfMenuObjMercenaryForm, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjMercenaryForm, unknown50) == 0x50, "");

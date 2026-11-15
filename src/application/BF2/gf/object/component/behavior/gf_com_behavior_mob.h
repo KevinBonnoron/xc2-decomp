@@ -93,6 +93,7 @@ public:
   fw::ColiMoveObject *getColiObject() const;
   gmk::AGmkBase *getBindedGmkInst() const;
   bool isSquadMember() const;
+  f32 getMoveSpeedMps() const;
   bool isMove() const;
   void initMoveSpeed(f32 time);
   void setStateId(mob::STATE_ID stateId);
@@ -132,6 +133,12 @@ public:
 
   // Inferred helper: squad of the squad navi; original name unknown.
   gmk::GmkSquad *unknown009() const { return unknownc0.unknown10.unknown00; }
+
+  // Inferred helper: navi mesh object; original name unknown.
+  navi::NvmshAcObj *unknown012() const { return unknowna8; }
+
+  // Inferred helper: move speed; original name unknown.
+  GfFieldMoveSpeed &unknown013() { return unknown1e0; }
 
   BdatInfo unknown98; // Inferred role: bdat parameters; original member name unknown.
   u8 _a4[0xa8 - 0xa4];

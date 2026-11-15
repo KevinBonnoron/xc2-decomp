@@ -1,16 +1,20 @@
 // Original file name from the game string C:/Monolithsoft/BF2/prog/libs/wndlib/src/wndlib/wnd_world.cpp.
 #include "anm/anm_array-inl.h"
 #include "mm/mm_std_base.h"
+#include "mm_mtl/fixed_queue.h"
 #include "mm_mtl/intrusive_list.h"
 #include "mm_mtl/reference_object.h" // for safeRelease
+#include "mm_mtl/rtti.h"
 #include "mm_mtl/vector.h"
 #include "types.h"
 #include "wnd/wnd_broad_phaze_interface.h"
 #include "wnd/wnd_dispatcher.h"
 #include "wnd/wnd_global_wind_manager.h" // IWYU pragma: keep
+#include "wnd/wnd_node.h"
 #include "wnd/wnd_object.h"
 #include "wnd/wnd_probe.h"
 #include "wnd/wnd_query.h"
+#include "wnd/wnd_wind.h"
 
 namespace mm {
 namespace mtl {
@@ -19,8 +23,6 @@ class IAllocator;
 } // namespace mm
 
 namespace wnd {
-struct ResConpoundWind;
-struct UpdateInfo;
 
 WindWorld::WindWorld(Dispatcher *dispatcher, BroadPhazeInterface *broadPhaze, const Array<const ResConpoundWind *> &resWind, mm::mtl::IAllocator *allocator) : unknown0c(0.0f), unknown1d0(false) {
   m_pBroadPhaze = broadPhaze;
@@ -79,6 +81,22 @@ bool WindWorld::query(Query *query) {
     return true;
   }
   return false;
+}
+
+// Addresses 0x710098a768-70. The game inlines GlobalWind::update here instead of calling it,
+// so its body is written out; a call gives a two-instruction tail call.
+void WindWorld::updateGlobalWind(const UpdateInfo &info) {
+  if (unknown10.unknown40.unknownf0 != nullptr) {
+    unknown10.unknown40.unknownf0->update(info);
+  }
+  if (unknown10.unknown40.unknowne8 != nullptr) {
+    unknown10.unknown40.unknowne8->update(info);
+  }
+  unknown10.unknown40.WindBlender::update(info);
+  if (unknown10.unknown40.unknownf0 == nullptr) {
+    // Address 0x710098a770: no-op store, as in GlobalWind::update.
+    unknown10.unknown40.unknownf0 = nullptr;
+  }
 }
 
 bool WindWorld::addProbe(WindProbe &probe) {

@@ -382,6 +382,29 @@ void IDColiPrimitive::calcCapsuleSetup(CLCapsuleWork *capsule) {
   unknown082(capsule->unknown30.z, capsule->unknown40.z, capsule->unknown10.z, capsule->unknown50);
 }
 
+// Ruling 8 (2026-11-13): the statements of calcCapsuleSetup are written out after the three stores (0x71008e0e50,
+// 105 instructions; Torna has the same 0x1a4 bytes, XC1DE inlines it too). Re-measured on 2026-11-14: `calcCapsuleSetup(&capsule);`
+// gives a 14-instruction tail call, and so does it with `inline` on the definition of calcCapsuleSetup (its 89 instructions
+// stay above the inline hint threshold of Clang 3.9.1); an inline helper shared with calcCapsuleSetup gives the same call.
+void IDColiPrimitive::createCapsule(CLCapsuleWork &capsule, const mm::Vec3 &start, const mm::Vec3 &end, f32 radius) {
+  capsule.unknown00 = start;
+  capsule.unknown10 = end;
+  capsule.unknown50 = radius;
+  capsule.unknown20.x = capsule.unknown10.x - capsule.unknown00.x;
+  capsule.unknown20.y = capsule.unknown10.y - capsule.unknown00.y;
+  capsule.unknown20.z = capsule.unknown10.z - capsule.unknown00.z;
+  capsule.unknown54 = capsule.unknown20.x * capsule.unknown20.x + capsule.unknown20.y * capsule.unknown20.y + capsule.unknown20.z * capsule.unknown20.z;
+  capsule.unknown58 = 1.0f / capsule.unknown54;
+  capsule.unknown30.x = capsule.unknown30.y = capsule.unknown30.z = -100000.0f;
+  capsule.unknown40.x = capsule.unknown40.y = capsule.unknown40.z = 100000.0f;
+  unknown082(capsule.unknown30.x, capsule.unknown40.x, capsule.unknown00.x, capsule.unknown50);
+  unknown082(capsule.unknown30.x, capsule.unknown40.x, capsule.unknown10.x, capsule.unknown50);
+  unknown082(capsule.unknown30.y, capsule.unknown40.y, capsule.unknown00.y, capsule.unknown50);
+  unknown082(capsule.unknown30.y, capsule.unknown40.y, capsule.unknown10.y, capsule.unknown50);
+  unknown082(capsule.unknown30.z, capsule.unknown40.z, capsule.unknown00.z, capsule.unknown50);
+  unknown082(capsule.unknown30.z, capsule.unknown40.z, capsule.unknown10.z, capsule.unknown50);
+}
+
 void IDColiPrimitive::calcBaseBoxSetup(CLBoxWork *box, const mm::Mat44 &matrix, const mm::Vec3 &size) {
   f32 scale = unknown123(matrix) * IDColiObj::OBJ_CALC_RADIUS;
   box->unknown70 = size;

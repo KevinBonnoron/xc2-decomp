@@ -62,7 +62,9 @@ public:
   void SetMoveParam(const EffectMoveComponent::MOVE_PARAM &param);
   void SetEndEffect(const char *name);
   bool IsEnd() const;
+  void ReturnLinkObj();
   void ReboundUp();
+  void StartAdditionalAttack();
 
   mm::mtl::FixedVector<fw::EffectPack *, 8> unknown00; // Inferred role: effect packs; original member name unknown.
   gf::GF_OBJ_HANDLE *unknown48;                        // Inferred role: attacker; original member name unknown.

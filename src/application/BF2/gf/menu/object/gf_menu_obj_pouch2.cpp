@@ -249,6 +249,26 @@ void GfMenuObjPouch2::updateItemList(GfMenuItemList *list, ui::UISelectObjList *
   list->setIndex(0);
 }
 
+void GfMenuObjPouch2::refreshItemList(ui::UIObjectAcc &acc, GfMenuItemList *list, ui::UISelectObjList *selectList, u32 item) {
+  mm::mtl::FixStr<32> name;
+  for (u32 i = 0; i < selectList->getSize(); i++) {
+    // The game compares the list item (cset after the getContents load), then calls getSize and combines both
+    // (and) before the name format (0x71004b8508); the single-use locals place that compare, that call and that
+    // computation (rulings 2026-11-13 #1 and #2, P2). Two locals give 110 insns (compare after the format).
+    bool isSelected = list->getContents(list->getPageIndex(i)).unknown04 == item;
+    bool isInList = i < list->getSize();
+    bool isDisp = isSelected && isInList;
+    name.format("IMG_fvstock_tagsellct@%02d", i + 1);
+    GfMenuObjUtil::setChildDisp(acc.unknown10, name.c_str(), isDisp);
+    name.format("TXT_fvstock_itname@%02d", i + 1);
+    ui::UIObjectAcc text(acc.searchChild(name.c_str()));
+    GfMenuObjUtil::setColMulandAdd(text.unknown10, "txt_normal2");
+    name.format("IMG_fvstock_eqicon@%02d", i + 1);
+    ui::UIObjectAcc icon(acc.searchChild(name.c_str()));
+    icon.setDisp(false);
+  }
+}
+
 void GfMenuObjPouch2::refreshSlot(ui::UIObjectAcc &acc, u32 index) {
   u32 driver = GfMenuReference::getReferenceDriverID(0);
   u32 openCount = GfPouchUtil::getOpenCount(driver);

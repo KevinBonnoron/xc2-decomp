@@ -119,6 +119,12 @@ public:
     GfComBehaviorPc *unknown08; // Inferred role: owner; original member name unknown.
   };
 
+  // Layout evidence: setup (0x71005646e4) reads the first state at 0x0 and the eye blink enable at 0x4.
+  struct SetupInfo {
+    u32 unknown00;  // Inferred role: first state id; original member name unknown.
+    bool unknown04; // Inferred role: eye blink enable; original member name unknown.
+  };
+
   static mm::mtl::RTTI m_rtti;
 
   GfComBehaviorPc();
@@ -177,6 +183,7 @@ public:
   void integrateMoveNormal(const fw::UpdateInfo &info, GfComPropertyPc &property);
   void integrateMoveChildHeight(const fw::UpdateInfo &info, GfComPropertyPc &property);
   void integrateMoveWall(const fw::UpdateInfo &info, GfComPropertyPc &property);
+  void setup(const SetupInfo &info);
   void cleanup();
 
   GfComPropertyPc *getProperty() const { return mm::mtl::dynamicCast<GfComPropertyPc>(unknown08->unknown38[GfComPropertyPc::COMPONENT_INDEX]); }

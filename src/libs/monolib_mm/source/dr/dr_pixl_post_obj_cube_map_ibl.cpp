@@ -9,6 +9,7 @@
 #include "grlib/cglib_dbl_uniform_block.h"
 #include "grlib/cglib_texture_buffer.h"
 #include "grlib/shd_util.h"
+#include "mm_math/mm_vec4.h"
 #include "mm_mtl/fixed_array.h"
 #include "mtl/alloc_handle.h"
 
@@ -57,6 +58,14 @@ const mm::Mat44 &DrPixlPostObjCubeMapIBL::getSHMatrix(u32 index) const { return 
 void DrPixlPostObjCubeMapIBL::updateUB_ToProxySpace(u8 *work) { grlib::ShdMat44TransposeMat44(reinterpret_cast<f32 *>(work), unknown1c0); }
 
 void DrPixlPostObjCubeMapIBL::updateUB_ShMatrixList(u8 *work) { grlib::ShdMat44TransposeMat44Array(reinterpret_cast<f32 *>(work), &m_shMatrix[unknown214][0], 3); }
+
+void DrPixlPostObjCubeMapIBL::updateUB_IBLPos_WS(u8 *work) {
+  // Reopen 2026-11-14 (P2): the game loads the whole IBL position (x and y in one 64-bit load, then z) before it stores the
+  // first component of the vector (0x7100836be8); the local copy places the loads there.
+  mm::Vec3 iblPosition = unknown200;
+  mm::Vec4 position(iblPosition, 1.0f);
+  grlib::ShdF32SetVec4(reinterpret_cast<f32 *>(work), &position.x);
+}
 
 void DrPixlPostObjCubeMapIBL::debugRender() {
   DrPixlPostParm *parm = unknown00->unknown120[unknown00->unknown1c98];

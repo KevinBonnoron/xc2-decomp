@@ -7,6 +7,7 @@
 #include "dr/dr_shd_data_obj.h"
 #include "grlib/cglib_ctl_shader.h"
 #include "grlib/cglib_ctl_vertex.h"
+#include "grlib/cglib_mem_handle.h"
 #include "grlib/cglib_one_uniform_block.h"
 #include "grlib/cglib_shd_list.h"
 #include "ml/file_res_th.h"
@@ -154,6 +155,47 @@ grlib::CGLibOneUniformBlock *DrShdDataList::getAlphaTestUniform(f32 alphaRef) {
     index = 10;
   }
   return &unknown9a8.m_items[index];
+}
+
+void DrShdDataList::createAlphaTestBlock() {
+  unknown9a8.setupArray(11);
+  unknown9a8.unknown0c = 0xb00;
+  // Reopen 2026-11-14 (ruling 8, P4): the statements of CGLibUniformArray::unknown002 written out again, without its last store.
+  // Re-measured: the call `unknown9a8.unknown002();` gives 179 instructions against the game's 178 at 0x710089c4c0 (an extra str wzr of
+  // the offset). Dropping that store from the helper is no way out: the nine other users of the helper keep it in the game
+  // (DrPixlShadowCacheMan::createCacheBuff, DrShdUniformBlockMan, DrShdLgtTileBasedDr::createWork, LayerObjTopDef::workIconCreate).
+  grlib::CGLibMemHandle::free(unknown9a8.unknown18);
+  if (unknown9a8.unknown0c != 0) {
+    grlib::CGLibMemHandle::allocUniform(unknown9a8.unknown18, unknown9a8.unknown0c);
+    unknown9a8.unknown10 = unknown9a8.unknown0c;
+    unknown9a8.unknown0c = 0;
+  }
+  for (int i = 0; i < 11; i++) {
+    unknown9a8.unknown0c += unknown9a8[i].setupArray(0x10, unknown9a8.unknown18, unknown9a8.unknown0c);
+  }
+  for (int i = 1; i < 10; i++) {
+    grlib::CGLibOneUniformBlock &block = unknown9a8[i];
+    f32 *data = static_cast<f32 *>(block.m_mapping);
+    data[0] = i * 0.1f;
+    data[1] = 0.0f;
+    data[2] = 0.0f;
+    data[3] = 0.0f;
+    block.updateData();
+  }
+  grlib::CGLibOneUniformBlock &firstBlock = unknown9a8[0];
+  f32 *first = static_cast<f32 *>(firstBlock.m_mapping);
+  first[0] = 0.01f;
+  first[1] = 0.0f;
+  first[2] = 0.0f;
+  first[3] = 0.0f;
+  firstBlock.updateData();
+  grlib::CGLibOneUniformBlock &lastBlock = unknown9a8[10];
+  f32 *last = static_cast<f32 *>(lastBlock.m_mapping);
+  last[0] = 0.99f;
+  last[1] = 0.0f;
+  last[2] = 0.0f;
+  last[3] = 0.0f;
+  lastBlock.updateData();
 }
 
 DrShdDataObj::DrShdDataObj() {

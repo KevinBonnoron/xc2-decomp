@@ -2,22 +2,21 @@
 #include <new> // IWYU pragma: keep
 
 #include "framework/navi/navi_util.h"
+#include "fw/fw_update_info.h"
 #include "gf/field/gf_field_exec_cmd.h"
+#include "gf/field/gf_field_local_steer.h"
 #include "gf/object/component/behavior/gf_com_behavior_npc.h"
 #include "gf/object/component/enemy/gf_enemy_state_battle.h"
 #include "gf/object/gf_obj.h"
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_manager.h"
+#include "ml/rand.h"
 #include "mm_math/mm_vec3.h"
 #include "types.h"
 
 namespace ai {
 class State;
 } // namespace ai
-
-namespace fw {
-struct UpdateInfo;
-} // namespace fw
 
 namespace gf {
 
@@ -96,6 +95,39 @@ template <typename T> void StateAreaMove<T>::seqWaitTurnEnd(T &behavior, const f
   if (behavior.unknown004().unknown6c) {
     unknown18.create(TFieldExecCmd<GfComAsm>::CreateInfo(static_cast<GfObj *>(behavior.unknown08)->unknownf8, "C_move"));
     unknown50 = &StateAreaMove::seqMoveToGoal;
+  }
+}
+
+template <typename T> void StateAreaMove<T>::seqMoveToGoal(T &behavior, const fw::UpdateInfo &info) {
+  unknown18.update(info.unknown04);
+  if (unknown18.unknown34) {
+    if (!canGetMoveVec(behavior.unknown012())) {
+      unknown50 = &StateAreaMove::seqInitGoalPos;
+    } else {
+      if (behavior.isArrivedToGoal()) {
+        behavior.unknown013().setSpeedKmph(behavior.unknown013().unknown08, 0.5f);
+        unknown18.create(TFieldExecCmd<GfComAsm>::CreateInfo(static_cast<GfObj *>(behavior.unknown08)->unknownf8, "C_walkend"));
+        unknown50 = &StateAreaMove::seqWaitMoveEnd;
+      }
+      behavior.moveToGoal(info.unknown04);
+    }
+  }
+}
+
+template <typename T> void StateAreaMove<T>::seqWaitMoveEnd(T &behavior, const fw::UpdateInfo &info) {
+  unknown18.update(info.unknown04);
+  if (unknown18.unknown34) {
+    unknown60 = ml::mtRandf1(3.0f, 5.0f);
+    unknown64 = 0.0f;
+    behavior.init(false);
+    unknown50 = &StateAreaMove::seqIdle;
+  }
+}
+
+template <typename T> void StateAreaMove<T>::seqIdle(T &behavior, const fw::UpdateInfo &info) {
+  unknown64 = info.unknown04 + unknown64;
+  if (!(unknown64 < unknown60)) {
+    unknown50 = &StateAreaMove::seqInitGoalPos;
   }
 }
 

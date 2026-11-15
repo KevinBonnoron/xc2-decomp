@@ -17,7 +17,15 @@
 #include "gf/game/quest/gf_quest_util.h"
 #include "gf/game/sequential_play/gf_sequential_play.h"
 #include "gf/gf_allocator.h"
+#include "gf/menu/adapter/gf_menu_adapter.h"
 #include "gf/menu/adapter/gf_menu_adapter_manager.h"
+#include "gf/menu/adapter/gf_menu_char_data_adapter.h"
+#include "gf/menu/adapter/gf_menu_exc_task_adapter.h"
+#include "gf/menu/adapter/gf_menu_game_adapter.h"
+#include "gf/menu/adapter/gf_menu_item_adapter.h"
+#include "gf/menu/adapter/gf_menu_reference_adapter.h"
+#include "gf/menu/adapter/gf_menu_shop_adapter.h"
+#include "gf/menu/adapter/gf_menu_zone_adapter.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_bdat.h"
 #include "gf/menu/gf_menu_fade.h"
@@ -42,6 +50,7 @@
 #include "mm_mtl/fixstr.h"
 #include "ui/ctrl/ui_ctrl_cursor_select.h"
 #include "ui/event/ui_event_data.h"
+#include "ui/event/ui_event_manager.h"
 #include "ui/list/ui_list_info.h"
 #include "ui/list/ui_select_obj_list.h"
 #include "ui/ui_object_acc.h"
@@ -72,6 +81,423 @@ GfMenuObjShop::GfMenuObjShop(u32 handle)
     unknown508[i] = nullptr;
   }
   unknown578 = GfMenuCallContext::create();
+}
+
+void GfMenuObjShop::initialize() {
+  ui::UIObjectAcc main(unknown18, "LAY_main");
+  if (main.isValid()) {
+    mm::mtl::FixStr<32> name;
+    attachExternalCall(unknown001, main.unknown10);
+    main.setSuspend(true);
+// __LINE__ must be 254 as in the original file: it is the line argument of operator new.
+#line 254
+    MainListener *mainListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) MainListener(this);
+    mainListener->addRef();
+    ui::UIEventManager::get()->registObjectListener(main.unknown10, mainListener);
+    if (mainListener != nullptr) {
+      mainListener->release();
+    }
+// __LINE__ must be 257 as in the original file: it is the line argument of operator new.
+#line 257
+    SubListener *storeSubListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) SubListener(this);
+    storeSubListener->addRef();
+    ui::UIEventManager::get()->registObjectListener(main.searchChild("LAY_store"), storeSubListener);
+    if (storeSubListener != nullptr) {
+      storeSubListener->release();
+    }
+// __LINE__ must be 258 as in the original file: it is the line argument of operator new.
+#line 258
+    SubListener *innSubListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) SubListener(this);
+    innSubListener->addRef();
+    ui::UIEventManager::get()->registObjectListener(main.searchChild("LAY_inn"), innSubListener);
+    if (innSubListener != nullptr) {
+      innSubListener->release();
+    }
+// __LINE__ must be 259 as in the original file: it is the line argument of operator new.
+#line 259
+    SubListener *orbSubListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) SubListener(this);
+    orbSubListener->addRef();
+    ui::UIEventManager::get()->registObjectListener(main.searchChild("LAY_orb"), orbSubListener);
+    if (orbSubListener != nullptr) {
+      orbSubListener->release();
+    }
+// __LINE__ must be 260 as in the original file: it is the line argument of operator new.
+#line 260
+    SubListener *exchangeSubListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) SubListener(this);
+    exchangeSubListener->addRef();
+    ui::UIEventManager::get()->registObjectListener(main.searchChild("LAY_exchange"), exchangeSubListener);
+    if (exchangeSubListener != nullptr) {
+      exchangeSubListener->release();
+    }
+    for (u32 i = 0; i < 26; i++) {
+      unknown168[i] = gf::unknown160();
+    }
+    unknown238 = GfMenuReferenceItem::unknown001();
+    GfMenuAdapterManager::beginCategory(unknown002);
+    {
+      ui::UIObjectAcc common(main.unknown10, "LAY_common");
+// __LINE__ must be 279 as in the original file: it is the line argument of operator new.
+#line 279
+      CommonListener *commonListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) CommonListener(this);
+      commonListener->addRef();
+      ui::UIEventManager::get()->registObjectListener(common.unknown10, commonListener);
+      if (commonListener != nullptr) {
+        commonListener->release();
+      }
+      GfMenuShopAdapter::createFromReference(common.searchChild("TXT_shop_name"), 0, unknown168[0], false);
+      GfMenuShopAdapter::createFromReference(common.searchChild("TXT_shop_name_quest"), 0, unknown168[0], false);
+      GfMenuShopAdapter::createFromReference(common.searchChild("TXT_index"), 1, unknown168[0], false);
+      GfMenuShopAdapter::createFromReference(common.searchChild("IMG_index_icon"), 2, unknown168[0], false);
+      GfMenuShopAdapter::createFromReference(common.searchChild("IMG_index_category"), 3, unknown168[0], false);
+      GfMenuGameAdapter::create(common.searchChild("TXT_index_money"), 1, true);
+      GfMenuZoneAdapter::createFromReference(common.searchChild("TXT_location_name"), 0, unknown168[1], true);
+      GfMenuZoneAdapter::createFromReference(common.searchChild("IMG_location_icon"), 2, unknown168[1], true);
+      GfMenuZoneAdapter::createFromReference(common.searchChild("IMG_location_lv_icon"), 3, unknown168[1], true);
+    }
+    {
+      // Braced scope (ruling 3 of 2026-11-13): the game keeps this parameter at frame offset x29-168, the slot it later
+      // reuses for the UIObjectAcc of the store layer, so its lifetime ends before that object. The game zeroes the slot
+      // (stur xzr, [x29, #-168] at 0x71004cafac, before the getAllocator call) and then stores the allocator over it: the
+      // `= {}` is written (P3 of 2026-11-14), without it the function has one instruction less.
+      ui::UISelectObjList::CreateParam createParam = {};
+      createParam.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
+      unknown48 = GfMenuItemList::create();
+      unknowne8 = GfMenuItemList::create();
+      unknownf0 = GfMenuItemList::create();
+      unknown158 = GfMenuItemList::create();
+      unknown160 = GfMenuItemList::create();
+      unknown150 = GfMenuIDList::create();
+      unknown40 = ui::UISelectObjList::create(createParam);
+      unknown50 = ui::UISelectObjList::create(createParam);
+      unknownd8 = ui::UISelectObjList::create(createParam);
+      unknown4e8 = ui::UISelectObjList::create(createParam);
+    }
+    {
+      ui::UIObjectAcc store(main.searchChild("LAY_store"));
+      GfMenuItemAdapter *adapter = GfMenuItemAdapter::createFromList(store.searchChild("TXT_store_item_info_nrm"), 9, unknown48, -1, false);
+      if (adapter != nullptr) {
+        adapter->unknown24 = store.searchChild("LAY_store_item_info_nrm2");
+      }
+      adapter = GfMenuItemAdapter::createFromList(store.searchChild("TXT_sell_item_info_nrm"), 9, unknown48, -1, false);
+      if (adapter != nullptr) {
+        adapter->unknown24 = store.searchChild("LAY_store_sell_info_txt");
+      }
+      unknown50->pickupObject(store.unknown10, "LAY_store_item@%02d", 1);
+      for (u32 i = 0; i < unknown50->getSize(); i++) {
+        ui::UIObjectAcc item(unknown50->getObject(i));
+        name.format("IMG_store_item_icon@%02d", i + 1);
+        GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 2, unknown48, i, false);
+        name.format("TXT_store_item_name@%02d", i + 1);
+        adapter = GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 0, unknown48, i, false);
+        if (adapter != nullptr) {
+          name.format("LAY_store_item_contents@%02d", i + 1);
+          adapter->unknown24 = item.searchChild(name.c_str());
+        }
+        name.format("IMG_store_item_rare@%02d", i + 1);
+        GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 7, unknown48, i, false);
+        name.format("TXT_store_item_price@%02d", i + 1);
+        GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 5, unknown48, i, true);
+        name.format("TXT_store_item_num@%02d", i + 1);
+        GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 3, unknown48, i, true);
+        name.format("TXT_store_item_max@%02d", i + 1);
+        GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 4, unknown48, i, true);
+      }
+      unknown50->clear();
+      unknown50->pickupObject(store.unknown10, "LAY_store_sell_item@%02d", 1);
+      for (u32 i = 0; i < unknown50->getSize(); i++) {
+        ui::UIObjectAcc item(unknown50->getObject(i));
+        name.format("IMG_sell_item_icon@%02d", i + 1);
+        GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 2, unknown48, i, false);
+        name.format("TXT_sell_item_name@%02d", i + 1);
+        adapter = GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 0, unknown48, i, false);
+        if (adapter != nullptr) {
+          name.format("LAY_store_sell_item_contents@%02d", i + 1);
+          adapter->unknown24 = item.searchChild(name.c_str());
+        }
+        name.format("IMG_sell_item_rare@%02d", i + 1);
+        GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 7, unknown48, i, false);
+        name.format("TXT_sell_item_price@%02d", i + 1);
+        GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 6, unknown48, i, true);
+        name.format("TXT_sell_item_num@%02d", i + 1);
+        GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 3, unknown48, i, true);
+        name.format("TXT_sell_item_max@%02d", i + 1);
+        GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 4, unknown48, i, true);
+      }
+      unknown50->clear();
+      GfMenuObjUtil::createVScrollBarPlugin(main.searchChild("IMG_store_scroll_bar"), unknown48, "IMG_store_scroll_base", true);
+      GfMenuObjUtil::createVScrollBarPlugin(main.searchChild("IMG_store_sell_scroll_bar"), unknown48, "IMG_store_sell_scroll_base", true);
+      name.format("TXT_store_sell_getarea@%02d", 1);
+      adapter = GfMenuItemAdapter::createFromList(main.searchChild(name.c_str()), 0xb, unknown48, -1, false);
+      if (adapter != nullptr) {
+        adapter->unknown24 = main.searchChild("LAY_store_sell_getinfo");
+      }
+      adapter->unknown70 = 0;
+      name.format("TXT_store_sell_getarea@%02d", 2);
+      adapter = GfMenuItemAdapter::createFromList(main.searchChild(name.c_str()), 0xb, unknown48, -1, false);
+      adapter->unknown70 = 1;
+      name.format("TXT_store_item_info_fav_eff@%02d", 1);
+      adapter = GfMenuItemAdapter::createFromList(store.searchChild(name.c_str()), 0xe, unknown48, -1, false);
+      if (adapter != nullptr) {
+        adapter->unknown70 = 0;
+      }
+      name.format("TXT_sell_item_info_fav_eff@%02d", 1);
+      adapter = GfMenuItemAdapter::createFromList(store.searchChild(name.c_str()), 0xe, unknown48, -1, false);
+      if (adapter != nullptr) {
+        adapter->unknown70 = 0;
+      }
+      name.format("TXT_store_item_info_fav_eff@%02d", 2);
+      adapter = GfMenuItemAdapter::createFromList(store.searchChild(name.c_str()), 0xe, unknown48, -1, false);
+      if (adapter != nullptr) {
+        adapter->unknown70 = 1;
+      }
+      name.format("TXT_sell_item_info_fav_eff@%02d", 2);
+      adapter = GfMenuItemAdapter::createFromList(store.searchChild(name.c_str()), 0xe, unknown48, -1, false);
+      if (adapter != nullptr) {
+        adapter->unknown70 = 1;
+      }
+      name.format("TXT_store_item_info_fav_eff@%02d", 3);
+      adapter = GfMenuItemAdapter::createFromList(store.searchChild(name.c_str()), 0xe, unknown48, -1, false);
+      if (adapter != nullptr) {
+        adapter->unknown70 = 2;
+      }
+      name.format("TXT_sell_item_info_fav_eff@%02d", 3);
+      adapter = GfMenuItemAdapter::createFromList(store.searchChild(name.c_str()), 0xe, unknown48, -1, false);
+      if (adapter != nullptr) {
+        adapter->unknown70 = 2;
+      }
+      GfMenuItemAdapter::createFromList(store.searchChild("TXT_store_item_info_fav_time"), 0xd, unknown48, -1, false);
+      GfMenuItemAdapter::createFromList(store.searchChild("TXT_sell_item_info_fav_time"), 0xd, unknown48, -1, false);
+// __LINE__ must be 507 as in the original file: it is the line argument of operator new.
+#line 507
+      StoreActListener *actListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) StoreActListener(this);
+      actListener->addRef();
+      ui::UIEventManager::get()->registObjectListener(store.searchChild("LAY_store_action"), actListener);
+      if (actListener != nullptr) {
+        actListener->release();
+      }
+// __LINE__ must be 508 as in the original file: it is the line argument of operator new.
+#line 508
+      StoreListListener *listListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) StoreListListener(this);
+      listListener->addRef();
+      ui::UIEventManager::get()->registObjectListener(store.searchChild("LAY_store_list"), listListener);
+      if (listListener != nullptr) {
+        listListener->release();
+      }
+// __LINE__ must be 509 as in the original file: it is the line argument of operator new.
+#line 509
+      SellListListener *sellListListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) SellListListener(this);
+      sellListListener->addRef();
+      ui::UIEventManager::get()->registObjectListener(store.searchChild("LAY_store_sell"), sellListListener);
+      if (sellListListener != nullptr) {
+        sellListListener->release();
+      }
+// __LINE__ must be 510 as in the original file: it is the line argument of operator new.
+#line 510
+      SellFilterListener *sellFilterListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) SellFilterListener(this);
+      sellFilterListener->addRef();
+      ui::UIEventManager::get()->registObjectListener(store.searchChild("LAY_store_sell_filter"), sellFilterListener);
+      if (sellFilterListener != nullptr) {
+        sellFilterListener->release();
+      }
+    }
+    {
+      ui::UIObjectAcc inn(main.searchChild("LAY_inn"));
+// __LINE__ must be 520 as in the original file: it is the line argument of operator new.
+#line 520
+      InnActListener *innActListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) InnActListener(this);
+      innActListener->addRef();
+      ui::UIEventManager::get()->registObjectListener(inn.searchChild("LAY_inn_action"), innActListener);
+      if (innActListener != nullptr) {
+        innActListener->release();
+      }
+      GfMenuReferenceAdapter::create(inn.searchChild("TXT_inn_action_money@01"), unknown168[3], true);
+      GfMenuReferenceAdapter::create(inn.searchChild("TXT_inn_action_money@02"), unknown168[4], true);
+      GfMenuObjUtil::createSyncPlugin(inn.searchSibiling("IMG_inn_action_cursor_base"), inn.searchSibiling("LAY_inn_action_cursor"), 0x22);
+      GfMenuObjUtil::FitOption option;
+      option.unknown00 = true;
+      option.unknown01 = true;
+      GfMenuObjUtil::createFitPlugin(inn.searchChild("IMG_inn_bg"), inn.searchChild("LAY_inn_action"), 0, 0, option);
+    }
+    {
+      ui::UIObjectAcc orb(main.searchChild("LAY_orb"));
+      unknown50->pickupObject(orb.unknown10, "LAY_orb_item@%02d", 1);
+      for (u32 i = 0; i < unknown50->getSize(); i++) {
+        ui::UIObjectAcc item(unknown50->getObject(i));
+        name.format("TXT_orb_item_name@%02d", i + 1);
+        GfMenuItemAdapter *adapter = GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 0, unknowne8, i, false);
+        if (adapter != nullptr) {
+          name.format("LAY_orb_item_contents@%02d", i + 1);
+          adapter->unknown24 = item.searchChild(name.c_str());
+        }
+        name.format("IMG_orb_item_icon@%02d", i + 1);
+        GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 2, unknowne8, i, false);
+        name.format("IMG_orb_item_rare@%02d", i + 1);
+        GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 7, unknowne8, i, false);
+        name.format("TXT_orb_item_num@%02d", i + 1);
+        GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 3, unknowne8, i, false);
+        name.format("TXT_orb_item_max@%02d", i + 1);
+        GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 4, unknowne8, i, false);
+      }
+      GfMenuObjUtil::createVScrollBarPlugin(orb.searchChild("IMG_orb_item_scroll_bar"), unknowne8, "IMG_orb_item_scroll_base", true);
+      unknown50->clear();
+      {
+        ui::UIObjectAcc itemList(orb.unknown10, "LAY_orb_item_list");
+        GfMenuItemAdapter::createFromList(itemList.searchChild("TXT_orb_item_info"), 9, unknowne8, -1, false);
+      }
+      {
+        ui::UIObjectAcc recipe(orb.unknown10, "LAY_orb_rcp");
+        unknown50->pickupObject(recipe.unknown10, "LAY_orb_rcp_item@%02d", 1);
+        for (u32 i = 0; i < unknown50->getSize(); i++) {
+          ui::UIObjectAcc item(unknown50->getObject(i));
+          name.format("TXT_orb_rcp_item_name@%02d", i + 1);
+          GfMenuItemAdapter *adapter = GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 0, unknownf0, i, false);
+          if (adapter != nullptr) {
+            name.format("LAY_orb_rcp_item_contents@%02d", i + 1);
+            adapter->unknown24 = item.searchChild(name.c_str());
+          }
+          name.format("IMG_orb_rcp_item_icon@%02d", i + 1);
+          GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 2, unknownf0, i, false);
+          name.format("IMG_orb_rcp_item_rare@%02d", i + 1);
+          GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 7, unknownf0, i, false);
+          name.format("TXT_orb_rcp_item_set_stock@%02d", i + 1);
+          GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 3, unknownf0, i, false);
+          name.format("TXT_orb_rcp_item_set_num@%02d", i + 1);
+          GfMenuReferenceAdapter::create(item.searchChild(name.c_str()), unknown168[i + 8], false);
+          name.format("TXT_orb_rcp_item_id_num@%02d", i + 1);
+          GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 3, unknownf0, i, false);
+          name.format("TXT_orb_rcp_item_id_max@%02d", i + 1);
+          GfMenuReferenceAdapter::create(item.searchChild(name.c_str()), unknown168[i + 8], false);
+        }
+        GfMenuObjUtil::createVScrollBarPlugin(orb.searchChild("IMG_orb_rcp_scroll_bar"), unknownf0, "IMG_orb_rcp_scroll_base", true);
+        GfMenuReferenceAdapter::create(orb.searchChild("TXT_orb_rcp_rest_num"), unknown168[6], true);
+        {
+          ui::UIObjectAcc gauge(orb.unknown10, "IMG_orb_rcp_rest_gauge");
+          GfMenuReferenceAdapter::create(gauge.unknown10, unknown168[6], false);
+          gauge.setExtType(1);
+        }
+        GfMenuReferenceAdapter::create(orb.searchChild("TXT_orb_rcp_rest_max"), unknown168[7], false);
+        unknown50->clear();
+      }
+// __LINE__ must be 666 as in the original file: it is the line argument of operator new.
+#line 666
+      OrbListListener *orbListListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) OrbListListener(this);
+      orbListListener->addRef();
+      ui::UIEventManager::get()->registObjectListener(orb.searchChild("LAY_orb_item_list"), orbListListener);
+      if (orbListListener != nullptr) {
+        orbListListener->release();
+      }
+// __LINE__ must be 667 as in the original file: it is the line argument of operator new.
+#line 667
+      OrbRecipeListener *orbRecipeListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) OrbRecipeListener(this);
+      orbRecipeListener->addRef();
+      ui::UIEventManager::get()->registObjectListener(orb.searchChild("LAY_orb_rcp"), orbRecipeListener);
+      if (orbRecipeListener != nullptr) {
+        orbRecipeListener->release();
+      }
+    }
+    {
+      ui::UIObjectAcc exchange(main.searchChild("LAY_exchange"));
+      unknown50->pickupObject(exchange.unknown10, "LAY_exc_task@%02d", 1);
+      for (u32 i = 0; i < unknown50->getSize(); i++) {
+        ui::UIObjectAcc item(unknown50->getObject(i));
+        name.format("TXT_exc_task_name@%02d", i + 1);
+        GfMenuExcTaskAdapter *adapter = GfMenuExcTaskAdapter::createFromList(item.searchChild(name.c_str()), 0, unknown150, i, false);
+        if (adapter != nullptr) {
+          name.format("LAY_exc_task_contents@%02d", i + 1);
+          adapter->unknown24 = item.searchChild(name.c_str());
+        }
+      }
+      GfMenuObjUtil::createVScrollBarPlugin(exchange.searchChild("IMG_exc_task_scroll_bar"), unknown150, "IMG_exc_task_scroll_base", true);
+      unknown50->clear();
+      {
+        ui::UIObjectAcc objective(exchange.unknown10, "LAY_exc_objective");
+        unknown50->pickupObject(objective.unknown10, "LAY_exc_obj_item@%02d", 1);
+        for (u32 i = 0; i < unknown50->getSize(); i++) {
+          ui::UIObjectAcc item(unknown50->getObject(i));
+          name.format("TXT_exc_obj_item_name@%02d", i + 1);
+          GfMenuItemAdapter *adapter = GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 0, unknown158, i, false);
+          if (adapter != nullptr) {
+            name.format("LAY_exc_obj_item_contents@%02d", i + 1);
+            adapter->unknown24 = item.searchChild(name.c_str());
+          }
+          name.format("IMG_exc_obj_item_icon@%02d", i + 1);
+          GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 2, unknown158, i, false);
+          name.format("TXT_exc_obj_item_stock@%02d", i + 1);
+          GfMenuReferenceAdapter::create(item.searchChild(name.c_str()), unknown168[i + 0x11], false);
+          name.format("TXT_exc_obj_item_cost@%02d", i + 1);
+          GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 3, unknown158, i, false);
+          name.format("IMG_exc_obj_item_rare@%02d", i + 1);
+          GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 7, unknown158, i, false);
+        }
+        unknown50->clear();
+      }
+      {
+        ui::UIObjectAcc reward(exchange.unknown10, "LAY_exc_reward");
+        unknown168[23]->unknown162(0);
+        unknown168[23]->unknown165(0);
+        unknown168[23]->unknown166(999999999);
+        GfMenuReferenceAdapter::create(reward.searchChild("TXT_exc_reward_money_num"), unknown168[23], false);
+        unknown50->pickupObject(reward.unknown10, "LAY_exc_reward_item@%02d", 1);
+        for (u32 i = 0; i < unknown50->getSize(); i++) {
+          ui::UIObjectAcc item(unknown50->getObject(i));
+          name.format("TXT_exc_reward_item_name@%02d", i + 1);
+          // The game loads the item handle after createFromList (0x71004ccfe0: ldr w8, [sp, #152]; str w8, [x0, #36]); the single-use local gives that order (P2).
+          GfMenuItemAdapter *adapter = GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 0, unknown160, i, false);
+          adapter->unknown24 = item.unknown10;
+          name.format("TXT_exc_reward_item_num@%02d", i + 1);
+          GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 3, unknown160, i, false);
+        }
+      }
+      GfMenuReferenceAdapter::create(exchange.searchChild("TXT_exc_obj_rest_num"), unknown168[6], true);
+      {
+        ui::UIObjectAcc gauge(exchange.unknown10, "IMG_exc_obj_rest_gauge");
+        GfMenuReferenceAdapter::create(gauge.unknown10, unknown168[6], false);
+        gauge.setExtType(1);
+      }
+      GfMenuReferenceAdapter::create(exchange.searchChild("TXT_exc_obj_rest_max"), unknown168[7], false);
+      {
+        ui::UIObjectAcc questGauge(exchange.unknown10, "IMG_exc_reward_quest_gauge");
+        GfMenuAdapter *adapter = GfMenuReferenceAdapter::create(questGauge.unknown10, unknown168[24], false);
+        if (adapter != nullptr) {
+          adapter->setNumberInterpolateMode(0.2f);
+        }
+        questGauge.setExtType(1);
+        adapter = GfMenuReferenceAdapter::create(exchange.searchChild("TXT_exc_reward_quest_num"), unknown168[24], false);
+        if (adapter != nullptr) {
+          adapter->setNumberInterpolateMode(0.2f);
+        }
+        adapter = GfMenuReferenceAdapter::create(exchange.searchChild("TXT_exc_reward_quest_max"), unknown168[25], false);
+        if (adapter != nullptr) {
+          adapter->setNumberInterpolateMode(0.2f);
+        }
+      }
+// __LINE__ must be 804 as in the original file: it is the line argument of operator new.
+#line 804
+      ExcTaskListListener *excTaskListListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ExcTaskListListener(this);
+      excTaskListListener->addRef();
+      ui::UIEventManager::get()->registObjectListener(exchange.searchChild("LAY_exc_task_list"), excTaskListListener);
+      if (excTaskListListener != nullptr) {
+        excTaskListListener->release();
+      }
+    }
+    {
+      ui::UIObjectAcc numSelect(main.searchChild("LAY_num_select"));
+      GfMenuReferenceAdapter::create(numSelect.searchChild("TXT_num_select_value"), unknown168[2], true);
+      GfMenuReferenceAdapter::create(numSelect.searchChild("TXT_num_select_total_price"), unknown168[3], true);
+// __LINE__ must be 820 as in the original file: it is the line argument of operator new.
+#line 820
+      NumSelectListener *numSelectListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) NumSelectListener(this);
+      numSelectListener->addRef();
+      ui::UIEventManager::get()->registObjectListener(numSelect.unknown10, numSelectListener);
+      if (numSelectListener != nullptr) {
+        numSelectListener->release();
+      }
+    }
+    GfMenuCharDataAdapter::createFromReferenceBlade(main.searchChild("IMG_char_bl"), 0x36, 0, false);
+    GfMenuAdapterManager::endCategory();
+    unknown570 = GfMenuCallContext::create();
+    GfMenuObject::initialize();
+  }
 }
 
 u32 GfMenuObjShop::getSellItemTypeMax() { return 0xd; }

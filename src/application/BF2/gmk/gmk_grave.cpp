@@ -11,6 +11,8 @@
 #include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_bdat.h"
+#include "gmk/gmk_enemy/gmk_enemy.h"
+#include "gmk/gmk_enemy/gmk_routed_enemy.h"
 #include "gmk/gmk_set.h"
 
 namespace mm {} // namespace mm
@@ -18,8 +20,6 @@ namespace mm {} // namespace mm
 namespace gmk {
 
 template bool TGmkList<GmkGrave, GmkGrave::BdatInfo, 1447121479u, 4u, GmkGraveGob>::initGmkBdatInfo(GmkGrave::BdatInfo &, int &, const AGmkBase &);
-class GmkEnemy;
-class GmkRoutedEnemy;
 
 GmkGrave::GmkGrave() : unknown48(false), unknown50(gf::unknown020), unknown58(), unknown98(false) {}
 
@@ -111,6 +111,37 @@ void GmkGrave::update(f32 deltaTime) {
   } else if (canDepopGobInst()) {
     disposeGobInst(true);
   }
+}
+
+void GmkGrave::validateTargetable() {
+  if (unknown50 == gf::unknown020 || !unknown98) {
+    return;
+  }
+  // The game calls getGmkType through the enemy pointer before testing the pointer, in both blocks (0x7100611ae8 + 0x38: blr, then cbz): the local places that call ahead of the null test (ruling 1).
+  const AGmkBase *gmk = unknown58.unknown38;
+  GmkType type = gmk->getGmkType();
+  if (gmk != nullptr && type == GmkEnemy::GMK_TYPE) {
+    const GmkEnemyInsts &insts = static_cast<const GmkEnemy *>(gmk)->unknown48;
+    if (insts.unknown141) {
+      return;
+    }
+    if (insts.isGobInstExist()) {
+      return;
+    }
+  }
+  gmk = unknown58.unknown38;
+  type = gmk->getGmkType();
+  if (gmk != nullptr && type == GmkRoutedEnemy::GMK_TYPE) {
+    const GmkEnemyInsts &insts = static_cast<const GmkRoutedEnemy *>(gmk)->unknown50;
+    if (insts.unknown141) {
+      return;
+    }
+    if (insts.isGobInstExist()) {
+      return;
+    }
+  }
+  unknown98 = false;
+  unknown002(unknown50, true);
 }
 
 bool GmkGrave::canPopGobInst() const {

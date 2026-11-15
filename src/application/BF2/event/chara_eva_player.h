@@ -26,7 +26,7 @@ public:
   virtual ~CharaEvaPlayer();
   void stop();
   void update(f32 delta);
-  void setSpMotWeapon(bool isSpMotion, void *data);
+  inline void setSpMotWeapon(bool isSpMotion, void *data);
   void setScaleWeapon(f32 scale);
   void playTar(bool isPlay, const mm::Vec3 &tar);
   void playAction(int type);

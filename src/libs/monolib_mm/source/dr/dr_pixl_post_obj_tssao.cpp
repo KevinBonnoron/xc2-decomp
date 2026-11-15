@@ -1,12 +1,24 @@
 #include "dr/dr_pixl_post_obj_tssao.h"
 
+#include <math.h>
+
+#include "dr/dr_ap_cache.h"
+#include "dr/dr_calc_man.h"
+#include "dr/dr_calc_view_work.h"
 #include "dr/dr_man.h"
 #include "dr/dr_pixl_man.h"
 #include "dr/dr_pixl_post_man.h"
 #include "dr/dr_pixl_post_obj.h"
 #include "dr/dr_pixl_post_parm.h"
 #include "dr/dr_pixl_render_target.h"
+#include "dr/dr_shd_data_list.h"
+#include "dr/dr_shd_data_obj.h"
+#include "dr/dr_shd_man.h"
+#include "grlib/cglib_color_ctl.h"
 #include "grlib/cglib_ctl_shader.h"
+#include "grlib/cglib_shader.h"
+#include "grlib/cglib_uni_base_utility.h"
+#include "mm_math/mm_mat44.h"
 #include "mm_math/mm_math.h"
 #include "mm_math/mm_vec4.h"
 #include "mm_mtl/fixed_array.h"
@@ -89,6 +101,107 @@ void DrPixlPostObjTSSAO::passPrevBlur() {
   passBlur_Sub(BLUR_AXIS_UNKNOWN_1, strength, unknown20, unknown38, false);
   grlib::CGLibCtlShader::setMemoryBarrierBit(2);
   passBlur_Sub(BLUR_AXIS_UNKNOWN_2, strength, unknown38, unknown20, false);
+}
+
+void DrPixlPostObjTSSAO::passTemporalFiltering() {
+  DrCalcViewWork *viewWork = unknown00->unknown580->unknown10;
+  DrPixlRenderTarget *target = unknown28[DrMan::s_nDblIdx];
+  grlib::CGLibColorCtl::setBlendOffControl(GRL_LOGIC_TYPE_COPY);
+  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrShdDataObj *shader = shdList->getPostShdObj(0x2e);
+  u32 execClear = 1;
+  if (!viewWork->unknown9ac && !viewWork->unknown9a9) {
+    execClear = 2;
+  }
+  shader->setDeclarationIdx(shader->getDeclarationOfs("EXEC_CLEAR"), execClear);
+  shader->setDeclarationIdx(shader->getDeclarationOfs("SELECTIVE_FILTERING"), 2);
+  shader->setDeclarationIdx(shader->getDeclarationOfs("DEB_OUTPUT"), 2);
+  shdList->unknown002(shader);
+  grlib::CGLibUniformEtcUtility uniform(shader);
+  uniform.setUseUniformBlock("U_POST");
+  u32 fragCoordToUv = uniform.unknown001("gFragCoordToUV");
+  u32 uvToScreen = uniform.unknown001("gUVToScreen");
+  u32 screenToUv = uniform.unknown001("gScreenToUV");
+  u32 screenToViewPos = uniform.unknown001("gScreenToViewPos");
+  u32 screenToGbUv = uniform.unknown001("gScreenToGBUV");
+  u32 invView = uniform.unknown001("gInvView");
+  u32 prevView = uniform.unknown001("gPrevView");
+  u32 proj = uniform.unknown001("gProj");
+  u32 param = uniform.unknown001("gParam");
+  u32 projInv = uniform.unknown001("gProjInv");
+  u32 toPrevScreen = uniform.unknown001("gToPrevScreen");
+  int aoLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("gTAO");
+  int depthLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("gTDepth");
+  int prevAoLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("gTPrevAO");
+  int prevDepthLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("gTPrevDepth");
+  int velocityLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("gTVelocity");
+  int similarityLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("gTSimilarity");
+  int prevSimilarityLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("gTPrevSimilarity");
+  f32 paddedWidth = static_cast<f32>(target->unknownbc) + (static_cast<f32>(unknown70) + static_cast<f32>(unknown70));
+  f32 paddedHeight = static_cast<f32>(target->unknownc0) + (static_cast<f32>(unknown70) + static_cast<f32>(unknown70));
+  mm::Vec4 fragCoordUv;
+  calcFragCoordToUV(fragCoordUv, paddedWidth, paddedHeight);
+  uniform.setF32SetVec4(fragCoordToUv, &fragCoordUv.x);
+  f32 uvScreen[4];
+  uvScreen[0] = 2.0f;
+  uvScreen[1] = -2.0f;
+  uvScreen[2] = -1.0f;
+  uvScreen[3] = 1.0f;
+  uniform.setF32SetVec4(uvToScreen, uvScreen);
+  f32 screenUv[4];
+  screenUv[0] = 0.5f;
+  screenUv[1] = -0.5f;
+  screenUv[2] = 0.5f;
+  screenUv[3] = 0.5f;
+  uniform.setF32SetVec4(screenToUv, screenUv);
+  f32 viewPos[4];
+  viewPos[1] = tanf(viewWork->unknown4c4 * 0.5f);
+  viewPos[0] = viewPos[1] * viewWork->unknown4c0;
+  viewPos[2] = 0.0f;
+  viewPos[3] = 0.0f;
+  uniform.setF32SetVec4(screenToViewPos, viewPos);
+  f32 width = static_cast<f32>(target->unknownbc);
+  f32 gbUv[4];
+  gbUv[0] = 0.5f / ((width * 0.5f) / (paddedWidth * 0.5f));
+  f32 height = static_cast<f32>(target->unknownc0);
+  gbUv[1] = -0.5f / ((height * 0.5f) / (paddedHeight * 0.5f));
+  gbUv[2] = 0.5f - 0.0f / width;
+  gbUv[3] = 0.5f - 0.0f / height;
+  uniform.setF32SetVec4(screenToGbUv, gbUv);
+  uniform.setMat44SetMat44(invView, viewWork->unknown00);
+  uniform.setMat44SetMat44(prevView, viewWork->unknown280);
+  uniform.setMat44SetMat44(proj, viewWork->unknown380);
+  uniform.setMat44SetMat44(projInv, viewWork->unknown3c0);
+  f32 paramValue[4];
+  paramValue[0] = static_cast<f32>(unknown10->unknowne8->unknownbc);
+  paramValue[1] = static_cast<f32>(unknown10->unknowne8->unknownc0);
+  paramValue[2] = 0.0f;
+  paramValue[3] = 0.0f;
+  uniform.setF32SetVec4(param, paramValue);
+  // The game copies unknown00 into the variable (the alignment assert at 0x71008c2fc8 and the memcpy at 0x71008c2ff4 of Mat44's copy
+  // constructor, after the gParam store at 0x71008c2fc0) and then stores the product into it; the product itself reads unknown00 directly.
+  // Forms tried: `Mat44 matrix = a * b * c;` (no copy, 1050 instructions against 1062) and `matrix = matrix * b * c;` (1053 instructions).
+  mm::Mat44 matrix = viewWork->unknown00;
+  matrix = viewWork->unknown00 * viewWork->unknown280 * viewWork->unknown380;
+  uniform.setMat44SetMat44(toPrevScreen, matrix);
+  DrAPCache *apCache = unknown00->unknown5c0;
+  apCache->beginTexSampling(2, 0);
+  apCache->setTexture(*unknown10->getOldDownDepth()->unknown70, prevDepthLocation);
+  apCache->beginTexSampling(2, 1);
+  apCache->setTexture(*unknown20->unknown70, aoLocation);
+  apCache->setTexture(*unknown28[DrMan::s_nDblStockIdx]->unknown70, prevAoLocation);
+  apCache->beginBorderDepthMinusMax();
+  apCache->setTexture(*unknown10->unknowne8->unknown70, depthLocation);
+  apCache->beginTexSampling(2, 0);
+  apCache->setTexture(*unknown08->getPixlObj(3)->unknown70, velocityLocation);
+  apCache->beginBorderWhite();
+  apCache->setTexture(*unknown48->unknown70, similarityLocation);
+  apCache->setTexture(*unknown50[DrMan::s_nDblStockIdx]->unknown70, prevSimilarityLocation);
+  target->setRenderTarget(*unknown50[DrMan::s_nDblIdx]);
+  uniform.updateData();
+  uniform.setUniformBlock();
+  shdList->renderQuads();
+  target->setColorInvalidate();
 }
 
 void DrPixlPostObjTSSAO::render_afterTemporal() {

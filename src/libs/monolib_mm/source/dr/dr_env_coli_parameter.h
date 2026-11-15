@@ -9,6 +9,7 @@ class DrEnvColiMan;
 class DrEnvColiObj;
 class DrMan;
 struct DrEnvColiResult;
+struct EnvColiPostData;
 
 template <int Version> struct EnvColiPostParameterVer;
 
@@ -19,6 +20,7 @@ public:
   static void updateBloomParams();
   void resetToneMapParams(const EnvColiPostParameterVer<10006> *from, const EnvColiPostParameterVer<10006> *to, f32 ratio);
   void calcPostEffectParams(bool isReset);
+  void updateCloudParams(f32 ratio, bool, const EnvColiPostData *from, const EnvColiPostData *to);
   void calcParams(u32 index, s32 num, bool isReset);
 
   DrMan *unknown00;           // Inferred role: dr manager; original member name unknown.

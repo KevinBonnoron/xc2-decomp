@@ -17,6 +17,10 @@ namespace wnd {
 
 struct ResWind;
 class OverlappingCache;
+class AABB;
+class Dispatcher;
+class WindObject;
+class WindProbe;
 
 // Octree broad phase. Layout from the constructor (0x71009866d0) and the allocation of 0xa150 bytes by
 // fw::WindManager::buildWorld (0x71001af59c).

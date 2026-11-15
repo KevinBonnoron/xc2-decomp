@@ -10,6 +10,7 @@
 #include "dr/dr_pixl_format.h"
 #include "dr/dr_pixl_man.h"
 #include "dr/dr_pixl_mem_man.h"
+#include "dr/dr_pixl_post_man.h"
 #include "dr/dr_pixl_post_parm.h"
 #include "dr/dr_pixl_render_target.h"
 #include "dr/dr_shd_data_list.h"
@@ -22,6 +23,8 @@
 #include "grlib/cglib_uni_base_utility.h"
 #include "grlib/cglib_vtx_vertex.h"
 #include "mm_math/mm_col4.h"
+#include "mm_math/mm_mat44.h"
+#include "mm_math/mm_vec3.h"
 #include "mm_math/mm_vec4.h"
 #include "mm_mtl/fixed_array.h"
 #include "mtl/alloc_handle.h"
@@ -143,6 +146,87 @@ void DrPixlPostObjMotionBlur2::render() {
   grlib::CGLibCtlShader::setMemoryBarrierBit(2);
   if (unknown64) {
     lastRender();
+  }
+}
+
+// Same body shape as DrPixlPostObjTSSAO::passTemporalFiltering for the matrix block.
+void DrPixlPostObjMotionBlur2::calcBlurWork() {
+  DrCalcViewWork *viewWork = unknown00->unknown580->unknown10;
+  if (viewWork->unknown9aa) {
+    unknown28->clearTexture(mm::Col4(0.0f, 0.0f, 0.0f, 1.0f), static_cast<GrlClaerMask>(0xf));
+  } else {
+    DrAPGxType::setupBlend(0);
+    unknown28->setRenderTarget();
+    DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+    DrShdDataList *shdList = unknown00->unknown80->unknown00;
+    DrShdDataObj *shader = shdList->getPostShdObj(0x39);
+    shdList->bindTriangleTex();
+    shader->setupShader(0u);
+    grlib::CGLibUniformEtcUtility uniform(shader);
+    uniform.setUseUniformBlock("U_POST");
+    int velocityLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("gTVelocity");
+    int depthLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("gTDep");
+    // The game calls it and drops the result (the third getTextureLocation call; ruling 5).
+    (shader->unknown38 + shader->unknown58)->getTextureLocation("gTStencil");
+    u32 dpch = uniform.unknown001("dpch");
+    u32 projInv = uniform.unknown001("gProjInv");
+    u32 toPrevScreen = uniform.unknown001("gToPrevScreen");
+    u32 sampleOffset = uniform.unknown001("gSampleOffset[0]");
+    u32 sizeOfColor = uniform.unknown001("gSizeOfColor");
+    u32 targetVelocity = uniform.unknown001("gTargetVelocity");
+    DrAPCache *apCache = unknown00->unknown5c0;
+    // unknown798 is read through unknown00->unknown580->unknown10 after the calls (the game reloads the view work pointer for it); the dpch value is a
+    // float array (the game's slot is 8-byte aligned, a Vec4 would be 16).
+    f32 blurParam[4] = {postParm->unknown200, postParm->unknown20c, postParm->unknown210 * unknown00->unknown580->unknown10->unknown798, postParm->unknown204};
+    uniform.setF32SetVec4(dpch, blurParam);
+    uniform.setMat44SetMat44(projInv, viewWork->unknown3c0);
+    // {} blocks: the frame of the game reuses the slots of the matrix, the sample offsets and the color size for later locals (ruling 3).
+    {
+      mm::Mat44 matrix = viewWork->unknown00;
+      matrix.unknown009(matrix, viewWork->unknown280 * viewWork->unknown380);
+      uniform.setMat44SetMat44(toPrevScreen, matrix);
+    }
+    {
+      f32 halfHeight = 0.5f / static_cast<f32>(unknown28->unknownc0);
+      f32 halfWidth = 0.5f / static_cast<f32>(unknown28->unknownbc);
+      f32 offsets[8] = {-halfWidth, -halfHeight, -halfWidth, halfHeight, halfWidth, -halfHeight, halfWidth, halfHeight};
+      uniform.setF32SetF32Array(sampleOffset, offsets, 8);
+    }
+    {
+      mm::Vec4 colorSize(static_cast<f32>(unknown00->unknown5b8->unknown18), static_cast<f32>(unknown00->unknown5b8->unknown1c), 0.0f, 0.0f);
+      uniform.setVec4SetVec4(sizeOfColor, colorSize);
+    }
+    mm::Vec4 velocity = mm::Vec4::zero;
+    mm::Vec3 point = viewWork->unknown410 * viewWork->unknown4c8 * 10.0f + viewWork->unknown400;
+    f32 w = (point.x * viewWork->unknown340.rows[0][3] + point.y * viewWork->unknown340.rows[1][3] + point.z * viewWork->unknown340.rows[2][3]) + viewWork->unknown340.rows[3][3];
+    f32 x = (point.x * viewWork->unknown340.rows[0][0] + point.y * viewWork->unknown340.rows[1][0] + point.z * viewWork->unknown340.rows[2][0]) + viewWork->unknown340.rows[3][0];
+    f32 y = (point.x * viewWork->unknown340.rows[0][1] + point.y * viewWork->unknown340.rows[1][1] + point.z * viewWork->unknown340.rows[2][1]) + viewWork->unknown340.rows[3][1];
+    // The game branches on the negation of `<=` (b.ls after the fcmp against 1e-06; `1.0e-6f < fabsf(w)` gives b.le).
+    if (!(fabsf(w) <= 1.0e-6f)) {
+      w = 1.0f / w;
+      x = x * w;
+      y = y * w;
+    }
+    // The game computes the product twice (for gToPrevScreen and again here), each time with the runtime alias test of Mat44::unknown002.
+    mm::Mat44 prevViewProj = viewWork->unknown280 * viewWork->unknown380;
+    f32 prevW = (point.x * prevViewProj.rows[0][3] + point.y * prevViewProj.rows[1][3] + point.z * prevViewProj.rows[2][3]) + prevViewProj.rows[3][3];
+    f32 prevX = (point.x * prevViewProj.rows[0][0] + point.y * prevViewProj.rows[1][0] + point.z * prevViewProj.rows[2][0]) + prevViewProj.rows[3][0];
+    f32 prevY = (point.x * prevViewProj.rows[0][1] + point.y * prevViewProj.rows[1][1] + point.z * prevViewProj.rows[2][1]) + prevViewProj.rows[3][1];
+    // Same projection through the previous view projection.
+    if (!(fabsf(prevW) <= 1.0e-6f)) {
+      prevW = 1.0f / prevW;
+      prevX = prevX * prevW;
+      prevY = prevY * prevW;
+    }
+    velocity.x = x - prevX;
+    velocity.y = -(y - prevY);
+    uniform.setVec4SetVec4(targetVelocity, velocity);
+    apCache->beginTexSampling(2, 0);
+    apCache->setTexture(*unknown08->getPixlObj(3)->unknown70, velocityLocation);
+    apCache->setTexture(*unknown08->unknown7f0->unknown180->getDownDepth()->unknown70, depthLocation);
+    uniform.updateData();
+    uniform.setUniformBlock();
+    shdList->renderTriangle();
   }
 }
 

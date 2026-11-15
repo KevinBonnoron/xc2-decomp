@@ -60,6 +60,12 @@ DrMdoCtlSeam::DrMdoCtlSeam(int viewNum)
 
 void *DrMdoCtlSeam::getColiListTbl() { return m_coliListTbl[DrMan::s_nDblIdx]; }
 
+// The game zero-extends the index (umaddl x0, w1, #0x48, x8 at 0x710081c018) although the symbol takes an int (P1, typed local for a zero-extending access).
+DrResMdoSeamColi *DrMdoCtlSeam::getColiRes(int index) {
+  u32 coliIndex = index;
+  return &unknown258.unknown20[coliIndex];
+}
+
 u32 DrMdoCtlSeam::getColiListMax() { return m_coliListMax[DrMan::s_nDblIdx]; }
 
 u32 DrMdoCtlSeam::isRead(int index) const {

@@ -1,3 +1,5 @@
+#include <new>
+
 #include "execute/title/title_main.h"
 #include "execute/title/title_menu.h"
 #include "execute/title/title_state_debug_save_continue.h"
@@ -9,10 +11,18 @@
 #include "execute/title/title_state_select_option.h"
 #include "execute/title/title_state_to_title.h"
 #include "framework/render/render_param.h"
+#include "fw/fw_pad.h"
 #include "gf/data/gf_data_event.h"
+#include "gf/data/gf_data_game.h"
+#include "gf/data/gf_data_option.h"
 #include "gf/data/gf_data_save.h"
+#include "gf/data/gf_data_system.h"
+#include "gf/data/gf_debug_save.h"
 #include "gf/event/gf_event.h"
 #include "gf/game/event/gf_game_event.h"
+#include "gf/game/gf_game_load.h"
+#include "gf/game/gf_game_save.h"
+#include "gf/game/gf_game_util_save_data.h"
 #include "gf/game/sequential_play/gf_sequential_play.h"
 #include "gf/gf_manager.h"
 #include "gf/map/gf_map_manager.h"
@@ -22,6 +32,7 @@
 #include "ml/time_count.h"
 #include "mm_math/mm_col4.h"
 #include "mm_mtl/fixed_vector.h"
+#include "mm_mtl/fixstr.h"
 #include "types.h"
 
 namespace ai {
@@ -36,6 +47,15 @@ namespace tl {
 // Inferred role: event played by the title for each chapter; original name unknown.
 static const u16 unknown001[12] = {0x2711, 0x2908, 0x2909, 0x290a, 0x290b, 0x290c, 0x290d, 0x290e, 0x290f, 0x2910, 0x2911, 0};
 
+// Inferred role: loads the save data and then the option data of the title buffers from a game file; original name unknown. The game repeats these statements in
+// TitleStateMainScreen::checkLoadSlotForDebug (0x7100146fc8), checkLoadFileForDebug (0x71001470f8) and loadSaveDataForTitle (0x7100147218).
+static void unknown002(TitleMain *main, gf::GfGameLoad &load) {
+  new (main->getSaveBuffer()) gf::SDataSave;
+  load.execGameLoadWithMicroThread(*main->getSaveBuffer());
+  main->getOptionBuffer()->unknown001();
+  load.execOptionLoadWithMicroThread(*main->getOptionBuffer());
+}
+
 void TitleStateLoad::update(TitleMain *main, const fw::UpdateInfo &info) {
   unknown18.reset();
   main->unknown158.unknown00 = 0;
@@ -47,6 +67,49 @@ void TitleStateMainScreen::gevPlayEvent(gf::GEV event, u32 value) {
   if (event == gf::GEV_UNKNOWN_13) {
     unknown20 = 1;
   }
+}
+
+bool TitleStateMainScreen::checkLoadSlotForDebug(TitleMain *main) {
+  gf::SAVESLOT slot = main->unknowna4;
+  if (slot != gf::SAVESLOT_UNKNOWN_FFFFFFFF) {
+    main->unknowna4 = gf::SAVESLOT_UNKNOWN_FFFFFFFF;
+    if (gf::GfDebugSave::isExist(slot)) {
+      gf::GfGameLoad load(slot);
+      unknown002(main, load);
+      gf::GfGameUtilSaveData::flushOptionSaveData();
+      reqState(5);
+      return true;
+    }
+  }
+  return false;
+}
+
+bool TitleStateMainScreen::checkLoadFileForDebug(TitleMain *main) {
+  if (main->unknowna8.empty()) {
+    return false;
+  }
+  gf::GfGameLoad load(main->unknowna8.c_str());
+  unknown002(main, load);
+  gf::GfGameUtilSaveData::flushOptionSaveData();
+  reqState(5);
+  main->unknowna8 = "";
+  return true;
+}
+
+bool TitleStateMainScreen::loadSaveDataForTitle(TitleMain *main) {
+  {
+    gf::GfGameLoad load(gf::SAVESLOT_UNKNOWN_22);
+    unknown002(main, load);
+    if (main->getOptionBuffer()->unknown00 != gf::SAVE_UNKNOWN_237915) {
+      gf::GfGameUtilSaveData::setupOptionSaveData(*main->getOptionBuffer());
+      gf::GfGameSave save(gf::SAVESLOT_UNKNOWN_FFFFFFFF);
+      save.execOptionSaveWithMicroThread();
+    }
+  }
+  gf::GfGameUtilSaveData::flushOptionSaveData();
+  main->setupTitleOptionToGameOption();
+  main->getGameClearFlagFromSaveData();
+  return main->getSaveBuffer()->unknown00 != gf::SAVE_UNKNOWN_237915;
 }
 
 bool TitleStateMainScreen::checkReturnEvent(TitleMain *main) {
@@ -150,6 +213,31 @@ bool TitleStateDebugSaveContinue::updateCheck(TitleMain *main) {
     reqState(7);
   }
   return true;
+}
+
+bool TitleStateDebugSaveContinue::updateButton(TitleMain *main) {
+  unknown16c++;
+  const fw::PadData *pad = fw::PadManager::getControlPadData(0);
+  if ((pad->unknown04 & PAD_BUTTON_UNKNOWN_1) != 0 && unknown16c >= 6) {
+    reqState(1);
+    return true;
+  }
+
+  if ((pad->unknown0c & PAD_BUTTON_UNKNOWN_14) != 0 && unknown168 < SLOT_UNKNOWN_21 - 1) {
+    unknown168++;
+  }
+  if ((pad->unknown0c & PAD_BUTTON_UNKNOWN_12) != 0 && unknown168 > 0) {
+    unknown168--;
+  }
+  if ((pad->unknown04 & PAD_BUTTON_UNKNOWN_2) != 0 && unknown18[unknown168].unknown08 && unknown16c >= 6) {
+    gf::GfGameLoad load(static_cast<gf::SAVESLOT>(unknown168));
+    new (main->getSaveBuffer()) gf::SDataSave;
+    if (load.execGameLoadWithMicroThread(*main->getSaveBuffer())) {
+      reqState(5);
+    }
+    return true;
+  }
+  return false;
 }
 
 void TitleStatePlayEvent::enter(TitleMain *main, ai::State *previous) {

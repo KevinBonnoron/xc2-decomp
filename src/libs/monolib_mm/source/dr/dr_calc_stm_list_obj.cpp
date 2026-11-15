@@ -161,6 +161,46 @@ bool DrCalcStmListObj::texstm_size_Wait() {
   return 0;
 }
 
+bool DrCalcStmListObj::texstm_stmchk_topLast() {
+  unknown88 = 2;
+  unknown8c = 0;
+  unknown8e = 0;
+  DrCalcTexStreamMan *man = DrCalcTexStreamMan::get();
+  if (man->unknown2490 >= 0) {
+    man->unknown2490 = 0;
+  }
+  // P2: the game loads the flags once (0x71008b6dbc) and stores them once at the end of the two branches that update them; with
+  // `unknown80 |= ...` in each branch the stores are not merged (49 instructions against 48). The reload after clearMemObj is the game's (0x71008b6e04).
+  u32 flags = unknown80;
+  if (flags & 0x4000000) {
+    DrMan::get()->setAllMiddelTexStmChk(true);
+  } else {
+    if (flags & 0x2000) {
+      if (flags & 0x8000000) {
+        unknown80 = flags & ~0x8000000;
+        if (unknown50 != nullptr) {
+          man->clearMemObj(unknown50);
+          unknown50 = nullptr;
+        }
+        unknown1e0 = &DrCalcStmListObj::texstm_notfileWait;
+        return false;
+      }
+      flags |= 0x4000;
+      unknown1e0 = &DrCalcStmListObj::texstm_stmchk_setWait;
+    } else {
+      if (unknown50 != nullptr) {
+        man->clearMemObj(unknown50);
+        flags = unknown80;
+        unknown50 = nullptr;
+      }
+      flags |= 0x8000;
+      unknown1e0 = unknown1f0;
+    }
+    unknown80 = flags;
+  }
+  return false;
+}
+
 void DrCalcStmListObj::setupReadCheck() {
   if (unknown50 != nullptr) {
     DrCalcTexStreamMan::get()->clearMemObj(unknown50);

@@ -790,6 +790,28 @@ void GfMenuObjHanaCustom::MainListener::reciveEvent(const ui::EventData &event, 
   }
 }
 
+void GfMenuObjHanaCustom::EquipListListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  // Ruling 5 (P3): the game (function start 0x710046f360) builds an accessor on the object of the owner (+0x18) first
+  // (constructor call 0x710046f38c) and only destroys it at the end (destructor 0x710046f418); it is never used. The
+  // original expression cannot be checked.
+  ui::UIObjectAcc ownerAcc(unknown20->unknown18);
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    break;
+  case GfMenuTypes::unknown003_33:
+    refreshEquipList(acc, GfMenuReference::getReferenceBladeID(0));
+    setFadeIn(handle, 2);
+    break;
+  case GfMenuTypes::unknown003_34:
+    setFadeOut(handle, 2);
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
 } // namespace gf
 
 template bool mm::mtl::Delegate<bool()>::memberFuncInvoker<gf::GfMenuObjHanaCustom>(const mm::mtl::Delegate<bool()> *);

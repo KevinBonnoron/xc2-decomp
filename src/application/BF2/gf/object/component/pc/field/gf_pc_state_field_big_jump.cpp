@@ -49,10 +49,7 @@ void StateFieldBigJump::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   unknown40.z = scale * unknown40.z;
   unknown40.w = scale * unknown40.w;
   f32 angle = info->unknown20 * 0.5f;
-  unknown50.y = sinf(angle);
-  unknown50.w = cosf(angle);
-  unknown50.x = 0.0f;
-  unknown50.z = 0.0f;
+  unknown50.unknown001(angle);
   GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
   if (!comAsm->existState("S_highjump_00")) {
     StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_FALL);
@@ -122,10 +119,7 @@ void StateFieldBigJump::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &
       f32 weight = mm::clamp((unknown18 - unknown20) / (unknown24 - unknown20), 0.0f, 1.0f);
       f32 angle = jump->unknown20 * 0.5f;
       mm::Quat target;
-      target.y = sinf(angle);
-      target.w = cosf(angle);
-      target.x = 0.0f;
-      target.z = 0.0f;
+      target.unknown001(angle);
       property->unknown160.unknown10 = mm::slerp(unknown40, target, weight);
       property->syncDirection();
       position = unknown30 * (1.0f - weight) + jump->unknown10 * weight;

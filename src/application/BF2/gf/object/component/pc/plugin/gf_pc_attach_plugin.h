@@ -30,7 +30,7 @@ class AttachPlugin : public Plugin {
 public:
   AttachPlugin();
   ~AttachPlugin() override;
-  static AttachPlugin *create();
+  static Plugin *create();
   virtual bool setup(GfComBehaviorPc &behavior);
   virtual void cleanup(GfComBehaviorPc &behavior);
   void onActivate() override;
