@@ -64,6 +64,8 @@ void ShakeCameraElementRandom::CalcShift(const mm::Vec3 &position, const mm::Vec
   }
 
   f32 progress = unknown14 / unknown10;
+  // Local copies of unknown20 and unknown30. The game spills both copies to
+  // the stack; reading the members directly does not match.
   mm::Vec3 previous = unknown20;
   mm::Vec3 next = unknown30;
   f32 rate;
@@ -87,12 +89,17 @@ void ShakeCameraElementRandom::CalcShift(const mm::Vec3 &position, const mm::Vec
   }
   case 1: {
     positionShift = mm::Vec3::zero;
+    // Stays a local: the game calls CalcAngle before it copies previous into
+    // direction. Inlining it into the TurnDirectionAngle call does not match.
     f32 angle = progress * Misc::CalcAngle(previous, next, false);
+    // A second copy of previous. Turning previous in place does not match.
     mm::Vec3 direction = previous;
     Misc::TurnDirectionAngle(direction, next, angle, true);
     f32 x = position.x - target.x;
     f32 y = position.y - target.y;
     f32 z = position.z - target.z;
+    // Written out by hand. The game inlines sqrtf and calls neither
+    // Misc::CalcLength nor the Vec3 operator-; both forms do not match.
     f32 length = sqrtf(x * x + y * y + z * z);
     direction.x = length * direction.x;
     direction.y = length * direction.y;
