@@ -243,8 +243,9 @@ inline f32 unknown003(f32 r) {
 }
 
 // Inferred helper: shortest rotation from the unit vector from to the unit vector to (a half turn about Y when they are
-// opposite); original name unknown. Evidence: the same inlined body in fw::PrimCapsule::getRot (from unitY),
-// btl::BattleCharacter::SetWarpPostureByDir and btl::ShakeCameraElementRandom::CalcShift (from unitZ).
+// opposite); original name unknown. Evidence: the same inlined body in fw::PrimCapsule::getRot (0x7100197c14, from unitY),
+// btl::BattleCharacter::SetWarpPostureByDir (0x7100025f20, from unitZ) and the shake camera CalcShift (0x7100085940, block at
+// 0x7100085bd4-0x7100085c5c, from unitZ). It is not anm::TransformUtil::calcShortestRotation, a different acos-based function.
 inline void unknown005(Quat &rotation, const Vec3 &from, const Vec3 &to) {
   f32 dot = from.x * to.x + from.y * to.y + from.z * to.z;
   if (!(dot < -0.9999f)) {
