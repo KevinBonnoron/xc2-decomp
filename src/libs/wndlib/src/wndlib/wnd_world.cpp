@@ -10,6 +10,7 @@
 #include "wnd/wnd_global_wind_manager.h" // IWYU pragma: keep
 #include "wnd/wnd_object.h"
 #include "wnd/wnd_probe.h"
+#include "wnd/wnd_query.h"
 
 namespace mm {
 namespace mtl {
@@ -45,6 +46,39 @@ WindWorld::~WindWorld() {
 void WindWorld::setDebugMode(bool enable, u32 mask) {
   unknown1d0 = enable;
   unknown10.setDebugWind(enable, mask);
+}
+
+bool WindWorld::query(Query *query) {
+  if (query != nullptr) {
+    if (query->getRTTI()->isKindOf(&AreaWindQuery::m_rtti)) {
+      AreaWindQuery *areaWindQuery = static_cast<AreaWindQuery *>(query);
+      areaWindQuery->unknown08.clear();
+      for (mm::mtl::IntrusiveList<unknown003<AreaWind>>::iterator it = unknown188.begin(); it != unknown188.end(); ++it) {
+        areaWindQuery->unknown08.push(it.get()->unknown10);
+      }
+      return true;
+    }
+    if (query->getRTTI()->isKindOf(&LocalWindQuery::m_rtti)) {
+      LocalWindQuery *localWindQuery = static_cast<LocalWindQuery *>(query);
+      localWindQuery->unknown08.clear();
+      for (mm::mtl::IntrusiveList<unknown003<LocalWind>>::iterator it = unknown1a0.begin(); it != unknown1a0.end(); ++it) {
+        localWindQuery->unknown08.push(it.get()->unknown10);
+      }
+      return true;
+    }
+    if (query->getRTTI()->isKindOf(&ProbeQuery::m_rtti)) {
+      ProbeQuery *probeQuery = static_cast<ProbeQuery *>(query);
+      probeQuery->unknown08.clear();
+      for (mm::mtl::IntrusiveList<WindProbe>::iterator it = unknown170.begin(); it != unknown170.end(); ++it) {
+        probeQuery->unknown08.push(&*it);
+      }
+      return true;
+    }
+  }
+  if (m_pBroadPhaze != nullptr && m_pBroadPhaze->query(query)) {
+    return true;
+  }
+  return false;
 }
 
 bool WindWorld::addProbe(WindProbe &probe) {

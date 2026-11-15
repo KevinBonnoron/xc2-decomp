@@ -26,4 +26,16 @@ AreaBlock *AreaBlock::createChild(u32 index, PoolObjectMemory<AreaBlock> &pool) 
   return child;
 }
 
+void AreaBlock::destroyChild(u32 index, PoolObjectMemory<AreaBlock> &pool) {
+  AreaBlock *child = unknown18[index];
+  if (child != nullptr) {
+    for (u32 i = 0; i < 8; i++) {
+      child->destroyChild(i, pool);
+    }
+    pool.unknown001(unknown18[index]);
+    unknown18[index] = nullptr;
+  }
+  unknown58 &= ~(1u << index);
+}
+
 } // namespace wnd

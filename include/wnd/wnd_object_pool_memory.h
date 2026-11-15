@@ -1,17 +1,20 @@
 #pragma once
+#include <new>
+
 #include "mm/mm_std_base.h"
 #include "mm_mtl/allocator.h"
 #include "mm_mtl/intrusive_list.h"
 
 namespace wnd {
 
-// Element pool of the broad phase octree; m_freeList and m_useList are named by the constructor assertions.
+// Element pool of the broad phase octree; m_freeList and m_useList are named by the assertions of unknown002.
 template <typename T> class PoolObjectMemory {
 public:
-  explicit PoolObjectMemory(mm::mtl::IAllocator *allocator);
   ~PoolObjectMemory();
 
   T *alloc();
+  void unknown001(T *object);
+  void unknown002(mm::mtl::IAllocator *allocator);
 
   mm::mtl::IAllocator *unknown00;
   mm::mtl::IntrusiveList<T> m_useList;
@@ -20,12 +23,37 @@ public:
 
 static_assert(sizeof(PoolObjectMemory<void>) == 0x38, "");
 
+// Inferred role: sets the allocator of an empty pool; original name unknown. Not a constructor: the BroadPhazeOctree
+// constructor (0x71009866d0) runs these asserts after its octree setup, once every member is constructed.
 // __LINE__ must be 102 and 103 as in the original header: they are the line arguments of the asserts.
 #line 101
-template <typename T> inline PoolObjectMemory<T>::PoolObjectMemory(mm::mtl::IAllocator *allocator) {
+template <typename T> inline void PoolObjectMemory<T>::unknown002(mm::mtl::IAllocator *allocator) {
   MM_ASSERT(m_freeList.empty());
   MM_ASSERT(m_useList.empty());
   unknown00 = allocator;
+}
+
+// Reuses a node of the free list, else allocates a new one; returns nullptr when the pool has no allocator.
+template <typename T> T *PoolObjectMemory<T>::alloc() {
+  if (!m_freeList.empty()) {
+    T *object = m_freeList.begin().get();
+    m_freeList.erase(object);
+    m_useList.push_back(object);
+    return object;
+  }
+  if (unknown00 == nullptr) {
+    return nullptr;
+  }
+  T *object = new (unknown00->allocate(sizeof(T), 16)) T();
+  m_useList.push_back(object);
+  return object;
+}
+
+// Inferred role: moves object from the use list back to the free list, the counterpart of alloc; original name unknown.
+// AreaBlock::destroyChild (0x71009881f8) inlines it.
+template <typename T> inline void PoolObjectMemory<T>::unknown001(T *object) {
+  m_useList.erase(object);
+  m_freeList.push_back(object);
 }
 
 // The game unlinks and frees the nodes of both lists, freeing-list first.
