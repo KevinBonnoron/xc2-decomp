@@ -86,11 +86,13 @@ void GetDebugPadState(DebugPadState *state);
 // Vibration classes of the SDK. open-ead nnheaders include/nn/hid.h (https://github.com/open-ead/nnheaders) does not
 // declare them: the class names and member functions come from the imports of the game
 // (nn::hid::VibrationPlayer::IsLoaded() const, nn::hid::VibrationPlayer::Stop(),
-// nn::hid::VibrationNodeConnection::Disconnect()). The sizes come from the layout of ml::DevPadNx::Impl (0xd8 per
+// nn::hid::VibrationNodeConnection::Disconnect(), and the C1/D1 constructors and destructors of both classes). The sizes come from the layout of ml::DevPadNx::Impl (0xd8 per
 // player entry starting at 0x18, 0x38 between the two connections of ml::DevPadNx::Impl::PadData); the members are
 // unknown.
 class VibrationPlayer {
 public:
+  VibrationPlayer();
+  ~VibrationPlayer();
   bool IsLoaded() const;
   void Stop();
 
@@ -99,6 +101,8 @@ public:
 
 class VibrationNodeConnection {
 public:
+  VibrationNodeConnection();
+  ~VibrationNodeConnection();
   void Disconnect();
 
   u8 unknown00[0x38]; // Inferred role: connection state; original member name unknown.

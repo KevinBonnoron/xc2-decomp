@@ -29,6 +29,10 @@ public:
 
   explicit JobQueue(mm::mtl::IAllocator *allocator) : Queue(allocator, 128) { memset(m_funcs, 0, sizeof(m_funcs)); }
 
+  // Inferred accessor: the game inlines it in anm::ThreadPool::threadFunc, so there is no symbol in this build (Xenoblade DE keeps
+  // _ZNK3anm8JobQueue11getJobCountEv out of line). It reads the 32-bit count while Queue::size() may be 64 bits.
+  u32 getJobCount() const { return static_cast<u32>(size()); }
+
   // __LINE__ must be 37 as in the original header: it is the line argument of the assert.
 #line 36
   void registerJobExecuter(u32 index, void (*function)(Job &)) {
