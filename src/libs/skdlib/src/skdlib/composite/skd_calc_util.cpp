@@ -34,7 +34,7 @@ void CalcUtil::detectCollision(const CollionArray &collisions, NodeArray *nodes)
   const ResNodeCollision *end = nodeCollisions.m_pElements + nodeCollisions.size();
   for (const ResNodeCollision *it = nodeCollisions.m_pElements; it != end; it++) {
     const ResNodeCollision &nodeCollision = *it;
-    // The game indexes both resource nodes (with the anm::Array asserts) and ignores them, then passes mask 0.
+    // The game (CalcUtil::detectCollision, 0x7100980968) indexes both resource nodes (with the anm::Array asserts) and ignores them, then passes mask 0.
     MM_VERIFY((*nodes->unknown00)[nodeCollision.unknown00]);
     MM_VERIFY((*nodes->unknown00)[nodeCollision.unknown02]);
     detectCollisionSpheres(nodeCollision, collisions, 0, nodes);
