@@ -43,21 +43,26 @@ public:
   static_assert(sizeof(unknown001) == 0x38, "");
 
   // Inferred role: shader table entry of a shader pack file; original type name unknown.
+  // Layout evidence: ml::DrShdDataList::createShader 0x710089b13c loads +4 and +6 as halfwords.
   struct unknown002 {
     u32 unknown00; // Inferred role: offset of the shader in the shader data; original member name unknown.
-    u8 unknown04[0x4];
+    u16 unknown04; // Inferred role: index; original member name unknown.
+    u16 unknown06; // Inferred role: kind; a value of 2 skips the entry; original member name unknown.
   };
 
+  static_assert(offsetof(unknown002, unknown04) == 0x4, "");
+  static_assert(offsetof(unknown002, unknown06) == 0x6, "");
   static_assert(sizeof(unknown002) == 0x8, "");
 
   // Inferred role: shader group table entry of a shader pack file; original type name unknown.
-  // Layout evidence: ml::DrShdLgtMan::createLightShader 0x710089d170.
+  // Layout evidence: ml::DrShdLgtMan::createLightShader 0x710089d170, ml::DrShdDataList::createShader 0x710089b13c.
   struct unknown003 {
-    u8 unknown00[0x4];
+    u32 unknown00; // Inferred role: number of shaders in the group; original member name unknown.
     u32 unknown04; // Inferred role: index of the first shader of the group; original member name unknown.
     u8 unknown08[0x4];
   };
 
+  static_assert(offsetof(unknown003, unknown00) == 0x0, "");
   static_assert(offsetof(unknown003, unknown04) == 0x4, "");
   static_assert(sizeof(unknown003) == 0xc, "");
 
