@@ -16,6 +16,10 @@ namespace wnd {
 void SphereBoxAgent::registerAgent(Dispatcher &dispatcher) { dispatcher.unknown18 = &SphereBoxAgent::processCollision; }
 
 bool SphereBoxAgent::processCollision(const WindObject &wind0, const WindObject &wind1, f32 radius, HitCache *cache) {
+  // The inverse and rotate must run before the shape asserts. The game loads the positions at
+  // 0x710098add0-0x710098addc, and the rotate arithmetic sinks below the asserts when it moves after them.
+  // Tried, none match: rotate after both asserts, rotate after the first assert, and `direction`
+  // computed before the inverse.
   mm::Quat rotation = wind1.unknown30.unknown10;
   mm::Quat::inverse(rotation);
   mm::Vec3 direction = wind0.unknown30.unknown00 - wind1.unknown30.unknown00;
@@ -37,6 +41,8 @@ bool SphereBoxAgent::processCollision(const WindObject &wind0, const WindObject 
   if (local.z < -limitZ || local.z > limitZ) {
     return false;
   }
+  // Repeats the tail of SphereSphereAgent::processCollision (game address 0x710098afc4). A shared
+  // helper breaks both functions. Tried by value, by reference, and as a HitCache member.
   cache->unknown00 = &wind1;
   cache->unknown08 = sqrtf(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z);
   if (!direction.unknown003()) {
