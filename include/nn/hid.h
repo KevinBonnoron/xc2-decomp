@@ -84,16 +84,32 @@ static_assert(offsetof(DebugPadState, mAnalogStickL) == 0x18, "");
 void GetDebugPadState(DebugPadState *state);
 
 // Vibration classes of the SDK. open-ead nnheaders include/nn/hid.h (https://github.com/open-ead/nnheaders) does not
-// declare them: the class names and member functions come from the imports of the game
-// (nn::hid::VibrationPlayer::IsLoaded() const, nn::hid::VibrationPlayer::Stop(),
-// nn::hid::VibrationNodeConnection::Disconnect(), and the C1/D1 constructors and destructors of both classes). The sizes come from the layout of ml::DevPadNx::Impl (0xd8 per
-// player entry starting at 0x18, 0x38 between the two connections of ml::DevPadNx::Impl::PadData); the members are
-// unknown.
+// declare them: the class names and member functions come from the imports of the game (the __imp__ stubs of
+// main_100.elf). The mangled names give the parameter types but not the return types, so every return type below
+// is unverified: bool for the IsLoaded and IsPlaying predicates, void for the rest.
+class VibrationDeviceHandle;
+class VibrationModulation;
+class VibrationNode;
+
+// Size and members unknown. The repository has no size evidence for it, so no data member is declared.
+class VibrationTarget {
+public:
+  VibrationTarget();
+  ~VibrationTarget();
+  void SetVibrationDeviceHandle(const VibrationDeviceHandle &);
+};
+
+// The sizes come from the layout of ml::DevPadNx::Impl (0xd8 per player entry starting at 0x18, 0x38 between the two
+// connections of ml::DevPadNx::Impl::PadData); the members are unknown.
 class VibrationPlayer {
 public:
   VibrationPlayer();
   ~VibrationPlayer();
+  void Load(const void *, size_t);
+  void Play();
+  void SetLoop(bool);
   bool IsLoaded() const;
+  bool IsPlaying() const;
   void Stop();
 
   u8 unknown00[0xc0]; // Inferred role: player state; original member name unknown.
@@ -103,10 +119,20 @@ class VibrationNodeConnection {
 public:
   VibrationNodeConnection();
   ~VibrationNodeConnection();
+  void Connect(VibrationNode *, VibrationNode *);
+  void SetModulation(const VibrationModulation &);
   void Disconnect();
 
   u8 unknown00[0x38]; // Inferred role: connection state; original member name unknown.
 };
+
+// Keyboard functions of the SDK. The names and parameter types come from the imports of the game,
+// nn::hid::InitializeKeyboard() and nn::hid::GetKeyboardState(nn::hid::KeyboardState*). The layout of KeyboardState
+// is unknown, so it is only forward declared.
+struct KeyboardState;
+
+void InitializeKeyboard();
+void GetKeyboardState(KeyboardState *);
 
 // Name from the import of the game nn::hid::InitializeTouchScreen(), called by ml::DevTouchNx::createDevice.
 void InitializeTouchScreen();
