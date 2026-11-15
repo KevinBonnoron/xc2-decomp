@@ -32,7 +32,10 @@ void AreaBlock::destroyChild(u32 index, PoolObjectMemory<AreaBlock> &pool) {
     for (u32 i = 0; i < 8; i++) {
       child->destroyChild(i, pool);
     }
-    pool.unknown001(unknown18[index]);
+    // The game reloads the slot after the recursion (81 instructions match this form).
+    AreaBlock *freed = unknown18[index];
+    pool.m_useList.erase(freed);
+    pool.m_freeList.push_back(freed);
     unknown18[index] = nullptr;
   }
   unknown58 &= ~(1u << index);

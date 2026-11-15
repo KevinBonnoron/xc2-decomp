@@ -50,6 +50,7 @@ void WindWorld::setDebugMode(bool enable, u32 mask) {
   unknown10.setDebugWind(enable, mask);
 }
 
+// The three loops are written out: a template helper for them was tried, and it changes the register allocation.
 bool WindWorld::query(Query *query) {
   if (query != nullptr) {
     if (query->getRTTI()->isKindOf(&AreaWindQuery::m_rtti)) {

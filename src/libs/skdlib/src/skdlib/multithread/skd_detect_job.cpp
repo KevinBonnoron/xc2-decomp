@@ -64,6 +64,8 @@ DetectInfo *unknown003(const NodeArray *nodes, const u16 &index, DetectInfoBuffe
 
 } // namespace
 
+// addDetectSphereJob, addDetectCapsuleJob and addDetectPlaneJob stay written out. A template helper for them was tried,
+// but it gives addDetect*Job a 0x160 frame against the game's 0x1a0.
 void addDetectCapsuleJob(const CapsuleCollObj *object, const ResNodeCollision *nodeCollision, const NodeArray *nodes, const mm::Vec3 &position, DetectInfoBuffer *buffer, anm::JobQueue *queue) {
   if ((nodeCollision->unknown0c & (1u << object->unknown00->unknown18)) == 0) {
     return;

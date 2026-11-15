@@ -78,6 +78,8 @@ public:
 
 static_assert(offsetof(BroadPhazeOctree::Proxy, unknown40) == 0x40, "");
 static_assert(sizeof(BroadPhazeOctree::Proxy) == 0x50, "");
+static_assert(offsetof(BroadPhazeOctree::Key, unknown08) == 0x08, "");
+static_assert(sizeof(BroadPhazeOctree::Key) == 0x10, "");
 static_assert(offsetof(BroadPhazeOctree, unknown10) == 0x10, "");
 static_assert(offsetof(BroadPhazeOctree, unknown40) == 0x40, "");
 static_assert(offsetof(BroadPhazeOctree, unknowne0) == 0xe0, "");

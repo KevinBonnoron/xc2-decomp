@@ -24,6 +24,8 @@ struct Query {
   static mm::mtl::RTTI m_rtti;
 };
 
+static_assert(sizeof(Query) == 0x8, "");
+
 // Filled by BroadPhazeOctree::query.
 struct AreaQuery : Query {
   static mm::mtl::RTTI m_rtti;
@@ -32,6 +34,7 @@ struct AreaQuery : Query {
 };
 
 static_assert(offsetof(AreaQuery, unknown08) == 0x08, "");
+static_assert(sizeof(AreaQuery) == 0x10, "");
 
 // The next three are filled by WindWorld::query (0x710098aa18). The game loads each object before the "!full()"
 // assert of push (0x710098aaac): the const conversion makes the argument a temporary.
@@ -53,6 +56,9 @@ struct ProbeQuery : Query {
   mm::mtl::FixedQueue<const WindProbe *, 4096> unknown08; // Inferred role: probes of the world; original member name unknown.
 };
 
+// The three queries share the FixedQueue<pointer, 4096> layout of ProbeQuery.
+static_assert(sizeof(AreaWindQuery) == 0x8018, "");
+static_assert(sizeof(LocalWindQuery) == 0x8018, "");
 static_assert(offsetof(ProbeQuery, unknown08) == 0x08, "");
 static_assert(sizeof(ProbeQuery) == 0x8018, "");
 

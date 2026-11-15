@@ -13,7 +13,6 @@ public:
   ~PoolObjectMemory();
 
   T *alloc();
-  void unknown001(T *object);
   void unknown002(mm::mtl::IAllocator *allocator);
 
   mm::mtl::IAllocator *unknown00;
@@ -23,8 +22,9 @@ public:
 
 static_assert(sizeof(PoolObjectMemory<void>) == 0x38, "");
 
-// Inferred role: sets the allocator of an empty pool; original name unknown. Not a constructor: the BroadPhazeOctree
-// constructor (0x71009866d0) runs these asserts after its octree setup, once every member is constructed.
+// Inferred role: sets the allocator of an empty pool; original name unknown. Not a constructor. The asserts sit in the
+// BroadPhazeOctree constructor (0x71009866d0) at 0x71009868ec (line 102) and 0x7100986910 (line 103), after its octree
+// setup (setAABB at 0x71009868a4). The form with the asserts as a constructor body does not match (157 instructions).
 // __LINE__ must be 102 and 103 as in the original header: they are the line arguments of the asserts.
 #line 101
 template <typename T> inline void PoolObjectMemory<T>::unknown002(mm::mtl::IAllocator *allocator) {
@@ -47,13 +47,6 @@ template <typename T> T *PoolObjectMemory<T>::alloc() {
   T *object = new (unknown00->allocate(sizeof(T), 16)) T();
   m_useList.push_back(object);
   return object;
-}
-
-// Inferred role: moves object from the use list back to the free list, the counterpart of alloc; original name unknown.
-// AreaBlock::destroyChild (0x71009881f8) inlines it.
-template <typename T> inline void PoolObjectMemory<T>::unknown001(T *object) {
-  m_useList.erase(object);
-  m_freeList.push_back(object);
 }
 
 // The game unlinks and frees the nodes of both lists, freeing-list first.

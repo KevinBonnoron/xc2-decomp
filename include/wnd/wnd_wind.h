@@ -57,6 +57,8 @@ public:
 
 static_assert(offsetof(ConpoundWind, unknownd0) == 0xd0, "");
 static_assert(offsetof(ConpoundWind, unknownd8) == 0xd8, "");
+// Vector<ConpoundWind>::extend copies 0xf8 bytes from +0xd0 (0x7100988ea0), so the type has no member after
+// unknownd8. Its size 0x1d0 comes from the 16-byte alignment.
 static_assert(sizeof(ConpoundWind) == 0x1d0, "");
 
 class GlobalWind : public WindBlender {

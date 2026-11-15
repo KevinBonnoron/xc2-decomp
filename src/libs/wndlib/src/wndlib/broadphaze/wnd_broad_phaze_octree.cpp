@@ -118,6 +118,8 @@ void BroadPhazeOctree::gcArea(AreaBlock *area) {
       break;
     }
     u32 index = 0;
+    // The game compares the children of block with the original area (0x71009874f4, x19), not with the current
+    // block. It looks like an original quirk.
     for (u32 i = 0; i < 8; i++) {
       if (block->unknown18[i] == area) {
         index = i;
@@ -149,6 +151,8 @@ void BroadPhazeOctree::flushProbes(mm::mtl::IntrusiveList<WindProbe> &probes) {
 
 void BroadPhazeOctree::collectWindObj(Dispatcher &dispatcher, mm::mtl::IntrusiveList<WindProbe> &probes) {
   for (mm::mtl::IntrusiveList<WindProbe>::iterator it = probes.begin(); it != probes.end(); ++it) {
+    // The game loads the proxy (0x710098775c) before the node assert of operator->, which is why it uses get().
+    // It loads the cache (0x710098777c) after that assert, so it uses operator->.
     BroadPhazeProxy *pProxy = it.get()->m_pProxy;
     OverlappingCache *pCache = it->m_pOverlappingCache;
     pCache->unknown10.clear();

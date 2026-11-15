@@ -17,6 +17,8 @@ void GlobalWindManager::setup(const Array<const ResConpoundWind *> &resWind, mm:
   for (u32 i = 0; i < count; i++) {
 #line 42
     MM_ASSERT(resWind[i]);
+    // The wind local matches the game; the form without it does not. The game's assert (0x7100988904), vector
+    // access (0x7100988928) and second read (0x71009889a0) are scheduled around it.
     ConpoundWind &wind = unknown00[i];
     wind.unknownd0 = resWind[i];
   }
