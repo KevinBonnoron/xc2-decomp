@@ -24,7 +24,10 @@ static_assert(sizeof(PoolObjectMemory<void>) == 0x38, "");
 
 // Inferred role: sets the allocator of an empty pool; original name unknown. Not a constructor. The asserts sit in the
 // BroadPhazeOctree constructor (0x71009866d0) at 0x71009868ec (line 102) and 0x7100986910 (line 103), after its octree
-// setup (setAABB at 0x71009868a4). The form with the asserts as a constructor body does not match (157 instructions).
+// setup (setAABB at 0x71009868a4). Forms tried: the asserts as a constructor body (157 instructions, no match); the
+// asserts in a constructor block with the members as offsets (compile error, name clash); and the
+// BroadPhazeOctree constructor with its proxies and free list as the sub-object unknown004, calling this function at
+// the end of its body (157 instructions, MATCH, the form kept).
 // __LINE__ must be 102 and 103 as in the original header: they are the line arguments of the asserts.
 #line 101
 template <typename T> inline void PoolObjectMemory<T>::unknown002(mm::mtl::IAllocator *allocator) {
