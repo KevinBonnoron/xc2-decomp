@@ -126,6 +126,18 @@ void WindWorld::delayErace() {
   }
 }
 
+// Address 0x710098a570. The game inlines delayErace, updateGlobalWind and updateProbe here.
+void WindWorld::update(f32 deltaTime) {
+  delayErace();
+  unknown0c += deltaTime;
+  UpdateInfo info;
+  info.unknown00 = unknown0c;
+  info.unknown04 = deltaTime;
+  info.unknown08 = unknown1d0;
+  updateGlobalWind(info);
+  updateProbe(info);
+}
+
 // Both functions have empty bodies in the game.
 void WindWorld::createOverlappingPairCache(WindProbe &probe) {}
 
