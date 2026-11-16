@@ -3,6 +3,8 @@
 #include <math.h>
 
 #include "battle/misc_battle.h"
+#include "mm_math/mm_math.h"
+#include "mm_math/mm_quat.h"
 
 namespace btl {
 
@@ -51,6 +53,75 @@ ShakeCameraElementRandom::ShakeCameraElementRandom() : unknown4c(PHASE_FADE_IN),
 void ShakeCameraElementRandom::StopEternalShake() {
   if (unknown44 < 0.0f) {
     unknown44 = 0.0f;
+  }
+}
+
+void ShakeCameraElementRandom::CalcShift(const mm::Vec3 &position, const mm::Vec3 &target, mm::Vec3 &positionShift, mm::Vec3 &targetShift) {
+  if (!unknown55) {
+    positionShift = mm::Vec3::zero;
+    targetShift = mm::Vec3::zero;
+    return;
+  }
+
+  f32 progress = unknown14 / unknown10;
+  // Local copies of unknown20 and unknown30. The game spills both copies to
+  // the stack; reading the members directly does not match.
+  mm::Vec3 previous = unknown20;
+  mm::Vec3 next = unknown30;
+  f32 rate;
+  if (unknown4c == PHASE_FADE_IN) {
+    rate = __builtin_fminf(unknown50 / unknown40, 1.0f);
+  } else if (unknown4c == PHASE_FADE_OUT) {
+    rate = __builtin_fmaxf(1.0f - unknown50 / unknown48, 0.0f);
+  } else {
+    rate = 1.0f;
+  }
+
+  switch (unknown08) {
+  case 0: {
+    previous *= 1.0f - progress;
+    next *= progress;
+    mm::Vec3 shift = previous + next;
+    mm::Vec3 result(rate * shift.x, rate * shift.y, rate * shift.z);
+    targetShift = result;
+    positionShift = result;
+    break;
+  }
+  case 1: {
+    positionShift = mm::Vec3::zero;
+    // Stays a local: the game calls CalcAngle before it copies previous into
+    // direction. Inlining it into the TurnDirectionAngle call does not match.
+    f32 angle = progress * Misc::CalcAngle(previous, next, false);
+    // A second copy of previous. Turning previous in place does not match.
+    mm::Vec3 direction = previous;
+    Misc::TurnDirectionAngle(direction, next, angle, true);
+    f32 x = position.x - target.x;
+    f32 y = position.y - target.y;
+    f32 z = position.z - target.z;
+    // Written out by hand. The game inlines sqrtf and calls neither
+    // Misc::CalcLength nor the Vec3 operator-; both forms do not match.
+    f32 length = sqrtf(x * x + y * y + z * z);
+    direction.x = length * direction.x;
+    direction.y = length * direction.y;
+    direction.z = length * direction.z;
+    mm::Vec3 forward;
+    forward.x = target.x - position.x;
+    forward.y = target.y - position.y;
+    forward.z = target.z - position.z;
+    Misc::Normalize(forward);
+
+    mm::Quat rotation;
+    mm::unknown005(rotation, mm::Vec3::unitZ, forward);
+    mm::Vec3 shift = rotation.rotate(direction);
+    targetShift = mm::Vec3(rate * shift.x, rate * shift.y, rate * shift.z);
+    break;
+  }
+  case 2:
+    break;
+  default:
+    positionShift = mm::Vec3::zero;
+    targetShift = mm::Vec3::zero;
+    break;
   }
 }
 
