@@ -11,7 +11,7 @@
 
 namespace wnd {
 
-void SphereSphereAgent::registerAgent(Dispatcher &dispatcher) { dispatcher.unknown10 = &SphereSphereAgent::processCollision; }
+void SphereSphereAgent::registerAgent(Dispatcher &dispatcher) { dispatcher.unknown10[SHAPE_TYPE_UNKNOWN_0][SHAPE_TYPE_UNKNOWN_0] = &SphereSphereAgent::processCollision; }
 
 bool SphereSphereAgent::processCollision(const WindObject &wind0, const WindObject &wind1, f32 radius, HitCache *cache) {
   mm::Vec3 direction = wind0.unknown30.unknown00 - wind1.unknown30.unknown00;
