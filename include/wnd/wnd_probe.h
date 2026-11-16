@@ -65,13 +65,13 @@ static_assert(offsetof(AreaWind, unknown260) == 0x260, "");
 static_assert(offsetof(AreaWind, unknown268) == 0x268, "");
 static_assert(sizeof(AreaWind) == 0x280, "");
 
-// Local wind hit by a probe. Layout evidence: Dispatcher fills it (area wind, distance, then a Vec3) before
+// Local wind hit by a probe. Layout evidence: Dispatcher::dispatchAll fills it (local wind, Vec3, then distance) before
 // Vector<LocalWindHitCache>::push_back (0x71009885c4), whose copy moves the first 12 bytes raw and the Vec3 member by
 // member; WindProbe keeps the vector at 0x190.
 struct LocalWindHitCache {
-  AreaWind *unknown00; // Inferred role: wind; original member name unknown.
-  f32 unknown08;       // Inferred role: distance; original member name unknown.
-  mm::Vec3 unknown10;  // Inferred role: hit vector; original member name unknown.
+  const LocalWind *unknown00; // Inferred role: wind; dispatchAll stores only ObjectType 0 (LocalWind) hits; original member name unknown.
+  f32 unknown08;              // Inferred role: distance; original member name unknown.
+  mm::Vec3 unknown10;         // Inferred role: hit vector; original member name unknown.
 };
 
 static_assert(offsetof(LocalWindHitCache, unknown08) == 0x08, "");
