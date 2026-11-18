@@ -339,7 +339,8 @@ public:
   u16 unknown27a; // Inferred role: compute particle offset; original member name unknown.
   u16 unknown27c; // Inferred role: compute particle count; original member name unknown.
   u16 unknown27e; // Inferred role: compute block offset; original member name unknown.
-  u8 _280[0x2b8 - 0x280];
+  f32 unknown280; // Inferred role: keyframe start time span, used when above 1.0; original member name unknown.
+  u8 _284[0x2b8 - 0x284];
   f32 *unknown2b8[11]; // Inferred role: loop start key of each keyframe channel; original member name unknown.
   // Evidence: name from the assertion string "m_pGpuCheck == nullptr" in emitter_alloc01; vtable +0x10 (release) and +0x18 (isRender) called in emitter_free_core and isRenderCheck.
   ml::DrGpuCheckBase *m_pGpuCheck;
@@ -379,6 +380,7 @@ static_assert(offsetof(EmitterObj, unknown274) == 0x274, "");
 static_assert(offsetof(EmitterObj, unknown27a) == 0x27a, "");
 static_assert(offsetof(EmitterObj, unknown27c) == 0x27c, "");
 static_assert(offsetof(EmitterObj, unknown27e) == 0x27e, "");
+static_assert(offsetof(EmitterObj, unknown280) == 0x280, "");
 static_assert(offsetof(EmitterObj, m_pGpuCheck) == 0x310, "");
 static_assert(offsetof(EmitterObj, unknown318) == 0x318, "");
 static_assert(offsetof(EmitterObj, unknown31c) == 0x31c, "");

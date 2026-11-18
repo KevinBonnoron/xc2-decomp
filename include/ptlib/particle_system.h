@@ -24,6 +24,10 @@ class ParticleObj;
 struct EmitterParam;
 } // namespace emitter
 
+namespace material {
+class MaterialBase;
+} // namespace material
+
 namespace renderer {
 class RenderManager;
 } // namespace renderer
@@ -282,6 +286,7 @@ public:
   int convert_key_by_material_index(int key, FxHeader *header) const;
   void parse_efb_type0050(u8 *data);
   void parse_efb_type0051(u8 *data);
+  material::MaterialBase *parse_efb_tex(int key, u8 *data, void *owner, bool isResident);
   int parse_efb_type0001(u8 *data);
   int parseEfb(ParseEfbParam *param);
   u8 *parseEfb(u8 *data, const char *name, u64 pack);

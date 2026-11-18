@@ -2,6 +2,7 @@
 
 #include "eflib/effect_system_manager.h"
 #include "mm/mm_std_base.h"
+#include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mtl/alloc_handle.h"
@@ -179,6 +180,51 @@ void SystemManager::kizunaTail() {
 }
 
 SystemManager::CommandList *SystemManager::getCommandPtr(u32 index) { return index == 0 ? &unknown220[0] : &unknown220[1]; }
+
+void SystemManager::updateKizunaPos(int index, KizunaWork &work) {
+  ptlib::emitter::EmitterManager *manager = ptlib::emitter::EmitterManager::getPtr();
+  if (manager == nullptr) {
+    return;
+  }
+  ptlib::emitter::EmitterManager::KizunaWork &dest = manager->unknown00[manager->unknown1790][index];
+  dest.unknown000 = work.unknown000;
+  dest.unknown154 = work.unknown154;
+  dest.unknown158 = work.unknown158;
+  dest.unknown15c = work.unknown15c;
+  dest.unknown160 = work.unknown160;
+  // The game wraps both accumulated angles into [-100, 100).
+  f32 x = dest.unknown164 + work.unknown164;
+  if (x > 100.0f) {
+    x -= 100.0f;
+  }
+  if (x < -100.0f) {
+    x += 100.0f;
+  }
+  dest.unknown164 = x;
+  f32 y = dest.unknown168 + work.unknown168;
+  if (y > 100.0f) {
+    y -= 100.0f;
+  }
+  if (y < -100.0f) {
+    y += 100.0f;
+  }
+  dest.unknown168 = y;
+  dest.unknown16c = work.unknown16c;
+  // The original copies the single-byte flags in this order rather than by offset; the order is observable in the game's
+  // store sequence.
+  dest.unknown148 = work.unknown148;
+  dest.unknown14a = work.unknown14a;
+  dest.unknown14c = work.unknown14c;
+  dest.unknown14e = work.unknown14e;
+  dest.unknown149 = work.unknown149;
+  dest.unknown14b = work.unknown14b;
+  dest.unknown14d = work.unknown14d;
+  dest.unknown14f = work.unknown14f;
+  dest.unknown150 = work.unknown150;
+  dest.unknown140 = work.unknown140;
+  dest.unknown151 = work.unknown151;
+  dest.unknown152 = work.unknown152;
+}
 
 void SystemManager::addCommand(const EsCommand &command) {
   if (unknown7824f != 0) {
