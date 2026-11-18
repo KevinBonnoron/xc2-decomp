@@ -1,17 +1,13 @@
 // Original file name from the game string C:/Monolithsoft/BF2/prog/libs/skdlib/src/skdlib/skd_dynamics.cpp.
 #include "skd/skd_dynamics.h"
 
+#include <new>
 #include <string.h>
 
 #include "mm/mm_std_base.h"
+#include "mm_mtl/allocator.h"
 #include "mm_mtl/vector.h" // IWYU pragma: keep
 #include "skd/skd_collision_object.h"
-
-namespace mm {
-namespace mtl {
-class IAllocator;
-} // namespace mtl
-} // namespace mm
 
 namespace skd {
 
@@ -26,6 +22,20 @@ Dynamics::Dynamics(CollisionObject &collisionObject, const anm::Array<ResSolver>
 Dynamics::~Dynamics() {
   anm::unknown001(unknown190);
   destroySolver();
+}
+
+#line 237
+void Dynamics::createSolver() {
+  MM_ASSERT(m_pResSolver);
+  MM_ASSERT(m_solvers.size() == 0);
+  mm::mtl::IAllocator *allocator = m_pAllocator;
+  u32 count = m_pResSolver->size();
+  m_solvers.resize(count);
+  for (u32 i = 0; i < count; i++) {
+    const ResSolver &resSolver = (*m_pResSolver)[i];
+    m_solvers[i] = new (allocator->allocate(sizeof(DynamicsSolver), 8)) DynamicsSolver(allocator, resSolver, i);
+    m_solvers[i]->init(unknown48);
+  }
 }
 
 void Dynamics::destroySolver() {
