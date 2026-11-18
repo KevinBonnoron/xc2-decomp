@@ -5,6 +5,7 @@
 #include "anm/anm_pose.h"
 #include "anm/anm_reference_object.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/vector.h"
 #include "skd/skd_collision_object.h" // IWYU pragma: keep
 #include "skd/skd_detect_info.h"      // IWYU pragma: keep
 #include "skd/skd_dynamics.h"
@@ -92,8 +93,7 @@ void addDetectSphereJob(const ShpereCollObj *object, const ResNodeCollision *nod
 
 // Inferred role: shared body of the three detect functions, which are identical
 // apart from the shape container; original name unknown.
-template <typename ShapeArray>
-static void unknown004(const ResNodeCollision &nodeCollision, const ShapeArray &shapes, u32 mask, NodeArray *nodes) {
+template <typename ShapeArray> static void unknown004(const ResNodeCollision &nodeCollision, const ShapeArray &shapes, u32 mask, NodeArray *nodes) {
   for (const auto &shape : shapes) {
     if ((nodeCollision.unknown0c & (1u << shape.unknown00->unknown18)) == 0) {
       continue;
@@ -114,17 +114,11 @@ static void unknown004(const ResNodeCollision &nodeCollision, const ShapeArray &
   }
 }
 
-void detectCollisionSpheres(const ResNodeCollision &nodeCollision, const CollionArray &collisions, u32 mask, NodeArray *nodes) {
-  unknown004(nodeCollision, collisions.unknown08, mask, nodes);
-}
+void detectCollisionSpheres(const ResNodeCollision &nodeCollision, const CollionArray &collisions, u32 mask, NodeArray *nodes) { unknown004(nodeCollision, collisions.unknown08, mask, nodes); }
 
-void detectCollisionCapsules(const ResNodeCollision &nodeCollision, const CollionArray &collisions, u32 mask, NodeArray *nodes) {
-  unknown004(nodeCollision, collisions.unknown30, mask, nodes);
-}
+void detectCollisionCapsules(const ResNodeCollision &nodeCollision, const CollionArray &collisions, u32 mask, NodeArray *nodes) { unknown004(nodeCollision, collisions.unknown30, mask, nodes); }
 
-void detectCollisionPlanes(const ResNodeCollision &nodeCollision, const CollionArray &collisions, u32 mask, NodeArray *nodes) {
-  unknown004(nodeCollision, collisions.unknown58, mask, nodes);
-}
+void detectCollisionPlanes(const ResNodeCollision &nodeCollision, const CollionArray &collisions, u32 mask, NodeArray *nodes) { unknown004(nodeCollision, collisions.unknown58, mask, nodes); }
 
 void executeDetectSphereJob(anm::Job &job) { unknown002<DetectSphereJob>(job); }
 
