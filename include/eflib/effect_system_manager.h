@@ -2,6 +2,8 @@
 #include <stddef.h>
 #include <string.h>
 
+#include "mm_math/mm_vec3.h"
+#include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_vector.h"
 #include "ptlib/forcefield/particle_force_field.h"
 #include "types.h"
@@ -21,6 +23,40 @@ struct SendParam;
 
 class SystemManager {
 public:
+  // Layout from updateKizunaPos (0x710091d038), which copies the 0x140-byte Vec3 array, then +0x154..+0x160,
+  // accumulates +0x164/+0x168, and copies +0x140, +0x148..+0x152 and +0x16c. The same layout is also used by
+  // ptlib::emitter::EmitterManager's kizuna works, but the game mangles that type under EmitterManager, so this
+  // is a separate declaration rather than an alias.
+  struct KizunaWork {
+    mm::mtl::FixedArray<mm::Vec3, 20> unknown000; // Inferred role: 20 Vec3s; original member name unknown.
+    u64 unknown140;                               // Copied as one 8-byte run; original semantic/pointer type unknown.
+    u8 unknown148;                                // Role and original member name unknown.
+    u8 unknown149;                                // Role and original member name unknown.
+    u8 unknown14a;                                // Role and original member name unknown.
+    u8 unknown14b;                                // Role and original member name unknown.
+    u8 unknown14c;                                // Role and original member name unknown.
+    u8 unknown14d;                                // Role and original member name unknown.
+    u8 unknown14e;                                // Role and original member name unknown.
+    u8 unknown14f;                                // Role and original member name unknown.
+    u8 unknown150;                                // Role and original member name unknown.
+    u8 unknown151;                                // Role and original member name unknown.
+    u8 unknown152;                                // Role and original member name unknown.
+    f32 unknown154;                               // Role and original member name unknown.
+    f32 unknown158;                               // Role and original member name unknown.
+    f32 unknown15c;                               // Role and original member name unknown.
+    f32 unknown160;                               // Role and original member name unknown.
+    f32 unknown164;                               // Role and original member name unknown; accumulated with a wrap at +-100.
+    f32 unknown168;                               // Role and original member name unknown; accumulated with a wrap at +-100.
+    u32 unknown16c;                               // Role and original member name unknown; 32-bit storage view.
+  };
+
+  static_assert(offsetof(KizunaWork, unknown140) == 0x140, "");
+  static_assert(offsetof(KizunaWork, unknown148) == 0x148, "");
+  static_assert(offsetof(KizunaWork, unknown152) == 0x152, "");
+  static_assert(offsetof(KizunaWork, unknown154) == 0x154, "");
+  static_assert(offsetof(KizunaWork, unknown16c) == 0x16c, "");
+  static_assert(sizeof(KizunaWork) == 0x170, "");
+
   // Layout from the disassembly of addCommand (0x710091a2b8), es_isalive (0x710091c740, stride 0xf0 and type/handle) and the es_*
   // setters (es_set_alpha 0x710091b438 inlines the copy). No accessor or string names these members, and the gaps are bytes
   // that no observed function reads or writes.
@@ -163,6 +199,7 @@ public:
   void es_clearall(bool isForce);
   void log();
   void kizunaTail();
+  void updateKizunaPos(int index, KizunaWork &work);
   CommandList *getCommandPtr(u32 index);
   void addCommand(const EsCommand &command);
   void setGlobalSpeed(f32 speed);
