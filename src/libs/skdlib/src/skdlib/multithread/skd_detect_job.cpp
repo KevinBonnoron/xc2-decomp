@@ -1,10 +1,13 @@
 // Original file name inferred from the job type strings and the skd_detect_info.h assertion file path.
+#include <float.h>
+
 #include "anm/anm_array-inl.h"
 #include "anm/anm_job.h"
 #include "anm/anm_job_queue.h"
 #include "anm/anm_pose.h"
 #include "anm/anm_reference_object.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/vector.h"
 #include "skd/skd_collision_object.h" // IWYU pragma: keep
 #include "skd/skd_detect_info.h"      // IWYU pragma: keep
 #include "skd/skd_dynamics.h"
@@ -88,6 +91,23 @@ void addDetectSphereJob(const ShpereCollObj *object, const ResNodeCollision *nod
   }
   DetectSphereJob job(object, nodeCollision, position, unknown003(nodes, nodeCollision->unknown00, buffer), unknown003(nodes, nodeCollision->unknown02, buffer));
   queue->unknown001(job);
+}
+
+void executeApplyDetectJob(anm::Job &job) {
+  ApplyDetectJob &applyJob = static_cast<ApplyDetectJob &>(job);
+  mm::Vec3 offset = mm::Vec3::zero;
+  f32 count = 0.0f;
+  const DetectInfo *const *hit = applyJob.unknown18;
+  const DetectInfo *const *end = hit + applyJob.unknown118;
+  for (; hit != end; hit++) {
+    const DetectInfo *info = *hit;
+    offset += info->unknown10;
+    count += 1.0f;
+  }
+  if (count > FLT_EPSILON) {
+    offset *= 1.0f / count;
+    applyJob.unknown120->unknown10[applyJob.unknown10].unknown50 += offset;
+  }
 }
 
 void executeDetectSphereJob(anm::Job &job) { unknown002<DetectSphereJob>(job); }
