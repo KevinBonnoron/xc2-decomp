@@ -36,7 +36,7 @@ void Dispatcher::dispatchAll(mm::mtl::IntrusiveList<WindProbe> &probes, const Up
     OverlappingCache *pCache = probe->m_pOverlappingCache;
 #line 76
     MM_ASSERT(pCache);
-    // Capacity 64 matches OverlappingCache's FixedQueue<WindObject *, 64>; x8 + x23, #0x3f bounds the loop, and the
+    // Capacity 64 matches the FixedQueue<WindObject *, 64>; and x8, x23, #0x3f masks the ring index, and the
     // 0x840-byte frame accounts for the 0x40-byte header and 64 HitCache entries of 0x20 bytes each.
     HitCache hits[64];
     u32 count = 0;
