@@ -1,10 +1,15 @@
 #include "event/cam_free.h"
 
+#include <math.h>
+
 #include "event/manager.h"
 #include "ml/dev_keyboard.h"
 #include "ml/event_view.h"
 #include "ml/scn.h"
+#include "ml/threadval.h"
 #include "ml/win_view.h"
+#include "mm_math/mm_mat44.h"
+#include "mm_math/mm_math.h"
 #include "mm_math/mm_vec3.h"
 
 namespace event {
@@ -103,6 +108,67 @@ bool CamFree::OnMouseMove(ml::EventView *view) {
     return false;
   }
   return true;
+}
+
+void CamFree::getViewInvertMatrix(mm::Mat44 &matrix) const {
+  mm::Vec3 rotation = getRot();
+  f32 sinX = sinf(rotation.x);
+  f32 cosX = cosf(rotation.x);
+  f32 sinY = sinf(rotation.y);
+  f32 cosY = cosf(rotation.y);
+  f32 sinZ = sinf(rotation.z);
+  f32 cosZ = cosf(rotation.z);
+  // The columns are written one after the other (1.0.0: 0x71000b09d0): written row by row the 90 instructions are scheduled differently from the first fmul on (measured).
+  matrix.rows[0][0] = sinX * sinY * sinZ + cosY * cosZ;
+  matrix.rows[1][0] = sinX * sinY * cosZ - cosY * sinZ;
+  matrix.rows[2][0] = cosX * sinY;
+  matrix.rows[0][1] = cosX * sinZ;
+  matrix.rows[1][1] = cosX * cosZ;
+  matrix.rows[2][1] = -sinX;
+  matrix.rows[0][2] = sinX * cosY * sinZ - sinY * cosZ;
+  matrix.rows[1][2] = sinY * sinZ + sinX * cosY * cosZ;
+  matrix.rows[2][2] = cosX * cosY;
+  matrix.rows[0][3] = 0.0f;
+  matrix.rows[1][3] = 0.0f;
+  matrix.rows[2][3] = 0.0f;
+  matrix.rows[3][0] = 0.0f;
+  matrix.rows[3][1] = 0.0f;
+  matrix.rows[3][2] = 0.0f;
+  matrix.rows[3][3] = 1.0f;
+  // Single-use local: the game reads the position (one 64-bit load for x and y, then z) after the rotation stores (1.0.0: 0x71000b0a4c); setTrans(unknown10) loads it earlier
+  // (first difference at +0xc4, 91 instructions against 90, measured).
+  mm::Vec3 pos = unknown10;
+  matrix.setTrans(pos);
+}
+
+void CamFree::getFrustum(mm::Mat44 &matrix) const {
+  ml::ScnObjCam *cam = Manager::get()->getScn()->getCam(-1);
+  f32 top = unknown38 * tanf(cam->unknown70.m_front->unknown1e8 * mm::DEG_TO_RAD * 0.5f);
+  f32 bottom = -top;
+  f32 left = top * -1.777f;
+  f32 right = top * 1.777f;
+  f32 nearClip = cam->unknown70.m_front->unknown1f4;
+  f32 farClip = cam->unknown70.m_front->unknown1f8;
+  // Temporary matrix: writing the elements straight into the output gives 65 instructions with the
+  // divisions scheduled differently (1.0.0: 0x71000b0f5c); building a local and assigning it matches.
+  mm::Mat44 result;
+  result.rows[0][0] = (nearClip + nearClip) / (top - bottom);
+  result.rows[0][1] = 0.0f;
+  result.rows[0][2] = 0.0f;
+  result.rows[0][3] = 0.0f;
+  result.rows[1][0] = 0.0f;
+  result.rows[1][1] = (nearClip + nearClip) / (right - left);
+  result.rows[1][2] = 0.0f;
+  result.rows[1][3] = 0.0f;
+  result.rows[2][0] = -(top + bottom) / (top - bottom);
+  result.rows[2][1] = -(right + left) / (right - left);
+  result.rows[2][2] = nearClip / (farClip - nearClip);
+  result.rows[2][3] = 1.0f;
+  result.rows[3][0] = 0.0f;
+  result.rows[3][1] = 0.0f;
+  result.rows[3][2] = -(nearClip * farClip) / (farClip - nearClip);
+  result.rows[3][3] = 0.0f;
+  matrix = result;
 }
 
 } // namespace event

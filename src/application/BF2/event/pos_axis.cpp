@@ -76,6 +76,12 @@ mm::Mat44 DataManager::getPosAxis(u32 axis) {
   return mm::Mat44::identity;
 }
 
+mm::Mat44 PosAxis::calcOrigMatInv() const {
+  mm::Mat44 mat = mm::mtl::Singleton<DataManager>::getPtr()->getPosAxis(unknown08);
+  mat.unknown012();
+  return mat;
+}
+
 const char *PosAxis::getOrigName() const { return mm::mtl::Singleton<DataManager>::getPtr()->getPosName(unknown08); }
 
 inline const char *DataManager::getPosName(u32 axis) {

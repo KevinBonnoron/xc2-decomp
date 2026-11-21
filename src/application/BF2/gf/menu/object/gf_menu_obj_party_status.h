@@ -7,6 +7,7 @@
 
 namespace ui {
 class UIObjectAcc;
+struct EventData;
 } // namespace ui
 
 namespace gf {
@@ -55,6 +56,7 @@ public:
   static void resetComboRequest(u16 index, const RequestParam &param);
   void closePartyStatus(u32 handle, int member);
   int openPartyStatus(u32 handle, int member);
+  void reciveHpEvent(u32 handle, const ui::EventData &event, int &flags);
   void setupComboReq(const ui::UIObjectAcc &acc, u16 index, u16 combo, bool isEnable, u16 effect, u32 button);
 
   u8 _24[0x30 - 0x24];

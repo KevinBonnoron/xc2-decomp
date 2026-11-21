@@ -375,6 +375,27 @@ bool StateUtilField::isBigSplashFallSpeed(GfComBehaviorPc &behavior) {
   return calcFallSpeed(*property) <= -param->bigSplashSpeed;
 }
 
+// Inferred name; kept as an exception to the unknown-name rule (AGENTS.md): single-user helper whose existence only the match proves; rename if a sibling build gives a symbol.
+// Gets the property component of an object. Single user: StateUtilField::setWaterMode (1.0.0: 0x71005509b8, 38 instructions), which keeps the null test of the component (cbz x21 at 0x71005509d8,
+// joining at the flag load at 0x7100550a00). The cause and the forms tried without the helper are written once, at UpdatableObject::getComponent.
+static GfComPropertyPc *getPropertyComponent(fw::UpdatableObject *object) { return object->getComponent<GfComPropertyPc>(); }
+
+void StateUtilField::setWaterMode(GfComBehaviorPc &behavior, bool isWater) {
+  GfComPropertyPc *property = getPropertyComponent(behavior.unknown08);
+  if (isWater) {
+    property->unknown110_5 = true;
+  } else {
+    property->unknown110_5 = false;
+  }
+
+  StateUtil::setEnableGravity(behavior, !isWater);
+  if (isWater) {
+    property->unknown310.unknown11_7 = true;
+  } else {
+    property->unknown310.unknown11_7 = false;
+  }
+}
+
 bool StateUtilField::isBigLandDistance(GfComBehaviorPc &behavior) {
   FallDistancePlugin *plugin = behavior.unknown001<FallDistancePlugin>(17);
   if (plugin != nullptr) {

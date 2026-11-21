@@ -32,6 +32,7 @@ class GfMenuCallContext;
 enum {
   MSG_PC_UNKNOWN_16777245 = 0x100001d, // Inferred role: msg pc field notify skill event; original name unknown.
   MSG_PC_UNKNOWN_16777254 = 0x1000026, // Inferred role: msg pc get elv lift; original name unknown.
+  MSG_PC_UNKNOWN_16777256 = 0x1000028, // Inferred role: msg pc field elv warp; original name unknown.
 };
 
 struct MsgPcFieldNotifySkillEvent : fw::Message {
@@ -43,12 +44,25 @@ struct MsgPcFieldNotifySkillEvent : fw::Message {
 static_assert(offsetof(MsgPcFieldNotifySkillEvent, unknown08) == 0x08, "");
 
 struct MsgPcGetElvLift : fw::Message {
+  MsgPcGetElvLift() : fw::Message(MSG_PC_UNKNOWN_16777254, 0x40), unknown08(), unknown90(false) {}
+
   mm::mtl::FixedVector<GF_OBJ_HANDLE *, 16> unknown08; // Inferred role: objects riding the lift of the elevator; original member name unknown.
   bool unknown90;                                      // Inferred role: lift switch; original member name unknown.
 };
 
 static_assert(offsetof(MsgPcGetElvLift, unknown08) == 0x08, "");
 static_assert(offsetof(MsgPcGetElvLift, unknown90) == 0x90, "");
+
+// Layout from StateFieldAccess::enter (0x7100553b88), which builds it on the stack: the lift message at 0x08 and the accessed object at 0x10.
+struct MsgPcFieldElvWarp : fw::Message {
+  MsgPcFieldElvWarp(MsgPcGetElvLift *lift, GF_OBJ_HANDLE *handle) : fw::Message(MSG_PC_UNKNOWN_16777256, 0x40), unknown08(lift), unknown10(handle) {}
+
+  MsgPcGetElvLift *unknown08; // Inferred role: lift message answered by the elevator; original member name unknown.
+  GF_OBJ_HANDLE *unknown10;   // Inferred role: elevator object; original member name unknown.
+};
+
+static_assert(offsetof(MsgPcFieldElvWarp, unknown08) == 0x08, "");
+static_assert(offsetof(MsgPcFieldElvWarp, unknown10) == 0x10, "");
 
 // Layout from its constructor (0x710052a63c), destructor, setup and cleanup: the moving collision at 0x98, the route navi
 // at 0xa0, the target info menu context at 0xa8, the big object at 0xb0 and the look point frame at 0xc0.

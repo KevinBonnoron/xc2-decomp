@@ -1,5 +1,6 @@
 #include "dr/dr_res_mdo_seam_wrk_low.h"
 
+#include "dr/dr_res_mdo_alp_tbl.h"
 #include "dr/dr_res_mdo_seam_res.h"
 #include "grlib/cglib_vtx_instans.h"
 #include "mtl/mem_manager.h"

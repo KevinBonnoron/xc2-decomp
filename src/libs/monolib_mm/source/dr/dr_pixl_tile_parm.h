@@ -12,6 +12,7 @@ public:
     TILE_TYPE_UNKNOWN_0,     // Inferred role: main; original name unknown.
     TILE_TYPE_UNKNOWN_2 = 2, // Inferred role: refraction tile; original name unknown.
     TILE_TYPE_UNKNOWN_3 = 3, // Inferred role: mpf seam map tile; original name unknown.
+    TILE_TYPE_UNKNOWN_4 = 4, // Inferred role: occlusion and gpu check tile; original name unknown.
   };
 
   void begin(TileType type);

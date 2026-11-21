@@ -23,9 +23,11 @@
 #include "dr/dr_shd_data_obj.h"
 #include "dr/dr_shd_man.h"
 #include "grlib/cglib_color_ctl.h"
+#include "grlib/cglib_ctl_texture.h"
 #include "grlib/cglib_dbl_uniform_block.h"
 #include "grlib/cglib_depth_ctl.h"
 #include "grlib/cglib_depth_target.h"
+#include "grlib/cglib_etc_uniform_block.h"
 #include "grlib/cglib_polygon.h"
 #include "grlib/cglib_render_array.h"
 #include "grlib/cglib_render_target.h"
@@ -1078,6 +1080,130 @@ void DrPixlMan::clearAccumBuffer() {
   unknown7f0->unknown00[10][0]->clearTexture(mm::Col4::black, static_cast<GrlClaerMask>(0xf));
   unknown7f0->unknown00[11][0]->clearTexture(mm::Col4::black, static_cast<GrlClaerMask>(0xf));
   unknown7f0->unknown00[15][0]->clearTexture(mm::Col4::black, static_cast<GrlClaerMask>(0xf));
+}
+
+void DrPixlMan::debugGBuffRender() {
+  DrMan *man = unknown08;
+  DrPixlPostParm *postParm = man->unknown120[man->unknown1c98];
+  DrShdMan *shdMan = man->unknown80;
+  DrAPGxType::setupScreenQuads(false);
+  DrShdDataList *shdList = shdMan->unknown00;
+  shdList->bindShdVertex();
+  DrShdDataObj *shader = shdList->getDebugShdObj(4);
+  shader->setupShader(0u);
+  {
+    grlib::CGLibUniformEtcUtility uniform(shader);
+    uniform.setUseUniformBlock("U_POST");
+    u32 parm = uniform.unknown001("parm");
+    // The four passes of each iteration (render target 0, 1, 2 and 4, each with its own vector) are written out one after the other, as the game inlines them: the
+    // asm repeats the register target, vector and renderQuads sequence with no call to a shared function (0x71008436cc onwards).
+    for (int i = 0; i < 2; i++) {
+      if (i == 0) {
+        DrAPGxType::setupBlend(7);
+      } else {
+        DrAPGxType::setupBlend(5);
+        // The game tests the second pass again (cmp x25, #4 on the induction variable scaled by 4, 0x71008436a0); without the test clang folds it and gives 294
+        // instructions against the game's 296.
+        if (i == 1) {
+          uniform.unknown20.Rebuilding();
+          static_cast<grlib::CGLibUniBaseUtility &>(uniform).setMoveMem();
+        }
+      }
+      grlib::CGLibState::beginRegisterRenderTarget();
+      grlib::CGLibState::setRegisterRenderTarget(*unknown7f0->unknown00[0][0], grlib::GRL_MRT_TYPE_0);
+      grlib::CGLibState::setRegisterDepthTarget(*unknown7f0->unknown1a0[DrMan::s_nDblIdx]->unknown120);
+      grlib::CGLibState::endRegisterRenderTarget();
+      f32 vec[4];
+      vec[0] = vec[1] = vec[2] = postParm->unknown320[0].unknown00[i];
+      vec[3] = postParm->unknown320[3].unknown00[i];
+      uniform.setF32SetVec4(parm, vec);
+      uniform.updateData();
+      uniform.setUniformBlock();
+      shdList->renderQuads();
+      uniform.unknown20.Rebuilding();
+      static_cast<grlib::CGLibUniBaseUtility &>(uniform).setMoveMem();
+      grlib::CGLibState::beginRegisterRenderTarget();
+      grlib::CGLibState::setRegisterRenderTarget(*unknown7f0->unknown00[1][0], grlib::GRL_MRT_TYPE_0);
+      grlib::CGLibState::setRegisterDepthTarget(*unknown7f0->unknown1a0[DrMan::s_nDblIdx]->unknown120);
+      grlib::CGLibState::endRegisterRenderTarget();
+      vec[0] = postParm->unknown320[1].unknown00[i];
+      vec[1] = postParm->unknown320[2].unknown00[i];
+      vec[2] = postParm->unknown320[7].unknown00[i];
+      f32 isMax = i == 0 ? 0.0f : 1.0f;
+      vec[3] = isMax;
+      uniform.setF32SetVec4(parm, vec);
+      uniform.updateData();
+      uniform.setUniformBlock();
+      shdList->renderQuads();
+      uniform.unknown20.Rebuilding();
+      static_cast<grlib::CGLibUniBaseUtility &>(uniform).setMoveMem();
+      grlib::CGLibState::beginRegisterRenderTarget();
+      grlib::CGLibState::setRegisterRenderTarget(*unknown7f0->unknown00[2][0], grlib::GRL_MRT_TYPE_0);
+      grlib::CGLibState::setRegisterDepthTarget(*unknown7f0->unknown1a0[DrMan::s_nDblIdx]->unknown120);
+      grlib::CGLibState::endRegisterRenderTarget();
+      vec[0] = isMax;
+      vec[1] = isMax;
+      vec[2] = postParm->unknown320[5].unknown00[i];
+      vec[3] = isMax;
+      uniform.setF32SetVec4(parm, vec);
+      uniform.updateData();
+      uniform.setUniformBlock();
+      shdList->renderQuads();
+      uniform.unknown20.Rebuilding();
+      static_cast<grlib::CGLibUniBaseUtility &>(uniform).setMoveMem();
+      grlib::CGLibState::beginRegisterRenderTarget();
+      grlib::CGLibState::setRegisterRenderTarget(*unknown7f0->unknown00[4][0], grlib::GRL_MRT_TYPE_0);
+      grlib::CGLibState::setRegisterDepthTarget(*unknown7f0->unknown1a0[DrMan::s_nDblIdx]->unknown120);
+      grlib::CGLibState::endRegisterRenderTarget();
+      vec[0] = isMax;
+      vec[1] = isMax;
+      vec[2] = isMax;
+      vec[3] = postParm->unknown320[6].unknown00[i];
+      uniform.setF32SetVec4(parm, vec);
+      uniform.updateData();
+      uniform.setUniformBlock();
+      shdList->renderQuads();
+    }
+  }
+  shader = shdList->getDebugShdObj(0x18);
+  shader->setupShader(0u);
+  DrPixlRenderTarget *target = unknown7f0->unknown00[1][0];
+  grlib::CGLibState::beginRegisterRenderTarget();
+  grlib::CGLibState::setRegisterRenderTarget(*target, grlib::GRL_MRT_TYPE_0);
+  grlib::CGLibState::endRegisterRenderTarget();
+  grlib::CGLibUniformEtcUtility uniform(shader);
+  uniform.setUseUniformBlock("U_POST");
+  u32 parm = uniform.unknown001("parm");
+  u32 value = 0;
+  u32 mask = 0;
+  if (postParm->unknown10e0[0] > 0) {
+    value = postParm->unknown10e0[0] - 1;
+    mask = 7;
+  }
+  if (postParm->unknown10e0[1] > 0) {
+    mask |= 0x10;
+    value |= postParm->unknown10e0[1] * 0x10 - 0x10;
+  }
+  if (postParm->unknown10e0[2] > 0) {
+    mask |= 0x20;
+    value |= postParm->unknown10e0[2] * 0x20 - 0x20;
+  }
+  if (postParm->unknown10e0[3] > 0) {
+    mask |= 0x40;
+    value |= postParm->unknown10e0[3] * 0x40 - 0x40;
+  }
+  u32 vec[4];
+  vec[0] = ~mask;
+  vec[1] = value;
+  vec[2] = 0;
+  vec[3] = 0;
+  uniform.setU32SetUVec4(parm, vec);
+  uniform.updateData();
+  uniform.setUniformBlock();
+  grlib::CGLibCtlTexture::setUAVTexture(*target->unknown70, 0, 0, 0);
+  grlib::CGLibColorCtl::setColorBufferOff();
+  shdList->renderQuads();
+  grlib::CGLibColorCtl::setColorBufferOn();
 }
 
 } // namespace ml

@@ -842,6 +842,31 @@ u32 GfGameParty::isExistDriver(u32 driver) {
   return 0;
 }
 
+// Ruling 8 (P4): walks the party like isExistObj and isExistDriver, written out again. A file-local template taking the inner check (a lambda over the member and
+// the party id, the loop returning partyId + 1) does not match any of the three: isExistObj 90 instructions against the game's 80 (0x710032857c), isExistDriver 33
+// against 46 (0x7100329838) and isExistBlade 116 against 139 (0x71003298f0); the last two already differ in the stack frame of the first instruction.
+bool GfGameParty::isExistBlade(u32 blade) {
+  if (blade == 0) {
+    return false;
+  }
+
+  GfGameParty *party = get();
+  for (u32 partyId = 0; partyId < PARTY_UNKNOWN_3; partyId++) {
+    GF_OBJ_HANDLE *driver = party->unknown10[partyId].unknown00;
+    if (driver != unknown020) {
+      DataParamAcc paramAcc(driver);
+      int setBladeNum = GfDataDriver::getMaxSetBladeNum(paramAcc.getValidDriverId());
+      for (int slot = 0; slot < setBladeNum; slot++) {
+        if (paramAcc.getBlade(slot, false) == blade) {
+          return true;
+        }
+      }
+    }
+  }
+
+  return false;
+}
+
 u32 GfGameParty::getPartySetBladeNum() {
   u32 bladeNum = 0;
   for (u32 partyId = 0; partyId < PARTY_UNKNOWN_3; partyId++) {

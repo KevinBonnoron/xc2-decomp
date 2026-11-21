@@ -121,6 +121,7 @@ public:
   void beginSetup();
   void end();
   void endSetup();
+  void debugUpdate();
   int loopCnt();
   void apply(int loop);
   void applyView(int view);
@@ -135,6 +136,7 @@ public:
   void renderEnd(int loop);
   void renderViewBegin();
   void renderViewEnd();
+  void GBuffRender();
   void blurCallBackRender();
   static void setSRGBMode(bool isSRGBMode);
   void tail();
@@ -273,7 +275,9 @@ public:
   u8 _1cb0[0x1cc0 - 0x1cb0];
   bool unknown1cc0; // Inferred role: home menu opened; original member name unknown.
   bool unknown1cc1; // Inferred role: auto reset scene; original member name unknown.
-  u8 _1cc2[0x1cc4 - 0x1cc2];
+  bool unknown1cc2; // Inferred role: render list flag, set to true by the constructor (0x71007c885c) and tested by DrMdoCtlNom::createRenderList, DrMdoCtlPos::createPosRenderList and the base and
+                    // instance map render list updates (0x7100808718, 0x71008137f8, 0x7100821180, 0x7100823a70); original member name unknown.
+  u8 _1cc3[0x1cc4 - 0x1cc3];
   bool unknown1cc4; // Inferred role: mdl height tex skip; original member name unknown.
   bool unknown1cc5; // Inferred role: height tex skip; original member name unknown.
   bool unknown1cc6; // Inferred role: seam height tex skip; original member name unknown.
@@ -320,7 +324,9 @@ public:
   bool unknown1d7a; // Inferred role: shadow map override; original member name unknown.
   bool unknown1d7b; // Inferred role: mdl dbl pause; original member name unknown.
   bool unknown1d7c; // Inferred role: skips the mpf wind update; original member name unknown.
-  u8 _1d7d[0x1d80 - 0x1d7d];
+  bool unknown1d7d; // Inferred role: skips the deferred render and the sky render of a view; original member name unknown.
+  bool unknown1d7e; // Inferred role: skips GBuffRender; original member name unknown.
+  u8 _1d7f[0x1d80 - 0x1d7f];
   bool unknown1d80; // Inferred role: clip; original member name unknown.
   u8 _1d81[0x1d8c - 0x1d81];
   bool unknown1d8c; // Inferred role: flag, copied to unknown1d8d at the end of the setup; original member name unknown.
@@ -334,9 +340,12 @@ public:
   bool unknown1da0; // Inferred role: camera light; original member name unknown.
   u8 _1da1[0x1da4 - 0x1da1];
   s32 unknown1da4; // Inferred role: dynamic light type; original member name unknown.
-  u8 _1da8[0x1dbc - 0x1da8];
+  u8 _1da8[0x1dac - 0x1da8];
+  bool unknown1dac[14]; // Inferred role: debug requests to reload a shader or a file, one flag per type, cleared by debugUpdate; original member name unknown.
+  u8 _1dba[0x1dbc - 0x1dba];
   s32 unknown1dbc; // Inferred role: render skip; original member name unknown.
-  u8 _1dc0[0x1de4 - 0x1dc0];
+  s16 unknown1dc0; // Inferred role: render stage request (renderView clears 1 before and 2 after the deferred render); original member name unknown.
+  u8 _1dc2[0x1de4 - 0x1dc2];
   u32 unknown1de4;  // Inferred role: histgram size shift; original member name unknown.
   bool unknown1de8; // Inferred role: histgram uses the tone map target; original member name unknown.
   u8 _1de9[0x1e00 - 0x1de9];
@@ -406,6 +415,7 @@ static_assert(offsetof(DrMan, unknown1ca4) == 0x1ca4, "");
 static_assert(offsetof(DrMan, unknown1cac) == 0x1cac, "");
 static_assert(offsetof(DrMan, unknown1cc0) == 0x1cc0, "");
 static_assert(offsetof(DrMan, unknown1cc1) == 0x1cc1, "");
+static_assert(offsetof(DrMan, unknown1cc2) == 0x1cc2, "");
 static_assert(offsetof(DrMan, unknown1cc4) == 0x1cc4, "");
 static_assert(offsetof(DrMan, unknown1cc5) == 0x1cc5, "");
 static_assert(offsetof(DrMan, unknown1cc6) == 0x1cc6, "");
@@ -437,6 +447,8 @@ static_assert(offsetof(DrMan, unknown1d73) == 0x1d73, "");
 static_assert(offsetof(DrMan, unknown1d75) == 0x1d75, "");
 static_assert(offsetof(DrMan, unknown1d7a) == 0x1d7a, "");
 static_assert(offsetof(DrMan, unknown1d7b) == 0x1d7b, "");
+static_assert(offsetof(DrMan, unknown1d7d) == 0x1d7d, "");
+static_assert(offsetof(DrMan, unknown1d7e) == 0x1d7e, "");
 static_assert(offsetof(DrMan, unknown1d80) == 0x1d80, "");
 static_assert(offsetof(DrMan, unknown1d8c) == 0x1d8c, "");
 static_assert(offsetof(DrMan, unknown1d8d) == 0x1d8d, "");
@@ -447,7 +459,9 @@ static_assert(offsetof(DrMan, m_allMiddelTexStmChk) == 0x1d9c, "");
 static_assert(offsetof(DrMan, m_seamMapStmOk) == 0x1d9e, "");
 static_assert(offsetof(DrMan, unknown1da0) == 0x1da0, "");
 static_assert(offsetof(DrMan, unknown1da4) == 0x1da4, "");
+static_assert(offsetof(DrMan, unknown1dac) == 0x1dac, "");
 static_assert(offsetof(DrMan, unknown1dbc) == 0x1dbc, "");
+static_assert(offsetof(DrMan, unknown1dc0) == 0x1dc0, "");
 static_assert(offsetof(DrMan, unknown1de4) == 0x1de4, "");
 static_assert(offsetof(DrMan, unknown1de8) == 0x1de8, "");
 static_assert(offsetof(DrMan, unknown1e00) == 0x1e00, "");

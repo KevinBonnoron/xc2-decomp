@@ -21,6 +21,7 @@ class GfInitParamWeapon;
 
 class GfAssetFactory {
 public:
+  static GF_ASSET_HANDLE *createAssetPackDriver(const GfInitParamDriver &param);
   static GF_ASSET_HANDLE *createAssetPackDriverForEvent(const GfInitParamDriver &param);
   static GF_ASSET_HANDLE *createAssetPackDriverForSalvage(const GfInitParamDriver &param);
   static GF_ASSET_HANDLE *createAssetPackDriverForUi(const GfInitParamDriver &param);

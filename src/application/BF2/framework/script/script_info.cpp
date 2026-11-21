@@ -1,6 +1,9 @@
+#include <string.h>
+
 #include "framework/script/script_manager.h"
 
 #include "ml/dev_file_th.h"
+#include "ml/path_util.h"
 #include "mm_mtl/fixstr.h"
 #include "types.h"
 #include "vm/vm.h"
@@ -43,6 +46,26 @@ void ScriptInfo::unlink() {
     unknown22c &= ~FLAG_UNKNOWN_3;
     vmUnlink(unknown08);
   }
+}
+
+void ScriptInfo::loadFromMemory(const mm::mtl::FixStr<256> &path, const char *data, size_t size) {
+  if (strcmp(path.c_str(), unknown14.c_str()) == 0) {
+    relink();
+    memcpy(unknown08, data, size);
+    return;
+  }
+  destroy();
+  unknown14 = path;
+  const char *name = ml::PathUtil::getFilePtrFromPath(path.c_str());
+  if (name != nullptr) {
+    unknown118 = name;
+  } else {
+    unknown118 = path.c_str();
+  }
+  unknown22c &= ~(FLAG_UNKNOWN_0 | FLAG_UNKNOWN_3 | FLAG_UNKNOWN_5);
+  memcpy(unknown08, data, size);
+  unknown22c |= FLAG_UNKNOWN_1;
+  unknown228 = STATE_UNKNOWN_1;
 }
 
 void ScriptInfo::relink() {

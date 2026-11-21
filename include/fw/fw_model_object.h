@@ -16,7 +16,19 @@ namespace fw {
 
 class ReferenceFrame;
 
-class ModelObject : public mm::mtl::ReferenceObject, public mm::mtl::IntrusiveListNode<ModelObject> {
+// Inferred role: element of the per-layer lists of ModelManager, shared by ModelObject and VisibleObject; original name unknown.
+// Evidence: ModelObject::~ModelObject and changeLayer, VisibleObject::create, ~VisibleObject and changeLayer link the node at +0x10
+// into the same ModelManager::unknown18[layer] list (1.0.0: 0x710018e8c8, 0x710018ea8c, 0x710018ec10, 0x710018ed70, 0x710018eeec),
+// ModelManager::update calls the virtual at +0x10 of each node (0x710018e530), and both vtables (0x1178ec8, 0x1178ef0) are 0x28
+// bytes: two header words, the destructor pair and update.
+class unknown083 : public mm::mtl::ReferenceObject, public mm::mtl::IntrusiveListNode<unknown083> {
+public:
+  virtual void update() = 0;
+};
+
+static_assert(sizeof(unknown083) == 0x20, "");
+
+class ModelObject : public unknown083 {
 public:
   ModelObject();
   virtual ~ModelObject();

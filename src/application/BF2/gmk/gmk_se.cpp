@@ -222,10 +222,7 @@ void GmkSe::createInst() {
   fw::SoundManager::get()->setVolume(unknownf4, info->unknown05 * 0.01f, 1.0f);
   unknownf8 = 0.0f;
   unknownf1 = true;
-  TGmkActiveList<GmkSe> *list = TGmkActiveList<GmkSe>::get();
-  if (list->unknown08.end() == list->unknown08.unknown002(list->unknown08.begin(), list->unknown08.end(), this)) {
-    TGmkActiveList<GmkSe>::get()->unknown08.push_back(this);
-  }
+  TGmkActiveList<GmkSe>::unknown002(this);
 }
 
 bool GmkSe::canDepopInst() const {
@@ -420,10 +417,7 @@ void GmkSeLine::createInst() {
   fw::SoundManager::get()->setVolume(unknown5c, info->unknown05 * 0.01f, 1.0f);
   unknown60 = 0.0f;
   unknown59 = true;
-  TGmkActiveList<GmkSeLine> *list = TGmkActiveList<GmkSeLine>::get();
-  if (list->unknown08.end() == list->unknown08.unknown002(list->unknown08.begin(), list->unknown08.end(), this)) {
-    TGmkActiveList<GmkSeLine>::get()->unknown08.push_back(this);
-  }
+  TGmkActiveList<GmkSeLine>::unknown002(this);
 }
 
 bool GmkSeLine::canDepopInst() const {

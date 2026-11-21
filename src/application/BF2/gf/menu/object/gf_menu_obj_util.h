@@ -213,7 +213,9 @@ public:
   static const char *getMenuMS(u32 id);
   static u32 getLeaderPartyID();
   static int getLeaderPartyType();
-  static bool isExitDriver(u32 partyId);
+  // Returns int: both game callers (0x71004aea0c in GfMenuObjPartyStatus::MainListener::reciveEvent, 0x71004aebe0 in reciveHpEvent) test the result with
+  // cbz w0, where a bool gives tbz w0, #0 (measured on reciveHpEvent).
+  static int isExitDriver(u32 partyId);
   static u32 setupPartyDriver(const mm::mtl::FixedVector<u16, 16> &drivers);
   static bool isLeaderBladeEnable();
   static bool isBladeEnable(u32 partyId, int slot);

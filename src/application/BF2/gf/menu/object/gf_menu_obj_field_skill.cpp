@@ -7,6 +7,7 @@
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/list/gf_menu_field_skill_list.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
+#include "gf/request/gf_req_scom.h"
 #include "mm_math/mm_vec2.h"
 #include "mm_mtl/delegate.h" // IWYU pragma: keep
 #include "mm_mtl/reference_object.h"
@@ -56,10 +57,10 @@ static const char *const unknown010[5][4] = {
 
 GfMenuObjFieldSkill::~GfMenuObjFieldSkill() {
   unknown50 = nullptr;
-  unknown38 = nullptr;
-  unknown40 = nullptr;
-  unknown28 = nullptr;
-  unknown30 = nullptr;
+  unknown38[0] = nullptr;
+  unknown38[1] = nullptr;
+  unknown28[0] = nullptr;
+  unknown28[1] = nullptr;
   mm::mtl::safeRelease(unknown48);
 }
 
@@ -404,6 +405,108 @@ void GfMenuObjFieldSkill::BaseListener::reciveEvent(const ui::EventData &event, 
     }
     break;
   }
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
+// The five fade control blocks stay written out, as in the other listeners of this class: one helper taking the animation, the type, the length and the child gives 345 instructions against the
+// game's 344 (checked at 0x7100467f68).
+void GfMenuObjFieldSkill::SkillInfoListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    acc.setDisp(false);
+    unknown0c = 0;
+    unknown10_u64 = 0;
+    break;
+  case 3:
+    if (event.unknown08 == 3) {
+      acc.setDisp(true);
+      unknown20->unknown50->unknown0c = unknown20->unknown58;
+      {
+        MenuFieldSkill fieldSkill;
+        unknown20->unknown50->getFs(fieldSkill);
+        unknown20->unknown68 = SCOM_FIELD_VOICE::createFieldSkillStart(unknown14, fieldSkill.unknown00);
+      }
+      GfMenuObjUtil::CtrlParam param;
+      param.unknown004("fade_in_l");
+      param.unknown04 = 2;
+      param.unknown14 = 8;
+      GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
+      GfMenuObject::addResultCallContext(acc.unknown10, 1, 0);
+      GfMenuReference::setReferenceBladeID(5, unknown14);
+      unknown20->unknown60 = acc.unknown10;
+      GfMenuObject::sendOpenEvent(acc.searchSibiling("LAY_base"), 1, 0.0f);
+      GfMenuObjUtil::playSE(0x10);
+    }
+    break;
+  case GfMenuTypes::unknown003_33: {
+    u64 params = event.unknown08_u64;
+    unknown14 = params >> 32;
+    unknown20->unknown58_u32 = params & 0xffffff;
+    GfMenuObject::sendOpenEvent(acc.searchSibiling("LAY_blade"), 0, 0.0f);
+    if (unknown0c == 0) {
+      GfMenuObjUtil::CtrlParam param;
+      param.unknown004("fade_in_l");
+      param.unknown04 = 1;
+      param.unknown14 = 8;
+      int ctrl = GfMenuObjUtil::startCtrl(acc.unknown10, param, "LAY_blade_info_name");
+      GfMenuObject::hookCtrlEvent(acc.unknown10, ctrl);
+      acc.setDispChild(false, "LAY_blade_info_skill");
+      unknown20->unknown60 = acc.unknown10;
+      GfMenuObject::sendOpenEvent(acc.searchSibiling("LAY_base"), 0, 0.0f);
+      unknown0c = 1;
+      unknown10 = 1;
+      GfMenuReference::setReferenceBladeID(5, unknown14);
+    } else {
+      GfMenuObjUtil::CtrlParam param;
+      param.unknown004("fade_out_r");
+      param.unknown04 = 3;
+      param.unknown14 = 10;
+      GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
+    }
+    acc.setDisp(true);
+    break;
+  }
+  case GfMenuTypes::unknown003_34:
+    if (unknown0c == 1) {
+      GfMenuObjUtil::CtrlParam param;
+      param.unknown004("fade_out_l");
+      param.unknown04 = 2;
+      param.unknown14 = 10;
+      GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
+      GfMenuObject::sendCloseEvent(acc.searchSibiling("LAY_blade"), 0, 0.0f);
+      unknown0c = 0;
+    }
+    break;
+  case 0x10d:
+    if (unknown10 != 1) {
+      GfMenuObject::termCallContext(acc.unknown10);
+      break;
+    }
+    acc.setDispChild(true, "LAY_blade_info_skill");
+    unknown20->unknown50->unknown0c = unknown20->unknown58;
+    {
+      MenuFieldSkill fieldSkill;
+      unknown20->unknown50->getFs(fieldSkill);
+      unknown20->unknown68 = SCOM_FIELD_VOICE::createFieldSkillStart(unknown14, fieldSkill.unknown00);
+    }
+    {
+      GfMenuObjUtil::CtrlParam param;
+      param.unknown004("fade_in_l");
+      param.unknown04 = 2;
+      param.unknown14 = 8;
+      int ctrl = GfMenuObjUtil::startCtrl(acc.unknown10, param, "LAY_blade_info_skill");
+      GfMenuObject::hookCtrlEvent(acc.unknown10, ctrl);
+    }
+    unknown20->unknown60 = acc.unknown10;
+    GfMenuObject::sendOpenEvent(acc.searchSibiling("LAY_base"), 1, 0.0f);
+    GfMenuObject::addResultCallContext(acc.unknown10, 1, 0);
+    unknown10 = 0;
+    GfMenuObjUtil::playSE(0x10);
+    break;
   default:
     ui::UIObjectListener::reciveEvent(event, handle);
     break;

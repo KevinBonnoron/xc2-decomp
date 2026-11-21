@@ -43,6 +43,7 @@ public:
   void create(const CreateInfo &info);
   void dispose();
   void update(mm::mtl::IntrusivePtr<fw::ReferenceFrame> &frame, bool param2);
+  void apply(mm::mtl::IntrusivePtr<fw::ReferenceFrame> &frame);
 
   CreateInfo unknown00; // Inferred role: create info; original member name unknown.
   BdatInfo unknown08;   // Inferred role: bdat info; original member name unknown.

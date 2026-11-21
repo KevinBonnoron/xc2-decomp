@@ -18,6 +18,10 @@ union uVal {
 // Name used by the callers written before the mangled name uVal was known.
 typedef uVal Value;
 
+// Inferred role: type of the function local static returned by getInstance; the game constructs it without a single store; original name unknown.
+struct unknown007;
+
+unknown007 *getInstance();
 void init();
 void regist(int idx, void *data);
 void decodeScramble(void *data);

@@ -37,6 +37,7 @@ public:
   void beginEvent();
   void dispose() override;
   void update(f32 deltaTime) override;
+  void updateInActiveList(f32 deltaTime);
   void debugDraw() const override;
   void disposeGmkPhantom();
   void createGmkPhantom();

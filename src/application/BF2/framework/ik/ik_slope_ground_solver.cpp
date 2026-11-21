@@ -1,11 +1,24 @@
 #include "framework/ik/ik_slope_ground_solver.h"
 
 #include "framework/ik/ik_foot_placement_solver.h"
+#include "framework/memory/allocator.h"
+#include "framework/memory/framework_memory.h"
 #include "fw/fw_param_manager.h"
 
 namespace fw {
 class IKFootGroundInterface;
 struct UpdateInfo;
+
+// __LINE__ of the game: it is the line argument of operator new.
+#line 33
+SlopeGroundSolver *SlopeGroundSolver::create(const Description &description, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose, IKGroundInterface *ground) {
+  SlopeGroundSolver *solver = new (Allocator::getProcAllocator(), 16, __FILE__, __LINE__) SlopeGroundSolver();
+  solver->addRef();
+  solver->createImpl(description, frame, pose, ground);
+  return solver;
+}
+
+SlopeGroundSolver::SlopeGroundSolver() : unknown40(mm::Quat::identity), unknown88(true), unknown89(true) {}
 
 SlopeGroundSolver::~SlopeGroundSolver() {}
 

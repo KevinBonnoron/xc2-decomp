@@ -1,5 +1,7 @@
 #include "event/chara_obj.h"
 
+#include <math.h>
+
 #include "event/alpha_manager.h"
 #include "event/alpha_obj.h"
 #include "event/attach_actor_base.h"
@@ -10,22 +12,77 @@
 #include "event/cmd_variable.h"
 #include "event/debug_manager.h"
 #include "event/group_manager.h"
+#include "event/i_attach_actor.h"
 #include "event/light_manager.h"
+#include "event/mdlstm_manager.h"
 #include "event/model_manager.h"
 #include "event/model_obj.h"
 #include "event/offscr_manager.h"
 #include "event/skip_manager.h"
 #include "event/tar_axis.h"
 #include "gf/event/gf_evt_model.h"
+#include "gf/object/component/gf_com_transform.h"
+#include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
+#include "mm_math/mm_math.h"
+#include "mm_math/mm_quat.h"
 #include "mm_mtl/singleton.h"
 
 namespace event {
 
 const char *CharaObj::getName() const { return m_name.c_str(); }
+
+// 0x71000bdf6c, 589 instructions (D2; the deleting D0 at 0x71000bec48 is the compiler's). The players are released in the order of the game (the
+// dys updater after the ik updater), then the model by state. The game's jump table (0x7100f67dbc) has five entries for the states 2 to 6:
+// 2, 3 and 6 share the ModelManager call (0x71000be0b4), but states 4 and 5 each have their own inlined MdlstmManager::dispose (0x71000be524 and
+// 0x71000be6c0). A merged `case 4: case 5:` gives one copy (487 instructions instead of 589), so the two cases keep separate, identical bodies.
+CharaObj::~CharaObj() {
+  if (unknownd58 != nullptr) {
+    delete unknownd58;
+    unknownd58 = nullptr;
+  }
+  unknown1650.destroy();
+  unknown1390.destroy();
+  unknown1350.destroy();
+  unknown12d0.destroy();
+  unknown1280.destroy();
+  unknownfe0.destroy();
+  unknowne10.destroy();
+  unknownd60.destroy();
+  unknownde0.destroy();
+  switch (unknownca4) {
+  case STATE_UNKNOWN_2:
+  case STATE_UNKNOWN_3:
+  case STATE_UNKNOWN_6:
+    mm::mtl::Singleton<ModelManager>::getPtr()->destroyModel(unknownd50, unknown3054);
+    break;
+  case STATE_UNKNOWN_4:
+    mm::mtl::Singleton<MdlstmManager>::getPtr()->dispose(unknownd50);
+    break;
+  case STATE_UNKNOWN_5:
+    mm::mtl::Singleton<MdlstmManager>::getPtr()->dispose(unknownd50);
+    break;
+  }
+}
+
+// 0x71000bec6c, 135 instructions: the Euler angles are written straight into the member, one angle per branch, which the out-parameter
+// mm::quatToEuler does (the by-value form `unknown2fd0 = mm::quatToEuler(...)` costs six more instructions). The game reads the four
+// components of the quaternion once from the getRotation() result (0x71000becfc); only a copy of the quaternion gives its register
+// assignment (binding the returned reference directly gives s11 where the game has s14 at 0x71000bed00).
+void CharaObj::createGfObj(gf::GF_OBJ_HANDLE *handle) {
+  unknownd3c = 0;
+  m_eyeOffset = 1.5f;
+  unknownd40 = handle;
+  gf::GfComTransform *transform = gf::GfObjUtil::getObj(handle)->getComponent<gf::GfComTransform>();
+  unknown2fb0 = transform->getPosition();
+  mm::Quat rotation = transform->getRotation();
+  mm::quatToEuler(rotation, unknown2fd0);
+  unknownca4 = STATE_UNKNOWN_1;
+  unknownd48 = nullptr;
+}
 
 void CharaObj::createGfObj(CHARA_TYPE type, u32 id, u32 param3, u32 param4) {
   // The game loads CharaManager::unknown10 before the first call (0x71000bef20, ldr w25) and tests
@@ -212,6 +269,50 @@ void CharaObj::setPos(const mm::Vec3 &pos) {
   param.val(1).setF32(pos.y);
   param.val(2).setF32(pos.z);
   unknown29d8.push_back(&unknown08, param);
+}
+
+// The game (0x71000c41a8, 180 instructions) also calls atan2f in the cv == 0 arm (bl at 0x71000c42ec) and
+// drops the result: the angle is assigned in both arms and tested after them, which clang threads (the
+// call stays, atan2f may set errno). It loads pos.z before pos.x there (0x71000c42d4, ldr s1,[x23,#8]!);
+// the local places that load (ruling 2, P2). Without it both arms start with the same loads and
+// SimplifyCFG hoists them above the cv test (177 instructions). The distance test is `!(d > 0.1f)`
+// (b.le at 0x71000c4294 also leaves for NaN) and the differences are written again after sqrtf as in
+// the game, which reloads the members there.
+void CharaObj::walkPos(const mm::Vec3 &pos, EVT_poscvtype cv, bool isRun) {
+  if (mm::mtl::Singleton<SkipManager>::getPtr()->isSkipFast()) {
+    return;
+  }
+  f32 angle;
+  if (cv == 0) {
+    f32 z = pos.z;
+    angle = atan2f(pos.x - unknown2fb0.x, z - unknown2fb0.z);
+    unknown2fb0 = pos;
+  } else {
+    if (!(sqrtf((pos.x - unknown2fb0.x) * (pos.x - unknown2fb0.x) + (pos.z - unknown2fb0.z) * (pos.z - unknown2fb0.z)) > 0.1f)) {
+      return;
+    }
+    angle = atan2f(pos.x - unknown2fb0.x, pos.z - unknown2fb0.z);
+  }
+  if (cv >= 1 && cv <= 8) {
+    unknown2fd0.x = 0.0f;
+    unknown2fd0.y = angle;
+    unknown2fd0.z = 0.0f;
+  }
+  unknown2fc0 = pos;
+  CmdParam param;
+  param.val(0).setUserdata(this);
+  param.unknown001(1, pos);
+  param.val(4).setS32(cv);
+  param.val(5).setBool(isRun);
+  CmdQueue<QUEUE_UNKNOWN_8, 0> *target = &unknown1738;
+  if (cv == 0) {
+    if (unknown1738.isExist(&unknown30)) {
+      unknown1738.erase(&unknown30);
+    }
+    target = &unknown2088;
+  }
+  target->push_back(&unknown30, param);
+  unknown750.setPos(pos);
 }
 
 void CharaObj::linerPos(const mm::Vec3 &pos, bool isWalk, f32 frame, CV_TYPE cv) {

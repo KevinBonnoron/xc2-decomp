@@ -28,6 +28,9 @@ public:
   void createSector(void *buffer, u32 index);
   void updateIrrVolByGlobalProbe(u32 x, u32 y, u32 z, u32 index, const SHTerms &terms, grlib::CGLibAcc3DTexture &texture);
   void drawDebugInfo(DebDraw *debDraw);
+  int getSectorResourceIndex(int x, int z) const;
+  DrIrrVolResObj *getSectorResource(int x, int z) const;
+  DrIrrVolSector *getSectorInstance(int x, int z) const;
 
   const SGlobalInfo *unknown00;  // Inferred role: global info; original member name unknown.
   const SCascadeInfo *unknown08; // Inferred role: info of this cascade; original member name unknown.
@@ -36,7 +39,10 @@ public:
   DrIrrVolResMan *unknown18;      // Inferred role: sector resource manager; original member name unknown.
   DrIrrVolSector *unknown20[81];  // Inferred role: sector instances of the 9 x 9 grid; original member name unknown.
   DrIrrVolResObj *unknown2a8[81]; // Inferred role: sector resources of the 9 x 9 grid; original member name unknown.
-  u8 _530[0x548 - 0x530];
+  // Layout evidence: getSectorResourceIndex (1.0.0: 0x71007eaf30) tests the sector coordinates against 4 around the two ints.
+  int unknown530; // Inferred role: center sector along x; original member name unknown.
+  int unknown534; // Inferred role: center sector along z; original member name unknown.
+  u8 _538[0x548 - 0x538];
   int unknown548; // Inferred role: sector count along x, compared signed by getSectorResourceIndex; original member name unknown.
   int unknown54c; // Inferred role: sector count along z, compared signed by getSectorResourceIndex; original member name unknown.
   u8 _550[0x560 - 0x550];
@@ -61,6 +67,8 @@ static_assert(offsetof(DrIrrVolCascade, unknown10) == 0x10, "");
 static_assert(offsetof(DrIrrVolCascade, unknown18) == 0x18, "");
 static_assert(offsetof(DrIrrVolCascade, unknown20) == 0x20, "");
 static_assert(offsetof(DrIrrVolCascade, unknown2a8) == 0x2a8, "");
+static_assert(offsetof(DrIrrVolCascade, unknown530) == 0x530, "");
+static_assert(offsetof(DrIrrVolCascade, unknown534) == 0x534, "");
 static_assert(offsetof(DrIrrVolCascade, unknown548) == 0x548, "");
 static_assert(offsetof(DrIrrVolCascade, unknown54c) == 0x54c, "");
 

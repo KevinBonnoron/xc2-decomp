@@ -1,13 +1,22 @@
 #pragma once
+#include "nn/fs.h"
 #include "types.h"
 
-namespace nn {
-namespace fs {
-struct FileHandle;
-} // namespace fs
-} // namespace nn
-
 namespace ml {
+
+// Inferred role: file handle closed on scope exit, shared by DevFileUtilNx::getFileSize and the inlined copies in DevFileNxTh::getFileSize and
+// DevFileNxTh::readBlockSlice; original type name unknown.
+struct unknown002 {
+  ~unknown002() {
+    if (isOpen) {
+      isOpen = false;
+      nn::fs::CloseFile(handle);
+    }
+  }
+
+  nn::fs::FileHandle handle;
+  bool isOpen;
+};
 
 class FileHandleTh;
 

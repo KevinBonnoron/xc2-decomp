@@ -173,6 +173,7 @@ public:
   void thicknessFirstBegin();
   DrPixlRenderTarget *getBackFaceDepthTexture();
   void thicknessFirstEnd();
+  void fastDeferredRender();
   void lastDeferredRender();
   void occRenderBegin(bool isFirst);
   void occRenderEnd();

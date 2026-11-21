@@ -48,6 +48,7 @@
 #include "mm_math/mm_col4.h"
 #include "mm_mtl/delegate.h"
 #include "mm_mtl/fixstr.h"
+#include "mm_mtl/reference_object.h"
 #include "ui/ctrl/ui_ctrl_cursor_select.h"
 #include "ui/event/ui_event_data.h"
 #include "ui/event/ui_event_manager.h"
@@ -81,6 +82,31 @@ GfMenuObjShop::GfMenuObjShop(u32 handle)
     unknown508[i] = nullptr;
   }
   unknown578 = GfMenuCallContext::create();
+}
+
+GfMenuObjShop::~GfMenuObjShop() {
+  unknown238 = nullptr;
+  for (u32 i = 0; i < 26; i++) {
+    unknown168[i] = nullptr;
+  }
+  mm::mtl::safeRelease(unknown150);
+  mm::mtl::safeRelease(unknown158);
+  mm::mtl::safeRelease(unknown160);
+  mm::mtl::safeRelease(unknownf0);
+  mm::mtl::safeRelease(unknowne8);
+  mm::mtl::safeRelease(unknowne0);
+  mm::mtl::safeRelease(unknownd8);
+  mm::mtl::safeRelease(unknown40);
+  mm::mtl::safeRelease(unknownc8);
+  mm::mtl::safeRelease(unknown48);
+  mm::mtl::safeRelease(unknown50);
+  mm::mtl::safeRelease(unknown4e8);
+  mm::mtl::safeRelease(unknown4f0);
+  for (u32 i = 0; i < 8; i++) {
+    mm::mtl::safeRelease(unknown508[i]);
+  }
+  mm::mtl::safeRelease(unknown570);
+  mm::mtl::safeRelease(unknown578);
 }
 
 void GfMenuObjShop::initialize() {
@@ -1153,6 +1179,43 @@ void GfMenuObjShop::OrbListListener::reciveEvent(const ui::EventData &event, u32
     return;
   }
   ui::UIObjectListener::reciveEvent(event, handle);
+}
+
+void GfMenuObjShop::SellFilterListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    GfMenuObject::disableInput(acc.unknown10);
+    break;
+  case 6: {
+    u32 index = event.unknown08;
+    u32 previous = event.unknown0c;
+    if (unknown20->unknownc0 != index) {
+      unknown20->unknownc0 = index;
+      ui::EventData notify;
+      notify.unknown00 = 0x45;
+      GfMenuObject::sendEvent(acc.getParentHandle(), notify, 0.0f);
+    }
+    unknown20->refreshFilterIcon();
+    if (previous != 0xffffffff && index != previous) {
+      GfMenuObjUtil::playSECommonTab();
+    }
+    break;
+  }
+  case 0x21:
+    GfMenuObject::resetInputSelection(acc.unknown10);
+    GfMenuObject::setupInputSelection(acc.unknown10, unknown20->unknownc0, unknown20->unknown60.size());
+    GfMenuObject::enableInput(acc.unknown10);
+    break;
+  case 0x22:
+    // Measured (clang 3.9.1): with `case 1: case 0x22:` as grouped labels the default arm is laid out after case 0x21 (game: before it);
+    // two separate bodies leave the game's order. The game's case 1 and case 0x22 are one block (0x71004d1c54): the tail merge joins them.
+    GfMenuObject::disableInput(acc.unknown10);
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
 }
 
 void GfMenuObjShop::setGuideText(u32 id) {
