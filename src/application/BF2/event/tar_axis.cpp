@@ -89,6 +89,12 @@ mm::Mat44 DataManager::getTarAxis(u32 axis) {
   return mm::Mat44::identity;
 }
 
+mm::Mat44 TarAxis::calcOrigMatInv() const {
+  mm::Mat44 mat = mm::mtl::Singleton<DataManager>::getPtr()->getTarAxis(unknown08);
+  mat.unknown012();
+  return mat;
+}
+
 const char *TarAxis::getOrigName() const { return mm::mtl::Singleton<DataManager>::getPtr()->getTarName(unknown08); }
 
 inline const char *DataManager::getTarName(u32 axis) {

@@ -44,6 +44,10 @@ public:
   // Queued by GfMenuManyObjects; the game gives it its own vtable, inheriting the dispose of the base. The Queue::erase and push_back
   // instances copy the open parameter in one 16-byte move at 0xc, in the tail padding of the base.
   struct PopupInfo : GfMenuManyObjects::InfoType {
+    // GfMenuObjPopup::open (0x71004b3434) zeroes the open parameter of the pop destination (two 8-byte stores at 0xc and 0x14) before the pop; without the
+    // member initialiser the stores disappear.
+    PopupInfo() : unknown0c() {}
+
     OpenParam unknown0c; // Inferred role: open parameter of the queued popup; original member name unknown.
   };
 
@@ -56,9 +60,12 @@ public:
     GfMenuObjPopup *unknown20; // Inferred role: owner; original member name unknown.
   };
 
+  // Game symbol _ZN2gf14GfMenuObjPopup6s_dispE (0x71014a12cc, bss); read by open, which skips the open event while it is set. Role otherwise unknown.
+  static bool s_disp;
+
   GfMenuObjPopup(u32 handle);
   ~GfMenuObjPopup() override;
-  static void open(const OpenParam &param);
+  static u32 open(const OpenParam &param);
   static void pausePickup();
   static void continuePickup(u32 type);
   static void sendEvent(u32 handle, u32 type, u32 param);

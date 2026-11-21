@@ -1,5 +1,6 @@
 #include "gf/data/gf_data_save.h"
 
+#include "gf/data/gf_data_game.h"
 #include "mm_mtl/fixstr.h"
 
 namespace gf {
@@ -97,5 +98,12 @@ void GfDataSave::getFileNameForOptionXml(mm::mtl::FixStr<256> &path) {
   getFileNameForOption(path);
   path += getSaveDataExtNameForXml();
 }
+
+namespace _gfgsv {
+
+// Defining the global emits its dynamic initialiser, which registers the implicit SDataSave destructor with atexit (0x71002cf550).
+SDataSave s_SDataSave;
+
+} // namespace _gfgsv
 
 } // namespace gf

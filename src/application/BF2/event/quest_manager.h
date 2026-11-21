@@ -16,7 +16,7 @@ public:
   void clear();
   virtual void OnEventProc(MSG_TYPE type);
   bool entry(u32 quest, bool *isOrdered);
-  u32 getState(u32 quest);
+  int getState(u32 quest);
   bool setComp(u32 quest, u32 taskIndex, bool isComp);
   bool getComp(u32 quest, u32 taskIndex);
   bool disp(u32 quest, bool isResult);

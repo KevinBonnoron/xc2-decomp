@@ -4,16 +4,18 @@
 #include "dr/dr_calc_view_work.h"
 #include "dr/dr_man.h"
 #include "dr/dr_mdo_ctl_seam.h"
+#include "dr/dr_mdo_mat.h"
 #include "dr/dr_res_mdo_seam_mem_man.h"
 #include "dr/dr_res_mdo_seam_parm_read.h"
 #include "dr/dr_res_mdo_seam_res.h"
+#include "dr/dr_res_mdo_seam_wrk_base.h"
 #include "dr/dr_res_mdo_seam_wrk_low.h"
 #include "mm_math/mm_vec3.h"
 #include "mtl/alloc_handle.h"
 #include "types.h"
 
 namespace ml {
-struct MdoWrkMatRes;
+class DrResMdoAlpTbl;
 
 DrMdoCtlSeamLowMap::DrMdoCtlSeamLowMap(int viewNum) : DrMdoCtlSeamBaseMap(viewNum) {}
 
@@ -121,6 +123,36 @@ void DrMdoCtlSeamLowMap::releaseFreeSeamLow(DrResMdoSeamWrkLow *low) {
   if (mem != nullptr) {
     low->unknown30 = nullptr;
     unknown6e0.releaseFreeObj(mem);
+  }
+}
+
+void DrMdoCtlSeamLowMap::createLowZPrePassDisplayList() {
+  unknownf8 &= ~0x40000000;
+  for (DrResMdoSeamWrkLow *low = unknown2c8.unknown10.unknown00; low != nullptr; low = low->unknown08) {
+    unknown30 = low->unknown28;
+    if (unknown30 == nullptr || !(low->unknown9c & 4)) {
+      continue;
+    }
+    s32 count = low->unknown78[0];
+    if (count == 0) {
+      continue;
+    }
+    changeSeamBaseMapMdlInfo();
+    DrResMdoAlpTbl *alpTbl = low->unknown40;
+    for (s32 i = 0; i < count; i++) {
+      for (unknown504 *entry = low->unknown58[i]; entry != nullptr; entry = &low->unknown38[entry->unknown04 - 1]) {
+        const MdsMdlInfoHeader *header = reinterpret_cast<const MdsMdlInfoHeader *>(unknown30->unknown18 + entry->unknown00);
+        if (entry->unknown0a & 2) {
+          unknownf8 |= 0x20000000;
+        } else {
+          unknownf8 &= ~0x20000000;
+        }
+        partsZPrePassRender(header, 0, 0, alpTbl, entry->unknown08);
+        if (entry->unknown04 == 0) {
+          break;
+        }
+      }
+    }
   }
 }
 

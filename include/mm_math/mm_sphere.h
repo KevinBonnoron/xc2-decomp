@@ -8,6 +8,8 @@
 
 namespace mm {
 
+struct Line2;
+
 class Sphere : public PrimBase {
 public:
   Sphere(const Mat44 &matrix) : PrimBase(PRIM_SPHERE) {
@@ -17,6 +19,8 @@ public:
   }
   void getOBB(Obb &obb) const override;
   void getAABB(Aabb &aabb) const override;
+  bool isCross(const Line2 &line) const;
+  u32 getCross(Vec3 &first, Vec3 &second, const Line2 &line) const;
   bool isCollide(const PrimBase &prim) const override;
 
   // __LINE__ must be 321 as in the original header: it is the line argument of the assert.

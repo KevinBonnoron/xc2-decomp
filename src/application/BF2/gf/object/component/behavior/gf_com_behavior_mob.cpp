@@ -49,8 +49,8 @@ namespace gf {
 void GfComBehaviorMob::BdatInfo::create(const CBdatWrapper &bdat, int id) {
   u16 reactionRange = bdat.getValCheck("ReactionRange", id, gmk::BDAT_TYPE_UNKNOWN_2);
   unknown00 = static_cast<f32>(reactionRange * reactionRange);
-  unknown04 = bdat.getValCheck("ReactionPercent", id, gmk::BDAT_TYPE_UNKNOWN_2);
-  unknown06 = bdat.getValCheck("ReactionMot", id, gmk::BDAT_TYPE_UNKNOWN_2);
+  unknown04_0 = bdat.getValCheck("ReactionPercent", id, gmk::BDAT_TYPE_UNKNOWN_2);
+  unknown06_0 = bdat.getValCheck("ReactionMot", id, gmk::BDAT_TYPE_UNKNOWN_2);
   unknown08 = bdat.getValCheck("BattleReaction", id, gmk::BDAT_TYPE_UNKNOWN_2);
   if (Bdat::getMember(bdat.unknown00, "BattleMot") != nullptr) {
     unknown0a = bdat.getValCheck("BattleMot", id, gmk::BDAT_TYPE_UNKNOWN_2);

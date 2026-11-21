@@ -56,6 +56,19 @@ DebDraw *unknown007;
 // Inferred role: vertex buffer handed to the render thread by the DebDrawCmd destructor; original name unknown.
 grlib::CGLibVtxVertex *unknown008;
 
+// Inferred role: vector rotated by the upper 3x3 of a matrix (each component sums vector.x * row 0, vector.y * row 1, vector.z * row 2 of its column), without the translation row; original name
+// unknown. Users: DebDraw::renderRealSphere (1.0.0: 0x710070a108, 101 instructions, no call: the game inlines it) and both loops of DebDraw::renderCapsule (0x710070b27c and 0x710070b388, no call
+// either). Forms tried without the helper in renderRealSphere: the rotated point in a local `mm::Vec3 point` before `add(...)` gives 101 instructions too, but the game's load of the virtual `add`
+// (ldr x24, [x8, #0x70]) before the sinf/cosf calls becomes a load after them (blr x8 against blr x24) and the registers differ; the three sums written inside the arguments of `add`, each repeating
+// sinf(angle) * radius, give 114 instructions. renderCapsule matches (196 instructions) with the helper and with the sums written out in both loops, so the helper is the form (decision 2026-11-14
+// #31, P4). DebDraw::renderCircle(const Mat44 &) (0x7100706f44, not matched) rotates a circle point the same way and adds the translation row: `unknown009(matrix, point) + Vec3(row 3)` gives its 89
+// instructions with another schedule, so it is not a user.
+mm::Vec3 unknown009(const mm::Mat44 &rotation, const mm::Vec3 &vector) {
+  return mm::Vec3(vector.x * rotation.rows[0][0] + vector.y * rotation.rows[1][0] + vector.z * rotation.rows[2][0],
+                  vector.x * rotation.rows[0][1] + vector.y * rotation.rows[1][1] + vector.z * rotation.rows[2][1],
+                  vector.x * rotation.rows[0][2] + vector.y * rotation.rows[1][2] + vector.z * rotation.rows[2][2]);
+}
+
 } // namespace
 
 void DebDraw::clrTex() {
@@ -1404,8 +1417,6 @@ void DebDraw::renderCapsule(f32 radius, f32 height, u32 division) {
       count = division;
     }
     mm::Vec3 offset(0.0f, radius * 0.5f, 0.0f);
-    // The axis is rotated by the matrix rows without a translation term, written out in both loops as the game does (no call:
-    // 0x710070b27c and 0x710070b388); a helper shared by the loops also matches but is not proven by anything.
     mm::Vec3 axis(0.0f, height, 0.0f);
     for (u32 i = 0; i < count; i++) {
       f32 angle = (6.2831855f / count) * i;
@@ -1413,18 +1424,14 @@ void DebDraw::renderCapsule(f32 radius, f32 height, u32 division) {
       for (int j = 0; j <= 8; j++) {
         mm::Mat44 rotation;
         rotation.setRotXYZ(mm::Vec3(j * 1.5707964f * 0.125f, angle, 0.0f));
-        mm::Vec3 point(axis.x * rotation.rows[0][0] + axis.y * rotation.rows[1][0] + axis.z * rotation.rows[2][0],
-                       axis.x * rotation.rows[0][1] + axis.y * rotation.rows[1][1] + axis.z * rotation.rows[2][1],
-                       axis.x * rotation.rows[0][2] + axis.y * rotation.rows[1][2] + axis.z * rotation.rows[2][2]);
+        mm::Vec3 point = unknown009(rotation, axis);
         point.y = fabsf(point.y);
         add(point + offset);
       }
       for (int j = 8; j >= 0; j--) {
         mm::Mat44 rotation;
         rotation.setRotXYZ(mm::Vec3(j * 1.5707964f * 0.125f, angle, 0.0f));
-        mm::Vec3 point(axis.x * rotation.rows[0][0] + axis.y * rotation.rows[1][0] + axis.z * rotation.rows[2][0],
-                       axis.x * rotation.rows[0][1] + axis.y * rotation.rows[1][1] + axis.z * rotation.rows[2][1],
-                       axis.x * rotation.rows[0][2] + axis.y * rotation.rows[1][2] + axis.z * rotation.rows[2][2]);
+        mm::Vec3 point = unknown009(rotation, axis);
         add(mm::Vec3(point.x, -fabsf(point.y), point.z) - offset);
       }
       end();
@@ -1447,6 +1454,24 @@ void DebDraw::renderOval(f32 width, f32 height) {
       add(upper);
       add(lower);
       add(bottom);
+      end();
+    }
+  }
+}
+
+// The game (1.0.0: 0x710070a108) calls CacheDraw first, then tests `cmp division, #1; b.lt` and `eor w8, w0, #1; tbz` as two branches. An explicit `division > 0 && !cached`
+// (the call kept in a local before it) is folded by clang into cmp/cset/and/cbz: 104 instructions against the game's 101. With only `if (!call)` around the loop, the
+// `division > 0` test is the guard of the rotated loop and the two branches come out as in the game.
+void DebDraw::renderRealSphere(f32 radius, int division) {
+  if (!unknown210->renderRealSphere(radius, division)) {
+    for (int i = 0; i < division; i++) {
+      mm::Mat44 rotation;
+      rotation.setRotY(i * 3.1415927f / division);
+      begin(3, division + 1);
+      for (int j = 0; j <= division; j++) {
+        f32 angle = j * 6.2831855f / division;
+        add(unknown009(rotation, mm::Vec3(sinf(angle) * radius, cosf(angle) * radius, 0.0f)));
+      }
       end();
     }
   }

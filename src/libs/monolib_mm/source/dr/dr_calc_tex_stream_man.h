@@ -43,7 +43,7 @@ public:
 
   DrCalcStmListObj *createTexStmListObj(const char *path);
   DrCalcStmListObj *createTexStmListObj(const char *path, const u8 *header);
-  DrCalcStmListObj *checkTexStmListObj(const char *path, u32 length);
+  DrCalcStmListObj *checkTexStmListObj(const char *path, u32 hash);
   DrCalcStmListObj *createBufferListObj(u32 size);
   void release();
   void setupMem(int count, u32 size, u32 limit);

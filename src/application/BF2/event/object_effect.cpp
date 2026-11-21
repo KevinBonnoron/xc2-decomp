@@ -4,10 +4,41 @@
 #include "event/data_manager.h"
 #include "event/effect_obj.h"
 #include "event/mani_manager.h"
+#include "event/memory_manager.h"
+#include "fw/fw_debug.h"
 #include "mm_math/mm_math.h"
 #include "mm_mtl/singleton.h"
+#include "mtl/alloc_handle.h"
 
 namespace event {
+
+// The body of resetAttach written out: the call (inline in the header, in this same unit, like in play) gives 133 instructions against the game's 134, a prologue that differs from the first
+// instruction (the game keeps one more register).
+ObjectEffect::ObjectEffect(const char *name) : Object(OBJTYPE_UNKNOWN_4, name) {
+  unknown68 = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) EffectObj(name);
+  unknownb0 = nullptr;
+  unknownc0 = nullptr;
+  unknownc8 = "";
+  unknownf0 = mm::Vec3::zero;
+  unknown100 = false;
+  unknown104 = static_cast<ATTACH_TYPE>(0);
+  unknown110 = mm::Mat44::identity;
+  unknown150.clear();
+}
+
+// Inferred helper: draws the box of an effect object at its position and rotation; original name unknown. The game inlines it in OnBouRender, OnManiRender and render
+// (0x71001178a0, 0x7100118988, 0x71001173f4): the rotation and the position are read before the six sinf and cosf calls of the matrix.
+static void unknown001(const mm::Vec3 &rotation, const mm::Vec3 &pos, const mm::Col4 &color) {
+  mm::Mat44 matrix;
+  matrix.unknown015(rotation);
+  matrix.setTrans(pos);
+  mm::Vec3 size(0.25f, 0.25f, 0.25f);
+  fw::debug::drawBoxLine(matrix, size, color);
+}
+
+void ObjectEffect::OnBouRender(const IBouCallback::RenderParam &param) { unknown001(getRot(), getPos(), param.color); }
+
+void ObjectEffect::OnManiRender(IManiCallback::RenderParam &param) { unknown001(getRot(), getPos(), param.unknown00); }
 
 ObjectEffect::~ObjectEffect() {
   if (unknown68 != nullptr) {

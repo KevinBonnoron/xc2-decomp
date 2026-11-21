@@ -7,7 +7,10 @@
 #include "gf/object/component/gf_component.h"
 #include "gf/object/component/property/gf_env_property.h"
 #include "mm_mtl/fixed_vector.h"
+#include "mm_mtl/intrusive_ptr.h"
+#include "mm_mtl/rtti.h"
 #include "mm_mtl/unique_ptr.h"
+#include "mm_mtl/vector.h"
 #include "types.h"
 
 namespace fw {
@@ -25,13 +28,8 @@ class SphericalCoordinatesIkSolver;
 class SpineRotateIKSolver;
 class TransLocalIkSolver;
 class RotateLocalIkSolver;
+class IkSolver;
 } // namespace fw
-
-namespace mm {
-namespace mtl {
-class RTTI;
-} // namespace mtl
-} // namespace mm
 
 namespace gf {
 
@@ -142,6 +140,16 @@ public:
   fw::BlowRotateIkSolver *createBlowRotateIkSolver(const char *boneName);
   void changeLayer(u32 oldLayer, u32 newLayer) override;
   const mm::mtl::RTTI *getRTTI() const override;
+
+  // Inferred helper: solver of a slot, null when it is not a T; original name unknown. Taking the component keeps the game's null test of the caller's getComponent<GfComIK>(), see
+  // UpdatableObject::getComponent.
+  template <typename T> T *unknown003(u32 slot) const {
+    const mm::mtl::IntrusivePtr<fw::IkSolver> &solver = unknown10.unknown10[slot];
+    if (solver.get() == nullptr) {
+      return nullptr;
+    }
+    return mm::mtl::dynamicCast<T>(solver.get());
+  }
 
   fw::IkResolver unknown10;             // Inferred role: ik resolver; original member name unknown.
   mm::mtl::UniquePtr<Ground> unknown48; // Inferred role: ground; original member name unknown.

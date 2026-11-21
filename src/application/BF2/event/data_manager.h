@@ -58,11 +58,11 @@ public:
                     mat.rows[0][2] * x + mat.rows[1][2] * y + mat.rows[2][2] * z + mat.rows[3][2]);
   }
 
-private:
   // Inferred helper: unknown001 on a matrix taken by value (the game keeps each getPosAxis/getTarAxis result in its own
   // stack slot, which a reference parameter would let the compiler share); original name unknown.
   static mm::Vec3 unknown002(mm::Mat44 mat, f32 x, f32 y, f32 z) { return unknown001(mat, x, y, z); }
 
+private:
   // Inferred helper: the point one unit along -z of the rotation (rotX, rotY), from pos; original name unknown.
   static mm::Vec3 unknown003(f32 rotX, f32 rotY, const mm::Vec3 &pos) {
     mm::Mat44 mat;

@@ -1,4 +1,7 @@
 // Original file name from the game string C:/Monolithsoft/BF2/prog/libs/skdlib/src/skdlib/composite/skd_calc_util.cpp.
+#include <float.h>
+#include <math.h>
+
 #include "anm/anm_array-inl.h"
 #include "anm/anm_pose.h"
 #include "anm/anm_qs_transform.h"
@@ -65,6 +68,23 @@ void CalcUtil::blendNode(f32 weight, NodeArray *nodes) {
   for (u32 i = 0; i < count; i++) {
     Node &node = nodes->unknown10[i];
     node.unknown50 = node.unknown50 * (1.0f - weight) + node.unknown70 * weight;
+  }
+}
+
+void CalcUtil::addForceSpring(const NodeArray &nodes, const anm::Array<ResSpringConstraint> &constraints, mm::mtl::Vector<mm::Vec3> *forces) {
+  u32 count = constraints.size();
+  for (u32 i = 0; i < count; i++) {
+    const ResSpringConstraint &constraint = constraints[i];
+    const Node &node0 = nodes.unknown10[constraint.unknown0c];
+    const Node &node1 = nodes.unknown10[constraint.unknown0e];
+    mm::Vec3 direction = node0.unknown00 - node1.unknown00;
+    f32 distance = sqrtf(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z);
+    if (distance > FLT_EPSILON) {
+      direction *= 1.0f / distance;
+    }
+    mm::Vec3 impulse = direction * ((distance - constraint.unknown08) * constraint.unknown10);
+    (*forces)[constraint.unknown0c] -= impulse;
+    (*forces)[constraint.unknown0e] += impulse;
   }
 }
 

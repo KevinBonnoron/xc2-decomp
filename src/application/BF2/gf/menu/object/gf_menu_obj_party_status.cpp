@@ -199,6 +199,22 @@ int GfMenuObjPartyStatus::openPartyStatus(u32 handle, int member) {
 // Inferred role: default button of each combo request slot; original name unknown.
 static const u32 unknown004[] = {4, 0x40, 0x80};
 
+// The game's first parameter (x1) is never read. `slot` and `params` are the game's two loads of the event (ldr w21 / ldr x20, 0x71004aebd0), made before the
+// isExitDriver call (0x71004aebe0): without `slot` the shifts reload event.unknown10 after the call (32 instructions), without `params` the parameters are
+// loaded after the call and `flags` is stored twice.
+void GfMenuObjPartyStatus::reciveHpEvent(u32 handle, const ui::EventData &event, int &flags) {
+  u32 slot = event.unknown10;
+  u64 params = event.unknown08_u64;
+  if (GfMenuObjUtil::isExitDriver(slot - 1)) {
+    flags |= 1 << slot;
+  } else {
+    flags &= ~(1 << slot);
+  }
+  if ((params & 0xffffefffffffffff) == 1) {
+    flags &= ~(1 << slot);
+  }
+}
+
 void GfMenuObjPartyStatus::setupComboReq(const ui::UIObjectAcc &acc, u16 index, u16 combo, bool isEnable, u16 effect, u32 button) {
   mm::mtl::FixStr<32> name;
   mm::mtl::FixStr<32> color;

@@ -35,11 +35,6 @@ void ReflectionValueFlag::writeDefaultFlag(u32 &flags) const {
   }
 }
 
-void ReflectionValueEnum::writeDefault(u8 *data) const {
-  int *destination = reinterpret_cast<int *>(data + unknown70);
-  *destination = unknown90;
-}
-
 void Reflection::setReflectionStruct(u32 index, ReflectionValueStruct *value) {
   if (unknown10[index] != nullptr) {
     unknown10[index]->release();

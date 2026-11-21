@@ -10,20 +10,25 @@
 #include "dr/dr_man.h"
 #include "dr/dr_mdl_base.h"
 #include "dr/dr_mdl_man.h"
+#include "dr/dr_mdo_ctl.h"
 #include "dr/dr_mdo_mat.h"
 #include "dr/dr_mdo_texture_man.h"
 #include "dr/dr_pixl_man.h"
+#include "dr/dr_pixl_occ_query.h"
 #include "dr/dr_pixl_shadow_cache_man.h"
 #include "dr/dr_pixl_shadow_cache_obj.h"
 #include "dr/dr_pixl_shadow_obj.h"
 #include "dr/dr_res_mdo_inst_mdl_info.h"
+#include "dr/dr_res_mdo_mat.h"
 #include "dr/dr_res_mdo_pnt_alpha.h"
 #include "dr/dr_res_mdo_pos.h"
 #include "dr/dr_res_mdo_pos_add_list.h"
 #include "dr/dr_res_mdo_sort.h"
 #include "dr/dr_res_mdo_tex_list.h"
 #include "dr/dr_res_mdo_vertex.h"
+#include "dr/dr_res_occ_uniform_obj.h"
 #include "dr/dr_res_wrk_clip_list.h"
+#include "mm_math/mm_col4.h"
 #include "mm_math/mm_vec3.h"
 #include "mtl/mem_manager.h"
 
@@ -257,6 +262,71 @@ void DrMdoCtlPos::createThicknessRenderFirstDisplayList() { createThicknessRende
 
 void DrMdoCtlPos::createThicknessRenderSecondDisplayList() { createThicknessRenderDisplayListSub(false); }
 
+void DrMdoCtlPos::callPosRender(u32 renderType) {
+  u32 count = unknown260;
+  if (count == 0) {
+    return;
+  }
+  MdoInstanceDrawArg arg;
+  arg.unknown0c = 0x34;
+  for (u32 i = 0; i < count; i++) {
+    const unknown020 &list = unknown2b0[i];
+    // The game loads the table pointer before the index (0x71008173a8): pointer arithmetic gives that order, the subscript operator loads the index first.
+    const MdsMdlTopHeader *top = unknown30->unknown168 + list.unknown0c;
+    s32 mode = (list.unknown08 & 1) + 1;
+    if (renderType == 8) {
+      mode = 2;
+    }
+    arg.unknown08 = list.unknown14;
+    arg.unknown20 = list.unknown10;
+    if ((top->unknown08 & 4) != 0) {
+      unknown30->unknown148->unknown20 = list.unknown12;
+      arg.unknown24 = list.unknown12;
+    }
+    if ((top->unknown08 & 0x20) != 0) {
+      arg.unknown2c = list.unknown0a;
+    }
+    s32 infoCount = top->unknown04;
+    arg.unknown00 = reinterpret_cast<const MdsMdlInfoHeader *>(unknown30->unknown18 + top->unknown00);
+    if (renderType == 1 || renderType == 8 || renderType == 0x20) {
+      arg.unknown10 = list.unknown00;
+      for (s32 j = 0; j < infoCount; j++, arg.unknown00++) {
+        // Same order for the material (0x7100817350, 0x7100817460): table pointer first, then the index; the subscript form changes the register of the table.
+        if ((arg.unknown00->unknown04 & renderType) != 0 && (unknown30->unknownc0 + arg.unknown00->unknown0e)->unknown08.a > 0.0f) {
+          if ((arg.unknown00->unknown00 & MdsMdlInfoHeader::FLAG_UNKNOWN_17) == 0 && (arg.unknown00->unknown04 & MdsMdlInfoHeader::PASS_FLAG_UNKNOWN_15) == 0) {
+            arg.unknown14 = list.unknown02;
+            arg.unknown18 = list.unknown04;
+            arg.unknown1c = list.unknown06;
+            arg.unknown28 = mode;
+          } else {
+            arg.unknown14 = list.unknown00;
+            arg.unknown18 = 0;
+            arg.unknown1c = 0;
+            arg.unknown28 = 0;
+          }
+          partsInstanceDefRender(arg);
+        }
+      }
+    } else {
+      s32 instanceCount = list.unknown00 - list.unknown06;
+      if (instanceCount != 0) {
+        // The game stores unknown28 twice here (0x7100817318 and 0x7100817330), the second one after unknown14.
+        arg.unknown28 = 0;
+        arg.unknown10 = instanceCount;
+        arg.unknown14 = list.unknown02;
+        arg.unknown18 = list.unknown04 - list.unknown06;
+        arg.unknown28 = 0;
+        arg.unknown1c = 0;
+        for (s32 j = 0; j < infoCount; j++, arg.unknown00++) {
+          if ((arg.unknown00->unknown04 & renderType) != 0 && (unknown30->unknownc0 + arg.unknown00->unknown0e)->unknown08.a > 0.0f) {
+            partsInstanceDefRender(arg);
+          }
+        }
+      }
+    }
+  }
+}
+
 void DrMdoCtlPos::callZpreePassRenderPosAll() {
   if ((unknownf8 & unknown028_20) == 0) {
     return;
@@ -338,6 +408,34 @@ void DrMdoCtlPos::callSpAlphaRenderPosAll() {
   callPosRender(0x40);
 }
 
+// 0x710081828c. Same body as DrResMdoSeamWrkInst::occRender (0x71008896d0), which holds the two render lists unrolled by Clang 3.9.1 as well.
+void DrMdoCtlPos::occRender() {
+  if (unknown2c0 != nullptr) {
+    DrPixlOccQuery *query = m_drMan->unknown78->unknown7f8;
+    DrResOccUniformObj *uniform = m_drMan->unknown88->unknown038;
+    for (unknown020 *info = unknown2c0; info != nullptr; info = info->unknown18) {
+      u32 index = info->unknown0c;
+      const s16 *posNum = &unknown30->unknown168[index].unknown28;
+      for (int type = 1; type < 3; type++) {
+        for (DrResMdoPos *pos = unknown270[type][index]; pos != nullptr; pos = pos->unknown10) {
+          u16 flags = pos->unknown1e;
+          if ((flags & 0xf) != 0) {
+            u32 bits = 0;
+            int count = 0;
+            for (int i = 0; i < *posNum; i++) {
+              if ((1 << i) & flags) {
+                bits |= 1 << i;
+                count++;
+              }
+            }
+            query->occRenderPosAABB(&pos->unknown00_1, uniform->getMatTbl(pos->unknown20), &bits, count);
+          }
+        }
+      }
+    }
+  }
+}
+
 void DrMdoCtlPos::callDisplistRender(int param) {}
 
 void DrMdoCtlPos::callDisplistPrePsssRender(int param) {}
@@ -356,6 +454,43 @@ void DrMdoCtlPos::shadowRender() {
   for (int i = 0; i < header->unknown2c; i++) {
     nomTreeShadowRenderMdl(&unknown1c8[i], shadow);
   }
+}
+
+bool DrMdoCtlPos::shadowCacheRender(DrPixlShadowCacheObj &cache) {
+  if ((unknown368 & cache.unknown8e8) != 0) {
+    return true;
+  }
+  if (unknown370 == 0) {
+    unknown370 = cache.unknown8e8;
+    unknown378 = 0;
+  } else if ((unknown370 & cache.unknown8e8) == 0) {
+    unknown370 = cache.unknown8e8;
+    unknown378 = 0;
+    return true;
+  }
+  if (unknown30->unknownc8 != nullptr) {
+    unknown001();
+    unknown30->unknownc8->beginVertexSetup();
+    unknownf4 = 6;
+    unknownf2 = 0;
+    if (cache.unknown808 & 0x10) {
+      unknown168 |= 0x80;
+    }
+    // The game zero-extends the signed id (ldrsh, uxtw) for the table index, as DrResMdoSeamWrkInst::seachShadowInstMapRender does with its u32 local.
+    u32 id = cache.unknown8f0;
+    unknown37c = DrPixlShadowCacheMan::SHADOW_CHECK_RANGE_TBL[id];
+    const unknown017 *header = unknown1a8;
+    for (int i = 0; i < header->unknown2c; i++) {
+      chankShadowRenderMdl(&unknown1c8[i], cache);
+    }
+    unknown168 &= ~0x80;
+  }
+  unknown378 = 0;
+  unknown370 = 0;
+  if ((cache.unknown808 & 8) == 0) {
+    unknown368 |= cache.unknown8e8;
+  }
+  return true;
 }
 
 void DrMdoCtlPos::nomTreeShadowRenderMdl(const MdsPosRangeTreeData *tree, DrPixlShadowObj *shadow) {

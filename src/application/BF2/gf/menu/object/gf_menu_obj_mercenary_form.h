@@ -78,10 +78,11 @@ public:
 
   class PresetListener : public ui::UIObjectListener {
   public:
-    PresetListener(GfMenuObjMercenaryForm *owner) : _0c(), unknown20(owner) {}
+    PresetListener(GfMenuObjMercenaryForm *owner) : unknown0c(0), _10(), unknown20(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x1c - 0x0c];
+    int unknown0c; // Inferred role: preset mode, 0 queues seqPresetSave and any other value seqPresetLoad (event 0x21 stores its first parameter, event 8 tests it); original member name unknown.
+    u8 _10[0x1c - 0x10];
     u8 _1c[0x20 - 0x1c];
     GfMenuObjMercenaryForm *unknown20; // Inferred role: owner; original member name unknown.
   };
@@ -183,6 +184,7 @@ static_assert(offsetof(GfMenuObjMercenaryForm::FormListener, unknown0c) == 0x0c,
 static_assert(offsetof(GfMenuObjMercenaryForm::FormListener, unknown10) == 0x10, "");
 static_assert(offsetof(GfMenuObjMercenaryForm::FormListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjMercenaryForm::ApplyListener, unknown0c) == 0x0c, "");
+static_assert(offsetof(GfMenuObjMercenaryForm::PresetListener, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfMenuObjMercenaryForm::BlImgListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjMercenaryForm::StartListener, unknown20) == 0x20, "");
 static_assert(sizeof(GfMenuObjMercenaryForm::MainListener) == 0x28, "");

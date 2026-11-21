@@ -15,6 +15,7 @@
 #include "grlib/cglib_render_target.h"
 #include "grlib/cglib_shader.h"
 #include "grlib/cglib_uni_base_utility.h"
+#include "grlib/shd_util.h"
 #include "mm_mtl/fixed_array.h"
 #include "mtl/alloc_handle.h"
 
@@ -110,5 +111,35 @@ void DrPixlPostObjMotionBlur::renderCalcBlur() {
   uniform.setUniformBlock();
   shdList->renderTriangle();
   unknown20->setColorInvalidate();
+}
+
+void DrPixlPostObjMotionBlur::lastRender() {
+  unknown08->unknown7f0->unknown138->setRenderTarget();
+  DrAPGxType::setupBlend(1);
+  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrShdDataObj *shader = shdList->unknown001();
+  shdList->bindTriangleTex();
+  shader->setupShader(0u);
+  grlib::CGLibUniformEtcUtility uniform(shader);
+  uniform.setUseUniformBlock("U_POST");
+  u32 scaleOffset = uniform.unknown001("gScal");
+  f32 height = static_cast<f32>(unknown20->unknownc0);
+  f32 width = static_cast<f32>(unknown20->unknownbc);
+  f32 scale[4];
+  scale[0] = (width - 1.0f) / width;
+  scale[1] = (height - 1.0f) / height;
+  scale[2] = 1.0f / (width + width);
+  scale[3] = 1.0f / (height + height);
+  // The game calls getBuff() and adds the byte offset itself (0x7100858dbc), without the offset test of setF32SetVec4. getBuff() returns u8 * (grlib,
+  // reserved), so the cast is the one of CGLibUniBaseUtility's own setters (cglib_uni_base_utility.cpp); no typed form adds a byte offset.
+  grlib::ShdF32SetVec4(reinterpret_cast<f32 *>(uniform.getBuff() + scaleOffset), scale);
+  uniform.updateData();
+  uniform.setUniformBlock();
+  int location = (shader->unknown38 + shader->unknown58)->getTextureLocation("s0");
+  DrAPCache *apCache = unknown00->unknown5c0;
+  apCache->beginTexSampling(2, 1);
+  apCache->setTexture(*unknown20->unknown70, location);
+  shdList->renderTriangle();
+  DrAPGxType::setupBlend(0);
 }
 } // namespace ml

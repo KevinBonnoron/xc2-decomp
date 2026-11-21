@@ -70,10 +70,11 @@ public:
     void create(const CBdatWrapper &bdat, int id);
 
     f32 unknown00; // Inferred role: squared reaction range; original member name unknown.
-    u16 unknown04; // Inferred role: reaction percent; original member name unknown.
-    u16 unknown06; // Inferred role: reaction motion; original member name unknown.
-    u16 unknown08; // Inferred role: battle reaction; original member name unknown.
-    u16 unknown0a; // Inferred role: battle motion; original member name unknown.
+    // The game tests both halves with one 32-bit load of 0x9c (GfComBehaviorMob::isStateCondMatch, 0x710052bde8: ldr w8,[x19,#0x9c] at 0x710052be94, then cmp #0x10000 and and #0xffff).
+    u32 unknown04_0 : 16; // Inferred role: reaction percent; original member name unknown.
+    u32 unknown06_0 : 16; // Inferred role: reaction motion; original member name unknown.
+    u16 unknown08;        // Inferred role: battle reaction; original member name unknown.
+    u16 unknown0a;        // Inferred role: battle motion; original member name unknown.
   };
 
   static mm::mtl::RTTI m_rtti;
@@ -123,13 +124,25 @@ public:
   mm::Vec3 &unknown005() { return unknown110; }
 
   // Inferred helper: reaction motion; original name unknown.
-  u16 unknown006() const { return unknown98.unknown06; }
+  u16 unknown006() const { return unknown98.unknown06_0; }
 
   // Inferred helper: battle motion; original name unknown.
   u16 unknown007() const { return unknown98.unknown0a; }
 
   // Inferred helper: battle reaction; original name unknown.
   u16 unknown008() const { return unknown98.unknown08; }
+
+  // Inferred helper: squared reaction range; original name unknown.
+  f32 unknown014() const { return unknown98.unknown00; }
+
+  // Inferred helper: reaction percent; original name unknown.
+  u16 unknown015() const { return unknown98.unknown04_0; }
+
+  // Inferred helper: squared distance to the player on the ground plane; original name unknown.
+  f32 unknown016() const { return unknown53d0; }
+
+  // Inferred helper: squared height difference to the player; original name unknown.
+  f32 unknown017() const { return unknown53d4; }
 
   // Inferred helper: squad of the squad navi; original name unknown.
   gmk::GmkSquad *unknown009() const { return unknownc0.unknown10.unknown00; }

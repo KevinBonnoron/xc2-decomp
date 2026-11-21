@@ -6,11 +6,13 @@
 #include "gf/data/gf_bdat_msg.h"
 #include "gf/data/gf_bdat_rsc.h"
 #include "gf/data/gf_data_blade.h"
+#include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_game.h"
 #include "gf/data/gf_data_manager.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/data/gf_object_type.h"
+#include "ml/rand.h"
 #include "mm_mtl/fixstr.h"
 
 namespace gf {
@@ -38,6 +40,167 @@ void GfDataEnemy::setupGameParamForLevel(SDataEnemy &dataEnemy, u32 level) {
   dataEnemy.unknownb6 = static_cast<u32>(agility * (dataEnemy.unknown58 * unknown015));
   dataEnemy.unknownb8 = static_cast<u32>(luck * (dataEnemy.unknown5a * unknown015));
   dataEnemy.unknowna8 = level;
+}
+
+void GfDataEnemy::setupSDataEnemy(SDataEnemy &dataEnemy, u32 arrange, u32 level) {
+  GfBdatChrEnArrange *bdatArrange = GfBdatChrEnArrange::get();
+  dataEnemy.unknown00 = arrange;
+  dataEnemy.unknown08 = bdatArrange->getChrEnArrangeParamID(arrange);
+  dataEnemy.unknown0a = bdatArrange->getChrEnArrangeBladeID(arrange);
+  dataEnemy.unknown0c = bdatArrange->getChrEnArrangeName(arrange);
+  dataEnemy.unknown0e = bdatArrange->getChrEnArrangeLv(arrange);
+  dataEnemy.unknown10 = bdatArrange->getChrEnArrangeExpRev(arrange);
+  dataEnemy.unknown12 = bdatArrange->getChrEnArrangeGoldRev(arrange);
+  dataEnemy.unknown14 = bdatArrange->getChrEnArrangeDropTableID(arrange);
+  dataEnemy.unknown16 = bdatArrange->getChrEnArrangeDropTableID2(arrange);
+  dataEnemy.unknown18 = bdatArrange->getChrEnArrangeDropTableID3(arrange);
+  dataEnemy.unknown1a = bdatArrange->getChrEnArrangePreciousID(arrange);
+  dataEnemy.unknown1c = bdatArrange->getChrEnArrangeScale(arrange);
+  dataEnemy.unknown1e = bdatArrange->getChrEnArrangeChrSize(arrange);
+  if (bdatArrange->isChrEnArrangeFlagNamed(arrange)) {
+    dataEnemy.unknown04 |= ENEMY_FLAG_UNKNOWN_0;
+  } else {
+    dataEnemy.unknown04 &= ~ENEMY_FLAG_UNKNOWN_0;
+  }
+  if (bdatArrange->isChrEnArrangeFlagmBoss(arrange)) {
+    dataEnemy.unknown04 |= ENEMY_FLAG_UNKNOWN_1;
+  } else {
+    dataEnemy.unknown04 &= ~ENEMY_FLAG_UNKNOWN_1;
+  }
+  if (bdatArrange->isChrEnArrangeFlagFAOff(arrange)) {
+    dataEnemy.unknown04 |= ENEMY_FLAG_UNKNOWN_2;
+  } else {
+    dataEnemy.unknown04 &= ~ENEMY_FLAG_UNKNOWN_2;
+  }
+  if (bdatArrange->isChrEnArrangeFlagNoEcSkip(arrange)) {
+    dataEnemy.unknown04 |= ENEMY_FLAG_UNKNOWN_3;
+  } else {
+    dataEnemy.unknown04 &= ~ENEMY_FLAG_UNKNOWN_3;
+  }
+  if (bdatArrange->isChrEnArrangeFlagLinkType(arrange)) {
+    dataEnemy.unknown04 |= ENEMY_FLAG_UNKNOWN_4;
+  } else {
+    dataEnemy.unknown04 &= ~ENEMY_FLAG_UNKNOWN_4;
+  }
+  dataEnemy.unknown1f = bdatArrange->getChrEnArrangeLinkRadius(arrange);
+  dataEnemy.unknown20 = bdatArrange->getChrEnArrangeDetects(arrange);
+  dataEnemy.unknown22 = bdatArrange->getChrEnArrangeSearchRange(arrange);
+  dataEnemy.unknown24 = bdatArrange->getChrEnArrangeSearchAngle(arrange);
+  dataEnemy.unknown26 = bdatArrange->getChrEnArrangeSearchRadius(arrange);
+  dataEnemy.unknown27 = bdatArrange->getChrEnArrangeBatArea(arrange);
+  dataEnemy.unknown29 = bdatArrange->getChrEnArrangeAiGroup(arrange);
+  dataEnemy.unknown2a = bdatArrange->getChrEnArrangeAiGroupNum(arrange);
+  dataEnemy.unknown2c = bdatArrange->getChrEnArrangeBookID(arrange);
+  dataEnemy.unknown2e = bdatArrange->getChrEnArrangeEnhanceID1(arrange);
+  dataEnemy.unknown30 = bdatArrange->getChrEnArrangeEnhanceID2(arrange);
+  dataEnemy.unknown32 = bdatArrange->getChrEnArrangeEnhanceID3(arrange);
+  dataEnemy.unknown34 = bdatArrange->getChrEnArrangeParamRev(arrange);
+  dataEnemy.unknown36 = bdatArrange->getChrEnArrangeRstDebuffRev(arrange);
+  dataEnemy.unknown38 = bdatArrange->getChrEnArrangeHealPotTypeRev(arrange);
+  dataEnemy.unknown3a = bdatArrange->getChrEnArrangeSummonID(arrange);
+  dataEnemy.unknown3c = bdatArrange->getChrEnArrangeBGMID(arrange);
+  dataEnemy.unknown3d = bdatArrange->getChrEnArrangeSeEnvID(arrange);
+  dataEnemy.unknown3e = bdatArrange->getChrEnArrangeZoneID(arrange);
+  dataEnemy.unknown41 = bdatArrange->getChrEnArrangeBladeAtr(arrange);
+  dataEnemy.unknown42 = bdatArrange->getChrEnArrangeExtraParts(arrange);
+  GfBdatChrEnParam *bdatParam = GfBdatChrEnParam::get();
+  u32 param = dataEnemy.unknown08;
+  dataEnemy.unknown44 = bdatParam->getChrEnParamResourceID(param);
+  dataEnemy.unknown46 = bdatParam->getChrEnParamAiID(param);
+  dataEnemy.unknown48 = bdatParam->getChrEnParamEnemyRole(param);
+  dataEnemy.unknown49 = bdatParam->getChrEnParamWalkSpeed(param);
+  dataEnemy.unknown4a = bdatParam->getChrEnParamRunSpeed(param);
+  dataEnemy.unknown4b = bdatParam->getChrEnParamBtlSpeed(param);
+  dataEnemy.unknown4c = bdatParam->getChrEnParamHpDefault(param);
+  dataEnemy.unknown4d = bdatParam->getChrEnParamHpLimit(param);
+  dataEnemy.unknown4e = bdatParam->getChrEnParamScoutStartHp(param);
+  dataEnemy.unknown4f = bdatParam->getChrEnParamScoutEndHp(param);
+  dataEnemy.unknown50 = bdatParam->getChrEnParamHpMaxRev(param);
+  dataEnemy.unknown52 = bdatParam->getChrEnParamStrengthRev(param);
+  dataEnemy.unknown54 = bdatParam->getChrEnParamPowEtherRev(param);
+  dataEnemy.unknown56 = bdatParam->getChrEnParamDexRev(param);
+  dataEnemy.unknown58 = bdatParam->getChrEnParamAgilityRev(param);
+  dataEnemy.unknown5a = bdatParam->getChrEnParamLuckRev(param);
+  dataEnemy.unknown5c = bdatParam->getChrEnParamParmor(param);
+  dataEnemy.unknown5e = bdatParam->getChrEnParamEarmor(param);
+  dataEnemy.unknown60 = bdatParam->getChrEnParamRstPower(param);
+  dataEnemy.unknown61 = bdatParam->getChrEnParamRstEther(param);
+  dataEnemy.unknown62 = bdatParam->getChrEnParamAtr(param);
+  dataEnemy.unknown63 = bdatParam->getChrEnParamCriticalRate(param);
+  dataEnemy.unknown64 = bdatParam->getChrEnParamGuardRate(param);
+  if (bdatParam->isChrEnParamFlagGrdDirFront(param)) {
+    dataEnemy.unknown04 |= ENEMY_FLAG_UNKNOWN_5;
+  } else {
+    dataEnemy.unknown04 &= ~ENEMY_FLAG_UNKNOWN_5;
+  }
+  if (bdatParam->isChrEnParamFlagGrdDirLeft(param)) {
+    dataEnemy.unknown04 |= ENEMY_FLAG_UNKNOWN_6;
+  } else {
+    dataEnemy.unknown04 &= ~ENEMY_FLAG_UNKNOWN_6;
+  }
+  if (bdatParam->isChrEnParamFlagGrdDirRight(param)) {
+    dataEnemy.unknown04 |= ENEMY_FLAG_UNKNOWN_7;
+  } else {
+    dataEnemy.unknown04 &= ~ENEMY_FLAG_UNKNOWN_7;
+  }
+  if (bdatParam->isChrEnParamFlagGrdDirBack(param)) {
+    dataEnemy.unknown04 |= ENEMY_FLAG_UNKNOWN_8;
+  } else {
+    dataEnemy.unknown04 &= ~ENEMY_FLAG_UNKNOWN_8;
+  }
+  if (bdatParam->isChrEnParamFlagFldDmgType(param)) {
+    dataEnemy.unknown04 |= ENEMY_FLAG_UNKNOWN_9;
+  } else {
+    dataEnemy.unknown04 &= ~ENEMY_FLAG_UNKNOWN_9;
+  }
+  dataEnemy.unknown65 = bdatParam->getChrEnParamHealPotDrop(param);
+  dataEnemy.unknown66 = bdatParam->getChrEnParamRstFiCombo(param);
+  dataEnemy.unknown68 = bdatParam->getChrEnParamIvdFiCombo(param);
+  dataEnemy.unknown6a = bdatParam->getChrEnParamAura(param);
+  dataEnemy.unknown6c = bdatParam->getChrEnParamDyingHP(param);
+  dataEnemy.unknown6d = bdatParam->getChrEnParamWTNormal(param);
+  dataEnemy.unknown6e = bdatParam->getChrEnParamWTDying(param);
+  dataEnemy.unknown6f = bdatParam->getChrEnParamHate0Target(param);
+  dataEnemy.unknown70 = bdatParam->getChrEnParamDeathArts(param);
+  dataEnemy.unknown74 = bdatParam->getChrEnParamDeathArtsStop(param);
+  for (u32 index = 0; index < 16; index++) {
+    dataEnemy.unknown78[index] = bdatParam->getChrEnParamArtsNum(param, index);
+  }
+  GfBdatRsc *bdatRsc = GfBdatRsc::get();
+  u32 resource = dataEnemy.unknown44;
+  dataEnemy.unknown98 = bdatRsc->getRscEnTypeFamily(resource);
+  dataEnemy.unknown99 = bdatRsc->getRscEnTypeGenus(resource);
+  dataEnemy.unknown9a = bdatRsc->getRscEnActType(resource);
+  dataEnemy.unknown9b = bdatRsc->getRscEnFldMoveType(resource);
+  dataEnemy.unknown9c = bdatRsc->getRscEnMemorySlot(resource);
+  if (bdatRsc->isRscEnFlagNoCamera(resource)) {
+    dataEnemy.unknown04 |= ENEMY_FLAG_UNKNOWN_11;
+  } else {
+    dataEnemy.unknown04 &= ~ENEMY_FLAG_UNKNOWN_11;
+  }
+  if (bdatRsc->isRscEnFlagWeaponDrawDisp(resource)) {
+    dataEnemy.unknown04 |= ENEMY_FLAG_UNKNOWN_12;
+  } else {
+    dataEnemy.unknown04 &= ~ENEMY_FLAG_UNKNOWN_12;
+  }
+  for (u32 index = 0; index < 5; index++) {
+    dataEnemy.unknown9e[index] = bdatRsc->getRscEnWeaponNum(resource, index);
+  }
+  if (bdatRsc->isRscEnGenusFlaggimmicktype(dataEnemy.unknown99)) {
+    dataEnemy.unknown04 |= ENEMY_FLAG_UNKNOWN_10;
+  } else {
+    dataEnemy.unknown04 &= ~ENEMY_FLAG_UNKNOWN_10;
+  }
+  u32 driverLevel = bdatArrange->getChrEnArrangeDriverLev(arrange);
+  if (driverLevel != 0) {
+    level = GfDataDriver::getLevel(driverLevel);
+  }
+  u32 levelRand = bdatArrange->getChrEnArrangeLvRand(arrange);
+  if (levelRand != 0) {
+    u32 random = ml::mtRand(levelRand + 1);
+    level = random + level < 1000 ? random + level : 999;
+  }
+  setupGameParamForLevel(dataEnemy, level);
 }
 
 const char *GfDataEnemy::getName(u32 arrange) {

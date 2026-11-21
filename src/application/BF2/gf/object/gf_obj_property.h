@@ -222,7 +222,7 @@ public:
 
   GfObjPropertyBlade(GF_OBJ_HANDLE *handle) : GfObjProperty(handle, &unknown88, &unknownc0), unknown1b4(0) {
     unknown88.unknown002();
-    unknown190.assign(unknown109());
+    unknown190.assign(unknown110());
     unknown1a4 = 0;
     unknown1a8 = 0;
     unknown1ac = 0.0f;
@@ -231,7 +231,7 @@ public:
 
   GfObjPropertyCharacter unknown88;              // Inferred role: character, pointed to by unknown10; original member name unknown.
   unknown070 unknownc0;                          // Inferred role: move, pointed to by unknown18; original member name unknown.
-  mm::mtl::FixedArray<unknown109, 3> unknown190; // Inferred role: field skills copied from SDataBlade::unknownae by GfGameUtil::flushProperty; original member name unknown.
+  mm::mtl::FixedArray<unknown110, 3> unknown190; // Inferred role: field skills copied from SDataBlade::unknownae by GfGameUtil::flushProperty; original member name unknown.
   int unknown1a4;                                // Inferred role: kizuna value, read by GfMenuGfObjAdapter::update_BL_Kizuna; original member name unknown.
   u32 unknown1a8;                                // Inferred role: special level, read by GfMenuGfObjAdapter::update_BL_SpecialLv; original member name unknown.
   f32 unknown1ac;                                // Inferred role: special gauge ratio; original member name unknown.

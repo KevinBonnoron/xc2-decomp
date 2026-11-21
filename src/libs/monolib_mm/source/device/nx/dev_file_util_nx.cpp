@@ -16,23 +16,6 @@ s64 DevFileUtilNx::getFileSize(nn::fs::FileHandle &handle) {
   return result.IsSuccess() ? size : -1;
 }
 
-namespace {
-
-// Inferred role: file handle closed on scope exit; original type name unknown.
-struct unknown002 {
-  ~unknown002() {
-    if (isOpen) {
-      isOpen = false;
-      nn::fs::CloseFile(handle);
-    }
-  }
-
-  nn::fs::FileHandle handle;
-  bool isOpen;
-};
-
-} // namespace
-
 s64 DevFileUtilNx::getFileSize(const char *path) {
   unknown002 file;
   file.isOpen = nn::fs::OpenFile(&file.handle, path, 1).IsSuccess();

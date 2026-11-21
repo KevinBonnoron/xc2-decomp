@@ -39,6 +39,7 @@ enum VibrationID : int {
   VIBRATION_ID_UNKNOWN_8 = 8,
   VIBRATION_ID_UNKNOWN_9 = 9,
   VIBRATION_ID_UNKNOWN_10 = 10,
+  VIBRATION_ID_UNKNOWN_11 = 11,
   VIBRATION_ID_UNKNOWN_13 = 13,
   VIBRATION_ID_UNKNOWN_14 = 14,
   VIBRATION_ID_UNKNOWN_15 = 15,
@@ -145,7 +146,15 @@ public:
 class IPadListener;
 
 struct PadConfigData {
-  u8 _00[0x54 - 0x00];
+  // Identity mapping: the function-local static of PadManager::getConfigData (1.0.0: 0x71001947a0, guard-initialised) is built by this
+  // loop, so it is a constructor, not a constant table; PadManager::config (1.0.0: 0x7100194b28) starts from the same values.
+  PadConfigData() {
+    for (int i = 0; i < 21; i++) {
+      unknown00[i] = i;
+    }
+  }
+
+  int unknown00[21]; // Inferred role: button id mapped to each button id; original member name unknown.
 };
 
 static_assert(sizeof(PadConfigData) == 0x54, "");

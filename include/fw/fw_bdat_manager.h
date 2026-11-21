@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "framework/lang_util.h"
 #include "framework/manager_object.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/map.h"
@@ -35,7 +36,9 @@ public:
 
     // Layout evidence: loadBdat (0x7100153048), loadBdatFromMemory (0x7100153920) and unregistBdat (0x7100152ecc) clear and fill one
     // element in these members: the three FixStr (characters at 0x04, 0x108 and 0x12c, lengths at 0x104, 0x128 and 0x13c) and the
-    // members at 0x00, 0x140, 0x148, 0x150, 0x158 and 0x160.
+    // members at 0x00, 0x140, 0x148, 0x150, 0x158 and 0x160. The copy constructor (0x7100153578, C2 only: implicit, emitted for its
+    // user reloadBdat) copies the strings one by one, the 16 bytes 0x140-0x14f and the 9 bytes 0x158-0x160 as memory blocks, and
+    // 0x150 apart (mtl::ALLOC_HANDLE has a user-provided copy constructor): no member covers 0x161-0x167, which is tail padding.
     struct BdatInfo {
       State unknown00;                // Inferred role: state; original member name unknown.
       mm::mtl::FixStr<256> unknown04; // Inferred role: file path; original member name unknown.
@@ -46,7 +49,6 @@ public:
       mtl::ALLOC_HANDLE unknown150;   // Inferred role: allocator handle, a copy of the handle passed to loadBdat; original member name unknown.
       ml::FileResTh *unknown158;      // Inferred role: loading data; original member name unknown.
       bool unknown160;                // Inferred role: data given by the caller; original member name unknown.
-      u8 _161[0x168 - 0x161];
     };
 
     // Sheet registered by updateLayer (0x7100153684) under the CRC of its name, and read back by getFp
@@ -62,12 +64,26 @@ public:
     static const u32 BDAT_UNKNOWN_16 = 16; // Inferred role: maximum number of registered bdat files; original name unknown.
 
     static bool isMsgFile(const char *name);
-    void makePath(mm::mtl::FixStr<256> &path, const char *name);
+    // Defined in the class: the game passes `this` to it from loadBdat (0x710015311c: `mov x0, x19`) although the body never reads it.
+    // Measured with clang 3.9: defined out of line in the unit, the call no longer sets x0 (loadBdat has 173 instructions against the
+    // game's 174); defined in the class (an inline function, emitted as a weak copy) it keeps the argument and gives the 90
+    // instructions of 0x7100152c60. The game computes the length of `name` and checks it against the capacity once in each arm, then
+    // both arms join in the shared strcat of the tail: written as `if (...) { lang; "/"; } path += name;` it has 77 instructions, so
+    // `path += name` is written in both arms.
+    void makePath(mm::mtl::FixStr<256> &path, const char *name) {
+      if (isMsgFile(name)) {
+        path += LangUtil::getLangFolder().c_str();
+        path += "/";
+        path += name;
+      } else {
+        path += name;
+      }
+    }
     ~Impl();
     void unregistBdat(int id);
     bool loadBdat(int id, mtl::ALLOC_HANDLE handle, const char *path);
-    void reloadBdat(int id);
-    void loadBdatFromMemory(int id, mtl::ALLOC_HANDLE handle, void *data, size_t size, const char *name);
+    bool reloadBdat(int id);
+    bool loadBdatFromMemory(int id, mtl::ALLOC_HANDLE handle, void *data, size_t size, const char *name);
     void loadBdatFromMemory(int id, void *data);
     void unregistBdat(const char *name);
     int find(const char *name) const;

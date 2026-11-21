@@ -459,6 +459,28 @@ void GfMenuObjMainMenu2::refreshCharChangeBl(ui::UIObjectAcc &acc, GfMenuBladeLi
   }
 }
 
+void GfMenuObjMainMenu2::closeChrChangeSub(ui::UIObjectAcc &acc, ChrChangeParam &param) {
+  u32 layer;
+  if (param.unknown00 == 0) {
+    layer = acc.searchChild("LAY_chr_change_dr");
+  } else {
+    layer = acc.searchChild("LAY_chr_change_bl");
+  }
+  GfMenuObjUtil::CtrlParam ctrl;
+  ctrl.unknown004("fade_out_r");
+  ctrl.unknown11 = true;
+  ctrl.unknown14 = 10;
+  ctrl.unknown04 = 2;
+  int hook = GfMenuObjUtil::startCtrl(layer, ctrl, nullptr);
+  GfMenuObjUtil::startCtrl(acc.searchChild("LAY_chr_change_input"), ctrl, nullptr);
+  ctrl = GfMenuObjUtil::CtrlParam();
+  ctrl.unknown08 = 2;
+  ctrl.unknown00 = 0.2f;
+  GfMenuObjUtil::startCtrl(acc.searchChild("IMG_chr_change_base"), ctrl, nullptr);
+  GfMenuObject::hookCtrlEvent(acc.unknown10, hook);
+  GfMenuObject::disableInput(acc.unknown10);
+}
+
 void GfMenuObjMainMenu2::inputChrChangeSub(ui::UIObjectAcc &acc, ChrChangeParam &param, int index) {
   switch (param.unknown00) {
   case 0:

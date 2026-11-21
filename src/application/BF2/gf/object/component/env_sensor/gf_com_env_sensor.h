@@ -4,6 +4,7 @@
 #include "framework/sensor/sensor_manager.h"
 #include "fw/fw_param_manager.h"
 #include "gf/object/component/gf_component.h"
+#include "gf/object/gf_obj_handle.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_plane.h"
 #include "mm_math/mm_vec3.h"
@@ -30,8 +31,8 @@ struct GfEnvProperty;
 
 // Layout evidence: GfComEnvSensor::GfComEnvSensor() constructs the sensor at +0x10 and the next member at +0x2b0;
 // EnviromentSensor::EnviromentSensor() clears +0x20, constructs VerticalData at +0x30 and a GroundInfo at +0x1f0 and
-// stores 1.0f at +0x290; GroundInfo::GroundInfo() and VerticalData::VerticalData() store the fields below (none of the
-// three constructors is reconstructed: the game has no complete-object symbol for GroundInfo's).
+// stores 1.0f at +0x290; GroundInfo::GroundInfo() and VerticalData::VerticalData() store the fields below
+// (VerticalData::VerticalData() is declared only: it is not reconstructed yet, its operand order of the plane distance differs).
 // The info offsets are the ones StateUtil::get*Info() add to the sensor, selected by a bit of the state word at +0x24.
 class EnviromentSensor {
 public:
@@ -40,6 +41,11 @@ public:
   enum Flag {};
 
   struct GroundInfo {
+    // Inline: the game only has the base object constructor symbol (C2) of this one, called out of line by VerticalData::VerticalData() and EnviromentSensor::EnviromentSensor().
+    GroundInfo() : unknown00(mm::Vec3::zero), unknown30(0), unknown38(unknown020), unknown40(mm::Vec3::zero), unknown50(mm::Col4::white), unknown60(0) {
+      unknown10.set(mm::Vec3::unitY, mm::Vec3::zero);
+    }
+
     mm::Vec3 unknown00;       // Inferred role: position; original member name unknown.
     mm::Plane unknown10;      // Inferred role: plane; original member name unknown.
     u64 unknown30;            // Inferred role: flags, bit 5 is the slide flag; original member name unknown.
@@ -162,6 +168,8 @@ public:
 
   // Layout evidence: VerticalData::VerticalData() initializes the water info at +0x70 and the ceiling info at +0xe0.
   struct VerticalData : GroundInfo {
+    VerticalData();
+
     unknown001 unknown70; // Inferred role: water info; original member name unknown.
     unknown002 unknownb0; // Inferred role: dead plane info; original member name unknown.
     unknown005 unknowne0; // Inferred role: ceiling info; original member name unknown.

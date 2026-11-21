@@ -6,6 +6,10 @@
 namespace gf {
 
 struct AchievQuest {
+  // Evidence: GfBladeCreateInfo::GfBladeCreateInfo (0x71003011a4) zeroes the 0x1a bytes from the quest to the achievement of each of the 50 quests of its ten achievements (0x404-0x41e, ...) and not
+  // the padding after them.
+  AchievQuest() : unknown04(0), unknown08(0), unknown0c(0), unknown0e(0), unknown10(0), unknown12(0), unknown14(0), unknown16(0), unknown18(0) {}
+
   void setTaskComplete(bool isFirst, bool isComplete);
   void setCountComplete();
   bool isCountComplete() const;
@@ -29,7 +33,7 @@ struct AchievQuest {
   u16 unknown16;     // Inferred role: blade; original member name unknown.
   u16 unknown18; // Inferred role: achievement; original member name unknown. Evidence: GfDataBlade::setupAchievInfo stores the achievement id at +0x18 of each quest and GfDataBlade::getKizunaringMax
                  // tests it.
-  u8 _1a[0x1c - 0x1a];
+  // The two padding bytes after unknown18 are no member: the game copies the quest in 0x1a bytes (GfBladeCreate::setupSDataBlade, 0x7100301fd4).
 };
 
 static_assert(offsetof(AchievQuest, unknown0c) == 0x0c, "");

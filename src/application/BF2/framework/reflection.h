@@ -87,7 +87,15 @@ public:
 static_assert(offsetof(ReflectionValueFlag, unknown78) == 0x78, "");
 static_assert(offsetof(ReflectionValueFlag, unknown7c) == 0x7c, "");
 
-class ReflectionValueEnumElem : public ReflectionValue {};
+class ReflectionValueEnumElem : public ReflectionValue {
+public:
+  ReflectionValueEnumElem(const char *name, int value) : ReflectionValue(name, static_cast<ValueType>(11)), unknown78(value) {}
+
+  int unknown78; // Inferred role: element value; original member name unknown.
+};
+
+static_assert(offsetof(ReflectionValueEnumElem, unknown78) == 0x78, "");
+static_assert(sizeof(ReflectionValueEnumElem) == 0x80, "");
 
 class ReflectionValueStruct : public ReflectionValue {
 public:
@@ -135,6 +143,11 @@ static_assert(offsetof(ReflectionValueBitset32, unknown78) == 0x78, "");
 
 class ReflectionValueEnum : public ReflectionValue {
 public:
+  ReflectionValueEnum(const char *name, s64 offset) : ReflectionValue(name, static_cast<ValueType>(10), offset), unknown90(0) { unknown68 = 4; }
+  void add(ReflectionValueEnumElem *element) {
+    element->addRef();
+    unknown78.push_back(element);
+  }
   ~ReflectionValueEnum() override {
     while (!unknown78.empty()) {
       ReflectionValueEnumElem *value = unknown78.begin().get();
@@ -142,7 +155,12 @@ public:
       value->release();
     }
   }
-  void writeDefault(u8 *data) const override;
+  // Defined here like the destructor: the game emits it with the destructors in the unit of PcColiParam::createReflection (1.0.0: 0x71005bb7d0, between
+  // ~ReflectionValueEnum and ~ReflectionValueEnumElem).
+  void writeDefault(u8 *data) const override {
+    int *destination = reinterpret_cast<int *>(data + unknown70);
+    *destination = unknown90;
+  }
 
   mm::mtl::IntrusiveList<ReflectionValueEnumElem> unknown78; // Inferred role: elements; original member name unknown.
   int unknown90;                                             // Inferred role: default value; original member name unknown.

@@ -58,7 +58,9 @@ void VoiceManager::preload(f32 frame, const char *name) {
 // The original source repeats the statements of play() here instead of calling it: the game's playAuto
 // (0x71000f517c, 159 instructions) holds them with Extend::wav inlined, which play() itself (0x71000fccec) calls.
 // `return play(path, delay, event)` gives 26 instructions, and play() forced inline gives 123 (wav stays a call);
-// both files are in the event unit, and no flag or inline threshold gives the game's code.
+// no flag or inline threshold gives the game's code. Unit: this file is not the game's unit for playAuto: the game places it inside the TextManager block, right after
+// TextManager::play (0x71000f46fc), its only caller (bl at 0x71000f503c), far from the VoiceManager block (0x71000fc854 to 0x71000fd264). A callee defined in this file therefore
+// cannot be what the game inlines there; [INFERENCE] playAuto is emitted with TextManager, like a header function, and play() is visible in that unit (audit 2026-11-21).
 bool VoiceManager::playAuto(const char *name, f32 delay, IVoiceEvent *event) {
   if ((unknown10 & FLAG_UNKNOWN_0) == 0) {
     return false;

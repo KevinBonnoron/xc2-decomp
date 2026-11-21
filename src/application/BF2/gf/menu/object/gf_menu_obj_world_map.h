@@ -82,13 +82,13 @@ public:
     GfMenuObjWorldMap *unknown20; // Inferred role: owner; original member name unknown.
   };
 
-  // Not matched yet (PointSelectListener::reciveEvent has a blocker); declared for the constructor inlined by initialize.
   class PointSelectListener : public ui::UIObjectListener {
   public:
-    PointSelectListener(GfMenuObjWorldMap *owner) : _0c(), unknown20(owner) {}
+    PointSelectListener(GfMenuObjWorldMap *owner) : unknown0c(0), _10(), unknown20(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x1c - 0x0c];
+    int unknown0c; // Inferred role: point selected flag; original member name unknown.
+    u8 _10[0x1c - 0x10];
     GfMenuObjWorldMap *unknown20; // Inferred role: owner; original member name unknown.
   };
 
@@ -144,6 +144,7 @@ public:
   void loadTex();
   static bool isEnableJump(const MenuZoneMapInfo &info);
   void clearTex();
+  u32 refreshZoneMap(int index);
   static void refreshPointText(ui::UIObjectAcc &acc, GfMenuZoneMapList *list, ui::UISelectObjList *objects);
   int getTotalFieldSkillLv(u32 skill);
   void refreshIconFilter();
@@ -214,6 +215,7 @@ static_assert(offsetof(GfMenuObjWorldMap::MapSelectListener, unknown0c) == 0x0c,
 static_assert(offsetof(GfMenuObjWorldMap::MapSelectListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjWorldMap::ZoneSelectListener, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfMenuObjWorldMap::ZoneSelectListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjWorldMap::PointSelectListener, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfMenuObjWorldMap::PointSelectListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjWorldMap::ZoneMapListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjWorldMap::IconFilterListener, unknown20) == 0x20, "");
