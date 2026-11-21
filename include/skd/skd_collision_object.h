@@ -49,9 +49,12 @@ public:
   bool detect(f32 radius, const mm::Vec3 &position, mm::Vec3 *normal) const;
 
   const ResCollisionCapsule *unknown00; // Inferred role: resource; original member name unknown.
-  mm::Vec3 unknown10;                   // Inferred role: first world end point; original member name unknown.
-  mm::Vec3 unknown20;                   // Inferred role: second world end point; original member name unknown.
-  u16 unknown30;                        // Inferred role: bone index; original member name unknown.
+  // Evidence, calc (0x710097b0ec): unknown10 is stored as the world centre minus unknown20 times half the resource
+  // height (res->unknown44 * 0.5), so it is the first end point, and unknown20 is the unit world axis, the bone
+  // rotation times the capsule's local rotation applied to mm::Vec3::unitY.
+  mm::Vec3 unknown10; // Inferred role: first world end point; original member name unknown.
+  mm::Vec3 unknown20; // Inferred role: world axis; original member name unknown.
+  u16 unknown30;      // Inferred role: bone index; original member name unknown.
 };
 
 static_assert(offsetof(CapsuleCollObj, unknown10) == 0x10, "");
