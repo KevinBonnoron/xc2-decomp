@@ -81,8 +81,7 @@ void ShakeCameraElementRandom::CalcShift(const mm::Vec3 &position, const mm::Vec
   case 0: {
     previous *= 1.0f - progress;
     next *= progress;
-    mm::Vec3 shift = previous + next;
-    mm::Vec3 result(rate * shift.x, rate * shift.y, rate * shift.z);
+    mm::Vec3 result = (previous + next) * rate;
     targetShift = result;
     positionShift = result;
     break;
@@ -101,9 +100,7 @@ void ShakeCameraElementRandom::CalcShift(const mm::Vec3 &position, const mm::Vec
     // Written out by hand. The game inlines sqrtf and calls neither
     // Misc::CalcLength nor the Vec3 operator-; both forms do not match.
     f32 length = sqrtf(x * x + y * y + z * z);
-    direction.x = length * direction.x;
-    direction.y = length * direction.y;
-    direction.z = length * direction.z;
+    direction *= length;
     mm::Vec3 forward;
     forward.x = target.x - position.x;
     forward.y = target.y - position.y;
@@ -112,8 +109,7 @@ void ShakeCameraElementRandom::CalcShift(const mm::Vec3 &position, const mm::Vec
 
     mm::Quat rotation;
     mm::unknown005(rotation, mm::Vec3::unitZ, forward);
-    mm::Vec3 shift = rotation.rotate(direction);
-    targetShift = mm::Vec3(rate * shift.x, rate * shift.y, rate * shift.z);
+    targetShift = rotation.rotate(direction) * rate;
     break;
   }
   case 2:
