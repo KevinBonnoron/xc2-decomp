@@ -204,6 +204,18 @@ void GfMenuBdat::getFieldSkillName(u16 skill, ui::UIStr &name) {
   }
 }
 
+u32 GfMenuBdat::getIconIDFromArtsID(u16 arts) {
+  u8 *bdat = s_BdatArray[6];
+  if (isValidBdatID(bdat, arts)) {
+    u16 icon = Bdat::getVal(bdat, "UI", arts).valueU16;
+    if (icon == 0) {
+      icon = 1;
+    }
+    return icon;
+  }
+  return 1;
+}
+
 int GfMenuBdat::getIconIDFromWeatherType(u32 weatherType) { return weatherType + 167; }
 
 const char *GfMenuBdat::getSortKeyName() {

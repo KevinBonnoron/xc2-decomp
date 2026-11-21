@@ -26,8 +26,7 @@ namespace pc {
 void StateFieldIdle::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   StateUtil::setEnableDownIK(*behavior, true);
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
-  property->unknown80 = mm::Vec3::zero;
-  property->unknown94 = 0.0f;
+  property->unknown007();
   StateUtilField::setIdleStatus(*property, true);
 }
 

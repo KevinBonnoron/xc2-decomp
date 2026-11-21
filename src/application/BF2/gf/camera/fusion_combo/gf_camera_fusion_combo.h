@@ -20,6 +20,27 @@ namespace gf {
 
 class FusionComboCamera : public fw::Camera {
 public:
+  // Inferred role: parameters of the camera, built by createReflection; original type name unknown.
+  // The member names are the names of createReflection.
+  struct unknown001 {
+    f32 zoom_frame;
+    f32 zoom_start_distance;
+    f32 zoom_end_distance;
+    f32 zoom_base_width;
+    f32 zoom_add_width;
+    f32 zoom_base_height;
+    f32 zoom_add_height;
+    s32 zoom_mode;
+    f32 around_frame;
+    f32 around_start_distance;
+    f32 around_end_distance;
+    f32 around_rotate;
+    f32 around_add_yaw;
+    f32 around_add_pitch;
+    s32 around_mode;
+    u32 flags;
+  };
+
   static mm::mtl::RTTI m_rtti;
 
   ~FusionComboCamera() override;
@@ -44,5 +65,6 @@ public:
 static_assert(offsetof(FusionComboCamera, unknown120) == 0x120, "");
 static_assert(offsetof(FusionComboCamera, unknown124) == 0x124, "");
 static_assert(sizeof(FusionComboCamera) == 0x160, "");
+static_assert(sizeof(FusionComboCamera::unknown001) == 0x40, "");
 
 } // namespace gf

@@ -84,7 +84,10 @@ bool GfMenuBattleAdapter::update_ArtsSlotRecast() {
 bool GfMenuBattleAdapter::update_ArtsSlotIcon() {
   u16 artsId = GfMenuReference::getArtsPaletteInfo(unknown30).unknown00;
   if (artsId != 0) {
-    setNumber(GfMenuBdat::getIconImageIndex(GfMenuBdat::getIconIDFromArtsID(artsId)));
+    // The callee returns the 16-bit icon id zero-extended to 32 bits (and w8, w0, #0xffff, 1.0.0: 0x71003b9060; a u16 return would leave
+    // the extension to the caller), and the game narrows it again before the lookup (and w0, w0, #0xffff, 0x7100399eb4).
+    u16 icon = GfMenuBdat::getIconIDFromArtsID(artsId);
+    setNumber(GfMenuBdat::getIconImageIndex(icon));
   }
   return artsId != 0;
 }

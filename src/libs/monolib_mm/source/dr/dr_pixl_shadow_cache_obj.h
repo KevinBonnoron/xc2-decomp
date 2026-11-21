@@ -21,6 +21,7 @@ public:
   void setClear();
   void setNewGrid();
   void update(const mm::Mat44 &view, const mm::Mat44 &projection, const mm::Vec3 &center, int gridX, int gridY);
+  bool checkGrid(int gridX, int gridY) const;
   void setBigMode(bool isBig);
   void setID(int id);
   void depthClear();
@@ -36,7 +37,7 @@ public:
   s32 unknown8e0;       // Inferred role: grid x; original member name unknown.
   s32 unknown8e4;       // Inferred role: grid y; original member name unknown.
   u64 unknown8e8;       // Inferred role: id mask; original member name unknown.
-  u16 unknown8f0;       // Inferred role: id; original member name unknown.
+  s16 unknown8f0;       // Inferred role: id; original member name unknown. Signed: DrResMdoSeamWrkInst::seachShadowInstMapRender loads it with ldrsh.
   s16 unknown8f2;       // Inferred role: id; original member name unknown.
   u8 _8f4[0x900 - 0x8f4];
   DrCalcClipWorkPlane unknown900; // Inferred role: clip work; original member name unknown.

@@ -11,12 +11,22 @@ namespace ml {
 // Layout evidence: ml::DevPadNx::Impl::playVibration reads the id at 0x00, tests bits 0 and 1 of 0x04 and copies the four
 // floats at 0x08; every caller (GfGameSalvage::playDiveVibration, GfMenuObjUtil::playVibration) stores 3 at 0x04 and 1.0f
 // at 0x0c and 0x14.
-// Store order evidence: with a constant amplitude the game keeps four separate 32-bit stores (stp w8,w8 twice) in
-// StateUtil::playVibration and GfGameSalvage::playDiveVibration, and with a variable amplitude it keeps
-// GfMenuObjUtil::playVibration's 0c, 14, 08, 10 order; only a body that stores the motors first and the id last gives
-// both (any in-order spelling merges the constant stores into one 64-bit store).
+// Store order evidence: the game builds the two forms in two different orders, so the original had two constructors.
+// With a variable amplitude GfMenuObjUtil::playVibration (0x71004e45fc) stores 0c, 14, 08, 10 (the id and 3 merge into
+// one stp); with the id alone StateSalvageResult::update (0x710037eea0) stores 04, 08, 10, 0c, 14 and the id last, and
+// StateUtil::playVibration, GfGameSalvage::playDiveVibration and StateSalvageClimbStart::callback match the same body.
+// No single body gives both (any in-order spelling merges the constant stores into one 64-bit store).
 struct PadVibrationInfo {
-  explicit PadVibrationInfo(u32 id, f32 amplitude = 1.0f) {
+  explicit PadVibrationInfo(u32 id) {
+    unknown04 = 3;
+    unknown08 = 1.0f;
+    unknown10 = 1.0f;
+    unknown0c = 1.0f;
+    unknown14 = 1.0f;
+    unknown00 = id;
+  }
+
+  PadVibrationInfo(u32 id, f32 amplitude) {
     unknown04 = 3;
     unknown0c = 1.0f;
     unknown14 = 1.0f;

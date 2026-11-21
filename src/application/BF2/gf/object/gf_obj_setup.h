@@ -44,12 +44,23 @@ class GfObjSetupWeapon;
 
 enum VFACC : s32 {
   VFACC_UNKNOWN_FFFFFFFF = -1, // Inferred role: no pending fade; original enumerator name unknown.
+  VFACC_UNKNOWN_0 = 0,         // Inferred role: fade ratio slot of the dead fade; original enumerator name unknown.
+  VFACC_UNKNOWN_1 = 1,         // Inferred role: fade ratio slot of the animation fade; original enumerator name unknown.
   VFACC_UNKNOWN_4 = 4,         // Inferred role: fade set by enterStayObjectWithVolumeFade; original enumerator name unknown.
 };
 
 enum VFEFF : u32 {
   VFEFF_UNKNOWN_0 = 0,
-  VFEFF_UNKNOWN_9 = 9, // Inferred role: effect type copying the dead fade params; original enumerator name unknown.
+  VFEFF_UNKNOWN_1 = 1,   // Inferred role: effect type of the blade attribute 1; original enumerator name unknown.
+  VFEFF_UNKNOWN_2 = 2,   // Inferred role: effect type of the blade attribute 2; original enumerator name unknown.
+  VFEFF_UNKNOWN_3 = 3,   // Inferred role: effect type of the blade attribute 3; original enumerator name unknown.
+  VFEFF_UNKNOWN_4 = 4,   // Inferred role: effect type of the blade attribute 4; original enumerator name unknown.
+  VFEFF_UNKNOWN_5 = 5,   // Inferred role: effect type of the blade attribute 5; original enumerator name unknown.
+  VFEFF_UNKNOWN_6 = 6,   // Inferred role: effect type of the blade attribute 6; original enumerator name unknown.
+  VFEFF_UNKNOWN_7 = 7,   // Inferred role: effect type of the blade attribute 7; original enumerator name unknown.
+  VFEFF_UNKNOWN_8 = 8,   // Inferred role: effect type of the blade attribute 8; original enumerator name unknown.
+  VFEFF_UNKNOWN_9 = 9,   // Inferred role: effect type copying the dead fade params; original enumerator name unknown.
+  VFEFF_UNKNOWN_16 = 16, // Inferred role: effect type of the blade attribute 1 of BLADE_KAGUTSUCHI; original enumerator name unknown.
 };
 
 class GfObjSetup {
@@ -336,7 +347,8 @@ public:
   SDataEnemy *unknowna0; // Inferred role: data enemy; original member name unknown.
   int unknowna8;         // Inferred role: row id of BDAT_FLD_ENACT_MOVE; original member name unknown.
   f32 unknownac;         // Inferred role: change battle delay, copied by GfComBehaviorEnemy::createBehField; original member name unknown.
-  u16 unknownb0;         // Role and original member name unknown.
+  bool unknownb0;        // Role and original member name unknown; the game reads this byte in GfComBehaviorEnemy::validatePopPos.
+  bool unknownb1;        // Role and original member name unknown; the game reads this byte in GfComBehaviorEnemy::onPopped.
   bool unknownb2;        // Role and original member name unknown.
   u8 _b3[0xb4 - 0xb3];
   u32 unknownb4; // Inferred role: saved hp; original member name unknown.

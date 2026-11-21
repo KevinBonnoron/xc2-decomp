@@ -5,6 +5,7 @@
 #include "ml/dev_graph.h"
 #include "ml/scn.h"
 #include "ml/scn_obj.h"
+#include "ml/scn_pool_obj.h"
 #include "ml/threadval.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_plane.h"
@@ -13,10 +14,12 @@
 #include "mm_math/mm_sphere.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixstr.h"
+#include "mtl/alloc_handle.h"
 #include "scn/scn_render_dr_sys.h"
 #include "types.h"
 
 namespace ml {
+class WinView;
 
 static const mm::Vec3 unknown002(0.0f, 5.0f, 20.0f); // Inferred role: default camera position; original name unknown.
 static const mm::Vec3 unknown003(0.0f, 0.0f, 0.0f);  // Inferred role: default camera target; original name unknown.
@@ -90,6 +93,25 @@ void ScnObjCam::setDist(const f32 &dist) {
   info->unknown00.unknown00 = pos + info->m_targetPos;
   updateViewMatrix(true);
 }
+
+// The game copies the z axis of the world matrix (row 2, three components loaded as integers like Mat44::unknown004 does for the position,
+// 0x7100752d50-0x7100752d54) to the target position first (0x7100752d58-0x7100752d60: three 32-bit stores), then overwrites it with
+// position - axis * distance. The first store stays because `dist` may alias the target position (it is read after the copy, 0x7100752d6c).
+void ScnObjCam::setTargetDist(const f32 &dist) {
+  RENDER_INFO *info = unknown70.m_back;
+  info->m_targetDist = dist;
+  mm::Vec3 axis;
+  memcpy(&axis, info->unknown00.unknown70.rows[2], sizeof(f32) * 3);
+  info->m_targetPos = axis;
+  mm::Vec3 offset = axis * dist;
+  info->m_targetPos.x = info->unknown00.unknown10.x - offset.x;
+  info->m_targetPos.y = info->unknown00.unknown10.y - offset.y;
+  info->m_targetPos.z = info->unknown00.unknown10.z - offset.z;
+}
+
+WinView *ScnObjCam::getView() { return unknown08->unknown28->getView(m_info); }
+
+const WinView *ScnObjCam::getView() const { return unknown08->unknown28->getView(m_info); }
 
 void ScnObjCam::apply() {
   RENDER_INFO *info = unknown70.m_front;
@@ -165,6 +187,19 @@ void ScnObjCam::infoInit(RENDER_INFO *info) {
   int height = DevGraph::getRootHeight();
   info->unknown1e0.x = width;
   info->unknown1e0.y = height;
+}
+
+ScnObjCam *ScnObjCam::create(Scn *scn, int screen) {
+  if (!scn->unknown20->isValidInsert(TYPE_UNKNOWN_2)) {
+    return nullptr;
+  }
+  mm::mtl::FixStr<32> name;
+  name.format("Camera%d", screen);
+  ScnObjCam *cam = new (scn->unknown64) ScnObjCam(scn, name.c_str());
+  cam->m_info = screen;
+  cam->setDefault();
+  scn->unknown20->insert(cam);
+  return cam;
 }
 
 void ScnObjCam::setSize(const mm::Pnt<int> &size) {

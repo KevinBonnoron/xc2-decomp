@@ -8,6 +8,7 @@
 #include "ml/thread_util.h"
 #include "ml/work_control.h"
 #include "ml/work_root.h"
+#include "ml/work_util.h"
 #include "mm_math/mm_col3.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/reference_object.h"
@@ -30,6 +31,22 @@ WorkCpuThread::~WorkCpuThread() {
     delete unknown1e8;
     unknown1e8 = nullptr;
   }
+}
+
+bool WorkCpuThread::create(WorkCpuThread **thread, CPUID cpuId, WorkObj *parent) {
+  mm::mtl::FixStr<16> name;
+  name.format("CPU(%d)", cpuId);
+  WorkCpuThread *work = WorkUtil::createWork<WorkCpuThread>(name.c_str(), parent, false);
+  *thread = work;
+  work->m_CPUID = cpuId;
+  if (cpuId == CPUID_UNKNOWN_1) {
+    work->m_threadID = ThreadUtil::getCurrentID();
+  } else {
+    Thread::create(&work->unknown1b8, work->unknown08.c_str(), false, threadFunc, work, 0x40000, cpuId, 0);
+    work->m_threadID = work->unknown1b8->getID();
+    work->unknown1b8->resume();
+  }
+  return true;
 }
 
 bool WorkCpuThread::isSuspendThread() const {

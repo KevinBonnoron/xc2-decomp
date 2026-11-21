@@ -4,6 +4,7 @@
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_hana.h"
+#include "gf/data/gf_item_handle.h"
 #include "gf/game/gf_game_util_hana.h"
 #include "gf/gf_allocator.h"
 #include "gf/menu/adapter/gf_menu_hana_adapter.h"
@@ -11,6 +12,7 @@
 #include "gf/menu/adapter/gf_menu_item_adapter.h"
 #include "gf/menu/adapter/gf_menu_reference_adapter.h"
 #include "gf/menu/call/gf_menu_call_context.h"
+#include "gf/menu/gf_menu_item_util.h"
 #include "gf/menu/gf_menu_reference.h"
 #include "gf/menu/gf_menu_reference_number.h"
 #include "gf/menu/gf_menu_types.h"
@@ -26,6 +28,7 @@
 #include "mm_math/mm_math.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/reference_object.h"
+#include "mm_mtl/vector.h"
 #include "ui/ctrl/ui_ctrl_cursor_color.h"
 #include "ui/ctrl/ui_ctrl_cursor_select.h"
 #include "ui/event/ui_event_data.h"
@@ -300,6 +303,66 @@ static const unknown001 unknown002[] = {
     {6, ItemType::ITEM_TYPE_UNKNOWN_20},
 };
 
+// Inferred role: parts type of each parts item type, indexed from ITEM_TYPE_UNKNOWN_16; original name unknown.
+static const u32 unknown003[] = {1, 2, 9, 3, 6};
+
+void GfMenuObjHanaPartsMake::updateItemList(GfMenuItemList *list, ItemType::Type type, u32 isEquip) {
+  list->clear();
+  if (isEquip == 0) {
+    GfMenuItemList::HanaPartsSetup setup;
+    setup.unknown00.unknown08 = 9;
+    setup.unknown00.unknown10 = true;
+    setup.unknown14 = type;
+    list->setupFromHanaParts(setup);
+  } else {
+    GfMenuItemList::ItemBoxSetup setup;
+    setup.unknown00.unknown08 = 9;
+    setup.unknown00.unknown10 = true;
+    setup.unknown14 = type;
+    setup.unknown28 = false;
+    setup.unknown29 = false;
+    list->setupFromBox(setup);
+    if (list->getSize() != 0) {
+      // Removes the parts that searchEquipHanaParts finds equipped; the others stay and the index advances. An item
+      // whose type is not a parts type is neither removed nor skipped: the game branches to the loop test without
+      // advancing (b.hs at 0x7100474dd8 to 0x7100474e30).
+      for (u32 i = 0; i < list->getSize();) {
+        MenuItemInfo &info = list->getContents(i);
+        if (info.unknown00 >= ItemType::ITEM_TYPE_UNKNOWN_16 && info.unknown00 <= ItemType::ITEM_TYPE_UNKNOWN_20) {
+          // The game loads the handle (0x7100474ddc) and the item before the parts type table entry.
+          GfItemHandle handle = info.unknown0c;
+          u32 item = info.unknown04;
+          if (!GfMenuItemUtil::searchEquipHanaParts(unknown003[info.unknown00 - ItemType::ITEM_TYPE_UNKNOWN_16], item, handle)) {
+            i++;
+            continue;
+          }
+          list->contents.erase(list->contents.begin() + i);
+          list->subSize(1);
+          list->contentsChanged = true;
+        }
+      }
+      if (list->getSize() != 0) {
+        for (u32 i = 0; i < list->getSize() - 1; i++) {
+          MenuItemInfo &first = list->getContents(i);
+          ItemType::Type kind = first.unknown00;
+          u32 item = first.unknown04;
+          for (u32 j = i + 1; j < list->getSize();) {
+            MenuItemInfo &other = list->getContents(j);
+            if (kind == other.unknown00 && item == other.unknown04) {
+              list->getContents(i).unknown08++;
+              list->contents.erase(list->contents.begin() + j);
+              list->subSize(1);
+              list->contentsChanged = true;
+            } else {
+              j++;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 void GfMenuObjHanaPartsMake::makeCategoryItemList(GfMenuIDList *idList, GfMenuItemList *itemList, u32 isEquip, u32 sort) {
   u32 type = idList->getContents(idList->getIndex(false)).unknown00;
   for (int i = 0; i < 5; i++) {
@@ -334,6 +397,101 @@ void GfMenuObjHanaPartsMake::MainListener::reciveEvent(const ui::EventData &even
     break;
   case GfMenuTypes::unknown003_34:
     setFadeOut(handle, 0);
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
+void GfMenuObjHanaPartsMake::NumSelectListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc acc(handle);
+  // The game calls getReferenceBladeID(0) here and drops the result (bl at 0x710047418c).
+  GfMenuReference::getReferenceBladeID(0);
+  switch (event.unknown00) {
+  case 1:
+    setupNumSelect(acc, unknown20->unknown60, unknown20->unknown68);
+    acc.setDisp(false);
+    break;
+  case 6: {
+    int count = event.unknown08;
+    int previous = event.unknown0c;
+    unknown20->unknown60->unknown162(count);
+    u32 parts = unknown20->unknown40->getContents(unknown20->unknown40->getIndex(false)).unknown04;
+    ItemProperty property;
+    GfItemUtil::getProperty(property, parts, 0);
+    unknown20->unknown68->unknown0c = (unknown20->unknown70 == 0 ? property.unknown68 : property.unknown6c) * count;
+    if (previous != -1 && count != previous) {
+      GfMenuObjUtil::playSECommonCursor();
+    }
+    break;
+  }
+  case 8:
+    switch (event.unknown0c) {
+    case 1: {
+      u32 type = unknown20->unknown28->getContents(unknown20->unknown28->getIndex(false)).unknown00;
+      u32 parts = unknown20->unknown40->getContents(unknown20->unknown40->getIndex(false)).unknown04;
+      u32 count = unknown20->unknown60->unknown0c;
+      if (count != 0) {
+        for (u32 i = 0; i < count; i++) {
+          if (unknown20->unknown70 == 0) {
+            makeParts(type, parts);
+          } else {
+            crystalParts(type, parts);
+          }
+        }
+        if (unknown20->unknown70 == 0) {
+          GfMenuObjUtil::playSE(0x14);
+        } else {
+          GfMenuObjUtil::playSE(0x15);
+        }
+        if (unknown20->unknown70 == 0) {
+          unknown20->unknown40->getContents(unknown20->unknown40->getIndex(false)).unknown08 += count;
+        } else {
+          makeCategoryItemList(unknown20->unknown28, unknown20->unknown40, unknown20->unknown70, unknown20->unknown74);
+          u32 selected = unknown20->unknown28->getContents(unknown20->unknown28->getIndex(false)).unknown00;
+          refreshItemList(acc, unknown20->unknown40, unknown20->unknown48, selected, unknown20->unknown70);
+          if (unknown20->unknown40->getSize() == 0) {
+            unknown164(handle, GfMenuTypes::unknown003_258);
+            unknown163(owner.searchChild("LAY_partsmake_window"), GfMenuTypes::unknown003_257, 0);
+            break;
+          }
+        }
+        unknown164(handle, GfMenuTypes::unknown003_258);
+        unknown163(owner.searchChild("LAY_metl_window"), GfMenuTypes::unknown003_257, 0);
+      }
+      break;
+    }
+    case 2:
+      unknown164(handle, GfMenuTypes::unknown003_258);
+      unknown163(owner.searchChild("LAY_metl_window"), GfMenuTypes::unknown003_257, 0);
+      GfMenuObjUtil::playSECommonCancel();
+      break;
+    }
+    break;
+  case GfMenuTypes::unknown003_257: {
+    GfMenuObjOperationInfo::add(handle, 0, 0, 0);
+    setFadeIn(handle, 0);
+    u32 parts = unknown20->unknown40->getContents(unknown20->unknown40->getIndex(false)).unknown04;
+    bool isMake = unknown20->unknown70 == 0;
+    ui::UIObjectAcc(acc.searchChild("LAY_select_make")).setDisp(isMake);
+    ui::UIObjectAcc(acc.searchChild("LAY_select_crystal")).setDisp(!isMake);
+    u32 max;
+    if (unknown20->unknown70 == 0) {
+      max = getMakeItemCount(parts);
+    } else {
+      max = getCrystalItemCount(parts);
+    }
+    GfMenuObject::setupInputSelection(handle, 0, max + 1);
+    GfMenuObject::enableInput(handle);
+    unknown20->unknown60->unknown166(max);
+    break;
+  }
+  case GfMenuTypes::unknown003_258:
+    GfMenuObjOperationInfo::remove(handle, 0, 0, 0);
+    setFadeOut(handle, 0);
+    GfMenuObject::disableInput(handle);
     break;
   default:
     ui::UIObjectListener::reciveEvent(event, handle);

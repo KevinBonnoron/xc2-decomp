@@ -21,6 +21,8 @@ public:
     PRIM_SPHERE = 2,   // Name from the assertion string "prim.getType()==PRIM_SPHERE".
   };
 
+  PrimBase(Type type) : type(type) {}
+
   virtual ~PrimBase() {}
   virtual void getOBB(Obb &obb) const = 0;
   virtual void getAABB(Aabb &aabb) const = 0;

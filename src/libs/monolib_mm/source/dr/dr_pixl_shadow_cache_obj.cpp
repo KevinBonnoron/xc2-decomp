@@ -56,6 +56,13 @@ void DrPixlShadowCacheObj::update(const mm::Mat44 &view, const mm::Mat44 &projec
   unknown900.setMatrix(unknown850);
 }
 
+bool DrPixlShadowCacheObj::checkGrid(int gridX, int gridY) const {
+  if (unknown8e0 <= gridX + 2 && unknown8e0 >= gridX && unknown8e4 <= gridY + 2 && unknown8e4 >= gridY) {
+    return false;
+  }
+  return true;
+}
+
 void DrPixlShadowCacheObj::setBigMode(bool isBig) {
   if (isBig) {
     unknown808 |= 8;

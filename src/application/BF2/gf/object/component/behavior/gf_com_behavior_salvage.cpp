@@ -17,8 +17,7 @@ GfComBehaviorSalvage::~GfComBehaviorSalvage() {}
 void GfComBehaviorSalvage::setup() {
   GfComAsm *comAsm = unknown08->getComponent<GfComAsm>();
   if (comAsm != nullptr) {
-    comAsm->unknown70[0].unknown00 = "system";
-    comAsm->unknown70[0].unknown08.bind<GfComBehavior>(this, &GfComBehavior::callbackAnim);
+    unknown014(comAsm);
   }
 
   unknown10.beginSetup(*this, 4);

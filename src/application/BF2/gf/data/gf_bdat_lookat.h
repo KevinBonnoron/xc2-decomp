@@ -34,7 +34,7 @@ public:
     f32 unknown08; // Inferred role: lower height; original member name unknown.
     f32 unknown0c; // Inferred role: look time; original member name unknown.
     f32 unknown10; // Inferred role: interval; original member name unknown.
-    u8 unknown14;  // Inferred role: priority; original member name unknown.
+    s8 unknown14;  // Inferred role: priority; original member name unknown. Signed: LookAtPlugin::changeTarget (1.0.0: 0x710057997c) compares it with ldrsb and updateHoldHandles tests -0x80.
   };
 
   class Impl;

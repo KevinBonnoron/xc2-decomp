@@ -17,6 +17,7 @@ class DrResMdoVertex;
 
 class DrResMdoVtxMeshObj {
 public:
+  DrResMdoVtxMeshObj();
   ~DrResMdoVtxMeshObj();
   static void release(DrResMdoVtxMeshObj *&obj);
   void update(const mm::Mat44 &matrix, f32 param2, f32 param3);
@@ -41,11 +42,12 @@ public:
   void *unknown78;                        // Inferred role: work memory; original member name unknown.
   u32 unknown80;                          // Inferred role: vertex count; original member name unknown.
   u32 unknown84;                          // Inferred role: capacity of the work memory; original member name unknown.
-  u8 _88[0x8c - 0x88];
-  s32 unknown8c; // Inferred role: render count; original member name unknown.
-  u8 _90[0x94 - 0x90];
-  s32 unknown94; // Inferred role: render count; original member name unknown.
-  u8 _98[0xa0 - 0x98];
+  u32 unknown88;                          // Inferred role: start index of the entries of unknown78; original member name unknown.
+  s32 unknown8c;                          // Inferred role: render count; original member name unknown.
+  u32 unknown90;                          // Inferred role: cleared by the constructor; original member name unknown.
+  s32 unknown94;                          // Inferred role: render count; original member name unknown.
+  f32 unknown98;                          // Inferred role: elapsed time accumulated by update; original member name unknown.
+  u8 _9c[0xa0 - 0x9c];
   mm::Mat44 unknowna0; // Inferred role: matrix; original member name unknown.
   mm::Vec3 unknowne0;  // Inferred role: init vector; original member name unknown.
   mm::Vec3 unknownf0;  // Inferred role: add vector; original member name unknown.
@@ -70,6 +72,9 @@ static_assert(offsetof(DrResMdoVtxMeshObj, unknown38) == 0x38, "");
 static_assert(offsetof(DrResMdoVtxMeshObj, unknown74) == 0x74, "");
 static_assert(offsetof(DrResMdoVtxMeshObj, unknown78) == 0x78, "");
 static_assert(offsetof(DrResMdoVtxMeshObj, unknown80) == 0x80, "");
+static_assert(offsetof(DrResMdoVtxMeshObj, unknown88) == 0x88, "");
+static_assert(offsetof(DrResMdoVtxMeshObj, unknown90) == 0x90, "");
+static_assert(offsetof(DrResMdoVtxMeshObj, unknown98) == 0x98, "");
 static_assert(offsetof(DrResMdoVtxMeshObj, unknown8c) == 0x8c, "");
 static_assert(offsetof(DrResMdoVtxMeshObj, unknown94) == 0x94, "");
 static_assert(offsetof(DrResMdoVtxMeshObj, unknowne0) == 0x0e0, "");

@@ -4,7 +4,13 @@
 #include "grlib/cglib_occlusion_query.h"
 #include "types.h"
 
+namespace mm {
+struct Mat44;
+struct Vec3;
+} // namespace mm
+
 namespace ml {
+class DrResQueryAcc;
 class DrResUseQueryObj;
 class DrShdDataList;
 class DrShdDataObj;
@@ -36,6 +42,8 @@ public:
   void end();
   void releaseObj(DrResQueryObj *obj);
   void update();
+  void occRenderAABB(DrResQueryAcc *acc, const mm::Vec3 &center, const mm::Vec3 &size);
+  void occRenderPosAABB(DrResQueryAcc *acc, const mm::Mat44 *matrices, const u32 *bits, int count);
 
   u8 _00[0x10 - 0x00];
   DrShdDataList *unknown10; // Inferred role: shader data list; original member name unknown.

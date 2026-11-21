@@ -21,7 +21,10 @@ enum WEATHERID {
   WEATHER_F,
 };
 
-enum CLOUD_SEA {};
+enum CLOUD_SEA {
+  CLOUD_SEA_UNKNOWN_0, // Inferred role: low cloud sea, the 0 of GfFieldWeather::setCloudSea that requests CLOUD_SEA_REQUEST_UNKNOWN_1; original name unknown.
+  CLOUD_SEA_UNKNOWN_1, // Inferred role: high cloud sea, the non-zero of GfFieldWeather::setCloudSea that requests CLOUD_SEA_REQUEST_UNKNOWN_2; original name unknown.
+};
 
 enum {
   MAP_UNKNOWN_3 = 3,   // Inferred role: map avaritia; original name unknown.

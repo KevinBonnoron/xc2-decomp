@@ -214,6 +214,18 @@ int DrResMdoMeshObj::getIdx(const char *name) const {
   return index;
 }
 
+int DrResMdoMeshObj::calcWorkSize(const u8 *resource) {
+  const unknown001 *header = reinterpret_cast<const unknown001 *>(resource);
+  int size = 0;
+  if (header->unknown68 != 0) {
+    size = header->unknown68 * 0x40 + 0x10;
+    if (header->unknown70 != 0) {
+      size += header->unknown70 * 0x40;
+    }
+  }
+  return size;
+}
+
 void DrResMdoMeshObj::release(DrResMdoMeshObj *&meshObj) {
   if (meshObj != nullptr) {
     meshObj = nullptr;

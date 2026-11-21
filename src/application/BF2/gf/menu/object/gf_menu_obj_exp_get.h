@@ -14,8 +14,8 @@ class GfMenuObjExpGet : public GfMenuObject {
 public:
   // Layout from open, which reads it, and from the copy the queued ExpGetInfo keeps.
   struct OpenParam {
-    // Decision 2026-11-14 #22: an empty user-provided constructor (language rule, as GmkDmgPhantom). Its proof is the game's Queue<ExpGetInfo>::erase, which copies
-    // 28 of the 32 bytes of the element and matches only with it; that instantiation is not on main yet (its Queue change waits for an answer about the anm job queue).
+    // Decision 2026-11-14 #22: an empty user-provided constructor (language rule, as GmkDmgPhantom). Its proof is the game's
+    // Queue<ExpGetInfo>::erase, which copies 28 of the 32 bytes of the element and matches only with it.
     OpenParam() {}
 
     int unknown00; // Inferred role: kind of gain (0 exp, 1 sp, 2 wp, 3 level up, from setupScreen); original member name unknown.
@@ -26,8 +26,8 @@ public:
     u32 unknown18;            // Inferred role: value sent to the object as a 16-bit word; original member name unknown.
   };
 
-  // Queued by GfMenuManyObjects; the game gives it its own vtable, inheriting the dispose of the base. The Queue::erase and push_back
-  // instances copy the open parameter in one 32-byte move at 0x10.
+  // Queued by GfMenuManyObjects; the game gives it its own vtable, inheriting the dispose of the base. The Queue::push_back
+  // instance copies the open parameter in one 32-byte move at 0x10, the Queue::erase instance only its 28 data bytes.
   struct ExpGetInfo : GfMenuManyObjects::InfoType {
     OpenParam unknown10; // Inferred role: open parameter of the queued gain; original member name unknown.
   };
@@ -42,6 +42,7 @@ public:
   static void close2(u32 handle);
   static void removeObject(ui::UIObjectAcc acc);
   static void removeObject2(ui::UIObjectAcc acc);
+  static void setupPlugin(u32 handle, u32 type);
   static const char *setupScreen(u32 handle, int type, int amount, int, int bonus);
   static void sendOpen(u32 handle, const ExpGetInfo &info);
 };

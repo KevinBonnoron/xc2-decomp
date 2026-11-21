@@ -337,6 +337,6 @@ void DrIniSys::getWetnessSetting(u16 index, WetSetting &setting) const {
   }
 }
 
-const void *DrIniSys::getGlassBreakage() const { return unknown898->unknownc8; }
+DrIniSys::unknown004 *DrIniSys::getGlassBreakage() const { return static_cast<unknown004 *>(unknown898->unknownc8); }
 
 } // namespace ml

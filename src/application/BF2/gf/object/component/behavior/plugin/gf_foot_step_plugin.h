@@ -14,6 +14,7 @@ class RTTI;
 
 namespace fw {
 class ParamAdapter;
+class Reflection;
 struct UpdateInfo;
 } // namespace fw
 
@@ -21,11 +22,14 @@ namespace gf {
 
 // Field names from the reflection of gf::FootStepParam::createReflection.
 struct FootStepParam {
+  static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
+
   f32 rapidSpeed;
   u32 ankleHeight;
 };
 
 static_assert(offsetof(FootStepParam, ankleHeight) == 0x04, "");
+static_assert(sizeof(FootStepParam) == 0x08, "");
 
 GfEnvProperty::GROUND_INDEX getFootGroundIndex(const char *name);
 bool isLeftFoot(GfEnvProperty::GROUND_INDEX ground);

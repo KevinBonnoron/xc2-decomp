@@ -31,13 +31,17 @@ struct MdsSeamEnvMapHead {
 static_assert(offsetof(MdsSeamEnvMapHead, unknown08) == 0x08, "");
 static_assert(offsetof(MdsSeamEnvMapHead, unknown18) == 0x18, "");
 
-// Inferred layout of the env map data; offsets are relative to the data.
+// Inferred layout of the env map data; offsets are relative to the data. Also the entry of the env map table of the seam resource
+// (stride 0x3c, data offset 0x34 and size 0x38 read by DrMdoCtlSeamRead::callEnvMdlStream at 0x7100826784).
 struct MdsSeamEnvMapData {
-  u8 _00[0x38];
+  u8 _00[0x34];
+  u32 unknown34; // Inferred role: data offset in the seam file; original member name unknown.
   u32 unknown38; // Inferred role: memory size; original member name unknown.
 };
 
+static_assert(offsetof(MdsSeamEnvMapData, unknown34) == 0x34, "");
 static_assert(offsetof(MdsSeamEnvMapData, unknown38) == 0x38, "");
+static_assert(sizeof(MdsSeamEnvMapData) == 0x3c, "");
 
 class DrResMdoSeamWrkEnv : public unknown133<DrResMdoSeamWrkEnv> {
 public:

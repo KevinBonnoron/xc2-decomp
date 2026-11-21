@@ -34,7 +34,6 @@ enum {
 constexpr u32 DRIVER_UNKNOWN_16 = 16;         // Inferred role: driver count; original name unknown.
 constexpr u32 SET_BLADE_UNKNOWN_3 = 3;        // Inferred role: set blade num normal; original name unknown.
 constexpr u32 SET_BLADE_UNKNOWN_5 = 5;        // Inferred role: set blade num rex; original name unknown.
-constexpr u32 POUCH_UNKNOWN_3 = 3;            // Inferred role: pouch count; original name unknown.
 constexpr int SLOT_UNKNOWN_5 = 5;             // Inferred role: death blow per slot; original name unknown.
 constexpr int FILE_INDEX_UNKNOWN_48 = 0x30;   // Inferred role: file index weapon anm; original name unknown.
 constexpr int FILE_INDEX_UNKNOWN_101 = 0x65;  // Inferred role: file index weapon swt; original name unknown.
@@ -66,6 +65,35 @@ bool GfDataDriver::getPouchEnhance(mm::mtl::FixedVector<u16, 64> &enhances, u32 
   }
 
   return !enhances.empty();
+}
+
+// The game fills only the rate, the type and the driver state of each element (stores of 1.0 at 0x0 and of the halfwords at 0x4 and 0x6 at 0x71002aba5c-0x71002aba64): the blade state at 0x8 is
+// never set here, so `favorite` is copied into the vector with that member left as it is (the copy carries three stores; `EnhanceFavorite favorite = {}` adds a zero store at each push, 213
+// instructions against the game's 209, and the ternary `favorite.unknown06 = isFavoriteItem(...) ? 2 : isFavoriteCategory(...)` gives 212). As in GfDataBlade::getPouchEnhanceFavorite, the pouch
+// item is read again for each use (reference to the pouch; with an `item` local it is 198 instructions) and the game inlines isFavoriteItem and isFavoriteCategory of this class (calls of
+// GfBdatChrDr::getChrDrFavoriteItem and getChrDrFavoriteCategory).
+bool GfDataDriver::getPouchEnhanceFavorite(mm::mtl::FixedVector<EnhanceFavorite, 64> &favorites, u32 driver) {
+  GfBdatItem *bdatItem = GfBdatItem::get();
+  for (u32 slot = 0; slot < POUCH_UNKNOWN_3; slot++) {
+    SDataPouch &pouch = getSDataDriver(driver).unknown584[slot];
+    if (pouch.unknown04 != 0) {
+      u32 enhance = bdatItem->getFavoriteType(pouch.unknown04);
+      if (enhance != 0) {
+        EnhanceFavorite favorite;
+        favorite.unknown00 = 1.0f;
+        favorite.unknown04 = enhance;
+        favorite.unknown06 = 0;
+        if (isFavoriteItem(driver, pouch.unknown04)) {
+          favorite.unknown06 = 2;
+        } else if (isFavoriteCategory(driver, pouch.unknown04)) {
+          favorite.unknown06 = 1;
+        }
+        favorites.push_back(favorite);
+      }
+    }
+  }
+
+  return !favorites.empty();
 }
 
 u8 GfDataDriver::getFavoritePouchNum(u32 driver, FAVORITE favorite) {
@@ -125,7 +153,7 @@ u32 GfDataDriver::getBlade(u32 driver, int slot) {
   return getBlade(getSDataDriver(driver), slot);
 }
 
-SDataPouch *GfDataDriver::getPouchData(u32 driver, u32 slot) { return &getSDataDriver(driver).unknown584[slot]; }
+SDataPouch &GfDataDriver::getPouchData(u32 driver, u32 slot) { return getSDataDriver(driver).unknown584[slot]; }
 
 int GfDataDriver::getBladeSet(u32 driver) {
   if (driver == 0) {

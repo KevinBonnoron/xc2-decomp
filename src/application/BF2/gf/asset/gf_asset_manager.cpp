@@ -106,6 +106,22 @@ AssetPackInfo *GfAssetManager::getAssetPackInfo(GF_ASSET_HANDLE *handle) {
   return manager->unknown10.unknown010(index) ? info : nullptr;
 }
 
+bool GfAssetManager::isSameResource(GF_ASSET_HANDLE *handle, GF_ASSET_HANDLE *other) {
+  // The game ANDs the result of the call with the found flag (`and w0, w0, w8`): when a handle is invalid (0x71001b53dc) w0 is not written and still holds
+  // the handle argument. `&` gives the game's operand order; `&&` in either order gives `and w0, w8, w0`.
+  bool result;
+  bool isFound = false;
+  AssetPackInfo *info = getAssetPackInfo(handle);
+  if (info != nullptr) {
+    AssetPackInfo *otherInfo = getAssetPackInfo(other);
+    if (otherInfo != nullptr) {
+      result = info->isSameResource(otherInfo);
+      isFound = true;
+    }
+  }
+  return result & isFound;
+}
+
 void GfAssetManager::destroy(GF_ASSET_HANDLE *handle) {
   AssetPackInfo *info = getAssetPackInfo(handle);
   if (info != nullptr && !info->unknown304) {

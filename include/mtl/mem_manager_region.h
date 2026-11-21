@@ -43,6 +43,7 @@ public:
   enum unknown001 {
     UNKNOWN001_UNKNOWN_0 = 1 << 0,
     UNKNOWN001_UNKNOWN_1 = 1 << 1,
+    UNKNOWN001_UNKNOWN_2 = 1 << 2,
     UNKNOWN001_UNKNOWN_3 = 1 << 3,
     UNKNOWN001_UNKNOWN_4 = 1 << 4,
     UNKNOWN001_UNKNOWN_5 = 1 << 5,

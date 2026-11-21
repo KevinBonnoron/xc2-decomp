@@ -6,6 +6,10 @@
 namespace gf {
 
 struct AchievQuest {
+  // Evidence: GfBladeCreateInfo::GfBladeCreateInfo (0x71003011a4) zeroes the 0x1a bytes from the quest to the achievement of each of the 50 quests of its ten achievements (0x404-0x41e, ...) and not
+  // the padding after them.
+  AchievQuest() : unknown04(0), unknown08(0), unknown0c(0), unknown0e(0), unknown10(0), unknown12(0), unknown14(0), unknown16(0), unknown18(0) {}
+
   void setTaskComplete(bool isFirst, bool isComplete);
   void setCountComplete();
   bool isCountComplete() const;
@@ -27,7 +31,9 @@ struct AchievQuest {
   u16 unknown12;     // Inferred role: achievement type; original member name unknown.
   u16 unknown14;     // Inferred role: sort index; original member name unknown.
   u16 unknown16;     // Inferred role: blade; original member name unknown.
-  u8 _18[0x1c - 0x18];
+  u16 unknown18; // Inferred role: achievement; original member name unknown. Evidence: GfDataBlade::setupAchievInfo stores the achievement id at +0x18 of each quest and GfDataBlade::getKizunaringMax
+                 // tests it.
+  // The two padding bytes after unknown18 are no member: the game copies the quest in 0x1a bytes (GfBladeCreate::setupSDataBlade, 0x7100301fd4).
 };
 
 static_assert(offsetof(AchievQuest, unknown0c) == 0x0c, "");
@@ -36,6 +42,7 @@ static_assert(offsetof(AchievQuest, unknown10) == 0x10, "");
 static_assert(offsetof(AchievQuest, unknown12) == 0x12, "");
 static_assert(offsetof(AchievQuest, unknown14) == 0x14, "");
 static_assert(offsetof(AchievQuest, unknown16) == 0x16, "");
+static_assert(offsetof(AchievQuest, unknown18) == 0x18, "");
 static_assert(sizeof(AchievQuest) == 0x1c, "");
 
 } // namespace gf

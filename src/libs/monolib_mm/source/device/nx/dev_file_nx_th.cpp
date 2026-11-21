@@ -64,6 +64,24 @@ void DevFileNxTh::deallocate(void *pointer, size_t size) {
   dfn_detail::g_allocator.deallocate(pointer);
 }
 
+int DevFileNxTh::getFileSize(const char *path, mm::VAL64 *size, const char *archive) {
+  mm::mtl::FixStr<256> fileName;
+  DevFileTh::makeMediaFileName(fileName, archive, path);
+  if (!DevFileBlackListNxTh::get()->check(path)) {
+    return -1;
+  }
+  unknown002 file;
+  file.isOpen = nn::fs::OpenFile(&file.handle, fileName.c_str(), 1).IsSuccess();
+  if (!file.isOpen) {
+    return -1;
+  }
+  s64 fileSize = DevFileUtilNx::getFileSize(file.handle);
+  if (size != nullptr && fileSize >= 0) {
+    size->unknown00 = 0;
+  }
+  return fileSize;
+}
+
 u32 DevFileNxTh::addressAlignment() { return 16; }
 
 bool DevFileNxTh::rfIsUsedChannel(u32 channel) { return unknown20->unknown00[channel].unknown10c; }

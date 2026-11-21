@@ -3,13 +3,16 @@
 
 #include "framework/effect/effect_manager.h"
 #include "gf/data/gf_bdat_wrapper.h"
+#include "gf/field/gf_field_manager.h"
 #include "gf/game/gf_game_cond.h"
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_set.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/fixstr.h"
 
 namespace fw {
+class EffectPack;
 enum EF_CATEGORY : int;
 } // namespace fw
 
@@ -90,6 +93,24 @@ void GmkRoutedFootPrint::debugDraw(bool isSelected) const {
     color = mm::Col4::gray;
   }
   debugDrawRoute(color);
+}
+
+void GmkRoutedFootPrint::create(const CreateInfo &info) {
+  AGmkBase::create(info);
+  if (info.unknown10 == nullptr) {
+    dispose();
+    return;
+  }
+  const BdatInfo *bdatInfo = getBdatInfo();
+  if (bdatInfo->unknown00 != nullptr && bdatInfo->unknown00[0] != '\0') {
+    fw::EffectPack *pack = gf::GfFieldManager::getEffectPack();
+    if (pack != nullptr) {
+      mm::mtl::FixStr<32> effectName = bdatInfo->unknown00;
+      unknown50 = fw::EffectManager::get()->search(effectName.c_str(), pack);
+      effectName[effectName.length() - 1]++;
+      unknown58 = fw::EffectManager::get()->search(effectName.c_str(), pack);
+    }
+  }
 }
 
 void GmkRoutedFootPrint::dispose() {

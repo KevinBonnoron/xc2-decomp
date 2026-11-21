@@ -18,7 +18,7 @@ struct VolumeFadeParams {
   f32 unknown7c[5];      // Inferred role: third group of five floats; original member name unknown.
   f32 unknown90;         // Inferred role: frame; original member name unknown.
   f32 unknown94;         // Inferred role: rate; original member name unknown.
-  f32 unknown98;         // Role and original member name unknown.
+  u32 unknown98;         // Inferred role: volume texture index offset, copied to ml::VolumeFadeParams::unknowna4; original member name unknown.
   f32 unknown9c[4];      // Inferred role: key times in frames, the unused keys are zero; original member name unknown.
   f32 unknownac[4];      // Inferred role: key values; original member name unknown.
 };

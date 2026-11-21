@@ -1,6 +1,8 @@
 #pragma once
+#include <math.h>
 #include <stddef.h>
 
+#include "anm/anm_qs_transform.h"
 #include "fw/fw_param_manager.h"
 #include "fw/fw_transform.h"
 #include "gf/object/component/env_sensor/gf_com_env_sensor.h"
@@ -8,6 +10,7 @@
 #include "gf/object/component/pc/gf_pc_property_field.h"
 #include "gf/object/component/property/gf_com_property.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_math/mm_vec4.h"
 #include "mm_mtl/bitflag.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
@@ -15,10 +18,6 @@
 namespace fw {
 class MessageObject;
 } // namespace fw
-
-namespace anm {
-struct QsTransform;
-} // namespace anm
 
 namespace mm {
 namespace mtl {
@@ -35,6 +34,7 @@ struct MsgPcFieldWarpCancel;
 
 namespace pc {
 struct MoveParam;
+struct SensorAIParam;
 struct SlideParam;
 struct WarpParam;
 
@@ -121,6 +121,13 @@ public:
     return paramList->unknown0c > 2 ? static_cast<const pc::WarpParam *>(paramList->unknown10[2].param) : nullptr;
   }
 
+  // Inferred role: sensor ai param of the pc param list entry 3 ("sensor_ai"), null when the list is shorter; original name unknown.
+  // Evidence: gf::pc::TaskFieldSensor::update (1.0.0: 0x7100544988) tests the count (4) before the read at +0x38.
+  const pc::SensorAIParam *unknown010() const {
+    const fw::ParamList *paramList = unknown300.operator->();
+    return paramList->unknown0c > 3 ? static_cast<const pc::SensorAIParam *>(paramList->unknown10[3].param) : nullptr;
+  }
+
   // Inferred role: moving, from the velocity or the value at 0xc0 (shared by gf::pc::isMainPcMove and isBuddyPcMove); original
   // name unknown.
   bool unknown002() const {
@@ -136,6 +143,14 @@ public:
     unknown150 = type;
     unknown130 = transform;
     unknown113_2 = true;
+  }
+
+  // Inferred role: stops the movement, zeroes the velocity and the horizontal speed (shared by the enter of StateFieldIdle,
+  // StateFieldIdleTurn, StateFieldLure, StateFieldTalk, StateFieldTurn, StateFieldWaterDead, StateFieldWaterIdle and
+  // StateFieldWaterIdleTurn and the leave of the two idle turn states); original name unknown.
+  void unknown007() {
+    unknown80 = mm::Vec3::zero;
+    unknown94 = 0.0f;
   }
 
   u32 unknown38; // Inferred role: player id set by MsgPcFieldNotifyChangePlayerID; original member name unknown.
@@ -269,6 +284,29 @@ static_assert(offsetof(GfComPropertyPc, unknown2f8) == 0x2f8, "");
 static_assert(offsetof(GfComPropertyPc, unknown300) == 0x300, "");
 static_assert(offsetof(GfComPropertyPc, unknown310) == 0x310, "");
 static_assert(offsetof(GfComPropertyPc, unknown470) == 0x470, "");
+
+// Inferred role: sets the turn direction from the input axes, the facing direction when there is no input (shared by the enter of
+// StateFieldTurn, StateFieldIdleTurn and StateFieldWaterIdleTurn); original name unknown. Internal linkage: as an inline member
+// the game's three enter functions would call it (41, 53 and 35 instructions against 104, 115 and 97 measured on 2026-11-15); the
+// game inlines it into each.
+static inline void unknown008(const GfComPropertyPc &property, mm::Vec3 &direction) {
+  direction = property.unknown2b0 * property.unknown60.unknown04 + property.unknown2d0 * property.unknown60.unknown00;
+  if (!(fabsf(direction.x) <= 0.000001f) || !(fabsf(direction.y) <= 0.000001f) || !(fabsf(direction.z) <= 0.000001f)) {
+    direction.unknown001();
+  } else {
+    direction = property.unknown1f0;
+  }
+}
+
+// Inferred role: sets the locomotion with its x and z translation zeroed (shared by the update of StateFieldWallLand,
+// StateFieldWallClimbEnd, StateFieldWallAdsorptionGround and StateFieldWallAdsorptionUnderGround); original name unknown. Internal
+// linkage, like unknown008: the game inlines it into each of its four users.
+static inline void unknown009(GfComPropertyPc &property, const anm::QsTransform &locomotion) {
+  anm::QsTransform horizontal = locomotion;
+  horizontal.unknown00.x = 0.0f;
+  horizontal.unknown00.z = 0.0f;
+  property.setLocomotion(horizontal);
+}
 
 u32 getMode(GfComPropertyPc &property);
 

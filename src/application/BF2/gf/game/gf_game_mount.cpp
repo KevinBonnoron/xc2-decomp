@@ -1,6 +1,7 @@
 #include "gf/game/gf_game_mount.h"
 
 #include "gf/data/gf_data_blade.h"
+#include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_object_type.h"
 #include "gf/game/gf_game_util.h"
 #include "gf/gf_allocator.h"
@@ -12,6 +13,7 @@
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
+#include "gf/request/gf_req_scom.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 
@@ -498,6 +500,20 @@ void GfMountManager::execAttachMount(GF_OBJ_HANDLE *handle, GFATTACH attach) {
 }
 
 void GfMountManager::gevGameObjLeave(GF_OBJ_HANDLE *) {}
+
+void GfMountManager::setVFadeForMount(GF_OBJ_HANDLE *handle, GFATTACH attach, f32 time) {
+  DataParamAcc paramAcc(handle);
+  GfGameMount *mount = getMount(GfObjUtil::getMountHandle(handle, attach));
+  if (mount == nullptr) {
+    return;
+  }
+  for (u32 index = 0; index < 10; index++) {
+    GF_OBJ_HANDLE *weapon = mount->unknown18->getCurrentHandles()[index];
+    if (weapon != unknown020) {
+      SCOM_OBJ_VFADE::createBattle(weapon, time, paramAcc.getAttribute(-1, false));
+    }
+  }
+}
 
 void GfMountManager::setAlphaMount(GF_OBJ_HANDLE *handle, GFATTACH attach, f32 alpha) {
   GfGameMount *mount = getMount(GfObjUtil::getMountHandle(handle, attach));

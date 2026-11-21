@@ -32,6 +32,7 @@
 #include "gf/menu/gf_menu_bdat.h"
 #include "gf/menu/object/gf_menu_obj_target_info.h"
 #include "gf/object/component/animation/gf_com_asm.h"
+#include "gf/object/component/behavior/plugin/gf_foot_step_plugin.h"
 #include "gf/object/component/behavior/plugin/gf_plugin_manager.h"
 #include "gf/object/component/enemy/gf_enemy_state_battle.h"
 #include "gf/object/component/enemy/gf_enemy_state_field_area_walk.h"
@@ -43,6 +44,7 @@
 #include "gf/object/component/enemy/gf_enemy_state_field_walk.h"
 #include "gf/object/component/gf_com_collider.h"
 #include "gf/object/component/gf_component.h"
+#include "gf/object/component/model/gf_com_model.h"
 #include "gf/object/component/property/gf_com_property.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
@@ -72,6 +74,14 @@ static const gmk::GmkEnemyInsts &unknown002(const gmk::GmkEnemy &gmk) { return g
 
 // Inferred helper: the enemy instances embedded in the gimmick; original name unknown.
 static const gmk::GmkEnemyInsts &unknown002(const gmk::GmkRoutedEnemy &gmk) { return gmk.unknown50; }
+
+namespace enemy {
+
+// Named as the game's global symbols gf::enemy::ASM_CB_NAME_FIELD_ENEMY and gf::enemy::ASM_CB_NAME_BATTLE_ENEMY.
+const char *ASM_CB_NAME_FIELD_ENEMY = "field_en";
+const char *ASM_CB_NAME_BATTLE_ENEMY = "battle_en";
+
+} // namespace enemy
 
 void GfComBehaviorEnemy::Listener::onWkStandbyLogout() { unknown08->unknown54e8 = nullptr; }
 
@@ -373,6 +383,78 @@ void GfComBehaviorEnemy::disposeMenuObj() {
     GfMenuObjTargetInfo::close(unknown130);
     mm::mtl::safeRelease(unknown130);
   }
+}
+
+void GfComBehaviorEnemy::setup() {
+  GfObjSetupEnemy *setup = GfObjUtil::getObjSetup<GfObjSetupEnemy>(static_cast<GfObj *>(unknown08)->unknownf8);
+  GfComAsm *comAsm = unknown08->getComponent<GfComAsm>();
+  if (comAsm != nullptr) {
+    unknown014(comAsm);
+    comAsm->unknown70[1].unknown00 = enemy::ASM_CB_NAME_FIELD_ENEMY;
+    comAsm->unknown70[1].unknown08.bind<GfComBehaviorEnemy>(this, &GfComBehaviorEnemy::callbackField);
+    comAsm->unknown70[2].unknown00 = enemy::ASM_CB_NAME_BATTLE_ENEMY;
+    comAsm->unknown70[2].unknown08.bind<GfComBehaviorEnemy>(this, &GfComBehaviorEnemy::callbackBattle);
+  }
+
+  u8 *bdat = GfDataBdat::getFP(BDAT_RSC_EN);
+  GfObjSetupEnemy *searchSetup = mm::mtl::dynamicCast<GfObjSetupEnemy>(GfObjManager::getObjInfo(static_cast<GfObj *>(unknown08)->unknownf8)->unknown30);
+  const char *searchBone = reinterpret_cast<const char *>(Bdat::getValCheck(bdat, "SearchBaseBone", searchSetup->unknown10, 7));
+  const char *boneName = "JU_spA";
+  if (searchBone != nullptr && *searchBone != '\0') {
+    boneName = searchBone;
+  }
+
+  GfComModel *model = unknown08->getComponent<GfComModel>();
+  unknown138 = model->createBoneReferenceFrame(boneName);
+  if (unknown138.get() == nullptr) {
+    GfComTransform *transform = unknown08->getComponent<GfComTransform>();
+    unknown138 = transform->unknown18.get() == nullptr ? transform->unknown10 : transform->unknown18;
+  }
+
+  unknown10.beginSetup(*this, 4);
+  unknown10.unknown001<FootStepPlugin>(0, true);
+  unknown10.endSetup();
+  FootStepPlugin *footStep = GfComBehavior::unknown001<FootStepPlugin>(0);
+  if (footStep != nullptr) {
+    footStep->setActivate(true);
+  }
+
+  {
+    DataParamAcc dataParam(static_cast<GfObj *>(unknown08)->unknownf8);
+    if (dataParam.isEnbaleTarget()) {
+      createMenuObj();
+    }
+  }
+
+  createFsm();
+  {
+    f32 radius = getCollisionRadius();
+    GfFieldUndulator::CreateInfo undulatorInfo;
+    undulatorInfo.unknown00 = setup->m_enArrangeID;
+    undulatorInfo.unknown04 = radius + radius;
+    unknown5460.create(undulatorInfo);
+  }
+
+  GfComTransform *transform = unknown08->getComponent<GfComTransform>();
+  unknown5460.update(transform->unknown18.get() == nullptr ? transform->unknown10 : transform->unknown18, false);
+  createBehField();
+  GfObjAcc acc(static_cast<GfObj *>(unknown08)->unknownf8);
+  if (acc.isEnemyBlade()) {
+    unknowna0.setState(enemy::STATE_ID_UNKNOWN_15);
+  }
+
+  {
+    DataParamAcc dataParam(static_cast<GfObj *>(unknown08)->unknownf8);
+    const SDataEnemy *dataEnemy = dataParam.getSDataEnemy();
+    if (dataEnemy != nullptr && dataEnemy->unknown05_1) {
+      GfFieldDmg::CreateInfo dmgInfo;
+      dmgInfo.unknown00 = true;
+      unknown54a0.create(dmgInfo);
+    }
+  }
+
+  updateInvincible();
+  setupWeapon();
 }
 
 void GfComBehaviorEnemy::createMenuObj() {

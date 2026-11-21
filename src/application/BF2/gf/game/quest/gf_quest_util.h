@@ -45,7 +45,7 @@ struct GfQuestReward {
         u16 unknown44; // Role and original member name unknown.
         u16 m_developZone;
       };
-      u32 unknown44_u32; // Inferred role: whole value of gold and exp rewards; original member name unknown.
+      u32 unknown44_u32; // Inferred role: whole value of gold and exp rewards, item and number of the items (GfQuestUtil::execReward); original member name unknown.
     };
   };
 

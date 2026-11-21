@@ -15,6 +15,8 @@ namespace gmk {
 
 template bool TGmkList<GmkClimbing, GmkClimbing::BdatInfo, 1112362051u, 2u, GmkClimbingGob>::initGmkBdatInfo(GmkClimbing::BdatInfo &, int &, const AGmkBase &);
 
+constexpr int WILDCARD_UNKNOWN_37 = 37; // Inferred role: wildcard climbing icon height row; original name unknown.
+
 void GmkClimbing::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   unknown04 = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_UNKNOWN_2));
   unknown08 =
@@ -41,6 +43,19 @@ bool GmkClimbing::BdatInfo::isPopCondMatched() const {
 }
 
 GmkType GmkClimbing::getGmkType() const { return GMK_TYPE; }
+
+// The game's updateIconPos (0x710061cfa0, called from nowhere else in the binary) is what create inlines at 0x710061cf0c. Defined inline
+// because the out-of-line copy does not match: it only differs in the operand order of the fadd (fadd s0, s1, s0 in the game, fadd s0, s0, s1
+// here; 98 permuter candidates and the source orders found nothing). The standalone copy stays a target (check lists it as TODO).
+inline void GmkClimbing::updateIconPos() {
+  unknown50 = unknown08.unknown08->unknown00;
+  unknown50.y += Bdat::getValCheck(gf::GfDataBdat::getFP(gf::BDAT_FLD_WILDCARD_DATA), 0, WILDCARD_UNKNOWN_37, BDAT_TYPE_UNKNOWN_8).valueF32;
+}
+
+void GmkClimbing::create(const CreateInfo &info) {
+  updateIconPos();
+  AGmkBase::create(info);
+}
 
 void GmkClimbing::disposeIcon() {
   if (unknown48 != nullptr) {

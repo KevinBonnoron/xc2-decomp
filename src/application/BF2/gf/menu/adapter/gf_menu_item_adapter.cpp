@@ -720,33 +720,33 @@ void GfMenuItemAdapter::ReferenceListConverter::getItemInfo(MenuItemInfo &info) 
 void GfMenuItemAdapter::ReferenceItemConverter::getItemInfo(MenuItemInfo &info) { item->getItem(info); }
 
 void GfMenuItemAdapter::PouchConverter::getItemInfo(MenuItemInfo &info) {
-  SDataPouch *pouch = GfPouchUtil::getPouch(driver, pouchIndex);
+  SDataPouch &pouch = GfPouchUtil::getPouch(driver, pouchIndex);
   info.unknown00 = ItemType::ITEM_TYPE_UNKNOWN_10;
-  info.unknown04 = pouch->unknown04;
+  info.unknown04 = pouch.unknown04;
   info.unknown08 = 1;
 }
 
 void GfMenuItemAdapter::PouchReferenceIndexConverter::getItemInfo(MenuItemInfo &info) {
   u32 pouchIndex = number->unknown0c;
-  SDataPouch *pouch = GfPouchUtil::getPouch(driver, pouchIndex);
+  SDataPouch &pouch = GfPouchUtil::getPouch(driver, pouchIndex);
   info.unknown00 = ItemType::ITEM_TYPE_UNKNOWN_10;
-  info.unknown04 = pouch->unknown04;
+  info.unknown04 = pouch.unknown04;
   info.unknown08 = 1;
 }
 
 void GfMenuItemAdapter::PouchReferenceIndexReferenceDriverConverter::getItemInfo(MenuItemInfo &info) {
   u32 pouchIndex = number->unknown0c;
-  SDataPouch *pouch = GfPouchUtil::getPouch(GfMenuReference::getReferenceDriverID(driverIndex), pouchIndex);
+  SDataPouch &pouch = GfPouchUtil::getPouch(GfMenuReference::getReferenceDriverID(driverIndex), pouchIndex);
   info.unknown00 = ItemType::ITEM_TYPE_UNKNOWN_10;
-  info.unknown04 = pouch->unknown04;
+  info.unknown04 = pouch.unknown04;
   info.unknown08 = 1;
 }
 
 void GfMenuItemAdapter::PouchReferenceDriverConverter::getItemInfo(MenuItemInfo &info) {
   u32 index = pouchIndex;
-  SDataPouch *pouch = GfPouchUtil::getPouch(GfMenuReference::getReferenceDriverID(driverIndex), index);
+  SDataPouch &pouch = GfPouchUtil::getPouch(GfMenuReference::getReferenceDriverID(driverIndex), index);
   info.unknown00 = ItemType::ITEM_TYPE_UNKNOWN_10;
-  info.unknown04 = pouch->unknown04;
+  info.unknown04 = pouch.unknown04;
   info.unknown08 = 1;
 }
 

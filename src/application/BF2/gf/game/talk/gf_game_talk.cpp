@@ -3,6 +3,7 @@
 #include "bdat.h"
 #include "event/manager.h"
 #include "gf/gf_allocator.h"
+#include "mm_mtl/bitflag.h"
 #include "mm_mtl/fixstr.h"
 
 namespace gf {
@@ -33,7 +34,7 @@ void GfGameTalk::update(const fw::UpdateInfo &) {}
 
 bool GfGameTalk::isPlaying() { return event::Manager::get()->isPlay(); }
 
-bool GfGameTalk::isError() { return (event::Manager::get()->unknown18 & event::Manager::FLAG_UNKNOWN_1) != 0; }
+bool GfGameTalk::isError() { return event::Manager::get()->unknown18.test(event::Manager::FLAG_UNKNOWN_1); }
 
 void GfGameTalk::play(const GfSetupPfTalk &talk) {
   u8 *list = Bdat::getFP("EVT_listList");

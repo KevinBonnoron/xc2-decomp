@@ -1,8 +1,10 @@
 // Original file name from the game string C:/Monolithsoft/BF2/prog/libs/wndlib/src/wndlib/wnd_world.cpp.
 #include "anm/anm_array-inl.h"
 #include "mm/mm_std_base.h"
+#include "mm_mtl/fixed_queue.h"
 #include "mm_mtl/intrusive_list.h"
 #include "mm_mtl/reference_object.h" // for safeRelease
+#include "mm_mtl/rtti.h"
 #include "mm_mtl/vector.h"
 #include "types.h"
 #include "wnd/wnd_broad_phaze_interface.h"
@@ -11,6 +13,7 @@
 #include "wnd/wnd_node.h"
 #include "wnd/wnd_object.h"
 #include "wnd/wnd_probe.h"
+#include "wnd/wnd_query.h"
 #include "wnd/wnd_wind.h"
 
 namespace mm {
@@ -45,6 +48,40 @@ WindWorld::~WindWorld() {
 void WindWorld::setDebugMode(bool enable, u32 mask) {
   unknown1d0 = enable;
   unknown10.setDebugWind(enable, mask);
+}
+
+// The three loops are written out: a template helper for them was tried, and it changes the register allocation.
+bool WindWorld::query(Query *query) {
+  if (query != nullptr) {
+    if (query->getRTTI()->isKindOf(&AreaWindQuery::m_rtti)) {
+      AreaWindQuery *areaWindQuery = static_cast<AreaWindQuery *>(query);
+      areaWindQuery->unknown08.clear();
+      for (mm::mtl::IntrusiveList<unknown003<AreaWind>>::iterator it = unknown188.begin(); it != unknown188.end(); ++it) {
+        areaWindQuery->unknown08.push(it.get()->unknown10);
+      }
+      return true;
+    }
+    if (query->getRTTI()->isKindOf(&LocalWindQuery::m_rtti)) {
+      LocalWindQuery *localWindQuery = static_cast<LocalWindQuery *>(query);
+      localWindQuery->unknown08.clear();
+      for (mm::mtl::IntrusiveList<unknown003<LocalWind>>::iterator it = unknown1a0.begin(); it != unknown1a0.end(); ++it) {
+        localWindQuery->unknown08.push(it.get()->unknown10);
+      }
+      return true;
+    }
+    if (query->getRTTI()->isKindOf(&ProbeQuery::m_rtti)) {
+      ProbeQuery *probeQuery = static_cast<ProbeQuery *>(query);
+      probeQuery->unknown08.clear();
+      for (mm::mtl::IntrusiveList<WindProbe>::iterator it = unknown170.begin(); it != unknown170.end(); ++it) {
+        probeQuery->unknown08.push(&*it);
+      }
+      return true;
+    }
+  }
+  if (m_pBroadPhaze != nullptr && m_pBroadPhaze->query(query)) {
+    return true;
+  }
+  return false;
 }
 
 // Addresses 0x710098a768-70. The game inlines GlobalWind::update here instead of calling it,
@@ -124,6 +161,16 @@ void WindWorld::delayErace() {
     unknown1b8.erase(&object->unknown70);
     object->release();
   }
+}
+
+// Address 0x710098a570. The game inlines delayErace, updateGlobalWind and updateProbe here.
+void WindWorld::update(f32 deltaTime) {
+  delayErace();
+  unknown0c += deltaTime;
+  UpdateInfo info = {unknown0c, deltaTime, unknown1d0};
+  // The inlined `updateGlobalWind` keeps its no-op store here (0x710098a6a4, see `updateGlobalWind`).
+  updateGlobalWind(info);
+  updateProbe(info);
 }
 
 // Both functions have empty bodies in the game.

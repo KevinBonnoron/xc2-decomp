@@ -143,6 +143,7 @@ public:
   static bool getAlphaMount(GF_OBJ_HANDLE *handle, GFATTACH attach, f32 &alpha);
   static void gevGameObjEnter(GF_OBJ_HANDLE *handle);
   static void gevGameObjLeave(GF_OBJ_HANDLE *handle);
+  static void setVFadeForMount(GF_OBJ_HANDLE *handle, GFATTACH attach, f32 time);
   static void setAlphaMount(GF_OBJ_HANDLE *handle, GFATTACH attach, f32 alpha);
   static void execMount(GF_OBJ_HANDLE *handle, GFATTACH attach, OPTMNT type);
   static void resetMount(GF_OBJ_HANDLE *handle, GFATTACH attach, OPTMNT type);

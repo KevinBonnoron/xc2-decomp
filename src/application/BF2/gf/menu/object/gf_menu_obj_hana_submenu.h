@@ -6,11 +6,11 @@
 #include "ui/event/ui_object_listener.h"
 
 namespace ui {
+class UICtrlCursorSelect;
 class UIObjectAcc;
 } // namespace ui
 
 namespace gf {
-class GfMenuCallContext;
 
 class GfMenuObjHanaSubmenu : public GfMenuObject {
 public:
@@ -46,9 +46,13 @@ public:
   void update() override;
 
   u8 _24[0x28 - 0x24];
-  GfMenuCallContext *unknown28; // Inferred role: call context, only released by the destructor (class type inferred); original member name unknown.
-  u32 unknown30;                // Inferred role: unused; original member name unknown.
-  u8 _34[0x40 - 0x34];          // The game allocates 0x40 bytes for the object; no function touches the tail.
+  // Evidence: SubmenuListener::reciveEvent (0x7100475624, case 1) stores the result of GfMenuObjUtil::createCursor at 0x28 and calls
+  // UICtrlCursorSelect::open and inputChange on it; the destructor only releases it (the earlier type, GfMenuCallContext, was a guess).
+  ui::UICtrlCursorSelect *unknown28; // Inferred role: cursor; original member name unknown.
+  u32 unknown30;                     // Inferred role: selected submenu index; original member name unknown.
+  f32 unknown34;                     // Inferred role: scale of the icons; original member name unknown.
+  f32 unknown38;                     // Inferred role: selected scale of the icons; original member name unknown.
+  u8 _3c[0x40 - 0x3c];               // The game allocates 0x40 bytes for the object; no function touches the tail.
 };
 
 static_assert(offsetof(GfMenuObjHanaSubmenu::MainListener, unknown20) == 0x20, "");

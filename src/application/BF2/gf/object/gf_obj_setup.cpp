@@ -340,8 +340,8 @@ GfObjSetupExtra *GfObjSetup::createSetupParam(GF_OBJ_HANDLE *handle, const GfIni
 }
 
 GfObjSetupEnemy::GfObjSetupEnemy(const GfInitParamEnemy &param)
-    : GfObjSetup(param, OBJECT_TYPE_ENEMY), unknown6c(param.m_enArrangeID), m_enArrangeID(param.unknown98), unknown98(false), unknowna0(nullptr), unknowna8(0), unknownac(0.0f), unknownb0(0),
-      unknownb2(false), unknownb4(0), unknownb8(param.m_bladeID), unknownc0(nullptr) {
+    : GfObjSetup(param, OBJECT_TYPE_ENEMY), unknown6c(param.m_enArrangeID), m_enArrangeID(param.unknown98), unknown98(false), unknowna0(nullptr), unknowna8(0), unknownac(0.0f), unknownb0(false),
+      unknownb1(false), unknownb2(false), unknownb4(0), unknownb8(param.m_bladeID), unknownc0(nullptr) {
   unknown74 = "S_idle";
   if (unknownb8 != 0) {
     // __LINE__ must be 662 as in the original file: it is the line argument of the allocation.

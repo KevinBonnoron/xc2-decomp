@@ -10,15 +10,13 @@
 #include "gf/object/component/pc/gf_pc_state_util_field.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_util.h"
-#include "mm_math/mm_vec3.h"
 
 namespace gf {
 namespace pc {
 
 void StateFieldLure::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
-  property->unknown80 = mm::Vec3::zero;
-  property->unknown94 = 0.0f;
+  property->unknown007();
   unknown18 = StateUtilField::getLureTargetHandle(*behavior);
 }
 

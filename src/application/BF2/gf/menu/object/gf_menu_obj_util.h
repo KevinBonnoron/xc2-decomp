@@ -69,7 +69,8 @@ public:
   struct unknown001 {
     f32 unknown00; // Inferred role: preset control time; original member name unknown.
     f32 unknown04; // Inferred role: preset control time of preset 6; original member name unknown.
-    u8 _08[0x18 - 0x08];
+    u8 _08[0x14 - 0x08];
+    f32 unknown14; // Inferred role: seconds the field skill total info is shown, read by GfMenuFieldSkill::StateTotalNext::onStep (0x71003bb310); original member name unknown.
     f32 unknown18; // Inferred role: delay of the blade change opening; original member name unknown.
   };
 
@@ -212,7 +213,9 @@ public:
   static const char *getMenuMS(u32 id);
   static u32 getLeaderPartyID();
   static int getLeaderPartyType();
-  static bool isExitDriver(u32 partyId);
+  // Returns int: both game callers (0x71004aea0c in GfMenuObjPartyStatus::MainListener::reciveEvent, 0x71004aebe0 in reciveHpEvent) test the result with
+  // cbz w0, where a bool gives tbz w0, #0 (measured on reciveHpEvent).
+  static int isExitDriver(u32 partyId);
   static u32 setupPartyDriver(const mm::mtl::FixedVector<u16, 16> &drivers);
   static bool isLeaderBladeEnable();
   static bool isBladeEnable(u32 partyId, int slot);
@@ -267,7 +270,7 @@ public:
   static u32 playSE(const char *name);
   static u32 playSECommonDecide();
   static u32 playSECommon(u32 type);
-  static u32 playSECommonFromInput(u32 input);
+  static void playSECommonFromInput(u32 input);
   static u32 playSECommonCancel();
   static u32 playSECommonCursor();
   static u32 playSECommonTab();
@@ -347,6 +350,7 @@ static_assert(offsetof(GfMenuObjUtil::ImageParam, unknown04) == 0x04, "");
 static_assert(sizeof(GfMenuObjUtil::ImageParam) == 0x08, "");
 static_assert(offsetof(GfMenuObjUtil::unknown001, unknown04) == 0x04, "");
 static_assert(offsetof(GfMenuObjUtil::unknown001, unknown18) == 0x18, "");
+static_assert(offsetof(GfMenuObjUtil::unknown001, unknown14) == 0x14, "");
 static_assert(offsetof(GfMenuObjUtil::FitOption, unknown04) == 0x04, "");
 static_assert(offsetof(GfMenuObjUtil::FitOption, unknown08) == 0x08, "");
 static_assert(sizeof(GfMenuObjUtil::FitOption) == 0x0c, "");

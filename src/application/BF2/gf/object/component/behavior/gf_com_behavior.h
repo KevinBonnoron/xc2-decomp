@@ -3,6 +3,7 @@
 
 #include "framework/memory/allocator.h"
 #include "framework/message/message_object.h"
+#include "gf/object/component/animation/gf_com_asm.h"
 #include "gf/object/component/behavior/plugin/gf_plugin_manager.h"
 #include "gf/object/component/gf_component.h"
 #include "mm_math/mm_vec3.h"
@@ -16,9 +17,7 @@ struct UpdateInfo;
 
 namespace gf {
 
-class GfComAsm;
 class GfComEvtAnim;
-struct CallBackCache;
 class Plugin;
 
 enum {
@@ -91,6 +90,13 @@ public:
       }
     }
     return nullptr;
+  }
+
+  // Inferred helper: registers callbackAnim as the "system" callback of the asm component; original name unknown. The setup of GfComBehaviorSalvage (0x710057e86c), GfComBehaviorUI (0x7100580990),
+  // GfComBehaviorPc (0x71005646e4) and GfComBehaviorEnemy (0x7100516a3c) all hold these two statements inline, with no call; they match with this one helper.
+  void unknown014(GfComAsm *comAsm) {
+    comAsm->unknown70[0].unknown00 = "system";
+    comAsm->unknown70[0].unknown08.bind<GfComBehavior>(this, &GfComBehavior::callbackAnim);
   }
 
   PluginManager unknown10; // Inferred role: plugin manager; original member name unknown.

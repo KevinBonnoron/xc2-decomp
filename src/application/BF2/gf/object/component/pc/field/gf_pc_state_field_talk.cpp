@@ -16,7 +16,6 @@
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
-#include "mm_math/mm_vec3.h"
 
 namespace gf {
 namespace pc {
@@ -36,8 +35,7 @@ void StateFieldTalk::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   }
   StateUtilField::setAccessFlag(*behavior, false);
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
-  property->unknown80 = mm::Vec3::zero;
-  property->unknown94 = 0.0f;
+  property->unknown007();
   StateUtilField::setSpecialActStatus(*behavior, true);
   StateUtilField::execAsmCmd(*behavior->unknown08->getComponent<GfComAsm>(), ASM_CMD_ID_FIELD_IDLE);
   StateUtil::setEnableDownIK(*behavior, true);

@@ -28,6 +28,16 @@ bool unknown005;
 
 } // namespace
 
+// 0x710076ae90. 0x80 is the fourth argument of the WorkObj constructor (0x710076aea0). The reslist of the former current views is created with
+// 0x80 nodes (the count stored at 0x710076af9c; 0xc00 bytes allocated at 0x710076af2c, the pool loop of the game is the reslist::create loop
+// unrolled twice) from the work memory handle at 0x54 (0x710076af3c). unknown005, the cutOff flag, is cleared at 0x710076afa8.
+WinViewRoot::WinViewRoot(const char *name, WorkObj *parent) : WorkObj(name, parent, 0x80), unknown1f0(nullptr), unknown1f8(nullptr), unknown200(nullptr), unknown208(0xffffffff) {
+  unknown1b0.create(0x80, unknown54);
+  unknown005 = false;
+}
+
+WinViewRoot::~WinViewRoot() {}
+
 WinView *WinViewRoot::getView(u32 wid) {
   if (get() == nullptr) {
     return nullptr;

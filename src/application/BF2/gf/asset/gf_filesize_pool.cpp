@@ -152,6 +152,22 @@ bool GfFileSizePool::getFileSize(int &size, u64 handle) const {
   return false;
 }
 
+bool GfFileSizePool::getFileSize(int &size, const char *path) const {
+  u32 hash = mm::mtl::hashStrCrc(path);
+  bool isFound = false;
+  // The game ANDs the two flags (`and w0, w8, w9` at 0x71001ccd08) and, when no entry matches (0x71001cccac), has stored nothing in w9: it still holds
+  // the loop pointer.
+  bool hasSize;
+  for (const unknown001 *it = unknown10.begin(); it != unknown10.end(); ++it) {
+    if (getHashFromHandle(it->unknown00) == hash) {
+      isFound = true;
+      hasSize = getFileSize(size, it->unknown00);
+      break;
+    }
+  }
+  return isFound && hasSize;
+}
+
 u32 GfFileSizePool::fnThread(void *argument) {
   GfFileSizePool *pool = get();
   pool->unknown1e0c8 = true;

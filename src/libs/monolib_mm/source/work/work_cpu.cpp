@@ -1,5 +1,7 @@
 #include "ml/work_cpu.h"
 
+#include <algorithm>
+
 #include "ml/critical_section.h"
 #include "ml/dev_clock.h"
 #include "ml/dev_graph.h"
@@ -15,8 +17,7 @@
 #include "mm/mm_std_base.h"
 #include "mm_mtl/algorithm.h"
 #include "mm_mtl/fixed_list.h" // IWYU pragma: keep
-
-#include <algorithm>
+#include "mtl/mem_manager.h"
 
 namespace ml {
 
@@ -36,6 +37,7 @@ bool s_bStallRender;
 long s_aHearBeat[3];
 s32 s_cpuStall;
 bool s_bBackGround;
+bool s_aInfinite[3];
 
 CriticalSection &getSwapLock() {
   static CriticalSection lock;
@@ -52,12 +54,27 @@ CriticalSection &getListGrpLock() {
   return lock;
 }
 
+CriticalSection &getJobBufLock() {
+  static CriticalSection lock;
+  return lock;
+}
+
 CriticalSection &getListenerLock() {
   static CriticalSection lock;
   return lock;
 }
 
+CriticalSection &getSuspendJobLock() {
+  static CriticalSection lock;
+  return lock;
+}
+
 CriticalSection &getTermThreadLock() {
+  static CriticalSection lock;
+  return lock;
+}
+
+CriticalSection &getAutoExecLock() {
   static CriticalSection lock;
   return lock;
 }
@@ -68,6 +85,56 @@ CriticalSection &getWaitingJobLock() {
 }
 
 } // namespace _mlwcpu
+
+// Evidence for the body statements (0x710076eedc): the game calls CriticalSectionNC::CriticalSectionNC for the last member (0x710076f77c) and only
+// afterwards zeroes m_jobTrans (0x2028), unknown1740 and the eight clocks from unknown2048 to m_syncClock (0x710076f780-0x710076f7b4, stores
+// that cannot move over the call): they are statements of the body, not member initialisers. Measured: with them in the initialiser list ours
+// stores unknown1738 and m_thread (both 1) as one 64-bit store and writes the clocks as a memset call (689 instructions); as body statements
+// the two stay separate 32-bit stores like in the game's 0x710076effc and the function has the game's 672 instructions.
+WorkCpu::WorkCpu(const char *name, WorkObj *parent)
+    : WorkObj(name, parent, 0x10), unknown1b0(0), unknown1b4(), unknown1b8(), m_cpuNum(0), unknown1738(DO_THREAD_UNKNOWN_1), m_thread(DO_THREAD_UNKNOWN_1), unknown1758(-1), unknown175c(-1),
+      unknown1760(false), m_even(0), unknown1798(nullptr), unknown1958(0), unknown195c(0), unknown2020(0), unknown2030(0.0f), unknown2034(0.0f), unknown2038(0.0f), unknown203c(0.0f),
+      unknown2040(false), unknown2088(0), unknown2090(0) {
+  for (int i = 0; i < 2; i++) {
+    m_jobTrans[i] = 0;
+  }
+  for (int i = 0; i < 3; i++) {
+    unknown1740[i] = nullptr;
+  }
+  for (int i = 0; i < 5; i++) {
+    unknown2048[i] = 0;
+  }
+  m_tailStartClock = 0;
+  m_tailEndClock = 0;
+  m_syncClock = 0;
+  for (int i = 0; i < 3; i++) {
+    _mlwcpu::s_aHearBeat[i] = 0;
+  }
+  // The game stores s_aInfinite[0..1] as one strh and s_aInfinite[2] as one strb (0x710076f7c4-0x710076f7c8), which three statements in index order
+  // reproduce. Forms tried with clang 3.9.1, all measured: a loop over the three flags, memset, std::fill and `a[0] = a[1] = a[2] = false` expand
+  // as strb [2] then strh [0] (first difference at 0x710076f7c4), and memset placed before the s_aHearBeat loop moves the load of the s_aInfinite
+  // address (0x710076f788); the loop over s_aHearBeat (24 bytes, str then stp) matches.
+  _mlwcpu::s_aInfinite[0] = false;
+  _mlwcpu::s_aInfinite[1] = false;
+  _mlwcpu::s_aInfinite[2] = false;
+  unknown2020 = ThreadUtil::getCurrentID();
+  _mlwcpu::getSuspendJobLock().setCostIgnore(true);
+  _mlwcpu::getListGrpLock().setCostIgnore(true);
+  _mlwcpu::getJobBufLock().setCostIgnore(true);
+  _mlwcpu::getAutoExecLock().setCostIgnore(true);
+  unknown2098 = std::chrono::system_clock::now();
+}
+
+WorkCpu::~WorkCpu() {
+  if (unknown1b4.isValid()) {
+    mtl::MemManager::erase(unknown1b4);
+    unknown1b4 = mtl::ALLOC_HANDLE();
+  }
+  if (unknown1b8.isValid()) {
+    mtl::MemManager::erase(unknown1b8);
+    unknown1b8 = mtl::ALLOC_HANDLE();
+  }
+}
 
 bool WorkCpu::s_bRenderSubCpu;
 
@@ -329,6 +396,75 @@ WorkCpu::GRPLIST *WorkCpu::getListGrp(int handle) {
   }
 
   return nullptr;
+}
+
+TJOB *WorkCpu::allocJob() {
+  CS lock(_mlwcpu::getJobBufLock());
+  u32 *bits = unknown1768.unknown10;
+  for (u32 word = 0; word < unknown1768.unknown20; word++, bits++) {
+    u32 value = *bits;
+    if (value != 0xffffffff) {
+      u32 bit = (value & 0xffff) == 0xffff ? 16 : 0;
+      for (u32 mask = 1 << bit; bit < 32; bit++, mask <<= 1) {
+        if ((mask & value) == 0) {
+          unknown1768.unknown24++;
+          *bits |= mask;
+          return unknown1768.unknown18 + (word * 32 + bit);
+        }
+      }
+    }
+  }
+  return nullptr;
+}
+
+void WorkCpu::freeJob(TJOB *job) {
+  CS lock(_mlwcpu::getJobBufLock());
+  u32 index = job - unknown1768.unknown18;
+  u32 word = index / 32;
+  u32 bit = 1 << (index % 32);
+  if ((unknown1768.unknown10[word] & bit) != 0) {
+    unknown1768.unknown10[word] &= ~bit;
+    unknown1768.unknown24--;
+  }
+}
+
+bool WorkCpu::removeAutoExecGrp(int group) {
+  WorkCpu *instance = get();
+  if (instance == nullptr) {
+    return false;
+  }
+
+  CS lock(_mlwcpu::getAutoExecLock());
+  for (mm::mtl::FixedList<AUTO_EXEC, 32>::iterator it = instance->unknown17a0.begin(); it != instance->unknown17a0.end(); ++it) {
+    if ((*it).unknown00 == group) {
+      instance->unknown17a0.erase(it);
+      return true;
+    }
+  }
+
+  return false;
+}
+
+void WorkCpu::setJobSuspendEnable(u32 mask, bool isEnable) {
+  WorkCpu *instance = get();
+  if (instance != nullptr) {
+    CS lock(_mlwcpu::getSuspendJobLock());
+    if (isEnable) {
+      instance->unknown1958 |= mask;
+    } else {
+      instance->unknown1958 &= ~mask;
+    }
+  }
+}
+
+bool WorkCpu::isJobSuspendEnable(CPUID cpu) {
+  WorkCpu *instance = get();
+  if (instance == nullptr) {
+    return false;
+  }
+
+  CS lock(_mlwcpu::getSuspendJobLock());
+  return (instance->unknown1958 & (1 << (cpu - 1))) != 0;
 }
 
 void WorkCpu::wakeup(int cpu) {
@@ -639,6 +775,57 @@ void WorkCpu::entrySwap(IThreadValue *value) {
   cpu->unknown1c0[index].push_back(value);
 }
 
+bool WorkCpu::releaseGroupHandle(int handle) {
+  WorkCpu *cpu = get();
+  if (cpu == nullptr) {
+    return false;
+  }
+
+  sync(handle, WKCPU_SYNC_UNKNOWN_0, CPUID_UNKNOWN_0);
+  if (!isBusyJob(handle)) {
+    CS lock(_mlwcpu::getListGrpLock());
+    GRPLIST *group = cpu->getListGrp(handle);
+    for (u32 i = 0; i < get()->m_cpuNum; i++) {
+      reslist<TJOB *> *jobs = group->unknown08[i];
+      for (reslist<TJOB *>::Node *node = jobs->begin(); node != jobs->end(); node = node->getNext()) {
+        cpu->freeJob(node->value);
+      }
+    }
+
+    for (mm::mtl::FixedList<GRPLIST, 128>::iterator it = cpu->unknown280.begin(); it != cpu->unknown280.end(); ++it) {
+      if (&*it == group) {
+        for (u32 i = 0; i < get()->m_cpuNum; i++) {
+          it->unknown08[i]->release();
+          if (it->unknown08[i] != nullptr) {
+            delete it->unknown08[i];
+            it->unknown08[i] = nullptr;
+          }
+        }
+        cpu->unknown280.erase(it);
+        break;
+      }
+    }
+  }
+
+  return true;
+}
+
+u32 WorkCpu::getResult(int handle) {
+  CS lock(_mlwcpu::getListGrpLock());
+  WorkCpu *cpu = get();
+  GRPLIST *group = cpu->getListGrp(handle);
+  for (u32 i = 0; i < get()->m_cpuNum; i++) {
+    reslist<TJOB *> *jobs = group->unknown08[i];
+    for (reslist<TJOB *>::Node *node = jobs->begin(); node != jobs->end(); node = node->getNext()) {
+      if (node->value->unknown24 == handle) {
+        return node->value->unknown20;
+      }
+    }
+  }
+
+  return 0;
+}
+
 u32 WorkCpu::runThread(CPUID cpu, u32 (*function)(void *, void *), void *argument, void *userData, const mm::Col3 *color, bool isDebug, WKCPU_SYNC sync) {
   WorkCpu *instance = get();
   if (instance != nullptr && (instance->unknown1b0 & 0x2) != 0 && getRenderCPUID() == cpu) {
@@ -790,6 +977,29 @@ void WorkCpu::removeSystemInfoListener(IWorkInfomation *listener) {
     }
     CriticalSection::leave(lock);
   }
+}
+
+bool WorkCpu::registErrorCB(IErrorCB *callback) {
+  WorkCpu *cpu = get();
+  if (callback == nullptr || cpu == nullptr) {
+    return false;
+  }
+
+  // The game calls ~CSNC twice, at 0x7100770834 when the list is full and at 0x71007708e0 after the insertion: the lock ends in its own block and
+  // the function ends with `return false` after it. With the lock for the whole function and `if (size() == 32) return false;` ours has 78
+  // instructions instead of 79 (measured). The loop without a body is the game's list walk at 0x7100770814-0x7100770820.
+  {
+    CSNC lock(cpu->unknown22e0);
+    for (mm::mtl::FixedList<IErrorCB *, 32>::iterator it = cpu->unknown20a0.begin(); it != cpu->unknown20a0.end(); ++it) {
+    }
+
+    if (cpu->unknown20a0.size() != 32) {
+      cpu->unknown20a0.push_back(callback);
+      return true;
+    }
+  }
+
+  return false;
 }
 
 bool WorkCpu::unregistErrorCB(IErrorCB *callback) {

@@ -1,5 +1,8 @@
 #include "framework/ik/ik_placement_ground_solver.h"
 
+#include "framework/memory/allocator.h"
+#include "framework/memory/framework_memory.h"
+
 #include "anm/anm_pose.h"
 #include "anm/anm_qs_transform.h"
 #include "framework/ik/ik_foot_placement_solver.h"
@@ -10,8 +13,18 @@
 #include "mm_math/mm_math.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_math/mm_vec4.h"
+#include "mm_mtl/bitflag.h"
 
 namespace fw {
+
+// __LINE__ of the game: it is the line argument of operator new.
+#line 34
+PlacementGroundSolver *PlacementGroundSolver::create(const Description &description, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose, IKGroundInterface *ground) {
+  PlacementGroundSolver *solver = new (Allocator::getProcAllocator(), 16, __FILE__, __LINE__) PlacementGroundSolver();
+  solver->addRef();
+  solver->createImpl(description, frame, pose, ground);
+  return solver;
+}
 
 PlacementGroundSolver::PlacementGroundSolver() : unknown58(0.3f), unknown5c(2), unknown60(0.0f), unknown64(false), unknown65(false), unknown68(nullptr) {}
 
@@ -113,7 +126,7 @@ void PlacementGroundSolver::overwriteRaycastUp(f32 distance) {
 void PlacementGroundSolver::resetRaycastUp() {
   for (u32 i = 0; i < unknown20.size(); i++) {
     if (unknown20[i].get() != nullptr) {
-      unknown20[i]->unknowna0 &= ~4;
+      unknown20[i]->unknowna0.unknown004(FootPlacementIKSolver::FLAG_UNKNOWN_2);
     }
   }
 }
@@ -129,7 +142,7 @@ void PlacementGroundSolver::overwriteRaycastDown(f32 distance) {
 void PlacementGroundSolver::resetRaycastDown() {
   for (u32 i = 0; i < unknown20.size(); i++) {
     if (unknown20[i].get() != nullptr) {
-      unknown20[i]->unknowna0 &= ~8;
+      unknown20[i]->unknowna0.unknown004(FootPlacementIKSolver::FLAG_UNKNOWN_3);
     }
   }
 }

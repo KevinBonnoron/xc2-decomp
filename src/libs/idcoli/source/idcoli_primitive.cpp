@@ -1,4 +1,5 @@
 #include <math.h>
+#include <stddef.h>
 #include <string.h>
 
 #include "idcoli/idcoli.h"
@@ -537,6 +538,67 @@ void IDColiPrimitive::createBaseCharacter(void *data, IDColiBaseType &type, cons
     capsule->unknown10.y += length;
     calcCapsuleSetup(capsule);
     type = IDColiBaseType_UNKNOWN_3;
+  }
+}
+
+// Inferred role: work buffer of a character primitive that keeps its last move after the sphere or capsule, at 0x60; original
+// type name unknown. Evidence: IDColiPrimitive::createSubBaseCharacter (1.0.0: 0x71008e0000) stores the move vector at +0x60.
+struct unknown200 {
+  union {
+    CLSphereWork sphere;
+    CLCapsuleWork capsule;
+  };
+  mm::Vec3 unknown60;
+};
+
+static_assert(offsetof(unknown200, unknown60) == 0x60, "");
+
+void IDColiPrimitive::createSubBaseCharacter(void *data, IDColiBaseType &type, const mm::Mat44 &matrix, const mm::Vec3 &size, bool isSub) {
+  unknown200 *work = static_cast<unknown200 *>(data);
+  f32 scale = unknown123(matrix) * IDColiObj::OBJ_CALC_RADIUS;
+  f32 radius = size.x * scale;
+  f32 height = scale * size.y;
+  // The game branches to the sphere arm with an ordered <= (b.ls, so a NaN length takes the capsule arm) and lays the capsule arm out
+  // first. 'length > 0.01f' does not match; 'if (length <= 0.01f)' with the sphere arm first stores the move of the capsule arm by two str
+  // around a fmul instead of one stp (135 instructions against the game's 134). This negated test with the capsule arm first is the form
+  // that matches.
+  if (!(height - radius * 2.0f <= 0.01f)) {
+    work->capsule.unknown50 = radius;
+    if (isSub) {
+      work->unknown60 = mm::Vec3(0.0f, 0.0f, 0.0f);
+      work->capsule.unknown00 = matrix.unknown004();
+      work->capsule.unknown00.y += height;
+    } else {
+      mm::Vec3 position = matrix.unknown004();
+      position.y += height;
+      work->unknown60.x = position.x - work->capsule.unknown00.x;
+      work->unknown60.y = position.y - work->capsule.unknown00.y;
+      work->unknown60.z = position.z - work->capsule.unknown00.z;
+      if (work->unknown60.x * work->unknown60.x + work->unknown60.y * work->unknown60.y + work->unknown60.z * work->unknown60.z >= 4.0f) {
+        work->unknown60 = mm::Vec3(0.0f, 0.0f, 0.0f);
+      }
+      work->capsule.unknown00 = position;
+    }
+    work->capsule.unknown10 = work->capsule.unknown00;
+    work->capsule.unknown10.y -= height;
+    calcCapsuleSetup(&work->capsule);
+    type = IDColiBaseType_UNKNOWN_3;
+  } else {
+    work->sphere.unknown10 = radius;
+    if (isSub) {
+      work->unknown60 = mm::Vec3(0.0f, 0.0f, 0.0f);
+      work->sphere.unknown00 = matrix.unknown004();
+    } else {
+      mm::Vec3 position = matrix.unknown004();
+      work->unknown60.x = position.x - work->sphere.unknown00.x;
+      work->unknown60.y = position.y - work->sphere.unknown00.y;
+      work->unknown60.z = position.z - work->sphere.unknown00.z;
+      if (work->unknown60.x * work->unknown60.x + work->unknown60.y * work->unknown60.y + work->unknown60.z * work->unknown60.z >= 4.0f) {
+        work->unknown60 = mm::Vec3(0.0f, 0.0f, 0.0f);
+      }
+      work->sphere.unknown00 = position;
+    }
+    type = IDColiBaseType_UNKNOWN_4;
   }
 }
 

@@ -1,4 +1,5 @@
 // Original file name inferred from the job type strings and the skd_detect_info.h assertion file path.
+#include "anm/anm_array-inl.h"
 #include "anm/anm_job.h"
 #include "anm/anm_job_queue.h"
 #include "anm/anm_pose.h"
@@ -50,7 +51,44 @@ template <typename Job> void unknown002(anm::Job &job) {
   }
 }
 
+// Inferred helper: appends the hit entry of a node unless the node has flag bit 0 set, else returns nullptr; the
+// original name is unknown. The index is a reference: the game reloads it after the append (0x7100982f9c).
+DetectInfo *unknown003(const NodeArray *nodes, const u16 &index, DetectInfoBuffer *buffer) {
+  if (((*nodes->unknown00)[index].unknown24 & 1) != 0) {
+    return nullptr;
+  }
+  DetectInfo *info = buffer->unknown001();
+  info->unknown00 = index;
+  return info;
+}
+
 } // namespace
+
+// addDetectSphereJob, addDetectCapsuleJob and addDetectPlaneJob stay written out. A template helper for them was tried,
+// but it gives addDetect*Job a 0x160 frame against the game's 0x1a0.
+void addDetectCapsuleJob(const CapsuleCollObj *object, const ResNodeCollision *nodeCollision, const NodeArray *nodes, const mm::Vec3 &position, DetectInfoBuffer *buffer, anm::JobQueue *queue) {
+  if ((nodeCollision->unknown0c & (1u << object->unknown00->unknown18)) == 0) {
+    return;
+  }
+  DetectCapsuleJob job(object, nodeCollision, position, unknown003(nodes, nodeCollision->unknown00, buffer), unknown003(nodes, nodeCollision->unknown02, buffer));
+  queue->unknown001(job);
+}
+
+void addDetectPlaneJob(const PlaneCollObj *object, const ResNodeCollision *nodeCollision, const NodeArray *nodes, const mm::Vec3 &position, DetectInfoBuffer *buffer, anm::JobQueue *queue) {
+  if ((nodeCollision->unknown0c & (1u << object->unknown00->unknown18)) == 0) {
+    return;
+  }
+  DetectPlaneJob job(object, nodeCollision, position, unknown003(nodes, nodeCollision->unknown00, buffer), unknown003(nodes, nodeCollision->unknown02, buffer));
+  queue->unknown001(job);
+}
+
+void addDetectSphereJob(const ShpereCollObj *object, const ResNodeCollision *nodeCollision, const NodeArray *nodes, const mm::Vec3 &position, DetectInfoBuffer *buffer, anm::JobQueue *queue) {
+  if ((nodeCollision->unknown0c & (1u << object->unknown00->unknown18)) == 0) {
+    return;
+  }
+  DetectSphereJob job(object, nodeCollision, position, unknown003(nodes, nodeCollision->unknown00, buffer), unknown003(nodes, nodeCollision->unknown02, buffer));
+  queue->unknown001(job);
+}
 
 void executeDetectSphereJob(anm::Job &job) { unknown002<DetectSphereJob>(job); }
 

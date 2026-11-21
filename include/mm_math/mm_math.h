@@ -161,9 +161,10 @@ inline void unknown001(Mat44 &matrix, const Quat &quat) {
 
 // Inferred helper: quaternion of the rotation of a matrix; original name unknown. Evidence: inlined in fw::PrimCapsule::setup
 // (1.0.0: 0x7100197934), whose stack holds the four values and the pointers to the four components below the quaternion of
-// the caller, and in gf::GfFieldLodColiAnim::PosInfo::syncGfTransform (0x71002e2728).
-// Internal linkage: the game inlines it into the single caller of each unit.
-static inline void unknown004(Quat &rotation, const Mat44 &matrix) {
+// the caller, in gf::GfFieldLodColiAnim::PosInfo::syncGfTransform (0x71002e2728), and in each of mm::Cube, mm::Cylinder and
+// mm::Sphere (const Mat44 &) (0x710070b918, 0x710070bc28, 0x710070be8c), three callers in one unit: clang 3.9 leaves it out of line there.
+// Internal linkage: the game inlines it into every caller.
+__attribute__((always_inline)) static inline void unknown004(Quat &rotation, const Mat44 &matrix) {
   f32 values[4];
   values[0] = ((matrix.rows[0][0] - matrix.rows[1][1]) - matrix.rows[2][2]) + 1.0f;
   values[1] = ((matrix.rows[1][1] - matrix.rows[0][0]) - matrix.rows[2][2]) + 1.0f;

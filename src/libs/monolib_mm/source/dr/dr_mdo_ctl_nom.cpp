@@ -5,11 +5,13 @@
 #include "dr/dr_light_obj.h"
 #include "dr/dr_man.h"
 #include "dr/dr_mdl_base.h"
+#include "dr/dr_mdl_man.h"
 #include "dr/dr_mdo_ctl.h"
 #include "dr/dr_mdo_mat.h"
 #include "dr/dr_mdo_nom_after_image.h"
 #include "dr/dr_mdo_sml_shadow_man.h"
 #include "dr/dr_pixl_man.h"
+#include "dr/dr_pixl_occ_query.h"
 #include "dr/dr_pixl_shadow_cache_man.h"
 #include "dr/dr_pixl_shadow_man.h"
 #include "dr/dr_pixl_shadow_obj.h"
@@ -24,6 +26,7 @@
 #include "dr/dr_res_mdo_vtx_mesh_obj.h"
 #include "grlib/cglib_ctl_shader.h"
 #include "mm_math/mm_col3.h"
+#include "mm_math/mm_vec3.h"
 #include "mtl/alloc_handle.h"
 
 namespace ml {
@@ -57,6 +60,121 @@ void DrMdoCtlNom::setDisp(bool isDisp) {
 
 void DrMdoCtlNom::callShadowCacheUpdate(u64 flags) { unknown230 &= ~flags; }
 
+void DrMdoCtlNom::occRender() {
+  if (unknown168 & 2) {
+    m_drMan->unknown78->unknown7f8->occRenderAABB(unknown1f8, unknown130, unknown140);
+  }
+  if (unknown168 & 4) {
+    unknown724 *pos = unknown30->unknown160_2;
+    m_drMan->unknown78->unknown7f8->occRenderPosAABB(pos->unknown38, pos->unknown20, pos->unknown30, pos->unknown18);
+  }
+}
+
+bool DrMdoCtlNom::cloneMdlObj(DrMdlObj *source) {
+  bool isCloned = DrMdoNomClone::cloneMdlObj(static_cast<DrMdoCtlNom *>(source), this);
+  if (isCloned) {
+    unknown20 &= ~(unknown038_5 | unknown038_6);
+  }
+  return isCloned;
+}
+
+// Repeats the model manager flag block of DrMdoCtlPos::update (0x7100810b80) and DrMdoCtlSeamAll::update (0x710081c6e8) (decision 2026-11-13, ruling 8): the
+// game's block here has seven tests, without the one of bit 17 (tbz w9, #0x10 at 0x71008069e8 is followed by #0x12 at 0x71008069fc, nothing for #0x11), so
+// no helper shared by the three functions gives the game's code, and a helper taking the set of tests would be a parameter the source has no trace of.
+void DrMdoCtlNom::update() {
+  stmResSetup();
+  updateAlphaCall();
+  updateNom();
+  DrMdlMan *mdlMan = m_drMan->unknown88;
+  if (unknownf8 & unknown028_15) {
+    mdlMan->unknown230->unknown00 = true;
+  }
+  if (unknownf8 & unknown028_16) {
+    mdlMan->unknown230->unknown01 = true;
+  }
+  if (unknownf8 & unknown028_18) {
+    mdlMan->unknown230->unknown07 = true;
+  }
+  if (unknownf8 & unknown028_3) {
+    mdlMan->unknown230->unknown03 = true;
+  }
+  if (unknownf8 & unknown028_2) {
+    mdlMan->unknown230->unknown04 = true;
+  }
+  if (unknownf8 & unknown028_8) {
+    mdlMan->unknown230->unknown08 = true;
+  }
+  if (unknownf8 & unknown028_9) {
+    mdlMan->unknown230->unknown09 = true;
+  }
+  if (unknown210 != nullptr) {
+    unknown210->setCallDisp(true);
+  }
+}
+
+void DrMdoCtlNom::updateVanishEffectParams() {
+  if (getVanishEffectWrk(0, 2) == nullptr) {
+    return;
+  }
+  for (u32 i = 0; i < getVanishEffectMax(); i++) {
+    MdoWrkVanishEffect *dst = getVanishEffectWrk(i, 2);
+    MdoWrkVanishEffect *src = getVanishEffectWrk(i, DrMan::s_nDblStockIdx);
+    if (src->unknownd4 & 1) {
+      for (int j = 0; j < 5; j++) {
+        dst->unknown00[j] = src->unknown00[j];
+      }
+    }
+    if (src->unknownd4 & (1 << 1)) {
+      dst->unknown40 = src->unknown40;
+    }
+    if (src->unknownd4 & (1 << 2)) {
+      dst->unknown50 = src->unknown50;
+    }
+    if (src->unknownd4 & (1 << 3)) {
+      for (int j = 0; j < 5; j++) {
+        dst->unknown60[j] = src->unknown60[j];
+      }
+    }
+    if (src->unknownd4 & (1 << 4)) {
+      for (int j = 0; j < 5; j++) {
+        dst->unknown74[j] = src->unknown74[j];
+      }
+    }
+    if (src->unknownd4 & (1 << 5)) {
+      for (int j = 0; j < 5; j++) {
+        dst->unknown88[j] = src->unknown88[j];
+      }
+    }
+    if (src->unknownd4 & (1 << 6)) {
+      dst->unknown9c = src->unknown9c;
+    }
+    if (src->unknownd4 & (1 << 7)) {
+      dst->unknowna0 = src->unknowna0;
+    }
+    if (src->unknownd4 & (1 << 8)) {
+      dst->unknowna4 = src->unknowna4;
+    }
+    if (src->unknownd4 & (1 << 9)) {
+      dst->unknowna8 = src->unknowna8;
+    }
+    if (src->unknownd4 & (1 << 10)) {
+      for (int j = 0; j < 4; j++) {
+        dst->unknownac[j] = src->unknownac[j];
+      }
+    }
+    if (src->unknownd4 & (1 << 11)) {
+      for (int j = 0; j < 4; j++) {
+        dst->unknownbc[j] = src->unknownbc[j];
+      }
+    }
+    // The game tests bit 8 a second time after the last copy (0x7100807388) and reads unknowna4 again for unknownd0.
+    if (src->unknownd4 & (1 << 8)) {
+      dst->unknownd0 = src->unknowna4;
+    }
+    src->unknownd4 = 0;
+  }
+}
+
 void DrMdoCtlNom::updateRimBloomParams() {
   if (getRimBloomWrk(2) != nullptr) {
     unknown091 *dst = getRimBloomWrk(2);
@@ -79,7 +197,7 @@ void DrMdoCtlNom::updateRimBloomParams() {
 
 void DrMdoCtlNom::updateShdMdl() {
   if (unknown1d0 != nullptr && unknown1d0->update(unknown30->unknown88)) {
-    unknown20 &= ~0x60;
+    unknown20 &= ~(unknown038_5 | unknown038_6);
   }
 }
 
@@ -168,7 +286,7 @@ void DrMdoCtlNom::nomCallRender(int pass) {
   beginSetup();
   const MdsMdlTopHeader *top = unknown30->unknown168;
   for (int i = 0; i < unknown30->unknown170; i++, top++) {
-    DrResChkList **lists = unknown190[i];
+    DrResChkList **lists = &unknown190[i * 8];
     DrResChkList *list = lists[unknownf4];
     if (list != nullptr) {
       nomRender(top, list);
@@ -302,7 +420,8 @@ void DrMdoCtlNom::shadowMapDirRender(int index) {
   unknown30->unknownc8->beginVertexSetup();
   const MdsMdlTopHeader *top = unknown30->unknown168;
   for (int i = 0; i < unknown30->unknown170; i++, top++) {
-    DrResChkList *list = unknown190[i][6];
+    DrResChkList **lists = &unknown190[i * 8];
+    DrResChkList *list = lists[6];
     if (list != nullptr) {
       const MdsMdlInfoHeader *infos = reinterpret_cast<const MdsMdlInfoHeader *>(unknown30->unknown18 + top->unknown00);
       s16 nodeMax = m_nodeMax;
@@ -397,7 +516,7 @@ void DrMdoCtlNom::shadowRender() {
   }
   const MdsMdlTopHeader *top = unknown30->unknown168;
   for (int i = 0; i < unknown30->unknown170; i++, top++) {
-    DrResChkList **lists = unknown190[i];
+    DrResChkList **lists = &unknown190[i * 8];
     DrResChkList *list = lists[unknownf4];
     if (list != nullptr) {
       shwRender(top, list);

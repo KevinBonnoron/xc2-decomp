@@ -44,6 +44,21 @@ void GfGameVisible::destroy() {
 
 void GfGameVisible::cleanup() {}
 
+bool GfGameVisible::isVisible(GF_OBJ_HANDLE *handle) {
+  // The game ends every path but the found one with `and w0, w9, w8` (0x71003574c4): w9, the lookup's `visible`, is never set on them (it holds whatever the registers had: the caller's
+  // value or the map end pointer) and w8, the found flag, is 0, so the result is false. `visible` is read unset here, as in the game; the bytes need that read.
+  bool visible;
+  bool found = false;
+  if (get() != nullptr) {
+    mm::mtl::Map<GF_OBJ_HANDLE *, Info *>::iterator it = get()->unknown08.find(handle);
+    if (it != get()->unknown08.end() && it->second != nullptr) {
+      visible = it->second->unknown00;
+      found = true;
+    }
+  }
+  return visible & found;
+}
+
 void GfGameVisible::update(const fw::UpdateInfo &info) {
   if (get() != nullptr) {
     get()->updateImpl(info);

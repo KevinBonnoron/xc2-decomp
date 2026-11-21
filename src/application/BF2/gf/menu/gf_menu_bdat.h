@@ -40,7 +40,7 @@ public:
   static int getFieldSkillTypeMax();
   static u8 *getBladeDataFP(u32 blade, u32 &id);
   static u32 getValueLevel(u8 *bdat, u32 value);
-  static u16 getIconIDFromArtsID(u16 arts);
+  static u32 getIconIDFromArtsID(u16 arts);
   static void getFieldSkillName(u16 skill, ui::UIStr &name);
   static int getIconIDFromWeatherType(u32 weatherType);
 };

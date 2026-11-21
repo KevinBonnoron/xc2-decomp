@@ -2,6 +2,7 @@
 #include "event/i_manager.h"
 #include "ml/work_background.h"
 #include "ml/work_event.h"
+#include "mm_mtl/bitflag.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/singleton.h"
@@ -32,20 +33,22 @@ public:
     LANGUAGE_MODE_UNKNOWN_2, // Inferred role: voice type 1; original name unknown.
   };
 
+  // Bit indices of the flags, for mm::mtl::unknown027<32>::test/set.
   enum {
-    FLAG_UNKNOWN_0 = 1 << 0,   // Inferred role: play flag; original name unknown.
-    FLAG_UNKNOWN_1 = 1 << 1,   // Inferred role: play end flag; original name unknown.
-    FLAG_UNKNOWN_2 = 1 << 2,   // Inferred role: end fade out flag; original name unknown.
-    FLAG_UNKNOWN_10 = 1 << 10, // Inferred role: hide info flag; original name unknown.
+    FLAG_UNKNOWN_0 = 0,   // Inferred role: play flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1,   // Inferred role: play end flag; original name unknown.
+    FLAG_UNKNOWN_2 = 2,   // Inferred role: end fade out flag; original name unknown.
+    FLAG_UNKNOWN_10 = 10, // Inferred role: hide info flag; original name unknown.
   };
 
+  // Bit indices of the states, for mm::mtl::unknown027<32>::test/set.
   enum {
-    STATE_UNKNOWN_0 = 1 << 0, // Inferred role: init; original name unknown.
-    STATE_UNKNOWN_1 = 1 << 1, // Inferred role: setup scene end; original name unknown.
-    STATE_UNKNOWN_2 = 1 << 2, // Inferred role: start scene; original name unknown.
-    STATE_UNKNOWN_3 = 1 << 3, // Inferred role: start page; original name unknown.
-    STATE_UNKNOWN_4 = 1 << 4, // Inferred role: end scene; original name unknown.
-    STATE_UNKNOWN_5 = 1 << 5, // Inferred role: stop; original name unknown.
+    STATE_UNKNOWN_0 = 0, // Inferred role: init; original name unknown.
+    STATE_UNKNOWN_1 = 1, // Inferred role: setup scene end; original name unknown.
+    STATE_UNKNOWN_2 = 2, // Inferred role: start scene; original name unknown.
+    STATE_UNKNOWN_3 = 3, // Inferred role: start page; original name unknown.
+    STATE_UNKNOWN_4 = 4, // Inferred role: end scene; original name unknown.
+    STATE_UNKNOWN_5 = 5, // Inferred role: stop; original name unknown.
   };
 
   Manager(ml::Scn *scn);
@@ -54,8 +57,8 @@ public:
   gf::GF_OBJ_HANDLE *getObjHandle() const { return unknown280; }
   ml::Scn *getScn() const { return unknown228; }
   const char *getSceneName() const { return unknown254.c_str(); }
-  bool isEndFadeOut() const { return (unknown18 & FLAG_UNKNOWN_2) != 0; }
-  bool isPlay() const { return (unknown18 & FLAG_UNKNOWN_0) != 0; }
+  bool isEndFadeOut() const { return unknown18.test(FLAG_UNKNOWN_2); }
+  bool isPlay() const { return unknown18.test(FLAG_UNKNOWN_0); }
   u32 getPlayParam(u32 index) const { return unknown288[index]; }
   void failureSkip();
   void nextEvent(int next);
@@ -98,8 +101,11 @@ public:
   virtual void bkgHomeMenu(bool isOpen);
 
 private:
-  u32 unknown18;                                                  // Inferred role: flags; original member name unknown.
-  u32 unknown1c;                                                  // Inferred role: state; original member name unknown.
+  // Inferred role: flags; original member name unknown. The game loads the play bit with ldrb (end, 0x710013ba8c)
+  // although the state word at 0x1c is loaded right after: through a plain u32 member clang widens the over-aligned
+  // load to 64 bits (GVN); through the bit flag class (align 4 `this`, as BouManager::unknown18) the byte load stays.
+  mm::mtl::unknown027<32> unknown18;
+  mm::mtl::unknown027<32> unknown1c;                              // Inferred role: state; original member name unknown.
   mm::mtl::FixedVector<IManager *, MANAGER_UNKNOWN_64> unknown20; // Inferred role: managers; original member name unknown.
   ml::Scn *unknown228;                                            // Inferred role: scn; original member name unknown.
   mm::mtl::FixStr<32> unknown230;                                 // Inferred role: event name; original member name unknown.

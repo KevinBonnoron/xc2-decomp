@@ -72,9 +72,9 @@ u32 ThreadPool::threadFunc(void *argument) {
     do {
       JobQueue *queue = pool->m_pJobQueue;
       if (queue != nullptr) {
-        while (queue->size() != 0) {
+        while (queue->getJobCount() != 0) {
           pool->unknown140.lock(0.0f);
-          u32 size = queue->size();
+          u32 size = queue->getJobCount();
           u32 limit = pool->unknown268.unknown08;
           u32 count = size < limit ? size : limit;
           for (u32 i = 0; i < count; i++) {

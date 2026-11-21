@@ -453,6 +453,157 @@ void GfMenuObjOption::MainListener::reciveEvent(const ui::EventData &event, u32 
     break;
   }
 }
+
+void GfMenuObjOption::SubMenuListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    acc.setDisp(false);
+    GfMenuObject::disableInput(acc.unknown10);
+    unknown0c = 0;
+    break;
+  case 3:
+    if (event.unknown08 != 0) {
+      if (event.unknown08 == 1) {
+        GfMenuObject::enableInput(acc.unknown10);
+      } else {
+        acc.setDisp(false);
+        if (unknown0c == 1) {
+          acc.setTerm();
+        }
+      }
+    }
+    break;
+  case 6: {
+    u32 index = event.unknown08;
+    if (index == -1) {
+      break;
+    }
+    u32 previous = event.unknown0c;
+    mm::mtl::FixStr<32> name;
+    if (previous != -1) {
+      name.format("IMG_submenu_item_sel@%02d", previous + 1);
+      acc.setDispChild(false, name.c_str());
+    }
+    name.format("IMG_submenu_item_sel@%02d", index + 1);
+    acc.setDispChild(true, name.c_str());
+    unknown20->unknown28->setIndex(index);
+    {
+      GfMenuObjUtil::CtrlParam param;
+      param.unknown08 = 0x10000000;
+      param.unknown50 = "cmn_fade_emotion";
+      param.unknown58 = "fade_in_select";
+      param.unknown11 = true;
+      GfMenuObjUtil::startCtrl(unknown20->unknown28->getSelectObject(), param, nullptr);
+    }
+    {
+      ui::UIObjectAcc owner(unknown20->unknown18);
+      ui::UIObjectAcc indexText(acc.unknown10, "TXT_submenu_index");
+      ui::UIObjectAcc infoText(acc.unknown10, "TXT_submenu_info");
+      // The game reads `text` unset when the index is not 0 to 2 (0x71004a4264: the default path jumps to 0x71004a43d8, over the
+      // searchChild calls, and the UIObjectAcc constructor at 0x71004a43e0 takes w8, which that path has not written).
+      u32 text;
+      u16 msgId;
+      switch (index) {
+      case 0:
+        text = owner.searchChild("TXT_cam_index");
+        msgId = 0x12;
+        break;
+      case 2:
+        text = owner.searchChild("TXT_dis_index");
+        msgId = 0x14;
+        break;
+      case 1:
+        text = owner.searchChild("TXT_snd_index");
+        msgId = 0x13;
+        break;
+      default:
+        msgId = 0;
+        break;
+      }
+      if (text != 0) {
+        ui::UIObjectAcc source(text);
+        ui::UIStr str;
+        source.getText(str);
+        indexText.setText(str);
+      }
+      if (msgId != 0) {
+        u16 id = GfMenuObjUtil::getMsgIDFromList(BDAT_MNU_MSG_MENU_DESCRIPTION, msgId);
+        infoText.setText(ui::UIStr(GfDataBdat::getFP(BDAT_MENU_SUB_CONTENTS_MS), id));
+      }
+    }
+    if (previous != -1 && index != previous) {
+      GfMenuObjUtil::playSECommonCursor();
+    }
+    break;
+  }
+  case 8:
+    switch (event.unknown0c) {
+    case 1: {
+      int index = event.unknown08;
+      if (index >= 0 && index < static_cast<int>(unknown20->unknown28->getSize())) {
+        u32 target;
+        switch (index) {
+        case 0:
+          target = acc.searchSibiling("LAY_cam");
+          break;
+        case 2:
+          target = acc.searchSibiling("LAY_dis");
+          break;
+        case 1:
+          target = acc.searchSibiling("LAY_snd");
+          break;
+        default:
+          return;
+        }
+        if (target != 0) {
+          GfMenuObject::sendCloseEvent(acc.unknown10, 0, 0.0f);
+          GfMenuObject::sendOpenEvent(target, 0, 0.0f);
+          GfMenuObject::disableInput(acc.unknown10);
+          GfMenuObjOperationInfo::remove(acc.unknown10, 0, 0, 0);
+          GfMenuObjUtil::playSECommonDecide();
+        }
+      }
+      break;
+    }
+    case 2:
+      if (!unknown20->unknown3c0) {
+        GfMenuObject::returnFSSubLayer(unknown20);
+      } else {
+        GfMenuObjOperationInfo::close();
+        GfMenuObject::closeFSLayer(acc.unknown10, false, false);
+      }
+      GfMenuObject::disableInput(acc.unknown10);
+      GfMenuObjOperationInfo::remove(acc.unknown10, 0, 0, 0);
+      GfMenuObjUtil::playSECommonCancel();
+      break;
+    }
+    break;
+  case GfMenuTypes::unknown003_33:
+    GfMenuObjUtil::setCommonFadeIn(acc.searchChild("LAY_submenu_base"), 0, 0);
+    {
+      int ctrl = GfMenuObjUtil::setCommonFadeIn(acc.searchChild("LAY_submenu_main"), 1, 2);
+      GfMenuObject::hookCtrlEvent(acc.unknown10, ctrl);
+    }
+    GfMenuObject::resetInputSelection(acc.unknown10);
+    GfMenuObject::setupInputSelectionFromList(acc.unknown10, *unknown20->unknown28);
+    GfMenuObjOperationInfo::add(acc.unknown10, 0, 0, 0);
+    GfMenuObjOperationInfo::setGuideText(0x2b, unknown20->unknown3c1);
+    acc.setDisp(true);
+    break;
+  case GfMenuTypes::unknown003_34:
+    GfMenuObjUtil::setCommonFadeOut(acc.searchChild("LAY_submenu_base"), 0, 0);
+    {
+      int ctrl = GfMenuObjUtil::setCommonFadeOut(acc.searchChild("LAY_submenu_main"), 2, 2);
+      GfMenuObject::hookCtrlEvent(acc.unknown10, ctrl);
+    }
+    GfMenuObject::disableInput(acc.unknown10);
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
 } // namespace gf
 
 template bool mm::mtl::Delegate<bool()>::memberFuncInvoker<gf::GfMenuObjOption>(const mm::mtl::Delegate<bool()> *);

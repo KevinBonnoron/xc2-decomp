@@ -10,6 +10,7 @@
 #include "types.h"
 
 namespace mm {
+struct Aabb;
 struct Quat;
 struct Vec3;
 } // namespace mm
@@ -79,6 +80,7 @@ public:
   static void addGfObj(GF_OBJ_HANDLE *handle, GfObj *obj);
   static void removeGfObj(GF_OBJ_HANDLE *handle);
   static u32 getObjType(GF_OBJ_HANDLE *handle);
+  static void setEnableAllIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time);
   static void setEnableBlowRotateIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time);
   static void setEnableBodyIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time);
   static void setEnableLookIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time);
@@ -148,6 +150,7 @@ public:
   static bool testFlag(const GFOBJ_INFO *info, u32 flag);
   static void copyTransformToSetup(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *setupHandle);
   static void copyTransformToSetup(GF_OBJ_HANDLE *handle, const mm::Vec3 &position, const mm::Vec3 &rotation);
+  static bool setFlag(GfObj *obj, u32 flag, bool value);
   static bool testFlag(const GfObj *obj, u32 flag);
   static const char *getModelBaseName(GF_OBJ_HANDLE *handle);
   static const char *getAssetModelName(GF_OBJ_HANDLE *handle);
@@ -160,6 +163,7 @@ public:
   static void rebuild(GF_OBJ_HANDLE *handle);
   static void saveRebuildInfo(GF_OBJ_HANDLE *handle);
   static bool isVolumeFadeForUser(GF_OBJ_HANDLE *handle);
+  static void getCullingAabb(mm::Aabb &aabb, GF_OBJ_HANDLE *handle);
   static void setVolumeFadeUserFlag(GF_OBJ_HANDLE *handle, bool isForUser);
   static bool isStanbyTalkingPlayer(GF_OBJ_HANDLE *handle);
   static void setTalking(GF_OBJ_HANDLE *handle, bool isTalking);

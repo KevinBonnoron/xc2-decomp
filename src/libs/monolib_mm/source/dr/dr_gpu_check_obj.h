@@ -20,6 +20,8 @@ public:
 
   enum Flag {
     FLAG_UNKNOWN_4 = 0x10, // Inferred role: render; original name unknown.
+    FLAG_UNKNOWN_5 = 0x20, // Inferred role: render requested; original name unknown.
+    FLAG_UNKNOWN_6 = 0x40, // Inferred role: world check; original name unknown.
     FLAG_UNKNOWN_7 = 0x80, // Inferred role: pause; original name unknown.
   };
 
@@ -43,7 +45,8 @@ public:
   u32 unknown3c;                        // Inferred role: flags; original member name unknown.
   unknown001 unknown40[2];              // Inferred role: positions per buffer; original member name unknown.
   unknown001 unknown60;                 // Inferred role: current position; original member name unknown.
-  s32 unknown70;                        // Inferred role: unknown; original member name unknown.
+  s16 unknown70; // Inferred role: render hold counter, set to 3 and counted down to 0 by update (signed 16-bit accesses of update and setWorldPos); original member name unknown.
+  s16 unknown72; // Inferred role: query hold counter, counted down to 0 by update (signed 16-bit accesses of update); original member name unknown.
   u8 _74[0x80 - 0x74];
 };
 
@@ -53,6 +56,7 @@ static_assert(offsetof(DrGpuCheckObj, unknown3c) == 0x3c, "");
 static_assert(offsetof(DrGpuCheckObj, unknown40) == 0x40, "");
 static_assert(offsetof(DrGpuCheckObj, unknown60) == 0x60, "");
 static_assert(offsetof(DrGpuCheckObj, unknown70) == 0x70, "");
+static_assert(offsetof(DrGpuCheckObj, unknown72) == 0x72, "");
 static_assert(offsetof(DrGpuCheckObj, unknown08) == 0x08, "");
 static_assert(offsetof(DrGpuCheckObj, unknown10) == 0x10, "");
 static_assert(sizeof(DrGpuCheckObj) == 0x80, "");

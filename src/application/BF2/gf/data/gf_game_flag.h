@@ -10,6 +10,7 @@ struct GfSetupParam;
 
 enum {
   FLAG_UNKNOWN_2132 = 0x854,   // Inferred role: flag salvager point; original name unknown.
+  FLAG_UNKNOWN_39487 = 0x9a3f, // Inferred role: flag events theater; original name unknown.
   FLAG_UNKNOWN_48589 = 0xbdcd, // Inferred role: flag game clear; original name unknown.
 };
 

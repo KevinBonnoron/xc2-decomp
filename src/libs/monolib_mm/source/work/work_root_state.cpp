@@ -65,6 +65,12 @@ CriticalSection &getCriticalSection() {
   return sect;
 }
 
+// Inferred name; kept as an exception to the unknown-name rule (AGENTS.md): single-user helper whose existence only the match proves; rename if a sibling build gives a symbol.
+// Clears one bit of the work id bit table. Single user: WorkRootState::freeWID (0x710078c498; the game computes the mask at 0x710078c518-0x710078c520, before it loads s_aBitWID).
+// Forms tried without the helper, written in freeWID, all with 58 instructions but the mask computed after the s_aBitWID load (first difference at 0x710078c518):
+// `s_aBitWID[index >> 5] &= ~(1 << (index & 0x1f))`, and with a `mask` local; only a `word = index >> 5` local (a single-use local that places nothing visible) matches too.
+static void clearBit(u32 word, u32 bit) { s_aBitWID[word] &= ~(1 << bit); }
+
 } // namespace _wrootst
 
 void WorkRootState::addFrameEnd(WorkObj *work) { _wrootst::s_frameEnd.push_back(work); }
@@ -165,6 +171,13 @@ u32 WorkRootState::allocWID(WorkObj *work) {
     }
   }
   return wid;
+}
+
+void WorkRootState::freeWID(u32 wid) {
+  CS cs(_wrootst::getCriticalSection());
+  u32 index = wid & 0xffff;
+  _wrootst::clearBit(index >> 5, index & 0x1f);
+  _wrootst::s_apBitWID[index] = nullptr;
 }
 
 WorkObj *WorkRootState::getWork(u32 wid) {

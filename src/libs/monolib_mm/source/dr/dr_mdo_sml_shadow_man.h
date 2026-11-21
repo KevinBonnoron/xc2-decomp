@@ -3,9 +3,14 @@
 
 #include "types.h"
 
+namespace grlib {
+class CGLibUniformEtcUtility;
+} // namespace grlib
+
 namespace ml {
 
 class DrMan;
+class DrShdDataList;
 
 // Inferred role: header of the shadow data (node count first); original name unknown.
 struct unknown002 {
@@ -16,6 +21,7 @@ class DrMdoSmlShadowObj {
 public:
   DrMdoSmlShadowObj(int viewNum, const u8 *data, DrMan *man);
   ~DrMdoSmlShadowObj();
+  void renderNode(DrShdDataList *shdList, u32 modelOfs, u32 parmOfs, grlib::CGLibUniformEtcUtility &uniform);
 
   enum Flag {
     FLAG_UNKNOWN_0 = 1 << 0,
@@ -43,8 +49,10 @@ public:
   DrMdoSmlShadowMan(DrMan *man);
   ~DrMdoSmlShadowMan();
   void changeViewNum(DrMdoSmlShadowObj *shadow, int viewNum);
+  DrMdoSmlShadowObj *createObj(int viewNum, const u8 *data);
   void shadowRender();
   void releaseObj(DrMdoSmlShadowObj *shadow);
+  void addObjList(int viewNum);
   void delObjList();
   bool checkDisp();
 

@@ -1,7 +1,9 @@
 #pragma once
 #include <stddef.h>
 
+#include "bdat.h"
 #include "gf/data/gf_data_blade.h"
+#include "gf/gf_allocator.h"
 #include "gf/object/gf_obj_handle.h"
 #include "mm_math/mm_plane.h"
 #include "mm_math/mm_quat.h"
@@ -36,7 +38,15 @@ struct GfObjPropertyCharacter {
     u32 unknown04; // Inferred role: zeroed by GfObjPropertyCharacter::unknown002; original member name unknown.
   };
 
-  GfObjPropertyCharacter();
+  // Inline in the original: the game has only the base constructor symbol (1.0.0: 0x71005ab290, emitted in the unit of GfObjProperty::create).
+  GfObjPropertyCharacter() : unknown00(0), unknown04(0), unknown08(0), unknown28(unknown020), unknown30(false) {
+    u8 *bdat = Bdat::getFP("BTL_Buff");
+    if (bdat != nullptr && Bdat::getIdCount(bdat) != 0) {
+      unknown10.setAllocator(getAllocator(ALLOCATOR_UNKNOWN_0));
+      unknown10.reserve(Bdat::getIdCount(bdat));
+      unknown002();
+    }
+  }
 
   // Inferred role: clears the values and the buff states, repeated by the constructors of the character and of the driver and blade properties; original name unknown.
   void unknown002() {
@@ -212,7 +222,7 @@ public:
 
   GfObjPropertyBlade(GF_OBJ_HANDLE *handle) : GfObjProperty(handle, &unknown88, &unknownc0), unknown1b4(0) {
     unknown88.unknown002();
-    unknown190.assign(unknown109());
+    unknown190.assign(unknown110());
     unknown1a4 = 0;
     unknown1a8 = 0;
     unknown1ac = 0.0f;
@@ -221,7 +231,7 @@ public:
 
   GfObjPropertyCharacter unknown88;              // Inferred role: character, pointed to by unknown10; original member name unknown.
   unknown070 unknownc0;                          // Inferred role: move, pointed to by unknown18; original member name unknown.
-  mm::mtl::FixedArray<unknown109, 3> unknown190; // Inferred role: field skills copied from SDataBlade::unknownae by GfGameUtil::flushProperty; original member name unknown.
+  mm::mtl::FixedArray<unknown110, 3> unknown190; // Inferred role: field skills copied from SDataBlade::unknownae by GfGameUtil::flushProperty; original member name unknown.
   int unknown1a4;                                // Inferred role: kizuna value, read by GfMenuGfObjAdapter::update_BL_Kizuna; original member name unknown.
   u32 unknown1a8;                                // Inferred role: special level, read by GfMenuGfObjAdapter::update_BL_SpecialLv; original member name unknown.
   f32 unknown1ac;                                // Inferred role: special gauge ratio; original member name unknown.

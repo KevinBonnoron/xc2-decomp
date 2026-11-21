@@ -19,6 +19,7 @@
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/list/gf_menu_item_list.h"
 #include "gf/menu/list/gf_menu_quest_list.h"
+#include "gf/menu/object/gf_menu_obj_common_text.h"
 #include "gf/menu/object/gf_menu_obj_mainmenu2.h"
 #include "gf/menu/object/gf_menu_obj_operation_info.h"
 #include "gf/menu/object/gf_menu_obj_quest_reward.h"
@@ -509,6 +510,22 @@ void GfMenuObjQuestList::changeView(u32 view) {
     return;
   }
   unknown58 = view;
+}
+
+bool GfMenuObjQuestList::seqActivateStart() {
+  if (unknown340 != 0) {
+    unknown0a0->reset();
+    if (GfQuestManager::getCurrentQuest(QTYPE_UNKNOWN_0).unknown00 == unknown340) {
+      // The local places the load of unknown364 before the load of the context pointer (0x71004c00c8: ldr w8, [x19, #868], then ldr x0, [x19, #160]).
+      u32 window = unknown364 != 0 ? 0xe2 : 0x39;
+      GfMenuObjCommonText::open(unknown0a0, window, 0);
+    } else {
+      GfMenuObjCommonText::open(unknown0a0, 1, 0);
+    }
+    unknown0b0.unknown002(&GfMenuObjQuestList::seqActivateSelect);
+    unknown0b0.unknown002(&GfMenuObjQuestList::seqEnd);
+  }
+  return true;
 }
 
 bool GfMenuObjQuestList::seqActivateSelect() {

@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "event/i_manager.h"
+#include "mm_mtl/bitflag.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/singleton.h"
@@ -27,10 +28,11 @@ public:
     MODE_UNKNOWN_5, // Inferred role: effect; original name unknown.
   };
 
+  // Bit indices of the flags, for mm::mtl::unknown027<32>::test/set.
   enum {
-    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: reserve flag; original name unknown.
-    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: capture flag; original name unknown.
-    FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: multi flag; original name unknown.
+    FLAG_UNKNOWN_0 = 0, // Inferred role: reserve flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1, // Inferred role: capture flag; original name unknown.
+    FLAG_UNKNOWN_2 = 2, // Inferred role: multi flag; original name unknown.
   };
 
   CaptureManager();
@@ -48,7 +50,10 @@ public:
 private:
   bool isJpegMode() const { return static_cast<u32>(unknown14 - MODE_UNKNOWN_3) < 3; }
 
-  u32 unknown10;                                                        // Inferred role: flags; original member name unknown.
+  // Inferred role: flags; original member name unknown. A bit set like AgelogManager, MotstmManager and OutsiderManager at the same offset
+  // 0x10 (decision 48): the game tests single bits with byte loads (clear, update, OnEventProc 0x710010583c) and, through a plain u32 member,
+  // clang widens the flag load of start (0x7100105628) with the mode load at 0x14 into one ldp where the game has a plain ldr.
+  mm::mtl::unknown027<32> unknown10;
   MODE unknown14;                                                       // Inferred role: mode; original member name unknown.
   int unknown18;                                                        // Inferred role: filter; original member name unknown.
   int unknown1c;                                                        // Inferred role: captured frame count; original member name unknown.

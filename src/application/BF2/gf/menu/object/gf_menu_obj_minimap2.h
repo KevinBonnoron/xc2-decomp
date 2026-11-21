@@ -34,6 +34,21 @@ public:
     GfMenuObjMinimap2 *unknown20; // Inferred role: owner; original member name unknown.
   };
 
+  // Layout from the inline constructor in initialize (0x710049e34c, 0x710049e434): same as MainListener, 0x28 bytes, 0x0c-0x1b cleared by two 64-bit stores,
+  // owner at 0x20. MapListener::reciveEvent (0x49f214) reads only the owner, so the type of the cleared words is not shown by an access; they follow
+  // MainListener.
+  class MapListener : public ui::UIObjectListener {
+  public:
+    MapListener(GfMenuObjMinimap2 *owner) : unknown0c(0), unknown10(0), unknown14(0), unknown18(0), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    int unknown0c;                // Role, type and original member name unknown, cleared by the constructor.
+    int unknown10;                // Role, type and original member name unknown, cleared by the constructor.
+    int unknown14;                // Role, type and original member name unknown, cleared by the constructor.
+    u32 unknown18;                // Role, type and original member name unknown, cleared by the constructor.
+    GfMenuObjMinimap2 *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   GfMenuObjMinimap2(u32 handle);
   ~GfMenuObjMinimap2() override;
   static void changeMap();
@@ -66,6 +81,12 @@ static_assert(offsetof(GfMenuObjMinimap2::MainListener, unknown10) == 0x10, "");
 static_assert(offsetof(GfMenuObjMinimap2::MainListener, unknown18) == 0x18, "");
 static_assert(offsetof(GfMenuObjMinimap2::MainListener, unknown20) == 0x20, "");
 static_assert(sizeof(GfMenuObjMinimap2::MainListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjMinimap2::MapListener, unknown0c) == 0x0c, "");
+static_assert(offsetof(GfMenuObjMinimap2::MapListener, unknown10) == 0x10, "");
+static_assert(offsetof(GfMenuObjMinimap2::MapListener, unknown14) == 0x14, "");
+static_assert(offsetof(GfMenuObjMinimap2::MapListener, unknown18) == 0x18, "");
+static_assert(offsetof(GfMenuObjMinimap2::MapListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjMinimap2::MapListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjMinimap2, unknown230) == 0x230, "");
 static_assert(offsetof(GfMenuObjMinimap2, unknown238) == 0x238, "");
 static_assert(sizeof(GfMenuObjMinimap2) == 0x248, "");

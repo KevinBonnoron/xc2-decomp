@@ -36,6 +36,7 @@ public:
   void changeFrame();
   bool isStackOverFlow() const;
   static unsigned int threadFunc(void *argument);
+  static bool create(WorkCpuThread **thread, CPUID cpuId, WorkObj *parent);
   bool isBeginTerm() const;
   void addJobClock(f32 clock);
   void terminateWorkingJob(const TJOB *job);

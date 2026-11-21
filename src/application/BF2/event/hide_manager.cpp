@@ -2,13 +2,38 @@
 
 #include <stddef.h>
 
+#include "event/manager.h"
 #include "event/memory_manager.h"
+#include "gf/field/gf_field_weather.h"
 #include "gf/game/event/gf_game_event.h"
 #include "gmk/gmk_manager.h"
+#include "ml/scn.h"
 #include "mm_mtl/singleton.h"
 #include "mtl/alloc_handle.h"
+#include "scn/scn_render_dr_sys_parm_acc.h"
 
 namespace event {
+
+// Name given by the xc2 symbol _ZN5event11HideManager5s_tblE: the event display type of each bit of the hide group; the names are the strings of the game.
+const HideManager::unknown001 HideManager::s_tbl[TBL_UNKNOWN_17] = {
+    {"EVTDISP_PC", gf::EVTDISP_PC},
+    {"EVTDISP_PC_WEAPON", gf::EVTDISP_PC_WEAPON},
+    {"EVTDISP_BLADE", gf::EVTDISP_BLADE},
+    {"EVTDISP_ENEMY", gf::EVTDISP_ENEMY},
+    {"EVTDISP_EN_WEAPON", gf::EVTDISP_EN_WEAPON},
+    {"EVTDISP_NPC", gf::EVTDISP_NPC},
+    {"EVTDISP_MOB", gf::EVTDISP_MOB},
+    {"EVTDISP_FIELD_OBJ", gf::EVTDISP_FIELD_OBJ},
+    {"EVTDISP_MAP", gf::EVTDISP_MAP},
+    {"EVTDISP_COLLECTION", gf::EVTDISP_COLLECTION},
+    {"EVTDISP_SALVAGE", gf::EVTDISP_SALVAGE},
+    {"EVTDISP_PRECIOUS", gf::EVTDISP_PRECIOUS},
+    {"EVTDISP_TBOX", gf::EVTDISP_TBOX},
+    {"EVTDISP_JUMP", gf::EVTDISP_JUMP},
+    {"EVTDISP_WARP", gf::EVTDISP_WARP},
+    {"EVTDISP_DMG_EFFECT", gf::EVTDISP_DMG_EFFECT},
+    {"EVTDISP_DMG_SE", gf::EVTDISP_DMG_SE},
+};
 
 constexpr u32 PRIMARY_LIST_DISP_UNKNOWN_6 = 6;   // Inferred role: primary list disp type; original name unknown.
 constexpr u32 SECONDARY_LIST_DISP_UNKNOWN_5 = 5; // Inferred role: secondary list disp type; original name unknown.
@@ -95,27 +120,71 @@ HideManager::OBJ_TYPE HideManager::Obj::getType() const { return m_type; }
 
 bool HideManager::Obj::getNow() const { return m_now; }
 
-HideManager::HideManager() : unknown10(0), m_group(GRP_TYPE_UNKNOWN_0) {}
+HideManager::HideManager() : unknown10(), m_group(GRP_TYPE_UNKNOWN_0) {}
 
 void HideManager::clear() {
   hideGroup(false);
   hideList(false);
   resetHideObj();
-  unknown10 = 0;
+  unknown10.clear();
   m_group = GRP_TYPE_UNKNOWN_0;
+}
+
+void HideManager::hideGroup(bool isHide) {
+  if (isHide) {
+    if (unknown10.test(FLAG_UNKNOWN_0)) {
+      return;
+    }
+    for (u32 i = 0; i < TBL_UNKNOWN_17; i++) {
+      // The bit is the left operand, as in mm::mtl::unknown027::test: the game ands m_group with the shifted bit (and w8, w9, w8, 0x71000e21c4); the
+      // natural `m_group & (1 << i)` swaps the two registers of the and (checked).
+      if ((1 << i) & m_group) {
+        gf::GfGameEvent::setDisp(static_cast<gf::EVTDISP>(s_tbl[i].unknown08), false);
+        // Entry 8 of s_tbl is EVTDISP_MAP: the game compares the index (cmp x26, #8, 0x71000e21dc).
+        if (i == 8) {
+          gf::GfFieldWeather::setDispWeather(false);
+          ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
+          parmAcc.setRainDrop(false);
+          gf::GfGameEvent::setDisp(gf::EVTDISP_UNKNOWN_20, false);
+          gf::GfGameEvent::setDisp(gf::EVTDISP_UNKNOWN_21, false);
+        }
+      }
+    }
+    unknown10.set(FLAG_UNKNOWN_0);
+  } else {
+    if (!unknown10.test(FLAG_UNKNOWN_0)) {
+      return;
+    }
+    for (u32 i = 0; i < TBL_UNKNOWN_17; i++) {
+      gf::GfGameEvent::setDisp(static_cast<gf::EVTDISP>(s_tbl[i].unknown08), true);
+      if (i == 8) {
+        gf::GfFieldWeather::setDispWeather(true);
+        ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
+        parmAcc.setRainDrop(true);
+        gf::GfGameEvent::setDisp(gf::EVTDISP_UNKNOWN_20, true);
+        gf::GfGameEvent::setDisp(gf::EVTDISP_UNKNOWN_21, true);
+        for (size_t j = 0; j < unknown2028.size(); j++) {
+          if (unknown2028[j]->getType() == OBJ_TYPE_UNKNOWN_4 || unknown2028[j]->getType() == OBJ_TYPE_UNKNOWN_5) {
+            unknown2028[j]->exec(unknown2028[j]->getNow());
+          }
+        }
+      }
+    }
+    unknown10.set(FLAG_UNKNOWN_0, false);
+  }
 }
 
 void HideManager::hideList(bool isHide) {
   if (isHide) {
-    if (!(unknown10 & FLAG_UNKNOWN_1)) {
+    if (!unknown10.test(FLAG_UNKNOWN_1)) {
       gf::GfGameEvent::setDisp(PRIMARY_LIST_DISP_UNKNOWN_6, unknown18, false);
       gf::GfGameEvent::setDisp(SECONDARY_LIST_DISP_UNKNOWN_5, unknown1020, false);
-      unknown10 |= FLAG_UNKNOWN_1;
+      unknown10.set(FLAG_UNKNOWN_1);
     }
-  } else if (unknown10 & FLAG_UNKNOWN_1) {
+  } else if (unknown10.test(FLAG_UNKNOWN_1)) {
     gf::GfGameEvent::setDisp(PRIMARY_LIST_DISP_UNKNOWN_6, unknown18, true);
     gf::GfGameEvent::setDisp(SECONDARY_LIST_DISP_UNKNOWN_5, unknown1020, true);
-    unknown10 &= ~FLAG_UNKNOWN_1;
+    unknown10.set(FLAG_UNKNOWN_1, false);
   }
 }
 

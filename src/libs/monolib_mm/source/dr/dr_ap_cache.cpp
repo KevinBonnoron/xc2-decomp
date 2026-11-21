@@ -1,5 +1,6 @@
 #include "dr/dr_ap_cache.h"
 
+#include "dr/dr_man.h"
 #include "dr/dr_res_fetch.h"
 #include "grlib/cglib_color_ctl.h"
 #include "grlib/cglib_ctl_shader.h"
@@ -8,16 +9,92 @@
 #include "grlib/cglib_polygon.h"
 #include "grlib/cglib_sampler.h"
 #include "grlib/cglib_texture_buffer.h"
+#include "mm_math/mm_col4.h"
+#include "mtl/alloc_handle.h"
 
 namespace ml {
 
 DrAPCache *DrAPCache::s_pIns;
+
+// Inferred role: clamp modes of the sampler table; original name unknown (read-only data 0x7100f66fb0 holds the words 0, 1, 2, 6 and has no symbol:
+// file-local data of this unit).
+static const GrlTexClamp unknown004[] = {GRL_TEX_CLAMP_REPEAT, GRL_TEX_CLAMP_MIRRORED_REPEAT, GRL_TEX_CLAMP_CLAMP, GRL_TEX_CLAMP_CLAMP_TO_BORDER};
 
 DrAPCache::DrAPCache() {
   s_pIns = this;
   unknown30 = nullptr;
   createSampler();
   begin();
+}
+
+void DrAPCache::createSampler() {
+  unknown30 = new (DrMan::getIns()->unknown0c) grlib::CGLibSampler[78];
+  // The first 64 samplers are indexed as getSamplerID reads them: mip map on * 32 + filter * 16 + clamp u * 4 + clamp v;
+  // the clamp modes come from the table of the game (0x7100f66fb0). The samplers 0x41 to 0x4d are the fixed ones of
+  // begin3DTextureSampling to beginBorderDepthMinusMax. The border colors of 0x4c and 0x4d are +8161.0f and -8161.0f
+  // in x (game constants 0x45ff0800 and 0xc5ff0800, built at 0x71008a36c8 and 0x71008a36f8).
+  int index = 0;
+  for (int mipMapOn = 0; mipMapOn < 2; mipMapOn++) {
+    for (int filter = 0; filter < 2; filter++) {
+      for (int u = 0; u < 4; u++) {
+        for (int v = 0; v < 4; v++) {
+          grlib::CGLibSampler &sampler = unknown30[index++];
+          if (filter == 0) {
+            sampler.initSampler(GRL_TEX_CLAMP_CLAMP, GRL_TEX_MAG_FILTER_NEAREST);
+            if (mipMapOn == 1) {
+              sampler.setFilter(GRL_TEX_MAG_FILTER_NEAREST, GRL_TEX_MIN_FILTER_UNKNOWN_2, GRL_TEX_ANISO_RATIO_UNKNOWN_0);
+            } else {
+              sampler.setFilter(GRL_TEX_MAG_FILTER_NEAREST, GRL_TEX_MIN_FILTER_NEAREST, GRL_TEX_ANISO_RATIO_UNKNOWN_0);
+            }
+          } else {
+            sampler.initSampler(GRL_TEX_CLAMP_CLAMP, GRL_TEX_MAG_FILTER_LINEAR);
+            if (mipMapOn == 1) {
+              sampler.setFilter(GRL_TEX_MAG_FILTER_LINEAR, GRL_TEX_MIN_FILTER_UNKNOWN_5, GRL_TEX_ANISO_RATIO_UNKNOWN_0);
+            } else {
+              sampler.setFilter(GRL_TEX_MAG_FILTER_LINEAR, GRL_TEX_MIN_FILTER_LINEAR, GRL_TEX_ANISO_RATIO_UNKNOWN_0);
+            }
+          }
+          sampler.setClamp(unknown004[u], unknown004[v], GRL_TEX_CLAMP_CLAMP);
+        }
+      }
+    }
+  }
+  // Ruling 8: the fixed samplers are one straight run in the game (0x71008a34a0-0x71008a3708, no branch, `unknown30` reloaded for every call), and
+  // the init + clamp pairs of 0x41 to 0x48 repeat each other. Measured: a file-local helper (sampler, filter, clamp) does not match (the inlined helper
+  // keeps the sampler address in x20 instead of x0, first difference at 0x71008a34a4); a loop over 0x41 to 0x46 with a three-entry clamp table
+  // (clamp, repeat, clamp) is unrolled and does match, but it needs a table nothing in the game shows, so the run stays written out (decision 42).
+  unknown30[0x41].initSampler(GRL_TEX_CLAMP_CLAMP, GRL_TEX_MAG_FILTER_LINEAR);
+  unknown30[0x41].setClamp(GRL_TEX_CLAMP_CLAMP, GRL_TEX_CLAMP_CLAMP, GRL_TEX_CLAMP_CLAMP);
+  unknown30[0x42].initSampler(GRL_TEX_CLAMP_CLAMP, GRL_TEX_MAG_FILTER_NEAREST);
+  unknown30[0x42].setClamp(GRL_TEX_CLAMP_CLAMP, GRL_TEX_CLAMP_CLAMP, GRL_TEX_CLAMP_CLAMP);
+  unknown30[0x43].initSampler(GRL_TEX_CLAMP_CLAMP, GRL_TEX_MAG_FILTER_LINEAR);
+  unknown30[0x43].setClamp(GRL_TEX_CLAMP_REPEAT, GRL_TEX_CLAMP_REPEAT, GRL_TEX_CLAMP_REPEAT);
+  unknown30[0x44].initSampler(GRL_TEX_CLAMP_CLAMP, GRL_TEX_MAG_FILTER_NEAREST);
+  unknown30[0x44].setClamp(GRL_TEX_CLAMP_REPEAT, GRL_TEX_CLAMP_REPEAT, GRL_TEX_CLAMP_REPEAT);
+  unknown30[0x45].initSampler(GRL_TEX_CLAMP_CLAMP, GRL_TEX_MAG_FILTER_LINEAR);
+  unknown30[0x45].setClamp(GRL_TEX_CLAMP_CLAMP, GRL_TEX_CLAMP_CLAMP, GRL_TEX_CLAMP_CLAMP);
+  unknown30[0x46].initSampler(GRL_TEX_CLAMP_CLAMP, GRL_TEX_MAG_FILTER_NEAREST);
+  unknown30[0x46].setClamp(GRL_TEX_CLAMP_CLAMP, GRL_TEX_CLAMP_CLAMP, GRL_TEX_CLAMP_CLAMP);
+  unknown30[0x47].initSampler(GRL_TEX_CLAMP_CLAMP, GRL_TEX_MAG_FILTER_LINEAR);
+  unknown30[0x47].setClamp(GRL_TEX_CLAMP_CLAMP, GRL_TEX_CLAMP_CLAMP, GRL_TEX_CLAMP_CLAMP);
+  unknown30[0x47].setFilter(GRL_TEX_MAG_FILTER_LINEAR, GRL_TEX_MIN_FILTER_UNKNOWN_5, GRL_TEX_ANISO_RATIO_UNKNOWN_0);
+  unknown30[0x48].initSampler(GRL_TEX_CLAMP_CLAMP, GRL_TEX_MAG_FILTER_NEAREST);
+  unknown30[0x48].setClamp(GRL_TEX_CLAMP_CLAMP, GRL_TEX_CLAMP_CLAMP, GRL_TEX_CLAMP_CLAMP);
+  unknown30[0x48].setFilter(GRL_TEX_MAG_FILTER_NEAREST, GRL_TEX_MIN_FILTER_UNKNOWN_2, GRL_TEX_ANISO_RATIO_UNKNOWN_0);
+  unknown30[0x49].initSampler(GRL_TEX_CLAMP_CLAMP_TO_BORDER, GRL_TEX_MAG_FILTER_LINEAR);
+  unknown30[0x49].setDepthCompare(static_cast<GrlTexCompare>(3));
+  unknown30[0x49].setBorderType(GRL_TEX_BORDER_OPAQUE_WHITE);
+  unknown30[0x4a].initSampler(GRL_TEX_CLAMP_CLAMP_TO_BORDER, GRL_TEX_MAG_FILTER_LINEAR);
+  unknown30[0x4a].setBorderType(GRL_TEX_BORDER_OPAQUE_WHITE);
+  unknown30[0x4b].initSampler(GRL_TEX_CLAMP_CLAMP_TO_BORDER, GRL_TEX_MAG_FILTER_LINEAR);
+  unknown30[0x4b].setBorderType(GRL_TEX_BORDER_TRANSPARENT_BLACK);
+  unknown30[0x4c].initSampler(GRL_TEX_CLAMP_CLAMP_TO_BORDER, GRL_TEX_MAG_FILTER_LINEAR);
+  unknown30[0x4c].setBorderColor(mm::Col4(8161.0f, 0.0f, 0.0f, 0.0f));
+  unknown30[0x4d].initSampler(GRL_TEX_CLAMP_CLAMP_TO_BORDER, GRL_TEX_MAG_FILTER_LINEAR);
+  unknown30[0x4d].setBorderColor(mm::Col4(-8161.0f, 0.0f, 0.0f, 0.0f));
+  for (int i = 0; i < 78; i++) {
+    unknown30[i].updateData();
+  }
 }
 
 void DrAPCache::begin() {

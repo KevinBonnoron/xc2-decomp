@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "gf/field/gf_field_locator.h"
+#include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/singleton.h"
 #include "mm_mtl/vector.h"
@@ -31,6 +32,16 @@ public:
     bool operator()(const OrderInfo &order, const OrderInfo &other) const { return order.unknown04 < other.unknown04; }
   };
 
+  // Name from the symbol of getLocatorData; the members were read from GfMenuObjCompass::update (0x71004414c8).
+  struct LocatorData {
+    mm::Vec3 unknown00; // Inferred role: position; original member name unknown.
+    u8 _10[0x14 - 0x10];
+    int unknown14;  // Inferred role: icon id; original member name unknown.
+    bool unknown18; // Inferred role: locator is on another map; original member name unknown.
+    int unknown1c;  // Inferred role: map id; original member name unknown.
+    int unknown20;  // Inferred role: distance; original member name unknown.
+  };
+
   // Inferred role: locator group; original type name unknown.
   struct unknown001 {
     mm::mtl::Vector<GfFieldLocator> unknown00;                    // Inferred role: locators; original member name unknown.
@@ -50,6 +61,7 @@ public:
   static void postUpdate(const fw::UpdateInfo &info);
   static u32 convIcon(u32 type);
   static u32 getLocatorDataNum(u32 type);
+  static bool getLocatorData(u32 type, u32 index, LocatorData &data, u32, bool);
 
   bool unknown08; // Inferred role: initialized; original member name unknown.
   u8 _09[0x10 - 0x09];
@@ -58,6 +70,10 @@ public:
 };
 
 static_assert(sizeof(GfMenuLocation::OrderInfo) == 0x8, "");
+static_assert(offsetof(GfMenuLocation::LocatorData, unknown14) == 0x14, "");
+static_assert(offsetof(GfMenuLocation::LocatorData, unknown18) == 0x18, "");
+static_assert(offsetof(GfMenuLocation::LocatorData, unknown1c) == 0x1c, "");
+static_assert(offsetof(GfMenuLocation::LocatorData, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuLocation::unknown001, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuLocation::unknown001, unknown2c) == 0x2c, "");
 static_assert(offsetof(GfMenuLocation::unknown001, unknown30) == 0x30, "");

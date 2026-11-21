@@ -62,6 +62,7 @@ public:
   void *unknown58; // Role and original member name unknown.
 
   const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
 };
 
 static_assert(sizeof(GmkRoutedFootPrint::BdatInfo) == 0x18, "");

@@ -53,6 +53,14 @@ static_assert(sizeof(DrResMdoMeshParts) == 0x40, "");
 
 class DrResMdoMeshObj {
 public:
+  // Inferred type: header of the model resource; original type name unknown.
+  struct unknown001 {
+    u8 _00[0x68];
+    u32 unknown68; // Inferred role: mesh part count; original member name unknown.
+    u8 _6c[0x70 - 0x6c];
+    u32 unknown70; // Inferred role: matrix count; original member name unknown.
+  };
+
   DrResMdoMeshObj();
   ~DrResMdoMeshObj();
   bool updateDisplayCheck(bool isDisp);
@@ -71,5 +79,7 @@ public:
 };
 
 static_assert(offsetof(DrResMdoMeshObj, unknown08) == 0x08, "");
+static_assert(offsetof(DrResMdoMeshObj::unknown001, unknown68) == 0x68, "");
+static_assert(offsetof(DrResMdoMeshObj::unknown001, unknown70) == 0x70, "");
 
 } // namespace ml

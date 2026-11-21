@@ -4,11 +4,15 @@
 #include "bdat.h"
 #include "fw/fw_update_info.h"
 #include "gf/field/gf_field_exec_cmd.h"
+#include "gf/object/component/behavior/gf_com_behavior_npc.h"
 #include "gf/object/component/enemy/gf_enemy_state_battle.h"
 #include "gf/object/gf_obj.h"
+#include "gmk/gmk_base.h"
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_manager.h"
 #include "mm_math/mm_quat.h"
+#include "mm_math/mm_vec3.h"
+#include "mm_mtl/fixstr.h"
 #include "types.h"
 
 namespace ai {
@@ -75,6 +79,44 @@ template <typename T> void StateReaction<T>::seqWaitTurnToPcEnd(T &behavior, con
 template <typename T> void StateReaction<T>::beginReaction(const T &behavior) {
   const char *command = reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("FLD_NpcMobMotionId"), "cmdName", behavior.unknown006(), gmk::BDAT_TYPE_UNKNOWN_7));
   unknown18.create(TFieldExecCmd<GfComAsm>::CreateInfo(static_cast<GfObj *>(behavior.unknown08)->unknownf8, command));
+}
+
+template <typename T> void StateReaction<T>::seqUpdateMove(T &behavior, const fw::UpdateInfo &info) {
+  if (unknown18.unknown34 && (!gmk::isPlayerExist() || !(0.0f < behavior.unknown014()) || behavior.unknown006() == 0 || behavior.unknown015() == 0 || behavior.unknown014() < behavior.unknown016() ||
+                              4.0f < behavior.unknown017())) {
+    endReaction(behavior);
+    unknown50 = &StateReaction::seqTurnToPrev;
+  }
+}
+
+template <typename T> void StateReaction<T>::endReaction(const T &behavior) {
+  const char *command = reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("FLD_NpcMobMotionId"), "cmdName", behavior.unknown006(), gmk::BDAT_TYPE_UNKNOWN_7));
+  mm::mtl::FixStr<32> name(command);
+  name[name.length() - 1] = '2';
+  unknown18.create(TFieldExecCmd<GfComAsm>::CreateInfo(static_cast<GfObj *>(behavior.unknown08)->unknownf8, name.c_str()));
+}
+
+template <typename T> void StateReaction<T>::seqTurnToPrev(T &behavior, const fw::UpdateInfo &info) {
+  if (unknown18.unknown34) {
+    mm::Vec3 position = mm::Vec3::zero;
+    gmk::AGmkBase *gmk = behavior.getBindedGmkInst();
+    if (gmk != nullptr) {
+      // Single-use local that places the load of Vec3::unitZ: the game loads it before the euler angles of the gimmick (0x7100537a60: ldr s14 / ldp s15,s11 before ldr x8,[x21,#16]); with
+      // quat.rotate(mm::Vec3::unitZ) written in the sum the function has 132 instructions against 135.
+      mm::Vec3 front = mm::Vec3::unitZ;
+      mm::Vec3 rotation = gmk->unknown08.unknown08->unknown10;
+      mm::Quat quat = mm::unknown005(rotation);
+      position = gmk->unknown08.unknown08->unknown00 + quat.rotate(front);
+    }
+    behavior.execTurnCmdToPos(position);
+    unknown50 = &StateReaction::seqWaitTurnToPrevEnd;
+  }
+}
+
+template <typename T> void StateReaction<T>::seqWaitTurnToPrevEnd(T &behavior, const fw::UpdateInfo &info) {
+  if (behavior.unknown004().unknown6c) {
+    reqState(STATE_ID_UNKNOWN_0);
+  }
 }
 
 } // namespace npc

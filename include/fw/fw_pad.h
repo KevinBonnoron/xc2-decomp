@@ -33,14 +33,18 @@ struct ResAxisInfo;
 class PadResEvent;
 
 enum VibrationID : int {
+  VIBRATION_ID_UNKNOWN_1 = 1,
   VIBRATION_ID_UNKNOWN_2 = 2,
   VIBRATION_ID_UNKNOWN_7 = 7,
   VIBRATION_ID_UNKNOWN_8 = 8,
+  VIBRATION_ID_UNKNOWN_9 = 9,
   VIBRATION_ID_UNKNOWN_10 = 10,
+  VIBRATION_ID_UNKNOWN_11 = 11,
   VIBRATION_ID_UNKNOWN_13 = 13,
   VIBRATION_ID_UNKNOWN_14 = 14,
   VIBRATION_ID_UNKNOWN_15 = 15,
   VIBRATION_ID_UNKNOWN_16 = 16,
+  VIBRATION_ID_UNKNOWN_18 = 18,
   VIBRATION_ID_UNKNOWN_22 = 22,
 };
 
@@ -67,6 +71,42 @@ struct PadData {
   bool unknown40; // Inferred role: connected; original member name unknown.
   u32 unknown44;  // Inferred role: style; original member name unknown.
 };
+
+enum PadActKey {
+  PAD_ACT_KEY_UNKNOWN_0,
+  PAD_ACT_KEY_UNKNOWN_1,
+  PAD_ACT_KEY_UNKNOWN_2,
+  PAD_ACT_KEY_UNKNOWN_3,
+  PAD_ACT_KEY_UNKNOWN_4,
+  PAD_ACT_KEY_UNKNOWN_5,
+  PAD_ACT_KEY_UNKNOWN_6,
+  PAD_ACT_KEY_UNKNOWN_7,
+  PAD_ACT_KEY_UNKNOWN_8,
+  PAD_ACT_KEY_UNKNOWN_9,
+  PAD_ACT_KEY_UNKNOWN_10,
+  PAD_ACT_KEY_UNKNOWN_11,
+  PAD_ACT_KEY_UNKNOWN_12,
+  PAD_ACT_KEY_UNKNOWN_13,
+  PAD_ACT_KEY_UNKNOWN_14,
+  PAD_ACT_KEY_UNKNOWN_15,
+  PAD_ACT_KEY_UNKNOWN_16,
+  PAD_ACT_KEY_UNKNOWN_17,
+  PAD_ACT_KEY_UNKNOWN_18,
+  PAD_ACT_KEY_UNKNOWN_19,
+  PAD_ACT_KEY_UNKNOWN_20,
+  PAD_ACT_KEY_UNKNOWN_21,
+  PAD_ACT_KEY_UNKNOWN_22,
+  PAD_ACT_KEY_UNKNOWN_23,
+  PAD_ACT_KEY_UNKNOWN_24,
+};
+
+// Evidence: the game's function-local static _ZZN2fw9getPadKeyENS_9PadActKeyEE11PAD_RAW_KEY (0x7100f68eec, 25 words) and no
+// out-of-line copy of getPadKey, so every user inlines it.
+inline u32 getPadKey(PadActKey key) {
+  static const u32 PAD_RAW_KEY[25] = {0x1000, 0x2000, 0x4000, 0x8000,  0x8,       0x4,       0x2,       0x1,       0x20,       0x80,       0x800,      0x10,      0x40,
+                                      0x400,  0x200,  0x100,  0x40000, 0x1000000, 0x2000000, 0x4000000, 0x8000000, 0x10000000, 0x20000000, 0x40000000, 0x80000000};
+  return PAD_RAW_KEY[key];
+}
 
 static_assert(offsetof(PadData, unknown10) == 0x10, "");
 static_assert(offsetof(PadData, unknown1c) == 0x1c, "");
@@ -106,7 +146,15 @@ public:
 class IPadListener;
 
 struct PadConfigData {
-  u8 _00[0x54 - 0x00];
+  // Identity mapping: the function-local static of PadManager::getConfigData (1.0.0: 0x71001947a0, guard-initialised) is built by this
+  // loop, so it is a constructor, not a constant table; PadManager::config (1.0.0: 0x7100194b28) starts from the same values.
+  PadConfigData() {
+    for (int i = 0; i < 21; i++) {
+      unknown00[i] = i;
+    }
+  }
+
+  int unknown00[21]; // Inferred role: button id mapped to each button id; original member name unknown.
 };
 
 static_assert(sizeof(PadConfigData) == 0x54, "");

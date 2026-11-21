@@ -2,6 +2,7 @@
 
 #include <stddef.h>
 
+#include "event/frame_manager.h"
 #include "event/skip_manager.h"
 #include "gf/game/event/gf_game_event.h"
 #include "ml/dev_graph.h"
@@ -18,6 +19,27 @@ void SeManager::clear() {
   unknown5318.clear();
   gf::GfGameEvent::destroySe();
   unknown14 = 0;
+}
+
+void SeManager::update() {
+  const FrameInfo &info = mm::mtl::Singleton<FrameManager>::getPtr()->frameInfo();
+  for (SeObj **it = unknown5318.begin(); it != unknown5318.end(); ++it) {
+    (*it)->exec(info.unknown0c);
+  }
+  for (;;) {
+    bool found = false;
+    for (SeObj **it = unknown5318.begin(); it != unknown5318.end(); ++it) {
+      if ((*it)->isEnd()) {
+        (*it)->clear();
+        unknown5318.erase(it);
+        found = true;
+        break;
+      }
+    }
+    if (!found) {
+      break;
+    }
+  }
 }
 
 void SeManager::render() {

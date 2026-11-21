@@ -69,6 +69,21 @@ bool GfDataField::getTimeRangeName(u8 *&bdat, u32 &textId, u32 time) {
   return true;
 }
 
+const char *GfDataField::getTimeRangeName(u32 time) {
+  u16 msg = Bdat::getValCheck(GfDataBdat::getFP(BDAT_FLD_TIME_INFO), "msg", time, 2);
+  const char *name = nullptr;
+  if (msg) {
+    // The game tests the u16 (and w8, w0, #0xffff at 0x71002b569c), then zero-extends the id (and w19, w0, #0xffff at 0x71002b56a4) before the call of getFpMapInfo;
+    // passing msg to getMSText directly extends it after that call.
+    u32 textId = msg;
+    name = Bdat::getMSText(GfBdatMsg::getFpMapInfo(), textId);
+  }
+  if (name == nullptr) {
+    name = "";
+  }
+  return name;
+}
+
 bool GfDataField::getWeatherName(u8 *&bdat, u32 &textId, u32 weather) {
   u16 msg = Bdat::getValCheck(GfDataBdat::getFP(BDAT_FLD_WEATHER_INFO), "msg", weather, 2);
   textId = msg;

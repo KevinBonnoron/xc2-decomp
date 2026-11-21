@@ -96,6 +96,50 @@ void WinView::setSize(int width, int height) {
   updateViewPort(rect);
 }
 
+// The result is a WinProc: WinView::renderView, WinViewRoot::setCurrent and ProcDesktop use the same lookup as a WinProc * (the argument of
+// WinProc::pssGetRoot). The plain WorkObj * return would be a tail call; the game calls getWork and returns (0x71007686c4).
+WinProc *WinView::getRootProc() {
+  if (unknown338.size() != 0) {
+    return static_cast<WinProc *>(WorkRootState::getWork(unknown338.begin()->value));
+  }
+  return nullptr;
+}
+
+void WinView::setRootRenderWID(WinView *view) {
+  WinProc *root = getRootProc();
+  if (root != nullptr) {
+    view->attachRenderWork(root);
+  }
+}
+
+// The frame position is declared before the offset: with the offset first the game's two `mov wzr` of the inlined
+// getFrame2ViewOffset come out in the other order (0x7100765490).
+void WinView::setPos(const mm::Pnt<int> &pos) {
+  mm::Pnt<int> framePos;
+  mm::Pnt<int> offset = getFrame2ViewOffset(true);
+  framePos.x = pos.x - offset.x;
+  framePos.y = pos.y - offset.y;
+  unknown1b8.m_back->unknown48.unknown58 = framePos;
+}
+
+void WinView::updateViewPort(const mm::Rect<int> &rect) {
+  if (!(unknown3b8 & 1)) {
+    setPos(rect.unknown00);
+    unknown1b8.m_back->setSize(rect.unknown08);
+  } else {
+    setPos(mm::Pnt<int>(0, 0));
+    WinView *parent = getParentView();
+    if (parent == nullptr) {
+      unknown1b8.m_back->setSize(mm::Pnt<int>(DevGraph::getRootWidth(), DevGraph::getRootHeight()));
+    } else {
+      unknown1b8.m_back->setSize(parent->unknown1b8.m_back->m_workSize);
+    }
+  }
+  if (!(unknown3b8 & 0x10)) {
+    unknown1b8.m_back->setWorkSize(rect.unknown08);
+  }
+}
+
 void WinView::setDefaultFrameColor(const mm::Col4 &color) { unknown004.m_defaultFrameColor = color; }
 
 void WinView::setInitialBackCol(const mm::Col4 &color) { unknown004.m_initialBackCol = color; }

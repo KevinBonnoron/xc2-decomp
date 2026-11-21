@@ -2,9 +2,12 @@
 
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_item_id.h"
+#include "gf/game/gf_game_manager.h"
+#include "gf/game/gf_game_party.h"
 #include "gf/game/gf_game_util.h"
 #include "gf/game/gf_game_voice.h"
 #include "gf/gf_allocator.h"
+#include "gf/menu/adapter/gf_menu_char_data_adapter.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_fullscreen.h"
 #include "gf/menu/gf_menu_manager.h"
@@ -15,9 +18,11 @@
 #include "gf/menu/list/gf_menu_id_list.h"
 #include "gf/menu/list/gf_menu_item_list.h"
 #include "gf/menu/object/gf_menu_obj_char_select.h"
+#include "gf/menu/object/gf_menu_obj_cmn_status.h"
 #include "gf/menu/object/gf_menu_obj_common_text.h"
 #include "gf/menu/object/gf_menu_obj_mainmenu2.h"
 #include "gf/menu/object/gf_menu_obj_operation_info.h"
+#include "gf/menu/object/gf_menu_obj_sort.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "gf/request/gf_req_scom.h"
 #include "gf/util/gf_item_util.h"
@@ -27,6 +32,7 @@
 #include "mm_mtl/vector.h"
 #include "ui/ctrl/ui_ctrl_cursor_select.h"
 #include "ui/event/ui_event_data.h"
+#include "ui/event/ui_event_manager.h"
 #include "ui/list/ui_list_info.h"
 #include "ui/list/ui_select_obj_list.h"
 #include "ui/ui_object_acc.h"
@@ -68,6 +74,109 @@ GfMenuObjBladeRelease::~GfMenuObjBladeRelease() {
   mm::mtl::safeRelease(unknown38);
   mm::mtl::safeRelease(unknown30);
   mm::mtl::safeRelease(unknown28);
+}
+
+void GfMenuObjBladeRelease::initialize() {
+  ui::UIObjectAcc main(unknown18, "LAY_main");
+  mm::mtl::FixStr<32> name;
+// __LINE__ must be 131 as in the original file: it is the line argument of operator new.
+#line 131
+  MainListener *mainListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) MainListener(this);
+  mainListener->addRef();
+  ui::UIEventManager::get()->registObjectListener(main.unknown10, mainListener);
+  if (mainListener != nullptr) {
+    mainListener->release();
+  }
+  unknown30 = GfMenuBladeList::create();
+  {
+    GfMenuBladeList::ReleasbleSetup releasbleSetup;
+    releasbleSetup.unknown00.unknown08 = 3;
+    releasbleSetup.unknown00.unknown0c = 5;
+    unknown30->clear();
+    unknown30->setupFromReleasble(releasbleSetup);
+  }
+  GfMenuReference::setReferenceBladeID(0, 0);
+  {
+    ui::UIObjectAcc list(main.unknown10, "LAY_list_bl");
+    {
+      ui::UISelectObjList::CreateParam createParam = {};
+      createParam.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
+      unknown38 = ui::UISelectObjList::create(createParam);
+    }
+    unknown38->pickupObject(list.unknown10, "LAY_list_bl@%02d", 1);
+    ui::UICtrlCursorSelect::CursorSetting setting;
+    setting.setType(0);
+    setting.unknown18 = 0;
+    setting.unknown08 = "loop";
+    unknown40 = ui::UICtrlCursorSelect::create(list.searchChild("IMG_list_bl_cursor"), setting, unknown38);
+    // Ruling 8 (P4): the five blocks below (face, element, weapon, role, mercenary: format the child name, then createFromBladeList on it; the weapon block adds the base lookup) are written out as in
+    // the game (0x7100400f24), like the same format/searchChild blocks of GfMenuObjBlOrb::initialize and GfMenuObjBlEquip::setupItemList. A file-local helper taking the format and the type (the name
+    // buffer passed by reference, as the frame holds a single FixStr) gives 398 instructions against the game's 393.
+    for (u32 i = 0; i < unknown38->getSize(); i++) {
+      name.format("IMG_list_bl_face@%02d", i + 1);
+      GfMenuCharDataAdapter::createFromBladeList(list.searchChild(name.c_str()), 3, unknown30, i, false);
+      name.format("IMG_list_bl_info_elem@%02d", i + 1);
+      GfMenuCharDataAdapter::createFromBladeList(list.searchChild(name.c_str()), 0x2a, unknown30, i, false);
+      name.format("IMG_list_bl_info_wpn@%02d", i + 1);
+      GfMenuCharDataAdapter *weapon = GfMenuCharDataAdapter::createFromBladeList(list.searchChild(name.c_str()), 0x29, unknown30, i, false);
+      if (weapon != nullptr) {
+        name.format("IMG_list_bl_info_wpn_base@%02d", i + 1);
+        weapon->unknown24 = list.searchChild(name.c_str());
+      }
+      name.format("IMG_list_bl_info_role@%02d", i + 1);
+      GfMenuCharDataAdapter::createFromBladeList(list.searchChild(name.c_str()), 0x42, unknown30, i, false);
+      name.format("IMG_list_bl_info_mer@%02d", i + 1);
+      GfMenuCharDataAdapter::createFromBladeList(list.searchChild(name.c_str()), 0x53, unknown30, i, false);
+    }
+    GfMenuObjUtil::createVScrollBarPlugin(list.searchChild("IMG_list_bl_scroll_bar"), unknown30, "IMG_list_bl_scroll_bar_base", true);
+// __LINE__ must be 204 as in the original file: it is the line argument of operator new.
+#line 204
+    ListListener *listListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ListListener(this);
+    listListener->addRef();
+    ui::UIEventManager::get()->registObjectListener(list.unknown10, listListener);
+    if (listListener != nullptr) {
+      listListener->release();
+    }
+    setFSInputObject(1, list.unknown10);
+    sendOpenEvent(list.unknown10, 0, 0.0f);
+  }
+  {
+    ui::UIObjectAcc layout(main.unknown10, "LAY_bl_img");
+    ui::UIObjectAcc image(layout.unknown10, "IMG_bl_img");
+    GfMenuCharDataAdapter::createFromReferenceBlade(layout.searchChild("IMG_bl_img"), 0x36, 0, false);
+    image.setAlpha(0.0f);
+    image.setStreamImage2nd();
+  }
+  {
+    ui::UIListInfoBase::SetupParam param;
+    param.unknown08 = 3;
+    unknown460->setup(getAllocator(ALLOCATOR_UNKNOWN_0), param);
+  }
+  GfPartySelect::getDriverList(unknown478, GfPartySelect::LIST_TYPE_UNKNOWN_2, 0);
+  u16 *driver = unknown478.begin();
+  while (driver != unknown478.end()) {
+    if (*driver == 1) {
+      if (GfGameManager::isRexAwakening()) {
+        unknown4a0 = true;
+        driver = unknown478.erase(driver);
+        continue;
+      }
+      // The game tests the driver a second time here (the loop is peeled around the erase; initialize 0x7100400f24, the second `cmp #1` after isRexAwakening); the statement is kept as written in the
+      // game (P3).
+      if (*driver == 1) {
+        unknown4a0 = true;
+      }
+      driver++;
+    } else if (*driver == 2 || *driver == 3 || *driver == 6) {
+      driver++;
+    } else {
+      driver = unknown478.erase(driver);
+    }
+  }
+  ui::UIListInfoBase::SetupParam driverParam;
+  driverParam.unknown08 = unknown478.size();
+  unknown470->setup(getAllocator(ALLOCATOR_UNKNOWN_0), driverParam);
+  GfMenuObject::initialize();
 }
 
 void GfMenuObjBladeRelease::finalize() {
@@ -113,6 +222,182 @@ bool GfMenuObjBladeRelease::seqOpenImage() {
     isEnd = false;
   }
   return isEnd;
+}
+
+void GfMenuObjBladeRelease::ListListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1: {
+    {
+      ui::UIObjectAcc sort(unknown20->unknown18, "LAY_sort");
+      u16 sortId = GfMenuObjSort::getSortID(1, 0);
+      GfMenuObjSort::setSortLabelText(sortId, sort.searchChild("TXT_sort_label"));
+      unknown20->unknown4a4 = 0;
+      unknown20->unknown30->sort(sortId, false);
+    }
+    GfMenuObjCmnStatus::openBlStatus(1, -1);
+    unknown20->refreshBladeInfo(acc, unknown20->unknown4a8);
+    unknown0c = 0;
+    break;
+  }
+  case 6: {
+    u64 param = event.unknown08_u64;
+    u32 index = param;
+    if (index != 0xffffffff) {
+      u32 previous = param >> 32;
+      unknown20->unknown30->setIndex(index);
+      int rowOffset = unknown20->unknown30->getRowOffset();
+      int columnSize = unknown20->unknown30->getColumnSize();
+      u32 pageIndex = index - columnSize * rowOffset;
+      unknown20->unknown38->setIndex(pageIndex);
+      u32 blade = unknown20->unknown30->getContents(index).unknown00;
+      bool isDifferentImage = GfMenuObjUtil::isBladeDifferentImage(blade, GfMenuReference::getReferenceBladeID(0));
+      GfMenuReference::setReferenceBladeID(0, blade);
+      if (isDifferentImage) {
+        ui::UIObjectAcc image(unknown20->unknown18, "IMG_bl_img");
+        int ctrl = GfMenuObjUtil::getCtrlID(image.unknown10);
+        if (ctrl != -1) {
+          GfMenuObjUtil::stopCtrl(ctrl);
+        }
+        image.setAlpha(0.0f);
+        ui::UIObjectAcc main(unknown20->unknown18, "LAY_main");
+        ui::EventData sendData;
+        sendData.unknown00 = 0x101;
+        GfMenuObject::sendEvent(main.unknown10, sendData, 0.0f);
+      }
+      if (previous != 0xffffffff && index != previous) {
+        GfMenuObjUtil::playSECommonCursor();
+      }
+    }
+    unknown0c = index;
+    break;
+  }
+  case 8: {
+    u32 type = event.unknown0c;
+    u32 item = event.unknown08;
+    switch (type) {
+    case 1:
+      if (item < unknown20->unknown30->getSize() && !GfDataBlade::isActivateMercenaryTeam(unknown20->unknown30->getContents(unknown20->unknown30->getIndex(false)).unknown00)) {
+        GfMenuObjMainMenu2::setCloseKeyEnable(false);
+        GfMenuObjOperationInfo::remove(acc.unknown10, 0, 0, 0);
+        unknown20->unknown58.unknown002(&GfMenuObjBladeRelease::seqSubMenuOpen);
+        GfMenuObject::disableFSInput();
+        unknown20->unknown40->setDisp(false);
+      } else {
+        GfMenuObjUtil::playSECommon(2);
+      }
+      break;
+    case 2:
+      GfMenuObjCmnStatus::closeBlStatus();
+      GfMenuObject::returnFSSubLayer(unknown20);
+      GfMenuObject::disableFSInput();
+      GfMenuObjOperationInfo::remove(acc.unknown10, 0, 0, 0);
+      GfMenuObjUtil::playSECommonCancel();
+      break;
+    case 0xd:
+      unknown20->unknown4a8++;
+      if (unknown20->unknown4a8 > 2) {
+        unknown20->unknown4a8 = 0;
+      }
+      unknown20->refreshBladeInfo(acc, unknown20->unknown4a8);
+      GfMenuObjUtil::playSE(0x1c);
+      break;
+    case 0x10:
+      if (item < unknown20->unknown30->getSize()) {
+        u32 blade = unknown20->unknown30->getContents(unknown20->unknown30->getIndex(false)).unknown00;
+        if (GfMenuObjUtil::isBladeReleasable(blade, nullptr)) {
+          GfMenuObjMainMenu2::setCloseKeyEnable(false);
+          GfMenuObjOperationInfo::remove(acc.unknown10, 0, 0, 0);
+          unknown20->unknown2e8 = false;
+          unknown20->unknown58.unknown005();
+          unknown20->unknown58.unknown002(&GfMenuObjBladeRelease::seqConfirmRelease);
+          GfMenuObject::disableFSInput();
+          unknown20->unknown40->setDisp(false);
+          break;
+        }
+        if (GfDataBlade::isActivateDriver(blade)) {
+          GfMenuManager::openCommonWindow(0xae);
+          break;
+        }
+        if (GfDataBlade::isReleaseLock(blade) || GfMenuObjUtil::isBladeLastOne(blade, nullptr) || blade == GfDataBlade::getStartCommonBlade()) {
+          GfMenuManager::openCommonWindow(0xad);
+          break;
+        }
+      }
+      GfMenuObjUtil::playSECommon(2);
+      break;
+    case 0x11: {
+      ui::UIObjectAcc label(unknown20->unknown18, "TXT_sort_label");
+      GfMenuObjSort::open(acc.unknown10, label.unknown10, 1, unknown20->unknown4a4);
+      GfMenuObject::disableInput(handle);
+      GfMenuObjOperationInfo::remove(handle, 0, 0, 0);
+      break;
+    }
+    case 0x12:
+      GfMenuObjOperationInfo::changeText(handle, 0x12, !GfMenuObjCmnStatus::swapBlStatus());
+      break;
+    }
+    break;
+  }
+  case 0x21: {
+    int param = event.unknown08;
+    GfMenuObject::resetInputSelection(acc.unknown10);
+    u32 size = unknown20->unknown30->getSize();
+    u32 padding = 0;
+    if (size % 5 != 0) {
+      padding = 5 - size % 5;
+    }
+    size += padding;
+    GfMenuObject::setupInputSelection(acc.unknown10, unknown20->unknown30->getIndex(false), size);
+    unknown0c = unknown20->unknown30->getIndex(false);
+    GfMenuObject::setupPadLineSelection(acc.unknown10, 5);
+    GfMenuObject::enableFSInput(1);
+    GfMenuObjOperationInfo::add(acc.unknown10, 0, 0, 0);
+    if (param != 1) {
+      GfMenuObjOperationInfo::setGuideText(0x21, 0);
+      GfMenuObjMainMenu2::setSubIndexText(0x14);
+    }
+    GfMenuObjOperationInfo::changeText(handle, 0x12, false);
+    unknown20->unknown40->setDisp(true);
+    break;
+  }
+  case 0x22:
+    break;
+  default:
+    if (event.unknown00 == 0x148) {
+      GfMenuObject::enableInput(handle);
+      GfMenuObjOperationInfo::add(handle, 0, 0, 0);
+      if (unknown20->unknown4a4 == event.unknown08) {
+        break;
+      }
+      u16 sortId = GfMenuObjSort::getSortID(1, event.unknown08);
+      if ((sortId & 0xfffe) == 4) {
+        unknown20->unknown30->sort(sortId, true);
+      } else {
+        unknown20->unknown30->sort(sortId, false);
+      }
+      unknown20->unknown4a4 = event.unknown08;
+      u32 blade = unknown20->unknown30->getContents(unknown0c).unknown00;
+      bool isDifferentImage = GfMenuObjUtil::isBladeDifferentImage(blade, GfMenuReference::getReferenceBladeID(0));
+      GfMenuReference::setReferenceBladeID(0, blade);
+      if (!isDifferentImage) {
+        break;
+      }
+      ui::UIObjectAcc image(unknown20->unknown18, "IMG_bl_img");
+      int ctrl = GfMenuObjUtil::getCtrlID(image.unknown10);
+      if (ctrl != -1) {
+        GfMenuObjUtil::stopCtrl(ctrl);
+      }
+      image.setAlpha(0.0f);
+      ui::UIObjectAcc main(unknown20->unknown18, "LAY_main");
+      ui::EventData sendData;
+      sendData.unknown00 = 0x101;
+      GfMenuObject::sendEvent(main.unknown10, sendData, 0.0f);
+    } else {
+      ui::UIObjectListener::reciveEvent(event, handle);
+    }
+    break;
+  }
 }
 
 void GfMenuObjBladeRelease::refreshBladeInfo(ui::UIObjectAcc &acc, u32 type) {

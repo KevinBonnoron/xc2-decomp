@@ -48,6 +48,7 @@ public:
   bool seqStartCommon();
   bool seqCloseJog();
   bool seqOpenJog();
+  bool seqSwapPhase1();
   bool seqSwapPhase2();
   void listenerPartySelect(const ui::EventData &event);
   void setBustupCtrlChar(u32 character, u32 flag, bool isDisp);
@@ -67,9 +68,9 @@ public:
   u32 unknown328;                  // Role and original member name unknown, cleared by the constructor.
   u8 _32c[0x330 - 0x32c];
   mm::mtl::FixedVector<u32, 3> unknown330; // Inferred role: party members; original member name unknown.
-  u8 _348[0x350 - 0x348];
-  u32 unknown350; // Inferred role: unused, 0xffffffff at start; original member name unknown.
-  u32 unknown354; // Role and original member name unknown, cleared by the constructor.
+  class unknown140 *unknown348;            // Inferred role: character data receiver of the leader adapter (GfMenuCharDataAdapter at thunk offset 0x30); original member name unknown.
+  int unknown350;                          // Inferred role: character whose bustup is being swapped, -1 at start; original member name unknown.
+  u32 unknown354;                          // Role and original member name unknown, cleared by the constructor.
 };
 
 static_assert(offsetof(GfMenuObjMainMenu::MainListener, unknown20) == 0x20, "");
@@ -87,6 +88,7 @@ static_assert(offsetof(GfMenuObjMainMenu, unknown318) == 0x318, "");
 static_assert(offsetof(GfMenuObjMainMenu, unknown320) == 0x320, "");
 static_assert(offsetof(GfMenuObjMainMenu, unknown328) == 0x328, "");
 static_assert(offsetof(GfMenuObjMainMenu, unknown330) == 0x330, "");
+static_assert(offsetof(GfMenuObjMainMenu, unknown348) == 0x348, "");
 static_assert(offsetof(GfMenuObjMainMenu, unknown350) == 0x350, "");
 static_assert(offsetof(GfMenuObjMainMenu, unknown354) == 0x354, "");
 

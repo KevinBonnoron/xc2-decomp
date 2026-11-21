@@ -34,6 +34,7 @@ public:
   };
 
   static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
+  void calcAngularVelocity(f32 deltaTime, Packet &packet);
   void calcVelocity(f32 deltaTime, Packet &packet);
   void update(const fw::UpdateInfo &info, Packet &packet);
 };

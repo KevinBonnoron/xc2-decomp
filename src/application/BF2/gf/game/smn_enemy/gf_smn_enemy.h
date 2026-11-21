@@ -46,6 +46,7 @@ public:
   void debugDraw() const;
   void updateDepopEnemy();
   void validatePopPos();
+  bool getPopPos(mm::Vec3 &position, const PopInfo &info) const;
   void removeEnemy(GF_OBJ_HANDLE *handle);
   void listenerGfObj(OBJEVT event, GF_OBJ_HANDLE *handle, u32 objectType) override;
 

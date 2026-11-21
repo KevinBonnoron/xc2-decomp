@@ -2,14 +2,26 @@
 #include <stddef.h>
 
 #include "anm/anm_reference_object.h"
+#include "fw/fw_pad.h"
 #include "types.h"
 
 namespace fw {
 
 struct ResAction {
-  u8 _00[0x10];
+  // Inferred role: key of an action; original type name unknown.
+  struct unknown001 {
+    u32 unknown00;
+    PadActKey unknown04; // Inferred role: pad key; original member name unknown. Typed by getPadKey(PadActKey), which getFwPadKey passes it to.
+  };
+
+  const unknown001 *unknown00; // Inferred role: keys; original member name unknown.
+  u32 unknown08;               // Inferred role: key count; original member name unknown.
+  u8 _0c[0x10 - 0x0c];
 };
 
+static_assert(offsetof(ResAction::unknown001, unknown04) == 0x04, "");
+static_assert(sizeof(ResAction::unknown001) == 0x08, "");
+static_assert(offsetof(ResAction, unknown08) == 0x08, "");
 static_assert(sizeof(ResAction) == 0x10, "");
 
 struct ResActionInfo {

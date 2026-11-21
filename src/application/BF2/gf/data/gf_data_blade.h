@@ -24,13 +24,25 @@ struct SDataGame;
 
 // Inferred role: save data blade arts; original type name unknown.
 struct unknown108 {
+  // Evidence: GfBladeCreateInfo::GfBladeCreateInfo (0x71003011a4) stores the six arts entries of its two arrays and its arts ex entry this way (strh 0, strh 100, strh 0, strh 0, strb 1, strh 0).
+  unknown108() {
+    unknown00 = 0;
+    unknown02 = 100;
+    unknown06 = 0;
+    unknown07 = 0;
+    unknown08 = 1;
+    unknown04 = 0;
+    unknown0a = 0;
+  }
+
   u16 unknown00; // Inferred role: id; original member name unknown.
   u16 unknown02; // Inferred role: arts h; original member name unknown.
-  u8 _04[0x06 - 0x04];
-  u8 unknown06; // Inferred role: achiev release level; original member name unknown.
-  u8 unknown07; // Inferred role: level; original member name unknown.
-  u8 unknown08; // Inferred role: level max; original member name unknown.
-  u8 _09[0x0c - 0x09];
+  u16 unknown04; // Inferred role: zeroed by the constructor; original member name unknown.
+  u8 unknown06;  // Inferred role: achiev release level; original member name unknown.
+  u8 unknown07;  // Inferred role: level; original member name unknown.
+  u8 unknown08;  // Inferred role: level max; original member name unknown.
+  u8 _09[0x0a - 0x09];
+  u16 unknown0a; // Inferred role: zeroed by the constructor; original member name unknown.
 };
 
 static_assert(offsetof(unknown108, unknown02) == 0x02, "");
@@ -41,8 +53,27 @@ static_assert(sizeof(unknown108) == 0x0c, "");
 
 // Inferred role: save data blade skill; original type name unknown.
 struct unknown109 {
-  // Evidence: GfObjPropertyBlade::GfObjPropertyBlade builds three of them (0x71005aade8-0x71005aae10) and assigns them again (0x71005aae9c-0x71005aaebc).
-  unknown109() : unknown00(0), unknown02(0), unknown03(0), unknown04(1), unknown05(0) {}
+  // Evidence: GfBladeCreateInfo::GfBladeCreateInfo (0x71003011a4) and SDataBlade::SDataBlade (0x7100145060) construct the first three of their six skill entries (SDataBlade 0x9c, GfBladeCreateInfo
+  // 0x3dc) without storing the padding byte after the level max (no store at 0x3e1, 0x3e7, 0x3ed), unlike the last three (unknown110).
+  unknown109() : unknown00(0), unknown02(0), unknown03(0), unknown04(1) {}
+
+  u16 unknown00; // Inferred role: id; original member name unknown.
+  u8 unknown02;  // Inferred role: achiev release level; original member name unknown.
+  u8 unknown03;  // Inferred role: level; original member name unknown.
+  u8 unknown04;  // Inferred role: level max; original member name unknown.
+  u8 _05[0x06 - 0x05];
+};
+
+static_assert(offsetof(unknown109, unknown02) == 0x02, "");
+static_assert(offsetof(unknown109, unknown03) == 0x03, "");
+static_assert(offsetof(unknown109, unknown04) == 0x04, "");
+static_assert(sizeof(unknown109) == 0x06, "");
+
+// Inferred role: save data blade field skill; original type name unknown.
+struct unknown110 {
+  // Evidence: GfObjPropertyBlade::GfObjPropertyBlade builds three of them (0x71005aade8-0x71005aae10) and assigns them again (0x71005aae9c-0x71005aaebc); GfBladeCreateInfo::GfBladeCreateInfo
+  // (0x71003011a4) stores the padding byte of its last three skill entries (0x3f3, 0x3f9, 0x3ff).
+  unknown110() : unknown00(0), unknown02(0), unknown03(0), unknown04(1), unknown05(0) {}
 
   u16 unknown00; // Inferred role: id; original member name unknown.
   u8 unknown02;  // Inferred role: achiev release level; original member name unknown.
@@ -51,14 +82,17 @@ struct unknown109 {
   u8 unknown05;  // Inferred role: zeroed by the constructor; original member name unknown.
 };
 
-static_assert(offsetof(unknown109, unknown02) == 0x02, "");
-static_assert(offsetof(unknown109, unknown03) == 0x03, "");
-static_assert(offsetof(unknown109, unknown04) == 0x04, "");
-static_assert(sizeof(unknown109) == 0x06, "");
+static_assert(offsetof(unknown110, unknown02) == 0x02, "");
+static_assert(offsetof(unknown110, unknown03) == 0x03, "");
+static_assert(offsetof(unknown110, unknown04) == 0x04, "");
+static_assert(sizeof(unknown110) == 0x06, "");
 
 struct AchievInfo {
-  u16 unknown00; // Inferred role: achievement; original member name unknown.
-  u8 _002[0x004 - 0x002];
+  // Evidence: GfBladeCreateInfo::GfBladeCreateInfo (0x71003011a4) zeroes the achievement of each of its ten entries (0x400, 0x490...) and not the padding after it.
+  AchievInfo() : unknown00(0) {}
+
+  u16 unknown00;            // Inferred role: achievement; original member name unknown. The two padding bytes after it are no member: the game copies and zeroes the entry without them
+                            // (GfBladeCreate::setupSDataBlade, 0x7100301fd4).
   AchievQuest unknown04[5]; // Inferred role: quests; original member name unknown.
 };
 
@@ -70,6 +104,9 @@ typedef AchievInfo SDataBladeAchievement;
 
 // Inferred role: save data blade favorite; original type name unknown.
 struct unknown112 {
+  // Evidence: GfBladeCreateInfo::GfBladeCreateInfo (0x71003011a4) zeroes the 16 bytes of its two favorites (0x9a0-0x9b0).
+  unknown112() : unknown00(0), unknown02(0), unknown04(0), unknown06(0) {}
+
   u16 unknown00; // Inferred role: category; original member name unknown.
   u16 unknown02; // Inferred role: item; original member name unknown.
   u16 unknown04; // Inferred role: used category; original member name unknown.
@@ -111,14 +148,12 @@ struct SDataBlade {
   GfIdea unknown38;                             // Inferred role: trust rank; original member name unknown.
   mm::mtl::FixedArray<unknown108, 3> unknown3c; // Inferred role: arts; original member name unknown.
   mm::mtl::FixedArray<unknown108, 3> unknown60; // Inferred role: n arts; original member name unknown.
-  u16 unknown84;                                // Inferred role: arts ex; original member name unknown.
-  u16 unknown86;                                // Inferred role: arts ex h; original member name unknown.
-  u8 _088[0x090 - 0x088];
-  u16 unknown90; // Inferred role: arts ex2; original member name unknown.
-  u16 unknown92; // Inferred role: arts ex2 h; original member name unknown.
-  u8 _094[0x09c - 0x094];
+  unknown108 unknown84; // Inferred role: arts ex (id in unknown00, h in unknown02); original member name unknown. Evidence: GfBladeCreate::setupSDataBlade copies 12 bytes at 0x84 from an unknown108
+                        // of GfBladeCreateInfo.
+  unknown108
+      unknown90; // Inferred role: arts ex2 (id in unknown00, h in unknown02); original member name unknown. Evidence: SDataBlade::SDataBlade (0x7100145060) stores the unknown108 pattern at 0x90.
   mm::mtl::FixedArray<unknown109, 3> unknown9c;             // Inferred role: skills; original member name unknown.
-  mm::mtl::FixedArray<unknown109, 3> unknownae;             // Inferred role: field skills; original member name unknown.
+  mm::mtl::FixedArray<unknown110, 3> unknownae;             // Inferred role: field skills; original member name unknown.
   mm::mtl::FixedArray<u8, 4> unknownc0;                     // Inferred role: extra parts; original member name unknown.
   mm::mtl::FixedArray<SDataBladeAchievement, 3> unknownc4;  // Inferred role: arts achievements; original member name unknown.
   mm::mtl::FixedArray<SDataBladeAchievement, 3> unknown274; // Inferred role: skill achievements; original member name unknown.
@@ -140,16 +175,18 @@ struct SDataBlade {
   mm::mtl::FixStr<16> unknown734;         // Inferred role: resource name motion; original member name unknown.
   mm::mtl::FixStr<16> unknown748;         // Inferred role: resource name motion2; original member name unknown.
   mm::mtl::FixStr<16> unknown75c;         // Inferred role: resource name add motion; original member name unknown.
-  char unknown770[0x7ac - 0x770];         // Inferred role: voice str; original member name unknown.
-  char unknown7ac[0x28];                  // Inferred role: resource name effect; original member name unknown.
-  char unknown7d4[0x14];                  // Inferred role: center bone; original member name unknown.
-  char unknown7e8[0x14];                  // Inferred role: cam bone; original member name unknown.
-  char unknown7fc[0x820 - 0x7fc];         // Inferred role: se pack; original member name unknown.
-  u8 unknown820;                          // Inferred role: size; original member name unknown.
-  u8 unknown821;                          // Inferred role: weapon type; original member name unknown.
-  u8 unknown822;                          // Inferred role: equip orb max; original member name unknown.
-  u8 unknown823;                          // Inferred role: attribute; original member name unknown.
-  u8 unknown824;                          // Inferred role: personality; original member name unknown.
+  mm::mtl::FixStr<16> unknown770; // Inferred role: voice str; original member name unknown. Evidence: GfBladeCreate::setupSDataBlade (0x7100301fd4) assigns it from a FixStr<16> (length at 0x780,
+                                  // assertion "m_nLen < LEN").
+  u8 _784[0x7ac - 0x784];
+  char unknown7ac[0x28];          // Inferred role: resource name effect; original member name unknown.
+  char unknown7d4[0x14];          // Inferred role: center bone; original member name unknown.
+  char unknown7e8[0x14];          // Inferred role: cam bone; original member name unknown.
+  mm::mtl::FixStr<32> unknown7fc; // Inferred role: se pack; original member name unknown. Evidence: GfBladeCreate::setupSDataBlade assigns it from a FixStr<32> (length at 0x81c).
+  u8 unknown820;                  // Inferred role: size; original member name unknown.
+  u8 unknown821;                  // Inferred role: weapon type; original member name unknown.
+  u8 unknown822;                  // Inferred role: equip orb max; original member name unknown.
+  u8 unknown823;                  // Inferred role: attribute; original member name unknown.
+  u8 unknown824;                  // Inferred role: personality; original member name unknown.
   u8 _825[0x826 - 0x825];
   u8 unknown826; // Inferred role: eye rot control; original member name unknown.
   u8 _827[0x828 - 0x827];
@@ -179,11 +216,11 @@ struct SDataBlade {
   u16 unknown84a; // Inferred role: kizuna link set; original member name unknown.
   u16 unknown84c; // Inferred role: normal talk; original member name unknown.
   u8 _84e[0x850 - 0x84e];
-  u32 unknown850;        // Inferred role: create event; original member name unknown.
-  u16 unknown854;        // Inferred role: mount point; original member name unknown.
-  u16 unknown856;        // Inferred role: mount object; original member name unknown.
-  char unknown858[0x40]; // Inferred role: custom name; original member name unknown.
-  u32 unknown898;        // Inferred role: custom name length; original member name unknown.
+  u32 unknown850;                 // Inferred role: create event; original member name unknown.
+  u16 unknown854;                 // Inferred role: mount point; original member name unknown.
+  u16 unknown856;                 // Inferred role: mount object; original member name unknown.
+  mm::mtl::FixStr<64> unknown858; // Inferred role: custom name; original member name unknown. Evidence: GfBladeCreate::setupSDataBlade assigns it from a C string (length at 0x898, assertions "pszName
+                                  // != 0" and "m_nLen < LEN").
   u8 _89c[0x89e - 0x89c];
   u8 unknown89e; // Inferred role: enable engage rex; original member name unknown.
   u8 unknown89f; // Inferred role: attached party; original member name unknown.
@@ -262,7 +299,6 @@ static_assert(offsetof(SDataBlade, unknown850) == 0x850, "");
 static_assert(offsetof(SDataBlade, unknown854) == 0x854, "");
 static_assert(offsetof(SDataBlade, unknown856) == 0x856, "");
 static_assert(offsetof(SDataBlade, unknown858) == 0x858, "");
-static_assert(offsetof(SDataBlade, unknown898) == 0x898, "");
 static_assert(offsetof(SDataBlade, unknown89e) == 0x89e, "");
 static_assert(offsetof(SDataBlade, unknown89f) == 0x89f, "");
 static_assert(offsetof(SDataBlade, unknown8a0) == 0x8a0, "");
@@ -315,6 +351,8 @@ public:
   static bool getCommonBladeName(u8 *&bdat, u32 &textId, u32 nameList);
   static u32 getFavorite(u32 blade, FAVORITE favorite);
   static bool isFavoriteItem(u32 blade, u32 item);
+  static bool isFavoriteCategory(u32 blade, u32 item);
+  static bool getPouchEnhanceFavorite(mm::mtl::FixedVector<EnhanceFavorite, 64> &favorites, u32 blade);
   static const char *getFieldSkillVoice(u32 blade, u32 skill);
   static u32 getAchievementQuestPrefix(u32 blade, u32 line, u32 level);
   static void setupAchievQuest(AchievQuest &achievQuest);
@@ -342,7 +380,7 @@ public:
   static bool isActivateUnuse(u32 blade);
   static bool isActivateMercenaryTeam(u32 blade);
   static bool isAttachedParty(u32 blade);
-  static void getListForFieldSkill(mm::mtl::FixedVector<u16, 422> &blades);
+  static bool getListForFieldSkill(mm::mtl::FixedVector<u16, 422> &blades);
   static u32 getStartBlade();
   static u32 getEndBlade();
   static u32 getStartRareBlade();
@@ -391,6 +429,11 @@ public:
   static bool getNameWithFieldSkillForDebug(mm::mtl::FixStr<128> &name, u32 blade);
   static u32 getKeyReleaseLevel(u32 blade);
   static u32 getSkillLineId(u32 blade, u32 line);
+  static const char *getSkillLineName(u32 blade, u32 line);
+  static u32 getSkillLineLevel(u32 blade, u32 line);
+  static u32 getSkillLineLevelMax(u32 blade, u32 line);
+  static void setSkillLineLevel(u32 blade, u32 line, u32 level);
+  static void setSkillLevel(u32 blade, u32 line, u32 level);
   static bool setAchievReleaseLevel(u32 blade, u32 line, u32 level);
   // Return type inferred: GfKizunaringBlade::releaseAchievement compares the result with the level unsigned (cmp w0, w20; b.hs at 0x7100363c48).
   static u32 getAchievReleaseLevel(u32 blade, u32 line);

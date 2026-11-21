@@ -1,11 +1,16 @@
 #include "gf/menu/object/gf_menu_obj_mainmenu.h"
 
 #include "gf/game/gf_game_party.h"
+#include "gf/menu/adapter/gf_menu_adapter.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/object/gf_menu_obj_common_jog.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "gf/request/gf_req_command.h"
+#include "mm_math/mm_col3.h"
+#include "mm_math/mm_pnt.h"
+#include "mm_math/mm_rect.h"
+#include "mm_math/mm_vec2.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/reference_object.h"
 #include "types.h"
@@ -16,11 +21,64 @@
 
 namespace gf {
 
+// Inferred role: multiply color of the bustup that is behind; original name unknown. The game reads it by address in setBustupCtrlChar (0x7100f706d4).
+static const mm::Col3 unknown002(0.5f, 0.5f, 0.5f);
+
 GfMenuObjMainMenu::GfMenuObjMainMenu(u32 handle)
-    : GfMenuObject(handle), unknown68(this), unknown300(nullptr), unknown308(0), unknown30c(0), unknown310(0), unknown318(nullptr), unknown320(nullptr), unknown328(0), unknown350(0xffffffff),
-      unknown354(0) {}
+    : GfMenuObject(handle), unknown68(this), unknown300(nullptr), unknown308(0), unknown30c(0), unknown310(0), unknown318(nullptr), unknown320(nullptr), unknown328(0), unknown350(-1), unknown354(0) {}
 
 GfMenuObjMainMenu::~GfMenuObjMainMenu() { ; }
+
+void GfMenuObjMainMenu::setBustupCtrlChar(u32 character, u32 flag, bool isDisp) {
+  if (isDisp) {
+    unknown350 = character;
+    unknown354 = flag;
+    unknown68.unknown005();
+    unknown68.unknown002(&GfMenuObjMainMenu::seqStartCommon);
+    unknown68.unknown002(&GfMenuObjMainMenu::seqSwapPhase1);
+    unknown68.unknown002(&GfMenuObjMainMenu::seqSwapPhase2);
+    unknown68.unknown002(&GfMenuObjMainMenu::seqEndCommon);
+  } else {
+    ui::UIObjectAcc acc(unknown320->getObject(character));
+    if (acc.isValid()) {
+      ui::UIObjectAcc driver(acc.unknown10, "IMG_bustup_dr");
+      ui::UIObjectAcc blade(acc.unknown10, "IMG_bustup_bl");
+      mm::Rect<s16> driverRect;
+      mm::Rect<s16> bladeRect;
+      acc.getLayoutRect("bustup_dr", driverRect);
+      acc.getLayoutRect("bustup_bl", bladeRect);
+      if (flag == 0) {
+        driver.setScale(mm::Vec2(1.0f, 1.0f));
+        driver.setPos(mm::Pnt<s16>(driverRect.unknown00));
+        driver.setMulColor(mm::Col3(1.0f, 1.0f, 1.0f));
+        driver.setDispPriority(9);
+        s16 y = bladeRect.y + 0x28; // Places the load of y before the one of x (0x7100482b5c): the game loads the two halves apart, y first, never as one word.
+        blade.setPos(mm::Pnt<s16>(bladeRect.x, y));
+        blade.setScale(mm::Vec2(0.85f, 0.85f));
+        blade.setMulColor(unknown002);
+        blade.setDispPriority(8);
+      } else {
+        blade.setScale(mm::Vec2(1.0f, 1.0f));
+        blade.setPos(mm::Pnt<s16>(bladeRect.unknown00));
+        blade.setMulColor(mm::Col3(1.0f, 1.0f, 1.0f));
+        blade.setDispPriority(9);
+        s16 y = driverRect.y + 0x28; // Places the load of y before the one of x (0x7100482c04): the game loads the two halves apart, y first, never as one word.
+        driver.setPos(mm::Pnt<s16>(driverRect.x, y));
+        driver.setScale(mm::Vec2(0.85f, 0.85f));
+        driver.setMulColor(unknown002);
+        driver.setDispPriority(8);
+      }
+      if (unknown348 != nullptr) {
+        if (flag == 0) {
+          unknown348->changeCharData(3, GfGameParty::getDriverBdatId(character));
+        } else {
+          unknown348->changeCharData(4, GfGameParty::getBladeBdatId(character, -1));
+        }
+      }
+      unknown330[character] = flag;
+    }
+  }
+}
 
 void GfMenuObjMainMenu::finalize() {
   mm::mtl::safeRelease(unknown320);

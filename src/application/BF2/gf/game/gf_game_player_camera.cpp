@@ -125,6 +125,19 @@ void GfGamePlayerCamera::setTargetObject(GF_OBJ_HANDLE *handle) {
   }
 }
 
+bool GfGamePlayerCamera::isManualCamera() {
+  PlayerCamera *camera = getPlayerCamera();
+  // The game ANDs the result of the call with the found flag (0x710032dbc0, `and w0, w0, w8`): w0 is never written on the paths without a camera.
+  bool isFound = false;
+  bool isManual;
+  if (camera != nullptr) {
+    isManual = camera->isManual();
+    isFound = true;
+  }
+
+  return isManual & isFound;
+}
+
 void GfGamePlayerCamera::setTargetPlayer(GF_OBJ_HANDLE *handle) {
   GfGamePlayerCamera *playerCamera = get();
   if (playerCamera == nullptr) {
@@ -185,6 +198,19 @@ u32 GfGamePlayerCamera::getSaveSide() {
   }
 
   return 1;
+}
+
+bool GfGamePlayerCamera::isSaveFreeMode() {
+  PlayerCamera *camera = getPlayerCamera();
+  // Same pattern as isManualCamera (0x710032de18).
+  bool isFound = false;
+  bool isFree;
+  if (camera != nullptr) {
+    isFree = camera->isSaveFreeMode();
+    isFound = true;
+  }
+
+  return isFree & isFound;
 }
 
 GfGamePlayerCamera::GfGamePlayerCamera() {}

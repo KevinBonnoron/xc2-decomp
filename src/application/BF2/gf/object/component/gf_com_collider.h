@@ -86,6 +86,11 @@ public:
   const mm::mtl::RTTI *getRTTI() const override;
   void changeLayer(u32 oldLayer, u32 newLayer) override;
 
+  // Inferred helper: first collision object; original name unknown. Users: DeadColCheckPlugin::testDead (1.0.0: 0x7100577a64), StateUtil::reflectionAdsorption (0x710057254c) and
+  // GfComBehaviorPc::warpBattle (0x7100567b5c) and warpExternal (0x7100567dbc). Taking the component keeps the game's null test of the caller's getComponent<GfComCollider>(), see
+  // UpdatableObject::getComponent.
+  fw::ColiObject *unknown001() const { return unknown18[0]; }
+
   mm::mtl::Vector<fw::ColiObject *> unknown18; // Inferred role: colis; original member name unknown.
   UserData unknown40;                          // Inferred role: user data; original member name unknown.
   fw::AnimColPoseModifier unknown50;           // Inferred role: pose modifier; original member name unknown.

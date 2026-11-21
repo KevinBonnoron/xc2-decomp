@@ -24,6 +24,9 @@ public:
   virtual void update(const FrameInfo &info);
   void play(const char *name, const mm::Vec3 &offset);
 
+  // Inferred role: flags; original name unknown.
+  u32 unknown001() const { return unknown40; }
+
 private:
   u32 unknown40;   // Inferred role: flags; original member name unknown.
   void *unknown48; // Inferred role: eva data; original member name unknown.

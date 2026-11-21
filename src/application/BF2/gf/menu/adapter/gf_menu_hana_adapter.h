@@ -53,6 +53,7 @@ public:
   static GfMenuHanaAdapter *createFromReferenceIndex(u32 handle, u32 type, u32 index, bool isUpdateAlways);
   static GfMenuHanaAdapter *createFromCoverter(u32 handle, u32 type, IConverter *converter, bool isUpdateAlways);
   void update(const fw::UpdateInfo &info) override;
+  static bool isOpenCircuit(u32 blade, u32 circuit, RESULT_HANA &result);
   static u32 getEquipParts(u32 blade, u32 type);
   static bool isEquipParts(u32 blade, u32 type, u32 parts, RESULT_HANA &result);
   static bool chkEquipPartsGroup(u32 blade, u32 type, u32 parts);

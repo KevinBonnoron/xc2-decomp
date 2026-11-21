@@ -1,9 +1,13 @@
 #include "dr/dr_pixl_shadow_obj_spt.h"
 
+#include "dr/dr_light_obj.h"
+#include "dr/dr_man.h"
+#include "dr/dr_shd_lgt_hybrid.h"
+#include "dr/dr_shd_lgt_man.h"
+#include "dr/dr_shd_man.h"
 #include "grlib/cglib_dbl_uniform_block.h"
 
 namespace ml {
-class DrMan;
 
 DrPixlShadowObjSpt::DrPixlShadowObjSpt(DrMan *man) : DrPixlShadowObj(man, 1, 0) {
   m_parmTbl[3] = 1.0f;
@@ -38,6 +42,13 @@ int DrPixlShadowObjSpt::clipTypeChk(const mm::Vec3 &position, f32 value) {
 }
 
 void DrPixlShadowObjSpt::renderLight() {}
+
+void DrPixlShadowObjSpt::stockTile() {
+  // The local places the load of unknown198 before the load of m_hybridLight, as the game does (0x7100867ce8); in one expression the
+  // call target is loaded first (9 instructions).
+  DrLightObjSpt *light = static_cast<DrLightObjSpt *>(unknown198);
+  unknown178->unknown80->unknown18->m_hybridLight->stockSptList(light);
+}
 
 const f32 *DrPixlShadowObjSpt::getParmTbl() const { return m_parmTbl; }
 

@@ -1,5 +1,6 @@
 #include "framework/effect/effect_pack.h"
 
+#include "mtl/alloc_handle.h"
 #include <unordered_map>
 
 #include "eflib/effect_system_manager.h"
@@ -32,6 +33,38 @@ unknown001 *unknown002(unknown001 *block) {
 
 } // namespace
 
+u32 EffectPack::getEfbNum(void *data) {
+  unknown001 *block = static_cast<unknown001 *>(data);
+  if (block->unknown08 == 'a') {
+    u32 count = 0;
+    while ((block = unknown002(block)) != nullptr) {
+      count++;
+    }
+    return count;
+  }
+
+  return 0;
+}
+EffectPack *EffectPack::createFromMemory(void *data, u32 size, const char *name, bool isCopy) {
+  mm::mtl::FixStr<128> path;
+  ml::PathUtil::getFsaPath(path, name);
+  EffectPack *pack = EffectManager::get()->findPack(path.c_str());
+  if (pack != nullptr) {
+    pack->addRef();
+    return pack;
+  }
+  if (data != nullptr && static_cast<unknown001 *>(data)->unknown04 >> 20 == 0) {
+    EffectManager *manager = EffectManager::get();
+    if (manager != nullptr) {
+      pack = new (manager->unknown2c) EffectPack(manager->unknown2c, data, size, path.c_str(), isCopy);
+      if (pack != nullptr) {
+        return pack;
+      }
+    }
+  }
+  return nullptr;
+}
+
 EffectPack::~EffectPack() {
   for (EffectManager::DataMap::iterator it = unknown18.begin(); it != unknown18.end(); ++it) {
     it->second->release();
@@ -44,19 +77,6 @@ EffectPack::~EffectPack() {
   }
 
   EffectManager::get()->removePack(this);
-}
-
-u32 EffectPack::getEfbNum(void *data) {
-  unknown001 *block = static_cast<unknown001 *>(data);
-  if (block->unknown08 == 'a') {
-    u32 count = 0;
-    while ((block = unknown002(block)) != nullptr) {
-      count++;
-    }
-    return count;
-  }
-
-  return 0;
 }
 
 void *EffectPack::searchEfb(const char *name) const {

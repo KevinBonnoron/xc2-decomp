@@ -61,6 +61,8 @@ public:
   void createShadowTemp();
   void buffUpdate();
 
+  static const f32 SHADOW_CHECK_RANGE_TBL[4]; // Name from the game symbol _ZN2ml20DrPixlShadowCacheMan22SHADOW_CHECK_RANGE_TBLE (16 bytes); read by DrResMdoSeamWrkInst::seachShadowInstMapRender.
+
   u32 unknown00;                   // Inferred role: flags; original member name unknown.
   DrPixlMan *unknown08;            // Inferred role: pixl man; original member name unknown.
   SHCACHE_WORK_TBL unknown0010[4]; // Inferred role: shadow cache works; original member name unknown.

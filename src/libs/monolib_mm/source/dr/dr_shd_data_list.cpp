@@ -1,5 +1,6 @@
 #include "dr/dr_shd_data_list.h"
 
+#include <math.h>
 #include <string.h>
 
 #include "dr/dr_man.h"
@@ -155,6 +156,72 @@ grlib::CGLibOneUniformBlock *DrShdDataList::getAlphaTestUniform(f32 alphaRef) {
     index = 10;
   }
   return &unknown9a8.m_items[index];
+}
+
+// 0x710089c2ac. The vertices are five floats each (x, y, z, u, v): 25 for the top ring, 25 for the bottom ring and 24 (the
+// last of each 25 is never written) for each cap, whose centre vertices sit at y = +-1.5. The unused parameter is the
+// DrMan the other geometry builders of this class take as well; the body never reads it.
+void DrShdDataList::createRainDropGeometry(DrMan *drMan) {
+  void *buffer;
+  u32 size;
+  unknown638[8].createVertexBuff(2000, 0x14);
+  unknown638[8].lock(&buffer, &size);
+  f32 *vertex = static_cast<f32 *>(buffer);
+  for (int i = 0; i < 25; i++) {
+    f32 angle = i * 15.0f * 3.1415927f / 180.0f;
+    f32 x = cosf(angle);
+    f32 z = sinf(angle);
+    vertex[i * 5] = x;
+    vertex[i * 5 + 1] = 1.0f;
+    vertex[i * 5 + 2] = z;
+    vertex[i * 5 + 3] = i / 24.0f;
+    vertex[i * 5 + 4] = 0.25f;
+    vertex[i * 5 + 125] = x;
+    vertex[i * 5 + 126] = -1.0f;
+    vertex[i * 5 + 127] = z;
+    vertex[i * 5 + 128] = i / 24.0f;
+    vertex[i * 5 + 129] = 0.75f;
+    if (i != 24) {
+      f32 u = (i + 0.5f) / 24.0f;
+      vertex[i * 5 + 250] = 0.0f;
+      vertex[i * 5 + 251] = 1.5f;
+      vertex[i * 5 + 252] = 0.0f;
+      vertex[i * 5 + 253] = u;
+      vertex[i * 5 + 254] = 0.0f;
+      vertex[i * 5 + 375] = 0.0f;
+      vertex[i * 5 + 376] = -1.5f;
+      vertex[i * 5 + 377] = 0.0f;
+      vertex[i * 5 + 378] = u;
+      vertex[i * 5 + 379] = 1.0f;
+    }
+  }
+  unknown638[8].unlock();
+  unknown818[6].createIndexBuff(0x120, GRL_PRIMITIVE_TRIANGLES, GRL_INDEX_FORMAT_U16);
+  unknown818[6].lock(&buffer, &size);
+  u16 *index = static_cast<u16 *>(buffer);
+  // In the game's first loop the induction variable is the vertex index i + 26 and the exit compares i + 25 with 48; with
+  // `i + 1` and `i + 26` written directly clang picks i + 25 instead (compared at 48 before the increment), so the next
+  // vertex keeps its own local.
+  int n = 0;
+  for (int i = 0; i < 24; i++) {
+    int next = i + 1;
+    index[n++] = i;
+    index[n++] = next;
+    index[n++] = next + 25;
+    index[n++] = i;
+    index[n++] = next + 25;
+    index[n++] = i + 25;
+  }
+  for (int i = 0; i < 24; i++) {
+    int next = i + 1;
+    index[n++] = i;
+    index[n++] = i + 50;
+    index[n++] = next;
+    index[n++] = i + 25;
+    index[n++] = next + 25;
+    index[n++] = i + 75;
+  }
+  unknown818[6].unlock();
 }
 
 void DrShdDataList::createAlphaTestBlock() {

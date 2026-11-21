@@ -36,4 +36,9 @@ void EnviromentSensor::Parameter::createReflection(fw::Reflection *reflection, c
   reflection->setReflectionStruct(index, value);
 }
 
+// Placed here, not in gf_com_env_sensor.cpp (where clang would inline it into GfComEnvSensor::GfComEnvSensor()): the game puts it right after
+// Parameter::createReflection (1.0.0: 0x710051cfe8 + 0x93c = 0x710051d924), a function this unit already defines, and GfComEnvSensor::GfComEnvSensor()
+// calls it out of line (0x710051b1ec).
+EnviromentSensor::EnviromentSensor() : m_envSensorCheckFlags(0), unknown24(0), unknown30(), unknown1f0(), unknown290(1.0f) {}
+
 } // namespace gf

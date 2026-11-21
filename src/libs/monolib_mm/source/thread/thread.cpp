@@ -17,6 +17,9 @@ u64 ThreadUtil::getCurrentID() { return reinterpret_cast<u64>(nn::os::GetCurrent
 
 Thread::Thread() {}
 
+// The empty statement makes the body non-trivial, which keeps the vtable pointer store of the original (0x7100757690).
+Thread::~Thread() { ; }
+
 s32 Thread::suspend() { return ThreadUtil::suspendThread(getHandle()); }
 
 s32 ThreadUtil::suspendThread(MLTHREAD *thread) { return 0; }

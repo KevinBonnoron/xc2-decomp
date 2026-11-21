@@ -7,10 +7,12 @@
 #include "framework/effect/effect_manager.h"
 #include "fw/fw_debug.h"
 #include "fw/fw_model_object.h"
+#include "fw/fw_update_info.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/field/gf_field_manager.h"
+#include "gf/game/gf_game_manager.h"
 #include "gf/gf_allocator.h"
 #include "gf/gf_manager.h"
 #include "gf/map/gf_map_manager.h"
@@ -532,6 +534,64 @@ GfFieldLodState GfFieldLodColiAnim::findStateOfFade(bool isFadeIn, bool isImmedi
   return isImmediate ? FIELD_LOD_STATE_UNKNOWN_3 : FIELD_LOD_STATE_UNKNOWN_4;
 }
 
+bool GfFieldLodColiAnim::play(u16 lodId, bool isReverse, bool isSkip) {
+  ml::ScnObjAccSeamPos seamPos(unknown00.unknown00);
+  int num = seamPos.getMax();
+  bool isPlayed = false;
+  for (int i = 0; i < num; i++) {
+    ml::ScnObjAccPartsPos partsPos = seamPos.getObj(i);
+    if (lodId == partsPos.getID() && (partsPos.isPosAnm() || partsPos.isNodeAnm())) {
+      PosInfo &posInfo = unknown20[i];
+      posInfo.unknown68 = true;
+      posInfo.unknown69 = isReverse;
+      if (isSkip) {
+        // One setNodeFrame call after both branches, as in the game; with a call in each branch the function has 181 instructions against 180.
+        f32 nodeFrame;
+        if (isReverse) {
+          partsPos.setPosFrame(0.0f);
+          nodeFrame = 0.0f;
+        } else {
+          partsPos.setPosFrame(partsPos.getPosMaxFrame());
+          nodeFrame = partsPos.getNodeMaxFrame();
+        }
+        partsPos.setNodeFrame(nodeFrame);
+      }
+      if (posInfo.unknown08.unknown2a) {
+        GfFieldLodState state = findStateOfAnimReverse(isReverse);
+        bool isLoop = posInfo.unknown08.isAssetLoop(state);
+        if (isLoop || !isSkip) {
+          posInfo.unknown08.createInst(state, partsPos, isSkip && isLoop);
+        }
+      }
+      isPlayed = true;
+    }
+  }
+  return isPlayed;
+}
+
+void GfFieldLodColiAnim::setFade(u16 lodId, bool isFadeIn, f32 fadeTime) {
+  ml::ScnObjAccSeamPos seamPos(unknown00.unknown00);
+  int num = seamPos.getMax();
+  for (int i = 0; i < num; i++) {
+    GfFieldLodState state = findStateOfFade(isFadeIn, fadeTime <= 0.0f);
+    ml::ScnObjAccPartsPos partsPos = seamPos.getObj(i);
+    if (lodId == partsPos.getID()) {
+      PosInfo &posInfo = unknown20[i];
+      if (posInfo.unknown70 != isFadeIn) {
+        posInfo.unknown78 = 0.0f;
+        posInfo.unknown74 = fadeTime;
+        posInfo.unknown70 = isFadeIn;
+      }
+      if (posInfo.unknown08.unknown2a) {
+        bool isLoop = posInfo.unknown08.isAssetLoop(state);
+        if (fadeTime > 0.0f || isLoop) {
+          posInfo.unknown08.createInst(state, partsPos, fadeTime == 0.0f && !isLoop);
+        }
+      }
+    }
+  }
+}
+
 void GfFieldLodColiAnim::stop(u16 lodId) {
   ml::ScnObjAccSeamPos seamPos(unknown00.unknown00);
   int num = seamPos.getMax();
@@ -758,6 +818,43 @@ void GfFieldLodColiAnim::PosInfo::updateAnim(ml::ScnObjAccPartsPos &partsPos, f3
   }
 }
 
+void GfFieldLodColiAnim::PosInfo::update(const fw::UpdateInfo &info) {
+  if (unknown00 != nullptr && unknown44 >= 0) {
+    ml::ScnObjAccSeamPos seamPos(unknown00->unknown00.unknown00);
+    ml::ScnObjAccPartsPos partsPos = seamPos.getObj(unknown44);
+    updateAnim(partsPos, info.unknown08 * unknown6c);
+    updateFade(partsPos, info.unknown04 * unknown6c);
+    updatePopDepopEffect(partsPos);
+    unknown08.update(partsPos);
+    updateColiOff(partsPos);
+  }
+}
+
+void GfFieldLodColiAnim::PosInfo::updatePopDepopEffect(ml::ScnObjAccPartsPos &partsPos) {
+  if (unknown08.unknown2a && partsPos.isPosMatrix()) {
+    GfFieldLodState state = unknown08.unknown30;
+    // The game masks the state (0x71002e25a4: and w8, w21, #0xfffffffe) to accept FIELD_LOD_STATE_UNKNOWN_2 and FIELD_LOD_STATE_UNKNOWN_3 only.
+    if ((state & ~1) == FIELD_LOD_STATE_UNKNOWN_2 && unknown08.getAsset(state) != nullptr) {
+      GfObj *mover = GfObjUtil::getObj(GfGameManager::getControlMover());
+      if (mover != nullptr) {
+        const mm::Vec3 &position = mover->getComponent<GfComTransform>()->getPosition();
+        mm::Mat44 matrix;
+        partsPos.getMatrix(matrix);
+        u32 instance = unknown08.unknown2c;
+        mm::Vec3 diff = position - matrix.unknown004();
+        if (diff.x * diff.x + diff.y * diff.y + diff.z * diff.z <= unknown7c) {
+          if (instance == 0) {
+            unknown08.createInst(state, partsPos, true);
+          }
+        } else if (instance != 0) {
+          fw::EffectManager::get()->dead(instance);
+          unknown08.unknown2c = 0;
+        }
+      }
+    }
+  }
+}
+
 void GfFieldLodColiAnim::PosInfo::updateColiOff(ml::ScnObjAccPartsPos &partsPos) {
   if (partsPos.isColiSkipData()) {
     bool isColiOff = partsPos.isColiOff();
@@ -788,3 +885,4 @@ const mm::mtl::RTTI *GfFieldLodColiAnim::ColiUserData::getRTTI() const { return 
 template mm::mtl::PtrSingleton<gf::GfFieldLod>::~PtrSingleton();
 template void mm::mtl::Vector<gf::GfFieldLodColiAnim::PosInfo>::push_back(const gf::GfFieldLodColiAnim::PosInfo &);
 template void mm::mtl::Vector<gf::GfFieldLodColiAnim::PosInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gf::GfFieldLod::BdatInfo>::expand(size_t, size_t);

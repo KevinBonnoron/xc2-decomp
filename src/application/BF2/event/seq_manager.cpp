@@ -1,7 +1,9 @@
 #include "event/seq_manager.h"
 
+#include "event/bgm_manager.h"
 #include "event/cmd_param.h"
 #include "event/cmd_variable.h"
+#include "event/cs_snd_manager.h"
 #include "event/debug_manager.h"
 #include "event/effect_manager.h"
 #include "event/env_manager.h"
@@ -11,14 +13,17 @@
 #include "event/frame_manager.h"
 #include "event/lipsync_manager.h"
 #include "event/manager.h"
+#include "event/mdlstm_manager.h"
 #include "event/memory_manager.h"
 #include "event/motstm_manager.h"
+#include "event/movie_manager.h"
 #include "event/mstxt_manager.h"
 #include "event/object_chara.h"
 #include "event/object_manager.h"
 #include "event/object_party_list.h"
 #include "event/res_manager.h"
 #include "event/se_manager.h"
+#include "event/seamless_manager.h"
 #include "event/skip_manager.h"
 #include "event/status_manager.h"
 #include "event/ui_manager.h"
@@ -100,6 +105,39 @@ ICmd::RESULT SeqManager::exec_fadeout::update(const Param &param) {
     result = RESULT_UNKNOWN_1;
   }
   return result;
+}
+
+ICmd::RESULT SeqManager::start_fadeout::update(const Param &param) {
+  if (param.getFrame() <= 0) {
+    SeqManager *seq = static_cast<SeqManager *>(param.val(0).getUserdata());
+    mm::mtl::Singleton<FadeManager>::getPtr()->request(FadePlanner::TYPE_UNKNOWN_0);
+    mm::mtl::Singleton<VolumeManager>::get().startSeamlessVolume(seq->unknown2710.unknown7c);
+    if (!param.val(1).getBool()) {
+      mm::mtl::Singleton<BgmManager>::getPtr()->playDefaultBgm(param.val(2).getS32());
+    }
+    seq->unknown178 = "start fadeout";
+  }
+  return static_cast<RESULT>(!mm::mtl::Singleton<FadeManager>::getPtr()->isFading());
+}
+
+ICmd::RESULT SeqManager::end_wait::update(const Param &param) {
+  if (param.getFrame() <= 0) {
+    mm::mtl::Singleton<ObjectManager>::getPtr()->clear();
+    mm::mtl::Singleton<MdlstmManager>::getPtr()->clear();
+    gf::GfScriptManager::destroyScript(SCRIPT_SLOT_UNKNOWN_2);
+    gf::GfEvent::callEventPlay(gf::GEV_UNKNOWN_8, 0);
+    static_cast<SeqManager *>(param.val(0).getUserdata())->unknown178 = "end wait";
+  }
+  if (!unknown08) {
+    return RESULT_UNKNOWN_0;
+  }
+  if (!gf::GfScriptManager::isScriptFinish(SCRIPT_SLOT_UNKNOWN_2) && gf::GfScriptManager::isScriptActive(SCRIPT_SLOT_UNKNOWN_2)) {
+    return RESULT_UNKNOWN_0;
+  }
+  if (mm::mtl::Singleton<MemoryManager>::getPtr()->isActive()) {
+    return RESULT_UNKNOWN_0;
+  }
+  return static_cast<RESULT>(param.getFrame() > 1);
 }
 
 ICmd::RESULT SeqManager::start_change::update(const Param &param) {
@@ -236,6 +274,54 @@ ICmd::RESULT SeqManager::start_weather::update(const Param &param) {
     mm::mtl::Singleton<EnvManager>::getPtr()->setCloudSea(static_cast<EVT_cloudtype>(cloud));
   }
   static_cast<SeqManager *>(param.val(0).getUserdata())->unknown178 = "start weather";
+  return RESULT_UNKNOWN_1;
+}
+
+ICmd::RESULT SeqManager::start_streaming0::update(const Param &param) {
+  SeqManager *seq = static_cast<SeqManager *>(param.val(0).getUserdata());
+  bool isCapture = param.val(1).getBool();
+  bool isGimmickWait = param.val(2).getBool();
+  if (param.getFrame() <= 0) {
+    const char *movie = param.val(3).getStr();
+    mm::mtl::Singleton<MdlstmManager>::getPtr()->start();
+    mm::mtl::Singleton<MotstmManager>::getPtr()->start();
+    // The game (0x710012ac54) constructs the DebugManager singleton and loads its flag word after the guard but before
+    // the null test of the movie name (guard, cbz, ldr w + tbnz #16); testing the flag inline puts the null test first.
+    bool isMovieDebug = mm::mtl::Singleton<DebugManager>::getPtr()->isMovieDebug();
+    if (movie != nullptr && !isMovieDebug && *movie != '\0') {
+      mm::mtl::Singleton<MovieManager>::getPtr()->preloadAuto(movie, false);
+    }
+    if (isGimmickWait && !mm::mtl::Singleton<SkipManager>::getPtr()->isSkipFast()) {
+      mm::mtl::Singleton<EnvManager>::getPtr()->startGimmickPopWait();
+    }
+    static_cast<SeqManager *>(param.val(0).getUserdata())->unknown178 = "start stream0";
+  }
+  if (static_cast<int>(seq->unknown2710.unknown54) >= 2) {
+    mm::mtl::Singleton<SeamlessManager>::getPtr()->readFirstSeamPoint(Manager::get()->getSceneName());
+  }
+  if (!mm::mtl::Singleton<SkipManager>::getPtr()->isSkipFast()) {
+    ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
+    if (mm::mtl::Singleton<MovieManager>::getPtr()->isLoading() || mm::mtl::Singleton<MdlstmManager>::getPtr()->isLoadingPrio(99999.0f) ||
+        mm::mtl::Singleton<MotstmManager>::getPtr()->isLoadingPrio(0.0f) || mm::mtl::Singleton<CsSndManager>::getPtr()->isLoading()) {
+      return RESULT_UNKNOWN_0;
+    }
+    if (isCapture) {
+      if (param.getFrame() <= 1) {
+        return RESULT_UNKNOWN_0;
+      }
+      if (parmAcc.isSeamMapRead() && param.getFrame() < 900) {
+        return RESULT_UNKNOWN_0;
+      }
+      if (parmAcc.isMdlAllMiddleTexStm() && param.getFrame() < 900) {
+        return RESULT_UNKNOWN_0;
+      }
+    }
+    if (isGimmickWait && mm::mtl::Singleton<EnvManager>::getPtr()->isGimmickPopWaiting() && param.getFrame() < 900) {
+      return RESULT_UNKNOWN_0;
+    }
+  }
+  mm::mtl::Singleton<EnvManager>::getPtr()->endGimmickPopWait();
+  mm::mtl::Singleton<MovieManager>::getPtr()->captureScreen(false);
   return RESULT_UNKNOWN_1;
 }
 
@@ -435,6 +521,47 @@ void SeqManager::setDisp(bool isDisp) {
 }
 
 bool SeqManager::isDisp() const { return (unknown174 & DISP_FLAG_UNKNOWN_0) != 0; }
+
+void SeqManager::OnEventProc(MSG_TYPE type) {
+  switch (type) {
+  case MSG_TYPE_UNKNOWN_1:
+    login();
+    break;
+  case MSG_TYPE_UNKNOWN_2:
+    logout();
+    clear();
+    break;
+  case MSG_TYPE_UNKNOWN_4:
+    init();
+    break;
+  case MSG_TYPE_UNKNOWN_5:
+    setupScene();
+    break;
+  case MSG_TYPE_UNKNOWN_6:
+    unknown48.unknown08 = true;
+    break;
+  case MSG_TYPE_UNKNOWN_7:
+    startScene();
+    break;
+  case MSG_TYPE_UNKNOWN_9:
+    unknowne0.unknown08 = true;
+    break;
+  case MSG_TYPE_UNKNOWN_11:
+    end();
+    break;
+  case MSG_TYPE_UNKNOWN_12:
+    unknown128.unknown08 = true;
+    break;
+  case MSG_TYPE_UNKNOWN_15:
+    update();
+    break;
+  case MSG_TYPE_UNKNOWN_17:
+    render();
+    break;
+  default:
+    break;
+  }
+}
 
 template void CmdQueue<SeqManager::QUEUE_UNKNOWN_32, 0>::push_back(ICmd *cmd, const CmdParam &param);
 template CmdQueue<SeqManager::QUEUE_UNKNOWN_32, 0>::~CmdQueue();

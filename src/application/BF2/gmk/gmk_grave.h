@@ -69,8 +69,8 @@ public:
 
   bool unknown48;               // Inferred role: enemy defeated; original member name unknown.
   gf::GF_OBJ_HANDLE *unknown50; // Inferred role: handle; original member name unknown.
-  GmkAcc unknown58;             // Inferred role: enemy; original member name unknown.
-  bool unknown98;               // Inferred role: enemy popped; original member name unknown.
+  mutable GmkAcc unknown58;     // Inferred role: enemy; original member name unknown.
+  mutable bool unknown98;       // Inferred role: enemy popped; original member name unknown.
 };
 
 static_assert(sizeof(GmkGrave::BdatInfo) == 0x14, "");

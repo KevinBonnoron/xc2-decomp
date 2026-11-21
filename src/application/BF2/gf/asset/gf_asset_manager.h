@@ -52,6 +52,7 @@ public:
   void finalize();
   static bool isInitialized();
   static AssetPackInfo *getAssetPackInfo(GF_ASSET_HANDLE *handle);
+  static bool isSameResource(GF_ASSET_HANDLE *handle, GF_ASSET_HANDLE *other);
   static void setNoCacheAsset(GF_ASSET_HANDLE *handle, bool noCache);
   static void destroy(GF_ASSET_HANDLE *handle);
   static void enableGameResource(GF_ASSET_HANDLE *handle);

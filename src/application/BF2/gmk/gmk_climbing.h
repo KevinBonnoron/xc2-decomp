@@ -43,6 +43,7 @@ public:
   void update(f32 deltaTime) override;
   bool isPopCondMatched() const;
   void createIcon();
+  inline void updateIconPos();
   void updateIcon();
 
   const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }

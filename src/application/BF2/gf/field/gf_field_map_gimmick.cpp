@@ -12,6 +12,7 @@
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_party.h"
+#include "gf/game/gf_game_util.h"
 #include "gf/game/sequential_play/gf_play_factory.h"
 #include "gf/menu/gf_menu_common_window_param.h"
 #include "gf/menu/gf_menu_field_skill.h"
@@ -53,6 +54,27 @@ void AFieldSeq::create(GF_OBJ_HANDLE *handle) {
   dispose();
   this->unknown08 = handle;
   unknown10 = &AFieldSeq::seqCheckFs;
+}
+
+void AFieldSeq::seqCheckFs(f32) {
+  gmk::AGmkBase *gmkInst = gmk::getBindedGmkInst(unknown08);
+  if (gmkInst == nullptr) {
+    dispose();
+    return;
+  }
+
+  u16 fsId = Bdat::getValCheck(gmkInst->getBindedBdatFp(), "FSID", gmkInst->unknown20.unknown18, gmk::BDAT_TYPE_UNKNOWN_2);
+  u32 nameId = 0;
+  GfGameUtil::getNameMsId(nameId, unknown08);
+  if (fsId) {
+    unknown21 = GfGameUtil::evalSumFs(fsId, nameId);
+  } else {
+    unknown21 = true;
+  }
+  if (unknown21) {
+    setTargetable(false);
+  }
+  unknown10 = &AFieldSeq::seqWaitUIEnd;
 }
 
 void AFieldSeq::dispose() {

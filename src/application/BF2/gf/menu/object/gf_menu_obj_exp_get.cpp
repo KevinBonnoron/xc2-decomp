@@ -2,13 +2,29 @@
 
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
+#include "mm_math/mm_pnt.h"
 #include "ui/event/ui_event_data.h"
 #include "ui/ui_object_acc.h"
+#include "ui/ui_util.h"
 
 namespace gf {
 
 // Inferred role: attached call id; original name unknown.
 constexpr u32 unknown001 = 0x2e;
+
+// Inferred role: names and fit margin of the objects the move text of each gain type is fitted to; original type name unknown.
+struct unknown002 {
+  const char *unknown00; // Inferred role: move layout; original member name unknown.
+  const char *unknown08; // Inferred role: background; original member name unknown.
+  int unknown10;         // Inferred role: horizontal margin of the fit; original member name unknown.
+};
+
+// Inferred role: fit parameters of each gain type (exp, sp, wp); original name unknown.
+static const unknown002 unknown003[3] = {
+    {"LAY_exp_move", "IMG_exp_bg", 0x1e},
+    {"LAY_sp_move", "IMG_sp_bg", 0x1e},
+    {"LAY_wp_move", "IMG_wp_bg", 0x1e},
+};
 
 GfMenuObjExpGet::GfMenuObjExpGet(u32 handle) : GfMenuObject(handle) {}
 
@@ -136,6 +152,21 @@ const char *GfMenuObjExpGet::setupScreen(u32 handle, int type, int amount, int, 
   }
   }
   return name;
+}
+
+void GfMenuObjExpGet::setupPlugin(u32 handle, u32 type) {
+  if (type < 3) {
+    u32 text = ui::UIUtil::searchChild(handle, unknown003[type].unknown00);
+    if (ui::UIUtil::isValid(text)) {
+      u32 background = ui::UIUtil::searchChild(handle, unknown003[type].unknown08);
+      if (ui::UIUtil::isValid(background)) {
+        GfMenuObjUtil::FitOption option;
+        // The game clears this offset twice: stur xzr, [sp, #4] at 0x71004651bc, then strh wzr, [sp, #4] at 0x71004651c0.
+        option.unknown04.x = 0;
+        GfMenuObjUtil::createFitPlugin(background, text, unknown003[type].unknown10, 0, option);
+      }
+    }
+  }
 }
 
 void GfMenuObjExpGet::update() { GfMenuObject::update(); }

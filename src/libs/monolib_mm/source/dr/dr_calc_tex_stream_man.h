@@ -10,18 +10,17 @@ namespace ml {
 class CriticalSection;
 class DrCalcStmListObj;
 
-// Inferred layout from DrCalcTexStreamMan list walks; the original member names are unknown.
-class DrCalcTexStmObj {
+// Inferred layout from DrCalcTexStreamMan list walks and the constructor (0x71008b5078); the original member names are unknown.
+// vtable _ZTVN2ml15DrCalcTexStmObjE: 2 slots (D2, D0), no other virtual function.
+class DrCalcTexStmObj : public unknown199<DrCalcTexStmObj> {
 public:
   DrCalcTexStmObj();
   virtual ~DrCalcTexStmObj() {}
 
-  DrCalcTexStmObj *unknown08; // Inferred role: previous object; original member name unknown.
-  DrCalcTexStmObj *unknown10; // Inferred role: next object; original member name unknown.
-  u8 *unknown18;              // Inferred role: address; original member name unknown.
-  u32 unknown20;              // Inferred role: size; original member name unknown.
-  u32 unknown24;              // Inferred role: flags, bit 0 is in use; original member name unknown.
-  u32 unknown28;              // Inferred role: unused; original member name unknown.
+  u8 *unknown18; // Inferred role: address; original member name unknown.
+  u32 unknown20; // Inferred role: size; original member name unknown.
+  u32 unknown24; // Inferred role: flags, bit 0 is in use; original member name unknown.
+  u32 unknown28; // Inferred role: unused; original member name unknown.
 };
 
 static_assert(offsetof(DrCalcTexStmObj, unknown08) == 0x08, "");
@@ -44,7 +43,7 @@ public:
 
   DrCalcStmListObj *createTexStmListObj(const char *path);
   DrCalcStmListObj *createTexStmListObj(const char *path, const u8 *header);
-  DrCalcStmListObj *checkTexStmListObj(const char *path, u32 length);
+  DrCalcStmListObj *checkTexStmListObj(const char *path, u32 hash);
   DrCalcStmListObj *createBufferListObj(u32 size);
   void release();
   void setupMem(int count, u32 size, u32 limit);
@@ -93,7 +92,8 @@ public:
   DrResChankList<DrCalcStmListObj> unknown38[2]; // Inferred role: entry list per buffer; original member name unknown.
   DrCalcStmListObj *unknown58[2][512];           // Inferred role: objects to update on the api side per buffer; original member name unknown.
   u32 unknown2058[2];                            // Inferred role: number of used entries of unknown58 per buffer; original member name unknown.
-  u8 _2060[0x2068 - 0x2060];
+  u8 _2060[0x2064 - 0x2060];
+  u32 unknown2064;                  // Inferred role: cleared by the constructor; original member name unknown.
   u32 unknown2068;                  // Inferred role: flags; original member name unknown.
   u32 unknown206c;                  // Inferred role: object count; original member name unknown.
   DrCalcTexStmObj *unknown2070;     // Inferred role: object array; original member name unknown.
@@ -116,6 +116,7 @@ static_assert(offsetof(DrCalcTexStreamMan, unknown28) == 0x28, "");
 static_assert(offsetof(DrCalcTexStreamMan, unknown38) == 0x38, "");
 static_assert(offsetof(DrCalcTexStreamMan, unknown58) == 0x58, "");
 static_assert(offsetof(DrCalcTexStreamMan, unknown2058) == 0x2058, "");
+static_assert(offsetof(DrCalcTexStreamMan, unknown2064) == 0x2064, "");
 static_assert(offsetof(DrCalcTexStreamMan, unknown2068) == 0x2068, "");
 static_assert(offsetof(DrCalcTexStreamMan, unknown206c) == 0x206c, "");
 static_assert(offsetof(DrCalcTexStreamMan, unknown2070) == 0x2070, "");

@@ -40,13 +40,19 @@ public:
     s32 unknown150;                         // Inferred role: pnt light count; original member name unknown.
     s32 unknown154;                         // Inferred role: spt light count; original member name unknown.
     s32 unknown158;                         // Inferred role: light list count; original member name unknown.
-    u8 _15c[0x188 - 0x15c];
+    f32 unknown15c;                         // Inferred role: first depth slice distance magnitude, set to 5.0f by addViewInfo; original member name unknown.
+    f32 unknown160;                         // Inferred role: depth slice ratio, set to 1.36f by addViewInfo; original member name unknown.
+    u8 _164[0x168 - 0x164];
+    f32 *unknown168; // Inferred role: depth slice table; original member name unknown.
+    u8 _170[0x188 - 0x170];
     u8 *unknown188; // Inferred role: light list data; original member name unknown.
   };
 
   DrShdLgtClustered(DrMan *drMan, bool isLowResolution);
   ~DrShdLgtClustered() override;
   void createWork();
+  void createPlaneEquation(mm::Vec3 &result, const mm::Vec3 &first, const mm::Vec3 &second);
+  bool planeVsCone(const mm::Vec3 &first, const mm::Vec3 &normal, const mm::Vec3 &second, const mm::Vec3 &direction, f32 range, f32 angle) const;
   const unknown001 *getClusterSetting(u32 cate) const;
   void stockBegin() override;
   void stockEnd() override;
@@ -93,6 +99,9 @@ public:
 };
 
 static_assert(sizeof(DrShdLgtClustered::unknown001) == 0x14, "");
+static_assert(offsetof(DrShdLgtClustered::unknown002, unknown15c) == 0x15c, "");
+static_assert(offsetof(DrShdLgtClustered::unknown002, unknown160) == 0x160, "");
+static_assert(offsetof(DrShdLgtClustered::unknown002, unknown168) == 0x168, "");
 static_assert(offsetof(DrShdLgtClustered::unknown002, unknown150) == 0x150, "");
 static_assert(offsetof(DrShdLgtClustered::unknown002, unknown158) == 0x158, "");
 static_assert(offsetof(DrShdLgtClustered::unknown002, unknown188) == 0x188, "");

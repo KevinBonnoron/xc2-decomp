@@ -818,12 +818,12 @@ void GfFieldWeather::updateCloudSea(const fw::UpdateInfo &) {
   if (GfGameCond::isGameCond(GfBdatMaplist::get()->getMaplistebb_ON_cndID(map))) {
     if (unknown80 == 0) {
       createCloudSeaCondition();
-      GfGameUtilCloudSea::setInnCloudSea(static_cast<CLOUD_SEA>(1));
+      GfGameUtilCloudSea::setInnCloudSea(CLOUD_SEA_UNKNOWN_1);
     }
   } else {
     if (unknown80 != 0) {
       destroyCloudSeaCondition();
-      GfGameUtilCloudSea::setInnCloudSea(static_cast<CLOUD_SEA>(0));
+      GfGameUtilCloudSea::setInnCloudSea(CLOUD_SEA_UNKNOWN_0);
     }
     applyCloudSelect();
   }
@@ -831,7 +831,7 @@ void GfFieldWeather::updateCloudSea(const fw::UpdateInfo &) {
 
 void GfFieldWeather::createCloudSeaCondition() {
   destroyCloudSeaCondition();
-  unknown80 = GfGameEnv::createCloudSea(static_cast<CLOUD_SEA>(1), static_cast<CLOUD_SEA_PRIO>(1));
+  unknown80 = GfGameEnv::createCloudSea(CLOUD_SEA_UNKNOWN_1, static_cast<CLOUD_SEA_PRIO>(1));
 }
 
 void GfFieldWeather::destroyCloudSeaCondition() {
@@ -850,7 +850,7 @@ void GfFieldWeather::applyCloudSelect() {
 
 void GfFieldWeather::createCloudSeaDefault() {
   destroyCloudSeaDefault();
-  unknown78 = GfGameEnv::createCloudSea(static_cast<CLOUD_SEA>(0), static_cast<CLOUD_SEA_PRIO>(0));
+  unknown78 = GfGameEnv::createCloudSea(CLOUD_SEA_UNKNOWN_0, static_cast<CLOUD_SEA_PRIO>(0));
 }
 
 void GfFieldWeather::destroyCloudSeaDefault() {

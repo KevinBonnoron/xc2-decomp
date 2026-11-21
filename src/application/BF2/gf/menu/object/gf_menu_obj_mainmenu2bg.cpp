@@ -2,8 +2,11 @@
 
 #include "gf/field/gf_field_time.h"
 #include "gf/gf_allocator.h"
+#include "gf/gf_info.h"
+#include "gf/menu/object/gf_menu_obj_util.h"
 #include "gf/menu/object/gf_menu_obj_world_map.h"
 #include "mm_math/mm_pnt.h"
+#include "mm_math/mm_rect.h"
 #include "mm_mtl/reference_object.h"
 #include "types.h"
 #include "ui/event/ui_event_data.h"
@@ -128,6 +131,53 @@ void GfMenuObjMainMenu2BG::move(GfMenuCallContext *, u32 index, const OpenMainMe
       event.unknown14 = index;
       ui::UIManager::get()->requestObjectEvent(handle, event, 0.0f);
     }
+  }
+}
+
+void GfMenuObjMainMenu2BG::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+  case 0x21:
+    acc.setDisp(true);
+    break;
+  case 0x22:
+    acc.setDisp(false);
+    break;
+  case 3:
+    if (event.unknown08 == 1 && unknown20->unknown24 != 0) {
+      GfMenuObject::addResultCallContext(unknown20->unknown24, 1, 0);
+      unknown20->unknown24 = 0;
+    }
+    break;
+  case 0x101: {
+    s16 screenWidth = GfScreenW();
+    u64 slot = event.unknown10_u64;
+    u32 offset = event.unknown08;
+    unknown20->unknown24 = slot >> 32;
+    u32 count = static_cast<u32>(slot);
+    mm::Rect<s16> rect;
+    for (u32 i = 0; i < unknown20->unknown28->getSize(); i++) {
+      ui::UIObjectAcc object(unknown20->unknown28->getObject(i));
+      object.getRect(rect, 2);
+      u32 shift = (rect.width - screenWidth) / (count - 1);
+      GfMenuObjUtil::CtrlParam param;
+      param.unknown08 = 0x80;
+      param.unknown0c = 1;
+      param.unknown00 = event.unknown0c_f32;
+      param.unknown04 = 1;
+      param.unknown26.y = 0;
+      param.unknown26.x = shift * -offset;
+      int ctrl = GfMenuObjUtil::startCtrl(object.unknown10, param, nullptr);
+      if (i == 0) {
+        hookCtrlEvent(handle, ctrl);
+      }
+    }
+    break;
+  }
+  default:
+    UIObjectListener::reciveEvent(event, handle);
+    break;
   }
 }
 

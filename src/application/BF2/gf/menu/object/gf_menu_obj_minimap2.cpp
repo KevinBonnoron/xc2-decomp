@@ -1,5 +1,6 @@
 #include "gf/menu/object/gf_menu_obj_minimap2.h"
 
+#include "gf/gf_allocator.h"
 #include "gf/menu/gf_menu_flag.h"
 #include "gf/menu/gf_menu_manager.h"
 #include "gf/menu/gf_menu_map_info.h"
@@ -7,8 +8,10 @@
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "mm_math/mm_pnt.h"
 #include "mm_math/mm_vec2.h"
+#include "mm_mtl/fixstr.h"
 #include "types.h"
 #include "ui/event/ui_event_data.h"
+#include "ui/event/ui_event_manager.h"
 #include "ui/ui_object_acc.h"
 
 namespace gf {
@@ -25,6 +28,41 @@ static const GfMenuObjMinimap2::MainListener::unknown003 unknown004 = {-1, 0};
 GfMenuObjMinimap2::GfMenuObjMinimap2(u32 handle) : GfMenuObject(handle), unknown24(false), unknown240(false) {}
 
 GfMenuObjMinimap2::~GfMenuObjMinimap2() {}
+
+// Inferred role: dock types of the nine map images (read by initialize at 0x710049e53c, table at 0x7100f714e8); original name unknown.
+static const u32 unknown005[9] = {4, 2, 6, 0, 8, 1, 5, 3, 7};
+
+void GfMenuObjMinimap2::initialize() {
+  ui::UIObjectAcc main(unknown18, "LAY_main");
+// The line arguments of the two operator new of the game are 121 (0x710049e394) and 127 (0x710049e44c).
+#line 121
+  MainListener *listener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) MainListener(this);
+  listener->addRef();
+  ui::UIEventManager::get()->registObjectListener(main.unknown10, listener);
+  if (listener != nullptr) {
+    listener->release();
+  }
+  attachExternalCall(unknown001, main.unknown10);
+#line 127
+  MapListener *mapListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) MapListener(this);
+  mapListener->addRef();
+  ui::UIEventManager::get()->registObjectListener(main.searchChild("LAY_map"), mapListener);
+  if (mapListener != nullptr) {
+    mapListener->release();
+  }
+  {
+    ui::UIObjectAcc center(main.unknown10, "IMG_map_image_center");
+    mm::mtl::FixStr<32> name;
+    for (u32 i = 0; i < 9; i++) {
+      name.format("IMG_map_image@%02d", i + 1);
+      GfMenuObjUtil::createDockPlugin(main.searchChild(name.c_str()), center.unknown10, unknown005[i], mm::Pnt<s16>(0, 0), 0);
+    }
+    GfMenuObjUtil::createDockPlugin(main.searchChild("IMG_map_arrow"), center.unknown10, 8, mm::Pnt<s16>(0, 0), 0);
+    GfMenuObjUtil::createDockPlugin(main.searchChild("IMG_map_camera"), center.unknown10, 8, mm::Pnt<s16>(0, 0), 0);
+    GfMenuObjUtil::setDockPos(center.unknown10, main.searchChild("IMG_map_frame"), 0, true);
+  }
+  GfMenuObject::initialize();
+}
 
 void GfMenuObjMinimap2::finalize() { GfMenuObject::finalize(); }
 

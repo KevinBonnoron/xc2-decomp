@@ -3,16 +3,20 @@
 #include <string.h>
 
 #include "bdat.h"
+#include "fw/fw_camera.h"
 #include "fw/fw_pad.h"
 #include "fw/fw_transform.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_blade.h"
+#include "gf/data/gf_data_item.h"
 #include "gf/data/gf_data_save.h"
 #include "gf/data/gf_item_id.h"
+#include "gf/game/blade/gf_blade_manager.h"
 #include "gf/game/sequential_play/gf_play_command.h"
 #include "gf/game/sequential_play/gf_play_factory.h"
 #include "gf/gf_allocator.h"
+#include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_fade.h"
 #include "gf/menu/gf_menu_fullscreen.h"
 #include "gf/menu/gf_menu_manager.h"
@@ -22,9 +26,11 @@
 #include "gf/menu/gf_menu_sound_manager.h"
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/list/gf_menu_item_list.h"
+#include "gf/menu/object/gf_menu_blade_create_camera.h"
 #include "gf/menu/object/gf_menu_obj_blade_name.h"
 #include "gf/menu/object/gf_menu_obj_blade_set2.h"
 #include "gf/menu/object/gf_menu_obj_cmn_status.h"
+#include "gf/menu/object/gf_menu_obj_common_text.h"
 #include "gf/menu/object/gf_menu_obj_fade.h"
 #include "gf/menu/object/gf_menu_obj_mainmenu2.h"
 #include "gf/menu/object/gf_menu_obj_operation_info.h"
@@ -50,6 +56,10 @@
 #include "ui/ui_object_acc.h"
 #include "ui/ui_str.h"
 
+namespace fw {
+enum CAMERA_PRIO : int;
+} // namespace fw
+
 namespace gf {
 struct GF_OBJ_HANDLE;
 
@@ -73,6 +83,12 @@ const int unknown008[6] = {0, 1, 2, 3, 4, 4};
 
 // Inferred role: camera motion of each driver of the creation screen, null for the drivers without one; original name unknown.
 const char *const unknown012[6] = {"mnu_blade_create_rex_01", "mnu_blade_create_nia_01", "mnu_blade_create_sieg_01", nullptr, nullptr, "mnu_blade_create_melef_01"};
+
+// Inferred role: effect names of each booster in the model view, the select effect and the use effect; original name unknown.
+const char *const unknown016[4][2] = {{"bc_00_000", "bc_10_000"}, {"bc_01_000", "bc_11_000"}, {"bc_02_000", "bc_12_000"}, {"bc_03_000", "bc_13_000"}};
+
+// Inferred role: sound effect of each booster; original name unknown.
+const char *const unknown017[4] = {"se_fld_allmap_707", "se_fld_allmap_708", "se_fld_allmap_709", "se_fld_allmap_710"};
 
 // Inferred role: sets the weapon type of a driver in the model view; original name unknown.
 static void unknown006(GfMenuModelView *view, u32 driver, int weaponType) { view->setObjectCommandValue(view->findGfObj(unknown003, driver), "V_weaponselect", weaponType); }
@@ -109,6 +125,59 @@ static void unknown015(u32 handle) {
   param.unknown00 = 0.25f;
   param.unknown04 = 2;
   GfMenuObjUtil::startCtrl(handle, param, nullptr);
+}
+
+// The camera functions sit between the listeners of this unit in the game (setRotY at 0x71003f997c, constructor at 0x71003fdd00), and the listeners
+// and the constructor of the menu object inline them, so the camera is defined in this file.
+// Inferred role: camera priority of the blade creation; original name unknown.
+static constexpr fw::CAMERA_PRIO CAMERA_PRIO_UNKNOWN_55 = static_cast<fw::CAMERA_PRIO>(55);
+
+GfMenuBladeCreateCamera::GfMenuBladeCreateCamera()
+    : fw::Camera(CAMERA_PRIO_UNKNOWN_55), unknownf0(0.0f), unknownf4(0.0f), m_rotOffsetY(0.0f), unknownfc(0.0f), unknown100(0.0f), unknown104(0.0f), unknown108(0) {}
+
+GfMenuBladeCreateCamera::~GfMenuBladeCreateCamera() {}
+
+const mm::mtl::RTTI *GfMenuBladeCreateCamera::getRTTI() const { return &m_rtti; }
+
+const char *GfMenuBladeCreateCamera::getName() const { return "GfMenuBladeCreateCamera"; }
+
+void GfMenuBladeCreateCamera::setRotY(f32 rot, u32 direction, f32 duration) {
+  f32 current = unknownfc;
+  if (direction == 0 && rot - current > 0.0f) {
+    rot += -6.2831855f;
+  } else if (direction == 1 && rot - current < 0.0f) {
+    if (current + rot < 6.2831855f) {
+      rot = 6.2831855f - rot;
+    } else {
+      rot += 6.2831855f;
+    }
+  }
+  unknown100 = rot;
+  unknown108 = direction;
+  unknownf0 = duration;
+  unknownf4 = 0.0f;
+  if (duration == 0.0f) {
+    unknownfc = rot;
+    current = rot;
+  }
+  unknown104 = current;
+}
+
+void GfMenuBladeCreateCamera::setRotOffsetY(f32 offset) { m_rotOffsetY = offset; }
+
+void GfMenuBladeCreateCamera::setDefault(const mm::Vec3 &position, const mm::Vec3 &target) {
+  unknownb0 = position;
+  unknownc0 = target;
+}
+
+void GfMenuBladeCreateCamera::getDefault(mm::Vec3 &position, mm::Vec3 &target) {
+  position = unknownb0;
+  target = unknownc0;
+}
+
+void GfMenuBladeCreateCamera::getCurrent(mm::Vec3 &position, mm::Vec3 &target) {
+  position = unknownd0;
+  target = unknowne0;
 }
 
 void GfMenuObjBladeCreate::registOpenParam(const OpenParam &param) {
@@ -714,6 +783,343 @@ bool GfMenuObjBladeCreate::seqResultEnd() {
   return true;
 }
 
+void GfMenuObjBladeCreate::DriverSelectListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    acc.setDisp(false);
+    break;
+  case 6: {
+    // Locals placing the loads of the event fields (ruling of 2026-11-13, member reads): the game reads the three before setIndex; at their use the loads move (measured).
+    int index = event.unknown08;
+    u32 prev = event.unknown0c;
+    u8 direction = event.unknown10;
+    unknown28->unknown40->setIndex(index);
+    GfMenuReference::setReferenceDriverID(0, unknown28->unknown40->getContents(unknown28->unknown40->getIndex(false)));
+    if (index == -1 || prev == -1) {
+      break;
+    }
+    unknown20->unknown11a0 = getDriverCameraIndex(unknown28->unknown40->getContents(unknown28->unknown40->getIndex(false))) * 5;
+    if (index == prev) {
+      break;
+    }
+    unknown20->unknown1190->setRotY(unknown20->unknown119c * index, direction, 0.25f);
+    GfMenuObjUtil::playSECommonTab();
+    break;
+  }
+  case 0x22:
+    unknown015(acc.unknown10);
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  case 3:
+    if (event.unknown08 == 1) {
+      GfMenuObject::enableFSInput(0);
+      GfMenuObjOperationInfo::add(acc.unknown10, 0, 0, 0);
+      if (unknown20->unknown11b4) {
+        GfMenuObject::setInputActionEnable(acc.unknown10, 2, false);
+      }
+      GfMenuObject::setupInputSelectionFromList(acc.unknown10, *unknown28->unknown40);
+    }
+    break;
+  case 8:
+    if (event.unknown0c == 1) {
+      unknown20->nextPage(acc.unknown10, unknown28, true);
+      GfMenuObjOperationInfo::remove(acc.unknown10, 0, 0, 0);
+      unknown28->unknownac8->sendObjectCommand(unknown28->unknownac8->findGfObj(unknown003, unknown28->unknown40->getContents(unknown28->unknown40->getIndex(false))), "C_reachout_00");
+      switch (unknown28->unknown40->getContents(unknown28->unknown40->getIndex(false))) {
+      case 1:
+        GfMenuObjUtil::playSE("se_fld_allmap_702");
+        break;
+      case 2:
+        GfMenuObjUtil::playSE("se_fld_allmap_703");
+        break;
+      case 3:
+        GfMenuObjUtil::playSE("se_fld_allmap_705");
+        break;
+      case 6:
+        GfMenuObjUtil::playSE("se_fld_allmap_704");
+        break;
+      }
+      GfMenuItemList::ItemBoxSetup setup;
+      setup.unknown14 = ItemType::ITEM_TYPE_UNKNOWN_11;
+      setup.unknown00.unknown08 = unknown20->unknown1150->getSize();
+      setup.unknown00.unknown10 = true;
+      if (unknown20->unknown11b8 == 0) {
+        unknown28->unknown48->setupFromBox(setup);
+        unknown28->unknown48->setIndex(0);
+      } else {
+        MenuItemInfo info;
+        info.unknown00 = ItemType::ITEM_TYPE_UNKNOWN_11;
+        info.unknown04 = unknown20->unknown11b8;
+        info.unknown08 = 1;
+        unknown28->unknown48->setup(getAllocator(ALLOCATOR_UNKNOWN_0), setup.unknown00);
+        unknown28->unknown48->addItem(info, false);
+      }
+    } else if (event.unknown0c == 2) {
+      GfMenuObjOperationInfo::remove(acc.unknown10, 0, 0, 0);
+      GfMenuObject::returnFSSubLayer(unknown20);
+    }
+    GfMenuObjUtil::playSECommonFromInput(event.unknown0c);
+    break;
+  case 0x21:
+    GfMenuReference::setReferenceDriverID(0, unknown28->unknown40->getContents(unknown28->unknown40->getIndex(false)));
+    GfMenuReference::setReferenceBladeID(0, 0);
+    unknown20->setGuideText(0x27);
+    {
+      ui::UIObjectAcc guide(unknown20->unknown18, "LAY_guide");
+      guide.setDisp(true);
+    }
+    unknown014(acc.unknown10);
+    if (!unknown20->unknown11b4) {
+      GfMenuObjMainMenu2::setCloseKeyEnable(true);
+    }
+    unknown28->unknownac8->sendObjectCommand(unknown28->unknownac8->findGfObj(unknown003, unknown28->unknown40->getContents(unknown28->unknown40->getIndex(false))), "C_idle");
+    if (unknown20->unknown11c0 == 0) {
+      unknown20->unknown11c0 = GfMenuObjUtil::playBGM(0x14, false, CATEGORY_MENU_BGM);
+    }
+    break;
+  }
+}
+
+void GfMenuObjBladeCreate::CrystalSelectListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    acc.setDisp(false);
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  case 3:
+    if (event.unknown08 == 1) {
+      GfMenuObject::enableFSInput(1);
+      GfMenuObjOperationInfo::add(acc.unknown10, 0, 0, 0);
+    }
+    break;
+  case 6: {
+    // Locals placing the loads of the event fields (ruling of 2026-11-13, member reads): the game reads both before setIndex; at their use the loads move (measured).
+    u32 index = event.unknown08;
+    u32 prev = event.unknown0c;
+    unknown28->unknown48->setIndex(index);
+    unknown20->unknown1150->setIndex(unknown28->unknown48->getIndex(true));
+    unknown20->refreshCrystalList();
+    if (prev != 0xffffffff && index != prev) {
+      GfMenuObjUtil::playSECommonCursor();
+    }
+    break;
+  }
+  case 8:
+    if (event.unknown0c == 1) {
+      if (event.unknown08 == 0xffffffff) {
+        GfMenuObjUtil::playSECommon(2);
+        break;
+      }
+      u32 item = unknown28->unknown48->getContents(unknown28->unknown48->getIndex(false)).unknown04;
+      if (!unknown20->isValidCrystal(item)) {
+        u32 message = unknown20->getInvalidCrystalMsgID(item);
+        if (message != 0) {
+          GfMenuManager::openCommonWindow(message);
+        } else {
+          GfMenuObjUtil::playSECommon(2);
+        }
+      } else {
+        unknown28->unknown2c = false;
+        if (!GfBladeManager::isBindRareBladeCrystal(item)) {
+          if (GfDataBlade::getEnableCountForCreateBlade() == 0) {
+            GfMenuObjUtil::playSECommon(2);
+            GfMenuManager::openCommonWindow(0xbe);
+            break;
+          }
+        } else {
+          unknown28->unknown2c = true;
+        }
+        GfMenuItemList::ItemBoxSetup setup;
+        setup.unknown14 = ItemType::ITEM_TYPE_UNKNOWN_12;
+        setup.unknown00.unknown08 = unknown20->unknown1160->getSize();
+        unknown28->unknown50->setupFromBox(setup);
+        unknown28->unknown50->setIndex(0);
+        unknown28->unknown50->sort(3, true);
+        if (unknown28->unknown50->getSize() == 0) {
+          unknown28->unknown2c = true;
+        }
+        unknown20->nextPage(acc.unknown10, unknown28, true);
+        GfMenuObjOperationInfo::remove(acc.unknown10, 0, 0, 0);
+      }
+    } else if (event.unknown0c == 2) {
+      unknown28->unknownac8->delGfObj(unknown009, unknown28->unknownac8->getMapObjID(1));
+      unknown28->unknownac8->delGfObj(unknown009, unknown28->unknownac8->getMapObjID(2));
+      if (unknown20->unknown11c4[1] != 0) {
+        GfMenuObjUtil::stopSE(unknown20->unknown11c4[1], 0.0f);
+        unknown20->unknown11c4[1] = 0;
+      }
+      GfMenuObjOperationInfo::remove(acc.unknown10, 0, 0, 0);
+      unknown20->returnPage(acc.unknown10, unknown28, true);
+    }
+    GfMenuObjUtil::playSECommonFromInput(event.unknown0c);
+    break;
+  case 0x21:
+    if (unknown28->unknown48->getSize() == 0) {
+      GfMenuObject::setupInputSelection(acc.unknown10, -1, 0);
+      acc.setDispChild(false, "IMG_core_select_cursor");
+    } else {
+      acc.setDispChild(true, "IMG_core_select_cursor");
+      if (unknown28->unknown04 == 0) {
+        GfMenuObject::resetInputSelection(acc.unknown10);
+      }
+      GfMenuObject::setupInputSelectionFromList(acc.unknown10, *unknown28->unknown48);
+      unknown20->refreshCrystalList();
+      if (!unknown013(unknown28->unknownac8, 1)) {
+        unknown28->unknownac8->addMapObjObject(1);
+        unknown28->unknownac8->addMapObjObject(2);
+        unknown20->unknownaf8.unknown005();
+        unknown20->unknownaf8.unknown002(&GfMenuObjBladeCreate::seqWaitLoading);
+        unknown20->unknownaf8.unknown002(&GfMenuObjBladeCreate::seqSetupCrystal);
+      }
+    }
+    unknown014(acc.unknown10);
+    unknown20->setGuideText(0x28);
+    break;
+  case 0x22:
+    unknown015(acc.unknown10);
+    break;
+  }
+}
+
+void GfMenuObjBladeCreate::BoosterSelectListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    acc.setDisp(false);
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  case 3:
+    if (event.unknown08 == 1) {
+      GfMenuObject::enableFSInput(2);
+      GfMenuObjOperationInfo::add(acc.unknown10, 0, 0, 0);
+    }
+    break;
+  case 6: {
+    u32 index = event.unknown08;
+    if (index != 0xffffffff) {
+      u32 prev = event.unknown0c;
+      unknown20->unknown1160->setIndex(index);
+      if (static_cast<int>(index) < static_cast<int>(unknown28->unknown50->getSize())) {
+        unknown28->unknown50->setIndex(index);
+        // The game calls getRowOffset and discards the result (0x71003fa540).
+        unknown28->unknown50->getRowOffset();
+        int booster = unknown28->unknown50->getContents(unknown28->unknown50->getIndex(false)).unknown04 - Bdat::getIdTop(GfDataBdat::getFP(BDAT_ITM_BOOSTER_LIST));
+        if (booster >= 0 && booster < 4) {
+          if (prev != 0xffffffff) {
+            unknown28->unknownac8->removeEffect(prev + 9);
+          }
+          GfMenuModelView *view = unknown28->unknownac8;
+          // Single-use locals (ruling of 2026-11-13): the game (0x71003faa4c) loads the effect name and computes index + 9 before it clears the position; inline, the order differs (measured).
+          const char *name = unknown016[booster][0];
+          u32 effect = index + 9;
+          mm::Vec3 position(0.0f, 0.0f, 0.0f);
+          view->playEffect(effect, name, position, view->findGfObj(unknown009, view->getMapObjID(1)));
+        }
+      } else {
+        unknown28->unknownac8->removeEffect(prev + 9);
+      }
+      if (prev != 0xffffffff && index != prev) {
+        GfMenuObjUtil::playSECommonCursor();
+      }
+    }
+    break;
+  }
+  case 8: {
+    int index = event.unknown08;
+    if (event.unknown0c == 1) {
+      if (index != -1) {
+        if (index < static_cast<int>(unknown28->unknown50->getSize())) {
+          GfMenuObject::sendOpenEvent(acc.searchChild("LAY_bst_select_dialog"), 0, 0.0f);
+        } else {
+          ui::EventData next;
+          next.unknown00 = GfMenuTypes::unknown003_257;
+          GfMenuObject::sendEvent(acc.unknown10, next, 0.0f);
+        }
+        GfMenuObject::disableFSInput();
+        GfMenuObjOperationInfo::remove(acc.unknown10, 0, 0, 0);
+      }
+    } else if (event.unknown0c == 2) {
+      if (index < static_cast<int>(unknown28->unknown50->getSize())) {
+        unknown28->unknownac8->stopEffect(index + 9);
+      }
+      GfMenuObject::sendCloseEvent(acc.searchSibiling("LAY_dr_idea"), 0, 0.0f);
+      unknown20->returnPage(acc.unknown10, unknown28, true);
+      GfMenuObjOperationInfo::remove(acc.unknown10, 0, 0, 0);
+    }
+    GfMenuObjUtil::playSECommonFromInput(event.unknown0c);
+    break;
+  }
+  case 0x21:
+    if (unknown28->unknown50->getSize() == 0) {
+      GfMenuObject::setupInputSelection(acc.unknown10, -1, 0);
+    } else if (unknown28->unknown04 == 1) {
+      GfMenuObject::resetInputSelection(acc.unknown10);
+      GfMenuObject::setupInputSelection(acc.unknown10, 0, unknown28->unknown50->getSize() + 1);
+      ui::UIObjectAcc skip(acc.unknown10, "LAY_bst_sel_item_skip");
+      mm::mtl::FixStr<32> name;
+      name.format("item_%d", unknown28->unknown50->getSize() + 1);
+      acc.setLayout(skip.unknown10, name.c_str());
+    }
+    unknown20->unknown1174[0] = 0;
+    unknown20->unknown1174[1] = 0;
+    unknown20->unknown1174[2] = 0;
+    unknown20->unknown1174[3] = 0;
+    unknown20->unknown1170 = 0;
+    unknown014(acc.unknown10);
+    unknown20->setGuideText(0x29);
+    GfMenuObject::sendOpenEvent(acc.searchSibiling("LAY_dr_idea"), 0, 0.0f);
+    unknown20->unknown1188->unknown0c = 0;
+    unknown20->updateIdea(false);
+    break;
+  case 0x22:
+    unknown015(acc.unknown10);
+    break;
+  case GfMenuTypes::unknown003_257:
+    GfMenuObject::sendCloseEvent(acc.searchSibiling("LAY_dr_idea"), 0, 0.0f);
+    unknown20->nextPage(acc.unknown10, unknown28, true);
+    break;
+  case GfMenuTypes::unknown003_258: {
+    // Single-use local (ruling of 2026-11-13): the game calls getIndex (0x71003fa75c) before it loads the model view (0x71003fa764); inline in the argument the load comes first (measured).
+    int index = unknown20->unknown1160->getIndex(false);
+    unknown28->unknownac8->stopEffect(index + 9);
+    GfMenuObjUtil::playVibration(fw::VIBRATION_ID_UNKNOWN_11, 1.0f);
+    ui::EventData next;
+    next.unknown00 = GfMenuTypes::unknown003_257;
+    GfMenuObject::sendEvent(acc.unknown10, next, 0.44f);
+    break;
+  }
+  case GfMenuTypes::unknown003_259:
+    if (event.unknown08 == 1) {
+      // The game calls getIndex on the booster select list and discards the result (0x71003fa450).
+      unknown20->unknown1160->getIndex(false);
+      int booster = unknown28->unknown50->getContents(unknown28->unknown50->getIndex(false)).unknown04 - Bdat::getIdTop(GfDataBdat::getFP(BDAT_ITM_BOOSTER_LIST));
+      // `view` is read once, before the calls of its arguments: written out at each use the order differs (measured).
+      GfMenuModelView *view = unknown28->unknownac8;
+      {
+        mm::Vec3 position(0.0f, 0.0f, 0.0f);
+        view->playEffect(13, unknown016[booster][1], position, view->findGfObj(unknown009, view->getMapObjID(1)));
+      }
+      GfMenuObjUtil::playSE(unknown017[booster]);
+      ui::EventData next;
+      next.unknown00 = GfMenuTypes::unknown003_258;
+      GfMenuObject::sendEvent(acc.unknown10, next, 0.56f);
+    } else {
+      GfMenuObject::enableFSInput(2);
+      GfMenuObjOperationInfo::add(acc.unknown10, 0, 0, 0);
+      unknown20->setGuideText(0x29);
+    }
+    break;
+  }
+}
+
 void GfMenuObjBladeCreate::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
@@ -850,7 +1256,7 @@ void GfMenuObjBladeCreate::BoosterNumListener::reciveEvent(const ui::EventData &
       unknown014(acc.unknown10);
       unknown0c = 1;
       unknown10 = 0;
-      const unknown005 &idea = unknown20->unknown28.unknown50->getContents(unknown20->unknown28.unknown50->getIndex(false));
+      const MenuItemInfo &idea = unknown20->unknown28.unknown50->getContents(unknown20->unknown28.unknown50->getIndex(false));
       u32 level = idea.unknown08;
       if (level > 5) {
         level = 5;
@@ -893,6 +1299,55 @@ void GfMenuObjBladeCreate::IdeagramListener::reciveEvent(const ui::EventData &ev
       unknown0c = 0;
     }
     break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
+void GfMenuObjBladeCreate::ConfirmListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    break;
+  case GfMenuTypes::unknown003_33:
+    unknown28->unknown38->reset();
+    // The game (0x71003fabd0) keeps the branch on the flag and calls open in each arm; a ternary argument gives a csel.
+    if (!unknown20->unknown11b4) {
+      GfMenuObjCommonText::open(unknown28->unknown38, 0x46, 0);
+    } else {
+      GfMenuObjCommonText::open(unknown28->unknown38, 0xc4, 0);
+    }
+    GfMenuObject::setCallContextEventHandler(unknown28->unknown38, acc.unknown10);
+    GfMenuObjOperationInfo::setDisp(false);
+    unknown20->dispGuideText(false);
+    if (!unknown20->unknown11b4) {
+      GfMenuObjMainMenu2::setCloseKeyEnable(false);
+    }
+    break;
+  case GfMenuTypes::unknown003_34:
+    break;
+  case 0x41: {
+    // Ruling 2: the game (0x71003fabf4) loads the id of the event before the id of the context.
+    u32 callId = event.unknown08;
+    if (unknown28->unknown38->unknown0c != callId) {
+      break;
+    }
+    if (event.unknown10 == 0) {
+      ui::EventData closeEvent;
+      closeEvent.unknown00 = GfMenuTypes::unknown003_34;
+      GfMenuObject::sendEvent(acc.searchSibiling("LAY_dr_idea"), closeEvent, 0.0f);
+      unknown20->nextPage(acc.unknown10, unknown28, true);
+    } else {
+      GfMenuObjOperationInfo::setDisp(true);
+      unknown20->dispGuideText(true);
+      unknown20->returnPage(acc.unknown10, unknown28, true);
+      if (!unknown20->unknown11b4) {
+        GfMenuObjMainMenu2::setCloseKeyEnable(true);
+      }
+    }
+    break;
+  }
   default:
     ui::UIObjectListener::reciveEvent(event, handle);
     break;

@@ -2,6 +2,21 @@
 
 namespace ml {
 
+// Inferred type: link pair of the objects of a DrResChankList; the original type name is unknown. The number is not the
+// next of this file (unknown001 to unknown005 are its helpers): a namespace scope type of ml shares its name with the other
+// headers of the unit, where unknown006 is already dr_mdo_mat.h's, so a number free in all of ml is used.
+// Evidence: the constructor of DrCalcTexStmObj (0x71008b5078, `stp vptr, xzr` then `str xzr, [x0, #0x10]`) reproduces only
+// when the two links are stored by an inlined base constructor that runs before the vptr store, so they sit in a
+// non-polymorphic base that the vptr precedes (the base starts at 0x08). Members of the object itself store them after the
+// vptr in any initialiser order, and a polymorphic base like unknown133 in dr_res_mdo_seam_res.h matches the constructor
+// but leaves the game's D2 destructor unemitted.
+template <typename T> struct unknown199 {
+  unknown199() : unknown08(nullptr), unknown10(nullptr) {}
+
+  T *unknown08; // Inferred role: previous object; original member name unknown.
+  T *unknown10; // Inferred role: next object; original member name unknown.
+};
+
 // Doubly linked list of memory chunks, linked through T::unknown08 (previous) and T::unknown10 (next).
 template <typename T> class DrResChankList {
 public:

@@ -29,8 +29,7 @@ void FootPlacementIKSolver::Param::createReflection(Reflection *reflection, cons
   reflection->setReflectionStruct(index, value);
 }
 
-FootPlacementIKSolver::FootPlacementIKSolver()
-    : unknown20(nullptr), unknown58(0xffff), unknown60(mm::Vec3::zero), unknowna0(0), unknownb0(mm::Quat::identity), unknownc0(mm::Quat::identity), unknownd0(nullptr) {}
+FootPlacementIKSolver::FootPlacementIKSolver() : unknown20(nullptr), unknown58(0xffff), unknown60(mm::Vec3::zero), unknownb0(mm::Quat::identity), unknownc0(mm::Quat::identity), unknownd0(nullptr) {}
 
 FootPlacementIKSolver *FootPlacementIKSolver::create(const Description &description, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose, IKFootGroundInterface *ground) {
 #line 66
@@ -61,20 +60,30 @@ void FootPlacementIKSolver::solve(const UpdateInfo &info) {
   }
 }
 
+f32 FootPlacementIKSolver::getRaycastUp() const {
+  if (unknowna0.test(FLAG_UNKNOWN_2)) {
+    return unknowna4;
+  }
+
+  anm::FootPlacementIKSolver *solver = unknown20;
+  const anm::QsTransform &ankle = unknown18->getBoneModelSpace(solver->m_desc.ankleBone);
+  return __builtin_fmaxf(solver->m_desc.maxAnkleHeightMS - ankle.unknown00.y, 0.0f);
+}
+
 f32 FootPlacementIKSolver::getRaycastDown() const {
-  if (unknowna0 & 8) {
+  if (unknowna0.test(FLAG_UNKNOWN_3)) {
     return unknowna8;
   }
 
   anm::FootPlacementIKSolver *solver = unknown20;
-  f32 height = unknown18->getBoneModelSpace(solver->m_desc.ankleBone).unknown00.y;
-  return __builtin_fmaxf(height - solver->m_desc.minAnkleHeightMS, 0.0f) + 0.1f;
+  const anm::QsTransform &ankle = unknown18->getBoneModelSpace(solver->m_desc.ankleBone);
+  return __builtin_fmaxf(ankle.unknown00.y - solver->m_desc.minAnkleHeightMS, 0.0f) + 0.1f;
 }
 
 void FootPlacementIKSolver::setGroundAngle(const mm::Vec3 &angle) { unknownb0 = mm::unknown005(angle); }
 
 void FootPlacementIKSolver::drawDebug() {
-  if (unknowna0 & 2) {
+  if (unknowna0.test(FLAG_UNKNOWN_1)) {
     mm::Vec3 position = unknown60;
     mm::Mat44 matrix;
     matrix.unknown007(position);

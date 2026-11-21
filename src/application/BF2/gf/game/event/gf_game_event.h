@@ -39,11 +39,21 @@ struct GF_SE_CATEGORY_HANDLE;
 struct GfSetupParam;
 struct EventBgmSetup;
 
-// The enumerators that keep a name are the strings of the game's event display table: "EVTDISP_MAP", "EVTDISP_COLLECTION", "EVTDISP_SALVAGE", "EVTDISP_PRECIOUS", "EVTDISP_TBOX", "EVTDISP_JUMP",
-// "EVTDISP_WARP", "EVTDISP_DMG_EFFECT", "EVTDISP_DMG_SE".
+// The enumerators that keep a name are the strings of the game's event display tables, used unchanged (no transformation): the table `event::HideManager::s_tbl` (0x1173cc8)
+// holds 17 records {char *name, u32 disp type}: each enumerator is the name string of a record and its value the record's disp type ("EVTDISP_PC" = 3, "EVTDISP_PC_WEAPON" = 10,
+// "EVTDISP_BLADE" = 4, "EVTDISP_ENEMY" = 5, "EVTDISP_EN_WEAPON" = 12, "EVTDISP_NPC" = 6, "EVTDISP_MOB" = 7, "EVTDISP_FIELD_OBJ" = 9, "EVTDISP_MAP" = 1, "EVTDISP_COLLECTION" = 16,
+// "EVTDISP_SALVAGE" = 17, "EVTDISP_PRECIOUS" = 18, "EVTDISP_TBOX" = 19, "EVTDISP_JUMP" = 22, "EVTDISP_WARP" = 23, "EVTDISP_DMG_EFFECT" = 24, "EVTDISP_DMG_SE" = 25).
 enum EVTDISP {
   EVTDISP_MAP = 1,
+  EVTDISP_PC = 3,
+  EVTDISP_BLADE = 4,
+  EVTDISP_ENEMY = 5,
+  EVTDISP_NPC = 6,
+  EVTDISP_MOB = 7,
   EVTDISP_UNKNOWN_8 = 8, // Inferred role: evtdisp gimmick; original name unknown.
+  EVTDISP_FIELD_OBJ = 9,
+  EVTDISP_PC_WEAPON = 10,
+  EVTDISP_EN_WEAPON = 12,
   EVTDISP_COLLECTION = 16,
   EVTDISP_SALVAGE = 17,
   EVTDISP_PRECIOUS = 18,

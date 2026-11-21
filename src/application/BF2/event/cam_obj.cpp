@@ -1,24 +1,23 @@
 #include "event/cam_obj.h"
 
-#include <stddef.h>
-
 #include "event/cam_interface.h"
 #include "event/cam_manager.h"
 #include "event/cam_util.h"
 #include "event/cmd_param.h"
 #include "event/cmd_variable.h"
+#include "event/curve.h"
 #include "event/frame_manager.h"
+#include "event/manager.h"
+#include "event/offscr_manager.h"
+#include "event/pos_axis.h"
+#include "event/tar_axis.h"
+#include "ml/attr_transform.h"
+#include "ml/scn.h"
+#include "ml/threadval.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/singleton.h"
 
 namespace event {
-
-// Inferred role: stores a vector in three consecutive variables of a command parameter; original name unknown.
-static void unknown001(CmdParam &param, size_t index, const mm::Vec3 &vec) {
-  param.val(index).setF32(vec.x);
-  param.val(index + 1).setF32(vec.y);
-  param.val(index + 2).setF32(vec.z);
-}
 
 ICmd::RESULT CamObj::SetEnable::update(const Param &param) {
   u32 screenID = param.val(0).getS32();
@@ -54,6 +53,56 @@ ICmd::RESULT CamObj::SetNearfar::update(const Param &param) {
   return RESULT_UNKNOWN_1;
 }
 
+// The game inlines the CamBase, CamField, CamHands, CamMotion and CmdQueue constructors here (0x71000b45b8, 429 instructions). The scene camera
+// is read through its front render info once per vector, as the game does. `active` carries the active camera out of the two branches: storing
+// unknownc70 in each branch instead gives other stores and registers.
+CamObj::CamObj(u32 screenID, bool isFocal, bool isStreamMode)
+    : CamBase(isFocal), unknown60(0), unknown64(0), unknown70(isFocal), unknownb0(isFocal), unknownbb0(isFocal, isStreamMode), unknownc70(&unknownb0) {
+  if (screenID != 0) {
+    mm::mtl::Singleton<OffscrManager>::getPtr()->createScreen(screenID);
+  }
+  if (mm::mtl::Singleton<CamManager>::getPtr()->isOffscrMode()) {
+    screenID = mm::mtl::Singleton<CamManager>::getPtr()->getOffscrID();
+  }
+  unknown64 = screenID;
+  ml::ScnObjCam *cam = Manager::get()->getScn()->getCam(-1);
+  CamBase *active = nullptr;
+  if (screenID == 0) {
+    unknown70.unknown003(cam);
+    unknown70.unknown004();
+    unknown70.setNearFar(0.1f, 40000.0f);
+    unknownb0.setPos(PosAxis(PosAxis::AXIS_UNKNOWN_1, cam->unknown70.m_front->unknown00.unknown10), CV_TYPE_UNKNOWN_1);
+    unknownb0.setTar(TarAxis(TarAxis::AXIS_UNKNOWN_1, cam->unknown70.m_front->m_targetPos), CV_TYPE_UNKNOWN_1);
+    unknownb0.setFov(40.0f, CV_TYPE_UNKNOWN_1);
+    unknownb0.setRotZ(0.0f, CV_TYPE_UNKNOWN_1);
+    unknownb0.setNearFar(0.1f, 40000.0f);
+    unknownbb0.unknown003(cam);
+    unknownbb0.unknown004();
+    unknownbb0.setNearFar(0.1f, 40000.0f);
+    unknown003(cam);
+    active = &unknown70;
+  } else {
+    unknown70.unknown004();
+    unknown70.setNearFar(0.1f, 40000.0f);
+    unknownb0.setFov(40.0f, CV_TYPE_UNKNOWN_1);
+    unknownb0.setRotZ(0.0f, CV_TYPE_UNKNOWN_1);
+    unknownb0.setNearFar(0.1f, 40000.0f);
+    unknownbb0.unknown004();
+    unknownbb0.setNearFar(0.1f, 40000.0f);
+  }
+  setNearFar(0.1f, 40000.0f);
+  unknown004();
+  unknownc70 = active;
+  // The game empties the command queue again after the constructors (the loop that destroys its items, 0x71000b4c20).
+  unknownc78.clear();
+}
+
+CamObj::~CamObj() {
+  changeActive(nullptr);
+  unknownc78.update();
+  unknownc78.update();
+}
+
 void CamObj::changeActive(CamBase *cam) {
   if (unknownc70 == cam) {
     return;
@@ -71,12 +120,6 @@ void CamObj::changeActive(CamBase *cam) {
     param.val(1).setBool(true);
     unknownc78.push_back(&unknown40, param);
   }
-}
-
-CamObj::~CamObj() {
-  changeActive(nullptr);
-  unknownc78.update();
-  unknownc78.update();
 }
 
 void CamObj::start() {}
@@ -111,8 +154,8 @@ void CamObj::update(const FrameInfo &info) {
   }
   CmdParam param;
   param.val(0).setS32(unknown64);
-  unknown001(param, 1, pos);
-  unknown001(param, 4, target);
+  param.unknown001(1, pos);
+  param.unknown001(4, target);
   param.val(7).setF32(roll);
   unknownc78.push_back(&unknown48, param);
   param.val(0).setS32(unknown64);

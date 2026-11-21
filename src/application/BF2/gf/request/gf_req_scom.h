@@ -8,6 +8,8 @@
 #include "gf/game/quest/gf_quest_id.h"
 #include "gf/menu/object/gf_menu_obj_popup.h"
 #include "gf/object/component/property/gf_com_property.h"
+#include "gf/object/gf_obj_setup.h"
+#include "gf/object/gf_volume_fade.h"
 #include "gf/request/gf_req_command.h"
 #include "gf/request/gf_scom.h"
 #include "mm_mtl/fixed_list.h"
@@ -64,10 +66,21 @@ public:
 static_assert(offsetof(SCOM_MISSION_COMPLETE, unknown1c) == 0x1c, "");
 static_assert(sizeof(SCOM_MISSION_COMPLETE) == 0x20, "");
 
-class SCOM_ADD_ITEM {
+class SCOM_ADD_ITEM : public SCOM {
 public:
+  SCOM_ADD_ITEM(GF_SCOM_HANDLE *handle, u32 item, int num, bool isForBattle) : SCOM(handle, SCOM_TYPE_UNKNOWN_13, SCOM_EXEC_UNKNOWN_0, 1), unknown1c(item), unknown20(num), unknown24(isForBattle) {}
+  bool exec(const fw::UpdateInfo &info) override;
   static GF_SCOM_HANDLE *create(u32 item, int num);
+  static GF_SCOM_HANDLE *createForBattle(u32 item, int num);
+
+  u32 unknown1c;  // Inferred role: item; original member name unknown.
+  int unknown20;  // Inferred role: number of items; original member name unknown.
+  bool unknown24; // Inferred role: created for a battle (shows the precious window); original member name unknown.
 };
+
+static_assert(offsetof(SCOM_ADD_ITEM, unknown1c) == 0x1c, "");
+static_assert(offsetof(SCOM_ADD_ITEM, unknown24) == 0x24, "");
+static_assert(sizeof(SCOM_ADD_ITEM) == 0x28, "");
 
 class SCOM_ADD_ETHER : public SCOM {
 public:
@@ -393,10 +406,22 @@ public:
   u32 unknown1c; // Inferred role: map; original member name unknown.
 };
 
-class SCOM_HOMURI_PARTS {
+class SCOM_HOMURI_PARTS : public SCOM {
 public:
-  static void create(u32 partyId, bool isVisible, f32 alpha);
+  SCOM_HOMURI_PARTS(GF_SCOM_HANDLE *handle, u32 partyId, bool isVisible, f32 time)
+      : SCOM(handle, SCOM_TYPE_UNKNOWN_76, SCOM_EXEC_UNKNOWN_0, 1), unknown1c(partyId), unknown20(isVisible), unknown24(0.0f), unknown28(time) {}
+  bool exec(const fw::UpdateInfo &info) override;
+  static void create(u32 partyId, bool isVisible, f32 time);
+
+  u32 unknown1c;  // Inferred role: party id; original member name unknown.
+  bool unknown20; // Inferred role: show the max mode parts; original member name unknown.
+  f32 unknown24;  // Inferred role: elapsed seconds; original member name unknown.
+  f32 unknown28;  // Inferred role: fade seconds; original member name unknown.
 };
+
+static_assert(offsetof(SCOM_HOMURI_PARTS, unknown1c) == 0x1c, "");
+static_assert(offsetof(SCOM_HOMURI_PARTS, unknown28) == 0x28, "");
+static_assert(sizeof(SCOM_HOMURI_PARTS) == 0x30, "");
 
 class SCOM_SALVAGER_POINT {
 public:
@@ -427,6 +452,7 @@ public:
       : SCOM(handle, SCOM_TYPE_UNKNOWN_9, SCOM_EXEC_UNKNOWN_0, 1), unknown1c(point), unknown20(driver), unknown24(idea), unknown28(target) {}
   bool exec(const fw::UpdateInfo &info) override;
   static GF_SCOM_HANDLE *create(GF_OBJ_HANDLE *handle, u32 idea, int point);
+  static GF_SCOM_HANDLE *create(u32 driver, u32 idea, int point);
 
   int unknown1c;            // Inferred role: idea point; original member name unknown.
   u32 unknown20;            // Inferred role: driver; original member name unknown.
@@ -536,6 +562,49 @@ public:
 
 static_assert(offsetof(SCOM_OBJ_VFADE_OFF, unknown20) == 0x20, "");
 static_assert(sizeof(SCOM_OBJ_VFADE_OFF) == 0x28, "");
+
+class SCOM_OBJ_VFADE : public SCOM {
+public:
+  SCOM_OBJ_VFADE(GF_SCOM_HANDLE *handle, GF_OBJ_HANDLE *target, f32 time, f32 ratio, VFPARTS parts, VFACC acc, VFEFF effect, bool isKeyFrame, bool isSingle);
+  GF_OBJ_HANDLE *getObjHandle() const override { return m_objHandle; }
+  bool exec(const fw::UpdateInfo &info) override;
+  f32 getKeyFrameSec() const;
+  void applyPartsRatio(GfVolumeFade *fade, f32 ratio);
+  bool updateFade(const fw::UpdateInfo &info);
+  static bool getRatioBySec(f32 &ratio, const mm::mtl::FixedVector<VFKEYDATA, 4> &keys, f32 time);
+  static VFEFF getAttribute2VfEff(u32 attribute, GF_OBJ_HANDLE *handle);
+  static GF_SCOM_HANDLE *create(GF_OBJ_HANDLE *handle, f32 time, f32 ratio, VFPARTS parts, VFACC acc, VFEFF effect);
+  static SCOM_OBJ_VFADE *createKeyFrame(GF_OBJ_HANDLE *handle, VFPARTS parts, VFACC acc, VFEFF effect);
+  static GF_SCOM_HANDLE *createParts(GF_OBJ_HANDLE *handle, f32 time, f32 ratio, VFPARTS parts, VFACC acc);
+  static GF_SCOM_HANDLE *createPartsWithSingle(GF_OBJ_HANDLE *handle, f32 time, f32 ratio, VFPARTS parts, VFACC acc);
+  static f32 createDead(GF_OBJ_HANDLE *handle, u32 attribute);
+  static GF_SCOM_HANDLE *createBattle(GF_OBJ_HANDLE *handle, f32 ratio, u32 attribute);
+  static GF_SCOM_HANDLE *createBattleParts(GF_OBJ_HANDLE *handle, f32 time, f32 ratio, u32 attribute, VFPARTS parts);
+  static GF_SCOM_HANDLE *createAnim(GF_OBJ_HANDLE *handle, f32 time, f32 ratio);
+  static GF_SCOM_HANDLE *createAnimParts(GF_OBJ_HANDLE *handle, f32 time, f32 ratio, VFPARTS parts);
+
+  u8 _1c[0x20 - 0x1c];
+  GF_OBJ_HANDLE *m_objHandle; // Name from getObjHandle().
+  f32 unknown28;              // Inferred role: fade seconds; original member name unknown.
+  f32 unknown2c;              // Inferred role: elapsed seconds; original member name unknown.
+  f32 unknown30;              // Inferred role: target ratio; original member name unknown.
+  f32 unknown34;              // Inferred role: start ratio (negative until read from the fade); original member name unknown.
+  VFPARTS unknown38;          // Inferred role: parts; original member name unknown.
+  VFACC unknown3c;            // Inferred role: ratio slot; original member name unknown.
+  VFEFF unknown40;            // Inferred role: effect type; original member name unknown.
+  u8 _44[0x48 - 0x44];
+  mm::mtl::FixedVector<VFKEYDATA, 4> unknown48; // Inferred role: key frames; original member name unknown.
+  bool unknown70;                               // Inferred role: set every other part to 0; original member name unknown.
+  bool unknown71;                               // Inferred role: set by createDead; original member name unknown.
+};
+
+static_assert(offsetof(SCOM_OBJ_VFADE, m_objHandle) == 0x20, "");
+static_assert(offsetof(SCOM_OBJ_VFADE, unknown28) == 0x28, "");
+static_assert(offsetof(SCOM_OBJ_VFADE, unknown38) == 0x38, "");
+static_assert(offsetof(SCOM_OBJ_VFADE, unknown40) == 0x40, "");
+static_assert(offsetof(SCOM_OBJ_VFADE, unknown48) == 0x48, "");
+static_assert(offsetof(SCOM_OBJ_VFADE, unknown70) == 0x70, "");
+static_assert(sizeof(SCOM_OBJ_VFADE) == 0x78, "");
 
 class SCOM_ADD_WP : public SCOM {
 public:

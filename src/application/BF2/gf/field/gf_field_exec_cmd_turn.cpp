@@ -68,6 +68,26 @@ template <typename T> void TFieldExecCmdTurn<T>::create(const CreateInfo &info) 
   unknown20.create(createInfo);
 }
 
+template <typename T> void TFieldExecCmdTurn<T>::applyDeltaRotY(GfComTransform &transform, f32 deltaTime) {
+  f32 step = unknown00.unknown14 * (unknown58 / unknown64 * deltaTime);
+  mm::Vec3 front = transform.getRotation().rotate(mm::Vec3::unitZ);
+  f32 angle = atan2f(front.x, front.z);
+  f32 diff = mm::unknown003(unknown00.unknown08 - angle);
+  f32 turn = fabsf(diff) < fabsf(step) ? diff : step;
+  mm::Quat rotation = transform.getRotation();
+  f32 half = turn * 0.5f;
+  f32 sine = sinf(half);
+  f32 cosine = cosf(half);
+  // The new x and y read the z and w that the next two statements overwrite (same form as GfBehaviorEnemyField::applyLinearVelocityAndRotY).
+  f32 x = sine * rotation.z + cosine * rotation.x;
+  f32 y = sine * rotation.w + cosine * rotation.y;
+  rotation.z = cosine * rotation.z - sine * rotation.x;
+  rotation.w = cosine * rotation.w - sine * rotation.y;
+  rotation.x = x;
+  rotation.y = y;
+  transform.setRotation(rotation);
+}
+
 template class TFieldExecCmdTurn<GfComAsm>;
 template class TFieldExecCmdTurn<GfComEvtAnim>;
 

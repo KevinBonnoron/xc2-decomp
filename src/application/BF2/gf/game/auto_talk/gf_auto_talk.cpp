@@ -28,6 +28,37 @@
 namespace gf {
 struct GF_OBJ_HANDLE;
 
+// Cause of the u16 tests here and in GfDataEvent::getMapjumpID, gmk::hasEyeBlink and GfMenuObjUtil::playBGM: Bdat::getValCheck returns 64 bits and the game tests a u16
+// column with `and w8, w0, #0xffff; cbz w8` (0x71002fe854, 0x71002fe894), the compare of an i16 value. A zero test of the u16 (`if (unknown0a)`, `!next`) keeps that i16
+// compare, while `!= 0` is promoted to int and gives `and x8, x0, #0xffff; cbz x8`. The loop (0x71002fe87c-0x71002fe8a8, 91 instructions in all) keeps its branches (cbz, add,
+// cmp, mov, b.gt) only with `next` declared before the do-while (inside, clang if-converts the body into tst/csel/cinc) and the bound written `count > i` (`i < count`
+// swaps the operands of the cmp).
+void GfAutoTalk::BdatInfo::create(const CBdatWrapper &bdat, int id) {
+  dispose();
+  unknown00 = bdat.getValCheck("MOBID", id, gmk::BDAT_TYPE_UNKNOWN_2);
+  unknown02 = bdat.getValCheck("Range", id, gmk::BDAT_TYPE_UNKNOWN_2);
+  unknown04 = bdat.getValCheck("Condition", id, gmk::BDAT_TYPE_UNKNOWN_2);
+  unknown06 = bdat.getValCheck("Text", id, gmk::BDAT_TYPE_UNKNOWN_2);
+  unknown08 = bdat.getValCheck("Ontime", id, gmk::BDAT_TYPE_UNKNOWN_2);
+  unknown0a = bdat.getValCheck("BeforeID", id, gmk::BDAT_TYPE_UNKNOWN_2);
+  if (unknown0a) {
+    int count = Bdat::getIdCount(bdat.unknown00);
+    int i = 0;
+    u16 before = unknown0a;
+    u16 next;
+    do {
+      next = bdat.getValCheck("BeforeID", before, gmk::BDAT_TYPE_UNKNOWN_2);
+      if (!next) {
+        break;
+      }
+      before = next;
+      i++;
+    } while (count > i);
+    unknown02 = bdat.getValCheck("Range", before, gmk::BDAT_TYPE_UNKNOWN_2);
+    unknown04 = bdat.getValCheck("Condition", before, gmk::BDAT_TYPE_UNKNOWN_2);
+  }
+}
+
 void GfAutoTalk::BdatInfo::dispose() { unknown00 = 0; }
 
 GfAutoTalk::GfAutoTalk(const CreateInfo *info) : unknown2c(), unknown78(nullptr), unknown80(false), unknown84(0.0f) {

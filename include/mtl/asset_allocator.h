@@ -31,6 +31,9 @@ public:
     bool operator<(const SMemChunk &other) const { return unknown0c < other.unknown0c; }
   };
 
+  // Evidence: MemManager::createAllocator (0x710077f5b8) builds it inline: block size 0x80, no buffer, no blocks.
+  AssetAllocator() : unknown11090(nullptr), unknown11098(0), unknown110a0(0x80), unknown110a8(0) {}
+
   void create(void *buffer, size_t size, const char *name) override;
   void destroy() override;
   AllocatorType getType() const override;

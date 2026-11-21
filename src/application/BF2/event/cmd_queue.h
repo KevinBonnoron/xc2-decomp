@@ -22,6 +22,8 @@ public:
       erase(mItems.front().unknown08);
     }
   }
+  // Inferred role: the command at the head of the queue; original name unknown.
+  ICmd *unknown001() { return mItems.front().unknown08; }
   bool isExist(const ICmd *cmd) const {
     for (u32 i = 0; i < mItems.size(); i++) {
       if (mItems.at(i)->unknown08 == cmd) {

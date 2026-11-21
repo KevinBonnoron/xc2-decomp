@@ -64,6 +64,140 @@ void DrMdoSetup::changeShaderMat(bool isChange) {
 
 void DrMdoSetup::changeShaderPos() { unknown178 |= 2; }
 
+void DrMdoSetup::setShader(DrResMdoMat *mat, const MdsMatInfoHeader *header, const MdsMatTechnique *technique, u32 matIndex, int mdlIndex, u32 bufferIndex) {
+  if (unknown178 & 0x10) {
+    setupMaterial(header);
+  }
+  const MdsMatValShaderCate *cate = reinterpret_cast<const MdsMatValShaderCate *>(unknown30->unknown78 + technique->unknown20);
+  s16 passIndex = unknownf4;
+  for (int i = 0; i < technique->unknown24; i++, cate++) {
+    (this->*s_pUniBkMat[cate->unknown00])(cate, i, mdlIndex, matIndex, passIndex != 5, bufferIndex);
+  }
+  if (unknown178 & 0x11) {
+    MdoWrkMatRes *matRes = unknown30;
+    if (matRes->unknowne8 != nullptr) {
+      if ((header->unknown04 & 0x84) == 0 || unknownf2 == 0 || unknownf2 == 2 || unknownf2 == 7) {
+        unknown38->setTextureList(reinterpret_cast<const MdsMatTextureInfo *>(matRes->unknown10 + header->unknown20), matRes->unknowne8, matRes->unknownd8);
+      } else {
+        unknown38->setTextureList(reinterpret_cast<const MdsMatTextureInfo *>(matRes->unknown10 + header->unknown5c), matRes->unknowne8, matRes->unknownd8);
+      }
+    }
+    int blockNum = technique->unknown24;
+    if (technique->unknown1c != 0) {
+      const u16 *textures = reinterpret_cast<const u16 *>(unknown30->unknown78 + technique->unknown18);
+      for (int i = 0; i < technique->unknown1c; i++) {
+        u32 location = unknown38->getValGlobalParam(blockNum + i);
+        (this->*s_pStaticTexture[textures[i]])(header, location, bufferIndex);
+      }
+    }
+    // The game reloads the block count after the texture loop (0x71007f1854), keeps the texture count that the loop test reloaded in w8 and adds both in the preheader of the
+    // image loop, after its pointer loads (0x71007f1878): both are locals loaded before the guard and summed in the loop. A sum written before the guard
+    // (technique->unknown1c + technique->unknown24) is sunk to the top of the preheader instead.
+    int textureNum = technique->unknown1c;
+    int imageBase = technique->unknown24;
+    if (technique->unknown38 != 0) {
+      const u16 *images = reinterpret_cast<const u16 *>(unknown30->unknown78 + technique->unknown34);
+      for (int i = 0; i < technique->unknown38; i++) {
+        u32 location = unknown38->getValGlobalParam(imageBase + textureNum + i);
+        (this->*s_pStaticImage[images[i]])(header, location, 0);
+      }
+    }
+  }
+}
+
+// Measured forms (1.0.0: 0x71007f1dcc, 66 instructions; the game also inlines it into partsDefRender). The order of the cases is free in the source and decides which machine
+// blocks BranchFolding merges: the numeric order gives 68 instructions (the game shares `orr w4, wzr, #3` of case 1 with cases 4 and 5). A scratch search over the order of the six
+// case groups {1}, {2, 3}, {4, 5}, {6, 7}, {8}, {9, 10} (720 orders) found 250 that give the game's 66; this order, the numeric one with case 8 last, is one of them. One
+// setupDepthStencil call after a switch that assigns the arguments to locals gives 65 or 67 instructions (without or with a default), and the `| 0x20` cases falling through to the
+// plain ones give 69: none matches.
+void DrMdoSetup::setupPartsMaterial(const MdsMatInfoHeader *header, int mode) {
+  MdoWrkMatSetupArg arg;
+  getSetupMaterial(arg, header, mode);
+  DrAPCache *apCache = m_drMan->unknown5c0;
+  apCache->depthBegin();
+  switch (mode) {
+  case 1:
+    apCache->setupDepthStencil(arg.unknown14, arg.unknown10, 0, 3);
+    break;
+  case 2:
+  case 11:
+    apCache->setupDepthStencil(arg.unknown14, 1, 1, 2);
+    break;
+  case 3:
+  case 12:
+    apCache->setupDepthStencil(arg.unknown14 | 0x20, 1, 1, 2);
+    break;
+  case 4:
+    apCache->setupDepthStencil(arg.unknown14, 5, 0, 3);
+    break;
+  case 5:
+    apCache->setupDepthStencil(arg.unknown14 | 0x20, 5, 0, 3);
+    break;
+  case 6:
+    apCache->setupDepthStencil(arg.unknown14, 5, 0, 1);
+    break;
+  case 7:
+    apCache->setupDepthStencil(arg.unknown14 | 0x20, 5, 0, 1);
+    break;
+  case 9:
+    apCache->setupDepthStencil(arg.unknown14, 1, 0, 2);
+    break;
+  case 10:
+    apCache->setupDepthStencil(arg.unknown14 | 0x20, 1, 0, 2);
+    break;
+  case 8:
+    apCache->setupDepthStencil(arg.unknown14, arg.unknown10, arg.unknown04 != 0, arg.unknown08);
+    break;
+  }
+}
+
+// Measured forms (1.0.0: 0x71007f6d28, 73 instructions): the same switch as setupPartsMaterial, with its own jump table (0x7100f83cc0, that of setupPartsMaterial is 0x7100f83c90), after
+// the depth write is forced on and the depth test follows the stencil (7 selects 3, the other values 2; read by mode 8 only). The switch is written out in both functions because a
+// shared static helper (apCache, arg, mode) stays an out-of-line call in each of them (20 and 27 instructions against 66 and 73), and the same case order matches here too (the numeric
+// order gives 75 instructions).
+void DrMdoSetup::setupZPrePassPartsMaterial(const MdsMatInfoHeader *header, int mode) {
+  MdoWrkMatSetupArg arg;
+  getSetupMaterial(arg, header, mode);
+  arg.unknown04 = 1;
+  arg.unknown08 = arg.unknown10 == 7 ? 3 : 2;
+  DrAPCache *apCache = m_drMan->unknown5c0;
+  apCache->depthBegin();
+  switch (mode) {
+  case 1:
+    apCache->setupDepthStencil(arg.unknown14, arg.unknown10, 0, 3);
+    break;
+  case 2:
+  case 11:
+    apCache->setupDepthStencil(arg.unknown14, 1, 1, 2);
+    break;
+  case 3:
+  case 12:
+    apCache->setupDepthStencil(arg.unknown14 | 0x20, 1, 1, 2);
+    break;
+  case 4:
+    apCache->setupDepthStencil(arg.unknown14, 5, 0, 3);
+    break;
+  case 5:
+    apCache->setupDepthStencil(arg.unknown14 | 0x20, 5, 0, 3);
+    break;
+  case 6:
+    apCache->setupDepthStencil(arg.unknown14, 5, 0, 1);
+    break;
+  case 7:
+    apCache->setupDepthStencil(arg.unknown14 | 0x20, 5, 0, 1);
+    break;
+  case 9:
+    apCache->setupDepthStencil(arg.unknown14, 1, 0, 2);
+    break;
+  case 10:
+    apCache->setupDepthStencil(arg.unknown14 | 0x20, 1, 0, 2);
+    break;
+  case 8:
+    apCache->setupDepthStencil(arg.unknown14, arg.unknown10, arg.unknown04 != 0, arg.unknown08);
+    break;
+  }
+}
+
 void DrMdoSetup::createUniformBlock(const MdsMatInfoHeader *header, DrResMdoMat *mat) {
   MdoWrkMatRes *matRes = unknown30;
   const MdsMatShaderTbl *shader = reinterpret_cast<const MdsMatShaderTbl *>(matRes->unknown10 + header->unknown4c);
@@ -138,6 +272,102 @@ void DrMdoSetup::updateMpfMatUniformBlock() {
   for (int i = 0; i < header->unknown14; i++, data++) {
     createMpfMatUniformBlock(data, i);
   }
+}
+
+void DrMdoSetup::getSetupMaterial(MdoWrkMatSetupArg &arg, const MdsMatInfoHeader *header, int mode) {
+  arg.unknown00 = header->unknown2f;
+  arg.unknown04 = header->unknown04 & 1;
+  arg.unknown08 = header->unknown2e;
+  arg.unknown0c = header->unknown29;
+  arg.unknown10 = header->unknown2d;
+  arg.unknown14 = header->unknown2c;
+  // The game loads unknownf2 with ldrh here (0x710082dd18) while getShdIdx sign-extends it, so the switch takes the unsigned value.
+  switch (static_cast<u16>(unknownf2)) {
+  case 1:
+    if (arg.unknown00 == 0) {
+      arg.unknown0c = 1;
+      arg.unknown00 = 1;
+    }
+    arg.unknown10 = 0;
+    arg.unknown14 = 0;
+    break;
+  default:
+    if (unknownf2 == 4) {
+      arg.unknown04 = 0;
+      arg.unknown10 = 0;
+      arg.unknown14 = 0;
+      if ((header->unknown04 & MdsMatInfoHeader::unknown015_26) || unknowne0 < 1.0f) {
+        arg.unknown08 = 3;
+        arg.unknown0c = 0;
+      }
+    } else {
+      arg.unknown0c = 0;
+      if (header->unknown04 & MdsMatInfoHeader::unknown015_2) {
+        // Two arms storing 1 (0x710082de44 tests the byte at +0xfa, then bit 25 of the flags): one condition with || makes clang merge both tests into one branch.
+        if (unknownf8 & unknown028_23) {
+          arg.unknown04 = 1;
+        } else if (header->unknown04 & MdsMatInfoHeader::unknown015_25) {
+          arg.unknown04 = 1;
+        } else {
+          arg.unknown04 = 0;
+          arg.unknown08 = 3;
+        }
+      } else if (!(header->unknown08 & MdsMatInfoHeader::unknown030_9) && (unknownfc & unknown027_11) && header->unknown28 == 0 &&
+                 !(header->unknown04 & (MdsMatInfoHeader::unknown015_6 | MdsMatInfoHeader::unknown015_25)) && mode != 8) {
+        arg.unknown04 = 0;
+        arg.unknown08 = 3;
+      } else {
+        arg.unknown04 = 1;
+      }
+      if ((arg.unknown14 & 8) == 0) {
+        arg.unknown14 |= 8;
+      } else {
+        arg.unknown14 &= ~8;
+      }
+      // Ruling 8: the two tests of unknown08 (and the unknown027_24 test after them) are written out in the default, case 7 and case 8 arms, as the game holds them
+      // in each (0x710082de7c, 0x710082ddcc, 0x710082de0c; 0x710082de9c, 0x710082de34). A file-local helper over `arg` is inlined into other code (case 8 keeps its
+      // constant 8 out of the select the game folds into lsr/and, 0x710082de10), and one taking and returning the flags by value merges the two tests into a single
+      // load and mask, because the game stores arg.unknown14 and reloads unknown08 between them (0x710082de88, 0x710082de8c).
+      if (header->unknown08 & MdsMatInfoHeader::unknown030_12) {
+        arg.unknown14 |= 0x40;
+      }
+      if (header->unknown08 & MdsMatInfoHeader::unknown030_13) {
+        arg.unknown14 |= 0x80;
+      }
+      if (!(unknownfc & unknown027_24)) {
+        arg.unknown14 |= 2;
+      }
+    }
+    if (unknownfc & unknown027_4) {
+      arg.unknown10 = 1;
+      arg.unknown14 |= 0x80;
+    }
+    break;
+  case 7:
+    arg.unknown04 = 0;
+    if (header->unknown08 & MdsMatInfoHeader::unknown030_12) {
+      arg.unknown14 |= 0x40;
+    }
+    if (header->unknown08 & MdsMatInfoHeader::unknown030_13) {
+      arg.unknown14 |= 0x80;
+    }
+    break;
+  case 8:
+    arg.unknown0c = (header->unknown04 & MdsMatInfoHeader::unknown015_10) == 0 ? 7 : 0;
+    arg.unknown10 = 1;
+    arg.unknown14 = 8;
+    if (header->unknown08 & MdsMatInfoHeader::unknown030_12) {
+      arg.unknown14 |= 0x40;
+    }
+    if (header->unknown08 & MdsMatInfoHeader::unknown030_13) {
+      arg.unknown14 |= 0x80;
+    }
+    if (!(unknownfc & unknown027_24)) {
+      arg.unknown14 |= 2;
+    }
+    break;
+  }
+  arg.unknown14 &= ~0x20;
 }
 
 void DrMdoSetup::setupPrePassShader(int index, const MdsMatInfoHeader *header, int uniformIndex, int unused) {
@@ -315,7 +545,7 @@ int DrMdoSetup::unimate_matColor(f32 *work, DrResMdoMat *mat, const MdsMatInfoHe
     work[2] = powf(mat->unknown08.b, gamma);
   }
   f32 alpha = mat->unknown08.a;
-  if ((header->unknown09 & 1) == 0) {
+  if ((header->unknown08 & MdsMatInfoHeader::unknown030_8) == 0) {
     alpha *= unknowne0;
   }
   work[3] = alpha;
@@ -326,7 +556,7 @@ int DrMdoSetup::unimate_alphaInfo(f32 *work, DrResMdoMat *mat, const MdsMatInfoH
   work[0] = 1.0f;
   work[1] = mat->unknown18;
   f32 alpha = mat->unknown08.a;
-  if ((header->unknown09 & 1) == 0) {
+  if ((header->unknown08 & MdsMatInfoHeader::unknown030_8) == 0) {
     alpha *= unknowne0;
   }
   work[2] = alpha;
@@ -613,6 +843,17 @@ void DrMdoSetup::varStTex_ToonRimTex(const MdsMatInfoHeader *header, u32 locatio
   cache->setTexture(m_drMan->unknown70->unknown98[6], location);
 }
 
+void DrMdoSetup::varStTex_VolumeTex00(const MdsMatInfoHeader *header, u32 location, u32 index) {
+  DrAPCache *cache = m_drMan->unknown5c0;
+  cache->begin3DTextureWarpSampling();
+  MdoWrkVanishEffect *effect = getVanishEffectWrk(index, 2);
+  int slot = 7;
+  if (effect != nullptr) {
+    slot = effect->unknowna8 + 7;
+  }
+  cache->setTexture(m_drMan->unknown70->unknown98[slot], location);
+}
+
 void DrMdoSetup::varStTex_VolumeTex01(const MdsMatInfoHeader *header, u32 location, u32 index) {
   DrAPCache *cache = m_drMan->unknown5c0;
   cache->begin3DTextureWarpSampling();
@@ -640,7 +881,7 @@ void DrMdoSetup::varStTex_FlagWaveTex1(const MdsMatInfoHeader *header, u32 locat
 void DrMdoSetup::varStTex_DitherTex(const MdsMatInfoHeader *header, u32 location, u32 index) {
   DrAPCache *cache = m_drMan->unknown5c0;
   const grlib::CGLibTextureBuffer *texture;
-  if ((header->unknown09 & 4) == 0) {
+  if ((header->unknown08 & MdsMatInfoHeader::unknown030_10) == 0) {
     cache->beginTexSampling(2, 0);
     texture = &m_drMan->unknown70->unknown98[1];
   } else {
@@ -663,6 +904,26 @@ void DrMdoSetup::varStTex_Movie0(const MdsMatInfoHeader *header, u32 location, u
   DrAPCache *cache = m_drMan->unknown5c0;
   grlib::CGLibTextureBuffer *texture = pixlMan->unknown808[0];
   if (pixlMan->unknown828[0] != 0) {
+    cache->beginTexSampling(2, 1);
+  } else {
+    cache->beginTexSampling(2, 0);
+  }
+  if (texture == nullptr) {
+    cache->setMipMapOn(*pixlMan->getDammyTexObj());
+    cache->setTexture(*pixlMan->getDammyTexObj(), location);
+  } else {
+    cache->setMipMapOn(*texture);
+    cache->setTexture(*texture, location);
+  }
+}
+
+// Repeats the texture block of varStTex_Movie0, varStTex_Movie2 and varStTex_Movie3 (movie 1): each of the four game functions holds the whole
+// block (40 instructions). With the block in one shared helper clang does not inline it and every function shrinks to a call (7 instructions).
+void DrMdoSetup::varStTex_Movie1(const MdsMatInfoHeader *header, u32 location, u32 index) {
+  DrPixlMan *pixlMan = m_drMan->unknown78;
+  DrAPCache *cache = m_drMan->unknown5c0;
+  grlib::CGLibTextureBuffer *texture = pixlMan->unknown808[1];
+  if (pixlMan->unknown828[1] != 0) {
     cache->beginTexSampling(2, 1);
   } else {
     cache->beginTexSampling(2, 0);

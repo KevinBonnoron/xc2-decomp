@@ -42,6 +42,8 @@ public:
   u32 getScreenID() const { return unknown64; }
   void changeActive(CamBase *cam);
   CamHands *getHands() { return &unknownb0; }
+  // Inferred role: motion camera; original name unknown.
+  CamMotion *unknown005() { return &unknownbb0; }
   CamHands *activateHands() {
     changeActive(&unknownb0);
     return &unknownb0;
@@ -61,8 +63,8 @@ private:
   SetTargetPos unknown48; // Inferred role: set target pos; original member name unknown.
   SetFov unknown50;       // Inferred role: set fov; original member name unknown.
   SetNearfar unknown58;   // Inferred role: set nearfar; original member name unknown.
-  u8 _60[0x64 - 0x60];
-  u32 unknown64; // Inferred role: screen id; original member name unknown.
+  u32 unknown60;          // Inferred role: unknown; zeroed with unknown64 by one 64-bit store in the constructor (0x71000b4674), no other CamObj function reads it; original member name unknown.
+  u32 unknown64;          // Inferred role: screen id; original member name unknown.
   u8 _68[0x70 - 0x68];
   CamField unknown70;                    // Inferred role: field; original member name unknown.
   CamHands unknownb0;                    // Inferred role: hands; original member name unknown.

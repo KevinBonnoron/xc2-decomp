@@ -1,4 +1,7 @@
 #pragma once
+#include "ml/attr_transform.h"
+#include "ml/scn.h"
+#include "ml/threadval.h"
 #include "mm_math/mm_vec3.h"
 #include "types.h"
 
@@ -28,6 +31,18 @@ public:
   void setNearFar(f32 nearClip, f32 farClip) {
     unknown38 = nearClip;
     unknown3c = farClip;
+  }
+
+  // Inferred role: copies the position and the target of a scene camera; original name unknown.
+  void unknown003(const ml::ScnObjCam *cam) {
+    unknown10 = cam->unknown70.m_front->unknown00.unknown10;
+    unknown20 = cam->unknown70.m_front->m_targetPos;
+  }
+
+  // Inferred role: sets the default fov and roll; original name unknown.
+  void unknown004() {
+    unknown30 = 40.0f;
+    unknown34 = 0.0f;
   }
 
 protected:
