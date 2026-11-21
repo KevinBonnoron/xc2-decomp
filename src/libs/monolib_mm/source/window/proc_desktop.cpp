@@ -52,6 +52,37 @@ mm::mtl::FixStr<128> s_revision;
 int s_nEnableHomeBtn;
 const char *s_szDesktop = "Desktop";
 
+// The game (0x710075e3c4) picks each of the padded formats with its own if/else chain and calls `format` in every arm; the second chain still
+// tests `ratio`, not `*base`. Forms tried: one `?:` chain for the format string gives 63 instructions (a single shared select; the game has 81),
+// a helper taking (text, ratio, value) called for both texts gives 79 (the two chains merge).
+mm::mtl::FixStr<32> getRatioStr(const char *name, f32 ratio, const f32 *base) {
+  mm::mtl::FixStr<32> result;
+  mm::mtl::FixStr<32> ratioText;
+  mm::mtl::FixStr<32> baseText;
+  if (ratio < 10.0f) {
+    ratioText.format("  %.2f", ratio);
+  } else if (ratio < 100.0f) {
+    ratioText.format(" %.2f", ratio);
+  } else {
+    ratioText.format("%.2f", ratio);
+  }
+  if (base != nullptr) {
+    if (ratio < 10.0f) {
+      baseText.format("  %.2f", *base);
+    } else if (ratio < 100.0f) {
+      baseText.format(" %.2f", *base);
+    } else {
+      baseText.format("%.2f", *base);
+    }
+  }
+  if (baseText.empty()) {
+    result.format("%s[%s] ", name, ratioText.c_str());
+  } else if (ratio < 100.0f) {
+    result.format("%s[%s/%s] ", name, baseText.c_str(), ratioText.c_str());
+  }
+  return result;
+}
+
 } // namespace _dsk
 
 void ProcDesktop::setSimpleCost(bool isSimpleCost) { _dsk::s_flg = !isSimpleCost ? _dsk::s_flg & ~_dsk::FLAG_UNKNOWN_6 : _dsk::s_flg | _dsk::FLAG_UNKNOWN_6; }

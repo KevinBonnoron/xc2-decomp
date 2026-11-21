@@ -10,6 +10,9 @@ namespace gf {
 class GfMenuObjLocationTelop : public GfMenuObject {
 public:
   struct OpenParam {
+    // Evidence: GmkLandmark::beginEvent (1.0.0: 0x710060583c) clears the words at +0x08 to +0x0f with one 64-bit store and sets the byte at +0x10 to 1 before it fills the members.
+    OpenParam() : unknown08(0), unknown0c(0), unknown0e(0), unknown10(true) {}
+
     u8 *unknown00;  // Inferred role: bdat; original member name unknown.
     u32 unknown08;  // Inferred role: text id; original member name unknown.
     u16 unknown0c;  // Inferred role: type; original member name unknown.

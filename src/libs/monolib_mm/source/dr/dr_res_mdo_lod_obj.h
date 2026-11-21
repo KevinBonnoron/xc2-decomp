@@ -27,6 +27,7 @@ public:
     s32 unknown10; // Inferred role: lod group count; original member name unknown.
   };
 
+  DrResMdoLodObj();
   ~DrResMdoLodObj();
   static int calcWorkSize(const u8 *resource);
   int setup(const u8 *resource, u8 *work);

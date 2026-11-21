@@ -113,6 +113,36 @@ DrIrrVolCascade::~DrIrrVolCascade() {
 
 void DrIrrVolCascade::createSector(void *buffer, u32 index) {}
 
+// The game (1.0.0: 0x71007eaf30) keeps tbnz w1 and tbnz w2 as two tests and computes x % 9 unsigned (umull) but z % 9 signed (smull). With the sign tests
+// next to each other (`x < 0 || z < 0 || x >= count || ...`) clang folds them into `orr` + one tbnz (SimplifyCFG's branch folding, then InstCombine) and makes
+// both modulos signed: 48 instructions against the game's 43. Testing each axis in turn, sign then count, keeps the two tests (the count load sits between
+// them, so the branches are not merged) and gives the game's umull/smull pair on its own (CorrelatedValuePropagation turns the x modulo into urem).
+int DrIrrVolCascade::getSectorResourceIndex(int x, int z) const {
+  if (x < 0 || x >= unknown548 || z < 0 || z >= unknown54c) {
+    return -1;
+  }
+  if (x < unknown530 - 4 || x > unknown530 + 4 || z < unknown534 - 4 || z > unknown534 + 4) {
+    return -1;
+  }
+  return x % 9 * 9 + z % 9;
+}
+
+DrIrrVolResObj *DrIrrVolCascade::getSectorResource(int x, int z) const {
+  int index = getSectorResourceIndex(x, z);
+  if (index < 0) {
+    return nullptr;
+  }
+  return unknown2a8[index];
+}
+
+DrIrrVolSector *DrIrrVolCascade::getSectorInstance(int x, int z) const {
+  int index = getSectorResourceIndex(x, z);
+  if (index < 0) {
+    return nullptr;
+  }
+  return unknown20[index];
+}
+
 // Inferred role: directions the irradiance of a global probe is evaluated for; original name unknown.
 static const mm::Vec4 unknown003[4] = {
     mm::Vec4(-0.408248f, 0.5773503f, -0.707107f, 1.0f),

@@ -10,6 +10,7 @@ class CGLibTextureBuffer;
 namespace ml {
 
 class DrMan;
+class DrShdMan;
 class DrPixlMan;
 class DrPixlRenderTarget;
 
@@ -38,9 +39,9 @@ public:
   DrPixlRenderTarget *getTemporalOutputShadowMap() const;
   DrPixlRenderTarget *getTemporalHistoryShadowMap();
 
-  u8 _00[0x08 - 0x00];
-  DrMan *unknown08; // Inferred role: driver manager; original member name unknown.
-  u8 _10[0x18 - 0x10];
+  void *unknown00;      // Inferred role: cleared by the constructor; original member name unknown.
+  DrMan *unknown08;     // Inferred role: driver manager; original member name unknown.
+  DrShdMan *unknown10;  // Inferred role: shd man, copied from the driver manager by the constructor; original member name unknown.
   DrPixlMan *unknown18; // Inferred role: pixl man; original member name unknown.
   DrPixlRenderTarget *m_temporalInputShadowMap;
   DrPixlRenderTarget *unknown28[2]; // Inferred role: temporal shadow buffers; original member name unknown.
@@ -49,6 +50,7 @@ public:
 };
 
 static_assert(offsetof(DrPixlDeferred, unknown08) == 0x08, "");
+static_assert(offsetof(DrPixlDeferred, unknown10) == 0x10, "");
 static_assert(offsetof(DrPixlDeferred, unknown18) == 0x18, "");
 static_assert(offsetof(DrPixlDeferred, m_temporalInputShadowMap) == 0x20, "");
 static_assert(offsetof(DrPixlDeferred, unknown28) == 0x28, "");

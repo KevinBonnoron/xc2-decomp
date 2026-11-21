@@ -1,8 +1,10 @@
 #include "gmk/gmk_map_gimmick.h"
 
 #include "bdat.h"
+#include "framework/effect/effect_manager.h"
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_game_flag.h"
+#include "gf/field/gf_field_lod.h"
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/sequential_play/gf_play_factory.h"
 #include "gf/object/gf_obj_factory.h"
@@ -12,7 +14,9 @@
 #include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_list_impl.h" // IWYU pragma: keep
+#include "gmk/gmk_set.h"
 #include "mm_mtl/vector.h"
+#include "scn/scn_obj_acc.h"
 
 namespace gmk {
 
@@ -92,6 +96,42 @@ void GmkMapGimmick::disposeGobInst() {
     unknown60 = gf::unknown020;
   }
 }
+
+bool GmkMapGimmick::validateEffectWithoutLodControl(int lodId, bool isDisp) const {
+  const GmkSet *set = unknown08.unknown00->getCreateInfo().unknown08;
+  if (set != nullptr && set->unknown10.unknown24) {
+    return false;
+  }
+  unknown70.createAsset(lodId);
+  if (!unknown70.unknown2a) {
+    return false;
+  }
+  if (unknown70.getAsset(gf::FIELD_LOD_STATE_UNKNOWN_0) == nullptr) {
+    return false;
+  }
+  if (isDisp) {
+    // Ruling 1 (2026-11-13): the local places the second getAsset call (0x710060eb18) before the manager is fetched (0x710060eb1c);
+    // the nested form isLoop(getAsset(...)) compiles to 88 instructions against the game's 87.
+    void *asset = unknown70.getAsset(gf::FIELD_LOD_STATE_UNKNOWN_0);
+    if (!fw::EffectManager::get()->isLoop(asset)) {
+      return false;
+    }
+  }
+  gf::GfFieldLod *lod = gf::GfFieldLod::get();
+  if (lod->unknown840.unknown00.unknown00 != nullptr && lod->unknown840.unknown00.unknown10 != nullptr) {
+    u16 partsId = lod->unknown08[lodId - lod->unknown808];
+    ml::ScnObjAccSeamPos seamPos(lod->unknown840.unknown00.unknown00);
+    int max = seamPos.getMax();
+    for (int i = 0; i < max; i++) {
+      ml::ScnObjAccPartsPos partsPos = seamPos.getObj(i);
+      if (partsId == partsPos.getID() && unknown70.unknown2c == 0) {
+        unknown70.createInst(gf::FIELD_LOD_STATE_UNKNOWN_0, partsPos, false);
+      }
+    }
+  }
+  return true;
+}
+
 void GmkMapGimmick::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) {
   AGmkBase::onGobEvent(event, handle);
   if (event == gf::IGfObjListener::OBJEVT_UNKNOWN_3) {

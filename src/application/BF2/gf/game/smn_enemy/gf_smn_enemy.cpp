@@ -8,6 +8,7 @@
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_object_type.h"
 #include "gf/game/gf_game_obj.h"
+#include "gf/game/gf_game_util.h"
 #include "gf/gf_allocator.h"
 #include "gf/object/component/enemy/gf_com_behavior_enemy.h"
 #include "gf/object/component/gf_com_transform.h"
@@ -21,8 +22,10 @@
 #include "gmk/gmk_enemy/gmk_enemy.h"
 #include "gmk/gmk_manager.h"
 #include "gmk/gmk_set.h"
+#include "ml/rand.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_mat44.h"
+#include "mm_math/mm_quat.h"
 #include "mm_mtl/fixed_list.h"
 #include "mm_mtl/vector.h"
 
@@ -134,6 +137,48 @@ void GfRelSmnEnemy::updateDepopEnemy() {
         unknowna0.erase(enemy);
         SCOM_DESTROY_GAME_OBJ::create(*enemy, 0.5f, 0);
         return;
+      }
+    }
+  }
+}
+
+void GfRelSmnEnemy::validatePopPos() {
+  if (unknowna0.size() != 0) {
+    for (GF_OBJ_HANDLE **enemy = unknowna0.begin(), **end = unknowna0.end(); enemy != end; ++enemy) {
+      GF_OBJ_HANDLE *enemyHandle = *enemy;
+      if (!GfGameObj::isValidGameObj(enemyHandle, true, nullptr) || GfGameUtil::isGameObjWait(enemyHandle)) {
+        return;
+      }
+    }
+  }
+  if (unknown78.size() != 0) {
+    // The game draws the random index before begin() checks its buffer (mtRandf2 call, then the assert).
+    size_t index = static_cast<size_t>(unknown78.size() * ml::mtRandf2());
+    std::pair<PopInfo *, GF_OBJ_HANDLE *> *wait = unknown78.begin() + index;
+    bool isCenter = wait->first->unknown10.unknown003();
+    GF_OBJ_HANDLE *handle = wait->second;
+    GfObjAcc acc(handle);
+    GfObj *obj = acc.getObj();
+    if (obj == nullptr) {
+      return;
+    }
+    GfComBehaviorEnemy *behavior = obj->getComponent<GfComBehaviorEnemy>();
+    if (behavior == nullptr) {
+      return;
+    }
+    GfObjSetupEnemy *setup = GfObjUtil::getObjSetup<GfObjSetupEnemy>(handle);
+    if (behavior->validatePopPos(setup->unknown20, setup->unknown30, false, isCenter)) {
+      unknown78.erase(wait);
+      unknowna0.push_back(handle);
+      behavior->onPopped();
+      GfGameUtil::setGameObjWait(handle, false);
+    } else {
+      mm::Vec3 position;
+      if (getPopPos(position, *wait->first)) {
+        fw::Transform transform;
+        transform.unknown00 = position;
+        mm::unknown005(transform.unknown10, setup->unknown30);
+        setup->setInitialTransform(transform);
       }
     }
   }

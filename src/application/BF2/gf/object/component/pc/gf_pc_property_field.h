@@ -22,6 +22,7 @@ enum {
   MSG_PC_FIELD_NOTIFY_UNKNOWN_16777236 = 0x1000014, // Inferred role: msg pc field notify warp; original name unknown.
   MSG_PC_FIELD_NOTIFY_UNKNOWN_16777237 = 0x1000015, // Inferred role: msg pc field notify high jump; original name unknown.
   MSG_PC_FIELD_NOTIFY_UNKNOWN_16777239 = 0x1000017, // Inferred role: msg pc field notify water warp; original name unknown.
+  MSG_PC_FIELD_NOTIFY_UNKNOWN_16777244 = 0x100001c, // Inferred role: msg pc field notify change player id; original name unknown.
   MSG_PC_FIELD_NOTIFY_UNKNOWN_16777247 = 0x100001f, // Inferred role: msg pc field notify water warp buddy; original name unknown.
 };
 

@@ -46,6 +46,14 @@ public:
     f32 unknown0c;    // Inferred role: radius; original member name unknown.
   };
 
+  struct unknown004 { // Inferred role: not rotated cylinder IBL primitive (render_notrot_cylinder); original name unknown.
+    f32 unknown00;    // Inferred role: center x; original member name unknown.
+    f32 unknown04;    // Inferred role: center y; original member name unknown.
+    f32 unknown08;    // Inferred role: center z; original member name unknown.
+    f32 unknown0c;    // Inferred role: radius scale; original member name unknown.
+    f32 unknown10;    // Inferred role: height scale; original member name unknown.
+  };
+
   DrIBLObj(const void *data);
   ~DrIBLObj();
   void initialize(DrMan *man);
@@ -91,6 +99,7 @@ static_assert(offsetof(DrIBLObj::unknown002, unknown0c) == 0x0c, "");
 static_assert(offsetof(DrIBLObj::unknown002, unknown1c) == 0x1c, "");
 static_assert(sizeof(DrIBLObj::unknown002) == 0x28, "");
 static_assert(offsetof(DrIBLObj::unknown003, unknown0c) == 0x0c, "");
+static_assert(offsetof(DrIBLObj::unknown004, unknown10) == 0x10, "");
 static_assert(offsetof(DrIBLObj, unknown08) == 0x08, "");
 static_assert(offsetof(DrIBLObj, unknown38) == 0x38, "");
 static_assert(offsetof(DrIBLObj, unknown40) == 0x40, "");

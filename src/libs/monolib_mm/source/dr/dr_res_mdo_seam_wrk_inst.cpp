@@ -3,8 +3,12 @@
 #include <string.h>
 
 #include "dr/dr_man.h"
+#include "dr/dr_mdl_man.h"
 #include "dr/dr_mdo_ctl_seam.h"
 #include "dr/dr_mdo_ctl_seam_inst_map.h"
+#include "dr/dr_mdo_mat.h"
+#include "dr/dr_pixl_man.h"
+#include "dr/dr_pixl_occ_query.h"
 #include "dr/dr_pixl_shadow_cache_man.h"
 #include "dr/dr_pixl_shadow_cache_obj.h"
 #include "dr/dr_res_mdo_inst_anm_obj.h"
@@ -14,6 +18,8 @@
 #include "dr/dr_res_mdo_seam_res.h"
 #include "dr/dr_res_mdo_seam_wrk_pos_inst.h"
 #include "dr/dr_res_mdo_vertex.h"
+#include "dr/dr_res_occ_uniform_obj.h"
+#include "grlib/cglib_texture_buffer.h"
 #include "mm_math/mm_vec3.h"
 #include "mtl/alloc_handle.h"
 #include "mtl/mem_manager.h"
@@ -113,6 +119,57 @@ void DrResMdoSeamWrkInst::calcEtcInstPos(DrMdoCtlSeamInstMap *) {
   }
   unknown8a &= 0xfe6f;
   unknown156 = 0;
+}
+
+// Same body as DrResMdoSeamWrkBase::callTexReadUpdate (0x710087d080) on the instance map header, plus the release mode (0x710088255c); setStockTexList is inlined (0x71008792cc).
+bool DrResMdoSeamWrkInst::callTexReadUpdate(u16 *textureListFlags, DrResMdoSeamTexList *texLists, DrMdoCtlSeamInstMap *ctl, bool isRelease) {
+  if (unknown20->unknown4c != 0) {
+    if (isRelease) {
+      if ((unknown8a & 2) == 0) {
+        return true;
+      }
+      unknown8a &= ~2;
+      for (s32 i = 0; i < unknown20->unknown4c; i++) {
+        unknown110[i] = nullptr;
+      }
+      s32 count = unknown20->unknown24;
+      for (s32 i = 0; i < count; i++) {
+        unknowne0[i >> 5] &= ~(1 << (i & 0x1f));
+        unknowne0[(count + i) >> 5] &= ~(1 << ((count + i) & 0x1f));
+      }
+      return true;
+    }
+    if (unknown20->unknown4c > 0) {
+      const u16 *index = reinterpret_cast<const u16 *>(reinterpret_cast<const u8 *>(unknown20) + unknown20->unknown48);
+      bool isRead = false;
+      for (s32 i = 0; i < unknown20->unknown4c; i++, index++) {
+        u16 list = textureListFlags[*index];
+        if (list == 0) {
+          ctl->unknownd30.setStockTexList(*index);
+          isRead = true;
+        } else {
+          texLists[list - 1].unknown3a = 0;
+          unknown110[i] = &texLists[list - 1];
+        }
+      }
+      if (isRead) {
+        return true;
+      }
+    }
+    if ((unknown8a & 2) == 0) {
+      unknown8a |= 2;
+      grlib::CGLibTextureBuffer *dummy = DrMan::getIns()->unknown78->getDammyTexObj();
+      const unknown401 *entry = reinterpret_cast<const unknown401 *>(reinterpret_cast<const u8 *>(unknown20) + unknown20->unknown20);
+      for (s32 i = 0; i < unknown20->unknown24; i++, entry++) {
+        if ((entry->unknown06 & 1) == 0) {
+          unknown50->unknowne8[i] = dummy;
+        } else {
+          unknown50->unknowne8[i] = unknown110[entry->unknown02]->unknown20 + entry->unknown00;
+        }
+      }
+    }
+  }
+  return false;
 }
 
 void DrResMdoSeamWrkInst::calcCacheInfo() {
@@ -346,6 +403,35 @@ void DrResMdoSeamWrkInst::seachDefShadowInstMapRender(DrPixlShadowObj *shadow, D
       const unknown405 *etcData = reinterpret_cast<const unknown405 *>(unknown128->unknown00);
       for (int j = 0; j < etcData->unknown18; j++) {
         seachDefShadowInstMapRenderChild(shadow, ctl, unknown128->unknown18 + j);
+      }
+    }
+  }
+}
+
+// 0x71008896d0. The game holds the body for the two render lists (unknown160[1] at 0x7100889744, unknown160[2] at 0x7100889824) twice; the loop over the list type
+// is unrolled by Clang 3.9.1 and matches. DrMdoCtlPos::occRender (0x710081828c) has the same body.
+void DrResMdoSeamWrkInst::occRender() {
+  if (unknown1b0 != nullptr) {
+    DrPixlOccQuery *query = DrMan::getIns()->unknown78->unknown7f8;
+    DrResOccUniformObj *uniform = DrMan::getIns()->unknown88->unknown038;
+    for (unknown002 *info = unknown1b0; info != nullptr; info = info->unknown18) {
+      u32 index = info->unknown0c;
+      const s16 *posNum = &unknown50->unknown168[index].unknown28;
+      for (int type = 1; type < 3; type++) {
+        for (DrResMdoPos *pos = unknown160[type][index]; pos != nullptr; pos = pos->unknown10) {
+          u16 flags = pos->unknown1e;
+          if ((flags & 0xf) != 0) {
+            u32 bits = 0;
+            int count = 0;
+            for (int i = 0; i < *posNum; i++) {
+              if ((1 << i) & flags) {
+                bits |= 1 << i;
+                count++;
+              }
+            }
+            query->occRenderPosAABB(&pos->unknown00_1, uniform->getMatTbl(pos->unknown20), &bits, count);
+          }
+        }
       }
     }
   }

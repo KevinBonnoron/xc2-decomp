@@ -391,6 +391,43 @@ struct unknown003 {
 
 static_assert(offsetof(unknown003, unknown04) == 0x04, "");
 
+void GfBehaviorEnemyField::moveToGoal(f32 deltaTime) {
+  f32 speed = unknown1d0.unknown10 * 0.2777778f;
+  GfObjSetupEnemy *setup = mm::mtl::dynamicCast<GfObjSetupEnemy>(GfObjManager::getObjInfo(unknown08.unknown08)->unknown30);
+  // Ruling 2: the game reads the member before the call of getMoveDir (0x7100513058, ldr s9, [x8, #0x40]).
+  f32 scale = setup->unknown40;
+  // Ruling 3: the game keeps the direction and the GfObjAcc below in one stack slot (sp + 0), so the direction ends here.
+  {
+    mm::Vec3 direction;
+    getMoveDir(direction);
+    unknowna0 += direction * speed * scale;
+  }
+  if (unknown200.unknown00.unknown00 != unknown020) {
+    unknown200.apply(unknowna0, unknowna0);
+  }
+  if (getColiObject() != nullptr) {
+    f32 goalAngle = atan2f(unknowna0.x, unknowna0.z);
+    GfObjAcc acc(unknown08.unknown08);
+    f32 angle = 0.0f;
+    if (acc.isValidTransform()) {
+      mm::Vec3 rotated = acc.getWorldTransform().unknown10.rotate(mm::Vec3::unitZ);
+      mm::Vec3 front(rotated.x, 0.0f, rotated.z);
+      if (!(fabsf(front.x) <= 0.000001f) || !(fabsf(front.z) <= 0.000001f)) {
+        front.unknown001();
+        angle = atan2f(front.x, front.z);
+      }
+    }
+    f32 delta = mm::unknown003(goalAngle - angle);
+    unknownb0 = delta * 0.1f;
+    if (unknown2c < fabsf(delta) && fabsf(delta) <= unknown30) {
+      f32 turn = mm::unknown003((angle + delta * 0.1f) - goalAngle);
+      mm::Quat rotation;
+      rotation.unknown001(turn * 0.5f);
+      unknowna0 = rotation.rotate(unknowna0);
+    }
+  }
+}
+
 void GfBehaviorEnemyField::applyLinearVelocityAndRotY(f32 deltaTime) {
   if (deltaTime <= 0.000001f) {
     return;

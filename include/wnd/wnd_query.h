@@ -59,6 +59,8 @@ struct ProbeQuery : Query {
 // The three queries share the FixedQueue<pointer, 4096> layout of ProbeQuery.
 static_assert(sizeof(AreaWindQuery) == 0x8018, "");
 static_assert(sizeof(LocalWindQuery) == 0x8018, "");
+static_assert(offsetof(AreaWindQuery, unknown08) == 0x08, "");
+static_assert(offsetof(LocalWindQuery, unknown08) == 0x08, "");
 static_assert(offsetof(ProbeQuery, unknown08) == 0x08, "");
 static_assert(sizeof(ProbeQuery) == 0x8018, "");
 

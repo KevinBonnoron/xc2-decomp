@@ -27,6 +27,21 @@ const OrbRecipe *RecipeInfo::getResultColleCategory() const { return &m_resultCo
 
 const mm::mtl::FixedVector<OrbRecipe, 8> *RecipeInfo::getResultItems() const { return &m_resultItems; }
 
+bool GfRecipeOrbUtil::isEnabaleOrbRecipeID(u32 recipe, const mm::mtl::FixedVector<OrbRecipe, 128> &items) {
+  GfBdatItem *bdatItem = GfBdatItem::get();
+  for (u32 index = 0; index < 8; index++) {
+    u32 id = bdatItem->getOrbRecipeItemID(recipe, index);
+    u32 count = bdatItem->getOrbRecipeItemNumber(recipe, index);
+    if (id == 0 || count == 0) {
+      continue;
+    }
+    if (!isExistItem(items, id, count)) {
+      return false;
+    }
+  }
+  return true;
+}
+
 bool GfRecipeOrbUtil::isEnabaleOrbRecipeCategory(u32 recipe, const mm::mtl::FixedVector<OrbRecipe, 128> &items) {
   GfBdatItem *bdatItem = GfBdatItem::get();
   u32 category = bdatItem->getOrbRecipeRscCat(recipe);
@@ -60,6 +75,19 @@ bool GfRecipeOrbUtil::isEnabaleOrbRecipeRare(u32 recipe, const mm::mtl::FixedVec
     }
   }
   return false;
+}
+
+bool GfRecipeOrbUtil::isEnabaleOrbRecipe(u32 recipe, const mm::mtl::FixedVector<OrbRecipe, 128> &items) {
+  switch (GfBdatItem::get()->getOrbRecipeRecipeType(recipe)) {
+  case 2:
+    return isEnabaleOrbRecipeID(recipe, items);
+  case 0:
+    return isEnabaleOrbRecipeRare(recipe, items);
+  case 1:
+    return isEnabaleOrbRecipeCategory(recipe, items);
+  default:
+    return false;
+  }
 }
 
 bool GfRecipeOrbUtil::isExistItem(const mm::mtl::FixedVector<OrbRecipe, 128> &items, u32 id, u32 count) {

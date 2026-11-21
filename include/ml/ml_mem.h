@@ -11,6 +11,9 @@ class MlMem {
 public:
   enum AccessMode {};
 
+  static void initialize();
+  static void terminate();
+
   static void setProductMem(mtl::ALLOC_HANDLE handle);
   static mtl::ALLOC_HANDLE getProductMem();
   static void setDebugMem(mtl::ALLOC_HANDLE handle);

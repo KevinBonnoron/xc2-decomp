@@ -12,7 +12,6 @@
 #include "dr/dr_shd_data_obj.h"
 #include "dr/dr_shd_man.h"
 #include "grlib/cglib_ctl_shader.h"
-#include "grlib/cglib_render_target.h"
 #include "grlib/cglib_shader.h"
 #include "grlib/cglib_uni_base_utility.h"
 #include "mm_math/mm_vec4.h"
@@ -50,10 +49,10 @@ DrPixlPostObjToneMap::DrPixlPostObjToneMap(DrMan *drMan, DrPixlMan *pixlMan, DrP
 
 DrPixlPostObjToneMap::~DrPixlPostObjToneMap() {
   for (s32 i = 0; i < 6; i++) {
-    unknown001(unknown18[i]);
+    unknown120(unknown18[i]);
   }
-  unknown001(unknown98);
-  unknown001(unknowna0);
+  unknown120(unknown98);
+  unknown120(unknowna0);
   unknown48.release();
   unknown70.release();
 }
@@ -214,7 +213,7 @@ void DrPixlPostObjToneMap::creaetMeasureLuminaceByRenderTarget() {
       offsets[(x * 4 + y) * 2 + 1] = tu * 0.5f + scale * (tu + (tu * static_cast<f32>(y) + tu * static_cast<f32>(y)));
     }
   }
-  grlib::CGLibRenderTarget *target;
+  DrPixlRenderTarget *target;
   if ((unknownb4 & 1) != 0) {
     target = unknown98;
     unknownb4 |= 2;
@@ -235,6 +234,13 @@ void DrPixlPostObjToneMap::creaetMeasureLuminaceByRenderTarget() {
   shdList->renderQuads();
   target->setColorInvalidate();
   unknowna8 = target;
+}
+
+void DrPixlPostObjToneMap::debugRender() {
+  for (s32 i = 0; i < 5; i++) {
+    unknown18[i]->debugRender(i * 256, 0, 256, 256, false, false, 1.0f, true);
+  }
+  unknown18[5]->debugRender(0, 256, 256, 256, false, false, 1.0f, true);
 }
 
 } // namespace ml

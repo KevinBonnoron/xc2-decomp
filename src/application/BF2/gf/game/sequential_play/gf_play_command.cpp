@@ -1,5 +1,7 @@
 #include "gf/game/sequential_play/gf_play_command.h"
 
+#include <string.h>
+
 #include "bdat.h"
 #include "fw/fw_camera.h"
 #include "fw/fw_update_info.h"
@@ -48,7 +50,9 @@
 #include "gf/menu/gf_menu_manager.h"
 #include "gf/menu/object/gf_menu_obj_popup.h"
 #include "gf/menu/object/gf_menu_obj_quest_log.h"
+#include "gf/object/component/animation/gf_com_asm.h"
 #include "gf/object/component/property/gf_com_property.h"
+#include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_setup.h"
@@ -1320,6 +1324,21 @@ void GfPlayComFieldTbox::end() {
   }
 }
 
+bool GfPlayComFieldTbox::isOpenFinish() const {
+  GfFieldTbox *tbox = GfFieldTbox::get();
+  if (!tbox->unknown28) {
+    return true;
+  }
+  if (!tbox->unknown11) {
+    return false;
+  }
+  GfObj *obj = GfObjUtil::getObj(GfGameManager::getControlMover());
+  if (obj == nullptr) {
+    return true;
+  }
+  return strcmp(obj->getComponent<GfComAsm>()->getStateName(ANIM_LAYER_UNKNOWN_0), "S_idle") == 0;
+}
+
 bool GfPlayComFieldTbox::updateForCheckOpenFinish(const fw::UpdateInfo &) {
   if (!isOpenFinish()) {
     return false;
@@ -1344,6 +1363,20 @@ bool GfPlayComFieldTbox::updateForWaitItemDrop(const fw::UpdateInfo &info) {
     unknown30 += info.unknown04;
     if (unknown30 < 5.0f && !GfFieldTbox::get()->isDropitemsEmitted()) {
       return false;
+    }
+  }
+  return true;
+}
+
+bool GfPlayComFieldTbox::update(const fw::UpdateInfo &info, bool isCancel) {
+  if (!isCancel) {
+    switch (unknown2c) {
+    case 0:
+      return updateForCheckOpenFinish(info);
+    case 1:
+      return updateForCompleteQuest(info);
+    case 2:
+      return updateForWaitItemDrop(info);
     }
   }
   return true;

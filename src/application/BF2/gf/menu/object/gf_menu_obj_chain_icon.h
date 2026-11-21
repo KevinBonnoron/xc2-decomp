@@ -14,7 +14,10 @@ struct GF_OBJ_HANDLE;
 class GfMenuObjChainIcon : public GfMenuObject {
 public:
   // Queued by GfMenuManyObjects; the game gives it its own vtable, inheriting the dispose of the base.
-  struct ChainIconInfo : GfMenuManyObjects::InfoType {};
+  struct ChainIconInfo : GfMenuManyObjects::InfoType {
+    ChainIconInfo() {}
+    ChainIconInfo(u32 handle) : InfoType(handle) {}
+  };
 
   class ListListener : public ui::UIObjectListener {
   public:
@@ -36,7 +39,7 @@ public:
     GF_OBJ_HANDLE *unknown00; // Inferred role: handle; original member name unknown.
   };
 
-  static void open(const OpenParam &param);
+  static u32 open(const OpenParam &param);
   static void removeObject(ui::UIObjectAcc acc);
   static void close(u32 handle);
   static void closeAll();

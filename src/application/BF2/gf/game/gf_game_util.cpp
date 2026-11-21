@@ -43,6 +43,7 @@
 #include "gf/field/gf_field_manager.h"
 #include "gf/field/gf_field_time.h"
 #include "gf/field/gf_field_weather.h"
+#include "gf/field/gf_real_time.h"
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_mount.h"
@@ -57,8 +58,10 @@
 #include "gf/game/quest/gf_quest_util.h"
 #include "gf/object/component/behavior/gf_com_behavior_event.h"
 #include "gf/object/component/behavior/gf_com_behavior_npc.h"
+#include "gf/object/component/enemy/gf_behavior_enemy_field.h"
 #include "gf/object/component/enemy/gf_com_behavior_enemy.h"
 #include "gf/object/component/enemy/gf_enemy_state_id.h"
+#include "gf/object/component/gf_com_transform.h"
 #include "gf/object/component/property/gf_com_property.h"
 #include "gf/object/gf_append.h"
 #include "gf/object/gf_append_info.h"
@@ -193,6 +196,25 @@ bool GfGameUtil::isUiGfObjHandleValid(GF_OBJ_HANDLE *handle) {
 
   GfObjAcc objAcc(handle);
   return objAcc.isValid() && !objAcc.isDestroy() && !objAcc.testFlag(OBJ_FLAG_UNKNOWN_17);
+}
+
+void GfGameUtil::UiEnemyStatusIconInfo::create(GF_OBJ_HANDLE *handle) {
+  unknown00 = false;
+  unknown01 = false;
+  if (!isUiGfObjHandleValid(handle)) {
+    return;
+  }
+
+  GfObjAcc objAcc(handle);
+  GfObj *obj = objAcc.getObj();
+  // The game tests only the low byte of the Detects column (tst w0, #0xff at 0x710034850c) where the accessor returns u32 (it zero-extends the u8 value itself, 0x7100234990): the u8 local is that
+  // truncation (an accessor returning u8 loses its own `and` and no longer matches; `static_cast<u8>` in the comparison matches too).
+  u8 detects = GfBdatChrEnArrange::get()->getChrEnArrangeDetects(mm::mtl::dynamicCast<GfObjSetupEnemy>(GfObjManager::getObjInfo(handle)->unknown30)->m_enArrangeID);
+  unknown00 = detects != 0;
+  GfComBehaviorEnemy *behavior = obj->getComponent<GfComBehaviorEnemy>();
+  if (behavior != nullptr) {
+    unknown01 = behavior->unknown140.unknown37 != 0;
+  }
 }
 
 void GfGameUtil::UiActionWindowInfo::create(GF_OBJ_HANDLE *handle) {
@@ -332,6 +354,52 @@ bool GfGameUtil::isUiNameDistMatch(GF_OBJ_HANDLE *handle) {
   return false;
 }
 
+bool GfGameUtil::isUiInfoIconDistMatch(GF_OBJ_HANDLE *handle) {
+  if (isUiGfObjHandleValid(handle)) {
+    GfObjAcc objAcc(handle);
+    switch (objAcc.getType()) {
+    case OBJECT_TYPE_ENEMY:
+    case OBJECT_TYPE_NPC:
+    case OBJECT_TYPE_GIMMICK:
+      break;
+    default:
+      return false;
+    }
+
+    // The game (0x7100348734) reads the bdat value 0xc once for the null and default paths: the two identical statements are merged. A bool set in the
+    // case body and tested afterwards also matches (85 instructions), but the game holds no such value.
+    f32 distance;
+    gmk::AGmkBase *gmkInst = gmk::getBindedGmkInst(handle);
+    if (gmkInst != nullptr) {
+      switch (gmkInst->getGmkType()) {
+      case gmk::GMK_TYPE_TBOX:
+      case gmk::GMK_TYPE_COLLECTION:
+      case gmk::GMK_TYPE_MAP_GIMMICK:
+      case gmk::GMK_TYPE_GRAVE:
+      case gmk::GMK_TYPE_DOOR:
+      case gmk::GMK_TYPE_ELEVATOR:
+        distance = getUiNameDist(handle);
+        if (!(distance > 0.0f)) {
+          return false;
+        }
+        distance *= Bdat::getValCheck(GfDataBdat::getFP(BDAT_FLD_WILDCARD_DATA), 0, 0x39, gmk::BDAT_TYPE_UNKNOWN_8).valueF32;
+        break;
+      default:
+        distance = Bdat::getValCheck(GfDataBdat::getFP(BDAT_FLD_WILDCARD_DATA), 0, 0xc, gmk::BDAT_TYPE_UNKNOWN_8).valueF32;
+        break;
+      }
+    } else {
+      distance = Bdat::getValCheck(GfDataBdat::getFP(BDAT_FLD_WILDCARD_DATA), 0, 0xc, gmk::BDAT_TYPE_UNKNOWN_8).valueF32;
+    }
+    if (!(distance <= 0.0f)) {
+      const mm::Vec3 &position = objAcc.getWorldTransform().unknown00;
+      return gmk::DistCond::isMatch(distance * distance, position);
+    }
+  }
+
+  return false;
+}
+
 static void makeWeaponBattleIdleState(mm::mtl::FixStr<32> &state, u32 weaponType) {
   mm::mtl::FixStr<16> weaponName;
   if (weaponType >= 10) {
@@ -398,7 +466,7 @@ void GfGameUtil::flushProperty(GF_OBJ_HANDLE *handle) {
     driver->unknown19c = paramAcc.getSkillPoint();
     driver->unknown194 = paramAcc.getExpNext(false);
   } else if (acc.getType() == OBJECT_TYPE_BLADE) {
-    mm::mtl::FixedArray<unknown109, 3> &skills = property->getBlade()->unknown190;
+    mm::mtl::FixedArray<unknown110, 3> &skills = property->getBlade()->unknown190;
     SDataBlade &sdata = GfDataBlade::getSDataBlade(paramAcc.isValid() ? paramAcc.getBdatId() : 0);
     skills = sdata.unknownae;
   }
@@ -697,6 +765,44 @@ u32 GfGameUtil::getTrustRank(u32 blade) {
     trustRank--;
   }
   return trustRank;
+}
+
+u32 GfGameUtil::getKizunaLink(u32 blade) {
+  GfBdatBtl *bdat = GfBdatBtl::get();
+  u32 kizunaLinkSet = GfDataBlade::getSDataBlade(blade).unknown84a;
+  u32 type = bdat->getBTL_Bl_KizunaLinkSetLinkChType(kizunaLinkSet);
+  int number = bdat->getBTL_Bl_KizunaLinkSetLinkChNum(kizunaLinkSet);
+  switch (type) {
+  case 0:
+    return bdat->getBTL_Bl_KizunaLinkSetKizunaLink1(kizunaLinkSet);
+  case 1:
+    if (static_cast<int>(getTrustRank(blade)) >= number) {
+      return bdat->getBTL_Bl_KizunaLinkSetKizunaLink2(kizunaLinkSet);
+    }
+    break;
+  case 2:
+    if (GfGameCond::isGameCond(number)) {
+      return bdat->getBTL_Bl_KizunaLinkSetKizunaLink2(kizunaLinkSet);
+    }
+    break;
+  default:
+    return 0;
+  }
+
+  return bdat->getBTL_Bl_KizunaLinkSetKizunaLink1(kizunaLinkSet);
+}
+
+void GfGameUtil::setTransformPreEnemy(GF_OBJ_HANDLE *handle, const mm::Vec3 &position, const mm::Vec3 &rotation) {
+  GfObjAcc objAcc(handle);
+  if (objAcc.isValidTransform() && objAcc.getType() == OBJECT_TYPE_ENEMY && !GfGameObj::isValidGameObj(handle, true, nullptr)) {
+    GfComTransform *transform = objAcc.getObj()->getComponent<GfComTransform>();
+    if (transform != nullptr) {
+      mm::Quat quat;
+      mm::unknown009(quat, rotation);
+      transform->setPosition(position);
+      transform->setRotation(quat);
+    }
+  }
 }
 
 void GfGameUtil::addTrustRankForKizunaRing(u32 blade) {
@@ -2037,23 +2143,6 @@ void GfGameUtil::setMaxPartyGauge() {
 
 GF_OBJ_HANDLE *GfGameUtil::getBlade(GF_OBJ_HANDLE *handle) { return GfMountManager::getHandle(handle, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_3); }
 
-// Inferred helper: copies one game flag of a size from one save game to another; original name unknown (inlined in GfGameUtil::setupNewGameParam, 0x7100351354).
-static void unknown039(SDataGame &dst, const SDataGame &src, u32 size, int flag) { GfGameFlag::setLocal(dst.unknownfbbc4, size, flag, GfGameFlag::getLocal(src.unknownfbbc4, size, flag)); }
-
-// Inferred helper: copies the game flags of a size from first up to last (excluded), the loops of 0x71003517e4 starting at the first flag; original name unknown.
-static void unknown040(SDataGame &dst, const SDataGame &src, u32 size, int first, int last) {
-  for (int flag = first; flag < last; flag++) {
-    unknown039(dst, src, size, flag);
-  }
-}
-
-// Inferred helper: copies count game flags of a size from a base flag, the loops of 0x7100351370 that add the base to a counter; original name unknown.
-static void unknown041(SDataGame &dst, const SDataGame &src, u32 size, int base, int count) {
-  for (int i = 0; i < count; i++) {
-    unknown039(dst, src, size, base + i);
-  }
-}
-
 // Inferred role: tells the blades whose driver and activation setupNewGameParam resets (the bit test of mask 0x27f7 at 0x710035273c, 0x7100352788, 0x71003527d8 and 0x7100352a00); original name
 // unknown.
 static bool unknown042(u32 blade) {
@@ -2142,78 +2231,78 @@ void GfGameUtil::setupNewGameParam(const SDataGame &dataGame) {
   currentGame->unknown109b30 = dataGame.unknown109b30;
   currentGame->unknown24 = dataGame.unknown24;
   // The game flag ranges copied from the save game. The numbers are indices into the flags of one width (the first argument, in bits), not the ids GfGameFlag::getFlag takes, and the game gives them
-  // no name. Each range is a loop of its own in the game, some with a base and a count and the others with a first and a last index (unknown041, unknown040): a table of ranges walked by one loop
-  // would give a single loop, so the calls stay written out (ruling 8; the quality gate reports the repeated statements).
-  unknown039(*currentGame, dataGame, 1, 0xbdcd);
-  unknown041(*currentGame, dataGame, 1, 0xd651, 300);
-  unknown041(*currentGame, dataGame, 1, 0xd588, 200);
-  unknown041(*currentGame, dataGame, 1, 0xc775, 100);
-  unknown041(*currentGame, dataGame, 1, 0xc710, 100);
-  unknown041(*currentGame, dataGame, 1, 0xc25e, 200);
-  unknown041(*currentGame, dataGame, 1, 0xc1b8, 64);
-  unknown041(*currentGame, dataGame, 1, 0xbdcf, 1000);
-  unknown041(*currentGame, dataGame, 1, 0xb78b, 100);
-  unknown041(*currentGame, dataGame, 1, 0x9fad, 1000);
-  unknown041(*currentGame, dataGame, 1, 0x9bc4, 1000);
-  unknown041(*currentGame, dataGame, 1, 0x9a97, 300);
-  unknown041(*currentGame, dataGame, 1, 0x8a5f, 2000);
-  unknown041(*currentGame, dataGame, 1, 0x88cd, 300);
-  unknown041(*currentGame, dataGame, 1, 0x7129, 50);
-  unknown041(*currentGame, dataGame, 1, 0x33d2, 100);
-  unknown041(*currentGame, dataGame, 1, 0x32d1, 256);
-  unknown041(*currentGame, dataGame, 1, 0x2f4a, 200);
-  unknown041(*currentGame, dataGame, 1, 0x16ac, 6000);
-  unknown041(*currentGame, dataGame, 1, 0x11fb, 1200);
-  unknown040(*currentGame, dataGame, 1, 0xfa2, 0x11fa);
-  unknown040(*currentGame, dataGame, 1, 0x1, 0xfa1);
-  unknown041(*currentGame, dataGame, 2, 0xe91a, 1000);
-  unknown040(*currentGame, dataGame, 2, 0xc209, 0xe919);
-  unknown040(*currentGame, dataGame, 2, 0x9af8, 0xc208);
-  unknown041(*currentGame, dataGame, 2, 0x8ce6, 2000);
-  unknown041(*currentGame, dataGame, 2, 0x8bb9, 300);
-  unknown041(*currentGame, dataGame, 2, 0x89c4, 500);
-  unknown041(*currentGame, dataGame, 2, 0x87cf, 500);
-  unknown041(*currentGame, dataGame, 2, 0x40fc, 15000);
-  unknown041(*currentGame, dataGame, 2, 0x663, 15000);
-  unknown040(*currentGame, dataGame, 2, 0x27a, 0x662);
-  unknown040(*currentGame, dataGame, 2, 0x25b, 0x279);
-  unknown040(*currentGame, dataGame, 4, 0x27b, 0x28b);
-  unknown040(*currentGame, dataGame, 4, 0x205, 0x20a);
-  unknown039(*currentGame, dataGame, 4, 0x1);
-  unknown040(*currentGame, dataGame, 4, 0x5, 0x1f9);
-  unknown040(*currentGame, dataGame, 8, 0xf8d, 0xf9d);
-  unknown040(*currentGame, dataGame, 8, 0x12, 0x5ee);
-  unknown040(*currentGame, dataGame, 8, 0x5ef, 0x847);
-  unknown040(*currentGame, dataGame, 16, 0x763, 0xb4b);
-  unknown039(*currentGame, dataGame, 16, 0x60b);
-  unknown040(*currentGame, dataGame, 16, 0x2e, 0x60a);
-  unknown040(*currentGame, dataGame, 16, 0x28, 0x2d);
-  unknown040(*currentGame, dataGame, 16, 0x22, 0x27);
-  unknown040(*currentGame, dataGame, 16, 0x1c, 0x21);
-  unknown040(*currentGame, dataGame, 16, 0x16, 0x1b);
-  unknown040(*currentGame, dataGame, 16, 0x5, 0x15);
-  unknown039(*currentGame, dataGame, 16, 0x3);
-  unknown040(*currentGame, dataGame, 32, 0x915, 0xcfd);
-  unknown040(*currentGame, dataGame, 32, 0x52c, 0x914);
-  unknown040(*currentGame, dataGame, 32, 0x143, 0x52b);
-  unknown040(*currentGame, dataGame, 32, 0x102, 0x142);
-  unknown040(*currentGame, dataGame, 32, 0x1, 0x101);
-  unknown039(*currentGame, dataGame, 1, 0x89fc);
-  unknown040(*currentGame, dataGame, 1, 0x89ff, 0x8a04);
-  unknown039(*currentGame, dataGame, 1, 0xc3de);
-  unknown039(*currentGame, dataGame, 1, 0xc3e9);
-  unknown039(*currentGame, dataGame, 1, 0xc400);
-  unknown039(*currentGame, dataGame, 1, 0xc40b);
-  unknown039(*currentGame, dataGame, 1, 0xc410);
-  unknown041(*currentGame, dataGame, 1, 0xc430, 29);
-  unknown040(*currentGame, dataGame, 1, 0xc44e, 0xc451);
-  unknown039(*currentGame, dataGame, 1, 0xc4a2);
-  unknown040(*currentGame, dataGame, 1, 0xc4d6, 0xc4d8);
-  unknown039(*currentGame, dataGame, 1, 0xc51c);
-  unknown040(*currentGame, dataGame, 1, 0xc559, 0xc55d);
-  unknown039(*currentGame, dataGame, 8, 0x84e);
-  unknown040(*currentGame, dataGame, 8, 0x854, 0x859);
-  unknown040(*currentGame, dataGame, 8, 0x85d, 0x862);
+  // no name. Each range is a loop of its own in the game, some with a base and a count and the others with a first and a last index (SDataGame::unknown003, unknown002): a table of ranges walked by
+  // one loop would give a single loop, so the calls stay written out (ruling 8; the quality gate reports the repeated statements).
+  currentGame->unknown001(dataGame, 1, 0xbdcd);
+  currentGame->unknown003(dataGame, 1, 0xd651, 300);
+  currentGame->unknown003(dataGame, 1, 0xd588, 200);
+  currentGame->unknown003(dataGame, 1, 0xc775, 100);
+  currentGame->unknown003(dataGame, 1, 0xc710, 100);
+  currentGame->unknown003(dataGame, 1, 0xc25e, 200);
+  currentGame->unknown003(dataGame, 1, 0xc1b8, 64);
+  currentGame->unknown003(dataGame, 1, 0xbdcf, 1000);
+  currentGame->unknown003(dataGame, 1, 0xb78b, 100);
+  currentGame->unknown003(dataGame, 1, 0x9fad, 1000);
+  currentGame->unknown003(dataGame, 1, 0x9bc4, 1000);
+  currentGame->unknown003(dataGame, 1, 0x9a97, 300);
+  currentGame->unknown003(dataGame, 1, 0x8a5f, 2000);
+  currentGame->unknown003(dataGame, 1, 0x88cd, 300);
+  currentGame->unknown003(dataGame, 1, 0x7129, 50);
+  currentGame->unknown003(dataGame, 1, 0x33d2, 100);
+  currentGame->unknown003(dataGame, 1, 0x32d1, 256);
+  currentGame->unknown003(dataGame, 1, 0x2f4a, 200);
+  currentGame->unknown003(dataGame, 1, 0x16ac, 6000);
+  currentGame->unknown003(dataGame, 1, 0x11fb, 1200);
+  currentGame->unknown002(dataGame, 1, 0xfa2, 0x11fa);
+  currentGame->unknown002(dataGame, 1, 0x1, 0xfa1);
+  currentGame->unknown003(dataGame, 2, 0xe91a, 1000);
+  currentGame->unknown002(dataGame, 2, 0xc209, 0xe919);
+  currentGame->unknown002(dataGame, 2, 0x9af8, 0xc208);
+  currentGame->unknown003(dataGame, 2, 0x8ce6, 2000);
+  currentGame->unknown003(dataGame, 2, 0x8bb9, 300);
+  currentGame->unknown003(dataGame, 2, 0x89c4, 500);
+  currentGame->unknown003(dataGame, 2, 0x87cf, 500);
+  currentGame->unknown003(dataGame, 2, 0x40fc, 15000);
+  currentGame->unknown003(dataGame, 2, 0x663, 15000);
+  currentGame->unknown002(dataGame, 2, 0x27a, 0x662);
+  currentGame->unknown002(dataGame, 2, 0x25b, 0x279);
+  currentGame->unknown002(dataGame, 4, 0x27b, 0x28b);
+  currentGame->unknown002(dataGame, 4, 0x205, 0x20a);
+  currentGame->unknown001(dataGame, 4, 0x1);
+  currentGame->unknown002(dataGame, 4, 0x5, 0x1f9);
+  currentGame->unknown002(dataGame, 8, 0xf8d, 0xf9d);
+  currentGame->unknown002(dataGame, 8, 0x12, 0x5ee);
+  currentGame->unknown002(dataGame, 8, 0x5ef, 0x847);
+  currentGame->unknown002(dataGame, 16, 0x763, 0xb4b);
+  currentGame->unknown001(dataGame, 16, 0x60b);
+  currentGame->unknown002(dataGame, 16, 0x2e, 0x60a);
+  currentGame->unknown002(dataGame, 16, 0x28, 0x2d);
+  currentGame->unknown002(dataGame, 16, 0x22, 0x27);
+  currentGame->unknown002(dataGame, 16, 0x1c, 0x21);
+  currentGame->unknown002(dataGame, 16, 0x16, 0x1b);
+  currentGame->unknown002(dataGame, 16, 0x5, 0x15);
+  currentGame->unknown001(dataGame, 16, 0x3);
+  currentGame->unknown002(dataGame, 32, 0x915, 0xcfd);
+  currentGame->unknown002(dataGame, 32, 0x52c, 0x914);
+  currentGame->unknown002(dataGame, 32, 0x143, 0x52b);
+  currentGame->unknown002(dataGame, 32, 0x102, 0x142);
+  currentGame->unknown002(dataGame, 32, 0x1, 0x101);
+  currentGame->unknown001(dataGame, 1, 0x89fc);
+  currentGame->unknown002(dataGame, 1, 0x89ff, 0x8a04);
+  currentGame->unknown001(dataGame, 1, 0xc3de);
+  currentGame->unknown001(dataGame, 1, 0xc3e9);
+  currentGame->unknown001(dataGame, 1, 0xc400);
+  currentGame->unknown001(dataGame, 1, 0xc40b);
+  currentGame->unknown001(dataGame, 1, 0xc410);
+  currentGame->unknown003(dataGame, 1, 0xc430, 29);
+  currentGame->unknown002(dataGame, 1, 0xc44e, 0xc451);
+  currentGame->unknown001(dataGame, 1, 0xc4a2);
+  currentGame->unknown002(dataGame, 1, 0xc4d6, 0xc4d8);
+  currentGame->unknown001(dataGame, 1, 0xc51c);
+  currentGame->unknown002(dataGame, 1, 0xc559, 0xc55d);
+  currentGame->unknown001(dataGame, 8, 0x84e);
+  currentGame->unknown002(dataGame, 8, 0x854, 0x859);
+  currentGame->unknown002(dataGame, 8, 0x85d, 0x862);
 
   // The blade list of the first driver is scoped: the game gives it and the list below one stack slot (0x7100352728, 0x71003527c4).
   {

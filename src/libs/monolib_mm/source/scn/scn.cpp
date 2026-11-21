@@ -4,6 +4,7 @@
 #include "ml/critical_section.h"
 #include "ml/dev_graph.h"
 #include "ml/file_res_th.h"
+#include "ml/ml_mem.h"
 #include "ml/path_util.h"
 #include "ml/proc_desktop.h"
 #include "ml/reslist.h"
@@ -25,6 +26,35 @@
 #include "scn_pool_obj.cpp"
 
 namespace ml {
+
+Scn::Scn(const ScnSetup *setup)
+    : unknown20(nullptr), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(false), unknown60(0), unknownb0(false), unknownb4(-1), unknown4b8(0), unknowndf8(false),
+      unknowndf9(false) {
+  unknown64 = mtl::ALLOC_HANDLE();
+  mtl::ALLOC_HANDLE parent = setup->unknown0c;
+  if (!parent.isValid()) {
+    parent = MlMem::getProductMem();
+  }
+  mm::mtl::FixStr<64> name;
+  name.format("Scn(%s)", setup->unknown10.c_str());
+  if (name.length() >= 32) {
+    name = "Scn";
+  }
+  unknown64 = mtl::MemManager::create(parent, setup->unknown08, name.c_str(), true);
+  unknownce0 = new (unknown64) CriticalSection();
+  unknownce8 = new (unknown64) CriticalSection();
+  unknown68 = *setup;
+  for (int i = 0; i < 10; i++) {
+    unknowndfc[i].unknown00 = i;
+    unknowndfc[i].unknown04 = static_cast<SCNPRIO_CB>(-1);
+  }
+  unknownb4 = WorkCpu::createGroupHandle(1);
+  WorkCpu::entryJobThread(unknownb4, thUpAfter, 0xf, this, nullptr, CPUID_UNKNOWN_1, true, false);
+  WorkCpu::entryAutoExecGrp(unknownb4, CPUID_UNKNOWN_1, 0xf);
+  init();
+}
+
+Scn::~Scn() { term(); }
 
 Scn *Scn::create(const ScnSetup *setup) {
   ScnSetup defaultSetup;
@@ -98,7 +128,7 @@ void Scn::callbackToListener(SCNCB type) {
       if (!unknownb8[i].unknown0d) {
         unknownb8[i].unknown00->cbRenderAfter(this, unknownb8[i].unknown08);
       }
-      if (unknowne00[0].unknown00 == unknownb8[i].unknown08) {
+      if (unknowndfc[0].unknown04 == unknownb8[i].unknown08) {
         DebDraw::flushPrio(-2, getCam(-1)->unknown70.m_front->unknown1a0, getCam(-1)->unknown70.m_front->unknown00.unknown70);
       }
       DevGraph::cmdCloseDisplayList();
@@ -198,12 +228,12 @@ u32 Scn::thUpAfter(void *argument, void *userData) {
   return 0;
 }
 
-void Scn::setDebDraw(SCNCAM cam, SCNPRIO_CB priority) { unknowne00[cam].unknown00 = priority; }
+void Scn::setDebDraw(SCNCAM cam, SCNPRIO_CB priority) { unknowndfc[cam].unknown04 = priority; }
 
 ScnObjModel *Scn::createMdl(const void *data, const char *name, int screenID) {
   ScnObjModel *model = unknown38->createMdl(this, data, name, screenID);
   if (model != nullptr) {
-    model->setAlwaysTexStm(!unknownac);
+    model->setAlwaysTexStm(!unknown68.unknown44);
   }
   return model;
 }

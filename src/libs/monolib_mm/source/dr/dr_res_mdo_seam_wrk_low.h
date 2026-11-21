@@ -6,7 +6,6 @@
 
 namespace grlib {
 class CGLibTriUniformArray;
-class CGLibVtxInstans;
 } // namespace grlib
 
 namespace mm {
@@ -19,6 +18,8 @@ class ALLOC_HANDLE;
 
 namespace ml {
 class DrCalcViewWork;
+class DrResMdoAlpTbl;
+struct unknown504;
 struct MdoWrkMatRes;
 
 // Inferred layout of the low map resource header (game symbol MdsSeamLowMapHead, members unknown); offsets are relative to the header.
@@ -70,9 +71,13 @@ public:
   u8 _20[0x28 - 0x20];
   MdoWrkMatRes *unknown28;       // Inferred role: material work; original member name unknown.
   DrResMdoSeamMemObj *unknown30; // Inferred role: memory object; original member name unknown.
-  u8 _38[0x40 - 0x38];
-  grlib::CGLibVtxInstans *unknown40; // Inferred role: instance vertex; original member name unknown.
-  u8 _48[0x88 - 0x48];
+  unknown504 *unknown38;         // Inferred role: render entries; original member name unknown.
+  DrResMdoAlpTbl *unknown40;     // Inferred role: alpha table; original member name unknown.
+  u8 _48[0x58 - 0x48];
+  unknown504 **unknown58; // Inferred role: first alpha render entries per material and kind; original member name unknown.
+  u8 _60[0x78 - 0x60];
+  s32 *unknown78; // Inferred role: alpha render entry num per kind; original member name unknown.
+  u8 _80[0x88 - 0x80];
   void *unknown88; // Inferred role: allocated buffer; original member name unknown.
   u8 _90[0x9c - 0x90];
   u32 unknown9c; // Inferred role: state flags; original member name unknown.
@@ -87,7 +92,10 @@ public:
 static_assert(offsetof(DrResMdoSeamWrkLow, unknown18) == 0x18, "");
 static_assert(offsetof(DrResMdoSeamWrkLow, unknown28) == 0x28, "");
 static_assert(offsetof(DrResMdoSeamWrkLow, unknown30) == 0x30, "");
+static_assert(offsetof(DrResMdoSeamWrkLow, unknown38) == 0x38, "");
 static_assert(offsetof(DrResMdoSeamWrkLow, unknown40) == 0x40, "");
+static_assert(offsetof(DrResMdoSeamWrkLow, unknown58) == 0x58, "");
+static_assert(offsetof(DrResMdoSeamWrkLow, unknown78) == 0x78, "");
 static_assert(offsetof(DrResMdoSeamWrkLow, unknown88) == 0x88, "");
 static_assert(offsetof(DrResMdoSeamWrkLow, unknown9c) == 0x9c, "");
 static_assert(offsetof(DrResMdoSeamWrkLow, unknowna0) == 0xa0, "");

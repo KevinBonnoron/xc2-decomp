@@ -367,6 +367,23 @@ void GmkManager::seqWaitValidateResDefBdatFp(f32 deltaTime) {
   }
 }
 
+void GmkManager::seqUpdate(f32 deltaTime) {
+  unknown1a0.update(deltaTime);
+  unknownf270.update(deltaTime);
+  TGmkActiveList<GmkPrecious>::unknown001(deltaTime);
+  TGmkActiveList<GmkSe>::unknown001(deltaTime);
+  TGmkActiveList<GmkSeLine>::unknown001(deltaTime);
+  TGmkActiveList<GmkEvent>::unknown001(deltaTime);
+  TGmkActiveList<GmkTutorial>::unknown001(deltaTime);
+  u64 num = unknownf358.size();
+  for (u64 i = 0; i < num; i++) {
+    GmkSet *set = unknownf358[i];
+    if (set != nullptr) {
+      set->update(deltaTime);
+    }
+  }
+}
+
 void GmkManager::create(const CreateInfo &info) {
   dispose();
   unknown08 = info;
@@ -1129,6 +1146,21 @@ AGmkBase *getBindedGmkInst(gf::GF_OBJ_HANDLE *handle) {
     return nullptr;
   }
   return reinterpret_cast<AGmkBase *>(acc.getUserData(gf::OBJ_USER_DATA_UNKNOWN_0));
+}
+
+bool hasEyeBlink(const AGmkBase &gmk) {
+  u8 *bdat = gmk.unknown08.unknown00->getBindedBdatFp();
+  if (bdat != nullptr) {
+    u16 motion = Bdat::getValCheck(bdat, "Mot", gmk.unknown20.unknown18, BDAT_TYPE_UNKNOWN_2);
+    if (motion) {
+      // The game tests the u16 as `and w8, w0, #0xffff; cbz w8` (0x71005e4f9c, a zero test of the i16 value, see GfAutoTalk::BdatInfo::create) and zero-extends it
+      // again, `and w19, w0, #0xffff` (0x71005e4fa4), before the getFP call (0x71005e4fb0); the widened local places that extension. Without it clang extends once,
+      // `and w2, w19, #0xffff`, as the getFlagVal argument after the getFP call (checked: no match, same instruction count).
+      u32 motionId = motion;
+      return Bdat::getFlagVal(Bdat::getFP("FLD_NpcMobMotionId"), "flag", motionId, "notEyeBlink") == 0;
+    }
+  }
+  return false;
 }
 
 GmkType getBindedGmkInstType(gf::GF_OBJ_HANDLE *handle) {

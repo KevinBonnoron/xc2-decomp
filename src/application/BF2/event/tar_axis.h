@@ -29,6 +29,8 @@ public:
   const char *getOrigName() const;
   u32 getAxis() const { return unknown08; }
   const mm::Vec3 &getTar() const { return unknown10; }
+  // Non-const: ObjectChara::OnManiSetTar (1.0.0: 0x71001132cc) writes the y then the x of its local axis in place (stur at 0x71001134bc and 0x71001134e0, after the copy of the axis index and z).
+  mm::Vec3 &getTar() { return unknown10; }
 
 private:
   u32 unknown08;      // Inferred role: axis; original member name unknown.

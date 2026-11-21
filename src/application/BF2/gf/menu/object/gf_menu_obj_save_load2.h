@@ -5,6 +5,7 @@
 #include "gf/menu/gf_menu_sequence.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
+#include "ui/event/ui_object_listener.h"
 
 namespace ui {
 class UIObjectAcc;
@@ -23,12 +24,22 @@ class GfMenuReferenceNumber;
 
 class GfMenuObjSaveLoad2 : public GfMenuObject {
 public:
+  class MainListener : public ui::UIObjectListener {
+  public:
+    MainListener(GfMenuObjSaveLoad2 *owner) : _0c(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjSaveLoad2 *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   GfMenuObjSaveLoad2(u32 handle);
   ~GfMenuObjSaveLoad2() override;
   static void sendEvent(u32 handle, u32 type, u32 param);
   static int setFadeIn(u32 handle, u32 type);
   static int setFadeOut(u32 handle, u32 type);
   void refreshSave(ui::UIObjectAcc &acc, u32 flag);
+  void setupSave(ui::UIObjectAcc &acc, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> *numbers);
   bool seqSave();
   bool seqSaveWait();
   bool seqSaveWaitToClose();
@@ -58,6 +69,8 @@ public:
   mm::mtl::IntrusivePtr<GfMenuReferenceNumber> unknown308[3]; // Inferred role: reference numbers; original member name unknown.
 };
 
+static_assert(offsetof(GfMenuObjSaveLoad2::MainListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjSaveLoad2::MainListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjSaveLoad2, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjSaveLoad2, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjSaveLoad2, unknown2c0) == 0x2c0, "");

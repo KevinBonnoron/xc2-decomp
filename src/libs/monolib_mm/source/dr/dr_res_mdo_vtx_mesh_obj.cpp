@@ -2,13 +2,80 @@
 
 #include <string.h>
 
+#include "dr/dr_ap_cache.h"
+#include "dr/dr_calc_man.h"
+#include "dr/dr_calc_view_work.h"
 #include "dr/dr_man.h"
+#include "dr/dr_pixl_man.h"
 #include "dr/dr_res_mdo_vertex.h"
+#include "dr/dr_res_shd.h"
+#include "dr/dr_shd_data_list.h"
+#include "dr/dr_shd_data_obj.h"
+#include "dr/dr_shd_man.h"
+#include "grlib/cglib_ctl_shader.h"
+#include "grlib/cglib_ctl_vertex.h"
+#include "grlib/cglib_polygon.h"
+#include "grlib/cglib_shader.h"
+#include "grlib/cglib_vtx_stm_out.h"
 #include "grlib/cglib_vtx_vertex.h"
+#include "grlib/shd_util.h"
 #include "mtl/alloc_handle.h"
 #include "mtl/mem_manager.h"
 
 namespace ml {
+
+// Inferred role: uniform block of the vertex mesh written by updateUniform (the size 0x130 is given to setup by updateInit); original type name unknown.
+// Evidence: updateUniform (0x710087b130) writes the four matrices with ShdMat44TransposeMat34 (twelve floats each) at 0x10, 0x40, 0x70 and 0xa0, unknownd0 (the render count less one, sub w8 at
+// 0x710087b5cc) as an integer, unknownd4 as a copy of the u32 unknown84, and the other members as floats.
+struct unknown001 {
+  f32 unknown00;
+  f32 unknown04;
+  f32 unknown08;
+  f32 unknown0c;
+  f32 unknown10[12];
+  f32 unknown40[12];
+  f32 unknown70[12];
+  f32 unknowna0[12];
+  s32 unknownd0;
+  u32 unknownd4;
+  f32 unknownd8;
+  f32 unknowndc;
+  f32 unknowne0;
+  f32 unknowne4;
+  f32 unknowne8;
+  f32 unknownec;
+  f32 unknownf0;
+  f32 unknownf4;
+  f32 unknownf8;
+  f32 unknownfc;
+  f32 unknown100;
+  f32 unknown104;
+  f32 unknown108;
+  f32 unknown10c;
+  f32 unknown110;
+  f32 unknown114;
+  f32 unknown118;
+  f32 unknown11c;
+  f32 unknown120;
+  f32 unknown124;
+  f32 unknown128;
+  f32 unknown12c;
+};
+
+static_assert(offsetof(unknown001, unknown10) == 0x10, "");
+static_assert(offsetof(unknown001, unknown40) == 0x40, "");
+static_assert(offsetof(unknown001, unknown70) == 0x70, "");
+static_assert(offsetof(unknown001, unknowna0) == 0xa0, "");
+static_assert(offsetof(unknown001, unknownd0) == 0xd0, "");
+static_assert(offsetof(unknown001, unknownd4) == 0xd4, "");
+static_assert(offsetof(unknown001, unknownd8) == 0xd8, "");
+static_assert(offsetof(unknown001, unknownec) == 0xec, "");
+static_assert(offsetof(unknown001, unknownf0) == 0xf0, "");
+static_assert(offsetof(unknown001, unknown100) == 0x100, "");
+static_assert(offsetof(unknown001, unknown110) == 0x110, "");
+static_assert(offsetof(unknown001, unknown120) == 0x120, "");
+static_assert(offsetof(unknown001, unknown12c) == 0x12c, "");
+static_assert(sizeof(unknown001) == 0x130, "");
 
 // The statement order is the one found to match: neither the order of the members nor the store order of the game (0x710087ab80) gives the
 // game's bytes. unknown84 is stored twice because the game's 64-bit zero store at 0x80 covers it before the 40000 store.
@@ -107,6 +174,56 @@ void DrResMdoVtxMeshObj::update(const mm::Mat44 &matrix, f32 param2, f32 param3)
   }
 }
 
+void DrResMdoVtxMeshObj::updateUniform(const mm::Mat44 &matrix, f32 param2, f32 param3) {
+  DrCalcViewWork *view = DrMan::get()->unknown580->unknown10;
+  unknown001 *uniform = static_cast<unknown001 *>(unknown38.getBuff());
+  uniform->unknown00 = unknown12c * 0.002f;
+  uniform->unknown04 = 0.5f;
+  uniform->unknown08 = unknown130;
+  uniform->unknown0c = view->unknown180.rows[2][2];
+  grlib::ShdMat44TransposeMat34(uniform->unknown10, matrix);
+  grlib::ShdMat44TransposeMat34(uniform->unknown40, view->unknown00);
+  grlib::ShdMat44TransposeMat34(uniform->unknown70, unknowna0);
+  // The game computes the destination address (add x22, x21, #0xa0 at 0x710087b2e8) before the inverse and keeps it in a callee-saved register across the assert call.
+  f32 *inverseUniform = uniform->unknowna0;
+  mm::Mat44 inverse;
+  inverse.unknown014(view->unknown280);
+  grlib::ShdMat44TransposeMat34(inverseUniform, inverse);
+  f32 scale = param2 * 0.2f * 0.033333335f;
+  if (unknown94 == 0) {
+    uniform->unknownd0 = 0;
+    uniform->unknownd4 = 0;
+  } else {
+    uniform->unknownd0 = unknown94 - 1;
+    uniform->unknownd4 = unknown84;
+  }
+  uniform->unknowne8 = 0.0f;
+  uniform->unknownd8 = 0.0f;
+  uniform->unknowndc = 0.0f;
+  uniform->unknowne0 = 0.0f;
+  uniform->unknowne4 = 0.0f;
+  uniform->unknownec = 1.0f / unknown104 * param3;
+  f32 velocity = scale * unknown10c * param3 * 0.1f;
+  uniform->unknownf0 = unknownf0.x * velocity;
+  uniform->unknownf4 = unknownf0.y * velocity;
+  uniform->unknownf8 = velocity * unknownf0.z;
+  uniform->unknownfc = unknown120 * param3;
+  uniform->unknown100 = unknown128;
+  uniform->unknown104 = param2 * -0.01f;
+  uniform->unknown108 = param2 * 0.01f;
+  uniform->unknown10c = 0.0f;
+  uniform->unknown110 = unknown114.r;
+  uniform->unknown114 = unknown114.g;
+  uniform->unknown118 = unknown114.b;
+  uniform->unknown11c = 1.0f;
+  f32 ratio = (1.0f - unknown124) * unknown108;
+  uniform->unknown120 = ratio * (scale * unknowne0.x);
+  uniform->unknown124 = ratio * (scale * unknowne0.y);
+  uniform->unknown128 = ratio * (scale * unknowne0.z);
+  uniform->unknown12c = scale * unknown108 * unknown124;
+  unknown38.updateData();
+}
+
 void DrResMdoVtxMeshObj::release(DrResMdoVtxMeshObj *&obj) {
   if (obj != nullptr) {
     obj->~DrResMdoVtxMeshObj();
@@ -138,6 +255,105 @@ bool DrResMdoVtxMeshObj::isRender() const {
     return false;
   }
   return true;
+}
+
+void DrResMdoVtxMeshObj::stmRender(bool isNode) {
+  if (!isRender()) {
+    return;
+  }
+  DrShdDataList *list = DrMan::getIns()->unknown80->unknown00;
+  DrResShdStreamOut *stmOut = list->getStmOutObj(7);
+  grlib::CGLibPolygon::setRasterizer(1);
+  u32 count = unknown80 < unknown110 ? unknown80 : unknown110;
+  if (unknown94 != 0) {
+    unknown94 = 0;
+    // The game loads the shader once for the two declaration calls (0x710087b794), before it computes the mode, and loads it again for setupShader.
+    DrShdDataObj *shader = stmOut->unknown00;
+    u32 mode = 1;
+    if (isNode) {
+      mode = 2;
+    }
+    shader->setDeclarationIdx(shader->getDeclarationOfs("CALC_MODE"), mode);
+    stmOut->unknown00->setupShader(0u);
+    if (isNode) {
+      list->unknown958.setStorageBuffer(1);
+      list->unknown980.setStorageBuffer(2);
+    }
+    unknown08->setUniformBlock(stmOut->unknown08[1]);
+    unknown38.setUniformBlock(stmOut->unknown08[0]);
+    // The game takes the head count before the first call (sub at 0x710087b820); written inline the function has 185 instructions instead of 194.
+    if (unknown90 + count > unknown80) {
+      u32 headCount = unknown80 - unknown90;
+      unknown10.setStorageBuffer(0);
+      grlib::CGLibCtlVertex::setVertex(*unknown00, unknown00->unknown04 * unknown90);
+      grlib::CGLibCtlVertex::renderVertex(GRL_PRIMITIVE_POINTS, headCount);
+      u32 tailCount = unknown90 + count - unknown80;
+      unknown10.setStorageBuffer(0);
+      grlib::CGLibCtlVertex::setVertex(*unknown00);
+      grlib::CGLibCtlVertex::renderVertex(GRL_PRIMITIVE_POINTS, tailCount);
+    } else {
+      unknown10.setStorageBuffer(0);
+      grlib::CGLibCtlVertex::setVertex(*unknown00, unknown00->unknown04 * unknown90);
+      grlib::CGLibCtlVertex::renderVertex(GRL_PRIMITIVE_POINTS, count);
+    }
+    unknown90 = (unknown90 + count) % unknown80;
+    grlib::CGLibCtlShader::setMemoryBarrierBit(1);
+  }
+  if (unknown8c != 0) {
+    DrShdDataObj *shader = stmOut->unknown00;
+    shader->setDeclarationIdx(shader->getDeclarationOfs("CALC_MODE"), 3);
+    stmOut->unknown00->setupShader(1u);
+    unknown38.setUniformBlock(stmOut->unknown08[0]);
+    if (unknown88 + unknown8c > unknown84) {
+      u32 headLength = unknown84 - unknown88;
+      unknown10.setStorageBuffer(0, unknown88 << 5, headLength << 5);
+      grlib::CGLibCtlVertex::setUniformVertex(unknown10, 0x20, unknown88 << 5, 0, 0);
+      grlib::CGLibCtlVertex::renderVertex(GRL_PRIMITIVE_POINTS, headLength);
+      u32 tailLength = unknown88 + unknown8c - unknown84;
+      unknown10.setStorageBuffer(0);
+      grlib::CGLibCtlVertex::setUniformVertex(unknown10, 0x20, 0, 0, 0);
+      grlib::CGLibCtlVertex::renderVertex(GRL_PRIMITIVE_POINTS, tailLength);
+    } else {
+      unknown10.setStorageBuffer(0, unknown88 << 5, unknown8c << 5);
+      grlib::CGLibCtlVertex::setUniformVertex(unknown10, 0x20, unknown88 << 5, 0, 0);
+      grlib::CGLibCtlVertex::renderVertex(GRL_PRIMITIVE_POINTS, unknown8c);
+    }
+    grlib::CGLibCtlShader::setMemoryBarrierBit(1);
+  }
+  grlib::CGLibPolygon::setRasterizer(0);
+}
+
+void DrResMdoVtxMeshObj::alpRender() {
+  if (!(unknown74 & 1) || unknown8c == 0) {
+    return;
+  }
+  DrAPCache *cache = DrMan::get()->unknown5c0;
+  DrShdDataList *list = DrMan::get()->unknown80->unknown00;
+  DrShdDataObj *shader = list->getPostShdObj(0x3f);
+  cache->setupCulling(DR_AP_CULL_TYPE_UNKNOWN_2);
+  cache->setupDepthStencil(0, 0, 0, 2);
+  cache->setupAlphaBlend(2);
+  DrMan::get()->unknown78->selectGBuffRenderTarget(0xc0u);
+  list->bindShdEffVtx();
+  shader->setupShader(0u);
+  // The game keeps the view work in a callee-saved register and takes the address of its uniform block (add at 0x710087bb24) after the offset lookup, as does DrGpuCheckRender::render.
+  DrCalcViewWork *view = DrMan::get()->unknown580->unknown10;
+  u32 staticOfs = (shader->unknown38 + shader->unknown58)->getUniformBlockOfs("U_Static");
+  view->unknown7b0.setUniformBlock(staticOfs);
+  u32 pamOfs = (shader->unknown38 + shader->unknown58)->getUniformBlockOfs("U_Pam");
+  unknown38.setUniformBlock(pamOfs);
+  if (unknown88 + unknown8c > unknown84) {
+    // The game takes the head count before the first call (sub at 0x710087bb7c); written inline the function has 103 instructions instead of 109.
+    u32 headCount = unknown84 - unknown88;
+    grlib::CGLibCtlVertex::setUniformVertex(unknown10, 0x20, unknown88 << 5, 1, 1);
+    list->renderEffVtx(headCount);
+    u32 tailCount = unknown88 + unknown8c - unknown84;
+    grlib::CGLibCtlVertex::setUniformVertex(unknown10, 0x20, 0, 1, 1);
+    list->renderEffVtx(tailCount);
+  } else {
+    grlib::CGLibCtlVertex::setUniformVertex(unknown10, 0x20, unknown88 << 5, 1, 1);
+    list->renderEffVtx(unknown8c);
+  }
 }
 
 u32 DrResMdoVtxMeshObj::setup(const u8 *, u8 *) { return 0x140; }

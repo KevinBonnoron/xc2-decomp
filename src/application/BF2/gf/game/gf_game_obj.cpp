@@ -1,8 +1,10 @@
 #include "gf/game/gf_game_obj.h"
 
+#include "fw/fw_coli_check.h"
 #include "fw/fw_transform.h"
 #include "fw/fw_update_info.h"
 #include "gf/asset/gf_asset_manager.h"
+#include "gf/data/gf_bdat_rsc.h"
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_enemy.h"
 #include "gf/data/gf_data_param_acc.h"
@@ -18,13 +20,17 @@
 #include "gf/game/gf_game_search_obj.h"
 #include "gf/game/gf_game_util.h"
 #include "gf/gf_allocator.h"
+#include "gf/object/component/enemy/gf_com_behavior_enemy.h"
 #include "gf/object/component/gf_com_transform.h"
+#include "gf/object/component/property/gf_com_property.h"
+#include "gf/object/gf_init_param.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_manager.h"
 #include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
+#include "gf/request/gf_req_scom.h"
 #include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/algorithm.h"
@@ -56,6 +62,33 @@ void GfGameObj::finalize() {
     unknown55c68 = nullptr;
   }
   unknown55c70 = false;
+}
+
+void GfGameObj::bdatReload() {
+  GfGameObj *gameObj = get();
+  if (gameObj == nullptr) {
+    return;
+  }
+  // The first two loops repeat the statements of refreshBdatInOut (0x710032474c, 39 instructions), which the game inlines here although it keeps a standalone copy:
+  // the call form compiles to 156 instructions (refreshBdatInOut stays a call), the game has 218 (no call to it). The last two loops call refreshBdat (0x71003247e8), which clang inlines.
+  for (mm::mtl::FixedList<INOUT, GAME_UNKNOWN_1024>::iterator it = gameObj->unknown3f1d0.begin(); it != gameObj->unknown3f1d0.end(); ++it) {
+    GfObjAcc acc((*it).unknown00);
+    if (acc.getType() == OBJECT_TYPE_ENEMY) {
+      refreshBdat((*it).unknown00);
+    }
+  }
+  for (mm::mtl::FixedList<INOUT, GAME_UNKNOWN_1024>::iterator it = gameObj->unknown47a00.begin(); it != gameObj->unknown47a00.end(); ++it) {
+    GfObjAcc acc((*it).unknown00);
+    if (acc.getType() == OBJECT_TYPE_ENEMY) {
+      refreshBdat((*it).unknown00);
+    }
+  }
+  for (mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024>::iterator it = gameObj->unknown9050.begin(); it != gameObj->unknown9050.end(); ++it) {
+    refreshBdat(*it);
+  }
+  for (mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024>::iterator it = gameObj->unknownd870.begin(); it != gameObj->unknownd870.end(); ++it) {
+    refreshBdat(*it);
+  }
 }
 
 void GfGameObj::destroy() {
@@ -325,6 +358,25 @@ bool GfGameObj::fadeinGameObj(INOUT &inout, GfObjAcc &acc, const fw::UpdateInfo 
   return true;
 }
 
+void GfGameObj::setupEffectFadeout(INOUT &inout, GfObjAcc &acc, const fw::UpdateInfo &info) {
+  if ((acc.getType() == OBJECT_TYPE_ENEMY || acc.getType() == OBJECT_TYPE_GIMMICK) && acc.getObj()->getComponent<GfComProperty>() != nullptr) {
+    // The game calls getHandle at each use, the search's call after the setup of the iterators (0x7100322b88); a local used at every call gives 94 instructions, the lambda taking acc by
+    // reference 95 (the game has 96).
+    mm::mtl::FixedList<ObjMsg, 256>::iterator it =
+        mm::mtl::find_if(unknown54240.begin(), unknown54240.end(), [handle = acc.getHandle()](const ObjMsg &message) { return message.unknown00 == handle; });
+    if (it != unknown54240.end()) {
+      if (0.0f < inout.unknown08) {
+        inout.unknown10 = 1.0f;
+      }
+      inout.unknown08 = SCOM_OBJ_VFADE::createDead(acc.getHandle(), it->unknown08);
+      inout.unknown16 = true;
+      if (acc.getType() == OBJECT_TYPE_ENEMY) {
+        SCOM_DEAD_PARTICLE::create(acc.getHandle(), it->unknown08, inout.unknown08);
+      }
+    }
+  }
+}
+
 bool GfGameObj::isEffectFadeEnd(const INOUT &inout, const GfObjAcc &acc) const {
   if (!inout.unknown16) {
     return false;
@@ -345,10 +397,196 @@ bool GfGameObj::isBattle(const mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_
   return false;
 }
 
+// The singleton is loaded before the dispatch, as the game does (0x7100320b1c).
+void GfGameObj::listenerGfObj(OBJEVT event, GF_OBJ_HANDLE *handle, u32 objectType) {
+  GfGameObj *gameObj = get();
+  switch (event) {
+  case OBJEVT_UNKNOWN_1:
+    GfGameEvent::applySetDispObject(handle);
+    break;
+  case OBJEVT_UNKNOWN_2:
+    gameObj->addInObj(handle, 0.5f);
+    break;
+  case OBJEVT_UNKNOWN_3:
+    gameObj->removeGameObj(handle);
+    break;
+  default:
+    break;
+  }
+}
+
+// Inferred role: list holding the object (the event character list, or the list of its type); no game symbol, original name unknown. The game inlines this choice in removeGameObj (0x7100320cc8),
+// addGameObj (0x7100321b20) and addOutObj (0x71003214ac) and holds no function for it. Measured: the three functions match both with this helper (inlined, no symbol emitted) and with the six lines
+// written out in each, so the helper is the form.
+static mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> *unknown001(GfGameObj *gameObj, GF_OBJ_HANDLE *handle) {
+  GfObjSetup *setup = GfObjUtil::getObjSetup(handle);
+  if (setup != nullptr && isEventCharacter(setup->unknown1c)) {
+    return &gameObj->unknown28930;
+  }
+  return gameObj->getListType(GfObjUtil::getObjType(handle), handle);
+}
+
+// 0x7100320cc8. The event test is isEventCharacter (values 6, 7, 12), not GfObjSetup::isEvent. Measured: the ObjMsg search is a find_if with a capturing lambda (a plain loop is jump-threaded, the
+// game's is not) and the last search is mm::mtl::find with `list->end() != found` (`found != list->end()` does not match). The switch of getListType inlined here lays its case blocks out as the
+// game does (0/0xe, default, 3, 6, 7, 8, 0xd, 4, 5, 9, 10, 0xb, 0xc) only with the cases 0 and 0xe written as two separate returns (see getListType).
+void GfGameObj::removeGameObj(GF_OBJ_HANDLE *handle) {
+  if (!GfObjUtil::testFlag(handle, OBJ_FLAG_UNKNOWN_15)) {
+    return;
+  }
+  GfObjAcc acc(handle);
+  removeGameObjCommon(acc);
+  mm::mtl::FixedList<ObjMsg, 256>::iterator message = mm::mtl::find_if(unknown54240.begin(), unknown54240.end(), [handle](const ObjMsg &entry) { return entry.unknown00 == handle; });
+  if (message != unknown54240.end()) {
+    unknown54240.erase(message);
+  }
+  for (mm::mtl::FixedList<INOUT, GAME_UNKNOWN_1024>::iterator it = unknown47a00.begin(); it != unknown47a00.end(); ++it) {
+    if (it->unknown00 == handle) {
+      unknown47a00.erase(it);
+      acc.setFlag(OBJ_FLAG_UNKNOWN_15, false);
+      return;
+    }
+  }
+  for (mm::mtl::FixedList<INOUT, GAME_UNKNOWN_1024>::iterator it = unknown3f1d0.begin(); it != unknown3f1d0.end(); ++it) {
+    if (it->unknown00 == handle) {
+      unknown3f1d0.erase(it);
+      return;
+    }
+  }
+  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> *list = unknown001(this, handle);
+  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024>::iterator found = mm::mtl::find(list->begin(), list->end(), handle);
+  if (list->end() != found) {
+    list->erase(found);
+    flushEvent();
+  }
+}
+
+// 0x7100321b20. The list choice is unknown001, as in removeGameObj. Returns true on every path (the game sets w0 to 1).
+bool GfGameObj::addGameObj(GF_OBJ_HANDLE *handle) {
+  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> *list = unknown001(this, handle);
+  list->push_back(handle);
+  GfGameUtil::setKosmosArts3EnableBothWeapon(handle, false);
+  return true;
+}
+
+// 0x71003214ac. The list choice is unknown001, as in removeGameObj and addGameObj. Measured: the list search tested as `list->end() == found` with the out list search first (the not found arm leaves
+// the function early) gives the game's block order; `list->end() != found` with the search last gives 347 instructions (the two `return false` blocks merge), `found == list->end()` another `cmp`
+// operand order, and a find_if for the last search another order. The two manager reads are the game's (0x7100321730, 0x71003217c0).
+bool GfGameObj::addOutObj(GF_OBJ_HANDLE *handle, f32 fadeTime, bool isEffect) {
+  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> *list = unknown001(this, handle);
+  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024>::iterator found = mm::mtl::find(list->begin(), list->end(), handle);
+  if (list->end() == found) {
+    for (mm::mtl::FixedList<INOUT, GAME_UNKNOWN_1024>::iterator it = unknown47a00.begin(); it != unknown47a00.end(); ++it) {
+      if ((*it).unknown00 == handle) {
+        return true;
+      }
+    }
+    return false;
+  }
+  list->erase(found);
+  if (GfGameManager::isFadeout()) {
+    fadeTime = 0.0f;
+  }
+  INOUT inout;
+  inout.unknown00 = handle;
+  inout.unknown08 = fadeTime < 0.000001f ? 0.0f : fadeTime;
+  inout.unknown0c = 0.0f;
+  inout.unknown10 = fadeTime == 0.0f ? 0.0f : 1.0f;
+  inout.unknown14 = true;
+  inout.unknown15 = true;
+  inout.unknown16 = false;
+  unknown47a00.push_back(inout);
+  GfObjAcc acc(handle);
+  if (acc.testFlag(OBJ_FLAG_UNKNOWN_14)) {
+    acc.setFlag(OBJ_FLAG_UNKNOWN_14, false);
+  }
+  if (!acc.testFlag(OBJ_FLAG_UNKNOWN_17)) {
+    acc.setFlag(OBJ_FLAG_UNKNOWN_17, true);
+  }
+  if (isEffect) {
+    GfObjManager *manager = GfObjManager::get();
+    if (manager != nullptr) {
+      mm::mtl::FixedList<GF_OBJ_HANDLE *, 32> *multiBind = manager->getMultiBindList(handle);
+      if (multiBind != nullptr) {
+        for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 32>::iterator it = multiBind->begin(); it != multiBind->end(); ++it) {
+          if (*it != handle) {
+            // The game calls the GfObjAcc constructor (0x7100321798) for each bound object and never reads the accessor.
+            GfObjAcc bound(*it);
+            addOutObj(*it, fadeTime, false);
+          }
+        }
+      }
+    }
+  }
+  GfObjManager *manager = GfObjManager::get();
+  if (manager != nullptr) {
+    mm::mtl::FixedList<GF_OBJ_HANDLE *, 768> followObjs;
+    if (manager->getFollowObj(followObjs, handle)) {
+      for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 768>::iterator it = followObjs.begin(); it != followObjs.end(); ++it) {
+        addOutObj(*it, fadeTime, false);
+      }
+    }
+  }
+  return true;
+}
+
+// 0x7100324860. The list type switch inlined here has no event character test (unlike addGameObj and addOutObj). Measured: the follow object loop dereferences its iterator twice, as the game does
+// (an assert each time): the search lambda captures `*it` by value and the new message reads `*it` again; a named local gives 376 instructions. The end comparisons are `found == list->end()` for
+// the list search and `end() == existing` for the message search (the other operand orders give another `cmp`). The loops over followObjs that set the collision off construct the accessor from
+// `handle` (the game never reads the node: the constructor call at 0x7100324928 takes x19, the handle).
+void GfGameObj::addCharDeadMessage(GF_OBJ_HANDLE *handle, const MsgObjectNotifyDead &message) {
+  mm::mtl::FixedList<GF_OBJ_HANDLE *, 768> followObjs;
+  GfObjManager *manager = GfObjManager::get();
+  if (manager != nullptr) {
+    manager->getFollowObj(followObjs, handle);
+  }
+  GfObjAcc acc(handle);
+  if (acc.getType() == OBJECT_TYPE_ENEMY) {
+    acc.setCollisionChar(false);
+    for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 768>::iterator it = followObjs.begin(); it != followObjs.end(); ++it) {
+      GfObjAcc follow(handle);
+      follow.setCollisionChar(false);
+    }
+  }
+  if (!message.unknown28 || message.unknown20 == 0) {
+    return;
+  }
+  GfGameObj *gameObj = get();
+  mm::mtl::FixedList<INOUT, GAME_UNKNOWN_1024>::iterator entering =
+      mm::mtl::find_if(gameObj->unknown3f1d0.begin(), gameObj->unknown3f1d0.end(), [handle](const INOUT &entry) { return entry.unknown00 == handle; });
+  if (entering == gameObj->unknown3f1d0.end()) {
+    mm::mtl::FixedList<INOUT, GAME_UNKNOWN_1024>::iterator leaving =
+        mm::mtl::find_if(gameObj->unknown47a00.begin(), gameObj->unknown47a00.end(), [handle](const INOUT &entry) { return entry.unknown00 == handle; });
+    if (leaving == gameObj->unknown47a00.end()) {
+      mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> *list = gameObj->getListType(GfObjUtil::getObjType(handle), handle);
+      mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024>::iterator found = mm::mtl::find(list->begin(), list->end(), handle);
+      if (found == list->end()) {
+        return;
+      }
+    }
+  }
+  u32 attribute = message.unknown20;
+  ObjMsg objMessage;
+  objMessage.unknown00 = handle;
+  objMessage.unknown08 = attribute;
+  gameObj->unknown54240.push_back(objMessage);
+  for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 768>::iterator it = followObjs.begin(); it != followObjs.end(); ++it) {
+    mm::mtl::FixedList<ObjMsg, 256>::iterator existing =
+        mm::mtl::find_if(gameObj->unknown54240.begin(), gameObj->unknown54240.end(), [followObj = *it](const ObjMsg &entry) { return entry.unknown00 == followObj; });
+    if (gameObj->unknown54240.end() == existing) {
+      ObjMsg followMessage;
+      followMessage.unknown00 = *it;
+      followMessage.unknown08 = attribute;
+      gameObj->unknown54240.push_back(followMessage);
+    }
+  }
+}
+
+// Cases 0 and 0xe are two separate returns, in value order (0xe after 0xd). Measured: with `case 0: case 0xe:` grouped, this function matches the same, but the switch inlined into removeGameObj lays
+// its case blocks out in another order than the game's and its jump table (0x7100f6a4f4) differs. The two cases still share one block; the order of the case blocks that tie in frequency follows
+// the rounding of the jump table successors' frequencies, which the separate case labels change (read in clang 3.9's block placement).
 mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> *GfGameObj::getListType(u32 objectType, GF_OBJ_HANDLE *handle) {
   switch (objectType) {
   case 0:
-  case 0xe:
     return &unknown28930;
   default:
     return &unknown3a9b0;
@@ -377,6 +615,8 @@ mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> *GfGameObj::getListType(u
     return &unknown2d150;
   case 0xd:
     return &unknown36190;
+  case 0xe:
+    return &unknown28930;
   }
 }
 
@@ -603,10 +843,7 @@ void GfGameObj::refreshBdat(GF_OBJ_HANDLE *handle) {
 void GfGameObj::refreshBdatInOut(INOUT &inout) {
   GfObjAcc acc(inout.unknown00);
   if (acc.getType() == OBJECT_TYPE_ENEMY) {
-    GfObjSetupEnemy *setup = GfObjUtil::getObjSetup<GfObjSetupEnemy>(inout.unknown00);
-    if (setup != nullptr) {
-      GfDataEnemy::setupSDataEnemy(*setup->unknowna0, setup->unknowna0->unknown00, setup->unknowna0->unknowna8);
-    }
+    refreshBdat(inout.unknown00);
   }
 }
 
@@ -716,6 +953,75 @@ bool GfGameObjEnemy::isGenusLink(GF_OBJ_HANDLE *handle) {
     return mm::mtl::find(enemy->unknown1890.begin(), enemy->unknown1890.end(), handle) != enemy->unknown1890.end();
   }
   return false;
+}
+
+// Inferred role: whether the enemy behavior of the object has its unknown54e4 flag set; no game symbol, original name unknown. The game holds this test twice in calcGenusLink (0x7100325b4c for the
+// first object, 0x7100325b8c for the second) and has no function for it. Measured: calcGenusLink matches both with this helper (inlined, no symbol emitted) and with the two blocks written out, so the
+// helper is the form.
+static bool unknown002(GF_OBJ_HANDLE *handle) {
+  GfObj *obj = GfObjUtil::getObj(handle);
+  if (obj != nullptr) {
+    GfComBehaviorEnemy *behavior = obj->getComponent<GfComBehaviorEnemy>();
+    if (behavior != nullptr && behavior->unknown54e4) {
+      return true;
+    }
+  }
+  return false;
+}
+
+// Game: 0x7100325ad0. The ColiCheckConfig stores repeat the seven of gf::util::getHitCollision, getUnderHitCollision and getUpperHitCollision (ruling 8): the game calls fw::ColiCheck::testLine
+// directly with this block (0x7100325d48) and never calls those functions, which also read the first hit position.
+void GfGameObjEnemy::calcGenusLink(Pair &pair) {
+  bool wasLinked = pair.unknown10;
+  pair.unknown10 = false;
+  GfObjAcc first(pair.unknown00);
+  GfObjAcc second(pair.unknown08);
+  if (first.isValid() && second.isValid()) {
+    if (first.isBattle() != second.isBattle()) {
+      if (unknown002(pair.unknown00) || unknown002(pair.unknown08)) {
+        return;
+      }
+      DataParamAcc firstParam(pair.unknown00);
+      DataParamAcc secondParam(pair.unknown08);
+      if (firstParam.getHp() != 0 && secondParam.getHp() != 0) {
+        f32 radius = firstParam.getLinkRadius();
+        if (!(radius * radius <= 0.000001f)) {
+          mm::Vec3 delta = second.getWorldTransform().unknown00 - first.getWorldTransform().unknown00;
+          if (delta.x * delta.x + delta.y * delta.y + delta.z * delta.z < radius * radius) {
+            GfBdatRsc *bdatRsc = GfBdatRsc::get();
+            if (pair.unknown12 == -1) {
+              pair.unknown12 = first.getBoneIdx(bdatRsc->getRscEnSearchBaseBone(first.getEnRscId()));
+            }
+            if (pair.unknown14 == -1) {
+              pair.unknown14 = second.getBoneIdx(bdatRsc->getRscEnSearchBaseBone(second.getEnRscId()));
+            }
+            fw::Transform firstBone;
+            fw::Transform secondBone;
+            if (first.getBoneTransform(firstBone, pair.unknown12) && second.getBoneTransform(secondBone, pair.unknown14)) {
+              fw::TColiCheckResult<256> result;
+              fw::ColiCheckConfig config;
+              config.unknown04 = 0xffffffff;
+              config.unknown10 = 1;
+              config.unknown08 = 0.0f;
+              config.unknown0c = 0.0f;
+              config.unknown14 = false;
+              config.unknown15 = false;
+              config.unknown00 = 9;
+              pair.unknown10 = !fw::ColiCheck::testLine(result, firstBone.unknown00, secondBone.unknown00, config);
+            }
+          }
+          if (!wasLinked && pair.unknown10) {
+            GF_OBJ_HANDLE *handle = first.isBattle() ? pair.unknown08 : pair.unknown00;
+            mm::mtl::FixedList<GF_OBJ_HANDLE *, 256>::iterator found = mm::mtl::find(unknown1890.begin(), unknown1890.end(), handle);
+            // The game compares the end iterator on the left of the test (0x7100325e00: cmp x23, x8), as removeGameObj and addOutObj do; the other order gives cmp x8, x23.
+            if (unknown1890.end() == found) {
+              unknown1890.push_back(handle);
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 bool GfGameObjEnemy::empty() const { return unknown08.empty(); }

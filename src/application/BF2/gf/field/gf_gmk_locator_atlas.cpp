@@ -163,3 +163,5 @@ void GfGmkLocatorAtlas::seqWaitToCreateCurMapGmkSet(f32) {
 template void mm::mtl::Vector<gf::GfGmkLocatorAtlas::BdatInfo>::expand(size_t, size_t);
 template void mm::mtl::Vector<gf::GfGmkLocatorAtlas::BdatInfo>::extend(size_t, size_t);
 template void mm::mtl::Vector<gf::GfGmkLocatorAtlas::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gf::GfGmkLocators>::push_back(const gf::GfGmkLocators &);
+template void mm::mtl::Vector<gf::GfGmkLocators>::expand(size_t, size_t);

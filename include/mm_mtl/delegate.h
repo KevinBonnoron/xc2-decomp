@@ -52,7 +52,11 @@ public:
 
   void *m_object;
   Invoker m_invoker;
-  u8 m_function[0x10];
+  // 16 bytes holding a member function pointer (pointer and adjustment) or a plain function pointer. The game reads them as 64-bit words only, never as bytes:
+  // DelegateIFbRKN2gf12DataParamAccEEE::memberFuncInvoker<GfMenuCharDataAdapter> (0x71003a0604) loads both with `ldp x2, x9, [x0, #0x10]` and staticFuncInvoker
+  // (0x7100160208, DelegateIFbRKN3skt12CommandParamEEE) one with `ldr x2, [x0, #0x10]`. The type also decides the non-virtual thunk of GfMenuCharDataAdapter::changeCharData
+  // (0x710039fb0c, this - 0x30): with u8[16] clang keeps the unadjusted `this` in a second register and the thunk has 30 instructions, not 25.
+  u64 m_function[2];
 };
 
 } // namespace mtl

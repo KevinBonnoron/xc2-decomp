@@ -23,6 +23,7 @@
 #include "types.h"
 #include "ui/ctrl/ui_ctrl_cursor_select.h"
 #include "ui/event/ui_event_data.h"
+#include "ui/input/ui_input_pointer.h"
 #include "ui/list/ui_select_obj_list.h"
 #include "ui/ui_object_acc.h"
 #include "ui/ui_util.h"
@@ -220,6 +221,37 @@ void GfMenuObjBladeBook::getScreenOverSize(u32 handle, f32 scale, s16 &width, s1
   if (height < 0) {
     height = 0;
   }
+}
+
+void GfMenuObjBladeBook::setPreviewScale(u32 step) {
+  ui::UIObjectAcc image(unknown18, "IMG_prev_bl_img");
+  f32 scale = step >= 4 ? 2.0f : unknown2f0.x + (2.0f - unknown2f0.x) / 5.0f * step;
+  // The game destroys `preview` (0x71003f39e8) before the store of the scale (0x71003f39f0) and the destruction of `image` (0x71003f39f4); without the block
+  // the store comes before both destructors.
+  {
+    ui::UIObjectAcc preview(unknown18, "LAY_preview");
+    mm::Rect<s16> rect;
+    getScreenOverSize(image.unknown10, scale, rect.width, rect.height);
+    rect.x = unknown2e8.x - rect.width / 2;
+    rect.y = unknown2e8.y - rect.height / 2;
+    ui::UIInputPointer::SelectionSetup setup;
+    setup.unknown10 = nullptr;
+    setup.unknown08 = 0;
+    setup.unknown00 = rect;
+    f32 ratio = static_cast<f32>(rect.height) / static_cast<f32>(unknown300.height);
+    f32 offsetX = unknown2e0.x * ratio;
+    unknown2e0.x = static_cast<s16>(offsetX + (offsetX > 0.0f ? 0.5f : -0.5f));
+    f32 offsetY = ratio * unknown2e0.y;
+    unknown2e0.y = static_cast<s16>(offsetY + (offsetY > 0.0f ? 0.5f : -0.5f));
+    if (step == 0) {
+      unknown2e0.y = -(rect.height / 2);
+    }
+    mm::Pnt<s16> pos(rect.width / 2 + rect.x - unknown2e0.x, unknown2e8.y - unknown2e0.y);
+    GfMenuObject::setupPointerSelection(preview.unknown10, setup);
+    GfMenuObject::changePointerPos(preview.unknown10, pos);
+    unknown300 = rect;
+  }
+  unknown308 = scale;
 }
 
 void GfMenuObjBladeBook::playVoice(const char *name) {

@@ -23,7 +23,7 @@ void DrResMdoSeamWrkPosMpf::setupMpfBasePos(const u8 *data) {
   unknown20 = nullptr;
   unknown28 = 0;
   unknown00 = data + header->unknown0c;
-  unknown08 = data + header->unknown14;
+  unknown08 = reinterpret_cast<const MdsMpfObjTreeData *>(data + header->unknown14);
   unknown18 = header->unknown18;
 }
 

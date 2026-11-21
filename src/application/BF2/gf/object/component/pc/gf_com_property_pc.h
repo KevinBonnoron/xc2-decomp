@@ -34,6 +34,7 @@ struct MsgPcFieldWarpCancel;
 
 namespace pc {
 struct MoveParam;
+struct SensorAIParam;
 struct SlideParam;
 struct WarpParam;
 
@@ -118,6 +119,13 @@ public:
   const pc::WarpParam *unknown006() const {
     const fw::ParamList *paramList = unknown300.operator->();
     return paramList->unknown0c > 2 ? static_cast<const pc::WarpParam *>(paramList->unknown10[2].param) : nullptr;
+  }
+
+  // Inferred role: sensor ai param of the pc param list entry 3 ("sensor_ai"), null when the list is shorter; original name unknown.
+  // Evidence: gf::pc::TaskFieldSensor::update (1.0.0: 0x7100544988) tests the count (4) before the read at +0x38.
+  const pc::SensorAIParam *unknown010() const {
+    const fw::ParamList *paramList = unknown300.operator->();
+    return paramList->unknown0c > 3 ? static_cast<const pc::SensorAIParam *>(paramList->unknown10[3].param) : nullptr;
   }
 
   // Inferred role: moving, from the velocity or the value at 0xc0 (shared by gf::pc::isMainPcMove and isBuddyPcMove); original

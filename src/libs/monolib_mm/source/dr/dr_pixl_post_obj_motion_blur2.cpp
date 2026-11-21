@@ -18,6 +18,7 @@
 #include "dr/dr_shd_man.h"
 #include "grlib/cglib_ctl_shader.h"
 #include "grlib/cglib_ctl_vertex.h"
+#include "grlib/cglib_etc_uniform_block.h"
 #include "grlib/cglib_render_target.h"
 #include "grlib/cglib_shader.h"
 #include "grlib/cglib_uni_base_utility.h"
@@ -363,6 +364,124 @@ void DrPixlPostObjMotionBlur2::renderCalcBlur() {
   grlib::CGLibCtlVertex::setVertex(*unknown50[unknown60]);
   grlib::CGLibCtlVertex::renderVertex(GRL_PRIMITIVE_POINTS, unknown50[unknown60]->unknown08);
   unknown20->setColorInvalidate();
+}
+
+// 0x71008bdabc. The test is written as an early return of `<= 0.0f`: the game skips the body only for an ordered `<=` (b.ls), `0.0f < x` gives b.le.
+// setMoveMem is called through the base class like DrPixlPostObj3dLut::render_updateLUT: the call through the utility gives 145 instructions
+// against the game's 147.
+void DrPixlPostObjMotionBlur2::calcVelocityBlur() {
+  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  if (postParm->unknown208 <= 0.0f) {
+    return;
+  }
+  DrAPCache *apCache = unknown00->unknown5c0;
+  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrShdDataObj *shader = shdList->getPostShdObj(0x1c);
+  grlib::CGLibUniformEtcUtility uniform(shader);
+  uniform.setUseUniformBlock("U_POST");
+  shdList->unknown002(shader);
+  int location = (shader->unknown38 + shader->unknown58)->getTextureLocation("s0");
+  u32 ofsOffset = uniform.unknown001("ofs[0]");
+  f32 width = static_cast<f32>(unknown30->unknownbc) * postParm->unknown208;
+  f32 height = postParm->unknown208 * static_cast<f32>(unknown30->unknownc0);
+  apCache->beginTexSampling(2, 1);
+  grlib::CGLibCtlShader::setMemoryBarrierBit(2);
+  unknown30->setRenderTarget();
+  apCache->setTexture(*unknown28->unknown70, location);
+  f32 offsets[20];
+  DrPixlPostObj::getSampleOffsets_GaussBlur_Horizontally(width, height, 2, offsets, 1.0f, 1.0f);
+  uniform.setF32SetF32Array(ofsOffset, offsets, 20);
+  uniform.updateData();
+  uniform.setUniformBlock();
+  shdList->renderQuads();
+  uniform.unknown20.Rebuilding();
+  static_cast<grlib::CGLibUniBaseUtility &>(uniform).setMoveMem();
+  unknown30->setColorInvalidate();
+  grlib::CGLibCtlShader::setMemoryBarrierBit(2);
+  unknown28->setRenderTarget();
+  apCache->setTexture(*unknown30->unknown70, location);
+  DrPixlPostObj::getSampleOffsets_GaussBlur_Verticaly(width, height, 2, offsets, 1.0f, 1.0f);
+  uniform.setF32SetF32Array(ofsOffset, offsets, 20);
+  uniform.updateData();
+  uniform.setUniformBlock();
+  shdList->renderQuads();
+  unknown28->setColorInvalidate();
+}
+
+// 0x71008bdd08. The game never writes the z and w of the five 4-float taps of `ofs` (stores at sp+0x0/0x4, 0x10/0x14... of each pass, 0x71008bde94 to 0x71008bdecc and
+// 0x71008bdf5c to 0x71008bdfb0) nor the z and w of `size` (only sp+0x50 and sp+0x54, 0x71008bde3c and 0x71008bde58): it passes both buffers on, and setF32SetF32Array
+// (20 floats) and setVec4SetVec4 (four floats, 0x71007a40f8 to 0x71007a4118) read them, so the uninitialised read is the game's own and they stay uninitialised here.
+// The height of the second pass is read inside the loop: a local for it moves three of the zero stores.
+void DrPixlPostObjMotionBlur2::calcMaxVelocityPerTile() {
+  DrAPCache *apCache = unknown00->unknown5c0;
+  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrShdDataObj *shader = shdList->getPostShdObj(0x40);
+  shdList->unknown002(shader);
+  DrAPGxType::setupBlend(0);
+  grlib::CGLibUniformEtcUtility uniform(shader);
+  uniform.setUseUniformBlock("U_POST");
+  int location = (shader->unknown38 + shader->unknown58)->getTextureLocation("s0");
+  u32 sizeOffset = uniform.unknown001("size");
+  u32 ofsOffset = uniform.unknown001("ofs[0]");
+  apCache->beginTexSampling(2, 1);
+  unknown40->setRenderTarget();
+  apCache->setTexture(*unknown28->unknown70, location);
+  mm::Vec4 size;
+  size.x = 1.0f / static_cast<f32>(unknown40->unknownbc);
+  size.y = 1.0f / static_cast<f32>(unknown40->unknownc0);
+  uniform.setVec4SetVec4(sizeOffset, size);
+  f32 ofs[20];
+  f32 width = static_cast<f32>(unknown28->unknownbc);
+  for (int i = 0; i < 5; i++) {
+    ofs[i * 4] = static_cast<f32>(i) / width;
+    ofs[i * 4 + 1] = 0.0f;
+  }
+  uniform.setF32SetF32Array(ofsOffset, ofs, 20);
+  uniform.updateData();
+  uniform.setUniformBlock();
+  shdList->renderQuads();
+  uniform.unknown20.Rebuilding();
+  static_cast<grlib::CGLibUniBaseUtility &>(uniform).setMoveMem();
+  unknown40->setColorInvalidate();
+  unknown38->setRenderTarget();
+  apCache->setTexture(*unknown30->unknown70, location);
+  size.x = 1.0f / static_cast<f32>(unknown38->unknownbc);
+  size.y = 1.0f / static_cast<f32>(unknown38->unknownc0);
+  uniform.setVec4SetVec4(sizeOffset, size);
+  for (int i = 0; i < 5; i++) {
+    ofs[i * 4] = 0.0f;
+    ofs[i * 4 + 1] = static_cast<f32>(i) / static_cast<f32>(unknown40->unknownc0);
+  }
+  uniform.setF32SetF32Array(ofsOffset, ofs, 20);
+  uniform.updateData();
+  uniform.setUniformBlock();
+  shdList->renderQuads();
+  unknown38->setColorInvalidate();
+}
+
+// 0x71008be01c. The game writes only the x and y of the Vec4 it passes (stores at sp and sp+4, 0x71008be118 and 0x71008be134): setVec4SetVec4 copies all four floats
+// (0x71007a40f8 to 0x71007a4118), so the read of z and w is the game's own and they stay uninitialised here.
+void DrPixlPostObjMotionBlur2::calcBlurMask() {
+  DrAPCache *apCache = unknown00->unknown5c0;
+  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrShdDataObj *shader = shdList->getPostShdObj(0x49);
+  shdList->unknown002(shader);
+  DrAPGxType::setupBlend(0);
+  grlib::CGLibUniformEtcUtility uniform(shader);
+  uniform.setUseUniformBlock("U_POST");
+  int location = (shader->unknown38 + shader->unknown58)->getTextureLocation("s0");
+  u32 vOfs = uniform.unknown001("vOfs");
+  apCache->beginTexSampling(2, 1);
+  unknown48->setRenderTarget();
+  apCache->setTexture(*unknown38->unknown70, location);
+  mm::Vec4 offset;
+  offset.x = 0.5f / static_cast<f32>(unknown48->unknownbc);
+  offset.y = 0.5f / static_cast<f32>(unknown48->unknownc0);
+  uniform.setVec4SetVec4(vOfs, offset);
+  uniform.updateData();
+  uniform.setUniformBlock();
+  shdList->renderQuads();
+  unknown48->setColorInvalidate();
 }
 
 } // namespace ml

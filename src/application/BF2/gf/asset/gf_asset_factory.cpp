@@ -36,6 +36,21 @@ template <typename SETUP, typename PARAM> GF_ASSET_HANDLE *unknown002(const PARA
 
 } // namespace
 
+GF_ASSET_HANDLE *GfAssetFactory::createAssetPackDriver(const GfInitParamDriver &param) {
+  if (param.isEvent()) {
+    return createAssetPackDriverForEvent(param);
+  }
+  // The game tests the types 9 and 13 as one condition, (type | 4) == 13 (0x71001b0470, `orr w9, w8, #4; cmp w9, #13`), after the event test. Written `type == 9 || type == 13`, or as a switch,
+  // clang gives 112 instructions with the event block in another position (first difference at +0x38).
+  if ((param.unknown08 | 4) == unknown030_13) {
+    return createAssetPackDriverForSalvage(param);
+  }
+  if (param.unknown002() && param.unknown08 != unknown030_7) {
+    return createAssetPackDriverForUi(param);
+  }
+  return unknown001<GfAssetSetupDriver>(GfAssetManager::createAssetHandle(param), param);
+}
+
 GF_ASSET_HANDLE *GfAssetFactory::createAssetPackDriverForEvent(const GfInitParamDriver &param) { return unknown002<GfAssetSetupEventDriver>(param); }
 
 GF_ASSET_HANDLE *GfAssetFactory::createAssetPackDriverForSalvage(const GfInitParamDriver &param) { return unknown002<GfAssetSetupSalvage>(param); }

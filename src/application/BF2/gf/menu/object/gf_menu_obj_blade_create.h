@@ -42,14 +42,6 @@ public:
     u32 unknown00; // Inferred role: event; original member name unknown.
   };
 
-  // Inferred role: entry of the idea list; original type name unknown.
-  struct unknown005 {
-    u8 _00[0x04 - 0x00];
-    int unknown04; // Inferred role: idea bdat id; original member name unknown.
-    s16 unknown08; // Inferred role: idea level; original member name unknown.
-    u8 _0a[0x10 - 0x0a];
-  };
-
   struct PageContext {
     u32 unknown00; // Inferred role: current page; original member name unknown.
     int unknown04; // Inferred role: previous page; original member name unknown.
@@ -59,12 +51,39 @@ public:
     u8 _2d[0x30 - 0x2d];
     mm::mtl::ReferenceObject *unknown30; // Inferred role: reference-counted object; type and original member name unknown.
     // Evidence for the type: ConfirmListener::reciveEvent (0x71003fab6c) resets it, opens a common window on it and compares its id (+0x0c).
-    GfMenuCallContext *unknown38;          // Inferred role: call context of the confirmation window; original member name unknown.
-    ui::UIListInfo<u32> *unknown40;        // Inferred role: driver list; original member name unknown.
-    GfMenuItemList *unknown48;             // Inferred role: crystal list; original member name unknown.
-    ui::UIListInfo<unknown005> *unknown50; // Inferred role: idea list; original member name unknown.
+    GfMenuCallContext *unknown38;   // Inferred role: call context of the confirmation window; original member name unknown.
+    ui::UIListInfo<u32> *unknown40; // Inferred role: driver list; original member name unknown.
+    GfMenuItemList *unknown48;      // Inferred role: crystal list; original member name unknown.
+    GfMenuItemList *unknown50;      // Inferred role: idea list; original member name unknown.
     u8 _58[0xac8 - 0x58];
     GfMenuModelView *unknownac8; // Inferred role: model view; original member name unknown.
+  };
+
+  class DriverSelectListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjBladeCreate *unknown20; // Inferred role: owner; original member name unknown.
+    PageContext *unknown28;          // Inferred role: page state of the owner; original member name unknown.
+  };
+
+  class CrystalSelectListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjBladeCreate *unknown20; // Inferred role: owner; original member name unknown.
+    PageContext *unknown28;          // Inferred role: page state of the owner; original member name unknown.
+  };
+
+  class BoosterSelectListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjBladeCreate *unknown20; // Inferred role: owner; original member name unknown.
+    PageContext *unknown28;          // Inferred role: page state of the owner; original member name unknown.
   };
 
   class ResultListener : public ui::UIObjectListener {
@@ -163,7 +182,10 @@ public:
   int unknown1148;                          // Inferred role: creation effect step; original member name unknown.
   int unknown114c;                          // Inferred role: vibration timer; original member name unknown.
   ui::UISelectObjList *unknown1150;         // Inferred role: crystal select object list; original member name unknown.
-  u8 _1158[0x1174 - 0x1158];
+  u8 _1158[0x1160 - 0x1158];
+  ui::UISelectObjList *unknown1160; // Inferred role: booster select object list; original member name unknown.
+  u8 _1168[0x1170 - 0x1168];
+  int unknown1170;    // Inferred role: idea level of the booster select page (reset with unknown1174); original member name unknown.
   int unknown1174[4]; // Inferred role: idea levels added by the result; original member name unknown.
   u8 _1184[0x1188 - 0x1184];
   mm::mtl::IntrusivePtr<GfMenuReferenceNumber> unknown1188; // Inferred role: idea level reference number; original member name unknown.
@@ -183,7 +205,6 @@ public:
 };
 
 static_assert(offsetof(GfMenuObjBladeCreate::PageContext, unknown04) == 0x04, "");
-static_assert(sizeof(GfMenuObjBladeCreate::unknown005) == 0x10, "");
 static_assert(offsetof(GfMenuObjBladeCreate::PageContext, unknown50) == 0x50, "");
 static_assert(offsetof(GfMenuObjBladeCreate, unknown1174) == 0x1174, "");
 static_assert(offsetof(GfMenuObjBladeCreate, unknown1188) == 0x1188, "");
@@ -209,10 +230,11 @@ static_assert(offsetof(GfMenuObjBladeCreate, unknown1128) == 0x1128, "");
 static_assert(offsetof(GfMenuObjBladeCreate, unknown1144) == 0x1144, "");
 static_assert(offsetof(GfMenuObjBladeCreate, unknown114c) == 0x114c, "");
 static_assert(offsetof(GfMenuObjBladeCreate, unknown1150) == 0x1150, "");
+static_assert(offsetof(GfMenuObjBladeCreate, unknown1160) == 0x1160, "");
+static_assert(offsetof(GfMenuObjBladeCreate, unknown1170) == 0x1170, "");
 static_assert(offsetof(GfMenuObjBladeCreate, unknown11c0) == 0x11c0, "");
 static_assert(offsetof(GfMenuObjBladeCreate, unknown11c4) == 0x11c4, "");
 static_assert(sizeof(GfMenuObjBladeCreate) == 0x11d0, "");
-static_assert(offsetof(GfMenuObjBladeCreate::unknown005, unknown08) == 0x08, "");
 static_assert(offsetof(GfMenuObjBladeCreate::ResultListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjBladeCreate::ResultListener, unknown28) == 0x28, "");
 static_assert(sizeof(GfMenuObjBladeCreate::ResultListener) == 0x30, "");

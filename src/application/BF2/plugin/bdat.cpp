@@ -101,6 +101,22 @@ u8 *unknown006(u8 *bin, u32 index) { return bin + *reinterpret_cast<u32 *>(bin +
 
 void *m_pBin[BDAT_FILE_MAX];
 
+// Inferred type: object of the function static of getInstance (0x71006b4518; object 0x71014ae9d0, guard 0x71014ae9d8). The game takes the guard with
+// ldarb, calls __cxa_guard_acquire and __cxa_guard_release, and never touches the object: no store, no member access, and no caller of getInstance
+// reads it (no bl or b to it in the executable), so its real type and constructor are unknown (original name unknown). The only evidence is the
+// guard, which needs a constructor that clang cannot fold into constant data. Forms tried: a plain `static bool` (no guard: 3 instructions), a
+// defaulted constructor (constant data: 3), a bool initialised from a runtime value (24 instructions, a store the game does not have); an empty
+// user constructor gives the game's 17 instructions (a type with one pointer member and the same constructor also matches, but no access shows a
+// member).
+struct unknown007 {
+  unknown007() {}
+};
+
+unknown007 *getInstance() {
+  static unknown007 instance;
+  return &instance;
+}
+
 void init() {
   for (int i = 0; i < BDAT_FILE_MAX; i++) {
     m_pBin[i] = nullptr;
@@ -434,6 +450,43 @@ int getFlagVal(unsigned char *bdat, const char *name, int id, const char *flag) 
 }
 
 void errFlag(unsigned char *bdat, const char *name, const char *flag) {}
+
+int getFlagVal(unsigned char *pBdat, unsigned char *pVarName, int id, unsigned char *pFlagName) {
+#line 376
+  assert(pBdat != 0L);
+#line 377
+  assert(pVarName != 0L);
+#line 378
+  assert(pFlagName != 0L);
+  if (!calcId(pBdat, &id)) {
+    return 0;
+  }
+  unknown004 *flag = reinterpret_cast<unknown004 *>(pBdat + reinterpret_cast<unknown003 *>(pFlagName)->unknown00);
+  if (flag->unknown00 != 3) {
+    return 0;
+  }
+  if (flag->unknown06 != static_cast<u16>(pVarName - pBdat)) {
+    return 0;
+  }
+  unknown004 *parent = reinterpret_cast<unknown004 *>(pBdat + reinterpret_cast<unknown003 *>(pBdat + flag->unknown06)->unknown00);
+  // The game keeps one inlined copy of getVar per mask of the parent type (0x71006b582c, 171 instructions). An if/else chain on the type merges two of
+  // the copies (137 instructions); a switch with the case 1 written before the case 2 keeps the three and the game's order of tests.
+  u32 value;
+  switch (parent->unknown01) {
+  case 1:
+    value = getVar(pBdat, pVarName, id).valueU32 & 0xff;
+    break;
+  case 2:
+    value = getVar(pBdat, pVarName, id).valueU32 & 0xffff;
+    break;
+  default:
+    value = getVar(pBdat, pVarName, id).valueU32;
+    break;
+  }
+  // The mask is read as one unaligned 32-bit word at 0x02 (`ldur w10, [x8, #2]` at 0x71006b59e4), like getShiftMask (decision 38 of 2026-11-14,
+  // blob read); `unknown02 | (unknown04 << 16)` gives two 16-bit loads (173 instructions).
+  return (*reinterpret_cast<u32 *>(&flag->unknown02) & value) >> flag->unknown01;
+}
 
 void errFlagParent(unsigned char *bdat, const char *name, const char *flag) {}
 

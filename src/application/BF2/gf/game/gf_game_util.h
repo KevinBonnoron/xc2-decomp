@@ -163,6 +163,7 @@ public:
   static bool isGameObjWait(GF_OBJ_HANDLE *handle);
   static bool isPlayVoice(GF_OBJ_HANDLE *handle);
   static void levelupForEnemy(GF_OBJ_HANDLE *handle, u32 addLevel);
+  static void setTransformPreEnemy(GF_OBJ_HANDLE *handle, const mm::Vec3 &position, const mm::Vec3 &rotation);
   static bool isDispWorldMap(u32 map);
   static u32 getBladeOnBookedItem(u32 blade);
   static bool execActivateUnuseForBlade(u32 blade, bool isRelease);

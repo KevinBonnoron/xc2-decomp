@@ -1,15 +1,32 @@
 #include "dr/dr_pixl_shadow_raytrace.h"
 
+#include <math.h>
+
+#include "dr/dr_ap_cache.h"
+#include "dr/dr_calc_man.h"
+#include "dr/dr_calc_view_work.h"
 #include "dr/dr_man.h"
+#include "dr/dr_pixl_man.h"
+#include "dr/dr_pixl_post_man.h"
 #include "dr/dr_pixl_post_parm.h"
 #include "dr/dr_pixl_render_target.h"
+#include "dr/dr_shd_data_list.h"
+#include "dr/dr_shd_data_obj.h"
+#include "dr/dr_shd_man.h"
+#include "grlib/cglib_color_ctl.h"
 #include "grlib/cglib_ctl_shader.h"
 #include "grlib/cglib_render_target.h"
+#include "grlib/cglib_shader.h"
+#include "grlib/cglib_uni_base_utility.h"
 #include "mm_math/mm_col4.h"
+#include "mm_math/mm_vec4.h"
 #include "mm_mtl/fixed_array.h"
 #include "mtl/alloc_handle.h"
 
 namespace ml {
+// Inferred role: first call flag of temporalFiltering, its only user (0x71008c6420): EXEC_CLEAR is declared 1 until it is set, 2 after;
+// file static at 0x7101bd7464, no game symbol; original name unknown.
+static bool unknown001;
 
 DrPixlShadowRaytrace::DrPixlShadowRaytrace(DrMan *man) : unknown00(man), unknown10(true) {
   unknown18 = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
@@ -63,6 +80,95 @@ void DrPixlShadowRaytrace::blurPass() {
   blurPassSub(BLUR_AXIS_UNKNOWN_1, unknown18, unknown30);
   grlib::CGLibCtlShader::setMemoryBarrierBit(2);
   blurPassSub(BLUR_AXIS_UNKNOWN_2, unknown30, unknown38);
+}
+
+void DrPixlShadowRaytrace::temporalFiltering() {
+  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  DrPixlRenderTarget *target = unknown20[DrMan::s_nDblIdx];
+  grlib::CGLibColorCtl::setBlendOffControl(GRL_LOGIC_TYPE_COPY);
+  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrShdDataObj *shader = shdList->getShadowShdObj(5);
+  // Decision 2026-11-13 (ruling 1): the local places the `cinc` before the getDeclarationOfs call, as the game does (the ternary in the argument
+  // gives 314 instructions). The game reloads the flag after the call and stores it only when clear (0x71008c64c4-0x71008c64cc); a plain
+  // `unknown001 = true;` gives 314 instructions.
+  u32 execClear = unknown001 ? 2 : 1;
+  shader->setDeclarationIdx(shader->getDeclarationOfs("EXEC_CLEAR"), execClear);
+  if (!unknown001) {
+    unknown001 = true;
+  }
+  shdList->bindTriangle();
+  shader->setupShader(0u);
+  grlib::CGLibUniformEtcUtility uniform(shader);
+  uniform.setUseUniformBlock("U_POST");
+  u32 fragCoordToUv = uniform.unknown001("gFragCoordToUV");
+  u32 uvToScreen = uniform.unknown001("gUVToScreen");
+  u32 screenToUv = uniform.unknown001("gScreenToUV");
+  u32 screenToViewPos = uniform.unknown001("gScreenToViewPos");
+  u32 invView = uniform.unknown001("gInvView");
+  u32 prevView = uniform.unknown001("gPrevView");
+  u32 proj = uniform.unknown001("gProj");
+  u32 param = uniform.unknown001("gParam");
+  int shadowLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("gTShadow");
+  int depthLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("gTDepth");
+  int prevShadowLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("gTPrevShadow");
+  int prevDepthLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("gTPrevDepth");
+  int velocityLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("gTVelocity");
+  f32 width = static_cast<f32>(target->unknownbc);
+  f32 height = static_cast<f32>(target->unknownc0);
+  // The game loads the view work before the two divisions of fragCoord; declared after the first division the loads and stores of
+  // fragCoord are scheduled differently (first difference at 0x71008c66bc) (ruling 2).
+  DrCalcViewWork *viewWork = unknown00->unknown580->unknown10;
+  mm::Vec4 fragCoord;
+  fragCoord.x = 1.0f / width;
+  fragCoord.y = 1.0f / height;
+  fragCoord.z = 0.0f;
+  fragCoord.w = 0.0f;
+  uniform.setF32SetVec4(fragCoordToUv, &fragCoord.x);
+  f32 uvScreen[4];
+  uvScreen[0] = 2.0f;
+  uvScreen[1] = 2.0f;
+  uvScreen[2] = -1.0f;
+  uvScreen[3] = -1.0f;
+  uniform.setF32SetVec4(uvToScreen, uvScreen);
+  f32 screenUv[4];
+  screenUv[0] = 0.5f;
+  screenUv[1] = 0.5f;
+  screenUv[2] = 0.5f;
+  screenUv[3] = 0.5f;
+  uniform.setF32SetVec4(screenToUv, screenUv);
+  f32 viewPos[4];
+  viewPos[1] = tanf(viewWork->unknown4c4 * 0.5f);
+  viewPos[0] = viewPos[1] * viewWork->unknown4c0;
+  viewPos[2] = 0.0f;
+  viewPos[3] = 0.0f;
+  uniform.setF32SetVec4(screenToViewPos, viewPos);
+  uniform.setMat44SetMat44(invView, viewWork->unknown00);
+  uniform.setMat44SetMat44(prevView, viewWork->unknown280);
+  uniform.setMat44SetMat44(proj, viewWork->unknown380);
+  f32 paramValue[4];
+  paramValue[0] = 0.7388f;
+  paramValue[1] = 0.71f;
+  paramValue[2] = 1.0f / postParm->unknown1010;
+  paramValue[3] = 0.0f;
+  uniform.setF32SetVec4(param, paramValue);
+  DrPixlRenderTarget *shadow = unknown10 ? unknown38 : unknown18;
+  // The game loads the post man chain (`ldr x9, [x8, #120]`) before the cache (`ldr x23, [x8, #1472]`); with the cache declared first
+  // the two loads swap (ruling 2).
+  DrPixlPostMan *postMan = unknown00->unknown78->unknown7f0->unknown180;
+  DrAPCache *apCache = unknown00->unknown5c0;
+  apCache->beginTexSampling(3, 0);
+  apCache->beginBorderWhite();
+  apCache->setTexture(*postMan->getDownDepth()->unknown70, depthLocation);
+  apCache->setTexture(*postMan->getOldDownDepth()->unknown70, prevDepthLocation);
+  apCache->beginTexSampling(2, 0);
+  apCache->setTexture(*shadow->unknown70, shadowLocation);
+  apCache->setTexture(*unknown20[DrMan::s_nDblStockIdx]->unknown70, prevShadowLocation);
+  apCache->setTexture(*unknown00->unknown78->getPixlObj(3)->unknown70, velocityLocation);
+  target->setRenderTarget();
+  uniform.updateData();
+  uniform.setUniformBlock();
+  shdList->renderQuads();
+  target->setColorInvalidate();
 }
 
 grlib::CGLibRenderTarget *DrPixlShadowRaytrace::getTemporalOutputTexture() { return unknown20[DrMan::s_nDblIdx]; }
