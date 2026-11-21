@@ -41,8 +41,9 @@ bool SphereBoxAgent::processCollision(const WindObject &wind0, const WindObject 
   if (local.z < -limitZ || local.z > limitZ) {
     return false;
   }
-  // Repeats the tail of SphereSphereAgent::processCollision (game address 0x710098afc4). A shared
-  // helper breaks both functions. Tried by value, by reference, and as a HitCache member.
+  // Repeats the tail of SphereSphereAgent::processCollision. This copy is at 0x710098afc4; the
+  // original, in that function, is at 0x710098b18c. A shared helper breaks both functions. Tried by
+  // value, by reference, and as a HitCache member.
   cache->unknown00 = &wind1;
   cache->unknown08 = sqrtf(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z);
   if (!direction.unknown003()) {
