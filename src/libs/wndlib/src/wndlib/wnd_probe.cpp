@@ -9,9 +9,6 @@ namespace wnd {
 struct UpdateInfo;
 } // namespace wnd
 
-template void mm::mtl::Vector<wnd::LocalWindHitCache>::push_back(const wnd::LocalWindHitCache &);
-template void mm::mtl::Vector<wnd::LocalWindHitCache>::expand(size_t, size_t);
-
 namespace wnd {
 
 WindProbe::WindProbe(const ProbeCreateInfo &info, u32 seed, mm::mtl::IAllocator *allocator)
