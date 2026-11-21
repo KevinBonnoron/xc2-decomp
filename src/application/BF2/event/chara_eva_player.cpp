@@ -8,7 +8,9 @@
 #include "event/chara_util.h"
 #include "event/tar_axis.h"
 #include "gf/event/gf_evt_model.h"
+#include "gf/object/component/effect/gf_com_effect_caster.h"
 #include "gf/object/component/gf_com_transform.h"
+#include "gf/object/component/property/gf_com_property.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_util.h"
@@ -314,6 +316,31 @@ void CharaEvaPlayer::setBattleWeapon(int type) {
     unknowne0.execCmd(unknown18, cmd, true, nullptr);
   }
   unknown84 = type;
+}
+
+// The two arms send the same message with the other foot: the game keeps a branch on isRight (tbz at 0x71000cb104) with the stores of the message in each arm and
+// one shared send. A ternary of two messages gives a select and one 64-bit store of the id and mask (56 instructions), so each arm builds and sends its own.
+void CharaEvaPlayer::playFoot(bool isRight) {
+  if (unknown18 == nullptr) {
+    return;
+  }
+  gf::GfObj *obj = gf::GfObjUtil::getObj(unknown18->unknown20);
+  if (obj == nullptr) {
+    return;
+  }
+  gf::GfComProperty *property = obj->getComponent<gf::GfComProperty>();
+  gf::GfComEffectCaster *caster = obj->getComponent<gf::GfComEffectCaster>();
+  if (property != nullptr && caster != nullptr) {
+    if (isRight) {
+      gf::MsgFxFootPrintEv message(0);
+      gf::GfObj *sender = static_cast<gf::GfObj *>(property->unknown08);
+      caster->recieveMessage(sender, message);
+    } else {
+      gf::MsgFxFootPrintEv message(1);
+      gf::GfObj *sender = static_cast<gf::GfObj *>(property->unknown08);
+      caster->recieveMessage(sender, message);
+    }
+  }
 }
 
 void CharaEvaPlayer::setMountWeapon(int type) {

@@ -14,6 +14,7 @@ class DrMdoCtlSeamLight : public DrMdoCtlSeamEnvMap {
 public:
   DrMdoCtlSeamLight(int viewNum);
   void releaseLight();
+  void initLightParts(DrResMdoSeamWrkLight *light);
   DrResMdoSeamWrkLight *createFreeSeamLight();
   void releaseFreeSeamLight(DrResMdoSeamWrkLight *light);
   bool readInstModelCheck(const mm::Vec3 &position, const f32 *max, const f32 *min);

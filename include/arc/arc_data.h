@@ -1,4 +1,5 @@
 #pragma once
+#include "mm_mtl/type_traits.h"
 #include "types.h"
 
 #include <stddef.h>
@@ -63,3 +64,14 @@ static_assert(sizeof(CArcData::unknown002) == 0x40, "");
 static_assert(sizeof(CArcData) == 0x10, "");
 
 } // namespace arc
+
+namespace mm {
+namespace mtl {
+
+// The game copies the elements of Vector<CArcData> with one memcpy (Vector<CArcData>::extend, see copy_construct_n) although the destructor is user-provided.
+template <> struct is_pod<arc::CArcData> {
+  static const bool unknown001 = true; // Inferred role: whether the type is plain old data, so it is copied with memcpy; original name unknown.
+};
+
+} // namespace mtl
+} // namespace mm

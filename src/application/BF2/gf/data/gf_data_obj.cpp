@@ -997,7 +997,7 @@ const char *DataObjBlade::getMotionResourceName() const { return get(false)->unk
 
 const char *DataObjBlade::getEffectResourceName() const { return get(false)->unknown7ac; }
 
-const char *DataObjBlade::getSeResourceName() const { return get(false)->unknown7fc; }
+const char *DataObjBlade::getSeResourceName() const { return get(false)->unknown7fc.c_str(); }
 
 const char *DataObjBlade::getName() const { return GfDataBlade::getName(getBdatId(), 0); }
 
@@ -1081,13 +1081,13 @@ u32 DataObjBlade::getBladeArtsN(bool, u32 index) const { return GfDataBlade::get
 
 u32 DataObjBlade::getBladeArtsNH(bool, u32 index) const { return GfDataBlade::getNArts(getBdatId(), index)->unknown02; }
 
-u32 DataObjBlade::getBladeArtsEx(bool isVirtual) const { return get(isVirtual)->unknown84; }
+u32 DataObjBlade::getBladeArtsEx(bool isVirtual) const { return get(isVirtual)->unknown84.unknown00; }
 
-u32 DataObjBlade::getBladeArtsExH(bool isVirtual) const { return get(isVirtual)->unknown86; }
+u32 DataObjBlade::getBladeArtsExH(bool isVirtual) const { return get(isVirtual)->unknown84.unknown02; }
 
-u32 DataObjBlade::getBladeArtsEx2(bool isVirtual) const { return get(isVirtual)->unknown90; }
+u32 DataObjBlade::getBladeArtsEx2(bool isVirtual) const { return get(isVirtual)->unknown90.unknown00; }
 
-u32 DataObjBlade::getBladeArtsEx2H(bool isVirtual) const { return get(isVirtual)->unknown92; }
+u32 DataObjBlade::getBladeArtsEx2H(bool isVirtual) const { return get(isVirtual)->unknown90.unknown02; }
 
 u32 DataObjBlade::getBladeSkill(bool isVirtual, u32 index) const { return get(isVirtual)->unknown9c[index].unknown00; }
 
@@ -1753,13 +1753,13 @@ u32 DataObjEnemyBlade::getBladeArtsN(bool, u32 index) const { return unknowne0->
 
 u32 DataObjEnemyBlade::getBladeArtsNH(bool, u32 index) const { return unknowne0->unknown60[index].unknown02; }
 
-u32 DataObjEnemyBlade::getBladeArtsEx(bool) const { return unknowne0->unknown84; }
+u32 DataObjEnemyBlade::getBladeArtsEx(bool) const { return unknowne0->unknown84.unknown00; }
 
-u32 DataObjEnemyBlade::getBladeArtsExH(bool) const { return unknowne0->unknown86; }
+u32 DataObjEnemyBlade::getBladeArtsExH(bool) const { return unknowne0->unknown84.unknown02; }
 
-u32 DataObjEnemyBlade::getBladeArtsEx2(bool) const { return unknowne0->unknown90; }
+u32 DataObjEnemyBlade::getBladeArtsEx2(bool) const { return unknowne0->unknown90.unknown00; }
 
-u32 DataObjEnemyBlade::getBladeArtsEx2H(bool) const { return unknowne0->unknown92; }
+u32 DataObjEnemyBlade::getBladeArtsEx2H(bool) const { return unknowne0->unknown90.unknown02; }
 
 u32 DataObjEnemyBlade::getPersonality() const { return unknowne0->unknown824; }
 

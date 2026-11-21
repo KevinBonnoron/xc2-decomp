@@ -36,6 +36,7 @@
 #include "dr/dr_mdo_zsort.h"
 #include "dr/dr_pixl_man.h"
 #include "dr/dr_pixl_mem_man.h"
+#include "dr/dr_pixl_post_man.h"
 #include "dr/dr_pixl_post_parm.h"
 #include "dr/dr_pixl_shadow_obj.h"
 #include "dr/dr_pixl_tile_parm.h"
@@ -43,6 +44,7 @@
 #include "dr/dr_res_etc_uniform_obj.h"
 #include "dr/dr_res_filter_data.h"
 #include "dr/dr_res_occ_uniform_obj.h"
+#include "dr/dr_shd_data_list.h"
 #include "dr/dr_shd_lgt_global_ibl.h"
 #include "dr/dr_shd_lgt_man.h"
 #include "dr/dr_shd_man.h"
@@ -281,6 +283,107 @@ void DrMan::resetModelTexture(u32 index) {
   unknown438[stockIndex] |= 1 << index;
 }
 
+void DrMan::renderView(int view) {
+  unknown1c98 = view;
+  unknown5b8 = &unknown440[view];
+  unknown660[view].unknown560 = view;
+  s32 index = view;
+  if (unknown440[view].unknown38 & 2) {
+    index = 0;
+  }
+  unknown98->unknown100 = index;
+  unknown580 = unknowna0[view];
+  unknown588 = unknownc0[view];
+  unknown590 = unknowne0[view];
+  unknown598 = unknown100[view];
+  unknown5a0 = unknown140[view];
+  unknown78->setupCate(view);
+  unknown88->setupCate(view);
+  unknown80->setupCate(view);
+  renderViewBegin();
+  if (view != 0 && !unknown88->unknown230->unknown0c) {
+    return;
+  }
+  GBuffRender();
+  if (!unknown058()) {
+    unknown78->clearAccumBuffer();
+    if (!unknown1d7d && !unknown1d7e) {
+      if (unknown1dc0 == 1) {
+        unknown1dc0 = 0;
+      }
+      unknown78->fastDeferredRender();
+      unknown78->lastDeferredRender();
+      if (unknown78->unknown7f0->unknown180->unknown108 < 0.05f) {
+        unknown180->begin(DrPixlTileParm::TILE_TYPE_UNKNOWN_4);
+        unknown88->occRender(false);
+        unknown88->DepthCheckRender(false);
+        unknown180->end(DrPixlTileParm::TILE_TYPE_UNKNOWN_4);
+        unknown78->setMainRenderTarget();
+      }
+      if (unknown1dc0 == 2) {
+        unknown1dc0 = 0;
+      }
+    }
+  }
+  if ((!unknown1d7d || unknown1d7e) && !unknown058()) {
+    unknown78->renderSkyDome();
+    unknown5c0->begin();
+    unknown78->alphaRenderTarget();
+    unknown88->lightPrePassRender();
+    bool isRefractionMap = unknown88->unknown230->unknown08;
+    bool isHalfMap;
+    if (unknown78->unknown7f0->unknown180->unknown108 > 0.0f) {
+      isHalfMap = !unknown120[unknown1c98]->getSSRWithTrans();
+    } else {
+      isHalfMap = false;
+    }
+    if (isRefractionMap || isHalfMap) {
+      unknown78->renderRefractionMap(isRefractionMap, isHalfMap);
+    }
+    unknown78->setupGodRay();
+    setSkyGodRayRenderTarget();
+    unknown78->renderSkyGodRay();
+    setAlphaRenderTarget();
+    unknown88->alphaRender();
+    for (int i = 0; i < unknown658; i++) {
+      unknown5d8[i]->alphaRender(&unknown660[unknown1c98]);
+    }
+  }
+  if (!unknown058() && !unknown1d7d) {
+    for (int i = 0; i < unknown658; i++) {
+      unknown5d8[i]->lastRender(&unknown660[unknown1c98]);
+    }
+    bool isRefractionMap = unknown88->unknown230->unknown09;
+    bool isHalfMap;
+    if (unknown78->unknown7f0->unknown180->unknown108 > 0.0f) {
+      isHalfMap = unknown120[unknown1c98]->getSSRWithTrans();
+    } else {
+      isHalfMap = false;
+    }
+    if (isRefractionMap || isHalfMap) {
+      unknown78->renderRefractionMap(isRefractionMap, isHalfMap);
+    }
+    setAlphaRenderTarget();
+    unknown78->setMainViewPort();
+    unknown88->spAlphaRender();
+  }
+  unknown78->lastRender();
+  if (view == 0) {
+    captureRender(false);
+    if (unknown1e00 != nullptr) {
+      unknown1e00->finalRender(&unknown660[unknown1c98]);
+    }
+  }
+  for (int i = 0; i < unknown658; i++) {
+    unknown5d8[i]->finalRender(&unknown660[unknown1c98]);
+  }
+  unknown78->lastCapRender();
+  if (!unknown058() && view == 0) {
+    captureRender(true);
+  }
+  renderViewEnd();
+}
+
 void DrMan::renderEnd(int loop) {
   unknown78->setMainRenderTarget();
   unknown180->end(DrPixlTileParm::TILE_TYPE_UNKNOWN_0);
@@ -289,6 +392,67 @@ void DrMan::renderEnd(int loop) {
 void DrMan::renderViewBegin() {
   unknown5c0->begin();
   unknown78->renderBegin(unknown1c98);
+}
+
+void DrMan::GBuffRender() {
+  if (unknown1d7e) {
+    return;
+  }
+  if (!unknown058()) {
+    unknown78->fastRender();
+    unknown78->setMainViewPort();
+    unknown5c0->begin();
+    unknown78->selectGBuffRenderTarget();
+    unknown88->setupRender();
+    unknown5c0->beginZRender();
+    unknown78->selectZprepassRenderTarget();
+    unknown88->ZPrePassRender();
+    unknown5c0->endZRender();
+    unknown78->thicknessFirstBegin();
+    unknown5c0->beginThicknessRenderFirst();
+    unknown88->ThicknessRenderFirst();
+    unknown5c0->endThicknessRenderFirst();
+    unknown78->thicknessFirstEnd();
+    unknown5c0->beginThicknessRenderSecond();
+    unknown88->ThicknessRenderSecond();
+    unknown5c0->endThicknessRenderSecond();
+    unknown78->selectGBuffRenderTarget();
+    unknown5c0->begin();
+    unknown88->render();
+    if (unknown78->unknown7f0->unknown180->unknown108 >= 0.05f) {
+      bool isDepthDown = unknown78->unknown7f0->unknown180->isDepthDown();
+      unknown78->unknown7f0->unknown180->setDownDepth();
+      unknown78->unknown7f0->unknown180->renderDownDepth(false, false, false);
+      unknown78->renderDownBaseColor();
+      if (isDepthDown) {
+        unknown78->unknown7f0->unknown180->setDownDepth();
+      }
+    }
+    if (unknown78->unknown7f0->unknown180->unknown108 >= 0.05f) {
+      unknown180->begin(DrPixlTileParm::TILE_TYPE_UNKNOWN_4);
+      unknown88->occRender(true);
+      unknown88->DepthCheckRender(true);
+      unknown180->end(DrPixlTileParm::TILE_TYPE_UNKNOWN_4);
+      unknown78->setMainViewPort();
+      unknown78->resetRenderTarget();
+    }
+    if (unknown78->renderRefractionBegin()) {
+      unknown88->refractionRender();
+      unknown78->renderRefractionEnd();
+    }
+    unknown5c0->endRefractionRender();
+    unknown5c0->begin();
+    unknown78->resetRenderTarget();
+    unknown78->selectGBuffRenderTarget();
+    unknown78->refractionGBuffInvalidate();
+    unknown88->GBuffRender();
+    unknown5c0->endGBuffRender();
+    unknown78->endGBuffRenderTarget();
+  }
+  for (int i = 0; i < unknown658; i++) {
+    unknown5d8[i]->opacityRender(&unknown660[unknown1c98]);
+  }
+  unknown5c0->begin();
 }
 
 void DrMan::renderViewEnd() {
@@ -1038,6 +1202,56 @@ void DrMan::setDblNowIdx(int index) {
 void DrMan::bkgHomeMenu(bool isOpen) {
   if (isOpen) {
     unknown1cc0 = true;
+  }
+}
+
+void DrMan::debugUpdate() {
+  int type = 0;
+  while (!unknown1dac[type]) {
+    type++;
+    if (type == 14) {
+      return;
+    }
+  }
+  unknown1dbc++;
+  if (unknown1dbc == 2) {
+    switch (type) {
+    case 0:
+    case 3: {
+      DrShdLgtMan *lgtMan = unknown80->unknown18;
+      DrShdDataList *dataList = unknown80->unknown00;
+      lgtMan->releaseLightShader();
+      dataList->releaseShader();
+      dataList->reloadShader(0);
+      lgtMan->reloadShader(0);
+      break;
+    }
+    case 6:
+      unknown70->reloadToonGradTexture();
+      break;
+    case 7:
+      unknown70->reloadToonRimTexture();
+      break;
+    case 8:
+      unknown70->reloadVolumeTexture();
+      break;
+    case 10:
+      unknown70->reloadIBLEnvTexture();
+      break;
+    case 11:
+      unknown70->reloadMirrorBallModel();
+      break;
+    case 12:
+      unknown70->reloadRainDropTexture();
+      break;
+    case 13:
+      unknown70->reloadFlagWaveTexture();
+      break;
+    }
+  }
+  if (unknown1dbc > 2) {
+    unknown1dac[type] = false;
+    unknown1dbc = 0;
   }
 }
 

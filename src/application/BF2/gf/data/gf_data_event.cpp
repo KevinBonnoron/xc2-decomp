@@ -101,6 +101,38 @@ int GfDataEvent::getEventType(u32 event) {
   return 0;
 }
 
+u32 GfDataEvent::getMapjumpID(u32 event) {
+  if (event == 0) {
+    return 0;
+  }
+
+  u8 *bdat = GfDataBdat::getFP(unknown001(event));
+  if (bdat == nullptr) {
+    return 0;
+  }
+
+  // The game calls getIdTop and getIdCount here and discards both results (bl at 0x71002b128c and 0x71002b1294). It tests the u16 zone with
+  // `and w8, w0, #0xffff; cbz w8` (0x71002b12b4) and zero-extends it again in the loop preheader (`and w23, w21, #0xffff`, 0x71002b12e4): the zero
+  // test keeps the i16 compare (see GfAutoTalk::BdatInfo::create); `zone == 0` extends once, `and w22, w0, #0xffff; cbz w22` (54 instructions).
+  Bdat::getIdTop(bdat);
+  Bdat::getIdCount(bdat);
+  u16 zone = Bdat::getValCheck(bdat, "zoneID", event, 2);
+  if (!zone) {
+    return 0;
+  }
+
+  u8 *mapList = GfDataBdat::getFP(BDAT_SYS_MAP_JUMP_LIST);
+  u32 top = Bdat::getIdTop(mapList);
+  u32 end = top + Bdat::getIdCount(mapList);
+  for (u32 index = top; index < end; index++) {
+    if (static_cast<u8>(Bdat::getValCheck(mapList, "MapList", index, 1)) == zone) {
+      return index;
+    }
+  }
+
+  return 0;
+}
+
 int GfDataEvent::getEventAfterScriptStartID(u32 event) {
   u8 *bdat = GfDataBdat::getFP(unknown001(event));
   if (bdat != nullptr) {

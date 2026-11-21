@@ -34,11 +34,28 @@ public:
     GfMenuObjBalloon *unknown20; // Inferred role: owner; original member name unknown.
   };
 
+  class BoxListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjBalloon *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   class EvSelectListener : public ui::UIObjectListener {
   public:
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u32 unknown0c; // Inferred role: select object handle; original member name unknown.
+    u8 _10[0x1c - 0x10];
+    GfMenuObjBalloon *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class SelMoneyListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    int unknown0c; // Inferred role: row of the cancel item; original member name unknown.
     u8 _10[0x1c - 0x10];
     GfMenuObjBalloon *unknown20; // Inferred role: owner; original member name unknown.
   };
@@ -113,7 +130,7 @@ public:
   ui::UISelectObjList *unknown30;                                               // Inferred role: event select message objects; original member name unknown.
   ui::UISelectObjList *unknown38;                                               // Inferred role: select item objects; original member name unknown.
   ui::UISelectObjList *unknown40;                                               // Inferred role: select money item objects; original member name unknown.
-  mm::mtl::FixedVector<u32, 4> unknown48;                                       // Inferred role: unused; original member name unknown.
+  mm::mtl::FixedVector<u32, 3> unknown48;                                       // Inferred role: moneys of the select money items; original member name unknown.
   mm::mtl::FixedArray<mm::mtl::IntrusivePtr<GfMenuReferenceItem>, 3> unknown60; // Inferred role: select items; original member name unknown.
   GfMenuSequence<GfMenuObjBalloon, 4> unknown78;                                // Inferred role: queued steps; original member name unknown.
   bool unknown1d8;                                                              // Role and original member name unknown, cleared by the constructor.
@@ -145,8 +162,13 @@ static_assert(offsetof(GfMenuObjBalloon::OpenSelectMoneyParam, unknown28) == 0x2
 static_assert(sizeof(GfMenuObjBalloon::OpenSelectMoneyParam) == 0x38, "");
 static_assert(offsetof(GfMenuObjBalloon::AutoTalkListener, unknown20) == 0x20, "");
 static_assert(sizeof(GfMenuObjBalloon::AutoTalkListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjBalloon::BoxListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjBalloon::BoxListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjBalloon::EvSelectListener, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfMenuObjBalloon::EvSelectListener, unknown20) == 0x20, "");
 static_assert(sizeof(GfMenuObjBalloon::EvSelectListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjBalloon::SelMoneyListener, unknown0c) == 0x0c, "");
+static_assert(offsetof(GfMenuObjBalloon::SelMoneyListener, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuObjBalloon::SelMoneyListener) == 0x28, "");
 
 } // namespace gf

@@ -20,10 +20,13 @@ struct _wkMpfObjBuff;
 struct MdsMpfObjData {
   u8 _00[0x06];
   u16 unknown06; // Inferred role: object type; original member name unknown.
-  u8 _08[0x18 - 0x08];
+  u8 _08[0x0c - 0x08];
+  f32 unknown0c; // Inferred role: range added to the radius of a tree node; original member name unknown. Read by DrMdoCtlMpfInst::calcInstMpf (0x71007f9fc4).
+  u8 _10[0x18 - 0x10];
 };
 
 static_assert(offsetof(MdsMpfObjData, unknown06) == 0x06, "");
+static_assert(offsetof(MdsMpfObjData, unknown0c) == 0x0c, "");
 static_assert(sizeof(MdsMpfObjData) == 0x18, "");
 
 // Inferred layout: only the type of the position data (byte 0xf) is read; original member names unknown.

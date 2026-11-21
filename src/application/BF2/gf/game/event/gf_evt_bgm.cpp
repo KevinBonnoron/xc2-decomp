@@ -1,6 +1,9 @@
 #include "gf/game/event/gf_evt_bgm.h"
 
+#include <string.h>
+
 #include "fw/fw_update_info.h"
+#include "gf/field/gf_field_bgm.h"
 #include "gf/game/event/gf_evt_bgm_task.h"
 #include "gf/game/gf_game_scene.h"
 #include "gf/gf_allocator.h"
@@ -8,7 +11,7 @@
 
 namespace gf {
 
-GfEvtBgm::GfEvtBgm(const GfSetupParam &param) : unknown0c(), m_playState(PLAY_STATE_UNKNOWN_0), unknown478(nullptr), unknown480(nullptr), unknown488(nullptr) { initialize(param); }
+GfEvtBgm::GfEvtBgm(const GfSetupParam &param) : unknown0c(), m_playState(PLAY_STATE_UNKNOWN_0), unknown78(), unknown488(nullptr) { initialize(param); }
 
 GfEvtBgm::~GfEvtBgm() { ; }
 
@@ -33,10 +36,87 @@ void GfEvtBgm::setPlayState(PLAY_STATE playState) { m_playState = playState; }
 bool GfEvtBgm::isEnableEventBgm() const { return m_playState >= PLAY_STATE_UNKNOWN_2 && m_playState <= PLAY_STATE_UNKNOWN_4; }
 
 void GfEvtBgm::setFadeoutVolume() {
-  if (m_playState == PLAY_STATE_UNKNOWN_3 && unknown478 == nullptr) {
+  if (m_playState == PLAY_STATE_UNKNOWN_3 && unknown78.empty()) {
     m_playState = PLAY_STATE_UNKNOWN_0;
   }
 }
+
+void GfEvtBgm::clear() {
+  for (EvtBgmTask *task : unknown78) {
+    delete task;
+  }
+  unknown78.clear();
+}
+
+void GfEvtBgm::changeBgmVolume(const EventBgmSetup &setup) { unknown78.push(EvtBgmTaskVolume::create(setup)); }
+
+void GfEvtBgm::build(const GfSetupParam &param) {
+  // __LINE__ must be 64 as in the original file: it is an argument of the allocation.
+#line 64
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfEvtBgm(param);
+}
+
+void GfEvtBgm::stopBgm(const EventBgmSetup &setup) {
+  if (unknown0c.unknown5c == 0.0f) {
+    unknown78.push(EvtBgmTaskDelayStop::create(setup));
+  }
+}
+
+void GfEvtBgm::playBgm(const EventBgmSetup &setup) {
+  if (isPlayBgm() && unknown0c.unknown58 > 0.0f) {
+    unknown78.push(EvtBgmTaskDelayStop::create(unknown0c));
+  }
+  while (!unknown78.empty() && unknown78.back()->isVolumeTask()) {
+    if (unknown78.back() != nullptr) {
+      delete unknown78.back();
+      unknown78.back() = nullptr;
+    }
+    unknown78.pop_back();
+  }
+  unknown78.push(EvtBgmTaskDelay::create(setup));
+}
+
+bool GfEvtBgm::isPlayBgm() const {
+  if (BgmEvent::get()->isPlaying() || m_playState != PLAY_STATE_UNKNOWN_0) {
+    return true;
+  }
+  for (EvtBgmTask *task : unknown78) {
+    if (task->isPlayTask()) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool GfEvtBgm::isPlaySilent() const {
+  if (isPlayBgm()) {
+    return strcmp(unknown0c.unknown00.c_str(), "SilentBgm") == 0;
+  }
+  return false;
+}
+
+void GfEvtBgm::cancelOverTime() {
+  unknown0c.unknown5c = 0.0f;
+  if (BgmEvent::get() != nullptr) {
+    BgmEvent::get()->cancelOverTime();
+  }
+}
+
+f32 GfEvtBgm::getPlayBgmTime() const {
+  if (BgmEvent::get() != nullptr) {
+    return BgmEvent::get()->getPlayTime();
+  }
+  return 0.0f;
+}
+
+f32 GfEvtBgm::getTotalBgmTime() const {
+  if (BgmEvent::get() != nullptr) {
+    return BgmEvent::get()->getTotalTime();
+  }
+  return 0.0f;
+}
+
+void GfEvtBgm::setPlayBgmTakeOver(const char *name) { unknown0c.unknown00 = name; }
 
 void GfEvtBgm::setPlayParam(const EventBgmSetup &setup) {
   unknown0c = setup;

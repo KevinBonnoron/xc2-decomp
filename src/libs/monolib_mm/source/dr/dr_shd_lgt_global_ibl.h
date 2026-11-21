@@ -65,6 +65,10 @@ public:
   void updateUniformBlock(int viewNum);
   void updateUniformBlockImpl(int viewNum);
   void render(DrShdLgtMan *man);
+  void renderGlobalIBL(DrShdLgtMan *man);
+  void renderIndexTable();
+  void renderLinkList(DrShdLgtMan *man);
+  void renderByLinkList(DrShdLgtMan *man);
   void resetColorBuff(int index);
   void delViewInfo(int viewNum);
   bool isEnable() const;

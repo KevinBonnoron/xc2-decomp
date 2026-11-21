@@ -52,6 +52,15 @@ static_assert(offsetof(unknown035, unknown0c) == 0x0c, "");
 static_assert(offsetof(unknown035, unknown10) == 0x10, "");
 static_assert(sizeof(unknown035) == 0x18, "");
 
+// Inferred role: file range entry (offset and size) of the table setupInfo carves from the work area (0x71008b5790 stores the table at 0x68,
+// 0x71008b55cc and 0x71008b55d4 store the size and offset of the first entry); original type name unknown.
+struct unknown770 {
+  u32 unknown00; // Inferred role: offset; original member name unknown.
+  u32 unknown04; // Inferred role: size; original member name unknown.
+};
+
+static_assert(sizeof(unknown770) == 0x08, "");
+
 // The previous and next links (unknown08, unknown10) are the members of the non-polymorphic base unknown199, as in DrCalcTexStmObj: the
 // constructors (0x71008b5290, 0x71008b5948, 0x71008b5a60) store the link at 0x10 before the vptr and pair the link at 0x08 with it.
 class DrCalcStmListObj : public IWorkEvent, public unknown199<DrCalcStmListObj> {
@@ -63,6 +72,7 @@ public:
   };
 
   DrCalcStmListObj(const char *name, const u8 *header, u32 hash);
+  DrCalcStmListObj(u32 size);
   ~DrCalcStmListObj() override;
   void initInfo();
   void release();
@@ -87,6 +97,10 @@ public:
   bool texstm_notfileWait();
   bool texstm_oldVerWait();
   bool texstm_stmchk_setWait();
+  bool texstm_fastReadWait();
+  bool texstm_defMidTexWait();
+  bool texstm_stmchk_topWait();
+  bool texstm_stmchk_topheader();
   bool texstm_stmchk_topLast();
   bool texstm_defErrWait();
   bool texstm_defMidtexErrWait();
@@ -115,14 +129,15 @@ public:
   s8 unknown58;                // Inferred role: height wait count; original member name unknown.
   u8 _59[0x5a - 0x59];
   s16 unknown5a; // Inferred role: tex stream object index kept during the height read; original member name unknown.
-  u8 _5c[0x70 - 0x5c];
-  u16 unknown70; // Inferred role: first read range index; original member name unknown.
-  u16 unknown72; // Inferred role: second read range index; original member name unknown.
-  u16 unknown74; // Inferred role: vertex res index; original member name unknown.
-  u16 unknown76; // Inferred role: shader res index; original member name unknown.
-  u16 unknown78; // Inferred role: low texture res index; original member name unknown.
-  u16 unknown7a; // Inferred role: first texture entry index; original member name unknown.
-  u16 unknown7c; // Inferred role: end texture entry index; original member name unknown.
+  u8 _5c[0x68 - 0x5c];
+  const unknown770 *unknown68; // Inferred role: file ranges, read by texstm_checkTexStm (0x71008b60b0) and texstm_deTexCheck (0x71008b635c); original member name unknown.
+  u16 unknown70;               // Inferred role: first read range index; original member name unknown.
+  u16 unknown72;               // Inferred role: second read range index; original member name unknown.
+  u16 unknown74;               // Inferred role: vertex res index; original member name unknown.
+  u16 unknown76;               // Inferred role: shader res index; original member name unknown.
+  u16 unknown78;               // Inferred role: low texture res index; original member name unknown.
+  u16 unknown7a;               // Inferred role: first texture entry index; original member name unknown.
+  u16 unknown7c;               // Inferred role: end texture entry index; original member name unknown.
   u8 _7e[0x80 - 0x7e];
   u32 unknown80; // Inferred role: state flags; original member name unknown.
   u32 unknown84; // Inferred role: error wait size; original member name unknown.
@@ -163,6 +178,7 @@ static_assert(offsetof(DrCalcStmListObj, unknown48) == 0x48, "");
 static_assert(offsetof(DrCalcStmListObj, unknown50) == 0x50, "");
 static_assert(offsetof(DrCalcStmListObj, unknown58) == 0x58, "");
 static_assert(offsetof(DrCalcStmListObj, unknown5a) == 0x5a, "");
+static_assert(offsetof(DrCalcStmListObj, unknown68) == 0x68, "");
 static_assert(offsetof(DrCalcStmListObj, unknown70) == 0x70, "");
 static_assert(offsetof(DrCalcStmListObj, unknown72) == 0x72, "");
 static_assert(offsetof(DrCalcStmListObj, unknown74) == 0x74, "");

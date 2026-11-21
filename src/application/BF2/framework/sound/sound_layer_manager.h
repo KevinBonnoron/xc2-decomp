@@ -11,7 +11,11 @@ namespace fw {
 
 class SoundUpdater : public mm::mtl::IntrusiveListNode<SoundUpdater> {
 public:
-  mm::mtl::Delegate<int()> unknown10; // Inferred role: update callback; original member name unknown.
+  // The constructor has no game symbol; it is inline in GfComSound::GfComSound (0x710057ead4), which clears the two flags with one 16-bit store (strh wzr, [x19, #0x120], 0x710057eb58).
+  SoundUpdater() : unknown30(false), unknown31(false) {}
+
+  // The delegate returns u32: GfComSound::setup binds GfComSound::flush through Delegate<unsigned int()>::memberFuncInvoker<GfComSound> (0x71005802a4).
+  mm::mtl::Delegate<u32()> unknown10; // Inferred role: update callback; original member name unknown.
   bool unknown30;                     // Inferred role: callback result; original member name unknown.
   bool unknown31;                     // Inferred role: registered; original member name unknown.
 };

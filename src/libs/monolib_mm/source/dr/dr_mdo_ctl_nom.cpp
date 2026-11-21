@@ -286,7 +286,7 @@ void DrMdoCtlNom::nomCallRender(int pass) {
   beginSetup();
   const MdsMdlTopHeader *top = unknown30->unknown168;
   for (int i = 0; i < unknown30->unknown170; i++, top++) {
-    DrResChkList **lists = unknown190[i];
+    DrResChkList **lists = &unknown190[i * 8];
     DrResChkList *list = lists[unknownf4];
     if (list != nullptr) {
       nomRender(top, list);
@@ -420,7 +420,8 @@ void DrMdoCtlNom::shadowMapDirRender(int index) {
   unknown30->unknownc8->beginVertexSetup();
   const MdsMdlTopHeader *top = unknown30->unknown168;
   for (int i = 0; i < unknown30->unknown170; i++, top++) {
-    DrResChkList *list = unknown190[i][6];
+    DrResChkList **lists = &unknown190[i * 8];
+    DrResChkList *list = lists[6];
     if (list != nullptr) {
       const MdsMdlInfoHeader *infos = reinterpret_cast<const MdsMdlInfoHeader *>(unknown30->unknown18 + top->unknown00);
       s16 nodeMax = m_nodeMax;
@@ -515,7 +516,7 @@ void DrMdoCtlNom::shadowRender() {
   }
   const MdsMdlTopHeader *top = unknown30->unknown168;
   for (int i = 0; i < unknown30->unknown170; i++, top++) {
-    DrResChkList **lists = unknown190[i];
+    DrResChkList **lists = &unknown190[i * 8];
     DrResChkList *list = lists[unknownf4];
     if (list != nullptr) {
       shwRender(top, list);

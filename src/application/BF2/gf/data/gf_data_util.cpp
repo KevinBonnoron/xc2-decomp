@@ -172,7 +172,7 @@ void GfDataUtil::setRandomInn() { GfGameFlag::setLocal(4, FLAG_UNKNOWN_516, ml::
 
 void GfDataUtil::setSalvagerPoint(u32 salvagerPoint) { GfGameFlag::setLocal(8, FLAG_UNKNOWN_2132, salvagerPoint); }
 
-u64 *GfDataUtil::getSaveRealTime() { return &GfDataManager::getDataGame()->unknown10ad68; }
+RealTime *GfDataUtil::getSaveRealTime() { return &GfDataManager::getDataGame()->unknown10ad68; }
 
 bool GfDataUtil::isCollectFlagNewVersion() { return GfDataManager::getDataGame()->unknown10ae80; }
 

@@ -79,23 +79,24 @@ public:
   static mm::mtl::RTTI m_rtti;
 
   struct BdatInfo {
-    BdatInfo() : unknown00(0), unknown04(0.0f), unknown08(1.0f), unknown0c(0.0f), unknown10(0), unknown12(0), unknown14(0), unknown16(0), unknown18(0), unknown1a(false) {}
+    BdatInfo() : unknown00(0), unknown04(0.0f), unknown08(1.0f), unknown0c(0.0f), unknown10_0(0), unknown12_0(0), unknown14(0), unknown16(0), unknown18(0), unknown1a(false) {}
     void create(const CBdatWrapper &bdat, int id, const GfComBehaviorNpc &npc);
     int getTalkBonusFlagId() const;
     bool isIconTalkBonus() const;
     void setTalkBonusFlag() const;
     static f32 getDistYThreshold();
 
-    u16 unknown00;  // Inferred role: shop id; original member name unknown.
-    f32 unknown04;  // Inferred role: squared close range; original member name unknown.
-    f32 unknown08;  // Inferred role: move speed; original member name unknown.
-    f32 unknown0c;  // Inferred role: squared reaction range; original member name unknown.
-    u16 unknown10;  // Inferred role: reaction percent; original member name unknown.
-    u16 unknown12;  // Inferred role: reaction motion; original member name unknown.
-    u16 unknown14;  // Inferred role: battle reaction; original member name unknown.
-    u16 unknown16;  // Inferred role: battle motion; original member name unknown.
-    u16 unknown18;  // Inferred role: event id used as talk bonus; original member name unknown.
-    bool unknown1a; // Inferred role: talk bonus enabled; original member name unknown.
+    u16 unknown00; // Inferred role: shop id; original member name unknown.
+    f32 unknown04; // Inferred role: squared close range; original member name unknown.
+    f32 unknown08; // Inferred role: move speed; original member name unknown.
+    f32 unknown0c; // Inferred role: squared reaction range; original member name unknown.
+    // The game tests both halves with one 32-bit load of 0xa8 (GfComBehaviorNpc::isStateCondMatch, 0x7100534624: ldr w8,[x19,#0xa8] at 0x71005346bc, then cmp #0x10000 and and #0xffff).
+    u32 unknown10_0 : 16; // Inferred role: reaction percent; original member name unknown.
+    u32 unknown12_0 : 16; // Inferred role: reaction motion; original member name unknown.
+    u16 unknown14;        // Inferred role: battle reaction; original member name unknown.
+    u16 unknown16;        // Inferred role: battle motion; original member name unknown.
+    u16 unknown18;        // Inferred role: event id used as talk bonus; original member name unknown.
+    bool unknown1a;       // Inferred role: talk bonus enabled; original member name unknown.
   };
 
   GfComBehaviorNpc();
@@ -156,13 +157,25 @@ public:
   mm::Vec3 &unknown005() { return unknownc0; }
 
   // Inferred helper: reaction motion; original name unknown.
-  u16 unknown006() const { return unknown98.unknown12; }
+  u16 unknown006() const { return unknown98.unknown12_0; }
 
   // Inferred helper: battle motion; original name unknown.
   u16 unknown007() const { return unknown98.unknown16; }
 
   // Inferred helper: battle reaction; original name unknown.
   u16 unknown008() const { return unknown98.unknown14; }
+
+  // Inferred helper: squared reaction range; original name unknown.
+  f32 unknown014() const { return unknown98.unknown0c; }
+
+  // Inferred helper: reaction percent; original name unknown.
+  u16 unknown015() const { return unknown98.unknown10_0; }
+
+  // Inferred helper: squared distance to the player on the ground plane; original name unknown.
+  f32 unknown016() const { return unknowne0; }
+
+  // Inferred helper: squared height difference to the player; original name unknown.
+  f32 unknown017() const { return unknowne4; }
 
   // Inferred helper: navi mesh object; original name unknown.
   navi::NvmshAcObj *unknown012() const { return unknownb8; }

@@ -86,6 +86,7 @@ public:
   void addWeaponFromBlade(u32 blade, u32 id);
   void delWeaponFromBlade(u32 id);
   u32 getMapObjID(u32 index);
+  void addMapObjObject(u32 index);
   void sendObjectCommand(GF_OBJ_HANDLE *handle, const char *command);
   void setObjectCommandValue(GF_OBJ_HANDLE *handle, const char *name, int value);
   void attachObject(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *parent, const char *bone);

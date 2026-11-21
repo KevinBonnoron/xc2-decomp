@@ -5,14 +5,11 @@
 #include "grlib/cglib_one_uniform_block.h"
 #include "types.h"
 
-namespace grlib {
-class CGLibRenderTarget;
-} // namespace grlib
-
 namespace ml {
 class DrMan;
 class DrPixlMan;
 class DrPixlPostMan;
+class DrPixlRenderTarget;
 
 class DrPixlPostObjToneMap : public DrPixlPostObj {
 public:
@@ -28,15 +25,15 @@ public:
   void creaetMeasureLuminaceByRenderTarget();
   void debugRender();
 
-  grlib::CGLibRenderTarget *unknown18[6]; // Inferred role: scale down targets; original member name unknown.
-  grlib::CGLibOneUniformBlock unknown48;  // Inferred role: measured luminance buffer; original member name unknown.
-  grlib::CGLibOneUniformBlock unknown70;  // Inferred role: measured luminance buffer; original member name unknown.
-  grlib::CGLibRenderTarget *unknown98;    // Inferred role: measured luminance target; original member name unknown.
-  grlib::CGLibRenderTarget *unknowna0;    // Inferred role: measured luminance target; original member name unknown.
-  grlib::CGLibRenderTarget *unknowna8;    // Inferred role: current measured luminance target; original member name unknown.
-  f32 unknownb0;                          // Inferred role: adapted luminance; original member name unknown.
-  u32 unknownb4;                          // Inferred role: state flags; original member name unknown.
-  s32 unknownb8;                          // Inferred role: luminance reset frames; original member name unknown.
+  DrPixlRenderTarget *unknown18[6];      // Inferred role: scale down targets (allocated as DrPixlRenderTarget by the constructor); original member name unknown.
+  grlib::CGLibOneUniformBlock unknown48; // Inferred role: measured luminance buffer; original member name unknown.
+  grlib::CGLibOneUniformBlock unknown70; // Inferred role: measured luminance buffer; original member name unknown.
+  DrPixlRenderTarget *unknown98;         // Inferred role: measured luminance target; original member name unknown.
+  DrPixlRenderTarget *unknowna0;         // Inferred role: measured luminance target; original member name unknown.
+  DrPixlRenderTarget *unknowna8;         // Inferred role: current measured luminance target; original member name unknown.
+  f32 unknownb0;                         // Inferred role: adapted luminance; original member name unknown.
+  u32 unknownb4;                         // Inferred role: state flags; original member name unknown.
+  s32 unknownb8;                         // Inferred role: luminance reset frames; original member name unknown.
 };
 
 static_assert(offsetof(DrPixlPostObjToneMap, unknown18) == 0x18, "");

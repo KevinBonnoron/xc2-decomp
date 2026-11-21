@@ -116,7 +116,7 @@ void GfMenuObjDrArtsSet::setupWpnType(ui::UIObjectAcc &acc, mm::mtl::IntrusivePt
   GfMenuWeaponTypeAdapter::createFromReferenceDriverWpnType(acc.searchChild("TXT_cate_wp_num"), 2, 0, number, 0, true);
 }
 
-void GfMenuObjDrArtsSet::setupSlideSelect(ui::UIObjectAcc &acc, mm::mtl::FixedVector<u32, 27> &weaponTypes, ui::UISelectObjList *list) {
+ui::UICtrlSlideSelect *GfMenuObjDrArtsSet::setupSlideSelect(ui::UIObjectAcc &acc, mm::mtl::FixedVector<u32, 27> &weaponTypes, ui::UISelectObjList *list) {
   GfDataDriver::getEquipWpnType(weaponTypes, GfMenuReference::getReferenceDriverID(0));
   int count = 0;
   for (u32 *it = weaponTypes.begin(); it != weaponTypes.end(); it++) {
@@ -155,7 +155,7 @@ void GfMenuObjDrArtsSet::setupSlideSelect(ui::UIObjectAcc &acc, mm::mtl::FixedVe
   setting.unknown00 = 0.4f;
   setting.unknown14 = 0.5f;
   setting.unknown18 = 1.0f;
-  ui::UICtrlSlideSelect::create(acc.unknown10, setting, list);
+  return ui::UICtrlSlideSelect::create(acc.unknown10, setting, list);
 }
 
 void GfMenuObjDrArtsSet::setupArtsList(ui::UIObjectAcc &acc, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number) {
@@ -217,6 +217,52 @@ void GfMenuObjDrArtsSet::MainListener::reciveEvent(const ui::EventData &event, u
   case GfMenuTypes::unknown003_34:
     GfMenuObjOperationInfo::close();
     setFadeOut(handle);
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
+void GfMenuObjDrArtsSet::WpnTypeListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  ui::UIObjectAcc owner(unknown20->unknown18);
+  switch (event.unknown00) {
+  case 1:
+    setupWpnType(acc, unknown20->unknown38);
+    ui::UIObjectAcc(acc.searchChild("IMG_cate_wp_icon@01")).setDisp(false);
+    unknown20->unknown30 = setupSlideSelect(acc, unknown20->unknown50, unknown20->unknown28);
+    GfMenuObject::disableInput(handle);
+    break;
+  case 6: {
+    // Places the load of the event parameter before the load of the list, as the game does (0x7100448258: ldr w1 [event+8] before ldr x0 [owner+0x28]); the
+    // direct argument loads the list first (ruling 2).
+    u32 selected = event.unknown08;
+    unknown20->unknown28->setIndex(selected);
+    u32 index = unknown20->unknown28->getIndex(true);
+    unknown20->unknown38->unknown162(unknown20->unknown50[index]);
+    break;
+  }
+  case 8:
+    // The two event requests are the unknown164/unknown163 helpers of gf_menu_object.h: their EventData allocas come before the listener's own locals, which
+    // puts the request slot above both UIObjectAcc (sp+0x48 against acc sp+0x30, owner sp+0x18) as in the game.
+    switch (event.unknown0c) {
+    case 1:
+      unknown164(handle, GfMenuTypes::unknown003_34);
+      unknown163(owner.searchChild("LAY_arts_list"), GfMenuTypes::unknown003_33, 0);
+      break;
+    case 2:
+      unknown164(owner.searchChild("LAY_main"), GfMenuTypes::unknown003_34);
+      break;
+    }
+    break;
+  case GfMenuTypes::unknown003_33:
+    GfMenuObject::setupInputSelectionFromList(handle, *unknown20->unknown28);
+    GfMenuObject::enableInput(handle);
+    GfMenuObjOperationInfo::open(handle, 0, 0, 0);
+    break;
+  case GfMenuTypes::unknown003_34:
+    GfMenuObject::disableInput(handle);
     break;
   default:
     ui::UIObjectListener::reciveEvent(event, handle);

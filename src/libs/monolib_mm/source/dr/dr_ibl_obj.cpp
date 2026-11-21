@@ -169,6 +169,21 @@ void DrIBLObj::render_sphere(const u8 *data) {
   cacheDraw->renderSphere(mm::Vec3(sphere->unknown00, sphere->unknown04, sphere->unknown08), sphere->unknown0c, 8);
 }
 
+// The game builds the matrix as the identity copy times a scale matrix, then adds the center to the translation row: the center comes first in a Vec3
+// sum read from the product's row components (1.0.0: 0x71007f0778, 122 instructions). Adding to the rows one by one, or reading the row through
+// Mat44::unknown004 (a memory round trip), gives the same count or more but no `stp` of the translation and another frame.
+void DrIBLObj::render_notrot_cylinder(const u8 *data) {
+  CacheDraw *cacheDraw = DebDraw::getCacheDraw();
+  const unknown004 *cylinder = reinterpret_cast<const unknown004 *>(data);
+  mm::Mat44 matrix = mm::Mat44::identity;
+  mm::Mat44 scale;
+  scale.unknown010(cylinder->unknown0c, cylinder->unknown10, cylinder->unknown0c);
+  matrix.unknown009(matrix, scale);
+  matrix.setTrans(mm::Vec3(cylinder->unknown00, cylinder->unknown04, cylinder->unknown08) + mm::Vec3(matrix.rows[3][0], matrix.rows[3][1], matrix.rows[3][2]));
+  cacheDraw->setMatrix(matrix);
+  cacheDraw->renderCylinder(2.0f, 1.0f, 8);
+}
+
 } // namespace ml
 
 template mm::mtl::FixedList<ml::DrIBLObj *, 32>::iterator mm::mtl::FixedList<ml::DrIBLObj *, 32>::erase(mm::mtl::FixedList<ml::DrIBLObj *, 32>::iterator);

@@ -25,6 +25,10 @@ public:
     SetupParam unknown00; // Inferred role: param; original member name unknown.
   };
 
+  struct ReleasbleSetup {
+    SetupParam unknown00; // Inferred role: param; original member name unknown.
+  };
+
   struct DriverSetup {
     DriverSetup() : unknown14(0), unknown18(0), unknown1c(true), unknown1d(false), unknown1e(false) {}
 
@@ -74,11 +78,13 @@ public:
   void setupFromBook(const BladeBookSetup &setup);
   void setupFromDriver(const DriverSetup &setup);
   void setupFromTeam(const TeamSetup &setup);
+  void setupFromReleasble(const ReleasbleSetup &setup);
 };
 
 static_assert(offsetof(GfMenuBladeList::BladeListSetup, unknown18) == 0x18, "");
 static_assert(offsetof(GfMenuBladeList::DriverSetup, unknown14) == 0x14, "");
 static_assert(sizeof(GfMenuBladeList::BladeBookSetup) == 0x14, "");
+static_assert(sizeof(GfMenuBladeList::ReleasbleSetup) == 0x14, "");
 static_assert(offsetof(GfMenuBladeList::DriverSetup, unknown1e) == 0x1e, "");
 static_assert(sizeof(GfMenuBladeList) == 0x70, "");
 

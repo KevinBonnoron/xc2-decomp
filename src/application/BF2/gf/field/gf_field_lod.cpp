@@ -885,3 +885,4 @@ const mm::mtl::RTTI *GfFieldLodColiAnim::ColiUserData::getRTTI() const { return 
 template mm::mtl::PtrSingleton<gf::GfFieldLod>::~PtrSingleton();
 template void mm::mtl::Vector<gf::GfFieldLodColiAnim::PosInfo>::push_back(const gf::GfFieldLodColiAnim::PosInfo &);
 template void mm::mtl::Vector<gf::GfFieldLodColiAnim::PosInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gf::GfFieldLod::BdatInfo>::expand(size_t, size_t);

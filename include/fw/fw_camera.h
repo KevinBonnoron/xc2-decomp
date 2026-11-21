@@ -28,8 +28,6 @@ struct UpdateInfo;
 enum CAMERA_PRIO : int;
 enum CAMERA_TYPE : unsigned int;
 
-class CameraLayer;
-
 class CameraPlugin : public mm::mtl::ReferenceObject, public mm::mtl::IntrusiveListNode<CameraPlugin> {};
 
 class Camera : public mm::mtl::ReferenceObject, public mm::mtl::IntrusiveListNode<Camera> {
@@ -47,8 +45,8 @@ public:
   virtual void updateViewMatrix();
   void setLookAt(const mm::Vec3 &position, const mm::Vec3 &target, f32 roll);
 
-  CameraLayer *unknown20; // Inferred role: layer; original member name unknown.
-  CAMERA_PRIO unknown28;  // Inferred role: prio; original member name unknown.
+  ml::ScnObjCam *unknown20; // Inferred role: scn camera, copied from CameraLayer::unknown38 by CameraLayer::push; original member name unknown.
+  CAMERA_PRIO unknown28;    // Inferred role: prio; original member name unknown.
   f32 m_fov;
   f32 unknown30;       // Inferred role: near clip; original member name unknown.
   f32 unknown34;       // Inferred role: far clip; original member name unknown.

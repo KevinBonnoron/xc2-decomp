@@ -3,6 +3,7 @@
 #include "eflib/effect_system_manager.h"
 #include "framework/asset/asset_manager.h"
 #include "framework/effect/effect_caster.h"
+#include "framework/effect/effect_caster_impl.h" // IWYU pragma: keep
 #include "mm_math/mm_mat44.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/vector.h"

@@ -100,6 +100,22 @@ public:
     u32 unknown08; // Inferred role: render list index, bit 31 marks a range tree lod; original member name unknown.
   };
 
+  // Inferred role: render list entry of a mdl entry, the entries are linked through unknown18 like DrResMdoSeamWrkInst::unknown002; original type name unknown.
+  struct unknown020 {
+    u16 unknown00; // Inferred role: instance count; original member name unknown.
+    u16 unknown02; // Inferred role: instance count of the leading range, see MdoInstanceDrawArg; original member name unknown.
+    u16 unknown04; // Inferred role: instance count of the trailing ranges, see MdoInstanceDrawArg; original member name unknown.
+    u16 unknown06; // Inferred role: instance count of the last range, left out by the thickness pass; original member name unknown.
+    u16 unknown08; // Inferred role: flags, bit 0 selects the depth stencil mode; original member name unknown.
+    u16 unknown0a; // Inferred role: storage buffer index; original member name unknown.
+    u16 unknown0c; // Inferred role: mdl entry index; original member name unknown.
+    u8 _0e[0x10 - 0x0e];
+    u16 unknown10;         // Inferred role: etc uniform index offset; original member name unknown.
+    u16 unknown12;         // Inferred role: etc uniform index of the node animation; original member name unknown.
+    u32 unknown14;         // Inferred role: vertex offset of the instances; original member name unknown.
+    unknown020 *unknown18; // Inferred role: next entry; original member name unknown.
+  };
+
   static const int INS_RENDERBUFF_SIZE = 0xbd000; // Name from the game symbol _ZN2ml11DrMdoCtlPos19INS_RENDERBUFF_SIZEE; also in torna and xc1de.
 
   ~DrMdoCtlPos() override;
@@ -172,8 +188,9 @@ public:
   DrResMdoPos **unknown288[3];     // Inferred role: render list tails; original member name unknown.
   u16 *unknown2a0;                 // Inferred role: render list counts; original member name unknown.
   DrResMdoPntAlphaMan *unknown2a8; // Inferred role: pnt alpha man; original member name unknown.
-  u8 _2b0[0x2c0 - 0x2b0];
-  void *unknown2c0; // Inferred role: first render list entry; original member name unknown.
+  const unknown020 *unknown2b0;    // Inferred role: instance render list of the mdl entries; original member name unknown.
+  u8 _2b8[0x2c0 - 0x2b8];
+  unknown020 *unknown2c0; // Inferred role: first render list entry; original member name unknown.
   u8 _2c8[0x2d8 - 0x2c8];
   u32 unknown2d8; // Inferred role: render list size; original member name unknown.
   u8 _2dc[0x2e0 - 0x2dc];
@@ -188,7 +205,8 @@ public:
   u64 unknown368; // Inferred role: shadow cache mask; original member name unknown.
   u64 unknown370; // Inferred role: shadow cache render mask; original member name unknown.
   u32 unknown378; // Inferred role: shadow cache render count; original member name unknown.
-  u8 _37c[0x420 - 0x37c];
+  f32 unknown37c; // Inferred role: shadow cache check range, from DrPixlShadowCacheMan::SHADOW_CHECK_RANGE_TBL; original member name unknown.
+  u8 _380[0x420 - 0x380];
 };
 
 static_assert(offsetof(DrMdoCtlPos, unknown1a0) == 0x1a0, "");
@@ -214,6 +232,7 @@ static_assert(offsetof(DrMdoCtlPos, unknown270) == 0x270, "");
 static_assert(offsetof(DrMdoCtlPos, unknown288) == 0x288, "");
 static_assert(offsetof(DrMdoCtlPos, unknown2a0) == 0x2a0, "");
 static_assert(offsetof(DrMdoCtlPos, unknown2a8) == 0x2a8, "");
+static_assert(offsetof(DrMdoCtlPos, unknown2b0) == 0x2b0, "");
 static_assert(offsetof(DrMdoCtlPos, unknown2c0) == 0x2c0, "");
 static_assert(offsetof(DrMdoCtlPos, unknown2d8) == 0x2d8, "");
 static_assert(offsetof(DrMdoCtlPos, unknown2e0) == 0x2e0, "");
@@ -230,5 +249,11 @@ static_assert(sizeof(DrMdoCtlPos::unknown018) == 0x08, "");
 static_assert(offsetof(DrMdoCtlPos::unknown019, unknown04) == 0x04, "");
 static_assert(offsetof(DrMdoCtlPos::unknown019, unknown08) == 0x08, "");
 static_assert(sizeof(DrMdoCtlPos::unknown019) == 0x0c, "");
+static_assert(offsetof(DrMdoCtlPos::unknown020, unknown08) == 0x08, "");
+static_assert(offsetof(DrMdoCtlPos::unknown020, unknown0c) == 0x0c, "");
+static_assert(offsetof(DrMdoCtlPos::unknown020, unknown10) == 0x10, "");
+static_assert(offsetof(DrMdoCtlPos::unknown020, unknown18) == 0x18, "");
+static_assert(offsetof(DrMdoCtlPos::unknown020, unknown14) == 0x14, "");
+static_assert(sizeof(DrMdoCtlPos::unknown020) == 0x20, "");
 
 } // namespace ml

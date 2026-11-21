@@ -59,6 +59,21 @@ CollisionObject::~CollisionObject() { anm::unknown001(unknowna0); }
 
 void CollisionObject::update() { unknown18.update(*unknowna0); }
 
+void CollionArray::update(anm::Pose &pose) {
+  if (!unknown80) {
+    return;
+  }
+  for (u32 i = 0; i < unknown08.size(); i++) {
+    unknown08[i].calc(pose);
+  }
+  for (u32 i = 0; i < unknown30.size(); i++) {
+    unknown30[i].calc(pose);
+  }
+  for (u32 i = 0; i < unknown58.size(); i++) {
+    unknown58[i].calc(pose);
+  }
+}
+
 } // namespace skd
 
 template void mm::mtl::Vector<skd::ShpereCollObj>::resize(size_t);

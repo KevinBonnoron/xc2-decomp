@@ -524,24 +524,24 @@ void ScnRenderDrSysParmAcc::setGBuffDebugParam(GBuffDebugType type, f32 min, f32
   DrPixlPostParm *firstPostParm = unknown00->unknown120[0];
   switch (static_cast<s32>(type)) {
   case 0:
-    firstPostParm->unknown320[0].unknown00 = min;
-    firstPostParm->unknown320[0].unknown04 = max;
+    firstPostParm->unknown320[0].unknown00[0] = min;
+    firstPostParm->unknown320[0].unknown00[1] = max;
     break;
   case 1:
-    firstPostParm->unknown320[1].unknown00 = min;
-    firstPostParm->unknown320[1].unknown04 = max;
+    firstPostParm->unknown320[1].unknown00[0] = min;
+    firstPostParm->unknown320[1].unknown00[1] = max;
     break;
   case 2:
-    firstPostParm->unknown320[2].unknown00 = min;
-    firstPostParm->unknown320[2].unknown04 = max;
+    firstPostParm->unknown320[2].unknown00[0] = min;
+    firstPostParm->unknown320[2].unknown00[1] = max;
     break;
   case 3:
-    firstPostParm->unknown320[3].unknown00 = min;
-    firstPostParm->unknown320[3].unknown04 = max;
+    firstPostParm->unknown320[3].unknown00[0] = min;
+    firstPostParm->unknown320[3].unknown00[1] = max;
     break;
   case 4:
-    firstPostParm->unknown320[4].unknown00 = min;
-    firstPostParm->unknown320[4].unknown04 = max;
+    firstPostParm->unknown320[4].unknown00[0] = min;
+    firstPostParm->unknown320[4].unknown00[1] = max;
     break;
   }
 }

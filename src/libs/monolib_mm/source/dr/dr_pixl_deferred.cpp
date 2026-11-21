@@ -24,6 +24,7 @@
 #include "grlib/cglib_state.h"
 #include "mm_math/mm_col4.h"
 #include "mm_mtl/fixed_array.h"
+#include "mtl/alloc_handle.h"
 
 namespace ml {
 
@@ -34,6 +35,17 @@ template <typename T> inline void unknown001(T *&object) {
     delete deleted;
     object = nullptr;
   }
+}
+
+DrPixlDeferred::DrPixlDeferred(DrMan *man, DrPixlMan *pixlMan) : unknown00(nullptr), unknown08(man), unknown18(pixlMan), m_temporalInputShadowMap(nullptr) {
+  unknown10 = man->unknown80;
+  m_temporalInputShadowMap = new (man->unknown0c) DrPixlRenderTarget(unknown08);
+  m_temporalInputShadowMap->setTextureInfo(1.0f, 1.0f, DrPixlFormat::s_DirShadowFormat, true, (DrPixlMemMan::get()->unknown010 + DrMan::getIns()->unknown1c98)->unknown0e8[0]);
+  for (int i = 0; i < 2; i++) {
+    unknown28[i] = new (unknown08->unknown0c) DrPixlRenderTarget(unknown08);
+  }
+  unknown38 = 1;
+  unknown3a = 1;
 }
 
 DrPixlDeferred::~DrPixlDeferred() {
