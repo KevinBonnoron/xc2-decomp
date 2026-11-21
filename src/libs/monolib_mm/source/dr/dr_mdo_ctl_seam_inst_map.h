@@ -4,6 +4,7 @@
 #include "types.h"
 
 namespace mm {
+struct Mat44;
 struct Vec3;
 } // namespace mm
 
@@ -17,6 +18,7 @@ class DrPixlShadowCacheObj;
 class DrPixlShadowObj;
 class DrResMdoSeamWrkInst;
 struct MdsMdlInfoHeader;
+struct MdsMdlTopHeader;
 struct _MdoInstanceWork;
 struct MdoWrkMatRes;
 struct MdoArgSeamUpdate;
@@ -51,6 +53,7 @@ public:
   void callInstShadowCacheAddRender(int index);
   void callShadowMapRenderSeamInstMap(DrPixlShadowObj *shadow);
   void callInstShadowCacheRender(DrPixlShadowCacheObj &cache);
+  void renderInstShadowCacheRender(DrResMdoSeamWrkInst *inst, const mm::Mat44 &matrix, u32 index, const MdsMdlTopHeader *top);
 };
 
 } // namespace ml

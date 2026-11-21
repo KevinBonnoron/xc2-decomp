@@ -8,13 +8,17 @@
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_game_flag.h"
+#include "gf/field/gf_fobj_manager.h"
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/sequential_play/gf_play_factory.h"
 #include "gf/menu/call/gf_menu_call_context.h"
+#include "gf/menu/gf_menu_bdat.h"
 #include "gf/menu/object/gf_menu_obj_field_icon.h"
 #include "gf/object/component/gf_com_transform.h"
+#include "gf/object/gf_init_param.h"
 #include "gf/object/gf_obj.h"
+#include "gf/object/gf_obj_factory.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
 #include "gf/request/gf_req_scom.h"
@@ -45,6 +49,7 @@ struct unknown091 {
 };
 
 constexpr int WILDCARD_UNKNOWN_34 = 34; // Inferred role: wildcard precious pop dist row; original name unknown.
+constexpr u32 FOBJ_UNKNOWN_23 = 23;     // Inferred role: field object id of the precious pickup (the bladeID member of GfInitParamFobj); original name unknown.
 
 void GmkPrecious::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   dispose();
@@ -133,6 +138,23 @@ void GmkPrecious::disposeGobInst(bool isFadeOut) {
   }
 }
 
+void GmkPrecious::createGobInst() {
+  if (!canCreateGameEntity()) {
+    return;
+  }
+  disposeGobInst(false);
+  gf::GfFobjManager *manager = gf::GfFobjManager::get();
+  CBdatWrapper bdat(manager != nullptr ? manager->unknown9068 : nullptr);
+  gf::GfInitParamFobj param;
+  param.m_bladeID = FOBJ_UNKNOWN_23;
+  param.unknown18 = &bdat;
+  param.unknown95 = false;
+  unknown58 = gf::GfObjFactory::createFieldObj(param);
+  bindToGameObj(unknown58);
+  validateDisp();
+  TGmkActiveList<GmkPrecious>::unknown002(this);
+}
+
 void GmkPrecious::createEffectIcon() {
   if (!canCreateGameEntity()) {
     return;
@@ -193,6 +215,35 @@ void GmkPrecious::update(f32 deltaTime) {
     disposeEffectIcon(true);
     disposeMenuIcon();
   }
+}
+
+void GmkPrecious::createMenuIcon() {
+  if (!canCreateGameEntity()) {
+    return;
+  }
+  disposeMenuIcon();
+  if (unknown58 == gf::unknown020) {
+    return;
+  }
+  int icon = getBdatIdOfQuestTargetIcon(unknown58, getBdatInfo()->unknown04);
+  if (icon < 0) {
+    return;
+  }
+  unknown68 = gf::GfMenuCallContext::create();
+  gf::GfMenuObjFieldIcon::OpenParam param;
+  param.unknown00 = icon;
+  param.unknown10 = AGmkBase::unknown08.unknown08->unknown00;
+  const int unknown001 = 42; // Inferred role: wildcard data column of the precious icon offset; original name unknown.
+  gf::GfMenuBdat::getMenuOffset(Bdat::getValCheck(gf::GfDataBdat::getFP(gf::BDAT_FLD_WILDCARD_DATA), 1, unknown001, BDAT_TYPE_UNKNOWN_2).valueU16, param.unknown20);
+  gf::GfMenuObjFieldIcon::open(unknown68, param);
+}
+
+void GmkPrecious::updateMenuIcon() {
+  if (unknown58 == gf::unknown020 || unknown68 == nullptr) {
+    return;
+  }
+  bool isDisp = isModelRendered(unknown58);
+  gf::GfMenuObjFieldIcon::disp(unknown68, isDisp);
 }
 
 void GmkPrecious::updateInActiveList(f32 deltaTime) {

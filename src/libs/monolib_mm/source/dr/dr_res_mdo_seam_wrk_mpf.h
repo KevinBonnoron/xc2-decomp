@@ -106,6 +106,8 @@ public:
   void setEtcMpfCache(int id, DrResMdoSeamMemObj *memObj);
   void setMpfPoliCache(int id, DrResMdoSeamMemObj *memObj);
   void setupMpfPoliWork(int index);
+  void seachEtcMpfPos(DrResMdoSeamParmRead *parmRead, DrMdoCtlSeamMpfMap *ctl);
+  void seachMpfPoli(DrResMdoSeamParmRead *parmRead, DrMdoCtlSeamMpfMap *ctl);
 
   static f32 SEAM_MPFMAP_READ_CHECK;
 

@@ -35,6 +35,18 @@ void IDColiGrdMoveObj::setMoveData(const u8 *binary, const IDCmfMovePosData *dat
   update();
 }
 
+void IDColiGrdMoveObj::update() {
+  if ((unknown1c0 & (1 << IDColiManager::s_nDebIdx)) != 0) {
+    // Inverse of the previous matrix (unknown00[2]) read in place, then the product with the new matrix of the debug index stored over it (the
+    // game's 0x71008e60f4 matches with the aliased product unknown002; unknown001 on the same object gives 431 instructions, operator* 560).
+    unknownc0.unknown014(unknown00[2]);
+    unknownc0.unknown002(unknownc0, unknown00[IDColiManager::s_nDebIdx]);
+    unknown00[2] = unknown00[IDColiManager::s_nDebIdx];
+    IDColiPrimitive::calcPosDataSetup(&unknown100, unknown00[IDColiManager::s_nDebIdx], unknown1a8->unknown50, unknown1a8->unknown60);
+    unknown1c0 &= ~(1 << IDColiManager::s_nDebIdx);
+  }
+}
+
 void IDColiGrdMoveObj::treeUpdate(IDColiTreeTop *tree, int index) { tree->setupTreeList(&unknown1c8[index].unknown00, unknown100.unknown80, unknown100.unknown90); }
 
 } // namespace idcoli

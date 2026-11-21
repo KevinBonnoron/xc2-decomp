@@ -63,6 +63,16 @@ public:
     m_size = 0;
   }
 
+  // Inferred role: element counted from the front; original name unknown (no symbol in XC2, Torna or XC1DE). The game inlines it in the dedupe loops of
+  // GfMenuObjPopup::open (0x71004b3434) and GfMenuObjDamageValue::open (0x7100445578): the assertion string "index < m_capacity" at line 503, then at()'s
+  // assert at line 65.
+  // __LINE__ must be 503 as in the original header: it is the line argument of the assert.
+#line 502
+  T &operator[](size_t index) {
+    MM_ASSERT(index < m_capacity);
+    return at((m_front + index) % m_capacity);
+  }
+
   // __LINE__ must be 543 as in the original header: it is the line argument of the assert.
 #line 542
   void reserve(size_t capacity, size_t alignment = alignof(T)) {
@@ -110,6 +120,22 @@ public:
   }
 
   T &front() { return at(m_front); }
+
+  // Inferred role: removes the front element and copies it into the argument; original name unknown (no symbol in XC2, Torna or XC1DE: the game only
+  // instantiates the push_back/erase/expand members of Queue<T>). The game inlines it in GfMenuObjDamageBuff::open and openUniteCombo (0x7100443854,
+  // 0x7100443bec), GfMenuObjDropItem::open (0x7100446c10), GfMenuObjDamageValue::open (0x7100445578) and GfMenuObjPopup::open (0x71004b3434): the
+  // assertion strings quote "!empty()" at line 0x301 (769), then at() asserts the buffer at line 0x41, and the element is read before the front moves.
+  // The destination is a reference to a record constructed before the call (its vtable pointer is stored before the assertions): a by-value return puts the
+  // copy in the inlined callee's noalias result slot, which lets the second read of m_front move above the copy stores (DamageValue::open reloads it after,
+  // with m_size, as one ldp).
+  // __LINE__ must be 769 as in the original header: it is the line argument of the assert.
+#line 768
+  void unknown002(T &out) {
+    MM_ASSERT(!empty());
+    out = at(m_front);
+    m_front = (m_front + 1) % m_capacity;
+    m_size--;
+  }
 
   // __LINE__ must be 782 as in the original header: it is the line argument of the assert.
 #line 781

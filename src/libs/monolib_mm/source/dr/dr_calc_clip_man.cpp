@@ -156,4 +156,3 @@ DrCalcCpPlaneObj *DrCalcClipMan::createCpPlaneObj(const void *data) {
 
 // The game builds the clip objects in the same unit: DrCalcClipMan::update inlines DrCalcClipObj::update and the constructors are inlined into the create functions.
 #include "dr_calc_clip_obj.cpp"
-#include "dr_calc_cp_plane_obj.cpp"

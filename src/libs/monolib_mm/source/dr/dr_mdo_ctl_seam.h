@@ -188,7 +188,7 @@ struct unknown061 {
   u8 _7c[0x80 - 0x7c];
   u32 unknown80; // Inferred role: offset of the area table; original member name unknown.
   u32 unknown84; // Inferred role: offset of the environment data; original member name unknown.
-  u8 _88[0x8c - 0x88];
+  s32 unknown88; // Inferred role: light count; original member name unknown.
   u32 unknown8c; // Inferred role: offset of the light entries; original member name unknown.
   u8 _90[0x94 - 0x90];
   u32 unknown94; // Inferred role: offset of the texture list table; original member name unknown.
@@ -552,8 +552,8 @@ public:
   u64 unknownc98; // Inferred role: inst map shadow cache mask; original member name unknown.
   s16 unknownca0; // Inferred role: base map counter; original member name unknown.
   s16 unknownca2; // Inferred role: base map counter; original member name unknown.
-  s16 unknownca4; // Inferred role: inst map counter; original member name unknown.
-  s16 unknownca6; // Inferred role: inst map counter; original member name unknown.
+  u16 unknownca4; // Inferred role: inst map counter; original member name unknown.
+  u16 unknownca6; // Inferred role: inst map counter; original member name unknown.
   u8 _ca8[0xcac - 0xca8];
   s16 unknowncac;    // Inferred role: error code write index; original member name unknown.
   s16 unknowncae[4]; // Inferred role: error codes; original member name unknown.

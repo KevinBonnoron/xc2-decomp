@@ -2,6 +2,7 @@
 
 #include <math.h>
 
+#include "framework/message/message_object.h"
 #include "framework/object/component_object.h"
 #include "framework/object/updatable_object.h"
 #include "framework/reference_frame.h"
@@ -9,16 +10,13 @@
 #include "gf/object/component/behavior/gf_com_behavior.h"
 #include "gf/object/component/env_sensor/gf_com_env_sensor.h"
 #include "gf/object/component/gf_com_transform.h"
+#include "gf/object/component/gf_component.h"
 #include "gf/object/component/pc/gf_pc_agent.h" // IWYU pragma: keep
 #include "gf/object/component/pc/param/gf_pc_param.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_quat.h"
 #include "mm_mtl/rtti.h"
 #include "mm_mtl/unique_ptr.h" // IWYU pragma: keep
-
-namespace fw {
-class MessageObject;
-} // namespace fw
 
 namespace gf {
 
@@ -181,6 +179,32 @@ void GfComPropertyPc::setEnvSensorCheckFlags(u32 flags, bool isEnable) {
 bool GfComPropertyPc::testEnvSensorCheckFlags(EnviromentSensor::Flag flag) {
   EnviromentSensor *sensor = &mm::mtl::dynamicCast<GfComEnvSensor>(unknown08->unknown38[GfComEnvSensor::COMPONENT_INDEX])->unknown10;
   return (sensor->m_envSensorCheckFlags & flag) != 0;
+}
+
+bool GfComPropertyPc::recieveMessage(fw::MessageObject *sender, fw::Message &message) {
+  // The order of the cases is free in the source but not for the code: of the 24 orders of these four cases only the 8 that put 0x100003b (flush) before 0x100001c and 0x1000046 give the game's
+  // compare tree (split at 0x100003a, then 0x1000003 and 0x100001c below, 0x1000046 and 0x100003b above: 82 instructions); the ascending order gives 81, first difference at +0x3c.
+  switch (message.unknown00) {
+  case MSG_UNKNOWN_16777219:
+    procMsgActivateComponentDebugWindow(sender, static_cast<MsgDebugActivateComponentWindow &>(message));
+    return true;
+  case MSG_OBJECT_UNKNOWN_16777275:
+    procMsgObjectFlushProperty(sender, static_cast<MsgObjectFlushProperty &>(message));
+    return true;
+  case MSG_UNKNOWN_16777286:
+    procMsgObjectGetVelocity(sender, static_cast<MsgObjectGetVelocity &>(message));
+    return true;
+  case MSG_PC_FIELD_NOTIFY_UNKNOWN_16777244:
+    procMsgPcFieldNotifyChangePlayerID(sender, static_cast<MsgPcFieldNotifyChangePlayerID &>(message));
+    return true;
+  }
+  if (unknown110_0 && unknown310.recieveMessage(*this, sender, message)) {
+    return true;
+  }
+  if (unknown110_1 && unknown470.recieveMessage(*this, sender, message)) {
+    return true;
+  }
+  return GfComProperty::recieveMessage(sender, message);
 }
 
 void GfComPropertyPc::procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message) {}

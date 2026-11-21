@@ -35,6 +35,26 @@
 #include "mm_mtl/fixed_array.h"
 #include "mtl/mem_manager.h"
 
+// Unit evidence (game 1.0.0): the game builds these files in one unit with this one (0x71007f0b0c, the DrMdoCtl constructor, to 0x7100836bb4),
+// in the order of their last functions: dr_mdo_ctl through dr_mdo_ctl_dammy (to 0x7100818588), then this file's own functions (0x710081858c to
+// 0x710081c050), then dr_mdo_ctl_seam_all through dr_mdo_zsort (from 0x710081c084, below). dr_mdo_morphing.cpp and dr_mdo_shd_set.cpp (0x7100831910
+// to 0x71008362e8) lie inside that range after the sampler manager but are hosts of their own here; not examined. DrMdoMat::s_pCallFstMatVal is
+// read through the GOT by DrMdoCtlNom::updateNom and also by DrMdoMat::updateMatFstCallBack, which is defined with the table: every global of
+// default visibility goes through the GOT in the game, so the access says nothing about which unit holds the definition (only the hidden
+// mm::Cube::m_fHalfLength is read directly). DrMdoMat::updateMatFstCallBack (0x71008078c0) sits right after updateNom (0x7100806a80): first
+// reference places it, so dr_mdo_mat.cpp belongs to updateNom's unit.
+// clang-format off
+#include "dr_mdo_ctl.cpp"
+#include "dr_mdo_ctl_cld_mdl.cpp"
+#include "dr_mdo_ctl_mpf.cpp"
+#include "dr_mdo_ctl_mpf_auto.cpp"
+#include "dr_mdo_ctl_mpf_inst.cpp"
+#include "dr_mdo_ctl_mpf_work.cpp"
+#include "dr_mdo_ctl_nom.cpp"
+#include "dr_mdo_ctl_pos.cpp"
+#include "dr_mdo_ctl_dammy.cpp"
+// clang-format on
+
 namespace ml {
 
 DrMdoCtlSeam::DrMdoCtlSeam(int viewNum)
@@ -607,18 +627,9 @@ void DrMdoCtlSeam::calcSeamMapRender(int renderType, u32 flags) {
 
 } // namespace ml
 
-// The game builds these files in one unit with this one (0x71007f0d14 to 0x7100836bb4), in this order; this file's own functions (0x7100819e84 to 0x710081c050) sit between dr_mdo_ctl_dammy.cpp and
-// dr_mdo_ctl_seam_all.cpp.
+// The rest of the unit follows this file's own functions, in the same order of last functions (dr_mdo_ctl_seam_all at 0x710081c084 to dr_mdo_zsort
+// at 0x7100831858).
 // clang-format off
-#include "dr_mdo_ctl.cpp"
-#include "dr_mdo_ctl_cld_mdl.cpp"
-#include "dr_mdo_ctl_mpf.cpp"
-#include "dr_mdo_ctl_mpf_auto.cpp"
-#include "dr_mdo_ctl_mpf_inst.cpp"
-#include "dr_mdo_ctl_mpf_work.cpp"
-#include "dr_mdo_ctl_nom.cpp"
-#include "dr_mdo_ctl_pos.cpp"
-#include "dr_mdo_ctl_dammy.cpp"
 #include "dr_mdo_ctl_seam_all.cpp"
 #include "dr_mdo_ctl_seam_base_map.cpp"
 #include "dr_mdo_ctl_seam_env_map.cpp"
@@ -639,4 +650,8 @@ void DrMdoCtlSeam::calcSeamMapRender(int renderType, u32 flags) {
 #include "dr_mdo_texture_man.cpp"
 #include "dr_mdo_vertex_man.cpp"
 #include "dr_mdo_zsort.cpp"
+// The sampler manager is the last file of the unit: its constructor, destructor and begin() are at 0x7100831874 to 0x71008318cc, after dr_mdo_zsort.cpp;
+// its create and release functions (0x7100828ef4 to 0x7100829650) sit inside the dr_mdo_mat.cpp block, which references them first (the release
+// functions are inlined there).
+#include "dr_mdo_sampler_man.cpp"
 // clang-format on

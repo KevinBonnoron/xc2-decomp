@@ -119,18 +119,18 @@ public:
   GfMenuItemList *unknown40;                              // Inferred role: filtered items; original member name unknown.
   ui::UISelectObjList *unknown48;                         // Inferred role: item objects; original member name unknown.
   GfMenuCallContext *unknown50;                           // Inferred role: call context; original member name unknown.
-  u8 _58[0x5c - 0x58];
-  u32 unknown5c;                                  // Inferred role: item filter; original member name unknown.
-  u32 unknown60;                                  // Inferred role: previous item filter; original member name unknown.
-  u32 unknown64;                                  // Role and original member name unknown, cleared by the constructor.
-  GfMenuCallContext *unknown68;                   // Inferred role: call context; original member name unknown.
-  mm::mtl::FixedArray<FavoriteFlag, 4> unknown70; // Inferred role: favorite flags; original member name unknown.
-  mm::mtl::FixedArray<FavoriteFlag, 4> unknownd0; // Inferred role: favorite flags; original member name unknown.
-  GfMenuSequence<GfMenuObjPouch2, 8> unknown130;  // Inferred role: queued steps; original member name unknown.
-  u32 unknown3c0;                                 // Inferred role: current favorite flag; original member name unknown.
-  u32 unknown3c4;                                 // Inferred role: current favorite; original member name unknown.
-  bool unknown3c8;                                // Role and original member name unknown.
-  bool unknown3c9;                                // Role and original member name unknown, cleared by the constructor.
+  u32 unknown58;                                          // Inferred role: common text window opened by SlotListener::reciveEvent; original member name unknown.
+  u32 unknown5c;                                          // Inferred role: item filter; original member name unknown.
+  u32 unknown60;                                          // Inferred role: previous item filter; original member name unknown.
+  u32 unknown64;                                          // Role and original member name unknown, cleared by the constructor.
+  GfMenuCallContext *unknown68;                           // Inferred role: call context; original member name unknown.
+  mm::mtl::FixedArray<FavoriteFlag, 4> unknown70;         // Inferred role: favorite flags; original member name unknown.
+  mm::mtl::FixedArray<FavoriteFlag, 4> unknownd0;         // Inferred role: favorite flags; original member name unknown.
+  GfMenuSequence<GfMenuObjPouch2, 8> unknown130;          // Inferred role: queued steps; original member name unknown.
+  u32 unknown3c0;                                         // Inferred role: current favorite flag; original member name unknown.
+  u32 unknown3c4;                                         // Inferred role: current favorite; original member name unknown.
+  bool unknown3c8;                                        // Role and original member name unknown.
+  bool unknown3c9;                                        // Role and original member name unknown, cleared by the constructor.
   u8 _3ca[0x3d0 - 0x3ca];
   GAME_VOICE_HANDLE *unknown3d0; // Inferred role: playing voice; original member name unknown.
   u32 unknown3d8;                // Role and original member name unknown, cleared by the constructor.
@@ -159,6 +159,7 @@ static_assert(offsetof(GfMenuObjPouch2, unknown38) == 0x38, "");
 static_assert(offsetof(GfMenuObjPouch2, unknown40) == 0x40, "");
 static_assert(offsetof(GfMenuObjPouch2, unknown48) == 0x48, "");
 static_assert(offsetof(GfMenuObjPouch2, unknown50) == 0x50, "");
+static_assert(offsetof(GfMenuObjPouch2, unknown58) == 0x58, "");
 static_assert(offsetof(GfMenuObjPouch2, unknown5c) == 0x5c, "");
 static_assert(offsetof(GfMenuObjPouch2, unknown60) == 0x60, "");
 static_assert(offsetof(GfMenuObjPouch2, unknown64) == 0x64, "");

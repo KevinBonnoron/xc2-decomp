@@ -3,6 +3,7 @@
 
 #include "event/i_res_event.h"
 #include "event/model_obj.h"
+#include "mm_mtl/bitflag.h"
 #include "mm_mtl/fixstr.h"
 #include "types.h"
 
@@ -29,6 +30,15 @@ public:
     STATE_UNKNOWN_7, // Inferred role: busy; original name unknown.
     STATE_UNKNOWN_8, // Inferred role: active; original name unknown.
     STATE_UNKNOWN_9, // Inferred role: dispose; original name unknown.
+  };
+
+  // Bit indices of the flags, for mm::mtl::unknown027<32>::test/set.
+  enum {
+    FLAG_UNKNOWN_0 = 0, // Inferred role: path; original name unknown.
+    FLAG_UNKNOWN_1 = 1, // Inferred role: mdo loading; original name unknown.
+    FLAG_UNKNOWN_2 = 2, // Inferred role: arc loading; original name unknown.
+    FLAG_UNKNOWN_3 = 3, // Inferred role: mdo loaded; original name unknown.
+    FLAG_UNKNOWN_4 = 4, // Inferred role: arc loaded; original name unknown.
   };
 
   MdlstmObj();
@@ -58,7 +68,10 @@ public:
 private:
   friend class MdlstmManager;
 
-  u32 unknown08;                  // Inferred role: flags; original member name unknown.
+  // Inferred role: flags; original member name unknown. A bit set like the event managers' flags (decision 48): the game tests single bits by index
+  // (isBuildable 0x71000a6c8c: ldrb + tbnz), and through a plain u32 member clang widens the flag load of exec (0x71000a5da0, the two loaded bits
+  // at 0x71000a5e28) with the state load at 0xc into one 64-bit load where the game has two 32-bit loads (146 instructions against 143).
+  mm::mtl::unknown027<32> unknown08;
   STATE unknown0c;                // Inferred role: state; original member name unknown.
   f32 unknown10;                  // Inferred role: frame; original member name unknown.
   mm::mtl::FixStr<128> unknown14; // Inferred role: path; original member name unknown.
@@ -73,7 +86,7 @@ private:
   ml::DrStmReadObj *_d0;
   ModelObj *unknownd8; // Inferred role: reuse model; original member name unknown.
   ModelObj *unknowne0; // Inferred role: model; original member name unknown.
-  u32 unknowne8;       // Inferred role: dispose delay; original member name unknown.
+  int unknowne8;       // Inferred role: dispose delay; original member name unknown.
   u32 unknownec;       // Role and original member name unknown.
 };
 

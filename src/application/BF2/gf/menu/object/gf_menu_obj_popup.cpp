@@ -9,6 +9,7 @@
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "mm_math/mm_col3.h"
+#include "mm_mtl/queue.h"
 #include "mm_mtl/reference_object.h"
 #include "types.h"
 #include "ui/event/ui_event_data.h"
@@ -28,6 +29,8 @@ constexpr u16 unknown003 = 0x102;
 
 GfMenuObjPopup::GfMenuObjPopup(u32 handle)
     : GfMenuObject(handle), unknown24(false), unknown28(0), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr), unknown48(nullptr), unknown50(nullptr), unknown58(nullptr), unknown60(this) {}
+
+bool GfMenuObjPopup::s_disp;
 
 GfMenuObjPopup::~GfMenuObjPopup() {
   mm::mtl::safeRelease(unknown30);
@@ -165,6 +168,40 @@ void GfMenuObjPopup::continuePickup(u32 type) {
       ui::UIManager::get()->requestObjectEvent(handle, event, 0.0f);
     }
   }
+}
+
+u32 GfMenuObjPopup::open(const OpenParam &param) {
+  if (GfMenuObjUtil::isMenuObjectFull()) {
+    return 0;
+  }
+  u32 handle = GfMenuObject::getAttachedObject(unknown001);
+  if (!ui::UIObjectAcc(handle).isValid()) {
+    return 0;
+  }
+  if (ui::UIObjectAcc(handle).isTerm()) {
+    return 0;
+  }
+  mm::mtl::Queue<PopupInfo> *queue = static_cast<mm::mtl::Queue<PopupInfo> *>(GfMenuManyObjects::get()->unknown10[GfMenuManyObjects::unknown001_7]);
+  size_t count = queue->size();
+  if (count != 0 && param.unknown00 == unknown005_9) {
+    for (u32 i = 0; i < count; i++) {
+      queue = static_cast<mm::mtl::Queue<PopupInfo> *>(GfMenuManyObjects::get()->unknown10[GfMenuManyObjects::unknown001_7]);
+      if (queue != nullptr && !queue->empty()) {
+        PopupInfo &queued = (*queue)[i];
+        if (queued.unknown0c.unknown00 == unknown005_9 && queued.unknown0c.unknown04 == param.unknown04) {
+          return 0;
+        }
+      }
+    }
+  }
+  PopupInfo info;
+  info.unknown08 = handle;
+  info.unknown0c = param;
+  GfMenuManyObjects::unknown003<PopupInfo>(GfMenuManyObjects::unknown001_7, info, &GfMenuObjPopup::close);
+  if (!s_disp && !GfMenuManyObjects::get()->unknown50[GfMenuManyObjects::unknown001_7]) {
+    sendOpen(handle, info);
+  }
+  return handle;
 }
 
 void GfMenuObjPopup::close(u32 handle) {

@@ -1,7 +1,5 @@
 #include "event/cam_obj.h"
 
-#include <stddef.h>
-
 #include "event/cam_interface.h"
 #include "event/cam_manager.h"
 #include "event/cam_util.h"
@@ -20,13 +18,6 @@
 #include "mm_mtl/singleton.h"
 
 namespace event {
-
-// Inferred role: stores a vector in three consecutive variables of a command parameter; original name unknown.
-static void unknown001(CmdParam &param, size_t index, const mm::Vec3 &vec) {
-  param.val(index).setF32(vec.x);
-  param.val(index + 1).setF32(vec.y);
-  param.val(index + 2).setF32(vec.z);
-}
 
 ICmd::RESULT CamObj::SetEnable::update(const Param &param) {
   u32 screenID = param.val(0).getS32();
@@ -163,8 +154,8 @@ void CamObj::update(const FrameInfo &info) {
   }
   CmdParam param;
   param.val(0).setS32(unknown64);
-  unknown001(param, 1, pos);
-  unknown001(param, 4, target);
+  param.unknown001(1, pos);
+  param.unknown001(4, target);
   param.val(7).setF32(roll);
   unknownc78.push_back(&unknown48, param);
   param.val(0).setS32(unknown64);

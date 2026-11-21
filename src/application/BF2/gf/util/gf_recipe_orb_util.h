@@ -50,6 +50,7 @@ static_assert(sizeof(RecipeInfo) == 0x38, "");
 class GfRecipeOrbUtil {
 public:
   static bool getRecipeItemsByItemBox(mm::mtl::FixedVector<OrbRecipe, 128> &items, u32 id);
+  static bool isEnabaleOrbRecipeID(u32 recipe, const mm::mtl::FixedVector<OrbRecipe, 128> &items);
   static bool isEnabaleOrbRecipeCategory(u32 recipe, const mm::mtl::FixedVector<OrbRecipe, 128> &items);
   static bool isEnabaleOrbRecipeRare(u32 recipe, const mm::mtl::FixedVector<OrbRecipe, 128> &items);
   static bool isEnableRecipe(u32 id);

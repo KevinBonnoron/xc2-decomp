@@ -6,6 +6,7 @@
 #include "grlib/cglib_dbl_uniform_block.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_math/mm_vec4.h"
 #include "types.h"
 
 namespace ml {
@@ -82,7 +83,7 @@ public:
   f32 unknown4c4; // Inferred role: field of view of the screen to view position (gScreenToViewPos of DrPixlPostObjTSSAO::passTemporalFiltering, halved and passed to tanf at 0x71008c2eb0); original
                   // member name unknown.
   f32 unknown4c8; // Inferred role: distance along the view direction (DrPixlPostObjMotionBlur2::calcBlurWork, 0x71008bcbe0, times the direction and 10); original member name unknown.
-  u8 _4cc[0x4d0 - 0x4cc];
+  f32 unknown4cc; // Inferred role: velocity parameter of the sky base render (DrPixlSkyDome::baseRender, gVelocityParam x component); original member name unknown.
   f32 unknown4d0; // Inferred role: pixl scale; original member name unknown.
   u8 _4d4[0x4e0 - 0x4d4];
   DrCalcClipWorkViewPlane unknown4e0; // Inferred role: view clip plane; original member name unknown.
@@ -105,17 +106,23 @@ public:
   u8 _9a8[0x9a9 - 0x9a8];
   bool unknown9a9; // Inferred role: camera cut; original member name unknown.
   bool unknown9aa; // Inferred role: SSR skip; original member name unknown.
-  u8 _9ab[0x9ac - 0x9ab];
+  bool unknown9ab; // Inferred role: first flag passed to DrMdoCtlMpfAuto::autoMpfCalc by DrResMdoSeamWrkMpf::updateRenderList; original member name unknown.
   bool unknown9ac; // Inferred role: set when the value at 0x79c exceeds 128; original member name unknown.
   bool unknown9ad; // Inferred role: request flag; original member name unknown.
-  u8 _9ae[0xae0 - 0x9ae];
+  u8 _9ae[0x9c0 - 0x9ae];
+  // Inferred role: eight entries of 16 bytes, the second float of each (offset 0x9c4 + 0x10 * index) times 2 pi is the fourth gParam2 value of
+  // DrPixlPostObjTSSAO::passSSAO (index from the counter of that function); original member name unknown.
+  mm::Vec4 unknown9c0[8];
+  u8 _a40[0xae0 - 0xa40];
   f32 unknownae0[2]; // Inferred role: jitter; original member name unknown.
   u8 _ae8[0xaf0 - 0xae8];
   f32 unknownaf0[2]; // Inferred role: prev jitter; original member name unknown.
   u8 _af8[0xb00 - 0xaf8];
   f32 unknownb00[4]; // Inferred role: dither tmaa values; original member name unknown.
   f32 unknownb10[2]; // Inferred role: dither param; original member name unknown.
-  u8 _b18[0xc60 - 0xb18];
+  u8 _b18[0xc20 - 0xb18];
+  // Inferred role: matrix passed as the gDither uniform of DrPixlPostObjTSSAO::passSSAO (0x71008c2388); original member name unknown.
+  mm::Mat44 unknownc20;
 };
 
 static_assert(offsetof(DrCalcViewWork, unknown40) == 0x40, "");
@@ -153,12 +160,15 @@ static_assert(offsetof(DrCalcViewWork, unknown938) == 0x938, "");
 static_assert(offsetof(DrCalcViewWork, unknown970) == 0x970, "");
 static_assert(offsetof(DrCalcViewWork, unknown9a9) == 0x9a9, "");
 static_assert(offsetof(DrCalcViewWork, unknown9aa) == 0x9aa, "");
+static_assert(offsetof(DrCalcViewWork, unknown9ab) == 0x9ab, "");
 static_assert(offsetof(DrCalcViewWork, unknown9ac) == 0x9ac, "");
 static_assert(offsetof(DrCalcViewWork, unknown9ad) == 0x9ad, "");
+static_assert(offsetof(DrCalcViewWork, unknown9c0) == 0x9c0, "");
 static_assert(offsetof(DrCalcViewWork, unknownae0) == 0xae0, "");
 static_assert(offsetof(DrCalcViewWork, unknownaf0) == 0xaf0, "");
 static_assert(offsetof(DrCalcViewWork, unknownb00) == 0xb00, "");
 static_assert(offsetof(DrCalcViewWork, unknownb10) == 0xb10, "");
+static_assert(offsetof(DrCalcViewWork, unknownc20) == 0xc20, "");
 static_assert(sizeof(DrCalcViewWork) == 0xc60, "");
 
 } // namespace ml

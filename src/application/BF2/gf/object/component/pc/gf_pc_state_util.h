@@ -127,7 +127,7 @@ public:
   static void setEnableLookIK(GfComBehaviorPc &behavior, bool isEnable);
   static void setEnableSpineIK(GfComBehaviorPc &behavior, bool isEnable);
   static void setEnableSpineRotate(GfComBehaviorPc &behavior, bool isEnable, f32 time);
-  static void setSpineRotateAngles(GfComBehaviorPc &behavior, f32 yaw, f32 pitch);
+  static void setSpineRotateAngles(GfComBehaviorPc &behavior, f32 pitch, f32 yaw);
   static void changePlacementDownDist(GfComBehaviorPc &behavior, f32 distance);
   static void resetPlacementDownDist(GfComBehaviorPc &behavior);
   static void changeGroundAnglesForMotion(GfComBehaviorPc &behavior, const mm::Vec3 &angles);

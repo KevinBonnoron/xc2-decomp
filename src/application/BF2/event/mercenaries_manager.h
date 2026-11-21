@@ -13,7 +13,7 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
   void entryable(u32 mission);
   void finish(u32 mission);
-  u32 getState(u32 mission);
+  int getState(u32 mission);
 };
 
 static_assert(sizeof(MercenariesManager) == 0x10, "");

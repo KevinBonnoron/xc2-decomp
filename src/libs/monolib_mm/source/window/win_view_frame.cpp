@@ -1,6 +1,9 @@
 #include "ml/win_view_frame.h"
 
+#include "ml/cache_draw.h"
+#include "ml/dev_graph.h"
 #include "ml/win_view.h"
+#include "mm_mtl/fixstr.h"
 
 namespace ml {
 
@@ -123,6 +126,57 @@ void WinViewFrame::getRectClose(mm::Rect<int> &rect) const {
   mm::Rect<int> frame = m_info->getFrameRect(false);
   s16 border = unknown60;
   rect = mm::Rect<int>(border + static_cast<s16>(frame.width - border * 2) - 0x12, border + 2, 0x10, 0x12);
+}
+
+void WinViewFrame::renderTitle(DebDraw *draw) const {
+  // Ruling 4: only this declaration order of the color components gives the game's registers (the gray result lands in the register of r, 0x710076918c); with the
+  // three declared and initialised together in any order the gray lands in another register. Found by permuting the declarations.
+  f32 b;
+  f32 g;
+  int width = m_info->getFrameRect(false).width;
+  s16 border = unknown60;
+  // The game truncates the width to 16 bits before the isCurrentChild call of hasCurrent (sxth at 0x710076912c) and keeps it across the draw calls; inline in
+  // the `right` computation, after the calls, the sxth moves down and the function has 236 instructions instead of 237.
+  int span = static_cast<s16>(width - border * 2);
+  f32 r = unknown28.r;
+  g = unknown28.g;
+  b = unknown28.b;
+  if (m_info->hasCurrent()) {
+    f32 gray = r * 0.298912f + g * 0.586611f + b * 0.114477f;
+    b = gray;
+    r = gray;
+    g = gray;
+  }
+  f32 alpha = m_info->unknown524;
+  draw->begin(8, 4);
+  int right = span + border;
+  draw->add(right, border, mm::Col4(r, g, b, alpha));
+  draw->add(border, border, mm::Col4(r * 0.5f, g * 0.5f, b * 0.5f, alpha));
+  draw->add(right, border + 0x16, mm::Col4(r, g, b, alpha));
+  draw->add(border, border + 0x16, mm::Col4(r * 0.5f, g * 0.5f, b * 0.5f, alpha));
+  draw->end();
+  if (!(m_info->unknown3bc & 0x400)) {
+    int closeWidth = m_info->getFrameRect(false).width;
+    s16 closeBorder = unknown60;
+    int right2 = closeBorder + static_cast<s16>(closeWidth - closeBorder * 2);
+    int left = right2 - 0x12;
+    int top = closeBorder + 2;
+    draw->setCol(mm::Col4::white);
+    draw->begin(2, 2);
+    draw->add(mm::Pnt<int>(left, top), mm::Pnt<int>(right2 - 2, closeBorder + 0x14));
+    draw->add(mm::Pnt<int>(left, closeBorder + 0x14), mm::Pnt<int>(right2 - 2, top));
+    draw->end();
+  }
+  m_info->fontStyle(FONT_STYLE_UNKNOWN_0);
+  m_info->fontShadow(false);
+  m_info->fontColor(unknown18);
+  m_info->fontScale(1.0f, 1.0f);
+  s16 textBorder = unknown60;
+  m_info->font(textBorder, textBorder + 0xb - m_info->fontGetHeight() / 2, m_info->unknown4d0.c_str());
+  m_info->fontFlush(true);
+  draw->setZComp(false);
+  draw->setZWrite(false);
+  renderFrame(draw, mm::Rect<int>(0, 0, width, static_cast<s16>(unknown60 * 2 + 0x16)));
 }
 
 } // namespace ml

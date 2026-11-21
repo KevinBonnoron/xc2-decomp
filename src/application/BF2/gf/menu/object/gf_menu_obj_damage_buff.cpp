@@ -4,8 +4,10 @@
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/gf_allocator.h"
+#include "gf/menu/adapter/gf_menu_field_pos_adapter.h"
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
+#include "mm_mtl/queue.h"
 #include "ui/event/ui_event_data.h"
 #include "ui/event/ui_event_manager.h"
 #include "ui/ui_object_acc.h"
@@ -46,6 +48,94 @@ void GfMenuObjDamageBuff::initialize() {
   ui::UIObjectAcc(unknown18).setTerm();
   GfMenuObject::initialize();
   GfMenuManyObjects::unknown002<DamageInfo>(GfMenuManyObjects::unknown001_1, 32);
+}
+
+u32 GfMenuObjDamageBuff::open(const OpenParam &param) {
+  if (GfMenuObjUtil::isMenuObjectFull()) {
+    return 0;
+  }
+  u32 object = getAttachedObject(unknown001);
+  if (!ui::UIObjectAcc(object).isValid()) {
+    return 0;
+  }
+  if (ui::UIObjectAcc(object).isTerm()) {
+    return 0;
+  }
+  u32 handle = ui::UIObjectAcc(object).duplicateChild("LAY_buff_root");
+  if (!ui::UIObjectAcc(handle).isValid()) {
+    return 0;
+  }
+  setupPlugin(handle);
+  GfMenuFieldPosAdapter::create(ui::UIObjectAcc(handle).searchChild("LAY_buff"), param.unknown20);
+  u16 text;
+  if (param.unknown10 != nullptr && param.unknown18 != 0) {
+    text = registString(ui::UIStr(param.unknown10, param.unknown18));
+  } else {
+    if (param.unknown08 == nullptr) {
+      return 0;
+    }
+    text = registString(ui::UIStr(param.unknown08, true));
+  }
+  ui::EventData event;
+  event.unknown00 = GfMenuTypes::unknown003_33;
+  event.unknown08 = param.unknown00;
+  event.unknown0c_u16 = param.unknown04;
+  if (param.unknown05 != 0) {
+    event.unknown0c_u16 = 2;
+  }
+  event.unknown0e = ui::UIObjectAcc(handle).getDuplicateIndex();
+  event.unknown10 = text;
+  event.unknown14 = param.unknown1c;
+  sendEvent(object, event, 0.0f);
+  DamageInfo info(handle);
+  mm::mtl::Queue<DamageInfo> *queue = static_cast<mm::mtl::Queue<DamageInfo> *>(GfMenuManyObjects::get()->unknown10[GfMenuManyObjects::unknown001_1]);
+  if (queue != nullptr) {
+    if (queue->full()) {
+      DamageInfo oldest;
+      queue->unknown002(oldest);
+      close(oldest.unknown08);
+    }
+    queue->push_back(info);
+  }
+  return handle;
+}
+
+u32 GfMenuObjDamageBuff::openUniteCombo(const OpenUniteParam &param) {
+  if (GfMenuObjUtil::isMenuObjectFull()) {
+    return 0;
+  }
+  u32 object = getAttachedObject(unknown001);
+  if (!ui::UIObjectAcc(object).isValid()) {
+    return 0;
+  }
+  if (ui::UIObjectAcc(object).isTerm()) {
+    return 0;
+  }
+  u32 handle = ui::UIObjectAcc(object).duplicateChild("LAY_unite_root");
+  ui::UIObjectAcc root(handle);
+  if (!root.isValid()) {
+    return 0;
+  }
+  GfMenuObjUtil::createFitPlugin(root.searchChild("IMG_dr_combo_bg"), root.searchChild("TXT_dr_combo_name"), 0x18, 8, GfMenuObjUtil::FitOption());
+  GfMenuObjUtil::createFitPlugin(root.searchChild("IMG_bl_combo_bg"), root.searchChild("TXT_bl_combo_name"), 0x18, 8, GfMenuObjUtil::FitOption());
+  GfMenuFieldPosAdapter::create(root.searchChild("LAY_unite_combo"), param.unknown10);
+  ui::EventData event;
+  event.unknown00 = GfMenuTypes::unknown003_256;
+  event.unknown0e = ui::UIObjectAcc(handle).getDuplicateIndex();
+  event.unknown10 = param.unknown00;
+  event.unknown14 = param.unknown04;
+  sendEvent(object, event, 0.0f);
+  DamageInfo info(handle);
+  mm::mtl::Queue<DamageInfo> *queue = static_cast<mm::mtl::Queue<DamageInfo> *>(GfMenuManyObjects::get()->unknown10[GfMenuManyObjects::unknown001_1]);
+  if (queue != nullptr) {
+    if (queue->full()) {
+      DamageInfo oldest;
+      queue->unknown002(oldest);
+      closeUniteCombo(oldest.unknown08);
+    }
+    queue->push_back(info);
+  }
+  return handle;
 }
 
 void GfMenuObjDamageBuff::close(u32 handle) {

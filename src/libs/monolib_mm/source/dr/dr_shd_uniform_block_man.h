@@ -16,10 +16,17 @@ struct MdsMatInfoHeader;
 struct MdsMatTechnique;
 
 struct MdsMpfMatTopHeader {
-  u8 _00[0x14 - 0x00];
+  u32 unknown00; // Inferred role: offset of the material infos; original member name unknown.
+  u32 unknown04; // Inferred role: material count, copied to MdoWrkMatRes::unknown30 and also the sampler count and the size of the bit table; original member name unknown.
+  u8 _08[0x0c - 0x08];
+  u32 unknown0c; // Inferred role: unknown value copied to MdoWrkMatRes::unknown34; original member name unknown.
+  u8 _10[0x14 - 0x10];
   s32 unknown14; // Inferred role: material count; original member name unknown.
 };
 
+static_assert(offsetof(MdsMpfMatTopHeader, unknown00) == 0x00, "");
+static_assert(offsetof(MdsMpfMatTopHeader, unknown04) == 0x04, "");
+static_assert(offsetof(MdsMpfMatTopHeader, unknown0c) == 0x0c, "");
 static_assert(offsetof(MdsMpfMatTopHeader, unknown14) == 0x14, "");
 
 class DrShdUniformBlockMan {

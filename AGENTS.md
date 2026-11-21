@@ -36,7 +36,7 @@
     the game address of its user. Helpers with several users stay
     `unknownNNN`, except the private `setFlag`/`setDispFlag` helpers of the
     event classes, which keep their descriptive names with an `// Inferred
-    name` comment (decision of 2026-11-14 #26).
+    name` comment (decision 26 in [docs/decisions.md](docs/decisions.md)).
 - A macro leaves no trace in the binary, so its original name can never be
   recovered: give it a descriptive upper-case name and say in a comment that
   the name is inferred (`// Inferred macro name; macros leave no trace in the

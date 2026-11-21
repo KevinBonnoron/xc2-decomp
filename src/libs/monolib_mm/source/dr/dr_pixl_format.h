@@ -22,6 +22,8 @@ public:
   static GrlDepthFormat s_UnbranchZBufferFormat;
   static GrlSurfaceFormat s_LgtLinkGIBFadeList;
   static GrlSurfaceFormat s_LgtLinkGIBIndexMask;
+  static GrlSurfaceFormat s_DepthBufferFormat;
+  static GrlSurfaceFormat s_QuaterNormalFormat;
   static const f32 s_fPixelScale[19]; // Name from the game symbol _ZN2ml12DrPixlFormat13s_fPixelScaleE; also in torna and xc1de.
 };
 

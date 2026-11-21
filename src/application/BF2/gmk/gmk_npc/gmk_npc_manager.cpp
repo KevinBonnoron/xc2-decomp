@@ -189,3 +189,7 @@ void GmkNpcIdInfo::removeGmkNpc(AGmkNpc *npc) {
 }
 
 } // namespace gmk
+
+template void mm::mtl::Vector<gmk::GmkNpcIdInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkNpcIdInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkNpcIdInfo>::resize(size_t);

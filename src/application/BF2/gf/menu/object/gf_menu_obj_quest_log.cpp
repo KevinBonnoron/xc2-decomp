@@ -390,6 +390,33 @@ bool GfMenuObjQuestLog::seqCompleteWait() {
   return true;
 }
 
+bool GfMenuObjQuestLog::seqTitleStart() {
+  ui::UIObjectAcc base(unknown18, "IMG_title_base");
+  QuestID quest;
+  unknown28->getQuest(quest);
+  if (QuestListAcc::get()->getListQuestCategory(quest) == QTYPE_UNKNOWN_1) {
+    base.startAnimation("start_scenario", false);
+    unknown60.unknown004(20);
+    unknown60.unknown002(&GfMenuObjQuestLog::seqTitleFadeInText);
+    unknown60.unknown002(&GfMenuObjQuestLog::seqTitleFadeInScenario);
+    unknown60.unknown004(119);
+    unknown60.unknown002(&GfMenuObjQuestLog::seqTitleFadeOutScenario);
+  } else {
+    base.startAnimation("start", false);
+    unknown60.unknown004(20);
+    unknown60.unknown002(&GfMenuObjQuestLog::seqTitleFadeInText);
+    unknown60.unknown002(&GfMenuObjQuestLog::seqTitleFadeInNormal);
+    unknown60.unknown004(119);
+    unknown60.unknown002(&GfMenuObjQuestLog::seqTitleFadeOutNormal);
+  }
+  unknown60.unknown002(&GfMenuObjQuestLog::seqTitleEndWait);
+  if (unknown818) {
+    unknown60.unknown002(&GfMenuObjQuestLog::seqOrderActivation);
+  }
+  base.setDisp(true);
+  return true;
+}
+
 bool GfMenuObjQuestLog::seqTitleFadeInScenario() {
   unknown005("TXT_title_sub_scenario");
   return true;

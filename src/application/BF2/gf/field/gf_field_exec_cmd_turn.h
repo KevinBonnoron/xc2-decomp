@@ -9,6 +9,7 @@ namespace gf {
 
 struct GF_OBJ_HANDLE;
 class GfComAsm;
+class GfComTransform;
 
 // Turns the object towards an angle with an asm command. The layout follows GfComBehaviorEnemy::execTurnCmd (0x7100517cb4),
 // execTurnCmd with four angles (0x7100518150), TFieldExecCmdTurn::create (0x7100517d54), the destructor (0x71005145a8) and the
@@ -40,6 +41,7 @@ public:
 
   void create(const CreateInfo &info);
   void update(f32 deltaTime);
+  void applyDeltaRotY(GfComTransform &transform, f32 deltaTime);
 
   CreateInfo unknown00;       // Inferred role: create info; original member name unknown.
   TFieldExecCmd<T> unknown20; // Inferred role: turn command; original member name unknown.

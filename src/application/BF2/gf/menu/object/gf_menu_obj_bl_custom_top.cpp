@@ -11,6 +11,8 @@
 #include "gf/menu/object/gf_menu_obj_common_detail.h"
 #include "gf/menu/object/gf_menu_obj_common_jog.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
+#include "mm_math/mm_pnt.h"
+#include "mm_math/mm_rect.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/reference_object.h"
 #include "ui/ctrl/ui_ctrl_object.h"
@@ -189,6 +191,48 @@ bool GfMenuObjBlCustomTop::seqStartAddLayer() {
   return true;
 }
 
+bool GfMenuObjBlCustomTop::seqAddLayerPhase1() {
+  if (unknown2e8 == -1) {
+    GfMenuObjCommonJog::close(unknown40);
+    ui::UIObjectAcc acc(unknown18, "LAY_blade");
+    mm::Pnt<s16> pos;
+    mm::Rect<s16> to;
+    // Ruling 2026-11-13 #3: the first rect shares its stack slot with the control parameter, its lifetime ends before the parameter exists (0x710040fe18).
+    {
+      mm::Rect<s16> from;
+      // The game ignores the result of getLayoutRect, as in seqAppearPhase3.
+      acc.getLayoutRect("dr_chage _position01", from);
+      acc.getLayoutRect("dr_chage _position02", to);
+      acc.getPos(pos);
+      pos.x += to.x - from.x;
+      pos.y += to.y - from.y;
+    }
+    GfMenuObjUtil::CtrlParam param;
+    // Ruling 2026-11-13 #4, 0x710040fe18: of the 24 orders of these four stores only this one gives the game's bytes, the others give 89 instructions or another order of the stores.
+    param.unknown08 = 0x80;
+    param.unknown26 = pos;
+    param.unknown0c = 1;
+    param.unknown00 = 0.25f;
+    unknown2e8 = GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
+  }
+  // Ruling 2026-11-13 #3: the result shares its stack slot with the control parameter and its lifetime ends here; without the block the return value
+  // is set before the store of -1 at the end (0x710040ff68), the game stores first.
+  {
+    GfMenuCallContext::GfMenuResult result;
+    if (unknown40->isActive()) {
+      if (unknown40->unknown18.empty() || !unknown40->popResult(result) || result.unknown04 != 1) {
+        return false;
+      }
+      unknown40->reset();
+    }
+  }
+  if (GfMenuObjUtil::isBusyCtrl(unknown2e8)) {
+    return false;
+  }
+  unknown2e8 = -1;
+  return true;
+}
+
 bool GfMenuObjBlCustomTop::seqAddLayerPhase2() {
   GfMenuObject::enableFSSwitching();
   GfMenuObject::changeFSSubLayer(unknown18, 2, unknown2ec, true);
@@ -205,6 +249,46 @@ bool GfMenuObjBlCustomTop::seqAddLayerPhase3_BlWeapon() { return GfMenuObjBlWeap
 bool GfMenuObjBlCustomTop::seqAddLayerPhase3_BlOrb() { return GfMenuObjBlOrb::attach(unknown50); }
 
 bool GfMenuObjBlCustomTop::seqAddLayerPhase4() { return unknown50->isTerm(); }
+
+bool GfMenuObjBlCustomTop::seqAddLayerPhase5() {
+  if (unknown2e8 == -1) {
+    ui::UIObjectAcc main(unknown18, "LAY_main");
+    GfMenuObjCommonJog::OpenParam jogParam;
+    jogParam.unknown00 = 6;
+    GfMenuObjCommonJog::open(unknown40, jogParam);
+    GfMenuObject::setCallContextEventHandler(unknown40, main.unknown10);
+    ui::UIObjectAcc acc(unknown18, "LAY_blade");
+    mm::Pnt<s16> pos;
+    mm::Rect<s16> to;
+    // Ruling 2026-11-13 #8: the game writes the rect block of seqAddLayerPhase1 again here (0x7100410010, the two names swapped). A shared helper that returns the position
+    // gives 93 instructions against 90 and a frame of 176 against 160 bytes in seqAddLayerPhase1, so the block stays written out. Ruling 2026-11-13 #3 for the scope of `from`.
+    {
+      mm::Rect<s16> from;
+      // The game ignores the result of getLayoutRect, as in seqAppearPhase3.
+      acc.getLayoutRect("dr_chage _position02", from);
+      acc.getLayoutRect("dr_chage _position01", to);
+      acc.getPos(pos);
+      pos.x += to.x - from.x;
+      pos.y += to.y - from.y;
+    }
+    GfMenuObjUtil::CtrlParam param;
+    // Ruling 2026-11-13 #4, same order as in seqAddLayerPhase1 (0x7100410010): the only one of the 24 that matches.
+    param.unknown08 = 0x80;
+    param.unknown26 = pos;
+    param.unknown0c = 1;
+    param.unknown00 = 0.25f;
+    unknown2e8 = GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
+  }
+  // Ruling 2026-11-13 #3: `result` has its own scope as in seqAddLayerPhase1 (0x7100410010); without the block the bytes differ there.
+  {
+    GfMenuCallContext::GfMenuResult result;
+    if ((!unknown40->isActive() || (!unknown40->unknown18.empty() && unknown40->popResult(result) && result.unknown04 == 0)) && !GfMenuObjUtil::isBusyCtrl(unknown2e8)) {
+      unknown2e8 = -1;
+      return true;
+    }
+  }
+  return false;
+}
 
 bool GfMenuObjBlCustomTop::seqEndAddLayer() {
   mm::mtl::safeRelease(unknown50);

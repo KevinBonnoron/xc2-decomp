@@ -24,7 +24,7 @@ void QuestManager::OnEventProc(MSG_TYPE type) {
   }
 }
 
-u32 QuestManager::getState(u32 quest) { return gf::GfQuestEvent::getQuestState(quest); }
+int QuestManager::getState(u32 quest) { return gf::GfQuestEvent::getQuestState(quest); }
 
 bool QuestManager::entry(u32 quest, bool *isOrdered) {
   if ((unknown10 & FLAG_UNKNOWN_0) == 0) {

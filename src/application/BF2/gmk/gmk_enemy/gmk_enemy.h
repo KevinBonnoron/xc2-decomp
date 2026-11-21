@@ -26,11 +26,16 @@ class GmkSquad;
 
 // Layout evidence: gmk::GmkEnemyInsts::reqForcePopGobInst (0x71005efab8) copies these 8 bytes to offset 0x144 of the
 // instances and GfSmnEnemyManager fills them; GmkEnemyInsts::createGobInsts copies the first byte to PopInfo::CreateInfo::unknown0c.
+// The first four bytes are four members: the constructor and createGobInsts access the first byte alone, while
+// gmk::GmkGrave::reqPopEnemy (0x710061207c, 0x71006122f0) clears the four with one 4 byte store (str wzr, [x20, #0x18c]); a u32
+// first member breaks the byte accesses and a lone u8 gives a strb.
 struct ForcePopEnemyInfo {
   ForcePopEnemyInfo() : unknown00(0), unknown04(0) {}
 
-  u8 unknown00; // Role and original member name unknown.
-  u8 _01[0x04 - 0x01];
+  u8 unknown00;  // Role and original member name unknown.
+  u8 unknown01;  // Role and original member name unknown.
+  u8 unknown02;  // Role and original member name unknown.
+  u8 unknown03;  // Role and original member name unknown.
   u32 unknown04; // Role and original member name unknown.
 };
 

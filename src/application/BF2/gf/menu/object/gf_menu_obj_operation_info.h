@@ -56,6 +56,7 @@ public:
   static void dupClose(mm::mtl::FixedVector<DupItem, 16> &table);
   static void setupScreen(u32 handle, mm::mtl::FixedVector<DupItem, 16> &table);
   static void dispOffIconTable(mm::mtl::FixedVector<DupItem, 16> &table, u32 index);
+  static bool setupIconTable(mm::mtl::FixedVector<DupItem, 16> &table, u32 index, u32 key, u32 value, u32 isSecond);
   void initialize() override;
   void finalize() override;
   void update() override;

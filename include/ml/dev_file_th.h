@@ -132,7 +132,7 @@ struct DevFileParamTh {
 
 static_assert(sizeof(DevFileParamTh) == 0x70, "");
 
-class DevFileTh : public DevBase, public mm::mtl::PtrSingleton<DevFileTh>, public IErrorCB {
+class DevFileTh : public DevBase, public mm::mtl::PtrSingleton<DevFileTh>, public unknown201 {
 public:
   class Impl {
   public:
