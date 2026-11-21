@@ -73,16 +73,7 @@ bool CMovie::isplaying() {
   if (player == nullptr) {
     return false;
   }
-  bool audioFinished;
-  if (player->unknown430 == nullptr) {
-    audioFinished = true;
-  } else {
-    audioFinished = player->unknown430->unknown4b0;
-  }
-  if ((player->unknown438 == nullptr || player->unknown438->unknown269) && audioFinished) {
-    player->unknownb30 = true;
-  }
-  return !player->unknownb30;
+  return !player->IsPlaybackComplete();
 }
 
 } // namespace CMovieNX
@@ -341,12 +332,7 @@ void MovieDecoderPlayer::ResetPlaybackComplete() {
 movie::Status MovieDecoderPlayer::AudioFormatChangedEvent() { return movie::Status_Success; }
 
 bool MovieDecoderPlayer::IsPlaybackComplete() {
-  bool audioFinished;
-  if (unknown430 == nullptr) {
-    audioFinished = true;
-  } else {
-    audioFinished = unknown430->unknown4b0;
-  }
+  bool audioFinished = unknown430 == nullptr || unknown430->unknown4b0;
   if ((unknown438 == nullptr || unknown438->unknown269) && audioFinished) {
     unknownb30 = true;
   }
@@ -354,13 +340,7 @@ bool MovieDecoderPlayer::IsPlaybackComplete() {
 }
 
 bool MovieDecoderPlayer::StartPlayback() {
-  bool audioFilled = false;
-  bool videoFilled = false;
-  if (unknownb08) {
-    audioFilled = unknownb4c < unknownb54;
-  }
-  if (unknownb09) {
-    videoFilled = unknownb50 < unknownb58;
-  }
+  bool audioFilled = unknownb08 && unknownb4c < unknownb54;
+  bool videoFilled = unknownb09 && unknownb50 < unknownb58;
   return !(audioFilled || videoFilled);
 }
