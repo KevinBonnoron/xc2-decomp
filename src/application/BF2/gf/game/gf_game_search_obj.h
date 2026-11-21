@@ -27,7 +27,8 @@ static GF_SEARCH_OBJ *const unknown012 = reinterpret_cast<GF_SEARCH_OBJ *>(-1); 
 // and GfGameSearchObj::updateObj, which fills them.
 struct GfSearchInfo {
   GF_OBJ_HANDLE *unknown00; // Inferred role: found object; original member name unknown.
-  u8 _08[0x24 - 0x08];
+  u8 _08[0x20 - 0x08];
+  f32 unknown20;       // Inferred role: distance; original member name unknown. Evidence: LookAtPlugin::changeTarget (1.0.0: 0x710057997c) compares it between candidates.
   f32 unknown24;       // Inferred role: forward angle; original member name unknown.
   f32 unknown28;       // Inferred role: sort key copied from the cached position; original member name unknown.
   u32 unknown2c_0 : 1; // Inferred role: visible; original member name unknown.

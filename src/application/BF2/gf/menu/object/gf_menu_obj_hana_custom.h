@@ -49,6 +49,14 @@ public:
     GfMenuObjHanaCustom *unknown20; // Inferred role: owner; original member name unknown.
   };
 
+  class PlanListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjHanaCustom *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   GfMenuObjHanaCustom(u32 handle);
   ~GfMenuObjHanaCustom() override;
   static void sendEvent(u32 handle, u32 type, u32 param);
@@ -110,6 +118,7 @@ public:
 
 static_assert(offsetof(GfMenuObjHanaCustom::MainListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjHanaCustom::EquipListListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjHanaCustom::PlanListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjHanaCustom, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjHanaCustom, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjHanaCustom, unknown38) == 0x38, "");

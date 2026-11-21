@@ -1,22 +1,28 @@
 #include "gf/object/component/gimmick/gf_com_behavior_gmk.h"
 
+#include <math.h>
+
 #include "bdat.h"
 #include "framework/coli/coli_object.h"
 #include "framework/object/updatable_object.h"
 #include "framework/reference_frame.h"
 #include "fw/fw_transform.h"
+#include "fw/fw_update_info.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_object_type.h"
+#include "gf/field/gf_big_obj_unique.h"
 #include "gf/field/gf_field_lod.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_obj.h"
 #include "gf/game/gf_game_util.h"
 #include "gf/game/sequential_play/gf_play_factory.h"
+#include "gf/gf_allocator.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_bdat.h"
 #include "gf/menu/object/gf_menu_obj_target_info.h"
 #include "gf/object/component/gf_com_collider.h"
+#include "gf/object/component/gf_com_transform.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_manager.h"
@@ -27,6 +33,7 @@
 #include "gmk/gmk_elevator.h"
 #include "gmk/gmk_jump.h"
 #include "gmk/gmk_manager.h"
+#include "gmk/gmk_map_obj.h"
 #include "gmk/gmk_route_navi.h"
 #include "gmk/gmk_salvage.h"
 #include "gmk/gmk_warp.h"
@@ -218,6 +225,54 @@ void GfComBehaviorGmk::procMsgPcGetElvLift(fw::MessageObject *sender, MsgPcGetEl
   }
 }
 
+void GfComBehaviorGmk::setup() {
+  unknownc0 = unknown08->getComponent<GfComTransform>()->unknown001();
+  createMenuObj();
+  gmk::AGmkBase *gmk = gmk::getBindedGmkInst(static_cast<GfObj *>(unknown08)->unknownf8);
+  if (gmk != nullptr) {
+    gmk::GmkType type = gmk->getGmkType();
+    if (type == gmk::GMK_TYPE_MAP_OBJ || type == gmk::GMK_TYPE_ROUTED_MAP_OBJ) {
+      u8 *bdat = GfDataBdat::getFP(BDAT_RSC_MAP_OBJ_LIST);
+      GfObjSetupGimmick *setup = mm::mtl::dynamicCast<GfObjSetupGimmick>(GfObjManager::getObjInfo(static_cast<GfObj *>(unknown08)->unknownf8)->unknown30);
+      int id = 0;
+      if (setup->unknown08 == OBJECT_TYPE_MOB) {
+        id = setup->unknown10;
+      } else if (setup->unknown08 == OBJECT_TYPE_GIMMICK) {
+        id = setup->unknown10;
+      }
+      if (Bdat::getFlagVal(bdat, "flag", id, "BigObj") != 0) {
+        GfBigObjUnique::CreateInfo bigObjInfo;
+        bigObjInfo.unknown00 = static_cast<GfObj *>(unknown08)->unknownf8;
+        unknownb0.create(bigObjInfo);
+      }
+    }
+  }
+  {
+    // The game calls the GfObjAcc constructor here (0x710052a920) and its stack slot is reused by the later locals, so its lifetime ends here.
+    GfObjAcc acc(static_cast<GfObj *>(unknown08));
+  }
+  gmk::AGmkBase *routeGmk = gmk::getBindedGmkInst(static_cast<GfObj *>(unknown08)->unknownf8);
+  if (routeGmk != nullptr && routeGmk->getGmkType() == gmk::GMK_TYPE_ROUTED_MAP_OBJ) {
+    gmk::GmkRouteNavi::CreateInfo naviInfo(static_cast<gmk::GmkRoutedMapObj *>(routeGmk));
+    naviInfo.unknown10 = 0.5f;
+    naviInfo.unknown14 = 1.0f;
+#line 131
+    unknowna0 = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) gmk::GmkRouteNavi(&naviInfo);
+    GfComCollider *collider = unknown08->getComponent<GfComCollider>();
+    fw::unknown133 shape(mm::Vec3(5.5f, 0.1f, 5.5f));
+    shape.unknown10.unknown10 = false;
+    fw::ColiCharacterInfo coliInfo;
+    coliInfo.unknown80 = &shape;
+    coliInfo.unknown04 = fw::COLI_TYPE_UNKNOWN_1;
+    coliInfo.unknown0c = 2;
+    coliInfo.unknown08 = 1000;
+    collider->createColiMoveCharacter(0, coliInfo, mm::mtl::IntrusivePtr<fw::ReferenceFrame>());
+    // The game reads the first collision through the const operator[] of the vector (0x710052aaa8: asserts at vector.h lines 345 and 346).
+    const mm::mtl::Vector<fw::ColiObject *> &colis = collider->unknown18;
+    unknown98 = colis[0];
+  }
+}
+
 void GfComBehaviorGmk::createMenuObj() {
   disposeMenuObj();
   if (!mm::mtl::dynamicCast<GfObjSetupGimmick>(GfObjManager::getObjInfo(static_cast<GfObj *>(unknown08)->unknownf8)->unknown30)->unknowna1) {
@@ -290,6 +345,35 @@ fw::ColiMoveObject *GfComBehaviorGmk::getColiObject() const {
   }
 
   return nullptr;
+}
+
+void GfComBehaviorGmk::update(const fw::UpdateInfo &info) {
+  mm::Vec3 direction;
+  if (unknowna0 == nullptr) {
+    direction = mm::Vec3(0.0f, 0.0f, 0.0f);
+  } else {
+    fw::ReferenceFrame *frame = unknown08->getComponent<GfComTransform>()->unknown001().operator->();
+    const mm::Vec3 &position = frame->getSyncedWorldTransform().unknown00;
+    gmk::GmkRouteNavi::UpdateInfo naviInfo;
+    naviInfo.position = position;
+    unknowna0->update(naviInfo);
+    direction = unknowna0->unknown90 - position;
+    if (!direction.unknown003()) {
+      direction.unknown001();
+    }
+    direction *= 2.0f;
+  }
+  if (unknown98 != nullptr) {
+    unknown98->setDir(direction * info.unknown04);
+    if (unknowna0 != nullptr) {
+      // The game calls atan2f here and drops the result (errno keeps the call). It loads the owner (ldr x21, [x20, #8], 0x710052b148) before the
+      // call (0x710052b154); without this local the load comes after it (167 instructions either way, one load out of place).
+      fw::UpdatableObject *owner = unknown08;
+      atan2f(direction.x, direction.z);
+      owner->getComponent<GfComTransform>()->unknown001()->invalidateLocal();
+    }
+  }
+  unknownb0.update(info.unknown04);
 }
 
 } // namespace gf

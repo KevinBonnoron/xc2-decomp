@@ -8,6 +8,7 @@
 #include "framework/reference_frame.h"
 #include "fw/fw_param_manager.h"
 #include "fw/fw_transform.h"
+#include "mm_mtl/bitflag.h"
 #include "mm_mtl/reference_object.h"
 
 namespace anm {
@@ -110,7 +111,7 @@ void TwoCharaGroundSolver::doPlacementFoot(const UpdateInfo &info) {
   for (u32 i = 0; i < unknown20.size(); i++) {
     if (unknown20[i].get() != nullptr) {
       if (unknowna8 == 1) {
-        unknown20[i]->unknowna0 &= ~1;
+        unknown20[i]->unknowna0.unknown004(FootPlacementIKSolver::FLAG_UNKNOWN_0);
       }
       unknown20[i]->solve(info);
     }
@@ -175,12 +176,12 @@ void TwoCharaGroundSolver::overwriteRaycastUp(f32 distance) {
 void TwoCharaGroundSolver::resetRaycastUp() {
   for (u32 i = 0; i < unknown20.size(); i++) {
     if (unknown20[i].get() != nullptr) {
-      unknown20[i]->unknowna0 &= ~4;
+      unknown20[i]->unknowna0.unknown004(FootPlacementIKSolver::FLAG_UNKNOWN_2);
     }
   }
   for (u32 i = 0; i < unknown58.size(); i++) {
     if (unknown58[i].get() != nullptr) {
-      unknown58[i]->unknowna0 &= ~4;
+      unknown58[i]->unknowna0.unknown004(FootPlacementIKSolver::FLAG_UNKNOWN_2);
     }
   }
 }
@@ -201,12 +202,12 @@ void TwoCharaGroundSolver::overwriteRaycastDown(f32 distance) {
 void TwoCharaGroundSolver::resetRaycastDown() {
   for (u32 i = 0; i < unknown20.size(); i++) {
     if (unknown20[i].get() != nullptr) {
-      unknown20[i]->unknowna0 &= ~8;
+      unknown20[i]->unknowna0.unknown004(FootPlacementIKSolver::FLAG_UNKNOWN_3);
     }
   }
   for (u32 i = 0; i < unknown58.size(); i++) {
     if (unknown58[i].get() != nullptr) {
-      unknown58[i]->unknowna0 &= ~8;
+      unknown58[i]->unknowna0.unknown004(FootPlacementIKSolver::FLAG_UNKNOWN_3);
     }
   }
 }

@@ -127,6 +127,51 @@ MLTHG *MicroThread::createGroup() {
   return group->unknown00;
 }
 
+u64 MicroThread::createThread(MLTHG *group, nn::os::FiberFunction function, void *userData) {
+  if (group == reinterpret_cast<MLTHG *>(-1)) {
+    return -1;
+  }
+  CS cs(unknown298);
+  unknown001 *data = unknown08[reinterpret_cast<u64>(group)];
+  u32 index = -1;
+  for (u64 i = 0; i < 64; i++) {
+    if (data->unknown10[i] == nullptr) {
+      bool isUsed = false;
+      // The game accumulates the flag over the iterations (orr w10, w10, w13 at 0x7100757538) and leaves the loop on the match itself (ccmp at 0x7100757530). Forms tried, all NO MATCH:
+      // `if (match) { isUsed = true; break; }` and `isUsed |= match; if (isUsed) break;` (107 instructions, no accumulated flag), `it != end && !isUsed` with `isUsed = match` or `isUsed |= match`
+      // (109, the flag is folded away).
+      for (MTHREAD **it = unknown88.begin(); it != unknown88.end(); ++it) {
+        bool isSame = (reinterpret_cast<u64>((*it)->unknown38) >> 16 & 0xff) == i;
+        isUsed |= isSame;
+        if (isSame) {
+          break;
+        }
+      }
+      if (!isUsed) {
+        index = i;
+        break;
+      }
+    }
+  }
+  MTHREAD *thread = new (WorkUtil::getWorkMem()) MTHREAD;
+  // Store order found by trying the orders (1.0.0: 0x7100757588-0x71007575a0, str w8 [x24], stp xzr, xzr [x24, #8], strh, str, stp x23, xzr [x24, #24]): with the priority first the stp comes
+  // after the strh, and in offset order the stores of 0x28..0x2d become one stur over 0x26..0x2d.
+  thread->unknown08 = nullptr;
+  thread->unknown10 = nullptr;
+  thread->unknown00 = 50;
+  thread->unknown2c = false;
+  thread->unknown2d = false;
+  thread->unknown28 = 0;
+  thread->unknown18 = userData;
+  thread->unknown20 = 0;
+  thread->unknown30 = nn::os::GetCurrentThread();
+  thread->unknown38 = reinterpret_cast<MLTH *>(createHandle(group, index));
+  setupThread(thread, function);
+  unknown88.push_back(thread);
+  data->unknown08++;
+  return reinterpret_cast<u64>(thread->unknown38);
+}
+
 void MicroThread::releaseGroup(MLTHG *group) {
   if (group == reinterpret_cast<MLTHG *>(-1)) {
     return;

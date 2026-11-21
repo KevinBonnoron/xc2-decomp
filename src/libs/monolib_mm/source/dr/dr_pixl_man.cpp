@@ -9,6 +9,8 @@
 #include "dr/dr_man.h"
 #include "dr/dr_mdl_man.h"
 #include "dr/dr_pixl_deferred.h"
+#include "dr/dr_pixl_format.h"
+#include "dr/dr_pixl_mem_man.h"
 #include "dr/dr_pixl_occ_query.h"
 #include "dr/dr_pixl_post_man.h"
 #include "dr/dr_pixl_post_parm.h"
@@ -21,9 +23,11 @@
 #include "dr/dr_shd_data_obj.h"
 #include "dr/dr_shd_man.h"
 #include "grlib/cglib_color_ctl.h"
+#include "grlib/cglib_ctl_texture.h"
 #include "grlib/cglib_dbl_uniform_block.h"
 #include "grlib/cglib_depth_ctl.h"
 #include "grlib/cglib_depth_target.h"
+#include "grlib/cglib_etc_uniform_block.h"
 #include "grlib/cglib_polygon.h"
 #include "grlib/cglib_render_array.h"
 #include "grlib/cglib_render_target.h"
@@ -35,7 +39,9 @@
 #include "grlib/cglib_uniform_array.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_mat44.h"
+#include "mm_math/mm_vec4.h"
 #include "mm_mtl/fixed_array.h"
+#include "mtl/alloc_handle.h"
 
 namespace ml {
 
@@ -534,6 +540,145 @@ void DrPixlMan::updateShadowDisplayList() {
 
 DrPixlRenderTarget *DrPixlMan::getResponsiveAAMask() { return unknown7f0->unknown00[18][0]; }
 
+grlib::CGLibTextureBuffer *DrPixlMan::getSunShadowMap() { return unknown10[0].unknown170->getShadowMapTexture(); }
+
+void DrPixlMan::resetColorBuff(bool isMain) {
+  // The game never sets the registers of the last two arguments (calcColorBuffer does not read them): the original expressions
+  // cannot be checked.
+  calcColorBuffer(unknown7f0, static_cast<f32>(unknown08->unknown5b8->unknown18), static_cast<f32>(unknown08->unknown5b8->unknown1c), 0.0f, 0.0f);
+  unknown7f0->unknown180->resetColorBuff();
+  unknown7f0->unknown170->resetColorBuff();
+  if (unknown08->unknown120[unknown08->unknown1c98]->unknownfe4 != 2) {
+    if (unknown7f0->unknown1d8 & unknown001_4) {
+      if (isMain) {
+        unknown7f0->unknown1d8 |= unknown001_16;
+        if (unknown7f0->unknown1d0 == nullptr) {
+          unknown7f0->unknown1d0 = new (unknown08->unknown0c) DrPixlRenderTarget(unknown08);
+        }
+      } else {
+        unknown7f0->unknown1d8 &= ~unknown001_16;
+        grlib::CGLibRenderTarget *target = unknown7f0->unknown1d0;
+        if (target != nullptr) {
+          target->releaseWork();
+          delete target;
+          unknown7f0->unknown1d0 = nullptr;
+        }
+      }
+    }
+    unknown7f0->unknown1d8 |= unknown001_32;
+    if ((unknown7f0->unknown1d8 & unknown001_4) && unknown7f0->unknown1d0 != nullptr) {
+      unknown7f0->unknown1d0->setTextureInfo(
+          static_cast<f32>(unknown08->unknown5b8->unknown20), static_cast<f32>(unknown08->unknown5b8->unknown24), DrAPCache::TEXTYPE_RGBA_8, true, DrPixlMemMan::get()->unknown430);
+    }
+  }
+}
+
+void DrPixlMan::calcColorBuffer(wkPixlManRes *res, f32 width, f32 height, f32 unknown1, f32 unknown2) {
+  DrPixlPostParm *postParm = unknown08->unknown120[unknown08->unknown1c98];
+  DrPixlMemMan *memMan = DrPixlMemMan::get();
+  if (postParm->unknownfe4 == 3) {
+    for (int i = 0; i < 19; i++) {
+      f32 scale = DrPixlFormat::getPixelScale(i);
+      f32 scaledWidth = scale * width;
+      f32 scaledHeight = scale * height;
+      if (res->unknown00[i][0] != nullptr) {
+        res->unknown00[i][0]->setTextureInfo(scaledWidth, scaledHeight, DrPixlFormat::s_MrtFormat[i], true, (memMan->unknown010 + DrMan::getIns()->unknown1c98)->unknown000[i][0]);
+      }
+      if (res->unknown00[i][1] != nullptr) {
+        res->unknown00[i][1]->setTextureInfo(scaledWidth, scaledHeight, DrPixlFormat::s_MrtFormat[i], true, (memMan->unknown010 + DrMan::getIns()->unknown1c98)->unknown000[i][1]);
+      }
+    }
+    res->unknown1a0[0]->setTextureInfo(width, height, DrPixlFormat::s_ZBufferFormat, true, (memMan->unknown010 + DrMan::getIns()->unknown1c98)->unknown0c0[0]);
+    res->unknown1a0[1]->setTextureInfo(width, height, DrPixlFormat::s_ZBufferFormat, true, (memMan->unknown010 + DrMan::getIns()->unknown1c98)->unknown0c0[1]);
+  } else {
+    u32 index = DrMan::s_nDblIdx;
+    for (int i = 0; i < 19; i++) {
+      f32 scale = DrPixlFormat::getPixelScale(i);
+      if (res->unknown00[i][index] != nullptr && isDblPixlObj(i)) {
+        res->unknown00[i][index]->setTextureInfo(scale * width, scale * height, DrPixlFormat::s_MrtFormat[i], true, (memMan->unknown010 + DrMan::getIns()->unknown1c98)->unknown000[i][index]);
+      }
+    }
+    res->unknown1a0[index]->setTextureInfo(width, height, DrPixlFormat::s_ZBufferFormat, true, (memMan->unknown010 + DrMan::getIns()->unknown1c98)->unknown0c0[index]);
+    if (postParm->unknownfe4 == 2) {
+      return;
+    }
+    for (int i = 0; i < 19; i++) {
+      f32 scale = DrPixlFormat::getPixelScale(i);
+      if (res->unknown00[i][0] != nullptr && !isDblPixlObj(i)) {
+        res->unknown00[i][0]->setTextureInfo(scale * width, scale * height, DrPixlFormat::s_MrtFormat[i], true, (memMan->unknown010 + DrMan::getIns()->unknown1c98)->unknown000[i][0]);
+      }
+    }
+  }
+  if (res->unknown148 != nullptr) {
+    res->unknown148->setTextureInfo(width, height, DrPixlFormat::s_BackFaceDepth, true, (memMan->unknown010 + DrMan::getIns()->unknown1c98)->unknown0bc);
+  }
+  // The reduced sizes are integers: the game truncates each size (fcvtzs at 0x710083d090 and 0x710083d098), scales it, truncates the
+  // product again (0x710083d0ac and 0x710083d0cc) and converts it back to float (scvtf at 0x710083d0b8 and 0x710083d0e0) as the argument.
+  int reducedWidth = static_cast<int>(width) * postParm->unknownfdc;
+  int reducedHeight = static_cast<int>(height) * postParm->unknownfe0;
+  res->unknown150->setTextureInfo(reducedWidth, reducedHeight, DrPixlFormat::s_SeparateCol, true, (DrPixlMemMan::get()->unknown010 + DrMan::getIns()->unknown1c98)->unknown0a8);
+  res->unknown158->setTextureInfo(reducedWidth, reducedHeight, DrPixlFormat::s_MrtFormat[6], true, (DrPixlMemMan::get()->unknown010 + DrMan::getIns()->unknown1c98)->unknown0ac);
+  res->unknown160->setTextureInfo(reducedWidth, reducedHeight, DrPixlFormat::s_MrtFormat[3], true, (DrPixlMemMan::get()->unknown010 + DrMan::getIns()->unknown1c98)->unknown0b0);
+  res->unknown168->setTextureInfo(reducedWidth, reducedHeight, DrPixlFormat::s_ResponsiveAAMask, true, (DrPixlMemMan::get()->unknown010 + DrMan::getIns()->unknown1c98)->unknown0b4);
+  res->unknown1b0->setTextureInfo(reducedWidth, reducedHeight, DrPixlFormat::s_ZBufferFormat, true, (memMan->unknown010 + DrMan::getIns()->unknown1c98)->unknown0c8);
+  res->unknown1b8->setTextureInfo(width, height, DrPixlFormat::s_UnbranchZBufferFormat, true, (memMan->unknown010 + DrMan::getIns()->unknown1c98)->unknown0cc);
+  res->unknown1c0->setTextureInfo(width * 0.25f, height * 0.25f, DrPixlFormat::s_UnbranchZBufferFormat, true, (memMan->unknown010 + DrMan::getIns()->unknown1c98)->unknown0d0);
+  f32 iblScale = unknown08->isIBLHalfRes() ? 0.5f : 1.0f;
+  res->unknown1e0->setTextureInfo(iblScale * width, iblScale * height, DrPixlFormat::s_LgtLinkGIBFadeList, true, (memMan->unknown010 + DrMan::getIns()->unknown1c98)->unknown0d4);
+  res->unknown1e8->setTextureInfo(iblScale * width, iblScale * height, DrPixlFormat::s_LgtLinkGIBIndexMask, true, (memMan->unknown010 + DrMan::getIns()->unknown1c98)->unknown0d8);
+  res->unknown1c8 = width;
+  res->unknown1cc = height;
+}
+
+void DrPixlMan::releaseColorBuff() {
+  DrPixlPostParm *postParm = unknown08->unknown120[unknown08->unknown1c98];
+  wkPixlManRes *res = unknown7f0;
+  if (postParm->unknownfe4 == 3) {
+    for (int i = 0; i < 19; i++) {
+      if (res->unknown00[i][0] != nullptr) {
+        res->unknown00[i][0]->releaseTexture();
+      }
+    }
+    res->unknown1a0[0]->release();
+    for (int i = 0; i < 19; i++) {
+      if (res->unknown00[i][1] != nullptr) {
+        res->unknown00[i][1]->releaseTexture();
+      }
+    }
+    res->unknown1a0[1]->release();
+  } else {
+    u32 index = DrMan::s_nDblIdx;
+    for (int i = 0; i < 19; i++) {
+      if (res->unknown00[i][index] != nullptr && isDblPixlObj(i)) {
+        res->unknown00[i][index]->releaseTexture();
+      }
+    }
+    res->unknown1a0[index]->release();
+    if (postParm->unknownfe4 != 2) {
+      for (int i = 0; i < 19; i++) {
+        if (res->unknown00[i][0] != nullptr && !isDblPixlObj(i)) {
+          res->unknown00[i][0]->releaseTexture();
+        }
+      }
+    }
+  }
+  res->unknown180->releaseColorBuff();
+  res->unknown170->releaseColorBuff();
+  if (postParm->unknownfe4 == 2) {
+    return;
+  }
+  res->unknown148->releaseTexture();
+  res->unknown150->releaseTexture();
+  res->unknown158->releaseTexture();
+  res->unknown160->releaseTexture();
+  res->unknown168->releaseTexture();
+  res->unknown1b0->release();
+  res->unknown1b8->release();
+  res->unknown1c0->release();
+  res->unknown1e0->releaseTexture();
+  res->unknown1e8->releaseTexture();
+}
+
 grlib::CGLibDepthTarget *DrPixlMan::getSeparateTransDepthObj() {
   if (unknown08->unknown120[unknown08->unknown1c98]->unknownfb4) {
     return unknown7f0->unknown1b0;
@@ -875,6 +1020,191 @@ DrPixlRenderTarget *DrPixlMan::getDiffIBLObj() {
 }
 
 DrPixlRenderTarget *DrPixlMan::getBackFaceDepthTexture() const { return unknown7f0->unknown148; }
+
+// Ruling 8: the two shader blocks (stencil bit 0x40 and 0x80) are written out twice like the game (0x7100849174: the first block is
+// 0x71008491a0-0x71008492fc, the second one starts at 0x7100849318 and repeats it with its own 8-float `col` array and its own uniform utility). A
+// file-local helper taking the flag, the mask and the target row, called twice, is not inlined (72 instructions against 258), so no call form matches.
+void DrPixlMan::clearAccumBuffer() {
+  if (unknown08->unknown88->unknown230->unknown0a) {
+    mm::Vec4 col[2];
+    col[0] = col[1] = mm::Vec4::zero;
+    unknown08->unknown78->selectGBuffRenderTarget(0x40);
+    DrAPGxType::setupStencilTest(false, false, 7, true, 0x40, 0x40, 5, 1, 1, 1);
+    DrAPGxType::setupBlend(0);
+    DrAPGxType::setupCullingOff();
+    DrShdDataList *shdList = unknown08->unknown80->unknown00;
+    DrShdDataObj *shader = shdList->getSelectShdObj(1);
+    shader->setDeclarationIdx(shader->getDeclarationOfs("PIXL_TYPE"), 2);
+    shader->setDeclarationIdx(shader->getDeclarationOfs("MRT_NUM"), 1);
+    shdList->bindTriangle();
+    shader->setupShader(0u);
+    grlib::CGLibUniformEtcUtility uniform(shader);
+    uniform.setUseUniformBlock("U_POST");
+    uniform.setF32SetF32Array(uniform.unknown001("col[0]"), &col[0].x, 4);
+    uniform.updateData();
+    uniform.setUniformBlock();
+    shdList->renderTriangle();
+  } else {
+    unknown7f0->unknown00[5][0]->clearTexture(mm::Col4(0.0f, 0.0f, 0.0f, 0.0f), static_cast<GrlClaerMask>(0xf));
+  }
+  if (unknown08->unknown88->unknown230->unknown0b) {
+    mm::Vec4 col[2];
+    col[0] = col[1] = mm::Vec4::zero;
+    unknown08->unknown78->selectGBuffRenderTarget(0x80);
+    DrAPGxType::setupStencilTest(false, false, 7, true, 0x80, 0x80, 5, 1, 1, 1);
+    DrAPGxType::setupBlend(0);
+    DrAPGxType::setupCullingOff();
+    DrShdDataList *shdList = unknown08->unknown80->unknown00;
+    DrShdDataObj *shader = shdList->getSelectShdObj(1);
+    shader->setDeclarationIdx(shader->getDeclarationOfs("PIXL_TYPE"), 2);
+    shader->setDeclarationIdx(shader->getDeclarationOfs("MRT_NUM"), 1);
+    shdList->bindTriangle();
+    shader->setupShader(0u);
+    grlib::CGLibUniformEtcUtility uniform(shader);
+    uniform.setUseUniformBlock("U_POST");
+    uniform.setF32SetF32Array(uniform.unknown001("col[0]"), &col[0].x, 4);
+    uniform.updateData();
+    uniform.setUniformBlock();
+    shdList->renderTriangle();
+  } else {
+    unknown7f0->unknown00[6][0]->clearTexture(mm::Col4(0.0f, 0.0f, 0.0f, 0.0f), static_cast<GrlClaerMask>(0xf));
+  }
+  DrAPGxType::setupStencilTest(false, false, 7, false, 0, 0, 2, 1, 1, 1);
+  // The game loads the render target table of the resource (`ldr x8, [x20]`, 0x71008494e0 and 0x7100849508) before the double buffer index
+  // (0x71008494e8 and 0x710084950c); the natural `unknown00[9][DrMan::s_nDblIdx]` loads the index first (first difference at 0x71008494dc, and
+  // at 0x7100849508 when only the second clear is written that way), so each row stays in a local.
+  DrPixlRenderTarget **accum = unknown7f0->unknown00[9];
+  accum[DrMan::s_nDblIdx]->clearTexture(mm::Col4::zero, static_cast<GrlClaerMask>(0xf));
+  DrPixlRenderTarget **accumBlur = unknown7f0->unknown00[14];
+  accumBlur[DrMan::s_nDblIdx]->clearTexture(mm::Col4::zero, static_cast<GrlClaerMask>(0xf));
+  unknown7f0->unknown00[10][0]->clearTexture(mm::Col4::black, static_cast<GrlClaerMask>(0xf));
+  unknown7f0->unknown00[11][0]->clearTexture(mm::Col4::black, static_cast<GrlClaerMask>(0xf));
+  unknown7f0->unknown00[15][0]->clearTexture(mm::Col4::black, static_cast<GrlClaerMask>(0xf));
+}
+
+void DrPixlMan::debugGBuffRender() {
+  DrMan *man = unknown08;
+  DrPixlPostParm *postParm = man->unknown120[man->unknown1c98];
+  DrShdMan *shdMan = man->unknown80;
+  DrAPGxType::setupScreenQuads(false);
+  DrShdDataList *shdList = shdMan->unknown00;
+  shdList->bindShdVertex();
+  DrShdDataObj *shader = shdList->getDebugShdObj(4);
+  shader->setupShader(0u);
+  {
+    grlib::CGLibUniformEtcUtility uniform(shader);
+    uniform.setUseUniformBlock("U_POST");
+    u32 parm = uniform.unknown001("parm");
+    // The four passes of each iteration (render target 0, 1, 2 and 4, each with its own vector) are written out one after the other, as the game inlines them: the
+    // asm repeats the register target, vector and renderQuads sequence with no call to a shared function (0x71008436cc onwards).
+    for (int i = 0; i < 2; i++) {
+      if (i == 0) {
+        DrAPGxType::setupBlend(7);
+      } else {
+        DrAPGxType::setupBlend(5);
+        // The game tests the second pass again (cmp x25, #4 on the induction variable scaled by 4, 0x71008436a0); without the test clang folds it and gives 294
+        // instructions against the game's 296.
+        if (i == 1) {
+          uniform.unknown20.Rebuilding();
+          static_cast<grlib::CGLibUniBaseUtility &>(uniform).setMoveMem();
+        }
+      }
+      grlib::CGLibState::beginRegisterRenderTarget();
+      grlib::CGLibState::setRegisterRenderTarget(*unknown7f0->unknown00[0][0], grlib::GRL_MRT_TYPE_0);
+      grlib::CGLibState::setRegisterDepthTarget(*unknown7f0->unknown1a0[DrMan::s_nDblIdx]->unknown120);
+      grlib::CGLibState::endRegisterRenderTarget();
+      f32 vec[4];
+      vec[0] = vec[1] = vec[2] = postParm->unknown320[0].unknown00[i];
+      vec[3] = postParm->unknown320[3].unknown00[i];
+      uniform.setF32SetVec4(parm, vec);
+      uniform.updateData();
+      uniform.setUniformBlock();
+      shdList->renderQuads();
+      uniform.unknown20.Rebuilding();
+      static_cast<grlib::CGLibUniBaseUtility &>(uniform).setMoveMem();
+      grlib::CGLibState::beginRegisterRenderTarget();
+      grlib::CGLibState::setRegisterRenderTarget(*unknown7f0->unknown00[1][0], grlib::GRL_MRT_TYPE_0);
+      grlib::CGLibState::setRegisterDepthTarget(*unknown7f0->unknown1a0[DrMan::s_nDblIdx]->unknown120);
+      grlib::CGLibState::endRegisterRenderTarget();
+      vec[0] = postParm->unknown320[1].unknown00[i];
+      vec[1] = postParm->unknown320[2].unknown00[i];
+      vec[2] = postParm->unknown320[7].unknown00[i];
+      f32 isMax = i == 0 ? 0.0f : 1.0f;
+      vec[3] = isMax;
+      uniform.setF32SetVec4(parm, vec);
+      uniform.updateData();
+      uniform.setUniformBlock();
+      shdList->renderQuads();
+      uniform.unknown20.Rebuilding();
+      static_cast<grlib::CGLibUniBaseUtility &>(uniform).setMoveMem();
+      grlib::CGLibState::beginRegisterRenderTarget();
+      grlib::CGLibState::setRegisterRenderTarget(*unknown7f0->unknown00[2][0], grlib::GRL_MRT_TYPE_0);
+      grlib::CGLibState::setRegisterDepthTarget(*unknown7f0->unknown1a0[DrMan::s_nDblIdx]->unknown120);
+      grlib::CGLibState::endRegisterRenderTarget();
+      vec[0] = isMax;
+      vec[1] = isMax;
+      vec[2] = postParm->unknown320[5].unknown00[i];
+      vec[3] = isMax;
+      uniform.setF32SetVec4(parm, vec);
+      uniform.updateData();
+      uniform.setUniformBlock();
+      shdList->renderQuads();
+      uniform.unknown20.Rebuilding();
+      static_cast<grlib::CGLibUniBaseUtility &>(uniform).setMoveMem();
+      grlib::CGLibState::beginRegisterRenderTarget();
+      grlib::CGLibState::setRegisterRenderTarget(*unknown7f0->unknown00[4][0], grlib::GRL_MRT_TYPE_0);
+      grlib::CGLibState::setRegisterDepthTarget(*unknown7f0->unknown1a0[DrMan::s_nDblIdx]->unknown120);
+      grlib::CGLibState::endRegisterRenderTarget();
+      vec[0] = isMax;
+      vec[1] = isMax;
+      vec[2] = isMax;
+      vec[3] = postParm->unknown320[6].unknown00[i];
+      uniform.setF32SetVec4(parm, vec);
+      uniform.updateData();
+      uniform.setUniformBlock();
+      shdList->renderQuads();
+    }
+  }
+  shader = shdList->getDebugShdObj(0x18);
+  shader->setupShader(0u);
+  DrPixlRenderTarget *target = unknown7f0->unknown00[1][0];
+  grlib::CGLibState::beginRegisterRenderTarget();
+  grlib::CGLibState::setRegisterRenderTarget(*target, grlib::GRL_MRT_TYPE_0);
+  grlib::CGLibState::endRegisterRenderTarget();
+  grlib::CGLibUniformEtcUtility uniform(shader);
+  uniform.setUseUniformBlock("U_POST");
+  u32 parm = uniform.unknown001("parm");
+  u32 value = 0;
+  u32 mask = 0;
+  if (postParm->unknown10e0[0] > 0) {
+    value = postParm->unknown10e0[0] - 1;
+    mask = 7;
+  }
+  if (postParm->unknown10e0[1] > 0) {
+    mask |= 0x10;
+    value |= postParm->unknown10e0[1] * 0x10 - 0x10;
+  }
+  if (postParm->unknown10e0[2] > 0) {
+    mask |= 0x20;
+    value |= postParm->unknown10e0[2] * 0x20 - 0x20;
+  }
+  if (postParm->unknown10e0[3] > 0) {
+    mask |= 0x40;
+    value |= postParm->unknown10e0[3] * 0x40 - 0x40;
+  }
+  u32 vec[4];
+  vec[0] = ~mask;
+  vec[1] = value;
+  vec[2] = 0;
+  vec[3] = 0;
+  uniform.setU32SetUVec4(parm, vec);
+  uniform.updateData();
+  uniform.setUniformBlock();
+  grlib::CGLibCtlTexture::setUAVTexture(*target->unknown70, 0, 0, 0);
+  grlib::CGLibColorCtl::setColorBufferOff();
+  shdList->renderQuads();
+  grlib::CGLibColorCtl::setColorBufferOn();
+}
 
 } // namespace ml
 

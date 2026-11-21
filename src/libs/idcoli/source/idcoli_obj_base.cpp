@@ -130,6 +130,13 @@ void IDColiObjBase::sweepTreeMax(IdSweepAxisType sweepAxis, IdVectorAxisType vec
   }
 }
 
+void IDColiObjBase::releaseDefTree() {
+  if (unknown1c8 != -1) {
+    unknown1a8->releaseTreeList(&unknown1b0, unknown1c8);
+    unknown1c8 = -1;
+  }
+}
+
 void IDColiObjBase::defTreeUpdate() { unknown1c8 = unknown1a8->setupTreeList(&unknown1b0, unknown50, unknown60); }
 
 void IDColiObjBase::updateBaseTree() {

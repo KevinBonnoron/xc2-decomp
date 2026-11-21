@@ -135,11 +135,12 @@ public:
 
     int unknown00;                                  // Role and original member name unknown.
     mm::mtl::FixedVector<unknown002, 30> unknown08; // Role and original member name unknown.
-    u64 unknown100;                                 // Role and original member name unknown.
+    u8 *unknown100;                                 // Role and original member name unknown; handed to OpenResultParam::unknown08 as a pointer by StateDispResult::onEnter (0x71003baf54).
     u32 unknown108;                                 // Role and original member name unknown.
     u8 _10c[0x110 - 0x10c];
     u64 unknown110;                                 // Role and original member name unknown.
-    u64 unknown118;                                 // Role and original member name unknown.
+    u32 unknown118;                                 // Role and original member name unknown.
+    u32 unknown11c;                                 // Role and original member name unknown; read by StateDispResult::onEnter (0x71003baf54).
     mm::mtl::FixedVector<unknown001, 2> unknown120; // Role and original member name unknown.
     u32 unknown130;                                 // Role and original member name unknown.
   };
@@ -161,7 +162,7 @@ public:
   GfMenuCallContext *unknown1f8;                                  // Inferred role: call context of the skip input; original member name unknown.
   GfMenuCallContext *unknown200;                                  // Inferred role: call context of the result; original member name unknown.
   GfMenuCallContext *unknown208;                                  // Inferred role: call context of the total info; original member name unknown.
-  int unknown210;                                                 // Role and original member name unknown.
+  u32 unknown210;                                                 // Role and original member name unknown; unsigned, StateTotalNext::onStep converts a float into it with fcvtzu (0x71003bb31c).
   int unknown214;                                                 // Role and original member name unknown.
   bool unknown218;                                                // Role and original member name unknown.
   u8 _219[0x220 - 0x219];
@@ -182,6 +183,7 @@ static_assert(offsetof(GfMenuFieldSkill::StartParam::unknown002, unknown04) == 0
 static_assert(offsetof(GfMenuFieldSkill::StartParam::unknown002, unknown06) == 0x06, "");
 static_assert(sizeof(GfMenuFieldSkill::StartParam::unknown002) == 0x08, "");
 static_assert(offsetof(GfMenuFieldSkill::StartParam, unknown100) == 0x100, "");
+static_assert(offsetof(GfMenuFieldSkill::StartParam, unknown11c) == 0x11c, "");
 static_assert(offsetof(GfMenuFieldSkill::StartParam, unknown120) == 0x120, "");
 static_assert(offsetof(GfMenuFieldSkill::StartParam, unknown130) == 0x130, "");
 static_assert(sizeof(GfMenuFieldSkill::StartParam) == 0x138, "");

@@ -7,6 +7,7 @@
 #include "fw/fw_param_manager.h"
 #include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/bitflag.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
 
@@ -59,27 +60,36 @@ public:
   ~FootPlacementIKSolver() override;
   void solve(const UpdateInfo &info) override;
   void solveImpl(anm::RaycastInterface &raycaster);
+  // Bit indices of the flags `unknowna0`.
+  enum {
+    FLAG_UNKNOWN_0 = 0, // Inferred role: placement enable; original name unknown.
+    FLAG_UNKNOWN_1 = 1, // Inferred role: debug draw; original name unknown.
+    FLAG_UNKNOWN_2 = 2, // Inferred role: raycast up distance forced; original name unknown.
+    FLAG_UNKNOWN_3 = 3, // Inferred role: raycast down distance forced; original name unknown.
+  };
+
   // Inferred helper: forces the raycast up distance; original name unknown.
   void unknown001(f32 distance) {
-    unknowna0 |= 4;
+    unknowna0.set(FLAG_UNKNOWN_2);
     unknowna4 = distance;
   }
 
   // Inferred helper: forces the raycast down distance; original name unknown.
   void unknown002(f32 distance) {
-    unknowna0 |= 8;
+    unknowna0.set(FLAG_UNKNOWN_3);
     unknowna8 = distance;
   }
 
   // Inferred helper: sets or clears the placement enable flag; original name unknown.
   void unknown003(bool enable) {
     if (enable) {
-      unknowna0 |= 1;
+      unknowna0.set(FLAG_UNKNOWN_0);
     } else {
-      unknowna0 &= ~1;
+      unknowna0.unknown004(FLAG_UNKNOWN_0);
     }
   }
 
+  f32 getRaycastUp() const;
   f32 getRaycastDown() const;
   void setGroundAngle(const mm::Vec3 &angle);
   void drawDebug();
@@ -91,9 +101,12 @@ public:
   u8 _5a[0x60 - 0x5a];
   mm::Vec3 unknown60;         // Inferred role: foot position; original member name unknown.
   anm::QsTransform unknown70; // Inferred role: foot bone transform; original member name unknown.
-  u32 unknowna0;              // Inferred role: flags; original member name unknown.
-  f32 unknowna4;              // Inferred role: raycast up distance; original member name unknown.
-  f32 unknowna8;              // Inferred role: raycast down distance; original member name unknown.
+  // Inferred role: flags; original member name unknown. The game reads the raycast flags with ldrb (getRaycastUp, 0x7100180324)
+  // although the up distance follows at 0xa4: through a plain u32 member clang widens the over-aligned load to 64 bits (GVN);
+  // through the bit flag class (align 4 `this`, as event::Manager::unknown18) the byte load stays.
+  mm::mtl::unknown027<32> unknowna0;
+  f32 unknowna4; // Inferred role: raycast up distance; original member name unknown.
+  f32 unknowna8; // Inferred role: raycast down distance; original member name unknown.
   u8 _ac[0xb0 - 0xac];
   mm::Quat unknownb0;               // Inferred role: ground angle; original member name unknown.
   mm::Quat unknownc0;               // Inferred role: unknown; original member name unknown.

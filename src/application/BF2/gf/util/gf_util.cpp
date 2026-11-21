@@ -3,6 +3,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "fw/fw_coli_check.h"
 #include "gf/camera/gf_camera_player.h"
@@ -14,11 +15,13 @@
 #include "mm_math/mm_plane.h"
 #include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/fixstr.h"
 
 namespace gf {
 namespace util {
 
 constexpr u32 LENGTH_UNKNOWN_1024 = 0x400; // Inferred role: utf16 buffer length; original name unknown.
+constexpr u32 LENGTH_UNKNOWN_512 = 0x200;  // Inferred role: utf16 and sjis buffer length of debugUTF8ToSJIS; original name unknown.
 
 void getViewLocalToDeviceCoord(mm::Vec3 &device, const mm::Mat44 &frustum, const mm::Vec3 &local) {
   device.x = frustum.rows[0][0] * (local.x / local.z) - frustum.rows[2][0];
@@ -168,6 +171,33 @@ bool utf8Tosjis(const char *source, char *destination, u32 destinationSize) {
   u16 buffer[LENGTH_UNKNOWN_1024];
   mlUTF8toUTF16(buffer, LENGTH_UNKNOWN_1024, source);
   return mlUTF16toSJIS(destination, destinationSize, buffer);
+}
+
+const char *debugUTF8ToSJIS(const char *string) {
+  // Inferred role: the last converted strings, handed out in turn, and the index of the next one; original names unknown.
+  static u32 unknown001;
+  static char unknown002[8][LENGTH_UNKNOWN_512];
+  if (string == nullptr) {
+    string = "";
+  }
+  if (unknown001 > 7) {
+    unknown001 = 0;
+  }
+  u16 buffer[LENGTH_UNKNOWN_512];
+  mlUTF8toUTF16(buffer, LENGTH_UNKNOWN_512, string);
+  if (!mlUTF16toSJIS(unknown002[unknown001], LENGTH_UNKNOWN_512, buffer)) {
+    unknown002[unknown001][0] = 0;
+  }
+  mm::mtl::FixStr<256> text(unknown002[unknown001]);
+  // The game does not call mm::mtl::replacestr (0x71001a86e0): it holds the search in place and replaces '%' with "per ".
+  int position;
+  while ((position = text.unknown003("%")) != -1) {
+    text.erase(position, 1);
+    text.insert(position, "per ", 4);
+  }
+  memcpy(unknown002[unknown001], text.c_str(), text.length());
+  unknown002[unknown001][text.length()] = 0;
+  return unknown002[unknown001++];
 }
 
 const char *getFilePtrFromPath(const char *path) { return ml::PathUtil::getFilePtrFromPath(path); }

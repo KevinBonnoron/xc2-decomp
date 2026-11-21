@@ -465,6 +465,25 @@ void StateSalvageResult::enter(GfGameSalvage *salvage, ai::State *) {
 
 void StateSalvageResult::leave(GfGameSalvage *, ai::State *) {}
 
+void StateSalvageResult::update(GfGameSalvage *salvage, const fw::UpdateInfo &) {
+  if (GfManager::isDestroyNow()) {
+    reqState(GfGameSalvage::STATE_UNKNOWN_20);
+  }
+  f32 time = 0.0f;
+  ml::DevClock::getTimeNow(time, startClock);
+  if (time >= 1.0f && !isVibrated) {
+    isVibrated = true;
+    int num = salvage->getTBoxNum();
+    if (num - 1U < 3) {
+      static const fw::VibrationID TBOX_VIBRATION[3] = {fw::VIBRATION_ID_UNKNOWN_2, fw::VIBRATION_ID_UNKNOWN_8, fw::VIBRATION_ID_UNKNOWN_9};
+      fw::PadManager::playVibration(ml::PadVibrationInfo(TBOX_VIBRATION[num - 1]));
+    }
+  }
+  if (salvage->isCameraCut01End()) {
+    reqState(unknown08 + 1);
+  }
+}
+
 void StateSalvageResultUi::leave(GfGameSalvage *salvage, ai::State *) {
   if (context != nullptr) {
     context->release();

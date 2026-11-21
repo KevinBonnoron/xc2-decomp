@@ -66,6 +66,8 @@ public:
   };
 
   class start_loading : public ICmd {
+    friend class SeqManager;
+
   public:
     start_loading() : unknown08(false) {}
     virtual RESULT update(const Param &param);
@@ -118,6 +120,8 @@ public:
   };
 
   class exec : public ICmd {
+    friend class SeqManager;
+
   public:
     exec() : unknown08(false), unknown09(false), unknown0a(false), unknown0c(0.0f), unknown14(0) {}
     virtual RESULT update(const Param &param);
@@ -161,6 +165,8 @@ public:
   };
 
   class end_wait : public ICmd {
+    friend class SeqManager;
+
   public:
     end_wait() : unknown08(false) {}
     virtual RESULT update(const Param &param);
@@ -215,6 +221,10 @@ public:
   static bool checkCapture(const SeqInfo &info);
   void update();
   void render();
+  void init();
+  void setupScene();
+  void startScene();
+  void end();
   void nextEvent(int next);
   bool isSetupSceneEnd() const;
   void setDisp(bool isDisp);
@@ -251,7 +261,7 @@ private:
   end_fadewait unknown150;                  // Inferred role: cmd end fadewait; original member name unknown.
   end_fadein unknown158;                    // Inferred role: cmd end fadein; original member name unknown.
   end_notice unknown160;                    // Inferred role: cmd end notice; original member name unknown.
-  end unknown168;                           // Inferred role: cmd end; original member name unknown.
+  class end unknown168;                     // Inferred role: cmd end; original member name unknown.
   u32 unknown170;                           // Inferred role: flags; original member name unknown.
   u32 unknown174;                           // Inferred role: disp flags; original member name unknown.
   mm::mtl::FixStr<128> unknown178;          // Inferred role: state name; original member name unknown.

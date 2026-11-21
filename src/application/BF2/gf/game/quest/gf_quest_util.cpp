@@ -26,8 +26,10 @@
 #include "gf/game/quest/gf_quest_task.h"
 #include "gf/game/quest/gf_quest_task_param.h"
 #include "gf/game/sequential_play/gf_play_command.h"
+#include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
+#include "gf/request/gf_req_scom.h"
 #include "gf/util/gf_item_util.h"
 #include "gmk/gmk_base.h"
 #include "mm_mtl/algorithm.h"
@@ -552,6 +554,30 @@ bool GfQuestUtil::getReward(GfQuestReward &reward, u32 rewardSet, bool isRandom)
   }
 
   return true;
+}
+
+void GfQuestUtil::execReward(const GfQuestReward &reward) {
+  SCOM_ADD_MONEY::create(reward.unknown00[QUEST_REWARD_UNKNOWN_0].unknown44_u32);
+  SCOM_ADD_COIN::create(reward.unknown00[QUEST_REWARD_UNKNOWN_1].unknown44_u32);
+  SCOM_ADD_SP::create(unknown020, reward.unknown00[QUEST_REWARD_UNKNOWN_2].unknown44_u32);
+  SCOM_ADD_EXP::createInnExp(reward.unknown00[QUEST_REWARD_UNKNOWN_3].unknown44_u32);
+  // The game masks the result of getDevelopZone, which returns u32, with 0xffff (0x710037865c).
+  SCOM_ADD_DEVELOP::create(static_cast<u16>(reward.unknown00[QUEST_REWARD_UNKNOWN_4].getDevelopZone()), reward.unknown00[QUEST_REWARD_UNKNOWN_4].unknown44);
+  SCOM_ADD_TRUST::create(reward.unknown360, reward.unknown00[QUEST_REWARD_UNKNOWN_5].unknown44);
+  SCOM_ADD_MERCENARIES_POINT::create(reward.unknown00[QUEST_REWARD_UNKNOWN_7].unknown44);
+  for (u32 slot = QUEST_REWARD_UNKNOWN_8; slot <= QUEST_REWARD_UNKNOWN_11; slot++) {
+    // The game reads item and number as one word (0x7100378678 ldr w8, 0x710037867c lsr w1, 0x7100378680 and w0), while getReward writes them as two halfwords (strh at 0x44 and 0x46, 0x7100378494 and
+    // 0x7100378498), hence both views of the union.
+    u32 item = reward.unknown00[slot].unknown44_u32;
+    // The lsr comes before the and in the game; written inline in the call the compiler puts the and first, the local fixes the order.
+    u32 number = item >> 16;
+    SCOM_ADD_ITEM::create(item & 0xffff, number);
+  }
+  if (reward.unknown360 != 0) {
+    SCOM_ADD_IDEA::create(GfDataBlade::getCreator(reward.unknown360), reward.unknown00[QUEST_REWARD_UNKNOWN_6].m_developZone, reward.unknown00[QUEST_REWARD_UNKNOWN_6].unknown44);
+  } else {
+    SCOM_ADD_IDEA::create(unknown020, reward.unknown00[QUEST_REWARD_UNKNOWN_6].m_developZone, reward.unknown00[QUEST_REWARD_UNKNOWN_6].unknown44);
+  }
 }
 
 bool GfQuestUtil::isCurrentTaskBattle() {

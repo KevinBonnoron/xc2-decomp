@@ -23,7 +23,8 @@ struct EventData {
         };
       };
       union {
-        u32 unknown0c; // Inferred role: param1; original member name unknown.
+        u32 unknown0c;     // Inferred role: param1; original member name unknown.
+        f32 unknown0c_f32; // View of the second parameter slot as a float; original member name unknown.
         struct {
           u16 unknown0c_u16; // Inferred role: param1 low half; original member name unknown.
           u16 unknown0e;     // Inferred role: param1 high half; original member name unknown.
@@ -58,6 +59,7 @@ static_assert(offsetof(EventData, unknown08_f32) == 0x08, "");
 static_assert(offsetof(EventData, unknown08_u16) == 0x08, "");
 static_assert(offsetof(EventData, unknown0a) == 0x0a, "");
 static_assert(offsetof(EventData, unknown0c) == 0x0c, "");
+static_assert(offsetof(EventData, unknown0c_f32) == 0x0c, "");
 static_assert(offsetof(EventData, unknown0c_u16) == 0x0c, "");
 static_assert(offsetof(EventData, unknown0e) == 0x0e, "");
 static_assert(offsetof(EventData, unknown10) == 0x10, "");

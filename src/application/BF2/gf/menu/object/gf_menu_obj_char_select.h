@@ -62,6 +62,15 @@ public:
     GfMenuObjCharSelect *unknown20; // Inferred role: owner; original member name unknown.
   };
 
+  class SubMenuListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    int unknown0c; // Inferred role: sub menu state, 1 while the sub menu is shown and 0 once it is left; original member name unknown.
+    u8 _10[0x20 - 0x10];
+    GfMenuObjCharSelect *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   class CharBlMoveListener : public ui::UIObjectListener {
   public:
     void reciveEvent(const ui::EventData &event, u32 handle) override;
@@ -118,6 +127,8 @@ public:
   static void setFadeOutSub(u32 handle, u32 type);
   static void dispOnCopyChar(ui::UIObjectAcc &acc, u32 type);
   static void dispOffCopyChar(ui::UIObjectAcc &acc, u32 type);
+  static void moveCharSubMenuOut(ui::UIObjectAcc &acc, u32 kind, mm::mtl::FixedArray<int, 8> controls, bool unknown);
+  static void moveCharSubMenuIn(ui::UIObjectAcc &acc, u32 kind, mm::mtl::FixedArray<int, 8> controls, bool fade, bool solo);
   static int setFadeIn(u32 handle, u32 type);
   void initialize() override;
   void finalize() override;
@@ -126,7 +137,7 @@ public:
   bool seqSpUpdateParty();
   bool seqConfSpecial();
   static void setupCharSubMenu(ui::UIObjectAcc &acc, mm::mtl::FixedVector<u32, 5> &drivers, mm::mtl::FixedVector<u32, 3> &blades, mm::mtl::FixedVector<u32, 4> &hanas);
-  u8 refreshDriver(ui::UIObjectAcc acc, u32 driver);
+  u32 refreshDriver(ui::UIObjectAcc acc, u32 driver);
   void update() override;
   bool seqStreamWaitStatDrBefore();
   bool seqStreamWaitStatBlBefore();
@@ -188,10 +199,10 @@ public:
   u16 unknown742;                          // Inferred role: customize type of the layer parameter; original member name unknown.
   u32 unknown744;                          // Inferred role: character of the layer parameter; original member name unknown.
   u32 unknown748;                          // Inferred role: special operation, 0xff for none; original member name unknown.
-  u8 _74c[0x750 - 0x74c];
-  mm::mtl::FixedArray<int, 5> unknown750; // Role and original member name unknown, -1 at start.
-  int unknown764;                         // Inferred role: kind of the character on the move layer, 0 driver and 1 blade; original member name unknown.
-  bool unknown768;                        // Role and original member name unknown, cleared by the constructor.
+  u32 unknown74c;                          // Inferred role: number of sub menu entries of the blade kind that was last selected; original member name unknown.
+  mm::mtl::FixedArray<int, 5> unknown750;  // Role and original member name unknown, -1 at start.
+  int unknown764;                          // Inferred role: kind of the character on the move layer, 0 driver and 1 blade; original member name unknown.
+  bool unknown768;                         // Role and original member name unknown, cleared by the constructor.
   u8 _769[0x770 - 0x769];
 };
 
@@ -203,6 +214,8 @@ static_assert(offsetof(GfMenuObjCharSelect::DetailListener, unknown0c) == 0x0c, 
 static_assert(offsetof(GfMenuObjCharSelect::StatusListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjCharSelect::CharDrListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjCharSelect::CharDrSoloListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjCharSelect::SubMenuListener, unknown0c) == 0x0c, "");
+static_assert(offsetof(GfMenuObjCharSelect::SubMenuListener, unknown20) == 0x20, "");
 static_assert(sizeof(GfMenuObjCharSelect::unknown003) == 0x08, "");
 static_assert(offsetof(GfMenuObjCharSelect, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjCharSelect, unknown30) == 0x30, "");
@@ -224,6 +237,7 @@ static_assert(offsetof(GfMenuObjCharSelect, unknown728) == 0x728, "");
 static_assert(offsetof(GfMenuObjCharSelect, unknown740) == 0x740, "");
 static_assert(offsetof(GfMenuObjCharSelect, unknown742) == 0x742, "");
 static_assert(offsetof(GfMenuObjCharSelect, unknown748) == 0x748, "");
+static_assert(offsetof(GfMenuObjCharSelect, unknown74c) == 0x74c, "");
 static_assert(offsetof(GfMenuObjCharSelect, unknown750) == 0x750, "");
 static_assert(offsetof(GfMenuObjCharSelect, unknown764) == 0x764, "");
 static_assert(offsetof(GfMenuObjCharSelect, unknown768) == 0x768, "");

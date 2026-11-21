@@ -1,6 +1,7 @@
 #include "gf/game/gf_game_manager.h"
 
 #include "battle/battle_manager.h"
+#include "execute/title/title_main.h"
 #include "framework/framework.h"
 #include "fw/fw_transform.h"
 #include "fw/fw_update_info.h"
@@ -10,6 +11,7 @@
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_enemy.h"
+#include "gf/data/gf_data_game.h"
 #include "gf/data/gf_data_manager.h"
 #include "gf/data/gf_data_map.h"
 #include "gf/data/gf_data_param_acc.h"
@@ -1111,6 +1113,21 @@ bool GfGameManager::isEnableOpenMainMenuSequence() {
   return true;
 }
 
+bool GfGameManager::isWaitGimmickPopForMapjump() {
+  tl::TitleMain *title = tl::TitleMain::get();
+  return title == nullptr || (!title->unknown95 && !title->isStateReturnTitle());
+}
+
+bool GfGameManager::isClearGame() {
+  if (GfManager::isExecModeAdvertize() || GfManager::isExecModeThater()) {
+    tl::TitleMain *title = tl::TitleMain::get();
+    if (title != nullptr && title->unknown130 != nullptr) {
+      return GfGameFlag::getLocal(title->getSaveBuffer()->unknown10.unknownfbbc4, 1, FLAG_UNKNOWN_48589) != 0;
+    }
+  }
+  return GfDataUtil::isClearGame();
+}
+
 bool GfGameManager::isStartGame() { return GfGameScene::get() == nullptr || GfGameScene::get()->unknown1c9; }
 
 bool GfGameManager::isStopMainMenuOpenForGimmick() { return GfGameScene::get() != nullptr && GfGameScene::get()->unknown1d0; }
@@ -1237,9 +1254,9 @@ void GfGameManager::setStartGame() {
 
 bool GfGameManager::isEnableRoomForHikariLv4() { return GfGameScene::get() != nullptr && GfGameScene::get()->unknown1ca; }
 
-void GfGameManager::setHomuriWeaponExtraMesh(bool isVisible, f32 alpha) {
+void GfGameManager::setHomuriWeaponExtraMesh(bool isVisible, f32 time) {
   if (GfGameScene::get() != nullptr) {
-    GfGameScene::get()->setHomuriWeaponExtraMesh(isVisible, alpha);
+    GfGameScene::get()->setHomuriWeaponExtraMesh(isVisible, time);
   }
 }
 

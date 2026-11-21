@@ -167,6 +167,8 @@ bool GfAssetResource::isFinishLoad() const {
   }
 }
 
+bool GfAssetResource::isValidData() const { return isFinishLoad() && getAssetData() != nullptr; }
+
 void GfAssetResource::destroyStreamObject() {
   if (unknownc8 != nullptr) {
     unknownc8->release();

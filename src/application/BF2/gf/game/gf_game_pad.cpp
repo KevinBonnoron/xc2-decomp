@@ -24,6 +24,23 @@ constexpr u32 SE_UNKNOWN_3 = 3;                        // Inferred role: se open
 constexpr u32 SE_UNKNOWN_7 = 7;                        // Inferred role: se disable; original name unknown.
 constexpr u32 TYPE_UNKNOWN_1 = 1;                      // Inferred role: open menu type; original name unknown.
 
+// Inferred role: DWPAD to PadActKey table (15 entries, 0x7100f674d4) read by updateInterruptPadOnForDebug; original name unknown.
+static const fw::PadActKey unknown001[15] = {fw::PAD_ACT_KEY_UNKNOWN_0,
+                                             fw::PAD_ACT_KEY_UNKNOWN_14,
+                                             fw::PAD_ACT_KEY_UNKNOWN_5,
+                                             fw::PAD_ACT_KEY_UNKNOWN_6,
+                                             fw::PAD_ACT_KEY_UNKNOWN_0,
+                                             fw::PAD_ACT_KEY_UNKNOWN_2,
+                                             fw::PAD_ACT_KEY_UNKNOWN_1,
+                                             fw::PAD_ACT_KEY_UNKNOWN_3,
+                                             fw::PAD_ACT_KEY_UNKNOWN_0,
+                                             fw::PAD_ACT_KEY_UNKNOWN_9,
+                                             fw::PAD_ACT_KEY_UNKNOWN_2,
+                                             fw::PAD_ACT_KEY_UNKNOWN_4,
+                                             fw::PAD_ACT_KEY_UNKNOWN_7,
+                                             fw::PAD_ACT_KEY_UNKNOWN_11,
+                                             fw::PAD_ACT_KEY_UNKNOWN_3};
+
 void GfGamePad::initialize(const GfSetupParam &) {
   GfEvent::addEventCallback(this);
   unknown10 = true;
@@ -73,6 +90,22 @@ bool GfGamePad::isInitialized() {
   return pad->unknown10;
 }
 
+void GfGamePad::update(const fw::UpdateInfo &) {
+  GfGamePad *pad = get();
+  pad->unknown11 = false;
+  pad->changePadInputMode();
+  pad->unknown18.update();
+  pad->unknown50 = *fw::PadManager::getControlPadData(0);
+  pad->checkEmergencyEscape();
+  pad->updateInterruptPadOnForDebug();
+  // The game keeps the address of the pad data in a register of its own across the call of isEnableBattouWithHoodHomura
+  // (0x7100326788: ldrb [x20]); reading unknown50 through pad in the condition gives 108 instructions against the game's 105 (P2).
+  const fw::PadData &data = pad->unknown50;
+  if (GfGameManager::isEnableBattouWithHoodHomura(true) && (data.unknown00 & fw::getPadKey(fw::PAD_ACT_KEY_UNKNOWN_8)) == 0 && (data.unknown04 & fw::getPadKey(fw::PAD_ACT_KEY_UNKNOWN_5)) != 0) {
+    GfPlayFactory::createHoodHomuraBattou();
+  }
+}
+
 void GfGamePad::clearUniqParams() { unknown11 = false; }
 
 u32 GfGamePad::getPlayerPadId() { return 0; }
@@ -91,6 +124,18 @@ void GfGamePad::checkEmergencyEscape() {
       obj->sendMessage(obj, message);
     }
   }
+}
+
+void GfGamePad::updateInterruptPadOnForDebug() {
+  for (DWPAD pad : unknown98) {
+    u32 key = fw::getPadKey(unknown001[pad]);
+    unknown50.unknown04 |= key;
+    unknown50.unknown0c |= key;
+    if (pad == DWPAD_UNKNOWN_1 && (GfManager::isExecModeDebug() || GfManager::isExecModeScenarioGame()) && (GfGameManager::isEvent(false) || GfGameManager::isTalking())) {
+      unknown11 = true;
+    }
+  }
+  unknown98.clear();
 }
 
 const fw::PadData *GfGamePad::getPadPlayer() {

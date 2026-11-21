@@ -118,9 +118,24 @@ public:                                                                         
   }
 
 class GfPlayComEventFade : public GfPlayCom {
+  GF_PLAY_COM("PlayComEventFade")
+
 public:
+  GfPlayComEventFade() : GfPlayCom(PCOMTYPE_UNKNOWN_0, false), unknown10(0) {}
+  void start() override;
+  void end() override;
+  bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComEventFade *create();
+
+  int unknown10; // Inferred role: fade state; original member name unknown.
+  f32 unknown14; // Inferred role: wait seconds before the fade in; original member name unknown.
+  f32 unknown18; // Inferred role: fade in seconds; original member name unknown.
+  f32 unknown1c; // Inferred role: seconds left before the fade in is forced; original member name unknown.
 };
+
+static_assert(offsetof(GfPlayComEventFade, unknown10) == 0x10, "");
+static_assert(offsetof(GfPlayComEventFade, unknown1c) == 0x1c, "");
+static_assert(sizeof(GfPlayComEventFade) == 0x20, "");
 
 class GfPlayComPause : public GfPlayCom {
   GF_PLAY_COM("PlayComPause")
@@ -726,6 +741,7 @@ public:
   void start() override;
   void end() override;
   bool update(const fw::UpdateInfo &info, bool isCancel) override;
+  void setupForFallout();
   static bool isDead();
   static bool replaceDeadType(GfPlayerDead dead);
   static GfPlayComPlayerDead *create(GfPlayerDead dead);

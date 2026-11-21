@@ -11,6 +11,7 @@ public:
   void releaseLowMap();
   void releaseFreeSeamLow(DrResMdoSeamWrkLow *low);
   void initLowMapParts(DrResMdoSeamWrkLow *low);
+  void changeMemLowMapParts(DrResMdoSeamWrkLow *low);
   DrResMdoSeamWrkLow *createFreeSeamLow();
   void updateLowMap();
   void readLowMapCheck();

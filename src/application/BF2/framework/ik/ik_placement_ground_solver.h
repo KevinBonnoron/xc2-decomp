@@ -47,6 +47,9 @@ public:
   void resetRaycastUp();
   void overwriteRaycastDown(f32 distance);
   void resetRaycastDown();
+  // Return type as in the sibling solvers (TwoCharaGroundSolver::createImpl, LookIkSolver::createImpl): the mangled name does not carry it and create
+  // (0x710018263c) ignores it.
+  bool createImpl(const Description &description, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose, IKGroundInterface *ground);
   const mm::mtl::RTTI *getRTTI() const override;
 
   mm::mtl::FixedVector<mm::mtl::IntrusivePtr<FootPlacementIKSolver>, 6> unknown20; // Inferred role: foot solvers; original member name unknown.

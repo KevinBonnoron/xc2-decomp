@@ -41,6 +41,7 @@ enum ColiState : int {
 
 enum ColiAtrr : int {
   COLI_ATRR_UNKNOWN_0 = 0, // Inferred role: tested by GfBehaviorEnemyField::update before applying gravity; original name unknown.
+  COLI_ATRR_UNKNOWN_1 = 1, // Inferred role: tested by DeadColCheckPlugin::testDead on the first collision of the pc; original name unknown.
   COLI_ATRR_UNKNOWN_3 = 3, // Inferred role: tested by GfPropertyField::flush on the first collision of the pc; original name unknown.
 };
 
@@ -185,7 +186,8 @@ static_assert(sizeof(unknown136) == 0x10, "");
 // 0x08, the state bits at 0x0c, the material masks at 0x10 and 0x14, the scale at 0x18, the user data at 0x20, the
 // event flags and listener at 0x28, the offset matrix at 0x40 and the shape at 0x80.
 struct ColiCharacterInfo {
-  ColiCharacterInfo() : unknown00(0), unknown10(0xfffffffa), unknown18(1.0f), unknown80(nullptr) { unknown40 = mm::Mat44::identity; }
+  // unknown14 defaults to 0x80000000 and unknown20 to null: GfComBehaviorGmk::setup (0x710052a790) stores both before the offset matrix copy and never sets them again.
+  ColiCharacterInfo() : unknown00(0), unknown10(0xfffffffa), unknown14(0x80000000), unknown18(1.0f), unknown20(nullptr), unknown80(nullptr) { unknown40 = mm::Mat44::identity; }
 
   u32 unknown00;               // Role and original member name unknown.
   ColiType unknown04;          // Inferred role: coli type; original member name unknown.

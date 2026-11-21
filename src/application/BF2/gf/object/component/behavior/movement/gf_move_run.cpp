@@ -27,6 +27,18 @@ void GfMoveRunControler::createReflection(fw::Reflection *reflection, const char
   reflection->setReflectionStruct(index, value);
 }
 
+// The game multiplies the direction in each branch (0x71004fd6f8, 23 instructions); one product after the test compiles to 20.
+void GfMoveRunControler::enter(Packet &packet, bool isInherit) {
+  const Param *param = packet.unknown18.get<Param>();
+  f32 speed = param->velocityMin;
+  if (isInherit) {
+    speed = speed + (param->velocityMax * packet.unknown50 - speed) * packet.unknown20;
+    packet.unknown00 = packet.unknown40 * speed;
+  } else {
+    packet.unknown00 = packet.unknown40 * speed;
+  }
+}
+
 void GfMoveRunControler::calcAngularVelocity(f32 deltaTime, Packet &packet) {
   const Param *param = packet.unknown18.get<Param>();
   const mm::Vec3 &target = packet.unknown30;

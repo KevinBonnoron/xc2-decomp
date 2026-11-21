@@ -55,6 +55,7 @@ public:
   void createAsset(int bdatId);
   void disposeAsset();
   void disposeInst(bool isDead);
+  void createInst(GfFieldLodState state, ml::ScnObjAccPartsPos &partsPos, bool isLoopOnly); // Declaration only: 0x71002e1f50 is not matched yet.
   void update(const ml::ScnObjAccPartsPos &partsPos);
 
   // Inferred role: effect data per lod state ("effect_anime_normal", "effect_anime_reverse", "effect_visibleON",
@@ -93,6 +94,8 @@ public:
   // PosInfo methods (0x71002e2120 to 0x71002e2728) read the other members.
   struct PosInfo {
     void update(const fw::UpdateInfo &info);
+    void updateFade(ml::ScnObjAccPartsPos &partsPos, f32 delta); // Declaration only: 0x71002e23f4 is not matched yet.
+    void updatePopDepopEffect(ml::ScnObjAccPartsPos &partsPos);
     void updateColiOff(ml::ScnObjAccPartsPos &partsPos);
     void updateAnim(ml::ScnObjAccPartsPos &partsPos, f32 delta);
     void syncGfTransform(const mm::Mat44 &matrix);

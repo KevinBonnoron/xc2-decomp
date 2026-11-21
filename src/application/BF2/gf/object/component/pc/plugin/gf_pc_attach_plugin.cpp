@@ -4,10 +4,12 @@
 #include "framework/object/updatable_object.h"
 #include "framework/reference_frame.h"
 #include "fw/fw_transform.h"
+#include "gf/game/gf_game_ride.h"
 #include "gf/object/component/env_sensor/gf_com_env_sensor.h"
 #include "gf/object/component/gf_com_dynamics.h"
 #include "gf/object/component/gf_com_transform.h"
 #include "gf/object/component/pc/gf_com_property_pc.h"
+#include "gf/object/component/pc/gf_pc_state_util.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
@@ -88,6 +90,19 @@ void AttachPlugin::notifyMovement() {
       notifyExcludeMovementRider(delta);
       unknown20 = world.unknown00;
       unknown30 = world.unknown10;
+    }
+  }
+}
+
+void AttachPlugin::notifyExcludeMovementRider(const fw::Transform &transform) {
+  if (GfGameRide::get() != nullptr && GfGameRide::isVehicle(static_cast<GfObj *>(unknown18->unknown08)->unknownf8)) {
+    GfObj *buddy = GfObjUtil::getObj(StateUtil::getBuddyHandle(*unknown18));
+    if (buddy != nullptr) {
+      GfComPropertyPc *property = buddy->getComponent<GfComPropertyPc>();
+      GfComDynamics *dynamics = buddy->getComponent<GfComDynamics>();
+      if (property->unknown111_1 && dynamics != nullptr) {
+        dynamics->unknown10.unknown50 = transform;
+      }
     }
   }
 }

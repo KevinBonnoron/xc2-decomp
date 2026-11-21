@@ -5,7 +5,7 @@ class DrMdoCtlNom;
 
 class DrMdoNomClone {
 public:
-  void cloneMdlObj(DrMdoCtlNom *clone, const DrMdoCtlNom *source);
+  bool cloneMdlObj(DrMdoCtlNom *clone, const DrMdoCtlNom *source);
   DrMdoNomClone();
   ~DrMdoNomClone();
 };

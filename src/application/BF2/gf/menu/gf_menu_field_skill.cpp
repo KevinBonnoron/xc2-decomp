@@ -2,9 +2,11 @@
 
 #include <new>
 
+#include "fw/fw_update_info.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_reference.h"
 #include "gf/menu/object/gf_menu_obj_field_skill.h"
+#include "gf/menu/object/gf_menu_obj_util.h"
 #include "mm_mtl/reference_object.h"
 
 namespace gf {
@@ -131,9 +133,26 @@ void GfMenuFieldSkill::StateTotalNext::onEnter(void *owner, ai::State *previous)
 
 void GfMenuFieldSkill::StateTotalNext::onLeave(void *owner, ai::State *next) {}
 
+void GfMenuFieldSkill::StateTotalNext::onStep(void *owner, const void *param) {
+  GfMenuFieldSkill *skill = static_cast<GfMenuFieldSkill *>(owner);
+  if (skill->unknown80.unknown08.empty() || skill->unknown1b8 > 1) {
+    reqState(6);
+  } else {
+    skill->unknown210 = GfMenuObjUtil::getParamMenu()->unknown14 * 30.0f;
+    skill->unknown214 = 2;
+    reqState(4);
+  }
+}
+
 ai::State *GfMenuFieldSkill::StateQuit::create(void *buffer) { return new (buffer) StateQuit; }
 
 const char *GfMenuFieldSkill::StateQuit::getName() const { return "StateQuit"; }
+
+void GfMenuFieldSkill::StateQuit::onEnter(void *owner, ai::State *previous) {
+  GfMenuFieldSkill *skill = static_cast<GfMenuFieldSkill *>(owner);
+  skill->unknown200 = GfMenuCallContext::create();
+  GfMenuObjFieldSkill::close(skill->unknown200);
+}
 
 void GfMenuFieldSkill::StateQuit::onLeave(void *owner, ai::State *next) { mm::mtl::safeRelease(static_cast<GfMenuFieldSkill *>(owner)->unknown200); }
 
@@ -158,6 +177,25 @@ ai::State *GfMenuFieldSkill::StateDispResult::create(void *buffer) { return new 
 
 const char *GfMenuFieldSkill::StateDispResult::getName() const { return "StateDispResult"; }
 
+void GfMenuFieldSkill::StateDispResult::onEnter(void *owner, ai::State *previous) {
+  GfMenuFieldSkill *skill = static_cast<GfMenuFieldSkill *>(owner);
+  GfMenuCallContext *context = GfMenuCallContext::create();
+  skill->unknown200 = context;
+  // The game leaves the first fields of the parameter unset when unknown130 is neither 1 nor 0 (0x71003baf54).
+  GfMenuObjFieldSkill::OpenResultParam param;
+  if (skill->unknown80.unknown130 == 0) {
+    param.unknown00 = 0;
+    param.unknown08 = skill->unknown80.unknown100;
+    param.unknown10 = skill->unknown80.unknown108;
+  } else if (skill->unknown80.unknown130 == 1) {
+    param.unknown00 = 1;
+  }
+  param.unknown14 = skill->unknown80.unknown11c;
+  GfMenuObjFieldSkill::openResult(context, param);
+  unknown18 = false;
+  unknown1c = 0.0f;
+}
+
 void GfMenuFieldSkill::StateDispResult::onLeave(void *owner, ai::State *next) {
   GfMenuFieldSkill *skill = static_cast<GfMenuFieldSkill *>(owner);
   mm::mtl::safeRelease(skill->unknown208);
@@ -165,6 +203,26 @@ void GfMenuFieldSkill::StateDispResult::onLeave(void *owner, ai::State *next) {
 }
 
 void GfMenuFieldSkill::StateDispResult::onStep(void *owner, const void *param) { update(static_cast<GfMenuFieldSkill *>(owner), *static_cast<const fw::UpdateInfo *>(param)); }
+
+void GfMenuFieldSkill::StateDispResult::update(GfMenuFieldSkill *skill, const fw::UpdateInfo &info) {
+  if (!unknown18) {
+    unknown1c = info.unknown04 + unknown1c;
+    if (unknown1c > 2.0f) {
+      GfMenuObjFieldSkill::closeResult(skill->unknown200);
+      if (skill->unknown208 != nullptr) {
+        GfMenuObjFieldSkill::closeTotalInfo(skill->unknown208);
+      }
+      if (skill->unknown80.unknown130 == 1) {
+        GfMenuObjFieldSkill::undoTotalSkillLevel(1);
+        GfMenuObjFieldSkill::undoTotalSkillLevel(2);
+      }
+      unknown18 = true;
+    }
+  } else if (skill->unknown200->isTerm()) {
+    mm::mtl::safeRelease(skill->unknown200);
+    reqState(8);
+  }
+}
 
 ai::State *GfMenuFieldSkill::StateDispInfo::create(void *buffer) { return new (buffer) StateDispInfo; }
 

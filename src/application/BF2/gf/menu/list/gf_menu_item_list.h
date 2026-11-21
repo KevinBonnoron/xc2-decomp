@@ -33,8 +33,14 @@ public:
   };
 
   struct HanaPartsSetup {
+    // Evidence: GfMenuObjHanaPartsMake::updateItemList builds this setup with the 16 bytes after unknown14 cleared (stp xzr, xzr, [sp, #40]
+    // at 0x7100475064); setupFromHanaParts reads nothing past unknown14.
+    HanaPartsSetup() : unknown18(0), unknown20(0) {}
+
     SetupParam unknown00;     // Inferred role: param; original member name unknown.
     ItemType::Type unknown14; // Inferred role: item type of the parts; original member name unknown.
+    u64 unknown18;            // Role and original member name unknown; cleared by the constructor.
+    u64 unknown20;            // Role and original member name unknown; cleared by the constructor.
   };
 
   struct ItemBoxSetup {
@@ -130,6 +136,9 @@ public:
 };
 
 static_assert(offsetof(GfMenuItemList::HanaPartsSetup, unknown14) == 0x14, "");
+static_assert(offsetof(GfMenuItemList::HanaPartsSetup, unknown18) == 0x18, "");
+static_assert(offsetof(GfMenuItemList::HanaPartsSetup, unknown20) == 0x20, "");
+static_assert(sizeof(GfMenuItemList::HanaPartsSetup) == 0x28, "");
 static_assert(offsetof(GfMenuItemList::ItemBoxSetup, unknown14) == 0x14, "");
 static_assert(offsetof(GfMenuItemList::ItemBoxSetup, unknown18) == 0x18, "");
 static_assert(offsetof(GfMenuItemList::ItemBoxSetup, unknown20) == 0x20, "");

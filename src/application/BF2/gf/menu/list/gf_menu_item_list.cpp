@@ -6,6 +6,7 @@
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_item.h"
+#include "gf/game/mercenaries/gf_game_mercenaries.h"
 #include "gf/game/quest/gf_quest_util.h"
 #include "gf/gf_allocator.h"
 #include "gf/menu/gf_menu_bdat.h"
@@ -409,6 +410,51 @@ void GfMenuItemList::setupFromHanaParts(const HanaPartsSetup &setup) {
   }
 }
 
+void GfMenuItemList::addListFromBox(const ItemBoxSetup &setup) {
+  if (isValid()) {
+    mm::mtl::FixedVector<GfItem, 1024> items;
+    bool canCount = GfMenuItemUtil::canCountStack(setup.unknown14);
+    GfItemUtil::getInfo(items, setup.unknown14, false);
+    if (items.size() != 0) {
+      MenuItemInfo info;
+      for (u32 i = 0; i < items.size(); i++) {
+        info.unknown00 = setup.unknown14;
+        info.unknown04 = items[i].unknown00;
+        if (canCount) {
+          info.unknown08 = items[i].unknown02;
+        } else {
+          info.unknown08 = 1;
+        }
+        info.unknown0c = items[i].unknown08;
+        if (info.unknown08 != 0 || setup.unknown29) {
+          if (setup.unknown2a && !GfDataItem::isEnableSell(info.unknown04)) {
+            continue;
+          }
+          if (setup.unknown2b && GfItemUtil::getEquipChar(items[i].unknown08) != 0) {
+            continue;
+          }
+          addContents(info);
+        }
+      }
+      if (setup.unknown18 == nullptr) {
+        return;
+      }
+      if ((setup.unknown18->unknown00 & 1) != 0) {
+        filterRarity(*setup.unknown18);
+      }
+      if ((setup.unknown18->unknown00 & 2) != 0) {
+        filterRarityMore(*setup.unknown18);
+      }
+      if ((setup.unknown18->unknown00 & 4) != 0) {
+        filterCollectionType(*setup.unknown18);
+      }
+      if ((setup.unknown18->unknown00 & 8) != 0) {
+        filterFavoriteType(*setup.unknown18);
+      }
+    }
+  }
+}
+
 void GfMenuItemList::setupFromQuestReward(const QuestRewardSetup &setup) {
   mm::mtl::FixedVector<MenuItemInfo, 4> items;
   GfQuestReward reward;
@@ -445,6 +491,31 @@ void GfMenuItemList::addItem(const MenuItemInfo &info, bool isAddItemBox) {
   }
   if (isAddItemBox) {
     SCOM_ADD_ITEM::create(info.unknown04, info.unknown08);
+  }
+}
+
+void GfMenuItemList::setupFromMissionReward(const MissionRewardSetup &setup) {
+  mm::mtl::FixedVector<MenuItemInfo, 4> items;
+  u32 item;
+  u32 number;
+  for (u32 slot = QUEST_REWARD_UNKNOWN_8; slot <= QUEST_REWARD_UNKNOWN_11; slot++) {
+    if (GfGameMercenaries::getRewardItem(item, number, setup.unknown14, static_cast<QUEST_REWARD>(slot))) {
+      MenuItemInfo info;
+      info.unknown04 = item;
+      info.unknown00 = GfDataItem::getItemType(item);
+      info.unknown08 = number;
+      items.push_back(info);
+    }
+  }
+  if (items.size() == 0) {
+    clear();
+  } else {
+    UIListInfo<MenuItemInfo>::setup(getAllocator(ALLOCATOR_UNKNOWN_0), setup.unknown00);
+    if (isValid()) {
+      for (u32 i = 0; i < items.size(); i++) {
+        addContents(items[i]);
+      }
+    }
   }
 }
 

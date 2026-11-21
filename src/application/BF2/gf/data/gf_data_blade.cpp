@@ -12,9 +12,13 @@
 #include "gf/data/gf_bdat_msg.h"
 #include "gf/data/gf_bdat_quest.h"
 #include "gf/data/gf_character_id.h"
+#include "gf/data/gf_data_achievement.h"
 #include "gf/data/gf_data_bdat.h"
+#include "gf/data/gf_data_blade_arts.h"
+#include "gf/data/gf_data_blade_skill.h"
 #include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_field.h"
+#include "gf/data/gf_data_field_skill.h"
 #include "gf/data/gf_data_game.h"
 #include "gf/data/gf_data_hana.h"
 #include "gf/data/gf_data_idea.h"
@@ -67,6 +71,7 @@ constexpr f32 unknown021 = 0.01f;                                               
 constexpr u32 CROWN_POINT_UNKNOWN_5 = 5;                                          // Inferred role: crown point max; original name unknown.
 constexpr u32 CROWN_POINT_UNKNOWN_1 = 1;                                          // Inferred role: crown point min; original name unknown.
 constexpr u32 TALK_UNKNOWN_32 = 32;                                               // Inferred role: normal talk count; original name unknown.
+constexpr u32 PARTY_UNKNOWN_8 = 8;                                                // Inferred role: party members scanned for field skills; original name unknown.
 
 namespace {
 
@@ -489,7 +494,438 @@ bool GfDataBlade::isFavoriteItem(u32 blade, u32 item) {
   return false;
 }
 
+// The game (0x71002a5f64) reads the pouch item again for each use (reference to the pouch, item not kept in a local) and inlines the driver's isFavoriteItem and isFavoriteCategory, while the
+// blade's two functions stay calls (0x710029bee4, 0x710029be10: isFavoriteCategory is not matched yet and stays declared only). `bdatItem` places the item table load before the loop, as the game
+// does (0x71002a5ff4; the call in the loop gives 128 instructions without it). The driver state is set to 0, then to 2 or 1: the game has no separate zero store (its state register holds the item,
+// known to be 0, on the path where the item is 0); this form gives 129 instructions, a ternary 130, an if/else chain with a final else 143 (a local holding the state also gives 129, but adds a
+// variable).
+bool GfDataBlade::getPouchEnhanceFavorite(mm::mtl::FixedVector<EnhanceFavorite, 64> &favorites, u32 blade) {
+  if (blade != 0) {
+    u32 driver = getSDataBlade(blade).unknown04;
+    if (driver != 0) {
+      GfBdatItem *bdatItem = GfBdatItem::get();
+      for (u32 slot = 0; slot < POUCH_UNKNOWN_3; slot++) {
+        SDataPouch &pouch = GfDataDriver::getSDataDriver(driver).unknown584[slot];
+        if (pouch.unknown04 != 0) {
+          u32 enhance = bdatItem->getFavoriteType(pouch.unknown04);
+          if (enhance != 0) {
+            EnhanceFavorite favorite;
+            favorite.unknown00 = 1.0f;
+            favorite.unknown04 = enhance;
+            favorite.unknown06 = 0;
+            if (GfDataDriver::isFavoriteItem(driver, pouch.unknown04)) {
+              favorite.unknown06 = 2;
+            } else if (GfDataDriver::isFavoriteCategory(driver, pouch.unknown04)) {
+              favorite.unknown06 = 1;
+            }
+            favorite.unknown08 = isFavoriteItem(blade, pouch.unknown04) ? 2 : isFavoriteCategory(blade, pouch.unknown04);
+            favorites.push_back(favorite);
+          }
+        }
+      }
+
+      return !favorites.empty();
+    }
+  }
+
+  return false;
+}
+
 u32 GfDataBlade::getAchievementQuestPrefix(u32 blade, u32 line, u32 level) { return getBladeRelativeID(blade) * ACHIEVEMENT_UNKNOWN_50 + line * ACHIEVEMENT_UNKNOWN_5 + level; }
+
+// Inferred role: gets the data of a blade and the type and index of an achievement line in it; original name unknown. Written out in each function the three statements give the same
+// code; they are shared because ten functions below start with them.
+static bool unknown003(SDataBlade *&dataBlade, ACHIEVEMENT_TYPE &type, u32 &index, u32 blade, u32 line) {
+  dataBlade = &GfDataBlade::getSDataBlade(blade);
+  return GfDataAchievement::getAchievementType(type, index, line);
+}
+
+SDataBladeAchievement *GfDataBlade::getAchievInfo(u32 blade, u32 line) {
+  SDataBlade *dataBlade;
+  ACHIEVEMENT_TYPE type;
+  u32 index;
+  if (unknown003(dataBlade, type, index, blade, line)) {
+    switch (type) {
+    case ACHIEVEMENT_TYPE_UNKNOWN_3:
+      return &dataBlade->unknown5d4;
+    case ACHIEVEMENT_TYPE_UNKNOWN_2:
+      return &dataBlade->unknown424[index];
+    case ACHIEVEMENT_TYPE_UNKNOWN_1:
+      return &dataBlade->unknown274[index];
+    default:
+      return &dataBlade->unknownc4[index];
+    }
+  }
+  return &dataBlade->unknownc4[0];
+}
+
+u32 GfDataBlade::getKizunaringMax(u32 blade) {
+  u32 count = 0;
+  for (u32 line = 0; line < ACHIEVEMENT_UNKNOWN_10; line++) {
+    SDataBladeAchievement *achievInfo = getAchievInfo(blade, line);
+    if (achievInfo->unknown00 != 0) {
+      for (u32 level = 0; level < ACHIEVEMENT_UNKNOWN_5; level++) {
+        if (achievInfo->unknown04[level].unknown18 != 0) {
+          count++;
+        }
+      }
+    }
+  }
+  return count;
+}
+
+u32 GfDataBlade::getKizunaringCompleteNum(u32 blade) {
+  u32 count = 0;
+  for (u32 line = 0; line < ACHIEVEMENT_UNKNOWN_10; line++) {
+    SDataBladeAchievement *achievInfo = getAchievInfo(blade, line);
+    if (achievInfo->unknown00 != 0) {
+      for (u32 level = 0; level < ACHIEVEMENT_UNKNOWN_5; level++) {
+        AchievQuest &achievQuest = achievInfo->unknown04[level];
+        if (achievQuest.unknown18 != 0) {
+          count += achievQuest.unknown0c & 1;
+        }
+      }
+    }
+  }
+  return count;
+}
+
+bool GfDataBlade::getTaskSkillMessage(u8 *&bdat, u32 &textId, u32 blade, u32 line) {
+  textId = 0;
+  ACHIEVEMENT_TYPE type;
+  u32 index;
+  if (GfDataAchievement::getAchievementType(type, index, line)) {
+    SDataBlade &dataBlade = getSDataBlade(blade);
+    switch (type) {
+    case ACHIEVEMENT_TYPE_UNKNOWN_3:
+      textId = 1;
+      bdat = GfBdatMsg::getFpAchievement();
+      break;
+    case ACHIEVEMENT_TYPE_UNKNOWN_2:
+      GfDataFieldSkill::getName(bdat, textId, dataBlade.unknownae[index].unknown00);
+      break;
+    case ACHIEVEMENT_TYPE_UNKNOWN_1:
+      GfDataBladeSkill::getName(bdat, textId, dataBlade.unknown9c[index].unknown00);
+      break;
+    default:
+      GfDataBladeArts::getName(bdat, textId, dataBlade.unknown3c[index].unknown00);
+      break;
+    }
+  }
+  return textId != 0;
+}
+
+// The `achievInfo` local places the call before the `level - 1` index: clang evaluates the index of a subscript first, the game computes it after the inlined getAchievInfo.
+bool GfDataBlade::getTaskTitleMessage(u8 *&bdat, u32 &textId, u32 blade, u32 line, u32 level) {
+  SDataBladeAchievement *achievInfo = getAchievInfo(blade, line);
+  AchievQuest &achievQuest = achievInfo->unknown04[level - 1];
+  if (achievQuest.unknown00.empty()) {
+    return false;
+  }
+  QuestID quest = GfDataQuest::getListNextQuestA(achievQuest.unknown00);
+  if (quest.empty() || GfDataQuest::getListPurposeID(quest) == 0) {
+    return false;
+  }
+  textId = QuestListAcc::get()->getTaskTaskLog(GfDataQuest::getListPurposeID(quest), 0);
+  bdat = GfBdatMsg::getFpQuest(quest);
+  return textId != 0;
+}
+
+// Same `achievInfo` local as getTaskTitleMessage (0x71002a2f98: the call comes before the `level - 1` index).
+bool GfDataBlade::getTaskResultMessage(u8 *&bdat, u32 &textId, u32 blade, u32 line, u32 level) {
+  SDataBladeAchievement *achievInfo = getAchievInfo(blade, line);
+  AchievQuest &achievQuest = achievInfo->unknown04[level - 1];
+  if (achievQuest.unknown00.empty()) {
+    return false;
+  }
+  textId = QuestListAcc::get()->getListResultA(achievQuest.unknown00);
+  bdat = GfBdatMsg::getFpQuest(achievQuest.unknown00);
+  return textId != 0;
+}
+
+// The functions by achievement line (getAchievInfo, getSkillLine*, setSkillLevel, getTask*Message, setAchievReleaseLevel, getAchievementID, the getKizunaring* loops) inline
+// GfDataAchievement::getAchievementType: the game tests `line - 3` in the entry block (subs/b.hs), which only that helper gives (a plain if chain on `line` gives cmp #2/b.hi),
+// and a line past the key line fails the helper (getAchievInfo then returns the first arts entry, getSkillLineLevel returns 0).
+// Case order (ruling 4): the source order of the switch cases fixes the block layout, and only one order matches the eleven functions: the key case first (`default` in the nine
+// functions where the key is the default, `case ACHIEVEMENT_TYPE_UNKNOWN_3` in getAchievInfo and getTaskSkillMessage), then field skill, skill, arts. Measured on the
+// branch: with `default` first and the others ascending (0, 1, 2) only getSkillLineLevel, getSkillLineLevelMax, getSkillLineId and getAchievReleaseLevel match, getAchievementID,
+// getSkillLineName (first difference at +0xec) and the three setters do not (62 against 61 instructions; first difference at +0x48 and +0x4c); with `default` last and ascending cases
+// getSkillLineLevel and getAchievReleaseLevel also fail (53 against 51); with the key case after the others getAchievInfo fails (first difference at +0x78).
+u32 GfDataBlade::getSkillLineLevel(u32 blade, u32 line) {
+  SDataBlade *dataBlade;
+  ACHIEVEMENT_TYPE type;
+  u32 index;
+  u32 level = 0;
+  if (unknown003(dataBlade, type, index, blade, line)) {
+    switch (type) {
+    default:
+      level = dataBlade->unknown664;
+      break;
+    case ACHIEVEMENT_TYPE_UNKNOWN_2:
+      level = dataBlade->unknownae[index].unknown03;
+      break;
+    case ACHIEVEMENT_TYPE_UNKNOWN_1:
+      level = dataBlade->unknown9c[index].unknown03;
+      break;
+    case ACHIEVEMENT_TYPE_UNKNOWN_0:
+      level = dataBlade->unknown3c[index].unknown07;
+      break;
+    }
+  }
+  return level;
+}
+
+u32 GfDataBlade::getSkillLineLevelMax(u32 blade, u32 line) {
+  SDataBlade *dataBlade;
+  ACHIEVEMENT_TYPE type;
+  u32 index;
+  u32 levelMax = 0;
+  if (unknown003(dataBlade, type, index, blade, line)) {
+    switch (type) {
+    default:
+      levelMax = ACHIEVEMENT_UNKNOWN_5;
+      break;
+    case ACHIEVEMENT_TYPE_UNKNOWN_2:
+      levelMax = dataBlade->unknownae[index].unknown04;
+      break;
+    case ACHIEVEMENT_TYPE_UNKNOWN_1:
+      levelMax = dataBlade->unknown9c[index].unknown04;
+      break;
+    case ACHIEVEMENT_TYPE_UNKNOWN_0:
+      levelMax = dataBlade->unknown3c[index].unknown08;
+      break;
+    }
+  }
+  return levelMax;
+}
+
+const char *GfDataBlade::getSkillLineName(u32 blade, u32 line) {
+  SDataBlade *dataBlade;
+  ACHIEVEMENT_TYPE type;
+  u32 index;
+  if (!unknown003(dataBlade, type, index, blade, line)) {
+    return "";
+  }
+  const char *name;
+  switch (type) {
+  default:
+    return "";
+  case ACHIEVEMENT_TYPE_UNKNOWN_2:
+    name = GfDataFieldSkill::getName(dataBlade->unknownae[index].unknown00);
+    break;
+  case ACHIEVEMENT_TYPE_UNKNOWN_1:
+    name = GfDataBladeSkill::getName(dataBlade->unknown9c[index].unknown00);
+    break;
+  case ACHIEVEMENT_TYPE_UNKNOWN_0:
+    name = GfDataBladeArts::getName(dataBlade->unknown3c[index].unknown00);
+    break;
+  }
+  return name == nullptr ? "" : name;
+}
+
+u32 GfDataBlade::getSkillLineId(u32 blade, u32 line) {
+  SDataBlade *dataBlade;
+  ACHIEVEMENT_TYPE type;
+  u32 index;
+  if (!unknown003(dataBlade, type, index, blade, line)) {
+    return 0;
+  }
+  u32 skill = 0;
+  switch (type) {
+  default:
+    break;
+  case ACHIEVEMENT_TYPE_UNKNOWN_2:
+    skill = dataBlade->unknownae[index].unknown00;
+    break;
+  case ACHIEVEMENT_TYPE_UNKNOWN_1:
+    skill = dataBlade->unknown9c[index].unknown00;
+    break;
+  case ACHIEVEMENT_TYPE_UNKNOWN_0:
+    skill = dataBlade->unknown3c[index].unknown00;
+    break;
+  }
+  return skill;
+}
+
+u32 GfDataBlade::getAchievReleaseLevel(u32 blade, u32 line) {
+  SDataBlade *dataBlade;
+  ACHIEVEMENT_TYPE type;
+  u32 index;
+  u32 releaseLevel = 0;
+  if (unknown003(dataBlade, type, index, blade, line)) {
+    switch (type) {
+    default:
+      releaseLevel = dataBlade->unknown664;
+      break;
+    case ACHIEVEMENT_TYPE_UNKNOWN_2:
+      releaseLevel = dataBlade->unknownae[index].unknown02;
+      break;
+    case ACHIEVEMENT_TYPE_UNKNOWN_1:
+      releaseLevel = dataBlade->unknown9c[index].unknown02;
+      break;
+    case ACHIEVEMENT_TYPE_UNKNOWN_0:
+      releaseLevel = dataBlade->unknown3c[index].unknown06;
+      break;
+    }
+  }
+  return releaseLevel;
+}
+
+bool GfDataBlade::setAchievReleaseLevel(u32 blade, u32 line, u32 level) {
+  SDataBlade *dataBlade;
+  ACHIEVEMENT_TYPE type;
+  u32 index;
+  u32 releaseLevel;
+  if (!unknown003(dataBlade, type, index, blade, line)) {
+    return false;
+  }
+  switch (type) {
+  default:
+    releaseLevel = dataBlade->unknown664;
+    if (releaseLevel < level) {
+      dataBlade->unknown664 = level;
+    }
+    break;
+  case ACHIEVEMENT_TYPE_UNKNOWN_2: {
+    unknown110 &skill = dataBlade->unknownae[index];
+    releaseLevel = skill.unknown02;
+    if (level > releaseLevel) {
+      skill.unknown02 = level;
+      if (skill.unknown04 > skill.unknown03) {
+        skill.unknown03++;
+      }
+    }
+    break;
+  }
+  case ACHIEVEMENT_TYPE_UNKNOWN_1: {
+    unknown109 &skill = dataBlade->unknown9c[index];
+    releaseLevel = skill.unknown02;
+    if (level > releaseLevel) {
+      skill.unknown02 = level;
+      if (skill.unknown04 > skill.unknown03) {
+        skill.unknown03++;
+      }
+    }
+    break;
+  }
+  case ACHIEVEMENT_TYPE_UNKNOWN_0: {
+    unknown108 &arts = dataBlade->unknown3c[index];
+    releaseLevel = arts.unknown06;
+    if (level > releaseLevel) {
+      arts.unknown06 = level;
+      if (arts.unknown08 > arts.unknown07) {
+        arts.unknown07++;
+      }
+    }
+    break;
+  }
+  }
+  return releaseLevel < level;
+}
+
+void GfDataBlade::setSkillLineLevel(u32 blade, u32 line, u32 level) {
+  SDataBlade *dataBlade;
+  ACHIEVEMENT_TYPE type;
+  u32 index;
+  if (!unknown003(dataBlade, type, index, blade, line)) {
+    return;
+  }
+  switch (type) {
+  default:
+    dataBlade->unknown664 = level;
+    break;
+  case ACHIEVEMENT_TYPE_UNKNOWN_2: {
+    unknown110 &skill = dataBlade->unknownae[index];
+    skill.unknown03 = level;
+    if (level == 0) {
+      skill.unknown02 = 0;
+    }
+    break;
+  }
+  case ACHIEVEMENT_TYPE_UNKNOWN_1: {
+    unknown109 &skill = dataBlade->unknown9c[index];
+    skill.unknown03 = level;
+    if (level == 0) {
+      skill.unknown02 = 0;
+    }
+    break;
+  }
+  case ACHIEVEMENT_TYPE_UNKNOWN_0: {
+    unknown108 &arts = dataBlade->unknown3c[index];
+    arts.unknown07 = level;
+    if (level == 0) {
+      arts.unknown06 = 0;
+    }
+    break;
+  }
+  }
+}
+
+void GfDataBlade::setSkillLevel(u32 blade, u32 line, u32 level) {
+  SDataBlade *dataBlade;
+  ACHIEVEMENT_TYPE type;
+  u32 index;
+  if (!unknown003(dataBlade, type, index, blade, line)) {
+    return;
+  }
+  switch (type) {
+  default:
+    break;
+  case ACHIEVEMENT_TYPE_UNKNOWN_2: {
+    unknown110 &skill = dataBlade->unknownae[index];
+    skill.unknown03 = level;
+    if (level == 0) {
+      skill.unknown02 = 0;
+    }
+    break;
+  }
+  case ACHIEVEMENT_TYPE_UNKNOWN_1: {
+    unknown109 &skill = dataBlade->unknown9c[index];
+    skill.unknown03 = level;
+    if (level == 0) {
+      skill.unknown02 = 0;
+    }
+    break;
+  }
+  case ACHIEVEMENT_TYPE_UNKNOWN_0: {
+    unknown108 &arts = dataBlade->unknown3c[index];
+    arts.unknown07 = level;
+    if (level == 0) {
+      arts.unknown06 = 0;
+    }
+    break;
+  }
+  }
+}
+
+u32 GfDataBlade::getAchievementID(u32 blade, u32 line, u32 level) {
+  SDataBlade *dataBlade;
+  ACHIEVEMENT_TYPE type;
+  u32 index;
+  if (!unknown003(dataBlade, type, index, blade, line)) {
+    return 0;
+  }
+  const u16 *achievementSet;
+  switch (type) {
+  default:
+    achievementSet = &dataBlade->unknown5d4.unknown00;
+    break;
+  case ACHIEVEMENT_TYPE_UNKNOWN_2:
+    achievementSet = &dataBlade->unknownae[index].unknown00;
+    break;
+  case ACHIEVEMENT_TYPE_UNKNOWN_1:
+    achievementSet = &dataBlade->unknown9c[index].unknown00;
+    break;
+  case ACHIEVEMENT_TYPE_UNKNOWN_0:
+    achievementSet = &dataBlade->unknown3c[index].unknown00;
+    break;
+  }
+  u32 achievement = *achievementSet;
+  if (achievement == 0) {
+    return 0;
+  }
+  return QuestListAcc::get()->getFLD_AchievementSetAchievementID(achievement, level - 1);
+}
 
 void GfDataBlade::setupAchievQuest(AchievQuest &achievQuest) {
   achievQuest.unknown04 = 0;
@@ -722,8 +1158,8 @@ bool GfDataBlade::getBladeAddAnim(mm::mtl::FixStr<128> &animName, u32 blade, u32
 const char *GfDataBlade::getDebugName(u32 blade) {
   if (isCommonBlade(blade)) {
     SDataBlade &dataBlade = getSDataBlade(blade);
-    if (dataBlade.unknown898 != 0) {
-      return dataBlade.unknown858;
+    if (dataBlade.unknown858.length() != 0) {
+      return dataBlade.unknown858.c_str();
     }
 
     return getName(blade, 0);
@@ -1249,6 +1685,24 @@ bool GfDataBlade::getListForAchievement(mm::mtl::FixedVector<u16, BLADE_UNKNOWN_
   return unknown001(blades, [](u32 blade) { return (!isActivateUnuse(blade) || isAttachedParty(blade)) && !isDummyBlade(blade) && !isUnselect(blade); });
 }
 
+bool GfDataBlade::getListForFieldSkill(mm::mtl::FixedVector<u16, BLADE_UNKNOWN_422> &blades) {
+  blades.clear();
+  for (u32 member = 0; member < PARTY_UNKNOWN_8; member++) {
+    u32 driver = GfDataParty::getDriver(member);
+    if (driver != 0) {
+      int slotNum = GfDataDriver::getMaxSetBladeNum(GfDataDriver::getSDataDriver(driver));
+      for (int slot = 0; slot < slotNum; slot++) {
+        u32 blade = GfDataDriver::getBlade(driver, slot);
+        if (blade != 0 && !isDummyBlade(blade) && !isUnselect(blade)) {
+          blades.push_back(blade);
+        }
+      }
+    }
+  }
+
+  return !blades.empty();
+}
+
 bool GfDataBlade::getListParty(mm::mtl::FixedVector<u16, BLADE_UNKNOWN_422> &blades, bool unknown001, bool unknown002) {
   blades.clear();
   for (u32 i = 0; i < BLADE_UNKNOWN_422; i++) {
@@ -1500,9 +1954,9 @@ u32 GfDataBlade::getVoiceID(u32 blade) {
   return GfBdatBtl::get()->getBTL_Bl_PersonalityVoiceID(personality);
 }
 
-const char *GfDataBlade::getVoiceStr(u32 blade) { return getSDataBlade(blade).unknown770; }
+const char *GfDataBlade::getVoiceStr(u32 blade) { return getSDataBlade(blade).unknown770.c_str(); }
 
-const char *GfDataBlade::getSePack(u32 blade) { return getSDataBlade(blade).unknown7fc; }
+const char *GfDataBlade::getSePack(u32 blade) { return getSDataBlade(blade).unknown7fc.c_str(); }
 
 u32 GfDataBlade::getBladeNum() {
   mm::mtl::FixedVector<u16, 422> blades;

@@ -26,6 +26,7 @@ class StateIdle : public GfStateBase {
   void enter(GfComBehaviorNpc *behavior, ai::State *previous);
   void leave(GfComBehaviorNpc *behavior, ai::State *next);
   void update(GfComBehaviorNpc *behavior, const fw::UpdateInfo &info);
+  bool isExecEndScheduleCondMatched(GfComBehaviorNpc &behavior, ai::State *state) const;
 
   TFieldExecCmd<GfComAsm> unknown18; // Inferred role: asm command; original member name unknown.
 };

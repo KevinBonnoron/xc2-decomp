@@ -102,11 +102,49 @@ void DrLightMan::debugRender() {
   renderDebugSpt();
 }
 
+DrLightObjAmb *DrLightMan::createAmbLight() {
+  CS lock(DrMan::getCriticalSection());
+  DrLightObjAmb *light = new (unknowne0->unknown10) DrLightObjAmb(unknowne0->unknown78);
+  ml::unknown100<DrLightObj>(unknown040[DrMan::s_nDblStockIdx][0], unknown040[DrMan::s_nDblStockIdx][1], light);
+  unknown100++;
+  return light;
+}
+
 DrLightObjDir *DrLightMan::createDirLight() {
   CS lock(DrMan::getCriticalSection());
   DrLightObjDir *light = new (unknowne0->unknown10) DrLightObjDir(unknowne0->unknown78);
   ml::unknown100<DrLightObj>(unknown060[DrMan::s_nDblStockIdx][0], unknown060[DrMan::s_nDblStockIdx][1], light);
   unknown104++;
+  return light;
+}
+
+DrLightObjPnt *DrLightMan::createPntLight() {
+  CS lock(DrMan::getCriticalSection());
+  DrLightObjPnt *light = new (unknowne0->unknown10) DrLightObjPnt(unknowne0->unknown78);
+  ml::unknown100<DrLightObj>(unknown080[DrMan::s_nDblStockIdx][0], unknown080[DrMan::s_nDblStockIdx][1], light);
+  unknown108++;
+  return light;
+}
+
+DrLightObjSpt *DrLightMan::createSptLight() {
+  CS lock(DrMan::getCriticalSection());
+  DrLightObjSpt *light = new (unknowne0->unknown10) DrLightObjSpt(unknowne0->unknown78);
+  ml::unknown100<DrLightObj>(unknown0a0[DrMan::s_nDblStockIdx][0], unknown0a0[DrMan::s_nDblStockIdx][1], light);
+  unknown10c++;
+  return light;
+}
+
+DrLightObjPnt *DrLightMan::createInstantPntLight() {
+  DrLightObjPnt *light = new (unknowne0->unknown10) DrLightObjPnt(unknowne0->unknown78);
+  ml::unknown100<DrLightObj>(unknown0c0[0], unknown0c0[1], light);
+  unknown108++;
+  return light;
+}
+
+DrLightObjSpt *DrLightMan::createInstantSptLight() {
+  DrLightObjSpt *light = new (unknowne0->unknown10) DrLightObjSpt(unknowne0->unknown78);
+  ml::unknown100<DrLightObj>(unknown0d0[0], unknown0d0[1], light);
+  unknown10c++;
   return light;
 }
 

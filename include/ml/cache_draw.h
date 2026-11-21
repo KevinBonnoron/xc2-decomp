@@ -10,6 +10,7 @@
 #include "mm_math/mm_pnt.h"
 #include "mm_math/mm_rect.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_math/mm_vec3_na.h"
 #include "mm_mtl/fixstr.h"
 #include "mtl/alloc_handle.h"
 #include "types.h"
@@ -76,25 +77,197 @@ public:
     u32 unknown10; // Inferred role: count; original member name unknown.
   };
 
-  // The game stores these matrices and positions at 4-byte aligned offsets.
-#pragma pack(push, 4)
+  // DADDV3_1, DRPNT and the records below keep 12-byte vectors (Vec3NA) at 0xc, 0x18 and 0x24: the render*/add* constructors
+  // write each vector as stp w,w + str w and the sizes they store (0x18, 0x20, 0x28, 0x30) only fit that stride (decision 45).
   struct DADDV3_1 : unknown001 {
+    DADDV3_1(const mm::Vec3 &position) : unknown001(0x34, sizeof(DADDV3_1), 0), unknown0c(position) {}
     void flush(DebDraw *draw) override;
-    mm::Vec3 unknown0c; // Inferred role: position; original member name unknown.
+    mm::Vec3NA unknown0c; // Inferred role: position; original member name unknown.
+  };
+
+  struct DADDV3_2 : unknown001 {
+    DADDV3_2(const mm::Vec3 &first, const mm::Vec3 &second) : unknown001(0x35, sizeof(DADDV3_2), 0), unknown0c(first), unknown18(second) {}
+    void flush(DebDraw *draw) override;
+    mm::Vec3NA unknown0c; // Inferred role: first position; original member name unknown.
+    mm::Vec3NA unknown18; // Inferred role: second position; original member name unknown.
+  };
+
+  struct DADDV3_3 : unknown001 {
+    DADDV3_3(const mm::Vec3 &first, const mm::Vec3 &second, const mm::Vec3 &third) : unknown001(0x36, sizeof(DADDV3_3), 0), unknown0c(first), unknown18(second), unknown24(third) {}
+    void flush(DebDraw *draw) override;
+    mm::Vec3NA unknown0c; // Inferred role: first position; original member name unknown.
+    mm::Vec3NA unknown18; // Inferred role: second position; original member name unknown.
+    mm::Vec3NA unknown24; // Inferred role: third position; original member name unknown.
   };
 
   struct DRPNT : unknown001 {
+    DRPNT(const mm::Vec3 &position) : unknown001(0x2e, sizeof(DRPNT), 1), unknown0c(position) {}
     void flush(DebDraw *draw) override;
-    mm::Vec3 unknown0c; // Inferred role: position; original member name unknown.
+    mm::Vec3NA unknown0c; // Inferred role: position; original member name unknown.
   };
 
-  struct DPERS : unknown001 {
+  struct DRPNT2D : unknown001 {
+    DRPNT2D(const mm::Vec3 &position, f32 size) : unknown001(0x2f, sizeof(DRPNT2D), 1), unknown0c(position), unknown18(size) {}
     void flush(DebDraw *draw) override;
-    mm::Mat44 unknown0c; // Inferred role: matrix; original member name unknown.
-    f32 unknown4c;       // Inferred role: first perspective value; original member name unknown.
-    f32 unknown50;       // Inferred role: second perspective value; original member name unknown.
-    f32 unknown54;       // Inferred role: third perspective value; original member name unknown.
-    mm::Vec3 unknown58;  // Inferred role: position; original member name unknown.
+    mm::Vec3NA unknown0c; // Inferred role: position; original member name unknown.
+    f32 unknown18;        // Inferred role: point size, converted to the line width; original member name unknown.
+  };
+
+  struct DRLINE : unknown001 {
+    DRLINE(const mm::Vec3 &start, const mm::Vec3 &end) : unknown001(0x2c, sizeof(DRLINE), 2), unknown0c(start), unknown18(end) {}
+    void flush(DebDraw *draw) override;
+    mm::Vec3NA unknown0c; // Inferred role: start; original member name unknown.
+    mm::Vec3NA unknown18; // Inferred role: end; original member name unknown.
+  };
+
+  struct DRTRI : unknown001 {
+    DRTRI(const mm::Vec3 &first, const mm::Vec3 &second, const mm::Vec3 &third) : unknown001(0xc, sizeof(DRTRI), 2), unknown0c(first), unknown18(second), unknown24(third) {}
+    void flush(DebDraw *draw) override;
+    mm::Vec3NA unknown0c; // Inferred role: first corner; original member name unknown.
+    mm::Vec3NA unknown18; // Inferred role: second corner; original member name unknown.
+    mm::Vec3NA unknown24; // Inferred role: third corner; original member name unknown.
+  };
+
+  struct DRTRI_FILL : unknown001 {
+    DRTRI_FILL(const mm::Vec3 &first, const mm::Vec3 &second, const mm::Vec3 &third) : unknown001(0xd, sizeof(DRTRI_FILL), 2), unknown0c(first), unknown18(second), unknown24(third) {}
+    void flush(DebDraw *draw) override;
+    mm::Vec3NA unknown0c; // Inferred role: first corner; original member name unknown.
+    mm::Vec3NA unknown18; // Inferred role: second corner; original member name unknown.
+    mm::Vec3NA unknown24; // Inferred role: third corner; original member name unknown.
+  };
+
+  struct DRCUBE : unknown001 {
+    DRCUBE(const mm::Vec3 &min, const mm::Vec3 &max) : unknown001(0xf, sizeof(DRCUBE), 2), unknown0c(min), unknown18(max) {}
+    void flush(DebDraw *draw) override;
+    mm::Vec3NA unknown0c; // Inferred role: minimum corner; original member name unknown.
+    mm::Vec3NA unknown18; // Inferred role: maximum corner; original member name unknown.
+  };
+
+  struct DRCUBE_FILL : unknown001 {
+    DRCUBE_FILL(const mm::Vec3 &min, const mm::Vec3 &max) : unknown001(0x10, sizeof(DRCUBE_FILL), 2), unknown0c(min), unknown18(max) {}
+    void flush(DebDraw *draw) override;
+    mm::Vec3NA unknown0c; // Inferred role: minimum corner; original member name unknown.
+    mm::Vec3NA unknown18; // Inferred role: maximum corner; original member name unknown.
+  };
+
+  struct DRCIRCLE : unknown001 {
+    DRCIRCLE(const mm::Vec3 &center, f32 radius, u32 division) : unknown001(0x11, sizeof(DRCIRCLE), 2), unknown0c(center), unknown18(radius), unknown1c(division) {}
+    void flush(DebDraw *draw) override;
+    mm::Vec3NA unknown0c; // Inferred role: center; original member name unknown.
+    f32 unknown18;        // Inferred role: radius; original member name unknown.
+    s32 unknown1c;        // Inferred role: division; original member name unknown.
+  };
+
+  struct DRCIRCLE2D : unknown001 {
+    DRCIRCLE2D(const mm::Vec3 &center, f32 radius, u32 division) : unknown001(0x12, sizeof(DRCIRCLE2D), 1), unknown0c(center), unknown18(radius), unknown1c(division) {}
+    void flush(DebDraw *draw) override;
+    mm::Vec3NA unknown0c; // Inferred role: center; original member name unknown.
+    f32 unknown18;        // Inferred role: radius; original member name unknown.
+    s32 unknown1c;        // Inferred role: division; original member name unknown.
+  };
+
+  struct DRCIRCLE_FILL : unknown001 {
+    DRCIRCLE_FILL(const mm::Vec3 &center, f32 radius, u32 division) : unknown001(0x13, sizeof(DRCIRCLE_FILL), 2), unknown0c(center), unknown18(radius), unknown1c(division) {}
+    void flush(DebDraw *draw) override;
+    mm::Vec3NA unknown0c; // Inferred role: center; original member name unknown.
+    f32 unknown18;        // Inferred role: radius; original member name unknown.
+    s32 unknown1c;        // Inferred role: division; original member name unknown.
+  };
+
+  struct DRCIRCLE2D_FILL : unknown001 {
+    DRCIRCLE2D_FILL(const mm::Vec3 &center, f32 radius, u32 division) : unknown001(0x14, sizeof(DRCIRCLE2D_FILL), 1), unknown0c(center), unknown18(radius), unknown1c(division) {}
+    void flush(DebDraw *draw) override;
+    mm::Vec3NA unknown0c; // Inferred role: center; original member name unknown.
+    f32 unknown18;        // Inferred role: radius; original member name unknown.
+    s32 unknown1c;        // Inferred role: division; original member name unknown.
+  };
+
+  struct DRFAN : unknown001 {
+    DRFAN(const mm::Vec3 &center, f32 radius, f32 direction, f32 angle) : unknown001(0x16, sizeof(DRFAN), 2), unknown0c(center), unknown18(radius), unknown1c(direction), unknown20(angle) {}
+    void flush(DebDraw *draw) override;
+    mm::Vec3NA unknown0c; // Inferred role: center; original member name unknown.
+    f32 unknown18;        // Inferred role: radius; original member name unknown.
+    f32 unknown1c;        // Inferred role: direction; original member name unknown.
+    f32 unknown20;        // Inferred role: angle; original member name unknown.
+  };
+
+  struct DRFAN_FILL : unknown001 {
+    DRFAN_FILL(const mm::Vec3 &center, f32 radius, f32 direction, f32 angle) : unknown001(0x17, sizeof(DRFAN_FILL), 2), unknown0c(center), unknown18(radius), unknown1c(direction), unknown20(angle) {}
+    void flush(DebDraw *draw) override;
+    mm::Vec3NA unknown0c; // Inferred role: center; original member name unknown.
+    f32 unknown18;        // Inferred role: radius; original member name unknown.
+    f32 unknown1c;        // Inferred role: direction; original member name unknown.
+    f32 unknown20;        // Inferred role: angle; original member name unknown.
+  };
+
+  struct DRARROW : unknown001 {
+    DRARROW(const mm::Vec3 &start, const mm::Vec3 &end) : unknown001(0x19, sizeof(DRARROW), 2), unknown0c(start), unknown18(end) {}
+    void flush(DebDraw *draw) override;
+    mm::Vec3NA unknown0c; // Inferred role: start; original member name unknown.
+    mm::Vec3NA unknown18; // Inferred role: end; original member name unknown.
+  };
+
+  struct DRARROW_CUBE : unknown001 {
+    DRARROW_CUBE(const mm::Vec3 &start, const mm::Vec3 &end) : unknown001(0x1a, sizeof(DRARROW_CUBE), 2), unknown0c(start), unknown18(end) {}
+    void flush(DebDraw *draw) override;
+    mm::Vec3NA unknown0c; // Inferred role: start; original member name unknown.
+    mm::Vec3NA unknown18; // Inferred role: end; original member name unknown.
+  };
+
+  struct DRSPHERE : unknown001 {
+    DRSPHERE(const mm::Vec3 &center, f32 radius, u32 division) : unknown001(0x1c, sizeof(DRSPHERE), 2), unknown0c(center), unknown18(radius), unknown1c(division) {}
+    void flush(DebDraw *draw) override;
+    mm::Vec3NA unknown0c; // Inferred role: center; original member name unknown.
+    f32 unknown18;        // Inferred role: radius; original member name unknown.
+    s32 unknown1c;        // Inferred role: division; original member name unknown.
+  };
+
+  struct DRSPHERE_FILL : unknown001 {
+    DRSPHERE_FILL(const mm::Vec3 &center, f32 radius, u32 division) : unknown001(0x1b, sizeof(DRSPHERE_FILL), 2), unknown0c(center), unknown18(radius), unknown1c(division) {}
+    void flush(DebDraw *draw) override;
+    mm::Vec3NA unknown0c; // Inferred role: center; original member name unknown.
+    f32 unknown18;        // Inferred role: radius; original member name unknown.
+    s32 unknown1c;        // Inferred role: division; original member name unknown.
+  };
+
+  // The game stores these matrices at 4-byte aligned offsets. The pack removes the 8-byte alignment that the vtable pointer of the base gives the
+  // record: DPERS is 0x68 bytes in the game (setPers adds 0x68 to the buffer, 0x71006ff88c) for members that end at 0x64, so alignas(8) restores
+  // it, as for DRCIRCLE_MAT (0x58 for 0x54).
+#pragma pack(push, 4)
+  struct alignas(8) DPERS : unknown001 {
+    // The game copies the matrix element by element (sixteen ldr/str pairs in setPers, 0x71006ff768), like DRPRIM.
+    DPERS(const mm::Mat44 &view, f32 fovy, f32 nearClip, f32 farClip, const mm::Vec3 &position) : unknown001(3, sizeof(DPERS), 0) {
+      for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+          unknown0c.rows[i][j] = view.rows[i][j];
+        }
+      }
+      unknown4c = fovy;
+      unknown50 = nearClip;
+      unknown54 = farClip;
+      unknown58 = position;
+    }
+    void flush(DebDraw *draw) override;
+    mm::Mat44 unknown0c;  // Inferred role: matrix; original member name unknown.
+    f32 unknown4c;        // Inferred role: first perspective value; original member name unknown.
+    f32 unknown50;        // Inferred role: second perspective value; original member name unknown.
+    f32 unknown54;        // Inferred role: third perspective value; original member name unknown.
+    mm::Vec3NA unknown58; // Inferred role: position; original member name unknown.
+  };
+
+  struct DRPRIM : unknown001 {
+    // The game copies the matrix element by element (sixteen ldr/str pairs in renderPrim, 0x71007034a4), not through the Mat44 copy constructor (alignment assert and memcpy); same as DRCIRCLE_MAT.
+    DRPRIM(const mm::Mat44 &matrix, u32 type) : unknown001(0x28, sizeof(DRPRIM), 2) {
+      for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+          unknown0c.rows[i][j] = matrix.rows[i][j];
+        }
+      }
+      unknown4c = type;
+    }
+    void flush(DebDraw *draw) override;
+    mm::Mat44 unknown0c; // Inferred role: primitive matrix; original member name unknown.
+    u32 unknown4c;       // Inferred role: primitive type, a PrimBase::Type value; original member name unknown.
   };
 
   struct alignas(8) DRCIRCLE_MAT : unknown001 {
@@ -146,24 +319,28 @@ public:
   };
 
   struct DRGRID : unknown001 {
+    DRGRID(f32 size, f32 step) : unknown001(0x2a, sizeof(DRGRID), 2), unknown0c(size), unknown10(step) {}
     void flush(DebDraw *draw) override;
     f32 unknown0c; // Inferred role: first size; original member name unknown.
     f32 unknown10; // Inferred role: second size; original member name unknown.
   };
 
   struct DROVAL : unknown001 {
+    DROVAL(f32 width, f32 height) : unknown001(0x25, sizeof(DROVAL), 2), unknown0c(width), unknown10(height) {}
     void flush(DebDraw *draw) override;
     f32 unknown0c; // Inferred role: width; original member name unknown.
     f32 unknown10; // Inferred role: height; original member name unknown.
   };
 
   struct DRSQUARE : unknown001 {
+    DRSQUARE(f32 width, f32 height) : unknown001(0x27, sizeof(DRSQUARE), 2), unknown0c(width), unknown10(height) {}
     void flush(DebDraw *draw) override;
     f32 unknown0c; // Inferred role: width; original member name unknown.
     f32 unknown10; // Inferred role: height; original member name unknown.
   };
 
   struct DRSQUARE_FILL : unknown001 {
+    DRSQUARE_FILL(f32 width, f32 height) : unknown001(0x26, sizeof(DRSQUARE_FILL), 2), unknown0c(width), unknown10(height) {}
     void flush(DebDraw *draw) override;
     f32 unknown0c; // Inferred role: width; original member name unknown.
     f32 unknown10; // Inferred role: height; original member name unknown.
@@ -240,6 +417,8 @@ public:
   };
 
   struct DCOL : unknown001 {
+    // Same command type as DTEX in the game.
+    DCOL(const mm::Col4 &color) : unknown001(5, sizeof(DCOL), 0), unknown0c(color) {}
     void flush(DebDraw *draw) override;
     mm::Col4 unknown0c; // Inferred role: color; original member name unknown.
   };
@@ -352,6 +531,7 @@ public:
   };
 
   struct DFONT_SCALE : unknown001 {
+    DFONT_SCALE(f32 x, f32 y) : unknown001(0x40, sizeof(DFONT_SCALE), 0), unknown0c(x), unknown10(y) {}
     void flush(DebDraw *draw) override;
     f32 unknown0c; // Inferred role: scale x; original member name unknown.
     f32 unknown10; // Inferred role: scale y; original member name unknown.
@@ -397,10 +577,12 @@ public:
   bool renderCircle2DFill(const mm::Vec3 &center, f32 radius, u32 division);
   bool renderCircle(const mm::Mat44 &matrix, f32 radius, u32 division);
   bool renderCircle(const mm::Vec3 &center, f32 radius, u32 division);
+  bool renderCircleFill(const mm::Vec3 &center, f32 radius, u32 division);
   bool renderFanFill(const mm::Vec3 &center, f32 radius, f32 direction, f32 angle);
   bool renderFan(const mm::Vec3 &center, f32 radius, f32 direction, f32 angle);
   bool renderAxis(f32 length);
   bool renderArrow(const mm::Vec3 &start, const mm::Vec3 &end);
+  bool renderCubeArrow(const mm::Vec3 &start, const mm::Vec3 &end);
   bool renderCubeFill(const mm::Vec3 &min, const mm::Vec3 &max);
   bool renderCube(const mm::Vec3 &min, const mm::Vec3 &max);
   bool renderPrim(const mm::Mat44 &matrix, u32 type);
@@ -439,6 +621,7 @@ public:
   bool fontShadow(bool isEnable);
   bool begin(u32 primitive, u32 count);
   bool end();
+  bool add(const mm::Vec3 &first, const mm::Vec3 &second, const mm::Vec3 &third);
   bool add(const mm::Vec3 &first, const mm::Vec3 &second);
   bool add(const mm::Vec3 &position);
 
@@ -465,6 +648,32 @@ static_assert(sizeof(CacheDraw::DRRECT) == 0x20, "");
 static_assert(sizeof(CacheDraw::DRTRI2D_FILL) == 0x28, "");
 static_assert(sizeof(CacheDraw::DRCIRCLE_MAT) == 0x58, "");
 static_assert(sizeof(CacheDraw::DRCAPSULE) == 0x18, "");
+static_assert(sizeof(CacheDraw::DADDV3_1) == 0x18, "");
+static_assert(sizeof(CacheDraw::DADDV3_2) == 0x28, "");
+static_assert(sizeof(CacheDraw::DADDV3_3) == 0x30, "");
+static_assert(sizeof(CacheDraw::DRPNT) == 0x18, "");
+static_assert(sizeof(CacheDraw::DRPNT2D) == 0x20, "");
+static_assert(sizeof(CacheDraw::DRLINE) == 0x28, "");
+static_assert(sizeof(CacheDraw::DRTRI) == 0x30, "");
+static_assert(sizeof(CacheDraw::DRTRI_FILL) == 0x30, "");
+static_assert(sizeof(CacheDraw::DRCUBE) == 0x28, "");
+static_assert(sizeof(CacheDraw::DRCUBE_FILL) == 0x28, "");
+static_assert(sizeof(CacheDraw::DRCIRCLE) == 0x20, "");
+static_assert(sizeof(CacheDraw::DRCIRCLE2D) == 0x20, "");
+static_assert(sizeof(CacheDraw::DRCIRCLE_FILL) == 0x20, "");
+static_assert(sizeof(CacheDraw::DRCIRCLE2D_FILL) == 0x20, "");
+static_assert(sizeof(CacheDraw::DRFAN) == 0x28, "");
+static_assert(sizeof(CacheDraw::DRFAN_FILL) == 0x28, "");
+static_assert(sizeof(CacheDraw::DRARROW) == 0x28, "");
+static_assert(sizeof(CacheDraw::DRARROW_CUBE) == 0x28, "");
+static_assert(sizeof(CacheDraw::DRSPHERE) == 0x20, "");
+static_assert(sizeof(CacheDraw::DRSPHERE_FILL) == 0x20, "");
+static_assert(sizeof(CacheDraw::DPERS) == 0x68, "");
+static_assert(offsetof(CacheDraw::DADDV3_3, unknown24) == 0x24, "");
+static_assert(offsetof(CacheDraw::DRTRI, unknown24) == 0x24, "");
+static_assert(offsetof(CacheDraw::DRPNT2D, unknown18) == 0x18, "");
+static_assert(offsetof(CacheDraw::DRCIRCLE, unknown1c) == 0x1c, "");
+static_assert(offsetof(CacheDraw::DRFAN, unknown20) == 0x20, "");
 static_assert(sizeof(CacheDraw::DROBB) == 0x60, "");
 static_assert(sizeof(CacheDraw::DRLINE_PNT) == 0x20, "");
 static_assert(sizeof(CacheDraw::DFONT32) == 0x38, "");
@@ -596,6 +805,7 @@ public:
   void cylinder(const mm::Cylinder *cylinder);
   void sphere(const mm::Sphere *sphere);
   void renderSphere(const mm::Vec3 &center, f32 radius, int division);
+  void renderSphereFill(const mm::Vec3 &center, f32 radius, int division);
   void renderSphere(const mm::Sphere &sphere, int division);
   void setCol(const mm::Col4 &color);
   static DebDraw *get(u32 screen);

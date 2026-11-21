@@ -19,10 +19,13 @@ class SimpleMapper;
 class SkeletonMapper;
 struct SkeletonMapperData;
 class ResASM;
+class ResResolver;
+struct ResStateArray;
 class Skeleton;
 
 class Factory {
 public:
+  static bool createASMResource(const ResStateArray &stateArray, const ResResolver &resolver, mm::mtl::IAllocator &allocator, ResASM **resAsm);
   static Pose *createPose(const Skeleton *skeleton, mm::mtl::IAllocator *allocator);
   static Binding *createReferencePoseAnimation(const Skeleton *skeleton, mm::mtl::IAllocator *allocator);
   static ExtraTruckBuffer *createExtraTruckBuffer(const Skeleton *skeleton, const char *name, mm::mtl::IAllocator *allocator);

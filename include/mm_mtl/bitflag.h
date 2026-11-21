@@ -66,6 +66,27 @@ public:
     }
   }
 
+  // Inferred role: writes one bit when it differs from the value and tells whether it did; original name unknown.
+  // Evidence: gf::GfObjUtil::setFlag (0x71005b1bfc): the asserts of lines 119 (reading the bit) and 89 (writing it), the word address and the mask
+  // computed before the load of the word.
+#line 118
+  bool unknown007(unsigned int index, bool value) {
+    MM_ASSERT(index < Size);
+    unsigned int word = wordIndex(index);
+    unsigned int mask = bit(index);
+    if (((mBits[word] & mask) != 0) != value) {
+#line 89
+      MM_ASSERT(index < Size);
+      if (value) {
+        mBits[word] |= mask;
+      } else {
+        mBits[word] &= ~mask;
+      }
+      return true;
+    }
+    return false;
+  }
+
   // Inferred role: reads one bit; original name unknown. The assert line of the game (119), seen in gf::GfGameFlag::getLocal, gf::GfGameFlag::setLocal
   // (0x71002b8928) and gf::GfDataEvent::isWatchedEventFlag, tells it apart from test() (133).
 #line 118

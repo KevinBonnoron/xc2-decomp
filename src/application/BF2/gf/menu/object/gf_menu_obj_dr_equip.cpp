@@ -1,6 +1,8 @@
 #include "gf/menu/object/gf_menu_obj_dr_equip.h"
 
+#include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_item.h"
+#include "gf/data/gf_item_handle.h"
 #include "gf/gf_allocator.h"
 #include "gf/menu/adapter/gf_menu_item_adapter.h"
 #include "gf/menu/call/gf_menu_call_context.h"
@@ -8,11 +10,14 @@
 #include "gf/menu/gf_menu_reference_item.h"
 #include "gf/menu/list/gf_menu_item_list.h"
 #include "gf/menu/object/gf_menu_obj_common_detail.h"
+#include "gf/menu/object/gf_menu_obj_common_text.h"
+#include "gf/util/gf_equip_util.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/reference_object.h"
 #include "types.h"
 #include "ui/ctrl/ui_ctrl_cursor_select.h"
+#include "ui/event/ui_event_data.h"
 #include "ui/event/ui_event_manager.h"
 #include "ui/list/ui_select_obj_list.h"
 #include "ui/ui_object_acc.h"
@@ -173,6 +178,56 @@ bool GfMenuObjDrEquip::seqEndClose() {
 bool GfMenuObjDrEquip::seqAppearPhase1() { return unknown002(1); }
 
 bool GfMenuObjDrEquip::seqLeavePhase1() { return unknown002(2); }
+
+void GfMenuObjDrEquip::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    unknown20->unknown50.unknown002(&GfMenuObjDrEquip::seqStartOpen);
+    unknown20->unknown50.unknown002(&GfMenuObjDrEquip::seqAppearPhase1);
+    unknown20->unknown50.unknown002(&GfMenuObjDrEquip::seqEndOpen);
+    break;
+  case 2:
+    unknown20->unknown50.unknown002(&GfMenuObjDrEquip::seqStartClose);
+    unknown20->unknown50.unknown002(&GfMenuObjDrEquip::seqLeavePhase1);
+    unknown20->unknown50.unknown002(&GfMenuObjDrEquip::seqEndClose);
+    break;
+  case 8: {
+    int result = event.unknown0c;
+    u32 driver = GfMenuReference::getReferenceDriverID(unknown20->unknown24);
+    if (result == 2) {
+      GfMenuObject::returnFSSubLayer(acc.unknown10, 2);
+    } else if (result == 9) {
+      if (GfDataDriver::getEquipAcce(driver, 0) != 0) {
+        if (unknown20->unknown48 == nullptr) {
+          unknown20->unknown48 = GfMenuCallContext::create();
+        }
+        unknown20->unknown48->reset();
+        GfMenuObjCommonText::open(unknown20->unknown48, 0x18, 0);
+        GfMenuObject::setCallContextEventHandler(unknown20->unknown48, acc.unknown10);
+        unknown20->suspendInput();
+      }
+    }
+    break;
+  }
+  case 0x41:
+    if (unknown20->unknown48->unknown0c == event.unknown08) {
+      if (event.unknown10_u16 == 0) {
+        u32 driver = GfMenuReference::getReferenceDriverID(unknown20->unknown24);
+        // The game keeps the bounds asserts of this read (vector.h lines 0x152 and 0x153) but never uses the item: the accessory is unequipped with the constant 0
+        // (ruling 2026-11-13 #5: statement without effect that the game holds).
+        unknown20->unknown28->getContents(unknown20->unknown28->getIndex(false));
+        GfItemHandle item(0);
+        GfEquipUtil::equipDriverAcce(driver, 0, 0, item);
+      }
+      unknown20->resumeInput();
+    }
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
 
 } // namespace gf
 

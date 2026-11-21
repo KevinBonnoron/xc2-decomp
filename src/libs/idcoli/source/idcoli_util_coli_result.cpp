@@ -6,6 +6,51 @@
 
 namespace idcoli {
 
+bool IDColiUtilColiResult::isSphereBox(IDColiResult &result, const IDColiInput &input, const void *data) {
+  const CLBoxWork *box = static_cast<const CLBoxWork *>(data);
+  const CLSphereWork &sphere = input.sphere;
+  if (box->unknown80.x + sphere.unknown10 < sphere.unknown00.x || box->unknown90.x - sphere.unknown10 > sphere.unknown00.x) {
+    return false;
+  }
+  if (box->unknown80.z + sphere.unknown10 < sphere.unknown00.z || box->unknown90.z - sphere.unknown10 > sphere.unknown00.z) {
+    return false;
+  }
+  if (box->unknown80.y + sphere.unknown10 < sphere.unknown00.y || box->unknown90.y - sphere.unknown10 > sphere.unknown00.y) {
+    return false;
+  }
+
+  mm::Vec3 delta = sphere.unknown00 - box->unknown60;
+  mm::Vec3 local(delta.x * box->unknown30.x + delta.y * box->unknown30.y + delta.z * box->unknown30.z,
+                 delta.x * box->unknown40.x + delta.y * box->unknown40.y + delta.z * box->unknown40.z,
+                 delta.x * box->unknown50.x + delta.y * box->unknown50.y + delta.z * box->unknown50.z);
+  mm::Vec3 near;
+  s32 count = calcNearBoxPoint(near, box, local);
+  f32 distance = sphere.unknown10 * box->unknowna4;
+  mm::Vec3 normal;
+  if (count == 3) {
+    // distance is both the output and the radius argument: the game holds it in one register (s8, set at 0x71008d7af4 and
+    // overwritten at 0x71008d7b98 by the inlined calcBoxInPoint), the same one that the other branch reduces by `length`.
+    calcBoxInPoint(normal, distance, box, local, distance);
+  } else {
+    normal.x = local.x - near.x;
+    normal.y = local.y - near.y;
+    normal.z = local.z - near.z;
+    f32 lengthSq = normal.x * normal.x + normal.y * normal.y + normal.z * normal.z;
+    if (distance * distance < lengthSq) {
+      return false;
+    }
+    if (lengthSq > 0.000001f) {
+      f32 length = sqrtf(lengthSq);
+      normal *= 1.0f / length;
+      distance -= length;
+    } else {
+      normal = mm::Vec3(0.0f, 0.0f, 1.0f);
+    }
+  }
+  setStockBox(result, box, normal, distance, sphere.unknown00, sphere.unknown10, false);
+  return true;
+}
+
 s32 IDColiUtilColiResult::calcNearBoxPoint(mm::Vec3 &near, const CLBoxWork *box, const mm::Vec3 &point) {
   const f32 *halfSize = &box->unknown70.x;
   const f32 *value = &point.x;

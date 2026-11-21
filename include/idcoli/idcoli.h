@@ -308,6 +308,7 @@ public:
   void sweepPop();
   bool sweepUpdate(IdSweepAxisType sweepAxis, IdVectorAxisType vectorAxis);
   void sweepTreeMax(IdSweepAxisType sweepAxis, IdVectorAxisType vectorAxis);
+  void releaseDefTree();
   void defTreeUpdate();
   void updateBaseTree();
 

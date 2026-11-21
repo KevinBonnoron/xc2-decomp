@@ -1,6 +1,7 @@
 #include "gf/menu/gf_menu_manager.h"
 
 #include "bdat.h"
+#include "execute/title/title_main.h"
 #include "framework/lang_util.h"
 #include "framework/resource/common_resource.h"
 #include "framework/sound/sound_manager.h"
@@ -1085,6 +1086,13 @@ GfMenuManager::REGION GfMenuManager::getRegion() {
 bool GfMenuManager::isRegionUS() {
   if (get() != nullptr) {
     return get()->unknown4104 == REGION_UNKNOWN_1;
+  }
+  return false;
+}
+
+bool GfMenuManager::isClearCheck() {
+  if (tl::TitleMain::get() != nullptr) {
+    return tl::TitleMain::get()->unknown178;
   }
   return false;
 }

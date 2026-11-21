@@ -25,11 +25,9 @@ namespace gf {
 
 struct GF_OBJ_HANDLE;
 struct GF_SEARCH_OBJ;
+struct GfSearchInfo;
 
 namespace pc {
-
-// Inferred role: search result of a look-at candidate (distance at 0x20); original type name unknown.
-struct unknown001;
 
 // Inferred role: LookAtPlugin parameters, entry 4 of the param list at 0x430 of the param manager; original type name unknown.
 struct unknown002 {
@@ -54,7 +52,7 @@ public:
   // 0x08, 0x10 and 0x18 and sets 0x1c; getTargetTransform (0x7100579ca0) reads 0x00.
   struct TargetInfo {
     GF_OBJ_HANDLE *unknown00;                  // Inferred role: target handle; original member name unknown.
-    const unknown001 *unknown08;               // Inferred role: search result; original member name unknown.
+    const GfSearchInfo *unknown08;             // Inferred role: search result; original member name unknown.
     const GfBdatLookAt::unknown001 *unknown10; // Inferred role: look info; original member name unknown.
     u32 unknown18;                             // Inferred role: chara type; original member name unknown.
     bool unknown1c;                            // Inferred role: already looked at; original member name unknown.

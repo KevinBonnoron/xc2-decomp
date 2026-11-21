@@ -22,6 +22,21 @@ void WinSplitFrame::setSplitLine(s16 line) {
   limit();
 }
 
+void WinSplitFrame::apply() {
+  if (WinViewRoot::get() != nullptr) {
+    WinView *view1 = getView1();
+    WinView *view2 = getView2();
+    if (view1 != nullptr) {
+      view1->setRect(getWorkRect1(true));
+      view1->applyRect();
+    }
+    if (view2 != nullptr) {
+      view2->setRect(getWorkRect2(true));
+      view2->applyRect();
+    }
+  }
+}
+
 WinView *WinSplitFrame::getView1() { return WinViewRoot::getView(unknown14); }
 
 WinView *WinSplitFrame::getView2() { return WinViewRoot::getView(unknown18); }

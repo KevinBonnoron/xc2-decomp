@@ -11,8 +11,11 @@
 #include "gf/menu/object/gf_menu_obj_common_detail.h"
 #include "gf/menu/object/gf_menu_obj_common_jog.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
+#include "mm_math/mm_pnt.h"
+#include "mm_math/mm_rect.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/reference_object.h"
+#include "ui/ctrl/ui_ctrl_object.h"
 #include "ui/ctrl/ui_ctrl_revolve_select.h"
 #include "ui/event/ui_event_data.h"
 #include "ui/event/ui_event_manager.h"
@@ -188,6 +191,48 @@ bool GfMenuObjBlCustomTop::seqStartAddLayer() {
   return true;
 }
 
+bool GfMenuObjBlCustomTop::seqAddLayerPhase1() {
+  if (unknown2e8 == -1) {
+    GfMenuObjCommonJog::close(unknown40);
+    ui::UIObjectAcc acc(unknown18, "LAY_blade");
+    mm::Pnt<s16> pos;
+    mm::Rect<s16> to;
+    // Ruling 2026-11-13 #3: the first rect shares its stack slot with the control parameter, its lifetime ends before the parameter exists (0x710040fe18).
+    {
+      mm::Rect<s16> from;
+      // The game ignores the result of getLayoutRect, as in seqAppearPhase3.
+      acc.getLayoutRect("dr_chage _position01", from);
+      acc.getLayoutRect("dr_chage _position02", to);
+      acc.getPos(pos);
+      pos.x += to.x - from.x;
+      pos.y += to.y - from.y;
+    }
+    GfMenuObjUtil::CtrlParam param;
+    // Ruling 2026-11-13 #4, 0x710040fe18: of the 24 orders of these four stores only this one gives the game's bytes, the others give 89 instructions or another order of the stores.
+    param.unknown08 = 0x80;
+    param.unknown26 = pos;
+    param.unknown0c = 1;
+    param.unknown00 = 0.25f;
+    unknown2e8 = GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
+  }
+  // Ruling 2026-11-13 #3: the result shares its stack slot with the control parameter and its lifetime ends here; without the block the return value
+  // is set before the store of -1 at the end (0x710040ff68), the game stores first.
+  {
+    GfMenuCallContext::GfMenuResult result;
+    if (unknown40->isActive()) {
+      if (unknown40->unknown18.empty() || !unknown40->popResult(result) || result.unknown04 != 1) {
+        return false;
+      }
+      unknown40->reset();
+    }
+  }
+  if (GfMenuObjUtil::isBusyCtrl(unknown2e8)) {
+    return false;
+  }
+  unknown2e8 = -1;
+  return true;
+}
+
 bool GfMenuObjBlCustomTop::seqAddLayerPhase2() {
   GfMenuObject::enableFSSwitching();
   GfMenuObject::changeFSSubLayer(unknown18, 2, unknown2ec, true);
@@ -205,10 +250,90 @@ bool GfMenuObjBlCustomTop::seqAddLayerPhase3_BlOrb() { return GfMenuObjBlOrb::at
 
 bool GfMenuObjBlCustomTop::seqAddLayerPhase4() { return unknown50->isTerm(); }
 
+bool GfMenuObjBlCustomTop::seqAddLayerPhase5() {
+  if (unknown2e8 == -1) {
+    ui::UIObjectAcc main(unknown18, "LAY_main");
+    GfMenuObjCommonJog::OpenParam jogParam;
+    jogParam.unknown00 = 6;
+    GfMenuObjCommonJog::open(unknown40, jogParam);
+    GfMenuObject::setCallContextEventHandler(unknown40, main.unknown10);
+    ui::UIObjectAcc acc(unknown18, "LAY_blade");
+    mm::Pnt<s16> pos;
+    mm::Rect<s16> to;
+    // Ruling 2026-11-13 #8: the game writes the rect block of seqAddLayerPhase1 again here (0x7100410010, the two names swapped). A shared helper that returns the position
+    // gives 93 instructions against 90 and a frame of 176 against 160 bytes in seqAddLayerPhase1, so the block stays written out. Ruling 2026-11-13 #3 for the scope of `from`.
+    {
+      mm::Rect<s16> from;
+      // The game ignores the result of getLayoutRect, as in seqAppearPhase3.
+      acc.getLayoutRect("dr_chage _position02", from);
+      acc.getLayoutRect("dr_chage _position01", to);
+      acc.getPos(pos);
+      pos.x += to.x - from.x;
+      pos.y += to.y - from.y;
+    }
+    GfMenuObjUtil::CtrlParam param;
+    // Ruling 2026-11-13 #4, same order as in seqAddLayerPhase1 (0x7100410010): the only one of the 24 that matches.
+    param.unknown08 = 0x80;
+    param.unknown26 = pos;
+    param.unknown0c = 1;
+    param.unknown00 = 0.25f;
+    unknown2e8 = GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
+  }
+  // Ruling 2026-11-13 #3: `result` has its own scope as in seqAddLayerPhase1 (0x7100410010); without the block the bytes differ there.
+  {
+    GfMenuCallContext::GfMenuResult result;
+    if ((!unknown40->isActive() || (!unknown40->unknown18.empty() && unknown40->popResult(result) && result.unknown04 == 0)) && !GfMenuObjUtil::isBusyCtrl(unknown2e8)) {
+      unknown2e8 = -1;
+      return true;
+    }
+  }
+  return false;
+}
+
 bool GfMenuObjBlCustomTop::seqEndAddLayer() {
   mm::mtl::safeRelease(unknown50);
   resumeInput();
   return true;
+}
+
+// Twin of GfMenuObjDrCustomTop::DrSelectListener::reciveEvent (1.0.0: 0x7100450604), whose case 6 selects the driver; here cases 1 and 6 do nothing (1.0.0: 0x710041025c, one ccmp).
+void GfMenuObjBlCustomTop::DrSelectListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+  case 6:
+    break;
+  case 0xe:
+    if (ui::UICtrlObject::getEventCtrlObjID(event) == 1) {
+      // The game never sets x0 for this call (0x7100410288): receiveRevolveEvent, defined in this file, does not read its object, so the compiler dropped the argument and the original
+      // expression cannot be checked. The owner is the object the other listeners of this class call their owner's functions on.
+      unknown20->receiveRevolveEvent(event, acc.unknown10);
+    }
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
+// Repeats the statements of GfMenuObjDrCustomTop::receiveRevolveEvent (1.0.0: 0x7100450750) with the child "IMG_bl_spot" instead of "IMG_dr_spot": the game has two functions of the same code at
+// 0x71004102bc and 0x7100450750, one per class, and the two classes only share GfMenuObject. A function taking the child name, inlined into both, matches too, but nothing in the binary (a call, a
+// symbol) shows that the original had one, and every other function of the two classes is written out twice on main.
+void GfMenuObjBlCustomTop::receiveRevolveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  if (ui::UICtrlObject::getEventType(event) == 0) {
+    ui::uiEventParam param;
+    ui::UICtrlObject::getEventParam(event, 1, param);
+    if (param.valueF32 != 0.0f) {
+      ui::UIObjectAcc spot(acc.unknown10, "IMG_bl_spot");
+      spot.setAlpha(1.0f);
+      GfMenuObjUtil::CtrlParam ctrl;
+      ctrl.unknown08 = 2;
+      ctrl.unknown0c = 4;
+      ctrl.unknown00 = param.valueF32;
+      GfMenuObjUtil::startCtrl(acc.searchChild("IMG_bl_spot"), ctrl, nullptr);
+    }
+  }
 }
 
 void GfMenuObjBlCustomTop::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {

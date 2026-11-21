@@ -29,6 +29,8 @@ class StateApproachPc : public GfStateBase {
   void seqTurnPc(GfComBehaviorNpc &behavior, const fw::UpdateInfo &info);
   void seqWaitTurnEnd(GfComBehaviorNpc &behavior, const fw::UpdateInfo &info);
   void seqApproachPc(GfComBehaviorNpc &behavior, const fw::UpdateInfo &info);
+  void seqApproachPcIdle(GfComBehaviorNpc &behavior, const fw::UpdateInfo &info);
+  static bool isCondMatch(const GfComBehaviorNpc &behavior);
 
   TFieldExecCmd<GfComAsm> unknown18;                                              // Inferred role: asm command; original member name unknown.
   void (StateApproachPc::*unknown50)(GfComBehaviorNpc &, const fw::UpdateInfo &); // Inferred role: sequence; original member name unknown.

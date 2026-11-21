@@ -8,6 +8,7 @@
 #include "gf/data/gf_data_quest.h"
 #include "gf/field/gf_field_locator.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/game/gf_game_util.h"
 #include "gf/game/quest/gf_quest_id.h"
 #include "gf/game/quest/gf_quest_info.h"
 #include "gf/game/quest/gf_quest_manager.h"
@@ -111,6 +112,28 @@ u32 GfMenuLocation::getLocatorDataNum(u32 type) {
     return location->unknown10[type].unknown28;
   }
   return 0;
+}
+
+void GfMenuLocation::refreshLocator(u32 type) {
+  GfMenuLocation *location = get();
+  if (location == nullptr) {
+    return;
+  }
+  unknown001 &group = location->unknown10[type];
+  group.unknown00.clear();
+  group.unknown28 = 0;
+  switch (type) {
+  case 0:
+    location->refreshLocatorFromQuest(0, 0);
+    break;
+  case 1:
+    location->refreshLocatorFromQuest(1, 1);
+    break;
+  case 3:
+    GfGameUtil::collectOrderableLocators(group.unknown00);
+    break;
+  }
+  location->updateDataNum(type);
 }
 
 void GfMenuLocation::refreshLocatorFromQuest(u32 index, u32 type) {

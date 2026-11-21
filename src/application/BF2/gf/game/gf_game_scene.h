@@ -157,7 +157,7 @@ public:
   bool isControlFreeState() const;
   void setEraseQuestEnemyForEventStart(QuestID quest);
   void setEnemyDead(GF_OBJ_HANDLE *handle);
-  void setHomuriWeaponExtraMesh(bool isVisible, f32 alpha);
+  void setHomuriWeaponExtraMesh(bool isVisible, f32 time);
   bool isEnableFieldBladeChange() const;
   bool requestFieldBladeChange();
   bool isNeedFieldBladeChange(u32 partyId) const;

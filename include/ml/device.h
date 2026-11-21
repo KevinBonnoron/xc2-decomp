@@ -30,6 +30,7 @@ public:
   static bool isColdStartReady();
   static bool isHotStartDestructed();
   static void createPort(const char *name);
+  static void addSubCpuUpdate(void (*update)(void *), void *argument);
   static void removeSubCpuUpdate(void (*update)(void *));
   static void updateSubCpu();
   static u32 jobUpdate(void *argument, void *userData);

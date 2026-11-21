@@ -64,6 +64,7 @@
 #include "gf/object/gf_obj_factory.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_manager.h"
+#include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
 #include "gf/request/gf_req_command.h"
 #include "gf/request/gf_scom.h"
@@ -71,7 +72,10 @@
 #include "gf/scom/gf_scom_enbook.h"
 #include "gf/scom/gf_scom_fade.h"
 #include "gf/scom/gf_scom_obj.h"
+#include "gf/scom/gf_scom_script.h"
+#include "gf/script/gf_script_manager.h"
 #include "gf/util/gf_item_util.h"
+#include "gf/util/gf_util.h"
 #include "gmk/gmk_manager.h"
 #include "ml/rand.h"
 #include "mm_math/mm_col4.h"
@@ -82,6 +86,7 @@
 #include "mm_mtl/fixed_list.h" // IWYU pragma: keep
 #include "mm_mtl/fixed_queue.h"
 #include "mm_mtl/fixed_vector.h"
+#include "mm_mtl/fixstr.h"
 #include "ui/ui_manager.h"
 #include "ui/ui_util.h"
 
@@ -284,6 +289,15 @@ bool SCOM_BATTLE_TASK_RESET::exec(const fw::UpdateInfo &) {
   return true;
 }
 
+GF_SCOM_HANDLE *SCOM_BATTLE_TASK_RESET::create() {
+  if (get() == nullptr) {
+#line 4865
+    SCOM_BATTLE_TASK_RESET *command = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) SCOM_BATTLE_TASK_RESET(GfReqSmallCom::get()->allocate());
+    return GfReqSmallCom::addRequest(command);
+  }
+  return reinterpret_cast<GF_SCOM_HANDLE *>(-1);
+}
+
 SCOM_FSKILLMAX_FOR_DEBUG::SCOM_FSKILLMAX_FOR_DEBUG(GF_SCOM_HANDLE *handle) : SCOM(handle, SCOM_TYPE_UNKNOWN_74, SCOM_EXEC_UNKNOWN_0, 1) {
   GfDataBlade::getListParty(unknown20);
   GfDataBlade::getListReserver(unknown20);
@@ -436,22 +450,6 @@ void SCOM_LEVELUP_DEVELOP::create() {
   GfReqSmallCom::addRequestParallel(command);
 }
 
-// Inferred helper: quaternion of the Euler angles; original name unknown. Evidence: inlined in both SCOM_OBJ_WARP_POS::create overloads taking a position and a rotation.
-static inline mm::Quat unknown004(mm::Vec3 rotation) {
-  f32 sinX = sinf(rotation.x * 0.5f);
-  f32 cosX = cosf(rotation.x * 0.5f);
-  f32 sinY = sinf(rotation.y * 0.5f);
-  f32 cosY = cosf(rotation.y * 0.5f);
-  f32 sinZ = sinf(rotation.z * 0.5f);
-  f32 cosZ = cosf(rotation.z * 0.5f);
-  mm::Quat quat;
-  quat.x = sinX * cosY * cosZ + cosX * sinY * sinZ;
-  quat.y = cosX * sinY * cosZ - sinX * cosY * sinZ;
-  quat.z = cosX * cosY * sinZ - sinX * sinY * cosZ;
-  quat.w = cosX * cosY * cosZ + sinX * sinY * sinZ;
-  return quat;
-}
-
 bool SCOM_OBJ_WARP_POS::exec(const fw::UpdateInfo &) {
   GfObjUtil::setWarpTransform(unknown20, unknown30, unknown50);
   return true;
@@ -460,7 +458,7 @@ bool SCOM_OBJ_WARP_POS::exec(const fw::UpdateInfo &) {
 GF_SCOM_HANDLE *SCOM_OBJ_WARP_POS::create(GF_OBJ_HANDLE *handle, const mm::Vec3 &position, const mm::Vec3 &rotation, bool isFollow) {
   fw::Transform transform;
   transform.unknown00 = position;
-  transform.unknown10 = unknown004(rotation);
+  mm::unknown009(transform.unknown10, rotation);
 #line 629
   SCOM_OBJ_WARP_POS *command = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) SCOM_OBJ_WARP_POS(GfReqSmallCom::get()->allocate(), handle, transform, isFollow);
   return GfReqSmallCom::addRequest(command);
@@ -469,7 +467,7 @@ GF_SCOM_HANDLE *SCOM_OBJ_WARP_POS::create(GF_OBJ_HANDLE *handle, const mm::Vec3 
 GF_SCOM_HANDLE *SCOM_OBJ_WARP_POS::create(const mm::Vec3 &position, const mm::Vec3 &rotation, bool isFollow) {
   fw::Transform transform;
   transform.unknown00 = position;
-  transform.unknown10 = unknown004(rotation);
+  mm::unknown009(transform.unknown10, rotation);
 #line 637
   SCOM_OBJ_WARP_POS *command =
       new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) SCOM_OBJ_WARP_POS(GfReqSmallCom::get()->allocate(), GfGameManager::getControlMover(), transform, isFollow);
@@ -517,6 +515,245 @@ GF_SCOM_HANDLE *SCOM_OBJ_VFADE_OFF::create(GF_OBJ_HANDLE *handle) {
     return GfReqSmallCom::addRequestParallel(command);
   }
   return reinterpret_cast<GF_SCOM_HANDLE *>(-1);
+}
+
+SCOM_OBJ_VFADE::SCOM_OBJ_VFADE(GF_SCOM_HANDLE *handle, GF_OBJ_HANDLE *target, f32 time, f32 ratio, VFPARTS parts, VFACC acc, VFEFF effect, bool isKeyFrame, bool isSingle)
+    : SCOM(handle, SCOM_TYPE_UNKNOWN_67, SCOM_EXEC_UNKNOWN_0, 1), m_objHandle(target), unknown28(time), unknown2c(0.0f), unknown30(ratio), unknown34(-1.0f), unknown38(parts), unknown3c(acc),
+      unknown40(effect), unknown70(isSingle), unknown71(false) {
+  if (isKeyFrame) {
+    GfVolumeFade::setupKeyFrame(unknown48, effect);
+    unknown28 = getKeyFrameSec();
+  }
+  DataParamAcc paramAcc(target);
+  if (paramAcc.getObjType() == OBJECT_TYPE_BLADE && paramAcc.isValid() && paramAcc.getBdatId() == BLADE_KAGUTSUCHI) {
+    unknown40 = VFEFF_UNKNOWN_16;
+  } else if (paramAcc.getObjType() == OBJECT_TYPE_PC_WEAPON) {
+    DataParamAcc bladeAcc(GfGameParty::getHandleBlade(GfGameParty::getPartyId(target), -1));
+    if (bladeAcc.getObjType() == OBJECT_TYPE_BLADE && bladeAcc.isValid() && bladeAcc.getBdatId() == BLADE_KAGUTSUCHI) {
+      unknown40 = VFEFF_UNKNOWN_16;
+    }
+  }
+}
+
+f32 SCOM_OBJ_VFADE::getKeyFrameSec() const {
+  if (unknown48.size() < 2) {
+    return 0.0f;
+  }
+  // back(), not begin()[size() - 1] or end() - 1: the copy inlined into the constructor (0x71005c5e6c) then addresses the key from
+  // this (86 instructions, as in the game; 89 with begin() or end(), which keeps &unknown48 in a register across setupKeyFrame).
+  return unknown48.back().unknown00;
+}
+
+void SCOM_OBJ_VFADE::applyPartsRatio(GfVolumeFade *fade, f32 ratio) {
+  fade->setFadeRatio(unknown3c, unknown38, ratio);
+  if (unknown70 && unknown38 != VFPARTS_UNKNOWN_FFFFFFFF) {
+    for (s32 parts = 0; parts < 6; parts++) {
+      if (unknown38 != parts) {
+        fade->setFadeRatio(unknown3c, static_cast<VFPARTS>(parts), 0.0f);
+      }
+    }
+  }
+}
+
+bool SCOM_OBJ_VFADE::updateFade(const fw::UpdateInfo &info) {
+  if (GfObjUtil::isValid(m_objHandle)) {
+    if (!GfObjUtil::isUpdate(m_objHandle)) {
+      return false;
+    }
+    GfVolumeFade *fade = GfObjUtil::getVolumeFade(m_objHandle);
+    if (fade != nullptr) {
+      GfObjUtil::setVolumeFadeUserFlag(m_objHandle, true);
+      unknown2c += info.unknown04;
+      if (unknown2c > unknown28) {
+        unknown2c = unknown28;
+      }
+      fade->setEffectType(unknown40);
+      if (unknown48.size() != 0) {
+        f32 ratio;
+        bool isEnd = getRatioBySec(ratio, unknown48, unknown2c);
+        applyPartsRatio(fade, ratio);
+        return isEnd;
+      }
+      f32 current = unknown34;
+      if (current < 0.0f) {
+        current = fade->getFadeRatio(unknown3c, unknown38);
+        unknown34 = current;
+      }
+      if (unknown28 > 0.000001f && fabsf(unknown30 - current) >= 0.000001f) {
+        f32 rate = unknown2c / unknown28;
+        applyPartsRatio(fade, unknown30 * rate + current * (1.0f - rate));
+        if (unknown2c < unknown28) {
+          return false;
+        }
+      } else {
+        applyPartsRatio(fade, unknown30);
+      }
+    }
+  }
+  return true;
+}
+
+bool SCOM_OBJ_VFADE::getRatioBySec(f32 &ratio, const mm::mtl::FixedVector<VFKEYDATA, 4> &keys, f32 time) {
+  ratio = 0.0f;
+  if (keys.size() == 0) {
+    return true;
+  }
+  // back(), not end() - 1 or begin()[size() - 1] (151 and 152 instructions, the game has 150): the game tests last.unknown00 before
+  // size() == 1 (0x71005c626c fcmp, then ccmp), and the vector's own checked access keeps both tests in that order; its assertion
+  // is provably true here and leaves no code.
+  const VFKEYDATA &last = keys.back();
+  if (last.unknown00 <= time || keys.size() == 1) {
+    ratio = last.unknown04;
+    return true;
+  }
+  // The game compares i with a bound computed once from the size read before the loop (0x71005c6258, sign-extended at 0x71005c6294
+  // before the loop); `keys.size() - 1` in the condition costs one more instruction (151).
+  int count = keys.size();
+  for (int i = 0; i < count - 1; i++) {
+    if (keys[i].unknown00 <= time && time < keys[i + 1].unknown00) {
+      // The game indexes the three time keys (index assertions at 0x71005c6370, 0x71005c6398, 0x71005c63c0; loads at 0x71005c6394,
+      // 0x71005c63bc, 0x71005c63e4) before the first ratio key (assertion 0x71005c63e8): the rate is evaluated before
+      // `keys[i].unknown04`. Written as one expression, the ratio key is indexed first and the loads come in another order.
+      f32 rate = (time - keys[i].unknown00) / (keys[i + 1].unknown00 - keys[i].unknown00);
+      ratio = keys[i].unknown04 + rate * (keys[i + 1].unknown04 - keys[i].unknown04);
+      return false;
+    }
+  }
+  ratio = keys[0].unknown04;
+  return false;
+}
+
+bool SCOM_OBJ_VFADE::exec(const fw::UpdateInfo &info) {
+  if (!updateFade(info)) {
+    return false;
+  }
+  SCOM_OBJ_VFADE_OFF::create(m_objHandle);
+  return true;
+}
+
+GF_SCOM_HANDLE *SCOM_OBJ_VFADE::create(GF_OBJ_HANDLE *handle, f32 time, f32 ratio, VFPARTS parts, VFACC acc, VFEFF effect) {
+#line 1508
+  SCOM_OBJ_VFADE *command = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) SCOM_OBJ_VFADE(GfReqSmallCom::get()->allocate(), handle, time, ratio, parts, acc, effect, false, false);
+  return GfReqSmallCom::addRequestParallel(command);
+}
+
+SCOM_OBJ_VFADE *SCOM_OBJ_VFADE::createKeyFrame(GF_OBJ_HANDLE *handle, VFPARTS parts, VFACC acc, VFEFF effect) {
+  if (GfObjUtil::getVolumeFade(handle) == nullptr) {
+    return nullptr;
+  }
+#line 1528
+  SCOM_OBJ_VFADE *command = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) SCOM_OBJ_VFADE(GfReqSmallCom::get()->allocate(), handle, 1.0f, 1.0f, parts, acc, effect, true, false);
+  GfReqSmallCom::addRequestParallel(command);
+  return command;
+}
+
+// createParts, createPartsWithSingle, createAnim and createAnimParts each repeat the attribute lookup (ruling 8: the game's code repeats the same
+// statements in each function). A shared static helper in place of the written-out lookup does not match: the four functions come out 4
+// instructions longer (78, 79, 82 and 82 against the game's 74, 75, 78 and 78; createPartsWithSingle 0x71005c6854, 0x138 bytes), first
+// difference `mov w22, wzr` where the game has `mov w22, w0` (0x71005c68a0).
+GF_SCOM_HANDLE *SCOM_OBJ_VFADE::createParts(GF_OBJ_HANDLE *handle, f32 time, f32 ratio, VFPARTS parts, VFACC acc) {
+  DataParamAcc paramAcc(handle);
+  VFEFF effect = getAttribute2VfEff(paramAcc.getAttribute(-1, false), handle);
+  if (effect == VFEFF_UNKNOWN_0) {
+    return reinterpret_cast<GF_SCOM_HANDLE *>(-1);
+  }
+  return create(handle, time, ratio, parts, acc, effect);
+}
+
+VFEFF SCOM_OBJ_VFADE::getAttribute2VfEff(u32 attribute, GF_OBJ_HANDLE *handle) {
+  // One return at the end, as the game's cases all end on one ret: a return per case gives a range test and 21 instructions (the game has 25).
+  VFEFF effect = VFEFF_UNKNOWN_0;
+  switch (attribute) {
+  case 1: {
+    GfObjAcc acc(handle);
+    effect = acc.getBdatId() == BLADE_KAGUTSUCHI ? VFEFF_UNKNOWN_16 : VFEFF_UNKNOWN_1;
+    break;
+  }
+  case 2:
+    effect = VFEFF_UNKNOWN_2;
+    break;
+  case 3:
+    effect = VFEFF_UNKNOWN_3;
+    break;
+  case 4:
+    effect = VFEFF_UNKNOWN_4;
+    break;
+  case 5:
+    effect = VFEFF_UNKNOWN_5;
+    break;
+  case 6:
+    effect = VFEFF_UNKNOWN_6;
+    break;
+  case 7:
+    effect = VFEFF_UNKNOWN_7;
+    break;
+  case 8:
+    effect = VFEFF_UNKNOWN_8;
+    break;
+  }
+  return effect;
+}
+
+GF_SCOM_HANDLE *SCOM_OBJ_VFADE::createPartsWithSingle(GF_OBJ_HANDLE *handle, f32 time, f32 ratio, VFPARTS parts, VFACC acc) {
+  DataParamAcc paramAcc(handle);
+  VFEFF effect = getAttribute2VfEff(paramAcc.getAttribute(-1, false), handle);
+  if (effect == VFEFF_UNKNOWN_0) {
+    return reinterpret_cast<GF_SCOM_HANDLE *>(-1);
+  }
+#line 1563
+  SCOM_OBJ_VFADE *command = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) SCOM_OBJ_VFADE(GfReqSmallCom::get()->allocate(), handle, time, ratio, parts, acc, effect, false, true);
+  return GfReqSmallCom::addRequestParallel(command);
+}
+
+f32 SCOM_OBJ_VFADE::createDead(GF_OBJ_HANDLE *handle, u32 attribute) {
+  f32 keyFrameSec = 0.0f;
+  VFEFF effect = getAttribute2VfEff(attribute, handle);
+  if (effect == VFEFF_UNKNOWN_0) {
+    return keyFrameSec;
+  }
+  SCOM_OBJ_VFADE *fade = createKeyFrame(handle, VFPARTS_UNKNOWN_FFFFFFFF, VFACC_UNKNOWN_0, effect);
+  if (fade != nullptr) {
+    fade->unknown71 = true;
+    keyFrameSec = fade->getKeyFrameSec();
+  }
+  return keyFrameSec;
+}
+
+GF_SCOM_HANDLE *SCOM_OBJ_VFADE::createBattle(GF_OBJ_HANDLE *handle, f32 ratio, u32 attribute) {
+  if (handle == unknown020) {
+    return reinterpret_cast<GF_SCOM_HANDLE *>(-1);
+  }
+  VFEFF effect = getAttribute2VfEff(attribute, handle);
+  if (effect == VFEFF_UNKNOWN_0) {
+    return reinterpret_cast<GF_SCOM_HANDLE *>(-1);
+  }
+  return create(handle, 0.0f, ratio, VFPARTS_UNKNOWN_FFFFFFFF, VFACC_UNKNOWN_4, effect);
+}
+
+GF_SCOM_HANDLE *SCOM_OBJ_VFADE::createBattleParts(GF_OBJ_HANDLE *handle, f32 time, f32 ratio, u32, VFPARTS parts) {
+  if (handle == unknown020) {
+    return reinterpret_cast<GF_SCOM_HANDLE *>(-1);
+  }
+  GfObjAcc acc(handle);
+  return createPartsWithSingle(handle, time, ratio, acc.getType() == OBJECT_TYPE_BLADE ? VFPARTS_UNKNOWN_0 : parts, VFACC_UNKNOWN_4);
+}
+
+GF_SCOM_HANDLE *SCOM_OBJ_VFADE::createAnim(GF_OBJ_HANDLE *handle, f32 time, f32 ratio) {
+  DataParamAcc paramAcc(handle);
+  VFEFF effect = getAttribute2VfEff(paramAcc.getAttribute(-1, false), handle);
+  if (effect == VFEFF_UNKNOWN_0) {
+    return reinterpret_cast<GF_SCOM_HANDLE *>(-1);
+  }
+  return create(handle, time, ratio, VFPARTS_UNKNOWN_FFFFFFFF, VFACC_UNKNOWN_1, effect);
+}
+
+GF_SCOM_HANDLE *SCOM_OBJ_VFADE::createAnimParts(GF_OBJ_HANDLE *handle, f32 time, f32 ratio, VFPARTS parts) {
+  DataParamAcc paramAcc(handle);
+  VFEFF effect = getAttribute2VfEff(paramAcc.getAttribute(-1, false), handle);
+  if (effect == VFEFF_UNKNOWN_0) {
+    return reinterpret_cast<GF_SCOM_HANDLE *>(-1);
+  }
+  return create(handle, time, ratio, parts, VFACC_UNKNOWN_1, effect);
 }
 
 bool SCOM_ADD_WP::exec(const fw::UpdateInfo &) {
@@ -620,6 +857,24 @@ bool SCOM_ADD_IDEA::exec(const fw::UpdateInfo &) {
   }
   GfGameUtil::addIdeaPoint(driverId, unknown24, unknown1c);
   return true;
+}
+
+GF_SCOM_HANDLE *SCOM_ADD_IDEA::create(GF_OBJ_HANDLE *handle, u32 idea, int point) {
+  if (point != 0) {
+#line 375
+    SCOM_ADD_IDEA *command = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) SCOM_ADD_IDEA(GfReqSmallCom::get()->allocate(), point, 0, idea, handle);
+    return GfReqSmallCom::addRequest(command);
+  }
+  return reinterpret_cast<GF_SCOM_HANDLE *>(-1);
+}
+
+GF_SCOM_HANDLE *SCOM_ADD_IDEA::create(u32 driver, u32 idea, int point) {
+  if (point != 0) {
+#line 380
+    SCOM_ADD_IDEA *command = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) SCOM_ADD_IDEA(GfReqSmallCom::get()->allocate(), point, driver, idea, unknown020);
+    return GfReqSmallCom::addRequest(command);
+  }
+  return reinterpret_cast<GF_SCOM_HANDLE *>(-1);
 }
 
 bool SCOM_EXEC_DRIVER_ARTS_LVUP::exec(const fw::UpdateInfo &) {
@@ -3197,6 +3452,68 @@ void GfReqSmallCom::update(const fw::UpdateInfo &info) {
   }
   unknown9048.clear();
   unknownd870 = false;
+}
+
+GF_SCOM_HANDLE *SCOM_ADD_ITEM::create(u32 item, int num) {
+  if (item != 0 && num != 0) {
+#line 602
+    SCOM_ADD_ITEM *command = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) SCOM_ADD_ITEM(GfReqSmallCom::get()->allocate(), item, num, false);
+    return GfReqSmallCom::addRequest(command);
+  }
+  return reinterpret_cast<GF_SCOM_HANDLE *>(-1);
+}
+
+GF_SCOM_HANDLE *SCOM_ADD_ITEM::createForBattle(u32 item, int num) {
+  if (item != 0 && num != 0) {
+#line 609
+    SCOM_ADD_ITEM *command = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) SCOM_ADD_ITEM(GfReqSmallCom::get()->allocate(), item, num, true);
+    return GfReqSmallCom::addRequest(command);
+  }
+  return reinterpret_cast<GF_SCOM_HANDLE *>(-1);
+}
+
+void SCOM_HOMURI_PARTS::create(u32 partyId, bool isVisible, f32 time) {
+#line 4572
+  SCOM_HOMURI_PARTS *command = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) SCOM_HOMURI_PARTS(GfReqSmallCom::get()->allocate(), partyId, isVisible, time);
+  GfReqSmallCom::addRequestParallel(command);
+}
+
+bool SCOM_SCRIPT::exec(const fw::UpdateInfo &) {
+  if (unknown20.empty()) {
+    GfScriptManager::destroyScript(unknown1c);
+    return true;
+  }
+  if (unknown44 == 0) {
+    GfScriptManager::loadScript(unknown1c, unknown20.c_str());
+    unknown44 = 1;
+  }
+  if (unknown44 == 1) {
+    if (GfScriptManager::isScriptLoadError(unknown1c)) {
+      return true;
+    }
+    if (!GfScriptManager::isScriptWaitStart(unknown1c)) {
+      return false;
+    }
+    GfScriptManager::startScript(unknown1c);
+    if (!unknown48) {
+      return true;
+    }
+    unknown44 = 2;
+  }
+  if (unknown44 == 2 && GfScriptManager::isScriptActive(unknown1c)) {
+    return false;
+  }
+  return true;
+}
+
+GF_SCOM_HANDLE *SCOM_SCRIPT::create(u32 slot, const char *script, bool isWait) {
+  mm::mtl::FixStr<32> name;
+  if (script != nullptr) {
+    name = util::getNoPathExtName(script).c_str();
+  }
+#line 1047
+  SCOM_SCRIPT *command = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) SCOM_SCRIPT(GfReqSmallCom::get()->allocate(), slot, name, isWait);
+  return GfReqSmallCom::addRequestParallel(command);
 }
 
 } // namespace gf

@@ -1,5 +1,7 @@
 #include "gf/game/sequential_play/gf_play_command.h"
 
+#include <string.h>
+
 #include "bdat.h"
 #include "fw/fw_camera.h"
 #include "fw/fw_update_info.h"
@@ -7,16 +9,21 @@
 #include "gf/data/gf_bdat_quest.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_event.h"
+#include "gf/data/gf_data_map.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_data_util.h"
 #include "gf/field/gf_field_collect.h"
+#include "gf/field/gf_field_gimmick.h"
+#include "gf/field/gf_field_manager.h"
 #include "gf/field/gf_field_map_gimmick.h"
 #include "gf/field/gf_field_tbox.h"
+#include "gf/field/gf_field_weather.h"
 #include "gf/field/gf_fobj_manager.h"
 #include "gf/game/achiev/gf_achiev_manager.h"
 #include "gf/game/event/gf_game_event.h"
 #include "gf/game/gf_game_arts_movie.h"
 #include "gf/game/gf_game_chain_attack.h"
+#include "gf/game/gf_game_dead_camera.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_obj.h"
 #include "gf/game/gf_game_party.h"
@@ -24,6 +31,7 @@
 #include "gf/game/gf_game_speed.h"
 #include "gf/game/gf_game_state.h"
 #include "gf/game/gf_game_util.h"
+#include "gf/game/gf_game_util_skip_travel.h"
 #include "gf/game/gf_game_voice.h"
 #include "gf/game/quest/gf_quest_event.h"
 #include "gf/game/quest/gf_quest_info.h"
@@ -34,6 +42,7 @@
 #include "gf/game/sequential_play/gf_play_factory.h"
 #include "gf/game/sequential_play/gf_sequential_play.h"
 #include "gf/gf_allocator.h"
+#include "gf/gf_info.h"
 #include "gf/gf_pause.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_fade.h"
@@ -41,6 +50,9 @@
 #include "gf/menu/gf_menu_manager.h"
 #include "gf/menu/object/gf_menu_obj_popup.h"
 #include "gf/menu/object/gf_menu_obj_quest_log.h"
+#include "gf/object/component/animation/gf_com_asm.h"
+#include "gf/object/component/property/gf_com_property.h"
+#include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_setup.h"
@@ -64,6 +76,87 @@ namespace gf {
 const mm::mtl::RTTI *GfPlayCom::getRTTI() const { return &m_rtti; }
 
 void GfPlayCom::start() {}
+
+void GfPlayComEventFade::start() {
+  unknown14 = GfGameEvent::getFadeInWaitSec();
+  unknown18 = GfGameEvent::getFadeInSec();
+  unknown1c = 10.0f;
+}
+
+void GfPlayComEventFade::end() {
+  if (unknown10 > 0) {
+    if (GfGameScene::get() != nullptr) {
+      GfGameScene::get()->setPlayerTalkForce(false);
+    }
+    GfFieldGimmick::get()->unknownf4ac.unknown00 = false;
+  }
+}
+
+bool GfPlayComEventFade::update(const fw::UpdateInfo &info, bool) {
+  switch (unknown10) {
+  case 0:
+    if (GfSequentialPlay::hasCommand(PCOMTYPE_UNKNOWN_36, this)) {
+      return true;
+    }
+    if (!GfSequentialPlay::hasCommand(PCOMTYPE_UNKNOWN_16, this)) {
+      if (GfSequentialPlay::hasCommand(PCOMTYPE_UNKNOWN_9, this)) {
+        return true;
+      }
+      if (!GfPause::isPause(PAUSE_BIT_UNKNOWN_0)) {
+        if (GfGameManager::isFadeClear()) {
+          return true;
+        }
+        if (GfGameManager::isEvent(false) && GfGameEvent::isStop()) {
+          return true;
+        }
+        GfMenuFade::setFade(1, 0, mm::Col4::black);
+        unknown10 = 1;
+        if (GfGameScene::get() != nullptr) {
+          GfGameScene::get()->setPlayerTalkForce(true);
+        }
+        // The same four stores, in the same order, as event::EnvManager::startGimmickPopWait (0x71000ac6f4); the game does not call it here (no bl, no EnvManager flag), so the stores are
+        // written out (GfFieldGimmick lists this class as a friend for them).
+        GfFieldGimmick *gimmick = GfFieldGimmick::get();
+        gimmick->unknownf4ac.unknown00 = true;
+        gimmick->unknownf4ac.unknown02 = false;
+        gimmick->unknownf4ac.unknown01 = false;
+        gimmick->unknownf4ac.unknown04 = 0.0f;
+        return false;
+      }
+    }
+    break;
+  case 1:
+    if (GfFieldGimmick::get()->unknownf4ac.unknown02) {
+      unknown14 = GfGameEvent::getFadeInWaitSec();
+      unknown18 = GfGameEvent::getFadeInSec();
+      unknown10 = 2;
+    }
+    return false;
+  case 2:
+    unknown14 -= info.unknown04;
+    if (unknown14 > 0.0f) {
+      return false;
+    }
+    break;
+  }
+  if (!GfGameParty::isReadyObj()) {
+    unknown1c -= info.unknown04;
+    if (unknown1c > 0.0f) {
+      return false;
+    }
+  }
+  u32 frame = unknown18 / GfInfo::m_fSecPerFrame;
+  SCOM_FADE::create(0, frame, mm::Col4::zero);
+  SCOM_FADE::create(1, frame, mm::Col4::zero);
+  SCOM_FADE::create(2, frame, mm::Col4::zero);
+  return true;
+}
+
+GfPlayComEventFade *GfPlayComEventFade::create() {
+  // __LINE__ must be 211 as in the original file: its value changes the instruction order.
+#line 211
+  return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComEventFade();
+}
 
 void GfPlayComPause::start() {
   if (unknown10 != 0) {
@@ -1231,6 +1324,21 @@ void GfPlayComFieldTbox::end() {
   }
 }
 
+bool GfPlayComFieldTbox::isOpenFinish() const {
+  GfFieldTbox *tbox = GfFieldTbox::get();
+  if (!tbox->unknown28) {
+    return true;
+  }
+  if (!tbox->unknown11) {
+    return false;
+  }
+  GfObj *obj = GfObjUtil::getObj(GfGameManager::getControlMover());
+  if (obj == nullptr) {
+    return true;
+  }
+  return strcmp(obj->getComponent<GfComAsm>()->getStateName(ANIM_LAYER_UNKNOWN_0), "S_idle") == 0;
+}
+
 bool GfPlayComFieldTbox::updateForCheckOpenFinish(const fw::UpdateInfo &) {
   if (!isOpenFinish()) {
     return false;
@@ -1255,6 +1363,20 @@ bool GfPlayComFieldTbox::updateForWaitItemDrop(const fw::UpdateInfo &info) {
     unknown30 += info.unknown04;
     if (unknown30 < 5.0f && !GfFieldTbox::get()->isDropitemsEmitted()) {
       return false;
+    }
+  }
+  return true;
+}
+
+bool GfPlayComFieldTbox::update(const fw::UpdateInfo &info, bool isCancel) {
+  if (!isCancel) {
+    switch (unknown2c) {
+    case 0:
+      return updateForCheckOpenFinish(info);
+    case 1:
+      return updateForCompleteQuest(info);
+    case 2:
+      return updateForWaitItemDrop(info);
     }
   }
   return true;
@@ -1371,6 +1493,94 @@ GfPlayComReturnTitle *GfPlayComReturnTitle::create(const ParamReturnTitle &param
 }
 
 bool GfPlayComPlayerDead::isDead() { return get() != nullptr && get()->m_dead; }
+
+bool GfPlayComPlayerDead::replaceDeadType(GfPlayerDead dead) {
+  if (dead == PLAYER_DEAD_UNKNOWN_4 && get() != nullptr && get()->unknown20 != PLAYER_DEAD_UNKNOWN_4) {
+    if (!get()->unknown38) {
+      get()->setupForFallout();
+      return true;
+    }
+  }
+  return false;
+}
+
+void GfPlayComPlayerDead::setupForFallout() {
+  unknown20 = PLAYER_DEAD_UNKNOWN_4;
+  // __LINE__ must be 2186 as in the original file: it is the line argument of operator new.
+#line 2186
+  unknown30 = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfDeadCamera(unknown20);
+  MsgObjectNotifyDead message(0, nullptr);
+  message.unknown08 = unknown20;
+  SCOM_CHAR_DEAD::create(GfGameManager::getControlMover(), message);
+}
+
+void GfPlayComPlayerDead::start() {
+  GfEvent::addEventCallback(this);
+  // The local places the load of unknown20 (0x7100382f88) before the store of unknown28 (0x7100382f90); read at the test it gives the store first.
+  bool isFallout = unknown20 == PLAYER_DEAD_UNKNOWN_4;
+  unknown28 = 3.0f;
+  if (isFallout) {
+    setupForFallout();
+    ParamObj object = {GfGameManager::getControlMover(), 0, 0};
+    SCOM_FIELD_VOICE::createFallDead(object);
+  }
+}
+
+void GfPlayComPlayerDead::end() {
+  if (GfGameScene::get() != nullptr) {
+    GfGameScene::get()->setDeadType(PLAYER_DEAD_UNKNOWN_0);
+  }
+  if (unknown30 != nullptr) {
+    delete unknown30;
+    unknown30 = nullptr;
+  }
+  GfGameParty::setPartyGauge(0);
+  GfEvent::removeEventCallback(this);
+}
+
+bool GfPlayComPlayerDead::update(const fw::UpdateInfo &info, bool isCancel) {
+  if (isCancel) {
+    return true;
+  }
+  if (!unknown38) {
+    unknown24 += info.unknown04;
+    if (unknown24 < unknown28) {
+      return unknown3a;
+    }
+    if (!GfGameManager::isPlayEnemyVoice() && !GfGameManager::isPartyMemberPlayVoice()) {
+      GfQuestManager::resetBattleTaskForPlayerDead();
+      GfMapjumpInfo mapjump;
+      // The game stores the jump type 2 (0x71003831f0) before it calls getLandmarkPoint (0x71003831f4) and stores the id; written after setMapjump it is stored after the id and the code differs from
+      // +0xec.
+      mapjump.unknown108 = 2;
+      mapjump.setMapjump(GfFieldManager::getLandmarkPoint());
+      mapjump.unknown103 = true;
+      if (!GfGameUtilSkipTravel::isEnableSkipTravel(GfFieldManager::getLandmarkPoint())) {
+        if (GfFieldWeather::getCloudSea(GfDataMap::getMapID(GfFieldManager::getLandmarkPoint())) == CLOUD_SEA_UNKNOWN_1) {
+          GfDataMap::setCloudType(GfGameManager::getMapID(), CLOUD_SEA_UNKNOWN_0);
+          GfFieldWeather::setCloudSea(GfDataMap::getMapID(GfFieldManager::getLandmarkPoint()), CLOUD_SEA_UNKNOWN_0);
+        }
+      }
+      GfReqCommand::reqMapjump(mapjump);
+      unknown38 = true;
+      return false;
+    }
+    if (!unknown3a) {
+      unknown2c -= info.unknown04;
+      return unknown2c <= 0.0f;
+    }
+  } else {
+    if (!unknown39) {
+      return false;
+    }
+    if (unknown20 == PLAYER_DEAD_UNKNOWN_1) {
+      SCOM_FIELD_VOICE::createRestart(CV_FIELD_UNKNOWN_21);
+    } else {
+      SCOM_FIELD_VOICE::createRestart(CV_FIELD_UNKNOWN_22);
+    }
+  }
+  return true;
+}
 
 void GfPlayComPlayerDead::gevMapjump(GEV event, const MapjumpCallbackInfo &) {
   if (event == GEV_UNKNOWN_4) {

@@ -74,8 +74,8 @@ void GfComBehaviorNpc::BdatInfo::create(const CBdatWrapper &bdat, int id, const 
   unknown08 = static_cast<f32>(static_cast<u16>(bdat.getValCheck("MoveSpeed", id, gmk::BDAT_TYPE_UNKNOWN_2)));
   u16 reactionRange = bdat.getValCheck("ReactionRange", id, gmk::BDAT_TYPE_UNKNOWN_2);
   unknown0c = static_cast<f32>(reactionRange * reactionRange);
-  unknown10 = bdat.getValCheck("ReactionPercent", id, gmk::BDAT_TYPE_UNKNOWN_2);
-  unknown12 = bdat.getValCheck("ReactionMot", id, gmk::BDAT_TYPE_UNKNOWN_2);
+  unknown10_0 = bdat.getValCheck("ReactionPercent", id, gmk::BDAT_TYPE_UNKNOWN_2);
+  unknown12_0 = bdat.getValCheck("ReactionMot", id, gmk::BDAT_TYPE_UNKNOWN_2);
   unknown14 = bdat.getValCheck("BattleReaction", id, gmk::BDAT_TYPE_UNKNOWN_2);
   unknown16 = bdat.getValCheck("BattleMot", id, gmk::BDAT_TYPE_UNKNOWN_2);
 
@@ -570,6 +570,41 @@ void GfComBehaviorNpc::execTurnCmdToGoal() {
   }
 
   execTurnCmdToPos(position);
+}
+
+bool GfComBehaviorNpc::isArrivedToGoal() const {
+  if (unknown350.isTimeOutCollide()) {
+    return true;
+  }
+  fw::ColiMoveObject *coli = getColiObject();
+  if (coli == nullptr) {
+    return false;
+  }
+  f32 height;
+  f32 radius;
+  const fw::unknown031 *shape = coli->unknowne8.get();
+  if (shape != nullptr && shape->unknown00 == fw::unknown031::TYPE_UNKNOWN_3) {
+    const fw::unknown134 *character = static_cast<const fw::unknown134 *>(shape);
+    height = character->unknown04;
+    radius = character->unknown08;
+  } else {
+    mm::Vec3 min;
+    mm::Vec3 max;
+    // The game ignores the result of the call (0x71005361b4) and reads min and max, which getAABB leaves unset when it returns false.
+    coli->getAABB(min, max);
+    f32 dx = max.x - min.x;
+    f32 dz = max.z - min.z;
+    radius = sqrtf(dx * dx + dz * dz) * 0.5f;
+    height = max.y - min.y;
+  }
+  const mm::Vec3 &position = getPos();
+  if (!(height < unknownc0.y - position.y)) {
+    mm::Vec3 diff(unknownc0.x - position.x, 0.0f, unknownc0.z - position.z);
+    f32 distanceSq = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
+    return !(radius * radius < distanceSq);
+  }
+
+  return false;
 }
 
 void GfComBehaviorNpc::Listener::onWkStandbyLogout() { unknown08->unknown198 = nullptr; }

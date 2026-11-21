@@ -527,7 +527,7 @@ void GfGameScene::setEnemyDead(GF_OBJ_HANDLE *handle) {
   }
 }
 
-void GfGameScene::setHomuriWeaponExtraMesh(bool isVisible, f32 alpha) {
+void GfGameScene::setHomuriWeaponExtraMesh(bool isVisible, f32 time) {
   if (!GfGameManager::isClearGame()) {
     return;
   }
@@ -537,7 +537,7 @@ void GfGameScene::setHomuriWeaponExtraMesh(bool isVisible, f32 alpha) {
   }
   DataParamAcc paramAcc(GfGameParty::getHandleBlade(partyId, -1));
   if (paramAcc.isValid() && paramAcc.getBdatId() == BLADE_HOMURI) {
-    SCOM_HOMURI_PARTS::create(partyId, isVisible, alpha);
+    SCOM_HOMURI_PARTS::create(partyId, isVisible, time);
   }
 }
 

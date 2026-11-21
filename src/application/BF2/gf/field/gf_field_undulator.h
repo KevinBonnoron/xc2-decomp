@@ -2,7 +2,12 @@
 #include <stddef.h>
 
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
+
+namespace fw {
+class ReferenceFrame;
+} // namespace fw
 
 namespace gf {
 
@@ -37,6 +42,8 @@ public:
   ~GfFieldUndulator() { dispose(); }
   void create(const CreateInfo &info);
   void dispose();
+  void update(mm::mtl::IntrusivePtr<fw::ReferenceFrame> &frame, bool param2);
+  void apply(mm::mtl::IntrusivePtr<fw::ReferenceFrame> &frame);
 
   CreateInfo unknown00; // Inferred role: create info; original member name unknown.
   BdatInfo unknown08;   // Inferred role: bdat info; original member name unknown.

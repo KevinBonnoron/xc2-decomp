@@ -19,7 +19,8 @@ class Octree {
 public:
   Octree();
   void setAABB(const AABB &aabb, u32 level);
-  u32 getBitFlag(const mm::Vec3 &position) const;
+  // 64-bit: BroadPhazeOctree::flushWindObject stores the whole x0 result (0x71009870c8).
+  u64 getBitFlag(const mm::Vec3 &position) const;
 
   AABB unknown00; // Inferred role: bounds; original member name unknown.
   u32 unknown20;  // Inferred role: number of subdivision levels; original member name unknown.

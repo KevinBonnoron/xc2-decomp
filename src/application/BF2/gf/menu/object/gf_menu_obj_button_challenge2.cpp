@@ -1,6 +1,7 @@
 #include "gf/menu/object/gf_menu_obj_button_challenge2.h"
 
 #include "bdat.h"
+#include "fw/fw_pad.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/gf_allocator.h"
@@ -312,6 +313,114 @@ bool GfMenuObjButtonChallenge2::seqEnd() {
   acc.setDisp(false);
   GfMenuObject::termCallContext(GfMenuObject::getAttachedObject(unknown001));
   return true;
+}
+
+void GfMenuObjButtonChallenge2::pushChallengeButtonV2(u8 button) {
+  if (unknown80 >= unknown28.unknown08.size()) {
+    return;
+  }
+  if (unknown490 < 3) {
+    return;
+  }
+  const unknown002 &challenge = unknown28.unknown08[unknown80];
+  int frame = unknown490 - 1;
+  if (frame < challenge.unknown0c) {
+    return;
+  }
+  u32 point;
+  bool isMiss;
+  if (challenge.unknown01 == 1) {
+    if (challenge.unknown00 != button || frame < challenge.unknown0e - 1 - challenge.unknown12 || frame >= challenge.unknown10) {
+      point = 0;
+      isMiss = true;
+    } else {
+      point = challenge.unknown02;
+      if (frame <= challenge.unknown0e + challenge.unknown12 + 1) {
+        unknown35e = 1;
+        isMiss = false;
+      } else {
+        point = challenge.unknown02 >> 1;
+        unknown35e = 0;
+        isMiss = false;
+      }
+    }
+    if (unknown28.unknown04 == 0) {
+      GfMenuObjUtil::playVibration(fw::VIBRATION_ID_UNKNOWN_1, 1.0f);
+    }
+  } else if (challenge.unknown01 == 2) {
+    if (challenge.unknown00 != button) {
+      return;
+    }
+    isMiss = false;
+    unknown84++;
+    if (unknown84 == challenge.unknown08) {
+      point = challenge.unknown02;
+      unknown35e = 1;
+      unknown88 = 2;
+    } else {
+      mm::mtl::FixStr<32> name;
+      name.format("IMG_challenge_btn_push_v2@%02d", unknown80 + 1);
+      {
+        ui::UIObjectAcc pushButton(unknown18, name.c_str());
+        pushButton.startAnimationFromIndex(challenge.unknown00 < 6 ? unknown004[challenge.unknown00] + 1 : 1, false);
+      }
+      name.format("IMG_challenge_btn_push_eff@%02d", unknown80 + 1);
+      ui::UIObjectAcc effect(unknown18, name.c_str());
+      GfMenuObjUtil::CtrlParam param;
+      // Three frames of 0.033333335f: the game holds 0x3dccccce, whereas 0.1f is 0x3dcccccd.
+      param.unknown00 = 3 * 0.033333335f;
+      param.unknown2c = 1.0f;
+      param.unknown08 = 0x40000;
+      param.unknown0c = 3;
+      GfMenuObjUtil::startCtrl(effect.unknown10, param, nullptr);
+      point = 0;
+    }
+    if (unknown28.unknown04 == 0) {
+      GfMenuObjUtil::playVibration(fw::VIBRATION_ID_UNKNOWN_15, 1.0f);
+    }
+  } else {
+    return;
+  }
+  if (isMiss) {
+    unknown35a = 2;
+    GfMenuObjUtil::playSE(0x32);
+  } else {
+    if (point == 0) {
+      return;
+    }
+    GfMenuObjUtil::playSE(0x31);
+    unknown35a = 1;
+    unknown98 += point;
+  }
+  ui::UIObjectAcc acc(unknown18, "LAY_challenge_v2");
+  mm::mtl::FixStr<32> name;
+  ui::EventData event;
+  if (unknown35a == 1) {
+    name.format("IMG_challenge_hit_eff_v2@%02d", unknown80 + 1);
+    ui::UIObjectAcc hit(unknown18, name.c_str());
+    hit.setDisp(true);
+    switch (unknown35e) {
+    case 1:
+      hit.startAnimation("excellent", false);
+      break;
+    case 0:
+      hit.startAnimation("good", false);
+      break;
+    }
+  }
+  if (challenge.unknown01 == 1) {
+    event.unknown00 = 0x103;
+    if ((unknown49c & (1 << unknown80)) == 0) {
+      name.format("LAY_challenge_v2@%02d", unknown80 + 1);
+      GfMenuObject::sendEvent(acc.searchChild(name.c_str()), event, 0.0f);
+      unknown49c |= 1 << unknown80;
+    }
+  } else {
+    event.unknown00 = 0x104;
+    name.format("LAY_challenge_v2@%02d", unknown80 + 1);
+    GfMenuObject::sendEvent(acc.searchChild(name.c_str()), event, 0.0f);
+  }
+  unknown80++;
 }
 
 void GfMenuObjButtonChallenge2::notifyChallengeResult() {

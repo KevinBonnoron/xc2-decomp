@@ -162,6 +162,7 @@ public:
   GF_OBJ_HANDLE *getExistFixedObj(int index) const;
   bool isValidMultiBind(GF_OBJ_HANDLE *handle, u32 uniqId) const;
   GfAssetMultiBind *getAssetMultiBind(u32 uniqId) const;
+  mm::mtl::FixedList<GF_OBJ_HANDLE *, 32> *getMultiBindList(GF_OBJ_HANDLE *handle) const;
   GfAssetMultiBind *getMultiBinder(GF_OBJ_HANDLE *handle);
   void loadedMultiBind(GF_OBJ_HANDLE *handle, u32 uniqId);
   void unloadedMultiBind(GF_OBJ_HANDLE *handle, u32 uniqId);

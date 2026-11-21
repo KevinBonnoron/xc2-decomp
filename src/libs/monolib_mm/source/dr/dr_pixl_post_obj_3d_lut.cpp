@@ -5,6 +5,7 @@
 #include "dr/dr_man.h"
 #include "dr/dr_pixl_man.h"
 #include "dr/dr_pixl_post_parm.h"
+#include "dr/dr_pixl_render_volume.h"
 #include "dr/dr_res_filter_data.h"
 #include "dr/dr_shd_data_list.h"
 #include "dr/dr_shd_data_obj.h"
@@ -14,14 +15,19 @@
 #include "grlib/cglib_etc_uniform_block.h"
 #include "grlib/cglib_render_volume.h"
 #include "grlib/cglib_shader.h"
+#include "grlib/cglib_texture_buffer.h"
 #include "grlib/cglib_uni_base_utility.h"
 #include "mm_mtl/fixed_array.h"
-
-namespace grlib {
-class CGLibTextureBuffer;
-} // namespace grlib
+#include "mtl/alloc_handle.h"
 
 namespace ml {
+
+DrPixlPostObj3dLut::DrPixlPostObj3dLut(DrMan *man, DrPixlMan *pixlMan, DrPixlPostMan *postMan) : unknown00(man), unknown08(pixlMan), unknown10(postMan), unknown18(false) {
+  unknown20[0] = new (man->unknown0c) DrPixlRenderVolume(unknown00);
+  unknown20[0]->setTextureInfo(16.0f, 16.0f, 16.0f, GRL_SURFACE_FORMAT_RGBA8, false, 0);
+  unknown20[1] = new (unknown00->unknown0c) DrPixlRenderVolume(unknown00);
+  unknown20[1]->setTextureInfo(16.0f, 16.0f, 16.0f, GRL_SURFACE_FORMAT_RGBA8, false, 0);
+}
 
 DrPixlPostObj3dLut::~DrPixlPostObj3dLut() {
   grlib::CGLibRenderVolume *volume = unknown20[0];

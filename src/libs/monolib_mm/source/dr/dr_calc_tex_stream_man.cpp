@@ -7,10 +7,28 @@
 #include "ml/critical_section.h"
 #include "ml/dev_graph.h"
 #include "ml/work_cpu.h"
+#include "mtl/alloc_handle.h"
 #include "mtl/mem_manager.h"
 #include "nn/os.h"
 
 namespace ml {
+
+// The game clears the four lists with one memset of 0x50 bytes (value-initialisation). The statement order is the one found to match
+// (0x71008b2000): the order of the members merges the two read mode limits (0x2490, 0x2494) into one 64-bit store and the order [0], [1]
+// of the counters moves the singleton store.
+DrCalcTexStreamMan::DrCalcTexStreamMan() : unknown08(), unknown18(), unknown28(), unknown38() {
+  unknown2488 = 0;
+  unknown2058[1] = 0;
+  unknown2058[0] = 0;
+  unknown2064 = 0;
+  unknown2068 = 0;
+  unknown206c = 0;
+  unknown2070 = nullptr;
+  unknown2078 = nullptr;
+  unknown2490 = 3;
+  unknown2494 = 3;
+  unknown248c = 0;
+}
 
 CriticalSection &DrCalcTexStreamMan::getCriticalSection() {
   static CriticalSection sect;
@@ -347,12 +365,25 @@ bool DrCalcTexStreamMan::memTempCopy(u32 size) {
   return isEmpty;
 }
 
+DrCalcStmListObj *DrCalcTexStreamMan::createBufferListObj(u32 size) {
+  CS cs(getCriticalSection());
+  DrCalcStmListObj *list = new (DrMan::get()->unknown18) DrCalcStmListObj(size);
+  list->unknowna6++;
+  unknown38[DrMan::s_nDblStockIdx].unknown004(list);
+  return list;
+}
+
+DrCalcTexStmObj::DrCalcTexStmObj() : unknown18(nullptr), unknown20(0), unknown24(0), unknown28(0) {}
+
 } // namespace ml
 
 // The game compiles DrCalcStmWork and DrCalcStmListObj in this unit (their functions are interleaved with the DrCalcTexStreamMan ones from 0x71008b2c8c on):
 // release inlines DrCalcTexStreamMan::getCriticalSection and the destructor inlines releaseFreeObj and DrCalcStmWork::workRelease.
-#include "dr_calc_stm_list_obj.cpp"
+// In the order of their last functions: DrCalcStmWork ends at 0x71008b5280 (getTexObj), DrCalcStmListObj at 0x71008b7eb4 (OnFileEvent).
+// clang-format off
 #include "dr_calc_stm_work.cpp"
+#include "dr_calc_stm_list_obj.cpp"
+// clang-format on
 
 template mm::mtl::PtrSingleton<ml::DrCalcTexStreamMan>::~PtrSingleton();
 template void ml::DrResChankList<ml::DrCalcTexStmObj>::changeList(ml::DrCalcTexStmObj *first, ml::DrCalcTexStmObj *second);

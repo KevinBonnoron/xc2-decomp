@@ -1,5 +1,6 @@
 #pragma once
 #include <stddef.h>
+#include <string.h>
 
 #include "mm_mtl/fixed_vector.h"
 #include "ptlib/forcefield/particle_force_field.h"
@@ -20,9 +21,78 @@ struct SendParam;
 
 class SystemManager {
 public:
+  // Layout from the disassembly of addCommand (0x710091a2b8), es_isalive (0x710091c740, stride 0xf0 and type/handle) and the es_*
+  // setters (es_set_alpha 0x710091b438 inlines the copy). No accessor or string names these members, and the gaps are bytes
+  // that no observed function reads or writes.
   struct alignas(16) EsCommand {
-    u8 _00[0xf0 - 0x00];
+    // The game copies bytes 0 to 0x14 as one run, the 0xb0 block from 0x20 unless source and destination are the same object,
+    // and bytes 0xd0 to 0xf0 as another run; the descending stores are how clang expands the memcpy calls.
+    EsCommand(const EsCommand &other) { *this = other; }
+
+    EsCommand &operator=(const EsCommand &other) {
+      memcpy(this, &other, offsetof(EsCommand, _14));
+      // memcpy requires non-overlapping ranges, so a self-assignment skips the block copy.
+      if (this != &other) {
+        memcpy(unknown20, other.unknown20, offsetof(EsCommand, unknownd0) - offsetof(EsCommand, unknown20));
+      }
+      memcpy(&unknownd0, &other.unknownd0, sizeof(EsCommand) - offsetof(EsCommand, unknownd0));
+      return *this;
+    }
+
+    u32 unknown00; // Inferred role: command type; original member name unknown.
+    u32 unknown04; // Role unknown; copied with unknown00 as one 8-byte run because es_set_alpha stores only a w at 0.
+    u64 unknown08; // Inferred role: zero in every setter; original member name unknown.
+    u32 unknown10; // Inferred role: target effect handle; original member name unknown.
+    u8 _14[0x20 - 0x14];
+
+    // Inferred role: default block loaded from a GOT pointer by the setters; original member name unknown.
+    u8 unknown20[0x40];
+    f32 unknown60; // Inferred role: default 1.0; original member name unknown.
+    f32 unknown64; // Inferred role: default 1.0; original member name unknown.
+    f32 unknown68; // Inferred role: default 1.0; original member name unknown.
+    f32 unknown6c; // Inferred role: default 1.0 (es_set_disp), written by es_set_alpha; original member name unknown.
+    u64 unknown70; // Inferred role: zero in every setter; original member name unknown.
+    u8 _78[0x80 - 0x78];
+    f32 unknown80; // Inferred role: default 1.0; original member name unknown.
+    f32 unknown84; // Inferred role: default 1.0; original member name unknown.
+    f32 unknown88; // Inferred role: default 1.0; original member name unknown.
+    u8 _8c[0x90 - 0x8c];
+    u64 unknown90; // Inferred role: zero in every setter; original member name unknown.
+    u32 unknown98; // Inferred role: zero in every setter; original member name unknown.
+    u8 _9c[0xa0 - 0x9c];
+    f32 unknowna0; // Inferred role: written by es_set_speed, default -1.0; original member name unknown.
+    u32 unknowna4; // Inferred role: default 0; original member name unknown.
+    f32 unknowna8; // Inferred role: default -1.0; original member name unknown.
+    f32 unknownac; // Inferred role: default -1.0; original member name unknown.
+    f32 unknownb0; // Inferred role: default -1.0; original member name unknown.
+    f32 unknownb4; // Inferred role: default -1.0; original member name unknown.
+    f32 unknownb8; // Inferred role: default -1.0; original member name unknown.
+    u32 unknownbc; // Inferred role: default 0; original member name unknown.
+    u16 unknownc0; // Inferred role: default 0xffff; original member name unknown.
+    u8 unknownc2;  // Inferred role: default 0; original member name unknown.
+    u8 unknownc3;  // Inferred role: flag, default 1; original member name unknown.
+    u16 unknownc4; // Inferred role: default 0; original member name unknown.
+    u16 unknownc6; // Inferred role: default 0; original member name unknown.
+    u8 unknownc8;  // Inferred role: default 0; original member name unknown.
+    u8 _c9[0xd0 - 0xc9];
+    u64 unknownd0; // Inferred role: payload; a w store in es_set_disp and an x store in es_remove_cas. Original member name unknown.
+    u64 unknownd8; // Inferred role: payload; es_remove_cas stores a 32-bit -1 here. Original member name unknown.
+    u64 unknowne0; // Inferred role: copied by addCommand, no setter store observed; original member name unknown.
+    u64 unknowne8; // Inferred role: copied by addCommand, no setter store observed; original member name unknown.
   };
+
+  static_assert(offsetof(EsCommand, unknown08) == 0x08, "");
+  static_assert(offsetof(EsCommand, unknown10) == 0x10, "");
+  static_assert(offsetof(EsCommand, unknown20) == 0x20, "");
+  static_assert(offsetof(EsCommand, unknown60) == 0x60, "");
+  static_assert(offsetof(EsCommand, unknown6c) == 0x6c, "");
+  static_assert(offsetof(EsCommand, unknown80) == 0x80, "");
+  static_assert(offsetof(EsCommand, unknown90) == 0x90, "");
+  static_assert(offsetof(EsCommand, unknowna0) == 0xa0, "");
+  static_assert(offsetof(EsCommand, unknownc0) == 0xc0, "");
+  static_assert(offsetof(EsCommand, unknownd0) == 0xd0, "");
+  static_assert(offsetof(EsCommand, unknowne8) == 0xe8, "");
+  static_assert(sizeof(EsCommand) == 0xf0, "");
 
   using CommandList = mm::mtl::FixedVector<EsCommand, 0x400>;
 
@@ -94,6 +164,7 @@ public:
   void log();
   void kizunaTail();
   CommandList *getCommandPtr(u32 index);
+  void addCommand(const EsCommand &command);
   void setGlobalSpeed(f32 speed);
   void setCategorySpd(u32 category, f32 speed);
   void memoryDump();

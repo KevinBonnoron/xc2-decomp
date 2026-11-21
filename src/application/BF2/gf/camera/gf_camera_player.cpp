@@ -10,15 +10,21 @@
 #include "fw/fw_transform.h"
 #include "gf/camera/gf_camera_player_target.h"
 #include "gf/camera/gf_camera_utilities.h"
+#include "gf/data/gf_data_manager.h"
+#include "gf/data/gf_data_option.h"
 #include "gf/data/gf_object_type.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
+#include "gf/object/gf_obj_util.h"
 #include "ml/dev_graph.h"
+#include "ml/scn_cam_util.h"
 #include "mm_math/mm_math.h"
 #include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
 
 namespace gf {
+
+class GfObj;
 
 void PlayerCamera::createReflection(fw::Reflection *reflection, const char *name, u32 index) {
 #line 45
@@ -259,6 +265,108 @@ void PlayerCamera::resetBattleWarp() {
     unknown100 = unknown110;
     unknown51a0 = unknown100;
   }
+}
+
+void PlayerCamera::updateTarget(const fw::Transform &transform, bool param2) {
+  unknown122 = false;
+  if (!param2 && m_manual) {
+    return;
+  }
+  if (unknowna8 == unknown020) {
+    return;
+  }
+  if (!PlayerCameraTarget::get()->unknown45) {
+    return;
+  }
+  GfObj *obj = GfObjUtil::getObj(unknowna8);
+  if (obj == nullptr) {
+    return;
+  }
+  GfObjAcc acc(obj);
+  if (acc.getType() != OBJECT_TYPE_ENEMY) {
+    return;
+  }
+  const unknown002 *param = unknownb0.get<unknown002>();
+  const unknown002 *base = static_cast<const unknown002 *>(unknownb0.unknown00->param);
+  f32 height = ((unknownd0 - base->distance_minimum) / (base->distance_maximum - base->distance_minimum)) * base->height_max;
+  mm::Vec3 look = acc.getWorldTransform().unknown00;
+  if (param->look_bone == 0) {
+    look.y = look.y + fminf(height + param->look_height + unknownd8, 2.0f);
+  } else {
+    CameraUtilities::getCameraLookBonePosition(unknowna8, look);
+  }
+  // The game adds look_height and unknownd8 to the height before it loads the position of the target (the two fadd at 0x71001dafa8, before the loads at 0x71001dafb4): the local
+  // places that sum first; written inline in the y component (as one sum or as a chain of subtractions) the order of the fadd and the loads differs (measured).
+  f32 offset = height + param->look_height + unknownd8;
+  mm::Vec3 position(look.x - transform.unknown00.x, look.y - transform.unknown00.y - offset, look.z - transform.unknown00.z);
+  mm::Vec3 forward = mm::Vec3::unitZ;
+  m_saveYaw = getYaw(mm::Vec3(-position.x, -position.y, -position.z), forward);
+  m_savePitch = getPitch(position, forward);
+  // The game reads the pitch limits through unknownb0 again here (the calls on `this` above force the reload) and computes both products before it loads unknownc8: with the
+  // subtraction in the initialisers the load comes between the two products (measured, same size, different order).
+  f32 lower = static_cast<const unknown002 *>(unknownb0.unknown00->param)->pitch_limit_lower * -mm::DEG_TO_RAD;
+  f32 upper = static_cast<const unknown002 *>(unknownb0.unknown00->param)->pitch_limit_upper * mm::DEG_TO_RAD;
+  lower -= unknownc8;
+  upper -= unknownc8;
+  mm::clampRef(m_savePitch, lower, upper);
+  mm::Vec3 screen;
+  if (!ml::ScnCamUtil::getScreenPos(screen, unknown20, look)) {
+    unknownec = param->rotate_revise_at_reset;
+  } else {
+    f32 centerX = ml::DevGraph::getRootWidth() * 0.5f;
+    s32 rootHeight = ml::DevGraph::getRootHeight();
+    // Locals placing member loads and calls (rulings of 2026-11-13): the game calls getRootHeight right after getRootWidth, loads the three target range members before the
+    // first sqrt (0x71001db0e0) and computes both distances before it tests them; each of these written at its use gives another order (measured).
+    f32 rangeOffsetY = param->target_range_offset_y;
+    f32 rangeHeight = param->target_range_height;
+    f32 rangeWidth = param->target_range_width * 0.5f;
+    f32 lookDistance = sqrtf((look.x - unknown40.x) * (look.x - unknown40.x) + (look.z - unknown40.z) * (look.z - unknown40.z));
+    f32 transformDistance = sqrtf((transform.unknown00.x - unknown40.x) * (transform.unknown00.x - unknown40.x) + (transform.unknown00.z - unknown40.z) * (transform.unknown00.z - unknown40.z));
+    f32 left = centerX - rangeWidth;
+    if (lookDistance - 1.0f <= transformDistance) {
+      screen.x = 0.0f;
+    }
+    unknownec = 0.0f;
+    f32 rate = 0.0f;
+    if (left > screen.x) {
+      f32 diff = left - screen.x;
+      if (diff != 0.0f) {
+        rate = diff / rangeWidth;
+      }
+    } else {
+      f32 right = centerX + rangeWidth;
+      if (right < screen.x) {
+        f32 diff = screen.x - right;
+        if (diff != 0.0f) {
+          rate = diff / rangeWidth;
+        }
+      } else {
+        f32 center = rangeOffsetY + rootHeight * 0.5f;
+        f32 half = rangeHeight * 0.5f;
+        f32 top = center - half;
+        if (top > screen.y) {
+          f32 diff = top - screen.y;
+          if (diff != 0.0f) {
+            rate = diff / half;
+          }
+        } else {
+          f32 bottom = center + half;
+          if (bottom < screen.y) {
+            f32 diff = screen.y - bottom;
+            if (diff != 0.0f) {
+              rate = diff / half;
+            }
+          }
+        }
+      }
+    }
+    u32 index = GfDataManager::getDataOption()->unknown04[4];
+    if (unknown52d7 <= index) {
+      index = 0;
+    }
+    unknownec = rate * unknown52d8[index].unknown10;
+  }
+  unknown122 = true;
 }
 
 } // namespace gf

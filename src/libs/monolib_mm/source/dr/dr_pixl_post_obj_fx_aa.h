@@ -20,6 +20,7 @@ public:
   void render();
   void calcScale();
   void calcLuminosity();
+  void calcAA();
   void debugRender();
 
   DrPixlRenderTarget *unknown18; // Inferred role: render target, a DrPixlRenderTarget the constructor allocates (0x71008571d0); original member name unknown.

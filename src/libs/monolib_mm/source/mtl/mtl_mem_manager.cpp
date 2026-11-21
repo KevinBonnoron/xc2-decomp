@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <new>
 #include <stddef.h>
 #include <stdlib.h>
 
@@ -23,6 +24,7 @@
 #include "mtl/mem_manager.h"
 #include "mtl/mem_manager_region.h"
 #include "mtl/null_allocator.h"
+#include "nn/diag.h"
 #include "types.h"
 
 #include "mtl/dlmalloc.inl"
@@ -190,7 +192,7 @@ void IMemAllocator::log_callSTack(void *callStack) const {}
 
 void IMemAllocator::checkLeakMemory() {}
 
-AllocatorType NullAllocator::getType() const { return static_cast<AllocatorType>(0); }
+AllocatorType NullAllocator::getType() const { return ALLOCATOR_TYPE_UNKNOWN_0; }
 
 void *NullAllocator::allocate(size_t size, size_t alignment) { return nullptr; }
 
@@ -524,6 +526,90 @@ void AllocatorWrapper::destroy() {
     m_allocator = nullptr;
     m_buffer = nullptr;
   }
+}
+
+MemManager::Region *MemManager::Region::getArea(const void *pointer) {
+  Region *area = nullptr;
+  if (unknown00 != nullptr && unknown08 <= pointer) {
+    area = this;
+    if (unknown10 + reinterpret_cast<size_t>(unknown08) <= reinterpret_cast<size_t>(pointer)) {
+      area = nullptr;
+    }
+  }
+  return area;
+}
+
+void MemManager::Region::destroy() {
+  if (m_parent.isValid()) {
+    if (!MemManager::valid_section(m_parent, false)) {
+      unknownb0 &= ~UNKNOWN001_UNKNOWN_0;
+    }
+  }
+  if (unknownb0 & UNKNOWN001_UNKNOWN_0) {
+    unknownb0 |= UNKNOWN001_UNKNOWN_2;
+    MemManager::deallocate_section(reinterpret_cast<void *>(m_topAdr), 0, false);
+  }
+  if (unknown00 != nullptr) {
+    MemManager::destroyAllocator(unknown00->getType(), unknown00);
+    unknown10 = 0;
+    m_allocs = 0;
+    unknown00 = nullptr;
+    unknown08 = nullptr;
+  }
+}
+
+// Evidence: the cases are written in the order of their blocks in the game (0x710077f5b8); an if chain compares in another order.
+IMemAllocator *MemManager::createAllocator(AllocatorType type) {
+  IMemAllocator *allocator = nullptr;
+  switch (type) {
+  case ALLOCATOR_TYPE_UNKNOWN_1:
+    allocator = new (unknown003.allocate(sizeof(DlAllocator), 8)) DlAllocator;
+    break;
+  case ALLOCATOR_TYPE_UNKNOWN_0:
+    allocator = new (unknown003.allocate(sizeof(NullAllocator), 8)) NullAllocator;
+    break;
+  case ALLOCATOR_TYPE_UNKNOWN_2:
+    allocator = new (unknown003.allocate(sizeof(AssetAllocator<1024>), 8)) AssetAllocator<1024>;
+    break;
+  }
+  return allocator;
+}
+
+void *MemManager::allocate_section(ALLOC_HANDLE handle, size_t size, size_t alignment, bool isBack, const char *file, int line) {
+  Region *region = s_ptrMap.unknown003(handle);
+  if (region != nullptr) {
+    void *pointer = region->allocate(size, alignment, isBack, file, line);
+    if (pointer != nullptr) {
+      return pointer;
+    }
+  }
+  mlStackTrace(nullptr);
+  // The game tests bits 3 and 5 together here (0x28) and reads the flags of a null region when the handle is unknown.
+  if (region->unknownb0 & (Region::UNKNOWN001_UNKNOWN_3 | Region::UNKNOWN001_UNKNOWN_5)) {
+    region->log(nullptr, true);
+  }
+  if (region->unknownb0 & Region::UNKNOWN001_UNKNOWN_3) {
+    nn::diag::detail::AbortImpl("", "", "", 0);
+  }
+  return nullptr;
+}
+
+void *MemManager::allocate_tail_section(ALLOC_HANDLE handle, size_t size, size_t alignment, bool isBack, const char *file, int line) {
+  Region *region = s_ptrMap.unknown003(handle);
+  if (region != nullptr) {
+    void *pointer = region->allocate_tail(size, alignment, isBack, file, line);
+    if (pointer != nullptr) {
+      return pointer;
+    }
+    mlStackTrace(nullptr);
+    if (region->unknownb0 & Region::UNKNOWN001_UNKNOWN_5) {
+      region->log(nullptr, true);
+    }
+    if (region->unknownb0 & Region::UNKNOWN001_UNKNOWN_3) {
+      nn::diag::detail::AbortImpl("", "", "", 0);
+    }
+  }
+  return nullptr;
 }
 
 void MemManager::log_section(ALLOC_HANDLE handle, bool isDetail, MemoryInfo *info) {

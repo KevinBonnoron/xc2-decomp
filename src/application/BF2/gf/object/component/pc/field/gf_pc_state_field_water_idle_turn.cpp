@@ -8,15 +8,20 @@
 #include "gf/object/component/pc/gf_pc_move_util_field.h"
 #include "gf/object/component/pc/gf_pc_state_id.h"
 #include "gf/object/component/pc/gf_pc_state_util_field.h"
-#include "mm_math/mm_vec3.h"
 
 namespace gf {
 namespace pc {
 
+void StateFieldWaterIdleTurn::enter(GfComBehaviorPc *behavior, ai::State *previous) {
+  GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
+  property->unknown007();
+  unknown008(*property, unknown20);
+  StateUtilField::notifyTurn(*behavior);
+}
+
 void StateFieldWaterIdleTurn::leave(GfComBehaviorPc *behavior, ai::State *next) {
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
-  property->unknown80 = mm::Vec3::zero;
-  property->unknown94 = 0.0f;
+  property->unknown007();
 }
 
 void StateFieldWaterIdleTurn::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {

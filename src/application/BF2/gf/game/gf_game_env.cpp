@@ -509,7 +509,7 @@ CLOUD_SEA GfGameEnv::getCloudType(CLOUD_SEA_HANDLE handle) {
   if (it != gameEnv->unknown170.end()) {
     return (*it).unknown00;
   }
-  return CLOUD_SEA(0);
+  return CLOUD_SEA_UNKNOWN_0;
 }
 
 CLOUD_SEA GfGameEnv::getCurrentCloudSea() {
@@ -517,7 +517,7 @@ CLOUD_SEA GfGameEnv::getCurrentCloudSea() {
   if (!gameEnv->unknown170.empty()) {
     return gameEnv->unknown170.front().unknown00;
   }
-  return CLOUD_SEA(0);
+  return CLOUD_SEA_UNKNOWN_0;
 }
 
 void GfGameEnv::gevMapjump(GEV event, const MapjumpCallbackInfo &info) {

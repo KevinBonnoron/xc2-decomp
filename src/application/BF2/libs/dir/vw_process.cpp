@@ -26,6 +26,27 @@ void unknown001(VwProcess *process) {
   }
 }
 
+// Inferred helper: runs one step (Move or Draw) on a process and, recursively, on its children unless a skip flag or the deleted flag
+// is set; original name unknown. The game has two separate functions (0x7100141ab4 for Move, 0x7100141b64 for Draw), the two
+// instantiations; the copies written out twice match as well.
+template <u8 VwProcess::*Skip, void (VwProcess::*Step)()> void unknown002(VwProcess *process) {
+  if (!(process->*Skip) && !process->unknown59) {
+    (process->*Step)();
+    DoubleListNode *head = process->unknown38.unknown08;
+    if (head != nullptr) {
+      DoubleListNode *child = head->unknown10;
+      while (child != nullptr) {
+        unknown002<Skip, Step>(static_cast<VwProcess *>(child));
+        DoubleListNode *next = nullptr;
+        if (process->unknown38.unknown08 != child) {
+          next = child->unknown10;
+        }
+        child = next;
+      }
+    }
+  }
+}
+
 } // namespace
 
 VwProcess::VwProcess() : unknown58(0), unknown59(0), unknown5a(0), unknown5b(0), unknown60(nullptr) {}
@@ -139,6 +160,39 @@ void VwProcessMan::Delete() {
         delete process;
       } else {
         unknown001(process);
+      }
+      child = next;
+    }
+  }
+}
+
+// The loop over the registered root processes is written out in Delete, Move and Draw, as in the game (three loops, 0x71001419c0,
+// 0x7100141a6c and 0x7100141b1c): a helper taking the list header (also as a template over the step) is not inlined, so Move
+// becomes a 2 instruction tail call of it.
+void VwProcessMan::Move() {
+  DoubleListNode *head = unknown30.unknown08;
+  if (head != nullptr) {
+    DoubleListNode *child = head->unknown10;
+    while (child != nullptr) {
+      unknown002<&VwProcess::unknown5a, &VwProcess::Move>(static_cast<VwProcess *>(child));
+      DoubleListNode *next = nullptr;
+      if (unknown30.unknown08 != child) {
+        next = child->unknown10;
+      }
+      child = next;
+    }
+  }
+}
+
+void VwProcessMan::Draw() {
+  DoubleListNode *head = unknown30.unknown08;
+  if (head != nullptr) {
+    DoubleListNode *child = head->unknown10;
+    while (child != nullptr) {
+      unknown002<&VwProcess::unknown5b, &VwProcess::Draw>(static_cast<VwProcess *>(child));
+      DoubleListNode *next = nullptr;
+      if (unknown30.unknown08 != child) {
+        next = child->unknown10;
       }
       child = next;
     }

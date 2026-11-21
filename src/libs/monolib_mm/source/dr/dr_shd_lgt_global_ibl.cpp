@@ -2,7 +2,11 @@
 
 #include "dr/dr_light_obj_global_ibl.h"
 #include "dr/dr_man.h"
+#include "dr/dr_pixl_man.h"
+#include "dr/dr_pixl_post_man.h"
+#include "dr/dr_pixl_post_obj_cube_map_multi_ibl.h"
 #include "dr/dr_pixl_post_parm.h"
+#include "grlib/cglib_ctl_shader.h"
 #include "grlib/cglib_dbl_uniform_block.h"
 #include "grlib/shd_util.h"
 #include "mm_math/mm_vec3.h"
@@ -82,6 +86,40 @@ void DrShdLgtGlobalIBL::update(int viewNum) {
 
 void DrShdLgtGlobalIBL::updateUniformBlock(int viewNum) { updateUniformBlockImpl(viewNum); }
 
+// The slot loops of render (0x7100895178) and renderGlobalIBL (0x71008954d8) are written with the exit test `i != 32`: the game steps one byte-offset induction
+// variable (`add x8, x8, #24; cmp x8, #768; b.ne`, 0x7100895230 in render) and `i < 32` gives one instruction more in both (a `mul` of the index by 0x18 instead
+// of the game's `madd`); the loop of removeObj (0x7100895024) matches either way and keeps `i < 32`. The tests of removeObj are written null, state, then the
+// object (ruling 4): with the object compared before the state byte the first branch becomes `cmp x9, #0` instead of the game's `cbz x9`. The object is passed to
+// cancelIBL as an id (`unsigned long` in the symbol), as DrRequetIBL stores it.
+void DrShdLgtGlobalIBL::render(DrShdLgtMan *man) {
+  if (unknown00->unknown120[unknown00->unknown1c98]->unknown269) {
+    renderIndexTable();
+    renderLinkList(man);
+    const unknown001 &view = unknown10[unknown00->unknown1c98];
+    for (int i = 0; i != 32; i++) {
+      const unknown002 &slot = view.unknown40[i];
+      if (slot.unknown10 != nullptr && slot.unknown04[(slot.unknown08 + 2) % 3] != 3 && (slot.unknown04[0] == 2 || slot.unknown04[1] == 2 || slot.unknown04[2] == 2)) {
+        grlib::CGLibCtlShader::setMemoryBarrierBit(2);
+        renderByLinkList(man);
+        return;
+      }
+    }
+  }
+}
+
+void DrShdLgtGlobalIBL::renderGlobalIBL(DrShdLgtMan *man) {
+  renderLinkList(man);
+  const unknown001 &view = unknown10[unknown00->unknown1c98];
+  for (int i = 0; i != 32; i++) {
+    const unknown002 &slot = view.unknown40[i];
+    if (slot.unknown10 != nullptr && slot.unknown04[(slot.unknown08 + 2) % 3] != 3 && (slot.unknown04[0] == 2 || slot.unknown04[1] == 2 || slot.unknown04[2] == 2)) {
+      grlib::CGLibCtlShader::setMemoryBarrierBit(2);
+      renderByLinkList(man);
+      return;
+    }
+  }
+}
+
 void DrShdLgtGlobalIBL::getLowestPrioritySH(mm::Mat44 &red, mm::Mat44 &green, mm::Mat44 &blue) const {
   const unknown001 &view = unknown10[unknown00->unknown1c98];
   int index = -1;
@@ -106,6 +144,27 @@ void DrShdLgtGlobalIBL::getLowestPrioritySH(mm::Mat44 &red, mm::Mat44 &green, mm
 }
 
 void DrShdLgtGlobalIBL::addObj(DrLightObjGlobalIBL *obj, int viewNum) { unknown10[viewNum].unknown00.push_back(obj); }
+
+void DrShdLgtGlobalIBL::removeObj(DrLightObjGlobalIBL *obj, int viewNum) {
+  for (int i = 0; i < 32; i++) {
+    const unknown002 &slot = unknown10[viewNum].unknown40[i];
+    if (slot.unknown10 != nullptr && slot.unknown04[(slot.unknown08 + 2) % 3] != 3 && slot.unknown10 == obj) {
+      DrPixlPostObjCubeMapMultiIBL *cubeMap = unknown00->unknown78->unknown10[viewNum].unknown180->unknown40;
+      if (cubeMap != nullptr) {
+        cubeMap->cancelIBL(reinterpret_cast<u64>(obj));
+      }
+    }
+  }
+  mm::mtl::List<DrLightObjGlobalIBL *> &list = unknown10[viewNum].unknown00;
+  for (mm::mtl::List<DrLightObjGlobalIBL *>::iterator it = list.begin(), end = list.end(); it != end;) {
+    mm::mtl::List<DrLightObjGlobalIBL *>::iterator next = it;
+    ++next;
+    if (*it == obj) {
+      list.erase(it);
+    }
+    it = next;
+  }
+}
 
 } // namespace ml
 

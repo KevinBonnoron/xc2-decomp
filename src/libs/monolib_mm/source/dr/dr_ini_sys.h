@@ -45,6 +45,27 @@ public:
     f32 unknown0c;  // Inferred role: wetness value; original member name unknown.
   };
 
+  // Inferred role: header of the glass breakage resource; original type name unknown.
+  // Evidence: DrPixlPostObjGlassBr::setup reads these members of the data returned by getGlassBreakage.
+  struct unknown004 {
+    // Inferred role: address of a byte offset of the resource; original name unknown. The offsets of the header are relative to the resource.
+    void *unknown002(u32 offset) { return static_cast<u8 *>(static_cast<void *>(this)) + offset; }
+
+    u8 _00[0x08 - 0x00];
+    u32 unknown08; // Inferred role: offset of the shard positions; original member name unknown.
+    s32 unknown0c; // Inferred role: shard count; original member name unknown.
+    u32 unknown10; // Inferred role: offset of the memory pool data; original member name unknown.
+    u32 unknown14; // Inferred role: size of the memory pool data; original member name unknown.
+    u32 unknown18; // Inferred role: offset of the vertex data; original member name unknown.
+    u32 unknown1c; // Inferred role: size of the vertex data; original member name unknown.
+    u8 _20[0x24 - 0x20];
+    u32 unknown24; // Inferred role: offset of the index data; original member name unknown.
+    u8 _28[0x2c - 0x28];
+    u32 unknown2c; // Inferred role: index count; original member name unknown.
+  };
+
+  static_assert(offsetof(unknown004, unknown2c) == 0x2c, "");
+
   DrIniSys(DrMan *drMan);
   ~DrIniSys();
   void dataWorkClear();
@@ -85,7 +106,7 @@ public:
   void reloadMirrorBallModel();
   void reloadRainDropTexture();
   void reloadFlagWaveTexture();
-  const void *getGlassBreakage() const;
+  unknown004 *getGlassBreakage() const;
   void getWetnessSetting(u16 index, WetSetting &setting) const;
 
   DrMan *unknown00;                        // Inferred role: dr man; original member name unknown.

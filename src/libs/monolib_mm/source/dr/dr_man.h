@@ -35,6 +35,7 @@ class DrResFilterData;
 class DrShdMan;
 class IDrDrawCallback;
 class DrPixlMan;
+class DrPixlMemMan;
 class DrPixlMdlSampler;
 class DrPixlPostParm;
 class Scn;
@@ -93,7 +94,8 @@ struct unknown057 {
   s32 unknown24; // Inferred role: render height; original member name unknown.
   s32 unknown28; // Inferred role: screen width; original member name unknown.
   s32 unknown2c; // Inferred role: screen height; original member name unknown.
-  u8 _30[0x38 - 0x30];
+  s32 unknown30; // Inferred role: divisor of the screen share of a model (DrMdoMat::oneTextureStream); original member name unknown.
+  u8 _34[0x38 - 0x34];
   u32 unknown38; // Inferred role: view flags; original member name unknown.
   u8 _3c[0x40 - 0x3c];
 };
@@ -101,6 +103,7 @@ struct unknown057 {
 static_assert(offsetof(unknown057, unknown18) == 0x18, "");
 static_assert(offsetof(unknown057, unknown20) == 0x20, "");
 static_assert(offsetof(unknown057, unknown28) == 0x28, "");
+static_assert(offsetof(unknown057, unknown30) == 0x30, "");
 static_assert(offsetof(unknown057, unknown2c) == 0x2c, "");
 static_assert(offsetof(unknown057, unknown38) == 0x38, "");
 static_assert(sizeof(unknown057) == 0x40, "");
@@ -118,6 +121,7 @@ public:
   void beginSetup();
   void end();
   void endSetup();
+  void debugUpdate();
   int loopCnt();
   void apply(int loop);
   void applyView(int view);
@@ -132,6 +136,7 @@ public:
   void renderEnd(int loop);
   void renderViewBegin();
   void renderViewEnd();
+  void GBuffRender();
   void blurCallBackRender();
   static void setSRGBMode(bool isSRGBMode);
   void tail();
@@ -204,13 +209,14 @@ public:
   static bool s_bFogSRGB;
   static bool s_bSeamDebug;
 
-  u8 _0008[0x000c - 0x0008];
+  mtl::ALLOC_HANDLE unknown08; // Inferred role: mem; original member name unknown.
   mtl::ALLOC_HANDLE unknown0c; // Inferred role: mem sys; original member name unknown.
   mtl::ALLOC_HANDLE unknown10; // Inferred role: mem class; original member name unknown.
   mtl::ALLOC_HANDLE unknown14; // Inferred role: mem work; original member name unknown.
-  u8 _0018[0x001c - 0x0018];
+  mtl::ALLOC_HANDLE unknown18; // Inferred role: mem; original member name unknown.
   mtl::ALLOC_HANDLE unknown1c; // Inferred role: mem data ("DrData"); original member name unknown.
-  u8 _0020[0x0070 - 0x0020];
+  mtl::ALLOC_HANDLE unknown20; // Inferred role: mem; original member name unknown.
+  u8 _0024[0x0070 - 0x0024];
   DrIniSys *unknown70;                                   // Inferred role: ini sys; original member name unknown.
   DrPixlMan *unknown78;                                  // Inferred role: pixl man; original member name unknown.
   DrShdMan *unknown80;                                   // Inferred role: shd man; original member name unknown.
@@ -246,9 +252,9 @@ public:
   unknown057 *unknown5b8;            // Inferred role: screen info; original member name unknown.
   DrAPCache *unknown5c0;             // Inferred role: ap cache; original member name unknown.
   DrCalcGpuCost *unknown5c8;         // Inferred role: gpu cost; original member name unknown.
-  u8 _05d0[0x05d8 - 0x05d0];
-  IDrDrawCallback *unknown5d8[16]; // Inferred role: callbacks; original member name unknown.
-  s32 unknown658;                  // Inferred role: callback num; original member name unknown.
+  DrPixlMemMan *unknown5d0;          // Inferred role: pixl mem man, created by the constructor (0x71007c8c5c); original member name unknown.
+  IDrDrawCallback *unknown5d8[16];   // Inferred role: callbacks; original member name unknown.
+  s32 unknown658;                    // Inferred role: callback num; original member name unknown.
   u8 _065c[0x0660 - 0x065c];
   IDrDrawWorkInfo unknown660[4]; // Inferred role: draw work infos; original member name unknown.
   s32 unknown1c60;               // Inferred role: tmaa mode; original member name unknown.
@@ -269,7 +275,9 @@ public:
   u8 _1cb0[0x1cc0 - 0x1cb0];
   bool unknown1cc0; // Inferred role: home menu opened; original member name unknown.
   bool unknown1cc1; // Inferred role: auto reset scene; original member name unknown.
-  u8 _1cc2[0x1cc4 - 0x1cc2];
+  bool unknown1cc2; // Inferred role: render list flag, set to true by the constructor (0x71007c885c) and tested by DrMdoCtlNom::createRenderList, DrMdoCtlPos::createPosRenderList and the base and
+                    // instance map render list updates (0x7100808718, 0x71008137f8, 0x7100821180, 0x7100823a70); original member name unknown.
+  u8 _1cc3[0x1cc4 - 0x1cc3];
   bool unknown1cc4; // Inferred role: mdl height tex skip; original member name unknown.
   bool unknown1cc5; // Inferred role: height tex skip; original member name unknown.
   bool unknown1cc6; // Inferred role: seam height tex skip; original member name unknown.
@@ -281,7 +289,12 @@ public:
   f32 unknown1cd0[2]; // Inferred role: pos model far render distance per operation mode; original member name unknown.
   u8 _1cd8[0x1cfc - 0x1cd8];
   s32 unknown1cfc; // Inferred role: seam read lv; original member name unknown.
-  u8 _1d00[0x1d20 - 0x1d00];
+  f32 unknown1d00; // Inferred role: seam base map read distance, added to the read check distance by DrMdoCtlSeamBaseMap::readBaseMapCheck; original member name unknown.
+  f32 unknown1d04; // Inferred role: seam base map vertex read distance, copied by DrMdoCtlSeamBaseMap::readBaseMapCheck; original member name unknown.
+  f32 unknown1d08; // Inferred role: seam base map vertex middle read distance, copied by DrMdoCtlSeamBaseMap::readBaseMapCheck; original member name unknown.
+  f32 unknown1d0c; // Inferred role: seam low map read distance, added to the read check distance by DrMdoCtlSeamLowMap::readLowMapCheck; original member name unknown.
+  u8 _1d10[0x1d18 - 0x1d10];
+  void *unknown1d18;          // Inferred role: memory block released by the destructor; original member name unknown.
   u32 *m_gblIdx;              // Named after setGblIdx and offGblIdx, which write its bits; Xenoblade Chronicles DE has isGblIdx and clearGblIdx on its table.
   RenderSpecMode unknown1d28; // Inferred role: render spec mode; original member name unknown.
   u8 _1d2c[0x1d30 - 0x1d2c];
@@ -303,13 +316,17 @@ public:
   u8 _1d6d[0x1d70 - 0x1d6d];
   bool unknown1d70; // Inferred role: shadow light skip; original member name unknown.
   bool unknown1d71; // Inferred role: fog skip; original member name unknown.
-  u8 _1d72[0x1d75 - 0x1d72];
+  u8 _1d72[0x1d73 - 0x1d72];
+  bool unknown1d73; // Inferred role: simple shadow render skip, read by DrMdoSmlShadowMan::shadowRender; original member name unknown.
+  u8 _1d74[0x1d75 - 0x1d74];
   bool unknown1d75; // Inferred role: IBL skip; original member name unknown.
   u8 _1d76[0x1d7a - 0x1d76];
   bool unknown1d7a; // Inferred role: shadow map override; original member name unknown.
   bool unknown1d7b; // Inferred role: mdl dbl pause; original member name unknown.
   bool unknown1d7c; // Inferred role: skips the mpf wind update; original member name unknown.
-  u8 _1d7d[0x1d80 - 0x1d7d];
+  bool unknown1d7d; // Inferred role: skips the deferred render and the sky render of a view; original member name unknown.
+  bool unknown1d7e; // Inferred role: skips GBuffRender; original member name unknown.
+  u8 _1d7f[0x1d80 - 0x1d7f];
   bool unknown1d80; // Inferred role: clip; original member name unknown.
   u8 _1d81[0x1d8c - 0x1d81];
   bool unknown1d8c; // Inferred role: flag, copied to unknown1d8d at the end of the setup; original member name unknown.
@@ -323,9 +340,12 @@ public:
   bool unknown1da0; // Inferred role: camera light; original member name unknown.
   u8 _1da1[0x1da4 - 0x1da1];
   s32 unknown1da4; // Inferred role: dynamic light type; original member name unknown.
-  u8 _1da8[0x1dbc - 0x1da8];
+  u8 _1da8[0x1dac - 0x1da8];
+  bool unknown1dac[14]; // Inferred role: debug requests to reload a shader or a file, one flag per type, cleared by debugUpdate; original member name unknown.
+  u8 _1dba[0x1dbc - 0x1dba];
   s32 unknown1dbc; // Inferred role: render skip; original member name unknown.
-  u8 _1dc0[0x1de4 - 0x1dc0];
+  s16 unknown1dc0; // Inferred role: render stage request (renderView clears 1 before and 2 after the deferred render); original member name unknown.
+  u8 _1dc2[0x1de4 - 0x1dc2];
   u32 unknown1de4;  // Inferred role: histgram size shift; original member name unknown.
   bool unknown1de8; // Inferred role: histgram uses the tone map target; original member name unknown.
   u8 _1de9[0x1e00 - 0x1de9];
@@ -337,10 +357,13 @@ public:
   u8 _1e11[0x1e20 - 0x1e11];
 };
 
+static_assert(offsetof(DrMan, unknown08) == 0x0008, "");
 static_assert(offsetof(DrMan, unknown0c) == 0x000c, "");
 static_assert(offsetof(DrMan, unknown10) == 0x0010, "");
 static_assert(offsetof(DrMan, unknown14) == 0x0014, "");
+static_assert(offsetof(DrMan, unknown18) == 0x0018, "");
 static_assert(offsetof(DrMan, unknown1c) == 0x001c, "");
+static_assert(offsetof(DrMan, unknown20) == 0x0020, "");
 static_assert(offsetof(DrMan, unknown70) == 0x0070, "");
 static_assert(offsetof(DrMan, unknown78) == 0x0078, "");
 static_assert(offsetof(DrMan, unknown80) == 0x0080, "");
@@ -374,6 +397,7 @@ static_assert(offsetof(DrMan, unknown5b0) == 0x05b0, "");
 static_assert(offsetof(DrMan, unknown5b8) == 0x05b8, "");
 static_assert(offsetof(DrMan, unknown5c0) == 0x05c0, "");
 static_assert(offsetof(DrMan, unknown5c8) == 0x05c8, "");
+static_assert(offsetof(DrMan, unknown5d0) == 0x05d0, "");
 static_assert(offsetof(DrMan, unknown5d8) == 0x05d8, "");
 static_assert(offsetof(DrMan, unknown658) == 0x0658, "");
 static_assert(offsetof(DrMan, unknown660) == 0x0660, "");
@@ -391,6 +415,7 @@ static_assert(offsetof(DrMan, unknown1ca4) == 0x1ca4, "");
 static_assert(offsetof(DrMan, unknown1cac) == 0x1cac, "");
 static_assert(offsetof(DrMan, unknown1cc0) == 0x1cc0, "");
 static_assert(offsetof(DrMan, unknown1cc1) == 0x1cc1, "");
+static_assert(offsetof(DrMan, unknown1cc2) == 0x1cc2, "");
 static_assert(offsetof(DrMan, unknown1cc4) == 0x1cc4, "");
 static_assert(offsetof(DrMan, unknown1cc5) == 0x1cc5, "");
 static_assert(offsetof(DrMan, unknown1cc6) == 0x1cc6, "");
@@ -400,6 +425,11 @@ static_assert(offsetof(DrMan, unknown1cc9) == 0x1cc9, "");
 static_assert(offsetof(DrMan, unknown1ccc) == 0x1ccc, "");
 static_assert(offsetof(DrMan, unknown1cd0) == 0x1cd0, "");
 static_assert(offsetof(DrMan, unknown1cfc) == 0x1cfc, "");
+static_assert(offsetof(DrMan, unknown1d00) == 0x1d00, "");
+static_assert(offsetof(DrMan, unknown1d04) == 0x1d04, "");
+static_assert(offsetof(DrMan, unknown1d08) == 0x1d08, "");
+static_assert(offsetof(DrMan, unknown1d0c) == 0x1d0c, "");
+static_assert(offsetof(DrMan, unknown1d18) == 0x1d18, "");
 static_assert(offsetof(DrMan, m_gblIdx) == 0x1d20, "");
 static_assert(offsetof(DrMan, unknown1d28) == 0x1d28, "");
 static_assert(offsetof(DrMan, m_globalWind) == 0x1d30, "");
@@ -413,9 +443,12 @@ static_assert(offsetof(DrMan, unknown1d66) == 0x1d66, "");
 static_assert(offsetof(DrMan, unknown1d67) == 0x1d67, "");
 static_assert(offsetof(DrMan, unknown1d6c) == 0x1d6c, "");
 static_assert(offsetof(DrMan, unknown1d71) == 0x1d71, "");
+static_assert(offsetof(DrMan, unknown1d73) == 0x1d73, "");
 static_assert(offsetof(DrMan, unknown1d75) == 0x1d75, "");
 static_assert(offsetof(DrMan, unknown1d7a) == 0x1d7a, "");
 static_assert(offsetof(DrMan, unknown1d7b) == 0x1d7b, "");
+static_assert(offsetof(DrMan, unknown1d7d) == 0x1d7d, "");
+static_assert(offsetof(DrMan, unknown1d7e) == 0x1d7e, "");
 static_assert(offsetof(DrMan, unknown1d80) == 0x1d80, "");
 static_assert(offsetof(DrMan, unknown1d8c) == 0x1d8c, "");
 static_assert(offsetof(DrMan, unknown1d8d) == 0x1d8d, "");
@@ -426,7 +459,9 @@ static_assert(offsetof(DrMan, m_allMiddelTexStmChk) == 0x1d9c, "");
 static_assert(offsetof(DrMan, m_seamMapStmOk) == 0x1d9e, "");
 static_assert(offsetof(DrMan, unknown1da0) == 0x1da0, "");
 static_assert(offsetof(DrMan, unknown1da4) == 0x1da4, "");
+static_assert(offsetof(DrMan, unknown1dac) == 0x1dac, "");
 static_assert(offsetof(DrMan, unknown1dbc) == 0x1dbc, "");
+static_assert(offsetof(DrMan, unknown1dc0) == 0x1dc0, "");
 static_assert(offsetof(DrMan, unknown1de4) == 0x1de4, "");
 static_assert(offsetof(DrMan, unknown1de8) == 0x1de8, "");
 static_assert(offsetof(DrMan, unknown1e00) == 0x1e00, "");

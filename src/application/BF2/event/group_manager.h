@@ -2,6 +2,7 @@
 #include "event/group.h"
 #include "event/i_manager.h"
 #include "mm_math/mm_mat44.h"
+#include "mm_math/mm_vec3.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
@@ -25,6 +26,11 @@ public:
   void setDisp(bool isDisp);
   bool isDisp() const;
   virtual void OnEventProc(MSG_TYPE type);
+
+  // Inferred role: translation of the group matrix; original name unknown.
+  mm::Vec3 unknown001() const { return unknown450.unknown004(); }
+  // Inferred role: radius of the group; original name unknown.
+  f32 unknown002() const { return unknown490; }
 
 private:
   u32 unknown10;        // Inferred role: disp flags; original member name unknown.

@@ -191,7 +191,7 @@ void GfMenuObjPouch::PouchListener::reciveEvent(const ui::EventData &event, u32 
     u32 index = event.unknown08;
     if (unknown20->unknown38->inputChange(index)) {
       unknown20->unknown48 = index;
-      u16 item = GfPouchUtil::getPouch(0, index)->unknown04;
+      u16 item = GfPouchUtil::getPouch(0, index).unknown04;
       MenuItemInfo &info = unknown20->unknown50.get()->unknown0c;
       info.unknown00 = ItemType::ITEM_TYPE_UNKNOWN_10;
       info.unknown04 = item;

@@ -14,6 +14,8 @@
 #include "dr/dr_gpu_check_obj.h"
 #include "dr/dr_gpu_check_render.h"
 #include "dr/dr_ibl_man.h"
+#include "dr/dr_ini_sys.h"
+#include "dr/dr_irr_vol_man.h"
 #include "dr/dr_light_man.h"
 #include "dr/dr_mdl_base.h"
 #include "dr/dr_mdl_man.h"
@@ -34,6 +36,7 @@
 #include "dr/dr_mdo_zsort.h"
 #include "dr/dr_pixl_man.h"
 #include "dr/dr_pixl_mem_man.h"
+#include "dr/dr_pixl_post_man.h"
 #include "dr/dr_pixl_post_parm.h"
 #include "dr/dr_pixl_shadow_obj.h"
 #include "dr/dr_pixl_tile_parm.h"
@@ -41,6 +44,7 @@
 #include "dr/dr_res_etc_uniform_obj.h"
 #include "dr/dr_res_filter_data.h"
 #include "dr/dr_res_occ_uniform_obj.h"
+#include "dr/dr_shd_data_list.h"
 #include "dr/dr_shd_lgt_global_ibl.h"
 #include "dr/dr_shd_lgt_man.h"
 #include "dr/dr_shd_man.h"
@@ -48,7 +52,10 @@
 #include "grlib/cglib_ctl_shader.h"
 #include "grlib/cglib_debug.h"
 #include "grlib/cglib_manager.h"
+#include "grlib/cglib_state.h"
 #include "ml/critical_section.h"
+#include "ml/work_cpu.h"
+#include "mtl/mem_manager.h"
 
 // The game builds DrIniSys in this unit, before this file (0x71007c4958 to 0x71007c8450): DrMan::setSRGBMode (0x71007c750c) sits inside its block.
 #include "dr_ini_sys.cpp"
@@ -60,6 +67,135 @@ class DrGpuCheckBase;
 DrMan *DrMan::getIns() { return s_pTop; }
 
 DrMan *DrMan::get() { return s_pTop; }
+
+DrMan::~DrMan() {
+  WorkCpu::removeBackgroundListener(this);
+  unknown78->pixelEndMode();
+  if (unknown1d18 != nullptr) {
+    mtl::MemManager::deallocate(unknown1d18, 0, false);
+    unknown1d18 = nullptr;
+  }
+  if (m_gblIdx != nullptr) {
+    mtl::MemManager::deallocate(m_gblIdx, 0, false);
+    m_gblIdx = nullptr;
+  }
+  if (unknown88 != nullptr) {
+    delete unknown88;
+    unknown88 = nullptr;
+  }
+  if (unknown1e00 != nullptr) {
+    delete unknown1e00;
+    unknown1e00 = nullptr;
+  }
+  for (int i = 0; i < 4; i++) {
+    if (unknown100[i] != nullptr) {
+      delete unknown100[i];
+      unknown100[i] = nullptr;
+    }
+    if (unknown140[i] != nullptr) {
+      delete unknown140[i];
+      unknown140[i] = nullptr;
+    }
+    if (unknown160[i] != nullptr) {
+      delete unknown160[i];
+      unknown160[i] = nullptr;
+    }
+    if (unknownc0[i] != nullptr) {
+      delete unknownc0[i];
+      unknownc0[i] = nullptr;
+    }
+    if (unknowne0[i] != nullptr) {
+      delete unknowne0[i];
+      unknowne0[i] = nullptr;
+    }
+  }
+  if (unknown78 != nullptr) {
+    delete unknown78;
+    unknown78 = nullptr;
+  }
+  if (unknown90 != nullptr) {
+    delete unknown90;
+    unknown90 = nullptr;
+  }
+  for (int i = 0; i < 4; i++) {
+    if (unknown120[i] != nullptr) {
+      delete unknown120[i];
+      unknown120[i] = nullptr;
+    }
+  }
+  if (unknown180 != nullptr) {
+    delete unknown180;
+    unknown180 = nullptr;
+  }
+  if (unknown188 != nullptr) {
+    delete unknown188;
+    unknown188 = nullptr;
+  }
+  for (int i = 0; i < 4; i++) {
+    if (unknowna0[i] != nullptr) {
+      delete unknowna0[i];
+      unknowna0[i] = nullptr;
+    }
+  }
+  if (unknown80 != nullptr) {
+    delete unknown80;
+    unknown80 = nullptr;
+  }
+  if (unknown98 != nullptr) {
+    delete unknown98;
+    unknown98 = nullptr;
+  }
+  if (unknown5b0 != nullptr) {
+    delete unknown5b0;
+    unknown5b0 = nullptr;
+  }
+  if (unknown5c8 != nullptr) {
+    delete unknown5c8;
+    unknown5c8 = nullptr;
+  }
+  if (unknown70 != nullptr) {
+    delete unknown70;
+    unknown70 = nullptr;
+  }
+  if (unknown5d0 != nullptr) {
+    delete unknown5d0;
+    unknown5d0 = nullptr;
+  }
+  if (unknown5c0 != nullptr) {
+    delete unknown5c0;
+    unknown5c0 = nullptr;
+  }
+  if (unknown0c.isValid()) {
+    mtl::MemManager::erase(unknown0c);
+    unknown0c = mtl::ALLOC_HANDLE();
+  }
+  if (unknown10.isValid()) {
+    mtl::MemManager::erase(unknown10);
+    unknown10 = mtl::ALLOC_HANDLE();
+  }
+  if (unknown14.isValid()) {
+    mtl::MemManager::erase(unknown14);
+    unknown14 = mtl::ALLOC_HANDLE();
+  }
+  if (unknown18.isValid()) {
+    mtl::MemManager::erase(unknown18);
+    unknown18 = mtl::ALLOC_HANDLE();
+  }
+  if (unknown1c.isValid()) {
+    mtl::MemManager::erase(unknown1c);
+    unknown1c = mtl::ALLOC_HANDLE();
+  }
+  if (unknown20.isValid()) {
+    mtl::MemManager::erase(unknown20);
+    unknown20 = mtl::ALLOC_HANDLE();
+  }
+  if (unknown08.isValid()) {
+    mtl::MemManager::erase(unknown08);
+    unknown08 = mtl::ALLOC_HANDLE();
+  }
+  s_pTop = nullptr;
+  grlib::CGLibState::setPixelResidentArea(false, 0);
+}
 
 CriticalSection &DrMan::getCriticalSection() {
   static CriticalSection sect;
@@ -147,6 +283,107 @@ void DrMan::resetModelTexture(u32 index) {
   unknown438[stockIndex] |= 1 << index;
 }
 
+void DrMan::renderView(int view) {
+  unknown1c98 = view;
+  unknown5b8 = &unknown440[view];
+  unknown660[view].unknown560 = view;
+  s32 index = view;
+  if (unknown440[view].unknown38 & 2) {
+    index = 0;
+  }
+  unknown98->unknown100 = index;
+  unknown580 = unknowna0[view];
+  unknown588 = unknownc0[view];
+  unknown590 = unknowne0[view];
+  unknown598 = unknown100[view];
+  unknown5a0 = unknown140[view];
+  unknown78->setupCate(view);
+  unknown88->setupCate(view);
+  unknown80->setupCate(view);
+  renderViewBegin();
+  if (view != 0 && !unknown88->unknown230->unknown0c) {
+    return;
+  }
+  GBuffRender();
+  if (!unknown058()) {
+    unknown78->clearAccumBuffer();
+    if (!unknown1d7d && !unknown1d7e) {
+      if (unknown1dc0 == 1) {
+        unknown1dc0 = 0;
+      }
+      unknown78->fastDeferredRender();
+      unknown78->lastDeferredRender();
+      if (unknown78->unknown7f0->unknown180->unknown108 < 0.05f) {
+        unknown180->begin(DrPixlTileParm::TILE_TYPE_UNKNOWN_4);
+        unknown88->occRender(false);
+        unknown88->DepthCheckRender(false);
+        unknown180->end(DrPixlTileParm::TILE_TYPE_UNKNOWN_4);
+        unknown78->setMainRenderTarget();
+      }
+      if (unknown1dc0 == 2) {
+        unknown1dc0 = 0;
+      }
+    }
+  }
+  if ((!unknown1d7d || unknown1d7e) && !unknown058()) {
+    unknown78->renderSkyDome();
+    unknown5c0->begin();
+    unknown78->alphaRenderTarget();
+    unknown88->lightPrePassRender();
+    bool isRefractionMap = unknown88->unknown230->unknown08;
+    bool isHalfMap;
+    if (unknown78->unknown7f0->unknown180->unknown108 > 0.0f) {
+      isHalfMap = !unknown120[unknown1c98]->getSSRWithTrans();
+    } else {
+      isHalfMap = false;
+    }
+    if (isRefractionMap || isHalfMap) {
+      unknown78->renderRefractionMap(isRefractionMap, isHalfMap);
+    }
+    unknown78->setupGodRay();
+    setSkyGodRayRenderTarget();
+    unknown78->renderSkyGodRay();
+    setAlphaRenderTarget();
+    unknown88->alphaRender();
+    for (int i = 0; i < unknown658; i++) {
+      unknown5d8[i]->alphaRender(&unknown660[unknown1c98]);
+    }
+  }
+  if (!unknown058() && !unknown1d7d) {
+    for (int i = 0; i < unknown658; i++) {
+      unknown5d8[i]->lastRender(&unknown660[unknown1c98]);
+    }
+    bool isRefractionMap = unknown88->unknown230->unknown09;
+    bool isHalfMap;
+    if (unknown78->unknown7f0->unknown180->unknown108 > 0.0f) {
+      isHalfMap = unknown120[unknown1c98]->getSSRWithTrans();
+    } else {
+      isHalfMap = false;
+    }
+    if (isRefractionMap || isHalfMap) {
+      unknown78->renderRefractionMap(isRefractionMap, isHalfMap);
+    }
+    setAlphaRenderTarget();
+    unknown78->setMainViewPort();
+    unknown88->spAlphaRender();
+  }
+  unknown78->lastRender();
+  if (view == 0) {
+    captureRender(false);
+    if (unknown1e00 != nullptr) {
+      unknown1e00->finalRender(&unknown660[unknown1c98]);
+    }
+  }
+  for (int i = 0; i < unknown658; i++) {
+    unknown5d8[i]->finalRender(&unknown660[unknown1c98]);
+  }
+  unknown78->lastCapRender();
+  if (!unknown058() && view == 0) {
+    captureRender(true);
+  }
+  renderViewEnd();
+}
+
 void DrMan::renderEnd(int loop) {
   unknown78->setMainRenderTarget();
   unknown180->end(DrPixlTileParm::TILE_TYPE_UNKNOWN_0);
@@ -155,6 +392,67 @@ void DrMan::renderEnd(int loop) {
 void DrMan::renderViewBegin() {
   unknown5c0->begin();
   unknown78->renderBegin(unknown1c98);
+}
+
+void DrMan::GBuffRender() {
+  if (unknown1d7e) {
+    return;
+  }
+  if (!unknown058()) {
+    unknown78->fastRender();
+    unknown78->setMainViewPort();
+    unknown5c0->begin();
+    unknown78->selectGBuffRenderTarget();
+    unknown88->setupRender();
+    unknown5c0->beginZRender();
+    unknown78->selectZprepassRenderTarget();
+    unknown88->ZPrePassRender();
+    unknown5c0->endZRender();
+    unknown78->thicknessFirstBegin();
+    unknown5c0->beginThicknessRenderFirst();
+    unknown88->ThicknessRenderFirst();
+    unknown5c0->endThicknessRenderFirst();
+    unknown78->thicknessFirstEnd();
+    unknown5c0->beginThicknessRenderSecond();
+    unknown88->ThicknessRenderSecond();
+    unknown5c0->endThicknessRenderSecond();
+    unknown78->selectGBuffRenderTarget();
+    unknown5c0->begin();
+    unknown88->render();
+    if (unknown78->unknown7f0->unknown180->unknown108 >= 0.05f) {
+      bool isDepthDown = unknown78->unknown7f0->unknown180->isDepthDown();
+      unknown78->unknown7f0->unknown180->setDownDepth();
+      unknown78->unknown7f0->unknown180->renderDownDepth(false, false, false);
+      unknown78->renderDownBaseColor();
+      if (isDepthDown) {
+        unknown78->unknown7f0->unknown180->setDownDepth();
+      }
+    }
+    if (unknown78->unknown7f0->unknown180->unknown108 >= 0.05f) {
+      unknown180->begin(DrPixlTileParm::TILE_TYPE_UNKNOWN_4);
+      unknown88->occRender(true);
+      unknown88->DepthCheckRender(true);
+      unknown180->end(DrPixlTileParm::TILE_TYPE_UNKNOWN_4);
+      unknown78->setMainViewPort();
+      unknown78->resetRenderTarget();
+    }
+    if (unknown78->renderRefractionBegin()) {
+      unknown88->refractionRender();
+      unknown78->renderRefractionEnd();
+    }
+    unknown5c0->endRefractionRender();
+    unknown5c0->begin();
+    unknown78->resetRenderTarget();
+    unknown78->selectGBuffRenderTarget();
+    unknown78->refractionGBuffInvalidate();
+    unknown88->GBuffRender();
+    unknown5c0->endGBuffRender();
+    unknown78->endGBuffRenderTarget();
+  }
+  for (int i = 0; i < unknown658; i++) {
+    unknown5d8[i]->opacityRender(&unknown660[unknown1c98]);
+  }
+  unknown5c0->begin();
 }
 
 void DrMan::renderViewEnd() {
@@ -249,6 +547,61 @@ DrMdlMan::~DrMdlMan() {
     delete unknown020;
     unknown020 = nullptr;
   }
+}
+
+void DrMdlMan::deleteAll(int cate) {
+  unknown0a8[cate].unknown005();
+  unknown148[cate].unknown005();
+}
+
+void DrMdlMan::deleteAll() {
+  for (int i = 0; i < 2; i++) {
+    unknown1f8[i].unknown005();
+  }
+  unknown1e8.unknown005();
+  for (int i = 0; i < 4; i++) {
+    deleteAll(i);
+  }
+  for (int i = 0; i < 2; i++) {
+    unknown0e8[i].unknown005();
+  }
+  for (int i = 0; i < 2; i++) {
+    unknown188[i].unknown005();
+  }
+  for (int i = 0; i < 4; i++) {
+    unknown108[i].unknown005();
+    unknown1a8[i].unknown005();
+  }
+}
+
+void DrMdlMan::addDelList(int cate) {
+  unknown108[cate].unknown005();
+  unknown1a8[cate].unknown005();
+  DrMdlBase *mdl = unknown0e8[DrMan::s_nDblIdx].unknown00;
+  while (mdl != nullptr) {
+    DrMdlBase *next;
+    if (mdl->unknown1a == cate) {
+      mdl->resourceInit();
+      next = mdl->unknown10;
+      unknown0e8[DrMan::s_nDblIdx].unknown001(mdl);
+      unknown0a8[cate].unknown004(mdl);
+    } else {
+      next = mdl->unknown10;
+    }
+    mdl = next;
+  }
+  DrGpuCheckObj *check = unknown188[DrMan::s_nDblIdx].unknown00;
+  while (check != nullptr) {
+    // The game loads the type (0x71007cad08) before the next pointer (0x71007cad0c).
+    s32 type = check->unknown18;
+    DrGpuCheckObj *next = check->unknown10;
+    if (type == cate) {
+      unknown188[DrMan::s_nDblIdx].unknown001(check);
+      unknown148[cate].unknown004(check);
+    }
+    check = next;
+  }
+  unknown030->addObjList(cate);
 }
 
 int DrMdlMan::headerChek(const void *data) {
@@ -849,6 +1202,56 @@ void DrMan::setDblNowIdx(int index) {
 void DrMan::bkgHomeMenu(bool isOpen) {
   if (isOpen) {
     unknown1cc0 = true;
+  }
+}
+
+void DrMan::debugUpdate() {
+  int type = 0;
+  while (!unknown1dac[type]) {
+    type++;
+    if (type == 14) {
+      return;
+    }
+  }
+  unknown1dbc++;
+  if (unknown1dbc == 2) {
+    switch (type) {
+    case 0:
+    case 3: {
+      DrShdLgtMan *lgtMan = unknown80->unknown18;
+      DrShdDataList *dataList = unknown80->unknown00;
+      lgtMan->releaseLightShader();
+      dataList->releaseShader();
+      dataList->reloadShader(0);
+      lgtMan->reloadShader(0);
+      break;
+    }
+    case 6:
+      unknown70->reloadToonGradTexture();
+      break;
+    case 7:
+      unknown70->reloadToonRimTexture();
+      break;
+    case 8:
+      unknown70->reloadVolumeTexture();
+      break;
+    case 10:
+      unknown70->reloadIBLEnvTexture();
+      break;
+    case 11:
+      unknown70->reloadMirrorBallModel();
+      break;
+    case 12:
+      unknown70->reloadRainDropTexture();
+      break;
+    case 13:
+      unknown70->reloadFlagWaveTexture();
+      break;
+    }
+  }
+  if (unknown1dbc > 2) {
+    unknown1dac[type] = false;
+    unknown1dbc = 0;
   }
 }
 

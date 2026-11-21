@@ -44,7 +44,9 @@ public:
   };
 
   static SlopeGroundSolver *create(const Description &description, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose, IKGroundInterface *ground);
+  bool createImpl(const Description &description, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose, IKGroundInterface *ground);
 
+  SlopeGroundSolver();
   ~SlopeGroundSolver() override;
   FootPlacementIKSolver *createFootPlacementIK(IKFootIndex index, ParamAdapter &param, const char *footName, const char *kneeName, const char *hipName, bool isMirror);
   void setEnablePlacement(bool enable);

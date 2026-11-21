@@ -7,6 +7,7 @@
 #include "ui/event/ui_object_listener.h"
 
 namespace ui {
+struct EventData;
 class UICtrlRevolveSelect;
 class UISelectObjList;
 } // namespace ui
@@ -42,6 +43,7 @@ public:
   void update() override;
   void suspendInput();
   void resumeInput();
+  void receiveRevolveEvent(const ui::EventData &event, u32 handle);
   bool seqStartOpen();
   bool seqAppearPhase1();
   bool seqAppearPhase2();

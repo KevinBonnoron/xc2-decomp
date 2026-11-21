@@ -344,6 +344,15 @@ mm::Vec3 GfMenuModelView::getCameraPos(u32 index) {
   return mm::Vec3::zero;
 }
 
+void GfMenuModelView::setCameraPos(u32 index, const mm::Vec3 &position) {
+  if (index < unknown930.size()) {
+    fw::Camera *camera = unknown930[index].get();
+    if (camera != nullptr && camera->getRTTI()->isKindOf(&GfMenuModelViewCamera::m_rtti)) {
+      static_cast<GfMenuModelViewCamera *>(camera)->setPos(position);
+    }
+  }
+}
+
 mm::Vec3 GfMenuModelView::getCameraRot(u32 index) {
   if (index < unknown930.size()) {
     fw::Camera *camera = unknown930[index].get();
@@ -352,6 +361,15 @@ mm::Vec3 GfMenuModelView::getCameraRot(u32 index) {
     }
   }
   return mm::Vec3::zero;
+}
+
+void GfMenuModelView::setCameraRotY(u32 index, f32 rotation) {
+  if (index < unknown930.size()) {
+    fw::Camera *camera = unknown930[index].get();
+    if (camera != nullptr && camera->getRTTI()->isKindOf(&GfMenuModelViewCamera::m_rtti)) {
+      static_cast<GfMenuModelViewCamera *>(camera)->setRotY(rotation);
+    }
+  }
 }
 
 bool GfMenuModelView::playCameraMotion(const char *name, const mm::Vec3 &position, f32 rotation) {

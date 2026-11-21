@@ -6,10 +6,13 @@
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_map.h"
+#include "gf/field/gf_field_gimmick.h"
+#include "gf/game/gf_game_manager.h"
 #include "gf/gf_allocator.h"
 #include "gf/menu/gf_menu_map_info.h"
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_manager.h"
+#include "mtl/alloc_handle.h"
 
 namespace gf {
 
@@ -17,6 +20,39 @@ GfGmkLocatorAtlas::GfGmkLocatorAtlas(const CreateInfo *info) : unknown00(), unkn
   if (info != nullptr) {
     create(*info);
   }
+}
+
+void GfGmkLocatorAtlas::create(const CreateInfo &info) {
+  dispose();
+  unknown00 = info;
+  if (unknown30.size() == 0) {
+    createBdatInfos();
+  }
+  void (GfGmkLocatorAtlas::*seq)(f32) = &GfGmkLocatorAtlas::seqWaitToCreateCurMapGmkSet;
+  if (GfGameManager::getMapID() != info.unknown00) {
+    gmk::GmkSet::CreateInfo setInfo;
+    setInfo.unknown00 = getAllocator(ALLOCATOR_UNKNOWN_8)->getMemHandle();
+    setInfo.unknown04 = GfFieldGimmick::getBdatIdFrom_FLD_maplist_To_RSC_GmkSetList(info.unknown00);
+    setInfo.unknown24 = true;
+    unknown70.create(setInfo);
+    unknown60 = &unknown70;
+    seq = &GfGmkLocatorAtlas::seqWaitToCreateGmkSet;
+  }
+  unknown438 = seq;
+}
+
+void GfGmkLocatorAtlas::dispose() {
+  unknown438 = nullptr;
+  unknown410.destroy();
+  unknown70.dispose();
+  unknown60 = nullptr;
+  disposeBdatInfos();
+  // The game stores the default values of CreateInfo field by field (0x71002df540: no temporary on the stack);
+  // `unknown00 = CreateInfo();` builds the object in a stack copy first and compiles to 84 instructions against the game's 81.
+  unknown00.unknown00 = 0;
+  unknown00.unknown04 = 0;
+  unknown00.unknown10 = mm::Vec3(1.0e12f, 1.0e12f, 1.0e12f);
+  unknown00.unknown20 = mm::Vec3(-1.0e12f, -1.0e12f, -1.0e12f);
 }
 
 const GfGmkLocatorAtlas::BdatInfo *GfGmkLocatorAtlas::getBdatInfo(int id) const {
@@ -127,3 +163,5 @@ void GfGmkLocatorAtlas::seqWaitToCreateCurMapGmkSet(f32) {
 template void mm::mtl::Vector<gf::GfGmkLocatorAtlas::BdatInfo>::expand(size_t, size_t);
 template void mm::mtl::Vector<gf::GfGmkLocatorAtlas::BdatInfo>::extend(size_t, size_t);
 template void mm::mtl::Vector<gf::GfGmkLocatorAtlas::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gf::GfGmkLocators>::push_back(const gf::GfGmkLocators &);
+template void mm::mtl::Vector<gf::GfGmkLocators>::expand(size_t, size_t);

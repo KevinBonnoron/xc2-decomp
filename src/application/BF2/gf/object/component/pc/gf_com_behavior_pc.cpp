@@ -251,20 +251,34 @@ void GfComBehaviorPc::procMsgObjectGetVelocity(fw::MessageObject *sender, MsgObj
   }
 }
 
+// 1.0.0: 0x7100567b5c, 151 instructions; the game keeps the null test of the collider component (cbz x20 at 0x7100567c08, joining at the vector read), see GfComCollider::unknown001 and
+// UpdatableObject::getComponent. warpExternal reads the collider the same way.
+bool GfComBehaviorPc::warpBattle(GfComPropertyPc &property) {
+  GfComTransform *comTransform = mm::mtl::dynamicCast<GfComTransform>(unknown08->unknown38[GfComTransform::COMPONENT_INDEX]);
+  fw::Transform &frameTransform = comTransform->unknown10->unknown003();
+  frameTransform.unknown00 = property.unknown130.unknown00;
+  frameTransform.unknown10 = property.unknown130.unknown10;
+  fw::ColiObject *coli = unknown08->getComponent<GfComCollider>()->unknown001();
+  if (coli != nullptr) {
+    mm::Mat44 matrix;
+    frameTransform.unknown001(matrix);
+    coli->setInstantlyMatrix(matrix);
+  }
+  resetHeadColPosition(frameTransform);
+  return true;
+}
+
 bool GfComBehaviorPc::warpFallDead(GfComPropertyPc &property) { return warpNormal(property); }
 
 bool GfComBehaviorPc::warpExternal(GfComPropertyPc &property, const fw::Transform &transform) {
   onWarpBeforeTransform(property);
   GfComTransform *comTransform = mm::mtl::dynamicCast<GfComTransform>(unknown08->unknown38[GfComTransform::COMPONENT_INDEX]);
   comTransform->unknown10->unknown003() = transform;
-  {
-    const GfComCollider *collider = unknown08->getComponent<GfComCollider>();
+  fw::ColiObject *coli = unknown08->getComponent<GfComCollider>()->unknown001();
+  if (coli != nullptr) {
     mm::Mat44 matrix;
-    fw::ColiObject *coli = collider->unknown18[0];
-    if (coli != nullptr) {
-      transform.unknown001(matrix);
-      coli->setInstantlyMatrix(matrix);
-    }
+    transform.unknown001(matrix);
+    coli->setInstantlyMatrix(matrix);
   }
   resetHeadColPosition(transform);
   onWarpAfterTransform(property);
@@ -608,12 +622,9 @@ void GfComBehaviorPc::procMsgGameChangeTarget(fw::MessageObject *sender, MsgGame
 
 void GfComBehaviorPc::setup(const SetupInfo &info) {
   static_cast<GfObj *>(unknown08)->unknown110 |= 2;
-  // The first two statements of this block repeat GfComBehaviorSalvage::setup (0x710057e86c) and GfComBehaviorUI::setup (0x7100580990): the game inlines the same registration of the
-  // "system" callback in each, with no call to a shared function.
   GfComAsm *comAsm = unknown08->getComponent<GfComAsm>();
   if (comAsm != nullptr) {
-    comAsm->unknown70[0].unknown00 = "system";
-    comAsm->unknown70[0].unknown08.bind<GfComBehavior>(this, &GfComBehavior::callbackAnim);
+    unknown014(comAsm);
     comAsm->unknown70[1].unknown00 = pc::ASM_CB_NAME_FIELD;
     comAsm->unknown70[1].unknown08.bind<GfComBehaviorPc>(this, &GfComBehaviorPc::callbackField);
     comAsm->unknown70[2].unknown00 = pc::ASM_CB_NAME_BATTLE;

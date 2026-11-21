@@ -13,7 +13,8 @@ namespace gf {
 
 struct GfSetupParam;
 
-enum DWPAD {};
+// DWPAD_UNKNOWN_1: Inferred role: pad whose interrupt raises the event pause; original name unknown.
+enum DWPAD { DWPAD_UNKNOWN_1 = 1 };
 
 class GfGamePad : public mm::mtl::PtrSingleton<GfGamePad>, public IGfEvent {
 public:

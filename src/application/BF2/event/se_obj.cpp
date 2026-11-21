@@ -1,7 +1,11 @@
 #include "event/se_obj.h"
 
 #include "event/skip_manager.h"
+#include "fw/fw_debug.h"
+#include "ml/dev_graph.h"
+#include "mm_math/mm_col4.h"
 #include "mm_math/mm_math.h"
+#include "mm_math/mm_rect.h"
 #include "mm_mtl/singleton.h"
 
 namespace fw {
@@ -93,6 +97,43 @@ void SeObj::exec(f32 delta) {
   }
   stop();
   unknown08 |= FLAG_UNKNOWN_1;
+}
+
+void SeObj::draw(int index, int x, int y) {
+  if ((unknown08 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) != FLAG_UNKNOWN_0) {
+    return;
+  }
+  if ((unknown08 & FLAG_UNKNOWN_8) != 0) {
+    x = (ml::DevGraph::getRootWidth() - 310) / 2 + static_cast<int>(unknown180 * (ml::DevGraph::getRootWidth() - 330) * 0.5f);
+  }
+  fw::debug::drawCompareZ(false);
+  fw::debug::drawSquare2D(mm::Rect<s32>(x, y, 310, 60), mm::Col4(0.0f, 0.0f, 0.0f, 0.25f));
+  fw::debug::drawLineSquare2D(mm::Rect<s32>(x, y, 310, 60), mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
+  fw::debug::drawFont(x + 5, y + 5, mm::Col4::white, "SE[%d]", index);
+  // The game computes y + 20 (0x71000ea814) before getPlayTime and keeps it in a callee-saved register; inlined it is computed at its use.
+  int volumeLabelY = y + 20;
+  f32 playTime = 0.0f;
+  gf::GfSound::get()->getPlayTime(unknown0c, playTime);
+  f32 totalTime = 0.0f;
+  gf::GfSound::get()->getTotalTime(unknown0c, totalTime);
+  fw::debug::drawFont(x + 25, y + 25, mm::Col4::white, "  %s", unknown14.c_str());
+  int line = y + 40;
+  fw::debug::drawFont(x + 25, line, mm::Col4::white, "   %d / %d", static_cast<int>(playTime * 30.0f), static_cast<int>(totalTime * 30.0f));
+  // The game computes x + 150 (0x71000ea890) before getVolume and keeps it in a callee-saved register; inlined it is computed at its use.
+  int volumeX = x + 150;
+  f32 volume = gf::GfSound::get()->getVolume(unknown0c);
+  fw::debug::drawSquare2D(mm::Rect<s32>(x + 160, line, 8, static_cast<int>(volume * -30.0f)), mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
+  fw::debug::drawFont(x + 175, volumeLabelY, mm::Col4::white, "vol");
+  fw::debug::drawFont(volumeX, line, mm::Col4::white, "%.2f", volume);
+  if ((unknown08 & FLAG_UNKNOWN_3) != 0) {
+    fw::debug::drawFont(x + 220, line, mm::Col4::white, "life %d", static_cast<int>(unknown5c));
+  }
+  if ((unknown08 & FLAG_UNKNOWN_2) != 0) {
+    fw::debug::drawFont(x + 220, y + 23, mm::Col4::white, "PAUSE");
+  }
+  if ((unknown08 & FLAG_UNKNOWN_8) != 0) {
+    fw::debug::drawFont(x + 220, line, mm::Col4::white, "pan  %.2f", unknown180);
+  }
 }
 
 void SeObj::play(const char *name, f32 life, f32 fadeIn, f32 fadeOut, f32 volume) {

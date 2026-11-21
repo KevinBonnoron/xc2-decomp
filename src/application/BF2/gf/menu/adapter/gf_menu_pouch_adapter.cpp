@@ -42,8 +42,8 @@ GfMenuPouchAdapter *GfMenuPouchAdapter::create(u32 handle, u32 type, u16 pouchIn
 }
 
 bool GfMenuPouchAdapter::update_PouchRemainTime() {
-  SDataPouch *pouch = GfPouchUtil::getPouch(unknown64, unknown60);
-  if (pouch->unknown04 != 0) {
+  SDataPouch &pouch = GfPouchUtil::getPouch(unknown64, unknown60);
+  if (pouch.unknown04 != 0) {
     ui::uiDateTime time = {};
     u32 remain = unknown5c;
     time.unknown03_7 = remain / 3600;
@@ -99,9 +99,9 @@ void GfMenuPouchAdapter::update(const fw::UpdateInfo &info) {
       setChange();
     }
   }
-  SDataPouch *pouch = GfPouchUtil::getPouch(unknown64, unknown60);
-  if (unknown5c != pouch->unknown00) {
-    unknown5c = pouch->unknown00;
+  SDataPouch &pouch = GfPouchUtil::getPouch(unknown64, unknown60);
+  if (unknown5c != pouch.unknown00) {
+    unknown5c = pouch.unknown00;
     setChange();
   }
 

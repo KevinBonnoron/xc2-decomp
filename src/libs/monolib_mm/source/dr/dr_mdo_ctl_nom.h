@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "dr/dr_mdl_obj.h"
+#include "dr/dr_mdo_nom_clone.h"
 #include "dr/dr_res_mdo_lod_obj.h"
 #include "grlib/cglib_ctl_shader.h"
 #include "types.h"
@@ -52,7 +53,10 @@ static_assert(offsetof(unknown099, unknown18) == 0x18, "");
 static_assert(offsetof(unknown099, unknown20) == 0x20, "");
 static_assert(offsetof(unknown099, unknown28) == 0x28, "");
 
-class DrMdoCtlNom : public DrMdlObj {
+// Inferred base: DrMdoCtlNom::cloneMdlObj calls DrMdoNomClone::cloneMdlObj with its own address as the receiver and as the
+// source (0x710080faa4); the empty base shares the address of the object. The game builds DrMdoNomClone in the same unit
+// (0x710082c200), so the destructor of DrMdoCtlNom (0x7100804f44) does not call the empty destructor of the base.
+class DrMdoCtlNom : public DrMdlObj, public DrMdoNomClone {
 public:
   DrMdoCtlNom(const void *data, const char *path, DrMan *drMan, int viewNum);
   ~DrMdoCtlNom() override;
@@ -75,6 +79,7 @@ public:
   void calcMdlUniformBlock();
   void updateShdMdl();
   void updateMdlUniformBlock();
+  void updateNom();
   void callNomSetupRender();
   void callZSortNomZpreePassRender();
   void callZSortThicknessRenderFirst();

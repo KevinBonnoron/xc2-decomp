@@ -70,6 +70,7 @@ static_assert(offsetof(MEMIMAGE_HEAD, unknown18) == 0x18, "");
 static_assert(sizeof(MEMIMAGE_HEAD) == 0x18, "");
 
 enum AllocatorType {
+  ALLOCATOR_TYPE_UNKNOWN_0 = 0, // Inferred role: null allocator (NullAllocator::getType); original name unknown.
   ALLOCATOR_TYPE_UNKNOWN_1 = 1, // Inferred role: program; original name unknown.
   ALLOCATOR_TYPE_UNKNOWN_2 = 2, // Inferred role: resource; original name unknown.
 };

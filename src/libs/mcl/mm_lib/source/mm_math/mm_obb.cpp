@@ -1,11 +1,53 @@
 #include "mm_math/mm_obb.h"
 
+#include <math.h>
+
 #include "mm_math/mm_line.h"
 #include "mm_math/mm_line2.h"
 #include "mm_math/mm_plane.h"
 #include "mm_math/mm_sphere.h"
 
 namespace mm {
+
+bool Sphere::isCross(const Line2 &line) const {
+  Vec3 toStart = getPos() - line.start;
+  f32 normalX = toStart.y * line.direction.z - toStart.z * line.direction.y;
+  f32 normalY = toStart.z * line.direction.x - toStart.x * line.direction.z;
+  f32 normalZ = toStart.x * line.direction.y - toStart.y * line.direction.x;
+  if (sqrtf(normalX * normalX + normalY * normalY + normalZ * normalZ) > scale.x + 0.000001f) {
+    return false;
+  }
+  Vec3 toEnd = getPos() - line.end;
+  // getPos() is virtual and the game calls it twice for the end delta (blr at 0x71009b589c, the deltas kept in registers, then at 0x71009b58c8 for
+  // the dot product); with one shared delta vector the same lines of getCross give 224 instructions against the game's 239.
+  Vec3 toEnd2 = getPos() - line.end;
+  f32 along = toEnd2.x * line.direction.x + toEnd2.y * line.direction.y + toEnd2.z * line.direction.z;
+  f32 distance = sqrtf(toEnd.x * toEnd.x + toEnd.y * toEnd.y + toEnd.z * toEnd.z);
+  if (distance - along < 0.000001f) {
+    return false;
+  }
+  f32 height = sqrtf(distance * distance - along * along);
+  if (scale.x - height < 0.000001f) {
+    return false;
+  }
+  f32 half = sqrtf(scale.x * scale.x - height * height);
+  Vec3 point = line.direction * (along - half) + line.end;
+  Vec3 startOffset = line.start - getPos();
+  f32 startDistance = startOffset.x * startOffset.x + startOffset.y * startOffset.y + startOffset.z * startOffset.z;
+  bool startInner = startDistance < scale.x * scale.x;
+  Vec3 endOffset = line.end - getPos();
+  f32 endDistance = endOffset.x * endOffset.x + endOffset.y * endOffset.y + endOffset.z * endOffset.z;
+  bool endInner = endDistance < scale.x * scale.x;
+  if (startInner && endInner) {
+    return false;
+  }
+  if (startInner != endInner) {
+    return true;
+  }
+  Vec3 pointStart = line.start - point;
+  Vec3 pointEnd = line.end - point;
+  return pointEnd.x * pointStart.x + pointEnd.y * pointStart.y + pointEnd.z * pointStart.z <= 0.0f;
+}
 
 Obb::Obb() : matrix(Mat44::identity), size(1.0f, 1.0f, 1.0f) {}
 
@@ -86,6 +128,58 @@ bool Obb::isInner(const Sphere &sphere) const {
     }
   }
   return true;
+}
+
+u32 Sphere::getCross(Vec3 &first, Vec3 &second, const Line2 &line) const {
+  Vec3 toStart = getPos() - line.start;
+  f32 normalX = toStart.y * line.direction.z - toStart.z * line.direction.y;
+  f32 normalY = toStart.z * line.direction.x - toStart.x * line.direction.z;
+  f32 normalZ = toStart.x * line.direction.y - toStart.y * line.direction.x;
+  if (sqrtf(normalX * normalX + normalY * normalY + normalZ * normalZ) > scale.x + 0.000001f) {
+    return 0;
+  }
+  Vec3 toEnd = getPos() - line.end;
+  // Second getPos() call of the game (0x71009b7f08), see isCross.
+  Vec3 toEnd2 = getPos() - line.end;
+  f32 along = toEnd2.x * line.direction.x + toEnd2.y * line.direction.y + toEnd2.z * line.direction.z;
+  f32 distance = sqrtf(toEnd.x * toEnd.x + toEnd.y * toEnd.y + toEnd.z * toEnd.z);
+  if (distance - along < 0.000001f) {
+    return 0;
+  }
+  f32 height = sqrtf(distance * distance - along * along);
+  if (scale.x - height < 0.000001f) {
+    return 0;
+  }
+  f32 half = sqrtf(scale.x * scale.x - height * height);
+  f32 nearStep = along - half;
+  first.x = line.direction.x * nearStep;
+  first.y = line.direction.y * nearStep;
+  first.z = line.direction.z * nearStep;
+  first += line.end;
+  f32 farStep = along + half;
+  second.x = line.direction.x * farStep;
+  second.y = line.direction.y * farStep;
+  second.z = line.direction.z * farStep;
+  second += line.end;
+  Vec3 startOffset = line.start - getPos();
+  f32 startDistance = startOffset.x * startOffset.x + startOffset.y * startOffset.y + startOffset.z * startOffset.z;
+  bool startInner = startDistance < scale.x * scale.x;
+  Vec3 endOffset = line.end - getPos();
+  f32 endDistance = endOffset.x * endOffset.x + endOffset.y * endOffset.y + endOffset.z * endOffset.z;
+  bool endInner = endDistance < scale.x * scale.x;
+  if (startInner && endInner) {
+    return 0;
+  }
+  if (startInner && !endInner) {
+    return 1;
+  }
+  if (!startInner && endInner) {
+    first = second;
+    return 1;
+  }
+  Vec3 firstStart = line.start - first;
+  Vec3 firstEnd = line.end - first;
+  return firstStart.x * firstEnd.x + firstStart.y * firstEnd.y + firstStart.z * firstEnd.z > 0.0f ? 0 : 2;
 }
 
 } // namespace mm

@@ -23,6 +23,8 @@ public:
     UICtrlSimple<1> unknown10;       // Inferred role: interpolation; original member name unknown.
   };
 
+  static UICtrlRadarGraph *create(u32 object, const Setting &setting);
+
   UICtrlRadarGraph(u32 object);
   virtual ~UICtrlRadarGraph();
   virtual void update(const fw::UpdateInfo &info);

@@ -32,8 +32,19 @@ public:
     u16 unknown0c;         // Inferred role: mount object2; original member name unknown.
   };
 
+  // Layout evidence: GmkNpcIdInfo::create (0x71005f7068) copies these 16 bytes as two 64-bit words to the start of the info, and
+  // GmkNpcManager::addGmkNpc (0x71005f84b4) stores the npc id (a halfword) and the bdat (a word) separately into it.
+  struct CreateInfo {
+    CreateInfo() : unknown00(0), unknown08(nullptr) {}
+
+    u16 unknown00; // Inferred role: npc id; original member name unknown.
+    u8 *unknown08; // Inferred role: bdat; original member name unknown.
+  };
+
+  GmkNpcIdInfo(const CreateInfo *info = nullptr);
   ~GmkNpcIdInfo() { dispose(); }
 
+  void create(const CreateInfo &info);
   void dispose();
   void update(f32 deltaTime, bool isCreate);
   void createGobInst();
@@ -44,10 +55,9 @@ public:
   void unknown001();
 
   // Inferred helper: checks that the npc id info has been created; original name unknown.
-  bool unknown002() const { return unknown00 != 0 && unknown08 != nullptr && unknown10 != nullptr; }
+  bool unknown002() const { return unknown00.unknown00 != 0 && unknown00.unknown08 != nullptr && unknown10 != nullptr; }
 
-  u16 unknown00;                              // Inferred role: npc id; original member name unknown.
-  u8 *unknown08;                              // Inferred role: bdat; original member name unknown.
+  CreateInfo unknown00;                       // Inferred role: create info; original member name unknown.
   mm::mtl::IntrusiveList<AGmkNpc> *unknown10; // Inferred role: npcs; original member name unknown.
   AGmkNpc *unknown18;                         // Inferred role: active npc; original member name unknown.
   BdatInfo unknown20;                         // Inferred role: bdat info; original member name unknown.
@@ -55,8 +65,8 @@ public:
 };
 
 static_assert(sizeof(GmkNpcIdInfo::BdatInfo) == 0xe, "");
-static_assert(offsetof(GmkNpcIdInfo, unknown08) == 0x08, "");
 static_assert(offsetof(GmkNpcIdInfo, unknown10) == 0x10, "");
+static_assert(sizeof(GmkNpcIdInfo::CreateInfo) == 0x10, "");
 static_assert(offsetof(GmkNpcIdInfo, unknown18) == 0x18, "");
 static_assert(offsetof(GmkNpcIdInfo, unknown20) == 0x20, "");
 static_assert(offsetof(GmkNpcIdInfo, unknown30) == 0x30, "");

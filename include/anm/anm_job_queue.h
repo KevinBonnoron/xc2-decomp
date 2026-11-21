@@ -29,6 +29,10 @@ public:
 
   explicit JobQueue(mm::mtl::IAllocator *allocator) : Queue(allocator, 128) { memset(m_funcs, 0, sizeof(m_funcs)); }
 
+  // Xenoblade Chronicles: Definitive Edition has _ZNK3anm8JobQueue11getJobCountEv at 0x7100918220 (ldr w0, [x0, #0x10]; ret, a
+  // 32-bit read of the queue size). Xenoblade 2 has no symbol for it, so it is inline here and used by ThreadPool::threadFunc.
+  u32 getJobCount() const { return static_cast<u32>(size()); }
+
   // __LINE__ must be 37 as in the original header: it is the line argument of the assert.
 #line 36
   void registerJobExecuter(u32 index, void (*function)(Job &)) {

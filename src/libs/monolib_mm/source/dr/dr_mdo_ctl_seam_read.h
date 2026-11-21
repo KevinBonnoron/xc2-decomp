@@ -1,8 +1,11 @@
 #pragma once
 
+#include "dr/dr_man.h"
 #include "dr/dr_mdo_ctl_seam_light.h"
+#include "types.h"
 
 namespace ml {
+class DrResMdoSeamMemObj;
 struct _wkSeamReadCall;
 struct _wkSeamReadWait;
 
@@ -41,6 +44,17 @@ public:
   void waitMpfEtcStream(_wkSeamReadCall *call, bool isRead);
   void waitMpfPoliStream(_wkSeamReadCall *call, bool isRead);
   void waitLightStream(_wkSeamReadCall *call, bool isRead);
+
+  // Inferred helper: the code of a read that is not complete yet: sets flag 0x10000 and, when the DrMan level is above `level`, flag 0x400;
+  // the statements the game repeats in the wait*Stream functions that have no other statement in between; original name unknown.
+  void unknown006(int level) {
+    unknownc7c |= 0x10000;
+    if (m_drMan->unknown1cfc > level) {
+      unknownc7c |= 0x400;
+    }
+  }
+
+  template <typename T> void unknown007(DrResMdoSeamMemObj *mem, void *work, const T &size, s16 kind, const int &handle, const _wkSeamReadWait *wait);
 };
 
 } // namespace ml

@@ -188,9 +188,10 @@ public:
   mm::Col3 unknownb0; // Inferred role: color; original member name unknown.
   f32 unknownbc;      // Inferred role: angle; original member name unknown.
   f32 m_size;
-  u8 _c4[0xc8 - 0xc4];
+  bool unknownc4; // Inferred role: spe enable, set by the constructors; original member name unknown.
+  u8 _c5[0xc8 - 0xc5];
   f32 unknownc8; // Inferred role: color intensity; original member name unknown.
-  u8 _cc[0xd0 - 0xcc];
+  f32 unknowncc; // Inferred role: set to 1.0f by the constructors; original member name unknown.
   f32 unknownd0; // Inferred role: light value set from the spot data; original member name unknown.
   f32 unknownd4; // Inferred role: spe intensity; original member name unknown.
   f32 unknownd8; // Inferred role: light value set from the spot data, 4.0 by default; original member name unknown.
@@ -203,6 +204,8 @@ public:
 static_assert(offsetof(DrLightObjSpt, m_pos) == 0x70, "");
 static_assert(offsetof(DrLightObjSpt, unknown90) == 0x90, "");
 static_assert(offsetof(DrLightObjSpt, unknownb0) == 0xb0, "");
+static_assert(offsetof(DrLightObjSpt, unknownc4) == 0xc4, "");
+static_assert(offsetof(DrLightObjSpt, unknowncc) == 0xcc, "");
 static_assert(offsetof(DrLightObjSpt, unknownbc) == 0xbc, "");
 static_assert(offsetof(DrLightObjSpt, unknownc8) == 0xc8, "");
 static_assert(offsetof(DrLightObjSpt, unknownd0) == 0xd0, "");

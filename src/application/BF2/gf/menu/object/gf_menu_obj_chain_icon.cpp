@@ -1,8 +1,17 @@
 #include "gf/menu/object/gf_menu_obj_chain_icon.h"
 
+#include "bdat.h"
+#include "fw/fw_transform.h"
+#include "gf/data/gf_bdat_id.h"
+#include "gf/data/gf_data_bdat.h"
+#include "gf/data/gf_object_type.h"
 #include "gf/gf_allocator.h"
+#include "gf/menu/adapter/gf_menu_field_pos_adapter.h"
+#include "gf/menu/gf_menu_bdat.h"
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
+#include "gf/object/gf_obj_acc.h"
+#include "mm_math/mm_vec3.h"
 #include "ui/event/ui_event_data.h"
 #include "ui/event/ui_event_manager.h"
 #include "ui/ui_object_acc.h"
@@ -43,6 +52,49 @@ void GfMenuObjChainIcon::removeObject(ui::UIObjectAcc acc) {
   GfMenuManyObjects::remove<ChainIconInfo>(GfMenuManyObjects::unknown001_2, acc.unknown10);
   acc.setDisp(false);
   acc.setTerm();
+}
+
+u32 GfMenuObjChainIcon::open(const OpenParam &param) {
+  if (GfMenuObjUtil::isMenuObjectFull()) {
+    return 0;
+  }
+  u32 object = getAttachedObject(unknown001);
+  if (!ui::UIObjectAcc(object).isValid()) {
+    return 0;
+  }
+  if (ui::UIObjectAcc(object).isTerm()) {
+    return 0;
+  }
+  u32 handle = ui::UIObjectAcc(object).duplicateChild("LAY_chain_icon_root");
+  if (!ui::UIObjectAcc(handle).isValid()) {
+    return 0;
+  }
+  {
+    GfObjAcc objAcc(param.unknown00);
+    if (!objAcc.isValid()) {
+      return 0;
+    }
+    if (objAcc.getType() != OBJECT_TYPE_PC) {
+      return 0;
+    }
+    // The id is normalised before the offset is declared: with the select inside the call (`offsetId == 0 ? 1 : offsetId`, u16 or int) the offset's x and y
+    // zeroing stores sit together and merge into one 64-bit store, whereas the game (0x71004282d8) stores x alone before the `tst` and pairs y and z after it.
+    int offsetId = Bdat::getVal(GfDataBdat::getFP(BDAT_CHR_DR), "OffsetID", objAcc.getBdatId()).valueU16;
+    if (offsetId == 0) {
+      offsetId = 1;
+    }
+    MenuOffset offset;
+    GfMenuBdat::getMenuOffset(offsetId, offset);
+    mm::Vec3 position = objAcc.getWorldTransform().unknown00;
+    position.y += offset.unknown00.y - 1.0f;
+    GfMenuFieldPosAdapter::create(ui::UIObjectAcc(handle).searchChild("LAY_chain_icon"), position);
+  }
+  ui::EventData event;
+  event.unknown00 = GfMenuTypes::unknown003_33;
+  event.unknown08_u16 = ui::UIObjectAcc(handle).getDuplicateIndex();
+  sendEvent(object, event, 0.0f);
+  GfMenuManyObjects::unknown003(GfMenuManyObjects::unknown001_2, ChainIconInfo(handle), close);
+  return handle;
 }
 
 void GfMenuObjChainIcon::close(u32 handle) {

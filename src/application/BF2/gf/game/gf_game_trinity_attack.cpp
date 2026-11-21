@@ -66,6 +66,18 @@ void GfTrinityAttack::createBlade() {
   m_blade = GfObjFactory::createBlade(param);
 }
 
+void GfTrinityAttack::startAttack() {
+  m_state = 1;
+  unknown10.bind(this, &GfTrinityAttack::updateForSetup);
+  createBlade();
+  GF_OBJ_HANDLE *leader = GfGameManager::getPartyLeaderDriver();
+  GF_MOUNT_HANDLE *mount = GfObjUtil::getMountHandle(m_blade, GFATTACH_UNKNOWN_3);
+  if (mount != reinterpret_cast<GF_MOUNT_HANDLE *>(-1)) {
+    GfMountManager::removeMountHandle(leader, GFATTACH_UNKNOWN_3);
+    GfMountManager::addMountHandle(mount, leader);
+  }
+}
+
 bool GfTrinityAttack::isEnableAttackMember() const { return getBladeId() != 0; }
 
 bool GfTrinityAttack::isLoading() const {

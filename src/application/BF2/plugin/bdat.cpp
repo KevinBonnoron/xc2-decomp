@@ -61,9 +61,9 @@ struct unknown003 {
 struct unknown004 {
   u8 unknown00;  // Inferred role: kind; original member name unknown.
   u8 unknown01;  // Inferred role: value type, or shift of a flag; original member name unknown.
-  u16 unknown02; // Inferred role: offset in the row; original member name unknown.
-  u16 unknown04; // Inferred role: array count; original member name unknown.
-  u16 unknown06; // Inferred role: unused here; original member name unknown.
+  u16 unknown02; // Inferred role: offset in the row, or the first half of the 32 bit mask of a flag (read as a u32 at 0x02 by getShiftMask); original member name unknown.
+  u16 unknown04; // Inferred role: array count, or the second half of the mask of a flag; original member name unknown.
+  u16 unknown06; // Inferred role: offset of the parent member of a flag, compared by getShiftMask; unused otherwise; original member name unknown.
 };
 #pragma pack(pop)
 
@@ -100,6 +100,22 @@ u8 *unknown006(u8 *bin, u32 index) { return bin + *reinterpret_cast<u32 *>(bin +
 } // namespace
 
 void *m_pBin[BDAT_FILE_MAX];
+
+// Inferred type: object of the function static of getInstance (0x71006b4518; object 0x71014ae9d0, guard 0x71014ae9d8). The game takes the guard with
+// ldarb, calls __cxa_guard_acquire and __cxa_guard_release, and never touches the object: no store, no member access, and no caller of getInstance
+// reads it (no bl or b to it in the executable), so its real type and constructor are unknown (original name unknown). The only evidence is the
+// guard, which needs a constructor that clang cannot fold into constant data. Forms tried: a plain `static bool` (no guard: 3 instructions), a
+// defaulted constructor (constant data: 3), a bool initialised from a runtime value (24 instructions, a store the game does not have); an empty
+// user constructor gives the game's 17 instructions (a type with one pointer member and the same constructor also matches, but no access shows a
+// member).
+struct unknown007 {
+  unknown007() {}
+};
+
+unknown007 *getInstance() {
+  static unknown007 instance;
+  return &instance;
+}
 
 void init() {
   for (int i = 0; i < BDAT_FILE_MAX; i++) {
@@ -319,6 +335,47 @@ uVal getArrayVal(unsigned char *bdat, const char *name, int id, int index) {
   return value;
 }
 
+uVal getArrayVal(unsigned char *pBdat, unsigned char *pVarName, int id, int index) {
+#line 243
+  assert(pVarName != 0L);
+#line 246
+  assert(pBdat != 0L);
+  if (calcId(pBdat, &id)) {
+    return getArray(pBdat, pVarName, id, index);
+  }
+  uVal value;
+  clearVal(&value);
+  return value;
+}
+
+uVal getArray(unsigned char *bdat, unsigned char *member, int row, int index) {
+  unknown004 *var = reinterpret_cast<unknown004 *>(bdat + reinterpret_cast<unknown003 *>(member)->unknown00);
+  if (var->unknown00 == 2 && index < var->unknown04) {
+    unknown002 *header = reinterpret_cast<unknown002 *>(bdat);
+    unsigned char *data = bdat + header->unknown0e + header->unknown08 * row + var->unknown02;
+    switch (var->unknown01) {
+    case 1:
+    case 4:
+      data += index;
+      break;
+    case 2:
+    case 5:
+      data += index * 2;
+      break;
+    case 3:
+    case 6:
+    case 7:
+    case 8:
+      data += index * 4;
+      break;
+    }
+    return getVarVal(bdat, data, var->unknown01);
+  }
+  uVal value;
+  clearVal(&value);
+  return value;
+}
+
 uVal getArrayVal(unsigned char *bdat, int column, int id, int index) { return getArrayVal(bdat, getMember(bdat, column), id, index); }
 
 int getArrayCount(unsigned char *bdat, const char *name) {
@@ -394,9 +451,66 @@ int getFlagVal(unsigned char *bdat, const char *name, int id, const char *flag) 
 
 void errFlag(unsigned char *bdat, const char *name, const char *flag) {}
 
+int getFlagVal(unsigned char *pBdat, unsigned char *pVarName, int id, unsigned char *pFlagName) {
+#line 376
+  assert(pBdat != 0L);
+#line 377
+  assert(pVarName != 0L);
+#line 378
+  assert(pFlagName != 0L);
+  if (!calcId(pBdat, &id)) {
+    return 0;
+  }
+  unknown004 *flag = reinterpret_cast<unknown004 *>(pBdat + reinterpret_cast<unknown003 *>(pFlagName)->unknown00);
+  if (flag->unknown00 != 3) {
+    return 0;
+  }
+  if (flag->unknown06 != static_cast<u16>(pVarName - pBdat)) {
+    return 0;
+  }
+  unknown004 *parent = reinterpret_cast<unknown004 *>(pBdat + reinterpret_cast<unknown003 *>(pBdat + flag->unknown06)->unknown00);
+  // The game keeps one inlined copy of getVar per mask of the parent type (0x71006b582c, 171 instructions). An if/else chain on the type merges two of
+  // the copies (137 instructions); a switch with the case 1 written before the case 2 keeps the three and the game's order of tests.
+  u32 value;
+  switch (parent->unknown01) {
+  case 1:
+    value = getVar(pBdat, pVarName, id).valueU32 & 0xff;
+    break;
+  case 2:
+    value = getVar(pBdat, pVarName, id).valueU32 & 0xffff;
+    break;
+  default:
+    value = getVar(pBdat, pVarName, id).valueU32;
+    break;
+  }
+  // The mask is read as one unaligned 32-bit word at 0x02 (`ldur w10, [x8, #2]` at 0x71006b59e4), like getShiftMask (decision 38 of 2026-11-14,
+  // blob read); `unknown02 | (unknown04 << 16)` gives two 16-bit loads (173 instructions).
+  return (*reinterpret_cast<u32 *>(&flag->unknown02) & value) >> flag->unknown01;
+}
+
 void errFlagParent(unsigned char *bdat, const char *name, const char *flag) {}
 
 int getFlagVal(unsigned char *bdat, int column, int id, int flag) { return getFlagVal(bdat, getMember(bdat, column), id, getMember(bdat, flag)); }
+
+bool getShiftMask(unsigned char *pBdat, const char *name, const char *flag, int *shift, u32 *mask) {
+#line 422
+  assert(pBdat != 0L);
+  unsigned char *member = getMember(pBdat, name);
+  if (member == nullptr) {
+    return false;
+  }
+  unsigned char *flagMember = getMember(pBdat, flag);
+  if (flagMember == nullptr) {
+    return false;
+  }
+  unknown004 *var = reinterpret_cast<unknown004 *>(pBdat + reinterpret_cast<unknown003 *>(flagMember)->unknown00);
+  if (var->unknown00 == 3 && var->unknown06 == static_cast<u16>(member - pBdat)) {
+    *shift = var->unknown01;
+    *mask = *reinterpret_cast<u32 *>(&var->unknown02);
+    return true;
+  }
+  return false;
+}
 
 bool getValCheckSub(unsigned char *bdat, unsigned char *member, int type) {
   if (member == nullptr) {

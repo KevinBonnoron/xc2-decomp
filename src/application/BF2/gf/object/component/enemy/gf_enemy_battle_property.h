@@ -21,6 +21,7 @@ public:
   GfEnemyBattleProperty();
   void Initialize(const GfComPropertyEnemy &property);
   void Finalize(const GfComPropertyEnemy &property);
+  void Update(const GfComPropertyEnemy &property);
   const btl::CharacterParameter *GetCharacterParameterConst() const;
   const btl::EnemyParameter *GetEnemyParameterConst() const;
   f32 GetReturnHomeDistance() const;

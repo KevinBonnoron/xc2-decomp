@@ -3,17 +3,20 @@
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/gf_allocator.h"
-#include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/object/gf_menu_obj_char_select.h"
 #include "gf/menu/object/gf_menu_obj_operation_info.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
+#include "mm_math/mm_vec2.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/reference_object.h"
 #include "types.h"
+#include "ui/ctrl/ui_ctrl_cursor_select.h"
+#include "ui/ctrl/ui_ctrl_curve.h"
 #include "ui/event/ui_event_data.h"
 #include "ui/event/ui_event_manager.h"
 #include "ui/plugin/ui_object_dock_plugin.h"
+#include "ui/ui_manager.h"
 #include "ui/ui_object_acc.h"
 
 namespace gf {
@@ -22,6 +25,15 @@ namespace gf {
 constexpr u32 unknown001 = 0x71;
 // Inferred role: ui event type; original name unknown.
 constexpr u16 unknown002 = 0x101;
+
+// Inferred role: layer and condition of a submenu entry, indexed by the selected submenu; original type name unknown.
+struct unknown003 {
+  u32 unknown00; // Inferred role: menu layer id; original member name unknown.
+  u32 unknown04; // Inferred role: menu condition id; original member name unknown.
+};
+
+// Inferred role: the three submenus (0x7100f6ffec); original name unknown.
+static const unknown003 unknown004[3] = {{0x2e, 0x12}, {0x2f, 0x13}, {0x30, 0x14}};
 
 GfMenuObjHanaSubmenu::GfMenuObjHanaSubmenu(u32 handle) : GfMenuObject(handle), unknown28(nullptr), unknown30(0) {}
 
@@ -112,6 +124,103 @@ void GfMenuObjHanaSubmenu::MainListener::reciveEvent(const ui::EventData &event,
     GfMenuObjOperationInfo::setGuideText(10, 0);
     GfMenuObjCharSelect::dispOnChar(1);
     unknown163(acc.searchChild("LAY_sub_menu"), GfMenuTypes::unknown003_258, 0);
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
+void GfMenuObjHanaSubmenu::SubmenuListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1: {
+    setupSubmenu(acc);
+    GfMenuObjUtil::CursorParam param;
+    param.unknown00 = ui::UIObjectAcc(handle).getParentHandle();
+    param.unknown04 = owner.searchChild("IMG_sub_cursor");
+    // Redundant store the game holds (P3): the constructor already cleared the cursor type at offset 0x1a of the parameter, and the game clears it again
+    // after the search of IMG_sub_cursor (0x71004759b4: strh wzr).
+    param.unknown1a = 0;
+    param.unknown08 = "LAY_sub_menu_bl@%02d";
+    // The dock type of the cursor setting (offset 0x38 of the parameter, default 1) is set to 0 (0x71004759b8: strh wzr); the default store is then dead.
+    param.unknown20.unknown18 = 0;
+    unknown20->unknown28 = GfMenuObjUtil::createCursor(param);
+    unknown20->unknown28->open(0);
+    ui::UIObjectAcc icon(acc.searchChild("IMG_sub_menu_bl_icon@01"));
+    mm::Vec2 scale;
+    icon.getScale(scale);
+    unknown20->unknown34 = scale.x;
+    unknown20->unknown38 = scale.x * 1.5f;
+    GfMenuObject::setupInputSelection(handle, 0, 3);
+    GfMenuObject::enableInput(handle);
+    break;
+  }
+  case 6: {
+    int current = event.unknown08;
+    int previous = event.unknown0c;
+    unknown20->unknown28->inputChange(current);
+    mm::mtl::FixStr<32> currentBase;
+    mm::mtl::FixStr<32> previousBase;
+    mm::mtl::FixStr<32> currentIcon;
+    mm::mtl::FixStr<32> previousIcon;
+    currentBase.format("IMG_sub_menu_bl_bg@%02d", current + 1);
+    previousBase.format("IMG_sub_menu_bl_bg@%02d", previous + 1);
+    currentIcon.format("IMG_sub_menu_bl_icon@%02d", current + 1);
+    previousIcon.format("IMG_sub_menu_bl_icon@%02d", previous + 1);
+    if (current >= 0) {
+      GfMenuObjUtil::CtrlParam param;
+      param.unknown08 = 0x80000;
+      param.unknown0c = ui::CURVE_TYPE_LINEAR;
+      param.unknown00 = 0.2f;
+      param.unknown2c = unknown20->unknown38;
+      GfMenuObjUtil::startCtrl(acc.searchChild(currentIcon.c_str()), param, nullptr);
+      ui::UIObjectAcc base(acc.searchChild(currentBase.c_str()));
+      base.startAnimation("sellect", false);
+      unknown20->unknown30 = current;
+    }
+    if (previous >= 0 && current != previous) {
+      GfMenuObjUtil::CtrlParam param;
+      param.unknown08 = 0x80000;
+      param.unknown0c = ui::CURVE_TYPE_LINEAR;
+      param.unknown00 = 0.2f;
+      param.unknown2c = unknown20->unknown34;
+      GfMenuObjUtil::startCtrl(acc.searchChild(previousIcon.c_str()), param, nullptr);
+      ui::UIObjectAcc base(acc.searchChild(previousBase.c_str()));
+      base.startAnimation("idol", false);
+    }
+    break;
+  }
+  case 8:
+    if (event.unknown0c == 1) {
+      u32 index = unknown20->unknown30;
+      if (GfMenuObjUtil::getMenuCondition(unknown004[index].unknown04)) {
+        GfMenuObjOperationInfo::remove(owner.searchChild("LAY_sub_menu"), 0, 0, 0);
+        ui::EventData end;
+        end.unknown00 = GfMenuTypes::unknown003_259;
+        ui::UIManager::get()->requestObjectEvent(handle, end, 0.0f);
+        if (unknown20->unknown30 < 3) {
+          GfMenuObjCharSelect::dispOffChar(1);
+          GfMenuObject::changeFSSubLayer(owner.unknown10, 3, GfMenuObject::getMenuLayerID(unknown004[index].unknown00), true);
+        }
+      }
+    } else if (event.unknown0c == 2) {
+      // The game calls searchChild before it loads the UIManager instance (0x7100475624).
+      u32 main = owner.searchChild("LAY_main");
+      ui::EventData end;
+      end.unknown00 = GfMenuTypes::unknown003_34;
+      ui::UIManager::get()->requestObjectEvent(main, end, 0.0f);
+      GfMenuObject::disableInput(handle);
+    }
+    break;
+  case GfMenuTypes::unknown003_258:
+    acc.setDisp(true);
+    GfMenuObject::enableInput(handle);
+    break;
+  case GfMenuTypes::unknown003_259:
+    acc.setDisp(false);
+    GfMenuObject::disableInput(handle);
     break;
   default:
     ui::UIObjectListener::reciveEvent(event, handle);

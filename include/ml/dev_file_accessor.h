@@ -6,7 +6,7 @@ class ALLOC_HANDLE;
 } // namespace mtl
 
 namespace mm {
-union VAL64;
+struct VAL64;
 } // namespace mm
 
 namespace ml {

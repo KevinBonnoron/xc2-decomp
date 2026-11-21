@@ -6,9 +6,9 @@
 namespace ml {
 
 // Inferred role: g buff debug range; original type name unknown.
+// Evidence: DrPixlMan::debugGBuffRender reads the two values of an entry through one loop index, the scene accessor writes them as min and max.
 struct unknown038 {
-  f32 unknown00; // Inferred role: min; original member name unknown.
-  f32 unknown04; // Inferred role: max; original member name unknown.
+  f32 unknown00[2]; // Inferred role: min and max; original member name unknown.
 };
 
 static_assert(sizeof(unknown038) == 0x8, "");
@@ -199,9 +199,18 @@ public:
   bool unknown174; // Inferred role: tssao; original member name unknown.
   // Inferred role: tssao debug render; original member name unknown. Evidence: byte cleared by DrPixlPostParm::reset (strb at 0x710085bf98).
   bool unknown175;
-  u8 _0176[0x0188 - 0x0176];
+  u8 _0176[0x0178 - 0x0176];
+  // Inferred role: tssao ssao radius scale, first factor of the gParam uniform of DrPixlPostObjTSSAO::passQuaterNormal (0x71008c1ea0) and passSSAO
+  // (0x71008c2388), squared in its second value; original member name unknown.
+  f32 unknown178;
+  // Inferred role: tssao upscale first parameter, first value of the gParam uniform written by DrPixlPostObjTSSAO::passUpScaleToMiddle
+  // (0x71008c4544) and passUpScaleToFull (0x71008c485c); original member name unknown.
+  f32 unknown17c;
+  f32 unknown180; // Inferred role: tssao ssao strength, times 100 in the gParam2 uniform of passQuaterNormal and passSSAO; original member name unknown.
+  f32 unknown184; // Inferred role: tssao upscale fourth parameter, last value of the same gParam uniform; original member name unknown.
   f32 unknown188; // Inferred role: tssao post blur strength; original member name unknown.
-  u8 _018c[0x0194 - 0x018c];
+  u8 _018c[0x0190 - 0x018c];
+  f32 unknown190;  // Inferred role: tssao upscale blend, the third gParam value is 1 - this clamped to [0, 1]; original member name unknown.
   bool unknown194; // Inferred role: ssao; original member name unknown.
   u8 _0195[0x019c - 0x0195];
   f32 unknown19c; // Inferred role: ssao blur str; original member name unknown.
@@ -222,9 +231,9 @@ public:
   u8 _01f4[0x01fc - 0x01f4];
   bool m_motBlur2;
   u8 _01fd[0x0200 - 0x01fd];
-  f32 unknown200; // Inferred role: first component of the motion blur 2 dpch vector (DrPixlPostObjMotionBlur2::calcBlurWork, 0x71008bc294); original member name unknown.
-  f32 unknown204; // Inferred role: fourth component of the motion blur 2 dpch vector (the game loads it with unknown200 as one 64 bit pair, as two f32 members do); original member name unknown.
-  u8 _0208[0x020c - 0x0208];
+  f32 unknown200;  // Inferred role: first component of the motion blur 2 dpch vector (DrPixlPostObjMotionBlur2::calcBlurWork, 0x71008bc294); original member name unknown.
+  f32 unknown204;  // Inferred role: fourth component of the motion blur 2 dpch vector (the game loads it with unknown200 as one 64 bit pair, as two f32 members do); original member name unknown.
+  f32 unknown208;  // Inferred role: motion blur 2 velocity blur scale, tested against zero and multiplied into the sizes by DrPixlPostObjMotionBlur2::calcVelocityBlur; original member name unknown.
   f32 unknown20c;  // Inferred role: second component of the motion blur 2 dpch vector; original member name unknown.
   f32 unknown210;  // Inferred role: third component of the motion blur 2 dpch vector, multiplied by the unknown798 of the view work; original member name unknown.
   f32 unknown214;  // Inferred role: motion blur 2 strength of the blur parameter; original member name unknown.
@@ -273,9 +282,8 @@ public:
   u8 _02d4[0x0304 - 0x02d4];
   bool unknown304; // Inferred role: deffered color; original member name unknown.
   u8 _0305[0x0320 - 0x0305];
-  unknown038 unknown320[5]; // Inferred role: g buff debug ranges; original member name unknown.
-  u8 _0348[0x0360 - 0x0348];
-  f32 unknown360; // Inferred role: shadow str; original member name unknown.
+  unknown038 unknown320[8]; // Inferred role: g buff debug ranges; original member name unknown. The scene accessor writes the first five, DrPixlMan::debugGBuffRender reads all eight.
+  f32 unknown360;           // Inferred role: shadow str; original member name unknown.
   u8 _0364[0x037c - 0x0364];
   f32 unknown37c; // Inferred role: shadow chache angle; original member name unknown.
   u8 _0380[0x03b8 - 0x0380];
@@ -332,7 +340,12 @@ public:
   // Inferred role: tssao option whose target DrPixlPostObjTSSAO::debugRender shows; original member name unknown. Evidence: byte cleared by
   // DrPixlPostParm::reset (strb at 0x710085c3a8) and read by DrPixlPostObjTSSAO::passSSAO (ldrb at 0x71008c2400).
   bool unknownfa0;
-  u8 _0fa1[0x0fb1 - 0x0fa1];
+  u8 _0fa1[0x0fa4 - 0x0fa1];
+  // Inferred role: tssao ssao second value copied unchanged into the gParam2 uniform of DrPixlPostObjTSSAO::passQuaterNormal (0x71008c1ea0) and
+  // passSSAO (0x71008c2388); original member name unknown.
+  f32 unknownfa4;
+  u8 _0fa8[0x0fb0 - 0x0fa8];
+  bool unknownfb0; // Inferred role: tssao ssao mpf skip, selects the MPF_SKIP declaration of DrPixlPostObjTSSAO::passSSAO; original member name unknown.
   bool unknownfb1; // Inferred role: tssao quarter normal; original member name unknown.
   bool unknownfb2; // Inferred role: reduction; original member name unknown.
   bool unknownfb3; // Inferred role: reduction buffer; original member name unknown.
@@ -352,7 +365,10 @@ public:
   bool unknown1000;    // Inferred role: debug blur mask render; original member name unknown.
   u8 _1001[0x1008 - 0x1001];
   s32 unknown1008; // Inferred role: debug mode of DrPixlShadowRaytrace::debugRender (1 draws three targets, 2 to 4 one); original member name unknown. Split out of _1001 (decision 2026-11-14 #17).
-  u8 _100c[0x101c - 0x100c];
+  u8 _100c[0x1010 - 0x100c];
+  f32 unknown1010; // Inferred role: shw raytrace temporal filtering depth scale, its inverse is the third value of gParam (DrPixlShadowRaytrace::temporalFiltering, 0x71008c6420); original member name
+                   // unknown.
+  u8 _1014[0x101c - 0x1014];
   f32 unknown101c; // Inferred role: unbranch to depth quarter size scale parameter; original member name unknown.
   u8 _1020[0x1024 - 0x1020];
   bool unknown1024; // Inferred role: shw raytrace temporal; original member name unknown.
@@ -366,7 +382,9 @@ public:
   bool unknown103c; // Inferred role: temporal shadow enable; original member name unknown.
   bool unknown103d; // Inferred role: temporal shadow history valid; original member name unknown.
   bool unknown103e; // Inferred role: char dir shadow; original member name unknown.
-  u8 _103f[0x1061 - 0x103f];
+  u8 _103f[0x1048 - 0x103f];
+  f32 unknown1048; // Inferred role: temporal shadow buffer scale; original member name unknown.
+  u8 _104c[0x1061 - 0x104c];
   bool unknown1061; // Inferred role: selects the IBL pixl objs; original member name unknown.
   u8 _1062[0x1064 - 0x1062];
   f32 unknown1064; // Inferred role: toon gradation value set from the ambient light data; original member name unknown.
@@ -384,10 +402,11 @@ public:
   u8 _10a0[0x10c0 - 0x10a0];
   u32 unknown10c0; // Inferred role: rain drop fade frames; original member name unknown.
   u8 _10c4[0x10d4 - 0x10c4];
-  f32 unknown10d4; // Inferred role: first area parameter, set from the seam resource area table; original member name unknown.
-  f32 unknown10d8; // Inferred role: second area parameter, set from the seam resource area table; original member name unknown.
-  f32 unknown10dc; // Inferred role: third area parameter, set from the seam resource area table; original member name unknown.
-  u8 _10e0[0x10fc - 0x10e0];
+  f32 unknown10d4;    // Inferred role: first area parameter, set from the seam resource area table; original member name unknown.
+  f32 unknown10d8;    // Inferred role: second area parameter, set from the seam resource area table; original member name unknown.
+  f32 unknown10dc;    // Inferred role: third area parameter, set from the seam resource area table; original member name unknown.
+  s32 unknown10e0[4]; // Inferred role: g buff debug counts; original member name unknown.
+  u8 _10f0[0x10fc - 0x10f0];
   bool unknown10fc; // Inferred role: attri menu closed; original member name unknown.
   u8 _10fd[0x10fe - 0x10fd];
   bool unknown10fe; // Inferred role: disp reduction; original member name unknown.
@@ -446,7 +465,12 @@ static_assert(offsetof(DrPixlPostParm, unknown12c) == 0x012c, "");
 static_assert(offsetof(DrPixlPostParm, unknown158) == 0x0158, "");
 static_assert(offsetof(DrPixlPostParm, unknown174) == 0x0174, "");
 static_assert(offsetof(DrPixlPostParm, unknown175) == 0x0175, "");
+static_assert(offsetof(DrPixlPostParm, unknown178) == 0x0178, "");
+static_assert(offsetof(DrPixlPostParm, unknown17c) == 0x017c, "");
+static_assert(offsetof(DrPixlPostParm, unknown180) == 0x0180, "");
+static_assert(offsetof(DrPixlPostParm, unknown184) == 0x0184, "");
 static_assert(offsetof(DrPixlPostParm, unknown188) == 0x0188, "");
+static_assert(offsetof(DrPixlPostParm, unknown190) == 0x0190, "");
 static_assert(offsetof(DrPixlPostParm, unknown104) == 0x0104, "");
 static_assert(offsetof(DrPixlPostParm, unknown108) == 0x0108, "");
 static_assert(offsetof(DrPixlPostParm, unknown10c) == 0x010c, "");
@@ -465,6 +489,7 @@ static_assert(offsetof(DrPixlPostParm, unknown1f0) == 0x01f0, "");
 static_assert(offsetof(DrPixlPostParm, m_motBlur2) == 0x01fc, "");
 static_assert(offsetof(DrPixlPostParm, unknown200) == 0x0200, "");
 static_assert(offsetof(DrPixlPostParm, unknown204) == 0x0204, "");
+static_assert(offsetof(DrPixlPostParm, unknown208) == 0x0208, "");
 static_assert(offsetof(DrPixlPostParm, unknown20c) == 0x020c, "");
 static_assert(offsetof(DrPixlPostParm, unknown210) == 0x0210, "");
 static_assert(offsetof(DrPixlPostParm, unknown214) == 0x0214, "");
@@ -526,6 +551,8 @@ static_assert(offsetof(DrPixlPostParm, unknownf74) == 0x0f74, "");
 static_assert(offsetof(DrPixlPostParm, unknownf73) == 0x0f73, "");
 static_assert(offsetof(DrPixlPostParm, unknownf94) == 0x0f94, "");
 static_assert(offsetof(DrPixlPostParm, unknownfa0) == 0x0fa0, "");
+static_assert(offsetof(DrPixlPostParm, unknownfa4) == 0x0fa4, "");
+static_assert(offsetof(DrPixlPostParm, unknownfb0) == 0x0fb0, "");
 static_assert(offsetof(DrPixlPostParm, unknownf78) == 0x0f78, "");
 static_assert(offsetof(DrPixlPostParm, unknownfb1) == 0x0fb1, "");
 static_assert(offsetof(DrPixlPostParm, unknownfb2) == 0x0fb2, "");
@@ -539,6 +566,7 @@ static_assert(offsetof(DrPixlPostParm, unknownfc8) == 0x0fc8, "");
 static_assert(offsetof(DrPixlPostParm, unknownff0) == 0x0ff0, "");
 static_assert(offsetof(DrPixlPostParm, unknown1000) == 0x1000, "");
 static_assert(offsetof(DrPixlPostParm, unknown1008) == 0x1008, "");
+static_assert(offsetof(DrPixlPostParm, unknown1010) == 0x1010, "");
 static_assert(offsetof(DrPixlPostParm, unknown101c) == 0x101c, "");
 static_assert(offsetof(DrPixlPostParm, unknown1024) == 0x1024, "");
 static_assert(offsetof(DrPixlPostParm, unknown1025) == 0x1025, "");
@@ -548,6 +576,7 @@ static_assert(offsetof(DrPixlPostParm, unknown102c) == 0x102c, "");
 static_assert(offsetof(DrPixlPostParm, unknown103c) == 0x103c, "");
 static_assert(offsetof(DrPixlPostParm, unknown103d) == 0x103d, "");
 static_assert(offsetof(DrPixlPostParm, unknown103e) == 0x103e, "");
+static_assert(offsetof(DrPixlPostParm, unknown1048) == 0x1048, "");
 static_assert(offsetof(DrPixlPostParm, unknown1061) == 0x1061, "");
 static_assert(offsetof(DrPixlPostParm, unknown1064) == 0x1064, "");
 static_assert(offsetof(DrPixlPostParm, unknown1074) == 0x1074, "");
@@ -560,6 +589,7 @@ static_assert(offsetof(DrPixlPostParm, unknown109c) == 0x109c, "");
 static_assert(offsetof(DrPixlPostParm, unknown10c0) == 0x10c0, "");
 static_assert(offsetof(DrPixlPostParm, unknown10d4) == 0x10d4, "");
 static_assert(offsetof(DrPixlPostParm, unknown10dc) == 0x10dc, "");
+static_assert(offsetof(DrPixlPostParm, unknown10e0) == 0x10e0, "");
 static_assert(offsetof(DrPixlPostParm, unknown10fc) == 0x10fc, "");
 static_assert(offsetof(DrPixlPostParm, unknown10fe) == 0x10fe, "");
 static_assert(offsetof(DrPixlPostParm, unknown1105) == 0x1105, "");

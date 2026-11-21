@@ -1,4 +1,5 @@
 #include "gmk/gmk_enemy/gmk_enemy.h"
+#include "gmk/gmk_enemy/gmk_enemy_impl.h" // IWYU pragma: keep
 
 #include "bdat.h"
 #include "framework/debug/debug_draw.h"
@@ -444,6 +445,30 @@ bool GmkEnemyInsts::canDepopGobInst() const {
     return true;
   }
   return !(unknown178 & unknown004_2);
+}
+
+void GmkEnemyInsts::updatePopDepopCond(const UpdateInfo &info) {
+  if (!unknown141 && !unknown38.isPopCondMatched()) {
+    unknown178 &= ~unknown004_0;
+  } else {
+    unknown178 |= unknown004_0;
+  }
+  if (!unknown158) {
+    unknown001(unknown004_1, unknown88.isMatch(*info.unknown08));
+  } else {
+    unknown001(unknown004_1, unknown159);
+  }
+  unknown001(unknown004_2, unknown90.isMatch(*info.unknown08));
+}
+
+void GmkEnemyInsts::update(const UpdateInfo &info) {
+  if (unknown00.unknown00 == nullptr || unknown00.unknown08.unknown00 == nullptr || unknown00.unknown10 <= 0) {
+    return;
+  }
+  updatePopDepopCond(info);
+  if (unknown160) {
+    (this->*unknown160)(info);
+  }
 }
 
 bool GmkEnemy::PopXformFinder::isYSnap() const { return unknown08->getData()->unknown04; }

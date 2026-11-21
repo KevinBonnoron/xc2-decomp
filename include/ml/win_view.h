@@ -18,6 +18,7 @@
 
 namespace ml {
 class IWorkEvent;
+class WinProc;
 
 class WinView : public WorkObj, public FontLayer {
 public:
@@ -41,6 +42,7 @@ public:
   void setTitle(const char *title);
   void setSize(int width, int height);
   void setFrameRect(const mm::Rect<int> &rect);
+  void setPos(const mm::Pnt<int> &pos);
   void setSplitLine(int line);
   void createSplitView(bool isHorizontal, WinView *view1, WinView *view2);
   bool attachWorkEvent(IWorkEvent *event, bool isFront);
@@ -57,7 +59,7 @@ public:
   mm::Rect<int> getClientRect(bool isBack) const;
   bool isSplitHolizon() const;
   bool isCurrent() const;
-  WorkObj *getRootProc();
+  WinProc *getRootProc();
   void setRootRenderWID(WinView *view);
   bool attachRenderWork(const WorkObj *work);
   WinView *getSplitView1();

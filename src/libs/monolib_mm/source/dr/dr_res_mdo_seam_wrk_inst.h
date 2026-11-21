@@ -49,7 +49,9 @@ struct MdsSeamInstMapHead {
   s32 unknown3c; // Inferred role: etc position entry count; original member name unknown.
   u8 _40[0x44 - 0x40];
   u32 unknown44; // Inferred role: offset of the shader data; original member name unknown.
-  u8 _48[0x58 - 0x48];
+  u32 unknown48; // Inferred role: offset of the texture list indices (u16); original member name unknown.
+  s32 unknown4c; // Inferred role: texture list index count; original member name unknown.
+  u8 _50[0x58 - 0x50];
 };
 
 static_assert(offsetof(MdsSeamInstMapHead, unknown18) == 0x18, "");
@@ -71,7 +73,7 @@ static_assert(sizeof(unknown400) == 0x20, "");
 
 // Inferred role: texture entry of the instance map; original type name unknown.
 struct unknown401 {
-  u8 _00[0x02 - 0x00];
+  u16 unknown00; // Inferred role: texture index in the texture list; original member name unknown.
   u16 unknown02; // Inferred role: texture list index; original member name unknown.
   u16 unknown04; // Inferred role: seam texture index; original member name unknown.
   u16 unknown06; // Inferred role: flags; original member name unknown.
@@ -96,7 +98,17 @@ class DrResMdoSeamWrkInst : public unknown133<DrResMdoSeamWrkInst> {
 public:
   // Inferred role: model info of the instance map; original type name unknown.
   struct unknown002 {
-    u8 _00[0x20];
+    u16 unknown00; // Inferred role: instance count of the model info; original member name unknown.
+    u16 unknown02; // Inferred role: first instance of the range that is drawn, the instances before it are skipped; original member name unknown.
+    u16 unknown04; // Inferred role: instance count of the last ranges; original member name unknown.
+    u16 unknown06; // Inferred role: instance count of the last range; original member name unknown.
+    u16 unknown08; // Inferred role: flags, bit 0 sets up the depth stencil of the z pre pass; original member name unknown.
+    u8 _0a[0x0c - 0x0a];
+    u16 unknown0c; // Inferred role: mdl entry index; original member name unknown.
+    u16 unknown0e; // Inferred role: vertex index, 0xffff for the vertex of the instance map; original member name unknown.
+    u8 _10[0x14 - 0x10];
+    u32 unknown14;         // Inferred role: vertex offset of the instances; original member name unknown.
+    unknown002 *unknown18; // Inferred role: next model info of the occlusion list; original member name unknown.
   };
 
   DrResMdoSeamWrkInst();
@@ -107,10 +119,12 @@ public:
                  const DrResMdoInstAnmObj *anm);
   void changeMemCall();
   bool update(const DrResMdoSeamParmRead *parmRead, bool isOpen, u32 flags);
+  u32 updateRenderList(MdoArgSeamUpdate &arg);
   void calcEtcInstPos(DrMdoCtlSeamInstMap *ctl);
   void calcEtcInstPosUpdate(DrMdoCtlSeamInstMap *ctl);
   bool callReadOffColiTest(const mm::Vec3 &position, const DrResMdoSeamParmRead *parmRead);
   bool callReadColiTest(const mm::Vec3 &position, bool isFirst);
+  bool callTexReadUpdate(u16 *textureListFlags, DrResMdoSeamTexList *texLists, DrMdoCtlSeamInstMap *ctl, bool isRelease);
   void calcCacheInfo();
   void beginRenderList(u16 *textureFlags);
   void seachRenderMdlList(MdoArgSeamUpdate &update);
@@ -158,11 +172,13 @@ public:
   u8 _8c[0x90 - 0x8c];
   void **unknown90; // Inferred role: render buffers; original member name unknown.
   s32 unknown98;    // Inferred role: render buffer count; original member name unknown.
-  u8 _9c[0xc8 - 0x9c];
+  u8 _9c[0xa0 - 0x9c];
+  const u32 *unknowna0; // Inferred role: material update flags; original member name unknown.
+  u8 _a8[0xc8 - 0xa8];
   u32 *unknownc8; // Inferred role: read model bit table; original member name unknown.
   u32 *unknownd0; // Inferred role: sub model bit table; original member name unknown.
   u32 *unknownd8; // Inferred role: bit table; original member name unknown.
-  u8 _e0[0xe8 - 0xe0];
+  u32 *unknowne0; // Inferred role: texture bit table, the bits i and i + the entry count; original member name unknown.
   u32 *unknowne8; // Inferred role: etc position bit table; original member name unknown.
   u8 _f0[0x108 - 0xf0];
   DrResMdoSeamMemObj *unknown108;      // Inferred role: memory object; original member name unknown.
@@ -174,18 +190,21 @@ public:
   u8 _138[0x140 - 0x138];
   s32 unknown140; // Inferred role: position object count; original member name unknown.
   s32 unknown144; // Inferred role: render object count; original member name unknown.
-  u8 _148[0x14c - 0x148];
+  s32 unknown148; // Inferred role: render count; original member name unknown.
   s32 unknown14c; // Inferred role: model info count; original member name unknown.
   u16 unknown150; // Inferred role: model info index; original member name unknown.
-  u8 _152[0x156 - 0x152];
+  u16 unknown152; // Inferred role: model info count of the render type; original member name unknown.
+  u16 unknown154; // Inferred role: unknown flags; original member name unknown.
   u16 unknown156; // Inferred role: shadow flags; original member name unknown.
   u32 unknown158; // Inferred role: shadow cache flags; original member name unknown.
-  u8 _15c[0x198 - 0x15c];
+  u8 _15c[0x160 - 0x15c];
+  DrResMdoPos **unknown160[3]; // Inferred role: render list heads per mdl entry, one list per render type; original member name unknown.
+  u8 _178[0x198 - 0x178];
   DrResMdoPntAlphaMan *unknown198; // Inferred role: point alpha manager; original member name unknown.
   unknown002 *unknown1a0;          // Inferred role: model infos; original member name unknown.
   u8 _1a8[0x1b0 - 0x1a8];
-  void *unknown1b0; // Inferred role: unknown work, cleared by the constructor; original member name unknown.
-  void *unknown1b8; // Inferred role: unknown work, cleared by the constructor; original member name unknown.
+  unknown002 *unknown1b0; // Inferred role: head of the occlusion model info list, cleared by the constructor; original member name unknown.
+  unknown002 *unknown1b8; // Inferred role: tail of the occlusion model info list, cleared by the constructor; original member name unknown.
   u8 _1c0[0x1c8 - 0x1c0];
 };
 
@@ -216,9 +235,20 @@ static_assert(offsetof(DrResMdoSeamWrkInst, unknown130) == 0x130, "");
 static_assert(offsetof(DrResMdoSeamWrkInst, unknown140) == 0x140, "");
 static_assert(offsetof(DrResMdoSeamWrkInst, unknown14c) == 0x14c, "");
 static_assert(offsetof(DrResMdoSeamWrkInst, unknown150) == 0x150, "");
+static_assert(offsetof(DrResMdoSeamWrkInst, unknown152) == 0x152, "");
 static_assert(offsetof(DrResMdoSeamWrkInst, unknown156) == 0x156, "");
+static_assert(offsetof(DrResMdoSeamWrkInst, unknown160) == 0x160, "");
 static_assert(offsetof(DrResMdoSeamWrkInst, unknown198) == 0x198, "");
 static_assert(offsetof(DrResMdoSeamWrkInst, unknown1a0) == 0x1a0, "");
+static_assert(offsetof(DrResMdoSeamWrkInst, unknown1b0) == 0x1b0, "");
+static_assert(offsetof(DrResMdoSeamWrkInst::unknown002, unknown02) == 0x02, "");
+static_assert(offsetof(DrResMdoSeamWrkInst::unknown002, unknown04) == 0x04, "");
+static_assert(offsetof(DrResMdoSeamWrkInst::unknown002, unknown06) == 0x06, "");
+static_assert(offsetof(DrResMdoSeamWrkInst::unknown002, unknown08) == 0x08, "");
+static_assert(offsetof(DrResMdoSeamWrkInst::unknown002, unknown0c) == 0x0c, "");
+static_assert(offsetof(DrResMdoSeamWrkInst::unknown002, unknown0e) == 0x0e, "");
+static_assert(offsetof(DrResMdoSeamWrkInst::unknown002, unknown14) == 0x14, "");
+static_assert(offsetof(DrResMdoSeamWrkInst::unknown002, unknown18) == 0x18, "");
 static_assert(sizeof(DrResMdoSeamWrkInst::unknown002) == 0x20, "");
 static_assert(sizeof(DrResMdoSeamWrkInst) == 0x1c8, "");
 

@@ -13,6 +13,8 @@ class CommonResource;
 
 namespace gf {
 
+struct GfSetupParam;
+
 // Layout evidence: the constructor (0x71003c5ee4) fills 0x158 bytes, the destructor releases the vectors at 0x10, 0x38
 // and 0x80 + 0x28 * n (n < 5), getMapRatio reads 0x148 and 0x14c and getMapSize 0x150 to 0x156.
 class GfMenuMapInfo : public mm::mtl::PtrSingleton<GfMenuMapInfo> {
@@ -49,7 +51,10 @@ public:
     mm::Vec3 unknown10; // Inferred role: position in the area; original member name unknown.
   };
 
+  GfMenuMapInfo(const GfSetupParam &param);
+  void initialize(const GfSetupParam &param);
   ~GfMenuMapInfo();
+  static void build(const GfSetupParam &param);
   static void destroy();
   void finalize();
   static bool isInitialized();

@@ -48,7 +48,7 @@ public:
   void dispose() override;
   void createGobInst();
   void disposeGobInst();
-  void validateEffectWithoutLodControl(int lodId, bool isDisp) const;
+  bool validateEffectWithoutLodControl(int lodId, bool isDisp) const;
   void update(f32 deltaTime) override;
   void debugDraw() const override;
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
@@ -64,9 +64,10 @@ public:
   gf::GF_OBJ_HANDLE *unknown60;          // Inferred role: gob instance handle; original member name unknown.
   bool unknown68;                        // Inferred role: message ray clear; original member name unknown.
   u8 _69[0x70 - 0x69];
-  gf::GfFieldLodEffect unknown70; // Inferred role: lod effect; original member name unknown.
-  bool unknowna8;                 // Inferred role: pop condition flag; original member name unknown.
-  bool unknowna9;                 // Inferred role: pop condition matched; original member name unknown.
+  // Mutable: the const validateEffectWithoutLodControl (0x710060ea98) calls GfFieldLodEffect::createAsset and createInst on it.
+  mutable gf::GfFieldLodEffect unknown70; // Inferred role: lod effect; original member name unknown.
+  bool unknowna8;                         // Inferred role: pop condition flag; original member name unknown.
+  bool unknowna9;                         // Inferred role: pop condition matched; original member name unknown.
   u8 _aa[0xb0 - 0xaa];
 };
 

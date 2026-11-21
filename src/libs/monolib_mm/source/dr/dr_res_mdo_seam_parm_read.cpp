@@ -126,6 +126,35 @@ void DrResMdoSeamParmRead::setStockTexture(f32 level, int index) {
   }
 }
 
+// The game adds the entry through the old count (add x8, x0, w8, uxtw #2 at 0x7100879304, before the count store at 0x7100879308): the reference taken with the post-increment gives this;
+// the entry written before or after a separate `unknown5e2++` statement takes one more instruction (21 against 20, tried).
+void DrResMdoSeamParmRead::setStockTexList(int index) {
+  if (unknown5e2 < 8) {
+    for (s32 i = 0; i < unknown5e2; i++) {
+      if (unknown32c[i].unknown00 == index) {
+        return;
+      }
+    }
+    unknown002 &entry = unknown32c[unknown5e2++];
+    entry.unknown00 = index;
+    entry.unknown02 = 9;
+  }
+}
+
+// Same shape as setStockTexList (0x710087931c).
+void DrResMdoSeamParmRead::setStockHeightTexture(int index) {
+  if (unknown5e8 < 3) {
+    for (s32 i = 0; i < unknown5e8; i++) {
+      if (unknown320[i].unknown02 == 8 && unknown320[i].unknown00 == index) {
+        return;
+      }
+    }
+    unknown002 &entry = unknown320[unknown5e8++];
+    entry.unknown00 = index;
+    entry.unknown02 = 8;
+  }
+}
+
 bool DrResMdoSeamParmRead::isReadInfo(const _wkSeamReadWait &wait) {
   for (s32 i = 0; i < unknown618; i++) {
     if (unknown610[i].unknown1e == wait.unknown0a && unknown610[i].unknown18 == wait.unknown08) {

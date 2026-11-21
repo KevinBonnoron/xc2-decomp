@@ -3,11 +3,13 @@
 #include "gf/data/gf_data_driver.h"
 #include "gf/game/gf_game_party.h"
 #include "gf/gf_allocator.h"
+#include "gf/gf_info.h"
 #include "gf/menu/adapter/gf_menu_char_data_adapter.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_sound_manager.h"
 #include "gf/menu/list/gf_menu_driver_list.h"
 #include "gf/menu/object/gf_menu_obj_common_text.h"
+#include "gf/menu/object/gf_menu_obj_fade.h"
 #include "gf/menu/object/gf_menu_obj_lvup_select.h"
 #include "gf/menu/object/gf_menu_obj_operation_info.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
@@ -152,6 +154,27 @@ void GfMenuObjLvupMain::refreshLevelUpInfo() {
     ui::UIObjectAcc image(acc.unknown10, name.c_str());
     image.startAnimation("loop", false);
   }
+}
+
+bool GfMenuObjLvupMain::seqClose() {
+  // The game computes the frames of two seconds as a float before the fade out call and converts them to an integer after the accessor is built; converting first, or writing 2.0f / m_fSecPerFrame,
+  // gives 91 instructions instead of 93.
+  f32 frameCount = 1.0f / GfInfo::m_fSecPerFrame + 1.0f / GfInfo::m_fSecPerFrame;
+  GfMenuSoundManager::fadeOutFieldBgm(2.0f);
+  // The game builds and destroys this accessor without using it.
+  ui::UIObjectAcc main(unknown18);
+  u32 frames = static_cast<u32>(frameCount);
+  GfMenuObjFade::StartParam param;
+  param.unknown00 = 2;
+  param.unknown04 = 0.0f;
+  param.unknown08 = 0.0f;
+  param.unknown0c = 0.0f;
+  param.unknown10 = 1.0f;
+  param.unknown02 = frames;
+  GfMenuObjFade::start(param);
+  unknown50.unknown004(frames);
+  unknown50.unknown002(&GfMenuObjLvupMain::seqClose2);
+  return true;
 }
 
 bool GfMenuObjLvupMain::seqClose2() {

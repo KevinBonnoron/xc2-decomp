@@ -38,6 +38,13 @@ public:
   // Base of the objects queued by the pooled menu objects (ExpGetInfo, PopupInfo...); the game gives it a vtable and a dispose virtual.
   class InfoType {
   public:
+    // GfMenuObjDamageBuff::open and openUniteCombo (0x7100443854, 0x7100443bec) and GfMenuObjDropItem::open (0x7100446c10) store the handle before
+    // the vtable pointer of their queued record: the base constructor sets the handle after its own vtable pointer, which the derived constructor
+    // then overwrites (the dead first store disappears).
+    // The default constructor is the one of the pop destination (Queue::unknown002): the game constructs it before the pop's assertions, and does not
+    // initialise the handle (initialising it adds a store the game does not have; the pop assigns the whole record before any read).
+    InfoType() {}
+    InfoType(u32 handle) : unknown08(handle) {}
     virtual void dispose() {}
 
     u32 unknown08; // Inferred role: handle of the queued UI object, compared by remove; original member name unknown.
@@ -53,6 +60,9 @@ public:
   void postUpdate(const fw::UpdateInfo &info);
   // Inferred role: creates the queue of a pooled object kind; the game inlines it; original name unknown.
   template <typename T> static void unknown002(u32 type, size_t capacity);
+  // Inferred role: appends a record to the queue of a pooled object kind, closing and disposing the oldest one first when the queue is full; the game inlines it
+  // in four functions (GfMenuObjPopup::open, GfMenuObjDropItem::open, GfMenuObjDamageValue::open, GfMenuObjChainIcon::open); original name unknown.
+  template <typename T> static void unknown003(u32 type, T info, void (*callback)(u32));
   template <typename T> static void remove(u32 type, u32 handle);
   template <typename T> static void destroy(u32 type);
   template <typename T> static void closeAll(u32 type, void (*callback)(u32));
@@ -125,6 +135,26 @@ template <typename T> void GfMenuManyObjects::unknown002(u32 type, size_t capaci
           slot = queue;
         }
       }
+    }
+  }
+}
+
+// The record is taken by value, as GfMenuObjPopup::open (0x71004b3434), GfMenuObjDropItem::open (0x7100446c10), GfMenuObjDamageValue::open (0x7100445578) and
+// GfMenuObjChainIcon::open (0x71004282d8) need: the same eviction (one close call, one virtual dispose call, the !empty() assertion at line 769) is in the four of
+// them. Written inline in Popup::open it gives a different frame (the oldest record then lies below the queued copy), and a const reference parameter stores the
+// copy differently. The oldest record is a local of the helper, whose stack slot lies above the argument copy, and the virtual dispose call reloads the vtable
+// pointer that the default constructor stored before the pop's assertions.
+template <typename T> void GfMenuManyObjects::unknown003(u32 type, T info, void (*callback)(u32)) {
+  if (type < 8) {
+    mm::mtl::Queue<T> *queue = static_cast<mm::mtl::Queue<T> *>(get()->unknown10[type]);
+    if (queue != nullptr) {
+      if (queue->full()) {
+        T oldest;
+        queue->unknown002(oldest);
+        callback(oldest.unknown08);
+        oldest.dispose();
+      }
+      queue->push_back(info);
     }
   }
 }

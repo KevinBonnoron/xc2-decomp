@@ -1,15 +1,19 @@
 #include "gf/game/item/gf_pouch_util.h"
 
 #include "fw/fw_update_info.h"
+#include "gf/data/gf_bdat_chrdr.h"
 #include "gf/data/gf_bdat_item.h"
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_item.h"
+#include "gf/data/gf_data_party.h"
 #include "gf/data/gf_item_id.h"
 #include "gf/event/gf_event.h"
 #include "gf/game/item/gf_item_box.h"
 #include "gf/request/gf_req_scom.h"
 #include "gf/scom/gf_scom_achiev.h"
+#include "mm_mtl/fixed_array.h"
+#include "mm_mtl/fixed_vector.h"
 
 namespace gf {
 
@@ -83,7 +87,7 @@ void GfPouchUtil::setPouch(u32 driver, u32 slot, const SDataPouch &pouch) {
 bool GfPouchUtil::isExistOpenItem() { return GfItemBox::get()->countItem(ITEM_UNKNOWN_25305) != 0; }
 
 void GfPouchUtil::setTimeUpForDebug(u32 driver, u32 slot) {
-  SDataPouch pouch = *GfDataDriver::getPouchData(driver, slot);
+  SDataPouch pouch = GfDataDriver::getPouchData(driver, slot);
   if (pouch.unknown00 > 0.0f) {
     pouch.unknown00 = 0.0f;
     setPouch(driver, slot, pouch);
@@ -92,14 +96,14 @@ void GfPouchUtil::setTimeUpForDebug(u32 driver, u32 slot) {
 
 void GfPouchUtil::execOpen(u32 driver) {
   if (GfItemBox::get()->countItem(ITEM_UNKNOWN_25305) != 0) {
-    SDataPouch pouch = *GfDataDriver::getPouchData(driver, 0);
+    SDataPouch pouch = GfDataDriver::getPouchData(driver, 0);
     u32 slot = 0;
     if (pouch._06 != 0) {
       slot = 1;
-      pouch = *GfDataDriver::getPouchData(driver, 1);
+      pouch = GfDataDriver::getPouchData(driver, 1);
       if (pouch._06 != 0) {
         slot = 2;
-        pouch = *GfDataDriver::getPouchData(driver, 2);
+        pouch = GfDataDriver::getPouchData(driver, 2);
         if (pouch._06 != 0) {
           return;
         }
@@ -115,7 +119,7 @@ void GfPouchUtil::execOpen(u32 driver) {
 
 bool GfPouchUtil::isEnableOpen(u32 driver) {
   for (u32 slot = 0; slot < 3; slot++) {
-    if (GfDataDriver::getPouchData(driver, slot)->_06 == 0) {
+    if (GfDataDriver::getPouchData(driver, slot)._06 == 0) {
       return true;
     }
   }
@@ -125,11 +129,78 @@ bool GfPouchUtil::isEnableOpen(u32 driver) {
 u32 GfPouchUtil::getOpenCount(u32 driver) {
   u8 count = 0;
   for (u32 slot = 0; slot < 3; slot++) {
-    if (GfDataDriver::getPouchData(driver, slot)->_06 != 0) {
+    if (GfDataDriver::getPouchData(driver, slot)._06 != 0) {
       count++;
     }
   }
   return count;
+}
+
+// Inferred role: favorite bonus of one favorite slot: half for the right category, one more for the right item (inlined six times by unknown004); original name unknown.
+static f32 unknown003(const SDataPouch &pouch, u32 category, u32 favoriteItem) {
+  f32 bonus = 0.0f;
+  if (pouch.unknown04 != 0) {
+    bonus = GfBdatItem::get()->getFavoriteCategory(pouch.unknown04) == category ? 0.5f : 0.0f;
+    if (pouch.unknown04 == favoriteItem) {
+      bonus += 1.0f;
+    }
+  }
+  return bonus;
+}
+
+// Inferred role: builds the effect of a favorite item: its type and a factor of 1 plus the bonuses of the drivers of the party and their blades; no game symbol (0x7100363290), original name unknown.
+static void unknown004(PouchEffect &effect, const SDataPouch &pouch) {
+  effect.unknown00 = GfDataItem::getFavoriteItemType(pouch.unknown04);
+  effect.unknown04 = 1.0f;
+  GfBdatChrDr *chrDr = GfBdatChrDr::get();
+  for (u32 member = 0; member < 3; member++) {
+    u32 driver = GfDataParty::getDriver(member);
+    if (driver != 0) {
+      effect.unknown04 += unknown003(pouch, chrDr->getChrDrFavoriteCategory(driver, 0), chrDr->getChrDrFavoriteItem(driver, 0));
+      effect.unknown04 += unknown003(pouch, chrDr->getChrDrFavoriteCategory(driver, 1), chrDr->getChrDrFavoriteItem(driver, 1));
+      int count = GfDataDriver::getMaxSetBladeNum(driver);
+      for (int i = 0; i < count; i++) {
+        u32 blade = GfDataDriver::getBlade(driver, i);
+        if (blade != 0) {
+          SDataBlade &dataBlade = GfDataBlade::getSDataBlade(blade);
+          effect.unknown04 += unknown003(pouch, dataBlade.unknown666[0].unknown00, dataBlade.unknown666[0].unknown02);
+          effect.unknown04 += unknown003(pouch, dataBlade.unknown666[1].unknown00, dataBlade.unknown666[1].unknown02);
+        }
+      }
+    }
+  }
+}
+
+// Reference evidence: no game call site of getPouch or getPouchData tests the result for null (they dereference it, copy it or pass it as a `const SDataPouch &`),
+// getPouchData returns an element of the driver record that getSDataDriver gives by reference, and the game's getPouch (0x7100363038: stp, bl getPouchData, ldp, ret)
+// is not a tail call, which clang 3.9 only produces when a returned reference is involved (a pointer returned by a pointer returning callee is a plain `b`).
+SDataPouch &GfPouchUtil::getPouch(u32 driver, u32 slot) { return GfDataDriver::getPouchData(driver, slot); }
+
+bool GfPouchUtil::getEffect(mm::mtl::FixedVector<PouchEffect, 3> &effects, u32 driver) {
+  for (u32 slot = 0; slot < 3; slot++) {
+    SDataPouch &pouch = GfDataDriver::getPouchData(driver, slot);
+    if (pouch.unknown04 == 0) {
+      continue;
+    }
+    if (pouch._06 == 0) {
+      return false;
+    }
+    PouchEffect effect;
+    unknown004(effect, pouch);
+    effects.push_back(effect);
+  }
+  return effects.size() != 0;
+}
+
+bool GfPouchUtil::getEffect(mm::mtl::FixedVector<PouchEffect, 3> &effects, u32 driver, u32 slot) {
+  SDataPouch &pouch = GfDataDriver::getPouchData(driver, slot);
+  if (pouch.unknown04 == 0 || pouch._06 == 0) {
+    return false;
+  }
+  PouchEffect effect;
+  unknown004(effect, pouch);
+  effects.push_back(effect);
+  return effects.size() != 0;
 }
 
 } // namespace gf

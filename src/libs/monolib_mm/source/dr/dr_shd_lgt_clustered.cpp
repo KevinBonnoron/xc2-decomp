@@ -4,6 +4,7 @@
 #include "dr/dr_calc_view_work.h"
 #include "dr/dr_man.h"
 #include "mm_math/mm_mat44.h"
+#include "mm_math/mm_math.h"
 #include "mm_math/mm_vec2.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_array.h"
@@ -48,6 +49,54 @@ void DrShdLgtClustered::stockBegin() {
   memset(unknown680, 0, clusterNum * sizeof(void *));
   memset(unknown688, 0, clusterNum * sizeof(void *));
   unknown690 = 0;
+}
+
+// The game computes the three components before the first store (the result may alias an operand) and stores z, y, x (0x7100892610:
+// stp for y and z first, 0x710089262c: x after the square root); the other store orders give another schedule (54 instructions in every form).
+void DrShdLgtClustered::createPlaneEquation(mm::Vec3 &result, const mm::Vec3 &first, const mm::Vec3 &second) {
+  f32 x = first.y * second.z - first.z * second.y;
+  f32 y = first.z * second.x - second.z * first.x;
+  f32 z = second.y * first.x - first.y * second.x;
+  result.z = z;
+  result.y = y;
+  result.x = x;
+  result.unknown001();
+}
+
+bool DrShdLgtClustered::planeVsCone(const mm::Vec3 &first, const mm::Vec3 &normal, const mm::Vec3 &second, const mm::Vec3 &direction, f32 range, f32 angle) const {
+  // The two vector locals place the loads as the game does (0x71008923d8-0x71008923e0: the normal is loaded whole before the direction); the 99
+  // instructions are the same with the plain member expressions but scheduled differently.
+  mm::Vec3 offset = second - first;
+  f32 distance = offset.x * normal.x + offset.y * normal.y + offset.z * normal.z;
+  if (distance > range) {
+    return false;
+  }
+  if (distance <= 0.001f) {
+    return true;
+  }
+  f32 planeAngle = mm::acos(distance / range);
+  mm::Vec3 axis = normal;
+  f32 directionAngle = mm::acos(-(axis.y * direction.y) - axis.x * direction.x - axis.z * direction.z);
+  return planeAngle + angle >= directionAngle - 0.052;
+}
+
+void DrShdLgtClustered::addViewInfo(int cate) {
+  unknown002 &view = unknown20[cate];
+  // The game reads the cluster setting before the two float stores (0x7100891920-0x7100891940: the setting address is computed first); with the call
+  // after them clang merges the stores into one 64-bit store.
+  const unknown001 *setting = getClusterSetting(cate);
+  view.unknown160 = 1.36f;
+  view.unknown15c = 5.0f;
+  view.unknown168[0] = 0.0f;
+  for (int i = 0; i <= setting->unknown08; i++) {
+    f32 depth;
+    if (i == 0) {
+      depth = -5.0f;
+    } else {
+      depth = view.unknown168[i - 1] * view.unknown160;
+    }
+    view.unknown168[i] = depth;
+  }
 }
 
 void DrShdLgtClustered::convertToViewProj(mm::Vec3 &result, const mm::Vec2 &position) {

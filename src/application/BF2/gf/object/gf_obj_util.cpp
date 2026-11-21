@@ -51,6 +51,7 @@
 #include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_volume_fade.h"
 #include "gf/sound/gf_sound.h"
+#include "mm_math/mm_aabb.h"
 #include "mm_math/mm_math.h"
 #include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
@@ -909,6 +910,38 @@ bool GfObjUtil::testFlag(GF_OBJ_HANDLE *handle, u32 flag) {
   return info != nullptr && info->unknown38.test(flag);
 }
 
+bool GfObjUtil::setFlag(GF_OBJ_HANDLE *handle, u32 flag, bool value) {
+  GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
+  if (info != nullptr && info->unknown38.unknown007(flag, value)) {
+    if (GfObjManager::get() != nullptr) {
+      GfObjManager::get()->addApplyParam(info->unknown08);
+    }
+    return true;
+  }
+  return false;
+}
+
+bool GfObjUtil::setFlag(GFOBJ_INFO *info, u32 flag, bool value) {
+  if (info != nullptr && info->unknown38.unknown007(flag, value)) {
+    if (GfObjManager::get() != nullptr) {
+      GfObjManager::get()->addApplyParam(info->unknown08);
+    }
+    return true;
+  }
+  return false;
+}
+
+bool GfObjUtil::setFlag(GfObj *obj, u32 flag, bool value) {
+  GFOBJ_INFO *info = obj->unknown100;
+  if (info != nullptr && info->unknown38.unknown007(flag, value)) {
+    if (GfObjManager::get() != nullptr) {
+      GfObjManager::get()->addApplyParam(info->unknown08);
+    }
+    return true;
+  }
+  return false;
+}
+
 bool GfObjUtil::testFlag(const GfObj *obj, u32 flag) { return obj->unknown100 != nullptr && obj->unknown100->unknown38.test(flag); }
 
 void GfObjUtil::copyTransformToSetup(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *setupHandle) {
@@ -1044,6 +1077,21 @@ void GfObjUtil::createVolumeFade(GF_OBJ_HANDLE *handle) {
 bool GfObjUtil::isVolumeFadeForUser(GF_OBJ_HANDLE *handle) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
   return info != nullptr && info->unknown38.test(OBJ_FLAG_UNKNOWN_20);
+}
+
+void GfObjUtil::getCullingAabb(mm::Aabb &aabb, GF_OBJ_HANDLE *handle) {
+  GfObjAcc acc(handle);
+  if (!acc.getModelAabb(aabb)) {
+    aabb.set(mm::Vec3(0.5f, 1.0f, 0.5f), mm::Vec3(-0.5f, -1.0f, -0.5f));
+  } else {
+    // The game initialises this guarded static (guard 0x71014a3de0, value at 0x71014a3dd0) and never reads it: the factors below are the constant 0.75
+    // (fmov s1, #0.75), not 1 - unknown009.x (that form loads the static and gives 71 instructions, not 61). Inferred role: scale; original name unknown.
+    static const mm::Vec3 unknown009(0.25f, 1.0f, 0.25f);
+    aabb.min.x *= 0.75f;
+    aabb.min.z *= 0.75f;
+    aabb.max.x *= 0.75f;
+    aabb.max.z *= 0.75f;
+  }
 }
 
 void GfObjUtil::setVolumeFadeUserFlag(GF_OBJ_HANDLE *handle, bool isForUser) {

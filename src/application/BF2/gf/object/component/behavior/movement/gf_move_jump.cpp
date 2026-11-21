@@ -3,6 +3,7 @@
 #include "framework/memory/allocator.h"
 #include "framework/memory/framework_memory.h"
 #include "framework/reflection.h"
+#include "fw/fw_update_info.h"
 
 namespace gf {
 
@@ -18,6 +19,11 @@ void GfMoveJumpControler::createReflection(fw::Reflection *reflection, const cha
 #line 19
   value->add(new (fw::Allocator::getDebAllocator(), 16, __FILE__, __LINE__) fw::ReflectionValueF32("angularAccel", offsetof(Param, angularAccel), 0.0f, 10000.0f, 10.0f));
   reflection->setReflectionStruct(index, value);
+}
+
+void GfMoveJumpControler::update(const fw::UpdateInfo &info, Packet &packet) {
+  calcVelocity(info.unknown04, packet);
+  calcAngularVelocity(info.unknown04, packet);
 }
 
 void GfMoveJumpControler::calcVelocity(f32 deltaTime, Packet &packet) {

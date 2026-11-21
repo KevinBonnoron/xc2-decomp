@@ -70,9 +70,11 @@ public:
     MdoWrkVanishEffect *unknown08; // Inferred role: vanish effects; original member name unknown.
   };
 
+  DrResEtcPamObj();
   ~DrResEtcPamObj();
   int setup(const u8 *data, u8 *work);
   void update();
+  static int create(u8 *work, const u8 *data);
   void callback(DrResMdoMeshObj *meshObj, MdoWrkVanishEffect *vanish);
   void mdonode_etcpam_etcmesh_disp(const MdsEtcParamsCallBack *callback, DrResEtcParams *param, wrkCallbackArg &arg);
   void mdonode_etcpam_volfadeanm(const MdsEtcParamsCallBack *callback, DrResEtcParams *param, wrkCallbackArg &arg);

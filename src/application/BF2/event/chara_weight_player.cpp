@@ -39,6 +39,29 @@ void CharaWeightPlayer::destroy() {
   unknown10 = nullptr;
 }
 
+void CharaWeightPlayer::update(f32 delta) {
+  gf::GfObj *obj = gf::GfObjUtil::getObj(unknown08);
+  if (obj == nullptr) {
+    return;
+  }
+  for (size_t i = 0; i < unknown18.size(); i++) {
+    unknown18[i]->update(obj, delta);
+  }
+  while (unknown18.begin() != unknown18.end()) {
+    CharaWeightItem **it = unknown18.begin();
+    while ((*it)->isActive()) {
+      ++it;
+      if (it == unknown18.end()) {
+        return;
+      }
+    }
+    CharaWeightItem *item = *it;
+    item->destroy(obj);
+    delete item;
+    unknown18.erase(it);
+  }
+}
+
 CharaWeightItem *CharaWeightPlayer::searchItem(const char *stat) {
   for (CharaWeightItem **it = unknown18.begin(); it != unknown18.end(); ++it) {
     if (__builtin_strcmp((*it)->getStat(), stat) == 0) {

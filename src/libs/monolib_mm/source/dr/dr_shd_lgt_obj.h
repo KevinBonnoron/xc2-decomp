@@ -5,8 +5,13 @@
 #include "grlib/cglib_dec_shader.h"
 #include "types.h"
 
+namespace mm {
+struct Mat44;
+} // namespace mm
+
 namespace ml {
 
+class DrMan;
 class DrResFetch;
 
 // Layout from DrShdLgtObj::DrShdLgtObj() and ~DrShdLgtObj() (CGLibDecShader base, four
@@ -18,6 +23,7 @@ public:
   ~DrShdLgtObj();
   void shaderComputeSetup();
   void shaderSetup(DrResFetch *fetch);
+  void setShaderGlobalIBLIndexVS(DrMan *man, const mm::Mat44 &matrix, u8 *buffer, u32 index);
   void lgtRelease();
 
   grlib::CGLibDblUniformBlock unknown68[4]; // Inferred role: uniform blocks; original member name unknown.

@@ -5,6 +5,10 @@
 #include "mm_math/mm_vec3.h"
 #include "types.h"
 
+namespace fw {
+struct ColiCheckConfig;
+} // namespace fw
+
 namespace gf {
 
 struct GF_OBJ_HANDLE;
@@ -13,6 +17,7 @@ class CameraUtilities {
 public:
   static void getCameraLookBonePosition(GF_OBJ_HANDLE *handle, mm::Vec3 &position);
   static bool getRotateAxis(const mm::Vec3 &from, const mm::Vec3 &to, mm::Vec3 &axis);
+  static bool updateCollision(const fw::ColiCheckConfig &config, mm::Vec3 &position, const mm::Vec3 &target, const f32 &fov, const f32 &collisionSize);
 };
 
 // Inferred role: quaternion of the Euler angles (half-angle products); original name unknown. Evidence: inlined in

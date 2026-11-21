@@ -22,6 +22,7 @@ enum VFEFF : u32;
 
 enum VFPARTS : s32 {
   VFPARTS_UNKNOWN_FFFFFFFF = -1, // Inferred role: every part; original enumerator name unknown.
+  VFPARTS_UNKNOWN_0 = 0,         // Inferred role: first part; original enumerator name unknown.
 };
 
 struct VFKEYDATA {

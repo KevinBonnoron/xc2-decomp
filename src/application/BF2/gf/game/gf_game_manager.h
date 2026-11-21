@@ -196,7 +196,7 @@ public:
   static bool isRexAwakening();
   static void setStartGame();
   static bool isEnableRoomForHikariLv4();
-  static void setHomuriWeaponExtraMesh(bool isVisible, f32 alpha);
+  static void setHomuriWeaponExtraMesh(bool isVisible, f32 time);
   static bool isClearGame();
   static bool isOpenPreciousMenu();
   static bool isStopEnemyAttack();

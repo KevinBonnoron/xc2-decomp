@@ -696,6 +696,26 @@ void GfAssetFiles::replaceAssetType(GfAssetType type) {
   }
 }
 
+void GfAssetFiles::setInitializeParam(const GfAssetFilesInfo &info) {
+  unknown00 = info.unknown08;
+  if (info.unknown30 != nullptr) {
+    unknown08 = info.unknown30;
+    unknown04 = mm::mtl::hashStrCrc(info.unknown30);
+  } else {
+    // Assigned, not cleared: FixStr::clear stores the terminator before the length, the game stores the length first (1.0.0: 0x71001ba730).
+    unknown08 = "";
+    unknown04 = 0;
+  }
+  for (AssetFile *&file : unknown50) {
+    if (file != nullptr) {
+      delete file;
+      file = nullptr;
+    }
+  }
+  unknownd8.clear();
+  unknown50.clear();
+}
+
 GfAssetFiles::~GfAssetFiles() {
   for (AssetFile **it = unknown50.begin(); it != unknown50.end(); ++it) {
     if (*it != nullptr) {
@@ -703,6 +723,32 @@ GfAssetFiles::~GfAssetFiles() {
       *it = nullptr;
     }
   }
+}
+
+bool GfAssetFiles::addResource(GfFileIdx index, const char *name) {
+  for (AssetFile *file : unknown50) {
+    if (file->unknown00 == index && strcmp(file->unknown10.c_str(), name) == 0) {
+      return true;
+    }
+  }
+  for (AssetFile *file : unknown50) {
+    if (file->unknown00 == index) {
+      continue;
+    }
+    u32 common = index | file->unknown00 << 16;
+    if (mm::mtl::find(unknownd8.begin(), unknownd8.end(), common) != unknownd8.end()) {
+      return true;
+    }
+    if (strcmp(file->unknown10.c_str(), name) == 0) {
+      unknownd8.push_back(common);
+      return true;
+    }
+  }
+  // __LINE__ must be 607 as in the original file: it is the line argument of operator new.
+#line 607
+  AssetFile *file = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) AssetFile(index, name);
+  unknown50.push_back(file);
+  return !unknown108;
 }
 
 void GfAssetFiles::addResourceWithLockAsset(GfFileIdx index, const char *name) {

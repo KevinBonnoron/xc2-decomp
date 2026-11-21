@@ -2,9 +2,12 @@
 #include "bdat.h"
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/game/quest/gf_quest_id.h"
+#include "gf/gf_allocator.h"
+#include "gf/object/gf_obj_handle.h"
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_npc/gmk_npc.h"
 #include "gmk/gmk_npc/gmk_npc_manager.h"
+#include "mm_mtl/intrusive_list.h"
 #include "mm_mtl/vector.h"
 #include "types.h"
 
@@ -30,6 +33,21 @@ void GmkNpcIdInfo::BdatInfo::dispose() {
   unknown08 = 0;
   unknown0a = 0;
   unknown0c = 0;
+}
+
+GmkNpcIdInfo::GmkNpcIdInfo(const CreateInfo *info) : unknown10(nullptr), unknown18(nullptr), unknown30(gf::unknown020) {
+  if (info != nullptr) {
+    create(*info);
+  }
+}
+
+// __LINE__ must be 97 as in the original file: it is the line argument of the allocation (the game's operator new of
+// GmkNpcIdInfo::create, inlined in GmkNpcManager::addGmkNpc, passes the line 0x61 of this header).
+#line 94
+void GmkNpcIdInfo::create(const CreateInfo &info) {
+  dispose();
+  unknown00 = info;
+  unknown10 = new (gf::getAllocator(gf::ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) mm::mtl::IntrusiveList<AGmkNpc>;
 }
 
 GmkNpcManager::GmkNpcManager(u32 updateNpcNumPerFrame) : unknown30(0), unknown34(updateNpcNumPerFrame), unknown38(0), unknown3c(true) { create(); }

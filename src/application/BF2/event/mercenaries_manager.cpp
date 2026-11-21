@@ -15,6 +15,6 @@ void MercenariesManager::entryable(u32 mission) { gf::GfGameMercenaries::setMiss
 
 void MercenariesManager::finish(u32 mission) { gf::SCOM_MISSION_COMPLETE::create(mission); }
 
-u32 MercenariesManager::getState(u32 mission) { return gf::GfGameMercenaries::getMissionFlag(mission); }
+int MercenariesManager::getState(u32 mission) { return gf::GfGameMercenaries::getMissionFlag(mission); }
 
 } // namespace event

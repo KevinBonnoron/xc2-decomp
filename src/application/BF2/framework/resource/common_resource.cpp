@@ -176,6 +176,47 @@ void CommonResource::update() {
   }
 }
 
+void CommonResource::updateBlock() {
+  const char *path = unknown2c.c_str(); // Places the add of this + 44 before the first branch (0x7100199598); used by three calls.
+  unknownb0 = STATE_UNKNOWN_2;
+  if (unknown10.isValid()) {
+    unknownc0 = AssetData::CreateFromCache(unknown10, path);
+  } else if (unknown18 != nullptr) {
+    unknownc0 = AssetData::CreateFromCache(unknown18, path);
+  }
+
+  if (unknownc0 != nullptr) {
+    if (unknownb4) {
+      ResourceManager::get()->addSafeObject(unknownc0, static_cast<eResourceType>(0));
+    }
+    return;
+  }
+
+  mm::mtl::FixStr<256> fileName;
+  ml::DevFileTh::normalizeDvdFileName(fileName, path);
+  ml::DevFileParamTh param;
+  param._08 = unknown10;
+  param._10 = unknown18;
+  param._54 = 0x1000;
+  param.unknown00 = fileName.c_str();
+  mm::VAL64 fileTime;
+  int size = 0;
+  void *data = ml::DevFileTh::readFileBlock(param, &size, &fileTime);
+  if (data == nullptr) {
+    return;
+  }
+
+  if (unknown10.isValid()) {
+    unknownc0 = AssetData::AssignFromMemory(unknown10, data, size, fileName.c_str(), fileTime.unknown00);
+  } else if (unknown18 != nullptr) {
+    unknownc0 = AssetData::AssignFromMemory(unknown18, data, size, fileName.c_str(), fileTime.unknown00);
+  }
+
+  if (unknownb4) {
+    ResourceManager::get()->addSafeObject(unknownc0, static_cast<eResourceType>(0));
+  }
+}
+
 const char *CommonResource::getMemName() {
   if (unknown10.isValid()) {
     return mtl::MemManager::getName(unknown10);

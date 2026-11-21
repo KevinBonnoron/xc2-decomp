@@ -68,6 +68,11 @@ void CameraLayer::popPlugin(mm::mtl::IntrusivePtr<CameraPlugin> &plugin) {
   plugin->release();
 }
 
+void CameraLayer::getMtx(mm::Mat44 &matrix) const {
+  matrix = unknown40;
+  matrix.unknown012();
+}
+
 mm::Vec3 CameraLayer::getCameraPosition() const {
   mm::Mat44 matrix = unknown40;
   return matrix.unknown003().unknown004();

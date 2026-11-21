@@ -6,9 +6,31 @@
 #include "grlib/cglib_texture_buffer.h"
 #include "ml/critical_section.h"
 #include "ml/dev_file_th.h"
+#include "mm_mtl/hash.h"
 #include "mtl/mem_manager.h"
 
 namespace ml {
+
+// 0x71008b5290. The name is copied by a FixStr<256> at 0xd4 (cleared at 0x71008b52d8, its null assertion at 0x71008b52f8, its length stored at 0x1d4),
+// the hash is stored at 0x1d8 (0x71008b5334) and setupInfo(header, false) is the tail call at 0x71008b5394.
+DrCalcStmListObj::DrCalcStmListObj(const char *name, const u8 *header, u32 hash) {
+  unknownd4 = name;
+  unknown1d8 = hash;
+  initInfo();
+  setupInfo(header, false);
+}
+
+// 0x71008b5a60. List of the size mode objects of createBufferListObj: the name "size" is copied inline (word store, length 4 at 0x1d4), its hash
+// is computed at run time (hashStrCrc call at 0x71008b5ab0), unknown80 holds 0x10000 and unknown9c the size.
+DrCalcStmListObj::DrCalcStmListObj(u32 size) {
+  unknownd4 = "size";
+  unknown1d8 = mm::mtl::hashStrCrc(unknownd4.c_str());
+  initInfo();
+  unknown80 = 0x10000;
+  unknown9c = size;
+  unknown1e0 = &DrCalcStmListObj::texstm_size_alloc;
+  unknown1f0 = &DrCalcStmListObj::texstm_size_alloc;
+}
 
 DrCalcStmListObj::~DrCalcStmListObj() {
   if (unknown40 != nullptr) {
@@ -210,6 +232,51 @@ void DrCalcStmListObj::setupReadCheck() {
   unknown80 |= 0x8000;
 }
 
+bool DrCalcStmListObj::texstm_stmchk_topheader() {
+  unknown88 = 0;
+  unknown8c = 0;
+  unknown8e = 0;
+  if (!(unknown80 & 0x2000)) {
+    setupReadCheck();
+  } else {
+    DrCalcTexStreamMan *man = DrCalcTexStreamMan::get();
+    if (man->unknown2490 >= 0) {
+      man->unknown2490 = 0;
+    }
+    if (!(man->unknown2068 & 0x20)) {
+      unknown50 = man->createReadFreeObj(0x1000);
+      if (unknown50 == nullptr) {
+        DrCalcTexStreamMan::get()->unknown2488 += 0x1000;
+      } else {
+        DevFileParamTh param;
+        // P3 (decision 2026-11-14): the game stores offset and size as one 64-bit constant (`orr x8, xzr, #0x4000000000` at 0x71008b5fcc, then
+        // `stur x8, [sp, #76]` at 0x71008b5fec); without this assignment of the offset the constructor's zero and the size stay two 32-bit stores.
+        param.unknown4c = 0;
+        param.unknown50 = 0x40;
+        param.unknown40 = unknown50->unknown18;
+        param.unknown48 = 0x1000;
+        param.unknown00 = unknownd4.c_str();
+        param.unknown60 = this;
+        unknown40 = DevFileTh::readFile(param);
+        if (unknown40 == nullptr) {
+          if (unknown50 != nullptr) {
+            DrCalcTexStreamMan::get()->clearMemObj(unknown50);
+            unknown50 = nullptr;
+          }
+          unknown1e0 = &DrCalcStmListObj::texstm_notfileWait;
+          unknown1f0 = &DrCalcStmListObj::texstm_notfileWait;
+        } else {
+          unknown50->unknown24 |= 0x24;
+          unknown1e0 = &DrCalcStmListObj::texstm_stmchk_topWait;
+          unknown80 |= 0x4000000;
+          DrMan::get()->setAllMiddelTexStmChk(true);
+        }
+      }
+    }
+  }
+  return 0;
+}
+
 bool DrCalcStmListObj::texstm_notfileWait() {
   unknown88 = 0x13;
   unknown80 |= 0x1000;
@@ -298,6 +365,80 @@ bool DrCalcStmListObj::texstm_defMidtexErrWait() {
     unknowna8 = 0;
     unknown1e0 = &DrCalcStmListObj::texstm_deTexCheck;
     return 1;
+  }
+  return 0;
+}
+
+bool DrCalcStmListObj::texstm_checkTexStm() {
+  unknown88 = 0x10;
+  if (unknownc8 != 0) {
+    DrCalcTexStreamMan *man = DrCalcTexStreamMan::get();
+    if (man->unknown2490 > 0) {
+      man->unknown2490 = 1;
+      if (man->unknown2494 > 0 && !(man->unknown2068 & 0x20)) {
+        unknown8c = 0;
+        unknown8e = 0;
+        // P2 (decision 2026-11-14): the local of the size passed to createReadFreeObj only changes the instruction order, which the asm shows: on
+        // the error path the game has `orr w0, wzr, #1` (0x71008b61f8) before `str w8, [x19, #0x84]`; without the local the store comes first
+        // (85 against 85 instructions, forms tried: no local, and a local of the stored size on the error path instead). Same in texstm_deTexCheck.
+        u32 size = unknown68->unknown04;
+        unknown48 = man->createReadFreeObj(size);
+        if (unknown48 == nullptr) {
+          unknown1e0 = &DrCalcStmListObj::texstm_fastErrWait;
+          unknowna8 = 0;
+          unknown84 = unknown68->unknown04;
+          return 1;
+        }
+        DevFileParamTh param;
+        param.unknown4c = unknown68->unknown00;
+        param.unknown50 = unknown68->unknown04;
+        param.unknown40 = unknown48->unknown18;
+        param.unknown48 = unknown68->unknown04;
+        param.unknown60 = this;
+        param.unknown00 = unknownd4.c_str();
+        unknown40 = DevFileTh::readFile(param);
+        unknown48->unknown24 |= 0x24;
+        unknown1e0 = &DrCalcStmListObj::texstm_fastReadWait;
+        unknown80 |= 0x4000000;
+      }
+    }
+  }
+  return 0;
+}
+
+bool DrCalcStmListObj::texstm_deTexCheck() {
+  unknown88 = 8;
+  if ((unknown80 & 0x800) && unknownc8 != 0) {
+    unknown8c = 0;
+    unknown8e = 0;
+    DrCalcTexStreamMan *man = DrCalcTexStreamMan::get();
+    if (man->unknown2490 > 0) {
+      man->unknown2490 = 1;
+      if (man->unknown2494 > 0 && !(man->unknown2068 & 0x20)) {
+        // P2: same local as in texstm_checkTexStm; without it the early exit is laid out differently (`tbz` instead of the game's `tbnz w8, #3`
+        // at 0x71008b637c, 98 against 100 instructions).
+        u32 size = unknown68[unknown72].unknown04;
+        unknown48 = man->createReadFreeObj(size);
+        if (unknown48 == nullptr) {
+          unknown1e0 = &DrCalcStmListObj::texstm_defMidtexErrWait;
+          unknowna8 = 0;
+          unknown84 = unknown68[unknown72].unknown04;
+          return 1;
+        }
+        DevFileParamTh param;
+        param.unknown4c = unknown68[unknown72].unknown00;
+        param.unknown50 = unknown68[unknown72].unknown04;
+        param.unknown40 = unknown48->unknown18;
+        param.unknown48 = unknown68[unknown72].unknown04;
+        param.unknown60 = this;
+        param.unknown00 = unknownd4.c_str();
+        unknown40 = DevFileTh::readFile(param);
+        unknown48->unknown24 |= 0x24;
+        unknown1e0 = &DrCalcStmListObj::texstm_defMidTexWait;
+        unknown80 |= 0x4000000;
+        DrMan::get()->setAllMiddelTexStmChk(true);
+      }
+    }
   }
   return 0;
 }

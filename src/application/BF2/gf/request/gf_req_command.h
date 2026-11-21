@@ -82,7 +82,7 @@ static_assert(offsetof(RQ_SETUP_PARTY_DRIVER, unknown14) == 0x14, "");
 
 struct GfMapjumpInfo {
   explicit GfMapjumpInfo(u32 mapjumpId = 0)
-      : unknown00(mapjumpId), unknown04(0), unknown08(-1), unknown0c(1.0f), unknown100(false), unknown101(false), unknown102(false), _103(), unknown104(false), unknown108(0) {}
+      : unknown00(mapjumpId), unknown04(0), unknown08(-1), unknown0c(1.0f), unknown100(false), unknown101(false), unknown102(false), unknown103(false), unknown104(false), unknown108(0) {}
 
   void setupForSaveData(u32 mapjumpId, const mm::Vec3 &position, const mm::Vec3 &rotation, bool isStartChapterSave);
 
@@ -100,9 +100,9 @@ struct GfMapjumpInfo {
   bool unknown100;               // Inferred role: with save data; original member name unknown.
   bool unknown101;               // Inferred role: no fade in; original member name unknown.
   bool unknown102;               // Inferred role: no fade out; original member name unknown.
-  u8 _103[0x104 - 0x103];
-  bool unknown104; // Inferred role: skip travel; original member name unknown.
-  u32 unknown108;  // Inferred role: jump type; original member name unknown.
+  bool unknown103;               // Inferred role: set to true by GfPlayComPlayerDead::update (strb at 0x7100383200) for the mapjump after a game over; original member name unknown.
+  bool unknown104;               // Inferred role: skip travel; original member name unknown.
+  u32 unknown108;                // Inferred role: jump type; original member name unknown.
 };
 
 static_assert(offsetof(GfMapjumpInfo, unknown10) == 0x10, "");

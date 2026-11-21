@@ -13,6 +13,7 @@
 #include "grlib/cglib_state.h"
 #include "grlib/cglib_uni_base_utility.h"
 #include "mm_math/mm_col4.h"
+#include "mtl/alloc_handle.h"
 #include "mtl/mem_manager.h"
 
 namespace ml {
@@ -22,9 +23,26 @@ class DrPixlPostMan;
 DrPixlPostObjGlassBr::DrPixlPostObjGlassBr(DrMan *drMan, DrPixlMan *pixlMan, DrPixlPostMan *postMan) : DrPixlPostObj(drMan, pixlMan, postMan) {
   unknown4f8 = nullptr;
   unknown4e0 = nullptr;
-  unknown508 = 3;
+  unknown508 = FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1;
   unknown4e8 = 0;
   unknown50c = 0;
+}
+
+void DrPixlPostObjGlassBr::setup() {
+  unknown508 &= ~FLAG_UNKNOWN_0;
+  DrIniSys::unknown004 *glass = unknown00->unknown70->getGlassBreakage();
+  unknown4f0 = glass;
+  unknown68.setupBuffer(glass->unknown002(glass->unknown10), glass->unknown14);
+  unknown18.createMemVertexBuff(&unknown68, glass->unknown18, glass->unknown1c, 0xc);
+  unknown40.createMemIndexBuff(&unknown68, glass->unknown24, glass->unknown2c, GRL_PRIMITIVE_TRIANGLES, GRL_INDEX_FORMAT_U16);
+  // Placed before the store of the count: the game loads the count once, shifts it (lsl w1, w8, #6 at 0x71008bab28) and then stores it (0x71008bab2c). Without the
+  // local the store comes first (first difference at 0x71008bab28); a local holding the count itself loads it as ldrsw instead of ldr.
+  u32 size = glass->unknown0c * sizeof(unknown001);
+  unknown500 = glass->unknown0c;
+  unknown4f8 = static_cast<unknown001 *>(mtl::MemManager::allocate(unknown00->unknown14, size, 0x10, false, "no name", 0));
+  unknown460.setup(unknown500 * 0x30 + 0x70);
+  unknown98.setTextureInfo(static_cast<f32>(unknown00->unknown5b8->unknown28) * 0.5f, static_cast<f32>(unknown00->unknown5b8->unknown2c) * 0.5f, DrAPCache::TEXTYPE_RGBA_8, false, 0);
+  posInt();
 }
 
 void DrPixlPostObjGlassBr::render() {

@@ -36,7 +36,10 @@ public:
   void releaseAllDirLight();
   void releasePntLight(DrLightObjPnt *light);
   void releaseSptLight(DrLightObjSpt *light);
+  DrLightObjAmb *createAmbLight();
   DrLightObjDir *createDirLight();
+  DrLightObjPnt *createPntLight();
+  DrLightObjSpt *createSptLight();
   void releaseAll();
   DrLightObjPnt *createInstantPntLight();
   DrLightObjSpt *createInstantSptLight();

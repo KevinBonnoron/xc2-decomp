@@ -11,6 +11,7 @@ class DrResMdoSeamWrkBaseVertex {
 public:
   DrResMdoSeamWrkBaseVertex();
   void release();
+  void setupVertex(int index, DrResMdoSeamMemObj *memObj);
   void changeMemVertex();
 
   DrResMdoSeamMemObj *unknown00; // Inferred role: memory object; original member name unknown.

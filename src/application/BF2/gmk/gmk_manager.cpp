@@ -94,11 +94,13 @@
 #include "gmk/gmk_tbox.h"
 #include "gmk/gmk_tutorial.h"
 #include "gmk/gmk_warp.h"
+#include "idcoli/idcoli_util_coli.h"
 #include "ml/attr_transform.h"
 #include "ml/scn.h"
 #include "ml/scn_cam_util.h"
 #include "ml/threadval.h"
 #include "mm_math/mm_mat44.h"
+#include "mm_math/mm_math.h"
 #include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec2.h"
 #include "mm_math/mm_vec3.h"
@@ -365,6 +367,23 @@ void GmkManager::seqWaitValidateResDefBdatFp(f32 deltaTime) {
   }
 }
 
+void GmkManager::seqUpdate(f32 deltaTime) {
+  unknown1a0.update(deltaTime);
+  unknownf270.update(deltaTime);
+  TGmkActiveList<GmkPrecious>::unknown001(deltaTime);
+  TGmkActiveList<GmkSe>::unknown001(deltaTime);
+  TGmkActiveList<GmkSeLine>::unknown001(deltaTime);
+  TGmkActiveList<GmkEvent>::unknown001(deltaTime);
+  TGmkActiveList<GmkTutorial>::unknown001(deltaTime);
+  u64 num = unknownf358.size();
+  for (u64 i = 0; i < num; i++) {
+    GmkSet *set = unknownf358[i];
+    if (set != nullptr) {
+      set->update(deltaTime);
+    }
+  }
+}
+
 void GmkManager::create(const CreateInfo &info) {
   dispose();
   unknown08 = info;
@@ -610,7 +629,27 @@ void GmkSet::seqUpdate(f32 deltaTime) {
   }
 }
 
-template <typename T> bool isGmkValidViewUnbound(const AGmkBase &gmk);
+template <typename T> bool isGmkValidViewUnbound(const AGmkBase &gmk) {
+  const auto &insts = unknown011(static_cast<const T &>(gmk));
+  if (!insts.isPopFinished()) {
+    return false;
+  }
+  u32 num = unknown012(insts);
+  for (u32 i = 0; i < num; i++) {
+    gf::GF_OBJ_HANDLE *handle = unknown013(insts, i);
+    if (handle == gf::unknown020 || gf::GfObjUtil::isSearchEmptyResource(handle)) {
+      continue;
+    }
+    if (!isValidView(handle)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+// The GmkEnemy, GmkMob and GmkRoutedMob instances match with this body. The GmkRoutedEnemy one (0x71005e0d5c) keeps the instance address
+// as gmk + 0x50 for every load where the game's code folds the offset into each access, so it stays unmatched and is not emitted.
+template <> bool isGmkValidViewUnbound<GmkRoutedEnemy>(const AGmkBase &gmk);
 
 // Inferred helper: checks the view of a game object that has a resource to wait for; original name unknown.
 static bool unknown005(gf::GF_OBJ_HANDLE *handle) {
@@ -1109,6 +1148,21 @@ AGmkBase *getBindedGmkInst(gf::GF_OBJ_HANDLE *handle) {
   return reinterpret_cast<AGmkBase *>(acc.getUserData(gf::OBJ_USER_DATA_UNKNOWN_0));
 }
 
+bool hasEyeBlink(const AGmkBase &gmk) {
+  u8 *bdat = gmk.unknown08.unknown00->getBindedBdatFp();
+  if (bdat != nullptr) {
+    u16 motion = Bdat::getValCheck(bdat, "Mot", gmk.unknown20.unknown18, BDAT_TYPE_UNKNOWN_2);
+    if (motion) {
+      // The game tests the u16 as `and w8, w0, #0xffff; cbz w8` (0x71005e4f9c, a zero test of the i16 value, see GfAutoTalk::BdatInfo::create) and zero-extends it
+      // again, `and w19, w0, #0xffff` (0x71005e4fa4), before the getFP call (0x71005e4fb0); the widened local places that extension. Without it clang extends once,
+      // `and w2, w19, #0xffff`, as the getFlagVal argument after the getFP call (checked: no match, same instruction count).
+      u32 motionId = motion;
+      return Bdat::getFlagVal(Bdat::getFP("FLD_NpcMobMotionId"), "flag", motionId, "notEyeBlink") == 0;
+    }
+  }
+  return false;
+}
+
 GmkType getBindedGmkInstType(gf::GF_OBJ_HANDLE *handle) {
   AGmkBase *gmk = getBindedGmkInst(handle);
   if (gmk == nullptr) {
@@ -1148,13 +1202,41 @@ bool isModelRendered(gf::GF_OBJ_HANDLE *handle) {
   return model->isRender();
 }
 
+// Nothing calls this function in the binary: GmkClimbing::updateIcon (0x710061d414, not reproduced) has its body inlined. Here the call costs
+// 275 against the inline threshold 275, so updateIcon stays a call (17 instructions against 59). Defining the function inline would inline it
+// and match updateIcon, but then this copy (0x71005e4344, 51 instructions, matching) is no longer emitted.
+bool isPointBehindGround(const mm::Vec3 &position) {
+  if (isCameraExist()) {
+    fw::TColiCheckResult<256> result;
+    // The game stores the result members in the order of clear() (0x71005e4388 to 0x71005e4398), not in the one of the constructor, which
+    // the other functions build the result with (0x71005d8bb8 to 0x71005d8bc4); the constructor alone, with the camera test written as an
+    // early return or the declarations in another order, keeps the constructor's order.
+    result.clear();
+    mm::Vec3 start = getCameraPos();
+    // Each game function that tests the collision sets its own ColiCheckConfig (8 functions with these four stores), none calls a helper.
+    fw::ColiCheckConfig config;
+    config.unknown08 = 0.0f;
+    config.unknown0c = 0.0f;
+    config.unknown14 = false;
+    config.unknown15 = false;
+    config.unknown00 = fw::ColiCheckConfig::FLAG_UNKNOWN_0 | fw::ColiCheckConfig::FLAG_UNKNOWN_3;
+    config.unknown10 = 0;
+    config.unknown04 = 0x80000020;
+    return fw::ColiCheck::testLineChara(result, start, position, config);
+  }
+  return false;
+}
+
 bool isNaviMeshExist(const mm::Vec3 &position) {
   mm::Vec3 result;
   return fw::NaviUtil::testNaviColi(result, position, 2.0f, 2.0f);
 }
 
-bool getYSnapPos(mm::Vec3 &result, const mm::Vec3 &position, f32 distance) {
-  fw::ColiCheckConfig config;
+// Inferred helper: collision config of the downward snap tests (ground and ground character objects, mode 2); original name unknown. Evidence: the same seven
+// stores are inlined in getYSnapPos with three arguments (0x71005e2500) and getYSnapPosRot (0x71005e472c); AGmkBase::getYSnapPosInShape (0x71005e2478) and
+// getPositionAppliedYSnap (0x71005e2d58) hold them too, in gmk_base.cpp. This function, inlined into both functions of this file, gives the game's bytes
+// for each (18 and 267 instructions), so the repeated stores are not proven to be duplicated source.
+static void unknown015(fw::ColiCheckConfig &config) {
   config.unknown08 = 0.0f;
   config.unknown0c = 0.0f;
   config.unknown15 = false;
@@ -1162,6 +1244,112 @@ bool getYSnapPos(mm::Vec3 &result, const mm::Vec3 &position, f32 distance) {
   config.unknown10 = 2;
   config.unknown04 = 0x80000020;
   config.unknown00 = 9;
+}
+
+bool getYSnapPos(mm::Vec3 &result, const mm::Vec3 &position, f32 distance, const fw::ColiCheckConfig &config) {
+  fw::TColiCheckResult<256> hitResult;
+  // The game stores the size, isHit and hitCount in this order (0x71005e4588 to 0x71005e4598), as the explicit clear() does: the constructor alone gives another
+  // order (see isPointBehindGround).
+  hitResult.clear();
+  mm::Vec3 end;
+  end.x = position.x;
+  end.z = position.z;
+  end.y = position.y - distance;
+  fw::ColiCheck::testLineChara(hitResult, position, end, config);
+  if (!hitResult.isHit) {
+    return false;
+  }
+  f32 nearestDistanceSq = 1e12f;
+  u32 num = hitResult.getCount();
+  for (u32 i = 0; i < num; i++) {
+    if (hitResult.getNormal(i).y < 0.0f) {
+      continue;
+    }
+    const mm::Vec3 &hit = hitResult.getPosition(i);
+    f32 dx = hit.x - position.x;
+    f32 dy = hit.y - position.y;
+    f32 dz = hit.z - position.z;
+    f32 distanceSq = dx * dx + dy * dy + dz * dz;
+    if (distanceSq < nearestDistanceSq) {
+      result = hit;
+      nearestDistanceSq = distanceSq;
+    }
+  }
+  return nearestDistanceSq < 1e12f;
+}
+
+bool getYSnapPosRot(mm::Vec3 &position, mm::Quat &rotation, const mm::Vec3 &start, f32 distance) {
+  fw::TColiCheckResult<256> result;
+  // Same stores as the other overload (0x71005e476c to 0x71005e477c).
+  result.clear();
+  mm::Vec3 end;
+  end.x = start.x;
+  end.z = start.z;
+  end.y = start.y - distance;
+  fw::ColiCheckConfig config;
+  unknown015(config);
+  fw::ColiCheck::testLineChara(result, start, end, config);
+  if (!result.isHit) {
+    return false;
+  }
+  u32 num = result.getCount();
+  if (num == 0) {
+    return false;
+  }
+  const mm::Vec3 *nearestPosition = nullptr;
+  const mm::Vec3 *nearestNormal = nullptr;
+  f32 nearestDistanceSq = 1e12f;
+  for (u32 i = 0; i < num; i++) {
+    const mm::Vec3 &normal = result.getNormal(i);
+    if (normal.y < 0.0f) {
+      continue;
+    }
+    const mm::Vec3 &hit = result.getPosition(i);
+    f32 dx = hit.x - start.x;
+    f32 dy = hit.y - start.y;
+    f32 dz = hit.z - start.z;
+    f32 distanceSq = dx * dx + dy * dy + dz * dz;
+    if (distanceSq < nearestDistanceSq) {
+      nearestPosition = &hit;
+      nearestNormal = &normal;
+      nearestDistanceSq = distanceSq;
+    }
+  }
+  if (nearestNormal == nullptr || nearestPosition == nullptr) {
+    return false;
+  }
+  position = *nearestPosition;
+  f32 angle = mm::acos(mm::Vec3::unitY.x * nearestNormal->x + mm::Vec3::unitY.y * nearestNormal->y + mm::Vec3::unitY.z * nearestNormal->z);
+  mm::Vec3 axis;
+  axis.x = mm::Vec3::unitY.y * nearestNormal->z - mm::Vec3::unitY.z * nearestNormal->y;
+  axis.y = mm::Vec3::unitY.z * nearestNormal->x - nearestNormal->z * mm::Vec3::unitY.x;
+  axis.z = nearestNormal->y * mm::Vec3::unitY.x - mm::Vec3::unitY.y * nearestNormal->x;
+  if (!axis.unknown003()) {
+    // The game normalises the axis twice, two full blocks (0x71005e4a04 to 0x71005e4a58 and 0x71005e4a5c to 0x71005e4ab8). Nothing in mm_math builds a quaternion from
+    // an axis and an angle (mm_quat.h only has the rotation about y and the Euler angles), and a file-local helper that takes the axis by value, normalises it
+    // and returns the quaternion does not match (the fmul operands at 0x71005e4ae4 are swapped).
+    axis.unknown001();
+    axis.unknown001();
+    f32 sine = sinf(angle * 0.5f);
+    f32 cosine = cosf(angle * 0.5f);
+    // The game multiplies in the order x, y, z (fmul at 0x71005e4ae4, 0x71005e4aec, 0x71005e4af0), then stores z, w, x, y (stp at 0x71005e4af4 and 0x71005e4af8). The
+    // expressions in the stores (z, w, x, y or x, y, z, w), a Vec3 product and a Quat temporary do not match (another instruction order).
+    f32 x = axis.x * sine;
+    f32 y = axis.y * sine;
+    f32 z = axis.z * sine;
+    rotation.z = z;
+    rotation.w = cosine;
+    rotation.x = x;
+    rotation.y = y;
+  } else {
+    rotation = mm::Quat::identity;
+  }
+  return true;
+}
+
+bool getYSnapPos(mm::Vec3 &result, const mm::Vec3 &position, f32 distance) {
+  fw::ColiCheckConfig config;
+  unknown015(config);
   return getYSnapPos(result, position, distance, config);
 }
 
@@ -1911,6 +2099,34 @@ PopPosSafeCond::PopPosSafeCond(const CreateInfo *info) : unknown20(false) {
   if (info != nullptr) {
     create(*info);
   }
+}
+
+bool getWaterHeight(f32 &height, const mm::Vec3 &position, f32 range) {
+  fw::TColiCheckResult<256> result;
+  // Same stores as getYSnapPos (0x71005e4b84 to 0x71005e4b8c): the explicit clear().
+  result.clear();
+  mm::Vec3 start = position;
+  start.y += range * 0.5f;
+  mm::Vec3 end = position;
+  end.y -= range * 0.5f;
+  // Repeats the four stores of length, margin and flags of isPointBehindGround (ruling 8, see the comment there): the nine functions that hold them are in six files, and a
+  // ColiCheckConfig constructor with them breaks ten functions.
+  fw::ColiCheckConfig config;
+  config.unknown04 = 0xffffffff;
+  config.unknown00 = 9;
+  config.unknown08 = 0.0f;
+  config.unknown0c = 0.0f;
+  config.unknown14 = false;
+  config.unknown15 = false;
+  config.unknown10 = 1;
+  if (!fw::ColiCheck::testLineChara(result, start, end, config)) {
+    return false;
+  }
+  if (result.getMaterial(0).unknown00 != 1) {
+    return false;
+  }
+  height = result.getPosition(0).y;
+  return true;
 }
 
 bool isWaterHeightCondMatchedOfEnemy(const mm::Vec3 &position, u8 type, f32 depth) {

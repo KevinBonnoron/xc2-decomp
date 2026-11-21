@@ -47,7 +47,7 @@ struct VolumeFadeParams {
   f32 unknown88[5];      // Inferred role: third group of five floats; original member name unknown.
   f32 unknown9c;         // Inferred role: frame; original member name unknown.
   f32 unknowna0;         // Inferred role: rate; original member name unknown.
-  f32 unknowna4;         // Role and original member name unknown.
+  u32 unknowna4;         // Inferred role: volume texture index offset, MdoWrkVanishEffect::unknowna8; original member name unknown.
 };
 
 static_assert(offsetof(VolumeFadeParams, unknown40) == 0x40, "");
@@ -81,6 +81,25 @@ static_assert(offsetof(MdlVtxParticle, unknown30) == 0x30, "");
 static_assert(sizeof(MdlVtxParticle) == 0x34, "");
 
 struct DrMdlAfterImageParams {
+  // Defaults the game stores in the stack copy before calling EffectManager::getAfterImageParams in CharaEffectPlayer::playAfterImage
+  // (0x71000bc66c; the game has no symbol for this constructor, it is inlined there): 4, 12, 0.95, orange, then per layer alpha 0.3,
+  // emissive 0, scale 0. The game stores the scale (0x20, 0x38) BEFORE the 64-bit pair alpha + emissive (0x18, 0x30): the DAG combiner
+  // creates the merged constant pair late, after the single store that follows it in IR order, so the scale is assigned before the
+  // emissive. In declaration order (init list or body) the pair comes first at both layers (first difference at +0x168 of the function).
+  DrMdlAfterImageParams() {
+    unknown00 = 4.0f;
+    unknown04 = 12.0f;
+    unknown08 = 0.95f;
+    unknown0c = mm::Col3::orange;
+    unknown18 = 0.3f;
+    unknown20 = 0.0f;
+    unknown1c = 0.0f;
+    unknown24 = mm::Col3::orange;
+    unknown30 = 0.3f;
+    unknown38 = 0.0f;
+    unknown34 = 0.0f;
+  }
+
   f32 unknown00;      // Inferred role: count; original member name unknown.
   f32 unknown04;      // Inferred role: span; original member name unknown.
   f32 unknown08;      // Inferred role: fade; original member name unknown.

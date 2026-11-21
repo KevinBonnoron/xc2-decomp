@@ -104,10 +104,7 @@ void GmkTutorial::createGmkPhantom() {
     return;
   }
   unknown60.create(*this, nullptr, false);
-  TGmkActiveList<GmkTutorial> *list = TGmkActiveList<GmkTutorial>::get();
-  if (list->unknown08.end() == list->unknown08.unknown002(list->unknown08.begin(), list->unknown08.end(), this)) {
-    TGmkActiveList<GmkTutorial>::get()->unknown08.push_back(this);
-  }
+  TGmkActiveList<GmkTutorial>::unknown002(this);
 }
 
 void GmkTutorial::disposeGmkPhantom() {

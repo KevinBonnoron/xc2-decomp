@@ -180,6 +180,14 @@ void SystemManager::kizunaTail() {
 
 SystemManager::CommandList *SystemManager::getCommandPtr(u32 index) { return index == 0 ? &unknown220[0] : &unknown220[1]; }
 
+void SystemManager::addCommand(const EsCommand &command) {
+  if (unknown7824f != 0) {
+    ptlib::efMsg("addCommandError!!");
+    return;
+  }
+  getCommandPtr(unknown7824c)->push_back(command);
+}
+
 void SystemManager::setGlobalSpeed(f32 speed) { unknown78240[unknown7824c == 0] = speed; }
 
 void SystemManager::setCategorySpd(u32 category, f32 speed) { ptlib::emitter::EmitterManager::getPtr()->unknown1700[category] = speed; }

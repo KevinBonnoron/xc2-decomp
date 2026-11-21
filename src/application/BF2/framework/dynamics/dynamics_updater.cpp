@@ -1,7 +1,9 @@
 #include "framework/dynamics/dynamics_updater.h"
 
 #include "anm/anm_pose.h"
+#include "framework/dynamics/dynamics_drawer.h"
 #include "fw/fw_update_info.h"
+#include "mm_math/mm_mat44.h"
 #include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
 #include "skd/skd_collision_object.h"
@@ -84,6 +86,13 @@ void DynamicsUpdater::update(const UpdateInfo &info) {
   anm::Pose *pose = unknown18->unknown48.m_pBindPose;
   pose->syncLocalSpace();
   pose->syncModelSpace();
+}
+
+void DynamicsUpdater::drawDebug() {
+  if (unknowna0 != nullptr) {
+    mm::Mat44 matrix = unknown20->getSyncedWorldMatrix();
+    unknowna0->draw(matrix, *unknown18);
+  }
 }
 
 DynamicsColObjUpdater::DynamicsColObjUpdater() : unknown18(nullptr) {}

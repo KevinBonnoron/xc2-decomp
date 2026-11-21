@@ -9,6 +9,9 @@ public:
   enum TYPE {
     TYPE_UNKNOWN_0, // Inferred role: none; original name unknown.
     TYPE_UNKNOWN_1, // Inferred role: circle; original name unknown.
+    TYPE_UNKNOWN_2, // Inferred role: group position with the defined radius; original name unknown.
+    TYPE_UNKNOWN_3, // Inferred role: defined position and radius; original name unknown.
+    TYPE_UNKNOWN_4, // Inferred role: camera position with the defined radius; original name unknown.
   };
 
   OutsiderField();

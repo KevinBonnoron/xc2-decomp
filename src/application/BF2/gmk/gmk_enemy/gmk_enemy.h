@@ -26,11 +26,16 @@ class GmkSquad;
 
 // Layout evidence: gmk::GmkEnemyInsts::reqForcePopGobInst (0x71005efab8) copies these 8 bytes to offset 0x144 of the
 // instances and GfSmnEnemyManager fills them; GmkEnemyInsts::createGobInsts copies the first byte to PopInfo::CreateInfo::unknown0c.
+// The first four bytes are four members: the constructor and createGobInsts access the first byte alone, while
+// gmk::GmkGrave::reqPopEnemy (0x710061207c, 0x71006122f0) clears the four with one 4 byte store (str wzr, [x20, #0x18c]); a u32
+// first member breaks the byte accesses and a lone u8 gives a strb.
 struct ForcePopEnemyInfo {
   ForcePopEnemyInfo() : unknown00(0), unknown04(0) {}
 
-  u8 unknown00; // Role and original member name unknown.
-  u8 _01[0x04 - 0x01];
+  u8 unknown00;  // Role and original member name unknown.
+  u8 unknown01;  // Role and original member name unknown.
+  u8 unknown02;  // Role and original member name unknown.
+  u8 unknown03;  // Role and original member name unknown.
   u32 unknown04; // Role and original member name unknown.
 };
 
@@ -74,6 +79,7 @@ public:
 
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isInvincibleCondMatched() const;
+    bool isPopCondMatched() const;
     bool isPopCondMatchedOfSmn() const;
 
     u16 unknown00;              // Inferred role: condition; original member name unknown.
@@ -166,6 +172,11 @@ public:
     unknown004_2 = 1 << 2, // Inferred role: depop distance condition matched; original name unknown.
   };
 
+  // Inferred helper: sets or clears one bit of the matched condition flags; original name unknown. Shared by the three bits of updatePopDepopCond, which the game
+  // writes through single selects (0x71005ef928). Forms tried: `isSet ? (x | flag) : (x & ~flag)` puts the orr before the and (the game computes the and first, as the
+  // negated test of the first block of updatePopDepopCond writes it) and an if/else gives branches (47 instructions against 46).
+  void unknown001(unknown004 flag, bool isSet) { unknown178 = !isSet ? (unknown178 & ~flag) : (unknown178 | flag); }
+
   GmkEnemyInsts();
   ~GmkEnemyInsts() { dispose(); }
   bool isPopFinished() const;
@@ -177,6 +188,7 @@ public:
   int getGobInstCapa() const;
   gf::GF_OBJ_HANDLE *getGobInst(u32 index) const;
   void update(const UpdateInfo &info);
+  void updatePopDepopCond(const UpdateInfo &info);
   void seqUpdatePopDepop(const UpdateInfo &info);
   void seqWaitToFadeOutOfGobInst(const UpdateInfo &info);
   bool canDepopGobInst() const;

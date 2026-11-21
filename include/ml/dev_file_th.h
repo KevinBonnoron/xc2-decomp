@@ -14,7 +14,19 @@
 #include "types.h"
 
 namespace mm {
-union VAL64;
+// Evidence: DevFileTh::Impl::readFileBlock (0x7100733aa4) stores the time (FileHandleTh::m_time) and the file time (FileHandleTh::unknown1c8)
+// at offsets 0 and 8 of its VAL64 argument (0x7100733bf4, 0x7100733bfc), and fw::CommonResource::updateBlock (0x7100199570) passes the first
+// one as the time stamp of AssetData::AssignFromMemory. Only these two words are accessed. The size is shown by the frame of updateBlock,
+// which keeps its VAL64 local at sp + 16 and the DevFileParamTh at sp + 40: no access reaches the last 8 bytes, hence the padding. Nothing
+// shows that the type is a union, hence the struct; the name is the one of the mangled symbols.
+struct VAL64 {
+  u64 unknown00; // Inferred role: time stamp; original member name unknown.
+  u64 unknown08; // Inferred role: file time; original member name unknown.
+  u8 _10[0x18 - 0x10];
+};
+
+static_assert(sizeof(VAL64) == 0x18, "");
+
 namespace mtl {
 class IAllocator;
 } // namespace mtl
@@ -120,7 +132,7 @@ struct DevFileParamTh {
 
 static_assert(sizeof(DevFileParamTh) == 0x70, "");
 
-class DevFileTh : public DevBase, public mm::mtl::PtrSingleton<DevFileTh>, public IErrorCB {
+class DevFileTh : public DevBase, public mm::mtl::PtrSingleton<DevFileTh>, public unknown201 {
 public:
   class Impl {
   public:

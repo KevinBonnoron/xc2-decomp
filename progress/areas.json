@@ -2,24 +2,24 @@
   {
     "name": "gf",
     "code": {
-      "total": 4334192,
-      "matching": 3193796,
+      "total": 4328728,
+      "matching": 3397432,
       "non_matching": 0
     }
   },
   {
     "name": "monolib_mm",
     "code": {
-      "total": 1747796,
-      "matching": 716732,
+      "total": 1748776,
+      "matching": 838328,
       "non_matching": 0
     }
   },
   {
     "name": "gmk",
     "code": {
-      "total": 763712,
-      "matching": 526944,
+      "total": 765292,
+      "matching": 538088,
       "non_matching": 0
     }
   },
@@ -27,15 +27,15 @@
     "name": "event",
     "code": {
       "total": 725424,
-      "matching": 500236,
+      "matching": 532480,
       "non_matching": 0
     }
   },
   {
     "name": "framework",
     "code": {
-      "total": 485876,
-      "matching": 295748,
+      "total": 485960,
+      "matching": 307336,
       "non_matching": 0
     }
   },
@@ -83,7 +83,7 @@
     "name": "idcoli",
     "code": {
       "total": 132992,
-      "matching": 73972,
+      "matching": 77108,
       "non_matching": 0
     }
   },
@@ -91,7 +91,7 @@
     "name": "eflib",
     "code": {
       "total": 175688,
-      "matching": 65672,
+      "matching": 65928,
       "non_matching": 0
     }
   },
@@ -106,8 +106,8 @@
   {
     "name": "mcl",
     "code": {
-      "total": 59960,
-      "matching": 29428,
+      "total": 61724,
+      "matching": 31192,
       "non_matching": 0
     }
   },
@@ -115,7 +115,23 @@
     "name": "skdlib",
     "code": {
       "total": 55128,
-      "matching": 15916,
+      "matching": 18976,
+      "non_matching": 0
+    }
+  },
+  {
+    "name": "wndlib",
+    "code": {
+      "total": 19760,
+      "matching": 15796,
+      "non_matching": 0
+    }
+  },
+  {
+    "name": "plugin",
+    "code": {
+      "total": 15372,
+      "matching": 13720,
       "non_matching": 0
     }
   },
@@ -128,18 +144,10 @@
     }
   },
   {
-    "name": "plugin",
-    "code": {
-      "total": 15372,
-      "matching": 11868,
-      "non_matching": 0
-    }
-  },
-  {
     "name": "execute",
     "code": {
-      "total": 16044,
-      "matching": 11256,
+      "total": 16276,
+      "matching": 12084,
       "non_matching": 0
     }
   },
@@ -152,10 +160,10 @@
     }
   },
   {
-    "name": "wndlib",
+    "name": "skt",
     "code": {
-      "total": 18936,
-      "matching": 7920,
+      "total": 7060,
+      "matching": 6176,
       "non_matching": 0
     }
   },
@@ -176,10 +184,10 @@
     }
   },
   {
-    "name": "skt",
+    "name": "dir",
     "code": {
-      "total": 7060,
-      "matching": 3512,
+      "total": 3372,
+      "matching": 2584,
       "non_matching": 0
     }
   },
@@ -188,14 +196,6 @@
     "code": {
       "total": 8448,
       "matching": 2468,
-      "non_matching": 0
-    }
-  },
-  {
-    "name": "dir",
-    "code": {
-      "total": 3372,
-      "matching": 2440,
       "non_matching": 0
     }
   },

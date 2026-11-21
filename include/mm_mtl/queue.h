@@ -63,6 +63,16 @@ public:
     m_size = 0;
   }
 
+  // Inferred role: element counted from the front; original name unknown (no symbol in XC2, Torna or XC1DE). The game inlines it in the dedupe loops of
+  // GfMenuObjPopup::open (0x71004b3434) and GfMenuObjDamageValue::open (0x7100445578): the assertion string "index < m_capacity" at line 503, then at()'s
+  // assert at line 65.
+  // __LINE__ must be 503 as in the original header: it is the line argument of the assert.
+#line 502
+  T &operator[](size_t index) {
+    MM_ASSERT(index < m_capacity);
+    return at((m_front + index) % m_capacity);
+  }
+
   // __LINE__ must be 543 as in the original header: it is the line argument of the assert.
 #line 542
   void reserve(size_t capacity, size_t alignment = alignof(T)) {
@@ -96,7 +106,7 @@ public:
 
   iterator begin() { return iterator(&at(0), m_front, m_capacity); }
 
-  u32 size() const { return m_size; }
+  size_t size() const { return m_size; }
   u32 capacity() const { return m_capacity; }
   bool full() const { return m_size == m_capacity; }
 
@@ -110,6 +120,22 @@ public:
   }
 
   T &front() { return at(m_front); }
+
+  // Inferred role: removes the front element and copies it into the argument; original name unknown (no symbol in XC2, Torna or XC1DE: the game only
+  // instantiates the push_back/erase/expand members of Queue<T>). The game inlines it in GfMenuObjDamageBuff::open and openUniteCombo (0x7100443854,
+  // 0x7100443bec), GfMenuObjDropItem::open (0x7100446c10), GfMenuObjDamageValue::open (0x7100445578) and GfMenuObjPopup::open (0x71004b3434): the
+  // assertion strings quote "!empty()" at line 0x301 (769), then at() asserts the buffer at line 0x41, and the element is read before the front moves.
+  // The destination is a reference to a record constructed before the call (its vtable pointer is stored before the assertions): a by-value return puts the
+  // copy in the inlined callee's noalias result slot, which lets the second read of m_front move above the copy stores (DamageValue::open reloads it after,
+  // with m_size, as one ldp).
+  // __LINE__ must be 769 as in the original header: it is the line argument of the assert.
+#line 768
+  void unknown002(T &out) {
+    MM_ASSERT(!empty());
+    out = at(m_front);
+    m_front = (m_front + 1) % m_capacity;
+    m_size--;
+  }
 
   // __LINE__ must be 782 as in the original header: it is the line argument of the assert.
 #line 781
@@ -134,11 +160,28 @@ public:
 
   iterator end() { return iterator(&at(0), m_front + m_size, m_capacity); }
 
-  // Declared only: the game has an out-of-line instance per element type. Its body is end() (one at() assert), the iterator
-  // compare, the size() != 0 assert (line 1067), --m_size, the shifting loop (destination = index % capacity, index++, source at
-  // index % capacity, with both at() asserts) and then two more at() asserts before returning the position unchanged; no single
-  // trailing statement produces two at() calls, and a duplicated destruct() would only reproduce them as a no-op.
-  iterator erase(iterator position);
+  // __LINE__ must be 1067 as in the original header: it is the line argument of the assert.
+#line 1063
+  iterator erase(iterator position) {
+    if (position == end()) {
+      return position;
+    }
+    MM_ASSERT(size() != 0);
+    m_size--;
+    for (size_t index = position._index; index < m_front + m_size;) {
+      size_t destination = index % m_capacity;
+      index++;
+      T &source = at(index % m_capacity);
+      at(destination) = source;
+    }
+    // The game ends with two at() asserts (queue.h line 65) and no other effect: both elements are the vacated slot, whose
+    // destructors are trivial for every element type the game instantiates. Which two slots the original touched is not
+    // recoverable from the binary; the vacated end slot is the only one an erase has reason to destruct.
+    size_t vacated = (m_front + m_size) % m_capacity;
+    destruct(&at(vacated));
+    destruct(&at(vacated));
+    return position;
+  }
 
 private:
   // __LINE__ must be 65 as in the original header: it is the line argument of the assert.

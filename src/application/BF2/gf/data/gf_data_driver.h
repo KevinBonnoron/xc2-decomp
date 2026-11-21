@@ -16,6 +16,7 @@ class GfInitParamDriver;
 constexpr u32 DRIVER_UNKNOWN_99 = 99;    // Inferred role: driver level max; original name unknown.
 constexpr u32 DRIVER_ARTS_UNKNOWN_5 = 5; // Inferred role: driver arts level max; original name unknown.
 constexpr u32 SET_UNKNOWN_5 = 5;         // Inferred role: set blade num max; original name unknown.
+constexpr u32 POUCH_UNKNOWN_3 = 3;       // Inferred role: pouch count; original name unknown.
 
 // Inferred role: save data driver weapon; original type name unknown.
 struct unknown114 {
@@ -36,6 +37,21 @@ struct SDataPouch {
   u16 unknown04; // Inferred role: item; original member name unknown.
   u8 _06;
 };
+
+// Evidence: gf::GfDataBlade::getPouchEnhanceFavorite (0x71002a5f64) fills the 12-byte elements of a mm::mtl::FixedVector<gf::EnhanceFavorite, 64> with a float 1.0 at 0x0 and three halfwords at 0x4,
+// 0x6 and 0x8; gf::GfDataDriver::getPouchEnhanceFavorite (0x71002ab918) fills the float and the halfwords at 0x4 and 0x6 of the same elements.
+struct EnhanceFavorite {
+  f32 unknown00; // Inferred role: rate, 1.0 when listed; original member name unknown.
+  u16 unknown04; // Inferred role: favorite type of the item; original member name unknown.
+  u16 unknown06; // Inferred role: favorite state for the driver (2 item, 1 category); original member name unknown.
+  u16 unknown08; // Inferred role: favorite state for the blade (2 item, 1 category); original member name unknown.
+  u8 _0a[0x0c - 0x0a];
+};
+
+static_assert(offsetof(EnhanceFavorite, unknown04) == 0x04, "");
+static_assert(offsetof(EnhanceFavorite, unknown06) == 0x06, "");
+static_assert(offsetof(EnhanceFavorite, unknown08) == 0x08, "");
+static_assert(sizeof(EnhanceFavorite) == 0x0c, "");
 
 // Inferred role: save data driver skill row; original type name unknown.
 struct unknown116 {
@@ -174,7 +190,7 @@ public:
   static bool leaveOneCommonBlade(u32 driver);
   static bool leaveOneRareBlade(u32 driver);
   static bool leaveOneScenarioBlade(u32 driver);
-  static SDataPouch *getPouchData(u32 driver, u32 slot);
+  static SDataPouch &getPouchData(u32 driver, u32 slot);
   static int getBladeSet(u32 driver);
   static bool isActivateReserver(u32 driver);
   static bool isActivateUnuse(u32 driver);
@@ -287,6 +303,7 @@ public:
   static u32 getPouchItemNum(u32 driver, u32 item);
   static bool isUsedFavorite(u32 driver, FAVORITE favorite);
   static bool getPouchEnhance(mm::mtl::FixedVector<u16, 64> &enhances, u32 driver);
+  static bool getPouchEnhanceFavorite(mm::mtl::FixedVector<EnhanceFavorite, 64> &favorites, u32 driver);
   static u8 getFavoritePouchNum(u32 driver, FAVORITE favorite);
   static u32 getFootStep(u32 driver);
   static u32 getFootStepEffect(u32 driver);

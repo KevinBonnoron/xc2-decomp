@@ -11,6 +11,9 @@
 namespace mm {
 struct Vec3;
 struct Mat44;
+namespace mtl {
+template <typename T> class Vector;
+} // namespace mtl
 } // namespace mm
 
 namespace gf {
@@ -20,6 +23,7 @@ enum {
 };
 
 struct GF_OBJ_HANDLE;
+struct GfFieldLocator;
 struct GfItem;
 struct OwnerBonus;
 struct SDataBlade;
@@ -109,6 +113,7 @@ public:
   static bool incEnemySuppress(u32 enemy);
   static bool isEnableDeleteObject(GF_OBJ_HANDLE *handle);
   static u32 getFormationPlayerID(GF_OBJ_HANDLE *handle);
+  static u32 setFormationParam(GF_OBJ_HANDLE *handle);
   static void resetFormationParam(GF_OBJ_HANDLE *handle);
   static void setHp(GF_OBJ_HANDLE *handle, u32 hp);
   static void debugHpRatio(GF_OBJ_HANDLE *handle, f32 ratio);
@@ -158,6 +163,7 @@ public:
   static bool isGameObjWait(GF_OBJ_HANDLE *handle);
   static bool isPlayVoice(GF_OBJ_HANDLE *handle);
   static void levelupForEnemy(GF_OBJ_HANDLE *handle, u32 addLevel);
+  static void setTransformPreEnemy(GF_OBJ_HANDLE *handle, const mm::Vec3 &position, const mm::Vec3 &rotation);
   static bool isDispWorldMap(u32 map);
   static u32 getBladeOnBookedItem(u32 blade);
   static bool execActivateUnuseForBlade(u32 blade, bool isRelease);
@@ -195,6 +201,7 @@ public:
   static GF_OBJ_HANDLE *getBlade(GF_OBJ_HANDLE *handle);
   static void setupNewGameParam(const SDataGame &dataGame);
   static bool getDriverAcceList(mm::mtl::FixedVector<u16, 16> &drivers);
+  static void collectOrderableLocators(mm::mtl::Vector<GfFieldLocator> &locators);
   static bool isDispRexCrystal();
   static bool isDispHomuraCrystal();
   static bool isDispMetsuCrystal();

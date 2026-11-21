@@ -86,6 +86,7 @@ public:
   void addWeaponFromBlade(u32 blade, u32 id);
   void delWeaponFromBlade(u32 id);
   u32 getMapObjID(u32 index);
+  void addMapObjObject(u32 index);
   void sendObjectCommand(GF_OBJ_HANDLE *handle, const char *command);
   void setObjectCommandValue(GF_OBJ_HANDLE *handle, const char *name, int value);
   void attachObject(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *parent, const char *bone);
@@ -108,8 +109,8 @@ public:
   void changeCamera(u32 index, f32 time);
   int getCurrentCameraIndex();
   mm::Vec3 getCameraPos(u32 index);
-  mm::Vec3 getCameraRot(u32 index);
   void setCameraPos(u32 index, const mm::Vec3 &position);
+  mm::Vec3 getCameraRot(u32 index);
   void setCameraRotY(u32 index, f32 rotation);
   bool playCameraMotion(const char *name, const mm::Vec3 &position, f32 rotation);
   void resetCamera(u32 index, f32 time);

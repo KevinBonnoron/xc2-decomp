@@ -44,9 +44,10 @@ struct wkPixlManRes {
   grlib::CGLibDepthTarget *unknown1b0;    // Inferred role: separate trans depth object; original member name unknown.
   grlib::CGLibDepthTarget *unknown1b8;    // Inferred role: light depth object; original member name unknown.
   grlib::CGLibDepthTarget *unknown1c0;    // Inferred role: quarter size depth object; original member name unknown.
-  u8 _1c8[0x1d0 - 0x1c8];
-  grlib::CGLibRenderTarget *unknown1d0; // Inferred role: main render target; original member name unknown.
-  u32 unknown1d8;                       // Inferred role: flags; original member name unknown.
+  f32 unknown1c8;                         // Inferred role: width of the color buffers set by calcColorBuffer; original member name unknown.
+  f32 unknown1cc;                         // Inferred role: height of the color buffers set by calcColorBuffer; original member name unknown.
+  grlib::CGLibRenderTarget *unknown1d0;   // Inferred role: main render target; original member name unknown.
+  u32 unknown1d8;                         // Inferred role: flags; original member name unknown.
   u8 _1dc[0x1e0 - 0x1dc];
   DrPixlRenderTarget *unknown1e0;             // Inferred role: render target; original member name unknown.
   DrPixlRenderTarget *unknown1e8;             // Inferred role: render target; original member name unknown.
@@ -70,6 +71,8 @@ static_assert(offsetof(wkPixlManRes, unknown1a0) == 0x1a0, "");
 static_assert(offsetof(wkPixlManRes, unknown1b0) == 0x1b0, "");
 static_assert(offsetof(wkPixlManRes, unknown1b8) == 0x1b8, "");
 static_assert(offsetof(wkPixlManRes, unknown1c0) == 0x1c0, "");
+static_assert(offsetof(wkPixlManRes, unknown1c8) == 0x1c8, "");
+static_assert(offsetof(wkPixlManRes, unknown1cc) == 0x1cc, "");
 static_assert(offsetof(wkPixlManRes, unknown1d0) == 0x1d0, "");
 static_assert(offsetof(wkPixlManRes, unknown1d8) == 0x1d8, "");
 static_assert(offsetof(wkPixlManRes, unknown1e0) == 0x1e0, "");
@@ -83,8 +86,13 @@ class DrPixlMan {
 public:
   DrPixlMan(DrMan *drMan);
   void createColorBuffer();
+  void calcColorBuffer(wkPixlManRes *res, f32 width, f32 height, f32 unknown1, f32 unknown2);
+  void resetColorBuff(bool isMain);
+  void releaseColorBuff();
   // Inferred role: res flag; original type name unknown.
   enum unknown001 {
+    unknown001_4 = 0x4,   // Inferred role: res flag main render target; original name unknown.
+    unknown001_16 = 0x10, // Inferred role: res flag main render target allocated; original name unknown.
     unknown001_32 = 0x20, // Inferred role: res flag shadow display list; original name unknown.
   };
 
@@ -113,6 +121,7 @@ public:
   void endGBuffTexture();
   void setMainRenderTarget();
   void selectOpcaityBlmRenderTarget();
+  grlib::CGLibTextureBuffer *getSunShadowMap();
   void selectOpcaityRenderTarget();
   DrPixlRenderTarget *getPixlObj(int type);
   grlib::CGLibDepthTarget *getDepthObj();
@@ -122,6 +131,7 @@ public:
   void setShadowDirRenderTarget(int index);
   void setupShadowUnifrom(int index);
   ~DrPixlMan();
+  void clearAccumBuffer();
   void releaseColorBuffer();
   void resetLightBuffOnly();
   void createShadowParmDisplayList(wkPixlManRes *res);
@@ -163,6 +173,7 @@ public:
   void thicknessFirstBegin();
   DrPixlRenderTarget *getBackFaceDepthTexture();
   void thicknessFirstEnd();
+  void fastDeferredRender();
   void lastDeferredRender();
   void occRenderBegin(bool isFirst);
   void occRenderEnd();
