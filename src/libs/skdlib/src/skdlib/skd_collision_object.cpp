@@ -31,7 +31,7 @@ void CapsuleCollObj::calc(anm::Pose &pose) {
   mm::Vec3 center = worldPosition + mm::Vec3(transform.unknown00.x, transform.unknown00.y, transform.unknown00.z);
   unknown20 = mm::Quat::mul(unknown00->unknown30, transform.unknown10).rotate(mm::Vec3::unitY);
   f32 half = unknown00->unknown44 * 0.5f;
-  unknown10 = center - mm::Vec3(half * unknown20.x, half * unknown20.y, half * unknown20.z);
+  unknown10 = center - unknown20 * half;
 }
 
 bool ShpereCollObj::detect(f32 radius, const mm::Vec3 &position, mm::Vec3 *normal) const {
