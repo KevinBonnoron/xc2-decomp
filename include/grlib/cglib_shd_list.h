@@ -21,7 +21,8 @@ public:
     u32 unknown08; // Inferred role: offset of the shader table; original member name unknown.
     s32 unknown0c; // Inferred role: shader num; original member name unknown.
     u32 unknown10; // Inferred role: offset of the shader group table (ml::DrShdLgtMan::createLightShader); original member name unknown.
-    u32 unknown14; // Inferred role: shader mode; original member name unknown.
+    // Shader group count. Copied to unknown54 and used as the group table loop bound.
+    u32 unknown14; // Original member name unknown.
     u32 unknown18; // Inferred role: offset of the shader data; original member name unknown.
     u8 unknown1c[0x4];
     u32 unknown20; // Inferred role: offset of the shader code; original member name unknown.
