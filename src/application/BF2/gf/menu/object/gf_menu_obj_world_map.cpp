@@ -1005,6 +1005,39 @@ bool GfMenuObjWorldMap::isEnableJump(const MenuZoneMapInfo &info) {
   return true;
 }
 
+u32 GfMenuObjWorldMap::refreshZoneMap(int index) {
+  u32 object = 0;
+  if (unknown2f0->isGroupMode()) {
+    for (u32 i = 0; i < unknown300.size(); i++) {
+      ui::UIObjectAcc acc(unknown300[i].unknown00);
+      if (acc.isValid()) {
+        if (index == i) {
+          acc.setImageIndex(2);
+          object = acc.unknown10;
+        } else {
+          acc.setImageIndex(1);
+        }
+      }
+    }
+  } else {
+    int icon = unknown2f0->getContents(index).unknown10;
+    if (unknown2f0->getContents(index).unknown0c == 0) {
+      for (u32 i = 0; i < unknown6c0[0].size(); i++) {
+        ui::UIObjectAcc acc(unknown6c0[0][i]);
+        if (acc.isValid()) {
+          if (icon == i) {
+            acc.setImageIndex(2);
+            object = acc.unknown10;
+          } else {
+            acc.setImageIndex(1);
+          }
+        }
+      }
+    }
+  }
+  return object;
+}
+
 void GfMenuObjWorldMap::clearTex() {
   unknown50.unknown005();
   unknown50.unknown002(&GfMenuObjWorldMap::seqTexDelete);

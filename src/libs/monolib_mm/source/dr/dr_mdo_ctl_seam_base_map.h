@@ -60,6 +60,11 @@ public:
   void createBaseThicknesPassDisplayList(bool isFirst);
   void callShadowMapRenderSeamBaseMap(DrPixlShadowObj *shadow);
   void callBaseShadowCacheRender(DrPixlShadowCacheObj &cache);
+
+  // Names from the game symbols _ZN2ml19DrMdoCtlSeamBaseMap27SEAM_BASEMAP_READ_DEN_CHECKE (0x71011b3148) and ...26SEAM_BASEMAP_READ_IN_CHECKE
+  // (0x71011b314c); writable data, initial values read from the game's .data (100.0f, 5.0f).
+  static f32 SEAM_BASEMAP_READ_DEN_CHECK;
+  static f32 SEAM_BASEMAP_READ_IN_CHECK;
 };
 
 } // namespace ml

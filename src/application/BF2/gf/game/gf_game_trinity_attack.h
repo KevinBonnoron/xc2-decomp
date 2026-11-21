@@ -24,6 +24,7 @@ public:
   static void destroy();
   void finish();
   void endAttack();
+  void startAttack();
   u32 getBladeId() const;
   void createBlade();
   bool isEnableAttackMember() const;

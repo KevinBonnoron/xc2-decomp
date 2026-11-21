@@ -35,6 +35,8 @@ public:
   void passUpScaling();
   void passBlur_Sub(BlurAxis axis, f32 strength, DrPixlRenderTarget *source, DrPixlRenderTarget *destination, bool flag);
   void passUpScaleToMiddle();
+  void passDilateContinuityMask();
+  void passUpScaleToFull();
   void update();
   void releaseColorBuff();
   void calcFragCoordToUV(mm::Vec4 &uv, f32 width, f32 height);

@@ -9,11 +9,27 @@ namespace gf {
 
 constexpr u32 PARTS_UNKNOWN_4 = 4; // Inferred role: extra parts count; original name unknown.
 
+// Inferred roles: bits 0 to 8 of SDataEnemy::unknown04, set and cleared by setupSDataEnemy (the roles are those of the bit-field members below, or of the table flag that sets them); original names
+// unknown.
+constexpr u32 ENEMY_FLAG_UNKNOWN_0 = 1 << 0; // Inferred role: named.
+constexpr u32 ENEMY_FLAG_UNKNOWN_1 = 1 << 1; // Inferred role: boss.
+constexpr u32 ENEMY_FLAG_UNKNOWN_2 = 1 << 2; // Inferred role: FAOff flag of the arrange table.
+constexpr u32 ENEMY_FLAG_UNKNOWN_3 = 1 << 3; // Inferred role: NoEcSkip flag of the arrange table.
+constexpr u32 ENEMY_FLAG_UNKNOWN_4 = 1 << 4; // Inferred role: link genus.
+constexpr u32 ENEMY_FLAG_UNKNOWN_5 = 1 << 5; // Inferred role: guard front.
+constexpr u32 ENEMY_FLAG_UNKNOWN_6 = 1 << 6; // Inferred role: guard left.
+constexpr u32 ENEMY_FLAG_UNKNOWN_7 = 1 << 7; // Inferred role: guard right.
+constexpr u32 ENEMY_FLAG_UNKNOWN_8 = 1 << 8; // Inferred role: guard back.
+
 // Inferred role: bit 9 of SDataEnemy::unknown04 (field damage, unknown05_1), read through the 32-bit word by GmkDmgPhantomManager::listenerGfObj; original name unknown.
 constexpr u32 ENEMY_FLAG_UNKNOWN_9 = 1 << 9;
 
 // Inferred role: bit 10 of SDataEnemy::unknown04, set by setupSDataEnemy from GfBdatRsc::isRscEnGenusFlaggimmicktype; original name unknown.
 constexpr u32 ENEMY_FLAG_UNKNOWN_10 = 1 << 10;
+
+// Inferred roles: bits 11 and 12 of SDataEnemy::unknown04, set and cleared by setupSDataEnemy from GfBdatRsc::isRscEnFlagNoCamera and isRscEnFlagWeaponDrawDisp; original names unknown.
+constexpr u32 ENEMY_FLAG_UNKNOWN_11 = 1 << 11; // Inferred role: no camera fade.
+constexpr u32 ENEMY_FLAG_UNKNOWN_12 = 1 << 12; // Inferred role: weapon draw disp.
 
 // Layout from GfDataEnemy::setupSDataEnemy (0x7100299478), which fills each member from a CHR_EnArrange,
 // CHR_EnParam or RSC_En column, and from the zeroing stores of SDataEnemy::clear (0x710029285c).

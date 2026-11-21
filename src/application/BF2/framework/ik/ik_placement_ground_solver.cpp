@@ -1,5 +1,8 @@
 #include "framework/ik/ik_placement_ground_solver.h"
 
+#include "framework/memory/allocator.h"
+#include "framework/memory/framework_memory.h"
+
 #include "anm/anm_pose.h"
 #include "anm/anm_qs_transform.h"
 #include "framework/ik/ik_foot_placement_solver.h"
@@ -13,6 +16,15 @@
 #include "mm_mtl/bitflag.h"
 
 namespace fw {
+
+// __LINE__ of the game: it is the line argument of operator new.
+#line 34
+PlacementGroundSolver *PlacementGroundSolver::create(const Description &description, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose, IKGroundInterface *ground) {
+  PlacementGroundSolver *solver = new (Allocator::getProcAllocator(), 16, __FILE__, __LINE__) PlacementGroundSolver();
+  solver->addRef();
+  solver->createImpl(description, frame, pose, ground);
+  return solver;
+}
 
 PlacementGroundSolver::PlacementGroundSolver() : unknown58(0.3f), unknown5c(2), unknown60(0.0f), unknown64(false), unknown65(false), unknown68(nullptr) {}
 

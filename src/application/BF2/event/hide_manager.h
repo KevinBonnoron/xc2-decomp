@@ -1,5 +1,6 @@
 #pragma once
 #include "event/i_manager.h"
+#include "mm_mtl/bitflag.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
@@ -11,6 +12,7 @@ public:
   static constexpr u32 LIST_UNKNOWN_1024 = 1024;      // Inferred role: list count; original name unknown.
   static constexpr u32 DEFINE_LIST_UNKNOWN_256 = 256; // Inferred role: define list count; original name unknown.
   static constexpr u32 OBJ_UNKNOWN_64 = 64;           // Inferred role: obj count; original name unknown.
+  static constexpr u32 TBL_UNKNOWN_17 = 17;           // Inferred role: s_tbl entry count; original name unknown.
 
   enum OBJ_TYPE {
     OBJ_TYPE_UNKNOWN_0, // Inferred role: none; original name unknown.
@@ -27,8 +29,14 @@ public:
   };
 
   enum {
-    FLAG_UNKNOWN_0 = 1 << 0, // Inferred role: hide group flag; original name unknown.
-    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: hide list flag; original name unknown.
+    FLAG_UNKNOWN_0 = 0, // Inferred role: hide group flag; original name unknown.
+    FLAG_UNKNOWN_1 = 1, // Inferred role: hide list flag; original name unknown.
+  };
+
+  // Inferred role: event display type of a hide group bit; original type name unknown.
+  struct unknown001 {
+    const char *unknown00; // Inferred role: name; original member name unknown.
+    u32 unknown08;         // Inferred role: event display type; original member name unknown.
   };
 
   class Obj {
@@ -61,8 +69,13 @@ public:
   Obj *searchObj(OBJ_TYPE type, u32 id);
   virtual void OnEventProc(MSG_TYPE type);
 
+  static const unknown001 s_tbl[TBL_UNKNOWN_17]; // Name given by the xc2 symbol _ZN5event11HideManager5s_tblE.
+
 private:
-  u32 unknown10; // Inferred role: flags; original member name unknown.
+  // Inferred role: flags; original member name unknown. A bit set like AgelogManager and MotstmManager at the same offset 0x10 (decision 48): the game tests
+  // the list flag with a byte load in clear (0x71000e2060) and, through a plain u32 member, clang widens the flag load of hideGroup (0x71000e2114) with the
+  // load of m_group at 0x14 into one 64-bit load.
+  mm::mtl::unknown027<32> unknown10;
   GRP_TYPE m_group;
   mm::mtl::FixedVector<u32, LIST_UNKNOWN_1024> unknown18;   // Inferred role: primary list; original member name unknown.
   mm::mtl::FixedVector<u32, LIST_UNKNOWN_1024> unknown1020; // Inferred role: secondary list; original member name unknown.

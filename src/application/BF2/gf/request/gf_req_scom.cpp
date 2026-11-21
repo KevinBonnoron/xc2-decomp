@@ -289,6 +289,15 @@ bool SCOM_BATTLE_TASK_RESET::exec(const fw::UpdateInfo &) {
   return true;
 }
 
+GF_SCOM_HANDLE *SCOM_BATTLE_TASK_RESET::create() {
+  if (get() == nullptr) {
+#line 4865
+    SCOM_BATTLE_TASK_RESET *command = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) SCOM_BATTLE_TASK_RESET(GfReqSmallCom::get()->allocate());
+    return GfReqSmallCom::addRequest(command);
+  }
+  return reinterpret_cast<GF_SCOM_HANDLE *>(-1);
+}
+
 SCOM_FSKILLMAX_FOR_DEBUG::SCOM_FSKILLMAX_FOR_DEBUG(GF_SCOM_HANDLE *handle) : SCOM(handle, SCOM_TYPE_UNKNOWN_74, SCOM_EXEC_UNKNOWN_0, 1) {
   GfDataBlade::getListParty(unknown20);
   GfDataBlade::getListReserver(unknown20);
@@ -441,22 +450,6 @@ void SCOM_LEVELUP_DEVELOP::create() {
   GfReqSmallCom::addRequestParallel(command);
 }
 
-// Inferred helper: quaternion of the Euler angles; original name unknown. Evidence: inlined in both SCOM_OBJ_WARP_POS::create overloads taking a position and a rotation.
-static inline mm::Quat unknown004(mm::Vec3 rotation) {
-  f32 sinX = sinf(rotation.x * 0.5f);
-  f32 cosX = cosf(rotation.x * 0.5f);
-  f32 sinY = sinf(rotation.y * 0.5f);
-  f32 cosY = cosf(rotation.y * 0.5f);
-  f32 sinZ = sinf(rotation.z * 0.5f);
-  f32 cosZ = cosf(rotation.z * 0.5f);
-  mm::Quat quat;
-  quat.x = sinX * cosY * cosZ + cosX * sinY * sinZ;
-  quat.y = cosX * sinY * cosZ - sinX * cosY * sinZ;
-  quat.z = cosX * cosY * sinZ - sinX * sinY * cosZ;
-  quat.w = cosX * cosY * cosZ + sinX * sinY * sinZ;
-  return quat;
-}
-
 bool SCOM_OBJ_WARP_POS::exec(const fw::UpdateInfo &) {
   GfObjUtil::setWarpTransform(unknown20, unknown30, unknown50);
   return true;
@@ -465,7 +458,7 @@ bool SCOM_OBJ_WARP_POS::exec(const fw::UpdateInfo &) {
 GF_SCOM_HANDLE *SCOM_OBJ_WARP_POS::create(GF_OBJ_HANDLE *handle, const mm::Vec3 &position, const mm::Vec3 &rotation, bool isFollow) {
   fw::Transform transform;
   transform.unknown00 = position;
-  transform.unknown10 = unknown004(rotation);
+  mm::unknown009(transform.unknown10, rotation);
 #line 629
   SCOM_OBJ_WARP_POS *command = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) SCOM_OBJ_WARP_POS(GfReqSmallCom::get()->allocate(), handle, transform, isFollow);
   return GfReqSmallCom::addRequest(command);
@@ -474,7 +467,7 @@ GF_SCOM_HANDLE *SCOM_OBJ_WARP_POS::create(GF_OBJ_HANDLE *handle, const mm::Vec3 
 GF_SCOM_HANDLE *SCOM_OBJ_WARP_POS::create(const mm::Vec3 &position, const mm::Vec3 &rotation, bool isFollow) {
   fw::Transform transform;
   transform.unknown00 = position;
-  transform.unknown10 = unknown004(rotation);
+  mm::unknown009(transform.unknown10, rotation);
 #line 637
   SCOM_OBJ_WARP_POS *command =
       new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) SCOM_OBJ_WARP_POS(GfReqSmallCom::get()->allocate(), GfGameManager::getControlMover(), transform, isFollow);

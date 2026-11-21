@@ -472,6 +472,17 @@ void GfMenuCharDataAdapter::update(const fw::UpdateInfo &info) {
   unknown20 &= ~FLAG_UNKNOWN_0;
 }
 
+void GfMenuCharDataAdapter::changeCharData(u8 type, u32 id) {
+  if (unknown78 != type) {
+    unknown78 = type;
+    setChange();
+  }
+  if (unknown7c != id) {
+    unknown7c = id;
+    setChange();
+  }
+}
+
 void GfMenuCharDataAdapter::changeGfObj(GF_OBJ_HANDLE *handle) {
   if (unknown70 != nullptr && unknown70->fromGfObj() != nullptr) {
     GfObjConverter *converter = unknown70->fromGfObj();

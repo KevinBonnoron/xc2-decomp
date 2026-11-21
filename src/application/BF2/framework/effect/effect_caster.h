@@ -48,6 +48,7 @@ public:
   virtual bool getMdlMat(mm::Mat44 &matrix);
   virtual bool getEfpMat(mm::Mat44 &matrix, const char *name);
 
+  static EffectCasterSend *create(EffectCasterBase *caster, mm::mtl::IAllocator *allocator, u32 count);
   void tailCopy();
   EffectCasterBase *getCaster();
   bool checkCaster(EffectCasterBase *caster);

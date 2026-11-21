@@ -168,6 +168,35 @@ void GmkGrave::debugDraw() const {
 
 bool GmkGrave::reqPopEnemy() const { return reqPopEnemy<GmkEnemy>() || reqPopEnemy<GmkRoutedEnemy>(); }
 
+template <typename T> bool GmkGrave::reqPopEnemy() const {
+  if (!getBdatInfo()->isValid()) {
+    return false;
+  }
+  const AGmkBase *gmk = GmkManager::get()->findFirstGmkInstByBdatId(T::GMK_TYPE, getBdatInfo()->unknown00);
+  if (gmk == nullptr || gmk->getGmkType() != T::GMK_TYPE) {
+    return false;
+  }
+  GmkAcc::CreateInfo info;
+  info.validate(*gmk);
+  unknown58.create(info);
+  const GmkEnemyInsts &insts = unknown011(*static_cast<const T *>(gmk));
+  if (insts.unknown98.getGobInstNum() != 0 || (insts.unknown38.unknown03 && !(insts.unknown178 & GmkEnemyInsts::unknown004_2))) {
+    return false;
+  }
+  insts.unknown141 = true;
+  insts.unknown144.unknown00 = 0;
+  insts.unknown144.unknown01 = 0;
+  insts.unknown144.unknown02 = 0;
+  insts.unknown144.unknown03 = 0;
+  insts.unknown144.unknown04 = 0x40000000;
+  unknown98 = true;
+  unknown002(unknown50, false);
+  return true;
+}
+
+template bool GmkGrave::reqPopEnemy<GmkEnemy>() const;
+template bool GmkGrave::reqPopEnemy<GmkRoutedEnemy>() const;
+
 void GmkGrave::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) {
   AGmkBase::onGobEvent(event, handle);
   if (event == gf::IGfObjListener::OBJEVT_UNKNOWN_3) {

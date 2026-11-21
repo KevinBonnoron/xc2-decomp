@@ -26,7 +26,13 @@ public:
     u32 unknown0d8;    // Inferred role: global IBL index mask memory area; original member name unknown.
     u8 _0dc[0x0e8 - 0x0dc];
     u32 unknown0e8[3]; // Inferred role: memory areas of the temporal shadow buffers; original member name unknown.
-    u8 _0f4[0x174 - 0x0f4];
+    u32 unknown0f4[2]; // Inferred role: memory areas of the down depth targets (DrPixlPostMan::setupDepthBuff 0x710084da70); original member name unknown.
+    u8 _0fc[0x100 - 0x0fc];
+    u32 unknown100; // Inferred role: memory area of the refraction map target; original member name unknown.
+    u8 _104[0x108 - 0x104];
+    u32 unknown108; // Inferred role: memory area of the quarter normal target; original member name unknown.
+    u32 unknown10c; // Inferred role: memory area of the tssao depth target; original member name unknown.
+    u8 _110[0x174 - 0x110];
     u32 unknown174; // Inferred role: velocity buffer memory offset; original member name unknown.
     u32 unknown178; // Inferred role: velocity blur buffer memory offset; original member name unknown.
     u32 unknown17c; // Inferred role: blur output buffer memory offset; original member name unknown.
@@ -58,6 +64,10 @@ public:
 static_assert(sizeof(DrPixlMemMan::unknown001) == 0x210, "");
 static_assert(offsetof(DrPixlMemMan::unknown001, unknown0a8) == 0x0a8, "");
 static_assert(offsetof(DrPixlMemMan::unknown001, unknown0bc) == 0x0bc, "");
+static_assert(offsetof(DrPixlMemMan::unknown001, unknown0f4) == 0x0f4, "");
+static_assert(offsetof(DrPixlMemMan::unknown001, unknown100) == 0x100, "");
+static_assert(offsetof(DrPixlMemMan::unknown001, unknown108) == 0x108, "");
+static_assert(offsetof(DrPixlMemMan::unknown001, unknown10c) == 0x10c, "");
 static_assert(offsetof(DrPixlMemMan::unknown001, unknown0c0) == 0x0c0, "");
 static_assert(offsetof(DrPixlMemMan::unknown001, unknown0d8) == 0x0d8, "");
 static_assert(offsetof(DrPixlMemMan, unknown010) == 0x010, "");

@@ -121,6 +121,109 @@ bool GfMenuObjTitle::seqConfirmNewGame() {
 
 bool GfMenuObjTitle::attach(GfMenuCallContext *context) { return unknown151(context, unknown001); }
 
+// Inferred role: switches the title to the key wait (0) or list (1) mode: display, input and the listener state; original name unknown. Shared by the three places of
+// ListListener::reciveEvent that do it (the game has the three blocks inlined, each ending with the store to unknown0c at 0x71004dd570, 0x71004dd7a0 and 0x71004dd820);
+// written out three times it matches too.
+static void unknown004(GfMenuObjTitle::ListListener &listener, u32 handle, int mode) {
+  GfMenuObjTitle::setDispMode(handle, mode);
+  GfMenuObjTitle::setInputMode(handle, mode);
+  listener.unknown0c = mode;
+}
+
+void GfMenuObjTitle::ListListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1: {
+    ui::UIObjectAcc cursor(acc.unknown10, "LAY_keywait_cursor");
+    GfMenuObjUtil::setDockPos(cursor.unknown10, acc.searchChild("TXT_keywait"), 0, true);
+  }
+    unknown004(*this, handle, 0);
+    acc.setDisp(true);
+    break;
+  case 2:
+    GfMenuObject::termCallContext(handle);
+    acc.setTerm();
+    break;
+  case 6:
+    if (unknown0c == 1) {
+      u32 index = event.unknown08;
+      if (index != 0xffffffff) {
+        u32 previous = event.unknown0c;
+        if (previous != 0xffffffff) {
+          ui::UIObjectAcc old(unknown20->unknown50->getObject(previous));
+          old.loadDefColor();
+          old.setBorderWeight(2.0f);
+        }
+        unknown20->moveCursor(handle, index);
+        {
+          ui::UIObjectAcc select(unknown20->unknown50->getObject(index));
+          GfMenuObjUtil::setColMulandAdd(select.unknown10, "txt_title_sel");
+          select.setBorderWeight(2.0f);
+        }
+        if (index != previous) {
+          GfMenuObjUtil::playSECommonCursor();
+        }
+      }
+    }
+    break;
+  case 8: {
+    int state = unknown0c;
+    // Measured: with case 2 written before case 1 the case blocks of the outer jump table (0x7100f7337c) come out with case 2 after case 6; the game has it before.
+    switch (event.unknown0c) {
+    case 1:
+      if (state == 1) {
+        // The game sign-extends the slot (ldrsw, 0x71004dd644) and ui::EventData has only an unsigned view, so the index is a typed local.
+        int index = event.unknown08;
+        u32 type = unknown20->unknown28[index];
+        if (!s_NoSaveData && (type == 0 || type == 4)) {
+          unknown20->unknown1b8 = false;
+          unknown20->unknown58.unknown005();
+          unknown20->unknown58.unknown002(&GfMenuObjTitle::seqConfirmNewGame);
+        } else {
+          addResultCallContext(handle, type, 0);
+        }
+        unknown20->unknown48 = type;
+        unknown0c = 2;
+        GfMenuObject::disableInput(acc.unknown10);
+      }
+      break;
+    case 2:
+      if (state == 1) {
+        unknown004(*this, handle, 0);
+      }
+      break;
+    default:
+      if (state == 0) {
+        unknown004(*this, handle, 1);
+        u32 selected = 0;
+        for (u32 i = 0; i < unknown20->unknown28.size(); i++) {
+          if (unknown20->unknown28[i] == 1) {
+            selected = i;
+            break;
+          }
+        }
+        setupInputSelection(acc.searchChild("LAY_list"), selected, unknown20->unknown28.size());
+      }
+      break;
+    }
+    if (state != unknown0c) {
+      if (unknown0c == 1) {
+        GfMenuObjUtil::playSECommonDecide();
+      } else {
+        GfMenuObjUtil::playSECommonFromInput(event.unknown0c);
+      }
+    }
+    break;
+  }
+  case 0x101:
+    unknown0c = 1;
+    GfMenuObject::enableInput(acc.unknown10);
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+  }
+}
+
 void GfMenuObjTitle::initialize() {
   ui::UIObjectAcc acc(unknown18);
   u32 main = acc.searchChild("LAY_main");

@@ -1,5 +1,6 @@
 #include "device/nx/dev_clock_nx.h"
 
+#include "ml/work_util.h" // IWYU pragma: keep
 #include "nn/time_span.h"
 
 namespace ml {
@@ -20,3 +21,6 @@ f32 DevClockNx::getSecNowSys(const long &clock) const { return getClock2SecSys(n
 f32 DevClockNx::getClock2SecSys(const long &clock) const { return nn::os::ConvertToTimeSpan(nn::os::Tick(clock)).GetNanoSeconds() / NANO_TO_SEC; }
 
 } // namespace ml
+
+// WorkUtil::createWork<DevClockNx> (0x710072937c) inlines the constructors of DevClock and DevClockNx, which are in this unit (device.cpp).
+template ml::DevClockNx *ml::WorkUtil::createWork<ml::DevClockNx>(const char *, ml::WorkObj *, bool);

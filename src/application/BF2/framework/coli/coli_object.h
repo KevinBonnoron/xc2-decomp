@@ -41,6 +41,7 @@ enum ColiState : int {
 
 enum ColiAtrr : int {
   COLI_ATRR_UNKNOWN_0 = 0, // Inferred role: tested by GfBehaviorEnemyField::update before applying gravity; original name unknown.
+  COLI_ATRR_UNKNOWN_1 = 1, // Inferred role: tested by DeadColCheckPlugin::testDead on the first collision of the pc; original name unknown.
   COLI_ATRR_UNKNOWN_3 = 3, // Inferred role: tested by GfPropertyField::flush on the first collision of the pc; original name unknown.
 };
 

@@ -25,20 +25,6 @@
 
 namespace ml {
 
-// Decision 2026-11-14 #35: the release helper for the bloom members, which are DrPixlRenderTarget *. It deletes through the base pointer, as the
-// game's releaseBloomTexture does (0x7100853b84, 151 instructions; a helper deleting through DrPixlRenderTarget * gives 179). It lives here and
-// not in dr_pixl_post_obj.h because DrPixlPostObjTMAA (own unit) needs the file-local `template unknown001(T *&)` for its DrPixlRenderTarget
-// members, which a shared non-template overload would capture; here, in the dr.cpp unit, it is preferred to the template of dr_pixl_deferred.cpp.
-// Inferred role: releases and deletes a render target; original name unknown.
-inline void unknown001(DrPixlRenderTarget *&target) {
-  grlib::CGLibRenderTarget *renderTarget = target;
-  if (renderTarget != nullptr) {
-    renderTarget->releaseWork();
-    delete renderTarget;
-    target = nullptr;
-  }
-}
-
 namespace _dppob {
 
 f32 lerp(f32 a, f32 b, f32 t) { return a * (1.0f - t) + b * t; }
@@ -92,16 +78,16 @@ void DrPixlPostObjBloom::calculateDownScale_TwoPass() {
 DrPixlPostObjBloom::~DrPixlPostObjBloom() { releaseBloomTexture(); }
 
 void DrPixlPostObjBloom::releaseBloomTexture() {
-  unknown001(unknown18);
-  unknown001(unknown20);
-  unknown001(unknown28);
-  unknown001(unknown30);
+  unknown120(unknown18);
+  unknown120(unknown20);
+  unknown120(unknown28);
+  unknown120(unknown30);
   for (int i = 0; i < 5; i++) {
-    unknown001(unknown38[i]);
-    unknown001(unknown60[i]);
+    unknown120(unknown38[i]);
+    unknown120(unknown60[i]);
   }
-  unknown001(m_lgtDownTarget[0]);
-  unknown001(m_lgtDownTarget[1]);
+  unknown120(m_lgtDownTarget[0]);
+  unknown120(m_lgtDownTarget[1]);
 }
 
 void DrPixlPostObjBloom::update() { unknown90 = 0; }

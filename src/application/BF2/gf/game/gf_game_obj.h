@@ -78,7 +78,8 @@ public:
   bool isEffectFadeEnd(const INOUT &inout, const GfObjAcc &acc) const;
   bool fadeinGameObj(INOUT &inout, GfObjAcc &acc, const fw::UpdateInfo &info);
   void removeGameObjCommon(GfObjAcc &acc);
-  void addGameObj(GF_OBJ_HANDLE *handle);
+  bool addGameObj(GF_OBJ_HANDLE *handle);
+  void removeGameObj(GF_OBJ_HANDLE *handle);
   bool isBattle(const mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> &list) const;
   void calcCameraFade(const mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> &list, const mm::Vec3 &cameraPosition);
   void enableGameObj(GfObjAcc &acc, bool isEnable);

@@ -777,6 +777,111 @@ void BgmEvent::updatePlaying(const fw::UpdateInfo &info) {
   }
 }
 
+void BgmEvent::beginPlay() {
+  GfEvtBgm *event = GfEvtBgm::get();
+  destroyFader();
+  addVolumeFade(_gffsn::bgmvolStop, 1.0f, 20.0f, true);
+  addVolumeFade(_gffsn::bgmvolFadeLeaveGame, 1.0f, 99.0f, true);
+  addVolumeFade(_gffsn::bgmvolFadeDeadSequence, 2.0f, 99.0f, true);
+  addVolumeFade(_gffsn::bgmvolFadeDisableEventBgm, event->unknown0c.unknown62 ? event->unknown0c.unknown4c : 0.5f, event->unknown0c.unknown63 ? event->unknown0c.unknown48 : 0.5f, true);
+  mm::mtl::FixStr<64> fileName;
+  if (event->unknown0c.unknown60) {
+    BgmTrack *current = GfFieldBgm::get()->getCurrentPlayBgmTrack();
+    if (current != nullptr && current != this) {
+      copyPlayParam(current);
+      unknown638 = event->unknown0c;
+      makePlayFileName(fileName);
+      if (!fileName.empty()) {
+        m_bgmCondID = 0;
+        event->setPlayBgmTakeOver(fileName.c_str());
+      }
+    }
+  }
+  if (fileName.empty()) {
+    fileName = event->unknown0c.unknown00;
+  }
+  if (event->unknown0c.unknown64) {
+    unknown618 = event->unknown0c.unknown44;
+  }
+  unknown61c = event->unknown0c.unknown50;
+  if (!fileName.empty()) {
+    if (strcmp(unknown6a0.c_str(), fileName.c_str()) == 0) {
+      return;
+    }
+    if (unknown638.unknown5c < 0.0f) {
+      event->setFadeoutVolume();
+      return;
+    }
+    unknown6a0 = fileName.c_str();
+  }
+  if (GfGameManager::isFullScreenMenu() && !GfManager::isExecModeThater()) {
+    m_categoryApply = CATEGORY_SYSTEM;
+  } else {
+    m_categoryApply = CATEGORY_EVT_BGM;
+  }
+  unknown08[0].unknown14 = fileName;
+  unknown638 = event->unknown0c;
+}
+
+void BgmEvent::checkStopByHandOver() {
+  GfEvtBgm *event = GfEvtBgm::get();
+  if (event->unknown0c.unknown61 && BgmTrack::isPlaying()) {
+    BgmFileInfo info;
+    if (GfFieldBgm::get() != nullptr && GfFieldBgm::get()->getBgmFileInfo(info, unknown08[0].unknown14.c_str()) && info.unknown0c) {
+      u32 map = GfGameManager::getMapID();
+      u32 bgmCond = 0;
+      if (map != 0) {
+        bgmCond = GfBdatMaplist::get()->getMaplistbgm_cndID(map);
+      }
+      BgmTrack *track = nullptr;
+      if (bgmCond == info.unknown00) {
+        track = BgmField::get();
+      }
+      if (track == nullptr && unknown620->m_rscGimmickBgmID == info.unknown00) {
+        track = BgmGimmick::get();
+      }
+      if (track != nullptr) {
+        track->copyPlayParam(this, info);
+        track->setCategoryApply(1);
+        return;
+      }
+    }
+    BgmTrack *boss = BgmBattleBoss::get();
+    if (boss != nullptr) {
+      // The game calls strstr before copyPlayParam (0x71002d2fd8); the local places that call first (ruling 2026-11-13 #1, P2).
+      const char *silent = strstr(unknown08[0].unknown14.c_str(), "Silent");
+      boss->copyPlayParam(this);
+      boss->setCategoryApply(1);
+      if (silent == nullptr) {
+        if (GfGameScene::get() != nullptr) {
+          GfGameScene::get()->setForceBossBattleBgm(true);
+        }
+      } else {
+        boss->stopBGM(0.0f);
+      }
+    }
+  }
+}
+
+void BgmEvent::updateEventBgm(const fw::UpdateInfo &info) {
+  GfEvtBgm *event = GfEvtBgm::get();
+  if (event != nullptr) {
+    checkStopByHandOver();
+    if (!isPlaying()) {
+      if (event->isEnableEventBgm() || event->unknown0c.unknown60) {
+        beginPlay();
+      }
+    } else {
+      updatePlaying(info);
+    }
+  }
+}
+
+void BgmEvent::update(const fw::UpdateInfo &info) {
+  updateEventBgm(info);
+  BgmTrack::update(info);
+}
+
 const char *BgmEvent::getTrackName() const { return "EventBGM"; }
 
 const char *BgmBattle::getTrackName() const { return "BattleBGM"; }

@@ -101,6 +101,7 @@ public:
   bool streamIsPlay(const BGMCOND &cond) const;
   void streamVolume(const BGMCOND &cond);
   u32 getBgmConditionBgmID(u32 id, u32 index) const;
+  void makePlayFileName(mm::mtl::FixStr<64> &name) const;
 
   // Inferred role: first bgm condition with a valid sound handle; original name unknown.
   BGMCOND *unknown003() {
@@ -194,6 +195,9 @@ public:
   void cancelOverTime();
   bool isInvalidRequestBgmFile() const;
   void updatePlaying(const fw::UpdateInfo &info);
+  void checkStopByHandOver();
+  void updateEventBgm(const fw::UpdateInfo &info);
+  void beginPlay();
 
   EventBgmSetup unknown638;        // Inferred role: setup of the playing event bgm; original member name unknown.
   mm::mtl::FixStr<128> unknown6a0; // Inferred role: name of the hand over bgm; original member name unknown.
@@ -232,6 +236,7 @@ public:
   bool isDisableFieldBgmChange() const;
   bool isBossBgmCopied() const;
   bool getBgmFileInfo(BgmFileInfo &info, const char *name) const;
+  BgmTrack *getCurrentPlayBgmTrack();
   void setRscBattleBgmID(u32 id);
   void setGimmickBgmID(u32 id);
   void gevBattleEnd();

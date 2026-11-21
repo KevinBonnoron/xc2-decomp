@@ -1,11 +1,16 @@
 #include "gf/object/component/env_sensor/gf_com_env_sensor.h"
 
+#include "framework/coli/coli_object.h"
 #include "framework/message/message_object.h"
 #include "framework/object/component_object.h"
 #include "framework/object/updatable_object.h"
 #include "framework/reference_frame.h"
+#include "gf/object/component/gf_com_collider.h"
 #include "gf/object/component/gf_com_transform.h"
+#include "gf/object/component/property/gf_com_property.h"
+#include "gf/object/gf_obj.h"
 #include "mm_mtl/rtti.h"
+#include "mm_mtl/vector.h"
 
 namespace fw {
 struct Transform;
@@ -81,6 +86,28 @@ void GfComEnvSensor::setEnableSensor(bool isEnable) {
   }
 }
 
+void GfComEnvSensor::flushEnv(const fw::Transform &transform) {
+  unknown10.check(transform, unknown2e0);
+  GfComProperty *property = unknown08->getComponent<GfComProperty>();
+  if (property != nullptr) {
+    GfEnvProperty *env = property->unknown28.get();
+    if (env != nullptr) {
+      bool isEnable = true;
+      GfComCollider *collider = unknown08->getComponent<GfComCollider>();
+      if (collider != nullptr) {
+        fw::ColiObject *coli = collider->unknown18[0];
+        if (coli != nullptr) {
+          isEnable = coli->testAttribute(fw::COLI_ATRR_UNKNOWN_0);
+        }
+      }
+      unknown10.writeBackProperty(isEnable, env);
+    }
+  }
+  if (unknown360) {
+    unknown360->update(static_cast<GfObj *>(unknown08)->unknownf8);
+  }
+}
+
 void GfComEnvSensor::resolveTransform() {
   GfComTransform *transform = mm::mtl::dynamicCast<GfComTransform>(unknown08->unknown38[GfComTransform::COMPONENT_INDEX]);
   if (transform->unknown10->unknowna8 != nullptr) {
@@ -92,6 +119,11 @@ void GfComEnvSensor::resolveTransform() {
 const fw::Transform &GfComEnvSensor::getTransform() {
   GfComTransform *transform = mm::mtl::dynamicCast<GfComTransform>(unknown08->unknown38[GfComTransform::COMPONENT_INDEX]);
   return transform->unknown10->unknown40;
+}
+
+void GfComEnvSensor::flushRoot() {
+  resolveTransform();
+  flushEnv(getTransform());
 }
 
 const mm::mtl::RTTI *GfComEnvSensor::getRTTI() const { return &m_rtti; }

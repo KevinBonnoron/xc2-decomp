@@ -5,6 +5,20 @@
 
 namespace ml {
 
+// The game stores unknown18 and unknown1c as `stp w8, wzr, [x0, #0x18]` (0x710086ee38). Written in declaration order (or in an
+// initialiser list) the two adjacent constant stores are merged by the DAG combiner into one 64-bit store (`stp xzr, x8`). With
+// unknown1c = 0 before unknown18 = 1, as update() clears the flags first, MemCpyOpt places the 24-byte memset of the zero members
+// between the two stores, so they stay separate and AArch64LoadStoreOpt pairs them. Measured over the 720 orders of the six
+// assignments: 222 give the game's code, among them all 120 that write unknown18 last; the declaration order does not.
+DrResMdoLodObj::DrResMdoLodObj() {
+  unknown00 = nullptr;
+  unknown08 = nullptr;
+  unknown10 = 0;
+  unknown14 = 0;
+  unknown1c = 0;
+  unknown18 = 1;
+}
+
 DrResMdoLodObj::~DrResMdoLodObj() {}
 
 int DrResMdoLodObj::calcWorkSize(const u8 *resource) {

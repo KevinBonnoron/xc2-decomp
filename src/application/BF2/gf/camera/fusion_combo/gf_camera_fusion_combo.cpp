@@ -2,11 +2,57 @@
 
 #include <math.h>
 
+#include "framework/memory/allocator.h"
+#include "framework/memory/framework_memory.h"
+#include "framework/reflection.h"
 #include "mm_math/mm_math.h"
 #include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
 
 namespace gf {
+
+void FusionComboCamera::createReflection(fw::Reflection *reflection, const char *name, u32 index) {
+#line 17
+  fw::ReflectionValueStruct *value = new (fw::Allocator::getDebAllocator(), 16, __FILE__, __LINE__) fw::ReflectionValueStruct(name, sizeof(unknown001));
+#line 18
+  value->add(new (fw::Allocator::getDebAllocator(), 16, __FILE__, __LINE__) fw::ReflectionValueF32("zoom_frame", offsetof(unknown001, zoom_frame), 0.0f, 1000.0f, 60.0f));
+#line 19
+  value->add(new (fw::Allocator::getDebAllocator(), 16, __FILE__, __LINE__) fw::ReflectionValueF32("zoom_start_distance", offsetof(unknown001, zoom_start_distance), -100.0f, 100.0f, 3.0f));
+#line 20
+  value->add(new (fw::Allocator::getDebAllocator(), 16, __FILE__, __LINE__) fw::ReflectionValueF32("zoom_end_distance", offsetof(unknown001, zoom_end_distance), -100.0f, 100.0f, 1.5f));
+#line 21
+  value->add(new (fw::Allocator::getDebAllocator(), 16, __FILE__, __LINE__) fw::ReflectionValueF32("zoom_base_width", offsetof(unknown001, zoom_base_width), 0.0f, 100.0f, 0.25f));
+#line 22
+  value->add(new (fw::Allocator::getDebAllocator(), 16, __FILE__, __LINE__) fw::ReflectionValueF32("zoom_add_width", offsetof(unknown001, zoom_add_width), 0.0f, 100.0f, 0.3f));
+#line 23
+  value->add(new (fw::Allocator::getDebAllocator(), 16, __FILE__, __LINE__) fw::ReflectionValueF32("zoom_base_height", offsetof(unknown001, zoom_base_height), 0.0f, 100.0f, 1.2f));
+#line 24
+  value->add(new (fw::Allocator::getDebAllocator(), 16, __FILE__, __LINE__) fw::ReflectionValueF32("zoom_add_height", offsetof(unknown001, zoom_add_height), 0.0f, 100.0f, 0.7f));
+#line 25
+  value->add(new (fw::Allocator::getDebAllocator(), 16, __FILE__, __LINE__) fw::ReflectionValueS32("zoom_mode", offsetof(unknown001, zoom_mode), 0, 1, 0));
+#line 27
+  value->add(new (fw::Allocator::getDebAllocator(), 16, __FILE__, __LINE__) fw::ReflectionValueF32("around_frame", offsetof(unknown001, around_frame), 0.0f, 1000.0f, 210.0f));
+#line 28
+  value->add(new (fw::Allocator::getDebAllocator(), 16, __FILE__, __LINE__) fw::ReflectionValueF32("around_start_distance", offsetof(unknown001, around_start_distance), 0.0f, 1000.0f, 10.0f));
+#line 29
+  value->add(new (fw::Allocator::getDebAllocator(), 16, __FILE__, __LINE__) fw::ReflectionValueF32("around_end_distance", offsetof(unknown001, around_end_distance), 0.0f, 1000.0f, 2.0f));
+#line 30
+  value->add(new (fw::Allocator::getDebAllocator(), 16, __FILE__, __LINE__) fw::ReflectionValueF32("around_rotate", offsetof(unknown001, around_rotate), 0.0f, 1000.0f, 360.0f));
+#line 31
+  value->add(new (fw::Allocator::getDebAllocator(), 16, __FILE__, __LINE__) fw::ReflectionValueF32("around_add_yaw", offsetof(unknown001, around_add_yaw), 0.0f, 180.0f, 45.0f));
+#line 32
+  value->add(new (fw::Allocator::getDebAllocator(), 16, __FILE__, __LINE__) fw::ReflectionValueF32("around_add_pitch", offsetof(unknown001, around_add_pitch), 0.0f, 180.0f, 45.0f));
+#line 33
+  value->add(new (fw::Allocator::getDebAllocator(), 16, __FILE__, __LINE__) fw::ReflectionValueS32("around_mode", offsetof(unknown001, around_mode), 0, 1, 0));
+#line 35
+  fw::ReflectionValueBitset32 *flags = new (fw::Allocator::getDebAllocator(), 16, __FILE__, __LINE__) fw::ReflectionValueBitset32("flags", offsetof(unknown001, flags));
+#line 36
+  flags->add(new (fw::Allocator::getDebAllocator(), 16, __FILE__, __LINE__) fw::ReflectionValueFlag("collision_enable", 1, false));
+#line 37
+  flags->add(new (fw::Allocator::getDebAllocator(), 16, __FILE__, __LINE__) fw::ReflectionValueFlag("speed_enable", 2, true));
+  value->add(flags);
+  reflection->setReflectionStruct(index, value);
+}
 
 FusionComboCamera::~FusionComboCamera() {}
 

@@ -131,6 +131,7 @@ public:
   void setShadowDirRenderTarget(int index);
   void setupShadowUnifrom(int index);
   ~DrPixlMan();
+  void clearAccumBuffer();
   void releaseColorBuffer();
   void resetLightBuffOnly();
   void createShadowParmDisplayList(wkPixlManRes *res);
@@ -172,6 +173,7 @@ public:
   void thicknessFirstBegin();
   DrPixlRenderTarget *getBackFaceDepthTexture();
   void thicknessFirstEnd();
+  void fastDeferredRender();
   void lastDeferredRender();
   void occRenderBegin(bool isFirst);
   void occRenderEnd();

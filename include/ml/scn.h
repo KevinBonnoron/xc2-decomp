@@ -137,17 +137,20 @@ static_assert(offsetof(ScnObjCam::RENDER_INFO, unknown2c0) == 0x2c0, "");
 // Layout from the ml::Scn::create defaults, which the Scn constructor copies; the members are unknown.
 class ScnSetup {
 public:
-  ScnSetup() : unknown00(0), unknown08(0x300000), unknown0c(0), unknown34(0x14000000), unknown38(0x80), unknown3c(0x1000), unknown40(0), unknown44(true) {}
+  ScnSetup() : unknown00(0), unknown08(0x300000), unknown34(0x14000000), unknown38(0x80), unknown3c(0x1000), unknown44(true) {}
 
   u64 unknown00;                 // Inferred role: copied to the scn; original member name unknown.
   s32 unknown08;                 // Inferred role: size of the scn memory; original member name unknown.
-  u32 unknown0c;                 // Inferred role: memory handle, 0 for the product memory; original member name unknown.
+  mtl::ALLOC_HANDLE unknown0c;   // Inferred role: memory handle, invalid for the product memory; original member name unknown.
   mm::mtl::FixStr<32> unknown10; // Inferred role: scn name; original member name unknown.
   s32 unknown34;                 // Inferred role: copied to the scn; original member name unknown.
   s32 unknown38;                 // Inferred role: copied to the scn; original member name unknown.
   s32 unknown3c;                 // Inferred role: copied to the scn; original member name unknown.
-  s32 unknown40;                 // Inferred role: copied to the scn; original member name unknown.
-  bool unknown44;                // Inferred role: tex stm; original member name unknown.
+  // Inferred role: memory handle; original member name unknown. The Scn constructor (0x710073fc4c) copies the setup with the implicit
+  // assignment, which copies unknown00 and unknown08 and then unknown34 to unknown3c as one run each (a 12 byte memcpy), and 0x40 with a
+  // load and a store of its own: a member with a copy assignment (a handle, like unknown0c) ends the run.
+  mtl::ALLOC_HANDLE unknown40;
+  bool unknown44; // Inferred role: tex stm; original member name unknown.
 };
 
 static_assert(offsetof(ScnSetup, unknown10) == 0x10, "");
@@ -184,10 +187,10 @@ static_assert(offsetof(ScnCamMan, unknown40) == 0x40, "");
 
 class Scn : public IWorkEvent, public mm::mtl::ReferenceObject, public mm::mtl::PtrSingleton<Scn> {
 public:
-  // Inferred role: deb draw info; original type name unknown.
+  // Inferred role: deb draw info; original type name unknown. The Scn constructor (0x710073fc4c) stores the screen 0 to 9 at 0xdfc + 8 * i and -1 at 0xe00 + 8 * i.
   struct unknown004 {
-    SCNPRIO_CB unknown00; // Inferred role: priority; original member name unknown.
-    s32 unknown04;        // Inferred role: screen; original member name unknown.
+    s32 unknown00;        // Inferred role: screen; original member name unknown.
+    SCNPRIO_CB unknown04; // Inferred role: priority; original member name unknown.
   };
 
   // Inferred type: render callback entry; the original type name is unknown.
@@ -203,6 +206,7 @@ public:
   };
 
   Scn(const ScnSetup *setup);
+  ~Scn() override;
   static Scn *create(const ScnSetup *setup);
   void init();
   void move();
@@ -243,11 +247,13 @@ public:
   ScnCamMan *unknown28;      // Inferred role: cam man; original member name unknown.
   ScnDebug *unknown30;       // Inferred role: scn debug; original member name unknown.
   ScnRenderDrSys *unknown38; // Inferred role: render dr sys; original member name unknown.
-  u8 _40[0x64 - 0x40];
+  bool unknown40;            // Inferred role: unknown; original member name unknown. Cleared by the constructor.
+  u8 _41[0x60 - 0x41];
+  u32 unknown60;               // Inferred role: unknown; original member name unknown. Cleared by the constructor.
   mtl::ALLOC_HANDLE unknown64; // Inferred role: alloc handle; original member name unknown.
-  u8 _68[0xac - 0x68];
-  bool unknownac; // Inferred role: tex stm; original member name unknown.
-  u8 _ad[0xb0 - 0xad];
+  // Inferred role: copy of the setup; original member name unknown. The constructor (0x710073fc4c) copies the members of the setup it
+  // gets over the defaults of ScnSetup, at the same relative offsets (0x68 to 0xb0).
+  ScnSetup unknown68;
   bool unknownb0; // Inferred role: update done, reset by tail; original member name unknown.
   u8 _b1[0xb4 - 0xb1];
   s32 unknownb4;            // Inferred role: cpu group handle; original member name unknown.
@@ -261,14 +267,17 @@ public:
   mm::mtl::FixedVector<FileResTh *, 32> unknowncf0; // Inferred role: entry res; original member name unknown.
   bool unknowndf8;                                  // Inferred role: pause; original member name unknown.
   bool unknowndf9;                                  // Inferred role: render stop; original member name unknown.
-  u8 _dfa[0xe00 - 0xdfa];
-  unknown004 unknowne00[10]; // Inferred role: deb draw infos, one per camera; original member name unknown.
+  u8 _dfa[0xdfc - 0xdfa];
+  unknown004 unknowndfc[10]; // Inferred role: deb draw infos, one per camera; original member name unknown.
 };
 
 static_assert(offsetof(Scn, unknown20) == 0x20, "");
 static_assert(offsetof(Scn, unknown38) == 0x38, "");
 static_assert(offsetof(Scn, unknown64) == 0x64, "");
-static_assert(offsetof(Scn, unknownac) == 0xac, "");
+static_assert(offsetof(Scn, unknown40) == 0x40, "");
+static_assert(offsetof(Scn, unknown60) == 0x60, "");
+static_assert(offsetof(Scn, unknown68) == 0x68, "");
+static_assert(offsetof(Scn, unknownb0) == 0xb0, "");
 static_assert(offsetof(Scn, unknownb4) == 0xb4, "");
 static_assert(offsetof(Scn, unknownb8) == 0xb8, "");
 static_assert(offsetof(Scn, unknown4b8) == 0x4b8, "");
@@ -278,6 +287,6 @@ static_assert(offsetof(Scn, unknownce0) == 0xce0, "");
 static_assert(offsetof(Scn, unknownce8) == 0xce8, "");
 static_assert(offsetof(Scn, unknowncf0) == 0xcf0, "");
 static_assert(offsetof(Scn, unknowndf8) == 0xdf8, "");
-static_assert(offsetof(Scn, unknowne00) == 0xe00, "");
+static_assert(offsetof(Scn, unknowndfc) == 0xdfc, "");
 
 } // namespace ml

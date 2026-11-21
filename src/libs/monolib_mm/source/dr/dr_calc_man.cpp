@@ -7,10 +7,13 @@
 #include "mtl/alloc_handle.h"
 
 // The game builds the clip manager and the clip works in the same unit, in address order: the constructor and the destructor of DrCalcClipMan
-// and the empty destructors of the clip works of DrCalcViewWork are inlined in DrCalcMan.
+// and the empty destructors of the clip works of DrCalcViewWork are inlined in DrCalcMan. Unit evidence (game 1.0.0, 0x71008a4744 to 0x71008ade6c): the
+// files follow the order of their last functions defined here, clip manager (to 0x71008a5778), clip objects (0x71008a63f0), view plane (0x71008a7f74),
+// view poli (0x71008a98b0), cp plane objects (0x71008aa06c to 0x71008aa120), then this file's functions (from 0x71008aa530).
 #include "dr_calc_clip_man.cpp"
 #include "dr_calc_clip_work_view_plane.cpp"
 #include "dr_calc_clip_work_view_poli.cpp"
+#include "dr_calc_cp_plane_obj.cpp"
 
 namespace ml {
 

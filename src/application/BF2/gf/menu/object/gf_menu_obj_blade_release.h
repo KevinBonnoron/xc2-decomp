@@ -32,9 +32,20 @@ class GfMenuObjBladeRelease : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
+    MainListener(GfMenuObjBladeRelease *owner) : _0c(), unknown20(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x20 - 0x0c];
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjBladeRelease *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
+  class ListListener : public ui::UIObjectListener {
+  public:
+    ListListener(GfMenuObjBladeRelease *owner) : unknown0c(0), _10(), unknown20(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    int unknown0c; // Inferred role: index of the cursor; original member name unknown.
+    u8 _10[0x1c - 0x10];
     GfMenuObjBladeRelease *unknown20; // Inferred role: owner; original member name unknown.
   };
 

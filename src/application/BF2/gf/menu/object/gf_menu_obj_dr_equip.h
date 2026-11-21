@@ -9,12 +9,6 @@
 #include "ui/event/ui_object_listener.h"
 #include "ui/ui_object_acc.h"
 
-namespace mm {
-namespace mtl {
-class ReferenceObject;
-} // namespace mtl
-} // namespace mm
-
 namespace ui {
 class UICtrlCursorSelect;
 class UISelectObjList;
@@ -82,7 +76,7 @@ public:
   ui::UISelectObjList *unknown30;                // Inferred role: item objects; original member name unknown.
   ui::UICtrlCursorSelect *unknown38;             // Inferred role: item cursor; original member name unknown.
   GfMenuCallContext *unknown40;                  // Inferred role: call context; original member name unknown.
-  mm::mtl::ReferenceObject *unknown48;           // Inferred role: reference-counted object; type and original member name unknown.
+  GfMenuCallContext *unknown48;                  // Inferred role: call context of the accessory removal confirmation (MainListener::reciveEvent); original member name unknown.
   GfMenuSequence<GfMenuObjDrEquip, 8> unknown50; // Inferred role: appear and leave steps; original member name unknown.
   int unknown2e0;                                // Inferred role: control of the appear and leave phases, -1 when idle; original member name unknown.
   u8 _2e4[0x2e8 - 0x2e4];

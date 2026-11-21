@@ -21,10 +21,10 @@ const char *CaptureManager::JPG_PATH = "C:/MonolithSoft/BF2/jpeg";
 const char *CaptureManager::JPG_PATH_OFS = "../../jpeg";
 const char *CaptureManager::CONV_PATH = "C:/Monolithsoft/BF2/execute/bf2tools/event/bmp2avi/bmp2avi";
 
-CaptureManager::CaptureManager() : unknown10(0), unknown14(MODE_UNKNOWN_0), unknown18(0) {}
+CaptureManager::CaptureManager() : unknown10(), unknown14(MODE_UNKNOWN_0), unknown18(0) {}
 
 void CaptureManager::clear() {
-  if ((unknown10 & FLAG_UNKNOWN_1) != 0) {
+  if (unknown10.test(FLAG_UNKNOWN_1)) {
     stop();
   }
 }
@@ -55,9 +55,26 @@ void CaptureManager::ready() {
   }
 }
 
+void CaptureManager::start() {
+  unknown10.set(FLAG_UNKNOWN_1);
+  unknown1c = 0;
+  unknown20.clear();
+  if (!isJpegMode()) {
+    unknown2828 = MOV_PATH;
+  } else {
+    unknown2828 = JPG_PATH;
+  }
+  unknown28ac = unknown2828;
+  unknown28ac += "/";
+  unknown28ac += Manager::get()->getSceneName();
+  unknown2930.format("%s/raw_%s.avi", unknown2828.c_str(), Manager::get()->getSceneName());
+  unknown29b4.format("%s/%s.mpg", unknown2828.c_str(), Manager::get()->getSceneName());
+  unknown2a38.format("%s/half_%s.mpg", unknown2828.c_str(), Manager::get()->getSceneName());
+}
+
 void CaptureManager::stop() {
   MODE mode = unknown14;
-  unknown10 &= ~FLAG_UNKNOWN_1;
+  unknown10.set(FLAG_UNKNOWN_1, false);
   switch (mode) {
   case MODE_UNKNOWN_0:
     mm::mtl::Singleton<FadeManager>::getPtr()->setDisableFade(false);
@@ -80,7 +97,7 @@ void CaptureManager::stop() {
 }
 
 void CaptureManager::update() {
-  if ((unknown10 & FLAG_UNKNOWN_1) == 0) {
+  if (!unknown10.test(FLAG_UNKNOWN_1)) {
     return;
   }
   if (mm::mtl::Singleton<FrameManager>::getPtr()->isPause(FrameManager::PAUSE_TYPE_UNKNOWN_17_2)) {
@@ -109,7 +126,7 @@ void CaptureManager::update() {
 }
 
 void CaptureManager::render() {
-  if ((unknown10 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) != FLAG_UNKNOWN_0) {
+  if (!unknown10.test(FLAG_UNKNOWN_0) || unknown10.test(FLAG_UNKNOWN_1)) {
     return;
   }
   s32 height = ml::DevGraph::getRootHeight();
@@ -128,21 +145,21 @@ void CaptureManager::render() {
   switch (unknown14) {
   case MODE_UNKNOWN_0:
     fw::debug::drawFontColor(mm::Col4::black);
-    fw::debug::drawFont(x + 1, y + 1, "      mode[movie mode] %s%s", filter.c_str(), (unknown10 & FLAG_UNKNOWN_2) != 0 ? "(+multi)" : "");
+    fw::debug::drawFont(x + 1, y + 1, "      mode[movie mode] %s%s", filter.c_str(), unknown10.test(FLAG_UNKNOWN_2) ? "(+multi)" : "");
     fw::debug::drawFontColor(mm::Col4::yellow);
-    fw::debug::drawFont(x, y, "      mode[movie mode] %s%s", filter.c_str(), (unknown10 & FLAG_UNKNOWN_2) != 0 ? "(+multi)" : "");
+    fw::debug::drawFont(x, y, "      mode[movie mode] %s%s", filter.c_str(), unknown10.test(FLAG_UNKNOWN_2) ? "(+multi)" : "");
     break;
   case MODE_UNKNOWN_1:
     fw::debug::drawFontColor(mm::Col4::black);
-    fw::debug::drawFont(x + 1, y + 1, "      mode[developer mode] %s%s", filter.c_str(), (unknown10 & FLAG_UNKNOWN_2) != 0 ? "(+multi)" : "");
+    fw::debug::drawFont(x + 1, y + 1, "      mode[developer mode] %s%s", filter.c_str(), unknown10.test(FLAG_UNKNOWN_2) ? "(+multi)" : "");
     fw::debug::drawFontColor(mm::Col4::yellow);
-    fw::debug::drawFont(x, y, "      mode[developer mode] %s%s", filter.c_str(), (unknown10 & FLAG_UNKNOWN_2) != 0 ? "(+multi)" : "");
+    fw::debug::drawFont(x, y, "      mode[developer mode] %s%s", filter.c_str(), unknown10.test(FLAG_UNKNOWN_2) ? "(+multi)" : "");
     break;
   case MODE_UNKNOWN_2:
     fw::debug::drawFontColor(mm::Col4::black);
-    fw::debug::drawFont(x + 1, y + 1, "      mode[composer mode] %s%s", filter.c_str(), (unknown10 & FLAG_UNKNOWN_2) != 0 ? "(+multi)" : "");
+    fw::debug::drawFont(x + 1, y + 1, "      mode[composer mode] %s%s", filter.c_str(), unknown10.test(FLAG_UNKNOWN_2) ? "(+multi)" : "");
     fw::debug::drawFontColor(mm::Col4::yellow);
-    fw::debug::drawFont(x, y, "      mode[composer mode] %s%s", filter.c_str(), (unknown10 & FLAG_UNKNOWN_2) != 0 ? "(+multi)" : "");
+    fw::debug::drawFont(x, y, "      mode[composer mode] %s%s", filter.c_str(), unknown10.test(FLAG_UNKNOWN_2) ? "(+multi)" : "");
     break;
   case MODE_UNKNOWN_3:
     fw::debug::drawFontColor(mm::Col4::black);
@@ -152,9 +169,9 @@ void CaptureManager::render() {
     break;
   case MODE_UNKNOWN_4:
     fw::debug::drawFontColor(mm::Col4::black);
-    fw::debug::drawFont(x + 1, y + 1, "      mode[sound mode] %s%s", filter.c_str(), (unknown10 & FLAG_UNKNOWN_2) != 0 ? "(+multi)" : "");
+    fw::debug::drawFont(x + 1, y + 1, "      mode[sound mode] %s%s", filter.c_str(), unknown10.test(FLAG_UNKNOWN_2) ? "(+multi)" : "");
     fw::debug::drawFontColor(mm::Col4::yellow);
-    fw::debug::drawFont(x, y, "      mode[sound mode] %s%s", filter.c_str(), (unknown10 & FLAG_UNKNOWN_2) != 0 ? "(+multi)" : "");
+    fw::debug::drawFont(x, y, "      mode[sound mode] %s%s", filter.c_str(), unknown10.test(FLAG_UNKNOWN_2) ? "(+multi)" : "");
     break;
   case MODE_UNKNOWN_5:
     fw::debug::drawFontColor(mm::Col4::black);
@@ -179,15 +196,11 @@ void CaptureManager::render() {
 
 void CaptureManager::reserve(bool isReserve, MODE mode, bool isMulti) {
   if (isReserve) {
-    unknown10 |= FLAG_UNKNOWN_0;
-    if (isMulti) {
-      unknown10 |= FLAG_UNKNOWN_2;
-    } else {
-      unknown10 &= ~FLAG_UNKNOWN_2;
-    }
+    unknown10.set(FLAG_UNKNOWN_0);
+    unknown10.set(FLAG_UNKNOWN_2, isMulti);
     unknown14 = mode;
   } else {
-    unknown10 &= ~FLAG_UNKNOWN_0;
+    unknown10.set(FLAG_UNKNOWN_0, false);
   }
 }
 
@@ -196,17 +209,17 @@ void CaptureManager::reserveFilter(int filter) { unknown18 = filter; }
 void CaptureManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
   case MSG_TYPE_UNKNOWN_4:
-    if ((unknown10 & FLAG_UNKNOWN_0) != 0) {
+    if (unknown10.test(FLAG_UNKNOWN_0)) {
       ready();
     }
     break;
   case MSG_TYPE_UNKNOWN_8:
-    if ((unknown10 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) == FLAG_UNKNOWN_0) {
+    if (unknown10.test(FLAG_UNKNOWN_0) && !unknown10.test(FLAG_UNKNOWN_1)) {
       start();
     }
     break;
   case MSG_TYPE_UNKNOWN_10:
-    if ((unknown10 & FLAG_UNKNOWN_1) != 0) {
+    if (unknown10.test(FLAG_UNKNOWN_1)) {
       stop();
     }
     break;

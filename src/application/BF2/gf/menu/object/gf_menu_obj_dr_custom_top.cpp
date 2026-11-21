@@ -296,6 +296,46 @@ bool GfMenuObjDrCustomTop::seqAddLayerPhase3_DrArtsSet() { return GfMenuObjDrArt
 
 bool GfMenuObjDrCustomTop::seqAddLayerPhase4() { return unknown50->isTerm(); }
 
+bool GfMenuObjDrCustomTop::seqAddLayerPhase5() {
+  if (unknown2e8 == -1) {
+    ui::UIObjectAcc main(unknown18, "LAY_main");
+    GfMenuObjCommonJog::OpenParam jogParam;
+    jogParam.unknown00 = 5;
+    GfMenuObjCommonJog::open(unknown40, jogParam);
+    GfMenuObject::setCallContextEventHandler(unknown40, main.unknown10);
+    ui::UIObjectAcc acc(unknown18, "LAY_driver");
+    mm::Pnt<s16> pos;
+    mm::Rect<s16> to;
+    // Twin of GfMenuObjBlCustomTop::seqAddLayerPhase5 (1.0.0: 0x7100410010; this one is 0x71004503ec): the rect block is written out as there (ruling 2026-11-13 #8): a file-local helper
+    // over the two layout names, returning the position or filling it, gives the game's 104 instructions but another stack layout (first difference at 0x7100450420, measured).
+    // `from` has its own scope (ruling 2026-11-13 #3), the game shares its stack slot with the CtrlParam.
+    {
+      mm::Rect<s16> from;
+      acc.getLayoutRect("dr_chage _position02", from);
+      acc.getLayoutRect("dr_chage _position01", to);
+      acc.getPos(pos);
+      pos.x += to.x - from.x;
+      pos.y += to.y - from.y;
+    }
+    GfMenuObjUtil::CtrlParam param;
+    // Ruling 2026-11-13 #4, same order as GfMenuObjBlCustomTop::seqAddLayerPhase5 (0x7100410010).
+    param.unknown08 = 0x80;
+    param.unknown26 = pos;
+    param.unknown0c = 1;
+    param.unknown00 = 0.25f;
+    unknown2e8 = GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
+  }
+  // Ruling 2026-11-13 #3: `result` has its own scope as in GfMenuObjBlCustomTop::seqAddLayerPhase5 (0x7100410010).
+  {
+    GfMenuCallContext::GfMenuResult result;
+    if ((!unknown40->isActive() || (!unknown40->unknown18.empty() && unknown40->popResult(result) && result.unknown04 == 0)) && !GfMenuObjUtil::isBusyCtrl(unknown2e8)) {
+      unknown2e8 = -1;
+      return true;
+    }
+  }
+  return false;
+}
+
 bool GfMenuObjDrCustomTop::seqEndAddLayer() {
   mm::mtl::safeRelease(unknown50);
   resumeInput();

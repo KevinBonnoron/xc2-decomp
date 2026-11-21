@@ -11,6 +11,7 @@
 #include "gf/data/gf_data_system.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/field/gf_field_time.h"
+#include "gf/field/gf_real_time.h"
 #include "gf/game/quest/gf_quest_data.h"
 #include "gf/game/quest/gf_quest_id.h"
 #include "mm_math/mm_vec3.h"
@@ -80,10 +81,10 @@ struct SDataGame {
   u32 unknown10ad4c;                                   // Inferred role: assure count; original member name unknown.
   u16 unknown10ad50;                                   // Inferred role: rare blade appear type; original member name unknown.
   u8 _10ad52[0x10ad54 - 0x10ad52];
-  u32 unknown10ad54;                                          // Inferred role: coin; original member name unknown.
-  u32 unknown10ad58[4];                                       // Inferred role: saved hp; original member name unknown.
-  u64 unknown10ad68;                                          // Inferred role: save real time; original member name unknown.
-  f32 unknown10ad70;                                          // Inferred role: camera height; original member name unknown.
+  u32 unknown10ad54;      // Inferred role: coin; original member name unknown.
+  u32 unknown10ad58[4];   // Inferred role: saved hp; original member name unknown.
+  RealTime unknown10ad68; // Inferred role: save real time; passed by address to GfFieldTime::getRealTime by GfGameUtilSaveData::setupGameSaveData (0x71003558b8); original member name unknown.
+  f32 unknown10ad70;      // Inferred role: camera height; original member name unknown.
   mm::mtl::FixedArray<u8, 0x10ae74 - 0x10ad74> unknown10ad74; // Inferred role: block of 0x100 bytes copied by GfGameUtil::setupNewGameParam (memcpy at 0x71003511c8); original member name unknown.
   f32 unknown10ae74;                                          // Inferred role: camera yaw; original member name unknown.
   f32 unknown10ae78;                                          // Inferred role: camera pitch; original member name unknown.
@@ -102,6 +103,24 @@ struct SDataGame {
 
   SDataGame();
   SDataGame &operator=(const SDataGame &dataGame);
+
+  // Inferred helper: copies one game flag of a size from another save game; original name unknown. Inlined in GfGameUtil::setupNewGameParam (0x7100351354) and in
+  // GfGameUtilSaveData::setupGameSaveData (0x7100355178).
+  void unknown001(const SDataGame &src, u32 size, int flag) { GfGameFlag::setLocal(unknownfbbc4, size, flag, GfGameFlag::getLocal(src.unknownfbbc4, size, flag)); }
+
+  // Inferred helper: copies the game flags of a size from first up to last (excluded), the loops that start at the first flag (0x71003517e4); original name unknown.
+  void unknown002(const SDataGame &src, u32 size, int first, int last) {
+    for (int flag = first; flag < last; flag++) {
+      unknown001(src, size, flag);
+    }
+  }
+
+  // Inferred helper: copies count game flags of a size from a base flag, the loops that add the base to a counter (0x7100351370); original name unknown.
+  void unknown003(const SDataGame &src, u32 size, int base, int count) {
+    for (int i = 0; i < count; i++) {
+      unknown001(src, size, base + i);
+    }
+  }
 };
 
 static_assert(offsetof(SDataGame, unknown00) == 0x0, "");

@@ -3,13 +3,13 @@
 
 #include "gf/menu/gf_menu_object.h"
 #include "gf/menu/gf_menu_sequence.h"
+#include "gf/menu/list/gf_menu_field_skill_list.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
 #include "ui/event/ui_object_listener.h"
 
 namespace gf {
 class GfMenuCallContext;
-class GfMenuFieldSkillList;
 class GfMenuReferenceFs;
 class GfMenuReferenceNumber;
 struct GAME_VOICE_HANDLE;
@@ -48,6 +48,23 @@ public:
     GfMenuObjFieldSkill *unknown20; // Inferred role: owner; original member name unknown.
   };
 
+  class SkillInfoListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    int unknown0c; // Inferred role: blade shown flag; original member name unknown.
+    // Both views are in the game's accesses: 32-bit loads and stores of each member, and one 64-bit store of zero for both (str xzr) by the first event.
+    union {
+      u64 unknown10_u64; // 64-bit view of the two members below; original member name unknown.
+      struct {
+        int unknown10; // Inferred role: skill shown flag; original member name unknown.
+        u32 unknown14; // Inferred role: blade; original member name unknown.
+      };
+    };
+    u8 _18[0x20 - 0x18];
+    GfMenuObjFieldSkill *unknown20; // Inferred role: owner; original member name unknown.
+  };
+
   struct OpenSkillInfoParam {
     u32 unknown00_0 : 16; // Inferred role: skill; original member name unknown.
     u32 unknown00_16 : 8; // Inferred role: level; original member name unknown.
@@ -82,15 +99,17 @@ public:
   bool seqWaitVoice();
 
   u8 _24[0x28 - 0x24];
-  mm::mtl::IntrusivePtr<GfMenuReferenceNumber> unknown28; // Inferred role: reference number; original member name unknown.
-  mm::mtl::IntrusivePtr<GfMenuReferenceNumber> unknown30; // Inferred role: reference number; original member name unknown.
-  mm::mtl::IntrusivePtr<GfMenuReferenceNumber> unknown38; // Inferred role: reference number; original member name unknown.
-  mm::mtl::IntrusivePtr<GfMenuReferenceNumber> unknown40; // Inferred role: reference number; original member name unknown.
-  GfMenuFieldSkillList *unknown48;                        // Inferred role: field skills; original member name unknown.
-  mm::mtl::IntrusivePtr<GfMenuReferenceFs> unknown50;     // Inferred role: field skill reference; original member name unknown.
-  u16 unknown58;                                          // Role and original member name unknown, cleared by the constructor.
-  bool unknown5a;                                         // Role and original member name unknown, cleared by the constructor.
-  u8 _5b[0x5c - 0x5b];
+  mm::mtl::IntrusivePtr<GfMenuReferenceNumber>
+      unknown28[2]; // Inferred role: reference numbers of the two total skills, indexed by the skill of the event (TotalListener::reciveEvent); original member name unknown.
+  mm::mtl::IntrusivePtr<GfMenuReferenceNumber> unknown38[2]; // Inferred role: reference numbers of the two total gauges, indexed like unknown28; original member name unknown.
+  GfMenuFieldSkillList *unknown48;                           // Inferred role: field skills; original member name unknown.
+  mm::mtl::IntrusivePtr<GfMenuReferenceFs> unknown50;        // Inferred role: field skill reference; original member name unknown.
+  // Both views are in the game's accesses: SkillInfoListener::reciveEvent copies it whole into unknown50 (one 32-bit load and store) and stores the 24-bit word of the event parameters (and w,
+  // #0xffffff).
+  union {
+    MenuFieldSkill unknown58; // Inferred role: field skill shown by the skill info; original member name unknown.
+    u32 unknown58_u32;        // 32-bit view of the field skill and its level; original member name unknown.
+  };
   // Decision 2026-11-14 #19: two bools instead of the former u16, as the byte accesses of two game functions show: BaseListener::reciveEvent (ldrb at 0x7100468ad4, and ldrh then and w10, w9, #0xff /
   // cmp w9, #0x100 at 0x7100468a14) and TotalListener::reciveEvent (strb at 0x7100469600, 0x710046960c, 0x7100469798).
   bool unknown5c; // Inferred role: treasure request flag, read as a byte by BaseListener::reciveEvent (0x7100468ad4); original member name unknown.
@@ -104,9 +123,7 @@ public:
 
 static_assert(offsetof(GfMenuObjFieldSkill, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown48) == 0x48, "");
-static_assert(offsetof(GfMenuObjFieldSkill, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown38) == 0x38, "");
-static_assert(offsetof(GfMenuObjFieldSkill, unknown40) == 0x40, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown50) == 0x50, "");
 static_assert(offsetof(GfMenuObjFieldSkill::MainListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjFieldSkill::BladeListener, unknown0c) == 0x0c, "");
@@ -115,7 +132,10 @@ static_assert(offsetof(GfMenuObjFieldSkill::BaseListener, unknown10) == 0x10, ""
 static_assert(offsetof(GfMenuObjFieldSkill::BaseListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown60) == 0x60, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown58) == 0x58, "");
-static_assert(offsetof(GfMenuObjFieldSkill, unknown5a) == 0x5a, "");
+static_assert(offsetof(GfMenuObjFieldSkill::SkillInfoListener, unknown0c) == 0x0c, "");
+static_assert(offsetof(GfMenuObjFieldSkill::SkillInfoListener, unknown10) == 0x10, "");
+static_assert(offsetof(GfMenuObjFieldSkill::SkillInfoListener, unknown14) == 0x14, "");
+static_assert(offsetof(GfMenuObjFieldSkill::SkillInfoListener, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown5c) == 0x5c, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown5d) == 0x5d, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown68) == 0x68, "");
