@@ -230,8 +230,8 @@ public:
   u8 _2fc[0x300 - 0x2fc];
   mm::mtl::IntrusivePtr<fw::ParamList> unknown300; // Inferred role: pc param list; original member name unknown.
   u8 _308[0x310 - 0x308];
-  pc::GfPropertyField unknown310;  // Inferred role: field; original member name unknown.
-  pc::GfPropertyBattle unknown470; // Inferred role: battle; original member name unknown.
+  pc::GfPropertyField m_propertyField;   // Inferred role: field; original member name unknown.
+  pc::GfPropertyBattle m_battleProperty; // Inferred role: battle; named after the game accessor gf::pc::StateBattleBase::GetBattleProperty.
 };
 
 static_assert(offsetof(GfComPropertyPc, unknown38) == 0x38, "");
@@ -282,8 +282,8 @@ static_assert(offsetof(GfComPropertyPc, unknown2f0) == 0x2f0, "");
 static_assert(offsetof(GfComPropertyPc, unknown2f4) == 0x2f4, "");
 static_assert(offsetof(GfComPropertyPc, unknown2f8) == 0x2f8, "");
 static_assert(offsetof(GfComPropertyPc, unknown300) == 0x300, "");
-static_assert(offsetof(GfComPropertyPc, unknown310) == 0x310, "");
-static_assert(offsetof(GfComPropertyPc, unknown470) == 0x470, "");
+static_assert(offsetof(GfComPropertyPc, m_propertyField) == 0x310, "");
+static_assert(offsetof(GfComPropertyPc, m_battleProperty) == 0x470, "");
 
 // Inferred role: sets the turn direction from the input axes, the facing direction when there is no input (shared by the enter of
 // StateFieldTurn, StateFieldIdleTurn and StateFieldWaterIdleTurn); original name unknown. Internal linkage: as an inline member

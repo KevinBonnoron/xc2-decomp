@@ -20,17 +20,17 @@ public:
   };
 
   struct Packet {
-    Packet() : unknown10() {}
+    Packet() : m_paramAdapter() {}
 
-    mm::Vec3 unknown00;         // Inferred role: velocity; original member name unknown.
-    fw::ParamAdapter unknown10; // Inferred role: brake param; original member name unknown.
+    mm::Vec3 unknown00;              // Inferred role: velocity; original member name unknown.
+    fw::ParamAdapter m_paramAdapter; // Inferred role: brake param; original member name unknown.
   };
 
   static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
   void update(const fw::UpdateInfo &info, Packet &packet);
 };
 
-static_assert(offsetof(GfMoveBrakeControler::Packet, unknown10) == 0x10, "");
+static_assert(offsetof(GfMoveBrakeControler::Packet, m_paramAdapter) == 0x10, "");
 static_assert(sizeof(GfMoveBrakeControler::Packet) == 0x20, "");
 static_assert(sizeof(GfMoveBrakeControler::Param) == 0x04, "");
 

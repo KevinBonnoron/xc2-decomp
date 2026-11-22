@@ -25,14 +25,14 @@ void RchaEff::clear() { RchaNode::clear(); }
 
 int RchaEff::getValueInt(int slot, f32 frame, int defaultValue) const {
   if (unknown19a4[slot] >= 0) {
-    return unknown10[unknown19a4[slot]].getValueInt(frame);
+    return m_rchaAnm[unknown19a4[slot]].getValueInt(frame);
   }
   return defaultValue;
 }
 
 f32 RchaEff::getValue(int slot, f32 frame, f32 defaultValue) const {
   if (unknown19a4[slot] >= 0) {
-    return unknown10[unknown19a4[slot]].getValue(frame);
+    return m_rchaAnm[unknown19a4[slot]].getValue(frame);
   }
   return defaultValue;
 }
@@ -74,21 +74,21 @@ bool RchaEff::getCol(mm::Col4 &color, f32 frame) const {
 
 bool RchaEff::isGenelate(f32 frame) const {
   if (unknown19a4[EFFATR_UNKNOWN_10] >= 0) {
-    return unknown10[unknown19a4[EFFATR_UNKNOWN_10]].getValue(frame) > 0.8f;
+    return m_rchaAnm[unknown19a4[EFFATR_UNKNOWN_10]].getValue(frame) > 0.8f;
   }
   return false;
 }
 
 bool RchaEff::isEnd(f32 frame) const {
   if (unknown19a4[EFFATR_UNKNOWN_18] >= 0) {
-    return unknown10[unknown19a4[EFFATR_UNKNOWN_18]].getValue(frame) > 0.8f;
+    return m_rchaAnm[unknown19a4[EFFATR_UNKNOWN_18]].getValue(frame) > 0.8f;
   }
   return false;
 }
 
 bool RchaEff::isKill(f32 frame) const {
   if (unknown19a4[EFFATR_UNKNOWN_19] >= 0) {
-    return unknown10[unknown19a4[EFFATR_UNKNOWN_19]].getValue(frame) > 0.8f;
+    return m_rchaAnm[unknown19a4[EFFATR_UNKNOWN_19]].getValue(frame) > 0.8f;
   }
   return false;
 }

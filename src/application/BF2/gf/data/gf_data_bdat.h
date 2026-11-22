@@ -39,7 +39,7 @@ public:
 
 private:
   u8 *unknown10[BDAT_COUNT];                         // Inferred role: fps; original member name unknown.
-  u32 unknowncf8;                                    // Inferred role: reload count; original member name unknown.
+  u32 m_reloadCount;                                 // Inferred role: reload count; named after the game accessor gf::GfDataBdat::getReloadCount.
   bool unknowncfc;                                   // Inferred role: initialized; original member name unknown.
   mm::mtl::FixedVector<IDataBdat *, 128> unknownd00; // Inferred role: listeners; original member name unknown.
 
@@ -48,7 +48,7 @@ private:
 
 struct GfDataBdatLayout {
   static_assert(offsetof(GfDataBdat, unknown10) == 0x10, "");
-  static_assert(offsetof(GfDataBdat, unknowncf8) == 0xcf8, "");
+  static_assert(offsetof(GfDataBdat, m_reloadCount) == 0xcf8, "");
   static_assert(offsetof(GfDataBdat, unknowncfc) == 0xcfc, "");
   static_assert(offsetof(GfDataBdat, unknownd00) == 0xd00, "");
   static_assert(sizeof(GfDataBdat) == 0x1108, "");

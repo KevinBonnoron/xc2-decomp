@@ -21,11 +21,11 @@ public:
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isCondMatched() const;
 
-    u16 unknown00;              // Inferred role: condition; original member name unknown.
-    u16 unknown02;              // Inferred role: event id; original member name unknown.
-    u16 unknown04;              // Inferred role: icon; original member name unknown.
-    ScenarioFlagCond unknown06; // Inferred role: scenario flag; original member name unknown.
-    QuestFlagCond unknown0a;    // Inferred role: quest flag; original member name unknown.
+    u16 unknown00;                       // Inferred role: condition; original member name unknown.
+    u16 unknown02;                       // Inferred role: event id; original member name unknown.
+    u16 unknown04;                       // Inferred role: icon; original member name unknown.
+    ScenarioFlagCond m_scenarioFlagCond; // Inferred role: scenario flag; original member name unknown.
+    QuestFlagCond m_questFlagCond;       // Inferred role: quest flag; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_EVENT; // Inferred name; shared by every gimmick class for the TGmkList templates.
@@ -43,16 +43,16 @@ public:
   void createGmkPhantom();
 
   // Inferred helper: bdat info of the event; original name unknown.
-  const BdatInfo *unknown001() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
+  const BdatInfo *unknown001() const { return reinterpret_cast<const BdatInfo *>(m_createInfo.unknown10); }
 
-  GmkPhantom unknown60; // Inferred role: phantom; original member name unknown.
-  bool unknownf0;       // Role and original member name unknown.
-  bool unknownf1;       // Role and original member name unknown.
-  bool unknownf2;       // Role and original member name unknown.
+  GmkPhantom m_gmkPhantom; // Inferred role: phantom; original member name unknown.
+  bool unknownf0;          // Role and original member name unknown.
+  bool unknownf1;          // Role and original member name unknown.
+  bool unknownf2;          // Role and original member name unknown.
 };
 
 static_assert(sizeof(GmkEvent::BdatInfo) == 0xe, "");
-static_assert(offsetof(GmkEvent, unknown60) == 0x60, "");
+static_assert(offsetof(GmkEvent, m_gmkPhantom) == 0x60, "");
 static_assert(offsetof(GmkEvent, unknownf0) == 0xf0, "");
 static_assert(offsetof(GmkEvent, unknownf1) == 0xf1, "");
 static_assert(offsetof(GmkEvent, unknownf2) == 0xf2, "");

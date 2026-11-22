@@ -64,19 +64,19 @@ public:
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
   void onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) override;
 
-  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
-  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
+  const Data *getData() const { return static_cast<const Data *>(m_createInfo.unknown08); }
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(m_createInfo.unknown10); }
 
   bool unknown48;               // Inferred role: enemy defeated; original member name unknown.
   gf::GF_OBJ_HANDLE *unknown50; // Inferred role: handle; original member name unknown.
-  mutable GmkAcc unknown58;     // Inferred role: enemy; original member name unknown.
+  mutable GmkAcc m_gmkAcc;      // Inferred role: enemy; original member name unknown.
   mutable bool unknown98;       // Inferred role: enemy popped; original member name unknown.
 };
 
 static_assert(sizeof(GmkGrave::BdatInfo) == 0x14, "");
 static_assert(offsetof(GmkGrave, unknown48) == 0x48, "");
 static_assert(offsetof(GmkGrave, unknown50) == 0x50, "");
-static_assert(offsetof(GmkGrave, unknown58) == 0x58, "");
+static_assert(offsetof(GmkGrave, m_gmkAcc) == 0x58, "");
 static_assert(offsetof(GmkGrave, unknown98) == 0x98, "");
 static_assert(sizeof(GmkGrave) == 0xa0, "");
 

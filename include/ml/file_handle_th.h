@@ -81,10 +81,10 @@ public:
   s32 unknown20;   // Role and original member name unknown.
   s32 unknown24;   // Role and original member name unknown.
   s32 m_currentPtr;
-  mtl::ALLOC_HANDLE unknown2c;                          // Inferred role: mem handle; original member name unknown.
+  mtl::ALLOC_HANDLE m_ALLOC_HANDLE;                     // Inferred role: mem handle; original member name unknown.
   void *unknown30;                                      // Inferred role: file size, or the allocator of the buffer; original member name unknown.
   mm::mtl::FixedVector<mtl::ALLOC_HANDLE, 8> unknown38; // Inferred role: fallback mem handles; original member name unknown.
-  IWorkEvent *unknown60;                                // Inferred role: event listener; original member name unknown.
+  IWorkEvent *m_iWorkEvent;                             // Inferred role: event listener; original member name unknown.
   void *unknown68;                                      // Inferred role: event; original member name unknown.
   void **unknown70;                                     // Inferred role: loaded data output; original member name unknown.
   s32 *unknown78;                                       // Inferred role: loaded size output; original member name unknown.
@@ -121,10 +121,10 @@ static_assert(offsetof(FileHandleTh, unknown10) == 0x10, "");
 static_assert(offsetof(FileHandleTh, unknown18) == 0x18, "");
 static_assert(offsetof(FileHandleTh, unknown20) == 0x20, "");
 static_assert(offsetof(FileHandleTh, m_currentPtr) == 0x28, "");
-static_assert(offsetof(FileHandleTh, unknown2c) == 0x2c, "");
+static_assert(offsetof(FileHandleTh, m_ALLOC_HANDLE) == 0x2c, "");
 static_assert(offsetof(FileHandleTh, unknown30) == 0x30, "");
 static_assert(offsetof(FileHandleTh, unknown38) == 0x38, "");
-static_assert(offsetof(FileHandleTh, unknown60) == 0x60, "");
+static_assert(offsetof(FileHandleTh, m_iWorkEvent) == 0x60, "");
 static_assert(offsetof(FileHandleTh, unknown68) == 0x68, "");
 static_assert(offsetof(FileHandleTh, unknown80) == 0x80, "");
 static_assert(offsetof(FileHandleTh, unknown88) == 0x88, "");

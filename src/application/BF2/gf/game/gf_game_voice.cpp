@@ -58,26 +58,26 @@ class VoiceInfo {
 public:
   class PJOB {
   public:
-    PJOB(VoiceInfo *info) : unknown08(info) {}
+    PJOB(VoiceInfo *info) : m_voiceInfo(info) {}
     virtual ~PJOB() {}
     virtual bool exec() = 0;
     virtual const GfVoiceName *getName() { return nullptr; }
     virtual GAME_VOICE_HANDLE *getVoiceHandle() const { return nullptr; }
 
-    VoiceInfo *unknown08; // Inferred role: owner; original member name unknown.
+    VoiceInfo *m_voiceInfo; // Inferred role: owner; original member name unknown.
   };
 
   class PJOB_PLAY : public PJOB {
   public:
     PJOB_PLAY(VoiceInfo *info, GAME_VOICE_HANDLE *voiceHandle, const ParamObj &object, const GfVoiceName &name, CV_PRIO priority)
-        : PJOB(info), m_voiceHandle(voiceHandle), unknown18(object), m_name(name), unknown44(priority) {}
+        : PJOB(info), m_voiceHandle(voiceHandle), m_paramObj(object), m_name(name), unknown44(priority) {}
     ~PJOB_PLAY() {}
     bool exec() override;
     const GfVoiceName *getName() override { return &m_name; }
     GAME_VOICE_HANDLE *getVoiceHandle() const override { return m_voiceHandle; }
 
     GAME_VOICE_HANDLE *m_voiceHandle;
-    ParamObj unknown18; // Inferred role: object; original member name unknown.
+    ParamObj m_paramObj; // Inferred role: object; original member name unknown.
     GfVoiceName m_name;
     CV_PRIO unknown44; // Inferred role: priority; original member name unknown.
   };
@@ -121,17 +121,17 @@ public:
   CV_PRIO unknown04;                         // Inferred role: priority; original member name unknown.
   u32 unknown08;                             // Inferred role: cleared by clear; original member name unknown.
   f32 unknown0c;                             // Inferred role: time since the play request; original member name unknown.
-  ParamObj unknown10;                        // Inferred role: object; original member name unknown.
-  SoundHandle unknown20;                     // Inferred role: sound; original member name unknown.
-  GAME_VOICE_HANDLE *unknown28;              // Inferred role: voice handle; original member name unknown.
+  ParamObj m_paramObj;                       // Inferred role: object; original member name unknown.
+  SoundHandle m_soundHandle;                 // Inferred role: sound; original member name unknown.
+  GAME_VOICE_HANDLE *m_GAME_VOICE_HANDLE;    // Inferred role: voice handle; original member name unknown.
   mm::mtl::FixedQueue<PJOB *, 16> unknown30; // Inferred role: jobs; original member name unknown.
 };
 
 static_assert(offsetof(VoiceInfo, unknown04) == 0x04, "");
 static_assert(offsetof(VoiceInfo, unknown0c) == 0x0c, "");
-static_assert(offsetof(VoiceInfo, unknown10) == 0x10, "");
-static_assert(offsetof(VoiceInfo, unknown20) == 0x20, "");
-static_assert(offsetof(VoiceInfo, unknown28) == 0x28, "");
+static_assert(offsetof(VoiceInfo, m_paramObj) == 0x10, "");
+static_assert(offsetof(VoiceInfo, m_soundHandle) == 0x20, "");
+static_assert(offsetof(VoiceInfo, m_GAME_VOICE_HANDLE) == 0x28, "");
 static_assert(offsetof(VoiceInfo, unknown30) == 0x30, "");
 static_assert(sizeof(VoiceInfo) == 0xc0, "");
 static_assert(sizeof(VoiceInfo::PJOB_PLAY) == 0x48, "");
@@ -140,18 +140,18 @@ static_assert(sizeof(VoiceInfo::PJOB_WAIT_STOP) == 0x10, "");
 
 // Inferred role: tells whether a voice belongs to an object, by handle or by type and id; original name unknown.
 inline bool unknown007(const ParamObj &voice, const ParamObj &object) {
-  if (voice.unknown00 == unknown020) {
+  if (voice.m_GF_OBJ_HANDLE == unknown020) {
     return voice.unknown08 == object.unknown08 && voice.unknown0c == object.unknown0c;
   }
-  return voice.unknown00 == object.unknown00;
+  return voice.m_GF_OBJ_HANDLE == object.m_GF_OBJ_HANDLE;
 }
 
 // Inferred role: predicate selecting the voice of an object; original name unknown.
 struct unknown008 {
-  unknown008(const ParamObj &object) : unknown00(object) {}
-  bool operator()(VoiceInfo *info) const { return unknown007(info->unknown10, unknown00); }
+  unknown008(const ParamObj &object) : m_paramObj(object) {}
+  bool operator()(VoiceInfo *info) const { return unknown007(info->m_paramObj, m_paramObj); }
 
-  ParamObj unknown00;
+  ParamObj m_paramObj;
 };
 
 bool GfVoiceName::isValid() const { return unknown18 != 0; }
@@ -261,19 +261,19 @@ GAME_VOICE_HANDLE *GfSalvageVoice::playResultVoice(GF_OBJ_HANDLE *handle, CV_SAL
   return nullptr;
 }
 
-VoiceInfo::VoiceInfo() : unknown00(true), unknown04(CV_PRIO_UNKNOWN_0), unknown0c(0.0f), unknown10{unknown020, 0, 0}, unknown20(), unknown28(nullptr) { clear(); }
+VoiceInfo::VoiceInfo() : unknown00(true), unknown04(CV_PRIO_UNKNOWN_0), unknown0c(0.0f), m_paramObj{unknown020, 0, 0}, m_soundHandle(), m_GAME_VOICE_HANDLE(nullptr) { clear(); }
 
 void VoiceInfo::clear() {
-  if (unknown20.isValid()) {
+  if (m_soundHandle.isValid()) {
     GfSound *sound = GfSound::get();
     if (sound != nullptr) {
-      sound->stopVoice(unknown20, 0.0f);
+      sound->stopVoice(m_soundHandle, 0.0f);
     }
-    unknown20.clear();
+    m_soundHandle.clear();
   }
   unknown04 = CV_PRIO_UNKNOWN_0;
-  unknown28 = nullptr;
-  unknown10 = {unknown020, 0, 0};
+  m_GAME_VOICE_HANDLE = nullptr;
+  m_paramObj = {unknown020, 0, 0};
   unknown08 = 0;
   unknown0c = 0.0f;
   destroyJob();
@@ -297,8 +297,8 @@ void VoiceInfo::update(const fw::UpdateInfo &info) {
     delete job;
     it = unknown30.erase(it);
   }
-  if (unknown20.isValid()) {
-    GfObjAcc acc(unknown10.unknown00);
+  if (m_soundHandle.isValid()) {
+    GfObjAcc acc(m_paramObj.m_GF_OBJ_HANDLE);
     if (acc.isValidTransform()) {
       applyPosition(acc.getWorldTransform().unknown00);
     }
@@ -307,13 +307,13 @@ void VoiceInfo::update(const fw::UpdateInfo &info) {
 }
 
 bool VoiceInfo::isEmpty() const {
-  if (unknown20.isValid()) {
+  if (m_soundHandle.isValid()) {
     return false;
   }
   return unknown30.size() == 0;
 }
 
-void VoiceInfo::applyPause(const GfGameVoice::VoiceInfoPause &) { GfObjUtil::getObjLayer(unknown10.unknown00); }
+void VoiceInfo::applyPause(const GfGameVoice::VoiceInfoPause &) { GfObjUtil::getObjLayer(m_paramObj.m_GF_OBJ_HANDLE); }
 
 const GfVoiceName &VoiceInfo::getName() const {
   static GfVoiceName s_empty("");
@@ -328,7 +328,7 @@ const GfVoiceName &VoiceInfo::getName() const {
 
 bool VoiceInfo::isEnableVoiceHandle(GAME_VOICE_HANDLE *voice) const {
   if (voice != nullptr) {
-    if (unknown28 == voice) {
+    if (m_GAME_VOICE_HANDLE == voice) {
       return true;
     }
     for (mm::mtl::FixedQueue<PJOB *, 16>::const_iterator it = unknown30.begin(); it != unknown30.end(); ++it) {
@@ -340,14 +340,14 @@ bool VoiceInfo::isEnableVoiceHandle(GAME_VOICE_HANDLE *voice) const {
   return false;
 }
 
-bool VoiceInfo::isSoundValid() const { return unknown20.isValid(); }
+bool VoiceInfo::isSoundValid() const { return m_soundHandle.isValid(); }
 
-void VoiceInfo::applyPosition(const mm::Vec3 &) { unknown20.isValid(); }
+void VoiceInfo::applyPosition(const mm::Vec3 &) { m_soundHandle.isValid(); }
 
 // The __LINE__ of the operator new calls of addPlay, addStop and addWaitStop are 0x349, 0x351, 0x361 and 0x369 in the game.
 void VoiceInfo::addPlay(GAME_VOICE_HANDLE *voice, const ParamObj &object, const GfVoiceName &name, CV_PRIO priority) {
   if (!unknown30.full()) {
-    unknown10 = object;
+    m_paramObj = object;
 #line 841
     unknown30.push(new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) PJOB_PLAY(this, voice, object, name, priority));
   }
@@ -355,27 +355,27 @@ void VoiceInfo::addPlay(GAME_VOICE_HANDLE *voice, const ParamObj &object, const 
 
 void VoiceInfo::addPlay(GAME_VOICE_HANDLE *voice, const char *name, CV_PRIO priority) {
   if (!unknown30.full()) {
-    unknown10 = {unknown020, 0, 0};
+    m_paramObj = {unknown020, 0, 0};
 #line 849
-    unknown30.push(new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) PJOB_PLAY(this, voice, unknown10, GfVoiceName(name), priority));
+    unknown30.push(new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) PJOB_PLAY(this, voice, m_paramObj, GfVoiceName(name), priority));
   }
 }
 
 void VoiceInfo::addPlay(GAME_VOICE_HANDLE *voice, SoundHandle sound, const GfVoiceName &) {
-  unknown20 = sound;
-  unknown28 = voice;
+  m_soundHandle = sound;
+  m_GAME_VOICE_HANDLE = voice;
   unknown04 = CV_PRIO_UNKNOWN_3;
 }
 
 void VoiceInfo::addStop(CV_PRIO priority) {
-  if (!unknown30.full() && unknown20.isValid()) {
+  if (!unknown30.full() && m_soundHandle.isValid()) {
 #line 865
     unknown30.push(new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) PJOB_STOP(this, priority));
   }
 }
 
 void VoiceInfo::addWaitStop() {
-  if (!unknown30.full() && unknown20.isValid()) {
+  if (!unknown30.full() && m_soundHandle.isValid()) {
 #line 873
     unknown30.push(new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) PJOB_WAIT_STOP(this));
   }
@@ -384,7 +384,7 @@ void VoiceInfo::addWaitStop() {
 bool VoiceInfo::PJOB_PLAY::exec() {
   GfSound *sound = GfSound::get();
   if (sound != nullptr) {
-    DataParamAcc acc(unknown18);
+    DataParamAcc acc(m_paramObj);
     fw::SoundCategory category = acc.getObjType() == OBJECT_TYPE_ENEMY ? CATEGORY_ENE_VO : CATEGORY_VOICE;
     const mm::mtl::FixStr<16> &langPath = fw::LangUtil::getVoiceFolder();
     mm::mtl::FixStr<16> voicePath;
@@ -392,21 +392,21 @@ bool VoiceInfo::PJOB_PLAY::exec() {
     mm::mtl::FixStr<128> path;
     path.format("%s%s/%s%s%s", _gfgvo::s_szVoicePath, langPath.c_str(), voicePath.c_str(), m_name.unknown00.c_str(), _gfgvo::s_szVoiceExt);
     SoundHandle handle = sound->playVoice(path.c_str(), 1.0f, false, category);
-    unknown08->setPlayInfoStart(m_voiceHandle, handle, unknown18, unknown44);
+    m_voiceInfo->setPlayInfoStart(m_voiceHandle, handle, m_paramObj, unknown44);
   }
   return true;
 }
 
 bool VoiceInfo::PJOB_STOP::exec() {
   GfSound *sound = GfSound::get();
-  if (sound != nullptr && unknown08->unknown20.isValid()) {
-    sound->stopVoice(unknown08->unknown20, 0.0f);
-    unknown08->setPlayInfoStop(unknown10);
+  if (sound != nullptr && m_voiceInfo->m_soundHandle.isValid()) {
+    sound->stopVoice(m_voiceInfo->m_soundHandle, 0.0f);
+    m_voiceInfo->setPlayInfoStop(unknown10);
   }
   return true;
 }
 
-bool VoiceInfo::PJOB_WAIT_STOP::exec() { return !unknown08->unknown20.isValid(); }
+bool VoiceInfo::PJOB_WAIT_STOP::exec() { return !m_voiceInfo->m_soundHandle.isValid(); }
 
 void GfGameVoice::build(const GfSetupParam &param) {
 // __LINE__ of the operator new call is 0x78 in the game.
@@ -465,7 +465,7 @@ void GfGameVoice::update(const fw::UpdateInfo &info) {
 }
 
 VoiceInfo *GfGameVoice::getPlayInfo(const ParamObj &object) {
-  if (object.unknown00 != unknown020 || object.unknown0c != 0) {
+  if (object.m_GF_OBJ_HANDLE != unknown020 || object.unknown0c != 0) {
     mm::mtl::FixedList<VoiceInfo *, 6>::iterator it = mm::mtl::find_if(unknown90.begin(), unknown90.end(), unknown008(object));
     if (unknown90.end() != it) {
       return *it;
@@ -476,7 +476,7 @@ VoiceInfo *GfGameVoice::getPlayInfo(const ParamObj &object) {
 
 VoiceInfo *GfGameVoice::getPlayInfo(GAME_VOICE_HANDLE *voice) {
   for (mm::mtl::FixedList<VoiceInfo *, 6>::iterator it = unknown90.begin(); it != unknown90.end(); ++it) {
-    if ((*it)->unknown28 == voice) {
+    if ((*it)->m_GAME_VOICE_HANDLE == voice) {
       return *it;
     }
   }
@@ -564,7 +564,8 @@ void GfGameVoice::playStop(GAME_VOICE_HANDLE *voice) {
 
 int GfGameVoice::getResult(GAME_VOICE_HANDLE *voice) {
   GfGameVoice *self = get();
-  mm::mtl::FixedQueue<unknown001, 256>::iterator result = mm::mtl::find_if(self->unknown118.begin(), self->unknown118.end(), [voice](const unknown001 &entry) { return entry.unknown10 == voice; });
+  mm::mtl::FixedQueue<unknown001, 256>::iterator result =
+      mm::mtl::find_if(self->unknown118.begin(), self->unknown118.end(), [voice](const unknown001 &entry) { return entry.m_GAME_VOICE_HANDLE == voice; });
   if (result != self->unknown118.end()) {
     return (*result).unknown18;
   }
@@ -581,7 +582,7 @@ int GfGameVoice::getResult(GF_OBJ_HANDLE *handle) {
       return CV_RESULT_UNKNOWN_1;
     }
 
-    return getResult(info->unknown28);
+    return getResult(info->m_GAME_VOICE_HANDLE);
   }
 
   mm::mtl::FixedQueue<unknown001, 256>::iterator result =
@@ -619,7 +620,7 @@ bool GfGameVoice::isPlayEnemyVoice() const {
 bool GfGameVoice::isPlayVoice(GF_OBJ_HANDLE *handle) const {
   ParamObj object = {handle, 0, 0};
   for (mm::mtl::FixedList<VoiceInfo *, 6>::const_iterator it = unknown90.begin(); it != unknown90.end(); ++it) {
-    if (unknown007((*it)->unknown10, object)) {
+    if (unknown007((*it)->m_paramObj, object)) {
       return true;
     }
   }

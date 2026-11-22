@@ -39,19 +39,19 @@ public:
   void releaseTexWorkOne(MdoShdPxlWrkTex *work);
   void releaseTexWork();
 
-  DrPixlShadowObj *unknown0000[256]; // Inferred role: shadow objects; original member name unknown.
-  MdoShdPxlWrkTex unknown0800[16];   // Inferred role: shadow textures; original member name unknown.
-  s32 unknown8900;                   // Inferred role: shadow object count; original member name unknown.
+  DrPixlShadowObj *unknown0000[256];     // Inferred role: shadow objects; original member name unknown.
+  MdoShdPxlWrkTex m_mdoShdPxlWrkTex[16]; // Inferred role: shadow textures; original member name unknown.
+  s32 unknown8900;                       // Inferred role: shadow object count; original member name unknown.
   u8 _8904[0x8908 - 0x8904];
-  DrMan *unknown8908;     // Inferred role: driver manager; original member name unknown.
-  DrPixlMan *unknown8910; // Inferred role: pixel manager; original member name unknown.
+  DrMan *m_drMan;         // Inferred role: driver manager; original member name unknown.
+  DrPixlMan *m_drPixlMan; // Inferred role: pixel manager; original member name unknown.
   DrPixlShadowObjDir *m_addShadowObj;
 };
 
-static_assert(offsetof(DrPixlShadowMan, unknown0800) == 0x0800, "");
+static_assert(offsetof(DrPixlShadowMan, m_mdoShdPxlWrkTex) == 0x0800, "");
 static_assert(offsetof(DrPixlShadowMan, unknown8900) == 0x8900, "");
-static_assert(offsetof(DrPixlShadowMan, unknown8908) == 0x8908, "");
-static_assert(offsetof(DrPixlShadowMan, unknown8910) == 0x8910, "");
+static_assert(offsetof(DrPixlShadowMan, m_drMan) == 0x8908, "");
+static_assert(offsetof(DrPixlShadowMan, m_drPixlMan) == 0x8910, "");
 static_assert(offsetof(DrPixlShadowMan, m_addShadowObj) == 0x8918, "");
 
 } // namespace ml

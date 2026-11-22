@@ -25,7 +25,7 @@ void GfComPropertyEnemy::writeBack() {
 }
 
 void GfComPropertyEnemy::flush() {
-  unknown40.Update(*this);
+  m_battleProperty.Update(*this);
   const fw::Transform &transform = unknown08->getComponent<GfComTransform>()->unknown001()->unknown40;
   unknown80 = transform.unknown00;
   unknown90 = transform.unknown10;
@@ -34,24 +34,24 @@ void GfComPropertyEnemy::flush() {
 // Inferred name; kept as an exception to the unknown-name rule (AGENTS.md): single-user helper whose existence only the match proves; rename if a sibling build gives a symbol.
 // Gets the env sensor component of an object. Single user: GfComPropertyEnemy::getWaterHeight (1.0.0: 0x710051ad18, 44 instructions), which keeps the null test of the component (cbz x21 at
 // 0x710051ad40, joining at the flag load at 0x710051ad68). Forms tried without the helper: the component read directly after getComponent<GfComEnvSensor>() gives 43 instructions (test dropped),
-// as does `&component->unknown10`. The cause is written at UpdatableObject::getComponent. isFieldDeadCondMatched (0x710051ae64, not matched yet) reads the component the same way at 0x710051af58:
+// as does `&component->m_envSensor`. The cause is written at UpdatableObject::getComponent. isFieldDeadCondMatched (0x710051ae64, not matched yet) reads the component the same way at 0x710051af58:
 // if it matches with this helper, it has two users and becomes unknownNNN.
 static GfComEnvSensor *getEnvSensorComponent(fw::UpdatableObject *object) { return object->getComponent<GfComEnvSensor>(); }
 
 bool GfComPropertyEnemy::getWaterHeight(f32 &height) const {
   GfComEnvSensor *envSensor = getEnvSensorComponent(unknown08);
-  if (!envSensor->unknown10.unknown24_1) {
+  if (!envSensor->m_envSensor.unknown24_1) {
     return false;
   }
   GfObjAcc acc(static_cast<GfObj *>(unknown08)->unknownf8);
   if (acc.getObj() == nullptr) {
     return false;
   }
-  height = envSensor->unknown10.unknown30.unknown70.unknown00 - acc.getWorldTransformNoSync().unknown00.y;
+  height = envSensor->m_envSensor.m_verticalData.unknown70.unknown00 - acc.getWorldTransformNoSync().unknown00.y;
   return true;
 }
 
-void GfComPropertyEnemy::cleanup() { unknown40.Finalize(*this); }
+void GfComPropertyEnemy::cleanup() { m_battleProperty.Finalize(*this); }
 
 f32 GfComPropertyEnemy::getChestHeight() const {
   DataParamAcc acc(static_cast<GfObj *>(unknown08)->unknownf8);

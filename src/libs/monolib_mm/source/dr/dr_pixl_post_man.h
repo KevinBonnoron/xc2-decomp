@@ -62,6 +62,7 @@ public:
     FLAG_UNKNOWN_22 = 0x400000, // Inferred role: color buffers released with the render mode 3; original name unknown.
   };
 
+  void beginUpdate();
   void setDownDepth();
   void setReflection(f32 x, f32 y, f32 z, bool isHigh);
   void renderDeferred();
@@ -70,6 +71,7 @@ public:
   void resetColorBuff();
   void releaseColorBuff();
   void render();
+  bool debugDeferredRenderImpl(bool isRender);
   void renderDeferredTemporal();
   DrPixlRenderTarget *getDownDepth();
   bool isCalcVolume();
@@ -117,32 +119,32 @@ public:
   const grlib::CGLibTextureBuffer *getToonGradTex() const;
   const grlib::CGLibTextureBuffer *getToonDarkGradTex() const;
 
-  DrMan *unknown00;                        // Inferred role: dr man; original member name unknown.
-  DrPixlMan *unknown08;                    // Inferred role: pixl man; original member name unknown.
-  DrPixlPostObj3dLut *unknown10;           // Inferred role: 3d lut (the destructor 0x710084dd20 inlines its destructor: two render volumes at +0x20 and +0x28); original member name unknown.
-  DrPixlPostObjToneMap *unknown18;         // Inferred role: tone map; original member name unknown.
-  DrPixlPostObjBloom *unknown20;           // Inferred role: bloom; original member name unknown.
-  DrPixlPostObjVolume *unknown28;          // Inferred role: volume; original member name unknown.
-  DrPixlPostObjDepthofField *unknown30;    // Inferred role: depthof field; original member name unknown.
-  DrPixlPostObjFxAA *unknown38;            // Inferred role: fx aa (releaseColorBuff 0x710083d614 releases its target at +0x18); original member name unknown.
-  DrPixlPostObjCubeMapMultiIBL *unknown40; // Inferred role: cube map multi ibl; original member name unknown.
-  DrPixlPostObjCubeMapIBL *unknown48;      // Inferred role: cube map ibl; original member name unknown.
-  DrPixlPostObjMotionBlur *unknown50;      // Inferred role: motion blur; original member name unknown.
-  DrPixlPostObjMotionBlur2 *unknown58;     // Inferred role: motion blur2; original member name unknown.
-  DrPixlPostObjHistgram *unknown60;        // Inferred role: histgram; original member name unknown.
-  DrPixlPostObjTMAA *unknown68;            // Inferred role: tmaa; original member name unknown.
-  DrPixlPostObjSSR *unknown70;             // Inferred role: ssr; original member name unknown.
-  DrPixlPostObjTSSAO *unknown78;           // Inferred role: tssao; original member name unknown.
-  DrPixlPostObjExpStencil *unknown80;      // Inferred role: exp stencil; original member name unknown.
-  DrPixlShadowRaytrace *unknown88;         // Inferred role: shadow raytrace; original member name unknown.
-  DrPixlSkyDome *unknown90;                // Inferred role: sky dome; original member name unknown.
-  DrPixlToonGrad *unknown98;               // Inferred role: toon grad; original member name unknown.
-  DrPixlPostObjRainDrop *unknowna0;        // Inferred role: rain drop; original member name unknown.
-  DrPixlPostObjGlassBr *unknowna8;         // Inferred role: glass br; original member name unknown.
-  DrPixlPostObjCapture *unknownb0;         // Inferred role: capture; original member name unknown.
-  DrPixlPostObjUnbranchToDepth *unknownb8; // Inferred role: unbranch to depth; original member name unknown.
-  DrPixlRenderTarget *unknownc0[2];        // Inferred role: down depths; original member name unknown.
-  DrPixlRenderTarget *unknownd0;           // Inferred role: refraction map; original member name unknown.
+  DrMan *m_drMan;                               // Inferred role: dr man; original member name unknown.
+  DrPixlMan *m_drPixlMan;                       // Inferred role: pixl man; original member name unknown.
+  DrPixlPostObj3dLut *m_drPixlPostObj3dLut;     // Inferred role: 3d lut (the destructor 0x710084dd20 inlines its destructor: two render volumes at +0x20 and +0x28); original member name unknown.
+  DrPixlPostObjToneMap *m_drPixlPostObjToneMap; // Inferred role: tone map; original member name unknown.
+  DrPixlPostObjBloom *m_drPixlPostObjBloom;     // Inferred role: bloom; original member name unknown.
+  DrPixlPostObjVolume *m_drPixlPostObjVolume;   // Inferred role: volume; original member name unknown.
+  DrPixlPostObjDepthofField *m_drPixlPostObjDepthofField;       // Inferred role: depthof field; original member name unknown.
+  DrPixlPostObjFxAA *m_drPixlPostObjFxAA;                       // Inferred role: fx aa (releaseColorBuff 0x710083d614 releases its target at +0x18); original member name unknown.
+  DrPixlPostObjCubeMapMultiIBL *m_drPixlPostObjCubeMapMultiIBL; // Inferred role: cube map multi ibl; original member name unknown.
+  DrPixlPostObjCubeMapIBL *m_drPixlPostObjCubeMapIBL;           // Inferred role: cube map ibl; original member name unknown.
+  DrPixlPostObjMotionBlur *m_drPixlPostObjMotionBlur;           // Inferred role: motion blur; original member name unknown.
+  DrPixlPostObjMotionBlur2 *m_drPixlPostObjMotionBlur2;         // Inferred role: motion blur2; original member name unknown.
+  DrPixlPostObjHistgram *m_drPixlPostObjHistgram;               // Inferred role: histgram; original member name unknown.
+  DrPixlPostObjTMAA *m_drPixlPostObjTMAA;                       // Inferred role: tmaa; original member name unknown.
+  DrPixlPostObjSSR *m_drPixlPostObjSSR;                         // Inferred role: ssr; original member name unknown.
+  DrPixlPostObjTSSAO *m_drPixlPostObjTSSAO;                     // Inferred role: tssao; original member name unknown.
+  DrPixlPostObjExpStencil *m_drPixlPostObjExpStencil;           // Inferred role: exp stencil; original member name unknown.
+  DrPixlShadowRaytrace *m_drPixlShadowRaytrace;                 // Inferred role: shadow raytrace; original member name unknown.
+  DrPixlSkyDome *m_drPixlSkyDome;                               // Inferred role: sky dome; original member name unknown.
+  DrPixlToonGrad *m_drPixlToonGrad;                             // Inferred role: toon grad; original member name unknown.
+  DrPixlPostObjRainDrop *m_drPixlPostObjRainDrop;               // Inferred role: rain drop; original member name unknown.
+  DrPixlPostObjGlassBr *m_drPixlPostObjGlassBr;                 // Inferred role: glass br; original member name unknown.
+  DrPixlPostObjCapture *m_drPixlPostObjCapture;                 // Inferred role: capture; original member name unknown.
+  DrPixlPostObjUnbranchToDepth *m_drPixlPostObjUnbranchToDepth; // Inferred role: unbranch to depth; original member name unknown.
+  DrPixlRenderTarget *unknownc0[2];                             // Inferred role: down depths; original member name unknown.
+  DrPixlRenderTarget *unknownd0;                                // Inferred role: refraction map; original member name unknown.
   // Inferred role: render target released by the destructor 0x710084dd20 (the only other access known); original member name unknown. Evidence: receives a
   // new DrPixlRenderTarget in the DrPixlPostMan constructor (0x710084da38-0x710084da4c, the object's DrMan at +0x3c8).
   DrPixlRenderTarget *unknownd8;
@@ -154,29 +156,29 @@ public:
   // DrPixlRenderTarget in the DrPixlPostMan constructor (0x710084d63c-0x710084d654, after unknowne0) and DrPixlPostObjTSSAO::
   // passTemporalFiltering (0x71008c2aa0) reads its width and height (offsets 0xbc, 0xc0) and its texture (offset 0x70).
   DrPixlRenderTarget *unknowne8;
-  DrResUseQueryObj *unknownf0; // Inferred role: refraction query; original member name unknown.
-  u32 unknownf8;               // Inferred role: flags; original member name unknown.
+  DrResUseQueryObj *m_drResUseQueryObj; // Inferred role: refraction query; original member name unknown.
+  u32 unknownf8;                        // Inferred role: flags; original member name unknown.
   f32 unknownfc;
   f32 unknown100;
   f32 unknown104;
   f32 unknown108; // Inferred role: SSR strength; original member name unknown.
 };
 
-static_assert(offsetof(DrPixlPostMan, unknown10) == 0x010, "");
-static_assert(offsetof(DrPixlPostMan, unknown18) == 0x018, "");
-static_assert(offsetof(DrPixlPostMan, unknown38) == 0x038, "");
-static_assert(offsetof(DrPixlPostMan, unknown40) == 0x040, "");
-static_assert(offsetof(DrPixlPostMan, unknown50) == 0x050, "");
-static_assert(offsetof(DrPixlPostMan, unknown68) == 0x068, "");
-static_assert(offsetof(DrPixlPostMan, unknown78) == 0x078, "");
-static_assert(offsetof(DrPixlPostMan, unknown90) == 0x090, "");
-static_assert(offsetof(DrPixlPostMan, unknowna0) == 0x0a0, "");
-static_assert(offsetof(DrPixlPostMan, unknownb0) == 0x0b0, "");
+static_assert(offsetof(DrPixlPostMan, m_drPixlPostObj3dLut) == 0x010, "");
+static_assert(offsetof(DrPixlPostMan, m_drPixlPostObjToneMap) == 0x018, "");
+static_assert(offsetof(DrPixlPostMan, m_drPixlPostObjFxAA) == 0x038, "");
+static_assert(offsetof(DrPixlPostMan, m_drPixlPostObjCubeMapMultiIBL) == 0x040, "");
+static_assert(offsetof(DrPixlPostMan, m_drPixlPostObjMotionBlur) == 0x050, "");
+static_assert(offsetof(DrPixlPostMan, m_drPixlPostObjTMAA) == 0x068, "");
+static_assert(offsetof(DrPixlPostMan, m_drPixlPostObjTSSAO) == 0x078, "");
+static_assert(offsetof(DrPixlPostMan, m_drPixlSkyDome) == 0x090, "");
+static_assert(offsetof(DrPixlPostMan, m_drPixlPostObjRainDrop) == 0x0a0, "");
+static_assert(offsetof(DrPixlPostMan, m_drPixlPostObjCapture) == 0x0b0, "");
 static_assert(offsetof(DrPixlPostMan, unknownc0) == 0x0c0, "");
 static_assert(offsetof(DrPixlPostMan, unknownd8) == 0x0d8, "");
 static_assert(offsetof(DrPixlPostMan, unknowne0) == 0x0e0, "");
 static_assert(offsetof(DrPixlPostMan, unknowne8) == 0x0e8, "");
-static_assert(offsetof(DrPixlPostMan, unknownf0) == 0x0f0, "");
+static_assert(offsetof(DrPixlPostMan, m_drResUseQueryObj) == 0x0f0, "");
 static_assert(offsetof(DrPixlPostMan, unknownf8) == 0x0f8, "");
 static_assert(offsetof(DrPixlPostMan, unknownfc) == 0x0fc, "");
 static_assert(offsetof(DrPixlPostMan, unknown104) == 0x104, "");

@@ -10,28 +10,25 @@
 #include "mtl/mem_manager.h"
 
 namespace ml {
-struct MdsMpfAutoPosData;
-struct MdsMpfAutoPosTree;
-struct MdsMpfAutoTree;
 
 f32 DrResMdoSeamWrkMpf::SEAM_MPFMAP_READ_CHECK = 60.0f;
 
 DrResMdoSeamWrkMpf::DrResMdoSeamWrkMpf()
-    : unknown18(nullptr), unknown4c(0), unknown54(0), unknown56(0), unknown58(0), unknown5c(0), unknown60(0), unknown64(0), unknown68(0), unknown6c(0), unknown70(nullptr), unknown78(nullptr),
-      unknownc0(nullptr), unknownc8(nullptr), unknownd0(nullptr), unknownd8(nullptr), unknowne8(0) {}
+    : unknown18(nullptr), unknown4c(0), unknown54(0), unknown56(0), unknown58(0), unknown5c(0), unknown60(0), unknown64(0), unknown68(0), unknown6c(0), m_mdoWrkMatRes(nullptr), unknown78(nullptr),
+      m_drMdoCtlMpfWork(nullptr), m_drMdoCtlMpfAuto(nullptr), m_drMdoCtlMpfInst(nullptr), unknownd8(nullptr), unknowne8(0) {}
 
 DrResMdoSeamWrkMpf::~DrResMdoSeamWrkMpf() { release(); }
 
 void DrResMdoSeamWrkMpf::release() {
-  if (unknown70 != nullptr) {
-    unknownc8->autoMpfRelease();
-    unknownc8->~DrMdoCtlMpfAuto();
-    unknownc8 = nullptr;
-    unknownd0 = nullptr;
-    unknownc0 = nullptr;
-    if (unknown70 != nullptr) {
-      mtl::MemManager::deallocate(unknown70, 0, false);
-      unknown70 = nullptr;
+  if (m_mdoWrkMatRes != nullptr) {
+    m_drMdoCtlMpfAuto->autoMpfRelease();
+    m_drMdoCtlMpfAuto->~DrMdoCtlMpfAuto();
+    m_drMdoCtlMpfAuto = nullptr;
+    m_drMdoCtlMpfInst = nullptr;
+    m_drMdoCtlMpfWork = nullptr;
+    if (m_mdoWrkMatRes != nullptr) {
+      mtl::MemManager::deallocate(m_mdoWrkMatRes, 0, false);
+      m_mdoWrkMatRes = nullptr;
     }
     if (unknown78 != nullptr) {
       mtl::MemManager::deallocate(unknown78, 0, false);
@@ -44,23 +41,23 @@ void DrResMdoSeamWrkMpf::release() {
 
 void DrResMdoSeamWrkMpf::changeMemCall() {
   const MdsSeamMpfMapHead *head = reinterpret_cast<const MdsSeamMpfMapHead *>(unknown18->m_buffer);
-  unknown30 = head;
+  m_mdsSeamMpfMapHead = head;
   const u8 *data = reinterpret_cast<const u8 *>(head) + head->unknown08;
   const unknown001 *mpf = reinterpret_cast<const unknown001 *>(data);
-  unknown38 = reinterpret_cast<const MdsMpfObjData *>(data + mpf->unknown04);
+  m_mdsMpfObjData = reinterpret_cast<const MdsMpfObjData *>(data + mpf->unknown04);
   unknown40 = reinterpret_cast<const unknown002 *>(reinterpret_cast<const u8 *>(head) + head->unknown1c);
-  unknownd0->setupInstMpf(data);
-  unknownc0->changeMemWork(unknown38);
+  m_drMdoCtlMpfInst->setupInstMpf(data);
+  m_drMdoCtlMpfWork->changeMemWork(m_mdsMpfObjData);
   if (mpf->unknown1c != 0) {
-    unknownc8->changeMemAutoMpf(data, data + mpf->unknown1c);
+    m_drMdoCtlMpfAuto->changeMemAutoMpf(data, data + mpf->unknown1c);
   }
 }
 
 void DrResMdoSeamWrkMpf::releaseCache(DrMdoCtlSeamMpfMap *ctl) {
   for (int i = 0; i < unknown50; i++) {
-    if ((unknown80[i >> 5] & (1 << (i & 0x1f))) != 0 && unknownd8[i].unknown20 != nullptr) {
-      ctl->releaseFreeSeamMemObj(unknownd8[i].unknown20);
-      unknownd8[i].unknown20 = nullptr;
+    if ((unknown80[i >> 5] & (1 << (i & 0x1f))) != 0 && unknownd8[i].m_drResMdoSeamMemObj != nullptr) {
+      ctl->releaseFreeSeamMemObj(unknownd8[i].m_drResMdoSeamMemObj);
+      unknownd8[i].m_drResMdoSeamMemObj = nullptr;
     }
   }
   for (int i = 0; i < unknown58; i++) {
@@ -82,7 +79,7 @@ void DrResMdoSeamWrkMpf::beginCalc() {
 void DrResMdoSeamWrkMpf::calcCacheInfo() {
   for (int i = 0; i < unknown54; i++) {
     DrResMdoSeamWrkPosMpf *pos = unknowne0[i];
-    if ((pos->unknown20->unknown24 & 2) != 0) {
+    if ((pos->m_drResMdoSeamMemObj->unknown24 & 2) != 0) {
       pos->changeMemCall();
     }
   }
@@ -94,15 +91,15 @@ void DrResMdoSeamWrkMpf::calcCacheInfo() {
 }
 
 void DrResMdoSeamWrkMpf::calcMpfMatSetup(DrCalcViewWork *view, grlib::CGLibVtxInstans *instans) {
-  const MdsMpfObjData *obj = unknown38;
+  const MdsMpfObjData *obj = m_mdsMpfObjData;
   for (int i = 0; i < unknown52; i++, obj++) {
-    if (unknownc0->getObjChk(i) != 0) {
+    if (m_drMdoCtlMpfWork->getObjChk(i) != 0) {
       unknown48 |= 1;
       unknown4e++;
       if (obj->unknown06 == 1 || obj->unknown06 == 3) {
-        unknownc0->createAutoList(i, view, instans);
+        m_drMdoCtlMpfWork->createAutoList(i, view, instans);
       } else {
-        unknownc0->createPosList(i, instans);
+        m_drMdoCtlMpfWork->createPosList(i, instans);
       }
     }
   }
@@ -112,14 +109,14 @@ u32 DrResMdoSeamWrkMpf::updateRenderList(DrCalcViewWork *view, grlib::CGLibVtxIn
   u32 result = 0;
   beginCalc();
   if (unknown56 < 20) {
-    seachEtcMpfPos(&ctl->unknownd30, ctl);
-    seachMpfPoli(&ctl->unknownd30, ctl);
-    unknownc0->beginList();
+    seachEtcMpfPos(&ctl->m_drResMdoSeamParmRead, ctl);
+    seachMpfPoli(&ctl->m_drResMdoSeamParmRead, ctl);
+    m_drMdoCtlMpfWork->beginList();
     calcCacheInfo();
     for (int i = 0; i < unknown54; i++) {
-      unknownd0->calcSeamInstMpf(view, unknownc0, unknowne0[i]);
+      m_drMdoCtlMpfInst->calcSeamInstMpf(view, m_drMdoCtlMpfWork, unknowne0[i]);
     }
-    unknownc8->autoMpfCalc(view->unknown9ab, true, view, unknownc0, unknown20);
+    m_drMdoCtlMpfAuto->autoMpfCalc(view->unknown9ab, true, view, m_drMdoCtlMpfWork, m_drMdoMpfMan);
     calcMpfMatSetup(view, instans);
     result = unknown48;
   }
@@ -127,8 +124,8 @@ u32 DrResMdoSeamWrkMpf::updateRenderList(DrCalcViewWork *view, grlib::CGLibVtxIn
 }
 
 u32 DrResMdoSeamWrkPosMpf::getDataSize() const {
-  if (unknown20 != nullptr) {
-    return unknown20->m_size;
+  if (m_drResMdoSeamMemObj != nullptr) {
+    return m_drResMdoSeamMemObj->m_size;
   }
   return 0;
 }
@@ -147,18 +144,18 @@ void DrResMdoSeamWrkMpf::setEtcMpfCache(int id, DrResMdoSeamMemObj *memObj) {
 }
 
 void DrResMdoSeamWrkPosMpf::setupMpfEtcPos(int index, DrResMdoSeamMemObj *memObj) {
-  unknown20 = memObj;
+  m_drResMdoSeamMemObj = memObj;
   unknown28 = index;
   const u8 *data = memObj->m_buffer;
   const unknown001 *header = reinterpret_cast<const unknown001 *>(data);
   unknown10 = data;
   unknown00 = data + header->unknown04;
-  unknown08 = reinterpret_cast<const MdsMpfObjTreeData *>(data + header->unknown0c);
+  m_mdsMpfObjTreeData = reinterpret_cast<const MdsMpfObjTreeData *>(data + header->unknown0c);
   unknown18 = header->unknown10;
 }
 
 void DrResMdoSeamWrkMpf::setMpfPoliCache(int id, DrResMdoSeamMemObj *memObj) {
-  const DrMdoCtlMpfAuto::unknown001 *autoHead = unknownc8->unknown00;
+  const DrMdoCtlMpfAuto::unknown001 *autoHead = m_drMdoCtlMpfAuto->unknown00;
   const unknown003 *poli = reinterpret_cast<const unknown003 *>(reinterpret_cast<const u8 *>(autoHead) + autoHead->unknown5c);
   const unknown004 *entry = reinterpret_cast<const unknown004 *>(reinterpret_cast<const u8 *>(poli) + poli->unknown08);
   for (int i = 0; i < poli->unknown0c; i++, entry++) {
@@ -186,28 +183,28 @@ void DrResMdoSeamWrkMpf::setupMpfPoliWork(int index) {
   buff->unknown28 = reinterpret_cast<const u8 *>(data) + data->unknown0c;
   buff->unknown30 = reinterpret_cast<const u8 *>(data) + data->unknown10;
   if (data->unknown14 == 0) {
-    buff->unknown38 = nullptr;
+    buff->m_mdsMpfAutoTree = nullptr;
   } else {
-    buff->unknown38 = reinterpret_cast<const MdsMpfAutoTree *>(reinterpret_cast<const u8 *>(data) + data->unknown14);
+    buff->m_mdsMpfAutoTree = reinterpret_cast<const MdsMpfAutoTree *>(reinterpret_cast<const u8 *>(data) + data->unknown14);
   }
   buff->unknown40 = reinterpret_cast<const u32 *>(reinterpret_cast<const u8 *>(data) + data->unknown18);
   buff->unknown48 = reinterpret_cast<const u32 *>(reinterpret_cast<const u8 *>(data) + data->unknown1c);
-  buff->unknown50 = reinterpret_cast<const f32 *>(reinterpret_cast<const u8 *>(data) + data->unknown20);
+  buff->unknown50 = reinterpret_cast<const unknown515 *>(reinterpret_cast<const u8 *>(data) + data->unknown20);
   if (data->unknown34 != 0) {
-    buff->unknown58 = reinterpret_cast<const MdsMpfAutoPosData *>(reinterpret_cast<const u8 *>(data) + data->unknown34);
-    buff->unknown60 = reinterpret_cast<const MdsMpfAutoPosTree *>(reinterpret_cast<const u8 *>(data) + data->unknown38);
+    buff->m_mdsMpfAutoPosData = reinterpret_cast<const MdsMpfAutoPosData *>(reinterpret_cast<const u8 *>(data) + data->unknown34);
+    buff->m_mdsMpfAutoPosTree = reinterpret_cast<const MdsMpfAutoPosTree *>(reinterpret_cast<const u8 *>(data) + data->unknown38);
     buff->unknown68 = reinterpret_cast<const u32 *>(reinterpret_cast<const u8 *>(data) + data->unknown3c);
   } else {
-    buff->unknown58 = nullptr;
+    buff->m_mdsMpfAutoPosData = nullptr;
   }
 }
 
 void DrResMdoSeamWrkPosMpf::changeMemCall() {
-  const u8 *data = unknown20->m_buffer;
+  const u8 *data = m_drResMdoSeamMemObj->m_buffer;
   const unknown001 *header = reinterpret_cast<const unknown001 *>(data);
   unknown10 = data;
   unknown00 = data + header->unknown04;
-  unknown08 = reinterpret_cast<const MdsMpfObjTreeData *>(data + header->unknown0c);
+  m_mdsMpfObjTreeData = reinterpret_cast<const MdsMpfObjTreeData *>(data + header->unknown0c);
 }
 
 } // namespace ml

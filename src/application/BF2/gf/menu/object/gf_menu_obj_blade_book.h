@@ -33,7 +33,7 @@ public:
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x20 - 0x0c];
-    GfMenuObjBladeBook *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBladeBook *m_menuObjBladeBook; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjBladeBook(u32 handle);
@@ -57,14 +57,14 @@ public:
   bool seqExecRelease();
 
   u8 _24[0x28 - 0x24];
-  GfMenuBladeList *unknown28;                      // Inferred role: blades; original member name unknown.
+  GfMenuBladeList *m_menuBladeList;                // Inferred role: blades; original member name unknown.
   ui::UISelectObjList *unknown30;                  // Inferred role: blade objects; original member name unknown.
   ui::UICtrlCursorSelect *unknown38;               // Inferred role: blade cursor; original member name unknown.
   GfMenuSequence<GfMenuObjBladeBook, 8> unknown40; // Inferred role: page steps; original member name unknown.
   bool unknown2d0;                                 // Role and original member name unknown, cleared by the constructor.
   u8 _2d1[0x2d8 - 0x2d1];
-  GAME_VOICE_HANDLE *unknown2d8; // Inferred role: playing voice; original member name unknown.
-  mm::Pnt<s16> unknown2e0;       // Role and original member name unknown, cleared by the constructor.
+  GAME_VOICE_HANDLE *m_GAME_VOICE_HANDLE; // Inferred role: playing voice; original member name unknown.
+  mm::Pnt<s16> unknown2e0;                // Role and original member name unknown, cleared by the constructor.
   u8 _2e4[0x2e8 - 0x2e4];
   // Accesses of setPreviewScale (1.0.0: 0x71003f386c): 0x2e8 is the centre of the preview image (a Pnt<s16> read as one word), 0x300 the pointer
   // region it sets up (the Rect<s16> is copied as one 64-bit word) and 0x308 the scale it applies.
@@ -76,12 +76,12 @@ public:
   u8 _30c[0x310 - 0x30c];
 };
 
-static_assert(offsetof(GfMenuObjBladeBook, unknown28) == 0x28, "");
+static_assert(offsetof(GfMenuObjBladeBook, m_menuBladeList) == 0x28, "");
 static_assert(offsetof(GfMenuObjBladeBook, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjBladeBook, unknown38) == 0x38, "");
 static_assert(offsetof(GfMenuObjBladeBook, unknown40) == 0x40, "");
 static_assert(offsetof(GfMenuObjBladeBook, unknown2d0) == 0x2d0, "");
-static_assert(offsetof(GfMenuObjBladeBook, unknown2d8) == 0x2d8, "");
+static_assert(offsetof(GfMenuObjBladeBook, m_GAME_VOICE_HANDLE) == 0x2d8, "");
 static_assert(offsetof(GfMenuObjBladeBook, unknown2e0) == 0x2e0, "");
 static_assert(offsetof(GfMenuObjBladeBook, unknown2f0) == 0x2f0, "");
 static_assert(offsetof(GfMenuObjBladeBook, unknown2e8) == 0x2e8, "");

@@ -35,9 +35,9 @@ public:
   u64 getAdder() override;
   bool update() override;
 
-  DrCalcStmListObj *unknown20; // Inferred role: stm list; original member name unknown.
+  DrCalcStmListObj *m_drCalcStmListObj; // Inferred role: stm list; original member name unknown.
 };
 
-static_assert(offsetof(DrStmReadCheck, unknown20) == 0x20, "");
+static_assert(offsetof(DrStmReadCheck, m_drCalcStmListObj) == 0x20, "");
 
 } // namespace ml

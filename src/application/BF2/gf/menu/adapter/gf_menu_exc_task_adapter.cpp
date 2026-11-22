@@ -16,12 +16,12 @@ static GfMenuExcTaskAdapter::TypeInfo TYPE_INFOS[] = {
     {&GfMenuExcTaskAdapter::update_Name, {GfMenuAdapter::unknown004_2, 0, 0}},
 };
 
-GfMenuExcTaskAdapter::GfMenuExcTaskAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), unknown30(0), unknown58(nullptr) {}
+GfMenuExcTaskAdapter::GfMenuExcTaskAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), unknown30(0), m_iConverter(nullptr) {}
 
 GfMenuExcTaskAdapter::~GfMenuExcTaskAdapter() {
-  if (unknown58 != nullptr) {
-    delete unknown58;
-    unknown58 = nullptr;
+  if (m_iConverter != nullptr) {
+    delete m_iConverter;
+    m_iConverter = nullptr;
   }
 }
 
@@ -58,7 +58,7 @@ GfMenuExcTaskAdapter *GfMenuExcTaskAdapter::createFromCoverter(u32 handle, u32 t
   converter->getTaskID(taskId);
   GfMenuExcTaskAdapter *adapter = create(handle, type, taskId, isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown58 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -71,9 +71,9 @@ GfMenuExcTaskAdapter *GfMenuExcTaskAdapter::createFromList(u32 handle, u32 type,
 }
 
 void GfMenuExcTaskAdapter::update(const fw::UpdateInfo &info) {
-  if (unknown58 != nullptr) {
+  if (m_iConverter != nullptr) {
     u32 newTaskId = 0;
-    unknown58->getTaskID(newTaskId);
+    m_iConverter->getTaskID(newTaskId);
     if (unknown30 != newTaskId) {
       unknown30 = newTaskId;
       setChange();

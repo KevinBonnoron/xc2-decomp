@@ -17,37 +17,37 @@ namespace event {
 class ObjectChara;
 
 u32 ObjectManager::getCharaCount() const {
-  if (unknown128 == nullptr) {
+  if (m_objectList == nullptr) {
     return 0;
   }
-  return unknown128->getCharaCount();
+  return m_objectList->getCharaCount();
 }
 
 ObjectChara *ObjectManager::getChara(u32 index) { return getCurrent()->getChara(index); }
 
 u32 ObjectManager::getCameraCount() const {
-  if (unknown128 == nullptr) {
+  if (m_objectList == nullptr) {
     return 0;
   }
-  return unknown128->getCameraCount();
+  return m_objectList->getCameraCount();
 }
 
 ObjectCamera *ObjectManager::getCamera(u32 index) { return getCurrent()->getCamera(index); }
 
 ObjectChara *ObjectManager::searchByHandle(gf::GF_OBJ_HANDLE *handle) {
-  if (unknown128 == nullptr)
+  if (m_objectList == nullptr)
     return nullptr;
-  return unknown128->searchByHandle(handle);
+  return m_objectList->searchByHandle(handle);
 }
 
 ObjectChara *ObjectManager::searchByID(u32 type, u32 id) {
-  if (unknown128 == nullptr)
+  if (m_objectList == nullptr)
     return nullptr;
-  return unknown128->searchByID(type, id);
+  return m_objectList->searchByID(type, id);
 }
 
 Object *ObjectManager::searchByName(const char *name) {
-  ObjectList *current = unknown128;
+  ObjectList *current = m_objectList;
   if (current == nullptr)
     return nullptr;
   Object *root = current->unknown50;
@@ -80,13 +80,13 @@ void ObjectManager::clear() {
   unknown10 = 0;
   unknowna0 = "default";
   unknowne4 = "";
-  unknown128 = nullptr;
+  m_objectList = nullptr;
 }
 
 void ObjectManager::init() {
   unknown10 = 0;
   unknowne4 = "";
-  unknown128 = nullptr;
+  m_objectList = nullptr;
   unknowna0 = "default";
   mm::mtl::Singleton<ObjectPartyList>::getPtr()->init();
 }
@@ -100,11 +100,11 @@ void ObjectManager::updateCurrent() {
   if (__builtin_strcmp(unknowna0.c_str(), unknowne4.c_str()) == 0) {
     return;
   }
-  unknown128 = searchScene(unknowna0.c_str());
-  if (unknown128 == nullptr) {
-    unknown128 = createScene(unknowna0.c_str());
+  m_objectList = searchScene(unknowna0.c_str());
+  if (m_objectList == nullptr) {
+    m_objectList = createScene(unknowna0.c_str());
   }
-  if (unknown128 != nullptr) {
+  if (m_objectList != nullptr) {
     unknowne4 = unknowna0;
   }
 }
@@ -112,26 +112,26 @@ void ObjectManager::updateCurrent() {
 void ObjectManager::startScene() {
   unknowna0 = Manager::get()->getSceneName();
   updateCurrent();
-  if (unknown128 != nullptr) {
-    unknown128->startScene();
+  if (m_objectList != nullptr) {
+    m_objectList->startScene();
   }
 }
 
 void ObjectManager::startPage() {
-  if (unknown128 != nullptr) {
-    unknown128->startPage();
+  if (m_objectList != nullptr) {
+    m_objectList->startPage();
   }
 }
 
 void ObjectManager::endScene() {
-  if (unknown128 != nullptr) {
-    unknown128->endScene();
+  if (m_objectList != nullptr) {
+    m_objectList->endScene();
   }
 }
 
 void ObjectManager::update() {
-  if (unknown128 != nullptr) {
-    unknown128->update();
+  if (m_objectList != nullptr) {
+    m_objectList->update();
   }
 }
 
@@ -140,27 +140,27 @@ void ObjectManager::render() {
       !mm::mtl::Singleton<CharaManager>::getPtr()->isBoneDisp() && !mm::mtl::Singleton<EffectManager>::getPtr()->isEffectDisp() && !mm::mtl::Singleton<LightManager>::getPtr()->isLightDisp()) {
     return;
   }
-  if (unknown128 != nullptr) {
-    unknown128->render();
+  if (m_objectList != nullptr) {
+    m_objectList->render();
   }
 }
 
 void ObjectManager::tail() {
-  if (unknown128 != nullptr) {
-    unknown128->tail();
+  if (m_objectList != nullptr) {
+    m_objectList->tail();
   }
 }
 
 bool ObjectManager::isLoading() const {
-  if (unknown128 != nullptr) {
-    return unknown128->isLoading();
+  if (m_objectList != nullptr) {
+    return m_objectList->isLoading();
   }
   return false;
 }
 
 ObjectList *ObjectManager::getCurrent() {
   updateCurrent();
-  return unknown128;
+  return m_objectList;
 }
 
 ObjectChara *ObjectManager::createGfObjPcByWalkID(const char *name, u32 walkID, u32 param2) {
@@ -235,17 +235,17 @@ ObjectLight *ObjectManager::createLight(const char *name, u32 id) { return getCu
 ObjectLight *ObjectManager::getLight(u32 index) { return getCurrent()->getLight(index); }
 
 u32 ObjectManager::getLightCount() const {
-  if (unknown128 == nullptr) {
+  if (m_objectList == nullptr) {
     return 0;
   }
-  return unknown128->getLightCount();
+  return m_objectList->getLightCount();
 }
 
 bool ObjectManager::isUsingEffect() {
-  if (unknown128 == nullptr) {
+  if (m_objectList == nullptr) {
     return false;
   }
-  return unknown128->isUsingEffect();
+  return m_objectList->isUsingEffect();
 }
 
 void ObjectManager::OnEventProc(MSG_TYPE type) {
@@ -254,7 +254,7 @@ void ObjectManager::OnEventProc(MSG_TYPE type) {
     unknown10 = 0;
     unknowna0 = "default";
     unknowne4 = "";
-    unknown128 = nullptr;
+    m_objectList = nullptr;
     mm::mtl::Singleton<ObjectPartyList>::getPtr()->init();
     break;
   case MSG_TYPE_UNKNOWN_5:
@@ -289,22 +289,22 @@ void ObjectManager::OnEventProc(MSG_TYPE type) {
 void ObjectManager::setActivePath(const char *path) { getCurrent()->setActivePath(path); }
 
 Object *ObjectManager::searchByPath(const char *path) {
-  if (unknown128 == nullptr) {
+  if (m_objectList == nullptr) {
     return nullptr;
   }
-  return unknown128->searchByPath(path);
+  return m_objectList->searchByPath(path);
 }
 
 bool ObjectManager::getPathByObj(mm::mtl::FixStr<256> &path, const Object *object) {
-  if (unknown128 == nullptr) {
+  if (m_objectList == nullptr) {
     return false;
   }
-  return unknown128->getPathByObj(path, object);
+  return m_objectList->getPathByObj(path, object);
 }
 
 void ObjectManager::listupObject(mm::mtl::FixedVector<u32, 256> &list, u32 type, bool isAppend) {
-  if (unknown128 != nullptr) {
-    unknown128->listupObject(list, type, isAppend);
+  if (m_objectList != nullptr) {
+    m_objectList->listupObject(list, type, isAppend);
   }
 }
 

@@ -29,11 +29,11 @@ public:
     bool isDepopCondMatched(const mm::Vec3 &position) const;
     void debugDraw(const AGmkBase &gmk) const;
 
-    u16 unknown00;           // Inferred role: condition; original member name unknown.
-    u16 unknown02;           // Inferred role: name radius; original member name unknown.
-    BootedGmkCond unknown04; // Inferred role: booted gmk; original member name unknown.
-    DistHvCond unknown08;    // Inferred role: pop dist; original member name unknown.
-    DistHvCond unknown10;    // Inferred role: depop dist; original member name unknown.
+    u16 unknown00;                 // Inferred role: condition; original member name unknown.
+    u16 unknown02;                 // Inferred role: name radius; original member name unknown.
+    BootedGmkCond m_bootedGmkCond; // Inferred role: booted gmk; original member name unknown.
+    DistHvCond unknown08;          // Inferred role: pop dist; original member name unknown.
+    DistHvCond unknown10;          // Inferred role: depop dist; original member name unknown.
   };
 
   // Inferred role: warp gimmick data; original type name unknown.
@@ -56,11 +56,11 @@ public:
   GmkType getGmkType() const override { return GMK_TYPE; }
 
   // Inferred helper: bdat info of the warp; original name unknown.
-  const BdatInfo *unknown002() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
+  const BdatInfo *unknown002() const { return reinterpret_cast<const BdatInfo *>(m_createInfo.unknown10); }
   // Inferred helper: data of the warp; original name unknown.
-  const unknown001 *unknown003() const { return static_cast<const unknown001 *>(unknown20.unknown08); }
+  const unknown001 *unknown003() const { return static_cast<const unknown001 *>(m_createInfo.unknown08); }
   // Inferred helper: warp points of the gimmick data, indexed like unknown50; original name unknown.
-  const unknown004 *unknown005() const { return static_cast<const unknown004 *>(unknown20.unknown08); }
+  const unknown004 *unknown005() const { return static_cast<const unknown004 *>(m_createInfo.unknown08); }
 
   void create(const CreateInfo &info) override;
   void dispose() override;
@@ -81,14 +81,14 @@ public:
   u8 _48[0x50 - 0x48];
   gf::GF_OBJ_HANDLE *unknown50[POINT_UNKNOWN_2]; // Inferred role: handles; original member name unknown.
   u32 unknown60[POINT_UNKNOWN_2];                // Inferred role: icon handles; original member name unknown.
-  DistCond unknown68;                            // Inferred role: icon dist; original member name unknown.
+  DistCond m_distCond;                           // Inferred role: icon dist; original member name unknown.
   bool unknown6c;                                // Inferred role: icon dead; original member name unknown.
   mutable bool unknown6d;                        // Inferred role: disp; original member name unknown.
 };
 
 static_assert(offsetof(GmkWarp, unknown50) == 0x50, "");
 static_assert(offsetof(GmkWarp, unknown60) == 0x60, "");
-static_assert(offsetof(GmkWarp, unknown68) == 0x68, "");
+static_assert(offsetof(GmkWarp, m_distCond) == 0x68, "");
 static_assert(offsetof(GmkWarp, unknown6c) == 0x6c, "");
 static_assert(offsetof(GmkWarp, unknown6d) == 0x6d, "");
 

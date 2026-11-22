@@ -16,13 +16,13 @@ template bool TGmkList<GmkEvent, GmkEvent::BdatInfo, 1414420037u, 4u, GmkEventGo
 
 template class TGmkActiveList<GmkEvent>;
 
-GmkEvent::GmkEvent() : IntrusiveListNode(), unknown60(nullptr), unknownf0(false), unknownf1(false), unknownf2(false) {}
+GmkEvent::GmkEvent() : IntrusiveListNode(), m_gmkPhantom(nullptr), unknownf0(false), unknownf1(false), unknownf2(false) {}
 
 void GmkEvent::debugDraw() const { isValid(); }
 
 void GmkEvent::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
-  unknown06 = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_UNKNOWN_2));
-  unknown0a =
+  m_scenarioFlagCond = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_UNKNOWN_2));
+  m_questFlagCond =
       QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_UNKNOWN_1), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_UNKNOWN_1));
   unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_UNKNOWN_2);
   unknown02 = bdat.getValCheck("EventID", id, BDAT_TYPE_UNKNOWN_2);
@@ -30,10 +30,10 @@ void GmkEvent::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) 
 }
 
 bool GmkEvent::BdatInfo::isCondMatched() const {
-  if (unknown06.isEnable() && !unknown06.isMatch()) {
+  if (m_scenarioFlagCond.isEnable() && !m_scenarioFlagCond.isMatch()) {
     return false;
   }
-  if (unknown0a.isEnable() && !unknown0a.isMatch()) {
+  if (m_questFlagCond.isEnable() && !m_questFlagCond.isMatch()) {
     return false;
   }
   if (unknown00 != 0 && !gf::GfGameCond::isGameCond(unknown00)) {
@@ -43,10 +43,10 @@ bool GmkEvent::BdatInfo::isCondMatched() const {
 }
 
 void GmkEvent::beginEvent() {
-  if (!unknownf1 && gf::GfPlayFactory::createOneEventForGimmick(unknown20.unknown10->unknown02)) {
+  if (!unknownf1 && gf::GfPlayFactory::createOneEventForGimmick(m_createInfo.unknown10->unknown02)) {
     unknownf1 = true;
     unknownf2 = false;
-    gf::SCOM_QUEST_REACH::createArrivePlace(unknown20.unknown18);
+    gf::SCOM_QUEST_REACH::createArrivePlace(m_createInfo.unknown18);
   }
 }
 
@@ -54,7 +54,7 @@ void GmkEvent::disposeGmkPhantom() {
   if (this != nullptr && intoNode() && TGmkActiveList<GmkEvent>::get() != nullptr) {
     TGmkActiveList<GmkEvent>::get()->unknown08.erase(this);
   }
-  unknown60.dispose();
+  m_gmkPhantom.dispose();
 }
 
 void GmkEvent::update(f32 deltaTime) {
@@ -71,7 +71,7 @@ void GmkEvent::update(f32 deltaTime) {
     }
     unknownf0 = isCondMatched;
   }
-  if (unknown60.unknown83) {
+  if (m_gmkPhantom.unknown83) {
     unknownf2 = true;
   }
   if (unknownf1 && gf::GfGameManager::isControlFree()) {
@@ -83,17 +83,17 @@ void GmkEvent::update(f32 deltaTime) {
 // callee returns the property flag as it loads it (`ldrb w0`, no extension): a plain conversion of the u8 gives `and w8, w0, #0xff; cbz` (55
 // instead of 54 instructions) and a bool return type of the callee gives `cmp; cset` in the callee.
 void GmkEvent::updateInActiveList(f32 deltaTime) {
-  if (unknown60.unknown83 && unknown001()->isCondMatched() && (gf::GfGameManager::isPlayEventOK() & 1) != 0) {
+  if (m_gmkPhantom.unknown83 && unknown001()->isCondMatched() && (gf::GfGameManager::isPlayEventOK() & 1) != 0) {
     beginEvent();
   }
 }
 
 void GmkEvent::createGmkPhantom() {
-  const GmkSet *set = AGmkBase::unknown08.unknown00->getCreateInfo().unknown08;
-  if (set != nullptr && set->unknown10.unknown24) {
+  const GmkSet *set = AGmkBase::m_createBaseInfo.m_ownerGmkEnemyList->getCreateInfo().m_gmkSet;
+  if (set != nullptr && set->m_createInfo.unknown24) {
     return;
   }
-  unknown60.create(*this, nullptr, false);
+  m_gmkPhantom.create(*this, nullptr, false);
   TGmkActiveList<GmkEvent>::unknown002(this);
 }
 

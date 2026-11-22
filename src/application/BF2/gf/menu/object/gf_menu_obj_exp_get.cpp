@@ -101,11 +101,11 @@ void GfMenuObjExpGet::removeObject(ui::UIObjectAcc acc) {
 void GfMenuObjExpGet::sendOpen(u32 handle, const ExpGetInfo &info) {
   ui::EventData event;
   event.unknown00 = GfMenuTypes::unknown003_33;
-  event.unknown08 = info.unknown10.unknown00;
-  event.unknown0c = info.unknown10.unknown04;
+  event.unknown08 = info.m_openParam.unknown00;
+  event.unknown0c = info.m_openParam.unknown04;
   event.unknown10_u16 = ui::UIObjectAcc(info.unknown08).getDuplicateIndex();
-  event.unknown12 = info.unknown10.unknown18;
-  event.unknown14 = info.unknown10.unknown08;
+  event.unknown12 = info.m_openParam.unknown18;
+  event.unknown14 = info.m_openParam.unknown08;
   sendEvent(handle, event, 0.0f);
 }
 

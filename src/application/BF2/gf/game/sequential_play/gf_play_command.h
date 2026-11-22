@@ -187,19 +187,19 @@ class GfPlayComWaitEvent : public GfPlayCom {
   GF_PLAY_COM("PlayComWaitEvent")
 
 public:
-  GfPlayComWaitEvent(f32 time, GF_OBJ_HANDLE *handle) : GfPlayCom(PCOMTYPE_UNKNOWN_4, false), unknown10(time), unknown18(handle), unknown20(-1) {}
+  GfPlayComWaitEvent(f32 time, GF_OBJ_HANDLE *handle) : GfPlayCom(PCOMTYPE_UNKNOWN_4, false), unknown10(time), m_GF_OBJ_HANDLE(handle), unknown20(-1) {}
   void start() override;
   void end() override;
   bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComWaitEvent *create(f32 time, GF_OBJ_HANDLE *handle);
 
-  f32 unknown10;            // Inferred role: time; original member name unknown.
-  GF_OBJ_HANDLE *unknown18; // Inferred role: handle; original member name unknown.
-  u32 unknown20;            // Inferred role: request; original member name unknown.
+  f32 unknown10;                  // Inferred role: time; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: handle; original member name unknown.
+  u32 unknown20;                  // Inferred role: request; original member name unknown.
 };
 
 static_assert(offsetof(GfPlayComWaitEvent, unknown10) == 0x10, "");
-static_assert(offsetof(GfPlayComWaitEvent, unknown18) == 0x18, "");
+static_assert(offsetof(GfPlayComWaitEvent, m_GF_OBJ_HANDLE) == 0x18, "");
 static_assert(offsetof(GfPlayComWaitEvent, unknown20) == 0x20, "");
 static_assert(sizeof(GfPlayComWaitEvent) == 0x28, "");
 
@@ -207,14 +207,14 @@ class GfPlayComMapjump : public GfPlayCom {
   GF_PLAY_COM("PlayComMapjump")
 
 public:
-  GfPlayComMapjump(const GfMapjumpInfo &info) : GfPlayCom(PCOMTYPE_UNKNOWN_5, false), unknown10(-1), unknown20(info) {}
+  GfPlayComMapjump(const GfMapjumpInfo &info) : GfPlayCom(PCOMTYPE_UNKNOWN_5, false), unknown10(-1), m_mapjumpInfo(info) {}
   void start() override;
   void end() override;
   bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComMapjump *create(const GfMapjumpInfo &info);
 
-  u32 unknown10;           // Inferred role: request; original member name unknown.
-  GfMapjumpInfo unknown20; // Inferred role: mapjump info; original member name unknown.
+  u32 unknown10;               // Inferred role: request; original member name unknown.
+  GfMapjumpInfo m_mapjumpInfo; // Inferred role: mapjump info; original member name unknown.
 };
 
 static_assert(sizeof(GfPlayComMapjump) == 0x130, "");
@@ -282,9 +282,9 @@ public:
   bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComAfterEventScript *create(u32 event);
 
-  int unknown10;             // Inferred role: state; original member name unknown.
-  u32 unknown14;             // Inferred role: event; original member name unknown.
-  GF_SCOM_HANDLE *unknown18; // Inferred role: handle; original member name unknown.
+  int unknown10;                    // Inferred role: state; original member name unknown.
+  u32 unknown14;                    // Inferred role: event; original member name unknown.
+  GF_SCOM_HANDLE *m_GF_SCOM_HANDLE; // Inferred role: handle; original member name unknown.
 
   static int s_activate;
 };
@@ -458,8 +458,8 @@ public:
   static u32 getResult(u32 window);
   static GfPlayComMenuCommonFromParam *create(const MenuCommonWindowParam &param);
 
-  MenuCommonWindowParam unknown10; // Inferred role: window param; original member name unknown.
-  u32 unknown60;                   // Inferred role: id; original member name unknown.
+  MenuCommonWindowParam m_menuCommonWindowParam; // Inferred role: window param; original member name unknown.
+  u32 unknown60;                                 // Inferred role: id; original member name unknown.
 
   static mm::mtl::FixedQueue<u32, 32> s_list;
   static u32 s_gblHandle;
@@ -603,10 +603,10 @@ public:
   bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComSalvage *create(GF_OBJ_HANDLE *handle);
 
-  u32 unknown10;            // Inferred role: pause; original member name unknown.
-  GF_OBJ_HANDLE *unknown18; // Inferred role: handle; original member name unknown.
-  int unknown20;            // Inferred role: wait frame; original member name unknown.
-  STATE unknown24;          // Inferred role: state; original member name unknown.
+  u32 unknown10;                  // Inferred role: pause; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: handle; original member name unknown.
+  int unknown20;                  // Inferred role: wait frame; original member name unknown.
+  STATE unknown24;                // Inferred role: state; original member name unknown.
 };
 
 static_assert(sizeof(GfPlayComSalvage) == 0x28, "");
@@ -621,12 +621,12 @@ public:
   bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComCollect *create(GF_OBJ_HANDLE *handle);
 
-  u32 unknown18;            // Inferred role: player pause; original member name unknown.
-  GF_OBJ_HANDLE *unknown20; // Inferred role: handle; original member name unknown.
+  u32 unknown18;                  // Inferred role: player pause; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: handle; original member name unknown.
 };
 
 static_assert(offsetof(GfPlayComCollect, unknown18) == 0x18, "");
-static_assert(offsetof(GfPlayComCollect, unknown20) == 0x20, "");
+static_assert(offsetof(GfPlayComCollect, m_GF_OBJ_HANDLE) == 0x20, "");
 static_assert(sizeof(GfPlayComCollect) == 0x28, "");
 
 class GfPlayComFieldTbox : public GfPlayCom, public mm::mtl::PtrSingleton<GfPlayComFieldTbox> {
@@ -643,16 +643,16 @@ public:
   bool updateForWaitItemDrop(const fw::UpdateInfo &info);
   static GfPlayComFieldTbox *create(GF_OBJ_HANDLE *handle);
 
-  u32 unknown18;            // Inferred role: player pause; original member name unknown.
-  GF_OBJ_HANDLE *unknown20; // Inferred role: handle; original member name unknown.
-  QuestID unknown28;        // Inferred role: quest of the treasure box; original member name unknown.
-  u32 unknown2c;            // Inferred role: update step (0 wait for the opening, 1 wait for the quest, 2 wait for the items); original member name unknown.
-  f32 unknown30;            // Inferred role: elapsed time of the step; original member name unknown.
+  u32 unknown18;                  // Inferred role: player pause; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: handle; original member name unknown.
+  QuestID m_questID;              // Inferred role: quest of the treasure box; original member name unknown.
+  u32 unknown2c;                  // Inferred role: update step (0 wait for the opening, 1 wait for the quest, 2 wait for the items); original member name unknown.
+  f32 unknown30;                  // Inferred role: elapsed time of the step; original member name unknown.
   u8 _34[0x38 - 0x34];
 };
 
 static_assert(offsetof(GfPlayComFieldTbox, unknown18) == 0x18, "");
-static_assert(offsetof(GfPlayComFieldTbox, unknown20) == 0x20, "");
+static_assert(offsetof(GfPlayComFieldTbox, m_GF_OBJ_HANDLE) == 0x20, "");
 static_assert(sizeof(GfPlayComFieldTbox) == 0x38, "");
 
 class GfPlayComFieldSeq : public GfPlayCom, public mm::mtl::PtrSingleton<GfPlayComFieldSeq> {
@@ -665,13 +665,13 @@ public:
   bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComFieldSeq *create(IFieldSeq *sequence, GF_OBJ_HANDLE *handle);
 
-  IFieldSeq *unknown18;     // Inferred role: sequence; original member name unknown.
-  GF_OBJ_HANDLE *unknown20; // Inferred role: handle; original member name unknown.
-  u32 unknown28;            // Inferred role: player pause; original member name unknown.
+  IFieldSeq *m_iFieldSeq;         // Inferred role: sequence; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: handle; original member name unknown.
+  u32 unknown28;                  // Inferred role: player pause; original member name unknown.
 };
 
-static_assert(offsetof(GfPlayComFieldSeq, unknown18) == 0x18, "");
-static_assert(offsetof(GfPlayComFieldSeq, unknown20) == 0x20, "");
+static_assert(offsetof(GfPlayComFieldSeq, m_iFieldSeq) == 0x18, "");
+static_assert(offsetof(GfPlayComFieldSeq, m_GF_OBJ_HANDLE) == 0x20, "");
 static_assert(offsetof(GfPlayComFieldSeq, unknown28) == 0x28, "");
 static_assert(sizeof(GfPlayComFieldSeq) == 0x30, "");
 
@@ -736,7 +736,7 @@ class GfPlayComPlayerDead : public GfPlayCom, public mm::mtl::PtrSingleton<GfPla
 
 public:
   GfPlayComPlayerDead(GfPlayerDead dead)
-      : GfPlayCom(PCOMTYPE_UNKNOWN_32, false), unknown20(dead), unknown24(0.0f), unknown28(0.0f), unknown2c(15.0f), unknown30(nullptr), unknown38(false), unknown39(false), unknown3a(false) {}
+      : GfPlayCom(PCOMTYPE_UNKNOWN_32, false), unknown20(dead), unknown24(0.0f), unknown28(0.0f), unknown2c(15.0f), m_deadCamera(nullptr), unknown38(false), unknown39(false), unknown3a(false) {}
   void gevMapjump(GEV event, const MapjumpCallbackInfo &info) override;
   void start() override;
   void end() override;
@@ -746,19 +746,19 @@ public:
   static bool replaceDeadType(GfPlayerDead dead);
   static GfPlayComPlayerDead *create(GfPlayerDead dead);
 
-  GfPlayerDead unknown20;  // Inferred role: dead type; original member name unknown.
-  f32 unknown24;           // Inferred role: unknown; original member name unknown.
-  f32 unknown28;           // Inferred role: unknown; original member name unknown.
-  f32 unknown2c;           // Inferred role: unknown; original member name unknown.
-  GfDeadCamera *unknown30; // Inferred role: dead camera; original member name unknown.
-  bool unknown38;          // Inferred role: unknown; original member name unknown.
-  bool unknown39;          // Inferred role: unknown; original member name unknown.
-  bool unknown3a;          // Inferred role: unknown; original member name unknown.
+  GfPlayerDead unknown20;     // Inferred role: dead type; original member name unknown.
+  f32 unknown24;              // Inferred role: unknown; original member name unknown.
+  f32 unknown28;              // Inferred role: unknown; original member name unknown.
+  f32 unknown2c;              // Inferred role: unknown; original member name unknown.
+  GfDeadCamera *m_deadCamera; // Inferred role: dead camera; original member name unknown.
+  bool unknown38;             // Inferred role: unknown; original member name unknown.
+  bool unknown39;             // Inferred role: unknown; original member name unknown.
+  bool unknown3a;             // Inferred role: unknown; original member name unknown.
   bool m_dead;
 };
 
 static_assert(offsetof(GfPlayComPlayerDead, unknown20) == 0x20, "");
-static_assert(offsetof(GfPlayComPlayerDead, unknown30) == 0x30, "");
+static_assert(offsetof(GfPlayComPlayerDead, m_deadCamera) == 0x30, "");
 static_assert(offsetof(GfPlayComPlayerDead, m_dead) == 0x3b, "");
 static_assert(sizeof(GfPlayComPlayerDead) == 0x40, "");
 
@@ -772,12 +772,12 @@ public:
   static u32 getQuestTargetNpc(u32 condId);
   static GfPlayComTalk *create(const GfSetupPfTalk &talk);
 
-  GfSetupPfTalk unknown18; // Inferred role: talk; original member name unknown.
-  int unknown30;           // Inferred role: player pause; original member name unknown.
-  u32 unknown34;           // Inferred role: npc; original member name unknown.
-  u32 unknown38;           // Inferred role: map; original member name unknown.
-  QuestID unknown3c;       // Inferred role: progress quest; original member name unknown.
-  QuestID unknown40;       // Inferred role: last order quest; original member name unknown.
+  GfSetupPfTalk m_setupPfTalk; // Inferred role: talk; original member name unknown.
+  int unknown30;               // Inferred role: player pause; original member name unknown.
+  u32 unknown34;               // Inferred role: npc; original member name unknown.
+  u32 unknown38;               // Inferred role: map; original member name unknown.
+  QuestID unknown3c;           // Inferred role: progress quest; original member name unknown.
+  QuestID unknown40;           // Inferred role: last order quest; original member name unknown.
 
   static u32 s_questTargetNpc;
   static u32 s_questTargetCondID;
@@ -797,9 +797,9 @@ public:
   bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComQuestOrderUI *create(QuestID quest, bool isForce);
 
-  QuestID unknown10;            // Inferred role: quest; original member name unknown.
-  bool unknown14;               // Inferred role: force; original member name unknown.
-  GfMenuCallContext *unknown18; // Inferred role: context; original member name unknown.
+  QuestID m_questID;                    // Inferred role: quest; original member name unknown.
+  bool unknown14;                       // Inferred role: force; original member name unknown.
+  GfMenuCallContext *m_menuCallContext; // Inferred role: context; original member name unknown.
 };
 
 static_assert(sizeof(GfPlayComQuestOrderUI) == 0x20, "");
@@ -815,10 +815,10 @@ public:
   bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComQuestCompleteUI *create(QuestID quest, QuestID child, QSTATE state);
 
-  QuestID unknown10;            // Inferred role: quest; original member name unknown.
-  QuestID unknown14;            // Inferred role: child quest; original member name unknown.
-  QSTATE unknown18;             // Inferred role: state; original member name unknown.
-  GfMenuCallContext *unknown20; // Inferred role: context; original member name unknown.
+  QuestID unknown10;                    // Inferred role: quest; original member name unknown.
+  QuestID unknown14;                    // Inferred role: child quest; original member name unknown.
+  QSTATE unknown18;                     // Inferred role: state; original member name unknown.
+  GfMenuCallContext *m_menuCallContext; // Inferred role: context; original member name unknown.
 
   static int s_active;
 };
@@ -846,17 +846,17 @@ class GfPlayComReturnTitle : public GfPlayCom, public mm::mtl::PtrSingleton<GfPl
   GF_PLAY_COM("PlayComReturnTitle")
 
 public:
-  GfPlayComReturnTitle(const ParamReturnTitle &param) : GfPlayCom(PCOMTYPE_UNKNOWN_36, false), unknown18(param), unknown1c(0) {}
+  GfPlayComReturnTitle(const ParamReturnTitle &param) : GfPlayCom(PCOMTYPE_UNKNOWN_36, false), m_paramReturnTitle(param), unknown1c(0) {}
   void start() override;
   void end() override;
   bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComReturnTitle *create(const ParamReturnTitle &param);
 
-  ParamReturnTitle unknown18; // Inferred role: param; original member name unknown.
-  u32 unknown1c;              // Inferred role: unknown; original member name unknown.
+  ParamReturnTitle m_paramReturnTitle; // Inferred role: param; original member name unknown.
+  u32 unknown1c;                       // Inferred role: unknown; original member name unknown.
 };
 
-static_assert(offsetof(GfPlayComReturnTitle, unknown18) == 0x18, "");
+static_assert(offsetof(GfPlayComReturnTitle, m_paramReturnTitle) == 0x18, "");
 static_assert(offsetof(GfPlayComReturnTitle, unknown1c) == 0x1c, "");
 static_assert(sizeof(GfPlayComReturnTitle) == 0x20, "");
 
@@ -885,8 +885,8 @@ public:
   void start() override;
   static GfPlayComExecuteSignal *create(bool isStart, GfSequentialPlaySignal *signal);
 
-  bool unknown10;                    // Inferred role: start; original member name unknown.
-  GfSequentialPlaySignal *unknown18; // Inferred role: signal; original member name unknown.
+  bool unknown10;                                 // Inferred role: start; original member name unknown.
+  GfSequentialPlaySignal *m_sequentialPlaySignal; // Inferred role: signal; original member name unknown.
 };
 
 static_assert(sizeof(GfPlayComExecuteSignal) == 0x20, "");
@@ -996,8 +996,8 @@ public:
   ~GfPlayComMenuObjCommonText() override;
   static GfPlayComMenuObjCommonText *create(GfMenuObjCommonText::OpenKizunaParam &param);
 
-  GfMenuObjCommonText::OpenKizunaParam unknown10; // Inferred role: param; original member name unknown.
-  GfMenuCallContext *unknown20;                   // Inferred role: context; original member name unknown.
+  GfMenuObjCommonText::OpenKizunaParam m_openKizunaParam; // Inferred role: param; original member name unknown.
+  GfMenuCallContext *m_menuCallContext;                   // Inferred role: context; original member name unknown.
 
   static int s_activate;
 };

@@ -44,8 +44,8 @@ public:
 
     u32 unknown0c; // Inferred role: state, 0 while no driver is picked and 1 while one is held for a swap; original member name unknown.
     u8 _10[0x20 - 0x10];
-    GfMenuObjPartyForm *unknown20; // Inferred role: owner; original member name unknown.
-    PtFormContext *unknown28;      // Inferred role: data of the owner; original member name unknown.
+    GfMenuObjPartyForm *m_menuObjPartyForm; // Inferred role: owner; original member name unknown.
+    PtFormContext *m_ptFormContext;         // Inferred role: data of the owner; original member name unknown.
   };
 
   class BladeFormListener : public ui::UIObjectListener {
@@ -55,8 +55,8 @@ public:
     u32 unknown0c; // Inferred role: state, 0 while no blade is picked, 1 while one is held for a swap and 2 after the driver list was left; original member name unknown.
     int unknown10; // Inferred role: control that fades the blade list; original member name unknown.
     u8 _14[0x20 - 0x14];
-    GfMenuObjPartyForm *unknown20; // Inferred role: owner; original member name unknown.
-    PtFormContext *unknown28;      // Inferred role: data of the owner; original member name unknown.
+    GfMenuObjPartyForm *m_menuObjPartyForm; // Inferred role: owner; original member name unknown.
+    PtFormContext *m_ptFormContext;         // Inferred role: data of the owner; original member name unknown.
   };
 
   GfMenuObjPartyForm(u32 handle);
@@ -70,7 +70,7 @@ public:
   static void swapBlade(PtFormContext *, u32, u32);
 
   u8 _24[0x28 - 0x24];
-  PtFormContext unknown28; // Inferred role: party form data; original member name unknown.
+  PtFormContext m_ptFormContext; // Inferred role: party form data; original member name unknown.
 };
 
 static_assert(offsetof(GfMenuObjPartyForm::unknown004, unknown08) == 0x08, "");
@@ -79,16 +79,16 @@ static_assert(offsetof(GfMenuObjPartyForm::PtFormContext, unknownd0) == 0xd0, ""
 static_assert(offsetof(GfMenuObjPartyForm::PtFormContext, unknowne0) == 0xe0, "");
 static_assert(offsetof(GfMenuObjPartyForm::PtFormContext, unknown100) == 0x100, "");
 static_assert(offsetof(GfMenuObjPartyForm::DriverFormListener, unknown0c) == 0x0c, "");
-static_assert(offsetof(GfMenuObjPartyForm::DriverFormListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjPartyForm::DriverFormListener, unknown28) == 0x28, "");
+static_assert(offsetof(GfMenuObjPartyForm::DriverFormListener, m_menuObjPartyForm) == 0x20, "");
+static_assert(offsetof(GfMenuObjPartyForm::DriverFormListener, m_ptFormContext) == 0x28, "");
 static_assert(sizeof(GfMenuObjPartyForm::DriverFormListener) == 0x30, "");
 static_assert(offsetof(GfMenuObjPartyForm::PtFormContext, unknownd8) == 0xd8, "");
 static_assert(offsetof(GfMenuObjPartyForm::PtFormContext, unknown180) == 0x180, "");
 static_assert(offsetof(GfMenuObjPartyForm::BladeFormListener, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfMenuObjPartyForm::BladeFormListener, unknown10) == 0x10, "");
-static_assert(offsetof(GfMenuObjPartyForm::BladeFormListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjPartyForm::BladeFormListener, unknown28) == 0x28, "");
+static_assert(offsetof(GfMenuObjPartyForm::BladeFormListener, m_menuObjPartyForm) == 0x20, "");
+static_assert(offsetof(GfMenuObjPartyForm::BladeFormListener, m_ptFormContext) == 0x28, "");
 static_assert(sizeof(GfMenuObjPartyForm::BladeFormListener) == 0x30, "");
-static_assert(offsetof(GfMenuObjPartyForm, unknown28) == 0x28, "");
+static_assert(offsetof(GfMenuObjPartyForm, m_ptFormContext) == 0x28, "");
 
 } // namespace gf

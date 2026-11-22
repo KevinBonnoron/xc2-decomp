@@ -20,20 +20,20 @@ public:
   void setPosAxis(const PosAxis &axis);
   void setRotAxis(const RotAxis &axis);
 
-  LightObj *getLightObj() const { return unknown68; }
+  LightObj *getLightObj() const { return m_lightObj; }
 
 private:
-  LightObj *unknown68; // Inferred role: light object; original member name unknown.
-  PosAxis unknown70;   // Inferred role: position axis; original member name unknown.
-  RotAxis unknown90;   // Inferred role: rotation axis; original member name unknown.
+  LightObj *m_lightObj; // Inferred role: light object; original member name unknown.
+  PosAxis m_posAxis;    // Inferred role: position axis; original member name unknown.
+  RotAxis m_rotAxis;    // Inferred role: rotation axis; original member name unknown.
 
   friend struct ObjectLightLayout;
 };
 
 struct ObjectLightLayout {
-  static_assert(offsetof(ObjectLight, unknown68) == 0x68, "");
-  static_assert(offsetof(ObjectLight, unknown70) == 0x70, "");
-  static_assert(offsetof(ObjectLight, unknown90) == 0x90, "");
+  static_assert(offsetof(ObjectLight, m_lightObj) == 0x68, "");
+  static_assert(offsetof(ObjectLight, m_posAxis) == 0x70, "");
+  static_assert(offsetof(ObjectLight, m_rotAxis) == 0x90, "");
   static_assert(sizeof(ObjectLight) == 0xb0, "");
 };
 

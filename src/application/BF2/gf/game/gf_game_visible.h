@@ -43,12 +43,12 @@ public:
 
   mm::mtl::Map<GF_OBJ_HANDLE *, Info *> unknown08; // Inferred role: visibility of the objects; original member name unknown.
   mm::mtl::FixedQueue<Info *, 0x400> unknown20;    // Inferred role: unused infos; original member name unknown.
-  Info unknown2030[0x400];                         // Inferred role: storage of the infos; original member name unknown.
+  Info m_info[0x400];                              // Inferred role: storage of the infos; original member name unknown.
 };
 
 static_assert(offsetof(GfGameVisible, unknown08) == 0x08, "");
 static_assert(offsetof(GfGameVisible, unknown20) == 0x20, "");
-static_assert(offsetof(GfGameVisible, unknown2030) == 0x2030, "");
+static_assert(offsetof(GfGameVisible, m_info) == 0x2030, "");
 static_assert(sizeof(GfGameVisible) == 0x4030, "");
 
 } // namespace gf

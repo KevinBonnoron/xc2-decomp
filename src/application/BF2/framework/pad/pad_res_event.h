@@ -25,12 +25,12 @@ static_assert(offsetof(ResAction, unknown08) == 0x08, "");
 static_assert(sizeof(ResAction) == 0x10, "");
 
 struct ResActionInfo {
-  const char *unknown00;      // Inferred role: name; original member name unknown.
-  const ResAction *unknown08; // Inferred role: alternative actions; original member name unknown.
-  u32 unknown10;              // Inferred role: action count; original member name unknown.
+  const char *unknown00;        // Inferred role: name; original member name unknown.
+  const ResAction *m_resAction; // Inferred role: alternative actions; original member name unknown.
+  u32 unknown10;                // Inferred role: action count; original member name unknown.
 };
 
-static_assert(offsetof(ResActionInfo, unknown08) == 0x08, "");
+static_assert(offsetof(ResActionInfo, m_resAction) == 0x08, "");
 static_assert(offsetof(ResActionInfo, unknown10) == 0x10, "");
 static_assert(sizeof(ResActionInfo) == 0x18, "");
 
@@ -46,15 +46,15 @@ static_assert(sizeof(ResAxisInfo) == 0x10, "");
 
 class PadResEvent : public anm::ReferenceObject {
 public:
-  const ResActionInfo *unknown18; // Inferred role: actions; original member name unknown.
-  u32 unknown20;                  // Inferred role: action count; original member name unknown.
-  const ResAxisInfo *unknown28;   // Inferred role: axes; original member name unknown.
-  u32 unknown30;                  // Inferred role: axis count; original member name unknown.
+  const ResActionInfo *m_resActionInfo; // Inferred role: actions; original member name unknown.
+  u32 unknown20;                        // Inferred role: action count; original member name unknown.
+  const ResAxisInfo *m_resAxisInfo;     // Inferred role: axes; original member name unknown.
+  u32 unknown30;                        // Inferred role: axis count; original member name unknown.
 };
 
-static_assert(offsetof(PadResEvent, unknown18) == 0x18, "");
+static_assert(offsetof(PadResEvent, m_resActionInfo) == 0x18, "");
 static_assert(offsetof(PadResEvent, unknown20) == 0x20, "");
-static_assert(offsetof(PadResEvent, unknown28) == 0x28, "");
+static_assert(offsetof(PadResEvent, m_resAxisInfo) == 0x28, "");
 static_assert(offsetof(PadResEvent, unknown30) == 0x30, "");
 
 class PadEventImporter {

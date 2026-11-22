@@ -2,7 +2,7 @@
 
 namespace ml {
 
-DrShdCubeCapFilter::DrShdCubeCapFilter(DrMan *man) : unknown00(man) {}
+DrShdCubeCapFilter::DrShdCubeCapFilter(DrMan *man) : m_drMan(man) {}
 
 DrShdCubeCapFilter::~DrShdCubeCapFilter() {}
 

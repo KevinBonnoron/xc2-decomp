@@ -54,7 +54,7 @@ public:
 
   static const char16_t *EmptyText;
 
-  Hash unknown08; // Inferred role: hash; original member name unknown.
+  Hash m_hash; // Inferred role: hash; original member name unknown.
   union {
     const void *unknown10;           // Inferred role: text; original member name unknown.
     const char *unknown10_utf8;      // Inferred role: text when unknown18 is TEXT_ENCODE_UTF8; original member name unknown.
@@ -63,7 +63,7 @@ public:
   TextEncodeType unknown18; // Inferred role: encode type; original member name unknown.
 };
 
-static_assert(offsetof(TextRef, unknown08) == 0x8, "");
+static_assert(offsetof(TextRef, m_hash) == 0x8, "");
 static_assert(offsetof(TextRef, unknown18) == 0x18, "");
 
 void SjisToUTF16(const char *source, char16_t *destination, unsigned long size);
@@ -126,10 +126,10 @@ public:
   void Set(const char *text) override;
   void Set(const char16_t *text) override;
 
-  MemoryBlock unknown20; // Inferred role: text buffer; original member name unknown.
+  MemoryBlock m_memoryBlock; // Inferred role: text buffer; original member name unknown.
 };
 
-static_assert(offsetof(String, unknown20) == 0x20, "");
+static_assert(offsetof(String, m_memoryBlock) == 0x20, "");
 static_assert(sizeof(String) == 0x30, "");
 
 } // namespace ssd

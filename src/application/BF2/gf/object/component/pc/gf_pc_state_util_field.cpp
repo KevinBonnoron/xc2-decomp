@@ -87,19 +87,19 @@ bool StateUtilField::execAsmCmd(GfComAsm &comAsm, ASM_CMD_ID_FIELD id) { return 
 
 bool StateUtilField::testVechile(GfComBehaviorPc &behavior) { return GfGameRide::isVehicle(static_cast<GfObj *>(behavior.unknown08)->unknownf8); }
 
-bool StateUtilField::isWalkMode(GfComPropertyPc &property) { return property.unknown310.unknown10_0; }
+bool StateUtilField::isWalkMode(GfComPropertyPc &property) { return property.m_propertyField.m_walkMode; }
 
-bool StateUtilField::isStop(GfComPropertyPc &property, u32 noInputFrameCount) { return property.unknown310.unknown001()->stopCnt <= noInputFrameCount; }
+bool StateUtilField::isStop(GfComPropertyPc &property, u32 noInputFrameCount) { return property.m_propertyField.unknown001()->stopCnt <= noInputFrameCount; }
 
-bool StateUtilField::testAutoRun(GfComPropertyPc &property) { return property.unknown310.unknown11_0; }
+bool StateUtilField::testAutoRun(GfComPropertyPc &property) { return property.m_propertyField.unknown11_0; }
 
 bool StateUtilField::isTurnEndRange(GfComPropertyPc &property) {
   f32 angle = calcInputDiffAngle(property);
-  return property.unknown310.unknown001()->turnEndAngle >= angle;
+  return property.m_propertyField.unknown001()->turnEndAngle >= angle;
 }
 
 bool StateUtilField::isTurnRange(GfComPropertyPc &property, mm::mtl::FixedQueue<mm::Vec2, 2> &queue) {
-  const FieldParam *param = property.unknown310.unknown006();
+  const FieldParam *param = property.m_propertyField.unknown006();
   f32 threshold = param->turnInputThreshold;
   f32 inputX = property.unknown60.unknown00 >= -threshold && property.unknown60.unknown00 <= threshold ? 0.0f : property.unknown60.unknown00;
   f32 inputY = property.unknown60.unknown04 >= -threshold && property.unknown60.unknown04 <= threshold ? 0.0f : property.unknown60.unknown04;
@@ -129,7 +129,7 @@ bool StateUtilField::isInputInverseDir(GfComPropertyPc &property) {
 bool StateUtilField::isTurnEndRangeCacheInput(GfComPropertyPc &property, const mm::Vec3 &direction) {
   f32 cosine = mm::clamp(direction.x * property.unknown1e0.x + direction.y * property.unknown1e0.y + direction.z * property.unknown1e0.z, -1.0f, 1.0f);
   f32 angle = mm::acos(cosine);
-  return property.unknown310.unknown001()->turnEndAngle >= angle;
+  return property.m_propertyField.unknown001()->turnEndAngle >= angle;
 }
 
 bool StateUtilField::isSlideGroundLanding(GfComPropertyPc &property) {
@@ -142,12 +142,12 @@ bool StateUtilField::isSlideGroundLanding(GfComPropertyPc &property) {
     return false;
   }
 
-  if (!((sensor->unknown30.unknown30 >> 5) & 1)) {
+  if (!((sensor->m_verticalData.unknown30 >> 5) & 1)) {
     return false;
   }
 
   const SlideParam *param = property.unknown004();
-  const mm::Plane &plane = sensor->unknown30.unknown10;
+  const mm::Plane &plane = sensor->m_verticalData.unknown10;
   f32 cosine = mm::clamp(plane.normal.x * mm::Vec3::unitY.x + plane.normal.y * mm::Vec3::unitY.y + plane.normal.z * mm::Vec3::unitY.z, -1.0f, 1.0f);
   return mm::acos(cosine) * mm::RAD_TO_DEG > param->minAngle;
 }
@@ -184,7 +184,7 @@ bool StateUtilField::isStartSlidePosuture(GfComBehaviorPc &behavior) {
 
 bool StateUtilField::isInputInverseDirAutoRun(GfComPropertyPc &property) {
   f32 cosine;
-  if (property.unknown310.unknown10_4) {
+  if (property.m_propertyField.unknown10_4) {
     f32 length;
     f32 inputX = property.unknown60.unknown00;
     f32 inputY = property.unknown60.unknown04;
@@ -212,38 +212,38 @@ bool StateUtilField::isInputInverseDirAutoRun(GfComPropertyPc &property) {
   }
 
   f32 angle = mm::acos(mm::clamp(cosine, -1.0f, 1.0f));
-  return property.unknown310.unknown001()->turnAngle <= angle;
+  return property.m_propertyField.unknown001()->turnAngle <= angle;
 }
 
-bool StateUtilField::isBackRange(GfComPropertyPc &property) { return calcInputDiffAngle(property) >= property.unknown310.unknown001()->backAngle; }
+bool StateUtilField::isBackRange(GfComPropertyPc &property) { return calcInputDiffAngle(property) >= property.m_propertyField.unknown001()->backAngle; }
 
-bool StateUtilField::isBackRangeAir(GfComPropertyPc &property) { return calcInputDiffAngleVel(property) >= property.unknown310.unknown001()->backAngle; }
+bool StateUtilField::isBackRangeAir(GfComPropertyPc &property) { return calcInputDiffAngleVel(property) >= property.m_propertyField.unknown001()->backAngle; }
 
-bool StateUtilField::ignoreOnGroundJump(GfComPropertyPc &property, f32 time) { return time < property.unknown310.unknown001()->ignoreTimeJump; }
+bool StateUtilField::ignoreOnGroundJump(GfComPropertyPc &property, f32 time) { return time < property.m_propertyField.unknown001()->ignoreTimeJump; }
 
 void StateUtilField::setIdleStatus(GfComPropertyPc &property, bool isIdle) {
   if (isIdle) {
-    property.unknown310.unknown10_2 = true;
+    property.m_propertyField.unknown10_2 = true;
   } else {
-    property.unknown310.unknown10_2 = false;
+    property.m_propertyField.unknown10_2 = false;
   }
 }
 
 void StateUtilField::setAirStatus(GfComBehaviorPc &behavior, bool isAir) {
   GfComPropertyPc *property = behavior.getProperty();
   if (isAir) {
-    property->unknown310.unknown11_1 = true;
+    property->m_propertyField.unknown11_1 = true;
   } else {
-    property->unknown310.unknown11_1 = false;
+    property->m_propertyField.unknown11_1 = false;
   }
 }
 
 void StateUtilField::setSpecialActStatus(GfComBehaviorPc &behavior, bool isSpecialAct) {
   GfComPropertyPc *property = behavior.getProperty();
   if (isSpecialAct) {
-    property->unknown310.unknown11_2 = true;
+    property->m_propertyField.unknown11_2 = true;
   } else {
-    property->unknown310.unknown11_2 = false;
+    property->m_propertyField.unknown11_2 = false;
   }
 }
 
@@ -272,19 +272,19 @@ ASM_CMD_ID_FIELD StateUtilField::getAsmID(GfPropertyField::WALL_MOVE_MODE mode) 
 
 bool StateUtilField::isMovableWall(GfComPropertyPc &property, GfPropertyField::WALL_MOVE_MODE mode) {
   bool isMovable = mode >= GfPropertyField::WALL_MOVE_MODE_UNKNOWN_0 && mode <= GfPropertyField::WALL_MOVE_MODE_UNKNOWN_7;
-  if (property.unknown310.unknown10_7) {
+  if (property.m_propertyField.unknown10_7) {
     isMovable &= !isWallUpMove(mode);
   }
   EnviromentSensor *sensor = property.getEnvSensor();
   if (!isMovable) {
     return false;
   }
-  if (!sensor->unknown24_1 || sensor->unknown150.unknown90 == unknown020) {
+  if (!sensor->unknown24_1 || sensor->unknown150.m_GF_OBJ_HANDLE == unknown020) {
     return true;
   }
   if (isWallUpMove(mode) && sensor->unknown25_0) {
-    f32 height = __builtin_fmaxf(property.unknown310.unknown3c + 1.3f, 0.0f);
-    return !(sensor->unknown1f0.unknown00.y - property.unknown160.unknown00.y <= height);
+    f32 height = __builtin_fmaxf(property.m_propertyField.unknown3c + 1.3f, 0.0f);
+    return !(sensor->m_groundInfo.unknown00.y - property.unknown160.unknown00.y <= height);
   }
   return true;
 }
@@ -321,12 +321,12 @@ bool StateUtilField::requestBattleStart(GfComPropertyPc &property) {
 void StateUtilField::notifySkillAct(GfComBehaviorPc &behavior, bool isSkillAct) {
   GfComPropertyPc *property = behavior.unknown08->getComponent<GfComPropertyPc>();
   if (property != nullptr) {
-    GfObj *obj = GfObjUtil::getObj(property->unknown310.unknown78);
+    GfObj *obj = GfObjUtil::getObj(property->m_propertyField.m_GF_OBJ_HANDLE);
     if (obj != nullptr) {
       MsgPcFieldNotifySkillEvent message(!isSkillAct);
       static_cast<GfObj *>(behavior.unknown08)->sendMessage(obj, message);
       if (!isSkillAct) {
-        property->unknown310.unknown78 = unknown020;
+        property->m_propertyField.m_GF_OBJ_HANDLE = unknown020;
       }
     }
   }
@@ -390,9 +390,9 @@ void StateUtilField::setWaterMode(GfComBehaviorPc &behavior, bool isWater) {
 
   StateUtil::setEnableGravity(behavior, !isWater);
   if (isWater) {
-    property->unknown310.unknown11_7 = true;
+    property->m_propertyField.unknown11_7 = true;
   } else {
-    property->unknown310.unknown11_7 = false;
+    property->m_propertyField.unknown11_7 = false;
   }
 }
 
@@ -408,12 +408,12 @@ bool StateUtilField::isBigLandDistance(GfComBehaviorPc &behavior) {
 }
 
 bool StateUtilField::isSwimFromAir(GfComPropertyPc &property) {
-  const WaterCommonParam *param = property.unknown310.unknown002();
+  const WaterCommonParam *param = property.m_propertyField.unknown002();
   return property.unknown90 >= param->waterDiveMinSpeed;
 }
 
 bool StateUtilField::isSwimMoveFromAir(GfComPropertyPc &property) {
-  const WaterCommonParam *param = property.unknown310.unknown005();
+  const WaterCommonParam *param = property.m_propertyField.unknown005();
   f32 speed = sqrtf(property.unknown80.x * property.unknown80.x + property.unknown80.y * property.unknown80.y + property.unknown80.z * property.unknown80.z);
   return property.existInputXY() && speed >= param->swimEnableSpeed;
 }
@@ -432,7 +432,7 @@ bool StateUtilField::isFallFromSlideState(GfComPropertyPc &property) {
     return true;
   }
   const SlideParam *param = property.unknown001();
-  return property.unknown160.unknown00.y - sensor->unknown30.unknown00.y >= param->fallDistance;
+  return property.unknown160.unknown00.y - sensor->m_verticalData.unknown00.y >= param->fallDistance;
 }
 
 void StateUtilField::setAsmSpeedSlideBrake(GfComPropertyPc &property) { property.unknown08->getComponent<GfComAsm>()->setVariable("V_speed", property.unknownc0 * 60.0f * 60.0f / 1000.0f); }
@@ -443,7 +443,7 @@ f32 StateUtilField::setAsmSpeedMove(GfComPropertyPc &property) {
   if (property.unknown38 & 1) {
     f32 effect = MoveUtilField::getSpeedEffect(property);
     speed = speed / (effect + 1.0f);
-    f32 velocityMax = static_cast<const GfMoveRunControler::Param *>(property.unknown310.unknown08->unknown10[3].param)->velocityMax;
+    f32 velocityMax = static_cast<const GfMoveRunControler::Param *>(property.m_propertyField.unknown08->unknown10[3].param)->velocityMax;
     speed = speed < velocityMax ? speed : velocityMax;
     speed = (effect + 1.0f) * speed;
   }
@@ -454,12 +454,12 @@ f32 StateUtilField::setAsmSpeedMove(GfComPropertyPc &property) {
 }
 
 void StateUtilField::setAsmSpeedSwim(GfComPropertyPc &property) {
-  const fw::ParamList *paramList = property.unknown310.unknown08.operator->();
+  const fw::ParamList *paramList = property.m_propertyField.unknown08.operator->();
   const GfMoveRunControler::Param *param = paramList->unknown0c > 10 ? static_cast<const GfMoveRunControler::Param *>(paramList->unknown10[10].param) : nullptr;
   f32 speed = sqrtf(property.unknown80.x * property.unknown80.x + property.unknown80.y * property.unknown80.y + property.unknown80.z * property.unknown80.z);
   f32 range = param->velocityMax - param->velocityMin;
   f32 ratio = mm::clamp(fabsf(range) > FLT_EPSILON ? (speed - param->velocityMin) / range : 0.0f, 0.0f, 1.0f);
-  const WaterCommonParam *waterParam = property.unknown310.unknown002();
+  const WaterCommonParam *waterParam = property.m_propertyField.unknown002();
   f32 motionSpeed = ratio + (1.0f - ratio) * waterParam->swimMotionMin;
   property.unknown08->getComponent<GfComAsm>()->setSpeed(motionSpeed, ANIM_LAYER_UNKNOWN_0);
 }
@@ -473,7 +473,7 @@ void StateUtilField::setSlideDirForce(GfComPropertyPc &property) {
   EnviromentSensor *sensor = property.getEnvSensor();
   mm::Vec3 direction;
   if (sensor->unknown24_0) {
-    direction = sensor->unknown30.unknown40;
+    direction = sensor->m_verticalData.unknown40;
   } else {
     direction = mm::Vec3::zero;
   }
@@ -514,10 +514,10 @@ void StateUtilField::setChildFrameHeight(GfComponent &component, f32 height) {
 mm::Vec3 StateUtilField::calcWallPreparePosition(GfComPropertyPc &property, const mm::Vec3 &position, const mm::Plane &plane) {
   mm::Vec3 result = position;
   if (position.y >= property.unknown160.unknown00.y) {
-    f32 offset = property.unknown310.unknown1c + property.unknown310.unknown4c;
+    f32 offset = property.m_propertyField.unknown1c + property.m_propertyField.unknown4c;
     result = position + plane.normal * offset;
   } else {
-    f32 offset = property.unknown310.unknown2c - property.unknown310.unknown4c;
+    f32 offset = property.m_propertyField.unknown2c - property.m_propertyField.unknown4c;
     result = position - plane.normal * offset;
   }
   return result;
@@ -528,7 +528,7 @@ bool StateUtilField::testCloud(GfComPropertyPc &property) {
   if (!sensor->unknown24_1) {
     return false;
   }
-  return sensor->unknown30.unknown70.unknown34 == 11;
+  return sensor->m_verticalData.unknown70.unknown34 == 11;
 }
 
 bool StateUtilField::isWallIdleMotion(GfComAsm &comAsm) {
@@ -553,7 +553,7 @@ bool StateUtilField::isEnableWallPrepare(GfComPropertyPc &property) {
   if (property.unknown38 == 0) {
     return false;
   }
-  GF_OBJ_HANDLE *handle = GfGamePlayerFormation::get()->unknown1a0[property.unknown38 - 2].unknown08;
+  GF_OBJ_HANDLE *handle = GfGamePlayerFormation::get()->unknown1a0[property.unknown38 - 2].m_playerHandle;
   if (handle == unknown020) {
     return false;
   }
@@ -581,7 +581,7 @@ bool StateUtilField::isNearPlayerWall(GfComPropertyPc &property, const mm::Vec3 
     if (i == property.unknown38) {
       continue;
     }
-    GF_OBJ_HANDLE *handle = formation->unknown1a0[i].unknown08;
+    GF_OBJ_HANDLE *handle = formation->unknown1a0[i].m_playerHandle;
     if (handle == unknown020) {
       continue;
     }
@@ -600,8 +600,8 @@ bool StateUtilField::isNearPlayer(GfComPropertyPc &property, const mm::Vec3 &pos
   f32 rangeSq = range * range;
   GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
   for (u64 i = 0; i < 6; i++) {
-    if (i != property.unknown38 && formation->unknown1a0[i].unknown08 != unknown020) {
-      mm::Vec3 diff = position - GfObjUtil::getProperty(formation->unknown1a0[i].unknown08)->unknown18->unknown10;
+    if (i != property.unknown38 && formation->unknown1a0[i].m_playerHandle != unknown020) {
+      mm::Vec3 diff = position - GfObjUtil::getProperty(formation->unknown1a0[i].m_playerHandle)->unknown18->unknown10;
       if (diff.x * diff.x + diff.y * diff.y + diff.z * diff.z <= rangeSq) {
         return true;
       }
@@ -612,17 +612,17 @@ bool StateUtilField::isNearPlayer(GfComPropertyPc &property, const mm::Vec3 &pos
 
 bool StateUtilField::isWallDetach(GfComPropertyPc &property) {
   EnviromentSensor *sensor = property.getEnvSensor();
-  if (!sensor->unknown24_0 || ((sensor->unknown30.unknown30 >> 4) & 1) != 0) {
+  if (!sensor->unknown24_0 || ((sensor->m_verticalData.unknown30 >> 4) & 1) != 0) {
     return false;
   }
-  const mm::Plane &plane = sensor->unknown30.unknown10;
+  const mm::Plane &plane = sensor->m_verticalData.unknown10;
   const mm::Vec3 &position = property.unknown160.unknown00;
   f32 dot = position.x * plane.normal.x + position.y * plane.normal.y + position.z * plane.normal.z;
-  return plane.distance + dot < -property.unknown310.unknown38;
+  return plane.distance + dot < -property.m_propertyField.unknown38;
 }
 
 bool StateUtilField::isWallAdsorption(GfComPropertyPc &property) {
-  if (property.unknown310.unknown10_3) {
+  if (property.m_propertyField.unknown10_3) {
     EnviromentSensor *sensor = property.getEnvSensor();
     if (sensor->unknown24_4 && (sensor->unknown150.unknown00.unknown24 & 0x50) == 0x10) {
       const EnviromentSensor::Parameter *sensorParam = property.unknown08->getComponent<GfComEnvSensor>()->unknown2e0.get<EnviromentSensor::Parameter>();
@@ -637,10 +637,10 @@ bool StateUtilField::isWallAdsorption(GfComPropertyPc &property) {
       packet.unknown38 = &wall;
       EnviromentSensor::searchHorizon(property.unknown160.unknown00, &packet);
       if (((packet.unknown34 >> 6) & 1) && wall.unknown60.unknown24_4) {
-        property.unknown310.unknown130 = wall.unknown60;
-        property.unknown310.unknown10_6 = true;
-        property.unknown310.flashWallInfo(property);
-        f32 limit = property.unknown310.unknown1c + property.unknown310.unknown4c;
+        property.m_propertyField.unknown130 = wall.unknown60;
+        property.m_propertyField.unknown10_6 = true;
+        property.m_propertyField.flashWallInfo(property);
+        f32 limit = property.m_propertyField.unknown1c + property.m_propertyField.unknown4c;
         if (!(wall.unknown60.unknown20 > limit)) {
           mm::Vec3 input = property.unknown2b0 * property.unknown60.unknown04 + property.unknown2d0 * property.unknown60.unknown00;
           if (!(fabsf(input.x) <= 0.000001f) || !(fabsf(input.y) <= 0.000001f) || !(fabsf(input.z) <= 0.000001f)) {
@@ -652,7 +652,7 @@ bool StateUtilField::isWallAdsorption(GfComPropertyPc &property) {
             direction.unknown001();
           }
 
-          const WallCommonParam *param = property.unknown310.unknown004(15).get<WallCommonParam>();
+          const WallCommonParam *param = property.m_propertyField.unknown004(15).get<WallCommonParam>();
           mm::Vec3 reverse(-direction.x, -direction.y, -direction.z);
           f32 cosine = mm::clamp(input.x * reverse.x + input.y * reverse.y + input.z * reverse.z, -1.0f, 1.0f);
           f32 angle = mm::acos(cosine);
@@ -682,7 +682,7 @@ void StateUtilField::setAccessFlag(GfComBehaviorPc &behavior, bool isEnable) {
 GfObj *StateUtilField::getAccessTarget(GfComBehaviorPc &behavior) {
   AccessPlugin *plugin = behavior.unknown001<AccessPlugin>(4);
   if (plugin != nullptr) {
-    return GfObjUtil::getObj(plugin->unknown10);
+    return GfObjUtil::getObj(plugin->m_GF_OBJ_HANDLE);
   }
   return nullptr;
 }
@@ -711,7 +711,7 @@ void StateUtilField::setEnableWaterIn(GfComBehaviorPc &behavior, bool isEnable) 
 GfObj *StateUtilField::getLureTarget(GfComBehaviorPc &behavior) {
   LurePlugin *plugin = behavior.unknown001<LurePlugin>(15);
   if (plugin != nullptr) {
-    return GfObjUtil::getObj(plugin->unknown10);
+    return GfObjUtil::getObj(plugin->m_GF_OBJ_HANDLE);
   }
 
   return nullptr;
@@ -720,7 +720,7 @@ GfObj *StateUtilField::getLureTarget(GfComBehaviorPc &behavior) {
 GF_OBJ_HANDLE *StateUtilField::getLureTargetHandle(GfComBehaviorPc &behavior) {
   LurePlugin *plugin = behavior.unknown001<LurePlugin>(15);
   if (plugin != nullptr) {
-    return plugin->unknown10;
+    return plugin->m_GF_OBJ_HANDLE;
   }
 
   return unknown020;
@@ -729,9 +729,9 @@ GF_OBJ_HANDLE *StateUtilField::getLureTargetHandle(GfComBehaviorPc &behavior) {
 void StateUtilField::setLookAtFlag(GfComBehaviorPc &behavior, bool isEnable) {
   GfComPropertyPc *property = behavior.getProperty();
   if (isEnable) {
-    property->unknown310.unknown10_1 = true;
+    property->m_propertyField.unknown10_1 = true;
   } else {
-    property->unknown310.unknown10_1 = false;
+    property->m_propertyField.unknown10_1 = false;
   }
 
   if (StateUtil::getTarget(behavior) == unknown020) {
@@ -764,15 +764,15 @@ static inline void unknown001(GfComPropertyPc &property) {
     input = property.unknown1e0;
   }
 
-  property.unknown310.unknown60 = input;
-  property.unknown310.unknown70 = power;
+  property.m_propertyField.unknown60 = input;
+  property.m_propertyField.unknown70 = power;
 }
 
 void StateUtilField::setAutoRun(GfComPropertyPc &property, bool isAutoRun) {
   if (isAutoRun) {
-    property.unknown310.unknown11_0 = true;
+    property.m_propertyField.unknown11_0 = true;
   } else {
-    property.unknown310.unknown11_0 = false;
+    property.m_propertyField.unknown11_0 = false;
   }
 
   if (isAutoRun) {
@@ -781,26 +781,26 @@ void StateUtilField::setAutoRun(GfComPropertyPc &property, bool isAutoRun) {
 }
 
 void StateUtilField::flipAutoRun(GfComPropertyPc &property) {
-  if (!property.unknown310.unknown11_0) {
+  if (!property.m_propertyField.unknown11_0) {
     if (!(fabsf(property.unknown80.x) <= 0.000001f) || !(fabsf(property.unknown80.y) <= 0.000001f) || !(fabsf(property.unknown80.z) <= 0.000001f)) {
-      property.unknown310.unknown11_0 = true;
+      property.m_propertyField.unknown11_0 = true;
       unknown001(property);
     }
   } else {
-    property.unknown310.unknown11_0 = false;
+    property.m_propertyField.unknown11_0 = false;
   }
 }
 
 void StateUtilField::setAutoRunInput(GfComPropertyPc &property) {
   if (!property.existInputXY()) {
-    property.setInputDirPow(property.unknown310.unknown60, property.unknown310.unknown70);
+    property.setInputDirPow(property.m_propertyField.unknown60, property.m_propertyField.unknown70);
     return;
   }
 
   mm::Vec3 input = property.unknown2d0 * property.unknown60.unknown00 + property.unknown2b0 * property.unknown60.unknown04;
   input.unknown001();
-  property.unknown310.unknown60 = input;
-  property.setInputDirPow(input, property.unknown310.unknown70);
+  property.m_propertyField.unknown60 = input;
+  property.setInputDirPow(input, property.m_propertyField.unknown70);
 }
 
 } // namespace pc

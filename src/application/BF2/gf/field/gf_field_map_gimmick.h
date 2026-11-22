@@ -56,18 +56,18 @@ public:
     m_end = false;
     unknown21 = false;
     unknown10 = nullptr;
-    unknown08 = unknown020;
+    m_GF_OBJ_HANDLE = unknown020;
   }
   virtual void onFsSucceeded() = 0;
   virtual void onFsFailed() {}
 
-  GF_OBJ_HANDLE *unknown08; // Inferred role: handle; original member name unknown.
-  Sequence unknown10;       // Inferred role: sequence; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: handle; original member name unknown.
+  Sequence unknown10;             // Inferred role: sequence; original member name unknown.
   bool m_end;
   bool unknown21; // Inferred role: fs succeeded; original member name unknown.
 };
 
-static_assert(offsetof(AFieldSeq, unknown08) == 0x08, "");
+static_assert(offsetof(AFieldSeq, m_GF_OBJ_HANDLE) == 0x08, "");
 static_assert(offsetof(AFieldSeq, unknown10) == 0x10, "");
 static_assert(offsetof(AFieldSeq, m_end) == 0x20, "");
 static_assert(offsetof(AFieldSeq, unknown21) == 0x21, "");
@@ -78,19 +78,19 @@ public:
   typedef void (GfFieldMapGimmick::*Sequence)(f32 deltaTime);
 
   struct BdatInfo {
-    BdatInfo() : unknown00(0), unknown02(0), unknown03(false), unknown04(false), unknown06(0, 0) {}
+    BdatInfo() : unknown00(0), unknown02(0), unknown03(false), unknown04(false), m_bootedGmkCond(0, 0) {}
     void create(CBdatWrapper bdat, int id);
     bool isCondMatched() const;
 
-    u16 unknown00;                   // Inferred role: condition; original member name unknown.
-    u8 unknown02;                    // Inferred role: camera gimmick attribute; original member name unknown.
-    bool unknown03;                  // Inferred role: gimmick camera position; original member name unknown.
-    bool unknown04;                  // Inferred role: no wait gimmick camera; original member name unknown.
-    gmk::BootedGmkCond unknown06;    // Inferred role: booted gmk; original member name unknown.
-    gmk::ScenarioFlagCond unknown0a; // Inferred role: scenario flag; original member name unknown.
-    gmk::QuestFlagCond unknown0e;    // Inferred role: quest flag; original member name unknown.
-    gmk::TimeCond unknown18;         // Inferred role: time cond; original member name unknown.
-    gmk::WeatherCond unknown28;      // Inferred role: weather cond; original member name unknown.
+    u16 unknown00;                            // Inferred role: condition; original member name unknown.
+    u8 unknown02;                             // Inferred role: camera gimmick attribute; original member name unknown.
+    bool unknown03;                           // Inferred role: gimmick camera position; original member name unknown.
+    bool unknown04;                           // Inferred role: no wait gimmick camera; original member name unknown.
+    gmk::BootedGmkCond m_bootedGmkCond;       // Inferred role: booted gmk; original member name unknown.
+    gmk::ScenarioFlagCond m_scenarioFlagCond; // Inferred role: scenario flag; original member name unknown.
+    gmk::QuestFlagCond m_questFlagCond;       // Inferred role: quest flag; original member name unknown.
+    gmk::TimeCond m_timeCond;                 // Inferred role: time cond; original member name unknown.
+    gmk::WeatherCond m_weatherCond;           // Inferred role: weather cond; original member name unknown.
   };
 
   GfFieldMapGimmick(const GfSetupParam &param);
@@ -127,9 +127,9 @@ public:
     delete get();
   }
 
-  BdatInfo unknown30;              // Inferred role: bdat info; original member name unknown.
-  gmk::GmkAcc unknown68;           // Inferred role: map gimmick accessor; original member name unknown.
-  gmk::GmkCamera unknownb0;        // Inferred role: gimmick camera; original member name unknown.
+  BdatInfo m_bdatInfo;             // Inferred role: bdat info; original member name unknown.
+  gmk::GmkAcc m_gmkAcc;            // Inferred role: map gimmick accessor; original member name unknown.
+  gmk::GmkCamera m_gmkCamera;      // Inferred role: gimmick camera; original member name unknown.
   Sequence unknown210;             // Inferred role: camera sequence; original member name unknown.
   Sequence unknown220;             // Inferred role: lod sequence; original member name unknown.
   u32 unknown230;                  // Inferred role: lod step; original member name unknown.
@@ -142,14 +142,14 @@ public:
 };
 
 static_assert(sizeof(GfFieldMapGimmick::BdatInfo) == 0x38, "");
-static_assert(offsetof(GfFieldMapGimmick::BdatInfo, unknown06) == 0x06, "");
-static_assert(offsetof(GfFieldMapGimmick::BdatInfo, unknown0a) == 0x0a, "");
-static_assert(offsetof(GfFieldMapGimmick::BdatInfo, unknown0e) == 0x0e, "");
-static_assert(offsetof(GfFieldMapGimmick::BdatInfo, unknown18) == 0x18, "");
-static_assert(offsetof(GfFieldMapGimmick::BdatInfo, unknown28) == 0x28, "");
-static_assert(offsetof(GfFieldMapGimmick, unknown30) == 0x30, "");
-static_assert(offsetof(GfFieldMapGimmick, unknown68) == 0x68, "");
-static_assert(offsetof(GfFieldMapGimmick, unknownb0) == 0xb0, "");
+static_assert(offsetof(GfFieldMapGimmick::BdatInfo, m_bootedGmkCond) == 0x06, "");
+static_assert(offsetof(GfFieldMapGimmick::BdatInfo, m_scenarioFlagCond) == 0x0a, "");
+static_assert(offsetof(GfFieldMapGimmick::BdatInfo, m_questFlagCond) == 0x0e, "");
+static_assert(offsetof(GfFieldMapGimmick::BdatInfo, m_timeCond) == 0x18, "");
+static_assert(offsetof(GfFieldMapGimmick::BdatInfo, m_weatherCond) == 0x28, "");
+static_assert(offsetof(GfFieldMapGimmick, m_bdatInfo) == 0x30, "");
+static_assert(offsetof(GfFieldMapGimmick, m_gmkAcc) == 0x68, "");
+static_assert(offsetof(GfFieldMapGimmick, m_gmkCamera) == 0xb0, "");
 static_assert(offsetof(GfFieldMapGimmick, unknown210) == 0x210, "");
 static_assert(offsetof(GfFieldMapGimmick, unknown220) == 0x220, "");
 static_assert(offsetof(GfFieldMapGimmick, unknown230) == 0x230, "");
@@ -195,12 +195,12 @@ public:
     delete get();
   }
 
-  GF_OBJ_HANDLE *unknown10; // Inferred role: handle; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: handle; original member name unknown.
   bool m_end;
   Sequence unknown20; // Inferred role: sequence; original member name unknown.
 };
 
-static_assert(offsetof(GfFieldGrave, unknown10) == 0x10, "");
+static_assert(offsetof(GfFieldGrave, m_GF_OBJ_HANDLE) == 0x10, "");
 static_assert(offsetof(GfFieldGrave, m_end) == 0x18, "");
 static_assert(offsetof(GfFieldGrave, unknown20) == 0x20, "");
 static_assert(sizeof(GfFieldGrave) == 0x30, "");

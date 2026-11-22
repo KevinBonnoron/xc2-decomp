@@ -29,7 +29,7 @@ public:
   f32 getLength() const override;
 
   DrMdlObj *unknown3d8; // Inferred role: dr mdl; original member name unknown.
-  DrMan *unknown3e0;    // Inferred role: dr man; original member name unknown.
+  DrMan *m_drMan;       // Inferred role: dr man; original member name unknown.
   const void *m_data;
   mm::mtl::FixStr<64> _3f0;
 };

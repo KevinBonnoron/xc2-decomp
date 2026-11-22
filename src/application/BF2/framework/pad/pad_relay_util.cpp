@@ -14,8 +14,8 @@ namespace fw {
 // share one unit: the game inlines findAction into getFwPadKey (75 instructions). Defined in another unit it is a call (62 instructions).
 const ResActionInfo *findAction(const PadResEvent *event, const char *name) {
   for (u32 i = 0; i < event->unknown20; i++) {
-    if (strcmp(event->unknown18[i].unknown00, name) == 0) {
-      return &event->unknown18[i];
+    if (strcmp(event->m_resActionInfo[i].unknown00, name) == 0) {
+      return &event->m_resActionInfo[i];
     }
   }
 
@@ -31,7 +31,7 @@ bool PadRelayUtil::getFwPadKey(u32 padIndex, const char *name, u32 arg2, u32 arg
       if (info == nullptr || arg2 >= info->unknown10) {
         return false;
       }
-      const ResAction &action = info->unknown08[arg2];
+      const ResAction &action = info->m_resAction[arg2];
       if (arg3 >= action.unknown08) {
         return false;
       }

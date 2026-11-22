@@ -15,7 +15,7 @@ AssetLoader *AssetLoader::Create(mtl::ALLOC_HANDLE handle, const char *path, int
   loader = new (AssetManager::getMemSYS()) AssetLoader();
   if (loader != nullptr) {
     loader->load(handle, path, option, static_cast<ml::FILE_PRIO>(priority));
-    loader->unknown100 = handle;
+    loader->m_ALLOC_HANDLE = handle;
     loader->SetName(path);
     loader->unknown110 = AssetManager::getHash(path);
   }

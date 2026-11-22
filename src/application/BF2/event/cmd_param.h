@@ -24,7 +24,7 @@ public:
   }
 
 private:
-  CmdVariable unknown08[VARIABLE_UNKNOWN_11]; // Inferred role: variables; original member name unknown.
+  CmdVariable m_cmdVariable[VARIABLE_UNKNOWN_11]; // Inferred role: variables; original member name unknown.
 };
 
 static_assert(sizeof(CmdParam) == 0x110, "");

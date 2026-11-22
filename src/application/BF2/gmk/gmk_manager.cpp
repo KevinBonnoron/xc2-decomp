@@ -27,6 +27,7 @@
 #include "gf/field/gf_field_weather.h"
 #include "gf/field/gf_mob_slot_manager.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/game/gf_game_party.h"
 #include "gf/game/gf_game_util.h"
 #include "gf/game/quest/gf_quest_id.h"
 #include "gf/game/quest/gf_quest_info.h"
@@ -129,12 +130,12 @@ static const char *const unknown014[] = {
     "fieldVolume", "climbing", "blade", "dmgGimmick", "dmgGimmick", "dmgGimmick", "dmgGimmick", nullptr,  "enemy",  "footPrint", "footPrint", "antiBladeArea", "tutorial",
 };
 
-bool GmkBdat::isValid() const { return unknown120 != nullptr && fw::BdatManager::isEnableBdat(unknown08.unknown108); }
+bool GmkBdat::isValid() const { return unknown120 != nullptr && fw::BdatManager::isEnableBdat(m_createInfo.unknown108); }
 
 bool GmkBdat::create(const CreateInfo &info) {
   dispose();
-  unknown08 = info;
-  unknown118 = fw::CommonResource::request(info.unknown00, unknown08.unknown04.c_str(), 9, false);
+  m_createInfo = info;
+  unknown118 = fw::CommonResource::request(info.m_ALLOC_HANDLE, m_createInfo.unknown04.c_str(), 9, false);
   if (unknown118->getRefCount() != 1) {
     return false;
   }
@@ -144,13 +145,13 @@ bool GmkBdat::create(const CreateInfo &info) {
 
 void GmkBdat::dispose() {
   unknown128 = nullptr;
-  if (unknown08.unknown108 >= 0) {
-    fw::BdatManager::unregistBdat(unknown08.unknown108);
-    unknown08.unknown108 = -1;
+  if (m_createInfo.unknown108 >= 0) {
+    fw::BdatManager::unregistBdat(m_createInfo.unknown108);
+    m_createInfo.unknown108 = -1;
   }
   mm::mtl::safeRelease(unknown118);
   unknown120 = nullptr;
-  unknown08 = CreateInfo();
+  m_createInfo = CreateInfo();
 }
 
 bool GmkManager::isGmkSetsReady() const {
@@ -165,7 +166,7 @@ bool GmkManager::isGmkSetsReady() const {
   return true;
 }
 
-bool GmkSet::isValid() const { return unknown10.unknown00.isValid() && unknown10.unknown04 > 0 && (!unknown40.unknown08.isValid() || unknown40.isValid()); }
+bool GmkSet::isValid() const { return m_createInfo.m_ALLOC_HANDLE.isValid() && m_createInfo.unknown04 > 0 && (!m_gmkBdat.m_createInfo.isValid() || m_gmkBdat.isValid()); }
 
 bool GmkSet::isGmkListsCreated() const {
   if (&GmkSet::seqUpdate != unknown388) {
@@ -220,7 +221,7 @@ bool GmkSet::updateImmediate() {
       unknown1b8[type]->updateImmediate();
     }
   }
-  unknown178.updateImmediate(0.0f);
+  m_gmkNpcManager.updateImmediate(0.0f);
   return true;
 }
 
@@ -230,7 +231,7 @@ void GmkBdat::update(f32 deltaTime) {
   }
 }
 
-GmkManager::GmkManager() : unknown58(nullptr), unknown190(nullptr), unknown198(unknown080_0), unknownf380(nullptr) {}
+GmkManager::GmkManager() : m_gmkBdat(nullptr), unknown190(nullptr), unknown198(unknown080_0), unknownf380(nullptr) {}
 
 GmkManager::~GmkManager() { dispose(); }
 
@@ -304,7 +305,7 @@ const AGmkBase *GmkSet::findFirstGmkInstByBdatId(GmkType type, int bdatId) const
   u32 num = list->getInstNum();
   for (u32 i = 0; i < num; i++) {
     const AGmkBase *gmk = list->getInst(i);
-    if (gmk->isValid() && gmk->unknown20.unknown18 == bdatId) {
+    if (gmk->isValid() && gmk->m_createInfo.unknown18 == bdatId) {
       return gmk;
     }
   }
@@ -320,14 +321,14 @@ const AGmkBase *GmkManager::findGmkInstByGmkInstIndex(int gmkSetId, GmkType type
 }
 
 bool GmkManager::isValid() const {
-  if (unknown58.unknown120 == nullptr || !fw::BdatManager::isEnableBdat(unknown58.unknown08.unknown108)) {
+  if (m_gmkBdat.unknown120 == nullptr || !fw::BdatManager::isEnableBdat(m_gmkBdat.m_createInfo.unknown108)) {
     return false;
   }
   return unknown190 != nullptr;
 }
 
 void GmkManager::update(f32 deltaTime) {
-  unknown58.update(deltaTime);
+  m_gmkBdat.update(deltaTime);
   if (unknownf380) {
     (this->*unknownf380)(deltaTime);
   }
@@ -361,15 +362,15 @@ bool GmkManager::isValidView() const {
 }
 
 void GmkManager::seqWaitValidateResDefBdatFp(f32 deltaTime) {
-  if (unknown58.isValid()) {
-    unknown190 = Bdat::getFP(unknown08.unknown28.c_str());
+  if (m_gmkBdat.isValid()) {
+    unknown190 = Bdat::getFP(m_createInfo.unknown28.c_str());
     unknownf380 = &GmkManager::seqUpdate;
   }
 }
 
 void GmkManager::seqUpdate(f32 deltaTime) {
-  unknown1a0.update(deltaTime);
-  unknownf270.update(deltaTime);
+  m_gmkPhantomManager.update(deltaTime);
+  m_gmkSquadManager.update(deltaTime);
   TGmkActiveList<GmkPrecious>::unknown001(deltaTime);
   TGmkActiveList<GmkSe>::unknown001(deltaTime);
   TGmkActiveList<GmkSeLine>::unknown001(deltaTime);
@@ -386,12 +387,12 @@ void GmkManager::seqUpdate(f32 deltaTime) {
 
 void GmkManager::create(const CreateInfo &info) {
   dispose();
-  unknown08 = info;
+  m_createInfo = info;
   GmkBdat::CreateInfo bdatInfo;
-  bdatInfo.unknown00 = info.unknown00;
-  bdatInfo.unknown04 = unknown08.unknown04.c_str();
+  bdatInfo.m_ALLOC_HANDLE = info.m_ALLOC_HANDLE;
+  bdatInfo.unknown04 = m_createInfo.unknown04.c_str();
   bdatInfo.unknown108 = 3;
-  unknown58.create(bdatInfo);
+  m_gmkBdat.create(bdatInfo);
   unknownf358.setAllocator(fw::FrameworkMemory::getAllocator(5));
   unknownf358.reserve(info.unknown4c);
   unknownf380 = &GmkManager::seqWaitValidateResDefBdatFp;
@@ -402,7 +403,7 @@ void GmkManager::dispose() {
   clearGmkSets();
   unknownf358.destroy();
   unknown190 = nullptr;
-  unknown58.dispose();
+  m_gmkBdat.dispose();
 }
 
 void GmkManager::clearGmkSets() {
@@ -421,13 +422,13 @@ void GmkManager::clearGmkSets() {
 void GmkManager::createGmkSet(mtl::ALLOC_HANDLE memory, int gmkSetId, const mm::Vec3 &position, f32 rotation) {
   if (!unknownf358.empty()) {
     for (GmkSet **it = unknownf358.begin(); it != unknownf358.end(); ++it) {
-      if ((*it)->unknown10.unknown04 == gmkSetId) {
+      if ((*it)->m_createInfo.unknown04 == gmkSetId) {
         return;
       }
     }
   }
   GmkSet::CreateInfo info;
-  info.unknown00 = memory;
+  info.m_ALLOC_HANDLE = memory;
   info.unknown04 = gmkSetId;
   info.unknown10 = position;
   info.unknown20 = rotation;
@@ -440,7 +441,7 @@ void GmkManager::disposeGmkSet(int gmkSetId) {
     return;
   }
   for (GmkSet **it = unknownf358.begin(); it != unknownf358.end(); ++it) {
-    if ((*it)->unknown10.unknown04 == gmkSetId) {
+    if ((*it)->m_createInfo.unknown04 == gmkSetId) {
       delete *it;
       unknownf358.erase(it);
       return;
@@ -449,7 +450,7 @@ void GmkManager::disposeGmkSet(int gmkSetId) {
 }
 
 int GmkManager::findFirstBdatId_RSC_GmkSetList(int map) const {
-  if (!unknown58.isValid()) {
+  if (!m_gmkBdat.isValid()) {
     return -1;
   }
   u8 *bdat = unknown190;
@@ -504,7 +505,7 @@ int GmkManager::findFirstBdatId_RSC_GmkSetList(GmkType type, int bdatId) const {
 GmkSet *GmkManager::findGmkSet(int gmkSetId) const {
   for (GmkSet *const *it = unknownf358.begin(); it != unknownf358.end(); ++it) {
     GmkSet *set = *it;
-    if (set != nullptr && set->unknown10.unknown04 == gmkSetId) {
+    if (set != nullptr && set->m_createInfo.unknown04 == gmkSetId) {
       return set;
     }
   }
@@ -523,17 +524,17 @@ int getCurrentMapBdatId() { return gf::GfGameManager::getMapID(); }
 
 void GmkSet::update(f32 deltaTime) {
   const GmkManager *manager = GmkManager::get();
-  if (!manager->unknown58.isValid() || manager->unknown190 == nullptr) {
+  if (!manager->m_gmkBdat.isValid() || manager->unknown190 == nullptr) {
     return;
   }
-  unknown40.update(deltaTime);
-  unknown178.update(deltaTime);
+  m_gmkBdat.update(deltaTime);
+  m_gmkNpcManager.update(deltaTime);
   if (unknown388) {
     (this->*unknown388)(deltaTime);
   }
 }
 
-GmkSet::GmkSet(const CreateInfo *info) : unknown40(nullptr), unknown178(0xffffffff) {
+GmkSet::GmkSet(const CreateInfo *info) : m_gmkBdat(nullptr), m_gmkNpcManager(0xffffffff) {
   for (u32 type = 0; type < GMK_TYPE_NUM; type++) {
     unknown1b8[type] = nullptr;
   }
@@ -545,8 +546,8 @@ GmkSet::GmkSet(const CreateInfo *info) : unknown40(nullptr), unknown178(0xffffff
 
 void GmkSet::create(const CreateInfo &info) {
   dispose();
-  unknown10 = info;
-  unknown178.unknown3c = !info.unknown24;
+  m_createInfo = info;
+  m_gmkNpcManager.unknown3c = !info.unknown24;
   unknown388 = &GmkSet::seqWaitToValidate_GfGameManager_m_mapID;
 }
 
@@ -554,7 +555,7 @@ void GmkSet::dispose() {
   unknown388 = nullptr;
   disposeGmkLists();
   disposeMapBdat();
-  unknown10 = CreateInfo();
+  m_createInfo = CreateInfo();
 }
 
 GmkSet::~GmkSet() { dispose(); }
@@ -589,19 +590,19 @@ void GmkSetOfSalvageChildren::createGmkLists(int gmkSetId) {
     }
     const char *bdatName = GmkManager::get()->getSheetnameByType(gmkSetId, static_cast<GmkType>(type));
     IGmkList::CreateInfo info;
-    info.unknown00 = unknown10.unknown00;
-    info.unknown08 = this;
+    info.m_ALLOC_HANDLE = m_createInfo.m_ALLOC_HANDLE;
+    info.m_gmkSet = this;
     info.unknown10 = "gmk/";
     info.unknown10 += fileName;
     info.unknown10 += ".lvb";
     if (bdatName != nullptr) {
       info.unknown114 = bdatName;
     }
-    info.unknown140 = unknown10.unknown10;
-    info.unknown150 = unknown10.unknown20;
+    info.unknown140 = m_createInfo.unknown10;
+    info.unknown150 = m_createInfo.unknown20;
     list->create(info);
   }
-  unknown178.dispose();
+  m_gmkNpcManager.dispose();
 }
 
 void GmkSet::seqWaitToValidate_GfGameManager_m_mapID(f32 deltaTime) {
@@ -619,7 +620,7 @@ void GmkSet::disposeGmkLists() {
   }
 }
 
-void GmkSet::disposeMapBdat() { unknown40.dispose(); }
+void GmkSet::disposeMapBdat() { m_gmkBdat.dispose(); }
 
 void GmkSet::seqUpdate(f32 deltaTime) {
   for (u32 type = 0; type < GMK_TYPE_NUM; type++) {
@@ -691,22 +692,22 @@ bool GmkSet::isGmkInstValidView(const AGmkBase &gmk) {
 }
 
 bool GmkSet::createMapBdat(int map) {
-  unknown40.dispose();
+  m_gmkBdat.dispose();
   GmkBdat::CreateInfo info;
   const char *name = reinterpret_cast<const char *>(Bdat::getValCheck(GmkManager::get()->unknown190, "bdat", map, BDAT_TYPE_UNKNOWN_7));
   if (name == nullptr || name[0] == '\0') {
     return false;
   }
-  info.unknown00 = unknown10.unknown00;
+  info.m_ALLOC_HANDLE = m_createInfo.m_ALLOC_HANDLE;
   info.unknown04 = "gmk/";
   info.unknown04 += name;
   info.unknown04 += ".bdat";
   info.unknown108 = 4;
-  return unknown40.create(info);
+  return m_gmkBdat.create(info);
 }
 
 void GmkSet::createGmkLists(int gmkSetId) {
-  unknown178.setUpdateNpcNumPerFrame(32);
+  m_gmkNpcManager.setUpdateNpcNumPerFrame(32);
   for (int i = 0; i < GMK_TYPE_NUM; i++) {
     if (unknown1b8[i] != nullptr) {
       delete unknown1b8[i];
@@ -782,28 +783,28 @@ void GmkSet::createGmkLists(int gmkSetId) {
     }
     const char *bdatName = GmkManager::get()->getSheetnameByType(gmkSetId, static_cast<GmkType>(type));
     IGmkList::CreateInfo info;
-    info.unknown00 = unknown10.unknown00;
-    info.unknown08 = this;
+    info.m_ALLOC_HANDLE = m_createInfo.m_ALLOC_HANDLE;
+    info.m_gmkSet = this;
     info.unknown10 = "gmk/";
     info.unknown10 += fileName;
     info.unknown10 += ".lvb";
     if (bdatName != nullptr) {
       info.unknown114 = bdatName;
     }
-    info.unknown140 = unknown10.unknown10;
-    info.unknown150 = unknown10.unknown20;
+    info.unknown140 = m_createInfo.unknown10;
+    info.unknown150 = m_createInfo.unknown20;
     list->create(info);
   }
 }
 
 void GmkSet::seqCreateMapBdat(f32 deltaTime) {
-  createGmkLists(unknown10.unknown04);
+  createGmkLists(m_createInfo.unknown04);
   unknown388 = &GmkSet::seqUpdate;
 }
 
 void GmkSet::seqCreateMapGmk(f32 deltaTime) {
-  if (unknown40.isValid() || !unknown40.unknown08.isValid()) {
-    createGmkLists(unknown10.unknown04);
+  if (m_gmkBdat.isValid() || !m_gmkBdat.m_createInfo.isValid()) {
+    createGmkLists(m_createInfo.unknown04);
     unknown388 = &GmkSet::seqUpdate;
   }
 }
@@ -825,20 +826,20 @@ public:
 static void unknown008(const GmkRoute &route, bool isValidate, bool isDisp) {
   const GmkRoutedEnemy &enemy = static_cast<const GmkRoutedEnemy &>(route);
   if (isValidate) {
-    isDisp = enemy.unknown50.unknown140;
+    isDisp = enemy.m_gmkEnemyInsts.unknown140;
   }
-  enemy.unknown50.unknown140 = isDisp;
-  enemy.unknown50.validateDisp();
+  enemy.m_gmkEnemyInsts.unknown140 = isDisp;
+  enemy.m_gmkEnemyInsts.validateDisp();
 }
 
 // Inferred helper: sets the display of a routed mob, or applies its current display setting; original name unknown.
 static void unknown009(const GmkRoute &route, bool isValidate, bool isDisp) {
   const GmkRoutedMob &mob = static_cast<const GmkRoutedMob &>(route);
   if (isValidate) {
-    isDisp = mob.unknown50.unknowna0;
+    isDisp = mob.m_gmkMobInsts.unknowna0;
   }
-  mob.unknown50.unknowna0 = isDisp;
-  mob.unknown50.validateDisp();
+  mob.m_gmkMobInsts.unknowna0 = isDisp;
+  mob.m_gmkMobInsts.validateDisp();
 }
 
 // Inferred helper: sets the display of a gimmick, or applies its current display setting; original name unknown.
@@ -847,10 +848,10 @@ static void unknown007(const AGmkBase &gmk, bool isValidate, bool isDisp) {
   case GMK_TYPE_ENEMY: {
     const GmkEnemy &enemy = static_cast<const GmkEnemy &>(gmk);
     if (isValidate) {
-      isDisp = enemy.unknown48.unknown140;
+      isDisp = enemy.m_gmkEnemyInsts.unknown140;
     }
-    enemy.unknown48.unknown140 = isDisp;
-    enemy.unknown48.validateDisp();
+    enemy.m_gmkEnemyInsts.unknown140 = isDisp;
+    enemy.m_gmkEnemyInsts.validateDisp();
     break;
   }
   case GMK_TYPE_ROUTED_ENEMY:
@@ -925,10 +926,10 @@ static void unknown007(const AGmkBase &gmk, bool isValidate, bool isDisp) {
   case GMK_TYPE_MOB: {
     const GmkMob &mob = static_cast<const GmkMob &>(gmk);
     if (isValidate) {
-      isDisp = mob.unknown48.unknowna0;
+      isDisp = mob.m_gmkMobInsts.unknowna0;
     }
-    mob.unknown48.unknowna0 = isDisp;
-    mob.unknown48.validateDisp();
+    mob.m_gmkMobInsts.unknowna0 = isDisp;
+    mob.m_gmkMobInsts.validateDisp();
     break;
   }
   case GMK_TYPE_ROUTED_MOB:
@@ -1026,7 +1027,7 @@ void GmkInstDispTraverserByBdatId::onTraverse(const AGmkBase &gmk) {
   if (!gmk.isValid()) {
     return;
   }
-  if (unknown08 < 1 || unknown08 == gmk.unknown20.unknown18) {
+  if (unknown08 < 1 || unknown08 == gmk.m_createInfo.unknown18) {
     if (unknown0d) {
       unknown007(gmk, true, false);
     } else {
@@ -1081,11 +1082,11 @@ void GmkBdat::seqWaitResourceLoaded(f32) {
     return;
   }
   unknown120 = unknown118->getAssetData();
-  if (unknown120 == nullptr || fw::BdatManager::isExistBdat(unknown08.unknown108)) {
+  if (unknown120 == nullptr || fw::BdatManager::isExistBdat(m_createInfo.unknown108)) {
     dispose();
     return;
   }
-  fw::BdatManager::loadBdatFromMemory(unknown08.unknown108, unknown120);
+  fw::BdatManager::loadBdatFromMemory(m_createInfo.unknown108, unknown120);
   unknown128 = nullptr;
 }
 
@@ -1149,9 +1150,9 @@ AGmkBase *getBindedGmkInst(gf::GF_OBJ_HANDLE *handle) {
 }
 
 bool hasEyeBlink(const AGmkBase &gmk) {
-  u8 *bdat = gmk.unknown08.unknown00->getBindedBdatFp();
+  u8 *bdat = gmk.m_createBaseInfo.m_ownerGmkEnemyList->getBindedBdatFp();
   if (bdat != nullptr) {
-    u16 motion = Bdat::getValCheck(bdat, "Mot", gmk.unknown20.unknown18, BDAT_TYPE_UNKNOWN_2);
+    u16 motion = Bdat::getValCheck(bdat, "Mot", gmk.m_createInfo.unknown18, BDAT_TYPE_UNKNOWN_2);
     if (motion) {
       // The game tests the u16 as `and w8, w0, #0xffff; cbz w8` (0x71005e4f9c, a zero test of the i16 value, see GfAutoTalk::BdatInfo::create) and zero-extends it
       // again, `and w19, w0, #0xffff` (0x71005e4fa4), before the getFP call (0x71005e4fb0); the widened local places that extension. Without it clang extends once,
@@ -1202,9 +1203,10 @@ bool isModelRendered(gf::GF_OBJ_HANDLE *handle) {
   return model->isRender();
 }
 
-// Nothing calls this function in the binary: GmkClimbing::updateIcon (0x710061d414, not reproduced) has its body inlined. Here the call costs
-// 275 against the inline threshold 275, so updateIcon stays a call (17 instructions against 59). Defining the function inline would inline it
-// and match updateIcon, but then this copy (0x71005e4344, 51 instructions, matching) is no longer emitted.
+// Nothing calls this function in the binary: GmkClimbing::updateIcon (0x710061d414) and GmkMapGimmick::seqUpdate (0x710060ec64) inline its body. The call costs 275
+// against the inline threshold 275 (-Rpass-analysis=inline), wherever the function is defined in the unit (before or after its callers, with isCameraExist and
+// getCameraPos before or after it), so a call compiles to 17 instructions in updateIcon against the game's 59; defining it inline would inline it but stop emitting
+// this copy (0x71005e4344, 51 instructions, matching). updateIcon therefore writes the body out again (ruling 8, see there).
 bool isPointBehindGround(const mm::Vec3 &position) {
   if (isCameraExist()) {
     fw::TColiCheckResult<256> result;
@@ -1382,7 +1384,7 @@ f32 getMobPopDistSq() {
   if (gimmick == nullptr) {
     return 1e12f;
   }
-  return gimmick->unknownf910.unknown528;
+  return gimmick->m_mobSlotManager.unknown528;
 }
 
 void resetMobPopDistSq() {
@@ -1390,8 +1392,8 @@ void resetMobPopDistSq() {
   if (gimmick == nullptr) {
     return;
   }
-  gimmick->unknownf910.unknown420.clear();
-  gimmick->unknownf910.unknown528 = 1e12f;
+  gimmick->m_mobSlotManager.unknown420.clear();
+  gimmick->m_mobSlotManager.unknown528 = 1e12f;
 }
 
 bool addFailedPopDistSq(f32 distSq) {
@@ -1399,7 +1401,7 @@ bool addFailedPopDistSq(f32 distSq) {
   if (gimmick == nullptr) {
     return false;
   }
-  return gimmick->unknownf910.addFailedPopDistSq(distSq);
+  return gimmick->m_mobSlotManager.addFailedPopDistSq(distSq);
 }
 
 u32 getBindedFsId(const AGmkBase &gmk) {
@@ -1410,10 +1412,10 @@ u32 getBindedFsId(const AGmkBase &gmk) {
     if (tbox.getBdatInfo()->unknown02 && tbox.getProgress() == GmkTbox::PROGRESS_UNKNOWN_0) {
       column = "FSID2";
     }
-    return Bdat::getValCheck(gmk.getBindedBdatFp(), column, gmk.unknown20.unknown18, BDAT_TYPE_UNKNOWN_2);
+    return Bdat::getValCheck(gmk.getBindedBdatFp(), column, gmk.m_createInfo.unknown18, BDAT_TYPE_UNKNOWN_2);
   }
   if (type == GMK_TYPE_JUMP || type == GMK_TYPE_WARP || type == GMK_TYPE_MAP_GIMMICK) {
-    return Bdat::getValCheck(gmk.getBindedBdatFp(), "FSID", gmk.unknown20.unknown18, BDAT_TYPE_UNKNOWN_2);
+    return Bdat::getValCheck(gmk.getBindedBdatFp(), "FSID", gmk.m_createInfo.unknown18, BDAT_TYPE_UNKNOWN_2);
   }
   return 0;
 }
@@ -1440,7 +1442,7 @@ void createMenuObj(gf::GF_OBJ_HANDLE *handle) {
   }
 }
 
-u32 GmkTbox::getProgress() const { return gf::GfGameFlag::getLocal(2, unknown20.unknown18 + GAME_FLAG_UNKNOWN_31765); }
+u32 GmkTbox::getProgress() const { return gf::GfGameFlag::getLocal(2, m_createInfo.unknown18 + GAME_FLAG_UNKNOWN_31765); }
 
 u32 getBdatIdOfQuestTargetIcon(gf::GF_OBJ_HANDLE *handle, u16 iconType) {
   if (handle == gf::unknown020) {
@@ -1588,13 +1590,13 @@ static int s_scriptStartId = -1;
 
 GmkScript::GmkScript(const CreateInfo *info) : unknown30(nullptr) {
   if (info != nullptr) {
-    unknown08 = *info;
+    m_createInfo = *info;
   }
 }
 
 void GmkScript::create(const CreateInfo &info) {
   endScript();
-  unknown08 = info;
+  m_createInfo = info;
 }
 
 void GmkScript::vmSetStartId(int id) { s_scriptStartId = id; }
@@ -1640,8 +1642,8 @@ void GmkScript::beginScript() {
     return;
   }
   endScript();
-  fw::ScriptManager::get()->loadScript(gf::SCRIPT_SLOT_UNKNOWN_1, unknown08.unknown00.c_str(), FILE_PRIO_UNKNOWN_7);
-  vmSetStartId(unknown08.unknown24);
+  fw::ScriptManager::get()->loadScript(gf::SCRIPT_SLOT_UNKNOWN_1, m_createInfo.unknown00.c_str(), FILE_PRIO_UNKNOWN_7);
+  vmSetStartId(m_createInfo.unknown24);
   fw::ScriptManager::get()->unknown20[gf::SCRIPT_SLOT_UNKNOWN_1].start();
   vmBeginScript();
   unknown30 = &GmkScript::seqWaitEndScript;
@@ -1661,25 +1663,25 @@ void GmkScript::update(f32 deltaTime) {
 }
 
 void GmkPhantomSimple::CreateInfo::validateByAGmkBase(const AGmkBase &gmk) {
-  u32 shapeType = gmk.unknown08.unknown10->unknown0c;
+  u32 shapeType = gmk.m_createBaseInfo.unknown10->unknown0c;
   if (shapeType == SHAPE_TYPE_UNKNOWN_1) {
     // Inferred: a point shape has no phantom; the game only reads the list create info, likely for a stripped debug message.
-    gmk.unknown08.unknown00->getCreateInfo();
+    gmk.m_createBaseInfo.m_ownerGmkEnemyList->getCreateInfo();
     return;
   }
   unknown00 = unknown006[shapeType];
-  unknown10 = gmk.unknown08.unknown08->unknown00;
-  unknown20 = gmk.unknown08.unknown08->unknown10;
+  unknown10 = gmk.m_createBaseInfo.m_xform->unknown00;
+  unknown20 = gmk.m_createBaseInfo.m_xform->unknown10;
   switch (unknown00) {
   case GmkPhantom::SHAPE_TYPE_UNKNOWN_1:
-    unknown30[0] = gmk.unknown08.unknown08->unknown20.x * 0.5f;
+    unknown30[0] = gmk.m_createBaseInfo.m_xform->unknown20.x * 0.5f;
     if (unknown30[0] < 0.0f) {
       unknown30[0] = -unknown30[0];
     }
     break;
   case GmkPhantom::SHAPE_TYPE_UNKNOWN_2:
-    unknown30[0] = gmk.unknown08.unknown08->unknown20.y;
-    unknown30[1] = gmk.unknown08.unknown08->unknown20.x * 0.5f;
+    unknown30[0] = gmk.m_createBaseInfo.m_xform->unknown20.y;
+    unknown30[1] = gmk.m_createBaseInfo.m_xform->unknown20.x * 0.5f;
     for (u32 i = 0; i < 2; i++) {
       if (unknown30[i] < 0.0f) {
         unknown30[i] = -unknown30[i];
@@ -1687,9 +1689,9 @@ void GmkPhantomSimple::CreateInfo::validateByAGmkBase(const AGmkBase &gmk) {
     }
     break;
   case GmkPhantom::SHAPE_TYPE_UNKNOWN_3:
-    unknown30[0] = gmk.unknown08.unknown08->unknown20.x * 0.5f;
-    unknown30[1] = gmk.unknown08.unknown08->unknown20.y * 0.5f;
-    unknown30[2] = gmk.unknown08.unknown08->unknown20.z * 0.5f;
+    unknown30[0] = gmk.m_createBaseInfo.m_xform->unknown20.x * 0.5f;
+    unknown30[1] = gmk.m_createBaseInfo.m_xform->unknown20.y * 0.5f;
+    unknown30[2] = gmk.m_createBaseInfo.m_xform->unknown20.z * 0.5f;
     for (u32 i = 0; i < 3; i++) {
       if (unknown30[i] < 0.0f) {
         unknown30[i] = -unknown30[i];
@@ -1709,7 +1711,7 @@ GmkPhantomSimple::GmkPhantomSimple(const CreateInfo *info) : unknown50(nullptr) 
 
 void GmkPhantomSimple::create(const CreateInfo &info) {
   dispose();
-  unknown10 = info;
+  m_createInfo = info;
   fw::ColiPhantomInfo coliInfo;
   coliInfo.unknown04 = fw::COLI_TYPE_UNKNOWN_0;
   coliInfo.unknown14 = 0x100000;
@@ -1752,7 +1754,7 @@ void GmkPhantomSimple::dispose() {
     unknown50->setListener(nullptr);
   }
   mm::mtl::safeRelease(unknown50);
-  unknown10 = CreateInfo();
+  m_createInfo = CreateInfo();
 }
 
 GmkPhantom::GmkPhantom(const CreateInfo *info) : unknown70(nullptr), unknown78(nullptr), unknown80(false), unknown81(false), unknown82(false), unknown83(false) {
@@ -1764,11 +1766,11 @@ GmkPhantom::GmkPhantom(const CreateInfo *info) : unknown70(nullptr), unknown78(n
 
 void GmkPhantom::create(const CreateInfo &info) {
   dispose();
-  unknown20 = info;
+  m_createInfo = info;
   fw::ColiPhantomInfo coliInfo;
   coliInfo.unknown04 = fw::COLI_TYPE_UNKNOWN_0;
   coliInfo.unknown14 = 0x100000;
-  coliInfo.unknown20 = this;
+  coliInfo.m_coliUserData = this;
   switch (info.unknown00) {
   case SHAPE_TYPE_UNKNOWN_1: {
     fw::unknown131 shape(info.unknown30[0]);
@@ -1825,14 +1827,14 @@ void GmkPhantom::update(const GmkPhantomCheckResults &results) {
   }
   unknown81 = false;
   unknown82 = false;
-  size_t resultNum = unknown20.unknown48 ? results.size() : 1;
+  size_t resultNum = m_createInfo.unknown48 ? results.size() : 1;
   int resultIndex = -1;
   int hitIndex = -1;
   for (int i = 0; i < resultNum; i++) {
     const fw::TColiCheckResult<256> &result = results[i];
     u32 hitNum = result.getCount();
     for (u32 j = 0; j < hitNum; j++) {
-      fw::ColiUserData *userData = result.hits[j].object->unknown58;
+      fw::ColiUserData *userData = result.hits[j].object->m_coliUserData;
       GmkPhantom *phantom = nullptr;
       if (userData != nullptr && userData->getRTTI()->isKindOf(&m_rtti)) {
         phantom = static_cast<GmkPhantom *>(userData);
@@ -1858,16 +1860,16 @@ void GmkPhantom::update(const GmkPhantomCheckResults &results) {
   }
   if (unknown81) {
     unknown83 = true;
-    if (unknown20.unknown40 != nullptr) {
+    if (m_createInfo.m_iGmkPhantomEventListener != nullptr) {
       IGmkPhantomEventListener::OnEnterInfo info = {this, &results[resultIndex], hitIndex};
-      unknown20.unknown40->onEnterPhantom(info);
+      m_createInfo.m_iGmkPhantomEventListener->onEnterPhantom(info);
     }
   }
   if (unknown82) {
     unknown83 = false;
-    if (unknown20.unknown40 != nullptr) {
+    if (m_createInfo.m_iGmkPhantomEventListener != nullptr) {
       IGmkPhantomEventListener::OnLeaveInfo info = {this};
-      unknown20.unknown40->onLeavePhantom(info);
+      m_createInfo.m_iGmkPhantomEventListener->onLeavePhantom(info);
     }
   }
 }
@@ -1877,6 +1879,49 @@ void GmkPhantomManager::addGmkPhantom(GmkPhantom *phantom) { unknown08.push_back
 void GmkPhantomManager::removeGmkPhantom(GmkPhantom *phantom) {
   if (phantom != nullptr) {
     unknown08.erase(phantom);
+  }
+}
+
+void GmkPhantomManager::update(f32 deltaTime) {
+  // The game computes &unknown20 once, before the clear loop, and reuses it for the first test and for the phantom loop (0x71005dc67c: x20 = this + 0x20). Written as
+  // a reference to the member, the address dominates the whole function; with unknown20 named at each use the phantom loop is rotated with a guard (119 instructions
+  // against the game's 115), where the game's is unrotated.
+  GmkPhantomCheckResults &results = unknown20;
+  for (u32 i = 0; i < 3; i++) {
+    results[i].clear();
+  }
+  {
+    gf::GfObjAcc acc(gf::GfGameManager::getControlMover());
+    if (acc.isValidTransform()) {
+      const mm::Vec3 &position = acc.getWorldTransform().unknown00;
+      fw::ColiCheckConfig config;
+      config.unknown15 = false;
+      config.unknown08 = 0.0f;
+      config.unknown0c = 0.0f;
+      config.unknown14 = true;
+      config.unknown00 = fw::ColiCheckConfig::FLAG_UNKNOWN_1;
+      config.unknown04 = 0x100000;
+      config.unknown10 = 0;
+      fw::ColiCheck::testSpherePhantom(results[0], position, 0.0f, config);
+    }
+  }
+  for (u32 i = 1; i < 3; i++) {
+    gf::GfObjAcc acc(gf::GfGameParty::getHandleDriver(i));
+    if (acc.isValidTransform()) {
+      const mm::Vec3 &position = acc.getWorldTransform().unknown00;
+      fw::ColiCheckConfig config;
+      config.unknown15 = false;
+      config.unknown08 = 0.0f;
+      config.unknown0c = 0.0f;
+      config.unknown14 = true;
+      config.unknown00 = fw::ColiCheckConfig::FLAG_UNKNOWN_1;
+      config.unknown04 = 0x100000;
+      config.unknown10 = 0;
+      fw::ColiCheck::testSpherePhantom(results[i], position, 0.0f, config);
+    }
+  }
+  for (mm::mtl::IntrusiveList<GmkPhantom>::iterator it = unknown08.begin(); it != unknown08.end(); ++it) {
+    it.get()->update(results);
   }
 }
 
@@ -2209,9 +2254,9 @@ bool BootedGmkCond::isMatch() const {
   bool isMatched = false;
   if (acc.isValid()) {
     if (unknown00 == 1) {
-      isMatched = !static_cast<const GmkMapGimmick *>(acc.unknown38)->isNotSolved();
+      isMatched = !static_cast<const GmkMapGimmick *>(acc.m_aGmkBase)->isNotSolved();
     } else if (unknown00 == 2) {
-      isMatched = static_cast<const GmkDoor *>(acc.unknown38)->isGmkFinished();
+      isMatched = static_cast<const GmkDoor *>(acc.m_aGmkBase)->isGmkFinished();
     }
   }
   return isMatched;

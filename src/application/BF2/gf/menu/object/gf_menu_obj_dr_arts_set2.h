@@ -30,38 +30,38 @@ class GfMenuObjDrArtsSet2 : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjDrArtsSet2 *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjDrArtsSet2 *owner) : _0c(), m_menuObjDrArtsSet2(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjDrArtsSet2 *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjDrArtsSet2 *m_menuObjDrArtsSet2; // Inferred role: owner; original member name unknown.
   };
 
   class WpnTypeListener : public ui::UIObjectListener {
   public:
-    WpnTypeListener(GfMenuObjDrArtsSet2 *owner) : _0c(), unknown20(owner) {}
+    WpnTypeListener(GfMenuObjDrArtsSet2 *owner) : _0c(), m_menuObjDrArtsSet2(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjDrArtsSet2 *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjDrArtsSet2 *m_menuObjDrArtsSet2; // Inferred role: owner; original member name unknown.
   };
 
   class ArtsListListener : public ui::UIObjectListener {
   public:
-    ArtsListListener(GfMenuObjDrArtsSet2 *owner) : _0c(), unknown20(owner) {}
+    ArtsListListener(GfMenuObjDrArtsSet2 *owner) : _0c(), m_menuObjDrArtsSet2(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjDrArtsSet2 *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjDrArtsSet2 *m_menuObjDrArtsSet2; // Inferred role: owner; original member name unknown.
   };
 
   class LevelupListener : public ui::UIObjectListener {
   public:
-    LevelupListener(GfMenuObjDrArtsSet2 *owner) : _0c(), unknown20(owner) {}
+    LevelupListener(GfMenuObjDrArtsSet2 *owner) : _0c(), m_menuObjDrArtsSet2(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjDrArtsSet2 *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjDrArtsSet2 *m_menuObjDrArtsSet2; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjDrArtsSet2(u32 handle);
@@ -109,11 +109,11 @@ public:
   GfMenuCallContext *unknown0c8;        // Inferred role: call context; original member name unknown.
   int unknown0d0;                       // Role and original member name unknown, set to -1 by the constructor.
   int unknown0d4;                       // Role and original member name unknown, set to -1 by the constructor.
-  GfMenuArtsList *unknown0d8;           // Inferred role: arts; original member name unknown.
+  GfMenuArtsList *m_menuArtsList;       // Inferred role: arts; original member name unknown.
   bool unknown0e0;                      // Role and original member name unknown, cleared by the constructor.
   u8 _e1[0xe8 - 0xe1];
-  GfMenuBladeList *unknown0e8;                       // Inferred role: blades; original member name unknown.
-  GfMenuItemList *unknown0f0;                        // Inferred role: items; original member name unknown.
+  GfMenuBladeList *m_menuBladeList;                  // Inferred role: blades; original member name unknown.
+  GfMenuItemList *m_menuItemList;                    // Inferred role: items; original member name unknown.
   GfMenuSequence<GfMenuObjDrArtsSet2, 4> unknown0f8; // Inferred role: queued steps; original member name unknown.
   bool unknown258;                                   // Role and original member name unknown, cleared by the constructor.
 };
@@ -126,10 +126,10 @@ static_assert(offsetof(GfMenuObjDrArtsSet2, unknown0c0) == 0xc0, "");
 static_assert(offsetof(GfMenuObjDrArtsSet2, unknown0c8) == 0xc8, "");
 static_assert(offsetof(GfMenuObjDrArtsSet2, unknown0d0) == 0xd0, "");
 static_assert(offsetof(GfMenuObjDrArtsSet2, unknown0d4) == 0xd4, "");
-static_assert(offsetof(GfMenuObjDrArtsSet2, unknown0d8) == 0xd8, "");
+static_assert(offsetof(GfMenuObjDrArtsSet2, m_menuArtsList) == 0xd8, "");
 static_assert(offsetof(GfMenuObjDrArtsSet2, unknown0e0) == 0xe0, "");
-static_assert(offsetof(GfMenuObjDrArtsSet2, unknown0e8) == 0xe8, "");
-static_assert(offsetof(GfMenuObjDrArtsSet2, unknown0f0) == 0xf0, "");
+static_assert(offsetof(GfMenuObjDrArtsSet2, m_menuBladeList) == 0xe8, "");
+static_assert(offsetof(GfMenuObjDrArtsSet2, m_menuItemList) == 0xf0, "");
 static_assert(offsetof(GfMenuObjDrArtsSet2, unknown0f8) == 0xf8, "");
 static_assert(offsetof(GfMenuObjDrArtsSet2, unknown258) == 0x258, "");
 static_assert(sizeof(GfMenuObjDrArtsSet2) == 0x260, "");

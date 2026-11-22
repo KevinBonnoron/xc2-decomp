@@ -27,14 +27,14 @@ namespace gf {
 
 class GfExtendResource : public mm::mtl::ReferenceObject {};
 
-AssetPackInfo::AssetPackInfo() : unknown08(unknown018), unknown2d8(unknown020), unknown300(10) {
+AssetPackInfo::AssetPackInfo() : m_GF_ASSET_HANDLE(unknown018), m_GF_OBJ_HANDLE(unknown020), unknown300(10) {
   for (u32 i = 0; i < 4; i++) {
-    unknown2e0[i] = nullptr;
+    m_extendResource[i] = nullptr;
   }
   unknown304 = false;
   unknown305 = false;
   unknown306 = false;
-  unknown307 = false;
+  m_loadComplete = false;
   unknown308 = ASSET_TYPE_UNKNOWN_0;
   unknown334 = 0;
 }
@@ -50,17 +50,17 @@ AssetPackInfo::~AssetPackInfo() {
   }
 }
 
-void AssetPackInfo::setLoadComplete() { unknown307 = false; }
+void AssetPackInfo::setLoadComplete() { m_loadComplete = false; }
 
 void AssetPackInfo::setupLoadStart() { unknown334 = 0; }
 
 void AssetPackInfo::replaceAssetPack(GfAssetType from, GfAssetType to, GfAssetPack *pack) { unknown308 = to; }
 
-void AssetPackInfo::setExtendResource(u32 index, GfExtendResource *resource) { unknown2e0[index] = resource; }
+void AssetPackInfo::setExtendResource(u32 index, GfExtendResource *resource) { m_extendResource[index] = resource; }
 
 void AssetPackInfo::releaseExtResource() {
   for (u32 i = 0; i < 4; i++) {
-    mm::mtl::safeRelease(unknown2e0[i]);
+    mm::mtl::safeRelease(m_extendResource[i]);
   }
 }
 
@@ -98,7 +98,7 @@ void AssetPackInfo::releaseEmptySlot() {
 }
 
 bool AssetPackInfo::isCached() const {
-  if (unknown307) {
+  if (m_loadComplete) {
     for (GfAssetPack *const *it = unknown10.begin(); it != unknown10.end(); ++it) {
       if (!(*it)->isEnableReload()) {
         return false;
@@ -149,7 +149,7 @@ bool AssetPackInfo::isUseSameAsset(const AssetPackInfo *other) const {
 }
 
 bool AssetPackInfo::getReloadObjectByUsingAssetPack(mm::mtl::FixedList<GF_OBJ_HANDLE *, 1024> &objects, const AssetPackInfo *other) const {
-  GF_OBJ_HANDLE *obj = GfAssetManager::getObj(unknown08);
+  GF_OBJ_HANDLE *obj = GfAssetManager::getObj(m_GF_ASSET_HANDLE);
   if (isUseSameAsset(other)) {
     if (objects.end() == mm::mtl::find(objects.begin(), objects.end(), obj)) {
       objects.push_back(obj);
@@ -205,7 +205,7 @@ GfAssetPack *AssetPackInfo::getAssetPack(const char *name) const {
 
 GfAssetPack *AssetPackInfo::getAssetPackByAssetType(GfAssetType type) const {
   for (GfAssetPack *pack : unknown10) {
-    if (pack->m_assetType.unknown00 == type) {
+    if (pack->m_assetType.m_assetType == type) {
       return pack;
     }
   }
@@ -225,12 +225,12 @@ bool AssetPackInfo::isSameResource(const AssetPackInfo *other) const {
 }
 
 void AssetPackInfo::execReload() {
-  GfAssetUtil::setRetargetLoad(unknown08, false);
+  GfAssetUtil::setRetargetLoad(m_GF_ASSET_HANDLE, false);
   for (GfAssetPack *pack : unknown10) {
     pack->m_assetType.destroyFileSizeCache();
     pack->releaseResource();
     pack->releaseSlotHandle();
-    GfAssetManager::getSlotMapping()->requestSlotLoad(unknown08, pack);
+    GfAssetManager::getSlotMapping()->requestSlotLoad(m_GF_ASSET_HANDLE, pack);
   }
 }
 
@@ -239,12 +239,12 @@ void AssetPackInfo::setDestroy() {
     return;
   }
   unknown304 = true;
-  GfAssetUtil::addDestroyObject(unknown08, true);
+  GfAssetUtil::addDestroyObject(m_GF_ASSET_HANDLE, true);
 }
 
 GfAssetPack *AssetPackInfo::getAssetPack(GF_SLOT_HANDLE *handle) const {
   for (GfAssetPack *const *it = unknown10.begin(); it != unknown10.end(); ++it) {
-    if ((*it)->unknown230 == handle) {
+    if ((*it)->m_GF_SLOT_HANDLE == handle) {
       return *it;
     }
   }
@@ -270,7 +270,7 @@ void AssetPackInfo::setMotionName(const char *name) { unknown320 = util::getFile
 bool AssetPackInfo::getSlotHandle(mm::mtl::FixedVector<GF_SLOT_HANDLE *, 88> &slots) const {
   GfAssetPack *const *end = unknown10.end();
   for (GfAssetPack *const *it = unknown10.begin(); it != end; ++it) {
-    GF_SLOT_HANDLE *slot = (*it)->unknown230;
+    GF_SLOT_HANDLE *slot = (*it)->m_GF_SLOT_HANDLE;
     if (slot != unknown006) {
       slots.push_back(slot);
     }
@@ -281,7 +281,7 @@ bool AssetPackInfo::getSlotHandle(mm::mtl::FixedVector<GF_SLOT_HANDLE *, 88> &sl
 GF_SLOT_HANDLE *AssetPackInfo::getSlotHandle(GfFileIdx index) const {
   GfAssetPack *pack = getAssetPack(index);
   if (pack != nullptr) {
-    return pack->unknown230;
+    return pack->m_GF_SLOT_HANDLE;
   }
   return unknown006;
 }
@@ -364,7 +364,7 @@ const char *AssetPackInfo::getLoadingFileForDebug() {
 GfAssetResource *GfAssetPack::getResource(GfFileIdx index) const {
   for (const unknown001 *it = unknown18.begin(); it != unknown18.end(); ++it) {
     if (it->unknown08 == index) {
-      return it->unknown00;
+      return it->m_assetResource;
     }
   }
   GfFileIdx common = m_assetType.getCommonResource(index);
@@ -372,7 +372,7 @@ GfAssetResource *GfAssetPack::getResource(GfFileIdx index) const {
   if (common != FILE_IDX_UNKNOWN_FFFFFFFF) {
     for (const unknown001 *it = unknown18.begin(); it != unknown18.end(); ++it) {
       if (it->unknown08 == common) {
-        resource = it->unknown00;
+        resource = it->m_assetResource;
         break;
       }
     }
@@ -433,7 +433,7 @@ void GfAssetPack::releaseEmptySlot() {
   if (!isLoaded(nullptr)) {
     return;
   }
-  if (unknown230 == unknown006) {
+  if (m_GF_SLOT_HANDLE == unknown006) {
     return;
   }
   for (GfAssetFiles::AssetFile *file : m_assetType.unknown50) {
@@ -511,7 +511,7 @@ u64 GfAssetPack::getTimeStamp(const char *name) {
 }
 
 bool GfAssetPack::isNeedLoad() const {
-  if (unknown230 == unknown006) {
+  if (m_GF_SLOT_HANDLE == unknown006) {
     return true;
   }
   for (GfAssetFiles::AssetFile *file : m_assetType.unknown50) {
@@ -555,7 +555,7 @@ bool GfAssetPack::releaseRefResource(void *data) {
   return false;
 }
 
-GfAssetType GfAssetPack::getAssetType() const { return m_assetType.unknown00; }
+GfAssetType GfAssetPack::getAssetType() const { return m_assetType.m_assetType; }
 
 const char *GfAssetPack::getAssetName() const { return m_assetType.unknown08.c_str(); }
 
@@ -572,11 +572,11 @@ bool GfAssetPack::setForceDestroy() {
   return true;
 }
 
-void GfAssetPack::setTimeout() { unknown23b = true; }
+void GfAssetPack::setTimeout() { m_timeout = true; }
 
 void GfAssetPack::setResource(GfFileIdx index, GfAssetResource *resource) {
   unknown001 entry;
-  entry.unknown00 = resource;
+  entry.m_assetResource = resource;
   entry.unknown08 = index;
   unknown18.push_back(entry);
   resource->addRef();
@@ -585,7 +585,7 @@ void GfAssetPack::setResource(GfFileIdx index, GfAssetResource *resource) {
 void GfAssetPack::releaseResource() {
   destroySoundPack();
   for (unknown001 &entry : unknown18) {
-    mm::mtl::safeRelease(entry.unknown00);
+    mm::mtl::safeRelease(entry.m_assetResource);
   }
   unknown18.clear();
 }
@@ -614,9 +614,9 @@ void GfAssetPack::updateReloadCount() {
 bool GfAssetPack::isEnableReload() const { return unknown280 > 9; }
 
 void GfAssetPack::releaseSlotHandle() {
-  if (unknown230 != reinterpret_cast<GF_SLOT_HANDLE *>(-1)) {
-    GfAssetManager::releaseSlotHandle(unknown230);
-    unknown230 = reinterpret_cast<GF_SLOT_HANDLE *>(-1);
+  if (m_GF_SLOT_HANDLE != reinterpret_cast<GF_SLOT_HANDLE *>(-1)) {
+    GfAssetManager::releaseSlotHandle(m_GF_SLOT_HANDLE);
+    m_GF_SLOT_HANDLE = reinterpret_cast<GF_SLOT_HANDLE *>(-1);
   }
 }
 
@@ -685,19 +685,19 @@ void GfAssetPack::loadStart(mm::mtl::IAllocator *allocator) {
 }
 
 void GfAssetPack::replaceAssetType(const GfAssetFilesInfo &filesInfo) {
-  AssetPackInfo *info = GfAssetManager::getAssetPackInfo(filesInfo.unknown00);
+  AssetPackInfo *info = GfAssetManager::getAssetPackInfo(filesInfo.m_GF_ASSET_HANDLE);
   info->unknown308 = filesInfo.unknown08;
   m_assetType.setInitializeParam(filesInfo);
 }
 
 void GfAssetFiles::replaceAssetType(GfAssetType type) {
   if (type != ASSET_TYPE_UNKNOWN_0) {
-    unknown00 = type;
+    m_assetType = type;
   }
 }
 
 void GfAssetFiles::setInitializeParam(const GfAssetFilesInfo &info) {
-  unknown00 = info.unknown08;
+  m_assetType = info.unknown08;
   if (info.unknown30 != nullptr) {
     unknown08 = info.unknown30;
     unknown04 = mm::mtl::hashStrCrc(info.unknown30);

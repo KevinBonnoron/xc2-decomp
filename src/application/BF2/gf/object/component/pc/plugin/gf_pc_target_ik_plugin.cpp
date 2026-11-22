@@ -26,7 +26,7 @@ constexpr u32 PC_UNKNOWN_4 = 4; // Inferred role: pc param target ik; original n
 
 constexpr f32 unknown018 = 0.000001f; // Inferred role: epsilon; original name unknown.
 
-TargetIKPlugin::TargetIKPlugin() : unknown10(unknown020), unknown20(nullptr), unknown30(mm::Vec3::unitZ), unknown40(1.0f), unknown44(1.0f) {}
+TargetIKPlugin::TargetIKPlugin() : m_GF_OBJ_HANDLE(unknown020), unknown20(nullptr), unknown30(mm::Vec3::unitZ), unknown40(1.0f), unknown44(1.0f) {}
 
 TargetIKPlugin::~TargetIKPlugin() {}
 
@@ -45,7 +45,7 @@ bool TargetIKPlugin::setup(GfComBehaviorPc &behavior) {
 void TargetIKPlugin::cleanup(GfComBehaviorPc &) { unknown18 = nullptr; }
 
 void TargetIKPlugin::update(GfComBehaviorPc &behavior, const fw::UpdateInfo &info) {
-  if (unknown10 == unknown020) {
+  if (m_GF_OBJ_HANDLE == unknown020) {
     return;
   }
 
@@ -60,7 +60,7 @@ void TargetIKPlugin::update(GfComBehaviorPc &behavior, const fw::UpdateInfo &inf
     unknown18->setTargetDownRatio(unknown44);
   }
 
-  GfObj *obj = GfObjUtil::getObj(unknown10);
+  GfObj *obj = GfObjUtil::getObj(m_GF_OBJ_HANDLE);
   if (obj != nullptr) {
     MsgPcGetLookPoint message;
     if (static_cast<GfObj *>(behavior.unknown08)->sendMessage(obj, message) && message.unknown20) {
@@ -102,13 +102,13 @@ bool TargetIKPlugin::isActiveRange(GfComPropertyPc &property, const mm::Vec3 &ta
 }
 
 void TargetIKPlugin::procMsgGameChangeTarget(fw::MessageObject *object, MsgGameChangeTarget &message) {
-  if (message.unknown08 != unknown020) {
+  if (message.m_GF_OBJ_HANDLE != unknown020) {
     const unknown001 *param = getParam();
     if (unknown18.get() != nullptr) {
       unknown18->startTargetFade(param->unknown04);
     }
   }
-  unknown10 = message.unknown08;
+  m_GF_OBJ_HANDLE = message.m_GF_OBJ_HANDLE;
 }
 
 void TargetIKPlugin::onActivate() {

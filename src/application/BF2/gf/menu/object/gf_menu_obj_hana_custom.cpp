@@ -59,8 +59,8 @@ static const char *const unknown002[] = {"JS_SET", "JK_SET", "JD_SET"};
 static const char *const unknown003[] = {"parts_category_one_S18_L1C12", "parts_category_two_S18_L1C12", "parts_category_three_S18_L1C12"};
 
 GfMenuObjHanaCustom::GfMenuObjHanaCustom(u32 handle)
-    : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr), unknown80(0), unknown84(0), unknown88(nullptr), unknown90(nullptr), unknown98(nullptr),
-      unknown0a0(nullptr), unknown0a8(this), unknown340(nullptr), unknown348(nullptr), unknown350(0) {
+    : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr), unknown80(0), unknown84(0), m_menuItemList(nullptr), unknown90(nullptr), unknown98(nullptr),
+      m_menuCallContext(nullptr), unknown0a8(this), m_menuReferenceItem(nullptr), unknown348(nullptr), unknown350(0) {
   for (int i = 0; i < 7; i++) {
     unknown48[i] = nullptr;
   }
@@ -71,11 +71,11 @@ GfMenuObjHanaCustom::~GfMenuObjHanaCustom() {
   mm::mtl::safeRelease(unknown30);
   mm::mtl::safeRelease(unknown38);
   mm::mtl::safeRelease(unknown40);
-  mm::mtl::safeRelease(unknown88);
+  mm::mtl::safeRelease(m_menuItemList);
   mm::mtl::safeRelease(unknown90);
   mm::mtl::safeRelease(unknown98);
-  mm::mtl::safeRelease(unknown0a0);
-  unknown340 = nullptr;
+  mm::mtl::safeRelease(m_menuCallContext);
+  m_menuReferenceItem = nullptr;
   unknown358 = nullptr;
   for (int i = 0; i < 7; i++) {
     mm::mtl::safeRelease(unknown48[i]);
@@ -431,7 +431,7 @@ void GfMenuObjHanaCustom::refreshItemList(GfMenuItemList *list, ui::UISelectObjL
     if (!GfMenuHanaAdapter::isEquipParts(blade, type, info.unknown04, result)) {
       GfMenuObjUtil::setColMulandAdd(partsName.unknown10, "txt_disable");
     }
-    u32 user = GfMenuItemUtil::searchEquipHanaParts(type, info.unknown04, info.unknown0c);
+    u32 user = GfMenuItemUtil::searchEquipHanaParts(type, info.unknown04, info.m_itemHandle);
     bool isUsed = user != 0;
     mm::mtl::FixStr<32> useName;
     useName.format("TXT_sbpartsuse@%02d", i + 1);
@@ -606,8 +606,8 @@ void GfMenuObjHanaCustom::setupPartsList(ui::UIObjectAcc &acc, GfMenuIDList *lis
 void GfMenuObjHanaCustom::updateItemList(GfMenuItemList *list, ItemType::Type type) {
   list->clear();
   GfMenuItemList::ItemBoxSetup setup;
-  setup.unknown00.unknown08 = 9;
-  setup.unknown00.unknown10 = true;
+  setup.m_setupParam.unknown08 = 9;
+  setup.m_setupParam.unknown10 = true;
   setup.unknown14 = type;
   setup.unknown28 = true;
   setup.unknown29 = true;
@@ -858,7 +858,7 @@ void GfMenuObjHanaCustom::MainListener::reciveEvent(const ui::EventData &event, 
       acc.setDisp(false);
       acc.setTerm();
       GfMenuObjCharSelect::returnSubMenu();
-      GfMenuObject::returnFSSubLayer(unknown20);
+      GfMenuObject::returnFSSubLayer(m_menuObjHanaCustom);
     }
     break;
   case GfMenuTypes::unknown003_33:
@@ -877,7 +877,7 @@ void GfMenuObjHanaCustom::EquipListListener::reciveEvent(const ui::EventData &ev
   // Ruling 5 (P3): the game (function start 0x710046f360) builds an accessor on the object of the owner (+0x18) first
   // (constructor call 0x710046f38c) and only destroys it at the end (destructor 0x710046f418); it is never used. The
   // original expression cannot be checked.
-  ui::UIObjectAcc ownerAcc(unknown20->unknown18);
+  ui::UIObjectAcc ownerAcc(m_menuObjHanaCustom->unknown18);
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1:
@@ -896,7 +896,7 @@ void GfMenuObjHanaCustom::EquipListListener::reciveEvent(const ui::EventData &ev
 }
 
 void GfMenuObjHanaCustom::PlanListener::reciveEvent(const ui::EventData &event, u32 handle) {
-  ui::UIObjectAcc ownerAcc(unknown20->unknown18);
+  ui::UIObjectAcc ownerAcc(m_menuObjHanaCustom->unknown18);
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1: {
@@ -904,9 +904,9 @@ void GfMenuObjHanaCustom::PlanListener::reciveEvent(const ui::EventData &event, 
     // The game (0x710046ed24) never sets x1 for the unused list argument of setupPlan, which is defined in this file and
     // never reads it (ruling 6); the original expression cannot be checked. unknown30 is the one of the two identifier lists of the owner that
     // getPartsId does not read.
-    setupPlan(acc, unknown20->unknown30);
-    setupItemInfo(ownerAcc, unknown20->unknown88);
-    setupItemInfo2(ownerAcc, unknown20->unknown358, blade);
+    setupPlan(acc, m_menuObjHanaCustom->unknown30);
+    setupItemInfo(ownerAcc, m_menuObjHanaCustom->m_menuItemList);
+    setupItemInfo2(ownerAcc, m_menuObjHanaCustom->unknown358, blade);
     break;
   }
   default:

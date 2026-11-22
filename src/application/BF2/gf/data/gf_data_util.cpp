@@ -33,7 +33,7 @@ void GfDataUtil::setupEventDriverAndBlade() {
   GfDataBlade::setActivateDriver(bdatDriver->getChrDrDefBlade1(DRIVER_UNKNOWN_8), -1, DRIVER_UNKNOWN_8, 0);
 }
 
-u32 GfDataUtil::getMoney() { return GfDataManager::getDataGame()->unknown00; }
+u32 GfDataUtil::getMoney() { return GfDataManager::getDataGame()->m_money; }
 
 void GfDataUtil::setMoney(u32 money) {
   SDataGame *dataGame = GfDataManager::getDataGame();
@@ -41,10 +41,10 @@ void GfDataUtil::setMoney(u32 money) {
     money = MONEY_UNKNOWN_999999999;
   }
 
-  dataGame->unknown00 = money;
+  dataGame->m_money = money;
 }
 
-u32 GfDataUtil::getCoin() { return GfDataManager::getDataGame()->unknown10ad54; }
+u32 GfDataUtil::getCoin() { return GfDataManager::getDataGame()->m_coin; }
 
 void GfDataUtil::setCoin(u32 coin) {
   SDataGame *dataGame = GfDataManager::getDataGame();
@@ -52,19 +52,19 @@ void GfDataUtil::setCoin(u32 coin) {
     coin = COIN_UNKNOWN_9999;
   }
 
-  dataGame->unknown10ad54 = coin;
+  dataGame->m_coin = coin;
 }
 
 void GfDataUtil::setChapterSave(u32 eventChapterSave, u16 startChapterSave) {
   SDataGame *dataGame = GfDataManager::getDataGame();
   dataGame->unknown26 = startChapterSave;
-  dataGame->unknown28 = eventChapterSave;
+  dataGame->m_eventChapterSave = eventChapterSave;
 }
 
 bool GfDataUtil::isStartChapterSave() {
   SDataGame *dataGame = GfDataManager::getDataGame();
   if (dataGame->unknown26 == getScenarioFlag()) {
-    return dataGame->unknown28 != 0;
+    return dataGame->m_eventChapterSave != 0;
   }
 
   return false;
@@ -72,46 +72,46 @@ bool GfDataUtil::isStartChapterSave() {
 
 u16 GfDataUtil::getScenarioFlag() { return GfGameFlag::getLocal(16, FLAG_UNKNOWN_1); }
 
-u32 GfDataUtil::getEventChapterSave() { return GfDataManager::getDataGame()->unknown28; }
+u32 GfDataUtil::getEventChapterSave() { return GfDataManager::getDataGame()->m_eventChapterSave; }
 
-u16 GfDataUtil::getAutoEventAfterLoad() { return GfDataManager::getDataGame()->unknown10ae7e; }
+u16 GfDataUtil::getAutoEventAfterLoad() { return GfDataManager::getDataGame()->m_autoEventAfterLoad; }
 
-u32 GfDataUtil::getSkipTravelID() { return GfDataManager::getDataGame()->unknown1097f0.unknownc0; }
+u32 GfDataUtil::getSkipTravelID() { return GfDataManager::getDataGame()->m_sDataMap.m_skipTravelID; }
 
 void GfDataUtil::setPlayerCameraDistance(f32 playerCameraDistance) {
   SDataGame *dataGame = GfDataManager::getDataGame();
-  dataGame->unknown109b28 = playerCameraDistance;
+  dataGame->m_playerCameraDistance = playerCameraDistance;
 }
 
-f32 GfDataUtil::getPlayerCameraDistance() { return GfDataManager::getDataGame()->unknown109b28; }
+f32 GfDataUtil::getPlayerCameraDistance() { return GfDataManager::getDataGame()->m_playerCameraDistance; }
 
-void GfDataUtil::setCameraHeight(f32 cameraHeight) { GfDataManager::getDataGame()->unknown10ad70 = cameraHeight; }
+void GfDataUtil::setCameraHeight(f32 cameraHeight) { GfDataManager::getDataGame()->m_cameraHeight = cameraHeight; }
 
-f32 GfDataUtil::getCameraHeight() { return GfDataManager::getDataGame()->unknown10ad70; }
+f32 GfDataUtil::getCameraHeight() { return GfDataManager::getDataGame()->m_cameraHeight; }
 
-void GfDataUtil::setCameraYaw(f32 cameraYaw) { GfDataManager::getDataGame()->unknown10ae74 = cameraYaw; }
+void GfDataUtil::setCameraYaw(f32 cameraYaw) { GfDataManager::getDataGame()->m_cameraYaw = cameraYaw; }
 
-f32 GfDataUtil::getCameraYaw() { return GfDataManager::getDataGame()->unknown10ae74; }
+f32 GfDataUtil::getCameraYaw() { return GfDataManager::getDataGame()->m_cameraYaw; }
 
-void GfDataUtil::setCameraPitch(f32 cameraPitch) { GfDataManager::getDataGame()->unknown10ae78 = cameraPitch; }
+void GfDataUtil::setCameraPitch(f32 cameraPitch) { GfDataManager::getDataGame()->m_cameraPitch = cameraPitch; }
 
-f32 GfDataUtil::getCameraPitch() { return GfDataManager::getDataGame()->unknown10ae78; }
+f32 GfDataUtil::getCameraPitch() { return GfDataManager::getDataGame()->m_cameraPitch; }
 
 void GfDataUtil::setCameraFreeMode(bool cameraFreeMode) {
   SDataGame *dataGame = GfDataManager::getDataGame();
-  dataGame->unknown10ae7c = cameraFreeMode;
+  dataGame->m_cameraFreeMode = cameraFreeMode;
 }
 
-bool GfDataUtil::isCameraFreeMode() { return GfDataManager::getDataGame()->unknown10ae7c; }
+bool GfDataUtil::isCameraFreeMode() { return GfDataManager::getDataGame()->m_cameraFreeMode; }
 
-u8 GfDataUtil::getCameraSide() { return GfDataManager::getDataGame()->unknown10ae82; }
+u8 GfDataUtil::getCameraSide() { return GfDataManager::getDataGame()->m_cameraSide; }
 
 void GfDataUtil::setCameraSide(u8 cameraSide) {
   SDataGame *dataGame = GfDataManager::getDataGame();
-  dataGame->unknown10ae82 = cameraSide;
+  dataGame->m_cameraSide = cameraSide;
 }
 
-u32 GfDataUtil::getGameClearCount() { return GfDataManager::getDataGame()->unknown109b2c; }
+u32 GfDataUtil::getGameClearCount() { return GfDataManager::getDataGame()->m_gameClearCount; }
 
 const char *GfDataUtil::getAttributeFileName(u32 attribute) {
   static const char *const unknown037[] = {
@@ -172,9 +172,9 @@ void GfDataUtil::setRandomInn() { GfGameFlag::setLocal(4, FLAG_UNKNOWN_516, ml::
 
 void GfDataUtil::setSalvagerPoint(u32 salvagerPoint) { GfGameFlag::setLocal(8, FLAG_UNKNOWN_2132, salvagerPoint); }
 
-RealTime *GfDataUtil::getSaveRealTime() { return &GfDataManager::getDataGame()->unknown10ad68; }
+RealTime *GfDataUtil::getSaveRealTime() { return &GfDataManager::getDataGame()->m_saveRealTime; }
 
-bool GfDataUtil::isCollectFlagNewVersion() { return GfDataManager::getDataGame()->unknown10ae80; }
+bool GfDataUtil::isCollectFlagNewVersion() { return GfDataManager::getDataGame()->m_collectFlagNewVersion; }
 
 void GfDataUtil::convertNewCollectFlagPatch() {}
 

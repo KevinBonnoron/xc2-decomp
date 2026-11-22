@@ -43,11 +43,11 @@ enum unknown064 {
 class GfGameUtil {
 public:
   struct ExecTurnCmdInfo {
-    GF_OBJ_HANDLE *unknown00; // Inferred role: handle; original member name unknown.
-    f32 unknown08;            // Inferred role: target rotation; original member name unknown.
-    f32 unknown0c;            // Inferred role: turn time; original member name unknown.
-    f32 unknown10;            // Inferred role: turn speed; original member name unknown.
-    f32 unknown14;            // Role and original member name unknown.
+    GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: handle; original member name unknown.
+    f32 unknown08;                  // Inferred role: target rotation; original member name unknown.
+    f32 unknown0c;                  // Inferred role: turn time; original member name unknown.
+    f32 unknown10;                  // Inferred role: turn speed; original member name unknown.
+    f32 unknown14;                  // Role and original member name unknown.
   };
 
   struct UiEnemyStatusIconInfo {

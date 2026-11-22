@@ -219,7 +219,7 @@ void GfMenuObjBalloon::setupEvSelect(u32 handle, int title, int name) {
       GfMenuObject::setText(text.unknown10, name);
     }
   }
-  GfMenuStrLinker &linker = GfMenuCallManager::get()->unknown228;
+  GfMenuStrLinker &linker = GfMenuCallManager::get()->m_menuStrLinker;
   mm::mtl::FixStr<32> layout;
   for (int i = 0; i < 2; i++) {
     layout.format("TXT_ev_select_msg@%02d", i + 1);
@@ -316,7 +316,7 @@ void GfMenuObjBalloon::openEventSelectBox(GfMenuCallContext *context, const Open
     u32 object = GfMenuObject::getAttachedObject(7);
     u16 id = GfMenuObject::registString(ui::UIStr(param.unknown00, param.unknown08));
     for (int i = 0; i < static_cast<int>(param.unknown18.size()); i++) {
-      GfMenuCallManager::get()->unknown228.addSelectString(ui::UIStr(param.unknown10, param.unknown18[i]));
+      GfMenuCallManager::get()->m_menuStrLinker.addSelectString(ui::UIStr(param.unknown10, param.unknown18[i]));
     }
     if (context != nullptr) {
       GfMenuObject::startCallContext(context, 7, object);
@@ -334,12 +334,12 @@ void GfMenuObjBalloon::openEvent(GfMenuCallContext *context, const OpenParam &pa
     ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(2));
     ui::UIObjectAcc talk(acc.duplicateChild("LAY_ev_talk"));
     if (talk.isValid()) {
-      GfMenuPosAdapter *adapter = GfMenuPosAdapter::create(talk.searchChild("LAY_ev_talk_main"), param.unknown20, &param.unknown30);
+      GfMenuPosAdapter *adapter = GfMenuPosAdapter::create(talk.searchChild("LAY_ev_talk_main"), param.m_GF_OBJ_HANDLE, &param.m_menuOffset);
       adapter->setPosOffsMode(1);
       adapter->unknown84 = mm::Pnt<s16>(0x20, -0x20);
       adapter->setPosAdjustSizeOffs(-0x40, -0x20);
       adapter->setPosAdjustScreen(true);
-      GfMenuPosAdapter::createDiffOffset(talk.searchChild("LAY_ev_talk_arrow"), param.unknown20, &param.unknown30, 0x60, 0);
+      GfMenuPosAdapter::createDiffOffset(talk.searchChild("LAY_ev_talk_arrow"), param.m_GF_OBJ_HANDLE, &param.m_menuOffset, 0x60, 0);
       GfMenuObjUtil::createDockPlugin(talk.searchChild("LAY_ev_talk_arrow"), talk.searchChild("LAY_ev_talk_main"), 3, mm::Pnt<s16>(0, -0x23), 0);
       GfMenuObjUtil::createSyncPlugin(talk.searchChild("LAY_ev_talk_arrow_sh"), talk.searchChild("LAY_ev_talk_arrow"), 0x3e);
       {
@@ -377,9 +377,9 @@ void GfMenuObjBalloon::openEvent(GfMenuCallContext *context, const OpenParam &pa
       u32 nameId = 0xffffffff;
       if (param.unknown10 != nullptr && param.unknown18 != 0) {
         nameId = GfMenuObject::registString(ui::UIStr(param.unknown10, param.unknown18));
-        if (GfGameParty::getPartyId(param.unknown20) == PARTY_UNKNOWN_4294967295) {
+        if (GfGameParty::getPartyId(param.m_GF_OBJ_HANDLE) == PARTY_UNKNOWN_4294967295) {
           if (GfGameManager::isEvent(false)) {
-            GfObjAcc objAcc(param.unknown20);
+            GfObjAcc objAcc(param.m_GF_OBJ_HANDLE);
             // The game calls getType (0x71003ef664), tests it against 3 (0x71003ef668), calls getType again when it differs (0x71003ef674) and uses neither
             // result nor anything after it: statement without effect that the game holds (ruling 5, P3).
             if (objAcc.getType() != OBJECT_TYPE_PC) {
@@ -472,7 +472,7 @@ void GfMenuObjBalloon::EvSelectListener::reciveEvent(const ui::EventData &event,
       select.setDispChild(false, "LAY_ev_select_cursor");
     } else {
       mm::mtl::FixStr<32> name;
-      unknown20->unknown30->setIndex(index);
+      m_menuObjBalloon->unknown30->setIndex(index);
       if (previous != -1) {
         name.format("TXT_ev_select_msg@%02d", previous + 1);
         ui::UIObjectAcc message(select.unknown10, name.c_str());
@@ -512,26 +512,26 @@ void GfMenuObjBalloon::EvSelectListener::reciveEvent(const ui::EventData &event,
       int ctrl = GfMenuObjUtil::startCtrl(select.unknown10, param, nullptr);
       GfMenuObject::hookCtrlEvent(acc.unknown10, ctrl);
       GfMenuObject::disableInput(acc.unknown10);
-      if (unknown20->unknown28 != nullptr) {
-        unknown20->unknown28->release();
-        unknown20->unknown28 = nullptr;
+      if (m_menuObjBalloon->unknown28 != nullptr) {
+        m_menuObjBalloon->unknown28->release();
+        m_menuObjBalloon->unknown28 = nullptr;
       }
-      if (unknown20->unknown30 != nullptr) {
-        unknown20->unknown30->release();
-        unknown20->unknown30 = nullptr;
+      if (m_menuObjBalloon->unknown30 != nullptr) {
+        m_menuObjBalloon->unknown30->release();
+        m_menuObjBalloon->unknown30 = nullptr;
       }
       {
         ui::UISelectObjList::CreateParam createParam;
         createParam.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
-        unknown20->unknown30 = ui::UISelectObjList::create(createParam);
+        m_menuObjBalloon->unknown30 = ui::UISelectObjList::create(createParam);
       }
-      unknown20->unknown30->pickupObject(select.unknown10, "LAY_ev_select_msg@%02d", 1);
+      m_menuObjBalloon->unknown30->pickupObject(select.unknown10, "LAY_ev_select_msg@%02d", 1);
       ui::UICtrlCursorSelect::CursorSetting setting;
       setting.setType(0);
       setting.unknown18 = 0;
       setting.unknown20 = false;
-      unknown20->unknown28 = ui::UICtrlCursorSelect::create(select.searchChild("LAY_ev_select_cursor"), setting, unknown20->unknown30);
-      GfMenuObject::setupInputSelection(acc.unknown10, -1, unknown20->unknown30->getSize());
+      m_menuObjBalloon->unknown28 = ui::UICtrlCursorSelect::create(select.searchChild("LAY_ev_select_cursor"), setting, m_menuObjBalloon->unknown30);
+      GfMenuObject::setupInputSelection(acc.unknown10, -1, m_menuObjBalloon->unknown30->getSize());
       unknown0c = select.unknown10;
     }
     break;
@@ -611,9 +611,9 @@ void GfMenuObjBalloon::BoxListener::reciveEvent(const ui::EventData &event, u32 
   case 4:
     if (event.unknown08 != -1) {
       if (GfMenuManager::getLatestCommonWinID() == 0xe0 && GfDataUtil::getScenarioFlag() > 10000 && ((GfDataUtil::getScenarioFlag() >> 6) & 0x3ff) < 0x9d && event.unknown08 == 0) {
-        unknown20->unknown78.unknown005();
-        unknown20->unknown78.unknown002(&GfMenuObjBalloon::seqSave);
-        unknown20->unknown78.unknown002(&GfMenuObjBalloon::seqSaveWait);
+        m_menuObjBalloon->unknown78.unknown005();
+        m_menuObjBalloon->unknown78.unknown002(&GfMenuObjBalloon::seqSave);
+        m_menuObjBalloon->unknown78.unknown002(&GfMenuObjBalloon::seqSaveWait);
         GfMenuObject::disableInput(acc.unknown10);
         GfMenuObjUtil::playSECommonDecide();
       } else {
@@ -632,13 +632,13 @@ void GfMenuObjBalloon::BoxListener::reciveEvent(const ui::EventData &event, u32 
     mm::mtl::FixStr<32> name;
     if (previous != 0xffffffff) {
       name.format("TXT_sel_item@%02d", previous + 1);
-      ui::UIObjectAcc item(unknown20->unknown38->getObject(previous), name.c_str());
+      ui::UIObjectAcc item(m_menuObjBalloon->unknown38->getObject(previous), name.c_str());
       item.loadDefColor();
     }
-    unknown20->unknown38->setIndex(index);
+    m_menuObjBalloon->unknown38->setIndex(index);
     name.format("TXT_sel_item@%02d", index + 1);
     {
-      ui::UIObjectAcc item(unknown20->unknown38->getSelectObject(), name.c_str());
+      ui::UIObjectAcc item(m_menuObjBalloon->unknown38->getSelectObject(), name.c_str());
       GfMenuObjUtil::setColMulandAdd(item.unknown10, "txt_normal");
       // The game writes the cursor docking out in full (0x71003ed650, 0x71003ed68c); see the note in SelMoneyListener::reciveEvent.
       GfMenuObjUtil::setDockPos(acc.searchChild("IMG_select_cursor_l"), item.unknown10, 1, true);
@@ -659,18 +659,18 @@ void GfMenuObjBalloon::BoxListener::reciveEvent(const ui::EventData &event, u32 
   case 0x105: {
     unknown005(acc.unknown10);
     GfMenuObject::setText(acc.searchChild("TXT_sel_title"), event.unknown08);
-    GfMenuStrLinker &linker = GfMenuCallManager::get()->unknown228;
+    GfMenuStrLinker &linker = GfMenuCallManager::get()->m_menuStrLinker;
     mm::mtl::FixStr<32> name;
     for (int i = 0; i < 3; i++) {
       name.format("TXT_sel_item@%02d", i + 1);
-      ui::UIObjectAcc item(unknown20->unknown38->getObject(i), name.c_str());
+      ui::UIObjectAcc item(m_menuObjBalloon->unknown38->getObject(i), name.c_str());
       if (item.isValid()) {
         int count = linker.unknowne18.size();
         if (i < count) {
           item.setText(linker.unknowne18[i]);
           item.loadDefColor();
         }
-        ui::UIObjectAcc(unknown20->unknown38->getObject(i)).setDisp(i < count);
+        ui::UIObjectAcc(m_menuObjBalloon->unknown38->getObject(i)).setDisp(i < count);
         if (i > 0) {
           mm::mtl::FixStr<32> accent;
           accent.format("IMG_sel_item_accent@%02d", i);
@@ -719,16 +719,16 @@ void GfMenuObjBalloon::SelMoneyListener::reciveEvent(const ui::EventData &event,
     int previous = pair >> 32;
     if (previous != -1) {
       name.format("TXT_sel_money_item@%02d", previous + 1);
-      ui::UIObjectAcc item(unknown20->unknown40->getObject(previous), name.c_str());
-      if (unknown20->unknown48.size() == previous || GfDataUtil::getMoney() >= unknown20->unknown48[previous]) {
+      ui::UIObjectAcc item(m_menuObjBalloon->unknown40->getObject(previous), name.c_str());
+      if (m_menuObjBalloon->unknown48.size() == previous || GfDataUtil::getMoney() >= m_menuObjBalloon->unknown48[previous]) {
         item.loadDefColor();
       }
     }
-    unknown20->unknown40->setIndex(index);
+    m_menuObjBalloon->unknown40->setIndex(index);
     name.format("TXT_sel_money_item@%02d", index + 1);
     {
-      ui::UIObjectAcc item(unknown20->unknown40->getSelectObject(), name.c_str());
-      if (unknown20->unknown48.size() == index || GfDataUtil::getMoney() >= unknown20->unknown48[index]) {
+      ui::UIObjectAcc item(m_menuObjBalloon->unknown40->getSelectObject(), name.c_str());
+      if (m_menuObjBalloon->unknown48.size() == index || GfDataUtil::getMoney() >= m_menuObjBalloon->unknown48[index]) {
         GfMenuObjUtil::setColMulandAdd(item.unknown10, "txt_normal");
       }
       // Written out as in BoxListener::reciveEvent: the game repeats the four calls (0x71003edf90 and 0x71003edfcc here, 0x71003ed650 and 0x71003ed68c there), as GfMenuObjCommonText's
@@ -755,10 +755,10 @@ void GfMenuObjBalloon::SelMoneyListener::reciveEvent(const ui::EventData &event,
         break;
       }
       if (unknown0c != index) {
-        if (index >= unknown20->unknown48.size()) {
+        if (index >= m_menuObjBalloon->unknown48.size()) {
           break;
         }
-        int money = unknown20->unknown48[index];
+        int money = m_menuObjBalloon->unknown48[index];
         if (money > static_cast<int>(GfDataUtil::getMoney())) {
           GfMenuObjUtil::playSECommon(2);
           break;
@@ -789,7 +789,7 @@ void GfMenuObjBalloon::SelMoneyListener::reciveEvent(const ui::EventData &event,
     // (sp+160); without the scope the string gets its own slot (the frame moves by 24 bytes, measured).
     {
       mm::mtl::FixStr<32> name;
-      for (u32 i = 0; i < unknown20->unknown40->getSize(); i++) {
+      for (u32 i = 0; i < m_menuObjBalloon->unknown40->getSize(); i++) {
         name.format("LAY_sel_money_item@%02d", i + 1);
         ui::UIObjectAcc layout(acc.unknown10, name.c_str());
         name.format("TXT_sel_money_item@%02d", i + 1);
@@ -837,7 +837,7 @@ void GfMenuObjBalloon::SelMoneyListener::reciveEvent(const ui::EventData &event,
         unknown0c = cancel;
       }
     }
-    unknown20->unknown48 = param->unknown10;
+    m_menuObjBalloon->unknown48 = param->unknown10;
     GfMenuObject::setupInputSelection(handle, -1, cancel + 1);
     unknown005(handle);
     delete param;

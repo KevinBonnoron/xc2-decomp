@@ -63,7 +63,7 @@ GfMenuArtsAdapter *GfMenuArtsAdapter::createFromCoverter(u32 handle, u32 type, I
   u32 driver = converter->getDriverId();
   GfMenuArtsAdapter *adapter = create(handle, type, info.unknown00, driver, info.unknown04, isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
     return adapter;
   }
   return nullptr;
@@ -91,12 +91,12 @@ GfMenuArtsAdapter *GfMenuArtsAdapter::createFromReferenceDriverSlot(u32 handle, 
   return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 
-GfMenuArtsAdapter::GfMenuArtsAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(nullptr), unknown58(0), unknown60(0) {}
+GfMenuArtsAdapter::GfMenuArtsAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), m_iConverter(nullptr), unknown58(0), unknown60(0) {}
 
 GfMenuArtsAdapter::~GfMenuArtsAdapter() {
-  if (unknown50 != nullptr) {
-    delete unknown50;
-    unknown50 = nullptr;
+  if (m_iConverter != nullptr) {
+    delete m_iConverter;
+    m_iConverter = nullptr;
   }
 }
 
@@ -421,15 +421,15 @@ bool GfMenuArtsAdapter::update_ArtsTextIndex() {
 }
 
 void GfMenuArtsAdapter::update(const fw::UpdateInfo &info) {
-  if (unknown50 != nullptr) {
+  if (m_iConverter != nullptr) {
     MenuArtsInfo newInfo = {};
-    unknown50->getArtsInfo(newInfo);
+    m_iConverter->getArtsInfo(newInfo);
     if (unknown58 != newInfo.unknown00) {
       unknown58 = newInfo.unknown00;
       setChange();
     }
-    if (unknown5c != unknown50->getDriverId()) {
-      unknown5c = unknown50->getDriverId();
+    if (unknown5c != m_iConverter->getDriverId()) {
+      unknown5c = m_iConverter->getDriverId();
       setChange();
     }
     if (unknown60 != newInfo.unknown04) {

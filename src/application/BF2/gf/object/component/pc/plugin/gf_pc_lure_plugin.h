@@ -43,14 +43,14 @@ public:
   const AccessParam *getParam() const;
   void drawDebug(GfComBehaviorPc &behavior);
 
-  GF_OBJ_HANDLE *unknown10;                       // Inferred role: target; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE;                 // Inferred role: target; original member name unknown.
   mm::mtl::IntrusivePtr<fw::ParamList> unknown18; // Inferred role: param list; original member name unknown.
-  GfComBehaviorPc *unknown20;                     // Inferred role: behavior; original member name unknown.
+  GfComBehaviorPc *m_comBehaviorPc;               // Inferred role: behavior; original member name unknown.
 };
 
-static_assert(offsetof(LurePlugin, unknown10) == 0x10, "");
+static_assert(offsetof(LurePlugin, m_GF_OBJ_HANDLE) == 0x10, "");
 static_assert(offsetof(LurePlugin, unknown18) == 0x18, "");
-static_assert(offsetof(LurePlugin, unknown20) == 0x20, "");
+static_assert(offsetof(LurePlugin, m_comBehaviorPc) == 0x20, "");
 static_assert(sizeof(LurePlugin) == 0x28, "");
 
 } // namespace pc

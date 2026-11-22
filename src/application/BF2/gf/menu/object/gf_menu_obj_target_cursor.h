@@ -15,13 +15,13 @@ class GfMenuObjTargetCursor : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjTargetCursor *owner) : unknown0c(0), _10(), unknown20(owner) {}
+    MainListener(GfMenuObjTargetCursor *owner) : unknown0c(0), _10(), m_menuObjTargetCursor(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     int unknown0c; // Inferred role: cursor opened flag; original member name unknown.
     u8 _10[0x1c - 0x10];
     u8 _1c[0x20 - 0x1c];
-    GfMenuObjTargetCursor *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjTargetCursor *m_menuObjTargetCursor; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjTargetCursor(u32 handle);
@@ -40,11 +40,11 @@ public:
   bool seqEnCursorOutScreen();
   bool seqCursorClose();
 
-  u32 unknown24;            // Role and original member name unknown, cleared by the constructor.
-  GF_OBJ_HANDLE *unknown28; // Inferred role: handle of the target the cursor follows, -1 at start; original member name unknown.
-  u32 unknown30;            // Role and original member name unknown, cleared by the constructor.
+  u32 unknown24;                  // Role and original member name unknown, cleared by the constructor.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: handle of the target the cursor follows, -1 at start; original member name unknown.
+  u32 unknown30;                  // Role and original member name unknown, cleared by the constructor.
   u8 _34[0x38 - 0x34];
-  GfMenuPosAdapter *unknown38;                         // Inferred role: position adapter; original member name unknown.
+  GfMenuPosAdapter *m_menuPosAdapter;                  // Inferred role: position adapter; original member name unknown.
   GfMenuSequence<GfMenuObjTargetCursor, 8> unknown40;  // Inferred role: queued steps; original member name unknown.
   GfMenuSequence<GfMenuObjTargetCursor, 8> unknown2d0; // Inferred role: queued steps; original member name unknown.
   bool unknown560;                                     // Role and original member name unknown, cleared by the constructor.
@@ -56,11 +56,11 @@ public:
 };
 
 static_assert(offsetof(GfMenuObjTargetCursor::MainListener, unknown0c) == 0xc, "");
-static_assert(offsetof(GfMenuObjTargetCursor::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjTargetCursor::MainListener, m_menuObjTargetCursor) == 0x20, "");
 static_assert(offsetof(GfMenuObjTargetCursor, unknown24) == 0x24, "");
-static_assert(offsetof(GfMenuObjTargetCursor, unknown28) == 0x28, "");
+static_assert(offsetof(GfMenuObjTargetCursor, m_GF_OBJ_HANDLE) == 0x28, "");
 static_assert(offsetof(GfMenuObjTargetCursor, unknown30) == 0x30, "");
-static_assert(offsetof(GfMenuObjTargetCursor, unknown38) == 0x38, "");
+static_assert(offsetof(GfMenuObjTargetCursor, m_menuPosAdapter) == 0x38, "");
 static_assert(offsetof(GfMenuObjTargetCursor, unknown40) == 0x40, "");
 static_assert(offsetof(GfMenuObjTargetCursor, unknown2d0) == 0x2d0, "");
 static_assert(offsetof(GfMenuObjTargetCursor, unknown560) == 0x560, "");

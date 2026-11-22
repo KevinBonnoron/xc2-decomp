@@ -13,13 +13,15 @@ struct FiberType;
 } // namespace nn
 namespace gf {
 
-GfReqManager::GfReqManager(const GfSetupParam &param) : unknown18(reinterpret_cast<ml::MLTHG *>(-1)), unknown20(-1), unknown1838(nullptr), unknown1840(false), unknown1848(false) { initialize(param); }
+GfReqManager::GfReqManager(const GfSetupParam &param) : unknown18(reinterpret_cast<ml::MLTHG *>(-1)), unknown20(-1), m_reqSmallCom(nullptr), unknown1840(false), unknown1848(false) {
+  initialize(param);
+}
 
 void GfReqManager::initialize(const GfSetupParam &) {
   unknown18 = ml::MicroThread::get()->createGroup();
   unknown20 = ml::MicroThread::get()->createThread(unknown18, fnReqUpdate, this);
 #line 93
-  unknown1838 = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfReqSmallCom();
+  m_reqSmallCom = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfReqSmallCom();
   unknown1848 = true;
 }
 
@@ -47,9 +49,9 @@ void GfReqManager::finalize() {
   while (GfReqSmallCom::isExistCommand()) {
     GfSleep(1);
   }
-  if (unknown1838 != nullptr) {
-    delete unknown1838;
-    unknown1838 = nullptr;
+  if (m_reqSmallCom != nullptr) {
+    delete m_reqSmallCom;
+    m_reqSmallCom = nullptr;
   }
   unknown1848 = false;
 }
@@ -71,9 +73,9 @@ nn::os::FiberType *GfReqManager::fnReqUpdate(void *) {
 }
 
 void GfReqManager::update(const fw::UpdateInfo &info) {
-  unknown08 = info;
+  m_updateInfo = info;
   ml::MicroThread::get()->update(unknown18);
-  unknown1838->update(info);
+  m_reqSmallCom->update(info);
 }
 
 void GfReqManager::reqUpdate() {
@@ -84,10 +86,10 @@ void GfReqManager::reqUpdate() {
       }
     } else {
       unknown001 &request = unknown28.front();
-      request.unknown08(request.unknown00);
-      if (request.unknown00 != nullptr) {
-        delete request.unknown00;
-        request.unknown00 = nullptr;
+      request.unknown08(request.m_reqParam);
+      if (request.m_reqParam != nullptr) {
+        delete request.m_reqParam;
+        request.m_reqParam = nullptr;
       }
       unknown28.pop_front();
     }
@@ -101,7 +103,7 @@ int GfReqManager::addCommand(GfReqParam *param, void (*command)(const GfReqParam
   if (!manager->unknown1840) {
     handle = manager->getHandle();
     unknown001 request;
-    request.unknown00 = param;
+    request.m_reqParam = param;
     request.unknown08 = command;
     request.unknown10 = handle;
     manager->unknown28.push(request);
@@ -144,7 +146,7 @@ bool GfReqManager::isExistCommand(void (*command)(const GfReqParam *param)) {
   return GfReqSmallCom::isExistCommand();
 }
 
-fw::UpdateInfo *GfReqManager::getUpdateInfo() { return &get()->unknown08; }
+fw::UpdateInfo *GfReqManager::getUpdateInfo() { return &get()->m_updateInfo; }
 
 bool GfReqManager::isValid(u32 request) {
   if (request == 0xffffffff) {

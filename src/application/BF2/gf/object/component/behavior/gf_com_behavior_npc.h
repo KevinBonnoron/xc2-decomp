@@ -70,10 +70,10 @@ public:
 
   class Listener {
   public:
-    Listener() : unknown08(nullptr) {}
+    Listener() : m_comBehaviorNpc(nullptr) {}
     virtual void onWkStandbyLogout();
 
-    GfComBehaviorNpc *unknown08; // Inferred role: owner; original member name unknown.
+    GfComBehaviorNpc *m_comBehaviorNpc; // Inferred role: owner; original member name unknown.
   };
 
   static mm::mtl::RTTI m_rtti;
@@ -157,19 +157,19 @@ public:
   mm::Vec3 &unknown005() { return unknownc0; }
 
   // Inferred helper: reaction motion; original name unknown.
-  u16 unknown006() const { return unknown98.unknown12_0; }
+  u16 unknown006() const { return m_bdatInfo.unknown12_0; }
 
   // Inferred helper: battle motion; original name unknown.
-  u16 unknown007() const { return unknown98.unknown16; }
+  u16 unknown007() const { return m_bdatInfo.unknown16; }
 
   // Inferred helper: battle reaction; original name unknown.
-  u16 unknown008() const { return unknown98.unknown14; }
+  u16 unknown008() const { return m_bdatInfo.unknown14; }
 
   // Inferred helper: squared reaction range; original name unknown.
-  f32 unknown014() const { return unknown98.unknown0c; }
+  f32 unknown014() const { return m_bdatInfo.unknown0c; }
 
   // Inferred helper: reaction percent; original name unknown.
-  u16 unknown015() const { return unknown98.unknown10_0; }
+  u16 unknown015() const { return m_bdatInfo.unknown10_0; }
 
   // Inferred helper: squared distance to the player on the ground plane; original name unknown.
   f32 unknown016() const { return unknowne0; }
@@ -181,9 +181,9 @@ public:
   navi::NvmshAcObj *unknown012() const { return unknownb8; }
 
   // Inferred helper: move speed; original name unknown.
-  GfFieldMoveSpeed &unknown013() { return unknown270; }
+  GfFieldMoveSpeed &unknown013() { return m_fieldMoveSpeed; }
 
-  BdatInfo unknown98; // Inferred role: bdat parameters; original member name unknown.
+  BdatInfo m_bdatInfo; // Inferred role: bdat parameters; original member name unknown.
   u8 _b4[0xb8 - 0xb4];
   navi::NvmshAcObj *unknownb8; // Inferred role: navi mesh object; original member name unknown.
   mm::Vec3 unknownc0;          // Inferred role: goal position; original member name unknown.
@@ -195,19 +195,19 @@ public:
   bool unknown100;    // Role and original member name unknown.
   bool unknown101;    // Inferred role: reaction rolled flag, set by isStateCondMatch; original member name unknown.
   u8 _102[0x108 - 0x102];
-  ai::Hfsm unknown108;                                  // Inferred role: state machine; original member name unknown.
-  bool unknown190;                                      // Inferred role: state machine is not set up, true by default; original member name unknown.
-  void *unknown198;                                     // Inferred role: viewer; original member name unknown.
-  Listener unknown1a0;                                  // Inferred role: listener; original member name unknown.
-  GfMenuCallContext *unknown1b0;                        // Inferred role: target info menu context; original member name unknown.
-  mm::mtl::IntrusivePtr<fw::ReferenceFrame> unknown1b8; // Inferred role: look point frame; original member name unknown.
-  GfGameStuckMeter unknown1c0;                          // Inferred role: stuck meter; original member name unknown.
-  GfGameDepopMeter unknown220;                          // Inferred role: depop meter, its flag is cleared while the player talks to the npc; original member name unknown.
-  GfFieldMoveSpeed unknown270;                          // Inferred role: move speed; original member name unknown.
-  GfFieldLookIk unknown2a0;                             // Inferred role: look ik; original member name unknown.
-  TFieldExecCmdTurn<GfComAsm> unknown2e0;               // Inferred role: turn command; original member name unknown.
-  GfFieldLocalSteer unknown350;                         // Inferred role: local steer; original member name unknown.
-  LocalSteerIsTargetNotPlayer unknown53b0;              // Inferred role: predicate of the local steer while approaching the player; original member name unknown.
+  ai::Hfsm m_hfsm;                                           // Inferred role: state machine; original member name unknown.
+  bool unknown190;                                           // Inferred role: state machine is not set up, true by default; original member name unknown.
+  void *unknown198;                                          // Inferred role: viewer; original member name unknown.
+  Listener m_listener;                                       // Inferred role: listener; original member name unknown.
+  GfMenuCallContext *m_menuCallContext;                      // Inferred role: target info menu context; original member name unknown.
+  mm::mtl::IntrusivePtr<fw::ReferenceFrame> unknown1b8;      // Inferred role: look point frame; original member name unknown.
+  GfGameStuckMeter m_gameStuckMeter;                         // Inferred role: stuck meter; original member name unknown.
+  GfGameDepopMeter m_gameDepopMeter;                         // Inferred role: depop meter, its flag is cleared while the player talks to the npc; original member name unknown.
+  GfFieldMoveSpeed m_fieldMoveSpeed;                         // Inferred role: move speed; original member name unknown.
+  GfFieldLookIk m_fieldLookIk;                               // Inferred role: look ik; original member name unknown.
+  TFieldExecCmdTurn<GfComAsm> unknown2e0;                    // Inferred role: turn command; original member name unknown.
+  GfFieldLocalSteer m_fieldLocalSteer;                       // Inferred role: local steer; original member name unknown.
+  LocalSteerIsTargetNotPlayer m_localSteerIsTargetNotPlayer; // Inferred role: predicate of the local steer while approaching the player; original member name unknown.
 };
 
 static_assert(offsetof(GfComBehaviorNpc::BdatInfo, unknown04) == 0x04, "");
@@ -222,18 +222,18 @@ static_assert(offsetof(GfComBehaviorNpc, unknowne0) == 0xe0, "");
 static_assert(offsetof(GfComBehaviorNpc, unknowne4) == 0xe4, "");
 static_assert(offsetof(GfComBehaviorNpc, unknownf0) == 0xf0, "");
 static_assert(offsetof(GfComBehaviorNpc, unknown100) == 0x100, "");
-static_assert(offsetof(GfComBehaviorNpc, unknown108) == 0x108, "");
+static_assert(offsetof(GfComBehaviorNpc, m_hfsm) == 0x108, "");
 static_assert(offsetof(GfComBehaviorNpc, unknown190) == 0x190, "");
 static_assert(offsetof(GfComBehaviorNpc, unknown198) == 0x198, "");
-static_assert(offsetof(GfComBehaviorNpc, unknown1a0) == 0x1a0, "");
-static_assert(offsetof(GfComBehaviorNpc, unknown1b0) == 0x1b0, "");
+static_assert(offsetof(GfComBehaviorNpc, m_listener) == 0x1a0, "");
+static_assert(offsetof(GfComBehaviorNpc, m_menuCallContext) == 0x1b0, "");
 static_assert(offsetof(GfComBehaviorNpc, unknown1b8) == 0x1b8, "");
-static_assert(offsetof(GfComBehaviorNpc, unknown1c0) == 0x1c0, "");
-static_assert(offsetof(GfComBehaviorNpc, unknown220) == 0x220, "");
-static_assert(offsetof(GfComBehaviorNpc, unknown270) == 0x270, "");
-static_assert(offsetof(GfComBehaviorNpc, unknown2a0) == 0x2a0, "");
+static_assert(offsetof(GfComBehaviorNpc, m_gameStuckMeter) == 0x1c0, "");
+static_assert(offsetof(GfComBehaviorNpc, m_gameDepopMeter) == 0x220, "");
+static_assert(offsetof(GfComBehaviorNpc, m_fieldMoveSpeed) == 0x270, "");
+static_assert(offsetof(GfComBehaviorNpc, m_fieldLookIk) == 0x2a0, "");
 static_assert(offsetof(GfComBehaviorNpc, unknown2e0) == 0x2e0, "");
-static_assert(offsetof(GfComBehaviorNpc, unknown350) == 0x350, "");
-static_assert(offsetof(GfComBehaviorNpc, unknown53b0) == 0x53b0, "");
+static_assert(offsetof(GfComBehaviorNpc, m_fieldLocalSteer) == 0x350, "");
+static_assert(offsetof(GfComBehaviorNpc, m_localSteerIsTargetNotPlayer) == 0x53b0, "");
 
 } // namespace gf

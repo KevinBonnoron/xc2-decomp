@@ -8,7 +8,7 @@ Source comments cite these texts: `ruling 2`, `P2`, `decision 48`, `decision 202
 
 - **Rulings 1 to 9** are the base rules, about single-use locals, scopes, orders, statements without effect, erased arguments, bit helpers, duplicated source and one-user helpers. Each decision cites them as `ruling N`.
 - **Principles P1 to P5** generalise the rulings. A question that a ruling answers is answered by the ruling; a question that only a principle covers is answered by the principle.
-- **Decisions 1 to 57** apply the rulings and principles to a specific form in a specific function, or settle a case that no ruling covers.
+- **Decisions 1 to 58** apply the rulings and principles to a specific form in a specific function, or settle a case that no ruling covers.
 - A form that no ruling, principle or decision covers is not extended from the nearest one by analogy: it is reported with its evidence (assembly, addresses, forms tried).
 - **Reserved areas.** The `ui` namespace (see [CONTRIBUTING.md](../CONTRIBUTING.md)) and the libraries `battle`, `eflib`, `grlib`, `anmlib`, `wnd` and the SDK declarations of `nn` are reserved for the contributor who works on them. A function that needs a change there is left alone and the needed change is reported to that contributor; no file of a reserved area is edited for a match, because the edit would conflict with that work (principle P5).
 
@@ -77,7 +77,7 @@ Derived from rulings 1 to 9; they cover every question after them.
 - Single-use locals, scopes, stores: 1, 2, 3, 10 to 14, 16, 17, 21, 33, 39, 44, 49.
 - Member and variable types: 4, 6, 18, 19, 20, 35, 36, 48.
 - Casts and byte offsets: 38, 40, 45, 47, 53, 54, 55.
-- Helpers, names and written-out code: 25 to 32, 41, 42, 50.
+- Helpers, names and written-out code: 25 to 32, 41, 42, 50, 58.
 - Devices kept out of the tree (declared but undefined specialisations, `inline` under the real name): 41, 51.
 - Refusals: 9, 43, 46, 53.
 - Changes needed in a reserved area: 22, 37, 52.
@@ -414,6 +414,13 @@ The seven `mm::mtl::Queue<T>::erase` instantiations of the `GfMenuObj...Info` cl
 - **Why.** The helper (and with it `GfGameUtilSaveData::setupGameSaveData`, 476 instructions, and `getSaveData(SDataGame &)`) matches only with these locals. At first sight they only change register allocation, which P2 refuses (decision 9), but the IR and the register allocation are identical with and without the locals. Only `AArch64A57FPLoadBalancing` differs: under `-g` a named variable leaves a `DBG_VALUE` between the `fmul` and its store, so the chain keeps `s0` (the game has s0, s0, s1, s1, s0, s1). This is the same kind of evidence as decision 44 (a variable visible under `-g`), so P2 does not apply.
 - **Scope.** These locals on that evidence; it does not make register-allocation-only locals acceptable in general.
 - **Evidence.** An exhaustive search found no other form: 83 hand-written forms, two permuter runs (1311 candidates, 158 matching sources, all with a variable bound to the product) and about 170 more forms elsewhere. Commit `ade36824f`.
+
+### 58. Members named after their game type
+
+- **Rule.** A member with no accessor and no string naming it, whose type is a class or struct the game names and which is the only member of that type in its class, is `m_` plus the class name without namespace, without leading underscores (`m__x` has a double underscore, reserved by C++) and without a leading `SData` or `Gf` (before an upper-case letter, a digit or `_`), first letter lowercased unless the whole name is upper case (`SDataIdea` gives `m_idea`, `GfBladeCreateInfo` gives `m_bladeCreateInfo`, `IDColiTreeTop` gives `m_iDColiTreeTop`, `_wkSeamReadCall` gives `m_wkSeamReadCall`, `CS` gives `m_CS`, `GF_OBJ_HANDLE` gives `m_GF_OBJ_HANDLE`, like the uppercase prefix of the accessor rule). A game accessor or a string name comes first; `unknownXX` stays when neither applies and the type does not qualify. The text is in AGENTS.md.
+- **Why.** The type name is a game name (it is in a mangled symbol of the game or of Torna or Xenoblade DE) and the derivation is written down, like the BDAT ids. Most members will never get an accessor or a string, so without the derivation they stay `unknownXX` while their type is known. The name is a derivation, not the original name.
+- **Scope.** Excluded, the member stays `unknownXX`: template types and instantiations (`FixedVector<...>`, `IntrusivePtr<...>`, `PtrSingleton<...>`), the `mm` math types (`Vec3`, `Quat`, `Mat44`, `Col4`), the base and SDK types, types whose own name is inferred (`unknownNNN`; the class that declares the member may have an inferred name), and any class with two or more members of the same type (`T`, pointers and references to `T` of any depth, `const T`, a typedef of `T` and arrays of any of these count as one type, static data members included). Reserved areas are not renamed (P5); the proposals are reported to their contributor.
+- **Evidence.** `SDataDriver::unknown00` and `SDataBlade::unknown0c` (now `m_idea`) are `SDataIdea`, the only member of that type in their class; the accessors `DataObjDriver::getIdea()` and `DataObjBlade::getIdea()` return their address, so the accessor rule gives `m_idea` first and the type rule gives the same name. 2183 members outside the reserved areas follow the type rule (commits `refactor(gf)`, `refactor(gmk)`, `refactor(event)`, `refactor(layer)`, `refactor(ml)`); a member of type `ml::_wkSeamReadCall` is `m_wkSeamReadCall`, not `m__wkSeamReadCall`.
 
 ### Everything else
 

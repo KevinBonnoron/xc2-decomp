@@ -32,7 +32,10 @@ struct Plane {
     distance = offset;
   }
 
-  void set(const Vec3 &direction, const Vec3 &position) {
+  // Parameter order from the order of the bounds checks of the two inlined accessors at the call in GfComEnvSensor::flushGroundSingle (1.0.0: 0x710051c77c): the check of the position
+  // (the pointer that the dot product uses, in x28) comes first, then the one of the normal (0x710051c8c0, 0x710051c900). The other users (GfInfo::initialize, the constructors of
+  // GroundInfo and GfEnvProperty::unknown002) pass constants, which show no order; the game has no symbol for the function (always inlined).
+  void set(const Vec3 &position, const Vec3 &direction) {
     normal = direction;
     unknown001();
     distance = -(normal.x * position.x + normal.y * position.y + normal.z * position.z);

@@ -10,7 +10,7 @@
 
 namespace ml {
 
-DrMdoZSortMan::DrMdoZSortMan(DrMan *drMan) : unknown00(drMan), unknown20(nullptr), unknown38(nullptr), unknown50(300.0f), unknown54(0.8f) {
+DrMdoZSortMan::DrMdoZSortMan(DrMan *drMan) : m_drMan(drMan), unknown20(nullptr), unknown38(nullptr), unknown50(300.0f), unknown54(0.8f) {
   unknown20 = mtl::MemManager::allocate(drMan->unknown0c, 0x2040, 0x20, false, "no name", 0);
   unknown08 = static_cast<DrMdoZSortObj **>(unknown20);
   unknown10 = unknown08 + 512;
@@ -25,7 +25,7 @@ DrMdoZSortMan::~DrMdoZSortMan() {
 }
 
 void DrMdoZSortMan::beginViewWorld() {
-  const mm::Vec3 &viewPos = unknown00->unknown580->unknown10->unknown400;
+  const mm::Vec3 &viewPos = m_drMan->m_drCalcMan->m_drCalcViewWork->unknown400;
   memset(unknown18, 0, 64);
   unknown40 = viewPos;
   unknown28 = nullptr;

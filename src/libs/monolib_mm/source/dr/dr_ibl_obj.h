@@ -76,11 +76,11 @@ public:
 
   static void (DrIBLObj::*s_pRenderColi[5])(const u8 *data);
 
-  const unknown001 *unknown00;           // Inferred role: IBL data; original member name unknown.
-  const unknown002 *unknown08;           // Inferred role: IBL entries; original member name unknown.
-  const _IBLPrimHeader *unknown10;       // Inferred role: IBL primitives; original member name unknown.
-  const _EnvColiListTreeData *unknown18; // Inferred role: collision tree; original member name unknown.
-  mm::Vec3 unknown20;                    // Inferred role: position tested against the collisions; original member name unknown.
+  const unknown001 *unknown00;                       // Inferred role: IBL data; original member name unknown.
+  const unknown002 *unknown08;                       // Inferred role: IBL entries; original member name unknown.
+  const _IBLPrimHeader *unknown10;                   // Inferred role: IBL primitives; original member name unknown.
+  const _EnvColiListTreeData *m_envColiListTreeData; // Inferred role: collision tree; original member name unknown.
+  mm::Vec3 unknown20;                                // Inferred role: position tested against the collisions; original member name unknown.
   u8 _30[0x38 - 0x30];
   const _IBLPrimHeader *unknown38; // Inferred role: current IBL primitive; original member name unknown.
   u32 unknown40;                   // Inferred role: texture count; original member name unknown.
@@ -90,7 +90,7 @@ public:
   u32 unknown58;                        // Inferred role: state flags; original member name unknown.
   u8 unknown5c;                         // Inferred role: unknown, 1 after construction; original member name unknown.
   u8 _5d[0x60 - 0x5d];
-  DrIBLColiAcc *unknown60; // Inferred role: collision access; original member name unknown.
+  DrIBLColiAcc *m_drIBLColiAcc; // Inferred role: collision access; original member name unknown.
   u8 _68[0x70 - 0x68];
 };
 static_assert(offsetof(DrIBLObj::unknown001, unknown08) == 0x08, "");
@@ -107,7 +107,7 @@ static_assert(offsetof(DrIBLObj, unknown48) == 0x48, "");
 static_assert(offsetof(DrIBLObj, unknown50) == 0x50, "");
 static_assert(offsetof(DrIBLObj, unknown58) == 0x58, "");
 static_assert(offsetof(DrIBLObj, unknown5c) == 0x5c, "");
-static_assert(offsetof(DrIBLObj, unknown60) == 0x60, "");
+static_assert(offsetof(DrIBLObj, m_drIBLColiAcc) == 0x60, "");
 static_assert(sizeof(DrIBLObj) == 0x70, "");
 
 } // namespace ml

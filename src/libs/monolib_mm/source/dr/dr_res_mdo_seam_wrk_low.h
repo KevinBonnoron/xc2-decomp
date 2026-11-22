@@ -67,12 +67,12 @@ public:
 
   static f32 SEAM_LOWEMAP_READ_CHECK;
 
-  const MdsSeamLowMapHead *unknown18; // Inferred role: low map header; original member name unknown.
+  const MdsSeamLowMapHead *m_mdsSeamLowMapHead; // Inferred role: low map header; original member name unknown.
   u8 _20[0x28 - 0x20];
-  MdoWrkMatRes *unknown28;       // Inferred role: material work; original member name unknown.
-  DrResMdoSeamMemObj *unknown30; // Inferred role: memory object; original member name unknown.
-  unknown504 *unknown38;         // Inferred role: render entries; original member name unknown.
-  DrResMdoAlpTbl *unknown40;     // Inferred role: alpha table; original member name unknown.
+  MdoWrkMatRes *m_mdoWrkMatRes;             // Inferred role: material work; original member name unknown.
+  DrResMdoSeamMemObj *m_drResMdoSeamMemObj; // Inferred role: memory object; original member name unknown.
+  unknown504 *unknown38;                    // Inferred role: render entries; original member name unknown.
+  DrResMdoAlpTbl *m_drResMdoAlpTbl;         // Inferred role: alpha table; original member name unknown.
   u8 _48[0x58 - 0x48];
   unknown504 **unknown58; // Inferred role: first alpha render entries per material and kind; original member name unknown.
   u8 _60[0x78 - 0x60];
@@ -89,11 +89,11 @@ public:
   u32 unknownb4; // Inferred role: unknown, cleared by the constructor; original member name unknown.
 };
 
-static_assert(offsetof(DrResMdoSeamWrkLow, unknown18) == 0x18, "");
-static_assert(offsetof(DrResMdoSeamWrkLow, unknown28) == 0x28, "");
-static_assert(offsetof(DrResMdoSeamWrkLow, unknown30) == 0x30, "");
+static_assert(offsetof(DrResMdoSeamWrkLow, m_mdsSeamLowMapHead) == 0x18, "");
+static_assert(offsetof(DrResMdoSeamWrkLow, m_mdoWrkMatRes) == 0x28, "");
+static_assert(offsetof(DrResMdoSeamWrkLow, m_drResMdoSeamMemObj) == 0x30, "");
 static_assert(offsetof(DrResMdoSeamWrkLow, unknown38) == 0x38, "");
-static_assert(offsetof(DrResMdoSeamWrkLow, unknown40) == 0x40, "");
+static_assert(offsetof(DrResMdoSeamWrkLow, m_drResMdoAlpTbl) == 0x40, "");
 static_assert(offsetof(DrResMdoSeamWrkLow, unknown58) == 0x58, "");
 static_assert(offsetof(DrResMdoSeamWrkLow, unknown78) == 0x78, "");
 static_assert(offsetof(DrResMdoSeamWrkLow, unknown88) == 0x88, "");

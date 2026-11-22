@@ -22,14 +22,14 @@ public:
     int unknown04; // Inferred role: amount, open does nothing when 0; original member name unknown.
     u8 unknown08;  // Inferred role: bonus flag; original member name unknown.
     u8 _09[0x10 - 0x09];
-    GF_OBJ_HANDLE *unknown10; // Inferred role: handle of the character; original member name unknown.
-    u32 unknown18;            // Inferred role: value sent to the object as a 16-bit word; original member name unknown.
+    GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: handle of the character; original member name unknown.
+    u32 unknown18;                  // Inferred role: value sent to the object as a 16-bit word; original member name unknown.
   };
 
   // Queued by GfMenuManyObjects; the game gives it its own vtable, inheriting the dispose of the base. The Queue::push_back
   // instance copies the open parameter in one 32-byte move at 0x10, the Queue::erase instance only its 28 data bytes.
   struct ExpGetInfo : GfMenuManyObjects::InfoType {
-    OpenParam unknown10; // Inferred role: open parameter of the queued gain; original member name unknown.
+    OpenParam m_openParam; // Inferred role: open parameter of the queued gain; original member name unknown.
   };
 
   GfMenuObjExpGet(u32 handle);
@@ -47,10 +47,10 @@ public:
   static void sendOpen(u32 handle, const ExpGetInfo &info);
 };
 
-static_assert(offsetof(GfMenuObjExpGet::OpenParam, unknown10) == 0x10, "");
+static_assert(offsetof(GfMenuObjExpGet::OpenParam, m_GF_OBJ_HANDLE) == 0x10, "");
 static_assert(offsetof(GfMenuObjExpGet::OpenParam, unknown18) == 0x18, "");
 static_assert(sizeof(GfMenuObjExpGet::OpenParam) == 0x20, "");
-static_assert(offsetof(GfMenuObjExpGet::ExpGetInfo, unknown10) == 0x10, "");
+static_assert(offsetof(GfMenuObjExpGet::ExpGetInfo, m_openParam) == 0x10, "");
 static_assert(sizeof(GfMenuObjExpGet::ExpGetInfo) == 0x30, "");
 
 } // namespace gf

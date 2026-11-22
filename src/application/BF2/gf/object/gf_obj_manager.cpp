@@ -67,7 +67,7 @@ void GfObjManager::destroy() {
 
 void GfObjManager::finalize() {
   requestDestroyAll();
-  while (unknown420240.size() != 0 || unknown432260.size() != 0 || unknown44d2a0.size() != 0 || unknown483320.size() != 0) {
+  while (m_loadingObj.size() != 0 || unknown432260.size() != 0 || m_destroyObj.size() != 0 || unknown483320.size() != 0) {
     GfSleep(1);
   }
   GfObjLayerSpeed::finalize();
@@ -92,16 +92,16 @@ bool GfObjManager::reloadForDebug(GF_OBJ_HANDLE *, bool) { return false; }
 
 void GfObjManager::gevMapjump(GEV event, const MapjumpCallbackInfo &info) {
   if (event == GEV_UNKNOWN_2) {
-    unknown484a28 = true;
-    for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096>::iterator it = unknown420240.begin(); it != unknown420240.end(); ++it) {
+    m_suspendUpdate = true;
+    for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096>::iterator it = m_loadingObj.begin(); it != m_loadingObj.end(); ++it) {
       GfObjUtil::applyExecUpdate(*it);
     }
     for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 2048>::iterator it = unknown432260.begin(); it != unknown432260.end(); ++it) {
       GfObjUtil::applyExecUpdate(*it);
     }
   } else if (event == GEV_UNKNOWN_6) {
-    unknown484a28 = false;
-    for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096>::iterator it = unknown420240.begin(); it != unknown420240.end(); ++it) {
+    m_suspendUpdate = false;
+    for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096>::iterator it = m_loadingObj.begin(); it != m_loadingObj.end(); ++it) {
       GfObjUtil::applyExecUpdate(*it);
     }
     for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 2048>::iterator it = unknown432260.begin(); it != unknown432260.end(); ++it) {
@@ -117,7 +117,7 @@ void GfObjManager::addListener(IGfObjListener *listener, IGfObjListener::OBJEVT 
 
 void GfObjManager::removeListener(IGfObjListener *listener) {
   for (mm::mtl::FixedList<ObjListener, 256>::iterator it = m_aListenerObj.begin(); it != m_aListenerObj.end(); ++it) {
-    if (it->unknown00 == listener) {
+    if (it->m_iGfObjListener == listener) {
       m_aListenerObj.erase(it);
       return;
     }
@@ -128,7 +128,7 @@ void GfObjManager::callGfObjListener(IGfObjListener::OBJEVT event, GF_OBJ_HANDLE
   u32 objectType = GfObjUtil::getObjType(handle);
   for (mm::mtl::FixedList<ObjListener, 256>::iterator it = m_aListenerObj.begin(); it != m_aListenerObj.end(); ++it) {
     if (it->unknown08 == IGfObjListener::OBJEVT_UNKNOWN_0 || it->unknown08 == event) {
-      it->unknown00->listenerGfObj(event, handle, objectType);
+      it->m_iGfObjListener->listenerGfObj(event, handle, objectType);
     }
   }
 }
@@ -142,7 +142,7 @@ bool GfObjManager::isInitialized() {
   return false;
 }
 
-int GfObjManager::getObjectNum(u32 objectType) { return s_pThis->unknown484540[objectType]; }
+int GfObjManager::getObjectNum(u32 objectType) { return s_pThis->m_objectNum[objectType]; }
 
 int GfObjManager::getGfObjCapacity(u32 objectType) {
   if (objectType >= sizeof(unknown042) / sizeof(unknown042[0])) {
@@ -179,7 +179,7 @@ void GfObjManager::updateFirstObjects(const fw::UpdateInfo &info) {
   unknown43b280.clear();
 }
 
-bool GfObjManager::isSuspendUpdate() const { return unknown484a28; }
+bool GfObjManager::isSuspendUpdate() const { return m_suspendUpdate; }
 
 GF_OBJ_HANDLE *GfObjManager::getExistFixedObj(int index) const {
   u32 slot = index;
@@ -192,9 +192,9 @@ GF_OBJ_HANDLE *GfObjManager::getExistFixedObj(int index) const {
   return unknown020;
 }
 
-const mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096> *GfObjManager::getLoadingObj() const { return &unknown420240; }
+const mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096> *GfObjManager::getLoadingObj() const { return &m_loadingObj; }
 
-const mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096> *GfObjManager::getDestroyObj() const { return &unknown44d2a0; }
+const mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096> *GfObjManager::getDestroyObj() const { return &m_destroyObj; }
 
 u32 GfObjManager::createGfObjHandle(const GFOBJ_INFO *info, u32 index, int multiBind) {
   u32 generation;
@@ -225,7 +225,7 @@ void GfObjManager::enterStayObject(GF_OBJ_HANDLE *handle) {
 }
 
 void GfObjManager::requestDestroyAll() {
-  for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096>::iterator it = unknown420240.begin(); it != unknown420240.end(); ++it) {
+  for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096>::iterator it = m_loadingObj.begin(); it != m_loadingObj.end(); ++it) {
     GfObjUtil::destroy(*it);
   }
   for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 2048>::iterator it = unknown432260.begin(); it != unknown432260.end(); ++it) {
@@ -235,7 +235,7 @@ void GfObjManager::requestDestroyAll() {
 
 bool GfObjManager::isExistGfObj(bool isIgnoreMap) const {
   if (isIgnoreMap) {
-    for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096>::const_iterator it = unknown420240.begin(); it != unknown420240.end(); ++it) {
+    for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096>::const_iterator it = m_loadingObj.begin(); it != m_loadingObj.end(); ++it) {
       GfObjAcc acc(*it);
       if (acc.getType() != OBJECT_TYPE_MAP) {
         return true;
@@ -247,7 +247,7 @@ bool GfObjManager::isExistGfObj(bool isIgnoreMap) const {
         return true;
       }
     }
-    for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096>::const_iterator it = unknown44d2a0.begin(); it != unknown44d2a0.end(); ++it) {
+    for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096>::const_iterator it = m_destroyObj.begin(); it != m_destroyObj.end(); ++it) {
       GfObjAcc acc(*it);
       if (acc.getType() != OBJECT_TYPE_MAP) {
         return true;
@@ -255,17 +255,17 @@ bool GfObjManager::isExistGfObj(bool isIgnoreMap) const {
     }
     return false;
   }
-  if (unknown44d2a0.size() != 0) {
+  if (m_destroyObj.size() != 0) {
     return true;
   }
-  if (unknown420240.size() != 0) {
+  if (m_loadingObj.size() != 0) {
     return true;
   }
   return unknown432260.size() != 0;
 }
 
 bool GfObjManager::isExistLayerObj(u32 layer) const {
-  for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096>::const_iterator it = unknown420240.begin(); it != unknown420240.end(); ++it) {
+  for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096>::const_iterator it = m_loadingObj.begin(); it != m_loadingObj.end(); ++it) {
     if (GfObjUtil::getObjLayer(*it) == layer) {
       return true;
     }
@@ -275,7 +275,7 @@ bool GfObjManager::isExistLayerObj(u32 layer) const {
       return true;
     }
   }
-  for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096>::const_iterator it = unknown44d2a0.begin(); it != unknown44d2a0.end(); ++it) {
+  for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096>::const_iterator it = m_destroyObj.begin(); it != m_destroyObj.end(); ++it) {
     if (GfObjUtil::getObjLayer(*it) == layer) {
       return true;
     }
@@ -284,7 +284,7 @@ bool GfObjManager::isExistLayerObj(u32 layer) const {
 }
 
 void GfObjManager::destroyLayerObj(u32 layer) {
-  for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096>::iterator it = unknown420240.begin(); it != unknown420240.end(); ++it) {
+  for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096>::iterator it = m_loadingObj.begin(); it != m_loadingObj.end(); ++it) {
     if (GfObjUtil::getObjLayer(*it) == layer) {
       GfObjUtil::destroy(*it);
     }
@@ -297,7 +297,7 @@ void GfObjManager::destroyLayerObj(u32 layer) {
 }
 
 void GfObjManager::destroyAllObj(bool isIgnoreMap) {
-  for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096>::iterator it = unknown420240.begin(); it != unknown420240.end(); ++it) {
+  for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096>::iterator it = m_loadingObj.begin(); it != m_loadingObj.end(); ++it) {
     GfObjAcc acc(*it);
     if (!isIgnoreMap || acc.getType() != OBJECT_TYPE_MAP) {
       GfObjUtil::destroy(*it);
@@ -397,19 +397,19 @@ void GfObjManager::destroyMultiBind(GF_OBJ_HANDLE *handle, u32 uniqId) {
 
 void GfObjManager::createGfObjProperty(GF_OBJ_HANDLE *handle) {
   GFOBJ_INFO *info = getObjInfo(handle);
-  if (info != nullptr && info->unknown98 == nullptr) {
-    info->unknown98 = GfObjProperty::create(handle);
+  if (info != nullptr && info->m_objProperty == nullptr) {
+    info->m_objProperty = GfObjProperty::create(handle);
   }
 }
 
 bool GfObjManager::isEmptyObj() const {
-  if (unknown420240.size() != 0) {
+  if (m_loadingObj.size() != 0) {
     return false;
   }
   if (unknown432260.size() != 0) {
     return false;
   }
-  if (unknown44d2a0.size() != 0) {
+  if (m_destroyObj.size() != 0) {
     return false;
   }
   return unknown483320.size() == 0;
@@ -421,10 +421,10 @@ void GfObjManager::addHandle(GF_OBJ_HANDLE *handle) { setStateLoading(handle); }
 
 void GfObjManager::setStateLoading(GF_OBJ_HANDLE *handle) {
   unknown001(handle)->unknown06 = GFOBJ_STATE_UNKNOWN_1;
-  if (mm::mtl::find(unknown420240.begin(), unknown420240.end(), handle) != unknown420240.end()) {
+  if (mm::mtl::find(m_loadingObj.begin(), m_loadingObj.end(), handle) != m_loadingObj.end()) {
     return;
   }
-  unknown420240.push_back(handle);
+  m_loadingObj.push_back(handle);
   GfAssetManager::setupLoadStart(GfObjUtil::getAssetHandle(handle));
 }
 
@@ -436,7 +436,7 @@ void GfObjManager::setStateUpdate(GF_OBJ_HANDLE *handle) {
 
 void GfObjManager::setStateDestroy(GF_OBJ_HANDLE *handle) {
   unknown001(handle)->unknown06 = GFOBJ_STATE_UNKNOWN_3;
-  unknown44d2a0.push_back(handle);
+  m_destroyObj.push_back(handle);
 }
 
 bool GfObjManager::isFinishLoadState(GfObjAcc &acc, bool unknown) {
@@ -488,13 +488,13 @@ void GfObjManager::addFollowObj(GF_OBJ_HANDLE *handle) {
 }
 
 void GfObjManager::destroyObjAsset(GF_ASSET_HANDLE *asset) {
-  for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096>::iterator it = unknown420240.begin(); it != unknown420240.end(); ++it) {
-    if (GfAssetManager::isSameAsset(unknown001(*it)->unknown10, asset)) {
+  for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096>::iterator it = m_loadingObj.begin(); it != m_loadingObj.end(); ++it) {
+    if (GfAssetManager::isSameAsset(unknown001(*it)->m_GF_ASSET_HANDLE, asset)) {
       GfObjUtil::destroy(*it);
     }
   }
   for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 2048>::iterator it = unknown432260.begin(); it != unknown432260.end(); ++it) {
-    if (GfAssetManager::isSameAsset(unknown001(*it)->unknown10, asset)) {
+    if (GfAssetManager::isSameAsset(unknown001(*it)->m_GF_ASSET_HANDLE, asset)) {
       GfObjUtil::destroy(*it);
     }
   }
@@ -523,7 +523,7 @@ void GfObjManager::getObjListForDebug(mm::mtl::FixedList<GF_OBJ_HANDLE *, 1024> 
   for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 2048>::iterator it = unknown432260.begin(); it != unknown432260.end(); ++it) {
     objs.push_back(*it);
   }
-  for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096>::iterator it = unknown420240.begin(); it != unknown420240.end(); ++it) {
+  for (mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096>::iterator it = m_loadingObj.begin(); it != m_loadingObj.end(); ++it) {
     objs.push_back(*it);
   }
 }
@@ -532,7 +532,7 @@ void GfObjManager::addDestroyObj(GF_OBJ_HANDLE *handle, bool flag) {
   GfObjAcc acc(handle);
   if (acc.isValid()) {
     if (mm::mtl::find(unknown4712e0.begin(), unknown4712e0.end(), handle) == unknown4712e0.end()) {
-      if (mm::mtl::find(unknown44d2a0.begin(), unknown44d2a0.end(), handle) == unknown44d2a0.end()) {
+      if (mm::mtl::find(m_destroyObj.begin(), m_destroyObj.end(), handle) == m_destroyObj.end()) {
         unknown4712e0.push_back(handle);
         GfAssetManager::isReload(acc.getAssetHandle());
         if (!acc.isRebuild()) {

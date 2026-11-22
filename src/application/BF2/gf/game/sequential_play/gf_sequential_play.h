@@ -119,7 +119,7 @@ public:
   static const char *getFuncName();
 
   mm::mtl::FixedList<GfPlayCom *, 256> unknown08;          // Inferred role: commands; original member name unknown.
-  bool unknown1228;                                        // Inferred role: canceled; original member name unknown.
+  bool m_cancel;                                           // Inferred role: canceled; named after the game accessor gf::GfSequentialPlay::isCancel.
   mm::mtl::FixedQueue<GF_PAUSE_HANDLE *, 128> unknown1230; // Inferred role: pause handles; original member name unknown.
   mm::mtl::FixedQueue<GF_STATE, 128> unknown1640;          // Inferred role: states; original member name unknown.
   mm::mtl::FixedList<GfPlayCom *, 128> unknown1850;        // Inferred role: playing commands; original member name unknown.
@@ -128,7 +128,7 @@ public:
 };
 
 static_assert(offsetof(GfSequentialPlay, unknown08) == 0x08, "");
-static_assert(offsetof(GfSequentialPlay, unknown1228) == 0x1228, "");
+static_assert(offsetof(GfSequentialPlay, m_cancel) == 0x1228, "");
 static_assert(offsetof(GfSequentialPlay, unknown1640) == 0x1640, "");
 static_assert(offsetof(GfSequentialPlay, unknown1850) == 0x1850, "");
 static_assert(offsetof(GfSequentialPlay, unknown20f0) == 0x20f0, "");

@@ -13,9 +13,9 @@ class DrMdoCtlNom;
 class DrMdoNomAfterImage : public DrMdoNomClone {
 public:
   struct wrkObjList {
-    mm::Vec3 unknown00;     // Inferred role: captured position; original member name unknown.
-    DrMdoCtlNom *unknown10; // Inferred role: cloned model; original member name unknown.
-    f32 unknown18;          // Inferred role: age; original member name unknown.
+    mm::Vec3 unknown00;         // Inferred role: captured position; original member name unknown.
+    DrMdoCtlNom *m_drMdoCtlNom; // Inferred role: cloned model; original member name unknown.
+    f32 unknown18;              // Inferred role: age; original member name unknown.
     u8 _1c[0x20 - 0x1c];
   };
 
@@ -30,7 +30,7 @@ public:
   void updateParam(wrkObjList *obj, const DrMdoCtlNom *model, f32 delta, const mm::Vec3 &position);
   void captureObj(const DrMdoCtlNom *model);
 
-  wrkObjList *unknown00;          // Inferred role: captured models; original member name unknown.
+  wrkObjList *m_wrkObjList;       // Inferred role: captured models; original member name unknown.
   s16 unknown08;                  // Inferred role: captured model count; original member name unknown.
   s16 unknown0a;                  // Inferred role: next capture index; original member name unknown.
   f32 unknown0c;                  // Inferred role: capture span; original member name unknown.
@@ -51,7 +51,7 @@ public:
 };
 
 static_assert(sizeof(DrMdoNomAfterImage::wrkObjList) == 0x20, "");
-static_assert(offsetof(DrMdoNomAfterImage::wrkObjList, unknown10) == 0x10, "");
+static_assert(offsetof(DrMdoNomAfterImage::wrkObjList, m_drMdoCtlNom) == 0x10, "");
 static_assert(offsetof(DrMdoNomAfterImage::wrkObjList, unknown18) == 0x18, "");
 static_assert(offsetof(DrMdoNomAfterImage, unknown08) == 0x08, "");
 static_assert(offsetof(DrMdoNomAfterImage, unknown0a) == 0x0a, "");

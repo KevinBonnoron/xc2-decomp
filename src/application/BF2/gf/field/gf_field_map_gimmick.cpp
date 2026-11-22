@@ -40,7 +40,7 @@ constexpr u32 OBJ_UNKNOWN_7_2 = 7;                                       // Infe
 constexpr u16 COMMON_UNKNOWN_51 = 0x33;                                  // Inferred role: common window grave; original name unknown.
 const ml::FILE_PRIO FILE_PRIO_UNKNOWN_7 = static_cast<ml::FILE_PRIO>(7); // Inferred role: gmk tutorial file prio; original name unknown.
 
-AFieldSeq::AFieldSeq(const GfSetupParam &) : unknown08(unknown020), unknown10(nullptr), m_end(false), unknown21(false) {}
+AFieldSeq::AFieldSeq(const GfSetupParam &) : m_GF_OBJ_HANDLE(unknown020), unknown10(nullptr), m_end(false), unknown21(false) {}
 
 void AFieldSeq::gevMapjump(GEV event, const MapjumpCallbackInfo &) {
   if (event == GEV_UNKNOWN_1) {
@@ -48,24 +48,24 @@ void AFieldSeq::gevMapjump(GEV event, const MapjumpCallbackInfo &) {
   }
 }
 
-gmk::AGmkBase *AFieldSeq::findBindedGmk() const { return gmk::getBindedGmkInst(unknown08); }
+gmk::AGmkBase *AFieldSeq::findBindedGmk() const { return gmk::getBindedGmkInst(m_GF_OBJ_HANDLE); }
 
 void AFieldSeq::create(GF_OBJ_HANDLE *handle) {
   dispose();
-  this->unknown08 = handle;
+  this->m_GF_OBJ_HANDLE = handle;
   unknown10 = &AFieldSeq::seqCheckFs;
 }
 
 void AFieldSeq::seqCheckFs(f32) {
-  gmk::AGmkBase *gmkInst = gmk::getBindedGmkInst(unknown08);
+  gmk::AGmkBase *gmkInst = gmk::getBindedGmkInst(m_GF_OBJ_HANDLE);
   if (gmkInst == nullptr) {
     dispose();
     return;
   }
 
-  u16 fsId = Bdat::getValCheck(gmkInst->getBindedBdatFp(), "FSID", gmkInst->unknown20.unknown18, gmk::BDAT_TYPE_UNKNOWN_2);
+  u16 fsId = Bdat::getValCheck(gmkInst->getBindedBdatFp(), "FSID", gmkInst->m_createInfo.unknown18, gmk::BDAT_TYPE_UNKNOWN_2);
   u32 nameId = 0;
-  GfGameUtil::getNameMsId(nameId, unknown08);
+  GfGameUtil::getNameMsId(nameId, m_GF_OBJ_HANDLE);
   if (fsId) {
     unknown21 = GfGameUtil::evalSumFs(fsId, nameId);
   } else {
@@ -80,18 +80,18 @@ void AFieldSeq::seqCheckFs(f32) {
 void AFieldSeq::dispose() {
   m_end = false;
   unknown21 = false;
-  unknown08 = unknown020;
+  m_GF_OBJ_HANDLE = unknown020;
   unknown10 = nullptr;
 }
 
 void AFieldSeq::update(f32 deltaTime) {
-  if (unknown08 != unknown020 && unknown10) {
+  if (m_GF_OBJ_HANDLE != unknown020 && unknown10) {
     (this->*unknown10)(deltaTime);
   }
 }
 
 void AFieldSeq::setTargetable(bool isTargetable) {
-  GfObj *obj = GfObjUtil::getObj(unknown08);
+  GfObj *obj = GfObjUtil::getObj(m_GF_OBJ_HANDLE);
   if (obj != nullptr) {
     if (isTargetable) {
       obj->unknown110 |= OBJ_UNKNOWN_7_2;
@@ -102,7 +102,7 @@ void AFieldSeq::setTargetable(bool isTargetable) {
 }
 
 bool AFieldSeq::isTargetable() const {
-  GfObj *obj = GfObjUtil::getObj(unknown08);
+  GfObj *obj = GfObjUtil::getObj(m_GF_OBJ_HANDLE);
   return obj != nullptr ? (obj->unknown110 >> 2) & 1 : false;
 }
 
@@ -112,7 +112,7 @@ void AFieldSeq::seqWaitUIEnd(f32) {
   }
 
   if (unknown21) {
-    GfObjAcc acc(unknown08);
+    GfObjAcc acc(m_GF_OBJ_HANDLE);
     if (acc.isValid()) {
       GfComBehaviorGmk *behavior = acc.getObj()->getComponent<GfComBehaviorGmk>();
       if (behavior != nullptr) {
@@ -129,11 +129,11 @@ void AFieldSeq::seqWaitUIEnd(f32) {
 
 void GfFieldMapGimmick::BdatInfo::create(CBdatWrapper bdat, int id) {
   unknown00 = bdat.getValCheck("OP_Condition", id, gmk::BDAT_TYPE_UNKNOWN_2);
-  unknown06 = gmk::BootedGmkCond(bdat, id, "OP_");
-  unknown0a = gmk::ScenarioFlagCond(bdat, id, "OP_");
-  unknown0e = gmk::QuestFlagCond(bdat, id, "OP_");
-  unknown18.unknown08 = static_cast<u16>(bdat.getValCheck("OP_Time", id, gmk::BDAT_TYPE_UNKNOWN_2));
-  unknown28.unknown08 = bdat.getValCheck("OP_weather", id, gmk::BDAT_TYPE_UNKNOWN_1);
+  m_bootedGmkCond = gmk::BootedGmkCond(bdat, id, "OP_");
+  m_scenarioFlagCond = gmk::ScenarioFlagCond(bdat, id, "OP_");
+  m_questFlagCond = gmk::QuestFlagCond(bdat, id, "OP_");
+  m_timeCond.unknown08 = static_cast<u16>(bdat.getValCheck("OP_Time", id, gmk::BDAT_TYPE_UNKNOWN_2));
+  m_weatherCond.unknown08 = bdat.getValCheck("OP_weather", id, gmk::BDAT_TYPE_UNKNOWN_1);
   unknown02 = bdat.getValCheck("camGim_ATR", id, gmk::BDAT_TYPE_UNKNOWN_1);
   unknown03 = Bdat::getFlagVal(bdat.unknown00, "flag", id, "gmkCamPos") != 0;
   unknown04 = Bdat::getFlagVal(bdat.unknown00, "flag", id, "nowaitGmkCam") != 0;
@@ -143,26 +143,26 @@ bool GfFieldMapGimmick::BdatInfo::isCondMatched() const {
   if (unknown00 != 0 && !GfGameCond::isGameCond(unknown00)) {
     return false;
   }
-  if (unknown06.isEnable() && !unknown06.isMatch()) {
+  if (m_bootedGmkCond.isEnable() && !m_bootedGmkCond.isMatch()) {
     return false;
   }
-  if (unknown0a.isEnable() && !unknown0a.isMatch()) {
+  if (m_scenarioFlagCond.isEnable() && !m_scenarioFlagCond.isMatch()) {
     return false;
   }
-  if (unknown0e.isEnable() && !unknown0e.isMatch()) {
+  if (m_questFlagCond.isEnable() && !m_questFlagCond.isMatch()) {
     return false;
   }
-  if (unknown18.isEnable() && !unknown18.isMatch()) {
+  if (m_timeCond.isEnable() && !m_timeCond.isMatch()) {
     return false;
   }
-  if (unknown28.isEnable() && !unknown28.isMatch()) {
+  if (m_weatherCond.isEnable() && !m_weatherCond.isMatch()) {
     return false;
   }
   return true;
 }
 
 GfFieldMapGimmick::GfFieldMapGimmick(const GfSetupParam &param)
-    : AFieldSeq(param), unknownb0(nullptr), unknown210(nullptr), unknown220(nullptr), unknown230(0), unknown234(0), unknown238(nullptr), unknown248(0.0f), unknown24c(0.0f), unknown4d0(0) {}
+    : AFieldSeq(param), m_gmkCamera(nullptr), unknown210(nullptr), unknown220(nullptr), unknown230(0), unknown234(0), unknown238(nullptr), unknown248(0.0f), unknown24c(0.0f), unknown4d0(0) {}
 
 void GfFieldMapGimmick::setDispOfParty(bool isDisp, bool isExceptMover) {
   GF_OBJ_HANDLE *mover = GfGameManager::getControlMover();
@@ -183,13 +183,13 @@ void GfFieldMapGimmick::create(GF_OBJ_HANDLE *handle) {
   gmk::AGmkBase *gmk = findBindedGmk();
   if (gmk != nullptr) {
     CBdatWrapper bdat = gmk->unknown004();
-    int id = gmk->unknown20.unknown18;
-    unknown30.create(bdat, id);
-    if (!isTargetable() || unknown30.isCondMatched()) {
+    int id = gmk->m_createInfo.unknown18;
+    m_bdatInfo.create(bdat, id);
+    if (!isTargetable() || m_bdatInfo.isCondMatched()) {
       {
         gmk::GmkAcc::CreateInfo accInfo;
         accInfo.validate(*gmk);
-        unknown68.create(accInfo);
+        m_gmkAcc.create(accInfo);
       }
       const char *camName = reinterpret_cast<const char *>(bdat.getValCheck("gmkCamName", id, gmk::BDAT_TYPE_UNKNOWN_7));
       if (camName == nullptr || *camName == '\0') {
@@ -197,18 +197,18 @@ void GfFieldMapGimmick::create(GF_OBJ_HANDLE *handle) {
       }
       gmk::GmkCamera::CreateInfo camInfo;
       camInfo.unknown00 = camName;
-      if (unknown30.unknown02 != 0) {
-        camInfo.unknown104 = unknown30.unknown02;
+      if (m_bdatInfo.unknown02 != 0) {
+        camInfo.unknown104 = m_bdatInfo.unknown02;
       }
       camInfo.unknown105 = false;
-      if (unknown30.unknown03) {
+      if (m_bdatInfo.unknown03) {
         if (unknown234 > 0) {
           camInfo.validateTransform(static_cast<u16>(unknown234));
         } else {
-          camInfo.validateTransform(unknown08);
+          camInfo.validateTransform(m_GF_OBJ_HANDLE);
         }
       }
-      unknownb0.create(camInfo);
+      m_gmkCamera.create(camInfo);
       unknown210 = &GfFieldMapGimmick::seqCamera_waitToLoaded;
       return;
     }
@@ -222,7 +222,7 @@ void GfFieldMapGimmick::create(GF_OBJ_HANDLE *handle) {
 }
 
 void GfFieldMapGimmick::seqCamera_waitToLoaded(f32) {
-  if (unknownb0.isLoaded()) {
+  if (m_gmkCamera.isLoaded()) {
     unknown210 = &GfFieldMapGimmick::seqCamera_waitToEnd;
   }
 }
@@ -234,7 +234,7 @@ void GfFieldMapGimmick::dispose() {
   unknown234 = 0;
   unknown220 = nullptr;
   unknown210 = nullptr;
-  unknownb0.dispose();
+  m_gmkCamera.dispose();
   AFieldSeq::dispose();
 }
 
@@ -253,12 +253,12 @@ void GfFieldMapGimmick::clearSe() {
 bool GfFieldMapGimmick::isEnd() const { return AFieldSeq::isEnd() && !unknown210 && !unknown220 && !unknown238; }
 
 void GfFieldMapGimmick::update(f32 deltaTime) {
-  if (unknown08 == unknown020) {
+  if (m_GF_OBJ_HANDLE == unknown020) {
     return;
   }
   bool isEnded = isEnd();
-  if (unknownb0.unknown10.unknown00.length() > 0) {
-    unknownb0.update(deltaTime);
+  if (m_gmkCamera.m_createInfo.unknown00.length() > 0) {
+    m_gmkCamera.update(deltaTime);
     if (unknown210) {
       (this->*unknown210)(deltaTime);
     }
@@ -280,17 +280,17 @@ void GfFieldMapGimmick::update(f32 deltaTime) {
 
 void GfFieldMapGimmick::setSolvedMapGimmick() {
   if (unknown21) {
-    const gmk::GmkMapGimmick *gmk = static_cast<const gmk::GmkMapGimmick *>(unknown68.unknown38);
+    const gmk::GmkMapGimmick *gmk = static_cast<const gmk::GmkMapGimmick *>(m_gmkAcc.m_aGmkBase);
     if (gmk != nullptr) {
-      SCOM_QUEST_GIMMICK::createMapGimmick(gmk->unknown20.unknown18, 0.0f);
+      SCOM_QUEST_GIMMICK::createMapGimmick(gmk->m_createInfo.unknown18, 0.0f);
       gmk->setSolved();
     }
   }
 }
 
 void GfFieldMapGimmick::onFsSucceeded() {
-  if (unknownb0.unknown10.unknown00.length() > 0) {
-    unknownb0.play();
+  if (m_gmkCamera.m_createInfo.unknown00.length() > 0) {
+    m_gmkCamera.play();
   }
   unknown230 = 1;
   unknown220 = &GfFieldMapGimmick::seqLod_init;
@@ -298,15 +298,15 @@ void GfFieldMapGimmick::onFsSucceeded() {
 }
 
 void GfFieldMapGimmick::seqLod_init(f32) {
-  const gmk::AGmkBase *gmk = unknown68.unknown38;
+  const gmk::AGmkBase *gmk = m_gmkAcc.m_aGmkBase;
   u8 *bdat = gmk->getBindedBdatFp();
-  int id = gmk->unknown20.unknown18;
+  int id = gmk->m_createInfo.unknown18;
   mm::mtl::FixStr<32> name;
   name.format("G%d_LODmodel", unknown230);
   unknown234 = static_cast<u16>(Bdat::getValCheck(bdat, name.c_str(), id, gmk::BDAT_TYPE_UNKNOWN_2));
   if (unknown234 == 0) {
     unknown220 = nullptr;
-    if (unknown30.unknown04) {
+    if (m_bdatInfo.unknown04) {
       setSolvedMapGimmick();
     }
     return;
@@ -371,7 +371,7 @@ void GfFieldMapGimmick::seqLod_init(f32) {
     info.unknown08 = seId;
     info.unknown10 = distance;
     info.unknown14 = distance;
-    info.unknown20 = gmk->unknown08.unknown08->unknown00;
+    info.unknown20 = gmk->m_createBaseInfo.m_xform->unknown00;
     unknown250[unknown230 - 1].create(info);
   }
 }
@@ -379,7 +379,7 @@ void GfFieldMapGimmick::seqLod_init(f32) {
 void GfFieldMapGimmick::onFsFailed() { unknown210 = nullptr; }
 
 void GfFieldMapGimmick::seqCamera_waitToEnd(f32) {
-  if (unknownb0.isEnd()) {
+  if (m_gmkCamera.isEnd()) {
     unknown210 = nullptr;
   }
 }
@@ -394,7 +394,7 @@ void GfFieldMapGimmick::seqLod_waitToElapseTime(f32 deltaTime) {
     unknown220 = &GfFieldMapGimmick::seqLod_init;
   } else {
     unknown220 = nullptr;
-    if (unknown30.unknown04) {
+    if (m_bdatInfo.unknown04) {
       setSolvedMapGimmick();
     }
   }
@@ -412,12 +412,12 @@ void GfFieldMapGimmick::seqMapObj_nextwait(f32 deltaTime) {
     return;
   }
   unknown238 = nullptr;
-  if (unknown30.unknown04) {
+  if (m_bdatInfo.unknown04) {
     setSolvedMapGimmick();
   }
 }
 
-GfFieldGrave::GfFieldGrave(const GfSetupParam &) : unknown10(unknown020), unknown20(nullptr) {}
+GfFieldGrave::GfFieldGrave(const GfSetupParam &) : m_GF_OBJ_HANDLE(unknown020), unknown20(nullptr) {}
 
 void GfFieldGrave::gevMapjump(GEV event, const MapjumpCallbackInfo &) {
   if (event == GEV_UNKNOWN_1) {
@@ -427,7 +427,7 @@ void GfFieldGrave::gevMapjump(GEV event, const MapjumpCallbackInfo &) {
 
 void GfFieldGrave::create(GF_OBJ_HANDLE *handle) {
   dispose();
-  this->unknown10 = handle;
+  this->m_GF_OBJ_HANDLE = handle;
   GfMenuManager::openCommonWindow(COMMON_UNKNOWN_51);
   unknown20 = &GfFieldGrave::seqWaitToSelect;
 }
@@ -436,7 +436,7 @@ void GfFieldGrave::seqWaitToSelect(f32) {
   if (!GfMenuManager::isOpenCommonWindow()) {
     s16 result = GfMenuManager::getCommonWindowResult();
     if (result == 0) {
-      gmk::GmkGrave *grave = static_cast<gmk::GmkGrave *>(gmk::getBindedGmkInst(unknown10));
+      gmk::GmkGrave *grave = static_cast<gmk::GmkGrave *>(gmk::getBindedGmkInst(m_GF_OBJ_HANDLE));
       if (grave == nullptr) {
         dispose();
       } else {
@@ -453,7 +453,7 @@ void GfFieldGrave::dispose() {
     GfMenuManager::closeCommonWindow();
   }
   m_end = false;
-  unknown10 = unknown020;
+  m_GF_OBJ_HANDLE = unknown020;
   unknown20 = nullptr;
 }
 
@@ -464,23 +464,23 @@ void GfFieldGrave::update(f32 deltaTime) {
 }
 
 void GfFieldJump::onFsSucceeded() {
-  gmk::GmkJump *jump = static_cast<gmk::GmkJump *>(gmk::getBindedGmkInst(unknown08));
+  gmk::GmkJump *jump = static_cast<gmk::GmkJump *>(gmk::getBindedGmkInst(m_GF_OBJ_HANDLE));
   if (jump != nullptr) {
-    GfObj *obj = GfObjUtil::getObj(unknown08);
+    GfObj *obj = GfObjUtil::getObj(m_GF_OBJ_HANDLE);
     if (obj != nullptr) {
       obj->unknown110 |= OBJ_UNKNOWN_7;
     }
     GfObj *mover = GfObjUtil::getObj(GfGameManager::getControlMover());
     if (mover != nullptr) {
-      GfObj *self = GfObjUtil::getObj(unknown08);
+      GfObj *self = GfObjUtil::getObj(m_GF_OBJ_HANDLE);
       if (self != nullptr) {
         switch (jump->getBdatInfo()->unknown02) {
         case 0: {
           MsgPcFieldNotifyWallJump message;
           message.unknown10 = jump->unknown097()->unknown00[1];
           message.unknown20 = jump->getBindedBdatFp();
-          message.unknown28 = jump->unknown20.unknown18;
-          message.unknown2c = jump->unknown20.unknown18;
+          message.unknown28 = jump->m_createInfo.unknown18;
+          message.unknown2c = jump->m_createInfo.unknown18;
           self->sendMessage(mover, message);
           return;
         }
@@ -491,8 +491,8 @@ void GfFieldJump::onFsSucceeded() {
           message.unknown24 = jump->unknown097()->unknown20;
           message.unknown28 = jump->unknown097()->unknown24;
           message.unknown30 = jump->getBindedBdatFp();
-          message.unknown38 = jump->unknown20.unknown18;
-          message.unknown3c = jump->unknown20.unknown18;
+          message.unknown38 = jump->m_createInfo.unknown18;
+          message.unknown3c = jump->m_createInfo.unknown18;
           self->sendMessage(mover, message);
           return;
         }
@@ -506,26 +506,26 @@ void GfFieldJump::onFsSucceeded() {
 }
 
 void GfFieldWarp::onFsSucceeded() {
-  gmk::GmkWarp *warp = static_cast<gmk::GmkWarp *>(gmk::getBindedGmkInst(unknown08));
+  gmk::GmkWarp *warp = static_cast<gmk::GmkWarp *>(gmk::getBindedGmkInst(m_GF_OBJ_HANDLE));
   if (warp != nullptr) {
-    GfObj *obj = GfObjUtil::getObj(unknown08);
+    GfObj *obj = GfObjUtil::getObj(m_GF_OBJ_HANDLE);
     if (obj != nullptr) {
       obj->unknown110 |= OBJ_UNKNOWN_7_2;
     }
     GfObj *mover = GfObjUtil::getObj(GfGameManager::getControlMover());
     if (mover != nullptr) {
-      GfObj *self = GfObjUtil::getObj(unknown08);
+      GfObj *self = GfObjUtil::getObj(m_GF_OBJ_HANDLE);
       if (self != nullptr) {
         MsgPcFieldNotifyWarp message;
         const gmk::GmkWarp::unknown004 *points = warp->unknown005();
-        const f32 *position = unknown08 == warp->unknown50[0] ? points[1].unknown00 : points[0].unknown00;
+        const f32 *position = m_GF_OBJ_HANDLE == warp->unknown50[0] ? points[1].unknown00 : points[0].unknown00;
         message.unknown10.x = position[0];
         message.unknown10.y = position[1];
         message.unknown10.z = position[2];
-        message.unknown20 = unknown08 == warp->unknown50[0] ? points[1].unknown0c : points[0].unknown0c;
+        message.unknown20 = m_GF_OBJ_HANDLE == warp->unknown50[0] ? points[1].unknown0c : points[0].unknown0c;
         message.unknown28 = warp->getBindedBdatFp();
-        message.unknown30 = warp->unknown20.unknown18;
-        message.unknown34 = warp->unknown20.unknown18;
+        message.unknown30 = warp->m_createInfo.unknown18;
+        message.unknown34 = warp->m_createInfo.unknown18;
         self->sendMessage(mover, message);
         return;
       }

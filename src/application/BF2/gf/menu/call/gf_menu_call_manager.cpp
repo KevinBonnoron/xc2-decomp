@@ -6,7 +6,7 @@
 
 namespace gf {
 
-GfMenuCallManager::GfMenuCallManager(const GfSetupParam &param) : unknown08(), unknown228(getAllocator(ALLOCATOR_UNKNOWN_0)), unknown1108() { reset(); }
+GfMenuCallManager::GfMenuCallManager(const GfSetupParam &param) : unknown08(), m_menuStrLinker(getAllocator(ALLOCATOR_UNKNOWN_0)), unknown1108() { reset(); }
 
 void GfMenuCallManager::reset() {
   for (u32 i = 0; i < CALL_UNKNOWN_135; i++) {
@@ -16,9 +16,9 @@ void GfMenuCallManager::reset() {
 
 GfMenuCallManager::~GfMenuCallManager() {
   for (unknown001 *info = unknown1108.begin(); info != unknown1108.end(); ++info) {
-    if (info->unknown00 != nullptr) {
-      info->unknown00->release();
-      info->unknown00 = nullptr;
+    if (info->m_menuCallContext != nullptr) {
+      info->m_menuCallContext->release();
+      info->m_menuCallContext = nullptr;
     }
   }
   unknown1108.clear();
@@ -45,8 +45,8 @@ void GfMenuCallManager::postUpdate(const fw::UpdateInfo &) {
   GfMenuCallManager *self = get();
   if (self != nullptr) {
     for (unknown001 *info = self->unknown1108.begin(); info != self->unknown1108.end();) {
-      if (info->unknown00->isTerm()) {
-        mm::mtl::safeRelease(info->unknown00);
+      if (info->m_menuCallContext->isTerm()) {
+        mm::mtl::safeRelease(info->m_menuCallContext);
         info = self->unknown1108.erase(info);
       } else {
         ++info;
@@ -70,11 +70,11 @@ u32 GfMenuCallManager::getAttachedObject(u32 call) {
   return 0;
 }
 
-u16 GfMenuCallManager::registString(const ui::UIStr &string) { return unknown228.addString(string); }
+u16 GfMenuCallManager::registString(const ui::UIStr &string) { return m_menuStrLinker.addString(string); }
 
-void GfMenuCallManager::releaseString(u16 id) { unknown228.delString(id); }
+void GfMenuCallManager::releaseString(u16 id) { m_menuStrLinker.delString(id); }
 
-const ui::UIStr &GfMenuCallManager::getString(u16 id) { return unknown228.getString(id); }
+const ui::UIStr &GfMenuCallManager::getString(u16 id) { return m_menuStrLinker.getString(id); }
 
 void GfMenuCallManager::startCallContext(GfMenuCallContext *context, u32 menu, u32 object) {
   if (unknown1108.size() == unknown1108.capacity()) {
@@ -84,7 +84,7 @@ void GfMenuCallManager::startCallContext(GfMenuCallContext *context, u32 menu, u
     return;
   }
   for (unknown001 *info = unknown1108.begin(); info != unknown1108.end(); ++info) {
-    if (info->unknown00->unknown0c == context->unknown0c) {
+    if (info->m_menuCallContext->unknown0c == context->unknown0c) {
       context->setup(object, menu);
       return;
     }
@@ -92,7 +92,7 @@ void GfMenuCallManager::startCallContext(GfMenuCallContext *context, u32 menu, u
   context->setup(object, menu);
   context->addRef();
   unknown001 info;
-  info.unknown00 = context;
+  info.m_menuCallContext = context;
   info.unknown08 = 0;
   unknown1108.push_back(info);
 }
@@ -105,7 +105,7 @@ void GfMenuCallManager::nextCallContext(GfMenuCallContext *context, u32 menu) {
 
 void GfMenuCallManager::setCallContextEventHandler(GfMenuCallContext *context, u32 handler) {
   for (unknown001 *info = unknown1108.begin(); info != unknown1108.end(); ++info) {
-    if (info->unknown00->unknown0c == context->unknown0c) {
+    if (info->m_menuCallContext->unknown0c == context->unknown0c) {
       info->unknown08 = handler;
       return;
     }

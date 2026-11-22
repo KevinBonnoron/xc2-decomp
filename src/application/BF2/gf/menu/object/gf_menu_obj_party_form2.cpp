@@ -37,7 +37,7 @@ static const char *const unknown002[] = {"1st_blade_position", "2nd_blade_positi
 
 GfMenuObjPartyForm2::GfMenuObjPartyForm2(u32 handle)
     : GfMenuObject(handle), unknown38(false), unknown40(), unknown60(0xff), unknown64(0xff), unknown68(this), unknown2f8(0), unknown2fc(-1), unknown300(-1), unknown304(-1), unknown308(0),
-      unknown310(nullptr), unknown318(nullptr) {}
+      m_menuCallContext(nullptr), m_menuFieldSkillList(nullptr) {}
 
 GfMenuObjPartyForm2::~GfMenuObjPartyForm2() {}
 
@@ -66,7 +66,7 @@ u32 GfMenuObjPartyForm2::getCursorID(u32 index) {
 void GfMenuObjPartyForm2::finalize() {
   mm::mtl::safeRelease(unknown28);
   mm::mtl::safeRelease(unknown30);
-  mm::mtl::safeRelease(unknown318);
+  mm::mtl::safeRelease(m_menuFieldSkillList);
   mm::mtl::safeRelease(unknown320);
   mm::mtl::safeRelease(unknown40[0].unknown08);
   mm::mtl::safeRelease(unknown40[0].unknown00);
@@ -89,14 +89,14 @@ void GfMenuObjPartyForm2::initialize() {
     {
       GfMenuDriverList::PartySetup setup;
       setup.unknown18 = false;
-      setup.unknown00.unknown08 = 3;
+      setup.m_setupParam.unknown08 = 3;
       setup.unknown14 = GfPartySelect::LIST_TYPE_UNKNOWN_0;
       unknown28 = GfMenuDriverList::create();
       unknown28->setupFromParty(setup);
       if (unknown28->getSize() == 1) {
         unknown38 = true;
       }
-      setup.unknown00.unknown08 = 2;
+      setup.m_setupParam.unknown08 = 2;
       setup.unknown14 = GfPartySelect::LIST_TYPE_UNKNOWN_1;
       unknown30 = GfMenuDriverList::create();
       unknown30->setupFromParty(setup);
@@ -240,11 +240,11 @@ void GfMenuObjPartyForm2::initialize() {
       if (fieldSkill.isValid()) {
         {
           ui::UIListInfoBase::SetupParam listParam;
-          unknown318 = GfMenuFieldSkillList::create();
-          if (unknown318 != nullptr) {
+          m_menuFieldSkillList = GfMenuFieldSkillList::create();
+          if (m_menuFieldSkillList != nullptr) {
             listParam.unknown08 = 0xf;
-            unknown318->setup(getAllocator(ALLOCATOR_UNKNOWN_0), listParam);
-            unknown318->addFieldSkillFromParty();
+            m_menuFieldSkillList->setup(getAllocator(ALLOCATOR_UNKNOWN_0), listParam);
+            m_menuFieldSkillList->addFieldSkillFromParty();
           }
         }
         mm::mtl::FixStr<32> name;
@@ -259,15 +259,15 @@ void GfMenuObjPartyForm2::initialize() {
           if (item.isValid()) {
             name.format("TXT_fs_item_name@%02d", i + 1);
             // The game reads the handle of the item after createFromList (ldur w8 before str [x0, #0x24]), not before it as the one-line assignment does.
-            GfMenuFieldSkillAdapter *adapter = GfMenuFieldSkillAdapter::createFromList(item.searchChild(name.c_str()), 0, unknown318, i);
+            GfMenuFieldSkillAdapter *adapter = GfMenuFieldSkillAdapter::createFromList(item.searchChild(name.c_str()), 0, m_menuFieldSkillList, i);
             adapter->unknown24 = item.unknown10;
             name.format("TXT_fs_item_lv_num@%02d", i + 1);
-            GfMenuFieldSkillAdapter::createFromList(item.searchChild(name.c_str()), 1, unknown318, i);
+            GfMenuFieldSkillAdapter::createFromList(item.searchChild(name.c_str()), 1, m_menuFieldSkillList, i);
           }
         }
-        if (unknown318->getSize() > unknown318->getPageSize()) {
-          u32 pages = unknown318->getSize() / unknown318->getPageSize();
-          if (unknown318->getSize() % unknown318->getPageSize() != 0) {
+        if (m_menuFieldSkillList->getSize() > m_menuFieldSkillList->getPageSize()) {
+          u32 pages = m_menuFieldSkillList->getSize() / m_menuFieldSkillList->getPageSize();
+          if (m_menuFieldSkillList->getSize() % m_menuFieldSkillList->getPageSize() != 0) {
             pages++;
           }
           GfMenuReference::setReferenceNumber(0, 1);
@@ -385,11 +385,11 @@ bool GfMenuObjPartyForm2::seqAppearPlate() {
 }
 
 bool GfMenuObjPartyForm2::seqAnnounceChange() {
-  if (unknown310 != nullptr) {
-    return unknown310->isTerm();
+  if (m_menuCallContext != nullptr) {
+    return m_menuCallContext->isTerm();
   }
-  unknown310 = GfMenuCallContext::create();
-  GfMenuObjCommonText::open(unknown310, 0xd, 0);
+  m_menuCallContext = GfMenuCallContext::create();
+  GfMenuObjCommonText::open(m_menuCallContext, 0xd, 0);
   return false;
 }
 
@@ -556,14 +556,14 @@ void GfMenuObjPartyForm2::MainListener::reciveEvent(const ui::EventData &event, 
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1:
-    unknown20->unknown68.unknown002(&GfMenuObjPartyForm2::seqStartOpen);
-    unknown20->unknown68.unknown002(&GfMenuObjPartyForm2::seqAppearTitle);
-    unknown20->unknown68.unknown002(&GfMenuObjPartyForm2::seqAppearFrame);
-    unknown20->unknown68.unknown002(&GfMenuObjPartyForm2::seqAppearPlate);
-    if (unknown20->unknown2f8 == 1) {
-      unknown20->unknown68.unknown002(&GfMenuObjPartyForm2::seqAnnounceChange);
+    m_menuObjPartyForm2->unknown68.unknown002(&GfMenuObjPartyForm2::seqStartOpen);
+    m_menuObjPartyForm2->unknown68.unknown002(&GfMenuObjPartyForm2::seqAppearTitle);
+    m_menuObjPartyForm2->unknown68.unknown002(&GfMenuObjPartyForm2::seqAppearFrame);
+    m_menuObjPartyForm2->unknown68.unknown002(&GfMenuObjPartyForm2::seqAppearPlate);
+    if (m_menuObjPartyForm2->unknown2f8 == 1) {
+      m_menuObjPartyForm2->unknown68.unknown002(&GfMenuObjPartyForm2::seqAnnounceChange);
     }
-    unknown20->unknown68.unknown002(&GfMenuObjPartyForm2::seqWaitOpenEnd);
+    m_menuObjPartyForm2->unknown68.unknown002(&GfMenuObjPartyForm2::seqWaitOpenEnd);
     break;
   case 2: {
     GfMenuObjUtil::CtrlParam param;
@@ -686,7 +686,7 @@ void GfMenuObjPartyForm2::FieldSkillListener::reciveEvent(const ui::EventData &e
     break;
   case 6: {
     int page = event.unknown08;
-    ui::UIListInfoBase *list = unknown20->unknown318;
+    ui::UIListInfoBase *list = m_menuObjPartyForm2->m_menuFieldSkillList;
     list->setIndex(list->getPageSize() * page);
     GfMenuReference::setReferenceNumber(0, page + 1);
     break;
@@ -703,13 +703,13 @@ void GfMenuObjPartyForm2::DrSelListener::reciveEvent(const ui::EventData &event,
   case 1:
     break;
   case 2:
-    if (unknown20->unknown28 != nullptr && unknown20->unknown30 != nullptr) {
+    if (m_menuObjPartyForm2->unknown28 != nullptr && m_menuObjPartyForm2->unknown30 != nullptr) {
       mm::mtl::FixedVector<u16, 16> drivers;
-      for (u32 i = 0; i < unknown20->unknown28->getSize(); i++) {
-        drivers.push_back(unknown20->unknown28->getContents(i).unknown00);
+      for (u32 i = 0; i < m_menuObjPartyForm2->unknown28->getSize(); i++) {
+        drivers.push_back(m_menuObjPartyForm2->unknown28->getContents(i).unknown00);
       }
-      for (u32 i = 0; i < unknown20->unknown30->getSize(); i++) {
-        drivers.push_back(unknown20->unknown30->getContents(i).unknown00);
+      for (u32 i = 0; i < m_menuObjPartyForm2->unknown30->getSize(); i++) {
+        drivers.push_back(m_menuObjPartyForm2->unknown30->getContents(i).unknown00);
       }
       GfMenuObjUtil::setupPartyDriver(drivers);
       GfMenuObjOperationInfo::close();
@@ -717,11 +717,11 @@ void GfMenuObjPartyForm2::DrSelListener::reciveEvent(const ui::EventData &event,
     }
     break;
   case 6:
-    if (unknown20->unknown60 != 0xff) {
+    if (m_menuObjPartyForm2->unknown60 != 0xff) {
       // The game loads the page before the ring list (ldr w1 before ldr x0 of setIndex).
       u32 index = event.unknown08;
-      unknown20->unknown40[unknown20->unknown60].unknown00->setIndex(index);
-      u32 object = unknown20->unknown40[unknown20->unknown60].unknown00->getSelectObject();
+      m_menuObjPartyForm2->unknown40[m_menuObjPartyForm2->unknown60].unknown00->setIndex(index);
+      u32 object = m_menuObjPartyForm2->unknown40[m_menuObjPartyForm2->unknown60].unknown00->getSelectObject();
       GfMenuObjUtil::setDockPos(acc.searchChild("IMG_head_cursor"), object, 3, true);
     }
     ui::UIObjectListener::reciveEvent(event, handle);
@@ -731,63 +731,63 @@ void GfMenuObjPartyForm2::DrSelListener::reciveEvent(const ui::EventData &event,
     u32 input = event.unknown0c;
     switch (input) {
     case 1:
-      if (unknown20->unknown38) {
+      if (m_menuObjPartyForm2->unknown38) {
         GfMenuObjUtil::playSECommon(2);
         return;
       }
-      if (unknown20->unknown60 == 0) {
-        unknown20->changeCursorMode(1);
-      } else if (unknown20->unknown60 == 1) {
-        if (unknown20->unknown40[unknown20->unknown64].unknown00->getIndex(false) == unknown20->unknown40[unknown20->unknown60].unknown00->getIndex(false)) {
+      if (m_menuObjPartyForm2->unknown60 == 0) {
+        m_menuObjPartyForm2->changeCursorMode(1);
+      } else if (m_menuObjPartyForm2->unknown60 == 1) {
+        if (m_menuObjPartyForm2->unknown40[m_menuObjPartyForm2->unknown64].unknown00->getIndex(false) == m_menuObjPartyForm2->unknown40[m_menuObjPartyForm2->unknown60].unknown00->getIndex(false)) {
           GfMenuObjUtil::playSECommon(2);
           return;
         }
-        unknown20->unknown68.unknown002(&GfMenuObjPartyForm2::seqStartSwap);
-        unknown20->unknown68.unknown002(&GfMenuObjPartyForm2::seqTakePlate);
-        unknown20->unknown68.unknown002(&GfMenuObjPartyForm2::seqMovePlate);
-        unknown20->unknown68.unknown002(&GfMenuObjPartyForm2::seqPutPlate);
-        unknown20->unknown68.unknown002(&GfMenuObjPartyForm2::seqWaitSwapEnd);
+        m_menuObjPartyForm2->unknown68.unknown002(&GfMenuObjPartyForm2::seqStartSwap);
+        m_menuObjPartyForm2->unknown68.unknown002(&GfMenuObjPartyForm2::seqTakePlate);
+        m_menuObjPartyForm2->unknown68.unknown002(&GfMenuObjPartyForm2::seqMovePlate);
+        m_menuObjPartyForm2->unknown68.unknown002(&GfMenuObjPartyForm2::seqPutPlate);
+        m_menuObjPartyForm2->unknown68.unknown002(&GfMenuObjPartyForm2::seqWaitSwapEnd);
       }
       break;
     case 2:
-      if (unknown20->unknown60 == 0) {
-        if (unknown20->unknown2f8 == 0) {
+      if (m_menuObjPartyForm2->unknown60 == 0) {
+        if (m_menuObjPartyForm2->unknown2f8 == 0) {
           GfMenuObject::returnFSSubLayer(acc.unknown10, 1);
         } else {
           GfMenuObject::closeFSLayer(acc.unknown10, true, true);
         }
-      } else if (unknown20->unknown64 != 0xff) {
-        unknown20->changeCursorMode(unknown20->unknown64);
+      } else if (m_menuObjPartyForm2->unknown64 != 0xff) {
+        m_menuObjPartyForm2->changeCursorMode(m_menuObjPartyForm2->unknown64);
       }
       break;
     case 9:
-      if (unknown20->unknown30->getSize() > 2) {
-        if (unknown20->unknown30->getIndex(false) < 2) {
-          unknown20->unknown30->setIndex(2);
-        } else if (unknown20->unknown30->getIndex(false) + 1 < unknown20->unknown30->getSize()) {
-          unknown20->unknown30->setIndex(unknown20->unknown30->getIndex(false) + 1);
+      if (m_menuObjPartyForm2->unknown30->getSize() > 2) {
+        if (m_menuObjPartyForm2->unknown30->getIndex(false) < 2) {
+          m_menuObjPartyForm2->unknown30->setIndex(2);
+        } else if (m_menuObjPartyForm2->unknown30->getIndex(false) + 1 < m_menuObjPartyForm2->unknown30->getSize()) {
+          m_menuObjPartyForm2->unknown30->setIndex(m_menuObjPartyForm2->unknown30->getIndex(false) + 1);
         }
       }
       break;
     case 10:
-      if (unknown20->unknown30->getSize() > 2 && unknown20->unknown30->getIndex(false) > 1) {
-        unknown20->unknown30->setIndex(unknown20->unknown30->getIndex(false) - 1);
+      if (m_menuObjPartyForm2->unknown30->getSize() > 2 && m_menuObjPartyForm2->unknown30->getIndex(false) > 1) {
+        m_menuObjPartyForm2->unknown30->setIndex(m_menuObjPartyForm2->unknown30->getIndex(false) - 1);
       }
       break;
     case 0xb: {
       ui::UIObjectAcc parent(acc.getParentHandle());
       ui::EventData request;
-      int index = unknown20->unknown40[unknown20->unknown60].unknown00->getIndex(false);
-      int size = unknown20->unknown28->getSize();
+      int index = m_menuObjPartyForm2->unknown40[m_menuObjPartyForm2->unknown60].unknown00->getIndex(false);
+      int size = m_menuObjPartyForm2->unknown28->getSize();
       // The game reloads the current list after the getSize call and shares it between the two arms.
-      GfMenuDriverList *current = unknown20->unknown28;
+      GfMenuDriverList *current = m_menuObjPartyForm2->unknown28;
       u32 driver;
       if (index < size) {
         driver = current->getContents(index).unknown00;
       } else {
         // The game calls getSize on the current list before it loads the reserve list.
         u32 rest = index - current->getSize();
-        driver = unknown20->unknown30->getContents(rest).unknown00;
+        driver = m_menuObjPartyForm2->unknown30->getContents(rest).unknown00;
       }
       request.unknown00 = 0x40;
       request.unknown08 = driver;

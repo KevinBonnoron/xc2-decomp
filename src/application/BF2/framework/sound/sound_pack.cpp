@@ -23,8 +23,8 @@ SoundPack *SoundPack::createFromStream(mm::mtl::IAllocator *allocator, const Set
   pack->addRef();
   mm::mtl::FixStr<256> bankName;
   bankName.format("%s_%p", info.unknown00.c_str(), allocator);
-  pack->unknown178 = SoundSsdBank::create(bankName.c_str(), info.unknown84, info.unknowna4);
-  pack->unknown178->setMaxSound(info.unknowna4);
+  pack->m_soundSsdBank = SoundSsdBank::create(bankName.c_str(), info.unknown84, info.unknowna4);
+  pack->m_soundSsdBank->setMaxSound(info.unknowna4);
   pack->registSource(info.unknown98, info.unknowna0);
   SoundManager::get()->registPack(pack);
   return pack;
@@ -43,8 +43,8 @@ SoundPack *SoundPack::create(const SetupInfo &info) {
   pack->addRef();
   mm::mtl::FixStr<256> bankName;
   bankName.format("%s_%p", info.unknown00.c_str(), nullptr);
-  pack->unknown178 = SoundSsdBank::create(bankName.c_str(), info.unknown84, info.unknowna4);
-  pack->unknown178->setMaxSound(info.unknowna4);
+  pack->m_soundSsdBank = SoundSsdBank::create(bankName.c_str(), info.unknown84, info.unknowna4);
+  pack->m_soundSsdBank->setMaxSound(info.unknowna4);
   pack->registSource(info.unknown98, info.unknowna0);
   SoundManager::get()->registPack(pack);
   return pack;
@@ -60,19 +60,19 @@ SoundPack::~SoundPack() {
   stopAll();
   m_source.clear();
   unknown988.clear();
-  mm::mtl::safeRelease(unknown178);
+  mm::mtl::safeRelease(m_soundSsdBank);
   SoundManager::get()->removePack(this);
 }
 
 void SoundPack::stopAll() {
-  if (unknown178 != nullptr) {
-    unknown178->stopAll();
+  if (m_soundSsdBank != nullptr) {
+    m_soundSsdBank->stopAll();
   }
 }
 
 bool SoundPack::canRelease() const {
-  if (unknown178 != nullptr) {
-    return unknown178->canRelease();
+  if (m_soundSsdBank != nullptr) {
+    return m_soundSsdBank->canRelease();
   }
 
   return true;

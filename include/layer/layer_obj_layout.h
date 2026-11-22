@@ -26,39 +26,39 @@ public:
     u32 unknown00;           // Inferred role: flags; original member name unknown.
     LayerViewPort unknown04; // Inferred role: view port; original member name unknown.
     u8 _14[0x18 - 0x14];
-    grlib::CGLibRenderTarget *unknown18; // Inferred role: render target; original member name unknown.
-    LayerObjTopTexObj *unknown20;        // Inferred role: texture object; original member name unknown.
-    mm::Col4 unknown28;                  // Inferred role: clear color; original member name unknown.
+    grlib::CGLibRenderTarget *unknown18;    // Inferred role: render target; original member name unknown.
+    LayerObjTopTexObj *m_layerObjTopTexObj; // Inferred role: texture object; original member name unknown.
+    mm::Col4 unknown28;                     // Inferred role: clear color; original member name unknown.
   };
 
   static_assert(offsetof(unknown001, unknown04) == 0x04, "");
   static_assert(offsetof(unknown001, unknown18) == 0x18, "");
-  static_assert(offsetof(unknown001, unknown20) == 0x20, "");
+  static_assert(offsetof(unknown001, m_layerObjTopTexObj) == 0x20, "");
   static_assert(offsetof(unknown001, unknown28) == 0x28, "");
   static_assert(sizeof(unknown001) == 0x38, "");
 
   // Inferred layout of the layout work data, cleared as one block by the constructor (memset of 0x150 bytes at 0x2a0);
   // original type and member names unknown.
   struct unknown002 {
-    const u8 *unknown00;               // Inferred role: layout data block; original member name unknown.
-    const LyrLayoutPosData *unknown08; // Inferred role: pos data table; original member name unknown.
-    LayerViewPort unknown10;           // Inferred role: view port; original member name unknown.
-    u32 unknown20;                     // Inferred role: auto anchor mode; original member name unknown.
-    u16 unknown24[2];                  // Inferred role: priority tbls; original member name unknown.
-    u16 unknown28;                     // Inferred role: priority tbl; original member name unknown.
+    const u8 *unknown00;                        // Inferred role: layout data block; original member name unknown.
+    const LyrLayoutPosData *m_lyrLayoutPosData; // Inferred role: pos data table; original member name unknown.
+    LayerViewPort unknown10;                    // Inferred role: view port; original member name unknown.
+    u32 m_autoAnchorMode;                       // Inferred role: auto anchor mode; named after the game accessor layer::LayerAccLayoutObj::getAutoAnchorMode.
+    u16 unknown24[2];                           // Inferred role: priority tbls; original member name unknown.
+    u16 unknown28;                              // Inferred role: priority tbl; original member name unknown.
     u8 _2a[0x30 - 0x2a];
-    LayerSortMan *unknown30;        // Inferred role: sort manager; original member name unknown.
-    LayerResViewPortInfo unknown38; // Inferred role: view port info of the children; original member name unknown.
-    unknown001 unknown70[2];        // Inferred role: render targets; original member name unknown.
-    unknown001 unknowne0;           // Inferred role: previous render target; original member name unknown.
-    unknown001 unknown118;          // Inferred role: active render target; original member name unknown.
+    LayerSortMan *m_layerSortMan;                // Inferred role: sort manager; original member name unknown.
+    LayerResViewPortInfo m_layerResViewPortInfo; // Inferred role: view port info of the children; original member name unknown.
+    unknown001 unknown70[2];                     // Inferred role: render targets; original member name unknown.
+    unknown001 unknowne0;                        // Inferred role: previous render target; original member name unknown.
+    unknown001 unknown118;                       // Inferred role: active render target; original member name unknown.
   };
 
   static_assert(offsetof(unknown002, unknown10) == 0x10, "");
-  static_assert(offsetof(unknown002, unknown20) == 0x20, "");
+  static_assert(offsetof(unknown002, m_autoAnchorMode) == 0x20, "");
   static_assert(offsetof(unknown002, unknown28) == 0x28, "");
-  static_assert(offsetof(unknown002, unknown30) == 0x30, "");
-  static_assert(offsetof(unknown002, unknown38) == 0x38, "");
+  static_assert(offsetof(unknown002, m_layerSortMan) == 0x30, "");
+  static_assert(offsetof(unknown002, m_layerResViewPortInfo) == 0x38, "");
   static_assert(offsetof(unknown002, unknown70) == 0x70, "");
   static_assert(offsetof(unknown002, unknowne0) == 0xe0, "");
   static_assert(offsetof(unknown002, unknown118) == 0x118, "");

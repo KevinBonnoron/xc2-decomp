@@ -8,27 +8,27 @@ namespace fw {
 
 HandlePtr<void> UpdatableObjectManager::Impl::registPointer(u32 group, const void *ptr) {
   HandlePtr<void> handle;
-  handle.id = unknown108.regist(ptr);
-  handle.map = &unknown108;
+  handle.id = m_pointerMap.regist(ptr);
+  handle.map = &m_pointerMap;
   return handle;
 }
 
 void UpdatableObjectManager::Impl::registGroup(u32 group, UpdatableGroup *updatableGroup) {
   removeGroup(group);
-  unknown08[group] = updatableGroup;
+  m_group[group] = updatableGroup;
 }
 
 void UpdatableObjectManager::Impl::removeGroup(u32 group) {
-  if (unknown08[group] != nullptr) {
-    delete unknown08[group];
-    unknown08[group] = nullptr;
+  if (m_group[group] != nullptr) {
+    delete m_group[group];
+    m_group[group] = nullptr;
   }
 }
 
 void UpdatableObjectManager::Impl::destroy() {
   for (int i = GROUP_UNKNOWN_32 - 1; i >= 0; i--) {
-    if (unknown08[i] != nullptr) {
-      unknown08[i]->destroyAllObject();
+    if (m_group[i] != nullptr) {
+      m_group[i]->destroyAllObject();
     }
   }
 
@@ -39,39 +39,39 @@ void UpdatableObjectManager::Impl::destroy() {
 
 void UpdatableObjectManager::Impl::destroyObject(u32 groupMask) {
   for (int i = GROUP_UNKNOWN_32 - 1; i >= 0; i--) {
-    if (unknown08[i] != nullptr && (groupMask & (1 << i)) != 0) {
-      unknown08[i]->destroyAllObject();
+    if (m_group[i] != nullptr && (groupMask & (1 << i)) != 0) {
+      m_group[i]->destroyAllObject();
     }
   }
 }
 
 void UpdatableObjectManager::Impl::update(const UpdateInfo &info, u32 layerMask) {
   for (u32 i = 0; i < GROUP_UNKNOWN_32; i++) {
-    if (unknown08[i] != nullptr) {
-      unknown08[i]->update(info, layerMask);
+    if (m_group[i] != nullptr) {
+      m_group[i]->update(info, layerMask);
     }
   }
 }
 
 void UpdatableObjectManager::Impl::tail(const UpdateInfo &info) {
   for (int i = GROUP_UNKNOWN_32 - 1; i >= 0; i--) {
-    if (unknown08[i] != nullptr) {
-      unknown08[i]->tail(info);
+    if (m_group[i] != nullptr) {
+      m_group[i]->tail(info);
     }
   }
 }
 
 void UpdatableObjectManager::Impl::execEvent(const ObjectEvent &event, u32 layerMask) {
   for (u32 i = 0; i < GROUP_UNKNOWN_32; i++) {
-    if (unknown08[i] != nullptr) {
-      unknown08[i]->execEvent(event, layerMask);
+    if (m_group[i] != nullptr) {
+      m_group[i]->execEvent(event, layerMask);
     }
   }
 }
 
-UpdatableGroup *UpdatableObjectManager::Impl::getGroup(u32 group) { return unknown08[group]; }
+UpdatableGroup *UpdatableObjectManager::Impl::getGroup(u32 group) { return m_group[group]; }
 
-void UpdatableObjectManager::Impl::registObject(u32 group, UpdatableObject *object) { unknown08[group]->registObject(object); }
+void UpdatableObjectManager::Impl::registObject(u32 group, UpdatableObject *object) { m_group[group]->registObject(object); }
 
 UpdatableObjectManager::UpdatableObjectManager(mm::mtl::IAllocator *allocator, size_t capacity)
 // __LINE__ of the game: it is the line argument of the operator new.

@@ -9,11 +9,11 @@ namespace ml {
 
 DrPixlToonGrad::DrPixlToonGrad(DrMan *drMan) {
   unknown08 = true;
-  unknown00 = drMan;
+  m_drMan = drMan;
   for (int i = 0; i < 2; i++) {
-    m_gradTex[i] = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
+    m_gradTex[i] = new (m_drMan->unknown0c) DrPixlRenderTarget(m_drMan);
     m_gradTex[i]->setTextureInfo(512.0f, 256.0f, GRL_SURFACE_FORMAT_RGBA8, false, 0);
-    m_darkGradTex[i] = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
+    m_darkGradTex[i] = new (m_drMan->unknown0c) DrPixlRenderTarget(m_drMan);
     m_darkGradTex[i]->setTextureInfo(512.0f, 256.0f, GRL_SURFACE_FORMAT_RGBA8, false, 0);
   }
 }

@@ -17,7 +17,7 @@
 
 namespace gf {
 
-GfVolumeFade::GfVolumeFade(GF_OBJ_HANDLE *handle, ml::ScnObjModel *model) : unknown00(handle), unknown08(model) { initializeParam(); }
+GfVolumeFade::GfVolumeFade(GF_OBJ_HANDLE *handle, ml::ScnObjModel *model) : m_GF_OBJ_HANDLE(handle), unknown08(model) { initializeParam(); }
 
 void GfVolumeFade::initializeParam() {
   for (u32 acc = 0; acc < 5; acc++) {
@@ -36,10 +36,10 @@ void GfVolumeFade::setEffectType(VFEFF effect) {
     case VFEFF_UNKNOWN_0:
       break;
     case VFEFF_UNKNOWN_9:
-      setupVolumeFadeParamForDead(unknown90, VFEFF_UNKNOWN_9);
+      setupVolumeFadeParamForDead(m_volumeFadeParams, VFEFF_UNKNOWN_9);
       break;
     default:
-      setupVolumeFadeParamForDead(unknown90, effect);
+      setupVolumeFadeParamForDead(m_volumeFadeParams, effect);
       break;
     }
   }
@@ -70,19 +70,19 @@ void GfVolumeFade::setFadeRatio(VFACC acc, VFPARTS parts, f32 ratio) {
 }
 
 void GfVolumeFade::applyFadeRatio() {
-  if (GfObjUtil::isValid(unknown00) && unknown10) {
+  if (GfObjUtil::isValid(m_GF_OBJ_HANDLE) && unknown10) {
     unknown10 = false;
     if (unknown140 != VFEFF_UNKNOWN_0) {
       ml::ScnObjAccVolumeFade acc(unknown08);
       MM_VERIFY(acc.getMax());
       for (u32 i = 0; i < fw::AnimVolumeFadeModifier::RATIO_UNKNOWN_6; i++) {
         f32 ratio = getFadeRatioForParts(static_cast<VFPARTS>(i));
-        acc.setParams(unknown90, -1);
-        GfObj *obj = GfObjUtil::getObj(unknown00);
+        acc.setParams(m_volumeFadeParams, -1);
+        GfObj *obj = GfObjUtil::getObj(m_GF_OBJ_HANDLE);
         if (obj != nullptr) {
           GfComModel *model = obj->getComponent<GfComModel>();
           if (model != nullptr) {
-            model->unknown10c8.unknown20[i] = 1.0f - ratio;
+            model->m_animVolumeFadeModifier.unknown20[i] = 1.0f - ratio;
           }
         }
       }

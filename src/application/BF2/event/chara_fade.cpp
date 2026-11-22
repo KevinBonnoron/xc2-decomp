@@ -23,16 +23,16 @@ ICmd::RESULT CharaFade::update(const Param &param) {
     }
     f32 to = param.val(1).getBool() ? 0.0f : 1.0f;
     f32 frame = param.val(2).getF32();
-    unknown10.clear();
-    unknown10.append(0.0f, from, CV_TYPE_UNKNOWN_0);
-    unknown10.append(frame, to, CV_TYPE_UNKNOWN_1);
+    m_anmF32.clear();
+    m_anmF32.append(0.0f, from, CV_TYPE_UNKNOWN_0);
+    m_anmF32.append(frame, to, CV_TYPE_UNKNOWN_1);
   }
-  unknown10.update(delta);
+  m_anmF32.update(delta);
   if (unknown08 != gf::unknown020) {
-    mm::mtl::Singleton<AlphaManager>::getPtr()->setAlpha(unknown08, ALPHA_ATTR_UNKNOWN_1, unknown10.getValue(), 1.0f);
+    mm::mtl::Singleton<AlphaManager>::getPtr()->setAlpha(unknown08, ALPHA_ATTR_UNKNOWN_1, m_anmF32.getValue(), 1.0f);
   }
-  if (unknown10.isEnd()) {
-    unknown10.clear();
+  if (m_anmF32.isEnd()) {
+    m_anmF32.clear();
     if (unknown08 != gf::unknown020) {
       mm::mtl::Singleton<AlphaManager>::getPtr()->setAlpha(unknown08, ALPHA_ATTR_UNKNOWN_1, param.val(1).getBool() ? 0.0f : 1.0f, 1.0f);
     }

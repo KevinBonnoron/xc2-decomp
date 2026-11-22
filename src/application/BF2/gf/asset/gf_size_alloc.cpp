@@ -14,15 +14,15 @@ void GfSizeAlloc::setup(mm::mtl::IAllocator *allocator, u32 blockSize, void *buf
     delete unknown18;
     unknown18 = nullptr;
   }
-  unknown28 = blockSize;
+  m_blockSize = blockSize;
   unknown24 = size / blockSize;
-  unknown08 = buffer;
-  unknown10 = size;
-  unknown20 = 0;
+  m_buffer = buffer;
+  m_bufferSize = size;
+  m_allocs = 0;
   memset(buffer, SIZE_UNKNOWN_253, size);
   unknown18 = static_cast<u32 *>(allocator->allocate(unknown24 * sizeof(u32), 4));
   memset(unknown18, 0, unknown24 * sizeof(u32));
-  unknown20 = 0;
+  m_allocs = 0;
   unknown30.push_back(0);
   unknown18[0] = unknown24;
   unknown288 = allocator;
@@ -33,16 +33,16 @@ void GfSizeAlloc::destroy() {
     delete unknown18;
     unknown18 = nullptr;
   }
-  unknown20 = 0;
+  m_allocs = 0;
   unknown24 = 0;
-  unknown08 = nullptr;
-  unknown10 = 0;
+  m_buffer = nullptr;
+  m_bufferSize = 0;
 }
 
 void GfSizeAlloc::resize(size_t size) {
-  unknown24 = size / unknown28;
-  unknown10 = size;
-  memset(unknown08, SIZE_UNKNOWN_253, size);
+  unknown24 = size / m_blockSize;
+  m_bufferSize = size;
+  memset(m_buffer, SIZE_UNKNOWN_253, size);
   if (unknown18 != nullptr) {
     delete unknown18;
     unknown18 = nullptr;
@@ -54,8 +54,8 @@ void GfSizeAlloc::resize(size_t size) {
 
 void *GfSizeAlloc::alloc(size_t size, bool isTail) {
   if (size != 0) {
-    u32 blocks = size / unknown28;
-    if (size % unknown28 != 0) {
+    u32 blocks = size / m_blockSize;
+    if (size % m_blockSize != 0) {
       blocks++;
     }
     if (unknown24 >= blocks) {
@@ -67,14 +67,14 @@ void *GfSizeAlloc::alloc(size_t size, bool isTail) {
           u32 length = unknown18[start];
           if (blocks <= length) {
             u32 allocStart = start + length - blocks;
-            void *pointer = static_cast<u8 *>(unknown08) + unknown28 * allocStart;
+            void *pointer = static_cast<u8 *>(m_buffer) + m_blockSize * allocStart;
             if (length == blocks) {
               unknown30.erase(it);
             } else {
               unknown18[start] = length - blocks;
             }
             unknown18[allocStart] = blocks;
-            unknown20++;
+            m_allocs++;
             return pointer;
           }
           if (unknown30.begin() == it) {
@@ -86,7 +86,7 @@ void *GfSizeAlloc::alloc(size_t size, bool isTail) {
           u32 start = *it;
           u32 length = unknown18[start];
           if (blocks <= length) {
-            void *pointer = static_cast<u8 *>(unknown08) + unknown28 * start;
+            void *pointer = static_cast<u8 *>(m_buffer) + m_blockSize * start;
             if (length == blocks) {
               unknown30.erase(it);
             } else {
@@ -95,7 +95,7 @@ void *GfSizeAlloc::alloc(size_t size, bool isTail) {
               *it = remainStart;
             }
             unknown18[start] = blocks;
-            unknown20++;
+            m_allocs++;
             return pointer;
           }
         }

@@ -154,9 +154,9 @@ public:
   static bool isRunning();
   static int getTotalSkillIndex(GfMenuFieldSkill *skill, u16 id);
 
-  ai::Fsm unknown08;    // Inferred role: state machine; original member name unknown.
-  StartParam unknown80; // Inferred role: start parameters; original member name unknown.
-  u32 unknown1b8;       // Role and original member name unknown.
+  ai::Fsm m_fsm;           // Inferred role: state machine; original member name unknown.
+  StartParam m_startParam; // Inferred role: start parameters; original member name unknown.
+  u32 unknown1b8;          // Role and original member name unknown.
   u8 _1bc[0x1c8 - 0x1bc];
   mm::mtl::FixedVector<mm::mtl::ReferenceObject *, 5> unknown1c8; // Role and original member name unknown; released by destroy.
   GfMenuCallContext *unknown1f8;                                  // Inferred role: call context of the skip input; original member name unknown.
@@ -168,8 +168,8 @@ public:
   u8 _219[0x220 - 0x219];
 };
 
-static_assert(offsetof(GfMenuFieldSkill, unknown08) == 0x08, "");
-static_assert(offsetof(GfMenuFieldSkill, unknown80) == 0x80, "");
+static_assert(offsetof(GfMenuFieldSkill, m_fsm) == 0x08, "");
+static_assert(offsetof(GfMenuFieldSkill, m_startParam) == 0x80, "");
 static_assert(offsetof(GfMenuFieldSkill, unknown1b8) == 0x1b8, "");
 static_assert(offsetof(GfMenuFieldSkill, unknown1c8) == 0x1c8, "");
 static_assert(offsetof(GfMenuFieldSkill, unknown1f8) == 0x1f8, "");

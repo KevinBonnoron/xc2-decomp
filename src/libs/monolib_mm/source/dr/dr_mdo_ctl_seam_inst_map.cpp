@@ -23,8 +23,8 @@ namespace ml {
 DrMdoCtlSeamInstMap::DrMdoCtlSeamInstMap(int viewNum) : DrMdoCtlSeamLowMap(viewNum) {}
 
 void DrMdoCtlSeamInstMap::changeMemInstMapParts(DrResMdoSeamWrkInst *inst) {
-  MdoWrkMatRes *matRes = inst->unknown50;
-  const u8 *data = inst->unknown108->m_buffer;
+  MdoWrkMatRes *matRes = inst->m_mdoWrkMatRes;
+  const u8 *data = inst->m_drResMdoSeamMemObj->m_buffer;
   const MdsSeamInstMapHead *head = reinterpret_cast<const MdsSeamInstMapHead *>(data);
   unknown30 = matRes;
   resetInstMapMaterial(matRes, data + head->unknown10, data + head->unknown0c, data + head->unknown44, nullptr, head->unknown24);
@@ -46,18 +46,18 @@ DrResMdoSeamWrkInst *DrMdoCtlSeamInstMap::createFreeSeamInst() { return unknown3
 
 void DrMdoCtlSeamInstMap::releaseFreeSeamInst(DrResMdoSeamWrkInst *inst) {
   DrResMdoSeamMemObj *mem = nullptr;
-  if (inst->unknown50 != nullptr) {
-    mem = inst->unknown108;
+  if (inst->m_mdoWrkMatRes != nullptr) {
+    mem = inst->m_drResMdoSeamMemObj;
     unknownb80[inst->unknown68 >> 5] &= ~(1 << (inst->unknown68 & 0x1f));
     unknownc48 -= inst->unknown84;
-    releaseInstMapSeamMat(inst->unknown50);
+    releaseInstMapSeamMat(inst->m_mdoWrkMatRes);
     inst->releaseCache(this);
     unknownc04--;
   }
   unknown300.unknown002(inst);
   if (mem != nullptr) {
-    inst->unknown108 = nullptr;
-    unknown6e0.releaseFreeObj(mem);
+    inst->m_drResMdoSeamMemObj = nullptr;
+    m_drResMdoSeamMemMan.releaseFreeObj(mem);
   }
 }
 
@@ -95,16 +95,16 @@ void DrMdoCtlSeamInstMap::updateInstMap(MdoArgSeamUpdate &arg) {
 // updateAnim and updateTimerCalc. The counter test leaves the function on `x < 2` (cmp w10, #2 at 0x7100823aec, b.lo at 0x7100823af0); the nested `x >= 2` and `x > 1` forms are
 // not the same code (tried).
 void DrMdoCtlSeamInstMap::updateInstMapRenderList(MdoArgSeamUpdate &arg) {
-  arg.unknown60 = this;
+  arg.m_drMdoCtlSeamInstMap = this;
   for (DrResMdoSeamWrkInst *inst = unknown300.unknown10.unknown00; inst != nullptr; inst = inst->unknown08) {
-    unknown30 = inst->unknown50;
+    unknown30 = inst->m_mdoWrkMatRes;
     if (unknown30 != nullptr) {
       if (inst->updateRenderList(arg)) {
         unknownc54 += inst->unknown144;
         unknownc58 += inst->unknown148;
         updateMatFstCallBack();
         updateMatCallBack(inst->unknowna0);
-        updateAnim(unknowndc * m_drMan->unknown1c8c, inst->unknowna0, nullptr);
+        updateAnim(m_frameSpd * m_drMan->unknown1c8c, inst->unknowna0, nullptr);
         updateTimerCalc(inst->unknowna0);
         updateUniformBlock(inst->unknowna0);
       }
@@ -112,7 +112,7 @@ void DrMdoCtlSeamInstMap::updateInstMapRenderList(MdoArgSeamUpdate &arg) {
         unknownc7c |= 5;
       }
       if ((unknownc7c & 0x88000) == 0 && inst->unknown70 != 0) {
-        unknownd30.setStockInstMap(inst->unknown70 - 1, inst);
+        m_drResMdoSeamParmRead.setStockInstMap(inst->unknown70 - 1, inst);
       }
       if (inst->unknown154 != 0 || (inst->unknown8a & 0x80) != 0) {
         unknownc7c |= 0x4000;
@@ -124,7 +124,7 @@ void DrMdoCtlSeamInstMap::updateInstMapRenderList(MdoArgSeamUpdate &arg) {
     return;
   }
   if ((unknownc98 & (1ull << unknownca6)) == 0 && unknown1a == 0) {
-    m_drMan->unknown78->unknown800->callSelectShadowCacheUpdate(1ull << unknownca6);
+    m_drMan->m_drPixlMan->m_drPixlShadowCacheMan->callSelectShadowCacheUpdate(1ull << unknownca6);
   }
   unknownca6++;
   if (unknownca6 >= 0x24) {
@@ -136,7 +136,7 @@ void DrMdoCtlSeamInstMap::updateInstMapRenderList(MdoArgSeamUpdate &arg) {
 void DrMdoCtlSeamInstMap::callShadowCacheInstUpdate(u64 flags) {
   unknownc98 &= ~flags;
   for (DrResMdoSeamWrkInst *inst = unknown300.unknown10.unknown00; inst != nullptr; inst = inst->unknown08) {
-    if (inst->unknown50 != nullptr) {
+    if (inst->m_mdoWrkMatRes != nullptr) {
       inst->callShadowCacheInstUpdate(flags);
     }
   }
@@ -145,7 +145,7 @@ void DrMdoCtlSeamInstMap::callShadowCacheInstUpdate(u64 flags) {
 void DrMdoCtlSeamInstMap::occInstRender() {
   if (!m_drMan->unknown1d6a) {
     for (DrResMdoSeamWrkInst *inst = unknown300.unknown10.unknown00; inst != nullptr; inst = inst->unknown08) {
-      unknown30 = inst->unknown50;
+      unknown30 = inst->m_mdoWrkMatRes;
       if (unknown30 != nullptr) {
         inst->occRender();
       }
@@ -161,22 +161,22 @@ void DrMdoCtlSeamInstMap::occInstRender() {
 //   gives 125 instructions without that store. The byte load is how clang narrows the 16-bit read of unknown08.
 // - The header count is read before arg.unknown00 (`ldp w10, w26, [x8]` before `ldr x8, [x9, #0x18]`, 0x710081d9f8); reading it after gives 127 instructions. The loop counts up to it
 //   and advances arg.unknown00 (0x710081da74).
-// - `unknown168 + index` and `unknownc0 + index` (pointer plus) give the game's order of loads (table pointer before the index, as dr_mdo_ctl_pos.cpp); the subscript form changes it.
+// - `m_mdsMdlTopHeader + index` and `m_materialRes + index` (pointer plus) give the game's order of loads (table pointer before the index, as dr_mdo_ctl_pos.cpp); the subscript form changes it.
 void DrMdoCtlSeamInstMap::createInstZPrePassDisplayList() {
   if ((unknownc7c & 4) && !m_drMan->unknown1d6a) {
     MdoInstancePrePassArg arg;
     arg.unknown0c = 0x34;
     for (DrResMdoSeamWrkInst *inst = unknown300.unknown10.unknown00; inst != nullptr; inst = inst->unknown08) {
-      unknown30 = inst->unknown50;
+      unknown30 = inst->m_mdoWrkMatRes;
       if (unknown30 != nullptr && inst->unknown152 != 0 && (inst->unknown8a & 0x10)) {
         inst->beginMdl();
         while (DrResMdoSeamWrkInst::unknown002 *info = inst->getMdlInfo()) {
           int count = info->unknown00 - info->unknown02;
           if (count != 0) {
             if (info->unknown0e == 0xffff) {
-              unknown30->unknownc8 = inst->unknown60;
+              unknown30->m_drResMdoVertex = inst->m_drResMdoVertex;
             } else {
-              unknown30->unknownc8 = unknown220.unknown20[unknownbd0[info->unknown0e] - 1u].unknown20;
+              unknown30->m_drResMdoVertex = unknown220.unknown20[unknownbd0[info->unknown0e] - 1u].m_drResMdoVertex;
             }
             arg.unknown20 = false;
             if (info->unknown08 & 1) {
@@ -190,18 +190,18 @@ void DrMdoCtlSeamInstMap::createInstZPrePassDisplayList() {
             unknown17e = 0xffff;
             unknown179 = false;
             unknown178 |= 0x10;
-            unknown30->unknownc8->beginVertexSetup();
-            const MdsMdlTopHeader *top = unknown30->unknown168 + info->unknown0c;
+            unknown30->m_drResMdoVertex->beginVertexSetup();
+            const MdsMdlTopHeader *top = unknown30->m_mdsMdlTopHeader + info->unknown0c;
             int headerCount = top->unknown04;
-            arg.unknown00 = reinterpret_cast<const MdsMdlInfoHeader *>(unknown30->unknown18 + top->unknown00);
-            for (int i = 0; i < headerCount; i++, arg.unknown00++) {
-              if ((unknown30->unknownc0 + arg.unknown00->unknown0e)->unknown08.a > 0.0f && !(arg.unknown00->unknown04 & MdsMdlInfoHeader::PASS_FLAG_UNKNOWN_15)) {
-                if (!(arg.unknown00->unknown00 & MdsMdlInfoHeader::FLAG_UNKNOWN_14)) {
-                  if ((arg.unknown00->unknown00 & MdsMdlInfoHeader::FLAG_UNKNOWN_4) && info->unknown04 != 0 && (arg.unknown00->unknown04 & MdsMdlInfoHeader::PASS_FLAG_UNKNOWN_0) &&
-                      !(arg.unknown00->unknown00 & MdsMdlInfoHeader::FLAG_UNKNOWN_17)) {
+            arg.m_mdsMdlInfoHeader = reinterpret_cast<const MdsMdlInfoHeader *>(unknown30->unknown18 + top->unknown00);
+            for (int i = 0; i < headerCount; i++, arg.m_mdsMdlInfoHeader++) {
+              if ((unknown30->m_materialRes + arg.m_mdsMdlInfoHeader->unknown0e)->unknown08.a > 0.0f && !(arg.m_mdsMdlInfoHeader->unknown04 & MdsMdlInfoHeader::PASS_FLAG_UNKNOWN_15)) {
+                if (!(arg.m_mdsMdlInfoHeader->unknown00 & MdsMdlInfoHeader::FLAG_UNKNOWN_14)) {
+                  if ((arg.m_mdsMdlInfoHeader->unknown00 & MdsMdlInfoHeader::FLAG_UNKNOWN_4) && info->unknown04 != 0 && (arg.m_mdsMdlInfoHeader->unknown04 & MdsMdlInfoHeader::PASS_FLAG_UNKNOWN_0) &&
+                      !(arg.m_mdsMdlInfoHeader->unknown00 & MdsMdlInfoHeader::FLAG_UNKNOWN_17)) {
                     partsInstanceZPrepassBillRender(arg);
                   }
-                } else if (!(arg.unknown00->unknown00 & MdsMdlInfoHeader::FLAG_UNKNOWN_17)) {
+                } else if (!(arg.m_mdsMdlInfoHeader->unknown00 & MdsMdlInfoHeader::FLAG_UNKNOWN_17)) {
                   partsInstanceZPrepassRender(arg);
                 }
               }
@@ -221,33 +221,33 @@ void DrMdoCtlSeamInstMap::createInstThicknessPassDisplayList(bool isFirst) {
     arg.unknown0c = 0x34;
     arg.unknown21 = isFirst;
     for (DrResMdoSeamWrkInst *inst = unknown300.unknown10.unknown00; inst != nullptr; inst = inst->unknown08) {
-      unknown30 = inst->unknown50;
+      unknown30 = inst->m_mdoWrkMatRes;
       if (unknown30 != nullptr && (inst->unknown8a & 0x110) == 0x110) {
         inst->beginMdl();
         while (DrResMdoSeamWrkInst::unknown002 *info = inst->getMdlInfo()) {
           int count = info->unknown00;
           if (count != 0) {
             if (info->unknown0e == 0xffff) {
-              unknown30->unknownc8 = inst->unknown60;
+              unknown30->m_drResMdoVertex = inst->m_drResMdoVertex;
             } else {
-              unknown30->unknownc8 = unknown220.unknown20[unknownbd0[info->unknown0e] - 1u].unknown20;
+              unknown30->m_drResMdoVertex = unknown220.unknown20[unknownbd0[info->unknown0e] - 1u].m_drResMdoVertex;
             }
             arg.unknown20 = false;
             unknown17c = 0xffff;
             unknown17e = 0xffff;
             unknown179 = false;
             unknown178 |= 0x10;
-            unknown30->unknownc8->beginVertexSetup();
-            const MdsMdlTopHeader *top = unknown30->unknown168 + info->unknown0c;
+            unknown30->m_drResMdoVertex->beginVertexSetup();
+            const MdsMdlTopHeader *top = unknown30->m_mdsMdlTopHeader + info->unknown0c;
             int headerCount = top->unknown04;
-            arg.unknown00 = reinterpret_cast<const MdsMdlInfoHeader *>(unknown30->unknown18 + top->unknown00);
+            arg.m_mdsMdlInfoHeader = reinterpret_cast<const MdsMdlInfoHeader *>(unknown30->unknown18 + top->unknown00);
             arg.unknown08 = info->unknown14;
             arg.unknown10 = count;
             arg.unknown14 = 0;
             arg.unknown18 = 0;
-            for (int i = 0; i < headerCount; i++, arg.unknown00++) {
-              if ((unknown30->unknownc0 + arg.unknown00->unknown0e)->unknown08.a > 0.0f && (arg.unknown00->unknown04 & MdsMdlInfoHeader::PASS_FLAG_UNKNOWN_15) &&
-                  (arg.unknown00->unknown00 & MdsMdlInfoHeader::FLAG_UNKNOWN_14) && !(arg.unknown00->unknown00 & MdsMdlInfoHeader::FLAG_UNKNOWN_17)) {
+            for (int i = 0; i < headerCount; i++, arg.m_mdsMdlInfoHeader++) {
+              if ((unknown30->m_materialRes + arg.m_mdsMdlInfoHeader->unknown0e)->unknown08.a > 0.0f && (arg.m_mdsMdlInfoHeader->unknown04 & MdsMdlInfoHeader::PASS_FLAG_UNKNOWN_15) &&
+                  (arg.m_mdsMdlInfoHeader->unknown00 & MdsMdlInfoHeader::FLAG_UNKNOWN_14) && !(arg.m_mdsMdlInfoHeader->unknown00 & MdsMdlInfoHeader::FLAG_UNKNOWN_17)) {
                 partsInstanceThicknessRender(arg);
               }
             }
@@ -262,7 +262,7 @@ void DrMdoCtlSeamInstMap::callShadowMapRenderSeamInstMap(DrPixlShadowObj *shadow
   if (!m_drMan->unknown1d6a) {
     changeSeamMatInfo();
     for (DrResMdoSeamWrkInst *inst = unknown300.unknown10.unknown00; inst != nullptr; inst = inst->unknown08) {
-      unknown30 = inst->unknown50;
+      unknown30 = inst->m_mdoWrkMatRes;
       if (unknown30 != nullptr && (inst->unknown8a & 0x10) != 0) {
         inst->seachDefShadowInstMapRender(shadow, this);
       }
@@ -272,13 +272,13 @@ void DrMdoCtlSeamInstMap::callShadowMapRenderSeamInstMap(DrPixlShadowObj *shadow
 
 void DrMdoCtlSeamInstMap::renderInstShadowCacheRender(DrResMdoSeamWrkInst *inst, const mm::Mat44 &matrix, u32 index, const MdsMdlTopHeader *top) {
   if (index == 0xffff) {
-    unknown30->unknownc8 = inst->unknown60;
+    unknown30->m_drResMdoVertex = inst->m_drResMdoVertex;
   } else {
     // The game loads the halfword, subtracts in 32 bits (sub w9, w9, #1 at 0x7100824310) and zero-extends the result in umaddl (0x7100824318).
     // `unknownbd0[index] - 1` (a signed int) gives 51 instructions against the game's 52; `static_cast<u32>(unknownbd0[index]) - 1` matches too.
-    unknown30->unknownc8 = unknown220.unknown20[unknownbd0[index] - 1u].unknown20;
+    unknown30->m_drResMdoVertex = unknown220.unknown20[unknownbd0[index] - 1u].m_drResMdoVertex;
   }
-  unknown30->unknownc8->beginVertexSetup();
+  unknown30->m_drResMdoVertex->beginVertexSetup();
   grlib::CGLibEtcUniformBlock uniform;
   grlib::ShdMat44TransposeMat44(reinterpret_cast<f32 *>(uniform.getBuff()), matrix);
   uniform.updateData(sizeof(mm::Mat44));
@@ -295,7 +295,7 @@ void DrMdoCtlSeamInstMap::callInstShadowCacheRender(DrPixlShadowCacheObj &cache)
   changeSeamMatInfo();
   bool isRetry = false;
   for (DrResMdoSeamWrkInst *inst = unknown300.unknown10.unknown00; inst != nullptr; inst = inst->unknown08) {
-    unknown30 = inst->unknown50;
+    unknown30 = inst->m_mdoWrkMatRes;
     if (unknown30 != nullptr) {
       if (inst->unknown8a & 0x10) {
         isRetry |= inst->seachShadowInstMapRender(cache, this);
@@ -315,11 +315,11 @@ void DrMdoCtlSeamInstMap::callInstShadowCacheRender(DrPixlShadowCacheObj &cache)
 // (`isAlpha`: the pass flag 1 or 6 selected unknown028_4 or unknown028_5) that picks unknown028_16 (alpha bloom) instead of unknown028_15 (bloom) for the mdl info flag 3.
 void DrMdoCtlSeamInstMap::createInstMapDisplayList() {
   for (DrResMdoSeamWrkInst *inst = unknown300.unknown10.unknown00; inst != nullptr; inst = inst->unknown08) {
-    unknown30 = inst->unknown50;
+    unknown30 = inst->m_mdoWrkMatRes;
     if (unknown30 != nullptr && inst->unknown74 != 0 && (inst->unknown8a & 0x10)) {
       inst->beginMdl();
       while (DrResMdoSeamWrkInst::unknown002 *info = inst->getMdlInfo()) {
-        const MdsMdlTopHeader *top = unknown30->unknown168 + info->unknown0c;
+        const MdsMdlTopHeader *top = unknown30->m_mdsMdlTopHeader + info->unknown0c;
         int count = top->unknown04;
         const MdsMdlInfoHeader *header = reinterpret_cast<const MdsMdlInfoHeader *>(unknown30->unknown18 + top->unknown00);
         for (int i = 0; i < count; i++, header++) {

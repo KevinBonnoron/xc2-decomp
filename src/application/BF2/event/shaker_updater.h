@@ -26,7 +26,7 @@ public:
   void reserve(const mm::Vec3 &pos, const mm::Vec3 &rot);
 
 private:
-  Update unknown00;                     // Inferred role: cmd; original member name unknown.
+  Update m_update;                      // Inferred role: cmd; original member name unknown.
   CmdQueue<CMD_UNKNOWN_8, 0> unknown08; // Inferred role: queue; original member name unknown.
 };
 

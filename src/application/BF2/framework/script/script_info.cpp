@@ -10,7 +10,7 @@
 
 namespace fw {
 
-ScriptInfo::ScriptInfo() : unknown08(nullptr), unknown10(0), unknown21c(-1), unknown220(nullptr), unknown228(STATE_UNKNOWN_0), unknown22c(0), unknown230(nullptr), unknown238(nullptr) {}
+ScriptInfo::ScriptInfo() : unknown08(nullptr), unknown10(0), unknown21c(-1), unknown220(nullptr), unknown228(STATE_UNKNOWN_0), unknown22c(0), unknown230(nullptr), m_scriptManager(nullptr) {}
 
 ScriptInfo::~ScriptInfo() { destroy(); }
 
@@ -29,7 +29,7 @@ void ScriptInfo::initialize(ScriptManager *manager, int type, void *vm, u32 size
   clear();
   this->unknown08 = vm;
   this->unknown10 = size;
-  this->unknown238 = manager;
+  this->m_scriptManager = manager;
   this->unknown21c = type;
 }
 
@@ -102,8 +102,8 @@ void ScriptInfo::waitLoad() {
     if ((unknown22c & FLAG_UNKNOWN_3) == 0 && vmLink(unknown08) != 0) {
       vmStart(unknown08);
       unknown22c |= FLAG_UNKNOWN_3 | FLAG_UNKNOWN_6;
-      if (unknown238 != nullptr) {
-        unknown238->notifyEvent(unknown21c, static_cast<ScriptEventParam::State>(2));
+      if (m_scriptManager != nullptr) {
+        m_scriptManager->notifyEvent(unknown21c, static_cast<ScriptEventParam::State>(2));
       }
     }
 
@@ -118,8 +118,8 @@ void ScriptInfo::update() {
 
   unknown22c &= ~FLAG_UNKNOWN_6;
   unknown228 = STATE_UNKNOWN_3;
-  if (unknown238 != nullptr) {
-    unknown238->notifyEvent(unknown21c, static_cast<ScriptEventParam::State>(STATE_UNKNOWN_3));
+  if (m_scriptManager != nullptr) {
+    m_scriptManager->notifyEvent(unknown21c, static_cast<ScriptEventParam::State>(STATE_UNKNOWN_3));
   }
 }
 

@@ -29,7 +29,10 @@
 #include "fw/fw_camera.h"
 #include "fw/fw_pad.h"
 #include "fw/fw_param_manager.h"
+#include "ml/dev_clock.h"
+#include "ml/dev_file_th.h"
 #include "ml/ml_mem.h"
+#include "ml/rand.h"
 #include "ml/scn.h"
 #include "ml/work_cpu.h"
 #include "ml/work_root.h"
@@ -44,12 +47,45 @@ class IAllocator;
 } // namespace mm
 
 namespace fw {
+enum LangType : u32;
 
 Framework::Framework()
     : m_applet(nullptr), unknown50(nullptr), unknown58(nullptr), unknown60(nullptr), unknown70(nullptr), unknown84(STATE_UNKNOWN_0), unknown88(false), unknown89(false), unknown8a(false),
       unknown8c(1.0f) {}
 
 Framework::~Framework() { destroyManager(); }
+
+void Framework::initialize(const FrameworkConfig &config, const FrameworkEnv &env) {
+  m_frameworkConfig = config;
+  unknown60 = env.unknown10;
+  unknown58 = env.unknown08;
+  unknown50 = env.unknown00;
+  m_ALLOC_HANDLE = env.unknown18;
+  unknown70 = env.unknown20;
+  m_updateInfo.unknown08 = 1.0f;
+  m_updateInfo.unknown00 = 1.0f / m_frameworkConfig.unknown04;
+  m_updateInfo.unknown04 = m_updateInfo.unknown00 * m_updateInfo.unknown08;
+  // The game stores m_updateInfo.unknown08 (+0x80, 0x710017ade8) before the first layer store (+0x98), so the UpdateInfo fields come before the
+  // reset: written after it, the layer stores open the sequence (first difference at +0x64).
+  // unknown98 is a FixedArray (mm::mtl, the type the managers' layer arrays use): the game writes 32 elements of 0x10 bytes from +0x98 to +0x297,
+  // each (1.0f, 1.0f, 1.0f, false, false) as unknown077() builds. The game (0x710017ad84) unrolls the 32 resets fully; a plain index or pointer
+  // loop over the 5 member stores stays rolled (clang's unroll threshold), FixedArray::assign (a copy of the value per element) is unrolled.
+  unknown98.assign(unknown077());
+  long clock;
+  if (ml::DevClock::getClockNow(clock)) {
+    ml::mtInit(clock);
+  }
+  m_memHandlebaseAllocator.setMemHandle(m_ALLOC_HANDLE);
+  createMemorySection();
+  createManager();
+  if (ml::DevFileTh::checkValidFileBlock("bdat/jp.bin")) {
+    LangUtil::setLangType(static_cast<LangType>(config.unknown38));
+    LangUtil::setVoiceType(static_cast<LangType>(0));
+  }
+  BdatManager::loadBdat(0, FrameworkMemory::getMem(5), "common.bdat");
+  BdatManager::loadBdat(1, FrameworkMemory::getMem(5), "common_ms.bdat");
+  unknown84 = STATE_UNKNOWN_1;
+}
 
 void Framework::createMemorySection() {
   MemorySectionInfo info;
@@ -100,8 +136,8 @@ void Framework::createManager() {
   LangUtil::initialize();
   RenderParam::initialize();
 #line 263
-  new (allocator, 16, __FILE__, __LINE__) AssetManager(allocator, unknown10.unknown20);
-  if ((unknown10.unknown00 & 0x20) != 0) {
+  new (allocator, 16, __FILE__, __LINE__) AssetManager(allocator, m_frameworkConfig.unknown20);
+  if ((m_frameworkConfig.unknown00 & 0x20) != 0) {
 #line 268
     new (allocator, 16, __FILE__, __LINE__) CameraManager(unknown58);
   }
@@ -116,16 +152,16 @@ void Framework::createManager() {
 #line 284
   new (allocator, 16, __FILE__, __LINE__) MessageManager(allocator);
 #line 287
-  new (allocator, 16, __FILE__, __LINE__) UpdatableObjectManager(allocator, unknown10.unknown30);
+  new (allocator, 16, __FILE__, __LINE__) UpdatableObjectManager(allocator, m_frameworkConfig.unknown30);
 #line 290
-  new (allocator, 16, __FILE__, __LINE__) ResourceManager(allocator, unknown10.unknown2c);
+  new (allocator, 16, __FILE__, __LINE__) ResourceManager(allocator, m_frameworkConfig.unknown2c);
   ResourceManager::setMemTMP(ml::WorkRoot::getMemTMP());
 #line 296
   new (allocator, 16, __FILE__, __LINE__) PadManager();
 #line 299
   new (allocator, 16, __FILE__, __LINE__) BdatManager(allocator);
 #line 303
-  new (allocator, 16, __FILE__, __LINE__) ScriptManager(allocator, unknown10.unknown34);
+  new (allocator, 16, __FILE__, __LINE__) ScriptManager(allocator, m_frameworkConfig.unknown34);
 #line 306
   new (allocator, 16, __FILE__, __LINE__) ColiManager(allocator, 0x1000);
 #line 309
@@ -137,7 +173,7 @@ void Framework::createManager() {
 #line 322
   new (allocator, 16, __FILE__, __LINE__) SoundManager(allocator);
 #line 327
-  new (allocator, 16, __FILE__, __LINE__) EffectManager(allocator, unknown10.unknown28, unknown58);
+  new (allocator, 16, __FILE__, __LINE__) EffectManager(allocator, m_frameworkConfig.unknown28, unknown58);
 #line 331
   new (allocator, 16, __FILE__, __LINE__) MovieManager();
 #line 334
@@ -152,7 +188,7 @@ void Framework::createManager() {
 
 mm::mtl::IAllocator *Framework::getAllocator() {
   Framework *framework = get();
-  return framework == nullptr ? nullptr : &framework->unknown3a0;
+  return framework == nullptr ? nullptr : &framework->m_memHandlebaseAllocator;
 }
 
 bool Framework::initializeManager() {
@@ -226,28 +262,28 @@ void Framework::deactivate() {
 
 void Framework::beginFrame(const UpdateState &updateState) {
   if (updateState.isPause) {
-    unknown78.unknown00 = 1.0f / unknown10.unknown04;
-    unknown78.unknown08 = 0.0f;
-    unknown78.unknown04 = unknown78.unknown00 * unknown78.unknown08;
+    m_updateInfo.unknown00 = 1.0f / m_frameworkConfig.unknown04;
+    m_updateInfo.unknown08 = 0.0f;
+    m_updateInfo.unknown04 = m_updateInfo.unknown00 * m_updateInfo.unknown08;
     for (u32 i = 0; i < LAYER_UNKNOWN_32; i++) {
       unknown98[i].unknown04 = 0.0f;
     }
   } else {
     f32 speed = unknown8c;
-    if (__builtin_fabsf(speed - unknown78.unknown08) > 0.000001f) {
-      unknown78.unknown08 = speed;
-      unknown78.unknown00 = 1.0f / unknown10.unknown04;
-      unknown78.unknown04 = speed * unknown78.unknown00;
+    if (__builtin_fabsf(speed - m_updateInfo.unknown08) > 0.000001f) {
+      m_updateInfo.unknown08 = speed;
+      m_updateInfo.unknown00 = 1.0f / m_frameworkConfig.unknown04;
+      m_updateInfo.unknown04 = speed * m_updateInfo.unknown00;
     }
     for (u32 i = 0; i < LAYER_UNKNOWN_32; i++) {
       unknown98[i].unknown08 = unknown98[i].unknown00;
-      unknown98[i].unknown04 = unknown98[i].unknown00 * unknown78.unknown08;
+      unknown98[i].unknown04 = unknown98[i].unknown00 * m_updateInfo.unknown08;
       unknown98[i].unknown0d = unknown98[i].unknown0c;
     }
   }
 
   if (isUpdating() && SoundManager::get() != nullptr) {
-    SoundManager::get()->update(unknown78);
+    SoundManager::get()->update(m_updateInfo);
   }
 }
 
@@ -255,7 +291,7 @@ void Framework::endFrame(const UpdateState &updateState) {}
 
 void Framework::preUpdate() {
   if (isUpdating() && m_applet != nullptr) {
-    m_applet->preUpdate(unknown78);
+    m_applet->preUpdate(m_updateInfo);
   }
 }
 
@@ -265,16 +301,16 @@ void Framework::update() {
   }
 
   if (ResourceManager::get() != nullptr) {
-    ResourceManager::get()->update(unknown78);
+    ResourceManager::get()->update(m_updateInfo);
   }
   if (ScriptManager::get() != nullptr) {
-    ScriptManager::get()->update(unknown78);
+    ScriptManager::get()->update(m_updateInfo);
   }
   if (BdatManager::get() != nullptr) {
-    BdatManager::get()->update(unknown78);
+    BdatManager::get()->update(m_updateInfo);
   }
   if (m_applet != nullptr && canUpdate()) {
-    m_applet->update(unknown78);
+    m_applet->update(m_updateInfo);
   }
   if (ColiManager::get() != nullptr) {
     ColiManager::get()->update();
@@ -283,15 +319,15 @@ void Framework::update() {
     NaviManager::get()->update();
   }
   if (WindManager::get() != nullptr) {
-    WindManager::get()->update(unknown78);
+    WindManager::get()->update(m_updateInfo);
   }
 
   for (u32 layer = 0; layer < unknown001; layer++) {
     u32 layerMask = 1 << layer;
     UpdateInfo info;
     info.unknown08 = unknown98[layer].unknown04;
-    info.unknown00 = unknown78.unknown00;
-    info.unknown04 = unknown78.unknown00 * unknown98[layer].unknown04;
+    info.unknown00 = m_updateInfo.unknown00;
+    info.unknown04 = m_updateInfo.unknown00 * unknown98[layer].unknown04;
     if (unknown98[layer].unknown0d) {
       if (AnimationManager::get() != nullptr) {
         AnimationManager::get()->applyPose(layerMask);
@@ -344,8 +380,8 @@ void Framework::update() {
     u32 layerMask = 1 << layer;
     UpdateInfo info;
     info.unknown08 = unknown98[layer].unknown04;
-    info.unknown00 = unknown78.unknown00;
-    info.unknown04 = unknown78.unknown00 * unknown98[layer].unknown04;
+    info.unknown00 = m_updateInfo.unknown00;
+    info.unknown04 = m_updateInfo.unknown00 * unknown98[layer].unknown04;
     if (unknown98[layer].unknown0d) {
       info.unknown08 = 0.0f;
     }
@@ -359,16 +395,16 @@ void Framework::update() {
     UpdatableObjectManager::get()->execEvent(event, (1 << unknown001) - 1);
   }
   if (EffectManager::get() != nullptr) {
-    EffectManager::get()->update(unknown78);
+    EffectManager::get()->update(m_updateInfo);
   }
   if (CameraManager::get() != nullptr) {
-    CameraManager::get()->update(unknown78);
+    CameraManager::get()->update(m_updateInfo);
   }
   if (MovieManager::get() != nullptr) {
     MovieManager::get()->update();
   }
   if (MessageManager::get() != nullptr) {
-    MessageManager::get()->update(unknown78);
+    MessageManager::get()->update(m_updateInfo);
   }
   unknown8a = true;
 }
@@ -390,7 +426,7 @@ void Framework::postUpdate() {
   }
 
   if (m_applet != nullptr) {
-    m_applet->postUpdate(unknown78);
+    m_applet->postUpdate(m_updateInfo);
   }
   if (ColiManager::get() != nullptr) {
     ColiManager::get()->postUpdate();
@@ -404,11 +440,11 @@ void Framework::tail(const UpdateState &updateState) {
   }
 
   if (m_applet != nullptr && canUpdate() && !updateState.isPause) {
-    m_applet->tail(unknown78);
+    m_applet->tail(m_updateInfo);
   }
   UpdatableObjectManager *updatableManager = UpdatableObjectManager::get();
   if (updatableManager != nullptr && !updateState.isPause) {
-    updatableManager->tail(unknown78);
+    updatableManager->tail(m_updateInfo);
   }
   if (ColiManager::get() != nullptr) {
     ColiManager::get()->tail();
@@ -421,7 +457,7 @@ void Framework::tail(const UpdateState &updateState) {
   }
   EffectManager *effectManager = EffectManager::get();
   if (effectManager != nullptr) {
-    effectManager->tail(unknown78, updateState.isPause);
+    effectManager->tail(m_updateInfo, updateState.isPause);
   }
 }
 
@@ -464,8 +500,8 @@ mtl::ALLOC_HANDLE Framework::getMemHandle() {
     return mtl::ALLOC_HANDLE();
   }
 
-  if (framework->unknown68.isValid()) {
-    return framework->unknown68;
+  if (framework->m_ALLOC_HANDLE.isValid()) {
+    return framework->m_ALLOC_HANDLE;
   }
 
   return FrameworkMemory::getMem(5);
@@ -546,7 +582,7 @@ u32 Framework::getFrameCount() { return ml::WorkCpu::getFrameCount(); }
 
 const UpdateInfo *Framework::getUpdateInfo() {
   Framework *framework = get();
-  return framework == nullptr ? nullptr : &framework->unknown78;
+  return framework == nullptr ? nullptr : &framework->m_updateInfo;
 }
 
 void Framework::addPauseCallback(IPauseTrigger *trigger) {

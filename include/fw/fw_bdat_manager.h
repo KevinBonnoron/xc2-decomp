@@ -40,15 +40,15 @@ public:
     // user reloadBdat) copies the strings one by one, the 16 bytes 0x140-0x14f and the 9 bytes 0x158-0x160 as memory blocks, and
     // 0x150 apart (mtl::ALLOC_HANDLE has a user-provided copy constructor): no member covers 0x161-0x167, which is tail padding.
     struct BdatInfo {
-      State unknown00;                // Inferred role: state; original member name unknown.
-      mm::mtl::FixStr<256> unknown04; // Inferred role: file path; original member name unknown.
-      mm::mtl::FixStr<32> unknown108; // Inferred role: name; original member name unknown.
-      mm::mtl::FixStr<16> unknown12c; // Inferred role: language folder; original member name unknown.
-      u32 unknown140;                 // Inferred role: CRC of the name; original member name unknown.
-      void *unknown148;               // Inferred role: data; original member name unknown.
-      mtl::ALLOC_HANDLE unknown150;   // Inferred role: allocator handle, a copy of the handle passed to loadBdat; original member name unknown.
-      ml::FileResTh *unknown158;      // Inferred role: loading data; original member name unknown.
-      bool unknown160;                // Inferred role: data given by the caller; original member name unknown.
+      State unknown00;                  // Inferred role: state; original member name unknown.
+      mm::mtl::FixStr<256> unknown04;   // Inferred role: file path; original member name unknown.
+      mm::mtl::FixStr<32> unknown108;   // Inferred role: name; original member name unknown.
+      mm::mtl::FixStr<16> unknown12c;   // Inferred role: language folder; original member name unknown.
+      u32 unknown140;                   // Inferred role: CRC of the name; original member name unknown.
+      void *unknown148;                 // Inferred role: data; original member name unknown.
+      mtl::ALLOC_HANDLE m_ALLOC_HANDLE; // Inferred role: allocator handle, a copy of the handle passed to loadBdat; original member name unknown.
+      ml::FileResTh *unknown158;        // Inferred role: loading data; original member name unknown.
+      bool unknown160;                  // Inferred role: data given by the caller; original member name unknown.
     };
 
     // Sheet registered by updateLayer (0x7100153684) under the CRC of its name, and read back by getFp
@@ -97,7 +97,7 @@ public:
     mm::mtl::FixStr<256> unknown08; // Inferred role: base path; original member name unknown.
     u8 _10c[0x110 - 0x10c];
     mm::mtl::Map<u32, SheetFpInfo> unknown110; // Inferred role: sheets by name CRC; original member name unknown.
-    BdatInfo unknown128[BDAT_UNKNOWN_16];      // Inferred role: infos; original member name unknown.
+    BdatInfo m_bdatInfo[BDAT_UNKNOWN_16];      // Inferred role: infos; original member name unknown.
   };
 
   explicit BdatManager(mm::mtl::IAllocator *allocator);
@@ -118,7 +118,7 @@ public:
   static unsigned char *getFp(const char *name);
   static unsigned char *getFp(int table, int id);
 
-  Impl *unknown18;                // Inferred role: impl; original member name unknown.
+  Impl *m_impl;                   // Inferred role: impl; original member name unknown.
   mm::mtl::IAllocator *unknown20; // Inferred role: allocator; original member name unknown.
 };
 
@@ -128,16 +128,16 @@ static_assert(offsetof(BdatManager::Impl::SheetFpInfo, unknown70) == 0x70, "");
 static_assert(sizeof(BdatManager::Impl::SheetFpInfo) == 0x78, "");
 static_assert(offsetof(BdatManager::Impl, unknown08) == 0x08, "");
 static_assert(offsetof(BdatManager::Impl, unknown110) == 0x110, "");
-static_assert(offsetof(BdatManager::Impl, unknown128) == 0x128, "");
+static_assert(offsetof(BdatManager::Impl, m_bdatInfo) == 0x128, "");
 static_assert(offsetof(BdatManager::Impl::BdatInfo, unknown04) == 0x04, "");
 static_assert(offsetof(BdatManager::Impl::BdatInfo, unknown108) == 0x108, "");
 static_assert(offsetof(BdatManager::Impl::BdatInfo, unknown12c) == 0x12c, "");
 static_assert(offsetof(BdatManager::Impl::BdatInfo, unknown140) == 0x140, "");
 static_assert(offsetof(BdatManager::Impl::BdatInfo, unknown148) == 0x148, "");
-static_assert(offsetof(BdatManager::Impl::BdatInfo, unknown150) == 0x150, "");
+static_assert(offsetof(BdatManager::Impl::BdatInfo, m_ALLOC_HANDLE) == 0x150, "");
 static_assert(offsetof(BdatManager::Impl::BdatInfo, unknown158) == 0x158, "");
 static_assert(offsetof(BdatManager::Impl::BdatInfo, unknown160) == 0x160, "");
 static_assert(sizeof(BdatManager::Impl::BdatInfo) == 0x168, "");
-static_assert(offsetof(BdatManager, unknown18) == 0x18, "");
+static_assert(offsetof(BdatManager, m_impl) == 0x18, "");
 
 } // namespace fw

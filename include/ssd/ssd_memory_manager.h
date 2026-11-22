@@ -27,25 +27,25 @@ public:
 
   static MemoryManager memoryManager_;
 
-  Mutex unknown08;           // Inferred role: block lists mutex; original member name unknown.
+  Mutex m_mutex;             // Inferred role: block lists mutex; original member name unknown.
   bool unknown30;            // Inferred role: initialized; original member name unknown.
   List<BlockNode> unknown38; // Inferred role: used blocks; original member name unknown.
   List<BlockNode> unknown60; // Inferred role: free blocks; original member name unknown.
-  BlockNode *unknown88;      // Inferred role: block pool; original member name unknown.
+  BlockNode *m_blockNode;    // Inferred role: block pool; original member name unknown.
   int unknown90;             // Inferred role: block pool size; original member name unknown.
-  int unknown94;             // Inferred role: instance alloc count; original member name unknown.
-  int unknown98;             // Inferred role: buffer alloc count; original member name unknown.
-  int unknown9c;             // Inferred role: stream alloc count; original member name unknown.
+  int m_instanceAllocCount;  // Inferred role: instance alloc count; named after the game accessor ssd::SoundCore::GetInstanceAllocCount.
+  int m_bufferAllocCount;    // Inferred role: buffer alloc count; named after the game accessor ssd::SoundCore::GetBufferAllocCount.
+  int m_streamAllocCount;    // Inferred role: stream alloc count; named after the game accessor ssd::SoundCore::GetStreamAllocCount.
   bool unknowna0;            // Inferred role: free blocks exhausted; original member name unknown.
 };
 
-static_assert(offsetof(MemoryManager, unknown08) == 0x8, "");
+static_assert(offsetof(MemoryManager, m_mutex) == 0x8, "");
 static_assert(offsetof(MemoryManager, unknown30) == 0x30, "");
 static_assert(offsetof(MemoryManager, unknown38) == 0x38, "");
 static_assert(offsetof(MemoryManager, unknown60) == 0x60, "");
-static_assert(offsetof(MemoryManager, unknown88) == 0x88, "");
-static_assert(offsetof(MemoryManager, unknown94) == 0x94, "");
-static_assert(offsetof(MemoryManager, unknown9c) == 0x9c, "");
+static_assert(offsetof(MemoryManager, m_blockNode) == 0x88, "");
+static_assert(offsetof(MemoryManager, m_instanceAllocCount) == 0x94, "");
+static_assert(offsetof(MemoryManager, m_streamAllocCount) == 0x9c, "");
 static_assert(offsetof(MemoryManager, unknowna0) == 0xa0, "");
 
 } // namespace ssd

@@ -52,24 +52,24 @@ bool GfMenuObjMainMenu2::s_cancelEnable;
 static u32 unknown006;
 
 GfMenuObjMainMenu2::GfMenuObjMainMenu2(u32 handle)
-    : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(0), unknown3c(-1), unknown40(-1), unknown44(0), unknown48(nullptr), unknown50(nullptr), unknown58(nullptr), unknown88(0),
-      unknown8c(false), unknown90(this), unknown320(false) {
-  unknown48 = GfMenuDriverList::create();
-  unknown50 = GfMenuBladeList::create();
+    : GfMenuObject(handle), unknown28(nullptr), m_menuCallContext(nullptr), unknown38(0), unknown3c(-1), unknown40(-1), unknown44(0), m_menuDriverList(nullptr), m_menuBladeList(nullptr),
+      m_selectionChecker(nullptr), unknown88(0), unknown8c(false), unknown90(this), unknown320(false) {
+  m_menuDriverList = GfMenuDriverList::create();
+  m_menuBladeList = GfMenuBladeList::create();
   // __LINE__ must be 186 as in the original source: it is the line argument of operator new.
 #line 186
-  unknown58 = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) SelectionChecker();
+  m_selectionChecker = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) SelectionChecker();
   s_openMenuID = 0;
 }
 
 GfMenuObjMainMenu2::~GfMenuObjMainMenu2() {
-  mm::mtl::safeRelease(unknown50);
-  mm::mtl::safeRelease(unknown48);
+  mm::mtl::safeRelease(m_menuBladeList);
+  mm::mtl::safeRelease(m_menuDriverList);
   mm::mtl::safeRelease(unknown28);
-  mm::mtl::safeRelease(unknown30);
-  if (unknown58 != nullptr) {
-    delete unknown58;
-    unknown58 = nullptr;
+  mm::mtl::safeRelease(m_menuCallContext);
+  if (m_selectionChecker != nullptr) {
+    delete m_selectionChecker;
+    m_selectionChecker = nullptr;
   }
   s_openMenuID = 0;
 }
@@ -128,7 +128,7 @@ void GfMenuObjMainMenu2::initialize() {
   if (changeListener != nullptr) {
     changeListener->release();
   }
-  unknown30 = GfMenuCallContext::create();
+  m_menuCallContext = GfMenuCallContext::create();
   acc.setDispChild(GfMenuManager::isClearCheck(), "IMG_clear_mark");
   GfMenuObject::initialize();
 }
@@ -487,14 +487,14 @@ void GfMenuObjMainMenu2::inputChrChangeSub(ui::UIObjectAcc &acc, ChrChangeParam 
     if (index == -1) {
       return;
     }
-    param.unknown18->setIndex(index);
-    refreshCharChangeDr(acc, param.unknown18);
-    if (GfMenuReference::getReferenceDriverID(0) == param.unknown18->getContents(param.unknown18->getIndex(false)).unknown00) {
+    param.m_menuDriverList->setIndex(index);
+    refreshCharChangeDr(acc, param.m_menuDriverList);
+    if (GfMenuReference::getReferenceDriverID(0) == param.m_menuDriverList->getContents(param.m_menuDriverList->getIndex(false)).unknown00) {
       return;
     }
     {
       u32 handle = param.unknown10;
-      u32 selected = param.unknown18->getContents(param.unknown18->getIndex(false)).unknown00;
+      u32 selected = param.m_menuDriverList->getContents(param.m_menuDriverList->getIndex(false)).unknown00;
       if (handle != 0) {
         unknown163(handle, 0x140, selected);
       }
@@ -505,14 +505,14 @@ void GfMenuObjMainMenu2::inputChrChangeSub(ui::UIObjectAcc &acc, ChrChangeParam 
     if (index == -1) {
       return;
     }
-    param.unknown20->setIndex(index);
-    refreshCharChangeBl(acc, param.unknown20);
-    if (GfMenuReference::getReferenceBladeID(0) == param.unknown20->getContents(param.unknown20->getIndex(false)).unknown00) {
+    param.m_menuBladeList->setIndex(index);
+    refreshCharChangeBl(acc, param.m_menuBladeList);
+    if (GfMenuReference::getReferenceBladeID(0) == param.m_menuBladeList->getContents(param.m_menuBladeList->getIndex(false)).unknown00) {
       return;
     }
     {
       u32 handle = param.unknown10;
-      u32 selected = param.unknown20->getContents(param.unknown20->getIndex(false)).unknown00;
+      u32 selected = param.m_menuBladeList->getContents(param.m_menuBladeList->getIndex(false)).unknown00;
       if (handle != 0) {
         unknown163(handle, 0x140, selected);
       }
@@ -546,7 +546,7 @@ void GfMenuObjMainMenu2::update() {
 }
 
 void GfMenuObjMainMenu2::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
-  ui::UIObjectAcc root(unknown20->unknown18);
+  ui::UIObjectAcc root(m_menuObjMainMenu2->unknown18);
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case GfMenuTypes::unknown003_259: {
@@ -561,10 +561,10 @@ void GfMenuObjMainMenu2::MainListener::reciveEvent(const ui::EventData &event, u
       param.unknown00 = 0.33f;
       GfMenuObjUtil::startCtrl(acc.unknown10, param, "LAY_contents_bg_sep");
     }
-    if (unknown20->unknown28 != nullptr) {
+    if (m_menuObjMainMenu2->unknown28 != nullptr) {
       mm::mtl::FixStr<32> name;
-      unknown20->unknown28->setDisp(enable == 1);
-      u32 item = unknown20->unknown28->unknown58->getIndex(false) + 1;
+      m_menuObjMainMenu2->unknown28->setDisp(enable == 1);
+      u32 item = m_menuObjMainMenu2->unknown28->unknown58->getIndex(false) + 1;
       name.format("TXT_contents_item@%02d", item);
       {
         ui::UIObjectAcc text(acc.unknown10, name.c_str());
@@ -587,7 +587,7 @@ void GfMenuObjMainMenu2::MainListener::reciveEvent(const ui::EventData &event, u
         }
       }
       for (int i = 0; i < 7; i++) {
-        if (unknown20->unknown3c != i) {
+        if (m_menuObjMainMenu2->unknown3c != i) {
           name.format("TXT_contents_item@%02d", i + 1);
           ui::UIObjectAcc text(acc.unknown10, name.c_str());
           text.setDisp(enable == 1);
@@ -609,10 +609,10 @@ void GfMenuObjMainMenu2::MainListener::reciveEvent(const ui::EventData &event, u
     setDispGold(true);
     {
       u8 *order = GfDataBdat::getFP(BDAT_MNU_MAIN_ORDER);
-      GfMenuObjOperationInfo::setGuideText(Bdat::getVal(order, "guide", unknown20->unknown60[unknown20->unknown3c]).valueU16, 0);
+      GfMenuObjOperationInfo::setGuideText(Bdat::getVal(order, "guide", m_menuObjMainMenu2->unknown60[m_menuObjMainMenu2->unknown3c]).valueU16, 0);
     }
-    unknown20->unknown44 = 0;
-    if (unknown20->unknown8c) {
+    m_menuObjMainMenu2->unknown44 = 0;
+    if (m_menuObjMainMenu2->unknown8c) {
       setCloseKeyEnable(true);
     }
     break;
@@ -628,8 +628,8 @@ void GfMenuObjMainMenu2::MainListener::reciveEvent(const ui::EventData &event, u
     }
     break;
   case 0x108:
-    if (!unknown20->unknown8c) {
-      unknown20->unknown44 = event.unknown08;
+    if (!m_menuObjMainMenu2->unknown8c) {
+      m_menuObjMainMenu2->unknown44 = event.unknown08;
     }
     break;
   case 0x10a: {
@@ -661,12 +661,12 @@ void GfMenuObjMainMenu2::MainListener::reciveEvent(const ui::EventData &event, u
     }
     break;
   case 0x10e:
-    unknown20->unknown320 = true;
+    m_menuObjMainMenu2->unknown320 = true;
     break;
   case 2:
-    unknown20->unknown90.unknown005();
-    unknown20->unknown90.unknown004(0x10);
-    unknown20->unknown90.unknown002(&GfMenuObjMainMenu2::seqExecTerm);
+    m_menuObjMainMenu2->unknown90.unknown005();
+    m_menuObjMainMenu2->unknown90.unknown004(0x10);
+    m_menuObjMainMenu2->unknown90.unknown002(&GfMenuObjMainMenu2::seqExecTerm);
     break;
   case 3:
     if (event.unknown08 == 2) {
@@ -746,7 +746,7 @@ void GfMenuObjMainMenu2::IndexListener::reciveEvent(const ui::EventData &event, 
   case GfMenuTypes::unknown003_257: {
     int index = event.unknown08;
     u8 *order = GfDataBdat::getFP(BDAT_MNU_MAIN_ORDER);
-    int entry = unknown20->unknown60[index];
+    int entry = m_menuObjMainMenu2->unknown60[index];
     u32 subTitle = Bdat::getVal(order, "subTitle", entry).valueU16;
     if (handle != 0) {
       unknown163(handle, GfMenuTypes::unknown003_258, subTitle);
@@ -763,7 +763,7 @@ void GfMenuObjMainMenu2::IndexListener::reciveEvent(const ui::EventData &event, 
 }
 
 void GfMenuObjMainMenu2::CloseListener::reciveEvent(const ui::EventData &event, u32 handle) {
-  ui::UIObjectAcc root(unknown20->unknown18);
+  ui::UIObjectAcc root(m_menuObjMainMenu2->unknown18);
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1:
@@ -773,7 +773,7 @@ void GfMenuObjMainMenu2::CloseListener::reciveEvent(const ui::EventData &event, 
   case 8:
     if (event.unknown0c == 2) {
       if (s_cancelEnable && !GfMenuManager::isSwitchingFullScreen()) {
-        if (unknown20->unknown44 != 0) {
+        if (m_menuObjMainMenu2->unknown44 != 0) {
           GfMenuObject::returnFSSubLayer(handle, 1);
           openMainMenu();
           GfMenuObjUtil::playSECommonCancel();
@@ -813,12 +813,12 @@ void GfMenuObjMainMenu2::CloseListener::reciveEvent(const ui::EventData &event, 
 }
 
 void GfMenuObjMainMenu2::ChrChangeListener::reciveEvent(const ui::EventData &event, u32 handle) {
-  ui::UIObjectAcc root(unknown20->unknown18);
+  ui::UIObjectAcc root(m_menuObjMainMenu2->unknown18);
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1: {
-    initChrChangeDr(root, unknown20->unknown48);
-    initChrChangeBl(root, unknown20->unknown50);
+    initChrChangeDr(root, m_menuObjMainMenu2->m_menuDriverList);
+    initChrChangeBl(root, m_menuObjMainMenu2->m_menuBladeList);
     acc.setDisp(false);
     GfMenuObject::disableInput(acc.unknown10);
     unknown0c = 0;
@@ -832,12 +832,12 @@ void GfMenuObjMainMenu2::ChrChangeListener::reciveEvent(const ui::EventData &eve
     case 1:
       if (unknown10.unknown00 == 1 || unknown10.unknown00 == 2) {
         GfMenuObject::resetInputSelection(acc.unknown10);
-        GfMenuObject::setupInputSelectionFromList(acc.unknown10, *unknown20->unknown50);
+        GfMenuObject::setupInputSelectionFromList(acc.unknown10, *m_menuObjMainMenu2->m_menuBladeList);
       } else if (unknown10.unknown00 == 0) {
         GfMenuObject::resetInputSelection(acc.unknown10);
-        GfMenuObject::setupInputSelectionFromList(acc.unknown10, *unknown20->unknown48);
+        GfMenuObject::setupInputSelectionFromList(acc.unknown10, *m_menuObjMainMenu2->m_menuDriverList);
       }
-      if (unknown20->unknown88 == 0) {
+      if (m_menuObjMainMenu2->unknown88 == 0) {
         GfMenuObject::disableInput(acc.unknown10);
       } else {
         GfMenuObject::enableInput(acc.unknown10);
@@ -862,9 +862,9 @@ void GfMenuObjMainMenu2::ChrChangeListener::reciveEvent(const ui::EventData &eve
     int previous = event.unknown0c;
     ChrChangeParam param;
     param.unknown00 = unknown10.unknown00;
-    param.unknown10 = unknown20->unknown88;
-    param.unknown18 = unknown20->unknown48;
-    param.unknown20 = unknown20->unknown50;
+    param.unknown10 = m_menuObjMainMenu2->unknown88;
+    param.m_menuDriverList = m_menuObjMainMenu2->m_menuDriverList;
+    param.m_menuBladeList = m_menuObjMainMenu2->m_menuBladeList;
     inputChrChangeSub(acc, param, next);
     if (previous != -1 && next != previous) {
       GfMenuObjUtil::playSECommonTab();
@@ -874,7 +874,7 @@ void GfMenuObjMainMenu2::ChrChangeListener::reciveEvent(const ui::EventData &eve
   case GfMenuTypes::unknown003_33: {
     u32 type = event.unknown08;
     u32 flag = event.unknown10;
-    unknown20->unknown88 = event.unknown0c;
+    m_menuObjMainMenu2->unknown88 = event.unknown0c;
     ChrChangeParam param;
     if (type == 3) {
       type = 0;
@@ -884,9 +884,9 @@ void GfMenuObjMainMenu2::ChrChangeListener::reciveEvent(const ui::EventData &eve
     param.unknown04 = flag == 1;
     param.unknown08 = unknown10.unknown00;
     param.unknown0c = unknown0c == 1;
-    param.unknown10 = unknown20->unknown88;
-    param.unknown18 = unknown20->unknown48;
-    param.unknown20 = unknown20->unknown50;
+    param.unknown10 = m_menuObjMainMenu2->unknown88;
+    param.m_menuDriverList = m_menuObjMainMenu2->m_menuDriverList;
+    param.m_menuBladeList = m_menuObjMainMenu2->m_menuBladeList;
     param.unknown28 = GfMenuReference::getReferenceDriverID(0);
     param.unknown30 = unknown10.unknown04;
     u32 value = 0;
@@ -905,13 +905,13 @@ void GfMenuObjMainMenu2::ChrChangeListener::reciveEvent(const ui::EventData &eve
     break;
   }
   case 0x109:
-    unknown20->unknown88 = 0;
+    m_menuObjMainMenu2->unknown88 = 0;
     break;
   case 0x10c: {
     ChrChangeParam param;
     param.unknown00 = unknown10.unknown00;
-    param.unknown18 = unknown20->unknown48;
-    param.unknown20 = unknown20->unknown50;
+    param.m_menuDriverList = m_menuObjMainMenu2->m_menuDriverList;
+    param.m_menuBladeList = m_menuObjMainMenu2->m_menuBladeList;
     openChrChange2Sub(acc, param);
     break;
   }

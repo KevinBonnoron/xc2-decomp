@@ -20,20 +20,20 @@ class GfMenuObjBlCustomTop : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjBlCustomTop *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjBlCustomTop *owner) : _0c(), m_menuObjBlCustomTop(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjBlCustomTop *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBlCustomTop *m_menuObjBlCustomTop; // Inferred role: owner; original member name unknown.
   };
 
   class DrSelectListener : public ui::UIObjectListener {
   public:
-    DrSelectListener(GfMenuObjBlCustomTop *owner) : _0c(), unknown20(owner) {}
+    DrSelectListener(GfMenuObjBlCustomTop *owner) : _0c(), m_menuObjBlCustomTop(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjBlCustomTop *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBlCustomTop *m_menuObjBlCustomTop; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjBlCustomTop(u32 handle);
@@ -60,7 +60,7 @@ public:
   bool seqEndAddLayer();
 
   u8 _24[0x28 - 0x24];
-  GfMenuBladeList *unknown28;                        // Inferred role: blades; original member name unknown.
+  GfMenuBladeList *m_menuBladeList;                  // Inferred role: blades; original member name unknown.
   ui::UISelectObjList *unknown30;                    // Inferred role: blade objects; original member name unknown.
   ui::UICtrlRevolveSelect *unknown38;                // Inferred role: blade ring control; original member name unknown.
   GfMenuCallContext *unknown40;                      // Inferred role: common jog call context; original member name unknown.
@@ -71,7 +71,7 @@ public:
   u16 unknown2ec;                                    // Inferred role: layer to add; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuObjBlCustomTop, unknown28) == 0x28, "");
+static_assert(offsetof(GfMenuObjBlCustomTop, m_menuBladeList) == 0x28, "");
 static_assert(offsetof(GfMenuObjBlCustomTop, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjBlCustomTop, unknown38) == 0x38, "");
 static_assert(offsetof(GfMenuObjBlCustomTop, unknown40) == 0x40, "");
@@ -81,9 +81,9 @@ static_assert(offsetof(GfMenuObjBlCustomTop, unknown58) == 0x58, "");
 static_assert(offsetof(GfMenuObjBlCustomTop, unknown2e8) == 0x2e8, "");
 static_assert(offsetof(GfMenuObjBlCustomTop, unknown2ec) == 0x2ec, "");
 
-static_assert(offsetof(GfMenuObjBlCustomTop::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjBlCustomTop::MainListener, m_menuObjBlCustomTop) == 0x20, "");
 static_assert(sizeof(GfMenuObjBlCustomTop::MainListener) == 0x28, "");
-static_assert(offsetof(GfMenuObjBlCustomTop::DrSelectListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjBlCustomTop::DrSelectListener, m_menuObjBlCustomTop) == 0x20, "");
 static_assert(sizeof(GfMenuObjBlCustomTop::DrSelectListener) == 0x28, "");
 
 } // namespace gf

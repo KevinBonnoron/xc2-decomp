@@ -161,12 +161,12 @@ public:
   // at 0x4e true. The name comes from the mangled symbol of effectStart.
   struct EffectSetUp {
     EffectSetUp()
-        : unknown00(mm::Vec3::zero), unknown10(mm::Vec3::zero), unknown20(nullptr), unknown28(nullptr), unknown30(nullptr), unknown38(1.0f), unknown3c(-1.0f), unknown40(1.0f), unknown44(0),
-          unknown46(0), unknown48(0), unknown49(0), unknown4a(0), unknown4b(0), unknown4c(0), unknown4d(0), unknown4e(true), unknown4f(0) {}
+        : unknown00(mm::Vec3::zero), unknown10(mm::Vec3::zero), m_obj(nullptr), unknown28(nullptr), unknown30(nullptr), unknown38(1.0f), unknown3c(-1.0f), unknown40(1.0f), unknown44(0), unknown46(0),
+          unknown48(0), unknown49(0), unknown4a(0), unknown4b(0), unknown4c(0), unknown4d(0), unknown4e(true), unknown4f(0) {}
 
     mm::Vec3 unknown00;              // Inferred role: offset; original member name unknown.
     mm::Vec3 unknown10;              // Inferred role: second vector; original member name unknown.
-    GfObj *unknown20;                // Inferred role: target object; original member name unknown.
+    GfObj *m_obj;                    // Inferred role: target object; original member name unknown.
     const char *unknown28;           // Inferred role: effect name; original member name unknown.
     fw::EffectCasterBase *unknown30; // Inferred role: effect caster; original member name unknown.
     f32 unknown38;                   // Inferred role: scale; original member name unknown.
@@ -296,8 +296,8 @@ public:
   fw::EffectResData *unknown30;                   // Inferred role: effect annotations of the weapon effect pack; original member name unknown.
   fw::EffectPack *unknown38;                      // Inferred role: effect pack; original member name unknown.
   mm::mtl::FixedVector<unknown001, 52> unknown40; // Inferred role: weapon effect packs; original member name unknown.
-  EffectCaster *unknown388;                       // Inferred role: effect caster; original member name unknown.
-  fw::EffectPoint *unknown390;                    // Inferred role: effect point; original member name unknown.
+  EffectCaster *m_effectCaster;                   // Inferred role: effect caster; original member name unknown.
+  fw::EffectPoint *m_effectPoint;                 // Inferred role: effect point; named after the game accessor gf::GfComEffectCaster::getEffectPoint.
   u8 _398[0x3a0 - 0x398];
   mm::mtl::FixedVector<Param, 256> unknown3a0;             // Inferred role: caster params; original member name unknown.
   mm::mtl::FixedVector<EventEfHandleTbl, 256> unknownc3b0; // Inferred role: mount effects; original member name unknown.
@@ -322,8 +322,8 @@ static_assert(offsetof(GfComEffectCaster, unknown20) == 0x20, "");
 static_assert(offsetof(GfComEffectCaster, unknown24) == 0x24, "");
 static_assert(offsetof(GfComEffectCaster, unknown28) == 0x28, "");
 static_assert(offsetof(GfComEffectCaster, unknown40) == 0x40, "");
-static_assert(offsetof(GfComEffectCaster, unknown388) == 0x388, "");
-static_assert(offsetof(GfComEffectCaster, unknown390) == 0x390, "");
+static_assert(offsetof(GfComEffectCaster, m_effectCaster) == 0x388, "");
+static_assert(offsetof(GfComEffectCaster, m_effectPoint) == 0x390, "");
 static_assert(offsetof(GfComEffectCaster, unknown3a0) == 0x3a0, "");
 static_assert(offsetof(GfComEffectCaster, unknownc3b0) == 0xc3b0, "");
 static_assert(offsetof(GfComEffectCaster, unknown113d0) == 0x113d0, "");
@@ -367,7 +367,7 @@ static_assert(offsetof(GfComEffectCaster::EventEfHandleTbl, unknown40) == 0x40, 
 static_assert(offsetof(GfComEffectCaster::EventEfHandleTbl, unknown42) == 0x42, "");
 static_assert(sizeof(GfComEffectCaster::EventEfHandleTbl) == 0x50, "");
 static_assert(offsetof(GfComEffectCaster::EffectSetUp, unknown10) == 0x10, "");
-static_assert(offsetof(GfComEffectCaster::EffectSetUp, unknown20) == 0x20, "");
+static_assert(offsetof(GfComEffectCaster::EffectSetUp, m_obj) == 0x20, "");
 static_assert(offsetof(GfComEffectCaster::EffectSetUp, unknown28) == 0x28, "");
 static_assert(offsetof(GfComEffectCaster::EffectSetUp, unknown30) == 0x30, "");
 static_assert(offsetof(GfComEffectCaster::EffectSetUp, unknown38) == 0x38, "");

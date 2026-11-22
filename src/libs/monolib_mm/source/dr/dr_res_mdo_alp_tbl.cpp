@@ -71,7 +71,7 @@ void DrResMdoAlpTbl::update(f32 alpha, const DrResMdoLodObj *lodObj, const DrRes
   const unknown003 *entry = unknown40;
   if (meshObj != nullptr) {
     for (u32 i = 0; i < unknown48; i++, entry++) {
-      const DrResMdoLodParts *lodParts = &lodObj->unknown00[entry->unknown02];
+      const DrResMdoLodParts *lodParts = &lodObj->m_drResMdoLodParts[entry->unknown02];
       f32 lodAlpha = lodParts->unknown10;
       if (lodParts->unknown14 & 0x10) {
         unknown38[i >> 5] |= 1 << (i & 0x1f);
@@ -88,7 +88,7 @@ void DrResMdoAlpTbl::update(f32 alpha, const DrResMdoLodObj *lodObj, const DrRes
     }
   } else {
     for (u32 i = 0; i < unknown48; i++, entry++) {
-      const DrResMdoLodParts *lodParts = &lodObj->unknown00[entry->unknown02];
+      const DrResMdoLodParts *lodParts = &lodObj->m_drResMdoLodParts[entry->unknown02];
       f32 lodAlpha = lodParts->unknown10;
       if (lodParts->unknown14 & 0x10) {
         unknown38[i >> 5] |= 1 << (i & 0x1f);

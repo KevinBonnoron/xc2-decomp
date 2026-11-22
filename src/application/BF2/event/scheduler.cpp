@@ -19,7 +19,7 @@
 namespace event {
 
 Scheduler::Scheduler(gf::GF_OBJ_HANDLE *handle, u32 type)
-    : unknown08(0), unknown0c(0), unknown10(handle), unknown18(gf::GfObjAcc(handle).getBdatId()), unknown1c(type), unknown20(0), unknown28(handle) {
+    : unknown08(0), unknown0c(0), unknown10(handle), unknown18(gf::GfObjAcc(handle).getBdatId()), unknown1c(type), unknown20(0), m_scheduleItem(handle) {
   unknown50[ORDER_UNKNOWN_0] = &Scheduler::func_stanby;
   unknown50[ORDER_UNKNOWN_1] = &Scheduler::func_stanby;
   unknown50[ORDER_UNKNOWN_2] = &Scheduler::func_stanby;
@@ -39,7 +39,7 @@ void Scheduler::setup() {
     switch (unknown1c) {
     case 0:
       unknown0c |= USE_UNKNOWN_2 | USE_UNKNOWN_3 | USE_UNKNOWN_4 | USE_UNKNOWN_5;
-      if (unknown28.hasItem()) {
+      if (m_scheduleItem.hasItem()) {
         unknown0c |= USE_UNKNOWN_6 | USE_UNKNOWN_7;
       }
       break;
@@ -55,14 +55,14 @@ void Scheduler::setup() {
 }
 
 Scheduler::Scheduler(const Scheduler *scheduler, u32 type)
-    : unknown08(0), unknown0c(scheduler->unknown0c), unknown10(scheduler->unknown10), unknown18(scheduler->unknown18), unknown1c(type), unknown20(0), unknown28(scheduler->unknown10) {
+    : unknown08(0), unknown0c(scheduler->unknown0c), unknown10(scheduler->unknown10), unknown18(scheduler->unknown18), unknown1c(type), unknown20(0), m_scheduleItem(scheduler->unknown10) {
   unknown50[ORDER_UNKNOWN_0] = &Scheduler::func_stanby;
   unknown50[ORDER_UNKNOWN_1] = &Scheduler::func_stanby;
   unknown50[ORDER_UNKNOWN_2] = &Scheduler::func_stanby;
   setup();
 }
 
-Scheduler::~Scheduler() { unknown28.clear(); }
+Scheduler::~Scheduler() { m_scheduleItem.clear(); }
 
 void Scheduler::play(ORDER order) {
   if (gf::GfObjUtil::getObj(unknown10) == nullptr) {
@@ -93,7 +93,7 @@ void Scheduler::play(ORDER order) {
 
 void Scheduler::func_fld2evt(gf::GfObj *obj) {
   if ((unknown0c & USE_UNKNOWN_6) != 0) {
-    unknown28.fadeout();
+    m_scheduleItem.fadeout();
   }
   unknown50[ORDER_UNKNOWN_0] = obj->unknown28 == gf::OBJECT_TYPE_PC ? nullptr : &Scheduler::func_motionEnd;
 }
@@ -130,7 +130,7 @@ void Scheduler::func_turn(gf::GfObj *obj) {
     gf::GfObj *leader = gf::GfGameParty::getLeaderTransformObj();
     gf::GfGameUtil::ExecTurnCmdInfo info;
     f32 rotY = getRotY(obj, leader);
-    info.unknown00 = unknown10;
+    info.m_GF_OBJ_HANDLE = unknown10;
     info.unknown08 = rotY;
     info.unknown0c = 1.0f;
     info.unknown10 = 0.7853982f;
@@ -197,13 +197,13 @@ void Scheduler::func_motion_loop(gf::GfObj *obj) {
 
 void Scheduler::func_item(gf::GfObj *obj) {
   if ((unknown0c & USE_UNKNOWN_7) != 0) {
-    unknown28.fadein();
+    m_scheduleItem.fadein();
   }
   unknown50[ORDER_UNKNOWN_2] = &Scheduler::func_item_loop;
 }
 
 void Scheduler::func_item_loop(gf::GfObj *obj) {
-  if ((unknown0c & USE_UNKNOWN_7) == 0 || !unknown28.isFading()) {
+  if ((unknown0c & USE_UNKNOWN_7) == 0 || !m_scheduleItem.isFading()) {
     unknown50[ORDER_UNKNOWN_2] = nullptr;
   }
 }

@@ -198,12 +198,12 @@ void GfMenuObjBladeKizunaRing::MainListener::reciveEvent(const ui::EventData &ev
     break;
   case 3:
     if (event.unknown08 == 1) {
-      if (getAchievementList(unknown20->unknown58) == 0) {
+      if (getAchievementList(m_menuObjBladeKizunaRing->unknown58) == 0) {
         unknown163(acc.searchChild("LAY_ring"), GfMenuTypes::unknown003_33, 0);
       } else {
-        unknown20->unknown4c = 1;
-        unknown20->unknown190.unknown005();
-        unknown20->unknown190.unknown002(&GfMenuObjBladeKizunaRing::seqComplete);
+        m_menuObjBladeKizunaRing->unknown4c = 1;
+        m_menuObjBladeKizunaRing->unknown190.unknown005();
+        m_menuObjBladeKizunaRing->unknown190.unknown002(&GfMenuObjBladeKizunaRing::seqComplete);
       }
     } else if (event.unknown08 == 2) {
       GfMenuObject::returnFSSubLayer(handle, 1);

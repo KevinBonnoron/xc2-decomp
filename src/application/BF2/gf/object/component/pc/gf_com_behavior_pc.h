@@ -73,12 +73,12 @@ static_assert(offsetof(MsgPcGetState, unknown08) == 0x08, "");
 struct MsgPcFieldWarp : fw::Message {
   MsgPcFieldWarp() : fw::Message(MSG_PC_UNKNOWN_16777241, 0x40), unknown30(true), unknown31(false) {}
 
-  fw::Transform unknown10; // Inferred role: target transform; original member name unknown.
-  bool unknown30;          // Inferred role: warp now; original member name unknown.
-  bool unknown31;          // Inferred role: warp accepted; original member name unknown.
+  fw::Transform m_transform; // Inferred role: target transform; original member name unknown.
+  bool unknown30;            // Inferred role: warp now; original member name unknown.
+  bool unknown31;            // Inferred role: warp accepted; original member name unknown.
 };
 
-static_assert(offsetof(MsgPcFieldWarp, unknown10) == 0x10, "");
+static_assert(offsetof(MsgPcFieldWarp, m_transform) == 0x10, "");
 static_assert(offsetof(MsgPcFieldWarp, unknown30) == 0x30, "");
 static_assert(offsetof(MsgPcFieldWarp, unknown31) == 0x31, "");
 
@@ -103,20 +103,20 @@ static_assert(offsetof(MsgPcApplyFieldDamage, unknown08) == 0x08, "");
 
 // Layout evidence: GfComBehaviorPc::procMsgPcFieldGetAccessTarget stores the object handle of the access plugin in the member at 0x8.
 struct MsgPcFieldGetAccessTarget : fw::Message {
-  GF_OBJ_HANDLE *unknown08; // Inferred role: access target; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: access target; original member name unknown.
 };
 
-static_assert(offsetof(MsgPcFieldGetAccessTarget, unknown08) == 0x08, "");
+static_assert(offsetof(MsgPcFieldGetAccessTarget, m_GF_OBJ_HANDLE) == 0x08, "");
 
 class GfComBehaviorPc : public GfComBehavior {
 public:
   class Listener {
   public:
-    explicit Listener(GfComBehaviorPc *owner) : unknown08(owner) {}
+    explicit Listener(GfComBehaviorPc *owner) : m_comBehaviorPc(owner) {}
 
     virtual void onWkStandbyLogout();
 
-    GfComBehaviorPc *unknown08; // Inferred role: owner; original member name unknown.
+    GfComBehaviorPc *m_comBehaviorPc; // Inferred role: owner; original member name unknown.
   };
 
   // Layout evidence: setup (0x71005646e4) reads the first state at 0x0 and the eye blink enable at 0x4.
@@ -189,17 +189,17 @@ public:
   GfComPropertyPc *getProperty() const { return mm::mtl::dynamicCast<GfComPropertyPc>(unknown08->unknown38[GfComPropertyPc::COMPONENT_INDEX]); }
 
   mm::mtl::UniquePtr<pc::Agent> unknown98;              // Inferred role: agent, tested by setEnableAgentField; original member name unknown.
-  ai::Hfsm unknowna0;                                   // Inferred role: state machine; original member name unknown.
+  ai::Hfsm m_hfsm;                                      // Inferred role: state machine; original member name unknown.
   mm::mtl::IntrusivePtr<fw::ReferenceFrame> unknown128; // Inferred role: look point frame; original member name unknown.
   void *unknown130;                                     // Inferred role: viewer; original member name unknown.
-  Listener unknown138;                                  // Inferred role: listener; original member name unknown.
+  Listener m_listener;                                  // Inferred role: listener; original member name unknown.
 };
 
 static_assert(offsetof(GfComBehaviorPc, unknown98) == 0x98, "");
-static_assert(offsetof(GfComBehaviorPc, unknowna0) == 0xa0, "");
+static_assert(offsetof(GfComBehaviorPc, m_hfsm) == 0xa0, "");
 static_assert(offsetof(GfComBehaviorPc, unknown128) == 0x128, "");
 static_assert(offsetof(GfComBehaviorPc, unknown130) == 0x130, "");
-static_assert(offsetof(GfComBehaviorPc, unknown138) == 0x138, "");
+static_assert(offsetof(GfComBehaviorPc, m_listener) == 0x138, "");
 static_assert(sizeof(GfComBehaviorPc::Listener) == 0x10, "");
 static_assert(sizeof(GfComBehaviorPc) == 0x148, "");
 

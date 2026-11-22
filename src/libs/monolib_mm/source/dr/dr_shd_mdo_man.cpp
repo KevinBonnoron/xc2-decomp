@@ -1,16 +1,20 @@
 #include "dr/dr_shd_mdo_man.h"
 
-#include "dr/dr_res_list.h"
-
 #include "dr/dr_calc_stm_list_obj.h"
+#include "dr/dr_man.h"
+#include "dr/dr_mdo_mat.h"
+#include "dr/dr_res_list.h"
+#include "dr/dr_shd_man.h"
 #include "dr/dr_shd_mdo_dec_res.h"
 #include "dr/dr_shd_mdo_dec_shd_obj.h"
 #include "grlib/cglib_shd_list.h"
 #include "grlib/cglib_vtl_mem_pool.h"
+#include "mtl/alloc_handle.h"
 #include "types.h"
 
 namespace ml {
-struct MdsMatTechnique;
+class DrShdFetchMan;
+struct MdsMatVertexInfo;
 
 DrShdMdoMan::DrShdMdoMan() : unknown00(nullptr), unknown08(nullptr) {}
 
@@ -31,6 +35,33 @@ void DrShdMdoMan::update() {
   }
 }
 
+DrShdMdoDecShdObj *DrShdMdoMan::createShaderObj(const u8 *data, const u8 *vertexData, const MdsMatTechnique *technique) {
+  DrShdMdoDecShdObj *found = unknown003(unknown00, data);
+  if (found != nullptr) {
+    return found;
+  }
+  DrShdMdoDecShdObj *obj = new (DrMan::getIns()->unknown10) DrShdMdoDecShdObj(data, vertexData, technique);
+  if (obj != nullptr) {
+    unknown101(unknown00, unknown08, obj);
+  }
+  return obj;
+}
+
+DrShdMdoDecShdObj *DrShdMdoMan::createShaderObj(DrCalcStmListObj *list, const u8 *vertexData, const MdsMatTechnique *technique) {
+  DrShdMdoDecShdObj *found = unknown003(unknown00, list);
+  if (found != nullptr) {
+    return found;
+  }
+  unknown035 *res = list->getResShaderObj();
+  DrShdMdoDecShdObj *obj = new (DrMan::getIns()->unknown10) DrShdMdoDecShdObj(res->unknown00, vertexData, technique);
+  // The game stores the list before the null test of the new object (0x71008a08b0, 0x71008a08cc, then cbz at 0x71008a08d0), as DrMdoVertexMan::createVertexObj does.
+  obj->m_drCalcStmListObj = list;
+  if (obj != nullptr) {
+    unknown101(unknown00, unknown08, obj);
+  }
+  return obj;
+}
+
 void DrShdMdoMan::releaseShaderObj(DrShdMdoDecShdObj *obj) {
   obj->unknown18--;
   if (obj->unknown18 < 0) {
@@ -45,11 +76,22 @@ void DrShdMdoMan::releaseShaderObj(DrShdMdoDecShdObj *obj) {
 
 DrShdMdoDecShdObj::~DrShdMdoDecShdObj() { unknown28.release(); }
 
+DrShdMdoDecShdObj::DrShdMdoDecShdObj(const u8 *data, const u8 *vertexData, const MdsMatTechnique *technique)
+    : unknown00(nullptr), unknown08(nullptr), unknown10(data), unknown18(1), m_drCalcStmListObj(nullptr) {
+  unknown28.createPacShader(data, 0, true);
+  // The game calls DrMan::getIns() once, before the test of the loop (0x71008a0af4), and keeps the fetch man in x22 across the calls (0x71008a0b04, 0x71008a0b08); written in the call,
+  // getIns is called again in each iteration.
+  DrShdFetchMan *fetchMan = DrMan::getIns()->m_drShdMan->m_drShdFetchMan;
+  for (s32 i = 0; i < unknown28.unknown50; i++) {
+    unknown102(unknown28, i)->setVertexParam(fetchMan, technique[i].unknown04, static_cast<const MdsMatVertexInfo *>(static_cast<const void *>(vertexData + technique[i].unknown00)));
+  }
+}
+
 void DrShdMdoDecShdObj::update() {
-  if (unknown20 == nullptr) {
+  if (m_drCalcStmListObj == nullptr) {
     return;
   }
-  unknown035 *res = unknown20->getResShaderObj();
+  unknown035 *res = m_drCalcStmListObj->getResShaderObj();
   if (res->unknown10 & 1) {
     changeMemShader(res->unknown00, nullptr, nullptr);
   }

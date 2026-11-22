@@ -23,53 +23,53 @@ class GfMenuObjBlKizunaRing : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjBlKizunaRing *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjBlKizunaRing *owner) : _0c(), m_menuObjBlKizunaRing(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
     u8 _1c[0x20 - 0x1c];
-    GfMenuObjBlKizunaRing *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBlKizunaRing *m_menuObjBlKizunaRing; // Inferred role: owner; original member name unknown.
   };
 
   class RingListener : public ui::UIObjectListener {
   public:
-    RingListener(GfMenuObjBlKizunaRing *owner) : unknown0c(0), _10(), unknown20(owner) {}
+    RingListener(GfMenuObjBlKizunaRing *owner) : unknown0c(0), _10(), m_menuObjBlKizunaRing(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     int unknown0c; // Inferred role: cursor needs no sound after the first selection; original member name unknown.
     u8 _10[0x1c - 0x10];
     u8 _1c[0x20 - 0x1c];
-    GfMenuObjBlKizunaRing *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBlKizunaRing *m_menuObjBlKizunaRing; // Inferred role: owner; original member name unknown.
   };
 
   class RingPadListener : public ui::UIObjectListener {
   public:
-    RingPadListener(GfMenuObjBlKizunaRing *owner) : _0c(), unknown20(owner) {}
+    RingPadListener(GfMenuObjBlKizunaRing *owner) : _0c(), m_menuObjBlKizunaRing(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
     u8 _1c[0x20 - 0x1c];
-    GfMenuObjBlKizunaRing *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBlKizunaRing *m_menuObjBlKizunaRing; // Inferred role: owner; original member name unknown.
   };
 
   class SkillDetailListener : public ui::UIObjectListener {
   public:
-    SkillDetailListener(GfMenuObjBlKizunaRing *owner) : _0c(), unknown20(owner) {}
+    SkillDetailListener(GfMenuObjBlKizunaRing *owner) : _0c(), m_menuObjBlKizunaRing(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
     u8 _1c[0x20 - 0x1c];
-    GfMenuObjBlKizunaRing *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBlKizunaRing *m_menuObjBlKizunaRing; // Inferred role: owner; original member name unknown.
   };
 
   class BladeSkillInfoListener : public ui::UIObjectListener {
   public:
-    BladeSkillInfoListener(GfMenuObjBlKizunaRing *owner) : _0c(), unknown20(owner) {}
+    BladeSkillInfoListener(GfMenuObjBlKizunaRing *owner) : _0c(), m_menuObjBlKizunaRing(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
     u8 _1c[0x20 - 0x1c];
-    GfMenuObjBlKizunaRing *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBlKizunaRing *m_menuObjBlKizunaRing; // Inferred role: owner; original member name unknown.
   };
 
   struct OpenParam {
@@ -138,22 +138,22 @@ public:
   int unknown438;                                      // Inferred role: open mode, 0 from the main menu; original member name unknown.
   int unknown43c;                                      // Inferred role: blade when opened for a mercenary; original member name unknown.
   GfMenuCallContext *unknown440;                       // Inferred role: item message call context; original member name unknown.
-  GfMenuItemList *unknown448;                          // Inferred role: item message list; original member name unknown.
+  GfMenuItemList *m_menuItemList;                      // Inferred role: item message list; original member name unknown.
   u32 unknown450;                                      // Inferred role: unused; original member name unknown.
   u32 unknown454;                                      // Inferred role: achievement index; original member name unknown.
-  GAME_VOICE_HANDLE *unknown458;                       // Inferred role: blade voice; original member name unknown.
+  GAME_VOICE_HANDLE *m_GAME_VOICE_HANDLE;              // Inferred role: blade voice; original member name unknown.
   u32 unknown460;                                      // Inferred role: node icon; original member name unknown.
   u8 _464[0x468 - 0x464];
-  GF_SCOM_HANDLE *unknown468; // Inferred role: voice request; original member name unknown.
+  GF_SCOM_HANDLE *m_GF_SCOM_HANDLE; // Inferred role: voice request; original member name unknown.
 };
 
 static_assert(offsetof(GfMenuObjBlKizunaRing::OpenParam, unknown04) == 0x04, "");
-static_assert(offsetof(GfMenuObjBlKizunaRing::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjBlKizunaRing::MainListener, m_menuObjBlKizunaRing) == 0x20, "");
 static_assert(offsetof(GfMenuObjBlKizunaRing::RingListener, unknown0c) == 0x0c, "");
-static_assert(offsetof(GfMenuObjBlKizunaRing::RingListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjBlKizunaRing::RingPadListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjBlKizunaRing::SkillDetailListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjBlKizunaRing::BladeSkillInfoListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjBlKizunaRing::RingListener, m_menuObjBlKizunaRing) == 0x20, "");
+static_assert(offsetof(GfMenuObjBlKizunaRing::RingPadListener, m_menuObjBlKizunaRing) == 0x20, "");
+static_assert(offsetof(GfMenuObjBlKizunaRing::SkillDetailListener, m_menuObjBlKizunaRing) == 0x20, "");
+static_assert(offsetof(GfMenuObjBlKizunaRing::BladeSkillInfoListener, m_menuObjBlKizunaRing) == 0x20, "");
 static_assert(sizeof(GfMenuObjBlKizunaRing::OpenParam) == 0x08, "");
 static_assert(offsetof(GfMenuObjBlKizunaRing, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjBlKizunaRing, unknown30) == 0x30, "");
@@ -172,12 +172,12 @@ static_assert(offsetof(GfMenuObjBlKizunaRing, unknown430) == 0x430, "");
 static_assert(offsetof(GfMenuObjBlKizunaRing, unknown434) == 0x434, "");
 static_assert(offsetof(GfMenuObjBlKizunaRing, unknown438) == 0x438, "");
 static_assert(offsetof(GfMenuObjBlKizunaRing, unknown440) == 0x440, "");
-static_assert(offsetof(GfMenuObjBlKizunaRing, unknown448) == 0x448, "");
+static_assert(offsetof(GfMenuObjBlKizunaRing, m_menuItemList) == 0x448, "");
 static_assert(offsetof(GfMenuObjBlKizunaRing, unknown450) == 0x450, "");
 static_assert(offsetof(GfMenuObjBlKizunaRing, unknown454) == 0x454, "");
-static_assert(offsetof(GfMenuObjBlKizunaRing, unknown458) == 0x458, "");
+static_assert(offsetof(GfMenuObjBlKizunaRing, m_GAME_VOICE_HANDLE) == 0x458, "");
 static_assert(offsetof(GfMenuObjBlKizunaRing, unknown460) == 0x460, "");
-static_assert(offsetof(GfMenuObjBlKizunaRing, unknown468) == 0x468, "");
+static_assert(offsetof(GfMenuObjBlKizunaRing, m_GF_SCOM_HANDLE) == 0x468, "");
 static_assert(sizeof(GfMenuObjBlKizunaRing) == 0x470, "");
 
 } // namespace gf

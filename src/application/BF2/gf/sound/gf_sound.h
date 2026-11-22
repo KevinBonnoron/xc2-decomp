@@ -74,7 +74,7 @@ struct SoundParam {
     unknown38 = 0;
     unknown39 = SOUND_TRANSFORM_UNKNOWN_0;
     unknown3a = SEINFO_UNKNOWN_0;
-    unknown30 = unknown020;
+    m_GF_OBJ_HANDLE = unknown020;
     unknown00 = 0;
   }
 
@@ -97,20 +97,20 @@ struct SoundParam {
   void setupTransformObj(GF_OBJ_HANDLE *handle, const mm::Vec3 &offset);
   void setupTransformBone(GF_OBJ_HANDLE *handle, const char *bone, const mm::Vec3 &offset);
 
-  u32 unknown00;                 // Inferred role: id; original member name unknown.
-  mm::mtl::FixStr<32> unknown04; // Inferred role: name; original member name unknown.
-  f32 unknown28;                 // Inferred role: volume; original member name unknown.
-  GF_OBJ_HANDLE *unknown30;      // Inferred role: handle; original member name unknown.
-  u8 unknown38;                  // Inferred role: category; original member name unknown.
-  u8 unknown39;                  // Inferred role: transform; original member name unknown.
-  u8 unknown3a;                  // Inferred role: se info; original member name unknown.
-  mm::Vec3 unknown40;            // Inferred role: position; original member name unknown.
-  const char *unknown50;         // Inferred role: bone; original member name unknown.
+  u32 unknown00;                  // Inferred role: id; original member name unknown.
+  mm::mtl::FixStr<32> unknown04;  // Inferred role: name; original member name unknown.
+  f32 unknown28;                  // Inferred role: volume; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: handle; original member name unknown.
+  u8 unknown38;                   // Inferred role: category; original member name unknown.
+  u8 unknown39;                   // Inferred role: transform; original member name unknown.
+  u8 unknown3a;                   // Inferred role: se info; original member name unknown.
+  mm::Vec3 unknown40;             // Inferred role: position; original member name unknown.
+  const char *unknown50;          // Inferred role: bone; original member name unknown.
 };
 
 static_assert(offsetof(SoundParam, unknown04) == 0x04, "");
 static_assert(offsetof(SoundParam, unknown28) == 0x28, "");
-static_assert(offsetof(SoundParam, unknown30) == 0x30, "");
+static_assert(offsetof(SoundParam, m_GF_OBJ_HANDLE) == 0x30, "");
 static_assert(offsetof(SoundParam, unknown38) == 0x38, "");
 static_assert(offsetof(SoundParam, unknown40) == 0x40, "");
 static_assert(offsetof(SoundParam, unknown50) == 0x50, "");
@@ -137,20 +137,20 @@ public:
   struct SeParam {
     void clear();
 
-    u8 unknown00;             // Inferred role: se info; original member name unknown.
-    u8 unknown01;             // Inferred role: category; original member name unknown.
-    bool unknown02;           // Inferred role: loop; original member name unknown.
-    u8 unknown03;             // Inferred role: pause bits; original member name unknown.
-    GF_OBJ_HANDLE *unknown08; // Inferred role: handle; original member name unknown.
-    SoundHandle unknown10;    // Inferred role: sound handle; original member name unknown.
+    u8 unknown00;                   // Inferred role: se info; original member name unknown.
+    u8 unknown01;                   // Inferred role: category; original member name unknown.
+    bool unknown02;                 // Inferred role: loop; original member name unknown.
+    u8 unknown03;                   // Inferred role: pause bits; original member name unknown.
+    GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: handle; original member name unknown.
+    SoundHandle m_soundHandle;      // Inferred role: sound handle; original member name unknown.
   };
 
   struct CategoryVolume {
     struct Volume {
-      Volume() : unknown00(1.0f), unknown04(1.0f), unknown08(1.0f), unknown0c(0.0f), unknown10(0.0f) {}
+      Volume() : m_categoryVolume(1.0f), unknown04(1.0f), unknown08(1.0f), unknown0c(0.0f), unknown10(0.0f) {}
 
       void clear() {
-        unknown00 = 1.0f;
+        m_categoryVolume = 1.0f;
         unknown04 = 1.0f;
         unknown08 = 1.0f;
         unknown0c = 0.0f;
@@ -160,15 +160,15 @@ public:
       void set(f32 volume, f32 fadeTime) {
         unknown10 = fadeTime;
         unknown0c = fadeTime;
-        unknown08 = unknown00;
+        unknown08 = m_categoryVolume;
         unknown04 = volume;
       }
 
-      f32 unknown00; // Inferred role: current; original member name unknown.
-      f32 unknown04; // Inferred role: target; original member name unknown.
-      f32 unknown08; // Inferred role: start; original member name unknown.
-      f32 unknown0c; // Inferred role: duration; original member name unknown.
-      f32 unknown10; // Inferred role: time; original member name unknown.
+      f32 m_categoryVolume; // Inferred role: current; named after the game accessor gf::GfSound::getCategoryVolume.
+      f32 unknown04;        // Inferred role: target; original member name unknown.
+      f32 unknown08;        // Inferred role: start; original member name unknown.
+      f32 unknown0c;        // Inferred role: duration; original member name unknown.
+      f32 unknown10;        // Inferred role: time; original member name unknown.
     };
 
     // The game constructor (0x71005d6094) stores the 18 volumes twice, once for the member initialisation and once for this clear loop.
@@ -248,8 +248,8 @@ public:
   mm::mtl::FixedArray<CategoryVolume, CATEGORY_UNKNOWN_32> unknown20; // Inferred role: category volumes; original member name unknown.
   ml::fixed_size_alloc_inside<SeParam, 384> unknown2e20;              // Inferred role: se params; original member name unknown.
   mm::mtl::FixedList<u16, 512> unknown5278;                           // Inferred role: playing se param indices; original member name unknown.
-  GfMasterVolume unknown6690;                                         // Inferred role: master volume; original member name unknown.
-  GF_SE_CATEGORY_HANDLE *unknown66d0;                                 // Inferred role: category handle; original member name unknown.
+  GfMasterVolume m_masterVolume;                                      // Inferred role: master volume; original member name unknown.
+  GF_SE_CATEGORY_HANDLE *m_GF_SE_CATEGORY_HANDLE;                     // Inferred role: category handle; original member name unknown.
 };
 
 static_assert(sizeof(GfSound::SeParam) == 0x18, "");
@@ -258,8 +258,8 @@ static_assert(offsetof(GfSound, unknown10) == 0x10, "");
 static_assert(offsetof(GfSound, unknown20) == 0x20, "");
 static_assert(offsetof(GfSound, unknown2e20) == 0x2e20, "");
 static_assert(offsetof(GfSound, unknown5278) == 0x5278, "");
-static_assert(offsetof(GfSound, unknown6690) == 0x6690, "");
-static_assert(offsetof(GfSound, unknown66d0) == 0x66d0, "");
+static_assert(offsetof(GfSound, m_masterVolume) == 0x6690, "");
+static_assert(offsetof(GfSound, m_GF_SE_CATEGORY_HANDLE) == 0x66d0, "");
 static_assert(sizeof(GfSound) == 0x66d8, "");
 
 extern const char *const SS_NAME_TABLE[];

@@ -84,7 +84,7 @@ template <typename T> static void unknown016(GfMenuObjEnemyStatus *status, T *ad
   }
 }
 
-GfMenuObjEnemyStatus::GfMenuObjEnemyStatus(u32 handle) : GfMenuObject(handle), unknown28(unknown020), unknown100(-1) {}
+GfMenuObjEnemyStatus::GfMenuObjEnemyStatus(u32 handle) : GfMenuObject(handle), m_GF_OBJ_HANDLE(unknown020), unknown100(-1) {}
 
 GfMenuObjEnemyStatus::~GfMenuObjEnemyStatus() {}
 
@@ -204,23 +204,23 @@ void GfMenuObjEnemyStatus::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjEnemyStatus::update() {
   GF_OBJ_HANDLE *target = GfMenuManager::getTargetObjHandle();
-  if (unknown28 != target) {
+  if (m_GF_OBJ_HANDLE != target) {
     for (u32 i = 0; i < unknown30.unknown00.size(); i++) {
       unknown30.unknown00[i]->changeGfObj(target);
     }
     {
       ui::UIObjectAcc acc(unknown18, "LAY_main");
-      GfObjAcc obj(unknown28);
+      GfObjAcc obj(m_GF_OBJ_HANDLE);
       ui::EventData event;
       event.unknown00 = unknown008;
-      if (unknown28 == unknown020) {
+      if (m_GF_OBJ_HANDLE == unknown020) {
         event.unknown08 = 1;
       } else {
         event.unknown08 = obj.getType() != OBJECT_TYPE_ENEMY;
       }
       GfMenuObject::sendEvent(acc.unknown10, event, 0.0f);
     }
-    unknown28 = target;
+    m_GF_OBJ_HANDLE = target;
   }
   GfMenuObject::update();
 }
@@ -318,7 +318,7 @@ void GfMenuObjEnemyStatus::MainListener::reciveEvent(const ui::EventData &event,
       ui::UIObjectAcc arts(acc.unknown10, "LAY_arts_name");
       if (param3 != 0) {
         ui::UIStr name;
-        GfObjProperty *property = GfObjUtil::getProperty(unknown20->unknown28);
+        GfObjProperty *property = GfObjUtil::getProperty(m_menuObjEnemyStatus->m_GF_OBJ_HANDLE);
         if (property != nullptr) {
           GfObjPropertyEnemy *enemy = property->getEnemy();
           if (enemy != nullptr && enemy->unknownc8 != 0 && enemy->unknownd0 != nullptr) {
@@ -473,10 +473,10 @@ void GfMenuObjEnemyStatus::ElemListener::reciveEvent(const ui::EventData &event,
         param.unknown3c = 1.0f;
         param.unknown10 = true;
         param.unknown0c = 3;
-        unknown20->unknown100 = GfMenuObjUtil::startCtrl(suspend.unknown10, param, nullptr);
-      } else if (unknown20->unknown100 != -1) {
-        GfMenuObjUtil::stopCtrl(unknown20->unknown100);
-        unknown20->unknown100 = -1;
+        m_menuObjEnemyStatus->unknown100 = GfMenuObjUtil::startCtrl(suspend.unknown10, param, nullptr);
+      } else if (m_menuObjEnemyStatus->unknown100 != -1) {
+        GfMenuObjUtil::stopCtrl(m_menuObjEnemyStatus->unknown100);
+        m_menuObjEnemyStatus->unknown100 = -1;
         suspend.setDisp(false);
       }
       break;

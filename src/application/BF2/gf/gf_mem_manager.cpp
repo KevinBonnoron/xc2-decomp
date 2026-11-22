@@ -38,7 +38,7 @@ void GfMemManager::buildCoreMemory(const GfSetupParam &param) {
 }
 
 void GfMemManager::initializeCore(const GfSetupParam &param) {
-  mtl::ALLOC_HANDLE parent = param.unknown18;
+  mtl::ALLOC_HANDLE parent = param.m_ALLOC_HANDLE;
   s_hMemProg = mtl::MemManager::create(parent, 0x2400000, "GfProg", false, mtl::ALLOCATOR_TYPE_UNKNOWN_1, 0x10);
   s_allocator.buildAllocator(ALLOCATOR_UNKNOWN_0, s_hMemProg);
   s_hMemInitial = mtl::MemManager::create(parent, 0xe00000, "GfInitial", false, mtl::ALLOCATOR_TYPE_UNKNOWN_1, 0x10);

@@ -47,16 +47,16 @@ public:
   const mm::mtl::RTTI *getRTTI() const override;
 
   u8 _34[0x38 - 0x34];
-  ParamAdapter unknown38; // Inferred role: limit param; original member name unknown.
-  u16 unknown40;          // Inferred role: bone index; original member name unknown.
-  u16 unknown42;          // Inferred role: end bone index; original member name unknown.
+  ParamAdapter m_paramAdapter; // Inferred role: limit param; original member name unknown.
+  u16 unknown40;               // Inferred role: bone index; original member name unknown.
+  u16 unknown42;               // Inferred role: end bone index; original member name unknown.
   // Inferred role: pitch and yaw angles in degrees, scaled by the ratio of the limit param and clamped by calcIK to minPitch0..maxPitch0 (1.0.0: 0x7100187584) and minYaw0..maxYaw0
   // (0x71001875cc); original member name unknown. Evidence: both are f32 in calcIK, and StateUtil::setSpineRotateAngles (0x7100572d88) stores its two f32 arguments there (stp s9, s8 at
   // 0x7100572e40).
   f32 unknown44[2];
 };
 
-static_assert(offsetof(SpineRotateIKSolver, unknown38) == 0x38, "");
+static_assert(offsetof(SpineRotateIKSolver, m_paramAdapter) == 0x38, "");
 static_assert(offsetof(SpineRotateIKSolver, unknown40) == 0x40, "");
 static_assert(offsetof(SpineRotateIKSolver, unknown42) == 0x42, "");
 static_assert(offsetof(SpineRotateIKSolver, unknown44) == 0x44, "");

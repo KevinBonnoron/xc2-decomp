@@ -16,7 +16,7 @@ public:
   void releaseObj(LayerRceObj *obj);
   void update();
 
-  LayerManager *unknown00;                 // Inferred role: layer manager; original member name unknown.
+  LayerManager *m_layerManager;            // Inferred role: layer manager; original member name unknown.
   LayerLinkList<LayerRceObj> unknown08;    // Inferred role: object list; original member name unknown.
   LayerLinkList<LayerRceObj> unknown20[2]; // Inferred role: object lists per index; original member name unknown.
   LayerLinkList<LayerRceObj> unknown50;    // Inferred role: released object list; original member name unknown.

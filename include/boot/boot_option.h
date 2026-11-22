@@ -12,8 +12,8 @@ class BootOption : public mm::mtl::Singleton<BootOption> {
 public:
   virtual ~BootOption() {}
 
-  ml::IniParser unknown08; // Inferred role: parsed boot ini file; original member name unknown.
+  ml::IniParser m_iniParser; // Inferred role: parsed boot ini file; original member name unknown.
 };
 
-static_assert(offsetof(BootOption, unknown08) == 0x8, "");
+static_assert(offsetof(BootOption, m_iniParser) == 0x8, "");
 static_assert(sizeof(BootOption) == 0x9610, "");

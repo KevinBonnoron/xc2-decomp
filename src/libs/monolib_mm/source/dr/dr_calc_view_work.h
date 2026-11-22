@@ -15,6 +15,7 @@ class DrMan;
 class DrCalcViewWork {
 public:
   DrCalcViewWork(DrMan *man);
+  ~DrCalcViewWork();
   void begin(int loop);
   void end();
   f32 getPixlLen(f32 depth, f32 length) const;
@@ -36,7 +37,9 @@ public:
   int unistatic_lightAmb(f32 *work);
   int unistatic_diffuseIBL(f32 *work);
   int unistatic_specularIBL(f32 *work);
+  int unistatic_dither_matrix(f32 *work);
   int unistatic_dither_param(f32 *work);
+  int unistatic_inv_dither_matrix(f32 *work);
   int unistatic_inv_dither_param(f32 *work);
   void renderEnd();
   int unistatic_mpf_ViewProj(f32 *work);
@@ -86,9 +89,9 @@ public:
   f32 unknown4cc; // Inferred role: velocity parameter of the sky base render (DrPixlSkyDome::baseRender, gVelocityParam x component); original member name unknown.
   f32 unknown4d0; // Inferred role: pixl scale; original member name unknown.
   u8 _4d4[0x4e0 - 0x4d4];
-  DrCalcClipWorkViewPlane unknown4e0; // Inferred role: view clip plane; original member name unknown.
-  DrCalcClipWorkViewPoli unknown590;  // Inferred role: view clip poli; original member name unknown.
-  DrMan *unknown700;                  // Inferred role: dr man; original member name unknown.
+  DrCalcClipWorkViewPlane m_drCalcClipWorkViewPlane; // Inferred role: view clip plane; original member name unknown.
+  DrCalcClipWorkViewPoli m_drCalcClipWorkViewPoli;   // Inferred role: view clip poli; original member name unknown.
+  DrMan *m_drMan;                                    // Inferred role: dr man; original member name unknown.
   u8 _708[0x770 - 0x708];
   mm::Vec3 unknown770; // Inferred role: prev view pos; original member name unknown.
   u8 _780[0x798 - 0x780];
@@ -105,7 +108,9 @@ public:
   grlib::CGLibDblUniformBlock unknown970; // Inferred role: dither uniform; original member name unknown.
   u8 _9a8[0x9a9 - 0x9a8];
   bool unknown9a9; // Inferred role: camera cut; original member name unknown.
-  bool unknown9aa; // Inferred role: SSR skip; original member name unknown.
+  // Inferred role: SSR skip; original member name unknown. A u8 and not a bool: DrPixlPostMan::renderDeferredTemporal (0x7100843d50) normalises the byte
+  // (`cmp w9, #0; cset w9, ne`) before it ors it into the reset flag, where a bool load carries a range and the compiler ors the byte as it is.
+  u8 unknown9aa;
   bool unknown9ab; // Inferred role: first flag passed to DrMdoCtlMpfAuto::autoMpfCalc by DrResMdoSeamWrkMpf::updateRenderList; original member name unknown.
   bool unknown9ac; // Inferred role: set when the value at 0x79c exceeds 128; original member name unknown.
   bool unknown9ad; // Inferred role: request flag; original member name unknown.
@@ -113,14 +118,21 @@ public:
   // Inferred role: eight entries of 16 bytes, the second float of each (offset 0x9c4 + 0x10 * index) times 2 pi is the fourth gParam2 value of
   // DrPixlPostObjTSSAO::passSSAO (index from the counter of that function); original member name unknown.
   mm::Vec4 unknown9c0[8];
-  u8 _a40[0xae0 - 0xa40];
+  u8 _a40[0xac0 - 0xa40];
+  // Inferred role: two pairs of floats, the differences of which (offset 0xac0 - 0xad0 and 0xac4 - 0xad4) are the gJitter uniform of
+  // DrPixlPostMan::renderDownDepth (0x710084fcc0); original member names unknown.
+  f32 unknownac0[2];
+  u8 _ac8[0xad0 - 0xac8];
+  f32 unknownad0[2];
+  u8 _ad8[0xae0 - 0xad8];
   f32 unknownae0[2]; // Inferred role: jitter; original member name unknown.
   u8 _ae8[0xaf0 - 0xae8];
   f32 unknownaf0[2]; // Inferred role: prev jitter; original member name unknown.
   u8 _af8[0xb00 - 0xaf8];
   f32 unknownb00[4]; // Inferred role: dither tmaa values; original member name unknown.
   f32 unknownb10[2]; // Inferred role: dither param; original member name unknown.
-  u8 _b18[0xc20 - 0xb18];
+  u8 _b18[0xb20 - 0xb18];
+  u32 unknownb20[8][8]; // Inferred role: 8x8 dither pattern, 0 to 63, the source of the gDither matrix uniforms (unistatic_dither_matrix, 1.0.0: 0x71008b1d60); original member name unknown.
   // Inferred role: matrix passed as the gDither uniform of DrPixlPostObjTSSAO::passSSAO (0x71008c2388); original member name unknown.
   mm::Mat44 unknownc20;
 };
@@ -144,9 +156,9 @@ static_assert(offsetof(DrCalcViewWork, unknown4c0) == 0x4c0, "");
 static_assert(offsetof(DrCalcViewWork, unknown4c4) == 0x4c4, "");
 static_assert(offsetof(DrCalcViewWork, unknown4c8) == 0x4c8, "");
 static_assert(offsetof(DrCalcViewWork, unknown4d0) == 0x4d0, "");
-static_assert(offsetof(DrCalcViewWork, unknown4e0) == 0x4e0, "");
-static_assert(offsetof(DrCalcViewWork, unknown590) == 0x590, "");
-static_assert(offsetof(DrCalcViewWork, unknown700) == 0x700, "");
+static_assert(offsetof(DrCalcViewWork, m_drCalcClipWorkViewPlane) == 0x4e0, "");
+static_assert(offsetof(DrCalcViewWork, m_drCalcClipWorkViewPoli) == 0x590, "");
+static_assert(offsetof(DrCalcViewWork, m_drMan) == 0x700, "");
 static_assert(offsetof(DrCalcViewWork, unknown770) == 0x770, "");
 static_assert(offsetof(DrCalcViewWork, unknown798) == 0x798, "");
 static_assert(offsetof(DrCalcViewWork, unknown7b0) == 0x7b0, "");
@@ -166,6 +178,8 @@ static_assert(offsetof(DrCalcViewWork, unknown9ad) == 0x9ad, "");
 static_assert(offsetof(DrCalcViewWork, unknown9c0) == 0x9c0, "");
 static_assert(offsetof(DrCalcViewWork, unknownae0) == 0xae0, "");
 static_assert(offsetof(DrCalcViewWork, unknownaf0) == 0xaf0, "");
+static_assert(offsetof(DrCalcViewWork, unknownac0) == 0xac0, "");
+static_assert(offsetof(DrCalcViewWork, unknownad0) == 0xad0, "");
 static_assert(offsetof(DrCalcViewWork, unknownb00) == 0xb00, "");
 static_assert(offsetof(DrCalcViewWork, unknownb10) == 0xb10, "");
 static_assert(offsetof(DrCalcViewWork, unknownc20) == 0xc20, "");

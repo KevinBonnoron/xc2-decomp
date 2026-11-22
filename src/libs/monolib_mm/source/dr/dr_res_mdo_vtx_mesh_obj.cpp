@@ -143,7 +143,7 @@ void DrResMdoVtxMeshObj::updateInit(const mm::Mat44 &matrix) {
   } else if (!(unknown74 & 2)) {
     unknown10.setup(unknown84 << 5);
     unknown10.updateData();
-    unknown38.setup(0x130);
+    m_cGLibDblUniformBlock.setup(0x130);
     unknown78 = mtl::MemManager::allocate(DrMan::get()->unknown14, static_cast<size_t>(unknown84) << 3, 4, false, "no name", 0);
     unknown74 |= 2;
     memcpy(&unknowna0, &matrix, sizeof(mm::Mat44));
@@ -175,8 +175,8 @@ void DrResMdoVtxMeshObj::update(const mm::Mat44 &matrix, f32 param2, f32 param3)
 }
 
 void DrResMdoVtxMeshObj::updateUniform(const mm::Mat44 &matrix, f32 param2, f32 param3) {
-  DrCalcViewWork *view = DrMan::get()->unknown580->unknown10;
-  unknown001 *uniform = static_cast<unknown001 *>(unknown38.getBuff());
+  DrCalcViewWork *view = DrMan::get()->m_drCalcMan->m_drCalcViewWork;
+  unknown001 *uniform = static_cast<unknown001 *>(m_cGLibDblUniformBlock.getBuff());
   uniform->unknown00 = unknown12c * 0.002f;
   uniform->unknown04 = 0.5f;
   uniform->unknown08 = unknown130;
@@ -221,7 +221,7 @@ void DrResMdoVtxMeshObj::updateUniform(const mm::Mat44 &matrix, f32 param2, f32 
   uniform->unknown124 = ratio * (scale * unknowne0.y);
   uniform->unknown128 = ratio * (scale * unknowne0.z);
   uniform->unknown12c = scale * unknown108 * unknown124;
-  unknown38.updateData();
+  m_cGLibDblUniformBlock.updateData();
 }
 
 void DrResMdoVtxMeshObj::release(DrResMdoVtxMeshObj *&obj) {
@@ -240,7 +240,7 @@ void DrResMdoVtxMeshObj::resourceInit(DrResMdoVertex *vertex) {
 
 void DrResMdoVtxMeshObj::releaseWork() {
   unknown10.release();
-  unknown38.release();
+  m_cGLibDblUniformBlock.release();
   if (unknown78 != nullptr) {
     mtl::MemManager::deallocate(unknown78, 0, false);
     unknown78 = nullptr;
@@ -261,26 +261,26 @@ void DrResMdoVtxMeshObj::stmRender(bool isNode) {
   if (!isRender()) {
     return;
   }
-  DrShdDataList *list = DrMan::getIns()->unknown80->unknown00;
+  DrShdDataList *list = DrMan::getIns()->m_drShdMan->m_drShdDataList;
   DrResShdStreamOut *stmOut = list->getStmOutObj(7);
   grlib::CGLibPolygon::setRasterizer(1);
   u32 count = unknown80 < unknown110 ? unknown80 : unknown110;
   if (unknown94 != 0) {
     unknown94 = 0;
     // The game loads the shader once for the two declaration calls (0x710087b794), before it computes the mode, and loads it again for setupShader.
-    DrShdDataObj *shader = stmOut->unknown00;
+    DrShdDataObj *shader = stmOut->m_drShdDataObj;
     u32 mode = 1;
     if (isNode) {
       mode = 2;
     }
     shader->setDeclarationIdx(shader->getDeclarationOfs("CALC_MODE"), mode);
-    stmOut->unknown00->setupShader(0u);
+    stmOut->m_drShdDataObj->setupShader(0u);
     if (isNode) {
       list->unknown958.setStorageBuffer(1);
       list->unknown980.setStorageBuffer(2);
     }
     unknown08->setUniformBlock(stmOut->unknown08[1]);
-    unknown38.setUniformBlock(stmOut->unknown08[0]);
+    m_cGLibDblUniformBlock.setUniformBlock(stmOut->unknown08[0]);
     // The game takes the head count before the first call (sub at 0x710087b820); written inline the function has 185 instructions instead of 194.
     if (unknown90 + count > unknown80) {
       u32 headCount = unknown80 - unknown90;
@@ -300,10 +300,10 @@ void DrResMdoVtxMeshObj::stmRender(bool isNode) {
     grlib::CGLibCtlShader::setMemoryBarrierBit(1);
   }
   if (unknown8c != 0) {
-    DrShdDataObj *shader = stmOut->unknown00;
+    DrShdDataObj *shader = stmOut->m_drShdDataObj;
     shader->setDeclarationIdx(shader->getDeclarationOfs("CALC_MODE"), 3);
-    stmOut->unknown00->setupShader(1u);
-    unknown38.setUniformBlock(stmOut->unknown08[0]);
+    stmOut->m_drShdDataObj->setupShader(1u);
+    m_cGLibDblUniformBlock.setUniformBlock(stmOut->unknown08[0]);
     if (unknown88 + unknown8c > unknown84) {
       u32 headLength = unknown84 - unknown88;
       unknown10.setStorageBuffer(0, unknown88 << 5, headLength << 5);
@@ -327,21 +327,21 @@ void DrResMdoVtxMeshObj::alpRender() {
   if (!(unknown74 & 1) || unknown8c == 0) {
     return;
   }
-  DrAPCache *cache = DrMan::get()->unknown5c0;
-  DrShdDataList *list = DrMan::get()->unknown80->unknown00;
+  DrAPCache *cache = DrMan::get()->m_drAPCache;
+  DrShdDataList *list = DrMan::get()->m_drShdMan->m_drShdDataList;
   DrShdDataObj *shader = list->getPostShdObj(0x3f);
   cache->setupCulling(DR_AP_CULL_TYPE_UNKNOWN_2);
   cache->setupDepthStencil(0, 0, 0, 2);
   cache->setupAlphaBlend(2);
-  DrMan::get()->unknown78->selectGBuffRenderTarget(0xc0u);
+  DrMan::get()->m_drPixlMan->selectGBuffRenderTarget(0xc0u);
   list->bindShdEffVtx();
   shader->setupShader(0u);
   // The game keeps the view work in a callee-saved register and takes the address of its uniform block (add at 0x710087bb24) after the offset lookup, as does DrGpuCheckRender::render.
-  DrCalcViewWork *view = DrMan::get()->unknown580->unknown10;
+  DrCalcViewWork *view = DrMan::get()->m_drCalcMan->m_drCalcViewWork;
   u32 staticOfs = (shader->unknown38 + shader->unknown58)->getUniformBlockOfs("U_Static");
   view->unknown7b0.setUniformBlock(staticOfs);
   u32 pamOfs = (shader->unknown38 + shader->unknown58)->getUniformBlockOfs("U_Pam");
-  unknown38.setUniformBlock(pamOfs);
+  m_cGLibDblUniformBlock.setUniformBlock(pamOfs);
   if (unknown88 + unknown8c > unknown84) {
     // The game takes the head count before the first call (sub at 0x710087bb7c); written inline the function has 103 instructions instead of 109.
     u32 headCount = unknown84 - unknown88;

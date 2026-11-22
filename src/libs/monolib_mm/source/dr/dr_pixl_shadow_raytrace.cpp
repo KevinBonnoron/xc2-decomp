@@ -28,13 +28,13 @@ namespace ml {
 // file static at 0x7101bd7464, no game symbol; original name unknown.
 static bool unknown001;
 
-DrPixlShadowRaytrace::DrPixlShadowRaytrace(DrMan *man) : unknown00(man), unknown10(true) {
-  unknown18 = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
+DrPixlShadowRaytrace::DrPixlShadowRaytrace(DrMan *man) : m_drMan(man), unknown10(true) {
+  unknown18 = new (m_drMan->unknown0c) DrPixlRenderTarget(m_drMan);
   for (int i = 0; i < 2; i++) {
-    unknown20[i] = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
+    unknown20[i] = new (m_drMan->unknown0c) DrPixlRenderTarget(m_drMan);
   }
-  unknown30 = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
-  unknown38 = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
+  unknown30 = new (m_drMan->unknown0c) DrPixlRenderTarget(m_drMan);
+  unknown38 = new (m_drMan->unknown0c) DrPixlRenderTarget(m_drMan);
 }
 
 DrPixlShadowRaytrace::~DrPixlShadowRaytrace() {
@@ -63,7 +63,7 @@ DrPixlShadowRaytrace::~DrPixlShadowRaytrace() {
 void DrPixlShadowRaytrace::update() {}
 
 void DrPixlShadowRaytrace::render_beforeTemporal() {
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   raytracePass();
   if (unknown10) {
     blurPass();
@@ -83,10 +83,10 @@ void DrPixlShadowRaytrace::blurPass() {
 }
 
 void DrPixlShadowRaytrace::temporalFiltering() {
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   DrPixlRenderTarget *target = unknown20[DrMan::s_nDblIdx];
   grlib::CGLibColorCtl::setBlendOffControl(GRL_LOGIC_TYPE_COPY);
-  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
   DrShdDataObj *shader = shdList->getShadowShdObj(5);
   // Decision 2026-11-13 (ruling 1): the local places the `cinc` before the getDeclarationOfs call, as the game does (the ternary in the argument
   // gives 314 instructions). The game reloads the flag after the call and stores it only when clear (0x71008c64c4-0x71008c64cc); a plain
@@ -117,7 +117,7 @@ void DrPixlShadowRaytrace::temporalFiltering() {
   f32 height = static_cast<f32>(target->unknownc0);
   // The game loads the view work before the two divisions of fragCoord; declared after the first division the loads and stores of
   // fragCoord are scheduled differently (first difference at 0x71008c66bc) (ruling 2).
-  DrCalcViewWork *viewWork = unknown00->unknown580->unknown10;
+  DrCalcViewWork *viewWork = m_drMan->m_drCalcMan->m_drCalcViewWork;
   mm::Vec4 fragCoord;
   fragCoord.x = 1.0f / width;
   fragCoord.y = 1.0f / height;
@@ -154,8 +154,8 @@ void DrPixlShadowRaytrace::temporalFiltering() {
   DrPixlRenderTarget *shadow = unknown10 ? unknown38 : unknown18;
   // The game loads the post man chain (`ldr x9, [x8, #120]`) before the cache (`ldr x23, [x8, #1472]`); with the cache declared first
   // the two loads swap (ruling 2).
-  DrPixlPostMan *postMan = unknown00->unknown78->unknown7f0->unknown180;
-  DrAPCache *apCache = unknown00->unknown5c0;
+  DrPixlPostMan *postMan = m_drMan->m_drPixlMan->unknown7f0->m_drPixlPostMan;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   apCache->beginTexSampling(3, 0);
   apCache->beginBorderWhite();
   apCache->setTexture(*postMan->getDownDepth()->unknown70, depthLocation);
@@ -163,7 +163,7 @@ void DrPixlShadowRaytrace::temporalFiltering() {
   apCache->beginTexSampling(2, 0);
   apCache->setTexture(*shadow->unknown70, shadowLocation);
   apCache->setTexture(*unknown20[DrMan::s_nDblStockIdx]->unknown70, prevShadowLocation);
-  apCache->setTexture(*unknown00->unknown78->getPixlObj(3)->unknown70, velocityLocation);
+  apCache->setTexture(*m_drMan->m_drPixlMan->getPixlObj(3)->unknown70, velocityLocation);
   target->setRenderTarget();
   uniform.updateData();
   uniform.setUniformBlock();
@@ -178,7 +178,7 @@ grlib::CGLibRenderTarget *DrPixlShadowRaytrace::getTemporalHistoryTexture() { re
 grlib::CGLibTextureBuffer *DrPixlShadowRaytrace::getScreenSpaceShadow() const { return unknown20[DrMan::s_nDblIdx]->unknown70; }
 
 void DrPixlShadowRaytrace::releaseColorBuff() {
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   if (postParm->unknownfe4 == 3) {
     unknown20[0]->releaseTexture();
     unknown20[1]->releaseTexture();
@@ -194,10 +194,10 @@ void DrPixlShadowRaytrace::releaseColorBuff() {
 }
 
 void DrPixlShadowRaytrace::debugRender() {
-  int width = unknown00->unknown5b8->unknown28;
-  int height = unknown00->unknown5b8->unknown2c;
+  int width = m_drMan->unknown5b8->unknown28;
+  int height = m_drMan->unknown5b8->unknown2c;
   DrPixlRenderTarget *target = nullptr;
-  switch (unknown00->unknown120[unknown00->unknown1c98]->unknown1008) {
+  switch (m_drMan->unknown120[m_drMan->unknown1c98]->unknown1008) {
   case 2:
     target = unknown18;
     break;
@@ -211,9 +211,9 @@ void DrPixlShadowRaytrace::debugRender() {
   if (target != nullptr) {
     target->debugRender(0, 0, width, height, false, false, 1.0f, true);
   }
-  if (unknown00->unknown120[unknown00->unknown1c98]->unknown1008 == 1) {
-    int halfWidth = unknown00->unknown5b8->unknown28 / 2;
-    int halfHeight = unknown00->unknown5b8->unknown2c / 2;
+  if (m_drMan->unknown120[m_drMan->unknown1c98]->unknown1008 == 1) {
+    int halfWidth = m_drMan->unknown5b8->unknown28 / 2;
+    int halfHeight = m_drMan->unknown5b8->unknown2c / 2;
     unknown18->debugRender(0, 0, halfWidth, halfHeight, false, false, 1.0f, true);
     unknown38->debugRender(halfWidth + 1, 0, halfWidth, halfHeight, false, false, 1.0f, true);
     // Decision 2026-11-14 #17 (P2): the local places the `add w2, w21, #1` before the load of the target in the tail call

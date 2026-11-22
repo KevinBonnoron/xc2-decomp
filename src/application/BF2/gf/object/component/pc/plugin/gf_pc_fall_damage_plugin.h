@@ -65,15 +65,15 @@ public:
   void procMsgPcFieldGetFallMaxHeight(fw::MessageObject *sender, MsgPcFieldGetFallMaxHeight &message);
   void procMsgPcFieldSetFallMaxHeight(fw::MessageObject *sender, MsgPcFieldSetFallMaxHeight &message);
 
-  GfComPropertyPc *unknown10; // Inferred role: property; original member name unknown.
-  f32 unknown18;              // Inferred role: max height; original member name unknown.
-  bool unknown1c;             // Inferred role: damage disabled; original member name unknown.
-  GF_OBJ_HANDLE *unknown20;   // Inferred role: attach object; original member name unknown.
+  GfComPropertyPc *m_comPropertyPc; // Inferred role: property; original member name unknown.
+  f32 unknown18;                    // Inferred role: max height; original member name unknown.
+  bool unknown1c;                   // Inferred role: damage disabled; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE;   // Inferred role: attach object; original member name unknown.
 };
 
-static_assert(offsetof(FallDamagePlugin, unknown10) == 0x10, "");
+static_assert(offsetof(FallDamagePlugin, m_comPropertyPc) == 0x10, "");
 static_assert(offsetof(FallDamagePlugin, unknown18) == 0x18, "");
-static_assert(offsetof(FallDamagePlugin, unknown20) == 0x20, "");
+static_assert(offsetof(FallDamagePlugin, m_GF_OBJ_HANDLE) == 0x20, "");
 static_assert(sizeof(FallDamagePlugin) == 0x28, "");
 
 } // namespace pc

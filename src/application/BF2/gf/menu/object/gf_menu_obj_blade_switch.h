@@ -12,11 +12,11 @@ class GfMenuObjBladeSwitch : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjBladeSwitch *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjBladeSwitch *owner) : _0c(), m_menuObjBladeSwitch(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjBladeSwitch *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBladeSwitch *m_menuObjBladeSwitch; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjBladeSwitch(u32 handle);
@@ -42,7 +42,7 @@ static_assert(offsetof(GfMenuObjBladeSwitch, unknown26) == 0x26, "");
 static_assert(offsetof(GfMenuObjBladeSwitch, unknown28) == 0x28, "");
 static_assert(sizeof(GfMenuObjBladeSwitch) == 0x2c0, "");
 
-static_assert(offsetof(GfMenuObjBladeSwitch::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjBladeSwitch::MainListener, m_menuObjBladeSwitch) == 0x20, "");
 static_assert(sizeof(GfMenuObjBladeSwitch::MainListener) == 0x28, "");
 
 } // namespace gf

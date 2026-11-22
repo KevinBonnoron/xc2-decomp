@@ -24,7 +24,7 @@ namespace fw {
 
 class ProbeDrawer : public mm::mtl::IntrusiveListNode<ProbeDrawer> {};
 
-WindManager::WindManager() : unknown18(nullptr), unknown68(nullptr), unknown80(nullptr) {}
+WindManager::WindManager() : unknown18(nullptr), m_commonResource(nullptr), unknown80(nullptr) {}
 
 void WindManager::destroyWorld() {
   if (unknown88.get() != nullptr) {
@@ -37,18 +37,18 @@ void WindManager::destroyWorld() {
 }
 
 bool WindManager::initialize() {
-  if (unknown68 == nullptr) {
-    unknown68 = CommonResource::request(FrameworkMemory::getAllocator(5), "/param/wind.prm", 10, false);
-    if (unknown68 == nullptr) {
+  if (m_commonResource == nullptr) {
+    m_commonResource = CommonResource::request(FrameworkMemory::getAllocator(5), "/param/wind.prm", 10, false);
+    if (m_commonResource == nullptr) {
       return false;
     }
   }
 
-  if (!unknown68->valid()) {
+  if (!m_commonResource->valid()) {
     return false;
   }
 
-  arc::CArcData archive(unknown68->getAssetData());
+  arc::CArcData archive(m_commonResource->getAssetData());
   unknown70 = ParamBuilder::importBinary(archive.getFileAdr("wind.param"), nullptr);
   return true;
 }
@@ -82,7 +82,7 @@ void WindManager::update(const UpdateInfo &info) {
   }
 }
 
-WindManager::~WindManager() { mm::mtl::safeRelease(unknown68); }
+WindManager::~WindManager() { mm::mtl::safeRelease(m_commonResource); }
 
 const char *WindManager::getName() const { return "WindManager"; }
 

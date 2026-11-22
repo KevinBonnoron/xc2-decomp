@@ -55,22 +55,22 @@ public:
 };
 
 struct PortRegistInfo {
-  PortRegistInfo() : unknownb0(nullptr), unknownb8(-2), unknownbc(0), unknownc0(0x10000), unknownc4(' ') {}
+  PortRegistInfo() : m_iCommandCallback(nullptr), unknownb8(-2), unknownbc(0), unknownc0(0x10000), unknownc4(' ') {}
 
   u16 unknown00; // Inferred role: port number; original member name unknown.
   u8 _02[0x04 - 0x02];
-  mm::mtl::FixStr<32> unknown04;  // Inferred role: server name; original member name unknown.
-  mm::mtl::FixStr<128> unknown28; // Role and original member name unknown.
-  ICommandCallback *unknownb0;    // Inferred role: receive callback; original member name unknown.
-  int unknownb8;                  // Role and original member name unknown.
-  u32 unknownbc;                  // Role and original member name unknown.
-  u32 unknownc0;                  // Inferred role: buffer size; original member name unknown.
-  char unknownc4;                 // Inferred role: argument separator; original member name unknown.
+  mm::mtl::FixStr<32> unknown04;        // Inferred role: server name; original member name unknown.
+  mm::mtl::FixStr<128> unknown28;       // Role and original member name unknown.
+  ICommandCallback *m_iCommandCallback; // Inferred role: receive callback; original member name unknown.
+  int unknownb8;                        // Role and original member name unknown.
+  u32 unknownbc;                        // Role and original member name unknown.
+  u32 unknownc0;                        // Inferred role: buffer size; original member name unknown.
+  char unknownc4;                       // Inferred role: argument separator; original member name unknown.
 };
 
 static_assert(offsetof(PortRegistInfo, unknown04) == 0x04, "");
 static_assert(offsetof(PortRegistInfo, unknown28) == 0x28, "");
-static_assert(offsetof(PortRegistInfo, unknownb0) == 0xb0, "");
+static_assert(offsetof(PortRegistInfo, m_iCommandCallback) == 0xb0, "");
 static_assert(offsetof(PortRegistInfo, unknownb8) == 0xb8, "");
 static_assert(offsetof(PortRegistInfo, unknownc4) == 0xc4, "");
 static_assert(sizeof(PortRegistInfo) == 0xc8, "");
@@ -150,9 +150,9 @@ class CommandManager : public mm::mtl::PtrSingleton<CommandManager> {
 public:
   struct PortInfo {
     // The game inlines this constructor into openServer (0x71009835c0, stores at 0x7100983684-0x71009836ac): unknown00 = 0x10000 and unknown04 = 0
-    // (stp), the FixStr unknown0c (terminator at 0x0c, length 0 at 0x2c), unknown30 = ' ', the count of unknown50 (0x150), unknown38, unknown40 and
+    // (stp), the FixStr unknown0c (terminator at 0x0c, length 0 at 0x2c), unknown30 = ' ', the count of unknown50 (0x150), m_iCommandCallback, unknown40 and
     // unknown48 = 0. unknown158 and unknown15c are not set. Same defaults as PortRegistInfo's constructor for the matching members.
-    PortInfo() : unknown00(0x10000), unknown04(0), unknown30(' '), unknown38(nullptr), unknown40(nullptr), unknown48(nullptr) {}
+    PortInfo() : unknown00(0x10000), unknown04(0), unknown30(' '), m_iCommandCallback(nullptr), unknown40(nullptr), unknown48(nullptr) {}
 
     void destroy();
 
@@ -163,7 +163,7 @@ public:
     mm::mtl::FixStr<32> unknown0c; // Inferred role: port name; original member name unknown.
     char unknown30;                // Inferred role: argument separator, copied from PortRegistInfo by openServer; original member name unknown.
     u8 _31[0x38 - 0x31];
-    ICommandCallback *unknown38;               // Inferred role: callback notified by notifyDisconnect; original member name unknown.
+    ICommandCallback *m_iCommandCallback;      // Inferred role: callback notified by notifyDisconnect; original member name unknown.
     mm::threading::Thread *unknown40;          // Inferred role: thread of the port, stopped and joined by destroy and copied whole by mtl::copy<PortInfo> (0x7100984cf0); original member name unknown.
     unknown003 *unknown48;                     // Inferred role: connection of the port; original member name unknown.
     FixedVector<CommandParam *, 32> unknown50; // Inferred role: received commands; original member name unknown.
@@ -216,7 +216,7 @@ static_assert(offsetof(CommandManager::PortInfo, unknown04) == 0x04, "");
 static_assert(offsetof(CommandManager::PortInfo, unknown08) == 0x08, "");
 static_assert(offsetof(CommandManager::PortInfo, unknown0c) == 0x0c, "");
 static_assert(offsetof(CommandManager::PortInfo, unknown30) == 0x30, "");
-static_assert(offsetof(CommandManager::PortInfo, unknown38) == 0x38, "");
+static_assert(offsetof(CommandManager::PortInfo, m_iCommandCallback) == 0x38, "");
 static_assert(offsetof(CommandManager::PortInfo, unknown40) == 0x40, "");
 static_assert(offsetof(CommandManager::PortInfo, unknown48) == 0x48, "");
 static_assert(offsetof(CommandManager::PortInfo, unknown50) == 0x50, "");

@@ -57,8 +57,8 @@ static void unknown002(TitleMain *main, gf::GfGameLoad &load) {
 }
 
 void TitleStateLoad::update(TitleMain *main, const fw::UpdateInfo &info) {
-  unknown18.reset();
-  main->unknown158.unknown00 = 0;
+  m_timeCount.reset();
+  main->m_titleMenu.unknown00 = 0;
   reqState(1);
   main->unknowna4 = gf::SAVESLOT_UNKNOWN_FFFFFFFF;
 }
@@ -140,7 +140,7 @@ void TitleStateMainScreen::playTitleEvent(TitleMain *main) {
 }
 
 bool TitleStateMainScreen::dispTitleMenu(TitleMain *main, bool isPlayEvent) {
-  TitleMenu &menu = main->unknown158;
+  TitleMenu &menu = main->m_titleMenu;
   main->playTitleBGM();
   menu.openTitle(isPlayEvent);
   while (!menu.isOpenTitle()) {
@@ -155,21 +155,21 @@ bool TitleStateMainScreen::dispTitleMenu(TitleMain *main, bool isPlayEvent) {
 }
 
 bool TitleStateMainScreen::checkMenuResult(TitleMain *main) {
-  while (!main->unknown158.hasResultSelect()) {
+  while (!main->m_titleMenu.hasResultSelect()) {
     if (main->unknown95) {
-      main->unknown158.closeTitle(true, true);
+      main->m_titleMenu.closeTitle(true, true);
       main->unknown95 = false;
       reqState(7);
       return true;
     }
     if (main->unknown94) {
-      main->unknown158.closeTitle(true, true);
+      main->m_titleMenu.closeTitle(true, true);
       reqState(8);
       return true;
     }
     TitleMain::sleep(1);
   }
-  main->unknown158.unknown00 = main->unknown158.getResult();
+  main->m_titleMenu.unknown00 = main->m_titleMenu.getResult();
   return false;
 }
 
@@ -278,7 +278,7 @@ void TitleStatePlayEvent::update(TitleMain *main, const fw::UpdateInfo &info) {
 
 void TitleStateToTitle::update(TitleMain *main, const fw::UpdateInfo &info) {
   gf::GfManager::execToAdvertize();
-  main->unknown158.unknown00 = 0;
+  main->m_titleMenu.unknown00 = 0;
   while (gf::GfSequentialPlay::isPlay()) {
     TitleMain::sleep(1);
   }
@@ -310,39 +310,39 @@ void TitleStateSelectEvent::update(TitleMain *main, const fw::UpdateInfo &info) 
 }
 
 bool TitleStateSelectEvent::eventMenuDisp(TitleMain *main) {
-  main->unknown158.openEventTheater();
-  while (!main->unknown158.isOpenEventTheater()) {
+  main->m_titleMenu.openEventTheater();
+  while (!main->m_titleMenu.isOpenEventTheater()) {
     if (main->unknown94) {
       reqState(8);
       return true;
     }
     TitleMain::sleep(1);
   }
-  main->unknown158.setupEventTheater();
+  main->m_titleMenu.setupEventTheater();
   return false;
 }
 
 bool TitleStateSelectEvent::eventMenuResult(TitleMain *main) {
-  while (!main->unknown158.hasResultEventTheater()) {
-    if (main->unknown158.isExitEventTheater()) {
-      main->unknown158.exitEventTheater();
+  while (!main->m_titleMenu.hasResultEventTheater()) {
+    if (main->m_titleMenu.isExitEventTheater()) {
+      main->m_titleMenu.exitEventTheater();
       main->unknown95 = false;
       reqState(1);
       return true;
     }
     TitleMain::sleep(1);
   }
-  if (main->unknown158.getPlayEventID() == 0) {
+  if (main->m_titleMenu.getPlayEventID() == 0) {
     return true;
   }
   mm::mtl::FixedVector<u16, 8> events;
-  events.push_back(main->unknown158.getPlayEventID());
+  events.push_back(main->m_titleMenu.getPlayEventID());
   main->unknown140 = events;
   return false;
 }
 
 bool TitleStateSelectEvent::eventMenuWaitFadeout(TitleMain *main) {
-  main->unknown158.fadeoutEventTheater();
+  main->m_titleMenu.fadeoutEventTheater();
   reqState(6);
   return true;
 }
@@ -360,28 +360,28 @@ void TitleStateSelectOption::update(TitleMain *main, const fw::UpdateInfo &info)
 }
 
 bool TitleStateSelectOption::optionMenuDisp(TitleMain *main) {
-  main->unknown158.openOption();
-  while (!main->unknown158.isOpenOption()) {
+  main->m_titleMenu.openOption();
+  while (!main->m_titleMenu.isOpenOption()) {
     if (main->unknown94) {
       reqState(8);
       return true;
     }
     TitleMain::sleep(1);
   }
-  main->unknown158.setupOption();
+  main->m_titleMenu.setupOption();
   return false;
 }
 
 bool TitleStateSelectOption::optionMenuResult(TitleMain *main) {
-  while (!main->unknown158.isExitOption()) {
+  while (!main->m_titleMenu.isExitOption()) {
     TitleMain::sleep(1);
   }
-  main->unknown158.exitOption();
+  main->m_titleMenu.exitOption();
   return false;
 }
 
 bool TitleStateSelectOption::optionMenuWaitFadeout(TitleMain *main) {
-  while (!main->unknown158.isCloseTitle()) {
+  while (!main->m_titleMenu.isCloseTitle()) {
     TitleMain::sleep(1);
   }
   main->unknown95 = false;

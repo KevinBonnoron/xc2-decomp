@@ -7,13 +7,13 @@
 namespace event {
 
 StmPackMemory::StmPackMemory(mtl::ALLOC_HANDLE handle)
-    : unknown08(0), unknown0c(handle), unknown10(nullptr), unknown18(0), unknown20(0), unknown28(0), unknown5838(0), unknown5840(0), unknown5848(0), unknown5850(0), unknown5858(0), unknown58e8(0),
-      unknown58f0(0) {}
+    : unknown08(0), m_ALLOC_HANDLE(handle), unknown10(nullptr), unknown18(0), unknown20(0), unknown28(0), unknown5838(0), unknown5840(0), unknown5848(0), unknown5850(0), unknown5858(0),
+      unknown58e8(0), unknown58f0(0) {}
 
 void StmPackMemory::loadStream(const char *name, const char *headerPath, const char *dataPath) {
   Stream *stream = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle()) Stream(name);
-  stream->unknown88.create(unknown0c, headerPath);
-  stream->unknown98.create(dataPath);
+  stream->m_stmPackHeader.create(m_ALLOC_HANDLE, headerPath);
+  stream->m_stmPackData.create(dataPath);
   unknown5860.push_back(stream);
 }
 
@@ -30,7 +30,7 @@ void StmPackMemory::stopStream() { unknown08 |= FLAG_UNKNOWN_2; }
 
 bool StmPackMemory::isBusy() {
   for (size_t i = 0; i < unknown5860.size(); i++) {
-    if (unknown5860[i]->unknown98.isBusy()) {
+    if (unknown5860[i]->m_stmPackData.isBusy()) {
       return true;
     }
   }
@@ -45,8 +45,8 @@ StmPackMemory::~StmPackMemory() {
   mtl::MemManager::deallocate(unknown10, 0, false);
   for (size_t i = 0; i < unknown5860.size(); i++) {
     Stream *stream = unknown5860[i];
-    stream->unknown98.destroy();
-    stream->unknown88.destroy();
+    stream->m_stmPackData.destroy();
+    stream->m_stmPackHeader.destroy();
     delete stream;
   }
   unknown5860.clear();
@@ -55,15 +55,15 @@ StmPackMemory::~StmPackMemory() {
 void StmPackMemory::update() {
   if (!(unknown08 & FLAG_UNKNOWN_0)) {
     for (size_t i = 0; i < unknown5860.size(); i++) {
-      if (unknown5860[i]->unknown88.isLoading()) {
+      if (unknown5860[i]->m_stmPackHeader.isLoading()) {
         return;
       }
     }
-    if (!getCurrentStream()->unknown98.open()) {
+    if (!getCurrentStream()->m_stmPackData.open()) {
       return;
     }
-    unknown18 = mtl::MemManager::maxAllocSize(unknown0c) / PAGE_UNKNOWN_4096 - 2;
-    unknown10 = mtl::MemManager::allocate(unknown0c, unknown18 * PAGE_UNKNOWN_4096, PAGE_UNKNOWN_4096, false, "no name", 0);
+    unknown18 = mtl::MemManager::maxAllocSize(m_ALLOC_HANDLE) / PAGE_UNKNOWN_4096 - 2;
+    unknown10 = mtl::MemManager::allocate(m_ALLOC_HANDLE, unknown18 * PAGE_UNKNOWN_4096, PAGE_UNKNOWN_4096, false, "no name", 0);
     unknown08 |= FLAG_UNKNOWN_0;
   }
   if (!(unknown08 & FLAG_UNKNOWN_0)) {
@@ -100,32 +100,32 @@ void StmPackMemory::freeCut() {
   }
 }
 void StmPackMemory::loadCut(void *buffer, size_t size, size_t firstFile, size_t lastFile, size_t firstPage, size_t lastPage, int prio) {
-  size_t dataOfs = getLoadStream()->unknown88.getDataOfs(firstFile);
-  getLoadStream()->unknown98.read(buffer, size, dataOfs);
+  size_t dataOfs = getLoadStream()->m_stmPackHeader.getDataOfs(firstFile);
+  getLoadStream()->m_stmPackData.read(buffer, size, dataOfs);
   StmPackRes res(buffer, size, dataOfs, firstFile, lastFile, firstPage, lastPage, prio, unknown5858, unknown58e8);
   unknown5858++;
   unknown30.push_back(res);
 }
 
 bool StmPackMemory::loadCut(void *buffer, size_t size, size_t firstPage, size_t &nextPage) {
-  if (!getLoadStream()->unknown98.isSuccess()) {
+  if (!getLoadStream()->m_stmPackData.isSuccess()) {
     return false;
   }
   size_t firstFile = unknown5838;
-  u32 prio = getLoadStream()->unknown88.getPrio(unknown5838);
-  size_t dataOfs = getLoadStream()->unknown88.getDataOfs(unknown5838);
-  size_t cutSize = getLoadStream()->unknown88.getDataSize(unknown5838);
+  u32 prio = getLoadStream()->m_stmPackHeader.getPrio(unknown5838);
+  size_t dataOfs = getLoadStream()->m_stmPackHeader.getDataOfs(unknown5838);
+  size_t cutSize = getLoadStream()->m_stmPackHeader.getDataSize(unknown5838);
   unknown5848 = cutSize;
   unknown5850 = size;
   if (cutSize >= size) {
     return false;
   }
-  size_t count = getLoadStream()->unknown88.getCount();
+  size_t count = getLoadStream()->m_stmPackHeader.getCount();
   for (size_t i = unknown5838 + 1; i < count; i++) {
-    if (prio != getLoadStream()->unknown88.getPrio(i)) {
+    if (prio != getLoadStream()->m_stmPackHeader.getPrio(i)) {
       break;
     }
-    size_t dataSize = getLoadStream()->unknown88.getDataOfs(i) + getLoadStream()->unknown88.getDataSize(i) - dataOfs;
+    size_t dataSize = getLoadStream()->m_stmPackHeader.getDataOfs(i) + getLoadStream()->m_stmPackHeader.getDataSize(i) - dataOfs;
     if (size <= dataSize) {
       break;
     }
@@ -140,14 +140,14 @@ bool StmPackMemory::loadCut(void *buffer, size_t size, size_t firstPage, size_t 
 }
 
 bool StmPackMemory::waitCut() {
-  if (getLoadStream()->unknown98.isBusy()) {
+  if (getLoadStream()->m_stmPackData.isBusy()) {
     return false;
   }
   for (size_t i = 0; i < unknown30.size(); i++) {
     unknown30[i].loadCompleate();
   }
-  if (unknown5838 < getLoadStream()->unknown88.getCount()) {
-    unknown5840 = getLoadStream()->unknown88.getPrio(unknown5838);
+  if (unknown5838 < getLoadStream()->m_stmPackHeader.getCount()) {
+    unknown5840 = getLoadStream()->m_stmPackHeader.getPrio(unknown5838);
   } else {
     unknown5840 = 9999999;
   }
@@ -162,12 +162,12 @@ void *StmPackMemory::adr(const char *path, size_t *size) {
       continue;
     }
     for (size_t i = res->unknown28; i <= res->unknown30; i++) {
-      if (__builtin_strcmp(path, getCurrentStream()->unknown88.getPath(i)) == 0) {
+      if (__builtin_strcmp(path, getCurrentStream()->m_stmPackHeader.getPath(i)) == 0) {
         res->unknown00++;
         if (size != nullptr) {
-          *size = getCurrentStream()->unknown88.getDataSize(i);
+          *size = getCurrentStream()->m_stmPackHeader.getDataSize(i);
         }
-        return res->getFileAdr(getCurrentStream()->unknown88.getDataOfs(i));
+        return res->getFileAdr(getCurrentStream()->m_stmPackHeader.getDataOfs(i));
       }
     }
   }
@@ -187,7 +187,7 @@ void StmPackMemory::free(void *adr, int frame) {
   }
 }
 
-bool StmPackMemory::isFailure() const { return getLoadStream()->unknown88.isFailure() || getLoadStream()->unknown98.isFailure(); }
+bool StmPackMemory::isFailure() const { return getLoadStream()->m_stmPackHeader.isFailure() || getLoadStream()->m_stmPackData.isFailure(); }
 
 // The symbol at 0x71000a4ec8 reads +0x58e8, +0x58f0 and +0x5840;
 // check confirms the code match, while the original member names remain unknown.

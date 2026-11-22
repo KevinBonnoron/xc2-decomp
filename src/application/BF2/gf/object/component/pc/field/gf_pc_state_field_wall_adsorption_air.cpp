@@ -15,7 +15,7 @@ namespace pc {
 
 void StateFieldWallAdsorptionAir::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   unknown18 = 0.0f;
-  unknown1c = behavior->getProperty()->unknown310.unknown18;
+  unknown1c = behavior->getProperty()->m_propertyField.unknown18;
   StateUtilField::resetCameraForWall(*behavior, StateUtilField::TIMING_UNKNOWN_2);
 }
 
@@ -25,11 +25,11 @@ void StateFieldWallAdsorptionAir::leave(GfComBehaviorPc *behavior, ai::State *ne
 // Gets the wall param of the pc param list (entry 15, "wall_common") from the property component. Single user: StateFieldWallAdsorptionAir::update (1.0.0: 0x710055a800, 66 instructions), which keeps
 // the null test of the property component (cbz x21 at 0x710055a820, joining at the param list read). Forms tried without the helper: the param read directly after getComponent<GfComPropertyPc>(),
 // and a helper taking the GfPropertyField, both give 65 instructions (test dropped). The cause is written at UpdatableObject::getComponent.
-static const WallCommonParam *getWallParam(GfComPropertyPc *property) { return property->unknown310.unknown004(15).get<WallCommonParam>(); }
+static const WallCommonParam *getWallParam(GfComPropertyPc *property) { return property->m_propertyField.unknown004(15).get<WallCommonParam>(); }
 
 void StateFieldWallAdsorptionAir::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
-  pc::GfPropertyField &field = property->unknown310;
+  pc::GfPropertyField &field = property->m_propertyField;
   const WallCommonParam *param = getWallParam(property);
   unknown18 += info.unknown04;
   if (unknown18 >= param->adsorptionTime) {

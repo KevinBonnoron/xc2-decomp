@@ -31,13 +31,13 @@ u32 CamManager::getOffscrID() const { return m_offscrID; }
 
 bool CamManager::isFreeCam() const { return (unknown14 & DISP_FLAG_UNKNOWN_1) != 0; }
 
-CamManager::CamManager() : unknown10(0), unknown14(0), unknown88(nullptr), m_freeCam(false), m_offscrID(0) {}
+CamManager::CamManager() : unknown10(0), unknown14(0), m_camObj(nullptr), m_freeCam(false), m_offscrID(0) {}
 
 void CamManager::destroyCam(CamObj *cam) {
   for (CamObj **it = unknown18.begin(); it != unknown18.end(); ++it) {
     if (*it == cam) {
       if (cam->getScreenID() == 0) {
-        unknown88 = nullptr;
+        m_camObj = nullptr;
       }
       delete cam;
       unknown18.erase(it);
@@ -60,7 +60,7 @@ void CamManager::clear() {
   m_freeCam.setActive(false);
   unknown10 = 0;
   unknown14 &= ~DISP_FLAG_UNKNOWN_1;
-  unknown88 = nullptr;
+  m_camObj = nullptr;
   m_offscrID = 0;
 }
 
@@ -91,7 +91,7 @@ void CamManager::update() {
 
 void CamManager::render() {
   if (!unknown18.empty() && (unknown14 & (DISP_FLAG_UNKNOWN_0 | DISP_FLAG_UNKNOWN_1)) != 0) {
-    CamBase *cam = (unknown14 & DISP_FLAG_UNKNOWN_1) != 0 ? static_cast<CamBase *>(&m_freeCam) : unknown88;
+    CamBase *cam = (unknown14 & DISP_FLAG_UNKNOWN_1) != 0 ? static_cast<CamBase *>(&m_freeCam) : m_camObj;
     if (cam != nullptr) {
       mm::Vec3 pos = cam->getPos();
       mm::Vec3 target = cam->getTarget();
@@ -160,7 +160,7 @@ CamObj *CamManager::createCam(u32 screenID) {
   CamObj *cam = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) CamObj(screenID, (unknown10 & FLAG_UNKNOWN_2) != 0, (unknown10 & FLAG_UNKNOWN_0) != 0);
   unknown18.push_back(cam);
   if (screenID == 0) {
-    unknown88 = cam;
+    m_camObj = cam;
   }
   return cam;
 }
@@ -188,11 +188,11 @@ CamFree *CamManager::getFreeCam() { return &m_freeCam; }
 
 void CamManager::setFreeCam(bool isFreeCam) {
   if (isFreeCam) {
-    if ((unknown14 & DISP_FLAG_UNKNOWN_1) != 0 || unknown88 == nullptr) {
+    if ((unknown14 & DISP_FLAG_UNKNOWN_1) != 0 || m_camObj == nullptr) {
       return;
     }
     m_freeCam.setActive(true);
-    m_freeCam.unknown002(*unknown88);
+    m_freeCam.unknown002(*m_camObj);
     unknown14 |= DISP_FLAG_UNKNOWN_1;
   } else {
     m_freeCam.setActive(false);

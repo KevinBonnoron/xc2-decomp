@@ -90,7 +90,7 @@ void CharaEffectPlayer::stopVolumeFade(VF_TYPE type) {
     }
     unknown08 &= ~fadeFlag;
   }
-  unknown80[type].clear();
+  m_anmF32[type].clear();
   unknown08 &= ~(type == VF_TYPE_UNKNOWN_1 ? FLAG_UNKNOWN_5 : FLAG_UNKNOWN_4);
 }
 
@@ -107,9 +107,9 @@ void CharaEffectPlayer::update(f32 delta) {
 }
 
 void CharaEffectPlayer::updateVolumeFadeAnim(VF_TYPE type, f32 delta) {
-  unknown80[type].update(delta);
-  unknown78[type] = unknown80[type].getValue();
-  if (unknown80[type].isEnd()) {
+  m_anmF32[type].update(delta);
+  unknown78[type] = m_anmF32[type].getValue();
+  if (m_anmF32[type].isEnd()) {
     unknown08 &= ~(type == VF_TYPE_UNKNOWN_1 ? FLAG_UNKNOWN_5 : FLAG_UNKNOWN_4);
   }
   gf::GfComModel *model = gf::GfObjUtil::getObj(unknown10)->getComponent<gf::GfComModel>();
@@ -173,9 +173,9 @@ void CharaEffectPlayer::playVolumeFadeAnim(VF_TYPE type, f32 rate, f32 frame) {
   if ((unknown08 & fadeFlag) == 0 || unknown10 == gf::unknown020) {
     return;
   }
-  unknown80[type].clear();
-  unknown80[type].append(0.0f, unknown78[type], CV_TYPE_UNKNOWN_1);
-  unknown80[type].append(frame, rate, CV_TYPE_UNKNOWN_1);
+  m_anmF32[type].clear();
+  m_anmF32[type].append(0.0f, unknown78[type], CV_TYPE_UNKNOWN_1);
+  m_anmF32[type].append(frame, rate, CV_TYPE_UNKNOWN_1);
   unknown08 |= type == VF_TYPE_UNKNOWN_1 ? FLAG_UNKNOWN_5 : FLAG_UNKNOWN_4;
 }
 

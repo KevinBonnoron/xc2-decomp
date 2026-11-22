@@ -24,9 +24,9 @@ namespace gf {
 // Inferred role: attached call id; original name unknown.
 constexpr u32 unknown001 = 0x5d;
 
-GfMenuObjPartyStatus2::GfMenuObjPartyStatus2(u32 handle) : GfMenuObject(handle), unknown24(false), unknown28(nullptr), unknown30{-1, -1, -1} {}
+GfMenuObjPartyStatus2::GfMenuObjPartyStatus2(u32 handle) : GfMenuObject(handle), unknown24(false), m_menuRewriteNumber(nullptr), unknown30{-1, -1, -1} {}
 
-GfMenuObjPartyStatus2::~GfMenuObjPartyStatus2() { mm::mtl::safeRelease(unknown28); }
+GfMenuObjPartyStatus2::~GfMenuObjPartyStatus2() { mm::mtl::safeRelease(m_menuRewriteNumber); }
 
 void GfMenuObjPartyStatus2::finalize() { GfMenuObject::finalize(); }
 
@@ -179,8 +179,8 @@ void GfMenuObjPartyStatus2::MainListener::reciveEvent(const ui::EventData &event
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1:
-    unknown20->unknown28 = unknown168();
-    setupPartyStatus(acc, unknown20->unknown28);
+    m_menuObjPartyStatus2->m_menuRewriteNumber = unknown168();
+    setupPartyStatus(acc, m_menuObjPartyStatus2->m_menuRewriteNumber);
     GfMenuObjUtil::setChildDisp(handle, "LAY_dr_list", true);
     acc.setDisp(false);
     break;
@@ -188,25 +188,25 @@ void GfMenuObjPartyStatus2::MainListener::reciveEvent(const ui::EventData &event
     u32 state = event.unknown08;
     switch (state) {
     case 1:
-      movePartyFrameIn(acc, 0, unknown20->unknown30[0]);
-      movePartyFrameIn(acc, 1, unknown20->unknown30[1]);
-      movePartyFrameIn(acc, 2, unknown20->unknown30[2]);
+      movePartyFrameIn(acc, 0, m_menuObjPartyStatus2->unknown30[0]);
+      movePartyFrameIn(acc, 1, m_menuObjPartyStatus2->unknown30[1]);
+      movePartyFrameIn(acc, 2, m_menuObjPartyStatus2->unknown30[2]);
       break;
     case 4:
-      movePartyFrameOut(acc, 0, unknown20->unknown30[0]);
-      movePartyFrameOut(acc, 1, unknown20->unknown30[1]);
-      movePartyFrameOut(acc, 2, unknown20->unknown30[2]);
+      movePartyFrameOut(acc, 0, m_menuObjPartyStatus2->unknown30[0]);
+      movePartyFrameOut(acc, 1, m_menuObjPartyStatus2->unknown30[1]);
+      movePartyFrameOut(acc, 2, m_menuObjPartyStatus2->unknown30[2]);
       break;
     case 7:
     case 8:
     case 9:
       movePartyFrameInEnd(acc, state - 7);
-      unknown20->unknown30[state - 7] = -1;
+      m_menuObjPartyStatus2->unknown30[state - 7] = -1;
       break;
     case 10:
     case 11:
     case 12:
-      unknown20->unknown30[state - 10] = -1;
+      m_menuObjPartyStatus2->unknown30[state - 10] = -1;
       break;
     }
     break;
@@ -227,11 +227,11 @@ void GfMenuObjPartyStatus2::MainListener::reciveEvent(const ui::EventData &event
     }
     break;
   case GfMenuTypes::unknown003_33:
-    if (!unknown20->unknown24) {
+    if (!m_menuObjPartyStatus2->unknown24) {
       for (u32 i = 0; i < 3; i++) {
-        if (unknown20->unknown30[i] != -1) {
-          GfMenuObjUtil::stopCtrl(unknown20->unknown30[i]);
-          unknown20->unknown30[i] = -1;
+        if (m_menuObjPartyStatus2->unknown30[i] != -1) {
+          GfMenuObjUtil::stopCtrl(m_menuObjPartyStatus2->unknown30[i]);
+          m_menuObjPartyStatus2->unknown30[i] = -1;
         }
       }
       acc.setDisp(true);
@@ -254,22 +254,22 @@ void GfMenuObjPartyStatus2::MainListener::reciveEvent(const ui::EventData &event
         ui::UIObjectAcc driverHp(handle, name.c_str());
         driverHp.setAlpha(0.0f);
       }
-      if (unknown20->unknown28 != nullptr) {
-        unknown20->unknown28->unknown10 = false;
+      if (m_menuObjPartyStatus2->m_menuRewriteNumber != nullptr) {
+        m_menuObjPartyStatus2->m_menuRewriteNumber->unknown10 = false;
       }
-      unknown20->unknown24 = true;
+      m_menuObjPartyStatus2->unknown24 = true;
       if (handle != 0) {
         unknown140(handle, 3, 1, 0.0f);
       }
     }
     break;
   case GfMenuTypes::unknown003_34:
-    if (unknown20->unknown24) {
-      unknown20->unknown24 = false;
+    if (m_menuObjPartyStatus2->unknown24) {
+      m_menuObjPartyStatus2->unknown24 = false;
       for (u32 i = 0; i < 3; i++) {
-        if (unknown20->unknown30[i] != -1) {
-          GfMenuObjUtil::stopCtrl(unknown20->unknown30[i]);
-          unknown20->unknown30[i] = -1;
+        if (m_menuObjPartyStatus2->unknown30[i] != -1) {
+          GfMenuObjUtil::stopCtrl(m_menuObjPartyStatus2->unknown30[i]);
+          m_menuObjPartyStatus2->unknown30[i] = -1;
         }
       }
       if (handle != 0) {

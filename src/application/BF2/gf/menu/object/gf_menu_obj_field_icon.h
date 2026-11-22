@@ -13,9 +13,9 @@ class GfMenuCallContext;
 class GfMenuObjFieldIcon : public GfMenuObject {
 public:
   struct OpenParam {
-    int unknown00;        // Inferred role: icon; original member name unknown.
-    mm::Vec3 unknown10;   // Inferred role: position; original member name unknown.
-    MenuOffset unknown20; // Inferred role: offset; original member name unknown. GmkPrecious::createMenuIcon (0x71006112a4) hands this member to GfMenuBdat::getMenuOffset.
+    int unknown00;           // Inferred role: icon; original member name unknown.
+    mm::Vec3 unknown10;      // Inferred role: position; original member name unknown.
+    MenuOffset m_menuOffset; // Inferred role: offset; original member name unknown. GmkPrecious::createMenuIcon (0x71006112a4) hands this member to GfMenuBdat::getMenuOffset.
   };
 
   GfMenuObjFieldIcon(u32 handle);
@@ -30,7 +30,7 @@ public:
 };
 
 static_assert(offsetof(GfMenuObjFieldIcon::OpenParam, unknown10) == 0x10, "");
-static_assert(offsetof(GfMenuObjFieldIcon::OpenParam, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjFieldIcon::OpenParam, m_menuOffset) == 0x20, "");
 static_assert(sizeof(GfMenuObjFieldIcon::OpenParam) == 0x40, "");
 
 } // namespace gf

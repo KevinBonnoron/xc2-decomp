@@ -10,7 +10,7 @@
 
 namespace event {
 
-ResPack::ResPack() : unknown90(nullptr), unknown98(nullptr), unknowna8(nullptr) {}
+ResPack::ResPack() : m_iResPackEvent(nullptr), unknown98(nullptr), unknowna8(nullptr) {}
 
 ResPack::~ResPack() { clear(); }
 
@@ -19,9 +19,9 @@ void ResPack::clear() {
     unknowna8->release();
     unknowna8 = nullptr;
   }
-  unknown08 = mtl::ALLOC_HANDLE();
+  m_ALLOC_HANDLE = mtl::ALLOC_HANDLE();
   unknown98 = nullptr;
-  unknown90 = nullptr;
+  m_iResPackEvent = nullptr;
 }
 
 void ResPack::update() {
@@ -60,9 +60,9 @@ void ResPack::draw() {
 }
 
 void ResPack::load(mtl::ALLOC_HANDLE handle, const char *path, IResPackEvent *event) {
-  this->unknown08 = handle;
+  this->m_ALLOC_HANDLE = handle;
   this->unknown0c = path;
-  unknown90 = event;
+  m_iResPackEvent = event;
   unknowna8 = fw::RenderResource::request(mm::mtl::Singleton<MemoryManager>::getPtr()->getResHandle(), mm::mtl::Singleton<Extend>::getPtr()->evpa(this->unknown0c.c_str()), 0);
   unknown98 = &ResPack::func_loading;
 }

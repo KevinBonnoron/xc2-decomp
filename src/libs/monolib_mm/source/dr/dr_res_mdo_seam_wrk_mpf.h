@@ -111,57 +111,57 @@ public:
 
   static f32 SEAM_MPFMAP_READ_CHECK;
 
-  DrResMdoSeamMemObj *unknown18;      // Inferred role: memory object; original member name unknown.
-  DrMdoMpfMan *unknown20;             // Inferred role: mpf manager; original member name unknown.
-  const unknown722 *unknown28;        // Inferred role: mpf map entry; original member name unknown.
-  const MdsSeamMpfMapHead *unknown30; // Inferred role: mpf map header; original member name unknown.
-  const MdsMpfObjData *unknown38;     // Inferred role: object data; original member name unknown.
-  const unknown002 *unknown40;        // Inferred role: etc position table; original member name unknown.
-  u32 unknown48;                      // Inferred role: calc flags; original member name unknown.
-  u16 unknown4c;                      // Inferred role: mpf map index; original member name unknown.
-  s16 unknown4e;                      // Inferred role: render object num; original member name unknown.
-  s16 unknown50;                      // Inferred role: etc position num; original member name unknown.
-  s16 unknown52;                      // Inferred role: object num; original member name unknown.
-  s16 unknown54;                      // Inferred role: etc position cache num; original member name unknown.
-  s16 unknown56;                      // Inferred role: read counter; original member name unknown.
-  s32 unknown58;                      // Inferred role: polygon cache num; original member name unknown.
-  u32 unknown5c;                      // Inferred role: state flags; original member name unknown.
-  s32 unknown60;                      // Inferred role: etc position calc count; original member name unknown.
-  s32 unknown64;                      // Inferred role: value cleared by beginCalc; original member name unknown.
-  s32 unknown68;                      // Inferred role: polygon calc count; original member name unknown.
-  s32 unknown6c;                      // Inferred role: value cleared by beginCalc; original member name unknown.
-  MdoWrkMatRes *unknown70;            // Inferred role: material work; original member name unknown.
-  void *unknown78;                    // Inferred role: allocated work buffer; original member name unknown.
-  u32 *unknown80;                     // Inferred role: etc position cache bit table; original member name unknown.
-  u32 *unknown88;                     // Inferred role: polygon cache bit table; original member name unknown.
+  DrResMdoSeamMemObj *unknown18;                // Inferred role: memory object; original member name unknown.
+  DrMdoMpfMan *m_drMdoMpfMan;                   // Inferred role: mpf manager; original member name unknown.
+  const unknown722 *unknown28;                  // Inferred role: mpf map entry; original member name unknown.
+  const MdsSeamMpfMapHead *m_mdsSeamMpfMapHead; // Inferred role: mpf map header; original member name unknown.
+  const MdsMpfObjData *m_mdsMpfObjData;         // Inferred role: object data; original member name unknown.
+  const unknown002 *unknown40;                  // Inferred role: etc position table; original member name unknown.
+  u32 unknown48;                                // Inferred role: calc flags; original member name unknown.
+  u16 unknown4c;                                // Inferred role: mpf map index; original member name unknown.
+  s16 unknown4e;                                // Inferred role: render object num; original member name unknown.
+  s16 unknown50;                                // Inferred role: etc position num; original member name unknown.
+  s16 unknown52;                                // Inferred role: object num; original member name unknown.
+  s16 unknown54;                                // Inferred role: etc position cache num; original member name unknown.
+  s16 unknown56;                                // Inferred role: read counter; original member name unknown.
+  s32 unknown58;                                // Inferred role: polygon cache num; original member name unknown.
+  u32 unknown5c;                                // Inferred role: state flags; original member name unknown.
+  s32 unknown60;                                // Inferred role: etc position calc count; original member name unknown.
+  s32 unknown64;                                // Inferred role: value cleared by beginCalc; original member name unknown.
+  s32 unknown68;                                // Inferred role: polygon calc count; original member name unknown.
+  s32 unknown6c;                                // Inferred role: value cleared by beginCalc; original member name unknown.
+  MdoWrkMatRes *m_mdoWrkMatRes;                 // Inferred role: material work; original member name unknown.
+  void *unknown78;                              // Inferred role: allocated work buffer; original member name unknown.
+  u32 *unknown80;                               // Inferred role: etc position cache bit table; original member name unknown.
+  u32 *unknown88;                               // Inferred role: polygon cache bit table; original member name unknown.
   u8 _90[0x98 - 0x90];
   u16 *unknown98; // Inferred role: polygon cache entry indices; original member name unknown.
   u8 _a0[0xb0 - 0xa0];
-  _wkMpfAutoBuff **unknownb0;        // Inferred role: polygon buffer table; original member name unknown.
-  DrResMdoSeamMemObj **unknownb8;    // Inferred role: polygon cache memory objects; original member name unknown.
-  DrMdoCtlMpfWork *unknownc0;        // Inferred role: mpf work; original member name unknown.
-  DrMdoCtlMpfAuto *unknownc8;        // Inferred role: auto mpf; original member name unknown.
-  DrMdoCtlMpfInst *unknownd0;        // Inferred role: instance mpf; original member name unknown.
-  DrResMdoSeamWrkPosMpf *unknownd8;  // Inferred role: etc positions; original member name unknown.
-  DrResMdoSeamWrkPosMpf **unknowne0; // Inferred role: cached etc positions; original member name unknown.
-  s32 unknowne8;                     // Inferred role: memory size; original member name unknown.
+  _wkMpfAutoBuff **unknownb0;         // Inferred role: polygon buffer table; original member name unknown.
+  DrResMdoSeamMemObj **unknownb8;     // Inferred role: polygon cache memory objects; original member name unknown.
+  DrMdoCtlMpfWork *m_drMdoCtlMpfWork; // Inferred role: mpf work; original member name unknown.
+  DrMdoCtlMpfAuto *m_drMdoCtlMpfAuto; // Inferred role: auto mpf; original member name unknown.
+  DrMdoCtlMpfInst *m_drMdoCtlMpfInst; // Inferred role: instance mpf; original member name unknown.
+  DrResMdoSeamWrkPosMpf *unknownd8;   // Inferred role: etc positions; original member name unknown.
+  DrResMdoSeamWrkPosMpf **unknowne0;  // Inferred role: cached etc positions; original member name unknown.
+  s32 unknowne8;                      // Inferred role: memory size; original member name unknown.
   u8 _ec[0xf0 - 0xec];
 };
 
 static_assert(offsetof(DrResMdoSeamWrkMpf, unknown08) == 0x08, "");
 static_assert(offsetof(DrResMdoSeamWrkMpf, unknown18) == 0x18, "");
-static_assert(offsetof(DrResMdoSeamWrkMpf, unknown20) == 0x20, "");
+static_assert(offsetof(DrResMdoSeamWrkMpf, m_drMdoMpfMan) == 0x20, "");
 static_assert(offsetof(DrResMdoSeamWrkMpf, unknown28) == 0x28, "");
-static_assert(offsetof(DrResMdoSeamWrkMpf, unknown30) == 0x30, "");
+static_assert(offsetof(DrResMdoSeamWrkMpf, m_mdsSeamMpfMapHead) == 0x30, "");
 static_assert(offsetof(DrResMdoSeamWrkMpf, unknown48) == 0x48, "");
 static_assert(offsetof(DrResMdoSeamWrkMpf, unknown4c) == 0x4c, "");
 static_assert(offsetof(DrResMdoSeamWrkMpf, unknown54) == 0x54, "");
 static_assert(offsetof(DrResMdoSeamWrkMpf, unknown5c) == 0x5c, "");
-static_assert(offsetof(DrResMdoSeamWrkMpf, unknown70) == 0x70, "");
+static_assert(offsetof(DrResMdoSeamWrkMpf, m_mdoWrkMatRes) == 0x70, "");
 static_assert(offsetof(DrResMdoSeamWrkMpf, unknown80) == 0x80, "");
 static_assert(offsetof(DrResMdoSeamWrkMpf, unknown98) == 0x98, "");
 static_assert(offsetof(DrResMdoSeamWrkMpf, unknownb0) == 0xb0, "");
-static_assert(offsetof(DrResMdoSeamWrkMpf, unknownc8) == 0xc8, "");
+static_assert(offsetof(DrResMdoSeamWrkMpf, m_drMdoCtlMpfAuto) == 0xc8, "");
 static_assert(offsetof(DrResMdoSeamWrkMpf, unknowne0) == 0xe0, "");
 static_assert(offsetof(DrResMdoSeamWrkMpf, unknowne8) == 0xe8, "");
 static_assert(sizeof(DrResMdoSeamWrkMpf) == 0xf0, "");

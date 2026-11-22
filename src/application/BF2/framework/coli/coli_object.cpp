@@ -74,7 +74,7 @@ void ColiObject::setupColiCharacter(ColiObject *object, const ColiCharacterInfo 
   object->setPriority(info.unknown08);
   object->setHitMaterialFlag(info.unknown10);
   object->setMaterialFlag(info.unknown14);
-  object->unknown58 = info.unknown20;
+  object->m_coliUserData = info.m_coliUserData;
   object->unknown48 = info.unknown28;
   const mm::Mat44 &offset = info.unknown40;
   object->unknown60 = offset;
@@ -156,7 +156,7 @@ void ColiObject::setupColiPhantom(ColiObject *object, const ColiPhantomInfo &inf
   object->setColiType(info.unknown04);
   object->setPriority(info.unknown08);
   object->setHitMaterialFlag(info.unknown10);
-  object->unknown58 = info.unknown20;
+  object->m_coliUserData = info.m_coliUserData;
   object->unknown48 = info.unknown28;
   const mm::Mat44 &offset = info.unknown40;
   object->unknown60 = offset;
@@ -402,7 +402,7 @@ void ColiObject::setInstantlyMatrix(const mm::Mat44 &matrix) {
   }
 }
 
-ColiObject::ColiObject() : m_coliObject(nullptr), unknown34(0), unknown58(nullptr), unknowne0(1.0f) {
+ColiObject::ColiObject() : m_coliObject(nullptr), unknown34(0), m_coliUserData(nullptr), unknowne0(1.0f) {
   unknown60 = mm::Mat44::identity;
   m_matrix = mm::Mat44::identity;
 }
@@ -429,7 +429,7 @@ void ColiObject::setOwner(UpdatableObject *owner) {
 UpdatableObject *ColiObject::getOwner() const { return unknown38.get(); }
 
 void ColiObject::setHandle(u32 handle) {
-  unknownf0.unknown08 = handle;
+  m_coliObjUserData.unknown08 = handle;
   if (m_coliObject == nullptr) {
     return;
   }
@@ -437,12 +437,12 @@ void ColiObject::setHandle(u32 handle) {
   switch (m_coliObject->unknown24) {
   case idcoli::unknown098_1: {
     idcoli::IDColiParmsCharacter params(m_coliObject);
-    params.setUserData(&unknownf0);
+    params.setUserData(&m_coliObjUserData);
     break;
   }
   case idcoli::unknown098_2: {
     idcoli::IDColiParmsPhantom params(m_coliObject);
-    params.setUserData(&unknownf0);
+    params.setUserData(&m_coliObjUserData);
     break;
   }
   default:
@@ -618,23 +618,23 @@ bool ColiObject::getAABB(mm::Vec3 &min, mm::Vec3 &max) const {
 
 void ColiObject::enter(const IColiEventListener::EnterInfo &info) {
   bool isEnable = unknown48.unknown001(EVENT_UNKNOWN_0);
-  if (unknown48.unknown08 != nullptr && isEnable) {
-    unknown48.unknown08->enter(info);
+  if (unknown48.m_iColiEventListener != nullptr && isEnable) {
+    unknown48.m_iColiEventListener->enter(info);
   }
 }
 
 void ColiObject::leave(const IColiEventListener::LeaveInfo &info) {
   bool isEnable = unknown48.unknown001(EVENT_UNKNOWN_2);
-  if (unknown48.unknown08 != nullptr && isEnable) {
-    unknown48.unknown08->leave(info);
+  if (unknown48.m_iColiEventListener != nullptr && isEnable) {
+    unknown48.m_iColiEventListener->leave(info);
   }
 }
 
 void IColiEventListener::contact(const EnterInfo &info) {}
 
 void ColiObject::contact(const IColiEventListener::EnterInfo &info) {
-  if (unknown48.unknown08 != nullptr && unknown48.unknown001(EVENT_UNKNOWN_1)) {
-    unknown48.unknown08->contact(info);
+  if (unknown48.m_iColiEventListener != nullptr && unknown48.unknown001(EVENT_UNKNOWN_1)) {
+    unknown48.m_iColiEventListener->contact(info);
   }
 }
 

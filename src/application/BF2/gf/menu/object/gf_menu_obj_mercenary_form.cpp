@@ -43,11 +43,11 @@ namespace gf {
 
 GfMenuObjMercenaryForm::GfMenuObjMercenaryForm(u32 handle)
     : GfMenuObject(handle), unknown24(0), unknown28(nullptr), unknown30(nullptr), unknown78(nullptr), unknown80(nullptr), unknown98(nullptr), unknowna0(nullptr), unknowna8(nullptr),
-      unknownb0(nullptr), unknownb8(nullptr), unknown100(0), unknown104(0), unknown108(this), unknown430(false), unknown438(this), unknown8f0(false), unknown8f8(nullptr) {
+      unknownb0(nullptr), m_menuCallContext(nullptr), unknown100(0), unknown104(0), unknown108(this), unknown430(false), unknown438(this), unknown8f0(false), m_GAME_VOICE_HANDLE(nullptr) {
   for (int i = 0; i < 8; i++) {
     unknownc0[i] = unknown160();
   }
-  unknownb8 = GfMenuCallContext::create();
+  m_menuCallContext = GfMenuCallContext::create();
 }
 
 GfMenuObjMercenaryForm::~GfMenuObjMercenaryForm() {
@@ -57,7 +57,7 @@ GfMenuObjMercenaryForm::~GfMenuObjMercenaryForm() {
   mm::mtl::safeRelease(unknown38);
   mm::mtl::safeRelease(unknown40);
   mm::mtl::safeRelease(unknown48);
-  mm::mtl::safeRelease(unknownb8);
+  mm::mtl::safeRelease(m_menuCallContext);
   mm::mtl::safeRelease(unknownb0);
   mm::mtl::safeRelease(unknowna8);
   mm::mtl::safeRelease(unknowna0);
@@ -68,7 +68,7 @@ GfMenuObjMercenaryForm::~GfMenuObjMercenaryForm() {
   mm::mtl::safeRelease(unknown28);
   mm::mtl::safeRelease(unknown88);
   mm::mtl::safeRelease(unknown90);
-  mm::mtl::safeRelease(unknown68);
+  mm::mtl::safeRelease(m_menuIDList);
   mm::mtl::safeRelease(unknown50[0]);
   mm::mtl::safeRelease(unknown50[1]);
   mm::mtl::safeRelease(unknown50[2]);
@@ -99,8 +99,8 @@ void GfMenuObjMercenaryForm::initialize() {
   {
     GfMenuBladeList::TeamSetup setup;
     setup.unknown14 = 3;
-    setup.unknown00.unknown08 = 3;
-    setup.unknown00.unknown0c = 5;
+    setup.m_setupParam.unknown08 = 3;
+    setup.m_setupParam.unknown0c = 5;
     setup.unknown1c = false;
     unknown30->clear();
     unknown30->setupFromTeam(setup);
@@ -309,14 +309,14 @@ void GfMenuObjMercenaryForm::initialize() {
     }
     {
       ui::UIListInfoBase::SetupParam presetParam;
-      unknown68 = GfMenuIDList::create();
+      m_menuIDList = GfMenuIDList::create();
       presetParam.unknown08 = 3;
-      unknown68->setup(getAllocator(ALLOCATOR_UNKNOWN_0), presetParam);
+      m_menuIDList->setup(getAllocator(ALLOCATOR_UNKNOWN_0), presetParam);
       for (u32 i = 0; i < 8; i++) {
-        unknown68->addContents(MenuID{i});
+        m_menuIDList->addContents(MenuID{i});
       }
     }
-    GfMenuObjUtil::createVScrollBarPlugin(preset.searchChild("IMG_preset_scroll_bar"), unknown68, "IMG_preset_scroll_base", false);
+    GfMenuObjUtil::createVScrollBarPlugin(preset.searchChild("IMG_preset_scroll_bar"), m_menuIDList, "IMG_preset_scroll_base", false);
     // The game's preheader (1.0.0: 0x7100491ee0-0x7100491f00) keeps the addresses of the face and wpn formats and the constants 0x39 and 0x29 in registers. The for forms tried (u32, int and size_t
     // counter, `!= 3`, `<= 2`, a while with an entry test) all end with another preheader (the for with a u32 counter rematerialises 0x29 in the body); only the do-while matches.
     u32 i = 0;
@@ -788,14 +788,14 @@ bool GfMenuObjMercenaryForm::seqOpenImage() {
 bool GfMenuObjMercenaryForm::seqDepartureStart() {
   unknown430 = false;
   unknown108.unknown002(&GfMenuObjMercenaryForm::seqApperBlade);
-  unknown8f8 = SCOM_FIELD_VOICE::createMercenariesLeader(GfMenuReference::getReferenceBladeID(0));
+  m_GAME_VOICE_HANDLE = SCOM_FIELD_VOICE::createMercenariesLeader(GfMenuReference::getReferenceBladeID(0));
   return true;
 }
 
 bool GfMenuObjMercenaryForm::seqApperBlade() {
-  if (unknown8f8 != nullptr) {
-    if (GfGameVoice::getResult(unknown8f8) >= 3) {
-      unknown8f8 = nullptr;
+  if (m_GAME_VOICE_HANDLE != nullptr) {
+    if (GfGameVoice::getResult(m_GAME_VOICE_HANDLE) >= 3) {
+      m_GAME_VOICE_HANDLE = nullptr;
     } else {
       return false;
     }
@@ -916,7 +916,7 @@ bool GfMenuObjMercenaryForm::seqPresetSave() {
   } else if (!GfMenuManager::isOpenCommonWindow()) {
     s16 result = GfMenuManager::getCommonWindowResult();
     if (result == 0) {
-      u32 index = unknown68->getIndex(true);
+      u32 index = m_menuIDList->getIndex(true);
       GfMenuBladeList *list = unknown50[index];
       unknown121 *preset = GfDataMercenaries::getPreset(index);
       MenuBladeInfo info;
@@ -945,7 +945,7 @@ bool GfMenuObjMercenaryForm::seqPresetSave() {
 }
 
 bool GfMenuObjMercenaryForm::seqPresetLoad() {
-  u32 index = unknown68->getIndex(true);
+  u32 index = m_menuIDList->getIndex(true);
   unknown121 *preset = GfDataMercenaries::getPreset(index);
   MenuBladeInfo info;
   info.unknown00 = 0;
@@ -1003,12 +1003,12 @@ void GfMenuObjMercenaryForm::PresetListener::reciveEvent(const ui::EventData &ev
     break;
   case 6:
     if (event.unknown08 != -1) {
-      unknown20->unknown68->setIndex(event.unknown08);
-      unknown20->unknowna8->setIndex(unknown20->unknown68->getIndex(true));
-      int offset = unknown20->unknown68->getRowOffset();
+      m_menuObjMercenaryForm->m_menuIDList->setIndex(event.unknown08);
+      m_menuObjMercenaryForm->unknowna8->setIndex(m_menuObjMercenaryForm->m_menuIDList->getIndex(true));
+      int offset = m_menuObjMercenaryForm->m_menuIDList->getRowOffset();
       for (int i = 0; i < 3; i++) {
         unknown121 *preset = GfDataMercenaries::getPreset(offset + i);
-        GfMenuBladeList *list = unknown20->unknown50[i];
+        GfMenuBladeList *list = m_menuObjMercenaryForm->unknown50[i];
         MenuBladeInfo info;
         info.unknown00 = 0;
         info.unknown04 = 0;
@@ -1023,7 +1023,7 @@ void GfMenuObjMercenaryForm::PresetListener::reciveEvent(const ui::EventData &ev
           }
           list->addContents(info);
         }
-        unknown20->unknownc0[4 + i]->unknown0c = offset + i + 1;
+        m_menuObjMercenaryForm->unknownc0[4 + i]->unknown0c = offset + i + 1;
       }
     }
     break;
@@ -1031,17 +1031,17 @@ void GfMenuObjMercenaryForm::PresetListener::reciveEvent(const ui::EventData &ev
     if (event.unknown0c == 1) {
       GfMenuObject::disableFSInput();
       GfMenuObjOperationInfo::remove(handle, 0, 0, 0);
-      unknown20->unknown108.unknown005();
+      m_menuObjMercenaryForm->unknown108.unknown005();
       if (unknown0c == 0) {
-        unknown20->unknown108.unknown002(&GfMenuObjMercenaryForm::seqPresetSave);
+        m_menuObjMercenaryForm->unknown108.unknown002(&GfMenuObjMercenaryForm::seqPresetSave);
       } else {
-        unknown20->unknown108.unknown002(&GfMenuObjMercenaryForm::seqPresetLoad);
+        m_menuObjMercenaryForm->unknown108.unknown002(&GfMenuObjMercenaryForm::seqPresetLoad);
       }
     } else if (event.unknown0c == 2) {
       GfMenuObject::disableFSInput();
       GfMenuObjOperationInfo::remove(handle, 0, 0, 0);
-      unknown20->sendCloseEvent(acc.unknown10, 0, 0.0f);
-      unknown20->sendOpenEvent(acc.searchSibiling("LAY_form_menu"), 0, 0.0f);
+      m_menuObjMercenaryForm->sendCloseEvent(acc.unknown10, 0, 0.0f);
+      m_menuObjMercenaryForm->sendOpenEvent(acc.searchSibiling("LAY_form_menu"), 0, 0.0f);
     }
     break;
   case GfMenuTypes::unknown003_33: {
@@ -1053,8 +1053,8 @@ void GfMenuObjMercenaryForm::PresetListener::reciveEvent(const ui::EventData &ev
     GfMenuObject::enableFSInput(3);
     GfMenuObjOperationInfo::add(handle, 0, 0, 0);
     unknown0c = event.unknown08;
-    unknown20->unknown68->setIndex(0);
-    GfMenuObject::setupInputSelectionFromList(acc.unknown10, *unknown20->unknown68);
+    m_menuObjMercenaryForm->m_menuIDList->setIndex(0);
+    GfMenuObject::setupInputSelectionFromList(acc.unknown10, *m_menuObjMercenaryForm->m_menuIDList);
     break;
   }
   case GfMenuTypes::unknown003_34: {
@@ -1090,15 +1090,15 @@ void GfMenuObjMercenaryForm::UnitListener::reciveEvent(const ui::EventData &even
     int index = event.unknown08;
     if (index != -1) {
       int oldIndex = event.unknown0c;
-      unknown20->unknown28->setIndex(index);
-      unknown20->unknown78->setIndex(index);
-      if (index < static_cast<int>(unknown20->unknown28->getSize())) {
-        GfMenuReference::setReferenceBladeID(0, unknown20->unknown28->getContents(unknown20->unknown28->getIndex(false)).unknown00);
+      m_menuObjMercenaryForm->unknown28->setIndex(index);
+      m_menuObjMercenaryForm->unknown78->setIndex(index);
+      if (index < static_cast<int>(m_menuObjMercenaryForm->unknown28->getSize())) {
+        GfMenuReference::setReferenceBladeID(0, m_menuObjMercenaryForm->unknown28->getContents(m_menuObjMercenaryForm->unknown28->getIndex(false)).unknown00);
       } else {
         GfMenuReference::setReferenceBladeID(0, 0);
       }
-      unknown20->setDetailBladePos(unknown20->unknown78->getSelectObject());
-      unknown20->updateBladeCount(false, false);
+      m_menuObjMercenaryForm->setDetailBladePos(m_menuObjMercenaryForm->unknown78->getSelectObject());
+      m_menuObjMercenaryForm->updateBladeCount(false, false);
       if (oldIndex != -1 && index != oldIndex) {
         GfMenuObjUtil::playSECommonCursor();
       }
@@ -1108,23 +1108,23 @@ void GfMenuObjMercenaryForm::UnitListener::reciveEvent(const ui::EventData &even
   case 8: {
     u32 index = event.unknown08;
     if (event.unknown0c == 10) {
-      if (static_cast<int>(index) < static_cast<int>(unknown20->unknown28->getSize())) {
-        GfMenuBladeList *blades = unknown20->unknown28;
+      if (static_cast<int>(index) < static_cast<int>(m_menuObjMercenaryForm->unknown28->getSize())) {
+        GfMenuBladeList *blades = m_menuObjMercenaryForm->unknown28;
         blades->contents.erase(blades->contents.begin() + index);
         blades->subSize(1);
         blades->contentsChanged = true;
-        if (static_cast<int>(index) < static_cast<int>(unknown20->unknown28->getSize())) {
-          GfMenuReference::setReferenceBladeID(0, unknown20->unknown28->getContents(unknown20->unknown28->getIndex(false)).unknown00);
+        if (static_cast<int>(index) < static_cast<int>(m_menuObjMercenaryForm->unknown28->getSize())) {
+          GfMenuReference::setReferenceBladeID(0, m_menuObjMercenaryForm->unknown28->getContents(m_menuObjMercenaryForm->unknown28->getIndex(false)).unknown00);
         } else {
           GfMenuReference::setReferenceBladeID(0, 0);
         }
-        unknown20->updateBladeCount(false, false);
-        unknown20->refreshBladeList();
-        if (unknown20->unknown28->getSize() == 0) {
+        m_menuObjMercenaryForm->updateBladeCount(false, false);
+        m_menuObjMercenaryForm->refreshBladeList();
+        if (m_menuObjMercenaryForm->unknown28->getSize() == 0) {
           GfMenuObject::disableFSInput();
           GfMenuObjOperationInfo::remove(handle, 0, 0, 0);
-          unknown20->unknown80->setDisp(false);
-          unknown20->sendOpenEvent(acc.searchSibiling("LAY_form_list_bl"), 0, 0.0f);
+          m_menuObjMercenaryForm->unknown80->setDisp(false);
+          m_menuObjMercenaryForm->sendOpenEvent(acc.searchSibiling("LAY_form_list_bl"), 0, 0.0f);
         }
         GfMenuObjUtil::playSECommonCancel();
       }
@@ -1135,17 +1135,17 @@ void GfMenuObjMercenaryForm::UnitListener::reciveEvent(const ui::EventData &even
     if (event.unknown08 == 2) {
       GfMenuObject::disableFSInput();
       GfMenuObjOperationInfo::remove(handle, 0, 0, 0);
-      unknown20->unknown80->setDisp(false);
-      unknown20->updateBladeCount(false, true);
-      unknown20->sendOpenEvent(acc.searchSibiling("LAY_form_list_bl"), 0, 0.0f);
+      m_menuObjMercenaryForm->unknown80->setDisp(false);
+      m_menuObjMercenaryForm->updateBladeCount(false, true);
+      m_menuObjMercenaryForm->sendOpenEvent(acc.searchSibiling("LAY_form_list_bl"), 0, 0.0f);
       GfMenuObjUtil::playSECommonCursor();
     }
     break;
   case GfMenuTypes::unknown003_33:
     GfMenuObject::enableFSInput(1);
     GfMenuObjOperationInfo::add(handle, 0, 0, 0);
-    unknown20->unknown80->setDisp(true);
-    GfMenuReference::setReferenceBladeID(0, unknown20->unknown28->getContents(unknown20->unknown28->getIndex(false)).unknown00);
+    m_menuObjMercenaryForm->unknown80->setDisp(true);
+    GfMenuReference::setReferenceBladeID(0, m_menuObjMercenaryForm->unknown28->getContents(m_menuObjMercenaryForm->unknown28->getIndex(false)).unknown00);
     GfMenuObject::sendCloseEvent(acc.searchSibiling("LAY_form_apply"), 0, 0.0f);
     break;
   default:
@@ -1168,7 +1168,7 @@ void GfMenuObjMercenaryForm::FormListener::reciveEvent(const ui::EventData &even
       break;
     }
     if (event.unknown08 == 2) {
-      unknown20->sendOpenEvent(acc.searchSibiling("LAY_leader"), 0, 0.0f);
+      m_menuObjMercenaryForm->sendOpenEvent(acc.searchSibiling("LAY_leader"), 0, 0.0f);
     }
     ui::UIObjectListener::reciveEvent(event, handle);
     break;
@@ -1187,7 +1187,7 @@ void GfMenuObjMercenaryForm::FormListener::reciveEvent(const ui::EventData &even
     param.unknown00 = 6;
     param.unknown10 = 1;
     GfMenuObjUtil::startPresetCtrl(acc.unknown10, param);
-    unknown20->sendOpenEvent(acc.searchChild("LAY_form_list_bl"), 1, 0.0f);
+    m_menuObjMercenaryForm->sendOpenEvent(acc.searchChild("LAY_form_list_bl"), 1, 0.0f);
     GfMenuObjOperationInfo::setGuideText(0x25, 0);
     GfMenuObjCmnStatus::openBlStatus(0, -1);
     break;
@@ -1266,8 +1266,8 @@ void GfMenuObjMercenaryForm::BlImgListener::reciveEvent(const ui::EventData &eve
     if (GfMenuReference::getReferenceBladeID(0) != 0) {
       acc.setDisp(true);
       acc.setAlpha(1.0f);
-      unknown20->unknown438.unknown005();
-      unknown20->unknown438.unknown002(&GfMenuObjMercenaryForm::seqOpenImage);
+      m_menuObjMercenaryForm->unknown438.unknown005();
+      m_menuObjMercenaryForm->unknown438.unknown002(&GfMenuObjMercenaryForm::seqOpenImage);
     }
     break;
   case GfMenuTypes::unknown003_34: {
@@ -1324,13 +1324,13 @@ void GfMenuObjMercenaryForm::StartListener::reciveEvent(const ui::EventData &eve
   }
   case GfMenuTypes::unknown003_33: {
     {
-      GfMenuBladeList *blades = unknown20->unknown28;
+      GfMenuBladeList *blades = m_menuObjMercenaryForm->unknown28;
       MenuBladeInfo info = blades->getContents(blades->getIndex(false));
-      blades = unknown20->unknown28;
+      blades = m_menuObjMercenaryForm->unknown28;
       blades->contents.erase(blades->getIndex(false) + blades->contents.begin());
       blades->subSize(1);
       blades->contentsChanged = true;
-      blades = unknown20->unknown28;
+      blades = m_menuObjMercenaryForm->unknown28;
       if (blades->getSize() == 0) {
         blades->addContents(info);
       } else {
@@ -1340,17 +1340,17 @@ void GfMenuObjMercenaryForm::StartListener::reciveEvent(const ui::EventData &eve
       }
     }
     mm::mtl::FixStr<32> name;
-    unknown20->unknown78->clear();
+    m_menuObjMercenaryForm->unknown78->clear();
     for (u32 i = 0; i < 5; i++) {
-      if (i < unknown20->unknown28->getSize() - 1) {
+      if (i < m_menuObjMercenaryForm->unknown28->getSize() - 1) {
         name.format("LAY_mis_start_bl@%02d", i + 1);
-        unknown20->unknown78->addObject(acc.searchChild(name.c_str()));
+        m_menuObjMercenaryForm->unknown78->addObject(acc.searchChild(name.c_str()));
       }
       acc.setDispChild(false, name.c_str());
     }
     acc.setDisp(true);
-    unknown20->unknown108.unknown005();
-    unknown20->unknown108.unknown002(&GfMenuObjMercenaryForm::seqDepartureStart);
+    m_menuObjMercenaryForm->unknown108.unknown005();
+    m_menuObjMercenaryForm->unknown108.unknown002(&GfMenuObjMercenaryForm::seqDepartureStart);
     break;
   }
   default:

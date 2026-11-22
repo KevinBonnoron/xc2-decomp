@@ -74,7 +74,7 @@ public:
 
   HandlePtr<UpdatableObject> unknown18; // Inferred role: self handle; original member name unknown.
   u32 unknown28;                        // Inferred role: type; original member name unknown.
-  u32 unknown2c;                        // Inferred role: layer; original member name unknown.
+  u32 m_layer;                          // Inferred role: layer; named after the game accessor fw::ComponentObject::getLayer.
   u16 unknown30;                        // Inferred role: flags; original member name unknown.
   u8 _32[0x38 - 0x32];
   ComponentObject *unknown38[COMPONENT_SLOT_UNKNOWN_16]; // Inferred role: components; original member name unknown.
@@ -84,7 +84,7 @@ public:
 
 static_assert(offsetof(UpdatableObject, unknown18) == 0x18, "");
 static_assert(offsetof(UpdatableObject, unknown28) == 0x28, "");
-static_assert(offsetof(UpdatableObject, unknown2c) == 0x2c, "");
+static_assert(offsetof(UpdatableObject, m_layer) == 0x2c, "");
 static_assert(offsetof(UpdatableObject, unknown30) == 0x30, "");
 static_assert(offsetof(UpdatableObject, unknown38) == 0x38, "");
 static_assert(offsetof(UpdatableObject, unknownb8) == 0xb8, "");

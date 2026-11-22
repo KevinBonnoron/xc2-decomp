@@ -15,8 +15,8 @@ namespace ml {
 class DrPixlOccQuery;
 
 DrLightObjGlobalIBL::DrLightObjGlobalIBL()
-    : unknown00(nullptr), unknown08(0), unknown10(0), unknown18(0), unknown48(0.0f), unknown50(mm::Vec3::zero), unknown60(mm::Vec3::zero), unknown70(0), unknown390(mm::Vec3::zero), unknown3b8(0),
-      unknown3c0(0), unknown3c4(false) {
+    : m_drGlobalIBLPack(nullptr), m_version(0), unknown10(0), unknown18(0), unknown48(0.0f), unknown50(mm::Vec3::zero), unknown60(mm::Vec3::zero), unknown70(0), unknown390(mm::Vec3::zero),
+      unknown3b8(0), unknown3c0(0), unknown3c4(false) {
   unknown20.clear();
   for (int i = 0; i < SH_TERM_UNKNOWN_4; i++) {
     unknown410[i] = mm::Vec4::zero;
@@ -26,11 +26,11 @@ DrLightObjGlobalIBL::DrLightObjGlobalIBL()
 DrLightObjGlobalIBL::~DrLightObjGlobalIBL() {
   for (u32 i = 0; i < unknown20.size(); i++) {
     MeshData &mesh = unknown20[i];
-    mesh.unknown00.release();
-    mesh.unknown28.release();
-    if (mesh.unknown110 != nullptr) {
-      delete mesh.unknown110;
-      mesh.unknown110 = nullptr;
+    mesh.m_cGLibVtxVertex.release();
+    mesh.m_cGLibVtxIndex.release();
+    if (mesh.m_drResUseQueryObj != nullptr) {
+      delete mesh.m_drResUseQueryObj;
+      mesh.m_drResUseQueryObj = nullptr;
     }
   }
 }
@@ -39,30 +39,30 @@ int DrLightObjGlobalIBL::getPriority() const { return m_priority; }
 
 void DrLightObjGlobalIBL::bindVertex(u32 index) {
   unknown70 = index;
-  grlib::CGLibCtlVertex::setVertex(unknown20[index].unknown00);
+  grlib::CGLibCtlVertex::setVertex(unknown20[index].m_cGLibVtxVertex);
 }
 
-void DrLightObjGlobalIBL::drawVertex() { unknown20[unknown70].unknown28.drawIndex(); }
+void DrLightObjGlobalIBL::drawVertex() { unknown20[unknown70].m_cGLibVtxIndex.drawIndex(); }
 
 void DrLightObjGlobalIBL::beginOccQuery() {
-  DrPixlOccQuery *occQuery = DrMan::getIns()->unknown78->unknown7f8;
-  unknown20[unknown70].unknown110->begin(occQuery);
+  DrPixlOccQuery *occQuery = DrMan::getIns()->m_drPixlMan->m_drPixlOccQuery;
+  unknown20[unknown70].m_drResUseQueryObj->begin(occQuery);
 }
 
-void DrLightObjGlobalIBL::endOccQuery() { unknown20[unknown70].unknown110->end(); }
+void DrLightObjGlobalIBL::endOccQuery() { unknown20[unknown70].m_drResUseQueryObj->end(); }
 
 void DrLightObjGlobalIBL::update() {
   unknown3c0 = 0;
   for (u32 i = 0; i < unknown20.size(); i++) {
-    unknown20[i].unknown110->update();
-    unknown3c0 += unknown20[i].unknown110->m_pixel;
+    unknown20[i].m_drResUseQueryObj->update();
+    unknown3c0 += unknown20[i].m_drResUseQueryObj->m_pixel;
   }
-  DrCalcViewWork *view = DrMan::getIns()->unknown580->unknown10;
+  DrCalcViewWork *view = DrMan::getIns()->m_drCalcMan->m_drCalcViewWork;
   mm::Vec3 center((unknown50.x + unknown60.x) * 0.5f, (unknown50.y + unknown60.y) * 0.5f, (unknown50.z + unknown60.z) * 0.5f);
   bool isVisible = false;
-  if (view->unknown4e0.clipTest(center, unknown48)) {
+  if (view->m_drCalcClipWorkViewPlane.clipTest(center, unknown48)) {
     for (MeshData &mesh : unknown20) {
-      bool isClipped = view->unknown4e0.clipTest(mesh.unknown100, mesh.unknownd0);
+      bool isClipped = view->m_drCalcClipWorkViewPlane.clipTest(mesh.unknown100, mesh.unknownd0);
       mesh.unknown118 = isClipped;
       isVisible = isVisible || isClipped;
       // The game computes the three differences before it squares them (0x71007da36c to 0x71007da390).

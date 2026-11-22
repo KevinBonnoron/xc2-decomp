@@ -138,20 +138,20 @@ public:
 private:
   // The element size comes from FixedVector<HandleRegion, 512> (0x4000 bytes of storage); the members are not decompiled yet.
   struct HandleRegion {
-    HandleRegion(const ALLOC_HANDLE &handle, Region *region) : unknown00(handle), unknown08(region) { unknown10.unknown08 = handle; }
-    bool operator==(const HandleRegion &other) const { return unknown00 == other.unknown00 && unknown08 == other.unknown08; }
+    HandleRegion(const ALLOC_HANDLE &handle, Region *region) : m_ALLOC_HANDLE(handle), m_region(region) { m_memHandlebaseAllocator.m_ALLOC_HANDLE = handle; }
+    bool operator==(const HandleRegion &other) const { return m_ALLOC_HANDLE == other.m_ALLOC_HANDLE && m_region == other.m_region; }
 
-    ALLOC_HANDLE unknown00;           // Inferred role: handle of the region; original member name unknown.
-    Region *unknown08;                // Inferred role: region of the handle; original member name unknown.
-    MemHandlebaseAllocator unknown10; // Inferred role: allocator handed out for the handle; original member name unknown.
+    ALLOC_HANDLE m_ALLOC_HANDLE;                     // Inferred role: handle of the region; original member name unknown.
+    Region *m_region;                                // Inferred role: region of the handle; original member name unknown.
+    MemHandlebaseAllocator m_memHandlebaseAllocator; // Inferred role: allocator handed out for the handle; original member name unknown.
   };
 
   static_assert(sizeof(HandleRegion) == 0x20, "");
 
   // Inferred role: slot of the table from region handles to regions; original type name unknown.
   struct unknown002 {
-    Region *unknown00; // Inferred role: region of the handle; original member name unknown.
-    u32 unknown08;     // Inferred role: key of the handle; original member name unknown.
+    Region *m_region; // Inferred role: region of the handle; original member name unknown.
+    u32 unknown08;    // Inferred role: key of the handle; original member name unknown.
   };
 
   // Inferred role: open addressing table from region handles to regions; original type name unknown.
@@ -163,7 +163,7 @@ private:
           u32 key = handle.unknown00 & unknown2010;
           const unknown002 &slot = unknown00[key % unknown2000];
           if (slot.unknown08 == key) {
-            return slot.unknown00;
+            return slot.m_region;
           }
         }
       }

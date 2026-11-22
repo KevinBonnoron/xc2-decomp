@@ -23,7 +23,7 @@ public:
   struct unknown001 {
     u64 unknown00;                   // Inferred role: handle; original member name unknown.
     mm::mtl::FixStr<128> *unknown08; // Inferred role: file name; original member name unknown.
-    s32 unknown10;                   // Inferred role: file size, -2 until the job has run; original member name unknown.
+    s32 m_fileSizeByHandle;          // Inferred role: file size, -2 until the job has run; named after the game accessor gf::GfFileSizePool::getFileSizeByHandle.
     u32 unknown14;                   // Inferred role: index in the pool; original member name unknown.
   };
 

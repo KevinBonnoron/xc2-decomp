@@ -13,7 +13,7 @@ void printf(const char *format, ...) {
   va_end(args);
   char16_t wide[256];
   SjisToUTF16(text, wide, 256);
-  Debug::log_.unknown10(static_cast<LogMessage::Type>(0), wide);
+  Debug::log_.m_messageMethod(static_cast<LogMessage::Type>(0), wide);
 }
 
 int vsprintf(char *buffer, unsigned long size, const char *format, va_list args) { return vsprintf_impl<char>(buffer, size, format, args) - buffer; }
@@ -24,7 +24,7 @@ void printf(const char16_t *format, ...) {
   char16_t text[256];
   vsprintf(text, 512, format, args);
   va_end(args);
-  Debug::log_.unknown10(static_cast<LogMessage::Type>(0), text);
+  Debug::log_.m_messageMethod(static_cast<LogMessage::Type>(0), text);
 }
 
 unsigned long vsprintf(char16_t *buffer, unsigned long size, const char16_t *format, va_list args) {

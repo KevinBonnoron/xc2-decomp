@@ -19,8 +19,8 @@ void WorkUtil::setDispLogH(bool isDisp) { _wkut::s_bDispLogH = isDisp; }
 bool WorkUtil::isDispLogH() { return _wkut::s_bDispLogH; }
 
 bool WorkUtil::isTopOfParent(const WorkObj *work) {
-  if (work->unknown58 != nullptr) {
-    return work->unknown58->unknown60.begin()->value == work;
+  if (work->m_workObj != nullptr) {
+    return work->m_workObj->unknown60.begin()->value == work;
   }
 
   return false;

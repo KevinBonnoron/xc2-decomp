@@ -75,7 +75,7 @@ void setGobTargetable(gf::GF_OBJ_HANDLE *handle, bool isTargetable) {
 
 GmkTbox::GmkTbox() : unknown48(gf::unknown020), unknown50(true), unknown54(0.0f), unknown58(0.0f) {}
 
-int GmkTbox::getGameFlagId() const { return unknown20.unknown18 + GAME_FLAG_UNKNOWN_31765; }
+int GmkTbox::getGameFlagId() const { return m_createInfo.unknown18 + GAME_FLAG_UNKNOWN_31765; }
 
 void GmkTbox::successToAccess() {
   u32 progress;
@@ -85,7 +85,7 @@ void GmkTbox::successToAccess() {
     setGobTargetable(unknown48, false);
     progress = PROGRESS_UNKNOWN_1;
   }
-  gf::GfGameFlag::setLocal(2, unknown20.unknown18 + GAME_FLAG_UNKNOWN_31765, progress);
+  gf::GfGameFlag::setLocal(2, m_createInfo.unknown18 + GAME_FLAG_UNKNOWN_31765, progress);
 }
 
 void GmkTbox::setTargetable(bool isTargetable) const { setGobTargetable(unknown48, isTargetable); }
@@ -140,7 +140,7 @@ bool GmkTbox::canPopGobInst() const {
   if (getBdatInfo()->unknown05 && getProgress() == PROGRESS_UNKNOWN_1) {
     return false;
   }
-  return getBdatInfo()->isPopCondMatched(unknown08.unknown08->unknown00);
+  return getBdatInfo()->isPopCondMatched(m_createBaseInfo.m_xform->unknown00);
 }
 
 void GmkTbox::createGobInst() {
@@ -149,13 +149,13 @@ void GmkTbox::createGobInst() {
   }
   disposeGobInst(false);
   CBdatWrapper bdat = {getBindedBdatFp()};
-  unknown48 = gf::GfObjFactory::createGmkTbox(bdat, unknown20.unknown18);
+  unknown48 = gf::GfObjFactory::createGmkTbox(bdat, m_createInfo.unknown18);
   bindToGameObj(unknown48);
   validateDisp();
   bool isOpened = getProgress() == PROGRESS_UNKNOWN_1;
   gf::GfObjSetupGimmick *setup = gf::GfObjUtil::getObjSetup<gf::GfObjSetupGimmick>(unknown48);
   setup->unknown70 = isOpened ? "S_open_02" : "S_open_00";
-  unknown003(setup, unknown08.unknown08);
+  unknown003(setup, m_createBaseInfo.m_xform);
   setup->setInitialScale(getData()->unknown04 * 0.1f);
   if (getBdatInfo()->unknown02 && getProgress() == PROGRESS_UNKNOWN_0) {
     setup->unknown50 = 0.0f;
@@ -165,7 +165,7 @@ void GmkTbox::createGobInst() {
 }
 
 bool GmkTbox::canDepopGobInst() const {
-  if (unknown48 != gf::unknown020 && getBdatInfo()->isDepopCondMatched(unknown08.unknown08->unknown00)) {
+  if (unknown48 != gf::unknown020 && getBdatInfo()->isDepopCondMatched(m_createBaseInfo.m_xform->unknown00)) {
     return true;
   }
   return false;

@@ -33,7 +33,7 @@ static_assert(sizeof(unknown003) == 0x40, "");
 
 } // namespace
 
-CreditReader::CreditReader() : unknown08(nullptr), unknown10(0), unknown18(nullptr), unknown20(nullptr) {}
+CreditReader::CreditReader() : unknown08(nullptr), m_rowCount(0), unknown18(nullptr), unknown20(nullptr) {}
 
 CreditReader::~CreditReader() {}
 
@@ -41,7 +41,7 @@ void CreditReader::bind(void *data, int size) {
   unknown08 = data;
   const unknown001 *header = static_cast<const unknown001 *>(data);
   if (header->unknown00 == 0x545243) {
-    unknown10 = header->unknown04;
+    m_rowCount = header->unknown04;
     const u8 *base = static_cast<const u8 *>(data);
     const u8 *rows = base + header->unknown08;
     const u8 *strings = base + header->unknown0c;
@@ -49,19 +49,19 @@ void CreditReader::bind(void *data, int size) {
     unknown20 = reinterpret_cast<const char *>(strings);
   } else {
     unknown08 = nullptr;
-    unknown10 = 0;
+    m_rowCount = 0;
   }
 }
 
 void CreditReader::unbind() {
   unknown08 = nullptr;
-  unknown10 = 0;
+  m_rowCount = 0;
 }
 
-int CreditReader::getRowCount() { return unknown10; }
+int CreditReader::getRowCount() { return m_rowCount; }
 
 bool CreditReader::getRow(int index, Row &row) {
-  if (unknown10 <= 0 || unknown10 <= index) {
+  if (m_rowCount <= 0 || m_rowCount <= index) {
     return false;
   }
   if (unknown18 == nullptr) {

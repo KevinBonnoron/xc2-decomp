@@ -42,7 +42,7 @@ public:
   Sequence unknown08;                                   // Inferred role: sequence; original member name unknown.
   bool unknown18;                                       // Inferred role: created; original member name unknown.
   bool unknown19;                                       // Inferred role: field skill window closed; original member name unknown.
-  GF_OBJ_HANDLE *unknown20;                             // Inferred role: collection point object; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE;                       // Inferred role: collection point object; original member name unknown.
   mm::mtl::FixedVector<GfDropitemEmitter, 4> unknown30; // Inferred role: dropitem emitters; original member name unknown.
   f32 unknown1c0;                                       // Inferred role: elapsed time; original member name unknown.
   f32 unknown1c4;                                       // Inferred role: wait time before the field skill check; original member name unknown.
@@ -52,7 +52,7 @@ public:
 
 static_assert(offsetof(GfFieldCollect, unknown08) == 0x08, "");
 static_assert(offsetof(GfFieldCollect, unknown18) == 0x18, "");
-static_assert(offsetof(GfFieldCollect, unknown20) == 0x20, "");
+static_assert(offsetof(GfFieldCollect, m_GF_OBJ_HANDLE) == 0x20, "");
 static_assert(offsetof(GfFieldCollect, unknown30) == 0x30, "");
 static_assert(offsetof(GfFieldCollect, unknown1c0) == 0x1c0, "");
 static_assert(offsetof(GfFieldCollect, unknown1c8) == 0x1c8, "");

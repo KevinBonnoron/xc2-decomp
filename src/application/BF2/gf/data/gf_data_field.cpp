@@ -36,7 +36,7 @@ const char *GfDataField::getFieldSkillVoice(u32 chara, u32 voice) {
       return nullptr;
     }
 
-    u32 personality = GfDataBlade::getSDataBlade(chara).unknown824;
+    u32 personality = GfDataBlade::getSDataBlade(chara).m_personality;
     u32 personalityVoice = GfBdatBtl::get()->getBTL_Bl_PersonalityVoiceID(personality);
     if (personalityVoice - VOICE_UNKNOWN_61 >= VOICE_UNKNOWN_32) {
       return nullptr;

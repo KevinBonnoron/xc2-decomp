@@ -19,7 +19,7 @@ void StateFieldWall::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   StateUtil::setEnableLookIK(*behavior, false);
   StateUtilField::setWallMoveMode(*behavior, true);
   GfComPropertyPc *property = behavior->getProperty();
-  property->unknown310.unknown18 = property->unknown310.unknown003()->unknown20;
+  property->m_propertyField.unknown18 = property->m_propertyField.unknown003()->unknown20;
   property->unknown80 = mm::Vec3::zero;
   property->unknown90 = 0.0f;
   property->unknown94 = 0.0f;
@@ -30,12 +30,12 @@ void StateFieldWall::enter(GfComBehaviorPc *behavior, ai::State *previous) {
 void StateFieldWall::flushWallType(GfComBehaviorPc *behavior) {
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   GfComSound *sound = behavior->unknown08->getComponent<GfComSound>();
-  if (property->unknown310.unknown10_6) {
+  if (property->m_propertyField.unknown10_6) {
     // The game loads the ladder word (ldr w20 at 0x7100559ca8) before the getSoundVariableName call and keeps the
     // branch on its bit after it (tbnz, one call per arm, tails merged): the single-use local places that load
     // (ruling 2026-11-13 #2, P2), the if/else gives the two arms (one expression gives ubfx; 49 vs 45 insns
     // with the name call in each arm).
-    bool isLadder = property->unknown310.unknown130.unknown24_7;
+    bool isLadder = property->m_propertyField.unknown130.unknown24_7;
     const char *name = getSoundVariableName(SOUND_VARIABLE_UNKNOWN_2);
     if (isLadder) {
       sound->unknown001(name, 1);
@@ -48,7 +48,7 @@ void StateFieldWall::flushWallType(GfComBehaviorPc *behavior) {
 void StateFieldWall::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
   flushWallType(behavior);
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
-  if (!property->unknown310.unknown10_6) {
+  if (!property->m_propertyField.unknown10_6) {
     GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
     if (StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_IDLE)) {
       reqState(STATE_ID_UNKNOWN_3);

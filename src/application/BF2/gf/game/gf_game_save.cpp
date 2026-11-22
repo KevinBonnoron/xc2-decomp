@@ -16,23 +16,23 @@
 
 namespace gf {
 
-GfGameSave::GfGameSave(SAVESLOT slot) : unknown08(0), unknown0c(slot), unknown10(nullptr), unknown18(nullptr), unknown20(nullptr), unknown28(0), unknown30(nullptr), unknown38(0) {}
+GfGameSave::GfGameSave(SAVESLOT slot) : unknown08(0), unknown0c(slot), m_save(nullptr), m_option(nullptr), unknown20(nullptr), unknown28(0), unknown30(nullptr), unknown38(0) {}
 
 GfGameSave::~GfGameSave() { destroySaveData(); }
 
 void GfGameSave::destroySaveData() {
   unknown20 = nullptr;
   unknown28 = 0;
-  SDataSave *saveData = unknown10;
+  SDataSave *saveData = m_save;
   if (saveData != nullptr) {
-    saveData->unknown10.unknown109b30.clear();
-    saveData->unknown10.unknown1098c8.unknown00.clear();
-    getAllocator(ALLOCATOR_UNKNOWN_0)->deallocate(unknown10);
-    unknown10 = nullptr;
+    saveData->m_game.m_taskAchieve.clear();
+    saveData->m_game.m_sDataMercenaries.unknown00.clear();
+    getAllocator(ALLOCATOR_UNKNOWN_0)->deallocate(m_save);
+    m_save = nullptr;
   }
-  if (unknown18 != nullptr) {
-    getAllocator(ALLOCATOR_UNKNOWN_0)->deallocate(unknown18);
-    unknown18 = nullptr;
+  if (m_option != nullptr) {
+    getAllocator(ALLOCATOR_UNKNOWN_0)->deallocate(m_option);
+    m_option = nullptr;
   }
 }
 
@@ -77,15 +77,15 @@ void GfGameSave::execGameSaveWithMicroThread() {
 
 void GfGameSave::createGameSaveData(mm::mtl::FixStr<256> &path) {
   void *buffer = getAllocator(ALLOCATOR_UNKNOWN_0)->allocate(sizeof(SDataSave), 16);
-  unknown10 = new (buffer) SDataSave();
-  GfGameUtilSaveData::setupGameSaveData(*unknown10);
-  unknown20 = unknown10;
+  m_save = new (buffer) SDataSave();
+  GfGameUtilSaveData::setupGameSaveData(*m_save);
+  unknown20 = m_save;
   unknown28 = sizeof(SDataSave);
   GfDataSave::getFileNameForSaveBin(path, unknown0c);
-  GfDataManager::setupGame(unknown10, &unknown10->unknown10, nullptr);
-  _gfgsv::s_SDataSave.unknown00 = unknown10->unknown00;
-  _gfgsv::s_SDataSave.unknown08 = unknown10->unknown08;
-  _gfgsv::s_SDataSave.unknown10 = unknown10->unknown10;
+  GfDataManager::setupGame(m_save, &m_save->m_game, nullptr);
+  _gfgsv::s_SDataSave.unknown00 = m_save->unknown00;
+  _gfgsv::s_SDataSave.m_realTime = m_save->m_realTime;
+  _gfgsv::s_SDataSave.m_game = m_save->m_game;
   if (unknown0c == SAVESLOT_UNKNOWN_22) {
     GfManager::setSaveDataCreated();
     GfGameUtilSaveData::setTitleSaveData(_gfgsv::s_SDataSave);
@@ -103,17 +103,17 @@ void GfGameSave::execOptionSaveWithMicroThread() {
 
 void GfGameSave::createOptionSaveData(mm::mtl::FixStr<256> &path) {
   void *buffer = getAllocator(ALLOCATOR_UNKNOWN_0)->allocate((sizeof(SDataOption) + 15) & ~15, 16);
-  unknown18 = new (buffer) SDataOption();
+  m_option = new (buffer) SDataOption();
   if (!GfManager::isExecModeThater() && !GfManager::isExecModeAdvertize()) {
-    GfGameUtilSaveData::setupOptionSaveData(*unknown18);
+    GfGameUtilSaveData::setupOptionSaveData(*m_option);
   } else {
-    *unknown18 = GfGameUtilSaveData::getValidOptionData();
+    *m_option = GfGameUtilSaveData::getValidOptionData();
   }
-  unknown20 = unknown18;
+  unknown20 = m_option;
   unknown28 = sizeof(SDataOption);
   GfDataSave::getFileNameForOptionBin(path);
-  GfDataManager::setupOptionData(*unknown18);
-  _gfgsv::s_SDataOption = *unknown18;
+  GfDataManager::setupOptionData(*m_option);
+  _gfgsv::s_SDataOption = *m_option;
 }
 
 void GfGameSave::execGameSaveBlockForDebug() {

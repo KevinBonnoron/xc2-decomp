@@ -48,7 +48,7 @@ class TaskFieldCheckWarpBattleWaterDead : public ai::TaskNode {
 public:
   static mm::mtl::RTTI m_rtti;
 
-  TaskFieldCheckWarpBattleWaterDead(const char *name) : ai::TaskNode(name, 3), unknown40() {}
+  TaskFieldCheckWarpBattleWaterDead(const char *name) : ai::TaskNode(name, 3), m_paramAdapter() {}
   const mm::mtl::RTTI *getRTTI() const override { return &m_rtti; }
   void onEvent(ai::BlackBoard &blackBoard, const ai::Event &event) override;
   void onChangeActivate(BlackBoardField &blackBoard, const ai::ActivateEvent &event);
@@ -60,12 +60,12 @@ public:
 #line 44
   UNKNOWN001
 
-  f32 unknown38;              // Inferred role: timer; original member name unknown.
-  fw::ParamAdapter unknown40; // Inferred role: warp param; original member name unknown.
+  f32 unknown38;                   // Inferred role: timer; original member name unknown.
+  fw::ParamAdapter m_paramAdapter; // Inferred role: warp param; original member name unknown.
 };
 
 static_assert(offsetof(TaskFieldCheckWarpBattleWaterDead, unknown38) == 0x38, "");
-static_assert(offsetof(TaskFieldCheckWarpBattleWaterDead, unknown40) == 0x40, "");
+static_assert(offsetof(TaskFieldCheckWarpBattleWaterDead, m_paramAdapter) == 0x40, "");
 static_assert(sizeof(TaskFieldCheckWarpBattleWaterDead) == 0x48, "");
 
 // Layout evidence: BehaviorTree::createTask<TaskFieldCheckWarpFallDead> (0x710053f924) allocates 0x38 bytes and passes

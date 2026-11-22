@@ -24,7 +24,7 @@ enum EVT_tarcvtype : int;
 namespace event {
 
 CharaEvaPlayer::CharaEvaPlayer()
-    : unknown08(0), unknown10(nullptr), unknown18(nullptr), unknown20(nullptr), unknown28(nullptr), unknown30(nullptr), unknown38(0.0f), unknown40(0.0f, 0.0f, 0.0f), unknown50(false),
+    : unknown08(0), m_charaObj(nullptr), unknown18(nullptr), m_charaDysUpdater(nullptr), unknown28(nullptr), m_cRchaEx(nullptr), unknown38(0.0f), unknown40(0.0f, 0.0f, 0.0f), unknown50(false),
       unknown60(0.0f, 0.0f, 0.0f), unknown70(0), unknown74(0), unknown78(0), unknown7c(1), unknown80(1), unknown84(1) {}
 
 // Inferred helper: a Vec3 track of the rcha animation at a fractional frame, linearly interpolated between the two frames around it;
@@ -103,27 +103,27 @@ void CharaEvaPlayer::update(f32 delta) {
   if (unknown18 == nullptr) {
     return;
   }
-  gf::GfObj *obj = gf::GfObjUtil::getObj(unknown18->unknown20);
+  gf::GfObj *obj = gf::GfObjUtil::getObj(unknown18->m_GF_OBJ_HANDLE);
   if (obj == nullptr) {
     return;
   }
-  if (unknown30 == nullptr) {
+  if (m_cRchaEx == nullptr) {
     return;
   }
   f32 frame = unknown38;
-  f32 lastFrame = static_cast<f32>(unknown30->getFrameCount()) - 1.0f;
+  f32 lastFrame = static_cast<f32>(m_cRchaEx->getFrameCount()) - 1.0f;
   frame = mm::min(frame, lastFrame);
   u32 flags = unknown08;
   if ((flags & FLAG_UNKNOWN_1) != 0) {
-    if (!unknown30->getWeaponSpMotion(frame)) {
+    if (!m_cRchaEx->getWeaponSpMotion(frame)) {
       unknown08 &= ~FLAG_UNKNOWN_2;
     } else {
       unknown08 |= FLAG_UNKNOWN_2;
       if ((flags & FLAG_UNKNOWN_2) == 0 && unknown28 != nullptr) {
         setSpMotWeapon(true, unknown28);
         obj->getComponent<gf::GfComTransform>();
-        unknown10->setPos(unknown40);
-        unknown10->setRot(mm::Vec3::zero);
+        m_charaObj->setPos(unknown40);
+        m_charaObj->setRot(mm::Vec3::zero);
       }
     }
   }
@@ -131,21 +131,21 @@ void CharaEvaPlayer::update(f32 delta) {
     mm::Vec3 pos;
     mm::Vec3 rot;
     if ((unknown08 & FLAG_UNKNOWN_3) == 0) {
-      pos = unknown030(unknown30, &CRchaEx::getWeaponPos, frame);
-      rot = unknown031(unknown30, &CRchaEx::getWeaponRot, frame);
+      pos = unknown030(m_cRchaEx, &CRchaEx::getWeaponPos, frame);
+      rot = unknown031(m_cRchaEx, &CRchaEx::getWeaponRot, frame);
     } else {
-      pos = unknown030(unknown30, &CRchaEx::getObjPos, frame);
-      rot = unknown031(unknown30, &CRchaEx::getObjRot, frame);
+      pos = unknown030(m_cRchaEx, &CRchaEx::getObjPos, frame);
+      rot = unknown031(m_cRchaEx, &CRchaEx::getObjRot, frame);
     }
-    f32 objScale = unknown032(unknown30, &CRchaEx::getObjScl, frame);
-    f32 weaponScale = unknown032(unknown30, &CRchaEx::getWeaponScl, frame);
+    f32 objScale = unknown032(m_cRchaEx, &CRchaEx::getObjScl, frame);
+    f32 weaponScale = unknown032(m_cRchaEx, &CRchaEx::getWeaponScl, frame);
     obj->getComponent<gf::GfComTransform>();
-    unknown10->setPos(pos);
+    m_charaObj->setPos(pos);
     mm::Vec3 euler;
     mm::quatToEuler(mm::unknown005(rot), euler);
-    unknown10->setRot(euler);
+    m_charaObj->setRot(euler);
     if (unknown18->unknown18 == gf::GF_EVT_MODEL_UNKNOWN_2) {
-      unknown10->setScaleWeapon(weaponScale != 1.0f ? weaponScale : objScale);
+      m_charaObj->setScaleWeapon(weaponScale != 1.0f ? weaponScale : objScale);
     }
   }
 
@@ -153,23 +153,23 @@ void CharaEvaPlayer::update(f32 delta) {
     int prevAction = unknown70;
     mm::Vec3 pos;
     mm::Vec3 rot;
-    pos = unknown030(unknown30, &CRchaEx::getObjPos, frame);
-    rot = unknown031(unknown30, &CRchaEx::getObjRot, frame);
-    bool isTarget = unknown30->isTargetEnable(frame);
+    pos = unknown030(m_cRchaEx, &CRchaEx::getObjPos, frame);
+    rot = unknown031(m_cRchaEx, &CRchaEx::getObjRot, frame);
+    bool isTarget = m_cRchaEx->isTargetEnable(frame);
     mm::Vec3 tar;
     if (isTarget) {
-      tar = unknown030(unknown30, &CRchaEx::getTarget, frame);
+      tar = unknown030(m_cRchaEx, &CRchaEx::getTarget, frame);
     } else {
       tar = mm::Vec3::zero;
     }
-    int actionType = unknown30->getActionType(frame);
-    unknown30->getFacePrisetType(frame);
-    unknown30->getEyeType(frame);
+    int actionType = m_cRchaEx->getActionType(frame);
+    m_cRchaEx->getFacePrisetType(frame);
+    m_cRchaEx->getEyeType(frame);
     obj->getComponent<gf::GfComTransform>();
-    unknown10->setPos(pos);
+    m_charaObj->setPos(pos);
     mm::Vec3 euler;
     mm::quatToEuler(mm::unknown005(rot), euler);
-    unknown10->setRot(euler);
+    m_charaObj->setRot(euler);
     if (unknown50 != isTarget || !(fabsf(tar.x - unknown60.x) <= 0.000001f && fabsf(tar.y - unknown60.y) <= 0.000001f && fabsf(tar.z - unknown60.z) <= 0.000001f)) {
       playTar(isTarget, tar);
     }
@@ -187,13 +187,13 @@ void CharaEvaPlayer::update(f32 delta) {
     int battleType = 0;
     int footL = 0;
     int footR = 0;
-    f32 blend = unknown032(unknown30, &CRchaEx::getDynamicsBlend, frame);
-    unknown30->getWeaponDisp(disp, frame);
-    unknown30->getWeaponMount(mount, frame);
-    unknown30->getWeaponBattle(battleType, frame);
-    unknown30->getFootEffectL(footL, frame);
-    unknown30->getFootEffectR(footR, frame);
-    unknown20->setDynamicsBlendWeight(blend);
+    f32 blend = unknown032(m_cRchaEx, &CRchaEx::getDynamicsBlend, frame);
+    m_cRchaEx->getWeaponDisp(disp, frame);
+    m_cRchaEx->getWeaponMount(mount, frame);
+    m_cRchaEx->getWeaponBattle(battleType, frame);
+    m_cRchaEx->getFootEffectL(footL, frame);
+    m_cRchaEx->getFootEffectR(footR, frame);
+    m_charaDysUpdater->setDynamicsBlendWeight(blend);
     if (disp > 0 && curDisp != disp) {
       setDispWeapon(disp);
     }
@@ -211,17 +211,17 @@ void CharaEvaPlayer::update(f32 delta) {
     }
   }
 
-  gf::GfObjAcc acc(unknown18->unknown20);
+  gf::GfObjAcc acc(unknown18->m_GF_OBJ_HANDLE);
   int extMeshMax = acc.getExtMeshMax();
   for (int i = 0; i < extMeshMax; i++) {
     const char *name = acc.getExtMeshName(i);
     if (*name != '\0') {
       int visible = 0;
-      unknown30->getVisible(visible, name, frame);
+      m_cRchaEx->getVisible(visible, name, frame);
       if (visible == 1) {
-        unknown10->setExtDisp(name, true);
+        m_charaObj->setExtDisp(name, true);
       } else if (visible == 2) {
-        unknown10->setExtDisp(name, false);
+        m_charaObj->setExtDisp(name, false);
       }
     }
   }
@@ -229,7 +229,7 @@ void CharaEvaPlayer::update(f32 delta) {
   unknown88.update(delta);
   unknowne0.update(delta);
   unknown38 = unknown38 + delta;
-  f32 maxFrame = static_cast<f32>(unknown30->getFrameCount()) - 1.0f;
+  f32 maxFrame = static_cast<f32>(m_cRchaEx->getFrameCount()) - 1.0f;
   if (maxFrame < unknown38) {
     unknown38 = maxFrame;
   }
@@ -254,7 +254,7 @@ inline void CharaEvaPlayer::setSpMotWeapon(bool isSpMotion, void *data) {
 
 void CharaEvaPlayer::setScaleWeapon(f32 scale) {
   if (unknown18->unknown18 == gf::GF_EVT_MODEL_UNKNOWN_2) {
-    unknown10->setScaleWeapon(scale);
+    m_charaObj->setScaleWeapon(scale);
   }
 }
 
@@ -263,9 +263,9 @@ void CharaEvaPlayer::playTar(bool isPlay, const mm::Vec3 &tar) {
     return;
   }
   if (isPlay) {
-    unknown10->setTar(TarAxis(TarAxis::AXIS_UNKNOWN_1, tar), -1.0f, static_cast<EVT_tarcvtype>(0), static_cast<EVT_aimtype>(0), -1.0f, -1.0f);
+    m_charaObj->setTar(TarAxis(TarAxis::AXIS_UNKNOWN_1, tar), -1.0f, static_cast<EVT_tarcvtype>(0), static_cast<EVT_aimtype>(0), -1.0f, -1.0f);
   } else {
-    unknown10->setTar(TarAxis(TarAxis::AXIS_UNKNOWN_1, tar), 0.0f, static_cast<EVT_tarcvtype>(0), static_cast<EVT_aimtype>(0), -1.0f, -1.0f);
+    m_charaObj->setTar(TarAxis(TarAxis::AXIS_UNKNOWN_1, tar), 0.0f, static_cast<EVT_tarcvtype>(0), static_cast<EVT_aimtype>(0), -1.0f, -1.0f);
   }
   unknown50 = isPlay;
   this->unknown60 = tar;
@@ -275,7 +275,7 @@ void CharaEvaPlayer::playAction(int type) {
   if (unknown18 == nullptr) {
     return;
   }
-  gf::GfObj *obj = gf::GfObjUtil::getObj(unknown18->unknown20);
+  gf::GfObj *obj = gf::GfObjUtil::getObj(unknown18->m_GF_OBJ_HANDLE);
   if (obj == nullptr || (unknown08 & FLAG_UNKNOWN_0) == 0) {
     return;
   }
@@ -295,11 +295,11 @@ void CharaEvaPlayer::playAction(int type) {
 
 void CharaEvaPlayer::setDispWeapon(int type) {
   if (unknown18->unknown18 == gf::GF_EVT_MODEL_UNKNOWN_0) {
-    unknown10->setHideWeapon(WPNHIDEID_UNKNOWN_1, type > 1, false);
-    unknown10->setHideWeapon(WPNHIDEID_UNKNOWN_1, type > 1, true);
+    m_charaObj->setHideWeapon(WPNHIDEID_UNKNOWN_1, type > 1, false);
+    m_charaObj->setHideWeapon(WPNHIDEID_UNKNOWN_1, type > 1, true);
   } else if (unknown18->unknown18 == gf::GF_EVT_MODEL_UNKNOWN_1) {
-    unknown10->setHideWeapon(WPNHIDEID_UNKNOWN_1, type > 1, false);
-    unknown10->setHideWeapon(WPNHIDEID_UNKNOWN_1, type > 1, true);
+    m_charaObj->setHideWeapon(WPNHIDEID_UNKNOWN_1, type > 1, false);
+    m_charaObj->setHideWeapon(WPNHIDEID_UNKNOWN_1, type > 1, true);
   }
   unknown7c = type;
 }
@@ -324,7 +324,7 @@ void CharaEvaPlayer::playFoot(bool isRight) {
   if (unknown18 == nullptr) {
     return;
   }
-  gf::GfObj *obj = gf::GfObjUtil::getObj(unknown18->unknown20);
+  gf::GfObj *obj = gf::GfObjUtil::getObj(unknown18->m_GF_OBJ_HANDLE);
   if (obj == nullptr) {
     return;
   }
@@ -365,7 +365,7 @@ void CharaEvaPlayer::stopAction() {
   if (unknown18 == nullptr) {
     return;
   }
-  gf::GfObj *obj = gf::GfObjUtil::getObj(unknown18->unknown20);
+  gf::GfObj *obj = gf::GfObjUtil::getObj(unknown18->m_GF_OBJ_HANDLE);
   if (obj == nullptr || unknown70 <= 0) {
     return;
   }

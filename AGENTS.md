@@ -16,8 +16,39 @@
   (drop `get`, `set` or `is`, lowercase the first letter of a capitalized
   word but keep an uppercase prefix such as `BLD_`, add `m_`). A name
   quoted in an assertion or debug string is kept exactly as written.
+- A data member (not a bit field) with no accessor and no string naming it,
+  whose type is a class or struct that the game names (the name appears in a
+  mangled symbol of the game or of a sibling build, Torna or Xenoblade DE), and
+  which is the only member of that type in its class, is named `m_` plus the
+  class name without its namespace, without leading underscores (`m__x` would
+  contain a double underscore, which C++ reserves for the implementation) and
+  without a leading `SData` or `Gf` prefix (only before an upper-case letter, a
+  digit or `_`).
+  The first letter is lowercased and nothing else changes, except that a name
+  that is all upper case keeps its case (the accessor rule's convention: an
+  uppercase prefix followed by `_`, such as `BLD_`, is kept as it is):
+  `SDataIdea` gives `m_idea`, `GfBladeCreateInfo` gives `m_bladeCreateInfo`,
+  `IDColiTreeTop` gives `m_iDColiTreeTop`, `_wkSeamReadCall` gives
+  `m_wkSeamReadCall`, `CS` gives `m_CS` and `GF_OBJ_HANDLE` gives
+  `m_GF_OBJ_HANDLE`. When counting the members of a type, `T`, pointers and
+  references to `T` (`T *`, `T **`, `T &`), `const T`, a typedef of `T`, and
+  arrays of any of these count as the same type; static data members count.
+  - Excluded, the member stays `unknownXX`: template types and their
+    instantiations (`FixedVector<...>`, `IntrusivePtr<...>`,
+    `PtrSingleton<...>`...), the `mm` math types (`Vec3`, `Quat`, `Mat44`,
+    `Col4`...), the base and SDK types, a type whose own name is inferred
+    (`unknownNNN`; it is not a game name, whereas the class that declares the
+    member may itself have an inferred name), and any class that has two or
+    more members of the same type.
+  - Precedence: a game accessor or a name quoted in a string wins, then this
+    type-derived name, then `unknownXX`. Existing opaque names such as `_18`
+    stay.
+  - The type-derived name is a derivation written down, like the BDAT ids
+    below, and not the original name of the member (decision 58 in
+    [docs/decisions.md](docs/decisions.md)).
 - Preserve existing opaque field names such as `_18` and `_1c0`.
-- A member with no accessor and no string naming it is `unknown` followed by
+- A member with no accessor, no string naming it and no type-derived name (the
+  rule above) is `unknown` followed by
   its hexadecimal byte offset, for example `unknown18`, never a descriptive
   invented name. For reconstructed helper functions, use `unknown001`,
   `unknown002`, etc., within each file (see the exception below for a helper

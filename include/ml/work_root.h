@@ -16,14 +16,14 @@ class WorkObj;
 struct WorkRootParam {
   WorkRootParam &operator=(const WorkRootParam &other);
 
-  bool unknown00;   // Inferred role: product mem; original member name unknown.
-  void *unknown08;  // Inferred role: product mem; original member name unknown.
-  size_t unknown10; // Inferred role: product mem size; original member name unknown.
-  void *unknown18;  // Inferred role: debug mem; original member name unknown.
-  size_t unknown20; // Inferred role: debug mem size; original member name unknown.
-  void *unknown28;  // Inferred role: graphic mem; original member name unknown.
-  size_t unknown30; // Inferred role: graphic mem size; original member name unknown.
-  s32 unknown38;    // Inferred role: fg mem size; original member name unknown.
+  bool m_productMem; // Inferred role: product mem; named after the game accessor ml::WorkRoot::isProductMem.
+  void *unknown08;   // Inferred role: product mem; original member name unknown.
+  size_t unknown10;  // Inferred role: product mem size; original member name unknown.
+  void *unknown18;   // Inferred role: debug mem; original member name unknown.
+  size_t unknown20;  // Inferred role: debug mem size; original member name unknown.
+  void *unknown28;   // Inferred role: graphic mem; original member name unknown.
+  size_t unknown30;  // Inferred role: graphic mem size; original member name unknown.
+  s32 unknown38;     // Inferred role: fg mem size; original member name unknown.
 };
 
 static_assert(offsetof(WorkRootParam, unknown08) == 0x8, "");

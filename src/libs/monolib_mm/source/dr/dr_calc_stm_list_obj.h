@@ -119,14 +119,14 @@ public:
   void afterUpdate(DrStmListAfterArg &arg);
   void apiUpdate();
 
-  void *unknown18;             // Inferred role: unused, only cleared; original member name unknown.
-  void *unknown20;             // Inferred role: memory block of the tables; original member name unknown.
-  DrCalcTexStmObj **unknown28; // Inferred role: tex stream objects; original member name unknown.
-  unknown035 *unknown30[2];    // Inferred role: res; original member name unknown.
-  FileHandleTh *unknown40;     // Inferred role: file handle; original member name unknown.
-  DrCalcTexStmObj *unknown48;  // Inferred role: tex stream object; original member name unknown.
-  DrCalcTexStmObj *unknown50;  // Inferred role: read check tex stream object; original member name unknown.
-  s8 unknown58;                // Inferred role: height wait count; original member name unknown.
+  void *unknown18;              // Inferred role: unused, only cleared; original member name unknown.
+  void *unknown20;              // Inferred role: memory block of the tables; original member name unknown.
+  DrCalcTexStmObj **unknown28;  // Inferred role: tex stream objects; original member name unknown.
+  unknown035 *unknown30[2];     // Inferred role: res; original member name unknown.
+  FileHandleTh *m_fileHandleTh; // Inferred role: file handle; original member name unknown.
+  DrCalcTexStmObj *unknown48;   // Inferred role: tex stream object; original member name unknown.
+  DrCalcTexStmObj *unknown50;   // Inferred role: read check tex stream object; original member name unknown.
+  s8 unknown58;                 // Inferred role: height wait count; original member name unknown.
   u8 _59[0x5a - 0x59];
   s16 unknown5a; // Inferred role: tex stream object index kept during the height read; original member name unknown.
   u8 _5c[0x68 - 0x5c];
@@ -156,7 +156,7 @@ public:
   s16 unknowna8; // Inferred role: error wait count; original member name unknown.
   s16 unknownaa; // Inferred role: request wait count; original member name unknown.
   u8 _ac[0xb0 - 0xac];
-  DrCalcStmWork unknownb0;        // Inferred role: textures and vertex object; original member name unknown.
+  DrCalcStmWork m_drCalcStmWork;  // Inferred role: textures and vertex object; original member name unknown.
   s32 unknownc8;                  // Inferred role: current use mode; original member name unknown.
   s32 unknowncc[2];               // Inferred role: use mode per buffer; original member name unknown.
   mm::mtl::FixStr<256> unknownd4; // Inferred role: list name; original member name unknown.
@@ -173,7 +173,7 @@ static_assert(offsetof(DrCalcStmListObj, unknown18) == 0x18, "");
 static_assert(offsetof(DrCalcStmListObj, unknown20) == 0x20, "");
 static_assert(offsetof(DrCalcStmListObj, unknown28) == 0x28, "");
 static_assert(offsetof(DrCalcStmListObj, unknown30) == 0x30, "");
-static_assert(offsetof(DrCalcStmListObj, unknown40) == 0x40, "");
+static_assert(offsetof(DrCalcStmListObj, m_fileHandleTh) == 0x40, "");
 static_assert(offsetof(DrCalcStmListObj, unknown48) == 0x48, "");
 static_assert(offsetof(DrCalcStmListObj, unknown50) == 0x50, "");
 static_assert(offsetof(DrCalcStmListObj, unknown58) == 0x58, "");
@@ -201,7 +201,7 @@ static_assert(offsetof(DrCalcStmListObj, unknowna4) == 0xa4, "");
 static_assert(offsetof(DrCalcStmListObj, unknowna6) == 0xa6, "");
 static_assert(offsetof(DrCalcStmListObj, unknowna8) == 0xa8, "");
 static_assert(offsetof(DrCalcStmListObj, unknownaa) == 0xaa, "");
-static_assert(offsetof(DrCalcStmListObj, unknownb0) == 0xb0, "");
+static_assert(offsetof(DrCalcStmListObj, m_drCalcStmWork) == 0xb0, "");
 static_assert(offsetof(DrCalcStmListObj, unknownc8) == 0xc8, "");
 static_assert(offsetof(DrCalcStmListObj, unknowncc) == 0xcc, "");
 static_assert(offsetof(DrCalcStmListObj, unknown1e0) == 0x1e0, "");

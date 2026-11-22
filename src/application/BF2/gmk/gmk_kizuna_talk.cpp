@@ -37,12 +37,12 @@ bool GmkKizunaTalk::BdatInfo::isCondMatched() const {
   return true;
 }
 
-int GmkKizunaTalk::getGameFlagId() const { return unknown20.unknown18; }
+int GmkKizunaTalk::getGameFlagId() const { return m_createInfo.unknown18; }
 
 void GmkKizunaTalk::create(const CreateInfo &info) {
   AGmkBase::create(info);
   f32 popDist = Bdat::getValCheck(gf::GfDataBdat::getFP(gf::BDAT_FLD_WILDCARD_DATA), 0, WILDCARD_UNKNOWN_30, BDAT_TYPE_UNKNOWN_8).valueF32;
-  unknown50.unknown00 = popDist * popDist;
+  m_distCond.unknown00 = popDist * popDist;
 }
 
 void GmkKizunaTalk::dispose() {
@@ -64,12 +64,12 @@ void GmkKizunaTalk::createGfObjHandle() {
   }
   disposeGfObjHandle();
   CBdatWrapper bdat = {getBindedBdatFp()};
-  unknown48 = gf::GfObjFactory::createGmkCollection(bdat, unknown20.unknown18);
+  unknown48 = gf::GfObjFactory::createGmkCollection(bdat, m_createInfo.unknown18);
   bindToGameObj(unknown48);
   setEventDisp(unknown48, debugIsDispGmkType(getGmkType()));
   unknown002(unknown48, true);
   gf::GfObjSetupGimmick *setup = mm::mtl::dynamicCast<gf::GfObjSetupGimmick>(gf::GfObjManager::getObjInfo(unknown48)->unknown30);
-  unknown003(setup, unknown08.unknown08);
+  unknown003(setup, m_createBaseInfo.m_xform);
   gf::GfGameFlag::setLocal(2, getGameFlagId(), 1);
 }
 
@@ -78,7 +78,7 @@ void GmkKizunaTalk::update(f32 deltaTime) {
   if (!isValid()) {
     return;
   }
-  if (getBdatInfo()->isCondMatched() && DistCond::isMatch(unknown50.unknown00, unknown08.unknown08->unknown00)) {
+  if (getBdatInfo()->isCondMatched() && DistCond::isMatch(m_distCond.unknown00, m_createBaseInfo.m_xform->unknown00)) {
     if (unknown48 == gf::unknown020) {
       createGfObjHandle();
     }
@@ -108,9 +108,9 @@ void GmkKizunaTalk::validateDisp() const {
 void GmkKizunaTalk::onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) {
   disposeGfObjHandle();
   if (getBdatInfo()->unknown04 == 0 || gf::GfGameCond::isGameCond(getBdatInfo()->unknown04)) {
-    u16 eventId = Bdat::getValCheck(getBindedBdatFp(), "EventID", unknown20.unknown18, BDAT_TYPE_UNKNOWN_2);
+    u16 eventId = Bdat::getValCheck(getBindedBdatFp(), "EventID", m_createInfo.unknown18, BDAT_TYPE_UNKNOWN_2);
     gf::GfPlayFactory::createOneEvent(eventId);
-    gf::GfGameFlag::setLocal(2, unknown20.unknown18, 2);
+    gf::GfGameFlag::setLocal(2, m_createInfo.unknown18, 2);
   } else {
     const BdatInfo *bdatInfo = getBdatInfo();
     gf::GfMenuObjCommonText::OpenKizunaParam param = {gf::GfDataBdat::getFP(gf::BDAT_FLD_KIZUNATALKTITLE), bdatInfo->unknown02, bdatInfo->unknown04};

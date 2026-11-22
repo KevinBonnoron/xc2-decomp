@@ -33,10 +33,10 @@ class StateFieldTalk : public GfStateBase {
   void procMsgGameLipAction(GfComBehaviorPc *behavior, fw::MessageObject *sender, MsgGameLipAction &message);
   void procMsgGameSetLipWeight(GfComBehaviorPc *behavior, fw::MessageObject *sender, MsgGameSetLipWeight &message);
 
-  GF_OBJ_HANDLE *unknown18; // Inferred role: talk target; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: talk target; original member name unknown.
 };
 
-static_assert(offsetof(StateFieldTalk, unknown18) == 0x18, "");
+static_assert(offsetof(StateFieldTalk, m_GF_OBJ_HANDLE) == 0x18, "");
 static_assert(sizeof(StateFieldTalk) == 0x20, "");
 
 } // namespace pc

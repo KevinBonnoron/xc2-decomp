@@ -69,7 +69,7 @@ public:
       STATE_UNKNOWN_2, // Inferred role: state stop; original name unknown.
     };
 
-    EvtPlayerStop(GfGameScene *scene, PLSTOP flag) : unknown00(scene), unknown08(STATE_UNKNOWN_0), unknown0c(flag) {}
+    EvtPlayerStop(GfGameScene *scene, PLSTOP flag) : m_gameScene(scene), unknown08(STATE_UNKNOWN_0), unknown0c(flag) {}
 
     void startPlayerStop();
     void endPlayerStop();
@@ -77,9 +77,9 @@ public:
     void setPlayerStop(bool isStop);
     void update(const fw::UpdateInfo &info);
 
-    GfGameScene *unknown00; // Inferred role: scene; original member name unknown.
-    STATE unknown08;        // Inferred role: state; original member name unknown.
-    PLSTOP unknown0c;       // Inferred role: flag; original member name unknown.
+    GfGameScene *m_gameScene; // Inferred role: scene; original member name unknown.
+    STATE unknown08;          // Inferred role: state; original member name unknown.
+    PLSTOP unknown0c;         // Inferred role: flag; original member name unknown.
   };
 
   struct BattleAchievement {
@@ -99,10 +99,10 @@ public:
 
   // Inferred role: damage character; original type name unknown.
   struct unknown004 {
-    unknown004() : unknown00(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown08(0.0f) {}
+    unknown004() : m_GF_OBJ_HANDLE(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown08(0.0f) {}
 
-    GF_OBJ_HANDLE *unknown00; // Inferred role: handle; original member name unknown.
-    f32 unknown08;            // Inferred role: heal time; original member name unknown.
+    GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: handle; original member name unknown.
+    f32 unknown08;                  // Inferred role: heal time; original member name unknown.
   };
 
   // Inferred role: move achievement; original type name unknown.
@@ -285,14 +285,14 @@ public:
   mm::mtl::FixedList<GfAppendWire *, 8> unknown70; // Inferred role: append wires; original member name unknown.
   f32 unknown118;                                  // Inferred role: money log time; original member name unknown.
   QuestID m_questIdForTaskLog;
-  BattleAchievement unknown120; // Inferred role: battle achievement; original member name unknown.
-  f32 unknown12c;               // Inferred role: force battle time; original member name unknown.
-  bool unknown130;              // Inferred role: force stop battle; original member name unknown.
+  BattleAchievement m_battleAchievement; // Inferred role: battle achievement; original member name unknown.
+  f32 unknown12c;                        // Inferred role: force battle time; original member name unknown.
+  bool unknown130;                       // Inferred role: force stop battle; original member name unknown.
   bool m_forceBossBattleBgm;
   bool unknown132; // Inferred role: force battle bgm; original member name unknown.
   f32 m_forceEventBgm;
-  bool unknown138; // Inferred role: player talk force enable; original member name unknown.
-  bool unknown139; // Inferred role: gimmick camera pause; original member name unknown.
+  bool m_playerTalkForce;    // Inferred role: player talk force enable; named after the game accessor gf::GfGameScene::setPlayerTalkForce.
+  bool m_gimmickCameraPause; // Inferred role: gimmick camera pause; named after the game accessor gf::GfGameScene::setGimmickCameraPause.
   GfPlayerDead m_deadType;
   u32 unknown140; // Inferred role: player pause bits; original member name unknown.
   u32 unknown144; // Inferred role: flags; original member name unknown.
@@ -347,7 +347,7 @@ static_assert(offsetof(GfGameScene, m_ownerBonus) == 0x52, "");
 static_assert(offsetof(GfGameScene, unknown70) == 0x70, "");
 static_assert(offsetof(GfGameScene, unknown118) == 0x118, "");
 static_assert(offsetof(GfGameScene, m_questIdForTaskLog) == 0x11c, "");
-static_assert(offsetof(GfGameScene, unknown120) == 0x120, "");
+static_assert(offsetof(GfGameScene, m_battleAchievement) == 0x120, "");
 static_assert(offsetof(GfGameScene, unknown12c) == 0x12c, "");
 static_assert(offsetof(GfGameScene, unknown130) == 0x130, "");
 static_assert(offsetof(GfGameScene, m_forceEventBgm) == 0x134, "");

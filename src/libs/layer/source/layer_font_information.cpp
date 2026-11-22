@@ -6,7 +6,7 @@
 namespace layer {
 
 LayerFontInformation::LayerFontInformation(u32 num) {
-  unknown00.setAllocator(&LayerManager::get()->unknowna0);
+  unknown00.setAllocator(&LayerManager::get()->m_layerMemHandleAllocator);
   unknown00.reserve(num);
 }
 

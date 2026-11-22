@@ -20,7 +20,7 @@ class DrResMdoAlpTbl;
 DrMdoCtlSeamLowMap::DrMdoCtlSeamLowMap(int viewNum) : DrMdoCtlSeamBaseMap(viewNum) {}
 
 void DrMdoCtlSeamLowMap::initLowMapParts(DrResMdoSeamWrkLow *low) {
-  const u8 *data = low->unknown30->m_buffer;
+  const u8 *data = low->m_drResMdoSeamMemObj->m_buffer;
   const MdsSeamLowMapHead *head = reinterpret_cast<const MdsSeamLowMapHead *>(data);
   MdoWrkMatRes *matRes = nullptr;
   initBaseMapMaterial(matRes, data + head->unknown0c, data + head->unknown08, data + head->unknown18, data + head->unknown20, data + head->unknown1c, 0);
@@ -38,8 +38,8 @@ void DrMdoCtlSeamLowMap::initLowMapParts(DrResMdoSeamWrkLow *low) {
 }
 
 void DrMdoCtlSeamLowMap::changeMemLowMapParts(DrResMdoSeamWrkLow *low) {
-  MdoWrkMatRes *matRes = low->unknown28;
-  const u8 *data = low->unknown30->m_buffer;
+  MdoWrkMatRes *matRes = low->m_mdoWrkMatRes;
+  const u8 *data = low->m_drResMdoSeamMemObj->m_buffer;
   const MdsSeamLowMapHead *head = reinterpret_cast<const MdsSeamLowMapHead *>(data);
   resetBaseMapMaterial(matRes, data + head->unknown0c, data + head->unknown08, data + head->unknown18, data + head->unknown20, data + head->unknown1c, 0);
   if (head->unknown10 != 0) {
@@ -59,17 +59,17 @@ void DrMdoCtlSeamLowMap::releaseLowMap() {
 
 void DrMdoCtlSeamLowMap::readLowMapCheck() {
   if ((unknownc7c & 0x80) == 0) {
-    if (unknownd30.unknown40 == 0 && (unknownc7c & 0x40) == 0) {
+    if (m_drResMdoSeamParmRead.unknown40 == 0 && (unknownc7c & 0x40) == 0) {
       DrResMdoSeamWrkLow::SEAM_LOWEMAP_READ_CHECK = m_drMan->unknown1d0c + 100.0f;
     } else {
       DrResMdoSeamWrkLow::SEAM_LOWEMAP_READ_CHECK = m_drMan->unknown1d0c + 0.5f;
     }
-  } else if (unknownd30.unknown40 == 0 && (unknownc7c & 0x40) == 0) {
+  } else if (m_drResMdoSeamParmRead.unknown40 == 0 && (unknownc7c & 0x40) == 0) {
     DrResMdoSeamWrkLow::SEAM_LOWEMAP_READ_CHECK = 250.0f;
   } else {
     DrResMdoSeamWrkLow::SEAM_LOWEMAP_READ_CHECK = 200.5f;
   }
-  DrCalcViewWork *view = m_drMan->unknown580->unknown10;
+  DrCalcViewWork *view = m_drMan->m_drCalcMan->m_drCalcViewWork;
   bool isOpen = ((unknownc7c >> 12) & 1) != 0 || unknowncc8;
   DrResMdoSeamWrkLow *low = unknown2c8.unknown10.unknown00;
   while (low != nullptr) {
@@ -103,7 +103,7 @@ void DrMdoCtlSeamLowMap::readLowMapCheck() {
           entry->unknown0c[1] - margin > view->unknown400.y || entry->unknown00[2] + margin < view->unknown400.z || entry->unknown0c[2] - margin > view->unknown400.z) {
         continue;
       }
-      unknownd30.setStockLowMdl(i);
+      m_drResMdoSeamParmRead.setStockLowMdl(i);
     }
   }
 }
@@ -111,25 +111,25 @@ void DrMdoCtlSeamLowMap::readLowMapCheck() {
 DrResMdoSeamWrkLow *DrMdoCtlSeamLowMap::createFreeSeamLow() { return unknown2c8.unknown001(); }
 
 void DrMdoCtlSeamLowMap::releaseFreeSeamLow(DrResMdoSeamWrkLow *low) {
-  DrResMdoSeamMemObj *mem = low->unknown30;
-  if (low->unknown28 != nullptr) {
+  DrResMdoSeamMemObj *mem = low->m_drResMdoSeamMemObj;
+  if (low->m_mdoWrkMatRes != nullptr) {
     unknownb70[low->unknowna0 >> 5] &= ~(1 << (low->unknowna0 & 0x1f));
     unknownc44 -= low->unknownb0;
-    releaseBaseMapSeamMat(low->unknown28);
+    releaseBaseMapSeamMat(low->m_mdoWrkMatRes);
     low->release();
     unknownc02--;
   }
   unknown2c8.unknown002(low);
   if (mem != nullptr) {
-    low->unknown30 = nullptr;
-    unknown6e0.releaseFreeObj(mem);
+    low->m_drResMdoSeamMemObj = nullptr;
+    m_drResMdoSeamMemMan.releaseFreeObj(mem);
   }
 }
 
 void DrMdoCtlSeamLowMap::createLowZPrePassDisplayList() {
   unknownf8 &= ~0x40000000;
   for (DrResMdoSeamWrkLow *low = unknown2c8.unknown10.unknown00; low != nullptr; low = low->unknown08) {
-    unknown30 = low->unknown28;
+    unknown30 = low->m_mdoWrkMatRes;
     if (unknown30 == nullptr || !(low->unknown9c & 4)) {
       continue;
     }
@@ -138,7 +138,7 @@ void DrMdoCtlSeamLowMap::createLowZPrePassDisplayList() {
       continue;
     }
     changeSeamBaseMapMdlInfo();
-    DrResMdoAlpTbl *alpTbl = low->unknown40;
+    DrResMdoAlpTbl *alpTbl = low->m_drResMdoAlpTbl;
     for (s32 i = 0; i < count; i++) {
       for (unknown504 *entry = low->unknown58[i]; entry != nullptr; entry = &low->unknown38[entry->unknown04 - 1]) {
         const MdsMdlInfoHeader *header = reinterpret_cast<const MdsMdlInfoHeader *>(unknown30->unknown18 + entry->unknown00);

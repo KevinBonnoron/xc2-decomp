@@ -32,21 +32,21 @@ class GfMenuObjBladeRelease : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjBladeRelease *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjBladeRelease *owner) : _0c(), m_menuObjBladeRelease(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjBladeRelease *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBladeRelease *m_menuObjBladeRelease; // Inferred role: owner; original member name unknown.
   };
 
   class ListListener : public ui::UIObjectListener {
   public:
-    ListListener(GfMenuObjBladeRelease *owner) : unknown0c(0), _10(), unknown20(owner) {}
+    ListListener(GfMenuObjBladeRelease *owner) : unknown0c(0), _10(), m_menuObjBladeRelease(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     int unknown0c; // Inferred role: index of the cursor; original member name unknown.
     u8 _10[0x1c - 0x10];
-    GfMenuObjBladeRelease *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBladeRelease *m_menuObjBladeRelease; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjBladeRelease(u32 handle);
@@ -78,7 +78,7 @@ public:
 
   u8 _24[0x28 - 0x24];
   mm::mtl::ReferenceObject *unknown28;                // Inferred role: reference-counted object; type and original member name unknown.
-  GfMenuBladeList *unknown30;                         // Inferred role: releasable blades; original member name unknown.
+  GfMenuBladeList *m_menuBladeList;                   // Inferred role: releasable blades; original member name unknown.
   ui::UISelectObjList *unknown38;                     // Inferred role: blade objects; original member name unknown.
   ui::UICtrlCursorSelect *unknown40;                  // Inferred role: blade cursor; original member name unknown.
   GfMenuCallContext *unknown48;                       // Inferred role: call context; original member name unknown.
@@ -87,25 +87,25 @@ public:
   bool unknown2e8;                                    // Role and original member name unknown, cleared by the constructor.
   u8 _2e9[0x2f0 - 0x2e9];
   GfMenuSequence<GfMenuObjBladeRelease, 4> unknown2f0; // Inferred role: queued effect steps; original member name unknown.
-  GfMenuItemList *unknown450;                          // Inferred role: items; original member name unknown.
+  GfMenuItemList *m_menuItemList;                      // Inferred role: items; original member name unknown.
   bool unknown458;                                     // Role and original member name unknown, cleared by the constructor.
   u8 _459[0x460 - 0x459];
-  GfMenuIDList *unknown460; // Inferred role: identifiers; original member name unknown.
-  bool unknown468;          // Role and original member name unknown, cleared by the constructor.
+  GfMenuIDList *m_menuIDList; // Inferred role: identifiers; original member name unknown.
+  bool unknown468;            // Role and original member name unknown, cleared by the constructor.
   u8 _469[0x46c - 0x469];
   int unknown46c;                           // Role and original member name unknown, set to -1 by the constructor.
-  GfMenuDriverList *unknown470;             // Inferred role: drivers; original member name unknown.
+  GfMenuDriverList *m_menuDriverList;       // Inferred role: drivers; original member name unknown.
   mm::mtl::FixedVector<u16, 16> unknown478; // Inferred role: selected blades; original member name unknown.
   bool unknown4a0;                          // Role and original member name unknown, cleared by the constructor.
   u8 _4a1[0x4a4 - 0x4a1];
   u32 unknown4a4; // Role and original member name unknown, cleared by the constructor.
   u32 unknown4a8; // Role and original member name unknown, cleared by the constructor.
   u8 _4ac[0x4b0 - 0x4ac];
-  GAME_VOICE_HANDLE *unknown4b0; // Inferred role: playing voice; original member name unknown.
+  GAME_VOICE_HANDLE *m_GAME_VOICE_HANDLE; // Inferred role: playing voice; original member name unknown.
 };
 
 static_assert(offsetof(GfMenuObjBladeRelease, unknown28) == 0x28, "");
-static_assert(offsetof(GfMenuObjBladeRelease, unknown30) == 0x30, "");
+static_assert(offsetof(GfMenuObjBladeRelease, m_menuBladeList) == 0x30, "");
 static_assert(offsetof(GfMenuObjBladeRelease, unknown38) == 0x38, "");
 static_assert(offsetof(GfMenuObjBladeRelease, unknown40) == 0x40, "");
 static_assert(offsetof(GfMenuObjBladeRelease, unknown48) == 0x48, "");
@@ -113,18 +113,18 @@ static_assert(offsetof(GfMenuObjBladeRelease, unknown50) == 0x50, "");
 static_assert(offsetof(GfMenuObjBladeRelease, unknown58) == 0x58, "");
 static_assert(offsetof(GfMenuObjBladeRelease, unknown2e8) == 0x2e8, "");
 static_assert(offsetof(GfMenuObjBladeRelease, unknown2f0) == 0x2f0, "");
-static_assert(offsetof(GfMenuObjBladeRelease, unknown450) == 0x450, "");
+static_assert(offsetof(GfMenuObjBladeRelease, m_menuItemList) == 0x450, "");
 static_assert(offsetof(GfMenuObjBladeRelease, unknown458) == 0x458, "");
-static_assert(offsetof(GfMenuObjBladeRelease, unknown460) == 0x460, "");
+static_assert(offsetof(GfMenuObjBladeRelease, m_menuIDList) == 0x460, "");
 static_assert(offsetof(GfMenuObjBladeRelease, unknown468) == 0x468, "");
 static_assert(offsetof(GfMenuObjBladeRelease, unknown46c) == 0x46c, "");
-static_assert(offsetof(GfMenuObjBladeRelease, unknown470) == 0x470, "");
+static_assert(offsetof(GfMenuObjBladeRelease, m_menuDriverList) == 0x470, "");
 static_assert(offsetof(GfMenuObjBladeRelease, unknown478) == 0x478, "");
 static_assert(offsetof(GfMenuObjBladeRelease, unknown4a0) == 0x4a0, "");
 static_assert(offsetof(GfMenuObjBladeRelease, unknown4a4) == 0x4a4, "");
 static_assert(offsetof(GfMenuObjBladeRelease, unknown4a8) == 0x4a8, "");
-static_assert(offsetof(GfMenuObjBladeRelease, unknown4b0) == 0x4b0, "");
-static_assert(offsetof(GfMenuObjBladeRelease::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjBladeRelease, m_GAME_VOICE_HANDLE) == 0x4b0, "");
+static_assert(offsetof(GfMenuObjBladeRelease::MainListener, m_menuObjBladeRelease) == 0x20, "");
 static_assert(sizeof(GfMenuObjBladeRelease) == 0x4b8, "");
 
 } // namespace gf

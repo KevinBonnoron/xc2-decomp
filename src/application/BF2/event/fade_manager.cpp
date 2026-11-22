@@ -11,7 +11,7 @@ FadeManager::FadeManager() : unknown10(0) {}
 
 void FadeManager::update() {
   const FrameInfo &info = mm::mtl::Singleton<FrameManager>::getPtr()->frameInfo();
-  unknown18.update(info.unknown04);
+  m_fadePlanner.update(info.unknown04);
   mm::mtl::Singleton<FadeCtrl>::getPtr()->update();
 }
 
@@ -29,7 +29,7 @@ void FadeManager::playEventSkip(bool isFadeOut, int frame) {
 }
 
 void FadeManager::clear() {
-  unknown18.clear();
+  m_fadePlanner.clear();
   mm::mtl::Singleton<FadeCtrl>::getPtr()->clear();
 }
 
@@ -37,13 +37,13 @@ bool FadeManager::isFading() const { return mm::mtl::Singleton<FadeCtrl>::getPtr
 
 void FadeManager::plan(FadePlanner::TYPE type, bool isEnable, u32 frame, u32 wait, FadeCtrl::PRIO prio, const mm::Col4 &color) {
   if (!(unknown10 & FLAG_UNKNOWN_0)) {
-    unknown18.plan(type, isEnable, frame, wait, prio, color);
+    m_fadePlanner.plan(type, isEnable, frame, wait, prio, color);
   }
 }
 
 void FadeManager::request(FadePlanner::TYPE type) {
   if (!(unknown10 & FLAG_UNKNOWN_0)) {
-    unknown18.request(type);
+    m_fadePlanner.request(type);
   }
 }
 

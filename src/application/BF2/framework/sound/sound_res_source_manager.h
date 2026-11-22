@@ -41,8 +41,8 @@ static_assert(sizeof(ResSoundSourceBase) == 0x10, "");
 struct ResComplexSoundSource : public ResSoundSourceBase {
   // Inferred role: sound selected by the values of the variables; original type name unknown.
   struct unknown001 {
-    ResSoundData unknown00;    // Inferred role: sound; original member name unknown.
-    anm::Array<s32> unknown10; // Inferred role: expected value of each variable, negative for any value; original member name unknown.
+    ResSoundData m_resSoundData; // Inferred role: sound; original member name unknown.
+    anm::Array<s32> unknown10;   // Inferred role: expected value of each variable, negative for any value; original member name unknown.
   };
 
   anm::Array<const char *> unknown10; // Inferred role: variable names; original member name unknown.
@@ -58,14 +58,14 @@ static_assert(sizeof(ResComplexSoundSource) == 0x30, "");
 struct ResSoundSource {
   // Inferred role: single sound source; original type name unknown.
   struct unknown001 : public ResSoundSourceBase {
-    ResSoundData unknown10; // Inferred role: sound of the source; original member name unknown.
+    ResSoundData m_resSoundData; // Inferred role: sound of the source; original member name unknown.
   };
 
   anm::Array<unknown001> unknown00;            // Inferred role: single sources; original member name unknown.
   anm::Array<ResComplexSoundSource> unknown10; // Inferred role: complex sources; original member name unknown.
 };
 
-static_assert(offsetof(ResSoundSource::unknown001, unknown10) == 0x10, "");
+static_assert(offsetof(ResSoundSource::unknown001, m_resSoundData) == 0x10, "");
 static_assert(sizeof(ResSoundSource::unknown001) == 0x20, "");
 static_assert(offsetof(ResSoundSource, unknown10) == 0x10, "");
 

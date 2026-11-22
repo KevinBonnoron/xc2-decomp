@@ -21,7 +21,7 @@ ICmd::RESULT CharaMount::update(const Param &param) {
   if (param.getFrame() < 1 && unknown08 != nullptr) {
     gf::GfEvtModel *model = static_cast<gf::GfEvtModel *>(param.val(0).getUserdata());
     const char *bone = param.val(1).getStr();
-    gf::GfComTransform *transform = gf::GfObjUtil::getObj(unknown08->unknown20)->getComponent<gf::GfComTransform>();
+    gf::GfComTransform *transform = gf::GfObjUtil::getObj(unknown08->m_GF_OBJ_HANDLE)->getComponent<gf::GfComTransform>();
     if (unknown10 != nullptr) {
       unknown08->resetMount(unknown10);
       transform->setPosition(unknown20);
@@ -38,7 +38,7 @@ ICmd::RESULT CharaMount::update(const Param &param) {
       } else {
         unknown08->setMount(model, bone);
       }
-      unknown18->resetDynamics(0);
+      m_charaDysUpdater->resetDynamics(0);
       unknown10 = model;
     }
   }
@@ -47,7 +47,7 @@ ICmd::RESULT CharaMount::update(const Param &param) {
 
 void CharaMount::term() {
   if (unknown08 != nullptr && unknown10 != nullptr) {
-    gf::GfComTransform *transform = gf::GfObjUtil::getObj(unknown08->unknown20)->getComponent<gf::GfComTransform>();
+    gf::GfComTransform *transform = gf::GfObjUtil::getObj(unknown08->m_GF_OBJ_HANDLE)->getComponent<gf::GfComTransform>();
     unknown08->resetMount(unknown10);
     transform->setPosition(unknown20);
     transform->setRotation(unknown30);

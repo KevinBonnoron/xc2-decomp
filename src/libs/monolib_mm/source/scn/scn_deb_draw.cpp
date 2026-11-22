@@ -78,7 +78,7 @@ void DebDraw::clrTex() {
 }
 
 void DebDraw::setAlpha(f32 alpha) {
-  if (!unknown210->setAlpha(alpha)) {
+  if (!m_cacheDraw->setAlpha(alpha)) {
     unknown1c = alpha;
     if (alpha < 0.0f) {
       unknown1c = 0.0f;
@@ -90,7 +90,7 @@ void DebDraw::setAlpha(f32 alpha) {
 }
 
 void DebDraw::setAlphaBlend(bool isEnable) {
-  if (!unknown210->setAlphaBlend(isEnable)) {
+  if (!m_cacheDraw->setAlphaBlend(isEnable)) {
     if (isEnable) {
       unknown08 |= 0x10;
     } else {
@@ -100,7 +100,7 @@ void DebDraw::setAlphaBlend(bool isEnable) {
 }
 
 void DebDraw::setLineWidth(u32 width) {
-  if (!unknown210->setLineWidth(width) && unknown144 != width) {
+  if (!m_cacheDraw->setLineWidth(width) && unknown144 != width) {
     unknown144 = width;
     unknown08 &= ~4;
   }
@@ -160,7 +160,7 @@ void FontLayer::fontScale(f32 x, f32 y) {
 }
 
 void DebDraw::setTex(grlib::CGLibTextureBuffer *texture) {
-  if (!unknown210->setTex(texture)) {
+  if (!m_cacheDraw->setTex(texture)) {
     unknown08 |= 2;
     unknown180 = texture;
   }
@@ -168,9 +168,9 @@ void DebDraw::setTex(grlib::CGLibTextureBuffer *texture) {
 
 DebDraw::DebDraw()
     : unknown08(0), unknown1c(1.0f), unknown20(-1), unknown24(0), unknown28(0), unknown140(0), unknown144(1), unknown148(0), unknown14c(0.0f), unknown150(0), unknown154(true), unknown155(true),
-      unknown170(-1), unknown178(0), unknown1f8(-1), unknown1fc(-1), unknown200(0), unknown208(0), unknown210(nullptr), m_forceRenderQueue(false) {
+      unknown170(-1), unknown178(0), unknown1f8(-1), unknown1fc(-1), unknown200(0), unknown208(0), m_cacheDraw(nullptr), m_forceRenderQueue(false) {
   unknown007 = this;
-  unknown210 = new (MlMem::getProductMem()) CacheDraw(MlMem::getDebugMem(), 0x20000);
+  m_cacheDraw = new (MlMem::getProductMem()) CacheDraw(MlMem::getDebugMem(), 0x20000);
   unknown0c = mm::Col4(1.0f, 1.0f, 1.0f, 1.0f);
   unknownc0 = mm::Mat44::identity;
   unknown30 = mm::Vec3::zero;
@@ -198,8 +198,8 @@ void DebDraw::setup() {
 
 void DebDraw::swap() {
   if (unknown007 != nullptr) {
-    unknown007->unknown210->swap();
-    unknown007->unknown210->clearSystem(false);
+    unknown007->m_cacheDraw->swap();
+    unknown007->m_cacheDraw->clearSystem(false);
   }
 }
 
@@ -218,14 +218,14 @@ DebDraw *DebDraw::get(u32 screen) {
     if (WorkCpu::getCurrentThreadId() == WorkCpu::getThreadId(WorkCpu::getRenderCPUID()) && !unknown007->m_forceRenderQueue) {
       unknown007->clear();
     } else {
-      unknown007->unknown210->reset_prim(screen);
+      unknown007->m_cacheDraw->reset_prim(screen);
     }
   }
   return unknown007;
 }
 
 void DebDraw::renderLine(int x1, int y1, int x2, int y2) {
-  if (!unknown210->renderLine(mm::Pnt<int>(x1, y1), mm::Pnt<int>(x2, y2))) {
+  if (!m_cacheDraw->renderLine(mm::Pnt<int>(x1, y1), mm::Pnt<int>(x2, y2))) {
     begin(2, 1);
     add(x1, y1, x2, y2);
     end();
@@ -233,7 +233,7 @@ void DebDraw::renderLine(int x1, int y1, int x2, int y2) {
 }
 
 void DebDraw::renderLine(const mm::Line2 &line) {
-  if (!unknown210->renderLine(line.start, line.end)) {
+  if (!m_cacheDraw->renderLine(line.start, line.end)) {
     begin(2, 1);
     add(line.start, line.end);
     end();
@@ -242,7 +242,7 @@ void DebDraw::renderLine(const mm::Line2 &line) {
 
 void DebDraw::setForceRenderQueue(bool isForce) {
   m_forceRenderQueue = isForce;
-  unknown210->setForceRenderQueue(isForce);
+  m_cacheDraw->setForceRenderQueue(isForce);
 }
 
 void DebDraw::renderRectUpFill(const mm::Rect<int> &rect) {
@@ -252,39 +252,39 @@ void DebDraw::renderRectUpFill(const mm::Rect<int> &rect) {
   renderRectUp(rect);
 }
 
-void DebDraw::fontColor(const mm::Col4 &color) { unknown210->fontColor(color); }
+void DebDraw::fontColor(const mm::Col4 &color) { m_cacheDraw->fontColor(color); }
 
-void DebDraw::fontBack(const mm::Col4 &color) { unknown210->fontBack(color); }
+void DebDraw::fontBack(const mm::Col4 &color) { m_cacheDraw->fontBack(color); }
 
-void DebDraw::fontShadow(bool isEnable) { unknown210->fontShadow(isEnable); }
+void DebDraw::fontShadow(bool isEnable) { m_cacheDraw->fontShadow(isEnable); }
 
-void DebDraw::fontFlush(bool isEnable) { unknown210->fontFlush(isEnable); }
+void DebDraw::fontFlush(bool isEnable) { m_cacheDraw->fontFlush(isEnable); }
 
-void DebDraw::fontScale(f32 x, f32 y) { unknown210->fontScale(x, y); }
+void DebDraw::fontScale(f32 x, f32 y) { m_cacheDraw->fontScale(x, y); }
 
-void DebDraw::font(int x, int y, const char *text) { unknown210->font(x, y, text); }
+void DebDraw::font(int x, int y, const char *text) { m_cacheDraw->font(x, y, text); }
 
 u32 DebDraw::getCacheDrawWID() {
   if (unknown007 != nullptr) {
-    return unknown007->unknown210->m_cacheDrawWID;
+    return unknown007->m_cacheDraw->m_cacheDrawWID;
   }
   return 0xffffffff;
 }
 
 CacheDraw *DebDraw::getCacheDraw() {
-  unknown007->unknown210->m_currentPrio = -2;
-  return unknown007->unknown210;
+  unknown007->m_cacheDraw->m_currentPrio = -2;
+  return unknown007->m_cacheDraw;
 }
 
 void DebDraw::setCurrentPrio(int priority) {
   if (unknown007 != nullptr) {
-    unknown007->unknown210->m_currentPrio = priority;
+    unknown007->m_cacheDraw->m_currentPrio = priority;
   }
 }
 
 void DebDraw::flushPrio(int priority, const mm::Mat44 &projection, const mm::Mat44 &view) {
   if (unknown007 != nullptr) {
-    unknown007->unknown210->flush(priority, projection, view);
+    unknown007->m_cacheDraw->flush(priority, projection, view);
   }
 }
 
@@ -389,7 +389,7 @@ void DebDrawCmd::add(const mm::Vec3 &position, const mm::Vec3 &texCoord, const m
 }
 
 void DebDrawCmd::begin(u32 primitive, u32 count) {
-  if (unknown210->begin(primitive, count)) {
+  if (m_cacheDraw->begin(primitive, count)) {
     return;
   }
   unknown08 &= ~0xffff0004;
@@ -488,7 +488,7 @@ void DebDrawCmd::begin(u32 primitive, u32 count) {
 }
 
 void DebDrawCmd::end() {
-  if (unknown210->end()) {
+  if (m_cacheDraw->end()) {
     return;
   }
   if (unknown140 != 0 && unknown170 >= 0) {
@@ -530,7 +530,7 @@ void DebDrawCmd::end() {
 }
 
 void DebDrawCmd::add(const mm::Vec3 &first, const mm::Vec3 &second) {
-  if (unknown210->add(first, second)) {
+  if (m_cacheDraw->add(first, second)) {
     return;
   }
   u32 flags = unknown08;
@@ -554,7 +554,7 @@ void DebDrawCmd::add(const mm::Vec3 &first, const mm::Vec3 &second) {
 }
 
 void DebDrawCmd::add(const mm::Vec3 &position) {
-  if (unknown210->add(position)) {
+  if (m_cacheDraw->add(position)) {
     return;
   }
   const mm::Vec3 *vertex = &position;
@@ -616,7 +616,7 @@ void DebDrawCmd::add(const mm::Rect<int> &rect) {
 }
 
 void DebDraw::setOrtho() {
-  if (!unknown210->setOrtho()) {
+  if (!m_cacheDraw->setOrtho()) {
     if (unknown08 & 8) {
       unknown08 &= ~4;
     }
@@ -625,7 +625,7 @@ void DebDraw::setOrtho() {
 }
 
 void DebDraw::setZComp(bool isEnable) {
-  if (!unknown210->setZComp(isEnable)) {
+  if (!m_cacheDraw->setZComp(isEnable)) {
     unknown154 = isEnable;
     if (DevGraph::get() != nullptr) {
       if (isEnable) {
@@ -638,7 +638,7 @@ void DebDraw::setZComp(bool isEnable) {
 }
 
 void DebDraw::setZWrite(bool isEnable) {
-  if (!unknown210->setZWrite(isEnable)) {
+  if (!m_cacheDraw->setZWrite(isEnable)) {
     unknown155 = isEnable;
     if (DevGraph::get() != nullptr) {
       if (unknown154) {
@@ -651,7 +651,7 @@ void DebDraw::setZWrite(bool isEnable) {
 }
 
 void DebDraw::setDoubleSide(bool isEnable) {
-  if (!unknown210->setDoubleSide(isEnable) && DevGraph::get() != nullptr) {
+  if (!m_cacheDraw->setDoubleSide(isEnable) && DevGraph::get() != nullptr) {
     if (isEnable) {
       grlib::CGLibPolygon::setCullingOff();
     } else {
@@ -661,7 +661,7 @@ void DebDraw::setDoubleSide(bool isEnable) {
 }
 
 void DebDraw::renderPoint(const mm::Vec3 &position) {
-  if (!unknown210->renderPoint(position)) {
+  if (!m_cacheDraw->renderPoint(position)) {
     begin(1, 1);
     add(position);
     end();
@@ -679,7 +679,7 @@ void CacheDraw::DRPNT2D::flush(DebDraw *draw) {
 }
 
 void DebDraw::renderLine(const mm::Vec3 &start, const mm::Vec3 &end) {
-  if (!unknown210->renderLine(start, end)) {
+  if (!m_cacheDraw->renderLine(start, end)) {
     begin(2, 1);
     add(start, end);
     this->end();
@@ -689,7 +689,7 @@ void DebDraw::renderLine(const mm::Vec3 &start, const mm::Vec3 &end) {
 void CacheDraw::DRLINE::flush(DebDraw *draw) { draw->renderLine(reinterpret_cast<const mm::Vec3 &>(unknown0c), reinterpret_cast<const mm::Vec3 &>(unknown18)); }
 
 void DebDraw::renderLine(const mm::Pnt<int> &start, const mm::Pnt<int> &end) {
-  if (!unknown210->renderLine(start, end)) {
+  if (!m_cacheDraw->renderLine(start, end)) {
     begin(2, 1);
     add(start, end);
     this->end();
@@ -697,7 +697,7 @@ void DebDraw::renderLine(const mm::Pnt<int> &start, const mm::Pnt<int> &end) {
 }
 
 void DebDraw::renderTriangle(const mm::Vec3 &first, const mm::Vec3 &second, const mm::Vec3 &third) {
-  if (!unknown210->renderTriangle(first, second, third)) {
+  if (!m_cacheDraw->renderTriangle(first, second, third)) {
     begin(3, 4);
     add(first);
     add(second);
@@ -712,7 +712,7 @@ void CacheDraw::DRTRI::flush(DebDraw *draw) {
 }
 
 void DebDraw::renderTriangleFill(const mm::Vec3 &first, const mm::Vec3 &second, const mm::Vec3 &third) {
-  if (!unknown210->renderTriangleFill(first, second, third)) {
+  if (!m_cacheDraw->renderTriangleFill(first, second, third)) {
     begin(6, 3);
     add(first);
     add(second);
@@ -726,13 +726,13 @@ void CacheDraw::DRTRI_FILL::flush(DebDraw *draw) {
 }
 
 void DebDraw::renderRect(int x, int y, int width, int height) {
-  if (!unknown210->renderRect(mm::Rect<int>(x, y, width, height))) {
+  if (!m_cacheDraw->renderRect(mm::Rect<int>(x, y, width, height))) {
     renderRect(mm::Rect<int>(x, y, width, height));
   }
 }
 
 void DebDraw::renderRectFill(int x, int y, int width, int height) {
-  if (!unknown210->renderRectFill(mm::Rect<int>(x, y, width, height))) {
+  if (!m_cacheDraw->renderRectFill(mm::Rect<int>(x, y, width, height))) {
     renderRectFill(mm::Rect<int>(x, y, width, height));
   }
 }
@@ -818,7 +818,7 @@ void DebDraw::sphere(const mm::Sphere *sphere) { renderSphere(sphere->getPos(), 
 void DebDraw::renderSphere(const mm::Sphere &sphere, int division) { renderSphere(sphere.getPos(), sphere.scale.x, division); }
 
 void DebDraw::setCol(const mm::Col4 &color) {
-  if (!unknown210->setCol(color)) {
+  if (!m_cacheDraw->setCol(color)) {
     unknown0c = color;
     unknown004(unknown0c);
     unknown08 &= ~4;
@@ -826,7 +826,7 @@ void DebDraw::setCol(const mm::Col4 &color) {
 }
 
 void DebDraw::setCol(const mm::Col3 &color, f32 alpha) {
-  CacheDraw *cacheDraw = unknown210;
+  CacheDraw *cacheDraw = m_cacheDraw;
   mm::Col4 opaque;
   opaque.r = color.r;
   opaque.g = color.g;
@@ -845,7 +845,7 @@ void DebDraw::setCol(const mm::Col3 &color, f32 alpha) {
 void DebDraw::setCol(f32 r, f32 g, f32 b, f32 a) { setCol(mm::Col4(r, g, b, a)); }
 
 void DebDraw::renderAxis(f32 length) {
-  if (!unknown210->renderAxis(length)) {
+  if (!m_cacheDraw->renderAxis(length)) {
     mm::Col4 color = unknown0c;
     setCol(mm::Col3::red, 1.0f);
     renderLine(mm::Vec3::zero, mm::Vec3(length, 0.0f, 0.0f));
@@ -994,7 +994,7 @@ void DebDraw::renderArrowAxis(const mm::Vec3 &position, int size, bool isCube) {
 }
 
 void DebDraw::renderOBB(const mm::Obb &obb) {
-  if (!unknown210->renderOBB(obb)) {
+  if (!m_cacheDraw->renderOBB(obb)) {
     mm::Vec3 vertices[8];
     obb.getVertices(vertices);
     begin(3, 10);
@@ -1016,7 +1016,7 @@ void DebDraw::renderOBB(const mm::Obb &obb) {
 }
 
 void DebDraw::renderCube(const mm::Vec3 &min, const mm::Vec3 &max) {
-  if (!unknown210->renderCube(min, max)) {
+  if (!m_cacheDraw->renderCube(min, max)) {
     unknown08 &= ~4;
     begin(3, 10);
     add(min);
@@ -1039,7 +1039,7 @@ void DebDraw::renderCube(const mm::Vec3 &min, const mm::Vec3 &max) {
 }
 
 void DebDraw::renderCubeFill(const mm::Vec3 &min, const mm::Vec3 &max) {
-  if (!unknown210->renderCubeFill(min, max)) {
+  if (!m_cacheDraw->renderCubeFill(min, max)) {
     begin(6, 10);
     add(min);
     add(mm::Vec3(max.x, min.y, min.z));
@@ -1068,7 +1068,7 @@ void DebDraw::renderCubeFill(const mm::Vec3 &min, const mm::Vec3 &max) {
 }
 
 void DebDraw::renderPrim(const mm::PrimBase *prim) {
-  CacheDraw *cacheDraw = unknown210;
+  CacheDraw *cacheDraw = m_cacheDraw;
   mm::Mat44 matrix;
   prim->getMat(matrix);
   if (!cacheDraw->renderPrim(matrix, prim->type)) {
@@ -1087,7 +1087,7 @@ void DebDraw::renderPrim(const mm::PrimBase *prim) {
 }
 
 void DebDraw::renderRect(const mm::Rect<int> &rect) {
-  if (!unknown210->renderRect(rect)) {
+  if (!m_cacheDraw->renderRect(rect)) {
     unknown08 &= ~0xa;
     begin(3, 5);
     add(rect.x, rect.y, 0);
@@ -1100,7 +1100,7 @@ void DebDraw::renderRect(const mm::Rect<int> &rect) {
 }
 
 void DebDraw::renderRectFill(const mm::Rect<int> &rect) {
-  if (!unknown210->renderRectFill(rect)) {
+  if (!m_cacheDraw->renderRectFill(rect)) {
     unknown08 &= ~0xa;
     begin(6, 4);
     add(rect.x, rect.y, 0);
@@ -1172,7 +1172,7 @@ void DebDraw::renderDiamondFill(const mm::Rect<int> &rect) {
 }
 
 void DebDraw::renderSquareFill(f32 width, f32 height) {
-  if (!unknown210->renderSquareFill(width, height)) {
+  if (!m_cacheDraw->renderSquareFill(width, height)) {
     mm::Vec3 fourth(width * -0.5f, height * 0.5f, 0.0f);
     mm::Vec3 third(width * 0.5f, height * 0.5f, 0.0f);
     mm::Vec3 second(width * -0.5f, height * -0.5f, 0.0f);
@@ -1187,7 +1187,7 @@ void DebDraw::renderSquareFill(f32 width, f32 height) {
 }
 
 void DebDraw::renderSquare(f32 width, f32 height) {
-  if (!unknown210->renderSquare(width, height)) {
+  if (!m_cacheDraw->renderSquare(width, height)) {
     mm::Vec3 fourth(width * -0.5f, height * 0.5f, 0.0f);
     mm::Vec3 third(width * 0.5f, height * 0.5f, 0.0f);
     mm::Vec3 second(width * -0.5f, height * -0.5f, 0.0f);
@@ -1203,7 +1203,7 @@ void DebDraw::renderSquare(f32 width, f32 height) {
 }
 
 void DebDraw::renderGrid(f32 size, f32 step) {
-  if (!unknown210->renderGrid(size, step)) {
+  if (!m_cacheDraw->renderGrid(size, step)) {
     int count = static_cast<int>(size / step);
     begin(2, count << 2 | 2);
     if (count >= 0) {
@@ -1222,7 +1222,7 @@ void DebDraw::renderGrid(f32 size, f32 step) {
 }
 
 void DebDraw::renderCircle(const mm::Vec3 &center, f32 radius, int division) {
-  if (!unknown210->renderCircle(center, radius, division)) {
+  if (!m_cacheDraw->renderCircle(center, radius, division)) {
     u32 flags = unknown08;
     begin(3, division + 1);
     if (!(flags & 8)) {
@@ -1241,7 +1241,7 @@ void DebDraw::renderCircle(const mm::Vec3 &center, f32 radius, int division) {
 }
 
 void DebDraw::renderCircleFill(const mm::Vec3 &center, f32 radius, int division) {
-  if (!unknown210->renderCircle(center, radius, division)) {
+  if (!m_cacheDraw->renderCircle(center, radius, division)) {
     u32 flags = unknown08;
     begin(7, division + 2);
     add(center);
@@ -1261,7 +1261,7 @@ void DebDraw::renderCircleFill(const mm::Vec3 &center, f32 radius, int division)
 }
 
 void DebDraw::renderFanFill(const mm::Vec3 &center, f32 radius, f32 direction, f32 angle) {
-  if (!unknown210->renderFanFill(center, radius, direction, angle)) {
+  if (!m_cacheDraw->renderFanFill(center, radius, direction, angle)) {
     u32 flags = unknown08;
     int division = static_cast<int>(angle / 0.17453294f) + 1;
     begin(7, division + 2);
@@ -1282,7 +1282,7 @@ void DebDraw::renderFanFill(const mm::Vec3 &center, f32 radius, f32 direction, f
 }
 
 void DebDraw::renderConeFill(f32 radius, f32 height, u32 division) {
-  if (!unknown210->renderConeFill(radius, height, division)) {
+  if (!m_cacheDraw->renderConeFill(radius, height, division)) {
     mm::Vec3 apex(0.0f, radius, 0.0f);
     u32 count = 8;
     if (division >= 8) {
@@ -1309,7 +1309,7 @@ void DebDraw::renderConeFill(f32 radius, f32 height, u32 division) {
 }
 
 void DebDraw::renderCylinder(f32 radius, f32 height, u32 division) {
-  if (!unknown210->renderCylinder(radius, height, division)) {
+  if (!m_cacheDraw->renderCylinder(radius, height, division)) {
     u32 count = 8;
     if (division >= 8) {
       count = division;
@@ -1351,7 +1351,7 @@ void DebDraw::renderCylinder(f32 radius, f32 height, u32 division) {
 }
 
 void DebDraw::renderCylinderFill(f32 radius, f32 height, u32 division) {
-  if (!unknown210->renderCylinderFill(radius, height, division)) {
+  if (!m_cacheDraw->renderCylinderFill(radius, height, division)) {
     u32 count = 8;
     if (division >= 8) {
       count = division;
@@ -1380,7 +1380,7 @@ void DebDraw::renderCylinderFill(f32 radius, f32 height, u32 division) {
 }
 
 void DebDraw::renderCone(f32 radius, f32 height, u32 division) {
-  if (!unknown210->renderConeFill(radius, height, division)) {
+  if (!m_cacheDraw->renderConeFill(radius, height, division)) {
     mm::Vec3 apex(0.0f, radius, 0.0f);
     u32 count = 8;
     if (division >= 8) {
@@ -1411,7 +1411,7 @@ void DebDraw::renderCone(f32 radius, f32 height, u32 division) {
 }
 
 void DebDraw::renderCapsule(f32 radius, f32 height, u32 division) {
-  if (!unknown210->renderCapsule(radius, height, division)) {
+  if (!m_cacheDraw->renderCapsule(radius, height, division)) {
     u32 count = 8;
     if (division >= 8) {
       count = division;
@@ -1440,7 +1440,7 @@ void DebDraw::renderCapsule(f32 radius, f32 height, u32 division) {
 }
 
 void DebDraw::renderOval(f32 width, f32 height) {
-  if (!unknown210->renderOval(width, height)) {
+  if (!m_cacheDraw->renderOval(width, height)) {
     mm::Vec3 top(0.0f, width * 0.5f + height, 0.0f);
     mm::Vec3 bottom(0.0f, width * -0.5f - height, 0.0f);
     for (int i = 0; i < 2; i++) {
@@ -1463,7 +1463,7 @@ void DebDraw::renderOval(f32 width, f32 height) {
 // (the call kept in a local before it) is folded by clang into cmp/cset/and/cbz: 104 instructions against the game's 101. With only `if (!call)` around the loop, the
 // `division > 0` test is the guard of the rotated loop and the two branches come out as in the game.
 void DebDraw::renderRealSphere(f32 radius, int division) {
-  if (!unknown210->renderRealSphere(radius, division)) {
+  if (!m_cacheDraw->renderRealSphere(radius, division)) {
     for (int i = 0; i < division; i++) {
       mm::Mat44 rotation;
       rotation.setRotY(i * 3.1415927f / division);

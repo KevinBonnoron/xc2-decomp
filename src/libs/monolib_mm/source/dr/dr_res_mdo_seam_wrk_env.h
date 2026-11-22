@@ -58,35 +58,35 @@ public:
   void release();
   void setupWork(MdoWrkMatRes *matRes, grlib::CGLibTriUniformArray *uniforms, mtl::ALLOC_HANDLE handle, const MdsSeamEnvMapHead *head, const MdsSeamEnvMapData *data);
 
-  const MdsSeamEnvMapHead *unknown18; // Inferred role: env map header; original member name unknown.
-  const MdsSeamEnvMapData *unknown20; // Inferred role: env map data; original member name unknown.
-  void *unknown28;                    // Inferred role: allocated bit table; original member name unknown.
-  u32 *unknown30;                     // Inferred role: render bit table; original member name unknown.
+  const MdsSeamEnvMapHead *m_mdsSeamEnvMapHead; // Inferred role: env map header; original member name unknown.
+  const MdsSeamEnvMapData *m_mdsSeamEnvMapData; // Inferred role: env map data; original member name unknown.
+  void *unknown28;                              // Inferred role: allocated bit table; original member name unknown.
+  u32 *unknown30;                               // Inferred role: render bit table; original member name unknown.
   u8 *m_displayWrk[2];
   int m_displayWrkSize[2];
   u32 unknown50; // Inferred role: env map index; original member name unknown.
   u8 _54[0x58 - 0x54];
-  MdoWrkMatRes *unknown58;       // Inferred role: material work; original member name unknown.
-  DrResMdoSeamMemObj *unknown60; // Inferred role: memory object; original member name unknown.
-  u32 unknown68;                 // Inferred role: info flags; original member name unknown.
-  u32 unknown6c;                 // Inferred role: state flags; original member name unknown.
-  s32 unknown70;                 // Inferred role: memory size; original member name unknown.
-  bool unknown74;                // Inferred role: enable; original member name unknown.
+  MdoWrkMatRes *m_mdoWrkMatRes;             // Inferred role: material work; original member name unknown.
+  DrResMdoSeamMemObj *m_drResMdoSeamMemObj; // Inferred role: memory object; original member name unknown.
+  u32 unknown68;                            // Inferred role: info flags; original member name unknown.
+  u32 unknown6c;                            // Inferred role: state flags; original member name unknown.
+  s32 unknown70;                            // Inferred role: memory size; original member name unknown.
+  bool unknown74;                           // Inferred role: enable; original member name unknown.
   u8 _75[0x80 - 0x75];
   mm::Vec3 unknown80; // Inferred role: position; original member name unknown.
   mm::Vec3 unknown90; // Inferred role: scale; original member name unknown.
 };
 
 static_assert(offsetof(DrResMdoSeamWrkEnv, unknown28) == 0x28, "");
-static_assert(offsetof(DrResMdoSeamWrkEnv, unknown20) == 0x20, "");
+static_assert(offsetof(DrResMdoSeamWrkEnv, m_mdsSeamEnvMapData) == 0x20, "");
 static_assert(offsetof(DrResMdoSeamWrkEnv, unknown30) == 0x30, "");
 
-static_assert(offsetof(DrResMdoSeamWrkEnv, unknown18) == 0x18, "");
+static_assert(offsetof(DrResMdoSeamWrkEnv, m_mdsSeamEnvMapHead) == 0x18, "");
 static_assert(offsetof(DrResMdoSeamWrkEnv, m_displayWrk) == 0x38, "");
 static_assert(offsetof(DrResMdoSeamWrkEnv, m_displayWrkSize) == 0x48, "");
 static_assert(offsetof(DrResMdoSeamWrkEnv, unknown68) == 0x68, "");
 static_assert(offsetof(DrResMdoSeamWrkEnv, unknown50) == 0x50, "");
-static_assert(offsetof(DrResMdoSeamWrkEnv, unknown58) == 0x58, "");
+static_assert(offsetof(DrResMdoSeamWrkEnv, m_mdoWrkMatRes) == 0x58, "");
 static_assert(offsetof(DrResMdoSeamWrkEnv, unknown70) == 0x70, "");
 static_assert(offsetof(DrResMdoSeamWrkEnv, unknown6c) == 0x6c, "");
 static_assert(offsetof(DrResMdoSeamWrkEnv, unknown74) == 0x74, "");

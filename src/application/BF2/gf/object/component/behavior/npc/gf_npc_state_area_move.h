@@ -50,7 +50,7 @@ template <typename T> void StateAreaMove<T>::onEnter(void *owner, ai::State *pre
     switch (gmk->getGmkType()) {
     case gmk::GMK_TYPE_NPC:
     case gmk::GMK_TYPE_MOB:
-      if (gmk->unknown08.unknown10->unknown0c != gmk::SHAPE_TYPE_UNKNOWN_1) {
+      if (gmk->m_createBaseInfo.unknown10->unknown0c != gmk::SHAPE_TYPE_UNKNOWN_1) {
         unknown50 = &StateAreaMove::seqInitGoalPos;
         return;
       }
@@ -79,7 +79,7 @@ template <typename T> void StateAreaMove<T>::seqInitGoalPos(T &behavior, const f
       mm::Vec3 position;
       gmk->getPositionInShape(position, false);
       if (gmk->getPositionAppliedYSnap(position, position, true)) {
-        f32 radius = base->unknown08.unknown08->unknown20.y * 0.5f;
+        f32 radius = base->m_createBaseInfo.m_xform->unknown20.y * 0.5f;
         if (fw::NaviUtil::testNaviFindPos(behavior.getPos(), radius, radius, 0.1f, position, radius, radius, 0.1f, 0) == 3) {
           behavior.init(true);
           behavior.unknown005() = position;

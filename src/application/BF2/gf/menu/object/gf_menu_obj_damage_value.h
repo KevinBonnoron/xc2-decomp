@@ -23,12 +23,12 @@ public:
 
   class ListListener : public ui::UIObjectListener {
   public:
-    ListListener(GfMenuObjDamageValue *owner) : _0c(), unknown20(owner) {}
+    ListListener(GfMenuObjDamageValue *owner) : _0c(), m_menuObjDamageValue(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
     u8 _1c[0x20 - 0x1c];
-    GfMenuObjDamageValue *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjDamageValue *m_menuObjDamageValue; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjDamageValue(u32 handle);
@@ -60,7 +60,7 @@ static_assert(offsetof(GfMenuObjDamageValue::DamageInfo, unknown10) == 0x10, "")
 static_assert(sizeof(GfMenuObjDamageValue::DamageInfo) == 0x20, "");
 static_assert(offsetof(GfMenuObjDamageValue::OpenParam, unknown20) == 0x20, "");
 static_assert(sizeof(GfMenuObjDamageValue::OpenParam) == 0x30, "");
-static_assert(offsetof(GfMenuObjDamageValue::ListListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjDamageValue::ListListener, m_menuObjDamageValue) == 0x20, "");
 static_assert(sizeof(GfMenuObjDamageValue::ListListener) == 0x28, "");
 
 } // namespace gf

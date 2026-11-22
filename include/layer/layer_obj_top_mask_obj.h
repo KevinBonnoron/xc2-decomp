@@ -25,20 +25,20 @@ public:
   void resourceInit() override;
   void setDrawList(LayerSortMan *sortMan, bool is3D) override;
 
-  LayerResViewPortInfo *unknown250; // Inferred role: view port, cleared by the constructor like the other Top objects; original member name unknown.
-  LayerViewPort unknown258;         // Inferred role: view port; original member name unknown.
+  LayerResViewPortInfo *m_layerResViewPortInfo; // Inferred role: view port, cleared by the constructor like the other Top objects; original member name unknown.
+  LayerViewPort m_layerViewPort;                // Inferred role: view port; original member name unknown.
   u8 _268[0x290 - 0x268];
-  grlib::CGLibDblUniformBlock unknown290; // Inferred role: uniform block; original member name unknown.
-  LayerTextureObj *unknown2c8;            // Inferred role: mask texture; original member name unknown.
-  u16 unknown2d0;                         // Inferred role: icon num; original member name unknown.
-  u16 unknown2d2;                         // Inferred role: icon max; original member name unknown.
+  grlib::CGLibDblUniformBlock m_cGLibDblUniformBlock; // Inferred role: uniform block; original member name unknown.
+  LayerTextureObj *m_layerTextureObj;                 // Inferred role: mask texture; original member name unknown.
+  u16 unknown2d0;                                     // Inferred role: icon num; original member name unknown.
+  u16 unknown2d2;                                     // Inferred role: icon max; original member name unknown.
 };
 
-static_assert(offsetof(LayerObjTopMaskObj, unknown250) == 0x250, "");
-static_assert(offsetof(LayerObjTopMaskObj, unknown258) == 0x258, "");
-static_assert(offsetof(LayerObjTopMaskObj, unknown258.unknown0c) == 0x264, "");
-static_assert(offsetof(LayerObjTopMaskObj, unknown290) == 0x290, "");
-static_assert(offsetof(LayerObjTopMaskObj, unknown2c8) == 0x2c8, "");
+static_assert(offsetof(LayerObjTopMaskObj, m_layerResViewPortInfo) == 0x250, "");
+static_assert(offsetof(LayerObjTopMaskObj, m_layerViewPort) == 0x258, "");
+static_assert(offsetof(LayerObjTopMaskObj, m_layerViewPort.unknown0c) == 0x264, "");
+static_assert(offsetof(LayerObjTopMaskObj, m_cGLibDblUniformBlock) == 0x290, "");
+static_assert(offsetof(LayerObjTopMaskObj, m_layerTextureObj) == 0x2c8, "");
 static_assert(offsetof(LayerObjTopMaskObj, unknown2d0) == 0x2d0, "");
 
 } // namespace layer

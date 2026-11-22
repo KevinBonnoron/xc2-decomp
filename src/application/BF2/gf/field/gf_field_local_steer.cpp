@@ -35,8 +35,8 @@ GfFieldLocalSteer::GfFieldLocalSteer(const CreateInfo *info) : unknown20(false),
 
 void GfFieldLocalSteer::create(const CreateInfo &info) {
   dispose();
-  if (isUseLocalSteer(info.unknown00)) {
-    unknown00 = info;
+  if (isUseLocalSteer(info.m_GF_OBJ_HANDLE)) {
+    m_createInfo = info;
     unknown28.unknown08 = 0.0f;
     unknown28.unknown0c = 0.0f;
     unknown28.unknown10 = 0.0f;
@@ -45,7 +45,7 @@ void GfFieldLocalSteer::create(const CreateInfo &info) {
 }
 
 bool GfFieldLocalSteer::isTimeOutCollide() const {
-  if (unknown00.unknown00 != unknown020) {
+  if (m_createInfo.m_GF_OBJ_HANDLE != unknown020) {
     return unknown040 < unknown24;
   }
   return false;
@@ -61,12 +61,12 @@ f32 GfFieldLocalSteer::getCurAngle() const {
 }
 
 void GfFieldLocalSteer::dispose() {
-  unknown00.unknown00 = unknown020;
-  unknown00.unknown08 = 2.0f;
-  unknown00.unknown0c = 1.0f;
-  unknown00.unknown10 = 0.5f;
-  unknown00.unknown14 = true;
-  unknown00.unknown18 = 0;
+  m_createInfo.m_GF_OBJ_HANDLE = unknown020;
+  m_createInfo.unknown08 = 2.0f;
+  m_createInfo.unknown0c = 1.0f;
+  m_createInfo.unknown10 = 0.5f;
+  m_createInfo.unknown14 = true;
+  m_createInfo.unknown18 = 0;
 }
 
 bool GfFieldLocalSteer::isUseLocalSteer(GF_OBJ_HANDLE *handle) {
@@ -79,10 +79,10 @@ bool GfFieldLocalSteer::isUseLocalSteer(GF_OBJ_HANDLE *handle) {
 
 void GfFieldLocalSteer::castRay(const mm::Vec3 &position) {
   unknown40.clear();
-  if (unknown00.unknown00 == unknown020) {
+  if (m_createInfo.m_GF_OBJ_HANDLE == unknown020) {
     return;
   }
-  GfObjAcc acc(unknown00.unknown00);
+  GfObjAcc acc(m_createInfo.m_GF_OBJ_HANDLE);
   if (!acc.isValid()) {
     return;
   }
@@ -92,8 +92,8 @@ void GfFieldLocalSteer::castRay(const mm::Vec3 &position) {
     return;
   }
   f32 length = sqrtf(ray.x * ray.x + ray.y * ray.y + ray.z * ray.z);
-  if (unknown00.unknown08 < length) {
-    ray *= unknown00.unknown08 / length;
+  if (m_createInfo.unknown08 < length) {
+    ray *= m_createInfo.unknown08 / length;
   }
   fw::ColiCheckConfig config;
   config.unknown04 = 0xffffffff;
@@ -102,8 +102,8 @@ void GfFieldLocalSteer::castRay(const mm::Vec3 &position) {
   config.unknown15 = false;
   config.unknown14 = true;
   config.unknown00 = 2;
-  config.unknown10 = unknown00.unknown14 ? 1 : 2;
-  mm::Vec3 end = ray + (origin + mm::Vec3(0.0f, unknown00.unknown0c, 0.0f));
+  config.unknown10 = m_createInfo.unknown14 ? 1 : 2;
+  mm::Vec3 end = ray + (origin + mm::Vec3(0.0f, m_createInfo.unknown0c, 0.0f));
   fw::ColiCheck::testLineChara(unknown40, origin, end, config);
 }
 
@@ -123,11 +123,11 @@ void GfFieldLocalSteer::apply(mm::Vec3 &result, const mm::Vec3 &direction) const
 }
 
 void validateGmkRouteNaviConsideringGfLocalSteer(gmk::GmkRouteNavi &navi, const GfFieldLocalSteer &steer, const mm::Vec3 &position) {
-  if (navi.unknown00.isValid() && navi.unknown28.isValid() && navi.unknown80 && steer.unknown00.unknown00 != unknown020 && steer.unknown20) {
+  if (navi.m_createInfo.isValid() && navi.m_gmkAcc.isValid() && navi.unknown80 && steer.m_createInfo.m_GF_OBJ_HANDLE != unknown020 && steer.unknown20) {
     f32 dx = navi.unknown90.x - position.x;
     f32 dy = navi.unknown90.y - position.y;
     f32 dz = navi.unknown90.z - position.z;
-    if (sqrtf(dx * dx + dy * dy + dz * dz) < steer.unknown00.unknown08) {
+    if (sqrtf(dx * dx + dy * dy + dz * dz) < steer.m_createInfo.unknown08) {
       navi.updateNextPos();
     }
   }
@@ -177,7 +177,7 @@ template <typename T> static gmk::GmkSquad *unknown002(GF_OBJ_HANDLE *handle) {
 }
 
 template <typename T> bool GfFieldLocalSteer::TIsTargetNotSameSquad<T>::operator()(const GfFieldLocalSteer &steer, GF_OBJ_HANDLE *handle) const {
-  gmk::GmkSquad *squad = unknown002<T>(steer.unknown00.unknown00);
+  gmk::GmkSquad *squad = unknown002<T>(steer.m_createInfo.m_GF_OBJ_HANDLE);
   if (squad == nullptr) {
     return true;
   }

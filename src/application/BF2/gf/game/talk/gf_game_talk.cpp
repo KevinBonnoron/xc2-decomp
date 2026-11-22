@@ -53,7 +53,7 @@ void GfGameTalk::play(const GfSetupPfTalk &talk) {
         name += "_link";
       }
       Bdat::getVal(bdat, "category", talk.unknown00);
-      event::Manager::get()->play(name.c_str(), talk.unknown08, talk.unknown10, talk.unknown14, 0, 0, false);
+      event::Manager::get()->play(name.c_str(), talk.m_GF_OBJ_HANDLE, talk.unknown10, talk.unknown14, 0, 0, false);
       return;
     }
   }

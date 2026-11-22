@@ -25,11 +25,11 @@ public:
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isPopCondMatched() const;
 
-    u16 unknown00;              // Inferred role: condition; original member name unknown.
-    u16 unknown02;              // Inferred role: climb icon radius; original member name unknown.
-    ScenarioFlagCond unknown04; // Inferred role: scenario flag; original member name unknown.
-    QuestFlagCond unknown08;    // Inferred role: quest flag; original member name unknown.
-    BootedGmkCond unknown0c;    // Inferred role: booted gmk; original member name unknown.
+    u16 unknown00;                       // Inferred role: condition; original member name unknown.
+    u16 unknown02;                       // Inferred role: climb icon radius; original member name unknown.
+    ScenarioFlagCond m_scenarioFlagCond; // Inferred role: scenario flag; original member name unknown.
+    QuestFlagCond m_questFlagCond;       // Inferred role: quest flag; original member name unknown.
+    BootedGmkCond m_bootedGmkCond;       // Inferred role: booted gmk; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_CLIMBING; // Inferred name; shared by every gimmick class for the TGmkList templates.
@@ -46,7 +46,7 @@ public:
   inline void updateIconPos();
   void updateIcon();
 
-  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(m_createInfo.unknown10); }
 
   gf::GfMenuCallContext *unknown48; // Inferred role: menu icon; original member name unknown.
   mm::Vec3 unknown50;               // Inferred role: icon position; original member name unknown.

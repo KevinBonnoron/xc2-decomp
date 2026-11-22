@@ -26,10 +26,10 @@ class StateFieldLure : public GfStateBase {
   void update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info);
   void notifyLure(GfComBehaviorPc *behavior);
 
-  GF_OBJ_HANDLE *unknown18; // Inferred role: target; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: target; original member name unknown.
 };
 
-static_assert(offsetof(StateFieldLure, unknown18) == 0x18, "");
+static_assert(offsetof(StateFieldLure, m_GF_OBJ_HANDLE) == 0x18, "");
 static_assert(sizeof(StateFieldLure) == 0x20, "");
 
 } // namespace pc

@@ -4,11 +4,11 @@
 
 namespace event {
 
-CharaWeightPlayer::CharaWeightPlayer() : unknown08(gf::unknown020), unknown10(nullptr) {}
+CharaWeightPlayer::CharaWeightPlayer() : unknown08(gf::unknown020), m_charaObj(nullptr) {}
 
 void CharaWeightPlayer::create(gf::GF_OBJ_HANDLE *handle, CharaObj *chara) {
   this->unknown08 = handle;
-  unknown10 = chara;
+  m_charaObj = chara;
 }
 
 void CharaWeightPlayer::easeOut(gf::AnimLayer layer, const char *stat, f32 frame, CV_TYPE cv, WeightLayer weightLayer) {
@@ -36,7 +36,7 @@ void CharaWeightPlayer::destroy() {
   }
   unknown18.clear();
   unknown08 = gf::unknown020;
-  unknown10 = nullptr;
+  m_charaObj = nullptr;
 }
 
 void CharaWeightPlayer::update(f32 delta) {

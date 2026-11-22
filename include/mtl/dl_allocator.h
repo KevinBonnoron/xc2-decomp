@@ -15,9 +15,9 @@ class DlAllocator : public IMemAllocator {
 public:
   // Inferred role: footer written after the memory of every allocation; original type name unknown.
   struct unknown001 {
-    u32 unknown00;            // Inferred role: signature of the footer; original member name unknown.
-    size_t unknown08;         // Inferred role: offset of the footer from the allocation; original member name unknown.
-    CallStackInfo *unknown10; // Inferred role: call stack of the allocation; original member name unknown.
+    u32 unknown00;                  // Inferred role: signature of the footer; original member name unknown.
+    size_t unknown08;               // Inferred role: offset of the footer from the allocation; original member name unknown.
+    CallStackInfo *m_callStackInfo; // Inferred role: call stack of the allocation; original member name unknown.
   };
 
   // The space of dlmalloc (an mspace, struct malloc_state of dlmalloc 2.8) made by create_mspace_with_base; its layout
@@ -52,15 +52,15 @@ public:
   static void *getNewInfo(const void *pointer, size_t &size);
 
   mm::mtl::FixStr<32> m_name;
-  malloc_state *unknown30;    // Inferred role: dlmalloc space of the buffer; original member name unknown.
-  void *unknown38;            // Inferred role: buffer given to create; original member name unknown.
-  size_t unknown40;           // Inferred role: size of the buffer; original member name unknown.
-  CallStackManager unknown48; // Inferred role: call stacks of the allocations; original member name unknown.
+  malloc_state *unknown30;             // Inferred role: dlmalloc space of the buffer; original member name unknown.
+  void *unknown38;                     // Inferred role: buffer given to create; original member name unknown.
+  size_t unknown40;                    // Inferred role: size of the buffer; original member name unknown.
+  CallStackManager m_callStackManager; // Inferred role: call stacks of the allocations; original member name unknown.
 };
 
 static_assert(offsetof(DlAllocator, m_name) == 0x08, "");
 static_assert(offsetof(DlAllocator, unknown30) == 0x30, "");
-static_assert(offsetof(DlAllocator, unknown48) == 0x48, "");
+static_assert(offsetof(DlAllocator, m_callStackManager) == 0x48, "");
 static_assert(sizeof(DlAllocator) == 0x88, "");
 
 } // namespace mtl

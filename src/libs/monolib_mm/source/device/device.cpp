@@ -13,7 +13,7 @@
 
 namespace ml {
 
-Device::Device(const char *name, WorkObj *parent) : WorkObj(name, parent, 0x20), unknown1b0(-1), unknown370(nullptr) {}
+Device::Device(const char *name, WorkObj *parent) : WorkObj(name, parent, 0x20), unknown1b0(-1), m_languageInfo(nullptr) {}
 
 void Device::initializeSDK(const InitParam &param) { DeviceNx::initializeSDK(param); }
 
@@ -55,9 +55,9 @@ bool Device::wkStandbyLogout() {
     return false;
   }
   WorkCpu::releaseGroupHandle(unknown1b0);
-  if (unknown370 != nullptr) {
-    delete unknown370;
-    unknown370 = nullptr;
+  if (m_languageInfo != nullptr) {
+    delete m_languageInfo;
+    m_languageInfo = nullptr;
   }
   return WorkObj::wkStandbyLogout();
 }

@@ -6,7 +6,7 @@
 
 namespace gf {
 
-GfMenuZoneMapList::GfMenuZoneMapList() : unknown79(false) {}
+GfMenuZoneMapList::GfMenuZoneMapList() : m_groupMode(false) {}
 
 GfMenuZoneMapList::~GfMenuZoneMapList() { ; }
 

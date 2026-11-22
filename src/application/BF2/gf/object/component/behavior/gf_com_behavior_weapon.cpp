@@ -56,7 +56,7 @@ void GfComBehaviorWeapon::procMsgObjectNotifyAsmCallback(fw::MessageObject *send
 
 void GfComBehaviorWeapon::procMsgObjectOnChangeWeapon(fw::MessageObject *sender, MsgObjectForceWeaponMount &message) {
   mm::mtl::FixStr<64> state("S_");
-  const char *name = GfObjUtil::getMotionResourceName(message.unknown10);
+  const char *name = GfObjUtil::getMotionResourceName(message.m_GF_OBJ_HANDLE);
   if (name != nullptr) {
     state += name + 3;
     state += "_";

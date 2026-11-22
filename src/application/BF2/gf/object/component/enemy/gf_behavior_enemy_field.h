@@ -35,13 +35,13 @@ class GfComBehaviorEnemy;
 class GfBehaviorEnemyField {
 public:
   struct CreateInfo {
-    CreateInfo() : unknown00(nullptr), unknown08(unknown020), unknown10(1.0f), unknown14(2.0f), unknown18(0) {}
+    CreateInfo() : m_iGfBehFieldOwner(nullptr), m_GF_OBJ_HANDLE(unknown020), unknown10(1.0f), unknown14(2.0f), unknown18(0) {}
 
-    IGfBehFieldOwner *unknown00; // Inferred role: owner; original member name unknown.
-    GF_OBJ_HANDLE *unknown08;    // Inferred role: object; original member name unknown.
-    f32 unknown10;               // Inferred role: radius; original member name unknown.
-    f32 unknown14;               // Inferred role: height; original member name unknown.
-    u8 unknown18;                // Inferred role: move type; original member name unknown.
+    IGfBehFieldOwner *m_iGfBehFieldOwner; // Inferred role: owner; original member name unknown.
+    GF_OBJ_HANDLE *m_GF_OBJ_HANDLE;       // Inferred role: object; original member name unknown.
+    f32 unknown10;                        // Inferred role: radius; original member name unknown.
+    f32 unknown14;                        // Inferred role: height; original member name unknown.
+    u8 unknown18;                         // Inferred role: move type; original member name unknown.
   };
 
   enum MoveSpeed {
@@ -65,7 +65,7 @@ public:
   void createNaviMeshObj();
   void createSensor();
   // Inferred helper: disposes the sensor before it is created again; original name unknown.
-  void unknown002() { unknownd0.dispose(); }
+  void unknown002() { m_fieldEnemySensor.dispose(); }
   void disposeSquadNavi();
   void updateNaviMeshObj(f32 deltaTime);
   void disposeNaviMeshObj();
@@ -95,8 +95,8 @@ public:
     }
   }
 
-  CreateInfo unknown08; // Inferred role: create info, copied as a whole by create; original member name unknown.
-  u8 unknown28;         // Inferred role: Dir_Per of BDAT_FLD_ENACT_MOVE; original member name unknown.
+  CreateInfo m_createInfo; // Inferred role: create info, copied as a whole by create; original member name unknown.
+  u8 unknown28;            // Inferred role: Dir_Per of BDAT_FLD_ENACT_MOVE; original member name unknown.
   u8 _29[0x2c - 0x29];
   f32 unknown2c;  // Inferred role: Dir_Line of BDAT_FLD_ENACT_MOVE in radians; original member name unknown.
   f32 unknown30;  // Inferred role: Dir_Curve of BDAT_FLD_ENACT_MOVE in radians; original member name unknown.
@@ -108,19 +108,19 @@ public:
   u8 _39[0x40 - 0x39];
   navi::NvmshAcObj *unknown40; // Inferred role: navi mesh object; original member name unknown.
   u8 _48[0x50 - 0x48];
-  gmk::GmkSquadNavi unknown50; // Inferred role: squad navi, its unknown30 is the offset applied at pop; original member name unknown.
-  bool unknown90;              // Inferred role: gravity; original member name unknown.
+  gmk::GmkSquadNavi m_gmkSquadNavi; // Inferred role: squad navi, its unknown30 is the offset applied at pop; original member name unknown.
+  bool unknown90;                   // Inferred role: gravity; original member name unknown.
   u8 _91[0xa0 - 0x91];
   mm::Vec3 unknowna0; // Inferred role: velocity; original member name unknown.
   f32 unknownb0; // Inferred role: y rotation applied by applyLinearVelocityAndRotY; original member name unknown. Decision 2026-11-14 #18: typed f32 as the game's accesses show (ldr s0, [x19, #0xb0]
                  // at 0x710051362c feeding sinf/cosf, and moveToGoal at 0x7100512ff8 stores angle * 0.1 there).
   u8 _b4[0xc0 - 0xb4];
   mm::Vec3 unknownc0;                                                       // Inferred role: position; original member name unknown.
-  GfFieldEnemySensor unknownd0;                                             // Inferred role: sensor; original member name unknown.
-  GfEnemyFieldMoveSpeed unknown1d0;                                         // Inferred role: move speed; original member name unknown.
-  GfFieldLocalSteer unknown200;                                             // Inferred role: local steer; original member name unknown.
+  GfFieldEnemySensor m_fieldEnemySensor;                                    // Inferred role: sensor; original member name unknown.
+  GfEnemyFieldMoveSpeed m_enemyFieldMoveSpeed;                              // Inferred role: move speed; original member name unknown.
+  GfFieldLocalSteer m_fieldLocalSteer;                                      // Inferred role: local steer; original member name unknown.
   GfFieldLocalSteer::TIsTargetNotSameSquad<GfComBehaviorEnemy> unknown5260; // Inferred role: predicate of the local steer; original member name unknown.
-  GfFieldPitchRollController unknown5268;                                   // Inferred role: pitch and roll controller; original member name unknown.
+  GfFieldPitchRollController m_fieldPitchRollController;                    // Inferred role: pitch and roll controller; original member name unknown.
   f32 unknown52a0;                                                          // Inferred role: change battle delay; original member name unknown.
   f32 unknown52a4;                                                          // Inferred role: elapsed time compared with unknown52a0; original member name unknown.
   bool unknown52a8;                                                         // Inferred role: change battle enabled, true by default; original member name unknown.
@@ -129,22 +129,22 @@ public:
 };
 
 static_assert(sizeof(GfBehaviorEnemyField::CreateInfo) == 0x20, "");
-static_assert(offsetof(GfBehaviorEnemyField, unknown08) == 0x08, "");
+static_assert(offsetof(GfBehaviorEnemyField, m_createInfo) == 0x08, "");
 static_assert(offsetof(GfBehaviorEnemyField, unknown28) == 0x28, "");
 static_assert(offsetof(GfBehaviorEnemyField, unknown30) == 0x30, "");
 static_assert(offsetof(GfBehaviorEnemyField, unknown36) == 0x36, "");
 static_assert(offsetof(GfBehaviorEnemyField, unknown38) == 0x38, "");
 static_assert(offsetof(GfBehaviorEnemyField, unknown40) == 0x40, "");
-static_assert(offsetof(GfBehaviorEnemyField, unknown50) == 0x50, "");
+static_assert(offsetof(GfBehaviorEnemyField, m_gmkSquadNavi) == 0x50, "");
 static_assert(offsetof(GfBehaviorEnemyField, unknown90) == 0x90, "");
 static_assert(offsetof(GfBehaviorEnemyField, unknowna0) == 0xa0, "");
 static_assert(offsetof(GfBehaviorEnemyField, unknownb0) == 0xb0, "");
 static_assert(offsetof(GfBehaviorEnemyField, unknownc0) == 0xc0, "");
-static_assert(offsetof(GfBehaviorEnemyField, unknownd0) == 0xd0, "");
-static_assert(offsetof(GfBehaviorEnemyField, unknown1d0) == 0x1d0, "");
-static_assert(offsetof(GfBehaviorEnemyField, unknown200) == 0x200, "");
+static_assert(offsetof(GfBehaviorEnemyField, m_fieldEnemySensor) == 0xd0, "");
+static_assert(offsetof(GfBehaviorEnemyField, m_enemyFieldMoveSpeed) == 0x1d0, "");
+static_assert(offsetof(GfBehaviorEnemyField, m_fieldLocalSteer) == 0x200, "");
 static_assert(offsetof(GfBehaviorEnemyField, unknown5260) == 0x5260, "");
-static_assert(offsetof(GfBehaviorEnemyField, unknown5268) == 0x5268, "");
+static_assert(offsetof(GfBehaviorEnemyField, m_fieldPitchRollController) == 0x5268, "");
 static_assert(offsetof(GfBehaviorEnemyField, unknown52a0) == 0x52a0, "");
 static_assert(offsetof(GfBehaviorEnemyField, unknown52a8) == 0x52a8, "");
 static_assert(sizeof(GfBehaviorEnemyField) == 0x52b0, "");

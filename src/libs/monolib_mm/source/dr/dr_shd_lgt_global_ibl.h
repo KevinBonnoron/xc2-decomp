@@ -27,12 +27,12 @@ bool CompareByPriority(const DrLightObjGlobalIBL *a, const DrLightObjGlobalIBL *
 class DrShdLgtGlobalIBL {
 public:
   // Inferred layout of an IBL slot; the original type name is unknown. Evidence: DrShdLgtGlobalIBL::updateView and
-  // removeObj index the state bytes with (unknown08 + 2) % 3 and pass unknown10 to DrPixlPostObjCubeMapMultiIBL::cancelIBL.
+  // removeObj index the state bytes with (unknown08 + 2) % 3 and pass m_drLightObjGlobalIBL to DrPixlPostObjCubeMapMultiIBL::cancelIBL.
   struct unknown002 {
-    s32 unknown00;                  // Inferred role: sh matrix index; original member name unknown.
-    u8 unknown04[3];                // Inferred role: request states; original member name unknown.
-    u32 unknown08;                  // Inferred role: current request state index; original member name unknown.
-    DrLightObjGlobalIBL *unknown10; // Inferred role: light object; original member name unknown.
+    s32 unknown00;                              // Inferred role: sh matrix index; original member name unknown.
+    u8 unknown04[3];                            // Inferred role: request states; original member name unknown.
+    u32 unknown08;                              // Inferred role: current request state index; original member name unknown.
+    DrLightObjGlobalIBL *m_drLightObjGlobalIBL; // Inferred role: light object; original member name unknown.
   };
 
   // Inferred layout of the per view data; the original type name is unknown. Evidence: the constructor stores the
@@ -53,9 +53,9 @@ public:
   // DrShdLgtGlobalIBL::updateView (1.0.0: 0x710089428c): 0x18 byte list nodes, the object at 0x0 compared with the slot
   // objects, the candidates ordered by the unsigned value at 0x8 and the byte at 0xc cleared for each new candidate.
   struct SlotCandidate {
-    DrLightObjGlobalIBL *unknown00; // Inferred role: light object; original member name unknown.
-    u32 unknown08;                  // Inferred role: priority; original member name unknown.
-    u8 unknown0c;                   // Inferred role: unknown, 0 for a new candidate; original member name unknown.
+    DrLightObjGlobalIBL *m_drLightObjGlobalIBL; // Inferred role: light object; original member name unknown.
+    u32 unknown08;                              // Inferred role: priority; original member name unknown.
+    u8 unknown0c;                               // Inferred role: unknown, 0 for a new candidate; original member name unknown.
   };
 
   DrShdLgtGlobalIBL(DrMan *drMan);
@@ -82,7 +82,7 @@ public:
   void addObj(DrLightObjGlobalIBL *obj, int viewNum);
   void removeObj(DrLightObjGlobalIBL *obj, int viewNum);
 
-  DrMan *unknown00;        // Inferred role: dr man; original member name unknown.
+  DrMan *m_drMan;          // Inferred role: dr man; original member name unknown.
   unknown001 unknown10[4]; // Inferred role: per view data; original member name unknown.
 };
 
@@ -90,7 +90,7 @@ static_assert(offsetof(DrShdLgtGlobalIBL, unknown10) == 0x10, "");
 static_assert(sizeof(DrShdLgtGlobalIBL::unknown002) == 0x18, "");
 static_assert(offsetof(DrShdLgtGlobalIBL::unknown002, unknown04) == 0x4, "");
 static_assert(offsetof(DrShdLgtGlobalIBL::unknown002, unknown08) == 0x8, "");
-static_assert(offsetof(DrShdLgtGlobalIBL::unknown002, unknown10) == 0x10, "");
+static_assert(offsetof(DrShdLgtGlobalIBL::unknown002, m_drLightObjGlobalIBL) == 0x10, "");
 static_assert(offsetof(DrShdLgtGlobalIBL::SlotCandidate, unknown08) == 0x8, "");
 static_assert(offsetof(DrShdLgtGlobalIBL::SlotCandidate, unknown0c) == 0xc, "");
 static_assert(sizeof(DrShdLgtGlobalIBL::SlotCandidate) == 0x10, "");

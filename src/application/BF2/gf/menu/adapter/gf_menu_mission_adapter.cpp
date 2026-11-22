@@ -35,14 +35,14 @@ constexpr int MISSION_TASK_UNKNOWN_3 = 3;
 static const char *unknown003[] = {"mer_unit_ready", "mer_unit_active", "mer_unit_complete"};
 
 GfMenuMissionAdapter::GfMenuMissionAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways)
-    : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(nullptr), unknown58(0), unknown5c(0), unknown60(0), unknown64(0), unknown68(nullptr), unknown70(0) {}
+    : GfMenuAdapter(plugin, false, isUpdateAlways), m_iConverter(nullptr), unknown58(0), unknown5c(0), unknown60(0), unknown64(0), m_menuBladeList(nullptr), unknown70(0) {}
 
 GfMenuMissionAdapter::~GfMenuMissionAdapter() {
-  if (unknown50 != nullptr) {
-    delete unknown50;
-    unknown50 = nullptr;
+  if (m_iConverter != nullptr) {
+    delete m_iConverter;
+    m_iConverter = nullptr;
   }
-  mm::mtl::safeRelease(unknown68);
+  mm::mtl::safeRelease(m_menuBladeList);
 }
 
 bool GfMenuMissionAdapter::update_MissionName() {
@@ -109,7 +109,7 @@ bool GfMenuMissionAdapter::update_MissionStatus() {
   if (stat == 2) {
     name = 13;
   } else if (stat == 0) {
-    if (!GfMenuObjUtil::checkMissionCond(unknown58, unknown68)) {
+    if (!GfMenuObjUtil::checkMissionCond(unknown58, m_menuBladeList)) {
       return false;
     }
     name = 11;
@@ -308,10 +308,10 @@ bool GfMenuMissionAdapter::update_MissionCondBladeMax() {
 }
 
 bool GfMenuMissionAdapter::update_MissionCondBladeCount() {
-  if (unknown70 < MISSION_TASK_UNKNOWN_3 && unknown68 != nullptr && unknown68->getSize() != 0) {
+  if (unknown70 < MISSION_TASK_UNKNOWN_3 && m_menuBladeList != nullptr && m_menuBladeList->getSize() != 0) {
     GfRequestBladeData data = {};
     if (GfDataMercenaries::getRequestCondition(data, unknown58, unknown70)) {
-      setNumber(GfMenuObjUtil::getMissionCondBladeCount(data, unknown68));
+      setNumber(GfMenuObjUtil::getMissionCondBladeCount(data, m_menuBladeList));
       return true;
     }
   }
@@ -319,10 +319,10 @@ bool GfMenuMissionAdapter::update_MissionCondBladeCount() {
 }
 
 bool GfMenuMissionAdapter::update_MissionCondCheckIcon() {
-  if (unknown70 < MISSION_TASK_UNKNOWN_3 && unknown68 != nullptr && unknown68->getSize() != 0) {
+  if (unknown70 < MISSION_TASK_UNKNOWN_3 && m_menuBladeList != nullptr && m_menuBladeList->getSize() != 0) {
     GfRequestBladeData data = {};
     if (GfDataMercenaries::getRequestCondition(data, unknown58, unknown70)) {
-      u32 count = GfMenuObjUtil::getMissionCondBladeCount(data, unknown68);
+      u32 count = GfMenuObjUtil::getMissionCondBladeCount(data, m_menuBladeList);
       u32 need = data.unknown0c == 0 ? 1 : data.unknown0c;
       setNumber(count >= need);
       return true;
@@ -332,14 +332,14 @@ bool GfMenuMissionAdapter::update_MissionCondCheckIcon() {
 }
 
 bool GfMenuMissionAdapter::update_MissionCondCheckDisp() {
-  if (unknown68 != nullptr && unknown68->getSize() != 0) {
+  if (m_menuBladeList != nullptr && m_menuBladeList->getSize() != 0) {
     if (unknown70 == -1) {
-      return GfMenuObjUtil::checkMissionCond(unknown58, unknown68);
+      return GfMenuObjUtil::checkMissionCond(unknown58, m_menuBladeList);
     }
     if (unknown70 < MISSION_TASK_UNKNOWN_3) {
       GfRequestBladeData data = {};
       if (GfDataMercenaries::getRequestCondition(data, unknown58, unknown70)) {
-        u32 count = GfMenuObjUtil::getMissionCondBladeCount(data, unknown68);
+        u32 count = GfMenuObjUtil::getMissionCondBladeCount(data, m_menuBladeList);
         u32 need = data.unknown0c == 0 ? 1 : data.unknown0c;
         return count >= need;
       }
@@ -524,14 +524,14 @@ bool GfMenuMissionAdapter::update_MissionFieldSkillBladeMax() {
 }
 
 bool GfMenuMissionAdapter::update_MissionFieldSkillLevelCount() {
-  if (unknown68 != nullptr && unknown68->getSize() != 0) {
+  if (m_menuBladeList != nullptr && m_menuBladeList->getSize() != 0) {
     int fieldSkill = GfDataMercenaries::getFieldSkill(unknown58, unknown70);
     if (fieldSkill == 0) {
       return false;
     }
     int level = 0;
-    for (u32 i = 0; i < unknown68->getSize(); i++) {
-      DataParamAcc acc(OBJECT_TYPE_BLADE, unknown68->getContents(i).unknown00, GIMMICK_TYPE_UNKNOWN_0);
+    for (u32 i = 0; i < m_menuBladeList->getSize(); i++) {
+      DataParamAcc acc(OBJECT_TYPE_BLADE, m_menuBladeList->getContents(i).unknown00, GIMMICK_TYPE_UNKNOWN_0);
       u32 index;
       if (acc.getFieldSkill(0, false) == fieldSkill) {
         index = 0;
@@ -551,14 +551,14 @@ bool GfMenuMissionAdapter::update_MissionFieldSkillLevelCount() {
 }
 
 bool GfMenuMissionAdapter::update_MissionFieldSkillBladeCount() {
-  if (unknown68 != nullptr && unknown68->getSize() != 0) {
+  if (m_menuBladeList != nullptr && m_menuBladeList->getSize() != 0) {
     int fieldSkill = GfDataMercenaries::getFieldSkill(unknown58, unknown70);
     if (fieldSkill == 0) {
       return false;
     }
     int count = 0;
-    for (u32 i = 0; i < unknown68->getSize(); i++) {
-      DataParamAcc acc(OBJECT_TYPE_BLADE, unknown68->getContents(i).unknown00, GIMMICK_TYPE_UNKNOWN_0);
+    for (u32 i = 0; i < m_menuBladeList->getSize(); i++) {
+      DataParamAcc acc(OBJECT_TYPE_BLADE, m_menuBladeList->getContents(i).unknown00, GIMMICK_TYPE_UNKNOWN_0);
       if (acc.getFieldSkill(0, false) == fieldSkill || acc.getFieldSkill(1, false) == fieldSkill || acc.getFieldSkill(2, false) == fieldSkill) {
         count++;
       }
@@ -572,7 +572,7 @@ bool GfMenuMissionAdapter::update_MissionFieldSkillBladeCount() {
 GfMenuMissionAdapter *GfMenuMissionAdapter::createFromCoverter(u32 handle, u32 type, IConverter *converter, bool isUpdateAlways) {
   GfMenuMissionAdapter *adapter = create(handle, type, converter->getMissionId(), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -583,9 +583,9 @@ GfMenuMissionAdapter *GfMenuMissionAdapter::createFromList(u32 handle, u32 type,
   ListConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ListConverter(list, index);
   GfMenuMissionAdapter *adapter = create(handle, type, converter->getMissionId(), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
     if (bladeList != nullptr) {
-      adapter->unknown68 = bladeList;
+      adapter->m_menuBladeList = bladeList;
       bladeList->addRef();
     }
   }
@@ -598,7 +598,7 @@ GfMenuMissionAdapter *GfMenuMissionAdapter::createFromMissionList(u32 handle, u3
   MissionListConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) MissionListConverter(list, index);
   GfMenuMissionAdapter *adapter = create(handle, type, converter->getMissionId(), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -609,7 +609,7 @@ GfMenuMissionAdapter *GfMenuMissionAdapter::createFromReference(u32 handle, u32 
   ReferenceConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceConverter(number);
   GfMenuMissionAdapter *adapter = create(handle, type, converter->getMissionId(), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -620,7 +620,7 @@ GfMenuMissionAdapter *GfMenuMissionAdapter::createFromReferenceMission(u32 handl
   ReferenceMissionConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceMissionConverter();
   GfMenuMissionAdapter *adapter = create(handle, type, GfMenuReference::getReferenceMissionID(), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
     adapter->unknown70 = index;
   }
   return adapter;
@@ -629,7 +629,7 @@ GfMenuMissionAdapter *GfMenuMissionAdapter::createFromReferenceMission(u32 handl
 GfMenuMissionAdapter *GfMenuMissionAdapter::createFromBladeList(u32 handle, u32 type, u32 mission, GfMenuBladeList *list, bool isUpdateAlways) {
   GfMenuMissionAdapter *adapter = create(handle, type, mission, isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown68 = list;
+    adapter->m_menuBladeList = list;
     list->addRef();
   }
   return adapter;
@@ -641,8 +641,8 @@ GfMenuMissionAdapter *GfMenuMissionAdapter::createFromReferenceMissionBladeList(
   ReferenceMissionConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceMissionConverter();
   GfMenuMissionAdapter *adapter = create(handle, type, GfMenuReference::getReferenceMissionID(), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
-    adapter->unknown68 = list;
+    adapter->m_iConverter = converter;
+    adapter->m_menuBladeList = list;
     list->addRef();
     adapter->unknown70 = index;
   }
@@ -650,8 +650,8 @@ GfMenuMissionAdapter *GfMenuMissionAdapter::createFromReferenceMissionBladeList(
 }
 
 void GfMenuMissionAdapter::update(const fw::UpdateInfo &info) {
-  if (unknown50 != nullptr) {
-    u32 newMission = unknown50->getMissionId();
+  if (m_iConverter != nullptr) {
+    u32 newMission = m_iConverter->getMissionId();
     if (newMission != unknown58) {
       unknown58 = newMission;
       setChange();

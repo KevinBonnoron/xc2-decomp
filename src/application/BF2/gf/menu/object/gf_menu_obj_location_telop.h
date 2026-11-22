@@ -28,13 +28,13 @@ public:
       u32 unknown04; // Inferred role: telop flag; original member name unknown.
     };
 
-    MainListener(GfMenuObjLocationTelop *owner) : unknown0c(0), unknown10(), _18(), unknown20(owner) {}
+    MainListener(GfMenuObjLocationTelop *owner) : unknown0c(0), unknown10(), _18(), m_menuObjLocationTelop(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     int unknown0c; // Inferred role: telop state, 0 closed, 1 opened, 3 closing; original member name unknown.
     unknown001 unknown10;
     u8 _18[0x1c - 0x18];
-    GfMenuObjLocationTelop *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjLocationTelop *m_menuObjLocationTelop; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjLocationTelop(u32 handle);
@@ -50,7 +50,7 @@ public:
 static_assert(offsetof(GfMenuObjLocationTelop::OpenParam, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfMenuObjLocationTelop::OpenParam, unknown0e) == 0x0e, "");
 static_assert(offsetof(GfMenuObjLocationTelop::OpenParam, unknown10) == 0x10, "");
-static_assert(offsetof(GfMenuObjLocationTelop::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjLocationTelop::MainListener, m_menuObjLocationTelop) == 0x20, "");
 static_assert(sizeof(GfMenuObjLocationTelop::MainListener) == 0x28, "");
 
 } // namespace gf

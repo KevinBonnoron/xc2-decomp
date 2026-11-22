@@ -24,7 +24,7 @@ void DrShdMdoDecExtTbl::setTextureParam(int num) {
 
 void DrShdMdoDecExtTbl::bindShader() {
   DrAPCache *cache = DrAPCache::s_pIns;
-  DrResFetch *fetch = &unknown18->m_fetch->unknown20;
+  DrResFetch *fetch = &m_drShdMdoDecRes->m_fetch->m_fetch;
   cache->setupShader(this, fetch);
 }
 

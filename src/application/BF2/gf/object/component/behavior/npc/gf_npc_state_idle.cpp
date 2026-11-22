@@ -28,8 +28,8 @@ namespace npc {
 // of four callers); no match. It matches only with the negated `&&` chain in the helper and the caller branching on it with two returns, as the game's `mov w0, wzr` / `orr w0, wzr, #1`.
 static bool isNotTalkWithNpcTurn3(GfComBehaviorNpc &behavior, ai::State &state) {
   gmk::AGmkBase *gmk;
-  return !(state.unknown08 == STATE_ID_UNKNOWN_6 && (gmk = behavior.getBindedGmkInst()) != nullptr &&
-           static_cast<u8>(Bdat::getValCheck(gmk->getBindedBdatFp(), "NpcTurn", gmk->unknown20.unknown18, gmk::BDAT_TYPE_UNKNOWN_1)) == 3);
+  return !(state.m_state == STATE_ID_UNKNOWN_6 && (gmk = behavior.getBindedGmkInst()) != nullptr &&
+           static_cast<u8>(Bdat::getValCheck(gmk->getBindedBdatFp(), "NpcTurn", gmk->m_createInfo.unknown18, gmk::BDAT_TYPE_UNKNOWN_1)) == 3);
 }
 
 bool StateIdle::isExecEndScheduleCondMatched(GfComBehaviorNpc &behavior, ai::State *state) const {

@@ -151,4 +151,24 @@ static inline void unknown009(Quat &quat, Vec3 rotation) {
   quat.w = cosX * cosY * cosZ + sinX * sinY * sinZ;
 }
 
+// Inferred helper: rotates a vector in place by a quaternion, each component stored before the next one is computed; original name unknown. Same statements as
+// Quat::rotate (`v = q.rotate(v)` stores the three components at the end). Six functions inline these statements, each matching through the helper: gf::GfMenuBladeCreateCamera::updateLookAt
+// (0x71003fe114: with `target = quat.rotate(target)` the function has the game's 210 instructions but adds `position` first in the x and y sums, where the game has the rotated
+// component first), gf::GfMenuModelViewCamera::updateLookAt (0x71003e6914, the same recipe), gf::ChainAttackCamera::updateParam (0x71001d3ce8: 237 instructions against the game's
+// 260 with `v = q.rotate(v)`; the quaternion and the vector are references there, so the game reloads the quaternion after each store), mm::Aabb::transform(const Quat &)
+// (0x71006fc700, loop body, 112 instructions), gf::FusionComboCamera::getYaw(const Quat &) (0x71001d60e0, the negated unit axis rotated in place, 63 instructions) and
+// gf::PlayerCamera::reset (0x71001dd84c, the negated unit axis, with the quaternion copied into a local first).
+// The statements are also written out in gf::GfComSound::flush (0x710057edc0: through the helper 194 instructions but 22 differing lines, the rotated offset goes into a result declared
+// before the temporaries) and in two functions of anm::TransformUtil (anmlib is reserved, left as it is).
+// Internal linkage: like unknown005, so that no out-of-line copy exists.
+static inline void unknown010(const Quat &quat, Vec3 &vector) {
+  f32 tx = quat.y * vector.z - quat.z * vector.y + quat.w * vector.x;
+  f32 ty = quat.z * vector.x - vector.z * quat.x + vector.y * quat.w;
+  f32 tz = vector.y * quat.x - quat.y * vector.x + vector.z * quat.w;
+  f32 tw = -vector.x * quat.x - quat.y * vector.y - vector.z * quat.z;
+  vector.x = -(quat.z * ty) + quat.y * tz - quat.x * tw + quat.w * tx;
+  vector.y = -(quat.x * tz) + quat.z * tx - quat.y * tw + quat.w * ty;
+  vector.z = -(quat.y * tx) + quat.x * ty - quat.z * tw + quat.w * tz;
+}
+
 } // namespace mm

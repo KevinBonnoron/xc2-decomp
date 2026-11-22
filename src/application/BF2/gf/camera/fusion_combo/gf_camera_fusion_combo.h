@@ -9,6 +9,7 @@ class Reflection;
 } // namespace fw
 
 namespace mm {
+struct Quat;
 struct Vec3;
 
 namespace mtl {
@@ -48,6 +49,7 @@ public:
   void onActivate() override;
   void update(const fw::UpdateInfo &info) override;
   bool isPlayEnd() const;
+  f32 getYaw(const mm::Quat &rotation);
   f32 getYaw(const mm::Vec3 &direction, const mm::Vec3 &reference);
   f32 getPitch(const mm::Vec3 &direction, const mm::Vec3 &reference);
   static f32 fastOut(f32 t);

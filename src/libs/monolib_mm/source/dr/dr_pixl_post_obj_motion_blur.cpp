@@ -24,11 +24,11 @@ class DrPixlPostMan;
 
 DrPixlPostObjMotionBlur::DrPixlPostObjMotionBlur(DrMan *drMan, DrPixlMan *pixlMan, DrPixlPostMan *postMan)
     : DrPixlPostObj(drMan, pixlMan, postMan), unknown20(nullptr), unknown28(nullptr), unknown30(nullptr) {
-  unknown28 = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
-  unknown30 = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
-  unknown20 = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
+  unknown28 = new (m_drMan->unknown0c) DrPixlRenderTarget(m_drMan);
+  unknown30 = new (m_drMan->unknown0c) DrPixlRenderTarget(m_drMan);
+  unknown20 = new (m_drMan->unknown0c) DrPixlRenderTarget(m_drMan);
   calcBludBuffColorBuff();
-  unknown38.setup(0x50);
+  m_cGLibDblUniformBlock.setup(0x50);
   unknown18 = 0.0f;
   unknown1c = 0.0f;
 }
@@ -58,19 +58,19 @@ void DrPixlPostObjMotionBlur::render() {
 }
 
 void DrPixlPostObjMotionBlur::calcObjMotionBlur() {
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
-  if (!unknown00->unknown580->unknown10->unknown9a9 && postParm->unknown1cd && 0.0f < postParm->unknown1ec) {
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
+  if (!m_drMan->m_drCalcMan->m_drCalcViewWork->unknown9a9 && postParm->unknown1cd && 0.0f < postParm->unknown1ec) {
     calcVelocityBlur();
   }
-  unknown00->blurCallBackRender();
+  m_drMan->blurCallBackRender();
   unknown28->setColorInvalidate();
 }
 
 void DrPixlPostObjMotionBlur::renderCalcBlur() {
   DrAPGxType::setupScreenQuads(false);
   unknown20->setRenderTarget();
-  DrShdDataList *shdList = unknown00->unknown80->unknown00;
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   // The game has one getPostShdObj call after a branch that sets w1 to 0x1d or 0xe (0x7100858aa8..0x7100858abc). Only a call in each arm gives that
   // shape (clang sinks the common call). `getPostShdObj(postParm->unknown1cf ? 0x1d : 0xe)` becomes a select (138 instructions, first difference at
   // 0x7100858aa0) and so does an index variable assigned in the arms (cmp instead of cbz at 0x7100858aa8). The if/else form is the one of the two
@@ -89,9 +89,9 @@ void DrPixlPostObjMotionBlur::renderCalcBlur() {
   int velocityLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("s1");
   u32 ofsOffset = uniform.unknown001("ofs[0]");
   f32 velocityHeight = static_cast<f32>(unknown28->unknownc0);
-  DrPixlRenderTarget *target = unknown08->unknown7f0->unknown138;
+  DrPixlRenderTarget *target = m_drPixlMan->unknown7f0->unknown138;
   f32 velocityWidth = static_cast<f32>(unknown28->unknownbc);
-  DrAPCache *apCache = unknown00->unknown5c0;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   f32 targetHeight = static_cast<f32>(target->unknownc0);
   f32 targetWidth = static_cast<f32>(target->unknownbc);
   f32 ofs[8];
@@ -105,7 +105,7 @@ void DrPixlPostObjMotionBlur::renderCalcBlur() {
   ofs[7] = 1.0f / (velocityHeight + velocityHeight);
   uniform.setF32SetF32Array(ofsOffset, ofs, 8);
   apCache->beginTexSampling(2, 1);
-  apCache->setTexture(*unknown08->unknown7f0->unknown138->unknown70, frameLocation);
+  apCache->setTexture(*m_drPixlMan->unknown7f0->unknown138->unknown70, frameLocation);
   apCache->setTexture(*unknown28->unknown70, velocityLocation);
   uniform.updateData();
   uniform.setUniformBlock();
@@ -114,9 +114,9 @@ void DrPixlPostObjMotionBlur::renderCalcBlur() {
 }
 
 void DrPixlPostObjMotionBlur::lastRender() {
-  unknown08->unknown7f0->unknown138->setRenderTarget();
+  m_drPixlMan->unknown7f0->unknown138->setRenderTarget();
   DrAPGxType::setupBlend(1);
-  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
   DrShdDataObj *shader = shdList->unknown001();
   shdList->bindTriangleTex();
   shader->setupShader(0u);
@@ -136,7 +136,7 @@ void DrPixlPostObjMotionBlur::lastRender() {
   uniform.updateData();
   uniform.setUniformBlock();
   int location = (shader->unknown38 + shader->unknown58)->getTextureLocation("s0");
-  DrAPCache *apCache = unknown00->unknown5c0;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   apCache->beginTexSampling(2, 1);
   apCache->setTexture(*unknown20->unknown70, location);
   shdList->renderTriangle();

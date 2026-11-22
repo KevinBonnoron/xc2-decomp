@@ -104,14 +104,14 @@ public:
   explicit AnimIkResolveJob(u32 count);
   static void exec(anm::Job &job);
 
-  IkResolver *unknown10[1];    // Inferred role: ik resolvers; original member name unknown.
-  u32 unknown18;               // Inferred role: resolver count; original member name unknown.
-  const UpdateInfo *unknown20; // Inferred role: update info; original member name unknown.
+  IkResolver *unknown10[1];       // Inferred role: ik resolvers; original member name unknown.
+  u32 unknown18;                  // Inferred role: resolver count; original member name unknown.
+  const UpdateInfo *m_updateInfo; // Inferred role: update info; original member name unknown.
 };
 
 static_assert(offsetof(AnimIkResolveJob, unknown10) == 0x10, "");
 static_assert(offsetof(AnimIkResolveJob, unknown18) == 0x18, "");
-static_assert(offsetof(AnimIkResolveJob, unknown20) == 0x20, "");
+static_assert(offsetof(AnimIkResolveJob, m_updateInfo) == 0x20, "");
 static_assert(sizeof(AnimIkResolveJob) == 0x28, "");
 
 class AnimationManager : public ManagerObject, public mm::mtl::PtrSingleton<AnimationManager> {
@@ -171,13 +171,13 @@ public:
     }
   }
 
-  Group unknown18[LAYER_UNKNOWN_32]; // Inferred role: groups; original member name unknown.
-  anm::ThreadPool *unknownf18;       // Inferred role: job thread pool; original member name unknown.
-  anm::JobQueue *unknownf20;         // Inferred role: job queue; original member name unknown.
+  Group m_group[LAYER_UNKNOWN_32]; // Inferred role: groups; original member name unknown.
+  anm::ThreadPool *unknownf18;     // Inferred role: job thread pool; original member name unknown.
+  anm::JobQueue *unknownf20;       // Inferred role: job queue; original member name unknown.
 };
 
 static_assert(sizeof(AnimationManager::Group) == 0x78, "");
-static_assert(offsetof(AnimationManager, unknown18) == 0x18, "");
+static_assert(offsetof(AnimationManager, m_group) == 0x18, "");
 static_assert(offsetof(AnimationManager, unknownf18) == 0xf18, "");
 static_assert(offsetof(AnimationManager, unknownf20) == 0xf20, "");
 

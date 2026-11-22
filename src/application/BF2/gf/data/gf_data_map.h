@@ -46,13 +46,13 @@ struct unknown118 {
   mm::Vec3 unknown30[3]; // Inferred role: blade save pos; original member name unknown.
   mm::Vec3 unknown60[3]; // Inferred role: driver save rot; original member name unknown.
   mm::Vec3 unknown90[3]; // Inferred role: blade save rot; original member name unknown.
-  u32 unknownc0;         // Inferred role: skip travel id; original member name unknown.
+  u32 m_skipTravelID;    // Inferred role: skip travel id; named after the game accessor gf::GfDataUtil::getSkipTravelID.
 };
 
 static_assert(offsetof(unknown118, unknown30) == 0x030, "");
 static_assert(offsetof(unknown118, unknown60) == 0x060, "");
 static_assert(offsetof(unknown118, unknown90) == 0x090, "");
-static_assert(offsetof(unknown118, unknownc0) == 0x0c0, "");
+static_assert(offsetof(unknown118, m_skipTravelID) == 0x0c0, "");
 static_assert(sizeof(unknown118) == 0x0d0, "");
 
 struct WeatherParam {
@@ -73,8 +73,8 @@ static_assert(sizeof(WeatherParam) == 0x1c, "");
 struct unknown119 {
   unknown119() : unknown1c(0) {}
 
-  WeatherParam unknown00; // Inferred role: weather param; original member name unknown.
-  u32 unknown1c;          // Inferred role: cloud type; original member name unknown.
+  WeatherParam m_weatherParam; // Inferred role: weather param; original member name unknown.
+  u32 unknown1c;               // Inferred role: cloud type; original member name unknown.
 };
 
 static_assert(offsetof(unknown119, unknown1c) == 0x1c, "");

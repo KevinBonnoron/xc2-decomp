@@ -68,8 +68,8 @@ private:
   u32 unknown10;                                  // Inferred role: flags; original member name unknown.
   u32 unknown14;                                  // Inferred role: disp flags; original member name unknown.
   mm::mtl::FixedArray<f32, CATE_COUNT> unknown18; // Inferred role: reset category volumes; original member name unknown.
-  VolumeSeamless unknown50;                       // Inferred role: seamless; original member name unknown.
-  VolumeSkip unknowna0;                           // Inferred role: skip; original member name unknown.
+  VolumeSeamless m_volumeSeamless;                // Inferred role: seamless; original member name unknown.
+  VolumeSkip m_volumeSkip;                        // Inferred role: skip; original member name unknown.
 };
 
 static_assert(sizeof(VolumeManager) == 0xf0, "");

@@ -29,11 +29,11 @@ public:
 private:
   u32 unknown08; // Inferred role: flags; original member name unknown.
   u32 _0c;
-  gf::GF_OBJ_HANDLE *unknown10; // Inferred role: handle; original member name unknown.
-  CharaIKUpdater *unknown18;    // Inferred role: ik; original member name unknown.
-  CharaDysUpdater *unknown20;   // Inferred role: dys; original member name unknown.
-  s32 unknown28;                // Role and original member name unknown.
-  f32 unknown2c;                // Role and original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown10;       // Inferred role: handle; original member name unknown.
+  CharaIKUpdater *m_charaIKUpdater;   // Inferred role: ik; original member name unknown.
+  CharaDysUpdater *m_charaDysUpdater; // Inferred role: dys; original member name unknown.
+  s32 unknown28;                      // Role and original member name unknown.
+  f32 unknown2c;                      // Role and original member name unknown.
   u8 _30[0x34 - 0x30];
   s32 unknown34[3];         // Inferred role: motion ids; original member name unknown.
   const char *unknown40[3]; // Inferred role: motion names; original member name unknown.
@@ -51,8 +51,8 @@ private:
 };
 
 struct CharaPlayMotionABCLayout {
-  static_assert(offsetof(CharaPlayMotionABC, unknown18) == 0x18, "");
-  static_assert(offsetof(CharaPlayMotionABC, unknown20) == 0x20, "");
+  static_assert(offsetof(CharaPlayMotionABC, m_charaIKUpdater) == 0x18, "");
+  static_assert(offsetof(CharaPlayMotionABC, m_charaDysUpdater) == 0x20, "");
   static_assert(offsetof(CharaPlayMotionABC, unknown28) == 0x28, "");
   static_assert(offsetof(CharaPlayMotionABC, unknown2c) == 0x2c, "");
   static_assert(offsetof(CharaPlayMotionABC, unknown34) == 0x34, "");

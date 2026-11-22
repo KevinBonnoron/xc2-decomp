@@ -9,18 +9,18 @@
 namespace gf {
 
 struct MenuItemInfo {
-  MenuItemInfo() : unknown00(ItemType::ITEM_TYPE_UNKNOWN_0), unknown04(0), unknown08(0), unknown0c(0) {}
+  MenuItemInfo() : unknown00(ItemType::ITEM_TYPE_UNKNOWN_0), unknown04(0), unknown08(0), m_itemHandle(0) {}
 
-  ItemType::Type unknown00; // Inferred role: type; original member name unknown.
-  u32 unknown04;            // Inferred role: item; original member name unknown.
-  s16 unknown08;            // Inferred role: count; original member name unknown.
-  u16 unknown0a;            // Inferred role: index; original member name unknown.
-  GfItemHandle unknown0c;   // Inferred role: handle; original member name unknown.
+  ItemType::Type unknown00;  // Inferred role: type; original member name unknown.
+  u32 unknown04;             // Inferred role: item; original member name unknown.
+  s16 unknown08;             // Inferred role: count; original member name unknown.
+  u16 unknown0a;             // Inferred role: index; original member name unknown.
+  GfItemHandle m_itemHandle; // Inferred role: handle; original member name unknown.
 };
 
 static_assert(offsetof(MenuItemInfo, unknown08) == 0x8, "");
 static_assert(offsetof(MenuItemInfo, unknown0a) == 0xa, "");
-static_assert(offsetof(MenuItemInfo, unknown0c) == 0xc, "");
+static_assert(offsetof(MenuItemInfo, m_itemHandle) == 0xc, "");
 static_assert(sizeof(MenuItemInfo) == 0x10, "");
 
 class GfMenuItemList : public ui::UIListInfo<MenuItemInfo> {
@@ -37,51 +37,51 @@ public:
     // at 0x7100475064); setupFromHanaParts reads nothing past unknown14.
     HanaPartsSetup() : unknown18(0), unknown20(0) {}
 
-    SetupParam unknown00;     // Inferred role: param; original member name unknown.
+    SetupParam m_setupParam;  // Inferred role: param; original member name unknown.
     ItemType::Type unknown14; // Inferred role: item type of the parts; original member name unknown.
     u64 unknown18;            // Role and original member name unknown; cleared by the constructor.
     u64 unknown20;            // Role and original member name unknown; cleared by the constructor.
   };
 
   struct ItemBoxSetup {
-    ItemBoxSetup() : unknown14(ItemType::ITEM_TYPE_UNKNOWN_0), unknown18(nullptr), unknown20(0), unknown28(true), unknown29(true), unknown2a(false), unknown2b(false) {}
+    ItemBoxSetup() : unknown14(ItemType::ITEM_TYPE_UNKNOWN_0), m_filtertInfo(nullptr), unknown20(0), unknown28(true), unknown29(true), unknown2a(false), unknown2b(false) {}
 
-    SetupParam unknown00;     // Inferred role: param; original member name unknown.
-    ItemType::Type unknown14; // Inferred role: item type of the item box; original member name unknown.
-    FiltertInfo *unknown18;   // Inferred role: filter; original member name unknown.
-    u64 unknown20;            // Role and original member name unknown.
-    bool unknown28;           // Role and original member name unknown.
-    bool unknown29;           // Inferred role: keep items whose count is zero; original member name unknown.
-    bool unknown2a;           // Inferred role: skip items that cannot be sold; original member name unknown.
-    bool unknown2b;           // Inferred role: skip items equipped by a character; original member name unknown.
+    SetupParam m_setupParam;    // Inferred role: param; original member name unknown.
+    ItemType::Type unknown14;   // Inferred role: item type of the item box; original member name unknown.
+    FiltertInfo *m_filtertInfo; // Inferred role: filter; original member name unknown.
+    u64 unknown20;              // Role and original member name unknown.
+    bool unknown28;             // Role and original member name unknown.
+    bool unknown29;             // Inferred role: keep items whose count is zero; original member name unknown.
+    bool unknown2a;             // Inferred role: skip items that cannot be sold; original member name unknown.
+    bool unknown2b;             // Inferred role: skip items equipped by a character; original member name unknown.
   };
 
   struct ItemShopSetup {
-    SetupParam unknown00; // Inferred role: param; original member name unknown.
-    u32 unknown14;        // Inferred role: shop; original member name unknown.
+    SetupParam m_setupParam; // Inferred role: param; original member name unknown.
+    u32 unknown14;           // Inferred role: shop; original member name unknown.
   };
 
   struct ItemShopExcSetup {
     ItemShopExcSetup() : unknown14(0) {}
 
-    SetupParam unknown00; // Inferred role: param; original member name unknown.
-    u32 unknown14;        // Inferred role: exchange task; original member name unknown.
+    SetupParam m_setupParam; // Inferred role: param; original member name unknown.
+    u32 unknown14;           // Inferred role: exchange task; original member name unknown.
   };
 
   struct QuestRewardSetup {
     // Evidence: GfMenuObjQuestReward::RewardListener::reciveEvent clears unknown14 of its two setup locals (str wzr, [sp, #0x14] at 0x71004c6cf8 and 0x71004c6e80).
     QuestRewardSetup() : unknown14(0) {}
 
-    SetupParam unknown00; // Inferred role: param; original member name unknown.
-    u32 unknown14;        // Inferred role: reward set; original member name unknown.
+    SetupParam m_setupParam; // Inferred role: param; original member name unknown.
+    u32 unknown14;           // Inferred role: reward set; original member name unknown.
   };
 
   struct MissionRewardSetup {
     // Evidence: GfMenuObjQuestReward::RewardListener::reciveEvent clears unknown14 of its two setup locals (str wzr, [sp, #0x14] at 0x71004c6cf8 and 0x71004c6e80).
     MissionRewardSetup() : unknown14(0) {}
 
-    SetupParam unknown00; // Inferred role: param; original member name unknown.
-    u32 unknown14;        // Inferred role: mission; original member name unknown.
+    SetupParam m_setupParam; // Inferred role: param; original member name unknown.
+    u32 unknown14;           // Inferred role: mission; original member name unknown.
   };
 
   GfMenuItemList();
@@ -140,7 +140,7 @@ static_assert(offsetof(GfMenuItemList::HanaPartsSetup, unknown18) == 0x18, "");
 static_assert(offsetof(GfMenuItemList::HanaPartsSetup, unknown20) == 0x20, "");
 static_assert(sizeof(GfMenuItemList::HanaPartsSetup) == 0x28, "");
 static_assert(offsetof(GfMenuItemList::ItemBoxSetup, unknown14) == 0x14, "");
-static_assert(offsetof(GfMenuItemList::ItemBoxSetup, unknown18) == 0x18, "");
+static_assert(offsetof(GfMenuItemList::ItemBoxSetup, m_filtertInfo) == 0x18, "");
 static_assert(offsetof(GfMenuItemList::ItemBoxSetup, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuItemList::ItemBoxSetup, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuItemList::ItemBoxSetup, unknown29) == 0x29, "");

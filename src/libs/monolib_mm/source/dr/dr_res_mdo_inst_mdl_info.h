@@ -81,16 +81,16 @@ public:
   void update(DrResMdlInstMdlArg &arg);
   static int calcWorkSize(const u8 *resource);
   static void release(DrResMdoInstMdlInfo *&info);
-  static void create(u8 *work, DrResMdoInstMdlInfo *&info, const u8 *resource, const char *name);
+  static int create(u8 *work, DrResMdoInstMdlInfo *&info, const u8 *resource, const char *name);
 
-  s32 unknown00;                  // Inferred role: model object count; original member name unknown.
-  DrResMdoInstMdlObj *unknown08;  // Inferred role: model objects; original member name unknown.
-  mm::mtl::FixStr<256> unknown10; // Inferred role: resource folder path; original member name unknown.
-  const u8 *unknown118;           // Inferred role: resource; original member name unknown.
-  u32 unknown120;                 // Inferred role: state flags; original member name unknown.
+  s32 unknown00;                            // Inferred role: model object count; original member name unknown.
+  DrResMdoInstMdlObj *m_drResMdoInstMdlObj; // Inferred role: model objects; original member name unknown.
+  mm::mtl::FixStr<256> unknown10;           // Inferred role: resource folder path; original member name unknown.
+  const u8 *unknown118;                     // Inferred role: resource; original member name unknown.
+  u32 unknown120;                           // Inferred role: state flags; original member name unknown.
 };
 
-static_assert(offsetof(DrResMdoInstMdlInfo, unknown08) == 0x08, "");
+static_assert(offsetof(DrResMdoInstMdlInfo, m_drResMdoInstMdlObj) == 0x08, "");
 static_assert(offsetof(DrResMdoInstMdlInfo, unknown10) == 0x10, "");
 static_assert(offsetof(DrResMdoInstMdlInfo, unknown118) == 0x118, "");
 static_assert(offsetof(DrResMdoInstMdlInfo, unknown120) == 0x120, "");

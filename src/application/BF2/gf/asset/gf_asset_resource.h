@@ -64,9 +64,9 @@ public:
   unknown001 unknown0c; // Inferred role: resource kind; original member name unknown.
   int unknown10;        // Inferred role: priority; original member name unknown.
   u8 _14[0x18 - 0x14];
-  fw::CommonResource *unknown18;  // Inferred role: requested resource; original member name unknown.
-  mm::mtl::IAllocator *unknown20; // Inferred role: allocator; original member name unknown.
-  mtl::ALLOC_HANDLE unknown28;    // Inferred role: memory handle; original member name unknown.
+  fw::CommonResource *unknown18;    // Inferred role: requested resource; original member name unknown.
+  mm::mtl::IAllocator *unknown20;   // Inferred role: allocator; original member name unknown.
+  mtl::ALLOC_HANDLE m_ALLOC_HANDLE; // Inferred role: memory handle; original member name unknown.
   u8 _2c[0x30 - 0x2c];
   void *unknown30;                // Inferred role: data; original member name unknown.
   u32 unknown38;                  // Inferred role: data size; original member name unknown.
@@ -79,7 +79,7 @@ public:
 
 static_assert(offsetof(GfAssetResource, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfAssetResource, unknown18) == 0x18, "");
-static_assert(offsetof(GfAssetResource, unknown28) == 0x28, "");
+static_assert(offsetof(GfAssetResource, m_ALLOC_HANDLE) == 0x28, "");
 static_assert(offsetof(GfAssetResource, unknown30) == 0x30, "");
 static_assert(offsetof(GfAssetResource, unknown3c) == 0x3c, "");
 static_assert(offsetof(GfAssetResource, unknownc0) == 0xc0, "");

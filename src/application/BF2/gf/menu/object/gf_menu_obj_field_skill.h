@@ -21,7 +21,7 @@ public:
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x20 - 0x0c];
-    GfMenuObjFieldSkill *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjFieldSkill *m_menuObjFieldSkill; // Inferred role: owner; original member name unknown.
   };
 
   class InputListener : public ui::UIObjectListener {
@@ -45,7 +45,7 @@ public:
     int unknown0c; // Inferred role: row of the animation name table; original member name unknown.
     int unknown10; // Inferred role: skill animation started flag; original member name unknown.
     u8 _14[0x20 - 0x14];
-    GfMenuObjFieldSkill *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjFieldSkill *m_menuObjFieldSkill; // Inferred role: owner; original member name unknown.
   };
 
   class SkillInfoListener : public ui::UIObjectListener {
@@ -62,7 +62,7 @@ public:
       };
     };
     u8 _18[0x20 - 0x18];
-    GfMenuObjFieldSkill *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjFieldSkill *m_menuObjFieldSkill; // Inferred role: owner; original member name unknown.
   };
 
   struct OpenSkillInfoParam {
@@ -102,7 +102,7 @@ public:
   mm::mtl::IntrusivePtr<GfMenuReferenceNumber>
       unknown28[2]; // Inferred role: reference numbers of the two total skills, indexed by the skill of the event (TotalListener::reciveEvent); original member name unknown.
   mm::mtl::IntrusivePtr<GfMenuReferenceNumber> unknown38[2]; // Inferred role: reference numbers of the two total gauges, indexed like unknown28; original member name unknown.
-  GfMenuFieldSkillList *unknown48;                           // Inferred role: field skills; original member name unknown.
+  GfMenuFieldSkillList *m_menuFieldSkillList;                // Inferred role: field skills; original member name unknown.
   mm::mtl::IntrusivePtr<GfMenuReferenceFs> unknown50;        // Inferred role: field skill reference; original member name unknown.
   // Both views are in the game's accesses: SkillInfoListener::reciveEvent copies it whole into unknown50 (one 32-bit load and store) and stores the 24-bit word of the event parameters (and w,
   // #0xffffff).
@@ -117,28 +117,28 @@ public:
   u8 _5e[0x60 - 0x5e];
   u32 unknown60; // Inferred role: main object handle, set by the closing event of the main listener; original member name unknown.
   u8 _64[0x68 - 0x64];
-  GAME_VOICE_HANDLE *unknown68;                     // Inferred role: playing voice; original member name unknown.
+  GAME_VOICE_HANDLE *m_GAME_VOICE_HANDLE;           // Inferred role: playing voice; original member name unknown.
   GfMenuSequence<GfMenuObjFieldSkill, 4> unknown70; // Inferred role: queued steps; original member name unknown.
 };
 
 static_assert(offsetof(GfMenuObjFieldSkill, unknown28) == 0x28, "");
-static_assert(offsetof(GfMenuObjFieldSkill, unknown48) == 0x48, "");
+static_assert(offsetof(GfMenuObjFieldSkill, m_menuFieldSkillList) == 0x48, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown38) == 0x38, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown50) == 0x50, "");
-static_assert(offsetof(GfMenuObjFieldSkill::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjFieldSkill::MainListener, m_menuObjFieldSkill) == 0x20, "");
 static_assert(offsetof(GfMenuObjFieldSkill::BladeListener, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfMenuObjFieldSkill::BaseListener, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfMenuObjFieldSkill::BaseListener, unknown10) == 0x10, "");
-static_assert(offsetof(GfMenuObjFieldSkill::BaseListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjFieldSkill::BaseListener, m_menuObjFieldSkill) == 0x20, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown60) == 0x60, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown58) == 0x58, "");
 static_assert(offsetof(GfMenuObjFieldSkill::SkillInfoListener, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfMenuObjFieldSkill::SkillInfoListener, unknown10) == 0x10, "");
 static_assert(offsetof(GfMenuObjFieldSkill::SkillInfoListener, unknown14) == 0x14, "");
-static_assert(offsetof(GfMenuObjFieldSkill::SkillInfoListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjFieldSkill::SkillInfoListener, m_menuObjFieldSkill) == 0x20, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown5c) == 0x5c, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown5d) == 0x5d, "");
-static_assert(offsetof(GfMenuObjFieldSkill, unknown68) == 0x68, "");
+static_assert(offsetof(GfMenuObjFieldSkill, m_GAME_VOICE_HANDLE) == 0x68, "");
 static_assert(offsetof(GfMenuObjFieldSkill, unknown70) == 0x70, "");
 static_assert(sizeof(GfMenuObjFieldSkill) == 0x1d0, "");
 

@@ -20,22 +20,22 @@ public:
   void renderSub();
   void setParameter(f32 strength, f32 scale, u32 sampleNum, bool isHalf, u32 passNum);
 
-  grlib::CGLibRenderTarget unknown18;     // Inferred role: render target; original member name unknown.
-  grlib::CGLibRenderTarget unknown3e0;    // Inferred role: result render target; original member name unknown.
-  grlib::CGLibDblUniformBlock unknown7a8; // Inferred role: uniform block; original member name unknown.
-  u32 unknown7e0;                         // Inferred role: width; original member name unknown.
-  u32 unknown7e4;                         // Inferred role: height; original member name unknown.
-  f32 unknown7e8;                         // Inferred role: horizontal blur scale; original member name unknown.
-  f32 unknown7ec;                         // Inferred role: vertical blur scale; original member name unknown.
-  u32 unknown7f0;                         // Inferred role: sample num; original member name unknown.
-  u32 unknown7f4;                         // Inferred role: pass num; original member name unknown.
-  bool unknown7f8;                        // Inferred role: half size; original member name unknown.
-  bool unknown7f9;                        // Inferred role: parameter changed; original member name unknown.
+  grlib::CGLibRenderTarget unknown18;                 // Inferred role: render target; original member name unknown.
+  grlib::CGLibRenderTarget unknown3e0;                // Inferred role: result render target; original member name unknown.
+  grlib::CGLibDblUniformBlock m_cGLibDblUniformBlock; // Inferred role: uniform block; original member name unknown.
+  u32 unknown7e0;                                     // Inferred role: width; original member name unknown.
+  u32 unknown7e4;                                     // Inferred role: height; original member name unknown.
+  f32 unknown7e8;                                     // Inferred role: horizontal blur scale; original member name unknown.
+  f32 unknown7ec;                                     // Inferred role: vertical blur scale; original member name unknown.
+  u32 unknown7f0;                                     // Inferred role: sample num; original member name unknown.
+  u32 unknown7f4;                                     // Inferred role: pass num; original member name unknown.
+  bool unknown7f8;                                    // Inferred role: half size; original member name unknown.
+  bool unknown7f9;                                    // Inferred role: parameter changed; original member name unknown.
 };
 
 static_assert(offsetof(LayerFilterGsBlurObj, unknown18) == 0x18, "");
 static_assert(offsetof(LayerFilterGsBlurObj, unknown3e0) == 0x3e0, "");
-static_assert(offsetof(LayerFilterGsBlurObj, unknown7a8) == 0x7a8, "");
+static_assert(offsetof(LayerFilterGsBlurObj, m_cGLibDblUniformBlock) == 0x7a8, "");
 static_assert(offsetof(LayerFilterGsBlurObj, unknown7e0) == 0x7e0, "");
 static_assert(offsetof(LayerFilterGsBlurObj, unknown7f8) == 0x7f8, "");
 static_assert(sizeof(LayerFilterGsBlurObj) == 0x800, "");

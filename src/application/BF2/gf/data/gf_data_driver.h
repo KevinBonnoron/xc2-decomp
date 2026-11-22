@@ -21,14 +21,14 @@ constexpr u32 POUCH_UNKNOWN_3 = 3;       // Inferred role: pouch count; original
 // Inferred role: save data driver weapon; original type name unknown.
 struct unknown114 {
   mm::mtl::FixedArray<u32, 3> unknown00; // Inferred role: slot arts; original member name unknown.
-  u32 unknown0c;                         // Inferred role: wp; original member name unknown.
+  u32 m_wp;                              // Inferred role: wp; named after the game accessor gf::GfDataDriverArts::getWp.
   u32 unknown10;                         // Inferred role: total wp; original member name unknown.
 };
 
 // Inferred role: save data driver accessory; original type name unknown.
 struct unknown115 {
-  GfItemHandle unknown00; // Inferred role: handle; original member name unknown.
-  u16 unknown04;          // Inferred role: item; original member name unknown.
+  GfItemHandle m_equipAcceHandle; // Inferred role: handle; named after the game accessor gf::GfDataDriver::getEquipAcceHandle.
+  u16 m_equipAcce;                // Inferred role: item; named after the game accessor gf::GfDataDriver::getEquipAcce.
   u8 _06[0x08 - 0x06];
 };
 
@@ -64,14 +64,14 @@ static_assert(offsetof(unknown116, unknown08) == 0x08, "");
 static_assert(sizeof(unknown116) == 0x0a, "");
 
 struct SDataDriver {
-  SDataIdea unknown00;     // Inferred role: idea; original member name unknown.
-  u16 unknown20;           // Inferred role: activate; original member name unknown.
+  SDataIdea m_idea;        // Inferred role: idea; named after the game accessor gf::DataObjDriver::getIdea.
+  u16 m_dataType;          // Inferred role: activate; named after the game accessor gf::DataObjDriver::getDataType.
   u16 unknown22;           // Inferred role: id; original member name unknown.
-  s16 unknown24;           // Inferred role: blade set; original member name unknown.
+  s16 m_bladeSet;          // Inferred role: blade set; named after the game accessor gf::GfDataDriver::getBladeSet.
   u16 unknown26[5];        // Inferred role: blades; original member name unknown.
   unknown116 unknown30[5]; // Inferred role: skill rows; original member name unknown.
   unknown116 unknown62[5]; // Inferred role: hidden skill rows; original member name unknown.
-  u16 unknown94;           // Inferred role: level; original member name unknown.
+  u16 m_level;             // Inferred role: level; named after the game accessor gf::GfDataDriver::getLevel.
   u16 unknown96;           // Inferred role: hp max; original member name unknown.
   u16 unknown98;           // Inferred role: strength; original member name unknown.
   u16 unknown9a;           // Inferred role: power ether; original member name unknown.
@@ -83,9 +83,9 @@ struct SDataDriver {
   u8 unknowna6;            // Inferred role: critical rate; original member name unknown.
   u8 unknowna7;            // Inferred role: guard rate; original member name unknown.
   u8 _0a8[0x0b0 - 0x0a8];
-  u32 unknownb0;                      // Inferred role: exp; original member name unknown.
-  u32 unknownb4;                      // Inferred role: battle exp; original member name unknown.
-  u32 unknownb8;                      // Inferred role: skill point; original member name unknown.
+  u32 m_exp;                          // Inferred role: exp; named after the game accessor gf::GfDataDriver::getExp.
+  u32 m_battleExp;                    // Inferred role: battle exp; named after the game accessor gf::GfDataDriver::getBattleExp.
+  u32 m_skillPoint;                   // Inferred role: skill point; named after the game accessor gf::GfDataDriver::getSkillPoint.
   u32 unknownbc;                      // Inferred role: total skill point; original member name unknown.
   unknown114 unknownc0[28];           // Inferred role: weapons; original member name unknown.
   u8 unknown2f0[0x570 - 0x2f0];       // Inferred role: arts level; original member name unknown.
@@ -94,7 +94,7 @@ struct SDataDriver {
   u8 unknown572;                      // Inferred role: equip default acce; original member name unknown.
   u8 unknown573;                      // Inferred role: kizunaring complete flags, set by GfDataDriver::setKizunaringComplete; original member name unknown.
   unknown115 unknown574[2];           // Inferred role: accessories; original member name unknown.
-  SDataPouch unknown584[3];           // Inferred role: pouches; original member name unknown.
+  SDataPouch m_pouchData[3];          // Inferred role: pouches; named after the game accessor gf::GfDataDriver::getPouchData.
   mm::mtl::unknown027<28> unknown59c; // Inferred role: activate weapon types; original member name unknown.
 };
 
@@ -117,23 +117,23 @@ enum FAVORITE {
 
 static_assert(sizeof(unknown114) == 0x14, "");
 static_assert(sizeof(unknown115) == 0x08, "");
-static_assert(offsetof(SDataDriver, unknown00) == 0x000, "");
-static_assert(offsetof(SDataDriver, unknown20) == 0x020, "");
+static_assert(offsetof(SDataDriver, m_idea) == 0x000, "");
+static_assert(offsetof(SDataDriver, m_dataType) == 0x020, "");
 static_assert(offsetof(SDataDriver, unknown22) == 0x022, "");
-static_assert(offsetof(SDataDriver, unknown24) == 0x024, "");
+static_assert(offsetof(SDataDriver, m_bladeSet) == 0x024, "");
 static_assert(offsetof(SDataDriver, unknown26) == 0x026, "");
 static_assert(offsetof(SDataDriver, unknown30) == 0x030, "");
 static_assert(offsetof(SDataDriver, unknown62) == 0x062, "");
-static_assert(offsetof(SDataDriver, unknown94) == 0x094, "");
+static_assert(offsetof(SDataDriver, m_level) == 0x094, "");
 static_assert(offsetof(SDataDriver, unknown96) == 0x096, "");
 static_assert(offsetof(SDataDriver, unknowna0) == 0x0a0, "");
 static_assert(offsetof(SDataDriver, unknowna2) == 0x0a2, "");
 static_assert(offsetof(SDataDriver, unknowna4) == 0x0a4, "");
 static_assert(offsetof(SDataDriver, unknowna6) == 0x0a6, "");
 static_assert(offsetof(SDataDriver, unknowna7) == 0x0a7, "");
-static_assert(offsetof(SDataDriver, unknownb0) == 0x0b0, "");
-static_assert(offsetof(SDataDriver, unknownb4) == 0x0b4, "");
-static_assert(offsetof(SDataDriver, unknownb8) == 0x0b8, "");
+static_assert(offsetof(SDataDriver, m_exp) == 0x0b0, "");
+static_assert(offsetof(SDataDriver, m_battleExp) == 0x0b4, "");
+static_assert(offsetof(SDataDriver, m_skillPoint) == 0x0b8, "");
 static_assert(offsetof(SDataDriver, unknownbc) == 0x0bc, "");
 static_assert(offsetof(SDataDriver, unknownc0) == 0x0c0, "");
 static_assert(offsetof(SDataDriver, unknown2f0) == 0x2f0, "");
@@ -142,7 +142,7 @@ static_assert(offsetof(SDataDriver, unknown571) == 0x571, "");
 static_assert(offsetof(SDataDriver, unknown572) == 0x572, "");
 static_assert(offsetof(SDataDriver, unknown573) == 0x573, "");
 static_assert(offsetof(SDataDriver, unknown574) == 0x574, "");
-static_assert(offsetof(SDataDriver, unknown584) == 0x584, "");
+static_assert(offsetof(SDataDriver, m_pouchData) == 0x584, "");
 static_assert(offsetof(SDataDriver, unknown59c) == 0x59c, "");
 static_assert(sizeof(SDataPouch) == 0x08, "");
 static_assert(sizeof(SDataDriver) == 0x5a0, "");

@@ -12,7 +12,7 @@ public:
   void deallocate(void *pointer) override;
   const char *getName() const override;
 
-  ALLOC_HANDLE unknown08; // Inferred role: handle of the region the allocator serves; original member name unknown.
+  ALLOC_HANDLE m_ALLOC_HANDLE; // Inferred role: handle of the region the allocator serves; original member name unknown.
 };
 
 static_assert(sizeof(MemHandlebaseAllocator) == 0x10, "");

@@ -22,15 +22,12 @@
 
 #include <string.h>
 
-// Scn::move inlines ScnPoolObj::update in the game: keep its definition visible in this unit.
-#include "scn_pool_obj.cpp"
-
 namespace ml {
 
 Scn::Scn(const ScnSetup *setup)
-    : unknown20(nullptr), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(false), unknown60(0), unknownb0(false), unknownb4(-1), unknown4b8(0), unknowndf8(false),
+    : m_scnPoolObj(nullptr), m_scnCamMan(nullptr), m_scnDebug(nullptr), unknown38(nullptr), unknown40(false), unknown60(0), unknownb0(false), unknownb4(-1), unknown4b8(0), unknowndf8(false),
       unknowndf9(false) {
-  unknown64 = mtl::ALLOC_HANDLE();
+  m_ALLOC_HANDLE = mtl::ALLOC_HANDLE();
   mtl::ALLOC_HANDLE parent = setup->unknown0c;
   if (!parent.isValid()) {
     parent = MlMem::getProductMem();
@@ -40,13 +37,13 @@ Scn::Scn(const ScnSetup *setup)
   if (name.length() >= 32) {
     name = "Scn";
   }
-  unknown64 = mtl::MemManager::create(parent, setup->unknown08, name.c_str(), true);
-  unknownce0 = new (unknown64) CriticalSection();
-  unknownce8 = new (unknown64) CriticalSection();
-  unknown68 = *setup;
+  m_ALLOC_HANDLE = mtl::MemManager::create(parent, setup->unknown08, name.c_str(), true);
+  unknownce0 = new (m_ALLOC_HANDLE) CriticalSection();
+  unknownce8 = new (m_ALLOC_HANDLE) CriticalSection();
+  m_scnSetup = *setup;
   for (int i = 0; i < 10; i++) {
     unknowndfc[i].unknown00 = i;
-    unknowndfc[i].unknown04 = static_cast<SCNPRIO_CB>(-1);
+    unknowndfc[i].m_debDraw = static_cast<SCNPRIO_CB>(-1);
   }
   unknownb4 = WorkCpu::createGroupHandle(1);
   WorkCpu::entryJobThread(unknownb4, thUpAfter, 0xf, this, nullptr, CPUID_UNKNOWN_1, true, false);
@@ -80,18 +77,18 @@ void Scn::term() {
     WorkCpu::releaseGroupHandle(unknownb4);
     unknownb4 = -1;
   }
-  if (unknown20 != nullptr) {
-    delete unknown20;
-    unknown20 = nullptr;
+  if (m_scnPoolObj != nullptr) {
+    delete m_scnPoolObj;
+    m_scnPoolObj = nullptr;
   }
   WorkCpu::runThread(WorkCpu::getRenderCPUID(), thRenderKillTerminate, this, nullptr, nullptr, true, WKCPU_SYNC_UNKNOWN_0);
-  if (unknown28 != nullptr) {
-    delete unknown28;
-    unknown28 = nullptr;
+  if (m_scnCamMan != nullptr) {
+    delete m_scnCamMan;
+    m_scnCamMan = nullptr;
   }
-  if (unknown30 != nullptr) {
-    delete unknown30;
-    unknown30 = nullptr;
+  if (m_scnDebug != nullptr) {
+    delete m_scnDebug;
+    m_scnDebug = nullptr;
   }
   for (FileResTh **it = unknowncf0.begin(); it != unknowncf0.end(); it++) {
     if (*it != nullptr) {
@@ -108,9 +105,9 @@ void Scn::term() {
     delete unknownce8;
     unknownce8 = nullptr;
   }
-  if (unknown64.isValid()) {
-    mtl::MemManager::erase(unknown64);
-    unknown64 = mtl::ALLOC_HANDLE();
+  if (m_ALLOC_HANDLE.isValid()) {
+    mtl::MemManager::erase(m_ALLOC_HANDLE);
+    m_ALLOC_HANDLE = mtl::ALLOC_HANDLE();
   }
 }
 
@@ -121,26 +118,26 @@ void Scn::callbackToListener(SCNCB type) {
     }
     switch (type) {
     case SCNCB_UNKNOWN_0:
-      unknownb8[i].unknown00->cbPreUpdate(this, unknownb8[i].unknown08);
+      unknownb8[i].m_iScnRender->cbPreUpdate(this, unknownb8[i].unknown08);
       break;
     case SCNCB_UNKNOWN_1:
       DevGraph::cmdOpenDisplayList(0);
       if (!unknownb8[i].unknown0d) {
-        unknownb8[i].unknown00->cbRenderAfter(this, unknownb8[i].unknown08);
+        unknownb8[i].m_iScnRender->cbRenderAfter(this, unknownb8[i].unknown08);
       }
-      if (unknowndfc[0].unknown04 == unknownb8[i].unknown08) {
+      if (unknowndfc[0].m_debDraw == unknownb8[i].unknown08) {
         DebDraw::flushPrio(-2, getCam(-1)->unknown70.m_front->unknown1a0, getCam(-1)->unknown70.m_front->unknown00.unknown70);
       }
       DevGraph::cmdCloseDisplayList();
       break;
     case SCNCB_UNKNOWN_2:
-      unknownb8[i].unknown00->cbManipuPickOn(this, unknownb8[i].unknown08);
+      unknownb8[i].m_iScnRender->cbManipuPickOn(this, unknownb8[i].unknown08);
       break;
     case SCNCB_UNKNOWN_3:
-      unknownb8[i].unknown00->cbManipuPickOff(this, unknownb8[i].unknown08);
+      unknownb8[i].m_iScnRender->cbManipuPickOff(this, unknownb8[i].unknown08);
       break;
     case SCNCB_UNKNOWN_4:
-      unknownb8[i].unknown00->cbManipuPickMove(this, unknownb8[i].unknown08);
+      unknownb8[i].m_iScnRender->cbManipuPickMove(this, unknownb8[i].unknown08);
       break;
     }
   }
@@ -148,8 +145,8 @@ void Scn::callbackToListener(SCNCB type) {
 
 void Scn::move() {
   callbackToListener(SCNCB_UNKNOWN_0);
-  unknown28->update();
-  unknown20->update();
+  m_scnCamMan->update();
+  m_scnPoolObj->update();
   if (!unknownb0) {
     unknownb0 = true;
     if (unknown38 != nullptr) {
@@ -166,7 +163,7 @@ void Scn::draw() {
   DevGraph::cmdOpenDisplayList(0);
   {
     CS lock(*unknownce0);
-    isCurrent = unknown28->setCurrentCam() && unknown28->getView(-1) == WinView::getView(true);
+    isCurrent = m_scnCamMan->setCurrentCam() && m_scnCamMan->getView(-1) == WinView::getView(true);
   }
   DevGraph::cmdCloseDisplayList();
   if (!isCurrent) {
@@ -175,7 +172,7 @@ void Scn::draw() {
   DevGraph::cmdOpenDisplayList(0);
   {
     CS lock(*unknownce0);
-    unknown20->apply();
+    m_scnPoolObj->apply();
   }
   DevGraph::cmdCloseDisplayList();
   {
@@ -201,19 +198,19 @@ void Scn::draw() {
   {
     CS lock(*unknownce0);
     DebDraw *debDraw = DebDraw::get(0xffffffff);
-    unknown20->renderDebug(debDraw);
-    if (unknown30 != nullptr) {
-      unknown30->render(debDraw);
+    m_scnPoolObj->renderDebug(debDraw);
+    if (m_scnDebug != nullptr) {
+      m_scnDebug->render(debDraw);
     }
   }
   DevGraph::cmdCloseDisplayList();
 }
 
 void Scn::init() {
-  mtl::ALLOC_HANDLE mem = unknown64;
-  unknown30 = new (mem) ScnDebug(this, mem);
-  unknown20 = new (mem) ScnPoolObj(this);
-  unknown28 = new (mem) ScnCamMan(this);
+  mtl::ALLOC_HANDLE mem = m_ALLOC_HANDLE;
+  m_scnDebug = new (mem) ScnDebug(this, mem);
+  m_scnPoolObj = new (mem) ScnPoolObj(this);
+  m_scnCamMan = new (mem) ScnCamMan(this);
 }
 
 u32 Scn::thUpAfter(void *argument, void *userData) {
@@ -221,19 +218,19 @@ u32 Scn::thUpAfter(void *argument, void *userData) {
   for (int i = 0; i < scn->unknown4b8; i++) {
     if (scn->unknownb8[i].unknown0d) {
       DebDraw::setCurrentPrio(scn->unknownb8[i].unknown08);
-      scn->unknownb8[i].unknown00->cbRenderAfter(scn, scn->unknownb8[i].unknown08);
+      scn->unknownb8[i].m_iScnRender->cbRenderAfter(scn, scn->unknownb8[i].unknown08);
       DebDraw::setCurrentPrio(-1);
     }
   }
   return 0;
 }
 
-void Scn::setDebDraw(SCNCAM cam, SCNPRIO_CB priority) { unknowndfc[cam].unknown04 = priority; }
+void Scn::setDebDraw(SCNCAM cam, SCNPRIO_CB priority) { unknowndfc[cam].m_debDraw = priority; }
 
 ScnObjModel *Scn::createMdl(const void *data, const char *name, int screenID) {
   ScnObjModel *model = unknown38->createMdl(this, data, name, screenID);
   if (model != nullptr) {
-    model->setAlwaysTexStm(!unknown68.unknown44);
+    model->setAlwaysTexStm(!m_scnSetup.unknown44);
   }
   return model;
 }
@@ -248,7 +245,7 @@ ScnObj *Scn::createEnvColi(const void *data, int screenID) { return unknown38->c
 
 void Scn::releaseItem(ScnObj *obj) {
   if (obj != nullptr) {
-    unknown20->release(obj);
+    m_scnPoolObj->release(obj);
   }
 }
 
@@ -274,14 +271,14 @@ void Scn::setFrameSpd(f32 speed) { ProcDesktop::setUpdateRatio(speed); }
 f32 Scn::getFrameSpd() const { return ProcDesktop::getUpdateRatio(); }
 
 void Scn::enableScnDebug(bool isEnable) {
-  if (unknown30 != nullptr) {
-    unknown30->_30 = isEnable;
+  if (m_scnDebug != nullptr) {
+    m_scnDebug->_30 = isEnable;
   }
 }
 
 void Scn::addRenderCB(IScnRender *render, SCNPRIO_CB priority, bool flag1, bool flag2) {
   unknown001 entry;
-  entry.unknown00 = render;
+  entry.m_iScnRender = render;
   entry.unknown08 = priority;
   entry.unknown0c = flag2;
   entry.unknown0d = flag1;
@@ -293,10 +290,10 @@ void Scn::removeRenderCB(IScnRender *render) {
   Scn *scn = get();
   if (scn != nullptr) {
     unknown001 entry;
-    entry.unknown00 = render;
+    entry.m_iScnRender = render;
     scn->unknown8d0.push(entry);
     for (int i = 0; i < scn->unknown4b8; i++) {
-      if (scn->unknownb8[i].unknown00 == render) {
+      if (scn->unknownb8[i].m_iScnRender == render) {
         scn->unknownb8[i].unknown0e = true;
         break;
       }
@@ -318,7 +315,7 @@ FileResTh *Scn::allocEntryRes(const char *path) {
     mm::mtl::FixStr<128> name;
     FileResTh *res = *it;
     {
-      CS nameLock(res->unknown90);
+      CS nameLock(res->m_criticalSection);
       name = res->unknown0c;
     }
     if (strcmp(name.c_str(), PathUtil::getFilePtrFromPath(path)) == 0) {
@@ -337,12 +334,12 @@ void Scn::removeEntryRes(FileResTh *res) {
   }
 }
 
-ScnCamMan::ScnCamMan(Scn *scn) : unknown08(scn), unknown40(0) {
+ScnCamMan::ScnCamMan(Scn *scn) : m_scn(scn), unknown40(0) {
   for (int i = 0; i < 10; i++) {
     unknown10.push_back(0xffffffff);
   }
   for (int i = 0; i < 10; i++) {
-    ScnObjCam::create(unknown08, i);
+    ScnObjCam::create(m_scn, i);
   }
 }
 
@@ -350,7 +347,7 @@ ScnCamMan::~ScnCamMan() {
   for (u32 i = 0; i < unknown10.size(); i++) {
     WinView *view = WinViewRoot::getView(*unknown10.at(i));
     if (view != nullptr) {
-      view->detachWorkEvent(unknown08);
+      view->detachWorkEvent(m_scn);
     }
   }
 }
@@ -360,11 +357,11 @@ void ScnCamMan::setView(WinView *view, int screen) {
     if (unknown10[screen] != view->unknown50) {
       WinView *current = WinViewRoot::getView(unknown10[screen]);
       if (current != nullptr) {
-        current->detachWorkEvent(unknown08);
+        current->detachWorkEvent(m_scn);
       }
     }
   }
-  view->attachWorkEvent(unknown08, false);
+  view->attachWorkEvent(m_scn, false);
   unknown10[screen] = view->unknown50;
 }
 
@@ -373,16 +370,16 @@ void ScnCamMan::clrView(WinView *view, int screen) {
     if (unknown10[screen] != 0xffffffff) {
       WinView *current = WinViewRoot::getView(unknown10[screen]);
       if (current != nullptr) {
-        current->detachWorkEvent(unknown08);
+        current->detachWorkEvent(m_scn);
       }
     }
     unknown10[screen] = 0xffffffff;
   }
 }
 
-void Scn::setView(WinView *view, int screen) { unknown28->setView(view, screen); }
+void Scn::setView(WinView *view, int screen) { m_scnCamMan->setView(view, screen); }
 
-void Scn::clrView(WinView *view, int screen) { unknown28->clrView(view, screen); }
+void Scn::clrView(WinView *view, int screen) { m_scnCamMan->clrView(view, screen); }
 
 WinView *ScnCamMan::getView(s16 screen) {
   if (screen < 0) {
@@ -404,41 +401,41 @@ const WinView *ScnCamMan::getView(s16 screen) const {
   return static_cast<WinView *>(WorkRootState::getWork(unknown10[screen]));
 }
 
-WinView *Scn::getView(int index) { return unknown28->getView(index); }
+WinView *Scn::getView(int index) { return m_scnCamMan->getView(index); }
 
-const WinView *Scn::getView(int index) const { return unknown28->getView(index); }
+const WinView *Scn::getView(int index) const { return m_scnCamMan->getView(index); }
 
 void ScnCamMan::setCrossIdTarget(const WinView *view) {}
 
-const ScnObjCam *ScnCamMan::getCam(const WinView *view) const { return unknown08->unknown20->getCam(view); }
+const ScnObjCam *ScnCamMan::getCam(const WinView *view) const { return m_scn->m_scnPoolObj->getCam(view); }
 
-ScnObjCam *ScnCamMan::getCam(const WinView *view) { return unknown08->unknown20->getCam(view); }
+ScnObjCam *ScnCamMan::getCam(const WinView *view) { return m_scn->m_scnPoolObj->getCam(view); }
 
-ScnObjCam *Scn::getCam(const WinView *view) { return unknown28->getCam(view); }
+ScnObjCam *Scn::getCam(const WinView *view) { return m_scnCamMan->getCam(view); }
 
-const ScnObjCam *Scn::getCam(const WinView *view) const { return unknown28->getCam(view); }
+const ScnObjCam *Scn::getCam(const WinView *view) const { return m_scnCamMan->getCam(view); }
 
 ScnObjCam *ScnCamMan::getCam(int screen) {
   if (screen < 0) {
     screen = unknown40;
   }
-  return unknown08->unknown20->getCam(screen);
+  return m_scn->m_scnPoolObj->getCam(screen);
 }
 
 const ScnObjCam *ScnCamMan::getCam(int screen) const {
   if (screen < 0) {
     screen = unknown40;
   }
-  return unknown08->unknown20->getCam(screen);
+  return m_scn->m_scnPoolObj->getCam(screen);
 }
 
 ScnObjCam *Scn::getCam(int index) {
   ScnObjCam *cam = nullptr;
   if (index == -1 && WorkCpu::getCurrentCPUID() == WorkCpu::getRenderCPUID()) {
-    cam = unknown28->getCam(WinView::getView(true));
+    cam = m_scnCamMan->getCam(WinView::getView(true));
   }
   if (cam == nullptr) {
-    cam = unknown28->getCam(index);
+    cam = m_scnCamMan->getCam(index);
   }
   return cam;
 }
@@ -446,20 +443,20 @@ ScnObjCam *Scn::getCam(int index) {
 const ScnObjCam *Scn::getCam(int index) const {
   const ScnObjCam *cam = nullptr;
   if (index == -1) {
-    cam = unknown28->getCam(WinView::getView(true));
+    cam = m_scnCamMan->getCam(WinView::getView(true));
   }
   if (cam == nullptr) {
-    cam = unknown28->getCam(index);
+    cam = m_scnCamMan->getCam(index);
   }
   return cam;
 }
 
-void ScnCamMan::apply() { unknown08->unknown20->getCam(unknown40)->apply(); }
+void ScnCamMan::apply() { m_scn->m_scnPoolObj->getCam(unknown40)->apply(); }
 
 void ScnCamMan::update() {
   WinView *view = getView(unknown40);
   if (view != nullptr) {
-    unknown08->unknown20->getCam(unknown40)->setSize(view->getClientSize(false));
+    m_scn->m_scnPoolObj->getCam(unknown40)->setSize(view->getClientSize(false));
   }
 }
 
@@ -478,13 +475,18 @@ template class reslist<ScnObj *>;
 
 // The game builds these files in one unit with this one (0x710073fc4c to 0x7100755bfc), in this order. Scn::draw inlines ScnDebug::render and Scn::init the ScnDebug constructor; ScnCamUtil
 // (0x7100742c24 to 0x7100743708) comes before the ScnDebug block (0x71007437a0 to 0x7100751eb0), which follows every function of this file and ends with ScnDebugUtil (0x7100751cc4); ScnObjCam
-// (0x7100751eb0), ScnObj (0x7100753ad4) and ScnUtil (0x7100754c4c) come after it.
+// (0x7100751eb0), ScnObj (0x7100753ad4), ScnPoolObj (0x7100753ff8 to 0x71007549e0, constructor, destructors and release; its other functions are first referenced from Scn and sit among its
+// functions, and Scn::move inlines ScnPoolObj::update, which the single unit still allows from here), ScnRender (0x7100754c2c to 0x7100754c48, between ScnObj and ScnUtil, with Scn functions on both
+// sides) and ScnUtil (0x7100754c4c) come after it. The longest increasing subsequence of the function labels of our assembly output against the game's addresses (240 named functions, aliases
+// counted once; a measure of the order, not a proof) is 176 with ScnPoolObj here and 166 with its file included first, before this file's functions.
 // clang-format off
 #include "scn_cam_util.cpp"
 #include "scn_debug.cpp"
 #include "scn_debug_util.cpp"
 #include "scn_obj_cam.cpp"
 #include "scn_obj.cpp"
+#include "scn_pool_obj.cpp"
+#include "scn_render.cpp"
 #include "scn_util.cpp"
 // clang-format on
 

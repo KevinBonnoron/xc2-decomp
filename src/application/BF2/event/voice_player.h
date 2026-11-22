@@ -71,7 +71,7 @@ private:
   f32 unknown470;                                        // Inferred role: delay; original member name unknown.
   mm::mtl::FixStr<64> unknown474;                        // Inferred role: path; original member name unknown.
   u32 unknown4b8;                                        // Inferred role: handle; original member name unknown.
-  IVoiceEvent *unknown4c0;                               // Inferred role: event; original member name unknown.
+  IVoiceEvent *m_iVoiceEvent;                            // Inferred role: event; original member name unknown.
 };
 
 static_assert(sizeof(VoicePlayer) == 0x4c8, "");

@@ -115,7 +115,7 @@ public:
   void update(const fw::UpdateInfo &info) override;
 
   mm::mtl::Delegate<bool()> unknown30; // Inferred role: updater; original member name unknown.
-  IConverter *unknown50;               // Inferred role: converter; original member name unknown.
+  IConverter *m_iConverter;            // Inferred role: converter; original member name unknown.
   u32 unknown58;                       // Inferred role: arts; original member name unknown.
   u32 unknown5c;                       // Inferred role: driver; original member name unknown.
   u32 unknown60;                       // Inferred role: level; original member name unknown.
@@ -123,7 +123,7 @@ public:
 };
 
 static_assert(offsetof(GfMenuArtsAdapter, unknown30) == 0x30, "");
-static_assert(offsetof(GfMenuArtsAdapter, unknown50) == 0x50, "");
+static_assert(offsetof(GfMenuArtsAdapter, m_iConverter) == 0x50, "");
 static_assert(offsetof(GfMenuArtsAdapter, unknown58) == 0x58, "");
 static_assert(offsetof(GfMenuArtsAdapter, unknown5c) == 0x5c, "");
 static_assert(offsetof(GfMenuArtsAdapter, unknown60) == 0x60, "");

@@ -9,27 +9,27 @@
 namespace gf {
 namespace pc {
 
-FallDamagePlugin::FallDamagePlugin() : unknown10(nullptr), unknown18(0.0f), unknown1c(false), unknown20(unknown020) {}
+FallDamagePlugin::FallDamagePlugin() : m_comPropertyPc(nullptr), unknown18(0.0f), unknown1c(false), m_GF_OBJ_HANDLE(unknown020) {}
 
 FallDamagePlugin::~FallDamagePlugin() {}
 
 bool FallDamagePlugin::setup(GfComBehaviorPc &behavior) {
-  unknown10 = behavior.unknown08->getComponent<GfComPropertyPc>();
+  m_comPropertyPc = behavior.unknown08->getComponent<GfComPropertyPc>();
   return true;
 }
 
 void FallDamagePlugin::cleanup(GfComBehaviorPc &) {}
 
 void FallDamagePlugin::onActivate() {
-  unknown18 = unknown10->unknown160.unknown00.y;
-  unknown20 = getAttachObj();
+  unknown18 = m_comPropertyPc->unknown160.unknown00.y;
+  m_GF_OBJ_HANDLE = getAttachObj();
 }
 
 void FallDamagePlugin::update(GfComBehaviorPc &, const fw::UpdateInfo &) {
-  if (unknown10->unknown160.unknown00.y > unknown18) {
-    unknown18 = unknown10->unknown160.unknown00.y;
+  if (m_comPropertyPc->unknown160.unknown00.y > unknown18) {
+    unknown18 = m_comPropertyPc->unknown160.unknown00.y;
   }
-  unknown20 = getAttachObj();
+  m_GF_OBJ_HANDLE = getAttachObj();
 }
 
 void FallDamagePlugin::procMsgPcFieldGetFallMaxHeight(fw::MessageObject *, MsgPcFieldGetFallMaxHeight &message) {

@@ -7,9 +7,9 @@
 namespace gf {
 namespace pc {
 
-void StateFieldSlide::enter(GfComBehaviorPc *behavior, ai::State *previous) { behavior->getProperty()->unknown310.unknown11_3 = true; }
+void StateFieldSlide::enter(GfComBehaviorPc *behavior, ai::State *previous) { behavior->getProperty()->m_propertyField.unknown11_3 = true; }
 
-void StateFieldSlide::leave(GfComBehaviorPc *behavior, ai::State *next) { behavior->getProperty()->unknown310.unknown11_3 = false; }
+void StateFieldSlide::leave(GfComBehaviorPc *behavior, ai::State *next) { behavior->getProperty()->m_propertyField.unknown11_3 = false; }
 
 void StateFieldSlide::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {}
 

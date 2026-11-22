@@ -202,7 +202,7 @@ static_assert(sizeof(unknown009) == 0x04, "");
 
 // Inferred role: entry of the treasure box table; original type name unknown.
 struct unknown007 {
-  u8 unknown00; // Inferred role: type of the box, the Type column of MIN_TT_Tbox; original member name unknown.
+  u8 m__tbox_type; // Inferred role: type of the box, the Type column of MIN_TT_Tbox; named after the game accessor minigame::tora::minigame::get_tbox_type.
   u8 _01;
   unknown009 unknown02[10];
 };
@@ -269,7 +269,7 @@ public:
 
   u8 _08[0x18 - 0x08];
   unknown004 *unknown18;        // Inferred role: screen buffers; original member name unknown.
-  archive unknown20;            // Inferred role: archive of the resources; original member name unknown.
+  archive m_archive;            // Inferred role: archive of the resources; original member name unknown.
   fw::SoundResource *unknown28; // Inferred role: sound resource whose pack plays the sound effects; original member name unknown.
   unknown013 unknown30[65];     // Inferred role: loaded sprite sheets; original member name unknown.
   u8 _648[0x64c - 0x648];
@@ -292,9 +292,9 @@ public:
   u8 _341a[0x3420 - 0x341a];
   unknown011 unknown3420[16]; // Inferred role: items waiting to be dropped; original member name unknown.
   void *unknown3520;          // Inferred role: item dropped by the next defeated enemy; original member name unknown.
-  _sTask *unknown3528;        // Task whose 0x2c/0x30 fields get_pc_pos and get_pc_dxdy read; original member name unknown.
+  _sTask *m_sTask;            // Task whose 0x2c/0x30 fields get_pc_pos and get_pc_dxdy read; original member name unknown.
   u8 _3530[0x3560 - 0x3530];
-  int unknown3560; // Divided by 256 and added to the y of unknown3528 in get_pc_pos and get_pc_dxdy; original member name unknown.
+  int unknown3560; // Divided by 256 and added to the y of m_sTask in get_pc_pos and get_pc_dxdy; original member name unknown.
   u8 _3564[0x3566 - 0x3564];
   u16 unknown3566; // Inferred role: height of the map in pixels minus the screen height; original member name unknown.
   u8 _3568[0x3de0 - 0x3568];
@@ -304,7 +304,7 @@ public:
 };
 
 static_assert(offsetof(minigame, unknown18) == 0x18, "");
-static_assert(offsetof(minigame, unknown20) == 0x20, "");
+static_assert(offsetof(minigame, m_archive) == 0x20, "");
 static_assert(offsetof(minigame, unknown28) == 0x28, "");
 static_assert(offsetof(minigame, unknown30) == 0x30, "");
 static_assert(offsetof(minigame, unknown64c) == 0x64c, "");
@@ -316,7 +316,7 @@ static_assert(offsetof(minigame, unknown3409) == 0x3409, "");
 static_assert(offsetof(minigame, unknown3410) == 0x3410, "");
 static_assert(offsetof(minigame, unknown3420) == 0x3420, "");
 static_assert(offsetof(minigame, unknown3520) == 0x3520, "");
-static_assert(offsetof(minigame, unknown3528) == 0x3528, "");
+static_assert(offsetof(minigame, m_sTask) == 0x3528, "");
 static_assert(offsetof(minigame, unknown3560) == 0x3560, "");
 static_assert(offsetof(minigame, unknown3566) == 0x3566, "");
 static_assert(offsetof(minigame, unknown3de0) == 0x3de0, "");

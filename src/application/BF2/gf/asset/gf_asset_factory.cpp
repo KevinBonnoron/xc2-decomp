@@ -15,11 +15,11 @@ namespace {
 template <typename SETUP, typename PARAM> GF_ASSET_HANDLE *unknown001(GF_ASSET_HANDLE *handle, const PARAM &param) {
   SETUP defaultSetup;
   SETUP *setup = &defaultSetup;
-  if (param.unknown88 != nullptr) {
-    setup = static_cast<SETUP *>(param.unknown88);
+  if (param.m_assetSetup != nullptr) {
+    setup = static_cast<SETUP *>(param.m_assetSetup);
   }
   setup->setup(handle, param);
-  return setup->unknown10;
+  return setup->m_GF_ASSET_HANDLE;
 }
 
 // Inferred role: creates the asset handle and sets it up as unknown001, checking the type of the setup of the init param; original name unknown.
@@ -27,11 +27,11 @@ template <typename SETUP, typename PARAM> GF_ASSET_HANDLE *unknown002(const PARA
   GF_ASSET_HANDLE *handle = GfAssetManager::createAssetHandle(param);
   SETUP defaultSetup;
   SETUP *setup = &defaultSetup;
-  if (param.unknown88 != nullptr) {
-    setup = mm::mtl::dynamicCast<SETUP>(param.unknown88);
+  if (param.m_assetSetup != nullptr) {
+    setup = mm::mtl::dynamicCast<SETUP>(param.m_assetSetup);
   }
   setup->setup(handle, param);
-  return setup->unknown10;
+  return setup->m_GF_ASSET_HANDLE;
 }
 
 } // namespace

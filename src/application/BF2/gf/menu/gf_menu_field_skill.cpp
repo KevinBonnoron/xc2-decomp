@@ -24,7 +24,7 @@ void GfMenuFieldSkill::postUpdate(const fw::UpdateInfo &info) {
     if (skill->unknown1f8 != nullptr && skill->unknown1f8->isActive() && !skill->unknown1f8->unknown18.empty() && (skill->unknown1f8->popResult(result), result.unknown04 == 2)) {
       skill->unknown218 = true;
     }
-    skill->unknown08.update(&info);
+    skill->m_fsm.update(&info);
   }
 }
 
@@ -34,10 +34,10 @@ bool GfMenuFieldSkill::start(const StartParam &param) {
   if (skill != nullptr) {
     if (!isRunning()) {
       if (param.unknown00 != 0 || !param.unknown08.empty()) {
-        skill->unknown80 = param;
+        skill->m_startParam = param;
         skill->unknown218 = false;
         started = true;
-        skill->unknown08.setState(1);
+        skill->m_fsm.setState(1);
         GfMenuReference::setReferenceBladeID(5, 0);
       }
     }
@@ -47,12 +47,12 @@ bool GfMenuFieldSkill::start(const StartParam &param) {
 
 bool GfMenuFieldSkill::isRunning() {
   GfMenuFieldSkill *skill = get();
-  return skill != nullptr && skill->unknown08.getState()->unknown08 != 0;
+  return skill != nullptr && skill->m_fsm.getState()->m_state != 0;
 }
 
 int GfMenuFieldSkill::getTotalSkillIndex(GfMenuFieldSkill *skill, u16 id) {
   int index = 0;
-  for (const StartParam::unknown001 *it = skill->unknown80.unknown120.begin(); it != skill->unknown80.unknown120.end(); it++) {
+  for (const StartParam::unknown001 *it = skill->m_startParam.unknown120.begin(); it != skill->m_startParam.unknown120.end(); it++) {
     if (it->unknown00 == id) {
       return index;
     }
@@ -85,7 +85,7 @@ void GfMenuFieldSkill::StateStart::onEnter(void *owner, ai::State *previous) {
 void GfMenuFieldSkill::StateStart::onLeave(void *owner, ai::State *next) {}
 
 void GfMenuFieldSkill::StateStart::onStep(void *owner, const void *param) {
-  switch (static_cast<GfMenuFieldSkill *>(owner)->unknown80.unknown00) {
+  switch (static_cast<GfMenuFieldSkill *>(owner)->m_startParam.unknown00) {
   case 0:
     reqState(2);
     break;
@@ -135,7 +135,7 @@ void GfMenuFieldSkill::StateTotalNext::onLeave(void *owner, ai::State *next) {}
 
 void GfMenuFieldSkill::StateTotalNext::onStep(void *owner, const void *param) {
   GfMenuFieldSkill *skill = static_cast<GfMenuFieldSkill *>(owner);
-  if (skill->unknown80.unknown08.empty() || skill->unknown1b8 > 1) {
+  if (skill->m_startParam.unknown08.empty() || skill->unknown1b8 > 1) {
     reqState(6);
   } else {
     skill->unknown210 = GfMenuObjUtil::getParamMenu()->unknown14 * 30.0f;
@@ -183,14 +183,14 @@ void GfMenuFieldSkill::StateDispResult::onEnter(void *owner, ai::State *previous
   skill->unknown200 = context;
   // The game leaves the first fields of the parameter unset when unknown130 is neither 1 nor 0 (0x71003baf54).
   GfMenuObjFieldSkill::OpenResultParam param;
-  if (skill->unknown80.unknown130 == 0) {
+  if (skill->m_startParam.unknown130 == 0) {
     param.unknown00 = 0;
-    param.unknown08 = skill->unknown80.unknown100;
-    param.unknown10 = skill->unknown80.unknown108;
-  } else if (skill->unknown80.unknown130 == 1) {
+    param.unknown08 = skill->m_startParam.unknown100;
+    param.unknown10 = skill->m_startParam.unknown108;
+  } else if (skill->m_startParam.unknown130 == 1) {
     param.unknown00 = 1;
   }
-  param.unknown14 = skill->unknown80.unknown11c;
+  param.unknown14 = skill->m_startParam.unknown11c;
   GfMenuObjFieldSkill::openResult(context, param);
   unknown18 = false;
   unknown1c = 0.0f;
@@ -212,7 +212,7 @@ void GfMenuFieldSkill::StateDispResult::update(GfMenuFieldSkill *skill, const fw
       if (skill->unknown208 != nullptr) {
         GfMenuObjFieldSkill::closeTotalInfo(skill->unknown208);
       }
-      if (skill->unknown80.unknown130 == 1) {
+      if (skill->m_startParam.unknown130 == 1) {
         GfMenuObjFieldSkill::undoTotalSkillLevel(1);
         GfMenuObjFieldSkill::undoTotalSkillLevel(2);
       }

@@ -13,21 +13,21 @@ DevFileJobSendCom::~DevFileJobSendCom() {}
 void DevFileJobSendCom::setParam(const char *param) { unknown43c = param; }
 
 void DevFileJobSendCom::callSendOK(const char *text) {
-  if (unknown1a8 != nullptr) {
-    DevFileTh::cancel(unknown1a8, false);
-    unknown1a8 = nullptr;
+  if (m_fileHandleTh != nullptr) {
+    DevFileTh::cancel(m_fileHandleTh, false);
+    m_fileHandleTh = nullptr;
   }
 }
 
 void DevFileJobSendCom::callSendError(const char *text) {
-  if (unknown1a8 != nullptr) {
-    DevFileTh::cancel(unknown1a8, false);
-    unknown1a8 = nullptr;
+  if (m_fileHandleTh != nullptr) {
+    DevFileTh::cancel(m_fileHandleTh, false);
+    m_fileHandleTh = nullptr;
   }
 }
 
 bool DevFileJobSendCom::cancel(FileHandleTh *handle) {
-  if (unknown1a8 == handle) {
+  if (m_fileHandleTh == handle) {
     wkIsCurrent();
   }
   return true;
@@ -40,15 +40,15 @@ bool DevFileJobSendCom::wkStandbyLogin() {
     if (!wkIsCurrent()) {
       return false;
     }
-    unknown1fc.clear();
-    unknown1fc.setLocation(unknown1a8->unknown98.c_str());
-    unknown1fc.setTimeStamp(unknown43c.c_str());
+    m_wiiFilerCommon.clear();
+    m_wiiFilerCommon.setLocation(m_fileHandleTh->unknown98.c_str());
+    m_wiiFilerCommon.setTimeStamp(unknown43c.c_str());
   }
   return WorkObj::wkStandbyLogin();
 }
 
 bool DevFileJobSendCom::wkStandbyLogout() {
-  if (unknown1a8 != nullptr) {
+  if (m_fileHandleTh != nullptr) {
     unknown1b0 = "error send data";
   }
   return WorkObj::wkStandbyLogout();

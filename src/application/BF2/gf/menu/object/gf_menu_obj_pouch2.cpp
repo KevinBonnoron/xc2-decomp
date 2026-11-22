@@ -60,7 +60,7 @@ static inline void unknown001(u32 handle, u16 type, u32 param0, u32 param1) {
 
 GfMenuObjPouch2::GfMenuObjPouch2(u32 handle)
     : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown40(nullptr), unknown48(nullptr), unknown50(nullptr), unknown5c(0), unknown60(0), unknown64(0), unknown68(nullptr),
-      unknown70(), unknownd0(), unknown130(this), unknown3c9(false), unknown3d0(nullptr), unknown3d8(0), unknown3e0(nullptr), unknown3e8(false) {}
+      unknown70(), unknownd0(), unknown130(this), unknown3c9(false), m_GAME_VOICE_HANDLE(nullptr), unknown3d8(0), m_menuBladeList(nullptr), unknown3e8(false) {}
 
 GfMenuObjPouch2::~GfMenuObjPouch2() {
   mm::mtl::safeRelease(unknown28);
@@ -69,7 +69,7 @@ GfMenuObjPouch2::~GfMenuObjPouch2() {
   mm::mtl::safeRelease(unknown48);
   mm::mtl::safeRelease(unknown50);
   mm::mtl::safeRelease(unknown68);
-  mm::mtl::safeRelease(unknown3e0);
+  mm::mtl::safeRelease(m_menuBladeList);
   unknown38 = nullptr;
 }
 
@@ -136,7 +136,7 @@ void GfMenuObjPouch2::initialize() {
   unknown38 = unknown160();
   unknown50 = GfMenuCallContext::create();
   unknown68 = GfMenuCallContext::create();
-  unknown3e0 = GfMenuBladeList::create();
+  m_menuBladeList = GfMenuBladeList::create();
   ui::UIObjectAcc slotAcc(acc.searchChild("LAY_eqp_fevitem"));
   disableInput(slotAcc.unknown10);
   ui::UIObjectAcc itemListAcc(acc.searchChild("LAY_fvstock_fevitem"));
@@ -235,15 +235,15 @@ void GfMenuObjPouch2::updateItemList(GfMenuItemList *list, ui::UISelectObjList *
   list->clear();
   GfMenuItemList::ItemBoxSetup setup;
   setup.unknown14 = ItemType::ITEM_TYPE_UNKNOWN_10;
-  setup.unknown00.unknown08 = 8;
-  setup.unknown00.unknown10 = true;
+  setup.m_setupParam.unknown08 = 8;
+  setup.m_setupParam.unknown10 = true;
   setup.unknown28 = false;
   setup.unknown29 = false;
   GfMenuItemList::FiltertInfo info;
   if (filter != 0) {
     info.unknown00 = 8;
     info.unknown06 = unknown002[filter];
-    setup.unknown18 = &info;
+    setup.m_filtertInfo = &info;
   }
   list->setupFromBox(setup);
   list->sort(GfMenuObjSort::getSortID(0x10, sort), false);
@@ -544,7 +544,7 @@ bool GfMenuObjPouch2::seqFavLoop() {
         if (unknown70[unknown3c0].unknown08[unknown3c4] != unknownd0[unknown3c0].unknown08[unknown3c4] && unknownd0[unknown3c0].unknown08[unknown3c4] == 0) {
           GAME_VOICE_HANDLE *voice = procFavFlag(acc, unknownd0[unknown3c0], unknown3c0, unknown3c4);
           unknown3c8 = true;
-          unknown3d0 = voice;
+          m_GAME_VOICE_HANDLE = voice;
           unknown3c4++;
           return false;
         }
@@ -558,14 +558,14 @@ bool GfMenuObjPouch2::seqFavLoop() {
           if (favorite == GfDataItem::getCategory(unknownd0[unknown3c0].unknown04)) {
             GAME_VOICE_HANDLE *voice = SCOM_FIELD_VOICE::createFavorite(unknownd0[unknown3c0].unknown00, static_cast<FAVORITE>(unknown3c4));
             unknown3c8 = true;
-            unknown3d0 = voice;
+            m_GAME_VOICE_HANDLE = voice;
             unknown3c4++;
             return false;
           }
         } else if (favorite == unknownd0[unknown3c0].unknown04) {
           GAME_VOICE_HANDLE *voice = SCOM_FIELD_VOICE::createFavorite(unknownd0[unknown3c0].unknown00, static_cast<FAVORITE>(unknown3c4));
           unknown3c8 = true;
-          unknown3d0 = voice;
+          m_GAME_VOICE_HANDLE = voice;
           unknown3c4++;
           return false;
         }
@@ -574,7 +574,7 @@ bool GfMenuObjPouch2::seqFavLoop() {
     }
     return true;
   }
-  int result = GfGameVoice::getResult(unknown3d0);
+  int result = GfGameVoice::getResult(m_GAME_VOICE_HANDLE);
   if (result == 1 || result == 2) {
     return false;
   }
@@ -664,12 +664,12 @@ bool GfMenuObjPouch2::seqFavClose() {
 }
 
 void GfMenuObjPouch2::SlotListener::reciveEvent(const ui::EventData &event, u32 handle) {
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjPouch2->unknown18);
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1: {
-    setupSlot(acc, unknown20->unknown38);
-    updateSlotList(unknown20->unknown28);
+    setupSlot(acc, m_menuObjPouch2->unknown38);
+    updateSlotList(m_menuObjPouch2->unknown28);
     refreshSlot(acc, 0);
     // Written out like the cursor setup of GfMenuObjCharSelect::SubMenuListener and GfMenuObjHanaSubmenu::SubmenuListener (ruling 8): a helper taking the
     // cursor and format names gives a 240 byte frame against the game's 256 (the parameter has its own slot). The two stores after the search of
@@ -679,11 +679,11 @@ void GfMenuObjPouch2::SlotListener::reciveEvent(const ui::EventData &event, u32 
     param.unknown00 = ui::UIObjectAcc(handle).getParentHandle();
     param.unknown04 = acc.searchChild("IMG_slotcursor");
     param.unknown1a = 0;
-    param.unknown20.unknown18 = 0;
+    param.m_cursorSetting.unknown18 = 0;
     param.unknown08 = "IMG_eqpouch_slbase@%02d";
-    unknown20->unknown30 = GfMenuObjUtil::createCursor(param);
-    unknown20->unknown30->open(0);
-    GfMenuObject::setupInputSelection(handle, 0, unknown20->unknown28->getSize());
+    m_menuObjPouch2->unknown30 = GfMenuObjUtil::createCursor(param);
+    m_menuObjPouch2->unknown30->open(0);
+    GfMenuObject::setupInputSelection(handle, 0, m_menuObjPouch2->unknown28->getSize());
     GfMenuObject::disableInput(handle);
     unknown164(handle, GfMenuTypes::unknown003_257);
     break;
@@ -693,24 +693,24 @@ void GfMenuObjPouch2::SlotListener::reciveEvent(const ui::EventData &event, u32 
     GfMenuObjOperationInfo::add(handle, 0, 0, 0);
     GfMenuObjMainMenu2::setSubIndexText(0x16);
     GfMenuObjUtil::setChildDisp(handle, "IMG_eqpouch_sellect", true);
-    unknown20->unknown30->setDisp(false);
+    m_menuObjPouch2->unknown30->setDisp(false);
     setFadeIn(handle, 1);
-    unknown20->unknown3e8 = event.unknown08 == 0;
+    m_menuObjPouch2->unknown3e8 = event.unknown08 == 0;
     break;
   case 0x140:
     GfMenuReference::setReferenceDriverID(0, event.unknown08);
-    updateSlotList(unknown20->unknown28);
-    refreshSlot(acc, unknown20->unknown28->getIndex(false));
+    updateSlotList(m_menuObjPouch2->unknown28);
+    refreshSlot(acc, m_menuObjPouch2->unknown28->getIndex(false));
     GfMenuObject::resetInputSelection(handle);
-    GfMenuObject::setupInputSelection(handle, 0, unknown20->unknown28->getSize());
+    GfMenuObject::setupInputSelection(handle, 0, m_menuObjPouch2->unknown28->getSize());
     GfMenuObjCharSelect::execCharPosScale(0);
     break;
   case 3:
     if (event.unknown08 == 1) {
-      if (!unknown20->unknown3c9) {
-        unknown20->unknown30->setDisp(true);
+      if (!m_menuObjPouch2->unknown3c9) {
+        m_menuObjPouch2->unknown30->setDisp(true);
       }
-      if (unknown20->unknown3e8) {
+      if (m_menuObjPouch2->unknown3e8) {
         GfMenuObjMainMenu2::openCharChange(acc.unknown10, 0, false);
         GfMenuObject::enableInput(handle);
       }
@@ -720,8 +720,8 @@ void GfMenuObjPouch2::SlotListener::reciveEvent(const ui::EventData &event, u32 
     u32 index = event.unknown08;
     u32 previous = event.unknown0c;
     u32 driver = GfMenuReference::getReferenceDriverID(0);
-    if (unknown20->unknown30->inputChange(index)) {
-      unknown20->unknown38->unknown0c = index;
+    if (m_menuObjPouch2->unknown30->inputChange(index)) {
+      m_menuObjPouch2->unknown38->unknown0c = index;
       SDataPouch &pouch = GfPouchUtil::getPouch(driver, index);
       ui::UIObjectAcc cursor(acc.searchChild("IMG_slotcursor"));
       cursor.setImageIndex(pouch.unknown04 != 0);
@@ -737,11 +737,11 @@ void GfMenuObjPouch2::SlotListener::reciveEvent(const ui::EventData &event, u32 
     }
     switch (event.unknown0c) {
     case 1:
-      if (unknown20->unknown40->getSize() != 0) {
+      if (m_menuObjPouch2->unknown40->getSize() != 0) {
         GfMenuBladeList::DriverSetup setup;
         setup.unknown18 = GfMenuReference::getReferenceDriverID(0);
         setup.unknown14 = 1;
-        unknown20->unknown3e0->setupFromDriver(setup);
+        m_menuObjPouch2->m_menuBladeList->setupFromDriver(setup);
         unknown164(handle, GfMenuTypes::unknown003_258);
         unknown001(owner.searchChild("LAY_chr_fevinfo"), GfMenuTypes::unknown003_257, 0, 0);
         unknown001(owner.searchChild("LAY_fvstock_fevitem"), GfMenuTypes::unknown003_33, 0, 0);
@@ -749,7 +749,7 @@ void GfMenuObjPouch2::SlotListener::reciveEvent(const ui::EventData &event, u32 
         GfMenuObjMainMenu2::closeCharChange();
         GfMenuObjUtil::playSECommonDecide();
       } else {
-        GfMenuObjCommonText::openError(unknown20->unknown50, 0x15, 0);
+        GfMenuObjCommonText::openError(m_menuObjPouch2->unknown50, 0x15, 0);
         GfMenuObjUtil::playSECommon(2);
       }
       break;
@@ -765,15 +765,15 @@ void GfMenuObjPouch2::SlotListener::reciveEvent(const ui::EventData &event, u32 
       u8 second = GfDataDriver::getPouchData(driver, 1)._06;
       if (first == 0 || second == 0) {
         if (GfPouchUtil::isExistOpenItem()) {
-          unknown20->unknown58 = 0x48;
-          GfMenuObjCommonText::open(unknown20->unknown50, unknown20->unknown58, 0);
-          GfMenuObject::setCallContextEventHandler(unknown20->unknown50, handle);
+          m_menuObjPouch2->unknown58 = 0x48;
+          GfMenuObjCommonText::open(m_menuObjPouch2->unknown50, m_menuObjPouch2->unknown58, 0);
+          GfMenuObject::setCallContextEventHandler(m_menuObjPouch2->unknown50, handle);
         } else {
-          GfMenuObjCommonText::openError(unknown20->unknown50, 0x13, 0);
+          GfMenuObjCommonText::openError(m_menuObjPouch2->unknown50, 0x13, 0);
           GfMenuObjUtil::playSECommon(2);
         }
       } else {
-        GfMenuObjCommonText::openError(unknown20->unknown50, 0x14, 0);
+        GfMenuObjCommonText::openError(m_menuObjPouch2->unknown50, 0x14, 0);
         GfMenuObjUtil::playSECommon(2);
       }
       break;
@@ -782,11 +782,11 @@ void GfMenuObjPouch2::SlotListener::reciveEvent(const ui::EventData &event, u32 
       GfMenuBladeList::DriverSetup setup;
       setup.unknown18 = GfMenuReference::getReferenceDriverID(0);
       setup.unknown14 = 1;
-      unknown20->unknown3e0->setupFromDriver(setup);
+      m_menuObjPouch2->m_menuBladeList->setupFromDriver(setup);
       unknown164(handle, GfMenuTypes::unknown003_258);
       unknown001(owner.searchChild("LAY_result"), GfMenuTypes::unknown003_257, 0, 0);
       GfMenuObjCharSelect::dispOffChar(0);
-      unknown20->unknown64 = 0;
+      m_menuObjPouch2->unknown64 = 0;
       GfMenuObjMainMenu2::closeCharChange();
       GfMenuObjUtil::playSECommonOpenSubMenu();
       break;
@@ -794,15 +794,15 @@ void GfMenuObjPouch2::SlotListener::reciveEvent(const ui::EventData &event, u32 
     }
     break;
   case 0x41:
-    if (unknown20->unknown50 != nullptr && unknown20->unknown50->unknown0c == event.unknown08) {
+    if (m_menuObjPouch2->unknown50 != nullptr && m_menuObjPouch2->unknown50->unknown0c == event.unknown08) {
       u16 result = event.unknown10_u16;
       u32 driver = GfMenuReference::getReferenceDriverID(0);
-      if (result == 0 && unknown20->unknown58 == 0x48) {
+      if (result == 0 && m_menuObjPouch2->unknown58 == 0x48) {
         GfPouchUtil::execOpen(driver);
-        updateSlotList(unknown20->unknown28);
-        refreshSlot(acc, unknown20->unknown28->getIndex(false));
+        updateSlotList(m_menuObjPouch2->unknown28);
+        refreshSlot(acc, m_menuObjPouch2->unknown28->getIndex(false));
         GfMenuObject::resetInputSelection(handle);
-        GfMenuObject::setupInputSelection(handle, 0, unknown20->unknown28->getSize());
+        GfMenuObject::setupInputSelection(handle, 0, m_menuObjPouch2->unknown28->getSize());
       }
     }
     break;
@@ -845,7 +845,7 @@ void GfMenuObjPouch2::MainListener::reciveEvent(const ui::EventData &event, u32 
 }
 
 void GfMenuObjPouch2::ResultListener::reciveEvent(const ui::EventData &event, u32 handle) {
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjPouch2->unknown18);
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1:
@@ -856,8 +856,8 @@ void GfMenuObjPouch2::ResultListener::reciveEvent(const ui::EventData &event, u3
   case 8:
     if (event.unknown0c == 0xb || event.unknown0c == 2) {
       unknown164(handle, GfMenuTypes::unknown003_258);
-      unknown001(owner.searchChild(unknown20->unknown64 == 0 ? "LAY_eqp_fevitem" : "LAY_fvstock_fevitem"), GfMenuTypes::unknown003_257, 0, 0);
-      if (unknown20->unknown64 == 0) {
+      unknown001(owner.searchChild(m_menuObjPouch2->unknown64 == 0 ? "LAY_eqp_fevitem" : "LAY_fvstock_fevitem"), GfMenuTypes::unknown003_257, 0, 0);
+      if (m_menuObjPouch2->unknown64 == 0) {
         GfMenuObjCharSelect::dispOnChar(0);
       } else {
         setFadeIn(owner.searchChild("LAY_fvstock_fevitem"), 1);
@@ -867,7 +867,7 @@ void GfMenuObjPouch2::ResultListener::reciveEvent(const ui::EventData &event, u3
     }
     break;
   case GfMenuTypes::unknown003_257:
-    refreshResult(acc, unknown20->unknown3e0);
+    refreshResult(acc, m_menuObjPouch2->m_menuBladeList);
     GfMenuObjOperationInfo::setGuideText(0x22, 0);
     GfMenuObjOperationInfo::add(handle, 0, 0, 0);
     setFadeIn(handle, 1);

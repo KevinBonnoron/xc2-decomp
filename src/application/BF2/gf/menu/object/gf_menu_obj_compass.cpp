@@ -66,7 +66,7 @@ void GfMenuObjCompass::update() {
       u32 isAreaShown = 0;
       for (IconObj *icon = m_IconObjList.begin(); icon != m_IconObjList.end(); ++icon) {
         ui::UIObjectAcc acc(icon->unknown00);
-        if (!GfMenuLocation::getLocatorData(icon->unknown04.unknown00, icon->unknown04.unknown02, data, 0, false)) {
+        if (!GfMenuLocation::getLocatorData(icon->m_locatorParam.unknown00, icon->m_locatorParam.unknown02, data, 0, false)) {
           if (icon->unknown0c != 0) {
             icon->unknown0c--;
           } else {
@@ -121,7 +121,7 @@ void GfMenuObjCompass::update() {
         f32 dot = target.x * direction.x + target.y * direction.y + target.z * direction.z;
         if (dot < 0.0f) {
           dot = 0.0f;
-          if (icon->unknown04.unknown00 >= 2) {
+          if (icon->m_locatorParam.unknown00 >= 2) {
             acc.setDisp(false);
             continue;
           }
@@ -130,7 +130,7 @@ void GfMenuObjCompass::update() {
         // Read here, before the range test, as the game does (the load comes right after the setDisp call).
         f32 posY = data.unknown00.y;
         int distance = data.unknown20;
-        if (icon->unknown04.unknown04 != 0 && distance > icon->unknown04.unknown04) {
+        if (icon->m_locatorParam.unknown04 != 0 && distance > icon->m_locatorParam.unknown04) {
           acc.setDisp(false);
           continue;
         }
@@ -212,7 +212,7 @@ void GfMenuObjCompass::addLocator(const LocatorParam &param) {
         }
         IconObj obj;
         obj.unknown00 = icon.unknown10;
-        obj.unknown04 = param;
+        obj.m_locatorParam = param;
         obj.unknown0c = 2;
         m_IconObjList.push_back(obj);
       }

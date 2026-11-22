@@ -75,9 +75,9 @@ public:
 
   // Layout evidence: getMapAreaCount reads the area count at 0x04 of the asset data and getMapArea returns 0x08 + 0x48 * index.
   struct unknown001 {
-    u32 unknown00;            // Inferred role: version; original member name unknown.
-    u32 unknown04;            // Inferred role: area count; original member name unknown.
-    MapAreaInfo unknown08[1]; // Inferred role: areas; original member name unknown.
+    u32 unknown00;                // Inferred role: version; original member name unknown.
+    u32 unknown04;                // Inferred role: area count; original member name unknown.
+    MapAreaInfo m_mapAreaInfo[1]; // Inferred role: areas; original member name unknown.
   };
 
   bool unknown08;                                  // Inferred role: initialized; original member name unknown.

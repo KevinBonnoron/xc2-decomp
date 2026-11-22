@@ -28,21 +28,21 @@ struct unknown001 {
 #pragma pack(push, 1)
 struct unknown002 {
   u8 unknown00[4];
-  u8 unknown04;  // Inferred role: flags, bit 1 is set while the sheet is scrambled; original member name unknown.
-  u8 unknown05;  // Inferred role: unused here; original member name unknown.
-  u16 unknown06; // Inferred role: offset of the sheet name; original member name unknown.
-  u16 unknown08; // Inferred role: row size; original member name unknown.
-  u16 unknown0a; // Inferred role: offset of the member hash table; original member name unknown.
-  u16 unknown0c; // Inferred role: size of the member hash table; original member name unknown.
-  u16 unknown0e; // Inferred role: offset of the row data; original member name unknown.
-  u16 unknown10; // Inferred role: row count; original member name unknown.
-  u16 unknown12; // Inferred role: first row id; original member name unknown.
-  u16 unknown14; // Inferred role: unused here; original member name unknown.
-  u16 unknown16; // Inferred role: checksum and scramble key; original member name unknown.
-  int unknown18; // Inferred role: start of the scrambled string data; original member name unknown.
-  int unknown1c; // Inferred role: size of the scrambled string data; original member name unknown.
-  u16 unknown20; // Inferred role: offset of the member table; original member name unknown.
-  u16 unknown22; // Inferred role: member count; original member name unknown.
+  u8 unknown04;     // Inferred role: flags, bit 1 is set while the sheet is scrambled; original member name unknown.
+  u8 unknown05;     // Inferred role: unused here; original member name unknown.
+  u16 unknown06;    // Inferred role: offset of the sheet name; original member name unknown.
+  u16 unknown08;    // Inferred role: row size; original member name unknown.
+  u16 unknown0a;    // Inferred role: offset of the member hash table; original member name unknown.
+  u16 unknown0c;    // Inferred role: size of the member hash table; original member name unknown.
+  u16 unknown0e;    // Inferred role: offset of the row data; original member name unknown.
+  u16 unknown10;    // Inferred role: row count; original member name unknown.
+  u16 unknown12;    // Inferred role: first row id; original member name unknown.
+  u16 unknown14;    // Inferred role: unused here; original member name unknown.
+  u16 unknown16;    // Inferred role: checksum and scramble key; original member name unknown.
+  int unknown18;    // Inferred role: start of the scrambled string data; original member name unknown.
+  int unknown1c;    // Inferred role: size of the scrambled string data; original member name unknown.
+  u16 unknown20;    // Inferred role: offset of the member table; original member name unknown.
+  u16 m_memberSize; // Inferred role: member count; named after the game accessor Bdat::getMemberSize.
 };
 #pragma pack(pop)
 
@@ -59,11 +59,11 @@ struct unknown003 {
 // as unknown002, decision 15 of 2026-11-14).
 #pragma pack(push, 1)
 struct unknown004 {
-  u8 unknown00;  // Inferred role: kind; original member name unknown.
-  u8 unknown01;  // Inferred role: value type, or shift of a flag; original member name unknown.
-  u16 unknown02; // Inferred role: offset in the row, or the first half of the 32 bit mask of a flag (read as a u32 at 0x02 by getShiftMask); original member name unknown.
-  u16 unknown04; // Inferred role: array count, or the second half of the mask of a flag; original member name unknown.
-  u16 unknown06; // Inferred role: offset of the parent member of a flag, compared by getShiftMask; unused otherwise; original member name unknown.
+  u8 unknown00;    // Inferred role: kind; original member name unknown.
+  u8 m_varTypeSub; // Inferred role: value type, or shift of a flag; named after the game accessor Bdat::getVarTypeSub.
+  u16 unknown02;   // Inferred role: offset in the row, or the first half of the 32 bit mask of a flag (read as a u32 at 0x02 by getShiftMask); original member name unknown.
+  u16 unknown04;   // Inferred role: array count, or the second half of the mask of a flag; original member name unknown.
+  u16 unknown06;   // Inferred role: offset of the parent member of a flag, compared by getShiftMask; unused otherwise; original member name unknown.
 };
 #pragma pack(pop)
 
@@ -80,7 +80,7 @@ static_assert(offsetof(unknown002, unknown16) == 0x16, "");
 static_assert(offsetof(unknown002, unknown18) == 0x18, "");
 static_assert(offsetof(unknown002, unknown1c) == 0x1c, "");
 static_assert(offsetof(unknown002, unknown20) == 0x20, "");
-static_assert(offsetof(unknown002, unknown22) == 0x22, "");
+static_assert(offsetof(unknown002, m_memberSize) == 0x22, "");
 static_assert(sizeof(unknown003) == 0x06, "");
 static_assert(offsetof(unknown004, unknown02) == 0x02, "");
 static_assert(offsetof(unknown004, unknown04) == 0x04, "");
@@ -276,7 +276,7 @@ unsigned char *getMember(unsigned char *fp, int member) {
   return fp + reinterpret_cast<unknown002 *>(fp)->unknown20 + member * static_cast<int>(sizeof(unknown003));
 }
 
-unsigned short getMemberSize(unsigned char *bdat) { return reinterpret_cast<unknown002 *>(bdat)->unknown22; }
+unsigned short getMemberSize(unsigned char *bdat) { return reinterpret_cast<unknown002 *>(bdat)->m_memberSize; }
 
 const char *getMemberName(unsigned char *bdat, int member) {
   if (member < getMemberSize(bdat)) {
@@ -316,7 +316,7 @@ uVal getVar(unsigned char *bdat, unsigned char *member, int row) {
   unknown004 *var = reinterpret_cast<unknown004 *>(bdat + reinterpret_cast<unknown003 *>(member)->unknown00);
   if (var->unknown00 == 1) {
     unknown002 *header = reinterpret_cast<unknown002 *>(bdat);
-    return getVarVal(bdat, bdat + header->unknown0e + header->unknown08 * row + var->unknown02, var->unknown01);
+    return getVarVal(bdat, bdat + header->unknown0e + header->unknown08 * row + var->unknown02, var->m_varTypeSub);
   }
   uVal value;
   clearVal(&value);
@@ -353,7 +353,7 @@ uVal getArray(unsigned char *bdat, unsigned char *member, int row, int index) {
   if (var->unknown00 == 2 && index < var->unknown04) {
     unknown002 *header = reinterpret_cast<unknown002 *>(bdat);
     unsigned char *data = bdat + header->unknown0e + header->unknown08 * row + var->unknown02;
-    switch (var->unknown01) {
+    switch (var->m_varTypeSub) {
     case 1:
     case 4:
       data += index;
@@ -369,7 +369,7 @@ uVal getArray(unsigned char *bdat, unsigned char *member, int row, int index) {
       data += index * 4;
       break;
     }
-    return getVarVal(bdat, data, var->unknown01);
+    return getVarVal(bdat, data, var->m_varTypeSub);
   }
   uVal value;
   clearVal(&value);
@@ -434,7 +434,7 @@ int getVarType(unsigned char *pBdat, unsigned char *pVarName) {
   return getVarTypeSub(pBdat, pVarName);
 }
 
-unsigned char getVarTypeSub(unsigned char *bdat, unsigned char *member) { return reinterpret_cast<unknown004 *>(bdat + reinterpret_cast<unknown003 *>(member)->unknown00)->unknown01; }
+unsigned char getVarTypeSub(unsigned char *bdat, unsigned char *member) { return reinterpret_cast<unknown004 *>(bdat + reinterpret_cast<unknown003 *>(member)->unknown00)->m_varTypeSub; }
 
 int getVarType(unsigned char *bdat, int column) { return getVarType(bdat, getMember(bdat, column)); }
 
@@ -472,7 +472,7 @@ int getFlagVal(unsigned char *pBdat, unsigned char *pVarName, int id, unsigned c
   // The game keeps one inlined copy of getVar per mask of the parent type (0x71006b582c, 171 instructions). An if/else chain on the type merges two of
   // the copies (137 instructions); a switch with the case 1 written before the case 2 keeps the three and the game's order of tests.
   u32 value;
-  switch (parent->unknown01) {
+  switch (parent->m_varTypeSub) {
   case 1:
     value = getVar(pBdat, pVarName, id).valueU32 & 0xff;
     break;
@@ -485,7 +485,7 @@ int getFlagVal(unsigned char *pBdat, unsigned char *pVarName, int id, unsigned c
   }
   // The mask is read as one unaligned 32-bit word at 0x02 (`ldur w10, [x8, #2]` at 0x71006b59e4), like getShiftMask (decision 38 of 2026-11-14,
   // blob read); `unknown02 | (unknown04 << 16)` gives two 16-bit loads (173 instructions).
-  return (*reinterpret_cast<u32 *>(&flag->unknown02) & value) >> flag->unknown01;
+  return (*reinterpret_cast<u32 *>(&flag->unknown02) & value) >> flag->m_varTypeSub;
 }
 
 void errFlagParent(unsigned char *bdat, const char *name, const char *flag) {}
@@ -505,7 +505,7 @@ bool getShiftMask(unsigned char *pBdat, const char *name, const char *flag, int 
   }
   unknown004 *var = reinterpret_cast<unknown004 *>(pBdat + reinterpret_cast<unknown003 *>(flagMember)->unknown00);
   if (var->unknown00 == 3 && var->unknown06 == static_cast<u16>(member - pBdat)) {
-    *shift = var->unknown01;
+    *shift = var->m_varTypeSub;
     *mask = *reinterpret_cast<u32 *>(&var->unknown02);
     return true;
   }

@@ -27,8 +27,8 @@ public:
   DrResMdoSeamColi *unknown08; // Inferred role: next; original member name unknown.
   DrResMdoSeamColi *unknown10; // Inferred role: prev; original member name unknown.
   DrResMdoSeamMemObj *m_cache;
-  const MdsSeamColiData *unknown20; // Inferred role: collision data; original member name unknown.
-  const void *unknown28;            // Inferred role: collision resource; original member name unknown.
+  const MdsSeamColiData *m_mdsSeamColiData; // Inferred role: collision data; original member name unknown.
+  const void *unknown28;                    // Inferred role: collision resource; original member name unknown.
   u8 _30[0x38 - 0x30];
   u32 unknown38; // Inferred role: memory size; original member name unknown.
   u16 unknown3c; // Inferred role: index; original member name unknown.

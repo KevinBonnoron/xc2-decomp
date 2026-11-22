@@ -31,7 +31,7 @@ void DrIBLObj::initialize(DrMan *man) {
   }
   unknown08 = reinterpret_cast<const unknown002 *>(reinterpret_cast<const u8 *>(unknown00) + unknown00->unknown0c);
   unknown10 = reinterpret_cast<const _IBLPrimHeader *>(reinterpret_cast<const u8 *>(unknown00) + unknown00->unknown14);
-  unknown18 = reinterpret_cast<const _EnvColiListTreeData *>(reinterpret_cast<const u8 *>(unknown00) + unknown00->unknown1c);
+  m_envColiListTreeData = reinterpret_cast<const _EnvColiListTreeData *>(reinterpret_cast<const u8 *>(unknown00) + unknown00->unknown1c);
   unknown40 = unknown00->unknown08;
   unknown48 = new (man->unknown10) grlib::CGLibTextureBuffer[unknown40];
   unknown50 = new (man->unknown10) grlib::CGLibTextureBuffer[unknown40];
@@ -40,7 +40,7 @@ void DrIBLObj::initialize(DrMan *man) {
     grlib::CGLibTexture::createTextureImagePtrs(unknown48[i], reinterpret_cast<const u8 *>(unknown00) + entry->unknown10, entry->unknown14, true, nullptr, true);
     grlib::CGLibTexture::createTextureImagePtrs(unknown50[i], reinterpret_cast<const u8 *>(unknown00) + entry->unknown18, entry->unknown1c, false, nullptr, true);
   }
-  unknown60 = new (man->unknown10) DrIBLColiAcc(unknown00, man->unknown10);
+  m_drIBLColiAcc = new (man->unknown10) DrIBLColiAcc(unknown00, man->unknown10);
   unknown58 |= 1;
 }
 
@@ -48,20 +48,20 @@ void DrIBLObj::update() {
   unknown38 = nullptr;
   if ((unknown58 & 3) == 1 && unknown5c != 0) {
     const _IBLPrimHeader *primitive;
-    if (unknown60->testColi(unknown20, 2.0f, primitive)) {
+    if (m_drIBLColiAcc->testColi(unknown20, 2.0f, primitive)) {
       unknown38 = primitive;
     }
   }
 }
 
 DrIBLObj::DrIBLObj(const void *data)
-    : unknown00(static_cast<const unknown001 *>(data)), unknown08(nullptr), unknown10(nullptr), unknown18(nullptr), unknown20(0.0f, 0.0f, 0.0f), unknown38(nullptr), unknown40(0), unknown48(nullptr),
-      unknown50(nullptr), unknown58(0), unknown5c(1), unknown60(nullptr) {}
+    : unknown00(static_cast<const unknown001 *>(data)), unknown08(nullptr), unknown10(nullptr), m_envColiListTreeData(nullptr), unknown20(0.0f, 0.0f, 0.0f), unknown38(nullptr), unknown40(0),
+      unknown48(nullptr), unknown50(nullptr), unknown58(0), unknown5c(1), m_drIBLColiAcc(nullptr) {}
 
 DrIBLObj::~DrIBLObj() {
-  if (unknown60 != nullptr) {
-    delete unknown60;
-    unknown60 = nullptr;
+  if (m_drIBLColiAcc != nullptr) {
+    delete m_drIBLColiAcc;
+    m_drIBLColiAcc = nullptr;
   }
   for (u32 i = 0; i < unknown40; i++) {
     unknown48[i].release();

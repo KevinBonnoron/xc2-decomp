@@ -39,13 +39,13 @@ ICmd::RESULT CharaTurnRot::update(const Param &param) {
       return RESULT_UNKNOWN_1;
     }
     chara->setRot(rot);
-    unknown18->resetMovement(0);
+    m_charaDysUpdater->resetMovement(0);
     return RESULT_UNKNOWN_1;
   }
   if (mm::mtl::Singleton<SkipManager>::getPtr()->isSkip()) {
     chara->setRot(mm::Vec3(0.0f, rot.y, 0.0f));
     CharaUtil::execCmd(obj, "C_idle");
-    unknown18->resetMovement(0);
+    m_charaDysUpdater->resetMovement(0);
     unknown08 &= ~1;
     return RESULT_UNKNOWN_1;
   }
@@ -55,7 +55,7 @@ ICmd::RESULT CharaTurnRot::update(const Param &param) {
   if ((unknown08 & 1) == 0 && chara->isTurnable()) {
     gf::GfGameUtil::ExecTurnCmdInfo info;
     info.unknown14 = 0.25f;
-    info.unknown00 = unknown10;
+    info.m_GF_OBJ_HANDLE = unknown10;
     info.unknown10 = 0.0f;
     info.unknown08 = rot.y;
     info.unknown0c = turn;
@@ -77,7 +77,7 @@ void CharaTurnRot::term() {
   if (obj != nullptr) {
     CharaUtil::execCmd(obj, "C_idle");
     gf::GfGameUtil::disposeTurnEnd(unknown10);
-    unknown18->resetMovement(0);
+    m_charaDysUpdater->resetMovement(0);
   }
   unknown08 &= ~1;
 }

@@ -183,7 +183,7 @@ private:
   f32 unknown160; // Inferred role: acc frame; original member name unknown.
   u8 _164[0x168 - 0x164];
   mm::mtl::FixedVector<unknown001, KEY_FRAME_UNKNOWN_512> unknown168; // Inferred role: key frames; original member name unknown.
-  FrameInfo unknown1170;                                              // Inferred role: frame info; original member name unknown.
+  FrameInfo m_frameInfo;                                              // Inferred role: frame info; original member name unknown.
   int unknown1184;                                                    // Inferred role: page disp count; original member name unknown.
   int unknown1188;                                                    // Inferred role: koma count; original member name unknown.
   PAUSE_TYPE unknown118c;                                             // Inferred role: koma type; original member name unknown.

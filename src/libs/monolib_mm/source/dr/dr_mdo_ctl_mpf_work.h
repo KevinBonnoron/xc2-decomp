@@ -64,11 +64,11 @@ union unknown731 {
 
 // Inferred role: list of position or auto work pointers of an object with an alpha value each, continued by chunks of the temporary memory.
 struct _wkMpfAlphaObjBuff {
-  s32 unknown00;                 // Inferred role: entry count; original member name unknown.
-  const void **unknown08;        // Inferred role: entries; original member name unknown.
-  u8 *unknown10;                 // Inferred role: alpha values; original member name unknown.
-  _wkMpfAlphaObjBuff *unknown18; // Inferred role: next chunk; original member name unknown.
-  unknown731 unknown20;          // Inferred role: store function; original member name unknown.
+  s32 unknown00;                           // Inferred role: entry count; original member name unknown.
+  const void **unknown08;                  // Inferred role: entries; original member name unknown.
+  u8 *unknown10;                           // Inferred role: alpha values; original member name unknown.
+  _wkMpfAlphaObjBuff *m_wkMpfAlphaObjBuff; // Inferred role: next chunk; original member name unknown.
+  unknown731 unknown20;                    // Inferred role: store function; original member name unknown.
 };
 
 static_assert(offsetof(_wkMpfAlphaObjBuff, unknown20) == 0x20, "");
@@ -76,8 +76,8 @@ static_assert(sizeof(_wkMpfAlphaObjBuff) == 0x30, "");
 
 // Inferred role: chunk of the temporary memory continuing an alpha object buffer without alpha values; original type name unknown.
 struct unknown733 {
-  _wkMpfAlphaObjBuff unknown00; // Inferred role: buffer header; original member name unknown.
-  const void *unknown30[16];    // Inferred role: entries; original member name unknown.
+  _wkMpfAlphaObjBuff m_wkMpfAlphaObjBuff; // Inferred role: buffer header; original member name unknown.
+  const void *unknown30[16];              // Inferred role: entries; original member name unknown.
 };
 
 static_assert(offsetof(unknown733, unknown30) == 0x30, "");
@@ -111,16 +111,16 @@ struct _wkMpfObjSelect {
   u8 _08[0x10 - 0x08];
   u16 *unknown10; // Inferred role: alpha position counts per type; original member name unknown.
   u8 _18[0x20 - 0x18];
-  u16 unknown20; // Inferred role: object check; original member name unknown.
+  u16 m_objChk; // Inferred role: object check; named after the game accessor ml::DrMdoCtlMpfWork::getObjChk.
   u8 _22[0x30 - 0x22];
-  _wkMpfObjBuff *unknown30;      // Inferred role: position buffer; original member name unknown.
-  _wkMpfAlphaObjBuff *unknown38; // Inferred role: alpha position buffer; original member name unknown.
+  _wkMpfObjBuff *m_wkMpfObjBuff;           // Inferred role: position buffer; original member name unknown.
+  _wkMpfAlphaObjBuff *m_wkMpfAlphaObjBuff; // Inferred role: alpha position buffer; original member name unknown.
 };
 
 static_assert(offsetof(_wkMpfObjSelect, unknown10) == 0x10, "");
-static_assert(offsetof(_wkMpfObjSelect, unknown20) == 0x20, "");
-static_assert(offsetof(_wkMpfObjSelect, unknown30) == 0x30, "");
-static_assert(offsetof(_wkMpfObjSelect, unknown38) == 0x38, "");
+static_assert(offsetof(_wkMpfObjSelect, m_objChk) == 0x20, "");
+static_assert(offsetof(_wkMpfObjSelect, m_wkMpfObjBuff) == 0x30, "");
+static_assert(offsetof(_wkMpfObjSelect, m_wkMpfAlphaObjBuff) == 0x38, "");
 static_assert(sizeof(_wkMpfObjSelect) == 0x40, "");
 
 class DrMdoCtlMpfWork {
@@ -153,15 +153,15 @@ public:
   void createAutoBillRenderList(_wkMpfObjSelect *select, DrCalcViewWork *view, grlib::CGLibVtxInstans *instans, f32 scale, _wkMpfObjBuff *buff, _wkMpfAlphaObjBuff *alphaBuff);
 
   u8 _00[0x20 - 0x00];
-  _wkMpfObjSelect *unknown20; // Inferred role: object select buffers; original member name unknown.
+  _wkMpfObjSelect *m_wkMpfObjSelect; // Inferred role: object select buffers; original member name unknown.
   u8 _28[0x30 - 0x28];
-  DrMdoMpfMan *unknown30;         // Inferred role: mpf manager; original member name unknown.
-  const MdsMpfObjData *unknown38; // Inferred role: object data; original member name unknown.
+  DrMdoMpfMan *m_drMdoMpfMan;           // Inferred role: mpf manager; original member name unknown.
+  const MdsMpfObjData *m_mdsMpfObjData; // Inferred role: object data; original member name unknown.
 };
 
-static_assert(offsetof(DrMdoCtlMpfWork, unknown20) == 0x20, "");
-static_assert(offsetof(DrMdoCtlMpfWork, unknown30) == 0x30, "");
-static_assert(offsetof(DrMdoCtlMpfWork, unknown38) == 0x38, "");
+static_assert(offsetof(DrMdoCtlMpfWork, m_wkMpfObjSelect) == 0x20, "");
+static_assert(offsetof(DrMdoCtlMpfWork, m_drMdoMpfMan) == 0x30, "");
+static_assert(offsetof(DrMdoCtlMpfWork, m_mdsMpfObjData) == 0x38, "");
 
 // Name from the symbols (DrMdoCtlMpfWindCalc::init, calcUpdate); layout from init and DrMdoMpfMan's ctor (0xf0 byte stride).
 class DrMdoCtlMpfWindCalc {

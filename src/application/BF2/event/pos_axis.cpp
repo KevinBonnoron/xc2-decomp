@@ -46,13 +46,13 @@ mm::Mat44 DataManager::getPosAxis(u32 axis) {
     mm::Mat44 mat = mm::Mat44::identity;
     switch (axis) {
     case PosAxis::AXIS_UNKNOWN_0:
-      mat = unknown120->unknownd0;
+      mat = m_ofsInfo->unknownd0;
       break;
     case PosAxis::AXIS_UNKNOWN_1:
-      mat = unknown120->unknownd0;
+      mat = m_ofsInfo->unknownd0;
       break;
     case PosAxis::AXIS_UNKNOWN_2:
-      mat = unknown120->unknown120;
+      mat = m_ofsInfo->unknown120;
       break;
     case PosAxis::AXIS_UNKNOWN_3:
       if (mm::mtl::Singleton<TextManager>::getPtr()->getTalker() != nullptr) {

@@ -16,7 +16,7 @@
 
 namespace gf {
 
-GfGmkLocatorAtlas::GfGmkLocatorAtlas(const CreateInfo *info) : unknown00(), unknown58(-1), unknown60(nullptr), unknown70(nullptr), unknown438(nullptr) {
+GfGmkLocatorAtlas::GfGmkLocatorAtlas(const CreateInfo *info) : m_createInfo(), unknown58(-1), unknown60(nullptr), unknown70(nullptr), unknown438(nullptr) {
   if (info != nullptr) {
     create(*info);
   }
@@ -24,14 +24,14 @@ GfGmkLocatorAtlas::GfGmkLocatorAtlas(const CreateInfo *info) : unknown00(), unkn
 
 void GfGmkLocatorAtlas::create(const CreateInfo &info) {
   dispose();
-  unknown00 = info;
+  m_createInfo = info;
   if (unknown30.size() == 0) {
     createBdatInfos();
   }
   void (GfGmkLocatorAtlas::*seq)(f32) = &GfGmkLocatorAtlas::seqWaitToCreateCurMapGmkSet;
   if (GfGameManager::getMapID() != info.unknown00) {
     gmk::GmkSet::CreateInfo setInfo;
-    setInfo.unknown00 = getAllocator(ALLOCATOR_UNKNOWN_8)->getMemHandle();
+    setInfo.m_ALLOC_HANDLE = getAllocator(ALLOCATOR_UNKNOWN_8)->getMemHandle();
     setInfo.unknown04 = GfFieldGimmick::getBdatIdFrom_FLD_maplist_To_RSC_GmkSetList(info.unknown00);
     setInfo.unknown24 = true;
     unknown70.create(setInfo);
@@ -48,15 +48,15 @@ void GfGmkLocatorAtlas::dispose() {
   unknown60 = nullptr;
   disposeBdatInfos();
   // The game stores the default values of CreateInfo field by field (0x71002df540: no temporary on the stack);
-  // `unknown00 = CreateInfo();` builds the object in a stack copy first and compiles to 84 instructions against the game's 81.
-  unknown00.unknown00 = 0;
-  unknown00.unknown04 = 0;
-  unknown00.unknown10 = mm::Vec3(1.0e12f, 1.0e12f, 1.0e12f);
-  unknown00.unknown20 = mm::Vec3(-1.0e12f, -1.0e12f, -1.0e12f);
+  // `m_createInfo = CreateInfo();` builds the object in a stack copy first and compiles to 84 instructions against the game's 81.
+  m_createInfo.unknown00 = 0;
+  m_createInfo.unknown04 = 0;
+  m_createInfo.unknown10 = mm::Vec3(1.0e12f, 1.0e12f, 1.0e12f);
+  m_createInfo.unknown20 = mm::Vec3(-1.0e12f, -1.0e12f, -1.0e12f);
 }
 
 const GfGmkLocatorAtlas::BdatInfo *GfGmkLocatorAtlas::getBdatInfo(int id) const {
-  if (unknown00.unknown00 > 0) {
+  if (m_createInfo.unknown00 > 0) {
     s32 index = id - unknown58;
     if (index >= 0 && !(unknown30.size() <= static_cast<size_t>(index))) {
       return &unknown30[index];
@@ -87,7 +87,7 @@ void GfGmkLocatorAtlas::disposeBdatInfos() {
 }
 
 void GfGmkLocatorAtlas::update(f32 deltaTime) {
-  if (unknown00.unknown00 > 0) {
+  if (m_createInfo.unknown00 > 0) {
     if (unknown70.isValid()) {
       unknown70.update(deltaTime);
     }
@@ -98,14 +98,14 @@ void GfGmkLocatorAtlas::update(f32 deltaTime) {
 }
 
 bool GfGmkLocatorAtlas::isBelongToCurMap(const mm::Vec3 &position) const {
-  if (unknown00.unknown00 <= 0 || unknown00.unknown04 <= 0) {
+  if (m_createInfo.unknown00 <= 0 || m_createInfo.unknown04 <= 0) {
     return false;
   }
-  const BdatInfo *info = getBdatInfo(unknown00.unknown04);
+  const BdatInfo *info = getBdatInfo(m_createInfo.unknown04);
   if (info == nullptr || GfMenuMapInfo::get() == nullptr) {
     return false;
   }
-  const char *mapName = GfDataMap::getMapResourceNameByMapID(unknown00.unknown00);
+  const char *mapName = GfDataMap::getMapResourceNameByMapID(m_createInfo.unknown00);
   if (mapName == nullptr) {
     return false;
   }

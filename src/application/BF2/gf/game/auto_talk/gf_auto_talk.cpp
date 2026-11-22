@@ -61,7 +61,7 @@ void GfAutoTalk::BdatInfo::create(const CBdatWrapper &bdat, int id) {
 
 void GfAutoTalk::BdatInfo::dispose() { unknown00 = 0; }
 
-GfAutoTalk::GfAutoTalk(const CreateInfo *info) : unknown2c(), unknown78(nullptr), unknown80(false), unknown84(0.0f) {
+GfAutoTalk::GfAutoTalk(const CreateInfo *info) : m_distHvCond(), m_menuCallContext(nullptr), unknown80(false), unknown84(0.0f) {
   if (info != nullptr) {
     create(*info);
   }
@@ -69,22 +69,22 @@ GfAutoTalk::GfAutoTalk(const CreateInfo *info) : unknown2c(), unknown78(nullptr)
 
 void GfAutoTalk::create(const CreateInfo &info) {
   dispose();
-  unknown08 = info;
-  unknown20.create(info.unknown00, info.unknown10);
-  if (unknown20.unknown001()) {
-    unknown2c.set(unknown20.unknown02, unknown20.unknown02);
+  m_createInfo = info;
+  m_bdatInfo.create(info.unknown00, info.unknown10);
+  if (m_bdatInfo.unknown001()) {
+    m_distHvCond.set(m_bdatInfo.unknown02, m_bdatInfo.unknown02);
     gmk::GmkAcc::CreateInfoByBdatId accInfo;
     accInfo.unknown00 = gmk::GMK_TYPE_MOB;
-    accInfo.unknown04 = unknown20.unknown00;
-    unknown38.create(accInfo);
+    accInfo.unknown04 = m_bdatInfo.unknown00;
+    m_gmkAcc.create(accInfo);
   } else {
     dispose();
   }
 }
 
 bool GfAutoTalk::isValid() const {
-  if (unknown08.unknown00 != nullptr && unknown08.unknown08 != nullptr && unknown08.unknown10 > 0) {
-    return unknown38.isValid();
+  if (m_createInfo.unknown00 != nullptr && m_createInfo.unknown08 != nullptr && m_createInfo.unknown10 > 0) {
+    return m_gmkAcc.isValid();
   }
   return false;
 }
@@ -103,15 +103,15 @@ void GfAutoTalk::dispose() {
   disposeMenuObj();
   unknown84 = 0.0f;
   unknown80 = false;
-  unknown38.dispose();
-  unknown20.dispose();
-  unknown08 = CreateInfo();
+  m_gmkAcc.dispose();
+  m_bdatInfo.dispose();
+  m_createInfo = CreateInfo();
 }
 
 void GfAutoTalk::disposeMenuObj() {
-  if (unknown78 != nullptr) {
-    GfMenuObjBalloon::close(unknown78, true);
-    mm::mtl::safeRelease(unknown78);
+  if (m_menuCallContext != nullptr) {
+    GfMenuObjBalloon::close(m_menuCallContext, true);
+    mm::mtl::safeRelease(m_menuCallContext);
   }
 }
 
@@ -126,14 +126,14 @@ void GfAutoTalk::update(f32 deltaTime) {
       disposeMenuObj();
     }
   }
-  const gmk::GmkMob *mob = static_cast<const gmk::GmkMob *>(unknown38.unknown38);
-  u32 num = mob->unknown48.unknowna8->size();
+  const gmk::GmkMob *mob = static_cast<const gmk::GmkMob *>(m_gmkAcc.m_aGmkBase);
+  u32 num = mob->m_gmkMobInsts.unknowna8->size();
   if (num != 0) {
     bool canDisp = canDispText();
     if (unknown80 != canDisp) {
       unknown80 = canDisp;
       if (canDisp) {
-        unknown84 = unknown20.unknown08;
+        unknown84 = m_bdatInfo.unknown08;
         createMenuObj();
       } else {
         unknown84 = 0.0f;
@@ -144,7 +144,7 @@ void GfAutoTalk::update(f32 deltaTime) {
 }
 
 void GfAutoTalk::updateMenuObj() {
-  if (unknown78 != nullptr && (unknown78->isTerm() || !GfGameManager::isAutoTalkOK())) {
+  if (m_menuCallContext != nullptr && (m_menuCallContext->isTerm() || !GfGameManager::isAutoTalkOK())) {
     disposeMenuObj();
   }
 }
@@ -153,22 +153,22 @@ bool GfAutoTalk::canDispText() const {
   if (!GfGameManager::isAutoTalkOK()) {
     return false;
   }
-  if (unknown20.unknown04 != 0 && !GfGameCond::isGameCond(unknown20.unknown04)) {
+  if (m_bdatInfo.unknown04 != 0 && !GfGameCond::isGameCond(m_bdatInfo.unknown04)) {
     return false;
   }
-  if (!unknown38.isValid()) {
+  if (!m_gmkAcc.isValid()) {
     return false;
   }
-  if (unknown20.unknown0a != 0) {
-    const GfAutoTalk *before = GfAutoTalkManager::get()->findGfAutoTalkByBdatId(unknown08.unknown00, unknown20.unknown0a);
+  if (m_bdatInfo.unknown0a != 0) {
+    const GfAutoTalk *before = GfAutoTalkManager::get()->findGfAutoTalkByBdatId(m_createInfo.unknown00, m_bdatInfo.unknown0a);
     if (before != nullptr && !before->isDispEnd()) {
       return false;
     }
   }
-  if (!unknown2c.isMatch(unknown38.unknown38->unknown08.unknown08->unknown00)) {
+  if (!m_distHvCond.isMatch(m_gmkAcc.m_aGmkBase->m_createBaseInfo.m_xform->unknown00)) {
     return false;
   }
-  const mm::mtl::Vector<GF_OBJ_HANDLE *> &handles = *static_cast<const gmk::GmkMob *>(unknown38.unknown38)->unknown48.unknowna8;
+  const mm::mtl::Vector<GF_OBJ_HANDLE *> &handles = *static_cast<const gmk::GmkMob *>(m_gmkAcc.m_aGmkBase)->m_gmkMobInsts.unknowna8;
   u32 num = handles.size();
   if (num == 0) {
     return false;
@@ -188,26 +188,26 @@ bool GfAutoTalk::canDispText() const {
 
 void GfAutoTalk::createMenuObj() {
   disposeMenuObj();
-  unknown78 = GfMenuCallContext::create();
+  m_menuCallContext = GfMenuCallContext::create();
   GfMenuObjBalloon::OpenParam param;
-  param.unknown00 = unknown08.unknown08;
-  param.unknown08 = unknown20.unknown06;
-  const gmk::GmkMob *mob = static_cast<const gmk::GmkMob *>(unknown38.unknown38);
-  param.unknown20 = (*mob->unknown48.unknowna8)[0];
-  int mobId = mm::mtl::dynamicCast<GfObjSetupMob>(GfObjManager::getObjInfo(param.unknown20)->unknown30)->unknown10;
+  param.unknown00 = m_createInfo.unknown08;
+  param.unknown08 = m_bdatInfo.unknown06;
+  const gmk::GmkMob *mob = static_cast<const gmk::GmkMob *>(m_gmkAcc.m_aGmkBase);
+  param.m_GF_OBJ_HANDLE = (*mob->m_gmkMobInsts.unknowna8)[0];
+  int mobId = mm::mtl::dynamicCast<GfObjSetupMob>(GfObjManager::getObjInfo(param.m_GF_OBJ_HANDLE)->unknown30)->unknown10;
   if (mobId > 0) {
-    GfMenuBdat::getMenuOffset(static_cast<u16>(Bdat::getValCheck(GfDataBdat::getFP(BDAT_RSC_MOB_LIST), "OffsetID", mobId, gmk::BDAT_TYPE_UNKNOWN_2)), param.unknown30);
+    GfMenuBdat::getMenuOffset(static_cast<u16>(Bdat::getValCheck(GfDataBdat::getFP(BDAT_RSC_MOB_LIST), "OffsetID", mobId, gmk::BDAT_TYPE_UNKNOWN_2)), param.m_menuOffset);
   } else {
-    param.unknown30.unknown10 = nullptr;
-    param.unknown30.unknown00 = mm::Vec3::zero;
+    param.m_menuOffset.unknown10 = nullptr;
+    param.m_menuOffset.unknown00 = mm::Vec3::zero;
   }
-  GfMenuObjBalloon::openAutoTalk(unknown78, param);
+  GfMenuObjBalloon::openAutoTalk(m_menuCallContext, param);
 }
 
 const GfAutoTalk *GfAutoTalkManager::findGfAutoTalkByBdatId(u8 *bdat, int id) const {
   for (mm::mtl::IntrusiveList<GfAutoTalkList>::iterator it = unknown10.begin(); it != unknown10.end(); ++it) {
     const GfAutoTalkList *list = it.get();
-    if (list->unknown18.unknown08 == bdat) {
+    if (list->m_createInfo.unknown08 == bdat) {
       u32 index = id - Bdat::getIdTop(bdat);
       return &list->unknown30[index];
     }
@@ -223,7 +223,7 @@ GfAutoTalkList::GfAutoTalkList(const CreateInfo *info) {
 
 void GfAutoTalkList::create(const CreateInfo &info) {
   dispose();
-  unknown18 = info;
+  m_createInfo = info;
   u8 *bdat = info.unknown08;
   int count = Bdat::getIdCount(bdat);
   unknown30.setAllocator(fw::FrameworkMemory::getAllocator(5));
@@ -245,11 +245,11 @@ void GfAutoTalkList::dispose() {
     unknown30[i].dispose();
   }
   unknown30.clear();
-  unknown18 = CreateInfo();
+  m_createInfo = CreateInfo();
 }
 
 void GfAutoTalkList::update(f32 deltaTime) {
-  if (unknown18.unknown00 > 0 && unknown18.unknown08 != nullptr && unknown18.unknown10 != nullptr) {
+  if (m_createInfo.unknown00 > 0 && m_createInfo.unknown08 != nullptr && m_createInfo.unknown10 != nullptr) {
     size_t num = unknown30.size();
     for (size_t i = 0; i < num; i++) {
       unknown30[i].update(deltaTime);
@@ -300,7 +300,7 @@ void GfAutoTalkManager::seqInit(f32) {
   const mm::mtl::Vector<gmk::GmkSet *> &sets = gmk::GmkManager::get()->unknownf358;
   size_t num = sets.size();
   for (size_t i = 0; i < num; i++) {
-    createAutoTalkList(sets[i]->unknown10.unknown04);
+    createAutoTalkList(sets[i]->m_createInfo.unknown04);
   }
   unknown28 = &GfAutoTalkManager::seqUpdate;
 }
@@ -346,7 +346,7 @@ bool GfAutoTalkManager::createAutoTalkList(int gmkSet) {
 void GfAutoTalkManager::disposeAutoTalkList(int gmkSet) {
   for (mm::mtl::IntrusiveList<GfAutoTalkList>::iterator it = unknown10.begin(); it != unknown10.end(); ++it) {
     GfAutoTalkList *list = it.get();
-    if (list->unknown18.unknown00 == gmkSet) {
+    if (list->m_createInfo.unknown00 == gmkSet) {
       unknown10.erase(list);
       delete list;
       return;

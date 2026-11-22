@@ -39,7 +39,7 @@ void BouManager::render() {
     return;
   }
   if (unknown18.test(FLAG_UNKNOWN_2)) {
-    unknown20.render();
+    m_bouRect.render();
   }
   for (IBouCallback **it = unknown2040.begin(); it != unknown2040.end(); ++it) {
     (*it)->OnBouRender(IBouCallback::RenderParam(mm::Col4(1.0f, 1.0f, 0.8f, 0.5f)));
@@ -47,8 +47,8 @@ void BouManager::render() {
 }
 
 void BouManager::startActive(const mm::Pnt<int> &point) {
-  unknown20.x = point.x;
-  unknown20.y = point.y;
+  m_bouRect.x = point.x;
+  m_bouRect.y = point.y;
   unknown003(point);
   unknown2040.clear();
   unknown18.set(FLAG_UNKNOWN_2);
@@ -67,7 +67,7 @@ void BouManager::updateActive(const mm::Pnt<int> &point) {
       }
     }
     if (selectedIndex >= 0) {
-      if (!callback->OnBouRectSelect(IBouCallback::SelectParam(&unknown20))) {
+      if (!callback->OnBouRectSelect(IBouCallback::SelectParam(&m_bouRect))) {
         for (IBouCallback **it = unknown2040.begin(); it != unknown2040.end(); ++it) {
           if (*it == callback) {
             unknown2040.erase(it);
@@ -75,7 +75,7 @@ void BouManager::updateActive(const mm::Pnt<int> &point) {
           }
         }
       }
-    } else if (callback->OnBouRectSelect(IBouCallback::SelectParam(&unknown20))) {
+    } else if (callback->OnBouRectSelect(IBouCallback::SelectParam(&m_bouRect))) {
       unknown2040.push_back(callback);
     }
   }

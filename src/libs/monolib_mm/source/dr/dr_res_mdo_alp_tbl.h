@@ -37,6 +37,9 @@ public:
   void updateInstace();
   void update(f32 alpha, const DrResMdoLodObj *lodObj, const DrResMdoMeshObj *meshObj);
   void update();
+  // Inferred role: reads and writes the alpha value of an index (u32 in the game's callers: zero extended indices in DrResMdoSeamWrkBase::releaseReadVertexList, 0x710087e6c8); original names unknown.
+  f32 unknown004(u32 index) const { return unknown30[index]; }
+  void unknown005(u32 index, f32 alpha) { unknown30[index] = alpha; }
   static void release(DrResMdoAlpTbl *&table);
   static int calcCntWorkSize(u32 count);
   static int calcWorkSize(const u8 *resource);

@@ -12,7 +12,7 @@
 namespace ml {
 
 DrCalcClipMan::DrCalcClipMan(DrMan *man, DrCalcViewWork *viewWork)
-    : unknown00(man), unknown08(viewWork), unknown10(), unknown20(), unknown40(), unknown50(), unknown70(nullptr), unknown78(0), unknown7c(0) {}
+    : m_drMan(man), m_drCalcViewWork(viewWork), unknown10(), unknown20(), unknown40(), unknown50(), unknown70(nullptr), unknown78(0), unknown7c(0) {}
 
 DrCalcClipMan::~DrCalcClipMan() { release(); }
 
@@ -51,7 +51,7 @@ void DrCalcClipMan::update() {
     DrCalcClipObj *object = unknown10.unknown00;
     while (object != nullptr) {
       if (!(object->unknown3c & (1 << index))) {
-        object->update(unknown08, unknown70);
+        object->update(m_drCalcViewWork, unknown70);
         if (object->unknown3c & 4) {
           unknown7c |= 2;
         }
@@ -80,7 +80,7 @@ void DrCalcClipMan::update() {
   while (plane != nullptr) {
     DrCalcCpPlaneObj *next;
     if (!(plane->unknown40 & (1 << index))) {
-      plane->update(unknown08);
+      plane->update(m_drCalcViewWork);
       next = plane->unknown08;
     } else {
       next = plane->unknown08;
@@ -110,7 +110,7 @@ void DrCalcClipMan::calcBitTbl() {
       unknown70 = nullptr;
     }
     unknown78 = size;
-    unknown70 = static_cast<u32 *>(mtl::MemManager::allocate(unknown00->unknown14, size, 0x20, false, "no name", 0));
+    unknown70 = static_cast<u32 *>(mtl::MemManager::allocate(m_drMan->unknown14, size, 0x20, false, "no name", 0));
     return;
   }
   if (unknown70 != nullptr) {
@@ -140,14 +140,14 @@ bool DrCalcClipMan::testPlaneClip(const mm::Vec3 &position, f32 radius) {
 
 DrCalcClipObj *DrCalcClipMan::createClipObj(const void *data) {
   CS lock(DrMan::getCriticalSection());
-  DrCalcClipObj *object = new (unknown00->unknown0c) DrCalcClipObj(data, unknown00);
+  DrCalcClipObj *object = new (m_drMan->unknown0c) DrCalcClipObj(data, m_drMan);
   unknown20[DrMan::s_nDblStockIdx].unknown010(object);
   return object;
 }
 
 DrCalcCpPlaneObj *DrCalcClipMan::createCpPlaneObj(const void *data) {
   CS lock(DrMan::getCriticalSection());
-  DrCalcCpPlaneObj *plane = new (unknown00->unknown0c) DrCalcCpPlaneObj(data);
+  DrCalcCpPlaneObj *plane = new (m_drMan->unknown0c) DrCalcCpPlaneObj(data);
   unknown50[DrMan::s_nDblStockIdx].unknown010(plane);
   return plane;
 }

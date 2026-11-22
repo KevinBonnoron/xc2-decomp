@@ -14,7 +14,7 @@ GfFobjSeManager::GfFobjSeManager(const CreateInfo *info) : unknown08(nullptr) {
 
 void GfFobjSeManager::create(const CreateInfo &info) {
   dispose();
-  unknown00 = info;
+  m_createInfo = info;
   unknown08 = fw::SoundManager::get()->findPack("se_fld_allmap", nullptr);
   if (unknown08 == nullptr) {
     dispose();
@@ -34,11 +34,11 @@ void GfFobjSeManager::dispose() {
     }
     unknown10.destroy();
   }
-  unknown00 = CreateInfo();
+  m_createInfo = CreateInfo();
 }
 
 void GfFobjSeManager::update(f32 deltaTime) {
-  if (unknown00.unknown04 == 0) {
+  if (m_createInfo.unknown04 == 0) {
     return;
   }
 

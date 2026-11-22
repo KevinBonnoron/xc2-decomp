@@ -39,8 +39,8 @@ void GfMenuObjCommonInfo::removeObject(ui::UIObjectAcc acc) {
 void GfMenuObjCommonInfo::sendOpen(u32 handle, const CommonInfo &info) {
   ui::EventData event;
   event.unknown00 = 0x21;
-  event.unknown08 = registString(info.unknown10->getTitleString());
-  event.unknown0c = registString(info.unknown10->getContentsString());
+  event.unknown08 = registString(info.m_paramBase->getTitleString());
+  event.unknown0c = registString(info.m_paramBase->getContentsString());
   sendEvent(handle, event, 0.0f);
 }
 

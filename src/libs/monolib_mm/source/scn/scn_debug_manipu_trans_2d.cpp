@@ -25,8 +25,8 @@ ScnDebugManipuTrans2D::ScnDebugManipuTrans2D(Scn *scn, const mm::Mat44 *matrix, 
     screen.x = px;
     f32 y = screen.y > 0.0f ? 0.5f : -0.5f;
     y = static_cast<int>(screen.y + y);
-    unknownb0.m_front->unknown00.unknown00 = mm::Vec3(px, y, 0.0f);
-    unknownb0.m_back->unknown00.unknown00 = mm::Vec3(px, y, 0.0f);
+    unknownb0.m_front->m_attrTransform.unknown00 = mm::Vec3(px, y, 0.0f);
+    unknownb0.m_back->m_attrTransform.unknown00 = mm::Vec3(px, y, 0.0f);
   }
   unknown360 = 0;
   unknown364 = 0;
@@ -94,8 +94,8 @@ bool ScnDebugManipuTrans2D::checkMouseMove(EventView *event) {
     } else if (unknown18 == 2) {
       unknown360 = 0;
     }
-    unknownb0.m_back->unknown00.unknown00 = mm::Vec3(unknown360, unknown364, 0.0f) + unknownb0.m_back->unknown00.unknown10;
-    unknownb0.m_back->unknown00.update();
+    unknownb0.m_back->m_attrTransform.unknown00 = mm::Vec3(unknown360, unknown364, 0.0f) + unknownb0.m_back->m_attrTransform.unknown10;
+    unknownb0.m_back->m_attrTransform.update();
     return true;
   }
   return false;

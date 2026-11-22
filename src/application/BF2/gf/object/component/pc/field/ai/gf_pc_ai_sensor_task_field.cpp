@@ -34,7 +34,7 @@ void TaskFieldSensor::onEvent(ai::BlackBoard &blackBoard, const ai::Event &event
   }
 }
 
-void TaskFieldSensor::onChangeActivate(BlackBoardField &blackBoard, const ai::ActivateEvent &event) { blackBoard.unknown08->setEnvSensorCheckFlags(0x20, event.unknown04); }
+void TaskFieldSensor::onChangeActivate(BlackBoardField &blackBoard, const ai::ActivateEvent &event) { blackBoard.m_comPropertyPc->setEnvSensorCheckFlags(0x20, event.unknown04); }
 
 bool TaskFieldSensor::testCondition(const BlackBoardField &blackBoard) { return true; }
 
@@ -65,7 +65,7 @@ template <typename Message> void unknown001(BlackBoardField &blackBoard, GfComPr
 }
 
 void TaskFieldSensor::update(BlackBoardField &blackBoard) {
-  GfComPropertyPc *property = blackBoard.unknown08;
+  GfComPropertyPc *property = blackBoard.m_comPropertyPc;
   const SensorAIParam *param = property->unknown010();
   GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
   blackBoard.unknown40 = formation->getFollowTransform(property->unknown38).unknown00;
@@ -84,7 +84,7 @@ void TaskFieldSensor::update(BlackBoardField &blackBoard) {
   if (blackBoard.unknown200.test(1)) {
     // The game keeps the ceiling test as a value (mov w10, wzr at 0x7100544c60, cset w10, ls at 0x7100544c7c, then tbnz w10 at 0x7100544c80) and tests the horizontal flag after it (tbnz w9, #5 at
     // 0x7100544c84). With the test written inside the condition, or with the operands swapped (isNear || flag), clang threads the jump and the function is 3 instructions short (317 against 320).
-    bool isNear = sensor->unknown24_3 && sensor->unknown30.unknowne0.unknown00 - property->unknown160.unknown00.y <= param->enableJumpCeil;
+    bool isNear = sensor->unknown24_3 && sensor->m_verticalData.unknowne0.unknown00 - property->unknown160.unknown00.y <= param->enableJumpCeil;
     if (sensor->unknown24_5 || isNear) {
       blackBoard.unknown200.set(2, false);
     } else {
@@ -103,7 +103,7 @@ void TaskFieldSensor::update(BlackBoardField &blackBoard) {
   } else if (blackBoard.unknown200.test(9)) {
     unknown001<MsgPcFieldWaterWarpBuddy>(blackBoard, property, 9);
   }
-  if (!blackBoard.unknown08->unknown310.unknown10_4) {
+  if (!blackBoard.m_comPropertyPc->m_propertyField.unknown10_4) {
     blackBoard.unknown200.set(8, false);
   }
 }

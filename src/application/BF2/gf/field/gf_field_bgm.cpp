@@ -30,8 +30,8 @@ void BGMCOND::clear() {
   if (!unknown14.empty()) {
     unknown14 = "";
   }
-  if (unknown04.isValid()) {
-    unknown04.clear();
+  if (m_soundHandle.isValid()) {
+    m_soundHandle.clear();
   }
   unknown00 = 0;
   unknown10 = 0;
@@ -43,14 +43,14 @@ void BGMCOND::copyPlayInfo(const BGMCOND &src) {
   unknown11 = src.unknown11;
   unknown0c = src.unknown0c;
   unknown10 = src.unknown10;
-  unknown04 = src.unknown04;
+  m_soundHandle = src.m_soundHandle;
   unknown14 = src.unknown14;
   unknown00 = src.unknown00;
 }
 
-bool BGMCOND::isInvalidBgm() const { return !unknown04.isValid(); }
+bool BGMCOND::isInvalidBgm() const { return !m_soundHandle.isValid(); }
 
-bool BGMCOND::isInvalidPlay() const { return !unknown04.isValid() && unknown11 == 0; }
+bool BGMCOND::isInvalidPlay() const { return !m_soundHandle.isValid() && unknown11 == 0; }
 
 bool BGMCOND::isSilentPlay() const { return strcmp(unknown14.c_str(), "SilentBgm") == 0; }
 
@@ -99,12 +99,12 @@ f32 bgmvolMultiMenuPause(f32, f32, f32 volume) { return bgmvolControlMulti(volum
 f32 bgmvolMultiTalkPause(f32, f32, f32 volume) { return bgmvolControlMulti(volume, GfPause::isPause(4) && GfGameManager::isTalking()); }
 
 f32 bgmvolFadeDeadSequence(ExecFadeParam &param) {
-  bool isFadeOut = param.unknown00->unknown620->unknowna9;
+  bool isFadeOut = param.m_bgmTrack->m_fieldBgm->unknowna9;
   return bgmvolControlFade(*param.unknown08, isFadeOut ? param.unknown10->unknown20 : param.unknown10->unknown24, isFadeOut);
 }
 
 f32 bgmvolFadeGimmick(ExecFadeParam &param) {
-  bool isFadeOut = param.unknown00->unknown620->m_rscGimmickBgmID != 0;
+  bool isFadeOut = param.m_bgmTrack->m_fieldBgm->m_rscGimmickBgmID != 0;
   return bgmvolControlFade(*param.unknown08, isFadeOut ? param.unknown10->unknown20 : param.unknown10->unknown24, isFadeOut);
 }
 
@@ -117,12 +117,12 @@ f32 bgmvolAdvertize(ExecFadeParam &param) {
 f32 bgmvolStop(ExecFadeParam &param) { return bgmvolControlFade(*param.unknown08, s_bStopBGM ? param.unknown10->unknown20 : param.unknown10->unknown24, s_bStopBGM); }
 
 f32 bgmvolBattleBoss(ExecFadeParam &param) {
-  bool isFadeOut = param.unknown00->unknown620->m_rscBossBattleBgmID != 0 || GfGameManager::isForceBossBattleBgm();
+  bool isFadeOut = param.m_bgmTrack->m_fieldBgm->m_rscBossBattleBgmID != 0 || GfGameManager::isForceBossBattleBgm();
   return bgmvolControlFade(*param.unknown08, isFadeOut ? param.unknown10->unknown20 : param.unknown10->unknown24, isFadeOut);
 }
 
 f32 bgmvolNotBattleBoss(ExecFadeParam &param) {
-  bool isFadeOut = !(param.unknown00->unknown620->m_rscBossBattleBgmID != 0 || GfGameManager::isForceBossBattleBgm());
+  bool isFadeOut = !(param.m_bgmTrack->m_fieldBgm->m_rscBossBattleBgmID != 0 || GfGameManager::isForceBossBattleBgm());
   return bgmvolControlFade(*param.unknown08, isFadeOut ? param.unknown10->unknown20 : param.unknown10->unknown24, isFadeOut);
 }
 
@@ -182,12 +182,12 @@ f32 bgmvolMapMatch(ExecFadeParam &param) {
   if (map != 0) {
     bgmCond = GfBdatMaplist::get()->getMaplistbgm_cndID(map);
   }
-  bool isFadeOut = bgmCond != param.unknown00->m_bgmCondID;
+  bool isFadeOut = bgmCond != param.m_bgmTrack->m_bgmCondID;
   return bgmvolControlFade(*param.unknown08, isFadeOut ? param.unknown10->unknown20 : param.unknown10->unknown24, isFadeOut);
 }
 
 f32 bgmvolGimmickMatch(ExecFadeParam &param) {
-  bool isFadeOut = param.unknown00->unknown620->m_rscGimmickBgmID != param.unknown00->m_bgmCondID;
+  bool isFadeOut = param.m_bgmTrack->m_fieldBgm->m_rscGimmickBgmID != param.m_bgmTrack->m_bgmCondID;
   return bgmvolControlFade(*param.unknown08, isFadeOut ? param.unknown10->unknown20 : param.unknown10->unknown24, isFadeOut);
 }
 } // namespace _gffsn
@@ -207,8 +207,8 @@ void BgmTrack::setPause(bool pause) {
   GfSound *sound = GfSound::get();
   if (sound != nullptr) {
     for (u32 i = 0; i < 4; i++) {
-      if (unknown08[i].unknown04.isValid()) {
-        sound->setPause(unknown08[i].unknown04, pause, 0.0f);
+      if (unknown08[i].m_soundHandle.isValid()) {
+        sound->setPause(unknown08[i].m_soundHandle, pause, 0.0f);
       }
     }
   }
@@ -239,8 +239,8 @@ void BgmTrack::play(u32 bgmCondID) {
 void BgmTrack::stopBGM(f32 fadeTime) {
   for (u32 i = 0; i < 4; i++) {
     GfSound *sound = GfSound::get();
-    if (sound != nullptr && unknown08[i].unknown04.isValid()) {
-      sound->stopBgm(unknown08[i].unknown04, fadeTime);
+    if (sound != nullptr && unknown08[i].m_soundHandle.isValid()) {
+      sound->stopBgm(unknown08[i].m_soundHandle, fadeTime);
     }
     unknown08[i].clear();
   }
@@ -261,7 +261,7 @@ void BgmTrack::play(const char *name) { unknown08[0].unknown14 = name; }
 
 bool BgmTrack::isPlaying() const {
   for (u32 i = 0; i < 4; i++) {
-    if (!unknown08[i].unknown14.empty() || unknown08[i].unknown04.isValid()) {
+    if (!unknown08[i].unknown14.empty() || unknown08[i].m_soundHandle.isValid()) {
       return true;
     }
   }
@@ -275,8 +275,8 @@ void BgmTrack::setCategoryApply(u8 category) {
   GfSound *sound = GfSound::get();
   if (sound != nullptr) {
     for (u32 i = 0; i < 4; i++) {
-      if (unknown08[i].unknown04.isValid()) {
-        sound->setCategory(unknown08[i].unknown04, static_cast<fw::SoundCategory>(category));
+      if (unknown08[i].m_soundHandle.isValid()) {
+        sound->setCategory(unknown08[i].m_soundHandle, static_cast<fw::SoundCategory>(category));
       }
     }
   }
@@ -350,23 +350,23 @@ void BgmTrack::streamVolume(const BGMCOND &cond) {
   } else if (unknown614 > 1.0f) {
     unknown614 = 1.0f;
   }
-  if (cond.unknown04.isValid() && GfSound::get() != nullptr) {
-    GfSound::get()->setVolume(cond.unknown04, unknown614, 0.0f);
+  if (cond.m_soundHandle.isValid() && GfSound::get() != nullptr) {
+    GfSound::get()->setVolume(cond.m_soundHandle, unknown614, 0.0f);
   }
 }
 
 bool BgmTrack::streamIsPlay(const BGMCOND &cond) const {
   GfSound *sound = nullptr;
-  if (cond.unknown04.isValid() && (sound = GfSound::get()) != nullptr) {
-    return sound->isPlaying(cond.unknown04) || sound->isPreparing(cond.unknown04);
+  if (cond.m_soundHandle.isValid() && (sound = GfSound::get()) != nullptr) {
+    return sound->isPlaying(cond.m_soundHandle) || sound->isPreparing(cond.m_soundHandle);
   }
   return false;
 }
 
 void BgmTrack::stopCondBGM(f32 fadeTime, BGMCOND &cond) {
   GfSound *sound = GfSound::get();
-  if (sound != nullptr && cond.unknown04.isValid()) {
-    sound->stopBgm(cond.unknown04, fadeTime);
+  if (sound != nullptr && cond.m_soundHandle.isValid()) {
+    sound->stopBgm(cond.m_soundHandle, fadeTime);
   }
   cond.clear();
 }
@@ -413,8 +413,8 @@ void BgmTrack::calcMultiplyVolume(const fw::UpdateInfo &info) {
 
 bool BgmTrack::getPlayVolume(f32 &volume, const fw::UpdateInfo &info, const BGMCOND &cond, bool isFadeOut) {
   ExecFadeParam param;
-  param.unknown18 = &cond;
-  param.unknown00 = this;
+  param.m_BGMCOND = &cond;
+  param.m_bgmTrack = this;
   param.unknown08 = &info;
   volume = cond.unknown00;
   f32 minVolume = 0.0f;
@@ -456,15 +456,15 @@ void BgmTrack::copyPlayParam(BgmTrack *src) {
   unknown610 = src->unknown610;
   unknown08 = src->unknown08;
   unknown629 = true;
-  if (!unknown08[0].unknown04.isValid() && unknown08[1].unknown04.isValid()) {
+  if (!unknown08[0].m_soundHandle.isValid() && unknown08[1].m_soundHandle.isValid()) {
     unknown08[0].copyPlayInfo(unknown08[1]);
     unknown08[1].clear();
   }
   GfSound *sound = GfSound::get();
   if (sound != nullptr) {
     for (BGMCOND *cond = src->unknown08.begin(); cond != src->unknown08.end(); cond++) {
-      if (cond->unknown04.isValid()) {
-        sound->setCategory(cond->unknown04, static_cast<fw::SoundCategory>(m_categoryApply));
+      if (cond->m_soundHandle.isValid()) {
+        sound->setCategory(cond->m_soundHandle, static_cast<fw::SoundCategory>(m_categoryApply));
       }
     }
   }
@@ -487,23 +487,23 @@ void BgmTrack::copyPlayParam(BgmTrack *src, const BgmFileInfo &info) {
   SoundHandle handle;
   f32 volume = 0.0f;
   for (BGMCOND *cond = src->unknown08.begin(); cond != src->unknown08.end(); cond++) {
-    if (cond->unknown04.isValid()) {
-      handle = cond->unknown04;
+    if (cond->m_soundHandle.isValid()) {
+      handle = cond->m_soundHandle;
       volume = cond->unknown00;
-      cond->unknown04.clear();
+      cond->m_soundHandle.clear();
       break;
     }
   }
   if (handle.isValid()) {
     unknown08[info.unknown08].unknown0c = info.unknown04;
-    unknown08[info.unknown08].unknown04 = handle;
+    unknown08[info.unknown08].m_soundHandle = handle;
     unknown08[info.unknown08].unknown00 = volume;
   }
   GfSound *sound = GfSound::get();
   if (sound != nullptr) {
     for (BGMCOND *cond = src->unknown08.begin(); cond != src->unknown08.end(); cond++) {
-      if (cond->unknown04.isValid()) {
-        sound->setCategory(cond->unknown04, static_cast<fw::SoundCategory>(m_categoryApply));
+      if (cond->m_soundHandle.isValid()) {
+        sound->setCategory(cond->m_soundHandle, static_cast<fw::SoundCategory>(m_categoryApply));
       }
     }
   }
@@ -532,7 +532,7 @@ bool BgmTrack::makeBgmFile(mm::mtl::FixStr<64> &name, u32 &bgmID, u32 bgmCondID,
 }
 
 BgmTrack::BgmTrack(GfFieldBgm *owner, bool unknown)
-    : m_bgmCondID(0), unknown60c(unknown), unknown60e(false), unknown610(1.0f), unknown614(1.0f), unknown618(1.0f), unknown61c(0.0f), unknown620(owner), unknown629(false),
+    : m_bgmCondID(0), unknown60c(unknown), unknown60e(false), unknown610(1.0f), unknown614(1.0f), unknown618(1.0f), unknown61c(0.0f), m_fieldBgm(owner), unknown629(false),
       m_categoryApply(CATEGORY_BGM) {
   BGMCOND cond;
   unknown08.assign(cond);
@@ -745,14 +745,14 @@ void BgmEvent::gevPlayEvent(GEV gev, u32) {
 
 bool BgmEvent::isPlaying() const { return BgmTrack::isPlaying(); }
 
-void BgmEvent::cancelOverTime() { unknown638.unknown5c = 0.0f; }
+void BgmEvent::cancelOverTime() { m_eventBgmSetup.unknown5c = 0.0f; }
 
 bool BgmEvent::isInvalidRequestBgmFile() const {
   GfEvtBgm *event = GfEvtBgm::get();
   if (event != nullptr) {
     // The game forms the event name address (add x1) before the playing name address (add x0), 0x71002d260c; the
     // single-use local places that computation first (ruling 2026-11-13 #2, P2). Also inlined in updatePlaying.
-    const char *eventName = event->unknown0c.unknown00.c_str();
+    const char *eventName = event->m_eventBgmSetup.unknown00.c_str();
     return strcmp(unknown08[0].unknown14.c_str(), eventName) != 0;
   }
   return false;
@@ -760,18 +760,18 @@ bool BgmEvent::isInvalidRequestBgmFile() const {
 
 void BgmEvent::updatePlaying(const fw::UpdateInfo &info) {
   GfEvtBgm *event = GfEvtBgm::get();
-  if (event->unknown0c.unknown64) {
-    unknown618 = event->unknown0c.unknown44;
+  if (event->m_eventBgmSetup.unknown64) {
+    unknown618 = event->m_eventBgmSetup.m_playBgmVolume;
   }
   if (isInvalidRequestBgmFile()) {
-    stopBGM(unknown638.unknown62 ? unknown638.unknown4c : 0.5f);
+    stopBGM(m_eventBgmSetup.unknown62 ? m_eventBgmSetup.unknown4c : 0.5f);
   } else if (!unknown60d && event->isPlayBgm()) {
     event->setFadeoutVolume();
   }
-  if (unknown638.unknown5c > 0.0f && !GfGameManager::isEvent(false)) {
-    unknown638.unknown5c -= info.unknown04;
-    if (unknown638.unknown5c <= 0.0f) {
-      unknown638.unknown5c = 0.0f;
+  if (m_eventBgmSetup.unknown5c > 0.0f && !GfGameManager::isEvent(false)) {
+    m_eventBgmSetup.unknown5c -= info.unknown04;
+    if (m_eventBgmSetup.unknown5c <= 0.0f) {
+      m_eventBgmSetup.unknown5c = 0.0f;
       event->setFadeoutVolume();
     }
   }
@@ -783,13 +783,14 @@ void BgmEvent::beginPlay() {
   addVolumeFade(_gffsn::bgmvolStop, 1.0f, 20.0f, true);
   addVolumeFade(_gffsn::bgmvolFadeLeaveGame, 1.0f, 99.0f, true);
   addVolumeFade(_gffsn::bgmvolFadeDeadSequence, 2.0f, 99.0f, true);
-  addVolumeFade(_gffsn::bgmvolFadeDisableEventBgm, event->unknown0c.unknown62 ? event->unknown0c.unknown4c : 0.5f, event->unknown0c.unknown63 ? event->unknown0c.unknown48 : 0.5f, true);
+  addVolumeFade(
+      _gffsn::bgmvolFadeDisableEventBgm, event->m_eventBgmSetup.unknown62 ? event->m_eventBgmSetup.unknown4c : 0.5f, event->m_eventBgmSetup.unknown63 ? event->m_eventBgmSetup.unknown48 : 0.5f, true);
   mm::mtl::FixStr<64> fileName;
-  if (event->unknown0c.unknown60) {
+  if (event->m_eventBgmSetup.unknown60) {
     BgmTrack *current = GfFieldBgm::get()->getCurrentPlayBgmTrack();
     if (current != nullptr && current != this) {
       copyPlayParam(current);
-      unknown638 = event->unknown0c;
+      m_eventBgmSetup = event->m_eventBgmSetup;
       makePlayFileName(fileName);
       if (!fileName.empty()) {
         m_bgmCondID = 0;
@@ -798,17 +799,17 @@ void BgmEvent::beginPlay() {
     }
   }
   if (fileName.empty()) {
-    fileName = event->unknown0c.unknown00;
+    fileName = event->m_eventBgmSetup.unknown00;
   }
-  if (event->unknown0c.unknown64) {
-    unknown618 = event->unknown0c.unknown44;
+  if (event->m_eventBgmSetup.unknown64) {
+    unknown618 = event->m_eventBgmSetup.m_playBgmVolume;
   }
-  unknown61c = event->unknown0c.unknown50;
+  unknown61c = event->m_eventBgmSetup.unknown50;
   if (!fileName.empty()) {
     if (strcmp(unknown6a0.c_str(), fileName.c_str()) == 0) {
       return;
     }
-    if (unknown638.unknown5c < 0.0f) {
+    if (m_eventBgmSetup.unknown5c < 0.0f) {
       event->setFadeoutVolume();
       return;
     }
@@ -820,12 +821,12 @@ void BgmEvent::beginPlay() {
     m_categoryApply = CATEGORY_EVT_BGM;
   }
   unknown08[0].unknown14 = fileName;
-  unknown638 = event->unknown0c;
+  m_eventBgmSetup = event->m_eventBgmSetup;
 }
 
 void BgmEvent::checkStopByHandOver() {
   GfEvtBgm *event = GfEvtBgm::get();
-  if (event->unknown0c.unknown61 && BgmTrack::isPlaying()) {
+  if (event->m_eventBgmSetup.unknown61 && BgmTrack::isPlaying()) {
     BgmFileInfo info;
     if (GfFieldBgm::get() != nullptr && GfFieldBgm::get()->getBgmFileInfo(info, unknown08[0].unknown14.c_str()) && info.unknown0c) {
       u32 map = GfGameManager::getMapID();
@@ -837,7 +838,7 @@ void BgmEvent::checkStopByHandOver() {
       if (bgmCond == info.unknown00) {
         track = BgmField::get();
       }
-      if (track == nullptr && unknown620->m_rscGimmickBgmID == info.unknown00) {
+      if (track == nullptr && m_fieldBgm->m_rscGimmickBgmID == info.unknown00) {
         track = BgmGimmick::get();
       }
       if (track != nullptr) {
@@ -868,7 +869,7 @@ void BgmEvent::updateEventBgm(const fw::UpdateInfo &info) {
   if (event != nullptr) {
     checkStopByHandOver();
     if (!isPlaying()) {
-      if (event->isEnableEventBgm() || event->unknown0c.unknown60) {
+      if (event->isEnableEventBgm() || event->m_eventBgmSetup.unknown60) {
         beginPlay();
       }
     } else {
@@ -887,8 +888,8 @@ const char *BgmEvent::getTrackName() const { return "EventBGM"; }
 const char *BgmBattle::getTrackName() const { return "BattleBGM"; }
 
 void BgmBattle::update(const fw::UpdateInfo &info) {
-  if (m_bgmCondID != unknown620->m_rscBattleBgmID) {
-    play(unknown620->m_rscBattleBgmID);
+  if (m_bgmCondID != m_fieldBgm->m_rscBattleBgmID) {
+    play(m_fieldBgm->m_rscBattleBgmID);
   }
   BgmTrack::update(info);
 }
@@ -896,7 +897,7 @@ void BgmBattle::update(const fw::UpdateInfo &info) {
 const char *BgmBattleBoss::getTrackName() const { return "BossBGM"; }
 
 void BgmBattleBoss::update(const fw::UpdateInfo &info) {
-  u32 id = unknown620->m_rscBossBattleBgmID;
+  u32 id = m_fieldBgm->m_rscBossBattleBgmID;
   if (id != 0 && m_bgmCondID != id) {
     play(id);
   }
@@ -924,7 +925,7 @@ void BgmField::update(const fw::UpdateInfo &info) {
 const char *BgmGimmick::getTrackName() const { return "GimmickBGM"; }
 
 void BgmGimmick::update(const fw::UpdateInfo &info) {
-  u32 id = unknown620->m_rscGimmickBgmID;
+  u32 id = m_fieldBgm->m_rscGimmickBgmID;
   if (m_bgmCondID != id) {
     playWithFadeout(id);
   }

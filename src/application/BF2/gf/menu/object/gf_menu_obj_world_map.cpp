@@ -60,14 +60,15 @@ const char *nd_lay_icon_node_tbl[10] = {
     "LAY_icon_mapjump", "LAY_icon_area", "LAY_icon_collect", "LAY_icon_kizuna", "LAY_icon_salvage", "LAY_icon_shop", "LAY_icon_scenario", "LAY_icon_quest", "LAY_icon_field_skill", "LAY_icon_player"};
 
 GfMenuObjWorldMap::GfMenuObjWorldMap(u32 handle)
-    : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(true), unknown40(nullptr), unknown48(nullptr), unknown50(this), unknown2e0(nullptr), unknown2e8(1.0f),
-      unknown2f0(nullptr), unknown2f8(nullptr), unknown318(0), unknown320(nullptr), unknown328(nullptr), unknown330(nullptr), unknown690(false), unknown6b8(nullptr), unknown6c0(), unknown2f10(0),
-      unknown2f60(false), unknown2f61(false), unknown2f68(nullptr), unknown2f70(false), unknown2f78(nullptr), unknown2f80(0), unknown2f84(0), unknown2f88(nullptr), unknown2f90(nullptr) {
+    : GfMenuObject(handle), m_menuIDList(nullptr), unknown30(nullptr), unknown38(true), unknown40(nullptr), unknown48(nullptr), unknown50(this), unknown2e0(nullptr), unknown2e8(1.0f),
+      unknown2f0(nullptr), unknown2f8(nullptr), unknown318(0), unknown320(nullptr), unknown328(nullptr), m_menuFieldSkillList(nullptr), unknown690(false), unknown6b8(nullptr), unknown6c0(),
+      unknown2f10(0), unknown2f60(false), unknown2f61(false), m_menuCallContext(nullptr), unknown2f70(false), unknown2f78(nullptr), unknown2f80(0), unknown2f84(0), unknown2f88(nullptr),
+      unknown2f90(nullptr) {
   unknown300.setAllocator(getAllocator(ALLOCATOR_UNKNOWN_0));
 }
 
 GfMenuObjWorldMap::~GfMenuObjWorldMap() {
-  mm::mtl::safeRelease(unknown28);
+  mm::mtl::safeRelease(m_menuIDList);
   mm::mtl::safeRelease(unknown30);
   mm::mtl::safeRelease(unknown2e0);
   mm::mtl::safeRelease(unknown40);
@@ -78,11 +79,11 @@ GfMenuObjWorldMap::~GfMenuObjWorldMap() {
   if (unknown300.size() != 0) {
     unknown300.destroy();
   }
-  mm::mtl::safeRelease(unknown330);
+  mm::mtl::safeRelease(m_menuFieldSkillList);
   mm::mtl::safeRelease(unknown328);
   mm::mtl::safeRelease(unknown320);
   mm::mtl::safeRelease(unknown6b8);
-  mm::mtl::safeRelease(unknown2f68);
+  mm::mtl::safeRelease(m_menuCallContext);
   mm::mtl::safeRelease(unknown2f88);
   mm::mtl::safeRelease(unknown2f90);
 }
@@ -172,11 +173,11 @@ void GfMenuObjWorldMap::initialize() {
     param.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
     unknown30 = ui::UISelectObjList::create(param);
     unknown30->pickupObject(acc.unknown10, "LAY_area_tag@%02d", 1);
-    unknown28 = GfMenuIDList::create();
+    m_menuIDList = GfMenuIDList::create();
     ui::UIListInfoBase::SetupParam setup;
     setup.unknown08 = unknown30->getSize();
     setup.unknown10 = true;
-    unknown28->setup(getAllocator(ALLOCATOR_UNKNOWN_0), setup);
+    m_menuIDList->setup(getAllocator(ALLOCATOR_UNKNOWN_0), setup);
   }
   {
     ui::UISelectObjList::CreateParam param;
@@ -204,8 +205,8 @@ void GfMenuObjWorldMap::initialize() {
     unknown328 = GfMenuZoneMapList::create();
     unknown328->setup(getAllocator(ALLOCATOR_UNKNOWN_0), setup);
     setup.unknown08 = 2;
-    unknown330 = GfMenuFieldSkillList::create();
-    unknown330->setup(getAllocator(ALLOCATOR_UNKNOWN_0), setup);
+    m_menuFieldSkillList = GfMenuFieldSkillList::create();
+    m_menuFieldSkillList->setup(getAllocator(ALLOCATOR_UNKNOWN_0), setup);
   }
   {
     ui::UIObjectAcc filter(acc.unknown10, "LAY_icon_filter");
@@ -223,7 +224,7 @@ void GfMenuObjWorldMap::initialize() {
     param.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
     unknown6b8 = ui::UISelectObjList::create(param);
   }
-  unknown2f68 = GfMenuCallContext::create();
+  m_menuCallContext = GfMenuCallContext::create();
   unknown2f84 = 0;
   for (u32 i = 0; i < 9; i++) {
     if (GfMenuFlag::get1(0x28 + i) == 1) {
@@ -234,13 +235,13 @@ void GfMenuObjWorldMap::initialize() {
   GfMenuObject::initialize();
   GfFieldGimmick *fieldGimmick = GfFieldGimmick::get();
   if (fieldGimmick != nullptr) {
-    unknown2fa0 = fieldGimmick->unknownf4c0.unknown00;
+    m_createInfo = fieldGimmick->m_gmkLocatorAtlas.m_createInfo;
   }
 }
 
 void GfMenuObjWorldMap::finalize() {
-  if (unknown2fa0.unknown00 > 0) {
-    GfFieldGimmick::get()->unknownf4c0.create(unknown2fa0);
+  if (m_createInfo.unknown00 > 0) {
+    GfFieldGimmick::get()->m_gmkLocatorAtlas.create(m_createInfo);
   }
   GfMenuObject::finalize();
 }
@@ -248,7 +249,7 @@ void GfMenuObjWorldMap::finalize() {
 void GfMenuObjWorldMap::update() {
   unknown50.unknown003();
   GfMenuLocation::updateLocator();
-  GfFieldGimmick::get()->unknownf4c0.update(0.0f);
+  GfFieldGimmick::get()->m_gmkLocatorAtlas.update(0.0f);
   GfMenuObject::update();
 }
 
@@ -259,7 +260,7 @@ void GfMenuObjWorldMap::MainListener::reciveEvent(const ui::EventData &event, u3
     setFadeIn(handle);
     break;
   case 2:
-    unknown20->deleteMapImage();
+    m_menuObjWorldMap->deleteMapImage();
     setFadeOut(handle, true);
     break;
   case 3:
@@ -316,7 +317,7 @@ void GfMenuObjWorldMap::WorldListener::reciveEvent(const ui::EventData &event, u
     acc.setDisp(true);
     break;
   case GfMenuTypes::unknown003_34:
-    if (!unknown20->unknown38) {
+    if (!m_menuObjWorldMap->unknown38) {
       sendEvent(handle, 3, 2, 0);
     } else {
       setFadeOut(handle, event.unknown08 == 1);
@@ -328,7 +329,7 @@ void GfMenuObjWorldMap::WorldListener::reciveEvent(const ui::EventData &event, u
     GfMenuObject::disableInput(acc.searchChild("LAY_worldmap"));
     GfMenuObject::disableInput(acc.searchChild("LAY_map_sellect"));
     setFadeOutSub(handle, false);
-    unknown20->unknown38 = false;
+    m_menuObjWorldMap->unknown38 = false;
     break;
   case GfMenuTypes::unknown003_258:
     sendEvent(acc.searchChild("LAY_worldmap"), GfMenuTypes::unknown003_259, 0, 0);
@@ -363,12 +364,12 @@ int GfMenuObjWorldMap::setFadeOutSub(u32 handle, bool unknown) {
 static const u32 unknown001[15] = {3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 16, 18, 20, 21};
 
 void GfMenuObjWorldMap::WorldMapListener::reciveEvent(const ui::EventData &event, u32 handle) {
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjWorldMap->unknown18);
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1:
-    setupMapList(unknown20->unknown28);
-    setupWorldMap(acc, unknown20->unknown28, unknown20->unknown30);
+    setupMapList(m_menuObjWorldMap->m_menuIDList);
+    setupWorldMap(acc, m_menuObjWorldMap->m_menuIDList, m_menuObjWorldMap->unknown30);
     break;
   case GfMenuTypes::unknown003_257: {
     u32 map = event.unknown08;
@@ -465,19 +466,19 @@ void GfMenuObjWorldMap::setupWorldMap(ui::UIObjectAcc &acc, GfMenuIDList *list, 
 }
 
 void GfMenuObjWorldMap::MapSelectListener::reciveEvent(const ui::EventData &event, u32 handle) {
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjWorldMap->unknown18);
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1:
-    setupMapSelect(acc, unknown20->unknown28);
-    GfMenuObject::setupInputSelectionFromList(handle, *unknown20->unknown28);
+    setupMapSelect(acc, m_menuObjWorldMap->m_menuIDList);
+    GfMenuObject::setupInputSelectionFromList(handle, *m_menuObjWorldMap->m_menuIDList);
     GfMenuObjMainMenu2::setSystemKeyEnable(true);
     GfMenuObjOperationInfo::add(acc.unknown10, 0, 0, 0);
     unknown0c = 0;
     break;
   case 3:
     if (event.unknown08 == 1) {
-      refreshMapSelect(acc, unknown20->unknown28, unknown20->unknown30, unknown20->unknown28->getIndex(true));
+      refreshMapSelect(acc, m_menuObjWorldMap->m_menuIDList, m_menuObjWorldMap->unknown30, m_menuObjWorldMap->m_menuIDList->getIndex(true));
       GfMenuObject::enableFSInput(0);
       GfMenuObjMainMenu2::setSystemKeyEnable(true);
       GfMenuObjOperationInfo::add(acc.unknown10, 0, 0, 0);
@@ -486,10 +487,10 @@ void GfMenuObjWorldMap::MapSelectListener::reciveEvent(const ui::EventData &even
   case 6: {
     u32 index = event.unknown08;
     u32 previous = event.unknown0c;
-    unknown20->unknown28->setIndex(index);
-    GfMenuReference::setReferenceWorldMapID(unknown20->unknown28->getContents(index).unknown00);
-    refreshMapSelect(acc, unknown20->unknown28, unknown20->unknown30, unknown20->unknown28->getIndex(true));
-    sendEvent(owner.searchChild("LAY_worldmap"), GfMenuTypes::unknown003_257, unknown20->unknown28->getContents(index).unknown00, 0);
+    m_menuObjWorldMap->m_menuIDList->setIndex(index);
+    GfMenuReference::setReferenceWorldMapID(m_menuObjWorldMap->m_menuIDList->getContents(index).unknown00);
+    refreshMapSelect(acc, m_menuObjWorldMap->m_menuIDList, m_menuObjWorldMap->unknown30, m_menuObjWorldMap->m_menuIDList->getIndex(true));
+    sendEvent(owner.searchChild("LAY_worldmap"), GfMenuTypes::unknown003_257, m_menuObjWorldMap->m_menuIDList->getContents(index).unknown00, 0);
     if (previous != 0xffffffff && index != previous) {
       GfMenuObjUtil::playSECommonCursor();
     }
@@ -510,11 +511,11 @@ void GfMenuObjWorldMap::MapSelectListener::reciveEvent(const ui::EventData &even
         if (sheetName == nullptr) {
           break;
         }
-        unknown20->unknown2f78 = Bdat::getFP(sheetName);
-        unknown20->unknown2f70 = unknown20->setupZoneList(unknown20->unknown40);
-        GfMenuZoneMapList *zones = unknown20->unknown40;
-        zones->unknown79 = unknown20->unknown2f70;
-        if (unknown20->unknown40->getSize() != 0) {
+        m_menuObjWorldMap->unknown2f78 = Bdat::getFP(sheetName);
+        m_menuObjWorldMap->unknown2f70 = m_menuObjWorldMap->setupZoneList(m_menuObjWorldMap->unknown40);
+        GfMenuZoneMapList *zones = m_menuObjWorldMap->unknown40;
+        zones->m_groupMode = m_menuObjWorldMap->unknown2f70;
+        if (m_menuObjWorldMap->unknown40->getSize() != 0) {
           GfMenuObjOperationInfo::remove(owner.searchChild("LAY_map_sellect"), owner.searchChild("LAY_worldmap"), 0, 0);
           GfMenuObjMainMenu2::setSystemKeyEnable(false);
           {
@@ -542,7 +543,7 @@ void GfMenuObjWorldMap::MapSelectListener::reciveEvent(const ui::EventData &even
           GfMenuObject::disableFSInput();
           GfMenuObjMainMenu2::setSystemKeyEnable(false);
           GfMenuObjOperationInfo::remove(acc.unknown10, 0, 0, 0);
-          refreshMapSelect(acc, unknown20->unknown28, unknown20->unknown30, -1);
+          refreshMapSelect(acc, m_menuObjWorldMap->m_menuIDList, m_menuObjWorldMap->unknown30, -1);
           GfMenuObjUtil::playSECommonDecide();
           break;
         }
@@ -555,17 +556,17 @@ void GfMenuObjWorldMap::MapSelectListener::reciveEvent(const ui::EventData &even
   case GfMenuTypes::unknown003_257: {
     u32 map = event.unknown08;
     int index = -1;
-    for (u32 i = 0; i < unknown20->unknown28->getSize(); i++) {
-      if (unknown20->unknown28->getContents(i).unknown00 == map) {
-        unknown20->unknown28->setIndex(i);
+    for (u32 i = 0; i < m_menuObjWorldMap->m_menuIDList->getSize(); i++) {
+      if (m_menuObjWorldMap->m_menuIDList->getContents(i).unknown00 == map) {
+        m_menuObjWorldMap->m_menuIDList->setIndex(i);
         index = i;
         break;
       }
     }
     if (index != -1) {
-      refreshMapSelect(acc, unknown20->unknown28, unknown20->unknown30, index);
+      refreshMapSelect(acc, m_menuObjWorldMap->m_menuIDList, m_menuObjWorldMap->unknown30, index);
     }
-    GfMenuObject::setupInputSelection(handle, index, unknown20->unknown28->getSize());
+    GfMenuObject::setupInputSelection(handle, index, m_menuObjWorldMap->m_menuIDList->getSize());
     break;
   }
   case GfMenuTypes::unknown003_259:
@@ -694,25 +695,25 @@ void GfMenuObjWorldMap::ctrlScrollBar(u32 handle, bool unknown) {
 }
 
 void GfMenuObjWorldMap::ZoneSelectListener::reciveEvent(const ui::EventData &event, u32 handle) {
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjWorldMap->unknown18);
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1:
     acc.setDisp(false);
     GfMenuObject::disableInput(acc.unknown10);
-    setupZoneSelect(acc, unknown20->unknown40);
+    setupZoneSelect(acc, m_menuObjWorldMap->unknown40);
     unknown0c = 0;
     return;
   case 3:
     if (event.unknown08 == 1) {
-      refreshZoneSelect(acc, unknown20->unknown40, unknown20->unknown48, unknown20->unknown40->getIndex(true));
+      refreshZoneSelect(acc, m_menuObjWorldMap->unknown40, m_menuObjWorldMap->unknown48, m_menuObjWorldMap->unknown40->getIndex(true));
       GfMenuObject::enableFSInput(1);
       GfMenuObjOperationInfo::add(acc.unknown10, 0, 0, 0);
     } else if (event.unknown08 == 2) {
       {
         mm::mtl::FixStr<32> name;
-        name.format("IMG_zone_base_@%02d", unknown20->unknown48->getIndex(false) + 1);
-        ui::UIObjectAcc base(unknown20->unknown48->getSelectObject(), name.c_str());
+        name.format("IMG_zone_base_@%02d", m_menuObjWorldMap->unknown48->getIndex(false) + 1);
+        ui::UIObjectAcc base(m_menuObjWorldMap->unknown48->getSelectObject(), name.c_str());
         if (base.isValid()) {
           base.startAnimation("open", false);
         }
@@ -727,11 +728,11 @@ void GfMenuObjWorldMap::ZoneSelectListener::reciveEvent(const ui::EventData &eve
   case 6: {
     u32 index = event.unknown08;
     u32 previous = event.unknown0c;
-    if (unknown20->unknown40->getSize() != 0) {
-      unknown20->unknown40->setIndex(index);
-      int page = unknown20->unknown40->getIndex(true);
-      unknown20->unknown40->getContents(index);
-      refreshZoneSelect(acc, unknown20->unknown40, unknown20->unknown48, page);
+    if (m_menuObjWorldMap->unknown40->getSize() != 0) {
+      m_menuObjWorldMap->unknown40->setIndex(index);
+      int page = m_menuObjWorldMap->unknown40->getIndex(true);
+      m_menuObjWorldMap->unknown40->getContents(index);
+      refreshZoneSelect(acc, m_menuObjWorldMap->unknown40, m_menuObjWorldMap->unknown48, page);
       if (previous != 0xffffffff && index != previous) {
         GfMenuObjUtil::playSECommonCursor();
       }
@@ -741,48 +742,48 @@ void GfMenuObjWorldMap::ZoneSelectListener::reciveEvent(const ui::EventData &eve
   }
   case 8:
     if (event.unknown0c == 1) {
-      if (unknown20->unknown40->getSize() == 0) {
+      if (m_menuObjWorldMap->unknown40->getSize() == 0) {
         GfMenuObjUtil::playSECommon(2);
       } else {
-        unknown20->unknown2f0->clear();
-        if (!unknown20->unknown2f70) {
-          unknown20->unknown2f0->unknown79 = false;
+        m_menuObjWorldMap->unknown2f0->clear();
+        if (!m_menuObjWorldMap->unknown2f70) {
+          m_menuObjWorldMap->unknown2f0->m_groupMode = false;
         } else {
-          u8 *bdat = unknown20->unknown2f78;
+          u8 *bdat = m_menuObjWorldMap->unknown2f78;
           u32 top = Bdat::getIdTop(bdat);
           u32 count = Bdat::getIdCount(bdat);
-          unknown20->unknown2f0->unknown79 = true;
+          m_menuObjWorldMap->unknown2f0->m_groupMode = true;
           for (u32 i = 0; i < count; i++) {
             Bdat::uVal group = Bdat::getVal(bdat, "menuGroup", top + i);
             if (Bdat::getVal(bdat, "MAPJUMPID", top + i).valueU16 != 0) {
-              if (group.valueU16 == unknown20->unknown40->getContents(unknown20->unknown40->getIndex(false)).unknown00) {
+              if (group.valueU16 == m_menuObjWorldMap->unknown40->getContents(m_menuObjWorldMap->unknown40->getIndex(false)).unknown00) {
                 if (GfGameFlag::getLocal(1, top + i + FLAG_UNKNOWN_51161) == 1) {
                   MenuZoneMapInfo info;
                   info.unknown00 = top + i;
                   info.unknown04 = Bdat::getVal(bdat, "MSGID", top + i).valueU16;
                   info.unknown08 = Bdat::getVal(bdat, "stoff_cndID", top + i).valueU16;
                   info.unknown14 = Bdat::getVal(bdat, "menuPriority", top + i).valueU16;
-                  unknown20->unknown2f0->addContents(info);
+                  m_menuObjWorldMap->unknown2f0->addContents(info);
                 }
               }
             }
           }
-          if (unknown20->unknown300.size() != 0) {
-            unknown20->unknown300.destroy();
-            unknown20->unknown300.setAllocator(getAllocator(ALLOCATOR_UNKNOWN_0));
+          if (m_menuObjWorldMap->unknown300.size() != 0) {
+            m_menuObjWorldMap->unknown300.destroy();
+            m_menuObjWorldMap->unknown300.setAllocator(getAllocator(ALLOCATOR_UNKNOWN_0));
           }
-          if (unknown20->unknown2f0->getSize() != 0) {
-            unknown20->unknown2f0->sortFromPriority();
-            unknown20->unknown300.reserve(unknown20->unknown2f0->getSize());
-            unknown20->unknown300.fill(MapJumpInfo());
+          if (m_menuObjWorldMap->unknown2f0->getSize() != 0) {
+            m_menuObjWorldMap->unknown2f0->sortFromPriority();
+            m_menuObjWorldMap->unknown300.reserve(m_menuObjWorldMap->unknown2f0->getSize());
+            m_menuObjWorldMap->unknown300.fill(MapJumpInfo());
           }
         }
-        int ctrl = ctrlGroupUp(unknown20->unknown48, unknown20->unknown40->getSize());
+        int ctrl = ctrlGroupUp(m_menuObjWorldMap->unknown48, m_menuObjWorldMap->unknown40->getSize());
         if (ctrl == -1) {
           {
             mm::mtl::FixStr<32> name;
-            name.format("IMG_zone_base_@%02d", unknown20->unknown48->getIndex(false) + 1);
-            ui::UIObjectAcc base(unknown20->unknown48->getSelectObject(), name.c_str());
+            name.format("IMG_zone_base_@%02d", m_menuObjWorldMap->unknown48->getIndex(false) + 1);
+            ui::UIObjectAcc base(m_menuObjWorldMap->unknown48->getSelectObject(), name.c_str());
             if (base.isValid()) {
               base.startAnimation("open", false);
             }
@@ -817,7 +818,7 @@ void GfMenuObjWorldMap::ZoneSelectListener::reciveEvent(const ui::EventData &eve
   case GfMenuTypes::unknown003_259:
     acc.setDisp(true);
     if (unknown0c == 1) {
-      int ctrl = ctrlGroupReturn(unknown20->unknown48, unknown20->unknown40->getSize());
+      int ctrl = ctrlGroupReturn(m_menuObjWorldMap->unknown48, m_menuObjWorldMap->unknown40->getSize());
       if (ctrl == -1) {
         GfMenuObject::enableFSInput(1);
       } else {
@@ -841,7 +842,7 @@ void GfMenuObjWorldMap::ZoneSelectListener::reciveEvent(const ui::EventData &eve
     }
     ctrlScrollBar(acc.searchChild("LAY_zone_scroll_bar"), false);
     GfMenuObject::resetInputSelection(handle);
-    GfMenuObject::setupInputSelectionFromList(handle, *unknown20->unknown40);
+    GfMenuObject::setupInputSelectionFromList(handle, *m_menuObjWorldMap->unknown40);
     break;
   }
   ui::UIObjectListener::reciveEvent(event, handle);
@@ -1096,7 +1097,7 @@ void GfMenuObjWorldMap::updateDispIconNode() {
 }
 
 void GfMenuObjWorldMap::IconFilterListener::reciveEvent(const ui::EventData &event, u32 handle) {
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjWorldMap->unknown18);
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1:
@@ -1107,13 +1108,13 @@ void GfMenuObjWorldMap::IconFilterListener::reciveEvent(const ui::EventData &eve
     u32 index = event.unknown08;
     if (index != 0xffffffff) {
       u32 prev = event.unknown0c;
-      unknown20->unknown2f88->setIndex(index);
+      m_menuObjWorldMap->unknown2f88->setIndex(index);
       {
         ui::UIObjectAcc text(acc.unknown10, "TXT_icon_filter_index");
         u16 msgId = GfMenuObjUtil::getMsgIDFromList(BDAT_MNU_MSG_MAP_FILTER, index + 1);
         text.setText(ui::UIStr(GfDataBdat::getFP(BDAT_MENU_MS), msgId));
       }
-      bool isOn = (unknown20->unknown2f84 & (1 << index)) != 0;
+      bool isOn = (m_menuObjWorldMap->unknown2f84 & (1 << index)) != 0;
       GfMenuObjOperationInfo::changeText(acc.unknown10, 11, isOn);
       if (prev != 0xffffffff && index != prev) {
         GfMenuObjUtil::playSECommonTab();
@@ -1124,14 +1125,14 @@ void GfMenuObjWorldMap::IconFilterListener::reciveEvent(const ui::EventData &eve
   case 8: {
     u32 index = event.unknown08;
     if (index != 0xffffffff && event.unknown0c == 11) {
-      if ((unknown20->unknown2f84 & (1 << index)) == 0) {
-        unknown20->unknown2f84 |= 1 << index;
+      if ((m_menuObjWorldMap->unknown2f84 & (1 << index)) == 0) {
+        m_menuObjWorldMap->unknown2f84 |= 1 << index;
       } else {
-        unknown20->unknown2f84 &= ~(1 << index);
+        m_menuObjWorldMap->unknown2f84 &= ~(1 << index);
       }
-      unknown20->refreshIconFilter();
-      unknown20->updateDispIconNode();
-      u32 isOn = unknown20->unknown2f84 & (1 << index);
+      m_menuObjWorldMap->refreshIconFilter();
+      m_menuObjWorldMap->updateDispIconNode();
+      u32 isOn = m_menuObjWorldMap->unknown2f84 & (1 << index);
       if (isOn != 0) {
         GfMenuObjUtil::playSE(12);
       } else {
@@ -1143,17 +1144,17 @@ void GfMenuObjWorldMap::IconFilterListener::reciveEvent(const ui::EventData &eve
     return;
   }
   case GfMenuTypes::unknown003_259:
-    unknown20->unknown2f88->setIndex(0);
+    m_menuObjWorldMap->unknown2f88->setIndex(0);
     GfMenuObject::resetInputSelection(acc.unknown10);
-    GfMenuObject::setupInputSelectionFromList(acc.unknown10, *unknown20->unknown2f88);
+    GfMenuObject::setupInputSelectionFromList(acc.unknown10, *m_menuObjWorldMap->unknown2f88);
     acc.setDisp(true);
-    unknown20->unknown2f90->setDisp(true);
-    unknown20->refreshIconFilter();
+    m_menuObjWorldMap->unknown2f90->setDisp(true);
+    m_menuObjWorldMap->refreshIconFilter();
     GfMenuObject::enableInput(handle);
     break;
   case GfMenuTypes::unknown003_260:
     acc.setDisp(false);
-    unknown20->unknown2f90->setDisp(false);
+    m_menuObjWorldMap->unknown2f90->setDisp(false);
     GfMenuObject::disableInput(handle);
     break;
   }
@@ -1207,7 +1208,7 @@ bool GfMenuObjWorldMap::chkMapCond(u32 map, mm::Pnt<s16> *pos) {
 }
 
 u32 GfMenuObjWorldMap::getFloor() {
-  if (!unknown40->unknown79) {
+  if (!unknown40->m_groupMode) {
     return unknown40->getContents(unknown40->getIndex(false)).unknown00;
   }
   u16 image = unknown2f0->getContents(unknown2f0->getIndex(false)).unknown00;
@@ -1221,7 +1222,7 @@ bool GfMenuObjWorldMap::seqTexDelete() {
     unknown6b8->clear();
     closeIconTable(main, unknown6c0);
     unknown300.fill(MapJumpInfo());
-    GfFieldGimmick::get()->unknownf4c0.dispose();
+    GfFieldGimmick::get()->m_gmkLocatorAtlas.dispose();
     mm::mtl::safeRelease(unknown2e0);
     deleteMapImage();
   }
@@ -1239,12 +1240,12 @@ bool GfMenuObjWorldMap::seqTexLoadWait() {
 
 bool GfMenuObjWorldMap::seqGimik() {
   ui::UIObjectAcc main(ui::UIObjectAcc(unknown18).searchChild("LAY_main"));
-  if (GfFieldGimmick::get()->unknownf4c0.unknown00.unknown00 <= 0 || !(nullptr == GfFieldGimmick::get()->unknownf4c0.unknown438)) {
+  if (GfFieldGimmick::get()->m_gmkLocatorAtlas.m_createInfo.unknown00 <= 0 || !(nullptr == GfFieldGimmick::get()->m_gmkLocatorAtlas.unknown438)) {
     return false;
   }
   if (unknown2f60) {
     const mm::Vec3 &position = GfGameManager::getControlMoverPosition();
-    unknown2f60 = GfFieldGimmick::get() != nullptr && GfFieldGimmick::get()->unknownf4c0.isBelongToCurMap(position);
+    unknown2f60 = GfFieldGimmick::get() != nullptr && GfFieldGimmick::get()->m_gmkLocatorAtlas.isBelongToCurMap(position);
   }
   setupIconTable(main, unknown6c0, unknown2f0, unknown2f14, unknown2f20, unknown2f30, unknown2f60);
   for (u32 node = 0; node < 10; node++) {
@@ -1252,7 +1253,7 @@ bool GfMenuObjWorldMap::seqGimik() {
       unknown6b8->addObject(unknown6c0[node][i]);
     }
   }
-  if (unknown2f0->unknown79) {
+  if (unknown2f0->m_groupMode) {
     for (u32 i = 0; i < unknown2f0->getSize(); i++) {
       unknown2f0->getContents(i).unknown10 = -1;
       for (u32 j = 0; j < unknown6b8->getSize(); j++) {

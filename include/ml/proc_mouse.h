@@ -26,17 +26,17 @@ public:
   bool wkStandbyLogin() override;
   bool wkStandbyLogout() override;
 
-  mm::Pnt<int> unknown1f8;        // Inferred role: position; original member name unknown.
+  mm::Pnt<int> m_pos;             // Inferred role: position; named after the game accessor ml::ProcMouse::getPos.
   mm::Pnt<int> unknown200;        // Inferred role: previous position; original member name unknown.
-  mm::Pnt<int> unknown208;        // Inferred role: move; original member name unknown.
+  mm::Pnt<int> m_move;            // Inferred role: move; named after the game accessor ml::ProcMouse::getMove.
   mm::mtl::FixStr<32> unknown210; // Inferred role: cursor name ("ARROW", "SIZE1"...); original member name unknown.
   bool unknown234;                // Inferred role: resize cursor shown; original member name unknown.
   u8 unknown235;                  // Inferred role: frames left to draw the cursor after a move; original member name unknown.
 };
 
-static_assert(offsetof(ProcMouse, unknown1f8) == 0x1f8, "");
+static_assert(offsetof(ProcMouse, m_pos) == 0x1f8, "");
 static_assert(offsetof(ProcMouse, unknown200) == 0x200, "");
-static_assert(offsetof(ProcMouse, unknown208) == 0x208, "");
+static_assert(offsetof(ProcMouse, m_move) == 0x208, "");
 static_assert(offsetof(ProcMouse, unknown210) == 0x210, "");
 static_assert(offsetof(ProcMouse, unknown234) == 0x234, "");
 static_assert(offsetof(ProcMouse, unknown235) == 0x235, "");

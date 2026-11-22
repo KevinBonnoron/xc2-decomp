@@ -45,7 +45,7 @@ public:
     u8 _164[0x168 - 0x164];
     f32 *unknown168; // Inferred role: depth slice table; original member name unknown.
     u8 _170[0x188 - 0x170];
-    u8 *unknown188; // Inferred role: light list data; original member name unknown.
+    u8 *m_lightListData; // Inferred role: light list data; named after the game accessor ml::DrShdLgtClustered::getLightListData.
   };
 
   DrShdLgtClustered(DrMan *drMan, bool isLowResolution);
@@ -95,7 +95,7 @@ public:
   u32 unknown690;          // Inferred role: light list node count; original member name unknown.
   u32 unknown694;          // Inferred role: light list node maximum; original member name unknown.
   void *unknown698;        // Inferred role: light list nodes; original member name unknown.
-  DrResFetch unknown6a0;   // Inferred role: light vertex fetch; original member name unknown.
+  DrResFetch m_drResFetch; // Inferred role: light vertex fetch; original member name unknown.
 };
 
 static_assert(sizeof(DrShdLgtClustered::unknown001) == 0x14, "");
@@ -104,14 +104,14 @@ static_assert(offsetof(DrShdLgtClustered::unknown002, unknown160) == 0x160, "");
 static_assert(offsetof(DrShdLgtClustered::unknown002, unknown168) == 0x168, "");
 static_assert(offsetof(DrShdLgtClustered::unknown002, unknown150) == 0x150, "");
 static_assert(offsetof(DrShdLgtClustered::unknown002, unknown158) == 0x158, "");
-static_assert(offsetof(DrShdLgtClustered::unknown002, unknown188) == 0x188, "");
+static_assert(offsetof(DrShdLgtClustered::unknown002, m_lightListData) == 0x188, "");
 static_assert(offsetof(DrShdLgtClustered::unknown002, unknown154) == 0x154, "");
 static_assert(sizeof(DrShdLgtClustered::unknown002) == 0x190, "");
 static_assert(offsetof(DrShdLgtClustered, unknown18) == 0x18, "");
 static_assert(offsetof(DrShdLgtClustered, unknown20) == 0x20, "");
 static_assert(offsetof(DrShdLgtClustered, unknown660) == 0x660, "");
 static_assert(offsetof(DrShdLgtClustered, unknown698) == 0x698, "");
-static_assert(offsetof(DrShdLgtClustered, unknown6a0) == 0x6a0, "");
+static_assert(offsetof(DrShdLgtClustered, m_drResFetch) == 0x6a0, "");
 static_assert(sizeof(DrShdLgtClustered) == 0x6b0, "");
 
 } // namespace ml

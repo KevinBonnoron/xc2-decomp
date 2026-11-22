@@ -17,7 +17,7 @@ GmkBattleLock::GmkBattleLock() : unknownc0(0), unknownc4(0) {}
 
 GmkType GmkBattleLock::getGmkType() const { return GMK_TYPE; }
 
-bool GmkBattleLock::isValid() const { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
+bool GmkBattleLock::isValid() const { return m_createBaseInfo.m_ownerGmkEnemyList != nullptr && m_createInfo.unknown08 != nullptr; }
 
 void GmkBattleLock::create(const CreateInfo &info) { AGmkBase::create(info); }
 
@@ -25,7 +25,7 @@ void GmkBattleLock::debugDraw() const { isValid(); }
 
 void GmkBattleLock::dispose() {
   disposeEffect(false);
-  unknown50.dispose();
+  m_gmkCollision.dispose();
   AGmkBase::dispose();
 }
 
@@ -49,7 +49,7 @@ void GmkBattleLock::createGmkCollision() {
   if (!canCreateGameEntity()) {
     return;
   }
-  unknown50.create(*this, true);
+  m_gmkCollision.create(*this, true);
 }
 
 void GmkBattleLock::createEffect() {
@@ -58,7 +58,7 @@ void GmkBattleLock::createEffect() {
   }
   disposeEffect(false);
   const unknown001 *data = unknown002();
-  switch (unknown08.unknown10->unknown0c) {
+  switch (m_createBaseInfo.unknown10->unknown0c) {
   case SHAPE_TYPE_UNKNOWN_3:
     unknownc0 = fw::EffectManager::get()->create(data->unknown00 ? "cmn_204_001" : "cmn_204_011", nullptr, true);
     break;
@@ -78,12 +78,12 @@ void GmkBattleLock::update(f32 deltaTime) {
   debugUpdateMmf();
   if (isValid()) {
     if (unknownc4 > 0) {
-      if (unknown50.unknown58 == nullptr && gf::GfGameManager::isEnableCreateBattleLock()) {
+      if (m_gmkCollision.unknown58 == nullptr && gf::GfGameManager::isEnableCreateBattleLock()) {
         createGmkCollision();
         createEffect();
       }
-    } else if (unknown50.unknown58 != nullptr && (gf::GfDataUtil::getScenarioFlag() != SCENARIO_FLAG_UNKNOWN_7039 || !gf::GfGameManager::isBattle())) {
-      unknown50.dispose();
+    } else if (m_gmkCollision.unknown58 != nullptr && (gf::GfDataUtil::getScenarioFlag() != SCENARIO_FLAG_UNKNOWN_7039 || !gf::GfGameManager::isBattle())) {
+      m_gmkCollision.dispose();
       disposeEffect(true);
     }
     if (unknownc0 != 0) {

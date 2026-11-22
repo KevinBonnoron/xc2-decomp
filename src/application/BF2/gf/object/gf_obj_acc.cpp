@@ -1,5 +1,7 @@
 #include "gf/object/gf_obj_acc.h"
 
+#include <math.h>
+
 #include "anm/anm_pose.h"
 #include "anm/anm_qs_transform.h"
 #include "anm/anm_skeleton.h"
@@ -52,14 +54,14 @@ static const char *unknown021[] = {
     "ExtraPartsF",
 };
 
-GfObjAcc::GfObjAcc(GfObj *obj) : m_obj(obj) { unknown00 = obj != nullptr ? GfObjManager::getObjInfo(obj->unknownf8) : nullptr; }
+GfObjAcc::GfObjAcc(GfObj *obj) : m_obj(obj) { m_GFOBJ_INFO = obj != nullptr ? GfObjManager::getObjInfo(obj->unknownf8) : nullptr; }
 
 GfObjAcc::GfObjAcc(GF_OBJ_HANDLE *handle) {
-  unknown00 = GfObjManager::getObjInfo(handle);
-  if (unknown00 == nullptr) {
+  m_GFOBJ_INFO = GfObjManager::getObjInfo(handle);
+  if (m_GFOBJ_INFO == nullptr) {
     m_obj = nullptr;
   } else {
-    m_obj = unknown00->unknown18;
+    m_obj = m_GFOBJ_INFO->unknown18;
   }
 }
 
@@ -156,6 +158,24 @@ const fw::Transform &GfObjAcc::getWorldTransformNoSync() const {
   transform.unknown00 = mm::Vec3::zero;
   transform.unknown10 = mm::Quat::identity;
   return transform;
+}
+
+// 1.0.0: 0x7100581c0c, 97 instructions. The game rotates the opposite direction: the products have the temporaries negated (tx = (z * uy - y * uz) - w * ux), the z is negated before
+// atan2f and its result after. `atan2f(front.x, front.z)` of `rotate(unitZ)` has 95 instructions. The early return of the invalid case keeps the one `return true` (the nested form
+// duplicates it: 99 instructions).
+bool GfObjAcc::getObjPosRot(mm::Vec3 &position, f32 &rotation) {
+  if (!isValidTransform()) {
+    position = mm::Vec3::zero;
+    rotation = 0.0f;
+    return false;
+  }
+  position = getWorldTransform().unknown00;
+  rotation = 0.0f;
+  mm::Vec3 back = getWorldTransform().unknown10.rotate(mm::Vec3(-mm::Vec3::unitZ.x, -mm::Vec3::unitZ.y, -mm::Vec3::unitZ.z));
+  if (fabsf(back.x) > 0.000001f || fabsf(back.z) > 0.000001f) {
+    rotation = -atan2f(back.x, -back.z);
+  }
+  return true;
 }
 
 f32 GfObjAcc::getAlpha(OBJ_ALPHA type) const {
@@ -308,7 +328,7 @@ void GfObjAcc::setFrameSpeed(f32 speed) {
   }
 }
 
-void GfObjAcc::setCameraFade(bool isEnable) { GfObjUtil::setFlag(unknown00, OBJ_FLAG_UNKNOWN_10, isEnable); }
+void GfObjAcc::setCameraFade(bool isEnable) { GfObjUtil::setFlag(m_GFOBJ_INFO, OBJ_FLAG_UNKNOWN_10, isEnable); }
 
 void GfObjAcc::setRenderCameraFade(bool isEnable) {
   ml::ScnObjModel *model = getScnModel();
@@ -323,19 +343,19 @@ void GfObjAcc::setRenderCameraFade(bool isEnable) {
   }
 }
 
-bool GfObjAcc::setFlag(u32 flag, bool value) { return GfObjUtil::setFlag(unknown00, flag, value); }
+bool GfObjAcc::setFlag(u32 flag, bool value) { return GfObjUtil::setFlag(m_GFOBJ_INFO, flag, value); }
 
-bool GfObjAcc::isCameraFadeEnable() const { return GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_10); }
+bool GfObjAcc::isCameraFadeEnable() const { return GfObjUtil::testFlag(m_GFOBJ_INFO, OBJ_FLAG_UNKNOWN_10); }
 
-bool GfObjAcc::testFlag(u32 flag) const { return GfObjUtil::testFlag(unknown00, flag); }
+bool GfObjAcc::testFlag(u32 flag) const { return GfObjUtil::testFlag(m_GFOBJ_INFO, flag); }
 
-bool GfObjAcc::isCameraFadeDisableForEvent() const { return GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_11); }
+bool GfObjAcc::isCameraFadeDisableForEvent() const { return GfObjUtil::testFlag(m_GFOBJ_INFO, OBJ_FLAG_UNKNOWN_11); }
 
-void GfObjAcc::setCameraFadeDisableForEvent(bool isDisable) { GfObjUtil::setFlag(unknown00, OBJ_FLAG_UNKNOWN_11, isDisable); }
+void GfObjAcc::setCameraFadeDisableForEvent(bool isDisable) { GfObjUtil::setFlag(m_GFOBJ_INFO, OBJ_FLAG_UNKNOWN_11, isDisable); }
 
-bool GfObjAcc::isCameraFadeDisableForBattle() const { return GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_12); }
+bool GfObjAcc::isCameraFadeDisableForBattle() const { return GfObjUtil::testFlag(m_GFOBJ_INFO, OBJ_FLAG_UNKNOWN_12); }
 
-void GfObjAcc::setCameraFadeDisableForBattle(bool isDisable) { GfObjUtil::setFlag(unknown00, OBJ_FLAG_UNKNOWN_12, isDisable); }
+void GfObjAcc::setCameraFadeDisableForBattle(bool isDisable) { GfObjUtil::setFlag(m_GFOBJ_INFO, OBJ_FLAG_UNKNOWN_12, isDisable); }
 
 void GfObjAcc::setCollisionChar(bool isEnable) {
   if (m_obj == nullptr) {
@@ -362,7 +382,7 @@ bool GfObjAcc::hasParent() const { return m_obj != nullptr && GfObjUtil::getPare
 
 GfObj *GfObjAcc::getObj() const { return m_obj; }
 
-GF_OBJ_HANDLE *GfObjAcc::getHandle() const { return unknown00 != nullptr ? unknown00->unknown08 : unknown020; }
+GF_OBJ_HANDLE *GfObjAcc::getHandle() const { return m_GFOBJ_INFO != nullptr ? m_GFOBJ_INFO->unknown08 : unknown020; }
 
 bool GfObjAcc::isDisp(OBJDISP disp) const {
   if (m_obj == nullptr) {
@@ -370,10 +390,10 @@ bool GfObjAcc::isDisp(OBJDISP disp) const {
   }
 
   if (disp != 0) {
-    return (unknown00->unknown48 & disp) == 0;
+    return (m_GFOBJ_INFO->unknown48 & disp) == 0;
   }
 
-  return unknown00->unknown48 == 0;
+  return m_GFOBJ_INFO->unknown48 == 0;
 }
 
 void GfObjAcc::setDisp(OBJDISP disp, bool isDisp) {
@@ -381,16 +401,16 @@ void GfObjAcc::setDisp(OBJDISP disp, bool isDisp) {
     return;
   }
 
-  bool isHidden = (unknown00->unknown48 & disp) != 0;
+  bool isHidden = (m_GFOBJ_INFO->unknown48 & disp) != 0;
   if (isHidden == isDisp) {
-    u32 flags = unknown00->unknown48;
+    u32 flags = m_GFOBJ_INFO->unknown48;
     if (isDisp) {
       flags &= ~disp;
     } else {
       flags |= disp;
     }
-    unknown00->unknown48 = flags;
-    GfObjUtil::setFlag(unknown00, OBJ_FLAG_UNKNOWN_1, true);
+    m_GFOBJ_INFO->unknown48 = flags;
+    GfObjUtil::setFlag(m_GFOBJ_INFO, OBJ_FLAG_UNKNOWN_1, true);
     for (mm::mtl::IntrusiveList<fw::UpdatableObject>::iterator it = m_obj->unknownb8.begin(), last = m_obj->unknownb8.end(); it != last; ++it) {
       GfObjUtil::setFlag(GfObjManager::getObjInfo(mm::mtl::dynamicCast<GfObj>(it.operator->())->unknownf8), OBJ_FLAG_UNKNOWN_1, true);
     }
@@ -418,7 +438,7 @@ bool GfObjAcc::isDispChanged() const {
     return true;
   }
 
-  return GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_1);
+  return GfObjUtil::testFlag(m_GFOBJ_INFO, OBJ_FLAG_UNKNOWN_1);
 }
 
 void GfObjAcc::applyDisp() {
@@ -427,7 +447,7 @@ void GfObjAcc::applyDisp() {
   }
 
   bool isDisp;
-  if (unknown00->unknown48 == 0) {
+  if (m_GFOBJ_INFO->unknown48 == 0) {
     GfObj *parent = GfObjUtil::getParentObj(m_obj);
     if (parent == nullptr) {
       isDisp = true;
@@ -443,21 +463,21 @@ void GfObjAcc::applyDisp() {
     model->setDisp(isDisp);
   }
 
-  if (GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_1)) {
-    GfObjUtil::setFlag(unknown00, OBJ_FLAG_UNKNOWN_1, false);
+  if (GfObjUtil::testFlag(m_GFOBJ_INFO, OBJ_FLAG_UNKNOWN_1)) {
+    GfObjUtil::setFlag(m_GFOBJ_INFO, OBJ_FLAG_UNKNOWN_1, false);
   }
 }
 
-void GfObjAcc::setClip(bool isClip) { GfObjUtil::setFlag(unknown00, OBJ_FLAG_UNKNOWN_2, isClip); }
+void GfObjAcc::setClip(bool isClip) { GfObjUtil::setFlag(m_GFOBJ_INFO, OBJ_FLAG_UNKNOWN_2, isClip); }
 
-void GfObjAcc::setGpuClip(bool isClip) { GfObjUtil::setFlag(unknown00, OBJ_FLAG_UNKNOWN_3, isClip); }
+void GfObjAcc::setGpuClip(bool isClip) { GfObjUtil::setFlag(m_GFOBJ_INFO, OBJ_FLAG_UNKNOWN_3, isClip); }
 
 void GfObjAcc::setModelScaleForMenu(const mm::Vec3 &scale) {
   if (m_obj == nullptr) {
     return;
   }
 
-  unknown00->unknowna0 = scale;
+  m_GFOBJ_INFO->unknowna0 = scale;
   ml::ScnObjModel *model = getScnModel();
   if (model != nullptr) {
     f32 setupScale = GfObjUtil::getSetupScale(getHandle());
@@ -475,7 +495,7 @@ void GfObjAcc::setModelScale(f32 scale) {
     return;
   }
 
-  mm::Vec3 &modelScale = unknown00->unknowna0;
+  mm::Vec3 &modelScale = m_GFOBJ_INFO->unknowna0;
   modelScale.x = scale;
   modelScale.y = scale;
   modelScale.z = scale;
@@ -485,22 +505,22 @@ void GfObjAcc::setModelScale(f32 scale) {
   }
 }
 
-const mm::Vec3 &GfObjAcc::getModelScaleXYZ() const { return unknown00 != nullptr ? unknown00->unknowna0 : mm::Vec3::unit; }
+const mm::Vec3 &GfObjAcc::getModelScaleXYZ() const { return m_GFOBJ_INFO != nullptr ? m_GFOBJ_INFO->unknowna0 : mm::Vec3::unit; }
 
 f32 GfObjAcc::getModelScale() const { return getModelScaleXYZ().x; }
 
 void GfObjAcc::setModelScaleForDebug(f32 scale) {
-  if (unknown00 == nullptr) {
+  if (m_GFOBJ_INFO == nullptr) {
     return;
   }
 
-  mm::Vec3 &modelScale = unknown00->unknowna0;
+  mm::Vec3 &modelScale = m_GFOBJ_INFO->unknowna0;
   modelScale.x = scale;
   modelScale.y = scale;
   modelScale.z = scale;
   ml::ScnObjModel *model = getScnModel();
   if (model != nullptr) {
-    model->setScl(unknown00->unknowna0);
+    model->setScl(m_GFOBJ_INFO->unknowna0);
   }
 }
 
@@ -509,18 +529,18 @@ void GfObjAcc::setGravity(bool isGravity) {}
 bool GfObjAcc::isGravity() const { return false; }
 
 bool GfObjAcc::isReload() const {
-  if (GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_5)) {
+  if (GfObjUtil::testFlag(m_GFOBJ_INFO, OBJ_FLAG_UNKNOWN_5)) {
     return true;
   }
 
-  return GfAssetManager::isReload(unknown00->unknown10);
+  return GfAssetManager::isReload(m_GFOBJ_INFO->m_GF_ASSET_HANDLE);
 }
 
-bool GfObjAcc::isRebuild() const { return GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_6); }
+bool GfObjAcc::isRebuild() const { return GfObjUtil::testFlag(m_GFOBJ_INFO, OBJ_FLAG_UNKNOWN_6); }
 
-void GfObjAcc::setToolMode(bool isToolMode) { GfObjUtil::setFlag(unknown00, OBJ_FLAG_UNKNOWN_24, isToolMode); }
+void GfObjAcc::setToolMode(bool isToolMode) { GfObjUtil::setFlag(m_GFOBJ_INFO, OBJ_FLAG_UNKNOWN_24, isToolMode); }
 
-bool GfObjAcc::isToolMode() const { return GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_24); }
+bool GfObjAcc::isToolMode() const { return GfObjUtil::testFlag(m_GFOBJ_INFO, OBJ_FLAG_UNKNOWN_24); }
 
 void GfObjAcc::setAttribute(u32 attribute) {
   if (m_obj != nullptr) {
@@ -533,7 +553,7 @@ u32 GfObjAcc::getAttribute() const { return m_obj != nullptr ? m_obj->unknown110
 void GfObjAcc::applyClip() {
   ml::ScnObjModel *model = getScnModel();
   if (model != nullptr) {
-    model->setClip(GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_2));
+    model->setClip(GfObjUtil::testFlag(m_GFOBJ_INFO, OBJ_FLAG_UNKNOWN_2));
   }
 }
 
@@ -541,7 +561,7 @@ void GfObjAcc::applyClipGpu() {
   ml::ScnObjModel *model = getScnModel();
   if (model != nullptr) {
     ml::ScnObjAccResMdlInfo modelInfo(model);
-    modelInfo.setGpuClip(GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_3));
+    modelInfo.setGpuClip(GfObjUtil::testFlag(m_GFOBJ_INFO, OBJ_FLAG_UNKNOWN_3));
   }
 }
 
@@ -561,23 +581,23 @@ bool GfObjAcc::isValidModel() const {
   return m_obj->unknown38[GfComModel::COMPONENT_INDEX]->getRTTI()->isKindOf(&GfComModel::m_rtti);
 }
 
-bool GfObjAcc::isDestroy() const { return GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_0); }
+bool GfObjAcc::isDestroy() const { return GfObjUtil::testFlag(m_GFOBJ_INFO, OBJ_FLAG_UNKNOWN_0); }
 
 u32 GfObjAcc::getType() const { return m_obj != nullptr ? m_obj->unknown28 : 0; }
 
-void GfObjAcc::setCalcCameraAlpha() { GfObjUtil::setFlag(unknown00, OBJ_FLAG_UNKNOWN_13, true); }
+void GfObjAcc::setCalcCameraAlpha() { GfObjUtil::setFlag(m_GFOBJ_INFO, OBJ_FLAG_UNKNOWN_13, true); }
 
-u32 GfObjAcc::getMultiBindUniqId() const { return unknown00 != nullptr ? unknown00->unknown00 : 0; }
+u32 GfObjAcc::getMultiBindUniqId() const { return m_GFOBJ_INFO != nullptr ? m_GFOBJ_INFO->unknown00 : 0; }
 
 bool GfObjAcc::isMultiBindWaiting() const {
-  if (unknown00 == nullptr || unknown00->unknown00 == 0) {
+  if (m_GFOBJ_INFO == nullptr || m_GFOBJ_INFO->unknown00 == 0) {
     return false;
   }
 
-  return !GfObjManager::get()->isValidMultiBind(unknown00->unknown08, unknown00->unknown00);
+  return !GfObjManager::get()->isValidMultiBind(m_GFOBJ_INFO->unknown08, m_GFOBJ_INFO->unknown00);
 }
 
-GF_ASSET_HANDLE *GfObjAcc::getAssetHandle() const { return unknown00 != nullptr ? unknown00->unknown10 : reinterpret_cast<GF_ASSET_HANDLE *>(-1); }
+GF_ASSET_HANDLE *GfObjAcc::getAssetHandle() const { return m_GFOBJ_INFO != nullptr ? m_GFOBJ_INFO->m_GF_ASSET_HANDLE : reinterpret_cast<GF_ASSET_HANDLE *>(-1); }
 
 GF_OBJ_HANDLE *GfObjAcc::getTarget() const {
   if (m_obj != nullptr) {
@@ -590,15 +610,15 @@ GF_OBJ_HANDLE *GfObjAcc::getTarget() const {
   return unknown020;
 }
 
-GF_OBJ_HANDLE *GfObjAcc::getMaster() const { return unknown00 != nullptr ? unknown00->unknown88 : unknown020; }
+GF_OBJ_HANDLE *GfObjAcc::getMaster() const { return m_GFOBJ_INFO != nullptr ? m_GFOBJ_INFO->unknown88 : unknown020; }
 
 void GfObjAcc::setUserData(GfObjUserData type, u64 data) {
-  if (unknown00 != nullptr) {
-    unknown00->unknown70[type] = data;
+  if (m_GFOBJ_INFO != nullptr) {
+    m_GFOBJ_INFO->unknown70[type] = data;
   }
 }
 
-u64 GfObjAcc::getUserData(GfObjUserData type) const { return unknown00 != nullptr ? unknown00->unknown70[type] : 0; }
+u64 GfObjAcc::getUserData(GfObjUserData type) const { return m_GFOBJ_INFO != nullptr ? m_GFOBJ_INFO->unknown70[type] : 0; }
 
 u32 GfObjAcc::getBdatId() const {
   if (m_obj == nullptr) {
@@ -672,28 +692,28 @@ u32 GfObjAcc::getPcWeaponId() const { return getBdatId(); }
 u32 GfObjAcc::getUiObjId() const { return getBdatId(); }
 
 bool GfObjAcc::isMasterObjValid() const {
-  if (unknown00 != nullptr && unknown00->unknown88 != unknown020 && GfObjUtil::isValid(unknown00->unknown88)) {
-    return GfObjUtil::isUpdate(unknown00->unknown88);
+  if (m_GFOBJ_INFO != nullptr && m_GFOBJ_INFO->unknown88 != unknown020 && GfObjUtil::isValid(m_GFOBJ_INFO->unknown88)) {
+    return GfObjUtil::isUpdate(m_GFOBJ_INFO->unknown88);
   }
 
   return true;
 }
 
 bool GfObjAcc::isLoadedWaitOK() const {
-  if (!isMasterObjValid() || GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_26)) {
+  if (!isMasterObjValid() || GfObjUtil::testFlag(m_GFOBJ_INFO, OBJ_FLAG_UNKNOWN_26)) {
     return false;
   }
 
-  if (GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_8)) {
-    return GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_9);
+  if (GfObjUtil::testFlag(m_GFOBJ_INFO, OBJ_FLAG_UNKNOWN_8)) {
+    return GfObjUtil::testFlag(m_GFOBJ_INFO, OBJ_FLAG_UNKNOWN_9);
   }
 
   return true;
 }
 
-u16 GfObjAcc::getView() const { return unknown00 != nullptr ? unknown00->unknown02 : 0; }
+u16 GfObjAcc::getView() const { return m_GFOBJ_INFO != nullptr ? m_GFOBJ_INFO->unknown02 : 0; }
 
-u32 GfObjAcc::getLayer() const { return m_obj != nullptr ? m_obj->unknown2c : 4; }
+u32 GfObjAcc::getLayer() const { return m_obj != nullptr ? m_obj->m_layer : 4; }
 
 bool GfObjAcc::isLayerPause() const { return fw::Framework::isLayerPause(getLayer()); }
 
@@ -747,7 +767,7 @@ const char *GfObjAcc::getExtMeshName(int index) const {
   return "";
 }
 
-bool GfObjAcc::isUpdated() const { return GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_19); }
+bool GfObjAcc::isUpdated() const { return GfObjUtil::testFlag(m_GFOBJ_INFO, OBJ_FLAG_UNKNOWN_19); }
 
 const char *GfObjAcc::getDebugName() const { return ""; }
 
@@ -765,7 +785,7 @@ bool GfObjAcc::isBattle() const {
   return false;
 }
 
-GF_MOUNT_HANDLE *GfObjAcc::getMountHandle(GFATTACH attach) const { return unknown00 != nullptr ? unknown00->unknownb8[attach].unknown00 : reinterpret_cast<GF_MOUNT_HANDLE *>(-1); }
+GF_MOUNT_HANDLE *GfObjAcc::getMountHandle(GFATTACH attach) const { return m_GFOBJ_INFO != nullptr ? m_GFOBJ_INFO->unknownb8[attach].m_GF_MOUNT_HANDLE : reinterpret_cast<GF_MOUNT_HANDLE *>(-1); }
 
 void GfObjAcc::setupExtraParts() {
   ml::ScnObjModel *model = getScnModel();
@@ -803,7 +823,7 @@ int GfObjAcc::getEtcParamIndex(const char *name) const {
   return -1;
 }
 
-bool GfObjAcc::isPartyObj() const { return GfObjUtil::testFlag(unknown00, OBJ_FLAG_UNKNOWN_18); }
+bool GfObjAcc::isPartyObj() const { return GfObjUtil::testFlag(m_GFOBJ_INFO, OBJ_FLAG_UNKNOWN_18); }
 
 int GfObjAcc::getPartyID() const { return GfObjUtil::getPartyID(getHandle()); }
 

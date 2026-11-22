@@ -91,15 +91,15 @@ public:
 
   static u8 s_etcNextVertex[];
 
-  FileResTh *unknown00;                              // Inferred role: shader file resource; original member name unknown.
-  DrMan *unknown08;                                  // Inferred role: dr man; original member name unknown.
+  FileResTh *m_fileResTh;                            // Inferred role: shader file resource; original member name unknown.
+  DrMan *m_drMan;                                    // Inferred role: dr man; original member name unknown.
   void *unknown10;                                   // Inferred role: shader object work memory; original member name unknown.
   DrShdDataObj *unknown18[10];                       // Inferred role: shd objs; original member name unknown.
-  DrResFetch unknown68[91];                          // Inferred role: fetches; original member name unknown.
+  DrResFetch m_fetchShader[91];                      // Inferred role: fetches; named after the game accessor ml::DrShdDataList::getFetchShader.
   grlib::CGLibShdListBase<DrShdDataObj> *unknown618; // Inferred role: shader list; original member name unknown.
-  DrResShdMpf *unknown620;                           // Inferred role: mpf objs; original member name unknown.
-  DrResShdPrePass *unknown628;                       // Inferred role: pre pass objs; original member name unknown.
-  DrResShdShw *unknown630;                           // Inferred role: shw objs; original member name unknown.
+  DrResShdMpf *m_mpfObj;                             // Inferred role: mpf objs; named after the game accessor ml::DrShdDataList::getMpfObj.
+  DrResShdPrePass *m_prePassObj;                     // Inferred role: pre pass objs; named after the game accessor ml::DrShdDataList::getPrePassObj.
+  DrResShdShw *m_shwObj;                             // Inferred role: shw objs; named after the game accessor ml::DrShdDataList::getShwObj.
   // Evidence for the arrays: ~DrShdDataList releases each vertex and index and destroys them with addresses recomputed
   // per element (array destruction), while the two stream outputs are constructed, created and destroyed one by one.
   grlib::CGLibVtxVertex
@@ -108,20 +108,20 @@ public:
   grlib::CGLibVtxStmOut unknown958;                                 // Inferred role: stm out; original member name unknown.
   grlib::CGLibVtxStmOut unknown980;                                 // Inferred role: stm out; original member name unknown.
   grlib::CGLibUniformArray<grlib::CGLibOneUniformBlock> unknown9a8; // Inferred role: alpha test uniforms; original member name unknown.
-  DrResShdStreamOut *unknown9d0;                                    // Inferred role: stm out objs; original member name unknown.
-  DrResShdObjMot *unknown9d8;                                       // Inferred role: object mot blur objs; original member name unknown.
+  DrResShdStreamOut *m_stmOutObj;                                   // Inferred role: stm out objs; named after the game accessor ml::DrShdDataList::getStmOutObj.
+  DrResShdObjMot *m_objMotBlurObj;                                  // Inferred role: object mot blur objs; named after the game accessor ml::DrShdDataList::getObjMotBlurObj.
 };
 
-static_assert(offsetof(DrShdDataList, unknown08) == 0x008, "");
+static_assert(offsetof(DrShdDataList, m_drMan) == 0x008, "");
 static_assert(offsetof(DrShdDataList, unknown18) == 0x018, "");
-static_assert(offsetof(DrShdDataList, unknown68) == 0x068, "");
-static_assert(offsetof(DrShdDataList, unknown620) == 0x620, "");
+static_assert(offsetof(DrShdDataList, m_fetchShader) == 0x068, "");
+static_assert(offsetof(DrShdDataList, m_mpfObj) == 0x620, "");
 static_assert(offsetof(DrShdDataList, unknown638) == 0x638, "");
 static_assert(offsetof(DrShdDataList, unknown818) == 0x818, "");
 static_assert(offsetof(DrShdDataList, unknown958) == 0x958, "");
 static_assert(offsetof(DrShdDataList, unknown980) == 0x980, "");
 static_assert(offsetof(DrShdDataList, unknown9a8) == 0x9a8, "");
-static_assert(offsetof(DrShdDataList, unknown9d0) == 0x9d0, "");
-static_assert(offsetof(DrShdDataList, unknown9d8) == 0x9d8, "");
+static_assert(offsetof(DrShdDataList, m_stmOutObj) == 0x9d0, "");
+static_assert(offsetof(DrShdDataList, m_objMotBlurObj) == 0x9d8, "");
 
 } // namespace ml

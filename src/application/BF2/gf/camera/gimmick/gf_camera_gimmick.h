@@ -96,38 +96,38 @@ public:
   void update(const fw::UpdateInfo &info) override;
 
   u8 _a8[0xb0 - 0xa8];
-  mm::Vec3 unknownb0; // Inferred role: position; original member name unknown.
-  mm::Vec3 unknownc0; // Inferred role: rotation; original member name unknown.
-  f32 unknownd0;      // Inferred role: fov; original member name unknown.
+  mm::Vec3 m_pos; // Inferred role: position; named after the game accessor gf::GimmickCamera::getPos.
+  mm::Vec3 m_rot; // Inferred role: rotation; named after the game accessor gf::GimmickCamera::getRot.
+  f32 unknownd0;  // Inferred role: fov; original member name unknown.
   u8 _d4[0xe0 - 0xd4];
   mm::mtl::FixedVector<Param, 1024> unknown00e0; // Inferred role: camera params; original member name unknown.
   s32 unknown100f0;                              // Inferred role: load mode; original member name unknown.
   s32 unknown100f4;                              // Inferred role: coordinate type; original member name unknown.
   bool unknown100f8;                             // Inferred role: playing; original member name unknown.
   bool unknown100f9;                             // Inferred role: played; original member name unknown.
-  bool unknown100fa;                             // Inferred role: auto; original member name unknown.
-  bool unknown100fb;                             // Inferred role: collision; original member name unknown.
-  bool unknown100fc;                             // Inferred role: speed flag; original member name unknown.
-  bool unknown100fd;                             // Inferred role: pause; original member name unknown.
+  bool m_auto;                                   // Inferred role: auto; named after the game accessor gf::GimmickCamera::setAuto.
+  bool m_collision;                              // Inferred role: collision; named after the game accessor gf::GimmickCamera::setCollision.
+  bool m_speedFlag;                              // Inferred role: speed flag; named after the game accessor gf::GimmickCamera::setSpeedFlag.
+  bool m_pause;                                  // Inferred role: pause; named after the game accessor gf::GimmickCamera::isPause.
   u8 _100fe[0x10100 - 0x100fe];
-  s32 unknown10100; // Inferred role: index; original member name unknown.
-  f32 unknown10104; // Inferred role: frame; original member name unknown.
-  f32 unknown10108; // Inferred role: speed; original member name unknown.
+  s32 m_index; // Inferred role: index; named after the game accessor gf::GimmickCamera::getIndex.
+  f32 m_frame; // Inferred role: frame; named after the game accessor gf::GimmickCamera::getFrame.
+  f32 m_speed; // Inferred role: speed; named after the game accessor gf::GimmickCamera::getSpeed.
   u8 _1010c[0x10110 - 0x1010c];
   mm::Vec3 unknown10110; // Inferred role: base position; original member name unknown.
   f32 unknown10120;      // Inferred role: base rotation; original member name unknown.
   u8 _10124[0x10128 - 0x10124];
   GF_OBJ_HANDLE *m_handle;
-  const void *unknown10130;         // Inferred role: loaded params data; original member name unknown.
-  f32 unknown10138;                 // Inferred role: control speed; original member name unknown.
-  fw::ColiCheckConfig unknown1013c; // Inferred role: camera collision config; original member name unknown.
-  bool unknown10154;                // Inferred role: look lock; original member name unknown.
+  const void *unknown10130;              // Inferred role: loaded params data; original member name unknown.
+  f32 m_controlSpeed;                    // Inferred role: control speed; named after the game accessor gf::GimmickCamera::getControlSpeed.
+  fw::ColiCheckConfig m_coliCheckConfig; // Inferred role: camera collision config; original member name unknown.
+  bool m_lookUnlock;                     // Inferred role: look lock; named after the game accessor gf::GimmickCamera::setLookUnlock.
   u8 _10155[0x10160 - 0x10155];
   mm::Vec3 unknown10160; // Inferred role: look lock position; original member name unknown.
 };
 
-static_assert(offsetof(GimmickCamera, unknownb0) == 0xb0, "");
-static_assert(offsetof(GimmickCamera, unknownc0) == 0xc0, "");
+static_assert(offsetof(GimmickCamera, m_pos) == 0xb0, "");
+static_assert(offsetof(GimmickCamera, m_rot) == 0xc0, "");
 static_assert(offsetof(GimmickCamera, unknownd0) == 0xd0, "");
 static_assert(offsetof(GimmickCamera, unknown00e0) == 0xe0, "");
 static_assert(sizeof(GimmickCamera::Param) == 0x40, "");
@@ -136,16 +136,16 @@ static_assert(offsetof(GimmickCamera::Param, unknown20) == 0x20, "");
 static_assert(offsetof(GimmickCamera::Param, unknown30) == 0x30, "");
 static_assert(offsetof(GimmickCamera, unknown100f0) == 0x100f0, "");
 static_assert(offsetof(GimmickCamera, unknown100f8) == 0x100f8, "");
-static_assert(offsetof(GimmickCamera, unknown10100) == 0x10100, "");
-static_assert(offsetof(GimmickCamera, unknown10104) == 0x10104, "");
-static_assert(offsetof(GimmickCamera, unknown10108) == 0x10108, "");
+static_assert(offsetof(GimmickCamera, m_index) == 0x10100, "");
+static_assert(offsetof(GimmickCamera, m_frame) == 0x10104, "");
+static_assert(offsetof(GimmickCamera, m_speed) == 0x10108, "");
 static_assert(offsetof(GimmickCamera, unknown10110) == 0x10110, "");
 static_assert(offsetof(GimmickCamera, unknown10120) == 0x10120, "");
 static_assert(offsetof(GimmickCamera, m_handle) == 0x10128, "");
 static_assert(offsetof(GimmickCamera, unknown10130) == 0x10130, "");
-static_assert(offsetof(GimmickCamera, unknown10138) == 0x10138, "");
-static_assert(offsetof(GimmickCamera, unknown1013c) == 0x1013c, "");
-static_assert(offsetof(GimmickCamera, unknown10154) == 0x10154, "");
+static_assert(offsetof(GimmickCamera, m_controlSpeed) == 0x10138, "");
+static_assert(offsetof(GimmickCamera, m_coliCheckConfig) == 0x1013c, "");
+static_assert(offsetof(GimmickCamera, m_lookUnlock) == 0x10154, "");
 static_assert(offsetof(GimmickCamera, unknown10160) == 0x10160, "");
 static_assert(sizeof(GimmickCamera) == 0x10170, "");
 

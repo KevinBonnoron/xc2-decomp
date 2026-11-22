@@ -46,38 +46,38 @@ public:
 
   // Inferred helper: creates the treasure quest command when the gimmick task end check of the bound gimmick returns check; original name unknown.
   void unknown001(u32 check, f32 delay) {
-    gmk::AGmkBase *gmk = gmk::getBindedGmkInst(unknown18);
+    gmk::AGmkBase *gmk = gmk::getBindedGmkInst(m_GF_OBJ_HANDLE);
     if (gmk != nullptr) {
       gmk::GmkType type = gmk->getGmkType();
-      u32 gimmick = gmk->unknown20.unknown18;
+      u32 gimmick = gmk->m_createInfo.unknown18;
       if (GfQuestUtil::getGimmickTaskEndCheck(type, gimmick) == check) {
         SCOM_QUEST_GIMMICK::createTresure(gimmick, delay);
       }
     }
   }
 
-  f32 unknown08;               // Inferred role: wait time before the field skill check; original member name unknown.
-  f32 unknown0c;               // Inferred role: wait time before the opening; original member name unknown.
-  bool unknown10;              // Inferred role: created; original member name unknown.
-  bool unknown11;              // Inferred role: field skill window closed; original member name unknown.
-  bool unknown12;              // Inferred role: field skill check succeeded; original member name unknown.
-  GF_OBJ_HANDLE *unknown18;    // Inferred role: treasure box object; original member name unknown.
-  int unknown20;               // Inferred role: RSC_ID of the treasure box; original member name unknown.
-  bool unknown24;              // Inferred role: buried treasure box; original member name unknown.
-  Sequence unknown28;          // Inferred role: sequence; original member name unknown.
-  f32 unknown38;               // Inferred role: elapsed time; original member name unknown.
-  GfDropitemEmitter unknown40; // Inferred role: dropitem emitter; original member name unknown.
+  f32 unknown08;                       // Inferred role: wait time before the field skill check; original member name unknown.
+  f32 unknown0c;                       // Inferred role: wait time before the opening; original member name unknown.
+  bool unknown10;                      // Inferred role: created; original member name unknown.
+  bool unknown11;                      // Inferred role: field skill window closed; original member name unknown.
+  bool unknown12;                      // Inferred role: field skill check succeeded; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE;      // Inferred role: treasure box object; original member name unknown.
+  int unknown20;                       // Inferred role: RSC_ID of the treasure box; original member name unknown.
+  bool unknown24;                      // Inferred role: buried treasure box; original member name unknown.
+  Sequence unknown28;                  // Inferred role: sequence; original member name unknown.
+  f32 unknown38;                       // Inferred role: elapsed time; original member name unknown.
+  GfDropitemEmitter m_dropitemEmitter; // Inferred role: dropitem emitter; original member name unknown.
 };
 
 static_assert(offsetof(GfFieldTbox, unknown08) == 0x08, "");
 static_assert(offsetof(GfFieldTbox, unknown10) == 0x10, "");
 static_assert(offsetof(GfFieldTbox, unknown12) == 0x12, "");
-static_assert(offsetof(GfFieldTbox, unknown18) == 0x18, "");
+static_assert(offsetof(GfFieldTbox, m_GF_OBJ_HANDLE) == 0x18, "");
 static_assert(offsetof(GfFieldTbox, unknown20) == 0x20, "");
 static_assert(offsetof(GfFieldTbox, unknown24) == 0x24, "");
 static_assert(offsetof(GfFieldTbox, unknown28) == 0x28, "");
 static_assert(offsetof(GfFieldTbox, unknown38) == 0x38, "");
-static_assert(offsetof(GfFieldTbox, unknown40) == 0x40, "");
+static_assert(offsetof(GfFieldTbox, m_dropitemEmitter) == 0x40, "");
 static_assert(sizeof(GfFieldTbox) == 0xa0, "");
 
 } // namespace gf

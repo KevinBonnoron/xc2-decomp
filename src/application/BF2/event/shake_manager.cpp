@@ -13,17 +13,17 @@ mm::mtl::FixStr<32> ShakeManager::s_names[TYPE_COUNT] = {"TYPE_SS", "TYPE_S", "T
 ShakeManager::ShakeManager() : unknown10(0) {}
 
 void ShakeManager::create() {
-  unknown18.create();
-  unknowncb8 = unknown18.registerShake("event/cam/cm_cam_noise_idle.eva");
-  unknownca8[TYPE_SS] = unknown18.registerShake("event/cam/cm_cam_noise_ss.eva");
-  unknownca8[TYPE_S] = unknown18.registerShake("event/cam/cm_cam_noise_s.eva");
-  unknownca8[TYPE_M] = unknown18.registerShake("event/cam/cm_cam_noise_m.eva");
-  unknownca8[TYPE_L] = unknown18.registerShake("event/cam/cm_cam_noise_l.eva");
+  m_shaker.create();
+  unknowncb8 = m_shaker.registerShake("event/cam/cm_cam_noise_idle.eva");
+  unknownca8[TYPE_SS] = m_shaker.registerShake("event/cam/cm_cam_noise_ss.eva");
+  unknownca8[TYPE_S] = m_shaker.registerShake("event/cam/cm_cam_noise_s.eva");
+  unknownca8[TYPE_M] = m_shaker.registerShake("event/cam/cm_cam_noise_m.eva");
+  unknownca8[TYPE_L] = m_shaker.registerShake("event/cam/cm_cam_noise_l.eva");
 }
 
 void ShakeManager::destroy() {
   clear();
-  unknown18.destroy();
+  m_shaker.destroy();
   for (u32 i = 0; i < TYPE_COUNT; i++) {
     unknownca8[i] = 0;
   }
@@ -31,30 +31,30 @@ void ShakeManager::destroy() {
 }
 
 void ShakeManager::clear() {
-  unknown18.stop();
+  m_shaker.stop();
   unknown10 = 0;
 }
 
 void ShakeManager::update() {
-  if ((unknown10 & FLAG_UNKNOWN_1) != 0 && !unknown18.isPlay()) {
+  if ((unknown10 & FLAG_UNKNOWN_1) != 0 && !m_shaker.isPlay()) {
     idle();
   }
   const FrameInfo &info = mm::mtl::Singleton<FrameManager>::getPtr()->frameInfo();
   if (info.unknown0c > 0.0f) {
-    unknown18.exec(info.unknown04, info.unknown0c);
+    m_shaker.exec(info.unknown04, info.unknown0c);
   }
 }
 
 void ShakeManager::idle() {
   if ((unknown10 & FLAG_UNKNOWN_0) != 0) {
-    unknown18.play(unknowncb8, unknown025, unknown025, unknown025);
+    m_shaker.play(unknowncb8, unknown025, unknown025, unknown025);
   } else {
-    unknown18.stop();
+    m_shaker.stop();
   }
   unknown10 &= ~FLAG_UNKNOWN_1;
 }
 
-void ShakeManager::tail() { unknown18.tail(); }
+void ShakeManager::tail() { m_shaker.tail(); }
 
 void ShakeManager::play(const char *name, f32 life, f32 fadeIn, f32 fadeOut) {
   int type = 0;
@@ -66,7 +66,7 @@ void ShakeManager::play(const char *name, f32 life, f32 fadeIn, f32 fadeOut) {
   if (type == TYPE_COUNT) {
     return;
   }
-  unknown18.play(unknownca8[type], life, fadeIn, fadeOut);
+  m_shaker.play(unknownca8[type], life, fadeIn, fadeOut);
   unknown10 |= FLAG_UNKNOWN_1;
 }
 

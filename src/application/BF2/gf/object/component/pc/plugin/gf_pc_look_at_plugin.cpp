@@ -23,7 +23,7 @@ namespace gf {
 
 namespace pc {
 
-LookAtPlugin::LookAtPlugin() : unknown20(unknown012), unknown28(getAllocator(ALLOCATOR_UNKNOWN_0)), unknown40(nullptr), unknown68(0), unknown6c(0.0f), unknown70() {}
+LookAtPlugin::LookAtPlugin() : m_GF_SEARCH_OBJ(unknown012), unknown28(getAllocator(ALLOCATOR_UNKNOWN_0)), unknown40(nullptr), unknown68(0), unknown6c(0.0f), unknown70() {}
 
 LookAtPlugin::~LookAtPlugin() {}
 
@@ -57,14 +57,14 @@ bool LookAtPlugin::setup(GfComBehaviorPc &behavior) {
   // The game copies the frame twice (reference count + 2 at 0x7100578f70): into this local, then into the param; without the local the function has 234 instructions.
   mm::mtl::IntrusivePtr<fw::ReferenceFrame> frame = behavior.unknown08->getComponent<GfComTransform>()->unknown001();
   search.unknown48 = frame;
-  unknown20 = GfGameSearchObj::createObj(search);
+  m_GF_SEARCH_OBJ = GfGameSearchObj::createObj(search);
   return true;
 }
 
 void LookAtPlugin::cleanup(GfComBehaviorPc &) {
-  if (unknown20 != unknown012) {
-    GfGameSearchObj::destroyObj(unknown20);
-    unknown20 = unknown012;
+  if (m_GF_SEARCH_OBJ != unknown012) {
+    GfGameSearchObj::destroyObj(m_GF_SEARCH_OBJ);
+    m_GF_SEARCH_OBJ = unknown012;
   }
   unknown10 = nullptr;
 }
@@ -85,7 +85,7 @@ void LookAtPlugin::update(GfComBehaviorPc &behavior, const fw::UpdateInfo &info)
   if (unknown40 == nullptr) {
     unknown68 = 0;
   } else {
-    GfObj *obj = GfObjUtil::getObj(unknown40->unknown00);
+    GfObj *obj = GfObjUtil::getObj(unknown40->m_GF_OBJ_HANDLE);
     if (obj != nullptr) {
       MsgPcGetLookPoint message;
       if (static_cast<GfObj *>(behavior.unknown08)->sendMessage(obj, message)) {
@@ -110,11 +110,11 @@ bool LookAtPlugin::changeTarget() {
     if (unknown70[info.unknown18] > 0.0f) {
       continue;
     }
-    u32 side = info.unknown08->unknown24 >= 0.0f ? 1 : 2;
+    u32 side = info.m_searchInfo->unknown24 >= 0.0f ? 1 : 2;
     if (unknown68 == side) {
       continue;
     }
-    if (target != nullptr && (info.unknown10->unknown14 < target->unknown10->unknown14 || info.unknown08->unknown20 >= target->unknown08->unknown20)) {
+    if (target != nullptr && (info.unknown10->unknown14 < target->unknown10->unknown14 || info.m_searchInfo->unknown20 >= target->m_searchInfo->unknown20)) {
       continue;
     }
     target = &info;
@@ -160,7 +160,7 @@ void LookAtPlugin::onDeactivate() {
 }
 
 bool LookAtPlugin::getTargetTransform(const TargetInfo &info, fw::Transform *transform) const {
-  GfObj *obj = GfObjUtil::getObj(info.unknown00);
+  GfObj *obj = GfObjUtil::getObj(info.m_GF_OBJ_HANDLE);
   if (obj != nullptr) {
     GfObjAcc acc(obj);
     const fw::Transform &worldTransform = acc.getWorldTransform();
@@ -173,15 +173,15 @@ bool LookAtPlugin::getTargetTransform(const TargetInfo &info, fw::Transform *tra
 
 void LookAtPlugin::onReloadBdat() {
   GfBdatLookAt *bdat = GfBdatLookAt::get();
-  GfGameSearchObj::GFSEARCH_INFO *info = GfGameSearchObj::getInfo(unknown20);
-  info->unknown00.unknown3c = bdat->getMaxRadius();
-  info->unknown00.unknown00 |= 1;
+  GfGameSearchObj::GFSEARCH_INFO *info = GfGameSearchObj::getInfo(m_GF_SEARCH_OBJ);
+  info->m_searchParam.unknown3c = bdat->getMaxRadius();
+  info->m_searchParam.unknown00 |= 1;
   // The game calls getMaxUpper (1.0.0: 0x7100579c70) and getMaxLower (0x7100579c7c), then sets the flag (0x7100579c80), then stores both values (stp s8, s0 at 0x7100579c8c).
   f32 upper = bdat->getMaxUpper();
   f32 lower = bdat->getMaxLower();
-  info->unknown00.unknown00 |= 2;
-  info->unknown00.unknown30 = upper;
-  info->unknown00.unknown34 = lower;
+  info->m_searchParam.unknown00 |= 2;
+  info->m_searchParam.unknown30 = upper;
+  info->m_searchParam.unknown34 = lower;
 }
 
 void LookAtPlugin::drawDebugTarget() {

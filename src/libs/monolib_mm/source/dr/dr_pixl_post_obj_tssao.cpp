@@ -38,14 +38,14 @@ namespace ml {
 static const f32 unknown003[3][2] = {{0.0f, 0.0f}, {100.0f, 100.0f}, {-100.0f, -100.0f}};
 
 void DrPixlPostObjTSSAO::passQuaterNormal() {
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
-  DrPixlRenderTarget *target = unknown08->unknown7f0->unknown180->unknowne0;
-  bool isQuarterDepth = unknown00->unknown1e10;
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
+  DrPixlRenderTarget *target = m_drPixlMan->unknown7f0->m_drPixlPostMan->unknowne0;
+  bool isQuarterDepth = m_drMan->unknown1e10;
   if (isQuarterDepth) {
     target->clearTexture(mm::Col4(0.5f, 0.5f, 0.0f, 1.0f), static_cast<GrlClaerMask>(0xf));
   }
   grlib::CGLibColorCtl::setBlendOffControl(GRL_LOGIC_TYPE_COPY);
-  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
   DrShdDataObj *shader = shdList->getPostShdObj(0x44);
   shader->setDeclarationIdx(shader->getDeclarationOfs("OUTPUT_CLASSIFICATION"), 2);
   u32 branchLess = isQuarterDepth ? 1 : 2;
@@ -65,7 +65,7 @@ void DrPixlPostObjTSSAO::passQuaterNormal() {
   (shader->unknown38 + shader->unknown58)->getTextureLocation("gTEtc");
   f32 paddedWidth = static_cast<f32>(target->unknownbc) + (static_cast<f32>(unknown70) + static_cast<f32>(unknown70));
   f32 paddedHeight = static_cast<f32>(target->unknownc0) + (static_cast<f32>(unknown70) + static_cast<f32>(unknown70));
-  DrCalcViewWork *viewWork = unknown00->unknown580->unknown10;
+  DrCalcViewWork *viewWork = m_drMan->m_drCalcMan->m_drCalcViewWork;
   mm::Vec4 paramValue;
   f32 value178 = postParm->unknown178;
   paramValue.x = value178 * ((paddedHeight * viewWork->unknown4c8) / (viewWork->unknown4c8 * tanf(viewWork->unknown4c4 * 0.5f)));
@@ -96,15 +96,15 @@ void DrPixlPostObjTSSAO::passQuaterNormal() {
   viewPos[2] = 0.0f;
   viewPos[3] = 0.0f;
   uniform.setF32SetVec4(screenToViewPos, viewPos);
-  DrAPCache *apCache = unknown00->unknown5c0;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   apCache->beginBorderDepthMax();
-  apCache->setTexture(*unknown10->getDownDepth()->unknown70, depthLocation);
+  apCache->setTexture(*m_drPixlPostMan->getDownDepth()->unknown70, depthLocation);
   uniform.updateData();
   uniform.setUniformBlock();
   if (!isQuarterDepth) {
     target->setRenderTarget();
   } else {
-    target->setRenderTarget(*unknown08->unknown7f0->unknown1c0->unknown120);
+    target->setRenderTarget(*m_drPixlMan->unknown7f0->unknown1c0->unknown120);
     grlib::CGLibDepthCtl::setDepthControl(true, false, GRL_COMPARE_LEQUAL);
   }
   shdList->renderQuads();
@@ -115,13 +115,13 @@ void DrPixlPostObjTSSAO::passQuaterNormal() {
 static int unknown004;
 
 void DrPixlPostObjTSSAO::passSSAO() {
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   DrPixlRenderTarget *target = unknown20;
   grlib::CGLibColorCtl::setBlendOffControl(GRL_LOGIC_TYPE_COPY);
-  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
   DrShdDataObj *shader = shdList->getPostShdObj(0x2c);
   bool isMpfSkip = postParm->unknownfb0;
-  bool isQuarterDepth = unknown00->unknown1e10;
+  bool isQuarterDepth = m_drMan->unknown1e10;
   u32 outputClassification = postParm->unknownfa0 ? 1 : 2;
   shader->setDeclarationIdx(shader->getDeclarationOfs("OUTPUT_CLASSIFICATION"), outputClassification);
   u32 useQuaterNormal = postParm->unknownfb1 ? 1 : 2;
@@ -148,7 +148,7 @@ void DrPixlPostObjTSSAO::passSSAO() {
   int prevSimilarityLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("gTPrevSimilarity");
   f32 paddedWidth = static_cast<f32>(target->unknownbc) + (static_cast<f32>(unknown70) + static_cast<f32>(unknown70));
   f32 paddedHeight = static_cast<f32>(target->unknownc0) + (static_cast<f32>(unknown70) + static_cast<f32>(unknown70));
-  DrCalcViewWork *viewWork = unknown00->unknown580->unknown10;
+  DrCalcViewWork *viewWork = m_drMan->m_drCalcMan->m_drCalcViewWork;
   mm::Vec4 paramValue;
   f32 value178 = postParm->unknown178;
   paramValue.x = value178 * ((paddedHeight * viewWork->unknown4c8) / (viewWork->unknown4c8 * tanf(viewWork->unknown4c4 * 0.5f)));
@@ -185,13 +185,13 @@ void DrPixlPostObjTSSAO::passSSAO() {
   viewPos[3] = 0.0f;
   uniform.setF32SetVec4(screenToViewPos, viewPos);
   uniform.setMat44SetMat44(dither, viewWork->unknownc20);
-  DrAPCache *apCache = unknown00->unknown5c0;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   apCache->beginBorderDepthMinusMax();
-  apCache->setTexture(*unknown10->unknowne8->unknown70, depthLocation);
+  apCache->setTexture(*m_drPixlPostMan->unknowne8->unknown70, depthLocation);
   apCache->beginTexSampling(2, 0);
-  apCache->setTexture(*unknown08->getDepthObj()->unknown130, stencilLocation);
-  apCache->setTexture(*unknown08->getPixlObj(1)->unknown70, etcLocation);
-  apCache->setTexture(*unknown08->unknown7f0->unknown180->unknowne0->unknown70, nomLocation);
+  apCache->setTexture(*m_drPixlMan->getDepthObj()->unknown130, stencilLocation);
+  apCache->setTexture(*m_drPixlMan->getPixlObj(1)->unknown70, etcLocation);
+  apCache->setTexture(*m_drPixlMan->unknown7f0->m_drPixlPostMan->unknowne0->unknown70, nomLocation);
   apCache->beginBorderWhite();
   apCache->setTexture(*unknown50[DrMan::s_nDblStockIdx]->unknown70, prevSimilarityLocation);
   mm::mtl::FixedVector<grlib::CGLibRenderTarget *, 2> targets;
@@ -199,7 +199,7 @@ void DrPixlPostObjTSSAO::passSSAO() {
   if (!isQuarterDepth) {
     target->setRenderTargetImpl(targets.begin(), targets.size(), nullptr);
   } else {
-    target->setRenderTargetImpl(targets.begin(), targets.size(), unknown08->unknown7f0->unknown1c0->unknown120);
+    target->setRenderTargetImpl(targets.begin(), targets.size(), m_drPixlMan->unknown7f0->unknown1c0->unknown120);
     grlib::CGLibDepthCtl::setDepthControl(true, false, GRL_COMPARE_LEQUAL);
   }
   uniform.updateData();
@@ -266,7 +266,7 @@ void DrPixlPostObjTSSAO::calcFragCoordToScreen(mm::Vec4 &screen, f32 width, f32 
 }
 
 void DrPixlPostObjTSSAO::render_beforeTemporal() {
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   if (!postParm->unknown174) {
     return;
   }
@@ -280,17 +280,17 @@ void DrPixlPostObjTSSAO::render_beforeTemporal() {
 }
 
 void DrPixlPostObjTSSAO::passPrevBlur() {
-  f32 strength = unknown00->unknown120[unknown00->unknown1c98]->unknownf94;
+  f32 strength = m_drMan->unknown120[m_drMan->unknown1c98]->unknownf94;
   passBlur_Sub(BLUR_AXIS_UNKNOWN_1, strength, unknown20, unknown38, false);
   grlib::CGLibCtlShader::setMemoryBarrierBit(2);
   passBlur_Sub(BLUR_AXIS_UNKNOWN_2, strength, unknown38, unknown20, false);
 }
 
 void DrPixlPostObjTSSAO::passTemporalFiltering() {
-  DrCalcViewWork *viewWork = unknown00->unknown580->unknown10;
+  DrCalcViewWork *viewWork = m_drMan->m_drCalcMan->m_drCalcViewWork;
   DrPixlRenderTarget *target = unknown28[DrMan::s_nDblIdx];
   grlib::CGLibColorCtl::setBlendOffControl(GRL_LOGIC_TYPE_COPY);
-  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
   DrShdDataObj *shader = shdList->getPostShdObj(0x2e);
   u32 execClear = 1;
   if (!viewWork->unknown9ac && !viewWork->unknown9a9) {
@@ -356,8 +356,8 @@ void DrPixlPostObjTSSAO::passTemporalFiltering() {
   uniform.setMat44SetMat44(proj, viewWork->unknown380);
   uniform.setMat44SetMat44(projInv, viewWork->unknown3c0);
   f32 paramValue[4];
-  paramValue[0] = static_cast<f32>(unknown10->unknowne8->unknownbc);
-  paramValue[1] = static_cast<f32>(unknown10->unknowne8->unknownc0);
+  paramValue[0] = static_cast<f32>(m_drPixlPostMan->unknowne8->unknownbc);
+  paramValue[1] = static_cast<f32>(m_drPixlPostMan->unknowne8->unknownc0);
   paramValue[2] = 0.0f;
   paramValue[3] = 0.0f;
   uniform.setF32SetVec4(param, paramValue);
@@ -367,16 +367,16 @@ void DrPixlPostObjTSSAO::passTemporalFiltering() {
   mm::Mat44 matrix = viewWork->unknown00;
   matrix = viewWork->unknown00 * viewWork->unknown280 * viewWork->unknown380;
   uniform.setMat44SetMat44(toPrevScreen, matrix);
-  DrAPCache *apCache = unknown00->unknown5c0;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   apCache->beginTexSampling(2, 0);
-  apCache->setTexture(*unknown10->getOldDownDepth()->unknown70, prevDepthLocation);
+  apCache->setTexture(*m_drPixlPostMan->getOldDownDepth()->unknown70, prevDepthLocation);
   apCache->beginTexSampling(2, 1);
   apCache->setTexture(*unknown20->unknown70, aoLocation);
   apCache->setTexture(*unknown28[DrMan::s_nDblStockIdx]->unknown70, prevAoLocation);
   apCache->beginBorderDepthMinusMax();
-  apCache->setTexture(*unknown10->unknowne8->unknown70, depthLocation);
+  apCache->setTexture(*m_drPixlPostMan->unknowne8->unknown70, depthLocation);
   apCache->beginTexSampling(2, 0);
-  apCache->setTexture(*unknown08->getPixlObj(3)->unknown70, velocityLocation);
+  apCache->setTexture(*m_drPixlMan->getPixlObj(3)->unknown70, velocityLocation);
   apCache->beginBorderWhite();
   apCache->setTexture(*unknown48->unknown70, similarityLocation);
   apCache->setTexture(*unknown50[DrMan::s_nDblStockIdx]->unknown70, prevSimilarityLocation);
@@ -388,7 +388,7 @@ void DrPixlPostObjTSSAO::passTemporalFiltering() {
 }
 
 void DrPixlPostObjTSSAO::render_afterTemporal() {
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   if (!postParm->unknown174) {
     return;
   }
@@ -397,7 +397,7 @@ void DrPixlPostObjTSSAO::render_afterTemporal() {
 }
 
 void DrPixlPostObjTSSAO::passPostBlur() {
-  f32 strength = unknown00->unknown120[unknown00->unknown1c98]->unknown188;
+  f32 strength = m_drMan->unknown120[m_drMan->unknown1c98]->unknown188;
   DrPixlRenderTarget *source = unknown28[DrMan::s_nDblIdx];
   f32 weight[4];
   for (s32 i = 0; i < 4; i++) {
@@ -409,14 +409,14 @@ void DrPixlPostObjTSSAO::passPostBlur() {
 }
 
 void DrPixlPostObjTSSAO::passDilateContinuityMask() {
-  bool isQuarterDepth = unknown00->unknown1e10;
+  bool isQuarterDepth = m_drMan->unknown1e10;
   DrPixlRenderTarget *source = unknown60;
   DrPixlRenderTarget *target = unknown68;
   if (isQuarterDepth) {
     target->clearTexture(mm::Col4(0.0f, 0.0f, 0.0f, 0.0f), static_cast<GrlClaerMask>(0xf));
   }
   grlib::CGLibColorCtl::setBlendOffControl(GRL_LOGIC_TYPE_COPY);
-  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
   DrShdDataObj *shader = shdList->getPostShdObj(0x30);
   u32 branchLess = isQuarterDepth ? 1 : 2;
   shader->setDeclarationIdx(shader->getDeclarationOfs("BRANCH_LESS"), branchLess);
@@ -433,13 +433,13 @@ void DrPixlPostObjTSSAO::passDilateContinuityMask() {
   coord.z = 0.5f / width;
   coord.w = 0.5f / height;
   uniform.setF32SetVec4(coordToUv, &coord.x);
-  DrAPCache *apCache = unknown00->unknown5c0;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   apCache->beginTexSampling(2, 0);
   apCache->setTexture(*source->unknown70, sourceLocation);
   if (!isQuarterDepth) {
     target->setRenderTarget(*unknown60);
   } else {
-    target->setRenderTarget(*unknown08->unknown7f0->unknown1c0->unknown120, *unknown60);
+    target->setRenderTarget(*m_drPixlMan->unknown7f0->unknown1c0->unknown120, *unknown60);
     grlib::CGLibDepthCtl::setDepthControl(true, false, GRL_COMPARE_LEQUAL);
   }
   uniform.updateData();
@@ -450,7 +450,7 @@ void DrPixlPostObjTSSAO::passDilateContinuityMask() {
 
 void DrPixlPostObjTSSAO::passBlur_Sub(BlurAxis axis, f32 strength, DrPixlRenderTarget *source, DrPixlRenderTarget *destination, bool flag) {
   grlib::CGLibColorCtl::setBlendOffControl(GRL_LOGIC_TYPE_COPY);
-  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
   DrShdDataObj *shader = shdList->getPostShdObj(0x2d);
   u32 branchLess = flag ? 1 : 2;
   shader->setDeclarationIdx(shader->getDeclarationOfs("BRANCH_LESS"), branchLess);
@@ -465,7 +465,7 @@ void DrPixlPostObjTSSAO::passBlur_Sub(BlurAxis axis, f32 strength, DrPixlRenderT
   int depthLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("gTDepth");
   int similarityLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("gTSimilarity");
   int prevSimilarityLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("gTPrevSimilarity");
-  DrPixlRenderTarget *downDepth = unknown10->getDownDepth();
+  DrPixlRenderTarget *downDepth = m_drPixlPostMan->getDownDepth();
   mm::Vec4 paramValue;
   paramValue.x = strength;
   paramValue.y = static_cast<f32>(unknown70);
@@ -486,7 +486,7 @@ void DrPixlPostObjTSSAO::passBlur_Sub(BlurAxis axis, f32 strength, DrPixlRenderT
   coordToUvValue.z = -0.5f / static_cast<f32>(downDepth->unknownbc);
   coordToUvValue.w = -0.5f / static_cast<f32>(downDepth->unknownc0);
   uniform.setF32SetVec4(coordToUv, &coordToUvValue.x);
-  DrAPCache *apCache = unknown00->unknown5c0;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   apCache->beginTexSampling(2, 1);
   apCache->setTexture(*source->unknown70, sourceLocation);
   apCache->setTexture(*downDepth->unknown70, depthLocation);
@@ -496,7 +496,7 @@ void DrPixlPostObjTSSAO::passBlur_Sub(BlurAxis axis, f32 strength, DrPixlRenderT
   if (!flag) {
     destination->setRenderTarget();
   } else {
-    destination->setRenderTarget(*unknown08->unknown7f0->unknown1c0->unknown120);
+    destination->setRenderTarget(*m_drPixlMan->unknown7f0->unknown1c0->unknown120);
     grlib::CGLibDepthCtl::setDepthControl(true, false, GRL_COMPARE_LEQUAL);
   }
   uniform.updateData();
@@ -508,8 +508,8 @@ void DrPixlPostObjTSSAO::passBlur_Sub(BlurAxis axis, f32 strength, DrPixlRenderT
 void DrPixlPostObjTSSAO::passUpScaleToMiddle() {
   DrPixlRenderTarget *target = unknown40;
   grlib::CGLibColorCtl::setBlendOffControl(GRL_LOGIC_TYPE_COPY);
-  unknown10->getDownDepth();
-  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  m_drPixlPostMan->getDownDepth();
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
   DrShdDataObj *shader = shdList->getPostShdObj(0x4a);
   shdList->unknown002(shader);
   grlib::CGLibUniformEtcUtility uniform(shader);
@@ -520,7 +520,7 @@ void DrPixlPostObjTSSAO::passUpScaleToMiddle() {
   int aoLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("gTAO");
   int depthLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("gTDepth");
   int halfDepthLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("gTHalfDepth");
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   DrPixlRenderTarget *ao = unknown28[DrMan::s_nDblIdx];
   mm::Vec4 sampleOffsetValue;
   sampleOffsetValue.x = 1.5f / static_cast<f32>(target->unknownbc);
@@ -540,10 +540,10 @@ void DrPixlPostObjTSSAO::passUpScaleToMiddle() {
   fragCoordToGbUvValue.z = (0.5f - static_cast<f32>(unknown70)) / static_cast<f32>(ao->unknownbc);
   fragCoordToGbUvValue.w = (0.5f - static_cast<f32>(unknown70)) / static_cast<f32>(ao->unknownc0);
   uniform.setF32SetVec4(fragCoordToGbUv, &fragCoordToGbUvValue.x);
-  DrAPCache *apCache = unknown00->unknown5c0;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   apCache->beginBorderDepthMax();
-  apCache->setTexture(*unknown10->getDownDepth()->unknown70, depthLocation);
-  apCache->setTexture(*unknown10->getOldDownDepth()->unknown70, halfDepthLocation);
+  apCache->setTexture(*m_drPixlPostMan->getDownDepth()->unknown70, depthLocation);
+  apCache->setTexture(*m_drPixlPostMan->getOldDownDepth()->unknown70, halfDepthLocation);
   apCache->beginTexSampling(2, 1);
   apCache->setTexture(*ao->unknown70, aoLocation);
   uniform.updateData();
@@ -554,9 +554,9 @@ void DrPixlPostObjTSSAO::passUpScaleToMiddle() {
 }
 
 void DrPixlPostObjTSSAO::passUpScaleToFull() {
-  DrPixlRenderTarget *target = unknown08->getPixlObj(2);
-  DrPixlRenderTarget *downDepth = unknown10->getDownDepth();
-  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrPixlRenderTarget *target = m_drPixlMan->getPixlObj(2);
+  DrPixlRenderTarget *downDepth = m_drPixlPostMan->getDownDepth();
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
   DrShdDataObj *shader = shdList->getPostShdObj(0x2f);
   shdList->unknown002(shader);
   grlib::CGLibUniformEtcUtility uniform(shader);
@@ -573,9 +573,9 @@ void DrPixlPostObjTSSAO::passUpScaleToFull() {
   int margin = unknown70 * 2;
   f32 downDepthWidth = static_cast<f32>(downDepth->unknownbc);
   f32 downDepthHeight = static_cast<f32>(downDepth->unknownc0);
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   DrPixlRenderTarget *middle = unknown40;
-  DrPixlRenderTarget *etc = unknown00->unknown78->getPixlObj(1);
+  DrPixlRenderTarget *etc = m_drMan->m_drPixlMan->getPixlObj(1);
   mm::Vec4 fragCoordToUvValue;
   fragCoordToUvValue.x = 1.0f / downDepthWidth;
   fragCoordToUvValue.y = 1.0f / downDepthHeight;
@@ -594,14 +594,14 @@ void DrPixlPostObjTSSAO::passUpScaleToFull() {
   fragCoordToGbUvValue.z = (0.5f - static_cast<f32>(unknown70)) / static_cast<f32>(middle->unknownbc);
   fragCoordToGbUvValue.w = (0.5f - static_cast<f32>(unknown70)) / static_cast<f32>(middle->unknownc0);
   uniform.setF32SetVec4(fragCoordToGbUv, &fragCoordToGbUvValue.x);
-  DrAPCache *apCache = unknown00->unknown5c0;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   apCache->beginBorderDepthMax();
-  apCache->setTexture(*unknown10->getDownDepth()->unknown70, depthLocation);
-  apCache->setTexture(*unknown10->getOldDownDepth()->unknown70, halfDepthLocation);
+  apCache->setTexture(*m_drPixlPostMan->getDownDepth()->unknown70, depthLocation);
+  apCache->setTexture(*m_drPixlPostMan->getOldDownDepth()->unknown70, halfDepthLocation);
   apCache->beginTexSampling(2, 1);
   apCache->setTexture(*middle->unknown70, aoLocation);
   apCache->setTexture(*etc->unknown70, etcLocation);
-  target->setRenderTarget(*unknown08->getDepthObj()->unknown120);
+  target->setRenderTarget(*m_drPixlMan->getDepthObj()->unknown120);
   grlib::CGLibColorCtl::setBlendControl(GRL_BLEND_FUNC_UNKNOWN_9, GRL_BLEND_FUNC_ZERO, GRL_BLEND_COMBINE_ADD, GRL_BLEND_FUNC_ONE, GRL_BLEND_FUNC_ONE, GRL_BLEND_COMBINE_ADD, GRL_LOGIC_TYPE_COPY);
   grlib::CGLibColorCtl::setColorChannelMask(false, false, true, false);
   grlib::LibMainStateViewPort viewPort(static_cast<f32>(margin),
@@ -621,10 +621,10 @@ void DrPixlPostObjTSSAO::passUpScaleToFull() {
 
 void DrPixlPostObjTSSAO::passUpScaling() { passUpScaleToMiddle(); }
 
-void DrPixlPostObjTSSAO::update() { unknown10->setDownDepth(); }
+void DrPixlPostObjTSSAO::update() { m_drPixlPostMan->setDownDepth(); }
 
 void DrPixlPostObjTSSAO::releaseColorBuff() {
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   if (postParm->unknownfe4 == 3) {
     unknown28[0]->releaseTexture();
     unknown50[0]->releaseTexture();
@@ -649,11 +649,11 @@ void DrPixlPostObjTSSAO::releaseColorBuff() {
 }
 
 void DrPixlPostObjTSSAO::debugRender() {
-  if (!unknown00->unknown120[unknown00->unknown1c98]->unknown175) {
+  if (!m_drMan->unknown120[m_drMan->unknown1c98]->unknown175) {
     return;
   }
-  int width = mm::min(unknown00->unknown5b8->unknown28, 1280);
-  int height = mm::min(unknown00->unknown5b8->unknown2c, 720);
+  int width = mm::min(m_drMan->unknown5b8->unknown28, 1280);
+  int height = mm::min(m_drMan->unknown5b8->unknown2c, 720);
   int halfWidth = static_cast<int>(width * 0.5f);
   int halfHeight = static_cast<int>(height * 0.5f);
   int quarterWidth = static_cast<int>(halfWidth * 0.5f);
@@ -664,14 +664,14 @@ void DrPixlPostObjTSSAO::debugRender() {
   int x2 = halfWidth + quarterWidth + 2;
   unknown48->debugRenderCh(x2, 0, quarterWidth, quarterHeight, 0);
   int y1 = quarterHeight + 1;
-  unknown08->debugRenderSimilarity(x1, y1, quarterWidth, quarterHeight);
+  m_drPixlMan->debugRenderSimilarity(x1, y1, quarterWidth, quarterHeight);
   unknown50[DrMan::s_nDblIdx]->debugRenderCh(x2, y1, quarterWidth, quarterHeight, 0);
   int y2 = quarterHeight * 2 + 2;
-  if (unknown00->unknown120[unknown00->unknown1c98]->unknownfa0) {
+  if (m_drMan->unknown120[m_drMan->unknown1c98]->unknownfa0) {
     unknown60->debugRenderCh(x1, y2, quarterWidth, quarterHeight, 0);
   }
-  if (unknown00->unknown120[unknown00->unknown1c98]->unknownfb1) {
-    unknown00->unknown78->unknown7f0->unknown180->unknowne0->debugRender(x2, y2, quarterWidth, quarterHeight, false, false, 1.0f, true);
+  if (m_drMan->unknown120[m_drMan->unknown1c98]->unknownfb1) {
+    m_drMan->m_drPixlMan->unknown7f0->m_drPixlPostMan->unknowne0->debugRender(x2, y2, quarterWidth, quarterHeight, false, false, 1.0f, true);
   }
 }
 

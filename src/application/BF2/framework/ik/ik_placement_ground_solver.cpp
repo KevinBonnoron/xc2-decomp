@@ -26,7 +26,7 @@ PlacementGroundSolver *PlacementGroundSolver::create(const Description &descript
   return solver;
 }
 
-PlacementGroundSolver::PlacementGroundSolver() : unknown58(0.3f), unknown5c(2), unknown60(0.0f), unknown64(false), unknown65(false), unknown68(nullptr) {}
+PlacementGroundSolver::PlacementGroundSolver() : unknown58(0.3f), unknown5c(2), unknown60(0.0f), unknown64(false), unknown65(false), m_iKGroundInterface(nullptr) {}
 
 PlacementGroundSolver::~PlacementGroundSolver() {}
 
@@ -40,8 +40,8 @@ FootPlacementIKSolver *PlacementGroundSolver::createFootPlacementIK(IKFootIndex 
   description.unknown08 = kneeName;
   description.unknown10 = hipName;
   description.unknown25 = isMirror;
-  description.unknown28 = param;
-  IKFootGroundInterface *ground = unknown68 != nullptr ? unknown68->getFootGround(index) : nullptr;
+  description.m_paramAdapter = param;
+  IKFootGroundInterface *ground = m_iKGroundInterface != nullptr ? m_iKGroundInterface->getFootGround(index) : nullptr;
   FootPlacementIKSolver *solver = FootPlacementIKSolver::create(description, unknown10, *unknown18, ground);
   unknown20[index] = solver;
   if (solver != nullptr) {
@@ -51,7 +51,7 @@ FootPlacementIKSolver *PlacementGroundSolver::createFootPlacementIK(IKFootIndex 
 }
 
 void PlacementGroundSolver::solve(const UpdateInfo &info) {
-  if (unknown68 == nullptr) {
+  if (m_iKGroundInterface == nullptr) {
     return;
   }
 
@@ -67,7 +67,7 @@ void PlacementGroundSolver::solve(const UpdateInfo &info) {
   f32 lowest = transform.unknown00.y;
   for (u32 i = 0; i < unknown20.size(); i++) {
     if (unknown20[i].get() != nullptr) {
-      IKFootGroundInterface *ground = unknown68->getFootGround(static_cast<IKFootIndex>(i));
+      IKFootGroundInterface *ground = m_iKGroundInterface->getFootGround(static_cast<IKFootIndex>(i));
       if (ground != nullptr) {
         const mm::Vec3 *hitPos = ground->getHitPos();
         if (hitPos != nullptr) {

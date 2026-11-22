@@ -21,7 +21,7 @@ AssetData *AssetData::CreateFromFile(mtl::ALLOC_HANDLE handle, const char *name)
   void *data = ml::DevFileTh::readFileBlock(param, &size, nullptr);
   AssetData *asset = new (AssetManager::getMemSYS()) AssetData();
   if (asset != nullptr) {
-    asset->unknown0c = handle;
+    asset->m_ALLOC_HANDLE = handle;
     asset->unknown20 = data;
     asset->unknown1c = size;
     asset->setName(fileName.c_str());
@@ -36,7 +36,7 @@ AssetData *AssetData::CreateFromMemory(mtl::ALLOC_HANDLE handle, const void *dat
   ml::DevFileTh::normalizeDvdFileName(fileName, name);
   AssetData *asset = new (AssetManager::getMemSYS()) AssetData();
   if (asset != nullptr) {
-    asset->unknown0c = handle;
+    asset->m_ALLOC_HANDLE = handle;
     if (data != nullptr && size != 0) {
       asset->unknown20 = mtl::MemManager::allocate(handle, size, 0x1000, false, "no name", 0);
       memcpy(asset->unknown20, data, size);
@@ -74,7 +74,7 @@ AssetData *AssetData::AssignFromMemory(mtl::ALLOC_HANDLE handle, const void *dat
   ml::DevFileTh::normalizeDvdFileName(fileName, name);
   AssetData *asset = new (AssetManager::getMemSYS()) AssetData();
   if (asset != nullptr) {
-    asset->unknown0c = handle;
+    asset->m_ALLOC_HANDLE = handle;
     if (data != nullptr && size != 0) {
       asset->unknown20 = const_cast<void *>(data);
       asset->unknown1c = size;
@@ -116,7 +116,7 @@ AssetData *AssetData::CreateFromCache(mtl::ALLOC_HANDLE handle, const char *name
   AssetData *asset = AssetManager::get()->searchAsset(name, nullptr);
   AssetData *source = nullptr;
   while (asset != nullptr) {
-    if (asset->unknown0c == handle) {
+    if (asset->m_ALLOC_HANDLE == handle) {
       asset->addRef();
       return asset;
     }
@@ -145,7 +145,7 @@ AssetData *AssetData::Clone(mtl::ALLOC_HANDLE handle) const {
       asset->unknown28 = unknown28;
     }
 
-    asset->unknown0c = handle;
+    asset->m_ALLOC_HANDLE = handle;
     asset->copyName(unknown30);
     asset->unknown18 = unknown18;
     asset->addRef();

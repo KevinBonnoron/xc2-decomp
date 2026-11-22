@@ -152,8 +152,8 @@ GfFieldLod::BdatInfo *GfFieldLod::_findBdatInfo(int bdatId) {
 }
 
 bool GfFieldLod::findTransform(mm::Mat44 &matrix, int bdatId) const {
-  if (unknown840.unknown00.unknown00 != nullptr && unknown840.unknown00.unknown10 != nullptr) {
-    ml::ScnObjAccSeamPos seamPos(unknown840.unknown00.unknown00);
+  if (m_fieldLodColiAnim.m_createInfo.unknown00 != nullptr && m_fieldLodColiAnim.m_createInfo.m_fieldLod != nullptr) {
+    ml::ScnObjAccSeamPos seamPos(m_fieldLodColiAnim.m_createInfo.unknown00);
     int num = seamPos.getMax();
     u16 lodId = unknown08[bdatId - unknown808];
     for (int i = 0; i < num; i++) {
@@ -168,9 +168,9 @@ bool GfFieldLod::findTransform(mm::Mat44 &matrix, int bdatId) const {
 }
 
 void GfFieldLod::setLodSwitchId(int bdatId, u32 switchId) {
-  if (unknown840.unknown00.unknown00 != nullptr && unknown840.unknown00.unknown10 != nullptr) {
+  if (m_fieldLodColiAnim.m_createInfo.unknown00 != nullptr && m_fieldLodColiAnim.m_createInfo.m_fieldLod != nullptr) {
     u16 lodId = unknown08[bdatId - unknown808];
-    ml::ScnObjAccSeamPos seamPos(unknown840.unknown00.unknown00);
+    ml::ScnObjAccSeamPos seamPos(m_fieldLodColiAnim.m_createInfo.unknown00);
     int num = seamPos.getMax();
     for (int i = 0; i < num; i++) {
       ml::ScnObjAccPartsPos partsPos = seamPos.getObj(i);
@@ -183,7 +183,7 @@ void GfFieldLod::setLodSwitchId(int bdatId, u32 switchId) {
 
 bool GfFieldLod::setAnimReverse(int bdatId, bool isReverse, bool isSkip) {
   GfGameFlag::setLocal(1, bdatId + unknown002 - unknown808, isReverse);
-  if (unknown840.unknown00.unknown00 == nullptr || unknown840.unknown00.unknown10 == nullptr) {
+  if (m_fieldLodColiAnim.m_createInfo.unknown00 == nullptr || m_fieldLodColiAnim.m_createInfo.m_fieldLod == nullptr) {
     return false;
   }
   if (!unknown888) {
@@ -192,7 +192,7 @@ bool GfFieldLod::setAnimReverse(int bdatId, bool isReverse, bool isSkip) {
       info->dirtyCache();
     }
   }
-  return unknown840.play(unknown08[bdatId - unknown808], isReverse, isSkip);
+  return m_fieldLodColiAnim.play(unknown08[bdatId - unknown808], isReverse, isSkip);
 }
 
 void GfFieldLod::setPlaySpeed(int bdatId, f32 speed) {
@@ -203,27 +203,27 @@ void GfFieldLod::setPlaySpeed(int bdatId, f32 speed) {
     }
   }
   u16 lodId = unknown08[bdatId - unknown808];
-  unknown840.setPlaySpeed(lodId, speed);
+  m_fieldLodColiAnim.setPlaySpeed(lodId, speed);
 }
 
 f32 GfFieldLod::getPlaySpeed(int bdatId) const {
   u16 lodId = unknown08[bdatId - unknown808];
-  return unknown840.getPlaySpeed(lodId);
+  return m_fieldLodColiAnim.getPlaySpeed(lodId);
 }
 
 bool GfFieldLod::isPlayAnimEnd(int bdatId) const {
   u16 lodId = unknown08[bdatId - unknown808];
-  return unknown840.isPlayEnd(lodId);
+  return m_fieldLodColiAnim.isPlayEnd(lodId);
 }
 
 bool GfFieldLod::isPlayAnimLoop(int bdatId) const {
   u16 lodId = unknown08[bdatId - unknown808];
-  return unknown840.isPlayLoop(lodId);
+  return m_fieldLodColiAnim.isPlayLoop(lodId);
 }
 
 f32 GfFieldLod::getAnimEndTime(int bdatId) const {
   u16 lodId = unknown08[bdatId - unknown808];
-  return unknown840.getAnimEndTime(lodId);
+  return m_fieldLodColiAnim.getAnimEndTime(lodId);
 }
 
 void GfFieldLod::gevMapjump(GEV event, const MapjumpCallbackInfo &) {
@@ -275,16 +275,16 @@ void GfFieldLod::createColiAnim(ml::ScnObjModel *model, bool isDebugDraw) {
   if (coliObject != nullptr) {
     info.unknown08 = coliObject->m_coliObject;
   }
-  info.unknown10 = this;
+  info.m_fieldLod = this;
   info.unknown18 = isDebugDraw;
-  unknown840.create(info);
+  m_fieldLodColiAnim.create(info);
   createBdatInfos();
-  unknown840.validateVeSe(*this);
+  m_fieldLodColiAnim.validateVeSe(*this);
 }
 
 void GfFieldLod::disposeColiAnim() {
   disposeBdatInfos();
-  unknown840.dispose();
+  m_fieldLodColiAnim.dispose();
 }
 
 void GfFieldLod::finalize() {
@@ -301,9 +301,10 @@ void GfFieldLod::destroy() {
 void GfFieldLod::setFade(int bdatId, bool isFadeIn, bool isImmediate) {
   GfGameFlag::setLocal(1, bdatId + unknown003 - unknown808, isFadeIn);
   // The lod id is read here, before the model test: the game loads it once before the search (1.0.0: 0x71002e4e34) and keeps it on the stack across the loop (str w1, [sp, #0xc] at
-  // 0x71002e4e54). Read at the setFade call the load comes after the loop (93 instructions instead of 97); declared after the model test the id takes x22 and the address of unknown840 the stack slot.
+  // 0x71002e4e54). Read at the setFade call the load comes after the loop (93 instructions instead of 97); declared after the model test the id takes x22 and the address of m_fieldLodColiAnim the
+  // stack slot.
   u16 lodId = unknown08[bdatId - unknown808];
-  if (unknown840.unknown00.unknown00 == nullptr || unknown840.unknown00.unknown10 == nullptr) {
+  if (m_fieldLodColiAnim.m_createInfo.unknown00 == nullptr || m_fieldLodColiAnim.m_createInfo.m_fieldLod == nullptr) {
     return;
   }
   f32 fadeTime = 0.0f;
@@ -316,7 +317,7 @@ void GfFieldLod::setFade(int bdatId, bool isFadeIn, bool isImmediate) {
       fadeTime = isFadeIn ? info->unknown04 : info->unknown08;
     }
   }
-  unknown840.setFade(lodId, isFadeIn, fadeTime);
+  m_fieldLodColiAnim.setFade(lodId, isFadeIn, fadeTime);
 }
 
 void GfFieldLod::validateBySaveData() {
@@ -362,7 +363,7 @@ void GfFieldLod::validateVeSe() {
   size_t count = unknown810.size();
   for (int i = 0; i < count; i++) {
     BdatInfo &info = unknown810[i];
-    unknown840.setFade(unknown08[info.unknown0c - unknown808], !isFadeOut(info.unknown0c), 0.0f);
+    m_fieldLodColiAnim.setFade(unknown08[info.unknown0c - unknown808], !isFadeOut(info.unknown0c), 0.0f);
   }
 }
 
@@ -385,7 +386,7 @@ void GfFieldLod::update(const fw::UpdateInfo &info) {
     return;
   }
   lod->updateBdatInfos();
-  get()->unknown840.update(info);
+  get()->m_fieldLodColiAnim.update(info);
 }
 
 bool GfFieldLod::isAnimReverse(int bdatId) const { return GfGameFlag::getLocal(1, bdatId + unknown002 - unknown808) != 0; }
@@ -402,7 +403,7 @@ bool GfFieldLod::isVisibleOfInit(int bdatId) { return Bdat::getFlagVal(GfDataBda
 void GfFieldLod::debugDraw() {
   GfFieldLod *lod = get();
   if (lod != nullptr && lod->unknown80c) {
-    lod->unknown840.debugDraw();
+    lod->m_fieldLodColiAnim.debugDraw();
   }
 }
 
@@ -412,7 +413,7 @@ void GfFieldLod::build(const GfSetupParam &param) {
   new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfFieldLod(param);
 }
 
-GfFieldLod::BdatInfo::BdatInfo(u16 bdatId) : unknown00(0), unknown04(0.0f), unknown08(0.0f), unknown0c(0), unknown0e{CondInfo(), CondInfo(), CondInfo()} {
+GfFieldLod::BdatInfo::BdatInfo(u16 bdatId) : unknown00(0), unknown04(0.0f), unknown08(0.0f), unknown0c(0), m_condInfo{CondInfo(), CondInfo(), CondInfo()} {
   if (bdatId != 0) {
     create(bdatId);
   }
@@ -426,7 +427,7 @@ void GfFieldLod::BdatInfo::create(u16 bdatId) {
   unknown08 = gmk::toBdatF32(Bdat::getValCheck(bdat, "LOD_fadeOUT_TIME", bdatId, gmk::BDAT_TYPE_UNKNOWN_8));
   mm::mtl::FixStr<32> name;
   for (u64 i = 0; i < 3; i++) {
-    CondInfo &cond = unknown0e[i];
+    CondInfo &cond = m_condInfo[i];
     cond.unknown0a = false;
     name.format("ScenarioFlagMin%d", i + 1);
     u16 scenarioFlagMin = Bdat::getValCheck(bdat, name.c_str(), bdatId, gmk::BDAT_TYPE_UNKNOWN_2);
@@ -434,7 +435,7 @@ void GfFieldLod::BdatInfo::create(u16 bdatId) {
     u16 scenarioFlagMax = Bdat::getValCheck(bdat, name.c_str(), bdatId, gmk::BDAT_TYPE_UNKNOWN_2);
     gmk::ScenarioFlagCond scenarioCond(scenarioFlagMin, scenarioFlagMax);
     if (scenarioCond.unknown00 <= scenarioCond.unknown02) {
-      cond.unknown00 = scenarioCond;
+      cond.m_scenarioFlagCond = scenarioCond;
     }
     name.format("QuestFlag%d", i + 1);
     u16 questFlag = Bdat::getValCheck(bdat, name.c_str(), bdatId, gmk::BDAT_TYPE_UNKNOWN_2);
@@ -446,7 +447,7 @@ void GfFieldLod::BdatInfo::create(u16 bdatId) {
     if (questCond.unknown02 > questCond.unknown03) {
       break;
     }
-    cond.unknown04 = questCond;
+    cond.m_questFlagCond = questCond;
     name.format("Condition%d", i + 1);
     cond.unknown08 = Bdat::getValCheck(bdat, name.c_str(), bdatId, gmk::BDAT_TYPE_UNKNOWN_2);
   }
@@ -457,7 +458,7 @@ void GfFieldLod::BdatInfo::dispose() { unknown0c = 0; }
 void GfFieldLod::BdatInfo::dirtyCache() {
   if (unknown0c != 0) {
     for (int i = 0; i < 3; i++) {
-      unknown0e[i].unknown0a = false;
+      m_condInfo[i].unknown0a = false;
     }
   }
 }
@@ -488,13 +489,13 @@ GfFieldLodColiAnim::GfFieldLodColiAnim(const CreateInfo *info) {
 
 void GfFieldLodColiAnim::create(const CreateInfo &info) {
   disposePosInfos();
-  unknown00 = info;
+  m_createInfo = info;
   createPosInfos(info.unknown18);
 }
 
 void GfFieldLodColiAnim::dispose() {
   disposePosInfos();
-  unknown00 = CreateInfo();
+  m_createInfo = CreateInfo();
 }
 
 void GfFieldLodColiAnim::disposePosInfos() {
@@ -503,22 +504,22 @@ void GfFieldLodColiAnim::disposePosInfos() {
   size_t count = unknown20.size();
   for (int i = 0; i < count; i++) {
     PosInfo &posInfo = unknown20[i];
-    if (posInfo.unknown50 != unknown020) {
+    if (posInfo.m_GF_OBJ_HANDLE != unknown020) {
       if (coliObject != nullptr && posInfo.unknown48 >= 0) {
         idcoli::IDColiParmsGrand coliParms(coliObject->m_coliObject);
         coliParms.getMoveObj(posInfo.unknown48).setUserData(nullptr);
       }
       unbindPosInfoToGfObj(posInfo);
-      GfObjUtil::destroy(posInfo.unknown50);
+      GfObjUtil::destroy(posInfo.m_GF_OBJ_HANDLE);
     }
   }
   unknown20.destroy();
 }
 
 void GfFieldLodColiAnim::update(const fw::UpdateInfo &info) {
-  if (unknown00.unknown00 != nullptr && unknown00.unknown10 != nullptr && !GfManager::isDestroyNow() && unknown20.size() != 0) {
+  if (m_createInfo.unknown00 != nullptr && m_createInfo.m_fieldLod != nullptr && !GfManager::isDestroyNow() && unknown20.size() != 0) {
     for (PosInfo &posInfo : unknown20) {
-      if (posInfo.unknown50 == unknown020) {
+      if (posInfo.m_GF_OBJ_HANDLE == unknown020) {
         posInfo.update(info);
       }
     }
@@ -535,7 +536,7 @@ GfFieldLodState GfFieldLodColiAnim::findStateOfFade(bool isFadeIn, bool isImmedi
 }
 
 bool GfFieldLodColiAnim::play(u16 lodId, bool isReverse, bool isSkip) {
-  ml::ScnObjAccSeamPos seamPos(unknown00.unknown00);
+  ml::ScnObjAccSeamPos seamPos(m_createInfo.unknown00);
   int num = seamPos.getMax();
   bool isPlayed = false;
   for (int i = 0; i < num; i++) {
@@ -556,11 +557,11 @@ bool GfFieldLodColiAnim::play(u16 lodId, bool isReverse, bool isSkip) {
         }
         partsPos.setNodeFrame(nodeFrame);
       }
-      if (posInfo.unknown08.unknown2a) {
+      if (posInfo.m_fieldLodEffect.unknown2a) {
         GfFieldLodState state = findStateOfAnimReverse(isReverse);
-        bool isLoop = posInfo.unknown08.isAssetLoop(state);
+        bool isLoop = posInfo.m_fieldLodEffect.isAssetLoop(state);
         if (isLoop || !isSkip) {
-          posInfo.unknown08.createInst(state, partsPos, isSkip && isLoop);
+          posInfo.m_fieldLodEffect.createInst(state, partsPos, isSkip && isLoop);
         }
       }
       isPlayed = true;
@@ -570,7 +571,7 @@ bool GfFieldLodColiAnim::play(u16 lodId, bool isReverse, bool isSkip) {
 }
 
 void GfFieldLodColiAnim::setFade(u16 lodId, bool isFadeIn, f32 fadeTime) {
-  ml::ScnObjAccSeamPos seamPos(unknown00.unknown00);
+  ml::ScnObjAccSeamPos seamPos(m_createInfo.unknown00);
   int num = seamPos.getMax();
   for (int i = 0; i < num; i++) {
     GfFieldLodState state = findStateOfFade(isFadeIn, fadeTime <= 0.0f);
@@ -582,10 +583,10 @@ void GfFieldLodColiAnim::setFade(u16 lodId, bool isFadeIn, f32 fadeTime) {
         posInfo.unknown74 = fadeTime;
         posInfo.unknown70 = isFadeIn;
       }
-      if (posInfo.unknown08.unknown2a) {
-        bool isLoop = posInfo.unknown08.isAssetLoop(state);
+      if (posInfo.m_fieldLodEffect.unknown2a) {
+        bool isLoop = posInfo.m_fieldLodEffect.isAssetLoop(state);
         if (fadeTime > 0.0f || isLoop) {
-          posInfo.unknown08.createInst(state, partsPos, fadeTime == 0.0f && !isLoop);
+          posInfo.m_fieldLodEffect.createInst(state, partsPos, fadeTime == 0.0f && !isLoop);
         }
       }
     }
@@ -593,7 +594,7 @@ void GfFieldLodColiAnim::setFade(u16 lodId, bool isFadeIn, f32 fadeTime) {
 }
 
 void GfFieldLodColiAnim::stop(u16 lodId) {
-  ml::ScnObjAccSeamPos seamPos(unknown00.unknown00);
+  ml::ScnObjAccSeamPos seamPos(m_createInfo.unknown00);
   int num = seamPos.getMax();
   for (int i = 0; i < num; i++) {
     ml::ScnObjAccPartsPos partsPos = seamPos.getObj(i);
@@ -604,7 +605,7 @@ void GfFieldLodColiAnim::stop(u16 lodId) {
 }
 
 bool GfFieldLodColiAnim::isLodIdExist(u16 lodId) const {
-  ml::ScnObjAccSeamPos seamPos(unknown00.unknown00);
+  ml::ScnObjAccSeamPos seamPos(m_createInfo.unknown00);
   int num = seamPos.getMax();
   for (int i = 0; i < num; i++) {
     ml::ScnObjAccPartsPos partsPos = seamPos.getObj(i);
@@ -616,7 +617,7 @@ bool GfFieldLodColiAnim::isLodIdExist(u16 lodId) const {
 }
 
 void GfFieldLodColiAnim::setPlaySpeed(u16 lodId, f32 speed) {
-  ml::ScnObjAccSeamPos seamPos(unknown00.unknown00);
+  ml::ScnObjAccSeamPos seamPos(m_createInfo.unknown00);
   int num = seamPos.getMax();
   for (int i = 0; i < num; i++) {
     ml::ScnObjAccPartsPos partsPos = seamPos.getObj(i);
@@ -627,7 +628,7 @@ void GfFieldLodColiAnim::setPlaySpeed(u16 lodId, f32 speed) {
 }
 
 bool GfFieldLodColiAnim::isPlayLoop(u16 lodId) const {
-  ml::ScnObjAccSeamPos seamPos(unknown00.unknown00);
+  ml::ScnObjAccSeamPos seamPos(m_createInfo.unknown00);
   int num = seamPos.getMax();
   for (int i = 0; i < num; i++) {
     ml::ScnObjAccPartsPos partsPos = seamPos.getObj(i);
@@ -642,7 +643,7 @@ bool GfFieldLodColiAnim::isPlayLoop(u16 lodId) const {
 }
 
 f32 GfFieldLodColiAnim::getPlaySpeed(u16 lodId) const {
-  ml::ScnObjAccSeamPos seamPos(unknown00.unknown00);
+  ml::ScnObjAccSeamPos seamPos(m_createInfo.unknown00);
   int num = seamPos.getMax();
   for (int i = 0; i < num; i++) {
     ml::ScnObjAccPartsPos partsPos = seamPos.getObj(i);
@@ -654,7 +655,7 @@ f32 GfFieldLodColiAnim::getPlaySpeed(u16 lodId) const {
 }
 
 f32 GfFieldLodColiAnim::getAnimEndTime(u16 lodId) const {
-  ml::ScnObjAccSeamPos seamPos(unknown00.unknown00);
+  ml::ScnObjAccSeamPos seamPos(m_createInfo.unknown00);
   int num = seamPos.getMax();
   for (int i = 0; i < num; i++) {
     ml::ScnObjAccPartsPos partsPos = seamPos.getObj(i);
@@ -672,7 +673,7 @@ f32 GfFieldLodColiAnim::getAnimEndTime(u16 lodId) const {
 }
 
 bool GfFieldLodColiAnim::isPlayEnd(u16 lodId) const {
-  ml::ScnObjAccSeamPos seamPos(unknown00.unknown00);
+  ml::ScnObjAccSeamPos seamPos(m_createInfo.unknown00);
   size_t count = unknown20.size();
   for (size_t i = 0; i < count; i++) {
     const PosInfo &posInfo = unknown20[i];
@@ -709,10 +710,10 @@ bool GfFieldLodColiAnim::isPlayEnd(u16 lodId) const {
 }
 
 void GfFieldLodColiAnim::debugDraw() const {
-  if (unknown00.unknown00 == nullptr || unknown00.unknown10 == nullptr) {
+  if (m_createInfo.unknown00 == nullptr || m_createInfo.m_fieldLod == nullptr) {
     return;
   }
-  ml::ScnObjAccSeamPos seamPos(unknown00.unknown00);
+  ml::ScnObjAccSeamPos seamPos(m_createInfo.unknown00);
   mm::Vec3 screenPos;
   mm::Mat44 matrix;
   mm::Col4 color;
@@ -724,7 +725,7 @@ void GfFieldLodColiAnim::debugDraw() const {
       partsPos.getMatrix(matrix);
       mm::Vec3 position = matrix.unknown004();
       if (ml::ScnCamUtil::getScreenPos(screenPos, ml::Scn::get()->getCam(-1), position)) {
-        color = unknown20[i].unknown08.unknown2c != 0 ? mm::Col4::red : mm::Col4::white;
+        color = unknown20[i].m_fieldLodEffect.unknown2c != 0 ? mm::Col4::red : mm::Col4::white;
         text.format("%d-%d", partsPos.getID(), partsPos.getSwitchID());
         fw::debug::drawFont(static_cast<int>(screenPos.x), static_cast<int>(screenPos.y), color, text.c_str());
       }
@@ -735,7 +736,7 @@ void GfFieldLodColiAnim::debugDraw() const {
 void GfFieldLodColiAnim::clearEffectInsts() {
   size_t count = unknown20.size();
   for (int i = 0; i < count; i++) {
-    unknown20[i].unknown08.disposeInst(false);
+    unknown20[i].m_fieldLodEffect.disposeInst(false);
   }
 }
 
@@ -746,12 +747,12 @@ void GfFieldLodColiAnim::validateVeSe(const GfFieldLod &lod) {
     PosInfo &posInfo = unknown20[i];
     int bdatId = lod.findBdatIdByLodId(posInfo.unknown40);
     if (bdatId > Bdat::getIdTop(bdat)) {
-      posInfo.unknown08.createAsset(bdatId);
+      posInfo.m_fieldLodEffect.createAsset(bdatId);
       f32 popDist = gmk::toBdatF32(Bdat::getValCheck(bdat, "effect_pop_dist", bdatId, gmk::BDAT_TYPE_UNKNOWN_8));
       f32 range = popDist;
       if (popDist == 0.0f) {
         for (u32 state = 0; state < 5; state++) {
-          if (posInfo.unknown08.isAssetLoop(static_cast<GfFieldLodState>(state))) {
+          if (posInfo.m_fieldLodEffect.isAssetLoop(static_cast<GfFieldLodState>(state))) {
             range = 50.0f;
             break;
           }
@@ -765,12 +766,12 @@ void GfFieldLodColiAnim::validateVeSe(const GfFieldLod &lod) {
 }
 
 void GfFieldLodColiAnim::bindPosInfoToGfObj(const PosInfo &posInfo) {
-  GfObjAcc acc(posInfo.unknown50);
+  GfObjAcc acc(posInfo.m_GF_OBJ_HANDLE);
   acc.setUserData(OBJ_USER_DATA_UNKNOWN_1, reinterpret_cast<u64>(&posInfo));
 }
 
 void GfFieldLodColiAnim::unbindPosInfoToGfObj(const PosInfo &posInfo) {
-  GfObjAcc acc(posInfo.unknown50);
+  GfObjAcc acc(posInfo.m_GF_OBJ_HANDLE);
   if (acc.isValid()) {
     acc.setUserData(OBJ_USER_DATA_UNKNOWN_1, 0);
   }
@@ -810,8 +811,8 @@ void GfFieldLodColiAnim::PosInfo::updateAnim(ml::ScnObjAccPartsPos &partsPos, f3
       partsPos.setMatrix(matrix);
       syncGfTransform(matrix);
       partsPos.getAnmMatrix(&matrix);
-      if (unknown48 >= 0 && unknown00->unknown00.unknown08 != nullptr) {
-        idcoli::IDColiParmsGrand grand(unknown00->unknown00.unknown08);
+      if (unknown48 >= 0 && m_fieldLodColiAnim->m_createInfo.unknown08 != nullptr) {
+        idcoli::IDColiParmsGrand grand(m_fieldLodColiAnim->m_createInfo.unknown08);
         grand.getMoveObj(unknown48).setMatrix(matrix);
       }
     }
@@ -819,36 +820,36 @@ void GfFieldLodColiAnim::PosInfo::updateAnim(ml::ScnObjAccPartsPos &partsPos, f3
 }
 
 void GfFieldLodColiAnim::PosInfo::update(const fw::UpdateInfo &info) {
-  if (unknown00 != nullptr && unknown44 >= 0) {
-    ml::ScnObjAccSeamPos seamPos(unknown00->unknown00.unknown00);
+  if (m_fieldLodColiAnim != nullptr && unknown44 >= 0) {
+    ml::ScnObjAccSeamPos seamPos(m_fieldLodColiAnim->m_createInfo.unknown00);
     ml::ScnObjAccPartsPos partsPos = seamPos.getObj(unknown44);
     updateAnim(partsPos, info.unknown08 * unknown6c);
     updateFade(partsPos, info.unknown04 * unknown6c);
     updatePopDepopEffect(partsPos);
-    unknown08.update(partsPos);
+    m_fieldLodEffect.update(partsPos);
     updateColiOff(partsPos);
   }
 }
 
 void GfFieldLodColiAnim::PosInfo::updatePopDepopEffect(ml::ScnObjAccPartsPos &partsPos) {
-  if (unknown08.unknown2a && partsPos.isPosMatrix()) {
-    GfFieldLodState state = unknown08.unknown30;
+  if (m_fieldLodEffect.unknown2a && partsPos.isPosMatrix()) {
+    GfFieldLodState state = m_fieldLodEffect.unknown30;
     // The game masks the state (0x71002e25a4: and w8, w21, #0xfffffffe) to accept FIELD_LOD_STATE_UNKNOWN_2 and FIELD_LOD_STATE_UNKNOWN_3 only.
-    if ((state & ~1) == FIELD_LOD_STATE_UNKNOWN_2 && unknown08.getAsset(state) != nullptr) {
+    if ((state & ~1) == FIELD_LOD_STATE_UNKNOWN_2 && m_fieldLodEffect.getAsset(state) != nullptr) {
       GfObj *mover = GfObjUtil::getObj(GfGameManager::getControlMover());
       if (mover != nullptr) {
         const mm::Vec3 &position = mover->getComponent<GfComTransform>()->getPosition();
         mm::Mat44 matrix;
         partsPos.getMatrix(matrix);
-        u32 instance = unknown08.unknown2c;
+        u32 instance = m_fieldLodEffect.unknown2c;
         mm::Vec3 diff = position - matrix.unknown004();
         if (diff.x * diff.x + diff.y * diff.y + diff.z * diff.z <= unknown7c) {
           if (instance == 0) {
-            unknown08.createInst(state, partsPos, true);
+            m_fieldLodEffect.createInst(state, partsPos, true);
           }
         } else if (instance != 0) {
           fw::EffectManager::get()->dead(instance);
-          unknown08.unknown2c = 0;
+          m_fieldLodEffect.unknown2c = 0;
         }
       }
     }
@@ -867,7 +868,7 @@ void GfFieldLodColiAnim::PosInfo::updateColiOff(ml::ScnObjAccPartsPos &partsPos)
 }
 
 void GfFieldLodColiAnim::PosInfo::syncGfTransform(const mm::Mat44 &matrix) {
-  GfObj *obj = GfObjUtil::getObj(unknown50);
+  GfObj *obj = GfObjUtil::getObj(m_GF_OBJ_HANDLE);
   if (obj != nullptr) {
     GfComTransform *transform = obj->getComponent<GfComTransform>();
     mm::Quat rotation;

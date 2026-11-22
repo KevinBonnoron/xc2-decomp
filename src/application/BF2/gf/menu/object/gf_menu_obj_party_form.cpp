@@ -115,8 +115,8 @@ void GfMenuObjPartyForm::DriverFormListener::reciveEvent(const ui::EventData &ev
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1:
-    GfMenuObject::setupInputSelection(acc.unknown10, 0, unknown28->unknown00.size());
-    unknown28->unknownd0 = -1;
+    GfMenuObject::setupInputSelection(acc.unknown10, 0, m_ptFormContext->unknown00.size());
+    m_ptFormContext->unknownd0 = -1;
     break;
   case 8: {
     u64 params = event.unknown08_u64;
@@ -125,30 +125,30 @@ void GfMenuObjPartyForm::DriverFormListener::reciveEvent(const ui::EventData &ev
     switch (type) {
     case 1:
       if (unknown0c == 0) {
-        unknown28->unknownd0 = index;
+        m_ptFormContext->unknownd0 = index;
         selectDriver(acc.unknown10, index, 2);
         unknown0c = 1;
       } else if (unknown0c == 1) {
-        u32 selected = unknown28->unknownd0;
+        u32 selected = m_ptFormContext->unknownd0;
         if (selected == index) {
           GfMenuObjUtil::playSECommon(2);
           return;
         }
-        swapDriver(unknown28, selected, index);
-        selectDriver(acc.unknown10, unknown28->unknownd0, 0);
-        unknown28->unknownd0 = -1;
+        swapDriver(m_ptFormContext, selected, index);
+        selectDriver(acc.unknown10, m_ptFormContext->unknownd0, 0);
+        m_ptFormContext->unknownd0 = -1;
         unknown0c = 0;
       }
       break;
     case 2:
       if (unknown0c == 1) {
-        u32 selected = unknown28->unknownd0;
+        u32 selected = m_ptFormContext->unknownd0;
         if (index == selected) {
           selectDriver(acc.unknown10, index, 1);
         } else {
           selectDriver(acc.unknown10, selected, 0);
         }
-        unknown28->unknownd0 = -1;
+        m_ptFormContext->unknownd0 = -1;
         unknown0c = 0;
       } else {
         GfMenuObject::returnFSSubLayer(acc.unknown10, 1);
@@ -160,9 +160,9 @@ void GfMenuObjPartyForm::DriverFormListener::reciveEvent(const ui::EventData &ev
     case 9:
       if (unknown0c == 0) {
         mm::mtl::FixedVector<u16, 422> blades;
-        bool hasBlade = GfDataDriver::getSetBlade(blades, unknown28->unknown00[static_cast<int>(index)].unknown00);
+        bool hasBlade = GfDataDriver::getSetBlade(blades, m_ptFormContext->unknown00[static_cast<int>(index)].unknown00);
         if (hasBlade) {
-          unknown28->unknownd0 = index;
+          m_ptFormContext->unknownd0 = index;
           ui::EventData next;
           next.unknown00 = 0x21;
           GfMenuObject::sendEvent(acc.searchSibiling("LAY_blade"), next, 0.0f);
@@ -186,10 +186,10 @@ void GfMenuObjPartyForm::DriverFormListener::reciveEvent(const ui::EventData &ev
       if (driver.isValid()) {
         GfMenuObjUtil::setDockPos(cursor.unknown10, driver.unknown10, 4, true);
         GfMenuObjUtil::addPos(cursor.unknown10, 0, -10);
-        if (index != unknown28->unknownd0) {
+        if (index != m_ptFormContext->unknownd0) {
           selectDriver(acc.unknown10, index, 1);
         }
-        if (previous != 0xffffffff && previous != unknown28->unknownd0) {
+        if (previous != 0xffffffff && previous != m_ptFormContext->unknownd0) {
           selectDriver(acc.unknown10, previous, 0);
         }
       }
@@ -222,10 +222,10 @@ void GfMenuObjPartyForm::BladeFormListener::reciveEvent(const ui::EventData &eve
       if (blade.isValid()) {
         GfMenuObjUtil::setDockPos(cursor.unknown10, blade.unknown10, 4, true);
         GfMenuObjUtil::addPos(cursor.unknown10, 0, -10);
-        if (index != unknown28->unknown180) {
+        if (index != m_ptFormContext->unknown180) {
           selectBlade(acc.unknown10, index, 1);
         }
-        if (previous != 0xffffffff && previous != unknown28->unknown180) {
+        if (previous != 0xffffffff && previous != m_ptFormContext->unknown180) {
           selectBlade(acc.unknown10, previous, 0);
         }
       }
@@ -245,19 +245,19 @@ void GfMenuObjPartyForm::BladeFormListener::reciveEvent(const ui::EventData &eve
     case 1: {
       u32 index = event.unknown08;
       if (unknown0c == 0) {
-        unknown28->unknown180 = index;
+        m_ptFormContext->unknown180 = index;
         selectBlade(acc.unknown10, index, 2);
         unknown0c = 1;
       } else if (unknown0c == 1) {
-        u32 selected = unknown28->unknown180;
+        u32 selected = m_ptFormContext->unknown180;
         if (selected == index) {
           GfMenuObjUtil::playSECommon(2);
           return;
         }
-        swapBlade(unknown28, selected, index);
+        swapBlade(m_ptFormContext, selected, index);
         // The game calls selectDriver here (bl 0x71004a740c right after swapBlade at 0x71004a7cfc), not selectBlade.
-        selectDriver(acc.unknown10, unknown28->unknown180, 0);
-        unknown28->unknown180 = 0xffffffff;
+        selectDriver(acc.unknown10, m_ptFormContext->unknown180, 0);
+        m_ptFormContext->unknown180 = 0xffffffff;
         unknown0c = 0;
       }
       break;
@@ -272,11 +272,11 @@ void GfMenuObjPartyForm::BladeFormListener::reciveEvent(const ui::EventData &eve
         param.unknown18 = unknown10;
         param.unknown0c = ui::CURVE_TYPE_SIN90;
         GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
-        unknown28->unknownd0 = -1;
+        m_ptFormContext->unknownd0 = -1;
         unknown0c = 2;
       } else if (unknown0c == 1) {
-        selectBlade(acc.unknown10, unknown28->unknown180, 0);
-        unknown28->unknown180 = 0xffffffff;
+        selectBlade(acc.unknown10, m_ptFormContext->unknown180, 0);
+        m_ptFormContext->unknown180 = 0xffffffff;
         unknown0c = 0;
       }
       break;
@@ -288,9 +288,9 @@ void GfMenuObjPartyForm::BladeFormListener::reciveEvent(const ui::EventData &eve
     break;
   }
   case 0x21: {
-    u32 driver = unknown28->unknown00[unknown28->unknownd0].unknown00;
-    unknown28->unknownd8 = driver;
-    mm::mtl::FixedVector<class unknown140 *, 3> &gauges = unknown28->unknowne0;
+    u32 driver = m_ptFormContext->unknown00[m_ptFormContext->unknownd0].unknown00;
+    m_ptFormContext->unknownd8 = driver;
+    mm::mtl::FixedVector<class unknown140 *, 3> &gauges = m_ptFormContext->unknowne0;
     for (u32 i = 0; i < gauges.size(); i++) {
       gauges[i]->changeCharData(3, driver);
     }
@@ -309,12 +309,12 @@ void GfMenuObjPartyForm::BladeFormListener::reciveEvent(const ui::EventData &eve
     }
     {
       mm::mtl::FixedVector<u16, 422> blades;
-      GfDataDriver::getSetBlade(blades, unknown28->unknownd8);
+      GfDataDriver::getSetBlade(blades, m_ptFormContext->unknownd8);
       for (u32 i = 0; i < 3; i++) {
         ui::UIObjectAcc blade(unknown003(acc.unknown10, "LAY_blade%02d", i));
         if (i < blades.size()) {
-          unknown28->unknown100[i].unknown00 = blades[i];
-          mm::mtl::FixedVector<class unknown140 *, 3> &adapters = unknown28->unknown100[i].unknown08;
+          m_ptFormContext->unknown100[i].unknown00 = blades[i];
+          mm::mtl::FixedVector<class unknown140 *, 3> &adapters = m_ptFormContext->unknown100[i].unknown08;
           // The game evaluates blades[i] again here, before the loop (assertion 0x71004a7a9c, load 0x71004a7ac0), as swapBlade does for the row id (0x71004a7e4c).
           u32 bladeId = blades[i];
           for (u32 j = 0; j < adapters.size(); j++) {
@@ -333,7 +333,7 @@ void GfMenuObjPartyForm::BladeFormListener::reciveEvent(const ui::EventData &eve
       GfMenuObject::setupInputSelection(acc.unknown10, 0, blades.size());
       selectBlade(acc.unknown10, 0, 0);
     }
-    unknown28->unknown180 = 0xffffffff;
+    m_ptFormContext->unknown180 = 0xffffffff;
     unknown0c = 0;
     break;
   }

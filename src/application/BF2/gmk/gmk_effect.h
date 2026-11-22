@@ -23,9 +23,9 @@ public:
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isPopCondMatched() const;
 
-    u16 unknown00;              // Inferred role: condition; original member name unknown.
-    ScenarioFlagCond unknown02; // Inferred role: scenario flag; original member name unknown.
-    QuestFlagCond unknown06;    // Inferred role: quest flag; original member name unknown.
+    u16 unknown00;                       // Inferred role: condition; original member name unknown.
+    ScenarioFlagCond m_scenarioFlagCond; // Inferred role: scenario flag; original member name unknown.
+    QuestFlagCond m_questFlagCond;       // Inferred role: quest flag; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_EFFECT; // Inferred name; shared by every gimmick class for the TGmkList templates.
@@ -48,13 +48,13 @@ public:
   bool canDepopInst() const;
   void validateDisp() const;
 
-  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
+  const Data *getData() const { return static_cast<const Data *>(m_createInfo.unknown08); }
 
   u64 unknown48;                     // Role and original member name unknown.
-  TimeCond unknown50;                // Inferred role: time cond; original member name unknown.
-  WeatherCond unknown60;             // Inferred role: weather cond; original member name unknown.
-  InOutDoorCond unknown70;           // Inferred role: indoor and outdoor cond; original member name unknown.
-  CloudCond unknown80;               // Inferred role: cloud sea cond; original member name unknown.
+  TimeCond m_timeCond;               // Inferred role: time cond; original member name unknown.
+  WeatherCond m_weatherCond;         // Inferred role: weather cond; original member name unknown.
+  InOutDoorCond m_inOutDoorCond;     // Inferred role: indoor and outdoor cond; original member name unknown.
+  CloudCond m_cloudCond;             // Inferred role: cloud sea cond; original member name unknown.
   void (GmkEffect::*unknown90)(f32); // Inferred role: sequence; original member name unknown.
   void *unknowna0;                   // Role and original member name unknown.
   bool unknowna8;                    // Role and original member name unknown.
@@ -72,10 +72,10 @@ public:
 
 static_assert(sizeof(GmkEffect::BdatInfo) == 0xa, "");
 static_assert(offsetof(GmkEffect, unknown48) == 0x48, "");
-static_assert(offsetof(GmkEffect, unknown50) == 0x50, "");
-static_assert(offsetof(GmkEffect, unknown60) == 0x60, "");
-static_assert(offsetof(GmkEffect, unknown70) == 0x70, "");
-static_assert(offsetof(GmkEffect, unknown80) == 0x80, "");
+static_assert(offsetof(GmkEffect, m_timeCond) == 0x50, "");
+static_assert(offsetof(GmkEffect, m_weatherCond) == 0x60, "");
+static_assert(offsetof(GmkEffect, m_inOutDoorCond) == 0x70, "");
+static_assert(offsetof(GmkEffect, m_cloudCond) == 0x80, "");
 static_assert(offsetof(GmkEffect, unknown90) == 0x90, "");
 static_assert(offsetof(GmkEffect, unknowna0) == 0xa0, "");
 static_assert(offsetof(GmkEffect, unknowna8) == 0xa8, "");

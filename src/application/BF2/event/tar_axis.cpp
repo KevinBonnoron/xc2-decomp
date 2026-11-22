@@ -33,9 +33,9 @@ mm::Vec3 DataManager::axis2tar(u32 axis, f32 x, f32 y, f32 z, const mm::Vec3 &po
   if (axis < TarAxis::AXIS_UNKNOWN_6) {
     switch (axis) {
     case TarAxis::AXIS_UNKNOWN_4:
-      return unknown003(x, unknown120->unknown110.y + y, pos);
+      return unknown003(x, m_ofsInfo->unknown110.y + y, pos);
     case TarAxis::AXIS_UNKNOWN_5:
-      return unknown003(x, unknown120->unknown160.y + y, pos);
+      return unknown003(x, m_ofsInfo->unknown160.y + y, pos);
     default:
       return unknown002(getTarAxis(axis), x, y, z);
     }
@@ -56,10 +56,10 @@ mm::Mat44 DataManager::getTarAxis(u32 axis) {
       mat = mm::Mat44::identity;
       break;
     case TarAxis::AXIS_UNKNOWN_1:
-      mat = unknown120->unknownd0;
+      mat = m_ofsInfo->unknownd0;
       break;
     case TarAxis::AXIS_UNKNOWN_2:
-      mat = unknown120->unknown120;
+      mat = m_ofsInfo->unknown120;
       break;
     case TarAxis::AXIS_UNKNOWN_3:
       if (mm::mtl::Singleton<TextManager>::getPtr()->getTalker() != nullptr) {
@@ -71,10 +71,10 @@ mm::Mat44 DataManager::getTarAxis(u32 axis) {
       }
       break;
     case TarAxis::AXIS_UNKNOWN_4:
-      mat.setRotY(unknown120->unknown110.y);
+      mat.setRotY(m_ofsInfo->unknown110.y);
       break;
     case TarAxis::AXIS_UNKNOWN_5:
-      mat.setRotY(unknown120->unknown160.y);
+      mat.setRotY(m_ofsInfo->unknown160.y);
       break;
     }
     return mat;

@@ -11,7 +11,7 @@
 namespace event {
 
 ICmd::RESULT CharaLinerRot::update(const Param &param) {
-  if (unknown08 == nullptr) {
+  if (m_charaDysUpdater == nullptr) {
     return RESULT_UNKNOWN_2;
   }
   CharaObj *chara = static_cast<CharaObj *>(param.val(0).getUserdata());
@@ -19,15 +19,15 @@ ICmd::RESULT CharaLinerRot::update(const Param &param) {
   if (param.getFrame() == 0) {
     mm::Vec3 from = chara->getRot();
     mm::Vec3 to(param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32());
-    unknown10.clear();
-    unknown10.append(0.0f, from, CV_TYPE_UNKNOWN_0);
-    unknown10.append(param.val(4).getF32(), to, static_cast<CV_TYPE>(param.val(5).getS32()));
-    unknown08->resetMovement(0);
+    m_anmVec.clear();
+    m_anmVec.append(0.0f, from, CV_TYPE_UNKNOWN_0);
+    m_anmVec.append(param.val(4).getF32(), to, static_cast<CV_TYPE>(param.val(5).getS32()));
+    m_charaDysUpdater->resetMovement(0);
   }
-  unknown10.update(delta);
-  chara->setRot(unknown10.getValue());
-  if (unknown10.isEnd()) {
-    unknown10.clear();
+  m_anmVec.update(delta);
+  chara->setRot(m_anmVec.getValue());
+  if (m_anmVec.isEnd()) {
+    m_anmVec.clear();
     return RESULT_UNKNOWN_1;
   }
   return RESULT_UNKNOWN_2;

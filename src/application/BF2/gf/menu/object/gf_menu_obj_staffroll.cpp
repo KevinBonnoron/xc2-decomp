@@ -123,8 +123,8 @@ void GfMenuObjStaffroll::MainListener::reciveEvent(const ui::EventData &event, u
   case GfMenuTypes::unknown003_33: {
     f32 time = event.unknown08_f32;
     int x = event.unknown0c;
-    unknown20->unknown68 = unknown20->unknown5c / (time * 30.0f);
-    unknown20->unknown58 = 2;
+    m_menuObjStaffroll->unknown68 = m_menuObjStaffroll->unknown5c / (time * 30.0f);
+    m_menuObjStaffroll->unknown58 = 2;
     mm::Pnt<s16> pos(x, 0);
     acc.setPos(pos);
     acc.setDisp(true);

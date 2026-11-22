@@ -17,11 +17,11 @@ class GfMenuObjPartyStatus2 : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjPartyStatus2 *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjPartyStatus2 *owner) : _0c(), m_menuObjPartyStatus2(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjPartyStatus2 *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjPartyStatus2 *m_menuObjPartyStatus2; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjPartyStatus2(u32 handle);
@@ -39,17 +39,17 @@ public:
   void finalize() override;
   void update() override;
 
-  bool unknown24;                 // Role and original member name unknown, cleared by the constructor.
-  GfMenuRewriteNumber *unknown28; // Inferred role: party status number; original member name unknown.
-  int unknown30[3];               // Inferred role: controls of the party frames, -1 when idle; original member name unknown.
+  bool unknown24;                           // Role and original member name unknown, cleared by the constructor.
+  GfMenuRewriteNumber *m_menuRewriteNumber; // Inferred role: party status number; original member name unknown.
+  int unknown30[3];                         // Inferred role: controls of the party frames, -1 when idle; original member name unknown.
 };
 
 static_assert(offsetof(GfMenuObjPartyStatus2, unknown24) == 0x24, "");
-static_assert(offsetof(GfMenuObjPartyStatus2, unknown28) == 0x28, "");
+static_assert(offsetof(GfMenuObjPartyStatus2, m_menuRewriteNumber) == 0x28, "");
 static_assert(offsetof(GfMenuObjPartyStatus2, unknown30) == 0x30, "");
 static_assert(sizeof(GfMenuObjPartyStatus2::unknown30) == 0x0c, "");
 static_assert(sizeof(GfMenuObjPartyStatus2) == 0x40, "");
-static_assert(offsetof(GfMenuObjPartyStatus2::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjPartyStatus2::MainListener, m_menuObjPartyStatus2) == 0x20, "");
 static_assert(sizeof(GfMenuObjPartyStatus2::MainListener) == 0x28, "");
 
 } // namespace gf

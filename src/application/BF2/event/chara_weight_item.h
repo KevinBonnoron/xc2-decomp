@@ -26,8 +26,8 @@ public:
   };
 
   CharaWeightItem() : unknown08(), m_stat(""), unknown238(0.0f) {
-    unknown23c[WEIGHT_LAYER_UNKNOWN_0] = 1.0f;
-    unknown23c[WEIGHT_LAYER_UNKNOWN_1] = 1.0f;
+    m_addWeight[WEIGHT_LAYER_UNKNOWN_0] = 1.0f;
+    m_addWeight[WEIGHT_LAYER_UNKNOWN_1] = 1.0f;
     unknown244[WEIGHT_LAYER_UNKNOWN_0] = 1.0f;
     unknown244[WEIGHT_LAYER_UNKNOWN_1] = 1.0f;
   }
@@ -47,10 +47,10 @@ private:
   mm::mtl::unknown027<FLAG_UNKNOWN_32> unknown08; // Inferred role: flags; original member name unknown.
   gf::AnimLayer unknown0c;                        // Inferred role: layer; original member name unknown.
   const char *m_stat;
-  AnmF32 unknown18[WEIGHT_LAYER_MAX]; // Inferred role: weight anms; original member name unknown.
-  f32 unknown238;                     // Inferred role: weight; original member name unknown.
-  f32 unknown23c[WEIGHT_LAYER_MAX];   // Inferred role: add weights; original member name unknown.
-  f32 unknown244[WEIGHT_LAYER_MAX];   // Inferred role: speeds; original member name unknown.
+  AnmF32 m_anmF32[WEIGHT_LAYER_MAX]; // Inferred role: weight anms; original member name unknown.
+  f32 unknown238;                    // Inferred role: weight; original member name unknown.
+  f32 m_addWeight[WEIGHT_LAYER_MAX]; // Inferred role: add weights; named after the game accessor event::CharaWeightItem::setAddWeight.
+  f32 unknown244[WEIGHT_LAYER_MAX];  // Inferred role: speeds; original member name unknown.
 };
 
 static_assert(sizeof(CharaWeightItem) == 0x250, "");

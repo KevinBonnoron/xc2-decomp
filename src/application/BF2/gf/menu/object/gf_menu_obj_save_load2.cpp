@@ -34,8 +34,8 @@ constexpr u32 unknown001 = 0x35;
 constexpr u32 CALL_UNKNOWN_117 = 0x75;
 
 GfMenuObjSaveLoad2::GfMenuObjSaveLoad2(u32 handle)
-    : GfMenuObject(handle), unknown28(nullptr), unknown30(this), unknown2c0(-1), unknown2c4(0), unknown2c8(nullptr), unknown2d0(nullptr), unknown2d8(nullptr), unknown2e0(nullptr), unknown2e8(nullptr),
-      unknown2f0(nullptr), unknown2f8(nullptr), unknown300(nullptr) {
+    : GfMenuObject(handle), m_menuCallContext(nullptr), unknown30(this), unknown2c0(-1), unknown2c4(0), unknown2c8(nullptr), unknown2d0(nullptr), unknown2d8(nullptr), unknown2e0(nullptr),
+      unknown2e8(nullptr), unknown2f0(nullptr), m_menuDriverList(nullptr), m_menuBladeList(nullptr) {
   for (int i = 0; i < 3; i++) {
     unknown308[i] = nullptr;
   }
@@ -60,26 +60,26 @@ void GfMenuObjSaveLoad2::initialize() {
     listener->release();
   }
   attachExternalCall(CALL_UNKNOWN_117, main);
-  unknown28 = GfMenuCallContext::create();
+  m_menuCallContext = GfMenuCallContext::create();
   // The braces end the CreateParam lifetime: the game (0x71004c86f4) reuses its stack slot for the layer param, the team setup and this one.
   {
     ui::UISelectObjList::CreateParam param;
     param.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
     unknown2c8 = ui::UISelectObjList::create(param);
   }
-  unknown2f8 = GfMenuDriverList::create();
+  m_menuDriverList = GfMenuDriverList::create();
   GfMenuDriverList::PartySetup partySetup;
   // PartySetup has no constructor past its SetupParam: the game stores the list type and the option one by one (str wzr 0x71004c884c, strb wzr 0x71004c8850).
   partySetup.unknown14 = GfPartySelect::LIST_TYPE_UNKNOWN_0;
   partySetup.unknown18 = false;
-  unknown2f8->setupFromParty(partySetup);
-  unknown300 = GfMenuBladeList::create();
+  m_menuDriverList->setupFromParty(partySetup);
+  m_menuBladeList = GfMenuBladeList::create();
   GfMenuBladeList::TeamSetup teamSetup;
   // The game stores the list source and then the flag (stp w27, wzr for the source and the constructor's zero team, then strb w27) in address order. The flag repeats the
   // constructor's value: with the source alone the byte store comes before the pair and the function does not match.
   teamSetup.unknown14 = 1;
   teamSetup.unknown1c = true;
-  unknown300->setupFromTeam(teamSetup);
+  m_menuBladeList->setupFromTeam(teamSetup);
   for (int i = 0; i < 3; i++) {
     unknown308[i] = unknown160();
     unknown308[i]->unknown162(1);
@@ -89,15 +89,15 @@ void GfMenuObjSaveLoad2::initialize() {
 }
 
 GfMenuObjSaveLoad2::~GfMenuObjSaveLoad2() {
-  mm::mtl::safeRelease(unknown28);
+  mm::mtl::safeRelease(m_menuCallContext);
   mm::mtl::safeRelease(unknown2c8);
   mm::mtl::safeRelease(unknown2d0);
   mm::mtl::safeRelease(unknown2d8);
   mm::mtl::safeRelease(unknown2e0);
   mm::mtl::safeRelease(unknown2e8);
   mm::mtl::safeRelease(unknown2f0);
-  mm::mtl::safeRelease(unknown2f8);
-  mm::mtl::safeRelease(unknown300);
+  mm::mtl::safeRelease(m_menuDriverList);
+  mm::mtl::safeRelease(m_menuBladeList);
   for (int i = 0; i < 3; i++) {
     unknown308[i] = nullptr;
   }
@@ -123,17 +123,17 @@ void GfMenuObjSaveLoad2::setupSave(ui::UIObjectAcc &acc, mm::mtl::IntrusivePtr<G
   int blade = 0;
   for (int i = 0; i < 3; i++) {
     name.format("IMG_driver@%02d", i + 1);
-    GfMenuCharDataAdapter::createFromDriverList(acc.searchChild(name.c_str()), 3, unknown2f8, i, false);
+    GfMenuCharDataAdapter::createFromDriverList(acc.searchChild(name.c_str()), 3, m_menuDriverList, i, false);
     name.format("TXT_char_name@%02d", i + 1);
-    GfMenuCharDataAdapter::createFromDriverList(acc.searchChild(name.c_str()), 2, unknown2f8, i, false);
+    GfMenuCharDataAdapter::createFromDriverList(acc.searchChild(name.c_str()), 2, m_menuDriverList, i, false);
     name.format("TXT_lv_num@%02d", i + 1);
     GfMenuReferenceAdapter::create(acc.searchChild(name.c_str()), numbers[i], false);
     name.format("IMG_blade%d@%02d", 1, i + 1);
-    GfMenuCharDataAdapter::createFromBladeList(acc.searchChild(name.c_str()), 3, unknown300, blade, false);
+    GfMenuCharDataAdapter::createFromBladeList(acc.searchChild(name.c_str()), 3, m_menuBladeList, blade, false);
     name.format("IMG_blade%d@%02d", 2, i + 1);
-    GfMenuCharDataAdapter::createFromBladeList(acc.searchChild(name.c_str()), 3, unknown300, blade + 1, false);
+    GfMenuCharDataAdapter::createFromBladeList(acc.searchChild(name.c_str()), 3, m_menuBladeList, blade + 1, false);
     name.format("IMG_blade%d@%02d", 3, i + 1);
-    GfMenuCharDataAdapter::createFromBladeList(acc.searchChild(name.c_str()), 3, unknown300, blade + 2, false);
+    GfMenuCharDataAdapter::createFromBladeList(acc.searchChild(name.c_str()), 3, m_menuBladeList, blade + 2, false);
     blade += 3;
   }
   unknown2d0 = ui::UIObjectTimePlugin::create(acc.searchChild("TXT_year_num"), 1);

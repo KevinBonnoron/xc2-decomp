@@ -70,14 +70,14 @@ private:
   static const char *type2stat(int type) { return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_headtype"), "stat", type, 7)); }
   static f32 type2blend(int type) { return static_cast<s16>(Bdat::getValCheck(Bdat::getFP("EVT_headtype"), "blend", type, 5)); }
 
-  u32 unknown08;                // Inferred role: flags; original member name unknown.
-  gf::GF_OBJ_HANDLE *unknown10; // Inferred role: handle; original member name unknown.
-  CharaWeightPlayer *unknown18; // Inferred role: weight; original member name unknown.
-  int unknown20;                // Inferred role: type; original member name unknown.
-  f32 unknown24;                // Inferred role: life; original member name unknown.
-  const char *unknown28;        // Inferred role: name; original member name unknown.
-  f32 unknown30;                // Inferred role: blend in; original member name unknown.
-  f32 unknown34;                // Inferred role: blend out; original member name unknown.
+  u32 unknown08;                          // Inferred role: flags; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown10;           // Inferred role: handle; original member name unknown.
+  CharaWeightPlayer *m_charaWeightPlayer; // Inferred role: weight; original member name unknown.
+  int unknown20;                          // Inferred role: type; original member name unknown.
+  f32 unknown24;                          // Inferred role: life; original member name unknown.
+  const char *unknown28;                  // Inferred role: name; original member name unknown.
+  f32 unknown30;                          // Inferred role: blend in; original member name unknown.
+  f32 unknown34;                          // Inferred role: blend out; original member name unknown.
 };
 
 static_assert(sizeof(CharaPlayHead) == 0x38, "");

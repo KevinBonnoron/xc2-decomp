@@ -41,7 +41,7 @@ void DrResMdoShdObj::bindShader(DrShdMdoExtTblObj *extTblObj) {
     u8 *decl = unknown08[i].unknown08;
     const u16 *shaderIdx = reinterpret_cast<const u16 *>(reinterpret_cast<const u8 *>(unknown00) + info->unknown0c);
     for (int j = 0; j < info->unknown10; j++, shaderIdx++) {
-      decl[j] = (extTblObj->unknown08 + *shaderIdx)->unknown00->getDeclarationOfs(name);
+      decl[j] = (extTblObj->m_drShdMdoDecExtTbl + *shaderIdx)->unknown00->getDeclarationOfs(name);
     }
   }
 }
@@ -56,7 +56,7 @@ bool DrResMdoShdObj::update(DrShdMdoExtTblObj *extTblObj) {
       const u8 *decl = unknown08[i].unknown08;
       const u16 *shaderIdx = reinterpret_cast<const u16 *>(reinterpret_cast<const u8 *>(unknown00) + info->unknown0c);
       for (int j = 0; j < info->unknown10; j++, shaderIdx++) {
-        (extTblObj->unknown08 + *shaderIdx)->setDeclarationIdx(decl[j], parm);
+        (extTblObj->m_drShdMdoDecExtTbl + *shaderIdx)->setDeclarationIdx(decl[j], parm);
       }
       isUpdate = true;
     }

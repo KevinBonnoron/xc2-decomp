@@ -230,43 +230,43 @@ public:
   void setDisp(bool isDisp);
   bool isDisp() const;
   // Inferred role: info of the current sequence; original name unknown.
-  const SeqInfo &unknown001() const { return unknown2710; }
+  const SeqInfo &unknown001() const { return m_seqInfo; }
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  play_start unknown10;                     // Inferred role: cmd play start; original member name unknown.
-  play_next unknown18;                      // Inferred role: cmd play next; original member name unknown.
-  start unknown20;                          // Inferred role: cmd start; original member name unknown.
-  start_fadeout unknown28;                  // Inferred role: cmd start fadeout; original member name unknown.
-  start_areajump unknown30;                 // Inferred role: cmd start areajump; original member name unknown.
-  start_notice unknown40;                   // Inferred role: cmd start notice; original member name unknown.
-  start_loading unknown48;                  // Inferred role: cmd start loading; original member name unknown.
-  start_other unknown58;                    // Inferred role: cmd start other; original member name unknown.
-  start_form unknowna8;                     // Inferred role: cmd start form; original member name unknown.
-  start_change unknownb0;                   // Inferred role: cmd start change; original member name unknown.
-  start_env_seam unknownb8;                 // Inferred role: cmd start env seam; original member name unknown.
-  start_weather unknownc0;                  // Inferred role: cmd start weather; original member name unknown.
-  start_streaming0 unknownc8;               // Inferred role: cmd start streaming0; original member name unknown.
-  start_capture_wait unknownd0;             // Inferred role: cmd start capture wait; original member name unknown.
-  start_streaming1 unknownd8;               // Inferred role: cmd start streaming1; original member name unknown.
-  exec unknowne0;                           // Inferred role: cmd exec; original member name unknown.
-  exec_fadeout unknownf8;                   // Inferred role: cmd exec fadeout; original member name unknown.
-  exec_grass unknown100;                    // Inferred role: cmd exec grass; original member name unknown.
-  end_change unknown108;                    // Inferred role: cmd end change; original member name unknown.
-  end_eff unknown118;                       // Inferred role: cmd end eff; original member name unknown.
-  end_stream unknown120;                    // Inferred role: cmd end stream; original member name unknown.
-  end_wait unknown128;                      // Inferred role: cmd end wait; original member name unknown.
-  end_areajump unknown138;                  // Inferred role: cmd end areajump; original member name unknown.
-  end_env_seam unknown148;                  // Inferred role: cmd end env seam; original member name unknown.
-  end_fadewait unknown150;                  // Inferred role: cmd end fadewait; original member name unknown.
-  end_fadein unknown158;                    // Inferred role: cmd end fadein; original member name unknown.
-  end_notice unknown160;                    // Inferred role: cmd end notice; original member name unknown.
-  class end unknown168;                     // Inferred role: cmd end; original member name unknown.
+  play_start m_play_start;                  // Inferred role: cmd play start; original member name unknown.
+  play_next m_play_next;                    // Inferred role: cmd play next; original member name unknown.
+  start m_start;                            // Inferred role: cmd start; original member name unknown.
+  start_fadeout m_start_fadeout;            // Inferred role: cmd start fadeout; original member name unknown.
+  start_areajump m_start_areajump;          // Inferred role: cmd start areajump; original member name unknown.
+  start_notice m_start_notice;              // Inferred role: cmd start notice; original member name unknown.
+  start_loading m_start_loading;            // Inferred role: cmd start loading; original member name unknown.
+  start_other m_start_other;                // Inferred role: cmd start other; original member name unknown.
+  start_form m_start_form;                  // Inferred role: cmd start form; original member name unknown.
+  start_change m_start_change;              // Inferred role: cmd start change; original member name unknown.
+  start_env_seam m_start_env_seam;          // Inferred role: cmd start env seam; original member name unknown.
+  start_weather m_start_weather;            // Inferred role: cmd start weather; original member name unknown.
+  start_streaming0 m_start_streaming0;      // Inferred role: cmd start streaming0; original member name unknown.
+  start_capture_wait m_start_capture_wait;  // Inferred role: cmd start capture wait; original member name unknown.
+  start_streaming1 m_start_streaming1;      // Inferred role: cmd start streaming1; original member name unknown.
+  exec m_exec;                              // Inferred role: cmd exec; original member name unknown.
+  exec_fadeout m_exec_fadeout;              // Inferred role: cmd exec fadeout; original member name unknown.
+  exec_grass m_exec_grass;                  // Inferred role: cmd exec grass; original member name unknown.
+  end_change m_end_change;                  // Inferred role: cmd end change; original member name unknown.
+  end_eff m_end_eff;                        // Inferred role: cmd end eff; original member name unknown.
+  end_stream m_end_stream;                  // Inferred role: cmd end stream; original member name unknown.
+  end_wait m_end_wait;                      // Inferred role: cmd end wait; original member name unknown.
+  end_areajump m_end_areajump;              // Inferred role: cmd end areajump; original member name unknown.
+  end_env_seam m_end_env_seam;              // Inferred role: cmd end env seam; original member name unknown.
+  end_fadewait m_end_fadewait;              // Inferred role: cmd end fadewait; original member name unknown.
+  end_fadein m_end_fadein;                  // Inferred role: cmd end fadein; original member name unknown.
+  end_notice m_end_notice;                  // Inferred role: cmd end notice; original member name unknown.
+  class end m_end;                          // Inferred role: cmd end; original member name unknown.
   u32 unknown170;                           // Inferred role: flags; original member name unknown.
   u32 unknown174;                           // Inferred role: disp flags; original member name unknown.
   mm::mtl::FixStr<128> unknown178;          // Inferred role: state name; original member name unknown.
   CmdQueue<QUEUE_UNKNOWN_32, 0> unknown200; // Inferred role: queue; original member name unknown.
-  SeqInfo unknown2710;                      // Inferred role: info; original member name unknown.
+  SeqInfo m_seqInfo;                        // Inferred role: info; original member name unknown.
   int unknown2840;                          // Inferred role: next event; original member name unknown.
   u8 _2844[0x2850 - 0x2844];
   u32 unknown2850; // Inferred role: login state; original member name unknown.

@@ -12,11 +12,11 @@ class GfMenuObjOperationInfo : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjOperationInfo *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjOperationInfo *owner) : _0c(), m_menuObjOperationInfo(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjOperationInfo *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjOperationInfo *m_menuObjOperationInfo; // Inferred role: owner; original member name unknown.
   };
 
   struct DupItem {
@@ -66,7 +66,7 @@ public:
   mm::mtl::FixedVector<InputObj, 16> unknown130; // Inferred role: input objects; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuObjOperationInfo::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjOperationInfo::MainListener, m_menuObjOperationInfo) == 0x20, "");
 static_assert(sizeof(GfMenuObjOperationInfo::MainListener) == 0x28, "");
 static_assert(sizeof(GfMenuObjOperationInfo::DupItem) == 0x10, "");
 static_assert(offsetof(GfMenuObjOperationInfo::DupItem, unknown0c) == 0x0c, "");

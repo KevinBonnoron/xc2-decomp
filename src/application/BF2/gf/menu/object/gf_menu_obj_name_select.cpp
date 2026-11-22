@@ -9,9 +9,9 @@
 
 namespace gf {
 
-GfMenuObjNameSelect::GfMenuObjNameSelect(u32 handle) : GfMenuObject(handle), unknown28(nullptr) { unknown28 = GfMenuCallContext::create(); }
+GfMenuObjNameSelect::GfMenuObjNameSelect(u32 handle) : GfMenuObject(handle), m_menuCallContext(nullptr) { m_menuCallContext = GfMenuCallContext::create(); }
 
-GfMenuObjNameSelect::~GfMenuObjNameSelect() { mm::mtl::safeRelease(unknown28); }
+GfMenuObjNameSelect::~GfMenuObjNameSelect() { mm::mtl::safeRelease(m_menuCallContext); }
 
 void GfMenuObjNameSelect::initialize() {
   ui::UIObjectAcc acc(unknown18, "LAY_main");

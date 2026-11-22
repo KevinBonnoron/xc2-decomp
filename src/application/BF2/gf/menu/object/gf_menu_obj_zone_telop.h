@@ -14,11 +14,11 @@ class GfMenuObjZoneTelop : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjZoneTelop *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjZoneTelop *owner) : _0c(), m_menuObjZoneTelop(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjZoneTelop *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjZoneTelop *m_menuObjZoneTelop; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjZoneTelop(u32 handle);
@@ -37,7 +37,7 @@ public:
   f32 unknown18c;                                  // Inferred role: fade out time; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuObjZoneTelop::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjZoneTelop::MainListener, m_menuObjZoneTelop) == 0x20, "");
 static_assert(sizeof(GfMenuObjZoneTelop::MainListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjZoneTelop, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjZoneTelop, unknown188) == 0x188, "");

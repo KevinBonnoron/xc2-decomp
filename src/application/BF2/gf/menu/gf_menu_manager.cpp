@@ -176,14 +176,14 @@ void unknown004(layer::LayerBase *layer, f32 x, f32 y) {
 }
 
 bool isOpenCallMenu(GfMenuManager *manager, u32 menu) {
-  if (manager->unknown40d0 == nullptr) {
+  if (manager->m_menuCallContext == nullptr) {
     return false;
   }
-  if (manager->unknown40d0->getState() == GfMenuCallContext::STATE_UNKNOWN_0) {
+  if (manager->m_menuCallContext->getState() == GfMenuCallContext::STATE_UNKNOWN_0) {
     return false;
   }
-  if (manager->unknown40d0->isActive()) {
-    return manager->unknown40d0->unknown10 == menu;
+  if (manager->m_menuCallContext->isActive()) {
+    return manager->m_menuCallContext->unknown10 == menu;
   }
   return false;
 }
@@ -219,7 +219,7 @@ void GfMenuManager::qevOrderQuest(const QuestOrderParam &) { unknown001(); }
 void GfMenuManager::qevCompleteQuest(const QuestCompleteParam &) {}
 
 void GfMenuManager::qevChangeTaskState(const QuestTaskParam &param) {
-  const QuestID &quest = param.unknown04;
+  const QuestID &quest = param.m_questID;
   if (quest.unknown00 == 0 && quest.unknown02 == 0) {
     return;
   }
@@ -243,7 +243,7 @@ void GfMenuManager::qevLoadTaskState(u32 count) {
 }
 
 void GfMenuManager::qevCompleteChildQuest(const QuestCompleteChildParam &param) {
-  const QuestID &quest = param.unknown04;
+  const QuestID &quest = param.m_questID;
   if (quest.unknown00 == 0 && quest.unknown02 == 0) {
     return;
   }
@@ -623,7 +623,7 @@ void GfMenuManager::applyGammaCorrectValue(f32 value) {
   renderParam.setGamma(gamma);
 }
 
-void GfMenuManager::applyOptionData(const SDataOption &option) { applyGammaCorrectValue(static_cast<f32>(option.unknown4c._1a) / unknown005); }
+void GfMenuManager::applyOptionData(const SDataOption &option) { applyGammaCorrectValue(static_cast<f32>(option.m_sSoundUiOption._1a) / unknown005); }
 
 void GfMenuManager::setupGame() {
   if (GfMenuFlag::get1(0x31) == 0) {
@@ -745,7 +745,7 @@ void GfMenuManager::gevChangeTarget(GF_OBJ_HANDLE *handle) {
     GfMenuObjEnemyStatus::close();
   } else {
     GfMenuObjEnemyStatus::OpenParam param;
-    param.unknown00 = handle;
+    param.m_GF_OBJ_HANDLE = handle;
     GfMenuObjEnemyStatus::open(param);
     GfMenuReference::setPartyStatusLock(0, true);
     GfMenuObjPartyStatus::open(true);
@@ -924,24 +924,24 @@ void GfMenuManager::setDispAll(bool isDisp) {
 
 void GfMenuManager::openCommonWindow(u16 window) {
   GfMenuManager *manager = get();
-  if (manager != nullptr && manager->unknown4090 && manager->unknown40d0 != nullptr) {
-    manager->unknown40d0->reset();
-    GfMenuObjCommonText::open(manager->unknown40d0, window, 0);
+  if (manager != nullptr && manager->unknown4090 && manager->m_menuCallContext != nullptr) {
+    manager->m_menuCallContext->reset();
+    GfMenuObjCommonText::open(manager->m_menuCallContext, window, 0);
     manager->unknown4154 = window;
   }
 }
 
 void GfMenuManager::openCommonWindow(const MenuCommonWindowParam &param) {
   GfMenuManager *manager = get();
-  if (manager != nullptr && manager->unknown4090 && manager->unknown40d0 != nullptr) {
-    manager->unknown40d0->reset();
-    GfMenuObjCommonText::open(manager->unknown40d0, param);
+  if (manager != nullptr && manager->unknown4090 && manager->m_menuCallContext != nullptr) {
+    manager->m_menuCallContext->reset();
+    GfMenuObjCommonText::open(manager->m_menuCallContext, param);
   }
 }
 
 void GfMenuManager::closeCommonWindow() {
   GfMenuManager *manager = get();
-  if (manager != nullptr && manager->unknown4090 && manager->unknown40d0 != nullptr) {
+  if (manager != nullptr && manager->unknown4090 && manager->m_menuCallContext != nullptr) {
     GfMenuObjCommonText::close();
   }
 }
@@ -978,9 +978,9 @@ u32 GfMenuManager::getLatestCommonWinID() {
 
 void GfMenuManager::openPreciousWindow(u16 item) {
   GfMenuManager *manager = get();
-  if (manager != nullptr && manager->unknown4090 && manager->unknown40d0 != nullptr) {
-    manager->unknown40d0->reset();
-    GfMenuObjCommonText::openItem(manager->unknown40d0, COMMON_TEXT_UNKNOWN_11, item);
+  if (manager != nullptr && manager->unknown4090 && manager->m_menuCallContext != nullptr) {
+    manager->m_menuCallContext->reset();
+    GfMenuObjCommonText::openItem(manager->m_menuCallContext, COMMON_TEXT_UNKNOWN_11, item);
   }
 }
 
@@ -994,17 +994,17 @@ bool GfMenuManager::isOpenPreciousWindow() {
 
 void GfMenuManager::openChapterTelop(u8 chapter) {
   GfMenuManager *manager = get();
-  if (manager != nullptr && manager->unknown4090 && chapter >= 1 && chapter <= CHAPTER_UNKNOWN_10 && manager->unknown40d0 != nullptr) {
-    manager->unknown40d0->reset();
-    GfMenuObjChapterTelop::openBeginTelop(manager->unknown40d0, chapter);
+  if (manager != nullptr && manager->unknown4090 && chapter >= 1 && chapter <= CHAPTER_UNKNOWN_10 && manager->m_menuCallContext != nullptr) {
+    manager->m_menuCallContext->reset();
+    GfMenuObjChapterTelop::openBeginTelop(manager->m_menuCallContext, chapter);
   }
 }
 
 void GfMenuManager::openChapterEndTelop(u8 chapter) {
   GfMenuManager *manager = get();
-  if (manager != nullptr && manager->unknown4090 && chapter >= 1 && chapter <= CHAPTER_UNKNOWN_10 && manager->unknown40d0 != nullptr) {
-    manager->unknown40d0->reset();
-    GfMenuObjChapterTelop::openEndTelop(manager->unknown40d0, chapter);
+  if (manager != nullptr && manager->unknown4090 && chapter >= 1 && chapter <= CHAPTER_UNKNOWN_10 && manager->m_menuCallContext != nullptr) {
+    manager->m_menuCallContext->reset();
+    GfMenuObjChapterTelop::openEndTelop(manager->m_menuCallContext, chapter);
   }
 }
 
@@ -1026,11 +1026,11 @@ bool GfMenuManager::isOpenZoneTelop() {
 
 void GfMenuManager::openDummyTutorial(u8 tutorial) {
   GfMenuManager *manager = get();
-  if (manager != nullptr && manager->unknown4090 && manager->unknown40d0 != nullptr) {
-    manager->unknown40d0->reset();
+  if (manager != nullptr && manager->unknown4090 && manager->m_menuCallContext != nullptr) {
+    manager->m_menuCallContext->reset();
     GfMenuObjDummyTutorial::OpenParam param;
     param.unknown00 = tutorial;
-    GfMenuObjDummyTutorial::open(manager->unknown40d0, param);
+    GfMenuObjDummyTutorial::open(manager->m_menuCallContext, param);
   }
 }
 

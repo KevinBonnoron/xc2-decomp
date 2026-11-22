@@ -40,9 +40,9 @@ bool GfComEvtAnim::recieveMessage(fw::MessageObject *sender, fw::Message &messag
 
 void GfComEvtAnim::procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message) {}
 
-GfComEvtAnim::Asm::Asm() : unknown08(nullptr), unknown10(nullptr), unknown148(getAllocator(ALLOCATOR_UNKNOWN_0)), unknown180(nullptr) {
-  unknown138.unknown08 = this;
-  unknown170.unknown08 = this;
+GfComEvtAnim::Asm::Asm() : m_comModel(nullptr), unknown10(nullptr), unknown148(getAllocator(ALLOCATOR_UNKNOWN_0)), unknown180(nullptr) {
+  m_asmLisener.m_asm = this;
+  m_viewerListener.m_asm = this;
 }
 
 void GfComEvtAnim::Asm::cleanup(u32 layer) {
@@ -53,14 +53,14 @@ void GfComEvtAnim::Asm::cleanup(u32 layer) {
   if (unknown00.test(FLAG_UNKNOWN_0)) {
     fw::AnimationManager *manager = fw::AnimationManager::get();
     if (manager != nullptr) {
-      manager->removePoseSampler(layer, unknown38);
-      manager->removeControlUpdater(layer, unknown18);
+      manager->removePoseSampler(layer, m_animEventAsmPoseSampler);
+      manager->removeControlUpdater(layer, m_animAsmUpdater);
     }
     unknown00.set(FLAG_UNKNOWN_0, false);
   }
 
-  unknown38.unbind();
-  unknown18.unbind();
+  m_animEventAsmPoseSampler.unbind();
+  m_animAsmUpdater.unbind();
   unknown148.clear();
   unknown10->setListener(nullptr);
   if (unknown10 != nullptr) {
@@ -70,7 +70,7 @@ void GfComEvtAnim::Asm::cleanup(u32 layer) {
 }
 
 void GfComEvtAnim::Asm::setup(u32 layer, GfComModel *model, anm::ResASM *resAsm, const char *state, bool isLocalSpace) {
-  this->unknown08 = model;
+  this->m_comModel = model;
   if (resAsm == nullptr) {
     return;
   }
@@ -82,25 +82,25 @@ void GfComEvtAnim::Asm::setup(u32 layer, GfComModel *model, anm::ResASM *resAsm,
 
   anm::ExtraTruckBuffer *extraTruckBuffer = model->unknown38;
   unknown10 = anm::Factory::createASMControl(*resAsm, *getAllocator(ALLOCATOR_UNKNOWN_7));
-  unknown18.bind(unknown10);
-  if (unknown18.unknown18 == nullptr) {
+  m_animAsmUpdater.bind(unknown10);
+  if (m_animAsmUpdater.unknown18 == nullptr) {
     return;
   }
 
-  unknown38.unknown33 = isLocalSpace;
-  unknown38.bind(unknown10, pose, extraTruckBuffer);
-  if (unknown38.unknown18 == nullptr || unknown38.unknown20 == nullptr) {
+  m_animEventAsmPoseSampler.unknown33 = isLocalSpace;
+  m_animEventAsmPoseSampler.bind(unknown10, pose, extraTruckBuffer);
+  if (m_animEventAsmPoseSampler.unknown18 == nullptr || m_animEventAsmPoseSampler.unknown20 == nullptr) {
     return;
   }
 
   fw::AnimationManager *manager = fw::AnimationManager::get();
   if (manager != nullptr) {
-    manager->addControlUpdater(layer, unknown18);
-    manager->addPoseSampler(layer, unknown38);
+    manager->addControlUpdater(layer, m_animAsmUpdater);
+    manager->addPoseSampler(layer, m_animEventAsmPoseSampler);
     unknown00.set(FLAG_UNKNOWN_0);
   }
 
-  unknown10->setListener(&unknown138);
+  unknown10->setListener(&m_asmLisener);
   unknown148.reserve(32);
   unknown10->unknown70[ANIM_LAYER_UNKNOWN_0].setState(state);
   unknown10->unknown70[ANIM_LAYER_UNKNOWN_0].executeCmd("C_idle");
@@ -116,13 +116,13 @@ void GfComEvtAnim::Asm::changeLayer(u32 oldLayer, u32 newLayer) {
     return;
   }
 
-  if (unknown38.unknown18 != nullptr && unknown38.unknown20 != nullptr) {
-    manager->removePoseSampler(oldLayer, unknown38);
-    manager->addPoseSampler(newLayer, unknown38);
+  if (m_animEventAsmPoseSampler.unknown18 != nullptr && m_animEventAsmPoseSampler.unknown20 != nullptr) {
+    manager->removePoseSampler(oldLayer, m_animEventAsmPoseSampler);
+    manager->addPoseSampler(newLayer, m_animEventAsmPoseSampler);
   }
-  if (unknown18.unknown18 != nullptr) {
-    manager->removeControlUpdater(oldLayer, unknown18);
-    manager->addControlUpdater(newLayer, unknown18);
+  if (m_animAsmUpdater.unknown18 != nullptr) {
+    manager->removeControlUpdater(oldLayer, m_animAsmUpdater);
+    manager->addControlUpdater(newLayer, m_animAsmUpdater);
   }
 }
 
@@ -209,7 +209,7 @@ const anm::QsTransform &GfComEvtAnim::Asm::getLocomotion() const {
 
 void GfComEvtAnim::Asm::setPause(u32 layer, bool isPause) {
   if (unknown10 != nullptr) {
-    unknown38.unknown32 = isPause;
+    m_animEventAsmPoseSampler.unknown32 = isPause;
   }
 }
 
@@ -285,7 +285,7 @@ void GfComEvtAnim::Asm::procMsgActivateComponentDebugWindow(fw::MessageObject *s
 
 void GfComEvtAnim::Asm::cacheCallback(anm::AsmListener::CallBackType type, const anm::AsmAnnotetion &annotation) { unknown148.push_back(CallBackCache(type, &annotation)); }
 
-GfComEvtAnim::Mot::Mot() : unknown08(nullptr), unknown10(nullptr), unknown18(nullptr), unknown3a8(0), unknown3b0(0), unknown3b4(1.0f) {}
+GfComEvtAnim::Mot::Mot() : m_comModel(nullptr), unknown10(nullptr), unknown18(nullptr), unknown3a8(0), unknown3b0(0), unknown3b4(1.0f) {}
 
 void GfComEvtAnim::Mot::cleanup(u32 layer) {
   stop(layer);
@@ -297,8 +297,8 @@ void GfComEvtAnim::Mot::cleanup(u32 layer) {
     }
   }
 
-  unknown40.unbind();
-  unknown20.unbind();
+  m_animEventMotPoseSamper.unbind();
+  m_animBlenderUpdater.unbind();
   if (unknown18 != nullptr) {
     unknown18->release();
     unknown18 = nullptr;
@@ -316,9 +316,9 @@ void GfComEvtAnim::Mot::stop(u32 layer) {
   if (unknown00.test(FLAG_UNKNOWN_0)) {
     fw::AnimationManager *manager = fw::AnimationManager::get();
     if (manager != nullptr) {
-      unknown40.resetPose();
-      manager->removePoseSampler(layer, unknown40);
-      manager->removeControlUpdater(layer, unknown20);
+      m_animEventMotPoseSamper.resetPose();
+      manager->removePoseSampler(layer, m_animEventMotPoseSamper);
+      manager->removeControlUpdater(layer, m_animBlenderUpdater);
     }
     unknown00.set(FLAG_UNKNOWN_0, false);
   }
@@ -337,7 +337,7 @@ void GfComEvtAnim::Mot::stop(u32 layer) {
 }
 
 void GfComEvtAnim::Mot::setup(GfComModel *model, anm::ResASM *resAsm, bool isLocalSpace) {
-  this->unknown08 = model;
+  this->m_comModel = model;
   this->unknown10 = resAsm;
   if (model == nullptr) {
     return;
@@ -350,10 +350,10 @@ void GfComEvtAnim::Mot::setup(GfComModel *model, anm::ResASM *resAsm, bool isLoc
 
   anm::ExtraTruckBuffer *extraTruckBuffer = model->unknown38;
   unknown18 = anm::Factory::createBlender(model->unknown28, getAllocator(ALLOCATOR_UNKNOWN_7));
-  unknown20.bind(unknown18);
-  if (unknown20.unknown18 != nullptr) {
-    unknown40.unknown33 = isLocalSpace;
-    unknown40.bind(unknown18, pose, extraTruckBuffer);
+  m_animBlenderUpdater.bind(unknown18);
+  if (m_animBlenderUpdater.unknown18 != nullptr) {
+    m_animEventMotPoseSamper.unknown33 = isLocalSpace;
+    m_animEventMotPoseSamper.bind(unknown18, pose, extraTruckBuffer);
   }
 }
 
@@ -367,13 +367,13 @@ void GfComEvtAnim::Mot::changeLayer(u32 oldLayer, u32 newLayer) {
     return;
   }
 
-  if (unknown40.unknown18 != nullptr && unknown40.unknown20 != nullptr) {
-    manager->removePoseSampler(oldLayer, unknown40);
-    manager->addPoseSampler(newLayer, unknown40);
+  if (m_animEventMotPoseSamper.unknown18 != nullptr && m_animEventMotPoseSamper.unknown20 != nullptr) {
+    manager->removePoseSampler(oldLayer, m_animEventMotPoseSamper);
+    manager->addPoseSampler(newLayer, m_animEventMotPoseSamper);
   }
-  if (unknown20.unknown18 != nullptr) {
-    manager->removeControlUpdater(oldLayer, unknown20);
-    manager->addControlUpdater(newLayer, unknown20);
+  if (m_animBlenderUpdater.unknown18 != nullptr) {
+    manager->removeControlUpdater(oldLayer, m_animBlenderUpdater);
+    manager->addControlUpdater(newLayer, m_animBlenderUpdater);
   }
 }
 
@@ -395,8 +395,8 @@ void GfComEvtAnim::Mot::init(u32 layer, void **motions, u64 *sizes, u64 count) {
 
   fw::AnimationManager *manager = fw::AnimationManager::get();
   if (manager != nullptr) {
-    manager->addControlUpdater(layer, unknown20);
-    manager->addPoseSampler(layer, unknown40);
+    manager->addControlUpdater(layer, m_animBlenderUpdater);
+    manager->addPoseSampler(layer, m_animEventMotPoseSamper);
     unknown00.set(FLAG_UNKNOWN_0);
   }
 
@@ -469,7 +469,7 @@ bool GfComEvtAnim::Mot::easeIn(const char *state, AnimLayer layer) {
   }
 
   if (unknown10 == nullptr) {
-    GfObjAcc acc(static_cast<GfObj *>(unknown08->unknown08)->unknownf8);
+    GfObjAcc acc(static_cast<GfObj *>(m_comModel->unknown08)->unknownf8);
     return false;
   }
 
@@ -546,8 +546,8 @@ bool GfComEvtAnim::Mot::setEaseSpeed(const char *state, AnimLayer layer, f32 spe
 GfComEvtAnim::GfComEvtAnim() : unknown550(nullptr), unknown580(true) {}
 
 void GfComEvtAnim::cleanup() {
-  unknown198.cleanup(getLayer());
-  unknown10.cleanup(getLayer());
+  m_mot.cleanup(getLayer());
+  m_asm.cleanup(getLayer());
   unknown550 = nullptr;
   unknown558 = "";
   unknown57c.clear();
@@ -570,8 +570,8 @@ void GfComEvtAnim::updateSetup() {
     return;
   }
 
-  unknown10.setup(getLayer(), model, unknown550, unknown558.c_str(), unknown580);
-  unknown198.setup(model, unknown550, unknown580);
+  m_asm.setup(getLayer(), model, unknown550, unknown558.c_str(), unknown580);
+  m_mot.setup(model, unknown550, unknown580);
   unknown57c.set(FLAG_UNKNOWN_0_2);
 }
 
@@ -580,99 +580,99 @@ void GfComEvtAnim::changeLayer(u32 oldLayer, u32 newLayer) {
     return;
   }
 
-  unknown10.changeLayer(oldLayer, newLayer);
-  unknown198.changeLayer(oldLayer, newLayer);
+  m_asm.changeLayer(oldLayer, newLayer);
+  m_mot.changeLayer(oldLayer, newLayer);
 }
 
-bool GfComEvtAnim::execCmd(const char *command) { return unknown10.execCmd(ANIM_LAYER_UNKNOWN_0, command); }
+bool GfComEvtAnim::execCmd(const char *command) { return m_asm.execCmd(ANIM_LAYER_UNKNOWN_0, command); }
 
-const char *GfComEvtAnim::getStateName() const { return unknown10.getStateName(ANIM_LAYER_UNKNOWN_0); }
+const char *GfComEvtAnim::getStateName() const { return m_asm.getStateName(ANIM_LAYER_UNKNOWN_0); }
 
-bool GfComEvtAnim::setState(const char *state) { return unknown10.setState(ANIM_LAYER_UNKNOWN_0, state); }
+bool GfComEvtAnim::setState(const char *state) { return m_asm.setState(ANIM_LAYER_UNKNOWN_0, state); }
 
-void GfComEvtAnim::setVariable(const char *name, f32 value) { unknown10.setVariable(name, value); }
+void GfComEvtAnim::setVariable(const char *name, f32 value) { m_asm.setVariable(name, value); }
 
-void GfComEvtAnim::setVariable(const char *name, int value) { unknown10.setVariable(name, value); }
+void GfComEvtAnim::setVariable(const char *name, int value) { m_asm.setVariable(name, value); }
 
-void GfComEvtAnim::setLocalTime(f32 time, AnimLayer layer) { unknown10.setLocalTime(layer, time); }
+void GfComEvtAnim::setLocalTime(f32 time, AnimLayer layer) { m_asm.setLocalTime(layer, time); }
 
-bool GfComEvtAnim::getPlaybackTime(const char *state, f32 *time) const { return unknown10.getPlaybackTime(state, time); }
+bool GfComEvtAnim::getPlaybackTime(const char *state, f32 *time) const { return m_asm.getPlaybackTime(state, time); }
 
-bool GfComEvtAnim::getLocomotionReference(const char *state, f32 time, anm::QsTransform *transform) const { return unknown10.getLocomotionReference(state, time, transform); }
+bool GfComEvtAnim::getLocomotionReference(const char *state, f32 time, anm::QsTransform *transform) const { return m_asm.getLocomotionReference(state, time, transform); }
 
-const anm::QsTransform &GfComEvtAnim::getLocomotion() const { return unknown10.getLocomotion(); }
+const anm::QsTransform &GfComEvtAnim::getLocomotion() const { return m_asm.getLocomotion(); }
 
-bool GfComEvtAnim::isEnd(AnimLayer layer) const { return unknown10.isEnd(layer); }
+bool GfComEvtAnim::isEnd(AnimLayer layer) const { return m_asm.isEnd(layer); }
 
 void GfComEvtAnim::play(void *motion, u64 size, f32 time) {
   updateSetup();
-  unknown198.init(getLayer(), &motion, &size, 1);
-  unknown198.play(0, time);
-  unknown10.setPause(getLayer(), true);
-  unknown198.setPause(getLayer(), false);
+  m_mot.init(getLayer(), &motion, &size, 1);
+  m_mot.play(0, time);
+  m_asm.setPause(getLayer(), true);
+  m_mot.setPause(getLayer(), false);
 }
 
 void GfComEvtAnim::stop() {
-  unknown198.stop(getLayer());
-  unknown10.setPause(getLayer(), false);
-  unknown198.setPause(getLayer(), true);
+  m_mot.stop(getLayer());
+  m_asm.setPause(getLayer(), false);
+  m_mot.setPause(getLayer(), true);
 }
 
 void GfComEvtAnim::initMulti(void **motions, u64 *sizes, u64 count) {
   updateSetup();
-  unknown198.init(getLayer(), motions, sizes, count);
+  m_mot.init(getLayer(), motions, sizes, count);
 }
 
 void GfComEvtAnim::playMulti(u32 index, f32 time) {
-  unknown198.play(index, time);
-  unknown10.setPause(getLayer(), true);
-  unknown198.setPause(getLayer(), false);
+  m_mot.play(index, time);
+  m_asm.setPause(getLayer(), true);
+  m_mot.setPause(getLayer(), false);
 }
 
 void GfComEvtAnim::stopMulti() {
-  unknown198.stop(getLayer());
-  unknown10.setPause(getLayer(), false);
-  unknown198.setPause(getLayer(), true);
+  m_mot.stop(getLayer());
+  m_asm.setPause(getLayer(), false);
+  m_mot.setPause(getLayer(), true);
 }
 
-bool GfComEvtAnim::isEndMulti() const { return unknown198.isEnd(); }
+bool GfComEvtAnim::isEndMulti() const { return m_mot.isEnd(); }
 
-void GfComEvtAnim::setWeightMulti(f32 *weights, u64 count) { unknown198.setWeight(weights, count); }
+void GfComEvtAnim::setWeightMulti(f32 *weights, u64 count) { m_mot.setWeight(weights, count); }
 
 void GfComEvtAnim::setSpeed(f32 speed, AnimLayer layer) {
   updateSetup();
-  unknown10.setSpeed(layer, speed);
-  unknown198.setSpeed(speed);
+  m_asm.setSpeed(layer, speed);
+  m_mot.setSpeed(speed);
 }
 
 bool GfComEvtAnim::easeIn(const char *name, AnimLayer layer) {
   updateSetup();
-  bool isEase = unknown10.easeIn(name, layer);
-  if (unknown198.easeIn(name, layer)) {
+  bool isEase = m_asm.easeIn(name, layer);
+  if (m_mot.easeIn(name, layer)) {
     isEase = true;
   }
   return isEase;
 }
 
 bool GfComEvtAnim::easeOut(const char *name, AnimLayer layer) {
-  bool isEase = unknown10.easeOut(name, layer);
-  if (unknown198.easeOut(name, layer)) {
+  bool isEase = m_asm.easeOut(name, layer);
+  if (m_mot.easeOut(name, layer)) {
     isEase = true;
   }
   return isEase;
 }
 
 bool GfComEvtAnim::setEaseWeight(const char *name, AnimLayer layer, f32 weight) {
-  bool isSet = unknown10.setEaseWeight(name, layer, weight);
-  if (unknown198.setEaseWeight(name, layer, weight)) {
+  bool isSet = m_asm.setEaseWeight(name, layer, weight);
+  if (m_mot.setEaseWeight(name, layer, weight)) {
     isSet = true;
   }
   return isSet;
 }
 
 bool GfComEvtAnim::setEaseSpeed(const char *name, AnimLayer layer, f32 speed) {
-  bool isSet = unknown10.setEaseSpeed(name, layer, speed);
-  if (unknown198.setEaseSpeed(name, layer, speed)) {
+  bool isSet = m_asm.setEaseSpeed(name, layer, speed);
+  if (m_mot.setEaseSpeed(name, layer, speed)) {
     isSet = true;
   }
   return isSet;

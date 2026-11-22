@@ -38,19 +38,19 @@ public:
   void changeMemCall();
   bool update(const DrResMdoSeamParmRead *parmRead, const u32 *gblIdx, bool isOpen);
 
-  DrResMdoSeamWrkLight *unknown08;    // Inferred role: next; original member name unknown.
-  DrResMdoSeamWrkLight *unknown10;    // Inferred role: prev; original member name unknown.
-  const MdsSeamLgtMapData *unknown18; // Inferred role: light data; original member name unknown.
-  DrEnvironmentObj *unknown20;        // Inferred role: environment object; original member name unknown.
-  DrResMdoSeamMemObj *unknown28;      // Inferred role: memory object; original member name unknown.
-  s32 unknown30;                      // Inferred role: index; original member name unknown.
-  u32 unknown34;                      // Inferred role: memory size; original member name unknown.
-  u16 unknown38;                      // Inferred role: out of range count; original member name unknown.
-  u16 unknown3a;                      // Inferred role: state flags; original member name unknown.
+  DrResMdoSeamWrkLight *unknown08;              // Inferred role: next; original member name unknown.
+  DrResMdoSeamWrkLight *unknown10;              // Inferred role: prev; original member name unknown.
+  const MdsSeamLgtMapData *m_mdsSeamLgtMapData; // Inferred role: light data; original member name unknown.
+  DrEnvironmentObj *m_drEnvironmentObj;         // Inferred role: environment object; original member name unknown.
+  DrResMdoSeamMemObj *m_drResMdoSeamMemObj;     // Inferred role: memory object; original member name unknown.
+  s32 unknown30;                                // Inferred role: index; original member name unknown.
+  u32 unknown34;                                // Inferred role: memory size; original member name unknown.
+  u16 unknown38;                                // Inferred role: out of range count; original member name unknown.
+  u16 unknown3a;                                // Inferred role: state flags; original member name unknown.
 };
 
-static_assert(offsetof(DrResMdoSeamWrkLight, unknown18) == 0x18, "");
-static_assert(offsetof(DrResMdoSeamWrkLight, unknown28) == 0x28, "");
+static_assert(offsetof(DrResMdoSeamWrkLight, m_mdsSeamLgtMapData) == 0x18, "");
+static_assert(offsetof(DrResMdoSeamWrkLight, m_drResMdoSeamMemObj) == 0x28, "");
 static_assert(offsetof(DrResMdoSeamWrkLight, unknown30) == 0x30, "");
 static_assert(offsetof(DrResMdoSeamWrkLight, unknown38) == 0x38, "");
 static_assert(sizeof(DrResMdoSeamWrkLight) == 0x40, "");

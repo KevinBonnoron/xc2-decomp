@@ -40,7 +40,7 @@ public:
   enum HOMURA_MODE { HOMURA_MODE_UNKNOWN_1 = 1 };
 
   struct REFLIST {
-    GF_SEARCH_OBJ *unknown00;                         // Inferred role: search object; original member name unknown.
+    GF_SEARCH_OBJ *m_GF_SEARCH_OBJ;                   // Inferred role: search object; original member name unknown.
     mm::mtl::FixedList<MENUREF_OBJ *, 512> unknown08; // Inferred role: referenced objects; original member name unknown.
   };
 
@@ -79,13 +79,13 @@ public:
   // Inferred role: arts palette; original type name unknown.
   struct unknown005 {
     // The GfMenuReference constructor (1.0.0: 0x71003cb6c4) zeroes every member of the nine and three palettes and sets the enable flag.
-    unknown005() : unknown00(), unknown08(), unknown1c(0), unknown20(true), unknown24(0) {}
+    unknown005() : m_artsPaletteInfo(), m_artsIconInfo(), unknown1c(0), unknown20(true), unknown24(0) {}
 
-    ArtsPaletteInfo unknown00;             // Inferred role: info; original member name unknown.
-    GfMenuObjUtil::ArtsIconInfo unknown08; // Inferred role: icon info; original member name unknown.
-    u32 unknown1c;                         // Inferred role: element type; original member name unknown.
-    bool unknown20;                        // Inferred role: enable; original member name unknown.
-    u32 unknown24;                         // Inferred role: disable flags; original member name unknown.
+    ArtsPaletteInfo m_artsPaletteInfo;          // Inferred role: info; original member name unknown.
+    GfMenuObjUtil::ArtsIconInfo m_artsIconInfo; // Inferred role: icon info; original member name unknown.
+    u32 unknown1c;                              // Inferred role: element type; original member name unknown.
+    bool unknown20;                             // Inferred role: enable; original member name unknown.
+    u32 unknown24;                              // Inferred role: disable flags; original member name unknown.
   };
 
   // Inferred role: blade virtual equip orb and its slot; original type name unknown.
@@ -211,7 +211,7 @@ public:
   ml::fixed_size_alloc_inside<REFLIST, 32> unknown4070;    // Inferred role: reference list pool; original member name unknown.
   mm::mtl::FixedList<REFLIST *, 32> unknown4c598;          // Inferred role: reference lists; original member name unknown.
   mm::mtl::FixedList<GF_SEARCH_OBJ *, 32> unknown4c7d8;    // Inferred role: search objects whose reference list is destroyed at the next update; original member name unknown.
-  ml::CriticalSection unknown4ca18;                        // Inferred role: critical section; original member name unknown.
+  ml::CriticalSection m_criticalSection;                   // Inferred role: critical section; named after the game accessor gf::GfMenuReference::getCriticalSection.
   bool unknown4ca40;                                       // Inferred role: initialized; original member name unknown.
   mm::mtl::FixedVector<FieldSkillInfo, 28> unknown4ca48;   // Inferred role: field skills; original member name unknown.
   unknown005 unknown4cac0[ARTS_PALETTE_UNKNOWN_3];         // Inferred role: arts palettes; original member name unknown.
@@ -236,11 +236,11 @@ public:
   bool unknown4cb80;                      // Inferred role: palette reverse; original member name unknown.
   mm::mtl::unknown027<8> unknown4cb84[4]; // Inferred role: reverse palette btn states; original member name unknown.
   u8 _4cb94[0x4cb98 - 0x4cb94];
-  GfMenuEnemyList *unknown4cb98; // Inferred role: enemy links; original member name unknown.
-  GfMenuItemList *unknown4cba0;  // Inferred role: item links; original member name unknown.
-  ElemComboRoot unknown4cba8[7]; // Inferred role: element combo roots; original member name unknown.
-  unknown003 unknown4cbe0[2];    // Inferred role: element combo parties; original member name unknown.
-  u32 unknown4cbf0;              // Inferred role: element combo request; original member name unknown.
+  GfMenuEnemyList *m_menuEnemyList; // Inferred role: enemy links; original member name unknown.
+  GfMenuItemList *m_menuItemList;   // Inferred role: item links; original member name unknown.
+  ElemComboRoot m_elemComboRoot[7]; // Inferred role: element combo roots; original member name unknown.
+  unknown003 unknown4cbe0[2];       // Inferred role: element combo parties; original member name unknown.
+  u32 unknown4cbf0;                 // Inferred role: element combo request; original member name unknown.
   u8 _4cbf4[0x4cbf8 - 0x4cbf4];
   u32 unknown4cbf8[8];        // Inferred role: reference driver ids; original member name unknown.
   u32 unknown4cc18[8];        // Inferred role: reference blade ids; original member name unknown.
@@ -270,7 +270,7 @@ static_assert(offsetof(GfMenuReference, unknown08) == 0x08, "");
 static_assert(offsetof(GfMenuReference, unknown4070) == 0x4070, "");
 static_assert(offsetof(GfMenuReference, unknown4c598) == 0x4c598, "");
 static_assert(offsetof(GfMenuReference, unknown4c7d8) == 0x4c7d8, "");
-static_assert(offsetof(GfMenuReference, unknown4ca18) == 0x4ca18, "");
+static_assert(offsetof(GfMenuReference, m_criticalSection) == 0x4ca18, "");
 static_assert(offsetof(GfMenuReference, unknown4ca40) == 0x4ca40, "");
 static_assert(offsetof(GfMenuReference, unknown4ca48) == 0x4ca48, "");
 static_assert(offsetof(GfMenuReference, unknown4cac0) == 0x4cac0, "");
@@ -290,9 +290,9 @@ static_assert(offsetof(GfMenuReference, unknown4cb78) == 0x4cb78, "");
 static_assert(offsetof(GfMenuReference, unknown4cb7c) == 0x4cb7c, "");
 static_assert(offsetof(GfMenuReference, unknown4cb80) == 0x4cb80, "");
 static_assert(offsetof(GfMenuReference, unknown4cb84) == 0x4cb84, "");
-static_assert(offsetof(GfMenuReference, unknown4cb98) == 0x4cb98, "");
-static_assert(offsetof(GfMenuReference, unknown4cba0) == 0x4cba0, "");
-static_assert(offsetof(GfMenuReference, unknown4cba8) == 0x4cba8, "");
+static_assert(offsetof(GfMenuReference, m_menuEnemyList) == 0x4cb98, "");
+static_assert(offsetof(GfMenuReference, m_menuItemList) == 0x4cba0, "");
+static_assert(offsetof(GfMenuReference, m_elemComboRoot) == 0x4cba8, "");
 static_assert(offsetof(GfMenuReference, unknown4cbe0) == 0x4cbe0, "");
 static_assert(offsetof(GfMenuReference, unknown4cbf0) == 0x4cbf0, "");
 static_assert(offsetof(GfMenuReference, unknown4cbf8) == 0x4cbf8, "");
@@ -312,9 +312,9 @@ class GfMenuReferenceFs : public mm::mtl::ReferenceObject {
 public:
   virtual void getFs(MenuFieldSkill &fs) const;
 
-  MenuFieldSkill unknown0c; // Inferred role: field skill; original member name unknown.
+  MenuFieldSkill m_menuFieldSkill; // Inferred role: field skill; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuReferenceFs, unknown0c) == 0x0c, "");
+static_assert(offsetof(GfMenuReferenceFs, m_menuFieldSkill) == 0x0c, "");
 
 } // namespace gf

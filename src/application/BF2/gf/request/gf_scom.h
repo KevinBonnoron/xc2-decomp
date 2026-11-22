@@ -93,17 +93,17 @@ enum SCOM_EXEC {
 class SCOM {
 public:
   SCOM(GF_SCOM_HANDLE *handle, SCOM_TYPE type, SCOM_EXEC exec, u16 unknown10);
-  virtual ~SCOM() { unknown08 = reinterpret_cast<GF_SCOM_HANDLE *>(-1); }
+  virtual ~SCOM() { m_GF_SCOM_HANDLE = reinterpret_cast<GF_SCOM_HANDLE *>(-1); }
   virtual bool exec(const fw::UpdateInfo &info) = 0;
   virtual GF_OBJ_HANDLE *getObjHandle() const;
 
-  GF_SCOM_HANDLE *unknown08; // Inferred role: command handle; original member name unknown.
-  u16 unknown10;             // Inferred role: unknown flag; original member name unknown.
-  SCOM_EXEC unknown14;       // Inferred role: exec mode; original member name unknown.
-  SCOM_TYPE unknown18;       // Inferred role: command type; original member name unknown.
+  GF_SCOM_HANDLE *m_GF_SCOM_HANDLE; // Inferred role: command handle; original member name unknown.
+  u16 unknown10;                    // Inferred role: unknown flag; original member name unknown.
+  SCOM_EXEC unknown14;              // Inferred role: exec mode; original member name unknown.
+  SCOM_TYPE unknown18;              // Inferred role: command type; original member name unknown.
 };
 
-static_assert(offsetof(SCOM, unknown08) == 0x08, "");
+static_assert(offsetof(SCOM, m_GF_SCOM_HANDLE) == 0x08, "");
 static_assert(offsetof(SCOM, unknown10) == 0x10, "");
 static_assert(offsetof(SCOM, unknown14) == 0x14, "");
 static_assert(offsetof(SCOM, unknown18) == 0x18, "");

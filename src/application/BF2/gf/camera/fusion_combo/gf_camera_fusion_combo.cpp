@@ -60,6 +60,17 @@ void FusionComboCamera::onActivate() {}
 
 bool FusionComboCamera::isPlayEnd() const { return unknown120 <= unknown124; }
 
+// 1.0.0: 0x71001d60e0, 63 instructions. The game rotates the opposite direction (the negated unit axis, rotated in place by mm::unknown010) and passes it with a copy of the axis. `direction`
+// is declared before `reference`: the game keeps the copy of the axis at sp and the direction above it. The other order has 12 lines of difference; `direction = rotation.rotate(...)`
+// has 30 (axis first) or 78 (direction first).
+f32 FusionComboCamera::getYaw(const mm::Quat &rotation) {
+  mm::Vec3 direction;
+  mm::Vec3 reference = mm::Vec3::unitZ;
+  direction = mm::Vec3(-reference.x, -reference.y, -reference.z);
+  mm::unknown010(rotation, direction);
+  return getYaw(direction, reference);
+}
+
 f32 FusionComboCamera::getYaw(const mm::Vec3 &direction, const mm::Vec3 &reference) {
   mm::Vec3 from(direction.x, 0.0f, direction.z);
   mm::Vec3 to(reference.x, 0.0f, reference.z);

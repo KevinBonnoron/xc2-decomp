@@ -45,9 +45,9 @@ enum {
 constexpr s32 ANNOTATION_KIND_UNKNOWN_1 = 1;
 
 struct MsgObjectNotifyAsmCallback : fw::Message {
-  MsgObjectNotifyAsmCallback(GfComAsm *comAsm, const anm::AsmAnnotetion *annotation) : fw::Message(MSG_OBJECT_UNKNOWN_16777279, 0x40), unknown08(comAsm), unknown10(annotation) {}
+  MsgObjectNotifyAsmCallback(GfComAsm *comAsm, const anm::AsmAnnotetion *annotation) : fw::Message(MSG_OBJECT_UNKNOWN_16777279, 0x40), m_comAsm(comAsm), unknown10(annotation) {}
 
-  GfComAsm *unknown08;                 // Inferred role: sender; original member name unknown.
+  GfComAsm *m_comAsm;                  // Inferred role: sender; original member name unknown.
   const anm::AsmAnnotetion *unknown10; // Inferred role: annotation; original member name unknown.
 };
 
@@ -103,20 +103,20 @@ public:
 
   class AsmLisener : public anm::AsmListener {
   public:
-    void callback(CallBackType type, const anm::AsmAnnotetion &annotation) override { unknown08->cacheCallback(type, annotation); }
+    void callback(CallBackType type, const anm::AsmAnnotetion &annotation) override { m_comAsm->cacheCallback(type, annotation); }
 
-    GfComAsm *unknown08; // Inferred role: owner; original member name unknown.
+    GfComAsm *m_comAsm; // Inferred role: owner; original member name unknown.
   };
 
   class ViewerListener {
   public:
     virtual void onWkStandbyLogout() {
-      if (unknown08 != nullptr) {
-        unknown08->unknown180 = nullptr;
+      if (m_comAsm != nullptr) {
+        m_comAsm->unknown180 = nullptr;
       }
     }
 
-    GfComAsm *unknown08; // Inferred role: owner; original member name unknown.
+    GfComAsm *m_comAsm; // Inferred role: owner; original member name unknown.
   };
 
   bool recieveMessage(fw::MessageObject *sender, fw::Message &message) override;
@@ -165,23 +165,23 @@ public:
   void changeLayer(u32 oldLayer, u32 newLayer) override;
   const mm::mtl::RTTI *getRTTI() const override;
 
-  anm::ASMControl *unknown10;                // Inferred role: asm control; original member name unknown.
-  fw::AnimAsmUpdater unknown18;              // Inferred role: updater; original member name unknown.
-  fw::AnimAsmPoseSampler unknown38;          // Inferred role: pose sampler; original member name unknown.
-  unknown008 unknown70[CALLBACK_UNKNOWN_5];  // Inferred role: callbacks; original member name unknown.
-  AsmLisener unknown138;                     // Inferred role: listener; original member name unknown.
-  mm::mtl::Vector<CallBackCache> unknown148; // Inferred role: callback caches; original member name unknown.
-  ViewerListener unknown170;                 // Inferred role: viewer listener; original member name unknown.
-  void *unknown180;                          // Inferred role: viewer; original member name unknown.
+  anm::ASMControl *unknown10;                  // Inferred role: asm control; original member name unknown.
+  fw::AnimAsmUpdater m_animAsmUpdater;         // Inferred role: updater; original member name unknown.
+  fw::AnimAsmPoseSampler m_animAsmPoseSampler; // Inferred role: pose sampler; original member name unknown.
+  unknown008 unknown70[CALLBACK_UNKNOWN_5];    // Inferred role: callbacks; original member name unknown.
+  AsmLisener m_asmLisener;                     // Inferred role: listener; original member name unknown.
+  mm::mtl::Vector<CallBackCache> unknown148;   // Inferred role: callback caches; original member name unknown.
+  ViewerListener m_viewerListener;             // Inferred role: viewer listener; original member name unknown.
+  void *unknown180;                            // Inferred role: viewer; original member name unknown.
 };
 
 static_assert(offsetof(GfComAsm, unknown10) == 0x10, "");
-static_assert(offsetof(GfComAsm, unknown18) == 0x18, "");
-static_assert(offsetof(GfComAsm, unknown38) == 0x38, "");
+static_assert(offsetof(GfComAsm, m_animAsmUpdater) == 0x18, "");
+static_assert(offsetof(GfComAsm, m_animAsmPoseSampler) == 0x38, "");
 static_assert(offsetof(GfComAsm, unknown70) == 0x70, "");
-static_assert(offsetof(GfComAsm, unknown138) == 0x138, "");
+static_assert(offsetof(GfComAsm, m_asmLisener) == 0x138, "");
 static_assert(offsetof(GfComAsm, unknown148) == 0x148, "");
-static_assert(offsetof(GfComAsm, unknown170) == 0x170, "");
+static_assert(offsetof(GfComAsm, m_viewerListener) == 0x170, "");
 static_assert(offsetof(GfComAsm, unknown180) == 0x180, "");
 static_assert(sizeof(GfComAsm) == 0x188, "");
 

@@ -68,7 +68,7 @@ ml::TimeCount s_loadGameTimer;
 
 GfManager::GfManager(const GfSetupParam &param) : unknown40(false), unknown41(false), unknown48(0), unknown4c(GAME_START_UNKNOWN_0), unknown50(0), unknown54(-1.0f), unknown58(false) {
   s_pThis = this;
-  unknown18 = param;
+  m_setupParam = param;
   unknown44 = param.unknown24;
   unknown48 = unknown092[unknown44];
 }
@@ -98,30 +98,30 @@ void GfManager::build(const GfSetupParam &param) {
 
 void GfManager::initialize() {
   fw::Framework::addPauseCallback(this);
-  GfEvent::build(unknown18);
+  GfEvent::build(m_setupParam);
   createGfParameter();
   bindPadResources();
   bindGFSoundSource();
-  GfPause::build(unknown18);
-  GfInfo::build(unknown18);
-  GfMemManager::build(unknown18);
-  GfDataManager::build(unknown18);
-  GfScriptManager::build(unknown18);
-  GfReqManager::build(unknown18);
-  GfAssetManager::build(unknown18);
-  GfObjManager::build(unknown18);
-  GfSound::build(unknown18);
-  GfMapManager::build(unknown18);
-  GfGameManager::build(unknown18);
-  GfFieldManager::build(unknown18);
-  GfMenuManager::build(unknown18);
+  GfPause::build(m_setupParam);
+  GfInfo::build(m_setupParam);
+  GfMemManager::build(m_setupParam);
+  GfDataManager::build(m_setupParam);
+  GfScriptManager::build(m_setupParam);
+  GfReqManager::build(m_setupParam);
+  GfAssetManager::build(m_setupParam);
+  GfObjManager::build(m_setupParam);
+  GfSound::build(m_setupParam);
+  GfMapManager::build(m_setupParam);
+  GfGameManager::build(m_setupParam);
+  GfFieldManager::build(m_setupParam);
+  GfMenuManager::build(m_setupParam);
   GfGameManager::setState(GF_STATE_UNKNOWN_3, false);
-  GfMovieManager::build(unknown18);
+  GfMovieManager::build(m_setupParam);
   GfEvent::addEventCallback(this);
   while (!GfMenuManager::isInitialized()) {
     GfSleep(1);
   }
-  btl::BattleManager::build(unknown18);
+  btl::BattleManager::build(m_setupParam);
   unknown40 = true;
 }
 
@@ -202,7 +202,7 @@ bool GfManager::isDestroyNow() {
   return false;
 }
 
-GfSetupParam &GfManager::getSetupParam() { return s_pThis->unknown18; }
+GfSetupParam &GfManager::getSetupParam() { return s_pThis->m_setupParam; }
 
 void GfManager::updatePauseCallback() {
   if (s_pThis != nullptr) {

@@ -61,10 +61,10 @@ public:
   void setPause(bool isPause) override;
 
 private:
-  SoundHandle unknown08; // Inferred role: sound handle; original member name unknown.
-  WEATYPE unknown10;     // Inferred role: type; original member name unknown.
-  bool unknown14;        // Inferred role: is skipped; original member name unknown.
-  f32 unknown18;         // Inferred role: volume; original member name unknown.
+  SoundHandle m_soundHandle; // Inferred role: sound handle; original member name unknown.
+  WEATYPE unknown10;         // Inferred role: type; original member name unknown.
+  bool unknown14;            // Inferred role: is skipped; original member name unknown.
+  f32 unknown18;             // Inferred role: volume; original member name unknown.
 };
 
 static_assert(sizeof(WeatherSnd) == 0x20, "");

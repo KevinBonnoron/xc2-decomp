@@ -17,7 +17,7 @@ AssetCsvb *AssetCsvb::CreateFromFile(mtl::ALLOC_HANDLE handle, const char *name)
   void *data = ml::DevFileTh::readFileBlock(param, &size, nullptr);
   AssetCsvb *csvb = new (AssetManager::getMemSYS()) AssetCsvb();
   if (csvb != nullptr) {
-    csvb->unknown0c = handle;
+    csvb->m_ALLOC_HANDLE = handle;
     csvb->unknown20 = new (handle) csvb::CCsvbData();
     csvb->unknown20->Load(handle, data, size);
     csvb->unknown001(fileName.c_str());
@@ -31,7 +31,7 @@ AssetCsvb *AssetCsvb::CreateFromMemory(mtl::ALLOC_HANDLE handle, const void *dat
   ml::DevFileTh::normalizeDvdFileName(fileName, name);
   AssetCsvb *csvb = new (AssetManager::getMemSYS()) AssetCsvb();
   if (csvb != nullptr) {
-    csvb->unknown0c = handle;
+    csvb->m_ALLOC_HANDLE = handle;
     if (data != nullptr && size != 0) {
       csvb->unknown20 = new (AssetManager::getMemSYS()) csvb::CCsvbData();
       csvb->unknown20->Load(handle, data, size);
@@ -63,7 +63,7 @@ AssetCsvb *AssetCsvb::CreateFromMemory(mm::mtl::IAllocator *allocator, const voi
 AssetCsvb *AssetCsvb::CreateFromCache(mtl::ALLOC_HANDLE handle, const char *name) {
   AssetCsvb *source = nullptr;
   for (AssetCsvb *csvb = AssetManager::get()->searchCsvb(name, nullptr); csvb != nullptr; csvb = AssetManager::get()->searchCsvb(name, csvb)) {
-    if (csvb->unknown0c == handle) {
+    if (csvb->m_ALLOC_HANDLE == handle) {
       csvb->addRef();
       return csvb;
     }
@@ -86,7 +86,7 @@ AssetCsvb *AssetCsvb::Clone(mtl::ALLOC_HANDLE handle) const {
       csvb->unknown20->Copy(handle, unknown20);
     }
 
-    csvb->unknown0c = handle;
+    csvb->m_ALLOC_HANDLE = handle;
     csvb->unknown28 = unknown28;
     csvb->unknown18 = unknown18;
     csvb->addRef();

@@ -8,8 +8,8 @@ namespace ml {
 LanguageInfo::LanguageInfo() {
   unknown28 = nullptr;
   unknown30 = 0;
-  unknown20 = mtl::ALLOC_HANDLE();
-  unknown10 = nullptr;
+  m_ALLOC_HANDLE = mtl::ALLOC_HANDLE();
+  m_languageInfoParam = nullptr;
   unknown18 = 0;
   unknown1c = 0;
   unknown08 = 0;
@@ -18,25 +18,25 @@ LanguageInfo::LanguageInfo() {
 
 LanguageInfo::~LanguageInfo() {
   unknown18 = 0;
-  if (unknown20.isValid() && unknown10 != nullptr) {
-    mtl::MemManager::deallocate(unknown10, 0, false);
-    unknown10 = nullptr;
+  if (m_ALLOC_HANDLE.isValid() && m_languageInfoParam != nullptr) {
+    mtl::MemManager::deallocate(m_languageInfoParam, 0, false);
+    m_languageInfoParam = nullptr;
   }
-  unknown10 = nullptr;
+  m_languageInfoParam = nullptr;
   unknown1c = 0;
-  unknown20 = mtl::ALLOC_HANDLE();
+  m_ALLOC_HANDLE = mtl::ALLOC_HANDLE();
 }
 
 void LanguageInfo::initialize(mtl::ALLOC_HANDLE) {
   LanguageInfo *info = get();
-  info->unknown10 = static_cast<LanguageInfoParam *>(mtl::MemManager::allocate(info->unknown20 = MlMem::getProductMem(), 0x1a00, 0x10, false, "no name", 0));
+  info->m_languageInfoParam = static_cast<LanguageInfoParam *>(mtl::MemManager::allocate(info->m_ALLOC_HANDLE = MlMem::getProductMem(), 0x1a00, 0x10, false, "no name", 0));
   info->unknown18 = 0;
   info->unknown1c = 0x40;
 }
 
 const char *LanguageInfo::getText(MLLANG_STRUCT *text) {
   LanguageInfo *info = get();
-  const LanguageInfoParam &entry = info->unknown10[reinterpret_cast<size_t>(text) & 0xffff];
+  const LanguageInfoParam &entry = info->m_languageInfoParam[reinterpret_cast<size_t>(text) & 0xffff];
   return entry.unknown00[info->unknown0c];
 }
 

@@ -61,7 +61,7 @@ bool GfMenuObjTitle::isEnableEventsTheater() {
   if (s_NoSaveData) {
     return false;
   }
-  return GfGameFlag::getLocal(tl::TitleMain::get()->getSaveBuffer()->unknown10.unknownfbbc4, 1, FLAG_UNKNOWN_39487) == 1;
+  return GfGameFlag::getLocal(tl::TitleMain::get()->getSaveBuffer()->m_game.m_gameFlag, 1, FLAG_UNKNOWN_39487) == 1;
 }
 
 void GfMenuObjTitle::moveCursor(u32 handle, int index) {
@@ -150,13 +150,13 @@ void GfMenuObjTitle::ListListener::reciveEvent(const ui::EventData &event, u32 h
       if (index != 0xffffffff) {
         u32 previous = event.unknown0c;
         if (previous != 0xffffffff) {
-          ui::UIObjectAcc old(unknown20->unknown50->getObject(previous));
+          ui::UIObjectAcc old(m_menuObjTitle->unknown50->getObject(previous));
           old.loadDefColor();
           old.setBorderWeight(2.0f);
         }
-        unknown20->moveCursor(handle, index);
+        m_menuObjTitle->moveCursor(handle, index);
         {
-          ui::UIObjectAcc select(unknown20->unknown50->getObject(index));
+          ui::UIObjectAcc select(m_menuObjTitle->unknown50->getObject(index));
           GfMenuObjUtil::setColMulandAdd(select.unknown10, "txt_title_sel");
           select.setBorderWeight(2.0f);
         }
@@ -174,15 +174,15 @@ void GfMenuObjTitle::ListListener::reciveEvent(const ui::EventData &event, u32 h
       if (state == 1) {
         // The game sign-extends the slot (ldrsw, 0x71004dd644) and ui::EventData has only an unsigned view, so the index is a typed local.
         int index = event.unknown08;
-        u32 type = unknown20->unknown28[index];
+        u32 type = m_menuObjTitle->unknown28[index];
         if (!s_NoSaveData && (type == 0 || type == 4)) {
-          unknown20->unknown1b8 = false;
-          unknown20->unknown58.unknown005();
-          unknown20->unknown58.unknown002(&GfMenuObjTitle::seqConfirmNewGame);
+          m_menuObjTitle->unknown1b8 = false;
+          m_menuObjTitle->unknown58.unknown005();
+          m_menuObjTitle->unknown58.unknown002(&GfMenuObjTitle::seqConfirmNewGame);
         } else {
           addResultCallContext(handle, type, 0);
         }
-        unknown20->unknown48 = type;
+        m_menuObjTitle->unknown48 = type;
         unknown0c = 2;
         GfMenuObject::disableInput(acc.unknown10);
       }
@@ -196,13 +196,13 @@ void GfMenuObjTitle::ListListener::reciveEvent(const ui::EventData &event, u32 h
       if (state == 0) {
         unknown004(*this, handle, 1);
         u32 selected = 0;
-        for (u32 i = 0; i < unknown20->unknown28.size(); i++) {
-          if (unknown20->unknown28[i] == 1) {
+        for (u32 i = 0; i < m_menuObjTitle->unknown28.size(); i++) {
+          if (m_menuObjTitle->unknown28[i] == 1) {
             selected = i;
             break;
           }
         }
-        setupInputSelection(acc.searchChild("LAY_list"), selected, unknown20->unknown28.size());
+        setupInputSelection(acc.searchChild("LAY_list"), selected, m_menuObjTitle->unknown28.size());
       }
       break;
     }

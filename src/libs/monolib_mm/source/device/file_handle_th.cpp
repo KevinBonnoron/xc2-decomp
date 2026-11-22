@@ -21,9 +21,9 @@ void FileHandleTh::init(FTYPE type) {
   unknown1c = 0;
   unknown20 = 0;
   m_currentPtr = 0;
-  unknown2c = mtl::ALLOC_HANDLE();
+  m_ALLOC_HANDLE = mtl::ALLOC_HANDLE();
   unknown30 = nullptr;
-  unknown60 = nullptr;
+  m_iWorkEvent = nullptr;
   unknown68 = nullptr;
   unknown70 = nullptr;
   unknown78 = nullptr;
@@ -46,7 +46,7 @@ void FileHandleTh::setup(const DevFileParamTh &param) {
     unknown24 = param.unknown48;
   } else if (param._08.isValid()) {
     init(FTYPE_UNKNOWN_1);
-    unknown2c = param._08;
+    m_ALLOC_HANDLE = param._08;
     unknown38 = param._18;
   } else if (param._10 != nullptr) {
     init(FTYPE_UNKNOWN_2);
@@ -57,7 +57,7 @@ void FileHandleTh::setup(const DevFileParamTh &param) {
     init(FTYPE_UNKNOWN_6);
   }
   unknown98 = param.unknown00;
-  unknown60 = param.unknown60;
+  m_iWorkEvent = param.unknown60;
   unknown1d0 = param._54;
   unknown001(param.unknown4c, param.unknown50);
   unknown1d4 = 0;
@@ -80,7 +80,7 @@ void FileHandleTh::initWriter(const char *path, void *data, int size, int offset
   unknown08 = data;
   unknown18 = size;
   unknown98 = path;
-  unknown60 = event;
+  m_iWorkEvent = event;
   unknown001(offset, 0);
 }
 
@@ -95,7 +95,7 @@ FileHandleTh::~FileHandleTh() {
 void FileHandleTh::releaseBuffer() {
   if (unknown00 == FTYPE_UNKNOWN_1) {
     if (unknown08 != nullptr && unknown70 == nullptr) {
-      if (mtl::MemManager::valid(unknown2c, true)) {
+      if (mtl::MemManager::valid(m_ALLOC_HANDLE, true)) {
         if (unknown08 == nullptr) {
           return;
         }
@@ -129,9 +129,9 @@ bool FileHandleTh::call(CBM cbm) {
       *unknown78 = unknown18;
     }
   }
-  if (unknown60 != nullptr) {
+  if (m_iWorkEvent != nullptr) {
     EventFileTh event(cbm, this);
-    return unknown60->OnFileEvent(&event);
+    return m_iWorkEvent->OnFileEvent(&event);
   }
   return false;
 }
@@ -159,7 +159,7 @@ bool FileHandleTh::setReadBuffer(int size, u32 alignment, u32 blockSize) {
   switch (unknown00) {
   case FTYPE_UNKNOWN_1: {
     releaseBuffer();
-    void *buffer = mtl::MemManager::allocate(unknown2c, unknown002(unknown1d8 + size, blockSize), alignment, false, "no name", 0);
+    void *buffer = mtl::MemManager::allocate(m_ALLOC_HANDLE, unknown002(unknown1d8 + size, blockSize), alignment, false, "no name", 0);
     for (u32 i = 0; i < unknown38.size(); i++) {
       if (buffer != nullptr) {
         break;
@@ -182,7 +182,7 @@ bool FileHandleTh::setReadBuffer(int size, u32 alignment, u32 blockSize) {
     break;
   }
   case FTYPE_UNKNOWN_5:
-    setReadAdr(size, mtl::MemManager::allocate(unknown2c, unknown003(size, blockSize), alignment, false, "no name", 0), unknown003(size, blockSize));
+    setReadAdr(size, mtl::MemManager::allocate(m_ALLOC_HANDLE, unknown003(size, blockSize), alignment, false, "no name", 0), unknown003(size, blockSize));
     break;
   case FTYPE_UNKNOWN_3:
     unknown18 = size;

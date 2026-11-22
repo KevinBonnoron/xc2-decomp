@@ -83,11 +83,11 @@ void GmkDoor::setLodSwitch(LodSwitch lodSwitch) {
     break;
   }
   gf::GfFieldLod *lod = gf::GfFieldLod::get();
-  if (lod->unknown840.unknown00.unknown00 == nullptr || lod->unknown840.unknown00.unknown10 == nullptr) {
+  if (lod->m_fieldLodColiAnim.m_createInfo.unknown00 == nullptr || lod->m_fieldLodColiAnim.m_createInfo.m_fieldLod == nullptr) {
     return;
   }
   u16 lodId = lod->unknown08[getBdatInfo()->unknown06 - lod->unknown808];
-  ml::ScnObjAccSeamPos seamPos(lod->unknown840.unknown00.unknown00);
+  ml::ScnObjAccSeamPos seamPos(lod->m_fieldLodColiAnim.m_createInfo.unknown00);
   int num = seamPos.getMax();
   for (int i = 0; i < num; i++) {
     ml::ScnObjAccPartsPos partsPos = seamPos.getObj(i);
@@ -181,7 +181,7 @@ u32 GmkDoorPhantomTargetInfo::getTargetType() const {
   }
 }
 
-GmkDoor::GmkDoor() : unknown60(nullptr), unknown2b0(false), unknown2b1(false), unknown2b8(gf::unknown020), unknown2c0(0.0f), unknown2c8(nullptr) {}
+GmkDoor::GmkDoor() : m_gmkCamera(nullptr), unknown2b0(false), unknown2b1(false), unknown2b8(gf::unknown020), unknown2c0(0.0f), unknown2c8(nullptr) {}
 
 void GmkDoor::setProgress(Progress progress) {
   gf::GfGameFlag::setLocal(2, getGameFlagId(), progress);
@@ -258,7 +258,7 @@ void GmkDoor::dispose() {
   disposeGmkPhantom();
   disposeGmkCamera();
   disposeGfObjHandle();
-  unknown2e0.dispose();
+  m_gmkCtrlVolSe.dispose();
   AGmkBase::dispose();
 }
 
@@ -286,23 +286,23 @@ void GmkDoor::update(f32 deltaTime) {
     if (unknown2b8 == gf::unknown020 && info->isGfObjMustExist()) {
       createGfObjHandle();
     }
-    if (unknown1c0.unknown78 == nullptr && unknown250.unknown50 == nullptr && info->isPhantomMustExist()) {
+    if (m_gmkPhantom.unknown78 == nullptr && m_gmkPhantomSimple.unknown50 == nullptr && info->isPhantomMustExist()) {
       createGmkPhantom();
     }
   } else {
     disposeGfObjHandle();
-    if (unknown1c0.unknown78 != nullptr || unknown250.unknown50 != nullptr) {
+    if (m_gmkPhantom.unknown78 != nullptr || m_gmkPhantomSimple.unknown50 != nullptr) {
       disposeGmkPhantom();
     }
   }
-  unknown60.update(deltaTime);
+  m_gmkCamera.update(deltaTime);
   if (unknown2c8) {
     (this->*unknown2c8)(deltaTime);
   }
 }
 
 bool GmkDoor::createGmkCamera(const char *name, u8 attribute, bool param3) {
-  unknown60.dispose();
+  m_gmkCamera.dispose();
   GmkCamera::CreateInfo info;
   info.unknown00 = name;
   info.unknown104 = attribute;
@@ -311,29 +311,29 @@ bool GmkDoor::createGmkCamera(const char *name, u8 attribute, bool param3) {
     info.validateTransform(getBdatInfo()->unknown06);
   }
   if (info.unknown00.length() > 0) {
-    unknown60.create(info);
+    m_gmkCamera.create(info);
     return true;
   }
   return false;
 }
 
-void GmkDoor::disposeGmkCamera() { unknown60.dispose(); }
+void GmkDoor::disposeGmkCamera() { m_gmkCamera.dispose(); }
 
 void GmkDoor::createGmkPhantom() {
   if (!canCreateGameEntity()) {
     return;
   }
-  switch (unknown08.unknown10->unknown0c) {
+  switch (m_createBaseInfo.unknown10->unknown0c) {
   case SHAPE_TYPE_UNKNOWN_2:
   case SHAPE_TYPE_UNKNOWN_3:
   case SHAPE_TYPE_UNKNOWN_4:
     if ((getBdatInfo()->unknown03 & 2) == 0) {
-      unknown1c0.create(*this, this, true);
+      m_gmkPhantom.create(*this, this, true);
     } else {
       GmkPhantomSimple::CreateInfo info;
       info.validateByAGmkBase(*this);
-      unknown250.create(info);
-      unknown250.unknown50->setColiUserData(this);
+      m_gmkPhantomSimple.create(info);
+      m_gmkPhantomSimple.unknown50->setColiUserData(this);
     }
     break;
   default:
@@ -342,8 +342,8 @@ void GmkDoor::createGmkPhantom() {
 }
 
 void GmkDoor::disposeGmkPhantom() {
-  unknown250.dispose();
-  unknown1c0.dispose();
+  m_gmkPhantomSimple.dispose();
+  m_gmkPhantom.dispose();
 }
 
 void GmkDoor::disposeGfObjHandle() {
@@ -363,10 +363,10 @@ void GmkDoor::createGfObjHandle() {
   }
   disposeGfObjHandle();
   CBdatWrapper bdat = {getBindedBdatFp()};
-  unknown2b8 = gf::GfObjFactory::createGmkEvent(bdat, unknown20.unknown18);
+  unknown2b8 = gf::GfObjFactory::createGmkEvent(bdat, m_createInfo.unknown18);
   bindToGameObj(unknown2b8);
   gf::GfObjSetupGimmick *setup = mm::mtl::dynamicCast<gf::GfObjSetupGimmick>(gf::GfObjManager::getObjInfo(unknown2b8)->unknown30);
-  unknown003(setup, unknown08.unknown08);
+  unknown003(setup, m_createBaseInfo.m_xform);
   bool isOpened = isDoorOpened();
   unknown002(unknown2b8, !isOpened);
 }
@@ -432,7 +432,7 @@ void GmkDoor::onLeavePhantom(const IGmkPhantomEventListener::OnLeaveInfo &info) 
 
 GmkType GmkDoor::getGmkType() const { return GMK_TYPE; }
 
-int GmkDoor::getGameFlagId() const { return unknown20.unknown18 + 0x94b6; }
+int GmkDoor::getGameFlagId() const { return m_createInfo.unknown18 + 0x94b6; }
 
 const mm::mtl::RTTI *GmkDoor::getRTTI() const { return &m_rtti; }
 
@@ -447,7 +447,7 @@ bool GmkDoor::isDoorOpened() const {
 void GmkDoor::debugDraw() const {
   if (isValid()) {
     if (getBdatInfo()->unknown02 == 5) {
-      const Xform *xform = unknown08.unknown08;
+      const Xform *xform = m_createBaseInfo.m_xform;
       mm::Vec3 end = unknown095(mm::Vec3::unitZ, xform->unknown10) + xform->unknown00;
       mm::Col4 color(mm::Col3::yellow.r, mm::Col3::yellow.g, mm::Col3::yellow.b, 1.0f);
       fw::debug::drawArrow(xform->unknown00, end, color);
@@ -457,7 +457,7 @@ void GmkDoor::debugDraw() const {
 }
 
 void GmkDoor::createSe(bool isMapPack, u16 seId, u8 distance) {
-  unknown2e0.dispose();
+  m_gmkCtrlVolSe.dispose();
   GmkCtrlVolSe::CreateInfo info;
   if (isMapPack) {
     info.unknown00 = gf::GfFieldSound::get()->getMapPack();
@@ -470,8 +470,8 @@ void GmkDoor::createSe(bool isMapPack, u16 seId, u8 distance) {
   info.unknown08 = seId;
   info.unknown10 = distance;
   info.unknown14 = distance;
-  info.unknown20 = unknown08.unknown08->unknown00;
-  unknown2e0.create(info);
+  info.unknown20 = m_createBaseInfo.m_xform->unknown00;
+  m_gmkCtrlVolSe.create(info);
 }
 
 bool GmkDoor::isSeLoop(bool isMapPack, u16 seId) const {
@@ -500,7 +500,7 @@ void GmkDoor::openDoor(bool isImmediate) {
     createSe(info->unknown0b, info->unknown0c, info->unknown0e);
   }
   if (!isImmediate) {
-    u32 gimmick = unknown20.unknown18;
+    u32 gimmick = m_createInfo.unknown18;
     f32 delay = 0.0f;
     if (gf::GfQuestUtil::getGimmickTaskEndCheck(GMK_TYPE, gimmick) == 1) {
       const BdatInfo *bdatInfo = getBdatInfo();
@@ -528,7 +528,7 @@ void GmkDoor::closeDoor(bool isImmediate) {
 }
 
 void GmkDoor::pollBootGmk() {
-  if (unknown2b1 || unknown1c0.unknown83) {
+  if (unknown2b1 || m_gmkPhantom.unknown83) {
     const BdatInfo *info = getBdatInfo();
     switch (info->unknown02) {
     case 3:
@@ -634,7 +634,7 @@ void GmkDoor::onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) {
       return;
     }
     const mm::Vec3 &position = gf::GfObjUtil::getObj(gf::GfGameManager::getControlMover())->getComponent<gf::GfComTransform>()->getPosition();
-    const Xform *xform = unknown08.unknown08;
+    const Xform *xform = m_createBaseInfo.m_xform;
     mm::Vec3 diff = position - xform->unknown00;
     mm::Vec3 rotation = xform->unknown10;
     mm::Mat44 matrix;

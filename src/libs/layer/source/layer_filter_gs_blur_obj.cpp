@@ -25,11 +25,11 @@ LayerFilterGsBlurObj::~LayerFilterGsBlurObj() {}
 void LayerFilterGsBlurObj::resourceInit() {
   unknown18.setTextureInfo(static_cast<f32>(unknown7e0), static_cast<f32>(unknown7e4), GRL_SURFACE_FORMAT_RGBA16F, false, 0);
   unknown3e0.setTextureInfo(static_cast<f32>(unknown7e0), static_cast<f32>(unknown7e4), GRL_SURFACE_FORMAT_RGBA16F, false, 0);
-  unknown7a8.setup(LayerObjUtil::getUniformBlockSizeAlOff(LAYER_UNI_TYPE_UNKNOWN_9));
+  m_cGLibDblUniformBlock.setup(LayerObjUtil::getUniformBlockSizeAlOff(LAYER_UNI_TYPE_UNKNOWN_9));
 }
 
 void LayerFilterGsBlurObj::render() {
-  LayerShdManager *shader = LayerManager::get()->unknown58;
+  LayerShdManager *shader = LayerManager::get()->m_layerShdManager;
   shader->unknown003(2);
   shader->setupVertex(static_cast<LayerDefVertType>(3));
   shader->unknown4f0 = 7;
@@ -56,33 +56,33 @@ void LayerFilterGsBlurObj::render() {
 }
 
 void LayerFilterGsBlurObj::renderMain() {
-  LayerShdManager *shader = LayerManager::get()->unknown58;
+  LayerShdManager *shader = LayerManager::get()->m_layerShdManager;
   grlib::CGLibCtlShader::setMemoryBarrierBit(2);
   unknown18.setRenderTarget();
   shader->unknown4f8 = 1;
-  shader->setupShader(&unknown7a8);
+  shader->setupShader(&m_cGLibDblUniformBlock);
   shader->setupTexture(*shader->getDefRenderTarget()->unknown70, static_cast<LayerSamplerType>(3), 0);
   shader->renderQuadsIndex();
   grlib::CGLibCtlShader::setMemoryBarrierBit(2);
   unknown3e0.setRenderTarget();
   shader->unknown4f8 = 2;
-  shader->setupShader(&unknown7a8);
+  shader->setupShader(&m_cGLibDblUniformBlock);
   shader->setupTexture(*unknown18.unknown70, static_cast<LayerSamplerType>(3), 0);
   shader->renderQuadsIndex();
   grlib::CGLibCtlShader::setMemoryBarrierBit(2);
 }
 
 void LayerFilterGsBlurObj::renderSub() {
-  LayerShdManager *shader = LayerManager::get()->unknown58;
+  LayerShdManager *shader = LayerManager::get()->m_layerShdManager;
   unknown18.setRenderTarget();
   shader->unknown4f8 = 3;
-  shader->setupShader(&unknown7a8);
+  shader->setupShader(&m_cGLibDblUniformBlock);
   shader->setupTexture(*unknown3e0.unknown70, static_cast<LayerSamplerType>(3), 0);
   shader->renderQuadsIndex();
   grlib::CGLibCtlShader::setMemoryBarrierBit(2);
   unknown3e0.setRenderTarget();
   shader->unknown4f8 = 2;
-  shader->setupShader(&unknown7a8);
+  shader->setupShader(&m_cGLibDblUniformBlock);
   shader->setupTexture(*unknown18.unknown70, static_cast<LayerSamplerType>(3), 0);
   shader->renderQuadsIndex();
   grlib::CGLibCtlShader::setMemoryBarrierBit(2);

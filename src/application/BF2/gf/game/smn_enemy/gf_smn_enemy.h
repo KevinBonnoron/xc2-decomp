@@ -29,12 +29,12 @@ public:
   };
 
   struct CreateInfo {
-    CreateInfo() : unknown00(unknown020), unknown08(0), unknown10(mm::Vec3::zero), unknown20(false) {}
+    CreateInfo() : m_GF_OBJ_HANDLE(unknown020), unknown08(0), unknown10(mm::Vec3::zero), unknown20(false) {}
 
-    GF_OBJ_HANDLE *unknown00; // Inferred role: owner object; original member name unknown.
-    s32 unknown08;            // Inferred role: bdat id of the summon enemy table row; original member name unknown.
-    mm::Vec3 unknown10;       // Inferred role: position; original member name unknown.
-    bool unknown20;           // Inferred role: flag; original member name unknown.
+    GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: owner object; original member name unknown.
+    s32 unknown08;                  // Inferred role: bdat id of the summon enemy table row; original member name unknown.
+    mm::Vec3 unknown10;             // Inferred role: position; original member name unknown.
+    bool unknown20;                 // Inferred role: flag; original member name unknown.
   };
 
   GfRelSmnEnemy(const CreateInfo *info);
@@ -57,10 +57,10 @@ public:
   void disposeEnemies(bool isFade);
 
   u8 _08[0x10 - 0x08];
-  CreateInfo unknown10;                                             // Inferred role: create info; original member name unknown.
+  CreateInfo m_createInfo;                                          // Inferred role: create info; original member name unknown.
   f32 unknown40;                                                    // Inferred role: minimum pop radius; original member name unknown.
   f32 unknown44;                                                    // Inferred role: maximum pop radius; original member name unknown.
-  gmk::DistHvCond unknown48;                                        // Inferred role: depop range of the popped enemies; original member name unknown.
+  gmk::DistHvCond m_distHvCond;                                     // Inferred role: depop range of the popped enemies; original member name unknown.
   mm::mtl::Vector<PopInfo> unknown50;                               // Inferred role: pop points; original member name unknown.
   mm::mtl::Vector<std::pair<PopInfo *, GF_OBJ_HANDLE *>> unknown78; // Inferred role: wait enemies; original member name unknown.
   mm::mtl::Vector<GF_OBJ_HANDLE *> unknowna0;                       // Inferred role: popped enemies; original member name unknown.
@@ -73,9 +73,9 @@ static_assert(offsetof(GfRelSmnEnemy::PopInfo, unknown20) == 0x20, "");
 static_assert(sizeof(GfRelSmnEnemy::PopInfo) == 0x30, "");
 static_assert(offsetof(GfRelSmnEnemy::CreateInfo, unknown10) == 0x10, "");
 static_assert(sizeof(GfRelSmnEnemy::CreateInfo) == 0x30, "");
-static_assert(offsetof(GfRelSmnEnemy, unknown10) == 0x10, "");
+static_assert(offsetof(GfRelSmnEnemy, m_createInfo) == 0x10, "");
 static_assert(offsetof(GfRelSmnEnemy, unknown40) == 0x40, "");
-static_assert(offsetof(GfRelSmnEnemy, unknown48) == 0x48, "");
+static_assert(offsetof(GfRelSmnEnemy, m_distHvCond) == 0x48, "");
 static_assert(offsetof(GfRelSmnEnemy, unknown50) == 0x50, "");
 static_assert(offsetof(GfRelSmnEnemy, unknown78) == 0x78, "");
 static_assert(offsetof(GfRelSmnEnemy, unknowna0) == 0xa0, "");
@@ -84,15 +84,15 @@ class GfSmnEnemyManager : public mm::mtl::PtrSingleton<GfSmnEnemyManager> {
 public:
   // Layout evidence: execRelSummon (0x710038c4c4) copies these 12 bytes to the owner and the table row of a GfRelSmnEnemy::CreateInfo.
   struct RelSmnInfo {
-    GF_OBJ_HANDLE *unknown00; // Inferred role: owner object; original member name unknown.
-    s32 unknown08;            // Inferred role: bdat id of the summon enemy table row; original member name unknown.
+    GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: owner object; original member name unknown.
+    s32 unknown08;                  // Inferred role: bdat id of the summon enemy table row; original member name unknown.
   };
 
   // Layout evidence: execAbsSummon (0x710038c188) reads the owner at 0x00, the radius at 0x08 and the genus at 0x0c.
   struct AbsSmnInfo {
-    GF_OBJ_HANDLE *unknown00; // Inferred role: owner object; original member name unknown.
-    f32 unknown08;            // Inferred role: radius; original member name unknown.
-    u8 unknown0c;             // Inferred role: enemy genus (SDataEnemy::unknown99), 0 for any; original member name unknown.
+    GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: owner object; original member name unknown.
+    f32 unknown08;                  // Inferred role: radius; original member name unknown.
+    u8 unknown0c;                   // Inferred role: enemy genus (SDataEnemy::m_genus), 0 for any; original member name unknown.
   };
 
   GfSmnEnemyManager();

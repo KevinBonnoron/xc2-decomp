@@ -21,8 +21,8 @@ public:
   int getFrameCount() const { return unknown199c; }
 
 protected:
-  mtl::ALLOC_HANDLE unknown08;         // Inferred role: allocation handle given to setup; original member name unknown.
-  RchaAnm unknown10[TRACK_UNKNOWN_48]; // Inferred role: tracks; original member name unknown.
+  mtl::ALLOC_HANDLE m_ALLOC_HANDLE;    // Inferred role: allocation handle given to setup; original member name unknown.
+  RchaAnm m_rchaAnm[TRACK_UNKNOWN_48]; // Inferred role: tracks; original member name unknown.
   int unknown1990;                     // Inferred role: track count; original member name unknown.
   int unknown1994;                     // Inferred role: set by setup from the resource header; original member name unknown.
   int unknown1998;                     // Inferred role: set by setup from the resource header; original member name unknown.
@@ -32,8 +32,8 @@ protected:
 };
 
 struct RchaNodeLayout {
-  static_assert(offsetof(RchaNode, unknown08) == 0x8, "");
-  static_assert(offsetof(RchaNode, unknown10) == 0x10, "");
+  static_assert(offsetof(RchaNode, m_ALLOC_HANDLE) == 0x8, "");
+  static_assert(offsetof(RchaNode, m_rchaAnm) == 0x10, "");
   static_assert(offsetof(RchaNode, unknown1990) == 0x1990, "");
   static_assert(offsetof(RchaNode, unknown1994) == 0x1994, "");
   static_assert(offsetof(RchaNode, unknown1998) == 0x1998, "");

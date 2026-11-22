@@ -436,7 +436,7 @@ void GfMenuModelView::playEffectFromCAS(u32 type, const char *name, GF_OBJ_HANDL
     unknown9a8[type].unknown00 = effect;
     if (effect != 0) {
       GfComEffectCaster *caster = GfObjAcc(handle).getObj()->getComponent<GfComEffectCaster>();
-      fw::EffectManager::get()->setParam(effect, caster->unknown388, 1.0f);
+      fw::EffectManager::get()->setParam(effect, caster->m_effectCaster, 1.0f);
     }
   }
 }
@@ -506,9 +506,9 @@ bool GfMenuModelView::checkGfObj(u32 type, u32 id) {
   return false;
 }
 
-GfMenuModelView::CtrlParam::CtrlParam(GF_OBJ_HANDLE *handle, f32 duration, bool unknown) : unknown00(handle), unknown0a(0), unknown0c(duration), unknown10(unknown) {
+GfMenuModelView::CtrlParam::CtrlParam(GF_OBJ_HANDLE *handle, f32 duration, bool unknown) : m_GF_OBJ_HANDLE(handle), unknown0a(0), unknown0c(duration), unknown10(unknown) {
   GfObjAcc acc(handle);
-  const fw::Transform &transform = getObjectTransformLocal(unknown00);
+  const fw::Transform &transform = getObjectTransformLocal(m_GF_OBJ_HANDLE);
   m_movePosX = transform.unknown00.x;
   m_movePosY = transform.unknown00.y;
   m_movePosZ = transform.unknown00.z;
@@ -526,7 +526,7 @@ void GfMenuModelView::CtrlParam::setMovePosX(f32 value) {
 }
 
 void GfMenuModelView::CtrlParam::setMovePosX(f32 start, f32 end) {
-  getObjectTransformLocal(unknown00).unknown00.x = start;
+  getObjectTransformLocal(m_GF_OBJ_HANDLE).unknown00.x = start;
   unknown08 |= 0x1;
   m_movePosX = end;
 }
@@ -538,7 +538,7 @@ void GfMenuModelView::CtrlParam::setMovePosY(f32 value) {
 
 // The game's setMovePosY/Z(f32, f32) write the X members and flag, like setMovePosX (same code in the binary).
 void GfMenuModelView::CtrlParam::setMovePosY(f32 start, f32 end) {
-  getObjectTransformLocal(unknown00).unknown00.x = start;
+  getObjectTransformLocal(m_GF_OBJ_HANDLE).unknown00.x = start;
   unknown08 |= 0x1;
   m_movePosX = end;
 }
@@ -549,25 +549,25 @@ void GfMenuModelView::CtrlParam::setMovePosZ(f32 value) {
 }
 
 void GfMenuModelView::CtrlParam::setMovePosZ(f32 start, f32 end) {
-  getObjectTransformLocal(unknown00).unknown00.x = start;
+  getObjectTransformLocal(m_GF_OBJ_HANDLE).unknown00.x = start;
   unknown08 |= 0x1;
   m_movePosX = end;
 }
 
 void GfMenuModelView::CtrlParam::setAddPosX(f32 value) {
-  fw::Transform &transform = getObjectTransformLocal(unknown00);
+  fw::Transform &transform = getObjectTransformLocal(m_GF_OBJ_HANDLE);
   unknown08 |= 0x1;
   m_movePosX = transform.unknown00.x + value;
 }
 
 void GfMenuModelView::CtrlParam::setAddPosY(f32 value) {
-  fw::Transform &transform = getObjectTransformLocal(unknown00);
+  fw::Transform &transform = getObjectTransformLocal(m_GF_OBJ_HANDLE);
   unknown08 |= 0x2;
   m_movePosY = transform.unknown00.y + value;
 }
 
 void GfMenuModelView::CtrlParam::setAddPosZ(f32 value) {
-  fw::Transform &transform = getObjectTransformLocal(unknown00);
+  fw::Transform &transform = getObjectTransformLocal(m_GF_OBJ_HANDLE);
   unknown08 |= 0x4;
   m_movePosZ = transform.unknown00.z + value;
 }
@@ -578,7 +578,7 @@ void GfMenuModelView::CtrlParam::setMoveSclX(f32 value) {
 }
 
 void GfMenuModelView::CtrlParam::setMoveSclX(f32 start, f32 end) {
-  GfObjAcc acc(unknown00);
+  GfObjAcc acc(m_GF_OBJ_HANDLE);
   mm::Vec3 scale = acc.getModelScaleXYZ();
   scale.x = end;
   acc.setModelScaleForMenu(scale);
@@ -593,7 +593,7 @@ void GfMenuModelView::CtrlParam::setMoveSclY(f32 value) {
 
 // The game's setMoveSclY/Z(f32, f32) set the X flag and m_moveSclX, like setMoveSclX (same code in the binary).
 void GfMenuModelView::CtrlParam::setMoveSclY(f32 start, f32 end) {
-  GfObjAcc acc(unknown00);
+  GfObjAcc acc(m_GF_OBJ_HANDLE);
   mm::Vec3 scale = acc.getModelScaleXYZ();
   scale.y = end;
   acc.setModelScaleForMenu(scale);
@@ -607,7 +607,7 @@ void GfMenuModelView::CtrlParam::setMoveSclZ(f32 value) {
 }
 
 void GfMenuModelView::CtrlParam::setMoveSclZ(f32 start, f32 end) {
-  GfObjAcc acc(unknown00);
+  GfObjAcc acc(m_GF_OBJ_HANDLE);
   mm::Vec3 scale = acc.getModelScaleXYZ();
   scale.z = end;
   acc.setModelScaleForMenu(scale);

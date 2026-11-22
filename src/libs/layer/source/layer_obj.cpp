@@ -18,26 +18,26 @@ namespace {
 
 const LayerBasePos *getMatrixParm(const LayerObj *layer, u32 flag) {
   if (layer->getStateFlags(LayerManager::s_nStkIdx) & flag) {
-    return &layer->unknownc8[LayerManager::s_nStkIdx].unknown00;
+    return &layer->m_layerResParmInfo[LayerManager::s_nStkIdx].m_layerBasePos;
   }
 
   if (layer->getStateFlags(LayerManager::s_nDebIdx) & flag) {
-    return &layer->unknownc8[LayerManager::s_nDebIdx].unknown00;
+    return &layer->m_layerResParmInfo[LayerManager::s_nDebIdx].m_layerBasePos;
   }
 
-  return &layer->unknownc8[2].unknown00;
+  return &layer->m_layerResParmInfo[2].m_layerBasePos;
 }
 
 const LayerResColor *getColorParm(const LayerObj *layer, u32 flag) {
   if (layer->getStateFlags(LayerManager::s_nStkIdx) & flag) {
-    return &layer->unknownc8[LayerManager::s_nStkIdx].unknown1c;
+    return &layer->m_layerResParmInfo[LayerManager::s_nStkIdx].m_layerResColor;
   }
 
   if (layer->getStateFlags(LayerManager::s_nDebIdx) & flag) {
-    return &layer->unknownc8[LayerManager::s_nDebIdx].unknown1c;
+    return &layer->m_layerResParmInfo[LayerManager::s_nDebIdx].m_layerResColor;
   }
 
-  return &layer->unknownc8[2].unknown1c;
+  return &layer->m_layerResParmInfo[2].m_layerResColor;
 }
 
 // Inferred layout of an action command header, followed by its f32 parameters; original type and member names unknown.
@@ -51,51 +51,51 @@ static_assert(sizeof(unknown020) == 0x04, "");
 } // namespace
 
 LayerObj::LayerObj() {
-  unknownc3 = 0;
-  unknownc4 = 5;
+  m_space = 0;
+  m_blendType = 5;
   unknownc5 = 5;
-  unknownc6 = 3;
+  m_texFilterType = 3;
   unknowna8 = 0x80;
   for (s32 i = 0; i < 2; i++) {
     unknowna0[i] = 0;
   }
-  unknownc0 = 0;
+  m_priority = 0;
   for (s32 i = 0; i < 2; i++) {
     unknown1d8[i] = 0;
   }
-  unknownb8 = nullptr;
+  m_resData = nullptr;
   unknown220[0] = unknown220[1] = unknown220[2] = nullptr;
   for (s32 i = 0; i < 3; i++) {
-    LayerResParmInfo &parm = unknownc8[i];
-    parm.unknown00.unknown00 = parm.unknown00.unknown04 = 0.0f;
-    parm.unknown00.unknown0c = parm.unknown00.unknown10 = 1.0f;
-    parm.unknown00.unknown08 = 0.0f;
-    parm.unknown00.unknown14 = parm.unknown00.unknown18 = 0.0f;
-    parm.unknown1c.unknown00 = mm::Col4(1.0f, 1.0f, 1.0f, 1.0f);
-    parm.unknown1c.unknown10 = mm::Col3(0.0f, 0.0f, 0.0f);
+    LayerResParmInfo &parm = m_layerResParmInfo[i];
+    parm.m_layerBasePos.unknown00 = parm.m_layerBasePos.unknown04 = 0.0f;
+    parm.m_layerBasePos.unknown0c = parm.m_layerBasePos.unknown10 = 1.0f;
+    parm.m_layerBasePos.unknown08 = 0.0f;
+    parm.m_layerBasePos.unknown14 = parm.m_layerBasePos.unknown18 = 0.0f;
+    parm.m_layerResColor.m_mulCol = mm::Col4(1.0f, 1.0f, 1.0f, 1.0f);
+    parm.m_layerResColor.m_addCol = mm::Col3(0.0f, 0.0f, 0.0f);
   }
   unknownb0 = 0;
   unknown208[0] = unknown208[1] = unknown208[2] = nullptr;
-  unknown1f4 = unknown1f8 = 1.0f;
+  m_ctrlSpd = unknown1f8 = 1.0f;
   unknown1fc = 0.0f;
   unknown200 = 0.0f;
-  unknown180.unknown00 = unknown180.unknown04 = unknown180.unknown08 = unknown180.unknown0c = 1.0f;
-  unknown180.unknown10 = 0;
-  unknown180.unknown12 = 0;
-  unknown180.unknown14 = unknown180.unknown16 = 1;
-  unknown180.unknown18 = 0;
-  unknown170.unknown00 = 1.0f;
-  unknown170.unknown04 = 1.0f;
-  unknown170.unknown08 = mm::Pnt<f32>(0.0f, 0.0f);
+  m_layerResRenderInfo.unknown00 = m_layerResRenderInfo.unknown04 = m_layerResRenderInfo.unknown08 = m_layerResRenderInfo.unknown0c = 1.0f;
+  m_layerResRenderInfo.m_pixelX = 0;
+  m_layerResRenderInfo.m_pixelY = 0;
+  m_layerResRenderInfo.m_pixelWidth = m_layerResRenderInfo.m_pixelHeight = 1;
+  m_layerResRenderInfo.m_centerType = 0;
+  m_layerResDispInfo.unknown00 = 1.0f;
+  m_layerResDispInfo.unknown04 = 1.0f;
+  m_layerResDispInfo.unknown08 = mm::Pnt<f32>(0.0f, 0.0f);
   unknown20[0] = mm::Mat44::identity;
   unknown20[1] = mm::Mat44::identity;
   unknownc2 = 0;
-  unknown19c.unknown00[2].unknown00 = mm::Pnt<f32>(0.0f, 0.0f);
-  unknown248 = nullptr;
-  unknown240 = nullptr;
+  m_layerResUvParam.unknown00[2].unknown00 = mm::Pnt<f32>(0.0f, 0.0f);
+  m_layerObjTopMaskObj = nullptr;
+  m_maskObj = nullptr;
   unknown238 = nullptr;
-  unknown19c.unknown00[2].unknown08 = unknown19c.unknown00[2].unknown0c = 1.0f;
-  unknown19c.unknown00[2].unknown10 = 0.0f;
+  m_layerResUvParam.unknown00[2].unknown08 = m_layerResUvParam.unknown00[2].unknown0c = 1.0f;
+  m_layerResUvParam.unknown00[2].unknown10 = 0.0f;
 }
 
 void LayerObj::resourceInit() {}
@@ -130,32 +130,36 @@ void LayerObj::baseRelease() {
 }
 
 void LayerObj::setInitPos(f32 x, f32 y) {
-  unknownc8[1].unknown00.unknown00 = x;
-  unknownc8[0].unknown00.unknown00 = x;
-  unknownc8[2].unknown00.unknown00 = x;
-  unknownc8[1].unknown00.unknown04 = y;
-  unknownc8[0].unknown00.unknown04 = y;
-  unknownc8[2].unknown00.unknown04 = y;
+  m_layerResParmInfo[1].m_layerBasePos.unknown00 = x;
+  m_layerResParmInfo[0].m_layerBasePos.unknown00 = x;
+  m_layerResParmInfo[2].m_layerBasePos.unknown00 = x;
+  m_layerResParmInfo[1].m_layerBasePos.unknown04 = y;
+  m_layerResParmInfo[0].m_layerBasePos.unknown04 = y;
+  m_layerResParmInfo[2].m_layerBasePos.unknown04 = y;
 }
 
 void LayerObj::setInitRot(f32 rot) {
-  unknownc8[1].unknown00.unknown08 = rot;
-  unknownc8[0].unknown00.unknown08 = rot;
-  unknownc8[2].unknown00.unknown08 = rot;
+  m_layerResParmInfo[1].m_layerBasePos.unknown08 = rot;
+  m_layerResParmInfo[0].m_layerBasePos.unknown08 = rot;
+  m_layerResParmInfo[2].m_layerBasePos.unknown08 = rot;
 }
 
 void LayerObj::setInitScl(f32 x, f32 y) {
-  unknownc8[1].unknown00.unknown0c = x;
-  unknownc8[0].unknown00.unknown0c = x;
-  unknownc8[2].unknown00.unknown0c = x;
-  unknownc8[1].unknown00.unknown10 = y;
-  unknownc8[0].unknown00.unknown10 = y;
-  unknownc8[2].unknown00.unknown10 = y;
+  m_layerResParmInfo[1].m_layerBasePos.unknown0c = x;
+  m_layerResParmInfo[0].m_layerBasePos.unknown0c = x;
+  m_layerResParmInfo[2].m_layerBasePos.unknown0c = x;
+  m_layerResParmInfo[1].m_layerBasePos.unknown10 = y;
+  m_layerResParmInfo[0].m_layerBasePos.unknown10 = y;
+  m_layerResParmInfo[2].m_layerBasePos.unknown10 = y;
 }
 
-void LayerObj::setInitMulCol(const mm::Col4 &color) { unknownc8[2].unknown1c.unknown00 = unknownc8[0].unknown1c.unknown00 = unknownc8[1].unknown1c.unknown00 = color; }
+void LayerObj::setInitMulCol(const mm::Col4 &color) {
+  m_layerResParmInfo[2].m_layerResColor.m_mulCol = m_layerResParmInfo[0].m_layerResColor.m_mulCol = m_layerResParmInfo[1].m_layerResColor.m_mulCol = color;
+}
 
-void LayerObj::setInitAddCol(const mm::Col3 &color) { unknownc8[2].unknown1c.unknown10 = unknownc8[0].unknown1c.unknown10 = unknownc8[1].unknown1c.unknown10 = color; }
+void LayerObj::setInitAddCol(const mm::Col3 &color) {
+  m_layerResParmInfo[2].m_layerResColor.m_addCol = m_layerResParmInfo[0].m_layerResColor.m_addCol = m_layerResParmInfo[1].m_layerResColor.m_addCol = color;
+}
 
 void LayerObj::setInitPosScl(f32 x, f32 y, f32 sclX, f32 sclY) {
   if (unknown18 == LAYER_OBJ_TYPE_FONT) {
@@ -164,16 +168,16 @@ void LayerObj::setInitPosScl(f32 x, f32 y, f32 sclX, f32 sclY) {
   }
   if (!(unknowna8 & 0x2)) {
     setInitPos(x, y);
-    if (LayerManager::get()->unknown9c != LAYER_COORDINATE_PIXEL) {
-      setInitScl(sclX / unknown180.unknown08, sclY / unknown180.unknown0c);
+    if (LayerManager::get()->m_coordinate != LAYER_COORDINATE_PIXEL) {
+      setInitScl(sclX / m_layerResRenderInfo.unknown08, sclY / m_layerResRenderInfo.unknown0c);
     } else {
       setInitScl(sclX, sclY);
     }
   } else {
-    if (LayerManager::get()->unknown9c != LAYER_COORDINATE_PIXEL) {
+    if (LayerManager::get()->m_coordinate != LAYER_COORDINATE_PIXEL) {
       setInitPos(x + sclX, y);
     } else {
-      setInitPos(static_cast<u16>(unknown180.unknown14) * sclX + x, y);
+      setInitPos(static_cast<u16>(m_layerResRenderInfo.m_pixelWidth) * sclX + x, y);
     }
     setInitScl(sclY, sclY);
   }
@@ -195,7 +199,7 @@ void LayerObj::updateCtrlSpd(f32 speed) {
     }
   }
 
-  unknown1f8 = unknown1f4 * speed;
+  unknown1f8 = m_ctrlSpd * speed;
 }
 
 void LayerObj::updateAnimObj() {
@@ -205,13 +209,13 @@ void LayerObj::updateAnimObj() {
       frame = 0.0f;
     }
 
-    if (unknown208[2]->update(unknownc8[2], frame) && unknown208[2] != nullptr) {
+    if (unknown208[2]->update(m_layerResParmInfo[2], frame) && unknown208[2] != nullptr) {
       delete unknown208[2];
       unknown208[2] = nullptr;
     }
   }
 
-  if (unknownc8[2].unknown1c.unknown00.a <= 0.0f && unknown18 != LAYER_OBJ_TYPE_MASK) {
+  if (m_layerResParmInfo[2].m_layerResColor.m_mulCol.a <= 0.0f && unknown18 != LAYER_OBJ_TYPE_MASK) {
     unknowna8 |= 0x80000;
   }
 }
@@ -227,7 +231,7 @@ void LayerObj::updateDefSpace(grlib::CGLibDblUniformBlock *&uniform, LAYER_SPACE
     LayerObjUtil::calcMatrixToZBuffPos(unknown200, unknown1fc, matrix);
     unknowna8 |= 0xc00;
     unknowna8 &= ~0x1000;
-    LayerObjUtil::createWorldMatrixUniform(uniform, matrix, unknownc0 * 0.0625f);
+    LayerObjUtil::createWorldMatrixUniform(uniform, matrix, m_priority * 0.0625f);
     return;
   }
   if (space == LAYER_SPACE_TYPE_UNKNOWN_1) {
@@ -253,15 +257,15 @@ void LayerObj::apply(LayerSortMan *sortMan, const LayerRenderView *view) {
     unknowna8 |= 0x10000;
     return;
   }
-  unknownc5 = unknownc4;
-  updateDefSpace(unknown238, static_cast<LAYER_SPACE_TYPE>(unknownc3), unknown20[unknownc2]);
+  unknownc5 = m_blendType;
+  updateDefSpace(unknown238, static_cast<LAYER_SPACE_TYPE>(m_space), unknown20[unknownc2]);
   LayerResMatrix matrix;
   if (unknowna8 & 0x800) {
-    LayerObjUtil::calcLayer3DSpaceTransRotScaleFontMatrix(matrix, unknownc8[2].unknown00, unknown180);
+    LayerObjUtil::calcLayer3DSpaceTransRotScaleFontMatrix(matrix, m_layerResParmInfo[2].m_layerBasePos, m_layerResRenderInfo);
   } else {
-    LayerObjUtil::calcLayerTransRotScaleFontMatrix(matrix, unknownc8[2].unknown00, unknown180);
+    LayerObjUtil::calcLayerTransRotScaleFontMatrix(matrix, m_layerResParmInfo[2].m_layerBasePos, m_layerResRenderInfo);
   }
-  applyParams(view, matrix, unknownc8[2].unknown1c);
+  applyParams(view, matrix, m_layerResParmInfo[2].m_layerResColor);
   setDrawList(sortMan, true);
 }
 
@@ -275,23 +279,23 @@ void LayerObj::applyBegin(LayerResUpdateInfo &info, const LayerRenderView *view)
     return;
   }
   if (info.unknown54 == LAYER_SPACE_TYPE_UNKNOWN_0) {
-    updateDefSpace(unknown238, static_cast<LAYER_SPACE_TYPE>(unknownc3), unknown20[unknownc2]);
+    updateDefSpace(unknown238, static_cast<LAYER_SPACE_TYPE>(m_space), unknown20[unknownc2]);
   } else {
     mm::Mat44 matrix;
     matrix.unknown009(unknown20[unknownc2], info.unknown00);
     updateDefSpace(unknown238, info.unknown54, matrix);
   }
-  if (unknownc4 != 5) {
-    unknownc5 = unknownc4;
+  if (m_blendType != 5) {
+    unknownc5 = m_blendType;
   } else {
     unknownc5 = info.unknown58;
   }
   if (unknowna8 & 0x800) {
-    LayerObjUtil::calcLayer3DSpaceTransRotScaleFontMatrix(unknown1dc, unknownc8[2].unknown00, unknown180);
+    LayerObjUtil::calcLayer3DSpaceTransRotScaleFontMatrix(m_layerResMatrix, m_layerResParmInfo[2].m_layerBasePos, m_layerResRenderInfo);
   } else {
-    LayerObjUtil::calcLayerTransRotScaleFontMatrix(unknown1dc, unknownc8[2].unknown00, unknown180);
+    LayerObjUtil::calcLayerTransRotScaleFontMatrix(m_layerResMatrix, m_layerResParmInfo[2].m_layerBasePos, m_layerResRenderInfo);
   }
-  LayerObjUtil::calcDispInfo(info.unknown5c, unknown1dc, unknown180);
+  LayerObjUtil::calcDispInfo(info.m_layerResDispInfo, m_layerResMatrix, m_layerResRenderInfo);
 }
 
 void LayerObj::applyEnd(LayerResUpdateInfo &info, const LayerRenderView *view) {
@@ -299,50 +303,50 @@ void LayerObj::applyEnd(LayerResUpdateInfo &info, const LayerRenderView *view) {
     return;
   }
   LayerResMatrix matrix;
-  LayerObjUtil::calcLayerMatrix(matrix, unknown1dc, *info.unknown40);
+  LayerObjUtil::calcLayerMatrix(matrix, m_layerResMatrix, *info.m_layerResMatrix);
   LayerResColor color;
-  LayerObjUtil::calcLayerColor(color, unknownc8[2].unknown1c, *info.unknown48);
+  LayerObjUtil::calcLayerColor(color, m_layerResParmInfo[2].m_layerResColor, *info.m_layerResColor);
   applyParams(view, matrix, color);
-  const LayerObjTopMaskObj *mask = static_cast<const LayerObjTopMaskObj *>(unknown240);
+  const LayerObjTopMaskObj *mask = static_cast<const LayerObjTopMaskObj *>(m_maskObj);
   if (mask == nullptr) {
-    mask = info.unknown70;
+    mask = info.m_layerObjTopMaskObj;
   }
-  unknown248 = mask;
+  m_layerObjTopMaskObj = mask;
 }
 
 void LayerObj::setPos(f32 x, f32 y) {
-  LayerBasePos &pos = unknownc8[LayerManager::s_nStkIdx].unknown00;
+  LayerBasePos &pos = m_layerResParmInfo[LayerManager::s_nStkIdx].m_layerBasePos;
   pos.unknown00 = x;
   pos.unknown04 = y;
   onStateFlags(0x2);
 }
 
 void LayerObj::setRot(f32 rot) {
-  unknownc8[LayerManager::s_nStkIdx].unknown00.unknown08 = rot;
+  m_layerResParmInfo[LayerManager::s_nStkIdx].m_layerBasePos.unknown08 = rot;
   onStateFlags(0x8);
 }
 
 void LayerObj::setScale(f32 x, f32 y) {
-  LayerBasePos &pos = unknownc8[LayerManager::s_nStkIdx].unknown00;
+  LayerBasePos &pos = m_layerResParmInfo[LayerManager::s_nStkIdx].m_layerBasePos;
   pos.unknown0c = x;
   pos.unknown10 = y;
   onStateFlags(0x4);
 }
 
 void LayerObj::setAnchor(f32 x, f32 y) {
-  LayerBasePos &pos = unknownc8[LayerManager::s_nStkIdx].unknown00;
+  LayerBasePos &pos = m_layerResParmInfo[LayerManager::s_nStkIdx].m_layerBasePos;
   pos.unknown14 = x;
   pos.unknown18 = y;
   onStateFlags(0x10);
 }
 
 void LayerObj::setMulCol(const mm::Col4 &color) {
-  unknownc8[LayerManager::s_nStkIdx].unknown1c.unknown00 = color;
+  m_layerResParmInfo[LayerManager::s_nStkIdx].m_layerResColor.m_mulCol = color;
   onStateFlags(0x20);
 }
 
 void LayerObj::setAddCol(const mm::Col3 &color) {
-  unknownc8[LayerManager::s_nStkIdx].unknown1c.unknown10 = color;
+  m_layerResParmInfo[LayerManager::s_nStkIdx].m_layerResColor.m_addCol = color;
   onStateFlags(0x40);
 }
 
@@ -357,7 +361,7 @@ void LayerObj::setMatrix(const mm::Mat44 &matrix) {
 }
 
 void LayerObj::setUVParams(f32 u, f32 v, f32 scaleU, f32 scaleV, f32 rot) {
-  unknown023 &uvParam = unknown19c.unknown00[LayerManager::s_nStkIdx];
+  unknown023 &uvParam = m_layerResUvParam.unknown00[LayerManager::s_nStkIdx];
   uvParam.unknown00.x = u;
   uvParam.unknown00.y = v;
   uvParam.unknown08 = scaleU;
@@ -400,9 +404,9 @@ const mm::Mat44 *LayerObj::getMatrix() const {
   return &unknown20[0];
 }
 
-const mm::Col4 *LayerObj::getMulCol() const { return &getColorParm(this, 0x20)->unknown00; }
+const mm::Col4 *LayerObj::getMulCol() const { return &getColorParm(this, 0x20)->m_mulCol; }
 
-const mm::Col3 *LayerObj::getAddCol() const { return &getColorParm(this, 0x40)->unknown10; }
+const mm::Col3 *LayerObj::getAddCol() const { return &getColorParm(this, 0x40)->m_addCol; }
 
 void LayerObj::setDisp(bool disp) {
   if (disp) {
@@ -415,16 +419,16 @@ void LayerObj::setDisp(bool disp) {
 }
 
 bool LayerObj::isClip() const {
-  if (unknown170.unknown00 <= 0.0f) {
+  if (m_layerResDispInfo.unknown00 <= 0.0f) {
     return true;
   }
-  if (unknown170.unknown04 <= 0.0f) {
+  if (m_layerResDispInfo.unknown04 <= 0.0f) {
     return true;
   }
-  if (unknown170.unknown08.x >= 1.0f) {
+  if (m_layerResDispInfo.unknown08.x >= 1.0f) {
     return true;
   }
-  return unknown170.unknown08.y >= 1.0f;
+  return m_layerResDispInfo.unknown08.y >= 1.0f;
 }
 
 bool LayerObj::isDisp() const { return (unknowna8 & 0x20000) != 0; }
@@ -540,7 +544,7 @@ void LayerActBase::updateAction() {
     if (unknowna8 & 0x200) {
       delta = 0.0f;
     }
-    const LyrActionData *action = unknown250->unknown08 + unknown250->unknown20;
+    const LyrActionData *action = unknown250->m_lyrActionData + unknown250->unknown20;
     unknown250->unknown18 = delta;
     if (delta > 0.0001f) {
       unknown250->unknown1c = 1.0f / delta;
@@ -564,7 +568,7 @@ void LayerActBase::setupAction(u8 *work, const u8 *data) {
   unknown250->unknown00 = data;
   unknown250->unknown28 = reinterpret_cast<u32 *>(work + sizeof(unknown084));
   unknown250->unknown10 = header->unknown08;
-  unknown250->unknown08 = reinterpret_cast<const LyrActionData *>(data + header->unknown04);
+  unknown250->m_lyrActionData = reinterpret_cast<const LyrActionData *>(data + header->unknown04);
   unknown250->unknown14 = 0.0f;
   unknown250->unknown20 = 0;
   unknown250->unknown24 = 0;
@@ -576,7 +580,7 @@ void LayerActBase::setupAction(u8 *work, const u8 *data) {
   }
   unknown250->unknown24 |= 1;
   unknown250->unknown14 = 0.0f;
-  const LyrActionData &action = *(unknown250->unknown08 + unknown250->unknown20);
+  const LyrActionData &action = *(unknown250->m_lyrActionData + unknown250->unknown20);
   if (action.unknown00 & 0x7e) {
     if (action.unknown00 & 0x2) {
       unknowna8 |= 0x80;
@@ -603,7 +607,7 @@ void LayerActBase::setupAction(u8 *work, const u8 *data) {
 void LayerActBase::startSetupAction() {
   unknown250->unknown24 |= 1;
   unknown250->unknown14 = 0.0f;
-  const LyrActionData &action = *(unknown250->unknown08 + unknown250->unknown20);
+  const LyrActionData &action = *(unknown250->m_lyrActionData + unknown250->unknown20);
   if ((action.unknown00 & 0x7e) == 0) {
     return;
   }
@@ -628,7 +632,7 @@ void LayerActBase::checkActionEnd(const LyrActionData *action, bool isCmdEnd) {
   if (unknown250->unknown18 == 0.0f) {
     return;
   }
-  const LyrActionData *actions = unknown250->unknown08;
+  const LyrActionData *actions = unknown250->m_lyrActionData;
   u32 index = unknown250->unknown20;
   const LyrActionData &current = actions[index];
   if (!(this->*s_pCallActEnd[current.unknown06])(&current, isCmdEnd)) {
@@ -669,7 +673,7 @@ bool LayerActBase::actcmd_rot(const u8 *&cmd) {
       if (rate > 1.0f) {
         rate = 1.0f;
       }
-      rot = unknownc8[2].unknown00.unknown08 + (parm[0] - unknownc8[2].unknown00.unknown08) * rate;
+      rot = m_layerResParmInfo[2].m_layerBasePos.unknown08 + (parm[0] - m_layerResParmInfo[2].m_layerBasePos.unknown08) * rate;
     }
     setInitRot(rot);
   }
@@ -683,14 +687,14 @@ bool LayerActBase::actcmd_numrot(const u8 *&cmd) {
   if (delta != 0.0f) {
     const f32 *parm = reinterpret_cast<const f32 *>(reinterpret_cast<const unknown020 *>(cmd) + 1);
     result = !(parm[1] <= unknown250->unknown14);
-    setInitRot(fmodf(unknownc8[2].unknown00.unknown08 + delta * parm[0], 6.2831855f));
+    setInitRot(fmodf(m_layerResParmInfo[2].m_layerBasePos.unknown08 + delta * parm[0], 6.2831855f));
   }
   cmd += sizeof(unknown020) + 2 * sizeof(f32);
   return result;
 }
 
 bool LayerActBase::actcmd_priority(const u8 *&cmd) {
-  unknownc0 = *reinterpret_cast<const u16 *>(cmd + 2);
+  m_priority = *reinterpret_cast<const u16 *>(cmd + 2);
   cmd += 4;
   return false;
 }
@@ -702,7 +706,7 @@ bool LayerActBase::actcmd_wait(const u8 *&cmd) {
 }
 
 bool LayerActBase::actcmd_ctrlspd(const u8 *&cmd) {
-  unknown1f4 = *reinterpret_cast<const f32 *>(cmd + 4);
+  m_ctrlSpd = *reinterpret_cast<const f32 *>(cmd + 4);
   cmd += 8;
   return false;
 }

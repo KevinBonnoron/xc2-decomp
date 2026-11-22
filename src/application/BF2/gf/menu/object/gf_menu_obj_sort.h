@@ -11,13 +11,13 @@ class GfMenuObjSort : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjSort *owner) : unknown0c(0), unknown10(0), _14(), unknown20(owner) {}
+    MainListener(GfMenuObjSort *owner) : unknown0c(0), unknown10(0), _14(), m_menuObjSort(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u32 unknown0c; // Inferred role: number of listed sort types; original member name unknown.
     u32 unknown10; // Inferred role: selected index; original member name unknown.
     u8 _14[0x1c - 0x14];
-    GfMenuObjSort *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjSort *m_menuObjSort; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjSort(u32 handle);
@@ -41,7 +41,7 @@ static_assert(offsetof(GfMenuObjSort, unknown24) == 0x24, "");
 static_assert(offsetof(GfMenuObjSort, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjSort::MainListener, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfMenuObjSort::MainListener, unknown10) == 0x10, "");
-static_assert(offsetof(GfMenuObjSort::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjSort::MainListener, m_menuObjSort) == 0x20, "");
 static_assert(sizeof(GfMenuObjSort::MainListener) == 0x28, "");
 
 } // namespace gf

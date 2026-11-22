@@ -21,7 +21,7 @@ f32 DrEnvironmentAnim::setupAnim(void *frames, const u8 *data, u32 offset) {
   const u32 *header = reinterpret_cast<const u32 *>(data + offset);
   unknown30 = static_cast<f32 *>(frames);
   unknown00 = reinterpret_cast<const unknown001 *>(data + header[1]);
-  unknown08 = reinterpret_cast<const LgtAnimInf *>(data + header[3]);
+  m_lgtAnimInf = reinterpret_cast<const LgtAnimInf *>(data + header[3]);
   unknown10 = reinterpret_cast<const unknown086 *>(data + header[5]);
   unknown18 = reinterpret_cast<const unknown087 *>(data + header[7]);
   unknown20 = reinterpret_cast<const f32 *>(data + header[9]);
@@ -38,7 +38,7 @@ f32 DrEnvironmentAnim::setupAnim(void *frames, const u8 *data, u32 offset) {
 void DrEnvironmentAnim::changeMemAnim(const u8 *data, u32 offset) {
   const u32 *header = reinterpret_cast<const u32 *>(data + offset);
   unknown00 = reinterpret_cast<const unknown001 *>(data + header[1]);
-  unknown08 = reinterpret_cast<const LgtAnimInf *>(data + header[3]);
+  m_lgtAnimInf = reinterpret_cast<const LgtAnimInf *>(data + header[3]);
   unknown10 = reinterpret_cast<const unknown086 *>(data + header[5]);
   unknown18 = reinterpret_cast<const unknown087 *>(data + header[7]);
   unknown20 = reinterpret_cast<const f32 *>(data + header[9]);
@@ -87,7 +87,7 @@ void DrEnvironmentAnim::calcAnimFog(DrFogObjGbl *fog, const LgtGlbFogObj *obj) {
   u32 num = range->unknown02;
   if (num != 0) {
     f32 *frames = unknown30;
-    const LgtAnimInf *inf = &unknown08[range->unknown00];
+    const LgtAnimInf *inf = &m_lgtAnimInf[range->unknown00];
     for (u32 i = 0; i < num; i++, inf++) {
       (this->*s_pFogAnim[inf->unknown0c])(fog, inf, frames[index]);
     }

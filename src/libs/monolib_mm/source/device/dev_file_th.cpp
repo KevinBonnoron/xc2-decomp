@@ -282,7 +282,7 @@ typedef mm::mtl::FixedList<DevFileJobTh *, 640> unknown003;
 // Inferred role: tells whether a job list holds a job of the file handle; original name unknown.
 bool unknown004(unknown003 &list, FileHandleTh *handle) {
   for (unknown003::iterator it = list.begin(); it != list.end(); ++it) {
-    if ((*it)->unknown10 == handle) {
+    if ((*it)->m_fileHandleTh == handle) {
       return true;
     }
   }
@@ -306,7 +306,7 @@ void DevFileTh::Impl::cancelRequest(FileHandleTh *handle) {
   if (handle != nullptr) {
     bool found = false;
     for (unknown003::iterator it = unknown00000.begin(); it != unknown00000.end(); ++it) {
-      if ((*it)->unknown10 == handle) {
+      if ((*it)->m_fileHandleTh == handle) {
         (*it)->unknown18 = true;
         found = true;
         break;
@@ -314,7 +314,7 @@ void DevFileTh::Impl::cancelRequest(FileHandleTh *handle) {
     }
     if (!found) {
       for (unknown003::iterator it = unknown02d20.begin(); it != unknown02d20.end(); ++it) {
-        if ((*it)->unknown10 == handle) {
+        if ((*it)->m_fileHandleTh == handle) {
           (*it)->unknown18 = true;
           found = true;
           break;
@@ -323,7 +323,7 @@ void DevFileTh::Impl::cancelRequest(FileHandleTh *handle) {
     }
     if (!found) {
       for (unknown003::iterator it = unknown05a40.begin(); it != unknown05a40.end(); ++it) {
-        if ((*it)->unknown10 == handle) {
+        if ((*it)->m_fileHandleTh == handle) {
           (*it)->unknown18 = true;
           break;
         }
@@ -439,7 +439,7 @@ bool DevFileTh::Impl::isBusy() {
 bool DevFileTh::Impl::isLoading(FileHandleTh *handle) {
   CS cs(unknown5a350);
   for (mm::mtl::FixedList<DevFileJobTh *, 640>::iterator it = unknown02d20.begin(); it != unknown02d20.end(); ++it) {
-    if ((*it)->unknown10 == handle) {
+    if ((*it)->m_fileHandleTh == handle) {
       return true;
     }
   }
@@ -475,7 +475,7 @@ void DevFileTh::Impl::tail() {
     updateCancel();
     while (!unknown05a40.empty()) {
       DevFileJobTh *job = unknown05a40.front();
-      FileHandleTh *handle = job->unknown10;
+      FileHandleTh *handle = job->m_fileHandleTh;
       CBM cbm;
       if (handle->unknown94 & 0x10000) {
         cbm = CBM_UNKNOWN_4;
@@ -521,7 +521,7 @@ bool DevFileTh::Impl::getReadingInfo(mm::mtl::FixStr<256> &name, f32 &ratio) {
     return false;
   }
   for (unknown003::iterator it = unknown02d20.begin(); it != unknown02d20.end(); ++it) {
-    const FileHandleTh *handle = (*it)->unknown10;
+    const FileHandleTh *handle = (*it)->m_fileHandleTh;
     if (handle != nullptr && handle->unknown00 >= FileHandleTh::FTYPE_UNKNOWN_1 && handle->unknown00 <= FileHandleTh::FTYPE_UNKNOWN_3) {
       unknown111(handle, name, ratio);
       return true;
@@ -530,7 +530,7 @@ bool DevFileTh::Impl::getReadingInfo(mm::mtl::FixStr<256> &name, f32 &ratio) {
   for (unknown003::iterator it = unknown05a40.begin(); it != unknown05a40.end(); ++it) {
     const DevFileJobTh *job = *it;
     if (job->unknown08 == 1 || job->unknown08 == 2) {
-      const FileHandleTh *handle = job->unknown10;
+      const FileHandleTh *handle = job->m_fileHandleTh;
       if (handle != nullptr && handle->unknown00 >= FileHandleTh::FTYPE_UNKNOWN_1 && handle->unknown00 <= FileHandleTh::FTYPE_UNKNOWN_3) {
         unknown111(handle, name, ratio);
         return true;
@@ -549,7 +549,7 @@ bool DevFileTh::Impl::getWritingInfo(mm::mtl::FixStr<256> &name, f32 &ratio) {
   for (unknown003::iterator it = unknown02d20.begin(); it != unknown02d20.end(); ++it) {
     const DevFileJobTh *job = *it;
     if (job->unknown08 == 1 || job->unknown08 == 2) {
-      const FileHandleTh *handle = job->unknown10;
+      const FileHandleTh *handle = job->m_fileHandleTh;
       if (handle != nullptr && handle->unknown00 == FileHandleTh::FTYPE_UNKNOWN_4) {
         unknown111(handle, name, ratio);
         return true;
@@ -559,7 +559,7 @@ bool DevFileTh::Impl::getWritingInfo(mm::mtl::FixStr<256> &name, f32 &ratio) {
   for (unknown003::iterator it = unknown05a40.begin(); it != unknown05a40.end(); ++it) {
     const DevFileJobTh *job = *it;
     if (job->unknown08 == 1 || job->unknown08 == 2) {
-      const FileHandleTh *handle = job->unknown10;
+      const FileHandleTh *handle = job->m_fileHandleTh;
       if (handle != nullptr && handle->unknown00 == FileHandleTh::FTYPE_UNKNOWN_4) {
         unknown111(handle, name, ratio);
         return true;
@@ -724,7 +724,7 @@ bool DevFileTh::entryCb(IWorkEvent *event) {
   if (file == nullptr) {
     return false;
   }
-  file->unknown1c0->unknown5a348 = event;
+  file->unknown1c0->m_iWorkEvent = event;
   return true;
 }
 
@@ -733,7 +733,7 @@ bool DevFileTh::removeCb(IWorkEvent *event) {
   if (file == nullptr) {
     return false;
   }
-  file->unknown1c0->unknown5a348 = nullptr;
+  file->unknown1c0->m_iWorkEvent = nullptr;
   return true;
 }
 
@@ -782,8 +782,8 @@ bool DevFileReaderTh::asyncUpdate() {
   void *buffer = mtl::MemManager::allocate(WorkRoot::getMemTMP(), 0x80000, 0x1000, false, "no name", 0);
   bool isRead = false;
   for (unknown001 *it = unknown20.begin(); it != unknown20.end(); ++it) {
-    unknown10->m_currentPtr = 0;
-    if (it->unknown10->readBlockSlice(unknown10, it->unknown08, buffer, 0x80000)) {
+    m_fileHandleTh->m_currentPtr = 0;
+    if (it->m_devFileAccessor->readBlockSlice(m_fileHandleTh, it->unknown08, buffer, 0x80000)) {
       isRead = true;
       break;
     }
@@ -795,18 +795,18 @@ bool DevFileReaderTh::asyncUpdate() {
     mtl::MemManager::deallocate(buffer, 0, false);
   }
   if (unknown18) {
-    unknown10->unknown94 |= 0x10000;
-    unknown10->unknown1e8 = CBM_UNKNOWN_4;
+    m_fileHandleTh->unknown94 |= 0x10000;
+    m_fileHandleTh->unknown1e8 = CBM_UNKNOWN_4;
     return false;
   }
   if (isRead) {
-    unknown10->unknown94 |= 0x40000;
-    unknown10->unknown1e8 = CBM_UNKNOWN_2;
+    m_fileHandleTh->unknown94 |= 0x40000;
+    m_fileHandleTh->unknown1e8 = CBM_UNKNOWN_2;
     unknown08 = 2;
     return true;
   }
-  unknown10->unknown94 |= 0x20000;
-  unknown10->unknown1e8 = CBM_UNKNOWN_4;
+  m_fileHandleTh->unknown94 |= 0x20000;
+  m_fileHandleTh->unknown1e8 = CBM_UNKNOWN_4;
   unknown08 = -1;
   return false;
 }

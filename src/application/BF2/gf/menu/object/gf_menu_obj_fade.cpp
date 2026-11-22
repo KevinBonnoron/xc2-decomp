@@ -106,7 +106,7 @@ void GfMenuObjFade::LoadingListener::reciveEvent(const ui::EventData &event, u32
     acc.setDisp(false);
     break;
   case GfMenuTypes::unknown003_33:
-    if (unknown20->unknown28++ <= 0) {
+    if (m_menuObjFade->unknown28++ <= 0) {
       f32 time = static_cast<int>(event.unknown08) * 0.033333335f;
       if (time == 0.0f) {
         acc.setDisp(true);
@@ -119,8 +119,8 @@ void GfMenuObjFade::LoadingListener::reciveEvent(const ui::EventData &event, u32
     }
     break;
   case GfMenuTypes::unknown003_34:
-    if (--unknown20->unknown28 <= 0) {
-      unknown20->unknown28 = 0;
+    if (--m_menuObjFade->unknown28 <= 0) {
+      m_menuObjFade->unknown28 = 0;
       f32 time = static_cast<int>(event.unknown08) * 0.033333335f;
       if (time == 0.0f) {
         acc.setDisp(false);

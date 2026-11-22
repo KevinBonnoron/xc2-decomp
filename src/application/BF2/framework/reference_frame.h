@@ -64,7 +64,7 @@ public:
   Transform unknown40;                              // Inferred role: world transform; original member name unknown.
   mm::Mat44 unknown60;                              // Inferred role: world matrix; original member name unknown.
   u32 unknowna0;                                    // Inferred role: flags; original member name unknown.
-  ReferenceFrame *unknowna8;                        // Inferred role: parent; original member name unknown.
+  ReferenceFrame *m_referenceFrame;                 // Inferred role: parent; original member name unknown.
   mm::mtl::IntrusiveList<ReferenceFrame> unknownb0; // Inferred role: children; original member name unknown.
   f32 unknownc8;                                    // Inferred role: scale x; original member name unknown.
   f32 unknowncc;                                    // Inferred role: scale y; original member name unknown.

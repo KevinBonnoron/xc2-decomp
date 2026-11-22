@@ -22,7 +22,7 @@ void GfMoveWaterRiseControler::createReflection(fw::Reflection *reflection, cons
 }
 
 void GfMoveWaterRiseControler::update(const fw::UpdateInfo &info, Packet &packet) {
-  const Param *param = packet.unknown08.get<Param>();
+  const Param *param = packet.m_paramAdapter.get<Param>();
   f32 speed = packet.unknown00;
   if (packet.unknown10) {
     f32 sign = speed >= 0.0f ? 1.0f : -1.0f;

@@ -59,7 +59,7 @@ public:
   static const mm::mtl::IntrusivePtr<fw::ParamList> &unknown001(GfComPropertyPc &property) {
     GfComBehaviorPc *behavior = mm::mtl::dynamicCast<GfComBehaviorPc>(property.unknown08->unknown38[GfComBehavior::COMPONENT_INDEX]);
     AIAgent *agent = mm::mtl::dynamicCast<AIAgent>(behavior->unknown98.get());
-    return agent->unknown10.unknown88;
+    return agent->m_aIAgentField.unknown88;
   }
 };
 

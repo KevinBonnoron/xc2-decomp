@@ -48,12 +48,12 @@ static_assert(sizeof(MsgPcFieldNotifyBigJump) == 0x40, "");
 // Layout evidence: StateFieldPrepareBigJump::procMsgPcFieldNotifyBigJump (0x7100554760) broadcasts it with the big jump
 // info, and AIAgentField::procMsgPcFieldHighJump reads that info through the member at 0x8.
 struct MsgPcFieldNotifyHighJump : fw::Message {
-  explicit MsgPcFieldNotifyHighJump(const MsgPcFieldNotifyBigJump *info) : fw::Message(MSG_PC_FIELD_NOTIFY_UNKNOWN_16777237, 0x40), unknown08(info) {}
+  explicit MsgPcFieldNotifyHighJump(const MsgPcFieldNotifyBigJump *info) : fw::Message(MSG_PC_FIELD_NOTIFY_UNKNOWN_16777237, 0x40), m_msgPcFieldNotifyBigJump(info) {}
 
-  const MsgPcFieldNotifyBigJump *unknown08; // Inferred role: big jump info; original member name unknown.
+  const MsgPcFieldNotifyBigJump *m_msgPcFieldNotifyBigJump; // Inferred role: big jump info; original member name unknown.
 };
 
-static_assert(offsetof(MsgPcFieldNotifyHighJump, unknown08) == 0x08, "");
+static_assert(offsetof(MsgPcFieldNotifyHighJump, m_msgPcFieldNotifyBigJump) == 0x08, "");
 
 struct MsgPcFieldNotifyWarp : fw::Message {
   MsgPcFieldNotifyWarp() : fw::Message(MSG_PC_FIELD_NOTIFY_UNKNOWN_16777236, 0x40), unknown10(mm::Vec3::zero), unknown20(0.0f), unknown28(nullptr), unknown30(0), unknown34(0) {}
@@ -88,32 +88,32 @@ static_assert(sizeof(MsgPcFieldNotifyWallJump) == 0x30, "");
 // Layout evidence: StateFieldWallPrepareJump broadcasts it with the wall jump info of GfPropertyField::getWallJumpInfo,
 // and AIAgentField::recieveMessage reads that info through the member at 0x8.
 struct MsgPcFieldNotifyWallJumpStart : fw::Message {
-  MsgPcFieldNotifyWallJumpStart(const MsgPcFieldNotifyWallJump *wallJump) : fw::Message(MSG_PC_FIELD_NOTIFY_UNKNOWN_16777234, 0x40), unknown08(wallJump) {}
+  MsgPcFieldNotifyWallJumpStart(const MsgPcFieldNotifyWallJump *wallJump) : fw::Message(MSG_PC_FIELD_NOTIFY_UNKNOWN_16777234, 0x40), m_msgPcFieldNotifyWallJump(wallJump) {}
 
-  const MsgPcFieldNotifyWallJump *unknown08; // Inferred role: wall jump info; original member name unknown.
+  const MsgPcFieldNotifyWallJump *m_msgPcFieldNotifyWallJump; // Inferred role: wall jump info; original member name unknown.
 };
 
-static_assert(offsetof(MsgPcFieldNotifyWallJumpStart, unknown08) == 0x08, "");
+static_assert(offsetof(MsgPcFieldNotifyWallJumpStart, m_msgPcFieldNotifyWallJump) == 0x08, "");
 
 // Layout evidence: StateFieldWaterPrepareWarp broadcasts it with the warp info of GfPropertyField::getWarpInfo, and
 // AIAgentField::procMsgPcFieldNotifyWaterWarp reads that info through the member at 0x8.
 struct MsgPcFieldNotifyWaterWarp : fw::Message {
-  MsgPcFieldNotifyWaterWarp(const MsgPcFieldNotifyWarp *warp) : fw::Message(MSG_PC_FIELD_NOTIFY_UNKNOWN_16777239, 0x40), unknown08(warp) {}
+  MsgPcFieldNotifyWaterWarp(const MsgPcFieldNotifyWarp *warp) : fw::Message(MSG_PC_FIELD_NOTIFY_UNKNOWN_16777239, 0x40), m_msgPcFieldNotifyWarp(warp) {}
 
-  const MsgPcFieldNotifyWarp *unknown08; // Inferred role: warp info; original member name unknown.
+  const MsgPcFieldNotifyWarp *m_msgPcFieldNotifyWarp; // Inferred role: warp info; original member name unknown.
 };
 
-static_assert(offsetof(MsgPcFieldNotifyWaterWarp, unknown08) == 0x08, "");
+static_assert(offsetof(MsgPcFieldNotifyWaterWarp, m_msgPcFieldNotifyWarp) == 0x08, "");
 
 // Layout evidence: StateFieldWaterWarpDive sends it to the buddies with the warp info of GfPropertyField::getWarpInfo,
 // and AIAgentField::procMsgPcFieldNotifyWaterWarpBuddy reads that info through the member at 0x8.
 struct MsgPcFieldNotifyWaterWarpBuddy : fw::Message {
-  MsgPcFieldNotifyWaterWarpBuddy(const MsgPcFieldNotifyWarp *warp) : fw::Message(MSG_PC_FIELD_NOTIFY_UNKNOWN_16777247, 0x40), unknown08(warp) {}
+  MsgPcFieldNotifyWaterWarpBuddy(const MsgPcFieldNotifyWarp *warp) : fw::Message(MSG_PC_FIELD_NOTIFY_UNKNOWN_16777247, 0x40), m_msgPcFieldNotifyWarp(warp) {}
 
-  const MsgPcFieldNotifyWarp *unknown08; // Inferred role: warp info; original member name unknown.
+  const MsgPcFieldNotifyWarp *m_msgPcFieldNotifyWarp; // Inferred role: warp info; original member name unknown.
 };
 
-static_assert(offsetof(MsgPcFieldNotifyWaterWarpBuddy, unknown08) == 0x08, "");
+static_assert(offsetof(MsgPcFieldNotifyWaterWarpBuddy, m_msgPcFieldNotifyWarp) == 0x08, "");
 
 namespace pc {
 struct FieldParam;
@@ -179,7 +179,7 @@ public:
   }
 
   mm::mtl::IntrusivePtr<fw::ParamList> unknown08; // Inferred role: param list; original member name unknown.
-  u32 unknown10_0 : 1;                            // Inferred role: walk mode; original member name unknown.
+  u32 m_walkMode : 1;                             // Inferred role: walk mode; named after the game accessor gf::pc::StateUtilField::isWalkMode.
   u32 unknown10_1 : 1;                            // Role and original member name unknown.
   u32 unknown10_2 : 1;                            // Inferred role: idle; original member name unknown.
   u32 unknown10_3 : 1;                            // Inferred role: pad control; original member name unknown.
@@ -219,11 +219,11 @@ public:
   mm::Vec3 unknown60; // Role and original member name unknown.
   f32 unknown70;      // Inferred role: input power paired with the direction at 0x60 (auto run); original member name unknown.
   u8 _74[0x78 - 0x74];
-  GF_OBJ_HANDLE *unknown78;                // Inferred role: object that sent the jump or warp notification, told about the skill action; original member name unknown.
-  MsgPcFieldNotifyBigJump unknown80;       // Inferred role: big jump info; original member name unknown.
-  MsgPcFieldNotifyWarp unknownc0;          // Inferred role: warp info; original member name unknown.
-  MsgPcFieldNotifyWallJump unknown100;     // Inferred role: wall jump info; original member name unknown.
-  EnviromentSensor::unknown003 unknown130; // Inferred role: climb wall info; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE;                      // Inferred role: object that sent the jump or warp notification, told about the skill action; original member name unknown.
+  MsgPcFieldNotifyBigJump m_msgPcFieldNotifyBigJump;   // Inferred role: big jump info; original member name unknown.
+  MsgPcFieldNotifyWarp m_msgPcFieldNotifyWarp;         // Inferred role: warp info; original member name unknown.
+  MsgPcFieldNotifyWallJump m_msgPcFieldNotifyWallJump; // Inferred role: wall jump info; original member name unknown.
+  EnviromentSensor::unknown003 unknown130;             // Inferred role: climb wall info; original member name unknown.
 };
 
 static_assert(offsetof(GfPropertyField, unknown08) == 0x08, "");
@@ -231,10 +231,10 @@ static_assert(offsetof(GfPropertyField, unknown14) == 0x14, "");
 static_assert(offsetof(GfPropertyField, unknown18) == 0x18, "");
 static_assert(offsetof(GfPropertyField, unknown28) == 0x28, "");
 static_assert(offsetof(GfPropertyField, unknown38) == 0x38, "");
-static_assert(offsetof(GfPropertyField, unknown78) == 0x78, "");
-static_assert(offsetof(GfPropertyField, unknown80) == 0x80, "");
-static_assert(offsetof(GfPropertyField, unknownc0) == 0xc0, "");
-static_assert(offsetof(GfPropertyField, unknown100) == 0x100, "");
+static_assert(offsetof(GfPropertyField, m_GF_OBJ_HANDLE) == 0x78, "");
+static_assert(offsetof(GfPropertyField, m_msgPcFieldNotifyBigJump) == 0x80, "");
+static_assert(offsetof(GfPropertyField, m_msgPcFieldNotifyWarp) == 0xc0, "");
+static_assert(offsetof(GfPropertyField, m_msgPcFieldNotifyWallJump) == 0x100, "");
 static_assert(offsetof(GfPropertyField, unknown130) == 0x130, "");
 static_assert(sizeof(GfPropertyField) == 0x160, "");
 

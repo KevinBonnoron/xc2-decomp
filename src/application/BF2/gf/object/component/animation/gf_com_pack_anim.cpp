@@ -19,7 +19,7 @@ class Pose;
 
 namespace gf {
 
-GfComPackAnim::Mot::Mot() : unknown00(nullptr), unknown08(nullptr), unknown68(0.0f) {}
+GfComPackAnim::Mot::Mot() : m_comModel(nullptr), unknown08(nullptr), unknown68(0.0f) {}
 
 void GfComPackAnim::Mot::cleanup(u32 layer) { stop(layer); }
 
@@ -31,35 +31,35 @@ void GfComPackAnim::Mot::stop(u32 layer) {
   unknown68 = 0.0f;
   fw::AnimationManager *manager = fw::AnimationManager::get();
   if (manager != nullptr) {
-    if (unknown30.unknown18 != nullptr && unknown30.unknown20 != nullptr) {
-      manager->removePoseSampler(layer, unknown30);
+    if (m_animSinglePoseSamper.unknown18 != nullptr && m_animSinglePoseSamper.unknown20 != nullptr) {
+      manager->removePoseSampler(layer, m_animSinglePoseSamper);
     }
-    if (unknown10.unknown18 != nullptr) {
-      manager->removeControlUpdater(layer, unknown10);
+    if (m_animControlUpdater.unknown18 != nullptr) {
+      manager->removeControlUpdater(layer, m_animControlUpdater);
     }
   }
 
-  unknown30.unbind();
-  unknown10.unbind();
+  m_animSinglePoseSamper.unbind();
+  m_animControlUpdater.unbind();
   if (unknown08 != nullptr) {
     unknown08->release();
     unknown08 = nullptr;
   }
 }
 
-void GfComPackAnim::Mot::setup(GfComModel *model, u32 layer) { this->unknown00 = model; }
+void GfComPackAnim::Mot::setup(GfComModel *model, u32 layer) { this->m_comModel = model; }
 
 void GfComPackAnim::Mot::play(u32 layer, void *motion, bool isLocalSpace) {
-  if (unknown00 == nullptr) {
+  if (m_comModel == nullptr) {
     return;
   }
 
-  anm::Pose *pose = unknown00->unknown30;
+  anm::Pose *pose = m_comModel->unknown30;
   if (pose == nullptr) {
     return;
   }
 
-  anm::ExtraTruckBuffer *extraTruckBuffer = unknown00->unknown38;
+  anm::ExtraTruckBuffer *extraTruckBuffer = m_comModel->unknown38;
   anm::Binding *binding = anm::AnimationImporter::import(motion);
   unknown68 = anm::Util::getPlayBackTime(*binding);
   unknown08 = anm::Factory::createControl(binding, getAllocator(ALLOCATOR_UNKNOWN_7));
@@ -67,16 +67,16 @@ void GfComPackAnim::Mot::play(u32 layer, void *motion, bool isLocalSpace) {
     binding->release();
   }
 
-  unknown10.bind(unknown08);
-  unknown30.unknown32 = isLocalSpace;
-  unknown30.bind(unknown08, pose, extraTruckBuffer);
+  m_animControlUpdater.bind(unknown08);
+  m_animSinglePoseSamper.unknown32 = isLocalSpace;
+  m_animSinglePoseSamper.bind(unknown08, pose, extraTruckBuffer);
   fw::AnimationManager *manager = fw::AnimationManager::get();
   if (manager != nullptr) {
-    if (unknown10.unknown18 != nullptr) {
-      manager->addControlUpdater(layer, unknown10);
+    if (m_animControlUpdater.unknown18 != nullptr) {
+      manager->addControlUpdater(layer, m_animControlUpdater);
     }
-    if (unknown30.unknown18 != nullptr && unknown30.unknown20 != nullptr) {
-      manager->addPoseSampler(layer, unknown30);
+    if (m_animSinglePoseSamper.unknown18 != nullptr && m_animSinglePoseSamper.unknown20 != nullptr) {
+      manager->addPoseSampler(layer, m_animSinglePoseSamper);
     }
   }
 }
@@ -105,13 +105,13 @@ void GfComPackAnim::Mot::changeLayer(u32 oldLayer, u32 newLayer) {
     return;
   }
 
-  if (unknown30.unknown18 != nullptr && unknown30.unknown20 != nullptr) {
-    manager->removePoseSampler(oldLayer, unknown30);
-    manager->addPoseSampler(newLayer, unknown30);
+  if (m_animSinglePoseSamper.unknown18 != nullptr && m_animSinglePoseSamper.unknown20 != nullptr) {
+    manager->removePoseSampler(oldLayer, m_animSinglePoseSamper);
+    manager->addPoseSampler(newLayer, m_animSinglePoseSamper);
   }
-  if (unknown10.unknown18 != nullptr) {
-    manager->removeControlUpdater(oldLayer, unknown10);
-    manager->addControlUpdater(newLayer, unknown10);
+  if (m_animControlUpdater.unknown18 != nullptr) {
+    manager->removeControlUpdater(oldLayer, m_animControlUpdater);
+    manager->addControlUpdater(newLayer, m_animControlUpdater);
   }
 }
 
@@ -120,7 +120,7 @@ GfComPackAnim::GfComPackAnim() : unknownc8(true) {}
 GfComPackAnim::~GfComPackAnim() {}
 
 void GfComPackAnim::cleanup() {
-  unknown10.cleanup(getLayer());
+  m_mot.cleanup(getLayer());
   for (arc::CArcData **arc = unknown80.begin(); arc != unknown80.end(); arc++) {
     if (*arc != nullptr) {
       delete *arc;
@@ -153,16 +153,16 @@ void GfComPackAnim::play(const char *name) {
 
   GfComModel *model = unknown08->getComponent<GfComModel>();
   if (model != nullptr) {
-    unknown10.setup(model, getLayer());
+    m_mot.setup(model, getLayer());
   }
 
-  unknown10.stop(getLayer());
+  m_mot.stop(getLayer());
   mm::mtl::FixStr<64> fileName;
   fileName.format("%s.anm", name);
   for (arc::CArcData **arc = unknown80.begin(); arc != unknown80.end(); arc++) {
     void *motion = (*arc)->getFileAdr(fileName.c_str());
     if (motion != nullptr) {
-      unknown10.play(getLayer(), motion, unknownc8);
+      m_mot.play(getLayer(), motion, unknownc8);
       return;
     }
   }
@@ -175,21 +175,21 @@ void GfComPackAnim::play(void *motion) {
 
   GfComModel *model = unknown08->getComponent<GfComModel>();
   if (model != nullptr) {
-    unknown10.setup(model, getLayer());
+    m_mot.setup(model, getLayer());
   }
 
-  unknown10.stop(getLayer());
-  unknown10.play(getLayer(), motion, unknownc8);
+  m_mot.stop(getLayer());
+  m_mot.play(getLayer(), motion, unknownc8);
 }
 
 void GfComPackAnim::stop() {
-  unknown10.stop(getLayer());
-  unknown10.cleanup(getLayer());
+  m_mot.stop(getLayer());
+  m_mot.cleanup(getLayer());
 }
 
-bool GfComPackAnim::isPlayEnd() const { return unknown10.isPlayEnd(); }
+bool GfComPackAnim::isPlayEnd() const { return m_mot.isPlayEnd(); }
 
-void GfComPackAnim::setSpeed(f32 speed) { unknown10.setSpeed(speed); }
+void GfComPackAnim::setSpeed(f32 speed) { m_mot.setSpeed(speed); }
 
 void GfComPackAnim::changeLayer(u32 oldLayer, u32 newLayer) {}
 

@@ -31,7 +31,7 @@ namespace gf {
 void GfGameUtilSaveData::getSaveData(SDataSystem &dataSystem) {
   const SDataSystem *source = GfDataManager::getDataSystem();
   dataSystem.unknown00 = source->unknown00;
-  dataSystem.unknown08 = source->unknown08;
+  dataSystem.m_realTime = source->m_realTime;
 }
 
 // Inferred role: saves the map positions and rotations of the party; original name unknown (0x71003558e8, right after setupGameSaveData, 114 instructions; called by setupGameSaveData and
@@ -58,7 +58,7 @@ static void unknown001(unknown118 &map) {
   if (scene != nullptr) {
     map.unknown00[0] = scene->getEnableSavePos();
   }
-  map.unknownc0 = GfGameManager::getMapJumpID();
+  map.m_skipTravelID = GfGameManager::getMapJumpID();
 }
 
 // Inferred name; kept as an exception to the unknown-name rule (AGENTS.md): single-user helper whose existence only the match proves; rename if a sibling build gives a symbol.
@@ -67,7 +67,7 @@ static void unknown001(unknown118 &map) {
 // source address, the body gives the reverse.
 static void copyOrderParentQuests(SDataGame &dst, const SDataGame &src) {
   for (int i = 0; i < 256; i++) {
-    dst.unknown10a138[i] = src.unknown10a138[i];
+    dst.m_questData[i] = src.m_questData[i];
   }
   dst.unknown10a538 = src.unknown10a538;
 }
@@ -76,67 +76,67 @@ static void copyOrderParentQuests(SDataGame &dst, const SDataGame &src) {
 void GfGameUtilSaveData::setupGameSaveData(SDataSave &saveData) {
   bool isClear = GfDataUtil::getScenarioFlag() > 10042 || GfDataManager::getDataGame()->unknown10ae81 != 0;
   getSaveData(saveData);
-  saveData.unknown10 = *GfDataManager::getDataGame();
+  saveData.m_game = *GfDataManager::getDataGame();
   if (!isClear) {
-    unknown001(saveData.unknown10.unknown1097f0);
-    saveData.unknown10.unknown10ae81 = 0;
-    saveData.unknown10.unknown10ae74 = GfGamePlayerCamera::getSaveYaw();
-    saveData.unknown10.unknown10ae78 = GfGamePlayerCamera::getSavePitch();
-    saveData.unknown10.unknown109b28 = GfGamePlayerCamera::getSaveDistance();
-    saveData.unknown10.unknown10ad70 = GfGamePlayerCamera::getSaveHeight();
-    saveData.unknown10.unknown10ae82 = GfGamePlayerCamera::getSaveSide();
-    saveData.unknown10.unknown10ae7c = GfGamePlayerCamera::isSaveFreeMode();
+    unknown001(saveData.m_game.m_sDataMap);
+    saveData.m_game.unknown10ae81 = 0;
+    saveData.m_game.m_cameraYaw = GfGamePlayerCamera::getSaveYaw();
+    saveData.m_game.m_cameraPitch = GfGamePlayerCamera::getSavePitch();
+    saveData.m_game.m_playerCameraDistance = GfGamePlayerCamera::getSaveDistance();
+    saveData.m_game.m_cameraHeight = GfGamePlayerCamera::getSaveHeight();
+    saveData.m_game.m_cameraSide = GfGamePlayerCamera::getSaveSide();
+    saveData.m_game.m_cameraFreeMode = GfGamePlayerCamera::isSaveFreeMode();
   } else {
-    saveData.unknown10.unknown10ae81 = 1;
-    GfGameFlag::setLocal(saveData.unknown10.unknownfbbc4, 16, 1, 10032);
+    saveData.m_game.unknown10ae81 = 1;
+    GfGameFlag::setLocal(saveData.m_game.m_gameFlag, 16, 1, 10032);
     tl::TitleMain *title = tl::TitleMain::get();
     if (title != nullptr) {
       // The game flag ranges copied from the title save (same helpers and index numbers as GfGameUtil::setupNewGameParam). Each range is a loop of its own in the game (0x7100355248 to 0x7100355708),
       // with the title save buffer fetched before each one: the calls stay written out (ruling 8; the quality gate reports the repeated statements).
-      saveData.unknown10.unknown002(title->getSaveBuffer()->unknown10, 2, 0x27a, 0x662);
-      saveData.unknown10.unknown002(title->getSaveBuffer()->unknown10, 2, 0x25b, 0x279);
-      saveData.unknown10.unknown002(title->getSaveBuffer()->unknown10, 1, 0xfa2, 0x11fa);
-      saveData.unknown10.unknown003(title->getSaveBuffer()->unknown10, 1, 0x11fb, 0x4b0);
-      saveData.unknown10.unknown002(title->getSaveBuffer()->unknown10, 1, 0x1, 0xfa1);
-      saveData.unknown10.unknown003(title->getSaveBuffer()->unknown10, 1, 0x9230, 0x400);
-      saveData.unknown10.unknown003(title->getSaveBuffer()->unknown10, 1, 0x3690, 15000);
-      saveData.unknown10.unknown003(title->getSaveBuffer()->unknown10, 1, 0x9631, 0x400);
-      saveData.unknown10.unknown003(title->getSaveBuffer()->unknown10, 1, 0xab67, 0x640);
-      saveData.unknown10.unknown003(title->getSaveBuffer()->unknown10, 1, 0xb1a8, 0xa0);
-      saveData.unknown10.unknown003(title->getSaveBuffer()->unknown10, 1, 0xb249, 0xa0);
-      saveData.unknown10.unknown003(title->getSaveBuffer()->unknown10, 1, 0xb2ea, 0xa0);
-      saveData.unknown10.unknown003(title->getSaveBuffer()->unknown10, 1, 0xb38b, 0xa0);
-      saveData.unknown10.unknown003(title->getSaveBuffer()->unknown10, 1, 0xb42c, 0xa0);
-      saveData.unknown10.unknown003(title->getSaveBuffer()->unknown10, 2, 0x94b7, 0x640);
-      saveData.unknown10.unknown002(title->getSaveBuffer()->unknown10, 8, 0x12, 0x5ee);
-      saveData.unknown10.unknown1097e4 = title->getSaveBuffer()->unknown10.unknown1097e4;
-      saveData.unknown10.unknown1097e8 = title->getSaveBuffer()->unknown10.unknown1097e8;
-      copyOrderParentQuests(saveData.unknown10, title->getSaveBuffer()->unknown10);
-      saveData.unknown10.unknown26 = title->getSaveBuffer()->unknown10.unknown26;
-      saveData.unknown10.unknown28 = title->getSaveBuffer()->unknown10.unknown28;
+      saveData.m_game.unknown002(title->getSaveBuffer()->m_game, 2, 0x27a, 0x662);
+      saveData.m_game.unknown002(title->getSaveBuffer()->m_game, 2, 0x25b, 0x279);
+      saveData.m_game.unknown002(title->getSaveBuffer()->m_game, 1, 0xfa2, 0x11fa);
+      saveData.m_game.unknown003(title->getSaveBuffer()->m_game, 1, 0x11fb, 0x4b0);
+      saveData.m_game.unknown002(title->getSaveBuffer()->m_game, 1, 0x1, 0xfa1);
+      saveData.m_game.unknown003(title->getSaveBuffer()->m_game, 1, 0x9230, 0x400);
+      saveData.m_game.unknown003(title->getSaveBuffer()->m_game, 1, 0x3690, 15000);
+      saveData.m_game.unknown003(title->getSaveBuffer()->m_game, 1, 0x9631, 0x400);
+      saveData.m_game.unknown003(title->getSaveBuffer()->m_game, 1, 0xab67, 0x640);
+      saveData.m_game.unknown003(title->getSaveBuffer()->m_game, 1, 0xb1a8, 0xa0);
+      saveData.m_game.unknown003(title->getSaveBuffer()->m_game, 1, 0xb249, 0xa0);
+      saveData.m_game.unknown003(title->getSaveBuffer()->m_game, 1, 0xb2ea, 0xa0);
+      saveData.m_game.unknown003(title->getSaveBuffer()->m_game, 1, 0xb38b, 0xa0);
+      saveData.m_game.unknown003(title->getSaveBuffer()->m_game, 1, 0xb42c, 0xa0);
+      saveData.m_game.unknown003(title->getSaveBuffer()->m_game, 2, 0x94b7, 0x640);
+      saveData.m_game.unknown002(title->getSaveBuffer()->m_game, 8, 0x12, 0x5ee);
+      saveData.m_game.m_scenario = title->getSaveBuffer()->m_game.m_scenario;
+      saveData.m_game.m_select = title->getSaveBuffer()->m_game.m_select;
+      copyOrderParentQuests(saveData.m_game, title->getSaveBuffer()->m_game);
+      saveData.m_game.unknown26 = title->getSaveBuffer()->m_game.unknown26;
+      saveData.m_game.m_eventChapterSave = title->getSaveBuffer()->m_game.m_eventChapterSave;
     }
   }
   GfFieldTime *fieldTime = GfFieldTime::get();
   if (fieldTime != nullptr) {
-    saveData.unknown10.unknown1098c0 = fieldTime->getGameTime();
-    saveData.unknown10.unknown1098c4 = fieldTime->getElapseTime();
-    saveData.unknown10.unknown24 = fieldTime->isTimeStop();
-    fieldTime->getRealTime(saveData.unknown08);
-    fieldTime->getRealTime(saveData.unknown10.unknown10ad68);
+    saveData.m_game.m_gameTime = fieldTime->getGameTime();
+    saveData.m_game.m_elapseTime = fieldTime->getElapseTime();
+    saveData.m_game.unknown24 = fieldTime->isTimeStop();
+    fieldTime->getRealTime(saveData.m_realTime);
+    fieldTime->getRealTime(saveData.m_game.m_saveRealTime);
   }
 }
 
 void GfGameUtilSaveData::getSaveData(SDataGame &dataGame) {
   dataGame = *GfDataManager::getDataGame();
-  unknown001(dataGame.unknown1097f0);
+  unknown001(dataGame.m_sDataMap);
 }
 
 void GfGameUtilSaveData::setTitleSaveData(const SDataSave &saveData) {
   if (tl::TitleMain::get() != nullptr) {
     SDataSave *titleSaveData = tl::TitleMain::get()->getSaveBuffer();
     titleSaveData->unknown00 = saveData.unknown00;
-    titleSaveData->unknown08 = saveData.unknown08;
-    titleSaveData->unknown10 = saveData.unknown10;
+    titleSaveData->m_realTime = saveData.m_realTime;
+    titleSaveData->m_game = saveData.m_game;
   }
 }
 
@@ -162,20 +162,20 @@ void GfGameUtilSaveData::setupOptionSaveData(SDataOption &optionData) {
   optionData = *GfDataManager::getDataOption();
   GfSound *sound = GfSound::get();
   if (sound != nullptr) {
-    optionData.unknown4c.unknown00 = GfMasterVolume::getU16Volume(sound->unknown6690.getEventVoiceVolume());
-    optionData.unknown4c.unknown02 = GfMasterVolume::getU16Volume(sound->unknown6690.getEventCsVolume());
-    optionData.unknown4c.unknown04 = GfMasterVolume::getU16Volume(sound->unknown6690.getEventBgmVolume());
-    optionData.unknown4c.unknown06 = GfMasterVolume::getU16Volume(sound->unknown6690.getEventSeVolume());
-    optionData.unknown4c.unknown08 = GfMasterVolume::getU16Volume(sound->unknown6690.getGameBgmVolume());
-    optionData.unknown4c.unknown0a = GfMasterVolume::getU16Volume(sound->unknown6690.getGameEnvVolume());
-    optionData.unknown4c.unknown0c = GfMasterVolume::getU16Volume(sound->unknown6690.getGameWeatherVolume());
-    optionData.unknown4c.unknown0e = GfMasterVolume::getU16Volume(sound->unknown6690.getGameSeVolume());
-    optionData.unknown4c.unknown10 = GfMasterVolume::getU16Volume(sound->unknown6690.getPlayerVoiceVolume());
-    optionData.unknown4c.unknown12 = GfMasterVolume::getU16Volume(sound->unknown6690.getEnemyVoiceVolume());
-    optionData.unknown4c.unknown14 = GfMasterVolume::getU16Volume(sound->unknown6690.getNareVoiceVolume());
-    optionData.unknown4c.unknown18 = GfMasterVolume::getU16Volume(sound->unknown6690.getMenuBgmVolume());
+    optionData.m_sSoundUiOption.unknown00 = GfMasterVolume::getU16Volume(sound->m_masterVolume.getEventVoiceVolume());
+    optionData.m_sSoundUiOption.unknown02 = GfMasterVolume::getU16Volume(sound->m_masterVolume.getEventCsVolume());
+    optionData.m_sSoundUiOption.unknown04 = GfMasterVolume::getU16Volume(sound->m_masterVolume.getEventBgmVolume());
+    optionData.m_sSoundUiOption.unknown06 = GfMasterVolume::getU16Volume(sound->m_masterVolume.getEventSeVolume());
+    optionData.m_sSoundUiOption.unknown08 = GfMasterVolume::getU16Volume(sound->m_masterVolume.getGameBgmVolume());
+    optionData.m_sSoundUiOption.unknown0a = GfMasterVolume::getU16Volume(sound->m_masterVolume.getGameEnvVolume());
+    optionData.m_sSoundUiOption.unknown0c = GfMasterVolume::getU16Volume(sound->m_masterVolume.getGameWeatherVolume());
+    optionData.m_sSoundUiOption.unknown0e = GfMasterVolume::getU16Volume(sound->m_masterVolume.getGameSeVolume());
+    optionData.m_sSoundUiOption.unknown10 = GfMasterVolume::getU16Volume(sound->m_masterVolume.getPlayerVoiceVolume());
+    optionData.m_sSoundUiOption.unknown12 = GfMasterVolume::getU16Volume(sound->m_masterVolume.getEnemyVoiceVolume());
+    optionData.m_sSoundUiOption.unknown14 = GfMasterVolume::getU16Volume(sound->m_masterVolume.getNareVoiceVolume());
+    optionData.m_sSoundUiOption.unknown18 = GfMasterVolume::getU16Volume(sound->m_masterVolume.getMenuBgmVolume());
   }
-  optionData.unknown4c._1d = fw::LangUtil::getLangType();
+  optionData.m_sSoundUiOption._1d = fw::LangUtil::getLangType();
 }
 
 } // namespace gf

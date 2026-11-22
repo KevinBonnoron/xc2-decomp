@@ -89,11 +89,11 @@ public:
   static WEATHERID getTempWeather();
 
 private:
-  bool unknown08;                                                // Inferred role: map jump; original member name unknown.
-  bool unknown09;                                                // Inferred role: map jump blackout; original member name unknown.
+  bool m_mapjump;                                                // Inferred role: map jump; named after the game accessor gf::GfGameEnv::isMapjump.
+  bool m_mapjumpBlackout;                                        // Inferred role: map jump blackout; named after the game accessor gf::GfGameEnv::isMapjumpBlackout.
   bool unknown0a;                                                // Inferred role: map jump with save data; original member name unknown.
-  u32 unknown0c;                                                 // Inferred role: map id; original member name unknown.
-  u32 unknown10;                                                 // Inferred role: map jump id; original member name unknown.
+  u32 m_mapID;                                                   // Inferred role: map id; named after the game accessor gf::GfGameEnv::getMapID.
+  u32 m_mapJumpID;                                               // Inferred role: map jump id; named after the game accessor gf::GfGameEnv::getMapJumpID.
   f32 unknown14;                                                 // Inferred role: stop enemy search time; original member name unknown.
   mm::mtl::FixedQueue<ColorFilter, FILTER_UNKNOWN_16> unknown18; // Inferred role: color filters; original member name unknown.
   u64 unknown168;                                                // Inferred role: color filter serial; original member name unknown.

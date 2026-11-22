@@ -1,6 +1,7 @@
 #include "gf/object/component/effect/gf_effect_ground.h"
 
 #include "bdat.h"
+#include "eflib/effect_send_param.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/game/gf_game_manager.h"
@@ -11,6 +12,7 @@
 #include "gf/object/gf_obj_property.h"
 #include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
+#include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/unique_ptr.h"
 
@@ -49,7 +51,7 @@ u32 GfEffectGround::getWaterHeightState(const GfComEffectCaster *caster) {
   GfComProperty *property = static_cast<GfObj *>(caster->unknown08)->getComponent<GfComProperty>();
   GfEnvProperty *env = property->unknown28.get();
   if (env != nullptr && (env->unknown2d0 & 1)) {
-    return getWaterHeightStateImpl(env->unknown2b4, caster->unknown24, caster->unknown28);
+    return getWaterHeightStateImpl(env->unknown280.unknown34, caster->unknown24, caster->unknown28);
   }
   return 0;
 }
@@ -66,6 +68,33 @@ bool GfEffectGround::tryGetWaterDepth(const GfComEffectCaster *caster, const GfC
     }
   }
   return false;
+}
+
+GfEffectGround::SwimEffectState GfEffectGround::calcSwimEffectParam(const GfComEffectCaster *caster, bool unknown1, bool unknown2, effect::SendParam &param) {
+  GfEnvProperty *env = static_cast<GfObj *>(caster->unknown08)->getComponent<GfComProperty>()->unknown28.get();
+  if (env == nullptr || !(env->unknown2d0 & 1)) {
+    return SWIM_EFFECT_STATE_UNKNOWN_2;
+  }
+  f32 depth;
+  if (!tryGetWaterDepth(caster, &env->unknown280, depth)) {
+    return SWIM_EFFECT_STATE_UNKNOWN_2;
+  }
+  // The single-use bool reproduces the game's block shape (P2): the game negates the second flag with `eor w8, w22, #1` before its `tbz` (0x7100502e50),
+  // where the inline `depth > 1.7f && !unknown2` gives `tbnz w22` (81 instructions against 82; the early-return and nested forms give the same).
+  bool isDeep = depth > 1.7f && !unknown2;
+  if (isDeep) {
+    return SWIM_EFFECT_STATE_UNKNOWN_1;
+  }
+  if (!unknown1) {
+    param.unknown00.rows[3][1] = env->unknown280.unknown00;
+    return SWIM_EFFECT_STATE_UNKNOWN_0;
+  }
+  GfEnvProperty *callerEnv = static_cast<GfObj *>(caster->unknown08)->getComponent<GfComProperty>()->unknown28.get();
+  if (callerEnv == nullptr || !(callerEnv->unknown2d0 & 1) || callerEnv->unknown280.unknown34 < caster->unknown24) {
+    return SWIM_EFFECT_STATE_UNKNOWN_2;
+  }
+  param.unknown00.rows[3][1] = env->unknown280.unknown00;
+  return SWIM_EFFECT_STATE_UNKNOWN_0;
 }
 
 bool GfEffectGround::getGroundEffectFileName(const GfComEffectCaster *caster, u32 type, const char *&fileName) {
@@ -106,9 +135,9 @@ bool GfEffectGround::getGroundEffectFileNameImpl(u32 type, u32 effectType, u32 m
 
 u32 GfEffectGround::getGroundMaterial(GfEnvProperty *env, const GfComEffectCaster *caster) {
   if (env->unknown2d0 & 1) {
-    s32 material = unknown001(env->unknown2b8, env->unknown2bc);
+    s32 material = unknown001(env->unknown280.unknown38, env->unknown280.unknown3c);
     GfEnvProperty *callerEnv = static_cast<GfObj *>(caster->unknown08)->getComponent<GfComProperty>()->unknown28.get();
-    if (callerEnv != nullptr && (callerEnv->unknown2d0 & 1) && !(callerEnv->unknown2b4 < caster->unknown24)) {
+    if (callerEnv != nullptr && (callerEnv->unknown2d0 & 1) && !(callerEnv->unknown280.unknown34 < caster->unknown24)) {
       switch (material) {
       case 1:
         material = 16;

@@ -37,14 +37,14 @@ static u32 getU8OrU16(const CBdatWrapper &bdat, const char *name, int id) {
 }
 
 void GmkEnemyInsts::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
-  unknown0e = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_UNKNOWN_2));
+  m_scenarioFlagCond = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_UNKNOWN_2));
   unknown12 =
       QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_UNKNOWN_1), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_UNKNOWN_1));
   unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_UNKNOWN_2);
-  unknown18.unknown08 = bdat.getValCheck("POP_TIME", id, BDAT_TYPE_UNKNOWN_3);
-  unknown28.unknown08 = bdat.getValCheck("popWeather", id, BDAT_TYPE_UNKNOWN_1);
+  m_timeCond.unknown08 = bdat.getValCheck("POP_TIME", id, BDAT_TYPE_UNKNOWN_3);
+  m_weatherCond.unknown08 = bdat.getValCheck("popWeather", id, BDAT_TYPE_UNKNOWN_1);
   if (Bdat::getFlagVal(bdat.unknown00, "flag", id, "popCloud") != 0) {
-    unknown38.unknown08 = CloudCond::TYPE_UNKNOWN_1;
+    m_cloudCond.unknown08 = CloudCond::TYPE_UNKNOWN_1;
   }
   unknown02 = Bdat::getFlagVal(bdat.unknown00, "flag", id, "ene_priority") != 0;
   unknown03 = Bdat::getFlagVal(bdat.unknown00, "flag", id, "pop_smn") != 0;
@@ -84,7 +84,7 @@ bool GmkEnemyInsts::BdatInfo::isInvincibleCondMatched() const {
 }
 
 bool GmkEnemyInsts::BdatInfo::isPopCondMatchedOfSmn() const {
-  if (unknown0e.isEnable() && !unknown0e.isMatch()) {
+  if (m_scenarioFlagCond.isEnable() && !m_scenarioFlagCond.isMatch()) {
     return false;
   }
   return true;
@@ -95,23 +95,23 @@ void GmkEnemy::debugDraw() const {
     return;
   }
   {
-    mm::Vec3 position = AGmkBase::unknown08.unknown08->unknown00;
+    mm::Vec3 position = AGmkBase::m_createBaseInfo.m_xform->unknown00;
     mm::Mat44 matrix;
     unknown001(matrix, position);
     fw::debug::drawCircleLine(matrix, getData()->unknown00, mm::Col4::cyan);
   }
   mm::Vec2 screen;
-  if (toScreenPos(screen, AGmkBase::unknown08.unknown08->unknown00)) {
+  if (toScreenPos(screen, AGmkBase::m_createBaseInfo.m_xform->unknown00)) {
     mm::mtl::FixStr<128> text;
     int offset;
-    if (unknown48.unknown170 > 0.0f) {
-      text.format("repop-time=%.1f", unknown48.unknown170);
+    if (m_gmkEnemyInsts.unknown170 > 0.0f) {
+      text.format("repop-time=%.1f", m_gmkEnemyInsts.unknown170);
       fw::debug::drawFont(static_cast<int>(screen.x), static_cast<int>(screen.y) + 24, mm::Col4::green, text.c_str());
       offset = 48;
     } else {
       offset = 24;
     }
-    if (reinterpret_cast<const BdatInfo *>(unknown20.unknown10)->unknown02) {
+    if (reinterpret_cast<const BdatInfo *>(m_createInfo.unknown10)->unknown02) {
       text.format("summon");
       fw::debug::drawFont(static_cast<int>(screen.x), static_cast<int>(screen.y) + offset, mm::Col4::red, text.c_str());
     }
@@ -160,20 +160,20 @@ void GmkEnemyInsts::PopInfo::PopEnemyInfo::dispose() {
 
 // Unrolled by hand in the original (the game's constructor merges the last member of an entry with the first members of the next entry into one block of zero stores, which the construction loop of an
 // array does not).
-GmkEnemyInsts::PopInfo::PopInfo() : unknown00(0), unknown02(0), unknown08{PopEnemyInfo(), PopEnemyInfo(), PopEnemyInfo(), PopEnemyInfo()} {}
+GmkEnemyInsts::PopInfo::PopInfo() : unknown00(0), unknown02(0), m_popEnemyInfo{PopEnemyInfo(), PopEnemyInfo(), PopEnemyInfo(), PopEnemyInfo()} {}
 
 void GmkEnemyInsts::PopInfo::dispose() {
-  unknown08[0].dispose();
-  unknown08[1].dispose();
-  unknown08[2].dispose();
-  unknown08[3].dispose();
+  m_popEnemyInfo[0].dispose();
+  m_popEnemyInfo[1].dispose();
+  m_popEnemyInfo[2].dispose();
+  m_popEnemyInfo[3].dispose();
   unknown02 = 0;
 }
 
 int GmkEnemyInsts::PopInfo::getGobInstNum() const {
   int num = 0;
   for (u32 i = 0; i < 4; i++) {
-    num += unknown08[i].unknown001();
+    num += m_popEnemyInfo[i].unknown001();
   }
   return num;
 }
@@ -181,7 +181,7 @@ int GmkEnemyInsts::PopInfo::getGobInstNum() const {
 bool GmkEnemyInsts::PopInfo::isPopFinished() const {
   u8 *arrange = gf::GfDataBdat::getFP(gf::BDAT_CHR_EN_ARRANGE);
   for (u32 i = 0; i < 4; i++) {
-    const PopEnemyInfo &info = unknown08[i];
+    const PopEnemyInfo &info = m_popEnemyInfo[i];
     if (info.unknown00 != 0 && Bdat::getFlagVal(arrange, "Flag", info.unknown00, "Named") != 0 && gf::GfDataEnemy::getEnemySuppress(info.unknown00) != 0) {
       continue;
     }
@@ -195,7 +195,7 @@ bool GmkEnemyInsts::PopInfo::isPopFinished() const {
 void GmkEnemyInsts::PopInfo::removeDefeatedNamedEnemyInfo() {
   u8 *arrange = gf::GfDataBdat::getFP(gf::BDAT_CHR_EN_ARRANGE);
   for (u32 i = 0; i < 4; i++) {
-    PopEnemyInfo &info = unknown08[i];
+    PopEnemyInfo &info = m_popEnemyInfo[i];
     if (info.unknown10 != nullptr && info.unknown18 != nullptr) {
       if (Bdat::getFlagVal(arrange, "Flag", info.unknown00, "Named") != 0 && gf::GfDataEnemy::getEnemySuppress(info.unknown00) != 0) {
         info.dispose();
@@ -206,7 +206,7 @@ void GmkEnemyInsts::PopInfo::removeDefeatedNamedEnemyInfo() {
 
 bool GmkEnemyInsts::PopInfo::hasEneID(u16 eneId, bool flag) const {
   for (u32 i = 0; i < 4; i++) {
-    const PopEnemyInfo &info = unknown08[i];
+    const PopEnemyInfo &info = m_popEnemyInfo[i];
     if (info.unknown10 == nullptr || info.unknown18 == nullptr) {
       continue;
     }
@@ -222,7 +222,7 @@ bool GmkEnemyInsts::PopInfo::hasEneID(u16 eneId, bool flag) const {
 
 bool GmkEnemyInsts::PopInfo::hasTypeGenus(u8 genus, bool flag) const {
   for (u32 i = 0; i < 4; i++) {
-    const PopEnemyInfo &info = unknown08[i];
+    const PopEnemyInfo &info = m_popEnemyInfo[i];
     if (info.unknown10 == nullptr || info.unknown18 == nullptr) {
       continue;
     }
@@ -237,15 +237,15 @@ bool GmkEnemyInsts::PopInfo::hasTypeGenus(u8 genus, bool flag) const {
 }
 
 bool GmkEnemyInsts::isGobInstExist() const {
-  if (unknown00.unknown00 == nullptr || unknown00.unknown08.unknown00 == nullptr || unknown00.unknown10 <= 0) {
+  if (m_createInfo.m_aGmkBase == nullptr || m_createInfo.m_cBdatWrapper.unknown00 == nullptr || m_createInfo.unknown10 <= 0) {
     return false;
   }
-  return unknown98.unknown001() != 0;
+  return m_popInfo.unknown001() != 0;
 }
 
 bool GmkEnemyInsts::isPopFinished() const {
   if (!isGfObjNumFull(gf::OBJECT_TYPE_ENEMY) && (unknown178 & unknown004_0) && (unknown178 & unknown004_1)) {
-    return unknown98.isPopFinished();
+    return m_popInfo.isPopFinished();
   }
   return true;
 }
@@ -261,7 +261,7 @@ void GmkEnemyInsts::validateDisp(gf::GF_OBJ_HANDLE *handle) const {
 
 bool GmkEnemyInsts::isQuestDead() const {
   for (u32 i = 0; i < 4; i++) {
-    if (unknown98.unknown08[i].unknown002() != unknown98.unknown08[i].unknown04) {
+    if (m_popInfo.m_popEnemyInfo[i].unknown002() != m_popInfo.m_popEnemyInfo[i].unknown04) {
       return false;
     }
   }
@@ -271,14 +271,14 @@ bool GmkEnemyInsts::isQuestDead() const {
 int GmkEnemyInsts::getGobInstCapa() const {
   int capacity = 0;
   for (u32 i = 0; i < 4; i++) {
-    capacity += unknown98.unknown08[i].unknown04;
+    capacity += m_popInfo.m_popEnemyInfo[i].unknown04;
   }
   return capacity;
 }
 
 gf::GF_OBJ_HANDLE *GmkEnemyInsts::getGobInst(u32 index) const {
   for (u32 i = 0; i < 4; i++) {
-    const PopInfo::PopEnemyInfo &info = unknown98.unknown08[i];
+    const PopInfo::PopEnemyInfo &info = m_popInfo.m_popEnemyInfo[i];
     u32 num = info.unknown001();
     if (index < num) {
       u8 slot = index;
@@ -293,27 +293,28 @@ gf::GF_OBJ_HANDLE *GmkEnemyInsts::getGobInst(u32 index) const {
 }
 
 GmkEnemyInsts::GmkEnemyInsts()
-    : unknown00(), unknown38(), unknown88(), unknown90(), unknown98(), unknown140(true), unknown141(false), unknown144(), unknown150(nullptr), unknown158(false), unknown159(false), unknown15a(false),
-      unknown160(nullptr), unknown170(-1.0f), unknown178(0), unknown180(false) {}
+    : m_createInfo(), m_bdatInfo(), unknown88(), unknown90(), m_popInfo(), unknown140(true), unknown141(false), m_forcePopEnemyInfo(), m_gmkSquad(nullptr), unknown158(false), unknown159(false),
+      unknown15a(false), unknown160(nullptr), unknown170(-1.0f), unknown178(0), unknown180(false) {}
 
 void GmkEnemyInsts::create(const CreateInfo &info) {
   dispose();
-  unknown00 = info;
-  unknown38.create(info.unknown08, info.unknown10, *info.unknown00);
+  m_createInfo = info;
+  m_bdatInfo.create(info.m_cBdatWrapper, info.unknown10, *info.m_aGmkBase);
   unknown88.unknown00 = info.unknown14 * info.unknown14;
   unknown88.unknown04 = info.unknown18 * info.unknown18;
   unknown90.unknown00 = info.unknown1c * info.unknown1c;
   unknown90.unknown04 = info.unknown20 * info.unknown20;
-  u32 enemyNum =
-      static_cast<u8>(info.unknown08.getValCheck("ene1num", info.unknown10, BDAT_TYPE_UNKNOWN_1)) + static_cast<u8>(info.unknown08.getValCheck("ene2num", info.unknown10, BDAT_TYPE_UNKNOWN_1)) +
-      static_cast<u8>(info.unknown08.getValCheck("ene3num", info.unknown10, BDAT_TYPE_UNKNOWN_1)) + static_cast<u8>(info.unknown08.getValCheck("ene4num", info.unknown10, BDAT_TYPE_UNKNOWN_1));
-  createSquad(unknown38.unknown04, enemyNum, unknown38.unknown06 * 0.01f);
+  u32 enemyNum = static_cast<u8>(info.m_cBdatWrapper.getValCheck("ene1num", info.unknown10, BDAT_TYPE_UNKNOWN_1)) +
+                 static_cast<u8>(info.m_cBdatWrapper.getValCheck("ene2num", info.unknown10, BDAT_TYPE_UNKNOWN_1)) +
+                 static_cast<u8>(info.m_cBdatWrapper.getValCheck("ene3num", info.unknown10, BDAT_TYPE_UNKNOWN_1)) +
+                 static_cast<u8>(info.m_cBdatWrapper.getValCheck("ene4num", info.unknown10, BDAT_TYPE_UNKNOWN_1));
+  createSquad(m_bdatInfo.unknown04, enemyNum, m_bdatInfo.unknown06 * 0.01f);
   unknown160 = &GmkEnemyInsts::seqUpdatePopDepop;
 }
 
 void GmkEnemyInsts::disposeGobInsts(bool isFadeOut, bool isCheckBattle) {
   if (isGobInstExist()) {
-    u32 num = unknown98.unknown001();
+    u32 num = m_popInfo.unknown001();
     for (u32 i = 0; i < num; i++) {
       gf::GF_OBJ_HANDLE *handle = getGobInst(i);
       if (handle != gf::unknown020) {
@@ -326,7 +327,7 @@ void GmkEnemyInsts::disposeGobInsts(bool isFadeOut, bool isCheckBattle) {
         if (isFadeOut) {
           gmk::disposeGobInst(handle, 1.0f);
         } else {
-          unknown00.unknown00->unbindToGameObj(handle);
+          m_createInfo.m_aGmkBase->unbindToGameObj(handle);
           gf::GfObjUtil::destroy(handle);
         }
       }
@@ -334,7 +335,7 @@ void GmkEnemyInsts::disposeGobInsts(bool isFadeOut, bool isCheckBattle) {
     if (isFadeOut && !unknown180) {
       unknown160 = &GmkEnemyInsts::seqWaitToFadeOutOfGobInst;
     } else {
-      unknown98.dispose();
+      m_popInfo.dispose();
     }
     if (unknown158) {
       unknown159 = false;
@@ -342,37 +343,37 @@ void GmkEnemyInsts::disposeGobInsts(bool isFadeOut, bool isCheckBattle) {
   }
 }
 
-void GmkEnemyInsts::disposeSquad() { mm::mtl::safeRelease(unknown150); }
+void GmkEnemyInsts::disposeSquad() { mm::mtl::safeRelease(m_gmkSquad); }
 
 void GmkEnemyInsts::dispose() {
   unknown178 &= ~(unknown004_0 | unknown004_1 | unknown004_2);
   disposeGobInsts(false, false);
   disposeSquad();
-  unknown00 = CreateInfo();
+  m_createInfo = CreateInfo();
 }
 
 void GmkEnemyInsts::validateDisp() const {
-  u32 num = unknown98.getGobInstNum();
+  u32 num = m_popInfo.getGobInstNum();
   for (u32 i = 0; i < num; i++) {
     validateDisp(getGobInst(i));
   }
 }
 
 bool GmkEnemyInsts::reqForcePopGobInst(const ForcePopEnemyInfo &info) const {
-  if (unknown98.getGobInstNum() == 0) {
-    if (unknown38.unknown03 && !(unknown178 & unknown004_2)) {
+  if (m_popInfo.getGobInstNum() == 0) {
+    if (m_bdatInfo.unknown03 && !(unknown178 & unknown004_2)) {
       return false;
     }
     unknown141 = true;
-    unknown144 = info;
+    m_forcePopEnemyInfo = info;
     return true;
   }
   return false;
 }
 
 void GmkEnemyInsts::removeGobInst(gf::GF_OBJ_HANDLE *handle) {
-  unknown98.removeGobInst(handle, false);
-  if (unknown98.getGobInstNum() == 0) {
+  m_popInfo.removeGobInst(handle, false);
+  if (m_popInfo.getGobInstNum() == 0) {
     unknown159 = false;
   }
 }
@@ -396,39 +397,39 @@ void GmkEnemyInsts::seqUpdateRepopCounter(const UpdateInfo &info) {
       return;
     }
   }
-  unknown98.removeDefeatedNamedEnemyInfo();
+  m_popInfo.removeDefeatedNamedEnemyInfo();
   unknown160 = &GmkEnemyInsts::seqUpdatePopDepop;
 }
 
 void GmkEnemyInsts::createGobInsts() {
   disposeGobInsts(false, false);
   PopInfo::CreateInfo info;
-  info.unknown00 = unknown00.unknown08.unknown00;
-  info.unknown08 = unknown00.unknown10;
-  info.unknown0c = unknown144.unknown00;
-  unknown98.create(info);
+  info.unknown00 = m_createInfo.m_cBdatWrapper.unknown00;
+  info.unknown08 = m_createInfo.unknown10;
+  info.unknown0c = m_forcePopEnemyInfo.unknown00;
+  m_popInfo.create(info);
   if (unknown141) {
     unknown141 = false;
     unknown180 = true;
   } else {
-    unknown98.removeDefeatedNamedEnemyInfo();
+    m_popInfo.removeDefeatedNamedEnemyInfo();
   }
 }
 
 void GmkEnemyInsts::onEnemyDead(gf::GF_OBJ_HANDLE *handle) {
-  unknown00.unknown00->unbindToGameObj(handle);
-  unknown98.removeGobInst(handle, true);
-  if (unknown98.getGobInstNum() == 0) {
+  m_createInfo.m_aGmkBase->unbindToGameObj(handle);
+  m_popInfo.removeGobInst(handle, true);
+  if (m_popInfo.getGobInstNum() == 0) {
     unknown159 = false;
-    if (!unknown38.unknown03) {
-      unknown170 = unknown00.unknown24;
+    if (!m_bdatInfo.unknown03) {
+      unknown170 = m_createInfo.unknown24;
       unknown160 = &GmkEnemyInsts::seqUpdateRepopCounter;
     }
   }
 }
 
 void GmkEnemyInsts::seqWaitToFadeOutOfGobInst(const UpdateInfo &info) {
-  if (unknown98.unknown001() == 0) {
+  if (m_popInfo.unknown001() == 0) {
     unknown160 = &GmkEnemyInsts::seqUpdatePopDepop;
   }
 }
@@ -437,18 +438,18 @@ bool GmkEnemyInsts::canDepopGobInst() const {
   if (!isGobInstExist()) {
     return false;
   }
-  if (!unknown38.unknown03) {
+  if (!m_bdatInfo.unknown03) {
     if (!(unknown178 & unknown004_0) && !unknown180) {
       return true;
     }
-  } else if (unknown38.unknown0e.isEnable() && !unknown38.unknown0e.isMatch()) {
+  } else if (m_bdatInfo.m_scenarioFlagCond.isEnable() && !m_bdatInfo.m_scenarioFlagCond.isMatch()) {
     return true;
   }
   return !(unknown178 & unknown004_2);
 }
 
 void GmkEnemyInsts::updatePopDepopCond(const UpdateInfo &info) {
-  if (!unknown141 && !unknown38.isPopCondMatched()) {
+  if (!unknown141 && !m_bdatInfo.isPopCondMatched()) {
     unknown178 &= ~unknown004_0;
   } else {
     unknown178 |= unknown004_0;
@@ -462,7 +463,7 @@ void GmkEnemyInsts::updatePopDepopCond(const UpdateInfo &info) {
 }
 
 void GmkEnemyInsts::update(const UpdateInfo &info) {
-  if (unknown00.unknown00 == nullptr || unknown00.unknown08.unknown00 == nullptr || unknown00.unknown10 <= 0) {
+  if (m_createInfo.m_aGmkBase == nullptr || m_createInfo.m_cBdatWrapper.unknown00 == nullptr || m_createInfo.unknown10 <= 0) {
     return;
   }
   updatePopDepopCond(info);
@@ -471,7 +472,7 @@ void GmkEnemyInsts::update(const UpdateInfo &info) {
   }
 }
 
-bool GmkEnemy::PopXformFinder::isYSnap() const { return unknown08->getData()->unknown04; }
+bool GmkEnemy::PopXformFinder::isYSnap() const { return m_gmkEnemy->getData()->m_ySnap; }
 
 bool GmkEnemy::PopXformFinder::onPopGob(gf::GF_OBJ_HANDLE *handle) const { return true; }
 
@@ -484,11 +485,11 @@ void GmkEnemy::update(f32 deltaTime) {
   }
   GmkEnemyInsts::UpdateInfo info;
   PopXformFinder finder;
-  finder.unknown08 = this;
+  finder.m_gmkEnemy = this;
   info.unknown00 = deltaTime;
-  info.unknown08 = &unknown08.unknown08->unknown00;
-  info.unknown10 = &finder;
-  unknown48.update(info);
+  info.unknown08 = &m_createBaseInfo.m_xform->unknown00;
+  info.m_iPopXformFinder = &finder;
+  m_gmkEnemyInsts.update(info);
 }
 
 void GmkEnemy::create(const CreateInfo &info) {
@@ -497,28 +498,28 @@ void GmkEnemy::create(const CreateInfo &info) {
     GmkEnemyInsts::CreateInfo createInfo;
     // The game loads the info and the list (0x71005f0648, 0x71005f064c) before the call of getBindedBdatFp.
     const unknown071 *bdatInfo = info.unknown10;
-    const GmkEnemyList *list = static_cast<const GmkEnemyList *>(unknown08.unknown00);
-    createInfo.unknown00 = this;
-    createInfo.unknown08.unknown00 = list->getBindedBdatFp();
-    createInfo.unknown10 = unknown20.unknown18;
-    list->unknown228.unknown001(createInfo, *bdatInfo);
-    unknown48.create(createInfo);
+    const GmkEnemyList *list = static_cast<const GmkEnemyList *>(m_createBaseInfo.m_ownerGmkEnemyList);
+    createInfo.m_aGmkBase = this;
+    createInfo.m_cBdatWrapper.unknown00 = list->getBindedBdatFp();
+    createInfo.unknown10 = m_createInfo.unknown18;
+    list->m_bdatInfo.unknown001(createInfo, *bdatInfo);
+    m_gmkEnemyInsts.create(createInfo);
   } else {
     dispose();
   }
 }
 
 void GmkEnemy::dispose() {
-  unknown48.dispose();
+  m_gmkEnemyInsts.dispose();
   AGmkBase::dispose();
 }
 
 GmkType GmkEnemy::getGmkType() const { return GMK_TYPE; }
 
-IGmkList *GmkEnemy::getOwnerGmkEnemyList() const { return unknown08.unknown00; }
+IGmkList *GmkEnemy::getOwnerGmkEnemyList() const { return m_createBaseInfo.m_ownerGmkEnemyList; }
 
 bool GmkEnemy::isPointInsideRandomWalk(const mm::Vec3 &position) const {
-  const mm::Vec3 &center = unknown08.unknown08->unknown00;
+  const mm::Vec3 &center = m_createBaseInfo.m_xform->unknown00;
   f32 x = center.x - position.x;
   f32 y = center.y - position.y;
   f32 z = center.z - position.z;
@@ -528,7 +529,7 @@ bool GmkEnemy::isPointInsideRandomWalk(const mm::Vec3 &position) const {
 void GmkEnemy::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) {
   AGmkBase::onGobEvent(event, handle);
   if (event == gf::IGfObjListener::OBJEVT_UNKNOWN_3) {
-    unknown48.removeGobInst(handle);
+    m_gmkEnemyInsts.removeGobInst(handle);
   }
 }
 
@@ -540,24 +541,24 @@ mm::Vec3 &GmkEnemy::getPositionInRandomWalk(mm::Vec3 &result, f32 angleMin, f32 
   result.x = offset.x * rotation.rows[0][0] + offset.y * rotation.rows[1][0] + offset.z * rotation.rows[2][0];
   result.y = offset.x * rotation.rows[0][1] + offset.y * rotation.rows[1][1] + offset.z * rotation.rows[2][1];
   result.z = offset.x * rotation.rows[0][2] + offset.y * rotation.rows[1][2] + offset.z * rotation.rows[2][2];
-  result += unknown08.unknown08->unknown00;
+  result += m_createBaseInfo.m_xform->unknown00;
   return result;
 }
 
 bool GmkEnemy::isValid() const {
-  if (unknown08.unknown00 == nullptr || unknown20.unknown08 == nullptr || unknown20.unknown10 == nullptr) {
+  if (m_createBaseInfo.m_ownerGmkEnemyList == nullptr || m_createInfo.unknown08 == nullptr || m_createInfo.unknown10 == nullptr) {
     return false;
   }
-  if (unknown48.unknown00.unknown00 == nullptr || unknown48.unknown00.unknown08.unknown00 == nullptr) {
+  if (m_gmkEnemyInsts.m_createInfo.m_aGmkBase == nullptr || m_gmkEnemyInsts.m_createInfo.m_cBdatWrapper.unknown00 == nullptr) {
     return false;
   }
-  return unknown48.unknown00.unknown10 > 0;
+  return m_gmkEnemyInsts.m_createInfo.unknown10 > 0;
 }
 
 GmkEnemyList::GmkEnemyList(u32 updateGmkNumPerFrame) : TGmkList(updateGmkNumPerFrame), unknown240(0xffffffff) {}
 
 void GmkEnemyList::create(const CreateInfo &info) {
-  if (!unknown228.create()) {
+  if (!m_bdatInfo.create()) {
     dispose();
     return;
   }

@@ -45,17 +45,17 @@ public:
   void update(mm::mtl::IntrusivePtr<fw::ReferenceFrame> &frame, bool param2);
   void apply(mm::mtl::IntrusivePtr<fw::ReferenceFrame> &frame);
 
-  CreateInfo unknown00; // Inferred role: create info; original member name unknown.
-  BdatInfo unknown08;   // Inferred role: bdat info; original member name unknown.
-  mm::Vec3 unknown20;   // Inferred role: ground normal for the pitch; original member name unknown.
-  mm::Vec3 unknown30;   // Inferred role: ground normal for the roll; original member name unknown.
+  CreateInfo m_createInfo; // Inferred role: create info; original member name unknown.
+  BdatInfo m_bdatInfo;     // Inferred role: bdat info; original member name unknown.
+  mm::Vec3 unknown20;      // Inferred role: ground normal for the pitch; original member name unknown.
+  mm::Vec3 unknown30;      // Inferred role: ground normal for the roll; original member name unknown.
 };
 
 static_assert(sizeof(GfFieldUndulator::CreateInfo) == 0x8, "");
 static_assert(offsetof(GfFieldUndulator::BdatInfo, unknown04) == 0x04, "");
 static_assert(offsetof(GfFieldUndulator::BdatInfo, unknown14) == 0x14, "");
 static_assert(sizeof(GfFieldUndulator::BdatInfo) == 0x18, "");
-static_assert(offsetof(GfFieldUndulator, unknown08) == 0x08, "");
+static_assert(offsetof(GfFieldUndulator, m_bdatInfo) == 0x08, "");
 static_assert(offsetof(GfFieldUndulator, unknown20) == 0x20, "");
 static_assert(offsetof(GfFieldUndulator, unknown30) == 0x30, "");
 static_assert(sizeof(GfFieldUndulator) == 0x40, "");

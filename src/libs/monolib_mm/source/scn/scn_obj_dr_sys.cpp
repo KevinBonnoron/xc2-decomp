@@ -22,25 +22,25 @@
 
 namespace ml {
 
-ScnObjClipDySys::ScnObjClipDySys(Scn *scn, const void *data, int screen) : ScnObjClip(scn), unknown58(nullptr), unknown60(screen), m_name("clipList") { createClipObj(data); }
+ScnObjClipDySys::ScnObjClipDySys(Scn *scn, const void *data, int screen) : ScnObjClip(scn), m_drCalcClipObj(nullptr), unknown60(screen), m_name("clipList") { createClipObj(data); }
 
 void ScnObjClipDySys::createClipObj(const void *data) {
   DrCreator creator;
-  unknown58 = creator.createClipObj(data, unknown60);
+  m_drCalcClipObj = creator.createClipObj(data, unknown60);
 }
 
 ScnObjClipDySys::~ScnObjClipDySys() {
-  if (unknown58 != nullptr) {
-    unknown58->release();
+  if (m_drCalcClipObj != nullptr) {
+    m_drCalcClipObj->release();
   }
 }
 
 ScnObj *ScnObjClipDySys::create(Scn *scn, const void *data, int screen) {
-  if (!scn->unknown20->isValidInsert(TYPE_UNKNOWN_4)) {
+  if (!scn->m_scnPoolObj->isValidInsert(TYPE_UNKNOWN_4)) {
     return nullptr;
   }
-  ScnObjClipDySys *clip = new (scn->unknown64) ScnObjClipDySys(scn, data, screen);
-  scn->unknown20->insert(clip);
+  ScnObjClipDySys *clip = new (scn->m_ALLOC_HANDLE) ScnObjClipDySys(scn, data, screen);
+  scn->m_scnPoolObj->insert(clip);
   return clip;
 }
 
@@ -48,69 +48,69 @@ const char *ScnObjClipDySys::getName() const { return m_name.c_str(); }
 
 ScnObjEnvColiDr::ScnObjEnvColiDr(Scn *scn, const void *data, int screen) : ScnObjEnvColi(scn) {
   DrCreator creator;
-  unknown58 = creator.createEnvColi(data, screen);
+  m_drEnvColiObj = creator.createEnvColi(data, screen);
 }
 
 ScnObjEnvColiDr::~ScnObjEnvColiDr() {
-  if (unknown58 != nullptr) {
-    unknown58->release();
+  if (m_drEnvColiObj != nullptr) {
+    m_drEnvColiObj->release();
   }
 }
 
 void ScnObjEnvColiDr::setPause(bool isPause) {
-  if (unknown58 != nullptr) {
-    unknown58->setPause(isPause);
+  if (m_drEnvColiObj != nullptr) {
+    m_drEnvColiObj->setPause(isPause);
   }
 }
 
 bool ScnObjEnvColiDr::isPause() const {
-  if (unknown58 != nullptr) {
-    return unknown58->isPause();
+  if (m_drEnvColiObj != nullptr) {
+    return m_drEnvColiObj->isPause();
   }
   return false;
 }
 
 ScnObj *ScnObjEnvColiDr::create(Scn *scn, const void *data, int screen) {
-  if (!scn->unknown20->isValidInsert(TYPE_UNKNOWN_4)) {
+  if (!scn->m_scnPoolObj->isValidInsert(TYPE_UNKNOWN_4)) {
     return nullptr;
   }
-  ScnObjEnvColiDr *envColi = new (scn->unknown64) ScnObjEnvColiDr(scn, data, screen);
-  scn->unknown20->insert(envColi);
+  ScnObjEnvColiDr *envColi = new (scn->m_ALLOC_HANDLE) ScnObjEnvColiDr(scn, data, screen);
+  scn->m_scnPoolObj->insert(envColi);
   return envColi;
 }
 
-ScnObjIBLDr::ScnObjIBLDr(Scn *scn, const void *data, int screen) : ScnObjIBL(scn), unknown18(nullptr), unknown20(screen) { createIBLObj(data); }
+ScnObjIBLDr::ScnObjIBLDr(Scn *scn, const void *data, int screen) : ScnObjIBL(scn), m_drGlobalIBLPack(nullptr), unknown20(screen) { createIBLObj(data); }
 
 void ScnObjIBLDr::createIBLObj(const void *data) {
-  if (unknown18 == nullptr && unknown08->unknown38 != nullptr) {
-    DrMan *drMan = unknown08->unknown38->unknown10;
+  if (m_drGlobalIBLPack == nullptr && m_scn->unknown38 != nullptr) {
+    DrMan *drMan = m_scn->unknown38->m_drMan;
     if (drMan != nullptr) {
       DrGlobalIBLMan *globalIBLMan = drMan->unknown160[unknown20];
       if (globalIBLMan != nullptr) {
-        unknown18 = globalIBLMan->createObj(data);
+        m_drGlobalIBLPack = globalIBLMan->createObj(data);
       }
     }
   }
 }
 
 ScnObjIBLDr::~ScnObjIBLDr() {
-  if (unknown18 != nullptr && unknown08->unknown38 != nullptr) {
-    DrMan *drMan = unknown08->unknown38->unknown10;
+  if (m_drGlobalIBLPack != nullptr && m_scn->unknown38 != nullptr) {
+    DrMan *drMan = m_scn->unknown38->m_drMan;
     if (drMan != nullptr) {
       DrGlobalIBLMan *globalIBLMan = drMan->unknown160[unknown20];
       if (globalIBLMan != nullptr) {
-        globalIBLMan->releaseObj(unknown18);
+        globalIBLMan->releaseObj(m_drGlobalIBLPack);
       }
     }
   }
 }
 
 ScnObj *ScnObjIBLDr::create(Scn *scn, const void *data, int screen) {
-  if (!scn->unknown20->isValidInsert(TYPE_UNKNOWN_5)) {
+  if (!scn->m_scnPoolObj->isValidInsert(TYPE_UNKNOWN_5)) {
     return nullptr;
   }
-  ScnObjIBLDr *ibl = new (scn->unknown64) ScnObjIBLDr(scn, data, screen);
-  scn->unknown20->insert(ibl);
+  ScnObjIBLDr *ibl = new (scn->m_ALLOC_HANDLE) ScnObjIBLDr(scn, data, screen);
+  scn->m_scnPoolObj->insert(ibl);
   return ibl;
 }
 
@@ -118,12 +118,12 @@ void ScnObjIBLDr::setReferencePos(const mm::Vec3 &position) {}
 
 const mm::Vec3 &ScnObjIBLDr::getReferencePos() const { return mm::Vec3::zero; }
 
-void ScnObjIBLDr::setFromCaptureTool() { unknown18->unknown58 = 2; }
+void ScnObjIBLDr::setFromCaptureTool() { m_drGlobalIBLPack->m_fromCaptureTool = 2; }
 
 void ScnObjIBLDr::dispDebugWindow(bool isOpen, const char *title, WinProc *window) {}
 
 void ScnObjIBLDr::apply() {
-  DrGlobalIBLPack *pack = unknown18;
+  DrGlobalIBLPack *pack = m_drGlobalIBLPack;
   if (pack != nullptr) {
     pack->unknown50 = !isDisp() ? pack->unknown50 | DrGlobalIBLPack::FLAG_UNKNOWN_0 : pack->unknown50 & ~DrGlobalIBLPack::FLAG_UNKNOWN_0;
   }
@@ -133,26 +133,26 @@ void ScnObjIBLDr::setName(const char *name) {}
 
 const char *ScnObjIBLDr::getName() const { return "IBLList"; }
 
-ScnObjLightDrSys::ScnObjLightDrSys(Scn *scn, const void *data, int screen) : ScnObjLight(scn), m_data(data), unknown320(nullptr), unknown328(screen) { createDrLgt(); }
+ScnObjLightDrSys::ScnObjLightDrSys(Scn *scn, const void *data, int screen) : ScnObjLight(scn), m_data(data), m_drEnvironmentObj(nullptr), unknown328(screen) { createDrLgt(); }
 
 void ScnObjLightDrSys::createDrLgt() {
-  if (!unknown08->unknown20->isExistLgtEnv()) {
-    DrMan *drMan = unknown08->unknown38->unknown10;
+  if (!m_scn->m_scnPoolObj->isExistLgtEnv()) {
+    DrMan *drMan = m_scn->unknown38->m_drMan;
     drMan->unknownc0[unknown328]->releaseFastLight();
   }
   DrCreator creator;
-  unknown320 = creator.createLgt(m_data, unknown328);
+  m_drEnvironmentObj = creator.createLgt(m_data, unknown328);
 }
 
 ScnObjLightDrSys::~ScnObjLightDrSys() {
-  if (unknown320 != nullptr) {
-    unknown320->release();
+  if (m_drEnvironmentObj != nullptr) {
+    m_drEnvironmentObj->release();
   }
 }
 
 void ScnObjLightDrSys::apply() {
   getTrans(false)->update();
-  DrEnvironmentObj *drEnv = unknown320;
+  DrEnvironmentObj *drEnv = m_drEnvironmentObj;
   if (drEnv != nullptr) {
     if (isDisp()) {
       drEnv->unknown8c &= ~DrEnvironmentObj::FLAG_UNKNOWN_0;
@@ -160,10 +160,10 @@ void ScnObjLightDrSys::apply() {
       drEnv->unknown8c |= DrEnvironmentObj::FLAG_UNKNOWN_0;
     }
     if (isOfsMatrix()) {
-      unknown320->unknown8c |= DrEnvironmentObj::FLAG_UNKNOWN_3;
-      unknown320->setMatrix(getTrans(false)->unknown70);
+      m_drEnvironmentObj->unknown8c |= DrEnvironmentObj::FLAG_UNKNOWN_3;
+      m_drEnvironmentObj->setMatrix(getTrans(false)->unknown70);
     } else {
-      unknown320->unknown8c &= ~DrEnvironmentObj::FLAG_UNKNOWN_2;
+      m_drEnvironmentObj->unknown8c &= ~DrEnvironmentObj::FLAG_UNKNOWN_2;
     }
   }
 }
@@ -171,72 +171,72 @@ void ScnObjLightDrSys::apply() {
 void ScnObjLightDrSys::tail() {}
 
 f32 ScnObjLightDrSys::getFrame() const {
-  if (unknown320 != nullptr) {
-    return unknown320->getFrame();
+  if (m_drEnvironmentObj != nullptr) {
+    return m_drEnvironmentObj->getFrame();
   }
   return 0.0f;
 }
 
 void ScnObjLightDrSys::setFrame(f32 frame) {
-  if (unknown320 != nullptr) {
-    unknown320->setFrame(frame);
+  if (m_drEnvironmentObj != nullptr) {
+    m_drEnvironmentObj->setFrame(frame);
   }
 }
 
 f32 ScnObjLightDrSys::getMaxFrame() const {
-  if (unknown320 != nullptr) {
-    return unknown320->getMaxFrame();
+  if (m_drEnvironmentObj != nullptr) {
+    return m_drEnvironmentObj->getMaxFrame();
   }
   return 0.0f;
 }
 
 void ScnObjLightDrSys::setFrameSpd(f32 speed) {
-  if (unknown320 != nullptr) {
-    unknown320->setFrameSpd(speed);
+  if (m_drEnvironmentObj != nullptr) {
+    m_drEnvironmentObj->setFrameSpd(speed);
   }
 }
 
 f32 ScnObjLightDrSys::getFrameSpd() const {
-  if (unknown320 != nullptr) {
-    return unknown320->getFrameSpd();
+  if (m_drEnvironmentObj != nullptr) {
+    return m_drEnvironmentObj->getFrameSpd();
   }
   return 0.0f;
 }
 
-void ScnObjLightDrSys::setGroup(int group) { unknown320->unknown90 = group; }
+void ScnObjLightDrSys::setGroup(int group) { m_drEnvironmentObj->m_group = group; }
 
-int ScnObjLightDrSys::getGroup() const { return unknown320->unknown90; }
+int ScnObjLightDrSys::getGroup() const { return m_drEnvironmentObj->m_group; }
 
 void ScnObjLightDrSys::setOffsetPos(const mm::Vec3 &position) {
-  if (unknown320 != nullptr) {
-    unknown320->unknown70 = position;
+  if (m_drEnvironmentObj != nullptr) {
+    m_drEnvironmentObj->m_offsetPos = position;
   }
 }
 
-const mm::Vec3 &ScnObjLightDrSys::getOffsetPos() const { return unknown320->unknown70; }
+const mm::Vec3 &ScnObjLightDrSys::getOffsetPos() const { return m_drEnvironmentObj->m_offsetPos; }
 
 void ScnObjLightDrSys::setDeugDisp2D(bool isDisp) {
   if (isDisp) {
-    unknown320->unknown8c |= DrEnvironmentObj::FLAG_UNKNOWN_20;
+    m_drEnvironmentObj->unknown8c |= DrEnvironmentObj::FLAG_UNKNOWN_20;
   } else {
-    unknown320->unknown8c &= ~DrEnvironmentObj::FLAG_UNKNOWN_20;
+    m_drEnvironmentObj->unknown8c &= ~DrEnvironmentObj::FLAG_UNKNOWN_20;
   }
 }
 
-void ScnObjLightDrSys::setFromCaptureTool() { static_cast<DrEnvironmentObjLgt *>(unknown320)->unknown23c = 2; }
+void ScnObjLightDrSys::setFromCaptureTool() { static_cast<DrEnvironmentObjLgt *>(m_drEnvironmentObj)->m_fromCaptureTool = 2; }
 
 void ScnObjLightDrSys::setLocalIBLName(const char *name) {}
 
 ScnObj *ScnObjLightDrSys::create(Scn *scn, const void *data, int screen) {
-  if (!scn->unknown20->isValidInsert(TYPE_UNKNOWN_4)) {
+  if (!scn->m_scnPoolObj->isValidInsert(TYPE_UNKNOWN_4)) {
     return nullptr;
   }
-  ScnObjLightDrSys *light = new (scn->unknown64) ScnObjLightDrSys(scn, data, screen);
-  scn->unknown20->insert(light);
+  ScnObjLightDrSys *light = new (scn->m_ALLOC_HANDLE) ScnObjLightDrSys(scn, data, screen);
+  scn->m_scnPoolObj->insert(light);
   return light;
 }
 
-bool ScnObjLightDrSys::isEnv() const { return unknown320 != nullptr; }
+bool ScnObjLightDrSys::isEnv() const { return m_drEnvironmentObj != nullptr; }
 
 ScnObjModelDrSysStandard::ScnObjModelDrSysStandard(Scn *scn, const void *data, const char *name, int screen) : ScnObjModelDrSys(scn, data, name), _438(nullptr) { createScnMdl(screen); }
 
@@ -286,11 +286,11 @@ void ScnObjModelDrSysStandard::apply() {
 void ScnObjModelDrSysStandard::tail() { ScnObjModel::tail(); }
 
 ScnObjModelDrSysStandard *ScnObjModelDrSysStandard::create(Scn *scn, const void *data, const char *name, int screen) {
-  if (!scn->unknown20->isValidInsert(TYPE_UNKNOWN_1)) {
+  if (!scn->m_scnPoolObj->isValidInsert(TYPE_UNKNOWN_1)) {
     return nullptr;
   }
-  ScnObjModelDrSysStandard *model = new (scn->unknown64) ScnObjModelDrSysStandard(scn, data, name, screen);
-  scn->unknown20->insert(model);
+  ScnObjModelDrSysStandard *model = new (scn->m_ALLOC_HANDLE) ScnObjModelDrSysStandard(scn, data, name, screen);
+  scn->m_scnPoolObj->insert(model);
   return model;
 }
 

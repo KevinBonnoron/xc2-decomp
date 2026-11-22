@@ -17,7 +17,7 @@ public:
   void createString(mm::mtl::FixStr<256> &string);
 
 private:
-  ParamVariable unknown08[VARIABLE_UNKNOWN_10]; // Inferred role: variables; original member name unknown.
+  ParamVariable m_paramVariable[VARIABLE_UNKNOWN_10]; // Inferred role: variables; original member name unknown.
 };
 
 static_assert(sizeof(Param) == 0xf8, "");

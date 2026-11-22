@@ -41,11 +41,11 @@ public:
   s32 unknown1b0; // Inferred role: cpu group handle; original member name unknown.
   u8 _1b4[0x1b8 - 0x1b4];
   mm::mtl::FixedList<SCU, 16> unknown1b8; // Inferred role: sub cpu updates; original member name unknown.
-  LanguageInfo *unknown370;               // Inferred role: language info; original member name unknown.
+  LanguageInfo *m_languageInfo;           // Inferred role: language info; original member name unknown.
 };
 
 static_assert(offsetof(Device, unknown1b0) == 0x1b0, "");
 static_assert(offsetof(Device, unknown1b8) == 0x1b8, "");
-static_assert(offsetof(Device, unknown370) == 0x370, "");
+static_assert(offsetof(Device, m_languageInfo) == 0x370, "");
 
 } // namespace ml

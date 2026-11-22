@@ -47,11 +47,11 @@ public:
     void setMoveAlpha(f32 value);
     void setMoveVanish(f32 value);
 
-    GF_OBJ_HANDLE *unknown00; // Inferred role: object handle; original member name unknown.
-    u16 unknown08;            // Inferred role: set value flags; original member name unknown.
-    u16 unknown0a;            // Inferred role: curve type; original member name unknown.
-    f32 unknown0c;            // Inferred role: duration; original member name unknown.
-    bool unknown10;           // Inferred role: set by the CtrlParam constructor; original member name unknown.
+    GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: object handle; original member name unknown.
+    u16 unknown08;                  // Inferred role: set value flags; original member name unknown.
+    u16 unknown0a;                  // Inferred role: curve type; original member name unknown.
+    f32 unknown0c;                  // Inferred role: duration; original member name unknown.
+    bool unknown10;                 // Inferred role: set by the CtrlParam constructor; original member name unknown.
     u8 _11[0x14 - 0x11];
     f32 m_movePosX;
     f32 m_movePosY;

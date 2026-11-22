@@ -119,30 +119,30 @@ void GfMenuObjCommonJog::MainListener::reciveEvent(const ui::EventData &event, u
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1: {
-    u32 object = unknown20->unknown28->getSelectObject();
+    u32 object = m_menuObjCommonJog->unknown28->getSelectObject();
     GfMenuObjUtil::CtrlParam param;
     param.unknown08 = 0x80000;
     param.unknown00 = 0.25f;
     param.unknown2c = 1.0f;
     GfMenuObjUtil::startCtrl(object, param, nullptr);
-    unknown20->unknown5c = false;
+    m_menuObjCommonJog->unknown5c = false;
     break;
   }
   case 6: {
     u32 index = event.unknown08;
     int previous = event.unknown0c;
-    unknown20->unknown40 = unknown20->unknown28->getSelectObject();
-    unknown20->unknown28->setIndex(index);
+    m_menuObjCommonJog->unknown40 = m_menuObjCommonJog->unknown28->getSelectObject();
+    m_menuObjCommonJog->unknown28->setIndex(index);
     if (previous != -1) {
       bool isUp;
       if (previous < static_cast<int>(index)) {
-        if (previous == 0 && index == unknown20->unknown28->getSize() - 1) {
+        if (previous == 0 && index == m_menuObjCommonJog->unknown28->getSize() - 1) {
           isUp = true;
         } else {
           isUp = false;
         }
       } else if (index == 0) {
-        isUp = previous != static_cast<int>(unknown20->unknown28->getSize()) - 1;
+        isUp = previous != static_cast<int>(m_menuObjCommonJog->unknown28->getSize()) - 1;
       } else {
         isUp = true;
       }
@@ -163,9 +163,9 @@ void GfMenuObjCommonJog::MainListener::reciveEvent(const ui::EventData &event, u
       }
     }
     ui::UIObjectAcc text(acc.unknown10, "TXT_item");
-    if (unknown20->unknown48 != nullptr) {
-      int top = Bdat::getIdTop(unknown20->unknown48);
-      u32 textId = Bdat::getVal(unknown20->unknown48, "txt", top + index).valueU16;
+    if (m_menuObjCommonJog->unknown48 != nullptr) {
+      int top = Bdat::getIdTop(m_menuObjCommonJog->unknown48);
+      u32 textId = Bdat::getVal(m_menuObjCommonJog->unknown48, "txt", top + index).valueU16;
       ui::UIStr str(GfDataBdat::getFP(BDAT_MENU_JOG_MS), textId);
       text.setText(str);
     }
@@ -173,39 +173,39 @@ void GfMenuObjCommonJog::MainListener::reciveEvent(const ui::EventData &event, u
     break;
   }
   case 0x21:
-    if (!unknown20->unknown5c) {
+    if (!m_menuObjCommonJog->unknown5c) {
       u64 param = event.unknown08_u64;
-      if (unknown20->setup(param, param >> 32)) {
-        unknown20->unknown38->moveCenterOffset(mm::Pnt<s16>(0, 0), true);
-        unknown20->unknown5e = param;
-        unknown20->unknown5c = true;
+      if (m_menuObjCommonJog->setup(param, param >> 32)) {
+        m_menuObjCommonJog->unknown38->moveCenterOffset(mm::Pnt<s16>(0, 0), true);
+        m_menuObjCommonJog->unknown5e = param;
+        m_menuObjCommonJog->unknown5c = true;
       }
     }
     break;
   case 0x22:
-    if (unknown20->unknown5c && unknown20->unknown38 != nullptr) {
+    if (m_menuObjCommonJog->unknown5c && m_menuObjCommonJog->unknown38 != nullptr) {
       ui::UIObjectAcc(acc.unknown10, "TXT_item").setDisp(false);
-      unknown20->unknown38->moveCenterOffset(mm::Pnt<s16>(unknown20->unknown58, 0), true);
-      unknown20->unknown5c = false;
+      m_menuObjCommonJog->unknown38->moveCenterOffset(mm::Pnt<s16>(m_menuObjCommonJog->unknown58, 0), true);
+      m_menuObjCommonJog->unknown5c = false;
     }
     break;
   case 8: {
     u32 index = event.unknown08;
     u16 input = event.unknown0c_u16;
     if (input == 1) {
-      if (!ui::UIObjectAcc(unknown20->unknown28->getSelectObject(), "IMG_item_icon").isDisp()) {
+      if (!ui::UIObjectAcc(m_menuObjCommonJog->unknown28->getSelectObject(), "IMG_item_icon").isDisp()) {
         GfMenuObjUtil::playSECommon(2);
       } else {
-        u16 menu = Bdat::getVal(unknown20->unknown48, "fs_menu_id", (index & 0xffff) + 1).valueU16;
+        u16 menu = Bdat::getVal(m_menuObjCommonJog->unknown48, "fs_menu_id", (index & 0xffff) + 1).valueU16;
         if (menu != 0) {
-          u16 next = Bdat::getVal(unknown20->unknown50, "next_jog", menu).valueU16;
+          u16 next = Bdat::getVal(m_menuObjCommonJog->unknown50, "next_jog", menu).valueU16;
           if (next == 0) {
-            u16 layer = Bdat::getVal(unknown20->unknown50, "layer_id", menu).valueU16;
+            u16 layer = Bdat::getVal(m_menuObjCommonJog->unknown50, "layer_id", menu).valueU16;
             if (layer != 0) {
               GfMenuObject::addResultCallContext(acc.unknown10, 3, layer);
             }
           } else {
-            unknown20->startJogChange(next, -1);
+            m_menuObjCommonJog->startJogChange(next, -1);
           }
         }
         GfMenuObject::addResultCallContext(acc.unknown10, 2, index & 0xffff);
@@ -216,7 +216,7 @@ void GfMenuObjCommonJog::MainListener::reciveEvent(const ui::EventData &event, u
   }
   case 0xe:
     if (ui::UICtrlObject::getEventCtrlObjID(event) == 1) {
-      unknown20->listenerItemRevlover(event);
+      m_menuObjCommonJog->listenerItemRevlover(event);
     }
   default:
     ui::UIObjectListener::reciveEvent(event, handle);
@@ -228,9 +228,9 @@ void GfMenuObjCommonJog::MainListener::reciveEvent(const ui::EventData &event, u
     GfMenuObject::disableInput(acc.unknown10);
     break;
   case 0x103:
-    if (!unknown20->unknown68.empty()) {
-      const GfMenuObjCommonJog::unknown002 &last = unknown20->unknown68.back();
-      unknown20->startJogChange(last.unknown00, last.unknown02);
+    if (!m_menuObjCommonJog->unknown68.empty()) {
+      const GfMenuObjCommonJog::unknown002 &last = m_menuObjCommonJog->unknown68.back();
+      m_menuObjCommonJog->startJogChange(last.unknown00, last.unknown02);
     }
     break;
   }

@@ -12,27 +12,27 @@ namespace gf {
 
 // Inferred role: save data party member; original type name unknown.
 struct unknown123 {
-  u16 unknown00; // Inferred role: driver; original member name unknown.
-  u16 unknown02; // Inferred role: hierarchy driver; original member name unknown.
-  u16 unknown04; // Inferred role: hierarchy blade; original member name unknown.
+  u16 m_driver;          // Inferred role: driver; named after the game accessor gf::GfDataParty::getDriver.
+  u16 m_hierarchyDriver; // Inferred role: hierarchy driver; named after the game accessor gf::GfGameParty::getHierarchyDriver.
+  u16 m_hierarchyBlade;  // Inferred role: hierarchy blade; named after the game accessor gf::GfGameParty::getHierarchyBlade.
 };
 
 // Inferred role: save data party; original type name unknown.
 struct unknown124 {
-  unknown123 unknown00[10]; // Inferred role: members; original member name unknown.
-  u32 unknown3c;            // Inferred role: leader object type; original member name unknown.
-  u32 unknown40;            // Inferred role: leader; original member name unknown.
-  u32 unknown44;            // Inferred role: saved leader object type; original member name unknown.
-  u32 unknown48;            // Inferred role: saved leader; original member name unknown.
-  u16 unknown4c;            // Inferred role: party gauge; original member name unknown.
-  u16 unknown4e[2];         // Inferred role: clear rex blades; original member name unknown.
+  unknown123 m_partyMember[10]; // Inferred role: members; named after the game accessor gf::GfDataParty::getPartyMember.
+  u32 unknown3c;                // Inferred role: leader object type; original member name unknown.
+  u32 m_leaderBdatID;           // Inferred role: leader; named after the game accessor gf::GfGameParty::getLeaderBdatID.
+  u32 unknown44;                // Inferred role: saved leader object type; original member name unknown.
+  u32 unknown48;                // Inferred role: saved leader; original member name unknown.
+  u16 m_partyGauge;             // Inferred role: party gauge; named after the game accessor gf::GfGameParty::getPartyGauge.
+  u16 unknown4e[2];             // Inferred role: clear rex blades; original member name unknown.
   u8 _052[0x054 - 0x052];
 };
 
 static_assert(sizeof(unknown123) == 0x06, "");
 static_assert(offsetof(unknown124, unknown3c) == 0x03c, "");
-static_assert(offsetof(unknown124, unknown40) == 0x040, "");
-static_assert(offsetof(unknown124, unknown4c) == 0x04c, "");
+static_assert(offsetof(unknown124, m_leaderBdatID) == 0x040, "");
+static_assert(offsetof(unknown124, m_partyGauge) == 0x04c, "");
 static_assert(offsetof(unknown124, unknown4e) == 0x04e, "");
 static_assert(sizeof(unknown124) == 0x054, "");
 

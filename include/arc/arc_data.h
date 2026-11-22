@@ -49,8 +49,8 @@ public:
   const unknown002 *begin() const;
   const unknown002 *end() const;
 
-  unknown001 *unknown00; // Inferred role: data; original member name unknown.
-  unknown002 *unknown08; // Inferred role: file table; original member name unknown.
+  unknown001 *unknown00;    // Inferred role: data; original member name unknown.
+  unknown002 *m_fileHeader; // Inferred role: file table; named after the game accessor arc::CArcData::getFileHeader.
 };
 
 static_assert(offsetof(CArcData::unknown001, unknown08) == 0x08, "");

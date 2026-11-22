@@ -39,17 +39,17 @@ public:
   // Evidence: the 0x30 bytes copied to this + 0x28 by createImpl (1.0.0: 0x710017f338), the defaults stored by the constructor (0x710017fb90)
   // and the stack object built by PlacementGroundSolver::createFootPlacementIK (0x7100182a10).
   struct Description {
-    Description() : unknown00(""), unknown08(""), unknown10(""), unknown18(180.0f), unknown1c(20.0f), unknown20(0.1f), unknown24(false), unknown25(false), unknown28() {}
+    Description() : unknown00(""), unknown08(""), unknown10(""), unknown18(180.0f), unknown1c(20.0f), unknown20(0.1f), unknown24(false), unknown25(false), m_paramAdapter() {}
 
-    const char *unknown00;  // Inferred role: foot bone name; original member name unknown.
-    const char *unknown08;  // Inferred role: second bone name; original member name unknown.
-    const char *unknown10;  // Inferred role: third bone name; original member name unknown.
-    f32 unknown18;          // Inferred role: angle in degrees; original member name unknown.
-    f32 unknown1c;          // Inferred role: angle in degrees; original member name unknown.
-    f32 unknown20;          // Inferred role: distance; original member name unknown.
-    bool unknown24;         // Inferred role: unknown; original member name unknown.
-    bool unknown25;         // Inferred role: mirror flag; original member name unknown.
-    ParamAdapter unknown28; // Inferred role: foot placement param; original member name unknown.
+    const char *unknown00;       // Inferred role: foot bone name; original member name unknown.
+    const char *unknown08;       // Inferred role: second bone name; original member name unknown.
+    const char *unknown10;       // Inferred role: third bone name; original member name unknown.
+    f32 unknown18;               // Inferred role: angle in degrees; original member name unknown.
+    f32 unknown1c;               // Inferred role: angle in degrees; original member name unknown.
+    f32 unknown20;               // Inferred role: distance; original member name unknown.
+    bool unknown24;              // Inferred role: unknown; original member name unknown.
+    bool unknown25;              // Inferred role: mirror flag; original member name unknown.
+    ParamAdapter m_paramAdapter; // Inferred role: foot placement param; original member name unknown.
   };
 
   static mm::mtl::RTTI m_rtti;
@@ -96,11 +96,11 @@ public:
   const mm::mtl::RTTI *getRTTI() const override;
 
   anm::FootPlacementIKSolver *unknown20; // Inferred role: anim foot placement solver; original member name unknown.
-  Description unknown28;                 // Inferred role: description copy; original member name unknown.
+  Description m_description;             // Inferred role: description copy; original member name unknown.
   u16 unknown58;                         // Inferred role: foot bone index; original member name unknown.
   u8 _5a[0x60 - 0x5a];
-  mm::Vec3 unknown60;         // Inferred role: foot position; original member name unknown.
-  anm::QsTransform unknown70; // Inferred role: foot bone transform; original member name unknown.
+  mm::Vec3 unknown60;             // Inferred role: foot position; original member name unknown.
+  anm::QsTransform m_qsTransform; // Inferred role: foot bone transform; original member name unknown.
   // Inferred role: flags; original member name unknown. The game reads the raycast flags with ldrb (getRaycastUp, 0x7100180324)
   // although the up distance follows at 0xa4: through a plain u32 member clang widens the over-aligned load to 64 bits (GVN);
   // through the bit flag class (align 4 `this`, as event::Manager::unknown18) the byte load stays.
@@ -108,24 +108,24 @@ public:
   f32 unknowna4; // Inferred role: raycast up distance; original member name unknown.
   f32 unknowna8; // Inferred role: raycast down distance; original member name unknown.
   u8 _ac[0xb0 - 0xac];
-  mm::Quat unknownb0;               // Inferred role: ground angle; original member name unknown.
-  mm::Quat unknownc0;               // Inferred role: unknown; original member name unknown.
-  IKFootGroundInterface *unknownd0; // Inferred role: foot ground interface; original member name unknown.
+  mm::Quat unknownb0;                             // Inferred role: ground angle; original member name unknown.
+  mm::Quat unknownc0;                             // Inferred role: unknown; original member name unknown.
+  IKFootGroundInterface *m_iKFootGroundInterface; // Inferred role: foot ground interface; original member name unknown.
   u8 _d8[0xe0 - 0xd8];
 };
 
 static_assert(offsetof(FootPlacementIKSolver, unknown20) == 0x20, "");
-static_assert(offsetof(FootPlacementIKSolver, unknown28) == 0x28, "");
-static_assert(offsetof(FootPlacementIKSolver::Description, unknown28) == 0x28, "");
+static_assert(offsetof(FootPlacementIKSolver, m_description) == 0x28, "");
+static_assert(offsetof(FootPlacementIKSolver::Description, m_paramAdapter) == 0x28, "");
 static_assert(sizeof(FootPlacementIKSolver::Description) == 0x30, "");
 static_assert(offsetof(FootPlacementIKSolver, unknown58) == 0x58, "");
 static_assert(offsetof(FootPlacementIKSolver, unknown60) == 0x60, "");
-static_assert(offsetof(FootPlacementIKSolver, unknown70) == 0x70, "");
+static_assert(offsetof(FootPlacementIKSolver, m_qsTransform) == 0x70, "");
 static_assert(offsetof(FootPlacementIKSolver, unknowna4) == 0xa4, "");
 static_assert(offsetof(FootPlacementIKSolver, unknowna8) == 0xa8, "");
 static_assert(offsetof(FootPlacementIKSolver, unknownb0) == 0xb0, "");
 static_assert(offsetof(FootPlacementIKSolver, unknownc0) == 0xc0, "");
-static_assert(offsetof(FootPlacementIKSolver, unknownd0) == 0xd0, "");
+static_assert(offsetof(FootPlacementIKSolver, m_iKFootGroundInterface) == 0xd0, "");
 static_assert(sizeof(FootPlacementIKSolver) == 0xe0, "");
 
 void buildDescFromParam(ParamAdapter &param, anm::FootPlacementIKSolver::Description *description);

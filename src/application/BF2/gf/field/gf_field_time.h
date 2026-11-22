@@ -37,10 +37,10 @@ struct ElapseTime {
 static_assert(sizeof(ElapseTime) == 4, "");
 
 struct GameTime {
-  u32 unknown00_0 : 6;  // Inferred role: second; original member name unknown.
-  u32 unknown00_6 : 6;  // Inferred role: minute; original member name unknown.
-  u32 unknown01_4 : 5;  // Inferred role: hour; original member name unknown.
-  u32 unknown02_1 : 15; // Inferred role: day; original member name unknown.
+  u32 m_sec : 6;  // Inferred role: second; named after the game accessor gf::GfFieldTime::getSec.
+  u32 m_min : 6;  // Inferred role: minute; named after the game accessor gf::GfFieldTime::getMin.
+  u32 m_hour : 5; // Inferred role: hour; named after the game accessor gf::GfFieldTime::getHour.
+  u32 m_day : 15; // Inferred role: day; named after the game accessor gf::GfFieldTime::getDay.
 
   u32 convMin() const;
   u32 convSec() const;

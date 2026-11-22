@@ -59,11 +59,11 @@ class GfComBehaviorEnemy : public GfComBehavior, public IGfBehFieldOwner {
 public:
   class Listener {
   public:
-    Listener() : unknown08(nullptr) {}
+    Listener() : m_comBehaviorEnemy(nullptr) {}
 
     virtual void onWkStandbyLogout();
 
-    GfComBehaviorEnemy *unknown08; // Inferred role: owner; original member name unknown.
+    GfComBehaviorEnemy *m_comBehaviorEnemy; // Inferred role: owner; original member name unknown.
   };
 
   static mm::mtl::RTTI m_rtti;
@@ -137,19 +137,19 @@ public:
   }
 
   // Inferred helper: moves the field behavior toward its goal; original name unknown.
-  void unknown003(f32 deltaTime) { unknown140.moveToGoal(deltaTime); }
+  void unknown003(f32 deltaTime) { m_behaviorEnemyField.moveToGoal(deltaTime); }
 
   // Inferred helper: squad of the squad navi of the field behavior; original name unknown.
-  gmk::GmkSquad *unknown009() const { return unknown140.unknown50.unknown10.unknown00; }
+  gmk::GmkSquad *unknown009() const { return m_behaviorEnemyField.m_gmkSquadNavi.m_createInfo.m_gmkSquad; }
 
-  ai::Hfsm unknowna0;                                   // Inferred role: state machine; original member name unknown.
+  ai::Hfsm m_hfsm;                                      // Inferred role: state machine; original member name unknown.
   bool unknown128;                                      // Inferred role: state machine is not set up, true by default; original member name unknown.
-  GfMenuCallContext *unknown130;                        // Inferred role: target info menu context; original member name unknown.
+  GfMenuCallContext *m_menuCallContext;                 // Inferred role: target info menu context; original member name unknown.
   mm::mtl::IntrusivePtr<fw::ReferenceFrame> unknown138; // Inferred role: search base bone frame; original member name unknown.
-  GfBehaviorEnemyField unknown140;                      // Inferred role: field behavior; original member name unknown.
+  GfBehaviorEnemyField m_behaviorEnemyField;            // Inferred role: field behavior; original member name unknown.
   TFieldExecCmdTurn<GfComAsm> unknown53f0;              // Inferred role: turn command; original member name unknown.
-  GfFieldUndulator unknown5460;                         // Inferred role: undulator; original member name unknown.
-  GfFieldDmg unknown54a0;                               // Inferred role: field damage; original member name unknown.
+  GfFieldUndulator m_fieldUndulator;                    // Inferred role: undulator; original member name unknown.
+  GfFieldDmg m_fieldDmg;                                // Inferred role: field damage; original member name unknown.
   u8 _54c8[0x54d0 - 0x54c8];
   mm::Vec3 unknown54d0; // Inferred role: velocity; original member name unknown.
   bool unknown54e0;     // Inferred role: battle lock counted; original member name unknown.
@@ -158,23 +158,23 @@ public:
   bool unknown54e3;     // Inferred role: request to change to the battle state from another squad member; original member name unknown.
   bool unknown54e4;     // Role and original member name unknown.
   u8 _54e5[0x54e8 - 0x54e5];
-  void *unknown54e8;    // Inferred role: viewer; original member name unknown.
-  Listener unknown54f0; // Inferred role: listener; original member name unknown.
-  u8 unknown5500;       // Inferred role: weapon alpha requests; original member name unknown.
-  u8 unknown5501;       // Inferred role: weapon alpha values; original member name unknown.
+  void *unknown54e8;   // Inferred role: viewer; original member name unknown.
+  Listener m_listener; // Inferred role: listener; original member name unknown.
+  u8 unknown5500;      // Inferred role: weapon alpha requests; original member name unknown.
+  u8 unknown5501;      // Inferred role: weapon alpha values; original member name unknown.
 };
 
-static_assert(offsetof(GfComBehaviorEnemy, unknowna0) == 0xa0, "");
+static_assert(offsetof(GfComBehaviorEnemy, m_hfsm) == 0xa0, "");
 static_assert(offsetof(GfComBehaviorEnemy, unknown128) == 0x128, "");
-static_assert(offsetof(GfComBehaviorEnemy, unknown130) == 0x130, "");
+static_assert(offsetof(GfComBehaviorEnemy, m_menuCallContext) == 0x130, "");
 static_assert(offsetof(GfComBehaviorEnemy, unknown138) == 0x138, "");
-static_assert(offsetof(GfComBehaviorEnemy, unknown140) == 0x140, "");
+static_assert(offsetof(GfComBehaviorEnemy, m_behaviorEnemyField) == 0x140, "");
 static_assert(offsetof(GfComBehaviorEnemy, unknown53f0) == 0x53f0, "");
-static_assert(offsetof(GfComBehaviorEnemy, unknown54a0) == 0x54a0, "");
+static_assert(offsetof(GfComBehaviorEnemy, m_fieldDmg) == 0x54a0, "");
 static_assert(offsetof(GfComBehaviorEnemy, unknown54d0) == 0x54d0, "");
 static_assert(offsetof(GfComBehaviorEnemy, unknown54e0) == 0x54e0, "");
 static_assert(offsetof(GfComBehaviorEnemy, unknown54e8) == 0x54e8, "");
-static_assert(offsetof(GfComBehaviorEnemy, unknown54f0) == 0x54f0, "");
+static_assert(offsetof(GfComBehaviorEnemy, m_listener) == 0x54f0, "");
 static_assert(offsetof(GfComBehaviorEnemy, unknown5500) == 0x5500, "");
 static_assert(sizeof(GfComBehaviorEnemy::Listener) == 0x10, "");
 static_assert(sizeof(GfComBehaviorEnemy) == 0x5510, "");

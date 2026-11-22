@@ -21,11 +21,11 @@ public:
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isCondMatched() const;
 
-    u16 unknown00;              // Inferred role: condition; original member name unknown.
-    u8 unknown02;               // Inferred role: lock type; original member name unknown.
-    u16 unknown04;              // Inferred role: text id; original member name unknown.
-    ScenarioFlagCond unknown06; // Inferred role: scenario flag; original member name unknown.
-    QuestFlagCond unknown0a;    // Inferred role: quest flag; original member name unknown.
+    u16 unknown00;                       // Inferred role: condition; original member name unknown.
+    u8 unknown02;                        // Inferred role: lock type; original member name unknown.
+    u16 unknown04;                       // Inferred role: text id; original member name unknown.
+    ScenarioFlagCond m_scenarioFlagCond; // Inferred role: scenario flag; original member name unknown.
+    QuestFlagCond m_questFlagCond;       // Inferred role: quest flag; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_FIELD_LOCK; // Inferred name; shared by every gimmick class for the TGmkList templates.
@@ -39,14 +39,14 @@ public:
   void debugDraw() const override;
   void createGmkCollision();
 
-  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(m_createInfo.unknown10); }
 
-  GmkCollision unknown50; // Inferred role: collision; original member name unknown.
-  f32 unknownc0;          // Inferred role: time since the party leader entered the lock; original member name unknown.
+  GmkCollision m_gmkCollision; // Inferred role: collision; original member name unknown.
+  f32 unknownc0;               // Inferred role: time since the party leader entered the lock; original member name unknown.
 };
 
 static_assert(sizeof(GmkFieldLock::BdatInfo) == 0xe, "");
-static_assert(offsetof(GmkFieldLock, unknown50) == 0x50, "");
+static_assert(offsetof(GmkFieldLock, m_gmkCollision) == 0x50, "");
 static_assert(offsetof(GmkFieldLock, unknownc0) == 0xc0, "");
 static_assert(sizeof(GmkFieldLock) == 0xd0, "");
 

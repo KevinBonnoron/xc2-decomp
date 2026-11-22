@@ -22,12 +22,12 @@ void StateFieldWallJump::leave(GfComBehaviorPc *behavior, ai::State *next) {
   StateUtilField::setSpecialActStatus(*behavior, false);
   StateUtilField::notifySkillAct(*behavior, false);
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
-  const MsgPcFieldNotifyWallJump *info = property->unknown310.getWallJumpInfo();
+  const MsgPcFieldNotifyWallJump *info = property->m_propertyField.getWallJumpInfo();
   if (info != nullptr) {
     if (property->unknown111_2) {
       SCOM_QUEST_GIMMICK::createJump(info->unknown2c, 0.0f);
     }
-    property->unknown310.setWallJump(nullptr);
+    property->m_propertyField.setWallJump(nullptr);
   }
   property->unknown120 = 2;
 }

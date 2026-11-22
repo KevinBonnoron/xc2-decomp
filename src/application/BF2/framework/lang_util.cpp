@@ -9,8 +9,8 @@ namespace {
 
 // Inferred role: lang folders; original type name unknown.
 struct unknown082 {
-  mm::mtl::FixStr<16> unknown00[LangUtil::LANG_TYPE_UNKNOWN_15];  // Inferred role: lang; original member name unknown.
-  mm::mtl::FixStr<16> unknown12c[LangUtil::LANG_TYPE_UNKNOWN_15]; // Inferred role: voice; original member name unknown.
+  mm::mtl::FixStr<16> m_langFolder[LangUtil::LANG_TYPE_UNKNOWN_15];  // Inferred role: lang; named after the game accessor fw::LangUtil::getLangFolder.
+  mm::mtl::FixStr<16> m_voiceFolder[LangUtil::LANG_TYPE_UNKNOWN_15]; // Inferred role: voice; named after the game accessor fw::LangUtil::getVoiceFolder.
 };
 
 unknown082 s_folders;
@@ -23,7 +23,7 @@ void LangUtil::initialize() {
   LangType lang = static_cast<LangType>(ml::DevSetting::getLang());
   m_selectLang = lang;
   m_defaultLang = lang;
-  LangType voice = static_cast<LangType>(__builtin_strcmp(s_folders.unknown12c[lang].c_str(), "jp") != 0);
+  LangType voice = static_cast<LangType>(__builtin_strcmp(s_folders.m_voiceFolder[lang].c_str(), "jp") != 0);
   m_selectVoice = voice;
   m_defaultVoice = voice;
 }
@@ -57,7 +57,7 @@ LangUtil::LangList &LangUtil::getLangList(LangList &list) {
   for (ml::LangType devLang : devLangs) {
     std::pair<LangType, mm::mtl::FixStr<16>> lang;
     lang.first = static_cast<LangType>(devLang);
-    lang.second = s_folders.unknown00[lang.first];
+    lang.second = s_folders.m_langFolder[lang.first];
     list.push_back(lang);
   }
   return list;
@@ -72,7 +72,7 @@ void LangUtil::setVoiceType(LangType type) {
       return;
     }
   }
-  m_selectVoice = static_cast<LangType>(__builtin_strcmp(s_folders.unknown12c[m_selectLang].c_str(), "jp") != 0);
+  m_selectVoice = static_cast<LangType>(__builtin_strcmp(s_folders.m_voiceFolder[m_selectLang].c_str(), "jp") != 0);
 }
 
 LangUtil::LangList &LangUtil::getVoiceList(LangList &list) {
@@ -80,7 +80,7 @@ LangUtil::LangList &LangUtil::getVoiceList(LangList &list) {
   LangList langs;
   getLangList(langs);
   for (const std::pair<LangType, mm::mtl::FixStr<16>> &lang : langs) {
-    const mm::mtl::FixStr<16> &folder = s_folders.unknown12c[lang.first];
+    const mm::mtl::FixStr<16> &folder = s_folders.m_voiceFolder[lang.first];
     bool isFound = false;
     for (const std::pair<LangType, mm::mtl::FixStr<16>> &voice : list) {
       if (__builtin_strcmp(voice.second.c_str(), folder.c_str()) == 0) {
@@ -98,8 +98,8 @@ LangUtil::LangList &LangUtil::getVoiceList(LangList &list) {
   return list;
 }
 
-const mm::mtl::FixStr<16> &LangUtil::getLangFolder() { return s_folders.unknown00[m_selectLang]; }
+const mm::mtl::FixStr<16> &LangUtil::getLangFolder() { return s_folders.m_langFolder[m_selectLang]; }
 
-const mm::mtl::FixStr<16> &LangUtil::getVoiceFolder() { return s_folders.unknown12c[m_selectVoice]; }
+const mm::mtl::FixStr<16> &LangUtil::getVoiceFolder() { return s_folders.m_voiceFolder[m_selectVoice]; }
 
 } // namespace fw

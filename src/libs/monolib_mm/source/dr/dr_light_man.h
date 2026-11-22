@@ -52,28 +52,28 @@ public:
   void updatePnt();
   void updateSpt();
 
-  DrLightObj *unknown000;       // Inferred role: first ambient light; original member name unknown.
-  DrLightObj *unknown008;       // Inferred role: last ambient light; original member name unknown.
-  DrLightObj *unknown010;       // Inferred role: first directional light; original member name unknown.
-  DrLightObj *unknown018;       // Inferred role: last directional light; original member name unknown.
-  DrLightObj *unknown020;       // Inferred role: first point light; original member name unknown.
-  DrLightObj *unknown028;       // Inferred role: last point light; original member name unknown.
-  DrLightObj *unknown030;       // Inferred role: first spot light; original member name unknown.
-  DrLightObj *unknown038;       // Inferred role: last spot light; original member name unknown.
-  DrLightObj *unknown040[2][2]; // Inferred role: first and last requested ambient light per buffer; original member name unknown.
-  DrLightObj *unknown060[2][2]; // Inferred role: first and last requested directional light per buffer; original member name unknown.
-  DrLightObj *unknown080[2][2]; // Inferred role: first and last requested point light per buffer; original member name unknown.
-  DrLightObj *unknown0a0[2][2]; // Inferred role: first and last requested spot light per buffer; original member name unknown.
-  DrLightObj *unknown0c0[2];    // Inferred role: first and last requested instant point light; original member name unknown.
-  DrLightObj *unknown0d0[2];    // Inferred role: first and last requested instant spot light; original member name unknown.
-  DrMan *unknowne0;             // Inferred role: dr man; original member name unknown.
-  DrShdLgtMan *unknowne8;       // Inferred role: shd light man; original member name unknown.
-  DrLightObjAmb *unknown0f0;    // Inferred role: fast ambient light; original member name unknown.
-  DrLightObjDir *unknown0f8;    // Inferred role: fast directional light; original member name unknown.
-  s32 unknown100;               // Inferred role: ambient light count; original member name unknown.
-  s32 unknown104;               // Inferred role: directional light count; original member name unknown.
-  s32 unknown108;               // Inferred role: instant point light count; original member name unknown.
-  s32 unknown10c;               // Inferred role: instant spot light count; original member name unknown.
+  DrLightObj *unknown000;         // Inferred role: first ambient light; original member name unknown.
+  DrLightObj *unknown008;         // Inferred role: last ambient light; original member name unknown.
+  DrLightObj *unknown010;         // Inferred role: first directional light; original member name unknown.
+  DrLightObj *unknown018;         // Inferred role: last directional light; original member name unknown.
+  DrLightObj *unknown020;         // Inferred role: first point light; original member name unknown.
+  DrLightObj *unknown028;         // Inferred role: last point light; original member name unknown.
+  DrLightObj *unknown030;         // Inferred role: first spot light; original member name unknown.
+  DrLightObj *unknown038;         // Inferred role: last spot light; original member name unknown.
+  DrLightObj *unknown040[2][2];   // Inferred role: first and last requested ambient light per buffer; original member name unknown.
+  DrLightObj *unknown060[2][2];   // Inferred role: first and last requested directional light per buffer; original member name unknown.
+  DrLightObj *unknown080[2][2];   // Inferred role: first and last requested point light per buffer; original member name unknown.
+  DrLightObj *unknown0a0[2][2];   // Inferred role: first and last requested spot light per buffer; original member name unknown.
+  DrLightObj *unknown0c0[2];      // Inferred role: first and last requested instant point light; original member name unknown.
+  DrLightObj *unknown0d0[2];      // Inferred role: first and last requested instant spot light; original member name unknown.
+  DrMan *m_drMan;                 // Inferred role: dr man; original member name unknown.
+  DrShdLgtMan *m_drShdLgtMan;     // Inferred role: shd light man; original member name unknown.
+  DrLightObjAmb *m_drLightObjAmb; // Inferred role: fast ambient light; original member name unknown.
+  DrLightObjDir *m_drLightObjDir; // Inferred role: fast directional light; original member name unknown.
+  s32 unknown100;                 // Inferred role: ambient light count; original member name unknown.
+  s32 unknown104;                 // Inferred role: directional light count; original member name unknown.
+  s32 unknown108;                 // Inferred role: instant point light count; original member name unknown.
+  s32 unknown10c;                 // Inferred role: instant spot light count; original member name unknown.
   u8 _110[0x120 - 0x110];
   mm::Col3 unknown120; // Inferred role: ambient color of the other buffer; original member name unknown.
   mm::Col3 unknown12c; // Inferred role: ambient color; original member name unknown.
@@ -97,9 +97,9 @@ static_assert(offsetof(DrLightMan, unknown080) == 0x80, "");
 static_assert(offsetof(DrLightMan, unknown0a0) == 0xa0, "");
 static_assert(offsetof(DrLightMan, unknown0c0) == 0xc0, "");
 static_assert(offsetof(DrLightMan, unknown0d0) == 0xd0, "");
-static_assert(offsetof(DrLightMan, unknowne0) == 0xe0, "");
-static_assert(offsetof(DrLightMan, unknowne8) == 0xe8, "");
-static_assert(offsetof(DrLightMan, unknown0f0) == 0xf0, "");
+static_assert(offsetof(DrLightMan, m_drMan) == 0xe0, "");
+static_assert(offsetof(DrLightMan, m_drShdLgtMan) == 0xe8, "");
+static_assert(offsetof(DrLightMan, m_drLightObjAmb) == 0xf0, "");
 static_assert(offsetof(DrLightMan, unknown100) == 0x100, "");
 static_assert(offsetof(DrLightMan, unknown108) == 0x108, "");
 static_assert(offsetof(DrLightMan, unknown10c) == 0x10c, "");
@@ -112,8 +112,8 @@ static_assert(offsetof(DrLightMan, unknown168) == 0x168, "");
 static_assert(offsetof(DrLightMan, unknown1b8) == 0x1b8, "");
 static_assert(offsetof(DrLightMan, unknown1b9) == 0x1b9, "");
 
-// Inferred role: deletes every object of a list linked through unknown10 and empties the list; shared by DrLightMan::releaseAll and
-// DrEnvironmentMan::releaseAll; original name unknown.
+// Inferred role: deletes every object of a list linked through unknown10 and empties the list, used by DrLightMan::releaseAll
+// (DrEnvironmentMan::releaseAll does the same with DrResChankList::unknown005); original name unknown.
 template <class T> void unknown2100(T *&first, T *&last) {
   T *object = first;
   while (object != nullptr) {

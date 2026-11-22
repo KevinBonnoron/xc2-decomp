@@ -67,23 +67,23 @@ void GfComPropertyPc::setPadControl(bool padControl) {
   }
 
   resetParams();
-  unknown310.resetStatus(*this);
+  m_propertyField.resetStatus(*this);
 }
 
 void GfComPropertyPc::resetParams() {
   fw::ParamManager *manager = fw::ParamManager::get();
   unknown300 = manager->unknown408[13];
   if (unknown111_2) {
-    unknown310.unknown08 = manager->unknown408[14];
+    m_propertyField.unknown08 = manager->unknown408[14];
   } else {
-    unknown310.unknown08 = manager->unknown408[15];
+    m_propertyField.unknown08 = manager->unknown408[15];
   }
 }
 
 void GfComPropertyPc::cleanup() {
-  unknown470.cleanup(*this);
-  unknown310.cleanup(*this);
-  unknown310.unknown08 = nullptr;
+  m_battleProperty.cleanup(*this);
+  m_propertyField.cleanup(*this);
+  m_propertyField.unknown08 = nullptr;
   unknown300 = nullptr;
   unknown38 = 0xffffffff;
   unknown3c = 0;
@@ -92,7 +92,7 @@ void GfComPropertyPc::cleanup() {
 void GfComPropertyPc::writeBack() {
   GfComTransform *transform = unknown08->getComponent<GfComTransform>();
   transform->unknown10->unknown003() = unknown160;
-  if (transform->unknown10->unknowna8 != nullptr) {
+  if (transform->unknown10->m_referenceFrame != nullptr) {
     transform->unknown10->syncLocalTransform();
   }
   if (transform->unknown18.get() != nullptr) {
@@ -165,10 +165,10 @@ void GfComPropertyPc::setInputDirPow(const mm::Vec3 &direction, f32 power) {
   unknown60.unknown04 = input.z * power;
 }
 
-EnviromentSensor *GfComPropertyPc::getEnvSensor() const { return &unknown08->getComponent<GfComEnvSensor>()->unknown10; }
+EnviromentSensor *GfComPropertyPc::getEnvSensor() const { return &unknown08->getComponent<GfComEnvSensor>()->m_envSensor; }
 
 void GfComPropertyPc::setEnvSensorCheckFlags(u32 flags, bool isEnable) {
-  EnviromentSensor *sensor = &unknown08->getComponent<GfComEnvSensor>()->unknown10;
+  EnviromentSensor *sensor = &unknown08->getComponent<GfComEnvSensor>()->m_envSensor;
   if (isEnable) {
     sensor->m_envSensorCheckFlags |= flags;
   } else {
@@ -177,7 +177,7 @@ void GfComPropertyPc::setEnvSensorCheckFlags(u32 flags, bool isEnable) {
 }
 
 bool GfComPropertyPc::testEnvSensorCheckFlags(EnviromentSensor::Flag flag) {
-  EnviromentSensor *sensor = &mm::mtl::dynamicCast<GfComEnvSensor>(unknown08->unknown38[GfComEnvSensor::COMPONENT_INDEX])->unknown10;
+  EnviromentSensor *sensor = &mm::mtl::dynamicCast<GfComEnvSensor>(unknown08->unknown38[GfComEnvSensor::COMPONENT_INDEX])->m_envSensor;
   return (sensor->m_envSensorCheckFlags & flag) != 0;
 }
 
@@ -198,10 +198,10 @@ bool GfComPropertyPc::recieveMessage(fw::MessageObject *sender, fw::Message &mes
     procMsgPcFieldNotifyChangePlayerID(sender, static_cast<MsgPcFieldNotifyChangePlayerID &>(message));
     return true;
   }
-  if (unknown110_0 && unknown310.recieveMessage(*this, sender, message)) {
+  if (unknown110_0 && m_propertyField.recieveMessage(*this, sender, message)) {
     return true;
   }
-  if (unknown110_1 && unknown470.recieveMessage(*this, sender, message)) {
+  if (unknown110_1 && m_battleProperty.recieveMessage(*this, sender, message)) {
     return true;
   }
   return GfComProperty::recieveMessage(sender, message);

@@ -27,15 +27,15 @@ constexpr u32 unknown002 = 2;
 // Inferred role: common text window opened when the list is empty; original name unknown.
 constexpr u32 unknown003 = 0x47;
 
-GfMenuObjCylinderSelect::GfMenuObjCylinderSelect(u32 handle) : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr) {
-  unknown40 = GfMenuCallContext::create();
+GfMenuObjCylinderSelect::GfMenuObjCylinderSelect(u32 handle) : GfMenuObject(handle), m_menuItemList(nullptr), unknown30(nullptr), unknown38(nullptr), m_menuCallContext(nullptr) {
+  m_menuCallContext = GfMenuCallContext::create();
 }
 
 GfMenuObjCylinderSelect::~GfMenuObjCylinderSelect() {
-  mm::mtl::safeRelease(unknown40);
+  mm::mtl::safeRelease(m_menuCallContext);
   mm::mtl::safeRelease(unknown38);
   mm::mtl::safeRelease(unknown30);
-  mm::mtl::safeRelease(unknown28);
+  mm::mtl::safeRelease(m_menuItemList);
 }
 
 void GfMenuObjCylinderSelect::finalize() { GfMenuObject::finalize(); }
@@ -76,7 +76,7 @@ void GfMenuObjCylinderSelect::MainListener::reciveEvent(const ui::EventData &eve
   case 3:
     if (event.unknown08 == 1) {
       GfMenuObject::resetInputSelection(acc.unknown10);
-      GfMenuObject::setupInputSelectionFromList(acc.unknown10, *unknown20->unknown28);
+      GfMenuObject::setupInputSelectionFromList(acc.unknown10, *m_menuObjCylinderSelect->m_menuItemList);
       GfMenuObject::enableInput(acc.unknown10);
     } else if (event.unknown08 == 2) {
       GfMenuObject::termCallContext(acc.unknown10);
@@ -87,18 +87,18 @@ void GfMenuObjCylinderSelect::MainListener::reciveEvent(const ui::EventData &eve
     u32 index = event.unknown08;
     if (index != 0xffffffff) {
       u32 previous = event.unknown0c;
-      unknown20->unknown28->setIndex(index);
-      unknown20->unknown30->setIndex(index);
+      m_menuObjCylinderSelect->m_menuItemList->setIndex(index);
+      m_menuObjCylinderSelect->unknown30->setIndex(index);
       if (previous != 0xffffffff && index != previous) {
         GfMenuObjUtil::playSECommonCursor();
       }
-      unknown20->unknown38->setDisp(true);
+      m_menuObjCylinderSelect->unknown38->setDisp(true);
     }
     return;
   }
   case 8: {
     if (event.unknown0c == 1) {
-      GfMenuObject::addResultCallContext(acc.unknown10, unknown20->unknown28->getContents(unknown20->unknown28->getIndex(false)).unknown04, 0);
+      GfMenuObject::addResultCallContext(acc.unknown10, m_menuObjCylinderSelect->m_menuItemList->getContents(m_menuObjCylinderSelect->m_menuItemList->getIndex(false)).unknown04, 0);
       GfMenuObjUtil::playSECommonDecide();
     } else if (event.unknown0c == 2) {
       GfMenuObject::addResultCallContext(acc.unknown10, 0, 1);
@@ -118,30 +118,30 @@ void GfMenuObjCylinderSelect::MainListener::reciveEvent(const ui::EventData &eve
     u32 item = event.unknown08;
     GfMenuItemList::ItemBoxSetup setup;
     GfDataBdat::getFP(BDAT_ITM_SALVAGE_LIST);
-    setup.unknown00.unknown08 = 10;
-    setup.unknown00.unknown10 = true;
+    setup.m_setupParam.unknown08 = 10;
+    setup.m_setupParam.unknown10 = true;
     setup.unknown14 = ItemType::ITEM_TYPE_UNKNOWN_5;
-    unknown20->unknown28->setupFromBox(setup);
-    if (unknown20->unknown28->getSize() == 0) {
-      unknown20->unknown40->reset();
-      GfMenuObjCommonText::open(unknown20->unknown40, unknown003, 0);
-      GfMenuObject::setCallContextEventHandler(unknown20->unknown40, acc.unknown10);
+    m_menuObjCylinderSelect->m_menuItemList->setupFromBox(setup);
+    if (m_menuObjCylinderSelect->m_menuItemList->getSize() == 0) {
+      m_menuObjCylinderSelect->m_menuCallContext->reset();
+      GfMenuObjCommonText::open(m_menuObjCylinderSelect->m_menuCallContext, unknown003, 0);
+      GfMenuObject::setCallContextEventHandler(m_menuObjCylinderSelect->m_menuCallContext, acc.unknown10);
     } else {
       u32 i = 0;
-      while (i < unknown20->unknown28->getSize()) {
-        MenuItemInfo info = unknown20->unknown28->getContents(i);
+      while (i < m_menuObjCylinderSelect->m_menuItemList->getSize()) {
+        MenuItemInfo info = m_menuObjCylinderSelect->m_menuItemList->getContents(i);
         ItemProperty property;
         GfItemUtil::getProperty(property, info.unknown04, 0);
         if (property.unknown00.test(ItemProperty::FLAG_UNKNOWN_4) && info.unknown04 != item) {
-          unknown20->unknown28->decItem(info, false);
+          m_menuObjCylinderSelect->m_menuItemList->decItem(info, false);
         } else {
           i++;
         }
       }
-      unknown20->unknown28->sort(unknown093_13, true);
+      m_menuObjCylinderSelect->m_menuItemList->sort(unknown093_13, true);
       GfMenuObjUtil::unknown002(acc.unknown10);
     }
-    unknown20->unknown38->setDisp(false);
+    m_menuObjCylinderSelect->unknown38->setDisp(false);
     break;
   }
   case 0x42:

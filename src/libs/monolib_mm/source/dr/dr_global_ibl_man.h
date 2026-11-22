@@ -33,16 +33,16 @@ public:
   mm::mtl::Vector<DrLightObjGlobalIBL *> unknown28; // Inferred role: light objects; original member name unknown.
   u32 unknown50;                                    // Inferred role: flags; original member name unknown.
   u32 unknown54;                                    // Inferred role: flags of the previous update; original member name unknown.
-  u8 unknown58;                                     // Inferred role: capture mode; original member name unknown.
-  grlib::CGLibVtlMemPool unknown60;                 // Inferred role: gpu memory pool; original member name unknown.
+  u8 m_fromCaptureTool;                             // Inferred role: capture mode; named after the game accessor ml::ScnObjIBLDr::setFromCaptureTool.
+  grlib::CGLibVtlMemPool m_cGLibVtlMemPool;         // Inferred role: gpu memory pool; original member name unknown.
 };
 
 static_assert(offsetof(DrGlobalIBLPack, unknown08) == 0x08, "");
 static_assert(offsetof(DrGlobalIBLPack, unknown18) == 0x18, "");
 static_assert(offsetof(DrGlobalIBLPack, unknown28) == 0x28, "");
 static_assert(offsetof(DrGlobalIBLPack, unknown50) == 0x50, "");
-static_assert(offsetof(DrGlobalIBLPack, unknown58) == 0x58, "");
-static_assert(offsetof(DrGlobalIBLPack, unknown60) == 0x60, "");
+static_assert(offsetof(DrGlobalIBLPack, m_fromCaptureTool) == 0x58, "");
+static_assert(offsetof(DrGlobalIBLPack, m_cGLibVtlMemPool) == 0x60, "");
 
 class DrGlobalIBLMan {
 public:
@@ -113,7 +113,7 @@ public:
   void releaseObj(DrGlobalIBLPack *pack);
   void update();
 
-  DrMan *unknown00;        // Inferred role: dr man; original member name unknown.
+  DrMan *m_drMan;          // Inferred role: dr man; original member name unknown.
   s32 unknown08;           // Inferred role: view index; original member name unknown.
   unknown001 unknown10[2]; // Inferred role: packs created per double buffer; original member name unknown.
   unknown001 unknown30;    // Inferred role: running packs; original member name unknown.

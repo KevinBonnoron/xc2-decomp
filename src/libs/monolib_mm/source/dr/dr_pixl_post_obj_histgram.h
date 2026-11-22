@@ -31,7 +31,7 @@ public:
   int getSectionNum() const;
   f32 getPercentage(u32 index) const;
 
-  DrResUseQueryObj *unknown18; // Inferred role: occlusion query; original member name unknown.
+  DrResUseQueryObj *m_drResUseQueryObj; // Inferred role: occlusion query; original member name unknown.
   f32 m_maxLuminance[11];
   f32 m_percentage[11];
   u32 unknown78[11]; // Inferred role: sample counts; original member name unknown.
@@ -43,7 +43,7 @@ public:
   bool unknownb8;    // Inferred role: valid tone ave range; original member name unknown.
 };
 
-static_assert(offsetof(DrPixlPostObjHistgram, unknown18) == 0x18, "");
+static_assert(offsetof(DrPixlPostObjHistgram, m_drResUseQueryObj) == 0x18, "");
 static_assert(offsetof(DrPixlPostObjHistgram, m_maxLuminance) == 0x20, "");
 static_assert(offsetof(DrPixlPostObjHistgram, m_percentage) == 0x4c, "");
 static_assert(offsetof(DrPixlPostObjHistgram, unknown78) == 0x78, "");

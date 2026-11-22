@@ -24,6 +24,16 @@ void ShpereCollObj::calc(anm::Pose &pose) {
   unknown10 = world + mm::Vec3(transform.unknown00.x, transform.unknown00.y, transform.unknown00.z);
 }
 
+void CapsuleCollObj::calc(anm::Pose &pose) {
+  const anm::QsTransform &transform = pose.getBoneModelSpace(unknown30);
+  mm::Vec3 localPosition(unknown00->unknown20.x, unknown00->unknown20.y, unknown00->unknown20.z);
+  mm::Vec3 worldPosition = transform.unknown10.rotate(localPosition);
+  mm::Vec3 center = worldPosition + mm::Vec3(transform.unknown00.x, transform.unknown00.y, transform.unknown00.z);
+  unknown20 = mm::Quat::mul(unknown00->unknown30, transform.unknown10).rotate(mm::Vec3::unitY);
+  f32 half = unknown00->unknown44 * 0.5f;
+  unknown10 = center - unknown20 * half;
+}
+
 bool ShpereCollObj::detect(f32 radius, const mm::Vec3 &position, mm::Vec3 *normal) const {
   mm::Vec3 direction = position - unknown10;
   f32 distance = sqrtf(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z);

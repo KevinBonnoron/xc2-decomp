@@ -51,9 +51,9 @@ bool CCsvbUtility::GetCsvbInfo(stCsvbInfo &info, const void *data, u32 size, boo
     EndianSwap4(&info.unknown00.unknown08);
     EndianSwap4(&info.unknown00.unknown0c);
   }
-  info.unknown10 = reinterpret_cast<const stCsvbRowInfo *>(header + 1);
-  info.unknown18 = reinterpret_cast<const stCsvbDataInfo *>(reinterpret_cast<const u8 *>(info.unknown10) + info.unknown00.unknown04 * sizeof(stCsvbRowInfo));
-  info.unknown20 = reinterpret_cast<const u8 *>(info.unknown18 + info.unknown00.unknown06);
+  info.m_stCsvbRowInfo = reinterpret_cast<const stCsvbRowInfo *>(header + 1);
+  info.m_stCsvbDataInfo = reinterpret_cast<const stCsvbDataInfo *>(reinterpret_cast<const u8 *>(info.m_stCsvbRowInfo) + info.unknown00.unknown04 * sizeof(stCsvbRowInfo));
+  info.unknown20 = reinterpret_cast<const u8 *>(info.m_stCsvbDataInfo + info.unknown00.unknown06);
   info.unknown28 = reinterpret_cast<const char *>(info.unknown20 + info.unknown00.unknown08);
   return static_cast<size_t>(reinterpret_cast<const u8 *>(info.unknown28) + info.unknown00.unknown0c - static_cast<const u8 *>(data)) <= size;
 }

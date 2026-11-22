@@ -95,13 +95,13 @@ void GfComEffectCaster::procMsgObjectNotifyDamage(fw::MessageObject *object, Msg
 void GfComEffectCaster::procMsgObjectNotifyDead(fw::MessageObject *object, MsgObjectNotifyDead &message) {}
 
 bool GfComEffectCaster::getEfpMatrix(const char *name, mm::Mat44 &matrix) {
-  if (unknown388 != nullptr) {
-    if (unknown388->unknown10 == nullptr) {
+  if (m_effectCaster != nullptr) {
+    if (m_effectCaster->unknown10 == nullptr) {
       return false;
     }
-    int index = unknown388->unknown10->getPointIndex(name);
+    int index = m_effectCaster->unknown10->getPointIndex(name);
     if (index != -1) {
-      matrix.unknown009(unknown388->unknown10->getPointTransform(index), unknown388->unknown60);
+      matrix.unknown009(m_effectCaster->unknown10->getPointTransform(index), m_effectCaster->unknown60);
       return true;
     }
   }
@@ -146,8 +146,8 @@ void GfComEffectCaster::cleanup() {
     if (param->unknown58 != 0) {
       fw::EffectManager::get()->remove(param->unknown58);
     }
-    if (param->unknown6e && unknown390 != nullptr) {
-      unknown390->unknown88(param->unknown34.c_str());
+    if (param->unknown6e && m_effectPoint != nullptr) {
+      m_effectPoint->unknown88(param->unknown34.c_str());
     }
   }
   unknown3a0.clear();
@@ -162,18 +162,18 @@ void GfComEffectCaster::cleanup() {
     }
   }
   unknown40.clear();
-  fw::EffectCasterBase *caster = unknown388;
+  fw::EffectCasterBase *caster = m_effectCaster;
   if (caster != nullptr) {
     if (caster->unknown10 != nullptr) {
       caster->unknown10->unknown002();
       caster->unknown10 = nullptr;
     }
     caster->_40 = true;
-    unknown388 = nullptr;
+    m_effectCaster = nullptr;
   }
-  if (unknown390 != nullptr) {
-    unknown390->unknown002();
-    unknown390 = nullptr;
+  if (m_effectPoint != nullptr) {
+    m_effectPoint->unknown002();
+    m_effectPoint = nullptr;
   }
 }
 
@@ -186,11 +186,11 @@ fw::EffectPack *GfComEffectCaster::getEffectPack(GF_ASSET_HANDLE *handle) {
 }
 
 const char *GfComEffectCaster::getEfpData(const char *name, mm::Mat44 &matrix) {
-  if (unknown388 == nullptr || unknown388->unknown10 == nullptr) {
+  if (m_effectCaster == nullptr || m_effectCaster->unknown10 == nullptr) {
     return nullptr;
   }
-  const char *parentName = unknown388->unknown10->getParentName(name);
-  matrix = unknown388->unknown10->getOffset(name);
+  const char *parentName = m_effectCaster->unknown10->getParentName(name);
+  matrix = m_effectCaster->unknown10->getOffset(name);
   return parentName;
 }
 
@@ -248,7 +248,7 @@ void GfComEffectCaster::updateParam(GfComEffectCaster *caster, Param *param, f32
 
 void GfComEffectCaster::getWpnMat(mm::Mat44 &matrix) { matrix = unknown002(unknown113d0, unknown11410); }
 
-fw::EffectPoint *GfComEffectCaster::getEffectPoint() { return unknown390; }
+fw::EffectPoint *GfComEffectCaster::getEffectPoint() { return m_effectPoint; }
 
 bool GfComEffectCaster::getValidEffectName(const char *name) const { return true; }
 
@@ -277,7 +277,7 @@ u32 GfComEffectCaster::calcWeaponID() const {
   return GfDataWeapon::getEffWeaponType(paramAcc.getWeaponType(-1, false));
 }
 
-void GfComEffectCaster::setCaster(u32 effect) { fw::EffectManager::get()->setParam(effect, unknown388, 1.0f); }
+void GfComEffectCaster::setCaster(u32 effect) { fw::EffectManager::get()->setParam(effect, m_effectCaster, 1.0f); }
 
 bool GfComEffectCaster::setSpeed(u32 effect, f32 speed) {
   Param *param = findEffectCasterParam(effect);
@@ -355,8 +355,8 @@ void GfComEffectCaster::addMountEffectEv(const EffectMountSetupEv &setup) {
   tbl.unknown40 = setup.unknown40;
   tbl.unknown42 = setup.unknown42;
   if (tbl.unknown41) {
-    if (unknown390 != nullptr) {
-      tbl.unknown28 = unknown390->unknown68(tbl.unknown00.c_str());
+    if (m_effectPoint != nullptr) {
+      tbl.unknown28 = m_effectPoint->unknown68(tbl.unknown00.c_str());
     } else {
       GfComModel *model = unknown08->getComponent<GfComModel>();
       if (model != nullptr) {
@@ -371,13 +371,13 @@ bool GfComEffectCaster::removeMountEffectEv(u32 effect) {
   for (EventEfHandleTbl *tbl = unknownc3b0.begin(); tbl != unknownc3b0.end(); tbl++) {
     if (tbl->unknown24 == effect) {
       if (tbl->unknown41) {
-        if (unknown390 == nullptr) {
+        if (m_effectPoint == nullptr) {
           GfComModel *model = unknown08->getComponent<GfComModel>();
           if (model != nullptr) {
             model->destroyBoneReferenceFrame(tbl->unknown00.c_str());
           }
         } else {
-          unknown390->unknown88(tbl->unknown00.c_str());
+          m_effectPoint->unknown88(tbl->unknown00.c_str());
         }
       }
       unknownc3b0.erase(tbl);

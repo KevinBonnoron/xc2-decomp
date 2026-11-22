@@ -49,7 +49,7 @@ Manager::~Manager() {
 }
 
 void Manager::play(const char *name, gf::GF_OBJ_HANDLE *handle, u32 param0, u32 param1, u32 param2, u32 param3, bool isEndFadeOut) {
-  unknown298 = LANGUAGE_MODE_UNKNOWN_0;
+  m_languageMode = LANGUAGE_MODE_UNKNOWN_0;
   unknown280 = handle;
   unknown288[0] = param0;
   unknown288[1] = param1;
@@ -92,7 +92,7 @@ void Manager::update() {
   execMessage(MSG_TYPE_UNKNOWN_15);
   if (unknown1c.test(STATE_UNKNOWN_0)) {
     SeqManager *seq = mm::mtl::Singleton<SeqManager>::getPtr();
-    if (!seq->unknown200.isEmpty() && seq->unknown200.unknown001() == &seq->unknown128) {
+    if (!seq->unknown200.isEmpty() && seq->unknown200.unknown001() == &seq->m_end_wait) {
       execMessage(MSG_TYPE_UNKNOWN_12);
       execMessage(MSG_TYPE_UNKNOWN_13);
       clear();
@@ -120,7 +120,7 @@ bool Manager::init(const char *name) {
     unknown230 = name;
     unknown254 = name;
     SeqManager *seq = mm::mtl::Singleton<SeqManager>::getPtr();
-    if (seq->unknown200.isEmpty() || seq->unknown200.unknown001() != &seq->unknown18) {
+    if (seq->unknown200.isEmpty() || seq->unknown200.unknown001() != &seq->m_play_next) {
       if (!ml::ProcDesktop::isDispInfo()) {
         unknown18.set(FLAG_UNKNOWN_10);
       }
@@ -132,7 +132,7 @@ bool Manager::init(const char *name) {
     unknown1c.set(STATE_UNKNOWN_0);
   }
   SeqManager *seq = mm::mtl::Singleton<SeqManager>::getPtr();
-  return !seq->unknown200.isExist(&seq->unknown30);
+  return !seq->unknown200.isExist(&seq->m_start_areajump);
 }
 
 bool Manager::startScene(const char *name, int pageID) {
@@ -143,8 +143,8 @@ bool Manager::startScene(const char *name, int pageID) {
     unknown1c.set(STATE_UNKNOWN_2);
   }
   SeqManager *seq = mm::mtl::Singleton<SeqManager>::getPtr();
-  if (seq->unknown200.isExist(&seq->unknowna8) || seq->unknown200.isExist(&seq->unknownb0) || seq->unknown200.isExist(&seq->unknownb8) || seq->unknown200.isExist(&seq->unknownc0) ||
-      seq->unknown200.isExist(&seq->unknownc8) || seq->unknown200.isExist(&seq->unknownd0)) {
+  if (seq->unknown200.isExist(&seq->m_start_form) || seq->unknown200.isExist(&seq->m_start_change) || seq->unknown200.isExist(&seq->m_start_env_seam) ||
+      seq->unknown200.isExist(&seq->m_start_weather) || seq->unknown200.isExist(&seq->m_start_streaming0) || seq->unknown200.isExist(&seq->m_start_capture_wait)) {
     return false;
   }
   unknown1c.unknown004(STATE_UNKNOWN_2);
@@ -158,7 +158,7 @@ bool Manager::startPage(const char *name, int pageID, f32 maxFrame) {
     unknown1c.set(STATE_UNKNOWN_3);
   }
   SeqManager *seq = mm::mtl::Singleton<SeqManager>::getPtr();
-  if (seq->unknown200.isExist(&seq->unknownd8)) {
+  if (seq->unknown200.isExist(&seq->m_start_streaming1)) {
     return false;
   }
   unknown1c.unknown004(STATE_UNKNOWN_3);
@@ -171,7 +171,7 @@ bool Manager::endScene() {
     unknown1c.set(STATE_UNKNOWN_4);
   }
   SeqManager *seq = mm::mtl::Singleton<SeqManager>::getPtr();
-  if (seq->unknown200.isExist(&seq->unknowne0) || seq->unknown200.isExist(&seq->unknownf8) || seq->unknown200.isExist(&seq->unknown100) || seq->unknown200.isExist(&seq->unknown108)) {
+  if (seq->unknown200.isExist(&seq->m_exec) || seq->unknown200.isExist(&seq->m_exec_fadeout) || seq->unknown200.isExist(&seq->m_exec_grass) || seq->unknown200.isExist(&seq->m_end_change)) {
     return false;
   }
   execMessage(MSG_TYPE_UNKNOWN_10);
@@ -214,7 +214,7 @@ void Manager::clear() {
   unknown288[1] = 0;
   unknown288[2] = 0;
   unknown288[3] = 0;
-  unknown298 = LANGUAGE_MODE_UNKNOWN_0;
+  m_languageMode = LANGUAGE_MODE_UNKNOWN_0;
   unknown18.unknown004(FLAG_UNKNOWN_2);
   unknown1c.clear();
 }
@@ -241,7 +241,7 @@ void Manager::drawInfo() {
   int seconds = frames % 1800 / 30;
   int rest = frames % 30;
   mm::mtl::FixStr<64> text;
-  text.format("%s %s  %02d:%02d:%02d [%.1f]", unknown033[static_cast<int>(mm::mtl::Singleton<SeqManager>::getPtr()->unknown2710.unknown54)], unknown254.c_str(), minutes, seconds, rest, frame);
+  text.format("%s %s  %02d:%02d:%02d [%.1f]", unknown033[static_cast<int>(mm::mtl::Singleton<SeqManager>::getPtr()->m_seqInfo.unknown54)], unknown254.c_str(), minutes, seconds, rest, frame);
   fw::debug::drawFont(x - 159, 61, mm::Col4::black, text.c_str());
   fw::debug::drawFont(left, 60, mm::Col4::white, text.c_str());
   if (mm::mtl::Singleton<FrameManager>::getPtr()->isWaiting()) {
@@ -277,10 +277,10 @@ bool Manager::setupScene(const char *name) {
   return true;
 }
 
-void Manager::setLanguageMode(bool isEnable, LANGUAGE_MODE mode) { unknown298 = isEnable ? mode : LANGUAGE_MODE_UNKNOWN_0; }
+void Manager::setLanguageMode(bool isEnable, LANGUAGE_MODE mode) { m_languageMode = isEnable ? mode : LANGUAGE_MODE_UNKNOWN_0; }
 
 bool Manager::checkLanguageMode() const {
-  switch (unknown298) {
+  switch (m_languageMode) {
   case LANGUAGE_MODE_UNKNOWN_1:
     return fw::LangUtil::getVoiceType() == 0;
   case LANGUAGE_MODE_UNKNOWN_2:

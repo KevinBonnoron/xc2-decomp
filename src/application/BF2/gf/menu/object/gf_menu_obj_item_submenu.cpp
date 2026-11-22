@@ -126,7 +126,7 @@ void GfMenuObjItemSubmenu::MainListener::reciveEvent(const ui::EventData &event,
 }
 
 void GfMenuObjItemSubmenu::SubmenuListener::reciveEvent(const ui::EventData &event, u32 handle) {
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjItemSubmenu->unknown18);
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1: {
@@ -134,9 +134,9 @@ void GfMenuObjItemSubmenu::SubmenuListener::reciveEvent(const ui::EventData &eve
     ui::UIObjectAcc icon(acc.searchChild("IMG_it_slicon@01"));
     mm::Vec2 scale;
     icon.getScale(scale);
-    unknown20->unknown24 = scale.x;
-    unknown20->unknown28 = 1.5f;
-    unknown20->unknown28 = scale.x * unknown20->unknown28;
+    m_menuObjItemSubmenu->unknown24 = scale.x;
+    m_menuObjItemSubmenu->unknown28 = 1.5f;
+    m_menuObjItemSubmenu->unknown28 = scale.x * m_menuObjItemSubmenu->unknown28;
     acc.setDisp(true);
     GfMenuObject::setupInputSelection(handle, 0, 2);
     GfMenuObject::enableInput(handle);
@@ -160,9 +160,9 @@ void GfMenuObjItemSubmenu::SubmenuListener::reciveEvent(const ui::EventData &eve
       param.unknown08 = 0x80000;
       param.unknown0c = ui::CURVE_TYPE_LINEAR;
       param.unknown00 = 0.2f;
-      param.unknown2c = unknown20->unknown28;
+      param.unknown2c = m_menuObjItemSubmenu->unknown28;
       GfMenuObjUtil::startCtrl(acc.searchChild(currentIcon.c_str()), param, nullptr);
-      unknown20->unknown2c = current;
+      m_menuObjItemSubmenu->unknown2c = current;
     }
     if (previous >= 0 && current != previous) {
       ui::UIObjectAcc(acc.searchChild(previousBase.c_str())).startAnimation("idol", false);
@@ -170,7 +170,7 @@ void GfMenuObjItemSubmenu::SubmenuListener::reciveEvent(const ui::EventData &eve
       param.unknown08 = 0x80000;
       param.unknown0c = ui::CURVE_TYPE_LINEAR;
       param.unknown00 = 0.2f;
-      param.unknown2c = unknown20->unknown24;
+      param.unknown2c = m_menuObjItemSubmenu->unknown24;
       GfMenuObjUtil::startCtrl(acc.searchChild(previousIcon.c_str()), param, nullptr);
     }
     GfMenuObjUtil::setChildDisp(handle, "IMG_it_pic01", current == 0);
@@ -183,7 +183,7 @@ void GfMenuObjItemSubmenu::SubmenuListener::reciveEvent(const ui::EventData &eve
       ui::EventData end;
       end.unknown00 = GfMenuTypes::unknown003_259;
       ui::UIManager::get()->requestObjectEvent(handle, end, 0.0f);
-      GfMenuObject::changeFSSubLayer(owner.unknown10, 2, GfMenuObject::getMenuLayerID(unknown20->unknown2c != 0 ? 0x2c : 0x2b), true);
+      GfMenuObject::changeFSSubLayer(owner.unknown10, 2, GfMenuObject::getMenuLayerID(m_menuObjItemSubmenu->unknown2c != 0 ? 0x2c : 0x2b), true);
       GfMenuObjMainMenu2::setSystemKeyEnable(false);
     }
     break;

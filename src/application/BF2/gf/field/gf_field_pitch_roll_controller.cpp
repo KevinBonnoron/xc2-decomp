@@ -14,7 +14,7 @@
 namespace gf {
 
 GfFieldPitchRollController::GfFieldPitchRollController(const CreateInfo *info) {
-  unknown00 = unknown020;
+  m_GF_OBJ_HANDLE = unknown020;
   unknown08 = unknown001();
   unknown0a = true;
   unknown10 = nullptr;
@@ -32,7 +32,7 @@ void GfFieldPitchRollController::create(const CreateInfo &info) {
   dispose();
   unknown0a = info.unknown0a;
   unknown08 = info.unknown08;
-  unknown00 = info.unknown00;
+  m_GF_OBJ_HANDLE = info.m_GF_OBJ_HANDLE;
   unknown18 = &GfFieldPitchRollController::seqInit;
 }
 
@@ -44,13 +44,13 @@ void GfFieldPitchRollController::dispose() {
   // the standalone dispose, create and seqInit but gives the constructor unknown18 as base; the declaration order matches none of them.
   unknown10 = nullptr;
   unknown18 = nullptr;
-  unknown00 = unknown020;
+  m_GF_OBJ_HANDLE = unknown020;
   unknown08 = unknown001();
   unknown0a = true;
 }
 
 void GfFieldPitchRollController::seqInit(const gmk::GmkRouteNavi &navi) {
-  GfObjAcc acc(unknown00);
+  GfObjAcc acc(m_GF_OBJ_HANDLE);
   GfObj *obj = acc.getObj();
   if (obj == nullptr) {
     dispose();
@@ -59,7 +59,7 @@ void GfFieldPitchRollController::seqInit(const gmk::GmkRouteNavi &navi) {
 
   GfComIK *comIK = obj->getComponent<GfComIK>();
   if (comIK != nullptr) {
-    fw::IkSolver *ikSolver = comIK->unknown10.unknown10[0].get();
+    fw::IkSolver *ikSolver = comIK->m_ikResolver.unknown10[0].get();
     if (ikSolver != nullptr) {
       fw::RotateIkSolver *solver = mm::mtl::dynamicCast<fw::RotateIkSolver>(ikSolver);
       if (solver != nullptr) {
@@ -75,7 +75,7 @@ void GfFieldPitchRollController::seqInit(const gmk::GmkRouteNavi &navi) {
 }
 
 void GfFieldPitchRollController::update(const gmk::GmkRouteNavi &navi) {
-  if (unknown00 != unknown020) {
+  if (m_GF_OBJ_HANDLE != unknown020) {
     if (unknown18) {
       (this->*unknown18)(navi);
     }

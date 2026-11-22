@@ -68,10 +68,10 @@ public:
   LayerVertexObj *createVertexObj(const u8 *data);
   void releaseVertexObj(LayerVertexObj *vertexObj);
 
-  LayerManager *unknown18; // Inferred role: layer manager; original member name unknown.
+  LayerManager *m_layerManager; // Inferred role: layer manager; original member name unknown.
 };
 
-static_assert(offsetof(LayerVertexMan, unknown18) == 0x18, "");
+static_assert(offsetof(LayerVertexMan, m_layerManager) == 0x18, "");
 static_assert(sizeof(LayerVertexMan) == 0x20, "");
 
 } // namespace layer

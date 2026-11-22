@@ -27,56 +27,56 @@ class GfMenuObjPouch2 : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjPouch2 *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjPouch2 *owner) : _0c(), m_menuObjPouch2(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjPouch2 *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjPouch2 *m_menuObjPouch2; // Inferred role: owner; original member name unknown.
   };
 
   class SlotListener : public ui::UIObjectListener {
   public:
-    SlotListener(GfMenuObjPouch2 *owner) : _0c(), unknown20(owner) {}
+    SlotListener(GfMenuObjPouch2 *owner) : _0c(), m_menuObjPouch2(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjPouch2 *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjPouch2 *m_menuObjPouch2; // Inferred role: owner; original member name unknown.
   };
 
   class ItemListListener : public ui::UIObjectListener {
   public:
-    ItemListListener(GfMenuObjPouch2 *owner) : _0c(), unknown20(owner) {}
+    ItemListListener(GfMenuObjPouch2 *owner) : _0c(), m_menuObjPouch2(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjPouch2 *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjPouch2 *m_menuObjPouch2; // Inferred role: owner; original member name unknown.
   };
 
   class FilterListener2 : public ui::UIObjectListener {
   public:
-    FilterListener2(GfMenuObjPouch2 *owner) : _0c(), unknown20(owner) {}
+    FilterListener2(GfMenuObjPouch2 *owner) : _0c(), m_menuObjPouch2(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjPouch2 *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjPouch2 *m_menuObjPouch2; // Inferred role: owner; original member name unknown.
   };
 
   class PartyInfoListener : public ui::UIObjectListener {
   public:
-    PartyInfoListener(GfMenuObjPouch2 *owner) : _0c(), unknown20(owner) {}
+    PartyInfoListener(GfMenuObjPouch2 *owner) : _0c(), m_menuObjPouch2(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjPouch2 *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjPouch2 *m_menuObjPouch2; // Inferred role: owner; original member name unknown.
   };
 
   class ResultListener : public ui::UIObjectListener {
   public:
-    ResultListener(GfMenuObjPouch2 *owner) : _0c(), unknown20(owner) {}
+    ResultListener(GfMenuObjPouch2 *owner) : _0c(), m_menuObjPouch2(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjPouch2 *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjPouch2 *m_menuObjPouch2; // Inferred role: owner; original member name unknown.
   };
 
   // Layout from setFavFlag: a blade, its slot and its four favorite stats; original member names unknown.
@@ -132,25 +132,25 @@ public:
   bool unknown3c8;                                        // Role and original member name unknown.
   bool unknown3c9;                                        // Role and original member name unknown, cleared by the constructor.
   u8 _3ca[0x3d0 - 0x3ca];
-  GAME_VOICE_HANDLE *unknown3d0; // Inferred role: playing voice; original member name unknown.
-  u32 unknown3d8;                // Role and original member name unknown, cleared by the constructor.
+  GAME_VOICE_HANDLE *m_GAME_VOICE_HANDLE; // Inferred role: playing voice; original member name unknown.
+  u32 unknown3d8;                         // Role and original member name unknown, cleared by the constructor.
   u8 _3dc[0x3e0 - 0x3dc];
-  GfMenuBladeList *unknown3e0; // Inferred role: blades; original member name unknown.
-  bool unknown3e8;             // Role and original member name unknown, cleared by the constructor.
+  GfMenuBladeList *m_menuBladeList; // Inferred role: blades; original member name unknown.
+  bool unknown3e8;                  // Role and original member name unknown, cleared by the constructor.
   u8 _3e9[0x3f0 - 0x3e9];
 };
 
-static_assert(offsetof(GfMenuObjPouch2::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjPouch2::MainListener, m_menuObjPouch2) == 0x20, "");
 static_assert(sizeof(GfMenuObjPouch2::MainListener) == 0x28, "");
-static_assert(offsetof(GfMenuObjPouch2::SlotListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjPouch2::SlotListener, m_menuObjPouch2) == 0x20, "");
 static_assert(sizeof(GfMenuObjPouch2::SlotListener) == 0x28, "");
-static_assert(offsetof(GfMenuObjPouch2::ItemListListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjPouch2::ItemListListener, m_menuObjPouch2) == 0x20, "");
 static_assert(sizeof(GfMenuObjPouch2::ItemListListener) == 0x28, "");
-static_assert(offsetof(GfMenuObjPouch2::FilterListener2, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjPouch2::FilterListener2, m_menuObjPouch2) == 0x20, "");
 static_assert(sizeof(GfMenuObjPouch2::FilterListener2) == 0x28, "");
-static_assert(offsetof(GfMenuObjPouch2::PartyInfoListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjPouch2::PartyInfoListener, m_menuObjPouch2) == 0x20, "");
 static_assert(sizeof(GfMenuObjPouch2::PartyInfoListener) == 0x28, "");
-static_assert(offsetof(GfMenuObjPouch2::ResultListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjPouch2::ResultListener, m_menuObjPouch2) == 0x20, "");
 static_assert(sizeof(GfMenuObjPouch2::ResultListener) == 0x28, "");
 static_assert(sizeof(GfMenuObjPouch2::FavoriteFlag) == 0x18, "");
 static_assert(offsetof(GfMenuObjPouch2, unknown28) == 0x28, "");
@@ -168,9 +168,9 @@ static_assert(offsetof(GfMenuObjPouch2, unknown70) == 0x70, "");
 static_assert(offsetof(GfMenuObjPouch2, unknownd0) == 0xd0, "");
 static_assert(offsetof(GfMenuObjPouch2, unknown130) == 0x130, "");
 static_assert(offsetof(GfMenuObjPouch2, unknown3c9) == 0x3c9, "");
-static_assert(offsetof(GfMenuObjPouch2, unknown3d0) == 0x3d0, "");
+static_assert(offsetof(GfMenuObjPouch2, m_GAME_VOICE_HANDLE) == 0x3d0, "");
 static_assert(offsetof(GfMenuObjPouch2, unknown3d8) == 0x3d8, "");
-static_assert(offsetof(GfMenuObjPouch2, unknown3e0) == 0x3e0, "");
+static_assert(offsetof(GfMenuObjPouch2, m_menuBladeList) == 0x3e0, "");
 static_assert(offsetof(GfMenuObjPouch2, unknown3e8) == 0x3e8, "");
 static_assert(sizeof(GfMenuObjPouch2) == 0x3f0, "");
 

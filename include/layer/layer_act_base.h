@@ -34,15 +34,15 @@ struct unknown083 {
 
 // Inferred role: layer act work; original type name unknown.
 struct unknown084 {
-  const u8 *unknown00;            // Inferred role: data; original member name unknown.
-  const LyrActionData *unknown08; // Inferred role: actions; original member name unknown.
-  s32 unknown10;                  // Inferred role: action num; original member name unknown.
-  f32 unknown14;                  // Inferred role: sec; original member name unknown.
-  f32 unknown18;                  // Inferred role: delta sec; original member name unknown.
-  f32 unknown1c;                  // Inferred role: inv delta sec; original member name unknown.
-  u32 unknown20;                  // Inferred role: action idx; original member name unknown.
-  u32 unknown24;                  // Inferred role: flags; original member name unknown.
-  u32 *unknown28;                 // Inferred role: action works; original member name unknown.
+  const u8 *unknown00;                  // Inferred role: data; original member name unknown.
+  const LyrActionData *m_lyrActionData; // Inferred role: actions; original member name unknown.
+  s32 unknown10;                        // Inferred role: action num; original member name unknown.
+  f32 unknown14;                        // Inferred role: sec; original member name unknown.
+  f32 unknown18;                        // Inferred role: delta sec; original member name unknown.
+  f32 unknown1c;                        // Inferred role: inv delta sec; original member name unknown.
+  u32 unknown20;                        // Inferred role: action idx; original member name unknown.
+  u32 unknown24;                        // Inferred role: flags; original member name unknown.
+  u32 *unknown28;                       // Inferred role: action works; original member name unknown.
 };
 
 static_assert(offsetof(unknown084, unknown20) == 0x20, "");

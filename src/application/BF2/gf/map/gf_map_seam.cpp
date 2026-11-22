@@ -17,7 +17,7 @@ namespace gf {
 MapSeam::~MapSeam() {}
 
 void MapSeam::create(GF_ASSET_HANDLE *handle) {
-  if (unknown00 == unknown020) {
+  if (m_GF_OBJ_HANDLE == unknown020) {
     GF_OBJ_HANDLE *objHandle = GfAssetManager::getObj(handle);
     GFOBJ_INFO *info = GfObjManager::getObjInfo(objHandle);
     if (info != nullptr && info->unknown30 != nullptr) {
@@ -25,17 +25,17 @@ void MapSeam::create(GF_ASSET_HANDLE *handle) {
       if (info->unknown30->unknown08 == obj->unknown28 && obj->unknown28 == OBJECT_TYPE_MAP) {
         GfObjSetupMap *setup = mm::mtl::dynamicCast<GfObjSetupMap>(info->unknown30);
         if (setup != nullptr && setup->unknown75) {
-          unknown00 = objHandle;
+          m_GF_OBJ_HANDLE = objHandle;
         }
       }
     }
   }
 }
 
-void MapSeam::destroy() { unknown00 = unknown020; }
+void MapSeam::destroy() { m_GF_OBJ_HANDLE = unknown020; }
 
 ml::ScnObjModel *MapSeam::getModel() const {
-  GfObjAcc acc(unknown00);
+  GfObjAcc acc(m_GF_OBJ_HANDLE);
   if (acc.isValidModel()) {
     return acc.getObj()->getComponent<GfComModel>()->unknown18->getInterface();
   }
@@ -43,7 +43,7 @@ ml::ScnObjModel *MapSeam::getModel() const {
 }
 
 ml::DrMdlObj *MapSeam::getDrModel() const {
-  if (unknown00 != unknown020) {
+  if (m_GF_OBJ_HANDLE != unknown020) {
     return static_cast<ml::ScnObjModelDrSys *>(getModel())->unknown3d8;
   }
   return nullptr;

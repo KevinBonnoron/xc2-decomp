@@ -20,8 +20,8 @@
 namespace gf {
 
 GfMenuObjDrEquip2::GfMenuObjDrEquip2(u32 handle)
-    : GfMenuObject(handle), unknown24(0), unknown28(false), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr), unknown48(nullptr), unknown50(nullptr), unknown60(nullptr), unknown68(nullptr),
-      unknown70(nullptr), unknown7c(0) {
+    : GfMenuObject(handle), unknown24(0), unknown28(false), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr), unknown48(nullptr), unknown50(nullptr), unknown60(nullptr),
+      m_menuDriverList(nullptr), unknown70(nullptr), unknown7c(0) {
   unknown70 = GfMenuCallContext::create();
 }
 
@@ -32,7 +32,7 @@ GfMenuObjDrEquip2::~GfMenuObjDrEquip2() {
   mm::mtl::safeRelease(unknown50);
   unknown58 = nullptr;
   mm::mtl::safeRelease(unknown60);
-  mm::mtl::safeRelease(unknown68);
+  mm::mtl::safeRelease(m_menuDriverList);
   mm::mtl::safeRelease(unknown30);
   mm::mtl::safeRelease(unknown38);
 }
@@ -105,8 +105,8 @@ void GfMenuObjDrEquip2::setupItemList(ui::UIObjectAcc &acc, GfMenuItemList *list
     GfMenuItemList::ItemBoxSetup setup;
     setup.unknown14 = ItemType::ITEM_TYPE_UNKNOWN_2;
     setup.unknown28 = false;
-    setup.unknown00.unknown08 = objects->getSize();
-    setup.unknown00.unknown10 = true;
+    setup.m_setupParam.unknown08 = objects->getSize();
+    setup.m_setupParam.unknown10 = true;
     list->setupFromBox(setup);
     mm::mtl::FixStr<32> name;
     for (u32 i = 0; i < objects->getSize(); i++) {
@@ -130,7 +130,7 @@ void GfMenuObjDrEquip2::setupEquipItem(ui::UIObjectAcc &acc, GfMenuItemList *lis
 }
 
 void GfMenuObjDrEquip2::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjDrEquip2->unknown18);
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1:
@@ -144,7 +144,7 @@ void GfMenuObjDrEquip2::MainListener::reciveEvent(const ui::EventData &event, u3
       acc.setDisp(false);
       acc.setTerm();
       GfMenuObjCharSelect::returnSubMenu();
-      GfMenuObject::returnFSSubLayer(unknown20);
+      GfMenuObject::returnFSSubLayer(m_menuObjDrEquip2);
     }
     break;
   case GfMenuTypes::unknown003_33:
@@ -160,10 +160,10 @@ void GfMenuObjDrEquip2::MainListener::reciveEvent(const ui::EventData &event, u3
 }
 
 void GfMenuObjDrEquip2::EquipItemListener::reciveEvent(const ui::EventData &event, u32 handle) {
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjDrEquip2->unknown18);
   ui::UIObjectAcc acc(handle);
   if (event.unknown00 == 1) {
-    setupEquipItem(acc, unknown20->unknown30);
+    setupEquipItem(acc, m_menuObjDrEquip2->unknown30);
   } else {
     ui::UIObjectListener::reciveEvent(event, handle);
   }

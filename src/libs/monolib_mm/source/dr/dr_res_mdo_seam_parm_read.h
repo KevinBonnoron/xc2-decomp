@@ -27,14 +27,14 @@ static_assert(sizeof(_wkSeamReadWait) == 0x10, "");
 
 // Inferred type: read call of the seam; the original type name is unknown.
 struct _wkSeamReadCall {
-  DrResMdoSeamMemObj *unknown00; // Inferred role: memory object; original member name unknown.
-  void *unknown08;               // Inferred role: work; original member name unknown.
-  void *unknown10;               // Inferred role: linked work, set by the instance map; original member name unknown.
-  u16 unknown18;                 // Inferred role: resource index; original member name unknown.
-  u16 unknown1a;                 // Inferred role: unknown, copied from the read request; original member name unknown.
-  u16 unknown1c;                 // Inferred role: file handle index; original member name unknown.
-  s16 unknown1e;                 // Inferred role: resource kind; original member name unknown.
-  s32 unknown20;                 // Inferred role: read size; original member name unknown.
+  DrResMdoSeamMemObj *m_drResMdoSeamMemObj; // Inferred role: memory object; original member name unknown.
+  void *unknown08;                          // Inferred role: work; original member name unknown.
+  void *unknown10;                          // Inferred role: linked work, set by the instance map; original member name unknown.
+  u16 unknown18;                            // Inferred role: resource index; original member name unknown.
+  u16 unknown1a;                            // Inferred role: unknown, copied from the read request; original member name unknown.
+  u16 unknown1c;                            // Inferred role: file handle index; original member name unknown.
+  s16 unknown1e;                            // Inferred role: resource kind; original member name unknown.
+  s32 unknown20;                            // Inferred role: read size; original member name unknown.
   u8 _24[0x28 - 0x24];
 };
 
@@ -63,9 +63,9 @@ static_assert(offsetof(wkSeamReadPacDataInf, unknown10) == 0x10, "");
 
 // Inferred role: stock entry of an instance map; original type name unknown.
 struct unknown062 {
-  DrResMdoSeamWrkInst *unknown00; // Inferred role: work; original member name unknown.
-  s16 unknown08;                  // Inferred role: index; original member name unknown.
-  s16 unknown0a;                  // Inferred role: kind; original member name unknown.
+  DrResMdoSeamWrkInst *m_drResMdoSeamWrkInst; // Inferred role: work; original member name unknown.
+  s16 unknown08;                              // Inferred role: index; original member name unknown.
+  s16 unknown0a;                              // Inferred role: kind; original member name unknown.
   u8 _0c[0x10 - 0x0c];
 };
 
@@ -163,15 +163,15 @@ public:
   u16 unknown606;                                // Inferred role: stock mpf instance work num; original member name unknown.
   u16 unknown608;                                // Inferred role: stock mpf poli work num; original member name unknown.
   u8 _60a[0x610 - 0x60a];
-  _wkSeamReadCall *unknown610; // Inferred role: read calls; original member name unknown.
-  s32 unknown618;              // Inferred role: read call num; original member name unknown.
+  _wkSeamReadCall *m_wkSeamReadCall; // Inferred role: read calls; original member name unknown.
+  s32 unknown618;                    // Inferred role: read call num; original member name unknown.
   u8 _61c[0x620 - 0x61c];
-  _wkSeamReadWait *unknown620; // Inferred role: read waits; original member name unknown.
-  s32 unknown628;              // Inferred role: read wait num; original member name unknown.
-  u8 unknown62c;               // Inferred role: cleared by the constructor and begin; original member name unknown.
-  u8 unknown62d;               // Inferred role: cleared by the constructor; original member name unknown.
+  _wkSeamReadWait *m_wkSeamReadWait; // Inferred role: read waits; original member name unknown.
+  s32 unknown628;                    // Inferred role: read wait num; original member name unknown.
+  u8 unknown62c;                     // Inferred role: cleared by the constructor and begin; original member name unknown.
+  u8 unknown62d;                     // Inferred role: cleared by the constructor; original member name unknown.
   u8 _62e[0x630 - 0x62e];
-  wkSeamReadPacDataInf *unknown630; // Inferred role: read packet; original member name unknown.
+  wkSeamReadPacDataInf *m_wkSeamReadPacDataInf; // Inferred role: read packet; original member name unknown.
 };
 
 static_assert(sizeof(DrResMdoSeamParmRead::unknown001<DrResMdoSeamWrkBase>) == 0x10, "");
@@ -201,11 +201,11 @@ static_assert(offsetof(DrResMdoSeamParmRead, unknown5e8) == 0x5e8, "");
 static_assert(offsetof(DrResMdoSeamParmRead, unknown50) == 0x50, "");
 static_assert(offsetof(DrResMdoSeamParmRead, unknown5ea) == 0x5ea, "");
 static_assert(offsetof(DrResMdoSeamParmRead, unknown5f0) == 0x5f0, "");
-static_assert(offsetof(DrResMdoSeamParmRead, unknown610) == 0x610, "");
+static_assert(offsetof(DrResMdoSeamParmRead, m_wkSeamReadCall) == 0x610, "");
 static_assert(offsetof(DrResMdoSeamParmRead, unknown618) == 0x618, "");
-static_assert(offsetof(DrResMdoSeamParmRead, unknown620) == 0x620, "");
+static_assert(offsetof(DrResMdoSeamParmRead, m_wkSeamReadWait) == 0x620, "");
 static_assert(offsetof(DrResMdoSeamParmRead, unknown628) == 0x628, "");
 static_assert(offsetof(DrResMdoSeamParmRead, unknown62c) == 0x62c, "");
-static_assert(offsetof(DrResMdoSeamParmRead, unknown630) == 0x630, "");
+static_assert(offsetof(DrResMdoSeamParmRead, m_wkSeamReadPacDataInf) == 0x630, "");
 
 } // namespace ml

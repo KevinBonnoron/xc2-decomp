@@ -58,25 +58,25 @@ void GfGamePad::destroy() {
 }
 
 void GfGamePad::finalize() {
-  unknown18.unbind();
+  m_padRelay.unbind();
   GfEvent::removeEventCallback(this);
   unknown10 = false;
 }
 
 void GfGamePad::changePadInputMode() {
-  unknown18.unbind();
-  unknown18.bind(0, 4, getAllocator(ALLOCATOR_UNKNOWN_0));
+  m_padRelay.unbind();
+  m_padRelay.bind(0, 4, getAllocator(ALLOCATOR_UNKNOWN_0));
   if (GfManager::isExecModeDebug() || GfManager::isExecModeScenarioGame()) {
     if (GfGameManager::isEvent(false) || GfGameManager::isTalking()) {
-      unknown18.bindAction("pause_event", this, &GfGamePad::eventInGameEventPause);
+      m_padRelay.bindAction("pause_event", this, &GfGamePad::eventInGameEventPause);
     } else if (GfGameManager::isEnableOpenMainMenuSequence()) {
-      unknown18.bindAction("boot_mainmenu", this, &GfGamePad::eventInGameOpenMainMenu);
-      unknown18.bindAction("call_system", this, &GfGamePad::eventInGameOpenSystemMenu);
-      unknown18.bindAction("call_skiptravel", this, &GfGamePad::eventInGameOpenSkipTravelMenu);
+      m_padRelay.bindAction("boot_mainmenu", this, &GfGamePad::eventInGameOpenMainMenu);
+      m_padRelay.bindAction("call_system", this, &GfGamePad::eventInGameOpenSystemMenu);
+      m_padRelay.bindAction("call_skiptravel", this, &GfGamePad::eventInGameOpenSkipTravelMenu);
     }
   } else if (GfManager::isExecModeThater()) {
     if (GfGameManager::isEvent(false) || GfGameManager::isTalking()) {
-      unknown18.bindAction("pause_event", this, &GfGamePad::eventInGameEventPause);
+      m_padRelay.bindAction("pause_event", this, &GfGamePad::eventInGameEventPause);
     }
   }
 }
@@ -94,13 +94,13 @@ void GfGamePad::update(const fw::UpdateInfo &) {
   GfGamePad *pad = get();
   pad->unknown11 = false;
   pad->changePadInputMode();
-  pad->unknown18.update();
-  pad->unknown50 = *fw::PadManager::getControlPadData(0);
+  pad->m_padRelay.update();
+  pad->m_padData = *fw::PadManager::getControlPadData(0);
   pad->checkEmergencyEscape();
   pad->updateInterruptPadOnForDebug();
   // The game keeps the address of the pad data in a register of its own across the call of isEnableBattouWithHoodHomura
-  // (0x7100326788: ldrb [x20]); reading unknown50 through pad in the condition gives 108 instructions against the game's 105 (P2).
-  const fw::PadData &data = pad->unknown50;
+  // (0x7100326788: ldrb [x20]); reading m_padData through pad in the condition gives 108 instructions against the game's 105 (P2).
+  const fw::PadData &data = pad->m_padData;
   if (GfGameManager::isEnableBattouWithHoodHomura(true) && (data.unknown00 & fw::getPadKey(fw::PAD_ACT_KEY_UNKNOWN_8)) == 0 && (data.unknown04 & fw::getPadKey(fw::PAD_ACT_KEY_UNKNOWN_5)) != 0) {
     GfPlayFactory::createHoodHomuraBattou();
   }
@@ -111,7 +111,7 @@ void GfGamePad::clearUniqParams() { unknown11 = false; }
 u32 GfGamePad::getPlayerPadId() { return 0; }
 
 void GfGamePad::checkEmergencyEscape() {
-  if ((unknown50.unknown00 & EMERGENCY_ESCAPE_UNKNOWN_16632) != EMERGENCY_ESCAPE_UNKNOWN_16632) {
+  if ((m_padData.unknown00 & EMERGENCY_ESCAPE_UNKNOWN_16632) != EMERGENCY_ESCAPE_UNKNOWN_16632) {
     unknown1a0 = 0;
     return;
   }
@@ -129,8 +129,8 @@ void GfGamePad::checkEmergencyEscape() {
 void GfGamePad::updateInterruptPadOnForDebug() {
   for (DWPAD pad : unknown98) {
     u32 key = fw::getPadKey(unknown001[pad]);
-    unknown50.unknown04 |= key;
-    unknown50.unknown0c |= key;
+    m_padData.unknown04 |= key;
+    m_padData.unknown0c |= key;
     if (pad == DWPAD_UNKNOWN_1 && (GfManager::isExecModeDebug() || GfManager::isExecModeScenarioGame()) && (GfGameManager::isEvent(false) || GfGameManager::isTalking())) {
       unknown11 = true;
     }
@@ -141,7 +141,7 @@ void GfGamePad::updateInterruptPadOnForDebug() {
 const fw::PadData *GfGamePad::getPadPlayer() {
   GfGamePad *pad = get();
   if (pad != nullptr) {
-    return &pad->unknown50;
+    return &pad->m_padData;
   }
 
   return fw::PadManager::getControlPadData(0);

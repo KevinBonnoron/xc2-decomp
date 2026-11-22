@@ -15,15 +15,15 @@ struct unknown002 {
 
 } // namespace
 
-DrResMdoSeamWrkPosMpf::DrResMdoSeamWrkPosMpf() : unknown20(nullptr) {}
+DrResMdoSeamWrkPosMpf::DrResMdoSeamWrkPosMpf() : m_drResMdoSeamMemObj(nullptr) {}
 
 void DrResMdoSeamWrkPosMpf::setupMpfBasePos(const u8 *data) {
   const unknown002 *header = reinterpret_cast<const unknown002 *>(data);
   unknown10 = data;
-  unknown20 = nullptr;
+  m_drResMdoSeamMemObj = nullptr;
   unknown28 = 0;
   unknown00 = data + header->unknown0c;
-  unknown08 = reinterpret_cast<const MdsMpfObjTreeData *>(data + header->unknown14);
+  m_mdsMpfObjTreeData = reinterpret_cast<const MdsMpfObjTreeData *>(data + header->unknown14);
   unknown18 = header->unknown18;
 }
 

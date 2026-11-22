@@ -152,7 +152,7 @@ void GfInitParamEnemy::setupForActViewer(u32 resource, const CBdatWrapper *bdat)
       }
     }
   }
-  unknown18 = bdat;
+  m_cBdatWrapper = bdat;
 }
 
 void GfInitParamEnemy::setupForActViewerEvent(u32 resource, const CBdatWrapper *bdat) {
@@ -178,7 +178,7 @@ void GfInitParamEnemy::setupForActViewerEvent(u32 resource, const CBdatWrapper *
       }
     }
   }
-  unknown18 = bdat;
+  m_cBdatWrapper = bdat;
   unknown82 = false;
   unknown40 = 7;
 }

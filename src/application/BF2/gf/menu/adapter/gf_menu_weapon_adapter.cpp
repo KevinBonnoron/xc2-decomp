@@ -33,12 +33,12 @@ static GfMenuWeaponAdapter::TypeInfo TYPE_INFOS[] = {
     {&GfMenuWeaponAdapter::update_Image, {GfMenuAdapter::unknown004_1, 0, 0}},
 };
 
-GfMenuWeaponAdapter::GfMenuWeaponAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(nullptr), unknown58(0), unknown5c(0) {}
+GfMenuWeaponAdapter::GfMenuWeaponAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), m_iConverter(nullptr), unknown58(0), unknown5c(0) {}
 
 GfMenuWeaponAdapter::~GfMenuWeaponAdapter() {
-  if (unknown50 != nullptr) {
-    delete unknown50;
-    unknown50 = nullptr;
+  if (m_iConverter != nullptr) {
+    delete m_iConverter;
+    m_iConverter = nullptr;
   }
 }
 
@@ -138,7 +138,7 @@ GfMenuWeaponAdapter *GfMenuWeaponAdapter::createFromBlade(u32 handle, u32 type, 
 GfMenuWeaponAdapter *GfMenuWeaponAdapter::createFromCoverter(u32 handle, u32 type, IConverter *converter, bool isUpdateAlways) {
   GfMenuWeaponAdapter *adapter = create(handle, type, converter->getWeaponID(), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -165,8 +165,8 @@ GfMenuWeaponAdapter *GfMenuWeaponAdapter::createFromReferenceChip(u32 handle, u3
 }
 
 void GfMenuWeaponAdapter::update(const fw::UpdateInfo &info) {
-  if (unknown50 != nullptr) {
-    u32 newWeapon = unknown50->getWeaponID();
+  if (m_iConverter != nullptr) {
+    u32 newWeapon = m_iConverter->getWeaponID();
     if (unknown58 != newWeapon) {
       unknown58 = newWeapon;
       setChange();
@@ -202,7 +202,7 @@ u32 GfMenuWeaponAdapter::ReferenceBladeConverter::getWeaponID() {
 u32 GfMenuWeaponAdapter::BladeWithChipListConverter::getWeaponID() {
   DataParamAcc acc(OBJECT_TYPE_BLADE, unknown08, GIMMICK_TYPE_UNKNOWN_0);
   if (acc.isValid()) {
-    u32 chip = unknown10->getContents(unknown10->getPageIndex(unknown18)).unknown04;
+    u32 chip = m_menuItemList->getContents(m_menuItemList->getPageIndex(unknown18)).unknown04;
     if (chip != 0) {
       return GfDataWeapon::getNewWeapon(acc.getEquipWeapon(EQUIP_WEAPON_SLOT_UNKNOWN_FFFFFFFF, false), chip);
     }

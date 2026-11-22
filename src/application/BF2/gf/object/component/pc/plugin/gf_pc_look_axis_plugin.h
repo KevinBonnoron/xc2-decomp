@@ -43,7 +43,7 @@ public:
   f32 calcYaw(f32 changeTime) const;
   void changeAxisYaw(f32 yaw);
 
-  GfComBehaviorPc *unknown10;                 // Inferred role: behavior; original member name unknown.
+  GfComBehaviorPc *m_comBehaviorPc;           // Inferred role: behavior; original member name unknown.
   f32 unknown18;                              // Inferred role: yaw; original member name unknown.
   f32 unknown1c;                              // Inferred role: start yaw; original member name unknown.
   f32 unknown20;                              // Inferred role: target yaw; original member name unknown.
@@ -52,7 +52,7 @@ public:
   const fw::ParamList::unknown005 *unknown30; // Inferred role: param entry; original member name unknown.
 };
 
-static_assert(offsetof(LookAxisPlugin, unknown10) == 0x10, "");
+static_assert(offsetof(LookAxisPlugin, m_comBehaviorPc) == 0x10, "");
 static_assert(offsetof(LookAxisPlugin, unknown18) == 0x18, "");
 static_assert(offsetof(LookAxisPlugin, unknown1c) == 0x1c, "");
 static_assert(offsetof(LookAxisPlugin, unknown20) == 0x20, "");

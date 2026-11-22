@@ -26,12 +26,12 @@ void GmkAntiBladeArea::createGmkPhantom() {
   if (!canCreateGameEntity()) {
     return;
   }
-  unknown60.create(*this, this, false);
+  m_gmkPhantom.create(*this, this, false);
 }
 
 void GmkAntiBladeArea::dispose() {
   GmkAntiBladeAreaManager::removeGmk(this);
-  unknown60.dispose();
+  m_gmkPhantom.dispose();
   AGmkBase::dispose();
 }
 
@@ -41,7 +41,7 @@ void GmkAntiBladeArea::onLeavePhantom(const IGmkPhantomEventListener::OnLeaveInf
 
 void GmkAntiBladeAreaManager::addGmk(GmkAntiBladeArea *gmk) {
   get()->unknown08.push_front(gmk);
-  get()->unknown20 = get()->unknown08.begin().get();
+  get()->m_gmkAntiBladeArea = get()->unknown08.begin().get();
 }
 
 void GmkAntiBladeAreaManager::removeGmk(GmkAntiBladeArea *gmk) {
@@ -50,14 +50,14 @@ void GmkAntiBladeAreaManager::removeGmk(GmkAntiBladeArea *gmk) {
   }
   get()->unknown08.erase(gmk);
   if (get()->unknown08.empty()) {
-    get()->unknown20 = nullptr;
+    get()->m_gmkAntiBladeArea = nullptr;
   } else {
-    get()->unknown20 = get()->unknown08.begin().get();
+    get()->m_gmkAntiBladeArea = get()->unknown08.begin().get();
   }
 }
 
 void GmkAntiBladeAreaManager::dispose() {
-  unknown20 = nullptr;
+  m_gmkAntiBladeArea = nullptr;
   unknown08.clear();
 }
 

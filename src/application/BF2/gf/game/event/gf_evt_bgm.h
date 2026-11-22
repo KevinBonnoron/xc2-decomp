@@ -52,7 +52,7 @@ public:
 
   bool m_initialized;
   u8 _09[0x0c - 0x09];
-  EventBgmSetup unknown0c; // Inferred role: setup of the playing event bgm; original member name unknown.
+  EventBgmSetup m_eventBgmSetup; // Inferred role: setup of the playing event bgm; original member name unknown.
   PLAY_STATE m_playState;
   // Layout from GfEvtBgm::clear (0x7100306e9c), isPlayBgm (0x7100307364) and isPlaySilent (0x71003077a4), which walk 128 task pointers at 0x78 from the
   // index at 0x480 for the count at 0x478 with `& 0x7f`.
@@ -61,7 +61,7 @@ public:
 };
 
 static_assert(offsetof(GfEvtBgm, m_initialized) == 0x08, "");
-static_assert(offsetof(GfEvtBgm, unknown0c) == 0x0c, "");
+static_assert(offsetof(GfEvtBgm, m_eventBgmSetup) == 0x0c, "");
 static_assert(offsetof(GfEvtBgm, m_playState) == 0x74, "");
 static_assert(offsetof(GfEvtBgm, unknown78) == 0x78, "");
 static_assert(offsetof(GfEvtBgm, unknown488) == 0x488, "");

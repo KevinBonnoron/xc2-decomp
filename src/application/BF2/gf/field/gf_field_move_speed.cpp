@@ -15,10 +15,10 @@ GfFieldMoveSpeed::GfFieldMoveSpeed(const CreateInfo *info) {
   }
 }
 
-void GfFieldMoveSpeed::dispose() { unknown00 = unknown020; }
+void GfFieldMoveSpeed::dispose() { m_GF_OBJ_HANDLE = unknown020; }
 
 GfComAsm *GfFieldMoveSpeed::getComAsm() const {
-  GfObjAcc acc(unknown00);
+  GfObjAcc acc(m_GF_OBJ_HANDLE);
   GfObj *obj = acc.getObj();
   if (obj == nullptr) {
     return nullptr;
@@ -40,7 +40,7 @@ GfEnemyFieldMoveSpeed::GfEnemyFieldMoveSpeed(const CreateInfo *info) {
 }
 
 GfComAsm *GfEnemyFieldMoveSpeed::getComAsm() const {
-  GfObjAcc acc(unknown00);
+  GfObjAcc acc(m_GF_OBJ_HANDLE);
   GfObj *obj = acc.getObj();
   if (obj == nullptr) {
     return nullptr;
@@ -49,32 +49,32 @@ GfComAsm *GfEnemyFieldMoveSpeed::getComAsm() const {
 }
 
 void GfEnemyFieldMoveSpeed::setSpeedKmph(f32 speed, f32 time) {
-  f32 current = unknown18.unknown10;
-  unknown18.unknown0c = speed;
+  f32 current = m_speedTween.unknown10;
+  m_speedTween.unknown0c = speed;
   unknown10 = current;
-  unknown18.unknown08 = current;
-  unknown18.unknown10 = time == 0.0f ? speed : current;
-  unknown18.unknown14 = time;
+  m_speedTween.unknown08 = current;
+  m_speedTween.unknown10 = time == 0.0f ? speed : current;
+  m_speedTween.unknown14 = time;
 }
 
 void GfEnemyFieldMoveSpeed::update(f32 deltaTime) {
-  if (unknown00 == unknown020) {
+  if (m_GF_OBJ_HANDLE == unknown020) {
     return;
   }
-  f32 target = unknown18.unknown0c;
-  if (unknown18.unknown08 < target) {
-    unknown18.unknown10 += unknown18.unknown14 * deltaTime;
-    if (target <= unknown18.unknown10) {
-      unknown18.unknown10 = target;
+  f32 target = m_speedTween.unknown0c;
+  if (m_speedTween.unknown08 < target) {
+    m_speedTween.unknown10 += m_speedTween.unknown14 * deltaTime;
+    if (target <= m_speedTween.unknown10) {
+      m_speedTween.unknown10 = target;
     }
   } else {
-    unknown18.unknown10 -= unknown18.unknown14 * deltaTime;
-    if (unknown18.unknown10 <= target) {
-      unknown18.unknown10 = target;
+    m_speedTween.unknown10 -= m_speedTween.unknown14 * deltaTime;
+    if (m_speedTween.unknown10 <= target) {
+      m_speedTween.unknown10 = target;
     }
   }
-  unknown10 = unknown18.unknown10;
-  GfObjAcc acc(unknown00);
+  unknown10 = m_speedTween.unknown10;
+  GfObjAcc acc(m_GF_OBJ_HANDLE);
   GfObj *obj = acc.getObj();
   if (obj != nullptr) {
     GfComAsm *comAsm = obj->getComponent<GfComAsm>();

@@ -57,29 +57,29 @@ public:
   void setupResource();
   void release() override;
 
-  LayerFontManager *unknown20; // Inferred role: font manager; original member name unknown.
-  u32 unknown28;               // Inferred role: flags; original member name unknown.
+  LayerFontManager *m_layerFontManager; // Inferred role: font manager; original member name unknown.
+  u32 unknown28;                        // Inferred role: flags; original member name unknown.
   u8 _2c[0x30 - 0x2c];
-  const void *unknown30;                // Inferred role: font data; original member name unknown.
-  const unknown001 *unknown38;          // Inferred role: font data header; original member name unknown.
-  const unknown003 *unknown40;          // Inferred role: hash table; original member name unknown.
-  const u16 *unknown48;                 // Inferred role: index table; original member name unknown.
-  const LyrFontInfoData *unknown50;     // Inferred role: font info table; original member name unknown.
-  const unknown002 *unknown58;          // Inferred role: texture info; original member name unknown.
-  grlib::CGLibTextureBuffer *unknown60; // Inferred role: texture buffer; original member name unknown.
-  f32 unknown68;                        // Inferred role: texture ratio x; original member name unknown.
-  f32 unknown6c;                        // Inferred role: texture ratio y; original member name unknown.
-  f32 unknown70;                        // Inferred role: line height; original member name unknown.
-  f32 unknown74;                        // Inferred role: double line height; original member name unknown.
+  const void *unknown30;                    // Inferred role: font data; original member name unknown.
+  const unknown001 *unknown38;              // Inferred role: font data header; original member name unknown.
+  const unknown003 *unknown40;              // Inferred role: hash table; original member name unknown.
+  const u16 *unknown48;                     // Inferred role: index table; original member name unknown.
+  const LyrFontInfoData *m_lyrFontInfoData; // Inferred role: font info table; original member name unknown.
+  const unknown002 *unknown58;              // Inferred role: texture info; original member name unknown.
+  grlib::CGLibTextureBuffer *unknown60;     // Inferred role: texture buffer; original member name unknown.
+  f32 unknown68;                            // Inferred role: texture ratio x; original member name unknown.
+  f32 unknown6c;                            // Inferred role: texture ratio y; original member name unknown.
+  f32 unknown70;                            // Inferred role: line height; original member name unknown.
+  f32 unknown74;                            // Inferred role: double line height; original member name unknown.
 };
 
-static_assert(offsetof(LayerFontResObj, unknown20) == 0x20, "");
+static_assert(offsetof(LayerFontResObj, m_layerFontManager) == 0x20, "");
 static_assert(offsetof(LayerFontResObj, unknown28) == 0x28, "");
 static_assert(offsetof(LayerFontResObj, unknown30) == 0x30, "");
 static_assert(offsetof(LayerFontResObj, unknown38) == 0x38, "");
 static_assert(offsetof(LayerFontResObj, unknown40) == 0x40, "");
 static_assert(offsetof(LayerFontResObj, unknown48) == 0x48, "");
-static_assert(offsetof(LayerFontResObj, unknown50) == 0x50, "");
+static_assert(offsetof(LayerFontResObj, m_lyrFontInfoData) == 0x50, "");
 static_assert(offsetof(LayerFontResObj, unknown58) == 0x58, "");
 static_assert(offsetof(LayerFontResObj, unknown60) == 0x60, "");
 static_assert(offsetof(LayerFontResObj, unknown68) == 0x68, "");

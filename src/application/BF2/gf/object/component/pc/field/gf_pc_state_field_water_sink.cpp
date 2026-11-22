@@ -24,7 +24,7 @@ void StateFieldWaterSink::leave(GfComBehaviorPc *behavior, ai::State *next) {}
 
 void StateFieldWaterSink::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
-  const WaterCommonParam *param = property->unknown310.unknown005();
+  const WaterCommonParam *param = property->m_propertyField.unknown005();
   unknown18 += info.unknown04;
   if (property->unknown110_4 || unknown18 >= param->sinkTime) {
     reqState(STATE_ID_UNKNOWN_26);

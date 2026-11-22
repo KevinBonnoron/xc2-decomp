@@ -369,7 +369,7 @@ void DevGraph::renderSync() {
 }
 
 DevGraphQue::DevGraphQue() {
-  unknown00 = WorkCpu::getEven();
+  m_even = WorkCpu::getEven();
   unknown48 = false;
   unknown4c = 100.0f;
   unknown50 = 0.1f;
@@ -405,15 +405,15 @@ bool DevGraphQue::removeQue(GraphQue *que) {
 }
 
 void DevGraphQue::swap() {
-  unknown00 = unknown00 == 0;
+  m_even = m_even == 0;
   for (reslist<GraphQue *>::Node *node = unknown08.begin(); node != unknown08.end(); node = node->getNext()) {
     node->value->unknown001();
   }
 }
 
-u32 DevGraphQue::getEven() { return unknown00; }
+u32 DevGraphQue::getEven() { return m_even; }
 
-bool DevGraphQue::getOdd() { return unknown00 == 0; }
+bool DevGraphQue::getOdd() { return m_even == 0; }
 
 mm::Rect<int> &DevGraphQue::getViewport() { return unknown58.back(); }
 

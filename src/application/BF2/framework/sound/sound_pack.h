@@ -60,7 +60,7 @@ public:
   u32 unknown128;                 // Inferred role: name hash; original member name unknown.
   mm::mtl::FixStr<64> unknown12c; // Inferred role: name without path and extension; original member name unknown.
   SoundPriority unknown170;       // Inferred role: priority; original member name unknown.
-  SoundSsdBank *unknown178;       // Inferred role: bank; original member name unknown.
+  SoundSsdBank *m_soundSsdBank;   // Inferred role: bank; original member name unknown.
   mm::mtl::FixedVector<mm::mtl::IntrusivePtr<SoundSsdSource>, 256> m_source;
   mm::mtl::FixedVector<fw::unknown128, 256> unknown988; // Inferred role: source ids; original member name unknown.
 };
@@ -73,7 +73,7 @@ static_assert(offsetof(SoundPack, unknown24) == 0x24, "");
 static_assert(offsetof(SoundPack, unknown128) == 0x128, "");
 static_assert(offsetof(SoundPack, unknown12c) == 0x12c, "");
 static_assert(offsetof(SoundPack, unknown170) == 0x170, "");
-static_assert(offsetof(SoundPack, unknown178) == 0x178, "");
+static_assert(offsetof(SoundPack, m_soundSsdBank) == 0x178, "");
 static_assert(offsetof(SoundPack, m_source) == 0x180, "");
 static_assert(offsetof(SoundPack, unknown988) == 0x988, "");
 

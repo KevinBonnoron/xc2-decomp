@@ -161,7 +161,7 @@ constexpr u32 unknown013 = 1;
 
 } // namespace
 
-GfEvtModel::GfEvtModel(GF_EVT_MODEL type, u32 param) : unknown18(type), unknown1c(param), unknown20(unknown020), unknown28(nullptr) { GfObjManager::addListener(this, OBJEVT_UNKNOWN_0); }
+GfEvtModel::GfEvtModel(GF_EVT_MODEL type, u32 param) : unknown18(type), unknown1c(param), m_GF_OBJ_HANDLE(unknown020), m_evtModel(nullptr) { GfObjManager::addListener(this, OBJEVT_UNKNOWN_0); }
 
 GfEvtModel::~GfEvtModel() {
   destroy();
@@ -173,22 +173,22 @@ void GfEvtModel::destroy() {
   while (unknown58.size() != 0) {
     unknown58.front()->resetMount(this);
   }
-  if (unknown28 != nullptr) {
-    GfEvtModel *parent = unknown28;
-    unknown28 = nullptr;
+  if (m_evtModel != nullptr) {
+    GfEvtModel *parent = m_evtModel;
+    m_evtModel = nullptr;
     parent->release();
   }
-  GfObjUtil::destroy(unknown20);
-  unknown20 = unknown020;
+  GfObjUtil::destroy(m_GF_OBJ_HANDLE);
+  m_GF_OBJ_HANDLE = unknown020;
 }
 
 bool GfEvtModel::isBusy(mm::mtl::FixStr<128> *) const {
   mm::mtl::FixStr<128> reason;
-  if (unknown20 == unknown020) {
+  if (m_GF_OBJ_HANDLE == unknown020) {
     return false;
   }
   for (int attach = GFATTACH_UNKNOWN_0; attach <= GFATTACH_UNKNOWN_3; attach++) {
-    GfWeapon *weapon = GfMountManager::getAppendHandles(unknown20, static_cast<GFATTACH>(attach));
+    GfWeapon *weapon = GfMountManager::getAppendHandles(m_GF_OBJ_HANDLE, static_cast<GFATTACH>(attach));
     if (weapon != nullptr) {
       for (u32 index = 0; index < 10; index++) {
         GF_OBJ_HANDLE *handle = weapon->getCurrentHandles()[index];
@@ -198,32 +198,32 @@ bool GfEvtModel::isBusy(mm::mtl::FixStr<128> *) const {
       }
     }
   }
-  return !GfGameObj::isValidGameObj(unknown20, true, &reason);
+  return !GfGameObj::isValidGameObj(m_GF_OBJ_HANDLE, true, &reason);
 }
 
 void GfEvtModel::resetMount(GfEvtModel *parent) {
-  if (parent == nullptr || unknown28 == nullptr) {
+  if (parent == nullptr || m_evtModel == nullptr) {
     return;
   }
-  if (GfObjUtil::getParentHandle(unknown20) == parent->unknown20) {
-    GfObjUtil::unmountFromBone(unknown20);
+  if (GfObjUtil::getParentHandle(m_GF_OBJ_HANDLE) == parent->m_GF_OBJ_HANDLE) {
+    GfObjUtil::unmountFromBone(m_GF_OBJ_HANDLE);
   }
   if (strcmp(unknown30.c_str(), "MT_met") == 0) {
-    GfMountManager::setMountType(unknown20, GFATTACH_UNKNOWN_1, OPTMNT_UNKNOWN_2);
+    GfMountManager::setMountType(m_GF_OBJ_HANDLE, GFATTACH_UNKNOWN_1, OPTMNT_UNKNOWN_2);
   }
   unknown30 = "";
-  unknown28 = nullptr;
+  m_evtModel = nullptr;
   release();
   mm::mtl::FixedList<GfEvtModel *, 32>::iterator it = mm::mtl::find(parent->unknown58.begin(), parent->unknown58.end(), this);
   parent->unknown58.erase(it);
 }
 
 void GfEvtModel::setMount(GfEvtModel *parent, const char *bone, const mm::Vec3 &pos, const mm::Vec3 &rot) {
-  if (unknown28 == nullptr) {
+  if (m_evtModel == nullptr) {
     if (mm::mtl::find(parent->unknown58.begin(), parent->unknown58.end(), this) == parent->unknown58.end()) {
       parent->unknown58.push_back(this);
       addRef();
-      unknown28 = parent;
+      m_evtModel = parent;
       unknown30 = bone;
       parent->execMount(this, pos, rot);
     }
@@ -231,22 +231,22 @@ void GfEvtModel::setMount(GfEvtModel *parent, const char *bone, const mm::Vec3 &
 }
 
 void GfEvtModel::execUnmount(GfEvtModel *child) {
-  if (GfObjUtil::getParentHandle(child->unknown20) == unknown20) {
-    GfObjUtil::unmountFromBone(child->unknown20);
+  if (GfObjUtil::getParentHandle(child->m_GF_OBJ_HANDLE) == m_GF_OBJ_HANDLE) {
+    GfObjUtil::unmountFromBone(child->m_GF_OBJ_HANDLE);
   }
 }
 
 void GfEvtModel::execMount(GfEvtModel *child) {
-  if (GfObjUtil::getParentHandle(child->unknown20) != unknown20 && !child->isBusy(nullptr)) {
+  if (GfObjUtil::getParentHandle(child->m_GF_OBJ_HANDLE) != m_GF_OBJ_HANDLE && !child->isBusy(nullptr)) {
     if (strcmp(child->unknown30.c_str(), "MT_met") == 0) {
-      GfMountManager::execMount(unknown20, GFATTACH_UNKNOWN_1, OPTMNT_UNKNOWN_0);
+      GfMountManager::execMount(m_GF_OBJ_HANDLE, GFATTACH_UNKNOWN_1, OPTMNT_UNKNOWN_0);
     }
-    GfObjUtil::mountToBone(child->unknown20, unknown20, child->unknown30.c_str());
+    GfObjUtil::mountToBone(child->m_GF_OBJ_HANDLE, m_GF_OBJ_HANDLE, child->unknown30.c_str());
   }
 }
 
 void GfEvtModel::listenerGfObj(OBJEVT event, GF_OBJ_HANDLE *handle, u32) {
-  if (unknown20 != handle) {
+  if (m_GF_OBJ_HANDLE != handle) {
     return;
   }
   switch (event) {
@@ -254,17 +254,17 @@ void GfEvtModel::listenerGfObj(OBJEVT event, GF_OBJ_HANDLE *handle, u32) {
     for (mm::mtl::FixedList<GfEvtModel *, 32>::iterator it = unknown58.begin(); it != unknown58.end(); ++it) {
       execMount(*it);
     }
-    if (unknown28 != nullptr && !unknown28->isBusy(nullptr)) {
-      unknown28->execMount(this);
+    if (m_evtModel != nullptr && !m_evtModel->isBusy(nullptr)) {
+      m_evtModel->execMount(this);
     }
     break;
   case OBJEVT_UNKNOWN_3:
     for (mm::mtl::FixedList<GfEvtModel *, 32>::iterator it = unknown58.begin(); it != unknown58.end(); ++it) {
       execUnmount(*it);
     }
-    if (unknown28 != nullptr && !unknown28->isBusy(nullptr)) {
-      unknown28->execUnmount(this);
-      unknown28 = nullptr;
+    if (m_evtModel != nullptr && !m_evtModel->isBusy(nullptr)) {
+      m_evtModel->execUnmount(this);
+      m_evtModel = nullptr;
     }
     break;
   default:
@@ -289,7 +289,7 @@ u32 GfEvtModel::changeLayerUI(u32 layer) {
   }
 }
 
-bool GfEvtModel::isValid() const { return GfObjUtil::isValid(unknown20); }
+bool GfEvtModel::isValid() const { return GfObjUtil::isValid(m_GF_OBJ_HANDLE); }
 
 void GfEvtModel::update(const fw::UpdateInfo &) {}
 
@@ -313,18 +313,18 @@ void GfEvtModel::setWeaponBattleMount() {}
 
 void GfEvtModel::setWeaponFieldMount() {}
 
-GfEvtModelDriver::GfEvtModelDriver(GfInitParamDriver &param) : GfEvtModel(GF_EVT_MODEL_UNKNOWN_0, param.m_bladeID), unknown298(getAllocator(ALLOCATOR_UNKNOWN_0)), unknown310(param.unknown1ac) {
+GfEvtModelDriver::GfEvtModelDriver(GfInitParamDriver &param) : GfEvtModel(GF_EVT_MODEL_UNKNOWN_0, param.m_bladeID), m_fsm(getAllocator(ALLOCATOR_UNKNOWN_0)), unknown310(param.unknown1ac) {
   if (GfMenuManager::isOpenFullScreen() && GfGameManager::isInnerState(GF_STATE_UNKNOWN_6)) {
     param.unknown40 = changeLayerUI(param.unknown40);
   }
-  unknown20 = GfObjFactory::createDriver(param);
-  unknown298.beginSetup(this, 4);
-  unknown298.registerState<StateIdleField>(unknown012);
-  unknown298.registerState<StateIdleBattle>(unknown013);
-  unknown298.registerState<StateStartBattle>(unknown003);
-  unknown298.registerState<StateEndBattle>(unknown004);
-  unknown298.endSetup();
-  unknown298.setState(unknown012);
+  m_GF_OBJ_HANDLE = GfObjFactory::createDriver(param);
+  m_fsm.beginSetup(this, 4);
+  m_fsm.registerState<StateIdleField>(unknown012);
+  m_fsm.registerState<StateIdleBattle>(unknown013);
+  m_fsm.registerState<StateStartBattle>(unknown003);
+  m_fsm.registerState<StateEndBattle>(unknown004);
+  m_fsm.endSetup();
+  m_fsm.setState(unknown012);
   if (unknown310 == 0) {
     DataParamAcc acc(OBJECT_TYPE_PC, param.m_bladeID, GIMMICK_TYPE_UNKNOWN_0);
     unknown310 = acc.getBlade(-1, false);
@@ -349,11 +349,11 @@ GfEvtModelSalvage *GfEvtModelSalvage::create(GfInitParamDriver &param) {
   return model;
 }
 
-bool GfEvtModelSalvage::isValid() const { return GfGameObj::isValidGameObj(unknown20, false, nullptr); }
+bool GfEvtModelSalvage::isValid() const { return GfGameObj::isValidGameObj(m_GF_OBJ_HANDLE, false, nullptr); }
 
 void GfEvtModelSalvage::setTransform(const mm::Vec3 &position, f32 rotation) {
-  if (GfGameObj::isValidGameObj(unknown20, false, nullptr)) {
-    SCOM_OBJ_WARP_POS::create(unknown20, position, mm::Vec3(0.0f, rotation * mm::DEG_TO_RAD, 0.0f), false);
+  if (GfGameObj::isValidGameObj(m_GF_OBJ_HANDLE, false, nullptr)) {
+    SCOM_OBJ_WARP_POS::create(m_GF_OBJ_HANDLE, position, mm::Vec3(0.0f, rotation * mm::DEG_TO_RAD, 0.0f), false);
   }
 }
 
@@ -368,7 +368,7 @@ GfEvtModelNpc::GfEvtModelNpc(GfInitParamNpc &param) : GfEvtModel(GF_EVT_MODEL_UN
     param.unknown40 = changeLayerUI(param.unknown40);
   }
   param.unknown44 = 1;
-  unknown20 = GfObjFactory::createNpc(param);
+  m_GF_OBJ_HANDLE = GfObjFactory::createNpc(param);
 }
 
 GfEvtModelNpc *GfEvtModelNpc::create(GfInitParamNpc &param) {
@@ -383,7 +383,7 @@ GfEvtModelEvent::GfEvtModelEvent(GfInitParamEventObj &param) : GfEvtModel(GF_EVT
   if (GfMenuManager::isOpenFullScreen() && GfGameManager::isInnerState(GF_STATE_UNKNOWN_6)) {
     param.unknown40 = changeLayerUI(param.unknown40);
   }
-  unknown20 = GfObjFactory::createEventObj(param);
+  m_GF_OBJ_HANDLE = GfObjFactory::createEventObj(param);
 }
 
 GfEvtModelEvent *GfEvtModelEvent::create(GfInitParamEventObj &param) {
@@ -395,14 +395,14 @@ GfEvtModelEvent *GfEvtModelEvent::create(GfInitParamEventObj &param) {
 }
 
 void GfEvtModelDriver::playAnimWeaponRightCS(const char *name) {
-  GfComPackAnim *anim = unknown002(unknown20, 0);
+  GfComPackAnim *anim = unknown002(m_GF_OBJ_HANDLE, 0);
   if (anim != nullptr) {
     anim->play(name);
   }
 }
 
 bool GfEvtModelDriver::isPlayEndAnimWeaponRightCS() {
-  GfComPackAnim *anim = unknown002(unknown20, 0);
+  GfComPackAnim *anim = unknown002(m_GF_OBJ_HANDLE, 0);
   if (anim != nullptr && !anim->isPlayEnd()) {
     return false;
   }
@@ -411,21 +411,21 @@ bool GfEvtModelDriver::isPlayEndAnimWeaponRightCS() {
 }
 
 void GfEvtModelDriver::setAnimSpeedWeaponRightCS(f32 speed) {
-  GfComPackAnim *anim = unknown002(unknown20, 0);
+  GfComPackAnim *anim = unknown002(m_GF_OBJ_HANDLE, 0);
   if (anim != nullptr) {
     anim->setSpeed(speed);
   }
 }
 
 void GfEvtModelDriver::playAnimWeaponLeftCS(const char *name) {
-  GfComPackAnim *anim = unknown002(unknown20, 1);
+  GfComPackAnim *anim = unknown002(m_GF_OBJ_HANDLE, 1);
   if (anim != nullptr) {
     anim->play(name);
   }
 }
 
 bool GfEvtModelDriver::isPlayEndAnimWeaponLeftCS() {
-  GfComPackAnim *anim = unknown002(unknown20, 1);
+  GfComPackAnim *anim = unknown002(m_GF_OBJ_HANDLE, 1);
   if (anim != nullptr && !anim->isPlayEnd()) {
     return false;
   }
@@ -434,21 +434,21 @@ bool GfEvtModelDriver::isPlayEndAnimWeaponLeftCS() {
 }
 
 void GfEvtModelDriver::setAnimSpeedWeaponLeftCS(f32 speed) {
-  GfComPackAnim *anim = unknown002(unknown20, 1);
+  GfComPackAnim *anim = unknown002(m_GF_OBJ_HANDLE, 1);
   if (anim != nullptr) {
     anim->setSpeed(speed);
   }
 }
 
 void GfEvtModelBlade::playAnimWeaponRightCS(const char *name) {
-  GfComPackAnim *anim = unknown002(unknown20, 0);
+  GfComPackAnim *anim = unknown002(m_GF_OBJ_HANDLE, 0);
   if (anim != nullptr) {
     anim->play(name);
   }
 }
 
 bool GfEvtModelBlade::isPlayEndAnimWeaponRightCS() {
-  GfComPackAnim *anim = unknown002(unknown20, 0);
+  GfComPackAnim *anim = unknown002(m_GF_OBJ_HANDLE, 0);
   if (anim != nullptr && !anim->isPlayEnd()) {
     return false;
   }
@@ -457,21 +457,21 @@ bool GfEvtModelBlade::isPlayEndAnimWeaponRightCS() {
 }
 
 void GfEvtModelBlade::setAnimSpeedWeaponRightCS(f32 speed) {
-  GfComPackAnim *anim = unknown002(unknown20, 0);
+  GfComPackAnim *anim = unknown002(m_GF_OBJ_HANDLE, 0);
   if (anim != nullptr) {
     anim->setSpeed(speed);
   }
 }
 
 void GfEvtModelBlade::playAnimWeaponLeftCS(const char *name) {
-  GfComPackAnim *anim = unknown002(unknown20, 1);
+  GfComPackAnim *anim = unknown002(m_GF_OBJ_HANDLE, 1);
   if (anim != nullptr) {
     anim->play(name);
   }
 }
 
 bool GfEvtModelBlade::isPlayEndAnimWeaponLeftCS() {
-  GfComPackAnim *anim = unknown002(unknown20, 1);
+  GfComPackAnim *anim = unknown002(m_GF_OBJ_HANDLE, 1);
   if (anim != nullptr && !anim->isPlayEnd()) {
     return false;
   }
@@ -480,14 +480,14 @@ bool GfEvtModelBlade::isPlayEndAnimWeaponLeftCS() {
 }
 
 void GfEvtModelBlade::setAnimSpeedWeaponLeftCS(f32 speed) {
-  GfComPackAnim *anim = unknown002(unknown20, 1);
+  GfComPackAnim *anim = unknown002(m_GF_OBJ_HANDLE, 1);
   if (anim != nullptr) {
     anim->setSpeed(speed);
   }
 }
 
 bool GfEvtModelDriver::isAnimEnd() const {
-  GfComEvtAnim *anim = GfObjUtil::getObj(unknown20)->getComponent<GfComEvtAnim>();
+  GfComEvtAnim *anim = GfObjUtil::getObj(m_GF_OBJ_HANDLE)->getComponent<GfComEvtAnim>();
   if (anim != nullptr) {
     return anim->isEnd(ANIM_LAYER_UNKNOWN_0);
   }
@@ -496,7 +496,7 @@ bool GfEvtModelDriver::isAnimEnd() const {
 }
 
 bool GfEvtModelBlade::isAnimEnd() const {
-  GfComEvtAnim *anim = GfObjUtil::getObj(unknown20)->getComponent<GfComEvtAnim>();
+  GfComEvtAnim *anim = GfObjUtil::getObj(m_GF_OBJ_HANDLE)->getComponent<GfComEvtAnim>();
   if (anim != nullptr) {
     return anim->isEnd(ANIM_LAYER_UNKNOWN_0);
   }
@@ -505,7 +505,7 @@ bool GfEvtModelBlade::isAnimEnd() const {
 }
 
 bool GfEvtModelEnemy::isAnimEnd() const {
-  GfComEvtAnim *anim = GfObjUtil::getObj(unknown20)->getComponent<GfComEvtAnim>();
+  GfComEvtAnim *anim = GfObjUtil::getObj(m_GF_OBJ_HANDLE)->getComponent<GfComEvtAnim>();
   if (anim != nullptr) {
     return anim->isEnd(ANIM_LAYER_UNKNOWN_0);
   }
@@ -522,7 +522,7 @@ GfEvtModelEnemy *GfEvtModelEnemy::create(GfInitParamEnemy &param) {
 }
 
 void GfEvtModelDriver::setDispJiji(bool isDisp) {
-  GfWeapon *weapon = GfMountManager::getAppendHandles(unknown20, GFATTACH_UNKNOWN_1);
+  GfWeapon *weapon = GfMountManager::getAppendHandles(m_GF_OBJ_HANDLE, GFATTACH_UNKNOWN_1);
   if (weapon != nullptr) {
     for (u32 index = 0; index < 10; index++) {
       GfObjAcc acc(weapon->getCurrentHandles()[index]);
@@ -533,20 +533,20 @@ void GfEvtModelDriver::setDispJiji(bool isDisp) {
   }
 }
 
-void GfEvtModelDriver::setDispRexCoreCrystal(bool isDisp) { GfGameUtil::dispRexCrystal(unknown20, isDisp); }
+void GfEvtModelDriver::setDispRexCoreCrystal(bool isDisp) { GfGameUtil::dispRexCrystal(m_GF_OBJ_HANDLE, isDisp); }
 
-GfEvtModelDriver::~GfEvtModelDriver() { unknown298.cleanup(); }
+GfEvtModelDriver::~GfEvtModelDriver() { m_fsm.cleanup(); }
 
 const mm::mtl::RTTI *GfEvtModelDriver::getRTTI() const { return &m_rtti; }
 
-void GfEvtModelDriver::update(const fw::UpdateInfo &info) { unknown298.update(&info); }
+void GfEvtModelDriver::update(const fw::UpdateInfo &info) { m_fsm.update(&info); }
 
-void GfEvtModelDriver::setDispWeapon(bool isDisp) { unknown007(unknown20, isDisp); }
+void GfEvtModelDriver::setDispWeapon(bool isDisp) { unknown007(m_GF_OBJ_HANDLE, isDisp); }
 
-void GfEvtModelDriver::setDispWeapon(bool isDispRight, bool isDispLeft) { unknown008(unknown20, isDispRight, isDispLeft); }
+void GfEvtModelDriver::setDispWeapon(bool isDispRight, bool isDispLeft) { unknown008(m_GF_OBJ_HANDLE, isDispRight, isDispLeft); }
 
 GF_OBJ_HANDLE *GfEvtModelDriver::getWeaponHandleRight() const {
-  GfWeapon *weapon = GfMountManager::getGfWeapon(unknown20, GFATTACH_UNKNOWN_0);
+  GfWeapon *weapon = GfMountManager::getGfWeapon(m_GF_OBJ_HANDLE, GFATTACH_UNKNOWN_0);
   if (weapon != nullptr) {
     return weapon->getCurrentHandles()[0];
   }
@@ -555,7 +555,7 @@ GF_OBJ_HANDLE *GfEvtModelDriver::getWeaponHandleRight() const {
 }
 
 GF_OBJ_HANDLE *GfEvtModelDriver::getWeaponHandleLeft() const {
-  GfWeapon *weapon = GfMountManager::getGfWeapon(unknown20, GFATTACH_UNKNOWN_0);
+  GfWeapon *weapon = GfMountManager::getGfWeapon(m_GF_OBJ_HANDLE, GFATTACH_UNKNOWN_0);
   if (weapon != nullptr) {
     return weapon->getCurrentHandles()[1];
   }
@@ -563,31 +563,31 @@ GF_OBJ_HANDLE *GfEvtModelDriver::getWeaponHandleLeft() const {
   return unknown020;
 }
 
-void GfEvtModelDriver::setWeaponBattleCommand() { unknown298.setState(unknown003); }
+void GfEvtModelDriver::setWeaponBattleCommand() { m_fsm.setState(unknown003); }
 
-void GfEvtModelDriver::setWeaponFieldCommand() { unknown298.setState(unknown004); }
+void GfEvtModelDriver::setWeaponFieldCommand() { m_fsm.setState(unknown004); }
 
-void GfEvtModelDriver::setStateWeapon(bool isBattle) { unknown298.setState(isBattle ? unknown003 : unknown004); }
+void GfEvtModelDriver::setStateWeapon(bool isBattle) { m_fsm.setState(isBattle ? unknown003 : unknown004); }
 
-void GfEvtModelDriver::setWeaponBattleMount() { GfMountManager::execMount(unknown20, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_1); }
+void GfEvtModelDriver::setWeaponBattleMount() { GfMountManager::execMount(m_GF_OBJ_HANDLE, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_1); }
 
-void GfEvtModelDriver::setWeaponFieldMount() { GfMountManager::execMount(unknown20, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_2); }
+void GfEvtModelDriver::setWeaponFieldMount() { GfMountManager::execMount(m_GF_OBJ_HANDLE, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_2); }
 
-GfEvtModelBlade::GfEvtModelBlade(GfInitParamBlade &param) : GfEvtModel(GF_EVT_MODEL_UNKNOWN_1, param.m_bladeID), unknown298(getAllocator(ALLOCATOR_UNKNOWN_0)) {
+GfEvtModelBlade::GfEvtModelBlade(GfInitParamBlade &param) : GfEvtModel(GF_EVT_MODEL_UNKNOWN_1, param.m_bladeID), m_fsm(getAllocator(ALLOCATOR_UNKNOWN_0)) {
   if (GfMenuManager::isOpenFullScreen() && GfGameManager::isInnerState(GF_STATE_UNKNOWN_6)) {
     param.unknown40 = changeLayerUI(param.unknown40);
   }
-  unknown20 = GfObjFactory::createBlade(param);
-  unknown298.beginSetup(this, 4);
-  unknown298.registerState<StateIdleField>(unknown012);
-  unknown298.registerState<StateIdleBattle>(unknown013);
-  unknown298.registerState<StateStartBattle>(unknown003);
-  unknown298.registerState<StateEndBattle>(unknown004);
-  unknown298.endSetup();
-  unknown298.setState(unknown012);
+  m_GF_OBJ_HANDLE = GfObjFactory::createBlade(param);
+  m_fsm.beginSetup(this, 4);
+  m_fsm.registerState<StateIdleField>(unknown012);
+  m_fsm.registerState<StateIdleBattle>(unknown013);
+  m_fsm.registerState<StateStartBattle>(unknown003);
+  m_fsm.registerState<StateEndBattle>(unknown004);
+  m_fsm.endSetup();
+  m_fsm.setState(unknown012);
 }
 
-GfEvtModelBlade::~GfEvtModelBlade() { unknown298.cleanup(); }
+GfEvtModelBlade::~GfEvtModelBlade() { m_fsm.cleanup(); }
 
 GfEvtModelBlade *GfEvtModelBlade::create(GfInitParamBlade &param) {
   // __LINE__ must be 754 as in the original source: it is the line argument of operator new.
@@ -599,14 +599,14 @@ GfEvtModelBlade *GfEvtModelBlade::create(GfInitParamBlade &param) {
 
 const mm::mtl::RTTI *GfEvtModelBlade::getRTTI() const { return &m_rtti; }
 
-void GfEvtModelBlade::update(const fw::UpdateInfo &info) { unknown298.update(&info); }
+void GfEvtModelBlade::update(const fw::UpdateInfo &info) { m_fsm.update(&info); }
 
-void GfEvtModelBlade::setDispWeapon(bool isDisp) { unknown007(unknown20, isDisp); }
+void GfEvtModelBlade::setDispWeapon(bool isDisp) { unknown007(m_GF_OBJ_HANDLE, isDisp); }
 
-void GfEvtModelBlade::setDispWeapon(bool isDispRight, bool isDispLeft) { unknown008(unknown20, isDispRight, isDispLeft); }
+void GfEvtModelBlade::setDispWeapon(bool isDispRight, bool isDispLeft) { unknown008(m_GF_OBJ_HANDLE, isDispRight, isDispLeft); }
 
 GF_OBJ_HANDLE *GfEvtModelBlade::getWeaponHandleRight() const {
-  GfWeapon *weapon = GfMountManager::getGfWeapon(unknown20, GFATTACH_UNKNOWN_0);
+  GfWeapon *weapon = GfMountManager::getGfWeapon(m_GF_OBJ_HANDLE, GFATTACH_UNKNOWN_0);
   if (weapon != nullptr) {
     return weapon->getCurrentHandles()[0];
   }
@@ -615,7 +615,7 @@ GF_OBJ_HANDLE *GfEvtModelBlade::getWeaponHandleRight() const {
 }
 
 GF_OBJ_HANDLE *GfEvtModelBlade::getWeaponHandleLeft() const {
-  GfWeapon *weapon = GfMountManager::getGfWeapon(unknown20, GFATTACH_UNKNOWN_0);
+  GfWeapon *weapon = GfMountManager::getGfWeapon(m_GF_OBJ_HANDLE, GFATTACH_UNKNOWN_0);
   if (weapon != nullptr) {
     return weapon->getCurrentHandles()[1];
   }
@@ -623,42 +623,42 @@ GF_OBJ_HANDLE *GfEvtModelBlade::getWeaponHandleLeft() const {
   return unknown020;
 }
 
-void GfEvtModelBlade::setWeaponBattleCommand() { unknown298.setState(unknown003); }
+void GfEvtModelBlade::setWeaponBattleCommand() { m_fsm.setState(unknown003); }
 
-void GfEvtModelBlade::setWeaponFieldCommand() { unknown298.setState(unknown004); }
+void GfEvtModelBlade::setWeaponFieldCommand() { m_fsm.setState(unknown004); }
 
-void GfEvtModelBlade::setStateWeapon(bool isBattle) { unknown298.setState(isBattle ? unknown003 : unknown004); }
+void GfEvtModelBlade::setStateWeapon(bool isBattle) { m_fsm.setState(isBattle ? unknown003 : unknown004); }
 
-void GfEvtModelBlade::setWeaponBattleMount() { GfMountManager::execMount(unknown20, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_1); }
+void GfEvtModelBlade::setWeaponBattleMount() { GfMountManager::execMount(m_GF_OBJ_HANDLE, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_1); }
 
-void GfEvtModelBlade::setWeaponFieldMount() { GfMountManager::execMount(unknown20, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_2); }
+void GfEvtModelBlade::setWeaponFieldMount() { GfMountManager::execMount(m_GF_OBJ_HANDLE, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_2); }
 
-GfEvtModelEnemy::GfEvtModelEnemy(GfInitParamEnemy &param) : GfEvtModel(GF_EVT_MODEL_UNKNOWN_5, param.GfInitParam::m_bladeID), unknown298(getAllocator(ALLOCATOR_UNKNOWN_0)) {
+GfEvtModelEnemy::GfEvtModelEnemy(GfInitParamEnemy &param) : GfEvtModel(GF_EVT_MODEL_UNKNOWN_5, param.GfInitParam::m_bladeID), m_fsm(getAllocator(ALLOCATOR_UNKNOWN_0)) {
   if (GfMenuManager::isOpenFullScreen() && GfGameManager::isInnerState(GF_STATE_UNKNOWN_6)) {
     param.unknown40 = changeLayerUI(param.unknown40);
   }
-  unknown20 = GfObjFactory::createEnemy(param);
-  unknown298.beginSetup(this, 4);
-  unknown298.registerState<StateIdleField>(unknown012);
-  unknown298.registerState<StateIdleBattle>(unknown013);
-  unknown298.registerState<StateStartBattle>(unknown003);
-  unknown298.registerState<StateEndBattle>(unknown004);
-  unknown298.endSetup();
-  unknown298.setState(unknown012);
+  m_GF_OBJ_HANDLE = GfObjFactory::createEnemy(param);
+  m_fsm.beginSetup(this, 4);
+  m_fsm.registerState<StateIdleField>(unknown012);
+  m_fsm.registerState<StateIdleBattle>(unknown013);
+  m_fsm.registerState<StateStartBattle>(unknown003);
+  m_fsm.registerState<StateEndBattle>(unknown004);
+  m_fsm.endSetup();
+  m_fsm.setState(unknown012);
 }
 
-GfEvtModelEnemy::~GfEvtModelEnemy() { unknown298.cleanup(); }
+GfEvtModelEnemy::~GfEvtModelEnemy() { m_fsm.cleanup(); }
 
 const mm::mtl::RTTI *GfEvtModelEnemy::getRTTI() const { return &m_rtti; }
 
-void GfEvtModelEnemy::update(const fw::UpdateInfo &info) { unknown298.update(&info); }
+void GfEvtModelEnemy::update(const fw::UpdateInfo &info) { m_fsm.update(&info); }
 
-void GfEvtModelEnemy::setDispWeapon(bool isDisp) { unknown007(unknown20, isDisp); }
+void GfEvtModelEnemy::setDispWeapon(bool isDisp) { unknown007(m_GF_OBJ_HANDLE, isDisp); }
 
-void GfEvtModelEnemy::setDispWeapon(bool isDispRight, bool isDispLeft) { unknown008(unknown20, isDispRight, isDispLeft); }
+void GfEvtModelEnemy::setDispWeapon(bool isDispRight, bool isDispLeft) { unknown008(m_GF_OBJ_HANDLE, isDispRight, isDispLeft); }
 
 GF_OBJ_HANDLE *GfEvtModelEnemy::getWeaponHandleRight() const {
-  GfWeapon *weapon = GfMountManager::getGfWeapon(unknown20, GFATTACH_UNKNOWN_0);
+  GfWeapon *weapon = GfMountManager::getGfWeapon(m_GF_OBJ_HANDLE, GFATTACH_UNKNOWN_0);
   if (weapon != nullptr) {
     return weapon->getCurrentHandles()[0];
   }
@@ -667,7 +667,7 @@ GF_OBJ_HANDLE *GfEvtModelEnemy::getWeaponHandleRight() const {
 }
 
 GF_OBJ_HANDLE *GfEvtModelEnemy::getWeaponHandleLeft() const {
-  GfWeapon *weapon = GfMountManager::getGfWeapon(unknown20, GFATTACH_UNKNOWN_0);
+  GfWeapon *weapon = GfMountManager::getGfWeapon(m_GF_OBJ_HANDLE, GFATTACH_UNKNOWN_0);
   if (weapon != nullptr) {
     return weapon->getCurrentHandles()[1];
   }
@@ -675,68 +675,68 @@ GF_OBJ_HANDLE *GfEvtModelEnemy::getWeaponHandleLeft() const {
   return unknown020;
 }
 
-void GfEvtModelEnemy::setWeaponBattleCommand() { unknown298.setState(unknown003); }
+void GfEvtModelEnemy::setWeaponBattleCommand() { m_fsm.setState(unknown003); }
 
-void GfEvtModelEnemy::setWeaponFieldCommand() { unknown298.setState(unknown004); }
+void GfEvtModelEnemy::setWeaponFieldCommand() { m_fsm.setState(unknown004); }
 
-void GfEvtModelEnemy::setStateWeapon(bool isBattle) { unknown298.setState(isBattle ? unknown003 : unknown004); }
+void GfEvtModelEnemy::setStateWeapon(bool isBattle) { m_fsm.setState(isBattle ? unknown003 : unknown004); }
 
-void GfEvtModelEnemy::setWeaponBattleMount() { GfMountManager::execMount(unknown20, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_1); }
+void GfEvtModelEnemy::setWeaponBattleMount() { GfMountManager::execMount(m_GF_OBJ_HANDLE, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_1); }
 
-void GfEvtModelEnemy::setWeaponFieldMount() { GfMountManager::execMount(unknown20, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_2); }
+void GfEvtModelEnemy::setWeaponFieldMount() { GfMountManager::execMount(m_GF_OBJ_HANDLE, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_2); }
 
 void GfEvtModelEnemy::setWeaponBattleState() {
   setWeaponBattleMount();
   mm::mtl::FixStr<32> weaponState;
   mm::mtl::FixStr<32> state;
-  GfGameUtil::makeWeaponStateIdle(weaponState, unknown20, true);
-  GfGameUtil::makeStateIdle(state, unknown20, true);
-  unknown005(unknown20, state.c_str());
-  unknown006(unknown20, weaponState.c_str());
+  GfGameUtil::makeWeaponStateIdle(weaponState, m_GF_OBJ_HANDLE, true);
+  GfGameUtil::makeStateIdle(state, m_GF_OBJ_HANDLE, true);
+  unknown005(m_GF_OBJ_HANDLE, state.c_str());
+  unknown006(m_GF_OBJ_HANDLE, weaponState.c_str());
 }
 
 void GfEvtModelEnemy::setWeaponFieldState() {
-  GfMountManager::execMount(unknown20, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_2);
+  GfMountManager::execMount(m_GF_OBJ_HANDLE, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_2);
   mm::mtl::FixStr<32> weaponState;
   mm::mtl::FixStr<32> state;
-  GfGameUtil::makeWeaponStateIdle(weaponState, unknown20, false);
-  GfGameUtil::makeStateIdle(state, unknown20, false);
-  unknown005(unknown20, state.c_str());
-  unknown006(unknown20, weaponState.c_str());
+  GfGameUtil::makeWeaponStateIdle(weaponState, m_GF_OBJ_HANDLE, false);
+  GfGameUtil::makeStateIdle(state, m_GF_OBJ_HANDLE, false);
+  unknown005(m_GF_OBJ_HANDLE, state.c_str());
+  unknown006(m_GF_OBJ_HANDLE, weaponState.c_str());
 }
 
 void GfEvtModelDriver::setWeaponBattleState() {
   setWeaponBattleMount();
   mm::mtl::FixStr<32> weaponState;
   mm::mtl::FixStr<32> state;
-  GfGameUtil::makeWeaponStateIdle(weaponState, unknown20, true);
+  GfGameUtil::makeWeaponStateIdle(weaponState, m_GF_OBJ_HANDLE, true);
   GfGameUtil::makeStateIdleByBlade(state, unknown310, true);
-  unknown005(unknown20, state.c_str());
-  unknown006(unknown20, weaponState.c_str());
+  unknown005(m_GF_OBJ_HANDLE, state.c_str());
+  unknown006(m_GF_OBJ_HANDLE, weaponState.c_str());
 }
 
 void GfEvtModelDriver::setWeaponFieldState() {
-  GfMountManager::execMount(unknown20, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_2);
+  GfMountManager::execMount(m_GF_OBJ_HANDLE, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_2);
   mm::mtl::FixStr<32> weaponState;
   mm::mtl::FixStr<32> state;
-  GfGameUtil::makeWeaponStateIdle(weaponState, unknown20, false);
+  GfGameUtil::makeWeaponStateIdle(weaponState, m_GF_OBJ_HANDLE, false);
   GfGameUtil::makeStateIdleByBlade(state, unknown310, false);
-  unknown005(unknown20, state.c_str());
-  unknown006(unknown20, weaponState.c_str());
+  unknown005(m_GF_OBJ_HANDLE, state.c_str());
+  unknown006(m_GF_OBJ_HANDLE, weaponState.c_str());
 }
 
 void GfEvtModelBlade::setWeaponBattleState() {
-  GfMountManager::execMount(unknown20, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_1);
+  GfMountManager::execMount(m_GF_OBJ_HANDLE, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_1);
   mm::mtl::FixStr<32> state;
-  GfGameUtil::makeStateIdle(state, unknown20, true);
-  unknown005(unknown20, state.c_str());
+  GfGameUtil::makeStateIdle(state, m_GF_OBJ_HANDLE, true);
+  unknown005(m_GF_OBJ_HANDLE, state.c_str());
 }
 
 void GfEvtModelBlade::setWeaponFieldState() {
-  GfMountManager::execMount(unknown20, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_2);
+  GfMountManager::execMount(m_GF_OBJ_HANDLE, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_2);
   mm::mtl::FixStr<32> state;
-  GfGameUtil::makeStateIdle(state, unknown20, false);
-  unknown005(unknown20, state.c_str());
+  GfGameUtil::makeStateIdle(state, m_GF_OBJ_HANDLE, false);
+  unknown005(m_GF_OBJ_HANDLE, state.c_str());
 }
 
 void GfEvtModelWeapon::playAnimCS(GF_OBJ_HANDLE *handle, const char *name) {
@@ -763,26 +763,26 @@ void GfEvtModelWeapon::setAnimSpeedCS(GF_OBJ_HANDLE *handle, f32 speed) {
 }
 
 void GfEvtModelWeapon::playAnimData(void *data) {
-  GfComPackAnim *anim = unknown001<GfComPackAnim>(unknown20);
+  GfComPackAnim *anim = unknown001<GfComPackAnim>(m_GF_OBJ_HANDLE);
   if (anim != nullptr) {
     anim->play(data);
   }
 }
 
 void GfEvtModelWeapon::setScale(f32 scale) {
-  GfObjAcc acc(unknown20);
+  GfObjAcc acc(m_GF_OBJ_HANDLE);
   acc.setModelScale(scale);
 }
 
 void GfEvtModelWeapon::playAnimCS(const char *name) {
-  GfComPackAnim *anim = unknown001<GfComPackAnim>(unknown20);
+  GfComPackAnim *anim = unknown001<GfComPackAnim>(m_GF_OBJ_HANDLE);
   if (anim != nullptr) {
     anim->play(name);
   }
 }
 
 bool GfEvtModelWeapon::isPlayEndAnimCS() {
-  GfComPackAnim *anim = unknown001<GfComPackAnim>(unknown20);
+  GfComPackAnim *anim = unknown001<GfComPackAnim>(m_GF_OBJ_HANDLE);
   if (anim != nullptr && !anim->isPlayEnd()) {
     return false;
   }
@@ -791,7 +791,7 @@ bool GfEvtModelWeapon::isPlayEndAnimCS() {
 }
 
 void GfEvtModelWeapon::setAnimSpeedCS(f32 speed) {
-  GfComPackAnim *anim = unknown001<GfComPackAnim>(unknown20);
+  GfComPackAnim *anim = unknown001<GfComPackAnim>(m_GF_OBJ_HANDLE);
   if (anim != nullptr) {
     anim->setSpeed(speed);
   }
@@ -801,11 +801,11 @@ GfEvtModelWeapon::GfEvtModelWeapon(GfInitParamWeapon &param) : GfEvtModel(GF_EVT
   if (GfMenuManager::isOpenFullScreen() && GfGameManager::isInnerState(GF_STATE_UNKNOWN_6)) {
     param.unknown40 = changeLayerUI(param.unknown40);
   }
-  unknown298 = *GfObjFactory::createDriverWeapon(param);
+  m_appendHandles = *GfObjFactory::createDriverWeapon(param);
   for (u32 index = 0; index < 10; index++) {
-    GF_OBJ_HANDLE *handle = unknown298.getCurrentHandles()[index];
+    GF_OBJ_HANDLE *handle = m_appendHandles.getCurrentHandles()[index];
     if (handle != unknown020) {
-      unknown20 = handle;
+      m_GF_OBJ_HANDLE = handle;
       break;
     }
   }
@@ -813,7 +813,7 @@ GfEvtModelWeapon::GfEvtModelWeapon(GfInitParamWeapon &param) : GfEvtModel(GF_EVT
 
 GfEvtModelWeapon::~GfEvtModelWeapon() {
   for (u32 index = 0; index < 10; index++) {
-    GfObjUtil::destroy(unknown298.getCurrentHandles()[index]);
+    GfObjUtil::destroy(m_appendHandles.getCurrentHandles()[index]);
   }
 }
 
@@ -835,7 +835,7 @@ void GfEvtModelWeapon::setWeaponBattleCommand() {
 
 void GfEvtModelWeapon::setWeaponCommand(const char *command) {
   for (u32 index = 0; index < 10; index++) {
-    GF_OBJ_HANDLE *handle = unknown298.getCurrentHandles()[index];
+    GF_OBJ_HANDLE *handle = m_appendHandles.getCurrentHandles()[index];
     if (handle != unknown020) {
       GfComAsm *comAsm = GfObjUtil::getObj(handle)->getComponent<GfComAsm>();
       if (comAsm != nullptr) {
@@ -853,7 +853,7 @@ void GfEvtModelWeapon::setWeaponFieldCommand() {
 
 void GfEvtModelWeapon::setWeaponState(const char *state) {
   for (u32 index = 0; index < 10; index++) {
-    GF_OBJ_HANDLE *handle = unknown298.getCurrentHandles()[index];
+    GF_OBJ_HANDLE *handle = m_appendHandles.getCurrentHandles()[index];
     if (handle != unknown020) {
       GfComAsm *comAsm = GfObjUtil::getObj(handle)->getComponent<GfComAsm>();
       if (comAsm != nullptr) {
@@ -946,22 +946,22 @@ void GfEvtModelDriver::StateStartBattle::onLeave(void *owner, ai::State *next) {
 void GfEvtModelDriver::StateStartBattle::onStep(void *owner, const void *param) { update(static_cast<GfEvtModelDriver *>(owner), *static_cast<const fw::UpdateInfo *>(param)); }
 
 void GfEvtModelDriver::StateStartBattle::enter(GfEvtModelDriver *model, ai::State *previous) {
-  if (GfMountManager::getMountType(model->unknown20, GFATTACH_UNKNOWN_0) != OPTMNT_UNKNOWN_1) {
+  if (GfMountManager::getMountType(model->m_GF_OBJ_HANDLE, GFATTACH_UNKNOWN_0) != OPTMNT_UNKNOWN_1) {
     model->setWeaponBattleMount();
   }
   mm::mtl::FixStr<32> weaponCommand;
   mm::mtl::FixStr<32> command;
-  GfGameUtil::makeWeaponCommandBattle(weaponCommand, model->unknown20, true, false);
+  GfGameUtil::makeWeaponCommandBattle(weaponCommand, model->m_GF_OBJ_HANDLE, true, false);
   GfGameUtil::makeCommandBattle(command, true);
   mm::mtl::FixStr<32> state;
   GfGameUtil::makeStateBattleByBlade(state, model->unknown310, true);
-  unknown009(model->unknown20, command.c_str(), state.c_str());
-  unknown010(model->unknown20, weaponCommand.c_str());
+  unknown009(model->m_GF_OBJ_HANDLE, command.c_str(), state.c_str());
+  unknown010(model->m_GF_OBJ_HANDLE, weaponCommand.c_str());
 }
 
 void GfEvtModelDriver::StateStartBattle::update(GfEvtModelDriver *model, const fw::UpdateInfo &info) {
   if (model->isAnimEnd()) {
-    unknown011(model->unknown20, "C_btidle");
+    unknown011(model->m_GF_OBJ_HANDLE, "C_btidle");
     reqState(unknown013);
   }
 }
@@ -979,24 +979,24 @@ void GfEvtModelDriver::StateEndBattle::onStep(void *owner, const void *param) { 
 void GfEvtModelDriver::StateEndBattle::leave(GfEvtModelDriver *model, ai::State *next) { model->setWeaponFieldMount(); }
 
 void GfEvtModelDriver::StateEndBattle::enter(GfEvtModelDriver *model, ai::State *previous) {
-  if (GfMountManager::getMountType(model->unknown20, GFATTACH_UNKNOWN_0) != OPTMNT_UNKNOWN_2) {
+  if (GfMountManager::getMountType(model->m_GF_OBJ_HANDLE, GFATTACH_UNKNOWN_0) != OPTMNT_UNKNOWN_2) {
     mm::mtl::FixStr<32> weaponCommand;
     mm::mtl::FixStr<32> command;
-    GfGameUtil::makeWeaponCommandBattle(weaponCommand, model->unknown20, false, false);
+    GfGameUtil::makeWeaponCommandBattle(weaponCommand, model->m_GF_OBJ_HANDLE, false, false);
     GfGameUtil::makeCommandBattle(command, false);
     mm::mtl::FixStr<32> state;
     GfGameUtil::makeStateBattleByBlade(state, model->unknown310, false);
-    unknown009(model->unknown20, command.c_str(), state.c_str());
-    unknown010(model->unknown20, weaponCommand.c_str());
+    unknown009(model->m_GF_OBJ_HANDLE, command.c_str(), state.c_str());
+    unknown010(model->m_GF_OBJ_HANDLE, weaponCommand.c_str());
   }
 }
 
 void GfEvtModelDriver::StateEndBattle::update(GfEvtModelDriver *model, const fw::UpdateInfo &info) {
   if (model->isAnimEnd()) {
-    unknown011(model->unknown20, "C_idle");
+    unknown011(model->m_GF_OBJ_HANDLE, "C_idle");
     mm::mtl::FixStr<32> weaponState;
-    GfGameUtil::makeWeaponStateIdle(weaponState, model->unknown20, false);
-    unknown006(model->unknown20, weaponState.c_str());
+    GfGameUtil::makeWeaponStateIdle(weaponState, model->m_GF_OBJ_HANDLE, false);
+    unknown006(model->m_GF_OBJ_HANDLE, weaponState.c_str());
     reqState(unknown012);
   }
 }
@@ -1015,16 +1015,16 @@ void GfEvtModelBlade::StateStartBattle::enter(GfEvtModelBlade *model, ai::State 
   mm::mtl::FixStr<32> command;
   GfGameUtil::makeCommandBattle(command, true);
   mm::mtl::FixStr<32> state;
-  GfGameUtil::makeStateBattle(state, model->unknown20, true);
-  unknown009(model->unknown20, command.c_str(), state.c_str());
-  if (GfMountManager::getMountType(model->unknown20, GFATTACH_UNKNOWN_0) != OPTMNT_UNKNOWN_1) {
-    GfMountManager::execMount(model->unknown20, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_1);
+  GfGameUtil::makeStateBattle(state, model->m_GF_OBJ_HANDLE, true);
+  unknown009(model->m_GF_OBJ_HANDLE, command.c_str(), state.c_str());
+  if (GfMountManager::getMountType(model->m_GF_OBJ_HANDLE, GFATTACH_UNKNOWN_0) != OPTMNT_UNKNOWN_1) {
+    GfMountManager::execMount(model->m_GF_OBJ_HANDLE, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_1);
   }
 }
 
 void GfEvtModelBlade::StateStartBattle::update(GfEvtModelBlade *model, const fw::UpdateInfo &info) {
   if (model->isAnimEnd()) {
-    unknown011(model->unknown20, "C_btidle");
+    unknown011(model->m_GF_OBJ_HANDLE, "C_btidle");
     reqState(unknown013);
   }
 }
@@ -1039,21 +1039,21 @@ void GfEvtModelBlade::StateEndBattle::onLeave(void *owner, ai::State *next) { le
 
 void GfEvtModelBlade::StateEndBattle::onStep(void *owner, const void *param) { update(static_cast<GfEvtModelBlade *>(owner), *static_cast<const fw::UpdateInfo *>(param)); }
 
-void GfEvtModelBlade::StateEndBattle::leave(GfEvtModelBlade *model, ai::State *next) { GfMountManager::execMount(model->unknown20, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_2); }
+void GfEvtModelBlade::StateEndBattle::leave(GfEvtModelBlade *model, ai::State *next) { GfMountManager::execMount(model->m_GF_OBJ_HANDLE, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_2); }
 
 void GfEvtModelBlade::StateEndBattle::enter(GfEvtModelBlade *model, ai::State *previous) {
-  if (GfMountManager::getMountType(model->unknown20, GFATTACH_UNKNOWN_0) != OPTMNT_UNKNOWN_2) {
+  if (GfMountManager::getMountType(model->m_GF_OBJ_HANDLE, GFATTACH_UNKNOWN_0) != OPTMNT_UNKNOWN_2) {
     mm::mtl::FixStr<32> command;
     GfGameUtil::makeCommandBattle(command, false);
     mm::mtl::FixStr<32> state;
-    GfGameUtil::makeStateBattle(state, model->unknown20, false);
-    unknown009(model->unknown20, command.c_str(), state.c_str());
+    GfGameUtil::makeStateBattle(state, model->m_GF_OBJ_HANDLE, false);
+    unknown009(model->m_GF_OBJ_HANDLE, command.c_str(), state.c_str());
   }
 }
 
 void GfEvtModelBlade::StateEndBattle::update(GfEvtModelBlade *model, const fw::UpdateInfo &info) {
   if (model->isAnimEnd()) {
-    unknown011(model->unknown20, "C_idle");
+    unknown011(model->m_GF_OBJ_HANDLE, "C_idle");
     reqState(unknown012);
   }
 }
@@ -1071,20 +1071,20 @@ void GfEvtModelEnemy::StateStartBattle::onStep(void *owner, const void *param) {
 void GfEvtModelEnemy::StateStartBattle::enter(GfEvtModelEnemy *model, ai::State *previous) {
   mm::mtl::FixStr<32> weaponCommand;
   mm::mtl::FixStr<32> command;
-  GfGameUtil::makeWeaponCommandBattle(weaponCommand, model->unknown20, true, true);
+  GfGameUtil::makeWeaponCommandBattle(weaponCommand, model->m_GF_OBJ_HANDLE, true, true);
   GfGameUtil::makeCommandBattle(command, true);
   mm::mtl::FixStr<32> state;
-  GfGameUtil::makeStateBattle(state, model->unknown20, true);
-  unknown009(model->unknown20, command.c_str(), state.c_str());
-  unknown010(model->unknown20, weaponCommand.c_str());
-  if (GfMountManager::getMountType(model->unknown20, GFATTACH_UNKNOWN_0) != OPTMNT_UNKNOWN_1) {
+  GfGameUtil::makeStateBattle(state, model->m_GF_OBJ_HANDLE, true);
+  unknown009(model->m_GF_OBJ_HANDLE, command.c_str(), state.c_str());
+  unknown010(model->m_GF_OBJ_HANDLE, weaponCommand.c_str());
+  if (GfMountManager::getMountType(model->m_GF_OBJ_HANDLE, GFATTACH_UNKNOWN_0) != OPTMNT_UNKNOWN_1) {
     model->setWeaponBattleMount();
   }
 }
 
 void GfEvtModelEnemy::StateStartBattle::update(GfEvtModelEnemy *model, const fw::UpdateInfo &info) {
   if (model->isAnimEnd()) {
-    unknown011(model->unknown20, "C_btidle");
+    unknown011(model->m_GF_OBJ_HANDLE, "C_btidle");
     reqState(unknown013);
   }
 }
@@ -1102,21 +1102,21 @@ void GfEvtModelEnemy::StateEndBattle::onStep(void *owner, const void *param) { u
 void GfEvtModelEnemy::StateEndBattle::leave(GfEvtModelEnemy *model, ai::State *next) { model->setWeaponFieldMount(); }
 
 void GfEvtModelEnemy::StateEndBattle::enter(GfEvtModelEnemy *model, ai::State *previous) {
-  if (GfMountManager::getMountType(model->unknown20, GFATTACH_UNKNOWN_0) != OPTMNT_UNKNOWN_2) {
+  if (GfMountManager::getMountType(model->m_GF_OBJ_HANDLE, GFATTACH_UNKNOWN_0) != OPTMNT_UNKNOWN_2) {
     mm::mtl::FixStr<32> weaponCommand;
     mm::mtl::FixStr<32> command;
-    GfGameUtil::makeWeaponCommandBattle(weaponCommand, model->unknown20, false, true);
+    GfGameUtil::makeWeaponCommandBattle(weaponCommand, model->m_GF_OBJ_HANDLE, false, true);
     GfGameUtil::makeCommandBattle(command, false);
     mm::mtl::FixStr<32> state;
-    GfGameUtil::makeStateBattle(state, model->unknown20, false);
-    unknown009(model->unknown20, command.c_str(), state.c_str());
-    unknown010(model->unknown20, weaponCommand.c_str());
+    GfGameUtil::makeStateBattle(state, model->m_GF_OBJ_HANDLE, false);
+    unknown009(model->m_GF_OBJ_HANDLE, command.c_str(), state.c_str());
+    unknown010(model->m_GF_OBJ_HANDLE, weaponCommand.c_str());
   }
 }
 
 void GfEvtModelEnemy::StateEndBattle::update(GfEvtModelEnemy *model, const fw::UpdateInfo &info) {
   if (model->isAnimEnd()) {
-    unknown011(model->unknown20, "C_idle");
+    unknown011(model->m_GF_OBJ_HANDLE, "C_idle");
     reqState(unknown012);
   }
 }

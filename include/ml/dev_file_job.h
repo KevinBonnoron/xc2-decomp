@@ -25,7 +25,7 @@ public:
   f32 getTransferRatio() const;
   void shutdownForce();
 
-  FileHandleTh *unknown1a8;       // Inferred role: file handle; original member name unknown.
+  FileHandleTh *m_fileHandleTh;   // Inferred role: file handle; original member name unknown.
   mm::mtl::FixStr<64> unknown1b0; // Inferred role: file name; original member name unknown.
   u32 unknown1f4;                 // Inferred role: unused value; original member name unknown.
   bool unknown1f8;                // Inferred role: flag; original member name unknown.
@@ -35,7 +35,7 @@ public:
   static mm::mtl::FixedList<u32, 512> s_jobs;
 };
 
-static_assert(offsetof(DevFileJob, unknown1a8) == 0x1a8, "");
+static_assert(offsetof(DevFileJob, m_fileHandleTh) == 0x1a8, "");
 static_assert(offsetof(DevFileJob, unknown1b0) == 0x1b0, "");
 static_assert(offsetof(DevFileJob, unknown1f4) == 0x1f4, "");
 static_assert(offsetof(DevFileJob, unknown1fa) == 0x1fa, "");

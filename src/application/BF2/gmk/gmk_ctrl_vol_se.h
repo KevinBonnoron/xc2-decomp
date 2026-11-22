@@ -48,14 +48,14 @@ public:
   void validateMute() const;
   void debugDraw() const;
 
-  CreateInfo unknown20; // Inferred role: create info; original member name unknown.
-  u32 unknown60;        // Inferred role: sound handle; original member name unknown.
-  f32 unknown64;        // Inferred role: distance to the controlled mover; original member name unknown.
-  bool unknown68;       // Inferred role: mute; original member name unknown.
-  mm::Vec3 unknown70;   // Inferred role: sound position; original member name unknown.
+  CreateInfo m_createInfo; // Inferred role: create info; original member name unknown.
+  u32 unknown60;           // Inferred role: sound handle; original member name unknown.
+  f32 unknown64;           // Inferred role: distance to the controlled mover; original member name unknown.
+  bool unknown68;          // Inferred role: mute; original member name unknown.
+  mm::Vec3 unknown70;      // Inferred role: sound position; original member name unknown.
 };
 
-static_assert(offsetof(GmkCtrlVolSe, unknown20) == 0x20, "");
+static_assert(offsetof(GmkCtrlVolSe, m_createInfo) == 0x20, "");
 static_assert(offsetof(GmkCtrlVolSe, unknown60) == 0x60, "");
 static_assert(offsetof(GmkCtrlVolSe, unknown68) == 0x68, "");
 static_assert(offsetof(GmkCtrlVolSe, unknown70) == 0x70, "");

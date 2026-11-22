@@ -124,15 +124,15 @@ public:
   void setTextFacePattern(const char *name);
   virtual void update(const fw::UpdateInfo &info);
 
-  ui::UIObjectPlugin *unknown18;  // Inferred role: plugin; original member name unknown.
-  u32 unknown20;                  // Inferred role: flags; original member name unknown.
-  u32 unknown24;                  // Inferred role: linked object; original member name unknown.
-  GfMenuRewriteNumber *unknown28; // Inferred role: rewrite number; original member name unknown.
+  ui::UIObjectPlugin *unknown18;            // Inferred role: plugin; original member name unknown.
+  u32 unknown20;                            // Inferred role: flags; original member name unknown.
+  u32 unknown24;                            // Inferred role: linked object; original member name unknown.
+  GfMenuRewriteNumber *m_menuRewriteNumber; // Inferred role: rewrite number; original member name unknown.
 };
 
 static_assert(offsetof(GfMenuAdapter, unknown18) == 0x18, "");
 static_assert(offsetof(GfMenuAdapter, unknown24) == 0x24, "");
-static_assert(offsetof(GfMenuAdapter, unknown28) == 0x28, "");
+static_assert(offsetof(GfMenuAdapter, m_menuRewriteNumber) == 0x28, "");
 static_assert(sizeof(GfMenuAdapter) == 0x30, "");
 
 // Inferred role: receiver of the character data an adapter shows, second base of GfMenuCharDataAdapter (thunk offset 0x30); original type name unknown.

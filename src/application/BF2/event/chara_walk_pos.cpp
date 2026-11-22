@@ -23,7 +23,7 @@ void CharaWalkPos::term() {
       if (unknown28 == 2) {
         gf::GfGameUtil::disposeTurnEnd(unknown08);
       }
-      unknown18->resetMovement(0);
+      m_charaDysUpdater->resetMovement(0);
       if (unknown20 == 0) {
         CharaUtil::setGravity(unknown08, true);
       }
@@ -34,7 +34,7 @@ void CharaWalkPos::term() {
       if (property != nullptr) {
         property->setMoveSpeed(0.0f);
       }
-      unknown10->setFootIK(true, CharaIKUpdater::FOOT_TYPE_UNKNOWN_1);
+      m_charaIKUpdater->setFootIK(true, CharaIKUpdater::FOOT_TYPE_UNKNOWN_1);
     }
   }
   unknown28 = 0;

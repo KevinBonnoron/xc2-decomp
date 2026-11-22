@@ -27,7 +27,7 @@
 namespace ml {
 
 void DrPixlPostObjVolume::calculateSclDown() {
-  if (unknown00->unknown120[unknown00->unknown1c98]->m_TMAAOn) {
+  if (m_drMan->unknown120[m_drMan->unknown1c98]->m_TMAAOn) {
     calculateSclDown_Temporal();
   } else {
     calculateSclDown_NonTemporal();
@@ -62,15 +62,15 @@ void DrPixlPostObjVolume::releaseColorBuff() {
 }
 
 void DrPixlPostObjVolume::calculateSclDown_NonTemporal() {
-  DrPixlRenderTarget *source = unknown08->unknown7f0->unknown00[7][0];
+  DrPixlRenderTarget *source = m_drPixlMan->unknown7f0->unknown00[7][0];
   source->setColorInvalidate();
   grlib::CGLibRenderTarget *target = unknown18[DrMan::s_nDblIdx];
   target->setRenderTarget();
-  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
   DrShdDataObj *shader = shdList->getSelectShdObj(0);
   shdList->unknown002(shader);
   int location = (shader->unknown38 + shader->unknown58)->getTextureLocation("s0");
-  DrAPCache *apCache = unknown00->unknown5c0;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   apCache->beginTexSampling(2, 1);
   apCache->setTexture(*source->unknown70, location);
   shdList->renderQuads();
@@ -82,11 +82,11 @@ void DrPixlPostObjVolume::calculateSclDown_NonTemporal() {
 static bool unknown005;
 
 void DrPixlPostObjVolume::calculateSclDown_Temporal() {
-  DrPixlRenderTarget *source = unknown08->unknown7f0->unknown00[7][0];
+  DrPixlRenderTarget *source = m_drPixlMan->unknown7f0->unknown00[7][0];
   source->setColorInvalidate();
   grlib::CGLibRenderTarget *target = unknown18[DrMan::s_nDblIdx];
   grlib::CGLibRenderTarget *previous = unknown18[DrMan::s_nDblStockIdx];
-  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
   DrShdDataObj *shader = shdList->getPostShdObj(0x32);
   u32 execClear = unknown005 ? 2 : 1;
   shader->setDeclarationIdx(shader->getDeclarationOfs("DECL_EXEC_CLEAR"), execClear);
@@ -113,7 +113,7 @@ void DrPixlPostObjVolume::calculateSclDown_Temporal() {
   f32 width = static_cast<f32>(target->unknownbc);
   // The game loads the view work between the two divisions of the first vector and keeps the five uniform vectors in 16 byte aligned stack slots (frame
   // 304 bytes, with an 8 byte gap above them): they are mm::Vec4 locals, float[4] arrays give a 288 byte frame.
-  DrCalcViewWork *viewWork = unknown00->unknown580->unknown10;
+  DrCalcViewWork *viewWork = m_drMan->m_drCalcMan->m_drCalcViewWork;
   mm::Vec4 fragCoordToUvValue;
   fragCoordToUvValue.x = 1.0f / width;
   fragCoordToUvValue.y = 1.0f / height;
@@ -147,8 +147,8 @@ void DrPixlPostObjVolume::calculateSclDown_Temporal() {
   paramValue.z = 0.0f;
   paramValue.w = 0.0f;
   uniform.setF32SetVec4(param, &paramValue.x);
-  DrPixlPostMan *postMan = unknown00->unknown78->unknown7f0->unknown180;
-  DrAPCache *apCache = unknown00->unknown5c0;
+  DrPixlPostMan *postMan = m_drMan->m_drPixlMan->unknown7f0->m_drPixlPostMan;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   apCache->beginTexSampling(2, 1);
   apCache->setTexture(*postMan->unknownc0[DrMan::s_nDblIdx]->unknown70, depthLocation);
   apCache->setTexture(*postMan->unknownc0[DrMan::s_nDblStockIdx]->unknown70, prevDepthLocation);

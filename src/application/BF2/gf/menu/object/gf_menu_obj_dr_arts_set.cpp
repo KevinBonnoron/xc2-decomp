@@ -29,7 +29,7 @@ namespace gf {
 // Inferred role: attached call id; original name unknown.
 constexpr u32 unknown001 = 0x5b;
 
-GfMenuObjDrArtsSet::GfMenuObjDrArtsSet(u32 handle) : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown48(nullptr), unknownc8(nullptr) {}
+GfMenuObjDrArtsSet::GfMenuObjDrArtsSet(u32 handle) : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown48(nullptr), m_menuCallContext(nullptr) {}
 
 GfMenuObjDrArtsSet::~GfMenuObjDrArtsSet() {
   mm::mtl::safeRelease(unknown28);
@@ -37,12 +37,12 @@ GfMenuObjDrArtsSet::~GfMenuObjDrArtsSet() {
   unknown38 = nullptr;
   unknown40 = nullptr;
   mm::mtl::safeRelease(unknown48);
-  mm::mtl::safeRelease(unknownc8);
+  mm::mtl::safeRelease(m_menuCallContext);
 }
 
 void GfMenuObjDrArtsSet::initialize() {
   ui::UIObjectAcc acc(unknown18);
-  unknownc8 = GfMenuCallContext::create();
+  m_menuCallContext = GfMenuCallContext::create();
   ui::UISelectObjList::CreateParam createParam;
   createParam.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
   unknown28 = ui::UISelectObjList::create(createParam);
@@ -226,21 +226,21 @@ void GfMenuObjDrArtsSet::MainListener::reciveEvent(const ui::EventData &event, u
 
 void GfMenuObjDrArtsSet::WpnTypeListener::reciveEvent(const ui::EventData &event, u32 handle) {
   ui::UIObjectAcc acc(handle);
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjDrArtsSet->unknown18);
   switch (event.unknown00) {
   case 1:
-    setupWpnType(acc, unknown20->unknown38);
+    setupWpnType(acc, m_menuObjDrArtsSet->unknown38);
     ui::UIObjectAcc(acc.searchChild("IMG_cate_wp_icon@01")).setDisp(false);
-    unknown20->unknown30 = setupSlideSelect(acc, unknown20->unknown50, unknown20->unknown28);
+    m_menuObjDrArtsSet->unknown30 = setupSlideSelect(acc, m_menuObjDrArtsSet->unknown50, m_menuObjDrArtsSet->unknown28);
     GfMenuObject::disableInput(handle);
     break;
   case 6: {
     // Places the load of the event parameter before the load of the list, as the game does (0x7100448258: ldr w1 [event+8] before ldr x0 [owner+0x28]); the
     // direct argument loads the list first (ruling 2).
     u32 selected = event.unknown08;
-    unknown20->unknown28->setIndex(selected);
-    u32 index = unknown20->unknown28->getIndex(true);
-    unknown20->unknown38->unknown162(unknown20->unknown50[index]);
+    m_menuObjDrArtsSet->unknown28->setIndex(selected);
+    u32 index = m_menuObjDrArtsSet->unknown28->getIndex(true);
+    m_menuObjDrArtsSet->unknown38->unknown162(m_menuObjDrArtsSet->unknown50[index]);
     break;
   }
   case 8:
@@ -257,7 +257,7 @@ void GfMenuObjDrArtsSet::WpnTypeListener::reciveEvent(const ui::EventData &event
     }
     break;
   case GfMenuTypes::unknown003_33:
-    GfMenuObject::setupInputSelectionFromList(handle, *unknown20->unknown28);
+    GfMenuObject::setupInputSelectionFromList(handle, *m_menuObjDrArtsSet->unknown28);
     GfMenuObject::enableInput(handle);
     GfMenuObjOperationInfo::open(handle, 0, 0, 0);
     break;
@@ -272,26 +272,26 @@ void GfMenuObjDrArtsSet::WpnTypeListener::reciveEvent(const ui::EventData &event
 
 void GfMenuObjDrArtsSet::ArtsListListener::reciveEvent(const ui::EventData &event, u32 handle) {
   ui::UIObjectAcc acc(handle);
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjDrArtsSet->unknown18);
   switch (event.unknown00) {
   case 1: {
-    setupArtsList(acc, unknown20->unknown38);
+    setupArtsList(acc, m_menuObjDrArtsSet->unknown38);
     GfMenuObjUtil::CursorParam param;
     param.unknown00 = handle;
     param.unknown04 = acc.searchChild("IMG_arts_list_cursor");
     param.unknown1a = 1;
     param.unknown08 = "IMG_arts_icon@%02d";
-    param.unknown20.unknown18 = 5;
-    unknown20->unknown48 = GfMenuObjUtil::createCursor(param);
+    param.m_cursorSetting.unknown18 = 5;
+    m_menuObjDrArtsSet->unknown48 = GfMenuObjUtil::createCursor(param);
     GfMenuObject::disableInput(handle);
     break;
   }
   case 6: {
     u32 index = event.unknown08;
-    if (unknown20->unknown48->inputChange(index)) {
+    if (m_menuObjDrArtsSet->unknown48->inputChange(index)) {
       mm::mtl::FixedArray<u32, 4> arts;
-      if (GfDataDriverArts::getEnableArts(arts, GfMenuReference::getReferenceDriverID(0), unknown20->unknown38->unknown0c)) {
-        unknown20->unknown40->unknown162(index);
+      if (GfDataDriverArts::getEnableArts(arts, GfMenuReference::getReferenceDriverID(0), m_menuObjDrArtsSet->unknown38->unknown0c)) {
+        m_menuObjDrArtsSet->unknown40->unknown162(index);
       }
     }
     break;
@@ -300,13 +300,13 @@ void GfMenuObjDrArtsSet::ArtsListListener::reciveEvent(const ui::EventData &even
     switch (event.unknown0c) {
     case 9: {
       u32 driver = GfMenuReference::getReferenceDriverID(0);
-      u32 weaponType = unknown20->unknown38->unknown0c;
+      u32 weaponType = m_menuObjDrArtsSet->unknown38->unknown0c;
       mm::mtl::FixedArray<u32, 4> arts;
       if (GfDataDriverArts::getEnableArts(arts, driver, weaponType)) {
         // The game zero-extends the arts index (ldr w8, [x8, #12] at 0x7100448aac) although
         // GfMenuReferenceNumber::unknown0c is int; retyping it breaks other matched functions, so the index is
         // kept as the u32 the game's access shows (P1, ruling 2026-11-14).
-        u32 slot = unknown20->unknown40->unknown0c;
+        u32 slot = m_menuObjDrArtsSet->unknown40->unknown0c;
         u32 art = arts[slot];
         u32 level = GfDataDriverArts::getArtsLevel(driver, art);
         u32 driverLevel = GfDataDriver::getLevel(driver);
@@ -326,9 +326,9 @@ void GfMenuObjDrArtsSet::ArtsListListener::reciveEvent(const ui::EventData &even
           } else {
             window = 0x1b;
           }
-          unknown20->unknownc8->reset();
-          GfMenuObjCommonText::open(unknown20->unknownc8, window, 0);
-          GfMenuObject::setCallContextEventHandler(unknown20->unknownc8, handle);
+          m_menuObjDrArtsSet->m_menuCallContext->reset();
+          GfMenuObjCommonText::open(m_menuObjDrArtsSet->m_menuCallContext, window, 0);
+          GfMenuObject::setCallContextEventHandler(m_menuObjDrArtsSet->m_menuCallContext, handle);
           GfMenuObject::disableInput(handle);
         }
       }
@@ -341,19 +341,19 @@ void GfMenuObjDrArtsSet::ArtsListListener::reciveEvent(const ui::EventData &even
     }
     break;
   case GfMenuTypes::unknown003_33:
-    unknown20->unknown48->open(0);
+    m_menuObjDrArtsSet->unknown48->open(0);
     unknown164(owner.searchChild("LAY_arts_detail"), GfMenuTypes::unknown003_33);
     GfMenuObject::setupInputSelection(handle, 0, 4);
     GfMenuObject::enableInput(handle);
     GfMenuObjOperationInfo::open(handle, 0, 0, 0);
     break;
   case GfMenuTypes::unknown003_34:
-    unknown20->unknown48->setDisp(false);
+    m_menuObjDrArtsSet->unknown48->setDisp(false);
     unknown164(owner.searchChild("LAY_arts_detail"), GfMenuTypes::unknown003_34);
     GfMenuObject::disableInput(handle);
     break;
   case 0x41:
-    if (unknown20->unknownc8 != nullptr && unknown20->unknownc8->unknown0c == event.unknown08) {
+    if (m_menuObjDrArtsSet->m_menuCallContext != nullptr && m_menuObjDrArtsSet->m_menuCallContext->unknown0c == event.unknown08) {
       GfMenuObject::enableInput(handle);
     }
     break;
@@ -367,7 +367,7 @@ void GfMenuObjDrArtsSet::ArtsDetailListener::reciveEvent(const ui::EventData &ev
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1:
-    setupArtsDetail(acc, unknown20->unknown38, unknown20->unknown40);
+    setupArtsDetail(acc, m_menuObjDrArtsSet->unknown38, m_menuObjDrArtsSet->unknown40);
     break;
   case GfMenuTypes::unknown003_33:
     setFadeIn(handle);

@@ -233,13 +233,13 @@ const char *PadManager::getPadFilterName(int padNo) {
   return "none";
 }
 
-void PadManager::setARXThreshold(int padNo, f32 threshold) { get()->unknown80[padNo].unknown2c = threshold; }
+void PadManager::setARXThreshold(int padNo, f32 threshold) { get()->unknown80[padNo].m_aRXThreshold = threshold; }
 
-void PadManager::setARYThreshold(int padNo, f32 threshold) { get()->unknown80[padNo].unknown30 = threshold; }
+void PadManager::setARYThreshold(int padNo, f32 threshold) { get()->unknown80[padNo].m_aRYThreshold = threshold; }
 
-void PadManager::setALXThreshold(int padNo, f32 threshold) { get()->unknown80[padNo].unknown34 = threshold; }
+void PadManager::setALXThreshold(int padNo, f32 threshold) { get()->unknown80[padNo].m_aLXThreshold = threshold; }
 
-void PadManager::setALYThreshold(int padNo, f32 threshold) { get()->unknown80[padNo].unknown38 = threshold; }
+void PadManager::setALYThreshold(int padNo, f32 threshold) { get()->unknown80[padNo].m_aLYThreshold = threshold; }
 
 void PadManager::setEnable(int padNo, bool isEnable) { get()->unknown3650.set(padNo, isEnable); }
 
@@ -282,7 +282,7 @@ bool PadManager::isDebugDraw() {
 void PadManager::setConfigData(int padNo, const PadConfigData &data) {
   PadManager *manager = get();
   if (manager != nullptr) {
-    manager->unknown3200[padNo] = data;
+    manager->m_padConfigData[padNo] = data;
   }
 }
 
@@ -296,7 +296,7 @@ const PadConfigData &PadManager::getConfigData(int padNo) {
     return identity;
   }
 
-  return manager->unknown3200[padNo];
+  return manager->m_padConfigData[padNo];
 }
 
 namespace detail {

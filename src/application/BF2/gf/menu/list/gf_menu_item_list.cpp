@@ -109,7 +109,7 @@ void GfMenuItemList::sort(u32 type, bool ascending) {
   case unknown093_1: {
     u32 *times = new (getAllocator(ALLOCATOR_UNKNOWN_0), nullptr, 0, 8) u32[getSize()];
     for (u32 i = 0; i < getSize(); i++) {
-      times[i] = GfItemUtil::getItemTime(getContents(i).unknown04, getContents(i).unknown0c);
+      times[i] = GfItemUtil::getItemTime(getContents(i).unknown04, getContents(i).m_itemHandle);
       getContents(i).unknown0a = i;
     }
     if (ascending) {
@@ -390,7 +390,7 @@ int GfMenuItemList::findItem(ItemType::Type type, u32 item) {
 }
 
 void GfMenuItemList::setupFromHanaParts(const HanaPartsSetup &setup) {
-  SetupParam param = setup.unknown00;
+  SetupParam param = setup.m_setupParam;
   UIListInfo<MenuItemInfo>::setup(getAllocator(ALLOCATOR_UNKNOWN_0), param);
   if (isValid() && setup.unknown14 >= ItemType::ITEM_TYPE_UNKNOWN_16 && setup.unknown14 <= ItemType::ITEM_TYPE_UNKNOWN_20) {
     u8 *bdat = GfDataBdat::getFP(setup.unknown14 - ItemType::ITEM_TYPE_UNKNOWN_16 + BDAT_ITM_HANA_ROLE);
@@ -425,31 +425,31 @@ void GfMenuItemList::addListFromBox(const ItemBoxSetup &setup) {
         } else {
           info.unknown08 = 1;
         }
-        info.unknown0c = items[i].unknown08;
+        info.m_itemHandle = items[i].m_itemHandle;
         if (info.unknown08 != 0 || setup.unknown29) {
           if (setup.unknown2a && !GfDataItem::isEnableSell(info.unknown04)) {
             continue;
           }
-          if (setup.unknown2b && GfItemUtil::getEquipChar(items[i].unknown08) != 0) {
+          if (setup.unknown2b && GfItemUtil::getEquipChar(items[i].m_itemHandle) != 0) {
             continue;
           }
           addContents(info);
         }
       }
-      if (setup.unknown18 == nullptr) {
+      if (setup.m_filtertInfo == nullptr) {
         return;
       }
-      if ((setup.unknown18->unknown00 & 1) != 0) {
-        filterRarity(*setup.unknown18);
+      if ((setup.m_filtertInfo->unknown00 & 1) != 0) {
+        filterRarity(*setup.m_filtertInfo);
       }
-      if ((setup.unknown18->unknown00 & 2) != 0) {
-        filterRarityMore(*setup.unknown18);
+      if ((setup.m_filtertInfo->unknown00 & 2) != 0) {
+        filterRarityMore(*setup.m_filtertInfo);
       }
-      if ((setup.unknown18->unknown00 & 4) != 0) {
-        filterCollectionType(*setup.unknown18);
+      if ((setup.m_filtertInfo->unknown00 & 4) != 0) {
+        filterCollectionType(*setup.m_filtertInfo);
       }
-      if ((setup.unknown18->unknown00 & 8) != 0) {
-        filterFavoriteType(*setup.unknown18);
+      if ((setup.m_filtertInfo->unknown00 & 8) != 0) {
+        filterFavoriteType(*setup.m_filtertInfo);
       }
     }
   }
@@ -460,19 +460,19 @@ void GfMenuItemList::setupFromQuestReward(const QuestRewardSetup &setup) {
   GfQuestReward reward;
   if (setup.unknown14 != 0 && GfQuestUtil::getReward(reward, setup.unknown14, false)) {
     for (u32 slot = QUEST_REWARD_UNKNOWN_8; slot <= QUEST_REWARD_UNKNOWN_11; slot++) {
-      u16 item = reward.unknown00[slot].unknown44;
+      u16 item = reward.m_param[slot].unknown44;
       if (item != 0) {
         MenuItemInfo info;
         info.unknown00 = GfDataItem::getItemType(item);
         info.unknown04 = item;
-        info.unknown08 = reward.unknown00[slot].m_developZone;
+        info.unknown08 = reward.m_param[slot].m_developZone;
         items.push_back(info);
       }
     }
     if (items.size() == 0) {
       clear();
     } else {
-      UIListInfo<MenuItemInfo>::setup(getAllocator(ALLOCATOR_UNKNOWN_0), setup.unknown00);
+      UIListInfo<MenuItemInfo>::setup(getAllocator(ALLOCATOR_UNKNOWN_0), setup.m_setupParam);
       if (isValid()) {
         for (u32 i = 0; i < items.size(); i++) {
           addContents(items[i]);
@@ -510,7 +510,7 @@ void GfMenuItemList::setupFromMissionReward(const MissionRewardSetup &setup) {
   if (items.size() == 0) {
     clear();
   } else {
-    UIListInfo<MenuItemInfo>::setup(getAllocator(ALLOCATOR_UNKNOWN_0), setup.unknown00);
+    UIListInfo<MenuItemInfo>::setup(getAllocator(ALLOCATOR_UNKNOWN_0), setup.m_setupParam);
     if (isValid()) {
       for (u32 i = 0; i < items.size(); i++) {
         addContents(items[i]);

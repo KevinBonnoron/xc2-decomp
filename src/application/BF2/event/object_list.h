@@ -83,8 +83,8 @@ public:
   void dump();
 
   const char *getName() const { return unknown0c.c_str(); }
-  Object *getActive() const { return unknown78; }
-  void setActive(Object *object) { unknown78 = object; }
+  Object *getActive() const { return m_object; }
+  void setActive(Object *object) { m_object = object; }
   u32 getCharaCount() const { return unknown88; }
   u32 getCameraCount() const { return unknown8c; }
   u32 getEffectCount() const { return unknown90; }
@@ -120,8 +120,8 @@ private:
   ObjectTree *unknown60;         // Inferred role: camera tree; original member name unknown.
   ObjectTree *unknown68;         // Inferred role: effect tree; original member name unknown.
   ObjectTree *unknown70;         // Inferred role: light tree; original member name unknown.
-  Object *unknown78;             // Inferred role: active; original member name unknown.
-  ObjectChara *unknown80;        // Inferred role: first chara; original member name unknown.
+  Object *m_object;              // Inferred role: active; original member name unknown.
+  ObjectChara *m_objectChara;    // Inferred role: first chara; original member name unknown.
   u32 unknown88;                 // Inferred role: chara count; original member name unknown.
   u32 unknown8c;                 // Inferred role: camera count; original member name unknown.
   u32 unknown90;                 // Inferred role: effect count; original member name unknown.

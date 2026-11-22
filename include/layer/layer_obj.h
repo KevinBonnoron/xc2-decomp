@@ -38,15 +38,15 @@ struct LayerResMatrix {
 static_assert(sizeof(LayerResMatrix) == 0x18, "");
 
 struct LayerResColor {
-  mm::Col4 unknown00; // Inferred role: mul col; original member name unknown.
-  mm::Col3 unknown10; // Inferred role: add col; original member name unknown.
+  mm::Col4 m_mulCol; // Inferred role: mul col; named after the game accessor layer::LayerObj::getMulCol.
+  mm::Col3 m_addCol; // Inferred role: add col; named after the game accessor layer::LayerObj::getAddCol.
 };
 
 static_assert(sizeof(LayerResColor) == 0x1c, "");
 
 struct LayerResParmInfo {
-  LayerBasePos unknown00;  // Inferred role: pos, rot, scale and anchor; original member name unknown.
-  LayerResColor unknown1c; // Inferred role: color; original member name unknown.
+  LayerBasePos m_layerBasePos;   // Inferred role: pos, rot, scale and anchor; original member name unknown.
+  LayerResColor m_layerResColor; // Inferred role: color; original member name unknown.
 };
 
 static_assert(sizeof(LayerResParmInfo) == 0x38, "");
@@ -70,23 +70,23 @@ static_assert(sizeof(LayerResUvParam) == 0x3c, "");
 
 // Evidence: LayerObj::applyBegin and applyEnd read it; the layout parents fill it for their children.
 struct LayerResUpdateInfo {
-  mm::Mat44 unknown00;                 // Inferred role: parent matrix; original member name unknown.
-  const LayerResMatrix *unknown40;     // Inferred role: parent local matrix; original member name unknown.
-  const LayerResColor *unknown48;      // Inferred role: parent color; original member name unknown.
-  bool unknown50;                      // Inferred role: parent is applied; original member name unknown.
-  LAYER_SPACE_TYPE unknown54;          // Inferred role: parent space; original member name unknown.
-  u32 unknown58;                       // Inferred role: parent blend type; original member name unknown.
-  LayerResDispInfo unknown5c;          // Inferred role: display bounds; original member name unknown.
-  const LayerObjTopMaskObj *unknown70; // Inferred role: parent mask object; original member name unknown.
+  mm::Mat44 unknown00;                            // Inferred role: parent matrix; original member name unknown.
+  const LayerResMatrix *m_layerResMatrix;         // Inferred role: parent local matrix; original member name unknown.
+  const LayerResColor *m_layerResColor;           // Inferred role: parent color; original member name unknown.
+  bool unknown50;                                 // Inferred role: parent is applied; original member name unknown.
+  LAYER_SPACE_TYPE unknown54;                     // Inferred role: parent space; original member name unknown.
+  u32 unknown58;                                  // Inferred role: parent blend type; original member name unknown.
+  LayerResDispInfo m_layerResDispInfo;            // Inferred role: display bounds; original member name unknown.
+  const LayerObjTopMaskObj *m_layerObjTopMaskObj; // Inferred role: parent mask object; original member name unknown.
 };
 
-static_assert(offsetof(LayerResUpdateInfo, unknown40) == 0x40, "");
-static_assert(offsetof(LayerResUpdateInfo, unknown48) == 0x48, "");
+static_assert(offsetof(LayerResUpdateInfo, m_layerResMatrix) == 0x40, "");
+static_assert(offsetof(LayerResUpdateInfo, m_layerResColor) == 0x48, "");
 static_assert(offsetof(LayerResUpdateInfo, unknown50) == 0x50, "");
 static_assert(offsetof(LayerResUpdateInfo, unknown54) == 0x54, "");
 static_assert(offsetof(LayerResUpdateInfo, unknown58) == 0x58, "");
-static_assert(offsetof(LayerResUpdateInfo, unknown5c) == 0x5c, "");
-static_assert(offsetof(LayerResUpdateInfo, unknown70) == 0x70, "");
+static_assert(offsetof(LayerResUpdateInfo, m_layerResDispInfo) == 0x5c, "");
+static_assert(offsetof(LayerResUpdateInfo, m_layerObjTopMaskObj) == 0x70, "");
 static_assert(sizeof(LayerResUpdateInfo) == 0x80, "");
 
 class LayerObj : public LayerBase {
@@ -156,76 +156,76 @@ public:
   // Inferred helper: sets the render info of a work buffer of width x height pixels; original name unknown.
   void unknown005(u32 width, u32 height) {
     f32 sclY = static_cast<f32>(height) / static_cast<f32>(width);
-    unknown180.unknown08 = 1.0f;
-    unknown180.unknown0c = sclY;
+    m_layerResRenderInfo.unknown08 = 1.0f;
+    m_layerResRenderInfo.unknown0c = sclY;
     f32 sclX = 1.0f;
     if (width <= height) {
       sclY = 1.0f;
       sclX = static_cast<f32>(width) / static_cast<f32>(height);
     }
-    unknown180.unknown00 = sclX;
-    unknown180.unknown04 = sclY;
-    unknown180.unknown10 = 0;
-    unknown180.unknown12 = 0;
-    unknown180.unknown14 = width;
-    unknown180.unknown16 = height;
+    m_layerResRenderInfo.unknown00 = sclX;
+    m_layerResRenderInfo.unknown04 = sclY;
+    m_layerResRenderInfo.m_pixelX = 0;
+    m_layerResRenderInfo.m_pixelY = 0;
+    m_layerResRenderInfo.m_pixelWidth = width;
+    m_layerResRenderInfo.m_pixelHeight = height;
   }
 
   mm::Mat44 unknown20[2]; // Inferred role: matrices; original member name unknown.
   u32 unknowna0[2];       // Inferred role: state flags; original member name unknown.
   u32 unknowna8;          // Inferred role: flags; original member name unknown.
   u8 _ac[0xb0 - 0xac];
-  u64 unknownb0;                 // Inferred role: cleared by the constructor; original member name unknown.
-  const void *unknownb8;         // Inferred role: res data; original member name unknown.
-  u16 unknownc0;                 // Inferred role: priority; original member name unknown.
-  u8 unknownc2;                  // Inferred role: matrix idx; original member name unknown.
-  u8 unknownc3;                  // Inferred role: space; original member name unknown.
-  u8 unknownc4;                  // Inferred role: blend type; original member name unknown.
-  u8 unknownc5;                  // Inferred role: render blend type, index of s_resDefBlend; original member name unknown.
-  u8 unknownc6;                  // Inferred role: tex filter type; original member name unknown.
-  LayerResParmInfo unknownc8[3]; // Inferred role: parms; original member name unknown.
-  LayerResDispInfo unknown170;   // Inferred role: display bounds, the clip values; original member name unknown.
-  LayerResRenderInfo unknown180; // Inferred role: render info; original member name unknown.
-  LayerResUvParam unknown19c;    // Inferred role: uv params; original member name unknown.
-  u16 unknown1d8[2];             // Inferred role: action idx; original member name unknown.
-  LayerResMatrix unknown1dc;     // Inferred role: local matrix; original member name unknown.
-  f32 unknown1f4;                // Inferred role: ctrl spd; original member name unknown.
-  f32 unknown1f8;                // Inferred role: frame ctrl spd; original member name unknown.
-  f32 unknown1fc;                // Inferred role: uniform block parameter; original member name unknown.
-  f32 unknown200;                // Inferred role: 3d sort depth; original member name unknown.
+  u64 unknownb0;                           // Inferred role: cleared by the constructor; original member name unknown.
+  const void *m_resData;                   // Inferred role: res data; named after the game accessor layer::LayerAccObjBase::getResData.
+  u16 m_priority;                          // Inferred role: priority; named after the game accessor layer::LayerAccObjBase::getPriority.
+  u8 unknownc2;                            // Inferred role: matrix idx; original member name unknown.
+  u8 m_space;                              // Inferred role: space; named after the game accessor layer::LayerAccObjBase::setSpace.
+  u8 m_blendType;                          // Inferred role: blend type; named after the game accessor layer::LayerAccObjBase::getBlendType.
+  u8 unknownc5;                            // Inferred role: render blend type, index of s_resDefBlend; original member name unknown.
+  u8 m_texFilterType;                      // Inferred role: tex filter type; named after the game accessor layer::LayerAccObjBase::getTexFilterType.
+  LayerResParmInfo m_layerResParmInfo[3];  // Inferred role: parms; original member name unknown.
+  LayerResDispInfo m_layerResDispInfo;     // Inferred role: display bounds, the clip values; original member name unknown.
+  LayerResRenderInfo m_layerResRenderInfo; // Inferred role: render info; original member name unknown.
+  LayerResUvParam m_layerResUvParam;       // Inferred role: uv params; original member name unknown.
+  u16 unknown1d8[2];                       // Inferred role: action idx; original member name unknown.
+  LayerResMatrix m_layerResMatrix;         // Inferred role: local matrix; original member name unknown.
+  f32 m_ctrlSpd;                           // Inferred role: ctrl spd; named after the game accessor layer::LayerAccObjBase::getCtrlSpd.
+  f32 unknown1f8;                          // Inferred role: frame ctrl spd; original member name unknown.
+  f32 unknown1fc;                          // Inferred role: uniform block parameter; original member name unknown.
+  f32 unknown200;                          // Inferred role: 3d sort depth; original member name unknown.
   u8 _204[0x208 - 0x204];
-  LayerAnimeObj *unknown208[3];            // Inferred role: anim objs; original member name unknown.
-  LayerResSecTexture *unknown220[3];       // Inferred role: second texs; original member name unknown.
-  grlib::CGLibDblUniformBlock *unknown238; // Inferred role: world matrix uniform; original member name unknown.
-  const LayerBase *unknown240;             // Inferred role: mask object; original member name unknown.
-  const LayerObjTopMaskObj *unknown248;    // Inferred role: mask object used for rendering; original member name unknown.
+  LayerAnimeObj *unknown208[3];                   // Inferred role: anim objs; original member name unknown.
+  LayerResSecTexture *unknown220[3];              // Inferred role: second texs; original member name unknown.
+  grlib::CGLibDblUniformBlock *unknown238;        // Inferred role: world matrix uniform; original member name unknown.
+  const LayerBase *m_maskObj;                     // Inferred role: mask object; named after the game accessor layer::LayerAccObjBase::setMaskObj.
+  const LayerObjTopMaskObj *m_layerObjTopMaskObj; // Inferred role: mask object used for rendering; original member name unknown.
 };
 
 static_assert(offsetof(LayerObj, unknown20) == 0x20, "");
 static_assert(offsetof(LayerObj, unknowna0) == 0xa0, "");
 static_assert(offsetof(LayerObj, unknowna8) == 0xa8, "");
 static_assert(offsetof(LayerObj, unknownb0) == 0xb0, "");
-static_assert(offsetof(LayerObj, unknownb8) == 0xb8, "");
-static_assert(offsetof(LayerObj, unknownc0) == 0xc0, "");
+static_assert(offsetof(LayerObj, m_resData) == 0xb8, "");
+static_assert(offsetof(LayerObj, m_priority) == 0xc0, "");
 static_assert(offsetof(LayerObj, unknownc2) == 0xc2, "");
-static_assert(offsetof(LayerObj, unknownc3) == 0xc3, "");
-static_assert(offsetof(LayerObj, unknownc4) == 0xc4, "");
+static_assert(offsetof(LayerObj, m_space) == 0xc3, "");
+static_assert(offsetof(LayerObj, m_blendType) == 0xc4, "");
 static_assert(offsetof(LayerObj, unknownc5) == 0xc5, "");
-static_assert(offsetof(LayerObj, unknownc6) == 0xc6, "");
-static_assert(offsetof(LayerObj, unknownc8) == 0xc8, "");
-static_assert(offsetof(LayerObj, unknown170) == 0x170, "");
-static_assert(offsetof(LayerObj, unknown180) == 0x180, "");
-static_assert(offsetof(LayerObj, unknown19c) == 0x19c, "");
+static_assert(offsetof(LayerObj, m_texFilterType) == 0xc6, "");
+static_assert(offsetof(LayerObj, m_layerResParmInfo) == 0xc8, "");
+static_assert(offsetof(LayerObj, m_layerResDispInfo) == 0x170, "");
+static_assert(offsetof(LayerObj, m_layerResRenderInfo) == 0x180, "");
+static_assert(offsetof(LayerObj, m_layerResUvParam) == 0x19c, "");
 static_assert(offsetof(LayerObj, unknown1d8) == 0x1d8, "");
-static_assert(offsetof(LayerObj, unknown1dc) == 0x1dc, "");
-static_assert(offsetof(LayerObj, unknown1f4) == 0x1f4, "");
+static_assert(offsetof(LayerObj, m_layerResMatrix) == 0x1dc, "");
+static_assert(offsetof(LayerObj, m_ctrlSpd) == 0x1f4, "");
 static_assert(offsetof(LayerObj, unknown1fc) == 0x1fc, "");
 static_assert(offsetof(LayerObj, unknown200) == 0x200, "");
 static_assert(offsetof(LayerObj, unknown208) == 0x208, "");
 static_assert(offsetof(LayerObj, unknown220) == 0x220, "");
 static_assert(offsetof(LayerObj, unknown238) == 0x238, "");
-static_assert(offsetof(LayerObj, unknown240) == 0x240, "");
-static_assert(offsetof(LayerObj, unknown248) == 0x248, "");
+static_assert(offsetof(LayerObj, m_maskObj) == 0x240, "");
+static_assert(offsetof(LayerObj, m_layerObjTopMaskObj) == 0x248, "");
 static_assert(sizeof(LayerObj) == 0x250, "");
 
 } // namespace layer

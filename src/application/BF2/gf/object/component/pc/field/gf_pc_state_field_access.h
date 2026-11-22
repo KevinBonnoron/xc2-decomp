@@ -25,10 +25,10 @@ class StateFieldAccess : public GfStateBase {
   void leave(GfComBehaviorPc *behavior, ai::State *next);
   void update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info);
 
-  GF_OBJ_HANDLE *unknown18; // Inferred role: accessed object; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: accessed object; original member name unknown.
 };
 
-static_assert(offsetof(StateFieldAccess, unknown18) == 0x18, "");
+static_assert(offsetof(StateFieldAccess, m_GF_OBJ_HANDLE) == 0x18, "");
 static_assert(sizeof(StateFieldAccess) == 0x20, "");
 
 } // namespace pc

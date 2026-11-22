@@ -18,18 +18,18 @@ struct LyrMeshData;
 struct LayerArgMdlRenInf {
   u32 *unknown00;                         // Inferred role: icon entry state cursor; original member name unknown.
   grlib::CGLibDblUniformBlock *unknown08; // Inferred role: uniform block of the icon entry; original member name unknown.
-  const LayerResNode *unknown10;          // Inferred role: mesh node (LayerObjTopDef::updateParams stores an element of a 0x38 stride array); original member name unknown.
-  const LayerResMatrix *unknown18;        // Inferred role: parent matrix; original member name unknown.
-  const LayerResColor *unknown20;         // Inferred role: parent color; original member name unknown.
-  const LyrMeshData *unknown28;           // Inferred role: mesh entry; original member name unknown.
+  const LayerResNode *m_layerResNode;     // Inferred role: mesh node (LayerObjTopDef::updateParams stores an element of a 0x38 stride array); original member name unknown.
+  const LayerResMatrix *m_layerResMatrix; // Inferred role: parent matrix; original member name unknown.
+  const LayerResColor *m_layerResColor;   // Inferred role: parent color; original member name unknown.
+  const LyrMeshData *m_lyrMeshData;       // Inferred role: mesh entry; original member name unknown.
   f32 *unknown30;                         // Inferred role: uniform buffer cursor; original member name unknown.
 };
 
 static_assert(offsetof(LayerArgMdlRenInf, unknown08) == 0x08, "");
-static_assert(offsetof(LayerArgMdlRenInf, unknown10) == 0x10, "");
-static_assert(offsetof(LayerArgMdlRenInf, unknown18) == 0x18, "");
-static_assert(offsetof(LayerArgMdlRenInf, unknown20) == 0x20, "");
-static_assert(offsetof(LayerArgMdlRenInf, unknown28) == 0x28, "");
+static_assert(offsetof(LayerArgMdlRenInf, m_layerResNode) == 0x10, "");
+static_assert(offsetof(LayerArgMdlRenInf, m_layerResMatrix) == 0x18, "");
+static_assert(offsetof(LayerArgMdlRenInf, m_layerResColor) == 0x20, "");
+static_assert(offsetof(LayerArgMdlRenInf, m_lyrMeshData) == 0x28, "");
 static_assert(offsetof(LayerArgMdlRenInf, unknown30) == 0x30, "");
 
 // Evidence: the vtable holds LayerActDef::updatePartsAction; LayerObjTopDef calls the LayerObjPlace, LayerObjMesh and

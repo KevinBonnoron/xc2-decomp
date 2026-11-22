@@ -70,7 +70,7 @@ DrMan *DrMan::get() { return s_pTop; }
 
 DrMan::~DrMan() {
   WorkCpu::removeBackgroundListener(this);
-  unknown78->pixelEndMode();
+  m_drPixlMan->pixelEndMode();
   if (unknown1d18 != nullptr) {
     mtl::MemManager::deallocate(unknown1d18, 0, false);
     unknown1d18 = nullptr;
@@ -79,9 +79,9 @@ DrMan::~DrMan() {
     mtl::MemManager::deallocate(m_gblIdx, 0, false);
     m_gblIdx = nullptr;
   }
-  if (unknown88 != nullptr) {
-    delete unknown88;
-    unknown88 = nullptr;
+  if (m_drMdlMan != nullptr) {
+    delete m_drMdlMan;
+    m_drMdlMan = nullptr;
   }
   if (unknown1e00 != nullptr) {
     delete unknown1e00;
@@ -109,13 +109,13 @@ DrMan::~DrMan() {
       unknowne0[i] = nullptr;
     }
   }
-  if (unknown78 != nullptr) {
-    delete unknown78;
-    unknown78 = nullptr;
+  if (m_drPixlMan != nullptr) {
+    delete m_drPixlMan;
+    m_drPixlMan = nullptr;
   }
-  if (unknown90 != nullptr) {
-    delete unknown90;
-    unknown90 = nullptr;
+  if (m_drIrrVolMan != nullptr) {
+    delete m_drIrrVolMan;
+    m_drIrrVolMan = nullptr;
   }
   for (int i = 0; i < 4; i++) {
     if (unknown120[i] != nullptr) {
@@ -123,13 +123,13 @@ DrMan::~DrMan() {
       unknown120[i] = nullptr;
     }
   }
-  if (unknown180 != nullptr) {
-    delete unknown180;
-    unknown180 = nullptr;
+  if (m_drPixlTileParm != nullptr) {
+    delete m_drPixlTileParm;
+    m_drPixlTileParm = nullptr;
   }
-  if (unknown188 != nullptr) {
-    delete unknown188;
-    unknown188 = nullptr;
+  if (m_drPixlMdlSampler != nullptr) {
+    delete m_drPixlMdlSampler;
+    m_drPixlMdlSampler = nullptr;
   }
   for (int i = 0; i < 4; i++) {
     if (unknowna0[i] != nullptr) {
@@ -137,33 +137,33 @@ DrMan::~DrMan() {
       unknowna0[i] = nullptr;
     }
   }
-  if (unknown80 != nullptr) {
-    delete unknown80;
-    unknown80 = nullptr;
+  if (m_drShdMan != nullptr) {
+    delete m_drShdMan;
+    m_drShdMan = nullptr;
   }
-  if (unknown98 != nullptr) {
-    delete unknown98;
-    unknown98 = nullptr;
+  if (m_drResFilterData != nullptr) {
+    delete m_drResFilterData;
+    m_drResFilterData = nullptr;
   }
-  if (unknown5b0 != nullptr) {
-    delete unknown5b0;
-    unknown5b0 = nullptr;
+  if (m_drCalcTexStreamMan != nullptr) {
+    delete m_drCalcTexStreamMan;
+    m_drCalcTexStreamMan = nullptr;
   }
-  if (unknown5c8 != nullptr) {
-    delete unknown5c8;
-    unknown5c8 = nullptr;
+  if (m_drCalcGpuCost != nullptr) {
+    delete m_drCalcGpuCost;
+    m_drCalcGpuCost = nullptr;
   }
-  if (unknown70 != nullptr) {
-    delete unknown70;
-    unknown70 = nullptr;
+  if (m_drIniSys != nullptr) {
+    delete m_drIniSys;
+    m_drIniSys = nullptr;
   }
-  if (unknown5d0 != nullptr) {
-    delete unknown5d0;
-    unknown5d0 = nullptr;
+  if (m_drPixlMemMan != nullptr) {
+    delete m_drPixlMemMan;
+    m_drPixlMemMan = nullptr;
   }
-  if (unknown5c0 != nullptr) {
-    delete unknown5c0;
-    unknown5c0 = nullptr;
+  if (m_drAPCache != nullptr) {
+    delete m_drAPCache;
+    m_drAPCache = nullptr;
   }
   if (unknown0c.isValid()) {
     mtl::MemManager::erase(unknown0c);
@@ -210,28 +210,28 @@ void DrMan::apply(int loop) {
   // 32-bit counter (lsl x8, x20, #32; add x8, x19, x8, asr #26 at 1.0.0: 0x71007cb384).
   for (int view = 0; view < 4; view++) {
     if ((unknown440[view].unknown38 & 1) == 0) {
-      unknown88->applyDispOff(view);
+      m_drMdlMan->applyDispOff(view);
     } else {
       applyView(view);
     }
   }
-  unknown580 = unknowna0[0];
+  m_drCalcMan = unknowna0[0];
   unknown588 = unknownc0[0];
-  unknown590 = unknowne0[0];
-  unknown598 = unknown100[0];
-  unknown5a0 = unknown140[0];
-  unknown5a8 = unknown160[0];
-  unknown78->setupCate(0);
-  unknown88->setupCate(0);
-  unknown80->setupCate(0);
-  unknown88->endApply();
-  unknown78->lastUpdate();
-  unknown5b0->entryJob();
+  m_drFogMan = unknowne0[0];
+  m_drEnvironmentMan = unknown100[0];
+  m_drIBLMan = unknown140[0];
+  m_drGlobalIBLMan = unknown160[0];
+  m_drPixlMan->setupCate(0);
+  m_drMdlMan->setupCate(0);
+  m_drShdMan->setupCate(0);
+  m_drMdlMan->endApply();
+  m_drPixlMan->lastUpdate();
+  m_drCalcTexStreamMan->entryJob();
 }
 
 void DrMan::applyBegin(int loop) {
-  unknown1c8c = unknown1c84 * unknown1c88;
-  unknown88->beginApply();
+  unknown1c8c = m_glbSpd * m_mdlSpd;
+  m_drMdlMan->beginApply();
 }
 
 void DrMan::applyEnd(int loop) {}
@@ -255,16 +255,16 @@ void DrMan::deleteAddRenderSystem(u32 id) {
 void DrMan::startCapture(DR_CAPTURE_PARAM *param) {
   CS lock(getCriticalSection());
   s32 index = s_nDblStockIdx;
-  unknown380[index] = *param;
+  m_DR_CAPTURE_PARAM[index] = *param;
   unknown3b0 |= 1 << index;
 }
 
 void DrMan::captureRender(bool isDouble) {
   u32 flags = unknown3b0;
   u32 mask = 1 << s_nDblIdx;
-  if ((mask & flags) && isDouble == unknown380[s_nDblIdx].unknown10) {
+  if ((mask & flags) && isDouble == m_DR_CAPTURE_PARAM[s_nDblIdx].unknown10) {
     unknown3b0 = flags & ~mask;
-    unknown78->captureMainFrameBuffer(unknown380[s_nDblIdx].unknown00, unknown380[s_nDblIdx].unknown08, unknown380[s_nDblIdx].unknown0c);
+    m_drPixlMan->captureMainFrameBuffer(m_DR_CAPTURE_PARAM[s_nDblIdx].unknown00, m_DR_CAPTURE_PARAM[s_nDblIdx].unknown08, m_DR_CAPTURE_PARAM[s_nDblIdx].unknown0c);
   }
 }
 
@@ -286,39 +286,39 @@ void DrMan::resetModelTexture(u32 index) {
 void DrMan::renderView(int view) {
   unknown1c98 = view;
   unknown5b8 = &unknown440[view];
-  unknown660[view].unknown560 = view;
+  m_iDrDrawWorkInfo[view].unknown560 = view;
   s32 index = view;
   if (unknown440[view].unknown38 & 2) {
     index = 0;
   }
-  unknown98->unknown100 = index;
-  unknown580 = unknowna0[view];
+  m_drResFilterData->unknown100 = index;
+  m_drCalcMan = unknowna0[view];
   unknown588 = unknownc0[view];
-  unknown590 = unknowne0[view];
-  unknown598 = unknown100[view];
-  unknown5a0 = unknown140[view];
-  unknown78->setupCate(view);
-  unknown88->setupCate(view);
-  unknown80->setupCate(view);
+  m_drFogMan = unknowne0[view];
+  m_drEnvironmentMan = unknown100[view];
+  m_drIBLMan = unknown140[view];
+  m_drPixlMan->setupCate(view);
+  m_drMdlMan->setupCate(view);
+  m_drShdMan->setupCate(view);
   renderViewBegin();
-  if (view != 0 && !unknown88->unknown230->unknown0c) {
+  if (view != 0 && !m_drMdlMan->unknown230->unknown0c) {
     return;
   }
   GBuffRender();
   if (!unknown058()) {
-    unknown78->clearAccumBuffer();
+    m_drPixlMan->clearAccumBuffer();
     if (!unknown1d7d && !unknown1d7e) {
       if (unknown1dc0 == 1) {
         unknown1dc0 = 0;
       }
-      unknown78->fastDeferredRender();
-      unknown78->lastDeferredRender();
-      if (unknown78->unknown7f0->unknown180->unknown108 < 0.05f) {
-        unknown180->begin(DrPixlTileParm::TILE_TYPE_UNKNOWN_4);
-        unknown88->occRender(false);
-        unknown88->DepthCheckRender(false);
-        unknown180->end(DrPixlTileParm::TILE_TYPE_UNKNOWN_4);
-        unknown78->setMainRenderTarget();
+      m_drPixlMan->fastDeferredRender();
+      m_drPixlMan->lastDeferredRender();
+      if (m_drPixlMan->unknown7f0->m_drPixlPostMan->unknown108 < 0.05f) {
+        m_drPixlTileParm->begin(DrPixlTileParm::TILE_TYPE_UNKNOWN_4);
+        m_drMdlMan->occRender(false);
+        m_drMdlMan->DepthCheckRender(false);
+        m_drPixlTileParm->end(DrPixlTileParm::TILE_TYPE_UNKNOWN_4);
+        m_drPixlMan->setMainRenderTarget();
       }
       if (unknown1dc0 == 2) {
         unknown1dc0 = 0;
@@ -326,58 +326,58 @@ void DrMan::renderView(int view) {
     }
   }
   if ((!unknown1d7d || unknown1d7e) && !unknown058()) {
-    unknown78->renderSkyDome();
-    unknown5c0->begin();
-    unknown78->alphaRenderTarget();
-    unknown88->lightPrePassRender();
-    bool isRefractionMap = unknown88->unknown230->unknown08;
+    m_drPixlMan->renderSkyDome();
+    m_drAPCache->begin();
+    m_drPixlMan->alphaRenderTarget();
+    m_drMdlMan->lightPrePassRender();
+    bool isRefractionMap = m_drMdlMan->unknown230->unknown08;
     bool isHalfMap;
-    if (unknown78->unknown7f0->unknown180->unknown108 > 0.0f) {
+    if (m_drPixlMan->unknown7f0->m_drPixlPostMan->unknown108 > 0.0f) {
       isHalfMap = !unknown120[unknown1c98]->getSSRWithTrans();
     } else {
       isHalfMap = false;
     }
     if (isRefractionMap || isHalfMap) {
-      unknown78->renderRefractionMap(isRefractionMap, isHalfMap);
+      m_drPixlMan->renderRefractionMap(isRefractionMap, isHalfMap);
     }
-    unknown78->setupGodRay();
+    m_drPixlMan->setupGodRay();
     setSkyGodRayRenderTarget();
-    unknown78->renderSkyGodRay();
+    m_drPixlMan->renderSkyGodRay();
     setAlphaRenderTarget();
-    unknown88->alphaRender();
+    m_drMdlMan->alphaRender();
     for (int i = 0; i < unknown658; i++) {
-      unknown5d8[i]->alphaRender(&unknown660[unknown1c98]);
+      unknown5d8[i]->alphaRender(&m_iDrDrawWorkInfo[unknown1c98]);
     }
   }
   if (!unknown058() && !unknown1d7d) {
     for (int i = 0; i < unknown658; i++) {
-      unknown5d8[i]->lastRender(&unknown660[unknown1c98]);
+      unknown5d8[i]->lastRender(&m_iDrDrawWorkInfo[unknown1c98]);
     }
-    bool isRefractionMap = unknown88->unknown230->unknown09;
+    bool isRefractionMap = m_drMdlMan->unknown230->unknown09;
     bool isHalfMap;
-    if (unknown78->unknown7f0->unknown180->unknown108 > 0.0f) {
+    if (m_drPixlMan->unknown7f0->m_drPixlPostMan->unknown108 > 0.0f) {
       isHalfMap = unknown120[unknown1c98]->getSSRWithTrans();
     } else {
       isHalfMap = false;
     }
     if (isRefractionMap || isHalfMap) {
-      unknown78->renderRefractionMap(isRefractionMap, isHalfMap);
+      m_drPixlMan->renderRefractionMap(isRefractionMap, isHalfMap);
     }
     setAlphaRenderTarget();
-    unknown78->setMainViewPort();
-    unknown88->spAlphaRender();
+    m_drPixlMan->setMainViewPort();
+    m_drMdlMan->spAlphaRender();
   }
-  unknown78->lastRender();
+  m_drPixlMan->lastRender();
   if (view == 0) {
     captureRender(false);
     if (unknown1e00 != nullptr) {
-      unknown1e00->finalRender(&unknown660[unknown1c98]);
+      unknown1e00->finalRender(&m_iDrDrawWorkInfo[unknown1c98]);
     }
   }
   for (int i = 0; i < unknown658; i++) {
-    unknown5d8[i]->finalRender(&unknown660[unknown1c98]);
+    unknown5d8[i]->finalRender(&m_iDrDrawWorkInfo[unknown1c98]);
   }
-  unknown78->lastCapRender();
+  m_drPixlMan->lastCapRender();
   if (!unknown058() && view == 0) {
     captureRender(true);
   }
@@ -385,13 +385,13 @@ void DrMan::renderView(int view) {
 }
 
 void DrMan::renderEnd(int loop) {
-  unknown78->setMainRenderTarget();
-  unknown180->end(DrPixlTileParm::TILE_TYPE_UNKNOWN_0);
+  m_drPixlMan->setMainRenderTarget();
+  m_drPixlTileParm->end(DrPixlTileParm::TILE_TYPE_UNKNOWN_0);
 }
 
 void DrMan::renderViewBegin() {
-  unknown5c0->begin();
-  unknown78->renderBegin(unknown1c98);
+  m_drAPCache->begin();
+  m_drPixlMan->renderBegin(unknown1c98);
 }
 
 void DrMan::GBuffRender() {
@@ -399,93 +399,93 @@ void DrMan::GBuffRender() {
     return;
   }
   if (!unknown058()) {
-    unknown78->fastRender();
-    unknown78->setMainViewPort();
-    unknown5c0->begin();
-    unknown78->selectGBuffRenderTarget();
-    unknown88->setupRender();
-    unknown5c0->beginZRender();
-    unknown78->selectZprepassRenderTarget();
-    unknown88->ZPrePassRender();
-    unknown5c0->endZRender();
-    unknown78->thicknessFirstBegin();
-    unknown5c0->beginThicknessRenderFirst();
-    unknown88->ThicknessRenderFirst();
-    unknown5c0->endThicknessRenderFirst();
-    unknown78->thicknessFirstEnd();
-    unknown5c0->beginThicknessRenderSecond();
-    unknown88->ThicknessRenderSecond();
-    unknown5c0->endThicknessRenderSecond();
-    unknown78->selectGBuffRenderTarget();
-    unknown5c0->begin();
-    unknown88->render();
-    if (unknown78->unknown7f0->unknown180->unknown108 >= 0.05f) {
-      bool isDepthDown = unknown78->unknown7f0->unknown180->isDepthDown();
-      unknown78->unknown7f0->unknown180->setDownDepth();
-      unknown78->unknown7f0->unknown180->renderDownDepth(false, false, false);
-      unknown78->renderDownBaseColor();
+    m_drPixlMan->fastRender();
+    m_drPixlMan->setMainViewPort();
+    m_drAPCache->begin();
+    m_drPixlMan->selectGBuffRenderTarget();
+    m_drMdlMan->setupRender();
+    m_drAPCache->beginZRender();
+    m_drPixlMan->selectZprepassRenderTarget();
+    m_drMdlMan->ZPrePassRender();
+    m_drAPCache->endZRender();
+    m_drPixlMan->thicknessFirstBegin();
+    m_drAPCache->beginThicknessRenderFirst();
+    m_drMdlMan->ThicknessRenderFirst();
+    m_drAPCache->endThicknessRenderFirst();
+    m_drPixlMan->thicknessFirstEnd();
+    m_drAPCache->beginThicknessRenderSecond();
+    m_drMdlMan->ThicknessRenderSecond();
+    m_drAPCache->endThicknessRenderSecond();
+    m_drPixlMan->selectGBuffRenderTarget();
+    m_drAPCache->begin();
+    m_drMdlMan->render();
+    if (m_drPixlMan->unknown7f0->m_drPixlPostMan->unknown108 >= 0.05f) {
+      bool isDepthDown = m_drPixlMan->unknown7f0->m_drPixlPostMan->isDepthDown();
+      m_drPixlMan->unknown7f0->m_drPixlPostMan->setDownDepth();
+      m_drPixlMan->unknown7f0->m_drPixlPostMan->renderDownDepth(false, false, false);
+      m_drPixlMan->renderDownBaseColor();
       if (isDepthDown) {
-        unknown78->unknown7f0->unknown180->setDownDepth();
+        m_drPixlMan->unknown7f0->m_drPixlPostMan->setDownDepth();
       }
     }
-    if (unknown78->unknown7f0->unknown180->unknown108 >= 0.05f) {
-      unknown180->begin(DrPixlTileParm::TILE_TYPE_UNKNOWN_4);
-      unknown88->occRender(true);
-      unknown88->DepthCheckRender(true);
-      unknown180->end(DrPixlTileParm::TILE_TYPE_UNKNOWN_4);
-      unknown78->setMainViewPort();
-      unknown78->resetRenderTarget();
+    if (m_drPixlMan->unknown7f0->m_drPixlPostMan->unknown108 >= 0.05f) {
+      m_drPixlTileParm->begin(DrPixlTileParm::TILE_TYPE_UNKNOWN_4);
+      m_drMdlMan->occRender(true);
+      m_drMdlMan->DepthCheckRender(true);
+      m_drPixlTileParm->end(DrPixlTileParm::TILE_TYPE_UNKNOWN_4);
+      m_drPixlMan->setMainViewPort();
+      m_drPixlMan->resetRenderTarget();
     }
-    if (unknown78->renderRefractionBegin()) {
-      unknown88->refractionRender();
-      unknown78->renderRefractionEnd();
+    if (m_drPixlMan->renderRefractionBegin()) {
+      m_drMdlMan->refractionRender();
+      m_drPixlMan->renderRefractionEnd();
     }
-    unknown5c0->endRefractionRender();
-    unknown5c0->begin();
-    unknown78->resetRenderTarget();
-    unknown78->selectGBuffRenderTarget();
-    unknown78->refractionGBuffInvalidate();
-    unknown88->GBuffRender();
-    unknown5c0->endGBuffRender();
-    unknown78->endGBuffRenderTarget();
+    m_drAPCache->endRefractionRender();
+    m_drAPCache->begin();
+    m_drPixlMan->resetRenderTarget();
+    m_drPixlMan->selectGBuffRenderTarget();
+    m_drPixlMan->refractionGBuffInvalidate();
+    m_drMdlMan->GBuffRender();
+    m_drAPCache->endGBuffRender();
+    m_drPixlMan->endGBuffRenderTarget();
   }
   for (int i = 0; i < unknown658; i++) {
-    unknown5d8[i]->opacityRender(&unknown660[unknown1c98]);
+    unknown5d8[i]->opacityRender(&m_iDrDrawWorkInfo[unknown1c98]);
   }
-  unknown5c0->begin();
+  m_drAPCache->begin();
 }
 
 void DrMan::renderViewEnd() {
-  unknown580->renderEnd();
-  unknown78->renderEnd(unknown1c98);
+  m_drCalcMan->renderEnd();
+  m_drPixlMan->renderEnd(unknown1c98);
 }
 
 void DrMan::setSkyGodRayRenderTarget() {
-  unknown5c0->begin();
-  unknown78->resetRenderTarget();
-  unknown78->skyGodRayRenderTarget();
+  m_drAPCache->begin();
+  m_drPixlMan->resetRenderTarget();
+  m_drPixlMan->skyGodRayRenderTarget();
 }
 
 void DrMan::setAlphaRenderTarget() {
-  unknown5c0->begin();
-  unknown78->resetRenderTarget();
-  unknown78->alphaRenderTarget();
+  m_drAPCache->begin();
+  m_drPixlMan->resetRenderTarget();
+  m_drPixlMan->alphaRenderTarget();
 }
 
 void DrMan::blurCallBackRender() {
   for (int i = 0; i < unknown658; i++) {
-    unknown5d8[i]->blurRender(&unknown660[unknown1c98]);
+    unknown5d8[i]->blurRender(&m_iDrDrawWorkInfo[unknown1c98]);
   }
 }
 
 void DrMan::applyViewBegin() {
-  unknown5c0->begin();
-  unknown78->updateShadowDisplayList();
+  m_drAPCache->begin();
+  m_drPixlMan->updateShadowDisplayList();
 }
 
-void DrMan::renderBegin(int loop) { unknown180->begin(DrPixlTileParm::TILE_TYPE_UNKNOWN_0); }
+void DrMan::renderBegin(int loop) { m_drPixlTileParm->begin(DrPixlTileParm::TILE_TYPE_UNKNOWN_0); }
 
-void DrMan::setMainRenderTarget() { unknown78->setMainRenderTarget(); }
+void DrMan::setMainRenderTarget() { m_drPixlMan->setMainRenderTarget(); }
 
 bool DrMan::isIBLHalfRes() const { return true; }
 
@@ -493,49 +493,49 @@ bool DrMan::isIBLSkip() const {
   if (unknown1d75) {
     return true;
   }
-  return !unknown80->unknown18->unknown58->isEnable();
+  return !m_drShdMan->m_drShdLgtMan->m_drShdLgtGlobalIBL->isEnable();
 }
 
 bool DrMan::isTemporalUPSToGlobalIBL() const {
   if (unknown1d75) {
     return false;
   }
-  return unknown80->unknown18->unknown58->isEnable();
+  return m_drShdMan->m_drShdLgtMan->m_drShdLgtGlobalIBL->isEnable();
 }
 
 DrMdlMan::~DrMdlMan() {
   deleteAll();
-  if (unknown038 != nullptr) {
-    delete unknown038;
-    unknown038 = nullptr;
+  if (m_drResOccUniformObj != nullptr) {
+    delete m_drResOccUniformObj;
+    m_drResOccUniformObj = nullptr;
   }
-  if (unknown040 != nullptr) {
-    delete unknown040;
-    unknown040 = nullptr;
+  if (m_drResEtcUniformObj != nullptr) {
+    delete m_drResEtcUniformObj;
+    m_drResEtcUniformObj = nullptr;
   }
-  if (unknown048 != nullptr) {
-    delete unknown048;
-    unknown048 = nullptr;
+  if (m_drGpuCheckRender != nullptr) {
+    delete m_drGpuCheckRender;
+    m_drGpuCheckRender = nullptr;
   }
-  if (unknown028 != nullptr) {
-    delete unknown028;
-    unknown028 = nullptr;
+  if (m_drMdoTexSimpleMan != nullptr) {
+    delete m_drMdoTexSimpleMan;
+    m_drMdoTexSimpleMan = nullptr;
   }
-  if (unknown030 != nullptr) {
-    delete unknown030;
-    unknown030 = nullptr;
+  if (m_drMdoSmlShadowMan != nullptr) {
+    delete m_drMdoSmlShadowMan;
+    m_drMdoSmlShadowMan = nullptr;
   }
-  if (unknown008 != nullptr) {
-    delete unknown008;
-    unknown008 = nullptr;
+  if (m_drMdoVertexMan != nullptr) {
+    delete m_drMdoVertexMan;
+    m_drMdoVertexMan = nullptr;
   }
-  if (unknown010 != nullptr) {
-    delete unknown010;
-    unknown010 = nullptr;
+  if (m_drMdoTextureMan != nullptr) {
+    delete m_drMdoTextureMan;
+    m_drMdoTextureMan = nullptr;
   }
-  if (unknown018 != nullptr) {
-    delete unknown018;
-    unknown018 = nullptr;
+  if (m_drMdoSamplerMan != nullptr) {
+    delete m_drMdoSamplerMan;
+    m_drMdoSamplerMan = nullptr;
   }
   for (int i = 0; i < 4; i++) {
     if (unknown050[i] != nullptr) {
@@ -543,9 +543,9 @@ DrMdlMan::~DrMdlMan() {
       unknown050[i] = nullptr;
     }
   }
-  if (unknown020 != nullptr) {
-    delete unknown020;
-    unknown020 = nullptr;
+  if (m_drMdoMpfMan != nullptr) {
+    delete m_drMdoMpfMan;
+    m_drMdoMpfMan = nullptr;
   }
 }
 
@@ -601,7 +601,7 @@ void DrMdlMan::addDelList(int cate) {
     }
     check = next;
   }
-  unknown030->addObjList(cate);
+  m_drMdoSmlShadowMan->addObjList(cate);
 }
 
 int DrMdlMan::headerChek(const void *data) {
@@ -643,9 +643,9 @@ bool DrMdlMan::getTextureStreamInfo(u32 &size, u32 &count, const void *data, boo
 }
 
 void DrMdlMan::addViewInfo(int cate) {
-  unknown050[cate] = new (unknown000->unknown0c) DrMdoZSortMan(unknown000);
+  unknown050[cate] = new (m_drMan->unknown0c) DrMdoZSortMan(m_drMan);
   for (DrMdlBase *mdl = unknown0a8[cate].unknown00; mdl != nullptr; mdl = mdl->unknown10) {
-    mdl->unknown20 &= ~(DrMdlBase::unknown038_5 | DrMdlBase::unknown038_6);
+    mdl->m_disp &= ~(DrMdlBase::unknown038_5 | DrMdlBase::unknown038_6);
   }
 }
 
@@ -655,7 +655,7 @@ void DrMdlMan::delViewInfo(int cate) {
     unknown050[cate] = nullptr;
   }
   for (DrMdlBase *mdl = unknown0a8[cate].unknown00; mdl != nullptr; mdl = mdl->unknown10) {
-    mdl->unknown20 &= ~(DrMdlBase::unknown038_5 | DrMdlBase::unknown038_6);
+    mdl->m_disp &= ~(DrMdlBase::unknown038_5 | DrMdlBase::unknown038_6);
   }
 }
 
@@ -665,10 +665,10 @@ void DrMdlMan::setupEnd() {
   unknown0e8[index].unknown08 = nullptr;
   unknown188[index].unknown00 = nullptr;
   unknown188[index].unknown08 = nullptr;
-  unknown030->delObjList();
-  unknown028->update();
-  unknown010->update();
-  unknown008->update();
+  m_drMdoSmlShadowMan->delObjList();
+  m_drMdoTexSimpleMan->update();
+  m_drMdoTextureMan->update();
+  m_drMdoVertexMan->update();
   index = DrMan::s_nDblIdx;
   for (DrStmReadObj *read = unknown1f8[index].unknown00; read != nullptr;) {
     DrStmReadObj *next = read->unknown10;
@@ -694,22 +694,22 @@ DrMdlObj *DrMdlMan::createMdl(const void *data, const char *name, int index) {
   int type = headerChek(data);
   switch (type) {
   case 1:
-    mdl = new (unknown000->unknown10) DrMdoCtlNom(data, name, unknown000, index);
+    mdl = new (m_drMan->unknown10) DrMdoCtlNom(data, name, m_drMan, index);
     break;
   case 2:
-    mdl = new (unknown000->unknown10) DrMdoCtlPos(data, name, unknown000, index);
+    mdl = new (m_drMan->unknown10) DrMdoCtlPos(data, name, m_drMan, index);
     break;
   case 3:
-    mdl = new (unknown000->unknown10) DrMdoCtlMpf(data, name, unknown000, index);
+    mdl = new (m_drMan->unknown10) DrMdoCtlMpf(data, name, m_drMan, index);
     break;
   case 4:
-    mdl = new (unknown000->unknown10) DrMdoCtlSeamAll(data, name, unknown000, index);
+    mdl = new (m_drMan->unknown10) DrMdoCtlSeamAll(data, name, m_drMan, index);
     break;
   default:
     if (type == 5) {
-      mdl = new (unknown000->unknown10) DrMdoCtlCldMdl(data, unknown000, index);
+      mdl = new (m_drMan->unknown10) DrMdoCtlCldMdl(data, m_drMan, index);
     } else {
-      mdl = new (unknown000->unknown10) DrMdoCtlDammy(data, unknown000, index);
+      mdl = new (m_drMan->unknown10) DrMdoCtlDammy(data, m_drMan, index);
     }
     break;
   }
@@ -723,22 +723,22 @@ DrMdlObj *DrMdlMan::createInstantMdl(const void *data, const char *name, int ind
   int type = headerChek(data);
   switch (type) {
   case 1:
-    mdl = new (unknown000->unknown10) DrMdoCtlNom(data, name, unknown000, index);
+    mdl = new (m_drMan->unknown10) DrMdoCtlNom(data, name, m_drMan, index);
     break;
   case 2:
-    mdl = new (unknown000->unknown10) DrMdoCtlPos(data, name, unknown000, index);
+    mdl = new (m_drMan->unknown10) DrMdoCtlPos(data, name, m_drMan, index);
     break;
   case 3:
-    mdl = new (unknown000->unknown10) DrMdoCtlMpf(data, name, unknown000, index);
+    mdl = new (m_drMan->unknown10) DrMdoCtlMpf(data, name, m_drMan, index);
     break;
   case 4:
-    mdl = new (unknown000->unknown10) DrMdoCtlSeamAll(data, name, unknown000, index);
+    mdl = new (m_drMan->unknown10) DrMdoCtlSeamAll(data, name, m_drMan, index);
     break;
   default:
     if (type == 5) {
-      mdl = new (unknown000->unknown10) DrMdoCtlCldMdl(data, unknown000, index);
+      mdl = new (m_drMan->unknown10) DrMdoCtlCldMdl(data, m_drMan, index);
     } else {
-      mdl = new (unknown000->unknown10) DrMdoCtlDammy(data, unknown000, index);
+      mdl = new (m_drMan->unknown10) DrMdoCtlDammy(data, m_drMan, index);
     }
     break;
   }
@@ -751,14 +751,14 @@ DrMdlObj *DrMdlMan::createInstantMdl(const void *data, const char *name, int ind
 
 DrMdoGrpObj *DrMdlMan::createGrp(int num, u32 flags) {
   CS lock(DrMan::getCriticalSection());
-  DrMdoGrpObj *grp = new (unknown000->unknown10) DrMdoGrpObj(num, flags);
+  DrMdoGrpObj *grp = new (m_drMan->unknown10) DrMdoGrpObj(num, flags);
   unknown0e8[DrMan::s_nDblStockIdx].unknown004(grp);
   return grp;
 }
 
 DrMdoGrpObj *DrMdlMan::createInstantGrp(int num, u32 flags) {
   CS lock(DrMan::getCriticalSection());
-  DrMdoGrpObj *grp = new (unknown000->unknown10) DrMdoGrpObj(num, flags);
+  DrMdoGrpObj *grp = new (m_drMan->unknown10) DrMdoGrpObj(num, flags);
   grp->resourceInit();
   unknown0a8[num].unknown004(grp);
   return grp;
@@ -766,53 +766,53 @@ DrMdoGrpObj *DrMdlMan::createInstantGrp(int num, u32 flags) {
 
 DrGpuCheckBase *DrMdlMan::createGpuCheckObj(int type) {
   CS lock(DrMan::getCriticalSection());
-  DrGpuCheckObj *check = new (unknown000->unknown10) DrGpuCheckObj(type, false);
+  DrGpuCheckObj *check = new (m_drMan->unknown10) DrGpuCheckObj(type, false);
   unknown188[DrMan::s_nDblStockIdx].unknown004(check);
   return check;
 }
 
 DrGpuCheckBase *DrMdlMan::createEffGpuCheckObj(int type) {
   CS lock(DrMan::getCriticalSection());
-  DrGpuCheckObj *check = new (unknown000->unknown10) DrGpuCheckObj(type, true);
+  DrGpuCheckObj *check = new (m_drMan->unknown10) DrGpuCheckObj(type, true);
   unknown148[type].unknown004(check);
   return check;
 }
 
 DrStmReadObj *DrMdlMan::createStmLoadObj(const char *path) {
   CS lock(DrMan::getCriticalSection());
-  DrStmReadCheck *read = new (unknown000->unknown10) DrStmReadCheck(path);
+  DrStmReadCheck *read = new (m_drMan->unknown10) DrStmReadCheck(path);
   unknown1f8[DrMan::s_nDblStockIdx].unknown004(read);
   return read;
 }
 
 DrStmReadObj *DrMdlMan::createStmSizeObj(u32 size) {
   CS lock(DrMan::getCriticalSection());
-  DrStmReadCheck *read = new (unknown000->unknown10) DrStmReadCheck(size);
+  DrStmReadCheck *read = new (m_drMan->unknown10) DrStmReadCheck(size);
   unknown1f8[DrMan::s_nDblStockIdx].unknown004(read);
   return read;
 }
 
 void DrMdlMan::addMpfObj() {
-  if (unknown020 != nullptr) {
-    unknown020->addMpfObj();
+  if (m_drMdoMpfMan != nullptr) {
+    m_drMdoMpfMan->addMpfObj();
     return;
   }
-  unknown020 = new (unknown000->unknown0c) DrMdoMpfMan(unknown000);
+  m_drMdoMpfMan = new (m_drMan->unknown0c) DrMdoMpfMan(m_drMan);
 }
 
 void DrMdlMan::delMpfObj() {
-  if (unknown020 != nullptr && unknown020->delMpfObj()) {
-    if (unknown020 != nullptr) {
-      delete unknown020;
-      unknown020 = nullptr;
+  if (m_drMdoMpfMan != nullptr && m_drMdoMpfMan->delMpfObj()) {
+    if (m_drMdoMpfMan != nullptr) {
+      delete m_drMdoMpfMan;
+      m_drMdoMpfMan = nullptr;
     }
   }
 }
 
-void DrMdlMan::simpleShadowRender() { unknown030->shadowRender(); }
+void DrMdlMan::simpleShadowRender() { m_drMdoSmlShadowMan->shadowRender(); }
 
 void DrMdlMan::lightPrePassRender() {
-  if (unknown000->unknown1d64) {
+  if (m_drMan->unknown1d64) {
     return;
   }
   if (unknown001()) {
@@ -822,7 +822,7 @@ void DrMdlMan::lightPrePassRender() {
 }
 
 void DrMdlMan::alphaRender() {
-  if (unknown000->unknown1d66) {
+  if (m_drMan->unknown1d66) {
     return;
   }
   if (unknown001()) {
@@ -832,7 +832,7 @@ void DrMdlMan::alphaRender() {
 }
 
 void DrMdlMan::spAlphaRender() {
-  if (unknown000->unknown1d67) {
+  if (m_drMan->unknown1d67) {
     return;
   }
   if (unknown001()) {
@@ -842,7 +842,7 @@ void DrMdlMan::spAlphaRender() {
 }
 
 void DrMdlMan::GBuffRender() {
-  if (unknown000->unknown1d64) {
+  if (m_drMan->unknown1d64) {
     return;
   }
   if (unknown001()) {
@@ -881,7 +881,7 @@ void DrMdlMan::ThicknessRenderSecond() {
 }
 
 void DrMdlMan::refractionRender() {
-  if (unknown000->unknown1d64 || unknown000->unknown1d65) {
+  if (m_drMan->unknown1d64 || m_drMan->unknown1d65) {
     return;
   }
   if (unknown001()) {
@@ -893,7 +893,7 @@ void DrMdlMan::refractionRender() {
 void DrMdlMan::renderBegin() {}
 
 void DrMdlMan::render() {
-  if (unknown000->unknown1d63) {
+  if (m_drMan->unknown1d63) {
     return;
   }
   if (unknown001()) {
@@ -901,19 +901,19 @@ void DrMdlMan::render() {
   }
   unknown218->viewRender();
   for (DrMdlBase *mdl = unknown220->unknown00; mdl != nullptr; mdl = mdl->unknown10) {
-    if (unknown23c & (1 << mdl->unknown18)) {
+    if (unknown23c & (1 << mdl->m_groups)) {
       mdl->shadowCacheOnlyRender();
     }
   }
 }
 
 bool DrMdlMan::shadowRender(DrPixlShadowObj *shadow) {
-  if (!unknown000->unknown1d7a && !unknown000->unknown1d68) {
-    DrPixlMan *pixlMan = unknown000->unknown78;
+  if (!m_drMan->unknown1d7a && !m_drMan->unknown1d68) {
+    DrPixlMan *pixlMan = m_drMan->m_drPixlMan;
     pixlMan->setShadowObj(shadow);
     shadow->unknown50 &= ~1u;
     for (DrMdlBase *mdl = unknown220->unknown00; mdl != nullptr; mdl = mdl->unknown10) {
-      if ((mdl->unknown20 & DrMdlBase::unknown038_0) && (unknown23c & (1 << mdl->unknown18))) {
+      if ((mdl->m_disp & DrMdlBase::unknown038_0) && (unknown23c & (1 << mdl->m_groups))) {
         mdl->shadowRender();
       }
     }
@@ -929,10 +929,10 @@ void DrMdlMan::occRender(bool isFirst) {
   if (unknown001()) {
     return;
   }
-  DrPixlMan *pixlMan = unknown000->unknown78;
+  DrPixlMan *pixlMan = m_drMan->m_drPixlMan;
   pixlMan->occRenderBegin(isFirst);
   for (DrMdlBase *mdl = unknown220->unknown00; mdl != nullptr; mdl = mdl->unknown10) {
-    if ((mdl->unknown20 & DrMdlBase::unknown038_0) && (unknown23c & (1 << mdl->unknown18))) {
+    if ((mdl->m_disp & DrMdlBase::unknown038_0) && (unknown23c & (1 << mdl->m_groups))) {
       mdl->occRender();
     }
   }
@@ -946,16 +946,16 @@ void DrMdlMan::DepthCheckRender(bool isDblDepth) {
   if ((unknown240 & (1 << unknown238)) == 0) {
     return;
   }
-  unknown048->beginRender(isDblDepth);
+  m_drGpuCheckRender->beginRender(isDblDepth);
   for (DrGpuCheckObj *check = unknown228->unknown00; check != nullptr; check = check->unknown10) {
     check->render();
   }
-  unknown048->endRender();
+  m_drGpuCheckRender->endRender();
 }
 
 bool DrMdlMan::shadowCacheRender(DrPixlShadowCacheObj &cache) {
   for (DrMdlBase *mdl = unknown220->unknown00; mdl != nullptr; mdl = mdl->unknown10) {
-    if ((mdl->unknown20 & DrMdlBase::unknown038_0) && (unknown23c & (1 << mdl->unknown18))) {
+    if ((mdl->m_disp & DrMdlBase::unknown038_0) && (unknown23c & (1 << mdl->m_groups))) {
       if (!mdl->shadowCacheRender(cache)) {
         return false;
       }
@@ -966,7 +966,7 @@ bool DrMdlMan::shadowCacheRender(DrPixlShadowCacheObj &cache) {
 
 void DrMdlMan::shadowCacheAddRender(int index) {
   for (DrMdlBase *mdl = unknown220->unknown00; mdl != nullptr; mdl = mdl->unknown10) {
-    if ((mdl->unknown20 & DrMdlBase::unknown038_0) && (unknown23c & (1 << mdl->unknown18))) {
+    if ((mdl->m_disp & DrMdlBase::unknown038_0) && (unknown23c & (1 << mdl->m_groups))) {
       mdl->shadowCacheAddRender(index);
     }
   }
@@ -978,7 +978,7 @@ void DrMdlMan::callShadowCacheUpdate(u64 flags) {
   }
 }
 
-void DrMan::fastRender() { unknown78->fastRender(); }
+void DrMan::fastRender() { m_drPixlMan->fastRender(); }
 
 void DrMan::setCallBack(IDrDrawCallback *callback) {
   if (unknown658 < 16) {
@@ -1001,7 +1001,8 @@ void DrMan::releaseCallBack(IDrDrawCallback *callback) {
 }
 
 void DrMan::setCacherClearMode(bool cacherClearMode) {
-  unknown5b0->unknown2068 = !cacherClearMode ? unknown5b0->unknown2068 & ~DrCalcTexStreamMan::FLAG_UNKNOWN_4 : unknown5b0->unknown2068 | DrCalcTexStreamMan::FLAG_UNKNOWN_4;
+  m_drCalcTexStreamMan->m_cacherClearMode =
+      !cacherClearMode ? m_drCalcTexStreamMan->m_cacherClearMode & ~DrCalcTexStreamMan::FLAG_UNKNOWN_4 : m_drCalcTexStreamMan->m_cacherClearMode | DrCalcTexStreamMan::FLAG_UNKNOWN_4;
 }
 
 void DrMan::openPixelDebugWindow(WinProc *window) {}
@@ -1010,18 +1011,18 @@ void DrMan::openHistgramDebugWindow(WinProc *window) {}
 
 void DrMan::memcpyLcDMA(void *destination, const void *source, u32 size) { memcpy(destination, source, size); }
 
-u32 DrMan::getMem1AlphaFree() { return DrPixlMemMan::get()->unknown434; }
+u32 DrMan::getMem1AlphaFree() { return DrPixlMemMan::get()->m_mem1AlphaFree; }
 
 void DrMan::setGblIdx(s32 id) {
   if (!isGblIdx(id)) {
-    unknown78->callShadowCacheVariance();
+    m_drPixlMan->callShadowCacheVariance();
     m_gblIdx[id >> 5] |= 1 << (id & 31);
   }
 }
 
 void DrMan::offGblIdx(s32 id) {
   if (isGblIdx(id)) {
-    unknown78->callShadowCacheVariance();
+    m_drPixlMan->callShadowCacheVariance();
     m_gblIdx[id >> 5] &= ~(1 << (id & 31));
   }
 }
@@ -1037,7 +1038,7 @@ void DrMan::setTimeVal(f32 timeVal) {
   }
 }
 
-void DrMan::setGroupsDisp(s32 group, bool disp) { unknown88->setGroupsDisp(group, disp); }
+void DrMan::setGroupsDisp(s32 group, bool disp) { m_drMdlMan->setGroupsDisp(group, disp); }
 
 void DrMdlMan::setupCate(int cate) {
   unknown238 = cate;
@@ -1045,7 +1046,7 @@ void DrMdlMan::setupCate(int cate) {
   unknown218 = unknown050[cate];
   unknown220 = &unknown0a8[cate];
   unknown228 = &unknown148[cate];
-  unknown030->unknown04 = cate;
+  m_drMdoSmlShadowMan->unknown04 = cate;
 }
 
 void DrMdlMan::applyDispOff(u32 view) {
@@ -1077,48 +1078,48 @@ void DrMdlMan::apply() {
   unknown230->unknown0c = false;
   unknown218->beginViewWorld();
   for (DrMdlBase *mdl = unknown220->unknown00; mdl != nullptr; mdl = mdl->unknown10) {
-    if ((mdl->unknown20 & DrMdlBase::unknown038_0) && (unknown23c & (1 << mdl->unknown18))) {
+    if ((mdl->m_disp & DrMdlBase::unknown038_0) && (unknown23c & (1 << mdl->m_groups))) {
       mdl->update();
     } else {
       mdl->dispOffUpdate();
     }
   }
   unknown240 &= ~(1 << unknown238);
-  unknown048->beginUpdate();
+  m_drGpuCheckRender->beginUpdate();
   bool isRender = false;
   for (DrGpuCheckObj *check = unknown228->unknown00; check != nullptr; check = check->unknown10) {
     isRender |= check->update();
   }
-  unknown048->endUpdate();
+  m_drGpuCheckRender->endUpdate();
   if (isRender) {
     unknown240 |= 1 << unknown238;
   }
   if (unknown238 == 0) {
-    if (unknown000->unknown1e00 != nullptr) {
-      unknown000->unknown1e00->apply(&unknown000->unknown660[unknown000->unknown1c98], unknown218);
+    if (m_drMan->unknown1e00 != nullptr) {
+      m_drMan->unknown1e00->apply(&m_drMan->m_iDrDrawWorkInfo[m_drMan->unknown1c98], unknown218);
     }
   }
   unknown218->endViewWorld();
-  unknown230->unknown06 = unknown030->checkDisp();
+  unknown230->unknown06 = m_drMdoSmlShadowMan->checkDisp();
 }
 
 void DrMdlMan::beginApply() {
-  if (unknown020 != nullptr) {
-    unknown020->begin();
+  if (m_drMdoMpfMan != nullptr) {
+    m_drMdoMpfMan->begin();
   }
-  unknown008->begin();
-  unknown038->begin();
-  unknown040->begin();
-  unknown018->begin();
+  m_drMdoVertexMan->begin();
+  m_drResOccUniformObj->begin();
+  m_drResEtcUniformObj->begin();
+  m_drMdoSamplerMan->begin();
 }
 
 void DrMdlMan::endApply() {
-  if (unknown020 != nullptr) {
-    unknown020->update();
+  if (m_drMdoMpfMan != nullptr) {
+    m_drMdoMpfMan->update();
   }
-  unknown008->end();
-  unknown038->end();
-  unknown040->end();
+  m_drMdoVertexMan->end();
+  m_drResOccUniformObj->end();
+  m_drResEtcUniformObj->end();
 }
 
 void DrMdlMan::setGroupsDisp(s32 group, bool disp) {
@@ -1131,18 +1132,18 @@ void DrMdlMan::setGroupsDisp(s32 group, bool disp) {
 
 void DrMan::setReduction(bool isReduction, f32 scaleX, f32 scaleY) {
   DrPixlPostParm *postParm = unknown120[0];
-  postParm->unknownfb2 = isReduction;
-  postParm->unknownfb8 = scaleX;
-  postParm->unknownfbc = scaleY;
+  postParm->m_reduction = isReduction;
+  postParm->m_reductionScX = scaleX;
+  postParm->m_reductionScY = scaleY;
 }
 
-void DrMan::setAutoReduction(bool autoReduction) { unknown5c8->m_autoReduction = autoReduction; }
+void DrMan::setAutoReduction(bool autoReduction) { m_drCalcGpuCost->m_autoReduction = autoReduction; }
 
 void DrMan::setAA(bool isAA) { unknown120[0]->m_AAOn = isAA; }
 
 void DrMan::setColorFilter(bool isColorFilter) { unknown120[0]->m_colTblOn = isColorFilter; }
 
-void DrMan::setSSAO(bool isSSAO) { unknown120[0]->unknown194 = isSSAO; }
+void DrMan::setSSAO(bool isSSAO) { unknown120[0]->m_sSAO = isSSAO; }
 
 void DrMan::setBloom(bool isBloom, bool isLensFlare) { unknown120[0]->m_bloomOn = isBloom; }
 
@@ -1205,6 +1206,39 @@ void DrMan::bkgHomeMenu(bool isOpen) {
   }
 }
 
+void DrMan::begin() {
+  beginSetup();
+  debugUpdate();
+  m_drCalcTexStreamMan->apiUpdate();
+  for (int i = 0; i < 4; i++) {
+    selectView(i);
+    m_drMdlMan->setupCate(i);
+    m_drMdlMan->addDelList(i);
+  }
+  for (int i = 0; i < 4; i++) {
+    selectView(i);
+    m_drMdlMan->setupCate(i);
+    m_drMdlMan->updateList(i);
+  }
+  m_drShdMan->beginUpdate();
+  m_drMdlMan->setupEnd();
+  m_drPixlTileParm->update();
+  for (int i = 0; i < 4; i++) {
+    if (unknown140[i] != nullptr) {
+      unknown140[i]->update();
+    }
+  }
+  if (unknown1e00 != nullptr) {
+    unknown1e00->begin(unknown1c8c);
+    // The game reloads unknown1e00 after the call (0x71007c9bdc) before it loads m_gblIdx (0x71007c9be0); written in one statement the member is loaded after it.
+    cloud::CloudMan *cloudMan = unknown1e00;
+    cloudMan->unknown28 = m_gblIdx;
+  }
+  for (int i = 0; i < unknown658; i++) {
+    unknown5d8[i]->begin();
+  }
+}
+
 void DrMan::debugUpdate() {
   int type = 0;
   while (!unknown1dac[type]) {
@@ -1218,8 +1252,8 @@ void DrMan::debugUpdate() {
     switch (type) {
     case 0:
     case 3: {
-      DrShdLgtMan *lgtMan = unknown80->unknown18;
-      DrShdDataList *dataList = unknown80->unknown00;
+      DrShdLgtMan *lgtMan = m_drShdMan->m_drShdLgtMan;
+      DrShdDataList *dataList = m_drShdMan->m_drShdDataList;
       lgtMan->releaseLightShader();
       dataList->releaseShader();
       dataList->reloadShader(0);
@@ -1227,25 +1261,25 @@ void DrMan::debugUpdate() {
       break;
     }
     case 6:
-      unknown70->reloadToonGradTexture();
+      m_drIniSys->reloadToonGradTexture();
       break;
     case 7:
-      unknown70->reloadToonRimTexture();
+      m_drIniSys->reloadToonRimTexture();
       break;
     case 8:
-      unknown70->reloadVolumeTexture();
+      m_drIniSys->reloadVolumeTexture();
       break;
     case 10:
-      unknown70->reloadIBLEnvTexture();
+      m_drIniSys->reloadIBLEnvTexture();
       break;
     case 11:
-      unknown70->reloadMirrorBallModel();
+      m_drIniSys->reloadMirrorBallModel();
       break;
     case 12:
-      unknown70->reloadRainDropTexture();
+      m_drIniSys->reloadRainDropTexture();
       break;
     case 13:
-      unknown70->reloadFlagWaveTexture();
+      m_drIniSys->reloadFlagWaveTexture();
       break;
     }
   }
@@ -1268,59 +1302,59 @@ void DrMan::end() {
 void DrMan::endSetup() {
   unknown1d8d = unknown1d8c;
   unknown5b8 = unknown440;
-  unknown580 = unknowna0[0];
+  m_drCalcMan = unknowna0[0];
   unknown1c98 = 0;
   unknown588 = unknownc0[0];
-  unknown590 = unknowne0[0];
-  unknown598 = unknown100[0];
-  unknown78->setupCate(0);
-  unknown88->setupCate(0);
-  unknown80->setupCate(0);
+  m_drFogMan = unknowne0[0];
+  m_drEnvironmentMan = unknown100[0];
+  m_drPixlMan->setupCate(0);
+  m_drMdlMan->setupCate(0);
+  m_drShdMan->setupCate(0);
 }
 
 void DrMan::applyView(int view) {
   unknown5b8 = &unknown440[view];
   unknown1c98 = view;
-  unknown660[view].unknown560 = view;
-  unknown660[view].unknown568 = unknown1d62;
-  unknown98->unknown100 = view;
-  unknown580 = unknowna0[view];
+  m_iDrDrawWorkInfo[view].unknown560 = view;
+  m_iDrDrawWorkInfo[view].unknown568 = unknown1d62;
+  m_drResFilterData->unknown100 = view;
+  m_drCalcMan = unknowna0[view];
   unknown588 = unknownc0[view];
-  unknown590 = unknowne0[view];
-  unknown598 = unknown100[view];
-  unknown5a0 = unknown140[view];
-  unknown5a8 = unknown160[view];
-  unknown88->setupCate(view);
-  unknown80->setupCate(view);
-  unknown78->setupCate(view);
-  unknown5c0->begin();
-  unknown78->updateShadowDisplayList();
-  unknown580->begin();
+  m_drFogMan = unknowne0[view];
+  m_drEnvironmentMan = unknown100[view];
+  m_drIBLMan = unknown140[view];
+  m_drGlobalIBLMan = unknown160[view];
+  m_drMdlMan->setupCate(view);
+  m_drShdMan->setupCate(view);
+  m_drPixlMan->setupCate(view);
+  m_drAPCache->begin();
+  m_drPixlMan->updateShadowDisplayList();
+  m_drCalcMan->begin();
   unknown588->stockBegin();
   unknown588->update();
-  unknown590->update();
-  unknown598->update();
-  unknown98->update(view);
-  unknown5a0->update();
-  unknown5a8->update();
-  unknown80->beforeUpdateCate(view);
-  unknown590->calcTbl();
-  unknown78->beforUpdate(view);
+  m_drFogMan->update();
+  m_drEnvironmentMan->update();
+  m_drResFilterData->update(view);
+  m_drIBLMan->update();
+  m_drGlobalIBLMan->update();
+  m_drShdMan->beforeUpdateCate(view);
+  m_drFogMan->calcTbl();
+  m_drPixlMan->beforUpdate(view);
   for (int i = 0; i < unknown658; i++) {
-    unknown5d8[i]->apply(&unknown660[unknown1c98]);
+    unknown5d8[i]->apply(&m_iDrDrawWorkInfo[unknown1c98]);
   }
-  unknown88->apply();
+  m_drMdlMan->apply();
   unknown588->stockEnd();
-  unknown80->updateCate(view);
-  unknown78->afterUpdate(view);
-  unknown580->end();
+  m_drShdMan->updateCate(view);
+  m_drPixlMan->afterUpdate(view);
+  m_drCalcMan->end();
 }
 
 void DrMan::render(int loop) {
   if (unknown1dbc != 0) {
     return;
   }
-  unknown180->begin(DrPixlTileParm::TILE_TYPE_UNKNOWN_0);
+  m_drPixlTileParm->begin(DrPixlTileParm::TILE_TYPE_UNKNOWN_0);
   for (int view = 3; view >= 0; view--) {
     if ((unknown440[view].unknown38 & 3) == 1) {
       renderView(view);
@@ -1332,8 +1366,8 @@ void DrMan::render(int loop) {
     }
   }
   unknown120[unknown1c98]->resetWeatherFrame();
-  unknown78->setMainRenderTarget();
-  unknown180->end(DrPixlTileParm::TILE_TYPE_UNKNOWN_0);
+  m_drPixlMan->setMainRenderTarget();
+  m_drPixlTileParm->end(DrPixlTileParm::TILE_TYPE_UNKNOWN_0);
 }
 
 } // namespace ml

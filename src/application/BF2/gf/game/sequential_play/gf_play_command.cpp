@@ -216,7 +216,7 @@ GfPlayComWait *GfPlayComWait::create(f32 time) {
   return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComWait(time);
 }
 
-void GfPlayComWaitEvent::start() { unknown20 = GfReqCommand::reqWaitEvent(unknown10, unknown18); }
+void GfPlayComWaitEvent::start() { unknown20 = GfReqCommand::reqWaitEvent(unknown10, m_GF_OBJ_HANDLE); }
 
 void GfPlayComWaitEvent::end() {
   GfFobjManager::get()->unknown907c = 0.0f;
@@ -227,7 +227,7 @@ bool GfPlayComWaitEvent::update(const fw::UpdateInfo &, bool isCancel) {
   for (u32 partyId = 0; partyId < 3; partyId++) {
     DataParamAcc acc(GfGameParty::getHandleDriver(partyId));
     if (acc.isValid() && acc.getHp() == 0) {
-      GfGameUtil::setHp(acc.unknown10, 1);
+      GfGameUtil::setHp(acc.m_GF_OBJ_HANDLE, 1);
     }
   }
   return !GfReqManager::isValid(unknown20);
@@ -352,7 +352,7 @@ GfPlayComResetBladePlayerStop *GfPlayComResetBladePlayerStop::create(bool isStop
 
 int GfPlayComAfterEventScript::s_activate;
 
-GfPlayComAfterEventScript::GfPlayComAfterEventScript(u32 event) : GfPlayCom(PCOMTYPE_UNKNOWN_8, false), unknown10(0), unknown14(event), unknown18(reinterpret_cast<GF_SCOM_HANDLE *>(-1)) {
+GfPlayComAfterEventScript::GfPlayComAfterEventScript(u32 event) : GfPlayCom(PCOMTYPE_UNKNOWN_8, false), unknown10(0), unknown14(event), m_GF_SCOM_HANDLE(reinterpret_cast<GF_SCOM_HANDLE *>(-1)) {
   s_activate++;
 }
 
@@ -363,7 +363,7 @@ void GfPlayComAfterEventScript::start() {
   const char *name = GfDataEvent::getEventAfterScriptName(unknown14);
   if (name != nullptr && name[0] != '\0') {
     GfGameEvent::setAfterEventStartID(startID);
-    unknown18 = SCOM_SCRIPT::create(SCRIPT_SLOT_UNKNOWN_3, name, true);
+    m_GF_SCOM_HANDLE = SCOM_SCRIPT::create(SCRIPT_SLOT_UNKNOWN_3, name, true);
   }
 }
 
@@ -374,7 +374,7 @@ bool GfPlayComAfterEventScript::update(const fw::UpdateInfo &, bool isCancel) {
     SCOM_SCRIPT::create(SCRIPT_SLOT_UNKNOWN_3, nullptr, false);
     return true;
   }
-  return !GfReqSmallCom::get()->isValid(unknown18);
+  return !GfReqSmallCom::get()->isValid(m_GF_SCOM_HANDLE);
 }
 
 GfPlayComAfterEventScript *GfPlayComAfterEventScript::create(u32 event) {
@@ -760,7 +760,8 @@ GfPlayComMenuCommon *GfPlayComMenuCommon::create(u32 window) {
 mm::mtl::FixedQueue<u32, 32> GfPlayComMenuCommonFromParam::s_list;
 u32 GfPlayComMenuCommonFromParam::s_gblHandle;
 
-GfPlayComMenuCommonFromParam::GfPlayComMenuCommonFromParam(const MenuCommonWindowParam &param, u32 handle) : GfPlayCom(PCOMTYPE_UNKNOWN_24, false), unknown10(param), unknown60(handle & 0xffffff) {
+GfPlayComMenuCommonFromParam::GfPlayComMenuCommonFromParam(const MenuCommonWindowParam &param, u32 handle)
+    : GfPlayCom(PCOMTYPE_UNKNOWN_24, false), m_menuCommonWindowParam(param), unknown60(handle & 0xffffff) {
   if (s_list.size() >= 32) {
     s_list.pop_front();
   }
@@ -780,7 +781,7 @@ void GfPlayComMenuCommonFromParam::start() {
   if (!GfGameManager::isAdvertize()) {
     SCOM_FADE::create(1, 15, mm::Col4::zero);
   }
-  GfMenuManager::openCommonWindow(unknown10);
+  GfMenuManager::openCommonWindow(m_menuCommonWindowParam);
 }
 
 bool GfPlayComMenuCommonFromParam::update(const fw::UpdateInfo &, bool isCancel) {
@@ -818,7 +819,7 @@ GfPlayComMenuCommonFromParam *GfPlayComMenuCommonFromParam::create(const MenuCom
   return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComMenuCommonFromParam(param, handle);
 }
 
-GfPlayComSalvage::GfPlayComSalvage(GF_OBJ_HANDLE *handle) : GfPlayCom(PCOMTYPE_UNKNOWN_25, false), unknown18(handle), unknown20(3), unknown24(STATE_UNKNOWN_0) {
+GfPlayComSalvage::GfPlayComSalvage(GF_OBJ_HANDLE *handle) : GfPlayCom(PCOMTYPE_UNKNOWN_25, false), m_GF_OBJ_HANDLE(handle), unknown20(3), unknown24(STATE_UNKNOWN_0) {
   if (GfGameScene::get() != nullptr) {
     unknown10 = GfGameScene::get()->createPlayerPause();
   }
@@ -841,7 +842,7 @@ bool GfPlayComSalvage::updateForWait(const fw::UpdateInfo &info) {
       return true;
     }
     unknown24 = STATE_UNKNOWN_1;
-    GfGameSalvage::startSalvage(unknown18);
+    GfGameSalvage::startSalvage(m_GF_OBJ_HANDLE);
   }
   return false;
 }
@@ -924,12 +925,12 @@ void GfPlayComTalk::start() {
   QuestID lastOrder = GfQuestManager::getLastOrder();
   unknown40.unknown00 = lastOrder.unknown00;
   unknown40.unknown02 = lastOrder.unknown02;
-  GfGameTalk::play(unknown18);
-  GfObjSetupNpc *setup = GfObjUtil::getObjSetup<GfObjSetupNpc>(unknown18.unknown08);
+  GfGameTalk::play(m_setupPfTalk);
+  GfObjSetupNpc *setup = GfObjUtil::getObjSetup<GfObjSetupNpc>(m_setupPfTalk.m_GF_OBJ_HANDLE);
   if (setup != nullptr) {
     unknown34 = setup->unknown10;
     if (unknown34 != 0) {
-      GfAchievStats::checkTalk(unknown34, unknown18.unknown08);
+      GfAchievStats::checkTalk(unknown34, m_setupPfTalk.m_GF_OBJ_HANDLE);
       u32 taskIndex;
       if (GfQuestUtil::getTalkNpcInfo(taskIndex, unknown34, unknown3c)) {
         s_questTargetNpc = unknown34;
@@ -965,18 +966,18 @@ bool GfPlayComTalk::update(const fw::UpdateInfo &, bool isCancel) {
   return !GfGameTalk::isPlaying();
 }
 
-GfPlayComQuestOrderUI::GfPlayComQuestOrderUI(QuestID quest, bool isForce) : GfPlayCom(PCOMTYPE_UNKNOWN_34, false), unknown10(quest), unknown14(isForce), unknown18(nullptr) {
+GfPlayComQuestOrderUI::GfPlayComQuestOrderUI(QuestID quest, bool isForce) : GfPlayCom(PCOMTYPE_UNKNOWN_34, false), m_questID(quest), unknown14(isForce), m_menuCallContext(nullptr) {
   if (GfGameScene::get() != nullptr) {
     GfGameScene::get()->setPlayerTalkForce(true);
   }
 }
 
-GfPlayComQuestOrderUI::~GfPlayComQuestOrderUI() { mm::mtl::safeRelease(unknown18); }
+GfPlayComQuestOrderUI::~GfPlayComQuestOrderUI() { mm::mtl::safeRelease(m_menuCallContext); }
 
 void GfPlayComQuestOrderUI::start() {
-  if (GfQuestInfo::isDispUI(unknown10)) {
-    unknown18 = GfMenuCallContext::create();
-    GfMenuObjQuestLog::order(unknown18, unknown10);
+  if (GfQuestInfo::isDispUI(m_questID)) {
+    m_menuCallContext = GfMenuCallContext::create();
+    GfMenuObjQuestLog::order(m_menuCallContext, m_questID);
   }
 }
 
@@ -987,8 +988,8 @@ void GfPlayComQuestOrderUI::end() {
 }
 
 bool GfPlayComQuestOrderUI::update(const fw::UpdateInfo &, bool) {
-  if (unknown18 != nullptr) {
-    if (!unknown18->isTerm()) {
+  if (m_menuCallContext != nullptr) {
+    if (!m_menuCallContext->isTerm()) {
       return false;
     }
     GfQuestEvent::clearDispUI();
@@ -1035,15 +1036,15 @@ GfPlayComBattleStart *GfPlayComBattleStart::create(bool isStart) {
   return command;
 }
 
-GfPlayComExecuteSignal::GfPlayComExecuteSignal(bool isStart, GfSequentialPlaySignal *signal) : GfPlayCom(PCOMTYPE_UNKNOWN_38, true), unknown10(isStart), unknown18(signal) {
+GfPlayComExecuteSignal::GfPlayComExecuteSignal(bool isStart, GfSequentialPlaySignal *signal) : GfPlayCom(PCOMTYPE_UNKNOWN_38, true), unknown10(isStart), m_sequentialPlaySignal(signal) {
   if (unknown10) {
-    unknown18->isActive = true;
+    m_sequentialPlaySignal->isActive = true;
   }
 }
 
 void GfPlayComExecuteSignal::start() {
   if (!unknown10) {
-    unknown18->isActive = false;
+    m_sequentialPlaySignal->isActive = false;
   }
 }
 
@@ -1057,14 +1058,14 @@ GfPlayComExecuteSignal *GfPlayComExecuteSignal::create(bool isStart, GfSequentia
 }
 
 void GfPlayComMenuObjCommonText::start() {
-  unknown20 = GfMenuCallContext::create();
-  GfMenuObjCommonText::openKizunaDialog(unknown20, unknown10);
+  m_menuCallContext = GfMenuCallContext::create();
+  GfMenuObjCommonText::openKizunaDialog(m_menuCallContext, m_openKizunaParam);
 }
 
 void GfPlayComMenuObjCommonText::end() {
-  if (unknown20 != nullptr) {
+  if (m_menuCallContext != nullptr) {
     GfMenuObjCommonText::close();
-    mm::mtl::safeRelease(unknown20);
+    mm::mtl::safeRelease(m_menuCallContext);
   }
 }
 
@@ -1072,13 +1073,13 @@ bool GfPlayComMenuObjCommonText::update(const fw::UpdateInfo &, bool isCancel) {
   if (isCancel) {
     return true;
   }
-  return unknown20->isTerm();
+  return m_menuCallContext->isTerm();
 }
 
 int GfPlayComMenuObjCommonText::s_activate;
 
-GfPlayComMenuObjCommonText::GfPlayComMenuObjCommonText(GfMenuObjCommonText::OpenKizunaParam &param) : GfPlayCom(PCOMTYPE_UNKNOWN_23, false), unknown20(nullptr) {
-  this->unknown10 = param;
+GfPlayComMenuObjCommonText::GfPlayComMenuObjCommonText(GfMenuObjCommonText::OpenKizunaParam &param) : GfPlayCom(PCOMTYPE_UNKNOWN_23, false), m_menuCallContext(nullptr) {
+  this->m_openKizunaParam = param;
   s_activate++;
 }
 
@@ -1153,7 +1154,7 @@ GfPlayComArtsMovie *GfPlayComArtsMovie::create(const char *name) {
   return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComArtsMovie(name);
 }
 
-void GfPlayComMapjump::start() { unknown10 = GfReqCommand::reqMapjump(unknown20); }
+void GfPlayComMapjump::start() { unknown10 = GfReqCommand::reqMapjump(m_mapjumpInfo); }
 
 void GfPlayComMapjump::end() {}
 
@@ -1246,24 +1247,24 @@ GfPlayComGmkCameraSeq *GfPlayComGmkCameraSeq::create(mm::mtl::IntrusivePtr<fw::C
 int GfPlayComQuestCompleteUI::s_active;
 
 GfPlayComQuestCompleteUI::GfPlayComQuestCompleteUI(QuestID quest, QuestID child, QSTATE state)
-    : GfPlayCom(PCOMTYPE_UNKNOWN_35, false), unknown10(quest), unknown14(child), unknown18(state), unknown20(nullptr) {
+    : GfPlayCom(PCOMTYPE_UNKNOWN_35, false), unknown10(quest), unknown14(child), unknown18(state), m_menuCallContext(nullptr) {
   s_active++;
 }
 
 GfPlayComQuestCompleteUI::~GfPlayComQuestCompleteUI() {
-  mm::mtl::safeRelease(unknown20);
+  mm::mtl::safeRelease(m_menuCallContext);
   s_active--;
 }
 
 void GfPlayComQuestCompleteUI::start() {
-  unknown20 = GfMenuCallContext::create();
-  GfMenuObjQuestLog::complete(unknown20, unknown10);
+  m_menuCallContext = GfMenuCallContext::create();
+  GfMenuObjQuestLog::complete(m_menuCallContext, unknown10);
 }
 
 void GfPlayComQuestCompleteUI::end() { GfQuestManager::requestRefreshQuestTaskState(); }
 
 bool GfPlayComQuestCompleteUI::update(const fw::UpdateInfo &, bool) {
-  if (unknown20->isTerm()) {
+  if (m_menuCallContext->isTerm()) {
     GfQuestEvent::clearDispUI();
     return true;
   }
@@ -1278,7 +1279,7 @@ GfPlayComQuestCompleteUI *GfPlayComQuestCompleteUI::create(QuestID quest, QuestI
   return command;
 }
 
-GfPlayComCollect::GfPlayComCollect(GF_OBJ_HANDLE *handle) : GfPlayCom(PCOMTYPE_UNKNOWN_26, false), unknown20(handle) {
+GfPlayComCollect::GfPlayComCollect(GF_OBJ_HANDLE *handle) : GfPlayCom(PCOMTYPE_UNKNOWN_26, false), m_GF_OBJ_HANDLE(handle) {
   if (GfGameScene::get() != nullptr) {
     unknown18 = GfGameScene::get()->createPlayerPause();
   }
@@ -1291,7 +1292,7 @@ GfPlayComCollect *GfPlayComCollect::create(GF_OBJ_HANDLE *handle) {
 }
 
 void GfPlayComCollect::start() {
-  GfFieldCollect::get()->start(unknown20);
+  GfFieldCollect::get()->start(m_GF_OBJ_HANDLE);
   SCOM_FIELD_VOICE::create(CV_FIELD_UNKNOWN_4, CV_PRIO_UNKNOWN_1);
 }
 
@@ -1301,20 +1302,20 @@ void GfPlayComCollect::end() {
   }
 }
 
-GfPlayComFieldTbox::GfPlayComFieldTbox(GF_OBJ_HANDLE *handle) : GfPlayCom(PCOMTYPE_UNKNOWN_27, false), unknown20(handle), unknown2c(0), unknown30(0.0f) {
+GfPlayComFieldTbox::GfPlayComFieldTbox(GF_OBJ_HANDLE *handle) : GfPlayCom(PCOMTYPE_UNKNOWN_27, false), m_GF_OBJ_HANDLE(handle), unknown2c(0), unknown30(0.0f) {
   if (GfGameScene::get() != nullptr) {
     unknown18 = GfGameScene::get()->createPlayerPause();
   }
-  unknown28 = GfQuestUtil::getCurrentTBoxWithEvent(handle);
+  m_questID = GfQuestUtil::getCurrentTBoxWithEvent(handle);
   gmk::AGmkBase *gmk = gmk::getBindedGmkInst(handle);
   if (gmk != nullptr && gmk->getGmkType() == gmk::GMK_TYPE_TBOX && static_cast<gmk::GmkTbox *>(gmk)->getBdatInfo()->unknown02 &&
       static_cast<gmk::GmkTbox *>(gmk)->getProgress() == gmk::GmkTbox::PROGRESS_UNKNOWN_0) {
-    unknown28 = toQuestID(0);
+    m_questID = toQuestID(0);
   }
 }
 
 void GfPlayComFieldTbox::start() {
-  GfFieldTbox::get()->start(unknown20);
+  GfFieldTbox::get()->start(m_GF_OBJ_HANDLE);
   SCOM_FIELD_VOICE::create(CV_FIELD_UNKNOWN_3, CV_PRIO_UNKNOWN_1);
 }
 
@@ -1344,7 +1345,7 @@ bool GfPlayComFieldTbox::updateForCheckOpenFinish(const fw::UpdateInfo &) {
     return false;
   }
   if (GfFieldTbox::get() == nullptr || GfFieldTbox::get()->unknown12) {
-    unknown2c = unknown28.empty() ? 2 : 1;
+    unknown2c = m_questID.empty() ? 2 : 1;
     return false;
   }
   return true;
@@ -1352,7 +1353,7 @@ bool GfPlayComFieldTbox::updateForCheckOpenFinish(const fw::UpdateInfo &) {
 
 bool GfPlayComFieldTbox::updateForCompleteQuest(const fw::UpdateInfo &info) {
   unknown30 += info.unknown04;
-  if (unknown30 < 0.5f && !GfQuestInfo::isQuestFin(unknown28)) {
+  if (unknown30 < 0.5f && !GfQuestInfo::isQuestFin(m_questID)) {
     return false;
   }
   return true;
@@ -1388,10 +1389,10 @@ GfPlayComFieldTbox *GfPlayComFieldTbox::create(GF_OBJ_HANDLE *handle) {
   return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfPlayComFieldTbox(handle);
 }
 
-void GfPlayComFieldSeq::start() { unknown18->create(unknown20); }
+void GfPlayComFieldSeq::start() { m_iFieldSeq->create(m_GF_OBJ_HANDLE); }
 
 void GfPlayComFieldSeq::end() {
-  unknown18->dispose();
+  m_iFieldSeq->dispose();
   if (GfGameScene::get() != nullptr) {
     GfGameScene::get()->destroyPlayerPause(unknown28);
   }
@@ -1399,12 +1400,12 @@ void GfPlayComFieldSeq::end() {
 
 bool GfPlayComFieldSeq::update(const fw::UpdateInfo &, bool isCancel) {
   if (isCancel) {
-    return unknown18->cancel();
+    return m_iFieldSeq->cancel();
   }
-  return unknown18->isEnd();
+  return m_iFieldSeq->isEnd();
 }
 
-GfPlayComFieldSeq::GfPlayComFieldSeq(IFieldSeq *sequence, GF_OBJ_HANDLE *handle) : GfPlayCom(PCOMTYPE_UNKNOWN_28, false), unknown18(sequence), unknown20(handle) {
+GfPlayComFieldSeq::GfPlayComFieldSeq(IFieldSeq *sequence, GF_OBJ_HANDLE *handle) : GfPlayCom(PCOMTYPE_UNKNOWN_28, false), m_iFieldSeq(sequence), m_GF_OBJ_HANDLE(handle) {
   if (GfGameScene::get() != nullptr) {
     unknown28 = GfGameScene::get()->createPlayerPause();
   }
@@ -1508,7 +1509,7 @@ void GfPlayComPlayerDead::setupForFallout() {
   unknown20 = PLAYER_DEAD_UNKNOWN_4;
   // __LINE__ must be 2186 as in the original file: it is the line argument of operator new.
 #line 2186
-  unknown30 = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfDeadCamera(unknown20);
+  m_deadCamera = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfDeadCamera(unknown20);
   MsgObjectNotifyDead message(0, nullptr);
   message.unknown08 = unknown20;
   SCOM_CHAR_DEAD::create(GfGameManager::getControlMover(), message);
@@ -1530,9 +1531,9 @@ void GfPlayComPlayerDead::end() {
   if (GfGameScene::get() != nullptr) {
     GfGameScene::get()->setDeadType(PLAYER_DEAD_UNKNOWN_0);
   }
-  if (unknown30 != nullptr) {
-    delete unknown30;
-    unknown30 = nullptr;
+  if (m_deadCamera != nullptr) {
+    delete m_deadCamera;
+    m_deadCamera = nullptr;
   }
   GfGameParty::setPartyGauge(0);
   GfEvent::removeEventCallback(this);

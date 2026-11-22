@@ -74,8 +74,8 @@ void GfComBehaviorMob::procMsgActivateComponentDebugWindow(fw::MessageObject *se
 void GfComBehaviorMob::procMsgObjectGetVelocity(fw::MessageObject *sender, MsgObjectGetVelocity &message) { message.unknown10 = unknown100; }
 
 GfComBehaviorMob::GfComBehaviorMob()
-    : unknown98(), unknowna8(nullptr), unknownb0(0), unknownb8(nullptr), unknown100(mm::Vec3::zero), unknown110(mm::Vec3::zero), unknown120(mm::Quat::identity), unknown130(nullptr),
-      unknown190(nullptr), unknown1e0(nullptr), unknown210(unknown020), unknown2c0(nullptr), unknown5328(fw::Allocator::getProcAllocator()), unknown53b0(true), unknown53b8(nullptr),
+    : m_bdatInfo(), unknowna8(nullptr), unknownb0(0), unknownb8(nullptr), unknown100(mm::Vec3::zero), unknown110(mm::Vec3::zero), unknown120(mm::Quat::identity), m_gameStuckMeter(nullptr),
+      m_gameDepopMeter(nullptr), m_fieldMoveSpeed(nullptr), m_fieldLookIk(unknown020), m_fieldLocalSteer(nullptr), m_hfsm(fw::Allocator::getProcAllocator()), unknown53b0(true), unknown53b8(nullptr),
       unknown53d0(1.0e12f), unknown53d4(1.0e12f), unknown53d8(false) {}
 
 GfComBehaviorMob::~GfComBehaviorMob() { cleanup(); }
@@ -86,7 +86,7 @@ void GfComBehaviorMob::cleanup() {
   unknownb8 = nullptr;
   disposeNaviMeshObj();
   disposeFsm();
-  unknown10.cleanup();
+  m_pluginManager.cleanup();
 }
 
 const mm::Vec3 &GfComBehaviorMob::getPos() const { return unknown08->getComponent<GfComTransform>()->unknown001()->getSyncedWorldTransform().unknown00; }
@@ -123,39 +123,39 @@ void GfComBehaviorMob::update(const fw::UpdateInfo &info) {
     unknown53d0 = delta.x * delta.x + delta.y * delta.y + delta.z * delta.z;
   }
   if (npc::StateBattle<GfComBehaviorMob>::isCondMatch(*this) && getStateId() != mob::STATE_ID_UNKNOWN_5) {
-    unknown5328.setState(mob::STATE_ID_UNKNOWN_5);
+    m_hfsm.setState(mob::STATE_ID_UNKNOWN_5);
   }
-  if (GfGameManager::isBattle() && unknown98.unknown08 == 1) {
+  if (GfGameManager::isBattle() && m_bdatInfo.unknown08 == 1) {
     GfObjAcc acc(static_cast<GfObj *>(unknown08)->unknownf8);
     if (!acc.testFlag(OBJ_FLAG_UNKNOWN_17)) {
       SCOM_DESTROY_GAME_OBJ::create(static_cast<GfObj *>(unknown08)->unknownf8, 1.0f, false);
     }
   }
-  unknown5328.update(&info);
+  m_hfsm.update(&info);
   coli = getColiObject();
   if (coli != nullptr) {
     coli->setDir(unknown100 * info.unknown04);
   }
   updateNaviMeshObj(info.unknown04);
-  unknown210.update(info.unknown04);
-  unknown1e0.update(info.unknown04);
-  unknown130.update(info.unknown04);
+  m_fieldLookIk.update(info.unknown04);
+  m_fieldMoveSpeed.update(info.unknown04);
+  m_gameStuckMeter.update(info.unknown04);
   unknown250.update(info.unknown04);
-  unknown10.update(info);
+  m_pluginManager.update(info);
   GfFieldLocalSteer::UpdateInfo steerUpdate;
   steerUpdate.unknown00 = unknown110;
   steerUpdate.unknown10 = info.unknown04;
-  unknown2c0.castRay(unknown110);
-  unknown2c0.update(steerUpdate);
+  m_fieldLocalSteer.castRay(unknown110);
+  m_fieldLocalSteer.update(steerUpdate);
 }
 
 gmk::AGmkBase *GfComBehaviorMob::getBindedGmkInst() const { return gmk::getBindedGmkInst(static_cast<GfObj *>(unknown08)->unknownf8); }
 
-bool GfComBehaviorMob::isSquadMember() const { return unknownc0.unknown001() && unknownc0.unknown28 != 0; }
+bool GfComBehaviorMob::isSquadMember() const { return m_gmkSquadNavi.unknown001() && m_gmkSquadNavi.unknown28 != 0; }
 
 f32 GfComBehaviorMob::getMoveSpeedMps() const {
   GfObjSetupMob *setup = mm::mtl::dynamicCast<GfObjSetupMob>(GfObjManager::getObjInfo(static_cast<GfObj *>(unknown08)->unknownf8)->unknown30);
-  return unknown1e0.unknown10 * 0.2777778f * setup->getScaleX();
+  return m_fieldMoveSpeed.unknown10 * 0.2777778f * setup->getScaleX();
 }
 
 bool GfComBehaviorMob::isMove() const {
@@ -178,7 +178,7 @@ bool GfComBehaviorMob::isMove() const {
       if (gmk == nullptr) {
         return false;
       }
-      return gmk->unknown08.unknown10->unknown0c != gmk::SHAPE_TYPE_UNKNOWN_1;
+      return gmk->m_createBaseInfo.unknown10->unknown0c != gmk::SHAPE_TYPE_UNKNOWN_1;
     }
   }
 
@@ -215,21 +215,21 @@ void GfComBehaviorMob::init(bool param1) {
 void GfComBehaviorMob::initMoveSpeed(f32 time) {
   GfObjSetupMob *setup = mm::mtl::dynamicCast<GfObjSetupMob>(GfObjManager::getObjInfo(static_cast<GfObj *>(unknown08)->unknownf8)->unknown30);
   f32 rate = setup->unknown90 * 0.01f;
-  unknown1e0.setSpeedKmph(unknown1e0.unknown08 * rate, time);
+  m_fieldMoveSpeed.setSpeedKmph(m_fieldMoveSpeed.unknown08 * rate, time);
 }
 
 void GfComBehaviorMob::setStateId(mob::STATE_ID stateId) {
   if (getStateId() != stateId) {
-    unknown5328.setState(stateId);
+    m_hfsm.setState(stateId);
   }
 }
 
 void GfComBehaviorMob::setup() {
   cleanup();
-  unknown10.beginSetup(*this, 4);
-  unknown10.unknown001<FootStepPlugin>(0, true);
-  unknown10.unknown001<EyeBlinkPlugin>(1, true);
-  unknown10.endSetup();
+  m_pluginManager.beginSetup(*this, 4);
+  m_pluginManager.unknown001<FootStepPlugin>(0, true);
+  m_pluginManager.unknown001<EyeBlinkPlugin>(1, true);
+  m_pluginManager.endSetup();
 
   FootStepPlugin *footStep = unknown001<FootStepPlugin>(0);
   if (footStep != nullptr) {
@@ -244,7 +244,7 @@ void GfComBehaviorMob::setup() {
   gmkInst = getBindedGmkInst();
   if (gmkInst != nullptr) {
     CBdatWrapper bdat{gmkInst->getBindedBdatFp()};
-    unknown98.create(bdat, gmkInst->unknown20.unknown18);
+    m_bdatInfo.create(bdat, gmkInst->m_createInfo.unknown18);
   }
 
   createNaviMeshObj();
@@ -253,8 +253,8 @@ void GfComBehaviorMob::setup() {
 
   {
     GfFieldMoveSpeed::CreateInfo moveSpeedInfo;
-    moveSpeedInfo.unknown00 = static_cast<GfObj *>(unknown08)->unknownf8;
-    unknown1e0.create(moveSpeedInfo);
+    moveSpeedInfo.m_GF_OBJ_HANDLE = static_cast<GfObj *>(unknown08)->unknownf8;
+    m_fieldMoveSpeed.create(moveSpeedInfo);
   }
   initMoveSpeed(0.0f);
   createSquadNavi();
@@ -275,20 +275,20 @@ void GfComBehaviorMob::setup() {
     stuckInfo.unknown10 = 0.0f;
     stuckInfo.setColiObj(coli);
     stuckInfo.unknown10 = stuckInfo.unknown00 * stuckInfo.unknown00;
-    unknown130.create(stuckInfo);
+    m_gameStuckMeter.create(stuckInfo);
   }
 
   {
     GfGameDepopMeter::CreateInfo depopInfo;
     depopInfo.unknown08 = true;
-    depopInfo.unknown00 = static_cast<GfObj *>(unknown08)->unknownf8;
-    unknown190.create(depopInfo);
+    depopInfo.m_GF_OBJ_HANDLE = static_cast<GfObj *>(unknown08)->unknownf8;
+    m_gameDepopMeter.create(depopInfo);
   }
 
   if (gmkInst != nullptr) {
     CBdatWrapper bdat{gmkInst->getBindedBdatFp()};
-    int id = gmkInst->unknown20.unknown18;
-    unknown210.create(static_cast<GfObj *>(unknown08)->unknownf8, bdat, id);
+    int id = gmkInst->m_createInfo.unknown18;
+    m_fieldLookIk.create(static_cast<GfObj *>(unknown08)->unknownf8, bdat, id);
   }
 
   GfFieldLocalSteer::CreateInfo steerInfo;
@@ -296,9 +296,9 @@ void GfComBehaviorMob::setup() {
   steerInfo.unknown0c = 1.0f;
   steerInfo.unknown10 = 0.5f;
   steerInfo.unknown14 = true;
-  steerInfo.unknown00 = static_cast<GfObj *>(unknown08)->unknownf8;
+  steerInfo.m_GF_OBJ_HANDLE = static_cast<GfObj *>(unknown08)->unknownf8;
   steerInfo.unknown18 = &unknown5320;
-  unknown2c0.create(steerInfo);
+  m_fieldLocalSteer.create(steerInfo);
 
   mob::STATE_ID stateId = mob::STATE_ID_UNKNOWN_0;
   if (gmkInst != nullptr) {
@@ -324,11 +324,11 @@ void GfComBehaviorMob::disposeNaviMeshObj() {
 void GfComBehaviorMob::disposeFsm() {
   if (!unknown53b0) {
     unknown53b0 = true;
-    unknown5328.cleanup();
+    m_hfsm.cleanup();
   }
 }
 
-void GfComBehaviorMob::disposeSquadNavi() { unknownc0.dispose(); }
+void GfComBehaviorMob::disposeSquadNavi() { m_gmkSquadNavi.dispose(); }
 
 void GfComBehaviorMob::setActivateCollison(bool isActivate) {
   fw::ColiMoveObject *coli = getColiObject();
@@ -338,15 +338,15 @@ void GfComBehaviorMob::setActivateCollison(bool isActivate) {
 }
 
 u32 GfComBehaviorMob::getStateId() const {
-  if (unknown5328.m_pState != nullptr) {
-    return unknown5328.m_pState->unknown08;
+  if (m_hfsm.m_pState != nullptr) {
+    return m_hfsm.m_pState->m_state;
   }
 
   return ai::INVALID_STATE_ID;
 }
 
 void GfComBehaviorMob::updateNaviMeshObj(f32 deltaTime) {
-  if (unknowna8 != nullptr && (unknowna8->unknown10 & 2) != 0 && unknown1e0.unknown00 != unknown020) {
+  if (unknowna8 != nullptr && (unknowna8->unknown10 & 2) != 0 && m_fieldMoveSpeed.m_GF_OBJ_HANDLE != unknown020) {
     const mm::Vec3 &position = getPos();
     unknowna8->setBeginPos(position);
     unknowna8->setEndPos(unknown110);
@@ -371,8 +371,8 @@ void GfComBehaviorMob::moveToGoal(f32 deltaTime) {
   direction *= getMoveSpeedMps();
   unknown100.x = direction.x;
   unknown100.z = direction.z;
-  if (unknown2c0.unknown00.unknown00 != unknown020) {
-    unknown2c0.apply(unknown100, unknown100);
+  if (m_fieldLocalSteer.m_createInfo.m_GF_OBJ_HANDLE != unknown020) {
+    m_fieldLocalSteer.apply(unknown100, unknown100);
   }
 
   fw::Transform &transform = unknown08->getComponent<GfComTransform>()->unknown001()->unknown003();
@@ -395,21 +395,21 @@ void GfComBehaviorMob::createNaviMeshObj() {
 
 void GfComBehaviorMob::createFsm() {
   disposeFsm();
-  unknown5328.beginSetup(this, 6, 1);
-  unknown5328.registerState<mob::StateIdle>(mob::STATE_ID_UNKNOWN_0, -1);
-  unknown5328.registerState<mob::StateMove>(mob::STATE_ID_UNKNOWN_1, -1);
-  unknown5328.registerState<npc::StateAreaMove<GfComBehaviorMob>>(mob::STATE_ID_UNKNOWN_2, -1);
-  unknown5328.registerState<mob::StateSquadMember>(mob::STATE_ID_UNKNOWN_3, -1);
-  unknown5328.registerState<npc::StateReaction<GfComBehaviorMob>>(mob::STATE_ID_UNKNOWN_4, -1);
-  unknown5328.registerState<npc::StateBattle<GfComBehaviorMob>>(mob::STATE_ID_UNKNOWN_5, -1);
-  unknown5328.endSetup();
+  m_hfsm.beginSetup(this, 6, 1);
+  m_hfsm.registerState<mob::StateIdle>(mob::STATE_ID_UNKNOWN_0, -1);
+  m_hfsm.registerState<mob::StateMove>(mob::STATE_ID_UNKNOWN_1, -1);
+  m_hfsm.registerState<npc::StateAreaMove<GfComBehaviorMob>>(mob::STATE_ID_UNKNOWN_2, -1);
+  m_hfsm.registerState<mob::StateSquadMember>(mob::STATE_ID_UNKNOWN_3, -1);
+  m_hfsm.registerState<npc::StateReaction<GfComBehaviorMob>>(mob::STATE_ID_UNKNOWN_4, -1);
+  m_hfsm.registerState<npc::StateBattle<GfComBehaviorMob>>(mob::STATE_ID_UNKNOWN_5, -1);
+  m_hfsm.endSetup();
   unknown53b0 = false;
 }
 
 void GfComBehaviorMob::execTurnCmdToPos(const mm::Vec3 &position) {
   const mm::Vec3 &current = getPos();
   f32 angle = atan2f(position.x - current.x, position.z - current.z);
-  angle += unknown2c0.unknown00.unknown00 == unknown020 ? 0.0f : unknown2c0.getCurAngle();
+  angle += m_fieldLocalSteer.m_createInfo.m_GF_OBJ_HANDLE == unknown020 ? 0.0f : m_fieldLocalSteer.getCurAngle();
   unknown250.create(TFieldExecCmdTurn<GfComAsm>::CreateInfo(static_cast<GfObj *>(unknown08)->unknownf8, angle));
 }
 
@@ -424,7 +424,7 @@ void GfComBehaviorMob::execTurnCmdToGoal() {
 }
 
 bool GfComBehaviorMob::isArrivedToGoal() const {
-  if (unknown2c0.isTimeOutCollide()) {
+  if (m_fieldLocalSteer.isTimeOutCollide()) {
     return true;
   }
   fw::ColiMoveObject *coli = getColiObject();
@@ -459,25 +459,25 @@ bool GfComBehaviorMob::isArrivedToGoal() const {
 }
 
 void GfComBehaviorMob::createSquadNavi() {
-  unknownc0.dispose();
+  m_gmkSquadNavi.dispose();
   gmk::AGmkBase *gmk = getBindedGmkInst();
   if (gmk != nullptr) {
     gmk::GmkSquadNavi::CreateInfo info;
     bool isMob = gmk->getGmkType() == gmk::GMK_TYPE_MOB;
     gmk::GmkRoutedMob *routedMob = gmk->getGmkType() == gmk::GMK_TYPE_ROUTED_MOB ? static_cast<gmk::GmkRoutedMob *>(gmk) : nullptr;
     if (isMob) {
-      info.unknown00 = static_cast<gmk::GmkMob *>(gmk)->unknown48.unknownb0;
+      info.m_gmkSquad = static_cast<gmk::GmkMob *>(gmk)->m_gmkMobInsts.m_gmkSquad;
     } else if (routedMob != nullptr) {
-      info.unknown00 = routedMob->unknown50.unknownb0;
+      info.m_gmkSquad = routedMob->m_gmkMobInsts.m_gmkSquad;
     }
     GfObjUtil::getObjSetup<GfObjSetupMob>(static_cast<GfObj *>(unknown08)->unknownf8);
     info.unknown08 = static_cast<GfObj *>(unknown08)->unknownf8;
-    if (info.unknown08 != unknown020 && info.unknown00 != nullptr) {
-      unknownc0.create(info);
+    if (info.unknown08 != unknown020 && info.m_gmkSquad != nullptr) {
+      m_gmkSquadNavi.create(info);
     }
   }
 }
 
-void GfComBehaviorMob::Listener::onWkStandbyLogout() { unknown08->unknown53b8 = nullptr; }
+void GfComBehaviorMob::Listener::onWkStandbyLogout() { m_comBehaviorMob->unknown53b8 = nullptr; }
 
 } // namespace gf

@@ -20,7 +20,7 @@ bool getPopPos(mm::Vec3 &position, const gmk::AGmkBase &gmk);
 
 class AFieldLocator {
 public:
-  AFieldLocator() : unknown08{0, 0}, m_iconBdatId(-1), m_mapBdatId(-1) {}
+  AFieldLocator() : m_questID{0, 0}, m_iconBdatId(-1), m_mapBdatId(-1) {}
   virtual ~AFieldLocator() {}
   virtual int getIconBdatId() const;
   virtual u32 getPosNum() const = 0;
@@ -39,7 +39,7 @@ public:
 
   // Inferred helper: binds an accessor to the first gimmick of a type and bdat id when it is not bound yet; original name unknown.
   static void unknown002(gmk::GmkAcc &acc, gmk::GmkType type, int bdatId) {
-    if (!acc.unknown18.isValid()) {
+    if (!acc.m_createInfo.isValid()) {
       gmk::GmkAcc::CreateInfo info;
       const gmk::AGmkBase *gmk = gmk::GmkManager::get()->findFirstGmkInstByBdatId(type, bdatId);
       if (gmk != nullptr) {
@@ -51,12 +51,12 @@ public:
     }
   }
 
-  QuestID unknown08; // Inferred role: quest; original member name unknown.
+  QuestID m_questID; // Inferred role: quest; original member name unknown.
   int m_iconBdatId;
   int m_mapBdatId;
 };
 
-static_assert(offsetof(AFieldLocator, unknown08) == 0x08, "");
+static_assert(offsetof(AFieldLocator, m_questID) == 0x08, "");
 static_assert(offsetof(AFieldLocator, m_iconBdatId) == 0x0c, "");
 static_assert(offsetof(AFieldLocator, m_mapBdatId) == 0x10, "");
 
@@ -215,20 +215,20 @@ class LocatorTbox : public AFieldLocator {
 public:
   LocatorTbox(QuestID quest, u16 tboxId);
   ~LocatorTbox() override { dispose(); }
-  u32 getPosNum() const override { return unknown18.isValid() ? m_posNum : 0; }
+  u32 getPosNum() const override { return m_gmkAcc.isValid() ? m_posNum : 0; }
   const mm::Vec3 *getPos(u32 index) const override { return &m_pos; }
   void update() override;
   void create(QuestID quest, u16 tboxId);
   void dispose();
 
-  u16 unknown14;         // Inferred role: tbox bdat id; original member name unknown.
-  gmk::GmkAcc unknown18; // Inferred role: tbox gimmick accessor; original member name unknown.
+  u16 unknown14;        // Inferred role: tbox bdat id; original member name unknown.
+  gmk::GmkAcc m_gmkAcc; // Inferred role: tbox gimmick accessor; original member name unknown.
   u8 m_posNum;
   mm::Vec3 m_pos;
 };
 
 static_assert(offsetof(LocatorTbox, unknown14) == 0x14, "");
-static_assert(offsetof(LocatorTbox, unknown18) == 0x18, "");
+static_assert(offsetof(LocatorTbox, m_gmkAcc) == 0x18, "");
 static_assert(offsetof(LocatorTbox, m_posNum) == 0x58, "");
 static_assert(offsetof(LocatorTbox, m_pos) == 0x60, "");
 static_assert(sizeof(LocatorTbox) == 0x70, "");
@@ -280,20 +280,20 @@ class LocatorEventPreorder : public AFieldLocator {
 public:
   explicit LocatorEventPreorder(const gmk::GmkEvent *gmk);
   ~LocatorEventPreorder() override { dispose(); }
-  u32 getPosNum() const override { return unknown18.isValid() ? m_posNum : 0; }
+  u32 getPosNum() const override { return m_gmkAcc.isValid() ? m_posNum : 0; }
   const mm::Vec3 *getPos(u32 index) const override { return &m_pos; }
   void update() override;
   void create(const gmk::GmkEvent &gmk);
   void dispose();
 
-  u16 unknown14;         // Inferred role: event bdat id; original member name unknown.
-  gmk::GmkAcc unknown18; // Inferred role: event gimmick accessor; original member name unknown.
+  u16 unknown14;        // Inferred role: event bdat id; original member name unknown.
+  gmk::GmkAcc m_gmkAcc; // Inferred role: event gimmick accessor; original member name unknown.
   u8 m_posNum;
   mm::Vec3 m_pos;
 };
 
 static_assert(offsetof(LocatorEventPreorder, unknown14) == 0x14, "");
-static_assert(offsetof(LocatorEventPreorder, unknown18) == 0x18, "");
+static_assert(offsetof(LocatorEventPreorder, m_gmkAcc) == 0x18, "");
 static_assert(offsetof(LocatorEventPreorder, m_posNum) == 0x58, "");
 static_assert(offsetof(LocatorEventPreorder, m_pos) == 0x60, "");
 static_assert(sizeof(LocatorEventPreorder) == 0x70, "");
@@ -302,20 +302,20 @@ class LocatorPreciousPreorder : public AFieldLocator {
 public:
   explicit LocatorPreciousPreorder(const gmk::GmkPrecious *gmk);
   ~LocatorPreciousPreorder() override { dispose(); }
-  u32 getPosNum() const override { return unknown18.isValid() ? m_posNum : 0; }
+  u32 getPosNum() const override { return m_gmkAcc.isValid() ? m_posNum : 0; }
   const mm::Vec3 *getPos(u32 index) const override { return &m_pos; }
   void update() override;
   void create(const gmk::GmkPrecious &gmk);
   void dispose();
 
-  u16 unknown14;         // Inferred role: precious bdat id; original member name unknown.
-  gmk::GmkAcc unknown18; // Inferred role: precious gimmick accessor; original member name unknown.
+  u16 unknown14;        // Inferred role: precious bdat id; original member name unknown.
+  gmk::GmkAcc m_gmkAcc; // Inferred role: precious gimmick accessor; original member name unknown.
   u8 m_posNum;
   mm::Vec3 m_pos;
 };
 
 static_assert(offsetof(LocatorPreciousPreorder, unknown14) == 0x14, "");
-static_assert(offsetof(LocatorPreciousPreorder, unknown18) == 0x18, "");
+static_assert(offsetof(LocatorPreciousPreorder, m_gmkAcc) == 0x18, "");
 static_assert(offsetof(LocatorPreciousPreorder, m_posNum) == 0x58, "");
 static_assert(offsetof(LocatorPreciousPreorder, m_pos) == 0x60, "");
 static_assert(sizeof(LocatorPreciousPreorder) == 0x70, "");
@@ -323,9 +323,9 @@ static_assert(sizeof(LocatorPreciousPreorder) == 0x70, "");
 class GfFieldLocator {
 public:
   struct CreateInfoByQuest {
-    CreateInfoByQuest() : unknown00{0, 0}, unknown04(-1), unknown08(-1) {}
+    CreateInfoByQuest() : m_questID{0, 0}, unknown04(-1), unknown08(-1) {}
 
-    QuestID unknown00; // Inferred role: quest; original member name unknown.
+    QuestID m_questID; // Inferred role: quest; original member name unknown.
     int unknown04;     // Inferred role: task type; original member name unknown.
     int unknown08;     // Inferred role: task id; original member name unknown.
   };
@@ -342,12 +342,12 @@ public:
   bool isOtherMap() const;
   static bool isIconIdPreorder(int iconId);
 
-  CreateInfoByQuest unknown08; // Inferred role: quest task; original member name unknown.
-  AFieldLocator *unknown18;    // Inferred role: locator; original member name unknown.
+  CreateInfoByQuest m_createInfoByQuest; // Inferred role: quest task; original member name unknown.
+  AFieldLocator *m_aFieldLocator;        // Inferred role: locator; original member name unknown.
 };
 
-static_assert(offsetof(GfFieldLocator, unknown08) == 0x08, "");
-static_assert(offsetof(GfFieldLocator, unknown18) == 0x18, "");
+static_assert(offsetof(GfFieldLocator, m_createInfoByQuest) == 0x08, "");
+static_assert(offsetof(GfFieldLocator, m_aFieldLocator) == 0x18, "");
 static_assert(sizeof(GfFieldLocator) == 0x20, "");
 
 } // namespace gf

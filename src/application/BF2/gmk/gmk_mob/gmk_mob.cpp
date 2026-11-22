@@ -24,11 +24,11 @@ void GmkMobInsts::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gm
   unknown02 = bdat.getValCheck("Group", id, BDAT_TYPE_UNKNOWN_2);
   unknown04 = bdat.getValCheck("squadId", id, BDAT_TYPE_UNKNOWN_2);
   if (unknown02 == 0) {
-    unknown12 = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_UNKNOWN_2));
-    unknown16 =
+    m_scenarioFlagCond = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_UNKNOWN_2));
+    m_questFlagCond =
         QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_UNKNOWN_1), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_UNKNOWN_1));
     u16 timeRange = bdat.getValCheck("TimeRange", id, BDAT_TYPE_UNKNOWN_2);
-    unknown20.unknown08 = timeRange;
+    m_timeCond.unknown08 = timeRange;
     unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_UNKNOWN_2);
   }
   unknown06 = bdat.getValCheck("Mot", id, BDAT_TYPE_UNKNOWN_2);
@@ -104,7 +104,7 @@ void GmkMobInsts::PopInfo::dispose() {
   unknown18.clear();
 }
 
-GmkMobInsts::GmkMobInsts() : unknowna0(true), unknowna8(nullptr), unknownb0(nullptr), unknownb8(0), unknownc0(nullptr) {}
+GmkMobInsts::GmkMobInsts() : unknowna0(true), unknowna8(nullptr), m_gmkSquad(nullptr), unknownb8(0), unknownc0(nullptr) {}
 
 void GmkMobInsts::validateDisp(gf::GF_OBJ_HANDLE *handle) const {
   AGmkBase *gmk = getBindedGmkInst(handle);
@@ -118,7 +118,7 @@ void GmkMobInsts::validateDisp(gf::GF_OBJ_HANDLE *handle) const {
 bool GmkMobInsts::isPopFinished() const {
   if (!isGfObjNumFull(gf::OBJECT_TYPE_MOB) && (unknownb8 & MATCHED_UNKNOWN_0) && (unknownb8 & MATCHED_UNKNOWN_1)) {
     u32 num = unknowna8->size();
-    return unknown58.unknown40 == num;
+    return m_popInfo.unknown40 == num;
   }
   return true;
 }
@@ -126,7 +126,7 @@ bool GmkMobInsts::isPopFinished() const {
 bool GmkMobInsts::isValid() const {
   bool valid = false;
   if (unknowna8 != nullptr) {
-    if (unknown18.unknown04 == 0 || (unknownb0 != nullptr && unknownb0->isValid())) {
+    if (m_bdatInfo.unknown04 == 0 || (m_gmkSquad != nullptr && m_gmkSquad->isValid())) {
       valid = true;
     }
   }
@@ -195,18 +195,18 @@ void GmkMobInsts::update(const UpdateInfo &info) {
 }
 
 void GmkMobInsts::updatePopDepopCond(const UpdateInfo &info) {
-  if (unknown18.isPopCommonCondMatched(*unknown00.unknown00)) {
+  if (m_bdatInfo.isPopCommonCondMatched(*m_createInfo.m_aGmkBase)) {
     unknownb8 |= MATCHED_UNKNOWN_0;
   } else {
     unknownb8 &= ~MATCHED_UNKNOWN_0;
   }
   const mm::Vec3 &position = *info.unknown08;
-  if (unknown18.unknown30.isMatch(position) && unknown18.isMobPopDistCondMatched(position)) {
+  if (m_bdatInfo.unknown30.isMatch(position) && m_bdatInfo.isMobPopDistCondMatched(position)) {
     unknownb8 |= MATCHED_UNKNOWN_1;
   } else {
     unknownb8 &= ~MATCHED_UNKNOWN_1;
   }
-  if (unknown18.unknown38.isMatch(*info.unknown08)) {
+  if (m_bdatInfo.unknown38.isMatch(*info.unknown08)) {
     unknownb8 |= MATCHED_UNKNOWN_2;
   } else {
     unknownb8 &= ~MATCHED_UNKNOWN_2;
@@ -221,42 +221,42 @@ void GmkMobInsts::seqUpdatePopDepop(const UpdateInfo &info) {
   if (canPopGobInst(*info.unknown08)) {
     createGobInsts();
     u32 num = unknowna8->capacity();
-    info.unknown10->onCreateGobInsts(num);
+    info.m_iPopXformFinder->onCreateGobInsts(num);
   } else if (canDepopGobInst(*info.unknown08)) {
     disposeGobInsts(true);
   }
   if (unknownb8 & MATCHED_UNKNOWN_1) {
-    unknown58.update(*this, *unknowna8, *info.unknown10);
+    m_popInfo.update(*this, *unknowna8, *info.m_iPopXformFinder);
   }
 }
 
 bool GmkMob::PopXformFinder::findPosRot(mm::Vec3 &position, mm::Vec3 &rotation) const {
-  GmkSquad *squad = unknown08->unknown48.unknownb0;
+  GmkSquad *squad = m_gmkMob->m_gmkMobInsts.m_gmkSquad;
   bool isPlaced = false;
   if (squad != nullptr) {
-    mm::mtl::Vector<gf::GF_OBJ_HANDLE *> *handles = unknown08->unknown48.unknowna8;
+    mm::mtl::Vector<gf::GF_OBJ_HANDLE *> *handles = m_gmkMob->m_gmkMobInsts.unknowna8;
     u32 num = handles->size();
     if (num != 0 && num < squad->unknown70) {
       gf::GfObjAcc acc((*handles)[0]);
       if (!acc.isValidTransform()) {
         return false;
       }
-      squad->getPosRotY(position, rotation.y, unknown08->unknown48.unknowna8->size());
+      squad->getPosRotY(position, rotation.y, m_gmkMob->m_gmkMobInsts.unknowna8->size());
       rotation.z = 0.0f;
       rotation.x = 0.0f;
       isPlaced = true;
     }
   }
   if (!isPlaced) {
-    if (unknown08->unknown48.unknown58.unknown40 == 1) {
-      position = unknown08->unknown08.unknown08->unknown00;
+    if (m_gmkMob->m_gmkMobInsts.m_popInfo.unknown40 == 1) {
+      position = m_gmkMob->m_createBaseInfo.m_xform->unknown00;
     } else {
-      unknown08->getPositionInShape(position, false);
+      m_gmkMob->getPositionInShape(position, false);
     }
   }
-  rotation = unknown08->unknown08.unknown08->unknown10;
-  if (unknown08->getData()->unknown00 != 0) {
-    f32 halfLength = unknown08->getYSnapRayLength() * 0.5f;
+  rotation = m_gmkMob->m_createBaseInfo.m_xform->unknown10;
+  if (m_gmkMob->getData()->unknown00 != 0) {
+    f32 halfLength = m_gmkMob->getYSnapRayLength() * 0.5f;
     mm::Vec3 start;
     start.x = position.x;
     start.y = halfLength + position.y;
@@ -276,7 +276,7 @@ void GmkMobInsts::seqWaitToFadeOutOfGobInst(const UpdateInfo &info) {
   u32 num = unknowna8->size();
   if (num == 0) {
     unknowna8->destroy();
-    unknown58.dispose();
+    m_popInfo.dispose();
     unknownc0 = &GmkMobInsts::seqUpdatePopDepop;
   }
 }
@@ -290,7 +290,7 @@ void GmkMobInsts::disposeGobInsts(bool isFadeOut) {
         if (isFadeOut) {
           gmk::disposeGobInst(handle, 1.0f);
         } else {
-          unknown00.unknown00->unbindToGameObj(handle);
+          m_createInfo.m_aGmkBase->unbindToGameObj(handle);
           gf::GfObjUtil::destroy(handle);
         }
       }
@@ -300,20 +300,20 @@ void GmkMobInsts::disposeGobInsts(bool isFadeOut) {
       return;
     }
     unknowna8->destroy();
-    unknown58.dispose();
+    m_popInfo.dispose();
   }
 }
 
 void GmkMobInsts::createGobInsts() {
   disposeGobInsts(false);
-  CBdatWrapper bdat = {unknown00.unknown08};
-  unknown58.create(bdat, unknown00.unknown10);
+  CBdatWrapper bdat = {m_createInfo.unknown08};
+  m_popInfo.create(bdat, m_createInfo.unknown10);
   unknowna8->destroy();
   unknowna8->setAllocator(gf::getAllocator(gf::ALLOCATOR_UNKNOWN_0));
-  unknowna8->reserve(unknown58.unknown40);
+  unknowna8->reserve(m_popInfo.unknown40);
 }
 
-void GmkMobInsts::disposeSquad() { mm::mtl::safeRelease(unknownb0); }
+void GmkMobInsts::disposeSquad() { mm::mtl::safeRelease(m_gmkSquad); }
 
 void GmkMobInsts::dispose() {
   unknownc0 = nullptr;
@@ -324,24 +324,24 @@ void GmkMobInsts::dispose() {
     delete unknowna8;
     unknowna8 = nullptr;
   }
-  unknown00 = CreateInfo();
+  m_createInfo = CreateInfo();
 }
 
-bool GmkMob::isValid() const { return AGmkBase::isValid() && unknown48.isValid(); }
+bool GmkMob::isValid() const { return AGmkBase::isValid() && m_gmkMobInsts.isValid(); }
 
 void GmkMob::create(const CreateInfo &info) {
   if (info.unknown10 != nullptr) {
     AGmkBase::create(info);
     GmkMobInsts::CreateInfo createInfo;
-    createInfo.unknown00 = this;
-    createInfo.unknown08 = unknown08.unknown00->getBindedBdatFp();
+    createInfo.m_aGmkBase = this;
+    createInfo.unknown08 = m_createBaseInfo.m_ownerGmkEnemyList->getBindedBdatFp();
     createInfo.unknown10 = info.unknown18;
-    unknown48.create(createInfo);
+    m_gmkMobInsts.create(createInfo);
   }
 }
 
 void GmkMob::dispose() {
-  unknown48.dispose();
+  m_gmkMobInsts.dispose();
   AGmkBase::dispose();
 }
 
@@ -359,7 +359,7 @@ void GmkMob::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *han
     if (acc.isValid()) {
       acc.setUserData(gf::OBJ_USER_DATA_UNKNOWN_0, 0);
     }
-    unknown48.removeGobInst(handle);
+    m_gmkMobInsts.removeGobInst(handle);
   }
 }
 
@@ -370,11 +370,11 @@ void GmkMob::update(f32 deltaTime) {
   }
   GmkMobInsts::UpdateInfo info;
   PopXformFinder finder;
-  finder.unknown08 = this;
+  finder.m_gmkMob = this;
   info.unknown00 = deltaTime;
-  info.unknown08 = &unknown08.unknown08->unknown00;
-  info.unknown10 = &finder;
-  unknown48.update(info);
+  info.unknown08 = &m_createBaseInfo.m_xform->unknown00;
+  info.m_iPopXformFinder = &finder;
+  m_gmkMobInsts.update(info);
 }
 
 GmkType GmkMob::getGmkType() const { return GMK_TYPE; }

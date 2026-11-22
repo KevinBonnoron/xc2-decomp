@@ -28,9 +28,9 @@ void CharaPlayWink::term() { idle(); }
 
 mm::Vec2 CharaPlayWink::calcLensXYFromTarAxis(const mm::Vec3 &target) {
   mm::Vec2 result(0.0f, 0.0f);
-  if (unknown30 != nullptr) {
+  if (m_iAttachActor != nullptr) {
     mm::Mat44 mat;
-    if (unknown30->getBoneMatGlobal(mat, "JU_head")) {
+    if (m_iAttachActor->getBoneMatGlobal(mat, "JU_head")) {
       unknown50 = mat.unknown004();
       if (!(fabsf(unknown50.x - target.x) <= 0.000001f && fabsf(unknown50.y - target.y) <= 0.000001f && fabsf(unknown50.z - target.z) <= 0.000001f)) {
         mm::Vec3 direction = target - unknown50;
@@ -48,22 +48,22 @@ mm::Vec2 CharaPlayWink::calcLensXYFromTarAxis(const mm::Vec3 &target) {
 }
 
 void CharaPlayWink::update() {
-  if ((unknown08 & FLAG_UNKNOWN_0) != 0 && unknown80 != nullptr) {
+  if ((unknown08 & FLAG_UNKNOWN_0) != 0 && m_objectChara != nullptr) {
     bool isSkip = mm::mtl::Singleton<SkipManager>::getPtr()->isSkip();
-    mm::Vec2 lens = calcLensXYFromTarAxis(unknown80->getEyePos());
-    unknown28->setManualTarget(true, lens, isSkip);
+    mm::Vec2 lens = calcLensXYFromTarAxis(m_objectChara->getEyePos());
+    m_charaLensPlayer->setManualTarget(true, lens, isSkip);
   }
 }
 
 void CharaPlayWink::idle() {
   if (gf::GfObjUtil::getObj(unknown10) != nullptr && (unknown08 & FLAG_UNKNOWN_1) != 0) {
     bool isSkip = mm::mtl::Singleton<SkipManager>::getPtr()->isSkip();
-    unknown20->idle(isSkip);
+    m_charaWinkPlayer->idle(isSkip);
     if ((unknown08 & FLAG_UNKNOWN_0) != 0) {
-      unknown28->setManualTarget(false, mm::Vec2::zero, isSkip);
+      m_charaLensPlayer->setManualTarget(false, mm::Vec2::zero, isSkip);
     }
     unknown70 = mm::Vec2::zero;
-    unknown80 = nullptr;
+    m_objectChara = nullptr;
     unknown60 = -1.0f;
   }
   unknown08 = 0;
@@ -95,19 +95,19 @@ void CharaPlayWink::render(const mm::Vec3 &position, f32 eyeOffset) {
     }
     s32 labelX = x - 280;
     s32 typeY = y - 65;
-    if (unknown18->unknown08 & CharaPlayFacial::FLAG_UNKNOWN_3) {
+    if (m_charaPlayFacial->unknown08 & CharaPlayFacial::FLAG_UNKNOWN_3) {
       fw::debug::drawFontColor(mm::Col4(0.5f, 0.5f, 0.5f, 1.0f));
     }
     fw::debug::drawFont(labelX, typeY, "type:");
     fw::debug::drawFont(x - 220, typeY, unknown68);
-    fw::debug::drawFont(x - 210, y - 50, "(%s)", unknown20->unknown30);
+    fw::debug::drawFont(x - 210, y - 50, "(%s)", m_charaWinkPlayer->unknown30);
     fw::debug::drawFont(labelX, y - 35, "lens:");
     if (!(unknown08 & FLAG_UNKNOWN_0)) {
       fw::debug::drawFont(x - 220, y - 35, "AUTO");
     } else {
       fw::debug::drawFont(x - 220, y - 35, "%.2f %.2f", unknown70.x, unknown70.y);
     }
-    if (unknown18->unknown08 & CharaPlayFacial::FLAG_UNKNOWN_3) {
+    if (m_charaPlayFacial->unknown08 & CharaPlayFacial::FLAG_UNKNOWN_3) {
       fw::debug::drawFont(labelX, typeY, "       --------------");
       fw::debug::drawFont(labelX, y - 50, "       --------------");
       fw::debug::drawFont(labelX, y - 35, "       --------------");

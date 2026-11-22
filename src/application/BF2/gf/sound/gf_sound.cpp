@@ -115,7 +115,7 @@ void SoundParam::clear() {
   unknown38 = 0;
   unknown39 = SOUND_TRANSFORM_UNKNOWN_0;
   unknown3a = SEINFO_UNKNOWN_0;
-  unknown30 = unknown020;
+  m_GF_OBJ_HANDLE = unknown020;
 }
 
 void SoundParam::setupTransformGlobal(const mm::Vec3 &position) {
@@ -125,13 +125,13 @@ void SoundParam::setupTransformGlobal(const mm::Vec3 &position) {
 
 void SoundParam::setupTransformObj(GF_OBJ_HANDLE *handle, const mm::Vec3 &offset) {
   unknown39 = SOUND_TRANSFORM_UNKNOWN_2;
-  this->unknown30 = handle;
+  this->m_GF_OBJ_HANDLE = handle;
   unknown40 = offset;
 }
 
 void SoundParam::setupTransformBone(GF_OBJ_HANDLE *handle, const char *bone, const mm::Vec3 &offset) {
   unknown39 = SOUND_TRANSFORM_UNKNOWN_3;
-  this->unknown30 = handle;
+  this->m_GF_OBJ_HANDLE = handle;
   unknown40 = offset;
   this->unknown50 = bone;
 }
@@ -141,8 +141,8 @@ void GfSound::SeParam::clear() {
   unknown01 = 0;
   unknown02 = false;
   unknown03 = 0;
-  unknown08 = unknown020;
-  unknown10.clear();
+  m_GF_OBJ_HANDLE = unknown020;
+  m_soundHandle.clear();
 }
 
 void SoundHandle::clear() {
@@ -156,12 +156,12 @@ SoundHandle::SoundHandle(u32 handle) : unknown00(handle), unknown04(INVALID_UNKN
 
 bool SoundHandle::isValid() const { return unknown00 != 0; }
 
-GfSound::GfSound(const GfSetupParam &param) : unknown10(false), unknown11(false), unknown18(0), unknown66d0(unknown019) { initialize(param); }
+GfSound::GfSound(const GfSetupParam &param) : unknown10(false), unknown11(false), unknown18(0), m_GF_SE_CATEGORY_HANDLE(unknown019) { initialize(param); }
 
 void GfSound::initialize(const GfSetupParam &) {
   GfEvent::addEventCallback(this);
-  unknown6690.initialize();
-  unknown66d0 = createCategoryHandle();
+  m_masterVolume.initialize();
+  m_GF_SE_CATEGORY_HANDLE = createCategoryHandle();
   unknown10 = true;
 }
 
@@ -176,15 +176,15 @@ void GfSound::destroy() {
 }
 
 void GfSound::finalize() {
-  releaseCategoryHandle(unknown66d0);
-  unknown6690.finalize();
+  releaseCategoryHandle(m_GF_SE_CATEGORY_HANDLE);
+  m_masterVolume.finalize();
   GfEvent::removeEventCallback(this);
   unknown10 = false;
 }
 
 void GfMasterVolume::initialize() {
   if (GfSound::get() != nullptr) {
-    unknown00 = GfSound::get()->createCategoryHandle();
+    m_GF_SE_CATEGORY_HANDLE = GfSound::get()->createCategoryHandle();
   }
 }
 
@@ -221,7 +221,7 @@ void GfSound::releaseCategoryHandle(GF_SE_CATEGORY_HANDLE *&handle) {
 
 void GfMasterVolume::finalize() {
   if (GfSound::get() != nullptr) {
-    GfSound::get()->releaseCategoryHandle(unknown00);
+    GfSound::get()->releaseCategoryHandle(m_GF_SE_CATEGORY_HANDLE);
   }
 }
 
@@ -237,7 +237,7 @@ void GfSound::updateSeParamList(const fw::UpdateInfo &) {
     return;
   }
   for (mm::mtl::FixedList<u16, 512>::iterator it = unknown5278.begin(); it != unknown5278.end();) {
-    if (!soundManager->isValid(getSeParam(*it)->unknown10.unknown00)) {
+    if (!soundManager->isValid(getSeParam(*it)->m_soundHandle.unknown00)) {
       deAllocateSeParam(*it);
       it = unknown5278.erase(it);
     } else {
@@ -252,19 +252,19 @@ bool GfSound::calcCategoryVolume(const fw::UpdateInfo &info) {
       categoryVolume.unknown16c = false;
       for (CategoryVolume::Volume &volume : categoryVolume.unknown00) {
         if (volume.unknown10 == 0.0f) {
-          if (volume.unknown00 != volume.unknown04) {
-            volume.unknown00 = volume.unknown04;
+          if (volume.m_categoryVolume != volume.unknown04) {
+            volume.m_categoryVolume = volume.unknown04;
             categoryVolume.unknown16c = true;
           }
         } else {
           volume.unknown10 -= info.unknown04;
           if (volume.unknown10 > 0.0f) {
             f32 rate = volume.unknown10 / volume.unknown0c;
-            volume.unknown00 = volume.unknown04 * (1.0f - rate) + rate * volume.unknown08;
+            volume.m_categoryVolume = volume.unknown04 * (1.0f - rate) + rate * volume.unknown08;
           } else {
             volume.unknown0c = 0.0f;
             volume.unknown10 = 0.0f;
-            volume.unknown00 = volume.unknown04;
+            volume.m_categoryVolume = volume.unknown04;
           }
           categoryVolume.unknown16c = true;
         }
@@ -284,7 +284,7 @@ bool GfSound::calcCategoryVolume(const fw::UpdateInfo &info) {
   for (u32 i = 0; i < CATEGORY_UNKNOWN_32; i++) {
     if (unknown20[i].unknown001()) {
       for (u32 category = 1; category < CATEGORY_UNKNOWN_18; category++) {
-        volumes[category] *= unknown20[i].unknown00[category].unknown00;
+        volumes[category] *= unknown20[i].unknown00[category].m_categoryVolume;
       }
     }
   }
@@ -299,23 +299,23 @@ bool GfSound::calcCategoryVolume(const fw::UpdateInfo &info) {
   return true;
 }
 
-void GfSound::setupGame() { unknown6690.setupGame(); }
+void GfSound::setupGame() { m_masterVolume.setupGame(); }
 
 void GfMasterVolume::setupGame() {
   const SDataOption *option = GfDataManager::getDataOption();
-  setEventVoiceVolume(getFloatVolume(option->unknown4c.unknown00));
-  setEventCsVolume(getFloatVolume(option->unknown4c.unknown02));
-  setEventBgmVolume(getFloatVolume(option->unknown4c.unknown04));
-  setEventSeVolume(getFloatVolume(option->unknown4c.unknown06));
-  setGameBgmVolume(getFloatVolume(option->unknown4c.unknown08));
-  setGameEnvVolume(getFloatVolume(option->unknown4c.unknown0a));
-  setGameWeatherVolume(getFloatVolume(option->unknown4c.unknown0c));
-  setGameSeVolume(getFloatVolume(option->unknown4c.unknown0e));
-  setPlayerVoiceVolume(getFloatVolume(option->unknown4c.unknown10));
-  setEnemyVoiceVolume(getFloatVolume(option->unknown4c.unknown12));
-  setNareVoiceVolume(getFloatVolume(option->unknown4c.unknown14));
-  setSystemVolume(getFloatVolume(option->unknown4c.unknown16));
-  setMenuBgmVolume(getFloatVolume(option->unknown4c.unknown18));
+  setEventVoiceVolume(getFloatVolume(option->m_sSoundUiOption.unknown00));
+  setEventCsVolume(getFloatVolume(option->m_sSoundUiOption.unknown02));
+  setEventBgmVolume(getFloatVolume(option->m_sSoundUiOption.unknown04));
+  setEventSeVolume(getFloatVolume(option->m_sSoundUiOption.unknown06));
+  setGameBgmVolume(getFloatVolume(option->m_sSoundUiOption.unknown08));
+  setGameEnvVolume(getFloatVolume(option->m_sSoundUiOption.unknown0a));
+  setGameWeatherVolume(getFloatVolume(option->m_sSoundUiOption.unknown0c));
+  setGameSeVolume(getFloatVolume(option->m_sSoundUiOption.unknown0e));
+  setPlayerVoiceVolume(getFloatVolume(option->m_sSoundUiOption.unknown10));
+  setEnemyVoiceVolume(getFloatVolume(option->m_sSoundUiOption.unknown12));
+  setNareVoiceVolume(getFloatVolume(option->m_sSoundUiOption.unknown14));
+  setSystemVolume(getFloatVolume(option->m_sSoundUiOption.unknown16));
+  setMenuBgmVolume(getFloatVolume(option->m_sSoundUiOption.unknown18));
 }
 
 void GfSound::setCategoryVolume(GF_SE_CATEGORY_HANDLE *handle, fw::SoundCategory category, f32 volume, f32 fadeTime) {
@@ -324,7 +324,7 @@ void GfSound::setCategoryVolume(GF_SE_CATEGORY_HANDLE *handle, fw::SoundCategory
 
 GfSound::CategoryVolume *GfSound::getCategoryVolume(GF_SE_CATEGORY_HANDLE *handle) { return &unknown20[getCategoryIndex(handle)]; }
 
-f32 GfSound::getCategoryVolume(GF_SE_CATEGORY_HANDLE *handle, fw::SoundCategory category) const { return unknown20[getCategoryIndex(handle)].unknown00[static_cast<u32>(category)].unknown00; }
+f32 GfSound::getCategoryVolume(GF_SE_CATEGORY_HANDLE *handle, fw::SoundCategory category) const { return unknown20[getCategoryIndex(handle)].unknown00[static_cast<u32>(category)].m_categoryVolume; }
 
 const GfSound::CategoryVolume *GfSound::getCategoryVolume(GF_SE_CATEGORY_HANDLE *handle) const { return &unknown20[getCategoryIndex(handle)]; }
 
@@ -372,9 +372,9 @@ SoundHandle GfSound::playBgm(const char *name, f32 volume, bool ignorePause, int
       SeParam *seParam = getSeParam(handle.unknown04);
       if (seParam != nullptr) {
         seParam->unknown00 = SEINFO_UNKNOWN_0;
-        seParam->unknown10 = handle;
+        seParam->m_soundHandle = handle;
         seParam->unknown02 = soundManager->isLoop(handle.unknown00);
-        seParam->unknown08 = unknown020;
+        seParam->m_GF_OBJ_HANDLE = unknown020;
         seParam->unknown01 = category;
         seParam->unknown03 = 0;
         unknown5278.push_back(handle.unknown04);
@@ -421,7 +421,7 @@ SoundHandle GfSound::playSe(const SoundParam &param) {
     mm::mtl::FixedVector<fw::SoundPack *, 4> packs;
     SoundHandle handle;
     if (param.unknown3a == SEINFO_UNKNOWN_0) {
-      if (GfObjUtil::getSePackAll(packs, param.unknown30)) {
+      if (GfObjUtil::getSePackAll(packs, param.m_GF_OBJ_HANDLE)) {
         handle = playSeWithPack(param, packs, SEINFO_UNKNOWN_4);
         if (handle.isValid()) {
           return handle;
@@ -495,7 +495,7 @@ bool GfSound::getSePack(mm::mtl::FixedVector<fw::SoundPack *, 4> &packs, const S
     }
     break;
   case SEINFO_UNKNOWN_4:
-    GfObjUtil::getSePackAll(packs, param.unknown30);
+    GfObjUtil::getSePackAll(packs, param.m_GF_OBJ_HANDLE);
     break;
   }
   return !packs.empty();
@@ -525,10 +525,10 @@ SoundHandle GfSound::playSeWithPack(const SoundParam &param, mm::mtl::FixedVecto
     SeParam *seParam = getSeParam(handle.unknown04);
     if (seParam != nullptr) {
       seParam->unknown00 = seInfo;
-      seParam->unknown10 = handle;
+      seParam->m_soundHandle = handle;
       seParam->unknown02 = soundManager->isLoop(id);
       seParam->unknown01 = param.unknown38;
-      seParam->unknown08 = param.unknown30;
+      seParam->m_GF_OBJ_HANDLE = param.m_GF_OBJ_HANDLE;
       seParam->unknown03 = 0;
       unknown5278.push_back(handle.unknown04);
     }
@@ -565,7 +565,7 @@ void GfSound::destroyCategorySe(fw::SoundCategory category) {
   for (u16 id : unknown5278) {
     SeParam *seParam = getSeParam(id);
     if (seParam->unknown01 == category) {
-      soundManager->stopSe(seParam->unknown10.unknown00, 0.0f);
+      soundManager->stopSe(seParam->m_soundHandle.unknown00, 0.0f);
     }
   }
 }
@@ -670,31 +670,31 @@ void GfSound::gevPause(u32 resumeBits, u32 pauseBits) {
 
 void GfSound::setPauseGameSe(bool isPause) {
   f32 volume = isPause ? 0.0f : 1.0f;
-  setCategoryVolume(unknown66d0, CATEGORY_BATTLE, volume, 0.0f);
-  setCategoryVolume(unknown66d0, CATEGORY_FIELD, volume, 0.0f);
-  setCategoryVolume(unknown66d0, CATEGORY_GIMMICK, volume, 0.0f);
-  setCategoryVolume(unknown66d0, CATEGORY_CH_SE, volume, 0.0f);
-  setCategoryVolume(unknown66d0, CATEGORY_CH_SE_NS, volume, 0.0f);
-  setCategoryVolume(unknown66d0, CATEGORY_ENE_VO, volume, 0.0f);
-  setCategoryVolume(unknown66d0, CATEGORY_NAREVO, volume, 0.0f);
+  setCategoryVolume(m_GF_SE_CATEGORY_HANDLE, CATEGORY_BATTLE, volume, 0.0f);
+  setCategoryVolume(m_GF_SE_CATEGORY_HANDLE, CATEGORY_FIELD, volume, 0.0f);
+  setCategoryVolume(m_GF_SE_CATEGORY_HANDLE, CATEGORY_GIMMICK, volume, 0.0f);
+  setCategoryVolume(m_GF_SE_CATEGORY_HANDLE, CATEGORY_CH_SE, volume, 0.0f);
+  setCategoryVolume(m_GF_SE_CATEGORY_HANDLE, CATEGORY_CH_SE_NS, volume, 0.0f);
+  setCategoryVolume(m_GF_SE_CATEGORY_HANDLE, CATEGORY_ENE_VO, volume, 0.0f);
+  setCategoryVolume(m_GF_SE_CATEGORY_HANDLE, CATEGORY_NAREVO, volume, 0.0f);
   for (u16 id : unknown5278) {
     SeParam *seParam = getSeParam(id);
     if (unknown001(seParam->unknown01)) {
-      setPauseType(seParam->unknown10, isPause, 0.0f, 2);
+      setPauseType(seParam->m_soundHandle, isPause, 0.0f, 2);
     }
   }
 }
 
 void GfSound::setPauseGameWeatherSe(bool isPause) {
   f32 volume = isPause ? 0.0f : 1.0f;
-  setCategoryVolume(unknown66d0, CATEGORY_ENV, volume, 0.0f);
-  setCategoryVolume(unknown66d0, CATEGORY_WEATHER, volume, 0.0f);
+  setCategoryVolume(m_GF_SE_CATEGORY_HANDLE, CATEGORY_ENV, volume, 0.0f);
+  setCategoryVolume(m_GF_SE_CATEGORY_HANDLE, CATEGORY_WEATHER, volume, 0.0f);
   for (u16 id : unknown5278) {
     SeParam *seParam = getSeParam(id);
     switch (seParam->unknown01) {
     case CATEGORY_ENV:
     case CATEGORY_WEATHER:
-      setPauseType(seParam->unknown10, isPause, 0.0f, 2);
+      setPauseType(seParam->m_soundHandle, isPause, 0.0f, 2);
       break;
     }
   }
@@ -704,7 +704,7 @@ void GfSound::setPauseEventSe(bool isPause) {
   for (u16 id : unknown5278) {
     SeParam *seParam = getSeParam(id);
     if (unknown002(seParam->unknown01)) {
-      setPauseType(seParam->unknown10, isPause, 0.0f, 4);
+      setPauseType(seParam->m_soundHandle, isPause, 0.0f, 4);
     }
   }
 }
@@ -720,7 +720,7 @@ GfMasterVolume::~GfMasterVolume() {}
 void GfMasterVolume::setEventVoiceVolume(f32 volume) {
   unknown08 = volume;
   if (GfSound::get() != nullptr) {
-    GfSound::get()->setCategoryVolume(unknown00, CATEGORY_EVT_VOICE, volume, 0.0f);
+    GfSound::get()->setCategoryVolume(m_GF_SE_CATEGORY_HANDLE, CATEGORY_EVT_VOICE, volume, 0.0f);
   }
 }
 
@@ -734,90 +734,90 @@ f32 GfMasterVolume::getFloatVolume(u16 volume) {
 void GfMasterVolume::setEventCsVolume(f32 volume) {
   unknown0c = volume;
   if (GfSound::get() != nullptr) {
-    GfSound::get()->setCategoryVolume(unknown00, CATEGORY_EVT_CS, volume, 0.0f);
+    GfSound::get()->setCategoryVolume(m_GF_SE_CATEGORY_HANDLE, CATEGORY_EVT_CS, volume, 0.0f);
   }
 }
 
 void GfMasterVolume::setEventBgmVolume(f32 volume) {
   unknown10 = volume;
   if (GfSound::get() != nullptr) {
-    GfSound::get()->setCategoryVolume(unknown00, CATEGORY_EVT_BGM, volume, 0.0f);
+    GfSound::get()->setCategoryVolume(m_GF_SE_CATEGORY_HANDLE, CATEGORY_EVT_BGM, volume, 0.0f);
   }
 }
 
 void GfMasterVolume::setEventSeVolume(f32 volume) {
   unknown14 = volume;
   if (GfSound::get() != nullptr) {
-    GfSound::get()->setCategoryVolume(unknown00, CATEGORY_EVT_SE, volume, 0.0f);
+    GfSound::get()->setCategoryVolume(m_GF_SE_CATEGORY_HANDLE, CATEGORY_EVT_SE, volume, 0.0f);
   }
 }
 
 void GfMasterVolume::setGameBgmVolume(f32 volume) {
   unknown18 = volume;
   if (GfSound::get() != nullptr) {
-    GfSound::get()->setCategoryVolume(unknown00, CATEGORY_BGM, volume, 0.0f);
+    GfSound::get()->setCategoryVolume(m_GF_SE_CATEGORY_HANDLE, CATEGORY_BGM, volume, 0.0f);
   }
 }
 
 void GfMasterVolume::setGameEnvVolume(f32 volume) {
   unknown1c = volume;
   if (GfSound::get() != nullptr) {
-    GfSound::get()->setCategoryVolume(unknown00, CATEGORY_ENV, volume, 0.0f);
+    GfSound::get()->setCategoryVolume(m_GF_SE_CATEGORY_HANDLE, CATEGORY_ENV, volume, 0.0f);
   }
 }
 
 void GfMasterVolume::setGameWeatherVolume(f32 volume) {
   unknown20 = volume;
   if (GfSound::get() != nullptr) {
-    GfSound::get()->setCategoryVolume(unknown00, CATEGORY_WEATHER, volume, 0.0f);
+    GfSound::get()->setCategoryVolume(m_GF_SE_CATEGORY_HANDLE, CATEGORY_WEATHER, volume, 0.0f);
   }
 }
 
 void GfMasterVolume::setGameSeVolume(f32 volume) {
   unknown24 = volume;
   if (GfSound::get() != nullptr) {
-    GfSound::get()->setCategoryVolume(unknown00, CATEGORY_BATTLE, volume, 0.0f);
-    GfSound::get()->setCategoryVolume(unknown00, CATEGORY_FIELD, volume, 0.0f);
-    GfSound::get()->setCategoryVolume(unknown00, CATEGORY_GIMMICK, volume, 0.0f);
-    GfSound::get()->setCategoryVolume(unknown00, CATEGORY_CH_SE, volume, 0.0f);
-    GfSound::get()->setCategoryVolume(unknown00, CATEGORY_CH_SE_NS, volume, 0.0f);
-    GfSound::get()->setCategoryVolume(unknown00, CATEGORY_ENE_VO, volume, 0.0f);
-    GfSound::get()->setCategoryVolume(unknown00, CATEGORY_NAREVO, volume, 0.0f);
+    GfSound::get()->setCategoryVolume(m_GF_SE_CATEGORY_HANDLE, CATEGORY_BATTLE, volume, 0.0f);
+    GfSound::get()->setCategoryVolume(m_GF_SE_CATEGORY_HANDLE, CATEGORY_FIELD, volume, 0.0f);
+    GfSound::get()->setCategoryVolume(m_GF_SE_CATEGORY_HANDLE, CATEGORY_GIMMICK, volume, 0.0f);
+    GfSound::get()->setCategoryVolume(m_GF_SE_CATEGORY_HANDLE, CATEGORY_CH_SE, volume, 0.0f);
+    GfSound::get()->setCategoryVolume(m_GF_SE_CATEGORY_HANDLE, CATEGORY_CH_SE_NS, volume, 0.0f);
+    GfSound::get()->setCategoryVolume(m_GF_SE_CATEGORY_HANDLE, CATEGORY_ENE_VO, volume, 0.0f);
+    GfSound::get()->setCategoryVolume(m_GF_SE_CATEGORY_HANDLE, CATEGORY_NAREVO, volume, 0.0f);
   }
 }
 
 void GfMasterVolume::setPlayerVoiceVolume(f32 volume) {
   unknown28 = volume;
   if (GfSound::get() != nullptr) {
-    GfSound::get()->setCategoryVolume(unknown00, CATEGORY_VOICE, volume, 0.0f);
+    GfSound::get()->setCategoryVolume(m_GF_SE_CATEGORY_HANDLE, CATEGORY_VOICE, volume, 0.0f);
   }
 }
 
 void GfMasterVolume::setEnemyVoiceVolume(f32 volume) {
   unknown2c = volume;
   if (GfSound::get() != nullptr) {
-    GfSound::get()->setCategoryVolume(unknown00, CATEGORY_ENE_VO, volume, 0.0f);
+    GfSound::get()->setCategoryVolume(m_GF_SE_CATEGORY_HANDLE, CATEGORY_ENE_VO, volume, 0.0f);
   }
 }
 
 void GfMasterVolume::setNareVoiceVolume(f32 volume) {
   unknown30 = volume;
   if (GfSound::get() != nullptr) {
-    GfSound::get()->setCategoryVolume(unknown00, CATEGORY_NAREVO, volume, 0.0f);
+    GfSound::get()->setCategoryVolume(m_GF_SE_CATEGORY_HANDLE, CATEGORY_NAREVO, volume, 0.0f);
   }
 }
 
 void GfMasterVolume::setSystemVolume(f32 volume) {
   unknown34 = volume;
   if (GfSound::get() != nullptr) {
-    GfSound::get()->setCategoryVolume(unknown00, CATEGORY_SYSTEM, volume, 0.0f);
+    GfSound::get()->setCategoryVolume(m_GF_SE_CATEGORY_HANDLE, CATEGORY_SYSTEM, volume, 0.0f);
   }
 }
 
 void GfMasterVolume::setMenuBgmVolume(f32 volume) {
   unknown38 = volume;
   if (GfSound::get() != nullptr) {
-    GfSound::get()->setCategoryVolume(unknown00, CATEGORY_MENU_BGM, volume, 0.0f);
+    GfSound::get()->setCategoryVolume(m_GF_SE_CATEGORY_HANDLE, CATEGORY_MENU_BGM, volume, 0.0f);
   }
 }
 

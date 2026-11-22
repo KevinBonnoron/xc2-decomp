@@ -16,13 +16,13 @@ class GfComEffectCaster;
 class EffectCaster : public fw::EffectCasterBase {
 public:
   u8 _48[0x58 - 0x48];
-  GfComEffectCaster *unknown58; // Inferred role: owner component; original member name unknown.
-  mm::Mat44 unknown60;          // Inferred role: root matrix of the caster; original member name unknown.
-  bool unknowna0;               // Inferred role: copy the matrix into the effect manager; original member name unknown.
+  GfComEffectCaster *m_comEffectCaster; // Inferred role: owner component; original member name unknown.
+  mm::Mat44 unknown60;                  // Inferred role: root matrix of the caster; original member name unknown.
+  bool unknowna0;                       // Inferred role: copy the matrix into the effect manager; original member name unknown.
   u8 _a1[0xb0 - 0xa1];
 };
 
-static_assert(offsetof(EffectCaster, unknown58) == 0x58, "");
+static_assert(offsetof(EffectCaster, m_comEffectCaster) == 0x58, "");
 static_assert(offsetof(EffectCaster, unknown60) == 0x60, "");
 static_assert(offsetof(EffectCaster, unknowna0) == 0xa0, "");
 static_assert(sizeof(EffectCaster) == 0xb0, "");

@@ -28,7 +28,7 @@ f32 MoveUtilField::getSpeedEffect(GfComPropertyPc &property) {
   f32 speed = 0.0f;
   speed += bonus - 1.0f;
   if (property.unknown114 == 2) {
-    const FieldParam *param = property.unknown310.unknown004(0).get<FieldParam>();
+    const FieldParam *param = property.m_propertyField.unknown004(0).get<FieldParam>();
     const f32 &slow = property.unknown111_5 ? param->poisonSlow : param->waterSlow;
     speed -= slow;
   }
@@ -47,7 +47,7 @@ void MoveUtilField::enterMoveWalk(GfComPropertyPc &property) {
 void setMoveWalkPacket(GfComPropertyPc &property, GfMoveWalkControler::Packet *packet) {
   packet->unknown00 = property.unknown80;
   packet->unknown10 = property.unknown94;
-  packet->unknown18 = property.unknown310.unknown004(2);
+  packet->m_paramAdapter = property.m_propertyField.unknown004(2);
   packet->unknown20 = property.unknown2b0 * property.unknown60.unknown04 + property.unknown2d0 * property.unknown60.unknown00;
   if (!(fabsf(packet->unknown20.x) <= 0.000001f) || !(fabsf(packet->unknown20.y) <= 0.000001f) || !(fabsf(packet->unknown20.z) <= 0.000001f)) {
     packet->unknown20.unknown001();
@@ -72,8 +72,8 @@ bool IsBuddy(GfComPropertyPc &property) { return property.unknown38 & 1; }
 void setMoveRunPacket(GfComPropertyPc &property, GfMoveRunControler::Packet *packet) {
   packet->unknown00 = property.unknown80;
   packet->unknown10 = property.unknown94;
-  packet->unknown18 = property.unknown310.unknown004(3);
-  const FieldParam *fieldParam = property.unknown310.unknown006();
+  packet->m_paramAdapter = property.m_propertyField.unknown004(3);
+  const FieldParam *fieldParam = property.m_propertyField.unknown006();
   // The game reads both input components (0x60, 0x64) into callee-saved registers before the assertions below.
   f32 inputX = property.unknown60.unknown00;
   f32 inputY = property.unknown60.unknown04;
@@ -124,7 +124,7 @@ void MoveUtilField::updateBrake(const fw::UpdateInfo &info, GfComPropertyPc &pro
   GfMoveBrakeControler controler;
   GfMoveBrakeControler::Packet packet;
   packet.unknown00 = property.unknown80;
-  packet.unknown10 = property.unknown310.unknown004(1);
+  packet.m_paramAdapter = property.m_propertyField.unknown004(1);
   controler.update(info, packet);
   property.unknown80 = packet.unknown00;
 }
@@ -132,7 +132,7 @@ void MoveUtilField::updateBrake(const fw::UpdateInfo &info, GfComPropertyPc &pro
 void MoveUtilField::updateMoveTurn(const fw::UpdateInfo &info, GfComPropertyPc &property, const mm::Vec3 &direction) {
   GfMoveTurnControler::Packet packet;
   packet.unknown00 = property.unknown94;
-  packet.unknown08 = property.unknown310.unknown004(4);
+  packet.m_paramAdapter = property.m_propertyField.unknown004(4);
   packet.unknown10 = direction;
   packet.unknown20 = property.unknown1e0;
   GfMoveTurnControler controler;
@@ -143,7 +143,7 @@ void MoveUtilField::updateMoveTurn(const fw::UpdateInfo &info, GfComPropertyPc &
 void MoveUtilField::updateMoveWalkTurn(const fw::UpdateInfo &info, GfComPropertyPc &property, const mm::Vec3 &direction) {
   GfMoveTurnControler::Packet packet;
   packet.unknown00 = property.unknown94;
-  packet.unknown08 = property.unknown310.unknown004(5);
+  packet.m_paramAdapter = property.m_propertyField.unknown004(5);
   packet.unknown10 = direction;
   packet.unknown20 = property.unknown1e0;
   GfMoveTurnControler controler;
@@ -163,7 +163,7 @@ void MoveUtilField::updateMoveJump(const fw::UpdateInfo &info, GfComPropertyPc &
 void setMoveJumpPacket(GfComPropertyPc &property, GfMoveJumpControler::Packet *packet) {
   packet->unknown00 = property.unknown80;
   packet->unknown10 = property.unknown94;
-  packet->unknown18 = property.unknown310.unknown004(6);
+  packet->m_paramAdapter = property.m_propertyField.unknown004(6);
   packet->unknown30 = property.unknown2b0 * property.unknown60.unknown04 + property.unknown2d0 * property.unknown60.unknown00;
   if (!(fabsf(packet->unknown30.x) <= 0.000001f) || !(fabsf(packet->unknown30.y) <= 0.000001f) || !(fabsf(packet->unknown30.z) <= 0.000001f)) {
     f32 length = sqrtf(packet->unknown30.x * packet->unknown30.x + packet->unknown30.y * packet->unknown30.y + packet->unknown30.z * packet->unknown30.z);
@@ -181,7 +181,7 @@ void MoveUtilField::updateMoveJumpBack(const fw::UpdateInfo &info, GfComProperty
   GfMoveJumpBackControler controler;
   GfMoveJumpBackControler::Packet packet;
   packet.unknown00 = property.unknown80;
-  packet.unknown10 = property.unknown310.unknown004(7);
+  packet.m_paramAdapter = property.m_propertyField.unknown004(7);
   mm::Vec3 input = property.unknown2b0 * property.unknown60.unknown04 + property.unknown2d0 * property.unknown60.unknown00;
   if (fabsf(input.x) <= 0.000001f && fabsf(input.y) <= 0.000001f && fabsf(input.z) <= 0.000001f) {
     packet.unknown18 = 0.0f;
@@ -196,7 +196,7 @@ void MoveUtilField::updateMoveJumpBack(const fw::UpdateInfo &info, GfComProperty
 }
 
 void MoveUtilField::updateLandBrake(const fw::UpdateInfo &info, GfComPropertyPc &property) {
-  const GfMoveRunControler::Param *param = static_cast<const GfMoveRunControler::Param *>(property.unknown310.unknown08->unknown10[3].param);
+  const GfMoveRunControler::Param *param = static_cast<const GfMoveRunControler::Param *>(property.m_propertyField.unknown08->unknown10[3].param);
   mm::Vec3 input = property.unknown2b0 * property.unknown60.unknown04 + property.unknown2d0 * property.unknown60.unknown00;
   f32 ratio = __builtin_fmaxf(input.x * property.unknown1e0.x + input.y * property.unknown1e0.y + input.z * property.unknown1e0.z, 0.0f);
   f32 limit = param->velocityMin + (param->velocityMax - param->velocityMin) * ratio;
@@ -212,7 +212,7 @@ void MoveUtilField::updateFallDown(const fw::UpdateInfo &info, GfComPropertyPc &
   GfMoveFallControler controler;
   GfMoveFallControler::Packet packet;
   packet.unknown00 = property.unknown90;
-  packet.unknown08 = property.unknown310.unknown004(8);
+  packet.m_paramAdapter = property.m_propertyField.unknown004(8);
   controler.update(info, packet);
   property.unknown90 = packet.unknown00;
 }
@@ -229,8 +229,8 @@ void MoveUtilField::enterMoveSwim(GfComPropertyPc &property) {
 void setMoveSwimPacket(GfComPropertyPc &property, GfMoveRunControler::Packet *packet) {
   packet->unknown00 = property.unknown80;
   packet->unknown10 = property.unknown94;
-  packet->unknown18 = property.unknown310.unknown004(10);
-  const FieldParam *param = property.unknown310.unknown006();
+  packet->m_paramAdapter = property.m_propertyField.unknown004(10);
+  const FieldParam *param = property.m_propertyField.unknown006();
   packet->unknown30 = property.unknown2b0 * property.unknown60.unknown04 + property.unknown2d0 * property.unknown60.unknown00;
   if (!(fabsf(packet->unknown30.x) <= 0.000001f) || !(fabsf(packet->unknown30.y) <= 0.000001f) || !(fabsf(packet->unknown30.z) <= 0.000001f)) {
     f32 length = sqrtf(packet->unknown30.x * packet->unknown30.x + packet->unknown30.y * packet->unknown30.y + packet->unknown30.z * packet->unknown30.z);
@@ -243,7 +243,7 @@ void setMoveSwimPacket(GfComPropertyPc &property, GfMoveRunControler::Packet *pa
   }
   packet->unknown40 = property.unknown1e0;
   if (property.unknown111_5) {
-    packet->unknown50 = 1.0f - property.unknown310.unknown001()->poisonSlow;
+    packet->unknown50 = 1.0f - property.m_propertyField.unknown001()->poisonSlow;
   }
   if (IsBuddy(property)) {
     packet->unknown54 = static_cast<const MoveParam *>(property.unknown300->unknown10[1].param)->addMaxSpeedBuddySwim;
@@ -262,7 +262,7 @@ void MoveUtilField::updateMoveSwim(const fw::UpdateInfo &info, GfComPropertyPc &
 void MoveUtilField::updateMoveWaterTurn(const fw::UpdateInfo &info, GfComPropertyPc &property, const mm::Vec3 &direction) {
   GfMoveTurnControler::Packet packet;
   packet.unknown00 = property.unknown94;
-  packet.unknown08 = property.unknown310.unknown004(11);
+  packet.m_paramAdapter = property.m_propertyField.unknown004(11);
   packet.unknown10 = direction;
   packet.unknown20 = property.unknown1e0;
   GfMoveTurnControler controler;
@@ -274,7 +274,7 @@ void MoveUtilField::updateMoveWaterSink(const fw::UpdateInfo &info, GfComPropert
   GfMoveWaterSinkControler controler;
   GfMoveWaterSinkControler::Packet packet;
   packet.unknown00 = property.unknown90;
-  packet.unknown08 = property.unknown310.unknown004(12);
+  packet.m_paramAdapter = property.m_propertyField.unknown004(12);
   controler.update(info, packet);
   property.unknown90 = packet.unknown00;
 }
@@ -283,8 +283,8 @@ void MoveUtilField::updateMoveWaterRise(const fw::UpdateInfo &info, GfComPropert
   GfMoveWaterRiseControler controler;
   GfMoveWaterRiseControler::Packet packet;
   packet.unknown00 = property.unknown90;
-  packet.unknown08 = property.unknown310.unknown004(13);
-  const WaterCommonParam *param = property.unknown310.unknown005();
+  packet.m_paramAdapter = property.m_propertyField.unknown004(13);
+  const WaterCommonParam *param = property.m_propertyField.unknown005();
   packet.unknown10 = fabsf(StateUtilField::getChildFrameHeight(property)) <= param->riseBrakeHeight;
   controler.update(info, packet);
   property.unknown90 = packet.unknown00;
@@ -294,8 +294,8 @@ void MoveUtilField::updateMoveWaterHoleRise(const fw::UpdateInfo &info, GfComPro
   GfMoveWaterRiseControler controler;
   GfMoveWaterRiseControler::Packet packet;
   packet.unknown00 = property.unknown90;
-  packet.unknown08 = property.unknown310.unknown004(14);
-  const WaterCommonParam *param = property.unknown310.unknown005();
+  packet.m_paramAdapter = property.m_propertyField.unknown004(14);
+  const WaterCommonParam *param = property.m_propertyField.unknown005();
   packet.unknown10 = fabsf(StateUtilField::getChildFrameHeight(property)) <= param->riseBrakeHeight;
   controler.update(info, packet);
   property.unknown90 = packet.unknown00;
@@ -305,8 +305,8 @@ void setMoveSlidePacket(GfComPropertyPc &property, const SlideParam &param, GfMo
   packet->unknown00 = property.unknown80;
   packet->unknown10 = property.unknown94;
   packet->unknown14 = property.unknownc0;
-  packet->unknown18 = property.unknown310.unknown004(17);
-  const FieldParam *fieldParam = property.unknown310.unknown006();
+  packet->m_paramAdapter = property.m_propertyField.unknown004(17);
+  const FieldParam *fieldParam = property.m_propertyField.unknown006();
   // The game reads both input components (0x60, 0x64) into callee-saved registers before the assertions below.
   f32 inputX = property.unknown60.unknown00;
   f32 inputY = property.unknown60.unknown04;

@@ -103,13 +103,35 @@ bool DevFileNxTh::readBlock(FileHandleTh *handle, const char *path) {
   return isRead;
 }
 
+// 1.0.0: 0x710072c194. The same body as DevFileArchiveNx::rfIsBusy (0x710072f290); the comment there gives the forms the loop and the guard need.
+bool DevFileNxTh::rfIsBusy(FileHandleTh *handle) {
+  DevFileNxTh *file = get();
+  if (handle == nullptr) {
+    for (u32 i = 0; i < file->unknown20->unknown00.size(); i++) {
+      OpenReadParam *channel = &file->unknown20->unknown00[i];
+      mm::threading::ReadLockGuard guard(channel->unknown1a8);
+      if (!channel->unknown10d || !channel->unknown10c) {
+        continue;
+      }
+      return true;
+    }
+  } else {
+    OpenReadParam *channel = &file->unknown20->unknown00[handle->unknown1d4];
+    mm::threading::ReadLockGuard guard(channel->unknown1a8);
+    if (channel->unknown10c) {
+      return channel->unknown10d;
+    }
+  }
+  return false;
+}
+
 bool DevFileNxTh::rfClose(FileHandleTh *handle) {
   OpenReadParam *channel = &get()->unknown20->unknown00[handle->unknown1d4];
   mm::threading::WriteLockGuard guard(channel->unknown1a8);
   bool isClosed = false;
   if (channel->unknown10f) {
     handle->unknown94 |= 0x10000;
-    handle->unknown60 = nullptr;
+    handle->m_iWorkEvent = nullptr;
     channel->unknown110 = true;
   } else {
     if (channel->unknown10d) {
@@ -128,7 +150,7 @@ CriticalSection &DevFileNxTh::getWriteLock() {
     static CriticalSection sect;
     return sect;
   }
-  return self->unknown20->unknown1800;
+  return self->unknown20->m_criticalSection;
 }
 
 bool DevFileNxTh::rfOpen(FileHandleTh *handle, const char *path) {
@@ -149,7 +171,7 @@ bool DevFileNxTh::rfOpen(FileHandleTh *handle, const char *path) {
   return isOpened;
 }
 
-DevFileNxTh::DevFileNxTh(mtl::ALLOC_HANDLE handle) : unknown14(handle), unknown18(0), unknown20(new (handle) unknown001()) {
+DevFileNxTh::DevFileNxTh(mtl::ALLOC_HANDLE handle) : m_ALLOC_HANDLE(handle), unknown18(0), unknown20(new (handle) unknown001()) {
   __atomic_store_n(&unknown20->unknown17fc, 0, __ATOMIC_SEQ_CST);
   __atomic_store_n(&unknown20->unknown17f8, false, __ATOMIC_SEQ_CST);
 }
@@ -159,10 +181,10 @@ DevFileNxTh::~DevFileNxTh() {}
 bool DevFileNxTh::initialize() {
   if (unknown18 == 0) {
     for (size_t i = 1; i < unknown20->unknown00.size(); i++) {
-      unknown20->unknown00[i].unknown1a0 = this;
+      unknown20->unknown00[i].m_devFileAccessor = this;
       Thread *thread = Thread::create("rfLoadThread", false, thFileLoader, &unknown20->unknown00[i], 0x10000, WorkCpu::getSubWorkCPUID(), -2);
       if (thread != nullptr) {
-        unknown20->unknown00[i].unknown198 = thread;
+        unknown20->unknown00[i].m_thread = thread;
         thread->resume();
       }
     }
@@ -173,7 +195,7 @@ bool DevFileNxTh::initialize() {
 
 u32 DevFileNxTh::thFileLoader(void *argument) {
   OpenReadParam *channel = static_cast<OpenReadParam *>(argument);
-  DevFileNxTh *accessor = static_cast<DevFileNxTh *>(channel->unknown1a0);
+  DevFileNxTh *accessor = static_cast<DevFileNxTh *>(channel->m_devFileAccessor);
   __atomic_fetch_add(&accessor->unknown20->unknown17fc, 1, __ATOMIC_SEQ_CST);
   while (!DevFileTh::isInitialized()) {
     nn::os::SleepThread(nn::TimeSpan::FromNanoSeconds(100000000));
@@ -185,9 +207,9 @@ u32 DevFileNxTh::thFileLoader(void *argument) {
 
 void DevFileNxTh::thUpdate(void *argument) {
   OpenReadParam *channel = static_cast<OpenReadParam *>(argument);
-  DevFileNxTh *accessor = static_cast<DevFileNxTh *>(channel->unknown1a0);
+  DevFileNxTh *accessor = static_cast<DevFileNxTh *>(channel->m_devFileAccessor);
   while (!__atomic_load_n(&accessor->unknown20->unknown17f8, __ATOMIC_SEQ_CST)) {
-    channel->unknown198->waitSignalEvent();
+    channel->m_thread->waitSignalEvent();
     if (__atomic_load_n(&accessor->unknown20->unknown17f8, __ATOMIC_SEQ_CST)) {
       break;
     }
@@ -197,19 +219,19 @@ void DevFileNxTh::thUpdate(void *argument) {
     bool reading = false;
     {
       mm::threading::ReadLockGuard guard(channel->unknown1a8);
-      buffer = channel->unknown120.unknown40;
-      offset = channel->unknown120.unknown4c;
-      size = channel->unknown120.unknown50;
+      buffer = channel->m_devFileParamTh.unknown40;
+      offset = channel->m_devFileParamTh.unknown4c;
+      size = channel->m_devFileParamTh.unknown50;
       if (channel->unknown10d) {
-        reading = (channel->unknown118->unknown94 & 0x10000) == 0;
+        reading = (channel->m_fileHandleTh->unknown94 & 0x10000) == 0;
       }
     }
     if (reading) {
       FileReadResult result;
       channel->unknown10f = true;
-      if (DevFileUtilNx::readFile(channel->unknown118, channel->unknown00, size, offset, buffer, size, result)) {
+      if (DevFileUtilNx::readFile(channel->m_fileHandleTh, channel->unknown00, size, offset, buffer, size, result)) {
         mm::threading::WriteLockGuard guard(channel->unknown1a8);
-        FileHandleTh *handle = channel->unknown118;
+        FileHandleTh *handle = channel->m_fileHandleTh;
         if (handle != nullptr) {
           int read = result.unknown00;
           if (result.unknown08) {
@@ -229,8 +251,8 @@ bool DevFileNxTh::finalize() {
   if (unknown18 == 1) {
     __atomic_store_n(&unknown20->unknown17f8, true, __ATOMIC_SEQ_CST);
     for (size_t i = 1; i < unknown20->unknown00.size(); i++) {
-      if (unknown20->unknown00[i].unknown198 != nullptr) {
-        unknown20->unknown00[i].unknown198->setSignalEvent(true);
+      if (unknown20->unknown00[i].m_thread != nullptr) {
+        unknown20->unknown00[i].m_thread->setSignalEvent(true);
       }
     }
     unknown18 = 2;
@@ -240,8 +262,8 @@ bool DevFileNxTh::finalize() {
     }
   } else if (unknown18 == 3) {
     for (size_t i = 1; i < unknown20->unknown00.size(); i++) {
-      if (unknown20->unknown00[i].unknown198 != nullptr) {
-        unknown20->unknown00[i].unknown198->release();
+      if (unknown20->unknown00[i].m_thread != nullptr) {
+        unknown20->unknown00[i].m_thread->release();
       }
     }
     unknown18 = 4;
@@ -262,24 +284,24 @@ bool DevFileNxTh::rfRead(FileHandleTh *handle, const DevFileParamTh &param) {
   handle->setReadAdr(param.unknown50, param.unknown40, param.unknown50);
   handle->unknown001(param.unknown4c, param.unknown50);
   handle->unknown94 &= 0xfff0ffff;
-  channel.unknown120 = param;
+  channel.m_devFileParamTh = param;
   channel.unknown10d = true;
-  channel.unknown118 = handle;
+  channel.m_fileHandleTh = handle;
   channel.unknown10e = false;
   channel.unknown110 = false;
-  channel.unknown198->setSignalEvent(true);
+  channel.m_thread->setSignalEvent(true);
   return true;
 }
 
 void DevFileNxTh::tail() {
   for (OpenReadParam *channel = unknown20->unknown00.begin(); channel != unknown20->unknown00.end(); channel++) {
-    if (channel->unknown10d && channel->unknown118 != nullptr) {
+    if (channel->unknown10d && channel->m_fileHandleTh != nullptr) {
       mm::threading::WriteLockGuard guard(channel->unknown1a8);
-      if ((channel->unknown118->unknown94 & 0x10000) == 0) {
-        if (channel->unknown118->m_currentPtr != 0 && channel->unknown118->m_currentPtr == channel->unknown118->unknown18) {
+      if ((channel->m_fileHandleTh->unknown94 & 0x10000) == 0) {
+        if (channel->m_fileHandleTh->m_currentPtr != 0 && channel->m_fileHandleTh->m_currentPtr == channel->m_fileHandleTh->unknown18) {
           channel->unknown10d = false;
-          channel->unknown118->call(CBM_UNKNOWN_2);
-          channel->unknown118 = nullptr;
+          channel->m_fileHandleTh->call(CBM_UNKNOWN_2);
+          channel->m_fileHandleTh = nullptr;
         }
       } else if (!channel->unknown10f) {
         if (channel->unknown110) {
@@ -288,8 +310,8 @@ void DevFileNxTh::tail() {
         }
         channel->unknown10c = false;
         channel->unknown10d = false;
-        channel->unknown118->call(CBM_UNKNOWN_4);
-        channel->unknown118 = nullptr;
+        channel->m_fileHandleTh->call(CBM_UNKNOWN_4);
+        channel->m_fileHandleTh = nullptr;
       }
     }
   }

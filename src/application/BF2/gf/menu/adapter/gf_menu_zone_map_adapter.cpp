@@ -16,12 +16,12 @@ static GfMenuZoneMapAdapter::TypeInfo TYPE_INFOS[] = {
 };
 
 GfMenuZoneMapAdapter::GfMenuZoneMapAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways)
-    : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(nullptr), unknown58(0), unknown5c(0), _60(), unknown64(false) {}
+    : GfMenuAdapter(plugin, false, isUpdateAlways), m_iConverter(nullptr), unknown58(0), unknown5c(0), _60(), unknown64(false) {}
 
 GfMenuZoneMapAdapter::~GfMenuZoneMapAdapter() {
-  if (unknown50 != nullptr) {
-    delete unknown50;
-    unknown50 = nullptr;
+  if (m_iConverter != nullptr) {
+    delete m_iConverter;
+    m_iConverter = nullptr;
   }
 }
 
@@ -63,7 +63,7 @@ GfMenuZoneMapAdapter *GfMenuZoneMapAdapter::createFromCoverter(u32 handle, u32 t
   u32 mapId = converter->getMapId();
   GfMenuZoneMapAdapter *adapter = create(handle, type, mapId, converter->getParam(), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -79,10 +79,10 @@ GfMenuZoneMapAdapter *GfMenuZoneMapAdapter::createFromList(u32 handle, u32 type,
 }
 
 void GfMenuZoneMapAdapter::update(const fw::UpdateInfo &info) {
-  if (unknown50 != nullptr) {
-    u32 newMapId = unknown50->getMapId();
-    u32 newParam = unknown50->getParam();
-    bool newIsGroupMode = unknown50->isGroupMode();
+  if (m_iConverter != nullptr) {
+    u32 newMapId = m_iConverter->getMapId();
+    u32 newParam = m_iConverter->getParam();
+    bool newIsGroupMode = m_iConverter->isGroupMode();
     if (unknown58 != newMapId) {
       unknown58 = newMapId;
       setChange();
@@ -107,6 +107,6 @@ void GfMenuZoneMapAdapter::update(const fw::UpdateInfo &info) {
   }
 }
 
-bool GfMenuZoneMapAdapter::ListConverter::isGroupMode() { return list->unknown79; }
+bool GfMenuZoneMapAdapter::ListConverter::isGroupMode() { return list->m_groupMode; }
 
 } // namespace gf

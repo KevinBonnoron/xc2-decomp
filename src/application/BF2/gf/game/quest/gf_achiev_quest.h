@@ -22,7 +22,7 @@ struct AchievQuest {
   u32 getCount() const { return unknown04 & MASK_UNKNOWN_1073741823; }
   u32 getTargetCount() const { return unknown08 & MASK_UNKNOWN_1073741823; }
 
-  QuestID unknown00; // Inferred role: quest; original member name unknown.
+  QuestID m_questID; // Inferred role: quest; original member name unknown.
   u32 unknown04;     // Inferred role: count; original member name unknown.
   u32 unknown08;     // Inferred role: target count; original member name unknown.
   u16 unknown0c;     // Inferred role: flags; original member name unknown.

@@ -33,9 +33,9 @@ public:
   virtual void release();
   bool OnFileEvent(EventFileTh *event) override;
 
-  FileHandleTh *unknownc0; // Inferred role: file handle; original member name unknown.
-  void *unknownc8;         // Inferred role: buffer; original member name unknown.
-  int unknownd0;           // Inferred role: size; original member name unknown.
+  FileHandleTh *m_fileHandleTh; // Inferred role: file handle; original member name unknown.
+  void *m_glassBreakage;        // Inferred role: buffer; named after the game accessor ml::DrIniSys::getGlassBreakage.
+  int unknownd0;                // Inferred role: size; original member name unknown.
   u8 _d4[0xe0 - 0xd4];
   u64 unknowne0;  // Inferred role: time stamp; original member name unknown.
   u64 unknowne8;  // Inferred role: file time; original member name unknown.
@@ -45,7 +45,7 @@ public:
   mm::mtl::IAllocator *unknownf8; // Inferred role: allocator; original member name unknown.
 };
 
-static_assert(offsetof(FileResTh, unknownc0) == 0xc0, "");
+static_assert(offsetof(FileResTh, m_fileHandleTh) == 0xc0, "");
 static_assert(offsetof(FileResTh, unknownd0) == 0xd0, "");
 static_assert(offsetof(FileResTh, unknowne0) == 0xe0, "");
 static_assert(offsetof(FileResTh, unknowne8) == 0xe8, "");

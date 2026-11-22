@@ -64,13 +64,13 @@ void GfGameMoverSwitcher::switchMover() {
   if (formation != nullptr) {
     formation->swapFormation(0, 1);
     for (u32 i = 0; i < 2; i++) {
-      GfObj *obj = GfObjUtil::getObj(formation->unknown1a0[i].unknown08);
+      GfObj *obj = GfObjUtil::getObj(formation->unknown1a0[i].m_playerHandle);
       if (obj != nullptr) {
         MsgPcFieldChangeControlMode mode(i);
         sendMessage(obj, mode);
         MsgPcFieldWarp warp;
-        warp.unknown10.unknown10 = formation->unknowne0[0].unknown10;
-        warp.unknown10.unknown00 = formation->unknown20[i];
+        warp.m_transform.unknown10 = formation->unknowne0[0].unknown10;
+        warp.m_transform.unknown00 = formation->unknown20[i];
         warp.unknown30 = true;
         sendMessage(obj, warp);
       }

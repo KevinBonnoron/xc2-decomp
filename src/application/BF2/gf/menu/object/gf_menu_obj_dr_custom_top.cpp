@@ -27,12 +27,13 @@
 
 namespace gf {
 
-GfMenuObjDrCustomTop::GfMenuObjDrCustomTop(u32 handle) : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr), unknown50(nullptr), unknown58(this) {}
+GfMenuObjDrCustomTop::GfMenuObjDrCustomTop(u32 handle)
+    : GfMenuObject(handle), m_menuDriverList(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr), unknown50(nullptr), unknown58(this) {}
 
 GfMenuObjDrCustomTop::~GfMenuObjDrCustomTop() {
   mm::mtl::safeRelease(unknown48);
   mm::mtl::safeRelease(unknown40);
-  mm::mtl::safeRelease(unknown28);
+  mm::mtl::safeRelease(m_menuDriverList);
   mm::mtl::safeRelease(unknown30);
   mm::mtl::safeRelease(unknown38);
 }
@@ -54,19 +55,19 @@ void GfMenuObjDrCustomTop::initialize() {
     GfMenuDriverList::PartySetup setup;
     setup.unknown18 = false;
     setup.unknown14 = GfPartySelect::LIST_TYPE_UNKNOWN_2;
-    unknown28 = GfMenuDriverList::create();
-    unknown28->setupFromParty(setup);
-    unknown28->setIndex(0);
+    m_menuDriverList = GfMenuDriverList::create();
+    m_menuDriverList->setupFromParty(setup);
+    m_menuDriverList->setIndex(0);
   }
   {
     ui::UIObjectAcc select(unknown18, "LAY_dr_select");
     ui::UISelectObjList::CreateParam createParam = {};
     createParam.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
     unknown30 = ui::UISelectObjList::create(createParam);
-    for (u32 i = 0; i < unknown28->getSize(); i++) {
+    for (u32 i = 0; i < m_menuDriverList->getSize(); i++) {
       ui::UIObjectAcc image(select.duplicateChild("LAY_dr_image"));
       if (image.isValid()) {
-        GfMenuCharDataAdapter::create(image.searchChild("IMG_dr_image"), 0x1c, OBJECT_TYPE_PC, unknown28->getContents(i).unknown00, false);
+        GfMenuCharDataAdapter::create(image.searchChild("IMG_dr_image"), 0x1c, OBJECT_TYPE_PC, m_menuDriverList->getContents(i).unknown00, false);
         image.setDisp(true);
         unknown30->addObject(image.unknown10);
       }
@@ -98,9 +99,9 @@ void GfMenuObjDrCustomTop::initialize() {
       unknown38->setupEventHanding(select.unknown10, 1);
     }
     GfMenuCharDataAdapter::createFromReferenceDriver(select.searchChild("TXT_dr_select_name"), 2, 0, false);
-    GfMenuReference::setReferenceDriverID(0, unknown28->getContents(unknown28->getIndex(false)).unknown00);
-    if (unknown28->getSize() >= 2) {
-      setupInputSelectionFromList(select.unknown10, *unknown28);
+    GfMenuReference::setReferenceDriverID(0, m_menuDriverList->getContents(m_menuDriverList->getIndex(false)).unknown00);
+    if (m_menuDriverList->getSize() >= 2) {
+      setupInputSelectionFromList(select.unknown10, *m_menuDriverList);
     } else {
       select.setDispChild(false, "LAY_dr_select_input");
     }
@@ -242,9 +243,9 @@ void GfMenuObjDrCustomTop::DrSelectListener::reciveEvent(const ui::EventData &ev
   case 6: {
     u32 index = event.unknown08;
     if (index != 0xffffffff) {
-      unknown20->unknown28->setIndex(index);
-      unknown20->unknown30->setIndex(index);
-      GfMenuDriverList *list = unknown20->unknown28;
+      m_menuObjDrCustomTop->m_menuDriverList->setIndex(index);
+      m_menuObjDrCustomTop->unknown30->setIndex(index);
+      GfMenuDriverList *list = m_menuObjDrCustomTop->m_menuDriverList;
       GfMenuReference::setReferenceDriverID(0, list->getContents(list->getIndex(false)).unknown00);
     }
     break;
@@ -253,7 +254,7 @@ void GfMenuObjDrCustomTop::DrSelectListener::reciveEvent(const ui::EventData &ev
     if (ui::UICtrlObject::getEventCtrlObjID(event) == 1) {
       // The game never sets x0 for this call (0x7100450708): receiveRevolveEvent, defined in this file, does not read its object, so the compiler dropped the argument and the original
       // expression cannot be checked. The owner is the object the other listeners of this class call their owner's functions on.
-      unknown20->receiveRevolveEvent(event, acc.unknown10);
+      m_menuObjDrCustomTop->receiveRevolveEvent(event, acc.unknown10);
     }
     break;
   default:
@@ -346,12 +347,12 @@ void GfMenuObjDrCustomTop::MainListener::reciveEvent(const ui::EventData &event,
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1:
-    unknown20->unknown58.unknown002(&GfMenuObjDrCustomTop::seqStartOpen);
-    unknown20->unknown58.unknown002(&GfMenuObjDrCustomTop::seqAppearPhase1);
-    unknown20->unknown58.unknown002(&GfMenuObjDrCustomTop::seqAppearPhase2);
-    unknown20->unknown58.unknown002(&GfMenuObjDrCustomTop::seqAppearPhase3);
-    unknown20->unknown58.unknown002(&GfMenuObjDrCustomTop::seqAppearPhase4);
-    unknown20->unknown58.unknown002(&GfMenuObjDrCustomTop::seqEndOpen);
+    m_menuObjDrCustomTop->unknown58.unknown002(&GfMenuObjDrCustomTop::seqStartOpen);
+    m_menuObjDrCustomTop->unknown58.unknown002(&GfMenuObjDrCustomTop::seqAppearPhase1);
+    m_menuObjDrCustomTop->unknown58.unknown002(&GfMenuObjDrCustomTop::seqAppearPhase2);
+    m_menuObjDrCustomTop->unknown58.unknown002(&GfMenuObjDrCustomTop::seqAppearPhase3);
+    m_menuObjDrCustomTop->unknown58.unknown002(&GfMenuObjDrCustomTop::seqAppearPhase4);
+    m_menuObjDrCustomTop->unknown58.unknown002(&GfMenuObjDrCustomTop::seqEndOpen);
     break;
   case 2: {
     GfMenuObjUtil::CtrlParam param;
@@ -371,39 +372,39 @@ void GfMenuObjDrCustomTop::MainListener::reciveEvent(const ui::EventData &event,
       param.unknown08 = 2;
       param.unknown00 = 0.25f;
       GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
-      GfMenuObjCommonJog::close(unknown20->unknown40);
-      unknown20->suspendInput();
+      GfMenuObjCommonJog::close(m_menuObjDrCustomTop->unknown40);
+      m_menuObjDrCustomTop->suspendInput();
     }
     break;
   default:
     if (event.unknown00 == 0x41) {
       u32 layer = event.unknown14;
-      if (unknown20->unknown40 == nullptr || unknown20->unknown40->unknown0c != event.unknown08 || event.unknown10_u16 != 3) {
+      if (m_menuObjDrCustomTop->unknown40 == nullptr || m_menuObjDrCustomTop->unknown40->unknown0c != event.unknown08 || event.unknown10_u16 != 3) {
         break;
       }
       if ((layer & 0xffff) == 6) {
         GfMenuObjBladeSet::OpenParam param;
         param.unknown00 = 0;
-        param.unknown04 = unknown20->unknown28->getContents(unknown20->unknown28->getIndex(false)).unknown00;
+        param.unknown04 = m_menuObjDrCustomTop->m_menuDriverList->getContents(m_menuObjDrCustomTop->m_menuDriverList->getIndex(false)).unknown00;
         GfMenuObjBladeSet::registOpenParam(param);
         GfMenuObject::changeFSSubLayer(acc.unknown10, 1, 6, true);
-        GfMenuObjCommonJog::close(unknown20->unknown40);
+        GfMenuObjCommonJog::close(m_menuObjDrCustomTop->unknown40);
       } else if ((layer & 0xffff) == 0x22) {
         GfMenuObject::changeFSSubLayer(acc.unknown10, 1, 0x22, true);
-        GfMenuObjCommonJog::close(unknown20->unknown40);
+        GfMenuObjCommonJog::close(m_menuObjDrCustomTop->unknown40);
       } else {
-        unknown20->unknown2ec = layer;
-        unknown20->unknown58.unknown002(&GfMenuObjDrCustomTop::seqStartAddLayer);
-        unknown20->unknown58.unknown002(&GfMenuObjDrCustomTop::seqAddLayerPhase1);
-        unknown20->unknown58.unknown002(&GfMenuObjDrCustomTop::seqAddLayerPhase2);
+        m_menuObjDrCustomTop->unknown2ec = layer;
+        m_menuObjDrCustomTop->unknown58.unknown002(&GfMenuObjDrCustomTop::seqStartAddLayer);
+        m_menuObjDrCustomTop->unknown58.unknown002(&GfMenuObjDrCustomTop::seqAddLayerPhase1);
+        m_menuObjDrCustomTop->unknown58.unknown002(&GfMenuObjDrCustomTop::seqAddLayerPhase2);
         if ((layer & 0xffff) == 0x21) {
-          unknown20->unknown58.unknown002(&GfMenuObjDrCustomTop::seqAddLayerPhase3_DrEquip);
+          m_menuObjDrCustomTop->unknown58.unknown002(&GfMenuObjDrCustomTop::seqAddLayerPhase3_DrEquip);
         } else if ((layer & 0xffff) == 0x20) {
-          unknown20->unknown58.unknown002(&GfMenuObjDrCustomTop::seqAddLayerPhase3_DrArtsSet);
+          m_menuObjDrCustomTop->unknown58.unknown002(&GfMenuObjDrCustomTop::seqAddLayerPhase3_DrArtsSet);
         }
-        unknown20->unknown58.unknown002(&GfMenuObjDrCustomTop::seqAddLayerPhase4);
-        unknown20->unknown58.unknown002(&GfMenuObjDrCustomTop::seqAddLayerPhase5);
-        unknown20->unknown58.unknown002(&GfMenuObjDrCustomTop::seqEndAddLayer);
+        m_menuObjDrCustomTop->unknown58.unknown002(&GfMenuObjDrCustomTop::seqAddLayerPhase4);
+        m_menuObjDrCustomTop->unknown58.unknown002(&GfMenuObjDrCustomTop::seqAddLayerPhase5);
+        m_menuObjDrCustomTop->unknown58.unknown002(&GfMenuObjDrCustomTop::seqEndAddLayer);
       }
       break;
     }

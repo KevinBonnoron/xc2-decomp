@@ -43,14 +43,14 @@ template <typename T> inline void unknown001(T *&object) {
 
 DrPixlPostObjMotionBlur2::DrPixlPostObjMotionBlur2(DrMan *drMan, DrPixlMan *pixlMan, DrPixlPostMan *postMan)
     : DrPixlPostObj(drMan, pixlMan, postMan), unknown20(nullptr), unknown28(nullptr), unknown30(nullptr), unknown60(0), unknown64(true) {
-  unknown28 = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
-  unknown30 = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
-  unknown38 = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
-  unknown48 = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
-  unknown40 = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
-  unknown20 = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
+  unknown28 = new (m_drMan->unknown0c) DrPixlRenderTarget(m_drMan);
+  unknown30 = new (m_drMan->unknown0c) DrPixlRenderTarget(m_drMan);
+  unknown38 = new (m_drMan->unknown0c) DrPixlRenderTarget(m_drMan);
+  unknown48 = new (m_drMan->unknown0c) DrPixlRenderTarget(m_drMan);
+  unknown40 = new (m_drMan->unknown0c) DrPixlRenderTarget(m_drMan);
+  unknown20 = new (m_drMan->unknown0c) DrPixlRenderTarget(m_drMan);
   for (s32 i = 0; i < 2; i++) {
-    unknown50[i] = new (unknown00->unknown0c) grlib::CGLibVtxVertex();
+    unknown50[i] = new (m_drMan->unknown0c) grlib::CGLibVtxVertex();
   }
   calcBludBuffColorBuff();
   unknown18 = 0.0f;
@@ -58,8 +58,8 @@ DrPixlPostObjMotionBlur2::DrPixlPostObjMotionBlur2(DrMan *drMan, DrPixlMan *pixl
 }
 
 void DrPixlPostObjMotionBlur2::calcBludBuffColorBuff() {
-  f32 height = static_cast<f32>(unknown00->unknown5b8->unknown1c);
-  f32 width = static_cast<f32>(unknown00->unknown5b8->unknown18);
+  f32 height = static_cast<f32>(m_drMan->unknown5b8->unknown1c);
+  f32 width = static_cast<f32>(m_drMan->unknown5b8->unknown18);
   f32 quarterX = width * 0.25f;
   f32 quarterY = height * 0.25f;
   f32 tileOutX = width * 0.05f;
@@ -104,10 +104,10 @@ void DrPixlPostObjMotionBlur2::calcBludBuffColorBuff() {
 }
 
 void DrPixlPostObjMotionBlur2::debugRender() {
-  if (unknown00->unknown120[unknown00->unknown1c98]->isMotBlur2() && unknown00->unknown120[unknown00->unknown1c98]->unknown1000) {
-    s32 width = unknown00->unknown5b8->unknown28;
-    s32 height = unknown00->unknown5b8->unknown2c;
-    unknown00->unknown78->debugRender(*unknown48->unknown70, 0, 0, width, height, false, false, 0.2f, true);
+  if (m_drMan->unknown120[m_drMan->unknown1c98]->isMotBlur2() && m_drMan->unknown120[m_drMan->unknown1c98]->unknown1000) {
+    s32 width = m_drMan->unknown5b8->unknown28;
+    s32 height = m_drMan->unknown5b8->unknown2c;
+    m_drMan->m_drPixlMan->debugRender(*unknown48->unknown70, 0, 0, width, height, false, false, 0.2f, true);
   }
 }
 
@@ -152,14 +152,14 @@ void DrPixlPostObjMotionBlur2::render() {
 
 // Same body shape as DrPixlPostObjTSSAO::passTemporalFiltering for the matrix block.
 void DrPixlPostObjMotionBlur2::calcBlurWork() {
-  DrCalcViewWork *viewWork = unknown00->unknown580->unknown10;
+  DrCalcViewWork *viewWork = m_drMan->m_drCalcMan->m_drCalcViewWork;
   if (viewWork->unknown9aa) {
     unknown28->clearTexture(mm::Col4(0.0f, 0.0f, 0.0f, 1.0f), static_cast<GrlClaerMask>(0xf));
   } else {
     DrAPGxType::setupBlend(0);
     unknown28->setRenderTarget();
-    DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
-    DrShdDataList *shdList = unknown00->unknown80->unknown00;
+    DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
+    DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
     DrShdDataObj *shader = shdList->getPostShdObj(0x39);
     shdList->bindTriangleTex();
     shader->setupShader(0u);
@@ -175,10 +175,10 @@ void DrPixlPostObjMotionBlur2::calcBlurWork() {
     u32 sampleOffset = uniform.unknown001("gSampleOffset[0]");
     u32 sizeOfColor = uniform.unknown001("gSizeOfColor");
     u32 targetVelocity = uniform.unknown001("gTargetVelocity");
-    DrAPCache *apCache = unknown00->unknown5c0;
-    // unknown798 is read through unknown00->unknown580->unknown10 after the calls (the game reloads the view work pointer for it); the dpch value is a
+    DrAPCache *apCache = m_drMan->m_drAPCache;
+    // unknown798 is read through m_drMan->m_drCalcMan->m_drCalcViewWork after the calls (the game reloads the view work pointer for it); the dpch value is a
     // float array (the game's slot is 8-byte aligned, a Vec4 would be 16).
-    f32 blurParam[4] = {postParm->unknown200, postParm->unknown20c, postParm->unknown210 * unknown00->unknown580->unknown10->unknown798, postParm->unknown204};
+    f32 blurParam[4] = {postParm->unknown200, postParm->unknown20c, postParm->unknown210 * m_drMan->m_drCalcMan->m_drCalcViewWork->unknown798, postParm->unknown204};
     uniform.setF32SetVec4(dpch, blurParam);
     uniform.setMat44SetMat44(projInv, viewWork->unknown3c0);
     // {} blocks: the frame of the game reuses the slots of the matrix, the sample offsets and the color size for later locals (ruling 3).
@@ -194,7 +194,7 @@ void DrPixlPostObjMotionBlur2::calcBlurWork() {
       uniform.setF32SetF32Array(sampleOffset, offsets, 8);
     }
     {
-      mm::Vec4 colorSize(static_cast<f32>(unknown00->unknown5b8->unknown18), static_cast<f32>(unknown00->unknown5b8->unknown1c), 0.0f, 0.0f);
+      mm::Vec4 colorSize(static_cast<f32>(m_drMan->unknown5b8->unknown18), static_cast<f32>(m_drMan->unknown5b8->unknown1c), 0.0f, 0.0f);
       uniform.setVec4SetVec4(sizeOfColor, colorSize);
     }
     mm::Vec4 velocity = mm::Vec4::zero;
@@ -223,8 +223,8 @@ void DrPixlPostObjMotionBlur2::calcBlurWork() {
     velocity.y = -(y - prevY);
     uniform.setVec4SetVec4(targetVelocity, velocity);
     apCache->beginTexSampling(2, 0);
-    apCache->setTexture(*unknown08->getPixlObj(3)->unknown70, velocityLocation);
-    apCache->setTexture(*unknown08->unknown7f0->unknown180->getDownDepth()->unknown70, depthLocation);
+    apCache->setTexture(*m_drPixlMan->getPixlObj(3)->unknown70, velocityLocation);
+    apCache->setTexture(*m_drPixlMan->unknown7f0->m_drPixlPostMan->getDownDepth()->unknown70, depthLocation);
     uniform.updateData();
     uniform.setUniformBlock();
     shdList->renderTriangle();
@@ -232,20 +232,20 @@ void DrPixlPostObjMotionBlur2::calcBlurWork() {
 }
 
 void DrPixlPostObjMotionBlur2::calcObjMotionBlur() {
-  if (!unknown00->unknown580->unknown10->unknown9aa && unknown00->unknown120[unknown00->unknown1c98]->unknown1cd) {
+  if (!m_drMan->m_drCalcMan->m_drCalcViewWork->unknown9aa && m_drMan->unknown120[m_drMan->unknown1c98]->unknown1cd) {
     calcVelocityBlur();
   }
-  unknown00->blurCallBackRender();
+  m_drMan->blurCallBackRender();
   calcMaxVelocityPerTile();
   grlib::CGLibCtlShader::setMemoryBarrierBit(2);
   calcBlurMask();
 }
 
 void DrPixlPostObjMotionBlur2::lastRender() {
-  DrPixlRenderTarget *target = unknown08->unknown7f0->unknown138;
+  DrPixlRenderTarget *target = m_drPixlMan->unknown7f0->unknown138;
   target->setRenderTarget();
   DrAPGxType::setupBlend(1);
-  DrShdDataObj *shader = unknown00->unknown80->unknown00->getPostShdObj(0x46);
+  DrShdDataObj *shader = m_drMan->m_drShdMan->m_drShdDataList->getPostShdObj(0x46);
   shader->setupShader(0u);
   grlib::CGLibUniformEtcUtility uniform(shader);
   uniform.setUseUniformBlock("U_POST");
@@ -263,7 +263,7 @@ void DrPixlPostObjMotionBlur2::lastRender() {
   uniform.setUniformBlock();
   int frameLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("s0");
   int velocityLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("s1");
-  DrAPCache *apCache = unknown00->unknown5c0;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   apCache->beginTexSampling(2, 1);
   apCache->setTexture(*unknown20->unknown70, frameLocation);
   apCache->beginTexSampling(2, 0);
@@ -277,8 +277,8 @@ void DrPixlPostObjMotionBlur2::renderCalcBlur() {
   unknown20->clearTexture(mm::Col4(0.0f, 0.0f, 0.0f, 0.0f), static_cast<GrlClaerMask>(0xf));
   DrAPGxType::setupScreenQuads(false);
   unknown20->setRenderTarget();
-  DrShdDataList *shdList = unknown00->unknown80->unknown00;
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   DrShdDataObj *shader = shdList->getPostShdObj(0x3a);
   u32 declHlv = postParm->unknown1cf ? 1 : 2;
   shader->setDeclarationIdx(shader->getDeclarationOfs("DECL_HLV"), declHlv);
@@ -299,8 +299,8 @@ void DrPixlPostObjMotionBlur2::renderCalcBlur() {
   f32 velocityHeight = static_cast<f32>(unknown28->unknownc0);
   f32 maxVelocityWidth = static_cast<f32>(unknown38->unknownbc);
   f32 maxVelocityHeight = static_cast<f32>(unknown38->unknownc0);
-  DrPixlRenderTarget *target = unknown08->unknown7f0->unknown138;
-  DrAPCache *apCache = unknown00->unknown5c0;
+  DrPixlRenderTarget *target = m_drPixlMan->unknown7f0->unknown138;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   f32 targetHeight = static_cast<f32>(target->unknownc0);
   f32 targetWidth = static_cast<f32>(target->unknownbc);
   f32 ofs[12];
@@ -354,7 +354,7 @@ void DrPixlPostObjMotionBlur2::renderCalcBlur() {
   posOffset.w = -0.5f / posHeight;
   uniform.setVec4SetVec4(posOffsetOffset, posOffset);
   apCache->beginTexSampling(2, 1);
-  apCache->setTexture(*unknown08->unknown7f0->unknown138->unknown70, frameLocation);
+  apCache->setTexture(*m_drPixlMan->unknown7f0->unknown138->unknown70, frameLocation);
   apCache->setTexture(*unknown28->unknown70, velocityLocation);
   apCache->setTexture(*unknown38->unknown70, maxVelocityLocation);
   apCache->beginTexSampling(2, 0);
@@ -370,12 +370,12 @@ void DrPixlPostObjMotionBlur2::renderCalcBlur() {
 // setMoveMem is called through the base class like DrPixlPostObj3dLut::render_updateLUT: the call through the utility gives 145 instructions
 // against the game's 147.
 void DrPixlPostObjMotionBlur2::calcVelocityBlur() {
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   if (postParm->unknown208 <= 0.0f) {
     return;
   }
-  DrAPCache *apCache = unknown00->unknown5c0;
-  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
   DrShdDataObj *shader = shdList->getPostShdObj(0x1c);
   grlib::CGLibUniformEtcUtility uniform(shader);
   uniform.setUseUniformBlock("U_POST");
@@ -413,8 +413,8 @@ void DrPixlPostObjMotionBlur2::calcVelocityBlur() {
 // (20 floats) and setVec4SetVec4 (four floats, 0x71007a40f8 to 0x71007a4118) read them, so the uninitialised read is the game's own and they stay uninitialised here.
 // The height of the second pass is read inside the loop: a local for it moves three of the zero stores.
 void DrPixlPostObjMotionBlur2::calcMaxVelocityPerTile() {
-  DrAPCache *apCache = unknown00->unknown5c0;
-  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
   DrShdDataObj *shader = shdList->getPostShdObj(0x40);
   shdList->unknown002(shader);
   DrAPGxType::setupBlend(0);
@@ -462,8 +462,8 @@ void DrPixlPostObjMotionBlur2::calcMaxVelocityPerTile() {
 // 0x71008be01c. The game writes only the x and y of the Vec4 it passes (stores at sp and sp+4, 0x71008be118 and 0x71008be134): setVec4SetVec4 copies all four floats
 // (0x71007a40f8 to 0x71007a4118), so the read of z and w is the game's own and they stay uninitialised here.
 void DrPixlPostObjMotionBlur2::calcBlurMask() {
-  DrAPCache *apCache = unknown00->unknown5c0;
-  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
   DrShdDataObj *shader = shdList->getPostShdObj(0x49);
   shdList->unknown002(shader);
   DrAPGxType::setupBlend(0);

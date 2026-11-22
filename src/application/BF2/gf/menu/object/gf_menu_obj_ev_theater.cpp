@@ -28,16 +28,16 @@ constexpr u32 unknown001 = 0x19;
 // Inferred role: off screen call id; original name unknown.
 constexpr u32 unknown002 = 0x1a;
 
-GfMenuObjEvTheater::GfMenuObjEvTheater(u32 handle) : GfMenuObject(handle), unknown24(1), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr) {
-  unknown28 = GfMenuMsgList::create();
-  unknown38 = GfMenuIDList::create();
+GfMenuObjEvTheater::GfMenuObjEvTheater(u32 handle) : GfMenuObject(handle), unknown24(1), m_menuMsgList(nullptr), unknown30(nullptr), m_menuIDList(nullptr), unknown40(nullptr) {
+  m_menuMsgList = GfMenuMsgList::create();
+  m_menuIDList = GfMenuIDList::create();
 }
 
 GfMenuObjEvTheater::~GfMenuObjEvTheater() {
   mm::mtl::safeRelease(unknown30);
-  mm::mtl::safeRelease(unknown28);
+  mm::mtl::safeRelease(m_menuMsgList);
   mm::mtl::safeRelease(unknown40);
-  mm::mtl::safeRelease(unknown38);
+  mm::mtl::safeRelease(m_menuIDList);
 }
 
 void GfMenuObjEvTheater::initialize() {
@@ -85,12 +85,12 @@ void GfMenuObjEvTheater::initialize() {
     unknown40->pickupObject(select.unknown10, "LAY_select_item@%02d", 1);
     ui::UIListInfoBase::SetupParam param;
     param.unknown08 = unknown40->getSize();
-    unknown38->setup(getAllocator(ALLOCATOR_UNKNOWN_0), param);
-    GfMenuEvTherterAdapter::createFromList(select.searchChild("IMG_select_cur"), 1, unknown38, -1, false);
-    GfMenuEvTherterAdapter::createFromList(select.searchChild("TXT_select_cur_title"), 0, unknown38, -1, false);
+    m_menuIDList->setup(getAllocator(ALLOCATOR_UNKNOWN_0), param);
+    GfMenuEvTherterAdapter::createFromList(select.searchChild("IMG_select_cur"), 1, m_menuIDList, -1, false);
+    GfMenuEvTherterAdapter::createFromList(select.searchChild("TXT_select_cur_title"), 0, m_menuIDList, -1, false);
     for (u32 i = 0; i < unknown40->getSize(); i++) {
       name.format("IMG_select_item@%02d", i + 1);
-      GfMenuEvTherterAdapter *adapter = GfMenuEvTherterAdapter::createFromList(select.searchChild(name.c_str()), 1, unknown38, i, false);
+      GfMenuEvTherterAdapter *adapter = GfMenuEvTherterAdapter::createFromList(select.searchChild(name.c_str()), 1, m_menuIDList, i, false);
       if (adapter != nullptr) {
         name.format("LAY_select_item@%02d", i + 1);
         adapter->unknown24 = select.searchChild(name.c_str());
@@ -138,7 +138,7 @@ void GfMenuObjEvTheater::finalize() { GfMenuObject::finalize(); }
 void GfMenuObjEvTheater::update() { GfMenuObject::update(); }
 
 void GfMenuObjEvTheater::refreshSelctList() {
-  u32 index = unknown38->getIndex(true);
+  u32 index = m_menuIDList->getIndex(true);
   mm::mtl::FixStr<32> name;
   for (u32 i = 0; i < unknown40->getSize(); i++) {
     name.format("IMG_select_frame@%02d", i + 1);
@@ -148,52 +148,52 @@ void GfMenuObjEvTheater::refreshSelctList() {
 }
 
 void GfMenuObjEvTheater::updateSubMsgList() {
-  if (unknown28 != nullptr) {
+  if (m_menuMsgList != nullptr) {
     switch (unknown24) {
     case 1: {
-      unknown28->setBdat(0x127, 0x102);
-      u8 *bdat = unknown28->unknown68;
+      m_menuMsgList->setBdat(0x127, 0x102);
+      u8 *bdat = m_menuMsgList->unknown68;
       {
         ui::UIListInfoBase::SetupParam param;
         param.unknown08 = unknown30->getSize();
-        unknown28->setup(getAllocator(ALLOCATOR_UNKNOWN_0), param);
+        m_menuMsgList->setup(getAllocator(ALLOCATOR_UNKNOWN_0), param);
       }
       for (int i = 0; i < Bdat::getIdCount(bdat); i++) {
         MsgID id = {};
         id.unknown00 = Bdat::getIdTop(bdat) + i;
-        unknown28->addContents(id);
+        m_menuMsgList->addContents(id);
       }
       break;
     }
     case 2: {
-      unknown28->setBdat(0x126, 0x102);
-      u8 *bdat = unknown28->unknown68;
+      m_menuMsgList->setBdat(0x126, 0x102);
+      u8 *bdat = m_menuMsgList->unknown68;
       {
         ui::UIListInfoBase::SetupParam param;
         param.unknown08 = unknown30->getSize();
-        unknown28->setup(getAllocator(ALLOCATOR_UNKNOWN_0), param);
+        m_menuMsgList->setup(getAllocator(ALLOCATOR_UNKNOWN_0), param);
       }
       for (int i = 0; i < Bdat::getIdCount(bdat); i++) {
         MsgID id = {};
         id.unknown00 = Bdat::getIdTop(bdat) + i;
-        unknown28->addContents(id);
+        m_menuMsgList->addContents(id);
       }
       break;
     }
     }
-    unknown28->setIndex(0);
+    m_menuMsgList->setIndex(0);
   }
 }
 
 void GfMenuObjEvTheater::refreshSubList() {
   ui::UIStr msg;
   mm::mtl::FixStr<32> name;
-  u32 index = unknown28->getIndex(true);
+  u32 index = m_menuMsgList->getIndex(true);
   for (u32 i = 0; i < unknown30->getSize(); i++) {
     ui::UIObjectAcc item(unknown30->getObject(i));
-    if (i < unknown28->getSize()) {
+    if (i < m_menuMsgList->getSize()) {
       item.setDisp(true);
-      unknown28->getMsg(i, msg, true);
+      m_menuMsgList->getMsg(i, msg, true);
       name.format("TXT_sub_item_def@%02d", i + 1);
       {
         ui::UIObjectAcc def(unknown30->getObject(i), name.c_str());
@@ -286,7 +286,7 @@ void GfMenuObjEvTheater::MainListener::reciveEvent(const ui::EventData &event, u
     param.unknown04 = 0;
     param.unknown10 = 1;
     GfMenuObjUtil::startPresetCtrl(acc.unknown10, param);
-    if (unknown20->unknown24 == 3) {
+    if (m_menuObjEvTheater->unknown24 == 3) {
       ui::UIObjectAcc view(acc.searchSibiling("LAY_mdl_view"));
       view.setDisp(false);
     }
@@ -314,7 +314,7 @@ void GfMenuObjEvTheater::TopListener::reciveEvent(const ui::EventData &event, u3
     param.unknown11 = true;
     param.unknown04 = 1;
     GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
-    GfMenuObject::setupInputSelection(acc.unknown10, unknown20->unknown24 - 1, 3);
+    GfMenuObject::setupInputSelection(acc.unknown10, m_menuObjEvTheater->unknown24 - 1, 3);
     break;
   }
   case GfMenuTypes::unknown003_34: {
@@ -349,17 +349,17 @@ void GfMenuObjEvTheater::TopListener::reciveEvent(const ui::EventData &event, u3
         name.format("TXT_top_item_def@%02d", current);
         acc.setDispChild(false, name.c_str());
       }
-      unknown20->unknown24 = current;
+      m_menuObjEvTheater->unknown24 = current;
     }
     break;
   }
   case 8:
     if (event.unknown0c == 1) {
-      if (unknown20->unknown24 == 1 || unknown20->unknown24 == 2) {
-        unknown20->updateSubMsgList();
+      if (m_menuObjEvTheater->unknown24 == 1 || m_menuObjEvTheater->unknown24 == 2) {
+        m_menuObjEvTheater->updateSubMsgList();
         GfMenuObject::sendOpenEvent(acc.searchSibiling("LAY_sub"), 0, 0.0f);
       } else {
-        unknown20->updateEvthIDList();
+        m_menuObjEvTheater->updateEvthIDList();
         GfMenuObject::sendOpenEvent(acc.searchSibiling("LAY_select"), 0, 0.0f);
       }
       GfMenuObject::sendCloseEvent(acc.unknown10, 0, 0.0f);
@@ -383,14 +383,14 @@ void GfMenuObjEvTheater::SubListener::reciveEvent(const ui::EventData &event, u3
     break;
   case 3:
     if (event.unknown08 == 1) {
-      GfMenuObject::setupInputSelectionFromList(acc.unknown10, *unknown20->unknown28);
+      GfMenuObject::setupInputSelectionFromList(acc.unknown10, *m_menuObjEvTheater->m_menuMsgList);
       GfMenuObject::enableFSInput(1);
     }
     break;
   case 6:
     if (event.unknown08 != 0xffffffff) {
-      unknown20->unknown28->setIndex(event.unknown08);
-      unknown20->refreshSubList();
+      m_menuObjEvTheater->m_menuMsgList->setIndex(event.unknown08);
+      m_menuObjEvTheater->refreshSubList();
     }
     break;
   case 8:
@@ -411,8 +411,8 @@ void GfMenuObjEvTheater::SubListener::reciveEvent(const ui::EventData &event, u3
     param.unknown11 = true;
     param.unknown04 = 1;
     GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
-    unknown20->refreshSubList();
-    acc.setDispChild(unknown20->unknown28->getSize() > unknown20->unknown30->getSize(), "LAY_sub_arrow");
+    m_menuObjEvTheater->refreshSubList();
+    acc.setDispChild(m_menuObjEvTheater->m_menuMsgList->getSize() > m_menuObjEvTheater->unknown30->getSize(), "LAY_sub_arrow");
     GfMenuObject::sendOpenEvent(acc.searchSibiling("LAY_header"), 0, 0.0f);
     break;
   }
@@ -448,10 +448,10 @@ void GfMenuObjEvTheater::SelectListener::reciveEvent(const ui::EventData &event,
     param.unknown04 = 0;
     param.unknown10 = 1;
     GfMenuObjUtil::startPresetCtrl(acc.unknown10, param);
-    unknown20->updateEvthIDList();
-    GfMenuObject::setupInputSelectionFromList(acc.unknown10, *unknown20->unknown38);
-    acc.setDispChild(unknown20->unknown38->getSize() > unknown20->unknown40->getSize(), "LAY_select_arrow");
-    if (unknown20->unknown24 == 1 || unknown20->unknown24 == 2) {
+    m_menuObjEvTheater->updateEvthIDList();
+    GfMenuObject::setupInputSelectionFromList(acc.unknown10, *m_menuObjEvTheater->m_menuIDList);
+    acc.setDispChild(m_menuObjEvTheater->m_menuIDList->getSize() > m_menuObjEvTheater->unknown40->getSize(), "LAY_select_arrow");
+    if (m_menuObjEvTheater->unknown24 == 1 || m_menuObjEvTheater->unknown24 == 2) {
       ui::EventData header;
       header.unknown00 = GfMenuTypes::unknown003_259;
       GfMenuObject::sendEvent(acc.searchSibiling("LAY_header"), header, 0.0f);
@@ -466,7 +466,7 @@ void GfMenuObjEvTheater::SelectListener::reciveEvent(const ui::EventData &event,
     param.unknown04 = 1;
     param.unknown10 = 2;
     GfMenuObjUtil::startPresetCtrl(acc.unknown10, param);
-    if (unknown20->unknown24 == 1 || unknown20->unknown24 == 2) {
+    if (m_menuObjEvTheater->unknown24 == 1 || m_menuObjEvTheater->unknown24 == 2) {
       ui::EventData header;
       header.unknown00 = GfMenuTypes::unknown003_260;
       GfMenuObject::sendEvent(acc.searchSibiling("LAY_header"), header, 0.0f);
@@ -475,8 +475,8 @@ void GfMenuObjEvTheater::SelectListener::reciveEvent(const ui::EventData &event,
   }
   case 6:
     if (event.unknown08 != 0xffffffff) {
-      unknown20->unknown38->setIndex(event.unknown08);
-      unknown20->refreshSelctList();
+      m_menuObjEvTheater->m_menuIDList->setIndex(event.unknown08);
+      m_menuObjEvTheater->refreshSelctList();
       GfMenuObjUtil::CtrlParam param;
       param.unknown08 = 1;
       param.unknown00 = 0.2f;
@@ -485,7 +485,7 @@ void GfMenuObjEvTheater::SelectListener::reciveEvent(const ui::EventData &event,
     break;
   case 8:
     if (event.unknown0c == 1) {
-      u16 id = unknown20->unknown38->getContents(unknown20->unknown38->getIndex(false)).unknown00;
+      u16 id = m_menuObjEvTheater->m_menuIDList->getContents(m_menuObjEvTheater->m_menuIDList->getIndex(false)).unknown00;
       u8 *bdat = GfDataBdat::getFP(BDAT_MNU_EVENT_THEATER);
       if (bdat != nullptr) {
         u16 eventId = Bdat::getVal(bdat, "event_id", id).valueU16;
@@ -498,7 +498,7 @@ void GfMenuObjEvTheater::SelectListener::reciveEvent(const ui::EventData &event,
         }
       }
     } else if (event.unknown0c == 2) {
-      if (unknown20->unknown24 == 1 || unknown20->unknown24 == 2) {
+      if (m_menuObjEvTheater->unknown24 == 1 || m_menuObjEvTheater->unknown24 == 2) {
         GfMenuObject::sendOpenEvent(acc.searchSibiling("LAY_sub"), 0, 0.0f);
       } else {
         GfMenuObject::sendCloseEvent(acc.searchSibiling("LAY_header"), 0, 0.0f);
@@ -535,7 +535,7 @@ void GfMenuObjEvTheater::HeaderListener::reciveEvent(const ui::EventData &event,
       mm::mtl::FixStr<32> name;
       for (u32 i = 0; i < count; i++) {
         name.format("TXT_header_title@%02d", i + 1);
-        acc.setDispChild(i + 1 == unknown20->unknown24, name.c_str());
+        acc.setDispChild(i + 1 == m_menuObjEvTheater->unknown24, name.c_str());
       }
       acc.setDispChild(false, "LAY_header_item");
       acc.setDispChild(false, "LAY_header_input");
@@ -559,7 +559,7 @@ void GfMenuObjEvTheater::HeaderListener::reciveEvent(const ui::EventData &event,
   case GfMenuTypes::unknown003_259: {
     ui::UIObjectAcc text(acc.unknown10, "TXT_header_item");
     ui::UIStr msg;
-    unknown20->unknown28->getMsg(-1, msg, false);
+    m_menuObjEvTheater->m_menuMsgList->getMsg(-1, msg, false);
     text.setText(msg);
     acc.setDispChild(true, "LAY_header_item");
     acc.setDispChild(true, "LAY_header_input");
@@ -567,7 +567,7 @@ void GfMenuObjEvTheater::HeaderListener::reciveEvent(const ui::EventData &event,
     mm::mtl::FixStr<32> name;
     for (u32 i = 0; i < count; i++) {
       name.format("TXT_header_input@%02d", i + 1);
-      acc.setDispChild(i + 1 == unknown20->unknown24, name.c_str());
+      acc.setDispChild(i + 1 == m_menuObjEvTheater->unknown24, name.c_str());
     }
     break;
   }

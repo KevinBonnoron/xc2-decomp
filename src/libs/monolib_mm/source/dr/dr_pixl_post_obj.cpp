@@ -11,7 +11,7 @@
 
 namespace ml {
 
-DrPixlPostObj::DrPixlPostObj(DrMan *drMan, DrPixlMan *pixlMan, DrPixlPostMan *postMan) : unknown00(drMan), unknown08(pixlMan), unknown10(postMan) {}
+DrPixlPostObj::DrPixlPostObj(DrMan *drMan, DrPixlMan *pixlMan, DrPixlPostMan *postMan) : m_drMan(drMan), m_drPixlMan(pixlMan), m_drPixlPostMan(postMan) {}
 
 float DrPixlPostObj::gaussianDistribution(float x, float y, float rho) {
   float g = 1.0f / sqrtf(rho * 6.2831855f * rho);
@@ -134,14 +134,14 @@ void DrPixlPostObj::getSampleOffsets_Bloom(int width, f32 *offsets, f32 *weights
 }
 
 void DrPixlPostObj::setShader3DTexture(DrShdDataObj *shader, const grlib::CGLibTextureBuffer &texture) {
-  DrAPCache *apCache = unknown00->unknown5c0;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   int location = (shader->unknown38 + shader->unknown58)->getTextureLocation("t3d");
   apCache->begin3DTextureSampling();
   apCache->setTexture(texture, location);
 }
 
 void DrPixlPostObj::setShader3DTexture(DrShdDataObj *shader, const grlib::CGLibTextureBuffer &texture, const grlib::CGLibTextureBuffer &shadowTexture) {
-  DrAPCache *apCache = unknown00->unknown5c0;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   int location = (shader->unknown38 + shader->unknown58)->getTextureLocation("t3d");
   int shadowLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("tSb");
   apCache->begin3DTextureSampling();
@@ -150,7 +150,7 @@ void DrPixlPostObj::setShader3DTexture(DrShdDataObj *shader, const grlib::CGLibT
 }
 
 void DrPixlPostObj::setShader3DTextureTransZ(DrShdDataObj *shader, const grlib::CGLibTextureBuffer &nearTexture, const grlib::CGLibTextureBuffer &farTexture) {
-  DrAPCache *apCache = unknown00->unknown5c0;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   int nearLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("t3dNear");
   int farLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("t3dFar");
   apCache->begin3DTextureSampling();
@@ -160,7 +160,7 @@ void DrPixlPostObj::setShader3DTextureTransZ(DrShdDataObj *shader, const grlib::
 
 void DrPixlPostObj::setShader3DTextureTransZ(DrShdDataObj *shader, const grlib::CGLibTextureBuffer &nearTexture, const grlib::CGLibTextureBuffer &nearShadowTexture,
                                              const grlib::CGLibTextureBuffer &farTexture, const grlib::CGLibTextureBuffer &farShadowTexture) {
-  DrAPCache *apCache = unknown00->unknown5c0;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   int nearLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("t3dNear");
   int farLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("t3dFar");
   int nearShadowLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("tSbNear");
@@ -173,7 +173,7 @@ void DrPixlPostObj::setShader3DTextureTransZ(DrShdDataObj *shader, const grlib::
 }
 
 void DrPixlPostObj::setUVScale_UB(grlib::CGLibUniformEtcUtility &uniform, DrShdDataObj *shader, const DrPixlRenderTarget *target, bool isFilter, u32 location, u32 offset) {
-  DrAPCache *apCache = unknown00->unknown5c0;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   f32 scale[4];
   scale[0] = 1.0f;
   scale[1] = 1.0f;

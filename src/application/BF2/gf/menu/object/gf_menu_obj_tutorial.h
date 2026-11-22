@@ -12,11 +12,11 @@ class GfMenuObjTutorial : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjTutorial *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjTutorial *owner) : _0c(), m_menuObjTutorial(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjTutorial *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjTutorial *m_menuObjTutorial; // Inferred role: owner; original member name unknown.
   };
 
   struct TextParam {
@@ -68,7 +68,7 @@ static_assert(sizeof(GfMenuObjTutorial::FocusParam) == 0x6, "");
 static_assert(offsetof(GfMenuObjTutorial::IconParam, unknown02) == 0x2, "");
 static_assert(sizeof(GfMenuObjTutorial::IconParam) == 0x4, "");
 
-static_assert(offsetof(GfMenuObjTutorial::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjTutorial::MainListener, m_menuObjTutorial) == 0x20, "");
 static_assert(sizeof(GfMenuObjTutorial::MainListener) == 0x28, "");
 
 } // namespace gf

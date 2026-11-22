@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "framework/manager_object.h"
+#include "fw/fw_model_object.h" // IWYU pragma: keep
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/intrusive_list.h"
 #include "mm_mtl/singleton.h"
@@ -10,7 +11,6 @@
 namespace fw {
 
 struct UpdateInfo;
-class unknown083;
 
 class ModelManager : public ManagerObject, public mm::mtl::PtrSingleton<ModelManager> {
 public:

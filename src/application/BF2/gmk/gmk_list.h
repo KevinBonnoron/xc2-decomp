@@ -54,17 +54,17 @@ static_assert(sizeof(unknown090) == 0x20, "");
 class IGmkList {
 public:
   struct CreateInfo {
-    CreateInfo() : unknown08(nullptr), unknown140(0.0f, 0.0f, 0.0f), unknown150(0.0f) {}
+    CreateInfo() : m_gmkSet(nullptr), unknown140(0.0f, 0.0f, 0.0f), unknown150(0.0f) {}
 
     // Inferred helper: checks that the list was created with a memory and a file path; original name unknown.
-    bool unknown001() const { return unknown00.isValid() && !unknown10.empty(); }
+    bool unknown001() const { return m_ALLOC_HANDLE.isValid() && !unknown10.empty(); }
 
-    mtl::ALLOC_HANDLE unknown00;    // Inferred role: memory; original member name unknown.
-    GmkSet *unknown08;              // Inferred role: set; original member name unknown.
-    mm::mtl::FixStr<256> unknown10; // Inferred role: path; original member name unknown.
-    mm::mtl::FixStr<32> unknown114; // Inferred role: bdat name; original member name unknown.
-    mm::Vec3 unknown140;            // Inferred role: position; original member name unknown.
-    f32 unknown150;                 // Inferred role: rotation; original member name unknown.
+    mtl::ALLOC_HANDLE m_ALLOC_HANDLE; // Inferred role: memory; original member name unknown.
+    GmkSet *m_gmkSet;                 // Inferred role: set; original member name unknown.
+    mm::mtl::FixStr<256> unknown10;   // Inferred role: path; original member name unknown.
+    mm::mtl::FixStr<32> unknown114;   // Inferred role: bdat name; original member name unknown.
+    mm::Vec3 unknown140;              // Inferred role: position; original member name unknown.
+    f32 unknown150;                   // Inferred role: rotation; original member name unknown.
   };
 
   virtual ~IGmkList() {}
@@ -122,7 +122,7 @@ public:
   void create(const CreateInfo &info) override {
     dispose();
     createInfo = info;
-    resource = fw::CommonResource::request(info.unknown00, createInfo.unknown10.c_str(), 9, false);
+    resource = fw::CommonResource::request(info.m_ALLOC_HANDLE, createInfo.unknown10.c_str(), 9, false);
     seq = &TGmkList::seqWaitResourceLoaded;
     if (!createInfo.unknown114.empty()) {
       bdatFp = Bdat::getFP(createInfo.unknown114.c_str());
@@ -172,11 +172,11 @@ public:
     }
     const mm::Vec3 &cameraPosition = ml::Scn::sys()->getCam(-1)->unknown70.m_front->unknown00.unknown10;
     for (T *gmk = gmkInsts.begin(); gmk != gmkInsts.end(); gmk++) {
-      if (gmk->AGmkBase::unknown08.unknown08 == nullptr) {
+      if (gmk->AGmkBase::m_createBaseInfo.m_xform == nullptr) {
         continue;
       }
-      f32 x = cameraPosition.x - gmk->AGmkBase::unknown08.unknown08->unknown00.x;
-      f32 z = cameraPosition.z - gmk->AGmkBase::unknown08.unknown08->unknown00.z;
+      f32 x = cameraPosition.x - gmk->AGmkBase::m_createBaseInfo.m_xform->unknown00.x;
+      f32 z = cameraPosition.z - gmk->AGmkBase::m_createBaseInfo.m_xform->unknown00.z;
       if (x * x + z * z > unknown005 * unknown005) {
         continue;
       }
@@ -193,11 +193,11 @@ public:
     }
     const mm::Vec3 &cameraPosition = ml::Scn::sys()->getCam(-1)->unknown70.m_front->unknown00.unknown10;
     for (const T *gmk = gmkInsts.begin(); gmk != gmkInsts.end(); gmk++) {
-      if (gmk->AGmkBase::unknown08.unknown08 == nullptr) {
+      if (gmk->AGmkBase::m_createBaseInfo.m_xform == nullptr) {
         continue;
       }
-      f32 x = cameraPosition.x - gmk->AGmkBase::unknown08.unknown08->unknown00.x;
-      f32 z = cameraPosition.z - gmk->AGmkBase::unknown08.unknown08->unknown00.z;
+      f32 x = cameraPosition.x - gmk->AGmkBase::m_createBaseInfo.m_xform->unknown00.x;
+      f32 z = cameraPosition.z - gmk->AGmkBase::m_createBaseInfo.m_xform->unknown00.z;
       if (x * x + z * z > unknown005 * unknown005) {
         continue;
       }

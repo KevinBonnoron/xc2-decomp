@@ -10,24 +10,24 @@
 
 namespace event {
 
-CharaTarPlayer::CharaTarPlayer() : unknown08(gf::unknown020), unknown10(nullptr), unknown18(0) {}
+CharaTarPlayer::CharaTarPlayer() : unknown08(gf::unknown020), m_charaIKUpdater(nullptr), unknown18(0) {}
 
 void CharaTarPlayer::create(gf::GF_OBJ_HANDLE *handle, CharaIKUpdater *ik) {
   this->unknown08 = handle;
-  this->unknown10 = ik;
+  this->m_charaIKUpdater = ik;
   unknown90 = mm::Vec3::zero;
   unknowna0 = mm::Vec3::zero;
   unknownb0 = mm::Vec3::zero;
-  unknownc0.clear();
+  m_anmF32.clear();
 }
 
 void CharaTarPlayer::destroy() {
   update(1.0f);
-  unknown10 = nullptr;
+  m_charaIKUpdater = nullptr;
 }
 
 void CharaTarPlayer::update(f32 delta) {
-  if (unknown10 == nullptr) {
+  if (m_charaIKUpdater == nullptr) {
     return;
   }
   unknown90 = unknownb0;
@@ -36,14 +36,14 @@ void CharaTarPlayer::update(f32 delta) {
     switch (request.unknown00) {
     case TYPE_UNKNOWN_1:
       if (request.unknown09) {
-        unknown10->setTargetIK(true, request.unknown04, request.unknown08);
+        m_charaIKUpdater->setTargetIK(true, request.unknown04, request.unknown08);
         unknown18 |= FLAG_UNKNOWN_0;
       }
       request.unknown09 = false;
       break;
     case TYPE_UNKNOWN_2:
       if (request.unknown09) {
-        unknown10->setTargetIK(false, request.unknown04, false);
+        m_charaIKUpdater->setTargetIK(false, request.unknown04, false);
         unknown18 &= ~FLAG_UNKNOWN_0;
       }
       request.unknown09 = false;
@@ -51,15 +51,15 @@ void CharaTarPlayer::update(f32 delta) {
     case TYPE_UNKNOWN_3: {
       mm::Vec3 eyePos = CharaTarUtil::getCharaEyePos(unknown08);
       f32 eyeRotY = CharaTarUtil::getCharaEyeRotY(unknown08);
-      unknownc0.update(delta);
-      if (unknownc0.isEnd()) {
-        unknownc0.clear();
+      m_anmF32.update(delta);
+      if (m_anmF32.isEnd()) {
+        m_anmF32.clear();
       }
-      if (unknownc0.isPlay()) {
-        unknown90 = CharaTarUtil::calcTarget(unknowna0, unknownb0, unknownc0.getValue(), eyePos, eyeRotY);
+      if (m_anmF32.isPlay()) {
+        unknown90 = CharaTarUtil::calcTarget(unknowna0, unknownb0, m_anmF32.getValue(), eyePos, eyeRotY);
       }
-      if (unknownc0.isEnd()) {
-        unknownc0.clear();
+      if (m_anmF32.isEnd()) {
+        m_anmF32.clear();
       }
       request.unknown09 = false;
       break;
@@ -75,17 +75,17 @@ void CharaTarPlayer::update(f32 delta) {
     }
   }
   if ((unknown18 & FLAG_UNKNOWN_0) != 0) {
-    unknown10->setTargetPos(unknown90);
+    m_charaIKUpdater->setTargetPos(unknown90);
   }
 }
 
 void CharaTarPlayer::setTargetPos(const mm::Vec3 &position) { unknownb0 = position; }
 
-CharaTarPlayerMot::CharaTarPlayerMot() : unknown08(gf::unknown020), unknown10(nullptr), unknown18(0), unknown1c(REQUEST_UNKNOWN_0), unknown20(0.0f), unknown24(false), unknown280() {}
+CharaTarPlayerMot::CharaTarPlayerMot() : unknown08(gf::unknown020), m_charaWeightPlayer(nullptr), unknown18(0), unknown1c(REQUEST_UNKNOWN_0), unknown20(0.0f), unknown24(false), unknown280() {}
 
 void CharaTarPlayerMot::create(gf::GF_OBJ_HANDLE *handle, CharaWeightPlayer *weight) {
   this->unknown08 = handle;
-  this->unknown10 = weight;
+  this->m_charaWeightPlayer = weight;
   unknown30 = mm::Vec3::zero;
   unknown40 = mm::Vec3::zero;
   unknown50 = mm::Vec3::zero;
@@ -100,11 +100,11 @@ void CharaTarPlayerMot::create(gf::GF_OBJ_HANDLE *handle, CharaWeightPlayer *wei
 
 void CharaTarPlayerMot::destroy() {
   update(1.0f);
-  unknown10 = nullptr;
+  m_charaWeightPlayer = nullptr;
 }
 
 void CharaTarPlayerMot::update(f32 delta) {
-  if (unknown10 == nullptr) {
+  if (m_charaWeightPlayer == nullptr) {
     return;
   }
   if (unknown1c != REQUEST_UNKNOWN_0) {
@@ -132,7 +132,7 @@ void CharaTarPlayerMot::update(f32 delta) {
       break;
     case REQUEST_UNKNOWN_3:
       for (u32 i = 0; i < AIMMOT_UNKNOWN_6; i++) {
-        unknown10->easeOut(gf::ANIM_LAYER_UNKNOWN_2, CharaTarUtil::aimmotType2stat(i), unknown20, CV_TYPE_UNKNOWN_2, WEIGHT_LAYER_UNKNOWN_0);
+        m_charaWeightPlayer->easeOut(gf::ANIM_LAYER_UNKNOWN_2, CharaTarUtil::aimmotType2stat(i), unknown20, CV_TYPE_UNKNOWN_2, WEIGHT_LAYER_UNKNOWN_0);
       }
       for (u32 i = 0; i < AIMMOT_UNKNOWN_6; i++) {
         unknown280[i] = 0.0f;
@@ -173,13 +173,13 @@ void CharaTarPlayerMot::update(f32 delta) {
     }
     const char *stat = CharaTarUtil::aimmotType2stat(i);
     if (prevWeights[i] > 0.0f && unknown280[i] <= 0.0f) {
-      unknown10->easeOut(gf::ANIM_LAYER_UNKNOWN_2, stat, 0.0f, CV_TYPE_UNKNOWN_2, WEIGHT_LAYER_UNKNOWN_0);
+      m_charaWeightPlayer->easeOut(gf::ANIM_LAYER_UNKNOWN_2, stat, 0.0f, CV_TYPE_UNKNOWN_2, WEIGHT_LAYER_UNKNOWN_0);
     }
     if (prevWeights[i] <= 0.0f && unknown280[i] > 0.0f) {
-      unknown10->easeIn(gf::ANIM_LAYER_UNKNOWN_2, stat, 0.0f, 1.0f, 1.0f, CV_TYPE_UNKNOWN_2, WEIGHT_LAYER_UNKNOWN_0);
+      m_charaWeightPlayer->easeIn(gf::ANIM_LAYER_UNKNOWN_2, stat, 0.0f, 1.0f, 1.0f, CV_TYPE_UNKNOWN_2, WEIGHT_LAYER_UNKNOWN_0);
     }
     if (unknown280[i] > 0.0f) {
-      unknown10->setAddWeight(stat, unknown280[i], WEIGHT_LAYER_UNKNOWN_0);
+      m_charaWeightPlayer->setAddWeight(stat, unknown280[i], WEIGHT_LAYER_UNKNOWN_0);
     }
   }
 }

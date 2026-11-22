@@ -19,12 +19,12 @@ public:
   void calcMpfObjTree(const MdsMpfObjTreeData *tree, DrCalcViewWork *view, f32 range);
   void calcSeamMpfObjTree(const MdsMpfObjTreeData *tree, DrCalcViewWork *view, f32 range);
 
-  const MdsMpfObjData *unknown00;   // Inferred role: instance object data; original member name unknown.
-  DrMdoCtlMpfWork *unknown08;       // Inferred role: mpf work, set by calcInstMpf and calcSeamInstMpf; original member name unknown.
-  DrResMdoSeamWrkPosMpf *unknown10; // Inferred role: positions, set by calcInstMpf and calcSeamInstMpf; original member name unknown.
+  const MdsMpfObjData *m_mdsMpfObjData;           // Inferred role: instance object data; original member name unknown.
+  DrMdoCtlMpfWork *m_drMdoCtlMpfWork;             // Inferred role: mpf work, set by calcInstMpf and calcSeamInstMpf; original member name unknown.
+  DrResMdoSeamWrkPosMpf *m_drResMdoSeamWrkPosMpf; // Inferred role: positions, set by calcInstMpf and calcSeamInstMpf; original member name unknown.
 };
 
-static_assert(offsetof(DrMdoCtlMpfInst, unknown08) == 0x08, "");
-static_assert(offsetof(DrMdoCtlMpfInst, unknown10) == 0x10, "");
+static_assert(offsetof(DrMdoCtlMpfInst, m_drMdoCtlMpfWork) == 0x08, "");
+static_assert(offsetof(DrMdoCtlMpfInst, m_drResMdoSeamWrkPosMpf) == 0x10, "");
 
 } // namespace ml

@@ -61,7 +61,7 @@ enum ITEM_BOX_INDEX {
 
 // Inferred role: save data item info; original type name unknown.
 struct unknown117 {
-  u32 unknown00_0 : 13; // Inferred role: index; original member name unknown.
+  u32 m_itemID : 13; // Inferred role: index; named after the game accessor gf::GfItemInfo::setItemID.
   u32 m_type : 6;
   u32 unknown02_3 : 10; // Inferred role: count; original member name unknown.
   u32 _00_29 : 1;

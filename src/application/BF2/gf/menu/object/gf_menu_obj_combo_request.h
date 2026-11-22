@@ -16,11 +16,11 @@ class GfMenuObjComboRequest : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjComboRequest *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjComboRequest *owner) : _0c(), m_menuObjComboRequest(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjComboRequest *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjComboRequest *m_menuObjComboRequest; // Inferred role: owner; original member name unknown.
   };
   struct RequestParam {
     u16 unknown00;  // Inferred role: combo id; original member name unknown.
@@ -40,7 +40,7 @@ public:
   void setupComboReq(const ui::UIObjectAcc &acc, u16 index, u16 combo, bool isEnable, u32 button);
 };
 
-static_assert(offsetof(GfMenuObjComboRequest::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjComboRequest::MainListener, m_menuObjComboRequest) == 0x20, "");
 static_assert(offsetof(GfMenuObjComboRequest::RequestParam, unknown04) == 0x4, "");
 static_assert(offsetof(GfMenuObjComboRequest::RequestParam, unknown08) == 0x8, "");
 static_assert(sizeof(GfMenuObjComboRequest::RequestParam) == 0xc, "");

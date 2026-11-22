@@ -23,11 +23,11 @@ public:
   bool wkStandbyLogout() override;
 
   u8 _1fb[0x1fc - 0x1fb];
-  WiiFilerCommon unknown1fc;       // Inferred role: send packet; original member name unknown.
+  WiiFilerCommon m_wiiFilerCommon; // Inferred role: send packet; original member name unknown.
   mm::mtl::FixStr<256> unknown43c; // Inferred role: parameter text; original member name unknown.
 };
 
-static_assert(offsetof(DevFileJobSendCom, unknown1fc) == 0x1fc, "");
+static_assert(offsetof(DevFileJobSendCom, m_wiiFilerCommon) == 0x1fc, "");
 static_assert(offsetof(DevFileJobSendCom, unknown43c) == 0x43c, "");
 
 } // namespace ml

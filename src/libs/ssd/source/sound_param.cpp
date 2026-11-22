@@ -9,17 +9,17 @@ void SoundParam::Name::Init() { unknown00[0] = u'\0'; }
 SoundParam::Name &SoundParam::Name::operator=(const TextRef &text) {
   if (text.unknown18 == TEXT_ENCODE_UTF8) {
     Utf8ToUTF16(text.unknown10_utf8, unknown00, 32);
-    unknown40 = Hash();
-    unknown40.CalcTextHash(unknown00);
+    m_hash = Hash();
+    m_hash.CalcTextHash(unknown00);
   } else {
     TextRef::unknown003(unknown00, text.unknown10_utf16, 32);
-    unknown40 = Hash();
-    unknown40 = text.unknown08;
+    m_hash = Hash();
+    m_hash = text.m_hash;
   }
   return *this;
 }
 
-bool SoundParam::Name::operator==(const TextRef &text) { return text.unknown08 == unknown40; }
+bool SoundParam::Name::operator==(const TextRef &text) { return text.m_hash == m_hash; }
 
 void SoundParam::Base::Init() {
   unknown01 = 1;

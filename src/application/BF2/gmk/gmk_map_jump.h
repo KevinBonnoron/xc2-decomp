@@ -20,10 +20,10 @@ public:
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isCondMatched() const;
 
-    u16 unknown00;              // Inferred role: map jump id; original member name unknown.
-    u16 unknown02;              // Inferred role: condition; original member name unknown.
-    ScenarioFlagCond unknown04; // Inferred role: scenario flag; original member name unknown.
-    QuestFlagCond unknown08;    // Inferred role: quest flag; original member name unknown.
+    u16 unknown00;                       // Inferred role: map jump id; original member name unknown.
+    u16 unknown02;                       // Inferred role: condition; original member name unknown.
+    ScenarioFlagCond m_scenarioFlagCond; // Inferred role: scenario flag; original member name unknown.
+    QuestFlagCond m_questFlagCond;       // Inferred role: quest flag; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_MAP_JUMP; // Inferred name; shared by every gimmick class for the TGmkList templates.
@@ -38,15 +38,15 @@ public:
   void beginEvent();
   void endEvent();
 
-  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(m_createInfo.unknown10); }
 
-  GmkPhantom unknown50; // Inferred role: phantom; original member name unknown.
-  bool unknowne0;       // Role and original member name unknown.
-  bool unknowne1;       // Role and original member name unknown.
+  GmkPhantom m_gmkPhantom; // Inferred role: phantom; original member name unknown.
+  bool unknowne0;          // Role and original member name unknown.
+  bool unknowne1;          // Role and original member name unknown.
 };
 
 static_assert(sizeof(GmkMapJump::BdatInfo) == 0xc, "");
-static_assert(offsetof(GmkMapJump, unknown50) == 0x50, "");
+static_assert(offsetof(GmkMapJump, m_gmkPhantom) == 0x50, "");
 static_assert(offsetof(GmkMapJump, unknowne0) == 0xe0, "");
 static_assert(offsetof(GmkMapJump, unknowne1) == 0xe1, "");
 static_assert(sizeof(GmkMapJump) == 0xf0, "");

@@ -33,15 +33,15 @@ public:
 
     class MessageHolder : public mm::mtl::ReferenceObject {
     public:
-      explicit MessageHolder(Message *message) : unknown10(message) {}
+      explicit MessageHolder(Message *message) : m_message(message) {}
       ~MessageHolder() {
-        if (unknown10 != nullptr) {
-          delete unknown10;
-          unknown10 = nullptr;
+        if (m_message != nullptr) {
+          delete m_message;
+          m_message = nullptr;
         }
       }
 
-      Message *unknown10; // Inferred role: message; original member name unknown.
+      Message *m_message; // Inferred role: message; original member name unknown.
     };
 
     struct MessageInfo {
@@ -53,7 +53,7 @@ public:
     };
 
     explicit Impl(mm::mtl::IAllocator *allocator) : unknown00(allocator), unknown40(0), unknown44(MESSAGE_ID_UNKNOWN_1), unknown48(MESSAGE_ID_UNKNOWN_4294967295), unknown50(allocator) {
-      unknown08.reserve(allocator, OBJECT_CAPACITY_UNKNOWN_1536);
+      m_pointerMap.reserve(allocator, OBJECT_CAPACITY_UNKNOWN_1536);
       unknown50.reserve(MESSAGE_RESERVE_UNKNOWN_2048);
     }
 
@@ -66,7 +66,7 @@ public:
     void remove(u32 id);
 
     mm::mtl::IAllocator *unknown00;       // Inferred role: allocator; original member name unknown.
-    PointerMap unknown08;                 // Inferred role: object map; original member name unknown.
+    PointerMap m_pointerMap;              // Inferred role: object map; original member name unknown.
     u32 unknown40;                        // Inferred role: message id; original member name unknown.
     u32 unknown44;                        // Inferred role: message id min; original member name unknown.
     u32 unknown48;                        // Inferred role: message id max; original member name unknown.
@@ -91,7 +91,7 @@ static_assert(sizeof(MessageManager::Impl::MessageHolder) == 0x18, "");
 static_assert(offsetof(MessageManager::Impl::MessageInfo, unknown10) == 0x10, "");
 static_assert(offsetof(MessageManager::Impl::MessageInfo, unknown30) == 0x30, "");
 static_assert(sizeof(MessageManager::Impl::MessageInfo) == 0x38, "");
-static_assert(offsetof(MessageManager::Impl, unknown08) == 0x08, "");
+static_assert(offsetof(MessageManager::Impl, m_pointerMap) == 0x08, "");
 static_assert(offsetof(MessageManager::Impl, unknown40) == 0x40, "");
 static_assert(offsetof(MessageManager::Impl, unknown50) == 0x50, "");
 static_assert(sizeof(MessageManager::Impl) == 0xc0, "");

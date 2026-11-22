@@ -92,12 +92,12 @@ void GfMenuObjBladeSwitch::MainListener::reciveEvent(const ui::EventData &event,
     }
     break;
   case 0xc:
-    if (!unknown20->unknown25) {
+    if (!m_menuObjBladeSwitch->unknown25) {
       acc.setDisp(false);
     }
     break;
   case GfMenuTypes::unknown003_33:
-    if (!unknown20->unknown25) {
+    if (!m_menuObjBladeSwitch->unknown25) {
       {
         ui::UIObjectAcc base(acc.unknown10, "IMG_base");
         base.startAnimation("fade_in", false);
@@ -110,13 +110,13 @@ void GfMenuObjBladeSwitch::MainListener::reciveEvent(const ui::EventData &event,
         param.unknown11 = true;
         GfMenuObjUtil::startCtrl(input.unknown10, param, nullptr);
       }
-      unknown20->unknown25 = true;
+      m_menuObjBladeSwitch->unknown25 = true;
       GfMenuObject::enableInput(acc.unknown10);
       acc.setDisp(true);
     }
     break;
   case GfMenuTypes::unknown003_34:
-    if (unknown20->unknown25) {
+    if (m_menuObjBladeSwitch->unknown25) {
       {
         ui::UIObjectAcc base(acc.unknown10, "IMG_base");
         base.startAnimation("fade_out", false);
@@ -130,18 +130,18 @@ void GfMenuObjBladeSwitch::MainListener::reciveEvent(const ui::EventData &event,
         param.unknown14 = 10;
         GfMenuObjUtil::startCtrl(input.unknown10, param, nullptr);
       }
-      unknown20->unknown25 = false;
+      m_menuObjBladeSwitch->unknown25 = false;
       GfMenuObject::disableInput(acc.unknown10);
     }
     break;
   default:
     if (event.unknown00 == 0x100) {
-      unknown20->unknown26 = event.unknown08 == 1;
-      if (!unknown20->unknown26) {
-        if (unknown20->unknown25) {
+      m_menuObjBladeSwitch->unknown26 = event.unknown08 == 1;
+      if (!m_menuObjBladeSwitch->unknown26) {
+        if (m_menuObjBladeSwitch->unknown25) {
           unknown155(unknown001, GfMenuTypes::unknown003_34);
         }
-        unknown20->unknown24 = false;
+        m_menuObjBladeSwitch->unknown24 = false;
       }
       break;
     }

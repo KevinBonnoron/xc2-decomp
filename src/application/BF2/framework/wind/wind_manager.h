@@ -58,7 +58,7 @@ public:
   mm::mtl::IntrusiveList<WindProbe> unknown20;   // Inferred role: probes; original member name unknown.
   mm::mtl::IntrusiveList<ProbeDrawer> unknown38; // Inferred role: debug drawers; original member name unknown.
   mm::mtl::IntrusiveList<WindImpluse> unknown50; // Inferred role: impluses; original member name unknown.
-  CommonResource *unknown68;                     // Inferred role: wind parameter resource; original member name unknown.
+  CommonResource *m_commonResource;              // Inferred role: wind parameter resource; original member name unknown.
   mm::mtl::IntrusivePtr<ParamList> unknown70;    // Inferred role: wind parameter list; original member name unknown.
   mm::mtl::IntrusivePtr<ParamList> unknown78;    // Inferred role: second parameter list; original member name unknown.
   void *unknown80;                               // Inferred role: unknown pointer; original member name unknown.
@@ -70,7 +70,7 @@ static_assert(offsetof(WindManager, unknown18) == 0x18, "");
 static_assert(offsetof(WindManager, unknown20) == 0x20, "");
 static_assert(offsetof(WindManager, unknown38) == 0x38, "");
 static_assert(offsetof(WindManager, unknown50) == 0x50, "");
-static_assert(offsetof(WindManager, unknown68) == 0x68, "");
+static_assert(offsetof(WindManager, m_commonResource) == 0x68, "");
 static_assert(offsetof(WindManager, unknown70) == 0x70, "");
 static_assert(offsetof(WindManager, unknown78) == 0x78, "");
 static_assert(offsetof(WindManager, unknown80) == 0x80, "");

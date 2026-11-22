@@ -198,7 +198,7 @@ public:
     u8 _58930[0x58934 - 0x58930];
     bool m_initialized;
     u8 _58935[0x5a348 - 0x58935];
-    IWorkEvent *unknown5a348;       // Inferred role: registered event callback; original member name unknown.
+    IWorkEvent *m_iWorkEvent;       // Inferred role: registered event callback; original member name unknown.
     CriticalSection unknown5a350;   // Inferred role: job lock; original member name unknown.
     CriticalSection unknown5a378;   // Inferred role: read lock; original member name unknown.
     std::atomic<bool> unknown5a3a0; // Inferred role: loader thread stop request; original member name unknown.
@@ -278,7 +278,7 @@ static_assert(offsetof(DevFileTh::Impl, unknown08808) == 0x8808, "");
 static_assert(offsetof(DevFileTh::Impl, unknown588b0) == 0x588b0, "");
 static_assert(offsetof(DevFileTh::Impl, unknown588f0) == 0x588f0, "");
 static_assert(offsetof(DevFileTh::Impl, m_initialized) == 0x58934, "");
-static_assert(offsetof(DevFileTh::Impl, unknown5a348) == 0x5a348, "");
+static_assert(offsetof(DevFileTh::Impl, m_iWorkEvent) == 0x5a348, "");
 static_assert(offsetof(DevFileTh::Impl, unknown5a350) == 0x5a350, "");
 static_assert(offsetof(DevFileTh::Impl, unknown5a378) == 0x5a378, "");
 static_assert(offsetof(DevFileTh::Impl, unknown5a3a0) == 0x5a3a0, "");

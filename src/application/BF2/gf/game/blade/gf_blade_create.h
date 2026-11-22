@@ -71,7 +71,7 @@ public:
   mm::mtl::FixedArray<SDataBladeAchievement, 3> unknown400; // Inferred role: arts achievements, to SDataBlade 0xc4; original member name unknown.
   mm::mtl::FixedArray<SDataBladeAchievement, 3> unknown5b0; // Inferred role: skill achievements, to SDataBlade 0x274; original member name unknown.
   mm::mtl::FixedArray<SDataBladeAchievement, 3> unknown760; // Inferred role: field skill achievements, to SDataBlade 0x424; original member name unknown.
-  SDataBladeAchievement unknown910;                         // Inferred role: key achievement, to SDataBlade 0x5d4; original member name unknown.
+  SDataBladeAchievement m_achievInfo;                       // Inferred role: key achievement, to SDataBlade 0x5d4; original member name unknown.
   mm::mtl::FixedArray<unknown112, 2> unknown9a0;            // Inferred role: favorites, to SDataBlade 0x666; original member name unknown.
   mm::mtl::FixedVector<u16, 64> unknown9b0;                 // Inferred role: unknown, cleared by clear (count at 0xa30); original member name unknown.
   u16 unknowna38;                                           // Inferred role: unknown; original member name unknown.
@@ -114,7 +114,7 @@ static_assert(offsetof(GfBladeCreateInfo, unknown3ee) == 0x3ee, "");
 static_assert(offsetof(GfBladeCreateInfo, unknown400) == 0x400, "");
 static_assert(offsetof(GfBladeCreateInfo, unknown5b0) == 0x5b0, "");
 static_assert(offsetof(GfBladeCreateInfo, unknown760) == 0x760, "");
-static_assert(offsetof(GfBladeCreateInfo, unknown910) == 0x910, "");
+static_assert(offsetof(GfBladeCreateInfo, m_achievInfo) == 0x910, "");
 static_assert(offsetof(GfBladeCreateInfo, unknown9a0) == 0x9a0, "");
 static_assert(offsetof(GfBladeCreateInfo, unknown9b0) == 0x9b0, "");
 static_assert(offsetof(GfBladeCreateInfo, unknowna38) == 0xa38, "");
@@ -131,6 +131,7 @@ public:
   bool setupCoreCrystal(u32 crystal);
   void setupAddBooster(u32 booster);
   bool isEnableAddBlade() const;
+  bool createBladeNewVersion();
   bool isResultRare() const;
   bool getResultBlade(SDataBlade &blade) const;
   static void setupSDataBlade(SDataBlade &blade, const GfBladeCreateInfo &info);

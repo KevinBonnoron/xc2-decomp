@@ -30,15 +30,15 @@ void DrMdoCtlSeamLight::initLightParts(DrResMdoSeamWrkLight *light) {
   unknown723(unknownbc0, light->unknown30) |= 1 << (light->unknown30 & 0x1f);
   unknownc0c++;
   light->setupWork(data);
-  DrEnvironmentObj *environment = light->unknown20; // The game loads the object once for the two accesses (ldr at 0x7100824464).
+  DrEnvironmentObj *environment = light->m_drEnvironmentObj; // The game loads the object once for the two accesses (ldr at 0x7100824464).
   environment->unknown8c |= 4;
-  environment->unknown90 = unknownc88;
+  environment->m_group = unknownc88;
 }
 
 DrResMdoSeamWrkLight *DrMdoCtlSeamLight::createFreeSeamLight() { return unknown3a8.unknown001(); }
 
 void DrMdoCtlSeamLight::releaseFreeSeamLight(DrResMdoSeamWrkLight *light) {
-  DrResMdoSeamMemObj *mem = light->unknown28;
+  DrResMdoSeamMemObj *mem = light->m_drResMdoSeamMemObj;
   if (mem != nullptr) {
     unknownc6c -= light->unknown34;
     unknown723(unknownbc0, light->unknown30) &= ~(1 << (light->unknown30 & 0x1f));
@@ -47,8 +47,8 @@ void DrMdoCtlSeamLight::releaseFreeSeamLight(DrResMdoSeamWrkLight *light) {
   }
   unknown3a8.unknown002(light);
   if (mem != nullptr) {
-    light->unknown28 = nullptr;
-    unknown6e0.releaseFreeObj(mem);
+    light->m_drResMdoSeamMemObj = nullptr;
+    m_drResMdoSeamMemMan.releaseFreeObj(mem);
   }
 }
 
@@ -61,13 +61,13 @@ void DrMdoCtlSeamLight::readLightCheck() {
   bool isOpen = ((unknownc7c >> 12) & 1) != 0 || unknowncc8;
   DrResMdoSeamWrkLight *light = unknown3a8.unknown10.unknown00;
   while (light != nullptr) {
-    if (light->update(&unknownd30, m_drMan->m_gblIdx, isOpen)) {
+    if (light->update(&m_drResMdoSeamParmRead, m_drMan->m_gblIdx, isOpen)) {
       DrResMdoSeamWrkLight *next = light->unknown08;
       releaseFreeSeamLight(light);
       light = next;
     } else {
-      if (light->unknown20 != nullptr) {
-        light->unknown20->unknown90 = unknownc88;
+      if (light->m_drEnvironmentObj != nullptr) {
+        light->m_drEnvironmentObj->m_group = unknownc88;
       }
       light = light->unknown08;
     }
@@ -84,18 +84,18 @@ void DrMdoCtlSeamLight::readLightCheck() {
         continue;
       }
       bool isRead = true;
-      if (entry->unknown00[0] < unknownd30.unknown50.x || entry->unknown0c[0] > unknownd30.unknown50.x || entry->unknown00[1] < unknownd30.unknown50.y ||
-          entry->unknown0c[1] > unknownd30.unknown50.y || entry->unknown00[2] < unknownd30.unknown50.z || entry->unknown0c[2] > unknownd30.unknown50.z) {
+      if (entry->unknown00[0] < m_drResMdoSeamParmRead.unknown50.x || entry->unknown0c[0] > m_drResMdoSeamParmRead.unknown50.x || entry->unknown00[1] < m_drResMdoSeamParmRead.unknown50.y ||
+          entry->unknown0c[1] > m_drResMdoSeamParmRead.unknown50.y || entry->unknown00[2] < m_drResMdoSeamParmRead.unknown50.z || entry->unknown0c[2] > m_drResMdoSeamParmRead.unknown50.z) {
         isRead = false;
-        for (s32 k = 0; k < unknownd30.unknown40; k++) {
-          if (readInstModelCheck(unknownd30.unknown10[k], entry->unknown00, entry->unknown0c)) {
+        for (s32 k = 0; k < m_drResMdoSeamParmRead.unknown40; k++) {
+          if (readInstModelCheck(m_drResMdoSeamParmRead.unknown10[k], entry->unknown00, entry->unknown0c)) {
             isRead = true;
             break;
           }
         }
       }
       if (isRead) {
-        unknownd30.setStockLight(i);
+        m_drResMdoSeamParmRead.setStockLight(i);
       }
     }
   }

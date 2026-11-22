@@ -24,15 +24,15 @@ public:
   const char *getAssetName(const char *path) const;
   void addAssetFile(const char *path, bool isSafe);
 
-  mm::mtl::Vector<CommonResource *> unknownb0; // Inferred role: resources; original member name unknown.
-  MemHandlebaseAllocator unknownd8;            // Inferred role: resource allocator; original member name unknown.
-  bool unknown128;                             // Inferred role: loaded; original member name unknown.
-  mtl::ALLOC_HANDLE unknown12c;                // Inferred role: resource handle; original member name unknown.
-  LOAD_PRIO unknown130;                        // Inferred role: resource priority; original member name unknown.
+  mm::mtl::Vector<CommonResource *> unknownb0;     // Inferred role: resources; original member name unknown.
+  MemHandlebaseAllocator m_memHandlebaseAllocator; // Inferred role: resource allocator; original member name unknown.
+  bool unknown128;                                 // Inferred role: loaded; original member name unknown.
+  mtl::ALLOC_HANDLE unknown12c;                    // Inferred role: resource handle; original member name unknown.
+  LOAD_PRIO unknown130;                            // Inferred role: resource priority; original member name unknown.
 };
 
 static_assert(offsetof(BlockResource, unknownb0) == 0xb0, "");
-static_assert(offsetof(BlockResource, unknownd8) == 0xd8, "");
+static_assert(offsetof(BlockResource, m_memHandlebaseAllocator) == 0xd8, "");
 static_assert(offsetof(BlockResource, unknown128) == 0x128, "");
 static_assert(offsetof(BlockResource, unknown130) == 0x130, "");
 static_assert(sizeof(BlockResource) == 0x138, "");

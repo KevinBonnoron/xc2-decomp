@@ -39,7 +39,7 @@ public:
   void setFlagWaveTexSet(u32 location, int index);
   void setFlagWaveUniform(int index, u32 binding);
 
-  DrMdoSetup *unknown00; // Inferred role: setup; original member name unknown.
+  DrMdoSetup *m_drMdoSetup; // Inferred role: setup; original member name unknown.
 };
 
 static_assert(sizeof(DrMdoShdSet) == 0x08, "");
@@ -67,10 +67,10 @@ public:
 
   static void (DrMdoShdSetMpf::*const s_pMpfMaterial[])(DrResShdMpf *shd, DrShdDataList *list, const MdsMpfMatInfoHeader *header, const DrResMpfSampler *sampler, bool isPre);
 
-  MdoWrkMatRes *unknown08; // Inferred role: material resource; original member name unknown.
+  MdoWrkMatRes *m_mdoWrkMatRes; // Inferred role: material resource; original member name unknown.
 };
 
-static_assert(offsetof(DrMdoShdSetMpf, unknown08) == 0x08, "");
+static_assert(offsetof(DrMdoShdSetMpf, m_mdoWrkMatRes) == 0x08, "");
 
 class DrMdoShdSetPrePass : public DrMdoShdSet {
 public:
@@ -104,10 +104,10 @@ public:
 
   static void (DrMdoShdSetPrePass::*const s_pPreMaterial[])(int index, const MdsMatInfoHeader *header, int uniformIndex, int unused, DrShdDataList *list, PrePassType type);
 
-  MdoWrkMatRes *unknown08; // Inferred role: material resource; original member name unknown.
+  MdoWrkMatRes *m_mdoWrkMatRes; // Inferred role: material resource; original member name unknown.
 };
 
-static_assert(offsetof(DrMdoShdSetPrePass, unknown08) == 0x08, "");
+static_assert(offsetof(DrMdoShdSetPrePass, m_mdoWrkMatRes) == 0x08, "");
 
 class DrMdoShdSetShadow : public DrMdoShdSet {
 public:

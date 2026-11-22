@@ -20,16 +20,16 @@ void DrPixlShadowCacheObj::release() { CGLibDepthTarget::release(); }
 
 void DrPixlShadowCacheObj::begin() {
   setRenderTarget();
-  DrMan::get()->unknown580->unknown10->shadowBegin(unknown810);
+  DrMan::get()->m_drCalcMan->m_drCalcViewWork->shadowBegin(unknown810);
 }
 
-void DrPixlShadowCacheObj::debugRender(int x, int y, int size) { DrMan::get()->unknown78->debugRender(*unknown128, x, y, size, size, false, false, 1.0f, true); }
+void DrPixlShadowCacheObj::debugRender(int x, int y, int size) { DrMan::get()->m_drPixlMan->debugRender(*unknown128, x, y, size, size, false, false, 1.0f, true); }
 
 DrPixlShadowCacheObj::DrPixlShadowCacheObj() : unknown800(0), unknown808(0), unknown80c(0), unknown8d0(0.0f, 0.0f, 0.0f), unknown8e0(0), unknown8e4(0), unknown8e8(1), unknown8f0(0), unknown8f2(0) {}
 
 DrPixlShadowCacheObj::~DrPixlShadowCacheObj() { release(); }
 
-bool DrPixlShadowCacheObj::clipTest(const mm::Vec3 &position, f32 radius) { return unknown900.clipTest(position, radius); }
+bool DrPixlShadowCacheObj::clipTest(const mm::Vec3 &position, f32 radius) { return m_drCalcClipWorkPlane.clipTest(position, radius); }
 
 void DrPixlShadowCacheObj::end() { grlib::CGLibGPUCache::depthInvalidate(*unknown120); }
 
@@ -53,7 +53,7 @@ void DrPixlShadowCacheObj::update(const mm::Mat44 &view, const mm::Mat44 &projec
   unknown8e4 = gridY;
   unknown808 |= 4;
   unknown8d0 = center;
-  unknown900.setMatrix(unknown850);
+  m_drCalcClipWorkPlane.setMatrix(unknown850);
 }
 
 bool DrPixlShadowCacheObj::checkGrid(int gridX, int gridY) const {

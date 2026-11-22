@@ -25,7 +25,7 @@
 
 namespace gf {
 
-GfMenuAdapter::GfMenuAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAfter, bool isUpdateAlways) : unknown18(nullptr), unknown20(0), unknown24(0), unknown28(nullptr) {
+GfMenuAdapter::GfMenuAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAfter, bool isUpdateAlways) : unknown18(nullptr), unknown20(0), unknown24(0), m_menuRewriteNumber(nullptr) {
   attachPlugin(plugin);
   unknown20 |= FLAG_UNKNOWN_0;
   if (isUpdateAlways) {
@@ -36,7 +36,7 @@ GfMenuAdapter::GfMenuAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAfter, boo
 
 GfMenuAdapter::~GfMenuAdapter() {
   mm::mtl::safeRelease(unknown18);
-  mm::mtl::safeRelease(unknown28);
+  mm::mtl::safeRelease(m_menuRewriteNumber);
 }
 
 void GfMenuAdapter::setChange() {
@@ -287,7 +287,7 @@ int GfMenuAdapter::getNumberMax() const {
 }
 
 void GfMenuAdapter::setRewriteNumber(GfMenuRewriteNumber *rewriteNumber) {
-  this->unknown28 = rewriteNumber;
+  this->m_menuRewriteNumber = rewriteNumber;
   rewriteNumber->addRef();
 }
 
@@ -295,8 +295,8 @@ void GfMenuAdapter::setNumber(int number) {
   if (unknown18 != nullptr) {
     ui::UIObjectNumberPlugin *numberPlugin = mm::mtl::dynamicCast<ui::UIObjectNumberPlugin>(unknown18);
     if (numberPlugin != nullptr) {
-      if (unknown28 != nullptr && unknown28->unknown10) {
-        number = unknown28->unknown0c;
+      if (m_menuRewriteNumber != nullptr && m_menuRewriteNumber->unknown10) {
+        number = m_menuRewriteNumber->unknown0c;
       }
       numberPlugin->setNumber(number);
     }

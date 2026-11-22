@@ -72,13 +72,13 @@ public:
   bool m_enableDoppler;
   f32 m_dopplerFactor;
   f32 m_interiorSize;
-  Mat34 unknown88; // Inferred role: matrix; original member name unknown.
+  Mat34 m_mat34; // Inferred role: matrix; original member name unknown.
 };
 
 static_assert(offsetof(SoundListener, unknown18) == 0x18, "");
 static_assert(offsetof(SoundListener, unknown48) == 0x48, "");
 static_assert(offsetof(SoundListener, unknown78) == 0x78, "");
 static_assert(offsetof(SoundListener, m_dopplerFactor) == 0x80, "");
-static_assert(offsetof(SoundListener, unknown88) == 0x88, "");
+static_assert(offsetof(SoundListener, m_mat34) == 0x88, "");
 
 } // namespace ssd

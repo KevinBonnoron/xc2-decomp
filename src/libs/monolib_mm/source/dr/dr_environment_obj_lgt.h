@@ -136,7 +136,7 @@ public:
   };
 
   // Inferred role: tells whether the DrMan global table hides the light of index id (0 is never hidden); original name unknown.
-  bool unknown006(u32 id) const { return id != 0 && unknown18->isGblIdx(id); }
+  bool unknown006(u32 id) const { return id != 0 && m_drMan->isGblIdx(id); }
 
   // Inferred role: swaps the render list buffers and starts an empty frame list; original name unknown.
   void unknown007() {
@@ -200,44 +200,44 @@ public:
   static void (DrEnvironmentObjLgt::*s_pCallLgtRender2D[])(DrLightObj *light, DrShdLgtMan *shdLgtMan);
   static void (DrEnvironmentObjLgt::*s_pCallFogCall[])(DrFogObjGbl *fog, DrCalcViewWork *viewWork, const LgtGlbFogObj *data);
 
-  DrEnvironmentTex unknown98;  // Inferred role: textures; original member name unknown.
-  DrEnvironmentTime unknowna8; // Inferred role: time; original member name unknown.
+  DrEnvironmentTex m_drEnvironmentTex;   // Inferred role: textures; original member name unknown.
+  DrEnvironmentTime m_drEnvironmentTime; // Inferred role: time; original member name unknown.
   u8 _d8[0xe0 - 0xd8];
-  DrEnvironmentAnim unknowne0;       // Inferred role: animation; original member name unknown.
-  int unknown150;                    // Inferred role: screen, passed to setupLgt; original member name unknown.
-  const LgtFileHeader *unknown158;   // Inferred role: light file data; original member name unknown.
-  const LgtObjData *unknown160;      // Inferred role: light object data; original member name unknown.
-  const LgtGlbFogObj *unknown168;    // Inferred role: fogs of the light file; original member name unknown.
-  const LgtPosTreeRange *unknown170; // Inferred role: position tree ranges; original member name unknown.
-  const unknown008 *unknown178;      // Inferred role: weather variant lists of the fogs; original member name unknown.
-  void *unknown180;                  // Inferred role: work memory of the lights, fogs and lists; original member name unknown.
-  u32 *unknown188;                   // Inferred role: bits of the lights checked this frame; original member name unknown.
-  DrResWrkClipList *unknown190;      // Inferred role: clip list; original member name unknown.
-  DrEnvironmentLgtList *unknown198;  // Inferred role: light lists; original member name unknown.
-  DrEnvironmentLgtList **unknown1a0; // Inferred role: lists to render; original member name unknown.
-  DrEnvironmentLgtList **unknown1a8; // Inferred role: lists to render of the other buffer; original member name unknown.
-  DrLightObjAmb *unknown1b0;         // Inferred role: ambient lights; original member name unknown.
-  DrLightObjDir *unknown1b8;         // Inferred role: directional lights; original member name unknown.
-  DrLightObjPnt *unknown1c0;         // Inferred role: point lights; original member name unknown.
-  DrLightObjSpt *unknown1c8;         // Inferred role: spot lights; original member name unknown.
-  DrLightObjLocalIBL *unknown1d0;    // Inferred role: local IBL lights; original member name unknown.
-  DrFogObjGbl *unknown1d8;           // Inferred role: global fogs; original member name unknown.
-  int unknown1e0;                    // Inferred role: count of the lists to render; original member name unknown.
-  int unknown1e4;                    // Inferred role: count of the lists to render of the other buffer; original member name unknown.
-  int unknown1e8;                    // Inferred role: ambient light count; original member name unknown.
-  int unknown1ec;                    // Inferred role: directional light count; original member name unknown.
-  int unknown1f0;                    // Inferred role: point light count; original member name unknown.
-  int unknown1f4;                    // Inferred role: spot light count; original member name unknown.
-  int unknown1f8;                    // Inferred role: local IBL light count; original member name unknown.
-  int unknown1fc;                    // Inferred role: light count; original member name unknown.
-  int unknown200;                    // Inferred role: fog count; original member name unknown.
-  int unknown204;                    // Inferred role: set to 1 by the constructor, cleared by update; original member name unknown.
-  int unknown208;                    // Inferred role: weather value seen by update; original member name unknown.
+  DrEnvironmentAnim m_drEnvironmentAnim;    // Inferred role: animation; original member name unknown.
+  int unknown150;                           // Inferred role: screen, passed to setupLgt; original member name unknown.
+  const LgtFileHeader *m_lgtFileHeader;     // Inferred role: light file data; original member name unknown.
+  const LgtObjData *m_lgtObjData;           // Inferred role: light object data; original member name unknown.
+  const LgtGlbFogObj *m_lgtGlbFogObj;       // Inferred role: fogs of the light file; original member name unknown.
+  const LgtPosTreeRange *m_lgtPosTreeRange; // Inferred role: position tree ranges; original member name unknown.
+  const unknown008 *unknown178;             // Inferred role: weather variant lists of the fogs; original member name unknown.
+  void *unknown180;                         // Inferred role: work memory of the lights, fogs and lists; original member name unknown.
+  u32 *unknown188;                          // Inferred role: bits of the lights checked this frame; original member name unknown.
+  DrResWrkClipList *m_drResWrkClipList;     // Inferred role: clip list; original member name unknown.
+  DrEnvironmentLgtList *unknown198;         // Inferred role: light lists; original member name unknown.
+  DrEnvironmentLgtList **unknown1a0;        // Inferred role: lists to render; original member name unknown.
+  DrEnvironmentLgtList **unknown1a8;        // Inferred role: lists to render of the other buffer; original member name unknown.
+  DrLightObjAmb *m_drLightObjAmb;           // Inferred role: ambient lights; original member name unknown.
+  DrLightObjDir *m_drLightObjDir;           // Inferred role: directional lights; original member name unknown.
+  DrLightObjPnt *m_drLightObjPnt;           // Inferred role: point lights; original member name unknown.
+  DrLightObjSpt *m_drLightObjSpt;           // Inferred role: spot lights; original member name unknown.
+  DrLightObjLocalIBL *m_drLightObjLocalIBL; // Inferred role: local IBL lights; original member name unknown.
+  DrFogObjGbl *m_drFogObjGbl;               // Inferred role: global fogs; original member name unknown.
+  int unknown1e0;                           // Inferred role: count of the lists to render; original member name unknown.
+  int unknown1e4;                           // Inferred role: count of the lists to render of the other buffer; original member name unknown.
+  int unknown1e8;                           // Inferred role: ambient light count; original member name unknown.
+  int unknown1ec;                           // Inferred role: directional light count; original member name unknown.
+  int unknown1f0;                           // Inferred role: point light count; original member name unknown.
+  int unknown1f4;                           // Inferred role: spot light count; original member name unknown.
+  int unknown1f8;                           // Inferred role: local IBL light count; original member name unknown.
+  int unknown1fc;                           // Inferred role: light count; original member name unknown.
+  int unknown200;                           // Inferred role: fog count; original member name unknown.
+  int unknown204;                           // Inferred role: set to 1 by the constructor, cleared by update; original member name unknown.
+  int unknown208;                           // Inferred role: weather value seen by update; original member name unknown.
   u8 _20c[0x210 - 0x20c];
-  mm::Vec3 unknown210; // Inferred role: camera position in the object space; original member name unknown.
-  mm::Vec3 unknown220; // Inferred role: previous camera position; original member name unknown.
-  mm::Col3 unknown230; // Inferred role: ambient color copied into DrLightMan::unknown12c by updatePosLgt; original member name unknown.
-  u8 unknown23c;       // Inferred role: capture tool state; original member name unknown.
+  mm::Vec3 unknown210;  // Inferred role: camera position in the object space; original member name unknown.
+  mm::Vec3 unknown220;  // Inferred role: previous camera position; original member name unknown.
+  mm::Col3 unknown230;  // Inferred role: ambient color copied into DrLightMan::unknown12c by updatePosLgt; original member name unknown.
+  u8 m_fromCaptureTool; // Inferred role: capture tool state; named after the game accessor ml::ScnObjLightDrSys::setFromCaptureTool.
 };
 
 static_assert(sizeof(DrEnvironmentObjLgt::unknown001) == 0x08, "");
@@ -246,20 +246,20 @@ static_assert(offsetof(DrEnvironmentObjLgt::unknown011, unknown0c) == 0x0c, "");
 static_assert(offsetof(DrEnvironmentObjLgt::unknown012, unknown04) == 0x04, "");
 static_assert(sizeof(DrEnvironmentObjLgt::unknown008) == 0x14, "");
 static_assert(offsetof(DrEnvironmentObjLgt::unknown008, unknown08) == 0x08, "");
-static_assert(offsetof(DrEnvironmentObjLgt, unknown98) == 0x98, "");
-static_assert(offsetof(DrEnvironmentObjLgt, unknowna8) == 0xa8, "");
-static_assert(offsetof(DrEnvironmentObjLgt, unknowne0) == 0xe0, "");
+static_assert(offsetof(DrEnvironmentObjLgt, m_drEnvironmentTex) == 0x98, "");
+static_assert(offsetof(DrEnvironmentObjLgt, m_drEnvironmentTime) == 0xa8, "");
+static_assert(offsetof(DrEnvironmentObjLgt, m_drEnvironmentAnim) == 0xe0, "");
 static_assert(offsetof(DrEnvironmentObjLgt, unknown150) == 0x150, "");
 static_assert(offsetof(DrEnvironmentObjLgt, unknown180) == 0x180, "");
-static_assert(offsetof(DrEnvironmentObjLgt, unknown190) == 0x190, "");
-static_assert(offsetof(DrEnvironmentObjLgt, unknown1b0) == 0x1b0, "");
-static_assert(offsetof(DrEnvironmentObjLgt, unknown1d8) == 0x1d8, "");
+static_assert(offsetof(DrEnvironmentObjLgt, m_drResWrkClipList) == 0x190, "");
+static_assert(offsetof(DrEnvironmentObjLgt, m_drLightObjAmb) == 0x1b0, "");
+static_assert(offsetof(DrEnvironmentObjLgt, m_drFogObjGbl) == 0x1d8, "");
 static_assert(offsetof(DrEnvironmentObjLgt, unknown1e8) == 0x1e8, "");
 static_assert(offsetof(DrEnvironmentObjLgt, unknown1fc) == 0x1fc, "");
 static_assert(offsetof(DrEnvironmentObjLgt, unknown208) == 0x208, "");
 static_assert(offsetof(DrEnvironmentObjLgt, unknown210) == 0x210, "");
 static_assert(offsetof(DrEnvironmentObjLgt, unknown230) == 0x230, "");
-static_assert(offsetof(DrEnvironmentObjLgt, unknown23c) == 0x23c, "");
+static_assert(offsetof(DrEnvironmentObjLgt, m_fromCaptureTool) == 0x23c, "");
 static_assert(sizeof(DrEnvironmentObjLgt) == 0x240, "");
 
 } // namespace ml

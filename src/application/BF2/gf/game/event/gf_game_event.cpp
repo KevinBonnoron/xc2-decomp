@@ -68,7 +68,7 @@ constexpr f32 unknown003 = 0.5f;
 } // namespace
 
 GfGameEvent::GfGameEvent(const GfSetupParam &param)
-    : unknown08(0), unknown0c(false), unknown18(0), unknown1c(0), unknown20(reinterpret_cast<GF_LP_HANDLE *>(-1)), unknown18f0(), unknown18f4(), unknown18f8(), unknown18fc(0),
+    : unknown08(0), unknown0c(false), unknown18(0), unknown1c(0), m_GF_LP_HANDLE(reinterpret_cast<GF_LP_HANDLE *>(-1)), unknown18f0(), unknown18f4(), unknown18f8(), unknown18fc(0),
       unknown1900(WEATYPE_UNKNOWN_0), unknown1904(WEATHER_F), unknown1908(0), unknown190c(0), unknown1910(0), unknown1914(PLAY_STATE_UNKNOWN_0), unknown1918(unknown019), unknown1920(unknown019),
       unknown1928(false), unknown1929(false), unknown1b00(0.0f), unknown1b04(0.0f) {
   initialize(param);
@@ -110,7 +110,7 @@ void GfGameEvent::destroy() {
 }
 
 void GfGameEvent::finalize() {
-  unknown1930.cleanup();
+  m_evtSe.cleanup();
   GfEvtBgm::destroy();
   GfSound *sound = GfSound::get();
   if (sound != nullptr) {
@@ -158,7 +158,7 @@ void GfGameEvent::clear() {
   }
   gameEvent->unknown18 = 0;
   gameEvent->unknown1c = 0;
-  GfLayerPause::destroyLayerPause(gameEvent->unknown20);
+  GfLayerPause::destroyLayerPause(gameEvent->m_GF_LP_HANDLE);
   for (u32 i = 0; i < EVTDISP_UNKNOWN_26; i++) {
     gameEvent->unknown28[i] = true;
   }
@@ -608,7 +608,7 @@ bool GfGameEvent::isPlayBgm() {
 f32 GfGameEvent::getPlayBgmVolume() {
   GfEvtBgm *bgm = GfEvtBgm::get();
   if (bgm != nullptr && bgm->isPlayBgm()) {
-    return bgm->unknown0c.unknown44;
+    return bgm->m_eventBgmSetup.m_playBgmVolume;
   }
   return 0.0f;
 }
@@ -644,19 +644,19 @@ f32 GfGameEvent::getCategoryVolume(fw::SoundCategory category) {
 
 void GfGameEvent::createSe(const char *name) {
   if (get() != nullptr) {
-    get()->unknown1930.createSe(name);
+    get()->m_evtSe.createSe(name);
   }
 }
 
 void GfGameEvent::destroySe() {
   if (get() != nullptr) {
-    get()->unknown1930.destroySe();
+    get()->m_evtSe.destroySe();
   }
 }
 
 bool GfGameEvent::isLoadedSe() {
   if (get() != nullptr) {
-    return get()->unknown1930.isLoadedSe();
+    return get()->m_evtSe.isLoadedSe();
   }
   return true;
 }
@@ -683,16 +683,16 @@ GfEvtModel *GfGameEvent::createBlade(GfInitParamBlade &param) {
 
 GfEvtModel *GfGameEvent::createNpc(GfInitParamNpc &param) {
   CBdatWrapper bdat = {GfDataBdat::getFP(BDAT_RSC_NPC_LIST)};
-  if (param.unknown18 == nullptr) {
-    param.unknown18 = &bdat;
+  if (param.m_cBdatWrapper == nullptr) {
+    param.m_cBdatWrapper = &bdat;
   }
   return GfEvtModelNpc::create(param);
 }
 
 GfEvtModel *GfGameEvent::createEnemy(GfInitParamEnemy &param) {
   CBdatWrapper bdat = {GfDataBdat::getFP(BDAT_RSC_EN)};
-  if (param.unknown18 == nullptr) {
-    param.unknown18 = &bdat;
+  if (param.m_cBdatWrapper == nullptr) {
+    param.m_cBdatWrapper = &bdat;
   }
   GfEvtModel *model = GfEvtModelEnemy::create(param);
   addEventObjUpdater(model);

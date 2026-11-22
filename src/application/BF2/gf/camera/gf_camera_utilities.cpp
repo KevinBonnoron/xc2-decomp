@@ -26,12 +26,7 @@ void CameraUtilities::getCameraLookBonePosition(GF_OBJ_HANDLE *handle, mm::Vec3 
 }
 
 bool CameraUtilities::getRotateAxis(const mm::Vec3 &from, const mm::Vec3 &to, mm::Vec3 &axis) {
-  f32 x = to.y * from.z - to.z * from.y;
-  f32 y = to.z * from.x - from.z * to.x;
-  f32 z = from.y * to.x - to.y * from.x;
-  axis.z = z;
-  axis.y = y;
-  axis.x = x;
+  axis.unknown004(to, from);
   if (!(fabsf(axis.x) <= 0.000001f) || !(fabsf(axis.y) <= 0.000001f) || !(fabsf(axis.z) <= 0.000001f)) {
     axis.unknown001();
   }

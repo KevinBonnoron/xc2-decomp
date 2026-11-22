@@ -26,17 +26,17 @@ void StateFieldWallJumpMove::enter(GfComBehaviorPc *behavior, ai::State *previou
   unknown18 = 0.0f;
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   unknown30 = property->unknown160.unknown00;
-  f32 height = property->unknown310.unknown48;
-  const MsgPcFieldNotifyWallJump *info = property->unknown310.getWallJumpInfo();
+  f32 height = property->m_propertyField.unknown48;
+  const MsgPcFieldNotifyWallJump *info = property->m_propertyField.getWallJumpInfo();
   unknown20 = info->unknown10;
   unknown20.y -= height;
   const EnviromentSensor::unknown003 *wall = StateUtil::getClimbWallInfo(*behavior);
   if (wall != nullptr) {
-    unknown20 += wall->unknown00.normal * property->unknown310.unknown18;
+    unknown20 += wall->unknown00.normal * property->m_propertyField.unknown18;
   }
   mm::Vec3 diff = unknown20 - unknown30;
   f32 distance = sqrtf(diff.x * diff.x + diff.y * diff.y + diff.z * diff.z);
-  unknown1c = __builtin_fmaxf(distance / static_cast<const WallCommonParam *>(property->unknown310.unknown08->unknown10[15].param)->jumpSpeed, 1.0f / 30.0f);
+  unknown1c = __builtin_fmaxf(distance / static_cast<const WallCommonParam *>(property->m_propertyField.unknown08->unknown10[15].param)->jumpSpeed, 1.0f / 30.0f);
   GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
   f32 time = 0.0f;
   comAsm->getPlaybackTime(comAsm->getStateName(ANIM_LAYER_UNKNOWN_0), &time);

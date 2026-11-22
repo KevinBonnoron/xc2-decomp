@@ -69,14 +69,14 @@ bool GfComIK::recieveMessage(fw::MessageObject *sender, fw::Message &message) {
 void GfComIK::procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message) {}
 
 GfComIK::GfComIK() : unknown48(nullptr), unknown50(0), unknown68(nullptr) {
-  unknown10.unknown10.setAllocator(getAllocator(ALLOCATOR_UNKNOWN_0));
-  unknown58.unknown08 = this;
+  m_ikResolver.unknown10.setAllocator(getAllocator(ALLOCATOR_UNKNOWN_0));
+  m_viewerListener.m_comIK = this;
 }
 
 GfComIK::~GfComIK() {}
 
 void GfComIK::setup(const SetupInfo &) {
-  unknown10.unknown10.resize(9, mm::mtl::IntrusivePtr<fw::IkSolver>());
+  m_ikResolver.unknown10.resize(9, mm::mtl::IntrusivePtr<fw::IkSolver>());
   unknown50 = calcFootCnt(unknown08->getComponent<GfComModel>());
   GfComProperty *property = unknown08->getComponent<GfComProperty>();
   if (property != nullptr && property->unknown28.get() != nullptr) {
@@ -88,16 +88,16 @@ void GfComIK::setup(const SetupInfo &) {
   }
   fw::AnimationManager *manager = fw::AnimationManager::get();
   if (manager != nullptr) {
-    manager->addIkResolver(getLayer(), unknown10);
+    manager->addIkResolver(getLayer(), m_ikResolver);
   }
 }
 
 void GfComIK::cleanup() {
   fw::AnimationManager *manager = fw::AnimationManager::get();
   if (manager != nullptr) {
-    manager->removeIkResolver(getLayer(), unknown10);
+    manager->removeIkResolver(getLayer(), m_ikResolver);
   }
-  unknown10.unknown10.clear();
+  m_ikResolver.unknown10.clear();
   unknown48.reset();
 }
 
@@ -111,7 +111,7 @@ fw::LookIkSolver *GfComIK::createLookIK(f32 fadeInTime, f32 fadeOutTime) {
     description.unknown04 = fadeInTime;
     description.unknown00 = fadeOutTime;
     solver = fw::LookIkSolver::create(description, frame, *model->unknown30);
-    unknown10.unknown10[unknown002_3] = solver;
+    m_ikResolver.unknown10[unknown002_3] = solver;
     if (solver != nullptr) {
       solver->release();
     }
@@ -126,7 +126,7 @@ fw::RotateIkSolver *GfComIK::createRotateBodyIK(const char *boneName) {
   fw::RotateIkSolver *solver = nullptr;
   if (model->unknown30 != nullptr) {
     solver = fw::RotateIkSolver::create(boneName, frame, *model->unknown30);
-    unknown10.unknown10[unknown002_0] = solver;
+    m_ikResolver.unknown10[unknown002_0] = solver;
     if (solver != nullptr) {
       solver->release();
     }
@@ -141,7 +141,7 @@ fw::SpineIkSolver *GfComIK::createSpineIK(const fw::ParamAdapter &param, const c
   fw::SpineIkSolver *solver = nullptr;
   if (model->unknown30 != nullptr) {
     solver = fw::SpineIkSolver::create(param, boneName, endBoneName, frame, *model->unknown30);
-    unknown10.unknown10[unknown002_3] = solver;
+    m_ikResolver.unknown10[unknown002_3] = solver;
     if (solver != nullptr) {
       solver->release();
     }
@@ -156,7 +156,7 @@ fw::LookAtIkSolver *GfComIK::createLookAtIK(const fw::ParamAdapter &param, const
   fw::LookAtIkSolver *solver = nullptr;
   if (model->unknown30 != nullptr) {
     solver = fw::LookAtIkSolver::create(param, boneName, frame, *model->unknown30);
-    unknown10.unknown10[unknown002_5] = solver;
+    m_ikResolver.unknown10[unknown002_5] = solver;
     if (solver != nullptr) {
       solver->release();
     }
@@ -172,7 +172,7 @@ fw::PlacementGroundSolver *GfComIK::createPlacementGroundIK(f32 value) {
   if (model->unknown30 != nullptr) {
     fw::PlacementGroundSolver::Description description = {value, unknown50};
     solver = fw::PlacementGroundSolver::create(description, frame, *model->unknown30, unknown48.get());
-    unknown10.unknown10[unknown002_2] = solver;
+    m_ikResolver.unknown10[unknown002_2] = solver;
     if (solver != nullptr) {
       solver->release();
     }
@@ -188,7 +188,7 @@ fw::TwoCharaGroundSolver *GfComIK::createTwoCharaGroundIK(f32 value, const char 
   if (model->unknown30 != nullptr) {
     fw::TwoCharaGroundSolver::Description description = {value, unknown50, boneName, endBoneName};
     solver = fw::TwoCharaGroundSolver::create(description, frame, *model->unknown30, unknown48.get());
-    unknown10.unknown10[unknown002_2] = solver;
+    m_ikResolver.unknown10[unknown002_2] = solver;
     if (solver != nullptr) {
       solver->release();
     }
@@ -207,7 +207,7 @@ fw::SlopeGroundSolver *GfComIK::createSlopeGroundIK(f32 first, f32 second) {
     description.unknown14 = first;
     description.unknown18 = second;
     solver = fw::SlopeGroundSolver::create(description, frame, *model->unknown30, unknown48.get());
-    unknown10.unknown10[unknown002_0] = solver;
+    m_ikResolver.unknown10[unknown002_0] = solver;
     if (solver != nullptr) {
       solver->release();
     }
@@ -222,7 +222,7 @@ fw::SphericalCoordinatesIkSolver *GfComIK::createSphericalCoordinatesIkSolver(co
   fw::SphericalCoordinatesIkSolver *solver = nullptr;
   if (model->unknown30 != nullptr) {
     solver = fw::SphericalCoordinatesIkSolver::create(param, boneName, frame, *model->unknown30);
-    unknown10.unknown10[unknown002_8] = solver;
+    m_ikResolver.unknown10[unknown002_8] = solver;
     if (solver != nullptr) {
       solver->release();
     }
@@ -237,7 +237,7 @@ fw::SpineRotateIKSolver *GfComIK::createSpineRotateIkSolver(const fw::ParamAdapt
   fw::SpineRotateIKSolver *solver = nullptr;
   if (model->unknown30 != nullptr) {
     solver = fw::SpineRotateIKSolver::create(param, boneName, endBoneName, frame, *model->unknown30);
-    unknown10.unknown10[unknown002_4] = solver;
+    m_ikResolver.unknown10[unknown002_4] = solver;
     if (solver != nullptr) {
       solver->release();
     }
@@ -252,7 +252,7 @@ fw::TransLocalIkSolver *GfComIK::createTransEyeIkSolver(u32 index, const char *b
   fw::TransLocalIkSolver *solver = nullptr;
   if (model->unknown30 != nullptr) {
     solver = fw::TransLocalIkSolver::create(boneName, frame, *model->unknown30);
-    unknown10.unknown10[index] = solver;
+    m_ikResolver.unknown10[index] = solver;
     if (solver != nullptr) {
       solver->release();
     }
@@ -267,7 +267,7 @@ fw::RotateLocalIkSolver *GfComIK::createRotateEyeIkSolver(u32 index, const char 
   fw::RotateLocalIkSolver *solver = nullptr;
   if (model->unknown30 != nullptr) {
     solver = fw::RotateLocalIkSolver::create(boneName, frame, *model->unknown30);
-    unknown10.unknown10[index] = solver;
+    m_ikResolver.unknown10[index] = solver;
     if (solver != nullptr) {
       solver->release();
     }
@@ -290,7 +290,7 @@ fw::BlowRotateIkSolver *GfComIK::createBlowRotateIkSolver(const char *boneName) 
       }
     }
     solver = fw::BlowRotateIkSolver::create(frame, *pose, boneIndex);
-    unknown10.unknown10[unknown002_1] = solver;
+    m_ikResolver.unknown10[unknown002_1] = solver;
     if (solver != nullptr) {
       solver->release();
     }
@@ -303,8 +303,8 @@ void GfComIK::changeLayer(u32 oldLayer, u32 newLayer) {
   if (manager == nullptr) {
     return;
   }
-  manager->removeIkResolver(getLayer(), unknown10);
-  manager->addIkResolver(newLayer, unknown10);
+  manager->removeIkResolver(getLayer(), m_ikResolver);
+  manager->addIkResolver(newLayer, m_ikResolver);
 }
 
 const mm::mtl::RTTI *GfComIK::getRTTI() const { return &m_rtti; }

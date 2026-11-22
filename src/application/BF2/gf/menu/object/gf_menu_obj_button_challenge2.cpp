@@ -200,15 +200,15 @@ void GfMenuObjButtonChallenge2::importOpenParam(OpenParam &param, unsigned int c
 void GfMenuObjButtonChallenge2::open(GfMenuCallContext *context, unsigned int challenge, bool isDispButton, bool isSound) {
   OpenParam param;
   importOpenParam(param, challenge);
-  param.unknown50.unknown00 = isDispButton;
-  param.unknown50.unknown01 = isSound;
+  param.m_optionParam.unknown00 = isDispButton;
+  param.m_optionParam.unknown01 = isSound;
   open(context, param, 0);
 }
 
 void GfMenuObjButtonChallenge2::open(GfMenuCallContext *context, unsigned int challenge, const OptionParam &option) {
   OpenParam param;
   importOpenParam(param, challenge);
-  param.unknown50 = option;
+  param.m_optionParam = option;
   open(context, param, 0);
 }
 
@@ -217,8 +217,8 @@ void GfMenuObjButtonChallenge2::openSequence(GfMenuCallContext *context, unsigne
   if (id != 0) {
     OpenParam param;
     importOpenParam(param, id);
-    param.unknown50.unknown00 = isDispButton;
-    param.unknown50.unknown01 = isSound;
+    param.m_optionParam.unknown00 = isDispButton;
+    param.m_optionParam.unknown01 = isSound;
     open(context, param, challenge);
   }
 }
@@ -228,7 +228,7 @@ void GfMenuObjButtonChallenge2::openSequence(GfMenuCallContext *context, unsigne
   if (id != 0) {
     OpenParam param;
     importOpenParam(param, id);
-    param.unknown50 = option;
+    param.m_optionParam = option;
     open(context, param, challenge);
   }
 }
@@ -292,10 +292,10 @@ bool GfMenuObjButtonChallenge2::seqStart() {
 void GfMenuObjButtonChallenge2::setupV2(const OpenParam &param) {
   ui::UIObjectAcc main(unknown18, "LAY_main");
   mm::mtl::FixStr<32> name;
-  if (unknown28.unknown08.size() == 0) {
+  if (m_openParam.unknown08.size() == 0) {
     GfMenuObject::termCallContext(main.unknown10);
   } else {
-    for (u32 i = 0; i < unknown28.unknown08.size(); i++) {
+    for (u32 i = 0; i < m_openParam.unknown08.size(); i++) {
       name.format("LAY_challenge_v2@%02d", i + 1);
       GfMenuObject::sendOpenEvent(main.searchChild(name.c_str()), i, 0.0f);
     }
@@ -316,13 +316,13 @@ bool GfMenuObjButtonChallenge2::seqEnd() {
 }
 
 void GfMenuObjButtonChallenge2::pushChallengeButtonV2(u8 button) {
-  if (unknown80 >= unknown28.unknown08.size()) {
+  if (unknown80 >= m_openParam.unknown08.size()) {
     return;
   }
   if (unknown490 < 3) {
     return;
   }
-  const unknown002 &challenge = unknown28.unknown08[unknown80];
+  const unknown002 &challenge = m_openParam.unknown08[unknown80];
   int frame = unknown490 - 1;
   if (frame < challenge.unknown0c) {
     return;
@@ -344,7 +344,7 @@ void GfMenuObjButtonChallenge2::pushChallengeButtonV2(u8 button) {
         isMiss = false;
       }
     }
-    if (unknown28.unknown04 == 0) {
+    if (m_openParam.unknown04 == 0) {
       GfMenuObjUtil::playVibration(fw::VIBRATION_ID_UNKNOWN_1, 1.0f);
     }
   } else if (challenge.unknown01 == 2) {
@@ -375,7 +375,7 @@ void GfMenuObjButtonChallenge2::pushChallengeButtonV2(u8 button) {
       GfMenuObjUtil::startCtrl(effect.unknown10, param, nullptr);
       point = 0;
     }
-    if (unknown28.unknown04 == 0) {
+    if (m_openParam.unknown04 == 0) {
       GfMenuObjUtil::playVibration(fw::VIBRATION_ID_UNKNOWN_15, 1.0f);
     }
   } else {
@@ -431,11 +431,11 @@ void GfMenuObjButtonChallenge2::notifyChallengeResult() {
 }
 
 bool GfMenuObjButtonChallenge2::getChallengeMashingWait(u32 &wait) {
-  if (unknown80 >= unknown28.unknown08.size()) {
+  if (unknown80 >= m_openParam.unknown08.size()) {
     return false;
   }
-  if (unknown28.unknown08[unknown80].unknown01 == 2) {
-    wait = unknown28.unknown08[unknown80].unknown0a;
+  if (m_openParam.unknown08[unknown80].unknown01 == 2) {
+    wait = m_openParam.unknown08[unknown80].unknown0a;
     return true;
   }
   return false;
@@ -458,7 +458,7 @@ void GfMenuObjButtonChallenge2::setRingScale(f32 scale) {
 }
 
 void GfMenuObjButtonChallenge2::updateChallenge() {
-  if (unknown348.size() != 0 && unknown80 < unknown28.unknown08.size()) {
+  if (unknown348.size() != 0 && unknown80 < m_openParam.unknown08.size()) {
     mm::Rect<s16> rect;
     {
       ui::UIObjectAcc acc(unknown18, "POL_ring_v2@04");
@@ -466,7 +466,7 @@ void GfMenuObjButtonChallenge2::updateChallenge() {
     }
     if (rect.width != 0 && rect.height != 0) {
       int ringSize = static_cast<int>(unknown3b2 * unknown348.front() - unknown3b0);
-      if (unknown28.unknown08[unknown80].unknown01 == 1 && ringSize < unknown3b0) {
+      if (m_openParam.unknown08[unknown80].unknown01 == 1 && ringSize < unknown3b0) {
         unknown80++;
       }
     }
@@ -487,11 +487,11 @@ bool GfMenuObjButtonChallenge2::isSeqCtrlBusy() {
 
 void GfMenuObjButtonChallenge2::nextChallenge() {
   unknown80++;
-  if (unknown80 == unknown28.unknown08.size()) {
+  if (unknown80 == m_openParam.unknown08.size()) {
     notifyChallengeResult();
     unknown0a0.unknown002(&GfMenuObjButtonChallenge2::seqCheckSequence);
   } else {
-    setup(unknown28, unknown80, false);
+    setup(m_openParam, unknown80, false);
     unknown0a0.unknown002(&GfMenuObjButtonChallenge2::seqAppearCursor);
   }
 }
@@ -500,13 +500,13 @@ bool GfMenuObjButtonChallenge2::seqWaitRestartV2() {
   if (!unknown4a0) {
     return false;
   }
-  setupV2(unknown28);
+  setupV2(m_openParam);
   unknown0a0.unknown002(&GfMenuObjButtonChallenge2::seqRunningV2);
   return true;
 }
 
 bool GfMenuObjButtonChallenge2::seqWaitMashingV2() {
-  if (unknown80 < unknown28.unknown08.size()) {
+  if (unknown80 < m_openParam.unknown08.size()) {
     if (++unknown490 < unknown498) {
       return false;
     }
@@ -516,7 +516,7 @@ bool GfMenuObjButtonChallenge2::seqWaitMashingV2() {
   mm::mtl::FixStr<32> name;
   ui::EventData event;
   event.unknown00 = 0x104;
-  for (u32 i = 0; i < unknown28.unknown08.size(); i++) {
+  for (u32 i = 0; i < m_openParam.unknown08.size(); i++) {
     name.format("LAY_challenge_v2@%02d", i + 1);
     GfMenuObject::sendEvent(acc.searchChild(name.c_str()), event, 0.0f);
   }
@@ -533,7 +533,7 @@ void GfMenuObjButtonChallenge2::setup(const OpenParam &param, unsigned int chall
     main.setDispChild(false, "LAY_result");
   }
   ui::UIObjectAcc challengeLayer(main.unknown10, "LAY_challenge");
-  unknown002 &challenge = unknown28.unknown08[challengeIndex];
+  unknown002 &challenge = m_openParam.unknown08[challengeIndex];
   u8 inputType = challenge.unknown01;
   {
     ui::UIObjectAcc ring(main.unknown10, "POL_ring_v2@04");
@@ -590,9 +590,9 @@ void GfMenuObjButtonChallenge2::setup(const OpenParam &param, unsigned int chall
 bool GfMenuObjButtonChallenge2::seqAppear() {
   if (unknown330.empty()) {
     ui::UIObjectAcc main(unknown18, "LAY_challenge");
-    if (unknown28.unknown50.unknown04 > 0.0f) {
+    if (m_openParam.m_optionParam.unknown04 > 0.0f) {
       GfMenuObjUtil::CtrlParam param;
-      param.unknown00 = unknown28.unknown50.unknown04;
+      param.unknown00 = m_openParam.m_optionParam.unknown04;
       param.unknown08 = 1;
       unknown330.push_back(GfMenuObjUtil::startCtrl(main.unknown10, param, nullptr));
     } else {
@@ -607,11 +607,11 @@ bool GfMenuObjButtonChallenge2::seqAppear() {
 bool GfMenuObjButtonChallenge2::seqClose() {
   if (unknown330.empty()) {
     ui::UIObjectAcc main(unknown18, "LAY_main");
-    if (unknown28.unknown50.unknown04 > 0.0f) {
+    if (m_openParam.m_optionParam.unknown04 > 0.0f) {
       if (main.isDisp()) {
         GfMenuObjUtil::CtrlParam param;
         param.unknown08 = 2;
-        param.unknown00 = unknown28.unknown50.unknown04;
+        param.unknown00 = m_openParam.m_optionParam.unknown04;
         param.unknown14 = 10;
         unknown330.push_back(GfMenuObjUtil::startCtrl(main.unknown10, param, nullptr));
       }
@@ -624,7 +624,7 @@ bool GfMenuObjButtonChallenge2::seqClose() {
 
 bool GfMenuObjButtonChallenge2::seqSuccess() {
   if (unknown330.empty()) {
-    const unknown002 &challenge = unknown28.unknown08[unknown80];
+    const unknown002 &challenge = m_openParam.unknown08[unknown80];
     GfMenuObjUtil::CtrlParam param;
     param.unknown00 = 0.25f;
     param.unknown08 = 2;
@@ -640,7 +640,7 @@ bool GfMenuObjButtonChallenge2::seqSuccess() {
 
 bool GfMenuObjButtonChallenge2::seqFailed() {
   if (unknown330.empty()) {
-    const unknown002 &challenge = unknown28.unknown08[unknown80];
+    const unknown002 &challenge = m_openParam.unknown08[unknown80];
     GfMenuObjUtil::CtrlParam param;
     param.unknown00 = 0.25f;
     param.unknown08 = 2;
@@ -663,12 +663,12 @@ bool GfMenuObjButtonChallenge2::seqRunningV2() {
   f32 frame = unknown494 / 0.033333335f;
   unknown490 = static_cast<int>(frame + (frame > 0.0f ? 0.5f : -0.5f));
   u32 finished = 0;
-  for (u32 i = 0; i < unknown28.unknown08.size(); i++) {
+  for (u32 i = 0; i < m_openParam.unknown08.size(); i++) {
     if (!unknown3b8[i].unknown00.isBusy()) {
       finished++;
       u32 bit = 1 << i;
       if ((unknown49c & bit) == 0) {
-        if (unknown28.unknown08[i].unknown01 != 2) {
+        if (m_openParam.unknown08[i].unknown01 != 2) {
           unknown80++;
         }
         name.format("LAY_challenge_v2@%02d", i + 1);
@@ -679,14 +679,14 @@ bool GfMenuObjButtonChallenge2::seqRunningV2() {
       setRingScaleV2(i, unknown3b8[i].unknown00.values[0]);
     }
   }
-  if (finished < unknown28.unknown08.size()) {
+  if (finished < m_openParam.unknown08.size()) {
     return false;
   }
   if (unknown498 > unknown490) {
     unknown0a0.unknown002(&GfMenuObjButtonChallenge2::seqWaitMashingV2);
   } else {
     event.unknown00 = 0x104;
-    for (u32 i = 0; i < unknown28.unknown08.size(); i++) {
+    for (u32 i = 0; i < m_openParam.unknown08.size(); i++) {
       name.format("LAY_challenge_v2@%02d", i + 1);
       GfMenuObject::sendEvent(acc.searchChild(name.c_str()), event, 0.0f);
     }
@@ -723,8 +723,8 @@ bool GfMenuObjButtonChallenge2::seqResultWait() {
 
 bool GfMenuObjButtonChallenge2::seqWaitMashing() {
   u32 wait = unknown8c;
-  if (unknown88 == 0 && unknown80 < unknown28.unknown08.size() && unknown28.unknown08[unknown80].unknown01 == 2) {
-    wait = unknown28.unknown08[unknown80].unknown0a;
+  if (unknown88 == 0 && unknown80 < m_openParam.unknown08.size() && m_openParam.unknown08[unknown80].unknown01 == 2) {
+    wait = m_openParam.unknown08[unknown80].unknown0a;
     {
       ui::UIObjectAcc ring(unknown18, "LAY_ring_v2@04");
       ring.setDisp(false);
@@ -767,23 +767,23 @@ bool GfMenuObjButtonChallenge2::seqWaitMashing() {
 }
 
 bool GfMenuObjButtonChallenge2::seqAppearCursor() {
-  if (unknown28.unknown50.unknown00) {
+  if (m_openParam.m_optionParam.unknown00) {
     return false;
   }
   if (unknown330.empty()) {
     ui::UIObjectAcc main(unknown18, "LAY_challenge_v2@04");
     setRingScale(1.0f);
     main.setDispChild(true, "LAY_ring_v2@04");
-    if (unknown80 == 0 && unknown28.unknown02 != 0) {
+    if (unknown80 == 0 && m_openParam.unknown02 != 0) {
       GfMenuObjUtil::CtrlParam param;
-      param.unknown00 = unknown28.unknown02 * 0.033333335f;
+      param.unknown00 = m_openParam.unknown02 * 0.033333335f;
       param.unknown08 = 1;
       param.unknown0c = 1;
       unknown330.push_back(GfMenuObjUtil::startCtrl(main.unknown10, param, nullptr));
     } else {
       main.setDisp(true);
     }
-    if (unknown80 < unknown28.unknown08.size() && unknown28.unknown08[unknown80].unknown01 == 2) {
+    if (unknown80 < m_openParam.unknown08.size() && m_openParam.unknown08[unknown80].unknown01 == 2) {
       ui::UIObjectAcc ring(unknown18, "POL_ring_v2@04");
       ring.setAlpha(0.0f);
     }
@@ -791,7 +791,7 @@ bool GfMenuObjButtonChallenge2::seqAppearCursor() {
   if (isSeqCtrlBusy()) {
     return false;
   }
-  const unknown002 &challenge = unknown28.unknown08[unknown80];
+  const unknown002 &challenge = m_openParam.unknown08[unknown80];
   unknown35a = 0;
   if (challenge.unknown01 == 1) {
     unknown0a0.unknown002(&GfMenuObjButtonChallenge2::seqMovePush);

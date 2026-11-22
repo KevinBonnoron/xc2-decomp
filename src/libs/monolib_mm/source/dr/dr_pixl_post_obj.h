@@ -56,9 +56,9 @@ public:
   void setScaleShader(DrPixlRenderTarget *source);
   void setShaderBloom(DrShdDataObj *shader, grlib::CGLibUniformEtcUtility &uniform);
 
-  DrMan *unknown00;         // Inferred role: driver manager; original member name unknown.
-  DrPixlMan *unknown08;     // Inferred role: pixel manager; original member name unknown.
-  DrPixlPostMan *unknown10; // Inferred role: post manager; original member name unknown.
+  DrMan *m_drMan;                 // Inferred role: driver manager; original member name unknown.
+  DrPixlMan *m_drPixlMan;         // Inferred role: pixel manager; original member name unknown.
+  DrPixlPostMan *m_drPixlPostMan; // Inferred role: post manager; original member name unknown.
 };
 
 } // namespace ml

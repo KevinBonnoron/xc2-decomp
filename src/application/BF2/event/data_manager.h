@@ -73,7 +73,7 @@ private:
   mm::mtl::FixedVector<OfsInfo *, SCENE_UNKNOWN_16> unknown10; // Inferred role: scenes; original member name unknown.
   mm::mtl::FixStr<64> unknown98;                               // Inferred role: scene name; original member name unknown.
   mm::mtl::FixStr<64> unknowndc;                               // Inferred role: current scene name; original member name unknown.
-  OfsInfo *unknown120;                                         // Inferred role: current; original member name unknown.
+  OfsInfo *m_ofsInfo;                                          // Inferred role: current; original member name unknown.
 };
 
 static_assert(sizeof(DataManager::OfsInfo) == 0x170, "");

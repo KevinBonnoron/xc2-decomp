@@ -41,14 +41,14 @@ void ResManager::clear() {
     delete item;
   }
   unknown20.clear();
-  unknown1028.clear();
+  m_resPackManager.clear();
   unknown10b8 = 0;
   unknown10bc = 0;
 }
 
 void ResManager::update() {
-  if (unknown1028.isLoading()) {
-    unknown1028.update();
+  if (m_resPackManager.isLoading()) {
+    m_resPackManager.update();
     return;
   }
   updateNormal();
@@ -180,10 +180,10 @@ void ResManager::render() {
     fw::debug::drawFont(930, y, item->unknown408 ? "yes" : "no");
     y += 17;
   }
-  unknown1028.draw();
+  m_resPackManager.draw();
 }
 
-void ResManager::loadPack(const char *path) { unknown1028.load(mm::mtl::Singleton<MemoryManager>::getPtr()->getResHandle(), path, this); }
+void ResManager::loadPack(const char *path) { m_resPackManager.load(mm::mtl::Singleton<MemoryManager>::getPtr()->getResHandle(), path, this); }
 
 void ResManager::load(const char *path, IResEvent *event, bool isPackOnly) {
   Item *item = search(path);

@@ -104,9 +104,9 @@ template <typename T> void StateReaction<T>::seqTurnToPrev(T &behavior, const fw
       // Single-use local that places the load of Vec3::unitZ: the game loads it before the euler angles of the gimmick (0x7100537a60: ldr s14 / ldp s15,s11 before ldr x8,[x21,#16]); with
       // quat.rotate(mm::Vec3::unitZ) written in the sum the function has 132 instructions against 135.
       mm::Vec3 front = mm::Vec3::unitZ;
-      mm::Vec3 rotation = gmk->unknown08.unknown08->unknown10;
+      mm::Vec3 rotation = gmk->m_createBaseInfo.m_xform->unknown10;
       mm::Quat quat = mm::unknown005(rotation);
-      position = gmk->unknown08.unknown08->unknown00 + quat.rotate(front);
+      position = gmk->m_createBaseInfo.m_xform->unknown00 + quat.rotate(front);
     }
     behavior.execTurnCmdToPos(position);
     unknown50 = &StateReaction::seqWaitTurnToPrevEnd;

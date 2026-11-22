@@ -54,6 +54,14 @@ void DrResMdoPntAlpha::update(f32 speed) {
 
 s32 DrResMdoPntAlphaMan::getWrkSize(s32 unknown001) { return unknown001 * (sizeof(DrResMdoPntAlpha) + sizeof(DrResMdoPntAlpha *)) + sizeof(DrResMdoPntAlphaMan); }
 
+int DrResMdoPntAlphaMan::setWrk(DrResMdoPntAlphaMan *&man, int count, u8 *work) {
+  man = reinterpret_cast<DrResMdoPntAlphaMan *>(work);
+  DrResMdoPntAlpha *alphas = reinterpret_cast<DrResMdoPntAlpha *>(work + sizeof(DrResMdoPntAlphaMan));
+  size_t offset = sizeof(DrResMdoPntAlphaMan) + count * sizeof(DrResMdoPntAlpha);
+  man->setup(alphas, reinterpret_cast<DrResMdoPntAlpha **>(work + offset), count);
+  return offset + count * sizeof(DrResMdoPntAlpha *);
+}
+
 void DrResMdoPntAlphaMan::setup(DrResMdoPntAlpha *unknown001, DrResMdoPntAlpha **unknown002, s32 unknown003) {
   unknown00 = unknown001;
   unknown08 = unknown002;

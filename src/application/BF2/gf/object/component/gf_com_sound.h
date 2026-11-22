@@ -92,12 +92,12 @@ public:
   class ViewerListener {
   public:
     virtual void onWkStandbyLogout() {
-      if (unknown08 != nullptr) {
-        unknown08->unknown168 = nullptr;
+      if (m_comSound != nullptr) {
+        m_comSound->unknown168 = nullptr;
       }
     }
 
-    GfComSound *unknown08; // Inferred role: owner; original member name unknown.
+    GfComSound *m_comSound; // Inferred role: owner; original member name unknown.
   };
 
   static mm::mtl::RTTI m_rtti;
@@ -125,27 +125,27 @@ public:
   int getAttributeVariable() const;
   void setAttributeVariable(int attribute);
   // Inferred helper: sets a sound variable; original name unknown. The game inlines it into FootStepPlugin::setAnkleHeight and update.
-  void unknown001(const char *name, int value) { unknown10.setVariable(name, value); }
+  void unknown001(const char *name, int value) { m_soundVariableTable.setVariable(name, value); }
 
   // Inferred helper: adds the updater to the sound layer manager of the layer of the component when it is not there yet; original name unknown. Shared by playSe and playSeBone (the game
   // inlines it in both: 0x710057f1d0, 0x710057f4a8).
   void unknown002() {
     fw::SoundLayerManager *manager = fw::SoundLayerManager::get();
-    if (manager != nullptr && !unknownf0.unknown31) {
-      manager->unknown08[getLayer()].push_back(&unknownf0);
-      unknownf0.unknown31 = true;
+    if (manager != nullptr && !m_soundUpdater.unknown31) {
+      manager->unknown08[getLayer()].push_back(&m_soundUpdater);
+      m_soundUpdater.unknown31 = true;
     }
   }
 
-  fw::SoundVariableTable unknown10;                              // Inferred role: sound variables; original member name unknown.
+  fw::SoundVariableTable m_soundVariableTable;                   // Inferred role: sound variables; original member name unknown.
   mm::mtl::List<SoundInfo> unknown30;                            // Inferred role: playing sounds; original member name unknown.
-  fw::SoundUpdater unknownf0;                                    // Inferred role: updater that flushes the sounds of the layer; original member name unknown.
+  fw::SoundUpdater m_soundUpdater;                               // Inferred role: updater that flushes the sounds of the layer; original member name unknown.
   bool (*unknown128)(GfComSound *sound, const void *annotation); // Inferred role: filter of the sound callbacks, called by callbackAnimImpl; original member name unknown.
   mm::mtl::Delegate<void(const fw::ResSoundData &, fw::SoundResSourceManager::CustomInfo *)>
-      unknown130;            // Inferred role: callback customizing a sound resource, set by GfComBehaviorPc::setup; original member name unknown.
-  bool unknown150;           // Inferred role: set up; original member name unknown.
-  ViewerListener unknown158; // Inferred role: viewer listener; original member name unknown.
-  void *unknown168;          // Inferred role: viewer; original member name unknown.
+      unknown130;                  // Inferred role: callback customizing a sound resource, set by GfComBehaviorPc::setup; original member name unknown.
+  bool unknown150;                 // Inferred role: set up; original member name unknown.
+  ViewerListener m_viewerListener; // Inferred role: viewer listener; original member name unknown.
+  void *unknown168;                // Inferred role: viewer; original member name unknown.
 };
 
 static_assert(offsetof(GfComSound::SoundInfo, unknown04) == 0x04, "");
@@ -157,14 +157,14 @@ static_assert(offsetof(GfComSound::SoundInfo, unknown70) == 0x70, "");
 static_assert(sizeof(GfComSound::SoundInfo) == 0x80, "");
 static_assert(offsetof(GfComSound, unknown30) == 0x30, "");
 static_assert(sizeof(mm::mtl::List<GfComSound::SoundInfo>) == 0xc0, "");
-static_assert(offsetof(GfComSound, unknownf0) == 0xf0, "");
+static_assert(offsetof(GfComSound, m_soundUpdater) == 0xf0, "");
 static_assert(offsetof(GfComSound, unknown128) == 0x128, "");
 static_assert(offsetof(GfComSound, unknown130) == 0x130, "");
 static_assert(offsetof(GfComSound, unknown150) == 0x150, "");
-static_assert(offsetof(GfComSound, unknown158) == 0x158, "");
+static_assert(offsetof(GfComSound, m_viewerListener) == 0x158, "");
 static_assert(offsetof(GfComSound, unknown168) == 0x168, "");
 static_assert(sizeof(GfComSound) == 0x170, "");
 
-static_assert(offsetof(GfComSound, unknown10) == 0x10, "");
+static_assert(offsetof(GfComSound, m_soundVariableTable) == 0x10, "");
 
 } // namespace gf

@@ -20,7 +20,7 @@ public:
   void releaseGblFog(DrFogObj *fog);
   bool isFogOn() const;
 
-  DrMan *unknown00;    // Inferred role: dr man; original member name unknown.
+  DrMan *m_drMan;      // Inferred role: dr man; original member name unknown.
   DrFogObj *unknown08; // Inferred role: first fog; original member name unknown.
   DrFogObj *unknown10; // Inferred role: last fog; original member name unknown.
   mm::Col3 unknown18;  // Inferred role: color; original member name unknown.

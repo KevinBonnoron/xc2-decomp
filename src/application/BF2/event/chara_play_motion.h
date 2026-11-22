@@ -44,14 +44,14 @@ private:
 
   u32 unknown08; // Inferred role: flags; original member name unknown.
   u32 _0c;
-  gf::GF_OBJ_HANDLE *unknown10; // Inferred role: handle; original member name unknown.
-  CharaIKUpdater *unknown18;    // Inferred role: ik; original member name unknown.
-  CharaDysUpdater *unknown20;   // Inferred role: dys; original member name unknown.
-  void *unknown28;              // Inferred role: stream data; original member name unknown.
-  u64 unknown30;                // Role and original member name unknown.
-  f32 unknown38;                // Role and original member name unknown.
-  f32 unknown3c;                // Role and original member name unknown.
-  f32 unknown40;                // Role and original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown10;       // Inferred role: handle; original member name unknown.
+  CharaIKUpdater *m_charaIKUpdater;   // Inferred role: ik; original member name unknown.
+  CharaDysUpdater *m_charaDysUpdater; // Inferred role: dys; original member name unknown.
+  void *unknown28;                    // Inferred role: stream data; original member name unknown.
+  u64 unknown30;                      // Role and original member name unknown.
+  f32 unknown38;                      // Role and original member name unknown.
+  f32 unknown3c;                      // Role and original member name unknown.
+  f32 unknown40;                      // Role and original member name unknown.
   u8 _44[0x48 - 0x44];
   const char *unknown48; // Inferred role: motion name; original member name unknown.
 
@@ -59,8 +59,8 @@ private:
 };
 
 struct CharaPlayMotionLayout {
-  static_assert(offsetof(CharaPlayMotion, unknown18) == 0x18, "");
-  static_assert(offsetof(CharaPlayMotion, unknown20) == 0x20, "");
+  static_assert(offsetof(CharaPlayMotion, m_charaIKUpdater) == 0x18, "");
+  static_assert(offsetof(CharaPlayMotion, m_charaDysUpdater) == 0x20, "");
   static_assert(offsetof(CharaPlayMotion, unknown28) == 0x28, "");
   static_assert(offsetof(CharaPlayMotion, unknown30) == 0x30, "");
   static_assert(offsetof(CharaPlayMotion, unknown3c) == 0x3c, "");

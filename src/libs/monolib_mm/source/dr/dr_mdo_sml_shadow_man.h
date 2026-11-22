@@ -58,14 +58,14 @@ public:
 
   u32 unknown00;                      // Inferred role: unknown, cleared by the constructor; original member name unknown.
   s32 unknown04;                      // Inferred role: view index; original member name unknown.
-  DrMan *unknown08;                   // Inferred role: owner; original member name unknown.
+  DrMan *m_drMan;                     // Inferred role: owner; original member name unknown.
   DrMdoSmlShadowObj *unknown10[4][2]; // Inferred role: object lists (first and last per view); original member name unknown.
   DrMdoSmlShadowObj *unknown50[2][2]; // Inferred role: added object lists (first and last per buffer); original member name unknown.
   DrMdoSmlShadowObj *unknown70[2];    // Inferred role: object list to delete (first and last); original member name unknown.
 };
 
 static_assert(offsetof(DrMdoSmlShadowMan, unknown04) == 0x04, "");
-static_assert(offsetof(DrMdoSmlShadowMan, unknown08) == 0x08, "");
+static_assert(offsetof(DrMdoSmlShadowMan, m_drMan) == 0x08, "");
 static_assert(offsetof(DrMdoSmlShadowMan, unknown10) == 0x10, "");
 static_assert(offsetof(DrMdoSmlShadowMan, unknown50) == 0x50, "");
 static_assert(offsetof(DrMdoSmlShadowMan, unknown70) == 0x70, "");

@@ -10,28 +10,28 @@
 
 namespace ml {
 
-DrCreator::DrCreator() : unknown00(DrMan::s_pTop) {}
+DrCreator::DrCreator() : m_drMan(DrMan::s_pTop) {}
 
-DrMdlObj *DrCreator::createMdl(const void *data, const char *name, int index) { return unknown00->unknown88->createMdl(data, name, index); }
+DrMdlObj *DrCreator::createMdl(const void *data, const char *name, int index) { return m_drMan->m_drMdlMan->createMdl(data, name, index); }
 
-DrMdlObj *DrCreator::createInstantMdl(const void *data, const char *name, int index) { return unknown00->unknown88->createInstantMdl(data, name, index); }
+DrMdlObj *DrCreator::createInstantMdl(const void *data, const char *name, int index) { return m_drMan->m_drMdlMan->createInstantMdl(data, name, index); }
 
-DrMdoGrpObj *DrCreator::createGrp(int num, u32 flags) { return unknown00->unknown88->createGrp(num, flags); }
+DrMdoGrpObj *DrCreator::createGrp(int num, u32 flags) { return m_drMan->m_drMdlMan->createGrp(num, flags); }
 
-DrMdoGrpObj *DrCreator::createInstantGrp(int num, u32 flags) { return unknown00->unknown88->createInstantGrp(num, flags); }
+DrMdoGrpObj *DrCreator::createInstantGrp(int num, u32 flags) { return m_drMan->m_drMdlMan->createInstantGrp(num, flags); }
 
-DrEnvironmentObj *DrCreator::createLgt(const void *data, int screen) { return unknown00->unknown100[screen]->createObj(data); }
+DrEnvironmentObj *DrCreator::createLgt(const void *data, int screen) { return m_drMan->unknown100[screen]->createObj(data); }
 
-DrEnvColiObj *DrCreator::createEnvColi(const void *data, int screen) { return unknown00->unknown100[screen]->unknown18->createObj(data); }
+DrEnvColiObj *DrCreator::createEnvColi(const void *data, int screen) { return m_drMan->unknown100[screen]->m_drEnvColiMan->createObj(data); }
 
-DrCalcClipObj *DrCreator::createClipObj(const void *data, int screen) { return unknown00->unknowna0[screen]->unknown18->createClipObj(data); }
+DrCalcClipObj *DrCreator::createClipObj(const void *data, int screen) { return m_drMan->unknowna0[screen]->m_drCalcClipMan->createClipObj(data); }
 
-DrGpuCheckBase *DrCreator::createGpuCheckObj(int type) { return unknown00->unknown88->createGpuCheckObj(type); }
+DrGpuCheckBase *DrCreator::createGpuCheckObj(int type) { return m_drMan->m_drMdlMan->createGpuCheckObj(type); }
 
-DrGpuCheckBase *DrCreator::createEffGpuCheckObj(int type) { return unknown00->unknown88->createEffGpuCheckObj(type); }
+DrGpuCheckBase *DrCreator::createEffGpuCheckObj(int type) { return m_drMan->m_drMdlMan->createEffGpuCheckObj(type); }
 
-DrStmReadObj *DrCreator::createStmLoadObj(const char *path) { return unknown00->unknown88->createStmLoadObj(path); }
+DrStmReadObj *DrCreator::createStmLoadObj(const char *path) { return m_drMan->m_drMdlMan->createStmLoadObj(path); }
 
-DrStmReadObj *DrCreator::createStmSizeObj(u32 size) { return unknown00->unknown88->createStmSizeObj(size); }
+DrStmReadObj *DrCreator::createStmSizeObj(u32 size) { return m_drMan->m_drMdlMan->createStmSizeObj(size); }
 
 } // namespace ml

@@ -92,22 +92,22 @@ public:
   DrResChankList<DrCalcStmListObj> unknown38[2]; // Inferred role: entry list per buffer; original member name unknown.
   DrCalcStmListObj *unknown58[2][512];           // Inferred role: objects to update on the api side per buffer; original member name unknown.
   u32 unknown2058[2];                            // Inferred role: number of used entries of unknown58 per buffer; original member name unknown.
-  u8 _2060[0x2064 - 0x2060];
-  u32 unknown2064;                  // Inferred role: cleared by the constructor; original member name unknown.
-  u32 unknown2068;                  // Inferred role: flags; original member name unknown.
-  u32 unknown206c;                  // Inferred role: object count; original member name unknown.
-  DrCalcTexStmObj *unknown2070;     // Inferred role: object array; original member name unknown.
-  void *unknown2078;                // Inferred role: memory; original member name unknown.
-  DrCalcTexStmObj *unknown2080[64]; // Inferred role: objects to clear; original member name unknown.
-  DrCalcTexStmObj *unknown2280[64]; // Inferred role: objects to optimize; original member name unknown.
-  s32 unknown2480;                  // Inferred role: clear wait count; original member name unknown.
-  s32 unknown2484;                  // Inferred role: listed object count; original member name unknown.
-  u32 unknown2488;                  // Inferred role: optimization count; original member name unknown.
-  s16 unknown248c;                  // Inferred role: read mode; original member name unknown.
-  u16 unknown248e;                  // Inferred role: read mode flags; original member name unknown.
-  s32 unknown2490;                  // Inferred role: read mode limit; original member name unknown.
-  s32 unknown2494;                  // Inferred role: read mode limit of the previous update; original member name unknown.
-  u32 unknown2498;                  // Inferred role: job cpu; original member name unknown.
+  u32 unknown2060;                               // Inferred role: size of the memory pool; original member name unknown.
+  u32 unknown2064;                               // Inferred role: cleared by the constructor; original member name unknown.
+  u32 m_cacherClearMode;                         // Inferred role: flags; named after the game accessor ml::DrMan::setCacherClearMode.
+  u32 unknown206c;                               // Inferred role: object count; original member name unknown.
+  DrCalcTexStmObj *unknown2070;                  // Inferred role: object array; original member name unknown.
+  void *unknown2078;                             // Inferred role: memory; original member name unknown.
+  DrCalcTexStmObj *unknown2080[64];              // Inferred role: objects to clear; original member name unknown.
+  DrCalcTexStmObj *unknown2280[64];              // Inferred role: objects to optimize; original member name unknown.
+  s32 unknown2480;                               // Inferred role: clear wait count; original member name unknown.
+  s32 unknown2484;                               // Inferred role: listed object count; original member name unknown.
+  u32 unknown2488;                               // Inferred role: optimization count; original member name unknown.
+  s16 unknown248c;                               // Inferred role: read mode; original member name unknown.
+  u16 unknown248e;                               // Inferred role: read mode flags; original member name unknown.
+  s32 unknown2490;                               // Inferred role: read mode limit; original member name unknown.
+  s32 unknown2494;                               // Inferred role: read mode limit of the previous update; original member name unknown.
+  u32 unknown2498;                               // Inferred role: job cpu; original member name unknown.
 };
 
 static_assert(offsetof(DrCalcTexStreamMan, unknown08) == 0x08, "");
@@ -117,7 +117,7 @@ static_assert(offsetof(DrCalcTexStreamMan, unknown38) == 0x38, "");
 static_assert(offsetof(DrCalcTexStreamMan, unknown58) == 0x58, "");
 static_assert(offsetof(DrCalcTexStreamMan, unknown2058) == 0x2058, "");
 static_assert(offsetof(DrCalcTexStreamMan, unknown2064) == 0x2064, "");
-static_assert(offsetof(DrCalcTexStreamMan, unknown2068) == 0x2068, "");
+static_assert(offsetof(DrCalcTexStreamMan, m_cacherClearMode) == 0x2068, "");
 static_assert(offsetof(DrCalcTexStreamMan, unknown206c) == 0x206c, "");
 static_assert(offsetof(DrCalcTexStreamMan, unknown2070) == 0x2070, "");
 static_assert(offsetof(DrCalcTexStreamMan, unknown2078) == 0x2078, "");

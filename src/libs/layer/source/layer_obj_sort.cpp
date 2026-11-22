@@ -15,18 +15,18 @@
 
 namespace layer {
 
-void LayerObjSortLayout::finalRender() { static_cast<LayerObjTopLayout *>(unknown10)->finalRender(); }
+void LayerObjSortLayout::finalRender() { static_cast<LayerObjTopLayout *>(m_layerObj)->finalRender(); }
 
-void LayerObjSortMemObj::finalRender() { static_cast<LayerObjTopMemObj *>(unknown10)->finalRender(); }
+void LayerObjSortMemObj::finalRender() { static_cast<LayerObjTopMemObj *>(m_layerObj)->finalRender(); }
 
-void LayerObjSortDef::finalRender() { static_cast<LayerObjTopDef *>(unknown10)->finalRender(); }
+void LayerObjSortDef::finalRender() { static_cast<LayerObjTopDef *>(m_layerObj)->finalRender(); }
 
-void LayerObjSortFont::finalRender() { static_cast<LayerObjTopFont *>(unknown10)->finalRender(); }
+void LayerObjSortFont::finalRender() { static_cast<LayerObjTopFont *>(m_layerObj)->finalRender(); }
 
-void LayerObjSortTexObj::finalRender() { static_cast<LayerObjTopTexObj *>(unknown10)->finalRender(); }
+void LayerObjSortTexObj::finalRender() { static_cast<LayerObjTopTexObj *>(m_layerObj)->finalRender(); }
 
-void LayerObjSortPolyObj::finalRender() { static_cast<LayerObjTopPolyObj *>(unknown10)->finalRender(); }
+void LayerObjSortPolyObj::finalRender() { static_cast<LayerObjTopPolyObj *>(m_layerObj)->finalRender(); }
 
-void LayerObjSortFilter::finalRender() { static_cast<LayerObjTopFilter *>(unknown10)->finalRender(); }
+void LayerObjSortFilter::finalRender() { static_cast<LayerObjTopFilter *>(m_layerObj)->finalRender(); }
 
 } // namespace layer

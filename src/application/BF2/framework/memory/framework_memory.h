@@ -42,15 +42,15 @@ public:
   struct SectionRegistInfo : public MemorySectionInfo {
     SectionRegistInfo() : unknown64(0) {}
 
-    mtl::ALLOC_HANDLE unknown60;      // Inferred role: section handle; original member name unknown.
-    u32 unknown64;                    // Inferred role: name hash; original member name unknown.
-    MemHandlebaseAllocator unknown68; // Inferred role: section allocator; original member name unknown.
+    mtl::ALLOC_HANDLE unknown60;                     // Inferred role: section handle; original member name unknown.
+    u32 unknown64;                                   // Inferred role: name hash; original member name unknown.
+    MemHandlebaseAllocator m_memHandlebaseAllocator; // Inferred role: section allocator; original member name unknown.
 
     // Inferred role: clear the section handle and its allocator; original name unknown.
     void unknown001() {
       unknown60 = mtl::ALLOC_HANDLE();
       unknown64 = 0;
-      unknown68.setMemHandle(mtl::ALLOC_HANDLE());
+      m_memHandlebaseAllocator.setMemHandle(mtl::ALLOC_HANDLE());
     }
   };
 
@@ -64,17 +64,17 @@ public:
   static mtl::ALLOC_HANDLE getMem(u32 section);
   static mm::mtl::IAllocator *getAllocator(u32 section);
 
-  mm::mtl::Array<SectionRegistInfo> unknown08; // Inferred role: sections; original member name unknown.
-  bool unknown20;                              // Inferred role: initialized; original member name unknown.
-  MemHandlebaseAllocator unknown28;            // Inferred role: section table allocator; original member name unknown.
+  mm::mtl::Array<SectionRegistInfo> unknown08;     // Inferred role: sections; original member name unknown.
+  bool unknown20;                                  // Inferred role: initialized; original member name unknown.
+  MemHandlebaseAllocator m_memHandlebaseAllocator; // Inferred role: section table allocator; original member name unknown.
 };
 
 static_assert(offsetof(FrameworkMemory::SectionRegistInfo, unknown60) == 0x60, "");
-static_assert(offsetof(FrameworkMemory::SectionRegistInfo, unknown68) == 0x68, "");
+static_assert(offsetof(FrameworkMemory::SectionRegistInfo, m_memHandlebaseAllocator) == 0x68, "");
 static_assert(sizeof(FrameworkMemory::SectionRegistInfo) == 0xb8, "");
 static_assert(offsetof(FrameworkMemory, unknown08) == 0x08, "");
 static_assert(offsetof(FrameworkMemory, unknown20) == 0x20, "");
-static_assert(offsetof(FrameworkMemory, unknown28) == 0x28, "");
+static_assert(offsetof(FrameworkMemory, m_memHandlebaseAllocator) == 0x28, "");
 static_assert(sizeof(FrameworkMemory) == 0x78, "");
 
 } // namespace fw

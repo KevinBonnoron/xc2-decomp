@@ -11,15 +11,15 @@ mm::mtl::IntrusivePtr<WindForceCalculator> WindForceCalculator::create() {
   return new (FrameworkMemory::getAllocator(5), 16, __FILE__, __LINE__) WindForceCalculator();
 }
 
-WindForceCalculator::WindForceCalculator() : unknown18(nullptr), unknown20(1.0f) {}
+WindForceCalculator::WindForceCalculator() : m_windProbe(nullptr), unknown20(1.0f) {}
 
 WindForceCalculator::~WindForceCalculator() { unbindProbe(); }
 
-void WindForceCalculator::unbindProbe() { mm::mtl::safeRelease(unknown18); }
+void WindForceCalculator::unbindProbe() { mm::mtl::safeRelease(m_windProbe); }
 
 void WindForceCalculator::bindProbe(WindProbe &probe) {
   unbindProbe();
-  unknown18 = &probe;
+  m_windProbe = &probe;
   probe.addRef();
 }
 

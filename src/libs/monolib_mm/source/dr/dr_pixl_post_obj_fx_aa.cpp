@@ -21,18 +21,18 @@
 namespace ml {
 
 DrPixlPostObjFxAA::DrPixlPostObjFxAA(DrMan *drMan, DrPixlMan *pixlMan, DrPixlPostMan *postMan) : DrPixlPostObj(drMan, pixlMan, postMan) {
-  unknown18 = new (drMan->unknown0c) DrPixlRenderTarget(drMan);
+  m_drPixlRenderTarget = new (drMan->unknown0c) DrPixlRenderTarget(drMan);
   resetColorBuff();
 }
 
 DrPixlPostObjFxAA::~DrPixlPostObjFxAA() {
-  if (unknown18 != nullptr) {
-    delete unknown18;
-    unknown18 = nullptr;
+  if (m_drPixlRenderTarget != nullptr) {
+    delete m_drPixlRenderTarget;
+    m_drPixlRenderTarget = nullptr;
   }
 }
 
-void DrPixlPostObjFxAA::releaseColorBuff() { unknown18->releaseTexture(); }
+void DrPixlPostObjFxAA::releaseColorBuff() { m_drPixlRenderTarget->releaseTexture(); }
 
 void DrPixlPostObjFxAA::update() {}
 
@@ -42,8 +42,8 @@ void DrPixlPostObjFxAA::render() {
 }
 
 void DrPixlPostObjFxAA::resetColorBuff() {
-  unknown20 = static_cast<f32>(unknown00->unknown5b8->unknown18);
-  unknown24 = static_cast<f32>(unknown00->unknown5b8->unknown1c);
+  unknown20 = static_cast<f32>(m_drMan->unknown5b8->unknown18);
+  unknown24 = static_cast<f32>(m_drMan->unknown5b8->unknown1c);
 }
 
 // Ruling 8: the shader-pass blocks (uniform block opening, `getTextureLocation` and `unknown001` lookups, the 1/width vectors, the `fxaaRcpFrOpt` and
@@ -51,18 +51,18 @@ void DrPixlPostObjFxAA::resetColorBuff() {
 // out in each function (0x710085725c: six getUniformBlockValOfs and six setF32SetVec4 calls, no call to a local helper). A file-local helper for the
 // two vectors shared with calcAA does not match (241 instructions against 264, 193 against 213 for calcAA).
 void DrPixlPostObjFxAA::calcScale() {
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   if (!DrMan::isSRGBMode() || postParm->m_colTblOn || postParm->m_toneMapOn) {
-    unknown08->setMainRenderTarget();
+    m_drPixlMan->setMainRenderTarget();
   } else {
-    unknown08->setMainSRGBRenderTarget();
+    m_drPixlMan->setMainSRGBRenderTarget();
   }
   DrAPGxType::setupDepthContl(true, true, 7);
-  DrPixlRenderTarget *source = unknown08->unknown7f0->unknown138;
-  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrPixlRenderTarget *source = m_drPixlMan->unknown7f0->unknown138;
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
   DrShdDataObj *shader = shdList->getSelectShdObj(7);
-  DrPixlRenderTarget *downDepth = unknown10->getDownDepth();
-  DrCalcViewWork *viewWork = unknown00->unknown580->unknown10;
+  DrPixlRenderTarget *downDepth = m_drPixlPostMan->getDownDepth();
+  DrCalcViewWork *viewWork = m_drMan->m_drCalcMan->m_drCalcViewWork;
   shdList->bindTriangleTex();
   shader->setupShader(0u);
   grlib::CGLibUniformEtcUtility uniform(shader);
@@ -75,8 +75,8 @@ void DrPixlPostObjFxAA::calcScale() {
   u32 scaleOffset = uniform.unknown001("gScal");
   u32 subOffset = uniform.unknown001("gSub");
   u32 uvsclOffset = uniform.unknown001("uvscl");
-  f32 width = static_cast<f32>(unknown00->unknown5b8->unknown18);
-  f32 height = static_cast<f32>(unknown00->unknown5b8->unknown1c);
+  f32 width = static_cast<f32>(m_drMan->unknown5b8->unknown18);
+  f32 height = static_cast<f32>(m_drMan->unknown5b8->unknown1c);
   f32 vec[4];
   vec[0] = 1.0f;
   vec[1] = 1.0f;
@@ -86,14 +86,14 @@ void DrPixlPostObjFxAA::calcScale() {
   vec[0] = 1.0f / width;
   vec[1] = 1.0f / height;
   uniform.setF32SetVec4(subOffset, vec);
-  vec[0] = postParm->unknown10c / width;
-  vec[1] = postParm->unknown10c / height;
+  vec[0] = postParm->m_aAEdgeRanges / width;
+  vec[1] = postParm->m_aAEdgeRanges / height;
   vec[2] = 2.0f / width;
   vec[3] = 2.0f / height;
   uniform.setF32SetVec4(rcpOffset, vec);
-  vec[0] = postParm->unknown104;
-  vec[1] = postParm->unknown108;
-  vec[2] = postParm->unknown100;
+  vec[0] = postParm->m_aAEdgeThreshold;
+  vec[1] = postParm->m_aAEdgeThresholdMin;
+  vec[2] = postParm->m_aAEdgeSharpness;
   uniform.setF32SetVec4(aaOffset, vec);
   f32 depthHeight = static_cast<f32>(downDepth->unknownc0);
   f32 depthWidth = static_cast<f32>(downDepth->unknownbc);
@@ -109,7 +109,7 @@ void DrPixlPostObjFxAA::calcScale() {
   uniform.setF32SetVec4(ratioOffset, vec);
   uniform.updateData();
   uniform.setUniformBlock();
-  DrAPCache *apCache = unknown00->unknown5c0;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   apCache->beginTexSampling(2, 1);
   apCache->setTexture(*source->unknown70, sourceLocation);
   apCache->setTexture(*downDepth->unknown70, depthLocation);
@@ -118,36 +118,36 @@ void DrPixlPostObjFxAA::calcScale() {
 }
 
 void DrPixlPostObjFxAA::calcLuminosity() {
-  wkPixlManRes *res = unknown08->unknown7f0;
+  wkPixlManRes *res = m_drPixlMan->unknown7f0;
   DrPixlRenderTarget *target = res->unknown130;
   if (res->unknown138 == target) {
     target = res->unknown140;
   }
-  unknown18->setRenderTarget(*target);
-  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  m_drPixlRenderTarget->setRenderTarget(*target);
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
   DrShdDataObj *shader = shdList->getSelectShdObj(3);
   shdList->bindTriangleTex();
   shader->setupShader(0u);
   int location = (shader->unknown38 + shader->unknown58)->getTextureLocation("s0");
-  DrPixlRenderTarget *source = unknown08->unknown7f0->unknown138;
-  DrAPCache *apCache = unknown00->unknown5c0;
+  DrPixlRenderTarget *source = m_drPixlMan->unknown7f0->unknown138;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   apCache->beginTexSampling(2, 0);
   apCache->setTexture(*source->unknown70, location);
   shdList->renderTriangle();
-  unknown18->setColorInvalidate();
+  m_drPixlRenderTarget->setColorInvalidate();
 }
 
 // Ruling 8: written out like calcScale (0x7100857754: four getUniformBlockValOfs and four setF32SetVec4 calls, no call to a local helper).
 void DrPixlPostObjFxAA::calcAA() {
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   if (!DrMan::isSRGBMode() || postParm->m_colTblOn || postParm->m_toneMapOn) {
-    unknown08->setMainRenderTarget();
+    m_drPixlMan->setMainRenderTarget();
   } else {
-    unknown08->setMainSRGBRenderTarget();
+    m_drPixlMan->setMainSRGBRenderTarget();
   }
-  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
   DrShdDataObj *shader = shdList->getSelectShdObj(2);
-  DrPixlRenderTarget *source = unknown08->unknown7f0->unknown138;
+  DrPixlRenderTarget *source = m_drPixlMan->unknown7f0->unknown138;
   shdList->bindTriangleTex();
   shader->setupShader(0u);
   grlib::CGLibUniformEtcUtility uniform(shader);
@@ -158,8 +158,8 @@ void DrPixlPostObjFxAA::calcAA() {
   u32 aaOffset = uniform.unknown001("aaVal");
   u32 scaleOffset = uniform.unknown001("gScal");
   u32 subOffset = uniform.unknown001("gSub");
-  f32 height = static_cast<f32>(unknown00->unknown5b8->unknown1c);
-  f32 width = static_cast<f32>(unknown00->unknown5b8->unknown18);
+  f32 height = static_cast<f32>(m_drMan->unknown5b8->unknown1c);
+  f32 width = static_cast<f32>(m_drMan->unknown5b8->unknown18);
   f32 vec[4];
   vec[0] = (width - 1.0f) / width;
   vec[1] = (height - 1.0f) / height;
@@ -169,28 +169,28 @@ void DrPixlPostObjFxAA::calcAA() {
   vec[0] = 1.0f / width;
   vec[1] = 1.0f / height;
   uniform.setF32SetVec4(subOffset, vec);
-  vec[0] = postParm->unknown10c / width;
-  vec[1] = postParm->unknown10c / height;
+  vec[0] = postParm->m_aAEdgeRanges / width;
+  vec[1] = postParm->m_aAEdgeRanges / height;
   vec[2] = 2.0f / width;
   vec[3] = 2.0f / height;
   uniform.setF32SetVec4(rcpOffset, vec);
-  vec[0] = postParm->unknown104;
-  vec[1] = postParm->unknown108;
-  vec[2] = postParm->unknown100;
+  vec[0] = postParm->m_aAEdgeThreshold;
+  vec[1] = postParm->m_aAEdgeThresholdMin;
+  vec[2] = postParm->m_aAEdgeSharpness;
   uniform.setF32SetVec4(aaOffset, vec);
   uniform.updateData();
   uniform.setUniformBlock();
-  DrAPCache *apCache = unknown00->unknown5c0;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   apCache->beginTexSampling(2, 1);
-  apCache->setTexture(*unknown18->unknown70, sourceLocation);
+  apCache->setTexture(*m_drPixlRenderTarget->unknown70, sourceLocation);
   apCache->beginTexSampling(2, 1);
   apCache->setTexture(*source->unknown70, texLocation);
   shdList->renderTriangle();
 }
 
 void DrPixlPostObjFxAA::debugRender() {
-  const unknown057 *screen = unknown00->unknown5b8;
-  unknown18->debugRender(0, 0, screen->unknown18 / 2, screen->unknown1c / 2, false, false, 1.0f, true);
+  const unknown057 *screen = m_drMan->unknown5b8;
+  m_drPixlRenderTarget->debugRender(0, 0, screen->unknown18 / 2, screen->unknown1c / 2, false, false, 1.0f, true);
 }
 
 } // namespace ml

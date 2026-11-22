@@ -41,7 +41,7 @@ void GfAssetLog::createAssetPack(const GfAssetPack *pack) {
 void GfAssetLog::setAssetPackForLoaded(const GfAssetPack *pack) {
   AssetInfo *info = getAssetInfo(getHash(pack->getAssetName()));
   if (info != nullptr && !(info->unknown24 > 0.0f)) {
-    info->unknown24 = info->unknown30.getSecLap();
+    info->unknown24 = info->m_timeCount.getSecLap();
   }
 }
 

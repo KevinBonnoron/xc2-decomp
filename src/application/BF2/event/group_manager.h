@@ -34,7 +34,7 @@ public:
 
 private:
   u32 unknown10;        // Inferred role: disp flags; original member name unknown.
-  Group unknown20;      // Inferred role: group; original member name unknown.
+  Group m_group;        // Inferred role: group; original member name unknown.
   mm::Mat44 unknown450; // Inferred role: matrix; original member name unknown.
   f32 unknown490;       // Inferred role: radius; original member name unknown.
 };

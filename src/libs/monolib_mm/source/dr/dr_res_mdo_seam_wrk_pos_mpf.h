@@ -34,18 +34,18 @@ public:
   void setupMpfEtcPos(int index, DrResMdoSeamMemObj *memObj);
   void changeMemCall();
 
-  const u8 *unknown00;                // Inferred role: first position table; original member name unknown.
-  const MdsMpfObjTreeData *unknown08; // Inferred role: object tree nodes (0x20 byte stride, read by DrMdoCtlMpfInst::calcInstMpf, 0x71007f9fc4); original member name unknown.
-  const u8 *unknown10;                // Inferred role: position data; original member name unknown.
-  s32 unknown18;                      // Inferred role: position num; original member name unknown. Signed: DrMdoCtlMpfInst::calcInstMpf compares it with `cmp w8, #1; b.lt` and `ldrsw` (0x71007f9fc4).
-  DrResMdoSeamMemObj *unknown20;      // Inferred role: memory object; original member name unknown.
-  s32 unknown28;                      // Inferred role: etc position index; original member name unknown.
+  const u8 *unknown00;                          // Inferred role: first position table; original member name unknown.
+  const MdsMpfObjTreeData *m_mdsMpfObjTreeData; // Inferred role: object tree nodes (0x20 byte stride, read by DrMdoCtlMpfInst::calcInstMpf, 0x71007f9fc4); original member name unknown.
+  const u8 *unknown10;                          // Inferred role: position data; original member name unknown.
+  s32 unknown18; // Inferred role: position num; original member name unknown. Signed: DrMdoCtlMpfInst::calcInstMpf compares it with `cmp w8, #1; b.lt` and `ldrsw` (0x71007f9fc4).
+  DrResMdoSeamMemObj *m_drResMdoSeamMemObj; // Inferred role: memory object; original member name unknown.
+  s32 unknown28;                            // Inferred role: etc position index; original member name unknown.
 };
 
-static_assert(offsetof(DrResMdoSeamWrkPosMpf, unknown08) == 0x08, "");
+static_assert(offsetof(DrResMdoSeamWrkPosMpf, m_mdsMpfObjTreeData) == 0x08, "");
 static_assert(offsetof(DrResMdoSeamWrkPosMpf, unknown10) == 0x10, "");
 static_assert(offsetof(DrResMdoSeamWrkPosMpf, unknown18) == 0x18, "");
-static_assert(offsetof(DrResMdoSeamWrkPosMpf, unknown20) == 0x20, "");
+static_assert(offsetof(DrResMdoSeamWrkPosMpf, m_drResMdoSeamMemObj) == 0x20, "");
 static_assert(offsetof(DrResMdoSeamWrkPosMpf, unknown28) == 0x28, "");
 
 } // namespace ml

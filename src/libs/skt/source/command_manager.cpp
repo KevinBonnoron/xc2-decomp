@@ -147,7 +147,7 @@ bool CommandManager::openServer(const PortRegistInfo &info, SERVER_OPTION option
     PortInfo port;
     port.unknown08 = info.unknown00;
     port.unknown0c = info.unknown04;
-    port.unknown38 = info.unknownb0;
+    port.m_iCommandCallback = info.m_iCommandCallback;
     port.unknown00 = info.unknownc0;
     port.unknown30 = info.unknownc4;
     port.unknown158 = NETWORK_MODE_UNKNOWN_1;
@@ -264,8 +264,8 @@ void CommandManager::notifyDisconnect(u32 id) {
     PortInfo *port = manager->findPortInfoFromID(id);
     if (port != nullptr) {
       mm::threading::CS lock(manager->unknown3120);
-      if (port->unknown38 != nullptr) {
-        port->unknown38->OnDisconnect(port->unknown0c.c_str());
+      if (port->m_iCommandCallback != nullptr) {
+        port->m_iCommandCallback->OnDisconnect(port->unknown0c.c_str());
       }
     }
   }
@@ -347,8 +347,8 @@ void CommandManager::updateCallback() {
       while (port->unknown50.size() != 0) {
         CommandParam *param = port->unknown50.front();
         port->unknown50.erase(port->unknown50.begin());
-        if (port->unknown38 != nullptr) {
-          port->unknown38->OnRecv(*param);
+        if (port->m_iCommandCallback != nullptr) {
+          port->m_iCommandCallback->OnRecv(*param);
         }
         if (param->unknowna08 != nullptr) {
           allocator->deallocate(param->unknowna08);

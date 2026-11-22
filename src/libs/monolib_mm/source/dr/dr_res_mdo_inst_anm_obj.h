@@ -24,7 +24,7 @@ struct MdsInstObjPosData {
 
   u32 unknown00; // Inferred role: name offset; original member name unknown.
   u32 unknown04; // Inferred role: position index; original member name unknown.
-  u16 unknown08; // Inferred role: id; original member name unknown.
+  u16 m_iD;      // Inferred role: id; named after the game accessor ml::ScnObjAccPartsPos::getID.
   union {
     u16 flags;
     struct {
@@ -43,7 +43,7 @@ struct MdsInstObjPosData {
 };
 
 static_assert(offsetof(MdsInstObjPosData, unknown04) == 0x04, "");
-static_assert(offsetof(MdsInstObjPosData, unknown08) == 0x08, "");
+static_assert(offsetof(MdsInstObjPosData, m_iD) == 0x08, "");
 static_assert(offsetof(MdsInstObjPosData, unknown0c) == 0x0c, "");
 static_assert(offsetof(MdsInstObjPosData, unknown0d) == 0x0d, "");
 
@@ -140,9 +140,9 @@ public:
   static void anmInsPosParm_SclY(mm::Vec3 *transform, f32 value);
   static void anmInsPosParm_SclZ(mm::Vec3 *transform, f32 value);
 
-  const MdsInstAnmObj *unknown00;  // Inferred role: instance animation; original member name unknown.
-  const u8 *unknown08;             // Inferred role: animation data; original member name unknown.
-  const MdsPosKeepData *unknown10; // Inferred role: position keep data; original member name unknown.
+  const MdsInstAnmObj *m_mdsInstAnmObj;   // Inferred role: instance animation; original member name unknown.
+  const u8 *unknown08;                    // Inferred role: animation data; original member name unknown.
+  const MdsPosKeepData *m_mdsPosKeepData; // Inferred role: position keep data; original member name unknown.
   u8 _018[0x020 - 0x018];
   mm::Mat44 unknown20; // Inferred role: matrix; original member name unknown.
   u8 _060[0x090 - 0x060];
@@ -153,7 +153,7 @@ public:
   u16 unknown154;         // Inferred role: start frame; original member name unknown.
 };
 
-static_assert(offsetof(DrResMdoPosInstAnm, unknown00) == 0x00, "");
+static_assert(offsetof(DrResMdoPosInstAnm, m_mdsInstAnmObj) == 0x00, "");
 static_assert(offsetof(DrResMdoPosInstAnm, unknown20) == 0x020, "");
 static_assert(offsetof(DrResMdoPosInstAnm, unknown90) == 0x090, "");
 static_assert(offsetof(DrResMdoPosInstAnm, unknown110) == 0x110, "");
@@ -203,18 +203,18 @@ public:
     };
   };
 
-  Flags unknown08;                    // Inferred role: flags; original member name unknown.
-  const char *unknown10;              // Inferred role: names; original member name unknown.
-  const MdsInstObjPosData *unknown18; // Inferred role: info; original member name unknown.
-  const mm::Mat44 *unknown20;         // Inferred role: matrix; original member name unknown.
-  f32 unknown28;                      // Inferred role: alpha; original member name unknown.
+  Flags unknown08;                              // Inferred role: flags; original member name unknown.
+  const char *unknown10;                        // Inferred role: names; original member name unknown.
+  const MdsInstObjPosData *m_mdsInstObjPosData; // Inferred role: info; original member name unknown.
+  const mm::Mat44 *unknown20;                   // Inferred role: matrix; original member name unknown.
+  f32 m_alpha;                                  // Inferred role: alpha; named after the game accessor ml::ScnObjAccPartsPos::getAlpha.
 };
 
 static_assert(offsetof(DrResMdoInstPartsObj, unknown08) == 0x08, "");
 static_assert(offsetof(DrResMdoInstPartsObj, unknown10) == 0x10, "");
-static_assert(offsetof(DrResMdoInstPartsObj, unknown18) == 0x18, "");
+static_assert(offsetof(DrResMdoInstPartsObj, m_mdsInstObjPosData) == 0x18, "");
 static_assert(offsetof(DrResMdoInstPartsObj, unknown20) == 0x20, "");
-static_assert(offsetof(DrResMdoInstPartsObj, unknown28) == 0x28, "");
+static_assert(offsetof(DrResMdoInstPartsObj, m_alpha) == 0x28, "");
 
 class DrResMdoInstPartsAnm : public DrResMdoInstPartsObj {
 public:
@@ -223,16 +223,16 @@ public:
   void setPosFrame(f32 frame) override { m_posFrame = frame; }
   f32 getPosFrame() const override { return m_posFrame; }
   f32 getPosMaxFrame() const override {
-    if (unknown30 == nullptr) {
+    if (m_drResMdoPosInstAnm == nullptr) {
       return 0.0f;
     }
-    return unknown30->unknown152 * unknown54;
+    return m_drResMdoPosInstAnm->unknown152 * unknown54;
   }
   f32 getPosStartFrame() const override {
-    if (unknown30 == nullptr || unknown18->unknown0c == 0) {
+    if (m_drResMdoPosInstAnm == nullptr || m_mdsInstObjPosData->unknown0c == 0) {
       return 0.0f;
     }
-    return unknown18->unknown0c * (1.0f / 255.0f) * unknown30->unknown152;
+    return m_mdsInstObjPosData->unknown0c * (1.0f / 255.0f) * m_drResMdoPosInstAnm->unknown152;
   }
   void setNodeFrame(f32 frame) override;
   f32 getNodeFrame() const override;
@@ -240,10 +240,10 @@ public:
   f32 getCalcOldNodeFrame() const override { return unknown5c + unknown48 * unknown58; }
   f32 getNodeMaxFrame() const override { return unknown5e * unknown54; }
   f32 getNodeStartFrame() const override {
-    if (unknown5e == 0 || unknown18->unknown0c == 0) {
+    if (unknown5e == 0 || m_mdsInstObjPosData->unknown0c == 0) {
       return 0.0f;
     }
-    return unknown18->unknown0c * (1.0f / 255.0f) * unknown5e;
+    return m_mdsInstObjPosData->unknown0c * (1.0f / 255.0f) * unknown5e;
   }
   u32 getSwitchID() const override { return m_switchID; }
   void setSwitchID(u8 id) override;
@@ -257,28 +257,28 @@ public:
   void setNodeAnmData(const MdsInstAnmNodeData *data);
   void setPosAnmData(DrResMdoPosInstAnm *posAnm, DrResMdoPos *pos);
 
-  DrResMdoPosInstAnm *unknown30; // Inferred role: pos anm; original member name unknown.
-  DrResMdoPos *unknown38;        // Inferred role: pos; original member name unknown.
+  DrResMdoPosInstAnm *m_drResMdoPosInstAnm; // Inferred role: pos anm; original member name unknown.
+  DrResMdoPos *m_drResMdoPos;               // Inferred role: pos; original member name unknown.
   f32 m_posFrame;
-  f32 unknown44;                        // Inferred role: node frame; original member name unknown.
-  f32 unknown48;                        // Inferred role: old node frame; original member name unknown.
-  f32 unknown4c[2];                     // Inferred role: dbl node frames; original member name unknown.
-  f32 unknown54;                        // Inferred role: frame scale; original member name unknown.
-  f32 unknown58;                        // Inferred role: inv frame scale; original member name unknown.
-  u16 unknown5c;                        // Inferred role: node start; original member name unknown.
-  u16 unknown5e;                        // Inferred role: node max; original member name unknown.
-  const MdsInstAnmParamInfo *unknown60; // Inferred role: coli param; original member name unknown.
-  const unknown044 *unknown68;          // Inferred role: switches; original member name unknown.
+  f32 unknown44;                                    // Inferred role: node frame; original member name unknown.
+  f32 unknown48;                                    // Inferred role: old node frame; original member name unknown.
+  f32 unknown4c[2];                                 // Inferred role: dbl node frames; original member name unknown.
+  f32 unknown54;                                    // Inferred role: frame scale; original member name unknown.
+  f32 unknown58;                                    // Inferred role: inv frame scale; original member name unknown.
+  u16 unknown5c;                                    // Inferred role: node start; original member name unknown.
+  u16 unknown5e;                                    // Inferred role: node max; original member name unknown.
+  const MdsInstAnmParamInfo *m_mdsInstAnmParamInfo; // Inferred role: coli param; original member name unknown.
+  const unknown044 *unknown68;                      // Inferred role: switches; original member name unknown.
   u8 m_switchID;
   u8 m_switchMax;
 };
 
-static_assert(offsetof(DrResMdoInstPartsAnm, unknown30) == 0x30, "");
+static_assert(offsetof(DrResMdoInstPartsAnm, m_drResMdoPosInstAnm) == 0x30, "");
 static_assert(offsetof(DrResMdoInstPartsAnm, m_posFrame) == 0x40, "");
 static_assert(offsetof(DrResMdoInstPartsAnm, unknown4c) == 0x4c, "");
 static_assert(offsetof(DrResMdoInstPartsAnm, unknown54) == 0x54, "");
 static_assert(offsetof(DrResMdoInstPartsAnm, unknown5c) == 0x5c, "");
-static_assert(offsetof(DrResMdoInstPartsAnm, unknown60) == 0x60, "");
+static_assert(offsetof(DrResMdoInstPartsAnm, m_mdsInstAnmParamInfo) == 0x60, "");
 static_assert(offsetof(DrResMdoInstPartsAnm, unknown68) == 0x68, "");
 static_assert(offsetof(DrResMdoInstPartsAnm, m_switchID) == 0x70, "");
 static_assert(offsetof(DrResMdoInstPartsAnm, m_switchMax) == 0x71, "");
@@ -316,6 +316,7 @@ public:
   DrResMdoInstAnmObj();
   ~DrResMdoInstAnmObj() { release(); }
   static int getWorkSize(const u8 *data);
+  int setup(u8 *work, const u8 *data);
   void release();
   void update();
   void setupLink(DrResMdoPos *pos) const;
@@ -330,17 +331,17 @@ public:
     return unknown08[index];
   }
 
-  const unknown045 *unknown00;      // Inferred role: header; original member name unknown.
-  DrResMdoInstPartsObj **unknown08; // Inferred role: objs; original member name unknown.
-  DrResMdoInstPartsAnm *unknown10;  // Inferred role: anm objs; original member name unknown.
-  void *unknown18;                  // Inferred role: data; original member name unknown.
-  void *unknown20;                  // Inferred role: data; original member name unknown.
-  DrResMdoPosInstAnm *unknown28;    // Inferred role: pos anm objs; original member name unknown.
+  const unknown045 *unknown00;                  // Inferred role: header; original member name unknown.
+  DrResMdoInstPartsObj **unknown08;             // Inferred role: objs; original member name unknown.
+  DrResMdoInstPartsAnm *m_drResMdoInstPartsAnm; // Inferred role: anm objs; original member name unknown.
+  void *unknown18;                              // Inferred role: data; original member name unknown.
+  void *unknown20;                              // Inferred role: data; original member name unknown.
+  DrResMdoPosInstAnm *m_drResMdoPosInstAnm;     // Inferred role: pos anm objs; original member name unknown.
 };
 
 static_assert(offsetof(DrResMdoInstAnmObj, unknown08) == 0x08, "");
-static_assert(offsetof(DrResMdoInstAnmObj, unknown10) == 0x10, "");
-static_assert(offsetof(DrResMdoInstAnmObj, unknown28) == 0x28, "");
+static_assert(offsetof(DrResMdoInstAnmObj, m_drResMdoInstPartsAnm) == 0x10, "");
+static_assert(offsetof(DrResMdoInstAnmObj, m_drResMdoPosInstAnm) == 0x28, "");
 static_assert(sizeof(DrResMdoInstAnmObj) == 0x30, "");
 
 } // namespace ml

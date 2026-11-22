@@ -55,9 +55,9 @@ GfBehaviorEnemyField::GfBehaviorEnemyField(const CreateInfo *info)
 
 void GfBehaviorEnemyField::create(const CreateInfo &info) {
   dispose();
-  unknown08 = info;
-  gmk::AGmkBase *gmkInst = gmk::getBindedGmkInst(unknown08.unknown08);
-  GfObjSetupEnemy *setup = GfObjUtil::getObjSetup<GfObjSetupEnemy>(unknown08.unknown08);
+  m_createInfo = info;
+  gmk::AGmkBase *gmkInst = gmk::getBindedGmkInst(m_createInfo.m_GF_OBJ_HANDLE);
+  GfObjSetupEnemy *setup = GfObjUtil::getObjSetup<GfObjSetupEnemy>(m_createInfo.m_GF_OBJ_HANDLE);
   unknownc0 = setup->unknown20;
   if (setup->unknowna8 > 0) {
     u8 *bdat = GfDataBdat::getFP(BDAT_FLD_ENACT_MOVE);
@@ -72,7 +72,7 @@ void GfBehaviorEnemyField::create(const CreateInfo &info) {
   if (gmkInst != nullptr) {
     u8 *bdat = gmkInst->getBindedBdatFp();
     if (bdat != nullptr) {
-      int index = gmkInst->unknown20.unknown18;
+      int index = gmkInst->m_createInfo.unknown18;
       unknown37 = Bdat::getValCheck(bdat, "party_flag", index, 1);
       if (Bdat::getMember(bdat, "noNaviMesh") != nullptr) {
         unknown38 = Bdat::getFlagVal(bdat, "flag", index, "noNaviMesh") != 0;
@@ -86,11 +86,11 @@ void GfBehaviorEnemyField::create(const CreateInfo &info) {
   }
 
   if (gmkInst != nullptr && unknown37 != 0) {
-    GfObjProperty *property = GfObjUtil::getProperty(unknown08.unknown08);
+    GfObjProperty *property = GfObjUtil::getProperty(m_createInfo.m_GF_OBJ_HANDLE);
     if (property != nullptr) {
       GfObjPropertyEnemy *enemy = property->getEnemy();
       if (enemy != nullptr) {
-        enemy->unknown150 = gmkInst->unknown20.unknown18;
+        enemy->unknown150 = gmkInst->m_createInfo.unknown18;
       }
     }
   }
@@ -100,18 +100,18 @@ void GfBehaviorEnemyField::create(const CreateInfo &info) {
   createSensor();
   {
     GfEnemyFieldMoveSpeed::CreateInfo moveSpeedInfo;
-    moveSpeedInfo.unknown00 = info.unknown08;
-    unknown1d0.create(moveSpeedInfo);
+    moveSpeedInfo.m_GF_OBJ_HANDLE = info.m_GF_OBJ_HANDLE;
+    m_enemyFieldMoveSpeed.create(moveSpeedInfo);
   }
   {
     GfFieldLocalSteer::CreateInfo steerInfo;
     steerInfo.unknown10 = 0.5f;
-    steerInfo.unknown00 = info.unknown08;
+    steerInfo.m_GF_OBJ_HANDLE = info.m_GF_OBJ_HANDLE;
     steerInfo.unknown08 = info.unknown10 * 1.5f;
     steerInfo.unknown0c = info.unknown14 * 0.5f;
     steerInfo.unknown14 = false;
     steerInfo.unknown18 = &unknown5260;
-    unknown200.create(steerInfo);
+    m_fieldLocalSteer.create(steerInfo);
   }
   gmk::GmkRouteNavi *navi = getGmkRouteNavi();
   if (navi != nullptr) {
@@ -119,24 +119,24 @@ void GfBehaviorEnemyField::create(const CreateInfo &info) {
     navi->unknown6c = info.unknown14;
     {
       gmk::GmkRouteNavi::UpdateInfo updateInfo;
-      updateInfo.position = unknown08.unknown00->getTransform().unknown00;
+      updateInfo.position = m_createInfo.m_iGfBehFieldOwner->getTransform().unknown00;
       navi->update(updateInfo);
     }
     unknownc0 = navi->unknown90;
-    GfObjSetupEnemy *setupEnemy = mm::mtl::dynamicCast<GfObjSetupEnemy>(GfObjManager::getObjInfo(info.unknown08)->unknown30);
+    GfObjSetupEnemy *setupEnemy = mm::mtl::dynamicCast<GfObjSetupEnemy>(GfObjManager::getObjInfo(info.m_GF_OBJ_HANDLE)->unknown30);
     if (setupEnemy->unknown68 == 3 && setupEnemy->unknowna8 > 0) {
       GfFieldPitchRollController::CreateInfo pitchRollInfo;
-      pitchRollInfo.unknown00 = info.unknown08;
+      pitchRollInfo.m_GF_OBJ_HANDLE = info.m_GF_OBJ_HANDLE;
       u8 *bdat = GfDataBdat::getFP(BDAT_FLD_ENACT_MOVE);
       u32 attribute = Bdat::getValCheck(bdat, "actMove_Atr", setupEnemy->unknowna8, 1);
       pitchRollInfo.unknown08.unknown00 = (attribute >> 2) & 1;
       pitchRollInfo.unknown08.unknown01 = (attribute >> 3) & 1;
       pitchRollInfo.unknown0a = (attribute >> 4) & 1;
-      unknown5268.create(pitchRollInfo);
+      m_fieldPitchRollController.create(pitchRollInfo);
     }
   }
 
-  switch (unknown08.unknown18) {
+  switch (m_createInfo.unknown18) {
   case 0:
   case 2:
     unknown90 = true;
@@ -149,19 +149,19 @@ void GfBehaviorEnemyField::create(const CreateInfo &info) {
 }
 
 f32 GfBehaviorEnemyField::getWalkSpeed() const {
-  DataParamAcc dataParam(unknown08.unknown08);
+  DataParamAcc dataParam(m_createInfo.m_GF_OBJ_HANDLE);
   return dataParam.getSDataEnemy()->unknown49;
 }
 
 f32 GfBehaviorEnemyField::getRunSpeed() const {
-  DataParamAcc dataParam(unknown08.unknown08);
+  DataParamAcc dataParam(m_createInfo.m_GF_OBJ_HANDLE);
   return dataParam.getSDataEnemy()->unknown4a;
 }
 
 gmk::GmkRouteNavi *GfBehaviorEnemyField::getGmkRouteNavi() const {
-  gmk::AGmkBase *gmkInst = gmk::getBindedGmkInst(unknown08.unknown08);
+  gmk::AGmkBase *gmkInst = gmk::getBindedGmkInst(m_createInfo.m_GF_OBJ_HANDLE);
   if (gmkInst != nullptr && gmkInst->getGmkType() == gmk::GMK_TYPE_ROUTED_ENEMY) {
-    return static_cast<gmk::GmkRoutedEnemy *>(gmkInst)->findRouteNavi(unknown08.unknown08);
+    return static_cast<gmk::GmkRoutedEnemy *>(gmkInst)->findRouteNavi(m_createInfo.m_GF_OBJ_HANDLE);
   }
 
   return nullptr;
@@ -176,35 +176,35 @@ bool GfBehaviorEnemyField::isChangeBattleCondMatch() const {
     return false;
   }
 
-  return unknownd0.isPlayerEnter() || unknownd0.unknown80;
+  return m_fieldEnemySensor.isPlayerEnter() || m_fieldEnemySensor.unknown80;
 }
 
 bool GfBehaviorEnemyField::isArrivedToGoal() const {
-  if (unknown200.isTimeOutCollide()) {
+  if (m_fieldLocalSteer.isTimeOutCollide()) {
     return true;
   }
 
-  const mm::Vec3 &position = unknown08.unknown00->getTransform().unknown00;
+  const mm::Vec3 &position = m_createInfo.m_iGfBehFieldOwner->getTransform().unknown00;
   f32 dy = unknownc0.y - position.y;
-  if (unknown08.unknown14 < dy) {
+  if (m_createInfo.unknown14 < dy) {
     return false;
   }
 
   f32 dx = unknownc0.x - position.x;
   f32 dz = unknownc0.z - position.z;
-  if (unknown08.unknown18 != 3) {
+  if (m_createInfo.unknown18 != 3) {
     dy = 0.0f;
   }
 
   f32 distanceSq = dx * dx + dy * dy + dz * dz;
-  return !(unknown08.unknown10 * unknown08.unknown10 < distanceSq);
+  return !(m_createInfo.unknown10 * m_createInfo.unknown10 < distanceSq);
 }
 
 void GfBehaviorEnemyField::getMoveDir(mm::Vec3 &direction) const {
   if (!getMoveVec(direction, unknown40)) {
-    const mm::Vec3 &position = unknown08.unknown00->getTransform().unknown00;
+    const mm::Vec3 &position = m_createInfo.m_iGfBehFieldOwner->getTransform().unknown00;
     direction = unknownc0 - position;
-    if (unknown08.unknown18 != 3) {
+    if (m_createInfo.unknown18 != 3) {
       direction.y = 0.0f;
     }
   }
@@ -223,17 +223,17 @@ void GfBehaviorEnemyField::getMoveDir(mm::Vec3 &direction) const {
 }
 
 void GfBehaviorEnemyField::dispose() {
-  unknown5268.dispose();
-  unknown200.dispose();
-  unknown1d0.dispose();
+  m_fieldPitchRollController.dispose();
+  m_fieldLocalSteer.dispose();
+  m_enemyFieldMoveSpeed.dispose();
   unknown002();
-  unknown50.dispose();
+  m_gmkSquadNavi.dispose();
   disposeNaviMeshObj();
-  unknown08 = CreateInfo();
+  m_createInfo = CreateInfo();
 }
 
 fw::ColiMoveObject *GfBehaviorEnemyField::getColiObject() const {
-  GfObjAcc acc(unknown08.unknown08);
+  GfObjAcc acc(m_createInfo.m_GF_OBJ_HANDLE);
   GfObj *obj = acc.getObj();
   if (obj != nullptr) {
     GfComCollider *collider = obj->getComponent<GfComCollider>();
@@ -250,7 +250,7 @@ fw::ColiMoveObject *GfBehaviorEnemyField::getColiObject() const {
 
 void GfBehaviorEnemyField::createNaviMeshObj() {
   disposeNaviMeshObj();
-  if (unknown08.unknown18 != 3 && !unknown38) {
+  if (m_createInfo.unknown18 != 3 && !unknown38) {
     unknown40 = fw::NaviManager::get()->createObject();
     if (unknown40 != nullptr) {
       unknown40->setMeshNum(0);
@@ -260,25 +260,25 @@ void GfBehaviorEnemyField::createNaviMeshObj() {
 }
 
 void GfBehaviorEnemyField::createSquadNavi() {
-  unknown50.dispose();
-  gmk::AGmkBase *gmkInst = gmk::getBindedGmkInst(unknown08.unknown08);
+  m_gmkSquadNavi.dispose();
+  gmk::AGmkBase *gmkInst = gmk::getBindedGmkInst(m_createInfo.m_GF_OBJ_HANDLE);
   if (gmkInst != nullptr) {
     gmk::GmkSquadNavi::CreateInfo info;
     switch (gmkInst->getGmkType()) {
     case gmk::GMK_TYPE_ENEMY:
-      info.unknown00 = static_cast<gmk::GmkEnemy *>(gmkInst)->unknown48.unknown150;
+      info.m_gmkSquad = static_cast<gmk::GmkEnemy *>(gmkInst)->m_gmkEnemyInsts.m_gmkSquad;
       break;
     case gmk::GMK_TYPE_ROUTED_ENEMY:
-      info.unknown00 = static_cast<gmk::GmkRoutedEnemy *>(gmkInst)->unknown50.unknown150;
+      info.m_gmkSquad = static_cast<gmk::GmkRoutedEnemy *>(gmkInst)->m_gmkEnemyInsts.m_gmkSquad;
       break;
     default:
       break;
     }
-    GF_OBJ_HANDLE *handle = unknown08.unknown08;
+    GF_OBJ_HANDLE *handle = m_createInfo.m_GF_OBJ_HANDLE;
     info.unknown08 = handle;
     GfObjUtil::getObjSetup<GfObjSetupEnemy>(handle);
-    if (info.unknown00 != nullptr && info.unknown08 != unknown020) {
-      unknown50.create(info);
+    if (info.m_gmkSquad != nullptr && info.unknown08 != unknown020) {
+      m_gmkSquadNavi.create(info);
     }
   }
 }
@@ -286,15 +286,15 @@ void GfBehaviorEnemyField::createSquadNavi() {
 void GfBehaviorEnemyField::createSensor() {
   unknown002();
   GfFieldEnemySensor::CreateInfo info;
-  unknown08.unknown00->getTransform().unknown001(info.unknown00);
-  GfObjSetupEnemy *setup = mm::mtl::dynamicCast<GfObjSetupEnemy>(GfObjManager::getObjInfo(unknown08.unknown08)->unknown30);
+  m_createInfo.m_iGfBehFieldOwner->getTransform().unknown001(info.unknown00);
+  GfObjSetupEnemy *setup = mm::mtl::dynamicCast<GfObjSetupEnemy>(GfObjManager::getObjInfo(m_createInfo.m_GF_OBJ_HANDLE)->unknown30);
   info.unknown40 = setup->unknown10;
   info.unknown44 = setup->m_enArrangeID;
-  unknown08.unknown00->getGmkBattleLockInfo(info.unknown48, info.unknown4c);
-  unknownd0.create(info);
+  m_createInfo.m_iGfBehFieldOwner->getGmkBattleLockInfo(info.unknown48, info.unknown4c);
+  m_fieldEnemySensor.create(info);
 }
 
-void GfBehaviorEnemyField::disposeSquadNavi() { unknown50.dispose(); }
+void GfBehaviorEnemyField::disposeSquadNavi() { m_gmkSquadNavi.dispose(); }
 
 void GfBehaviorEnemyField::disposeNaviMeshObj() {
   fw::NaviManager::get()->releaseObject(unknown40);
@@ -302,7 +302,7 @@ void GfBehaviorEnemyField::disposeNaviMeshObj() {
 }
 
 void GfBehaviorEnemyField::update(f32 deltaTime) {
-  if (unknown08.unknown00 == nullptr || unknown08.unknown08 == unknown020) {
+  if (m_createInfo.m_iGfBehFieldOwner == nullptr || m_createInfo.m_GF_OBJ_HANDLE == unknown020) {
     return;
   }
 
@@ -318,16 +318,16 @@ void GfBehaviorEnemyField::update(f32 deltaTime) {
   unknownb0 = 0.0f;
   updateNaviMeshObj(deltaTime);
   updateSensor(deltaTime);
-  unknown1d0.update(deltaTime);
+  m_enemyFieldMoveSpeed.update(deltaTime);
   GfFieldLocalSteer::UpdateInfo steerInfo;
   steerInfo.unknown00 = unknownc0;
   steerInfo.unknown10 = deltaTime;
-  unknown200.update(steerInfo);
+  m_fieldLocalSteer.update(steerInfo);
   if (unknown52a4 < unknown52a0) {
     unknown52a4 += deltaTime;
   }
 
-  GfObjAcc acc(unknown08.unknown08);
+  GfObjAcc acc(m_createInfo.m_GF_OBJ_HANDLE);
   GfObj *obj = acc.getObj();
   if (obj == nullptr) {
     return;
@@ -342,7 +342,7 @@ void GfBehaviorEnemyField::update(f32 deltaTime) {
     return;
   }
 
-  DataParamAcc dataParam(unknown08.unknown08);
+  DataParamAcc dataParam(m_createInfo.m_GF_OBJ_HANDLE);
   switch (dataParam.getSDataEnemy()->unknown9a) {
   case 0:
     unknown52a9 = isInWater;
@@ -363,23 +363,23 @@ void GfBehaviorEnemyField::update(f32 deltaTime) {
 }
 
 void GfBehaviorEnemyField::updateNaviMeshObj(f32 deltaTime) {
-  if (unknown40 != nullptr && (unknown40->unknown10 & 2) != 0 && unknown1d0.unknown00 != unknown020 && !isArrivedToGoal()) {
-    const mm::Vec3 &position = unknown08.unknown00->getTransform().unknown00;
+  if (unknown40 != nullptr && (unknown40->unknown10 & 2) != 0 && m_enemyFieldMoveSpeed.m_GF_OBJ_HANDLE != unknown020 && !isArrivedToGoal()) {
+    const mm::Vec3 &position = m_createInfo.m_iGfBehFieldOwner->getTransform().unknown00;
     unknown40->setBeginPos(position);
     unknown40->setEndPos(unknownc0);
-    f32 speed = unknown1d0.unknown10 * 0.2777778f;
+    f32 speed = m_enemyFieldMoveSpeed.unknown10 * 0.2777778f;
     unknown40->setMoveSpd(speed * deltaTime);
     mm::Vec3 direction;
     getMoveDir(direction);
   }
 }
 
-void GfBehaviorEnemyField::updateSensor(f32 deltaTime) { unknownd0.update(unknown08.unknown08, *unknown08.unknown00); }
+void GfBehaviorEnemyField::updateSensor(f32 deltaTime) { m_fieldEnemySensor.update(m_createInfo.m_GF_OBJ_HANDLE, *m_createInfo.m_iGfBehFieldOwner); }
 
 void GfBehaviorEnemyField::updatePitchRollController() {
   gmk::GmkRouteNavi *navi = getGmkRouteNavi();
   if (navi != nullptr) {
-    unknown5268.update(*navi);
+    m_fieldPitchRollController.update(*navi);
   }
 }
 
@@ -392,8 +392,8 @@ struct unknown003 {
 static_assert(offsetof(unknown003, unknown04) == 0x04, "");
 
 void GfBehaviorEnemyField::moveToGoal(f32 deltaTime) {
-  f32 speed = unknown1d0.unknown10 * 0.2777778f;
-  GfObjSetupEnemy *setup = mm::mtl::dynamicCast<GfObjSetupEnemy>(GfObjManager::getObjInfo(unknown08.unknown08)->unknown30);
+  f32 speed = m_enemyFieldMoveSpeed.unknown10 * 0.2777778f;
+  GfObjSetupEnemy *setup = mm::mtl::dynamicCast<GfObjSetupEnemy>(GfObjManager::getObjInfo(m_createInfo.m_GF_OBJ_HANDLE)->unknown30);
   // Ruling 2: the game reads the member before the call of getMoveDir (0x7100513058, ldr s9, [x8, #0x40]).
   f32 scale = setup->unknown40;
   // Ruling 3: the game keeps the direction and the GfObjAcc below in one stack slot (sp + 0), so the direction ends here.
@@ -402,12 +402,12 @@ void GfBehaviorEnemyField::moveToGoal(f32 deltaTime) {
     getMoveDir(direction);
     unknowna0 += direction * speed * scale;
   }
-  if (unknown200.unknown00.unknown00 != unknown020) {
-    unknown200.apply(unknowna0, unknowna0);
+  if (m_fieldLocalSteer.m_createInfo.m_GF_OBJ_HANDLE != unknown020) {
+    m_fieldLocalSteer.apply(unknowna0, unknowna0);
   }
   if (getColiObject() != nullptr) {
     f32 goalAngle = atan2f(unknowna0.x, unknowna0.z);
-    GfObjAcc acc(unknown08.unknown08);
+    GfObjAcc acc(m_createInfo.m_GF_OBJ_HANDLE);
     f32 angle = 0.0f;
     if (acc.isValidTransform()) {
       mm::Vec3 rotated = acc.getWorldTransform().unknown10.rotate(mm::Vec3::unitZ);
@@ -447,7 +447,7 @@ void GfBehaviorEnemyField::applyLinearVelocityAndRotY(f32 deltaTime) {
     }
     coli->setDir(unknowna0 * deltaTime);
   }
-  GfObjAcc acc(unknown08.unknown08);
+  GfObjAcc acc(m_createInfo.m_GF_OBJ_HANDLE);
   GfObj *obj = acc.getObj();
   if (obj != nullptr) {
     mm::mtl::IntrusivePtr<fw::ReferenceFrame> &frame = obj->getComponent<GfComTransform>()->unknown001();
@@ -500,7 +500,7 @@ void GfBehaviorEnemyField::applyFieldMoveSpeed(MoveSpeed currentMoveSpeed, MoveS
   f32 speed = getWalkSpeed();
   switch (targetMoveSpeed) {
   case MOVE_SPEED_UNKNOWN_0:
-    speed = unknown1d0.unknown08;
+    speed = m_enemyFieldMoveSpeed.unknown08;
     break;
   case MOVE_SPEED_UNKNOWN_1:
     speed = getWalkSpeed();
@@ -513,7 +513,7 @@ void GfBehaviorEnemyField::applyFieldMoveSpeed(MoveSpeed currentMoveSpeed, MoveS
   }
 
   f32 delta = unknown001(currentMoveSpeed, targetMoveSpeed, *getEnemeyMoveParam(unknown36));
-  unknown1d0.setSpeedKmph(speed, delta);
+  m_enemyFieldMoveSpeed.setSpeedKmph(speed, delta);
 }
 
 } // namespace gf

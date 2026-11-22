@@ -46,8 +46,8 @@ template <typename T> nn::os::FiberType *MicroUpdater<T>::fnMicroUpdate(void *) 
 namespace tl {
 
 TitleMain::TitleMain()
-    : unknown08(fw::FrameworkMemory::getAllocator(5)), unknown80(nullptr), unknown94(false), unknown95(false), unknown98(0), unknowna0(false), unknowna4(gf::SAVESLOT_UNKNOWN_FFFFFFFF),
-      unknown130(nullptr), unknown138(nullptr), unknown168(0), unknown170(gf::unknown019), unknown178(false) {}
+    : m_fsm(fw::FrameworkMemory::getAllocator(5)), unknown80(nullptr), unknown94(false), unknown95(false), m_soundHandle(0), unknowna0(false), unknowna4(gf::SAVESLOT_UNKNOWN_FFFFFFFF),
+      m_saveBuffer(nullptr), m_optionBuffer(nullptr), m_playTitleEvent(0), unknown170(gf::unknown019), unknown178(false) {}
 
 TitleMain::~TitleMain() {}
 
@@ -60,18 +60,18 @@ TitleMain *TitleMain::create() {
 
 void TitleMain::initialize() {
   createSaveBuffer();
-  unknown08.beginSetup(this, 9);
-  unknown08.registerState<TitleStateLoad>(0);
-  unknown08.registerState<TitleStateMainScreen>(1);
-  unknown08.registerState<TitleStatePlayGame>(5);
-  unknown08.registerState<TitleStatePlayEvent>(6);
-  unknown08.registerState<TitleStateToTitle>(7);
-  unknown08.registerState<TitleStateDebugSaveContinue>(2);
-  unknown08.registerState<TitleStateSelectEvent>(3);
-  unknown08.registerState<TitleStateSelectOption>(4);
-  unknown08.registerState<TitleStateDebugSaveContinue>(8);
-  unknown08.endSetup();
-  unknown08.setState(0);
+  m_fsm.beginSetup(this, 9);
+  m_fsm.registerState<TitleStateLoad>(0);
+  m_fsm.registerState<TitleStateMainScreen>(1);
+  m_fsm.registerState<TitleStatePlayGame>(5);
+  m_fsm.registerState<TitleStatePlayEvent>(6);
+  m_fsm.registerState<TitleStateToTitle>(7);
+  m_fsm.registerState<TitleStateDebugSaveContinue>(2);
+  m_fsm.registerState<TitleStateSelectEvent>(3);
+  m_fsm.registerState<TitleStateSelectOption>(4);
+  m_fsm.registerState<TitleStateDebugSaveContinue>(8);
+  m_fsm.endSetup();
+  m_fsm.setState(0);
 #line 127
   MicroUpdater<TitleMain> *updater = new (fw::FrameworkMemory::getAllocator(5), 16, __FILE__, __LINE__) MicroUpdater<TitleMain>();
   unknown80 = updater;
@@ -87,16 +87,16 @@ void TitleMain::initialize() {
 void TitleMain::finalize() {
   destroyMaskVolume();
   unknown94 = true;
-  while (unknown08.getState()->unknown08 != 8) {
+  while (m_fsm.getState()->m_state != 8) {
     ml::MicroThread::get()->sleep(1, true);
   }
   stopTitleBGM(0.0f);
-  unknown158.destroyMenuCallContext();
+  m_titleMenu.destroyMenuCallContext();
   if (unknown80 != nullptr) {
     delete unknown80;
     unknown80 = nullptr;
   }
-  unknown08.cleanup();
+  m_fsm.cleanup();
   destroySaveBuffer();
 }
 
@@ -107,24 +107,24 @@ void TitleMain::destroy() {
 }
 
 void TitleMain::createSaveBuffer() {
-  if (unknown130 == nullptr) {
-    unknown130 = new (ml::WorkRootMem::getMemTMP(), nullptr, 0, 4, false) gf::SDataSave;
+  if (m_saveBuffer == nullptr) {
+    m_saveBuffer = new (ml::WorkRootMem::getMemTMP(), nullptr, 0, 4, false) gf::SDataSave;
   } else {
-    new (unknown130) gf::SDataSave;
+    new (m_saveBuffer) gf::SDataSave;
   }
-  if (unknown138 == nullptr) {
-    unknown138 = new (ml::WorkRootMem::getMemTMP(), nullptr, 0, 4, false) gf::SDataOption;
+  if (m_optionBuffer == nullptr) {
+    m_optionBuffer = new (ml::WorkRootMem::getMemTMP(), nullptr, 0, 4, false) gf::SDataOption;
   } else {
-    new (unknown138) gf::SDataOption;
+    new (m_optionBuffer) gf::SDataOption;
   }
-  gf::GfMenuManager::initOptionData(*unknown138);
+  gf::GfMenuManager::initOptionData(*m_optionBuffer);
 }
 
 void TitleMain::fnUpdate(TitleMain *main) {
-  main->unknown08.update(&main->unknown88);
-  while (main->unknown08.getState()->unknown08 != 8) {
+  main->m_fsm.update(&main->m_updateInfo);
+  while (main->m_fsm.getState()->m_state != 8) {
     ml::MicroThread::get()->sleep(1, true);
-    main->unknown08.update(&main->unknown88);
+    main->m_fsm.update(&main->m_updateInfo);
   }
 }
 
@@ -135,23 +135,23 @@ void TitleMain::destroyMaskVolume() {
 }
 
 void TitleMain::stopTitleBGM(f32 fadeTime) {
-  if (unknown98.isValid()) {
+  if (m_soundHandle.isValid()) {
     if (gf::GfSound::get() != nullptr) {
-      gf::GfSound::get()->stopBgm(unknown98, fadeTime);
+      gf::GfSound::get()->stopBgm(m_soundHandle, fadeTime);
     }
-    unknown98.clear();
+    m_soundHandle.clear();
     unknowna0 = false;
   }
 }
 
 void TitleMain::destroySaveBuffer() {
-  if (unknown130 != nullptr) {
-    delete unknown130;
-    unknown130 = nullptr;
+  if (m_saveBuffer != nullptr) {
+    delete m_saveBuffer;
+    m_saveBuffer = nullptr;
   }
-  if (unknown138 != nullptr) {
-    delete unknown138;
-    unknown138 = nullptr;
+  if (m_optionBuffer != nullptr) {
+    delete m_optionBuffer;
+    m_optionBuffer = nullptr;
   }
 }
 
@@ -160,8 +160,8 @@ void TitleMain::update(const fw::UpdateInfo &info) {
   if (main != nullptr) {
     if (main->unknowna0) {
       gf::GfSound *sound = gf::GfSound::get();
-      if (sound != nullptr && !sound->isPlaying(main->unknown98)) {
-        main->unknown98 = sound->playBgm("stream/bgm/m02.wav", 1.0f, false, -1, gf::CATEGORY_EVT_BGM);
+      if (sound != nullptr && !sound->isPlaying(main->m_soundHandle)) {
+        main->m_soundHandle = sound->playBgm("stream/bgm/m02.wav", 1.0f, false, -1, gf::CATEGORY_EVT_BGM);
       }
     }
     MicroUpdater<TitleMain> *updater = main->unknown80;
@@ -181,7 +181,7 @@ void TitleMain::returnTitle(gf::SAVESLOT slot) {
   TitleMain *main = get();
   if (main != nullptr) {
     main->unknowna4 = slot;
-    u32 state = main->unknown08.getState()->unknown08;
+    u32 state = main->m_fsm.getState()->m_state;
     if (state == 1 || state == 5 || state == 6) {
       main->unknown95 = true;
     }
@@ -191,21 +191,21 @@ void TitleMain::returnTitle(gf::SAVESLOT slot) {
 
 bool TitleMain::isStateGame() const {
   if (get() != nullptr) {
-    return get()->unknown08.getState()->unknown08 == 5;
+    return get()->m_fsm.getState()->m_state == 5;
   }
   return false;
 }
 
 bool TitleMain::isStateEvent() const {
   if (get() != nullptr) {
-    return get()->unknown08.getState()->unknown08 == 6;
+    return get()->m_fsm.getState()->m_state == 6;
   }
   return false;
 }
 
 bool TitleMain::isStateSelect() const {
   if (get() != nullptr) {
-    return get()->unknown08.getState()->unknown08 == 1;
+    return get()->m_fsm.getState()->m_state == 1;
   }
   return false;
 }
@@ -225,13 +225,13 @@ void TitleMain::setMaskVolume(f32 volume, f32 fadeTime) {
 
 bool TitleMain::isReturnTitle() {
   if (get() != nullptr) {
-    return get()->unknown08.getState()->unknown08 == 7;
+    return get()->m_fsm.getState()->m_state == 7;
   }
   return false;
 }
 
 void TitleMain::playTitleBGM() {
-  if (!unknown98.isValid()) {
+  if (!m_soundHandle.isValid()) {
     stopTitleBGM(0.0f);
     unknowna0 = true;
   }
@@ -239,48 +239,48 @@ void TitleMain::playTitleBGM() {
 
 bool TitleMain::isStateReturnTitle() const {
   if (get() != nullptr) {
-    return get()->unknown08.getState()->unknown08 == 7;
+    return get()->m_fsm.getState()->m_state == 7;
   }
   return false;
 }
 
-gf::SDataSave *TitleMain::getSaveBuffer() { return unknown130; }
+gf::SDataSave *TitleMain::getSaveBuffer() { return m_saveBuffer; }
 
-gf::SDataOption *TitleMain::getOptionBuffer() { return unknown138; }
+gf::SDataOption *TitleMain::getOptionBuffer() { return m_optionBuffer; }
 
 void TitleMain::clearSaveBuffer() {
-  if (unknown130 != nullptr) {
-    new (unknown130) gf::SDataSave;
+  if (m_saveBuffer != nullptr) {
+    new (m_saveBuffer) gf::SDataSave;
   }
 }
 
 void TitleMain::setupTitleOptionToGameOption() {
-  if (unknown138 != nullptr) {
-    gf::GfManager::setupOptionData(*unknown138);
+  if (m_optionBuffer != nullptr) {
+    gf::GfManager::setupOptionData(*m_optionBuffer);
   }
 }
 
 void TitleMain::playTitleEvent(u32 event) {
-  unknown168 = event;
+  m_playTitleEvent = event;
   if (event != 0) {
     gf::GfPlayFactory::createOneEvent(event);
   }
 }
 
-u32 TitleMain::getPlayTitleEvent() { return unknown168; }
+u32 TitleMain::getPlayTitleEvent() { return m_playTitleEvent; }
 
 void TitleMain::getGameClearFlagFromSaveData() {
-  if (unknown130->unknown00 == gf::SAVE_UNKNOWN_237915 && gf::GfGameFlag::getLocal(unknown130->unknown10.unknownfbbc4, 1, 0xd77e) != 0) {
+  if (m_saveBuffer->unknown00 == gf::SAVE_UNKNOWN_237915 && gf::GfGameFlag::getLocal(m_saveBuffer->m_game.m_gameFlag, 1, 0xd77e) != 0) {
     unknown178 = true;
   }
 }
 
 u32 TitleMain::getChapterIdFromSaveData() {
-  if (unknown130->unknown00 != gf::SAVE_UNKNOWN_237915) {
+  if (m_saveBuffer->unknown00 != gf::SAVE_UNKNOWN_237915) {
     return 0;
   }
   // The game reads the u16 at SDataSave + 0x104bd6 (ldrh at 0x7100143e6c), which is unknown9000[1], a short flag, of the game flags.
-  u32 flag = unknown130->unknown10.unknownfbbc4.unknown9000[1];
+  u32 flag = m_saveBuffer->m_game.m_gameFlag.unknown9000[1];
   if (flag == 0) {
     return 0;
   }

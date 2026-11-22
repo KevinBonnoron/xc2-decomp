@@ -320,31 +320,31 @@ bool IDColiUtilColiSimple::isLineInBox(IDColiResult &result, const IDColiInput &
 bool IDColiUtilColiSimple::isLineInCapsule(IDColiResult &result, const IDColiInput &input, const void *data) { return isPartsLineCapsule(result, &input.line, data, false); }
 
 bool IDColiUtilColiSimple::isRayBox(IDColiResult &result, const IDColiInput &input, const void *data) {
-  if (isPartsLineBox(result, &input.ray.unknown00[0], data, false)) {
+  if (isPartsLineBox(result, &input.ray.m_cLLineWork[0], data, false)) {
     return true;
   }
-  return isPartsLineBox(result, &input.ray.unknown00[1], data, false);
+  return isPartsLineBox(result, &input.ray.m_cLLineWork[1], data, false);
 }
 
 bool IDColiUtilColiSimple::isRayInBox(IDColiResult &result, const IDColiInput &input, const void *data) {
-  if (isPartsLineBox(result, &input.ray.unknown00[0], data, true)) {
+  if (isPartsLineBox(result, &input.ray.m_cLLineWork[0], data, true)) {
     return true;
   }
-  return isPartsLineBox(result, &input.ray.unknown00[1], data, true);
+  return isPartsLineBox(result, &input.ray.m_cLLineWork[1], data, true);
 }
 
 bool IDColiUtilColiSimple::isRayCapsule(IDColiResult &result, const IDColiInput &input, const void *data) {
-  if (isPartsLineCapsule(result, &input.ray.unknown00[0], data, false)) {
+  if (isPartsLineCapsule(result, &input.ray.m_cLLineWork[0], data, false)) {
     return true;
   }
-  return isPartsLineCapsule(result, &input.ray.unknown00[1], data, false);
+  return isPartsLineCapsule(result, &input.ray.m_cLLineWork[1], data, false);
 }
 
 bool IDColiUtilColiSimple::isRayInCapsule(IDColiResult &result, const IDColiInput &input, const void *data) {
-  if (isPartsLineCapsule(result, &input.ray.unknown00[0], data, true)) {
+  if (isPartsLineCapsule(result, &input.ray.m_cLLineWork[0], data, true)) {
     return true;
   }
-  return isPartsLineCapsule(result, &input.ray.unknown00[1], data, true);
+  return isPartsLineCapsule(result, &input.ray.m_cLLineWork[1], data, true);
 }
 
 bool IDColiUtilColiSimple::isRayPoli(IDColiResult &result, const IDColiInput &input, const void *data) { return false; }
@@ -374,10 +374,10 @@ bool IDColiUtilColiSimple::isPartsLineSphere(IDColiResult &result, const CLLineW
 bool IDColiUtilColiSimple::isLineSphere(IDColiResult &result, const IDColiInput &input, const void *data) { return isPartsLineSphere(result, &input.line, data); }
 
 bool IDColiUtilColiSimple::isRaySphere(IDColiResult &result, const IDColiInput &input, const void *data) {
-  if (isPartsLineSphere(result, &input.ray.unknown00[0], data)) {
+  if (isPartsLineSphere(result, &input.ray.m_cLLineWork[0], data)) {
     return true;
   }
-  return isPartsLineSphere(result, &input.ray.unknown00[1], data);
+  return isPartsLineSphere(result, &input.ray.m_cLLineWork[1], data);
 }
 
 } // namespace idcoli

@@ -20,7 +20,7 @@
 namespace ml {
 
 void DrPixlPostObjToneMap::update() {
-  if (unknown00->unknown058()) {
+  if (m_drMan->unknown058()) {
     return;
   }
   if ((unknownb4 & 0x10) != 0) {
@@ -32,12 +32,12 @@ void DrPixlPostObjToneMap::update() {
 
 DrPixlPostObjToneMap::DrPixlPostObjToneMap(DrMan *drMan, DrPixlMan *pixlMan, DrPixlPostMan *postMan) : DrPixlPostObj(drMan, pixlMan, postMan), unknownb0(1.0f), unknownb4(0x10), unknownb8(0) {
   for (s32 i = 0; i < 6; i++) {
-    unknown18[i] = new (unknown00->unknown0c) DrPixlRenderTarget(drMan);
+    unknown18[i] = new (m_drMan->unknown0c) DrPixlRenderTarget(drMan);
   }
   unknown48.setup(0x10);
   unknown70.setup(0x10);
-  unknown98 = new (unknown00->unknown0c) DrPixlRenderTarget(drMan);
-  unknowna0 = new (unknown00->unknown0c) DrPixlRenderTarget(drMan);
+  unknown98 = new (m_drMan->unknown0c) DrPixlRenderTarget(drMan);
+  unknowna0 = new (m_drMan->unknown0c) DrPixlRenderTarget(drMan);
   unknowna8 = unknown98;
   unknown98->setTextureInfo(1.0f, 1.0f, DrAPCache::TEXTYPE_HALF_X1, false, 0);
   unknowna0->setTextureInfo(1.0f, 1.0f, DrAPCache::TEXTYPE_HALF_X1, false, 0);
@@ -67,7 +67,7 @@ void DrPixlPostObjToneMap::createMeasureLuminance() {
 
 void DrPixlPostObjToneMap::createSclDow() {
   unknown18[0]->setRenderTarget();
-  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
   DrShdDataObj *shader = shdList->getPostShdObj(0);
   shdList->bindQuadsTex();
   shader->setupShader(0u);
@@ -75,15 +75,15 @@ void DrPixlPostObjToneMap::createSclDow() {
   uniform.setUseUniformBlock("U_POST");
   u32 paramOffset = uniform.unknown001("gParam");
   mm::Vec4 param = mm::Vec4::zero;
-  param.x = unknown00->unknown588->getSkyLuminance();
+  param.x = m_drMan->unknown588->getSkyLuminance();
   uniform.setVec4SetVec4(paramOffset, param);
   uniform.updateData();
   uniform.setUniformBlock();
   int location = (shader->unknown38 + shader->unknown58)->getTextureLocation("s0");
   int depthLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("gTDownDepth");
-  DrPixlRenderTarget *colorBuff = unknown08->unknown7f0->unknown138;
-  DrPixlRenderTarget *downDepth = unknown08->unknown7f0->unknown180->getDownDepth();
-  DrAPCache *apCache = unknown00->unknown5c0;
+  DrPixlRenderTarget *colorBuff = m_drPixlMan->unknown7f0->unknown138;
+  DrPixlRenderTarget *downDepth = m_drPixlMan->unknown7f0->m_drPixlPostMan->getDownDepth();
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   apCache->beginTexSampling(2, 0);
   apCache->setTexture(*colorBuff->unknown70, location);
   apCache->setTexture(*downDepth->unknown70, depthLocation);
@@ -92,10 +92,10 @@ void DrPixlPostObjToneMap::createSclDow() {
 }
 
 void DrPixlPostObjToneMap::createMeasureLuminanceByCompute() {
-  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
   DrShdDataObj *shader = shdList->getPostShdObj(1);
-  DrAPCache *apCache = unknown00->unknown5c0;
-  wkPixlManRes *res = unknown08->unknown7f0;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
+  wkPixlManRes *res = m_drPixlMan->unknown7f0;
   f32 offsets[32];
   f32 toneAveMin = res->unknown194;
   f32 toneAveMax = res->unknown198;
@@ -163,10 +163,10 @@ void DrPixlPostObjToneMap::createMeasureLuminanceByCompute() {
 }
 
 void DrPixlPostObjToneMap::creaetMeasureLuminaceByRenderTarget() {
-  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
   DrShdDataObj *shader = shdList->getPostShdObj(1);
-  DrAPCache *apCache = unknown00->unknown5c0;
-  wkPixlManRes *res = unknown08->unknown7f0;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
+  wkPixlManRes *res = m_drPixlMan->unknown7f0;
   f32 offsets[32];
   f32 toneAveMin = res->unknown194;
   f32 toneAveMax = res->unknown198;

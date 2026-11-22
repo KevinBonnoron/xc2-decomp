@@ -24,6 +24,7 @@ public:
   };
 
   void update();
+  void resetColorBuff();
   void releaseColorBuff();
   void debugRender();
   void render_beforeTemporal();
@@ -35,7 +36,7 @@ public:
   grlib::CGLibRenderTarget *getTemporalHistoryTexture();
   grlib::CGLibTextureBuffer *getScreenSpaceShadow() const;
 
-  DrMan *unknown00; // Inferred role: driver manager; original member name unknown.
+  DrMan *m_drMan; // Inferred role: driver manager; original member name unknown.
   u8 _08[0x10 - 0x08];
   bool unknown10; // Inferred role: blur enable; original member name unknown.
   u8 _11[0x18 - 0x11];

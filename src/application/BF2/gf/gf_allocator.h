@@ -22,11 +22,11 @@ public:
   bool deallocateProgLarge(void *pointer);
   const char *getName() const override;
 
-  mtl::ALLOC_HANDLE unknown08;   // Inferred role: handle; original member name unknown.
+  mtl::ALLOC_HANDLE m_memHandle; // Inferred role: handle; named after the game accessor gf::GfAllocator::getMemHandle.
   mm::mtl::FixStr<64> unknown0c; // Inferred role: name; original member name unknown.
 };
 
-static_assert(offsetof(GfAllocator, unknown08) == 0x08, "");
+static_assert(offsetof(GfAllocator, m_memHandle) == 0x08, "");
 static_assert(offsetof(GfAllocator, unknown0c) == 0x0c, "");
 static_assert(sizeof(GfAllocator) == 0x50, "");
 
@@ -57,12 +57,12 @@ public:
   void buildAllocator(ALLOCATOR allocator, mtl::ALLOC_HANDLE handle);
   void destroyAllocator(ALLOCATOR allocator, mtl::ALLOC_HANDLE handle);
 
-  bool unknown08;                       // Inferred role: initialized; original member name unknown.
-  GfAllocator unknown10[ALLOCATOR_MAX]; // Inferred role: allocators; original member name unknown.
+  bool unknown08;                         // Inferred role: initialized; original member name unknown.
+  GfAllocator m_allocator[ALLOCATOR_MAX]; // Inferred role: allocators; named after the game accessor gf::GfAllocatorManager::getAllocator.
 };
 
 static_assert(offsetof(GfAllocatorManager, unknown08) == 0x08, "");
-static_assert(offsetof(GfAllocatorManager, unknown10) == 0x10, "");
+static_assert(offsetof(GfAllocatorManager, m_allocator) == 0x10, "");
 static_assert(sizeof(GfAllocatorManager) == 0x3d0, "");
 
 GfAllocator *getAllocator(ALLOCATOR allocator);

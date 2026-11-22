@@ -82,7 +82,7 @@ void GfDataEnemy::setupSDataEnemy(SDataEnemy &dataEnemy, u32 arrange, u32 level)
   } else {
     dataEnemy.unknown04 &= ~ENEMY_FLAG_UNKNOWN_4;
   }
-  dataEnemy.unknown1f = bdatArrange->getChrEnArrangeLinkRadius(arrange);
+  dataEnemy.m_linkRadius = bdatArrange->getChrEnArrangeLinkRadius(arrange);
   dataEnemy.unknown20 = bdatArrange->getChrEnArrangeDetects(arrange);
   dataEnemy.unknown22 = bdatArrange->getChrEnArrangeSearchRange(arrange);
   dataEnemy.unknown24 = bdatArrange->getChrEnArrangeSearchAngle(arrange);
@@ -123,8 +123,8 @@ void GfDataEnemy::setupSDataEnemy(SDataEnemy &dataEnemy, u32 arrange, u32 level)
   dataEnemy.unknown5a = bdatParam->getChrEnParamLuckRev(param);
   dataEnemy.unknown5c = bdatParam->getChrEnParamParmor(param);
   dataEnemy.unknown5e = bdatParam->getChrEnParamEarmor(param);
-  dataEnemy.unknown60 = bdatParam->getChrEnParamRstPower(param);
-  dataEnemy.unknown61 = bdatParam->getChrEnParamRstEther(param);
+  dataEnemy.m_resistancePower = bdatParam->getChrEnParamRstPower(param);
+  dataEnemy.m_resistanceEther = bdatParam->getChrEnParamRstEther(param);
   dataEnemy.unknown62 = bdatParam->getChrEnParamAtr(param);
   dataEnemy.unknown63 = bdatParam->getChrEnParamCriticalRate(param);
   dataEnemy.unknown64 = bdatParam->getChrEnParamGuardRate(param);
@@ -154,8 +154,8 @@ void GfDataEnemy::setupSDataEnemy(SDataEnemy &dataEnemy, u32 arrange, u32 level)
     dataEnemy.unknown04 &= ~ENEMY_FLAG_UNKNOWN_9;
   }
   dataEnemy.unknown65 = bdatParam->getChrEnParamHealPotDrop(param);
-  dataEnemy.unknown66 = bdatParam->getChrEnParamRstFiCombo(param);
-  dataEnemy.unknown68 = bdatParam->getChrEnParamIvdFiCombo(param);
+  dataEnemy.m_resistanceCombo = bdatParam->getChrEnParamRstFiCombo(param);
+  dataEnemy.m_invincibleCombo = bdatParam->getChrEnParamIvdFiCombo(param);
   dataEnemy.unknown6a = bdatParam->getChrEnParamAura(param);
   dataEnemy.unknown6c = bdatParam->getChrEnParamDyingHP(param);
   dataEnemy.unknown6d = bdatParam->getChrEnParamWTNormal(param);
@@ -169,7 +169,7 @@ void GfDataEnemy::setupSDataEnemy(SDataEnemy &dataEnemy, u32 arrange, u32 level)
   GfBdatRsc *bdatRsc = GfBdatRsc::get();
   u32 resource = dataEnemy.unknown44;
   dataEnemy.unknown98 = bdatRsc->getRscEnTypeFamily(resource);
-  dataEnemy.unknown99 = bdatRsc->getRscEnTypeGenus(resource);
+  dataEnemy.m_genus = bdatRsc->getRscEnTypeGenus(resource);
   dataEnemy.unknown9a = bdatRsc->getRscEnActType(resource);
   dataEnemy.unknown9b = bdatRsc->getRscEnFldMoveType(resource);
   dataEnemy.unknown9c = bdatRsc->getRscEnMemorySlot(resource);
@@ -184,9 +184,9 @@ void GfDataEnemy::setupSDataEnemy(SDataEnemy &dataEnemy, u32 arrange, u32 level)
     dataEnemy.unknown04 &= ~ENEMY_FLAG_UNKNOWN_12;
   }
   for (u32 index = 0; index < 5; index++) {
-    dataEnemy.unknown9e[index] = bdatRsc->getRscEnWeaponNum(resource, index);
+    dataEnemy.m_equipWeapon[index] = bdatRsc->getRscEnWeaponNum(resource, index);
   }
-  if (bdatRsc->isRscEnGenusFlaggimmicktype(dataEnemy.unknown99)) {
+  if (bdatRsc->isRscEnGenusFlaggimmicktype(dataEnemy.m_genus)) {
     dataEnemy.unknown04 |= ENEMY_FLAG_UNKNOWN_10;
   } else {
     dataEnemy.unknown04 &= ~ENEMY_FLAG_UNKNOWN_10;
@@ -327,7 +327,7 @@ u32 GfDataEnemy::getWeaponType(u32 arrange) {
     return 0;
   }
 
-  return GfDataBlade::getSDataBlade(blade).unknown821;
+  return GfDataBlade::getSDataBlade(blade).m_weaponType;
 }
 
 bool GfDataEnemy::getDriverAddAnim(mm::mtl::FixStr<128> &animName, u32 driver, u32 number) {

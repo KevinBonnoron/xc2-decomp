@@ -7,10 +7,10 @@
 
 namespace gf {
 
-GfMenuHUD::GfMenuHUD(const GfSetupParam &param) : unknown08(false), unknown0c(0), unknown10(0) { initialize(param); }
+GfMenuHUD::GfMenuHUD(const GfSetupParam &param) : m_initialized(false), unknown0c(0), unknown10(0) { initialize(param); }
 
 void GfMenuHUD::initialize(const GfSetupParam &param) {
-  unknown08 = true;
+  m_initialized = true;
   unknown0c = 0;
   unknown10 = 0;
   unknown40.bind(this, &GfMenuHUD::systemStart);
@@ -53,11 +53,11 @@ void GfMenuHUD::finalize() {
   unknown10 = 0;
 }
 
-bool GfMenuHUD::isInitialized() { return get()->unknown08; }
+bool GfMenuHUD::isInitialized() { return get()->m_initialized; }
 
 void GfMenuHUD::postUpdate(const fw::UpdateInfo &info) {
   GfMenuHUD *hud = get();
-  if (hud == nullptr || !hud->unknown08) {
+  if (hud == nullptr || !hud->m_initialized) {
     return;
   }
   if (hud->unknown40.isValid()) {
@@ -72,7 +72,7 @@ void GfMenuHUD::reciveUIEvent(const ui::EventData &event, u32 handle) {}
 
 void GfMenuHUD::changeScene(u32 scene) {
   GfMenuHUD *hud = get();
-  if (hud->unknown08 && hud->unknown0c != scene) {
+  if (hud->m_initialized && hud->unknown0c != scene) {
     hud->unknown10 = scene;
     hud->unknown60.bind(hud, &GfMenuHUD::sceneChangeStart);
   }
@@ -80,7 +80,7 @@ void GfMenuHUD::changeScene(u32 scene) {
 
 u32 GfMenuHUD::getSceneID() {
   u32 scene = 0;
-  if (get()->unknown08) {
+  if (get()->m_initialized) {
     scene = get()->unknown0c;
   }
   return scene;

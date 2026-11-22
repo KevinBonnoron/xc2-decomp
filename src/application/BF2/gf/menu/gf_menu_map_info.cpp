@@ -142,7 +142,7 @@ bool GfMenuMapInfo::getMapArea(int index, u32 areaIndex, MapAreaInfo &area) {
   if (info != nullptr && index < info->unknown10.size() && info->unknown10[index]->valid()) {
     const unknown001 *data = static_cast<const unknown001 *>(info->unknown10[index]->getAssetData());
     if (areaIndex < data->unknown04) {
-      area = data->unknown08[areaIndex];
+      area = data->m_mapAreaInfo[areaIndex];
       return true;
     }
   }
@@ -154,7 +154,7 @@ const GfMenuMapInfo::MapAreaInfo *GfMenuMapInfo::getMapArea(int index, u32 areaI
   GfMenuMapInfo *info = get();
   if (info != nullptr && index < info->unknown10.size() && info->unknown10[index]->valid()) {
     const unknown001 *data = static_cast<const unknown001 *>(info->unknown10[index]->getAssetData());
-    return areaIndex < data->unknown04 ? &data->unknown08[areaIndex] : nullptr;
+    return areaIndex < data->unknown04 ? &data->m_mapAreaInfo[areaIndex] : nullptr;
   }
 
   return nullptr;
@@ -165,8 +165,8 @@ bool GfMenuMapInfo::getMapAreaFromName(int index, const char *name, MapAreaInfo 
   if (info != nullptr && index < info->unknown10.size() && info->unknown10[index]->valid()) {
     const unknown001 *data = static_cast<const unknown001 *>(info->unknown10[index]->getAssetData());
     for (u32 i = 0; i < data->unknown04; i++) {
-      if (strcmp(data->unknown08[i].unknown00, name) == 0) {
-        area = data->unknown08[i];
+      if (strcmp(data->m_mapAreaInfo[i].unknown00, name) == 0) {
+        area = data->m_mapAreaInfo[i];
         return true;
       }
     }
@@ -180,8 +180,8 @@ const GfMenuMapInfo::MapAreaInfo *GfMenuMapInfo::getMapAreaFromName(int index, c
   if (info != nullptr && index < info->unknown10.size() && info->unknown10[index]->valid()) {
     const unknown001 *data = static_cast<const unknown001 *>(info->unknown10[index]->getAssetData());
     for (u32 i = 0; i < data->unknown04; i++) {
-      if (strcmp(data->unknown08[i].unknown00, name) == 0) {
-        return &data->unknown08[i];
+      if (strcmp(data->m_mapAreaInfo[i].unknown00, name) == 0) {
+        return &data->m_mapAreaInfo[i];
       }
     }
   }

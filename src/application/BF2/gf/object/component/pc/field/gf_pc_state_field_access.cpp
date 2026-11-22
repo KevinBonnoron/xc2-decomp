@@ -22,7 +22,7 @@ namespace gf {
 namespace pc {
 
 void StateFieldAccess::enter(GfComBehaviorPc *behavior, ai::State *previous) {
-  unknown18 = unknown020;
+  m_GF_OBJ_HANDLE = unknown020;
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   GfObj *target = StateUtilField::getAccessTarget(*behavior);
   if (target != nullptr) {
@@ -37,7 +37,7 @@ void StateFieldAccess::enter(GfComBehaviorPc *behavior, ai::State *previous) {
         StateUtil::broadcastPlayer(*behavior, warp);
       }
     }
-    unknown18 = target->unknownf8;
+    m_GF_OBJ_HANDLE = target->unknownf8;
     MsgPcFieldNotifyAction message(0);
     static_cast<GfObj *>(behavior->unknown08)->sendMessage(target, message);
   }

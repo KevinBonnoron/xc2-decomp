@@ -16,13 +16,13 @@ namespace gf {
 namespace npc {
 
 void StateApproachPc::enter(GfComBehaviorNpc *behavior, ai::State *previous) {
-  behavior->validateLocalSteer(static_cast<STATE_ID>(unknown08));
+  behavior->validateLocalSteer(static_cast<STATE_ID>(m_state));
   unknown50 = &StateApproachPc::seqTurnPc;
 }
 
 void StateApproachPc::leave(GfComBehaviorNpc *behavior, ai::State *next) {
   if (next != nullptr) {
-    behavior->validateLocalSteer(static_cast<STATE_ID>(next->unknown08));
+    behavior->validateLocalSteer(static_cast<STATE_ID>(next->m_state));
   }
   unknown50 = nullptr;
 }
@@ -81,16 +81,16 @@ void StateApproachPc::seqApproachPc(GfComBehaviorNpc &behavior, const fw::Update
   }
   if (!isNear) {
     // The goal copy loads the goal and then the position before the call to getDistYThreshold, as the game does (0x7100538740-0x710053874c, call at 0x7100538754);
-    // without it the position is loaded first. The distance local places the sum before the load of unknown98.unknown04 (0x710053877c); without it the
+    // without it the position is loaded first. The distance local places the sum before the load of m_bdatInfo.unknown04 (0x710053877c); without it the
     // squares are scheduled in another order. The negated `<` tests are the game's (fcmp operand order and b.mi/b.pl): `>=` and `<=` change them.
     GfObjAcc acc(static_cast<GfObj *>(behavior.unknown08));
     const mm::Vec3 &position = acc.getWorldTransform().unknown00;
-    mm::Vec3 goal = binded->unknown08.unknown08->unknown00;
+    mm::Vec3 goal = binded->m_createBaseInfo.m_xform->unknown00;
     mm::Vec3 delta = position - goal;
     if (!(GfComBehaviorNpc::BdatInfo::getDistYThreshold() < delta.y)) {
       delta.y = 0.0f;
       f32 distanceSq = delta.x * delta.x + delta.y * delta.y + delta.z * delta.z;
-      if (!(behavior.unknown98.unknown04 < distanceSq)) {
+      if (!(behavior.m_bdatInfo.unknown04 < distanceSq)) {
         behavior.moveToGoal(info.unknown04);
         return;
       }
@@ -105,9 +105,9 @@ void StateApproachPc::seqApproachPc(GfComBehaviorNpc &behavior, const fw::Update
 // game's 30), nested ifs with `return true` give 28. The negated `<` tests are the game's (b.pl): `>=` gives b.ge.
 bool StateApproachPc::isCondMatch(const GfComBehaviorNpc &behavior) {
   bool match = false;
-  if (gmk::isPlayerExist() && 0.0f < behavior.unknown98.unknown04) {
+  if (gmk::isPlayerExist() && 0.0f < behavior.m_bdatInfo.unknown04) {
     if (!(GfComBehaviorNpc::BdatInfo::getDistYThreshold() * GfComBehaviorNpc::BdatInfo::getDistYThreshold() < behavior.unknowne4)) {
-      if (!(behavior.unknown98.unknown04 < behavior.unknowne0)) {
+      if (!(behavior.m_bdatInfo.unknown04 < behavior.unknowne0)) {
         match = true;
       }
     }

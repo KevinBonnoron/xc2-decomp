@@ -46,7 +46,7 @@ bool GmkJump::BdatInfo::isPopCondMatched() const {
 
 void GmkJump::BdatInfo::debugDraw(const AGmkBase &gmk) const {}
 
-GmkJump::GmkJump() : _48(), unknown50(false), unknown58(gf::unknown020), unknown60(), unknown68(), unknown74(), unknown78(false), unknown79(true) {}
+GmkJump::GmkJump() : _48(), unknown50(false), unknown58(gf::unknown020), unknown60(), unknown68(), m_distCond(), unknown78(false), unknown79(true) {}
 
 void GmkJump::create(const CreateInfo &info) {
   AGmkBase::create(info);
@@ -61,7 +61,7 @@ void GmkJump::create(const CreateInfo &info) {
       u8 releaseHeight = Bdat::getValCheck(mapList, "ene_release_h", map, BDAT_TYPE_UNKNOWN_1);
       unknown68.set(displayRadius + releaseRadius, displayHeight + releaseHeight);
       f32 iconDistance = Bdat::getValCheck(gf::GfDataBdat::getFP(gf::BDAT_FLD_WILDCARD_DATA), 0, WILDCARD_UNKNOWN_1_2, BDAT_TYPE_UNKNOWN_8).valueF32;
-      unknown74.unknown00 = iconDistance * iconDistance;
+      m_distCond.unknown00 = iconDistance * iconDistance;
       return;
     }
   }
@@ -105,7 +105,7 @@ void GmkJump::createGobInst() {
   }
   disposeGobInst(false);
   CBdatWrapper bdat = unknown004();
-  unknown58 = gf::GfObjFactory::createGmkCollection(bdat, unknown20.unknown18);
+  unknown58 = gf::GfObjFactory::createGmkCollection(bdat, m_createInfo.unknown18);
   bindToGameObj(unknown58);
   unknown002(unknown58, true);
   setEventDisp(unknown58, debugIsDispGmkType(getGmkType()));
@@ -130,7 +130,7 @@ void GmkJump::update(f32 deltaTime) {
   if (unknown78) {
     return;
   }
-  if (unknown50 && DistCond::isMatch(unknown74.unknown00, getData()->position)) {
+  if (unknown50 && DistCond::isMatch(m_distCond.unknown00, getData()->position)) {
     if (unknown70 == 0) {
       createIcon();
     }

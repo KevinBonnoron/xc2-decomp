@@ -29,9 +29,9 @@ void SeObj::clear() {
 }
 
 void SeObj::stop() {
-  if (unknown0c.isValid()) {
-    gf::GfSound::get()->stopSe(unknown0c, 0.0f);
-    unknown0c.clear();
+  if (m_soundHandle.isValid()) {
+    gf::GfSound::get()->stopSe(m_soundHandle, 0.0f);
+    m_soundHandle.clear();
   }
 }
 
@@ -39,7 +39,7 @@ void SeObj::exec(f32 delta) {
   if ((unknown08 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) != FLAG_UNKNOWN_0) {
     return;
   }
-  if (gf::GfSound::get()->isPlaying(unknown0c) && !mm::mtl::Singleton<SkipManager>::getPtr()->isSkip()) {
+  if (gf::GfSound::get()->isPlaying(m_soundHandle) && !mm::mtl::Singleton<SkipManager>::getPtr()->isSkip()) {
     unknown58 += delta;
     if ((unknown08 & FLAG_UNKNOWN_6) != 0) {
       if (mm::mtl::Singleton<SkipManager>::getPtr()->isSkip()) {
@@ -51,7 +51,7 @@ void SeObj::exec(f32 delta) {
       }
       unknown68 = unknown70.getValue();
       mm::clampRef(unknown68, 0.0f, 1.0f);
-      gf::GfSound::get()->setVolume(unknown0c, unknown68, 0.0f);
+      gf::GfSound::get()->setVolume(m_soundHandle, unknown68, 0.0f);
       if (unknown70.isEnd()) {
         unknown08 &= ~FLAG_UNKNOWN_6;
       }
@@ -60,7 +60,7 @@ void SeObj::exec(f32 delta) {
       f32 rate = __builtin_fminf(unknown58 / unknown60, 1.0f);
       f32 fadeVolume = unknown68 * rate;
       mm::clampRef(fadeVolume, 0.0f, 1.0f);
-      gf::GfSound::get()->setVolume(unknown0c, fadeVolume, 0.0f);
+      gf::GfSound::get()->setVolume(m_soundHandle, fadeVolume, 0.0f);
       setFlag(FLAG_UNKNOWN_4, unknown58 < unknown60);
     }
     if ((unknown08 & FLAG_UNKNOWN_5) != 0) {
@@ -68,7 +68,7 @@ void SeObj::exec(f32 delta) {
       if (rate < 1.0f) {
         f32 fadeVolume = rate * unknown68;
         mm::clampRef(fadeVolume, 0.0f, 1.0f);
-        gf::GfSound::get()->setVolume(unknown0c, fadeVolume, 0.0f);
+        gf::GfSound::get()->setVolume(m_soundHandle, fadeVolume, 0.0f);
       }
     }
     if ((unknown08 & FLAG_UNKNOWN_7) != 0) {
@@ -80,7 +80,7 @@ void SeObj::exec(f32 delta) {
         unknown188.update(0.0f);
       }
       unknown180 = unknown188.getValue();
-      gf::GfSound::get()->setPan(unknown0c, unknown180, 0.0f);
+      gf::GfSound::get()->setPan(m_soundHandle, unknown180, 0.0f);
       if (unknown188.isEnd()) {
         unknown08 &= ~FLAG_UNKNOWN_7;
       }
@@ -113,15 +113,15 @@ void SeObj::draw(int index, int x, int y) {
   // The game computes y + 20 (0x71000ea814) before getPlayTime and keeps it in a callee-saved register; inlined it is computed at its use.
   int volumeLabelY = y + 20;
   f32 playTime = 0.0f;
-  gf::GfSound::get()->getPlayTime(unknown0c, playTime);
+  gf::GfSound::get()->getPlayTime(m_soundHandle, playTime);
   f32 totalTime = 0.0f;
-  gf::GfSound::get()->getTotalTime(unknown0c, totalTime);
+  gf::GfSound::get()->getTotalTime(m_soundHandle, totalTime);
   fw::debug::drawFont(x + 25, y + 25, mm::Col4::white, "  %s", unknown14.c_str());
   int line = y + 40;
   fw::debug::drawFont(x + 25, line, mm::Col4::white, "   %d / %d", static_cast<int>(playTime * 30.0f), static_cast<int>(totalTime * 30.0f));
   // The game computes x + 150 (0x71000ea890) before getVolume and keeps it in a callee-saved register; inlined it is computed at its use.
   int volumeX = x + 150;
-  f32 volume = gf::GfSound::get()->getVolume(unknown0c);
+  f32 volume = gf::GfSound::get()->getVolume(m_soundHandle);
   fw::debug::drawSquare2D(mm::Rect<s32>(x + 160, line, 8, static_cast<int>(volume * -30.0f)), mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
   fw::debug::drawFont(x + 175, volumeLabelY, mm::Col4::white, "vol");
   fw::debug::drawFont(volumeX, line, mm::Col4::white, "%.2f", volume);
@@ -140,8 +140,8 @@ void SeObj::play(const char *name, f32 life, f32 fadeIn, f32 fadeOut, f32 volume
   mm::clampRef(volume, 0.0f, 1.0f);
   if (!isPlay() || __builtin_strcmp(this->unknown14.c_str(), name) != 0) {
     clear();
-    unknown0c = gf::GfSound::get()->playSe(name, SOUND_CATEGORY_UNKNOWN_12);
-    unknown0c.isValid();
+    m_soundHandle = gf::GfSound::get()->playSe(name, SOUND_CATEGORY_UNKNOWN_12);
+    m_soundHandle.isValid();
   }
   unknown08 |= FLAG_UNKNOWN_0;
   setFlag(FLAG_UNKNOWN_3, life > 0.0f);
@@ -154,11 +154,11 @@ void SeObj::play(const char *name, f32 life, f32 fadeIn, f32 fadeOut, f32 volume
   this->unknown64 = fadeOut;
   this->unknown68 = volume;
   unknown180 = 0.0f;
-  gf::GfSound::get()->setVolume(unknown0c, volume, 0.0f);
+  gf::GfSound::get()->setVolume(m_soundHandle, volume, 0.0f);
 }
 
 void SeObj::changeVolume(f32 volume, f32 frame) {
-  if (!unknown0c.isValid()) {
+  if (!m_soundHandle.isValid()) {
     return;
   }
   f32 changeFrame = mm::mtl::Singleton<SkipManager>::getPtr()->isSkip() ? 0.0f : frame;
@@ -167,7 +167,7 @@ void SeObj::changeVolume(f32 volume, f32 frame) {
     this->unknown68 = volume;
     unknown70.clear();
     unknown08 &= ~FLAG_UNKNOWN_6;
-    gf::GfSound::get()->setVolume(unknown0c, volume, 0.0f);
+    gf::GfSound::get()->setVolume(m_soundHandle, volume, 0.0f);
     return;
   }
   unknown70.clear();
@@ -177,7 +177,7 @@ void SeObj::changeVolume(f32 volume, f32 frame) {
 }
 
 void SeObj::pan(f32 pan, f32 frame, CV_TYPE cv) {
-  if (!unknown0c.isValid()) {
+  if (!m_soundHandle.isValid()) {
     return;
   }
   f32 changeFrame = mm::mtl::Singleton<SkipManager>::getPtr()->isSkip() ? 0.0f : frame;
@@ -185,7 +185,7 @@ void SeObj::pan(f32 pan, f32 frame, CV_TYPE cv) {
     unknown180 = pan;
     unknown188.clear();
     unknown08 = (unknown08 & ~FLAG_UNKNOWN_7) | FLAG_UNKNOWN_8;
-    gf::GfSound::get()->setPan(unknown0c, pan, 0.0f);
+    gf::GfSound::get()->setPan(m_soundHandle, pan, 0.0f);
     return;
   }
   unknown188.clear();
@@ -195,20 +195,20 @@ void SeObj::pan(f32 pan, f32 frame, CV_TYPE cv) {
 }
 
 void SeObj::pause(bool isPause) {
-  if (!unknown0c.isValid()) {
+  if (!m_soundHandle.isValid()) {
     return;
   }
   if (isPause) {
     if ((unknown08 & FLAG_UNKNOWN_2) != 0) {
       return;
     }
-    gf::GfSound::get()->setPause(unknown0c, true, 0.0f);
+    gf::GfSound::get()->setPause(m_soundHandle, true, 0.0f);
     unknown08 |= FLAG_UNKNOWN_2;
   } else {
     if ((unknown08 & FLAG_UNKNOWN_2) == 0) {
       return;
     }
-    gf::GfSound::get()->setPause(unknown0c, false, 0.0f);
+    gf::GfSound::get()->setPause(m_soundHandle, false, 0.0f);
     unknown08 &= ~FLAG_UNKNOWN_2;
   }
 }

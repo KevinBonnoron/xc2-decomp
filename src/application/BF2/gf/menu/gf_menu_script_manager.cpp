@@ -12,7 +12,7 @@
 
 namespace gf {
 
-GfMenuScriptManager::GfMenuScriptManager(const GfSetupParam &param) : unknown08(false), unknown4118(nullptr) { initialize(param); }
+GfMenuScriptManager::GfMenuScriptManager(const GfSetupParam &param) : unknown08(false), m_scriptListener(nullptr) { initialize(param); }
 
 void GfMenuScriptManager::initialize(const GfSetupParam &) {
   for (u32 i = 0; i < 32; i++) {
@@ -22,8 +22,8 @@ void GfMenuScriptManager::initialize(const GfSetupParam &) {
 
   // __LINE__ must be 234 as in the original file: it is the line argument of operator new.
 #line 234
-  unknown4118 = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ScriptListener();
-  unknown4118->addRef();
+  m_scriptListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ScriptListener();
+  m_scriptListener->addRef();
   unknown08 = true;
 }
 
@@ -42,7 +42,7 @@ void GfMenuScriptManager::destroy() {
 }
 
 void GfMenuScriptManager::finalize() {
-  mm::mtl::safeRelease(unknown4118);
+  mm::mtl::safeRelease(m_scriptListener);
   unknown08 = false;
 }
 
@@ -69,9 +69,9 @@ bool GfMenuScriptManager::regist(const char *script, u32 handle, u32 id) {
   info.unknown04 = script;
   info.unknown4c = handle;
   info.unknown50 = -1;
-  info.unknown58.unknown00 = 0;
+  info.m_eventData.unknown00 = 0;
   manager->unknown10.push_back(info);
-  ui::UIEventManager::get()->registObjectListener(handle, manager->unknown4118);
+  ui::UIEventManager::get()->registObjectListener(handle, manager->m_scriptListener);
   GfScriptManager::loadScript(slot, script);
   GfScriptManager::startScript(slot);
   return true;
@@ -128,7 +128,7 @@ u32 GfMenuScriptManager::getHandle(u32 id) {
 bool GfMenuScriptManager::checkEvent(u32 handle) {
   for (unknown002 &info : get()->unknown10) {
     if (info.unknown4c == handle && !info.unknown70.empty()) {
-      info.unknown58 = info.unknown70.pop_front();
+      info.m_eventData = info.unknown70.pop_front();
       return true;
     }
   }
@@ -139,7 +139,7 @@ bool GfMenuScriptManager::checkEvent(u32 handle) {
 bool GfMenuScriptManager::getEventData(u32 handle, ui::EventData &event) {
   for (unknown002 *info = get()->unknown10.begin(); info != get()->unknown10.end(); info++) {
     if (info->unknown4c == handle) {
-      event = info->unknown58;
+      event = info->m_eventData;
       return true;
     }
   }

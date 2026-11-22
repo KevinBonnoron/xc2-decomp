@@ -60,13 +60,13 @@ bool StateFieldPrepareBigJump::recieveMessage(void *owner, fw::MessageObject *se
 
 void StateFieldPrepareBigJump::procMsgPcFieldNotifyBigJump(GfComBehaviorPc *behavior, fw::MessageObject *sender, MsgPcFieldNotifyBigJump &message) {
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
-  property->unknown310.setBigJumpInfo(&message);
+  property->m_propertyField.setBigJumpInfo(&message);
   MsgPcFieldNotifyHighJump notify(&message);
   StateUtil::broadcastPlayer(*behavior, notify);
   if (sender != nullptr) {
     GfObj *object = mm::mtl::dynamicCast<GfObj>(sender);
     if (object != nullptr) {
-      property->unknown310.unknown78 = object->unknownf8;
+      property->m_propertyField.m_GF_OBJ_HANDLE = object->unknownf8;
     }
   }
   reqState(STATE_ID_UNKNOWN_17);

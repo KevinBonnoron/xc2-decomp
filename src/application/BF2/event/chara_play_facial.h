@@ -80,21 +80,21 @@ public:
   int getType() const { return unknown20; }
 
 private:
-  u32 unknown08;                // Inferred role: flags; original member name unknown.
-  gf::GF_OBJ_HANDLE *unknown10; // Inferred role: handle; original member name unknown.
-  CharaWeightPlayer *unknown18; // Inferred role: weight; original member name unknown.
-  int unknown20;                // Inferred role: type; original member name unknown.
-  f32 unknown24;                // Inferred role: life; original member name unknown.
-  const char *unknown28;        // Inferred role: bdat name; original member name unknown.
-  const char *unknown30;        // Inferred role: name; original member name unknown.
-  const char *unknown38;        // Inferred role: brow stat; original member name unknown.
-  f32 unknown40;                // Inferred role: brow weight; original member name unknown.
-  const char *unknown48;        // Inferred role: eye stat; original member name unknown.
-  f32 unknown50;                // Inferred role: eye weight; original member name unknown.
-  const char *unknown58;        // Inferred role: lip stat; original member name unknown.
-  f32 unknown60;                // Inferred role: lip weight; original member name unknown.
-  f32 unknown64;                // Inferred role: blend in; original member name unknown.
-  f32 unknown68;                // Inferred role: blend out; original member name unknown.
+  u32 unknown08;                          // Inferred role: flags; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown10;           // Inferred role: handle; original member name unknown.
+  CharaWeightPlayer *m_charaWeightPlayer; // Inferred role: weight; original member name unknown.
+  int unknown20;                          // Inferred role: type; original member name unknown.
+  f32 unknown24;                          // Inferred role: life; original member name unknown.
+  const char *unknown28;                  // Inferred role: bdat name; original member name unknown.
+  const char *unknown30;                  // Inferred role: name; original member name unknown.
+  const char *unknown38;                  // Inferred role: brow stat; original member name unknown.
+  f32 unknown40;                          // Inferred role: brow weight; original member name unknown.
+  const char *unknown48;                  // Inferred role: eye stat; original member name unknown.
+  f32 unknown50;                          // Inferred role: eye weight; original member name unknown.
+  const char *unknown58;                  // Inferred role: lip stat; original member name unknown.
+  f32 unknown60;                          // Inferred role: lip weight; original member name unknown.
+  f32 unknown64;                          // Inferred role: blend in; original member name unknown.
+  f32 unknown68;                          // Inferred role: blend out; original member name unknown.
 };
 
 static_assert(sizeof(CharaPlayFacial) == 0x70, "");

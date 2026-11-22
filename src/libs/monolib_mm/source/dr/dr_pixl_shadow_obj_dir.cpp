@@ -13,8 +13,8 @@ namespace ml {
 DrPixlShadowObjDir::DrPixlShadowObjDir(DrMan *man) : DrPixlShadowObj(man, 0, 0), unknown2b0(1.0f), unknown300(0.0f, 0.0f, 0.0f), unknown338(5.0f), unknown33c(30.0f), unknown340(1.0f) {}
 
 DrPixlShadowObjDir::~DrPixlShadowObjDir() {
-  unknown08.release();
-  delete unknown190;
+  m_cGLibDblUniformBlock.release();
+  delete m_drPixlShadowObj;
 }
 
 bool DrPixlShadowObjDir::dispChk() { return (unknown50 & FLAG_UNKNOWN_1) != 0; }
@@ -23,16 +23,16 @@ int DrPixlShadowObjDir::clipTypeChk(const mm::Vec3 &position, f32 value) {
   if ((unknown50 & FLAG_UNKNOWN_3) == 0 || value >= unknown338) {
     return 0;
   }
-  return unknown1a0.clipTypeTest(position, value);
+  return m_drCalcClipWorkPlane.clipTypeTest(position, value);
 }
 
 bool DrPixlShadowObjDir::clipChk(const mm::Vec3 &position, f32 value, bool flag) {
   if ((unknown50 & FLAG_UNKNOWN_3) == 0 || value >= unknown338) {
     return false;
   }
-  bool isClip = unknown1a0.clipTest(position, value);
+  bool isClip = m_drCalcClipWorkPlane.clipTest(position, value);
   if (!flag && isClip) {
-    return unknown178->unknown580->unknown10->unknown590.clipLineTest(position, unknown300, value);
+    return m_drMan->m_drCalcMan->m_drCalcViewWork->m_drCalcClipWorkViewPoli.clipLineTest(position, unknown300, value);
   }
   return isClip;
 }

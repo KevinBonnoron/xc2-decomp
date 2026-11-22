@@ -27,7 +27,7 @@ struct ItemPrice {
 static_assert(sizeof(ItemPrice) == 0x14, "");
 
 struct ItemProperty {
-  ItemProperty() : unknown30() {}
+  ItemProperty() : m_itemPrice() {}
 
   enum {
     FLAG_UNKNOWN_0 = 0,   // Inferred role: flag valid; original name unknown.
@@ -52,7 +52,7 @@ struct ItemProperty {
     unknown20 = nullptr;
     unknown28 = 0;
     unknown2c = 0;
-    unknown30.clear();
+    m_itemPrice.clear();
     unknown44 = 0;
     unknown45 = 0;
     unknown46 = 0;
@@ -106,7 +106,7 @@ struct ItemProperty {
   u8 *unknown20;         // Inferred role: bdat; original member name unknown.
   u32 unknown28;         // Inferred role: name text id; original member name unknown.
   u32 unknown2c;         // Inferred role: caption text id; original member name unknown.
-  ItemPrice unknown30;   // Inferred role: price; original member name unknown.
+  ItemPrice m_itemPrice; // Inferred role: price; original member name unknown.
   u8 unknown44;          // Inferred role: rarity; original member name unknown.
   u8 unknown45;          // Inferred role: booster category; original member name unknown.
   s8 unknown46;          // Inferred role: booster idea; original member name unknown.
@@ -153,7 +153,7 @@ static_assert(offsetof(ItemProperty, unknown08) == 0x08, "");
 static_assert(offsetof(ItemProperty, unknown10) == 0x10, "");
 static_assert(offsetof(ItemProperty, unknown14) == 0x14, "");
 static_assert(offsetof(ItemProperty, unknown18) == 0x18, "");
-static_assert(offsetof(ItemProperty, unknown30) == 0x30, "");
+static_assert(offsetof(ItemProperty, m_itemPrice) == 0x30, "");
 static_assert(offsetof(ItemProperty, unknown44) == 0x44, "");
 static_assert(offsetof(ItemProperty, unknown4a) == 0x4a, "");
 static_assert(offsetof(ItemProperty, unknown50) == 0x50, "");
@@ -165,16 +165,16 @@ static_assert(offsetof(ItemProperty, unknown7d) == 0x7d, "");
 static_assert(sizeof(ItemProperty) == 0x80, "");
 
 struct GfItem {
-  GfItem() : unknown00(0), unknown02(0), unknown04(0), unknown08(0) {}
+  GfItem() : unknown00(0), unknown02(0), unknown04(0), m_itemHandle(0) {}
 
-  u16 unknown00;          // Inferred role: id; original member name unknown.
-  u16 unknown02;          // Inferred role: count; original member name unknown.
-  u16 unknown04;          // Inferred role: character; original member name unknown.
-  GfItemHandle unknown08; // Inferred role: handle; original member name unknown.
+  u16 unknown00;             // Inferred role: id; original member name unknown.
+  u16 unknown02;             // Inferred role: count; original member name unknown.
+  u16 unknown04;             // Inferred role: character; original member name unknown.
+  GfItemHandle m_itemHandle; // Inferred role: handle; original member name unknown.
 };
 
 static_assert(offsetof(GfItem, unknown04) == 0x04, "");
-static_assert(offsetof(GfItem, unknown08) == 0x08, "");
+static_assert(offsetof(GfItem, m_itemHandle) == 0x08, "");
 static_assert(sizeof(GfItem) == 0x0c, "");
 
 class GfItemUtil {

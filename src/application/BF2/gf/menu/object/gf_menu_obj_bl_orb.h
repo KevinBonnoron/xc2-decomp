@@ -23,29 +23,29 @@ class GfMenuObjBlOrb : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjBlOrb *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjBlOrb *owner) : _0c(), m_menuObjBlOrb(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x1c - 0x0c];       // Actively zero-initialized unknown byte range, NOT padding; original name/role unknown.
-    GfMenuObjBlOrb *unknown20; // Inferred role: owner; original member name unknown.
+    u8 _0c[0x1c - 0x0c];            // Actively zero-initialized unknown byte range, NOT padding; original name/role unknown.
+    GfMenuObjBlOrb *m_menuObjBlOrb; // Inferred role: owner; original member name unknown.
   };
 
   class SlotListener : public ui::UIObjectListener {
   public:
-    SlotListener(GfMenuObjBlOrb *owner) : _0c(), unknown20(owner) {}
+    SlotListener(GfMenuObjBlOrb *owner) : _0c(), m_menuObjBlOrb(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x1c - 0x0c];       // Actively zero-initialized unknown byte range, NOT padding; original name/role unknown.
-    GfMenuObjBlOrb *unknown20; // Inferred role: owner; original member name unknown.
+    u8 _0c[0x1c - 0x0c];            // Actively zero-initialized unknown byte range, NOT padding; original name/role unknown.
+    GfMenuObjBlOrb *m_menuObjBlOrb; // Inferred role: owner; original member name unknown.
   };
 
   class ItemListener : public ui::UIObjectListener {
   public:
-    ItemListener(GfMenuObjBlOrb *owner) : _0c(), unknown20(owner) {}
+    ItemListener(GfMenuObjBlOrb *owner) : _0c(), m_menuObjBlOrb(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x1c - 0x0c];       // Actively zero-initialized unknown byte range, NOT padding; original name/role unknown.
-    GfMenuObjBlOrb *unknown20; // Inferred role: owner; original member name unknown.
+    u8 _0c[0x1c - 0x0c];            // Actively zero-initialized unknown byte range, NOT padding; original name/role unknown.
+    GfMenuObjBlOrb *m_menuObjBlOrb; // Inferred role: owner; original member name unknown.
   };
 
   // Inferred helper: runs a quarter second control on the main layout and waits for its end; original name unknown.
@@ -82,30 +82,30 @@ public:
   u32 unknown24;                                          // Inferred role: blade; original member name unknown.
   ui::UISelectObjList *unknown28;                         // Inferred role: slot objects; original member name unknown.
   ui::UICtrlCursorSelect *unknown30;                      // Inferred role: slot cursor; original member name unknown.
-  GfMenuItemList *unknown38;                              // Inferred role: item list; original member name unknown.
+  GfMenuItemList *m_menuItemList;                         // Inferred role: item list; original member name unknown.
   ui::UISelectObjList *unknown40;                         // Inferred role: item objects; original member name unknown.
   ui::UICtrlCursorSelect *unknown48;                      // Inferred role: item cursor; original member name unknown.
   mm::mtl::IntrusivePtr<GfMenuReferenceNumber> unknown50; // Inferred role: reference orb; original member name unknown.
   GfMenuSequence<GfMenuObjBlOrb, 8> unknown58;            // Inferred role: appear and leave steps; original member name unknown.
   int unknown2e8;                                         // Inferred role: control of the appear and leave phases, -1 when idle; original member name unknown.
-  GfMenuCallContext *unknown2f0;                          // Inferred role: call context; original member name unknown.
+  GfMenuCallContext *m_menuCallContext;                   // Inferred role: call context; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuObjBlOrb::MainListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjBlOrb::SlotListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjBlOrb::MainListener, m_menuObjBlOrb) == 0x20, "");
+static_assert(offsetof(GfMenuObjBlOrb::SlotListener, m_menuObjBlOrb) == 0x20, "");
 static_assert(sizeof(GfMenuObjBlOrb::SlotListener) == 0x28, "");
-static_assert(offsetof(GfMenuObjBlOrb::ItemListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjBlOrb::ItemListener, m_menuObjBlOrb) == 0x20, "");
 static_assert(sizeof(GfMenuObjBlOrb::ItemListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjBlOrb, unknown24) == 0x24, "");
 static_assert(offsetof(GfMenuObjBlOrb, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjBlOrb, unknown30) == 0x30, "");
-static_assert(offsetof(GfMenuObjBlOrb, unknown38) == 0x38, "");
+static_assert(offsetof(GfMenuObjBlOrb, m_menuItemList) == 0x38, "");
 static_assert(offsetof(GfMenuObjBlOrb, unknown40) == 0x40, "");
 static_assert(offsetof(GfMenuObjBlOrb, unknown48) == 0x48, "");
 static_assert(offsetof(GfMenuObjBlOrb, unknown50) == 0x50, "");
 static_assert(offsetof(GfMenuObjBlOrb, unknown58) == 0x58, "");
 static_assert(offsetof(GfMenuObjBlOrb, unknown2e8) == 0x2e8, "");
-static_assert(offsetof(GfMenuObjBlOrb, unknown2f0) == 0x2f0, "");
+static_assert(offsetof(GfMenuObjBlOrb, m_menuCallContext) == 0x2f0, "");
 static_assert(sizeof(GfMenuObjBlOrb) == 0x2f8, "");
 
 } // namespace gf

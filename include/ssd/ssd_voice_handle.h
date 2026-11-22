@@ -34,10 +34,10 @@ public:
 
   // Inferred role: the wave source of the stream when streaming, otherwise of the voice; original name unknown.
   WaveSource *unknown002() const {
-    if (unknown70 == nullptr) {
-      return unknown68;
+    if (m_streamController == nullptr) {
+      return m_waveSource;
     }
-    return &unknown70->unknown18;
+    return &m_streamController->m_waveSource;
   }
 
   static void AllocAdpcmSplitBuffer();
@@ -106,22 +106,22 @@ public:
   bool unknown3f; // Inferred role: empty stream buffer; original member name unknown.
   bool unknown40; // Inferred role: empty voice queue; original member name unknown.
   u8 _41[0x44 - 0x41];
-  int unknown44;                    // Inferred role: state; original member name unknown.
-  int unknown48;                    // Inferred role: num channel; original member name unknown.
-  int unknown4c;                    // Inferred role: num source; original member name unknown.
-  int unknown50;                    // Inferred role: number; original member name unknown.
-  u32 unknown54;                    // Inferred role: sound control id; original member name unknown.
-  SoundHandle *unknown58;           // Inferred role: sound handle; original member name unknown.
-  const SoundEntry *unknown60;      // Inferred role: sound entry; original member name unknown.
-  WaveSource *unknown68;            // Inferred role: wave source; original member name unknown.
-  StreamController *unknown70;      // Inferred role: stream; original member name unknown.
-  void (VoiceHandle::*unknown78)(); // Inferred role: buffer process; original member name unknown.
-  int unknown88;                    // Inferred role: voice queue count; original member name unknown.
-  int unknown8c;                    // Inferred role: free streaming buffer count; original member name unknown.
-  unknown003 unknown90[8];          // Inferred role: channel voices; original member name unknown.
-  SystemCore *unknown650;           // Inferred role: sound core; original member name unknown.
-  void *unknown658;                 // Inferred role: audio data buffer; original member name unknown.
-  int unknown660;                   // Inferred role: buffer index; original member name unknown.
+  int unknown44;                        // Inferred role: state; original member name unknown.
+  int unknown48;                        // Inferred role: num channel; original member name unknown.
+  int unknown4c;                        // Inferred role: num source; original member name unknown.
+  int unknown50;                        // Inferred role: number; original member name unknown.
+  u32 unknown54;                        // Inferred role: sound control id; original member name unknown.
+  SoundHandle *m_soundHandle;           // Inferred role: sound handle; original member name unknown.
+  const SoundEntry *m_soundEntry;       // Inferred role: sound entry; original member name unknown.
+  WaveSource *m_waveSource;             // Inferred role: wave source; original member name unknown.
+  StreamController *m_streamController; // Inferred role: stream; original member name unknown.
+  void (VoiceHandle::*unknown78)();     // Inferred role: buffer process; original member name unknown.
+  int unknown88;                        // Inferred role: voice queue count; original member name unknown.
+  int unknown8c;                        // Inferred role: free streaming buffer count; original member name unknown.
+  unknown003 unknown90[8];              // Inferred role: channel voices; original member name unknown.
+  SystemCore *m_systemCore;             // Inferred role: sound core; original member name unknown.
+  void *unknown658;                     // Inferred role: audio data buffer; original member name unknown.
+  int unknown660;                       // Inferred role: buffer index; original member name unknown.
   u8 _664[0x668 - 0x664];
   bool unknown668; // Inferred role: play position request; original member name unknown.
   u8 unknown669;   // Inferred role: play position request type; original member name unknown.
@@ -150,7 +150,7 @@ public:
   f32 unknown6f0; // Inferred role: distance volume; original member name unknown.
   f32 unknown6f4; // Inferred role: pan angle in degrees; original member name unknown.
   u8 _6f8[0x704 - 0x6f8];
-  Vec3 unknown704; // Inferred role: position in listener space; original member name unknown.
+  Vec3 m_vec3; // Inferred role: position in listener space; original member name unknown.
 };
 
 static_assert(offsetof(VoiceHandle, unknown30) == 0x30, "");
@@ -158,14 +158,14 @@ static_assert(offsetof(VoiceHandle, unknown44) == 0x44, "");
 static_assert(offsetof(VoiceHandle, unknown88) == 0x88, "");
 static_assert(offsetof(VoiceHandle, unknown658) == 0x658, "");
 static_assert(offsetof(VoiceHandle, unknown668) == 0x668, "");
-static_assert(offsetof(VoiceHandle, unknown70) == 0x70, "");
+static_assert(offsetof(VoiceHandle, m_streamController) == 0x70, "");
 static_assert(offsetof(VoiceHandle, unknown6f0) == 0x6f0, "");
 static_assert(offsetof(VoiceHandle, unknown669) == 0x669, "");
 static_assert(offsetof(VoiceHandle, unknown680) == 0x680, "");
 static_assert(offsetof(VoiceHandle, unknown6a0) == 0x6a0, "");
 static_assert(offsetof(VoiceHandle, unknown6d0) == 0x6d0, "");
 static_assert(offsetof(VoiceHandle, unknown90) == 0x90, "");
-static_assert(offsetof(VoiceHandle, unknown650) == 0x650, "");
+static_assert(offsetof(VoiceHandle, m_systemCore) == 0x650, "");
 static_assert(offsetof(VoiceHandle, unknown3c) == 0x3c, "");
 static_assert(offsetof(VoiceHandle, unknown78) == 0x78, "");
 static_assert(offsetof(VoiceHandle, unknown6a8) == 0x6a8, "");
@@ -175,7 +175,7 @@ static_assert(offsetof(VoiceHandle, unknown6c0) == 0x6c0, "");
 static_assert(offsetof(VoiceHandle, unknown6c4) == 0x6c4, "");
 static_assert(offsetof(VoiceHandle, unknown6cc) == 0x6cc, "");
 static_assert(offsetof(VoiceHandle, unknown6f4) == 0x6f4, "");
-static_assert(offsetof(VoiceHandle, unknown704) == 0x704, "");
+static_assert(offsetof(VoiceHandle, m_vec3) == 0x704, "");
 static_assert(offsetof(VoiceHandle::unknown003, unknown98) == 0x98, "");
 static_assert(offsetof(VoiceHandle::unknown003, unknownb4) == 0xb4, "");
 static_assert(sizeof(VoiceHandle::unknown003) == 0xb8, "");

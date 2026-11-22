@@ -18,7 +18,7 @@ void GfMoveWaterSinkControler::createReflection(fw::Reflection *reflection, cons
 }
 
 void GfMoveWaterSinkControler::update(const fw::UpdateInfo &info, Packet &packet) {
-  const Param *param = packet.unknown08.get<Param>();
+  const Param *param = packet.m_paramAdapter.get<Param>();
   f32 sign = packet.unknown00 >= 0.0f ? 1.0f : -1.0f;
   f32 speed = packet.unknown00 * sign;
   speed = speed - info.unknown04 * param->brake;

@@ -67,13 +67,13 @@ float frac(float value) { return value - static_cast<int>(value); }
 
 MemHandlebaseAllocator::MemHandlebaseAllocator() {}
 
-MemHandlebaseAllocator::MemHandlebaseAllocator(mtl::ALLOC_HANDLE handle) : unknown08(handle) {}
+MemHandlebaseAllocator::MemHandlebaseAllocator(mtl::ALLOC_HANDLE handle) : m_memHandle(handle) {}
 
-void MemHandlebaseAllocator::setMemHandle(mtl::ALLOC_HANDLE handle) { unknown08 = handle; }
+void MemHandlebaseAllocator::setMemHandle(mtl::ALLOC_HANDLE handle) { m_memHandle = handle; }
 
-mtl::ALLOC_HANDLE MemHandlebaseAllocator::getMemHandle() const { return unknown08; }
+mtl::ALLOC_HANDLE MemHandlebaseAllocator::getMemHandle() const { return m_memHandle; }
 
-void *MemHandlebaseAllocator::allocate(size_t size, size_t alignment) { return mtl::MemManager::allocate(unknown08, size, alignment, false, "no name", 0); }
+void *MemHandlebaseAllocator::allocate(size_t size, size_t alignment) { return mtl::MemManager::allocate(m_memHandle, size, alignment, false, "no name", 0); }
 
 void MemHandlebaseAllocator::deallocate(void *pointer) {
   if (pointer != nullptr) {
@@ -81,20 +81,20 @@ void MemHandlebaseAllocator::deallocate(void *pointer) {
   }
 }
 
-DrIrrVolSector::DrIrrVolSector(const SSectorInfo *sectorInfo, const SCascadeInfo *cascadeInfo) : unknown00(sectorInfo), unknown08(cascadeInfo->unknown20) {}
+DrIrrVolSector::DrIrrVolSector(const SSectorInfo *sectorInfo, const SCascadeInfo *cascadeInfo) : m_sSectorInfo(sectorInfo), unknown08(cascadeInfo->unknown20) {}
 
 DrIrrVolSector::~DrIrrVolSector() {}
 
-const SLightProbe *DrIrrVolSector::getProbe(int index) const { return unknown00->unknown40 + index; }
+const SLightProbe *DrIrrVolSector::getProbe(int index) const { return m_sSectorInfo->m_sLightProbe + index; }
 
 DrIrrVolCascade::DrIrrVolCascade(const SGlobalInfo *globalInfo, u32 index, const char *name)
-    : unknown00(globalInfo), unknown08(&globalInfo->unknown28[index]), unknown10(index), unknown18(nullptr), unknown5e0(0), unknown890(nullptr) {
-  mm::Vec3 size = unknown08->unknown00.max - unknown08->unknown00.min;
-  unknown548 = static_cast<u32>(size.x / unknown08->unknown24 + 0.5f);
-  unknown54c = static_cast<u32>(size.z / unknown08->unknown24 + 0.5f);
+    : m_sGlobalInfo(globalInfo), m_sCascadeInfo(&globalInfo->m_sCascadeInfo[index]), unknown10(index), m_drIrrVolResMan(nullptr), unknown5e0(0), unknown890(nullptr) {
+  mm::Vec3 size = m_sCascadeInfo->unknown00.max - m_sCascadeInfo->unknown00.min;
+  unknown548 = static_cast<u32>(size.x / m_sCascadeInfo->unknown24 + 0.5f);
+  unknown54c = static_cast<u32>(size.z / m_sCascadeInfo->unknown24 + 0.5f);
   memset(unknown20, 0, sizeof(unknown20));
   memset(unknown2a8, 0, sizeof(unknown2a8));
-  unknown18 = new (DrMan::get()->unknown0c) DrIrrVolResMan(DrMan::get()->unknown14, unknown10, unknown548 * unknown54c, name);
+  m_drIrrVolResMan = new (DrMan::get()->unknown0c) DrIrrVolResMan(DrMan::get()->unknown14, unknown10, unknown548 * unknown54c, name);
 }
 
 DrIrrVolCascade::~DrIrrVolCascade() {
@@ -105,9 +105,9 @@ DrIrrVolCascade::~DrIrrVolCascade() {
     }
   }
   memset(unknown2a8, 0, sizeof(unknown2a8));
-  if (unknown18 != nullptr) {
-    delete unknown18;
-    unknown18 = nullptr;
+  if (m_drIrrVolResMan != nullptr) {
+    delete m_drIrrVolResMan;
+    m_drIrrVolResMan = nullptr;
   }
 }
 
@@ -164,7 +164,7 @@ void DrIrrVolCascade::updateIrrVolByGlobalProbe(u32 x, u32 y, u32 z, u32 index, 
 // Inferred role: rounds a file buffer size up to 16 bytes; original name unknown.
 template <typename T> static inline T unknown002(T size) { return size % 0x10 != 0 ? size + 0x10 - size % 0x10 : size; }
 
-void DrIrrVolResObj::release() { unknown00->releaseSector(this); }
+void DrIrrVolResObj::release() { m_drIrrVolResMan->releaseSector(this); }
 
 DrIrrVolResObj *DrIrrVolResMan::loadSector(u32 index) {
   if (unknown18 == nullptr) {
@@ -189,7 +189,7 @@ DrIrrVolResObj *DrIrrVolResMan::loadSector(u32 index) {
   DevFileParamTh param;
   u32 bufferSize = unknown002(size);
   param.unknown00 = path.c_str();
-  param.unknown40 = mtl::MemManager::allocate(unknown20, bufferSize, 0x40, false, "no name", 0);
+  param.unknown40 = mtl::MemManager::allocate(m_ALLOC_HANDLE, bufferSize, 0x40, false, "no name", 0);
   param.unknown48 = bufferSize;
   param.unknown50 = size;
   param.unknown4c = unknown18->unknown18[index];
@@ -199,20 +199,20 @@ DrIrrVolResObj *DrIrrVolResMan::loadSector(u32 index) {
   if (handle == nullptr) {
     return nullptr;
   }
-  DrIrrVolResObj *resObj = new (unknown20) DrIrrVolResObj(index, this, handle);
+  DrIrrVolResObj *resObj = new (m_ALLOC_HANDLE) DrIrrVolResObj(index, this, handle);
   unknown38.push_back(resObj);
   return resObj;
 }
 
 void DrIrrVolResMan::update() {
-  if (unknown18 != nullptr || unknown08 != nullptr) {
+  if (unknown18 != nullptr || m_fileHandleTh != nullptr) {
     return;
   }
   mm::mtl::FixStr<128> path;
   path.format("%s_c%02d.bin", unknownc0.c_str(), unknownb8);
   u32 size = unknown002(sizeof(unknown001) + unknownbc * sizeof(u32) * 2);
   if (unknown10 == nullptr) {
-    unknown10 = mtl::MemManager::allocate(unknown20, size, 0x40, false, "no name", 0);
+    unknown10 = mtl::MemManager::allocate(m_ALLOC_HANDLE, size, 0x40, false, "no name", 0);
   }
   DevFileParamTh param;
   param.unknown00 = path.c_str();
@@ -222,7 +222,7 @@ void DrIrrVolResMan::update() {
   param.unknown50 = size;
   param.unknown60 = this;
   param.unknown68 = 1;
-  unknown08 = DevFileTh::readFile(param);
+  m_fileHandleTh = DevFileTh::readFile(param);
 }
 
 void DrIrrVolCascade::drawDebugInfo(DebDraw *debDraw) {
@@ -232,29 +232,29 @@ void DrIrrVolCascade::drawDebugInfo(DebDraw *debDraw) {
   debDraw->setCol(mm::Col3::gray, 1.0f);
   for (int i = 0; i < 81; i++) {
     if (unknown20[i] != nullptr) {
-      const mm::Aabb &bounds = unknown20[i]->unknown00->unknown00;
+      const mm::Aabb &bounds = unknown20[i]->m_sSectorInfo->unknown00;
       debDraw->renderCube(bounds.min, bounds.max);
     }
   }
-  unknown18->drawDebugInfo(debDraw);
+  m_drIrrVolResMan->drawDebugInfo(debDraw);
 }
 
 void DrIrrVolResMan::drawDebugInfo(DebDraw *debDraw) {
   debDraw->setCol(mm::Col3::black, 1.0f);
   for (mm::mtl::List<DrIrrVolResObj *>::iterator it = unknown78.begin(); it != unknown78.end(); ++it) {
     if ((*it)->unknown20 > 0) {
-      const mm::Aabb &bounds = (*it)->unknown18->unknown00;
+      const mm::Aabb &bounds = (*it)->m_sSectorInfo->unknown00;
       debDraw->renderCube(bounds.min, bounds.max);
     }
   }
 }
 
 DrIrrVolResObj::DrIrrVolResObj(int index, DrIrrVolResMan *manager, FileHandleTh *handle)
-    : unknown00(manager), unknown08(handle), unknown10(nullptr), unknown18(nullptr), unknown20(0), unknown24(index) {}
+    : m_drIrrVolResMan(manager), m_fileHandleTh(handle), unknown10(nullptr), m_sSectorInfo(nullptr), unknown20(0), unknown24(index) {}
 
 DrIrrVolResObj::~DrIrrVolResObj() {
-  if (unknown08 != nullptr) {
-    DevFileTh::cancel(unknown08, false);
+  if (m_fileHandleTh != nullptr) {
+    DevFileTh::cancel(m_fileHandleTh, false);
   }
   if (unknown10 != nullptr) {
     mtl::MemManager::deallocate(unknown10, 0, false);
@@ -273,15 +273,15 @@ void DrIrrVolResMan::releaseSector(DrIrrVolResObj *resObj) {
 
 void DrIrrVolResObj::onLoaded(EventFileTh *event) {
   unknown10 = event->unknown28;
-  unknown18 = static_cast<const SSectorInfo *>(bin::BinaryResolver::resolve(unknown10));
+  m_sSectorInfo = static_cast<const SSectorInfo *>(bin::BinaryResolver::resolve(unknown10));
   unknown20 = 1;
 }
 
 DrIrrVolResMan::DrIrrVolResMan(mtl::ALLOC_HANDLE handle, u32 cascadeIndex, u32 sectorCount, const char *name)
-    : unknown08(nullptr), unknown10(nullptr), unknown18(nullptr), unknown20(handle), unknown28(handle), unknownb8(cascadeIndex), unknownbc(sectorCount), unknownc0(name) {
-  unknown38.setAllocator(&unknown28);
+    : m_fileHandleTh(nullptr), unknown10(nullptr), unknown18(nullptr), m_ALLOC_HANDLE(handle), m_memHandlebaseAllocator(handle), unknownb8(cascadeIndex), unknownbc(sectorCount), unknownc0(name) {
+  unknown38.setAllocator(&m_memHandlebaseAllocator);
   unknown38.reserve(81);
-  unknown78.setAllocator(&unknown28);
+  unknown78.setAllocator(&m_memHandlebaseAllocator);
   unknown78.reserve(19);
 }
 

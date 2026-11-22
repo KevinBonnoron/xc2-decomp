@@ -27,7 +27,7 @@ public:
     mm::mtl::FixedArray<OpenReadParam, 13> unknown00; // Inferred role: channels; original member name unknown.
     bool unknown17f8;                                 // Inferred role: finalizing; original member name unknown.
     s32 unknown17fc;                                  // Inferred role: running loader threads; original member name unknown.
-    CriticalSection unknown1800;                      // Inferred role: write lock; original member name unknown.
+    CriticalSection m_criticalSection;                // Inferred role: write lock; original member name unknown.
   };
 
   static bool m_mountRom;
@@ -68,17 +68,17 @@ public:
   void thUpdate(void *argument);
 
   u8 _10[0x14 - 0x10];
-  mtl::ALLOC_HANDLE unknown14; // Inferred role: memory; original member name unknown.
-  s32 unknown18;               // Inferred role: state; original member name unknown.
+  mtl::ALLOC_HANDLE m_ALLOC_HANDLE; // Inferred role: memory; original member name unknown.
+  s32 unknown18;                    // Inferred role: state; original member name unknown.
   u8 _1c[0x20 - 0x1c];
   mm::mtl::UniquePtr<unknown001> unknown20; // Inferred role: channels; original member name unknown.
 };
 
 static_assert(offsetof(DevFileNxTh::unknown001, unknown17f8) == 0x17f8, "");
 static_assert(offsetof(DevFileNxTh::unknown001, unknown17fc) == 0x17fc, "");
-static_assert(offsetof(DevFileNxTh::unknown001, unknown1800) == 0x1800, "");
+static_assert(offsetof(DevFileNxTh::unknown001, m_criticalSection) == 0x1800, "");
 static_assert(sizeof(DevFileNxTh::unknown001) == 0x1828, "");
-static_assert(offsetof(DevFileNxTh, unknown14) == 0x14, "");
+static_assert(offsetof(DevFileNxTh, m_ALLOC_HANDLE) == 0x14, "");
 static_assert(offsetof(DevFileNxTh, unknown20) == 0x20, "");
 
 class DevFileJobValidNxTh : public DevFileJobTh {

@@ -15,9 +15,9 @@
 namespace ml {
 
 CacheDraw::CacheDraw(mtl::ALLOC_HANDLE handle, size_t size)
-    : unknown6048(handle), m_currentPrio(-1), m_cacheDrawWID(0xffffffff), unknown6054(1.0f), unknown6058(1.0f), m_forceRenderQueue(false), m_suspendSwap(0), unknown6070(true) {
-  unknown6060 = new (handle) CriticalSectionNC();
-  unknown6060->setCostIgnore(true);
+    : m_ALLOC_HANDLE(handle), m_currentPrio(-1), m_cacheDrawWID(0xffffffff), unknown6054(1.0f), unknown6058(1.0f), m_forceRenderQueue(false), m_suspendSwap(0), unknown6070(true) {
+  m_criticalSectionNC = new (handle) CriticalSectionNC();
+  m_criticalSectionNC->setCostIgnore(true);
   for (int i = 0; i < 2; i++) {
     unknown08[i].unknown10 = size / 2;
     unknown08[i].unknown00 = static_cast<u8 *>(mtl::MemManager::allocate(handle, size / 2, 0x10, false, "no name", 0));
@@ -47,14 +47,14 @@ void CacheDraw::clearSystem(bool isOdd) {
 CacheDraw::~CacheDraw() {
   mtl::MemManager::deallocate(unknown08[0].unknown00, 0, false);
   mtl::MemManager::deallocate(unknown08[1].unknown00, 0, false);
-  if (unknown6060 != nullptr) {
-    delete unknown6060;
-    unknown6060 = nullptr;
+  if (m_criticalSectionNC != nullptr) {
+    delete m_criticalSectionNC;
+    m_criticalSectionNC = nullptr;
   }
 }
 
 void CacheDraw::setSuspendSwap(bool isSuspend) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (isSuspend) {
     if (m_suspendSwap == 0) {
       m_suspendSwap = WorkCpu::getOdd() + 1;
@@ -111,7 +111,7 @@ CacheDraw::unknown003 *CacheDraw::getBuf(bool isOdd) {
 // nested ifs, a switch and `||` give a branch where the game computes `isPerspective | (mode != 2)` with cset and orr. The game also calls DebDraw::get
 // once before the buffer lookup and drops the result (0x71006fe9d4), then calls it again for each range of the priority.
 void CacheDraw::flush(int priority, const mm::Mat44 &projection, const mm::Mat44 &view) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   DebDraw::get(0xffffffff);
   u32 index;
   if (m_suspendSwap == 0) {
@@ -187,7 +187,7 @@ bool CacheDraw::calcCurrentBuf(size_t size) {
 }
 
 bool CacheDraw::clear() {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DCLEAR();
     return calcCurrentBuf(sizeof(DCLEAR));
@@ -196,7 +196,7 @@ bool CacheDraw::clear() {
 }
 
 bool CacheDraw::setMatrix(const mm::Mat44 &matrix) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DMAT(matrix);
     return calcCurrentBuf(sizeof(DMAT));
@@ -205,7 +205,7 @@ bool CacheDraw::setMatrix(const mm::Mat44 &matrix) {
 }
 
 bool CacheDraw::setPers(const mm::Mat44 &view, f32 fovy, f32 nearClip, f32 farClip, const mm::Vec3 *position) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DPERS(view, fovy, nearClip, farClip, position == nullptr ? mm::Vec3::zero : *position);
     return calcCurrentBuf(sizeof(DPERS));
@@ -214,7 +214,7 @@ bool CacheDraw::setPers(const mm::Mat44 &view, f32 fovy, f32 nearClip, f32 farCl
 }
 
 bool CacheDraw::setOrtho() {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DORTHO();
     return calcCurrentBuf(sizeof(DORTHO));
@@ -223,7 +223,7 @@ bool CacheDraw::setOrtho() {
 }
 
 bool CacheDraw::setCol(const mm::Col4 &color) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DCOL(color);
     return calcCurrentBuf(sizeof(DCOL));
@@ -232,7 +232,7 @@ bool CacheDraw::setCol(const mm::Col4 &color) {
 }
 
 bool CacheDraw::setTex(grlib::CGLibTextureBuffer *texture) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DTEX(texture);
     return calcCurrentBuf(sizeof(DTEX));
@@ -241,7 +241,7 @@ bool CacheDraw::setTex(grlib::CGLibTextureBuffer *texture) {
 }
 
 bool CacheDraw::setDoubleSide(bool isEnable) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DDOUBLESIDE(isEnable);
     return calcCurrentBuf(sizeof(DDOUBLESIDE));
@@ -250,7 +250,7 @@ bool CacheDraw::setDoubleSide(bool isEnable) {
 }
 
 bool CacheDraw::setZComp(bool isEnable) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DZCOMP(isEnable);
     return calcCurrentBuf(sizeof(DZCOMP));
@@ -259,7 +259,7 @@ bool CacheDraw::setZComp(bool isEnable) {
 }
 
 bool CacheDraw::setZWrite(bool isEnable) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     unknown6070 = isEnable;
     new (getBuf(false)->unknown08) DZWRITE(isEnable);
@@ -269,7 +269,7 @@ bool CacheDraw::setZWrite(bool isEnable) {
 }
 
 bool CacheDraw::setAlpha(f32 alpha) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DALPHA(alpha);
     return calcCurrentBuf(sizeof(DALPHA));
@@ -278,7 +278,7 @@ bool CacheDraw::setAlpha(f32 alpha) {
 }
 
 bool CacheDraw::renderRect(const mm::Rect<int> &rect) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRRECT(rect);
     return calcCurrentBuf(sizeof(DRRECT));
@@ -287,7 +287,7 @@ bool CacheDraw::renderRect(const mm::Rect<int> &rect) {
 }
 
 bool CacheDraw::renderRectFill(const mm::Rect<int> &rect) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRRECT_FILL(rect);
     return calcCurrentBuf(sizeof(DRRECT_FILL));
@@ -296,7 +296,7 @@ bool CacheDraw::renderRectFill(const mm::Rect<int> &rect) {
 }
 
 bool CacheDraw::renderTriangle(const mm::Vec3 &first, const mm::Vec3 &second, const mm::Vec3 &third) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRTRI(first, second, third);
     return calcCurrentBuf(sizeof(DRTRI));
@@ -305,7 +305,7 @@ bool CacheDraw::renderTriangle(const mm::Vec3 &first, const mm::Vec3 &second, co
 }
 
 bool CacheDraw::renderTriangleFill(const mm::Vec3 &first, const mm::Vec3 &second, const mm::Vec3 &third) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRTRI_FILL(first, second, third);
     return calcCurrentBuf(sizeof(DRTRI_FILL));
@@ -314,7 +314,7 @@ bool CacheDraw::renderTriangleFill(const mm::Vec3 &first, const mm::Vec3 &second
 }
 
 bool CacheDraw::renderTriangle2DFill(const mm::Pnt<int> &first, const mm::Pnt<int> &second, const mm::Pnt<int> &third) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRTRI2D_FILL(first, second, third);
     return calcCurrentBuf(sizeof(DRTRI2D_FILL));
@@ -323,7 +323,7 @@ bool CacheDraw::renderTriangle2DFill(const mm::Pnt<int> &first, const mm::Pnt<in
 }
 
 bool CacheDraw::renderCube(const mm::Vec3 &min, const mm::Vec3 &max) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRCUBE(min, max);
     return calcCurrentBuf(sizeof(DRCUBE));
@@ -332,7 +332,7 @@ bool CacheDraw::renderCube(const mm::Vec3 &min, const mm::Vec3 &max) {
 }
 
 bool CacheDraw::renderCubeFill(const mm::Vec3 &min, const mm::Vec3 &max) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRCUBE_FILL(min, max);
     return calcCurrentBuf(sizeof(DRCUBE_FILL));
@@ -341,7 +341,7 @@ bool CacheDraw::renderCubeFill(const mm::Vec3 &min, const mm::Vec3 &max) {
 }
 
 bool CacheDraw::renderCircle(const mm::Vec3 &center, f32 radius, u32 division) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRCIRCLE(center, radius, division);
     return calcCurrentBuf(sizeof(DRCIRCLE));
@@ -350,7 +350,7 @@ bool CacheDraw::renderCircle(const mm::Vec3 &center, f32 radius, u32 division) {
 }
 
 bool CacheDraw::renderCircle2D(const mm::Vec3 &center, f32 radius, u32 division) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRCIRCLE2D(center, radius, division);
     return calcCurrentBuf(sizeof(DRCIRCLE2D));
@@ -359,7 +359,7 @@ bool CacheDraw::renderCircle2D(const mm::Vec3 &center, f32 radius, u32 division)
 }
 
 bool CacheDraw::renderCircleFill(const mm::Vec3 &center, f32 radius, u32 division) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRCIRCLE_FILL(center, radius, division);
     return calcCurrentBuf(sizeof(DRCIRCLE_FILL));
@@ -368,7 +368,7 @@ bool CacheDraw::renderCircleFill(const mm::Vec3 &center, f32 radius, u32 divisio
 }
 
 bool CacheDraw::renderCircle2DFill(const mm::Vec3 &center, f32 radius, u32 division) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRCIRCLE2D_FILL(center, radius, division);
     return calcCurrentBuf(sizeof(DRCIRCLE2D_FILL));
@@ -377,7 +377,7 @@ bool CacheDraw::renderCircle2DFill(const mm::Vec3 &center, f32 radius, u32 divis
 }
 
 bool CacheDraw::renderCircle(const mm::Mat44 &matrix, f32 radius, u32 division) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRCIRCLE_MAT(matrix, radius, division);
     return calcCurrentBuf(sizeof(DRCIRCLE_MAT));
@@ -386,7 +386,7 @@ bool CacheDraw::renderCircle(const mm::Mat44 &matrix, f32 radius, u32 division) 
 }
 
 bool CacheDraw::renderFan(const mm::Vec3 &center, f32 radius, f32 direction, f32 angle) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRFAN(center, radius, direction, angle);
     return calcCurrentBuf(sizeof(DRFAN));
@@ -395,7 +395,7 @@ bool CacheDraw::renderFan(const mm::Vec3 &center, f32 radius, f32 direction, f32
 }
 
 bool CacheDraw::renderFanFill(const mm::Vec3 &center, f32 radius, f32 direction, f32 angle) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRFAN_FILL(center, radius, direction, angle);
     return calcCurrentBuf(sizeof(DRFAN_FILL));
@@ -404,7 +404,7 @@ bool CacheDraw::renderFanFill(const mm::Vec3 &center, f32 radius, f32 direction,
 }
 
 bool CacheDraw::renderAxis(f32 length) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRAXIS(length);
     return calcCurrentBuf(sizeof(DRAXIS));
@@ -413,7 +413,7 @@ bool CacheDraw::renderAxis(f32 length) {
 }
 
 bool CacheDraw::renderArrow(const mm::Vec3 &start, const mm::Vec3 &end) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRARROW(start, end);
     return calcCurrentBuf(sizeof(DRARROW));
@@ -422,7 +422,7 @@ bool CacheDraw::renderArrow(const mm::Vec3 &start, const mm::Vec3 &end) {
 }
 
 bool CacheDraw::renderCubeArrow(const mm::Vec3 &start, const mm::Vec3 &end) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRARROW_CUBE(start, end);
     return calcCurrentBuf(sizeof(DRARROW_CUBE));
@@ -431,7 +431,7 @@ bool CacheDraw::renderCubeArrow(const mm::Vec3 &start, const mm::Vec3 &end) {
 }
 
 bool CacheDraw::renderSphereFill(const mm::Vec3 &center, f32 radius, u32 division) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRSPHERE_FILL(center, radius, division);
     return calcCurrentBuf(sizeof(DRSPHERE_FILL));
@@ -440,7 +440,7 @@ bool CacheDraw::renderSphereFill(const mm::Vec3 &center, f32 radius, u32 divisio
 }
 
 bool CacheDraw::renderSphere(const mm::Vec3 &center, f32 radius, u32 division) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRSPHERE(center, radius, division);
     return calcCurrentBuf(sizeof(DRSPHERE));
@@ -449,7 +449,7 @@ bool CacheDraw::renderSphere(const mm::Vec3 &center, f32 radius, u32 division) {
 }
 
 bool CacheDraw::renderRealSphereFill(f32 radius, u32 division) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRSPHERE_REAL_FILL(radius, division);
     return calcCurrentBuf(sizeof(DRSPHERE_REAL_FILL));
@@ -458,7 +458,7 @@ bool CacheDraw::renderRealSphereFill(f32 radius, u32 division) {
 }
 
 bool CacheDraw::renderRealSphere(f32 radius, u32 division) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRSPHERE_REAL(radius, division);
     return calcCurrentBuf(sizeof(DRSPHERE_REAL));
@@ -467,7 +467,7 @@ bool CacheDraw::renderRealSphere(f32 radius, u32 division) {
 }
 
 bool CacheDraw::renderConeFill(f32 radius, f32 height, u32 division) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRCONE_FILL(radius, height, division);
     return calcCurrentBuf(sizeof(DRCONE_FILL));
@@ -476,7 +476,7 @@ bool CacheDraw::renderConeFill(f32 radius, f32 height, u32 division) {
 }
 
 bool CacheDraw::renderCone(f32 radius, f32 height, u32 division) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRCONE(radius, height, division);
     return calcCurrentBuf(sizeof(DRCONE));
@@ -485,7 +485,7 @@ bool CacheDraw::renderCone(f32 radius, f32 height, u32 division) {
 }
 
 bool CacheDraw::renderCylinderFill(f32 radius, f32 height, u32 division) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRCYLINDER_FILL(radius, height, division);
     return calcCurrentBuf(sizeof(DRCYLINDER_FILL));
@@ -494,7 +494,7 @@ bool CacheDraw::renderCylinderFill(f32 radius, f32 height, u32 division) {
 }
 
 bool CacheDraw::renderCylinder(f32 radius, f32 height, u32 division) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRCYLINDER(radius, height, division);
     return calcCurrentBuf(sizeof(DRCYLINDER));
@@ -503,7 +503,7 @@ bool CacheDraw::renderCylinder(f32 radius, f32 height, u32 division) {
 }
 
 bool CacheDraw::renderCapsuleFill(f32 radius, f32 height, u32 division) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRCAPSULE_FILL(radius, height, division);
     return calcCurrentBuf(sizeof(DRCAPSULE_FILL));
@@ -512,7 +512,7 @@ bool CacheDraw::renderCapsuleFill(f32 radius, f32 height, u32 division) {
 }
 
 bool CacheDraw::renderCapsule(f32 radius, f32 height, u32 division) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRCAPSULE(radius, height, division);
     return calcCurrentBuf(sizeof(DRCAPSULE));
@@ -521,7 +521,7 @@ bool CacheDraw::renderCapsule(f32 radius, f32 height, u32 division) {
 }
 
 bool CacheDraw::renderOval(f32 width, f32 height) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DROVAL(width, height);
     return calcCurrentBuf(sizeof(DROVAL));
@@ -530,7 +530,7 @@ bool CacheDraw::renderOval(f32 width, f32 height) {
 }
 
 bool CacheDraw::renderSquareFill(f32 width, f32 height) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRSQUARE_FILL(width, height);
     return calcCurrentBuf(sizeof(DRSQUARE_FILL));
@@ -539,7 +539,7 @@ bool CacheDraw::renderSquareFill(f32 width, f32 height) {
 }
 
 bool CacheDraw::renderSquare(f32 width, f32 height) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRSQUARE(width, height);
     return calcCurrentBuf(sizeof(DRSQUARE));
@@ -548,7 +548,7 @@ bool CacheDraw::renderSquare(f32 width, f32 height) {
 }
 
 bool CacheDraw::renderPrim(const mm::Mat44 &matrix, u32 type) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRPRIM(matrix, type);
     return calcCurrentBuf(sizeof(DRPRIM));
@@ -557,7 +557,7 @@ bool CacheDraw::renderPrim(const mm::Mat44 &matrix, u32 type) {
 }
 
 bool CacheDraw::renderOBB(const mm::Obb &obb) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DROBB(obb);
     return calcCurrentBuf(sizeof(DROBB));
@@ -566,7 +566,7 @@ bool CacheDraw::renderOBB(const mm::Obb &obb) {
 }
 
 bool CacheDraw::renderGrid(f32 size, f32 step) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRGRID(size, step);
     return calcCurrentBuf(sizeof(DRGRID));
@@ -575,7 +575,7 @@ bool CacheDraw::renderGrid(f32 size, f32 step) {
 }
 
 bool CacheDraw::renderCamera() {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRCAMERA();
     return calcCurrentBuf(sizeof(DRCAMERA));
@@ -584,7 +584,7 @@ bool CacheDraw::renderCamera() {
 }
 
 bool CacheDraw::renderLine(const mm::Vec3 &start, const mm::Vec3 &end) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRLINE(start, end);
     return calcCurrentBuf(sizeof(DRLINE));
@@ -593,7 +593,7 @@ bool CacheDraw::renderLine(const mm::Vec3 &start, const mm::Vec3 &end) {
 }
 
 bool CacheDraw::renderLine(const mm::Pnt<int> &start, const mm::Pnt<int> &end) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRLINE_PNT(start, end);
     return calcCurrentBuf(sizeof(DRLINE_PNT));
@@ -602,7 +602,7 @@ bool CacheDraw::renderLine(const mm::Pnt<int> &start, const mm::Pnt<int> &end) {
 }
 
 bool CacheDraw::renderPoint(const mm::Vec3 &position) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRPNT(position);
     return calcCurrentBuf(sizeof(DRPNT));
@@ -611,7 +611,7 @@ bool CacheDraw::renderPoint(const mm::Vec3 &position) {
 }
 
 bool CacheDraw::renderPoint2D(const mm::Vec3 &position, f32 size) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DRPNT2D(position, size);
     return calcCurrentBuf(sizeof(DRPNT2D));
@@ -620,7 +620,7 @@ bool CacheDraw::renderPoint2D(const mm::Vec3 &position, f32 size) {
 }
 
 bool CacheDraw::setLineWidth(u32 width) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DLINE_WIDTH(width);
     return calcCurrentBuf(sizeof(DLINE_WIDTH));
@@ -629,7 +629,7 @@ bool CacheDraw::setLineWidth(u32 width) {
 }
 
 bool CacheDraw::setAlphaBlend(bool isEnable) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DALPHA_BLEND(isEnable);
     return calcCurrentBuf(sizeof(DALPHA_BLEND));
@@ -638,7 +638,7 @@ bool CacheDraw::setAlphaBlend(bool isEnable) {
 }
 
 bool CacheDraw::begin(u32 primitive, u32 count) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DBEGIN(primitive, count);
     return calcCurrentBuf(sizeof(DBEGIN));
@@ -647,7 +647,7 @@ bool CacheDraw::begin(u32 primitive, u32 count) {
 }
 
 bool CacheDraw::end() {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DEND();
     return calcCurrentBuf(sizeof(DEND));
@@ -656,7 +656,7 @@ bool CacheDraw::end() {
 }
 
 bool CacheDraw::add(const mm::Vec3 &first, const mm::Vec3 &second, const mm::Vec3 &third) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DADDV3_3(first, second, third);
     return calcCurrentBuf(sizeof(DADDV3_3));
@@ -665,7 +665,7 @@ bool CacheDraw::add(const mm::Vec3 &first, const mm::Vec3 &second, const mm::Vec
 }
 
 bool CacheDraw::add(const mm::Vec3 &first, const mm::Vec3 &second) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DADDV3_2(first, second);
     return calcCurrentBuf(sizeof(DADDV3_2));
@@ -674,7 +674,7 @@ bool CacheDraw::add(const mm::Vec3 &first, const mm::Vec3 &second) {
 }
 
 bool CacheDraw::add(const mm::Vec3 &position) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DADDV3_1(position);
     return calcCurrentBuf(sizeof(DADDV3_1));
@@ -683,7 +683,7 @@ bool CacheDraw::add(const mm::Vec3 &position) {
 }
 
 bool CacheDraw::fontColor(const mm::Col4 &color) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DFONT_COL(color);
     return calcCurrentBuf(sizeof(DFONT_COL));
@@ -692,7 +692,7 @@ bool CacheDraw::fontColor(const mm::Col4 &color) {
 }
 
 bool CacheDraw::fontBack(const mm::Col4 &color) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DFONT_BACKCOL(color);
     return calcCurrentBuf(sizeof(DFONT_BACKCOL));
@@ -701,7 +701,7 @@ bool CacheDraw::fontBack(const mm::Col4 &color) {
 }
 
 bool CacheDraw::fontShadow(bool isEnable) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DFONT_SHADOW(isEnable);
     return calcCurrentBuf(sizeof(DFONT_SHADOW));
@@ -710,7 +710,7 @@ bool CacheDraw::fontShadow(bool isEnable) {
 }
 
 bool CacheDraw::fontFlush(bool isEnable) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DFONT_FLUSH(isEnable);
     return calcCurrentBuf(sizeof(DFONT_FLUSH));
@@ -719,7 +719,7 @@ bool CacheDraw::fontFlush(bool isEnable) {
 }
 
 bool CacheDraw::fontScale(f32 x, f32 y) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     new (getBuf(false)->unknown08) DFONT_SCALE(x, y);
     unknown6054 = x;
@@ -730,7 +730,7 @@ bool CacheDraw::fontScale(f32 x, f32 y) {
 }
 
 bool CacheDraw::font(s16 x, s16 y, const char *text) {
-  CSNC lock(*unknown6060);
+  CSNC lock(*m_criticalSectionNC);
   if (DebDraw::isNotRender()) {
     unknown003 *buf = getBuf(false);
     size_t length = strlen(text);

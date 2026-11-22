@@ -64,13 +64,13 @@ public:
   static u32 getMakeSortTableId(u32 type);
 
   mm::mtl::Delegate<bool()> unknown30; // Inferred role: updater; original member name unknown.
-  IConverter *unknown50;               // Inferred role: converter; original member name unknown.
+  IConverter *m_iConverter;            // Inferred role: converter; original member name unknown.
   u32 unknown58;                       // Inferred role: parts type; original member name unknown.
   u32 unknown5c;                       // Inferred role: blade; original member name unknown.
 };
 
 static_assert(offsetof(GfMenuHanaAdapter, unknown30) == 0x30, "");
-static_assert(offsetof(GfMenuHanaAdapter, unknown50) == 0x50, "");
+static_assert(offsetof(GfMenuHanaAdapter, m_iConverter) == 0x50, "");
 static_assert(offsetof(GfMenuHanaAdapter, unknown58) == 0x58, "");
 static_assert(offsetof(GfMenuHanaAdapter, unknown5c) == 0x5c, "");
 static_assert(sizeof(GfMenuHanaAdapter) == 0x60, "");

@@ -188,7 +188,7 @@ u32 GfMenuObjPopup::open(const OpenParam &param) {
       queue = static_cast<mm::mtl::Queue<PopupInfo> *>(GfMenuManyObjects::get()->unknown10[GfMenuManyObjects::unknown001_7]);
       if (queue != nullptr && !queue->empty()) {
         PopupInfo &queued = (*queue)[i];
-        if (queued.unknown0c.unknown00 == unknown005_9 && queued.unknown0c.unknown04 == param.unknown04) {
+        if (queued.m_openParam.unknown00 == unknown005_9 && queued.m_openParam.unknown04 == param.unknown04) {
           return 0;
         }
       }
@@ -196,7 +196,7 @@ u32 GfMenuObjPopup::open(const OpenParam &param) {
   }
   PopupInfo info;
   info.unknown08 = handle;
-  info.unknown0c = param;
+  info.m_openParam = param;
   GfMenuManyObjects::unknown003<PopupInfo>(GfMenuManyObjects::unknown001_7, info, &GfMenuObjPopup::close);
   if (!s_disp && !GfMenuManyObjects::get()->unknown50[GfMenuManyObjects::unknown001_7]) {
     sendOpen(handle, info);
@@ -220,10 +220,10 @@ void GfMenuObjPopup::close(u32 handle) {
 void GfMenuObjPopup::sendOpen(u32 handle, const PopupInfo &info) {
   ui::EventData event;
   event.unknown00 = GfMenuTypes::unknown003_33;
-  event.unknown08 = info.unknown0c.unknown00;
-  event.unknown0c = info.unknown0c.unknown04;
-  event.unknown10 = info.unknown0c.unknown08;
-  event.unknown14 = info.unknown0c.unknown0c;
+  event.unknown08 = info.m_openParam.unknown00;
+  event.unknown0c = info.m_openParam.unknown04;
+  event.unknown10 = info.m_openParam.unknown08;
+  event.unknown14 = info.m_openParam.unknown0c;
   ui::UIManager::get()->requestObjectEvent(handle, event, 0.0f);
 }
 

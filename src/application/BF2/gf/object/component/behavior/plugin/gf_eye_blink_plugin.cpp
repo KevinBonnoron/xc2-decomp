@@ -9,10 +9,10 @@ namespace gf {
 
 static const char *const unknown010 = "S_eye_close"; // Inferred role: eye close state; original name unknown.
 
-EyeBlinkPlugin::EyeBlinkPlugin() : unknown10(nullptr), unknown18(0.0f), unknown1c(MODE_UNKNOWN_0), unknown20(nullptr) {}
+EyeBlinkPlugin::EyeBlinkPlugin() : m_comBehavior(nullptr), unknown18(0.0f), unknown1c(MODE_UNKNOWN_0), unknown20(nullptr) {}
 
 bool EyeBlinkPlugin::setup(GfComBehavior &behavior) {
-  unknown10 = &behavior;
+  m_comBehavior = &behavior;
   unknown20 = fw::ParamManager::get()->unknown408[11];
   return true;
 }
@@ -25,7 +25,7 @@ void EyeBlinkPlugin::onActivate() {
 }
 
 void EyeBlinkPlugin::setMode(Mode mode) {
-  GfComAsm *comAsm = unknown10->unknown08->getComponent<GfComAsm>();
+  GfComAsm *comAsm = m_comBehavior->unknown08->getComponent<GfComAsm>();
   if (comAsm == nullptr) {
     return;
   }
@@ -72,7 +72,7 @@ void EyeBlinkPlugin::resetTimer() {
 void EyeBlinkPlugin::onDeactivate() {
   if (unknown1c != MODE_UNKNOWN_0) {
     const unknown001 *param = getParameter();
-    GfComAsm *comAsm = unknown10->unknown08->getComponent<GfComAsm>();
+    GfComAsm *comAsm = m_comBehavior->unknown08->getComponent<GfComAsm>();
     if (param != nullptr && comAsm != nullptr) {
       comAsm->easeOut(unknown010, param->unknown0c, ANIM_LAYER_UNKNOWN_3);
     }

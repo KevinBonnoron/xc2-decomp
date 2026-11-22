@@ -54,25 +54,25 @@ static void unknown002(GfMenuIDList *list, u32 id) {
 }
 
 GfMenuObjBladeRelease::GfMenuObjBladeRelease(u32 handle)
-    : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr), unknown48(nullptr), unknown50(nullptr), unknown58(this), unknown2e8(false),
-      unknown2f0(this), unknown450(nullptr), unknown458(false), unknown460(nullptr), unknown468(false), unknown46c(-1), unknown470(nullptr), unknown4a0(false), unknown4a4(0), unknown4a8(0),
-      unknown4b0(nullptr) {
-  unknown450 = GfMenuItemList::create();
-  unknown460 = GfMenuIDList::create();
-  unknown470 = GfMenuDriverList::create();
+    : GfMenuObject(handle), unknown28(nullptr), m_menuBladeList(nullptr), unknown38(nullptr), unknown40(nullptr), unknown48(nullptr), unknown50(nullptr), unknown58(this), unknown2e8(false),
+      unknown2f0(this), m_menuItemList(nullptr), unknown458(false), m_menuIDList(nullptr), unknown468(false), unknown46c(-1), m_menuDriverList(nullptr), unknown4a0(false), unknown4a4(0),
+      unknown4a8(0), m_GAME_VOICE_HANDLE(nullptr) {
+  m_menuItemList = GfMenuItemList::create();
+  m_menuIDList = GfMenuIDList::create();
+  m_menuDriverList = GfMenuDriverList::create();
   unknown48 = GfMenuCallContext::create();
   unknown50 = GfMenuCallContext::create();
 }
 
 GfMenuObjBladeRelease::~GfMenuObjBladeRelease() {
-  mm::mtl::safeRelease(unknown470);
-  mm::mtl::safeRelease(unknown460);
-  mm::mtl::safeRelease(unknown450);
+  mm::mtl::safeRelease(m_menuDriverList);
+  mm::mtl::safeRelease(m_menuIDList);
+  mm::mtl::safeRelease(m_menuItemList);
   mm::mtl::safeRelease(unknown50);
   mm::mtl::safeRelease(unknown48);
   mm::mtl::safeRelease(unknown40);
   mm::mtl::safeRelease(unknown38);
-  mm::mtl::safeRelease(unknown30);
+  mm::mtl::safeRelease(m_menuBladeList);
   mm::mtl::safeRelease(unknown28);
 }
 
@@ -87,13 +87,13 @@ void GfMenuObjBladeRelease::initialize() {
   if (mainListener != nullptr) {
     mainListener->release();
   }
-  unknown30 = GfMenuBladeList::create();
+  m_menuBladeList = GfMenuBladeList::create();
   {
     GfMenuBladeList::ReleasbleSetup releasbleSetup;
-    releasbleSetup.unknown00.unknown08 = 3;
-    releasbleSetup.unknown00.unknown0c = 5;
-    unknown30->clear();
-    unknown30->setupFromReleasble(releasbleSetup);
+    releasbleSetup.m_setupParam.unknown08 = 3;
+    releasbleSetup.m_setupParam.unknown0c = 5;
+    m_menuBladeList->clear();
+    m_menuBladeList->setupFromReleasble(releasbleSetup);
   }
   GfMenuReference::setReferenceBladeID(0, 0);
   {
@@ -114,21 +114,21 @@ void GfMenuObjBladeRelease::initialize() {
     // buffer passed by reference, as the frame holds a single FixStr) gives 398 instructions against the game's 393.
     for (u32 i = 0; i < unknown38->getSize(); i++) {
       name.format("IMG_list_bl_face@%02d", i + 1);
-      GfMenuCharDataAdapter::createFromBladeList(list.searchChild(name.c_str()), 3, unknown30, i, false);
+      GfMenuCharDataAdapter::createFromBladeList(list.searchChild(name.c_str()), 3, m_menuBladeList, i, false);
       name.format("IMG_list_bl_info_elem@%02d", i + 1);
-      GfMenuCharDataAdapter::createFromBladeList(list.searchChild(name.c_str()), 0x2a, unknown30, i, false);
+      GfMenuCharDataAdapter::createFromBladeList(list.searchChild(name.c_str()), 0x2a, m_menuBladeList, i, false);
       name.format("IMG_list_bl_info_wpn@%02d", i + 1);
-      GfMenuCharDataAdapter *weapon = GfMenuCharDataAdapter::createFromBladeList(list.searchChild(name.c_str()), 0x29, unknown30, i, false);
+      GfMenuCharDataAdapter *weapon = GfMenuCharDataAdapter::createFromBladeList(list.searchChild(name.c_str()), 0x29, m_menuBladeList, i, false);
       if (weapon != nullptr) {
         name.format("IMG_list_bl_info_wpn_base@%02d", i + 1);
         weapon->unknown24 = list.searchChild(name.c_str());
       }
       name.format("IMG_list_bl_info_role@%02d", i + 1);
-      GfMenuCharDataAdapter::createFromBladeList(list.searchChild(name.c_str()), 0x42, unknown30, i, false);
+      GfMenuCharDataAdapter::createFromBladeList(list.searchChild(name.c_str()), 0x42, m_menuBladeList, i, false);
       name.format("IMG_list_bl_info_mer@%02d", i + 1);
-      GfMenuCharDataAdapter::createFromBladeList(list.searchChild(name.c_str()), 0x53, unknown30, i, false);
+      GfMenuCharDataAdapter::createFromBladeList(list.searchChild(name.c_str()), 0x53, m_menuBladeList, i, false);
     }
-    GfMenuObjUtil::createVScrollBarPlugin(list.searchChild("IMG_list_bl_scroll_bar"), unknown30, "IMG_list_bl_scroll_bar_base", true);
+    GfMenuObjUtil::createVScrollBarPlugin(list.searchChild("IMG_list_bl_scroll_bar"), m_menuBladeList, "IMG_list_bl_scroll_bar_base", true);
 // __LINE__ must be 204 as in the original file: it is the line argument of operator new.
 #line 204
     ListListener *listListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ListListener(this);
@@ -150,7 +150,7 @@ void GfMenuObjBladeRelease::initialize() {
   {
     ui::UIListInfoBase::SetupParam param;
     param.unknown08 = 3;
-    unknown460->setup(getAllocator(ALLOCATOR_UNKNOWN_0), param);
+    m_menuIDList->setup(getAllocator(ALLOCATOR_UNKNOWN_0), param);
   }
   GfPartySelect::getDriverList(unknown478, GfPartySelect::LIST_TYPE_UNKNOWN_2, 0);
   u16 *driver = unknown478.begin();
@@ -175,14 +175,14 @@ void GfMenuObjBladeRelease::initialize() {
   }
   ui::UIListInfoBase::SetupParam driverParam;
   driverParam.unknown08 = unknown478.size();
-  unknown470->setup(getAllocator(ALLOCATOR_UNKNOWN_0), driverParam);
+  m_menuDriverList->setup(getAllocator(ALLOCATOR_UNKNOWN_0), driverParam);
   GfMenuObject::initialize();
 }
 
 void GfMenuObjBladeRelease::finalize() {
-  if (unknown4b0 != nullptr) {
-    GfGameVoice::playStop(unknown4b0);
-    unknown4b0 = nullptr;
+  if (m_GAME_VOICE_HANDLE != nullptr) {
+    GfGameVoice::playStop(m_GAME_VOICE_HANDLE);
+    m_GAME_VOICE_HANDLE = nullptr;
   }
   GfMenuObject::finalize();
 }
@@ -229,14 +229,14 @@ void GfMenuObjBladeRelease::ListListener::reciveEvent(const ui::EventData &event
   switch (event.unknown00) {
   case 1: {
     {
-      ui::UIObjectAcc sort(unknown20->unknown18, "LAY_sort");
+      ui::UIObjectAcc sort(m_menuObjBladeRelease->unknown18, "LAY_sort");
       u16 sortId = GfMenuObjSort::getSortID(1, 0);
       GfMenuObjSort::setSortLabelText(sortId, sort.searchChild("TXT_sort_label"));
-      unknown20->unknown4a4 = 0;
-      unknown20->unknown30->sort(sortId, false);
+      m_menuObjBladeRelease->unknown4a4 = 0;
+      m_menuObjBladeRelease->m_menuBladeList->sort(sortId, false);
     }
     GfMenuObjCmnStatus::openBlStatus(1, -1);
-    unknown20->refreshBladeInfo(acc, unknown20->unknown4a8);
+    m_menuObjBladeRelease->refreshBladeInfo(acc, m_menuObjBladeRelease->unknown4a8);
     unknown0c = 0;
     break;
   }
@@ -245,22 +245,22 @@ void GfMenuObjBladeRelease::ListListener::reciveEvent(const ui::EventData &event
     u32 index = param;
     if (index != 0xffffffff) {
       u32 previous = param >> 32;
-      unknown20->unknown30->setIndex(index);
-      int rowOffset = unknown20->unknown30->getRowOffset();
-      int columnSize = unknown20->unknown30->getColumnSize();
+      m_menuObjBladeRelease->m_menuBladeList->setIndex(index);
+      int rowOffset = m_menuObjBladeRelease->m_menuBladeList->getRowOffset();
+      int columnSize = m_menuObjBladeRelease->m_menuBladeList->getColumnSize();
       u32 pageIndex = index - columnSize * rowOffset;
-      unknown20->unknown38->setIndex(pageIndex);
-      u32 blade = unknown20->unknown30->getContents(index).unknown00;
+      m_menuObjBladeRelease->unknown38->setIndex(pageIndex);
+      u32 blade = m_menuObjBladeRelease->m_menuBladeList->getContents(index).unknown00;
       bool isDifferentImage = GfMenuObjUtil::isBladeDifferentImage(blade, GfMenuReference::getReferenceBladeID(0));
       GfMenuReference::setReferenceBladeID(0, blade);
       if (isDifferentImage) {
-        ui::UIObjectAcc image(unknown20->unknown18, "IMG_bl_img");
+        ui::UIObjectAcc image(m_menuObjBladeRelease->unknown18, "IMG_bl_img");
         int ctrl = GfMenuObjUtil::getCtrlID(image.unknown10);
         if (ctrl != -1) {
           GfMenuObjUtil::stopCtrl(ctrl);
         }
         image.setAlpha(0.0f);
-        ui::UIObjectAcc main(unknown20->unknown18, "LAY_main");
+        ui::UIObjectAcc main(m_menuObjBladeRelease->unknown18, "LAY_main");
         ui::EventData sendData;
         sendData.unknown00 = 0x101;
         GfMenuObject::sendEvent(main.unknown10, sendData, 0.0f);
@@ -277,42 +277,43 @@ void GfMenuObjBladeRelease::ListListener::reciveEvent(const ui::EventData &event
     u32 item = event.unknown08;
     switch (type) {
     case 1:
-      if (item < unknown20->unknown30->getSize() && !GfDataBlade::isActivateMercenaryTeam(unknown20->unknown30->getContents(unknown20->unknown30->getIndex(false)).unknown00)) {
+      if (item < m_menuObjBladeRelease->m_menuBladeList->getSize() &&
+          !GfDataBlade::isActivateMercenaryTeam(m_menuObjBladeRelease->m_menuBladeList->getContents(m_menuObjBladeRelease->m_menuBladeList->getIndex(false)).unknown00)) {
         GfMenuObjMainMenu2::setCloseKeyEnable(false);
         GfMenuObjOperationInfo::remove(acc.unknown10, 0, 0, 0);
-        unknown20->unknown58.unknown002(&GfMenuObjBladeRelease::seqSubMenuOpen);
+        m_menuObjBladeRelease->unknown58.unknown002(&GfMenuObjBladeRelease::seqSubMenuOpen);
         GfMenuObject::disableFSInput();
-        unknown20->unknown40->setDisp(false);
+        m_menuObjBladeRelease->unknown40->setDisp(false);
       } else {
         GfMenuObjUtil::playSECommon(2);
       }
       break;
     case 2:
       GfMenuObjCmnStatus::closeBlStatus();
-      GfMenuObject::returnFSSubLayer(unknown20);
+      GfMenuObject::returnFSSubLayer(m_menuObjBladeRelease);
       GfMenuObject::disableFSInput();
       GfMenuObjOperationInfo::remove(acc.unknown10, 0, 0, 0);
       GfMenuObjUtil::playSECommonCancel();
       break;
     case 0xd:
-      unknown20->unknown4a8++;
-      if (unknown20->unknown4a8 > 2) {
-        unknown20->unknown4a8 = 0;
+      m_menuObjBladeRelease->unknown4a8++;
+      if (m_menuObjBladeRelease->unknown4a8 > 2) {
+        m_menuObjBladeRelease->unknown4a8 = 0;
       }
-      unknown20->refreshBladeInfo(acc, unknown20->unknown4a8);
+      m_menuObjBladeRelease->refreshBladeInfo(acc, m_menuObjBladeRelease->unknown4a8);
       GfMenuObjUtil::playSE(0x1c);
       break;
     case 0x10:
-      if (item < unknown20->unknown30->getSize()) {
-        u32 blade = unknown20->unknown30->getContents(unknown20->unknown30->getIndex(false)).unknown00;
+      if (item < m_menuObjBladeRelease->m_menuBladeList->getSize()) {
+        u32 blade = m_menuObjBladeRelease->m_menuBladeList->getContents(m_menuObjBladeRelease->m_menuBladeList->getIndex(false)).unknown00;
         if (GfMenuObjUtil::isBladeReleasable(blade, nullptr)) {
           GfMenuObjMainMenu2::setCloseKeyEnable(false);
           GfMenuObjOperationInfo::remove(acc.unknown10, 0, 0, 0);
-          unknown20->unknown2e8 = false;
-          unknown20->unknown58.unknown005();
-          unknown20->unknown58.unknown002(&GfMenuObjBladeRelease::seqConfirmRelease);
+          m_menuObjBladeRelease->unknown2e8 = false;
+          m_menuObjBladeRelease->unknown58.unknown005();
+          m_menuObjBladeRelease->unknown58.unknown002(&GfMenuObjBladeRelease::seqConfirmRelease);
           GfMenuObject::disableFSInput();
-          unknown20->unknown40->setDisp(false);
+          m_menuObjBladeRelease->unknown40->setDisp(false);
           break;
         }
         if (GfDataBlade::isActivateDriver(blade)) {
@@ -327,8 +328,8 @@ void GfMenuObjBladeRelease::ListListener::reciveEvent(const ui::EventData &event
       GfMenuObjUtil::playSECommon(2);
       break;
     case 0x11: {
-      ui::UIObjectAcc label(unknown20->unknown18, "TXT_sort_label");
-      GfMenuObjSort::open(acc.unknown10, label.unknown10, 1, unknown20->unknown4a4);
+      ui::UIObjectAcc label(m_menuObjBladeRelease->unknown18, "TXT_sort_label");
+      GfMenuObjSort::open(acc.unknown10, label.unknown10, 1, m_menuObjBladeRelease->unknown4a4);
       GfMenuObject::disableInput(handle);
       GfMenuObjOperationInfo::remove(handle, 0, 0, 0);
       break;
@@ -342,14 +343,14 @@ void GfMenuObjBladeRelease::ListListener::reciveEvent(const ui::EventData &event
   case 0x21: {
     int param = event.unknown08;
     GfMenuObject::resetInputSelection(acc.unknown10);
-    u32 size = unknown20->unknown30->getSize();
+    u32 size = m_menuObjBladeRelease->m_menuBladeList->getSize();
     u32 padding = 0;
     if (size % 5 != 0) {
       padding = 5 - size % 5;
     }
     size += padding;
-    GfMenuObject::setupInputSelection(acc.unknown10, unknown20->unknown30->getIndex(false), size);
-    unknown0c = unknown20->unknown30->getIndex(false);
+    GfMenuObject::setupInputSelection(acc.unknown10, m_menuObjBladeRelease->m_menuBladeList->getIndex(false), size);
+    unknown0c = m_menuObjBladeRelease->m_menuBladeList->getIndex(false);
     GfMenuObject::setupPadLineSelection(acc.unknown10, 5);
     GfMenuObject::enableFSInput(1);
     GfMenuObjOperationInfo::add(acc.unknown10, 0, 0, 0);
@@ -358,7 +359,7 @@ void GfMenuObjBladeRelease::ListListener::reciveEvent(const ui::EventData &event
       GfMenuObjMainMenu2::setSubIndexText(0x14);
     }
     GfMenuObjOperationInfo::changeText(handle, 0x12, false);
-    unknown20->unknown40->setDisp(true);
+    m_menuObjBladeRelease->unknown40->setDisp(true);
     break;
   }
   case 0x22:
@@ -367,29 +368,29 @@ void GfMenuObjBladeRelease::ListListener::reciveEvent(const ui::EventData &event
     if (event.unknown00 == 0x148) {
       GfMenuObject::enableInput(handle);
       GfMenuObjOperationInfo::add(handle, 0, 0, 0);
-      if (unknown20->unknown4a4 == event.unknown08) {
+      if (m_menuObjBladeRelease->unknown4a4 == event.unknown08) {
         break;
       }
       u16 sortId = GfMenuObjSort::getSortID(1, event.unknown08);
       if ((sortId & 0xfffe) == 4) {
-        unknown20->unknown30->sort(sortId, true);
+        m_menuObjBladeRelease->m_menuBladeList->sort(sortId, true);
       } else {
-        unknown20->unknown30->sort(sortId, false);
+        m_menuObjBladeRelease->m_menuBladeList->sort(sortId, false);
       }
-      unknown20->unknown4a4 = event.unknown08;
-      u32 blade = unknown20->unknown30->getContents(unknown0c).unknown00;
+      m_menuObjBladeRelease->unknown4a4 = event.unknown08;
+      u32 blade = m_menuObjBladeRelease->m_menuBladeList->getContents(unknown0c).unknown00;
       bool isDifferentImage = GfMenuObjUtil::isBladeDifferentImage(blade, GfMenuReference::getReferenceBladeID(0));
       GfMenuReference::setReferenceBladeID(0, blade);
       if (!isDifferentImage) {
         break;
       }
-      ui::UIObjectAcc image(unknown20->unknown18, "IMG_bl_img");
+      ui::UIObjectAcc image(m_menuObjBladeRelease->unknown18, "IMG_bl_img");
       int ctrl = GfMenuObjUtil::getCtrlID(image.unknown10);
       if (ctrl != -1) {
         GfMenuObjUtil::stopCtrl(ctrl);
       }
       image.setAlpha(0.0f);
-      ui::UIObjectAcc main(unknown20->unknown18, "LAY_main");
+      ui::UIObjectAcc main(m_menuObjBladeRelease->unknown18, "LAY_main");
       ui::EventData sendData;
       sendData.unknown00 = 0x101;
       GfMenuObject::sendEvent(main.unknown10, sendData, 0.0f);
@@ -418,18 +419,18 @@ bool GfMenuObjBladeRelease::seqEffReleaseA() {
   int ctrl = GfMenuObjUtil::getCtrlID(acc.unknown10);
   bool isEnd;
   if (!unknown2e8) {
-    u32 blade = unknown30->getContents(unknown30->getIndex(false)).unknown00;
+    u32 blade = m_menuBladeList->getContents(m_menuBladeList->getIndex(false)).unknown00;
     GfMenuObjUtil::CtrlParam param;
     param.unknown08 = 0x40000000;
     param.unknown38 = 1.0f;
     param.unknown00 = 1.0f;
     GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
-    unknown4b0 = SCOM_FIELD_VOICE::createReleaseBlade(blade);
+    m_GAME_VOICE_HANDLE = SCOM_FIELD_VOICE::createReleaseBlade(blade);
     isEnd = false;
     unknown2e8 = true;
-  } else if (!GfMenuObjUtil::isBusyCtrl(ctrl) && static_cast<int>(GfGameVoice::getResult(unknown4b0)) > CV_RESULT_UNKNOWN_2) {
+  } else if (!GfMenuObjUtil::isBusyCtrl(ctrl) && static_cast<int>(GfGameVoice::getResult(m_GAME_VOICE_HANDLE)) > CV_RESULT_UNKNOWN_2) {
     isEnd = true;
-    unknown4b0 = nullptr;
+    m_GAME_VOICE_HANDLE = nullptr;
     unknown2e8 = false;
   } else {
     isEnd = false;
@@ -461,10 +462,10 @@ bool GfMenuObjBladeRelease::seqEffReleaseB() {
 }
 
 bool GfMenuObjBladeRelease::seqConfirmBoosterGet() {
-  if (unknown450->getSize() != 0) {
+  if (m_menuItemList->getSize() != 0) {
     if (!unknown2e8) {
       unknown48->reset();
-      GfMenuObjCommonText::openGetItem(unknown48, unknown450);
+      GfMenuObjCommonText::openGetItem(unknown48, m_menuItemList);
       unknown2e8 = true;
       return false;
     }
@@ -540,7 +541,7 @@ bool GfMenuObjBladeRelease::seqSubMenuOpenCustomize() {
   ui::UIObjectAcc main(unknown18, "LAY_main");
   GfMenuObjUtil::setCommonFadeOut(main.searchChild("LAY_list_bl"), 0, 0);
   GfMenuObjUtil::setCommonFadeOut(main.searchChild("LAY_index"), 0, 0);
-  const MenuBladeInfo &info = unknown30->getContents(unknown30->getIndex(false));
+  const MenuBladeInfo &info = m_menuBladeList->getContents(m_menuBladeList->getIndex(false));
   GfMenuObjCharSelect::openBladeCustomize(main.unknown10, info.unknown00, GfMenuFullScreen::getLayerGroup(unknown20) + 1);
   unknown58.unknown002(&GfMenuObjBladeRelease::seqSubMenuWaitLoadCustomize);
   return true;
@@ -635,7 +636,7 @@ bool GfMenuObjBladeRelease::seqConfirmRelease() {
 
 bool GfMenuObjBladeRelease::seqExecRelease() {
   static mm::mtl::FixedVector<GfItem, 1024> items;
-  u32 blade = unknown30->getContents(unknown30->getIndex(false)).unknown00;
+  u32 blade = m_menuBladeList->getContents(m_menuBladeList->getIndex(false)).unknown00;
   items.clear();
   GfGameUtil::execBoosterAddForReleaseBlade(items, blade);
   {
@@ -644,19 +645,19 @@ bool GfMenuObjBladeRelease::seqExecRelease() {
     if (param.unknown08 == 0) {
       param.unknown08 = 1;
     }
-    unknown450->setup(getAllocator(ALLOCATOR_UNKNOWN_0), param);
+    m_menuItemList->setup(getAllocator(ALLOCATOR_UNKNOWN_0), param);
   }
   MenuItemInfo info;
   for (u32 i = 0; i < items.size(); i++) {
     info.unknown04 = items.at(i)->unknown00;
     info.unknown00 = GfItemUtil::getType(items.at(i)->unknown00);
     info.unknown08 = 1;
-    unknown450->addItem(info, false);
+    m_menuItemList->addItem(info, false);
   }
   GfGameUtil::execActivateUnuseForBlade(blade, true);
-  for (u32 i = 0; i < unknown30->getSize(); i++) {
-    if (unknown30->getContents(i).unknown00 == blade) {
-      GfMenuBladeList *list = unknown30;
+  for (u32 i = 0; i < m_menuBladeList->getSize(); i++) {
+    if (m_menuBladeList->getContents(i).unknown00 == blade) {
+      GfMenuBladeList *list = m_menuBladeList;
       list->contents.erase(list->contents.begin() + i);
       list->subSize(1);
       list->contentsChanged = true;
@@ -669,15 +670,15 @@ bool GfMenuObjBladeRelease::seqExecRelease() {
 
 bool GfMenuObjBladeRelease::seqSubMenuOpen() {
   if (!unknown2e8) {
-    const MenuBladeInfo &blade = unknown30->getContents(unknown30->getIndex(false));
-    unknown460->clear();
-    unknown002(unknown460, unknown001_1);
+    const MenuBladeInfo &blade = m_menuBladeList->getContents(m_menuBladeList->getIndex(false));
+    m_menuIDList->clear();
+    unknown002(m_menuIDList, unknown001_1);
     if (!GfMenuObjUtil::isScenarioBlade(blade.unknown00) && blade.unknown00 != GfDataBlade::getStartCommonBlade() && !unknown478.empty() && GfItemUtil::getItemBoxCount(ITEM_UNKNOWN_25408) != 0 &&
         (unknown478.size() != 1 || unknown478.front() != blade.unknown04)) {
-      unknown002(unknown460, unknown001_2);
+      unknown002(m_menuIDList, unknown001_2);
     }
     unknown48->reset();
-    GfMenuObjCommonText::openSubMenu(unknown48, unknown460);
+    GfMenuObjCommonText::openSubMenu(unknown48, m_menuIDList);
     unknown2e8 = true;
     unknown46c = -1;
     return false;
@@ -695,12 +696,12 @@ bool GfMenuObjBladeRelease::seqSubMenuOpen() {
     unknown58.unknown002(&GfMenuObjBladeRelease::seqSubMenuEnd);
     return true;
   }
-  switch (unknown460->getContents(unknown46c).unknown00) {
+  switch (m_menuIDList->getContents(unknown46c).unknown00) {
   case unknown001_1:
     unknown58.unknown002(&GfMenuObjBladeRelease::seqSubMenuOpenCustomize);
     break;
   case unknown001_2: {
-    const MenuBladeInfo &blade = unknown30->getContents(unknown30->getIndex(false));
+    const MenuBladeInfo &blade = m_menuBladeList->getContents(m_menuBladeList->getIndex(false));
     if (GfMenuObjUtil::isBladeLastOneInSlot(blade.unknown00, nullptr)) {
       unknown58.unknown002(&GfMenuObjBladeRelease::seqSubMenuErrorOvdOnly);
     } else if (GfDataBlade::getCreator(blade.unknown00) == 1 && GfMenuObjUtil::isBladeLastOne(blade.unknown00, nullptr)) {
@@ -726,18 +727,18 @@ bool GfMenuObjBladeRelease::seqSubMenuOpen() {
 
 bool GfMenuObjBladeRelease::seqSubMenuDrChange() {
   if (!unknown2e8) {
-    const MenuBladeInfo &blade = unknown30->getContents(unknown30->getIndex(false));
+    const MenuBladeInfo &blade = m_menuBladeList->getContents(m_menuBladeList->getIndex(false));
     MenuDriverInfo driver = {};
     u32 creator = blade.unknown04;
-    unknown470->clear();
+    m_menuDriverList->clear();
     for (u32 i = 0; i < unknown478.size(); i++) {
       if (unknown478[i] != creator) {
         driver.unknown00 = unknown478[i];
-        unknown470->addContents(driver);
+        m_menuDriverList->addContents(driver);
       }
     }
     unknown48->reset();
-    GfMenuObjCommonText::openDrChange(unknown48, creator, unknown470);
+    GfMenuObjCommonText::openDrChange(unknown48, creator, m_menuDriverList);
     unknown2e8 = true;
     return false;
   }
@@ -746,16 +747,16 @@ bool GfMenuObjBladeRelease::seqSubMenuDrChange() {
   }
   GfMenuCallContext::GfMenuResult result;
   if (!unknown48->unknown18.empty() && unknown48->popResult(result) && result.unknown00 == 0) {
-    const MenuBladeInfo &blade = unknown30->getContents(unknown30->getIndex(false));
+    const MenuBladeInfo &blade = m_menuBladeList->getContents(m_menuBladeList->getIndex(false));
     if (GfDataBlade::isActivateDriver(blade.unknown00)) {
       int slot = GfDataBlade::getDriverSetID(blade.unknown00);
       if (slot != -1) {
         SCOM_PARTY_ADD::removeBlade(blade.unknown04, slot, true);
       }
     }
-    unknown470->setIndex(result.unknown04);
+    m_menuDriverList->setIndex(result.unknown04);
     u32 target = blade.unknown00;
-    GfDataBlade::setCreator(target, unknown470->getContents(unknown470->getIndex(false)).unknown00);
+    GfDataBlade::setCreator(target, m_menuDriverList->getContents(m_menuDriverList->getIndex(false)).unknown00);
     GfItemUtil::addItemBox(ITEM_UNKNOWN_25408, -1);
     unknown58.unknown002(&GfMenuObjBladeRelease::seqSubMenuOwnerChange);
   } else {
@@ -777,7 +778,7 @@ bool GfMenuObjBladeRelease::seqSubMenuConfSetRex() {
   }
   GfMenuCallContext::GfMenuResult result;
   if (!unknown48->unknown18.empty() && unknown48->popResult(result) && result.unknown00 == 0 && result.unknown04 == 0) {
-    const MenuBladeInfo &info = unknown30->getContents(unknown30->getIndex(false));
+    const MenuBladeInfo &info = m_menuBladeList->getContents(m_menuBladeList->getIndex(false));
     if (GfDataBlade::isActivateDriver(info.unknown00)) {
       int slot = GfDataBlade::getDriverSetID(info.unknown00);
       if (slot != -1) {
@@ -804,7 +805,7 @@ bool GfMenuObjBladeRelease::seqSubMenuConfRemoveRex() {
   }
   GfMenuCallContext::GfMenuResult result;
   if (!unknown48->unknown18.empty() && unknown48->popResult(result) && result.unknown00 == 0 && result.unknown04 == 0) {
-    const MenuBladeInfo &info = unknown30->getContents(unknown30->getIndex(false));
+    const MenuBladeInfo &info = m_menuBladeList->getContents(m_menuBladeList->getIndex(false));
     if (GfDataBlade::getSetDriver(info.unknown00) == 1) {
       int slot = GfDataBlade::getDriverSetID(info.unknown00);
       if (slot != -1) {
@@ -821,10 +822,10 @@ bool GfMenuObjBladeRelease::seqSubMenuConfRemoveRex() {
 
 bool GfMenuObjBladeRelease::seqSubMenuOwnerChange() {
   if (!unknown2e8) {
-    const MenuBladeInfo &info = unknown30->getContents(unknown30->getIndex(false));
-    unknown460->getContents(unknown46c);
+    const MenuBladeInfo &info = m_menuBladeList->getContents(m_menuBladeList->getIndex(false));
+    m_menuIDList->getContents(unknown46c);
     u32 creator = info.unknown04;
-    u32 driver = unknown470->getContents(unknown470->getIndex(false)).unknown00;
+    u32 driver = m_menuDriverList->getContents(m_menuDriverList->getIndex(false)).unknown00;
     unknown48->reset();
     GfMenuObjCommonText::openOwnerChange(unknown48, creator, driver);
     unknown2e8 = true;
@@ -833,7 +834,7 @@ bool GfMenuObjBladeRelease::seqSubMenuOwnerChange() {
   if (!unknown48->isTerm()) {
     return false;
   }
-  unknown30->updateOwner();
+  m_menuBladeList->updateOwner();
   unknown58.unknown002(&GfMenuObjBladeRelease::seqSubMenuEnd);
   unknown2e8 = false;
   return true;
@@ -861,8 +862,8 @@ void GfMenuObjBladeRelease::MainListener::reciveEvent(const ui::EventData &event
   }
   case GfMenuTypes::unknown003_257:
     if (GfMenuReference::getReferenceBladeID(0) != 0) {
-      unknown20->unknown2f0.unknown005();
-      unknown20->unknown2f0.unknown002(&GfMenuObjBladeRelease::seqOpenImage);
+      m_menuObjBladeRelease->unknown2f0.unknown005();
+      m_menuObjBladeRelease->unknown2f0.unknown002(&GfMenuObjBladeRelease::seqOpenImage);
     }
     break;
   default:

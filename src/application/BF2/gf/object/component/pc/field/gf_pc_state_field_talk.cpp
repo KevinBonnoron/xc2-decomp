@@ -26,10 +26,10 @@ static const char *const unknown002[] = {"S_talkA_00", "S_talkA_01", "S_talkA_02
 static const char *const unknown003[] = {"C_talkA_00", nullptr, "C_talkA_02", nullptr};
 
 void StateFieldTalk::enter(GfComBehaviorPc *behavior, ai::State *previous) {
-  unknown18 = unknown020;
+  m_GF_OBJ_HANDLE = unknown020;
   GfObj *target = StateUtilField::getAccessTarget(*behavior);
   if (target != nullptr) {
-    unknown18 = target->unknownf8;
+    m_GF_OBJ_HANDLE = target->unknownf8;
     MsgPcFieldNotifyAction message(0);
     static_cast<GfObj *>(behavior->unknown08)->sendMessage(target, message);
   }
@@ -42,7 +42,7 @@ void StateFieldTalk::enter(GfComBehaviorPc *behavior, ai::State *previous) {
 }
 
 void StateFieldTalk::leave(GfComBehaviorPc *behavior, ai::State *next) {
-  GfObj *target = GfObjUtil::getObj(unknown18);
+  GfObj *target = GfObjUtil::getObj(m_GF_OBJ_HANDLE);
   if (target != nullptr) {
     MsgPcFieldNotifyAction message(1);
     static_cast<GfObj *>(behavior->unknown08)->sendMessage(target, message);

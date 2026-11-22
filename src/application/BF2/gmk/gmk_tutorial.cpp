@@ -23,33 +23,33 @@ template bool TGmkList<GmkTutorial, GmkTutorial::BdatInfo, 1330926932u, 4u, GmkT
 
 template class TGmkActiveList<GmkTutorial>;
 
-GmkTutorial::GmkTutorial() : IntrusiveListNode(), unknown60(nullptr), unknownf0(false) {}
+GmkTutorial::GmkTutorial() : IntrusiveListNode(), m_gmkPhantom(nullptr), unknownf0(false) {}
 
-bool GmkTutorial::isValid() const { return AGmkBase::unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
+bool GmkTutorial::isValid() const { return AGmkBase::m_createBaseInfo.m_ownerGmkEnemyList != nullptr && m_createInfo.unknown08 != nullptr; }
 
 constexpr int GAME_FLAG_UNKNOWN_35322 = 35322; // Inferred role: game flag sys multi flag; original name unknown.
 
 void GmkTutorial::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   ScenarioFlagCond minScenarioFlag(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_UNKNOWN_2), 0xffff);
   if (minScenarioFlag.unknown00 != 0) {
-    unknown02 = minScenarioFlag;
+    m_scenarioFlagCond = minScenarioFlag;
   }
-  unknown06 =
+  m_questFlagCond =
       QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_UNKNOWN_1), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_UNKNOWN_1));
   unknown00 = bdat.getValCheck("SysMultiFlag", id, BDAT_TYPE_UNKNOWN_1);
 }
 
 bool GmkTutorial::BdatInfo::isCondMatched() const {
-  if (unknown02.isEnable()) {
+  if (m_scenarioFlagCond.isEnable()) {
     u16 flag = gf::GfDataUtil::getScenarioFlag();
-    if (unknown02.unknown00 > flag) {
+    if (m_scenarioFlagCond.unknown00 > flag) {
       return false;
     }
-    if (flag > unknown02.unknown02) {
+    if (flag > m_scenarioFlagCond.unknown02) {
       return false;
     }
   }
-  if (unknown06.isEnable() && !unknown06.isMatch()) {
+  if (m_questFlagCond.isEnable() && !m_questFlagCond.isMatch()) {
     return false;
   }
   if (unknown00 != 0 && gf::GfGameFlag::getLocal(1, unknown00 + GAME_FLAG_UNKNOWN_35322) == 0) {
@@ -64,7 +64,7 @@ void GmkTutorial::debugDraw() const {
   }
   mm::Col4 color = unknownf0 ? mm::Col4::red : mm::Col4::white;
   mm::Vec2 screen;
-  if (toScreenPos(screen, AGmkBase::unknown08.unknown08->unknown00)) {
+  if (toScreenPos(screen, AGmkBase::m_createBaseInfo.m_xform->unknown00)) {
     mm::mtl::FixStr<256> text;
     text.format("%s:%d", getData()->unknown00, getData()->unknown08);
     fw::debug::drawFont(static_cast<int>(screen.x), static_cast<int>(screen.y) + 16, color, text.c_str());
@@ -74,7 +74,7 @@ void GmkTutorial::debugDraw() const {
 GmkType GmkTutorial::getGmkType() const { return GMK_TYPE; }
 
 void GmkTutorial::updateInActiveList(f32 deltaTime) {
-  if (unknown60.unknown83 && gf::GfGameFlag::getLocal(1, getGameFlagId()) == 0 && gf::GfGameManager::isGmkTutorialOK()) {
+  if (m_gmkPhantom.unknown83 && gf::GfGameFlag::getLocal(1, getGameFlagId()) == 0 && gf::GfGameManager::isGmkTutorialOK()) {
     beginTutorial();
   }
 }
@@ -86,7 +86,7 @@ void GmkTutorial::update(f32 deltaTime) {
   }
   const BdatInfo *info = getBdatInfo();
   bool isCondMatched = info == nullptr ? true : info->isCondMatched();
-  if (unknown60.unknown78 == nullptr) {
+  if (m_gmkPhantom.unknown78 == nullptr) {
     if (isCondMatched && gf::GfGameFlag::getLocal(1, getGameFlagId()) == 0) {
       createGmkPhantom();
     }
@@ -99,11 +99,11 @@ void GmkTutorial::update(f32 deltaTime) {
 }
 
 void GmkTutorial::createGmkPhantom() {
-  const GmkSet *set = AGmkBase::unknown08.unknown00->getCreateInfo().unknown08;
-  if (set != nullptr && set->unknown10.unknown24) {
+  const GmkSet *set = AGmkBase::m_createBaseInfo.m_ownerGmkEnemyList->getCreateInfo().m_gmkSet;
+  if (set != nullptr && set->m_createInfo.unknown24) {
     return;
   }
-  unknown60.create(*this, nullptr, false);
+  m_gmkPhantom.create(*this, nullptr, false);
   TGmkActiveList<GmkTutorial>::unknown002(this);
 }
 
@@ -111,7 +111,7 @@ void GmkTutorial::disposeGmkPhantom() {
   if (this != nullptr && intoNode() && TGmkActiveList<GmkTutorial>::get() != nullptr) {
     TGmkActiveList<GmkTutorial>::get()->unknown08.erase(this);
   }
-  unknown60.dispose();
+  m_gmkPhantom.dispose();
 }
 
 void GmkTutorial::create(const CreateInfo &info) { AGmkBase::create(info); }
@@ -122,7 +122,7 @@ void GmkTutorial::dispose() {
   AGmkBase::dispose();
 }
 
-int GmkTutorial::getGameFlagId() const { return unknown20.unknown18 + 0xd392; }
+int GmkTutorial::getGameFlagId() const { return m_createInfo.unknown18 + 0xd392; }
 
 bool GmkTutorial::isBooted() const { return gf::GfGameFlag::getLocal(1, getGameFlagId()) != 0; }
 
@@ -136,7 +136,7 @@ void GmkTutorial::beginTutorial() {
   }
   const Data *data = getData();
   if (data->unknown00 != nullptr) {
-    static_cast<GmkTutorialList *>(AGmkBase::unknown08.unknown00)->setBootedOthers(*this);
+    static_cast<GmkTutorialList *>(AGmkBase::m_createBaseInfo.m_ownerGmkEnemyList)->setBootedOthers(*this);
   }
   gf::GfGameFlag::setLocal(1, getGameFlagId(), 1);
   unknownf0 = true;

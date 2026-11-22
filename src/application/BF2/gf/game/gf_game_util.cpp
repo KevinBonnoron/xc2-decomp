@@ -213,7 +213,7 @@ void GfGameUtil::UiEnemyStatusIconInfo::create(GF_OBJ_HANDLE *handle) {
   unknown00 = detects != 0;
   GfComBehaviorEnemy *behavior = obj->getComponent<GfComBehaviorEnemy>();
   if (behavior != nullptr) {
-    unknown01 = behavior->unknown140.unknown37 != 0;
+    unknown01 = behavior->m_behaviorEnemyField.unknown37 != 0;
   }
 }
 
@@ -251,7 +251,7 @@ void GfGameUtil::UiActionWindowInfo::create(GF_OBJ_HANDLE *handle) {
       break;
     }
     case gmk::GMK_TYPE_MAP_GIMMICK:
-      unknown08 = static_cast<u16>(Bdat::getValCheck(gmkInst->getBindedBdatFp(), "actionwindowID", gmkInst->unknown20.unknown18, gmk::BDAT_TYPE_UNKNOWN_2));
+      unknown08 = static_cast<u16>(Bdat::getValCheck(gmkInst->getBindedBdatFp(), "actionwindowID", gmkInst->m_createInfo.unknown18, gmk::BDAT_TYPE_UNKNOWN_2));
       break;
     default: {
       int row = unknown038[gmkInst->getGmkType()];
@@ -939,7 +939,7 @@ bool GfGameUtil::getGmkTargetPointPos(mm::Vec3 &position, GF_OBJ_HANDLE *handle)
   if (gmkInst != nullptr) {
     u32 type = gmkInst->getGmkType();
     if (type <= gmk::GMK_TYPE_ROUTED_ENEMY) {
-      return getGmkTargetPointPos(position, gmkInst->unknown20.unknown10->id);
+      return getGmkTargetPointPos(position, gmkInst->m_createInfo.unknown10->id);
     }
   }
 
@@ -976,7 +976,7 @@ bool GfGameUtil::getGmkTargetPointPos(mm::Vec3 &position, u32 gimmick) {
     if (list != nullptr && list->isValid() && gimmick <= list->getInstNum()) {
       const gmk::AGmkBase *gmkInst = list->getInst(gimmick - 1);
       if (gmkInst != nullptr && gmkInst->isValid()) {
-        position = gmkInst->unknown08.unknown08->unknown00;
+        position = gmkInst->m_createBaseInfo.m_xform->unknown00;
         return true;
       }
     }
@@ -1026,15 +1026,15 @@ public:
     switch (gmk.getGmkType()) {
     case gmk::GMK_TYPE_ENEMY: {
       const gmk::GmkEnemy &enemy = static_cast<const gmk::GmkEnemy &>(gmk);
-      if (enemy.unknown48.unknown98.hasEneID(unknown00, true)) {
-        enemy.unknown48.reqClearRepopCounter();
+      if (enemy.m_gmkEnemyInsts.m_popInfo.hasEneID(unknown00, true)) {
+        enemy.m_gmkEnemyInsts.reqClearRepopCounter();
       }
       break;
     }
     case gmk::GMK_TYPE_ROUTED_ENEMY: {
       const gmk::GmkRoutedEnemy &enemy = static_cast<const gmk::GmkRoutedEnemy &>(gmk);
-      if (enemy.unknown50.unknown98.hasEneID(unknown00, true)) {
-        enemy.unknown50.reqClearRepopCounter();
+      if (enemy.m_gmkEnemyInsts.m_popInfo.hasEneID(unknown00, true)) {
+        enemy.m_gmkEnemyInsts.reqClearRepopCounter();
       }
       break;
     }
@@ -1101,12 +1101,12 @@ u32 GfGameUtil::setFormationParam(GF_OBJ_HANDLE *handle) {
     GfGamePlayerFormation *current = GfGamePlayerFormation::get();
     const GfGamePlayerFormation::unknown004 *slot = current->unknown1a0;
     for (u32 index = 0; index < GfGamePlayerFormation::PLAYER_UNKNOWN_6; index++, slot++) {
-      GfObjSetup *setup = GfObjUtil::getObjSetup(slot->unknown08);
-      if (setup != nullptr && setup->unknown14 == partyId && GfObjUtil::getObjType(slot->unknown08) == type) {
+      GfObjSetup *setup = GfObjUtil::getObjSetup(slot->m_playerHandle);
+      if (setup != nullptr && setup->unknown14 == partyId && GfObjUtil::getObjType(slot->m_playerHandle) == type) {
         // The game copies the slot through a local (0x710034d010 loads its 64-bit word at 0x1b0, 0x710034d014 stores the handle, 0x710034d018 stores the low byte of the main pc flag back); assigning
         // the handle alone does not match.
         GfGamePlayerFormation::unknown004 player = formation->unknown1a0[index];
-        player.unknown08 = handle;
+        player.m_playerHandle = handle;
         formation->unknown1a0[index] = player;
         return index;
       }
@@ -1129,7 +1129,7 @@ u32 GfGameUtil::setFormationParam(GF_OBJ_HANDLE *handle) {
     isMain = true;
   }
   formation->unknown1a0[playerId].unknown00 = follow;
-  formation->unknown1a0[playerId].unknown08 = handle;
+  formation->unknown1a0[playerId].m_playerHandle = handle;
   formation->unknown1a0[playerId].unknown10 = isMain;
   return playerId;
 }
@@ -1141,7 +1141,7 @@ void GfGameUtil::resetFormationParam(GF_OBJ_HANDLE *handle) {
 
   GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
   for (u32 playerId = 0; playerId < GfGamePlayerFormation::PLAYER_UNKNOWN_6; playerId++) {
-    GF_OBJ_HANDLE *&player = formation->unknown1a0[playerId].unknown08;
+    GF_OBJ_HANDLE *&player = formation->unknown1a0[playerId].m_playerHandle;
     if (player == handle) {
       formation->unknown1a0[playerId].unknown00 = PLAYER_ID_UNKNOWN_4294967295;
       player = unknown020;
@@ -1332,7 +1332,7 @@ void GfGameUtil::changeStopLayer(GF_OBJ_HANDLE *handle, bool isStop) {
     if (stopSection != section && GfObjUtil::getParentHandle(handle) == unknown020) {
       for (mm::mtl::IntrusiveList<fw::UpdatableObject>::iterator it = obj->unknownb8.begin(), last = obj->unknownb8.end(); it != last; ++it) {
         GfObj *child = mm::mtl::dynamicCast<GfObj>(it.operator->());
-        GfObjUtil::changeLayer(child, child->unknown2c + sectionDiff);
+        GfObjUtil::changeLayer(child, child->m_layer + sectionDiff);
       }
       GfObjUtil::changeLayer(obj, layer + sectionDiff);
     }
@@ -1388,8 +1388,8 @@ bool GfGameUtil::getMaxHpForUi(GF_OBJ_HANDLE *handle, u32 *maxHp) {
 void GfGameUtil::incGameClearCount() {
   GfGameFlag::setLocal(1, FLAG_UNKNOWN_48589, 1);
   SDataGame *dataGame = GfDataManager::getDataGame();
-  if (dataGame->unknown109b2c < GAME_UNKNOWN_9999) {
-    dataGame->unknown109b2c++;
+  if (dataGame->m_gameClearCount < GAME_UNKNOWN_9999) {
+    dataGame->m_gameClearCount++;
   }
 }
 
@@ -1656,7 +1656,7 @@ void GfGameUtil::levelupForEnemy(GF_OBJ_HANDLE *handle, u32 addLevel) {
 
   u32 levelMax = GfBdatChrEnParam::get()->getChrEnParamTableEnd() - 1;
   u32 level = dataParamAcc.getLevel(false) + addLevel;
-  GfDataEnemy::setupGameParamForLevel(*setup->unknowna0, level > levelMax ? levelMax : level);
+  GfDataEnemy::setupGameParamForLevel(*setup->m_enemy, level > levelMax ? levelMax : level);
   GfObj *obj = GfObjUtil::getObj(handle);
   MsgObjectMaxHp changeHpMax(dataParamAcc.getHpMax(false));
   obj->sendMessage(obj, changeHpMax);
@@ -1795,8 +1795,8 @@ u32 GfGameUtil::execAddRareBlade(const SDataBlade &dataBlade) {
       GfDataBlade::setCreator(BLADE_UNKNOWN_1050, GfDataBlade::getCreator(BLADE_UNKNOWN_1022));
     }
 
-    if (addedBlade.unknown850 != 0) {
-      setWatchedEvent(addedBlade.unknown850);
+    if (addedBlade.m_createEvent != 0) {
+      setWatchedEvent(addedBlade.m_createEvent);
     }
 
     GfEvent::callBladeActivate(blade, activateType, ACTIVATE_TYPE_UNKNOWN_1);
@@ -1809,8 +1809,8 @@ u32 GfGameUtil::execAddCommonBlade(const SDataBlade &dataBlade) {
   u32 blade = GfDataBlade::addCommonBlade(dataBlade);
   if (blade != 0) {
     SDataBlade &addedBlade = GfDataBlade::getSDataBlade(blade);
-    if (addedBlade.unknown850 != 0) {
-      setWatchedEvent(addedBlade.unknown850);
+    if (addedBlade.m_createEvent != 0) {
+      setWatchedEvent(addedBlade.m_createEvent);
     }
 
     GfEvent::callBladeActivate(blade, ACTIVATE_TYPE_UNKNOWN_0, ACTIVATE_TYPE_UNKNOWN_1);
@@ -1852,7 +1852,7 @@ bool GfGameUtil::hasBelonging(GF_OBJ_HANDLE *handle, u32 belonging) {
 }
 
 bool GfGameUtil::execTurnCmd(const ExecTurnCmdInfo &info) {
-  GfObjAcc objAcc(info.unknown00);
+  GfObjAcc objAcc(info.m_GF_OBJ_HANDLE);
   GfObj *obj = objAcc.getObj();
   if (obj == nullptr) {
     return false;
@@ -1997,7 +1997,7 @@ GF_OBJ_HANDLE *GfGameUtil::getWeaponOwner(GF_OBJ_HANDLE *handle) {
   GfAppendInfo *info = GfObjUtil::getAppendInfo(handle, GFATTACH_UNKNOWN_0);
   if (info != nullptr) {
     GfObjSetupWeapon *setup = GfObjUtil::getObjSetup<GfObjSetupWeapon>(handle);
-    if (setup != nullptr && info->unknown00[1].size() != 0 && !setup->unknown80.unknown98.unknown80) {
+    if (setup != nullptr && info->unknown00[1].size() != 0 && !setup->m_initParamWeapon.m_append.unknown80) {
       return GfMountManager::getHandle(owner, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_3);
     }
   }
@@ -2169,19 +2169,19 @@ static bool unknown042(u32 blade) {
 // Forms tried without the helper: the same body inlined in the loop with `break` and the end of the search re-tested (1708 instructions against the game's 1705), the same body with `goto`
 // (matches, but gotos are not accepted).
 static void removeFromDriverSet(SDataBlade &dataBlade, u32 blade) {
-  if (dataBlade.unknown04 != 0) {
-    SDataDriver &dataDriver = GfDataDriver::getSDataDriver(dataBlade.unknown04);
-    for (int slot = 0; slot < GfDataDriver::getMaxSetBladeNum(dataBlade.unknown04); slot++) {
+  if (dataBlade.m_driverBySetBlade != 0) {
+    SDataDriver &dataDriver = GfDataDriver::getSDataDriver(dataBlade.m_driverBySetBlade);
+    for (int slot = 0; slot < GfDataDriver::getMaxSetBladeNum(dataBlade.m_driverBySetBlade); slot++) {
       if (dataDriver.unknown26[slot] == blade) {
         dataDriver.unknown26[slot] = 0;
-        if (dataDriver.unknown24 == slot) {
-          for (int next = 0; next < GfDataDriver::getMaxSetBladeNum(dataBlade.unknown04); next++) {
+        if (dataDriver.m_bladeSet == slot) {
+          for (int next = 0; next < GfDataDriver::getMaxSetBladeNum(dataBlade.m_driverBySetBlade); next++) {
             if (dataDriver.unknown26[next] != 0) {
-              dataDriver.unknown24 = next;
+              dataDriver.m_bladeSet = next;
               return;
             }
           }
-          dataDriver.unknown24 = -1;
+          dataDriver.m_bladeSet = -1;
         }
         return;
       }
@@ -2209,26 +2209,26 @@ void GfGameUtil::setupNewGameParam(const SDataGame &dataGame) {
   currentGame->unknown5a2c = dataGame.unknown5a2c;
   currentGame->unknown10ad4c = dataGame.unknown10ad4c;
   currentGame->unknown10ad48 = dataGame.unknown10ad48;
-  currentGame->unknown10ae7e = dataGame.unknown10ae7e;
-  currentGame->unknown109b28 = dataGame.unknown109b28;
-  currentGame->unknown10ae7c = dataGame.unknown10ae7c;
-  currentGame->unknown10ae78 = dataGame.unknown10ae78;
-  currentGame->unknown10ae74 = dataGame.unknown10ae74;
-  currentGame->unknown10ad70 = dataGame.unknown10ad70;
-  currentGame->unknown109b2c = dataGame.unknown109b2c;
-  currentGame->unknown10ad3c = dataGame.unknown10ad3c;
-  currentGame->unknown1098c0 = dataGame.unknown1098c0;
-  currentGame->unknowne98d8 = dataGame.unknowne98d8;
+  currentGame->m_autoEventAfterLoad = dataGame.m_autoEventAfterLoad;
+  currentGame->m_playerCameraDistance = dataGame.m_playerCameraDistance;
+  currentGame->m_cameraFreeMode = dataGame.m_cameraFreeMode;
+  currentGame->m_cameraPitch = dataGame.m_cameraPitch;
+  currentGame->m_cameraYaw = dataGame.m_cameraYaw;
+  currentGame->m_cameraHeight = dataGame.m_cameraHeight;
+  currentGame->m_gameClearCount = dataGame.m_gameClearCount;
+  currentGame->m_ether = dataGame.m_ether;
+  currentGame->m_gameTime = dataGame.m_gameTime;
+  currentGame->m_itemBox = dataGame.m_itemBox;
   currentGame->unknown10ad74 = dataGame.unknown10ad74;
   currentGame->unknown10ad40 = dataGame.unknown10ad40;
   currentGame->unknown10ad44 = dataGame.unknown10ad44;
-  currentGame->unknown10ad54 = dataGame.unknown10ad54;
-  currentGame->unknown10ae80 = dataGame.unknown10ae80;
-  currentGame->unknown00 = dataGame.unknown00;
-  currentGame->unknown1098c4 = dataGame.unknown1098c4;
-  currentGame->unknown10ad50 = dataGame.unknown10ad50;
-  currentGame->unknown10ad68 = dataGame.unknown10ad68;
-  currentGame->unknown109b30 = dataGame.unknown109b30;
+  currentGame->m_coin = dataGame.m_coin;
+  currentGame->m_collectFlagNewVersion = dataGame.m_collectFlagNewVersion;
+  currentGame->m_money = dataGame.m_money;
+  currentGame->m_elapseTime = dataGame.m_elapseTime;
+  currentGame->m_rareBladeAppearType = dataGame.m_rareBladeAppearType;
+  currentGame->m_saveRealTime = dataGame.m_saveRealTime;
+  currentGame->m_taskAchieve = dataGame.m_taskAchieve;
   currentGame->unknown24 = dataGame.unknown24;
   // The game flag ranges copied from the save game. The numbers are indices into the flags of one width (the first argument, in bits), not the ids GfGameFlag::getFlag takes, and the game gives them
   // no name. Each range is a loop of its own in the game, some with a base and a count and the others with a first and a last index (SDataGame::unknown003, unknown002): a table of ranges walked by
@@ -2320,11 +2320,11 @@ void GfGameUtil::setupNewGameParam(const SDataGame &dataGame) {
       }
     }
   }
-  GfDataDriver::getSDataDriver(2).unknown20 = 0;
-  GfDataDriver::getSDataDriver(4).unknown20 = 0;
-  GfDataDriver::getSDataDriver(5).unknown20 = 0;
-  GfDataDriver::getSDataDriver(6).unknown20 = 0;
-  GfDataDriver::getSDataDriver(3).unknown20 = 0;
+  GfDataDriver::getSDataDriver(2).m_dataType = 0;
+  GfDataDriver::getSDataDriver(4).m_dataType = 0;
+  GfDataDriver::getSDataDriver(5).m_dataType = 0;
+  GfDataDriver::getSDataDriver(6).m_dataType = 0;
+  GfDataDriver::getSDataDriver(3).m_dataType = 0;
   for (int slot = 0; slot < GfDataDriver::getMaxSetBladeNum(1); slot++) {
     u32 setBlade = GfDataDriver::getBlade(1, slot);
     if (setBlade != 0 && setBlade != BLADE_UNKNOWN_1012) {
@@ -2348,9 +2348,9 @@ void GfGameUtil::setupNewGameParam(const SDataGame &dataGame) {
       SDataBlade &dataBlade = GfDataBlade::getSDataBlade(blade);
       if (unknown042(blade)) {
         removeFromDriverSet(dataBlade, blade);
-        dataBlade.unknown04 = 0;
-        dataBlade.unknown00 = 0;
-      } else if (dataBlade.unknown00 != 0) {
+        dataBlade.m_driverBySetBlade = 0;
+        dataBlade.m_dataType = 0;
+      } else if (dataBlade.m_dataType != 0) {
         GfDataBlade::setUnselect(blade, true);
       }
     }
@@ -2542,3 +2542,14 @@ u32 GfWeapon::getRscLeft() const {
 }
 
 } // namespace gf
+
+// The game builds the shop, hana, skip travel and save data utilities in this unit: their functions alternate with the functions of GfGameUtil in one
+// contiguous range with no other unit between (GfGameUtil to 0x7100352b34, GfGameUtilShop 0x7100352bd8 to 0x7100353240, GfGameUtilHana 0x71003532f8 to
+// 0x7100354cc4, GfGameUtilCloudSea 0x7100354d48 to 0x7100354db8, GfGameUtilSkipTravel 0x7100354dbc to 0x7100354ec4, GfGameUtilNanakoori and GfWeapon
+// 0x7100354f8c to 0x71003550e8, GfGameUtilSaveData 0x7100355178 to 0x7100355d90, GfGameUtil again 0x71003560ec to 0x7100356a28).
+// clang-format off
+#include "gf_game_util_shop.cpp"
+#include "gf_game_util_hana.cpp"
+#include "gf_game_util_skip_travel.cpp"
+#include "gf_game_util_save_data.cpp"
+// clang-format on

@@ -33,7 +33,7 @@ public:
   u8 unknown28;        // Inferred role: needs setup; original member name unknown.
   u8 _29[0x2c - 0x29];
   s32 unknown2c;                             // Inferred role: texture count; original member name unknown.
-  grlib::CGLibTextureBuffer *unknown30;      // Inferred role: textures; original member name unknown.
+  grlib::CGLibTextureBuffer *m_texture;      // Inferred role: textures; named after the game accessor layer::LayerTextureObj::getTexture.
   void *unknown38;                           // Inferred role: texture memory; original member name unknown.
   LayerLinkList<LayerTextureObj> *unknown40; // Inferred role: owner list; original member name unknown.
 };
@@ -43,7 +43,7 @@ static_assert(offsetof(LayerTextureObj, unknown18) == 0x18, "");
 static_assert(offsetof(LayerTextureObj, unknown20) == 0x20, "");
 static_assert(offsetof(LayerTextureObj, unknown28) == 0x28, "");
 static_assert(offsetof(LayerTextureObj, unknown2c) == 0x2c, "");
-static_assert(offsetof(LayerTextureObj, unknown30) == 0x30, "");
+static_assert(offsetof(LayerTextureObj, m_texture) == 0x30, "");
 static_assert(offsetof(LayerTextureObj, unknown38) == 0x38, "");
 static_assert(offsetof(LayerTextureObj, unknown40) == 0x40, "");
 static_assert(sizeof(LayerTextureObj) == 0x48, "");
@@ -57,10 +57,10 @@ public:
   LayerTextureObj *createTextureObj(const u8 *data);
   void releaseTextureObj(LayerTextureObj *textureObj);
 
-  LayerManager *unknown18; // Inferred role: layer manager; original member name unknown.
+  LayerManager *m_layerManager; // Inferred role: layer manager; original member name unknown.
 };
 
-static_assert(offsetof(LayerTextureMan, unknown18) == 0x18, "");
+static_assert(offsetof(LayerTextureMan, m_layerManager) == 0x18, "");
 static_assert(sizeof(LayerTextureMan) == 0x20, "");
 
 } // namespace layer

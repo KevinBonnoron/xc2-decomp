@@ -47,15 +47,15 @@ public:
   bool OnMouseMove(EventView *event);
   void update();
 
-  CriticalSection unknown08;    // Inferred role: cs; original member name unknown.
-  Scn *unknown30;               // Inferred role: scn; original member name unknown.
-  ScnDebugManipuObj *unknown38; // Inferred role: object; original member name unknown.
-  bool unknown40;               // Inferred role: disp; original member name unknown.
+  CriticalSection m_criticalSection;      // Inferred role: cs; original member name unknown.
+  Scn *m_scn;                             // Inferred role: scn; original member name unknown.
+  ScnDebugManipuObj *m_scnDebugManipuObj; // Inferred role: object; original member name unknown.
+  bool unknown40;                         // Inferred role: disp; original member name unknown.
 };
 
-static_assert(offsetof(ScnDebugManipu, unknown08) == 0x08, "");
-static_assert(offsetof(ScnDebugManipu, unknown30) == 0x30, "");
-static_assert(offsetof(ScnDebugManipu, unknown38) == 0x38, "");
+static_assert(offsetof(ScnDebugManipu, m_criticalSection) == 0x08, "");
+static_assert(offsetof(ScnDebugManipu, m_scn) == 0x30, "");
+static_assert(offsetof(ScnDebugManipu, m_scnDebugManipuObj) == 0x38, "");
 static_assert(offsetof(ScnDebugManipu, unknown40) == 0x40, "");
 
 class ScnDebug : public IWorkEvent, public IScnRender {
@@ -86,14 +86,14 @@ public:
   void update();
   void cbRenderAfter(Scn *scn, SCNPRIO_CB priority) override;
 
-  Scn *unknown10; // Inferred role: scn; original member name unknown.
+  Scn *m_scn; // Inferred role: scn; original member name unknown.
   ScnDebugManipu *m_manipulator;
   int _20;
   void *_28;
   bool _30;
 };
 
-static_assert(offsetof(ScnDebug, unknown10) == 0x10, "");
+static_assert(offsetof(ScnDebug, m_scn) == 0x10, "");
 static_assert(offsetof(ScnDebug, m_manipulator) == 0x18, "");
 static_assert(offsetof(ScnDebug, _20) == 0x20, "");
 static_assert(offsetof(ScnDebug, _30) == 0x30, "");

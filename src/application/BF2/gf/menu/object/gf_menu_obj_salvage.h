@@ -14,12 +14,12 @@ class GfMenuObjSalvage : public GfMenuObject {
 public:
   class ResultListener : public ui::UIObjectListener {
   public:
-    ResultListener(GfMenuObjSalvage *owner) : unknown0c(0), _10(), unknown20(owner) {}
+    ResultListener(GfMenuObjSalvage *owner) : unknown0c(0), _10(), m_menuObjSalvage(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     int unknown0c; // Inferred role: state, -1 once closed; original member name unknown.
     u8 _10[0x1c - 0x10];
-    GfMenuObjSalvage *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjSalvage *m_menuObjSalvage; // Inferred role: owner; original member name unknown.
   };
 
   struct ResultParam {
@@ -43,7 +43,7 @@ public:
 
 static_assert(offsetof(GfMenuObjSalvage::ResultParam, unknown00) == 0x00, "");
 static_assert(sizeof(GfMenuObjSalvage::ResultParam) == 0x04, "");
-static_assert(offsetof(GfMenuObjSalvage::ResultListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjSalvage::ResultListener, m_menuObjSalvage) == 0x20, "");
 static_assert(sizeof(GfMenuObjSalvage::ResultListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjSalvage, unknown24) == 0x24, "");
 static_assert(offsetof(GfMenuObjSalvage, unknown28) == 0x28, "");

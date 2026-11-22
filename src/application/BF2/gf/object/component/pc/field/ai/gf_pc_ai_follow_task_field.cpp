@@ -29,7 +29,7 @@ bool isMainPcMove(GfComPropertyPc &property) {
 
   u32 mainId = formation->unknown1a0[property.unknown38].unknown00;
   if (mainId != PLAYER_ID_UNKNOWN_4294967295) {
-    GfObjProperty *mainProperty = GfObjUtil::getProperty(formation->unknown1a0[mainId].unknown08);
+    GfObjProperty *mainProperty = GfObjUtil::getProperty(formation->unknown1a0[mainId].m_playerHandle);
     if (mainProperty->unknown18 != nullptr) {
       return mainProperty->unknown18->unknown7f;
     }
@@ -45,7 +45,7 @@ bool TaskFieldFollowTarget::testCondition(const BlackBoardField &blackBoard) {
 }
 
 void TaskFieldFollowTarget::update(BlackBoardField &blackBoard) {
-  GfComPropertyPc *property = blackBoard.unknown08;
+  GfComPropertyPc *property = blackBoard.m_comPropertyPc;
   navi::NvmshAcObj *naviObject = blackBoard.unknown10;
   naviObject->setBeginPos(property->unknown160.unknown00);
   naviObject->setEndPos(blackBoard.unknown20);
@@ -82,7 +82,7 @@ void TaskFieldFollowMainPc::onCreate(BlackBoardField &blackBoard, const ai::Crea
 }
 
 bool isFollowMainPc(const BlackBoardField &blackBoard) {
-  GfComPropertyPc *property = blackBoard.unknown08;
+  GfComPropertyPc *property = blackBoard.m_comPropertyPc;
   if (property->unknown38 == 0) {
     return true;
   }
@@ -115,7 +115,7 @@ bool TaskFieldFollowMainPc::testCondition(const BlackBoardField &blackBoard) {
   }
 
   const FollowMainPcParam *param =
-      AgentUtilField::getAIParamAdapter(*blackBoard.unknown08, blackBoard.unknown08->unknown114 == 3 ? PARAM_ID_FIELD_AI_UNKNOWN_1 : PARAM_ID_FIELD_AI_UNKNOWN_0).get<FollowMainPcParam>();
+      AgentUtilField::getAIParamAdapter(*blackBoard.m_comPropertyPc, blackBoard.m_comPropertyPc->unknown114 == 3 ? PARAM_ID_FIELD_AI_UNKNOWN_1 : PARAM_ID_FIELD_AI_UNKNOWN_0).get<FollowMainPcParam>();
   if (unknown38 >= param->adjustTime && unknown3c) {
     isFollow |= blackBoard.unknown30 >= param->adjustDist;
     unknown3c = false;
@@ -125,7 +125,7 @@ bool TaskFieldFollowMainPc::testCondition(const BlackBoardField &blackBoard) {
 }
 
 void TaskFieldFollowMainPc::update(BlackBoardField &blackBoard) {
-  GfComPropertyPc *property = blackBoard.unknown08;
+  GfComPropertyPc *property = blackBoard.m_comPropertyPc;
   navi::NvmshAcObj *naviObject = blackBoard.unknown10;
   const FollowMainPcParam *param = AgentUtilField::getAIParamAdapter(*property, property->unknown114 == 3 ? PARAM_ID_FIELD_AI_UNKNOWN_1 : PARAM_ID_FIELD_AI_UNKNOWN_0).get<FollowMainPcParam>();
   if (!blackBoard.unknown200.test(10) && blackBoard.unknown50 < param->walkDistStopFollower) {
@@ -145,9 +145,9 @@ bool isBuddyPcMove(GfComPropertyPc &property) {
 }
 
 bool isFollowBuddyPc(const BlackBoardField &blackBoard) {
-  GfComPropertyPc *property = blackBoard.unknown08;
+  GfComPropertyPc *property = blackBoard.m_comPropertyPc;
   GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
-  GfObjProperty *mainProperty = GfObjUtil::getProperty(formation->unknown1a0[formation->unknown1a0[property->unknown38].unknown00].unknown08);
+  GfObjProperty *mainProperty = GfObjUtil::getProperty(formation->unknown1a0[formation->unknown1a0[property->unknown38].unknown00].m_playerHandle);
   if (mainProperty->unknown18->unknown00 == PROPERTY_MOVE_UNKNOWN_3) {
     return false;
   }
@@ -163,7 +163,7 @@ bool isFollowBuddyPc(const BlackBoardField &blackBoard) {
 bool TaskFieldFollowBuddyPc::testCondition(const BlackBoardField &blackBoard) { return isFollowBuddyPc(blackBoard); }
 
 void TaskFieldFollowBuddyPc::update(BlackBoardField &blackBoard) {
-  GfComPropertyPc *property = blackBoard.unknown08;
+  GfComPropertyPc *property = blackBoard.m_comPropertyPc;
   navi::NvmshAcObj *naviObject = blackBoard.unknown10;
   const FollowBuddyPcParam *param = AgentUtilField::getAIParamAdapter(*property, property->unknown114 == 3 ? PARAM_ID_FIELD_AI_UNKNOWN_3 : PARAM_ID_FIELD_AI_UNKNOWN_2).get<FollowBuddyPcParam>();
   if (!blackBoard.unknown200.test(10) && blackBoard.unknown50 < param->walkDistStopFollower) {

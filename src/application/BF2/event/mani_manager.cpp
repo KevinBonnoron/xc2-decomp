@@ -32,7 +32,7 @@ void ManiManager::adjestPosY(mm::Vec3 &position) {
 
 bool ManiManager::exist(mm::mtl::FixedVector<Item, ITEM_UNKNOWN_512> &items, IManiCallback *callback) {
   for (u32 i = 0; i < items.size(); i++) {
-    if (items[i].unknown00 == callback) {
+    if (items[i].m_iManiCallback == callback) {
       return true;
     }
   }
@@ -47,7 +47,7 @@ void ManiManager::removeManipulate(IManiCallback *callback) {
     return;
   }
   for (Item *it = unknown20.begin(); it != unknown20.end(); ++it) {
-    if (it->unknown00 == callback) {
+    if (it->m_iManiCallback == callback) {
       unknown20.erase(it);
       break;
     }
@@ -66,7 +66,7 @@ void ManiManager::changeManipulate(MANI_TYPE type) {
     mm::mtl::FixedVector<Item, ITEM_UNKNOWN_512> items = unknown20;
     clearManipulate();
     for (u32 i = 0; i < items.size(); i++) {
-      addManipulate(items[i].unknown00, MANI_TYPE_UNKNOWN_1);
+      addManipulate(items[i].m_iManiCallback, MANI_TYPE_UNKNOWN_1);
     }
     break;
   }
@@ -74,7 +74,7 @@ void ManiManager::changeManipulate(MANI_TYPE type) {
     mm::mtl::FixedVector<Item, ITEM_UNKNOWN_512> items = unknown20;
     clearManipulate();
     for (u32 i = 0; i < items.size(); i++) {
-      addManipulate(items[i].unknown00, MANI_TYPE_UNKNOWN_2);
+      addManipulate(items[i].m_iManiCallback, MANI_TYPE_UNKNOWN_2);
     }
     break;
   }
@@ -82,7 +82,7 @@ void ManiManager::changeManipulate(MANI_TYPE type) {
     mm::mtl::FixedVector<Item, ITEM_UNKNOWN_512> items = unknown20;
     clearManipulate();
     for (u32 i = 0; i < items.size(); i++) {
-      addManipulate(items[i].unknown00, MANI_TYPE_UNKNOWN_3);
+      addManipulate(items[i].m_iManiCallback, MANI_TYPE_UNKNOWN_3);
     }
     break;
   }
@@ -116,7 +116,7 @@ void ManiManager::update() {
 void ManiManager::clearManipulate() {
   unknown20.clear();
   unknown22030 = MANI_TYPE_UNKNOWN_1;
-  Manager::get()->getScn()->unknown30->clrManipulator();
+  Manager::get()->getScn()->m_scnDebug->clrManipulator();
   unknown18.set(FLAG_UNKNOWN_2, false);
 }
 
@@ -127,7 +127,7 @@ void ManiManager::render() {
   for (Item *it = unknown20.begin(); it != unknown20.end(); ++it) {
     IManiCallback::RenderParam param;
     param.unknown00 = mm::Col4(0.8f, 1.0f, 0.8f, 0.5f);
-    it->unknown00->OnManiRender(param);
+    it->m_iManiCallback->OnManiRender(param);
   }
   if (unknown20.empty()) {
     return;

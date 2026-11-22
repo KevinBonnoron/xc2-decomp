@@ -47,12 +47,12 @@ GfMenuDriverList *GfMenuObjCommonText::s_pChangeDrList;
 
 // The game's constructor (0x710043bb30) does not store the member at 0x60, which the destructor releases.
 GfMenuObjCommonText::GfMenuObjCommonText(u32 handle)
-    : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown50(nullptr), unknown58(nullptr), unknown68(nullptr), unknown70(nullptr), unknown88(0) {
+    : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), m_menuBladeList(nullptr), unknown58(nullptr), unknown68(nullptr), unknown70(nullptr), unknown88(0) {
   unknown40 = unknown160();
   unknown40->unknown162(0);
   unknown48 = unknown160();
   unknown48->unknown162(0);
-  unknown50 = GfMenuBladeList::create();
+  m_menuBladeList = GfMenuBladeList::create();
   unknown58 = GfMenuDriverList::create();
   s_pItemList = GfMenuItemList::create();
   s_pSubMenuIDList = GfMenuIDList::create();
@@ -77,7 +77,7 @@ GfMenuObjCommonText::~GfMenuObjCommonText() {
   mm::mtl::safeRelease(unknown30);
   mm::mtl::safeRelease(unknown38);
   mm::mtl::safeRelease(unknown60);
-  mm::mtl::safeRelease(unknown50);
+  mm::mtl::safeRelease(m_menuBladeList);
   mm::mtl::safeRelease(unknown58);
   mm::mtl::safeRelease(unknown28);
   unknown78 = nullptr;
@@ -686,7 +686,7 @@ void GfMenuObjCommonText::openNumSelect(GfMenuCallContext *context, const OpenNu
 }
 
 void GfMenuObjCommonText::ErrorListener::reciveEvent(const ui::EventData &event, u32 handle) {
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjCommonText->unknown18);
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1:
@@ -878,7 +878,7 @@ void GfMenuObjCommonText::DrChangeListener::reciveEvent(const ui::EventData &eve
   case 3:
     if (event.unknown08 == 1) {
       GfMenuObject::enableInput(acc.unknown10);
-      unknown20->unknown70->setDisp(true);
+      m_menuObjCommonText->unknown70->setDisp(true);
     } else if (event.unknown08 == 2) {
       if (unknown18 == 0) {
         acc.setSuspend(true);
@@ -889,7 +889,7 @@ void GfMenuObjCommonText::DrChangeListener::reciveEvent(const ui::EventData &eve
     u32 index = event.unknown08;
     u32 previous = event.unknown0c;
     s_pChangeDrList->setIndex(index);
-    unknown20->unknown68->setIndex(index);
+    m_menuObjCommonText->unknown68->setIndex(index);
     if (previous != 0xffffffff && index != previous) {
       GfMenuObjUtil::playSECommonCursor();
     }
@@ -906,7 +906,7 @@ void GfMenuObjCommonText::DrChangeListener::reciveEvent(const ui::EventData &eve
       break;
     }
     close();
-    unknown20->unknown70->setDisp(true);
+    m_menuObjCommonText->unknown70->setDisp(true);
     break;
   case GfMenuTypes::unknown003_33: {
     acc.setAlpha(1.0f);
@@ -922,7 +922,7 @@ void GfMenuObjCommonText::DrChangeListener::reciveEvent(const ui::EventData &eve
     mm::Rect<s16> next;
     acc.getLayoutRect("dr_select_next", next);
     GfMenuObjUtil::placeObjectH(acc.unknown10, "LAY_dr_change@%02d", s_pChangeDrList->getSize(), mm::Pnt<s16>(rect.x + rect.width / 2, rect.y + rect.height / 2), next.x - rect.x);
-    unknown20->unknown70->setDisp(false);
+    m_menuObjCommonText->unknown70->setDisp(false);
     GfMenuObject::resetInputSelection(acc.unknown10);
     GfMenuObject::setupInputSelectionFromList(acc.unknown10, *s_pChangeDrList);
     unknown18 = 1;
@@ -945,13 +945,13 @@ void GfMenuObjCommonText::DrChangeListener::reciveEvent(const ui::EventData &eve
 }
 
 void GfMenuObjCommonText::NumSelectListener::reciveEvent(const ui::EventData &event, u32 handle) {
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjCommonText->unknown18);
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1:
     GfMenuAdapterManager::beginCategory(3);
-    GfMenuReferenceAdapter::create(acc.searchChild("TXT_num_select_value"), unknown20->unknown78, true);
-    GfMenuReferenceAdapter::create(acc.searchChild("TXT_num_select_total_price"), unknown20->unknown80, true);
+    GfMenuReferenceAdapter::create(acc.searchChild("TXT_num_select_value"), m_menuObjCommonText->unknown78, true);
+    GfMenuReferenceAdapter::create(acc.searchChild("TXT_num_select_total_price"), m_menuObjCommonText->unknown80, true);
     GfMenuAdapterManager::endCategory();
     GfMenuObject::disableInput(acc.unknown10);
     acc.setDisp(false);
@@ -971,8 +971,8 @@ void GfMenuObjCommonText::NumSelectListener::reciveEvent(const ui::EventData &ev
   case 6: {
     int index = event.unknown08;
     int previous = event.unknown0c;
-    unknown20->unknown78->unknown162(index);
-    unknown20->unknown80->unknown162(unknown20->unknown88 * index);
+    m_menuObjCommonText->unknown78->unknown162(index);
+    m_menuObjCommonText->unknown80->unknown162(m_menuObjCommonText->unknown88 * index);
     if (previous != -1 && index != previous) {
       GfMenuObjUtil::playSE(0x19);
     }
@@ -980,10 +980,10 @@ void GfMenuObjCommonText::NumSelectListener::reciveEvent(const ui::EventData &ev
   }
   case 8:
     if (event.unknown0c == 1) {
-      if (unknown20->unknown78->unknown0c == 0) {
+      if (m_menuObjCommonText->unknown78->unknown0c == 0) {
         break;
       }
-      GfMenuObject::addResultCallContext(owner.searchChild("LAY_main"), 0, unknown20->unknown78->unknown0c);
+      GfMenuObject::addResultCallContext(owner.searchChild("LAY_main"), 0, m_menuObjCommonText->unknown78->unknown0c);
       unknown164(owner.searchChild("LAY_main"), GfMenuTypes::unknown003_34);
     } else if (event.unknown0c == 2) {
       GfMenuObject::addResultCallContext(owner.searchChild("LAY_main"), 1, 0);
@@ -997,13 +997,13 @@ void GfMenuObjCommonText::NumSelectListener::reciveEvent(const ui::EventData &ev
     first.setDisp(isSingle == 0);
     ui::UIObjectAcc second(acc.searchChild("TXT_num_select_index@02"));
     second.setDisp(isSingle != 0);
-    unknown20->unknown78->unknown162(0);
-    unknown20->unknown78->unknown165(event.unknown0a);
-    unknown20->unknown78->unknown166(event.unknown0c_u16);
-    unknown20->unknown80->unknown162(0);
-    unknown20->unknown80->unknown165(0);
-    unknown20->unknown80->unknown166(999999999);
-    unknown20->unknown88 = event.unknown10;
+    m_menuObjCommonText->unknown78->unknown162(0);
+    m_menuObjCommonText->unknown78->unknown165(event.unknown0a);
+    m_menuObjCommonText->unknown78->unknown166(event.unknown0c_u16);
+    m_menuObjCommonText->unknown80->unknown162(0);
+    m_menuObjCommonText->unknown80->unknown165(0);
+    m_menuObjCommonText->unknown80->unknown166(999999999);
+    m_menuObjCommonText->unknown88 = event.unknown10;
     GfMenuObject::resetInputSelection(handle);
     GfMenuObject::setupInputSelection(handle, 0, event.unknown0c_u16 + 1);
     setFadeIn(handle);

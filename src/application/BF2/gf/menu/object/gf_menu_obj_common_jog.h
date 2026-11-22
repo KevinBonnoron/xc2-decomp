@@ -20,11 +20,11 @@ class GfMenuObjCommonJog : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjCommonJog *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjCommonJog *owner) : _0c(), m_menuObjCommonJog(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjCommonJog *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjCommonJog *m_menuObjCommonJog; // Inferred role: owner; original member name unknown.
   };
 
   struct OpenParam {
@@ -72,7 +72,7 @@ public:
   mm::mtl::FixedVector<unknown002, 4> unknown68; // Inferred role: visited menus; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuObjCommonJog::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjCommonJog::MainListener, m_menuObjCommonJog) == 0x20, "");
 static_assert(sizeof(GfMenuObjCommonJog::MainListener) == 0x28, "");
 
 static_assert(offsetof(GfMenuObjCommonJog::OpenParam, unknown04) == 0x04, "");

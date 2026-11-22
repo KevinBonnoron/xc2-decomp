@@ -36,7 +36,7 @@ void log_debug(Debug::LogFlag::Type flag, const char *format, ...) {
     log_make_text(buffer, sizeof(buffer), format, args);
     char16_t text[256];
     Utf8ToUTF16(buffer, text, 256);
-    Debug::log_.unknown10(static_cast<LogMessage::Type>(4), text);
+    Debug::log_.m_messageMethod(static_cast<LogMessage::Type>(4), text);
   }
   va_end(args);
 }
@@ -47,7 +47,7 @@ void log_debug(Debug::LogFlag::Type flag, const char16_t *format, ...) {
   if ((Debug::log_.unknown0c & flag) != 0) {
     char16_t buffer[256];
     log_make_text(buffer, sizeof(buffer), format, args);
-    Debug::log_.unknown10(static_cast<LogMessage::Type>(4), buffer);
+    Debug::log_.m_messageMethod(static_cast<LogMessage::Type>(4), buffer);
   }
   va_end(args);
 }
@@ -60,7 +60,7 @@ void log_message(const char *format, ...) {
   va_end(args);
   char16_t text[256];
   Utf8ToUTF16(buffer, text, 256);
-  Debug::log_.unknown10(static_cast<LogMessage::Type>(0), text);
+  Debug::log_.m_messageMethod(static_cast<LogMessage::Type>(0), text);
 }
 
 void log_message(const char16_t *format, ...) {
@@ -69,7 +69,7 @@ void log_message(const char16_t *format, ...) {
   char16_t buffer[256];
   log_make_text(buffer, sizeof(buffer), format, args);
   va_end(args);
-  Debug::log_.unknown10(static_cast<LogMessage::Type>(0), buffer);
+  Debug::log_.m_messageMethod(static_cast<LogMessage::Type>(0), buffer);
 }
 
 void log_error(Result result, Debug::LogFlag::Type flag, const char *format, ...) {
@@ -83,7 +83,7 @@ void log_error(Result result, Debug::LogFlag::Type flag, const char *format, ...
     log_make_text(buffer, sizeof(buffer), format, args);
     char16_t text[256];
     Utf8ToUTF16(buffer, text, 256);
-    Debug::log_.unknown10(static_cast<LogMessage::Type>(2), text);
+    Debug::log_.m_messageMethod(static_cast<LogMessage::Type>(2), text);
   }
   va_end(args);
 }
@@ -97,7 +97,7 @@ void log_error(Result result, Debug::LogFlag::Type flag, const char16_t *format,
   if ((Debug::log_.m_errorLogFlag & flag) != 0) {
     char16_t buffer[256];
     log_make_text(buffer, sizeof(buffer), format, args);
-    Debug::log_.unknown10(static_cast<LogMessage::Type>(2), buffer);
+    Debug::log_.m_messageMethod(static_cast<LogMessage::Type>(2), buffer);
   }
   va_end(args);
 }
@@ -113,7 +113,7 @@ void log_warning(Result result, Debug::LogFlag::Type flag, const char *format, .
     log_make_text(buffer, sizeof(buffer), format, args);
     char16_t text[256];
     Utf8ToUTF16(buffer, text, 256);
-    Debug::log_.unknown10(static_cast<LogMessage::Type>(1), text);
+    Debug::log_.m_messageMethod(static_cast<LogMessage::Type>(1), text);
   }
   va_end(args);
 }
@@ -127,7 +127,7 @@ void log_warning(Result result, Debug::LogFlag::Type flag, const char16_t *forma
   if ((Debug::log_.m_warningLogFlag & flag) != 0) {
     char16_t buffer[256];
     log_make_text(buffer, sizeof(buffer), format, args);
-    Debug::log_.unknown10(static_cast<LogMessage::Type>(1), buffer);
+    Debug::log_.m_messageMethod(static_cast<LogMessage::Type>(1), buffer);
   }
   va_end(args);
 }
@@ -151,12 +151,12 @@ void Init() {
   log_.m_errorLogFlag = 0x10000015;
   log_.m_warningLogFlag = 0x10000015;
   log_.unknown0c = 0x10000015;
-  log_.unknown10 = LogMethodT;
+  log_.m_messageMethod = LogMethodT;
 }
 
 Result LogMethodT(LogMessage::Type type, const char16_t *text) { return static_cast<Result>(0); }
 
-void SetMessageMethod(unknown001 method) { log_.unknown10 = method != nullptr ? method : LogMethodT; }
+void SetMessageMethod(unknown001 method) { log_.m_messageMethod = method != nullptr ? method : LogMethodT; }
 
 void SetTimeStampType(LogTimeStamp::Type type) { log_.m_logTimeStampType = type; }
 

@@ -199,9 +199,9 @@ Plugin *WaterInPlugin::create() {
 
 } // namespace pc
 
-void GfComBehaviorPc::Listener::onWkStandbyLogout() { unknown08->unknown130 = nullptr; }
+void GfComBehaviorPc::Listener::onWkStandbyLogout() { m_comBehaviorPc->unknown130 = nullptr; }
 
-GfComBehaviorPc::GfComBehaviorPc() : unknowna0(fw::Allocator::getProcAllocator()), unknown130(nullptr), unknown138(this) {}
+GfComBehaviorPc::GfComBehaviorPc() : m_hfsm(fw::Allocator::getProcAllocator()), unknown130(nullptr), m_listener(this) {}
 
 GfComBehaviorPc::~GfComBehaviorPc() {}
 
@@ -223,8 +223,8 @@ const mm::mtl::RTTI *GfComBehaviorPc::getRTTI() const { return &m_rtti; }
 void GfComBehaviorPc::procMsgPcApplyFieldDamage(fw::MessageObject *sender, MsgPcApplyFieldDamage &message) { pc::StateUtil::applyDamage(*this, message.unknown08, true); }
 
 void GfComBehaviorPc::procMsgPcGetState(fw::MessageObject *sender, MsgPcGetState &message) {
-  if (unknowna0.m_pState != nullptr) {
-    message.unknown08 = unknowna0.m_pState->unknown08;
+  if (m_hfsm.m_pState != nullptr) {
+    message.unknown08 = m_hfsm.m_pState->m_state;
   }
 }
 
@@ -322,7 +322,7 @@ void GfComBehaviorPc::onWarpAfterTransform(GfComPropertyPc &property) {
 }
 
 void GfComBehaviorPc::procMsgObjectNotifyDamage(fw::MessageObject *sender, MsgObjectNotifyDamage &message) {
-  const MsgObjectDamage *damage = message.unknown08;
+  const MsgObjectDamage *damage = message.m_msgObjectDamage;
   if (damage != nullptr && damage->unknown10 == 0 && damage->unknown2a) {
     if (getProperty()->unknown111_1) {
       pc::StateUtilField::requestGetOffRider(*this);
@@ -332,7 +332,7 @@ void GfComBehaviorPc::procMsgObjectNotifyDamage(fw::MessageObject *sender, MsgOb
   GfStateBase::unknown001 event;
   event.unknown00 = sender;
   event.unknown08 = &message;
-  unknowna0.execEvent(&event);
+  m_hfsm.execEvent(&event);
 }
 
 void GfComBehaviorPc::procMsgObjectNotifyDead(fw::MessageObject *sender, MsgObjectNotifyDead &message) {
@@ -350,7 +350,7 @@ void GfComBehaviorPc::procMsgObjectNotifyDead(fw::MessageObject *sender, MsgObje
     GfStateBase::unknown001 event;
     event.unknown00 = sender;
     event.unknown08 = &message;
-    unknowna0.execEvent(&event);
+    m_hfsm.execEvent(&event);
   }
 }
 
@@ -379,7 +379,7 @@ void GfComBehaviorPc::procMsgPcFieldSetFallMaxHeight(fw::MessageObject *sender, 
 void GfComBehaviorPc::procMsgPcFieldGetAccessTarget(fw::MessageObject *sender, MsgPcFieldGetAccessTarget &message) {
   pc::AccessPlugin *plugin = unknown001<pc::AccessPlugin>(4);
   if (plugin != nullptr) {
-    message.unknown08 = plugin->unknown10;
+    message.m_GF_OBJ_HANDLE = plugin->m_GF_OBJ_HANDLE;
   }
 }
 
@@ -500,7 +500,7 @@ void GfComBehaviorPc::detectHead(GfComPropertyPc &property, fw::ColiObject *coli
     mm::Mat44 matrix;
     transform->unknown001(matrix);
     coli->setInstantlyMatrix(matrix);
-    proxy.unknown00 = coli;
+    proxy.m_coliObject = coli;
     if (!(fabsf(horizontal.x) <= 0.000001f) || !(fabsf(horizontal.z) <= 0.000001f)) {
       mm::Vec3 down = move;
       if (fabsf(down.x) <= 0.000001f && fabsf(down.y) <= 0.000001f && fabsf(down.z) <= 0.000001f) {
@@ -546,7 +546,7 @@ void GfComBehaviorPc::onWarpWall(GfComPropertyPc &property) {
   property.flush();
   GfComAsm *comAsm = unknown08->getComponent<GfComAsm>();
   if (comAsm != nullptr && comAsm->setState("S_climbidle_base", ANIM_LAYER_UNKNOWN_0)) {
-    unknowna0.setState(pc::STATE_ID_UNKNOWN_46);
+    m_hfsm.setState(pc::STATE_ID_UNKNOWN_46);
   }
   GfComDynamics *dynamics = unknown08->getComponent<GfComDynamics>();
   if (dynamics != nullptr) {
@@ -592,7 +592,7 @@ void GfComBehaviorPc::procAnimCallback(GfComAsm *comAsm, const CallBackCache &ca
     GfStateBase::unknown001 event;
     event.unknown00 = static_cast<GfObj *>(unknown08);
     event.unknown08 = &message;
-    unknowna0.execEvent(&event);
+    m_hfsm.execEvent(&event);
   }
 }
 
@@ -604,9 +604,9 @@ void GfComBehaviorPc::procMsgGameChangeTarget(fw::MessageObject *sender, MsgGame
 
   pc::LookAtPlugin *lookAt = unknown001<pc::LookAtPlugin>(5);
   GfComPropertyPc *property = unknown08->getComponent<GfComPropertyPc>();
-  if (message.unknown08 == unknown020) {
+  if (message.m_GF_OBJ_HANDLE == unknown020) {
     targetIK->setActivate(false);
-    if (lookAt != nullptr && property->unknown310.unknown10_1) {
+    if (lookAt != nullptr && property->m_propertyField.unknown10_1) {
       lookAt->setActivate(true);
     }
   } else {
@@ -651,40 +651,40 @@ void GfComBehaviorPc::setup(const SetupInfo &info) {
   if (formation != nullptr && property->unknown38 != PLAYER_ID_UNKNOWN_4294967295) {
     isMainPc = formation->unknown1a0[property->unknown38].unknown10;
   }
-  unknown10.beginSetup(*this, 0x16);
-  unknown10.unknown001<FootStepPlugin>(0, true);
-  unknown10.unknown001<EyeBlinkPlugin>(1, info.unknown04);
-  unknown10.unknown001<LipSyncPlugin>(2, true);
-  unknown10.unknown001<FootIkControllerPlugin>(3, true);
-  unknown10.unknown001<pc::AccessPlugin>(4, isPad);
-  unknown10.unknown001<pc::FallIntoColiPlugin>(9, isPad);
-  unknown10.unknown001<pc::FadePlugin>(11, isPad);
-  unknown10.unknown001<pc::LurePlugin>(15, isPad);
-  unknown10.unknown001<pc::LookAtPlugin>(5, true);
-  unknown10.unknown001<pc::TargetIKPlugin>(6, true);
-  unknown10.unknown001<pc::FallDamagePlugin>(7, isMainPc);
-  unknown10.unknown001<pc::TimerPlugin>(8, true);
-  unknown10.unknown001<pc::SlidePlugin>(10, true);
-  unknown10.unknown001<pc::AttachPlugin>(12, true);
-  unknown10.unknown001<pc::ColVelCalculatorPlugin>(13, true);
-  unknown10.unknown001<pc::TerrainDamagePlugin>(16, isMainPc);
-  unknown10.unknown001<pc::FallDistancePlugin>(17, true);
-  unknown10.unknown001<pc::WaterInPlugin>(18, true);
-  unknown10.unknown001<pc::DeadColCheckPlugin>(19, isMainPc);
-  unknown10.unknown001<pc::LookAxisPlugin>(20, true);
-  unknown10.unknown001<pc::FallDistanceAchievPlugin>(21, isMainPc);
-  unknown10.endSetup();
-  unknown002(unknown10, 13);
-  unknown002(unknown10, 16);
-  unknown002(unknown10, 2);
-  unknown002(unknown10, 3);
-  unknown002(unknown10, 19);
-  unknown002(unknown10, 20);
-  unknowna0.beginSetup(this, 0x52, 8);
-  pc::registerFieldStates(unknowna0);
-  pc::registerBattleStates(unknowna0);
-  unknowna0.endSetup();
-  unknowna0.setState(info.unknown00);
+  m_pluginManager.beginSetup(*this, 0x16);
+  m_pluginManager.unknown001<FootStepPlugin>(0, true);
+  m_pluginManager.unknown001<EyeBlinkPlugin>(1, info.unknown04);
+  m_pluginManager.unknown001<LipSyncPlugin>(2, true);
+  m_pluginManager.unknown001<FootIkControllerPlugin>(3, true);
+  m_pluginManager.unknown001<pc::AccessPlugin>(4, isPad);
+  m_pluginManager.unknown001<pc::FallIntoColiPlugin>(9, isPad);
+  m_pluginManager.unknown001<pc::FadePlugin>(11, isPad);
+  m_pluginManager.unknown001<pc::LurePlugin>(15, isPad);
+  m_pluginManager.unknown001<pc::LookAtPlugin>(5, true);
+  m_pluginManager.unknown001<pc::TargetIKPlugin>(6, true);
+  m_pluginManager.unknown001<pc::FallDamagePlugin>(7, isMainPc);
+  m_pluginManager.unknown001<pc::TimerPlugin>(8, true);
+  m_pluginManager.unknown001<pc::SlidePlugin>(10, true);
+  m_pluginManager.unknown001<pc::AttachPlugin>(12, true);
+  m_pluginManager.unknown001<pc::ColVelCalculatorPlugin>(13, true);
+  m_pluginManager.unknown001<pc::TerrainDamagePlugin>(16, isMainPc);
+  m_pluginManager.unknown001<pc::FallDistancePlugin>(17, true);
+  m_pluginManager.unknown001<pc::WaterInPlugin>(18, true);
+  m_pluginManager.unknown001<pc::DeadColCheckPlugin>(19, isMainPc);
+  m_pluginManager.unknown001<pc::LookAxisPlugin>(20, true);
+  m_pluginManager.unknown001<pc::FallDistanceAchievPlugin>(21, isMainPc);
+  m_pluginManager.endSetup();
+  unknown002(m_pluginManager, 13);
+  unknown002(m_pluginManager, 16);
+  unknown002(m_pluginManager, 2);
+  unknown002(m_pluginManager, 3);
+  unknown002(m_pluginManager, 19);
+  unknown002(m_pluginManager, 20);
+  m_hfsm.beginSetup(this, 0x52, 8);
+  pc::registerFieldStates(m_hfsm);
+  pc::registerBattleStates(m_hfsm);
+  m_hfsm.endSetup();
+  m_hfsm.setState(info.unknown00);
   GfComModel *model = unknown08->getComponent<GfComModel>();
   unknown128 = model->createBoneReferenceFrame("JU_neck");
   if (unknown128.get() == nullptr) {
@@ -710,8 +710,8 @@ void GfComBehaviorPc::cleanup() {
     }
     unknown128 = nullptr;
   }
-  unknowna0.cleanup();
-  unknown10.cleanup();
+  m_hfsm.cleanup();
+  m_pluginManager.cleanup();
   if (unknown98) {
     GfComPropertyPc *property = unknown08->getComponent<GfComPropertyPc>();
     unknown98->cleanup(*property);

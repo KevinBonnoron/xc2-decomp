@@ -17,43 +17,43 @@
 
 namespace layer {
 
-LayerObjTopMemObj::LayerObjTopMemObj(u32 width, u32 height, LayerMemType type) : unknown258(this) {
+LayerObjTopMemObj::LayerObjTopMemObj(u32 width, u32 height, LayerMemType type) : m_layerObjSortMemObj(this) {
   unknowna8 |= 0x20000;
-  unknown740 = width;
-  unknown744 = height;
+  m_memWidth = width;
+  m_memHeight = height;
   unknown748 = 0;
   unknown74c = 0;
   unknown750 = type;
   unknown18 = LAYER_OBJ_TYPE_MEM;
-  unknown250 = nullptr;
+  m_layerResViewPortInfo = nullptr;
   unknown238 = nullptr;
   unknown270 = 0xc;
   createWorkBuffer();
 }
 
 void LayerObjTopMemObj::createWorkBuffer() {
-  unknown640.setup(0x80);
-  unknown180.unknown08 = 1.0f;
-  unknown180.unknown0c = static_cast<f32>(unknown744) / static_cast<f32>(unknown740);
-  if (unknown740 > unknown744) {
-    unknown180.unknown00 = 1.0f;
-    unknown180.unknown04 = static_cast<f32>(unknown744) / static_cast<f32>(unknown740);
+  m_cGLibDblUniformBlock.setup(0x80);
+  m_layerResRenderInfo.unknown08 = 1.0f;
+  m_layerResRenderInfo.unknown0c = static_cast<f32>(m_memHeight) / static_cast<f32>(m_memWidth);
+  if (m_memWidth > m_memHeight) {
+    m_layerResRenderInfo.unknown00 = 1.0f;
+    m_layerResRenderInfo.unknown04 = static_cast<f32>(m_memHeight) / static_cast<f32>(m_memWidth);
   } else {
-    unknown180.unknown00 = static_cast<f32>(unknown740) / static_cast<f32>(unknown744);
-    unknown180.unknown04 = 1.0f;
+    m_layerResRenderInfo.unknown00 = static_cast<f32>(m_memWidth) / static_cast<f32>(m_memHeight);
+    m_layerResRenderInfo.unknown04 = 1.0f;
   }
-  unknown180.unknown10 = 0;
-  unknown180.unknown12 = 0;
-  unknown180.unknown14 = unknown740;
-  unknown180.unknown16 = unknown744;
+  m_layerResRenderInfo.m_pixelX = 0;
+  m_layerResRenderInfo.m_pixelY = 0;
+  m_layerResRenderInfo.m_pixelWidth = m_memWidth;
+  m_layerResRenderInfo.m_pixelHeight = m_memHeight;
   u32 size;
   if (unknown750 == LAYER_MEM_TYPE_UNKNOWN_2) {
-    size = 2 * unknown740 * unknown744;
+    size = 2 * m_memWidth * m_memHeight;
   } else {
-    size = unknown740 * unknown744;
+    size = m_memWidth * m_memHeight;
     if (unknown750 == LAYER_MEM_TYPE_UNKNOWN_3) {
       unknown748 = size + (0x100 - size % 0x100) % 0x100;
-      u32 secondSize = (unknown740 >> 1) * (unknown744 >> 1) * 2;
+      u32 secondSize = (m_memWidth >> 1) * (m_memHeight >> 1) * 2;
       unknown74c = secondSize + (0x10 - secondSize % 0x10) % 0x10;
       size = unknown748 + unknown74c;
     } else {
@@ -76,8 +76,8 @@ LayerObjTopMemObj::~LayerObjTopMemObj() {
 }
 
 void LayerObjTopMemObj::releaseWorkBuffer() {
-  unknown278.release();
-  unknown640.release();
+  m_cGLibRenderTarget.release();
+  m_cGLibDblUniformBlock.release();
   unknown678.release();
   unknown6a0[0].release();
   unknown6a0[1].release();
@@ -88,17 +88,17 @@ void LayerObjTopMemObj::releaseWorkBuffer() {
 void LayerObjTopMemObj::resourceInit() {
   if (unknown270 & 0x8) {
     unknown270 &= ~0x8;
-    unknown278.setTextureInfo(unknown740, unknown744, GRL_SURFACE_FORMAT_RGBA8, false, 0);
-    unknown278.clearTexture(mm::Col4(0.0f, 0.0f, 0.0f, 0.0f), static_cast<GrlClaerMask>(0xf));
+    m_cGLibRenderTarget.setTextureInfo(m_memWidth, m_memHeight, GRL_SURFACE_FORMAT_RGBA8, false, 0);
+    m_cGLibRenderTarget.clearTexture(mm::Col4(0.0f, 0.0f, 0.0f, 0.0f), static_cast<GrlClaerMask>(0xf));
     u32 *info = static_cast<u32 *>(unknown678.m_mapping);
-    info[0] = unknown740;
-    info[1] = unknown744;
+    info[0] = m_memWidth;
+    info[1] = m_memHeight;
     if (unknown750 == LAYER_MEM_TYPE_UNKNOWN_3) {
-      info[2] = unknown740 >> 1;
-      info[3] = unknown744 >> 1;
+      info[2] = m_memWidth >> 1;
+      info[3] = m_memHeight >> 1;
     } else {
-      info[2] = unknown740;
-      info[3] = unknown744;
+      info[2] = m_memWidth;
+      info[3] = m_memHeight;
     }
     unknown678.updateData();
   }
@@ -124,13 +124,13 @@ void LayerObjTopMemObj::setRender(bool render) {
 bool LayerObjTopMemObj::isRender() const { return (unknown270 >> 2) & 0x1; }
 
 void LayerObjTopMemObj::applyParams(const LayerRenderView *view, const LayerResMatrix &matrix, const LayerResColor &color) {
-  unknown250 = view->unknown08;
-  unknown170.unknown001();
-  LayerObjUtil::calcDispInfo(unknown170, matrix, unknown180);
+  m_layerResViewPortInfo = view->m_layerResViewPortInfo;
+  m_layerResDispInfo.unknown001();
+  LayerObjUtil::calcDispInfo(m_layerResDispInfo, matrix, m_layerResRenderInfo);
   if (unknowna8 & 0x90000) {
     return;
   }
-  updateDefUniformBlock(unknown640, matrix, color, nullptr);
+  updateDefUniformBlock(m_cGLibDblUniformBlock, matrix, color, nullptr);
 }
 
 void LayerObjTopMemObj::setDrawList(LayerSortMan *sortMan, bool is3D) {
@@ -139,23 +139,23 @@ void LayerObjTopMemObj::setDrawList(LayerSortMan *sortMan, bool is3D) {
   }
   if (is3D) {
     if (unknowna8 & 0x400) {
-      LayerManager::get()->unknown60->unknown10->set3DSpace(&unknown258, unknown200);
+      LayerManager::get()->m_layerObjManager->m_layerSortMan->set3DSpace(&m_layerObjSortMemObj, unknown200);
     } else if (!isClip()) {
-      sortMan->set2DSpace(&unknown258, unknownc0);
+      sortMan->set2DSpace(&m_layerObjSortMemObj, m_priority);
     }
   } else if (!isClip()) {
-    sortMan->set2DSpace(&unknown258, unknownc0);
+    sortMan->set2DSpace(&m_layerObjSortMemObj, m_priority);
   }
 }
 
 void LayerObjTopMemObj::setupRender() {
   u32 index = LayerManager::s_nDebIdx;
   unknown270 &= ~(1 << index);
-  LayerShdManager *shader = LayerManager::get()->unknown58;
+  LayerShdManager *shader = LayerManager::get()->m_layerShdManager;
   shader->unknown4f0 = 9;
   shader->unknown4f8 = unknown750;
   grlib::CGLibDecShader *decShader = shader->setupShader();
-  unknown278.setRenderTarget();
+  m_cGLibRenderTarget.setRenderTarget();
   unknown678.setUniformBlock((decShader->unknown38 + decShader->unknown58)->getUniformBlockOfs("U_MENU"));
   unknown6a0[index].setStorageBuffer(0);
   if (unknown750 != LAYER_MEM_TYPE_UNKNOWN_1) {
@@ -176,8 +176,8 @@ void LayerObjTopMemObj::setupRender() {
 }
 
 void LayerObjTopMemObj::lastRender() {
-  LayerShdManager *shader = LayerManager::get()->unknown58;
-  if (!shader->unknown002(unknown248, unknown250)) {
+  LayerShdManager *shader = LayerManager::get()->m_layerShdManager;
+  if (!shader->unknown002(m_layerObjTopMaskObj, m_layerResViewPortInfo)) {
     return;
   }
   shader->unknown003(LayerShdManager::s_resDefBlend[unknownc5]);
@@ -186,8 +186,8 @@ void LayerObjTopMemObj::lastRender() {
   shader->setSecTexture(unknown220[2]);
   shader->setupVertex(static_cast<LayerDefVertType>(1));
   shader->unknown4f0 = 1;
-  shader->setupShader(&unknown640);
-  shader->setupTexture(*unknown278.unknown70, static_cast<LayerSamplerType>(unknownc6), 0);
+  shader->setupShader(&m_cGLibDblUniformBlock);
+  shader->setupTexture(*m_cGLibRenderTarget.unknown70, static_cast<LayerSamplerType>(m_texFilterType), 0);
   shader->renderQuadsIndex();
 }
 

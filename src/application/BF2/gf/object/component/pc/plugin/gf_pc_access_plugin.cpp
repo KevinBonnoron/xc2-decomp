@@ -38,17 +38,17 @@ bool isActiveRange(GfComPropertyPc &property, const AccessParam &param, GF_OBJ_H
   return isActive;
 }
 
-AccessPlugin::AccessPlugin() : unknown10(unknown020), unknown20(nullptr), unknown28(-1) {}
+AccessPlugin::AccessPlugin() : m_GF_OBJ_HANDLE(unknown020), m_comBehaviorPc(nullptr), unknown28(-1) {}
 
 bool AccessPlugin::setup(GfComBehaviorPc &behavior) {
   unknown18 = fw::ParamManager::get()->unknown408[5];
-  this->unknown20 = &behavior;
+  this->m_comBehaviorPc = &behavior;
   return true;
 }
 
 void AccessPlugin::cleanup(GfComBehaviorPc &) {
-  if (unknown10 != unknown020) {
-    unknown10 = unknown020;
+  if (m_GF_OBJ_HANDLE != unknown020) {
+    m_GF_OBJ_HANDLE = unknown020;
     SCOM_ACCESS_TARGET::create(unknown020);
   }
 }
@@ -56,8 +56,8 @@ void AccessPlugin::cleanup(GfComBehaviorPc &) {
 void AccessPlugin::onActivate() {}
 
 void AccessPlugin::onDeactivate() {
-  if (unknown10 != unknown020) {
-    unknown10 = unknown020;
+  if (m_GF_OBJ_HANDLE != unknown020) {
+    m_GF_OBJ_HANDLE = unknown020;
     SCOM_ACCESS_TARGET::create(unknown020);
   }
 }
@@ -70,9 +70,9 @@ const AccessParam *AccessPlugin::getParam(u32 index) const {
 
 u32 AccessPlugin::getParamIndex(GfComPropertyPc &property) const {
   if (property.unknown113_7) {
-    return property.unknown310.unknown10_4 | 2;
+    return property.m_propertyField.unknown10_4 | 2;
   }
-  return property.unknown310.unknown10_4;
+  return property.m_propertyField.unknown10_4;
 }
 
 } // namespace pc

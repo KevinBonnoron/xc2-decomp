@@ -28,8 +28,8 @@ FootPlacementIKSolver *SlopeGroundSolver::createFootPlacementIK(IKFootIndex inde
   description.unknown08 = kneeName;
   description.unknown10 = hipName;
   description.unknown25 = isMirror;
-  description.unknown28 = param;
-  IKFootGroundInterface *ground = unknown90 != nullptr ? unknown90->getFootGround(index) : nullptr;
+  description.m_paramAdapter = param;
+  IKFootGroundInterface *ground = m_iKGroundInterface != nullptr ? m_iKGroundInterface->getFootGround(index) : nullptr;
   FootPlacementIKSolver *solver = FootPlacementIKSolver::create(description, unknown10, *unknown18, ground);
   unknown50[index] = solver;
   if (solver != nullptr) {
@@ -48,7 +48,7 @@ void SlopeGroundSolver::setEnablePlacement(bool enable) {
 }
 
 void SlopeGroundSolver::solve(const UpdateInfo &info) {
-  if (unknown90 != nullptr) {
+  if (m_iKGroundInterface != nullptr) {
     slopeBody(info);
     if (unknown50.size() != 0) {
       solveFoot(info);

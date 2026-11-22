@@ -5,6 +5,7 @@
 #include "framework/debug/debug_draw.h"
 #include "mm_math/mm_rect.h"
 #include "mm_mtl/algorithm.h"
+#include "skt/fixed_vector.h"
 
 namespace fw {
 namespace debug {
@@ -53,12 +54,12 @@ skt::SERVER_OPTION CommandManager::getServerOption(const char *server) {
 skt::SERVER_OPTION DebugCommander::getServerOption(const char *server) const { return m_serverOption; }
 
 DebugCommander::DebugCommander(mm::mtl::IAllocator *allocator, const char *name, u16 port, s8 unknown)
-    : unknownab0(port), unknownab2(unknown), unknownab4(name), unknownad8(allocator), unknownae0(nullptr), unknownae8(false), m_serverOption(static_cast<skt::SERVER_OPTION>(0)) {}
+    : unknownab0(port), unknownab2(unknown), unknownab4(name), unknownad8(allocator), m_iDebugInput(nullptr), unknownae8(false), m_serverOption(static_cast<skt::SERVER_OPTION>(0)) {}
 
 DebugCommander::~DebugCommander() {
-  if (unknownae0 != nullptr) {
-    delete unknownae0;
-    unknownae0 = nullptr;
+  if (m_iDebugInput != nullptr) {
+    delete m_iDebugInput;
+    m_iDebugInput = nullptr;
   }
   finalize();
 }
@@ -103,9 +104,9 @@ bool DebugCommander::finalize() {
 }
 
 void DebugCommander::update() {
-  if (!isFinalized() && unknownae0 != nullptr && unknownae8) {
-    unknownae0->unknown001(this);
-    unknownae0->unknown002(mm::Rect<int>(16, 680, 512, 18));
+  if (!isFinalized() && m_iDebugInput != nullptr && unknownae8) {
+    m_iDebugInput->unknown001(this);
+    m_iDebugInput->unknown002(mm::Rect<int>(16, 680, 512, 18));
   }
 }
 
@@ -139,11 +140,11 @@ void DebugCommander::onDecide(const char *command) {
 }
 
 void DebugCommander::setDebugInput(IDebugInput *input) {
-  if (unknownae0 != nullptr) {
-    delete unknownae0;
-    unknownae0 = nullptr;
+  if (m_iDebugInput != nullptr) {
+    delete m_iDebugInput;
+    m_iDebugInput = nullptr;
   }
-  unknownae0 = input;
+  m_iDebugInput = input;
   unknownae8 = input != nullptr;
 }
 

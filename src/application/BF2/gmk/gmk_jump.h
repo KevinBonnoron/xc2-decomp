@@ -73,12 +73,12 @@ public:
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
   void onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) override {}
 
-  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
-  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(m_createInfo.unknown10); }
+  const Data *getData() const { return static_cast<const Data *>(m_createInfo.unknown08); }
   // Inferred helper: jump points of the gimmick data, the first is the one of getData; original name unknown.
-  const unknown001 *unknown016() const { return static_cast<const unknown001 *>(unknown20.unknown08); }
+  const unknown001 *unknown016() const { return static_cast<const unknown001 *>(m_createInfo.unknown08); }
   // Inferred helper: jump point pair and floats of the gimmick data; original name unknown.
-  const unknown096 *unknown097() const { return static_cast<const unknown096 *>(unknown20.unknown08); }
+  const unknown096 *unknown097() const { return static_cast<const unknown096 *>(m_createInfo.unknown08); }
 
   u8 _48[0x50 - 0x48];
   bool unknown50;               // Inferred role: cond matched; original member name unknown.
@@ -86,7 +86,7 @@ public:
   DistHvCond unknown60;         // Inferred role: pop dist; original member name unknown.
   DistHvCond unknown68;         // Inferred role: depop dist; original member name unknown.
   u32 unknown70;                // Inferred role: icon handle; original member name unknown.
-  DistCond unknown74;           // Inferred role: icon dist; original member name unknown.
+  DistCond m_distCond;          // Inferred role: icon dist; original member name unknown.
   bool unknown78;               // Inferred role: icon dead; original member name unknown.
   mutable bool unknown79;       // Inferred role: disp; original member name unknown.
 };
@@ -95,7 +95,7 @@ static_assert(offsetof(GmkJump, unknown50) == 0x50, "");
 static_assert(offsetof(GmkJump, unknown58) == 0x58, "");
 static_assert(offsetof(GmkJump, unknown60) == 0x60, "");
 static_assert(offsetof(GmkJump, unknown70) == 0x70, "");
-static_assert(offsetof(GmkJump, unknown74) == 0x74, "");
+static_assert(offsetof(GmkJump, m_distCond) == 0x74, "");
 static_assert(offsetof(GmkJump, unknown78) == 0x78, "");
 static_assert(offsetof(GmkJump, unknown79) == 0x79, "");
 

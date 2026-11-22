@@ -49,10 +49,10 @@ DrPixlPostObjCubeMapMultiIBL::DrPixlPostObjCubeMapMultiIBL(DrMan *drMan, DrPixlM
   unknown5c8[1] = new (drMan->unknown0c) DrPixlRenderCubeMapMipMap(drMan);
   unknown5c8[1]->setTextureInfo(64.0f, 64.0f, GRL_SURFACE_FORMAT_R11G11B10F, false, 0);
   m_premMipCount = 5;
-  unknown650.createVertexBuff(unknown64c * unknown64c * 6 * 16, 16);
+  m_cGLibVtxVertex.createVertexBuff(unknown64c * unknown64c * 6 * 16, 16);
   void *buffer;
   u32 size;
-  unknown650.lock(&buffer, &size);
+  m_cGLibVtxVertex.lock(&buffer, &size);
   for (int face = 0; face < 6; face++) {
     for (u32 y = 0; y < unknown64c; y++) {
       for (u32 x = 0; x < unknown64c; x++) {
@@ -66,26 +66,26 @@ DrPixlPostObjCubeMapMultiIBL::DrPixlPostObjCubeMapMultiIBL(DrMan *drMan, DrPixlM
       }
     }
   }
-  unknown650.unlock();
+  m_cGLibVtxVertex.unlock();
   unknown6e0 = 0x90;
   unknown6dc = unknown64c * unknown64c * 6 * unknown6e0;
   grlib::CGLibVtxAttr attributes[1];
   attributes[0] = {unknown073_46, 0, 0, 0};
-  unknown6c8.createFetchObj(attributes, 1);
+  m_cGLibVtxFetch.createFetchObj(attributes, 1);
   unknown678[0].createWorkBuff(unknown6dc);
   unknown678[1].createWorkBuff(unknown6dc);
-  unknown6e8 = new (drMan->unknown0c) DrShdCubeCapFilter(drMan);
+  m_drShdCubeCapFilter = new (drMan->unknown0c) DrShdCubeCapFilter(drMan);
 }
 
 DrPixlPostObjCubeMapMultiIBL::~DrPixlPostObjCubeMapMultiIBL() {
-  if (unknown6e8 != nullptr) {
-    delete unknown6e8;
-    unknown6e8 = nullptr;
+  if (m_drShdCubeCapFilter != nullptr) {
+    delete m_drShdCubeCapFilter;
+    m_drShdCubeCapFilter = nullptr;
   }
   unknown678[0].release();
   unknown678[1].release();
-  unknown6c8.release();
-  unknown650.release();
+  m_cGLibVtxFetch.release();
+  m_cGLibVtxVertex.release();
   for (s32 i = 0; i < 2; i++) {
     if (unknown5c8[i] != nullptr) {
       delete unknown5c8[i];
@@ -103,7 +103,7 @@ void DrPixlPostObjCubeMapMultiIBL::render() {
       ++it;
     }
   }
-  if (unknown00->isIBLSkip() || !unknown00->unknown120[unknown00->unknown1c98]->unknown269) {
+  if (m_drMan->isIBLSkip() || !m_drMan->unknown120[m_drMan->unknown1c98]->unknown269) {
     return;
   }
   for (mm::mtl::FixedQueue<DrRequetIBL, 30>::iterator it = unknown18.begin(); it != unknown18.end(); ++it) {
@@ -115,11 +115,11 @@ void DrPixlPostObjCubeMapMultiIBL::render() {
     }
   }
   unknown6d8 ^= 1;
-  unknown00->unknown80->unknown18->unknown58->updateUniformBlock(unknown00->unknown1c98);
+  m_drMan->m_drShdMan->m_drShdLgtMan->m_drShdLgtGlobalIBL->updateUniformBlock(m_drMan->unknown1c98);
 }
 
 bool DrPixlPostObjCubeMapMultiIBL::requestIBL(DrRequetIBL &request) {
-  if (!unknown00->unknown120[unknown00->unknown1c98]->unknown269 || unknown18.full()) {
+  if (!m_drMan->unknown120[m_drMan->unknown1c98]->unknown269 || unknown18.full()) {
     return false;
   }
 

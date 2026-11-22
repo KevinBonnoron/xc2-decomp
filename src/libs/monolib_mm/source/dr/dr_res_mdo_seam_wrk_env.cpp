@@ -10,14 +10,14 @@
 
 namespace ml {
 
-DrResMdoSeamWrkEnv::DrResMdoSeamWrkEnv() : unknown28(nullptr), m_displayWrk(), m_displayWrkSize(), unknown58(nullptr), unknown60(nullptr), unknown6c(0), unknown70(0) {}
+DrResMdoSeamWrkEnv::DrResMdoSeamWrkEnv() : unknown28(nullptr), m_displayWrk(), m_displayWrkSize(), m_mdoWrkMatRes(nullptr), m_drResMdoSeamMemObj(nullptr), unknown6c(0), unknown70(0) {}
 
 DrResMdoSeamWrkEnv::~DrResMdoSeamWrkEnv() { release(); }
 
 void DrResMdoSeamWrkEnv::release() {
-  if (unknown58 != nullptr) {
-    mtl::MemManager::deallocate(unknown58, 0, false);
-    unknown58 = nullptr;
+  if (m_mdoWrkMatRes != nullptr) {
+    mtl::MemManager::deallocate(m_mdoWrkMatRes, 0, false);
+    m_mdoWrkMatRes = nullptr;
   }
   if (m_displayWrk[0] != nullptr) {
     mtl::MemManager::deallocate(m_displayWrk[0], 0, false);
@@ -34,27 +34,27 @@ void DrResMdoSeamWrkEnv::release() {
   m_displayWrkSize[0] = 0;
   m_displayWrkSize[1] = 0;
   unknown6c = 0;
-  unknown60 = nullptr;
+  m_drResMdoSeamMemObj = nullptr;
 }
 
 bool DrResMdoSeamWrkEnv::update(const mm::Vec3 &position, bool isOpen) {
   unknown6c &= ~0x10;
-  if (unknown58 == nullptr) {
+  if (m_mdoWrkMatRes == nullptr) {
     return false;
   }
   if (isOpen) {
     return true;
   }
-  if (unknown60->unknown24 & 2) {
+  if (m_drResMdoSeamMemObj->unknown24 & 2) {
     unknown6c |= 0x10;
   }
   return false;
 }
 
 void DrResMdoSeamWrkEnv::setupWork(MdoWrkMatRes *matRes, grlib::CGLibTriUniformArray *uniforms, mtl::ALLOC_HANDLE handle, const MdsSeamEnvMapHead *head, const MdsSeamEnvMapData *data) {
-  unknown58 = matRes;
-  unknown18 = head;
-  unknown20 = data;
+  m_mdoWrkMatRes = matRes;
+  m_mdsSeamEnvMapHead = head;
+  m_mdsSeamEnvMapData = data;
   unknown6c = 0;
   unknown70 = data->unknown38;
   m_displayWrk[0] = nullptr;
@@ -84,7 +84,7 @@ void DrResMdoSeamWrkEnv::setDisplayWrk(u8 *work, int size) {
 }
 
 void DrResMdoSeamWrkEnv::changeMemCall(const MdsSeamEnvMapHead *head) {
-  unknown18 = head;
+  m_mdsSeamEnvMapHead = head;
   unknown6c &= ~3u;
 }
 

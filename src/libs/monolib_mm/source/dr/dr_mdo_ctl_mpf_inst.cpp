@@ -13,17 +13,17 @@ struct unknown064 {
 
 DrMdoCtlMpfInst::DrMdoCtlMpfInst() {}
 
-void DrMdoCtlMpfInst::setupInstMpf(const u8 *resource) { unknown00 = reinterpret_cast<const MdsMpfObjData *>(resource + reinterpret_cast<const unknown064 *>(resource)->unknown04); }
+void DrMdoCtlMpfInst::setupInstMpf(const u8 *resource) { m_mdsMpfObjData = reinterpret_cast<const MdsMpfObjData *>(resource + reinterpret_cast<const unknown064 *>(resource)->unknown04); }
 
 void DrMdoCtlMpfInst::calcInstMpf(DrCalcViewWork *view, DrMdoCtlMpfWork *work, DrResMdoSeamWrkPosMpf *pos) {
   if (pos->unknown18 != 0) {
-    unknown08 = work;
-    unknown10 = pos;
+    m_drMdoCtlMpfWork = work;
+    m_drResMdoSeamWrkPosMpf = pos;
     for (int i = 0; i < pos->unknown18; i++) {
-      // The game loads unknown00 before the load of the node's object index (0x71007fa020: ldr x9, [x21], then ldrh w8, [x1, #28]); the local places
+      // The game loads m_mdsMpfObjData before the load of the node's object index (0x71007fa020: ldr x9, [x21], then ldrh w8, [x1, #28]); the local places
       // that load.
-      const MdsMpfObjData *objects = unknown00;
-      const MdsMpfObjTreeData *tree = &unknown10->unknown08[i];
+      const MdsMpfObjData *objects = m_mdsMpfObjData;
+      const MdsMpfObjTreeData *tree = &m_drResMdoSeamWrkPosMpf->m_mdsMpfObjTreeData[i];
       calcMpfObjTree(tree, view, objects[tree->unknown1c].unknown0c);
     }
   }
@@ -31,12 +31,12 @@ void DrMdoCtlMpfInst::calcInstMpf(DrCalcViewWork *view, DrMdoCtlMpfWork *work, D
 
 void DrMdoCtlMpfInst::calcSeamInstMpf(DrCalcViewWork *view, DrMdoCtlMpfWork *work, DrResMdoSeamWrkPosMpf *pos) {
   if (pos->unknown18 != 0) {
-    unknown08 = work;
-    unknown10 = pos;
+    m_drMdoCtlMpfWork = work;
+    m_drResMdoSeamWrkPosMpf = pos;
     for (int i = 0; i < pos->unknown18; i++) {
       // Same load order as calcInstMpf, which this function repeats with the seam callee (the same instruction, 0x5c bytes into the function).
-      const MdsMpfObjData *objects = unknown00;
-      const MdsMpfObjTreeData *tree = &unknown10->unknown08[i];
+      const MdsMpfObjData *objects = m_mdsMpfObjData;
+      const MdsMpfObjTreeData *tree = &m_drResMdoSeamWrkPosMpf->m_mdsMpfObjTreeData[i];
       calcSeamMpfObjTree(tree, view, objects[tree->unknown1c].unknown0c);
     }
   }

@@ -20,8 +20,8 @@ public:
   void play(CamBase *cam, void *data, const mm::Vec3 &offset);
 
 private:
-  CamBase *unknown08;    // Inferred role: cam; original member name unknown.
-  RchaCam *unknown10;    // Inferred role: rcha; original member name unknown.
+  CamBase *m_camBase;    // Inferred role: cam; original member name unknown.
+  RchaCam *m_rchaCam;    // Inferred role: rcha; original member name unknown.
   f32 unknown18;         // Inferred role: frame; original member name unknown.
   mm::Vec3 unknown20;    // Inferred role: offset; original member name unknown.
   EVT_nearfar unknown30; // Inferred role: nearfar; original member name unknown.

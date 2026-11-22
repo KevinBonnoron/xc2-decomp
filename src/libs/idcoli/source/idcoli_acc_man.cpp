@@ -40,7 +40,7 @@ void IDColiAccMan::setGblId(u32 id, bool isClear) { IDColiManager::get()->setGbl
 
 void *IDColiAccMan::getGblIdTbl() { return IDColiManager::get()->getGblIdTbl(); }
 
-void IDColiAccMan::setSubNum(u32 num) { IDColiManager::get()->unknownf0 = num; }
+void IDColiAccMan::setSubNum(u32 num) { IDColiManager::get()->m_subNum = num; }
 
 void IDColiAccMan::openDebugWindow(ml::WinProc *window) {}
 

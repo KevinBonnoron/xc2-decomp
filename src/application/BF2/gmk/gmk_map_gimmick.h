@@ -27,13 +27,13 @@ public:
     bool isPopCondMatched() const;
     void debugDraw(const AGmkBase &gmk) const;
 
-    u16 unknown00;           // Inferred role: condition; original member name unknown.
-    u16 unknown02;           // Inferred role: name radius; original member name unknown.
-    u16 unknown04;           // Inferred role: map object id; original member name unknown.
-    bool unknown06;          // Inferred role: msg ray; original member name unknown.
-    TimeCond unknown08;      // Inferred role: time cond; original member name unknown.
-    WeatherCond unknown18;   // Inferred role: weather cond; original member name unknown.
-    BootedGmkCond unknown28; // Inferred role: booted gmk; original member name unknown.
+    u16 unknown00;                 // Inferred role: condition; original member name unknown.
+    u16 unknown02;                 // Inferred role: name radius; original member name unknown.
+    u16 unknown04;                 // Inferred role: map object id; original member name unknown.
+    bool unknown06;                // Inferred role: msg ray; original member name unknown.
+    TimeCond m_timeCond;           // Inferred role: time cond; original member name unknown.
+    WeatherCond m_weatherCond;     // Inferred role: weather cond; original member name unknown.
+    BootedGmkCond m_bootedGmkCond; // Inferred role: booted gmk; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_MAP_GIMMICK; // Inferred name; shared by every gimmick class for the TGmkList templates.
@@ -57,7 +57,7 @@ public:
   bool canPopGobInst() const;
   bool canDepopGobInst() const;
 
-  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(m_createInfo.unknown10); }
 
   f32 unknown48;                         // Inferred role: pop distance squared; original member name unknown.
   void (GmkMapGimmick::*unknown50)(f32); // Inferred role: sequence; original member name unknown.
@@ -65,9 +65,9 @@ public:
   bool unknown68;                        // Inferred role: message ray clear; original member name unknown.
   u8 _69[0x70 - 0x69];
   // Mutable: the const validateEffectWithoutLodControl (0x710060ea98) calls GfFieldLodEffect::createAsset and createInst on it.
-  mutable gf::GfFieldLodEffect unknown70; // Inferred role: lod effect; original member name unknown.
-  bool unknowna8;                         // Inferred role: pop condition flag; original member name unknown.
-  bool unknowna9;                         // Inferred role: pop condition matched; original member name unknown.
+  mutable gf::GfFieldLodEffect m_fieldLodEffect; // Inferred role: lod effect; original member name unknown.
+  bool unknowna8;                                // Inferred role: pop condition flag; original member name unknown.
+  bool unknowna9;                                // Inferred role: pop condition matched; original member name unknown.
   u8 _aa[0xb0 - 0xaa];
 };
 
@@ -75,7 +75,7 @@ static_assert(sizeof(GmkMapGimmick::BdatInfo) == 0x30, "");
 static_assert(offsetof(GmkMapGimmick, unknown48) == 0x48, "");
 static_assert(offsetof(GmkMapGimmick, unknown50) == 0x50, "");
 static_assert(offsetof(GmkMapGimmick, unknown60) == 0x60, "");
-static_assert(offsetof(GmkMapGimmick, unknown70) == 0x70, "");
+static_assert(offsetof(GmkMapGimmick, m_fieldLodEffect) == 0x70, "");
 static_assert(offsetof(GmkMapGimmick, unknowna8) == 0xa8, "");
 static_assert(offsetof(GmkMapGimmick, unknowna9) == 0xa9, "");
 static_assert(sizeof(GmkMapGimmick) == 0xb0, "");

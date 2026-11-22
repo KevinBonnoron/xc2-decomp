@@ -30,7 +30,7 @@ void DrShdLgtObj::lgtRelease() {
 }
 
 void DrShdLgtObj::setShaderGlobalIBLIndexVS(DrMan *man, const mm::Mat44 &matrix, u8 *buffer, u32 index) {
-  DrCalcViewWork *viewWork = man->unknown580->unknown10;
+  DrCalcViewWork *viewWork = man->m_drCalcMan->m_drCalcViewWork;
   u32 offset = (unknown38 + unknown58)->getUniformBlockValOfs(index, "gWVP");
   if (offset != 0xffffffff) {
     mm::Mat44 wvp;

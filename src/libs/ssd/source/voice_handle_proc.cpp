@@ -13,7 +13,7 @@ namespace ssd {
 enum Result : long;
 
 void VoiceHandle::UpdateAudioFrame(f32 deltaTime) {
-  if (unknown70 != nullptr) {
+  if (m_streamController != nullptr) {
     UpdateAudioStream(deltaTime);
   } else {
     UpdateAudioInternal(deltaTime);
@@ -52,16 +52,16 @@ void VoiceHandle::UpdateAudioVoice(f32 deltaTime) {
     SSD_ASSERT(unknown78 != nullptr, u"Assert : \"%s\" = nullptr, %s:%d", u"bufferProcess_", u"D:/ssd/ssd51/ssd/sources/voice_handle_proc.cpp", 0x1ba);
     (this->*unknown78)();
     u64 playedSample = nn::audio::GetVoicePlayedSampleCount(&unknown90[0].unknown00);
-    if (unknown68->unknown34 == WaveSource::unknown001_3) {
+    if (m_waveSource->unknown34 == WaveSource::unknown001_3) {
       unknown680 = playedSample * 8 / 14;
     } else {
-      unknown680 = unknown68->unknown40 * playedSample;
+      unknown680 = m_waveSource->unknown40 * playedSample;
     }
     int waveBufferCount = nn::audio::GetWaveBufferCount(&unknown90[0].unknown00);
     unknown3e = waveBufferCount != 0;
     if (!unknown3d || (waveBufferCount != 0 && !unknown37)) {
-      if (unknown58 != nullptr) {
-        unknown58->UpdateAudioFrame(deltaTime);
+      if (m_soundHandle != nullptr) {
+        m_soundHandle->UpdateAudioFrame(deltaTime);
         UpdateOutputParam(deltaTime);
       }
     } else {
@@ -112,9 +112,9 @@ Result VoiceHandle::ReleaseBuffer() {
   if (nn::audio::IsVoiceValid(&unknown90[0].unknown00)) {
     for (int i = 0; i < unknown4c; i++) {
       if (nn::audio::IsVoiceValid(&unknown90[i].unknown00)) {
-        nn::audio::ReleaseVoiceSlot(&unknown650->unknown168, &unknown90[i].unknown00);
+        nn::audio::ReleaseVoiceSlot(&m_systemCore->unknown168, &unknown90[i].unknown00);
         SystemCore *core = static_cast<SystemCore *>(SoundCore::instance_);
-        core->unknown410 -= unknown90[i].unknownb4;
+        core->m_hWAllocVoiceCount -= unknown90[i].unknownb4;
         unknown90[i].unknownb4 = 0;
       }
     }
@@ -123,12 +123,12 @@ Result VoiceHandle::ReleaseBuffer() {
 }
 
 Result VoiceHandle::SetPlayPositionImpl() {
-  StreamController *stream = unknown70;
+  StreamController *stream = m_streamController;
   u64 position;
   if (stream == nullptr) {
     position = static_cast<u32>(unknown6a0.unknown00);
   } else {
-    WaveSource *source = &stream->unknown18;
+    WaveSource *source = &stream->m_waveSource;
     if (unknown669 == 3) {
       position = source->TimeToSample(unknown6a0.unknown01) * source->unknown40;
     } else if (unknown669 == 2) {
@@ -143,8 +143,8 @@ Result VoiceHandle::SetPlayPositionImpl() {
   unknown668 = false;
   unknown688 = position;
   unknown690 = position;
-  if (unknown70 != nullptr) {
-    unknown70->SetReadPosition(position);
+  if (m_streamController != nullptr) {
+    m_streamController->SetReadPosition(position);
   }
   return static_cast<Result>(1);
 }
@@ -159,12 +159,12 @@ Result VoiceHandle::DisableBuffer() {
 }
 
 void VoiceHandle::DeleteStream() {
-  if (unknown70 != nullptr) {
-    unknown70->QuitStream();
-    StreamController *stream = unknown70;
+  if (m_streamController != nullptr) {
+    m_streamController->QuitStream();
+    StreamController *stream = m_streamController;
     SoundMemory::allocator_->unknown001(stream);
     unknown44 = 1;
-    unknown70 = nullptr;
+    m_streamController = nullptr;
   }
 }
 
