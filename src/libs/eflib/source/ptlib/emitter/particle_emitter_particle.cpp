@@ -33,8 +33,25 @@ inline f32 unknown007(f32 angle) {
   return angle;
 }
 
-// Inferred role: wind direction modes that keep the direction as is; original name unknown.
-constexpr u32 MASK_UNKNOWN_3329 = 0xd01;
+// Inferred role: evaluates one speed keyframe step and returns the speed value; original name unknown.
+inline f32 unknown009(ParticleObj *self, EmitterObj *emitter, unknown006 *speed, EmitterArg *arg, math::KeyFrameIP &keyFrame, f32 frame, f32 emitterFrame) {
+  f32 value = 1.0f;
+  int hasKey = 0;
+  if (speed->unknown0c != 0) {
+    arg->get_kf(&keyFrame, speed->unknown0c, 2, frame, self->m_extParam->unknown214[0], &self->m_extParam->unknown190[0], &self->unknownd8[0], emitter->unknown2b8[0]);
+    value = keyFrame.keyrand_get_ip1(&self->m_extParam->unknown190[0], emitter->unknown268);
+    hasKey = 1;
+  }
+  if (speed->unknown08 != 0) {
+    value *= self->unknownac.z;
+  } else if (speed->unknown0a != 0) {
+    arg->get_kf(&keyFrame, speed->unknown0a, 2, emitterFrame, emitter->unknown250[3], &emitter->unknown220[0], &self->unknownd8[0], emitter->unknown2b8[0]);
+    value *= keyFrame.keyrand_get_ip1(&emitter->unknown220[0], emitter->unknown268);
+  } else if (!hasKey) {
+    value = self->unknownac.y;
+  }
+  return value;
+}
 
 } // namespace
 
@@ -151,11 +168,19 @@ void ParticleObj::emitter_create_local_common_grav_wind(EmitterObj *emitter) {
     mm::Vec3 direction(wind->unknown0c.x, wind->unknown0c.y, wind->unknown0c.z);
     f32 strength = wind->unknown18;
     u16 mode = wind->unknown06;
-    if (mode > 11 || (MASK_UNKNOWN_3329 & (1 << mode)) == 0) {
+    switch (mode) {
+    case 0:
+    case 8:
+    case 10:
+    case 11:
+      break;
+    default: {
       const mm::Mat44 &matrix = emitter->unknownc0->unknown10;
       direction = mm::Vec3(direction.x * matrix.rows[0][0] + direction.y * matrix.rows[1][0] + direction.z * matrix.rows[2][0],
                            direction.x * matrix.rows[0][1] + direction.y * matrix.rows[1][1] + direction.z * matrix.rows[2][1],
                            direction.x * matrix.rows[0][2] + direction.y * matrix.rows[1][2] + direction.z * matrix.rows[2][2]);
+      break;
+    }
     }
     m_extParam->unknown30 = mm::Vec3(strength * direction.x, strength * direction.y, strength * direction.z);
   }
@@ -322,41 +347,11 @@ void ParticleObj::calcSpeedKeyframe(EmitterObj *emitter, math::KeyFrameIP &keyFr
     }
     unknownac.x = 0.0f;
     while (start <= frame) {
-      f32 value = 1.0f;
-      int hasKey = 0;
-      if (speed->unknown0c != 0) {
-        arg->get_kf(&keyFrame, speed->unknown0c, 2, frame, m_extParam->unknown214[0], &m_extParam->unknown190[0], &unknownd8[0], emitter->unknown2b8[0]);
-        value = keyFrame.keyrand_get_ip1(&m_extParam->unknown190[0], emitter->unknown268);
-        hasKey = 1;
-      }
-      if (speed->unknown08 != 0) {
-        value *= unknownac.z;
-      } else if (speed->unknown0a != 0) {
-        arg->get_kf(&keyFrame, speed->unknown0a, 2, emitterFrame, emitter->unknown250[3], &emitter->unknown220[0], &unknownd8[0], emitter->unknown2b8[0]);
-        value *= keyFrame.keyrand_get_ip1(&emitter->unknown220[0], emitter->unknown268);
-      } else if (!hasKey) {
-        value = unknownac.y;
-      }
-      unknownac.x += value * emitter->getEmitterScale();
+      unknownac.x += unknown009(this, emitter, speed, arg, keyFrame, frame, emitterFrame) * emitter->getEmitterScale();
       start += 1.0f;
     }
   } else {
-    f32 value = 1.0f;
-    int hasKey = 0;
-    if (speed->unknown0c != 0) {
-      arg->get_kf(&keyFrame, speed->unknown0c, 2, frame, m_extParam->unknown214[0], &m_extParam->unknown190[0], &unknownd8[0], emitter->unknown2b8[0]);
-      value = keyFrame.keyrand_get_ip1(&m_extParam->unknown190[0], emitter->unknown268);
-      hasKey = true;
-    }
-    if (speed->unknown08 != 0) {
-      value *= unknownac.z;
-    } else if (speed->unknown0a != 0) {
-      arg->get_kf(&keyFrame, speed->unknown0a, 2, emitterFrame, emitter->unknown250[3], &emitter->unknown220[0], &unknownd8[0], emitter->unknown2b8[0]);
-      value *= keyFrame.keyrand_get_ip1(&emitter->unknown220[0], emitter->unknown268);
-    } else if (!hasKey) {
-      value = unknownac.y;
-    }
-    unknownac.x = value * emitter->getEmitterScale();
+    unknownac.x = unknown009(this, emitter, speed, arg, keyFrame, frame, emitterFrame) * emitter->getEmitterScale();
   }
 }
 
