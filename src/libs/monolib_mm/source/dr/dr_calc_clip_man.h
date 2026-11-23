@@ -62,8 +62,8 @@ public:
   DrCalcClipObj *createClipObj(const void *data);
   DrCalcCpPlaneObj *createCpPlaneObj(const void *data);
 
-  DrMan *unknown00;                          // Inferred role: dr man; original member name unknown.
-  DrCalcViewWork *unknown08;                 // Inferred role: view work; original member name unknown.
+  DrMan *m_drMan;                            // Inferred role: dr man; original member name unknown.
+  DrCalcViewWork *m_drCalcViewWork;          // Inferred role: view work; original member name unknown.
   unknown009<DrCalcClipObj> unknown10;       // Inferred role: clip objects in use; original member name unknown.
   unknown009<DrCalcClipObj> unknown20[2];    // Inferred role: new clip objects per double buffer index; original member name unknown.
   unknown009<DrCalcCpPlaneObj> unknown40;    // Inferred role: clip plane objects in use; original member name unknown.
@@ -73,7 +73,7 @@ public:
   u32 unknown7c;                             // Inferred role: state flags; original member name unknown.
 };
 
-static_assert(offsetof(DrCalcClipMan, unknown08) == 0x08, "");
+static_assert(offsetof(DrCalcClipMan, m_drCalcViewWork) == 0x08, "");
 static_assert(offsetof(DrCalcClipMan, unknown10) == 0x10, "");
 static_assert(offsetof(DrCalcClipMan, unknown20) == 0x20, "");
 static_assert(offsetof(DrCalcClipMan, unknown40) == 0x40, "");

@@ -39,11 +39,11 @@ public:
 
   class GfObjConverter : public IConverter {
   public:
-    GfObjConverter(GF_OBJ_HANDLE *handle) : unknown08(handle) {}
+    GfObjConverter(GF_OBJ_HANDLE *handle) : m_GF_OBJ_HANDLE(handle) {}
     void getCharData(u8 &type, u32 &id) override;
     GfObjConverter *fromGfObj() override;
 
-    GF_OBJ_HANDLE *unknown08; // Inferred role: object handle; original member name unknown.
+    GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: object handle; original member name unknown.
   };
 
   class PartyDriverConverter : public IConverter {
@@ -69,37 +69,37 @@ public:
 
   class DriverListConverter : public IConverter {
   public:
-    DriverListConverter(const GfMenuDriverList *list, int index) : unknown08(list), unknown10(index) {}
+    DriverListConverter(const GfMenuDriverList *list, int index) : m_menuDriverList(list), unknown10(index) {}
     void getCharData(u8 &type, u32 &id) override;
 
-    const GfMenuDriverList *unknown08; // Inferred role: driver list; original member name unknown.
-    int unknown10;                     // Inferred role: list index, -1 for the selected one; original member name unknown.
+    const GfMenuDriverList *m_menuDriverList; // Inferred role: driver list; original member name unknown.
+    int unknown10;                            // Inferred role: list index, -1 for the selected one; original member name unknown.
   };
 
   class BladeListConverter : public IConverter {
   public:
-    BladeListConverter(const GfMenuBladeList *list, int index) : unknown08(list), unknown10(index) {}
+    BladeListConverter(const GfMenuBladeList *list, int index) : m_menuBladeList(list), unknown10(index) {}
     void getCharData(u8 &type, u32 &id) override;
 
-    const GfMenuBladeList *unknown08; // Inferred role: blade list; original member name unknown.
-    int unknown10;                    // Inferred role: list index, -1 for the selected one; original member name unknown.
+    const GfMenuBladeList *m_menuBladeList; // Inferred role: blade list; original member name unknown.
+    int unknown10;                          // Inferred role: list index, -1 for the selected one; original member name unknown.
   };
 
   class EnemyListConverter : public IConverter {
   public:
-    EnemyListConverter(const GfMenuEnemyList *list, int index) : unknown08(list), unknown10(index) {}
+    EnemyListConverter(const GfMenuEnemyList *list, int index) : m_menuEnemyList(list), unknown10(index) {}
     void getCharData(u8 &type, u32 &id) override;
 
-    const GfMenuEnemyList *unknown08; // Inferred role: enemy list; original member name unknown.
-    int unknown10;                    // Inferred role: list index, -1 for the selected one; original member name unknown.
+    const GfMenuEnemyList *m_menuEnemyList; // Inferred role: enemy list; original member name unknown.
+    int unknown10;                          // Inferred role: list index, -1 for the selected one; original member name unknown.
   };
 
   class EnBookListConverter : public IConverter {
   public:
     void getCharData(u8 &type, u32 &id) override;
 
-    const GfMenuIDList *unknown08; // Inferred role: enemy book list; original member name unknown.
-    int unknown10;                 // Inferred role: list index, -1 for the selected one; original member name unknown.
+    const GfMenuIDList *m_menuIDList; // Inferred role: enemy book list; original member name unknown.
+    int unknown10;                    // Inferred role: list index, -1 for the selected one; original member name unknown.
   };
 
   class ReferenceDriverConverter : public IConverter {
@@ -264,21 +264,21 @@ public:
   void changePartyBlade(u8 partyId, u8 slot) override;
 
   mm::mtl::Delegate<bool(const DataParamAcc &)> unknown50; // Inferred role: updater; original member name unknown.
-  IConverter *unknown70;                                   // Inferred role: converter; original member name unknown.
+  IConverter *m_iConverter;                                // Inferred role: converter; original member name unknown.
   u8 unknown78;                                            // Inferred role: object type; original member name unknown.
   u8 unknown79;                                            // Inferred role: virtual parameters; original member name unknown.
   u32 unknown7c;                                           // Inferred role: object id; original member name unknown.
   u32 unknown80;                                           // Inferred role: slot index; original member name unknown.
-  GfMenuBladeList *unknown88;                              // Inferred role: blade list, reference counted by hand; original member name unknown.
+  GfMenuBladeList *m_menuBladeList;                        // Inferred role: blade list, reference counted by hand; original member name unknown.
 };
 
 static_assert(offsetof(GfMenuCharDataAdapter, unknown50) == 0x50, "");
-static_assert(offsetof(GfMenuCharDataAdapter, unknown70) == 0x70, "");
+static_assert(offsetof(GfMenuCharDataAdapter, m_iConverter) == 0x70, "");
 static_assert(offsetof(GfMenuCharDataAdapter, unknown78) == 0x78, "");
 static_assert(offsetof(GfMenuCharDataAdapter, unknown79) == 0x79, "");
 static_assert(offsetof(GfMenuCharDataAdapter, unknown7c) == 0x7c, "");
 static_assert(offsetof(GfMenuCharDataAdapter, unknown80) == 0x80, "");
-static_assert(offsetof(GfMenuCharDataAdapter, unknown88) == 0x88, "");
+static_assert(offsetof(GfMenuCharDataAdapter, m_menuBladeList) == 0x88, "");
 static_assert(sizeof(GfMenuCharDataAdapter) == 0x90, "");
 static_assert(offsetof(GfMenuCharDataAdapter::PartyBladeConverter, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfMenuCharDataAdapter::PartyBladeConverter, unknown10) == 0x10, "");

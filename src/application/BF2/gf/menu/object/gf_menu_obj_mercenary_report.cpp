@@ -35,14 +35,14 @@
 namespace gf {
 
 GfMenuObjMercenaryReport::GfMenuObjMercenaryReport(u32 handle)
-    : GfMenuObject(handle), unknown24(0), unknown28(nullptr), unknown30(this), unknown358(false), unknown359(false), unknown360(nullptr), unknown368(nullptr), unknown370(nullptr) {
+    : GfMenuObject(handle), unknown24(0), m_menuBladeList(nullptr), unknown30(this), unknown358(false), unknown359(false), unknown360(nullptr), unknown368(nullptr), unknown370(nullptr) {
   unknown360 = unknown160();
   unknown368 = GfMenuCallContext::create();
   unknown370 = GfMenuCallContext::create();
 }
 
 GfMenuObjMercenaryReport::~GfMenuObjMercenaryReport() {
-  mm::mtl::safeRelease(unknown28);
+  mm::mtl::safeRelease(m_menuBladeList);
   mm::mtl::safeRelease(unknown370);
   mm::mtl::safeRelease(unknown368);
   unknown360 = nullptr;
@@ -51,16 +51,16 @@ GfMenuObjMercenaryReport::~GfMenuObjMercenaryReport() {
 void GfMenuObjMercenaryReport::initialize() {
   ui::UIObjectAcc main(unknown18, "LAY_main");
   mm::mtl::FixStr<32> name;
-  unknown28 = GfMenuBladeList::create();
+  m_menuBladeList = GfMenuBladeList::create();
   GfMenuZoneAdapter::createFromReferenceZone(main.searchChild("TXT_report_unit_zone"), 0, false);
   GfMenuZoneAdapter::createFromReferenceZone(main.searchChild("IMG_reward_flag"), 2, false);
   GfMenuMissionAdapter::createFromReferenceMission(main.searchChild("TXT_report_mission_name"), 0, 0, false);
   GfMenuMissionAdapter::createFromReferenceMission(main.searchChild("TXT_reward_result"), 1, 0, false);
   GfMenuMercenariesAdapter::createFromReferenceTeam(main.searchChild("TXT_report_unit_idx_name"), 0, false);
-  GfMenuCharDataAdapter::createFromBladeList(main.searchChild("IMG_bl_img"), 0x36, unknown28, 0, false);
+  GfMenuCharDataAdapter::createFromBladeList(main.searchChild("IMG_bl_img"), 0x36, m_menuBladeList, 0, false);
   for (int i = 0; i < 6; i++) {
     name.format("IMG_report_unit_bl_face@%02d", i + 1);
-    GfMenuCharDataAdapter *adapter = GfMenuCharDataAdapter::createFromBladeList(main.searchChild(name.c_str()), 3, unknown28, i, false);
+    GfMenuCharDataAdapter *adapter = GfMenuCharDataAdapter::createFromBladeList(main.searchChild(name.c_str()), 3, m_menuBladeList, i, false);
     if (adapter != nullptr) {
       name.format("LAY_report_unit_bl@%02d", i + 1);
       adapter->unknown24 = main.searchChild(name.c_str());
@@ -123,8 +123,8 @@ bool GfMenuObjMercenaryReport::seqStart() {
     {
       GfMenuBladeList::TeamSetup setup;
       setup.unknown18 = unknown24;
-      unknown28->clear();
-      unknown28->setupFromTeam(setup);
+      m_menuBladeList->clear();
+      m_menuBladeList->setupFromTeam(setup);
     }
     unknown358 = false;
     unknown30.unknown004(15);
@@ -136,7 +136,7 @@ bool GfMenuObjMercenaryReport::seqStart() {
       main.getLayoutRect("blade_l_1", rect);
       mm::Rect<s16> next;
       main.getLayoutRect("blade_l_2", next);
-      GfMenuObjUtil::placeObjectH(main.unknown10, "LAY_report_unit_bl@%02d", unknown28->getSize(), mm::Pnt<s16>(rect.x + rect.width / 2, rect.y + rect.height / 2), next.x - rect.x);
+      GfMenuObjUtil::placeObjectH(main.unknown10, "LAY_report_unit_bl@%02d", m_menuBladeList->getSize(), mm::Pnt<s16>(rect.x + rect.width / 2, rect.y + rect.height / 2), next.x - rect.x);
     }
     GfMenuObjQuestReward::open(unknown368, false);
   }
@@ -160,7 +160,7 @@ bool GfMenuObjMercenaryReport::seqDispBlade() {
   if (!unknown358) {
     ui::UIObjectAcc layer(unknown18, "LAY_bl_img");
     layer.setDisp(true);
-    u32 blade = unknown28->getContents(0).unknown00;
+    u32 blade = m_menuBladeList->getContents(0).unknown00;
     layer.setLayout(image.unknown10, "character");
     GfMenuObjUtil::ImageParam imageParam;
     if (GfMenuObjUtil::getImageParam(1, blade, imageParam, 1)) {
@@ -177,7 +177,7 @@ bool GfMenuObjMercenaryReport::seqDispBlade() {
     param.unknown00 = 0.2f;
     GfMenuObjUtil::startCtrl(image.unknown10, param, nullptr);
     GfMenuObjUtil::playSE("se_fld_allmap_503");
-    SCOM_FIELD_VOICE::createMercenariesResult(unknown28->getContents(0).unknown00);
+    SCOM_FIELD_VOICE::createMercenariesResult(m_menuBladeList->getContents(0).unknown00);
     unknown358 = true;
     isEnd = false;
   } else if (!GfMenuObjUtil::isBusyCtrl(GfMenuObjUtil::getCtrlID(image.unknown10))) {
@@ -263,17 +263,17 @@ bool GfMenuObjMercenaryReport::seqClose() {
 }
 
 bool GfMenuObjMercenaryReport::seqCheckAchive() {
-  if (unknown28->getSize() != 0) {
-    while (unknown28->getSize() != 0) {
-      if (GfMenuObjUtil::isBladeAchivementReleased(unknown28->getContents(0).unknown00)) {
-        MM_VERIFY(unknown28->getSize());
+  if (m_menuBladeList->getSize() != 0) {
+    while (m_menuBladeList->getSize() != 0) {
+      if (GfMenuObjUtil::isBladeAchivementReleased(m_menuBladeList->getContents(0).unknown00)) {
+        MM_VERIFY(m_menuBladeList->getSize());
         ui::UIObjectAcc main(unknown18, "LAY_main");
-        u32 blade = unknown28->getContents(0).unknown00;
+        u32 blade = m_menuBladeList->getContents(0).unknown00;
         GfMenuObjBlKizunaRing::openForMercenary(main.unknown10, blade, 3);
         unknown30.unknown002(&GfMenuObjMercenaryReport::seqWaitLoadKizuna);
         return true;
       }
-      GfMenuBladeList *list = unknown28;
+      GfMenuBladeList *list = m_menuBladeList;
       list->contents.erase(list->contents.begin());
       list->subSize(1);
       list->contentsChanged = true;
@@ -309,8 +309,8 @@ void GfMenuObjMercenaryReport::MainListener::reciveEvent(const ui::EventData &ev
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1:
-    unknown20->unknown30.unknown005();
-    unknown20->unknown30.unknown002(&GfMenuObjMercenaryReport::seqStart);
+    m_menuObjMercenaryReport->unknown30.unknown005();
+    m_menuObjMercenaryReport->unknown30.unknown002(&GfMenuObjMercenaryReport::seqStart);
     GfMenuObjOperationInfo::setGuideDisp(false);
     break;
   case 2: {
@@ -346,7 +346,7 @@ void GfMenuObjMercenaryReport::RewardListener::reciveEvent(const ui::EventData &
       GfMenuObjOperationInfo::add(acc.unknown10, 0, 0, 0);
     } else if (event.unknown08 == 3) {
       acc.setDispChild(false, "TXT_reward_complete");
-      unknown20->unknown359 = true;
+      m_menuObjMercenaryReport->unknown359 = true;
     }
     break;
   case 8:
@@ -385,7 +385,7 @@ void GfMenuObjMercenaryReport::RewardListener::reciveEvent(const ui::EventData &
     param.unknown14 = 8;
     param.unknown04 = 1;
     GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
-    unknown20->unknown359 = false;
+    m_menuObjMercenaryReport->unknown359 = false;
     GfMenuObjUtil::playJingle(7);
     break;
   }

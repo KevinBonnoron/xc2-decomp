@@ -22,17 +22,17 @@ void LayerFilterObj::releaseCall() { unknown08 |= 1 << LayerManager::s_nStkIdx; 
 u32 LayerFilterObj::isReleaseCall() const { return unknown08 & (1 << LayerManager::s_nDebIdx); }
 
 void LayerFilterObj::calcFilterUvParam(f32 *param, const LayerRenderView *view) {
-  const LayerResViewPortInfo *viewPort = view->unknown08;
+  const LayerResViewPortInfo *viewPort = view->m_layerResViewPortInfo;
   if (viewPort != nullptr && viewPort->unknown10 != nullptr) {
-    f32 x = viewPort->unknown00.unknown00;
-    LayerShdManager *shader = LayerManager::get()->unknown58;
+    f32 x = viewPort->m_layerViewPort.unknown00;
+    LayerShdManager *shader = LayerManager::get()->m_layerShdManager;
     f32 scale = shader->unknown558;
-    f32 screenWidth = shader->unknown530;
+    f32 screenWidth = shader->m_screenWidth;
     f32 scaledX = x * scale;
-    f32 scaledY = scale * viewPort->unknown00.unknown04;
-    f32 scaledWidth = scale * viewPort->unknown00.unknown08;
-    f32 scaledHeight = scale * viewPort->unknown00.unknown0c;
-    f32 screenHeight = shader->unknown534;
+    f32 scaledY = scale * viewPort->m_layerViewPort.unknown04;
+    f32 scaledWidth = scale * viewPort->m_layerViewPort.unknown08;
+    f32 scaledHeight = scale * viewPort->m_layerViewPort.unknown0c;
+    f32 screenHeight = shader->m_screenHeight;
     param[2] = scaledX / screenWidth;
     param[0] = screenWidth / scaledWidth;
     param[1] = screenHeight / scaledHeight;

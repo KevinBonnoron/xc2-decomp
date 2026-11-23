@@ -14,7 +14,7 @@ namespace ml {
 
 MicroThreadNx::MicroThreadNx() {
   for (int i = 0; i < 16; i++) {
-    unknown2c8[i].unknown58 = mtl::MemManager::allocate(WorkCpu::getMemStack(), 0x10000, 0x1000, false, "no name", 0);
+    m_fiberParam[i].unknown58 = mtl::MemManager::allocate(WorkCpu::getMemStack(), 0x10000, 0x1000, false, "no name", 0);
   }
 }
 
@@ -28,12 +28,12 @@ MicroThreadNx::~MicroThreadNx() { destroyAll(); }
 
 void MicroThread::destroyAll() {
   for (MTHREAD **it = unknown88.begin(); it != unknown88.end(); ++it) {
-    releaseThread((*it)->unknown38);
+    releaseThread((*it)->m_MLTH);
   }
   unknown88.clear();
   for (unknown001 **it = unknown08; it != unknown08 + 16; ++it) {
     if (*it != nullptr) {
-      releaseGroup((*it)->unknown00);
+      releaseGroup((*it)->m_MLTHG);
     }
   }
 }
@@ -45,7 +45,7 @@ bool MicroThreadNx::isExistThread(FiberParam *param) {
     return false;
   }
   for (int i = 0; i < 16; i++) {
-    if (&unknown2c8[i] == param) {
+    if (&m_fiberParam[i] == param) {
       return param->unknown60 > 0;
     }
   }
@@ -54,7 +54,7 @@ bool MicroThreadNx::isExistThread(FiberParam *param) {
 
 void MicroThreadNx::setupThread(MTHREAD *thread, nn::os::FiberFunction function) {
   FiberParam *param = nullptr;
-  for (FiberParam *it = unknown2c8; it != unknown2c8 + 16; ++it) {
+  for (FiberParam *it = m_fiberParam; it != m_fiberParam + 16; ++it) {
     if (it->unknown60 == 0) {
       param = it;
       break;
@@ -66,9 +66,9 @@ void MicroThreadNx::setupThread(MTHREAD *thread, nn::os::FiberFunction function)
 }
 
 void MicroThreadNx::destroyThread(MTHREAD *thread) {
-  FiberParam *it = unknown2c8;
+  FiberParam *it = m_fiberParam;
   FiberParam *param = static_cast<FiberParam *>(thread->unknown10);
-  for (; it != unknown2c8 + 16; ++it) {
+  for (; it != m_fiberParam + 16; ++it) {
     if (it == param) {
       if (it->unknown60 > 0 && it->unknown60-- == 1) {
         nn::os::FinalizeFiber(&it->unknown00);
@@ -110,7 +110,7 @@ u64 MicroThread::createHandle(MLTHG *group, u32 index) {
 }
 
 MLTHG *MicroThread::createGroup() {
-  CS cs(unknown298);
+  CS cs(m_criticalSection);
   long index = -1;
   for (int i = 0; i < 16; i++) {
     if (unknown08[i] == nullptr) {
@@ -121,17 +121,17 @@ MLTHG *MicroThread::createGroup() {
   unknown001 *group = new (WorkUtil::getWorkMem()) unknown001;
   memset(group->unknown10, 0, sizeof(group->unknown10));
   group->unknown08 = 0;
-  group->unknown00 = reinterpret_cast<MLTHG *>(index);
+  group->m_MLTHG = reinterpret_cast<MLTHG *>(index);
   unknown08[index] = group;
   unknown290++;
-  return group->unknown00;
+  return group->m_MLTHG;
 }
 
 u64 MicroThread::createThread(MLTHG *group, nn::os::FiberFunction function, void *userData) {
   if (group == reinterpret_cast<MLTHG *>(-1)) {
     return -1;
   }
-  CS cs(unknown298);
+  CS cs(m_criticalSection);
   unknown001 *data = unknown08[reinterpret_cast<u64>(group)];
   u32 index = -1;
   for (u64 i = 0; i < 64; i++) {
@@ -141,7 +141,7 @@ u64 MicroThread::createThread(MLTHG *group, nn::os::FiberFunction function, void
       // `if (match) { isUsed = true; break; }` and `isUsed |= match; if (isUsed) break;` (107 instructions, no accumulated flag), `it != end && !isUsed` with `isUsed = match` or `isUsed |= match`
       // (109, the flag is folded away).
       for (MTHREAD **it = unknown88.begin(); it != unknown88.end(); ++it) {
-        bool isSame = (reinterpret_cast<u64>((*it)->unknown38) >> 16 & 0xff) == i;
+        bool isSame = (reinterpret_cast<u64>((*it)->m_MLTH) >> 16 & 0xff) == i;
         isUsed |= isSame;
         if (isSame) {
           break;
@@ -162,26 +162,26 @@ u64 MicroThread::createThread(MLTHG *group, nn::os::FiberFunction function, void
   thread->unknown2c = false;
   thread->unknown2d = false;
   thread->unknown28 = 0;
-  thread->unknown18 = userData;
+  thread->m_currentUserData = userData;
   thread->unknown20 = 0;
   thread->unknown30 = nn::os::GetCurrentThread();
-  thread->unknown38 = reinterpret_cast<MLTH *>(createHandle(group, index));
+  thread->m_MLTH = reinterpret_cast<MLTH *>(createHandle(group, index));
   setupThread(thread, function);
   unknown88.push_back(thread);
   data->unknown08++;
-  return reinterpret_cast<u64>(thread->unknown38);
+  return reinterpret_cast<u64>(thread->m_MLTH);
 }
 
 void MicroThread::releaseGroup(MLTHG *group) {
   if (group == reinterpret_cast<MLTHG *>(-1)) {
     return;
   }
-  CS cs(unknown298);
+  CS cs(m_criticalSection);
   unknown001 *&slot = unknown08[reinterpret_cast<u64>(group)];
   unknown001 *data = slot;
   for (int i = 0; i < 64; i++) {
     if (data->unknown10[i] != nullptr) {
-      releaseThread(data->unknown10[i]->unknown38);
+      releaseThread(data->unknown10[i]->m_MLTH);
     }
   }
   if (slot != nullptr) {
@@ -195,7 +195,7 @@ void MicroThread::releaseThread(MLTH *handle) {
   if (handle == reinterpret_cast<MLTH *>(-1)) {
     return;
   }
-  CS cs(unknown298);
+  CS cs(m_criticalSection);
   u64 value = reinterpret_cast<u64>(handle);
   u32 groupIndex = value >> 28 & 0xf;
   u32 threadIndex = value >> 16 & 0xff;
@@ -205,7 +205,7 @@ void MicroThread::releaseThread(MLTH *handle) {
   if (thread == nullptr) {
     for (MTHREAD **it = unknown88.begin(); it != unknown88.end(); ++it) {
       MTHREAD *created = *it;
-      if (created->unknown38 == handle) {
+      if (created->m_MLTH == handle) {
         unknown88.erase(it);
         if (created != nullptr) {
           destroyThread(created);
@@ -215,7 +215,7 @@ void MicroThread::releaseThread(MLTH *handle) {
         return;
       }
     }
-  } else if (thread->unknown38 == handle) {
+  } else if (thread->m_MLTH == handle) {
     destroyThread(thread);
     if (slot != nullptr) {
       delete slot;
@@ -261,7 +261,7 @@ void MicroThread::update(MLTHG *group) {
   if (group == reinterpret_cast<MLTHG *>(-1)) {
     return;
   }
-  CriticalSection::enter(unknown298);
+  CriticalSection::enter(m_criticalSection);
   unknown001 *data = unknown08[reinterpret_cast<u64>(group)];
   unknown2c0 = data;
   for (mm::mtl::FixedList<MTHREAD *, 64>::iterator it = data->unknown210.begin(); it != data->unknown210.end();) {
@@ -269,13 +269,13 @@ void MicroThread::update(MLTHG *group) {
     ++next;
     MTHREAD *thread = *it;
     if (thread->unknown2c) {
-      releaseThread(thread->unknown38);
+      releaseThread(thread->m_MLTH);
     }
     it = next;
   }
   if (data->unknown08 == 0) {
     unknown2c0 = nullptr;
-    CriticalSection::leave(unknown298);
+    CriticalSection::leave(m_criticalSection);
     return;
   }
   data->unknown670 = nullptr;
@@ -295,7 +295,7 @@ void MicroThread::update(MLTHG *group) {
     data->unknown670 = thread;
     break;
   }
-  CriticalSection::leave(unknown298);
+  CriticalSection::leave(m_criticalSection);
   if (data->unknown670 != nullptr) {
     switchThread(nullptr, data->unknown670);
   }
@@ -314,7 +314,7 @@ void MicroThread::tail() {
   }
   for (MTHREAD **it = unknown88.begin(); it != unknown88.end(); ++it) {
     MTHREAD *thread = *it;
-    u64 value = reinterpret_cast<u64>(thread->unknown38);
+    u64 value = reinterpret_cast<u64>(thread->m_MLTH);
     unknown001 *group = unknown08[value >> 28 & 0xf];
     group->unknown10[value >> 16 & 0xff] = thread;
     group->unknown210.push_back(thread);
@@ -322,7 +322,7 @@ void MicroThread::tail() {
   unknown88.clear();
 }
 
-void *MicroThread::getCurrentUserData() { return unknown2c0->unknown670->unknown18; }
+void *MicroThread::getCurrentUserData() { return unknown2c0->unknown670->m_currentUserData; }
 
 u64 MicroThread::getCurrentThreadID() {
   MicroThread *thread = get();

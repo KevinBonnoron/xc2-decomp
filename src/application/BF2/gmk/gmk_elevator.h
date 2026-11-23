@@ -123,8 +123,8 @@ public:
   const GmkElevatorLocator *getBindedGmkElevatorLocator(u32 index) const;
   const AGmkBase *getGmkBaseByItemType(ItemType type) const;
 
-  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
-  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
+  const Data *getData() const { return static_cast<const Data *>(m_createInfo.unknown08); }
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(m_createInfo.unknown10); }
 
   mm::mtl::FixedArray<GmkPhantom, 4> unknown50;    // Inferred role: phantoms; original member name unknown.
   gf::GF_OBJ_HANDLE *unknown290[4];                // Inferred role: switches, call switches at even indices and lift switches at odd ones; original member name unknown.

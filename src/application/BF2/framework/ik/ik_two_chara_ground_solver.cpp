@@ -23,8 +23,8 @@ class IKFootGroundInterface;
 struct UpdateInfo;
 
 TwoCharaGroundSolver::TwoCharaGroundSolver()
-    : unknown90{0.3f, 4, nullptr, nullptr}, unknowna8(0), unknownac(0.0f), unknownb0(0.0f), unknownb4(0xffff), unknownb6(0xffff), unknownb8(false), unknownb9(false), unknownba(true), unknownbb(true),
-      unknownc0(nullptr) {}
+    : m_description{0.3f, 4, nullptr, nullptr}, unknowna8(0), unknownac(0.0f), unknownb0(0.0f), unknownb4(0xffff), unknownb6(0xffff), unknownb8(false), unknownb9(false), unknownba(true),
+      unknownbb(true), m_iKGroundInterface(nullptr) {}
 
 TwoCharaGroundSolver::~TwoCharaGroundSolver() {}
 
@@ -41,8 +41,8 @@ TwoCharaGroundSolver *TwoCharaGroundSolver::create(const Description &descriptio
 
 bool TwoCharaGroundSolver::createImpl(const Description &description, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose, IKGroundInterface *ground) {
   bind(frame, pose);
-  unknown90 = description;
-  unknownc0 = ground;
+  m_description = description;
+  m_iKGroundInterface = ground;
   unknown20.resize(description.unknown04, mm::mtl::IntrusivePtr<FootPlacementIKSolver>());
   unknown58.resize(description.unknown04, mm::mtl::IntrusivePtr<FootPlacementIKSolver>());
   const anm::Skeleton *skeleton = pose.unknown18;
@@ -77,8 +77,8 @@ FootPlacementIKSolver *TwoCharaGroundSolver::createFootPlacementIKMain(IKFootInd
   description.unknown08 = kneeName;
   description.unknown10 = hipName;
   description.unknown25 = isMirror;
-  description.unknown28 = param;
-  IKFootGroundInterface *ground = unknownc0 != nullptr ? unknownc0->getFootGround(index) : nullptr;
+  description.m_paramAdapter = param;
+  IKFootGroundInterface *ground = m_iKGroundInterface != nullptr ? m_iKGroundInterface->getFootGround(index) : nullptr;
   FootPlacementIKSolver *solver = FootPlacementIKSolver::create(description, unknown10, *unknown18, ground);
   unknown20[index] = solver;
   if (solver != nullptr) {
@@ -97,8 +97,8 @@ FootPlacementIKSolver *TwoCharaGroundSolver::createFootPlacementIKSub(IKFootInde
   description.unknown08 = kneeName;
   description.unknown10 = hipName;
   description.unknown25 = isMirror;
-  description.unknown28 = param;
-  IKFootGroundInterface *ground = unknownc0 != nullptr ? unknownc0->getFootGround(index) : nullptr;
+  description.m_paramAdapter = param;
+  IKFootGroundInterface *ground = m_iKGroundInterface != nullptr ? m_iKGroundInterface->getFootGround(index) : nullptr;
   FootPlacementIKSolver *solver = FootPlacementIKSolver::create(description, unknown10, *unknown18, ground);
   unknown58[index] = solver;
   if (solver != nullptr) {

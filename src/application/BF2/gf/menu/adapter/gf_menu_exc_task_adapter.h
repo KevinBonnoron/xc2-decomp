@@ -48,12 +48,12 @@ public:
 
   u32 unknown30;                          // Inferred role: task id; original member name unknown.
   mm::mtl::Delegate<bool(u32)> unknown38; // Inferred role: updater; original member name unknown.
-  IConverter *unknown58;                  // Inferred role: converter; original member name unknown.
+  IConverter *m_iConverter;               // Inferred role: converter; original member name unknown.
 };
 
 static_assert(offsetof(GfMenuExcTaskAdapter, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuExcTaskAdapter, unknown38) == 0x38, "");
-static_assert(offsetof(GfMenuExcTaskAdapter, unknown58) == 0x58, "");
+static_assert(offsetof(GfMenuExcTaskAdapter, m_iConverter) == 0x58, "");
 static_assert(sizeof(GfMenuExcTaskAdapter) == 0x60, "");
 
 } // namespace gf

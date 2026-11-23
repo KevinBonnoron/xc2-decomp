@@ -33,7 +33,7 @@ bool StateBattle::Enter(GfComBehaviorPc *behavior, ai::State *previous) {
     btl::BattleGlobal *global = btl::BattleGlobal::get();
     global->unknown65de_4 = target != unknown020;
   }
-  property->unknown470.unknown18 = false;
+  property->m_battleProperty.unknown18 = false;
   GfObjAcc acc(static_cast<GfObj *>(behavior->unknown08));
   acc.setFlag(OBJ_FLAG_UNKNOWN_23, false);
   return true;
@@ -52,11 +52,11 @@ void StateBattle::Leave(GfComBehaviorPc *behavior, ai::State *next) {
   StateUtil::setEnableFallDistChecker(*behavior, false);
   StateUtil::setEnableSpineRotate(*behavior, false, 0.2f);
   StateUtil::setSpineRotateAngles(*behavior, 0.0f, 0.0f);
-  property->unknown470.unknown10 = 1.0f;
+  property->m_battleProperty.unknown10 = 1.0f;
   StateUtil::setLipSpeed(*behavior, 1.0f);
   property->unknown110_1 = false;
   property->unknown111_7 = false;
-  property->unknown470.unknown17 = false;
+  property->m_battleProperty.unknown17 = false;
   property->unknown10.get()->unknown1b = false;
   GfObjAcc acc(static_cast<GfObj *>(behavior->unknown08));
   acc.setFlag(OBJ_FLAG_UNKNOWN_23, true);

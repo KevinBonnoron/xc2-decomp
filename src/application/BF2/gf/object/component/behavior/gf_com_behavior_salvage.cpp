@@ -20,9 +20,9 @@ void GfComBehaviorSalvage::setup() {
     unknown014(comAsm);
   }
 
-  unknown10.beginSetup(*this, 4);
-  unknown10.unknown001<FootStepPlugin>(0, true);
-  unknown10.endSetup();
+  m_pluginManager.beginSetup(*this, 4);
+  m_pluginManager.unknown001<FootStepPlugin>(0, true);
+  m_pluginManager.endSetup();
 
   FootStepPlugin *plugin = unknown001<FootStepPlugin>(0);
   if (plugin != nullptr) {
@@ -30,9 +30,9 @@ void GfComBehaviorSalvage::setup() {
   }
 }
 
-void GfComBehaviorSalvage::cleanup() { unknown10.cleanup(); }
+void GfComBehaviorSalvage::cleanup() { m_pluginManager.cleanup(); }
 
-void GfComBehaviorSalvage::update(const fw::UpdateInfo &info) { unknown10.update(info); }
+void GfComBehaviorSalvage::update(const fw::UpdateInfo &info) { m_pluginManager.update(info); }
 
 void GfComBehaviorSalvage::procAnimCallback(GfComAsm *comAsm, const CallBackCache &cache) {
   if (!unknown98.isValid()) {

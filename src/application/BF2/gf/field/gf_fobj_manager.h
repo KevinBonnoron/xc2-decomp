@@ -45,28 +45,28 @@ public:
   mm::mtl::FixedList<GfFobjDropitem *, 1024> unknown4838; // Inferred role: dropitems of the loaded objects; original member name unknown.
   bool unknown9058;                                       // Inferred role: initialized; original member name unknown.
   u8 _9059[0x9060 - 0x9059];
-  GfDropitemParams *unknown9060; // Inferred role: dropitem params; original member name unknown.
-  u8 *unknown9068;               // Inferred role: dropitem bdat; original member name unknown.
-  u8 *unknown9070;               // Inferred role: dropitem param bdat; original member name unknown.
-  bool unknown9078;              // Inferred role: dropitems are displayed (cleared while an event plays); original member name unknown.
-  f32 unknown907c;               // Inferred role: dropitem collect range, read by GfFobjDropitem and ramped by GfReqCommand::execWaitEvent; original member name unknown.
-  bool unknown9080;              // Inferred role: set while the collect range is ramped; original member name unknown.
+  GfDropitemParams *m_dropitemParams; // Inferred role: dropitem params; original member name unknown.
+  u8 *unknown9068;                    // Inferred role: dropitem bdat; original member name unknown.
+  u8 *unknown9070;                    // Inferred role: dropitem param bdat; original member name unknown.
+  bool unknown9078;                   // Inferred role: dropitems are displayed (cleared while an event plays); original member name unknown.
+  f32 unknown907c;                    // Inferred role: dropitem collect range, read by GfFobjDropitem and ramped by GfReqCommand::execWaitEvent; original member name unknown.
+  bool unknown9080;                   // Inferred role: set while the collect range is ramped; original member name unknown.
   u8 _9081[0x9088 - 0x9081];
-  GfFobjGottenEffectManager unknown9088; // Inferred role: effects of the gotten dropitems; original member name unknown.
-  GfFobjSeManager unknown90d0;           // Inferred role: sounds of the dropitems; original member name unknown.
+  GfFobjGottenEffectManager m_fobjGottenEffectManager; // Inferred role: effects of the gotten dropitems; original member name unknown.
+  GfFobjSeManager m_fobjSeManager;                     // Inferred role: sounds of the dropitems; original member name unknown.
 };
 
 static_assert(offsetof(GfFobjManager, unknown18) == 0x18, "");
 static_assert(offsetof(GfFobjManager, unknown4838) == 0x4838, "");
 static_assert(offsetof(GfFobjManager, unknown9058) == 0x9058, "");
-static_assert(offsetof(GfFobjManager, unknown9060) == 0x9060, "");
+static_assert(offsetof(GfFobjManager, m_dropitemParams) == 0x9060, "");
 static_assert(offsetof(GfFobjManager, unknown9068) == 0x9068, "");
 static_assert(offsetof(GfFobjManager, unknown9070) == 0x9070, "");
 static_assert(offsetof(GfFobjManager, unknown9078) == 0x9078, "");
 static_assert(offsetof(GfFobjManager, unknown907c) == 0x907c, "");
 static_assert(offsetof(GfFobjManager, unknown9080) == 0x9080, "");
-static_assert(offsetof(GfFobjManager, unknown9088) == 0x9088, "");
-static_assert(offsetof(GfFobjManager, unknown90d0) == 0x90d0, "");
+static_assert(offsetof(GfFobjManager, m_fobjGottenEffectManager) == 0x9088, "");
+static_assert(offsetof(GfFobjManager, m_fobjSeManager) == 0x90d0, "");
 static_assert(sizeof(GfFobjManager) == 0x9120, "");
 
 } // namespace gf

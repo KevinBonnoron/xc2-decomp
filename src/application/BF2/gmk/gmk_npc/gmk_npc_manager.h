@@ -24,7 +24,7 @@ public:
     void create(CBdatWrapper bdat, int id);
     void dispose();
 
-    gf::QuestID unknown00; // Inferred role: quest; original member name unknown.
+    gf::QuestID m_questID; // Inferred role: quest; original member name unknown.
     u16 unknown04;         // Inferred role: shop id; original member name unknown.
     u16 unknown06;         // Inferred role: mount point; original member name unknown.
     u16 unknown08;         // Inferred role: mount object; original member name unknown.
@@ -55,20 +55,20 @@ public:
   void unknown001();
 
   // Inferred helper: checks that the npc id info has been created; original name unknown.
-  bool unknown002() const { return unknown00.unknown00 != 0 && unknown00.unknown08 != nullptr && unknown10 != nullptr; }
+  bool unknown002() const { return m_createInfo.unknown00 != 0 && m_createInfo.unknown08 != nullptr && unknown10 != nullptr; }
 
-  CreateInfo unknown00;                       // Inferred role: create info; original member name unknown.
+  CreateInfo m_createInfo;                    // Inferred role: create info; original member name unknown.
   mm::mtl::IntrusiveList<AGmkNpc> *unknown10; // Inferred role: npcs; original member name unknown.
-  AGmkNpc *unknown18;                         // Inferred role: active npc; original member name unknown.
-  BdatInfo unknown20;                         // Inferred role: bdat info; original member name unknown.
+  AGmkNpc *m_aGmkNpc;                         // Inferred role: active npc; original member name unknown.
+  BdatInfo m_bdatInfo;                        // Inferred role: bdat info; original member name unknown.
   gf::GF_OBJ_HANDLE *unknown30;               // Inferred role: handle; original member name unknown.
 };
 
 static_assert(sizeof(GmkNpcIdInfo::BdatInfo) == 0xe, "");
 static_assert(offsetof(GmkNpcIdInfo, unknown10) == 0x10, "");
 static_assert(sizeof(GmkNpcIdInfo::CreateInfo) == 0x10, "");
-static_assert(offsetof(GmkNpcIdInfo, unknown18) == 0x18, "");
-static_assert(offsetof(GmkNpcIdInfo, unknown20) == 0x20, "");
+static_assert(offsetof(GmkNpcIdInfo, m_aGmkNpc) == 0x18, "");
+static_assert(offsetof(GmkNpcIdInfo, m_bdatInfo) == 0x20, "");
 static_assert(offsetof(GmkNpcIdInfo, unknown30) == 0x30, "");
 static_assert(sizeof(GmkNpcIdInfo) == 0x38, "");
 

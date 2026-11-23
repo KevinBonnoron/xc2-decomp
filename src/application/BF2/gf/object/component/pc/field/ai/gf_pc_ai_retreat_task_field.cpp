@@ -15,18 +15,18 @@ namespace pc {
 
 bool TaskFieldRetreat::testCondition(const BlackBoardField &blackBoard) {
   if (blackBoard.unknown200.test(4)) {
-    mm::Vec3 diff = blackBoard.unknown1f0 - blackBoard.unknown08->unknown160.unknown00;
+    mm::Vec3 diff = blackBoard.unknown1f0 - blackBoard.m_comPropertyPc->unknown160.unknown00;
     return sqrtf(diff.x * diff.x + diff.y * diff.y + diff.z * diff.z) > 1.0f;
   }
   return false;
 }
 
 void TaskFieldRetreat::update(BlackBoardField &blackBoard) {
-  GfComPropertyPc *property = blackBoard.unknown08;
+  GfComPropertyPc *property = blackBoard.m_comPropertyPc;
   navi::NvmshAcObj *naviObject = blackBoard.unknown10;
   naviObject->setBeginPos(property->unknown160.unknown00);
   naviObject->setEndPos(blackBoard.unknown1f0);
-  mm::Vec3 diff = blackBoard.unknown1f0 - blackBoard.unknown08->unknown160.unknown00;
+  mm::Vec3 diff = blackBoard.unknown1f0 - blackBoard.m_comPropertyPc->unknown160.unknown00;
   const mm::Vec3 &moveVec = naviObject->getMoveVec();
   f32 distance = fabsf(diff.x * moveVec.x + diff.y * moveVec.y + diff.z * moveVec.z);
   f32 power = AgentUtilField::setFollowInput(distance, naviObject, *property);

@@ -46,16 +46,16 @@ public:
   const char *getAssetName() const;
   SoundPack *getSoundPack();
 
-  State unknownb0;        // Inferred role: state; original member name unknown.
-  AssetLoader *unknownb8; // Inferred role: loader; original member name unknown.
-  AssetData *unknownc0;   // Inferred role: asset; original member name unknown.
+  State unknownb0;            // Inferred role: state; original member name unknown.
+  AssetLoader *m_assetLoader; // Inferred role: loader; original member name unknown.
+  AssetData *m_assetData;     // Inferred role: asset; original member name unknown.
   SoundPack *m_soundPack;
-  SetupInfo unknownd0; // Inferred role: setup info; original member name unknown.
+  SetupInfo m_setupInfo; // Inferred role: setup info; original member name unknown.
 };
 
 static_assert(offsetof(SoundResource, unknownb0) == 0xb0, "");
 static_assert(offsetof(SoundResource, m_soundPack) == 0xc8, "");
-static_assert(offsetof(SoundResource, unknownd0) == 0xd0, "");
+static_assert(offsetof(SoundResource, m_setupInfo) == 0xd0, "");
 static_assert(sizeof(SoundResource) == 0xe0, "");
 
 } // namespace fw

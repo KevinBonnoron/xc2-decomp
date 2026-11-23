@@ -11,7 +11,7 @@ public:
   void render();
   void update();
 
-  DrMan *unknown00; // Inferred role: driver manager; original member name unknown.
+  DrMan *m_drMan; // Inferred role: driver manager; original member name unknown.
 };
 
 } // namespace ml

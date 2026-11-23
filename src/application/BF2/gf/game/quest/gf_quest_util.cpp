@@ -92,7 +92,7 @@ bool GfQuestUtil::getScenarioTopic(GfQuestScinario &scenario) {
 bool GfQuestUtil::getMsgQuestTaskLog(GfQuestTaskLogResult &result, const QuestTaskParam &param) {
   QuestListAcc *questListAcc = QuestListAcc::get();
   QuestID parent;
-  QuestID quest = param.unknown04;
+  QuestID quest = param.m_questID;
   if (!quest.empty()) {
     parent = GfDataQuest::getListPRTQuestID(quest);
     if (parent.empty()) {
@@ -117,7 +117,7 @@ bool GfQuestUtil::getMsgQuestTaskLog(GfQuestTaskLogResult &result, const QuestTa
 
   result.unknown10 = taskParam.unknown10;
   result.unknown24 = GfQuestInfo::isCompleteTask(taskParam) | (GfPlayComTalk::getQuestTargetNpc(taskParam.unknown0c) != 0);
-  result.unknown26 = taskParam.unknown04;
+  result.m_questID = taskParam.m_questID;
   u32 limit;
   u32 count;
   u32 item;
@@ -221,7 +221,7 @@ QuestID GfQuestUtil::getCurrentTBoxWithEvent(GF_OBJ_HANDLE *handle) {
   }
 
   gmk->getBindedBdatFp();
-  u32 gimmick = gmk->unknown20.unknown18;
+  u32 gimmick = gmk->m_createInfo.unknown18;
   if (gimmick == 0) {
     return QuestID();
   }
@@ -479,7 +479,7 @@ u32 GfQuestUtil::getMsgQuestResult(QuestID quest) {
 
 bool GfQuestUtil::getReward(GfQuestReward &reward, u32 rewardSet, bool isRandom) {
   GfQuestReward::Param empty;
-  for (GfQuestReward::Param &param : reward.unknown00) {
+  for (GfQuestReward::Param &param : reward.m_param) {
     param = empty;
   }
 
@@ -491,55 +491,55 @@ bool GfQuestUtil::getReward(GfQuestReward &reward, u32 rewardSet, bool isRandom)
   QuestListAcc *questListAcc = QuestListAcc::get();
   u32 gold = questListAcc->getRewardGold(rewardSet);
   if (gold != 0) {
-    reward.unknown00[QUEST_REWARD_UNKNOWN_0].unknown00 = "GOLD";
-    reward.unknown00[QUEST_REWARD_UNKNOWN_0].unknown44_u32 = gold;
+    reward.m_param[QUEST_REWARD_UNKNOWN_0].unknown00 = "GOLD";
+    reward.m_param[QUEST_REWARD_UNKNOWN_0].unknown44_u32 = gold;
   }
 
   u32 coin = questListAcc->getRewardCoin(rewardSet);
   if (coin != 0) {
-    reward.unknown00[QUEST_REWARD_UNKNOWN_1].unknown00 = "COIN";
-    reward.unknown00[QUEST_REWARD_UNKNOWN_1].unknown44_u32 = coin;
+    reward.m_param[QUEST_REWARD_UNKNOWN_1].unknown00 = "COIN";
+    reward.m_param[QUEST_REWARD_UNKNOWN_1].unknown44_u32 = coin;
   }
 
   u32 sp = questListAcc->getRewardSp(rewardSet);
   if (sp != 0) {
-    reward.unknown00[QUEST_REWARD_UNKNOWN_2].unknown00 = "SP";
-    reward.unknown00[QUEST_REWARD_UNKNOWN_2].unknown44_u32 = sp;
+    reward.m_param[QUEST_REWARD_UNKNOWN_2].unknown00 = "SP";
+    reward.m_param[QUEST_REWARD_UNKNOWN_2].unknown44_u32 = sp;
   }
 
   u32 exp = questListAcc->getRewardEXP(rewardSet);
   if (exp != 0) {
-    reward.unknown00[QUEST_REWARD_UNKNOWN_3].unknown00 = "EXP";
-    reward.unknown00[QUEST_REWARD_UNKNOWN_3].unknown44_u32 = exp;
+    reward.m_param[QUEST_REWARD_UNKNOWN_3].unknown00 = "EXP";
+    reward.m_param[QUEST_REWARD_UNKNOWN_3].unknown44_u32 = exp;
   }
 
   u16 developMap = questListAcc->getRewardDevelopZone(rewardSet);
   u16 developZone = GfDataMap::getZoneIdForDevelopPoint(developMap);
   u16 developPoint = questListAcc->getRewardDevelopPoint(rewardSet);
   if (developPoint != 0) {
-    reward.unknown00[QUEST_REWARD_UNKNOWN_4].unknown00 = "DEVELOP";
-    reward.unknown00[QUEST_REWARD_UNKNOWN_4].unknown44 = developPoint;
-    reward.unknown00[QUEST_REWARD_UNKNOWN_4].m_developZone = developZone;
+    reward.m_param[QUEST_REWARD_UNKNOWN_4].unknown00 = "DEVELOP";
+    reward.m_param[QUEST_REWARD_UNKNOWN_4].unknown44 = developPoint;
+    reward.m_param[QUEST_REWARD_UNKNOWN_4].m_developZone = developZone;
   }
 
   u16 trust = questListAcc->getRewardTrustPoint(rewardSet);
   if (trust != 0) {
-    reward.unknown00[QUEST_REWARD_UNKNOWN_5].unknown00 = "TRUST";
-    reward.unknown00[QUEST_REWARD_UNKNOWN_5].unknown44 = trust;
+    reward.m_param[QUEST_REWARD_UNKNOWN_5].unknown00 = "TRUST";
+    reward.m_param[QUEST_REWARD_UNKNOWN_5].unknown44 = trust;
   }
 
   u16 mercenaries = questListAcc->getRewardMercenariesPoint(rewardSet);
   if (mercenaries != 0) {
-    reward.unknown00[QUEST_REWARD_UNKNOWN_7].unknown00 = "MERCE";
-    reward.unknown00[QUEST_REWARD_UNKNOWN_7].unknown44 = mercenaries;
+    reward.m_param[QUEST_REWARD_UNKNOWN_7].unknown00 = "MERCE";
+    reward.m_param[QUEST_REWARD_UNKNOWN_7].unknown44 = mercenaries;
   }
 
   u16 ideaCategory = questListAcc->getRewardIdeaCategory(rewardSet);
   u16 ideaValue = questListAcc->getRewardIdeaValue(rewardSet);
   if (ideaValue != 0) {
-    reward.unknown00[QUEST_REWARD_UNKNOWN_6].unknown00 = "IDEA";
-    reward.unknown00[QUEST_REWARD_UNKNOWN_6].unknown44 = ideaValue;
-    reward.unknown00[QUEST_REWARD_UNKNOWN_6].m_developZone = ideaCategory;
+    reward.m_param[QUEST_REWARD_UNKNOWN_6].unknown00 = "IDEA";
+    reward.m_param[QUEST_REWARD_UNKNOWN_6].unknown44 = ideaValue;
+    reward.m_param[QUEST_REWARD_UNKNOWN_6].m_developZone = ideaCategory;
   }
 
   for (u32 slot = QUEST_REWARD_UNKNOWN_8; slot <= QUEST_REWARD_UNKNOWN_11; slot++) {
@@ -547,9 +547,9 @@ bool GfQuestUtil::getReward(GfQuestReward &reward, u32 rewardSet, bool isRandom)
     u16 number = questListAcc->getRewardItemNumber(rewardSet, slot - QUEST_REWARD_UNKNOWN_8);
     bool isPrecious = isRandom && GfItemUtil::isPrecious(item);
     if (number != 0 && !isPrecious) {
-      reward.unknown00[slot].unknown00 = GfDataItem::getName(item);
-      reward.unknown00[slot].unknown44 = item;
-      reward.unknown00[slot].m_developZone = number;
+      reward.m_param[slot].unknown00 = GfDataItem::getName(item);
+      reward.m_param[slot].unknown44 = item;
+      reward.m_param[slot].m_developZone = number;
     }
   }
 
@@ -557,26 +557,26 @@ bool GfQuestUtil::getReward(GfQuestReward &reward, u32 rewardSet, bool isRandom)
 }
 
 void GfQuestUtil::execReward(const GfQuestReward &reward) {
-  SCOM_ADD_MONEY::create(reward.unknown00[QUEST_REWARD_UNKNOWN_0].unknown44_u32);
-  SCOM_ADD_COIN::create(reward.unknown00[QUEST_REWARD_UNKNOWN_1].unknown44_u32);
-  SCOM_ADD_SP::create(unknown020, reward.unknown00[QUEST_REWARD_UNKNOWN_2].unknown44_u32);
-  SCOM_ADD_EXP::createInnExp(reward.unknown00[QUEST_REWARD_UNKNOWN_3].unknown44_u32);
+  SCOM_ADD_MONEY::create(reward.m_param[QUEST_REWARD_UNKNOWN_0].unknown44_u32);
+  SCOM_ADD_COIN::create(reward.m_param[QUEST_REWARD_UNKNOWN_1].unknown44_u32);
+  SCOM_ADD_SP::create(unknown020, reward.m_param[QUEST_REWARD_UNKNOWN_2].unknown44_u32);
+  SCOM_ADD_EXP::createInnExp(reward.m_param[QUEST_REWARD_UNKNOWN_3].unknown44_u32);
   // The game masks the result of getDevelopZone, which returns u32, with 0xffff (0x710037865c).
-  SCOM_ADD_DEVELOP::create(static_cast<u16>(reward.unknown00[QUEST_REWARD_UNKNOWN_4].getDevelopZone()), reward.unknown00[QUEST_REWARD_UNKNOWN_4].unknown44);
-  SCOM_ADD_TRUST::create(reward.unknown360, reward.unknown00[QUEST_REWARD_UNKNOWN_5].unknown44);
-  SCOM_ADD_MERCENARIES_POINT::create(reward.unknown00[QUEST_REWARD_UNKNOWN_7].unknown44);
+  SCOM_ADD_DEVELOP::create(static_cast<u16>(reward.m_param[QUEST_REWARD_UNKNOWN_4].getDevelopZone()), reward.m_param[QUEST_REWARD_UNKNOWN_4].unknown44);
+  SCOM_ADD_TRUST::create(reward.unknown360, reward.m_param[QUEST_REWARD_UNKNOWN_5].unknown44);
+  SCOM_ADD_MERCENARIES_POINT::create(reward.m_param[QUEST_REWARD_UNKNOWN_7].unknown44);
   for (u32 slot = QUEST_REWARD_UNKNOWN_8; slot <= QUEST_REWARD_UNKNOWN_11; slot++) {
     // The game reads item and number as one word (0x7100378678 ldr w8, 0x710037867c lsr w1, 0x7100378680 and w0), while getReward writes them as two halfwords (strh at 0x44 and 0x46, 0x7100378494 and
     // 0x7100378498), hence both views of the union.
-    u32 item = reward.unknown00[slot].unknown44_u32;
+    u32 item = reward.m_param[slot].unknown44_u32;
     // The lsr comes before the and in the game; written inline in the call the compiler puts the and first, the local fixes the order.
     u32 number = item >> 16;
     SCOM_ADD_ITEM::create(item & 0xffff, number);
   }
   if (reward.unknown360 != 0) {
-    SCOM_ADD_IDEA::create(GfDataBlade::getCreator(reward.unknown360), reward.unknown00[QUEST_REWARD_UNKNOWN_6].m_developZone, reward.unknown00[QUEST_REWARD_UNKNOWN_6].unknown44);
+    SCOM_ADD_IDEA::create(GfDataBlade::getCreator(reward.unknown360), reward.m_param[QUEST_REWARD_UNKNOWN_6].m_developZone, reward.m_param[QUEST_REWARD_UNKNOWN_6].unknown44);
   } else {
-    SCOM_ADD_IDEA::create(unknown020, reward.unknown00[QUEST_REWARD_UNKNOWN_6].m_developZone, reward.unknown00[QUEST_REWARD_UNKNOWN_6].unknown44);
+    SCOM_ADD_IDEA::create(unknown020, reward.m_param[QUEST_REWARD_UNKNOWN_6].m_developZone, reward.m_param[QUEST_REWARD_UNKNOWN_6].unknown44);
   }
 }
 
@@ -603,16 +603,16 @@ void GfQuestUtil::addOrderParentQuest(QuestID quest) {
   QuestData orderQuest(quest);
   removeOrderParentQuest(quest);
   if (dataGame->unknown10a538 < QUEST_UNKNOWN_256) {
-    dataGame->unknown10a138[dataGame->unknown10a538++] = orderQuest;
+    dataGame->m_questData[dataGame->unknown10a538++] = orderQuest;
   }
 }
 
 void GfQuestUtil::removeOrderParentQuest(QuestID quest) {
   SDataGame *dataGame = GfDataManager::getDataGame();
   for (u32 index = 0; index < dataGame->unknown10a538; index++) {
-    if (dataGame->unknown10a138[index] == QuestData(quest)) {
+    if (dataGame->m_questData[index] == QuestData(quest)) {
       for (; index < dataGame->unknown10a538 - 1; index++) {
-        dataGame->unknown10a138[index] = dataGame->unknown10a138[index + 1];
+        dataGame->m_questData[index] = dataGame->m_questData[index + 1];
       }
 
       dataGame->unknown10a538--;
@@ -627,8 +627,8 @@ QuestID GfQuestUtil::getLastOrderCategoryQuest(QTYPE type) {
   u16 variant = 0;
   if (dataGame->unknown10a538 != 0) {
     for (s32 index = dataGame->unknown10a538; index > 0; index--) {
-      if (GfDataQuest::getListQuestCategory(dataGame->unknown10a138[index - 1]) == type) {
-        QuestID quest = dataGame->unknown10a138[index - 1];
+      if (GfDataQuest::getListQuestCategory(dataGame->m_questData[index - 1]) == type) {
+        QuestID quest = dataGame->m_questData[index - 1];
         id = quest.unknown00;
         variant = quest.unknown02;
         break;
@@ -645,8 +645,8 @@ QuestID GfQuestUtil::getLastOrderInvalidCategoryQuest(QTYPE type) {
   u16 variant = 0;
   if (dataGame->unknown10a538 != 0) {
     for (s32 index = dataGame->unknown10a538; index > 0; index--) {
-      if (GfDataQuest::getQuestCategory(dataGame->unknown10a138[index - 1]) != type) {
-        QuestID quest = dataGame->unknown10a138[index - 1];
+      if (GfDataQuest::getQuestCategory(dataGame->m_questData[index - 1]) != type) {
+        QuestID quest = dataGame->m_questData[index - 1];
         id = quest.unknown00;
         variant = quest.unknown02;
         break;
@@ -662,7 +662,7 @@ QuestID GfQuestUtil::getLastOrderParentQuest() {
   u16 id = 0;
   u16 variant = 0;
   if (dataGame->unknown10a538 != 0) {
-    QuestID quest = dataGame->unknown10a138[dataGame->unknown10a538 - 1];
+    QuestID quest = dataGame->m_questData[dataGame->unknown10a538 - 1];
     id = quest.unknown00;
     variant = quest.unknown02;
   }
@@ -698,8 +698,8 @@ void GfQuestUtil::addTaskHanyouCount(u32 purpose, u32 taskIndex, u32 add) {
 
   GfGameFlag::setLocal(8, flag, newCount);
   QuestID quest = GfQuestManager::getOrderQuestId(purpose);
-  param.unknown04.unknown00 = quest.unknown00;
-  param.unknown04.unknown02 = quest.unknown02;
+  param.m_questID.unknown00 = quest.unknown00;
+  param.m_questID.unknown02 = quest.unknown02;
   GfQuestManager::eventChangeTaskState(param);
 }
 
@@ -958,13 +958,13 @@ bool GfQuestUtil::getDispCount(u32 &count, u32 &limit, const AchievQuest &achiev
   }
 
   QuestListAcc *questListAcc = QuestListAcc::get();
-  if (!achievQuest.unknown00.empty() || achievQuest.unknown0e != 0) {
+  if (!achievQuest.m_questID.empty() || achievQuest.unknown0e != 0) {
     bool isComplete = GfKizunaringBlade::isCompleteLevel(achievQuest);
     if (achievQuest.unknown10 != TASK_TYPE_UNKNOWN_5 && achievQuest.unknown10 != TASK_TYPE_UNKNOWN_6) {
       switch (achievQuest.unknown10) {
       case TASK_TYPE_UNKNOWN_10: {
         GfBdatCond *bdatCond = GfBdatCond::get();
-        QuestTaskParam param(GfDataQuest::getListNextQuestA(achievQuest.unknown00), 0, TASK_STATE_UNKNOWN_0);
+        QuestTaskParam param(GfDataQuest::getListNextQuestA(achievQuest.m_questID), 0, TASK_STATE_UNKNOWN_0);
         bool isDisp = false;
         if (param.unknown10 != TASK_TYPE_UNKNOWN_10) {
           count = 0;
@@ -1005,7 +1005,7 @@ bool GfQuestUtil::getDispCount(u32 &count, u32 &limit, const AchievQuest &achiev
         return isDisp;
       }
       case TASK_TYPE_UNKNOWN_11: {
-        QuestTaskParam param(GfDataQuest::getListNextQuestA(achievQuest.unknown00), 0, TASK_STATE_UNKNOWN_0);
+        QuestTaskParam param(GfDataQuest::getListNextQuestA(achievQuest.m_questID), 0, TASK_STATE_UNKNOWN_0);
         limit = questListAcc->getFieldSkillCountCount(param.unknown14);
         if (count > limit || !isComplete) {
           count = isComplete ? limit : 0;
@@ -1033,15 +1033,15 @@ void GfQuestUtil::incFieldSkillTask(u32 blade, u32 fieldSkill) {
     }
 
     for (u32 level = 1; level <= ACHIEVEMENT_UNKNOWN_5; level++) {
-      AchievQuest &achievQuest = achievInfo->unknown04[level - 1];
-      if (achievQuest.unknown10 != TASK_TYPE_UNKNOWN_11 || !GfQuestInfo::isQuestOrder(achievQuest.unknown00) || achievQuest.isCountComplete()) {
+      AchievQuest &achievQuest = achievInfo->m_achievQuest[level - 1];
+      if (achievQuest.unknown10 != TASK_TYPE_UNKNOWN_11 || !GfQuestInfo::isQuestOrder(achievQuest.m_questID) || achievQuest.isCountComplete()) {
         continue;
       }
 
-      QuestTaskParam param(GfDataQuest::getListNextQuestA(achievQuest.unknown00), 0, TASK_STATE_UNKNOWN_0);
+      QuestTaskParam param(GfDataQuest::getListNextQuestA(achievQuest.m_questID), 0, TASK_STATE_UNKNOWN_0);
       if (questListAcc->getFieldSkillCountFieldSkillID(param.unknown14) == fieldSkill) {
         achievQuest.incleseCount(1);
-        GfQuestTask::updateQuestTask(achievQuest.unknown00);
+        GfQuestTask::updateQuestTask(achievQuest.m_questID);
         return;
       }
     }
@@ -1189,11 +1189,11 @@ bool GfQuestUtil::getResultIdea(u32 &category, u32 &value, u32 blade, u32 line, 
   SDataBladeAchievement *achievInfo = GfDataBlade::getAchievInfo(blade, line);
   if (achievInfo->unknown00 != 0) {
     GfQuestReward reward;
-    if (GfQuestManager::getRewardItem(reward, achievInfo->unknown04[level - 1].unknown00, true)) {
-      value = reward.unknown00[QUEST_REWARD_UNKNOWN_6].unknown44;
+    if (GfQuestManager::getRewardItem(reward, achievInfo->m_achievQuest[level - 1].m_questID, true)) {
+      value = reward.m_param[QUEST_REWARD_UNKNOWN_6].unknown44;
       if (value != 0) {
         isIdea = true;
-        category = reward.unknown00[QUEST_REWARD_UNKNOWN_6].m_developZone;
+        category = reward.m_param[QUEST_REWARD_UNKNOWN_6].m_developZone;
       }
     }
   }

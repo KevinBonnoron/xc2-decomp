@@ -16,7 +16,7 @@ void DrMdoAnim::changeMemFixAnim(MdoWrkMatRes *matRes, const void *data) {
   const unknown025 *anim = static_cast<const unknown025 *>(data);
   const u8 *base = static_cast<const u8 *>(data);
   matRes->unknown50 = base;
-  matRes->unknown58 = reinterpret_cast<const MdsFixAnmInf *>(base + anim->unknown14);
+  matRes->m_mdsFixAnmInf = reinterpret_cast<const MdsFixAnmInf *>(base + anim->unknown14);
   matRes->unknown60 = reinterpret_cast<const unknown013 *>(base + anim->unknown1c);
   matRes->unknown68 = base + anim->unknown24;
 }
@@ -24,7 +24,7 @@ void DrMdoAnim::changeMemFixAnim(MdoWrkMatRes *matRes, const void *data) {
 void DrMdoAnim::setupFixAnim(const void *data) {
   const unknown025 *anim = static_cast<const unknown025 *>(data);
   unknown30->unknown50 = static_cast<const u8 *>(data);
-  unknown30->unknown58 = reinterpret_cast<const MdsFixAnmInf *>(unknown30->unknown50 + anim->unknown14);
+  unknown30->m_mdsFixAnmInf = reinterpret_cast<const MdsFixAnmInf *>(unknown30->unknown50 + anim->unknown14);
   unknown30->unknown60 = reinterpret_cast<const unknown013 *>(unknown30->unknown50 + anim->unknown1c);
   unknown30->unknown68 = unknown30->unknown50 + anim->unknown24;
 }
@@ -48,7 +48,7 @@ void DrMdoAnim::updateAnimEnd(f32 frame, const u32 *flags, DrResEtcPamObj *pamOb
         for (u32 j = 0; j < num; j++, cate++) {
           f32 *work = values + cate->unknown06;
           memcpy(work, unknown30->unknown38 + (matInfo->unknown40 + cate->unknown06), sizeof(f32) * 8);
-          calcAnim(cate, &unknown30->unknownc0[i], pamObj, work, frame);
+          calcAnim(cate, &unknown30->m_materialRes[i], pamObj, work, frame);
         }
       }
       if (matInfo->unknown04 & MdsMatInfoHeader::unknown015_18) {
@@ -56,7 +56,7 @@ void DrMdoAnim::updateAnimEnd(f32 frame, const u32 *flags, DrResEtcPamObj *pamOb
         u32 num = range->unknown02;
         const MdsFixAnmCate *cate = &cates[range->unknown00];
         for (u32 j = 0; j < num; j++, cate++) {
-          calcAnim(cate, &unknown30->unknownc0[i], pamObj, values, frame);
+          calcAnim(cate, &unknown30->m_materialRes[i], pamObj, values, frame);
         }
       }
     }
@@ -64,12 +64,12 @@ void DrMdoAnim::updateAnimEnd(f32 frame, const u32 *flags, DrResEtcPamObj *pamOb
 }
 
 void DrMdoAnim::calcAnim(const MdsFixAnmCate *cate, DrResMdoMat *mat, DrResEtcPamObj *pamObj, f32 *work, f32 frame) {
-  const MdsFixAnmInf *inf = &unknown30->unknown58[cate->unknown02];
+  const MdsFixAnmInf *inf = &unknown30->m_mdsFixAnmInf[cate->unknown02];
   f32 *frames = &unknown30->unknown100[cate->unknown02];
   for (int i = 0; i < cate->unknown04; i++, inf++, frames++) {
     f32 value;
     if (inf->unknown00_30) {
-      value = pamObj->unknown10[inf->unknown04].getParams();
+      value = pamObj->m_drResEtcParams[inf->unknown04].getParams();
       if (inf->unknown00_29) {
         value = 1.0f - value;
         if (value < 0.0f) {
@@ -80,7 +80,7 @@ void DrMdoAnim::calcAnim(const MdsFixAnmCate *cate, DrResMdoMat *mat, DrResEtcPa
       }
     } else {
       if (inf->unknown00_31) {
-        *frames = m_drMan->unknown1cac * 240.0f;
+        *frames = m_drMan->m_timerVal * 240.0f;
       } else {
         *frames += frame;
         if (*frames > inf->unknown0e - 1) {
@@ -128,7 +128,7 @@ f32 DrMdoAnim::getHermiteAttr(const MdsFixAnmInf *inf, f32 frame) {
 }
 
 void DrMdoAnim::calcAnimFrameOnly(const MdsFixAnmCate *cate, f32 frame) {
-  const MdsFixAnmInf *inf = &unknown30->unknown58[cate->unknown02];
+  const MdsFixAnmInf *inf = &unknown30->m_mdsFixAnmInf[cate->unknown02];
   f32 *frames = &unknown30->unknown100[cate->unknown02];
   for (int i = 0; i < cate->unknown04; i++, inf++, frames++) {
     if (!inf->unknown00_30 && !inf->unknown00_31) {

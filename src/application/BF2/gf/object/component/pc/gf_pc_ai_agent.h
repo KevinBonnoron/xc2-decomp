@@ -32,14 +32,14 @@ public:
   bool testBattleAI() const override;
   bool recieveMessage(GfComPropertyPc &property, fw::MessageObject *sender, fw::Message &message) override;
 
-  u32 unknown08;           // Inferred role: flags (bit 0 field AI, bit 1 battle AI); original member name unknown.
-  AIAgentField unknown10;  // Inferred role: field AI; original member name unknown.
-  AIAgentBattle unknowna0; // Inferred role: battle AI; original member name unknown.
+  u32 unknown08;                 // Inferred role: flags (bit 0 field AI, bit 1 battle AI); original member name unknown.
+  AIAgentField m_aIAgentField;   // Inferred role: field AI; original member name unknown.
+  AIAgentBattle m_aIAgentBattle; // Inferred role: battle AI; original member name unknown.
 };
 
 static_assert(offsetof(AIAgent, unknown08) == 0x08, "");
-static_assert(offsetof(AIAgent, unknown10) == 0x10, "");
-static_assert(offsetof(AIAgent, unknowna0) == 0xa0, "");
+static_assert(offsetof(AIAgent, m_aIAgentField) == 0x10, "");
+static_assert(offsetof(AIAgent, m_aIAgentBattle) == 0xa0, "");
 static_assert(sizeof(AIAgent) == 0xa8, "");
 
 } // namespace pc

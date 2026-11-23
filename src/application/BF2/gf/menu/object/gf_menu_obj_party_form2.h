@@ -18,20 +18,40 @@ class GfMenuFieldSkillList;
 
 class GfMenuObjPartyForm2 : public GfMenuObject {
 public:
-  class DrDetailListener : public ui::UIObjectListener {
+  class MainListener : public ui::UIObjectListener {
   public:
+    MainListener(GfMenuObjPartyForm2 *owner) : _0c(), m_menuObjPartyForm2(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x20 - 0x0c];
-    GfMenuObjPartyForm2 *unknown20; // Inferred role: owner; original member name unknown.
+    u8 _0c[0x1c - 0x0c];                      // Actively zero-initialized unknown byte range, NOT padding; original name/role unknown.
+    GfMenuObjPartyForm2 *m_menuObjPartyForm2; // Inferred role: owner; original member name unknown.
+  };
+
+  class DrDetailListener : public ui::UIObjectListener {
+  public:
+    DrDetailListener(GfMenuObjPartyForm2 *owner) : _0c(), m_menuObjPartyForm2(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];                      // Actively zero-initialized unknown byte range, NOT padding; original name/role unknown.
+    GfMenuObjPartyForm2 *m_menuObjPartyForm2; // Inferred role: owner; original member name unknown.
   };
 
   class FieldSkillListener : public ui::UIObjectListener {
   public:
+    FieldSkillListener(GfMenuObjPartyForm2 *owner) : _0c(), m_menuObjPartyForm2(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x20 - 0x0c];
-    GfMenuObjPartyForm2 *unknown20; // Inferred role: owner; original member name unknown.
+    u8 _0c[0x1c - 0x0c];                      // Actively zero-initialized unknown byte range, NOT padding; original name/role unknown.
+    GfMenuObjPartyForm2 *m_menuObjPartyForm2; // Inferred role: owner; original member name unknown.
+  };
+
+  class DrSelListener : public ui::UIObjectListener {
+  public:
+    DrSelListener(GfMenuObjPartyForm2 *owner) : _0c(), m_menuObjPartyForm2(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];                      // Actively zero-initialized unknown byte range, NOT padding; original name/role unknown.
+    GfMenuObjPartyForm2 *m_menuObjPartyForm2; // Inferred role: owner; original member name unknown.
   };
 
   struct OpenParam {
@@ -82,15 +102,19 @@ public:
   int unknown304; // Inferred role: control of the second plate, -1 when idle; original member name unknown.
   u32 unknown308; // Inferred role: display priority of the plate; original member name unknown.
   u8 _30c[0x310 - 0x30c];
-  GfMenuCallContext *unknown310;    // Inferred role: announce call context; original member name unknown.
-  GfMenuFieldSkillList *unknown318; // Inferred role: field skills of the party; original member name unknown.
-  ui::UISelectObjList *unknown320;  // Inferred role: field skill objects; original member name unknown.
+  GfMenuCallContext *m_menuCallContext;       // Inferred role: announce call context; original member name unknown.
+  GfMenuFieldSkillList *m_menuFieldSkillList; // Inferred role: field skills of the party; original member name unknown.
+  ui::UISelectObjList *unknown320;            // Inferred role: field skill objects; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuObjPartyForm2::DrDetailListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjPartyForm2::MainListener, m_menuObjPartyForm2) == 0x20, "");
+static_assert(sizeof(GfMenuObjPartyForm2::MainListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjPartyForm2::DrDetailListener, m_menuObjPartyForm2) == 0x20, "");
 static_assert(sizeof(GfMenuObjPartyForm2::DrDetailListener) == 0x28, "");
-static_assert(offsetof(GfMenuObjPartyForm2::FieldSkillListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjPartyForm2::FieldSkillListener, m_menuObjPartyForm2) == 0x20, "");
 static_assert(sizeof(GfMenuObjPartyForm2::FieldSkillListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjPartyForm2::DrSelListener, m_menuObjPartyForm2) == 0x20, "");
+static_assert(sizeof(GfMenuObjPartyForm2::DrSelListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjPartyForm2, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjPartyForm2, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjPartyForm2, unknown38) == 0x38, "");
@@ -106,7 +130,7 @@ static_assert(offsetof(GfMenuObjPartyForm2, unknown2fc) == 0x2fc, "");
 static_assert(offsetof(GfMenuObjPartyForm2, unknown300) == 0x300, "");
 static_assert(offsetof(GfMenuObjPartyForm2, unknown304) == 0x304, "");
 static_assert(offsetof(GfMenuObjPartyForm2, unknown308) == 0x308, "");
-static_assert(offsetof(GfMenuObjPartyForm2, unknown310) == 0x310, "");
-static_assert(offsetof(GfMenuObjPartyForm2, unknown318) == 0x318, "");
+static_assert(offsetof(GfMenuObjPartyForm2, m_menuCallContext) == 0x310, "");
+static_assert(offsetof(GfMenuObjPartyForm2, m_menuFieldSkillList) == 0x318, "");
 
 } // namespace gf

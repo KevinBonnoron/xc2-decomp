@@ -52,7 +52,7 @@ void StateFieldWalk::update(GfComBehaviorEnemy *behavior, const fw::UpdateInfo &
     return;
   }
 
-  gmk::GmkRouteNavi *navi = behavior->unknown140.getGmkRouteNavi();
+  gmk::GmkRouteNavi *navi = behavior->m_behaviorEnemyField.getGmkRouteNavi();
   if (navi != nullptr) {
     unknown84 = navi->unknowna0;
   }
@@ -67,7 +67,7 @@ void StateFieldWalk::update(GfComBehaviorEnemy *behavior, const fw::UpdateInfo &
     if (unknown98 <= unknown9c) {
       unknown9c = 0.0f;
       u32 stateId = behavior->getNextFieldStateId();
-      behavior->unknown140.applyFieldMoveSpeed((stateId & ~1) == STATE_ID_UNKNOWN_10 ? GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_2 : GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_1, *behavior);
+      behavior->m_behaviorEnemyField.applyFieldMoveSpeed((stateId & ~1) == STATE_ID_UNKNOWN_10 ? GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_2 : GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_1, *behavior);
     }
   }
 }
@@ -77,10 +77,10 @@ void StateFieldWalk::leave(GfComBehaviorEnemy *behavior, ai::State *next) { beha
 bool StateFieldWalk::has_move_fly_ON() const { return (unknown18 >> 5) & 1; }
 
 bool StateFieldWalk::canLotteryMoveSpeed(GfComBehaviorEnemy &behavior) const {
-  gmk::GmkRouteNavi *navi = behavior.unknown140.getGmkRouteNavi();
+  gmk::GmkRouteNavi *navi = behavior.m_behaviorEnemyField.getGmkRouteNavi();
   bool result = false;
   if (navi != nullptr) {
-    if (navi->unknown28.unknown38 == nullptr) {
+    if (navi->m_gmkAcc.m_aGmkBase == nullptr) {
       result = false;
     } else {
       result = unknown18 == 0;
@@ -91,14 +91,14 @@ bool StateFieldWalk::canLotteryMoveSpeed(GfComBehaviorEnemy &behavior) const {
 }
 
 void StateFieldWalk::updateRouteNavi(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info) {
-  gmk::GmkRouteNavi *navi = behavior.unknown140.getGmkRouteNavi();
+  gmk::GmkRouteNavi *navi = behavior.m_behaviorEnemyField.getGmkRouteNavi();
   if (navi != nullptr) {
     const mm::Vec3 &position = behavior.getTransform().unknown00;
-    validateGmkRouteNaviConsideringGfLocalSteer(*navi, behavior.unknown140.unknown200, position);
+    validateGmkRouteNaviConsideringGfLocalSteer(*navi, behavior.m_behaviorEnemyField.m_fieldLocalSteer, position);
     gmk::GmkRouteNavi::UpdateInfo updateInfo;
     updateInfo.position = position;
     navi->update(updateInfo);
-    behavior.unknown140.unknownc0 = navi->unknown90;
+    behavior.m_behaviorEnemyField.unknownc0 = navi->unknown90;
   }
 }
 
@@ -112,7 +112,7 @@ void StateFieldWalk::enter(GfComBehaviorEnemy *behavior, ai::State *previous) {
     gmk::GmkRoutedEnemy *routedEnemy = static_cast<gmk::GmkRoutedEnemy *>(gmkInst);
     if (!routedEnemy->isClosed() && (routedEnemy->getData()->unknown0c & gmk::GmkRoute::FLAG_UNKNOWN_3)) {
       unknown19 = true;
-      gmk::GmkRouteNavi *navi = behavior->unknown140.getGmkRouteNavi();
+      gmk::GmkRouteNavi *navi = behavior->m_behaviorEnemyField.getGmkRouteNavi();
       seq = navi != nullptr && routedEnemy->isPopPointRouteEnd(*navi) ? &StateFieldWalk::seqIdleInfinit : &StateFieldWalk::seqInitGoalPos;
     }
   }
@@ -143,7 +143,7 @@ void StateFieldWalk::seqWaitSpecialEndAtRoutePoint(GfComBehaviorEnemy &behavior,
 void StateFieldWalk::validateMoveSpeed(GfComBehaviorEnemy &behavior) {
   u32 moveSpeed = 1;
   if (has_move_fly_ON()) {
-    f32 pitch = behavior.unknown140.unknown5268.unknown28;
+    f32 pitch = behavior.m_behaviorEnemyField.m_fieldPitchRollController.unknown28;
     if (pitch > 5.0f * mm::DEG_TO_RAD) {
       moveSpeed = 3;
     }
@@ -158,18 +158,18 @@ void StateFieldWalk::validateMoveSpeed(GfComBehaviorEnemy &behavior) {
     switch (moveSpeed) {
     case 1: {
       GfBehaviorEnemyField::MoveSpeed speed = GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_1;
-      if ((unknown08 & ~1) == STATE_ID_UNKNOWN_10) {
+      if ((m_state & ~1) == STATE_ID_UNKNOWN_10) {
         speed = GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_2;
       }
 
-      behavior.unknown140.applyFieldMoveSpeed(speed, behavior);
+      behavior.m_behaviorEnemyField.applyFieldMoveSpeed(speed, behavior);
       break;
     }
     case 2:
-      behavior.unknown140.applyFieldMoveSpeed(STATE_ID_UNKNOWN_9, behavior);
+      behavior.m_behaviorEnemyField.applyFieldMoveSpeed(STATE_ID_UNKNOWN_9, behavior);
       break;
     case 3:
-      behavior.unknown140.applyFieldMoveSpeed(STATE_ID_UNKNOWN_11, behavior);
+      behavior.m_behaviorEnemyField.applyFieldMoveSpeed(STATE_ID_UNKNOWN_11, behavior);
       break;
     }
   }
@@ -179,14 +179,14 @@ void StateFieldWalk::seqWaitTurnEnd(GfComBehaviorEnemy &behavior, const fw::Upda
   if (behavior.unknown53f0.unknown6c) {
     unknown20.create(TFieldExecCmd<GfComAsm>::CreateInfo(static_cast<GfObj *>(behavior.unknown08)->unknownf8, "C_move"));
     unknown58 = &StateFieldWalk::seqUpdateMove;
-    behavior.unknown140.applyFieldMoveSpeed(
-        GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_0, (unknown08 & ~1) == STATE_ID_UNKNOWN_10 ? GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_2 : GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_1, behavior);
+    behavior.m_behaviorEnemyField.applyFieldMoveSpeed(
+        GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_0, (m_state & ~1) == STATE_ID_UNKNOWN_10 ? GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_2 : GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_1, behavior);
   }
 }
 
 void StateFieldWalk::seqInitGoalPos(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info) {
   updateRouteNavi(behavior, info);
-  if (behavior.unknown140.isArrivedToGoal()) {
+  if (behavior.m_behaviorEnemyField.isArrivedToGoal()) {
     unknown20.create(TFieldExecCmd<GfComAsm>::CreateInfo(static_cast<GfObj *>(behavior.unknown08)->unknownf8, "C_move"));
     unknown58 = &StateFieldWalk::seqUpdateMove;
   } else {
@@ -198,11 +198,11 @@ void StateFieldWalk::seqInitGoalPos(GfComBehaviorEnemy &behavior, const fw::Upda
 void StateFieldWalk::pollToShiftLandingSeq(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info) {
   GfComAsm *comAsm = behavior.unknown08->getComponent<GfComAsm>();
   if (comAsm != nullptr && behavior.isFly()) {
-    gmk::GmkRouteNavi *navi = behavior.unknown140.getGmkRouteNavi();
-    if (navi != nullptr && unknown90 == 6 && navi->unknown28.unknown38 != nullptr) {
+    gmk::GmkRouteNavi *navi = behavior.m_behaviorEnemyField.getGmkRouteNavi();
+    if (navi != nullptr && unknown90 == 6 && navi->m_gmkAcc.m_aGmkBase != nullptr) {
       mm::Vec3 position;
       if (navi->getRoute()->getRoutePointPos(position, unknown84)) {
-        behavior.unknown140.unknownc0 = position;
+        behavior.m_behaviorEnemyField.unknownc0 = position;
         if (navi->isArrived(position, behavior.getTransform().unknown00)) {
           unknown20.create(TFieldExecCmd<GfComAsm>::CreateInfo(static_cast<GfObj *>(behavior.unknown08)->unknownf8, "C_idle"));
           unknown58 = &StateFieldWalk::seqWaitToIdle;
@@ -226,7 +226,7 @@ void StateFieldWalk::seqUpdateMove(GfComBehaviorEnemy &behavior, const fw::Updat
   }
 
   updateRouteNavi(behavior, info);
-  gmk::GmkRouteNavi *navi = behavior.unknown140.getGmkRouteNavi();
+  gmk::GmkRouteNavi *navi = behavior.m_behaviorEnemyField.getGmkRouteNavi();
   if (navi != nullptr && unknown84 != navi->unknowna0) {
     const gmk::GmkRoute *route = navi->getRoute();
     if (!unknown19) {
@@ -254,7 +254,7 @@ void StateFieldWalk::seqUpdateMove(GfComBehaviorEnemy &behavior, const fw::Updat
   }
 
   pollToShiftLandingSeq(behavior, info);
-  behavior.unknown140.moveToGoal(info.unknown04);
+  behavior.m_behaviorEnemyField.moveToGoal(info.unknown04);
 }
 
 void StateFieldWalk::seqWaitTurnEndAtRoutePoint(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info) {
@@ -294,7 +294,7 @@ void StateFieldWalk::seqWaitSyncLoco(GfComBehaviorEnemy &behavior, const fw::Upd
         return;
       }
 
-      gmk::GmkRouteNavi *navi = behavior.unknown140.getGmkRouteNavi();
+      gmk::GmkRouteNavi *navi = behavior.m_behaviorEnemyField.getGmkRouteNavi();
       if (navi != nullptr) {
         navi->updateNextPos();
       }
@@ -310,8 +310,8 @@ void StateFieldWalk::seqWaitToIdle(GfComBehaviorEnemy &behavior, const fw::Updat
   if (unknown20.unknown34) {
     unknown20.create(TFieldExecCmd<GfComAsm>::CreateInfo(static_cast<GfObj *>(behavior.unknown08)->unknownf8, "C_specialA_00"));
     unknown58 = &StateFieldWalk::seqMoveToBeginLanding;
-    behavior.unknown140.unknown5268.unknown30 = true;
-    behavior.unknown140.unknown1d0.setSpeedKmph(behavior.unknown140.unknown1d0.unknown08, 0.0f);
+    behavior.m_behaviorEnemyField.m_fieldPitchRollController.unknown30 = true;
+    behavior.m_behaviorEnemyField.m_enemyFieldMoveSpeed.setSpeedKmph(behavior.m_behaviorEnemyField.m_enemyFieldMoveSpeed.unknown08, 0.0f);
   }
 }
 

@@ -43,8 +43,8 @@ void CamInterface::setRoll(f32 roll) {
 void CamInterface::setFov(f32 fov) { this->m_fov = fov; }
 
 void CamInterface::setNearFar(f32 nearClip, f32 farClip) {
-  this->unknown30 = nearClip;
-  this->unknown34 = farClip;
+  this->m_nearClip = nearClip;
+  this->m_farClip = farClip;
 }
 
 } // namespace event

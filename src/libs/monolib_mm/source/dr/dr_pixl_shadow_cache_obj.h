@@ -40,7 +40,7 @@ public:
   s16 unknown8f0;       // Inferred role: id; original member name unknown. Signed: DrResMdoSeamWrkInst::seachShadowInstMapRender loads it with ldrsh.
   s16 unknown8f2;       // Inferred role: id; original member name unknown.
   u8 _8f4[0x900 - 0x8f4];
-  DrCalcClipWorkPlane unknown900; // Inferred role: clip work; original member name unknown.
+  DrCalcClipWorkPlane m_drCalcClipWorkPlane; // Inferred role: clip work; original member name unknown.
 };
 
 static_assert(offsetof(DrPixlShadowCacheObj, unknown800) == 0x800, "");
@@ -53,6 +53,6 @@ static_assert(offsetof(DrPixlShadowCacheObj, unknown8e0) == 0x8e0, "");
 static_assert(offsetof(DrPixlShadowCacheObj, unknown8e4) == 0x8e4, "");
 static_assert(offsetof(DrPixlShadowCacheObj, unknown8e8) == 0x8e8, "");
 static_assert(offsetof(DrPixlShadowCacheObj, unknown8f2) == 0x8f2, "");
-static_assert(offsetof(DrPixlShadowCacheObj, unknown900) == 0x900, "");
+static_assert(offsetof(DrPixlShadowCacheObj, m_drCalcClipWorkPlane) == 0x900, "");
 
 } // namespace ml

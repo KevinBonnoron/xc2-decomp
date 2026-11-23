@@ -24,6 +24,16 @@ void ShpereCollObj::calc(anm::Pose &pose) {
   unknown10 = world + mm::Vec3(transform.unknown00.x, transform.unknown00.y, transform.unknown00.z);
 }
 
+void CapsuleCollObj::calc(anm::Pose &pose) {
+  const anm::QsTransform &transform = pose.getBoneModelSpace(unknown30);
+  mm::Vec3 localPosition(unknown00->unknown20.x, unknown00->unknown20.y, unknown00->unknown20.z);
+  mm::Vec3 worldPosition = transform.unknown10.rotate(localPosition);
+  mm::Vec3 center = worldPosition + mm::Vec3(transform.unknown00.x, transform.unknown00.y, transform.unknown00.z);
+  unknown20 = mm::Quat::mul(unknown00->unknown30, transform.unknown10).rotate(mm::Vec3::unitY);
+  f32 half = unknown00->unknown44 * 0.5f;
+  unknown10 = center - unknown20 * half;
+}
+
 bool ShpereCollObj::detect(f32 radius, const mm::Vec3 &position, mm::Vec3 *normal) const {
   mm::Vec3 direction = position - unknown10;
   f32 distance = sqrtf(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z);
@@ -48,6 +58,21 @@ CollisionObject::CollisionObject(const ResCollisionArray &collisions, anm::Pose 
 CollisionObject::~CollisionObject() { anm::unknown001(unknowna0); }
 
 void CollisionObject::update() { unknown18.update(*unknowna0); }
+
+void CollionArray::update(anm::Pose &pose) {
+  if (!unknown80) {
+    return;
+  }
+  for (u32 i = 0; i < unknown08.size(); i++) {
+    unknown08[i].calc(pose);
+  }
+  for (u32 i = 0; i < unknown30.size(); i++) {
+    unknown30[i].calc(pose);
+  }
+  for (u32 i = 0; i < unknown58.size(); i++) {
+    unknown58[i].calc(pose);
+  }
+}
 
 } // namespace skd
 

@@ -59,7 +59,7 @@ public:
   static COLITEST s_pColiTest[5];
 
   const u8 *unknown00;                   // Inferred role: data; original member name unknown.
-  const _IBLPrimHeader *unknown08;       // Inferred role: primitives; original member name unknown.
+  const _IBLPrimHeader *m_iBLPrimHeader; // Inferred role: primitives; original member name unknown.
   const _EnvColiListTreeData *unknown10; // Inferred role: collision tree; original member name unknown.
   const _EnvColiListTreeData *unknown18; // Inferred role: invalid collision tree; original member name unknown.
   u16 unknown20;                         // Inferred role: current priority; original member name unknown.
@@ -67,7 +67,7 @@ public:
   mm::mtl::ReservedBitflag unknown28; // Inferred role: invalid textures; original member name unknown.
 };
 
-static_assert(offsetof(DrIBLColiAcc, unknown08) == 0x08, "");
+static_assert(offsetof(DrIBLColiAcc, m_iBLPrimHeader) == 0x08, "");
 static_assert(offsetof(DrIBLColiAcc, unknown10) == 0x10, "");
 static_assert(offsetof(DrIBLColiAcc, unknown18) == 0x18, "");
 static_assert(offsetof(DrIBLColiAcc, unknown20) == 0x20, "");

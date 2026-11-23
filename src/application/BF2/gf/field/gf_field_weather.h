@@ -78,17 +78,17 @@ public:
   static void update(const fw::UpdateInfo &info);
 
 private:
-  bool unknown08; // Inferred role: initialized; original member name unknown.
-  bool unknown09; // Inferred role: is infinite time; original member name unknown.
-  bool unknown0a; // Inferred role: is weather update enabled, set when a map jump destroys the field; original member name unknown.
+  bool unknown08;      // Inferred role: initialized; original member name unknown.
+  bool m_infiniteTime; // Inferred role: is infinite time; named after the game accessor gf::GfFieldWeather::isInfiniteTime.
+  bool unknown0a;      // Inferred role: is weather update enabled, set when a map jump destroys the field; original member name unknown.
   u8 _0b[0x10 - 0x0b];
-  mm::mtl::FixedQueue<GEV, 16> unknown10; // Inferred role: events; original member name unknown.
-  MapjumpCallbackInfo unknown60;          // Inferred role: mapjump info; original member name unknown.
-  WEATHERID unknown74;                    // Inferred role: temp weather of the game env applied last; original member name unknown.
-  CLOUD_SEA_HANDLE unknown78;             // Inferred role: cloud sea default; original member name unknown.
-  CLOUD_SEA_REQUEST unknown7c;            // Inferred role: cloud sea request; original member name unknown.
-  CLOUD_SEA_HANDLE unknown80;             // Inferred role: cloud sea condition; original member name unknown.
-  bool unknown84;                         // Inferred role: is disp weather; original member name unknown.
+  mm::mtl::FixedQueue<GEV, 16> unknown10;    // Inferred role: events; original member name unknown.
+  MapjumpCallbackInfo m_mapjumpCallbackInfo; // Inferred role: mapjump info; original member name unknown.
+  WEATHERID unknown74;                       // Inferred role: temp weather of the game env applied last; original member name unknown.
+  CLOUD_SEA_HANDLE unknown78;                // Inferred role: cloud sea default; original member name unknown.
+  CLOUD_SEA_REQUEST unknown7c;               // Inferred role: cloud sea request; original member name unknown.
+  CLOUD_SEA_HANDLE unknown80;                // Inferred role: cloud sea condition; original member name unknown.
+  bool unknown84;                            // Inferred role: is disp weather; original member name unknown.
 };
 
 static_assert(sizeof(GfFieldWeather) == 0x88, "");

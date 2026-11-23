@@ -12,8 +12,8 @@ namespace layer {
 
 LayerObjWork::LayerObjWork() {
   unknown2ac = 0;
-  unknown278 = nullptr;
-  unknown270 = nullptr;
+  m_layerTextureObj = nullptr;
+  m_layerVertexObj = nullptr;
   unknown298 = nullptr;
   unknown290 = nullptr;
   unknown2a0 = 1.0f;
@@ -22,48 +22,48 @@ LayerObjWork::LayerObjWork() {
   unknown2a8 = 0;
   unknown2b8 = 0.0f;
   unknown280 = nullptr;
-  unknown288 = 0;
+  m_textureMax = 0;
   unknown2b0 = nullptr;
 }
 
-f32 LayerObjWork::getMaxSecond() const { return unknown298->unknown00->unknown18 * unknown298->unknown00->unknown1c * LayerManager::get()->unknown7c; }
+f32 LayerObjWork::getMaxSecond() const { return unknown298->unknown00->unknown18 * unknown298->unknown00->unknown1c * LayerManager::get()->m_frameRate; }
 
-f32 LayerObjWork::getSecond() const { return unknown2b0->unknown00 * LayerManager::get()->unknown7c; }
+f32 LayerObjWork::getSecond() const { return unknown2b0->m_second * LayerManager::get()->m_frameRate; }
 
-void LayerObjWork::setSecond(f32 second) { unknown2b0->unknown00 = LayerManager::get()->unknown80 * second; }
+void LayerObjWork::setSecond(f32 second) { unknown2b0->m_second = LayerManager::get()->unknown80 * second; }
 
 void LayerObjWork::setAddTexture(const void *data, u32 index) {
   ml::CS lock(LayerObjManager::getCriticalSection());
   resetAddTexutre(index);
-  unknown2c0.setAddTexture(data, index);
+  m_layerObjResTex.setAddTexture(data, index);
 }
 
-void LayerObjWork::resetAddTexutre(u32 index) { unknown2c0.resetAddTexutre(index); }
+void LayerObjWork::resetAddTexutre(u32 index) { m_layerObjResTex.resetAddTexutre(index); }
 
 void LayerObjWork::setAddTexture(grlib::CGLibTextureBuffer &texture, u32 index) {
   ml::CS lock(LayerObjManager::getCriticalSection());
   resetAddTexutre(index);
-  unknown2c0.setAddTexture(texture, index);
+  m_layerObjResTex.setAddTexture(texture, index);
 }
 
-void LayerObjWork::resetAddAllTexutre() { unknown2c0.resetAddAllTexutre(); }
+void LayerObjWork::resetAddAllTexutre() { m_layerObjResTex.resetAddAllTexutre(); }
 
 void LayerObjWork::workCreate() {
-  u32 offset = static_cast<const unknown013 *>(unknownb8)->unknown10;
+  u32 offset = static_cast<const unknown013 *>(m_resData)->unknown10;
   if (offset != 0) {
-    unknown270 = LayerManager::get()->unknown58->unknown38->createVertexObj(static_cast<const u8 *>(unknownb8) + offset);
+    m_layerVertexObj = LayerManager::get()->m_layerShdManager->m_layerVertexMan->createVertexObj(static_cast<const u8 *>(m_resData) + offset);
   }
 }
 
 void LayerObjWork::workRelease() {
-  unknown2c0.clear();
-  if (unknown270 != nullptr) {
-    unknown270->release();
-    unknown270 = nullptr;
+  m_layerObjResTex.clear();
+  if (m_layerVertexObj != nullptr) {
+    m_layerVertexObj->release();
+    m_layerVertexObj = nullptr;
   }
-  if (unknown278 != nullptr) {
-    unknown278->release();
-    unknown278 = nullptr;
+  if (m_layerTextureObj != nullptr) {
+    m_layerTextureObj->release();
+    m_layerTextureObj = nullptr;
   }
   if (unknown290 != nullptr) {
     mtl::MemManager::deallocate(unknown290, 0, false);
@@ -72,16 +72,16 @@ void LayerObjWork::workRelease() {
 }
 
 void LayerObjWork::setupDefTexList() {
-  for (s32 i = 0; i < static_cast<s32>(unknown288); i++) {
-    unknown280[i] = unknown278->getTexture(i);
+  for (s32 i = 0; i < static_cast<s32>(m_textureMax); i++) {
+    unknown280[i] = m_layerTextureObj->getTexture(i);
   }
 }
 
-void LayerObjWork::updapteAddTexList() { unknown2c0.updateTexutre(unknown280, unknown278); }
+void LayerObjWork::updapteAddTexList() { m_layerObjResTex.updateTexutre(unknown280, m_layerTextureObj); }
 
 void LayerObjWork::calcFrmParm(s32 count) {
   for (s32 i = 0; i < count; i++) {
-    unknown2b0[i].unknown00 = 0.0f;
+    unknown2b0[i].m_second = 0.0f;
     unknown2b0[i].unknown04 = 0;
   }
   unknown298->unknown80 = static_cast<f32>(unknown298->unknown00->unknown18);

@@ -27,7 +27,7 @@ public:
   void bind(IKFootGroundInterface &ground);
   ~PlaneRayCaster() override {}
 
-  IKFootGroundInterface *unknown08; // Inferred role: ground interface; original member name unknown.
+  IKFootGroundInterface *m_iKFootGroundInterface; // Inferred role: ground interface; original member name unknown.
 };
 
 // Evidence: the vtable of the game is 0x20 bytes (two virtual functions, no virtual destructor),
@@ -39,12 +39,12 @@ public:
   virtual const mm::Vec3 *getHitPos() const = 0;
   ~IKFootGroundInterface() {}
 
-  PlaneRayCaster unknown08; // Inferred role: ray caster; original member name unknown.
+  PlaneRayCaster m_planeRayCaster; // Inferred role: ray caster; original member name unknown.
 };
 
-static_assert(offsetof(PlaneRayCaster, unknown08) == 0x08, "");
+static_assert(offsetof(PlaneRayCaster, m_iKFootGroundInterface) == 0x08, "");
 static_assert(sizeof(PlaneRayCaster) == 0x10, "");
-static_assert(offsetof(IKFootGroundInterface, unknown08) == 0x08, "");
+static_assert(offsetof(IKFootGroundInterface, m_planeRayCaster) == 0x08, "");
 static_assert(sizeof(IKFootGroundInterface) == 0x18, "");
 
 } // namespace fw

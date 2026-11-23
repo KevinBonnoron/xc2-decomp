@@ -50,12 +50,12 @@ public:
   mm::mtl::Delegate<bool(u32)> unknown30; // Inferred role: updater; original member name unknown.
   u32 unknown50;                          // Inferred role: event theater id; original member name unknown.
   u8 _54[0x58 - 0x54];
-  IConverter *unknown58; // Inferred role: converter; original member name unknown.
+  IConverter *m_iConverter; // Inferred role: converter; original member name unknown.
 };
 
 static_assert(offsetof(GfMenuEvTherterAdapter, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuEvTherterAdapter, unknown50) == 0x50, "");
-static_assert(offsetof(GfMenuEvTherterAdapter, unknown58) == 0x58, "");
+static_assert(offsetof(GfMenuEvTherterAdapter, m_iConverter) == 0x58, "");
 static_assert(sizeof(GfMenuEvTherterAdapter) == 0x60, "");
 
 } // namespace gf

@@ -31,14 +31,14 @@ public:
     bool isValid() const;
     void validate(const GmkRoute &route);
 
-    int unknown00;         // Inferred role: gmk set id; original member name unknown.
-    GmkType unknown04;     // Inferred role: type; original member name unknown.
-    u32 unknown08;         // Inferred role: index; original member name unknown.
-    f32 unknown0c;         // Inferred role: width ratio; original member name unknown.
-    f32 unknown10;         // Inferred role: arrive dist; original member name unknown.
-    f32 unknown14;         // Inferred role: arrive height; original member name unknown.
-    u32 unknown18;         // Inferred role: curve division num; original member name unknown.
-    InitResult *unknown20; // Inferred role: init result; original member name unknown.
+    int unknown00;            // Inferred role: gmk set id; original member name unknown.
+    GmkType unknown04;        // Inferred role: type; original member name unknown.
+    u32 unknown08;            // Inferred role: index; original member name unknown.
+    f32 unknown0c;            // Inferred role: width ratio; original member name unknown.
+    f32 unknown10;            // Inferred role: arrive dist; original member name unknown.
+    f32 unknown14;            // Inferred role: arrive height; original member name unknown.
+    u32 unknown18;            // Inferred role: curve division num; original member name unknown.
+    InitResult *m_initResult; // Inferred role: init result; original member name unknown.
   };
 
   explicit GmkRouteNavi(const CreateInfo *info = nullptr);
@@ -64,12 +64,12 @@ public:
   void seqUpdateOnLine(const UpdateInfo &info);
   static const GmkRoute *findGmkRouteByBdatId(GmkType type, int bdatId);
 
-  bool isValid() const { return unknown00.isValid() && unknown28.unknown38 != nullptr && unknown28.unknown38->isValid(); }
-  const GmkRoute *getRoute() const { return static_cast<const GmkRoute *>(unknown28.unknown38); }
+  bool isValid() const { return m_createInfo.isValid() && m_gmkAcc.m_aGmkBase != nullptr && m_gmkAcc.m_aGmkBase->isValid(); }
+  const GmkRoute *getRoute() const { return static_cast<const GmkRoute *>(m_gmkAcc.m_aGmkBase); }
   int getPointStep() const { return unknowna4 ? -1 : 1; }
 
-  CreateInfo unknown00;                                    // Inferred role: create info; original member name unknown.
-  GmkAcc unknown28;                                        // Inferred role: acc; original member name unknown.
+  CreateInfo m_createInfo;                                 // Inferred role: create info; original member name unknown.
+  GmkAcc m_gmkAcc;                                         // Inferred role: acc; original member name unknown.
   f32 unknown68;                                           // Inferred role: arrive dist; original member name unknown.
   f32 unknown6c;                                           // Inferred role: arrive height; original member name unknown.
   void (GmkRouteNavi::*unknown70)(const UpdateInfo &info); // Inferred role: seq; original member name unknown.
@@ -82,7 +82,7 @@ public:
 };
 
 static_assert(sizeof(GmkRouteNavi::CreateInfo) == 0x28, "");
-static_assert(offsetof(GmkRouteNavi, unknown28) == 0x28, "");
+static_assert(offsetof(GmkRouteNavi, m_gmkAcc) == 0x28, "");
 static_assert(offsetof(GmkRouteNavi, unknown68) == 0x68, "");
 static_assert(offsetof(GmkRouteNavi, unknown70) == 0x70, "");
 static_assert(offsetof(GmkRouteNavi, unknown80) == 0x80, "");

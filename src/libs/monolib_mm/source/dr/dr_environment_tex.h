@@ -17,7 +17,7 @@ public:
   grlib::CGLibTextureBuffer *getTexture(int index);
   void releaseTexture();
 
-  grlib::CGLibTextureBuffer *unknown00; // Inferred role: textures; original member name unknown.
+  grlib::CGLibTextureBuffer *m_texture; // Inferred role: textures; named after the game accessor ml::DrEnvironmentTex::getTexture.
   s32 unknown08;                        // Inferred role: texture count; original member name unknown.
 };
 

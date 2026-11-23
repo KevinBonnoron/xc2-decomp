@@ -74,8 +74,8 @@ void GfComBehaviorNpc::BdatInfo::create(const CBdatWrapper &bdat, int id, const 
   unknown08 = static_cast<f32>(static_cast<u16>(bdat.getValCheck("MoveSpeed", id, gmk::BDAT_TYPE_UNKNOWN_2)));
   u16 reactionRange = bdat.getValCheck("ReactionRange", id, gmk::BDAT_TYPE_UNKNOWN_2);
   unknown0c = static_cast<f32>(reactionRange * reactionRange);
-  unknown10 = bdat.getValCheck("ReactionPercent", id, gmk::BDAT_TYPE_UNKNOWN_2);
-  unknown12 = bdat.getValCheck("ReactionMot", id, gmk::BDAT_TYPE_UNKNOWN_2);
+  unknown10_0 = bdat.getValCheck("ReactionPercent", id, gmk::BDAT_TYPE_UNKNOWN_2);
+  unknown12_0 = bdat.getValCheck("ReactionMot", id, gmk::BDAT_TYPE_UNKNOWN_2);
   unknown14 = bdat.getValCheck("BattleReaction", id, gmk::BDAT_TYPE_UNKNOWN_2);
   unknown16 = bdat.getValCheck("BattleMot", id, gmk::BDAT_TYPE_UNKNOWN_2);
 
@@ -126,14 +126,14 @@ void GfComBehaviorNpc::procMsgPcFieldNotifyAction(fw::MessageObject *sender, Msg
   case 0:
     if (!unknown100 && GfGameManager::isTalkOK() && getStateId() != npc::STATE_ID_UNKNOWN_6) {
       unknown100 = true;
-      unknown220.unknown20 = false;
+      m_gameDepopMeter.unknown20 = false;
       setStateId(npc::STATE_ID_UNKNOWN_6);
     }
     break;
   case 1:
     if (unknown100) {
       unknown100 = false;
-      unknown220.unknown20 = true;
+      m_gameDepopMeter.unknown20 = true;
     }
     break;
   }
@@ -223,7 +223,7 @@ void GfComBehaviorNpc::procMsgObjectGetVelocity(fw::MessageObject *sender, MsgOb
 gmk::GmkRouteNavi *GfComBehaviorNpc::getGmkRouteNavi() const {
   gmk::AGmkBase *gmk = getBindedGmkInst();
   if (gmk != nullptr && gmk->getGmkType() == gmk::GMK_TYPE_ROUTED_NPC) {
-    return static_cast<gmk::GmkRoutedNpc *>(gmk)->unknown70;
+    return static_cast<gmk::GmkRoutedNpc *>(gmk)->m_gmkRouteNavi;
   }
 
   return nullptr;
@@ -263,13 +263,13 @@ fw::ColiMoveObject *GfComBehaviorNpc::getColiObject() const {
 void GfComBehaviorNpc::disposeFsm() {
   if (!unknown190) {
     unknown190 = true;
-    unknown108.cleanup();
+    m_hfsm.cleanup();
   }
 }
 
 u32 GfComBehaviorNpc::getStateId() const {
-  if (unknown108.m_pState != nullptr) {
-    return unknown108.m_pState->unknown08;
+  if (m_hfsm.m_pState != nullptr) {
+    return m_hfsm.m_pState->m_state;
   }
 
   return ai::INVALID_STATE_ID;
@@ -282,7 +282,7 @@ void GfComBehaviorNpc::setStateId(npc::STATE_ID stateId) {
 }
 
 void GfComBehaviorNpc::initStateId(npc::STATE_ID stateId) {
-  unknown108.setState(stateId);
+  m_hfsm.setState(stateId);
   validateLocalSteer(stateId);
 }
 
@@ -292,15 +292,15 @@ void GfComBehaviorNpc::validateLocalSteer(npc::STATE_ID stateId) {
   info.unknown0c = 1.0f;
   info.unknown10 = 0.5f;
   info.unknown14 = true;
-  info.unknown00 = static_cast<GfObj *>(unknown08)->unknownf8;
-  info.unknown18 = stateId == npc::STATE_ID_UNKNOWN_3 ? &unknown53b0 : nullptr;
-  unknown350.create(info);
+  info.m_GF_OBJ_HANDLE = static_cast<GfObj *>(unknown08)->unknownf8;
+  info.unknown18 = stateId == npc::STATE_ID_UNKNOWN_3 ? &m_localSteerIsTargetNotPlayer : nullptr;
+  m_fieldLocalSteer.create(info);
 }
 
 void GfComBehaviorNpc::disposeMenuObj() {
-  if (unknown1b0 != nullptr) {
-    GfMenuObjTargetInfo::close(unknown1b0);
-    mm::mtl::safeRelease(unknown1b0);
+  if (m_menuCallContext != nullptr) {
+    GfMenuObjTargetInfo::close(m_menuCallContext);
+    mm::mtl::safeRelease(m_menuCallContext);
   }
 }
 
@@ -313,15 +313,15 @@ void GfComBehaviorNpc::setActivateCollison(bool isActivate) {
 
 void GfComBehaviorNpc::createFsm() {
   disposeFsm();
-  unknown108.beginSetup(this, 7, 1);
-  unknown108.registerState<npc::StateIdle>(npc::STATE_ID_UNKNOWN_0, -1);
-  unknown108.registerState<npc::StateWalk>(npc::STATE_ID_UNKNOWN_1, -1);
-  unknown108.registerState<npc::StateAreaMove<GfComBehaviorNpc>>(npc::STATE_ID_UNKNOWN_2, -1);
-  unknown108.registerState<npc::StateApproachPc>(npc::STATE_ID_UNKNOWN_3, -1);
-  unknown108.registerState<npc::StateReaction<GfComBehaviorNpc>>(npc::STATE_ID_UNKNOWN_4, -1);
-  unknown108.registerState<npc::StateBattle<GfComBehaviorNpc>>(npc::STATE_ID_UNKNOWN_5, -1);
-  unknown108.registerState<npc::StateTalk>(npc::STATE_ID_UNKNOWN_6, -1);
-  unknown108.endSetup();
+  m_hfsm.beginSetup(this, 7, 1);
+  m_hfsm.registerState<npc::StateIdle>(npc::STATE_ID_UNKNOWN_0, -1);
+  m_hfsm.registerState<npc::StateWalk>(npc::STATE_ID_UNKNOWN_1, -1);
+  m_hfsm.registerState<npc::StateAreaMove<GfComBehaviorNpc>>(npc::STATE_ID_UNKNOWN_2, -1);
+  m_hfsm.registerState<npc::StateApproachPc>(npc::STATE_ID_UNKNOWN_3, -1);
+  m_hfsm.registerState<npc::StateReaction<GfComBehaviorNpc>>(npc::STATE_ID_UNKNOWN_4, -1);
+  m_hfsm.registerState<npc::StateBattle<GfComBehaviorNpc>>(npc::STATE_ID_UNKNOWN_5, -1);
+  m_hfsm.registerState<npc::StateTalk>(npc::STATE_ID_UNKNOWN_6, -1);
+  m_hfsm.endSetup();
   unknown190 = false;
 }
 
@@ -335,9 +335,9 @@ void GfComBehaviorNpc::createNaviMeshObj() {
 }
 
 GfComBehaviorNpc::GfComBehaviorNpc()
-    : unknown98(), unknownb8(nullptr), unknownc0(mm::Vec3::zero), unknownd0(mm::Quat::identity), unknowne0(1.0e12f), unknowne4(1.0e12f), unknownf0(mm::Vec3::zero), unknown100(false),
-      unknown101(false), unknown108(fw::Allocator::getProcAllocator()), unknown190(true), unknown198(nullptr), unknown1a0(), unknown1b0(nullptr), unknown1b8(), unknown1c0(nullptr),
-      unknown220(nullptr), unknown270(nullptr), unknown2a0(unknown020) {
+    : m_bdatInfo(), unknownb8(nullptr), unknownc0(mm::Vec3::zero), unknownd0(mm::Quat::identity), unknowne0(1.0e12f), unknowne4(1.0e12f), unknownf0(mm::Vec3::zero), unknown100(false),
+      unknown101(false), m_hfsm(fw::Allocator::getProcAllocator()), unknown190(true), unknown198(nullptr), m_listener(), m_menuCallContext(nullptr), unknown1b8(), m_gameStuckMeter(nullptr),
+      m_gameDepopMeter(nullptr), m_fieldMoveSpeed(nullptr), m_fieldLookIk(unknown020) {
   createNaviMeshObj();
 }
 
@@ -359,7 +359,7 @@ void GfComBehaviorNpc::cleanup() {
     }
     unknown1b8 = nullptr;
   }
-  unknown10.cleanup();
+  m_pluginManager.cleanup();
 }
 
 bool GfComBehaviorNpc::recieveMessage(fw::MessageObject *sender, fw::Message &message) {
@@ -402,11 +402,11 @@ bool GfComBehaviorNpc::recieveMessage(fw::MessageObject *sender, fw::Message &me
 
 void GfComBehaviorNpc::setup() {
   cleanup();
-  unknown10.beginSetup(*this, 4);
-  unknown10.unknown001<EyeBlinkPlugin>(1, true);
-  unknown10.unknown001<LipSyncPlugin>(2, true);
-  unknown10.endSetup();
-  Plugin *plugin = unknown10.unknown28[2];
+  m_pluginManager.beginSetup(*this, 4);
+  m_pluginManager.unknown001<EyeBlinkPlugin>(1, true);
+  m_pluginManager.unknown001<LipSyncPlugin>(2, true);
+  m_pluginManager.endSetup();
+  Plugin *plugin = m_pluginManager.unknown28[2];
   if (plugin != nullptr) {
     plugin->setActivate(true);
   }
@@ -418,8 +418,8 @@ void GfComBehaviorNpc::setup() {
   createFsm();
   {
     GfFieldMoveSpeed::CreateInfo moveSpeedInfo;
-    moveSpeedInfo.unknown00 = static_cast<GfObj *>(unknown08)->unknownf8;
-    unknown270.create(moveSpeedInfo);
+    moveSpeedInfo.m_GF_OBJ_HANDLE = static_cast<GfObj *>(unknown08)->unknownf8;
+    m_fieldMoveSpeed.create(moveSpeedInfo);
   }
   validateBindedGmkInstInfo(false);
   fw::ColiMoveObject *coli = getColiObject();
@@ -429,17 +429,17 @@ void GfComBehaviorNpc::setup() {
     stuckInfo.unknown10 = 0.0f;
     stuckInfo.setColiObj(coli);
     stuckInfo.unknown10 = stuckInfo.unknown00 * stuckInfo.unknown00;
-    unknown1c0.create(stuckInfo);
+    m_gameStuckMeter.create(stuckInfo);
   }
   GfGameDepopMeter::CreateInfo depopInfo;
   depopInfo.unknown08 = true;
-  depopInfo.unknown00 = static_cast<GfObj *>(unknown08)->unknownf8;
-  unknown220.create(depopInfo);
+  depopInfo.m_GF_OBJ_HANDLE = static_cast<GfObj *>(unknown08)->unknownf8;
+  m_gameDepopMeter.create(depopInfo);
 }
 
 void GfComBehaviorNpc::update(const fw::UpdateInfo &info) {
   if (!unknown100) {
-    unknown2a0.update(info.unknown04);
+    m_fieldLookIk.update(info.unknown04);
   }
   unknownf0.z = 0.0f;
   unknownf0.x = 0.0f;
@@ -457,42 +457,42 @@ void GfComBehaviorNpc::update(const fw::UpdateInfo &info) {
     delta.y = 0.0f;
     unknowne0 = delta.x * delta.x + delta.y * delta.y + delta.z * delta.z;
   }
-  if (npc::StateBattle<GfComBehaviorNpc>::isCondMatch(*this) && (unknown108.m_pState == nullptr || unknown108.m_pState->unknown08 != npc::STATE_ID_UNKNOWN_5)) {
-    unknown108.setState(npc::STATE_ID_UNKNOWN_5);
+  if (npc::StateBattle<GfComBehaviorNpc>::isCondMatch(*this) && (m_hfsm.m_pState == nullptr || m_hfsm.m_pState->m_state != npc::STATE_ID_UNKNOWN_5)) {
+    m_hfsm.setState(npc::STATE_ID_UNKNOWN_5);
     GfFieldLocalSteer::CreateInfo steerInfo;
     steerInfo.unknown08 = 2.0f;
     steerInfo.unknown0c = 1.0f;
     steerInfo.unknown10 = 0.5f;
     steerInfo.unknown14 = true;
-    steerInfo.unknown00 = static_cast<GfObj *>(unknown08)->unknownf8;
+    steerInfo.m_GF_OBJ_HANDLE = static_cast<GfObj *>(unknown08)->unknownf8;
     steerInfo.unknown18 = nullptr;
-    unknown350.create(steerInfo);
+    m_fieldLocalSteer.create(steerInfo);
   }
-  if (GfGameManager::isBattle() && unknown98.unknown14 == 1) {
+  if (GfGameManager::isBattle() && m_bdatInfo.unknown14 == 1) {
     GfObjAcc acc(static_cast<GfObj *>(unknown08)->unknownf8);
     if (!acc.testFlag(OBJ_FLAG_UNKNOWN_17)) {
       SCOM_DESTROY_GAME_OBJ::create(static_cast<GfObj *>(unknown08)->unknownf8, 1.0f, false);
     }
   }
-  unknown108.update(&info);
+  m_hfsm.update(&info);
   coli = getColiObject();
   if (coli != nullptr) {
     coli->setDir(mm::Vec3(info.unknown04 * unknownf0.x, info.unknown04 * unknownf0.y, info.unknown04 * unknownf0.z));
   }
-  unknown1c0.update(info.unknown04);
+  m_gameStuckMeter.update(info.unknown04);
   unknown2e0.update(info.unknown04);
-  unknown10.update(info);
+  m_pluginManager.update(info);
   if (unknownf0.x != 0.0f && unknownf0.z != 0.0f) {
     GfFieldLocalSteer::UpdateInfo steerUpdate;
     steerUpdate.unknown00 = unknownc0;
     steerUpdate.unknown10 = info.unknown04;
-    unknown350.castRay(unknownc0);
-    unknown350.update(steerUpdate);
+    m_fieldLocalSteer.castRay(unknownc0);
+    m_fieldLocalSteer.update(steerUpdate);
   } else {
-    unknown350.unknown28.unknown10 = 0.0f;
-    unknown350.unknown28.unknown14 = 0.0f;
-    unknown350.unknown28.unknown08 = 0.0f;
-    unknown350.unknown28.unknown0c = 0.0f;
+    m_fieldLocalSteer.unknown28.unknown10 = 0.0f;
+    m_fieldLocalSteer.unknown28.unknown14 = 0.0f;
+    m_fieldLocalSteer.unknown28.unknown08 = 0.0f;
+    m_fieldLocalSteer.unknown28.unknown0c = 0.0f;
   }
   updateNaviMeshObj(info.unknown04);
 }
@@ -507,7 +507,7 @@ void GfComBehaviorNpc::updateNaviMeshObj(f32 deltaTime) {
     const mm::Vec3 &position = getPos();
     unknownb8->setBeginPos(position);
     unknownb8->setEndPos(unknownc0);
-    unknownb8->setMoveSpd(unknown98.unknown08 * deltaTime);
+    unknownb8->setMoveSpd(m_bdatInfo.unknown08 * deltaTime);
   }
 }
 
@@ -540,14 +540,14 @@ void GfComBehaviorNpc::init(bool param1) {
 }
 
 void GfComBehaviorNpc::execTurnCmd(f32 angle) {
-  angle += unknown350.unknown00.unknown00 == unknown020 ? 0.0f : unknown350.getCurAngle();
+  angle += m_fieldLocalSteer.m_createInfo.m_GF_OBJ_HANDLE == unknown020 ? 0.0f : m_fieldLocalSteer.getCurAngle();
   unknown2e0.create(TFieldExecCmdTurn<GfComAsm>::CreateInfo(static_cast<GfObj *>(unknown08)->unknownf8, angle));
 }
 
 void GfComBehaviorNpc::execTurnCmd(f32 angle, f32 param2, f32 param3, f32 param4) {
   TFieldExecCmdTurn<GfComAsm>::CreateInfo info;
   info.unknown00 = static_cast<GfObj *>(unknown08)->unknownf8;
-  info.unknown08 = (unknown350.unknown00.unknown00 == unknown020 ? 0.0f : unknown350.getCurAngle()) + angle;
+  info.unknown08 = (m_fieldLocalSteer.m_createInfo.m_GF_OBJ_HANDLE == unknown020 ? 0.0f : m_fieldLocalSteer.getCurAngle()) + angle;
   info.unknown0c = param3;
   info.unknown14 = param2;
   info.unknown18 = param4;
@@ -557,7 +557,7 @@ void GfComBehaviorNpc::execTurnCmd(f32 angle, f32 param2, f32 param3, f32 param4
 void GfComBehaviorNpc::execTurnCmdToPos(const mm::Vec3 &position) {
   const mm::Vec3 &current = getPos();
   f32 angle = atan2f(position.x - current.x, position.z - current.z);
-  angle += unknown350.unknown00.unknown00 == unknown020 ? 0.0f : unknown350.getCurAngle();
+  angle += m_fieldLocalSteer.m_createInfo.m_GF_OBJ_HANDLE == unknown020 ? 0.0f : m_fieldLocalSteer.getCurAngle();
   unknown2e0.create(TFieldExecCmdTurn<GfComAsm>::CreateInfo(static_cast<GfObj *>(unknown08)->unknownf8, angle));
 }
 
@@ -573,7 +573,7 @@ void GfComBehaviorNpc::execTurnCmdToGoal() {
 }
 
 bool GfComBehaviorNpc::isArrivedToGoal() const {
-  if (unknown350.isTimeOutCollide()) {
+  if (m_fieldLocalSteer.isTimeOutCollide()) {
     return true;
   }
   fw::ColiMoveObject *coli = getColiObject();
@@ -607,6 +607,6 @@ bool GfComBehaviorNpc::isArrivedToGoal() const {
   return false;
 }
 
-void GfComBehaviorNpc::Listener::onWkStandbyLogout() { unknown08->unknown198 = nullptr; }
+void GfComBehaviorNpc::Listener::onWkStandbyLogout() { m_comBehaviorNpc->unknown198 = nullptr; }
 
 } // namespace gf

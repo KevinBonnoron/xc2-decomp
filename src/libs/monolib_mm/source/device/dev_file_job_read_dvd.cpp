@@ -15,18 +15,18 @@ DevFileJobReadDvd::~DevFileJobReadDvd() {
 
 void DevFileJobReadDvd::wkUpdate() {
   if (unknown1fa) {
-    if (unknown1a8 != nullptr) {
-      if (DevFileTh::isLoading(unknown1a8)) {
+    if (m_fileHandleTh != nullptr) {
+      if (DevFileTh::isLoading(m_fileHandleTh)) {
         return;
       }
-      if (unknown1a8->unknown94 & 4) {
-        unknown1a8->call(CBM_UNKNOWN_2);
+      if (m_fileHandleTh->unknown94 & 4) {
+        m_fileHandleTh->call(CBM_UNKNOWN_2);
       } else {
-        unknown1a8->call(CBM_UNKNOWN_4);
+        m_fileHandleTh->call(CBM_UNKNOWN_4);
       }
     }
     unknown1fa = false;
-  } else if (unknown1a8 != nullptr && unknown1a8->m_currentPtr != 0 && unknown1a8->m_currentPtr == unknown1a8->unknown18) {
+  } else if (m_fileHandleTh != nullptr && m_fileHandleTh->m_currentPtr != 0 && m_fileHandleTh->m_currentPtr == m_fileHandleTh->unknown18) {
     // Decision 2026-11-14 #23: a bare accessor call is not original code; the test below gives the same bytes. The game keeps only the
     // singleton null test and the UniquePtr assert of this inlined accessor (0x7100721ae8-0x7100721b14); its result is the constant
     // false, so what the original did with it cannot be seen (`&& !DevFileTh::isSuspend()` at the end of the `else if` condition gives
@@ -37,7 +37,7 @@ void DevFileJobReadDvd::wkUpdate() {
     if (DevFileTh::isSuspend()) {
       return;
     }
-    unknown1a8->call(CBM_UNKNOWN_2);
+    m_fileHandleTh->call(CBM_UNKNOWN_2);
   }
 }
 
@@ -49,8 +49,8 @@ bool DevFileJobReadDvd::wkStandbyLogin() {
 }
 
 bool DevFileJobReadDvd::wkStandbyLogout() {
-  if (unknown1a8 != nullptr) {
-    cancel(unknown1a8);
+  if (m_fileHandleTh != nullptr) {
+    cancel(m_fileHandleTh);
     return false;
   }
   return WorkObj::wkStandbyLogout();

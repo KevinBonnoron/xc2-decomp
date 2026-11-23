@@ -142,7 +142,7 @@ DrResMdoSortCloud::~DrResMdoSortCloud() {}
 void DrResMdoSortCloud::alphaRender() {
   cloud::CloudMan *cloudMan = static_cast<cloud::CloudMan *>(unknown18);
   DrMan *drMan = DrMan::getIns();
-  cloudMan->alphaRender(&drMan->unknown660[drMan->unknown1c98]);
+  cloudMan->alphaRender(&drMan->m_iDrDrawWorkInfo[drMan->unknown1c98]);
 }
 
 } // namespace ml

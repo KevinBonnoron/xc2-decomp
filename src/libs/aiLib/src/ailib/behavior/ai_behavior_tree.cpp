@@ -16,7 +16,7 @@ template void mm::mtl::Vector<mm::mtl::IntrusivePtr<ai::BehaviorNodeInfo>>::expa
 
 namespace ai {
 
-BehaviorTree::BehaviorTree() : unknown00(), unknown40(), m_pNodes(), m_pAllocator(nullptr), m_setup(false) {}
+BehaviorTree::BehaviorTree() : m_rootNode(), unknown40(), m_pNodes(), m_pAllocator(nullptr), m_setup(false) {}
 
 BehaviorTree::~BehaviorTree() {}
 
@@ -49,7 +49,7 @@ void BehaviorTree::attachRoot(u32 nodeID) {
   BehaviorNode *pNode = m_pNodes[nodeID].get();
 #line 88
   MM_ASSERT(pNode);
-  unknown00.attachChild(pNode);
+  m_rootNode.attachChild(pNode);
 }
 
 void BehaviorTree::attachComposite(u32 parentID, u32 childID, u32 index) {
@@ -84,12 +84,12 @@ void BehaviorTree::execute() {
   BlackBoard *pBB = unknown40.get();
 #line 157
   MM_ASSERT(pBB);
-  bool result = unknown00.execute(*pBB);
-  unknown00.setActive(*pBB, result);
+  bool result = m_rootNode.execute(*pBB);
+  m_rootNode.setActive(*pBB, result);
 }
 
 void BehaviorTree::queryNode(mm::mtl::IAllocator *allocator, BehaviorNodeInfo *info) const {
-  BehaviorNode *pChildNode = unknown00.m_pChildNode;
+  BehaviorNode *pChildNode = m_rootNode.m_pChildNode;
   if (pChildNode == nullptr) {
     return;
   }

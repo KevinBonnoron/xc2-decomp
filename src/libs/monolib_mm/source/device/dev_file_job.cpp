@@ -16,7 +16,7 @@ CriticalSection &DevFileJob::getCriticalSection() {
   return sect;
 }
 
-DevFileJob::DevFileJob(const char *name, WorkObj *parent) : WorkObj(name, parent, 0), unknown1a8(nullptr), unknown1f4(0), unknown1f8(false), unknown1f9(false), unknown1fa(false) {
+DevFileJob::DevFileJob(const char *name, WorkObj *parent) : WorkObj(name, parent, 0), m_fileHandleTh(nullptr), unknown1f4(0), unknown1f8(false), unknown1f9(false), unknown1fa(false) {
   CS lock(getCriticalSection());
   u32 wid = unknown50;
   s_jobs.push_back(wid);
@@ -35,7 +35,7 @@ u32 DevFileJob::getJob(FileHandleTh *handle) {
   CS lock(getCriticalSection());
   for (mm::mtl::FixedList<u32, 512>::iterator it = s_jobs.begin(); it != s_jobs.end(); ++it) {
     DevFileJob *job = static_cast<DevFileJob *>(WorkRootState::getWork(*it));
-    if (job != nullptr && job->unknown1a8 == handle) {
+    if (job != nullptr && job->m_fileHandleTh == handle) {
       return *it;
     }
   }
@@ -45,17 +45,17 @@ u32 DevFileJob::getJob(FileHandleTh *handle) {
 void DevFileJob::clearJob(IWorkEvent *event) {
   if (event == nullptr) {
     wkSetEvent(static_cast<EVT>(0));
-  } else if (unknown1a8 != nullptr && unknown1a8->unknown60 == event) {
+  } else if (m_fileHandleTh != nullptr && m_fileHandleTh->m_iWorkEvent == event) {
     wkSetEvent(static_cast<EVT>(0));
   }
 }
 
-const char *DevFileJob::getFileName() const { return unknown1a8->unknown98.c_str(); }
+const char *DevFileJob::getFileName() const { return m_fileHandleTh->unknown98.c_str(); }
 
 f32 DevFileJob::getTransferRatio() const {
   f32 ratio = 0.0f;
-  if (unknown1a8 != nullptr && unknown1a8->unknown18 != 0) {
-    ratio = static_cast<f32>(unknown1a8->m_currentPtr) / static_cast<f32>(static_cast<u32>(unknown1a8->unknown18));
+  if (m_fileHandleTh != nullptr && m_fileHandleTh->unknown18 != 0) {
+    ratio = static_cast<f32>(m_fileHandleTh->m_currentPtr) / static_cast<f32>(static_cast<u32>(m_fileHandleTh->unknown18));
   }
   return ratio;
 }

@@ -2,9 +2,11 @@
 
 #include "bdat.h"
 #include "framework/debug/debug_draw.h"
+#include "gf/data/gf_bdat_chrenarrange.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_data_bdat.h"
+#include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
@@ -31,24 +33,46 @@ struct GF_OBJ_HANDLE;
 namespace gmk {
 
 GmkSalvage::RaffleResult::RaffleResult() {
-  unknown08 = -1;
-  unknown0c = -1;
-  unknown10 = -1;
-  unknown20 = -1;
-  unknown24 = -1;
-  unknown28 = -1;
-  unknown38 = -1;
+  unknown08[0] = -1;
+  unknown08[1] = -1;
+  unknown08[2] = -1;
+  unknown20[0] = -1;
+  unknown20[1] = -1;
+  unknown20[2] = -1;
+  unknown38[0] = -1;
   unknown00 = 0;
   unknown18 = 0;
   unknown30 = 0;
-  unknown44 = 0;
-  unknown46 = 0;
-  unknown48 = 0;
-  unknown4a = 0;
-  unknown4c = 0;
-  unknown4e = 0;
-  unknown3c = -1;
-  unknown40 = -1;
+  unknown44[0].unknown00 = 0;
+  unknown44[0].unknown02 = 0;
+  unknown44[1].unknown00 = 0;
+  unknown44[1].unknown02 = 0;
+  unknown44[2].unknown00 = 0;
+  unknown44[2].unknown02 = 0;
+  unknown38[1] = -1;
+  unknown38[2] = -1;
+}
+
+// The loop copies each entry (range-for by value) and keeps `enemyLevel` in a local: the local scope and the `continue` give the game's cleanup dispatch of the loop body
+// (`cset ls; csel hi; cbnz` at 0x710060982c, `orr #2; cmp #2; cset ne` at the end). Without the local (`level <= enemy.getLevel(arrange)`) the function is 78 instructions, with a
+// nested `if (enemy.unknown00 != 0)` instead of `continue` 60, with an index loop or a reference loop variable 63 (`cmp; b.hs`).
+bool GmkSalvage::RaffleResult::isPowerfullEnemyExist() const {
+  if (gf::GfGameManager::getControlMover() == gf::unknown020) {
+    return false;
+  }
+  gf::DataParamAcc acc(gf::GfGameManager::getControlMover());
+  u32 level = acc.getLevel(false) + 5;
+  const gf::GfBdatChrEnArrange *arrange = gf::GfBdatChrEnArrange::get();
+  for (RaffleResult::unknown001 enemy : unknown44) {
+    if (enemy.unknown00 == 0) {
+      continue;
+    }
+    u32 enemyLevel = enemy.getLevel(arrange);
+    if (level <= enemyLevel) {
+      return true;
+    }
+  }
+  return false;
 }
 
 template bool TGmkList<GmkSalvage, GmkSalvage::BdatInfo, 1447838035u, 2u, GmkSalvageGobCustom>::initGmkBdatInfo(GmkSalvage::BdatInfo &, int &, const AGmkBase &);
@@ -59,11 +83,11 @@ void GmkSalvage::debugDraw() const {
   isValid();
 }
 
-bool GmkSalvageLocator::isValid() const { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
+bool GmkSalvageLocator::isValid() const { return m_createBaseInfo.m_ownerGmkEnemyList != nullptr && m_createInfo.unknown08 != nullptr; }
 
 GmkSalvageLocator::GmkSalvageLocator()
-    : unknown48(nullptr), unknown58(false), unknown60(nullptr), unknownc0(gf::unknown020), unknownc8(0), unknownd0(nullptr), unknownd8(0.0f), unknowndc(0.0f), unknowne0(0.0f), unknowne4(0.0f),
-      unknowne8(-1), unknownec(0), unknownf0(0), unknownf1(false), unknownf2(false) {}
+    : unknown48(nullptr), unknown58(false), m_dropitemEmitter(nullptr), unknownc0(gf::unknown020), unknownc8(0), m_gmkSalvage(nullptr), unknownd8(0.0f), unknowndc(0.0f), unknowne0(0.0f),
+      unknowne4(0.0f), unknowne8(-1), unknownec(0), unknownf0(0), unknownf1(false), unknownf2(false) {}
 
 void GmkSalvage::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) { unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_UNKNOWN_2); }
 
@@ -75,19 +99,20 @@ bool GmkSalvage::BdatInfo::isCondMatched() const {
 }
 
 GmkSalvage::GmkSalvage()
-    : unknown48(nullptr), unknown58(gf::unknown020), unknown60(0.0f), unknown64(0.0f), unknown68(), unknown88(), unknowna8(nullptr), unknownb0(), unknownd0(0), unknownd1(0), unknownd8(),
-      unknown128(true), unknown129(false) {}
+    : unknown48(nullptr), unknown58(gf::unknown020), unknown60(0.0f), unknown64(0.0f), unknown68(), unknown88(), m_gmkSalvageLocator(nullptr), unknownb0(), unknownd0(0), unknownd1(0),
+      m_raffleResult(), unknown128(true), unknown129(false) {}
 
 GmkType GmkSalvage::getGmkType() const { return GMK_TYPE; }
 
-int GmkSalvage::getGameFlagId() const { return unknown20.unknown18 + 0x2e1c; }
+int GmkSalvage::getGameFlagId() const { return m_createInfo.unknown18 + 0x2e1c; }
 
 int GmkSalvage::getGmkSalvageLocatorNum() const { return getData()->unknown14 - getData()->unknown10; }
 
 void GmkSalvage::onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) { gf::GfGameFlag::setLocal(1, getGameFlagId(), 1); }
 
 GmkSalvageLocator *GmkSalvage::getGmkSalvageLocator(u32 index) const {
-  GmkSalvageLocatorList *list = static_cast<GmkSalvageLocatorList *>(static_cast<GmkSalvageList *>(unknown08.unknown00)->unknown230.getGmkList(GMK_TYPE_SALVAGE_LOCATOR));
+  GmkSalvageLocatorList *list =
+      static_cast<GmkSalvageLocatorList *>(static_cast<GmkSalvageList *>(m_createBaseInfo.m_ownerGmkEnemyList)->m_gmkSetOfSalvageChildren.getGmkList(GMK_TYPE_SALVAGE_LOCATOR));
   if (list != nullptr) {
     u32 listIndex = getData()->unknown10 + index;
     if (list->getInstNum() > listIndex) {
@@ -101,7 +126,7 @@ const GmkFormPc *GmkSalvage::getGmkFormPc() const {
   u32 index = getData()->unknown08;
   int num = getData()->unknown0c - index;
   if (num > 0) {
-    const IGmkList *list = static_cast<const GmkSalvageList *>(unknown08.unknown00)->unknown230.getGmkList(GMK_TYPE_FORM_PC);
+    const IGmkList *list = static_cast<const GmkSalvageList *>(m_createBaseInfo.m_ownerGmkEnemyList)->m_gmkSetOfSalvageChildren.getGmkList(GMK_TYPE_FORM_PC);
     if (list->getInstNum() > index) {
       return static_cast<const GmkFormPc *>(list->getInst(index));
     }
@@ -128,7 +153,7 @@ void GmkSalvage::seqValidateGmkSalvageLocatorDetails(f32 deltaTime) {
     }
     for (u32 i = 0; i < num; i++) {
       GmkSalvageLocator *locator = getGmkSalvageLocator(i);
-      locator->unknownd0 = this;
+      locator->m_gmkSalvage = this;
       switch (locator->getData()->unknown00) {
       case 1:
         if (unknown68.size() != unknown68.capacity()) {
@@ -141,8 +166,8 @@ void GmkSalvage::seqValidateGmkSalvageLocatorDetails(f32 deltaTime) {
         }
         break;
       case 3:
-        if (unknowna8 == nullptr) {
-          unknowna8 = locator;
+        if (m_gmkSalvageLocator == nullptr) {
+          m_gmkSalvageLocator = locator;
         }
         break;
       case 4:
@@ -157,7 +182,7 @@ void GmkSalvage::seqValidateGmkSalvageLocatorDetails(f32 deltaTime) {
 }
 
 void GmkSalvage::seqUpdatePopDepop(f32 deltaTime) {
-  if (getBdatInfo()->isCondMatched() && DistCond::isMatch(unknown60, unknown08.unknown08->unknown00)) {
+  if (getBdatInfo()->isCondMatched() && DistCond::isMatch(unknown60, m_createBaseInfo.m_xform->unknown00)) {
     if (unknown58 == gf::unknown020) {
       createGfObjHandle();
     }
@@ -167,7 +192,7 @@ void GmkSalvage::seqUpdatePopDepop(f32 deltaTime) {
   if (unknownd1) {
     u32 enemyCount = unknownb0.size();
     for (u32 i = 0; i < enemyCount; i++) {
-      if ((1ul << i) & unknownd8.unknown30) {
+      if ((1ul << i) & m_raffleResult.unknown30) {
         GmkSalvageLocator *locator = unknownb0[i];
         if (locator != nullptr) {
           locator->update(deltaTime);
@@ -176,7 +201,7 @@ void GmkSalvage::seqUpdatePopDepop(f32 deltaTime) {
     }
     u32 locatorCount = unknown68.size();
     for (u32 i = 0; i < locatorCount; i++) {
-      if ((1ul << i) & unknownd8.unknown00) {
+      if ((1ul << i) & m_raffleResult.unknown00) {
         GmkSalvageLocator *locator = unknown68[i];
         if (locator != nullptr) {
           locator->update(deltaTime);
@@ -185,14 +210,14 @@ void GmkSalvage::seqUpdatePopDepop(f32 deltaTime) {
     }
     u32 tboxCount = unknown88.size();
     for (u32 i = 0; i < tboxCount; i++) {
-      if ((1ul << i) & unknownd8.unknown18) {
+      if ((1ul << i) & m_raffleResult.unknown18) {
         GmkSalvageLocator *locator = unknown88[i];
         if (locator != nullptr) {
           locator->update(deltaTime);
         }
       }
     }
-    if (!gf::GfGameManager::isBattle() && !DistCond::isMatch(unknown64, unknown08.unknown08->unknown00)) {
+    if (!gf::GfGameManager::isBattle() && !DistCond::isMatch(unknown64, m_createBaseInfo.m_xform->unknown00)) {
       u32 count = unknownb0.size();
       for (u32 i = 0; i < count; i++) {
         GmkSalvageLocator *locator = unknownb0[i];
@@ -271,7 +296,7 @@ void GmkSalvage::dispose() {
   disposeRaffle(false);
   unknown48 = nullptr;
   unknownb0.clear();
-  unknowna8 = nullptr;
+  m_gmkSalvageLocator = nullptr;
   unknown88.clear();
   unknown68.clear();
   disposeGfObjHandle();
@@ -291,12 +316,12 @@ void GmkSalvage::createGfObjHandle() {
   }
   disposeGfObjHandle();
   CBdatWrapper bdat = {getBindedBdatFp()};
-  unknown58 = gf::GfObjFactory::createGmkCollection(bdat, unknown20.unknown18);
+  unknown58 = gf::GfObjFactory::createGmkCollection(bdat, m_createInfo.unknown18);
   bindToGameObj(unknown58);
   validateDisp();
   unknown002(unknown58, true);
   gf::GfObjSetupGimmick *setup = mm::mtl::dynamicCast<gf::GfObjSetupGimmick>(gf::GfObjManager::getObjInfo(unknown58)->unknown30);
-  unknown003(setup, unknown08.unknown08);
+  unknown003(setup, m_createBaseInfo.m_xform);
 }
 
 void GmkSalvage::update(f32 deltaTime) {
@@ -346,8 +371,8 @@ void GmkSalvageLocator::initWaitPopTime(f32 waitTime) {
 }
 
 void GmkSalvageLocator::syncDepopTboxes() {
-  if (getData()->unknown00 == 4 && !unknownf1 && !unknownf2 && unknownd0 != nullptr) {
-    unknownd0->unknown129 = true;
+  if (getData()->unknown00 == 4 && !unknownf1 && !unknownf2 && m_gmkSalvage != nullptr) {
+    m_gmkSalvage->unknown129 = true;
   }
 }
 
@@ -364,7 +389,7 @@ void GmkSalvageLocator::seqPop(f32 deltaTime) {
     if (!unknown58) {
       createCollectDropitemEmitter();
     }
-    unknown60.update(deltaTime);
+    m_dropitemEmitter.update(deltaTime);
     break;
   case 2: {
     bool isWaitDepop = unknowne0 > 0.0f;
@@ -402,7 +427,7 @@ void GmkSalvageLocator::dispose() {
   unknownec = 0;
   reqDisposeTboxGobInst(0.0f);
   unknown58 = false;
-  unknown60.dispose();
+  m_dropitemEmitter.dispose();
   unknownc8 = false;
   disposeGobInst(false);
   AGmkBase::dispose();
@@ -424,17 +449,17 @@ void GmkSalvageLocator::disposeGobInst(bool isFadeOut) {
 
 void GmkSalvageLocator::debugDraw() const {
   if (isValid()) {
-    mm::Vec3 end = unknown095(mm::Vec3::unitZ, unknown08.unknown08->unknown10) + unknown08.unknown08->unknown00;
+    mm::Vec3 end = unknown095(mm::Vec3::unitZ, m_createBaseInfo.m_xform->unknown10) + m_createBaseInfo.m_xform->unknown00;
     mm::Col4 color(mm::Col3::green.r, mm::Col3::green.g, mm::Col3::green.b, 1.0f);
-    fw::debug::drawArrow(unknown08.unknown08->unknown00, end, color);
+    fw::debug::drawArrow(m_createBaseInfo.m_xform->unknown00, end, color);
   }
 }
 
 void GmkSalvageLocator::createCollectDropitemEmitter() {
   unknown58 = false;
-  unknown60.dispose();
+  m_dropitemEmitter.dispose();
   gf::GfDropitemEmitter::CreateInfo info;
-  const Xform *xform = unknown08.unknown08;
+  const Xform *xform = m_createBaseInfo.m_xform;
   info.unknown00 = xform->unknown00;
   info.unknown00.y += 0.8f;
   info.unknown10 = xform->unknown10.y;
@@ -442,7 +467,7 @@ void GmkSalvageLocator::createCollectDropitemEmitter() {
   info.unknown28 = gf::GfDataBdat::getFP(gf::BDAT_FLD_SALVAGE_ITEM_SET);
   info.unknown30 = unknowne8;
   info.unknown20 = 0.25f;
-  unknown60.create(info);
+  m_dropitemEmitter.create(info);
   unknown58 = true;
 }
 
@@ -454,14 +479,14 @@ void GmkSalvageLocator::createTboxGobInst() {
   bindToGameObj(unknownc0);
   setEventDisp(unknownc0, debugIsDispGmkType(getGmkType()));
   gf::GfObjSetupGimmick *setup = gf::GfObjUtil::getObjSetup<gf::GfObjSetupGimmick>(unknownc0);
-  unknown003(setup, unknown08.unknown08);
+  unknown003(setup, m_createBaseInfo.m_xform);
   setup->unknown70 = "S_drop";
   setTargetable(true);
 }
 
 void GmkSalvageLocator::createEnemyGobInst() {
   disposeGobInst(false);
-  const Xform *xform = unknown08.unknown08;
+  const Xform *xform = m_createBaseInfo.m_xform;
   unknownc0 = gf::GfObjFactory::createGmkEnemy(unknownec, unknownf0, 2, xform->unknown00, xform->unknown10, true);
   if (unknownc0 == gf::unknown020) {
     return;
@@ -487,17 +512,17 @@ GmkSalvageList::GmkSalvageList(u32 updateGmkNumPerFrame) : TGmkList(updateGmkNum
 
 void GmkSalvageList::createGmk(void *data) {
   TGmkList::createGmk(data);
-  unknown230.create(getCreateInfo().unknown08->unknown10);
+  m_gmkSetOfSalvageChildren.create(getCreateInfo().m_gmkSet->m_createInfo);
 }
 
 void GmkSalvageList::disposeGmk() {
-  unknown230.dispose();
+  m_gmkSetOfSalvageChildren.dispose();
   TGmkList::disposeGmk();
 }
 
 void GmkSalvageList::update(f32 deltaTime) {
   TGmkList::update(deltaTime);
-  unknown230.update(deltaTime);
+  m_gmkSetOfSalvageChildren.update(deltaTime);
 }
 
 void GmkSalvageList::debugDraw() const { TGmkList::debugDraw(); }

@@ -27,8 +27,8 @@ void WindFactory::generateImpluse(const mm::Vec3 &position, f32 radius, f32 para
 mm::mtl::IntrusivePtr<DynamicWindResource> WindFactory::createWindResource(const mm::Vec3 &min, const mm::Vec3 &max) {
 #line 60
   DynamicWindResource *resource = new (FrameworkMemory::getAllocator(5), 16, __FILE__, __LINE__) DynamicWindResource();
-  resource->unknown10.unknown00 = min;
-  resource->unknown10.unknown10 = max;
+  resource->m_resWind.unknown00 = min;
+  resource->m_resWind.unknown10 = max;
   return resource;
 }
 

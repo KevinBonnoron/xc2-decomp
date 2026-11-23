@@ -138,12 +138,12 @@ DrEnvColiObj::COLITEST DrEnvColiObj::s_pColiTest[5] = {
 };
 
 DrEnvColiObj *DrEnvColiMan::createObj(const void *data) {
-  DrEnvColiObj *object = new (unknown30->unknown10) DrEnvColiObj(unknown30, data);
+  DrEnvColiObj *object = new (m_drMan->unknown10) DrEnvColiObj(m_drMan, data);
   unknown101(unknown10[DrMan::s_nDblStockIdx][0], unknown10[DrMan::s_nDblStockIdx][1], object);
   return object;
 }
 
-DrEnvColiObj::DrEnvColiObj(DrMan *man, const void *data) : unknown00(nullptr), unknown08(nullptr), unknown10(nullptr), unknown28(nullptr), unknown30(man), unknown38(0) { setDataAdd(data); }
+DrEnvColiObj::DrEnvColiObj(DrMan *man, const void *data) : unknown00(nullptr), unknown08(nullptr), unknown10(nullptr), unknown28(nullptr), m_drMan(man), unknown38(0) { setDataAdd(data); }
 
 void DrEnvColiMan::update() {
   bool isChanged = false;
@@ -182,14 +182,14 @@ void DrEnvColiMan::update() {
     }
     object = next;
   }
-  DrPixlPostParm *postParm = unknown30->unknown120[unknown30->unknown1c98];
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   postParm->unknown1104 = postParm->unknown1105[DrMan::s_nDblIdx];
   postParm->unknown1105[DrMan::s_nDblIdx] = false;
-  if (!unknown30->unknown1d8e) {
+  if (!m_drMan->unknown1d8e) {
     DrEnvColiObj *selected = unknown00;
     if (selected != nullptr) {
       DrEnvColiResult result;
-      mm::Vec3 position(unknown30->unknown580->unknown10->unknown400);
+      mm::Vec3 position(m_drMan->m_drCalcMan->m_drCalcViewWork->unknown400);
       DrEnvColiObj *hitObject = nullptr;
       DrEnvColiObj *next = selected;
       for (DrEnvColiObj *current = next; current != nullptr; current = next) {
@@ -202,15 +202,15 @@ void DrEnvColiMan::update() {
         selected = hitObject;
       }
       if (unknown38 != selected || unknown8c != result.unknown1c) {
-        unknown70 = unknown30->unknown120[unknown30->unknown1c98]->getWeatherFrame();
+        unknown70 = m_drMan->unknown120[m_drMan->unknown1c98]->getWeatherFrame();
       }
-      DrPixlPostParm *currentParm = unknown30->unknown120[unknown30->unknown1c98];
-      s32 weather = currentParm->unknown1084;
+      DrPixlPostParm *currentParm = m_drMan->unknown120[m_drMan->unknown1c98];
+      s32 weather = currentParm->m_weather;
       bool isReset = unknown74 != weather;
       updateTime(isReset);
       updateCloudFade(isReset, isChanged);
       unknown74 = weather;
-      DrEnvColiParameter parameter(selected, &result, unknown30, this);
+      DrEnvColiParameter parameter(selected, &result, m_drMan, this);
       parameter.calcPostEffectParams(isReset);
       unknown38 = selected;
       unknown8c = result.unknown1c;
@@ -223,10 +223,10 @@ void DrEnvColiMan::update() {
 }
 
 DrEnvColiParameter::DrEnvColiParameter(DrEnvColiObj *object, DrEnvColiResult *result, DrMan *man, DrEnvColiMan *coliMan) {
-  unknown10 = result;
-  unknown18 = object;
-  unknown00 = man;
-  unknown08 = coliMan;
+  m_drEnvColiResult = result;
+  m_drEnvColiObj = object;
+  m_drMan = man;
+  m_drEnvColiMan = coliMan;
   unknown20 = object->getPostParams();
   unknown28 = reinterpret_cast<const unknown006 *>(object->unknown10)->unknown04;
 }
@@ -235,33 +235,33 @@ DrEnvColiParameter::~DrEnvColiParameter() {}
 
 void DrEnvColiParameter::calcPostEffectParams(bool isReset) {
   const unknown008 *postIndexList = reinterpret_cast<const unknown008 *>(unknown20 + reinterpret_cast<const unknown007 *>(unknown20)->unknown04);
-  const unknown008 *postIndex = &postIndexList[unknown10->unknown1c];
+  const unknown008 *postIndex = &postIndexList[m_drEnvColiResult->unknown1c];
   calcParams(postIndex->unknown04, postIndex->unknown08, isReset);
 }
 
 void DrEnvColiParameter::updateBloomParams() {
   DrMan *man = DrMan::getIns();
   DrPixlPostParm *postParm = man->unknown120[man->unknown1c98];
-  const DrPixlPostParm &defaultParm = DrMan::getIns()->unknown70->unknown970;
-  postParm->unknown40 = defaultParm.unknown40;
+  const DrPixlPostParm &defaultParm = DrMan::getIns()->m_drIniSys->m_drPixlPostParm;
+  postParm->m_borderBlmSub = defaultParm.m_borderBlmSub;
   postParm->m_borderBlmMul = defaultParm.m_borderBlmMul;
-  postParm->unknown48 = defaultParm.unknown48;
-  postParm->unknown4c = defaultParm.unknown4c;
-  postParm->unknown50 = defaultParm.unknown50;
+  postParm->m_borderBlmSecSub = defaultParm.m_borderBlmSecSub;
+  postParm->m_borderBlmSecMul = defaultParm.m_borderBlmSecMul;
+  postParm->m_borderBlmMax = defaultParm.m_borderBlmMax;
   for (int i = 0; i < 3; i++) {
-    postParm->unknown54[i] = defaultParm.unknown54[i];
+    postParm->m_blmWeight[i] = defaultParm.m_blmWeight[i];
   }
   for (int i = 0; i < 7; i++) {
     postParm->unknown60[i] = defaultParm.unknown60[i];
   }
   for (int i = 0; i < 3; i++) {
-    postParm->unknown7c[i] = defaultParm.unknown7c[i];
+    postParm->m_blmStr[i] = defaultParm.m_blmStr[i];
   }
   for (int i = 0; i < 2; i++) {
     postParm->unknown88[i] = defaultParm.unknown88[i];
   }
   for (int i = 0; i < 3; i++) {
-    postParm->unknown90[i] = defaultParm.unknown90[i];
+    postParm->m_blmGauss[i] = defaultParm.m_blmGauss[i];
   }
   for (int i = 0; i < 7; i++) {
     postParm->unknown9c[i] = defaultParm.unknown9c[i];
@@ -269,15 +269,15 @@ void DrEnvColiParameter::updateBloomParams() {
   for (int i = 0; i < 2; i++) {
     postParm->unknownc0[i] = defaultParm.unknownc0[i];
   }
-  postParm->unknownc8 = defaultParm.unknownc8;
-  postParm->unknowncc = defaultParm.unknowncc;
-  postParm->unknownd0 = defaultParm.unknownd0;
-  postParm->unknownd4 = defaultParm.unknownd4;
-  postParm->unknownd8 = defaultParm.unknownd8;
-  postParm->unknowndc = defaultParm.unknowndc;
-  postParm->unknowne0 = defaultParm.unknowne0;
-  postParm->unknowne4 = defaultParm.unknowne4;
-  postParm->unknowne8 = defaultParm.unknowne8;
+  postParm->m_blmLensSub = defaultParm.m_blmLensSub;
+  postParm->m_blmLensMul = defaultParm.m_blmLensMul;
+  postParm->m_blmLensMax = defaultParm.m_blmLensMax;
+  postParm->m_blmLensRot = defaultParm.m_blmLensRot;
+  postParm->m_blmLensWeight = defaultParm.m_blmLensWeight;
+  postParm->m_blmLensDecay = defaultParm.m_blmLensDecay;
+  postParm->m_blmLensStrength = defaultParm.m_blmLensStrength;
+  postParm->m_blmLensParmMax = defaultParm.m_blmLensParmMax;
+  postParm->m_blmLensUVDecay = defaultParm.m_blmLensUVDecay;
 }
 
 // Written statement by statement as in the original (0x71007d5770): the game's code is straight-line, one blend or fade statement per parameter, in the order of the destination members (source
@@ -289,7 +289,7 @@ void DrEnvColiParameter::updateCloudParams(f32 ratio, bool, const EnvColiPostDat
   unknown013 blendSky;
   unknown015 blendModel;
   unknown014 blendLight;
-  cloud::CloudMan *cloudMan = unknown00->unknown1e00;
+  cloud::CloudMan *cloudMan = m_drMan->unknown1e00;
   u32 cldNum = cloudMan->getCldNum();
   const unknown007 *header = reinterpret_cast<const unknown007 *>(unknown20);
   u32 sizeCloud = header->unknown38 == 0x1001 ? 0x20 : 0x14;
@@ -434,7 +434,7 @@ void DrEnvColiParameter::updateCloudParams(f32 ratio, bool, const EnvColiPostDat
       paramModel = &blendModel;
     }
   }
-  f32 fade = unknown08->unknown88;
+  f32 fade = m_drEnvColiMan->unknown88;
   if ((from->unknown08 & EnvColiPostData::FLAG_UNKNOWN_1) != 0) {
     cloud::CloudCalcParams *params = cloudMan->unknown50->unknown38;
     params->unknown1b8[0].r += fade * (paramPlane->unknown00[0] - params->unknown1b8[0].r);
@@ -558,29 +558,29 @@ void DrEnvColiParameter::updateCloudParams(f32 ratio, bool, const EnvColiPostDat
 }
 
 void DrEnvColiParameter::resetToneMapParams(const EnvColiPostParameterVer<10006> *from, const EnvColiPostParameterVer<10006> *to, f32 ratio) {
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   if (ratio != 0.0f) {
     f32 inverse = 1.0f - ratio;
-    postParm->unknown08 = from->unknown00 * ratio + inverse * to->unknown00;
-    postParm->unknown0c = from->unknown04 * ratio + inverse * to->unknown04;
-    postParm->unknown10 = from->unknown08 * ratio + inverse * to->unknown08;
-    postParm->unknown14 = from->unknown0c * ratio + inverse * to->unknown0c;
-    postParm->unknown18 = from->unknown10 * ratio + inverse * to->unknown10;
-    postParm->unknown1c = from->unknown14 * ratio + inverse * to->unknown14;
-    postParm->unknown20 = from->unknown18 * ratio + inverse * to->unknown18;
-    postParm->unknown24 = from->unknown1c * ratio + inverse * to->unknown1c;
+    postParm->m_toneMax = from->unknown00 * ratio + inverse * to->unknown00;
+    postParm->m_toneMin = from->unknown04 * ratio + inverse * to->unknown04;
+    postParm->m_toneRatio = from->unknown08 * ratio + inverse * to->unknown08;
+    postParm->m_toneRatioLast = from->unknown0c * ratio + inverse * to->unknown0c;
+    postParm->m_toneBlmMax = from->unknown10 * ratio + inverse * to->unknown10;
+    postParm->m_toneBlmMin = from->unknown14 * ratio + inverse * to->unknown14;
+    postParm->m_toneBlmRatio = from->unknown18 * ratio + inverse * to->unknown18;
+    postParm->m_toneBlmRatioLast = from->unknown1c * ratio + inverse * to->unknown1c;
     postParm->unknown28 = from->unknown20 * ratio + inverse * to->unknown20;
     postParm->unknown2c = from->unknown24 * ratio + inverse * to->unknown24;
     postParm->unknown30 = from->unknown28 * ratio + inverse * to->unknown28;
   } else {
-    postParm->unknown08 = from->unknown00;
-    postParm->unknown0c = from->unknown04;
-    postParm->unknown10 = from->unknown08;
-    postParm->unknown14 = from->unknown0c;
-    postParm->unknown18 = from->unknown10;
-    postParm->unknown1c = from->unknown14;
-    postParm->unknown20 = from->unknown18;
-    postParm->unknown24 = from->unknown1c;
+    postParm->m_toneMax = from->unknown00;
+    postParm->m_toneMin = from->unknown04;
+    postParm->m_toneRatio = from->unknown08;
+    postParm->m_toneRatioLast = from->unknown0c;
+    postParm->m_toneBlmMax = from->unknown10;
+    postParm->m_toneBlmMin = from->unknown14;
+    postParm->m_toneBlmRatio = from->unknown18;
+    postParm->m_toneBlmRatioLast = from->unknown1c;
     postParm->unknown28 = from->unknown20;
     postParm->unknown2c = from->unknown24;
     postParm->unknown30 = from->unknown28;
@@ -589,7 +589,7 @@ void DrEnvColiParameter::resetToneMapParams(const EnvColiPostParameterVer<10006>
 
 bool DrEnvColiMan::testEnvColi(DrEnvColiResult *result, const mm::Vec3 &position, f32 radius) {
   if (result == nullptr) {
-    result = &unknown40;
+    result = &m_drEnvColiResult;
     result->unknown001();
   }
   bool isHit = false;
@@ -605,7 +605,7 @@ bool DrEnvColiMan::testEnvColi(DrEnvColiResult *result, const mm::Vec3 &position
 
 bool DrEnvColiObj::testEnvColi(DrEnvColiResult *result, const mm::Vec3 &position, f32 radius) {
   if (!isPause() && unknown10 != nullptr) {
-    return testTreeColi(result, unknown20, position, radius);
+    return testTreeColi(result, m_envColiListTreeData, position, radius);
   }
   return false;
 }
@@ -622,7 +622,7 @@ bool DrEnvColiObj::testTreeColi(DrEnvColiResult *result, const EnvColiListTreeDa
       u8 childHit = 0;
       const u16 *children = reinterpret_cast<const u16 *>(unknown10 + tree->unknown18);
       for (u32 i = 0; i < childCount; i++) {
-        const EnvColiListTreeData *base = unknown20;
+        const EnvColiListTreeData *base = m_envColiListTreeData;
         childHit |= testTreeColi(result, base + children[i], position, radius) & 1;
       }
       primCount = tree->unknown22;
@@ -640,7 +640,7 @@ bool DrEnvColiObj::testTreeColi(DrEnvColiResult *result, const EnvColiListTreeDa
           continue;
         }
         u16 gblId = primitive->unknown0c;
-        if (gblId != 0 && unknown30->isGblIdx(gblId)) {
+        if (gblId != 0 && m_drMan->isGblIdx(gblId)) {
           continue;
         }
         if (!(this->*s_pColiTest[primitive->unknown04])(unknown10 + primitive->unknown00, position, radius, unknown28[index])) {
@@ -650,15 +650,15 @@ bool DrEnvColiObj::testTreeColi(DrEnvColiResult *result, const EnvColiListTreeDa
         result->unknown04 = primitive->unknown0a;
         result->unknown24 |= primitive->unknown06;
         if (primitive->unknown06 & 2) {
-          result->unknown08 = primitive->unknown0e;
+          result->m_bgmId = primitive->unknown0e;
         }
-        result->unknown0c = primitive->unknown10;
-        result->unknown10 = primitive->unknown11;
-        result->unknown14 = primitive->unknown12;
-        result->unknown18 = primitive->unknown14;
+        result->m_layerId = primitive->unknown10;
+        result->m_reverbId = primitive->unknown11;
+        result->m_caveId = primitive->unknown12;
+        result->m_areaId = primitive->unknown14;
         result->unknown1c = primitive->unknown16;
-        result->unknown20 = 0;
-        DrEnvColiMan *coliMan = unknown30->unknown100[0]->unknown18;
+        result->m_windId = 0;
+        DrEnvColiMan *coliMan = m_drMan->unknown100[0]->m_drEnvColiMan;
         const u8 *postParams = getPostParams();
         const unknown007 *header = reinterpret_cast<const unknown007 *>(postParams);
         const unknown008 *postIndex = &reinterpret_cast<const unknown008 *>(postParams + header->unknown04)[result->unknown1c];
@@ -684,7 +684,7 @@ bool DrEnvColiObj::testTreeColi(DrEnvColiResult *result, const EnvColiListTreeDa
           latest = current;
         }
         if (latest != nullptr) {
-          result->unknown20 = latest->unknown26;
+          result->m_windId = latest->unknown26;
         }
         isHit = true;
       }
@@ -693,7 +693,7 @@ bool DrEnvColiObj::testTreeColi(DrEnvColiResult *result, const EnvColiListTreeDa
   return isHit;
 }
 
-DrEnvColiObj::DrEnvColiObj(DrMan *man) : unknown00(nullptr), unknown08(nullptr), unknown10(nullptr), unknown28(nullptr), unknown30(man), unknown38(0) {}
+DrEnvColiObj::DrEnvColiObj(DrMan *man) : unknown00(nullptr), unknown08(nullptr), unknown10(nullptr), unknown28(nullptr), m_drMan(man), unknown38(0) {}
 
 DrEnvColiObj::~DrEnvColiObj() {
   if (unknown28 != nullptr) {
@@ -713,9 +713,9 @@ void DrEnvColiMan::clear() {
 
 void DrEnvColiMan::updateTime(bool isReset) {
   if (isReset) {
-    unknown70 = unknown30->unknown120[unknown30->unknown1c98]->getWeatherFrame();
+    unknown70 = m_drMan->unknown120[m_drMan->unknown1c98]->getWeatherFrame();
   } else {
-    unknown70 -= unknown30->unknown1c8c;
+    unknown70 -= m_drMan->unknown1c8c;
     if (unknown70 < 0.0f) {
       unknown70 = 0.0f;
     }
@@ -728,7 +728,7 @@ void DrEnvColiMan::updateTime(bool isReset) {
   } else {
     unknown6c = 1.0f;
   }
-  unknown68 = unknown30->unknown1cac;
+  unknown68 = m_drMan->m_timerVal;
 }
 
 void DrEnvColiMan::updateCloudFade(bool isReset, bool isForce) {
@@ -737,14 +737,14 @@ void DrEnvColiMan::updateCloudFade(bool isReset, bool isForce) {
     unknown84 = 600.0f;
     unknown88 = 0.0f;
   } else {
-    unknown84 -= unknown30->unknown1c8c;
+    unknown84 -= m_drMan->unknown1c8c;
     if (unknown84 < 0.0f) {
       unknown84 = 0.0f;
     } else {
       unknown88 = mm::clamp(1.0f / unknown84, 0.0f, 1.0f);
     }
   }
-  if (unknown30->unknown120[unknown30->unknown1c98]->unknown1104 || isForce || unknown30->unknown580->unknown10->unknown9ac) {
+  if (m_drMan->unknown120[m_drMan->unknown1c98]->unknown1104 || isForce || m_drMan->m_drCalcMan->m_drCalcViewWork->unknown9ac) {
     unknown84 = 0.0f;
     unknown88 = 1.0f;
   }
@@ -752,9 +752,9 @@ void DrEnvColiMan::updateCloudFade(bool isReset, bool isForce) {
 
 void DrEnvColiMan::updateRainDropFade(bool isReset) {
   if (isReset) {
-    unknown7c = unknown30->unknown120[unknown30->unknown1c98]->unknown10c0;
+    unknown7c = m_drMan->unknown120[m_drMan->unknown1c98]->unknown10c0;
   } else {
-    unknown7c -= unknown30->unknown1c8c;
+    unknown7c -= m_drMan->unknown1c8c;
     if (unknown7c < 0.0f) {
       unknown7c = 0.0f;
     }

@@ -46,13 +46,13 @@ mm::Mat44 DataManager::getPosAxis(u32 axis) {
     mm::Mat44 mat = mm::Mat44::identity;
     switch (axis) {
     case PosAxis::AXIS_UNKNOWN_0:
-      mat = unknown120->unknownd0;
+      mat = m_ofsInfo->unknownd0;
       break;
     case PosAxis::AXIS_UNKNOWN_1:
-      mat = unknown120->unknownd0;
+      mat = m_ofsInfo->unknownd0;
       break;
     case PosAxis::AXIS_UNKNOWN_2:
-      mat = unknown120->unknown120;
+      mat = m_ofsInfo->unknown120;
       break;
     case PosAxis::AXIS_UNKNOWN_3:
       if (mm::mtl::Singleton<TextManager>::getPtr()->getTalker() != nullptr) {
@@ -74,6 +74,12 @@ mm::Mat44 DataManager::getPosAxis(u32 axis) {
     return mat;
   }
   return mm::Mat44::identity;
+}
+
+mm::Mat44 PosAxis::calcOrigMatInv() const {
+  mm::Mat44 mat = mm::mtl::Singleton<DataManager>::getPtr()->getPosAxis(unknown08);
+  mat.unknown012();
+  return mat;
 }
 
 const char *PosAxis::getOrigName() const { return mm::mtl::Singleton<DataManager>::getPtr()->getPosName(unknown08); }

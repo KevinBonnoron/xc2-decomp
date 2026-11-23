@@ -31,15 +31,15 @@ constexpr u32 unknown001 = 0x24;
 constexpr u32 CALL_UNKNOWN_98 = 98;
 
 GfMenuObjPartyForm3::GfMenuObjPartyForm3(u32 handle)
-    : GfMenuObject(handle), unknown28(nullptr), unknown30(0), unknown34(0), unknown38(0), unknown3c(0), unknown40(-1), unknown44(false), unknown80(this), unknown310(nullptr), unknown318(true),
-      unknown319(false) {
+    : GfMenuObject(handle), m_menuDriverList(nullptr), unknown30(0), unknown34(0), unknown38(0), unknown3c(0), unknown40(-1), unknown44(false), unknown80(this), m_menuCallContext(nullptr),
+      unknown318(true), unknown319(false) {
   unknown48.assign(mm::mtl::IntrusivePtr<GfMenuReferenceNumber>());
 }
 
 GfMenuObjPartyForm3::~GfMenuObjPartyForm3() {
   unknown48.assign(mm::mtl::IntrusivePtr<GfMenuReferenceNumber>());
-  mm::mtl::safeRelease(unknown28);
-  mm::mtl::safeRelease(unknown310);
+  mm::mtl::safeRelease(m_menuDriverList);
+  mm::mtl::safeRelease(m_menuCallContext);
 }
 
 void GfMenuObjPartyForm3::initialize() {
@@ -80,7 +80,7 @@ void GfMenuObjPartyForm3::initialize() {
   if (driverSelectListener != nullptr) {
     driverSelectListener->release();
   }
-  unknown28 = GfMenuDriverList::create();
+  m_menuDriverList = GfMenuDriverList::create();
   unknown34 = 0;
   unknown38 = 0;
   {
@@ -93,9 +93,9 @@ void GfMenuObjPartyForm3::initialize() {
     GfMenuDriverList::PartySetup setup;
     setup.unknown14 = GfPartySelect::LIST_TYPE_UNKNOWN_2;
     setup.unknown18 = false;
-    unknown28->setupFromParty(setup);
+    m_menuDriverList->setupFromParty(setup);
   }
-  if (unknown28->getSize() == 1) {
+  if (m_menuDriverList->getSize() == 1) {
     unknown318 = false;
   }
   for (int i = 0; i < 7; i++) {
@@ -193,50 +193,50 @@ void GfMenuObjPartyForm3::refreshRemoveAddOperation(u32 handle, int index) {
 }
 
 bool GfMenuObjPartyForm3::seqAnnounceChange() {
-  if (unknown310 != nullptr) {
-    return unknown310->isTerm();
+  if (m_menuCallContext != nullptr) {
+    return m_menuCallContext->isTerm();
   }
-  unknown310 = GfMenuCallContext::create();
-  GfMenuObjCommonText::open(unknown310, 0xd, 0);
+  m_menuCallContext = GfMenuCallContext::create();
+  GfMenuObjCommonText::open(m_menuCallContext, 0xd, 0);
   return false;
 }
 
 void GfMenuObjPartyForm3::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
   ui::UIObjectAcc acc(handle);
-  ui::UIObjectAcc main(unknown20->unknown18);
+  ui::UIObjectAcc main(m_menuObjPartyForm3->unknown18);
   switch (event.unknown00) {
   case 1:
-    unknown20->unknown80.unknown005();
-    if (unknown20->unknown30 == 0) {
+    m_menuObjPartyForm3->unknown80.unknown005();
+    if (m_menuObjPartyForm3->unknown30 == 0) {
       GfMenuObjOperationInfo::add(main.searchChild("LAY_dr_select"), 0, 0, 0);
-      unknown20->refreshRemoveAddOperation(main.searchChild("LAY_dr_select"), 0);
+      m_menuObjPartyForm3->refreshRemoveAddOperation(main.searchChild("LAY_dr_select"), 0);
       acc.setDispChild(false, "LAY_index");
       GfMenuObjMainMenu2::setSubIndexText(4);
       GfMenuObjMainMenu2::cancelEnableMainMenu(false);
       GfMenuObjOperationInfo::setGuideText(0xb, 0);
     } else {
       GfMenuObjOperationInfo::open(main.searchChild("LAY_dr_select"), 0, 0, 0);
-      unknown20->refreshRemoveAddOperation(main.searchChild("LAY_dr_select"), 0);
-      unknown20->unknown80.unknown002(&GfMenuObjPartyForm3::seqAnnounceChange);
+      m_menuObjPartyForm3->refreshRemoveAddOperation(main.searchChild("LAY_dr_select"), 0);
+      m_menuObjPartyForm3->unknown80.unknown002(&GfMenuObjPartyForm3::seqAnnounceChange);
       GfMenuObjOperationInfo::setGuideText(0xb, 2);
     }
     GfMenuObject::hookCtrlEvent(handle, GfMenuObjUtil::setCommonFadeIn(handle, 1, 0));
     break;
   case 2:
-    if (unknown20->unknown44) {
+    if (m_menuObjPartyForm3->unknown44) {
       mm::mtl::FixedVector<u16, 16> drivers;
       for (u32 i = 0; i < 3; i++) {
-        drivers.push_back(i < unknown20->unknown34 ? unknown20->unknown28->getContents(i).unknown00 : 0);
+        drivers.push_back(i < m_menuObjPartyForm3->unknown34 ? m_menuObjPartyForm3->m_menuDriverList->getContents(i).unknown00 : 0);
       }
-      for (u32 i = unknown20->unknown34; i < unknown20->unknown28->getSize(); i++) {
-        drivers.push_back(unknown20->unknown28->getContents(i).unknown00);
+      for (u32 i = m_menuObjPartyForm3->unknown34; i < m_menuObjPartyForm3->m_menuDriverList->getSize(); i++) {
+        drivers.push_back(m_menuObjPartyForm3->m_menuDriverList->getContents(i).unknown00);
       }
       GfMenuObjPartyStatus::memberChange(1, drivers[0]);
       GfMenuObjPartyStatus::memberChange(2, drivers[1]);
       GfMenuObjPartyStatus::memberChange(3, drivers[2]);
       GfMenuObjUtil::setupPartyDriver(drivers);
     }
-    if (unknown20->unknown30 == 0) {
+    if (m_menuObjPartyForm3->unknown30 == 0) {
       GfMenuObjOperationInfo::remove(main.searchChild("LAY_dr_select"), 0, 0, 0);
     } else {
       GfMenuObjOperationInfo::close();
@@ -247,7 +247,7 @@ void GfMenuObjPartyForm3::MainListener::reciveEvent(const ui::EventData &event, 
     if (event.unknown08 == 2) {
       acc.setTerm();
     } else if (event.unknown08 == 1) {
-      unknown20->unknown80.unknown002(&GfMenuObjPartyForm3::seqWaitOpenEnd);
+      m_menuObjPartyForm3->unknown80.unknown002(&GfMenuObjPartyForm3::seqWaitOpenEnd);
     }
     break;
   case GfMenuTypes::unknown003_33:
@@ -264,7 +264,7 @@ void GfMenuObjPartyForm3::MainListener::reciveEvent(const ui::EventData &event, 
 
 void GfMenuObjPartyForm3::BGListener::reciveEvent(const ui::EventData &event, u32 handle) {
   ui::UIObjectAcc acc(handle);
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjPartyForm3->unknown18);
   if (event.unknown00 != 1) {
     ui::UIObjectListener::reciveEvent(event, handle);
   }

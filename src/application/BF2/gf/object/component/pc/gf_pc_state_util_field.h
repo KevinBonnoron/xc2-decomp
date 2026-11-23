@@ -26,13 +26,13 @@ struct GF_OBJ_HANDLE;
 struct MsgPcFieldNotifyWall : fw::Message {
   MsgPcFieldNotifyWall() : fw::Message(0x100000f, 0x40) {}
 
-  mm::Plane unknown10;     // Inferred role: wall plane; original member name unknown.
-  fw::Transform unknown30; // Inferred role: transform, pushed as a whole by AIAgentField::procMsgPcFieldNotifyWall; original member name unknown.
-  u32 unknown50;           // Inferred role: notify type (0 enter, 1 leave, 2 jump, 3 move); original member name unknown.
+  mm::Plane unknown10;       // Inferred role: wall plane; original member name unknown.
+  fw::Transform m_transform; // Inferred role: transform, pushed as a whole by AIAgentField::procMsgPcFieldNotifyWall; original member name unknown.
+  u32 unknown50;             // Inferred role: notify type (0 enter, 1 leave, 2 jump, 3 move); original member name unknown.
 };
 
 static_assert(offsetof(MsgPcFieldNotifyWall, unknown10) == 0x10, "");
-static_assert(offsetof(MsgPcFieldNotifyWall, unknown30) == 0x30, "");
+static_assert(offsetof(MsgPcFieldNotifyWall, m_transform) == 0x30, "");
 static_assert(offsetof(MsgPcFieldNotifyWall, unknown50) == 0x50, "");
 
 namespace pc {

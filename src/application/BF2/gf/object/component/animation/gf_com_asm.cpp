@@ -42,8 +42,8 @@ void GfComAsm::procMsgObjectSetAsmPlaybackSpeed(fw::MessageObject *sender, MsgOb
 void GfComAsm::procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message) {}
 
 GfComAsm::GfComAsm() : unknown10(nullptr), unknown148(getAllocator(ALLOCATOR_UNKNOWN_0)), unknown180(nullptr) {
-  unknown138.unknown08 = this;
-  unknown170.unknown08 = this;
+  m_asmLisener.m_comAsm = this;
+  m_viewerListener.m_comAsm = this;
 }
 
 GfComAsm::~GfComAsm() {}
@@ -56,13 +56,13 @@ void GfComAsm::cleanup() {
 
   fw::AnimationManager *manager = fw::AnimationManager::get();
   if (manager != nullptr) {
-    if (unknown38.unknown18 != nullptr && unknown38.unknown20 != nullptr) {
-      manager->removePoseSampler(getLayer(), unknown38);
-      unknown38.unbind();
+    if (m_animAsmPoseSampler.unknown18 != nullptr && m_animAsmPoseSampler.unknown20 != nullptr) {
+      manager->removePoseSampler(getLayer(), m_animAsmPoseSampler);
+      m_animAsmPoseSampler.unbind();
     }
-    if (unknown18.unknown18 != nullptr) {
-      manager->removeControlUpdater(getLayer(), unknown18);
-      unknown18.unbind();
+    if (m_animAsmUpdater.unknown18 != nullptr) {
+      manager->removeControlUpdater(getLayer(), m_animAsmUpdater);
+      m_animAsmUpdater.unbind();
     }
   }
 
@@ -417,13 +417,13 @@ void GfComAsm::changeLayer(u32 oldLayer, u32 newLayer) {
     return;
   }
 
-  if (unknown38.unknown18 != nullptr && unknown38.unknown20 != nullptr) {
-    manager->removePoseSampler(getLayer(), unknown38);
-    manager->addPoseSampler(newLayer, unknown38);
+  if (m_animAsmPoseSampler.unknown18 != nullptr && m_animAsmPoseSampler.unknown20 != nullptr) {
+    manager->removePoseSampler(getLayer(), m_animAsmPoseSampler);
+    manager->addPoseSampler(newLayer, m_animAsmPoseSampler);
   }
-  if (unknown18.unknown18 != nullptr) {
-    manager->removeControlUpdater(getLayer(), unknown18);
-    manager->addControlUpdater(newLayer, unknown18);
+  if (m_animAsmUpdater.unknown18 != nullptr) {
+    manager->removeControlUpdater(getLayer(), m_animAsmUpdater);
+    manager->addControlUpdater(newLayer, m_animAsmUpdater);
   }
 }
 

@@ -36,7 +36,7 @@ void StateFieldRideOn::syncMotion(GfComBehaviorPc *behavior) {
   GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
   u32 playerId = behavior->unknown08->getComponent<GfComPropertyPc>()->unknown38;
   u32 buddyId = (playerId & 1) != 0 ? playerId - 1 : playerId + 1;
-  GfObj *buddy = GfObjUtil::getObj(GfGamePlayerFormation::get()->unknown1a0[buddyId].unknown08);
+  GfObj *buddy = GfObjUtil::getObj(GfGamePlayerFormation::get()->unknown1a0[buddyId].m_playerHandle);
   GfComAsm *buddyAsm = buddy->getComponent<GfComAsm>();
   unknown001 vehicleType = getVehicleMotType(*buddyAsm);
   unknown001 riderType = getRiderMotType(*comAsm);

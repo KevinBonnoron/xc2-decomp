@@ -44,16 +44,16 @@ void DrMdoCtlSeamMpfMap::createMpfZPrePassDisplayList() {
     return;
   }
   DrResMdoSeamWrkMpf *mpf = unknown338.unknown10.unknown00;
-  grlib::CGLibVtxInstans *instans = m_drMan->unknown88->unknown008->unknown10;
-  m_drMan->unknown5c0->setupCulling(DR_AP_CULL_TYPE_UNKNOWN_2);
+  grlib::CGLibVtxInstans *instans = m_drMan->m_drMdlMan->m_drMdoVertexMan->unknown10;
+  m_drMan->m_drAPCache->setupCulling(DR_AP_CULL_TYPE_UNKNOWN_2);
   for (; mpf != nullptr; mpf = mpf->unknown08) {
-    unknown30 = mpf->unknown70;
+    unknown30 = mpf->m_mdoWrkMatRes;
     if (unknown30 != nullptr && mpf->unknown4e != 0) {
       int count = mpf->unknown52;
-      DrMdoCtlMpfWork *work = mpf->unknownc0;
+      DrMdoCtlMpfWork *work = mpf->m_drMdoCtlMpfWork;
       for (int i = 0; i < count; i++) {
-        if (work->unknown20[i].unknown20 != 0) {
-          const MdsMdlTopHeader *entry = &unknown30->unknown168[i];
+        if (work->m_wkMpfObjSelect[i].m_objChk != 0) {
+          const MdsMdlTopHeader *entry = &unknown30->m_mdsMdlTopHeader[i];
           const MdsMdlInfoHeader *header = reinterpret_cast<const MdsMdlInfoHeader *>(unknown30->unknown18 + entry->unknown00);
           int num = entry->unknown04;
           for (int j = 0; j < num; j++, header++) {
@@ -74,13 +74,13 @@ void DrMdoCtlSeamMpfMap::initMpfMapParts(DrResMdoSeamWrkMpf *mpf) {
   unknownc4c += table[mpf->unknown4c].unknown38;
   unknownb90[mpf->unknown4c >> 5] |= 1 << (mpf->unknown4c & 0x1f);
   unknownc06++;
-  mpf->setupWork(matRes, m_drMan->unknown14, head, m_drMan->unknown88->unknown020);
+  mpf->setupWork(matRes, m_drMan->unknown14, head, m_drMan->m_drMdlMan->m_drMdoMpfMan);
 }
 
 void DrMdoCtlSeamMpfMap::changeMemMpfMapParts(DrResMdoSeamWrkMpf *mpf) {
   const u8 *data = mpf->unknown18->m_buffer;
   const MdsSeamMpfMapHead *head = reinterpret_cast<const MdsSeamMpfMapHead *>(data);
-  resetMpfMaterial(mpf->unknown70, data + head->unknown04, data + head->unknown0c, data + head->unknown00, data + head->unknown10);
+  resetMpfMaterial(mpf->m_mdoWrkMatRes, data + head->unknown04, data + head->unknown0c, data + head->unknown00, data + head->unknown10);
 }
 
 void DrMdoCtlSeamMpfMap::createAllpfMapDisplayList() {}
@@ -89,17 +89,17 @@ void DrMdoCtlSeamMpfMap::renderMpfMapDisplayList() { createMpfMapDisplayList(); 
 
 void DrMdoCtlSeamMpfMap::releaseFreeSeamMpf(DrResMdoSeamWrkMpf *mpf) {
   DrResMdoSeamMemObj *mem = mpf->unknown18;
-  if (mpf->unknown70 != nullptr) {
+  if (mpf->m_mdoWrkMatRes != nullptr) {
     unknownb90[mpf->unknown4c >> 5] &= ~(1 << (mpf->unknown4c & 0x1f));
     unknownc4c -= mpf->unknowne8;
-    releaseMpfMapSeamMat(mpf->unknown70);
+    releaseMpfMapSeamMat(mpf->m_mdoWrkMatRes);
     mpf->releaseCache(this);
     unknownc06--;
   }
   unknown338.unknown002(mpf);
   if (mem != nullptr) {
     mpf->unknown18 = nullptr;
-    unknown6e0.releaseFreeObj(mem);
+    m_drResMdoSeamMemMan.releaseFreeObj(mem);
   }
 }
 
@@ -111,7 +111,7 @@ void DrMdoCtlSeamMpfMap::updateMpfMap() {
 }
 
 void DrMdoCtlSeamMpfMap::readMpfMapCheck() {
-  if (unknownd30.unknown40 != 0) {
+  if (m_drResMdoSeamParmRead.unknown40 != 0) {
     DrResMdoSeamWrkMpf::SEAM_MPFMAP_READ_CHECK = 40.5f;
   } else {
     DrResMdoSeamWrkMpf::SEAM_MPFMAP_READ_CHECK = (unknownc7c & 0x40) == 0 ? 60.0f : 40.5f;
@@ -119,7 +119,7 @@ void DrMdoCtlSeamMpfMap::readMpfMapCheck() {
   bool isOpen = ((unknownc7c >> 12) & 1) != 0 || unknowncc8;
   DrResMdoSeamWrkMpf *mpf = unknown338.unknown10.unknown00;
   while (mpf != nullptr) {
-    bool isRelease = mpf->update(&unknownd30, isOpen, unknownc7c);
+    bool isRelease = mpf->update(&m_drResMdoSeamParmRead, isOpen, unknownc7c);
     if (mpf->unknown5c & 0x10) {
       changeMemMpfMapParts(mpf);
     }
@@ -130,16 +130,16 @@ void DrMdoCtlSeamMpfMap::readMpfMapCheck() {
     mpf = next;
   }
   if ((unknownc7c & 0x81200) == 0 && unknownc06 < 3) {
-    readMpfModelCheck(unknownd30.unknown50);
+    readMpfModelCheck(m_drResMdoSeamParmRead.unknown50);
   }
 }
 
 void DrMdoCtlSeamMpfMap::updateMpfMapRenderList() {
-  DrCalcViewWork *view = m_drMan->unknown580->unknown10;
-  grlib::CGLibVtxInstans *instans = m_drMan->unknown88->unknown008->unknown10;
-  DrMdoMpfMan *mpfMan = m_drMan->unknown88->unknown020;
+  DrCalcViewWork *view = m_drMan->m_drCalcMan->m_drCalcViewWork;
+  grlib::CGLibVtxInstans *instans = m_drMan->m_drMdlMan->m_drMdoVertexMan->unknown10;
+  DrMdoMpfMan *mpfMan = m_drMan->m_drMdlMan->m_drMdoMpfMan;
   for (DrResMdoSeamWrkMpf *mpf = unknown338.unknown10.unknown00; mpf != nullptr; mpf = mpf->unknown08) {
-    unknown30 = mpf->unknown70;
+    unknown30 = mpf->m_mdoWrkMatRes;
     if (unknown30 != nullptr) {
       u32 flags = mpf->updateRenderList(view, instans, this);
       if (flags != 0) {
@@ -180,7 +180,7 @@ bool DrMdoCtlSeamMpfMap::readMpfModelCheck(const mm::Vec3 &position) {
         entry->unknown00[2] + 40.0f < position.z || entry->unknown0c[2] - 40.0f > position.z) {
       continue;
     }
-    unknownd30.setStockMpfMdl(i);
+    m_drResMdoSeamParmRead.setStockMpfMdl(i);
     isEmpty = false;
   }
   return isEmpty;
@@ -191,22 +191,22 @@ void DrMdoCtlSeamMpfMap::createMpfMapDisplayList() {
     return;
   }
   DrResMdoSeamWrkMpf *mpf = unknown338.unknown10.unknown00;
-  grlib::CGLibVtxInstans *instans = m_drMan->unknown88->unknown008->unknown10;
-  DrAPCache *cache = m_drMan->unknown5c0;
+  grlib::CGLibVtxInstans *instans = m_drMan->m_drMdlMan->m_drMdoVertexMan->unknown10;
+  DrAPCache *cache = m_drMan->m_drAPCache;
   cache->setupCulling(DR_AP_CULL_TYPE_UNKNOWN_2);
-  m_drMan->unknown78->selectGBuffRenderTarget(0x1f);
+  m_drMan->m_drPixlMan->selectGBuffRenderTarget(0x1f);
   cache->setupDepthStencil(0x18, 1, 0, 3);
   cache->setupAlphaBlend(0);
   for (; mpf != nullptr; mpf = mpf->unknown08) {
-    unknown30 = mpf->unknown70;
+    unknown30 = mpf->m_mdoWrkMatRes;
     if (unknown30 != nullptr && mpf->unknown4e != 0) {
       beginMatInfo();
-      unknown30->unknownc8->beginVertexSetup();
+      unknown30->m_drResMdoVertex->beginVertexSetup();
       int count = mpf->unknown52;
-      DrMdoCtlMpfWork *work = mpf->unknownc0;
+      DrMdoCtlMpfWork *work = mpf->m_drMdoCtlMpfWork;
       for (int i = 0; i < count; i++) {
-        if (work->unknown20[i].unknown20 != 0) {
-          const MdsMdlTopHeader *entry = &unknown30->unknown168[i];
+        if (work->m_wkMpfObjSelect[i].m_objChk != 0) {
+          const MdsMdlTopHeader *entry = &unknown30->m_mdsMdlTopHeader[i];
           const MdsMdlInfoHeader *header = reinterpret_cast<const MdsMdlInfoHeader *>(unknown30->unknown18 + entry->unknown00);
           int num = entry->unknown04;
           for (int j = 0; j < num; j++, header++) {
@@ -225,9 +225,9 @@ void DrMdoCtlSeamMpfMap::callRenderSeamMpfMap() {
   if (((unknownc7c >> 3) & 1) == 0) {
     return;
   }
-  DrMan::get()->unknown180->begin(DrPixlTileParm::TILE_TYPE_UNKNOWN_3);
+  DrMan::get()->m_drPixlTileParm->begin(DrPixlTileParm::TILE_TYPE_UNKNOWN_3);
   createMpfMapDisplayList();
-  DrMan::get()->unknown180->end(DrPixlTileParm::TILE_TYPE_UNKNOWN_3);
+  DrMan::get()->m_drPixlTileParm->end(DrPixlTileParm::TILE_TYPE_UNKNOWN_3);
 }
 
 } // namespace ml

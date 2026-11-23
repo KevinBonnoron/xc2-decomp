@@ -124,30 +124,30 @@ public:
   void setLodSwitch(LodSwitch lodSwitch);
   bool isGmkFinished() const;
 
-  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(m_createInfo.unknown10); }
 
-  GmkCamera unknown60;         // Inferred role: gimmick camera; original member name unknown.
-  GmkPhantom unknown1c0;       // Inferred role: phantom with enter and leave events; original member name unknown.
-  GmkPhantomSimple unknown250; // Inferred role: simple phantom; original member name unknown.
-  bool unknown2b0;             // Inferred role: player entered the phantom this frame; original member name unknown.
-  bool unknown2b1;             // Inferred role: unknown2b0 of the previous frame; original member name unknown.
+  GmkCamera m_gmkCamera;               // Inferred role: gimmick camera; original member name unknown.
+  GmkPhantom m_gmkPhantom;             // Inferred role: phantom with enter and leave events; original member name unknown.
+  GmkPhantomSimple m_gmkPhantomSimple; // Inferred role: simple phantom; original member name unknown.
+  bool unknown2b0;                     // Inferred role: player entered the phantom this frame; original member name unknown.
+  bool unknown2b1;                     // Inferred role: unknown2b0 of the previous frame; original member name unknown.
   u8 _2b2[0x2b8 - 0x2b2];
   gf::GF_OBJ_HANDLE *unknown2b8; // Inferred role: door game object handle; original member name unknown.
   f32 unknown2c0;                // Role and original member name unknown.
   u8 _2c4[0x2c8 - 0x2c4];
   void (GmkDoor::*unknown2c8)(f32); // Inferred role: seq; original member name unknown.
-  GmkCtrlVolSe unknown2e0;          // Inferred role: se; original member name unknown.
+  GmkCtrlVolSe m_gmkCtrlVolSe;      // Inferred role: se; original member name unknown.
 };
 
 static_assert(sizeof(GmkDoor::BdatInfo) == 0x48, "");
-static_assert(offsetof(GmkDoor, unknown60) == 0x60, "");
-static_assert(offsetof(GmkDoor, unknown1c0) == 0x1c0, "");
-static_assert(offsetof(GmkDoor, unknown250) == 0x250, "");
+static_assert(offsetof(GmkDoor, m_gmkCamera) == 0x60, "");
+static_assert(offsetof(GmkDoor, m_gmkPhantom) == 0x1c0, "");
+static_assert(offsetof(GmkDoor, m_gmkPhantomSimple) == 0x250, "");
 static_assert(offsetof(GmkDoor, unknown2b0) == 0x2b0, "");
 static_assert(offsetof(GmkDoor, unknown2b8) == 0x2b8, "");
 static_assert(offsetof(GmkDoor, unknown2c0) == 0x2c0, "");
 static_assert(offsetof(GmkDoor, unknown2c8) == 0x2c8, "");
-static_assert(offsetof(GmkDoor, unknown2e0) == 0x2e0, "");
+static_assert(offsetof(GmkDoor, m_gmkCtrlVolSe) == 0x2e0, "");
 static_assert(sizeof(GmkDoor) == 0x360, "");
 
 typedef TGmkList<GmkDoor, GmkDoor::BdatInfo, 0x524f4f44, 2, GmkDoorGob> GmkDoorList;

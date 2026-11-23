@@ -18,13 +18,13 @@ public:
       int unknown04; // Inferred role: opened flag; original member name unknown.
     };
 
-    MainListener(GfMenuObjCompass *owner) : unknown0c(0), unknown10(), _18(), unknown20(owner) {}
+    MainListener(GfMenuObjCompass *owner) : unknown0c(0), unknown10(), _18(), m_menuObjCompass(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     int unknown0c; // Inferred role: control of the open and close fade; original member name unknown.
     unknown005 unknown10;
     u8 _18[0x1c - 0x18];
-    GfMenuObjCompass *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjCompass *m_menuObjCompass; // Inferred role: owner; original member name unknown.
   };
 
   // Parameter of addLocator, copied whole into the icon list entry (the game moves it with one 64-bit load and store); the type name comes from the symbol of addLocator.
@@ -36,9 +36,9 @@ public:
 
   // Entry of the compass icon list; the name comes from the symbol of mm::mtl::FixedVector<gf::GfMenuObjCompass::IconObj, 32>.
   struct IconObj {
-    u32 unknown00;          // Inferred role: icon object handle; original member name unknown.
-    LocatorParam unknown04; // Inferred role: locator; original member name unknown.
-    int unknown0c;          // Inferred role: frames left before the icon is hidden; original member name unknown.
+    u32 unknown00;               // Inferred role: icon object handle; original member name unknown.
+    LocatorParam m_locatorParam; // Inferred role: locator; original member name unknown.
+    int unknown0c;               // Inferred role: frames left before the icon is hidden; original member name unknown.
   };
 
   GfMenuObjCompass(u32 handle);
@@ -54,10 +54,10 @@ public:
   static mm::mtl::FixedVector<IconObj, 32> m_IconObjList;
 };
 
-static_assert(offsetof(GfMenuObjCompass::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjCompass::MainListener, m_menuObjCompass) == 0x20, "");
 static_assert(sizeof(GfMenuObjCompass::MainListener) == 0x28, "");
 static_assert(sizeof(GfMenuObjCompass::LocatorParam) == 0x8, "");
-static_assert(offsetof(GfMenuObjCompass::IconObj, unknown04) == 0x4, "");
+static_assert(offsetof(GfMenuObjCompass::IconObj, m_locatorParam) == 0x4, "");
 static_assert(sizeof(GfMenuObjCompass::IconObj) == 0x10, "");
 static_assert(sizeof(GfMenuObjCompass) == 0x28, "");
 

@@ -19,9 +19,9 @@ namespace ssd {
 
 VoiceHandle::VoiceHandle()
     : Object(ObjectType::VOICE_HANDLE), unknown31(false), unknown32(false), unknown33(false), unknown34(false), unknown35(false), unknown36(false), unknown37(false), unknown38(false),
-      unknown3b(false), unknown3c(false), unknown3d(true), unknown44(0), unknown48(0), unknown4c(0), unknown50(-1), unknown54(0), unknown58(nullptr), unknown60(nullptr), unknown68(nullptr),
-      unknown70(nullptr), unknown78(&VoiceHandle::NullBufferProcess), unknown88(0), unknown6b0(false), unknown6b1(false), unknown6b4(1.0f), unknown6b8(1.0f), unknown6bc(0.0f), unknown6c0(1.0f),
-      unknown6f0(1.0f) {
+      unknown3b(false), unknown3c(false), unknown3d(true), unknown44(0), unknown48(0), unknown4c(0), unknown50(-1), unknown54(0), m_soundHandle(nullptr), m_soundEntry(nullptr), m_waveSource(nullptr),
+      m_streamController(nullptr), unknown78(&VoiceHandle::NullBufferProcess), unknown88(0), unknown6b0(false), unknown6b1(false), unknown6b4(1.0f), unknown6b8(1.0f), unknown6bc(0.0f),
+      unknown6c0(1.0f), unknown6f0(1.0f) {
   unknown668 = false;
   unknown669 = 0;
   unknown688 = 0;
@@ -71,8 +71,8 @@ void VoiceHandle::Init(int number) {
   unknown660 = 0;
   unknown48 = 0;
   unknown54 = 0;
-  unknown58 = nullptr;
-  unknown60 = nullptr;
+  m_soundHandle = nullptr;
+  m_soundEntry = nullptr;
   unknown78 = &VoiceHandle::NullBufferProcess;
   unknown669 = 0;
   unknown6a8 = 0;
@@ -82,7 +82,7 @@ void VoiceHandle::Init(int number) {
   unknown688 = 0;
   unknown680 = 0;
   unknown6d0.Reset(0.0f);
-  unknown70 = nullptr;
+  m_streamController = nullptr;
 }
 
 void VoiceHandle::Quit() {
@@ -97,15 +97,15 @@ void VoiceHandle::DeleteHWVoice() {}
 void VoiceHandle::FreeVoice() {
   unknown78 = &VoiceHandle::NullBufferProcess;
   unknown3a = true;
-  if (unknown58 != nullptr) {
-    unknown58->unknown59 = false;
-    unknown58->unknown5a = true;
-    unknown58->unknown100.ExecuteDelegateImpl(reinterpret_cast<unsigned long long>(unknown58), 1);
-    unknown58->unknown30 = nullptr;
-    unknown58->unknownf8 = 0;
-    unknown58 = nullptr;
+  if (m_soundHandle != nullptr) {
+    m_soundHandle->unknown59 = false;
+    m_soundHandle->unknown5a = true;
+    m_soundHandle->m_multiCast.ExecuteDelegateImpl(reinterpret_cast<unsigned long long>(m_soundHandle), 1);
+    m_soundHandle->m_soundEntry = nullptr;
+    m_soundHandle->unknownf8 = 0;
+    m_soundHandle = nullptr;
   }
-  if (unknown70 != nullptr) {
+  if (m_streamController != nullptr) {
     DeleteStream();
   }
   static_cast<SystemCore *>(SoundCore::instance_)->FreeVoiceHandle(this);
@@ -114,10 +114,10 @@ void VoiceHandle::FreeVoice() {
     unknown3b = false;
   }
   Quit();
-  if (unknown68 != nullptr) {
-    unknown68->unknown6c--;
-    unknown60 = nullptr;
-    unknown68 = nullptr;
+  if (m_waveSource != nullptr) {
+    m_waveSource->unknown6c--;
+    m_soundEntry = nullptr;
+    m_waveSource = nullptr;
   }
 }
 
@@ -128,9 +128,9 @@ Result VoiceHandle::ForceStop() {
   unknown37 = false;
   unknown32 = false;
   unknown44 = 9;
-  if (unknown58 != nullptr) {
-    unknown58->unknownf8 = 0;
-    unknown58 = nullptr;
+  if (m_soundHandle != nullptr) {
+    m_soundHandle->unknownf8 = 0;
+    m_soundHandle = nullptr;
   }
   return set_result(static_cast<Result>(0));
 }
@@ -165,7 +165,7 @@ Result VoiceHandle::GetPlayPosition(u64 *position) const {
     current = limit;
   }
   u64 result = current;
-  if (!unknown68->unknown50) {
+  if (!m_waveSource->unknown50) {
     result = unknown698;
     if (current <= unknown698) {
       result = current;
@@ -182,12 +182,12 @@ Result VoiceHandle::GetPlaySample(unsigned long long *sample) const {
     return result;
   }
   u64 value = 0;
-  if (unknown68->unknown34 == WaveSource::unknown001_3) {
-    if (unknown68->unknown18) {
+  if (m_waveSource->unknown34 == WaveSource::unknown001_3) {
+    if (m_waveSource->unknown18) {
       value = position * 14 / 8;
     }
-  } else if (unknown68->unknown18 && unknown68->unknown40 != 0) {
-    value = static_cast<u32>(position / unknown68->unknown40);
+  } else if (m_waveSource->unknown18 && m_waveSource->unknown40 != 0) {
+    value = static_cast<u32>(position / m_waveSource->unknown40);
   }
   *sample = value;
   return result;
@@ -197,7 +197,7 @@ Result VoiceHandle::GetPlayTime(f32 *time) const {
   u64 position;
   Result result = GetPlayPosition(&position);
   if (result >= 0) {
-    WaveSource *source = unknown68;
+    WaveSource *source = m_waveSource;
     f32 value = 0.0f;
     if (source->unknown34 == WaveSource::unknown001_3) {
       bool hasData = source->unknown18;
@@ -224,9 +224,9 @@ Result VoiceHandle::Start(f32 fadeTime, bool pregap) {
     unknown44 = 4;
     return static_cast<Result>(0);
   }
-  if (unknown70 != nullptr && unknown44 == 2) {
+  if (m_streamController != nullptr && unknown44 == 2) {
     SetPlayPosition(0);
-    unknown70->ResetStream();
+    m_streamController->ResetStream();
     unknown44 = 6;
   }
   unknown6d0.Set(1.0f, fadeTime);
@@ -250,8 +250,8 @@ Result VoiceHandle::SetPlayPosition(u64 position) {
 
 Result VoiceHandle::Stop(f32 fadeTime) {
   unknown6d0.Set(0.0f, fadeTime);
-  if (unknown70 != nullptr) {
-    unknown70->unknownf5 = false;
+  if (m_streamController != nullptr) {
+    m_streamController->unknownf5 = false;
   }
   unknown44 = 9;
   unknown36 = true;
@@ -283,31 +283,31 @@ Result VoiceHandle::SetPlayTime(f32 time) {
 }
 
 Result VoiceHandle::GetFilePosition(u64 *position) const {
-  *position = unknown70 != nullptr ? unknown70->unknown218 : 0;
+  *position = m_streamController != nullptr ? m_streamController->unknown218 : 0;
   return set_result(static_cast<Result>(0));
 }
 
 Result VoiceHandle::GetLoopTime(bool *isLoop, f32 *begin, f32 *end) {
-  f32 sampleRate = unknown68->unknown2c;
-  *isLoop = unknown68->unknown50;
-  *begin = unknown68->unknown44 / sampleRate;
-  *end = unknown68->unknown48 / sampleRate;
+  f32 sampleRate = m_waveSource->unknown2c;
+  *isLoop = m_waveSource->unknown50;
+  *begin = m_waveSource->unknown44 / sampleRate;
+  *end = m_waveSource->unknown48 / sampleRate;
   return static_cast<Result>(0);
 }
 
 Result VoiceHandle::GetRemainLoopCount(int *count) const {
-  if (count == nullptr || unknown70 == nullptr) {
+  if (count == nullptr || m_streamController == nullptr) {
     return static_cast<Result>(-6);
   }
-  *count = unknown70->unknown250;
+  *count = m_streamController->unknown250;
   return static_cast<Result>(0);
 }
 
 Result VoiceHandle::SetRemainLoopCount(int count) {
-  if (unknown70 == nullptr) {
+  if (m_streamController == nullptr) {
     return static_cast<Result>(-6);
   }
-  unknown70->unknown250 = count;
+  m_streamController->unknown250 = count;
   return static_cast<Result>(0);
 }
 
@@ -338,10 +338,10 @@ Result VoiceHandle::IsEmptyStreamBuffer(bool *isEmpty) {
 }
 
 void VoiceHandle::UpdateGameFrame(f32 deltaTime) {
-  if (unknown58 == nullptr) {
+  if (m_soundHandle == nullptr) {
     return;
   }
-  SoundActor *actor = unknown58->unknown38;
+  SoundActor *actor = m_soundHandle->m_soundActor;
   if (actor == nullptr) {
     return;
   }
@@ -355,8 +355,8 @@ void VoiceHandle::UpdateGameFrame(f32 deltaTime) {
   if (listener == nullptr) {
     return;
   }
-  const SoundEntry *entry = unknown60;
-  if (entry->unknown30.unknown68.unknown03) {
+  const SoundEntry *entry = m_soundEntry;
+  if (entry->m_soundParam.m_state.unknown03) {
     SystemCore *core = static_cast<SystemCore *>(SoundCore::instance_);
     if (listener->IsEnableDoppler() && core->unknown4e4) {
       f32 x = actor3D->unknown5c.x - listener->unknown48.unknown00.x;
@@ -388,13 +388,13 @@ void VoiceHandle::UpdateGameFrame(f32 deltaTime) {
       }
     }
   }
-  if (entry->unknown30.unknown68.unknown01) {
+  if (entry->m_soundParam.m_state.unknown01) {
     Vec3 listenerPosition = actor3D->m_listener->unknown18.unknown00;
     f32 x = actor3D->unknown5c.x - listenerPosition.x;
     f32 y = actor3D->unknown5c.y - listenerPosition.y;
     f32 z = actor3D->unknown5c.z - listenerPosition.z;
     f32 distance = sqrtf(x * x + y * y + z * z);
-    f32 volume = unknown006(distance, entry->unknown30.unknown70.unknown00, unknown6c8, entry->unknown30.unknown70.unknown08, unknown6cc);
+    f32 volume = unknown006(distance, entry->m_soundParam.m_surround.unknown00, unknown6c8, entry->m_soundParam.m_surround.unknown08, unknown6cc);
     f32 result;
     if (volume <= unknown6cc) {
       result = unknown6cc;
@@ -405,10 +405,10 @@ void VoiceHandle::UpdateGameFrame(f32 deltaTime) {
     }
     unknown6f0 = result;
   }
-  if (entry->unknown30.unknown68.unknown02) {
-    listener->Vec3Transform(&actor3D->unknown5c, &unknown704);
-    f32 x = unknown704.x;
-    f32 z = unknown704.z;
+  if (entry->m_soundParam.m_state.unknown02) {
+    listener->Vec3Transform(&actor3D->unknown5c, &m_vec3);
+    f32 x = m_vec3.x;
+    f32 z = m_vec3.z;
     f32 angle = acosf(x / sqrtf(x * x + z * z)) * 180.0f / 3.1415927f;
     if (z < 0.0f) {
       angle = 360.0f - angle;

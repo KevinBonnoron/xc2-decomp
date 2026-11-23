@@ -4,7 +4,7 @@
 
 namespace ml {
 
-DrShdFetchMan::DrShdFetchMan(DrMan *drMan) : unknown00(nullptr), unknown08(nullptr), unknown10(drMan), unknown18(0) {}
+DrShdFetchMan::DrShdFetchMan(DrMan *drMan) : unknown00(nullptr), unknown08(nullptr), m_drMan(drMan), unknown18(0) {}
 
 DrShdFetchMan::~DrShdFetchMan() {
   DrShdFetchObj *obj = unknown00;

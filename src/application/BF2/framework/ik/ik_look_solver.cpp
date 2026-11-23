@@ -20,7 +20,7 @@ LookIkSolver *LookIkSolver::create(const Description &description, mm::mtl::Intr
 
 bool LookIkSolver::createImpl(const Description &description, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose) {
   bind(frame, pose);
-  unknown30 = description;
+  m_description = description;
   return true;
 }
 
@@ -94,10 +94,10 @@ void LookIkSolver::setEnableSpine(bool enable) {
   bool isSpineEnable = unknown20->isEnable();
   if (enable) {
     if (!isSpineEnable && unknown28->isEnable()) {
-      unknown20->fadeIn(unknown30.unknown04);
+      unknown20->fadeIn(m_description.unknown04);
     }
   } else if (isSpineEnable || unknown20->unknown24 == IkFadeSolver::unknown002_1) {
-    unknown20->fadeOut(unknown30.unknown00);
+    unknown20->fadeOut(m_description.unknown00);
   }
 
   unknown38 = enable;

@@ -48,7 +48,7 @@ public:
   void updateColorFileter(int index);
   grlib::CGLibTextureBuffer *findFilterTexture(u32 id) const;
 
-  DrMan *unknown00;                     // Inferred role: dr man; original member name unknown.
+  DrMan *m_drMan;                       // Inferred role: dr man; original member name unknown.
   const unknown002 *unknown08;          // Inferred role: texture table; original member name unknown.
   unknown001 unknown10[4];              // Inferred role: filter slots; original member name unknown.
   grlib::CGLibTextureBuffer *unknownf0; // Inferred role: textures; original member name unknown.

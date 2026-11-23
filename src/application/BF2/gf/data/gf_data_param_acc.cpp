@@ -54,16 +54,16 @@ static_assert(sizeof(ml::fixed_size_alloc_inside<ACCMEM, 128>) == 0x4038, "");
 } // namespace _gfdac
 
 DataParamAcc::DataParamAcc(const ParamObj &paramObj) {
-  if (paramObj.unknown00 != unknown020) {
-    setupObjHandle(paramObj.unknown00);
+  if (paramObj.m_GF_OBJ_HANDLE != unknown020) {
+    setupObjHandle(paramObj.m_GF_OBJ_HANDLE);
   } else {
     setupObjId(paramObj.unknown08, paramObj.unknown0c, static_cast<GimmickType>(0));
   }
 }
 
 void DataParamAcc::setupObjHandle(GF_OBJ_HANDLE *handle) {
-  unknown08 = nullptr;
-  unknown10 = handle;
+  m_iDataObj = nullptr;
+  m_GF_OBJ_HANDLE = handle;
   _gfdac::ACCMEM *mem = _gfdac::s_accbuf.unknown003();
   IDataObj *obj;
   switch (GfObjUtil::getObjType(handle)) {
@@ -103,11 +103,11 @@ void DataParamAcc::setupObjHandle(GF_OBJ_HANDLE *handle) {
     _gfdac::s_accbuf.unknown004(mem);
     return;
   }
-  unknown08 = obj;
+  m_iDataObj = obj;
 }
 
 void DataParamAcc::setupObjId(u32 objectType, u32 id, GimmickType gimmickType) {
-  unknown08 = nullptr;
+  m_iDataObj = nullptr;
   _gfdac::ACCMEM *mem = _gfdac::s_accbuf.unknown003();
   IDataObj *obj;
   switch (objectType) {
@@ -142,7 +142,7 @@ void DataParamAcc::setupObjId(u32 objectType, u32 id, GimmickType gimmickType) {
     _gfdac::s_accbuf.unknown004(mem);
     return;
   }
-  unknown08 = obj;
+  m_iDataObj = obj;
 }
 
 DataParamAcc::DataParamAcc(GF_OBJ_HANDLE *handle) { setupObjHandle(handle); }
@@ -150,18 +150,18 @@ DataParamAcc::DataParamAcc(GF_OBJ_HANDLE *handle) { setupObjHandle(handle); }
 DataParamAcc::DataParamAcc(u32 objectType, u32 id, GimmickType gimmickType) { setupObjId(objectType, id, gimmickType); }
 
 DataParamAcc::~DataParamAcc() {
-  if (unknown08 != nullptr) {
-    unknown08->~IDataObj();
-    _gfdac::s_accbuf.unknown004(unknown08);
-    unknown08 = nullptr;
+  if (m_iDataObj != nullptr) {
+    m_iDataObj->~IDataObj();
+    _gfdac::s_accbuf.unknown004(m_iDataObj);
+    m_iDataObj = nullptr;
   }
 }
 
-bool DataParamAcc::isValid() const { return unknown08 != nullptr && unknown08->isValid(); }
+bool DataParamAcc::isValid() const { return m_iDataObj != nullptr && m_iDataObj->isValid(); }
 
 u32 DataParamAcc::getObjType() const {
   if (isValid()) {
-    return unknown08->getObjType();
+    return m_iDataObj->getObjType();
   }
 
   return 0;
@@ -169,7 +169,7 @@ u32 DataParamAcc::getObjType() const {
 
 const char *DataParamAcc::getModelResourceName() const {
   if (isValid()) {
-    return unknown08->getModelResourceName();
+    return m_iDataObj->getModelResourceName();
   }
 
   return nullptr;
@@ -177,7 +177,7 @@ const char *DataParamAcc::getModelResourceName() const {
 
 const char *DataParamAcc::getMotionResourceName() const {
   if (isValid()) {
-    return unknown08->getMotionResourceName();
+    return m_iDataObj->getMotionResourceName();
   }
 
   return nullptr;
@@ -185,7 +185,7 @@ const char *DataParamAcc::getMotionResourceName() const {
 
 const char *DataParamAcc::getEffectResourceName() const {
   if (isValid()) {
-    return unknown08->getEffectResourceName();
+    return m_iDataObj->getEffectResourceName();
   }
 
   return nullptr;
@@ -193,7 +193,7 @@ const char *DataParamAcc::getEffectResourceName() const {
 
 const char *DataParamAcc::getSeResourceName() const {
   if (isValid()) {
-    return unknown08->getSeResourceName();
+    return m_iDataObj->getSeResourceName();
   }
 
   return nullptr;
@@ -201,7 +201,7 @@ const char *DataParamAcc::getSeResourceName() const {
 
 const char *DataParamAcc::getName() const {
   if (isValid()) {
-    const char *name = unknown08->getName();
+    const char *name = m_iDataObj->getName();
     return name == nullptr ? "" : name;
   }
 
@@ -210,7 +210,7 @@ const char *DataParamAcc::getName() const {
 
 bool DataParamAcc::getName(u8 *&bdat, u32 &textId) const {
   if (isValid()) {
-    return unknown08->getName(bdat, textId);
+    return m_iDataObj->getName(bdat, textId);
   }
 
   return false;
@@ -218,7 +218,7 @@ bool DataParamAcc::getName(u8 *&bdat, u32 &textId) const {
 
 u32 DataParamAcc::getBdatId() const {
   if (isValid()) {
-    return unknown08->getBdatId();
+    return m_iDataObj->getBdatId();
   }
 
   return 0;
@@ -226,7 +226,7 @@ u32 DataParamAcc::getBdatId() const {
 
 u32 DataParamAcc::getHp() const {
   if (isValid()) {
-    return unknown08->getHp();
+    return m_iDataObj->getHp();
   }
 
   return 0;
@@ -234,7 +234,7 @@ u32 DataParamAcc::getHp() const {
 
 u32 DataParamAcc::getLevel(bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getLevel(isVirtual);
+    return m_iDataObj->getLevel(isVirtual);
   }
 
   return 0;
@@ -242,7 +242,7 @@ u32 DataParamAcc::getLevel(bool isVirtual) const {
 
 u32 DataParamAcc::getExp() const {
   if (isValid()) {
-    return unknown08->getExp();
+    return m_iDataObj->getExp();
   }
 
   return 0;
@@ -250,7 +250,7 @@ u32 DataParamAcc::getExp() const {
 
 u32 DataParamAcc::getBattleExp() const {
   if (isValid()) {
-    return unknown08->getBattleExp();
+    return m_iDataObj->getBattleExp();
   }
 
   return 0;
@@ -258,7 +258,7 @@ u32 DataParamAcc::getBattleExp() const {
 
 u32 DataParamAcc::getExpNext(bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getExpNext(isVirtual);
+    return m_iDataObj->getExpNext(isVirtual);
   }
 
   return 0;
@@ -266,7 +266,7 @@ u32 DataParamAcc::getExpNext(bool isVirtual) const {
 
 u32 DataParamAcc::getBattleExpNext(bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getBattleExpNext(isVirtual);
+    return m_iDataObj->getBattleExpNext(isVirtual);
   }
 
   return 0;
@@ -274,7 +274,7 @@ u32 DataParamAcc::getBattleExpNext(bool isVirtual) const {
 
 u32 DataParamAcc::getWeaponPoint(u32 weaponType) const {
   if (isValid()) {
-    return unknown08->getWeaponPoint(weaponType);
+    return m_iDataObj->getWeaponPoint(weaponType);
   }
 
   return 0;
@@ -282,13 +282,13 @@ u32 DataParamAcc::getWeaponPoint(u32 weaponType) const {
 
 void DataParamAcc::addWeaponPoint(u32 weaponType, int weaponPoint) {
   if (isValid()) {
-    unknown08->addWeaponPoint(weaponType, weaponPoint);
+    m_iDataObj->addWeaponPoint(weaponType, weaponPoint);
   }
 }
 
 u32 DataParamAcc::getSkillPoint() const {
   if (isValid()) {
-    return unknown08->getSkillPoint();
+    return m_iDataObj->getSkillPoint();
   }
 
   return 0;
@@ -296,13 +296,13 @@ u32 DataParamAcc::getSkillPoint() const {
 
 void DataParamAcc::addSkillPoint(int skillPoint) {
   if (isValid()) {
-    unknown08->addSkillPoint(skillPoint);
+    m_iDataObj->addSkillPoint(skillPoint);
   }
 }
 
 u32 DataParamAcc::getDriverArts(u32 weaponType, u32 index) const {
   if (isValid()) {
-    return unknown08->getDriverArts(weaponType, index);
+    return m_iDataObj->getDriverArts(weaponType, index);
   }
 
   return 0;
@@ -310,7 +310,7 @@ u32 DataParamAcc::getDriverArts(u32 weaponType, u32 index) const {
 
 bool DataParamAcc::setDriverArts(u32 weaponType, int index, u32 arts) {
   if (isValid()) {
-    return unknown08->setDriverArts(weaponType, index, arts);
+    return m_iDataObj->setDriverArts(weaponType, index, arts);
   }
 
   return false;
@@ -318,7 +318,7 @@ bool DataParamAcc::setDriverArts(u32 weaponType, int index, u32 arts) {
 
 u32 DataParamAcc::getDriverArtsLevel(u32 arts) const {
   if (isValid()) {
-    return unknown08->getDriverArtsLevel(arts);
+    return m_iDataObj->getDriverArtsLevel(arts);
   }
 
   return 0;
@@ -326,13 +326,13 @@ u32 DataParamAcc::getDriverArtsLevel(u32 arts) const {
 
 void DataParamAcc::setDriverArtsLevel(u32 arts, u32 level) {
   if (isValid()) {
-    unknown08->setDriverArtsLevel(arts, level);
+    m_iDataObj->setDriverArtsLevel(arts, level);
   }
 }
 
 u32 DataParamAcc::getHpMax(bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getHpMax(isVirtual);
+    return m_iDataObj->getHpMax(isVirtual);
   }
 
   return 0;
@@ -340,7 +340,7 @@ u32 DataParamAcc::getHpMax(bool isVirtual) const {
 
 u32 DataParamAcc::getStrength(bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getStrength(isVirtual);
+    return m_iDataObj->getStrength(isVirtual);
   }
 
   return 0;
@@ -348,7 +348,7 @@ u32 DataParamAcc::getStrength(bool isVirtual) const {
 
 u32 DataParamAcc::getPowerEther(bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getPowerEther(isVirtual);
+    return m_iDataObj->getPowerEther(isVirtual);
   }
 
   return 0;
@@ -356,7 +356,7 @@ u32 DataParamAcc::getPowerEther(bool isVirtual) const {
 
 u32 DataParamAcc::getDex(bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getDex(isVirtual);
+    return m_iDataObj->getDex(isVirtual);
   }
 
   return 0;
@@ -364,7 +364,7 @@ u32 DataParamAcc::getDex(bool isVirtual) const {
 
 u32 DataParamAcc::getAgility(bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getAgility(isVirtual);
+    return m_iDataObj->getAgility(isVirtual);
   }
 
   return 0;
@@ -372,7 +372,7 @@ u32 DataParamAcc::getAgility(bool isVirtual) const {
 
 u32 DataParamAcc::getLuck(bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getLuck(isVirtual);
+    return m_iDataObj->getLuck(isVirtual);
   }
 
   return 0;
@@ -380,7 +380,7 @@ u32 DataParamAcc::getLuck(bool isVirtual) const {
 
 u32 DataParamAcc::getPArmor(bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getPArmor(isVirtual);
+    return m_iDataObj->getPArmor(isVirtual);
   }
 
   return 0;
@@ -388,7 +388,7 @@ u32 DataParamAcc::getPArmor(bool isVirtual) const {
 
 u32 DataParamAcc::getEArmor(bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getEArmor(isVirtual);
+    return m_iDataObj->getEArmor(isVirtual);
   }
 
   return 0;
@@ -396,7 +396,7 @@ u32 DataParamAcc::getEArmor(bool isVirtual) const {
 
 u32 DataParamAcc::getCriticalRate(bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getCriticalRate(isVirtual);
+    return m_iDataObj->getCriticalRate(isVirtual);
   }
 
   return 0;
@@ -404,7 +404,7 @@ u32 DataParamAcc::getCriticalRate(bool isVirtual) const {
 
 u32 DataParamAcc::getGuardRate(bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getGuardRate(isVirtual);
+    return m_iDataObj->getGuardRate(isVirtual);
   }
 
   return 0;
@@ -412,7 +412,7 @@ u32 DataParamAcc::getGuardRate(bool isVirtual) const {
 
 u32 DataParamAcc::getAutoHate(bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getAutoHate(isVirtual);
+    return m_iDataObj->getAutoHate(isVirtual);
   }
 
   return 0;
@@ -420,7 +420,7 @@ u32 DataParamAcc::getAutoHate(bool isVirtual) const {
 
 u32 DataParamAcc::getArtsHate(bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getArtsHate(isVirtual);
+    return m_iDataObj->getArtsHate(isVirtual);
   }
 
   return 0;
@@ -428,7 +428,7 @@ u32 DataParamAcc::getArtsHate(bool isVirtual) const {
 
 u32 DataParamAcc::getWeaponDamage(bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getWeaponDamage(isVirtual);
+    return m_iDataObj->getWeaponDamage(isVirtual);
   }
 
   return 0;
@@ -436,7 +436,7 @@ u32 DataParamAcc::getWeaponDamage(bool isVirtual) const {
 
 u32 DataParamAcc::getWeaponStability(bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getWeaponStability(isVirtual);
+    return m_iDataObj->getWeaponStability(isVirtual);
   }
 
   return 0;
@@ -444,7 +444,7 @@ u32 DataParamAcc::getWeaponStability(bool isVirtual) const {
 
 u32 DataParamAcc::getChestHeight() const {
   if (isValid()) {
-    return unknown08->getChestHeight();
+    return m_iDataObj->getChestHeight();
   }
 
   return 0;
@@ -452,7 +452,7 @@ u32 DataParamAcc::getChestHeight() const {
 
 u32 DataParamAcc::getLandingHeight() const {
   if (isValid()) {
-    return unknown08->getLandingHeight();
+    return m_iDataObj->getLandingHeight();
   }
 
   return 0;
@@ -460,7 +460,7 @@ u32 DataParamAcc::getLandingHeight() const {
 
 u32 DataParamAcc::getIconData() const {
   if (isValid()) {
-    return unknown08->getIconData();
+    return m_iDataObj->getIconData();
   }
 
   return 0;
@@ -468,7 +468,7 @@ u32 DataParamAcc::getIconData() const {
 
 u32 DataParamAcc::getRace() const {
   if (isValid()) {
-    return unknown08->getRace();
+    return m_iDataObj->getRace();
   }
 
   return 0;
@@ -476,7 +476,7 @@ u32 DataParamAcc::getRace() const {
 
 u32 DataParamAcc::getQuestRace() const {
   if (isValid()) {
-    return unknown08->getQuestRace();
+    return m_iDataObj->getQuestRace();
   }
 
   return 1;
@@ -484,7 +484,7 @@ u32 DataParamAcc::getQuestRace() const {
 
 u32 DataParamAcc::getGender() const {
   if (isValid()) {
-    return unknown08->getGender();
+    return m_iDataObj->getGender();
   }
 
   return 0;
@@ -492,7 +492,7 @@ u32 DataParamAcc::getGender() const {
 
 u32 DataParamAcc::getAttribute(int slot, bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getAttribute(isVirtual, slot);
+    return m_iDataObj->getAttribute(isVirtual, slot);
   }
 
   return 0;
@@ -500,7 +500,7 @@ u32 DataParamAcc::getAttribute(int slot, bool isVirtual) const {
 
 bool DataParamAcc::isDispInitExtraParts(u32 part) const {
   if (isValid()) {
-    return unknown08->isDispInitExtraParts(part);
+    return m_iDataObj->isDispInitExtraParts(part);
   }
 
   return true;
@@ -508,7 +508,7 @@ bool DataParamAcc::isDispInitExtraParts(u32 part) const {
 
 bool DataParamAcc::isScenarioMask() const {
   if (isValid()) {
-    return unknown08->isScenarioMask();
+    return m_iDataObj->isScenarioMask();
   }
 
   return false;
@@ -516,7 +516,7 @@ bool DataParamAcc::isScenarioMask() const {
 
 u32 DataParamAcc::getRole(bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getRole();
+    return m_iDataObj->getRole();
   }
 
   return 0;
@@ -524,7 +524,7 @@ u32 DataParamAcc::getRole(bool isVirtual) const {
 
 const char *DataParamAcc::getVoiceStr() const {
   if (isValid()) {
-    if (const char *voiceStr = unknown08->getVoiceStr()) {
+    if (const char *voiceStr = m_iDataObj->getVoiceStr()) {
       return voiceStr;
     }
 
@@ -536,7 +536,7 @@ const char *DataParamAcc::getVoiceStr() const {
 
 u32 DataParamAcc::getMenuOffset() const {
   if (isValid()) {
-    return unknown08->getMenuOffset();
+    return m_iDataObj->getMenuOffset();
   }
 
   return 0;
@@ -544,7 +544,7 @@ u32 DataParamAcc::getMenuOffset() const {
 
 u32 DataParamAcc::getFootStep() const {
   if (isValid()) {
-    return unknown08->getFootStep();
+    return m_iDataObj->getFootStep();
   }
 
   return 0;
@@ -552,7 +552,7 @@ u32 DataParamAcc::getFootStep() const {
 
 u32 DataParamAcc::getFootStepEffect() const {
   if (isValid()) {
-    return unknown08->getFootStepEffect();
+    return m_iDataObj->getFootStepEffect();
   }
 
   return 1;
@@ -560,7 +560,7 @@ u32 DataParamAcc::getFootStepEffect() const {
 
 u32 DataParamAcc::getEyeRotControl() const {
   if (isValid()) {
-    return unknown08->getEyeRotControl();
+    return m_iDataObj->getEyeRotControl();
   }
 
   return 0;
@@ -568,7 +568,7 @@ u32 DataParamAcc::getEyeRotControl() const {
 
 const char *DataParamAcc::getRotateBone() const {
   if (isValid()) {
-    return unknown08->getRotateBone();
+    return m_iDataObj->getRotateBone();
   }
 
   return nullptr;
@@ -576,7 +576,7 @@ const char *DataParamAcc::getRotateBone() const {
 
 u32 DataParamAcc::getPersonality() const {
   if (isValid()) {
-    return unknown08->getPersonality();
+    return m_iDataObj->getPersonality();
   }
 
   return 0;
@@ -584,7 +584,7 @@ u32 DataParamAcc::getPersonality() const {
 
 u32 DataParamAcc::getCoolTime() const {
   if (isValid()) {
-    return unknown08->getCoolTime();
+    return m_iDataObj->getCoolTime();
   }
 
   return 0;
@@ -592,7 +592,7 @@ u32 DataParamAcc::getCoolTime() const {
 
 u32 DataParamAcc::getNorAtkDmgMin(bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getNorAtkDmgMin(isVirtual);
+    return m_iDataObj->getNorAtkDmgMin(isVirtual);
   }
 
   return 0;
@@ -600,7 +600,7 @@ u32 DataParamAcc::getNorAtkDmgMin(bool isVirtual) const {
 
 u32 DataParamAcc::getNorAtkDmgMax(bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getNorAtkDmgMax(isVirtual);
+    return m_iDataObj->getNorAtkDmgMax(isVirtual);
   }
 
   return 0;
@@ -608,7 +608,7 @@ u32 DataParamAcc::getNorAtkDmgMax(bool isVirtual) const {
 
 u32 DataParamAcc::getEquipAcce(u32 slot, bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getEquipAcce(slot, isVirtual);
+    return m_iDataObj->getEquipAcce(slot, isVirtual);
   }
 
   return 0;
@@ -616,7 +616,7 @@ u32 DataParamAcc::getEquipAcce(u32 slot, bool isVirtual) const {
 
 bool DataParamAcc::getEquipOrb(mm::mtl::FixedArray<u16, 3> &orbs, bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getEquipOrb(orbs, isVirtual);
+    return m_iDataObj->getEquipOrb(orbs, isVirtual);
   }
 
   return false;
@@ -624,7 +624,7 @@ bool DataParamAcc::getEquipOrb(mm::mtl::FixedArray<u16, 3> &orbs, bool isVirtual
 
 int DataParamAcc::getBladeSet(bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getBladeSet(isVirtual);
+    return m_iDataObj->getBladeSet(isVirtual);
   }
 
   return -1;
@@ -632,13 +632,13 @@ int DataParamAcc::getBladeSet(bool isVirtual) const {
 
 void DataParamAcc::setBladeSet(int slot) {
   if (isValid()) {
-    unknown08->setBladeSet(slot);
+    m_iDataObj->setBladeSet(slot);
   }
 }
 
 u32 DataParamAcc::getBlade(int slot, bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getBlade(isVirtual, slot);
+    return m_iDataObj->getBlade(isVirtual, slot);
   }
 
   return 0;
@@ -646,7 +646,7 @@ u32 DataParamAcc::getBlade(int slot, bool isVirtual) const {
 
 u32 DataParamAcc::getClass(bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getClass(isVirtual);
+    return m_iDataObj->getClass(isVirtual);
   }
 
   return 0;
@@ -654,7 +654,7 @@ u32 DataParamAcc::getClass(bool isVirtual) const {
 
 u32 DataParamAcc::getEquipWeapon(int slot, bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getEquipWeapon(isVirtual, slot);
+    return m_iDataObj->getEquipWeapon(isVirtual, slot);
   }
 
   return 0;
@@ -662,7 +662,7 @@ u32 DataParamAcc::getEquipWeapon(int slot, bool isVirtual) const {
 
 u32 DataParamAcc::getWeaponType(int slot, bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getWeaponType(isVirtual, slot);
+    return m_iDataObj->getWeaponType(isVirtual, slot);
   }
 
   return 0;
@@ -671,7 +671,7 @@ u32 DataParamAcc::getWeaponType(int slot, bool isVirtual) const {
 u32 DataParamAcc::getAsmWeaponType(int slot) const {
   u32 weaponType = 0;
   if (isValid()) {
-    weaponType = unknown08->getWeaponType(false, slot);
+    weaponType = m_iDataObj->getWeaponType(false, slot);
   }
 
   return GfDataWeapon::getAsmWeaponType(weaponType);
@@ -679,7 +679,7 @@ u32 DataParamAcc::getAsmWeaponType(int slot) const {
 
 u32 DataParamAcc::getBladePower(bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getBladePower(isVirtual);
+    return m_iDataObj->getBladePower(isVirtual);
   }
 
   return 0;
@@ -687,7 +687,7 @@ u32 DataParamAcc::getBladePower(bool isVirtual) const {
 
 u32 DataParamAcc::getBladeArts(u32 index, bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getBladeArts(isVirtual, index);
+    return m_iDataObj->getBladeArts(isVirtual, index);
   }
 
   return 0;
@@ -695,7 +695,7 @@ u32 DataParamAcc::getBladeArts(u32 index, bool isVirtual) const {
 
 u32 DataParamAcc::getBladeArtsEnhance(u32 index, bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getBladeArtsEnhance(isVirtual, index);
+    return m_iDataObj->getBladeArtsEnhance(isVirtual, index);
   }
 
   return 0;
@@ -703,7 +703,7 @@ u32 DataParamAcc::getBladeArtsEnhance(u32 index, bool isVirtual) const {
 
 u32 DataParamAcc::getBladeArtsLevel(u32 index, bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getBladeArtsLevel(isVirtual, index);
+    return m_iDataObj->getBladeArtsLevel(isVirtual, index);
   }
 
   return 0;
@@ -711,7 +711,7 @@ u32 DataParamAcc::getBladeArtsLevel(u32 index, bool isVirtual) const {
 
 u32 DataParamAcc::getBladeArtsN(u32 index, bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getBladeArtsN(isVirtual, index);
+    return m_iDataObj->getBladeArtsN(isVirtual, index);
   }
 
   return 0;
@@ -719,7 +719,7 @@ u32 DataParamAcc::getBladeArtsN(u32 index, bool isVirtual) const {
 
 u32 DataParamAcc::getBladeArtsNH(u32 index, bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getBladeArtsNH(isVirtual, index);
+    return m_iDataObj->getBladeArtsNH(isVirtual, index);
   }
 
   return 100;
@@ -727,7 +727,7 @@ u32 DataParamAcc::getBladeArtsNH(u32 index, bool isVirtual) const {
 
 u32 DataParamAcc::getBladeSkill(u32 index, bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getBladeSkill(isVirtual, index);
+    return m_iDataObj->getBladeSkill(isVirtual, index);
   }
 
   return 0;
@@ -735,7 +735,7 @@ u32 DataParamAcc::getBladeSkill(u32 index, bool isVirtual) const {
 
 u32 DataParamAcc::getBladeSkillLevel(u32 index, bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getBladeSkillLevel(isVirtual, index);
+    return m_iDataObj->getBladeSkillLevel(isVirtual, index);
   }
 
   return 0;
@@ -743,7 +743,7 @@ u32 DataParamAcc::getBladeSkillLevel(u32 index, bool isVirtual) const {
 
 u32 DataParamAcc::getFieldSkill(u32 index, bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getFieldSkill(isVirtual, index);
+    return m_iDataObj->getFieldSkill(isVirtual, index);
   }
 
   return 0;
@@ -751,7 +751,7 @@ u32 DataParamAcc::getFieldSkill(u32 index, bool isVirtual) const {
 
 u32 DataParamAcc::getFieldSkillLevel(u32 index, bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getFieldSkillLevel(isVirtual, index);
+    return m_iDataObj->getFieldSkillLevel(isVirtual, index);
   }
 
   return 0;
@@ -759,7 +759,7 @@ u32 DataParamAcc::getFieldSkillLevel(u32 index, bool isVirtual) const {
 
 u32 DataParamAcc::getKeyLevel() const {
   if (isValid()) {
-    return unknown08->getKeyLevel();
+    return m_iDataObj->getKeyLevel();
   }
 
   return 0;
@@ -767,7 +767,7 @@ u32 DataParamAcc::getKeyLevel() const {
 
 u32 DataParamAcc::getBladeArtsH(u32 index, bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getBladeArtsH(isVirtual, index);
+    return m_iDataObj->getBladeArtsH(isVirtual, index);
   }
 
   return 100;
@@ -775,7 +775,7 @@ u32 DataParamAcc::getBladeArtsH(u32 index, bool isVirtual) const {
 
 u32 DataParamAcc::getBladeArtsEx(bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getBladeArtsEx(isVirtual);
+    return m_iDataObj->getBladeArtsEx(isVirtual);
   }
 
   return 0;
@@ -783,7 +783,7 @@ u32 DataParamAcc::getBladeArtsEx(bool isVirtual) const {
 
 u32 DataParamAcc::getBladeArtsExH(bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getBladeArtsExH(isVirtual);
+    return m_iDataObj->getBladeArtsExH(isVirtual);
   }
 
   return 100;
@@ -791,7 +791,7 @@ u32 DataParamAcc::getBladeArtsExH(bool isVirtual) const {
 
 u32 DataParamAcc::getBladeArtsEx2(bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getBladeArtsEx2(isVirtual);
+    return m_iDataObj->getBladeArtsEx2(isVirtual);
   }
 
   return 0;
@@ -799,7 +799,7 @@ u32 DataParamAcc::getBladeArtsEx2(bool isVirtual) const {
 
 u32 DataParamAcc::getBladeArtsEx2H(bool isVirtual) const {
   if (isValid()) {
-    return unknown08->getBladeArtsEx2H(isVirtual);
+    return m_iDataObj->getBladeArtsEx2H(isVirtual);
   }
 
   return 100;
@@ -807,7 +807,7 @@ u32 DataParamAcc::getBladeArtsEx2H(bool isVirtual) const {
 
 u32 DataParamAcc::getFavoriteCategory(FAVORITE favorite) const {
   if (isValid()) {
-    return unknown08->getFavoriteCategory(favorite);
+    return m_iDataObj->getFavoriteCategory(favorite);
   }
 
   return 0;
@@ -815,7 +815,7 @@ u32 DataParamAcc::getFavoriteCategory(FAVORITE favorite) const {
 
 u32 DataParamAcc::getFavoriteItem(FAVORITE favorite) const {
   if (isValid()) {
-    return unknown08->getFavoriteItem(favorite);
+    return m_iDataObj->getFavoriteItem(favorite);
   }
 
   return 0;
@@ -823,7 +823,7 @@ u32 DataParamAcc::getFavoriteItem(FAVORITE favorite) const {
 
 u32 DataParamAcc::getArtsAchievement(u32 index) const {
   if (isValid()) {
-    return unknown08->getArtsAchievement(index);
+    return m_iDataObj->getArtsAchievement(index);
   }
 
   return 0;
@@ -831,7 +831,7 @@ u32 DataParamAcc::getArtsAchievement(u32 index) const {
 
 u32 DataParamAcc::getSkillAchievement(u32 index) const {
   if (isValid()) {
-    return unknown08->getSkillAchievement(index);
+    return m_iDataObj->getSkillAchievement(index);
   }
 
   return 0;
@@ -839,7 +839,7 @@ u32 DataParamAcc::getSkillAchievement(u32 index) const {
 
 u32 DataParamAcc::getFieldSkillAchievement(u32 index) const {
   if (isValid()) {
-    return unknown08->getFieldSkillAchievement(index);
+    return m_iDataObj->getFieldSkillAchievement(index);
   }
 
   return 0;
@@ -847,7 +847,7 @@ u32 DataParamAcc::getFieldSkillAchievement(u32 index) const {
 
 u32 DataParamAcc::getKeyAchievement() const {
   if (isValid()) {
-    return unknown08->getKeyAchievement();
+    return m_iDataObj->getKeyAchievement();
   }
 
   return 0;
@@ -855,19 +855,19 @@ u32 DataParamAcc::getKeyAchievement() const {
 
 void DataParamAcc::setVirtualEquipWpn(u32 weapon, int slot) {
   if (isValid()) {
-    unknown08->setVirtualEquipWpn(weapon, slot);
+    m_iDataObj->setVirtualEquipWpn(weapon, slot);
   }
 }
 
 void DataParamAcc::setVirtualEquipAcc(u32 slot, u32 accessory) {
   if (isValid()) {
-    unknown08->setVirtualEquipAcc(slot, accessory);
+    m_iDataObj->setVirtualEquipAcc(slot, accessory);
   }
 }
 
 u32 DataParamAcc::getEquipAcceResult(u32 slot, u32 accessory, bool isVirtual) {
   if (isValid()) {
-    return unknown08->getEquipAcceResult(slot, accessory, isVirtual);
+    return m_iDataObj->getEquipAcceResult(slot, accessory, isVirtual);
   }
 
   return 5;
@@ -875,31 +875,31 @@ u32 DataParamAcc::getEquipAcceResult(u32 slot, u32 accessory, bool isVirtual) {
 
 void DataParamAcc::setVirtualSetBlade(u32 blade, int slot) {
   if (isValid()) {
-    unknown08->setVirtualSetBlade(blade, slot);
+    m_iDataObj->setVirtualSetBlade(blade, slot);
   }
 }
 
 void DataParamAcc::setVirtualEquipWpnChip(u32 chip) {
   if (isValid()) {
-    unknown08->setVirtualEquipWpnChip(chip);
+    m_iDataObj->setVirtualEquipWpnChip(chip);
   }
 }
 
 void DataParamAcc::setVirtualEquipOrb(u32 orb, u32 slot) {
   if (isValid()) {
-    unknown08->setVirtualEquipOrb(orb, slot);
+    m_iDataObj->setVirtualEquipOrb(orb, slot);
   }
 }
 
 void DataParamAcc::setMenuParam() {
   if (isValid()) {
-    unknown08->setMenuParam();
+    m_iDataObj->setMenuParam();
   }
 }
 
 u32 DataParamAcc::getLinkNum() const {
   if (isValid()) {
-    return unknown08->getLinkNum();
+    return m_iDataObj->getLinkNum();
   }
 
   return 500;
@@ -907,7 +907,7 @@ u32 DataParamAcc::getLinkNum() const {
 
 u32 DataParamAcc::getDeadNum() const {
   if (isValid()) {
-    return unknown08->getDeadNum();
+    return m_iDataObj->getDeadNum();
   }
 
   return 500;
@@ -915,7 +915,7 @@ u32 DataParamAcc::getDeadNum() const {
 
 u32 DataParamAcc::getAppStNum() const {
   if (isValid()) {
-    return unknown08->getAppStNum();
+    return m_iDataObj->getAppStNum();
   }
 
   return 500;
@@ -923,7 +923,7 @@ u32 DataParamAcc::getAppStNum() const {
 
 u32 DataParamAcc::getAppEndNum() const {
   if (isValid()) {
-    return unknown08->getAppEndNum();
+    return m_iDataObj->getAppEndNum();
   }
 
   return 500;
@@ -931,7 +931,7 @@ u32 DataParamAcc::getAppEndNum() const {
 
 u32 DataParamAcc::getBdatIdEnParam() const {
   if (isValid()) {
-    return unknown08->getBdatIdEnParam();
+    return m_iDataObj->getBdatIdEnParam();
   }
 
   return 0;
@@ -939,7 +939,7 @@ u32 DataParamAcc::getBdatIdEnParam() const {
 
 u32 DataParamAcc::getBdatIdEnRsc() const {
   if (isValid()) {
-    return unknown08->getBdatIdEnRsc();
+    return m_iDataObj->getBdatIdEnRsc();
   }
 
   return 0;
@@ -947,7 +947,7 @@ u32 DataParamAcc::getBdatIdEnRsc() const {
 
 bool DataParamAcc::isGuardFront() const {
   if (isValid()) {
-    return unknown08->isGuardFront();
+    return m_iDataObj->isGuardFront();
   }
 
   return false;
@@ -955,7 +955,7 @@ bool DataParamAcc::isGuardFront() const {
 
 bool DataParamAcc::isGuardLeft() const {
   if (isValid()) {
-    return unknown08->isGuardLeft();
+    return m_iDataObj->isGuardLeft();
   }
 
   return false;
@@ -963,7 +963,7 @@ bool DataParamAcc::isGuardLeft() const {
 
 bool DataParamAcc::isGuardRight() const {
   if (isValid()) {
-    return unknown08->isGuardRight();
+    return m_iDataObj->isGuardRight();
   }
 
   return false;
@@ -971,7 +971,7 @@ bool DataParamAcc::isGuardRight() const {
 
 bool DataParamAcc::isGuardBack() const {
   if (isValid()) {
-    return unknown08->isGuardBack();
+    return m_iDataObj->isGuardBack();
   }
 
   return false;
@@ -979,7 +979,7 @@ bool DataParamAcc::isGuardBack() const {
 
 bool DataParamAcc::isFieldDamage() const {
   if (isValid()) {
-    return unknown08->isFieldDamage();
+    return m_iDataObj->isFieldDamage();
   }
 
   return false;
@@ -987,7 +987,7 @@ bool DataParamAcc::isFieldDamage() const {
 
 u32 DataParamAcc::getResistancePower() const {
   if (isValid()) {
-    return unknown08->getResistancePower();
+    return m_iDataObj->getResistancePower();
   }
 
   return 0;
@@ -995,7 +995,7 @@ u32 DataParamAcc::getResistancePower() const {
 
 u32 DataParamAcc::getResistanceEther() const {
   if (isValid()) {
-    return unknown08->getResistanceEther();
+    return m_iDataObj->getResistanceEther();
   }
 
   return 0;
@@ -1003,7 +1003,7 @@ u32 DataParamAcc::getResistanceEther() const {
 
 u32 DataParamAcc::getResistanceCombo() const {
   if (isValid()) {
-    return unknown08->getResistanceCombo();
+    return m_iDataObj->getResistanceCombo();
   }
 
   return 0;
@@ -1011,7 +1011,7 @@ u32 DataParamAcc::getResistanceCombo() const {
 
 u32 DataParamAcc::getInvincibleCombo() const {
   if (isValid()) {
-    return unknown08->getInvincibleCombo();
+    return m_iDataObj->getInvincibleCombo();
   }
 
   return 0;
@@ -1019,7 +1019,7 @@ u32 DataParamAcc::getInvincibleCombo() const {
 
 u32 DataParamAcc::getLevelGold() const {
   if (isValid()) {
-    return unknown08->getLevelGold();
+    return m_iDataObj->getLevelGold();
   }
 
   return 0;
@@ -1027,7 +1027,7 @@ u32 DataParamAcc::getLevelGold() const {
 
 u32 DataParamAcc::getLevelExp() const {
   if (isValid()) {
-    return unknown08->getLevelExp();
+    return m_iDataObj->getLevelExp();
   }
 
   return 0;
@@ -1035,7 +1035,7 @@ u32 DataParamAcc::getLevelExp() const {
 
 u32 DataParamAcc::getLevelWp() const {
   if (isValid()) {
-    return unknown08->getLevelWp();
+    return m_iDataObj->getLevelWp();
   }
 
   return 0;
@@ -1043,7 +1043,7 @@ u32 DataParamAcc::getLevelWp() const {
 
 u32 DataParamAcc::getLevelSp() const {
   if (isValid()) {
-    return unknown08->getLevelSp();
+    return m_iDataObj->getLevelSp();
   }
 
   return 0;
@@ -1051,7 +1051,7 @@ u32 DataParamAcc::getLevelSp() const {
 
 u32 DataParamAcc::getGenus() const {
   if (isValid()) {
-    return unknown08->getGenus();
+    return m_iDataObj->getGenus();
   }
 
   return 0;
@@ -1059,7 +1059,7 @@ u32 DataParamAcc::getGenus() const {
 
 bool DataParamAcc::isLinkGenus() const {
   if (isValid()) {
-    return unknown08->isLinkGenus();
+    return m_iDataObj->isLinkGenus();
   }
 
   return false;
@@ -1067,7 +1067,7 @@ bool DataParamAcc::isLinkGenus() const {
 
 f32 DataParamAcc::getLinkRadius() const {
   if (isValid()) {
-    return unknown08->getLinkRadius();
+    return m_iDataObj->getLinkRadius();
   }
 
   return 0.0f;
@@ -1075,7 +1075,7 @@ f32 DataParamAcc::getLinkRadius() const {
 
 u32 DataParamAcc::getGoldDivide() const {
   if (isValid()) {
-    return unknown08->getGoldDivide();
+    return m_iDataObj->getGoldDivide();
   }
 
   return 0;
@@ -1083,7 +1083,7 @@ u32 DataParamAcc::getGoldDivide() const {
 
 u32 DataParamAcc::getGoldDivideRev() const {
   if (isValid()) {
-    return unknown08->getGoldDivideRev();
+    return m_iDataObj->getGoldDivideRev();
   }
 
   return 0;
@@ -1091,7 +1091,7 @@ u32 DataParamAcc::getGoldDivideRev() const {
 
 const SDataEnemy *DataParamAcc::getSDataEnemy() const {
   if (isValid()) {
-    return unknown08->getSDataEnemy();
+    return m_iDataObj->getSDataEnemy();
   }
 
   return nullptr;
@@ -1099,13 +1099,13 @@ const SDataEnemy *DataParamAcc::getSDataEnemy() const {
 
 void DataParamAcc::setVirtualLevel(u32 level) {
   if (isValid()) {
-    unknown08->setVirtualLevel(level);
+    m_iDataObj->setVirtualLevel(level);
   }
 }
 
 bool DataParamAcc::isEnbaleTarget() const {
   if (isValid()) {
-    return unknown08->isEnbaleTarget();
+    return m_iDataObj->isEnbaleTarget();
   }
 
   return true;
@@ -1113,7 +1113,7 @@ bool DataParamAcc::isEnbaleTarget() const {
 
 GimmickType DataParamAcc::getGimmickType() const {
   if (isValid()) {
-    return unknown08->getGimmickType();
+    return m_iDataObj->getGimmickType();
   }
 
   return GimmickType();
@@ -1121,7 +1121,7 @@ GimmickType DataParamAcc::getGimmickType() const {
 
 bool DataParamAcc::isNoCameraFade() const {
   if (isValid()) {
-    return unknown08->isNoCameraFade();
+    return m_iDataObj->isNoCameraFade();
   }
 
   return false;
@@ -1129,7 +1129,7 @@ bool DataParamAcc::isNoCameraFade() const {
 
 bool DataParamAcc::isWeaponDrawDisp() const {
   if (isValid()) {
-    return unknown08->isWeaponDrawDisp();
+    return m_iDataObj->isWeaponDrawDisp();
   }
 
   return false;
@@ -1137,7 +1137,7 @@ bool DataParamAcc::isWeaponDrawDisp() const {
 
 const char *DataParamAcc::getCenterBone() const {
   if (isValid()) {
-    return unknown08->getCenterBone();
+    return m_iDataObj->getCenterBone();
   }
 
   return nullptr;
@@ -1145,59 +1145,59 @@ const char *DataParamAcc::getCenterBone() const {
 
 const char *DataParamAcc::getCamBone() const {
   if (isValid()) {
-    return unknown08->getCamBone();
+    return m_iDataObj->getCamBone();
   }
 
   return nullptr;
 }
 
-DataIdeaAcc::DataIdeaAcc(DataParamAcc &dataParamAcc) : unknown00(dataParamAcc.unknown08->getIdea()), unknown08(false) {
-  if (unknown00 != nullptr) {
+DataIdeaAcc::DataIdeaAcc(DataParamAcc &dataParamAcc) : m_idea(dataParamAcc.m_iDataObj->getIdea()), unknown08(false) {
+  if (m_idea != nullptr) {
     unknown08 = dataParamAcc.getObjType() == OBJECT_TYPE_BLADE;
   }
 }
 
-DataIdeaAcc::DataIdeaAcc(SDataIdea &idea, bool isBlade) : unknown00(&idea), unknown08(isBlade) {}
+DataIdeaAcc::DataIdeaAcc(SDataIdea &idea, bool isBlade) : m_idea(&idea), unknown08(isBlade) {}
 
-bool DataIdeaAcc::isValid() const { return unknown00 != nullptr; }
+bool DataIdeaAcc::isValid() const { return m_idea != nullptr; }
 
 int DataIdeaAcc::getLevel(u32 idea) const {
-  if (this->unknown00 != nullptr) {
-    return this->unknown00->unknown00[idea].unknown04;
+  if (this->m_idea != nullptr) {
+    return this->m_idea->unknown00[idea].unknown04;
   }
 
   return 0;
 }
 
-SDataIdea *DataIdeaAcc::get() const { return unknown00; }
+SDataIdea *DataIdeaAcc::get() const { return m_idea; }
 
 void DataIdeaAcc::setLevel(u32 idea, u32 level) {
-  if (this->unknown00 != nullptr) {
-    this->unknown00->setLevel(idea, level);
+  if (this->m_idea != nullptr) {
+    this->m_idea->setLevel(idea, level);
   }
 }
 
 bool DataIdeaAcc::addPoint(u32 idea, u32 point) {
-  if (this->unknown00 != nullptr) {
-    this->unknown00->setPoint(idea, this->unknown00->unknown00[idea].unknown00 + point);
+  if (this->m_idea != nullptr) {
+    this->m_idea->setPoint(idea, this->m_idea->unknown00[idea].unknown00 + point);
   }
 
   return false;
 }
 
 u32 DataIdeaAcc::getPoint(u32 idea) const {
-  const SDataIdea::unknown004 *ideas = unknown00->unknown00;
+  const SDataIdea::unknown004 *ideas = m_idea->unknown00;
   return ideas[idea].unknown00;
 }
 
 void DataIdeaAcc::setPointForDebug(u32 idea, u32 point) {
-  if (this->unknown00 != nullptr) {
-    this->unknown00->setPoint(idea, point);
+  if (this->m_idea != nullptr) {
+    this->m_idea->setPoint(idea, point);
   }
 }
 
 u32 DataIdeaAcc::getMaximumIdeaLevel() const {
-  if (unknown00 == nullptr) {
+  if (m_idea == nullptr) {
     return 0;
   }
   mm::mtl::FixedVector<u32, 5> ideas;

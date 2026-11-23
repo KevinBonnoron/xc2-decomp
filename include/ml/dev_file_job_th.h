@@ -13,7 +13,7 @@ class FileHandleTh;
 
 class DevFileJobTh {
 public:
-  DevFileJobTh() : unknown08(0), unknown10(nullptr), unknown18(false) {}
+  DevFileJobTh() : unknown08(0), m_fileHandleTh(nullptr), unknown18(false) {}
   virtual ~DevFileJobTh() {}
   virtual bool asyncUpdate();
   virtual int getJobType() const;
@@ -21,21 +21,21 @@ public:
 
   s32 unknown08; // Inferred role: result; original member name unknown.
   u8 _0c[0x10 - 0x0c];
-  FileHandleTh *unknown10; // Inferred role: file handle; original member name unknown.
-  bool unknown18;          // Inferred role: cancel requested; original member name unknown.
+  FileHandleTh *m_fileHandleTh; // Inferred role: file handle; original member name unknown.
+  bool unknown18;               // Inferred role: cancel requested; original member name unknown.
 };
 
 static_assert(offsetof(DevFileJobTh, unknown08) == 0x08, "");
-static_assert(offsetof(DevFileJobTh, unknown10) == 0x10, "");
+static_assert(offsetof(DevFileJobTh, m_fileHandleTh) == 0x10, "");
 static_assert(offsetof(DevFileJobTh, unknown18) == 0x18, "");
 
 class DevFileReaderTh : public DevFileJobTh {
 public:
   // Inferred role: one accessor to try for the file, filled by DevFileTh::Impl::readFile; original name unknown.
   struct unknown001 {
-    MEDIA unknown00;            // Inferred role: media; original member name unknown.
-    const char *unknown08;      // Inferred role: media root path; original member name unknown.
-    DevFileAccessor *unknown10; // Inferred role: accessor; original member name unknown.
+    MEDIA unknown00;                    // Inferred role: media; original member name unknown.
+    const char *unknown08;              // Inferred role: media root path; original member name unknown.
+    DevFileAccessor *m_devFileAccessor; // Inferred role: accessor; original member name unknown.
   };
 
   bool asyncUpdate() override;

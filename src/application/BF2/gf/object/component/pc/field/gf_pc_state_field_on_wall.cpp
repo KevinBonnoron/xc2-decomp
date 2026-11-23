@@ -25,15 +25,15 @@ namespace pc {
 
 void StateFieldOnWall::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
-  property->unknown310.unknown10_5 = true;
+  property->m_propertyField.unknown10_5 = true;
   StateUtilField::setAccessFlag(*behavior, true);
   StateUtil::setEnvSensor(*behavior, 0x100, true);
-  property->unknown310.unknown18 = property->unknown310.unknown4c;
-  unknown20 = *property->unknown310.unknown003();
+  property->m_propertyField.unknown18 = property->m_propertyField.unknown4c;
+  unknown20 = *property->m_propertyField.unknown003();
   MsgPcFieldNotifyWall message;
   message.unknown10 = unknown20.unknown00;
-  message.unknown30.unknown00 = property->unknown160.unknown00;
-  message.unknown30.unknown10 = property->unknown160.unknown10;
+  message.m_transform.unknown00 = property->unknown160.unknown00;
+  message.m_transform.unknown10 = property->unknown160.unknown10;
   message.unknown50 = 0;
   StateUtilField::sendMessageWallChilds(*property, message);
   AccessPlugin *plugin = behavior->unknown001<AccessPlugin>(4);
@@ -44,20 +44,20 @@ void StateFieldOnWall::enter(GfComBehaviorPc *behavior, ai::State *previous) {
 
 void StateFieldOnWall::leave(GfComBehaviorPc *behavior, ai::State *next) {
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
-  property->unknown310.unknown10_5 = false;
+  property->m_propertyField.unknown10_5 = false;
   StateUtil::setEnvSensor(*behavior, 0x100, false);
-  if (next != nullptr && next->unknown08 != STATE_ID_UNKNOWN_48) {
+  if (next != nullptr && next->m_state != STATE_ID_UNKNOWN_48) {
     StateUtilField::setAccessFlag(*behavior, false);
-    u32 type = next->unknown08 == STATE_ID_UNKNOWN_15 ? 2 : 1;
+    u32 type = next->m_state == STATE_ID_UNKNOWN_15 ? 2 : 1;
     MsgPcFieldNotifyWall message;
     message.unknown10 = unknown20.unknown00;
-    message.unknown30.unknown00 = property->unknown160.unknown00;
-    message.unknown30.unknown10 = property->unknown160.unknown10;
+    message.m_transform.unknown00 = property->unknown160.unknown00;
+    message.m_transform.unknown10 = property->unknown160.unknown10;
     message.unknown50 = type;
-    if (next->unknown08 == STATE_ID_UNKNOWN_43) {
+    if (next->m_state == STATE_ID_UNKNOWN_43) {
       EnviromentSensor::GroundInfo *ground = StateUtil::getClimbEndGroundInfo(*behavior);
       if (ground != nullptr) {
-        message.unknown30.unknown00.y = ground->unknown00.y;
+        message.m_transform.unknown00.y = ground->unknown00.y;
       }
     }
     StateUtilField::sendMessageWallChilds(*property, message);
@@ -92,8 +92,8 @@ void StateFieldOnWall::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &i
 
   EnviromentSensor::unknown003 *wallInfo = StateUtil::getClimbWallInfo(*behavior);
   if (wallInfo != nullptr) {
-    property->unknown310.unknown130 = *wallInfo;
-    property->unknown310.unknown10_6 = true;
+    property->m_propertyField.unknown130 = *wallInfo;
+    property->m_propertyField.unknown10_6 = true;
     unknown20 = *wallInfo;
   }
 }
@@ -116,3 +116,15 @@ void StateFieldOnWall::procMsgPcFieldWallJump(GfComBehaviorPc *behavior, fw::Mes
 
 } // namespace pc
 } // namespace gf
+
+// The wall idle, move, prepare jump and jump states (0x710055b314 to 0x710055c040) sit between the on wall state functions (0x710055ac10 to 0x710055b274) and
+// the on wall and prepare jump virtual wrappers (0x710055c128 to 0x710055c188), which a unit emits after everything it defines.
+// clang-format off
+#include "gf_pc_state_field_wall_idle.cpp"
+#include "gf_pc_state_field_wall_move.cpp"
+#include "gf_pc_state_field_wall_prepare_jump.cpp"
+#include "gf_pc_state_field_wall_jump.cpp"
+#include "gf_pc_state_field_wall_jump_start.cpp"
+#include "gf_pc_state_field_wall_jump_move.cpp"
+#include "gf_pc_state_field_wall_jump_end.cpp"
+// clang-format on

@@ -40,7 +40,7 @@ bool GmkRoutedEnemy::isValid() const {
   if (list->getInstNum() == 0) {
     return false;
   }
-  return unknown50.unknown00.unknown00 != nullptr && unknown50.unknown00.unknown08.unknown00 != nullptr && unknown50.unknown00.unknown10 > 0;
+  return m_gmkEnemyInsts.m_createInfo.m_aGmkBase != nullptr && m_gmkEnemyInsts.m_createInfo.m_cBdatWrapper.unknown00 != nullptr && m_gmkEnemyInsts.m_createInfo.unknown10 > 0;
 }
 
 void GmkRoutedEnemy::create(const CreateInfo &info) {
@@ -49,12 +49,12 @@ void GmkRoutedEnemy::create(const CreateInfo &info) {
     GmkEnemyInsts::CreateInfo createInfo;
     // The game loads the info and the list (0x71005f3938, 0x71005f393c) before the call of getBindedBdatFp.
     const unknown071 *bdatInfo = info.unknown10;
-    const GmkRoutedEnemyList *list = static_cast<const GmkRoutedEnemyList *>(unknown08.unknown00);
-    createInfo.unknown00 = this;
-    createInfo.unknown08.unknown00 = list->getBindedBdatFp();
-    createInfo.unknown10 = unknown20.unknown18;
-    list->unknown228.unknown001(createInfo, *bdatInfo);
-    unknown50.create(createInfo);
+    const GmkRoutedEnemyList *list = static_cast<const GmkRoutedEnemyList *>(m_createBaseInfo.m_ownerGmkEnemyList);
+    createInfo.m_aGmkBase = this;
+    createInfo.m_cBdatWrapper.unknown00 = list->getBindedBdatFp();
+    createInfo.unknown10 = m_createInfo.unknown18;
+    list->m_bdatInfo.unknown001(createInfo, *bdatInfo);
+    m_gmkEnemyInsts.create(createInfo);
   } else {
     dispose();
   }
@@ -62,15 +62,15 @@ void GmkRoutedEnemy::create(const CreateInfo &info) {
 
 bool GmkRoutedEnemy::PopXformFinder::isYSnap() const { return false; }
 
-void GmkRoutedEnemy::PopXformFinder::onCreateGobInsts(u32 num) const { unknown08->createRouteNavis(num); }
+void GmkRoutedEnemy::PopXformFinder::onCreateGobInsts(u32 num) const { m_gmkRoutedEnemy->createRouteNavis(num); }
 
 bool GmkRoutedEnemy::PopXformFinder::getSquadMemberIndex(int &index, gf::GF_OBJ_HANDLE *handle) const {
   gf::GfObjAcc acc(handle);
   gf::GfObj *obj = acc.getObj();
   if (obj != nullptr) {
     gf::GfComBehaviorEnemy *behavior = obj->getComponent<gf::GfComBehaviorEnemy>();
-    if (behavior != nullptr && behavior->unknown140.unknown50.unknown001()) {
-      index = behavior->unknown140.unknown50.unknown28;
+    if (behavior != nullptr && behavior->m_behaviorEnemyField.m_gmkSquadNavi.unknown001()) {
+      index = behavior->m_behaviorEnemyField.m_gmkSquadNavi.unknown28;
       return index != 0;
     }
   }
@@ -82,11 +82,11 @@ bool GmkRoutedEnemy::PopXformFinder::onPopGob(gf::GF_OBJ_HANDLE *handle) const {
   if (getSquadMemberIndex(index, handle)) {
     return true;
   }
-  GmkRouteNavi *navi = unknown08->findFreeRouteNavi();
+  GmkRouteNavi *navi = m_gmkRoutedEnemy->findFreeRouteNavi();
   if (navi == nullptr) {
     return false;
   }
-  unknown08->bindRouteNavi(handle, *navi);
+  m_gmkRoutedEnemy->bindRouteNavi(handle, *navi);
   return true;
 }
 
@@ -104,7 +104,7 @@ void GmkRoutedEnemy::createRouteNavis(u32 num) {
 
 void GmkRoutedEnemy::dispose() {
   disposeRouteNavis();
-  unknown50.dispose();
+  m_gmkEnemyInsts.dispose();
   AGmkBase::dispose();
 }
 
@@ -124,11 +124,11 @@ void GmkRoutedEnemy::update(f32 deltaTime) {
   if (getNearestPos(nearestPosition, playerPosition)) {
     GmkEnemyInsts::UpdateInfo info;
     PopXformFinder finder;
-    finder.unknown08 = this;
+    finder.m_gmkRoutedEnemy = this;
     info.unknown00 = deltaTime;
     info.unknown08 = &nearestPosition;
-    info.unknown10 = &finder;
-    unknown50.update(info);
+    info.m_iPopXformFinder = &finder;
+    m_gmkEnemyInsts.update(info);
   }
 }
 
@@ -137,7 +137,7 @@ GmkType GmkRoutedEnemyPoint::getGmkType() const { return GMK_TYPE; }
 GmkRoutedEnemyList::GmkRoutedEnemyList(u32 updateGmkNumPerFrame) : TGmkList(updateGmkNumPerFrame), unknown240(0xffffffff) {}
 
 void GmkRoutedEnemyList::create(const CreateInfo &info) {
-  if (!unknown228.create()) {
+  if (!m_bdatInfo.create()) {
     dispose();
     return;
   }
@@ -171,7 +171,7 @@ void GmkRoutedEnemyList::setUpdateGmkNumPerFrame(u32 num) {
   unknown240.setUpdateGmkNumPerFrame(num);
 }
 
-IGmkList *GmkRoutedEnemy::getOwnerGmkEnemyList() const { return unknown08.unknown00; }
+IGmkList *GmkRoutedEnemy::getOwnerGmkEnemyList() const { return m_createBaseInfo.m_ownerGmkEnemyList; }
 
 bool GmkRoutedEnemy::isPopPointRouteEnd(const GmkRouteNavi &navi) const {
   if (navi.isValid()) {
@@ -188,7 +188,7 @@ bool GmkRoutedEnemy::isPopPointRouteEnd(const GmkRouteNavi &navi) const {
   return false;
 }
 
-const IGmkList *GmkRoutedEnemy::getBindedRoutePointList() const { return unknown08.unknown00->getCreateInfo().unknown08->unknown1b8[GMK_TYPE_ROUTED_ENEMY_POINT]; }
+const IGmkList *GmkRoutedEnemy::getBindedRoutePointList() const { return m_createBaseInfo.m_ownerGmkEnemyList->getCreateInfo().m_gmkSet->unknown1b8[GMK_TYPE_ROUTED_ENEMY_POINT]; }
 
 void GmkRoutedEnemyList::debugDraw() const {
   TGmkList::debugDraw();
@@ -245,14 +245,14 @@ GmkRouteNavi *GmkRoutedEnemy::findRouteNavi(gf::GF_OBJ_HANDLE *handle) const {
 
 void GmkRoutedEnemy::onEnemyDead(gf::GF_OBJ_HANDLE *handle) {
   unbindRouteNavi(handle, true);
-  unknown50.onEnemyDead(handle);
+  m_gmkEnemyInsts.onEnemyDead(handle);
 }
 
 void GmkRoutedEnemy::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) {
   AGmkBase::onGobEvent(event, handle);
   if (event == gf::IGfObjListener::OBJEVT_UNKNOWN_3) {
     unbindRouteNavi(handle, false);
-    unknown50.removeGobInst(handle);
+    m_gmkEnemyInsts.removeGobInst(handle);
   }
 }
 

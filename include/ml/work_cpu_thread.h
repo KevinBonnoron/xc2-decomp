@@ -59,17 +59,17 @@ public:
 
   CPUID m_CPUID;
   u64 m_threadID;
-  Thread *unknown1b8; // Inferred role: thread; original member name unknown.
-  s32 unknown1c0;     // Inferred role: logout state; original member name unknown.
-  u32 unknown1c4;     // Inferred role: queued job count; original member name unknown.
+  Thread *m_thread; // Inferred role: thread; original member name unknown.
+  s32 unknown1c0;   // Inferred role: logout state; original member name unknown.
+  u32 unknown1c4;   // Inferred role: queued job count; original member name unknown.
   u32 m_aboutJobNumC;
   long unknown1d0;                           // Inferred role: begin clock; original member name unknown.
   long unknown1d8;                           // Inferred role: end clock; original member name unknown.
   f32 unknown1e0;                            // Inferred role: job clock; original member name unknown.
   f32 unknown1e4;                            // Inferred role: job cost; original member name unknown.
-  CriticalSection *unknown1e8;               // Inferred role: cs; original member name unknown.
+  CriticalSection *m_criticalSection;        // Inferred role: cs; original member name unknown.
   mm::mtl::FixedList<TJOB *, 64> unknown1f0; // Inferred role: queued jobs; original member name unknown.
-  TJOB *unknown650;                          // Inferred role: working job; original member name unknown.
+  TJOB *m_TJOB;                              // Inferred role: working job; original member name unknown.
   u32 unknown658;                            // Inferred role: color; original member name unknown.
   unsigned long unknown660;                  // Inferred role: stack address; original member name unknown.
   unsigned long unknown668;                  // Inferred role: stack size; original member name unknown.
@@ -79,14 +79,14 @@ public:
 };
 
 static_assert(offsetof(WorkCpuThread, m_CPUID) == 0x1a8, "");
-static_assert(offsetof(WorkCpuThread, unknown1b8) == 0x1b8, "");
+static_assert(offsetof(WorkCpuThread, m_thread) == 0x1b8, "");
 static_assert(offsetof(WorkCpuThread, unknown1c4) == 0x1c4, "");
 static_assert(offsetof(WorkCpuThread, m_aboutJobNumC) == 0x1c8, "");
 static_assert(offsetof(WorkCpuThread, unknown1d0) == 0x1d0, "");
 static_assert(offsetof(WorkCpuThread, unknown1e4) == 0x1e4, "");
-static_assert(offsetof(WorkCpuThread, unknown1e8) == 0x1e8, "");
+static_assert(offsetof(WorkCpuThread, m_criticalSection) == 0x1e8, "");
 static_assert(offsetof(WorkCpuThread, unknown1f0) == 0x1f0, "");
-static_assert(offsetof(WorkCpuThread, unknown650) == 0x650, "");
+static_assert(offsetof(WorkCpuThread, m_TJOB) == 0x650, "");
 static_assert(offsetof(WorkCpuThread, unknown658) == 0x658, "");
 static_assert(offsetof(WorkCpuThread, unknown660) == 0x660, "");
 static_assert(offsetof(WorkCpuThread, m_beginTerm) == 0x672, "");

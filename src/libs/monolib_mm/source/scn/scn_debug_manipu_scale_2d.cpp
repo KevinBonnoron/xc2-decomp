@@ -25,8 +25,8 @@ ScnDebugManipuScale2D::ScnDebugManipuScale2D(Scn *scn, const mm::Mat44 *matrix, 
     f32 y = screen.y > 0.0f ? 0.5f : -0.5f;
     y = static_cast<int>(screen.y + y);
     mm::Vec3 position(screen.x, y, 0.0f);
-    unknownb0.m_front->unknown00.unknown00 = position;
-    unknownb0.m_back->unknown00.unknown00 = position;
+    unknownb0.m_front->m_attrTransform.unknown00 = position;
+    unknownb0.m_back->m_attrTransform.unknown00 = position;
   }
   unknown360 = 0;
   unknown364 = 0;

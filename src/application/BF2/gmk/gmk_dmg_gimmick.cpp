@@ -59,7 +59,7 @@ const fw::SoundCategory SOUND_CATEGORY_UNKNOWN_7 = static_cast<fw::SoundCategory
 
 void GmkDmgGimmick::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_UNKNOWN_2);
-  unknown1c = BootedGmkCond(bdat, id, "DEPOP_");
+  m_bootedGmkCond = BootedGmkCond(bdat, id, "DEPOP_");
   unknown02 = bdat.getValCheck("DEPOP_Condition", id, BDAT_TYPE_UNKNOWN_2);
   unknown04 = toBdatF32(bdat.getValCheck("DMG_interval", id, BDAT_TYPE_UNKNOWN_8));
   unknown08 = bdat.getValCheck("Pc_dmg", id, BDAT_TYPE_UNKNOWN_1);
@@ -79,7 +79,7 @@ bool GmkDmgGimmick::BdatInfo::isCondMatched() const {
   if (unknown00 != 0 && !gf::GfGameCond::isGameCond(unknown00)) {
     return false;
   }
-  if (unknown1c.isEnable() && unknown1c.isMatch()) {
+  if (m_bootedGmkCond.isEnable() && m_bootedGmkCond.isMatch()) {
     return false;
   }
   if (unknown02 != 0 && gf::GfGameCond::isGameCond(unknown02)) {
@@ -92,11 +92,11 @@ void GmkDmgSe::createGmkPhantom() const {
   if (!canCreateGameEntity()) {
     return;
   }
-  switch (unknown08.unknown10->unknown0c) {
+  switch (m_createBaseInfo.unknown10->unknown0c) {
   case SHAPE_TYPE_UNKNOWN_2:
   case SHAPE_TYPE_UNKNOWN_3:
   case SHAPE_TYPE_UNKNOWN_4:
-    unknown50.create(*this, nullptr, false);
+    m_gmkPhantom.create(*this, nullptr, false);
     break;
   default:
     break;
@@ -110,7 +110,7 @@ void GmkDmgSe::createSeInst(fw::SoundPack *pack, u32 id) const {
   disposeSeInst(false);
   unknowne4 = fw::SoundManager::get()->playSe(id, pack, 1.0f, SOUND_CATEGORY_UNKNOWN_7);
   if (unknowne4 != 0) {
-    const mm::Vec3 &position = unknown08.unknown08->unknown00;
+    const mm::Vec3 &position = m_createBaseInfo.m_xform->unknown00;
     fw::SoundManager::get()->setPos(unknowne4, position);
   }
 }
@@ -142,7 +142,7 @@ void GmkDmgSe::validateMute() const {
 
 GmkType GmkDmgPhantom::getGmkType() const { return GMK_TYPE; }
 
-bool GmkDmgPhantom::isValid() const { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
+bool GmkDmgPhantom::isValid() const { return m_createBaseInfo.m_ownerGmkEnemyList != nullptr && m_createInfo.unknown08 != nullptr; }
 
 void GmkDmgPhantom::createGmkPhantom(fw::ColiUserData *userData) const {
   if (!canCreateGameEntity()) {
@@ -151,11 +151,11 @@ void GmkDmgPhantom::createGmkPhantom(fw::ColiUserData *userData) const {
   disposeGmkPhantom();
   GmkPhantomSimple::CreateInfo info;
   info.validateByAGmkBase(*this);
-  unknown50.create(info);
-  unknown50.unknown50->setColiUserData(userData);
+  m_gmkPhantomSimple.create(info);
+  m_gmkPhantomSimple.unknown50->setColiUserData(userData);
 }
 
-void GmkDmgPhantom::disposeGmkPhantom() const { unknown50.dispose(); }
+void GmkDmgPhantom::disposeGmkPhantom() const { m_gmkPhantomSimple.dispose(); }
 
 void GmkDmgPhantom::dispose() {
   disposeGmkPhantom();
@@ -164,7 +164,7 @@ void GmkDmgPhantom::dispose() {
 
 GmkType GmkDmgEffect::getGmkType() const { return GMK_TYPE; }
 
-bool GmkDmgEffect::isValid() const { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
+bool GmkDmgEffect::isValid() const { return m_createBaseInfo.m_ownerGmkEnemyList != nullptr && m_createInfo.unknown08 != nullptr; }
 
 void GmkDmgEffect::update(f32 deltaTime) { debugUpdateMmf(); }
 
@@ -214,12 +214,12 @@ void GmkDmgEffect::applyEffectParam() const {
     return;
   }
   effect::SendParam param;
-  param.unknown00.unknown011(unknown08.unknown08->unknown10);
-  mm::Vec3 position = unknown08.unknown08->unknown00;
+  param.unknown00.unknown011(m_createBaseInfo.m_xform->unknown10);
+  mm::Vec3 position = m_createBaseInfo.m_xform->unknown00;
   param.unknown00.rows[3][0] += position.x;
   param.unknown00.rows[3][1] += position.y;
   param.unknown00.rows[3][2] += position.z;
-  param.unknown60 = unknown08.unknown08->unknown20;
+  param.unknown60 = m_createBaseInfo.m_xform->unknown20;
   param.unknowna3 = unknown48 && debugIsDispGmkType(getGmkType());
   fw::EffectManager::get()->setParam(unknown4c, &param);
 }
@@ -277,7 +277,7 @@ void GmkDmgGimmick::create(const CreateInfo &info) {
   unknown68 = &GmkDmgGimmick::seqWaitToCreateChild;
 }
 
-GmkDmgGimmick::GmkDmgGimmick() : unknown50(false), unknown58(nullptr), unknown60(nullptr), unknown68(nullptr), unknown80(true) { unknown78 = this; }
+GmkDmgGimmick::GmkDmgGimmick() : unknown50(false), unknown58(nullptr), unknown60(nullptr), unknown68(nullptr), unknown80(true) { m_gmkDmgGimmick = this; }
 
 void GmkDmgGimmick::dispose() {
   unknown58 = nullptr;
@@ -298,7 +298,7 @@ void GmkDmgGimmick::update(f32 deltaTime) {
 }
 
 GmkDmgPhantom *GmkDmgGimmick::getGmkDmgPhantom(u32 index) const {
-  IGmkList *list = unknown08.unknown00->getCreateInfo().unknown08->unknown1b8[GMK_TYPE_DMG_PHANTOM];
+  IGmkList *list = m_createBaseInfo.m_ownerGmkEnemyList->getCreateInfo().m_gmkSet->unknown1b8[GMK_TYPE_DMG_PHANTOM];
   const Data *data = getData();
   if (list != nullptr && list->getInstNum() > data->unknown00 + index) {
     u32 listIndex = data->unknown00 + index;
@@ -308,7 +308,7 @@ GmkDmgPhantom *GmkDmgGimmick::getGmkDmgPhantom(u32 index) const {
 }
 
 GmkDmgEffect *GmkDmgGimmick::getGmkDmgEffect(u32 index) const {
-  IGmkList *list = unknown08.unknown00->getCreateInfo().unknown08->unknown1b8[GMK_TYPE_DMG_EFFECT];
+  IGmkList *list = m_createBaseInfo.m_ownerGmkEnemyList->getCreateInfo().m_gmkSet->unknown1b8[GMK_TYPE_DMG_EFFECT];
   const Data *data = getData();
   if (list != nullptr && list->getInstNum() > data->unknown04 + index) {
     u32 listIndex = data->unknown04 + index;
@@ -318,7 +318,7 @@ GmkDmgEffect *GmkDmgGimmick::getGmkDmgEffect(u32 index) const {
 }
 
 GmkDmgSe *GmkDmgGimmick::getGmkDmgSe(u32 index) const {
-  IGmkList *list = unknown08.unknown00->getCreateInfo().unknown08->unknown1b8[GMK_TYPE_DMG_SE];
+  IGmkList *list = m_createBaseInfo.m_ownerGmkEnemyList->getCreateInfo().m_gmkSet->unknown1b8[GMK_TYPE_DMG_SE];
   const Data *data = getData();
   if (list != nullptr && list->getInstNum() > data->unknown08 + index) {
     u32 listIndex = data->unknown08 + index;
@@ -351,7 +351,7 @@ void GmkDmgGimmick::seqUpdatePopDepop(f32 deltaTime) {
   for (u32 i = 0; i < effectNum; i++) {
     GmkDmgEffect *effect = getGmkDmgEffect(i);
     if (effect != nullptr) {
-      const mm::Vec3 &position = effect->unknown08.unknown08->unknown00;
+      const mm::Vec3 &position = effect->m_createBaseInfo.m_xform->unknown00;
       if (!isPop) {
         effect->disposeEffectInst(true);
       } else if (effect->unknown4c == 0) {
@@ -371,10 +371,10 @@ void GmkDmgGimmick::seqUpdatePopDepop(f32 deltaTime) {
         if (isPop) {
           se->createGmkPhantom();
         } else {
-          se->unknown50.dispose();
+          se->m_gmkPhantom.dispose();
         }
       }
-      if (se->unknown50.unknown001() && isPop) {
+      if (se->m_gmkPhantom.unknown001() && isPop) {
         if (se->unknowne4 == 0) {
           se->createSeInst(unknown60, info->unknown18);
         }
@@ -529,7 +529,7 @@ void GmkDmgPhantomManager::update(f32 deltaTime) {
             unknown38 = true;
           }
           f32 interval = gimmick->getBdatInfo()->unknown04;
-          int bdatIndex = gimmick->unknown20.unknown18;
+          int bdatIndex = gimmick->m_createInfo.unknown18;
           if (info.unknown08 != bdatIndex) {
             info.unknown08 = bdatIndex;
             info.unknown0c = interval;

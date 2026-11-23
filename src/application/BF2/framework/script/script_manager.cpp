@@ -1,6 +1,8 @@
 #include "framework/script/script_manager.h"
 
+#include "ml/path_util.h"
 #include "mm_mtl/allocator.h"
+#include "mm_mtl/str_util.h"
 #include "mtl/alloc_handle.h"
 #include "mtl/mem_manager.h"
 
@@ -113,6 +115,20 @@ void ScriptManager::setScriptPath(const char *path) {
   if (m_rootPath[-1] != '/') {
     m_rootPath += "/";
   }
+}
+
+// 1.0.0: 0x710019e240. The root path followed by the file name without directory and extension, with ".sb" added when it holds no dot, lower-cased
+// by mm::mtl::unknown002. getNoExtName<FixStr<256>> is the standalone instance 0x710019e430 of this unit.
+void ScriptManager::makeFullPath(mm::mtl::FixStr<256> &path, const char *name) {
+  mm::mtl::FixStr<256> noExt;
+  mm::mtl::FixStr<256> file;
+  ml::PathUtil::getNoExtName(noExt, name);
+  file = ml::PathUtil::getNoPathExtName(noExt.c_str()).c_str();
+  if (file.unknown004('.') == -1) {
+    file += ".sb";
+  }
+  path.format("%s%s", m_rootPath.c_str(), file.c_str());
+  mm::mtl::unknown002(path);
 }
 
 void ScriptManager::loadScript(int type, const char *name, ml::FILE_PRIO priority) {

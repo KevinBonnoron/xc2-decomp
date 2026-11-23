@@ -1,4 +1,5 @@
 #pragma once
+#include "mm_mtl/type_traits.h"
 #include "types.h"
 
 #include <stddef.h>
@@ -48,8 +49,8 @@ public:
   const unknown002 *begin() const;
   const unknown002 *end() const;
 
-  unknown001 *unknown00; // Inferred role: data; original member name unknown.
-  unknown002 *unknown08; // Inferred role: file table; original member name unknown.
+  unknown001 *unknown00;    // Inferred role: data; original member name unknown.
+  unknown002 *m_fileHeader; // Inferred role: file table; named after the game accessor arc::CArcData::getFileHeader.
 };
 
 static_assert(offsetof(CArcData::unknown001, unknown08) == 0x08, "");
@@ -63,3 +64,14 @@ static_assert(sizeof(CArcData::unknown002) == 0x40, "");
 static_assert(sizeof(CArcData) == 0x10, "");
 
 } // namespace arc
+
+namespace mm {
+namespace mtl {
+
+// The game copies the elements of Vector<CArcData> with one memcpy (Vector<CArcData>::extend, see copy_construct_n) although the destructor is user-provided.
+template <> struct is_pod<arc::CArcData> {
+  static const bool unknown001 = true; // Inferred role: whether the type is plain old data, so it is copied with memcpy; original name unknown.
+};
+
+} // namespace mtl
+} // namespace mm

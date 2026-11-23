@@ -71,7 +71,7 @@ public:
   void update(const fw::UpdateInfo &info) override;
 
   mm::mtl::Delegate<bool()> unknown30; // Inferred role: updater; original member name unknown.
-  IConverter *unknown50;               // Inferred role: converter; original member name unknown.
+  IConverter *m_iConverter;            // Inferred role: converter; original member name unknown.
   u8 _58[0x5c - 0x58];
   f32 unknown5c; // Inferred role: time; original member name unknown.
   u32 unknown60; // Inferred role: pouch index; original member name unknown.
@@ -79,7 +79,7 @@ public:
 };
 
 static_assert(offsetof(GfMenuPouchAdapter, unknown30) == 0x30, "");
-static_assert(offsetof(GfMenuPouchAdapter, unknown50) == 0x50, "");
+static_assert(offsetof(GfMenuPouchAdapter, m_iConverter) == 0x50, "");
 static_assert(offsetof(GfMenuPouchAdapter, unknown5c) == 0x5c, "");
 static_assert(offsetof(GfMenuPouchAdapter, unknown60) == 0x60, "");
 static_assert(offsetof(GfMenuPouchAdapter, unknown64) == 0x64, "");

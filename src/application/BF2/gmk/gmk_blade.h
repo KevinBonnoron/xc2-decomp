@@ -31,13 +31,13 @@ public:
     bool isPopCommonCondMatched() const;
     bool isDepopCondMatched(const mm::Vec3 &position) const;
 
-    u8 unknown00;               // Inferred role: blade size check; original member name unknown.
-    u16 unknown02;              // Inferred role: condition; original member name unknown.
-    u16 unknown04;              // Inferred role: battle reaction; original member name unknown.
-    ScenarioFlagCond unknown06; // Inferred role: scenario flag; original member name unknown.
-    TimeCond unknown10;         // Inferred role: time cond; original member name unknown.
-    DistHvCond unknown20;       // Inferred role: pop dist; original member name unknown.
-    DistHvCond unknown28;       // Inferred role: depop dist; original member name unknown.
+    u8 unknown00;                        // Inferred role: blade size check; original member name unknown.
+    u16 unknown02;                       // Inferred role: condition; original member name unknown.
+    u16 unknown04;                       // Inferred role: battle reaction; original member name unknown.
+    ScenarioFlagCond m_scenarioFlagCond; // Inferred role: scenario flag; original member name unknown.
+    TimeCond m_timeCond;                 // Inferred role: time cond; original member name unknown.
+    DistHvCond unknown20;                // Inferred role: pop dist; original member name unknown.
+    DistHvCond unknown28;                // Inferred role: depop dist; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_BLADE; // Inferred name; shared by every gimmick class for the TGmkList templates.
@@ -55,7 +55,7 @@ public:
   bool canDepopGobInst() const;
   void validateDisp() const;
 
-  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(m_createInfo.unknown10); }
 
   gf::GF_OBJ_HANDLE *unknown48; // Inferred role: gob instance handle; original member name unknown.
   int unknown50;                // Inferred role: pop state; original member name unknown.

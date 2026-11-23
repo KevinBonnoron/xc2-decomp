@@ -26,7 +26,7 @@ const fw::EF_CATEGORY EF_CATEGORY_UNKNOWN_1_2 = static_cast<fw::EF_CATEGORY>(1);
 
 void GmkWarp::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_UNKNOWN_2);
-  unknown04 = BootedGmkCond(bdat, id, nullptr);
+  m_bootedGmkCond = BootedGmkCond(bdat, id, nullptr);
   unknown02 = bdat.getValCheck("nameRadius", id, BDAT_TYPE_UNKNOWN_2);
   u8 *mapList = gf::GfDataBdat::getFP(gf::BDAT_FLD_MAPLIST);
   if (mapList != nullptr) {
@@ -53,7 +53,7 @@ bool GmkWarp::BdatInfo::isPopCondCommonMatched() const {
   if (unknown00 != 0 && !gf::GfGameCond::isGameCond(unknown00)) {
     return false;
   }
-  if (unknown04.isEnable() && !unknown04.isMatch()) {
+  if (m_bootedGmkCond.isEnable() && !m_bootedGmkCond.isMatch()) {
     return false;
   }
   return true;
@@ -68,7 +68,7 @@ bool GmkWarp::BdatInfo::isDepopCondMatched(const mm::Vec3 &position) const {
 
 void GmkWarp::BdatInfo::debugDraw(const AGmkBase &gmk) const {}
 
-GmkWarp::GmkWarp() : _48(), unknown68(), unknown6c(false), unknown6d(true) {
+GmkWarp::GmkWarp() : _48(), m_distCond(), unknown6c(false), unknown6d(true) {
   for (u32 i = 0; i < POINT_UNKNOWN_2; i++) {
     unknown50[i] = gf::unknown020;
   }
@@ -80,7 +80,7 @@ GmkWarp::GmkWarp() : _48(), unknown68(), unknown6c(false), unknown6d(true) {
 void GmkWarp::create(const CreateInfo &info) {
   AGmkBase::create(info);
   f32 iconDistance = Bdat::getValCheck(gf::GfDataBdat::getFP(gf::BDAT_FLD_WILDCARD_DATA), 0, WILDCARD_UNKNOWN_1_3, BDAT_TYPE_UNKNOWN_8).valueF32;
-  unknown68.unknown00 = iconDistance * iconDistance;
+  m_distCond.unknown00 = iconDistance * iconDistance;
 }
 
 void GmkWarp::dispose() {

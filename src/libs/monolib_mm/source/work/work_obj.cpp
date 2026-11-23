@@ -11,7 +11,7 @@
 namespace ml {
 
 WorkObj::WorkObj(const char *name, WorkObj *parent, int childNum)
-    : unknown4c(WKSTATE_UNKNOWN_0), unknown50(-1), unknown58(parent), unknowna0(0), unknown188(-1), unknown190(0), unknown198(10), unknown19c(false), unknown1a0(nullptr) {
+    : unknown4c(WKSTATE_UNKNOWN_0), unknown50(-1), m_workObj(parent), unknowna0(0), unknown188(-1), unknown190(0), unknown198(10), unknown19c(false), unknown1a0(nullptr) {
   unknown54 = WorkUtil::getWorkMem();
   unknown08 = name;
   unknown50 = WorkRootState::allocWID(this);
@@ -57,8 +57,8 @@ const reslist<WorkObj *> *WorkObj::wkGetChild() const { return &unknown60; }
 reslist<WorkObj *> *WorkObj::wkGetChild() { return &unknown60; }
 
 bool WorkObj::wkIsCurrent() const {
-  if (unknown58 != nullptr) {
-    return unknown58->unknown60.begin()->value == this;
+  if (m_workObj != nullptr) {
+    return m_workObj->unknown60.begin()->value == this;
   }
 
   return true;

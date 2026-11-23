@@ -43,7 +43,9 @@ struct unknown404 {
   u8 _24[0x28 - 0x24];
   s32 unknown28; // Inferred role: range tree offset; original member name unknown.
   s32 unknown2c; // Inferred role: root range tree num; original member name unknown.
-  u8 _30[0x4c - 0x30];
+  u8 _30[0x3c - 0x30];
+  u32 unknown3c; // Inferred role: model count of the position data, sizes the read model bit table; original member name unknown.
+  u8 _40[0x4c - 0x40];
   u32 unknown4c; // Inferred role: read table offsets offset; original member name unknown.
   u8 _50[0x54 - 0x50];
   u32 unknown54; // Inferred role: tree work offset; original member name unknown.
@@ -55,6 +57,7 @@ static_assert(offsetof(unknown404, unknown18) == 0x18, "");
 static_assert(offsetof(unknown404, unknown20) == 0x20, "");
 static_assert(offsetof(unknown404, unknown28) == 0x28, "");
 static_assert(offsetof(unknown404, unknown2c) == 0x2c, "");
+static_assert(offsetof(unknown404, unknown3c) == 0x3c, "");
 static_assert(offsetof(unknown404, unknown4c) == 0x4c, "");
 static_assert(offsetof(unknown404, unknown54) == 0x54, "");
 
@@ -130,30 +133,30 @@ public:
   static DrResMdoSeamTexture *s_pSeamTexture;
   static DrResMdoSeamParmRead *s_pParmRead;
 
-  const u8 *unknown00;                  // Inferred role: position data; original member name unknown.
-  const MdsPosKeepData *unknown08;      // Inferred role: position keep data; original member name unknown.
-  const u32 *unknown10;                 // Inferred role: range tree indices of the lod trees; original member name unknown.
-  const MdsPosRangeTreeData *unknown18; // Inferred role: range trees; original member name unknown.
-  const unknown003 *unknown20;          // Inferred role: read table offsets; original member name unknown.
-  const MdsPosReadTreeData *unknown28;  // Inferred role: read trees; original member name unknown.
-  const u16 *unknown30;                 // Inferred role: vertex index table; original member name unknown.
-  const u16 *unknown38;                 // Inferred role: texture index table; original member name unknown.
+  const u8 *unknown00;                              // Inferred role: position data; original member name unknown.
+  const MdsPosKeepData *m_mdsPosKeepData;           // Inferred role: position keep data; original member name unknown.
+  const u32 *unknown10;                             // Inferred role: range tree indices of the lod trees; original member name unknown.
+  const MdsPosRangeTreeData *m_mdsPosRangeTreeData; // Inferred role: range trees; original member name unknown.
+  const unknown003 *unknown20;                      // Inferred role: read table offsets; original member name unknown.
+  const MdsPosReadTreeData *m_mdsPosReadTreeData;   // Inferred role: read trees; original member name unknown.
+  const u16 *unknown30;                             // Inferred role: vertex index table; original member name unknown.
+  const u16 *unknown38;                             // Inferred role: texture index table; original member name unknown.
   unknown001 *unknown40;
-  DrResMdoPos *unknown48;        // Inferred role: positions; original member name unknown.
-  DrResMdoSeamMemObj *unknown50; // Inferred role: memory object; original member name unknown.
-  u32 **unknown58;               // Inferred role: shadow bit tables; original member name unknown.
-  u32 unknown60;                 // Inferred role: shadow bit table size; original member name unknown.
-  u32 unknown64;                 // Inferred role: first inst anm object index; original member name unknown.
-  s32 unknown68;                 // Inferred role: inst anm object num; original member name unknown.
-  s32 unknown6c;                 // Inferred role: position num; original member name unknown.
+  DrResMdoPos *m_drResMdoPos;               // Inferred role: positions; original member name unknown.
+  DrResMdoSeamMemObj *m_drResMdoSeamMemObj; // Inferred role: memory object; original member name unknown.
+  u32 **unknown58;                          // Inferred role: shadow bit tables; original member name unknown.
+  u32 unknown60;                            // Inferred role: shadow bit table size; original member name unknown.
+  u32 unknown64;                            // Inferred role: first inst anm object index; original member name unknown.
+  s32 unknown68;                            // Inferred role: inst anm object num; original member name unknown.
+  s32 unknown6c;                            // Inferred role: position num; original member name unknown.
   u8 _70[0x74 - 0x70];
   u32 unknown74;   // Inferred role: state flags; original member name unknown.
   void *unknown78; // Inferred role: allocated work; original member name unknown.
 };
 
 static_assert(offsetof(DrResMdoSeamWrkPosInst, unknown40) == 0x40, "");
-static_assert(offsetof(DrResMdoSeamWrkPosInst, unknown48) == 0x48, "");
-static_assert(offsetof(DrResMdoSeamWrkPosInst, unknown50) == 0x50, "");
+static_assert(offsetof(DrResMdoSeamWrkPosInst, m_drResMdoPos) == 0x48, "");
+static_assert(offsetof(DrResMdoSeamWrkPosInst, m_drResMdoSeamMemObj) == 0x50, "");
 static_assert(offsetof(DrResMdoSeamWrkPosInst, unknown58) == 0x58, "");
 static_assert(offsetof(DrResMdoSeamWrkPosInst, unknown60) == 0x60, "");
 static_assert(offsetof(DrResMdoSeamWrkPosInst, unknown64) == 0x64, "");

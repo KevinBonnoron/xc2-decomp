@@ -27,7 +27,7 @@ SoundBank::~SoundBank() {
 
 int SoundBank::GetNumber() const { return m_number; }
 
-const TextRef &SoundBank::GetName() const { return unknown38; }
+const TextRef &SoundBank::GetName() const { return m_name; }
 
 Result SoundBank::Init(int number, const TextRef &name) {
   SystemCore *core = static_cast<SystemCore *>(SoundCore::instance_);
@@ -35,7 +35,7 @@ Result SoundBank::Init(int number, const TextRef &name) {
     return static_cast<Result>(-1);
   }
   m_number = number;
-  unknown38.Set(name);
+  m_name.Set(name);
   core->AddBank(this);
   return set_result(static_cast<Result>(0));
 }
@@ -53,9 +53,9 @@ SoundEntry *SoundBank::AddWave(WaveSource *wave, const SoundParam &param) {
     entry = nullptr;
   }
   entry->unknownd8 = true;
-  entry->unknownc8 = wave;
-  entry->unknown30 = param;
-  entry->unknownd0 = this;
+  entry->m_waveSource = wave;
+  entry->m_soundParam = param;
+  entry->m_soundBank = this;
   core->unknown708.Lock();
   unknowne0.PushBack(entry);
   core->unknown708.Unlock();
@@ -64,11 +64,11 @@ SoundEntry *SoundBank::AddWave(WaveSource *wave, const SoundParam &param) {
 
 SoundEntry *SoundBank::GetSoundEntryFromName(const TextRef &name) const {
   for (SoundEntry *it = unknowne0.unknown002(); it != unknowne0.unknown003(); it = List<SoundEntry>::unknown004(it)) {
-    if (it->unknown30.unknown00.unknown40 == Hash()) {
-      if (it->unknownc8->unknowna0.unknown08 == name.unknown08) {
+    if (it->m_soundParam.m_name.m_hash == Hash()) {
+      if (it->m_waveSource->m_string.m_hash == name.m_hash) {
         return it;
       }
-    } else if (it->unknown30.unknown00 == name) {
+    } else if (it->m_soundParam.m_name == name) {
       return it;
     }
   }
@@ -118,7 +118,7 @@ SoundEntry *SoundBank::AddSoundEntry(SoundEntry *entry) {
   if (core == nullptr || m_number < 0) {
     return nullptr;
   }
-  entry->unknownd0 = this;
+  entry->m_soundBank = this;
   core->unknown708.Lock();
   unknowne0.PushBack(entry);
   core->unknown708.Unlock();
@@ -167,7 +167,7 @@ SoundEntry *SoundBank::GetSoundEntryFromNumber(int number) const {
     return nullptr;
   }
   for (SoundEntry *it = begin(); it != end(); it = List<SoundEntry>::unknown004(it)) {
-    if (it->unknown30.unknown48 == number) {
+    if (it->m_soundParam.unknown48 == number) {
       return it;
     }
   }
@@ -212,7 +212,7 @@ int SoundBank::GetReferenceCounter() const {
   if (m_number >= 0) {
     int count = 0;
     for (SoundEntry *it = begin(); it != end(); it = List<SoundEntry>::unknown004(it)) {
-      count += it->unknownc8->unknown6c;
+      count += it->m_waveSource->unknown6c;
     }
     return count;
   }
@@ -231,7 +231,7 @@ Result SoundBank::Stop(f32 fadeTime) {
   return static_cast<Result>(-14);
 }
 
-SoundEntry::SoundEntry() : Object(ObjectType::SOUND_ENTRY), unknownc8(nullptr), unknownd0(nullptr), unknownd8(false) {}
+SoundEntry::SoundEntry() : Object(ObjectType::SOUND_ENTRY), m_waveSource(nullptr), m_soundBank(nullptr), unknownd8(false) {}
 
 SoundEntry::~SoundEntry() {}
 
@@ -239,7 +239,7 @@ SoundGroup *SoundEntry::GetSoundGroup() const {
   if (SoundCore::instance_ == nullptr) {
     return nullptr;
   }
-  return unknownd0->GetSoundGroup(unknown30.unknown4c.unknown01);
+  return m_soundBank->GetSoundGroup(m_soundParam.m_base.unknown01);
 }
 
 template List<SoundBank> *List<SoundBank>::Delete();

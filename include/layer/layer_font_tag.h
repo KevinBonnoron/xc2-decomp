@@ -61,17 +61,17 @@ public:
   virtual void createFontIcon(u16 code) = 0;
   virtual void createLineBreak() = 0;
 
-  const LayerFontStyleObj *unknown08; // Inferred role: style object; original member name unknown.
-  const LayerFontResObj *unknown10;   // Inferred role: font resource; original member name unknown.
-  const LayerFontIconObj *unknown18;  // Inferred role: icon object; original member name unknown.
-  const LyrFontStyleData *unknown20;  // Inferred role: style data; original member name unknown.
-  bool unknown28;                     // Inferred role: creates the work instead of counting its size; original member name unknown.
-  bool unknown29;                     // Inferred role: wide tag; original member name unknown.
+  const LayerFontStyleObj *m_layerFontStyleObj; // Inferred role: style object; original member name unknown.
+  const LayerFontResObj *m_layerFontResObj;     // Inferred role: font resource; original member name unknown.
+  const LayerFontIconObj *m_layerFontIconObj;   // Inferred role: icon object; original member name unknown.
+  const LyrFontStyleData *m_lyrFontStyleData;   // Inferred role: style data; original member name unknown.
+  bool unknown28;                               // Inferred role: creates the work instead of counting its size; original member name unknown.
+  bool unknown29;                               // Inferred role: wide tag; original member name unknown.
   u8 _2a[0x30 - 0x2a];
-  LayerTagWork *unknown30; // Inferred role: tag work; original member name unknown.
-  s32 unknown38;           // Inferred role: display setting; original member name unknown.
-  u32 unknown3c;           // Inferred role: setting is not default; original member name unknown.
-  u32 unknown40;           // Inferred role: setting is default; original member name unknown.
+  LayerTagWork *m_layerTagWork; // Inferred role: tag work; original member name unknown.
+  s32 unknown38;                // Inferred role: display setting; original member name unknown.
+  u32 unknown3c;                // Inferred role: setting is not default; original member name unknown.
+  u32 unknown40;                // Inferred role: setting is default; original member name unknown.
   u8 _44[0x48 - 0x44];
   unknown001 *unknown48; // Inferred role: first font instance; original member name unknown.
   unknown001 *unknown50; // Inferred role: font instances; original member name unknown.
@@ -88,12 +88,12 @@ public:
 
 static_assert(offsetof(LayerFontTag::unknown001, unknown20) == 0x20, "");
 static_assert(sizeof(LayerFontTag::unknown001) == 0x24, "");
-static_assert(offsetof(LayerFontTag, unknown08) == 0x08, "");
-static_assert(offsetof(LayerFontTag, unknown10) == 0x10, "");
-static_assert(offsetof(LayerFontTag, unknown18) == 0x18, "");
-static_assert(offsetof(LayerFontTag, unknown20) == 0x20, "");
+static_assert(offsetof(LayerFontTag, m_layerFontStyleObj) == 0x08, "");
+static_assert(offsetof(LayerFontTag, m_layerFontResObj) == 0x10, "");
+static_assert(offsetof(LayerFontTag, m_layerFontIconObj) == 0x18, "");
+static_assert(offsetof(LayerFontTag, m_lyrFontStyleData) == 0x20, "");
 static_assert(offsetof(LayerFontTag, unknown28) == 0x28, "");
-static_assert(offsetof(LayerFontTag, unknown30) == 0x30, "");
+static_assert(offsetof(LayerFontTag, m_layerTagWork) == 0x30, "");
 static_assert(offsetof(LayerFontTag, unknown38) == 0x38, "");
 static_assert(offsetof(LayerFontTag, unknown48) == 0x48, "");
 static_assert(offsetof(LayerFontTag, unknown68) == 0x68, "");

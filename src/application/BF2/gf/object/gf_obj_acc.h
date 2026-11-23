@@ -169,7 +169,7 @@ public:
   void setEnableCollideModelClip(bool isEnable);
   void setCollisionGround(bool isCollisionGround);
 
-  GFOBJ_INFO *unknown00; // Inferred role: info; original member name unknown.
+  GFOBJ_INFO *m_GFOBJ_INFO; // Inferred role: info; original member name unknown.
 
 private:
   GfObj *m_obj;

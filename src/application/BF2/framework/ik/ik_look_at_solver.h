@@ -55,15 +55,15 @@ public:
   mm::Vec3 unknown60; // Inferred role: front in model space; original member name unknown.
   f32 unknown70;      // Inferred role: limit angle (pi); original member name unknown.
   u8 _74[0x80 - 0x74];
-  f32 unknown80;          // Inferred role: limit angle up; original member name unknown.
-  f32 unknown84;          // Inferred role: limit angle down; original member name unknown.
-  f32 unknown88;          // Inferred role: limit angle left; original member name unknown.
-  f32 unknown8c;          // Inferred role: limit angle right; original member name unknown.
-  mm::Vec3 unknown90;     // Inferred role: up; original member name unknown.
-  mm::Vec3 unknowna0;     // Inferred role: target; original member name unknown.
-  mm::Vec3 unknownb0;     // Inferred role: unknown; original member name unknown.
-  ParamAdapter unknownc0; // Inferred role: limit param; original member name unknown.
-  u16 unknownc8;          // Inferred role: bone index; original member name unknown.
+  f32 unknown80;               // Inferred role: limit angle up; original member name unknown.
+  f32 unknown84;               // Inferred role: limit angle down; original member name unknown.
+  f32 unknown88;               // Inferred role: limit angle left; original member name unknown.
+  f32 unknown8c;               // Inferred role: limit angle right; original member name unknown.
+  mm::Vec3 unknown90;          // Inferred role: up; original member name unknown.
+  mm::Vec3 unknowna0;          // Inferred role: target; original member name unknown.
+  mm::Vec3 unknownb0;          // Inferred role: unknown; original member name unknown.
+  ParamAdapter m_paramAdapter; // Inferred role: limit param; original member name unknown.
+  u16 unknownc8;               // Inferred role: bone index; original member name unknown.
   u8 _ca[0xcc - 0xca];
   f32 unknowncc;  // Inferred role: target up ratio; original member name unknown.
   f32 unknownd0;  // Inferred role: target down ratio; original member name unknown.
@@ -82,7 +82,7 @@ static_assert(offsetof(LookAtIkSolver, unknown90) == 0x90, "");
 static_assert(offsetof(LookAtIkSolver, unknown80) == 0x80, "");
 static_assert(offsetof(LookAtIkSolver, unknown8c) == 0x8c, "");
 static_assert(offsetof(LookAtIkSolver, unknowna0) == 0xa0, "");
-static_assert(offsetof(LookAtIkSolver, unknownc0) == 0xc0, "");
+static_assert(offsetof(LookAtIkSolver, m_paramAdapter) == 0xc0, "");
 static_assert(offsetof(LookAtIkSolver, unknownc8) == 0xc8, "");
 static_assert(offsetof(LookAtIkSolver, unknowncc) == 0xcc, "");
 static_assert(offsetof(LookAtIkSolver, unknownd0) == 0xd0, "");

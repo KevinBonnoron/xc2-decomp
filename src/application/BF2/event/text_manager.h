@@ -82,8 +82,8 @@ private:
 
   u32 unknown10;                   // Inferred role: flags; original member name unknown.
   u32 unknown14;                   // Inferred role: disp flags; original member name unknown.
-  TextCaption unknown18;           // Inferred role: caption; original member name unknown.
-  TextWindow unknown128;           // Inferred role: window; original member name unknown.
+  TextCaption m_textCaption;       // Inferred role: caption; original member name unknown.
+  TextWindow m_textWindow;         // Inferred role: window; original member name unknown.
   f32 unknown358;                  // Inferred role: life; original member name unknown.
   f32 unknown35c;                  // Inferred role: delay; original member name unknown.
   f32 unknown360;                  // Inferred role: delay back; original member name unknown.
@@ -97,7 +97,7 @@ private:
   mm::mtl::FixStr<64> unknown384;  // Inferred role: label; original member name unknown.
   mm::mtl::FixStr<512> unknown3c8; // Inferred role: text; original member name unknown.
   CharaObj *unknown5d0;            // Inferred role: talker; original member name unknown.
-  CharaObj *unknown5d8;            // Inferred role: default talker; original member name unknown.
+  CharaObj *m_defaultTalkerMode;   // Inferred role: default talker; named after the game accessor event::TextManager::setDefaultTalkerMode.
   mm::mtl::FixStr<32> unknown5e0;  // Inferred role: replace name; original member name unknown.
 };
 

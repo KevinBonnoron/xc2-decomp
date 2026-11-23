@@ -23,12 +23,12 @@ public:
   void calcAA();
   void debugRender();
 
-  DrPixlRenderTarget *unknown18; // Inferred role: render target, a DrPixlRenderTarget the constructor allocates (0x71008571d0); original member name unknown.
-  f32 unknown20;                 // Inferred role: screen width; original member name unknown.
-  f32 unknown24;                 // Inferred role: screen height; original member name unknown.
+  DrPixlRenderTarget *m_drPixlRenderTarget; // Inferred role: render target, a DrPixlRenderTarget the constructor allocates (0x71008571d0); original member name unknown.
+  f32 unknown20;                            // Inferred role: screen width; original member name unknown.
+  f32 unknown24;                            // Inferred role: screen height; original member name unknown.
 };
 
-static_assert(offsetof(DrPixlPostObjFxAA, unknown18) == 0x18, "");
+static_assert(offsetof(DrPixlPostObjFxAA, m_drPixlRenderTarget) == 0x18, "");
 static_assert(offsetof(DrPixlPostObjFxAA, unknown20) == 0x20, "");
 static_assert(offsetof(DrPixlPostObjFxAA, unknown24) == 0x24, "");
 

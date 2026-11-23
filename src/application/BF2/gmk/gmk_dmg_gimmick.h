@@ -53,18 +53,18 @@ public:
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isCondMatched() const;
 
-    u16 unknown00;           // Inferred role: condition; original member name unknown.
-    u16 unknown02;           // Inferred role: depop condition; original member name unknown.
-    f32 unknown04;           // Inferred role: damage interval; original member name unknown.
-    u8 unknown08;            // Inferred role: pc damage; original member name unknown.
-    u8 unknown09;            // Inferred role: enemy damage; original member name unknown.
-    const char *unknown10;   // Inferred role: effect name; original member name unknown.
-    u8 unknown18;            // Inferred role: se name; original member name unknown.
-    u8 unknown19;            // Inferred role: volume max; original member name unknown.
-    u8 unknown1a;            // Inferred role: volume min; original member name unknown.
-    BootedGmkCond unknown1c; // Inferred role: depop booted gmk; original member name unknown.
-    DistCond unknown20;      // Inferred role: effect disp dist; original member name unknown.
-    DistCond unknown24;      // Inferred role: effect release dist; original member name unknown.
+    u16 unknown00;                 // Inferred role: condition; original member name unknown.
+    u16 unknown02;                 // Inferred role: depop condition; original member name unknown.
+    f32 unknown04;                 // Inferred role: damage interval; original member name unknown.
+    u8 unknown08;                  // Inferred role: pc damage; original member name unknown.
+    u8 unknown09;                  // Inferred role: enemy damage; original member name unknown.
+    const char *unknown10;         // Inferred role: effect name; original member name unknown.
+    u8 unknown18;                  // Inferred role: se name; original member name unknown.
+    u8 unknown19;                  // Inferred role: volume max; original member name unknown.
+    u8 unknown1a;                  // Inferred role: volume min; original member name unknown.
+    BootedGmkCond m_bootedGmkCond; // Inferred role: depop booted gmk; original member name unknown.
+    DistCond unknown20;            // Inferred role: effect disp dist; original member name unknown.
+    DistCond unknown24;            // Inferred role: effect release dist; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_DMG_GIMMICK; // Inferred name; shared by every gimmick class for the TGmkList templates.
@@ -88,11 +88,11 @@ public:
   bool unknown50;           // Role and original member name unknown.
   void *unknown58;          // Role and original member name unknown.
   fw::SoundPack *unknown60; // Inferred role: map sound pack; original member name unknown.
-  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
-  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
+  const Data *getData() const { return static_cast<const Data *>(m_createInfo.unknown08); }
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(m_createInfo.unknown10); }
 
   void (GmkDmgGimmick::*unknown68)(f32); // Inferred role: sequence; original member name unknown.
-  GmkDmgGimmick *unknown78;              // Inferred role: self pointer; original member name unknown.
+  GmkDmgGimmick *m_gmkDmgGimmick;        // Inferred role: self pointer; original member name unknown.
   bool unknown80;                        // Role and original member name unknown.
   u8 _81[0x88 - 0x81];
 };
@@ -101,7 +101,7 @@ static_assert(sizeof(GmkDmgGimmick::BdatInfo) == 0x28, "");
 static_assert(offsetof(GmkDmgGimmick, unknown58) == 0x58, "");
 static_assert(offsetof(GmkDmgGimmick, unknown60) == 0x60, "");
 static_assert(offsetof(GmkDmgGimmick, unknown68) == 0x68, "");
-static_assert(offsetof(GmkDmgGimmick, unknown78) == 0x78, "");
+static_assert(offsetof(GmkDmgGimmick, m_gmkDmgGimmick) == 0x78, "");
 static_assert(offsetof(GmkDmgGimmick, unknown80) == 0x80, "");
 static_assert(sizeof(GmkDmgGimmick) == 0x88, "");
 
@@ -117,7 +117,7 @@ public:
 
   // User-provided as in GmkAntiBladeArea and GmkDmgSe: the game's Vector<GmkDmgPhantom>::extend and resize construct the elements without
   // zero-filling them first (no memset before the member stores).
-  GmkDmgPhantom() : unknown50(nullptr) {}
+  GmkDmgPhantom() : m_gmkPhantomSimple(nullptr) {}
   ~GmkDmgPhantom() override { dispose(); }
   GmkType getGmkType() const override;
   bool isValid() const override;
@@ -125,10 +125,10 @@ public:
   void createGmkPhantom(fw::ColiUserData *userData) const;
   void disposeGmkPhantom() const;
 
-  mutable GmkPhantomSimple unknown50; // Inferred role: phantom; original member name unknown.
+  mutable GmkPhantomSimple m_gmkPhantomSimple; // Inferred role: phantom; original member name unknown.
 };
 
-static_assert(offsetof(GmkDmgPhantom, unknown50) == 0x50, "");
+static_assert(offsetof(GmkDmgPhantom, m_gmkPhantomSimple) == 0x50, "");
 static_assert(sizeof(GmkDmgPhantom) == 0xb0, "");
 
 class GmkDmgPhantomList : public TGmkList<GmkDmgPhantom, GmkDmgPhantom::BdatInfo, 0x48504d44, 2, GmkDmgPhantomGob> {
@@ -180,10 +180,10 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_DMG_SE; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
-  GmkDmgSe() : unknown50(nullptr), unknowne0(false), unknowne4(0), unknowne8(1.0f) {}
+  GmkDmgSe() : m_gmkPhantom(nullptr), unknowne0(false), unknowne4(0), unknowne8(1.0f) {}
   ~GmkDmgSe() override { dispose(); }
   GmkType getGmkType() const override { return GMK_TYPE; }
-  bool isValid() const override { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
+  bool isValid() const override { return m_createBaseInfo.m_ownerGmkEnemyList != nullptr && m_createInfo.unknown08 != nullptr; }
   void createGmkPhantom() const;
   void createSeInst(fw::SoundPack *pack, u32 id) const;
   void disposeSeInst(bool isFadeOut) const;
@@ -191,13 +191,13 @@ public:
   void dispose() override;
   void validateMute() const;
 
-  mutable GmkPhantom unknown50; // Inferred role: phantom; original member name unknown.
-  mutable bool unknowne0;       // Inferred role: mute; original member name unknown.
-  mutable u32 unknowne4;        // Inferred role: se handle; original member name unknown.
-  mutable f32 unknowne8;        // Inferred role: se volume; original member name unknown.
+  mutable GmkPhantom m_gmkPhantom; // Inferred role: phantom; original member name unknown.
+  mutable bool unknowne0;          // Inferred role: mute; original member name unknown.
+  mutable u32 unknowne4;           // Inferred role: se handle; original member name unknown.
+  mutable f32 unknowne8;           // Inferred role: se volume; original member name unknown.
 };
 
-static_assert(offsetof(GmkDmgSe, unknown50) == 0x50, "");
+static_assert(offsetof(GmkDmgSe, m_gmkPhantom) == 0x50, "");
 static_assert(offsetof(GmkDmgSe, unknowne0) == 0xe0, "");
 static_assert(offsetof(GmkDmgSe, unknowne4) == 0xe4, "");
 static_assert(offsetof(GmkDmgSe, unknowne8) == 0xe8, "");

@@ -12,10 +12,10 @@ struct GF_OBJ_HANDLE;
 struct GfSetupParam;
 
 struct GfSetupPfTalk {
-  int unknown00;            // Inferred role: event; original member name unknown.
-  GF_OBJ_HANDLE *unknown08; // Inferred role: handle; original member name unknown.
-  u32 unknown10;            // Inferred role: param 0; original member name unknown.
-  u32 unknown14;            // Inferred role: param 1; original member name unknown.
+  int unknown00;                  // Inferred role: event; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: handle; original member name unknown.
+  u32 unknown10;                  // Inferred role: param 0; original member name unknown.
+  u32 unknown14;                  // Inferred role: param 1; original member name unknown.
 };
 
 static_assert(sizeof(GfSetupPfTalk) == 0x18, "");

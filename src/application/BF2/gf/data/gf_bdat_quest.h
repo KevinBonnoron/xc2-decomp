@@ -29,14 +29,14 @@ constexpr u32 QUEST_UNKNOWN_16000 = 16000; // Inferred role: quest id count; ori
 constexpr u32 QUEST_UNKNOWN_4 = 4;         // Inferred role: quest task count; original name unknown.
 
 struct QIDXINFO {
-  QIDXINFO(QuestID quest) : unknown0c(0), unknown10(quest) {}
-  QIDXINFO(u32 purpose) : unknown0c(purpose), unknown10() {}
+  QIDXINFO(QuestID quest) : unknown0c(0), m_questID(quest) {}
+  QIDXINFO(u32 purpose) : unknown0c(purpose), m_questID() {}
 
   u32 unknown00;     // Inferred role: index; original member name unknown.
   u32 unknown04;     // Inferred role: category begin; original member name unknown.
   QTYPE unknown08;   // Inferred role: category; original member name unknown.
   u32 unknown0c;     // Inferred role: purpose; original member name unknown.
-  QuestID unknown10; // Inferred role: quest; original member name unknown.
+  QuestID m_questID; // Inferred role: quest; original member name unknown.
 };
 
 static_assert(sizeof(QIDXINFO) == 0x14, "");
@@ -82,7 +82,7 @@ public:
   qlist_iterator operator++();
   bool operator!=(const qlist_iterator &other) const { return unknown0c != other.unknown0c; }
 
-  QuestListAcc *unknown00;            // Inferred role: quest list acc; original member name unknown.
+  QuestListAcc *m_questListAcc;       // Inferred role: quest list acc; original member name unknown.
   QTYPE unknown08;                    // Inferred role: type; original member name unknown.
   s32 unknown0c;                      // Inferred role: index; original member name unknown.
   const QuestListCategory *unknown10; // Inferred role: category; original member name unknown.
@@ -96,7 +96,7 @@ public:
   u16 getPurposeID() const;
   bool operator!=(const tlist_iterator &other) const { return unknown0c != other.unknown0c; }
 
-  QuestListAcc *unknown00;            // Inferred role: quest list acc; original member name unknown.
+  QuestListAcc *m_questListAcc;       // Inferred role: quest list acc; original member name unknown.
   QTYPE unknown08;                    // Inferred role: type; original member name unknown.
   s32 unknown0c;                      // Inferred role: index; original member name unknown.
   const QuestTaskCategory *unknown10; // Inferred role: category; original member name unknown.
@@ -429,43 +429,43 @@ public:
   void bdatRefresh() override;
 
 private:
-  CBdatWrapper *unknown10;  // Inferred role: fld quest list; original member name unknown.
-  CBdatWrapper *unknown18;  // Inferred role: fld quest list normal; original member name unknown.
-  CBdatWrapper *unknown20;  // Inferred role: fld quest list mini; original member name unknown.
-  CBdatWrapper *unknown28;  // Inferred role: fld quest list mercenaries; original member name unknown.
-  CBdatWrapper *unknown30;  // Inferred role: fld quest list achievement; original member name unknown.
-  CBdatWrapper *unknown38;  // Inferred role: fld quest list blade; original member name unknown.
-  CBdatWrapper *unknown40;  // Inferred role: fld quest collect; original member name unknown.
-  CBdatWrapper *unknown48;  // Inferred role: fld quest task; original member name unknown.
-  CBdatWrapper *unknown50;  // Inferred role: fld quest task normal; original member name unknown.
-  CBdatWrapper *unknown58;  // Inferred role: fld quest task mini; original member name unknown.
-  CBdatWrapper *unknown60;  // Inferred role: fld quest task mercenaries; original member name unknown.
-  CBdatWrapper *unknown68;  // Inferred role: fld quest task achievement; original member name unknown.
-  CBdatWrapper *unknown70;  // Inferred role: fld quest task blade; original member name unknown.
-  CBdatWrapper *unknown78;  // Inferred role: fld quest battle; original member name unknown.
-  CBdatWrapper *unknown80;  // Inferred role: fld request item set; original member name unknown.
-  CBdatWrapper *unknown88;  // Inferred role: fld quest use; original member name unknown.
-  CBdatWrapper *unknown90;  // Inferred role: fld quest reach; original member name unknown.
-  CBdatWrapper *unknown98;  // Inferred role: fld quest talk; original member name unknown.
-  CBdatWrapper *unknowna0;  // Inferred role: fld quest talk dummy group; original member name unknown.
-  CBdatWrapper *unknowna8;  // Inferred role: fld quest gimmick; original member name unknown.
-  CBdatWrapper *unknownb0;  // Inferred role: fld quest field skill count; original member name unknown.
-  CBdatWrapper *unknownb8;  // Inferred role: fld request blade; original member name unknown.
-  CBdatWrapper *unknownc0;  // Inferred role: fld quest condition; original member name unknown.
-  CBdatWrapper *unknownc8;  // Inferred role: fld quest hints; original member name unknown.
-  CBdatWrapper *unknownd0;  // Inferred role: fld quest event; original member name unknown.
-  CBdatWrapper *unknownd8;  // Inferred role: fld quest reward; original member name unknown.
-  CBdatWrapper *unknowne0;  // Inferred role: fld quest reward random; original member name unknown.
-  CBdatWrapper *unknowne8;  // Inferred role: fld achievement; original member name unknown.
-  CBdatWrapper *unknownf0;  // Inferred role: fld achievement set; original member name unknown.
-  CBdatWrapper *unknownf8;  // Inferred role: fld achievement list; original member name unknown.
-  CBdatWrapper *unknown100; // Inferred role: fld mercenaries config; original member name unknown.
-  CBdatWrapper *unknown108; // Inferred role: fld mercenaries mission; original member name unknown.
-  CBdatWrapper *unknown110; // Inferred role: fld field skill list; original member name unknown.
-  CBdatWrapper *unknown118; // Inferred role: fld field skill setting; original member name unknown.
-  CBdatWrapper *unknown120; // Inferred role: fld field skill random; original member name unknown.
-  CBdatWrapper *unknown128; // Inferred role: fld development level; original member name unknown.
-  QuestListAcc *unknown130; // Inferred role: quest list acc; original member name unknown.
+  CBdatWrapper *unknown10;      // Inferred role: fld quest list; original member name unknown.
+  CBdatWrapper *unknown18;      // Inferred role: fld quest list normal; original member name unknown.
+  CBdatWrapper *unknown20;      // Inferred role: fld quest list mini; original member name unknown.
+  CBdatWrapper *unknown28;      // Inferred role: fld quest list mercenaries; original member name unknown.
+  CBdatWrapper *unknown30;      // Inferred role: fld quest list achievement; original member name unknown.
+  CBdatWrapper *unknown38;      // Inferred role: fld quest list blade; original member name unknown.
+  CBdatWrapper *unknown40;      // Inferred role: fld quest collect; original member name unknown.
+  CBdatWrapper *unknown48;      // Inferred role: fld quest task; original member name unknown.
+  CBdatWrapper *unknown50;      // Inferred role: fld quest task normal; original member name unknown.
+  CBdatWrapper *unknown58;      // Inferred role: fld quest task mini; original member name unknown.
+  CBdatWrapper *unknown60;      // Inferred role: fld quest task mercenaries; original member name unknown.
+  CBdatWrapper *unknown68;      // Inferred role: fld quest task achievement; original member name unknown.
+  CBdatWrapper *unknown70;      // Inferred role: fld quest task blade; original member name unknown.
+  CBdatWrapper *unknown78;      // Inferred role: fld quest battle; original member name unknown.
+  CBdatWrapper *unknown80;      // Inferred role: fld request item set; original member name unknown.
+  CBdatWrapper *unknown88;      // Inferred role: fld quest use; original member name unknown.
+  CBdatWrapper *unknown90;      // Inferred role: fld quest reach; original member name unknown.
+  CBdatWrapper *unknown98;      // Inferred role: fld quest talk; original member name unknown.
+  CBdatWrapper *unknowna0;      // Inferred role: fld quest talk dummy group; original member name unknown.
+  CBdatWrapper *unknowna8;      // Inferred role: fld quest gimmick; original member name unknown.
+  CBdatWrapper *unknownb0;      // Inferred role: fld quest field skill count; original member name unknown.
+  CBdatWrapper *unknownb8;      // Inferred role: fld request blade; original member name unknown.
+  CBdatWrapper *unknownc0;      // Inferred role: fld quest condition; original member name unknown.
+  CBdatWrapper *unknownc8;      // Inferred role: fld quest hints; original member name unknown.
+  CBdatWrapper *unknownd0;      // Inferred role: fld quest event; original member name unknown.
+  CBdatWrapper *unknownd8;      // Inferred role: fld quest reward; original member name unknown.
+  CBdatWrapper *unknowne0;      // Inferred role: fld quest reward random; original member name unknown.
+  CBdatWrapper *unknowne8;      // Inferred role: fld achievement; original member name unknown.
+  CBdatWrapper *unknownf0;      // Inferred role: fld achievement set; original member name unknown.
+  CBdatWrapper *unknownf8;      // Inferred role: fld achievement list; original member name unknown.
+  CBdatWrapper *unknown100;     // Inferred role: fld mercenaries config; original member name unknown.
+  CBdatWrapper *unknown108;     // Inferred role: fld mercenaries mission; original member name unknown.
+  CBdatWrapper *unknown110;     // Inferred role: fld field skill list; original member name unknown.
+  CBdatWrapper *unknown118;     // Inferred role: fld field skill setting; original member name unknown.
+  CBdatWrapper *unknown120;     // Inferred role: fld field skill random; original member name unknown.
+  CBdatWrapper *unknown128;     // Inferred role: fld development level; original member name unknown.
+  QuestListAcc *m_questListAcc; // Inferred role: quest list acc; original member name unknown.
 
   friend class GfQuestManager;
   friend class QuestListAcc;
@@ -476,7 +476,7 @@ struct GfBdatQuestLayout {
   static_assert(offsetof(GfBdatQuest, unknown10) == 0x10, "");
   static_assert(offsetof(GfBdatQuest, unknown78) == 0x78, "");
   static_assert(offsetof(GfBdatQuest, unknownd0) == 0xd0, "");
-  static_assert(offsetof(GfBdatQuest, unknown130) == 0x130, "");
+  static_assert(offsetof(GfBdatQuest, m_questListAcc) == 0x130, "");
 };
 
 } // namespace gf

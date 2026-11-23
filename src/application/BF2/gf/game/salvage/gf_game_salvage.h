@@ -377,18 +377,18 @@ public:
   void playSE(SEID id);
   void playDiveVibration();
 
-  ai::Fsm unknown08;                           // Inferred role: fsm; original member name unknown.
+  ai::Fsm m_fsm;                               // Inferred role: fsm; original member name unknown.
   mm::mtl::IntrusivePtr<fw::Camera> unknown80; // Inferred role: camera dive start; original member name unknown.
   mm::mtl::IntrusivePtr<fw::Camera> unknown88; // Inferred role: camera dive; original member name unknown.
   mm::mtl::IntrusivePtr<fw::Camera> unknown90; // Inferred role: camera climb; original member name unknown.
   mm::mtl::IntrusivePtr<fw::Camera> unknown98; // Inferred role: camera cut 01; original member name unknown.
   bool unknowna0;                              // Inferred role: initialized; original member name unknown.
-  GF_OBJ_HANDLE *unknowna8;                    // Inferred role: handle; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE;              // Inferred role: handle; original member name unknown.
   int unknownb0;                               // Inferred role: button challenge point; original member name unknown.
   int unknownb4;                               // Inferred role: skill point; original member name unknown.
   u32 unknownb8;                               // Inferred role: cylinder item; original member name unknown.
-  GfEvtModelSalvage *unknownc0;                // Inferred role: model; original member name unknown.
-  GAME_VOICE_HANDLE *unknownc8;                // Inferred role: voice; original member name unknown.
+  GfEvtModelSalvage *m_evtModelSalvage;        // Inferred role: model; original member name unknown.
+  GAME_VOICE_HANDLE *m_GAME_VOICE_HANDLE;      // Inferred role: voice; original member name unknown.
   AnimationType m_climbAnimationType;
   u32 unknownd4; // Inferred role: climb voice; original member name unknown.
   u32 unknownd8; // Inferred role: dive vibration; original member name unknown.

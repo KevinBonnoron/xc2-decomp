@@ -41,7 +41,7 @@ public:
   void enter(const EnterInfo &info) override;
   void leave(const LeaveInfo &info) override;
 
-  CreateInfo unknown10;      // Inferred role: create info; original member name unknown.
+  CreateInfo m_createInfo;   // Inferred role: create info; original member name unknown.
   u8 unknown60;              // Inferred role: Detects of BDAT_CHR_EN_ARRANGE, bit 0 for the sight and bit 1 for the radius; original member name unknown.
   bool unknown61;            // Inferred role: UseSearchBone of BDAT_RSC_EN; original member name unknown.
   mm::Quat unknown70;        // Inferred role: rotation of the search bone; original member name unknown.
@@ -54,12 +54,12 @@ public:
   fw::ColiObject *unknowna0; // Inferred role: search radius collision; original member name unknown.
   f32 unknowna8;             // Inferred role: search radius squared; original member name unknown.
   bool unknownac;            // Inferred role: player in the search radius; original member name unknown.
-  gmk::GmkAcc unknownb0;     // Inferred role: battle lock; original member name unknown.
+  gmk::GmkAcc m_gmkAcc;      // Inferred role: battle lock; original member name unknown.
   bool unknownf0;            // Inferred role: player inside the battle lock shape; original member name unknown.
 };
 
 static_assert(sizeof(GfFieldEnemySensor::CreateInfo) == 0x50, "");
-static_assert(offsetof(GfFieldEnemySensor, unknown10) == 0x10, "");
+static_assert(offsetof(GfFieldEnemySensor, m_createInfo) == 0x10, "");
 static_assert(offsetof(GfFieldEnemySensor, unknown60) == 0x60, "");
 static_assert(offsetof(GfFieldEnemySensor, unknown70) == 0x70, "");
 static_assert(offsetof(GfFieldEnemySensor, unknown80) == 0x80, "");
@@ -69,7 +69,7 @@ static_assert(offsetof(GfFieldEnemySensor, unknown98) == 0x98, "");
 static_assert(offsetof(GfFieldEnemySensor, unknowna0) == 0xa0, "");
 static_assert(offsetof(GfFieldEnemySensor, unknowna8) == 0xa8, "");
 static_assert(offsetof(GfFieldEnemySensor, unknownac) == 0xac, "");
-static_assert(offsetof(GfFieldEnemySensor, unknownb0) == 0xb0, "");
+static_assert(offsetof(GfFieldEnemySensor, m_gmkAcc) == 0xb0, "");
 static_assert(offsetof(GfFieldEnemySensor, unknownf0) == 0xf0, "");
 static_assert(sizeof(GfFieldEnemySensor) == 0x100, "");
 

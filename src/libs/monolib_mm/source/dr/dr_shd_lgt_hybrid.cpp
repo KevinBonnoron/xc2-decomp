@@ -9,84 +9,84 @@ namespace ml {
 
 DrShdLgtHybrid::DrShdLgtHybrid(DrMan *drMan) {
   unknown08 = 0;
-  unknown10 = drMan;
-  unknown18 = new (drMan->unknown0c) DrShdLgtClustered(drMan, false);
-  unknown20 = new (drMan->unknown0c) DrShdLgtTileBasedDr(drMan);
+  m_drMan = drMan;
+  m_drShdLgtClustered = new (drMan->unknown0c) DrShdLgtClustered(drMan, false);
+  m_drShdLgtTileBasedDr = new (drMan->unknown0c) DrShdLgtTileBasedDr(drMan);
 }
 
 DrShdLgtHybrid::~DrShdLgtHybrid() {
-  if (unknown18 != nullptr) {
-    delete unknown18;
-    unknown18 = nullptr;
+  if (m_drShdLgtClustered != nullptr) {
+    delete m_drShdLgtClustered;
+    m_drShdLgtClustered = nullptr;
   }
-  if (unknown20 != nullptr) {
-    delete unknown20;
-    unknown20 = nullptr;
+  if (m_drShdLgtTileBasedDr != nullptr) {
+    delete m_drShdLgtTileBasedDr;
+    m_drShdLgtTileBasedDr = nullptr;
   }
 }
 
 void DrShdLgtHybrid::render(DrShdLgtMan *shdLgtMan, DrLightMan *lightMan) {
-  if (unknown10->unknown1da4 != 1) {
-    if (unknown10->unknown1da4 != 0) {
+  if (m_drMan->unknown1da4 != 1) {
+    if (m_drMan->unknown1da4 != 0) {
       return;
     }
-    unknown20->render(shdLgtMan, lightMan);
+    m_drShdLgtTileBasedDr->render(shdLgtMan, lightMan);
     return;
   }
   if (DrMan::getIns()->unknown1d70) {
     return;
   }
-  unknown18->render(shdLgtMan, lightMan);
+  m_drShdLgtClustered->render(shdLgtMan, lightMan);
 }
 
 void DrShdLgtHybrid::stockBegin() {
-  unknown18->stockBegin();
-  unknown20->stockBegin();
+  m_drShdLgtClustered->stockBegin();
+  m_drShdLgtTileBasedDr->stockBegin();
 }
 
 void DrShdLgtHybrid::stockEnd() {
-  unknown18->stockEnd();
-  unknown20->stockEnd();
+  m_drShdLgtClustered->stockEnd();
+  m_drShdLgtTileBasedDr->stockEnd();
 }
 
 void DrShdLgtHybrid::update() {
-  unknown18->update();
-  unknown20->update();
+  m_drShdLgtClustered->update();
+  m_drShdLgtTileBasedDr->update();
 }
 
 void DrShdLgtHybrid::setupCate(int cate) {
   unknown08 = cate;
-  unknown18->setupCate(cate);
-  unknown20->setupCate(cate);
+  m_drShdLgtClustered->setupCate(cate);
+  m_drShdLgtTileBasedDr->setupCate(cate);
 }
 
 void DrShdLgtHybrid::addViewInfo(int cate) {
-  unknown18->addViewInfo(cate);
-  unknown20->addViewInfo(cate);
+  m_drShdLgtClustered->addViewInfo(cate);
+  m_drShdLgtTileBasedDr->addViewInfo(cate);
 }
 
 void DrShdLgtHybrid::delViewInfo(int cate) {
-  unknown18->delViewInfo(cate);
-  unknown20->delViewInfo(cate);
+  m_drShdLgtClustered->delViewInfo(cate);
+  m_drShdLgtTileBasedDr->delViewInfo(cate);
 }
 
 void DrShdLgtHybrid::stockPntList(DrLightObjPnt *light) {
-  unknown18->stockPntList(light);
-  unknown20->stockPntList(light);
+  m_drShdLgtClustered->stockPntList(light);
+  m_drShdLgtTileBasedDr->stockPntList(light);
 }
 
 void DrShdLgtHybrid::stockSptList(DrLightObjSpt *light) {
-  unknown18->stockSptList(light);
-  unknown20->stockSptList(light);
+  m_drShdLgtClustered->stockSptList(light);
+  m_drShdLgtTileBasedDr->stockSptList(light);
 }
 
 void DrShdLgtHybrid::debugRender() {
-  switch (unknown10->unknown1da4) {
+  switch (m_drMan->unknown1da4) {
   case unknown063_0:
-    unknown20->debugRender();
+    m_drShdLgtTileBasedDr->debugRender();
     break;
   case unknown063_1:
-    unknown18->debugRender();
+    m_drShdLgtClustered->debugRender();
     break;
   }
 }

@@ -15,6 +15,6 @@ void CameraManager::update(const UpdateInfo &info) {
   }
 }
 
-void CameraManager::Listener::onWkStandbyLogout() { unknown08->unknown368 = nullptr; }
+void CameraManager::Listener::onWkStandbyLogout() { m_cameraManager->unknown368 = nullptr; }
 
 } // namespace fw

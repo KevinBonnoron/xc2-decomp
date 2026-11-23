@@ -38,7 +38,7 @@ void ScnDebugUtil::renderCamera(DebDraw *debDraw, ScnObjCam *cam, const mm::Mat4
     camMatrix = cam->unknown70.m_front->unknown00.unknown70;
     matrix = &camMatrix;
   }
-  ScnUtil::setPerspective(cam->unknown08, debDraw, nullptr);
+  ScnUtil::setPerspective(cam->m_scn, debDraw, nullptr);
   debDraw->setMatrix(*matrix);
   debDraw->setCol(0.1f, 0.5f, 0.0f, 1.0f);
   debDraw->renderCamera();

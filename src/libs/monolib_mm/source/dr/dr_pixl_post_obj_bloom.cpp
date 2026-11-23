@@ -45,23 +45,23 @@ DrPixlPostObjBloom::DrPixlPostObjBloom(DrMan *drMan, DrPixlMan *pixlMan, DrPixlP
   for (int i = 0; i < 5; i++) {
     unknown38[i] = nullptr;
   }
-  unknown18 = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
-  unknown20 = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
-  unknown28 = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
-  unknown30 = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
+  unknown18 = new (m_drMan->unknown0c) DrPixlRenderTarget(m_drMan);
+  unknown20 = new (m_drMan->unknown0c) DrPixlRenderTarget(m_drMan);
+  unknown28 = new (m_drMan->unknown0c) DrPixlRenderTarget(m_drMan);
+  unknown30 = new (m_drMan->unknown0c) DrPixlRenderTarget(m_drMan);
   for (int i = 0; i < 5; i++) {
-    unknown38[i] = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
-    unknown60[i] = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
+    unknown38[i] = new (m_drMan->unknown0c) DrPixlRenderTarget(m_drMan);
+    unknown60[i] = new (m_drMan->unknown0c) DrPixlRenderTarget(m_drMan);
   }
   for (int i = 0; i < 2; i++) {
-    m_lgtDownTarget[i] = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
+    m_lgtDownTarget[i] = new (m_drMan->unknown0c) DrPixlRenderTarget(m_drMan);
   }
   unknown94 |= 1;
   unknowna8 = 0;
 }
 
 void DrPixlPostObjBloom::calculateDownScale() {
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   if (postParm->unknownf72 && postParm->m_TMAAOn) {
     calculateDownScale_TwoPass();
   } else {
@@ -93,7 +93,7 @@ void DrPixlPostObjBloom::releaseBloomTexture() {
 void DrPixlPostObjBloom::update() { unknown90 = 0; }
 
 void DrPixlPostObjBloom::calcRender() {
-  s32 scaleType = unknown00->unknown120[unknown00->unknown1c98]->unknownf58;
+  s32 scaleType = m_drMan->unknown120[m_drMan->unknown1c98]->unknownf58;
   if (unknowna8 != scaleType) {
     BLOOMTEX_SCALE = scaleType == 1 ? BLOOMTEX_SCALE_NEW : BLOOMTEX_SCALE_OLD;
     releaseColorBuff(true);
@@ -107,7 +107,7 @@ void DrPixlPostObjBloom::calcRender() {
 }
 
 void DrPixlPostObjBloom::releaseColorBuff(bool isForce) {
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   if (postParm->unknownfe4 == 3 || isForce) {
     m_lgtDownTarget[0]->releaseTexture();
     m_lgtDownTarget[1]->releaseTexture();
@@ -138,9 +138,9 @@ void DrPixlPostObjBloom::bloomLensFlare() {
 }
 
 void DrPixlPostObjBloom::calculateGaussBlur() {
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   calculateGaussBlurImplPS();
-  if (postParm->unknown3e) {
+  if (postParm->m_lensFlare) {
     calculateFlareBuff();
     calculateLensFlare();
     bloomLensFlare();
@@ -151,12 +151,12 @@ void DrPixlPostObjBloom::calculateGaussBlur() {
 // `source` (a DrPixlRenderTarget * like getPixlObj(6) and getBloomTexture()) takes unknown20 without a cast. extType and pass are the single-use
 // locals that place the `add`/`cinc` before the getDeclarationOfs calls.
 void DrPixlPostObjBloom::calculateDownScaleImpl(DownScaleType type) {
-  DrPixlRenderTarget *color = unknown08->unknown7f0->unknown138;
+  DrPixlRenderTarget *color = m_drPixlMan->unknown7f0->unknown138;
   DrPixlRenderTarget *source;
-  if (!unknown00->unknown120[unknown00->unknown1c98]->m_TMAAOn) {
-    source = unknown08->getPixlObj(6);
+  if (!m_drMan->unknown120[m_drMan->unknown1c98]->m_TMAAOn) {
+    source = m_drPixlMan->getPixlObj(6);
   } else {
-    source = unknown08->unknown7f0->unknown180->unknown68->getBloomTexture();
+    source = m_drPixlMan->unknown7f0->m_drPixlPostMan->m_drPixlPostObjTMAA->getBloomTexture();
   }
   if (type == DOWN_SCALE_TYPE_UNKNOWN_2) {
     source = unknown20;
@@ -165,8 +165,8 @@ void DrPixlPostObjBloom::calculateDownScaleImpl(DownScaleType type) {
   color->setColorInvalidate();
   grlib::CGLibRenderTarget *target = type == DOWN_SCALE_TYPE_UNKNOWN_1 ? unknown20 : unknown18;
   target->setRenderTarget();
-  DrShdDataList *shdList = unknown00->unknown80->unknown00;
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   bool isTwoPass = type == DOWN_SCALE_TYPE_UNKNOWN_1 || type == DOWN_SCALE_TYPE_UNKNOWN_2;
   DrShdDataObj *shader = shdList->getPostShdObj(isTwoPass ? 0x41 : 4);
   u32 extType = type + 1;
@@ -207,14 +207,14 @@ void DrPixlPostObjBloom::calculateDownScaleImpl(DownScaleType type) {
     work[3] = 0.0f;
   }
   uniform.setF32SetVec4(scaleOffset, work);
-  work[0] = postParm->unknown40;
+  work[0] = postParm->m_borderBlmSub;
   work[1] = postParm->m_borderBlmMul * (1.0f / 3.0f);
   work[2] = postParm->unknownc0[0] * 0.25f;
-  work[3] = unknown08->unknown7f0->unknown188;
-  work[4] = postParm->unknown48;
-  work[5] = postParm->unknown4c * (1.0f / 3.0f);
-  work[6] = unknown08->unknown7f0->unknown18c;
-  work[7] = 1.0f / unknown08->unknown7f0->unknown188;
+  work[3] = m_drPixlMan->unknown7f0->unknown188;
+  work[4] = postParm->m_borderBlmSecSub;
+  work[5] = postParm->m_borderBlmSecMul * (1.0f / 3.0f);
+  work[6] = m_drPixlMan->unknown7f0->unknown18c;
+  work[7] = 1.0f / m_drPixlMan->unknown7f0->unknown188;
   uniform.setF32SetF32Array(ratioOffset, work, 8);
   if (isReduction) {
     f32 pixelV = 1.0f / static_cast<f32>(color->unknownc0);
@@ -240,7 +240,7 @@ void DrPixlPostObjBloom::calculateDownScaleImpl(DownScaleType type) {
     work[7] = pixelV * 3.0f;
   }
   uniform.setF32SetF32Array(ofsOffset, work, 8);
-  DrAPCache *apCache = unknown00->unknown5c0;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   apCache->beginTexSampling(2, 1);
   apCache->setTexture(*source->unknown70, sourceLocation);
   apCache->setTexture(*color->unknown70, colorLocation);
@@ -252,12 +252,12 @@ void DrPixlPostObjBloom::calculateDownScaleImpl(DownScaleType type) {
 
 void DrPixlPostObjBloom::calculateFlareBuff() {
   unknown28->setRenderTarget();
-  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
   DrShdDataObj *shader = shdList->getPostShdObj(8);
   shdList->unknown002(shader);
   grlib::CGLibUniformEtcUtility uniform(shader);
   uniform.setUseUniformBlock("U_POST");
-  DrAPCache *apCache = unknown00->unknown5c0;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   int location = (shader->unknown38 + shader->unknown58)->getTextureLocation("s0");
   u32 scaleOffset = uniform.unknown001("gScal");
   u32 ratioOffset = uniform.unknown001("ratio");
@@ -271,9 +271,9 @@ void DrPixlPostObjBloom::calculateFlareBuff() {
   work[2] = 1.0f / (width + width);
   work[3] = 1.0f / (height + height);
   uniform.setF32SetVec4(scaleOffset, work);
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
-  work[0] = postParm->unknownc8;
-  work[1] = postParm->unknowncc * (1.0f / 3.0f);
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
+  work[0] = postParm->m_blmLensSub;
+  work[1] = postParm->m_blmLensMul * (1.0f / 3.0f);
   uniform.setF32SetVec4(ratioOffset, work);
   apCache->beginTexSampling(2, 1);
   apCache->setTexture(*unknown38[2]->unknown70, location);
@@ -285,18 +285,18 @@ void DrPixlPostObjBloom::calculateFlareBuff() {
 
 void DrPixlPostObjBloom::calculateLensFlare() {
   unknown30->setRenderTarget();
-  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
   DrShdDataObj *shader = shdList->getPostShdObj(7);
   shdList->unknown002(shader);
   grlib::CGLibUniformEtcUtility uniform(shader);
   uniform.setUseUniformBlock("U_CMN");
-  DrAPCache *apCache = unknown00->unknown5c0;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   int location = (shader->unknown38 + shader->unknown58)->getTextureLocation("s0");
   u32 scaleOffset = uniform.unknown001("gScal");
   u32 ratioOffset = uniform.unknown001("ratio");
   apCache->beginBorderBlack();
   apCache->setTexture(*unknown28->unknown70, location);
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   f32 height = static_cast<f32>(unknown28->unknownc0);
   f32 width = static_cast<f32>(unknown28->unknownbc);
   f32 scaleU = (width - 1.0f) / width;
@@ -307,20 +307,20 @@ void DrPixlPostObjBloom::calculateLensFlare() {
   work[2] = 1.0f / (width + width);
   work[3] = 1.0f / (height + height);
   uniform.setF32SetVec4(scaleOffset, work);
-  work[0] = postParm->unknownd8;
-  work[1] = postParm->unknowndc;
-  work[2] = postParm->unknowne0 * 0.1f;
-  work[3] = postParm->unknowne4;
+  work[0] = postParm->m_blmLensWeight;
+  work[1] = postParm->m_blmLensDecay;
+  work[2] = postParm->m_blmLensStrength * 0.1f;
+  work[3] = postParm->m_blmLensParmMax;
   uniform.setF32SetVec4(ratioOffset, work);
   grlib::CGLibUniformEtcUtility loopUniform(shader);
   loopUniform.setUseUniformBlock("U_LOOP");
   u32 uvOffset = loopUniform.unknown001("spuv");
-  f32 angle = postParm->unknownd4 * mm::DEG_TO_RAD;
+  f32 angle = postParm->m_blmLensRot * mm::DEG_TO_RAD;
   f32 stepU = 1.0f / width * scaleU;
   f32 stepV = 1.0f / height * scaleV;
   work[0] = stepU * cosf(angle);
   work[1] = stepV * sinf(angle);
-  work[2] = postParm->unknowne8 + 0.8f;
+  work[2] = postParm->m_blmLensUVDecay + 0.8f;
   work[3] = 0.0f;
   loopUniform.setF32SetVec4(uvOffset, work);
   uniform.updateData();
@@ -328,7 +328,7 @@ void DrPixlPostObjBloom::calculateLensFlare() {
   loopUniform.updateData();
   loopUniform.setUniformBlock();
   shdList->renderQuads();
-  int count = postParm->unknownd0;
+  int count = postParm->m_blmLensMax;
   if (count != 0) {
     DrAPGxType::setupBlend(2);
     for (int i = 1; i < count; i++) {
@@ -356,8 +356,8 @@ void DrPixlPostObjBloom::calculateLensFlare() {
 void DrPixlPostObjBloom::calcCollectRender(bool isVolume) {
   DrAPGxType::setupBlend(0);
   unknown18->setRenderTarget();
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
-  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
   DrShdDataObj *shader = shdList->getPostShdObj(9);
   // Decision 2026-11-14 (ruling 1): the single-use local places the `cinc` before the getDeclarationOfs call (245 instructions, 244 without it).
   u32 withVolume = isVolume ? 1 : 2;
@@ -369,9 +369,9 @@ void DrPixlPostObjBloom::calcCollectRender(bool isVolume) {
   grlib::CGLibUniformEtcUtility uniform(shader);
   uniform.setUseUniformBlock("U_POST");
   setShaderBloom(shader, uniform);
-  DrAPCache *apCache = unknown00->unknown5c0;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   int volumeLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("vl");
-  apCache->setTexture(*unknown10->unknown28->unknown28->unknown70, volumeLocation);
+  apCache->setTexture(*m_drPixlPostMan->m_drPixlPostObjVolume->unknown28->unknown70, volumeLocation);
   u32 scaleOffset = uniform.unknown001("gScal");
   f32 width = static_cast<f32>(unknown18->unknownbc);
   f32 height = static_cast<f32>(unknown18->unknownc0);
@@ -383,7 +383,7 @@ void DrPixlPostObjBloom::calcCollectRender(bool isVolume) {
   uniform.setF32SetVec4(scaleOffset, work);
   u32 parmOffset = uniform.unknown001("gParm");
   // Decision 2026-11-14 (P3): plain statements in the order the game stores them (work[3], work[2], work[1]) instead of a chained assignment.
-  work[0] = unknown08->unknown7f0->unknown188;
+  work[0] = m_drPixlMan->unknown7f0->unknown188;
   work[3] = 0.0f;
   work[2] = 0.0f;
   work[1] = 0.0f;
@@ -423,19 +423,19 @@ void DrPixlPostObjBloom::calcCollectRender(bool isVolume) {
 }
 
 void DrPixlPostObjBloom::debugRender() {
-  if (!unknown00->unknown120[unknown00->unknown1c98]->unknown3d) {
+  if (!m_drMan->unknown120[m_drMan->unknown1c98]->unknown3d) {
     return;
   }
   // Inferred role: debug view entry, a render target with its index and kind; original type name unknown. Stride 0x10 at sp+0x10.
   struct unknown010 {
-    DrPixlRenderTarget *unknown00; // Inferred role: render target; original member name unknown.
-    u16 unknown08;                 // Inferred role: index in its group; original member name unknown.
-    u16 unknown0a;                 // Inferred role: group, 1 for the blur chains; original member name unknown.
+    DrPixlRenderTarget *m_drPixlRenderTarget; // Inferred role: render target; original member name unknown.
+    u16 unknown08;                            // Inferred role: index in its group; original member name unknown.
+    u16 unknown0a;                            // Inferred role: group, 1 for the blur chains; original member name unknown.
   };
   static_assert(offsetof(unknown010, unknown08) == 0x08, "");
   static_assert(offsetof(unknown010, unknown0a) == 0x0a, "");
   static_assert(sizeof(unknown010) == 0x10, "");
-  DrPixlRenderTarget *color = unknown08->getPixlObj(6);
+  DrPixlRenderTarget *color = m_drPixlMan->getPixlObj(6);
   unknown010 targets[13];
   targets[0] = {unknown18, 0, 0};
   targets[1] = {color, 1, 0};
@@ -446,11 +446,11 @@ void DrPixlPostObjBloom::debugRender() {
   for (u16 i = 0; i < 5; i++) {
     targets[8 + i] = {unknown60[i], i, 1};
   }
-  u32 index = unknown00->unknown120[unknown00->unknown1c98]->unknownf74;
+  u32 index = m_drMan->unknown120[m_drMan->unknown1c98]->unknownf74;
   if (index > 11) {
     index = 12;
   }
-  targets[index].unknown00->debugRender(0, 0, unknown00->unknown5b8->unknown18, unknown00->unknown5b8->unknown1c, false, true, 1.0f, true);
+  targets[index].m_drPixlRenderTarget->debugRender(0, 0, m_drMan->unknown5b8->unknown18, m_drMan->unknown5b8->unknown1c, false, true, 1.0f, true);
 }
 
 } // namespace ml

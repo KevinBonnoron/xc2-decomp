@@ -43,7 +43,7 @@ void GfInfo::initialize(const GfSetupParam &) {
   m_nScreenW = ml::DevGraph::getRootWidth();
   m_nScreenH = ml::DevGraph::getRootHeight();
   mm::Plane plane;
-  plane.set(mm::Vec3::unitY, mm::Vec3::zero);
+  plane.set(mm::Vec3::zero, mm::Vec3::unitY);
   for (u32 i = 0; i < PLANE_UNKNOWN_6; i++) {
     m_camPlanes[i] = plane;
   }

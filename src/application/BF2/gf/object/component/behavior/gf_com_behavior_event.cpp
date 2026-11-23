@@ -35,13 +35,13 @@ bool GfComBehaviorEvent::recieveMessage(fw::MessageObject *sender, fw::Message &
 void GfComBehaviorEvent::setup() {
   GfComEvtAnim *evtAnim = unknown08->getComponent<GfComEvtAnim>();
   if (evtAnim != nullptr) {
-    evtAnim->unknown10.unknown70[0].unknown00 = "system";
-    evtAnim->unknown10.unknown70[0].unknown08.bind<GfComBehavior>(this, &GfComBehavior::callbackAnimForEvent);
+    evtAnim->m_asm.unknown70[0].unknown00 = "system";
+    evtAnim->m_asm.unknown70[0].unknown08.bind<GfComBehavior>(this, &GfComBehavior::callbackAnimForEvent);
   }
 
-  unknown10.beginSetup(*this, 4);
-  unknown10.unknown001<FootIkControllerPlugin>(3, true);
-  unknown10.endSetup();
+  m_pluginManager.beginSetup(*this, 4);
+  m_pluginManager.unknown001<FootIkControllerPlugin>(3, true);
+  m_pluginManager.endSetup();
 
   FootIkControllerPlugin *plugin = unknown001<FootIkControllerPlugin>(3);
   if (plugin != nullptr) {
@@ -50,7 +50,7 @@ void GfComBehaviorEvent::setup() {
 }
 
 void GfComBehaviorEvent::update(const fw::UpdateInfo &info) {
-  unknown10.update(info);
+  m_pluginManager.update(info);
   if ((unknown98 & 1) == 0) {
     setFootIK(true);
     unknown98 |= 1;
@@ -60,7 +60,7 @@ void GfComBehaviorEvent::update(const fw::UpdateInfo &info) {
 }
 
 const mm::mtl::RTTI *GfComBehaviorEvent::getRTTI() const { return &m_rtti; }
-void GfComBehaviorEvent::cleanup() { unknown10.cleanup(); }
+void GfComBehaviorEvent::cleanup() { m_pluginManager.cleanup(); }
 
 void GfComBehaviorEvent::setFootIK(bool isEnable) {
   if (unknown08->getComponent<GfComIK>() == nullptr) {
@@ -68,7 +68,7 @@ void GfComBehaviorEvent::setFootIK(bool isEnable) {
   }
 
   GfComEvtAnim *evtAnim = unknown08->getComponent<GfComEvtAnim>();
-  if (evtAnim != nullptr && evtAnim->unknown10.unknown10 != nullptr) {
+  if (evtAnim != nullptr && evtAnim->m_asm.unknown10 != nullptr) {
     FootIkControllerPlugin *plugin = unknown001<FootIkControllerPlugin>(3);
     if (plugin != nullptr) {
       plugin->unknown1e = isEnable;
@@ -83,11 +83,11 @@ void GfComBehaviorEvent::setTarget(bool isEnable, f32 time, bool isLookOnly) {
   }
 
   GfComEvtAnim *evtAnim = unknown08->getComponent<GfComEvtAnim>();
-  if (evtAnim == nullptr || evtAnim->unknown10.unknown10 == nullptr) {
+  if (evtAnim == nullptr || evtAnim->m_asm.unknown10 == nullptr) {
     return;
   }
 
-  fw::IkSolver *solver = ik->unknown10.unknown10[unknown002_3].get();
+  fw::IkSolver *solver = ik->m_ikResolver.unknown10[unknown002_3].get();
   if (solver == nullptr) {
     return;
   }
@@ -134,11 +134,11 @@ void GfComBehaviorEvent::setTargetPos(const mm::Vec3 &position) {
   }
 
   GfComEvtAnim *evtAnim = unknown08->getComponent<GfComEvtAnim>();
-  if (evtAnim == nullptr || evtAnim->unknown10.unknown10 == nullptr) {
+  if (evtAnim == nullptr || evtAnim->m_asm.unknown10 == nullptr) {
     return;
   }
 
-  fw::IkSolver *solver = ik->unknown10.unknown10[unknown002_3].get();
+  fw::IkSolver *solver = ik->m_ikResolver.unknown10[unknown002_3].get();
   if (solver == nullptr) {
     return;
   }

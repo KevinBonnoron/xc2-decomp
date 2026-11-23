@@ -35,16 +35,16 @@ namespace gf {
 constexpr u32 CALL_UNKNOWN_116 = 116;
 
 GfMenuObjHanaPartsCrystal::GfMenuObjHanaPartsCrystal(u32 handle)
-    : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr), unknown48(nullptr), unknown50(nullptr), unknown58(nullptr) {}
+    : GfMenuObject(handle), m_menuIDList(nullptr), unknown30(nullptr), unknown38(nullptr), m_menuItemList(nullptr), unknown48(nullptr), unknown50(nullptr), m_menuCallContext(nullptr) {}
 
 GfMenuObjHanaPartsCrystal::~GfMenuObjHanaPartsCrystal() {
-  mm::mtl::safeRelease(unknown28);
+  mm::mtl::safeRelease(m_menuIDList);
   mm::mtl::safeRelease(unknown30);
   mm::mtl::safeRelease(unknown38);
-  mm::mtl::safeRelease(unknown40);
+  mm::mtl::safeRelease(m_menuItemList);
   mm::mtl::safeRelease(unknown48);
   mm::mtl::safeRelease(unknown50);
-  mm::mtl::safeRelease(unknown58);
+  mm::mtl::safeRelease(m_menuCallContext);
   unknown60 = nullptr;
   unknown68 = nullptr;
 }
@@ -88,17 +88,17 @@ void GfMenuObjHanaPartsCrystal::initialize() {
   if (numSelectListener != nullptr) {
     numSelectListener->release();
   }
-  unknown40 = GfMenuItemList::create();
+  m_menuItemList = GfMenuItemList::create();
   ui::UISelectObjList::CreateParam createParam;
   createParam.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
   unknown48 = ui::UISelectObjList::create(createParam);
-  unknown28 = GfMenuIDList::create();
+  m_menuIDList = GfMenuIDList::create();
   ui::UIListInfoBase::SetupParam setup;
   setup.unknown08 = 5;
-  unknown28->setup(getAllocator(ALLOCATOR_UNKNOWN_0), setup);
+  m_menuIDList->setup(getAllocator(ALLOCATOR_UNKNOWN_0), setup);
   createParam.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
   unknown30 = ui::UISelectObjList::create(createParam);
-  unknown58 = GfMenuCallContext::create();
+  m_menuCallContext = GfMenuCallContext::create();
   unknown60 = unknown160();
   unknown60->unknown162(0);
   unknown60->unknown166(99);
@@ -203,7 +203,7 @@ void GfMenuObjHanaPartsCrystal::updatePartsList(ui::UIObjectAcc &acc, GfMenuIDLi
 void GfMenuObjHanaPartsCrystal::updateItemList(GfMenuItemList *list, ItemType::Type type) {
   list->clear();
   GfMenuItemList::ItemBoxSetup setup;
-  setup.unknown00.unknown08 = 10;
+  setup.m_setupParam.unknown08 = 10;
   setup.unknown14 = type;
   setup.unknown28 = false;
   setup.unknown29 = false;
@@ -266,29 +266,29 @@ void GfMenuObjHanaPartsCrystal::MainListener::reciveEvent(const ui::EventData &e
 }
 
 void GfMenuObjHanaPartsCrystal::NumSelectListener::reciveEvent(const ui::EventData &event, u32 handle) {
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjHanaPartsCrystal->unknown18);
   ui::UIObjectAcc acc(handle);
   GfMenuReference::getReferenceBladeID(0);
   switch (event.unknown00) {
   case 1:
-    setupNumSelect(acc, unknown20->unknown60, unknown20->unknown68);
+    setupNumSelect(acc, m_menuObjHanaPartsCrystal->unknown60, m_menuObjHanaPartsCrystal->unknown68);
     acc.setDisp(false);
     break;
   case 6: {
     int count = event.unknown08;
-    unknown20->unknown60->unknown162(count);
-    u32 parts = unknown20->unknown40->getContents(unknown20->unknown40->getIndex(false)).unknown04;
+    m_menuObjHanaPartsCrystal->unknown60->unknown162(count);
+    u32 parts = m_menuObjHanaPartsCrystal->m_menuItemList->getContents(m_menuObjHanaPartsCrystal->m_menuItemList->getIndex(false)).unknown04;
     ItemProperty property;
     GfItemUtil::getProperty(property, parts, 0);
-    unknown20->unknown68->unknown0c = property.unknown6c * count;
+    m_menuObjHanaPartsCrystal->unknown68->unknown0c = property.unknown6c * count;
     break;
   }
   case 8:
     switch (event.unknown0c) {
     case 1: {
-      u32 type = unknown20->unknown28->getContents(unknown20->unknown28->getIndex(false)).unknown00;
-      u32 parts = unknown20->unknown40->getContents(unknown20->unknown40->getIndex(false)).unknown04;
-      u32 count = unknown20->unknown60->unknown0c;
+      u32 type = m_menuObjHanaPartsCrystal->m_menuIDList->getContents(m_menuObjHanaPartsCrystal->m_menuIDList->getIndex(false)).unknown00;
+      u32 parts = m_menuObjHanaPartsCrystal->m_menuItemList->getContents(m_menuObjHanaPartsCrystal->m_menuItemList->getIndex(false)).unknown04;
+      u32 count = m_menuObjHanaPartsCrystal->unknown60->unknown0c;
       for (u32 i = 0; i < count; i++) {
         crystalParts(type, parts);
       }
@@ -301,7 +301,7 @@ void GfMenuObjHanaPartsCrystal::NumSelectListener::reciveEvent(const ui::EventDa
     break;
   case GfMenuTypes::unknown003_257:
     setFadeIn(handle);
-    GfMenuObject::setupInputSelection(handle, 0, getCrystalItemCount(unknown20->unknown40->getContents(unknown20->unknown40->getIndex(false)).unknown04) + 1);
+    GfMenuObject::setupInputSelection(handle, 0, getCrystalItemCount(m_menuObjHanaPartsCrystal->m_menuItemList->getContents(m_menuObjHanaPartsCrystal->m_menuItemList->getIndex(false)).unknown04) + 1);
     GfMenuObject::enableInput(handle);
     break;
   case GfMenuTypes::unknown003_258:

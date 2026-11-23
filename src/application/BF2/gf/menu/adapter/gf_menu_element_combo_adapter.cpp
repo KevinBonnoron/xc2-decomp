@@ -34,7 +34,7 @@ static GfMenuElementComboAdapter::TypeInfo TYPE_INFOS[] = {
 };
 
 GfMenuElementComboAdapter::GfMenuElementComboAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways)
-    : GfMenuAdapter(plugin, true, isUpdateAlways), unknown50(0), unknown54(ELEMENT_COMBO_ROUTE_UNKNOWN_7), unknown58(nullptr) {}
+    : GfMenuAdapter(plugin, true, isUpdateAlways), unknown50(0), unknown54(ELEMENT_COMBO_ROUTE_UNKNOWN_7), m_iConverter(nullptr) {}
 
 GfMenuElementComboAdapter *GfMenuElementComboAdapter::create(u32 handle, u32 type, u32 elementCombo, bool isUpdateAlways) {
   ui::UIObjectAcc acc(handle);
@@ -58,7 +58,7 @@ GfMenuElementComboAdapter *GfMenuElementComboAdapter::createFromCoverter(u32 han
   GfMenuElementComboAdapter *adapter = create(handle, type, converter->getElementComboId(), isUpdateAlways);
   if (adapter != nullptr) {
     adapter->unknown54 = converter->getElementComboRouteNo();
-    adapter->unknown58 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -71,9 +71,9 @@ GfMenuElementComboAdapter *GfMenuElementComboAdapter::createReferenceRoute(u32 h
 }
 
 GfMenuElementComboAdapter::~GfMenuElementComboAdapter() {
-  if (unknown58 != nullptr) {
-    delete unknown58;
-    unknown58 = nullptr;
+  if (m_iConverter != nullptr) {
+    delete m_iConverter;
+    m_iConverter = nullptr;
   }
 }
 
@@ -211,8 +211,8 @@ u32 GfMenuElementComboAdapter::TargetEnemyConverter::getElementComboRouteNo() { 
 u32 GfMenuElementComboAdapter::TargetEnemyConverter::getElementComboId() { return getTargetElementComboId(); }
 
 void GfMenuElementComboAdapter::update(const fw::UpdateInfo &info) {
-  if (unknown58 != nullptr) {
-    u32 combo = unknown58->getElementComboId();
+  if (m_iConverter != nullptr) {
+    u32 combo = m_iConverter->getElementComboId();
     if (unknown50 != combo) {
       unknown50 = combo;
       setChange();

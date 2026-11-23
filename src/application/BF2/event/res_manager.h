@@ -69,7 +69,7 @@ public:
 private:
   u32 unknown18;                                            // Inferred role: flags; original member name unknown.
   mm::mtl::FixedVector<Item *, ITEM_UNKNOWN_512> unknown20; // Inferred role: items; original member name unknown.
-  ResPackManager unknown1028;                               // Inferred role: pack manager; original member name unknown.
+  ResPackManager m_resPackManager;                          // Inferred role: pack manager; original member name unknown.
   s32 unknown10b8;                                          // Inferred role: loading count; original member name unknown.
   s32 unknown10bc;                                          // Inferred role: loaded count; original member name unknown.
 };

@@ -112,9 +112,9 @@ inline mm::Vec3 unknown095(mm::Vec3 vector, mm::Vec3 rotation) {
 class AGmkBase {
 public:
   struct CreateBaseInfo {
-    IGmkList *unknown00;         // Inferred role: list; original member name unknown.
-    const Xform *unknown08;      // Inferred role: xform; original member name unknown.
-    const unknown072 *unknown10; // Inferred role: gob info; original member name unknown.
+    IGmkList *m_ownerGmkEnemyList; // Inferred role: list; named after the game accessor gmk::GmkEnemy::getOwnerGmkEnemyList.
+    const Xform *m_xform;          // Inferred role: xform; original member name unknown.
+    const unknown072 *unknown10;   // Inferred role: gob info; original member name unknown.
   };
 
   struct CreateInfo {
@@ -127,19 +127,19 @@ public:
   };
 
   AGmkBase();
-  virtual ~AGmkBase() { unknown08 = CreateBaseInfo(); }
+  virtual ~AGmkBase() { m_createBaseInfo = CreateBaseInfo(); }
   virtual GmkType getGmkType() const = 0;
-  virtual bool isValid() const { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr && unknown20.unknown10 != nullptr; }
+  virtual bool isValid() const { return m_createBaseInfo.m_ownerGmkEnemyList != nullptr && m_createInfo.unknown08 != nullptr && m_createInfo.unknown10 != nullptr; }
 
   virtual void create(const CreateInfo &info) {
     dispose();
-    unknown20 = info;
+    m_createInfo = info;
   }
 
   virtual void dispose() {
-    unknown20.unknown00 = 0;
-    unknown20.unknown08 = nullptr;
-    unknown20.unknown10 = nullptr;
+    m_createInfo.unknown00 = 0;
+    m_createInfo.unknown08 = nullptr;
+    m_createInfo.unknown10 = nullptr;
   }
 
   virtual void update(f32 deltaTime);
@@ -168,13 +168,13 @@ public:
   bool getYSnapPosInShape(mm::Vec3 &position) const;
   bool getPositionAppliedYSnap(mm::Vec3 &result, const mm::Vec3 &position, bool isXformY) const;
 
-  CreateBaseInfo unknown08; // Inferred role: base info; original member name unknown.
-  CreateInfo unknown20;     // Inferred role: create info; original member name unknown.
+  CreateBaseInfo m_createBaseInfo; // Inferred role: base info; original member name unknown.
+  CreateInfo m_createInfo;         // Inferred role: create info; original member name unknown.
   alignas(8) u8 _40[0x48 - 0x40];
 };
 
-static_assert(offsetof(AGmkBase, unknown08) == 0x08, "");
-static_assert(offsetof(AGmkBase, unknown20) == 0x20, "");
+static_assert(offsetof(AGmkBase, m_createBaseInfo) == 0x08, "");
+static_assert(offsetof(AGmkBase, m_createInfo) == 0x20, "");
 static_assert(sizeof(AGmkBase) == 0x48, "");
 
 } // namespace gmk

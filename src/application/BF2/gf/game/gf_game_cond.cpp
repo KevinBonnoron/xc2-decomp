@@ -556,7 +556,7 @@ bool GfGameCond::isAchievement(u32 condition, u32 blade) {
   for (u16 *candidate = blades.begin(), *end = blades.end(); candidate != end; candidate++) {
     for (u32 line = 0; line < ACHIEVEMENT_UNKNOWN_10; line++) {
       SDataBladeAchievement *achievInfo = GfDataBlade::getAchievInfo(*candidate, line);
-      if (achievInfo->unknown00 == achievementSet && achievInfo->unknown04[index].unknown00.unknown00 == task && (achievInfo->unknown04[index].unknown0c & 1) != 0) {
+      if (achievInfo->unknown00 == achievementSet && achievInfo->m_achievQuest[index].m_questID.unknown00 == task && (achievInfo->m_achievQuest[index].unknown0c & 1) != 0) {
         return true;
       }
     }
@@ -676,14 +676,14 @@ void GfGameCond::applyAchievement(u32 condition, u32 blade) {
     }
 
     for (u32 level = 0; level < ACHIEVEMENT_UNKNOWN_5; level++) {
-      AchievQuest &achievQuest = achievInfo->unknown04[level];
-      if (achievQuest.unknown00.unknown00 == task && (achievQuest.unknown0c & 1) == 0) {
+      AchievQuest &achievQuest = achievInfo->m_achievQuest[level];
+      if (achievQuest.m_questID.unknown00 == task && (achievQuest.unknown0c & 1) == 0) {
         achievQuest.setCountComplete();
         achievQuest.setTaskComplete(false, true);
         achievQuest.setTaskComplete(true, true);
         achievQuest.unknown0c |= 1;
         GfDataBlade::setAchievReleaseLevel(blade, line, level + 1);
-        GfQuestInfo::setState(achievQuest.unknown00, QSTATE_UNKNOWN_2);
+        GfQuestInfo::setState(achievQuest.m_questID, QSTATE_UNKNOWN_2);
         return;
       }
     }

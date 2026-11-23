@@ -11,30 +11,30 @@ namespace event {
 VoiceManager::VoiceManager() : unknown10(0), unknown14(0) {}
 
 void VoiceManager::clear() {
-  unknown230.clear();
-  unknown6f8.clear();
+  m_voicePlayer.clear();
+  m_voiceOneShoter.clear();
   unknown10 = 0;
 }
 
-void VoiceManager::startScene() { unknown230.clearPreload(); }
+void VoiceManager::startScene() { m_voicePlayer.clearPreload(); }
 
 void VoiceManager::update() {
-  unknown230.update();
-  unknown6f8.update();
+  m_voicePlayer.update();
+  m_voiceOneShoter.update();
 }
 
 void VoiceManager::render() {
   if ((unknown14 & DISP_FLAG_UNKNOWN_0) != 0) {
-    unknown230.draw();
+    m_voicePlayer.draw();
   }
 }
 
 void VoiceManager::setAutoVoiceMode(bool isAutoVoiceMode, const char *directory, const char *name) {
-  unknown18.create(isAutoVoiceMode, directory, name);
+  m_voiceMaker.create(isAutoVoiceMode, directory, name);
   setFlag(FLAG_UNKNOWN_0, isAutoVoiceMode);
 }
 
-void VoiceManager::setMultipleMode(bool isMultipleMode) { unknown230.setMultipleMode(isMultipleMode); }
+void VoiceManager::setMultipleMode(bool isMultipleMode) { m_voicePlayer.setMultipleMode(isMultipleMode); }
 
 // The original source repeats the statements of preload() here instead of calling it: with `preload(frame, path)`
 // this function is 46 instructions against the game's 109 (0x71000fcaa4), and no call, unit grouping or flag
@@ -43,27 +43,29 @@ void VoiceManager::preloadAuto(f32 frame, const char *name) {
   if ((unknown10 & FLAG_UNKNOWN_0) == 0) {
     return;
   }
-  const char *path = unknown18.makePath(name);
+  const char *path = m_voiceMaker.makePath(name);
   if (path == nullptr) {
     return;
   }
-  unknown230.preload(frame, mm::mtl::Singleton<Extend>::getPtr()->wav(path));
+  m_voicePlayer.preload(frame, mm::mtl::Singleton<Extend>::getPtr()->wav(path));
 }
 
 void VoiceManager::preload(f32 frame, const char *name) {
   const char *path = mm::mtl::Singleton<Extend>::getPtr()->wav(name);
-  unknown230.preload(frame, path);
+  m_voicePlayer.preload(frame, path);
 }
 
 // The original source repeats the statements of play() here instead of calling it: the game's playAuto
 // (0x71000f517c, 159 instructions) holds them with Extend::wav inlined, which play() itself (0x71000fccec) calls.
 // `return play(path, delay, event)` gives 26 instructions, and play() forced inline gives 123 (wav stays a call);
-// both files are in the event unit, and no flag or inline threshold gives the game's code.
+// no flag or inline threshold gives the game's code. Unit: this file is not the game's unit for playAuto: the game places it inside the TextManager block, right after
+// TextManager::play (0x71000f46fc), its only caller (bl at 0x71000f503c), far from the VoiceManager block (0x71000fc854 to 0x71000fd264). A callee defined in this file therefore
+// cannot be what the game inlines there; [INFERENCE] playAuto is emitted with TextManager, like a header function, and play() is visible in that unit (audit 2026-11-21).
 bool VoiceManager::playAuto(const char *name, f32 delay, IVoiceEvent *event) {
   if ((unknown10 & FLAG_UNKNOWN_0) == 0) {
     return false;
   }
-  const char *path = unknown18.makePath(name);
+  const char *path = m_voiceMaker.makePath(name);
   if (path == nullptr) {
     return false;
   }
@@ -72,7 +74,7 @@ bool VoiceManager::playAuto(const char *name, f32 delay, IVoiceEvent *event) {
   if (mm::mtl::Singleton<SkipManager>::getPtr()->isSkip()) {
     return isLipsync;
   }
-  return unknown230.play(mm::mtl::Singleton<Extend>::getPtr()->wav(path), delay, event);
+  return m_voicePlayer.play(mm::mtl::Singleton<Extend>::getPtr()->wav(path), delay, event);
 }
 
 bool VoiceManager::play(const char *name, f32 delay, IVoiceEvent *event) {
@@ -81,7 +83,7 @@ bool VoiceManager::play(const char *name, f32 delay, IVoiceEvent *event) {
   if (mm::mtl::Singleton<SkipManager>::getPtr()->isSkip()) {
     return isLipsync;
   }
-  return unknown230.play(mm::mtl::Singleton<Extend>::getPtr()->wav(name), delay, event);
+  return m_voicePlayer.play(mm::mtl::Singleton<Extend>::getPtr()->wav(name), delay, event);
 }
 
 bool VoiceManager::playOneshot(const char *name, f32 volume) {
@@ -90,13 +92,13 @@ bool VoiceManager::playOneshot(const char *name, f32 volume) {
   if (fw::LangUtil::getVoiceType() != 0) {
     path = mm::mtl::Singleton<Extend>::getPtr()->replaceString(name, "jp", fw::LangUtil::getVoiceFolder().c_str());
   }
-  return unknown6f8.play(mm::mtl::Singleton<Extend>::getPtr()->wav(path.c_str()), volume);
+  return m_voiceOneShoter.play(mm::mtl::Singleton<Extend>::getPtr()->wav(path.c_str()), volume);
 }
 
 void VoiceManager::pause(bool isPause) {
   setFlag(FLAG_UNKNOWN_2, isPause);
-  unknown230.pause(isPause);
-  unknown6f8.pause(isPause);
+  m_voicePlayer.pause(isPause);
+  m_voiceOneShoter.pause(isPause);
 }
 
 void VoiceManager::setDisp(bool isDisp) {

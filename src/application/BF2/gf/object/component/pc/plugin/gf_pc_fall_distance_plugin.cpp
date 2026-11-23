@@ -9,12 +9,12 @@
 namespace gf {
 namespace pc {
 
-FallDistancePlugin::FallDistancePlugin() : unknown10(nullptr), unknown18(0.0f) {}
+FallDistancePlugin::FallDistancePlugin() : m_comPropertyPc(nullptr), unknown18(0.0f) {}
 
 FallDistancePlugin::~FallDistancePlugin() {}
 
 bool FallDistancePlugin::setup(GfComBehaviorPc &behavior) {
-  unknown10 = behavior.unknown08->getComponent<GfComPropertyPc>();
+  m_comPropertyPc = behavior.unknown08->getComponent<GfComPropertyPc>();
   return true;
 }
 
@@ -27,13 +27,13 @@ f32 FallDistancePlugin::calcDistance(const mm::Vec3 &position) const {
   return 0.0f;
 }
 
-void FallDistancePlugin::onActivate() { unknown18 = unknown10->unknown160.unknown00.y; }
+void FallDistancePlugin::onActivate() { unknown18 = m_comPropertyPc->unknown160.unknown00.y; }
 
 void FallDistancePlugin::onDeactivate() {}
 
 void FallDistancePlugin::update(GfComBehaviorPc &, const fw::UpdateInfo &) {
-  if (unknown10->unknown160.unknown00.y > unknown18) {
-    unknown18 = unknown10->unknown160.unknown00.y;
+  if (m_comPropertyPc->unknown160.unknown00.y > unknown18) {
+    unknown18 = m_comPropertyPc->unknown160.unknown00.y;
   }
 }
 

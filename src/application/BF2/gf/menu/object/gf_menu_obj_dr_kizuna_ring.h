@@ -26,53 +26,53 @@ class GfMenuObjDrKizunaRing : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjDrKizunaRing *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjDrKizunaRing *owner) : _0c(), m_menuObjDrKizunaRing(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
     u8 _1c[0x20 - 0x1c];
-    GfMenuObjDrKizunaRing *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjDrKizunaRing *m_menuObjDrKizunaRing; // Inferred role: owner; original member name unknown.
   };
 
   class RingListener : public ui::UIObjectListener {
   public:
-    RingListener(GfMenuObjDrKizunaRing *owner) : unknown0c(0), _10(), unknown20(owner) {}
+    RingListener(GfMenuObjDrKizunaRing *owner) : unknown0c(0), _10(), m_menuObjDrKizunaRing(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     int unknown0c; // Inferred role: cursor needs no sound after the first selection; original member name unknown.
     u8 _10[0x1c - 0x10];
     u8 _1c[0x20 - 0x1c];
-    GfMenuObjDrKizunaRing *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjDrKizunaRing *m_menuObjDrKizunaRing; // Inferred role: owner; original member name unknown.
   };
 
   class RingPadListener : public ui::UIObjectListener {
   public:
-    RingPadListener(GfMenuObjDrKizunaRing *owner) : _0c(), unknown20(owner) {}
+    RingPadListener(GfMenuObjDrKizunaRing *owner) : _0c(), m_menuObjDrKizunaRing(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
     u8 _1c[0x20 - 0x1c];
-    GfMenuObjDrKizunaRing *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjDrKizunaRing *m_menuObjDrKizunaRing; // Inferred role: owner; original member name unknown.
   };
 
   class SkillDetailListener : public ui::UIObjectListener {
   public:
-    SkillDetailListener(GfMenuObjDrKizunaRing *owner) : _0c(), unknown20(owner) {}
+    SkillDetailListener(GfMenuObjDrKizunaRing *owner) : _0c(), m_menuObjDrKizunaRing(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
     u8 _1c[0x20 - 0x1c];
-    GfMenuObjDrKizunaRing *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjDrKizunaRing *m_menuObjDrKizunaRing; // Inferred role: owner; original member name unknown.
   };
 
   class DriverStockSPListener : public ui::UIObjectListener {
   public:
-    DriverStockSPListener(GfMenuObjDrKizunaRing *owner) : _0c(), unknown20(owner) {}
+    DriverStockSPListener(GfMenuObjDrKizunaRing *owner) : _0c(), m_menuObjDrKizunaRing(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
     u8 _1c[0x20 - 0x1c];
-    GfMenuObjDrKizunaRing *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjDrKizunaRing *m_menuObjDrKizunaRing; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjDrKizunaRing(u32 handle);
@@ -121,14 +121,14 @@ public:
   GfMenuSequence<GfMenuObjDrKizunaRing, 8> unknown68; // Inferred role: skill learning steps; original member name unknown.
   int unknown2f8;                                     // Inferred role: step state; original member name unknown.
   u8 _2fc[0x300 - 0x2fc];
-  GfMenuCallContext *unknown300; // Inferred role: call context; original member name unknown.
-  GfMenuItemList *unknown308;    // Inferred role: reward items; original member name unknown.
-  u32 unknown310;                // Role and original member name unknown, cleared by the constructor.
+  GfMenuCallContext *unknown300;  // Inferred role: call context; original member name unknown.
+  GfMenuItemList *m_menuItemList; // Inferred role: reward items; original member name unknown.
+  u32 unknown310;                 // Role and original member name unknown, cleared by the constructor.
   u8 _314[0x318 - 0x314];
 };
 
-static_assert(offsetof(GfMenuObjDrKizunaRing::MainListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjDrKizunaRing::DriverStockSPListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjDrKizunaRing::MainListener, m_menuObjDrKizunaRing) == 0x20, "");
+static_assert(offsetof(GfMenuObjDrKizunaRing::DriverStockSPListener, m_menuObjDrKizunaRing) == 0x20, "");
 static_assert(offsetof(GfMenuObjDrKizunaRing, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjDrKizunaRing, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjDrKizunaRing, unknown38) == 0x38, "");
@@ -141,7 +141,7 @@ static_assert(offsetof(GfMenuObjDrKizunaRing, unknown60) == 0x60, "");
 static_assert(offsetof(GfMenuObjDrKizunaRing, unknown68) == 0x68, "");
 static_assert(offsetof(GfMenuObjDrKizunaRing, unknown2f8) == 0x2f8, "");
 static_assert(offsetof(GfMenuObjDrKizunaRing, unknown300) == 0x300, "");
-static_assert(offsetof(GfMenuObjDrKizunaRing, unknown308) == 0x308, "");
+static_assert(offsetof(GfMenuObjDrKizunaRing, m_menuItemList) == 0x308, "");
 static_assert(offsetof(GfMenuObjDrKizunaRing, unknown310) == 0x310, "");
 static_assert(sizeof(GfMenuObjDrKizunaRing) == 0x318, "");
 

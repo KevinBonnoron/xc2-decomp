@@ -7,12 +7,12 @@ namespace {
 
 // Inferred helper: destroys the processes marked deleted below a process; original name unknown.
 void unknown001(VwProcess *process) {
-  DoubleListNode *head = process->unknown38.unknown08;
+  DoubleListNode *head = process->unknown38.m_doubleListNode;
   if (head != nullptr) {
     DoubleListNode *child = head->unknown10;
     while (child != nullptr) {
       DoubleListNode *next = nullptr;
-      if (process->unknown38.unknown08 != child) {
+      if (process->unknown38.m_doubleListNode != child) {
         next = child->unknown10;
       }
       VwProcess *childProcess = static_cast<VwProcess *>(child);
@@ -32,13 +32,13 @@ void unknown001(VwProcess *process) {
 template <u8 VwProcess::*Skip, void (VwProcess::*Step)()> void unknown002(VwProcess *process) {
   if (!(process->*Skip) && !process->unknown59) {
     (process->*Step)();
-    DoubleListNode *head = process->unknown38.unknown08;
+    DoubleListNode *head = process->unknown38.m_doubleListNode;
     if (head != nullptr) {
       DoubleListNode *child = head->unknown10;
       while (child != nullptr) {
         unknown002<Skip, Step>(static_cast<VwProcess *>(child));
         DoubleListNode *next = nullptr;
-        if (process->unknown38.unknown08 != child) {
+        if (process->unknown38.m_doubleListNode != child) {
           next = child->unknown10;
         }
         child = next;
@@ -49,15 +49,15 @@ template <u8 VwProcess::*Skip, void (VwProcess::*Step)()> void unknown002(VwProc
 
 } // namespace
 
-VwProcess::VwProcess() : unknown58(0), unknown59(0), unknown5a(0), unknown5b(0), unknown60(nullptr) {}
+VwProcess::VwProcess() : unknown58(0), unknown59(0), unknown5a(0), unknown5b(0), m_vwProcessMan(nullptr) {}
 
 VwProcess::~VwProcess() {
-  DoubleListNode *head = unknown38.unknown08;
+  DoubleListNode *head = unknown38.m_doubleListNode;
   if (head != nullptr) {
     DoubleListNode *child = head->unknown10;
     while (child != nullptr) {
       DoubleListNode *next = nullptr;
-      if (unknown38.unknown08 != child) {
+      if (unknown38.m_doubleListNode != child) {
         next = child->unknown10;
       }
       delete static_cast<VwProcess *>(child);
@@ -65,38 +65,38 @@ VwProcess::~VwProcess() {
     }
   }
   DoubleListHeader *header;
-  if (unknown20 != nullptr) {
-    header = &unknown20->unknown38;
+  if (m_childListNode != nullptr) {
+    header = &m_childListNode->unknown38;
   } else if (unknown58) {
-    header = &unknown60->unknown30;
+    header = &m_vwProcessMan->unknown30;
   } else {
-    header = &unknown60->unknown10;
+    header = &m_vwProcessMan->unknown10;
   }
   header->Remove(this);
 }
 
 void VwProcess::Remove() {
   if (unknown58) {
-    while (unknown38.unknown08 != nullptr) {
-      static_cast<VwProcess *>(unknown38.unknown08)->Remove();
+    while (unknown38.m_doubleListNode != nullptr) {
+      static_cast<VwProcess *>(unknown38.m_doubleListNode)->Remove();
     }
     Term();
     DoubleListHeader *header;
-    if (unknown20 != nullptr) {
-      header = &unknown20->unknown38;
+    if (m_childListNode != nullptr) {
+      header = &m_childListNode->unknown38;
     } else {
-      header = &unknown60->unknown30;
+      header = &m_vwProcessMan->unknown30;
     }
     header->Remove(this);
-    unknown60->unknown10.InsertEnd(this);
-    unknown20 = nullptr;
+    m_vwProcessMan->unknown10.InsertEnd(this);
+    m_childListNode = nullptr;
     unknown58 = 0;
   }
 }
 
 bool VwProcess::HasChild() const {
-  if (unknown38.unknown08 != nullptr) {
-    return unknown38.unknown08->unknown10 != nullptr;
+  if (unknown38.m_doubleListNode != nullptr) {
+    return unknown38.m_doubleListNode->unknown10 != nullptr;
   }
   return false;
 }
@@ -115,44 +115,44 @@ void VwProcessMan::Init() {
 
 void VwProcessMan::Term() {
   if (unknown08) {
-    while (unknown30.unknown08 != nullptr && unknown30.unknown08->unknown10 != nullptr) {
-      static_cast<VwProcess *>(unknown30.unknown08->unknown10)->Remove();
+    while (unknown30.m_doubleListNode != nullptr && unknown30.m_doubleListNode->unknown10 != nullptr) {
+      static_cast<VwProcess *>(unknown30.m_doubleListNode->unknown10)->Remove();
     }
-    while (unknown10.unknown08 != nullptr && unknown10.unknown08->unknown10 != nullptr) {
-      delete static_cast<VwProcess *>(unknown10.unknown08->unknown10);
+    while (unknown10.m_doubleListNode != nullptr && unknown10.m_doubleListNode->unknown10 != nullptr) {
+      delete static_cast<VwProcess *>(unknown10.m_doubleListNode->unknown10);
     }
     unknown08 = 0;
   }
 }
 
 void VwProcessMan::Reset() {
-  while (unknown30.unknown08 != nullptr && unknown30.unknown08->unknown10 != nullptr) {
-    static_cast<VwProcess *>(unknown30.unknown08->unknown10)->Remove();
+  while (unknown30.m_doubleListNode != nullptr && unknown30.m_doubleListNode->unknown10 != nullptr) {
+    static_cast<VwProcess *>(unknown30.m_doubleListNode->unknown10)->Remove();
   }
-  while (unknown10.unknown08 != nullptr && unknown10.unknown08->unknown10 != nullptr) {
-    delete static_cast<VwProcess *>(unknown10.unknown08->unknown10);
+  while (unknown10.m_doubleListNode != nullptr && unknown10.m_doubleListNode->unknown10 != nullptr) {
+    delete static_cast<VwProcess *>(unknown10.m_doubleListNode->unknown10);
   }
 }
 
 void VwProcessMan::Delete() {
-  DoubleListNode *head = unknown10.unknown08;
+  DoubleListNode *head = unknown10.m_doubleListNode;
   if (head != nullptr) {
     DoubleListNode *child = head->unknown10;
     while (child != nullptr) {
       DoubleListNode *next = nullptr;
-      if (unknown10.unknown08 != child) {
+      if (unknown10.m_doubleListNode != child) {
         next = child->unknown10;
       }
       delete static_cast<ChildListNode *>(child);
       child = next;
     }
   }
-  head = unknown30.unknown08;
+  head = unknown30.m_doubleListNode;
   if (head != nullptr) {
     DoubleListNode *child = head->unknown10;
     while (child != nullptr) {
       DoubleListNode *next = nullptr;
-      if (unknown30.unknown08 != child) {
+      if (unknown30.m_doubleListNode != child) {
         next = child->unknown10;
       }
       VwProcess *process = static_cast<VwProcess *>(child);
@@ -170,13 +170,13 @@ void VwProcessMan::Delete() {
 // 0x7100141a6c and 0x7100141b1c): a helper taking the list header (also as a template over the step) is not inlined, so Move
 // becomes a 2 instruction tail call of it.
 void VwProcessMan::Move() {
-  DoubleListNode *head = unknown30.unknown08;
+  DoubleListNode *head = unknown30.m_doubleListNode;
   if (head != nullptr) {
     DoubleListNode *child = head->unknown10;
     while (child != nullptr) {
       unknown002<&VwProcess::unknown5a, &VwProcess::Move>(static_cast<VwProcess *>(child));
       DoubleListNode *next = nullptr;
-      if (unknown30.unknown08 != child) {
+      if (unknown30.m_doubleListNode != child) {
         next = child->unknown10;
       }
       child = next;
@@ -185,13 +185,13 @@ void VwProcessMan::Move() {
 }
 
 void VwProcessMan::Draw() {
-  DoubleListNode *head = unknown30.unknown08;
+  DoubleListNode *head = unknown30.m_doubleListNode;
   if (head != nullptr) {
     DoubleListNode *child = head->unknown10;
     while (child != nullptr) {
       unknown002<&VwProcess::unknown5b, &VwProcess::Draw>(static_cast<VwProcess *>(child));
       DoubleListNode *next = nullptr;
-      if (unknown30.unknown08 != child) {
+      if (unknown30.m_doubleListNode != child) {
         next = child->unknown10;
       }
       child = next;

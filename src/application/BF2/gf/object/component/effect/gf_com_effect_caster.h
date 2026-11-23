@@ -3,6 +3,7 @@
 
 #include "framework/message/message_object.h"
 #include "framework/reference_frame.h"
+#include "gf/object/component/effect/gf_effect_caster.h" // IWYU pragma: export
 #include "gf/object/component/effect/gf_effect_ground.h"
 #include "gf/object/component/gf_component.h"
 #include "gf/object/component/property/gf_env_property.h"
@@ -40,9 +41,14 @@ class WinProc;
 
 namespace gf {
 
+class GfObj;
 struct GF_OBJ_HANDLE;
 struct GF_ASSET_HANDLE;
-struct MsgFxRimBloomEnd;
+struct MsgObjectNotifyAsmCallback;
+// Layout evidence: CharaEffectPlayer::stopRimBloom (0x71000bbb04) stores id 0x1000053 and mask 0x80 as one 64-bit constant; the message has no other member.
+struct MsgFxRimBloomEnd : fw::Message {
+  MsgFxRimBloomEnd() : fw::Message(0x1000053, 0x80) {}
+};
 
 struct MsgFxRimBloomTarget : fw::Message {
   MsgFxRimBloomTarget() : fw::Message(0x1000054, 0x80) {}
@@ -59,6 +65,9 @@ static_assert(offsetof(MsgFxSplashdown, unknown08) == 0x08, "");
 
 // Layout evidence: GfComEffectCaster::procMsgFxRimBloom reads the member at 0x08 and the flag at 0x0c and sets the flag at 0x0d.
 struct MsgFxRimBloom : fw::Message {
+  // CharaEffectPlayer::playRimBloom (0x71000bc4a8) stores id 0x1000052 and mask 0x80, then the three members one by one before the component tests.
+  MsgFxRimBloom() : fw::Message(0x1000052, 0x80) {}
+
   u32 unknown08;  // Inferred role: rim bloom state; original member name unknown.
   bool unknown0c; // Inferred role: force; original member name unknown.
   bool unknown0d; // Inferred role: accepted; original member name unknown.
@@ -92,6 +101,33 @@ struct MsgFxFootPrint : fw::Message {
 static_assert(offsetof(MsgFxFootPrint, unknown08) == 0x08, "");
 static_assert(offsetof(MsgFxFootPrint, unknown0c) == 0x0c, "");
 
+// Layout evidence: CharaEvaPlayer::playFoot (0x71000cb06c) builds it on the stack: id 0x1000056, mask 0x80, the foot at 0x08 (0 for the right foot, 1 for the left) and the word at 0x0c zeroed;
+// GfComEffectCaster::procMsgFxFootPrintEv (0x7100505088) reads the foot and stores the started effect handle at 0x0c.
+struct MsgFxFootPrintEv : fw::Message {
+  explicit MsgFxFootPrintEv(u32 foot) : fw::Message(0x1000056, 0x80), unknown08(foot), unknown0c(0) {}
+
+  u32 unknown08; // Inferred role: foot (0 right, 1 left); original member name unknown.
+  u32 unknown0c; // Inferred role: started effect handle; original member name unknown.
+};
+
+static_assert(offsetof(MsgFxFootPrintEv, unknown08) == 0x08, "");
+static_assert(offsetof(MsgFxFootPrintEv, unknown0c) == 0x0c, "");
+
+// Layout evidence: GfComBehavior::callbackAnim (0x71004fbc6c) builds it on the stack: id 0x1000050, mask 0x80, the flag at 0x08 (0 for weaponAttach, 1 for weaponDetach; the game zeroes the
+// word at 0x0c with it), then the right and left option handles at 0x10 and 0x18.
+struct MsgFxWeapon : fw::Message {
+  MsgFxWeapon() : fw::Message(0x1000050, 0x80), unknown08(0), unknown0c(0) {}
+
+  u32 unknown08;            // Inferred role: weapon detached; original member name unknown.
+  u32 unknown0c;            // Role and original member name unknown.
+  GF_OBJ_HANDLE *unknown10; // Inferred role: right option handle; original member name unknown.
+  GF_OBJ_HANDLE *unknown18; // Inferred role: left option handle; original member name unknown.
+};
+
+static_assert(offsetof(MsgFxWeapon, unknown08) == 0x08, "");
+static_assert(offsetof(MsgFxWeapon, unknown10) == 0x10, "");
+static_assert(offsetof(MsgFxWeapon, unknown18) == 0x18, "");
+
 // Message id from GfComEffectCaster::recieveMessage (0x7100503300), whose case 0x100004c is procMsgFxCombo inlined.
 struct MsgFxCombo : fw::Message {
   MsgFxCombo() : fw::Message(0x100004c, 0x80), unknown08(0) {}
@@ -118,6 +154,36 @@ static_assert(offsetof(MsgFxComboBuff, unknown10) == 0x10, "");
 
 class GfComEffectCaster : public GfComponent {
 public:
+  // Layout evidence: effectStart (0x7100506604) reads it, and procMessageAsmCallback (0x710050354c) and callbackImpl
+  // (0x7100508db8) build it on the stack. The constructor inlined in callbackImpl (0x7100508e34-0x7100508e84) stores both
+  // vectors from mm::Vec3::zero, the three pointers null, the scale 1.0 and the life time -1.0 (the callers overwrite
+  // them, procMessageAsmCallback's block drops the dead stores), the speed 1.0, the type and flag bytes zero and the byte
+  // at 0x4e true. The name comes from the mangled symbol of effectStart.
+  struct EffectSetUp {
+    EffectSetUp()
+        : unknown00(mm::Vec3::zero), unknown10(mm::Vec3::zero), m_obj(nullptr), unknown28(nullptr), unknown30(nullptr), unknown38(1.0f), unknown3c(-1.0f), unknown40(1.0f), unknown44(0), unknown46(0),
+          unknown48(0), unknown49(0), unknown4a(0), unknown4b(0), unknown4c(0), unknown4d(0), unknown4e(true), unknown4f(0) {}
+
+    mm::Vec3 unknown00;              // Inferred role: offset; original member name unknown.
+    mm::Vec3 unknown10;              // Inferred role: second vector; original member name unknown.
+    GfObj *m_obj;                    // Inferred role: target object; original member name unknown.
+    const char *unknown28;           // Inferred role: effect name; original member name unknown.
+    fw::EffectCasterBase *unknown30; // Inferred role: effect caster; original member name unknown.
+    f32 unknown38;                   // Inferred role: scale; original member name unknown.
+    f32 unknown3c;                   // Inferred role: life time; original member name unknown.
+    f32 unknown40;                   // Inferred role: speed; original member name unknown.
+    u16 unknown44;                   // Inferred role: caster type; original member name unknown.
+    u16 unknown46;                   // Inferred role: setup value; original member name unknown.
+    u8 unknown48;                    // Inferred role: setup flag; original member name unknown.
+    u8 unknown49;                    // Inferred role: setup flag; original member name unknown.
+    u8 unknown4a;                    // Inferred role: setup flag; original member name unknown.
+    u8 unknown4b;                    // Inferred role: setup flag; original member name unknown.
+    u8 unknown4c;                    // Inferred role: setup flag; original member name unknown.
+    u8 unknown4d;                    // Inferred role: scale is absolute; original member name unknown.
+    bool unknown4e;                  // Inferred role: state flag; original member name unknown.
+    u8 unknown4f;                    // Inferred role: ground type; original member name unknown.
+  };
+
   // Layout evidence: effectStart (0x7100506604) builds it before its copy ctor (0x710050b090); the copy ctor and
   // operator= (0x710050af14) copy the two FixStr, the IntrusivePtr at 0x60 and the Vec3 members one by one and the other
   // members by blocks (0x24-0x34, 0x58, 0x68-0x74, 0xa0-0xc0).
@@ -181,8 +247,10 @@ public:
 
   static void registerAsmCallbackEffect(GF_OBJ_HANDLE *handle, anm::ResASM *resAsm, fw::EffectResData *effectData);
   void cleanup();
+  void procMessageAsmCallback(fw::MessageObject *object, MsgObjectNotifyAsmCallback &message);
   bool getEfpMatrix(const char *name, mm::Mat44 &matrix);
   void calcMtxAndScale(GfComEffectCaster *caster, Param *param, f32 time, bool unknown, effect::SendParam &sendParam);
+  u32 effectStart(const EffectSetUp &setup, const char *pointName);
   void updateParam(GfComEffectCaster *caster, Param *param, f32 time, bool unknown);
   void getWpnMat(mm::Mat44 &matrix);
   u32 calcFollowAnnotetionTag(Param *param, effect::SendParam &sendParam);
@@ -228,8 +296,8 @@ public:
   fw::EffectResData *unknown30;                   // Inferred role: effect annotations of the weapon effect pack; original member name unknown.
   fw::EffectPack *unknown38;                      // Inferred role: effect pack; original member name unknown.
   mm::mtl::FixedVector<unknown001, 52> unknown40; // Inferred role: weapon effect packs; original member name unknown.
-  fw::EffectCasterBase *unknown388;               // Inferred role: effect caster; original member name unknown.
-  fw::EffectPoint *unknown390;                    // Inferred role: effect point; original member name unknown.
+  EffectCaster *m_effectCaster;                   // Inferred role: effect caster; original member name unknown.
+  fw::EffectPoint *m_effectPoint;                 // Inferred role: effect point; named after the game accessor gf::GfComEffectCaster::getEffectPoint.
   u8 _398[0x3a0 - 0x398];
   mm::mtl::FixedVector<Param, 256> unknown3a0;             // Inferred role: caster params; original member name unknown.
   mm::mtl::FixedVector<EventEfHandleTbl, 256> unknownc3b0; // Inferred role: mount effects; original member name unknown.
@@ -254,8 +322,8 @@ static_assert(offsetof(GfComEffectCaster, unknown20) == 0x20, "");
 static_assert(offsetof(GfComEffectCaster, unknown24) == 0x24, "");
 static_assert(offsetof(GfComEffectCaster, unknown28) == 0x28, "");
 static_assert(offsetof(GfComEffectCaster, unknown40) == 0x40, "");
-static_assert(offsetof(GfComEffectCaster, unknown388) == 0x388, "");
-static_assert(offsetof(GfComEffectCaster, unknown390) == 0x390, "");
+static_assert(offsetof(GfComEffectCaster, m_effectCaster) == 0x388, "");
+static_assert(offsetof(GfComEffectCaster, m_effectPoint) == 0x390, "");
 static_assert(offsetof(GfComEffectCaster, unknown3a0) == 0x3a0, "");
 static_assert(offsetof(GfComEffectCaster, unknownc3b0) == 0xc3b0, "");
 static_assert(offsetof(GfComEffectCaster, unknown113d0) == 0x113d0, "");
@@ -298,5 +366,17 @@ static_assert(offsetof(GfComEffectCaster::EventEfHandleTbl, unknown30) == 0x30, 
 static_assert(offsetof(GfComEffectCaster::EventEfHandleTbl, unknown40) == 0x40, "");
 static_assert(offsetof(GfComEffectCaster::EventEfHandleTbl, unknown42) == 0x42, "");
 static_assert(sizeof(GfComEffectCaster::EventEfHandleTbl) == 0x50, "");
+static_assert(offsetof(GfComEffectCaster::EffectSetUp, unknown10) == 0x10, "");
+static_assert(offsetof(GfComEffectCaster::EffectSetUp, m_obj) == 0x20, "");
+static_assert(offsetof(GfComEffectCaster::EffectSetUp, unknown28) == 0x28, "");
+static_assert(offsetof(GfComEffectCaster::EffectSetUp, unknown30) == 0x30, "");
+static_assert(offsetof(GfComEffectCaster::EffectSetUp, unknown38) == 0x38, "");
+static_assert(offsetof(GfComEffectCaster::EffectSetUp, unknown3c) == 0x3c, "");
+static_assert(offsetof(GfComEffectCaster::EffectSetUp, unknown40) == 0x40, "");
+static_assert(offsetof(GfComEffectCaster::EffectSetUp, unknown44) == 0x44, "");
+static_assert(offsetof(GfComEffectCaster::EffectSetUp, unknown46) == 0x46, "");
+static_assert(offsetof(GfComEffectCaster::EffectSetUp, unknown48) == 0x48, "");
+static_assert(offsetof(GfComEffectCaster::EffectSetUp, unknown4e) == 0x4e, "");
+static_assert(offsetof(GfComEffectCaster::EffectSetUp, unknown4f) == 0x4f, "");
 
 } // namespace gf

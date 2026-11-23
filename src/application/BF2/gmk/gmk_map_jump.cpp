@@ -12,23 +12,23 @@ namespace gmk {
 
 template bool TGmkList<GmkMapJump, GmkMapJump::BdatInfo, 1347047501u, 2u, GmkMapJumpGob>::initGmkBdatInfo(GmkMapJump::BdatInfo &, int &, const AGmkBase &);
 
-GmkMapJump::GmkMapJump() : unknown50(nullptr), unknowne0(false), unknowne1(false) {}
+GmkMapJump::GmkMapJump() : m_gmkPhantom(nullptr), unknowne0(false), unknowne1(false) {}
 
 void GmkMapJump::debugDraw() const { isValid(); }
 
 void GmkMapJump::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   unknown00 = bdat.getValCheck("MapJumpId", id, BDAT_TYPE_UNKNOWN_2);
-  unknown04 = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_UNKNOWN_2));
-  unknown08 =
+  m_scenarioFlagCond = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_UNKNOWN_2));
+  m_questFlagCond =
       QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_UNKNOWN_1), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_UNKNOWN_1));
   unknown02 = bdat.getValCheck("Condition", id, BDAT_TYPE_UNKNOWN_2);
 }
 
 bool GmkMapJump::BdatInfo::isCondMatched() const {
-  if (unknown04.isEnable() && !unknown04.isMatch()) {
+  if (m_scenarioFlagCond.isEnable() && !m_scenarioFlagCond.isMatch()) {
     return false;
   }
-  if (unknown08.isEnable() && !unknown08.isMatch()) {
+  if (m_questFlagCond.isEnable() && !m_questFlagCond.isMatch()) {
     return false;
   }
   if (unknown02 != 0 && !gf::GfGameCond::isGameCond(unknown02)) {
@@ -41,12 +41,12 @@ GmkType GmkMapJump::getGmkType() const { return GMK_TYPE; }
 
 void GmkMapJump::createGmkPhantom() {
   if (canCreateGameEntity()) {
-    unknown50.create(*this, nullptr, false);
+    m_gmkPhantom.create(*this, nullptr, false);
   }
 }
 
 void GmkMapJump::dispose() {
-  unknown50.dispose();
+  m_gmkPhantom.dispose();
   AGmkBase::dispose();
 }
 
@@ -60,11 +60,11 @@ void GmkMapJump::update(f32 deltaTime) {
     if (isCondMatched) {
       createGmkPhantom();
     } else {
-      unknown50.dispose();
+      m_gmkPhantom.dispose();
     }
     unknowne0 = isCondMatched;
   }
-  if (unknown50.unknown83) {
+  if (m_gmkPhantom.unknown83) {
     beginEvent();
   } else {
     endEvent();

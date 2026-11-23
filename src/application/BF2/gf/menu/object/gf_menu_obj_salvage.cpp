@@ -64,10 +64,10 @@ void GfMenuObjSalvage::ResultListener::reciveEvent(const ui::EventData &event, u
     acc.setDisp(false);
     unknown0c = -1;
   } else if (event.unknown00 == GfMenuTypes::unknown003_33) {
-    unknown20->unknown24 = static_cast<u16>(event.unknown08);
-    unknown20->unknown28.unknown005();
-    unknown20->unknown28.unknown002(&GfMenuObjSalvage::seqResultAppear);
-    unknown20->unknown2b8 = false;
+    m_menuObjSalvage->unknown24 = static_cast<u16>(event.unknown08);
+    m_menuObjSalvage->unknown28.unknown005();
+    m_menuObjSalvage->unknown28.unknown002(&GfMenuObjSalvage::seqResultAppear);
+    m_menuObjSalvage->unknown2b8 = false;
   } else {
     ui::UIObjectListener::reciveEvent(event, handle);
   }

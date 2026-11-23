@@ -169,7 +169,7 @@ public:
   mtl::ALLOC_HANDLE unknown14;                       // Inferred role: event debug memory; original member name unknown.
   int unknown18;                                     // Inferred role: after event start id; original member name unknown.
   int unknown1c;                                     // Inferred role: player off state; original member name unknown.
-  GF_LP_HANDLE *unknown20;                           // Inferred role: layer pause; original member name unknown.
+  GF_LP_HANDLE *m_GF_LP_HANDLE;                      // Inferred role: layer pause; original member name unknown.
   bool unknown28[EVTDISP_UNKNOWN_26];                // Inferred role: display flags; original member name unknown.
   mm::mtl::FixedVector<u32, 1024> unknown48;         // Inferred role: display ids; original member name unknown.
   mm::mtl::FixedList<GfEvtModel *, 128> unknown1050; // Inferred role: event models; original member name unknown.
@@ -187,7 +187,7 @@ public:
   GF_SE_CATEGORY_HANDLE *unknown1920;                // Inferred role: cutscene category handle; original member name unknown.
   bool unknown1928;                                  // Inferred role: cutscene mute; original member name unknown.
   bool unknown1929;                                  // Inferred role: stopped; original member name unknown.
-  GfEvtSe unknown1930;                               // Inferred role: event se; original member name unknown.
+  GfEvtSe m_evtSe;                                   // Inferred role: event se; original member name unknown.
   f32 unknown1b00;                                   // Inferred role: fade in wait seconds; original member name unknown.
   f32 unknown1b04;                                   // Inferred role: fade in seconds; original member name unknown.
 };
@@ -195,7 +195,7 @@ public:
 static_assert(offsetof(GfGameEvent, unknown08) == 0x8, "");
 static_assert(offsetof(GfGameEvent, unknown10) == 0x10, "");
 static_assert(offsetof(GfGameEvent, unknown18) == 0x18, "");
-static_assert(offsetof(GfGameEvent, unknown20) == 0x20, "");
+static_assert(offsetof(GfGameEvent, m_GF_LP_HANDLE) == 0x20, "");
 static_assert(offsetof(GfGameEvent, unknown28) == 0x28, "");
 static_assert(offsetof(GfGameEvent, unknown48) == 0x48, "");
 static_assert(offsetof(GfGameEvent, unknown1050) == 0x1050, "");
@@ -205,7 +205,7 @@ static_assert(offsetof(GfGameEvent, unknown190c) == 0x190c, "");
 static_assert(offsetof(GfGameEvent, unknown1914) == 0x1914, "");
 static_assert(offsetof(GfGameEvent, unknown1918) == 0x1918, "");
 static_assert(offsetof(GfGameEvent, unknown1928) == 0x1928, "");
-static_assert(offsetof(GfGameEvent, unknown1930) == 0x1930, "");
+static_assert(offsetof(GfGameEvent, m_evtSe) == 0x1930, "");
 static_assert(offsetof(GfGameEvent, unknown1b00) == 0x1b00, "");
 static_assert(sizeof(GfGameEvent) == 0x1b08, "");
 

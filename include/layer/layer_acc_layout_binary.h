@@ -68,11 +68,11 @@ public:
   void setLayoutObj(LayerObj *object, u32 index, bool initScale);
   void setLayoutObj(LayerObj *object, const char *name, bool initScale);
 
-  const u8 *unknown00;               // Inferred role: layout data; original member name unknown.
-  u32 unknown08;                     // Inferred role: pos data count; original member name unknown.
-  const LyrLayoutPosData *unknown10; // Inferred role: pos data table; original member name unknown.
-  s32 unknown18;                     // Inferred role: res name count; original member name unknown.
-  const unknown001 *unknown20;       // Inferred role: res name table; original member name unknown.
+  const u8 *unknown00;                        // Inferred role: layout data; original member name unknown.
+  u32 unknown08;                              // Inferred role: pos data count; original member name unknown.
+  const LyrLayoutPosData *m_lyrLayoutPosData; // Inferred role: pos data table; original member name unknown.
+  s32 unknown18;                              // Inferred role: res name count; original member name unknown.
+  const unknown001 *unknown20;                // Inferred role: res name table; original member name unknown.
 };
 
 static_assert(sizeof(LayerAccLayoutBinary::unknown001) == 0x0c, "");
@@ -80,7 +80,7 @@ static_assert(offsetof(LayerAccLayoutBinary::unknown002, unknown10) == 0x10, "")
 static_assert(offsetof(LayerAccLayoutBinary::unknown002, unknown1c) == 0x1c, "");
 static_assert(sizeof(LayerAccLayoutBinary::unknown002) == 0x24, "");
 static_assert(offsetof(LayerAccLayoutBinary, unknown08) == 0x08, "");
-static_assert(offsetof(LayerAccLayoutBinary, unknown10) == 0x10, "");
+static_assert(offsetof(LayerAccLayoutBinary, m_lyrLayoutPosData) == 0x10, "");
 static_assert(offsetof(LayerAccLayoutBinary, unknown18) == 0x18, "");
 static_assert(offsetof(LayerAccLayoutBinary, unknown20) == 0x20, "");
 static_assert(sizeof(LayerAccLayoutBinary) == 0x28, "");

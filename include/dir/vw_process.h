@@ -33,14 +33,14 @@ public:
   u8 unknown5a; // Inferred role: skips Move; original member name unknown.
   u8 unknown5b; // Inferred role: skips Draw and Tail; original member name unknown.
   u8 _5c[0x60 - 0x5c];
-  VwProcessMan *unknown60; // Inferred role: manager owning the process; original member name unknown.
+  VwProcessMan *m_vwProcessMan; // Inferred role: manager owning the process; original member name unknown.
 };
 
 static_assert(offsetof(VwProcess, unknown58) == 0x58, "");
 static_assert(offsetof(VwProcess, unknown59) == 0x59, "");
 static_assert(offsetof(VwProcess, unknown5a) == 0x5a, "");
 static_assert(offsetof(VwProcess, unknown5b) == 0x5b, "");
-static_assert(offsetof(VwProcess, unknown60) == 0x60, "");
+static_assert(offsetof(VwProcess, m_vwProcessMan) == 0x60, "");
 static_assert(sizeof(VwProcess) == 0x68, "");
 
 // Layout evidence: VwProcessMan::VwProcessMan 0x71001418b4 and the vtable _ZTVN3dir12VwProcessManE.
@@ -81,7 +81,7 @@ public:
   void DebugDraw(ml::WinView *view);
   void DebugDrawRecursive(VwProcess *process, ml::WinView *view, int &depth);
 
-  VwProcessMan unknown00; // Inferred role: process manager; original member name unknown.
+  VwProcessMan m_vwProcessMan; // Inferred role: process manager; original member name unknown.
   u8 _40[0x50 - 0x40];
   VwProcess *unknown50; // Inferred role: root process; original member name unknown.
   VwProcess *unknown58; // Inferred role: root process; original member name unknown.

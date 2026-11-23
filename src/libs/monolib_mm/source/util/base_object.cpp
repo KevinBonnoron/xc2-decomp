@@ -5,14 +5,14 @@
 namespace ml {
 
 int BaseObjectM::AddRef() {
-  CS cs(unknown90);
+  CS cs(m_criticalSection);
   return ++unknown08;
 }
 
 int BaseObjectM::Release() {
   int ref;
   {
-    CS cs(unknown90);
+    CS cs(m_criticalSection);
     ref = --unknown08;
   }
   if (ref == 0) {
@@ -22,7 +22,7 @@ int BaseObjectM::Release() {
 }
 
 void BaseObjectM::SetName(const char *name) {
-  CS cs(unknown90);
+  CS cs(m_criticalSection);
   unknown0c = name;
 }
 

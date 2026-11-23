@@ -38,7 +38,7 @@ public:
     u32 unknown4c;                 // Inferred role: handle of the listened ui object; original member name unknown.
     int unknown50;                 // Inferred role: control id; original member name unknown.
     u8 _54[0x58 - 0x54];
-    ui::EventData unknown58;                          // Inferred role: last event taken by checkEvent; original member name unknown.
+    ui::EventData m_eventData;                        // Inferred role: last event taken by checkEvent; original member name unknown.
     mm::mtl::FixedQueue<ui::EventData, 16> unknown70; // Inferred role: received events; original member name unknown.
   };
 
@@ -64,7 +64,7 @@ public:
   bool unknown08;                                 // Inferred role: initialized; original member name unknown.
   mm::mtl::FixedVector<unknown002, 32> unknown10; // Inferred role: registered scripts; original member name unknown.
   unknown001 unknown4018[32];                     // Inferred role: menu script slots; original member name unknown.
-  ScriptListener *unknown4118;                    // Inferred role: listener of the registered ui objects; original member name unknown.
+  ScriptListener *m_scriptListener;               // Inferred role: listener of the registered ui objects; original member name unknown.
 };
 
 static_assert(sizeof(GfMenuScriptManager::ScriptListener) == 0x10, "");
@@ -73,13 +73,13 @@ static_assert(offsetof(GfMenuScriptManager::unknown002, unknown04) == 0x4, "");
 static_assert(offsetof(GfMenuScriptManager::unknown002, unknown48) == 0x48, "");
 static_assert(offsetof(GfMenuScriptManager::unknown002, unknown4c) == 0x4c, "");
 static_assert(offsetof(GfMenuScriptManager::unknown002, unknown50) == 0x50, "");
-static_assert(offsetof(GfMenuScriptManager::unknown002, unknown58) == 0x58, "");
+static_assert(offsetof(GfMenuScriptManager::unknown002, m_eventData) == 0x58, "");
 static_assert(offsetof(GfMenuScriptManager::unknown002, unknown70) == 0x70, "");
 static_assert(sizeof(GfMenuScriptManager::unknown002) == 0x200, "");
 static_assert(offsetof(GfMenuScriptManager, unknown08) == 0x8, "");
 static_assert(offsetof(GfMenuScriptManager, unknown10) == 0x10, "");
 static_assert(offsetof(GfMenuScriptManager, unknown4018) == 0x4018, "");
-static_assert(offsetof(GfMenuScriptManager, unknown4118) == 0x4118, "");
+static_assert(offsetof(GfMenuScriptManager, m_scriptListener) == 0x4118, "");
 static_assert(sizeof(GfMenuScriptManager) == 0x4120, "");
 
 } // namespace gf

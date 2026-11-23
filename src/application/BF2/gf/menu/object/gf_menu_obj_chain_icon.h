@@ -14,16 +14,19 @@ struct GF_OBJ_HANDLE;
 class GfMenuObjChainIcon : public GfMenuObject {
 public:
   // Queued by GfMenuManyObjects; the game gives it its own vtable, inheriting the dispose of the base.
-  struct ChainIconInfo : GfMenuManyObjects::InfoType {};
+  struct ChainIconInfo : GfMenuManyObjects::InfoType {
+    ChainIconInfo() {}
+    ChainIconInfo(u32 handle) : InfoType(handle) {}
+  };
 
   class ListListener : public ui::UIObjectListener {
   public:
-    ListListener(GfMenuObjChainIcon *owner) : _0c(), unknown20(owner) {}
+    ListListener(GfMenuObjChainIcon *owner) : _0c(), m_menuObjChainIcon(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
     u8 _1c[0x20 - 0x1c];
-    GfMenuObjChainIcon *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjChainIcon *m_menuObjChainIcon; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjChainIcon(u32 handle);
@@ -36,14 +39,14 @@ public:
     GF_OBJ_HANDLE *unknown00; // Inferred role: handle; original member name unknown.
   };
 
-  static void open(const OpenParam &param);
+  static u32 open(const OpenParam &param);
   static void removeObject(ui::UIObjectAcc acc);
   static void close(u32 handle);
   static void closeAll();
 };
 
 static_assert(sizeof(GfMenuObjChainIcon::ChainIconInfo) == 0x10, "");
-static_assert(offsetof(GfMenuObjChainIcon::ListListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjChainIcon::ListListener, m_menuObjChainIcon) == 0x20, "");
 static_assert(sizeof(GfMenuObjChainIcon::ListListener) == 0x28, "");
 
 } // namespace gf

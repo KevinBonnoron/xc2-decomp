@@ -75,18 +75,18 @@ public:
   };
 
   struct CreateInfo {
-    CreateInfo() : unknown00(SHAPE_TYPE_UNKNOWN_0), unknown10(0.0f, 0.0f, 0.0f), unknown20(0.0f, 0.0f, 0.0f), unknown40(nullptr), unknown48(false) {
+    CreateInfo() : unknown00(SHAPE_TYPE_UNKNOWN_0), unknown10(0.0f, 0.0f, 0.0f), unknown20(0.0f, 0.0f, 0.0f), m_iGmkPhantomEventListener(nullptr), unknown48(false) {
       for (u32 i = 0; i < 3; i++) {
         unknown30[i] = 0.0f;
       }
     }
 
-    ShapeType unknown00;                 // Inferred role: shape type; original member name unknown.
-    mm::Vec3 unknown10;                  // Inferred role: position; original member name unknown.
-    mm::Vec3 unknown20;                  // Inferred role: rotation; original member name unknown.
-    f32 unknown30[3];                    // Inferred role: size; original member name unknown.
-    IGmkPhantomEventListener *unknown40; // Inferred role: listener; original member name unknown.
-    bool unknown48;                      // Inferred role: check party; original member name unknown.
+    ShapeType unknown00;                                  // Inferred role: shape type; original member name unknown.
+    mm::Vec3 unknown10;                                   // Inferred role: position; original member name unknown.
+    mm::Vec3 unknown20;                                   // Inferred role: rotation; original member name unknown.
+    f32 unknown30[3];                                     // Inferred role: size; original member name unknown.
+    IGmkPhantomEventListener *m_iGmkPhantomEventListener; // Inferred role: listener; original member name unknown.
+    bool unknown48;                                       // Inferred role: check party; original member name unknown.
   };
 
   static mm::mtl::RTTI m_rtti;
@@ -102,7 +102,7 @@ public:
   // Inferred helper: true when there is no phantom or something is inside it; original name unknown.
   bool unknown001() const { return unknown78 == nullptr || unknown83; }
 
-  CreateInfo unknown20;      // Inferred role: create info; original member name unknown.
+  CreateInfo m_createInfo;   // Inferred role: create info; original member name unknown.
   const char *unknown70;     // Inferred role: name; original member name unknown.
   fw::ColiObject *unknown78; // Inferred role: phantom; original member name unknown.
   bool unknown80;            // Inferred role: hit; original member name unknown.
@@ -112,7 +112,7 @@ public:
 };
 
 static_assert(sizeof(GmkPhantom::CreateInfo) == 0x50, "");
-static_assert(offsetof(GmkPhantom, unknown20) == 0x20, "");
+static_assert(offsetof(GmkPhantom, m_createInfo) == 0x20, "");
 static_assert(offsetof(GmkPhantom, unknown70) == 0x70, "");
 static_assert(offsetof(GmkPhantom, unknown78) == 0x78, "");
 static_assert(offsetof(GmkPhantom, unknown80) == 0x80, "");
@@ -140,12 +140,12 @@ public:
   void create(const CreateInfo &info);
   void dispose();
 
-  CreateInfo unknown10;      // Inferred role: create info; original member name unknown.
+  CreateInfo m_createInfo;   // Inferred role: create info; original member name unknown.
   fw::ColiObject *unknown50; // Inferred role: phantom; original member name unknown.
 };
 
 static_assert(sizeof(GmkPhantomSimple::CreateInfo) == 0x40, "");
-static_assert(offsetof(GmkPhantomSimple, unknown10) == 0x10, "");
+static_assert(offsetof(GmkPhantomSimple, m_createInfo) == 0x10, "");
 static_assert(offsetof(GmkPhantomSimple, unknown50) == 0x50, "");
 static_assert(sizeof(GmkPhantomSimple) == 0x60, "");
 

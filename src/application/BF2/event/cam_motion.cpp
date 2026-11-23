@@ -14,8 +14,8 @@ CamMotion::CamMotion(bool isFocal, bool isStreamMode) : CamBase(isFocal), unknow
 CamMotion::~CamMotion() { stop(); }
 
 void CamMotion::stop() {
-  unknown60.stop();
-  unknowna0.stop();
+  m_camEvaPlayer.stop();
+  m_camEvaPlayerEff.stop();
   if (unknown40 & FLAG_UNKNOWN_0) {
     if (unknown48 != nullptr) {
       mm::mtl::Singleton<MotstmManager>::getPtr()->free(unknown48);
@@ -46,10 +46,10 @@ void CamMotion::play(const char *name, const mm::Vec3 &offset) {
     } else {
       unknown50 = mm::mtl::Singleton<MotstmManager>::getPtr()->adr(mm::mtl::Singleton<Extend>::getPtr()->effeva(effectName), nullptr);
     }
-    unknown60.play(this, unknown48, offset);
+    m_camEvaPlayer.play(this, unknown48, offset);
     unknown40 |= FLAG_UNKNOWN_1;
     if (unknown50 != nullptr) {
-      unknowna0.play(unknown50);
+      m_camEvaPlayerEff.play(unknown50);
       unknown40 |= FLAG_UNKNOWN_2;
     }
   }
@@ -57,10 +57,10 @@ void CamMotion::play(const char *name, const mm::Vec3 &offset) {
 
 void CamMotion::update(const FrameInfo &info) {
   if (unknown40 & FLAG_UNKNOWN_1) {
-    unknown60.update(info.unknown0c);
+    m_camEvaPlayer.update(info.unknown0c);
   }
   if (unknown40 & FLAG_UNKNOWN_2) {
-    unknowna0.update(info.unknown0c);
+    m_camEvaPlayerEff.update(info.unknown0c);
   }
 }
 

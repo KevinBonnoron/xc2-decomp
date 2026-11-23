@@ -44,20 +44,20 @@ public:
   f32 getMenuBgmVolume() const { return unknown38; }
 
 private:
-  GF_SE_CATEGORY_HANDLE *unknown00; // Inferred role: category handle; original member name unknown.
-  f32 unknown08;                    // Inferred role: event voice volume; original member name unknown.
-  f32 unknown0c;                    // Inferred role: event cs volume; original member name unknown.
-  f32 unknown10;                    // Inferred role: event bgm volume; original member name unknown.
-  f32 unknown14;                    // Inferred role: event se volume; original member name unknown.
-  f32 unknown18;                    // Inferred role: game bgm volume; original member name unknown.
-  f32 unknown1c;                    // Inferred role: game env volume; original member name unknown.
-  f32 unknown20;                    // Inferred role: game weather volume; original member name unknown.
-  f32 unknown24;                    // Inferred role: game se volume; original member name unknown.
-  f32 unknown28;                    // Inferred role: player voice volume; original member name unknown.
-  f32 unknown2c;                    // Inferred role: enemy voice volume; original member name unknown.
-  f32 unknown30;                    // Inferred role: nare voice volume; original member name unknown.
-  f32 unknown34;                    // Inferred role: system volume; original member name unknown.
-  f32 unknown38;                    // Inferred role: menu bgm volume; original member name unknown.
+  GF_SE_CATEGORY_HANDLE *m_GF_SE_CATEGORY_HANDLE; // Inferred role: category handle; original member name unknown.
+  f32 unknown08;                                  // Inferred role: event voice volume; original member name unknown.
+  f32 unknown0c;                                  // Inferred role: event cs volume; original member name unknown.
+  f32 unknown10;                                  // Inferred role: event bgm volume; original member name unknown.
+  f32 unknown14;                                  // Inferred role: event se volume; original member name unknown.
+  f32 unknown18;                                  // Inferred role: game bgm volume; original member name unknown.
+  f32 unknown1c;                                  // Inferred role: game env volume; original member name unknown.
+  f32 unknown20;                                  // Inferred role: game weather volume; original member name unknown.
+  f32 unknown24;                                  // Inferred role: game se volume; original member name unknown.
+  f32 unknown28;                                  // Inferred role: player voice volume; original member name unknown.
+  f32 unknown2c;                                  // Inferred role: enemy voice volume; original member name unknown.
+  f32 unknown30;                                  // Inferred role: nare voice volume; original member name unknown.
+  f32 unknown34;                                  // Inferred role: system volume; original member name unknown.
+  f32 unknown38;                                  // Inferred role: menu bgm volume; original member name unknown.
 
   friend struct GfMasterVolumeLayout;
 };

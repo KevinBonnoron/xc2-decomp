@@ -76,25 +76,25 @@ void GfMenuObjMercenaryRoot::MainListener::reciveEvent(const ui::EventData &even
     acc.setDispChild(false, "IMG_bg_front");
     if (GfSound::get() != nullptr) {
       GfMenuSoundManager::fadeOutFieldBgm(0.5f);
-      unknown20->unknown188 = GfMenuObjUtil::playBGM(0x16, false, CATEGORY_MENU_BGM);
+      m_menuObjMercenaryRoot->unknown188 = GfMenuObjUtil::playBGM(0x16, false, CATEGORY_MENU_BGM);
     } else {
-      unknown20->unknown188 = 0;
+      m_menuObjMercenaryRoot->unknown188 = 0;
     }
     break;
   }
   case 2:
     if (GfSound::get() != nullptr) {
       GfMenuSoundManager::fadeFieldBgm(1.0f, 0.5f);
-      GfMenuObjUtil::stopBGM(unknown20->unknown188, 1.0f);
-      unknown20->unknown188 = 0;
+      GfMenuObjUtil::stopBGM(m_menuObjMercenaryRoot->unknown188, 1.0f);
+      m_menuObjMercenaryRoot->unknown188 = 0;
     }
     acc.setTerm();
     break;
   case 3:
     if (event.unknown08 == 1) {
       ui::UIObjectAcc bg(acc.unknown10, "IMG_bg");
-      bg.setImageIndex(unknown20->unknown24);
-      unknown20->unknown28.unknown002(&GfMenuObjMercenaryRoot::seqWaitBGStream);
+      bg.setImageIndex(m_menuObjMercenaryRoot->unknown24);
+      m_menuObjMercenaryRoot->unknown28.unknown002(&GfMenuObjMercenaryRoot::seqWaitBGStream);
     }
     break;
   default:
@@ -106,7 +106,7 @@ void GfMenuObjMercenaryRoot::MainListener::reciveEvent(const ui::EventData &even
     param.unknown08 = 1;
     param.unknown00 = 0.25f;
     param.unknown04 = 1;
-    if (unknown20->unknown24 == -1) {
+    if (m_menuObjMercenaryRoot->unknown24 == -1) {
       ui::UIObjectAcc bg(acc.unknown10, "IMG_bg");
       bg.setImageIndex(image);
       GfMenuObjUtil::startCtrl(acc.unknown10, param, "IMG_bg");
@@ -116,8 +116,8 @@ void GfMenuObjMercenaryRoot::MainListener::reciveEvent(const ui::EventData &even
       int ctrl = GfMenuObjUtil::startCtrl(acc.unknown10, param, "IMG_bg_front");
       GfMenuObject::hookCtrlEvent(acc.unknown10, ctrl);
     }
-    unknown20->unknown24 = image;
-    unknown20->unknown28.unknown005();
+    m_menuObjMercenaryRoot->unknown24 = image;
+    m_menuObjMercenaryRoot->unknown28.unknown005();
     break;
   }
   case GfMenuTypes::unknown003_34: {

@@ -11,9 +11,9 @@
 
 namespace gf {
 
-constexpr u32 CIRCUIT_UNKNOWN_3 = 3;               // Inferred role: extend circuit first; original name unknown.
-constexpr u32 RANK_UNKNOWN_20 = 20;                // Inferred role: power rank max; original name unknown.
-constexpr s32 ETHER_UNKNOWN_999999999 = 999999999; // Inferred role: ether max; original name unknown.
+constexpr u32 CIRCUIT_UNKNOWN_3 = 3;                 // Inferred role: extend circuit first; original name unknown.
+constexpr u32 RANK_UNKNOWN_20 = 20;                  // Inferred role: power rank max; original name unknown.
+constexpr s32 ETHER_UNKNOWN_999999999_2 = 999999999; // Inferred role: ether max (signed copy of the constant of gf_game_util.cpp); original name unknown.
 
 namespace {
 
@@ -42,8 +42,8 @@ template <u32 (*getNeedEther)(u32)> RESULT_HANA unknown002(u32 parts) {
 
   s32 rest = GfDataHana::getEther() - needEther;
   s32 ether = rest;
-  if (rest > ETHER_UNKNOWN_999999999) {
-    ether = ETHER_UNKNOWN_999999999;
+  if (rest > ETHER_UNKNOWN_999999999_2) {
+    ether = ETHER_UNKNOWN_999999999_2;
   }
 
   if (rest < 0) {
@@ -720,7 +720,7 @@ RESULT_HANA GfGameUtilHana::execEquipExtendCondenserParts(u32 blade, u32 parts, 
 }
 
 void GfGameUtilHana::setupDefaultParts(u32 blade) {
-  if (!GfDataHana::isValid(blade) || GfDataBlade::getSDataBlade(blade).unknown68c.unknown00 != 0) {
+  if (!GfDataHana::isValid(blade) || GfDataBlade::getSDataBlade(blade).m_equipParts.unknown00 != 0) {
     return;
   }
 

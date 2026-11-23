@@ -69,13 +69,13 @@ public:
 
   mm::mtl::IntrusivePtr<SpineIkSolver> unknown20;  // Inferred role: spine solver; original member name unknown.
   mm::mtl::IntrusivePtr<LookAtIkSolver> unknown28; // Inferred role: look at solver; original member name unknown.
-  Description unknown30;                           // Inferred role: spine fade times; original member name unknown.
+  Description m_description;                       // Inferred role: spine fade times; original member name unknown.
   bool unknown38;                                  // Inferred role: spine enabled; original member name unknown.
 };
 
 static_assert(offsetof(LookIkSolver, unknown20) == 0x20, "");
 static_assert(offsetof(LookIkSolver, unknown28) == 0x28, "");
-static_assert(offsetof(LookIkSolver, unknown30) == 0x30, "");
+static_assert(offsetof(LookIkSolver, m_description) == 0x30, "");
 static_assert(offsetof(LookIkSolver, unknown38) == 0x38, "");
 static_assert(sizeof(LookIkSolver) == 0x40, "");
 

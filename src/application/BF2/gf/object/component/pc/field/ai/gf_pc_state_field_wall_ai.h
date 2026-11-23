@@ -18,7 +18,7 @@ class BlackBoardField;
 // Layout evidence: TaskFieldWallPrepare::onCreate (0x71005450dc) passes the member at 0x40 of the task as the owner of the
 // state machine, and the StateFieldWallAi* states read the black board through its first member.
 struct WallAiContextField {
-  BlackBoardField *unknown00; // Inferred role: black board during a state change or an update; original member name unknown.
+  BlackBoardField *m_blackBoardField; // Inferred role: black board during a state change or an update; original member name unknown.
 };
 
 static_assert(sizeof(WallAiContextField) == 0x08, "");

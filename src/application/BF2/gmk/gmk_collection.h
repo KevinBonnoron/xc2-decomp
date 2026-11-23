@@ -19,17 +19,17 @@ class GmkCollectionGob;
 class GmkCollection : public AGmkBase {
 public:
   struct BdatInfo {
-    BdatInfo() : unknown00(10), unknown02(0), unknown28{0.0f} {}
+    BdatInfo() : unknown00(10), unknown02(0), m_distCond{0.0f} {}
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isPopCondMatchedExceptDist() const;
     bool isPopCondMatched(const AGmkBase &gmk) const;
     void debugDraw(const AGmkBase &gmk) const;
 
-    u16 unknown00;         // Inferred role: name radius; original member name unknown.
-    u16 unknown02;         // Inferred role: condition; original member name unknown.
-    TimeCond unknown08;    // Inferred role: time cond; original member name unknown.
-    WeatherCond unknown18; // Inferred role: weather cond; original member name unknown.
-    DistCond unknown28;    // Inferred role: dist cond; original member name unknown.
+    u16 unknown00;             // Inferred role: name radius; original member name unknown.
+    u16 unknown02;             // Inferred role: condition; original member name unknown.
+    TimeCond m_timeCond;       // Inferred role: time cond; original member name unknown.
+    WeatherCond m_weatherCond; // Inferred role: weather cond; original member name unknown.
+    DistCond m_distCond;       // Inferred role: dist cond; original member name unknown.
   };
 
   struct Data {
@@ -61,8 +61,8 @@ public:
   void seqUpdateRepopCounter(f32 deltaTime);
   void setTargetable(bool isTargetable);
 
-  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
-  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
+  const Data *getData() const { return static_cast<const Data *>(m_createInfo.unknown08); }
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(m_createInfo.unknown10); }
 
   gf::GF_OBJ_HANDLE *unknown48;          // Inferred role: gob instance handle; original member name unknown.
   u32 unknown50;                         // Role and original member name unknown.
@@ -98,7 +98,7 @@ public:
 
   void create(const CreateInfo &info) override;
 
-  BdatInfo unknown228; // Inferred role: bdat info; original member name unknown.
+  BdatInfo m_bdatInfo; // Inferred role: bdat info; original member name unknown.
 };
 
 static_assert(sizeof(GmkCollectionList::BdatInfo) == 0x8, "");

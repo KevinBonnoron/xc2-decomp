@@ -26,8 +26,8 @@ class FileHandleTh;
 // Name from the symbols (FixedArray<ml::OpenReadParam, 13>::~FixedArray).
 struct OpenReadParam {
   OpenReadParam()
-      : unknown00(), unknown10c(false), unknown10d(false), unknown10e(false), unknown10f(false), unknown110(false), unknown118(nullptr), unknown120(), unknown190(0), unknown198(nullptr),
-        unknown1a0(nullptr) {}
+      : unknown00(), unknown10c(false), unknown10d(false), unknown10e(false), unknown10f(false), unknown110(false), m_fileHandleTh(nullptr), m_devFileParamTh(), unknown190(0), m_thread(nullptr),
+        m_devFileAccessor(nullptr) {}
 
   nn::fs::FileHandle unknown00;            // Inferred role: file; original member name unknown.
   mm::mtl::FixStr<256> unknown08;          // Inferred role: media file name; original member name unknown.
@@ -36,11 +36,11 @@ struct OpenReadParam {
   bool unknown10e;                         // Role and original member name unknown.
   bool unknown10f;                         // Inferred role: read in progress, the close is deferred; original member name unknown.
   bool unknown110;                         // Inferred role: close requested; original member name unknown.
-  FileHandleTh *unknown118;                // Inferred role: file handle of the request; original member name unknown.
-  DevFileParamTh unknown120;               // Inferred role: parameters of the request; original member name unknown.
+  FileHandleTh *m_fileHandleTh;            // Inferred role: file handle of the request; original member name unknown.
+  DevFileParamTh m_devFileParamTh;         // Inferred role: parameters of the request; original member name unknown.
   u64 unknown190;                          // Inferred role: data offset in the archive; original member name unknown.
-  Thread *unknown198;                      // Inferred role: loader thread; original member name unknown.
-  DevFileAccessor *unknown1a0;             // Inferred role: owner, a DevFileArchiveNx or a DevFileNxTh; original member name unknown.
+  Thread *m_thread;                        // Inferred role: loader thread; original member name unknown.
+  DevFileAccessor *m_devFileAccessor;      // Inferred role: owner, a DevFileArchiveNx or a DevFileNxTh; original member name unknown.
   mm::threading::ReadWriteLock unknown1a8; // Inferred role: lock; original member name unknown.
   u8 _1c8[0x1d8 - 0x1c8];
 };
@@ -48,11 +48,11 @@ struct OpenReadParam {
 static_assert(offsetof(OpenReadParam, unknown08) == 0x08, "");
 static_assert(offsetof(OpenReadParam, unknown10c) == 0x10c, "");
 static_assert(offsetof(OpenReadParam, unknown110) == 0x110, "");
-static_assert(offsetof(OpenReadParam, unknown118) == 0x118, "");
-static_assert(offsetof(OpenReadParam, unknown120) == 0x120, "");
+static_assert(offsetof(OpenReadParam, m_fileHandleTh) == 0x118, "");
+static_assert(offsetof(OpenReadParam, m_devFileParamTh) == 0x120, "");
 static_assert(offsetof(OpenReadParam, unknown190) == 0x190, "");
-static_assert(offsetof(OpenReadParam, unknown198) == 0x198, "");
-static_assert(offsetof(OpenReadParam, unknown1a0) == 0x1a0, "");
+static_assert(offsetof(OpenReadParam, m_thread) == 0x198, "");
+static_assert(offsetof(OpenReadParam, m_devFileAccessor) == 0x1a0, "");
 static_assert(offsetof(OpenReadParam, unknown1a8) == 0x1a8, "");
 static_assert(sizeof(OpenReadParam) == 0x1d8, "");
 
@@ -73,7 +73,7 @@ public:
     std::atomic<bool> unknown17f8;                      // Inferred role: finalizing; original member name unknown.
     u8 _17f9[0x17fc - 0x17f9];
     std::atomic<s32> unknown17fc;                              // Inferred role: running loader threads; original member name unknown.
-    CriticalSection unknown1800;                               // Inferred role: lock of the thread files; original member name unknown.
+    CriticalSection m_criticalSection;                         // Inferred role: lock of the thread files; original member name unknown.
     mm::mtl::FixedObjectAllocator<unknown002, 16> unknown1828; // Inferred role: thread file pool; original member name unknown.
     unknown003 unknown29b8;                                    // Inferred role: open thread files; original member name unknown.
   };
@@ -101,19 +101,19 @@ public:
   void normalizeFileName(mm::mtl::FixStr<256> &fileName);
 
   u8 _10[0x14 - 0x10];
-  mtl::ALLOC_HANDLE unknown14; // Inferred role: memory; original member name unknown.
-  s32 unknown18;               // Inferred role: state; original member name unknown.
+  mtl::ALLOC_HANDLE m_ALLOC_HANDLE; // Inferred role: memory; original member name unknown.
+  s32 unknown18;                    // Inferred role: state; original member name unknown.
   u8 _1c[0x20 - 0x1c];
   mm::mtl::UniquePtr<Param> unknown20; // Inferred role: parameters; original member name unknown.
 };
 
 static_assert(offsetof(DevFileArchiveNx::Param, unknown17f8) == 0x17f8, "");
 static_assert(offsetof(DevFileArchiveNx::Param, unknown17fc) == 0x17fc, "");
-static_assert(offsetof(DevFileArchiveNx::Param, unknown1800) == 0x1800, "");
+static_assert(offsetof(DevFileArchiveNx::Param, m_criticalSection) == 0x1800, "");
 static_assert(offsetof(DevFileArchiveNx::Param, unknown1828) == 0x1828, "");
 static_assert(offsetof(DevFileArchiveNx::Param, unknown29b8) == 0x29b8, "");
 static_assert(sizeof(DevFileArchiveNx::Param) == 0x2a48, "");
-static_assert(offsetof(DevFileArchiveNx, unknown14) == 0x14, "");
+static_assert(offsetof(DevFileArchiveNx, m_ALLOC_HANDLE) == 0x14, "");
 static_assert(offsetof(DevFileArchiveNx, unknown20) == 0x20, "");
 
 class DevFileJobValidArcNxTh : public DevFileJobTh {

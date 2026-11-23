@@ -45,7 +45,7 @@
 
 namespace gf {
 
-GfComBehaviorGmk::GfComBehaviorGmk() : unknown98(nullptr), unknowna0(nullptr), unknowna8(nullptr), unknownb0(nullptr), unknownc0(nullptr) {}
+GfComBehaviorGmk::GfComBehaviorGmk() : unknown98(nullptr), unknowna0(nullptr), m_menuCallContext(nullptr), m_bigObjUnique(nullptr), unknownc0(nullptr) {}
 
 GfComBehaviorGmk::~GfComBehaviorGmk() {
   if (unknowna0 != nullptr) {
@@ -242,8 +242,8 @@ void GfComBehaviorGmk::setup() {
       }
       if (Bdat::getFlagVal(bdat, "flag", id, "BigObj") != 0) {
         GfBigObjUnique::CreateInfo bigObjInfo;
-        bigObjInfo.unknown00 = static_cast<GfObj *>(unknown08)->unknownf8;
-        unknownb0.create(bigObjInfo);
+        bigObjInfo.m_GF_OBJ_HANDLE = static_cast<GfObj *>(unknown08)->unknownf8;
+        m_bigObjUnique.create(bigObjInfo);
       }
     }
   }
@@ -279,7 +279,7 @@ void GfComBehaviorGmk::createMenuObj() {
     return;
   }
   GfMenuObjTargetInfo::OpenOtherParam param;
-  param.unknown00 = static_cast<GfObj *>(unknown08)->unknownf8;
+  param.m_GF_OBJ_HANDLE = static_cast<GfObj *>(unknown08)->unknownf8;
   param.unknown30 = GfDataBdat::getFP(BDAT_FLD_GMKNAME);
   if (!GfGameUtil::getNameMsId(param.unknown38, static_cast<GfObj *>(unknown08)->unknownf8)) {
     return;
@@ -289,7 +289,7 @@ void GfComBehaviorGmk::createMenuObj() {
     return;
   }
   u8 *bdat = gmk->getBindedBdatFp();
-  int id = gmk->unknown20.unknown18;
+  int id = gmk->m_createInfo.unknown18;
   switch (gmk->getGmkType()) {
   case gmk::GMK_TYPE_COLLECTION:
     param.unknown3c = true;
@@ -308,12 +308,12 @@ void GfComBehaviorGmk::createMenuObj() {
   default:
     break;
   }
-  int offsetId = GfGameUtil::getUiOffsetId(param.unknown00);
-  param.unknown10.unknown10 = nullptr;
-  param.unknown10.unknown00 = mm::Vec3::zero;
-  GfMenuBdat::getMenuOffset(offsetId, param.unknown10);
-  unknowna8 = GfMenuCallContext::create();
-  GfMenuObjTargetInfo::openOther(unknowna8, param);
+  int offsetId = GfGameUtil::getUiOffsetId(param.m_GF_OBJ_HANDLE);
+  param.m_menuOffset.unknown10 = nullptr;
+  param.m_menuOffset.unknown00 = mm::Vec3::zero;
+  GfMenuBdat::getMenuOffset(offsetId, param.m_menuOffset);
+  m_menuCallContext = GfMenuCallContext::create();
+  GfMenuObjTargetInfo::openOther(m_menuCallContext, param);
 }
 
 void GfComBehaviorGmk::cleanup() {
@@ -322,9 +322,9 @@ void GfComBehaviorGmk::cleanup() {
 }
 
 void GfComBehaviorGmk::disposeMenuObj() {
-  if (unknowna8 != nullptr) {
-    GfMenuObjTargetInfo::close(unknowna8);
-    mm::mtl::safeRelease(unknowna8);
+  if (m_menuCallContext != nullptr) {
+    GfMenuObjTargetInfo::close(m_menuCallContext);
+    mm::mtl::safeRelease(m_menuCallContext);
   }
 }
 
@@ -373,7 +373,7 @@ void GfComBehaviorGmk::update(const fw::UpdateInfo &info) {
       owner->getComponent<GfComTransform>()->unknown001()->invalidateLocal();
     }
   }
-  unknownb0.update(info.unknown04);
+  m_bigObjUnique.update(info.unknown04);
 }
 
 } // namespace gf

@@ -18,3 +18,6 @@ bool DevTouchNx::createDevice() {
 void DevTouchNx::releaseDevice() {}
 
 } // namespace ml
+
+// WorkUtil::createWork<DevTouchNx> (0x71007295c4) inlines the constructors of DevTouch and DevTouchNx, which are in this unit (device.cpp).
+template ml::DevTouchNx *ml::WorkUtil::createWork<ml::DevTouchNx>(const char *, ml::WorkObj *, bool);

@@ -7,7 +7,7 @@ namespace ml {
 
 EventFileTh::EventFileTh(CBM cbm, FileHandleTh *handle) : type(cbm), unknown08(handle), m_memHandle(), unknown18(nullptr), unknown20(nullptr), unknown28(nullptr), unknown30(0), unknown38(nullptr) {
   if (handle != nullptr) {
-    m_memHandle = handle->unknown2c;
+    m_memHandle = handle->m_ALLOC_HANDLE;
     unknown18 = handle->unknown30;
     unknown20 = handle->unknown98.c_str();
     unknown28 = handle->unknown08;

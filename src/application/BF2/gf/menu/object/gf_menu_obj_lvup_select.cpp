@@ -28,14 +28,14 @@ constexpr u32 unknown001 = 0x57;
 // Inferred role: common window of the level up confirmation; original name unknown.
 constexpr u16 unknown002 = 0xa7;
 
-GfMenuObjLvupSelect::GfMenuObjLvupSelect(u32 handle) : GfMenuObject(handle), unknown28(this), unknown2b8(false), unknown2d8(nullptr) {
+GfMenuObjLvupSelect::GfMenuObjLvupSelect(u32 handle) : GfMenuObject(handle), unknown28(this), unknown2b8(false), m_menuCallContext(nullptr) {
   unknown2c8 = unknown160();
   unknown2d0 = unknown160();
-  unknown2d8 = GfMenuCallContext::create();
+  m_menuCallContext = GfMenuCallContext::create();
 }
 
 GfMenuObjLvupSelect::~GfMenuObjLvupSelect() {
-  mm::mtl::safeRelease(unknown2d8);
+  mm::mtl::safeRelease(m_menuCallContext);
   unknown2d0 = nullptr;
   unknown2c8 = nullptr;
 }
@@ -217,7 +217,7 @@ void GfMenuObjLvupSelect::MainListener::reciveEvent(const ui::EventData &event, 
     u32 driver = event.unknown0c;
     GfMenuReference::setReferenceDriverID(0, driver);
     GfMenuReference::setDriverVirtualLevel(GfDataDriver::getLevel(driver) + 1);
-    unknown20->updateBonusExp();
+    m_menuObjLvupSelect->updateBonusExp();
     GfMenuObject::sendOpenEvent(acc.searchChild("LAY_lvup_sellect"), 0, 0.0f);
     GfMenuObject::sendOpenEvent(acc.searchSibiling("LAY_dr_img"), 0, 0.0f);
     break;
@@ -253,15 +253,15 @@ void GfMenuObjLvupSelect::SelectListener::reciveEvent(const ui::EventData &event
     if (index != -1) {
       int previous = event.unknown0c;
       int level = GfDataDriver::getLevel(GfMenuReference::getReferenceDriverID(0));
-      unknown20->unknown2c8->unknown162(index + level + 1);
+      m_menuObjLvupSelect->unknown2c8->unknown162(index + level + 1);
       GfMenuReference::setDriverVirtualLevel(index + level + 1);
       // Each statement reads unknown2c8 through its own operator-> (one `_ptr != 0` assert before the loads, 0x7100481bc4 and 0x7100481c04); the form without the locals calls it twice
       // per statement and gives 290 instructions against the game's 264.
-      GfMenuReferenceNumber *numberMin = unknown20->unknown2c8.operator->();
+      GfMenuReferenceNumber *numberMin = m_menuObjLvupSelect->unknown2c8.operator->();
       acc.setDispChild(numberMin->unknown0c != numberMin->unknown10, "IMG_lvslc_arrow@01");
-      GfMenuReferenceNumber *numberMax = unknown20->unknown2c8.operator->();
+      GfMenuReferenceNumber *numberMax = m_menuObjLvupSelect->unknown2c8.operator->();
       acc.setDispChild(numberMax->unknown0c != numberMax->unknown14, "IMG_lvslc_arrow@02");
-      unknown20->updateBonusExp();
+      m_menuObjLvupSelect->updateBonusExp();
       if (previous != -1 && index != previous) {
         GfMenuObjUtil::playSECommonCursor();
       }
@@ -272,9 +272,9 @@ void GfMenuObjLvupSelect::SelectListener::reciveEvent(const ui::EventData &event
     if (event.unknown0c == 1) {
       int index = event.unknown08;
       int level = GfDataDriver::getLevel(GfMenuReference::getReferenceDriverID(0));
-      unknown20->unknown2c0 = index + level + 1;
-      unknown20->unknown2b8 = false;
-      unknown20->unknown28.unknown002(&GfMenuObjLvupSelect::seqConfirmLevelUp);
+      m_menuObjLvupSelect->unknown2c0 = index + level + 1;
+      m_menuObjLvupSelect->unknown2b8 = false;
+      m_menuObjLvupSelect->unknown28.unknown002(&GfMenuObjLvupSelect::seqConfirmLevelUp);
     } else if (event.unknown0c == 2) {
       GfMenuObject::addResultCallContext(acc.getParentHandle(), 1, 0);
       GfMenuObject::sendCloseEvent(acc.getParentHandle(), 0, 0.0f);
@@ -302,9 +302,9 @@ void GfMenuObjLvupSelect::SelectListener::reciveEvent(const ui::EventData &event
     }
     GfMenuObject::resetInputSelection(acc.unknown10);
     GfMenuObject::setupInputSelection(acc.unknown10, 0, enableLevel - level);
-    unknown20->unknown2c8->unknown162(next);
-    unknown20->unknown2c8->unknown165(next);
-    unknown20->unknown2c8->unknown166(enableLevel);
+    m_menuObjLvupSelect->unknown2c8->unknown162(next);
+    m_menuObjLvupSelect->unknown2c8->unknown165(next);
+    m_menuObjLvupSelect->unknown2c8->unknown166(enableLevel);
     GfMenuObjCmnStatus::openDrStatus(1, 0);
     break;
   }

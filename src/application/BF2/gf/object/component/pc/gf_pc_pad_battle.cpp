@@ -19,7 +19,7 @@ constexpr int PAD_TYPE_UNKNOWN_3 = 3; // Inferred role: pad type battle target; 
 
 bool registerAsmCallbackBattle(GF_OBJ_HANDLE *handle, anm::ResASM *resAsm) { return false; }
 
-PadBattle::PadBattle() : unknown78(nullptr) {}
+PadBattle::PadBattle() : m_comPropertyPc(nullptr) {}
 
 void PadBattle::setup(int padNo, GfComPropertyPc &property) {
   unknown08.bind(padNo, PAD_TYPE_UNKNOWN_1, getAllocator(ALLOCATOR_UNKNOWN_0));
@@ -79,14 +79,14 @@ void PadBattle::changeCameraMode() const { setInput(INPUT_ID_UNKNOWN_19); }
 void PadBattle::orderRally() const { setInput(INPUT_ID_UNKNOWN_20); }
 
 void PadBattle::moveFront(f32 value) {
-  if (unknown78 != nullptr && unknown78->unknown110_1) {
-    unknown78->unknown60.unknown04 = value;
+  if (m_comPropertyPc != nullptr && m_comPropertyPc->unknown110_1) {
+    m_comPropertyPc->unknown60.unknown04 = value;
   }
 }
 
 void PadBattle::moveSide(f32 value) {
-  if (unknown78 != nullptr && unknown78->unknown110_1) {
-    unknown78->unknown60.unknown00 = value;
+  if (m_comPropertyPc != nullptr && m_comPropertyPc->unknown110_1) {
+    m_comPropertyPc->unknown60.unknown00 = value;
   }
 }
 
@@ -100,14 +100,14 @@ void PadBattle::cleanup(GfComPropertyPc &property) {
 }
 
 void PadBattle::update(const fw::UpdateInfo &info, GfComPropertyPc &property) {
-  this->unknown78 = &property;
+  this->m_comPropertyPc = &property;
   unknown08.update();
   unknown40.update();
-  this->unknown78 = nullptr;
+  this->m_comPropertyPc = nullptr;
 }
 
 void PadBattle::setInput(InputID id) const {
-  if (unknown78 == nullptr) {
+  if (m_comPropertyPc == nullptr) {
     return;
   }
 
@@ -131,7 +131,7 @@ void PadBattle::setInput(InputID id) const {
   default:
     break;
   }
-  unknown78->unknown60.unknown08.set(id);
+  m_comPropertyPc->unknown60.unknown08.set(id);
 }
 
 } // namespace pc

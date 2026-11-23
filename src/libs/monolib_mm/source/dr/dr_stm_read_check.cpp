@@ -8,26 +8,26 @@ namespace ml {
 
 DrStmReadCheck::DrStmReadCheck(const char *path) {
   unknown1c = 0;
-  unknown20 = DrMan::get()->unknown5b0->createTexStmListObj(path);
+  m_drCalcStmListObj = DrMan::get()->m_drCalcTexStreamMan->createTexStmListObj(path);
 }
 
 DrStmReadCheck::DrStmReadCheck(u32 size) {
   unknown1c = 4;
-  unknown20 = DrMan::get()->unknown5b0->createBufferListObj(size);
+  m_drCalcStmListObj = DrMan::get()->m_drCalcTexStreamMan->createBufferListObj(size);
 }
 
 DrStmReadCheck::~DrStmReadCheck() {
-  if (unknown20 != nullptr) {
-    unknown20->release();
-    unknown20 = nullptr;
+  if (m_drCalcStmListObj != nullptr) {
+    m_drCalcStmListObj->release();
+    m_drCalcStmListObj = nullptr;
   }
 }
 
 void DrStmReadCheck::release() { unknown1c |= 1 << DrMan::s_nDblStockIdx; }
 
 u64 DrStmReadCheck::getAdder() {
-  if ((unknown1c & 4) && unknown20 != nullptr) {
-    unknown20->getAdder();
+  if ((unknown1c & 4) && m_drCalcStmListObj != nullptr) {
+    m_drCalcStmListObj->getAdder();
   }
   return 0;
 }
@@ -38,11 +38,11 @@ bool DrStmReadCheck::update() {
     result = true;
   } else if (!(unknown1c & 4)) {
     if (unknown18 == 2) {
-      unknown20->setUseMode(DrCalcStmListObj::DR_TEX_USE_MODE_UNKNOWN_2);
+      m_drCalcStmListObj->setUseMode(DrCalcStmListObj::DR_TEX_USE_MODE_UNKNOWN_2);
     } else if (unknown18 == 1) {
-      unknown20->setUseMode(DrCalcStmListObj::DR_TEX_USE_MODE_UNKNOWN_1);
+      m_drCalcStmListObj->setUseMode(DrCalcStmListObj::DR_TEX_USE_MODE_UNKNOWN_1);
     } else {
-      unknown20->setUseMode(DrCalcStmListObj::DR_TEX_USE_MODE_UNKNOWN_0);
+      m_drCalcStmListObj->setUseMode(DrCalcStmListObj::DR_TEX_USE_MODE_UNKNOWN_0);
     }
   }
   return result;

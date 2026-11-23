@@ -70,10 +70,10 @@ namespace gf {
 struct GF_OBJ_HANDLE;
 
 // Inferred helper: the enemy instances embedded in the gimmick; original name unknown.
-static const gmk::GmkEnemyInsts &unknown002(const gmk::GmkEnemy &gmk) { return gmk.unknown48; }
+static const gmk::GmkEnemyInsts &unknown002(const gmk::GmkEnemy &gmk) { return gmk.m_gmkEnemyInsts; }
 
 // Inferred helper: the enemy instances embedded in the gimmick; original name unknown.
-static const gmk::GmkEnemyInsts &unknown002(const gmk::GmkRoutedEnemy &gmk) { return gmk.unknown50; }
+static const gmk::GmkEnemyInsts &unknown002(const gmk::GmkRoutedEnemy &gmk) { return gmk.m_gmkEnemyInsts; }
 
 namespace enemy {
 
@@ -83,11 +83,11 @@ const char *ASM_CB_NAME_BATTLE_ENEMY = "battle_en";
 
 } // namespace enemy
 
-void GfComBehaviorEnemy::Listener::onWkStandbyLogout() { unknown08->unknown54e8 = nullptr; }
+void GfComBehaviorEnemy::Listener::onWkStandbyLogout() { m_comBehaviorEnemy->unknown54e8 = nullptr; }
 
 u32 GfComBehaviorEnemy::getStateId() const {
-  if (unknowna0.m_pState != nullptr) {
-    return unknowna0.m_pState->unknown08;
+  if (m_hfsm.m_pState != nullptr) {
+    return m_hfsm.m_pState->m_state;
   }
 
   return ai::INVALID_STATE_ID;
@@ -133,14 +133,14 @@ bool GfComBehaviorEnemy::recieveMessage(fw::MessageObject *sender, fw::Message &
 }
 
 GfComBehaviorEnemy::GfComBehaviorEnemy()
-    : unknowna0(fw::Allocator::getProcAllocator()), unknown128(true), unknown130(nullptr), unknown54a0(nullptr), unknown54e0(false), unknown54e1(false), unknown54e2(false), unknown54e3(false),
+    : m_hfsm(fw::Allocator::getProcAllocator()), unknown128(true), m_menuCallContext(nullptr), m_fieldDmg(nullptr), unknown54e0(false), unknown54e1(false), unknown54e2(false), unknown54e3(false),
       unknown54e4(false), unknown54e8(nullptr) {}
 
 GfComBehaviorEnemy::~GfComBehaviorEnemy() {
   if (unknown54e0) {
     unknown54e0 = false;
-    if (unknown140.unknownd0.unknownb0.isValid()) {
-      static_cast<const gmk::GmkBattleLock *>(unknown140.unknownd0.unknownb0.unknown38)->unknownc4--;
+    if (m_behaviorEnemyField.m_fieldEnemySensor.m_gmkAcc.isValid()) {
+      static_cast<const gmk::GmkBattleLock *>(m_behaviorEnemyField.m_fieldEnemySensor.m_gmkAcc.m_aGmkBase)->unknownc4--;
     }
   }
 
@@ -148,10 +148,10 @@ GfComBehaviorEnemy::~GfComBehaviorEnemy() {
 }
 
 void GfComBehaviorEnemy::cleanup() {
-  unknown140.dispose();
+  m_behaviorEnemyField.dispose();
   disposeFsm();
   disposeMenuObj();
-  unknown10.cleanup();
+  m_pluginManager.cleanup();
   unknown138 = nullptr;
 }
 
@@ -220,23 +220,23 @@ bool GfComBehaviorEnemy::getGmkBattleLockInfo(int &param1, int &param2) const {
     return false;
   }
 
-  param1 = gmkInst->unknown08.unknown00->getCreateInfo().unknown08->unknown10.unknown04;
+  param1 = gmkInst->m_createBaseInfo.m_ownerGmkEnemyList->getCreateInfo().m_gmkSet->m_createInfo.unknown04;
   u8 *bdat = gmkInst->getBindedBdatFp();
   if (bdat == nullptr) {
     return false;
   }
 
-  param2 = static_cast<u16>(Bdat::getValCheck(bdat, "battlelockname", gmkInst->unknown20.unknown18, 2)) - 1;
+  param2 = static_cast<u16>(Bdat::getValCheck(bdat, "battlelockname", gmkInst->m_createInfo.unknown18, 2)) - 1;
   return true;
 }
 
 f32 GfComBehaviorEnemy::getMoveSpeedDelta(GfBehaviorEnemyField::MoveSpeed moveSpeed) const {
-  GfBehaviorEnemyField::MoveSpeed current = unknown140.getFieldMoveSpeedType(static_cast<enemy::STATE_ID>(getStateId()));
+  GfBehaviorEnemyField::MoveSpeed current = m_behaviorEnemyField.getFieldMoveSpeedType(static_cast<enemy::STATE_ID>(getStateId()));
   if (current == moveSpeed) {
     return 0.0f;
   }
 
-  return GfBehaviorEnemyField::unknown001(current, moveSpeed, *getEnemeyMoveParam(unknown140.unknown36));
+  return GfBehaviorEnemyField::unknown001(current, moveSpeed, *getEnemeyMoveParam(m_behaviorEnemyField.unknown36));
 }
 
 void GfComBehaviorEnemy::reqChangeBattle() {
@@ -248,7 +248,7 @@ void GfComBehaviorEnemy::reqChangeBattle() {
 void GfComBehaviorEnemy::disposeFsm() {
   if (!unknown128) {
     unknown128 = true;
-    unknowna0.cleanup();
+    m_hfsm.cleanup();
   }
 }
 
@@ -256,17 +256,17 @@ void GfComBehaviorEnemy::setStateId(enemy::STATE_ID stateId) {
   if (stateId == enemy::STATE_ID_UNKNOWN_0) {
     unknown54e2 = false;
     unknown54e3 = false;
-    unknown140.unknown5268.unknown30 = true;
-    unknown140.unknown5268.unknown31 = true;
+    m_behaviorEnemyField.m_fieldPitchRollController.unknown30 = true;
+    m_behaviorEnemyField.m_fieldPitchRollController.unknown31 = true;
     static_cast<GfObj *>(unknown08)->unknown110 |= 4;
     GfObjUtil::setInvincible(static_cast<GfObj *>(unknown08)->unknownf8, false, false);
-    if (unknown140.unknown37 != 0) {
+    if (m_behaviorEnemyField.unknown37 != 0) {
       reqChangeBattleToOtherMember<gmk::GmkEnemy>();
       reqChangeBattleToOtherMember<gmk::GmkRoutedEnemy>();
     }
   }
 
-  unknowna0.setState(stateId);
+  m_hfsm.setState(stateId);
 }
 
 fw::ColiMoveObject *GfComBehaviorEnemy::getColiObject() const {
@@ -312,7 +312,7 @@ void GfComBehaviorEnemy::procAnimCallback(GfComAsm *comAsm, const CallBackCache 
   GfStateBase::unknown001 event;
   event.unknown00 = static_cast<GfObj *>(unknown08);
   event.unknown08 = &message;
-  unknowna0.execEvent(&event);
+  m_hfsm.execEvent(&event);
 }
 
 void GfComBehaviorEnemy::setupWeapon() {
@@ -350,15 +350,15 @@ void GfComBehaviorEnemy::updateInvincible() {
         } else {
           gmk::GmkType type = gmkInst->getGmkType();
           if (type == gmk::GmkEnemy::GMK_TYPE) {
-            if ((unknown140.unknownd0.unknown10.unknown48 | unknown140.unknownd0.unknown10.unknown4c) >= 0) {
+            if ((m_behaviorEnemyField.m_fieldEnemySensor.m_createInfo.unknown48 | m_behaviorEnemyField.m_fieldEnemySensor.m_createInfo.unknown4c) >= 0) {
               isInvincible = true;
               isTargetable = true;
             } else {
-              isInvincible = unknown002(*static_cast<gmk::GmkEnemy *>(gmkInst)).unknown38.isInvincibleCondMatched();
+              isInvincible = unknown002(*static_cast<gmk::GmkEnemy *>(gmkInst)).m_bdatInfo.isInvincibleCondMatched();
               isTargetable = !isInvincible;
             }
           } else if (type == gmk::GmkRoutedEnemy::GMK_TYPE) {
-            isInvincible = unknown002(*static_cast<gmk::GmkRoutedEnemy *>(gmkInst)).unknown38.isInvincibleCondMatched();
+            isInvincible = unknown002(*static_cast<gmk::GmkRoutedEnemy *>(gmkInst)).m_bdatInfo.isInvincibleCondMatched();
             isTargetable = !isInvincible;
           } else {
             isTargetable = true;
@@ -374,14 +374,14 @@ void GfComBehaviorEnemy::updateInvincible() {
   } else {
     static_cast<GfObj *>(unknown08)->unknown110 &= ~4u;
   }
-  unknown140.unknown52a8 = isTargetable;
+  m_behaviorEnemyField.unknown52a8 = isTargetable;
   GfObjUtil::setInvincible(static_cast<GfObj *>(unknown08)->unknownf8, isInvincible, false);
 }
 
 void GfComBehaviorEnemy::disposeMenuObj() {
-  if (unknown130 != nullptr) {
-    GfMenuObjTargetInfo::close(unknown130);
-    mm::mtl::safeRelease(unknown130);
+  if (m_menuCallContext != nullptr) {
+    GfMenuObjTargetInfo::close(m_menuCallContext);
+    mm::mtl::safeRelease(m_menuCallContext);
   }
 }
 
@@ -411,9 +411,9 @@ void GfComBehaviorEnemy::setup() {
     unknown138 = transform->unknown18.get() == nullptr ? transform->unknown10 : transform->unknown18;
   }
 
-  unknown10.beginSetup(*this, 4);
-  unknown10.unknown001<FootStepPlugin>(0, true);
-  unknown10.endSetup();
+  m_pluginManager.beginSetup(*this, 4);
+  m_pluginManager.unknown001<FootStepPlugin>(0, true);
+  m_pluginManager.endSetup();
   FootStepPlugin *footStep = GfComBehavior::unknown001<FootStepPlugin>(0);
   if (footStep != nullptr) {
     footStep->setActivate(true);
@@ -432,24 +432,24 @@ void GfComBehaviorEnemy::setup() {
     GfFieldUndulator::CreateInfo undulatorInfo;
     undulatorInfo.unknown00 = setup->m_enArrangeID;
     undulatorInfo.unknown04 = radius + radius;
-    unknown5460.create(undulatorInfo);
+    m_fieldUndulator.create(undulatorInfo);
   }
 
   GfComTransform *transform = unknown08->getComponent<GfComTransform>();
-  unknown5460.update(transform->unknown18.get() == nullptr ? transform->unknown10 : transform->unknown18, false);
+  m_fieldUndulator.update(transform->unknown18.get() == nullptr ? transform->unknown10 : transform->unknown18, false);
   createBehField();
   GfObjAcc acc(static_cast<GfObj *>(unknown08)->unknownf8);
   if (acc.isEnemyBlade()) {
-    unknowna0.setState(enemy::STATE_ID_UNKNOWN_15);
+    m_hfsm.setState(enemy::STATE_ID_UNKNOWN_15);
   }
 
   {
     DataParamAcc dataParam(static_cast<GfObj *>(unknown08)->unknownf8);
     const SDataEnemy *dataEnemy = dataParam.getSDataEnemy();
-    if (dataEnemy != nullptr && dataEnemy->unknown05_1) {
+    if (dataEnemy != nullptr && dataEnemy->m_fieldDamage) {
       GfFieldDmg::CreateInfo dmgInfo;
       dmgInfo.unknown00 = true;
-      unknown54a0.create(dmgInfo);
+      m_fieldDmg.create(dmgInfo);
     }
   }
 
@@ -459,29 +459,29 @@ void GfComBehaviorEnemy::setup() {
 
 void GfComBehaviorEnemy::createMenuObj() {
   disposeMenuObj();
-  unknown130 = GfMenuCallContext::create();
+  m_menuCallContext = GfMenuCallContext::create();
   GfMenuObjTargetInfo::OpenEnemyParam param;
-  param.unknown00 = static_cast<GfObj *>(unknown08)->unknownf8;
-  int offsetId = GfGameUtil::getUiOffsetId(param.unknown00);
-  param.unknown10.unknown10 = nullptr;
-  param.unknown10.unknown00 = mm::Vec3::zero;
-  GfMenuBdat::getMenuOffset(offsetId, param.unknown10);
-  GfMenuObjTargetInfo::openEnemy(unknown130, param);
+  param.m_GF_OBJ_HANDLE = static_cast<GfObj *>(unknown08)->unknownf8;
+  int offsetId = GfGameUtil::getUiOffsetId(param.m_GF_OBJ_HANDLE);
+  param.m_menuOffset.unknown10 = nullptr;
+  param.m_menuOffset.unknown00 = mm::Vec3::zero;
+  GfMenuBdat::getMenuOffset(offsetId, param.m_menuOffset);
+  GfMenuObjTargetInfo::openEnemy(m_menuCallContext, param);
 }
 
 void GfComBehaviorEnemy::validateBattleLock(bool isLock) {
-  if ((unknown140.unknownd0.unknown10.unknown48 | unknown140.unknownd0.unknown10.unknown4c) < 0) {
+  if ((m_behaviorEnemyField.m_fieldEnemySensor.m_createInfo.unknown48 | m_behaviorEnemyField.m_fieldEnemySensor.m_createInfo.unknown4c) < 0) {
     return;
   }
 
-  if (!unknown140.unknownd0.unknownb0.isValid()) {
+  if (!m_behaviorEnemyField.m_fieldEnemySensor.m_gmkAcc.isValid()) {
     if (unknown54e0) {
       unknown54e0 = false;
     }
     return;
   }
 
-  const gmk::GmkBattleLock *lock = static_cast<const gmk::GmkBattleLock *>(unknown140.unknownd0.unknownb0.unknown38);
+  const gmk::GmkBattleLock *lock = static_cast<const gmk::GmkBattleLock *>(m_behaviorEnemyField.m_fieldEnemySensor.m_gmkAcc.m_aGmkBase);
   bool isFree = true;
   if (unknown54e0) {
     if (lock->unknownc4 != 0) {
@@ -541,11 +541,11 @@ f32 GfComBehaviorEnemy::getCollisionRadius() const {
 }
 
 void GfComBehaviorEnemy::createBehField() {
-  unknown140.dispose();
+  m_behaviorEnemyField.dispose();
   GfObjSetupEnemy *setup = GfObjUtil::getObjSetup<GfObjSetupEnemy>(static_cast<GfObj *>(unknown08)->unknownf8);
   GfBehaviorEnemyField::CreateInfo info;
-  info.unknown00 = this;
-  info.unknown08 = static_cast<GfObj *>(unknown08)->unknownf8;
+  info.m_iGfBehFieldOwner = this;
+  info.m_GF_OBJ_HANDLE = static_cast<GfObj *>(unknown08)->unknownf8;
   {
     f32 radius;
     f32 height;
@@ -579,30 +579,30 @@ void GfComBehaviorEnemy::createBehField() {
     info.unknown18 = dataParam.getSDataEnemy()->unknown9a;
   }
 
-  unknown140.create(info);
-  unknown140.unknown52a0 = setup->unknownac;
-  unknown140.unknown52a4 = 0.0f;
+  m_behaviorEnemyField.create(info);
+  m_behaviorEnemyField.unknown52a0 = setup->unknownac;
+  m_behaviorEnemyField.unknown52a4 = 0.0f;
 }
 
 void GfComBehaviorEnemy::createFsm() {
   disposeFsm();
-  unknowna0.beginSetup(this, 0x10, 3);
-  unknowna0.registerState<enemy::StateBattle>(enemy::STATE_ID_UNKNOWN_0, -1);
-  unknowna0.registerState<enemy::StateFieldIdle>(enemy::STATE_ID_UNKNOWN_1, -1);
-  unknowna0.registerState<enemy::StateFieldIdle>(enemy::STATE_ID_UNKNOWN_2, -1);
-  unknowna0.registerState<enemy::StateFieldIdle>(enemy::STATE_ID_UNKNOWN_3, -1);
-  unknowna0.registerState<enemy::StateFieldIdle>(enemy::STATE_ID_UNKNOWN_4, -1);
-  unknowna0.registerState<enemy::StateFieldIdle>(enemy::STATE_ID_UNKNOWN_5, -1);
-  unknowna0.registerState<enemy::StateFieldSpawn>(enemy::STATE_ID_UNKNOWN_6, -1);
-  unknowna0.registerState<enemy::StateFieldSpawn>(enemy::STATE_ID_UNKNOWN_7, -1);
-  unknowna0.registerState<enemy::StateFieldAreaWalk>(enemy::STATE_ID_UNKNOWN_8, -1);
-  unknowna0.registerState<enemy::StateFieldWalk>(enemy::STATE_ID_UNKNOWN_9, -1);
-  unknowna0.registerState<enemy::StateFieldAreaWalk>(enemy::STATE_ID_UNKNOWN_10, -1);
-  unknowna0.registerState<enemy::StateFieldWalk>(enemy::STATE_ID_UNKNOWN_11, -1);
-  unknowna0.registerState<enemy::StateFieldHome>(enemy::STATE_ID_UNKNOWN_13, -1);
-  unknowna0.registerState<enemy::StateFieldSquadMember>(enemy::STATE_ID_UNKNOWN_14, -1);
-  unknowna0.registerState<enemy::StateFieldBlade>(enemy::STATE_ID_UNKNOWN_15, -1);
-  unknowna0.endSetup();
+  m_hfsm.beginSetup(this, 0x10, 3);
+  m_hfsm.registerState<enemy::StateBattle>(enemy::STATE_ID_UNKNOWN_0, -1);
+  m_hfsm.registerState<enemy::StateFieldIdle>(enemy::STATE_ID_UNKNOWN_1, -1);
+  m_hfsm.registerState<enemy::StateFieldIdle>(enemy::STATE_ID_UNKNOWN_2, -1);
+  m_hfsm.registerState<enemy::StateFieldIdle>(enemy::STATE_ID_UNKNOWN_3, -1);
+  m_hfsm.registerState<enemy::StateFieldIdle>(enemy::STATE_ID_UNKNOWN_4, -1);
+  m_hfsm.registerState<enemy::StateFieldIdle>(enemy::STATE_ID_UNKNOWN_5, -1);
+  m_hfsm.registerState<enemy::StateFieldSpawn>(enemy::STATE_ID_UNKNOWN_6, -1);
+  m_hfsm.registerState<enemy::StateFieldSpawn>(enemy::STATE_ID_UNKNOWN_7, -1);
+  m_hfsm.registerState<enemy::StateFieldAreaWalk>(enemy::STATE_ID_UNKNOWN_8, -1);
+  m_hfsm.registerState<enemy::StateFieldWalk>(enemy::STATE_ID_UNKNOWN_9, -1);
+  m_hfsm.registerState<enemy::StateFieldAreaWalk>(enemy::STATE_ID_UNKNOWN_10, -1);
+  m_hfsm.registerState<enemy::StateFieldWalk>(enemy::STATE_ID_UNKNOWN_11, -1);
+  m_hfsm.registerState<enemy::StateFieldHome>(enemy::STATE_ID_UNKNOWN_13, -1);
+  m_hfsm.registerState<enemy::StateFieldSquadMember>(enemy::STATE_ID_UNKNOWN_14, -1);
+  m_hfsm.registerState<enemy::StateFieldBlade>(enemy::STATE_ID_UNKNOWN_15, -1);
+  m_hfsm.endSetup();
   unknown128 = false;
 }
 
@@ -635,7 +635,7 @@ bool GfComBehaviorEnemy::isStateCondMatch(enemy::STATE_ID stateId) const {
 }
 
 void GfComBehaviorEnemy::updateField(const fw::UpdateInfo &info) {
-  unknown140.update(info.unknown04);
+  m_behaviorEnemyField.update(info.unknown04);
   GfObjAcc acc(static_cast<GfObj *>(unknown08)->unknownf8);
   if (acc.isEnemyBlade()) {
     const btl::CharacterParameter *parameter = btl::CharacterManager::get()->GetCharacterConst(static_cast<GfObj *>(unknown08)->unknownf8)->GetCharacterParameterConst(true);
@@ -646,8 +646,8 @@ void GfComBehaviorEnemy::updateField(const fw::UpdateInfo &info) {
     }
   }
 
-  if (getStateId() != enemy::STATE_ID_UNKNOWN_13 && unknown140.unknown52a9) {
-    unknowna0.setState(enemy::STATE_ID_UNKNOWN_13);
+  if (getStateId() != enemy::STATE_ID_UNKNOWN_13 && m_behaviorEnemyField.unknown52a9) {
+    m_hfsm.setState(enemy::STATE_ID_UNKNOWN_13);
   }
 
   GfMountManager::getHandle(static_cast<GfObj *>(unknown08)->unknownf8, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_1);
@@ -659,7 +659,7 @@ template <typename T> void GfComBehaviorEnemy::reqChangeBattleToOtherMember() co
   if (gmkInst != nullptr && gmkInst->getGmkType() == T::GMK_TYPE) {
     const gmk::GmkEnemyInsts &insts = unknown002(*static_cast<T *>(gmkInst));
     GF_OBJ_HANDLE *handle = static_cast<GfObj *>(unknown08)->unknownf8;
-    u32 num = insts.unknown98.getGobInstNum();
+    u32 num = insts.m_popInfo.getGobInstNum();
     for (u32 i = 0; i < num; i++) {
       GF_OBJ_HANDLE *gobHandle = insts.getGobInst(i);
       if (handle != gobHandle) {
@@ -680,7 +680,7 @@ template <typename T> void GfComBehaviorEnemy::reqChangeBattleToOtherMember() co
 }
 
 template <typename T> bool GfComBehaviorEnemy::isOtherMemberBattle() const {
-  if (unknown140.unknown37 == 0) {
+  if (m_behaviorEnemyField.unknown37 == 0) {
     return false;
   }
 
@@ -691,7 +691,7 @@ template <typename T> bool GfComBehaviorEnemy::isOtherMemberBattle() const {
 
   const gmk::GmkEnemyInsts &insts = unknown002(*static_cast<T *>(gmkInst));
   GF_OBJ_HANDLE *handle = static_cast<GfObj *>(unknown08)->unknownf8;
-  u32 num = insts.unknown98.getGobInstNum();
+  u32 num = insts.m_popInfo.getGobInstNum();
   for (u32 i = 0; i < num; i++) {
     GF_OBJ_HANDLE *gobHandle = insts.getGobInst(i);
     if (handle != gobHandle) {
@@ -714,12 +714,12 @@ bool GfComBehaviorEnemy::isOtherMemberBattle() const {
 }
 
 template <typename T> bool GfComBehaviorEnemy::isOtherMemberHome() const {
-  if (unknown140.unknown37 != 0) {
+  if (m_behaviorEnemyField.unknown37 != 0) {
     gmk::AGmkBase *gmkInst = getBindedGmkInst();
     if (gmkInst != nullptr && gmkInst->getGmkType() == T::GMK_TYPE) {
       const gmk::GmkEnemyInsts &insts = unknown002(*static_cast<T *>(gmkInst));
       GF_OBJ_HANDLE *handle = static_cast<GfObj *>(unknown08)->unknownf8;
-      u32 num = insts.unknown98.getGobInstNum();
+      u32 num = insts.m_popInfo.getGobInstNum();
       for (u32 i = 0; i < num; i++) {
         GF_OBJ_HANDLE *gobHandle = insts.getGobInst(i);
         if (handle != gobHandle) {
@@ -751,24 +751,24 @@ void GfComBehaviorEnemy::execTurnCmd(f32 angle) {
   getTransform();
   TFieldExecCmdTurn<GfComAsm>::CreateInfo info;
   info.unknown00 = static_cast<GfObj *>(unknown08)->unknownf8;
-  info.unknown08 = unknown140.unknown200.getCurAngle() + angle;
-  info.unknown0c = unknown140.unknown30;
+  info.unknown08 = m_behaviorEnemyField.m_fieldLocalSteer.getCurAngle() + angle;
+  info.unknown0c = m_behaviorEnemyField.unknown30;
   unknown53f0.create(info);
   if (!unknown53f0.unknown6c) {
-    unknown140.unknown1d0.setSpeedKmph(unknown140.unknown1d0.unknown08, 0.0f);
+    m_behaviorEnemyField.m_enemyFieldMoveSpeed.setSpeedKmph(m_behaviorEnemyField.m_enemyFieldMoveSpeed.unknown08, 0.0f);
   }
 }
 
 void GfComBehaviorEnemy::execTurnCmd(f32 angle, f32 param2, f32 param3, f32 param4) {
   TFieldExecCmdTurn<GfComAsm>::CreateInfo info;
   info.unknown00 = static_cast<GfObj *>(unknown08)->unknownf8;
-  info.unknown08 = unknown140.unknown200.getCurAngle() + angle;
+  info.unknown08 = m_behaviorEnemyField.m_fieldLocalSteer.getCurAngle() + angle;
   info.unknown0c = param3;
   info.unknown14 = param2;
   info.unknown18 = param4;
   unknown53f0.create(info);
   if (!unknown53f0.unknown6c) {
-    unknown140.unknown1d0.setSpeedKmph(unknown140.unknown1d0.unknown08, 0.0f);
+    m_behaviorEnemyField.m_enemyFieldMoveSpeed.setSpeedKmph(m_behaviorEnemyField.m_enemyFieldMoveSpeed.unknown08, 0.0f);
   }
 }
 
@@ -776,17 +776,17 @@ void GfComBehaviorEnemy::execTurnCmdAccurately(f32 angle) {
   getTransform();
   TFieldExecCmdTurn<GfComAsm>::CreateInfo info;
   info.unknown00 = static_cast<GfObj *>(unknown08)->unknownf8;
-  info.unknown08 = unknown140.unknown200.getCurAngle() + angle;
+  info.unknown08 = m_behaviorEnemyField.m_fieldLocalSteer.getCurAngle() + angle;
   info.unknown0c = 0.0f;
   unknown53f0.create(info);
   if (!unknown53f0.unknown6c) {
-    unknown140.unknown1d0.setSpeedKmph(unknown140.unknown1d0.unknown08, 0.0f);
+    m_behaviorEnemyField.m_enemyFieldMoveSpeed.setSpeedKmph(m_behaviorEnemyField.m_enemyFieldMoveSpeed.unknown08, 0.0f);
   }
 }
 
 void GfComBehaviorEnemy::execTurnCmdToGoal() {
   mm::Vec3 direction;
-  unknown140.getMoveDir(direction);
+  m_behaviorEnemyField.getMoveDir(direction);
   direction.y = 0.0f;
   if (!(fabsf(direction.x) <= 0.000001f) || !(fabsf(direction.z) <= 0.000001f)) {
     f32 length = sqrtf(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z);

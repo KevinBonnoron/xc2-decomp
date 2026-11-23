@@ -11,9 +11,9 @@ class GmkSet;
 class GmkForm {
 public:
   struct CreateInfo {
-    GmkSet *unknown00; // Inferred role: gmk set; original member name unknown.
-    u32 unknown08;     // Inferred role: gmk index; original member name unknown.
-    bool unknown0c;    // Inferred role: event form; original member name unknown.
+    GmkSet *m_gmkSet; // Inferred role: gmk set; original member name unknown.
+    u32 unknown08;    // Inferred role: gmk index; original member name unknown.
+    bool unknown0c;   // Inferred role: event form; original member name unknown.
   };
 
   static const u32 MAX_UNKNOWN_6 = 6; // Inferred role: max num; original name unknown.

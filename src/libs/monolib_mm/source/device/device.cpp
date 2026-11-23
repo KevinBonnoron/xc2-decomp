@@ -13,7 +13,7 @@
 
 namespace ml {
 
-Device::Device(const char *name, WorkObj *parent) : WorkObj(name, parent, 0x20), unknown1b0(-1), unknown370(nullptr) {}
+Device::Device(const char *name, WorkObj *parent) : WorkObj(name, parent, 0x20), unknown1b0(-1), m_languageInfo(nullptr) {}
 
 void Device::initializeSDK(const InitParam &param) { DeviceNx::initializeSDK(param); }
 
@@ -55,9 +55,9 @@ bool Device::wkStandbyLogout() {
     return false;
   }
   WorkCpu::releaseGroupHandle(unknown1b0);
-  if (unknown370 != nullptr) {
-    delete unknown370;
-    unknown370 = nullptr;
+  if (m_languageInfo != nullptr) {
+    delete m_languageInfo;
+    m_languageInfo = nullptr;
   }
   return WorkObj::wkStandbyLogout();
 }
@@ -69,6 +69,18 @@ void Device::updateSubCpu() {
   if (device != nullptr) {
     WorkCpu::wakeup(device->unknown1b0);
   }
+}
+
+void Device::addSubCpuUpdate(void (*update)(void *), void *argument) {
+  Device *device = get();
+  // The game walks the links of the list to its end without reading a value (0x710070e9e4 to 0x710070e9fc) before the push: a statement without
+  // effect that the game really holds (ruling 5).
+  for (mm::mtl::FixedList<SCU, 16>::iterator it = device->unknown1b8.begin(); it != device->unknown1b8.end(); ++it) {
+  }
+  SCU entry;
+  entry.unknown00 = update;
+  entry.unknown08 = argument;
+  device->unknown1b8.push_back(entry);
 }
 
 void Device::removeSubCpuUpdate(void (*update)(void *)) {

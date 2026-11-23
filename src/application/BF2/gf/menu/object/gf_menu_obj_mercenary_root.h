@@ -12,11 +12,11 @@ class GfMenuObjMercenaryRoot : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjMercenaryRoot *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjMercenaryRoot *owner) : _0c(), m_menuObjMercenaryRoot(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjMercenaryRoot *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjMercenaryRoot *m_menuObjMercenaryRoot; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjMercenaryRoot(u32 handle);
@@ -33,7 +33,7 @@ public:
   u32 unknown188;                                      // Role and original member name unknown, cleared by the constructor.
 };
 
-static_assert(offsetof(GfMenuObjMercenaryRoot::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjMercenaryRoot::MainListener, m_menuObjMercenaryRoot) == 0x20, "");
 static_assert(sizeof(GfMenuObjMercenaryRoot::MainListener) == 0x28, "");
 
 static_assert(offsetof(GfMenuObjMercenaryRoot, unknown24) == 0x24, "");

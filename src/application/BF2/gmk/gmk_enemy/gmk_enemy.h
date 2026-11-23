@@ -49,54 +49,54 @@ public:
   // to the start of the instances and GmkEnemyInsts::dispose restores the defaults written by GmkEnemyInsts::GmkEnemyInsts.
   struct CreateInfo {
     CreateInfo()
-        : unknown00(nullptr), unknown08(nullptr), unknown10(-1), unknown14(100.0f), unknown18(50.0f), unknown1c(110.0f), unknown20(55.0f), unknown24(0.0f), unknown28(0), unknown2c(0), unknown30(0),
-          unknown34(0) {}
+        : m_aGmkBase(nullptr), m_cBdatWrapper(nullptr), unknown10(-1), unknown14(100.0f), unknown18(50.0f), unknown1c(110.0f), unknown20(55.0f), unknown24(0.0f), unknown28(0), unknown2c(0),
+          unknown30(0), unknown34(0) {}
 
-    AGmkBase *unknown00;    // Inferred role: owner gimmick; original member name unknown.
-    CBdatWrapper unknown08; // Inferred role: bdat; original member name unknown.
-    int unknown10;          // Inferred role: bdat id; original member name unknown.
-    f32 unknown14;          // Inferred role: display radius; original member name unknown.
-    f32 unknown18;          // Inferred role: display height; original member name unknown.
-    f32 unknown1c;          // Inferred role: release radius; original member name unknown.
-    f32 unknown20;          // Inferred role: release height; original member name unknown.
-    f32 unknown24;          // Inferred role: repop time in seconds; original member name unknown.
-    u32 unknown28;          // Role and original member name unknown.
-    u32 unknown2c;          // Role and original member name unknown.
-    u32 unknown30;          // Role and original member name unknown.
-    u32 unknown34;          // Role and original member name unknown.
+    AGmkBase *m_aGmkBase;        // Inferred role: owner gimmick; original member name unknown.
+    CBdatWrapper m_cBdatWrapper; // Inferred role: bdat; original member name unknown.
+    int unknown10;               // Inferred role: bdat id; original member name unknown.
+    f32 unknown14;               // Inferred role: display radius; original member name unknown.
+    f32 unknown18;               // Inferred role: display height; original member name unknown.
+    f32 unknown1c;               // Inferred role: release radius; original member name unknown.
+    f32 unknown20;               // Inferred role: release height; original member name unknown.
+    f32 unknown24;               // Inferred role: repop time in seconds; original member name unknown.
+    u32 unknown28;               // Role and original member name unknown.
+    u32 unknown2c;               // Role and original member name unknown.
+    u32 unknown30;               // Role and original member name unknown.
+    u32 unknown34;               // Role and original member name unknown.
   };
 
   struct UpdateInfo {
-    f32 unknown00;                    // Inferred role: delta time; original member name unknown.
-    const mm::Vec3 *unknown08;        // Inferred role: position; original member name unknown.
-    const IPopXformFinder *unknown10; // Inferred role: pop xform finder; original member name unknown.
+    f32 unknown00;                            // Inferred role: delta time; original member name unknown.
+    const mm::Vec3 *unknown08;                // Inferred role: position; original member name unknown.
+    const IPopXformFinder *m_iPopXformFinder; // Inferred role: pop xform finder; original member name unknown.
   };
 
   struct BdatInfo {
     BdatInfo()
-        : unknown00(0), unknown02(false), unknown03(false), unknown04(0), unknown06(100), unknown08(0), unknown09(0), unknown0a(0), unknown0c(false), unknown0e(), unknown12(), unknown18(),
-          unknown28(), unknown38(), unknown48() {}
+        : unknown00(0), unknown02(false), unknown03(false), unknown04(0), unknown06(100), unknown08(0), unknown09(0), unknown0a(0), unknown0c(false), m_scenarioFlagCond(), unknown12(), m_timeCond(),
+          m_weatherCond(), m_cloudCond(), unknown48() {}
 
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isInvincibleCondMatched() const;
     bool isPopCondMatched() const;
     bool isPopCondMatchedOfSmn() const;
 
-    u16 unknown00;              // Inferred role: condition; original member name unknown.
-    bool unknown02;             // Inferred role: enemy priority; original member name unknown.
-    bool unknown03;             // Inferred role: pop summon; original member name unknown.
-    u16 unknown04;              // Inferred role: squad id; original member name unknown.
-    u16 unknown06;              // Inferred role: squad scale; original member name unknown.
-    u8 unknown08;               // Inferred role: form; original member name unknown.
-    u8 unknown09;               // Inferred role: form range; original member name unknown.
-    u16 unknown0a;              // Inferred role: invincible condition; original member name unknown.
-    bool unknown0c;             // Role and original member name unknown.
-    ScenarioFlagCond unknown0e; // Inferred role: scenario flag; original member name unknown.
-    QuestFlagCond unknown12;    // Inferred role: quest flag; original member name unknown.
-    TimeCond unknown18;         // Inferred role: time cond; original member name unknown.
-    WeatherCond unknown28;      // Inferred role: weather cond; original member name unknown.
-    CloudCond unknown38;        // Inferred role: cloud cond; original member name unknown.
-    QuestFlagCond unknown48;    // Inferred role: invincible quest flag; original member name unknown.
+    u16 unknown00;                       // Inferred role: condition; original member name unknown.
+    bool unknown02;                      // Inferred role: enemy priority; original member name unknown.
+    bool unknown03;                      // Inferred role: pop summon; original member name unknown.
+    u16 unknown04;                       // Inferred role: squad id; original member name unknown.
+    u16 unknown06;                       // Inferred role: squad scale; original member name unknown.
+    u8 unknown08;                        // Inferred role: form; original member name unknown.
+    u8 unknown09;                        // Inferred role: form range; original member name unknown.
+    u16 unknown0a;                       // Inferred role: invincible condition; original member name unknown.
+    bool unknown0c;                      // Role and original member name unknown.
+    ScenarioFlagCond m_scenarioFlagCond; // Inferred role: scenario flag; original member name unknown.
+    QuestFlagCond unknown12;             // Inferred role: quest flag; original member name unknown.
+    TimeCond m_timeCond;                 // Inferred role: time cond; original member name unknown.
+    WeatherCond m_weatherCond;           // Inferred role: weather cond; original member name unknown.
+    CloudCond m_cloudCond;               // Inferred role: cloud cond; original member name unknown.
+    QuestFlagCond unknown48;             // Inferred role: invincible quest flag; original member name unknown.
   };
 
   struct PopInfo {
@@ -152,7 +152,7 @@ public:
     // disposeGobInsts (0x71005ef3f4) have the sum as add(e1, e0), add(acc, e2), cmn(acc, e3). The call to getGobInstNum (loop over the index, or over a pointer) inlines with the same instruction
     // counts (isGobInstExist 58, seqWaitToFadeOutOfGobInst 48, canDepopGobInst 87, disposeGobInsts 237) but with add(e0, e1) and cmn(e3, acc) (operand order only); the written-out sum matches all
     // four. getGobInstNum itself and its other callers (validateDisp, removeGobInst, reqForcePopGobInst) match with the loop.
-    int unknown001() const { return unknown08[0].unknown001() + unknown08[1].unknown001() + unknown08[2].unknown001() + unknown08[3].unknown001(); }
+    int unknown001() const { return m_popEnemyInfo[0].unknown001() + m_popEnemyInfo[1].unknown001() + m_popEnemyInfo[2].unknown001() + m_popEnemyInfo[3].unknown001(); }
     bool isPopFinished() const;
     void removeGobInst(gf::GF_OBJ_HANDLE *handle, bool isDead);
     void removeDefeatedNamedEnemyInfo();
@@ -162,7 +162,7 @@ public:
     u16 unknown00; // Role and original member name unknown.
     u8 unknown02;  // Role and original member name unknown.
     u8 _03[0x08 - 0x03];
-    PopEnemyInfo unknown08[4]; // Inferred role: enemies; original member name unknown.
+    PopEnemyInfo m_popEnemyInfo[4]; // Inferred role: enemies; original member name unknown.
   };
 
   // Inferred role: matched; original type name unknown.
@@ -203,17 +203,17 @@ public:
   void dispose();
   void disposeSquad();
 
-  CreateInfo unknown00;    // Inferred role: create info; original member name unknown.
-  BdatInfo unknown38;      // Inferred role: bdat info; original member name unknown.
+  CreateInfo m_createInfo; // Inferred role: create info; original member name unknown.
+  BdatInfo m_bdatInfo;     // Inferred role: bdat info; original member name unknown.
   DistHvCond unknown88;    // Inferred role: pop dist; original member name unknown.
   DistHvCond unknown90;    // Inferred role: depop dist; original member name unknown.
-  PopInfo unknown98;       // Inferred role: pop info; original member name unknown.
+  PopInfo m_popInfo;       // Inferred role: pop info; original member name unknown.
   mutable bool unknown140; // Inferred role: display enabled; original member name unknown.
   mutable bool unknown141; // Inferred role: force pop requested; original member name unknown.
   u8 _142[0x144 - 0x142];
-  mutable ForcePopEnemyInfo unknown144; // Inferred role: force pop request; original member name unknown.
+  mutable ForcePopEnemyInfo m_forcePopEnemyInfo; // Inferred role: force pop request; original member name unknown.
   u8 _14c[0x150 - 0x14c];
-  GmkSquad *unknown150;    // Inferred role: squad; original member name unknown.
+  GmkSquad *m_gmkSquad;    // Inferred role: squad; original member name unknown.
   bool unknown158;         // Inferred role: pop condition flag; original member name unknown.
   bool unknown159;         // Inferred role: pop condition matched; original member name unknown.
   mutable bool unknown15a; // Inferred role: request to clear the repop counter; original member name unknown.
@@ -227,7 +227,7 @@ public:
 
 static_assert(sizeof(GmkEnemyInsts::BdatInfo) == 0x50, "");
 static_assert(sizeof(GmkEnemyInsts::CreateInfo) == 0x38, "");
-static_assert(offsetof(GmkEnemyInsts, unknown38) == 0x38, "");
+static_assert(offsetof(GmkEnemyInsts, m_bdatInfo) == 0x38, "");
 static_assert(offsetof(GmkEnemyInsts, unknown88) == 0x88, "");
 static_assert(offsetof(GmkEnemyInsts, unknown90) == 0x90, "");
 static_assert(sizeof(GmkEnemyInsts::PopInfo::PopEnemyInfo) == 0x28, "");
@@ -236,11 +236,11 @@ static_assert(offsetof(GmkEnemyInsts::PopInfo::PopEnemyInfo, unknown18) == 0x18,
 static_assert(offsetof(GmkEnemyInsts::PopInfo::PopEnemyInfo, unknown20) == 0x20, "");
 static_assert(offsetof(GmkEnemyInsts::PopInfo::PopEnemyInfo, unknown24) == 0x24, "");
 static_assert(sizeof(GmkEnemyInsts::PopInfo) == 0xa8, "");
-static_assert(offsetof(GmkEnemyInsts, unknown98) == 0x98, "");
+static_assert(offsetof(GmkEnemyInsts, m_popInfo) == 0x98, "");
 static_assert(offsetof(GmkEnemyInsts, unknown140) == 0x140, "");
 static_assert(offsetof(GmkEnemyInsts, unknown141) == 0x141, "");
-static_assert(offsetof(GmkEnemyInsts, unknown144) == 0x144, "");
-static_assert(offsetof(GmkEnemyInsts, unknown150) == 0x150, "");
+static_assert(offsetof(GmkEnemyInsts, m_forcePopEnemyInfo) == 0x144, "");
+static_assert(offsetof(GmkEnemyInsts, m_gmkSquad) == 0x150, "");
 static_assert(offsetof(GmkEnemyInsts, unknown15a) == 0x15a, "");
 static_assert(offsetof(GmkEnemyInsts, unknown160) == 0x160, "");
 static_assert(offsetof(GmkEnemyInsts, unknown158) == 0x158, "");
@@ -270,8 +270,8 @@ public:
   };
 
   struct Data {
-    f32 unknown00;  // Inferred role: random walk radius; original member name unknown. The size of this structure is unknown.
-    bool unknown04; // Inferred role: snap the pop position to the ground; original member name unknown.
+    f32 unknown00; // Inferred role: random walk radius; original member name unknown. The size of this structure is unknown.
+    bool m_ySnap;  // Inferred role: snap the pop position to the ground; named after the game accessor gmk::GmkEnemy::PopXformFinder::isYSnap.
   };
 
   // Layout evidence: the vtable at 0x11a3688 holds the four virtual functions of GmkEnemyInsts::IPopXformFinder in this order
@@ -283,7 +283,7 @@ public:
     bool onPopGob(gf::GF_OBJ_HANDLE *handle) const override;
     void onCreateGobInsts(u32 num) const override;
 
-    GmkEnemy *unknown08; // Inferred role: owner; original member name unknown.
+    GmkEnemy *m_gmkEnemy; // Inferred role: owner; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_ENEMY; // Inferred name; shared by every gimmick class for the TGmkList templates.
@@ -301,13 +301,13 @@ public:
   mm::Vec3 &getPositionInRandomWalk(mm::Vec3 &result, f32 angleMin, f32 angleMax, f32 distanceMin, f32 distanceMax) const;
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
 
-  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
+  const Data *getData() const { return static_cast<const Data *>(m_createInfo.unknown08); }
 
-  GmkEnemyInsts unknown48; // Inferred role: enemy instances; original member name unknown.
+  GmkEnemyInsts m_gmkEnemyInsts; // Inferred role: enemy instances; original member name unknown.
 };
 
 static_assert(sizeof(GmkEnemy::PopXformFinder) == 0x10, "");
-static_assert(offsetof(GmkEnemy, unknown48) == 0x48, "");
+static_assert(offsetof(GmkEnemy, m_gmkEnemyInsts) == 0x48, "");
 static_assert(sizeof(GmkEnemy::BdatInfo) == 0x8, "");
 static_assert(sizeof(GmkEnemy) == 0x1d0, "");
 
@@ -360,7 +360,7 @@ protected:
   void createGmk(void *data) override;
 
 public:
-  GmkEnemyList::BdatInfo unknown228; // Inferred role: bdat info; original member name unknown.
+  GmkEnemyList::BdatInfo m_bdatInfo; // Inferred role: bdat info; original member name unknown.
   GmkTriggerList unknown240;         // Inferred role: trigger list; original member name unknown.
 };
 

@@ -29,7 +29,7 @@ const char ObjectList::EFF_TREE[64] = "\x83\x47\x83\x74\x83\x46\x83\x4e\x83\x67\
 const char ObjectList::LGT_TREE[64] = "\x83\x89\x83\x43\x83\x67\x83\x63\x83\x8a\x81\x5b";
 
 ObjectList::ObjectList(const char *name, bool isCloneMode)
-    : unknown08(0), unknown0c(name), unknown50(nullptr), unknown58(nullptr), unknown60(nullptr), unknown68(nullptr), unknown70(nullptr), unknown78(nullptr), unknown80(nullptr), unknown88(0),
+    : unknown08(0), unknown0c(name), unknown50(nullptr), unknown58(nullptr), unknown60(nullptr), unknown68(nullptr), unknown70(nullptr), m_object(nullptr), m_objectChara(nullptr), unknown88(0),
       unknown8c(0), unknown90(0), unknown94(0) {
   if (isCloneMode) {
     unknown08 |= FLAG_UNKNOWN_0;
@@ -49,8 +49,8 @@ ObjectList::ObjectList(const char *name, bool isCloneMode)
   unknown70 = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ObjectTree(LGT_TREE);
   unknown50->addChild(unknown70);
   unknown94 = 0;
-  unknown78 = nullptr;
-  unknown80 = nullptr;
+  m_object = nullptr;
+  m_objectChara = nullptr;
 }
 
 ObjectList::~ObjectList() {
@@ -103,8 +103,8 @@ ObjectList::~ObjectList() {
     unknown50 = nullptr;
   }
   unknown08 = 0;
-  unknown78 = nullptr;
-  unknown80 = nullptr;
+  m_object = nullptr;
+  m_objectChara = nullptr;
 }
 
 void ObjectList::clearSub(Object *object) {
@@ -148,7 +148,7 @@ void ObjectList::startPage() {
     clrChilds(tree);
   }
   unknown90 = 0;
-  unknown78 = nullptr;
+  m_object = nullptr;
 }
 
 void ObjectList::endScene() {
@@ -232,9 +232,9 @@ ObjectChara *ObjectList::createGfObj(const char *name, gf::GF_OBJ_HANDLE *handle
   unknown58->addChild(chara);
   unknown88++;
   mm::mtl::Singleton<BouManager>::getPtr()->push(chara);
-  unknown78 = chara;
-  if (unknown80 == nullptr) {
-    unknown80 = chara;
+  m_object = chara;
+  if (m_objectChara == nullptr) {
+    m_objectChara = chara;
   }
   return chara;
 }
@@ -327,7 +327,7 @@ ObjectCamera *ObjectList::createCamera(const char *name, u32 id) {
   unknown60->addChild(camera);
   unknown8c++;
   mm::mtl::Singleton<BouManager>::getPtr()->push(camera);
-  unknown78 = camera;
+  m_object = camera;
   return camera;
 }
 
@@ -345,7 +345,7 @@ ObjectEffect *ObjectList::createEffect(const char *name) {
   unknown68->addChild(effect);
   unknown90++;
   mm::mtl::Singleton<BouManager>::getPtr()->push(effect);
-  unknown78 = effect;
+  m_object = effect;
   return effect;
 }
 
@@ -356,7 +356,7 @@ ObjectLight *ObjectList::createLight(const char *name, u32 id) {
   ObjectLight *light = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ObjectLight(name, id);
   unknown70->addChild(light);
   unknown94++;
-  unknown78 = light;
+  m_object = light;
   return light;
 }
 
@@ -425,13 +425,13 @@ void ObjectList::setActivePath(const char *path) {
     return;
   }
   if (*path == '\0') {
-    unknown78 = nullptr;
+    m_object = nullptr;
     return;
   }
   Object *found = searchByPathSub(unknown50, path);
-  unknown78 = found;
+  m_object = found;
   if (found == nullptr || found == unknown50 || found == unknown58 || found == unknown60 || found == unknown68 || found == unknown70) {
-    unknown78 = nullptr;
+    m_object = nullptr;
   }
 }
 

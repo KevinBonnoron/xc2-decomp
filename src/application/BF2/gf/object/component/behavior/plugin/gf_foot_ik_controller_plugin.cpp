@@ -27,13 +27,13 @@ template <typename T> static T *castSolver(const mm::mtl::IntrusivePtr<fw::IkSol
 constexpr u32 IK_SOLVER_UNKNOWN_0 = 0; // Inferred role: ik solver slope; original name unknown.
 constexpr u32 IK_SOLVER_UNKNOWN_2 = 2; // Inferred role: ik solver ground; original name unknown.
 
-FootIkControllerPlugin::FootIkControllerPlugin() : unknown10(nullptr), unknown18(MODE_UNKNOWN_0), unknown1c(false), unknown1d(false), unknown1e(0), unknown1f(true), unknown20(false) {}
+FootIkControllerPlugin::FootIkControllerPlugin() : m_comBehavior(nullptr), unknown18(MODE_UNKNOWN_0), unknown1c(false), unknown1d(false), unknown1e(0), unknown1f(true), unknown20(false) {}
 
 bool FootIkControllerPlugin::setup(GfComBehavior &behavior) {
-  unknown10 = &behavior;
+  m_comBehavior = &behavior;
   const GfComIK *ik = behavior.unknown08->getComponent<GfComIK>();
   if (ik != nullptr) {
-    const mm::mtl::Vector<mm::mtl::IntrusivePtr<fw::IkSolver>> &solvers = ik->unknown10.unknown10;
+    const mm::mtl::Vector<mm::mtl::IntrusivePtr<fw::IkSolver>> &solvers = ik->m_ikResolver.unknown10;
     fw::PlacementGroundSolver *placement = castSolver<fw::PlacementGroundSolver>(solvers[IK_SOLVER_UNKNOWN_2]);
     if (castSolver<fw::SlopeGroundSolver>(solvers[IK_SOLVER_UNKNOWN_0]) != nullptr) {
       unknown18 = MODE_UNKNOWN_2;
@@ -65,13 +65,13 @@ u64 FootIkControllerPlugin::getASMStateAttribute(GfComBehavior &behavior) const 
 }
 
 void FootIkControllerPlugin::setGroundPlacement(bool enable) {
-  if (unknown10 == nullptr) {
+  if (m_comBehavior == nullptr) {
     return;
   }
 
-  const GfComIK *ik = unknown10->unknown08->getComponent<GfComIK>();
+  const GfComIK *ik = m_comBehavior->unknown08->getComponent<GfComIK>();
   if (ik != nullptr) {
-    const mm::mtl::Vector<mm::mtl::IntrusivePtr<fw::IkSolver>> &solvers = ik->unknown10.unknown10;
+    const mm::mtl::Vector<mm::mtl::IntrusivePtr<fw::IkSolver>> &solvers = ik->m_ikResolver.unknown10;
     if (unknown18 == MODE_UNKNOWN_1) {
       fw::PlacementGroundSolver *solver = castSolver<fw::PlacementGroundSolver>(solvers[IK_SOLVER_UNKNOWN_2]);
       if (solver != nullptr) {
@@ -93,7 +93,7 @@ void FootIkControllerPlugin::setGroundPlacement(bool enable) {
   unknown1d = enable;
 }
 
-void FootIkControllerPlugin::cleanup(GfComBehavior &) { unknown10 = nullptr; }
+void FootIkControllerPlugin::cleanup(GfComBehavior &) { m_comBehavior = nullptr; }
 
 void FootIkControllerPlugin::onActivate() {}
 
@@ -114,7 +114,7 @@ void FootIkControllerPlugin::update(GfComBehavior &behavior, const fw::UpdateInf
 
   const GfComIK *ik = behavior.unknown08->getComponent<GfComIK>();
   if (ik != nullptr) {
-    const mm::mtl::Vector<mm::mtl::IntrusivePtr<fw::IkSolver>> &solvers = ik->unknown10.unknown10;
+    const mm::mtl::Vector<mm::mtl::IntrusivePtr<fw::IkSolver>> &solvers = ik->m_ikResolver.unknown10;
     fw::PlacementGroundSolver *placement = castSolver<fw::PlacementGroundSolver>(solvers[IK_SOLVER_UNKNOWN_2]);
     if (placement != nullptr) {
       placement->unknown65 = isFit;
@@ -128,7 +128,7 @@ void FootIkControllerPlugin::update(GfComBehavior &behavior, const fw::UpdateInf
   if (unknown18 == MODE_UNKNOWN_3) {
     ik = behavior.unknown08->getComponent<GfComIK>();
     if (ik != nullptr) {
-      const mm::mtl::Vector<mm::mtl::IntrusivePtr<fw::IkSolver>> &solvers = ik->unknown10.unknown10;
+      const mm::mtl::Vector<mm::mtl::IntrusivePtr<fw::IkSolver>> &solvers = ik->m_ikResolver.unknown10;
       fw::TwoCharaGroundSolver *twoChara = castSolver<fw::TwoCharaGroundSolver>(solvers[IK_SOLVER_UNKNOWN_2]);
       if (twoChara != nullptr) {
         if ((attribute & 2) == 0 && !unknown20) {

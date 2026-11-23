@@ -31,7 +31,7 @@ bool unknown005;
 // 0x710076ae90. 0x80 is the fourth argument of the WorkObj constructor (0x710076aea0). The reslist of the former current views is created with
 // 0x80 nodes (the count stored at 0x710076af9c; 0xc00 bytes allocated at 0x710076af2c, the pool loop of the game is the reslist::create loop
 // unrolled twice) from the work memory handle at 0x54 (0x710076af3c). unknown005, the cutOff flag, is cleared at 0x710076afa8.
-WinViewRoot::WinViewRoot(const char *name, WorkObj *parent) : WorkObj(name, parent, 0x80), unknown1f0(nullptr), unknown1f8(nullptr), unknown200(nullptr), unknown208(0xffffffff) {
+WinViewRoot::WinViewRoot(const char *name, WorkObj *parent) : WorkObj(name, parent, 0x80), m_winView(nullptr), unknown1f8(nullptr), unknown200(nullptr), unknown208(0xffffffff) {
   unknown1b0.create(0x80, unknown54);
   unknown005 = false;
 }
@@ -57,7 +57,7 @@ WinView *WinViewRoot::getView(u32 wid) {
 
 WinView *WinViewRoot::getCurrent() {
   WinViewRoot *root = get();
-  return root != nullptr ? root->unknown1f0 : nullptr;
+  return root != nullptr ? root->m_winView : nullptr;
 }
 
 WinView *WinViewRoot::getRootView(WinView *view) {
@@ -65,7 +65,7 @@ WinView *WinViewRoot::getRootView(WinView *view) {
   if (root == nullptr) {
     return nullptr;
   }
-  WorkObj *parent = view->unknown58;
+  WorkObj *parent = view->m_workObj;
   if (root == parent) {
     return nullptr;
   }
@@ -107,7 +107,7 @@ void WinViewRoot::destroyProc(const WinProc *proc) {
 bool WinViewRoot::isCurrent(const WinView *view) {
   WinViewRoot *root = get();
   if (root != nullptr) {
-    WinView *current = root->unknown1f0;
+    WinView *current = root->m_winView;
     return current == view && current != nullptr;
   }
   return false;
@@ -131,22 +131,22 @@ void WinViewRoot::invalidCurrent(WinView *view) {
           break;
         }
       }
-      if (root->unknown1f0 == view) {
-        root->unknown1f0 = getView(*best);
+      if (root->m_winView == view) {
+        root->m_winView = getView(*best);
       }
     } else {
-      root->unknown1f0 = nullptr;
+      root->m_winView = nullptr;
     }
   }
 }
 
 void WinViewRoot::setCurrent(WinView *view) {
   WinViewRoot *root = get();
-  if (root != nullptr && !view->wkIsShutdown() && view->unknown338.size() != 0 && root->unknown1f0 != view) {
+  if (root != nullptr && !view->wkIsShutdown() && view->unknown338.size() != 0 && root->m_winView != view) {
     WinProc *proc = static_cast<WinProc *>(WorkRootState::getWork(view->unknown338.begin()->value));
     WinProc *rootProc = WinProc::pssGetRoot(proc);
     if (proc != nullptr) {
-      WinView *current = root->unknown1f0;
+      WinView *current = root->m_winView;
       if (current != nullptr) {
         if (root->unknown1f8 != nullptr && root->unknown200 == rootProc && root->unknown1f8->unknown1ec == 0 && proc->unknown1ec != 0) {
           return;
@@ -155,7 +155,7 @@ void WinViewRoot::setCurrent(WinView *view) {
         current->evtFocusOff();
       }
       root->unknown200 = rootProc;
-      root->unknown1f0 = view;
+      root->m_winView = view;
       root->unknown1f8 = proc;
       // The game reads the list ends before the wid (0x71007660c8: end, begin, then the wid load of the find loop), which only the
       // locals give; the node is compared with the end node as base pointers, as in ScnPoolObj::release (0x7100740b58).
@@ -166,9 +166,9 @@ void WinViewRoot::setCurrent(WinView *view) {
       if (found.unknown00 == root->unknown1b0.m_end) {
         root->unknown1b0.insert(found, wid);
       }
-      if (root->unknown1f0 != nullptr) {
-        root->unknown1f0->evtFocusOn();
-        WinView *focus = root->unknown1f0;
+      if (root->m_winView != nullptr) {
+        root->m_winView->evtFocusOn();
+        WinView *focus = root->m_winView;
         if (focus != nullptr) {
           WinView *parent = focus->getParentView();
           if (get() != nullptr && parent != nullptr) {

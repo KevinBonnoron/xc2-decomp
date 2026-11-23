@@ -45,11 +45,11 @@ static const unknown001 unknown003[3] = {{65, 24, 12}, {20, 23, 11}, {69, 21, 13
 static const unknown001 unknown004[3] = {{68, 33, 15}, {54, 32, 16}, {26, 34, 17}};
 
 GfMenuObjMainSubmenu::GfMenuObjMainSubmenu(u32 handle)
-    : GfMenuObject(handle), unknown24(0), unknown28(0), unknown2c(0), unknown30(nullptr), unknown64(true), unknown68(nullptr), unknown70{-1, -1, -1} {}
+    : GfMenuObject(handle), unknown24(0), unknown28(0), unknown2c(0), unknown30(nullptr), unknown64(true), m_menuCallContext(nullptr), unknown70{-1, -1, -1} {}
 
 GfMenuObjMainSubmenu::~GfMenuObjMainSubmenu() {
   mm::mtl::safeRelease(unknown30);
-  mm::mtl::safeRelease(unknown68);
+  mm::mtl::safeRelease(m_menuCallContext);
 }
 
 void GfMenuObjMainSubmenu::initialize() {
@@ -114,7 +114,7 @@ void GfMenuObjMainSubmenu::initialize() {
       }
     }
   }
-  unknown68 = GfMenuCallContext::create();
+  m_menuCallContext = GfMenuCallContext::create();
   GfMenuObject::disableInput(main.searchChild("LAY_item_list"));
   GfMenuObject::initialize();
 }
@@ -163,7 +163,7 @@ void GfMenuObjMainSubmenu::MainListener::reciveEvent(const ui::EventData &event,
     break;
   }
   case GfMenuTypes::unknown003_34: {
-    if (!unknown20->unknown64) {
+    if (!m_menuObjMainSubmenu->unknown64) {
       ui::EventData sendData;
       sendData.unknown00 = 3;
       sendData.unknown08 = 2;
@@ -189,7 +189,7 @@ void GfMenuObjMainSubmenu::MainListener::reciveEvent(const ui::EventData &event,
     param.unknown04 = 1;
     param.unknown10 = 2;
     GfMenuObjUtil::startPresetCtrl(acc.unknown10, param);
-    unknown20->unknown64 = false;
+    m_menuObjMainSubmenu->unknown64 = false;
     break;
   }
   default:
@@ -199,7 +199,7 @@ void GfMenuObjMainSubmenu::MainListener::reciveEvent(const ui::EventData &event,
 }
 
 void GfMenuObjMainSubmenu::ListListener::reciveEvent(const ui::EventData &event, u32 handle) {
-  ui::UIObjectAcc root(unknown20->unknown18);
+  ui::UIObjectAcc root(m_menuObjMainSubmenu->unknown18);
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1: {
@@ -209,9 +209,9 @@ void GfMenuObjMainSubmenu::ListListener::reciveEvent(const ui::EventData &event,
     acc.getLayoutRect("lay_item01", firstRect);
     int interval = rect.x - 1 - firstRect.x;
     mm::Pnt<s16> pos(rect.x + rect.width / 2, rect.height / 2 + rect.y);
-    GfMenuObjUtil::placeObjectH(unknown20->unknown30, pos, interval);
-    GfMenuObjOperationInfo::setGuideText(unknown20->unknown28, 0);
-    GfMenuObjMainMenu2::setSubIndexText(unknown20->unknown2c);
+    GfMenuObjUtil::placeObjectH(m_menuObjMainSubmenu->unknown30, pos, interval);
+    GfMenuObjOperationInfo::setGuideText(m_menuObjMainSubmenu->unknown28, 0);
+    GfMenuObjMainMenu2::setSubIndexText(m_menuObjMainSubmenu->unknown2c);
     ui::EventData sendData;
     sendData.unknown00 = GfMenuTypes::unknown003_33;
     GfMenuObject::sendEvent(acc.unknown10, sendData, 0.0f);
@@ -225,7 +225,7 @@ void GfMenuObjMainSubmenu::ListListener::reciveEvent(const ui::EventData &event,
     if (index == -1) {
       break;
     }
-    u32 entry = unknown20->unknown38[index];
+    u32 entry = m_menuObjMainSubmenu->unknown38[index];
     name.format("IMG_item_pic_grow@%02d", entry + 1);
     {
       ui::UIObjectAcc grow(acc.searchChild(name.c_str()));
@@ -237,11 +237,11 @@ void GfMenuObjMainSubmenu::ListListener::reciveEvent(const ui::EventData &event,
       param.unknown10 = true;
       param.unknown14 = 8;
       param.unknown0c = 3;
-      param.unknown18 = unknown20->unknown70[entry];
-      unknown20->unknown70[entry] = GfMenuObjUtil::startCtrl(grow.unknown10, param, nullptr);
+      param.unknown18 = m_menuObjMainSubmenu->unknown70[entry];
+      m_menuObjMainSubmenu->unknown70[entry] = GfMenuObjUtil::startCtrl(grow.unknown10, param, nullptr);
     }
     if (previous != -1) {
-      u32 previousEntry = unknown20->unknown38[previous];
+      u32 previousEntry = m_menuObjMainSubmenu->unknown38[previous];
       name.format("LAY_item_pic@%02d", entry + 1);
       GfMenuObjUtil::CtrlParam param;
       param.unknown08 = 0x10000000;
@@ -251,14 +251,14 @@ void GfMenuObjMainSubmenu::ListListener::reciveEvent(const ui::EventData &event,
       GfMenuObjUtil::startCtrl(acc.searchChild(name.c_str()), param, nullptr);
       name.format("IMG_item_pic_grow@%02d", previousEntry + 1);
       ui::UIObjectAcc grow(acc.searchChild(name.c_str()));
-      if (unknown20->unknown70[previousEntry] != -1 && unknown20->unknown70[previousEntry] == GfMenuObjUtil::getCtrlID(grow.unknown10)) {
-        GfMenuObjUtil::stopCtrl(unknown20->unknown70[previousEntry]);
-        unknown20->unknown70[previousEntry] = -1;
+      if (m_menuObjMainSubmenu->unknown70[previousEntry] != -1 && m_menuObjMainSubmenu->unknown70[previousEntry] == GfMenuObjUtil::getCtrlID(grow.unknown10)) {
+        GfMenuObjUtil::stopCtrl(m_menuObjMainSubmenu->unknown70[previousEntry]);
+        m_menuObjMainSubmenu->unknown70[previousEntry] = -1;
       }
     }
-    unknown20->unknown30->setIndex(index);
-    for (u32 i = 0; i < unknown20->unknown30->getSize(); i++) {
-      u32 item = unknown20->unknown38[i];
+    m_menuObjMainSubmenu->unknown30->setIndex(index);
+    for (u32 i = 0; i < m_menuObjMainSubmenu->unknown30->getSize(); i++) {
+      u32 item = m_menuObjMainSubmenu->unknown38[i];
       name.format("LAY_item_pic@%02d", item + 1);
       ui::UIObjectAcc pic(acc.searchChild(name.c_str()));
       pic.setMulColor(item == entry ? "white" : "char_unselect");
@@ -273,7 +273,7 @@ void GfMenuObjMainSubmenu::ListListener::reciveEvent(const ui::EventData &event,
       }
     }
     u16 text = 0;
-    switch (unknown20->unknown24) {
+    switch (m_menuObjMainSubmenu->unknown24) {
     case 1:
       text = unknown002[entry].unknown08;
       break;
@@ -297,9 +297,9 @@ void GfMenuObjMainSubmenu::ListListener::reciveEvent(const ui::EventData &event,
   case 8: {
     int index = event.unknown08;
     if (index >= 0 && event.unknown0c == 1) {
-      u32 entry = unknown20->unknown38[index];
+      u32 entry = m_menuObjMainSubmenu->unknown38[index];
       u32 layer;
-      switch (unknown20->unknown24) {
+      switch (m_menuObjMainSubmenu->unknown24) {
       case 1:
         layer = unknown002[entry].unknown00;
         break;
@@ -315,12 +315,12 @@ void GfMenuObjMainSubmenu::ListListener::reciveEvent(const ui::EventData &event,
       }
       if (layer != 0) {
         if (layer == 0x36 && !isEnableSkipTime()) {
-          GfMenuObjCommonText::open(unknown20->unknown68, 0xb6, 0);
+          GfMenuObjCommonText::open(m_menuObjMainSubmenu->m_menuCallContext, 0xb6, 0);
         } else {
           GfMenuObjMainMenu2::setSystemKeyEnable(false);
           GfMenuTypes::Param param;
           param.set<u16>(index);
-          GfMenuObject::registFSLayerParam(unknown20->unknown20, param);
+          GfMenuObject::registFSLayerParam(m_menuObjMainSubmenu->unknown20, param);
           GfMenuObject::changeFSSubLayer(acc.unknown10, 1, layer, true);
           ui::EventData sendData;
           sendData.unknown00 = GfMenuTypes::unknown003_34;
@@ -332,15 +332,15 @@ void GfMenuObjMainSubmenu::ListListener::reciveEvent(const ui::EventData &event,
     break;
   }
   case GfMenuTypes::unknown003_33: {
-    unknown20->unknown60 = 0;
+    m_menuObjMainSubmenu->unknown60 = 0;
     GfMenuTypes::Param param;
-    if (GfMenuObject::getFSLayerParam(unknown20->unknown20, param)) {
-      unknown20->unknown60 = param.get<u16>();
-      GfMenuObject::removeFSLayerParam(unknown20->unknown20);
+    if (GfMenuObject::getFSLayerParam(m_menuObjMainSubmenu->unknown20, param)) {
+      m_menuObjMainSubmenu->unknown60 = param.get<u16>();
+      GfMenuObject::removeFSLayerParam(m_menuObjMainSubmenu->unknown20);
     }
     GfMenuObjMainMenu2::setSystemKeyEnable(true);
     GfMenuObjOperationInfo::add(acc.unknown10, 0, 0, 0);
-    GfMenuObject::setupInputSelection(acc.unknown10, unknown20->unknown60, unknown20->unknown30->getSize());
+    GfMenuObject::setupInputSelection(acc.unknown10, m_menuObjMainSubmenu->unknown60, m_menuObjMainSubmenu->unknown30->getSize());
     break;
   }
   case GfMenuTypes::unknown003_34:

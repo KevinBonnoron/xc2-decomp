@@ -17,43 +17,43 @@
 
 namespace ml {
 
-DrMdoMorphing::DrMdoMorphing(MdoWrkMatRes *matRes, DrResMdoMorpObj *morpObj, DrResEtcPamObj *pamObj) : unknown00(matRes), unknown08(morpObj), unknown10(pamObj) {}
+DrMdoMorphing::DrMdoMorphing(MdoWrkMatRes *matRes, DrResMdoMorpObj *morpObj, DrResEtcPamObj *pamObj) : m_mdoWrkMatRes(matRes), m_drResMdoMorpObj(morpObj), m_drResEtcPamObj(pamObj) {}
 
 DrMdoMorphing::~DrMdoMorphing() {}
 
 void DrMdoMorphing::updateParms() {
-  if (unknown08->unknown00 != 0) {
+  if (m_drResMdoMorpObj->unknown00 != 0) {
     return;
   }
   unknown1c = -1;
-  for (u32 i = 0; i < unknown08->unknown10; i++) {
-    DrResMdoMorpObj::unknown004 &entry = unknown08->unknown08[i];
+  for (u32 i = 0; i < m_drResMdoMorpObj->unknown10; i++) {
+    DrResMdoMorpObj::unknown004 &entry = m_drResMdoMorpObj->unknown08[i];
     u32 description = entry.unknown18->unknown08;
     if ((description & 0xffff) == 7) {
-      entry.unknown00 = unknown10->unknown10[description >> 16].getParams();
+      entry.unknown00 = m_drResEtcPamObj->m_drResEtcParams[description >> 16].getParams();
     }
   }
 }
 
 void DrMdoMorphing::resetDefVertex() {
-  const u8 *base = reinterpret_cast<const u8 *>(unknown00->unknownc8->unknown28);
-  const unknown051 *mofBlend = reinterpret_cast<const unknown051 *>(base + unknown00->unknownc8->unknown28->unknown28);
+  const u8 *base = reinterpret_cast<const u8 *>(m_mdoWrkMatRes->m_drResMdoVertex->unknown28);
+  const unknown051 *mofBlend = reinterpret_cast<const unknown051 *>(base + m_mdoWrkMatRes->m_drResMdoVertex->unknown28->unknown28);
   const unknown137 *entry = reinterpret_cast<const unknown137 *>(base + mofBlend->unknown04);
   const unknown050 *infos = reinterpret_cast<const unknown050 *>(base + mofBlend->infoOffset);
-  DrShdDataList *list = DrMan::getIns()->unknown80->unknown00;
+  DrShdDataList *list = DrMan::getIns()->m_drShdMan->m_drShdDataList;
   grlib::CGLibPolygon::setRasterizer(1);
   DrResShdStreamOut *stmOut = list->getStmOutObj(5);
   int prevDeclaration = -1;
   for (int i = 0; i < mofBlend->unknown00; i++, entry++) {
     s8 declaration = entry->unknown10;
     if (declaration != prevDeclaration) {
-      stmOut->unknown00->setDeclarationIdx(0, declaration);
+      stmOut->m_drShdDataObj->setDeclarationIdx(0, declaration);
       stmOut->setupStreamShader(0);
       prevDeclaration = declaration;
     }
     u32 next = entry->unknown04 + 1;
-    grlib::CGLibCtlVertex::setUniformVertex((*unknown00->unknowna8)[next], 0x20, 0, 0, 0);
-    (*unknown00->unknowna8)[entry->unknown04].setStorageBuffer(0);
+    grlib::CGLibCtlVertex::setUniformVertex((*m_mdoWrkMatRes->unknowna8)[next], 0x20, 0, 0, 0);
+    (*m_mdoWrkMatRes->unknowna8)[entry->unknown04].setStorageBuffer(0);
     grlib::CGLibCtlVertex::renderVertex(GRL_PRIMITIVE_POINTS, infos[next].unknown04);
   }
   grlib::CGLibPolygon::setRasterizer(0);
@@ -61,18 +61,18 @@ void DrMdoMorphing::resetDefVertex() {
 }
 
 void DrMdoMorphing::oldPosVertex() {
-  const u8 *base = reinterpret_cast<const u8 *>(unknown00->unknownc8->unknown28);
-  const unknown051 *mofBlend = reinterpret_cast<const unknown051 *>(base + unknown00->unknownc8->unknown28->unknown28);
+  const u8 *base = reinterpret_cast<const u8 *>(m_mdoWrkMatRes->m_drResMdoVertex->unknown28);
+  const unknown051 *mofBlend = reinterpret_cast<const unknown051 *>(base + m_mdoWrkMatRes->m_drResMdoVertex->unknown28->unknown28);
   const unknown137 *entry = reinterpret_cast<const unknown137 *>(base + mofBlend->unknown04);
   const unknown050 *infos = reinterpret_cast<const unknown050 *>(base + mofBlend->infoOffset);
-  DrShdDataList *list = DrMan::getIns()->unknown80->unknown00;
+  DrShdDataList *list = DrMan::getIns()->m_drShdMan->m_drShdDataList;
   grlib::CGLibPolygon::setRasterizer(1);
   DrResShdStreamOut *stmOut = list->getStmOutObj(8);
   stmOut->setupStreamShader(0);
   for (int i = 0; i < mofBlend->unknown00; i++, entry++) {
     u32 next = entry->unknown04 + 1;
-    grlib::CGLibCtlVertex::setUniformVertex((*unknown00->unknowna8)[next], 0x20, 0, 0, 0);
-    (*unknown00->unknowna8)[entry->unknown04].setStorageBuffer(0);
+    grlib::CGLibCtlVertex::setUniformVertex((*m_mdoWrkMatRes->unknowna8)[next], 0x20, 0, 0, 0);
+    (*m_mdoWrkMatRes->unknowna8)[entry->unknown04].setStorageBuffer(0);
     grlib::CGLibCtlVertex::renderVertex(GRL_PRIMITIVE_POINTS, infos[next].unknown04);
   }
   grlib::CGLibPolygon::setRasterizer(0);
@@ -82,8 +82,8 @@ void DrMdoMorphing::oldPosVertex() {
 int DrMdoMorphing::isBlendCheck() const {
   int result = 0;
   int state = 0;
-  for (u32 i = 0; i < unknown08->unknown10; i++) {
-    const DrResMdoMorpObj::unknown004 &entry = unknown08->unknown08[i];
+  for (u32 i = 0; i < m_drResMdoMorpObj->unknown10; i++) {
+    const DrResMdoMorpObj::unknown004 &entry = m_drResMdoMorpObj->unknown08[i];
     if (entry.unknown04 == entry.unknown00) {
       if (entry.unknown00 != 0.0f) {
         state = 2;
@@ -105,8 +105,8 @@ int DrMdoMorphing::isBlendCheck() const {
 }
 
 void DrMdoMorphing::parmsUpdate() {
-  for (u32 i = 0; i < unknown08->unknown10; i++) {
-    unknown08->unknown08[i].unknown04 = unknown08->unknown08[i].unknown00;
+  for (u32 i = 0; i < m_drResMdoMorpObj->unknown10; i++) {
+    m_drResMdoMorpObj->unknown08[i].unknown04 = m_drResMdoMorpObj->unknown08[i].unknown00;
   }
 }
 

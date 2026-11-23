@@ -26,8 +26,8 @@ public:
   // The split frame and the frame members are proven by applyRect, which calls WinSplitFrame::apply on +0x28, and by
   // the constructor, which inlines the WinSplitFrame and WinViewFrame constructors on +0x28 and +0x48.
   struct RENDER_INFO : public WinViewPort {
-    WinSplitFrame unknown28; // Inferred role: split frame; original member name unknown.
-    WinViewFrame unknown48;  // Inferred role: frame; original member name unknown.
+    WinSplitFrame m_winSplitFrame; // Inferred role: split frame; original member name unknown.
+    WinViewFrame m_winViewFrame;   // Inferred role: frame; original member name unknown.
   };
 
   WinView(const char *name, WorkObj *parent);
@@ -122,7 +122,7 @@ public:
 inline mm::Rect<int> WinViewFrame::unknown001(bool isBack) const {
   const WinView::RENDER_INFO *viewInfo = isBack ? m_info->unknown1b8.m_back : m_info->unknown1b8.m_front;
   mm::Pnt<int> size = m_info->getSize(isBack);
-  mm::Rect<int> rect(viewInfo->unknown48.unknown58, size);
+  mm::Rect<int> rect(viewInfo->m_winViewFrame.unknown58, size);
   u32 frameFlags = m_info->unknown3bc;
   if ((frameFlags & 1) && (m_info->unknown3b8 & 3) == 0) {
     s16 border = unknown60;
@@ -137,8 +137,8 @@ inline mm::Rect<int> WinViewFrame::unknown001(bool isBack) const {
 }
 
 static_assert(sizeof(WinView::RENDER_INFO) == 0xb0, "");
-static_assert(offsetof(WinView::RENDER_INFO, unknown28) == 0x28, "");
-static_assert(offsetof(WinView::RENDER_INFO, unknown48) == 0x48, "");
+static_assert(offsetof(WinView::RENDER_INFO, m_winSplitFrame) == 0x28, "");
+static_assert(offsetof(WinView::RENDER_INFO, m_winViewFrame) == 0x48, "");
 static_assert(offsetof(WinView, unknown1b8) == 0x1b8, "");
 static_assert(offsetof(WinView, unknown338) == 0x338, "");
 static_assert(offsetof(WinView, unknown378) == 0x378, "");

@@ -178,18 +178,18 @@ void GfMenuObjElementEff::MainListener::reciveEvent(const ui::EventData &event, 
     break;
   case GfMenuTypes::unknown003_33:
     acc.setDisp(true);
-    unknown20->unknown2bc = event.unknown08;
-    unknown20->unknown2b8 = -1;
-    unknown20->unknown28.unknown005();
-    unknown20->unknown28.unknown002(&GfMenuObjElementEff::seqInit);
-    unknown20->unknown28.unknown002(&GfMenuObjElementEff::seqOpen);
-    unknown20->unknown28.unknown002(&GfMenuObjElementEff::seqComboName);
-    unknown20->unknown28.unknown002(&GfMenuObjElementEff::seqLoop);
+    m_menuObjElementEff->unknown2bc = event.unknown08;
+    m_menuObjElementEff->unknown2b8 = -1;
+    m_menuObjElementEff->unknown28.unknown005();
+    m_menuObjElementEff->unknown28.unknown002(&GfMenuObjElementEff::seqInit);
+    m_menuObjElementEff->unknown28.unknown002(&GfMenuObjElementEff::seqOpen);
+    m_menuObjElementEff->unknown28.unknown002(&GfMenuObjElementEff::seqComboName);
+    m_menuObjElementEff->unknown28.unknown002(&GfMenuObjElementEff::seqLoop);
     break;
   case GfMenuTypes::unknown003_34:
-    unknown20->unknown2b8 = -1;
-    unknown20->unknown28.unknown005();
-    unknown20->unknown28.unknown002(&GfMenuObjElementEff::seqClose);
+    m_menuObjElementEff->unknown2b8 = -1;
+    m_menuObjElementEff->unknown28.unknown005();
+    m_menuObjElementEff->unknown28.unknown002(&GfMenuObjElementEff::seqClose);
     break;
   default:
     ui::UIObjectListener::reciveEvent(event, handle);

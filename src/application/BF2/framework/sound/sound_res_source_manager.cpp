@@ -86,7 +86,7 @@ u32 SoundResSourceManager::playSe(const char *name, f32 volume, const SoundVaria
       const ResSoundSourceBase *source = it->second;
       switch (source->unknown08) {
       case 0: {
-        const ResSoundData &sound = static_cast<const ResSoundSource::unknown001 *>(source)->unknown10;
+        const ResSoundData &sound = static_cast<const ResSoundSource::unknown001 *>(source)->m_resSoundData;
         SoundPack *pack = soundManager->findPack(sound.unknown00, nullptr);
         if (pack == nullptr) {
           return 0;
@@ -105,7 +105,7 @@ u32 SoundResSourceManager::playSe(const char *name, f32 volume, const SoundVaria
         if (index == -1) {
           return 0;
         }
-        const ResSoundData &sound = complex->unknown20[index].unknown00;
+        const ResSoundData &sound = complex->unknown20[index].m_resSoundData;
         SoundPack *pack = soundManager->findPack(sound.unknown00, nullptr);
         if (pack == nullptr) {
           return 0;

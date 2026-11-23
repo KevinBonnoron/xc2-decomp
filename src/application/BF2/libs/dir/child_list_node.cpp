@@ -3,11 +3,11 @@
 
 namespace dir {
 
-ChildListNode::ChildListNode() : unknown20(nullptr) {}
+ChildListNode::ChildListNode() : m_childListNode(nullptr) {}
 
 void ChildListNode::InitVariable() {
-  unknown20 = nullptr;
-  unknown38.unknown08 = nullptr;
+  m_childListNode = nullptr;
+  unknown38.m_doubleListNode = nullptr;
 }
 
 void ChildListNode::Reset() {

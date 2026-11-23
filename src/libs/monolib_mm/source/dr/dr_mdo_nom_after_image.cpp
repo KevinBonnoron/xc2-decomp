@@ -20,7 +20,7 @@ void DrMdoNomAfterImage::update(const DrMdoCtlNom *model, f32 delta) {
   if (unknown08 != 0) {
     for (int i = 0; i < unknown08; i++) {
       // The game never sets the fourth argument's register: updateParam does not read it, so the original expression cannot be checked.
-      updateParam(&unknown00[i], model, delta, model->m_offsetPos);
+      updateParam(&m_wrkObjList[i], model, delta, model->m_offsetPos);
     }
     unknown10 += delta;
     if (unknown10 >= unknown0c) {
@@ -53,7 +53,7 @@ void DrMdoNomAfterImage::create(const DrMdoCtlNom *model, f32 span, f32 life, f3
   if (unknown18 / unknown0c - unknown08 > 0.0001f) {
     unknown08++;
   }
-  unknown00 = static_cast<wrkObjList *>(mtl::MemManager::allocate(DrMan::getIns()->unknown14, sizeof(wrkObjList) * unknown08, 0x10, false, "no name", 0));
+  m_wrkObjList = static_cast<wrkObjList *>(mtl::MemManager::allocate(DrMan::getIns()->unknown14, sizeof(wrkObjList) * unknown08, 0x10, false, "no name", 0));
   const char *path = nullptr;
   if (model->unknown238 != nullptr) {
     unknown54 = model->unknown238;
@@ -61,15 +61,15 @@ void DrMdoNomAfterImage::create(const DrMdoCtlNom *model, f32 span, f32 life, f3
   }
   DrCreator creator;
   for (int i = 0; i < unknown08; i++) {
-    unknown00[i].unknown10 = static_cast<DrMdoCtlNom *>(creator.createMdl(model->unknown50, path, model->unknown1a));
-    unknown00[i].unknown18 = unknown18;
-    unknown00[i].unknown10->setAlpha(0.0f);
-    unknown00[i].unknown10->setDisp(false);
+    m_wrkObjList[i].m_drMdoCtlNom = static_cast<DrMdoCtlNom *>(creator.createMdl(model->unknown50, path, model->unknown1a));
+    m_wrkObjList[i].unknown18 = unknown18;
+    m_wrkObjList[i].m_drMdoCtlNom->setAlpha(0.0f);
+    m_wrkObjList[i].m_drMdoCtlNom->setDisp(false);
   }
 }
 
 DrMdoNomAfterImage::DrMdoNomAfterImage() {
-  unknown00 = nullptr;
+  m_wrkObjList = nullptr;
   unknown08 = 0;
   unknown0a = 0;
   unknown20 = 0;
@@ -80,12 +80,12 @@ DrMdoNomAfterImage::~DrMdoNomAfterImage() { release(); }
 void DrMdoNomAfterImage::release() {
   if (unknown08 != 0) {
     for (int i = 0; i < unknown08; i++) {
-      unknown00[i].unknown10->setDeleteCall(DrMan::s_nDblStockIdx);
+      m_wrkObjList[i].m_drMdoCtlNom->setDeleteCall(DrMan::s_nDblStockIdx);
     }
     unknown08 = 0;
-    if (unknown00 != nullptr) {
-      mtl::MemManager::deallocate(unknown00, 0, false);
-      unknown00 = nullptr;
+    if (m_wrkObjList != nullptr) {
+      mtl::MemManager::deallocate(m_wrkObjList, 0, false);
+      m_wrkObjList = nullptr;
     }
   }
 }
@@ -94,21 +94,21 @@ void DrMdoNomAfterImage::updateParam(wrkObjList *obj, const DrMdoCtlNom *model, 
   obj->unknown18 += delta;
   if (obj->unknown18 >= unknown18) {
     obj->unknown18 = unknown18;
-    obj->unknown10->setAlpha(0.0f);
-    obj->unknown10->setDisp(false);
+    obj->m_drMdoCtlNom->setAlpha(0.0f);
+    obj->m_drMdoCtlNom->setDisp(false);
     return;
   }
   if (unknown14 < obj->unknown18) {
     f32 alpha = (1.0f - (obj->unknown18 - unknown14) / (unknown18 - unknown14)) * model->unknowne0;
-    obj->unknown10->setAlpha(model->unknowne0 * alpha);
+    obj->m_drMdoCtlNom->setAlpha(model->unknowne0 * alpha);
   } else {
-    obj->unknown10->setAlpha(model->unknowne0);
+    obj->m_drMdoCtlNom->setAlpha(model->unknowne0);
   }
-  obj->unknown10->setDisp((model->unknown20 & DrMdlBase::unknown038_0) != 0);
-  if (obj->unknown10->getRimBloomWrk(2) != nullptr) {
+  obj->m_drMdoCtlNom->setDisp((model->m_disp & DrMdlBase::unknown038_0) != 0);
+  if (obj->m_drMdoCtlNom->getRimBloomWrk(2) != nullptr) {
     f32 rate = obj->unknown18 / unknown18;
     f32 inverse = 1.0f - rate;
-    unknown091 *rimBloom = obj->unknown10->getRimBloomWrk(2);
+    unknown091 *rimBloom = obj->m_drMdoCtlNom->getRimBloomWrk(2);
     rimBloom->unknown00 = inverse * unknown24 + rate * unknown3c;
     rimBloom->unknown14 = inverse * unknown38 + rate * unknown50;
     rimBloom->unknown0c = inverse * unknown30 + rate * unknown48;
@@ -117,8 +117,8 @@ void DrMdoNomAfterImage::updateParam(wrkObjList *obj, const DrMdoCtlNom *model, 
 }
 
 void DrMdoNomAfterImage::captureObj(const DrMdoCtlNom *model) {
-  wrkObjList *obj = &unknown00[unknown0a];
-  DrMdoCtlNom *clone = obj->unknown10;
+  wrkObjList *obj = &m_wrkObjList[unknown0a];
+  DrMdoCtlNom *clone = obj->m_drMdoCtlNom;
   cloneMdlObj(clone, model);
   obj->unknown18 = 0.0f;
   obj->unknown00 = clone->m_matrix.unknown004();

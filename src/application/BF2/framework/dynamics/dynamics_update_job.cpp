@@ -6,12 +6,12 @@ namespace fw {
 
 const char *DynamicsUpdateJob::_TYPE_NAME = "DynamicsUpdateJob";
 
-DynamicsUpdateJob::DynamicsUpdateJob(u32 count) : anm::Job(_TYPE_NAME, sizeof(DynamicsUpdateJob), 1), unknown18(count), unknown20(nullptr) {}
+DynamicsUpdateJob::DynamicsUpdateJob(u32 count) : anm::Job(_TYPE_NAME, sizeof(DynamicsUpdateJob), 1), unknown18(count), m_updateInfo(nullptr) {}
 
 void DynamicsUpdateJob::exec(anm::Job &job) {
   DynamicsUpdateJob &updateJob = static_cast<DynamicsUpdateJob &>(job);
   for (int i = 0; i < updateJob.unknown18; i++) {
-    updateJob.unknown10[i]->update(*updateJob.unknown20);
+    updateJob.unknown10[i]->update(*updateJob.m_updateInfo);
   }
 }
 

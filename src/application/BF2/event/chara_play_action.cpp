@@ -140,7 +140,7 @@ void CharaPlayAction::play(gf::GfObj *obj) {
     unknown08 |= FLAG_UNKNOWN_7;
   }
   if ((unknown08 & FLAG_UNKNOWN_3) == 0) {
-    unknown20->resetDynamics(0);
+    m_charaDysUpdater->resetDynamics(0);
   }
 }
 

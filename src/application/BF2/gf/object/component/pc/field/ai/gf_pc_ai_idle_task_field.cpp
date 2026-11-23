@@ -15,9 +15,9 @@ namespace pc {
 bool TaskFieldIdle::testCondition(const BlackBoardField &blackBoard) { return true; }
 
 void TaskFieldIdle::update(BlackBoardField &blackBoard) {
-  GfComPropertyPc *property = blackBoard.unknown08;
+  GfComPropertyPc *property = blackBoard.m_comPropertyPc;
   AgentUtilField::setIdleInput(*property);
-  if (property->unknown310.unknown10_2) {
+  if (property->m_propertyField.unknown10_2) {
     blackBoard.unknown200.set(3, false);
   }
 }
@@ -33,9 +33,9 @@ bool isEnableTurn(GfComPropertyPc &property, const mm::Vec3 &front) {
 }
 
 bool TaskFieldIdleTurn::testCondition(const BlackBoardField &blackBoard) {
-  GfComPropertyPc *property = blackBoard.unknown08;
+  GfComPropertyPc *property = blackBoard.m_comPropertyPc;
   const mm::Vec3 &front = getTargetFront();
-  if (property->unknown310.unknown10_2 && isEnableTurn(*blackBoard.unknown08, front)) {
+  if (property->m_propertyField.unknown10_2 && isEnableTurn(*blackBoard.m_comPropertyPc, front)) {
     return blackBoard.unknown200.test(3);
   }
   return false;
@@ -43,7 +43,7 @@ bool TaskFieldIdleTurn::testCondition(const BlackBoardField &blackBoard) {
 
 void TaskFieldIdleTurn::update(BlackBoardField &blackBoard) {
   const mm::Vec3 &front = getTargetFront();
-  blackBoard.unknown08->setInputDirPow(front, 1.0f);
+  blackBoard.m_comPropertyPc->setInputDirPow(front, 1.0f);
   blackBoard.unknown200.set(3, false);
 }
 

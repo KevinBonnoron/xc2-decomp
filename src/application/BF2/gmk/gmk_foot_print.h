@@ -29,10 +29,10 @@ public:
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isPopCondMatched() const;
 
-    const char *unknown00;      // Inferred role: foot effect; original member name unknown.
-    u16 unknown08;              // Inferred role: condition; original member name unknown.
-    ScenarioFlagCond unknown0a; // Inferred role: scenario flag; original member name unknown.
-    QuestFlagCond unknown0e;    // Inferred role: quest flag; original member name unknown.
+    const char *unknown00;               // Inferred role: foot effect; original member name unknown.
+    u16 unknown08;                       // Inferred role: condition; original member name unknown.
+    ScenarioFlagCond m_scenarioFlagCond; // Inferred role: scenario flag; original member name unknown.
+    QuestFlagCond m_questFlagCond;       // Inferred role: quest flag; original member name unknown.
   };
 
   struct Data {
@@ -61,8 +61,8 @@ public:
   void *unknown50; // Role and original member name unknown.
   void *unknown58; // Role and original member name unknown.
 
-  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
-  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
+  const Data *getData() const { return static_cast<const Data *>(m_createInfo.unknown08); }
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(m_createInfo.unknown10); }
 };
 
 static_assert(sizeof(GmkRoutedFootPrint::BdatInfo) == 0x18, "");
@@ -92,14 +92,14 @@ public:
   void applyEffectParam(bool isDisp) const;
   void validateDisp() const;
 
-  DistHvCond unknown48; // Role and original member name unknown.
-  u32 unknown50;        // Inferred role: effect handle; original member name unknown.
-  bool unknown54;       // Inferred role: disp; original member name unknown.
+  DistHvCond m_distHvCond; // Role and original member name unknown.
+  u32 unknown50;           // Inferred role: effect handle; original member name unknown.
+  bool unknown54;          // Inferred role: disp; original member name unknown.
 
-  const GmkRoutePoint::Data *getData() const { return static_cast<const GmkRoutePoint::Data *>(unknown20.unknown08); }
+  const GmkRoutePoint::Data *getData() const { return static_cast<const GmkRoutePoint::Data *>(m_createInfo.unknown08); }
 };
 
-static_assert(offsetof(GmkRoutedFootPrintPoint, unknown48) == 0x48, "");
+static_assert(offsetof(GmkRoutedFootPrintPoint, m_distHvCond) == 0x48, "");
 static_assert(offsetof(GmkRoutedFootPrintPoint, unknown50) == 0x50, "");
 static_assert(offsetof(GmkRoutedFootPrintPoint, unknown54) == 0x54, "");
 static_assert(sizeof(GmkRoutedFootPrintPoint) == 0x58, "");

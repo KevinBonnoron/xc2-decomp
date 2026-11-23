@@ -116,12 +116,12 @@ bool StateField::recieveMessage(void *owner, fw::MessageObject *sender, fw::Mess
 }
 
 void StateField::procMsgPcBattleStart(GfComBehaviorPc *behavior, fw::MessageObject *sender, MsgPcBattleStart &message) {
-  behavior->unknown08->getComponent<GfComPropertyPc>()->unknown470.SetStartCondition(message);
+  behavior->unknown08->getComponent<GfComPropertyPc>()->m_battleProperty.SetStartCondition(message);
   reqState(STATE_ID_UNKNOWN_63);
 }
 
 void StateField::procMsgObjectNotifyDamage(GfComBehaviorPc *behavior, fw::MessageObject *sender, MsgObjectNotifyDamage &message) {
-  const MsgObjectDamage *damage = message.unknown08;
+  const MsgObjectDamage *damage = message.m_msgObjectDamage;
   if (damage != nullptr && damage->unknown10 == 0 && damage->unknown2a) {
     MsgPcBattleStart start(3);
     start.unknown0c = damage->unknown2a;
@@ -138,7 +138,7 @@ void StateField::procMsgObjectNotifyDead(GfComBehaviorPc *behavior, fw::MessageO
     property->unknown90 = 0.0f;
     property->unknown94 = 0.0f;
     MsgPcBattleStart start(2);
-    property->unknown470.SetStartCondition(start);
+    property->m_battleProperty.SetStartCondition(start);
     reqState(STATE_ID_UNKNOWN_63);
   } else {
     onDead(behavior, message);
@@ -158,3 +158,20 @@ void StateField::procMsgPcFieldRelaySurvive(GfComBehaviorPc *behavior, fw::Messa
 
 } // namespace pc
 } // namespace gf
+
+// The game builds these field states in one unit with the base state, in address order (0x710055309c to 0x71005569cc). The virtual wrappers of the base,
+// Talk, PrepareBigJump, RideOn and Dead states (destructor, getName, onEnter, onLeave, onStep: 0x710055674c to 0x71005569cc) form one block after the strong
+// functions of all of them (Talk to ExtraControl, 0x7100553e8c to 0x7100556460), where each class's wrappers would follow its own functions if the files were
+// separate units: a unit emits the wrappers with the vtable after everything it defines.
+// clang-format off
+#include "gf_pc_state_field_start.cpp"
+#include "gf_pc_state_field_access.cpp"
+#include "gf_pc_state_field_talk.cpp"
+#include "gf_pc_state_field_prepare_big_jump.cpp"
+#include "gf_pc_state_field_big_jump.cpp"
+#include "gf_pc_state_field_lure.cpp"
+#include "gf_pc_state_field_ride_on.cpp"
+#include "gf_pc_state_field_dead.cpp"
+#include "gf_pc_state_field_alive.cpp"
+#include "gf_pc_state_field_extra_control.cpp"
+// clang-format on

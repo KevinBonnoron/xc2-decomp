@@ -47,8 +47,8 @@ void GfGameLoad::phaseBinData() {
   if (unknown138 != nullptr) {
     memcpy(unknown138, unknown148, unknown150);
     _gfgsv::s_SDataSave.unknown00 = unknown138->unknown00;
-    _gfgsv::s_SDataSave.unknown08 = unknown138->unknown08;
-    _gfgsv::s_SDataSave.unknown10 = unknown138->unknown10;
+    _gfgsv::s_SDataSave.m_realTime = unknown138->m_realTime;
+    _gfgsv::s_SDataSave.m_game = unknown138->m_game;
     unknown138 = nullptr;
   } else if (unknown140 != nullptr) {
     memcpy(unknown140, unknown148, unknown150);
@@ -57,8 +57,8 @@ void GfGameLoad::phaseBinData() {
   }
   SDataSave *saveData = unknown110;
   if (saveData != nullptr) {
-    saveData->unknown10.unknown109b30.clear();
-    saveData->unknown10.unknown1098c8.unknown00.clear();
+    saveData->m_game.m_taskAchieve.clear();
+    saveData->m_game.m_sDataMercenaries.unknown00.clear();
     getAllocator(ALLOCATOR_UNKNOWN_0)->deallocate(unknown110);
     unknown110 = nullptr;
   }

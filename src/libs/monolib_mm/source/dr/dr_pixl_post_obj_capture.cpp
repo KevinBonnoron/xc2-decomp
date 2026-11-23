@@ -16,16 +16,16 @@ DrPixlPostObjCapture::DrPixlPostObjCapture(DrMan *drMan, DrPixlMan *pixlMan, DrP
 
 void DrPixlPostObjCapture::setup() {
   unknown3e0 &= ~1;
-  unknown18.setTextureInfo(static_cast<f32>(unknown00->unknown5b8->unknown28), static_cast<f32>(unknown00->unknown5b8->unknown2c), DrAPCache::TEXTYPE_RGBA_8, false, 0);
+  m_cGLibRenderTarget.setTextureInfo(static_cast<f32>(m_drMan->unknown5b8->unknown28), static_cast<f32>(m_drMan->unknown5b8->unknown2c), DrAPCache::TEXTYPE_RGBA_8, false, 0);
 }
 
 DrPixlPostObjCapture::~DrPixlPostObjCapture() {
-  unknown18.release();
+  m_cGLibRenderTarget.release();
   unknown3e0 = 3;
 }
 
 void DrPixlPostObjCapture::release() {
-  unknown18.release();
+  m_cGLibRenderTarget.release();
   unknown3e0 = 3;
 }
 
@@ -50,13 +50,13 @@ void DrPixlPostObjCapture::render() {
 
 void DrPixlPostObjCapture::renderCaputre() {
   if (unknown3e0 & 2) {
-    unknown18.setRenderTarget();
-    DrShdDataList *shdList = unknown00->unknown80->unknown00;
+    m_cGLibRenderTarget.setRenderTarget();
+    DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
     DrShdDataObj *shader = shdList->unknown001();
     shdList->bindTriangleTex();
     shader->setupShader(0u);
     int location = (shader->unknown38 + shader->unknown58)->getTextureLocation("s0");
-    DrAPCache *apCache = unknown00->unknown5c0;
+    DrAPCache *apCache = m_drMan->m_drAPCache;
     apCache->beginTexSampling(2, 0);
     apCache->setTexture(*grlib::CGLibState::getMainRenderTarget()->unknown70, location);
     grlib::CGLibUniformEtcUtility uniform(shader);
@@ -77,14 +77,14 @@ void DrPixlPostObjCapture::renderCaputre() {
 void DrPixlPostObjCapture::renderDef() {
   grlib::CGLibState::setMainFrameBuffer();
   if (!(unknown3e0 & 2)) {
-    DrShdDataList *shdList = unknown00->unknown80->unknown00;
+    DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
     DrShdDataObj *shader = shdList->unknown001();
     shdList->bindTriangleTex();
     shader->setupShader(0u);
     int location = (shader->unknown38 + shader->unknown58)->getTextureLocation("s0");
-    DrAPCache *apCache = unknown00->unknown5c0;
+    DrAPCache *apCache = m_drMan->m_drAPCache;
     apCache->beginTexSampling(2, 0);
-    apCache->setTexture(*unknown18.unknown70, location);
+    apCache->setTexture(*m_cGLibRenderTarget.unknown70, location);
     grlib::CGLibUniformEtcUtility uniform(shader);
     uniform.setUseUniformBlock("U_POST");
     u32 offset = uniform.unknown001("gScal");

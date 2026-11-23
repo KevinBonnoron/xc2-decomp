@@ -1,5 +1,11 @@
 #include "gf/object/component/pc/gf_pc_state_util.h"
 
+#include <string.h>
+
+#include "framework/coli/coli_object.h"
+#include "framework/ik/ik_look_solver.h"
+#include "framework/ik/ik_placement_ground_solver.h"
+#include "framework/ik/ik_spine_rotate_solver.h"
 #include "framework/object/component_object.h"
 #include "framework/object/updatable_object.h"
 #include "framework/pad/pad_relay_util.h"
@@ -12,13 +18,18 @@
 #include "gf/game/gf_game_ride.h"
 #include "gf/game/gf_game_target.h"
 #include "gf/game/sequential_play/gf_play_factory.h"
+#include "gf/object/component/animation/gf_com_asm.h"
 #include "gf/object/component/behavior/plugin/gf_foot_ik_controller_plugin.h"
 #include "gf/object/component/behavior/plugin/gf_foot_step_plugin.h"
 #include "gf/object/component/behavior/plugin/gf_lip_sync_plugin.h"
 #include "gf/object/component/behavior/plugin/gf_plugin.h"
 #include "gf/object/component/behavior/plugin/gf_plugin_manager.h"
+#include "gf/object/component/env_sensor/gf_com_env_sensor.h"
+#include "gf/object/component/gf_com_collider.h"
+#include "gf/object/component/gf_com_ik.h"
 #include "gf/object/component/pc/gf_com_behavior_pc.h"
 #include "gf/object/component/pc/gf_com_property_pc.h"
+#include "gf/object/component/pc/param/gf_pc_param.h"
 #include "gf/object/component/pc/plugin/gf_pc_fall_damage_plugin.h"
 #include "gf/object/component/pc/plugin/gf_pc_fall_distance_achiev_plugin.h"
 #include "gf/object/component/property/gf_com_property.h"
@@ -27,6 +38,9 @@
 #include "gf/object/gf_obj_util.h"
 #include "ml/dev_pad.h"
 #include "mm_math/mm_math.h"
+#include "mm_math/mm_plane.h"
+#include "mm_math/mm_quat.h"
+#include "mm_math/mm_vec3.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/rtti.h"
 #include "mm_mtl/unique_ptr.h"
@@ -80,14 +94,14 @@ void StateUtil::setEnvSensor(GfComBehaviorPc &behavior, u32 flags, bool isEnable
 bool StateUtil::testEnvSensor(GfComBehaviorPc &behavior, EnviromentSensor::Flag flag) { return behavior.unknown08->getComponent<GfComPropertyPc>()->testEnvSensorCheckFlags(flag); }
 
 void StateUtil::setEnableAttach(GfComBehaviorPc &behavior, bool isEnable) {
-  Plugin *plugin = behavior.unknown10.unknown28[12];
+  Plugin *plugin = behavior.m_pluginManager.unknown28[12];
   if (plugin != nullptr) {
     plugin->setActivate(isEnable);
   }
 }
 
 void StateUtil::setEnableTimer(GfComBehaviorPc &behavior, bool isEnable) {
-  Plugin *plugin = behavior.unknown10.unknown28[8];
+  Plugin *plugin = behavior.m_pluginManager.unknown28[8];
   if (plugin != nullptr) {
     plugin->setActivate(isEnable);
   }
@@ -123,6 +137,61 @@ void StateUtil::switchPlacementIK(GfComBehaviorPc &behavior, bool isOn) {
   FootIkControllerPlugin *plugin = behavior.unknown001<FootIkControllerPlugin>(3);
   if (plugin != nullptr) {
     plugin->switchMode(isOn ? FootIkControllerPlugin::MODE_UNKNOWN_2 : FootIkControllerPlugin::MODE_UNKNOWN_1);
+  }
+}
+
+void StateUtil::setEnableSpineIK(GfComBehaviorPc &behavior, bool isEnable) {
+  const GfComIK *ik = behavior.unknown08->getComponent<GfComIK>();
+  fw::LookIkSolver *look = ik->unknown003<fw::LookIkSolver>(unknown002_3);
+  if (look != nullptr) {
+    look->setEnableSpine(isEnable);
+  }
+}
+
+void StateUtil::setEnableSpineRotate(GfComBehaviorPc &behavior, bool isEnable, f32 time) {
+  const GfComIK *ik = behavior.unknown08->getComponent<GfComIK>();
+  fw::SpineRotateIKSolver *spine = ik->unknown003<fw::SpineRotateIKSolver>(unknown002_4);
+  if (spine != nullptr) {
+    if (isEnable) {
+      spine->fadeIn(time);
+    } else {
+      spine->fadeOut(time);
+    }
+  }
+}
+
+void StateUtil::setSpineRotateAngles(GfComBehaviorPc &behavior, f32 pitch, f32 yaw) {
+  const GfComIK *ik = behavior.unknown08->getComponent<GfComIK>();
+  fw::SpineRotateIKSolver *spine = ik->unknown003<fw::SpineRotateIKSolver>(unknown002_4);
+  if (spine != nullptr) {
+    spine->unknown44[0] = pitch;
+    spine->unknown44[1] = yaw;
+  }
+}
+
+void StateUtil::changePlacementDownDist(GfComBehaviorPc &behavior, f32 distance) {
+  const GfComIK *ik = behavior.unknown08->getComponent<GfComIK>();
+  fw::PlacementGroundSolver *placement = ik->unknown003<fw::PlacementGroundSolver>(unknown002_2);
+  if (placement != nullptr) {
+    placement->overwriteRaycastDown(distance);
+  }
+}
+
+void StateUtil::resetPlacementDownDist(GfComBehaviorPc &behavior) {
+  const GfComIK *ik = behavior.unknown08->getComponent<GfComIK>();
+  fw::PlacementGroundSolver *placement = ik->unknown003<fw::PlacementGroundSolver>(unknown002_2);
+  if (placement != nullptr) {
+    placement->resetRaycastDown();
+  }
+}
+
+void StateUtil::changeGroundAnglesForMotion(GfComBehaviorPc &behavior, const mm::Vec3 &angles) {
+  const GfComIK *ik = behavior.unknown08->getComponent<GfComIK>();
+  fw::PlacementGroundSolver *placement = ik->unknown003<fw::PlacementGroundSolver>(unknown002_2);
+  if (placement != nullptr) {
+    // The game computes the quaternion of the angles (the six sinf/cosf calls at 0x71005730cc..0x71005730f4) and never uses it: setGroundAngle gets the angles themselves.
+    mm::unknown005(angles);
+    placement->setGroundAngle(angles);
   }
 }
 
@@ -167,7 +236,7 @@ void StateUtil::setEnableFootStep(GfComBehaviorPc &behavior, bool isEnable) {
 
 EnviromentSensor::GroundInfo *StateUtil::getGroundInfo(GfComBehaviorPc &behavior) {
   EnviromentSensor *sensor = behavior.unknown08->getComponent<GfComPropertyPc>()->getEnvSensor();
-  return sensor->unknown24_0 ? &sensor->unknown30 : nullptr;
+  return sensor->unknown24_0 ? &sensor->m_verticalData : nullptr;
 }
 
 void StateUtil::applyDamage(GfComBehaviorPc &behavior, u32 rate, bool isTerrain) {
@@ -202,7 +271,7 @@ EnviromentSensor::unknown003 *StateUtil::getClimbWallInfo(GfComBehaviorPc &behav
 
 EnviromentSensor::GroundInfo *StateUtil::getClimbEndGroundInfo(GfComBehaviorPc &behavior) {
   EnviromentSensor *sensor = behavior.unknown08->getComponent<GfComPropertyPc>()->getEnvSensor();
-  return sensor->unknown25_0 ? &sensor->unknown1f0 : nullptr;
+  return sensor->unknown25_0 ? &sensor->m_groundInfo : nullptr;
 }
 
 EnviromentSensor::unknown003 *StateUtil::getDescendWallInfo(GfComBehaviorPc &behavior) {
@@ -212,12 +281,12 @@ EnviromentSensor::unknown003 *StateUtil::getDescendWallInfo(GfComBehaviorPc &beh
 
 EnviromentSensor::unknown001 *StateUtil::getWaterInfo(GfComBehaviorPc &behavior) {
   EnviromentSensor *sensor = behavior.unknown08->getComponent<GfComPropertyPc>()->getEnvSensor();
-  return sensor->unknown24_1 ? &sensor->unknown30.unknown70 : nullptr;
+  return sensor->unknown24_1 ? &sensor->m_verticalData.unknown70 : nullptr;
 }
 
 EnviromentSensor::unknown002 *StateUtil::getDeadPlaneInfo(GfComBehaviorPc &behavior) {
   EnviromentSensor *sensor = behavior.unknown08->getComponent<GfComPropertyPc>()->getEnvSensor();
-  return sensor->unknown24_2 ? &sensor->unknown30.unknownb0 : nullptr;
+  return sensor->unknown24_2 ? &sensor->m_verticalData.unknownb0 : nullptr;
 }
 
 bool StateUtil::isOnSlideGround(GfComBehaviorPc &behavior) {
@@ -231,7 +300,7 @@ bool StateUtil::isOnSlideGround(GfComBehaviorPc &behavior) {
     return false;
   }
 
-  return (sensor->unknown30.unknown30 >> 5) & 1;
+  return (sensor->m_verticalData.unknown30 >> 5) & 1;
 }
 
 GF_OBJ_HANDLE *StateUtil::getBuddyHandle(GfComBehaviorPc &behavior) {
@@ -242,7 +311,7 @@ GF_OBJ_HANDLE *StateUtil::getBuddyHandle(GfComBehaviorPc &behavior) {
   }
 
   u32 buddyId = (playerId & 1) != 0 ? playerId - 1 : playerId + 1;
-  return formation->unknown1a0[buddyId].unknown08;
+  return formation->unknown1a0[buddyId].m_playerHandle;
 }
 
 void StateUtil::sendMessageToBuddy(GfComBehaviorPc &behavior, fw::Message &message) {
@@ -314,8 +383,8 @@ void StateUtil::broadcastMainChar(GfComBehaviorPc &behavior, fw::Message &messag
   GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
   behavior.unknown08->getComponent<GfComPropertyPc>();
   for (u32 i = 0; i < GfGamePlayerFormation::PLAYER_UNKNOWN_6; i++) {
-    if (formation->unknown1a0[i].unknown10 && formation->unknown1a0[i].unknown08 != static_cast<GfObj *>(behavior.unknown08)->unknownf8) {
-      GfObj *obj = GfObjUtil::getObj(formation->unknown1a0[i].unknown08);
+    if (formation->unknown1a0[i].unknown10 && formation->unknown1a0[i].m_playerHandle != static_cast<GfObj *>(behavior.unknown08)->unknownf8) {
+      GfObj *obj = GfObjUtil::getObj(formation->unknown1a0[i].m_playerHandle);
       if (obj != nullptr) {
         static_cast<GfObj *>(behavior.unknown08)->sendMessage(obj, message);
       }
@@ -358,6 +427,39 @@ void StateUtil::sendMessageGfObj(GfComBehaviorPc &behavior, GF_OBJ_HANDLE *handl
 void StateUtil::playVibration(GfComBehaviorPc &behavior, fw::VibrationID id) {
   if (behavior.getProperty()->unknown111_2) {
     fw::PadManager::playVibration(ml::PadVibrationInfo(id));
+  }
+}
+
+// 1.0.0: 0x710057254c, 179 instructions; the game keeps the null test of the collider component (cbz x19 at 0x71005725a8, joining at the vector read at 0x71005725d0), see
+// GfComCollider::unknown001 and UpdatableObject::getComponent.
+void StateUtil::reflectionAdsorption(GfComBehaviorPc &behavior) {
+  GfComPropertyPc *property = behavior.unknown08->getComponent<GfComPropertyPc>();
+  fw::ColiObject *coli = behavior.unknown08->getComponent<GfComCollider>()->unknown001();
+  if (coli != nullptr) {
+    if (!property->unknown110_3) {
+      f32 adsorption = 0.005f;
+      GfComAsm *comAsm = behavior.unknown08->getComponent<GfComAsm>();
+      if (comAsm != nullptr) {
+        const char *name = comAsm->getStateName();
+        if (name != nullptr) {
+          adsorption = strcmp(name, "S_jump_01") == 0 ? 0.026f : 0.005f;
+        }
+      }
+      coli->setAdsorption(adsorption);
+    } else {
+      const MoveParam *param = property->unknown005();
+      EnviromentSensor::GroundInfo *ground = getGroundInfo(behavior);
+      f32 adsorption;
+      if (ground != nullptr) {
+        const mm::Vec3 &normal = ground->unknown10.normal;
+        f32 angle = mm::acos(mm::clamp(normal.x * mm::Vec3::unitY.x + normal.y * mm::Vec3::unitY.y + normal.z * mm::Vec3::unitY.z, 0.0f, 1.0f));
+        f32 rate = mm::clamp(angle * mm::RAD_TO_DEG / param->adsorptionMaxAngle, 0.0f, 1.0f);
+        adsorption = param->adsorptionMin * (1.0f - rate) + param->adsorptionMax * rate;
+      } else {
+        adsorption = param->adsorptionMin;
+      }
+      coli->setAdsorption(adsorption);
+    }
   }
 }
 

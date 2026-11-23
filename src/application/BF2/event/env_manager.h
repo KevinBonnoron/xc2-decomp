@@ -70,20 +70,20 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  u32 unknown10;              // Inferred role: flags; original member name unknown.
-  u32 unknown14;              // Inferred role: disp flags; original member name unknown.
-  u32 unknown18;              // Inferred role: clock hour; original member name unknown.
-  u32 unknown1c;              // Inferred role: clock minute; original member name unknown.
-  EVT_cloudtype unknown20;    // Inferred role: cloud type; original member name unknown.
-  COLORFILTER_TYPE unknown24; // Inferred role: color filter state; original member name unknown.
-  int unknown28;              // Inferred role: color filter; original member name unknown.
-  int unknown2c;              // Inferred role: color sub filter; original member name unknown.
-  f32 unknown30;              // Inferred role: color filter frame; original member name unknown.
-  int unknown34;              // Inferred role: color filter count; original member name unknown.
-  u32 unknown38;              // Inferred role: vignette handle; original member name unknown.
-  f32 unknown3c;              // Inferred role: tone map; original member name unknown.
-  EnvTransferEvent unknown40; // Inferred role: transfer event; original member name unknown.
-  EnvTransferField unknown60; // Inferred role: transfer field; original member name unknown.
+  u32 unknown10;                       // Inferred role: flags; original member name unknown.
+  u32 unknown14;                       // Inferred role: disp flags; original member name unknown.
+  u32 unknown18;                       // Inferred role: clock hour; original member name unknown.
+  u32 unknown1c;                       // Inferred role: clock minute; original member name unknown.
+  EVT_cloudtype unknown20;             // Inferred role: cloud type; original member name unknown.
+  COLORFILTER_TYPE unknown24;          // Inferred role: color filter state; original member name unknown.
+  int unknown28;                       // Inferred role: color filter; original member name unknown.
+  int unknown2c;                       // Inferred role: color sub filter; original member name unknown.
+  f32 unknown30;                       // Inferred role: color filter frame; original member name unknown.
+  int unknown34;                       // Inferred role: color filter count; original member name unknown.
+  u32 unknown38;                       // Inferred role: vignette handle; original member name unknown.
+  f32 unknown3c;                       // Inferred role: tone map; original member name unknown.
+  EnvTransferEvent m_envTransferEvent; // Inferred role: transfer event; original member name unknown.
+  EnvTransferField m_envTransferField; // Inferred role: transfer field; original member name unknown.
 };
 
 static_assert(sizeof(EnvManager) == 0x78, "");

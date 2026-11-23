@@ -30,8 +30,8 @@ void StateFieldBigJump::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   StateUtilField::notifySkillAct(*behavior, true);
   StateUtil::setFallDamageDisable(*behavior, true);
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
-  const MsgPcFieldNotifyBigJump *info = property->unknown310.getBigJumpInfo();
-  f32 gravity = static_cast<const GfMoveFallControler::Param *>(property->unknown310.unknown08->unknown10[8].param)->accel;
+  const MsgPcFieldNotifyBigJump *info = property->m_propertyField.getBigJumpInfo();
+  f32 gravity = static_cast<const GfMoveFallControler::Param *>(property->m_propertyField.unknown08->unknown10[8].param)->accel;
   unknown30 = property->unknown160.unknown00;
   f32 height = info->unknown10.y >= unknown30.y ? (info->unknown10.y - unknown30.y) + info->unknown24 : info->unknown24;
   f32 speed = __builtin_fmaxf(info->unknown28, 0.03f);
@@ -67,12 +67,12 @@ void StateFieldBigJump::enter(GfComBehaviorPc *behavior, ai::State *previous) {
 void StateFieldBigJump::leave(GfComBehaviorPc *behavior, ai::State *next) {
   StateUtilField::notifySkillAct(*behavior, false);
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
-  const MsgPcFieldNotifyBigJump *info = property->unknown310.getBigJumpInfo();
+  const MsgPcFieldNotifyBigJump *info = property->m_propertyField.getBigJumpInfo();
   if (info != nullptr) {
     if (property->unknown111_2) {
       SCOM_QUEST_GIMMICK::createJump(info->unknown3c, 0.0f);
     }
-    property->unknown310.setBigJumpInfo(nullptr);
+    property->m_propertyField.setBigJumpInfo(nullptr);
   }
   StateUtil::setEnableGravity(*behavior, true);
   StateUtilField::setSpecialActStatus(*behavior, false);
@@ -81,8 +81,8 @@ void StateFieldBigJump::leave(GfComBehaviorPc *behavior, ai::State *next) {
 void StateFieldBigJump::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
   unknown18 = info.unknown04 + unknown18;
   GfComPropertyPc *property = behavior->getProperty();
-  f32 gravity = static_cast<const GfMoveFallControler::Param *>(property->unknown310.unknown004(8).unknown00->param)->accel;
-  const MsgPcFieldNotifyBigJump *jump = property->unknown310.getBigJumpInfo();
+  f32 gravity = static_cast<const GfMoveFallControler::Param *>(property->m_propertyField.unknown004(8).unknown00->param)->accel;
+  const MsgPcFieldNotifyBigJump *jump = property->m_propertyField.getBigJumpInfo();
   if (unknown18 >= unknown24) {
     property->unknown160.unknown00 = jump->unknown10;
     f32 angle = jump->unknown20 * 0.5f;

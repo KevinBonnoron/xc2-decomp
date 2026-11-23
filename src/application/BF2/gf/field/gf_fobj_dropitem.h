@@ -79,15 +79,15 @@ public:
   u8 _0d;
   bool unknown0e; // Role and original member name unknown.
   u8 _0f;
-  GF_OBJ_HANDLE *unknown10; // Inferred role: object; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: object; original member name unknown.
   u8 _18[0x20 - 0x18];
-  mm::Vec3 unknown20;            // Inferred role: velocity; original member name unknown.
-  s32 unknown30;                 // Inferred role: state; original member name unknown.
-  f32 unknown34;                 // Role and original member name unknown.
-  f32 unknown38;                 // Role and original member name unknown.
-  f32 unknown3c;                 // Role and original member name unknown.
-  GfDropitemParamInst unknown40; // Inferred role: parameters of the drop; original member name unknown.
-  bool unknown50;                // Role and original member name unknown.
+  mm::Vec3 unknown20;                      // Inferred role: velocity; original member name unknown.
+  s32 unknown30;                           // Inferred role: state; original member name unknown.
+  f32 unknown34;                           // Role and original member name unknown.
+  f32 unknown38;                           // Role and original member name unknown.
+  f32 unknown3c;                           // Role and original member name unknown.
+  GfDropitemParamInst m_dropitemParamInst; // Inferred role: parameters of the drop; original member name unknown.
+  bool unknown50;                          // Role and original member name unknown.
   u8 _51[0x54 - 0x51];
   u32 unknown54; // Inferred role: effect handle; original member name unknown.
   u8 _58[0x60 - 0x58];
@@ -99,8 +99,8 @@ static_assert(offsetof(GfFobjDropitem::EmitInfo, unknown54) == 0x54, "");
 static_assert(offsetof(GfFobjDropitem, unknown08) == 0x08, "");
 static_assert(offsetof(GfFobjDropitem, unknown20) == 0x20, "");
 static_assert(offsetof(GfFobjDropitem, unknown34) == 0x34, "");
-static_assert(offsetof(GfFobjDropitem, unknown40) == 0x40, "");
-static_assert(offsetof(GfFobjDropitem, unknown10) == 0x10, "");
+static_assert(offsetof(GfFobjDropitem, m_dropitemParamInst) == 0x40, "");
+static_assert(offsetof(GfFobjDropitem, m_GF_OBJ_HANDLE) == 0x10, "");
 static_assert(offsetof(GfFobjDropitem, unknown30) == 0x30, "");
 static_assert(offsetof(GfFobjDropitem, unknown50) == 0x50, "");
 static_assert(offsetof(GfFobjDropitem, unknown54) == 0x54, "");
@@ -132,7 +132,7 @@ public:
   void seqWaitBeginDrop(f32 deltaTime);
   void seqWaitEndDrop(f32 deltaTime);
 
-  CreateInfo unknown00; // Inferred role: create info; original member name unknown.
+  CreateInfo m_createInfo; // Inferred role: create info; original member name unknown.
   bool m_dropitemsEmitted;
   f32 unknown44;                             // Inferred role: elapsed time; original member name unknown.
   f32 unknown48;                             // Role and original member name unknown.

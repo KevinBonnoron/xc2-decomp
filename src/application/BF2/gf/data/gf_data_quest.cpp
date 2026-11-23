@@ -328,19 +328,19 @@ const char *GfDataQuest::getTaskLog(QuestID quest, u32 line) {
 
 void GfDataQuest::setScenario(QuestID scenario) {
   SDataGame *dataGame = GfDataManager::getDataGame();
-  dataGame->unknown1097e4.unknown00 = scenario.unknown00;
-  dataGame->unknown1097e4.unknown02 = scenario.unknown02;
+  dataGame->m_scenario.unknown00 = scenario.unknown00;
+  dataGame->m_scenario.unknown02 = scenario.unknown02;
 }
 
-QuestID GfDataQuest::getScenario() { return GfDataManager::getDataGame()->unknown1097e4; }
+QuestID GfDataQuest::getScenario() { return GfDataManager::getDataGame()->m_scenario; }
 
 void GfDataQuest::setSelect(QuestID select) {
   SDataGame *dataGame = GfDataManager::getDataGame();
-  dataGame->unknown1097e8.unknown00 = select.unknown00;
-  dataGame->unknown1097e8.unknown02 = select.unknown02;
+  dataGame->m_select.unknown00 = select.unknown00;
+  dataGame->m_select.unknown02 = select.unknown02;
 }
 
-QuestID GfDataQuest::getSelect() { return GfDataManager::getDataGame()->unknown1097e8; }
+QuestID GfDataQuest::getSelect() { return GfDataManager::getDataGame()->m_select; }
 
 AchievQuest *GfDataQuest::getAchievQuest(QuestID quest) {
   if (quest.unknown02 == 0) {
@@ -358,17 +358,17 @@ AchievQuest *GfDataQuest::getAchievQuest(QuestID quest) {
   case 0:
   case 1:
   case 2:
-    return &dataBlade.unknownc4[line].unknown04[level];
+    return &dataBlade.unknownc4[line].m_achievQuest[level];
   case 3:
   case 4:
   case 5:
-    return &dataBlade.unknown274[line - 3].unknown04[level];
+    return &dataBlade.unknown274[line - 3].m_achievQuest[level];
   case 6:
   case 7:
   case 8:
-    return &dataBlade.unknown424[line - 6].unknown04[level];
+    return &dataBlade.unknown424[line - 6].m_achievQuest[level];
   case 9:
-    return &dataBlade.unknown5d4.unknown04[level];
+    return &dataBlade.m_achievInfo.m_achievQuest[level];
   default:
     return nullptr;
   }
@@ -378,7 +378,7 @@ bool GfDataQuest::getHanyouFlg(u32 &flag, u32 &flagMin, u32 &flagMax, const Ques
   QuestListAcc *questListAcc = QuestListAcc::get();
   u32 purpose = param.unknown08;
   if (purpose == 0) {
-    getListPurposeID(param.unknown04);
+    getListPurposeID(param.m_questID);
     return false;
   }
 
@@ -413,6 +413,6 @@ bool GfDataQuest::getHanyouFlg(u32 &flag, u32 &flagMin, u32 &flagMax, const Ques
   return false;
 }
 
-mm::mtl::FixedVector<unknown106, 128> &GfDataQuest::getTaskAchieve() { return GfDataManager::getDataGame()->unknown109b30; }
+mm::mtl::FixedVector<unknown106, 128> &GfDataQuest::getTaskAchieve() { return GfDataManager::getDataGame()->m_taskAchieve; }
 
 } // namespace gf

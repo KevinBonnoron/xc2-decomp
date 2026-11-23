@@ -2,7 +2,7 @@
 
 namespace ml {
 
-DrPixlRenderArray::DrPixlRenderArray(DrMan *man) { unknown98 = man; }
+DrPixlRenderArray::DrPixlRenderArray(DrMan *man) { m_drMan = man; }
 
 DrPixlRenderArray::~DrPixlRenderArray() { releaseWork(); }
 

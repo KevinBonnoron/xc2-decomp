@@ -33,17 +33,17 @@ void DrLightObj::setCullON(bool isEnable) { unknown1c = !isEnable ? unknown1c & 
 
 bool DrLightObj::isCullON() const { return (unknown1c & FLAG_UNKNOWN_30) != 0; }
 
-DrLightObj::DrLightObj() : unknown08(nullptr), unknown10(nullptr), unknown1c(0), unknown20(nullptr), unknown28(nullptr) {}
+DrLightObj::DrLightObj() : unknown08(nullptr), unknown10(nullptr), unknown1c(0), m_drPixlMan(nullptr), m_drPixlShadowObj(nullptr) {}
 
 // The statements are in the order that matches this constructor (0x71007e9858) and its copies inlined into the derived light constructors
 // and the createXxxLight functions: a member initialiser list, in declaration order or with the one body statement it replaces, changes the
 // stores of the inlined copies.
 DrLightObj::DrLightObj(DrPixlMan *pixlMan) {
   unknown10 = nullptr;
-  unknown20 = pixlMan;
+  m_drPixlMan = pixlMan;
   unknown08 = nullptr;
   unknown1c = 0;
-  unknown28 = nullptr;
+  m_drPixlShadowObj = nullptr;
 }
 
 void DrLightObj::setTexLoop(bool isEnable) { unknown1c = !isEnable ? unknown1c & ~FLAG_UNKNOWN_4 : unknown1c | FLAG_UNKNOWN_4; }
@@ -140,7 +140,7 @@ void DrLightObjDir::setDirShadow(bool isEnable, int index) {
   releaseDir();
   if (isEnable) {
     unknown1c |= FLAG_UNKNOWN_0;
-    unknown28 = unknown20->unknown7f0->unknown178->createDirCacheShadow(this, index);
+    m_drPixlShadowObj = m_drPixlMan->unknown7f0->m_drPixlShadowMan->createDirCacheShadow(this, index);
   } else {
     unknown1c &= ~FLAG_UNKNOWN_0;
   }
@@ -162,29 +162,29 @@ void DrLightObjDir::initDir() {
 DrLightObjDir::~DrLightObjDir() { releaseDir(); }
 
 void DrLightObjDir::releaseDir() {
-  if (unknown28 != nullptr) {
-    DrPixlShadowMan *shadowMan = unknown20->unknown7f0->unknown178;
+  if (m_drPixlShadowObj != nullptr) {
+    DrPixlShadowMan *shadowMan = m_drPixlMan->unknown7f0->m_drPixlShadowMan;
     unknown1c &= ~FLAG_UNKNOWN_0;
-    shadowMan->releaseShadow(unknown28);
-    unknown28 = nullptr;
+    shadowMan->releaseShadow(m_drPixlShadowObj);
+    m_drPixlShadowObj = nullptr;
   }
 }
 
 void DrLightObjDir::deleteDirShadow() {
-  if (unknown28 != nullptr) {
-    DrPixlShadowMan *shadowMan = unknown20->unknown7f0->unknown178;
+  if (m_drPixlShadowObj != nullptr) {
+    DrPixlShadowMan *shadowMan = m_drPixlMan->unknown7f0->m_drPixlShadowMan;
     unknown1c &= ~FLAG_UNKNOWN_0;
-    shadowMan->releaseShadow(unknown28);
-    unknown28 = nullptr;
+    shadowMan->releaseShadow(m_drPixlShadowObj);
+    m_drPixlShadowObj = nullptr;
   }
 }
 
 void DrLightObjDir::update(DrLightMan *lightMan) {
   if (unknown1c & FLAG_UNKNOWN_0) {
     if (unknown90 > 0.0f) {
-      unknown20->unknown800->unknown00 |= 4;
+      m_drPixlMan->m_drPixlShadowCacheMan->unknown00 |= 4;
     } else {
-      unknown20->unknown800->unknown00 |= 0x20;
+      m_drPixlMan->m_drPixlShadowCacheMan->unknown00 |= 0x20;
     }
   }
 }
@@ -239,11 +239,11 @@ void DrLightObjPnt::deletePntShadow() { releasePnt(); }
 DrLightObjPnt::~DrLightObjPnt() { releasePnt(); }
 
 void DrLightObjPnt::releasePnt() {
-  if (unknown28 != nullptr) {
-    DrPixlShadowMan *shadowMan = unknown20->unknown7f0->unknown178;
+  if (m_drPixlShadowObj != nullptr) {
+    DrPixlShadowMan *shadowMan = m_drPixlMan->unknown7f0->m_drPixlShadowMan;
     unknown1c &= ~FLAG_UNKNOWN_0;
-    shadowMan->releaseShadow(unknown28);
-    unknown28 = nullptr;
+    shadowMan->releaseShadow(m_drPixlShadowObj);
+    m_drPixlShadowObj = nullptr;
   }
 }
 
@@ -306,11 +306,11 @@ DrLightObjSpt::DrLightObjSpt(DrPixlMan *pixlMan) : DrLightObj(pixlMan) { initSpt
 DrLightObjSpt::~DrLightObjSpt() { releaseSpt(); }
 
 void DrLightObjSpt::releaseSpt() {
-  if (unknown28 != nullptr) {
-    DrPixlShadowMan *shadowMan = unknown20->unknown7f0->unknown178;
+  if (m_drPixlShadowObj != nullptr) {
+    DrPixlShadowMan *shadowMan = m_drPixlMan->unknown7f0->m_drPixlShadowMan;
     unknown1c &= ~FLAG_UNKNOWN_0;
-    shadowMan->releaseShadow(unknown28);
-    unknown28 = nullptr;
+    shadowMan->releaseShadow(m_drPixlShadowObj);
+    m_drPixlShadowObj = nullptr;
   }
 }
 

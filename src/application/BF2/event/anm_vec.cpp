@@ -8,15 +8,15 @@ void AnmVec::clear() {
   AnmBase::clear();
   unknown80.clear();
   unknown190.clear();
-  unknown1e0.x = 0.0f;
-  unknown1e0.y = 0.0f;
-  unknown1e0.z = 0.0f;
+  m_value.x = 0.0f;
+  m_value.y = 0.0f;
+  m_value.z = 0.0f;
 }
 
 void AnmVec::update(f32 delta) {
   AnmBase::update(delta);
   if (unknown08 & STATE_UNKNOWN_1) {
-    unknown1e0 = calcEvalute(unknown68, unknown70);
+    m_value = calcEvalute(unknown68, unknown70);
   }
 }
 

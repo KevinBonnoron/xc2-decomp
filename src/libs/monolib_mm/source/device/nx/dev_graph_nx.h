@@ -37,14 +37,14 @@ public:
   f32 getScreenScaleWSys() override { return 1.0f; }
   f32 getVSyncSecSys() const override { return 1.0f / 60.0f; }
 
-  s32 unknown370;     // Inferred role: unknown, cleared by the constructor; original member name unknown.
-  FontSys unknown378; // Inferred role: system font; original member name unknown.
-  void *unknown6d0;   // Inferred role: font file data; original member name unknown.
+  s32 unknown370;    // Inferred role: unknown, cleared by the constructor; original member name unknown.
+  FontSys m_fontSys; // Inferred role: system font; original member name unknown.
+  void *unknown6d0;  // Inferred role: font file data; original member name unknown.
   u8 _6d8[0x6e0 - 0x6d8];
 };
 
 static_assert(offsetof(DevGraphNx, unknown370) == 0x370, "");
-static_assert(offsetof(DevGraphNx, unknown378) == 0x378, "");
+static_assert(offsetof(DevGraphNx, m_fontSys) == 0x378, "");
 static_assert(offsetof(DevGraphNx, unknown6d0) == 0x6d0, "");
 static_assert(sizeof(DevGraphNx) == 0x6e0, "");
 

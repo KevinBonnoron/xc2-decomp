@@ -8,9 +8,7 @@ namespace gf {
 class GfComEffectCaster;
 class GfEnvProperty;
 
-struct GfCharaWaterInfo {
-  f32 unknown00; // Inferred role: water height; original member name unknown.
-};
+struct GfCharaWaterInfo;
 
 class GfEffectGround {
 public:

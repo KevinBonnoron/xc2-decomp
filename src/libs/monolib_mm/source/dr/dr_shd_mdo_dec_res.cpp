@@ -22,12 +22,12 @@ DrShdMdoDecRes::~DrShdMdoDecRes() { releaseObj(); }
 void DrShdMdoDecRes::releaseObj() {
   CGLibDecShader::release();
   if (m_fetch != nullptr) {
-    DrMan::getIns()->unknown80->unknown10->releaseFetchObj(m_fetch);
+    DrMan::getIns()->m_drShdMan->m_drShdFetchMan->releaseFetchObj(m_fetch);
     m_fetch = nullptr;
   }
 }
 
-DrResFetch *DrShdMdoDecRes::getFetch() { return &m_fetch->unknown20; }
+DrResFetch *DrShdMdoDecRes::getFetch() { return &m_fetch->m_fetch; }
 
 } // namespace ml
 

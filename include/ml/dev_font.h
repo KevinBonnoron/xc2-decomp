@@ -48,7 +48,7 @@ public:
   u32 fontGetHeight() const;
   const mm::Col4 &fontGetColor() const;
 
-  DevFontLayer *unknown08; // Inferred role: layer work created by DevFont::createLayer; original member name unknown.
+  DevFontLayer *m_devFontLayer; // Inferred role: layer work created by DevFont::createLayer; original member name unknown.
 };
 
 class DevFont : public FontLayer, public DevBase, public mm::mtl::PtrSingleton<DevFont> {

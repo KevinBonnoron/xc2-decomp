@@ -135,7 +135,7 @@ void GfGamePlayerPicker::onDeactive() {
   }
 }
 
-GF_OBJ_HANDLE *GfGamePlayerPicker::getPlayerHandle() const { return GfGamePlayerFormation::get()->unknown1a0[0].unknown08; }
+GF_OBJ_HANDLE *GfGamePlayerPicker::getPlayerHandle() const { return GfGamePlayerFormation::get()->unknown1a0[0].m_playerHandle; }
 
 void GfGamePlayerPicker::movePlayer(GfComTransform *transform) {
   const fw::PadData *padData = fw::PadManager::getControlPadData(0);
@@ -177,7 +177,7 @@ void GfGamePlayerPicker::movePlayer(GfComTransform *transform) {
     front *= unknown001[unknown20];
     world.unknown00 += front;
   }
-  if (transform->unknown10->unknowna8 != nullptr) {
+  if (transform->unknown10->m_referenceFrame != nullptr) {
     transform->unknown10->syncLocalTransform();
   }
   if (transform->unknown18.get() != nullptr) {

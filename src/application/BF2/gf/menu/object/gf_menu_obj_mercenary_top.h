@@ -25,32 +25,32 @@ class GfMenuObjMercenaryTop : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjMercenaryTop *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjMercenaryTop *owner) : _0c(), m_menuObjMercenaryTop(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
     u8 _1c[0x20 - 0x1c];
-    GfMenuObjMercenaryTop *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjMercenaryTop *m_menuObjMercenaryTop; // Inferred role: owner; original member name unknown.
   };
 
   class ZoneListener : public ui::UIObjectListener {
   public:
-    ZoneListener(GfMenuObjMercenaryTop *owner) : _0c(), unknown20(owner) {}
+    ZoneListener(GfMenuObjMercenaryTop *owner) : _0c(), m_menuObjMercenaryTop(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
     u8 _1c[0x20 - 0x1c];
-    GfMenuObjMercenaryTop *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjMercenaryTop *m_menuObjMercenaryTop; // Inferred role: owner; original member name unknown.
   };
 
   class MissionListener : public ui::UIObjectListener {
   public:
-    MissionListener(GfMenuObjMercenaryTop *owner) : _0c(), unknown20(owner) {}
+    MissionListener(GfMenuObjMercenaryTop *owner) : _0c(), m_menuObjMercenaryTop(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
     u8 _1c[0x20 - 0x1c];
-    GfMenuObjMercenaryTop *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjMercenaryTop *m_menuObjMercenaryTop; // Inferred role: owner; original member name unknown.
   };
 
   struct OpenParam {
@@ -111,6 +111,6 @@ static_assert(offsetof(GfMenuObjMercenaryTop, unknown330) == 0x330, "");
 static_assert(offsetof(GfMenuObjMercenaryTop, unknown334) == 0x334, "");
 static_assert(offsetof(GfMenuObjMercenaryTop, unknown338) == 0x338, "");
 static_assert(offsetof(GfMenuObjMercenaryTop, unknown340) == 0x340, "");
-static_assert(offsetof(GfMenuObjMercenaryTop::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjMercenaryTop::MainListener, m_menuObjMercenaryTop) == 0x20, "");
 
 } // namespace gf

@@ -13,7 +13,7 @@
 namespace ml {
 
 DrMdoMpfMan::~DrMdoMpfMan() {
-  unknown18.release();
+  m_cGLibTriUniformBlock.release();
   unknown60.release();
   unknown98.release();
   if (unknown3d28 != nullptr) {
@@ -150,7 +150,7 @@ void DrMdoMpfMan::freeMemWork(_MPFWorkAutoInf *work) {
 
 void DrMdoMpfMan::getTempCalcTbl(_MPFWorkAutoPos **tables, int count) {
   for (int i = 0; i < count; i++) {
-    tables[i] = &unknown3d18[i];
+    tables[i] = &m_mPFWorkAutoPos[i];
   }
 }
 
@@ -161,11 +161,11 @@ void DrMdoMpfMan::update() {
     return;
   }
   unknown3d30 &= ~2;
-  if (!unknown00->unknown1d7c) {
-    f32 speed = unknown3d24 * 0.4f * unknown00->unknown1c8c;
+  if (!m_drMan->unknown1d7c) {
+    f32 speed = unknown3d24 * 0.4f * m_drMan->unknown1c8c;
     if (speed != 0.0f) {
       for (int i = 0; i < getMpfWindMax(); i++) {
-        unknown100[i].calcUpdate(1.0f, speed, 1.0f);
+        m_drMdoCtlMpfWindCalc[i].calcUpdate(1.0f, speed, 1.0f);
       }
     }
   }
@@ -173,14 +173,14 @@ void DrMdoMpfMan::update() {
 }
 
 void DrMdoMpfMan::updateUniformWork() {
-  f32 *buffer = static_cast<f32 *>(unknown18.getBuff());
+  f32 *buffer = static_cast<f32 *>(m_cGLibTriUniformBlock.getBuff());
   for (int i = 0; i < getMpfWindMax(); i++) {
-    grlib::ShdMat44TransposeMat34(buffer, unknown100[i].unknown70);
-    grlib::ShdMat44TransposeMat34(buffer + 0xc, unknown100[i].unknownb0);
+    grlib::ShdMat44TransposeMat34(buffer, m_drMdoCtlMpfWindCalc[i].unknown70);
+    grlib::ShdMat44TransposeMat34(buffer + 0xc, m_drMdoCtlMpfWindCalc[i].unknownb0);
     buffer += 0x18;
   }
-  unknown18.updateData();
-  mm::Col3 color = unknown00->unknown588->unknown12c;
+  m_cGLibTriUniformBlock.updateData();
+  mm::Col3 color = m_drMan->unknown588->unknown12c;
   color.r *= 0.5f;
   color.g *= 0.5f;
   color.b *= 0.5f;

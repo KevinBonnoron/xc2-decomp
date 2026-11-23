@@ -132,7 +132,7 @@ void GfMenuObjHanaSubmenu::MainListener::reciveEvent(const ui::EventData &event,
 }
 
 void GfMenuObjHanaSubmenu::SubmenuListener::reciveEvent(const ui::EventData &event, u32 handle) {
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjHanaSubmenu->unknown18);
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1: {
@@ -145,14 +145,14 @@ void GfMenuObjHanaSubmenu::SubmenuListener::reciveEvent(const ui::EventData &eve
     param.unknown1a = 0;
     param.unknown08 = "LAY_sub_menu_bl@%02d";
     // The dock type of the cursor setting (offset 0x38 of the parameter, default 1) is set to 0 (0x71004759b8: strh wzr); the default store is then dead.
-    param.unknown20.unknown18 = 0;
-    unknown20->unknown28 = GfMenuObjUtil::createCursor(param);
-    unknown20->unknown28->open(0);
+    param.m_cursorSetting.unknown18 = 0;
+    m_menuObjHanaSubmenu->unknown28 = GfMenuObjUtil::createCursor(param);
+    m_menuObjHanaSubmenu->unknown28->open(0);
     ui::UIObjectAcc icon(acc.searchChild("IMG_sub_menu_bl_icon@01"));
     mm::Vec2 scale;
     icon.getScale(scale);
-    unknown20->unknown34 = scale.x;
-    unknown20->unknown38 = scale.x * 1.5f;
+    m_menuObjHanaSubmenu->unknown34 = scale.x;
+    m_menuObjHanaSubmenu->unknown38 = scale.x * 1.5f;
     GfMenuObject::setupInputSelection(handle, 0, 3);
     GfMenuObject::enableInput(handle);
     break;
@@ -160,7 +160,7 @@ void GfMenuObjHanaSubmenu::SubmenuListener::reciveEvent(const ui::EventData &eve
   case 6: {
     int current = event.unknown08;
     int previous = event.unknown0c;
-    unknown20->unknown28->inputChange(current);
+    m_menuObjHanaSubmenu->unknown28->inputChange(current);
     mm::mtl::FixStr<32> currentBase;
     mm::mtl::FixStr<32> previousBase;
     mm::mtl::FixStr<32> currentIcon;
@@ -174,18 +174,18 @@ void GfMenuObjHanaSubmenu::SubmenuListener::reciveEvent(const ui::EventData &eve
       param.unknown08 = 0x80000;
       param.unknown0c = ui::CURVE_TYPE_LINEAR;
       param.unknown00 = 0.2f;
-      param.unknown2c = unknown20->unknown38;
+      param.unknown2c = m_menuObjHanaSubmenu->unknown38;
       GfMenuObjUtil::startCtrl(acc.searchChild(currentIcon.c_str()), param, nullptr);
       ui::UIObjectAcc base(acc.searchChild(currentBase.c_str()));
       base.startAnimation("sellect", false);
-      unknown20->unknown30 = current;
+      m_menuObjHanaSubmenu->unknown30 = current;
     }
     if (previous >= 0 && current != previous) {
       GfMenuObjUtil::CtrlParam param;
       param.unknown08 = 0x80000;
       param.unknown0c = ui::CURVE_TYPE_LINEAR;
       param.unknown00 = 0.2f;
-      param.unknown2c = unknown20->unknown34;
+      param.unknown2c = m_menuObjHanaSubmenu->unknown34;
       GfMenuObjUtil::startCtrl(acc.searchChild(previousIcon.c_str()), param, nullptr);
       ui::UIObjectAcc base(acc.searchChild(previousBase.c_str()));
       base.startAnimation("idol", false);
@@ -194,13 +194,13 @@ void GfMenuObjHanaSubmenu::SubmenuListener::reciveEvent(const ui::EventData &eve
   }
   case 8:
     if (event.unknown0c == 1) {
-      u32 index = unknown20->unknown30;
+      u32 index = m_menuObjHanaSubmenu->unknown30;
       if (GfMenuObjUtil::getMenuCondition(unknown004[index].unknown04)) {
         GfMenuObjOperationInfo::remove(owner.searchChild("LAY_sub_menu"), 0, 0, 0);
         ui::EventData end;
         end.unknown00 = GfMenuTypes::unknown003_259;
         ui::UIManager::get()->requestObjectEvent(handle, end, 0.0f);
-        if (unknown20->unknown30 < 3) {
+        if (m_menuObjHanaSubmenu->unknown30 < 3) {
           GfMenuObjCharSelect::dispOffChar(1);
           GfMenuObject::changeFSSubLayer(owner.unknown10, 3, GfMenuObject::getMenuLayerID(unknown004[index].unknown00), true);
         }

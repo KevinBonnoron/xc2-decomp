@@ -27,9 +27,9 @@ public:
   void lastRender();
   void finalRender();
 
-  LayerObjSortDef unknown308; // Inferred role: sort object; original member name unknown.
+  LayerObjSortDef m_layerObjSortDef; // Inferred role: sort object; original member name unknown.
 };
 
-static_assert(offsetof(LayerObjTopDef, unknown308) == 0x308, "");
+static_assert(offsetof(LayerObjTopDef, m_layerObjSortDef) == 0x308, "");
 
 } // namespace layer

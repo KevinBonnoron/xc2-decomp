@@ -52,14 +52,14 @@ f32 GfFieldEnemySensor::getEyeRadiusSq() const {
 
 void GfFieldEnemySensor::createByGmkBattleLock() {
   gmk::GmkAcc::CreateInfo createInfo;
-  createInfo.unknown00 = unknown10.unknown48;
+  createInfo.unknown00 = m_createInfo.unknown48;
   createInfo.unknown04 = gmk::GMK_TYPE_BATTLE_LOCK;
-  createInfo.unknown08 = unknown10.unknown4c;
-  unknownb0.create(createInfo);
+  createInfo.unknown08 = m_createInfo.unknown4c;
+  m_gmkAcc.create(createInfo);
 }
 
 void GfFieldEnemySensor::debugDraw(GF_OBJ_HANDLE *handle, const IGfBehFieldOwner &) const {
-  if (unknown10.unknown44 > 0) {
+  if (m_createInfo.unknown44 > 0) {
     GfObjAcc acc(handle);
     acc.isValidTransform();
   }

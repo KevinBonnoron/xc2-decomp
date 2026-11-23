@@ -103,15 +103,15 @@ void GfMenuObjOpeningTelop::MainListener::reciveEvent(const ui::EventData &event
       layer.setDisp(true);
       layer.setAlpha(1.0f);
     }
-    u32 count = unknown20->unknown24[telop];
+    u32 count = m_menuObjOpeningTelop->unknown24[telop];
     mm::mtl::FixStr<32> name;
     name.format(unknown005[telop], count + 1);
     ui::UIObjectAcc img(acc.unknown10, name.c_str());
     img.setImageIndex(image);
     if (img.isStreaming()) {
-      unknown20->unknown30->addObject(img.unknown10);
+      m_menuObjOpeningTelop->unknown30->addObject(img.unknown10);
     }
-    unknown20->unknown24[telop]++;
+    m_menuObjOpeningTelop->unknown24[telop]++;
     break;
   }
   case 0x22: {
@@ -126,7 +126,7 @@ void GfMenuObjOpeningTelop::MainListener::reciveEvent(const ui::EventData &event
       return;
     }
     int telop = event.unknown08 - 1;
-    u32 count = unknown20->unknown24[telop];
+    u32 count = m_menuObjOpeningTelop->unknown24[telop];
     mm::mtl::FixStr<32> name;
     for (u32 i = 0; i < count; i++) {
       name.format(unknown005[telop], i + 1);
@@ -136,7 +136,7 @@ void GfMenuObjOpeningTelop::MainListener::reciveEvent(const ui::EventData &event
         img.setDisp(false);
       }
     }
-    unknown20->unknown24[telop] = 0;
+    m_menuObjOpeningTelop->unknown24[telop] = 0;
     break;
   }
   }

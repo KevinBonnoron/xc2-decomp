@@ -15,11 +15,11 @@ class GfMenuObjBladeName : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjBladeName *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjBladeName *owner) : _0c(), m_menuObjBladeName(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjBladeName *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBladeName *m_menuObjBladeName; // Inferred role: owner; original member name unknown.
   };
 
   // Inferred helper: zooms in the blade name text and its shadow; original name unknown.
@@ -52,7 +52,7 @@ public:
   bool unknown2b8;                                 // Inferred role: leave control started flag; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuObjBladeName::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjBladeName::MainListener, m_menuObjBladeName) == 0x20, "");
 static_assert(offsetof(GfMenuObjBladeName, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjBladeName, unknown2b8) == 0x2b8, "");
 static_assert(sizeof(GfMenuObjBladeName) == 0x2c0, "");

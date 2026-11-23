@@ -6,10 +6,10 @@ namespace gf {
 
 u32 GfDataBladeCreate::getRareBladeAppearType() {
   SDataGame *dataGame = GfDataManager::getDataGame();
-  return dataGame->unknown10ad50;
+  return dataGame->m_rareBladeAppearType;
 }
 
-void GfDataBladeCreate::setRareBladeAppearType(u32 rareBladeAppearType) { GfDataManager::getDataGame()->unknown10ad50 = (u8)rareBladeAppearType; }
+void GfDataBladeCreate::setRareBladeAppearType(u32 rareBladeAppearType) { GfDataManager::getDataGame()->m_rareBladeAppearType = (u8)rareBladeAppearType; }
 
 void GfDataBladeCreate::addAssurePoint(u32 amount) {
   u32 assurePoint = GfDataManager::getDataGame()->unknown10ad48 + amount;

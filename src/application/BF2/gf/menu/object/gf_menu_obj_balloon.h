@@ -31,7 +31,15 @@ public:
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjBalloon *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBalloon *m_menuObjBalloon; // Inferred role: owner; original member name unknown.
+  };
+
+  class BoxListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];
+    GfMenuObjBalloon *m_menuObjBalloon; // Inferred role: owner; original member name unknown.
   };
 
   class EvSelectListener : public ui::UIObjectListener {
@@ -40,7 +48,16 @@ public:
 
     u32 unknown0c; // Inferred role: select object handle; original member name unknown.
     u8 _10[0x1c - 0x10];
-    GfMenuObjBalloon *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBalloon *m_menuObjBalloon; // Inferred role: owner; original member name unknown.
+  };
+
+  class SelMoneyListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    int unknown0c; // Inferred role: row of the cancel item; original member name unknown.
+    u8 _10[0x1c - 0x10];
+    GfMenuObjBalloon *m_menuObjBalloon; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjBalloon(u32 handle);
@@ -56,13 +73,13 @@ public:
   };
 
   struct OpenParam : NextParam {
-    OpenParam() : unknown10(nullptr), unknown18(0), unknown20(unknown020) {}
+    OpenParam() : unknown10(nullptr), unknown18(0), m_GF_OBJ_HANDLE(unknown020) {}
 
-    u8 *unknown10;            // Inferred role: name bdat; original member name unknown.
-    u32 unknown18;            // Inferred role: name id; original member name unknown.
-    GF_OBJ_HANDLE *unknown20; // Inferred role: handle; original member name unknown.
+    u8 *unknown10;                  // Inferred role: name bdat; original member name unknown.
+    u32 unknown18;                  // Inferred role: name id; original member name unknown.
+    GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: handle; original member name unknown.
     u8 _28[0x30 - 0x28];
-    MenuOffset unknown30; // Inferred role: offset; original member name unknown.
+    MenuOffset m_menuOffset; // Inferred role: offset; original member name unknown.
   };
 
   struct OpenSelectParam : OpenParam {
@@ -113,7 +130,7 @@ public:
   ui::UISelectObjList *unknown30;                                               // Inferred role: event select message objects; original member name unknown.
   ui::UISelectObjList *unknown38;                                               // Inferred role: select item objects; original member name unknown.
   ui::UISelectObjList *unknown40;                                               // Inferred role: select money item objects; original member name unknown.
-  mm::mtl::FixedVector<u32, 4> unknown48;                                       // Inferred role: unused; original member name unknown.
+  mm::mtl::FixedVector<u32, 3> unknown48;                                       // Inferred role: moneys of the select money items; original member name unknown.
   mm::mtl::FixedArray<mm::mtl::IntrusivePtr<GfMenuReferenceItem>, 3> unknown60; // Inferred role: select items; original member name unknown.
   GfMenuSequence<GfMenuObjBalloon, 4> unknown78;                                // Inferred role: queued steps; original member name unknown.
   bool unknown1d8;                                                              // Role and original member name unknown, cleared by the constructor.
@@ -133,8 +150,8 @@ static_assert(offsetof(GfMenuObjBalloon, unknown1dc) == 0x1dc, "");
 static_assert(sizeof(GfMenuObjBalloon) == 0x1e0, "");
 
 static_assert(offsetof(GfMenuObjBalloon::OpenParam, unknown10) == 0x10, "");
-static_assert(offsetof(GfMenuObjBalloon::OpenParam, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjBalloon::OpenParam, unknown30) == 0x30, "");
+static_assert(offsetof(GfMenuObjBalloon::OpenParam, m_GF_OBJ_HANDLE) == 0x20, "");
+static_assert(offsetof(GfMenuObjBalloon::OpenParam, m_menuOffset) == 0x30, "");
 static_assert(sizeof(GfMenuObjBalloon::OpenParam) == 0x50, "");
 static_assert(offsetof(GfMenuObjBalloon::OpenSelectParam, unknown58) == 0x58, "");
 static_assert(sizeof(GfMenuObjBalloon::OpenSelectParam) == 0x70, "");
@@ -143,10 +160,15 @@ static_assert(sizeof(GfMenuObjBalloon::OpenSelectBoxParam) == 0x30, "");
 static_assert(offsetof(GfMenuObjBalloon::OpenSelectMoneyParam, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfMenuObjBalloon::OpenSelectMoneyParam, unknown28) == 0x28, "");
 static_assert(sizeof(GfMenuObjBalloon::OpenSelectMoneyParam) == 0x38, "");
-static_assert(offsetof(GfMenuObjBalloon::AutoTalkListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjBalloon::AutoTalkListener, m_menuObjBalloon) == 0x20, "");
 static_assert(sizeof(GfMenuObjBalloon::AutoTalkListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjBalloon::BoxListener, m_menuObjBalloon) == 0x20, "");
+static_assert(sizeof(GfMenuObjBalloon::BoxListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjBalloon::EvSelectListener, unknown0c) == 0x0c, "");
-static_assert(offsetof(GfMenuObjBalloon::EvSelectListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjBalloon::EvSelectListener, m_menuObjBalloon) == 0x20, "");
 static_assert(sizeof(GfMenuObjBalloon::EvSelectListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjBalloon::SelMoneyListener, unknown0c) == 0x0c, "");
+static_assert(offsetof(GfMenuObjBalloon::SelMoneyListener, m_menuObjBalloon) == 0x20, "");
+static_assert(sizeof(GfMenuObjBalloon::SelMoneyListener) == 0x28, "");
 
 } // namespace gf

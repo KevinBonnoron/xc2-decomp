@@ -23,7 +23,7 @@ ICmd::RESULT CharaSetIdle::update(const Param &param) {
   if (obj != nullptr && param.getFrame() <= 0) {
     int type = param.val(1).getS32();
     CharaUtil::setStat(obj, type2stat(type));
-    unknown18->resetDynamics(0);
+    m_charaDysUpdater->resetDynamics(0);
     unknown20 = type;
   }
   return RESULT_UNKNOWN_1;

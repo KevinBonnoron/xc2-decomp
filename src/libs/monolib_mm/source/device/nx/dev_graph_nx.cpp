@@ -59,20 +59,20 @@ void DevGraphNx::resetSizeSys(s16 width, s16 height) {}
 
 u32 DevGraphNx::fontGetWidthSys(const char *text, FONT_STYLE style, f32 scale) {
   WriteStr writer;
-  writer.set_font(&static_cast<DevGraphNx *>(get())->unknown378);
+  writer.set_font(&static_cast<DevGraphNx *>(get())->m_fontSys);
   writer.set_scale(scale, scale);
   return writer.calc_string_width(text);
 }
 
 u32 DevGraphNx::fontGetHeightSys(FONT_STYLE style, f32 scale) {
   WriteStr writer;
-  writer.set_font(&static_cast<DevGraphNx *>(get())->unknown378);
+  writer.set_font(&static_cast<DevGraphNx *>(get())->m_fontSys);
   return writer.get_origin_size() * scale;
 }
 
 void DevGraphNx::fontDrawSys(s16 x, s16 y, f32 scaleX, f32 scaleY, const char *text, const mm::Col4 *color, bool isShadow) {
   WriteStr writer;
-  writer.set_font(&static_cast<DevGraphNx *>(get())->unknown378);
+  writer.set_font(&static_cast<DevGraphNx *>(get())->m_fontSys);
   writer.set_pos(x, y);
   writer.set_scale(scaleX, scaleY);
   if (color != nullptr) {
@@ -103,7 +103,7 @@ bool DevGraphNx::wkStandbyLogout() {
     return false;
   }
   if (unknown6d0 != nullptr) {
-    unknown378.destroy();
+    m_fontSys.destroy();
     if (unknown6d0 != nullptr) {
       mtl::MemManager::deallocate(unknown6d0, 0, false);
       unknown6d0 = nullptr;

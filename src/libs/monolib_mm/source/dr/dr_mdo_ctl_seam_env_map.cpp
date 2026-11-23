@@ -31,8 +31,8 @@ void DrMdoCtlSeamEnvMap::releaseEnvMap() {
 }
 
 void DrMdoCtlSeamEnvMap::changeMemEnvMapParts(DrResMdoSeamWrkEnv *env) {
-  MdoWrkMatRes *matRes = env->unknown58;
-  const u8 *data = env->unknown60->m_buffer;
+  MdoWrkMatRes *matRes = env->m_mdoWrkMatRes;
+  const u8 *data = env->m_drResMdoSeamMemObj->m_buffer;
   const MdsSeamEnvMapHead *head = reinterpret_cast<const MdsSeamEnvMapHead *>(data);
   resetBaseMapMaterial(matRes, data + head->unknown04, data + head->unknown00, data + head->unknown0c, data + head->unknown18, data + head->unknown10, 0);
   if (head->unknown08 != 0) {
@@ -44,23 +44,23 @@ void DrMdoCtlSeamEnvMap::changeMemEnvMapParts(DrResMdoSeamWrkEnv *env) {
 DrResMdoSeamWrkEnv *DrMdoCtlSeamEnvMap::createFreeSeamEnvMap() { return unknown370.unknown001(); }
 
 void DrMdoCtlSeamEnvMap::releaseFreeSeamEnvMap(DrResMdoSeamWrkEnv *env) {
-  DrResMdoSeamMemObj *mem = env->unknown60;
-  if (env->unknown58 != nullptr) {
+  DrResMdoSeamMemObj *mem = env->m_drResMdoSeamMemObj;
+  if (env->m_mdoWrkMatRes != nullptr) {
     unknownba0[env->unknown50 >> 5] &= ~(1 << (env->unknown50 & 0x1f));
     unknownc50 += env->unknown70;
-    releaseBaseMapSeamMat(env->unknown58);
+    releaseBaseMapSeamMat(env->m_mdoWrkMatRes);
     env->release();
     unknownc08--;
   }
   unknown370.unknown002(env);
   if (mem != nullptr) {
-    env->unknown60 = nullptr;
-    unknown6e0.releaseFreeObj(mem);
+    env->m_drResMdoSeamMemObj = nullptr;
+    m_drResMdoSeamMemMan.releaseFreeObj(mem);
   }
 }
 
 void DrMdoCtlSeamEnvMap::readEnvMapCheck() {
-  DrCalcViewWork *view = m_drMan->unknown580->unknown10;
+  DrCalcViewWork *view = m_drMan->m_drCalcMan->m_drCalcViewWork;
   bool isOpen = ((unknownc7c >> 12) & 1) != 0 || unknowncc8;
   DrResMdoSeamWrkEnv *env = unknown370.unknown10.unknown00;
   while (env != nullptr) {
@@ -78,7 +78,7 @@ void DrMdoCtlSeamEnvMap::readEnvMapCheck() {
   if ((unknownc7c & 0x81200) == 0 && unknownc08 < 1) {
     for (int i = 0; i < unknown1a8->unknown30; i++) {
       if ((unknown723(unknownba0, i) & (1 << (i & 0x1f))) == 0) {
-        unknownd30.setStockEnvMdl(i + 1);
+        m_drResMdoSeamParmRead.setStockEnvMdl(i + 1);
         return;
       }
     }
@@ -95,17 +95,17 @@ void DrMdoCtlSeamEnvMap::updateEnvMap() {
 }
 
 void DrMdoCtlSeamEnvMap::updateEnvMapRenderList() {
-  DrCalcViewWork *view = m_drMan->unknown580->unknown10;
+  DrCalcViewWork *view = m_drMan->m_drCalcMan->m_drCalcViewWork;
   for (DrResMdoSeamWrkEnv *env = unknown370.unknown10.unknown00; env != nullptr; env = env->unknown08) {
-    unknown30 = env->unknown58;
+    unknown30 = env->m_mdoWrkMatRes;
     if (unknown30 == nullptr) {
       continue;
     }
     unknownf8 |= env->unknown68;
     if (env->unknown68 & 0x20000) {
-      m_drMan->unknown78->unknown7f0->unknown180->setVolumePos(mm::Vec3(env->unknown80.x + view->unknown400.x, env->unknown80.y + view->unknown400.y, env->unknown80.z + view->unknown400.z));
+      m_drMan->m_drPixlMan->unknown7f0->m_drPixlPostMan->setVolumePos(mm::Vec3(env->unknown80.x + view->unknown400.x, env->unknown80.y + view->unknown400.y, env->unknown80.z + view->unknown400.z));
     }
-    updateAnimFast(unknowndc * m_drMan->unknown1c8c, nullptr);
+    updateAnimFast(m_frameSpd * m_drMan->unknown1c8c, nullptr);
     updateTimerCalc();
     // The game loads the bit table pointer before the size (0x7100822304: ldr x21,[x20,#0x30]) and keeps it for the loop; the later calls reload it.
     // The size is unsigned: the game passes `add w2,w8,#4` to memset with no sxtw (0x710082231c).
@@ -113,7 +113,7 @@ void DrMdoCtlSeamEnvMap::updateEnvMapRenderList() {
     u32 size = unknown30->unknown30 / 32 * 4 + 4;
     memset(renderBits, 0, size);
     bool isChange = false;
-    DrResMdoMat *mat = unknown30->unknownc0;
+    DrResMdoMat *mat = unknown30->m_materialRes;
     for (s32 i = 0; i < unknown30->unknown30; i++, mat++) {
       if (mat->unknown08.a <= 0.0f) {
         if (mat->unknown1c & 1) {
@@ -128,7 +128,7 @@ void DrMdoCtlSeamEnvMap::updateEnvMapRenderList() {
         }
       }
     }
-    updateAnimEnd(unknowndc * m_drMan->unknown1c8c, env->unknown30, nullptr);
+    updateAnimEnd(m_frameSpd * m_drMan->unknown1c8c, env->unknown30, nullptr);
     updateMatFstCallBack();
     updateMatCallBack(env->unknown30);
     updateUniformBlock(env->unknown30);

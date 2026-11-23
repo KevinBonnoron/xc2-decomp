@@ -15,7 +15,7 @@ void GfObjUpdate::updateComponent(GfObj *obj, const fw::UpdateInfo &info) {
     } else {
       GfComEvtAnim *evtAnim = obj->getComponent<GfComEvtAnim>();
       if (evtAnim != nullptr) {
-        evtAnim->unknown10.executeCallback(evtAnim);
+        evtAnim->m_asm.executeCallback(evtAnim);
       }
     }
     GfComBehavior *behavior = obj->getComponent<GfComBehavior>();
@@ -28,7 +28,7 @@ void GfObjUpdate::updateComponent(GfObj *obj, const fw::UpdateInfo &info) {
     } else {
       GfComEvtAnim *evtAnim = obj->getComponent<GfComEvtAnim>();
       if (evtAnim != nullptr) {
-        evtAnim->unknown10.executeCallback(evtAnim);
+        evtAnim->m_asm.executeCallback(evtAnim);
       }
     }
   }

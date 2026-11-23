@@ -66,4 +66,25 @@ void GfStaticRes::loadStaticRes(const char *path) {
 
 fw::CommonResource *GfStaticRes::search(const char *path) { return fw::CommonResource::search(s_hMem, path); }
 
+// Inferred name; kept as an exception to the unknown-name rule (AGENTS.md): single-user helper whose existence only the match proves; rename if a sibling build gives a symbol.
+// The user, GfStaticRes::reloadRequestForDebug (0x7100392858), keeps the ALLOC_HANDLE temporary of the blockRequest call at sp + 8 and that of the search call at sp.
+// Written inline the two slots are swapped (61 instructions, only the sp offsets of the two temporaries differ), because the allocas of an inlined callee land in front of the caller's own.
+static fw::CommonResource *requestBlock(const char *path) { return fw::CommonResource::blockRequest(GfStaticRes::s_hMem, path, false); }
+
+void GfStaticRes::reloadRequestForDebug(const char *path) {
+  fw::CommonResource *resource = search(path);
+  if (resource != nullptr) {
+    for (mm::mtl::FixedList<ResourceInfo, 64>::iterator it = s_aResource.begin(); it != s_aResource.end(); ++it) {
+      if (it->unknown00 == resource) {
+        // The game has no null test before the release (it already knows the node equals the non-null search result), and the node it releases is the one loaded
+        // from the list: mm::mtl::safeRelease here makes GVN release the search result instead (62 instructions, a copy of the result in x20), so the release is spelled out.
+        it->unknown00->release();
+        it->unknown00 = nullptr;
+        it->unknown00 = requestBlock(path);
+        break;
+      }
+    }
+  }
+}
+
 } // namespace gf

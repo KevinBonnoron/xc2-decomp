@@ -19,11 +19,11 @@ enum unknown063 {
 
 class DrShdLgtDynamic {
 public:
-  // DrShdLgtClustered::DrShdLgtClustered (0x71008900e0) and DrShdLgtTileBasedDr::DrShdLgtTileBasedDr (0x710089e5f0) store unknown08 and unknown10
+  // DrShdLgtClustered::DrShdLgtClustered (0x71008900e0) and DrShdLgtTileBasedDr::DrShdLgtTileBasedDr (0x710089e5f0) store unknown08 and m_drMan
   // before their member constructors run, which only a base constructor does. DrShdLgtHybrid::DrShdLgtHybrid matches only with assignments in its
   // body (base constructor form tested: same 45 instructions, different schedule), hence the empty default constructor.
   DrShdLgtDynamic() {}
-  DrShdLgtDynamic(DrMan *drMan) : unknown08(0), unknown10(drMan) {}
+  DrShdLgtDynamic(DrMan *drMan) : unknown08(0), m_drMan(drMan) {}
   virtual ~DrShdLgtDynamic() {}
   virtual void stockBegin() = 0;
   virtual void stockEnd() = 0;
@@ -36,11 +36,11 @@ public:
   virtual void render(DrShdLgtMan *shdLgtMan, DrLightMan *lightMan) = 0;
   virtual void debugRender() = 0;
 
-  s32 unknown08;    // Inferred role: cate; original member name unknown.
-  DrMan *unknown10; // Inferred role: dr man; original member name unknown.
+  s32 unknown08;  // Inferred role: cate; original member name unknown.
+  DrMan *m_drMan; // Inferred role: dr man; original member name unknown.
 };
 
 static_assert(offsetof(DrShdLgtDynamic, unknown08) == 0x8, "");
-static_assert(offsetof(DrShdLgtDynamic, unknown10) == 0x10, "");
+static_assert(offsetof(DrShdLgtDynamic, m_drMan) == 0x10, "");
 
 } // namespace ml

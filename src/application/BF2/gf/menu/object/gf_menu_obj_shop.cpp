@@ -48,6 +48,7 @@
 #include "mm_math/mm_col4.h"
 #include "mm_mtl/delegate.h"
 #include "mm_mtl/fixstr.h"
+#include "mm_mtl/reference_object.h"
 #include "ui/ctrl/ui_ctrl_cursor_select.h"
 #include "ui/event/ui_event_data.h"
 #include "ui/event/ui_event_manager.h"
@@ -74,13 +75,38 @@ constexpr u32 unknown006 = 0x23;
 constexpr u16 unknown007 = 0xa3;
 GfMenuObjShop::GfMenuObjShop(u32 handle)
     : GfMenuObject(handle), unknown24(0), unknown34(0), unknown38(0), unknown40(nullptr), unknown48(nullptr), unknown50(nullptr), unknown58(false), unknown59(false), unknown60(), unknownc0(0),
-      unknownc8(nullptr), unknownd0(0), unknownd8(nullptr), unknowne0(nullptr), unknowne8(nullptr), unknownf8(), unknown130(), unknown148(0), unknown14c(0), unknown168(), unknown238(),
-      unknown248(this), unknown4dc(false), unknown4f0(nullptr), unknown504(-1), unknown548(QuestID(), 0, 0, TASK_STATE_UNKNOWN_0), unknown568(0), unknown570(nullptr), unknown578(nullptr) {
+      unknownc8(nullptr), unknownd0(0), unknownd8(nullptr), unknowne0(nullptr), unknowne8(nullptr), m_recipeInfo(), unknown130(), unknown148(0), unknown14c(0), unknown168(), unknown238(),
+      unknown248(this), unknown4dc(false), unknown4f0(nullptr), unknown504(-1), m_questTaskParam(QuestID(), 0, 0, TASK_STATE_UNKNOWN_0), unknown568(0), unknown570(nullptr), unknown578(nullptr) {
   unknown130.setAllocator(getAllocator(ALLOCATOR_UNKNOWN_0));
   for (u32 i = 0; i < 8; i++) {
     unknown508[i] = nullptr;
   }
   unknown578 = GfMenuCallContext::create();
+}
+
+GfMenuObjShop::~GfMenuObjShop() {
+  unknown238 = nullptr;
+  for (u32 i = 0; i < 26; i++) {
+    unknown168[i] = nullptr;
+  }
+  mm::mtl::safeRelease(m_menuIDList);
+  mm::mtl::safeRelease(unknown158);
+  mm::mtl::safeRelease(unknown160);
+  mm::mtl::safeRelease(unknownf0);
+  mm::mtl::safeRelease(unknowne8);
+  mm::mtl::safeRelease(unknowne0);
+  mm::mtl::safeRelease(unknownd8);
+  mm::mtl::safeRelease(unknown40);
+  mm::mtl::safeRelease(unknownc8);
+  mm::mtl::safeRelease(unknown48);
+  mm::mtl::safeRelease(unknown50);
+  mm::mtl::safeRelease(unknown4e8);
+  mm::mtl::safeRelease(unknown4f0);
+  for (u32 i = 0; i < 8; i++) {
+    mm::mtl::safeRelease(unknown508[i]);
+  }
+  mm::mtl::safeRelease(unknown570);
+  mm::mtl::safeRelease(unknown578);
 }
 
 void GfMenuObjShop::initialize() {
@@ -166,7 +192,7 @@ void GfMenuObjShop::initialize() {
       unknownf0 = GfMenuItemList::create();
       unknown158 = GfMenuItemList::create();
       unknown160 = GfMenuItemList::create();
-      unknown150 = GfMenuIDList::create();
+      m_menuIDList = GfMenuIDList::create();
       unknown40 = ui::UISelectObjList::create(createParam);
       unknown50 = ui::UISelectObjList::create(createParam);
       unknownd8 = ui::UISelectObjList::create(createParam);
@@ -401,13 +427,13 @@ void GfMenuObjShop::initialize() {
       for (u32 i = 0; i < unknown50->getSize(); i++) {
         ui::UIObjectAcc item(unknown50->getObject(i));
         name.format("TXT_exc_task_name@%02d", i + 1);
-        GfMenuExcTaskAdapter *adapter = GfMenuExcTaskAdapter::createFromList(item.searchChild(name.c_str()), 0, unknown150, i, false);
+        GfMenuExcTaskAdapter *adapter = GfMenuExcTaskAdapter::createFromList(item.searchChild(name.c_str()), 0, m_menuIDList, i, false);
         if (adapter != nullptr) {
           name.format("LAY_exc_task_contents@%02d", i + 1);
           adapter->unknown24 = item.searchChild(name.c_str());
         }
       }
-      GfMenuObjUtil::createVScrollBarPlugin(exchange.searchChild("IMG_exc_task_scroll_bar"), unknown150, "IMG_exc_task_scroll_base", true);
+      GfMenuObjUtil::createVScrollBarPlugin(exchange.searchChild("IMG_exc_task_scroll_bar"), m_menuIDList, "IMG_exc_task_scroll_base", true);
       unknown50->clear();
       {
         ui::UIObjectAcc objective(exchange.unknown10, "LAY_exc_objective");
@@ -801,7 +827,7 @@ void GfMenuObjShop::setFilterIndex() {
 
 bool GfMenuObjShop::seqEndRecipeIndexOpen() {
   ui::UIObjectAcc acc(unknown18, "LAY_orb_rcp");
-  switch (unknownf8.unknown04) {
+  switch (m_recipeInfo.unknown04) {
   case 0:
     acc.setDispChild(true, "TXT_orb_rcp_type_rare_index");
     break;
@@ -820,35 +846,35 @@ void GfMenuObjShop::MainListener::reciveEvent(const ui::EventData &event, u32 ha
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case GfMenuTypes::unknown003_33: {
-    unknown20->unknown24 = event.unknown08;
-    unknown20->unknown34 = getSpecialShop(unknown20->unknown24);
+    m_menuObjShop->unknown24 = event.unknown08;
+    m_menuObjShop->unknown34 = getSpecialShop(m_menuObjShop->unknown24);
     u8 *bdat = GfDataBdat::getFP(BDAT_MNU_SHOP_LIST);
     if (bdat == nullptr) {
       return;
     }
-    unknown20->unknown28 = Bdat::getVal(bdat, "ShopType", unknown20->unknown24).valueU8;
-    unknown20->unknown30 = Bdat::getVal(bdat, "TableID", unknown20->unknown24).valueU16;
-    unknown20->unknown2c = Bdat::getVal(bdat, "ShopIcon", unknown20->unknown24).valueU16;
-    GfMenuReference::setReferenceShopID(unknown20->unknown24);
-    if (unknown20->unknown28 == 1 || unknown20->unknown28 == 3) {
+    m_menuObjShop->unknown28 = Bdat::getVal(bdat, "ShopType", m_menuObjShop->unknown24).valueU8;
+    m_menuObjShop->unknown30 = Bdat::getVal(bdat, "TableID", m_menuObjShop->unknown24).valueU16;
+    m_menuObjShop->unknown2c = Bdat::getVal(bdat, "ShopIcon", m_menuObjShop->unknown24).valueU16;
+    GfMenuReference::setReferenceShopID(m_menuObjShop->unknown24);
+    if (m_menuObjShop->unknown28 == 1 || m_menuObjShop->unknown28 == 3) {
       GfMenuObjUtil::setChildDisp(handle, "LAY_location", false);
       GfMenuObjUtil::setChildDisp(handle, "LAY_index_money", false);
     } else {
       GfMenuObjUtil::setChildDisp(handle, "LAY_location", true);
       GfMenuObjUtil::setChildDisp(handle, "LAY_index_money", true);
     }
-    unknown20->unknown4e0 = 0;
-    unknown20->unknown4e4 = 0;
+    m_menuObjShop->unknown4e0 = 0;
+    m_menuObjShop->unknown4e4 = 0;
     acc.setDispChild(false, "TXT_common_guide");
-    unknown20->unknown38 = 0;
+    m_menuObjShop->unknown38 = 0;
     int isQuest = 0;
-    if (unknown20->unknown28 == 2) {
-      u32 price = GfGameUtilShop::getNeedMoneyForInn(unknown20->unknown24);
+    if (m_menuObjShop->unknown28 == 2) {
+      u32 price = GfGameUtilShop::getNeedMoneyForInn(m_menuObjShop->unknown24);
       if (price != 0) {
-        unknown20->unknown168[3]->unknown162(price);
-        unknown20->unknown168[4]->unknown162(price * 2);
+        m_menuObjShop->unknown168[3]->unknown162(price);
+        m_menuObjShop->unknown168[4]->unknown162(price * 2);
         u32 money = GfDataUtil::getMoney();
-        u32 need = unknown20->unknown168[3]->unknown0c;
+        u32 need = m_menuObjShop->unknown168[3]->unknown0c;
         u32 text = acc.searchChild("TXT_inn_action@01");
         if (money < need) {
           GfMenuObjUtil::setColMulandAdd(text, "txt_disable");
@@ -856,7 +882,7 @@ void GfMenuObjShop::MainListener::reciveEvent(const ui::EventData &event, u32 ha
           GfMenuObjUtil::setColDefault(text);
         }
         money = GfDataUtil::getMoney();
-        need = unknown20->unknown168[4]->unknown0c;
+        need = m_menuObjShop->unknown168[4]->unknown0c;
         text = acc.searchChild("TXT_inn_action@02");
         if (money < need) {
           GfMenuObjUtil::setColMulandAdd(text, "txt_disable");
@@ -864,17 +890,17 @@ void GfMenuObjShop::MainListener::reciveEvent(const ui::EventData &event, u32 ha
           GfMenuObjUtil::setColDefault(text);
         }
       } else {
-        unknown20->unknown248.unknown005();
-        unknown20->unknown248.unknown002(&GfMenuObjShop::seqStartSleepFade);
-        unknown20->unknown4e0 = 1;
-        unknown20->unknown4e4 = 0;
+        m_menuObjShop->unknown248.unknown005();
+        m_menuObjShop->unknown248.unknown002(&GfMenuObjShop::seqStartSleepFade);
+        m_menuObjShop->unknown4e0 = 1;
+        m_menuObjShop->unknown4e4 = 0;
         acc.setSuspend(false);
         break;
       }
-    } else if (unknown20->unknown28 == 3) {
+    } else if (m_menuObjShop->unknown28 == 3) {
       GfMenuObjSort::setSortLabelText(GfMenuObjSort::getSortID(8, 0), acc.searchChild("TXT_orb_item_sort_label"));
-      unknown20->unknown14c = 0;
-    } else if (unknown20->unknown28 == 1) {
+      m_menuObjShop->unknown14c = 0;
+    } else if (m_menuObjShop->unknown28 == 1) {
       ui::UIListInfoBase::SetupParam param;
       param.unknown08 = 8;
       param.unknown10 = true;
@@ -882,17 +908,17 @@ void GfMenuObjShop::MainListener::reciveEvent(const ui::EventData &event, u32 ha
       acc.setDispChild(false, "TXT_exc_task_index_quest");
       acc.setDispChild(false, "TXT_exc_task_index_cook");
       acc.setDispChild(false, "TXT_exc_task_index_craft");
-      unknown20->unknown150->setupExcTaskListFromShop(param, unknown20->unknown24);
-      unknown20->unknown150->setIndex(0);
+      m_menuObjShop->m_menuIDList->setupExcTaskListFromShop(param, m_menuObjShop->unknown24);
+      m_menuObjShop->m_menuIDList->setIndex(0);
       int taskType;
-      if (unknown20->unknown150->getSize() != 0) {
+      if (m_menuObjShop->m_menuIDList->getSize() != 0) {
         u8 *changeBdat = GfDataBdat::getFP(BDAT_MNU_SHOP_CHANGE);
         if (changeBdat == nullptr) {
           return;
         }
-        u32 purpose = Bdat::getVal(changeBdat, "LinkQuestTask", unknown20->unknown30).valueU16;
+        u32 purpose = Bdat::getVal(changeBdat, "LinkQuestTask", m_menuObjShop->unknown30).valueU16;
         if (purpose != 0) {
-          u32 taskIndex = Bdat::getVal(changeBdat, "LinkQuestTaskID", unknown20->unknown30).valueU16;
+          u32 taskIndex = Bdat::getVal(changeBdat, "LinkQuestTaskID", m_menuObjShop->unknown30).valueU16;
           u8 *logBdat = nullptr;
           u32 logId = 0;
           GfQuestInfo::getTaskLog(logBdat, logId, purpose, taskIndex);
@@ -900,7 +926,7 @@ void GfMenuObjShop::MainListener::reciveEvent(const ui::EventData &event, u32 ha
             ui::UIObjectAcc(acc.unknown10, "TXT_exc_reward_quest_task").setText(ui::UIStr(logBdat, logId));
           }
           QuestID quest = GfQuestManager::getOrderQuestId(purpose);
-          unknown20->unknown548 = QuestTaskParam(quest, taskIndex, purpose, TASK_STATE_UNKNOWN_0);
+          m_menuObjShop->m_questTaskParam = QuestTaskParam(quest, taskIndex, purpose, TASK_STATE_UNKNOWN_0);
           isQuest = 1;
           acc.setDispChild(true, "TXT_exc_task_index_quest");
           taskType = 1;
@@ -908,49 +934,49 @@ void GfMenuObjShop::MainListener::reciveEvent(const ui::EventData &event, u32 ha
       }
       if (!isQuest) {
         taskType = 0;
-        if (unknown20->unknown2c == 0x1aa) {
+        if (m_menuObjShop->unknown2c == 0x1aa) {
           acc.setDispChild(true, "TXT_exc_task_index_cook");
           taskType = 2;
-        } else if (unknown20->unknown2c == 0x1ab) {
+        } else if (m_menuObjShop->unknown2c == 0x1ab) {
           acc.setDispChild(true, "TXT_exc_task_index_craft");
           taskType = 3;
-        } else if (unknown20->unknown2c == 0x1a4) {
+        } else if (m_menuObjShop->unknown2c == 0x1a4) {
           acc.setDispChild(true, "TXT_exc_task_index_quest");
           taskType = 1;
         }
       }
-      unknown20->unknown168[24]->unknown10 = 0;
-      unknown20->unknown168[24]->unknown14 = 999;
-      unknown20->unknown168[25]->unknown10 = 0;
-      unknown20->unknown168[25]->unknown14 = 999;
-      unknown20->unknown568 = taskType;
-      if (unknown20->unknown568 == 0) {
+      m_menuObjShop->unknown168[24]->unknown10 = 0;
+      m_menuObjShop->unknown168[24]->unknown14 = 999;
+      m_menuObjShop->unknown168[25]->unknown10 = 0;
+      m_menuObjShop->unknown168[25]->unknown14 = 999;
+      m_menuObjShop->unknown568 = taskType;
+      if (m_menuObjShop->unknown568 == 0) {
         acc.setDispChild(true, "TXT_exc_task_index");
       }
-      unknown20->setupExcItem();
+      m_menuObjShop->setupExcItem();
     }
     GfMenuObjOperationInfo::open(0, 0, 0, 0);
     GfMenuObjOperationInfo::setGuideDisp(false);
-    unknown20->unknown168[0]->unknown162(unknown20->unknown24);
-    unknown20->unknown168[1]->unknown162(GfGameManager::getMapZoneID());
+    m_menuObjShop->unknown168[0]->unknown162(m_menuObjShop->unknown24);
+    m_menuObjShop->unknown168[1]->unknown162(GfGameManager::getMapZoneID());
     GfMenuObject::sendOpenEvent(acc.searchChild("LAY_common"), 0, 0.06666667f);
-    GfMenuObject::sendOpenEvent(unknown20->getShopSubLayer(acc.unknown10), 0, 0.06666667f);
+    GfMenuObject::sendOpenEvent(m_menuObjShop->getShopSubLayer(acc.unknown10), 0, 0.06666667f);
     ui::UIObjectAcc(acc.unknown10, "LAY_index_normal").setDisp(!isQuest);
     ui::UIObjectAcc(acc.unknown10, "LAY_index_quest").setDisp(isQuest);
     acc.setSuspend(false);
     break;
   }
   case GfMenuTypes::unknown003_34:
-    unknown20->sendCloseEvent(acc.searchChild("LAY_common"));
-    unknown20->sendCloseEvent(unknown20->getShopSubLayer(acc.unknown10));
+    m_menuObjShop->sendCloseEvent(acc.searchChild("LAY_common"));
+    m_menuObjShop->sendCloseEvent(m_menuObjShop->getShopSubLayer(acc.unknown10));
     GfMenuObjOperationInfo::close();
     break;
   case 0x41:
     GfMenuReference::setReferenceShopID(0);
-    if (unknown20->unknown4e0 != 0) {
-      unknown20->addCallContextResult(unknown20->unknown4e0, unknown20->unknown4e4);
+    if (m_menuObjShop->unknown4e0 != 0) {
+      m_menuObjShop->addCallContextResult(m_menuObjShop->unknown4e0, m_menuObjShop->unknown4e4);
     }
-    if (unknown20->unknown248.unknown00.empty()) {
+    if (m_menuObjShop->unknown248.unknown00.empty()) {
       GfMenuObject::termCallContext(acc.unknown10);
       acc.setSuspend(true);
     }
@@ -979,7 +1005,7 @@ void GfMenuObjShop::CommonListener::reciveEvent(const ui::EventData &event, u32 
     break;
   case 3:
     if (event.unknown08 == 2) {
-      unknown20->sendExitEvent(0);
+      m_menuObjShop->sendExitEvent(0);
       acc.setDisp(false);
     }
     break;
@@ -1033,17 +1059,17 @@ void GfMenuObjShop::OrbListListener::reciveEvent(const ui::EventData &event, u32
     u32 index = event.unknown08;
     if (index != 0xffffffff) {
       u32 previous = event.unknown0c;
-      unknown20->unknowne8->setIndex(index);
-      u32 page = unknown20->unknowne8->getIndex(true);
-      unknown20->unknown50->setIndex(page);
-      u32 orb = GfRecipeOrbUtil::getEquipOrb(unknown20->unknowne8->getContents(unknown20->unknowne8->getIndex(false)).unknown04);
-      MenuItemInfo &item = unknown20->unknown238->unknown0c;
+      m_menuObjShop->unknowne8->setIndex(index);
+      u32 page = m_menuObjShop->unknowne8->getIndex(true);
+      m_menuObjShop->unknown50->setIndex(page);
+      u32 orb = GfRecipeOrbUtil::getEquipOrb(m_menuObjShop->unknowne8->getContents(m_menuObjShop->unknowne8->getIndex(false)).unknown04);
+      MenuItemInfo &item = m_menuObjShop->unknown238->m_menuItemInfo;
       item.unknown00 = ItemType::ITEM_TYPE_UNKNOWN_3;
       item.unknown04 = orb;
       item.unknown08 = 1;
-      item.unknown0c = GfItemHandle(0);
-      unknown20->updateOrbRecipe();
-      unknown20->unknown59 = true;
+      item.m_itemHandle = GfItemHandle(0);
+      m_menuObjShop->updateOrbRecipe();
+      m_menuObjShop->unknown59 = true;
       if (previous != 0xffffffff && index != previous) {
         GfMenuObjUtil::playSECommonCursor();
       }
@@ -1054,7 +1080,7 @@ void GfMenuObjShop::OrbListListener::reciveEvent(const ui::EventData &event, u32
     int type = event.unknown0c;
     bool isClose;
     if (type == 1) {
-      u32 error = GfMenuItemUtil::canCreateOrb(unknown20->unknowne8->getContents(unknown20->unknowne8->getIndex(false)).unknown04);
+      u32 error = GfMenuItemUtil::canCreateOrb(m_menuObjShop->unknowne8->getContents(m_menuObjShop->unknowne8->getIndex(false)).unknown04);
       if (error != 0) {
         GfMenuObjUtil::playSECommon(2);
         if (error == 1) {
@@ -1064,15 +1090,15 @@ void GfMenuObjShop::OrbListListener::reciveEvent(const ui::EventData &event, u32
         }
         return;
       }
-      switch (unknown20->unknownf8.unknown04) {
+      switch (m_menuObjShop->m_recipeInfo.unknown04) {
       case 0: {
         u32 recipe = acc.searchSibiling("LAY_orb_rcp");
         GfMenuObjUtil::playSECommonDecide();
         if (recipe != 0) {
-          if (unknown20->unknownf0->getSize() != 0) {
-            unknown20->unknownf0->setIndex(0);
+          if (m_menuObjShop->unknownf0->getSize() != 0) {
+            m_menuObjShop->unknownf0->setIndex(0);
           }
-          unknown20->sendEnableEvent(recipe);
+          m_menuObjShop->sendEnableEvent(recipe);
         }
         break;
       }
@@ -1080,20 +1106,20 @@ void GfMenuObjShop::OrbListListener::reciveEvent(const ui::EventData &event, u32
         u32 recipe = acc.searchSibiling("LAY_orb_rcp");
         GfMenuObjUtil::playSECommonDecide();
         if (recipe != 0) {
-          if (unknown20->unknownf0->getSize() != 0) {
-            unknown20->unknownf0->setIndex(0);
+          if (m_menuObjShop->unknownf0->getSize() != 0) {
+            m_menuObjShop->unknownf0->setIndex(0);
           }
-          unknown20->sendEnableEvent(recipe);
+          m_menuObjShop->sendEnableEvent(recipe);
         }
         break;
       }
       case 2:
         GfMenuManager::openCommonWindow(unknown007);
-        unknown20->unknown4f8 = acc.unknown10;
-        unknown20->unknown248.unknown005();
-        unknown20->unknown248.unknown002(&GfMenuObjShop::seqWaitOrbCreate);
-        unknown20->unknown248.unknown002(&GfMenuObjShop::seqItemGet);
-        unknown20->unknown248.unknown002(&GfMenuObjShop::seqEndDialog);
+        m_menuObjShop->unknown4f8 = acc.unknown10;
+        m_menuObjShop->unknown248.unknown005();
+        m_menuObjShop->unknown248.unknown002(&GfMenuObjShop::seqWaitOrbCreate);
+        m_menuObjShop->unknown248.unknown002(&GfMenuObjShop::seqItemGet);
+        m_menuObjShop->unknown248.unknown002(&GfMenuObjShop::seqEndDialog);
         GfMenuObjUtil::playSECommonDecide();
         break;
       default:
@@ -1102,57 +1128,94 @@ void GfMenuObjShop::OrbListListener::reciveEvent(const ui::EventData &event, u32
       }
       isClose = false;
     } else if (type == 2) {
-      if (unknown20->unknown34 == 2) {
+      if (m_menuObjShop->unknown34 == 2) {
         return;
       }
       GfMenuObjUtil::playSECommonCancel();
       isClose = true;
     } else if (type == 0x11) {
-      GfMenuObjSort::open(acc.unknown10, acc.searchChild("TXT_orb_item_sort_label"), 8, unknown20->unknown14c);
+      GfMenuObjSort::open(acc.unknown10, acc.searchChild("TXT_orb_item_sort_label"), 8, m_menuObjShop->unknown14c);
       isClose = false;
     } else {
       return;
     }
     GfMenuObject::disableInput(acc.unknown10);
     GfMenuObjOperationInfo::remove(acc.unknown10, 0, 0, 0);
-    if (unknown20->unknownc8 != nullptr) {
-      unknown20->unknownc8->release();
-      unknown20->unknownc8 = nullptr;
+    if (m_menuObjShop->unknownc8 != nullptr) {
+      m_menuObjShop->unknownc8->release();
+      m_menuObjShop->unknownc8 = nullptr;
     }
     acc.setDispChild(false, "IMG_orb_item_cursor");
     if (isClose) {
-      unknown20->sendCloseEvent(0);
+      m_menuObjShop->sendCloseEvent(0);
     }
     return;
   }
   case 0x40: {
     GfMenuObject::enableInput(acc.unknown10);
     GfMenuObjOperationInfo::add(acc.unknown10, 0, 0, 0);
-    unknown20->setGuideText(0x3f);
-    unknown20->updateOrbRecipe();
-    unknown20->unknown59 = true;
-    unknown20->sendOpenEvent(acc.searchSibiling("LAY_orb_rcp"), 0);
-    GfMenuObjOperationInfo::setActionEnable(acc.unknown10, 2, unknown20->unknown34 != 2);
+    m_menuObjShop->setGuideText(0x3f);
+    m_menuObjShop->updateOrbRecipe();
+    m_menuObjShop->unknown59 = true;
+    m_menuObjShop->sendOpenEvent(acc.searchSibiling("LAY_orb_rcp"), 0);
+    GfMenuObjOperationInfo::setActionEnable(acc.unknown10, 2, m_menuObjShop->unknown34 != 2);
     break;
   }
   case 0x42:
     GfMenuObject::enableInput(acc.unknown10);
     GfMenuObjOperationInfo::add(acc.unknown10, 0, 0, 0);
-    GfMenuObjOperationInfo::setActionEnable(acc.unknown10, 2, unknown20->unknown34 != 2);
+    GfMenuObjOperationInfo::setActionEnable(acc.unknown10, 2, m_menuObjShop->unknown34 != 2);
     return;
   case 0x148:
     GfMenuObject::enableInput(handle);
     GfMenuObjOperationInfo::add(acc.unknown10, 0, 0, 0);
-    if (unknown20->unknown14c != event.unknown08) {
+    if (m_menuObjShop->unknown14c != event.unknown08) {
       u16 sort = GfMenuObjSort::getSortID(8, event.unknown08);
-      unknown20->unknowne8->sort(sort, false);
-      unknown20->unknown14c = event.unknown08;
+      m_menuObjShop->unknowne8->sort(sort, false);
+      m_menuObjShop->unknown14c = event.unknown08;
     }
     GfMenuObject::resetInputSelection(acc.unknown10);
-    GfMenuObject::setupInputSelectionFromList(acc.unknown10, *unknown20->unknowne8);
+    GfMenuObject::setupInputSelectionFromList(acc.unknown10, *m_menuObjShop->unknowne8);
     return;
   }
   ui::UIObjectListener::reciveEvent(event, handle);
+}
+
+void GfMenuObjShop::SellFilterListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    GfMenuObject::disableInput(acc.unknown10);
+    break;
+  case 6: {
+    u32 index = event.unknown08;
+    u32 previous = event.unknown0c;
+    if (m_menuObjShop->unknownc0 != index) {
+      m_menuObjShop->unknownc0 = index;
+      ui::EventData notify;
+      notify.unknown00 = 0x45;
+      GfMenuObject::sendEvent(acc.getParentHandle(), notify, 0.0f);
+    }
+    m_menuObjShop->refreshFilterIcon();
+    if (previous != 0xffffffff && index != previous) {
+      GfMenuObjUtil::playSECommonTab();
+    }
+    break;
+  }
+  case 0x21:
+    GfMenuObject::resetInputSelection(acc.unknown10);
+    GfMenuObject::setupInputSelection(acc.unknown10, m_menuObjShop->unknownc0, m_menuObjShop->unknown60.size());
+    GfMenuObject::enableInput(acc.unknown10);
+    break;
+  case 0x22:
+    // Measured (clang 3.9.1): with `case 1: case 0x22:` as grouped labels the default arm is laid out after case 0x21 (game: before it);
+    // two separate bodies leave the game's order. The game's case 1 and case 0x22 are one block (0x71004d1c54): the tail merge joins them.
+    GfMenuObject::disableInput(acc.unknown10);
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
 }
 
 void GfMenuObjShop::setGuideText(u32 id) {
@@ -1178,8 +1241,8 @@ void GfMenuObjShop::setupExcItem() {
   ui::UIObjectAcc acc(unknown18, "LAY_exc_objective");
   mm::mtl::FixStr<32> name;
   GfMenuItemList::ItemShopExcSetup setup;
-  setup.unknown14 = unknown150->getContents(unknown150->getIndex(false)).unknown00;
-  setup.unknown00.unknown08 = 5;
+  setup.unknown14 = m_menuIDList->getContents(m_menuIDList->getIndex(false)).unknown00;
+  setup.m_setupParam.unknown08 = 5;
   unknown158->clear();
   unknown158->setupFromShopExcTask(setup);
   u32 have = 0;
@@ -1214,10 +1277,10 @@ void GfMenuObjShop::setupExcItem() {
 }
 
 void GfMenuObjShop::refreshExcReward() {
-  if (unknown150 != nullptr) {
+  if (m_menuIDList != nullptr) {
     ui::UIObjectAcc item(unknown18, "LAY_exc_reward_item");
     ui::UIObjectAcc quest(unknown18, "LAY_exc_reward_quest");
-    u32 task = unknown150->getContents(unknown150->getIndex(false)).unknown00;
+    u32 task = m_menuIDList->getContents(m_menuIDList->getIndex(false)).unknown00;
     u32 value;
     bool isHide = false;
     if (!getExcTaskReward(task, value, unknown160, isHide)) {
@@ -1231,7 +1294,7 @@ void GfMenuObjShop::refreshExcReward() {
         u32 count;
         u32 questItem;
         u32 category;
-        if (!unknown548.unknown04.empty() && GfQuestTask::getTaskCount(unknown548, limit, count, questItem, category)) {
+        if (!m_questTaskParam.m_questID.empty() && GfQuestTask::getTaskCount(m_questTaskParam, limit, count, questItem, category)) {
           unknown168[24]->unknown166(limit);
           unknown168[24]->unknown162(count);
           unknown168[25]->unknown162(limit);
@@ -1256,7 +1319,7 @@ bool GfMenuObjShop::seqWaitExchange() {
   if (result == 0) {
     unknown4e0 = 1;
     unknown4e4 = 0;
-    GfGameUtilShop::execChangeItem(unknown150->getContents(unknown150->getIndex(false)).unknown00, unknown30);
+    GfGameUtilShop::execChangeItem(m_menuIDList->getContents(m_menuIDList->getIndex(false)).unknown00, unknown30);
     setupExcItem();
     unknown59 = true;
     refreshExcReward();
@@ -1272,7 +1335,7 @@ bool GfMenuObjShop::seqStartRecipeIndexOpen() {
   ui::UIObjectAcc acc(unknown18, "LAY_orb_rcp");
   acc.setDispChild(false, "LAY_orb_rcp_index_rare");
   acc.setDispChild(false, "LAY_orb_rcp_index_cate");
-  switch (unknownf8.unknown04) {
+  switch (m_recipeInfo.unknown04) {
   case 0:
     acc.setDispChild(true, "LAY_orb_rcp_index_rare");
     acc.setDispChild(false, "TXT_orb_rcp_type_rare_index");
@@ -1342,8 +1405,8 @@ bool GfMenuObjShop::canGetExcTaskReward(u32 id) {
   if (!GfQuestUtil::getReward(reward, rewardSet, false)) {
     return true;
   }
-  for (u32 i = QUEST_REWARD_UNKNOWN_8; i < sizeof(reward.unknown00) / sizeof(reward.unknown00[0]); i++) {
-    if (reward.unknown00[i].unknown44 != 0 && !GfItemUtil::isEnableAddItemBox(reward.unknown00[i].unknown44, reward.unknown00[i].m_developZone)) {
+  for (u32 i = QUEST_REWARD_UNKNOWN_8; i < sizeof(reward.m_param) / sizeof(reward.m_param[0]); i++) {
+    if (reward.m_param[i].unknown44 != 0 && !GfItemUtil::isEnableAddItemBox(reward.m_param[i].unknown44, reward.m_param[i].m_developZone)) {
       return false;
     }
   }
@@ -1359,13 +1422,13 @@ bool GfMenuObjShop::getExcTaskReward(u32 id, u32 &value, GfMenuItemList *list, b
     if (rewardSet) {
       {
         GfMenuItemList::QuestRewardSetup setup;
-        setup.unknown00.unknown08 = 4;
+        setup.m_setupParam.unknown08 = 4;
         setup.unknown14 = rewardSet;
         list->setupFromQuestReward(setup);
       }
       GfQuestReward reward;
       if (GfQuestUtil::getReward(reward, rewardSet, false)) {
-        value = reward.unknown00[QUEST_REWARD_UNKNOWN_0].unknown44_u32;
+        value = reward.m_param[QUEST_REWARD_UNKNOWN_0].unknown44_u32;
         if (value != 0) {
           return true;
         }
@@ -1417,10 +1480,10 @@ bool GfMenuObjShop::seqWaitOrbCreate() {
     u32 item = unknowne8->getContents(unknowne8->getIndex(false)).unknown04;
     mm::mtl::FixedVector<OrbRecipe, 128> items;
     bool canCreate;
-    if (unknownf8.unknown04 == 2) {
-      canCreate = GfRecipeOrbUtil::isEnableRecipe(unknownf8.unknown00);
+    if (m_recipeInfo.unknown04 == 2) {
+      canCreate = GfRecipeOrbUtil::isEnableRecipe(m_recipeInfo.unknown00);
       if (canCreate) {
-        const mm::mtl::FixedVector<OrbRecipe, 8> *results = unknownf8.getResultItems();
+        const mm::mtl::FixedVector<OrbRecipe, 8> *results = m_recipeInfo.getResultItems();
         for (u32 i = 0; i < results->size(); i++) {
           OrbRecipe recipe;
           recipe.unknown00 = (*results)[i].unknown00;
@@ -1437,7 +1500,7 @@ bool GfMenuObjShop::seqWaitOrbCreate() {
           items.push_back(recipe);
         }
       }
-      canCreate = GfRecipeOrbUtil::isEnabaleOrbRecipe(unknownf8.unknown00, items);
+      canCreate = GfRecipeOrbUtil::isEnabaleOrbRecipe(m_recipeInfo.unknown00, items);
     }
     if (canCreate) {
       GfRecipeOrbUtil::execOrbRecipe(item, &items);
@@ -1462,13 +1525,13 @@ bool GfMenuObjShop::seqWaitOrbCreate() {
 
 void GfMenuObjShop::updateOrbRecipe() {
   ui::UIObjectAcc acc(unknown18, "LAY_orb");
-  unknownf8.unknown001();
+  m_recipeInfo.unknown001();
   if (unknowne8->getSize() != 0) {
     u32 recipe = GfRecipeOrbUtil::getRecipeID(unknowne8->getContents(unknowne8->getIndex(false)).unknown04);
     if (recipe != 0) {
       RecipeInfo info;
       if (GfRecipeOrbUtil::getRecipeInfo(info, recipe)) {
-        unknownf8 = info;
+        m_recipeInfo = info;
       }
     }
   }

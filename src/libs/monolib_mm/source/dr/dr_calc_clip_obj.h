@@ -85,25 +85,25 @@ public:
 
   static bool (DrCalcClipObj::*s_pColiCheck[5])(const u8 *data, const mm::Vec3 &pos);
 
-  const unknown008 *unknown10;          // Inferred role: clip data file; original member name unknown.
-  const unknown005 *unknown18;          // Inferred role: clip data headers; original member name unknown.
-  const MdsClipListTreeData *unknown20; // Inferred role: clip tree; original member name unknown.
-  const unknown006 *unknown28;          // Inferred role: clip flag data; original member name unknown.
-  const unknown007 *unknown30;          // Inferred role: clip data groups; original member name unknown.
-  s32 unknown38;                        // Inferred role: clip flag count; original member name unknown.
-  u32 unknown3c;                        // Inferred role: state flags; original member name unknown.
-  s16 unknown40;                        // Inferred role: size of the flag table; original member name unknown.
-  s16 unknown42;                        // Inferred role: priority of the flagged clip data; original member name unknown.
-  s16 unknown44;                        // Inferred role: flagged clip data count; original member name unknown.
-  u16 unknown46[8];                     // Inferred role: flagged clip data indices; original member name unknown.
-  u32 *unknown58;                       // Inferred role: flag table; original member name unknown.
-  u32 *unknown60;                       // Inferred role: visibility flags; original member name unknown.
+  const unknown008 *unknown10;                      // Inferred role: clip data file; original member name unknown.
+  const unknown005 *unknown18;                      // Inferred role: clip data headers; original member name unknown.
+  const MdsClipListTreeData *m_mdsClipListTreeData; // Inferred role: clip tree; original member name unknown.
+  const unknown006 *unknown28;                      // Inferred role: clip flag data; original member name unknown.
+  const unknown007 *unknown30;                      // Inferred role: clip data groups; original member name unknown.
+  s32 unknown38;                                    // Inferred role: clip flag count; original member name unknown.
+  u32 unknown3c;                                    // Inferred role: state flags; original member name unknown.
+  s16 unknown40;                                    // Inferred role: size of the flag table; original member name unknown.
+  s16 unknown42;                                    // Inferred role: priority of the flagged clip data; original member name unknown.
+  s16 unknown44;                                    // Inferred role: flagged clip data count; original member name unknown.
+  u16 unknown46[8];                                 // Inferred role: flagged clip data indices; original member name unknown.
+  u32 *unknown58;                                   // Inferred role: flag table; original member name unknown.
+  u32 *unknown60;                                   // Inferred role: visibility flags; original member name unknown.
 };
 
 static_assert(offsetof(DrCalcClipObj, unknown08) == 0x08, "");
 static_assert(offsetof(DrCalcClipObj, unknown10) == 0x10, "");
 static_assert(offsetof(DrCalcClipObj, unknown18) == 0x18, "");
-static_assert(offsetof(DrCalcClipObj, unknown20) == 0x20, "");
+static_assert(offsetof(DrCalcClipObj, m_mdsClipListTreeData) == 0x20, "");
 static_assert(offsetof(DrCalcClipObj, unknown28) == 0x28, "");
 static_assert(offsetof(DrCalcClipObj, unknown30) == 0x30, "");
 static_assert(offsetof(DrCalcClipObj, unknown38) == 0x38, "");

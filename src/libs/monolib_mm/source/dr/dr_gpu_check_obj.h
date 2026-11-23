@@ -40,18 +40,18 @@ public:
   DrGpuCheckObj *unknown10; // Inferred role: next object; original member name unknown.
   s32 unknown18;            // Inferred role: type; original member name unknown.
   u8 _1c[0x20 - 0x1c];
-  grlib::CGLibOcclusionQuery unknown20; // Inferred role: query; original member name unknown.
-  u32 unknown38;                        // Inferred role: unknown; original member name unknown.
-  u32 unknown3c;                        // Inferred role: flags; original member name unknown.
-  unknown001 unknown40[2];              // Inferred role: positions per buffer; original member name unknown.
-  unknown001 unknown60;                 // Inferred role: current position; original member name unknown.
+  grlib::CGLibOcclusionQuery m_cGLibOcclusionQuery; // Inferred role: query; original member name unknown.
+  u32 unknown38;                                    // Inferred role: unknown; original member name unknown.
+  u32 unknown3c;                                    // Inferred role: flags; original member name unknown.
+  unknown001 unknown40[2];                          // Inferred role: positions per buffer; original member name unknown.
+  unknown001 unknown60;                             // Inferred role: current position; original member name unknown.
   s16 unknown70; // Inferred role: render hold counter, set to 3 and counted down to 0 by update (signed 16-bit accesses of update and setWorldPos); original member name unknown.
   s16 unknown72; // Inferred role: query hold counter, counted down to 0 by update (signed 16-bit accesses of update); original member name unknown.
   u8 _74[0x80 - 0x74];
 };
 
 static_assert(offsetof(DrGpuCheckObj, unknown18) == 0x18, "");
-static_assert(offsetof(DrGpuCheckObj, unknown20) == 0x20, "");
+static_assert(offsetof(DrGpuCheckObj, m_cGLibOcclusionQuery) == 0x20, "");
 static_assert(offsetof(DrGpuCheckObj, unknown3c) == 0x3c, "");
 static_assert(offsetof(DrGpuCheckObj, unknown40) == 0x40, "");
 static_assert(offsetof(DrGpuCheckObj, unknown60) == 0x60, "");

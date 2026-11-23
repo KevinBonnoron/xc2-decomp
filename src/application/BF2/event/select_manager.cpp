@@ -5,7 +5,7 @@ namespace event {
 SelectManager::SelectManager() : unknown10(0), unknown14(0), unknown38(0), m_result(0) {}
 
 void SelectManager::clear() {
-  unknown18.clear();
+  m_selectWindow.clear();
   unknown38 = 0;
   m_result = 0;
   unknown10 = 0;
@@ -14,7 +14,7 @@ void SelectManager::clear() {
 
 void SelectManager::update() {
   if (isActive()) {
-    unknown18.update();
+    m_selectWindow.update();
   }
 }
 

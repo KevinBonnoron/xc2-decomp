@@ -121,15 +121,15 @@ public:
   // Parameter of createCursor (_ZN2gf13GfMenuObjUtil12createCursorERNS0_11CursorParamE). Layout read by createCursor (0x00 handle, 0x04 cursor object, 0x08 format, 0x10 names, 0x18 count, 0x1a type,
   // 0x20 CursorSetting); the constructor stores match the stack initialisation of the callers (GfMenuObjBladeSet::ReleaseSlotListener::reciveEvent).
   struct CursorParam {
-    CursorParam() : unknown00(0), unknown04(0), unknown08(nullptr), unknown10(nullptr), unknown18(0), unknown1a(0), unknown20() {}
+    CursorParam() : unknown00(0), unknown04(0), unknown08(nullptr), unknown10(nullptr), unknown18(0), unknown1a(0), m_cursorSetting() {}
 
-    u32 unknown00;                                   // Inferred role: object whose children are the cursor targets; original member name unknown.
-    u32 unknown04;                                   // Inferred role: cursor object; original member name unknown.
-    const char *unknown08;                           // Inferred role: format of the target names, picked up with UISelectObjList::pickupObject; original member name unknown.
-    const char *const *unknown10;                    // Inferred role: target names, used when there is no format; original member name unknown.
-    u16 unknown18;                                   // Inferred role: number of target names; original member name unknown.
-    u16 unknown1a;                                   // Inferred role: cursor type, argument of CursorSetting::setType; original member name unknown.
-    ui::UICtrlCursorSelect::CursorSetting unknown20; // Inferred role: cursor setting; original member name unknown.
+    u32 unknown00;                                         // Inferred role: object whose children are the cursor targets; original member name unknown.
+    u32 unknown04;                                         // Inferred role: cursor object; original member name unknown.
+    const char *unknown08;                                 // Inferred role: format of the target names, picked up with UISelectObjList::pickupObject; original member name unknown.
+    const char *const *unknown10;                          // Inferred role: target names, used when there is no format; original member name unknown.
+    u16 unknown18;                                         // Inferred role: number of target names; original member name unknown.
+    u16 unknown1a;                                         // Inferred role: cursor type, argument of CursorSetting::setType; original member name unknown.
+    ui::UICtrlCursorSelect::CursorSetting m_cursorSetting; // Inferred role: cursor setting; original member name unknown.
   };
 
   struct ImageParam {
@@ -213,7 +213,9 @@ public:
   static const char *getMenuMS(u32 id);
   static u32 getLeaderPartyID();
   static int getLeaderPartyType();
-  static bool isExitDriver(u32 partyId);
+  // Returns int: both game callers (0x71004aea0c in GfMenuObjPartyStatus::MainListener::reciveEvent, 0x71004aebe0 in reciveHpEvent) test the result with
+  // cbz w0, where a bool gives tbz w0, #0 (measured on reciveHpEvent).
+  static int isExitDriver(u32 partyId);
   static u32 setupPartyDriver(const mm::mtl::FixedVector<u16, 16> &drivers);
   static bool isLeaderBladeEnable();
   static bool isBladeEnable(u32 partyId, int slot);
@@ -382,7 +384,7 @@ static_assert(offsetof(GfMenuObjUtil::CursorParam, unknown08) == 0x08, "");
 static_assert(offsetof(GfMenuObjUtil::CursorParam, unknown10) == 0x10, "");
 static_assert(offsetof(GfMenuObjUtil::CursorParam, unknown18) == 0x18, "");
 static_assert(offsetof(GfMenuObjUtil::CursorParam, unknown1a) == 0x1a, "");
-static_assert(offsetof(GfMenuObjUtil::CursorParam, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjUtil::CursorParam, m_cursorSetting) == 0x20, "");
 static_assert(sizeof(GfMenuObjUtil::CursorParam) == 0x48, "");
 
 } // namespace gf

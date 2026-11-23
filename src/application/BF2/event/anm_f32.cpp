@@ -8,13 +8,13 @@ void AnmF32::clear() {
   AnmBase::clear();
   unknown78.clear();
   unknownc0.clear();
-  unknown108 = 0.0f;
+  m_value = 0.0f;
 }
 
 void AnmF32::update(f32 delta) {
   AnmBase::update(delta);
   if (unknown08 & STATE_UNKNOWN_1) {
-    unknown108 = calcEvalute(unknown68, unknown70);
+    m_value = calcEvalute(unknown68, unknown70);
   }
 }
 

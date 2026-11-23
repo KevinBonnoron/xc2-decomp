@@ -35,43 +35,43 @@ public:
   };
 
   struct CreateInfo {
-    CreateInfo() : unknown00(nullptr), unknown08(nullptr), unknown10(-1) {}
+    CreateInfo() : m_aGmkBase(nullptr), unknown08(nullptr), unknown10(-1) {}
 
-    AGmkBase *unknown00; // Inferred role: owner gimmick; original member name unknown.
-    u8 *unknown08;       // Inferred role: bdat; original member name unknown.
-    int unknown10;       // Inferred role: bdat id; original member name unknown.
+    AGmkBase *m_aGmkBase; // Inferred role: owner gimmick; original member name unknown.
+    u8 *unknown08;        // Inferred role: bdat; original member name unknown.
+    int unknown10;        // Inferred role: bdat id; original member name unknown.
   };
 
   struct UpdateInfo {
-    f32 unknown00;                    // Inferred role: delta time; original member name unknown.
-    const mm::Vec3 *unknown08;        // Inferred role: position; original member name unknown.
-    const IPopXformFinder *unknown10; // Inferred role: pop xform finder; original member name unknown.
+    f32 unknown00;                            // Inferred role: delta time; original member name unknown.
+    const mm::Vec3 *unknown08;                // Inferred role: position; original member name unknown.
+    const IPopXformFinder *m_iPopXformFinder; // Inferred role: pop xform finder; original member name unknown.
   };
 
   struct BdatInfo {
     BdatInfo()
-        : unknown00(0), unknown02(0), unknown04(0), unknown06(0), unknown08(0), unknown0a(0), unknown0c(0), unknown0e(0), unknown10(0), unknown12(0, 0),
-          unknown16(static_cast<u16>(0), static_cast<u8>(0), static_cast<u8>(0)), unknown30(), unknown38() {}
+        : unknown00(0), unknown02(0), unknown04(0), unknown06(0), unknown08(0), unknown0a(0), unknown0c(0), unknown0e(0), unknown10(0), m_scenarioFlagCond(0, 0),
+          m_questFlagCond(static_cast<u16>(0), static_cast<u8>(0), static_cast<u8>(0)), unknown30(), unknown38() {}
 
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     void debugDraw(const AGmkBase &gmk) const;
     bool isPopCommonCondMatched(const AGmkBase &gmk) const;
     bool isMobPopDistCondMatched(const mm::Vec3 &position) const;
 
-    u16 unknown00;              // Inferred role: condition; original member name unknown.
-    u16 unknown02;              // Inferred role: group; original member name unknown.
-    u16 unknown04;              // Inferred role: squad id; original member name unknown.
-    u16 unknown06;              // Inferred role: motion; original member name unknown.
-    u16 unknown08;              // Inferred role: collision; original member name unknown.
-    u16 unknown0a;              // Inferred role: reaction range; original member name unknown.
-    u16 unknown0c;              // Inferred role: reaction percent; original member name unknown.
-    u16 unknown0e;              // Inferred role: reaction motion; original member name unknown.
-    u16 unknown10;              // Inferred role: battle reaction; original member name unknown.
-    ScenarioFlagCond unknown12; // Inferred role: scenario flag; original member name unknown.
-    QuestFlagCond unknown16;    // Inferred role: quest flag; original member name unknown.
-    TimeCond unknown20;         // Inferred role: time cond; original member name unknown.
-    DistHvCond unknown30;       // Inferred role: pop dist; original member name unknown.
-    DistHvCond unknown38;       // Inferred role: depop dist; original member name unknown.
+    u16 unknown00;                       // Inferred role: condition; original member name unknown.
+    u16 unknown02;                       // Inferred role: group; original member name unknown.
+    u16 unknown04;                       // Inferred role: squad id; original member name unknown.
+    u16 unknown06;                       // Inferred role: motion; original member name unknown.
+    u16 unknown08;                       // Inferred role: collision; original member name unknown.
+    u16 unknown0a;                       // Inferred role: reaction range; original member name unknown.
+    u16 unknown0c;                       // Inferred role: reaction percent; original member name unknown.
+    u16 unknown0e;                       // Inferred role: reaction motion; original member name unknown.
+    u16 unknown10;                       // Inferred role: battle reaction; original member name unknown.
+    ScenarioFlagCond m_scenarioFlagCond; // Inferred role: scenario flag; original member name unknown.
+    QuestFlagCond m_questFlagCond;       // Inferred role: quest flag; original member name unknown.
+    TimeCond m_timeCond;                 // Inferred role: time cond; original member name unknown.
+    DistHvCond unknown30;                // Inferred role: pop dist; original member name unknown.
+    DistHvCond unknown38;                // Inferred role: depop dist; original member name unknown.
   };
 
   struct PopInfo {
@@ -120,23 +120,23 @@ public:
   void dispose();
   void disposeSquad();
 
-  CreateInfo unknown00;                                   // Inferred role: create info; original member name unknown.
-  BdatInfo unknown18;                                     // Inferred role: bdat info; original member name unknown.
-  PopInfo unknown58;                                      // Inferred role: pop info; original member name unknown.
+  CreateInfo m_createInfo;                                // Inferred role: create info; original member name unknown.
+  BdatInfo m_bdatInfo;                                    // Inferred role: bdat info; original member name unknown.
+  PopInfo m_popInfo;                                      // Inferred role: pop info; original member name unknown.
   mutable bool unknowna0;                                 // Inferred role: display enabled; original member name unknown.
   mm::mtl::Vector<gf::GF_OBJ_HANDLE *> *unknowna8;        // Inferred role: game object handles; original member name unknown.
-  GmkSquad *unknownb0;                                    // Inferred role: squad; original member name unknown.
+  GmkSquad *m_gmkSquad;                                   // Inferred role: squad; original member name unknown.
   u64 unknownb8;                                          // Inferred role: matched condition flags; original member name unknown.
   void (GmkMobInsts::*unknownc0)(const UpdateInfo &info); // Inferred role: seq; original member name unknown.
 };
 
 static_assert(sizeof(GmkMobInsts::BdatInfo) == 0x40, "");
 static_assert(sizeof(GmkMobInsts::PopInfo) == 0x48, "");
-static_assert(offsetof(GmkMobInsts, unknown18) == 0x18, "");
-static_assert(offsetof(GmkMobInsts, unknown58) == 0x58, "");
+static_assert(offsetof(GmkMobInsts, m_bdatInfo) == 0x18, "");
+static_assert(offsetof(GmkMobInsts, m_popInfo) == 0x58, "");
 static_assert(offsetof(GmkMobInsts, unknowna0) == 0xa0, "");
 static_assert(offsetof(GmkMobInsts, unknowna8) == 0xa8, "");
-static_assert(offsetof(GmkMobInsts, unknownb0) == 0xb0, "");
+static_assert(offsetof(GmkMobInsts, m_gmkSquad) == 0xb0, "");
 static_assert(offsetof(GmkMobInsts, unknownc0) == 0xc0, "");
 static_assert(sizeof(GmkMobInsts) == 0xd0, "");
 
@@ -163,7 +163,7 @@ public:
     void onPopGob(gf::GF_OBJ_HANDLE *handle) const override;
     void onCreateGobInsts(u32 num) const override;
 
-    GmkMob *unknown08; // Inferred role: owner; original member name unknown.
+    GmkMob *m_gmkMob; // Inferred role: owner; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_MOB; // Inferred name; shared by every gimmick class for the TGmkList templates.
@@ -178,12 +178,12 @@ public:
   void debugDraw() const override;
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
 
-  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
+  const Data *getData() const { return static_cast<const Data *>(m_createInfo.unknown08); }
 
-  GmkMobInsts unknown48; // Inferred role: mob instances; original member name unknown.
+  GmkMobInsts m_gmkMobInsts; // Inferred role: mob instances; original member name unknown.
 };
 
-static_assert(offsetof(GmkMob, unknown48) == 0x48, "");
+static_assert(offsetof(GmkMob, m_gmkMobInsts) == 0x48, "");
 static_assert(sizeof(GmkMob::PopXformFinder) == 0x10, "");
 static_assert(sizeof(GmkMob) == 0x118, "");
 

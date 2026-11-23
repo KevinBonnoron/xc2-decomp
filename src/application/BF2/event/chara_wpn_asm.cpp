@@ -17,7 +17,7 @@ void CharaWpnAsm::clear() {
 }
 
 void CharaWpnAsm::update(f32 speed) {
-  if (unknown10 == nullptr || gf::GfObjUtil::getObj(unknown10->unknown20) == nullptr) {
+  if (unknown10 == nullptr || gf::GfObjUtil::getObj(unknown10->m_GF_OBJ_HANDLE) == nullptr) {
     clear();
     return;
   }

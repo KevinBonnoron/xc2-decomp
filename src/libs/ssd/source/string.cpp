@@ -6,34 +6,34 @@
 namespace ssd {
 
 String::String() {
-  unknown20.unknown00 = nullptr;
-  unknown20.unknown08 = 0;
+  m_memoryBlock.unknown00 = nullptr;
+  m_memoryBlock.unknown08 = 0;
 }
 
 String::~String() { FreeImpl(); }
 
 void String::FreeImpl() {
-  if (unknown20.unknown00 != nullptr) {
+  if (m_memoryBlock.unknown00 != nullptr) {
     Allocator *allocator = SoundMemory::allocator_;
-    Allocator::Block *block = allocator->GetMemoryBlock(unknown20.unknown00);
+    Allocator::Block *block = allocator->GetMemoryBlock(m_memoryBlock.unknown00);
     allocator->DeleteBufferImpl(block);
-    unknown20.unknown00 = nullptr;
-    unknown20.unknown08 = 0;
+    m_memoryBlock.unknown00 = nullptr;
+    m_memoryBlock.unknown08 = 0;
   }
 }
 
 void String::Set(const char *text) {
-  Utf8ToUTF16(text, &unknown20);
-  SSD_ASSERT(unknown20.unknown00 != nullptr,
+  Utf8ToUTF16(text, &m_memoryBlock);
+  SSD_ASSERT(m_memoryBlock.unknown00 != nullptr,
              u"Assert : \"%s\", %s:%d, %s",
              u"data_.GetAdrs() != ssd_null",
              u"D:/ssd/ssd51/ssd/sources/util/string.cpp",
              0x41,
              u"メモリが確保できませんでした。: textBuf == nullptr");
-  char16_t *buffer = static_cast<char16_t *>(unknown20.unknown00);
+  char16_t *buffer = static_cast<char16_t *>(m_memoryBlock.unknown00);
   unknown10 = buffer;
-  unknown08 = Hash();
-  unknown08.CalcTextHash(buffer);
+  m_hash = Hash();
+  m_hash.CalcTextHash(buffer);
 }
 
 void String::Set(const TextRef &text) {

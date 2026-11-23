@@ -27,8 +27,8 @@ namespace event {
 CharaPlayMotion::CharaPlayMotion() {
   unknown08 = 0;
   unknown10 = reinterpret_cast<gf::GF_OBJ_HANDLE *>(-1);
-  unknown18 = 0;
-  unknown20 = 0;
+  m_charaIKUpdater = 0;
+  m_charaDysUpdater = 0;
   unknown28 = 0;
   unknown30 = 0;
   unknown3c = 0.0f;
@@ -61,7 +61,7 @@ ICmd::RESULT CharaPlayMotion::update(const Param &param) {
     unknown3c = param.val(3).getF32();
     unknown40 = 0.0f;
     play(obj, unknown28, unknown30, param.val(4).getF32());
-    unknown18->setFootIK(false, CharaIKUpdater::FOOT_TYPE_UNKNOWN_2);
+    m_charaIKUpdater->setFootIK(false, CharaIKUpdater::FOOT_TYPE_UNKNOWN_2);
     unknown48 = name;
     f32 life = param.val(2).getF32();
     unknown38 = life;
@@ -79,7 +79,7 @@ ICmd::RESULT CharaPlayMotion::update(const Param &param) {
     unknown38 -= delta;
     if (unknown38 < 0.0f) {
       stop(obj);
-      unknown18->setFootIK(true, CharaIKUpdater::FOOT_TYPE_UNKNOWN_2);
+      m_charaIKUpdater->setFootIK(true, CharaIKUpdater::FOOT_TYPE_UNKNOWN_2);
       if (CharaManager::getPtr()->isStreamMode() && unknown28 != nullptr) {
         MotstmManager::getPtr()->free(unknown28);
       }
@@ -101,7 +101,7 @@ void CharaPlayMotion::play(gf::GfObj *obj, void *motion, u64 size, f32 time) {
   if (anim != nullptr) {
     anim->play(motion, size, time / 30.0f);
   }
-  unknown20->resetDynamics(0);
+  m_charaDysUpdater->resetDynamics(0);
   unknown08 |= 4;
 }
 
@@ -141,7 +141,7 @@ void CharaPlayMotion::term() {
   if (obj != nullptr) {
     stop(obj);
   }
-  unknown18->setFootIK(true, CharaIKUpdater::FOOT_TYPE_UNKNOWN_2);
+  m_charaIKUpdater->setFootIK(true, CharaIKUpdater::FOOT_TYPE_UNKNOWN_2);
   if (CharaManager::getPtr()->isStreamMode() && unknown28 != nullptr) {
     MotstmManager::getPtr()->free(unknown28);
   }
@@ -158,7 +158,7 @@ void CharaPlayMotion::stop(gf::GfObj *obj) {
     anim->stop();
     anim->setSpeed(1.0f, gf::ANIM_LAYER_UNKNOWN_0);
   }
-  unknown20->resetDynamics(0);
+  m_charaDysUpdater->resetDynamics(0);
   unknown08 &= ~4;
 }
 

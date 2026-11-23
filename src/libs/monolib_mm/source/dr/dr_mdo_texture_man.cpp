@@ -12,7 +12,7 @@ class CGLibTextureBuffer;
 
 namespace ml {
 
-DrMdoTextureMan::DrMdoTextureMan(DrMan *drMan) : unknown00(drMan), unknown08(nullptr), unknown10(nullptr), unknown18(nullptr), unknown20(nullptr) {}
+DrMdoTextureMan::DrMdoTextureMan(DrMan *drMan) : m_drMan(drMan), unknown08(nullptr), unknown10(nullptr), unknown18(nullptr), unknown20(nullptr) {}
 
 DrMdoTextureMan::~DrMdoTextureMan() {
   DrResMdoTexList *mdoList = unknown08;
@@ -38,7 +38,7 @@ DrResMdoTexList *DrMdoTextureMan::createTextureObj(const u8 *data) {
   if (list != nullptr) {
     return list;
   }
-  list = new (unknown00->unknown10) DrResMdoTexList(data);
+  list = new (m_drMan->unknown10) DrResMdoTexList(data);
   if (list != nullptr) {
     unknown001(list);
   }
@@ -50,7 +50,7 @@ DrResMdoTexList *DrMdoTextureMan::createTextureObj(const u8 *header, const u8 *d
   if (list != nullptr) {
     return list;
   }
-  list = new (unknown00->unknown10) DrResMdoTexList(header, data);
+  list = new (m_drMan->unknown10) DrResMdoTexList(header, data);
   if (list != nullptr) {
     unknown001(list);
   }
@@ -62,7 +62,7 @@ DrResMdoTexList *DrMdoTextureMan::createTextureObj(const u8 *header, DrCalcStmLi
   if (list != nullptr) {
     return list;
   }
-  list = new (unknown00->unknown10) DrResMdoTexList(header, stmList, data, stmHeader);
+  list = new (m_drMan->unknown10) DrResMdoTexList(header, stmList, data, stmHeader);
   if (list != nullptr) {
     unknown001(list);
   }
@@ -74,7 +74,7 @@ DrResMdoTexList *DrMdoTextureMan::createTextureObj(const u8 *header, DrCalcStmLi
   if (list != nullptr) {
     return list;
   }
-  list = new (unknown00->unknown10) DrResMdoTexList(header, stmList, data, stmTexIdx);
+  list = new (m_drMan->unknown10) DrResMdoTexList(header, stmList, data, stmTexIdx);
   if (list != nullptr) {
     unknown001(list);
   }
@@ -127,7 +127,7 @@ void DrMdoTextureMan::releaseTextureObj(DrResMdoTexList *list) {
 }
 
 DrResEtcTexList *DrMdoTextureMan::createEtxTexture(const u8 *data) {
-  DrResEtcTexList *list = new (unknown00->unknown10) DrResEtcTexList(data);
+  DrResEtcTexList *list = new (m_drMan->unknown10) DrResEtcTexList(data);
   if (unknown20 == nullptr) {
     unknown18 = list;
     unknown20 = list;

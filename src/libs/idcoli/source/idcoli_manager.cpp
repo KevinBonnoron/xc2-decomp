@@ -40,13 +40,13 @@ ml::CriticalSection &IDColiManager::getCriticalSection() {
 
 IDColiMemHandleAllocator::IDColiMemHandleAllocator() {}
 
-IDColiMemHandleAllocator::IDColiMemHandleAllocator(mtl::ALLOC_HANDLE handle) : unknown08(handle) {}
+IDColiMemHandleAllocator::IDColiMemHandleAllocator(mtl::ALLOC_HANDLE handle) : m_memHandle(handle) {}
 
-void IDColiMemHandleAllocator::setMemHandle(mtl::ALLOC_HANDLE handle) { unknown08 = handle; }
+void IDColiMemHandleAllocator::setMemHandle(mtl::ALLOC_HANDLE handle) { m_memHandle = handle; }
 
-mtl::ALLOC_HANDLE IDColiMemHandleAllocator::getMemHandle() const { return unknown08; }
+mtl::ALLOC_HANDLE IDColiMemHandleAllocator::getMemHandle() const { return m_memHandle; }
 
-void *IDColiMemHandleAllocator::allocate(size_t size, size_t alignment) { return mtl::MemManager::allocate(unknown08, size, alignment, false, "no name", 0); }
+void *IDColiMemHandleAllocator::allocate(size_t size, size_t alignment) { return mtl::MemManager::allocate(m_memHandle, size, alignment, false, "no name", 0); }
 
 void IDColiMemHandleAllocator::deallocate(void *pointer) {
   if (pointer != nullptr) {
@@ -55,18 +55,18 @@ void IDColiMemHandleAllocator::deallocate(void *pointer) {
 }
 
 IDColiManager::IDColiManager(ml::Scn *scn, mtl::ALLOC_HANDLE handle, u32 size) {
-  unknownf4 = mtl::ALLOC_HANDLE();
-  unknownf4 = mtl::MemManager::create(handle, size, "Collision", false);
-  m_allocator.setMemHandle(unknownf4);
+  m_ALLOC_HANDLE = mtl::ALLOC_HANDLE();
+  m_ALLOC_HANDLE = mtl::MemManager::create(handle, size, "Collision", false);
+  m_allocator.setMemHandle(m_ALLOC_HANDLE);
   memset(unknown08, 0, sizeof(unknown08) + sizeof(unknown48) + sizeof(_c8));
   s_nDebIdx = 0;
   s_nStkIdx = 1;
-  unknownf0 = 0;
+  m_subNum = 0;
   unknownd8[0] = nullptr;
   unknownd8[1] = nullptr;
-  unknownd8[0] = new (unknownf4) IDColiTreeTop();
-  unknownd8[1] = new (unknownf4) IDColiTreeTop();
-  m_gblIdTbl = static_cast<u32 *>(mtl::MemManager::allocate(unknownf4, 0x400, 0x20, false, "no name", 0));
+  unknownd8[0] = new (m_ALLOC_HANDLE) IDColiTreeTop();
+  unknownd8[1] = new (m_ALLOC_HANDLE) IDColiTreeTop();
+  m_gblIdTbl = static_cast<u32 *>(mtl::MemManager::allocate(m_ALLOC_HANDLE, 0x400, 0x20, false, "no name", 0));
   memset(m_gblIdTbl, 0, 0x400);
 }
 
@@ -84,9 +84,9 @@ IDColiManager::~IDColiManager() {
     delete unknownd8[1];
     unknownd8[1] = nullptr;
   }
-  if (unknownf4.isValid()) {
-    mtl::MemManager::erase(unknownf4);
-    unknownf4 = mtl::ALLOC_HANDLE();
+  if (m_ALLOC_HANDLE.isValid()) {
+    mtl::MemManager::erase(m_ALLOC_HANDLE);
+    m_ALLOC_HANDLE = mtl::ALLOC_HANDLE();
   }
 }
 
@@ -145,29 +145,29 @@ void IDColiManager::tail() {
 
 IDColiObj *IDColiManager::createColiGrand(const void *binary) {
   ml::CS cs(getCriticalSection());
-  IDColiObjGrand *object = new (unknownf4) IDColiObjGrand();
-  object->createGrand(unknownf4, binary);
+  IDColiObjGrand *object = new (m_ALLOC_HANDLE) IDColiObjGrand();
+  object->createGrand(m_ALLOC_HANDLE, binary);
   unknown48[0][s_nStkIdx].unknown001(object);
   return object;
 }
 
 IDColiObj *IDColiManager::createColiCharacter() {
   ml::CS cs(getCriticalSection());
-  IDColiObjCharCheck *object = new (unknownf4) IDColiObjCharCheck(unknownd8[0]);
+  IDColiObjCharCheck *object = new (m_ALLOC_HANDLE) IDColiObjCharCheck(unknownd8[0]);
   unknown48[1][s_nStkIdx].unknown001(object);
   return object;
 }
 
 IDColiObj *IDColiManager::createColiPhantom() {
   ml::CS cs(getCriticalSection());
-  IDColiObjPhantomCheck *object = new (unknownf4) IDColiObjPhantomCheck(unknownd8[1]);
+  IDColiObjPhantomCheck *object = new (m_ALLOC_HANDLE) IDColiObjPhantomCheck(unknownd8[1]);
   unknown48[2][s_nStkIdx].unknown001(object);
   return object;
 }
 
 IDColiObj *IDColiManager::createColiGrdChar() {
   ml::CS cs(getCriticalSection());
-  IDColiObjGrdChar *object = new (unknownf4) IDColiObjGrdChar();
+  IDColiObjGrdChar *object = new (m_ALLOC_HANDLE) IDColiObjGrdChar();
   unknown48[3][s_nStkIdx].unknown001(object);
   return object;
 }

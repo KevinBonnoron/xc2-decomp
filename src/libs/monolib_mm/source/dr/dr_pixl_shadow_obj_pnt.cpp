@@ -12,15 +12,15 @@ class DrMan;
 DrPixlShadowObjPnt::DrPixlShadowObjPnt(DrMan *man, int index) : DrPixlShadowObj(man, 2, index) {}
 
 DrPixlShadowObjPnt::~DrPixlShadowObjPnt() {
-  unknown08.release();
-  delete unknown190;
+  m_cGLibDblUniformBlock.release();
+  delete m_drPixlShadowObj;
 }
 
 void DrPixlShadowObjPnt::update() {
-  DrLightObjPnt *light = static_cast<DrLightObjPnt *>(unknown198);
+  DrLightObjPnt *light = static_cast<DrLightObjPnt *>(m_drLightObj);
   unknown50 &= ~(FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1 | FLAG_UNKNOWN_3 | FLAG_UNKNOWN_4 | FLAG_UNKNOWN_5 | FLAG_UNKNOWN_6);
   getLightMatrix(unknown60, light->m_pos, light->m_pos + mm::Vec3(0.0f, 0.0f, 1.0f), mm::Vec3(0.0f, 1.0f, 0.0f));
-  f32 offset = 0.5f / unknown40->unknown800 + 0.5f;
+  f32 offset = 0.5f / m_mdoShdPxlWrkTex->unknown800 + 0.5f;
   unknown120.rows[0][0] = 0.5f;
   unknown120.rows[0][1] = 0.0f;
   unknown120.rows[0][2] = 0.0f;
@@ -40,16 +40,16 @@ void DrPixlShadowObjPnt::update() {
   unknowne0 = unknown60;
   unknowna0 = unknown60;
   unknown120 = unknowna0 * unknown120;
-  unknown1a0.setSphereWork(light->m_pos, light->m_size, unknown48);
-  if (unknown190 != nullptr) {
-    unknown190->update();
+  m_drCalcClipWorkSphere.setSphereWork(light->m_pos, light->m_size, unknown48);
+  if (m_drPixlShadowObj != nullptr) {
+    m_drPixlShadowObj->update();
   }
 }
 
-bool DrPixlShadowObjPnt::dispChk() { return !unknown198->isCullON(); }
+bool DrPixlShadowObjPnt::dispChk() { return !m_drLightObj->isCullON(); }
 
-bool DrPixlShadowObjPnt::clipChk(const mm::Vec3 &position, f32 value, bool flag) { return unknown1a0.clipTest(position, value); }
+bool DrPixlShadowObjPnt::clipChk(const mm::Vec3 &position, f32 value, bool flag) { return m_drCalcClipWorkSphere.clipTest(position, value); }
 
-int DrPixlShadowObjPnt::clipTypeChk(const mm::Vec3 &position, f32 value) { return unknown1a0.clipTypeTest(position, value); }
+int DrPixlShadowObjPnt::clipTypeChk(const mm::Vec3 &position, f32 value) { return m_drCalcClipWorkSphere.clipTypeTest(position, value); }
 
 } // namespace ml

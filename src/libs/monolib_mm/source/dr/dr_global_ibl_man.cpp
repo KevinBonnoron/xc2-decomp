@@ -5,7 +5,7 @@
 
 namespace ml {
 
-DrGlobalIBLMan::DrGlobalIBLMan(DrMan *man, int index) : unknown00(man), unknown08(index) {}
+DrGlobalIBLMan::DrGlobalIBLMan(DrMan *man, int index) : m_drMan(man), unknown08(index) {}
 
 DrGlobalIBLMan::~DrGlobalIBLMan() { releaseAll(); }
 
@@ -20,7 +20,7 @@ DrGlobalIBLPack *DrGlobalIBLMan::createObj(const void *data) {
   if (!DrGlobalIBLPack::checkFileType(data)) {
     return nullptr;
   }
-  DrGlobalIBLPack *pack = new (unknown00->unknown10) DrGlobalIBLPack(data, unknown08);
+  DrGlobalIBLPack *pack = new (m_drMan->unknown10) DrGlobalIBLPack(data, unknown08);
   unknown10[DrMan::s_nDblStockIdx].unknown002(pack);
   return pack;
 }

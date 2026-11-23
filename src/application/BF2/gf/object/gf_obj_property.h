@@ -39,7 +39,7 @@ struct GfObjPropertyCharacter {
   };
 
   // Inline in the original: the game has only the base constructor symbol (1.0.0: 0x71005ab290, emitted in the unit of GfObjProperty::create).
-  GfObjPropertyCharacter() : unknown00(0), unknown04(0), unknown08(0), unknown28(unknown020), unknown30(false) {
+  GfObjPropertyCharacter() : unknown00(0), unknown04(0), unknown08(0), m_GF_OBJ_HANDLE(unknown020), unknown30(false) {
     u8 *bdat = Bdat::getFP("BTL_Buff");
     if (bdat != nullptr && Bdat::getIdCount(bdat) != 0) {
       unknown10.setAllocator(getAllocator(ALLOCATOR_UNKNOWN_0));
@@ -53,7 +53,7 @@ struct GfObjPropertyCharacter {
     unknown00 = 0;
     unknown04 = 0;
     unknown08 = 0;
-    unknown28 = unknown020;
+    m_GF_OBJ_HANDLE = unknown020;
     for (unknown001 *buff = unknown10.begin(); buff != unknown10.end(); ++buff) {
       buff->unknown00 = 0;
       buff->unknown04 = 0;
@@ -64,7 +64,7 @@ struct GfObjPropertyCharacter {
   u32 unknown04;                        // Inferred role: hp; original member name unknown.
   u16 unknown08;                        // Inferred role: level; original member name unknown.
   mm::mtl::Array<unknown001> unknown10; // Inferred role: one state per row of the BTL_Buff table; original member name unknown.
-  GF_OBJ_HANDLE *unknown28;             // Inferred role: target, copied from the property component by GfComProperty::flush; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE;       // Inferred role: target, copied from the property component by GfComProperty::flush; original member name unknown.
   bool unknown30;                       // Inferred role: battle; original member name unknown.
 };
 
@@ -74,7 +74,7 @@ static_assert(offsetof(GfObjPropertyCharacter::unknown001, unknown04) == 0x04, "
 static_assert(offsetof(GfObjPropertyCharacter, unknown04) == 0x04, "");
 static_assert(offsetof(GfObjPropertyCharacter, unknown08) == 0x08, "");
 static_assert(offsetof(GfObjPropertyCharacter, unknown10) == 0x10, "");
-static_assert(offsetof(GfObjPropertyCharacter, unknown28) == 0x28, "");
+static_assert(offsetof(GfObjPropertyCharacter, m_GF_OBJ_HANDLE) == 0x28, "");
 static_assert(offsetof(GfObjPropertyCharacter, unknown30) == 0x30, "");
 static_assert(sizeof(GfObjPropertyCharacter) == 0x38, "");
 
@@ -91,33 +91,33 @@ enum {
 struct unknown070 {
   unknown070()
       : unknown00(0), unknown50(mm::Vec3::unitY, 0.0f), unknown70(0), unknown74(0.0f), unknown78(0.0f), unknown7c(false), unknown7d(false), unknown7e(false), unknown7f(false), unknown80(false),
-        unknown90(mm::Vec3(1.0f, 0.0f, 0.0f), 0.0f), unknownb0(0), unknownb4(1), unknownb8(0.0f), unknownc0(unknown020), unknownc8(0.0f) {
+        unknown90(mm::Vec3(1.0f, 0.0f, 0.0f), 0.0f), unknownb0(0), unknownb4(1), unknownb8(0.0f), m_GF_OBJ_HANDLE(unknown020), unknownc8(0.0f) {
     unknown10 = mm::Vec3::zero;
     unknown20 = mm::Quat::identity;
     unknown30 = mm::Vec3::zero;
     unknown40 = mm::Quat::identity;
   }
 
-  u32 unknown00;            // Inferred role: type; original member name unknown.
-  mm::Vec3 unknown10;       // Inferred role: position; original member name unknown.
-  mm::Quat unknown20;       // Inferred role: rotation; original member name unknown.
-  mm::Vec3 unknown30;       // Inferred role: second position, whose y is the height compared with the water surface by GfEffectGround; original member name unknown.
-  mm::Quat unknown40;       // Inferred role: second rotation; original member name unknown.
-  mm::Plane unknown50;      // Inferred role: plane built from Vec3::unitY by the constructor; original member name unknown.
-  u32 unknown70;            // Inferred role: zeroed by the constructor; original member name unknown.
-  f32 unknown74;            // Inferred role: unknown height; original member name unknown.
-  f32 unknown78;            // Inferred role: unknown height limit; original member name unknown.
-  bool unknown7c;           // Inferred role: auto run, copied from the pc field property; original member name unknown.
-  bool unknown7d;           // Inferred role: can start event; original member name unknown.
-  bool unknown7e;           // Inferred role: climb wall plane valid; original member name unknown.
-  bool unknown7f;           // Inferred role: blocks the standby talk of the player (GfObjUtil::isStanbyTalkingPlayer); original member name unknown.
-  bool unknown80;           // Inferred role: jump; original member name unknown.
-  mm::Plane unknown90;      // Inferred role: climb wall plane, copied from the pc field property; original member name unknown.
-  u32 unknownb0;            // Inferred role: zeroed by the constructor; original member name unknown.
-  u32 unknownb4;            // Inferred role: set to 1 by the constructor; original member name unknown.
-  f32 unknownb8;            // Inferred role: unknown height; original member name unknown.
-  GF_OBJ_HANDLE *unknownc0; // Inferred role: ground object; original member name unknown.
-  f32 unknownc8;            // Inferred role: float time; original member name unknown.
+  u32 unknown00;                  // Inferred role: type; original member name unknown.
+  mm::Vec3 unknown10;             // Inferred role: position; original member name unknown.
+  mm::Quat unknown20;             // Inferred role: rotation; original member name unknown.
+  mm::Vec3 unknown30;             // Inferred role: second position, whose y is the height compared with the water surface by GfEffectGround; original member name unknown.
+  mm::Quat unknown40;             // Inferred role: second rotation; original member name unknown.
+  mm::Plane unknown50;            // Inferred role: plane built from Vec3::unitY by the constructor; original member name unknown.
+  u32 unknown70;                  // Inferred role: zeroed by the constructor; original member name unknown.
+  f32 unknown74;                  // Inferred role: unknown height; original member name unknown.
+  f32 unknown78;                  // Inferred role: unknown height limit; original member name unknown.
+  bool unknown7c;                 // Inferred role: auto run, copied from the pc field property; original member name unknown.
+  bool unknown7d;                 // Inferred role: can start event; original member name unknown.
+  bool unknown7e;                 // Inferred role: climb wall plane valid; original member name unknown.
+  bool unknown7f;                 // Inferred role: blocks the standby talk of the player (GfObjUtil::isStanbyTalkingPlayer); original member name unknown.
+  bool unknown80;                 // Inferred role: jump; original member name unknown.
+  mm::Plane unknown90;            // Inferred role: climb wall plane, copied from the pc field property; original member name unknown.
+  u32 unknownb0;                  // Inferred role: zeroed by the constructor; original member name unknown.
+  u32 unknownb4;                  // Inferred role: set to 1 by the constructor; original member name unknown.
+  f32 unknownb8;                  // Inferred role: unknown height; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: ground object; original member name unknown.
+  f32 unknownc8;                  // Inferred role: float time; original member name unknown.
 };
 
 static_assert(offsetof(unknown070, unknown10) == 0x10, "");
@@ -137,14 +137,14 @@ static_assert(offsetof(unknown070, unknown7e) == 0x7e, "");
 static_assert(offsetof(unknown070, unknown7f) == 0x7f, "");
 static_assert(offsetof(unknown070, unknown80) == 0x80, "");
 static_assert(offsetof(unknown070, unknown90) == 0x90, "");
-static_assert(offsetof(unknown070, unknownc0) == 0xc0, "");
+static_assert(offsetof(unknown070, m_GF_OBJ_HANDLE) == 0xc0, "");
 static_assert(offsetof(unknown070, unknownc8) == 0xc8, "");
 static_assert(sizeof(unknown070) == 0xd0, "");
 
 class GfObjProperty {
 public:
   // The game's constructors (GfObjPropertyDriver::GfObjPropertyDriver, 1.0.0: 0x71005aa9c8) store the three pointers, empty the string, then set the transform.
-  GfObjProperty(GF_OBJ_HANDLE *handle, GfObjPropertyCharacter *character, unknown070 *move) : unknown08(handle), unknown10(character), unknown18(move) {
+  GfObjProperty(GF_OBJ_HANDLE *handle, GfObjPropertyCharacter *character, unknown070 *move) : m_GF_OBJ_HANDLE(handle), unknown10(character), unknown18(move) {
     unknown20 = mm::Vec3::zero;
     unknown30 = mm::Quat::identity;
   }
@@ -164,7 +164,7 @@ public:
   GfObjPropertyUi *getUi();
   virtual ~GfObjProperty() {}
 
-  GF_OBJ_HANDLE *unknown08;          // Inferred role: handle; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE;    // Inferred role: handle; original member name unknown.
   GfObjPropertyCharacter *unknown10; // Inferred role: character; original member name unknown.
   unknown070 *unknown18;             // Inferred role: move; original member name unknown.
   mm::Vec3 unknown20;                // Inferred role: cached world position written by GfGameUtil::flushProperty; original member name unknown.
@@ -222,7 +222,7 @@ public:
 
   GfObjPropertyBlade(GF_OBJ_HANDLE *handle) : GfObjProperty(handle, &unknown88, &unknownc0), unknown1b4(0) {
     unknown88.unknown002();
-    unknown190.assign(unknown109());
+    unknown190.assign(unknown110());
     unknown1a4 = 0;
     unknown1a8 = 0;
     unknown1ac = 0.0f;
@@ -231,7 +231,7 @@ public:
 
   GfObjPropertyCharacter unknown88;              // Inferred role: character, pointed to by unknown10; original member name unknown.
   unknown070 unknownc0;                          // Inferred role: move, pointed to by unknown18; original member name unknown.
-  mm::mtl::FixedArray<unknown109, 3> unknown190; // Inferred role: field skills copied from SDataBlade::unknownae by GfGameUtil::flushProperty; original member name unknown.
+  mm::mtl::FixedArray<unknown110, 3> unknown190; // Inferred role: field skills copied from SDataBlade::unknownae by GfGameUtil::flushProperty; original member name unknown.
   int unknown1a4;                                // Inferred role: kizuna value, read by GfMenuGfObjAdapter::update_BL_Kizuna; original member name unknown.
   u32 unknown1a8;                                // Inferred role: special level, read by GfMenuGfObjAdapter::update_BL_SpecialLv; original member name unknown.
   f32 unknown1ac;                                // Inferred role: special gauge ratio; original member name unknown.

@@ -24,12 +24,13 @@
 
 namespace gf {
 
-GfMenuObjBlCustomTop::GfMenuObjBlCustomTop(u32 handle) : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr), unknown50(nullptr), unknown58(this) {}
+GfMenuObjBlCustomTop::GfMenuObjBlCustomTop(u32 handle)
+    : GfMenuObject(handle), m_menuBladeList(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr), unknown50(nullptr), unknown58(this) {}
 
 GfMenuObjBlCustomTop::~GfMenuObjBlCustomTop() {
   mm::mtl::safeRelease(unknown48);
   mm::mtl::safeRelease(unknown40);
-  mm::mtl::safeRelease(unknown28);
+  mm::mtl::safeRelease(m_menuBladeList);
   mm::mtl::safeRelease(unknown30);
   mm::mtl::safeRelease(unknown38);
 }
@@ -49,17 +50,17 @@ void GfMenuObjBlCustomTop::initialize() {
       GfMenuBladeList::DriverSetup setup;
       setup.unknown14 = 1;
       setup.unknown18 = 1;
-      unknown28 = GfMenuBladeList::create();
-      unknown28->setupFromDriver(setup);
+      m_menuBladeList = GfMenuBladeList::create();
+      m_menuBladeList->setupFromDriver(setup);
     }
-    unknown28->setIndex(0);
+    m_menuBladeList->setIndex(0);
     {
       ui::UIObjectAcc select(unknown18, "LAY_bl_select");
       select.setDispChild(true, "LAY_bl_image");
       GfMenuCharDataAdapter::createFromReferenceBlade(select.searchChild("TXT_bl_select_name"), 2, 0, false);
-      GfMenuReference::setReferenceBladeID(0, unknown28->getContents(unknown28->getIndex(false)).unknown00);
-      if (unknown28->getSize() >= 3) {
-        setupInputSelectionFromList(select.unknown10, *unknown28);
+      GfMenuReference::setReferenceBladeID(0, m_menuBladeList->getContents(m_menuBladeList->getIndex(false)).unknown00);
+      if (m_menuBladeList->getSize() >= 3) {
+        setupInputSelectionFromList(select.unknown10, *m_menuBladeList);
       } else {
         select.setDispChild(false, "LAY_bl_select_input");
       }
@@ -307,7 +308,7 @@ void GfMenuObjBlCustomTop::DrSelectListener::reciveEvent(const ui::EventData &ev
     if (ui::UICtrlObject::getEventCtrlObjID(event) == 1) {
       // The game never sets x0 for this call (0x7100410288): receiveRevolveEvent, defined in this file, does not read its object, so the compiler dropped the argument and the original
       // expression cannot be checked. The owner is the object the other listeners of this class call their owner's functions on.
-      unknown20->receiveRevolveEvent(event, acc.unknown10);
+      m_menuObjBlCustomTop->receiveRevolveEvent(event, acc.unknown10);
     }
     break;
   default:
@@ -340,12 +341,12 @@ void GfMenuObjBlCustomTop::MainListener::reciveEvent(const ui::EventData &event,
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1:
-    unknown20->unknown58.unknown002(&GfMenuObjBlCustomTop::seqStartOpen);
-    unknown20->unknown58.unknown002(&GfMenuObjBlCustomTop::seqAppearPhase1);
-    unknown20->unknown58.unknown002(&GfMenuObjBlCustomTop::seqAppearPhase2);
-    unknown20->unknown58.unknown002(&GfMenuObjBlCustomTop::seqAppearPhase3);
-    unknown20->unknown58.unknown002(&GfMenuObjBlCustomTop::seqAppearPhase4);
-    unknown20->unknown58.unknown002(&GfMenuObjBlCustomTop::seqEndOpen);
+    m_menuObjBlCustomTop->unknown58.unknown002(&GfMenuObjBlCustomTop::seqStartOpen);
+    m_menuObjBlCustomTop->unknown58.unknown002(&GfMenuObjBlCustomTop::seqAppearPhase1);
+    m_menuObjBlCustomTop->unknown58.unknown002(&GfMenuObjBlCustomTop::seqAppearPhase2);
+    m_menuObjBlCustomTop->unknown58.unknown002(&GfMenuObjBlCustomTop::seqAppearPhase3);
+    m_menuObjBlCustomTop->unknown58.unknown002(&GfMenuObjBlCustomTop::seqAppearPhase4);
+    m_menuObjBlCustomTop->unknown58.unknown002(&GfMenuObjBlCustomTop::seqEndOpen);
     break;
   case 2: {
     GfMenuObjUtil::CtrlParam param;
@@ -365,40 +366,40 @@ void GfMenuObjBlCustomTop::MainListener::reciveEvent(const ui::EventData &event,
       param.unknown08 = 2;
       param.unknown00 = 0.25f;
       GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
-      GfMenuObjCommonJog::close(unknown20->unknown40);
-      unknown20->suspendInput();
+      GfMenuObjCommonJog::close(m_menuObjBlCustomTop->unknown40);
+      m_menuObjBlCustomTop->suspendInput();
     }
     break;
   default:
     if (event.unknown00 == 0x41) {
       u32 call = event.unknown08;
       u32 layer = event.unknown14;
-      if (unknown20->unknown40 == nullptr || unknown20->unknown40->unknown0c != call || event.unknown10_u16 != 3) {
+      if (m_menuObjBlCustomTop->unknown40 == nullptr || m_menuObjBlCustomTop->unknown40->unknown0c != call || event.unknown10_u16 != 3) {
         break;
       }
       if ((layer & 0xffff) == 6) {
         GfMenuObjBladeSet::OpenParam param;
         param.unknown00 = 0;
-        param.unknown04 = unknown20->unknown28->getContents(unknown20->unknown28->getIndex(false)).unknown00;
+        param.unknown04 = m_menuObjBlCustomTop->m_menuBladeList->getContents(m_menuObjBlCustomTop->m_menuBladeList->getIndex(false)).unknown00;
         GfMenuObjBladeSet::registOpenParam(param);
         GfMenuObject::changeFSSubLayer(acc.unknown10, 1, 6, true);
-        GfMenuObjCommonJog::close(unknown20->unknown40);
+        GfMenuObjCommonJog::close(m_menuObjBlCustomTop->unknown40);
       } else if ((layer & 0xffff) == 0x22) {
         GfMenuObject::changeFSSubLayer(acc.unknown10, 1, 0x22, true);
-        GfMenuObjCommonJog::close(unknown20->unknown40);
+        GfMenuObjCommonJog::close(m_menuObjBlCustomTop->unknown40);
       } else {
-        unknown20->unknown2ec = layer;
-        unknown20->unknown58.unknown002(&GfMenuObjBlCustomTop::seqStartAddLayer);
-        unknown20->unknown58.unknown002(&GfMenuObjBlCustomTop::seqAddLayerPhase1);
-        unknown20->unknown58.unknown002(&GfMenuObjBlCustomTop::seqAddLayerPhase2);
+        m_menuObjBlCustomTop->unknown2ec = layer;
+        m_menuObjBlCustomTop->unknown58.unknown002(&GfMenuObjBlCustomTop::seqStartAddLayer);
+        m_menuObjBlCustomTop->unknown58.unknown002(&GfMenuObjBlCustomTop::seqAddLayerPhase1);
+        m_menuObjBlCustomTop->unknown58.unknown002(&GfMenuObjBlCustomTop::seqAddLayerPhase2);
         if ((layer & 0xffff) == 0x24) {
-          unknown20->unknown58.unknown002(&GfMenuObjBlCustomTop::seqAddLayerPhase3_BlWeapon);
+          m_menuObjBlCustomTop->unknown58.unknown002(&GfMenuObjBlCustomTop::seqAddLayerPhase3_BlWeapon);
         } else if ((layer & 0xffff) == 0x26) {
-          unknown20->unknown58.unknown002(&GfMenuObjBlCustomTop::seqAddLayerPhase3_BlOrb);
+          m_menuObjBlCustomTop->unknown58.unknown002(&GfMenuObjBlCustomTop::seqAddLayerPhase3_BlOrb);
         }
-        unknown20->unknown58.unknown002(&GfMenuObjBlCustomTop::seqAddLayerPhase4);
-        unknown20->unknown58.unknown002(&GfMenuObjBlCustomTop::seqAddLayerPhase5);
-        unknown20->unknown58.unknown002(&GfMenuObjBlCustomTop::seqEndAddLayer);
+        m_menuObjBlCustomTop->unknown58.unknown002(&GfMenuObjBlCustomTop::seqAddLayerPhase4);
+        m_menuObjBlCustomTop->unknown58.unknown002(&GfMenuObjBlCustomTop::seqAddLayerPhase5);
+        m_menuObjBlCustomTop->unknown58.unknown002(&GfMenuObjBlCustomTop::seqEndAddLayer);
       }
       break;
     }

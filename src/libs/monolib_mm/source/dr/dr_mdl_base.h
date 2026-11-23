@@ -34,12 +34,12 @@ public:
   DrMdlBase(int viewNum) {
     unknown10 = nullptr;
     unknown1a = viewNum;
-    unknown18 = 0;
+    m_groups = 0;
     unknown1c = unknown037_0;
     unknown1d = 0;
     unknown08 = nullptr;
     unknown1e = 0;
-    unknown20 = unknown038_0 | unknown038_1;
+    m_disp = unknown038_0 | unknown038_1;
   }
 
   virtual ~DrMdlBase() {}
@@ -56,33 +56,33 @@ public:
   virtual void occRender();
   virtual bool cloneMdlObj(DrMdlObj *source);
   virtual void chageShadowObject(DrMdoSmlShadowMan *shadowMan);
-  virtual void setDisp(bool isDisp) { unknown20 = !isDisp ? unknown20 & ~unknown038_0 : unknown20 | unknown038_0; }
-  virtual void setDeleteCall(int deleteCall) { unknown20 |= unknown038_3 << deleteCall; }
+  virtual void setDisp(bool isDisp) { m_disp = !isDisp ? m_disp & ~unknown038_0 : m_disp | unknown038_0; }
+  virtual void setDeleteCall(int deleteCall) { m_disp |= unknown038_3 << deleteCall; }
 
   void setClip(bool isClip) {
     if (isClip) {
-      unknown20 |= unknown038_1;
+      m_disp |= unknown038_1;
     } else {
-      unknown20 &= ~unknown038_1;
+      m_disp &= ~unknown038_1;
     }
   }
 
   DrMdlBase *unknown08; // Inferred role: previous model; original member name unknown.
   DrMdlBase *unknown10; // Inferred role: next model; original member name unknown.
-  s16 unknown18;        // Inferred role: groups; original member name unknown.
+  s16 m_groups;         // Inferred role: groups; named after the game accessor ml::ScnObjModelDrSys::getGroups.
   s16 unknown1a;        // Inferred role: view num; original member name unknown.
   u8 unknown1c;         // Inferred role: type; original member name unknown.
   u8 unknown1d;         // Inferred role: change view num; original member name unknown.
   u16 unknown1e;        // Inferred role: unused, cleared by the constructor; original member name unknown.
-  u32 unknown20;        // Inferred role: update flags; original member name unknown.
+  u32 m_disp;           // Inferred role: update flags; named after the game accessor ml::DrMdlBase::setDisp.
 };
 
 static_assert(offsetof(DrMdlBase, unknown08) == 0x08, "");
 static_assert(offsetof(DrMdlBase, unknown10) == 0x10, "");
-static_assert(offsetof(DrMdlBase, unknown18) == 0x18, "");
+static_assert(offsetof(DrMdlBase, m_groups) == 0x18, "");
 static_assert(offsetof(DrMdlBase, unknown1a) == 0x1a, "");
 static_assert(offsetof(DrMdlBase, unknown1c) == 0x1c, "");
 static_assert(offsetof(DrMdlBase, unknown1d) == 0x1d, "");
-static_assert(offsetof(DrMdlBase, unknown20) == 0x20, "");
+static_assert(offsetof(DrMdlBase, m_disp) == 0x20, "");
 
 } // namespace ml

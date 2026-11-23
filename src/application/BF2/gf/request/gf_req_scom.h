@@ -103,21 +103,21 @@ public:
 class SCOM_ADD_EXP : public SCOM {
 public:
   SCOM_ADD_EXP(GF_SCOM_HANDLE *handle, u32 exp, u32 driver, GF_OBJ_HANDLE *target, bool isInn)
-      : SCOM(handle, SCOM_TYPE_UNKNOWN_4, SCOM_EXEC_UNKNOWN_0, 1), unknown1c(exp), unknown20(driver), unknown28(target), unknown30(isInn) {}
+      : SCOM(handle, SCOM_TYPE_UNKNOWN_4, SCOM_EXEC_UNKNOWN_0, 1), unknown1c(exp), unknown20(driver), m_GF_OBJ_HANDLE(target), unknown30(isInn) {}
   bool exec(const fw::UpdateInfo &info) override;
   static GF_SCOM_HANDLE *createBattleExp(u32 exp, GF_OBJ_HANDLE *handle);
   static GF_SCOM_HANDLE *createBattleExp(u32 exp, u32 driver);
   static GF_SCOM_HANDLE *createInnExp(u32 exp);
 
-  u32 unknown1c;            // Inferred role: experience; original member name unknown.
-  u32 unknown20;            // Inferred role: driver; original member name unknown.
-  GF_OBJ_HANDLE *unknown28; // Inferred role: driver object; original member name unknown.
-  bool unknown30;           // Inferred role: is the experience for the inn; original member name unknown.
+  u32 unknown1c;                  // Inferred role: experience; original member name unknown.
+  u32 unknown20;                  // Inferred role: driver; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: driver object; original member name unknown.
+  bool unknown30;                 // Inferred role: is the experience for the inn; original member name unknown.
 };
 
 static_assert(offsetof(SCOM_ADD_EXP, unknown1c) == 0x1c, "");
 static_assert(offsetof(SCOM_ADD_EXP, unknown20) == 0x20, "");
-static_assert(offsetof(SCOM_ADD_EXP, unknown28) == 0x28, "");
+static_assert(offsetof(SCOM_ADD_EXP, m_GF_OBJ_HANDLE) == 0x28, "");
 static_assert(offsetof(SCOM_ADD_EXP, unknown30) == 0x30, "");
 static_assert(sizeof(SCOM_ADD_EXP) == 0x38, "");
 
@@ -136,20 +136,20 @@ public:
   static GF_SCOM_HANDLE *createArts(u32 driver, u32 arts);
   static GF_SCOM_HANDLE *createCrystalOK(u32 item);
 
-  GfMenuObjPopup::OpenParam unknown1c; // Inferred role: popup parameter; original member name unknown.
+  GfMenuObjPopup::OpenParam m_openParam; // Inferred role: popup parameter; original member name unknown.
 };
 
-static_assert(offsetof(SCOM_POPUP, unknown1c) == 0x1c, "");
+static_assert(offsetof(SCOM_POPUP, m_openParam) == 0x1c, "");
 static_assert(sizeof(SCOM_POPUP) == 0x30, "");
 
 class SCOM_TARGET_UI : public SCOM {
 public:
-  SCOM_TARGET_UI(GF_SCOM_HANDLE *handle, GF_OBJ_HANDLE *target) : SCOM(handle, SCOM_TYPE_UNKNOWN_47, SCOM_EXEC_UNKNOWN_0, 1), unknown20(target) {}
+  SCOM_TARGET_UI(GF_SCOM_HANDLE *handle, GF_OBJ_HANDLE *target) : SCOM(handle, SCOM_TYPE_UNKNOWN_47, SCOM_EXEC_UNKNOWN_0, 1), m_GF_OBJ_HANDLE(target) {}
   bool exec(const fw::UpdateInfo &info) override;
   static void create(GF_OBJ_HANDLE *target);
 
   u8 _1c[0x20 - 0x1c];
-  GF_OBJ_HANDLE *unknown20; // Inferred role: target; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: target; original member name unknown.
 };
 
 class SCOM_PARTY_ADD : public SCOM, public mm::mtl::PtrSingleton<SCOM_PARTY_ADD> {
@@ -251,14 +251,14 @@ static_assert(sizeof(SCOM_PARTY_LEADER) == 0x28, "");
 
 class SCOM_SET_BLADE : public SCOM {
 public:
-  SCOM_SET_BLADE(GF_SCOM_HANDLE *handle, const RQ_SETUP_BLADE &info) : SCOM(handle, SCOM_TYPE_SET_BLADE, SCOM_EXEC_UNKNOWN_0, 1), unknown1c(info) {}
+  SCOM_SET_BLADE(GF_SCOM_HANDLE *handle, const RQ_SETUP_BLADE &info) : SCOM(handle, SCOM_TYPE_SET_BLADE, SCOM_EXEC_UNKNOWN_0, 1), m_RQ_SETUP_BLADE(info) {}
   bool exec(const fw::UpdateInfo &info) override;
   static GF_SCOM_HANDLE *create(const RQ_SETUP_BLADE &info);
 
-  RQ_SETUP_BLADE unknown1c; // Inferred role: blades to set; original member name unknown.
+  RQ_SETUP_BLADE m_RQ_SETUP_BLADE; // Inferred role: blades to set; original member name unknown.
 };
 
-static_assert(offsetof(SCOM_SET_BLADE, unknown1c) == 0x1c, "");
+static_assert(offsetof(SCOM_SET_BLADE, m_RQ_SETUP_BLADE) == 0x1c, "");
 static_assert(sizeof(SCOM_SET_BLADE) == 0x30, "");
 
 class SCOM_NIA_BLADE : public SCOM {
@@ -335,12 +335,12 @@ class SCOM_FIELD_VOICE : public SCOM {
 public:
   // Inferred role: queued field voice; original type name unknown.
   struct unknown001 {
-    ParamObj unknown00;           // Inferred role: object; original member name unknown.
-    f32 unknown10;                // Inferred role: delay in seconds; original member name unknown.
-    CV_FIELD unknown14;           // Inferred role: voice; original member name unknown.
-    int unknown18;                // Inferred role: play state; original member name unknown.
-    CV_PRIO unknown1c;            // Inferred role: priority; original member name unknown.
-    GAME_VOICE_HANDLE *unknown20; // Inferred role: voice handle; original member name unknown.
+    ParamObj m_paramObj;                    // Inferred role: object; original member name unknown.
+    f32 unknown10;                          // Inferred role: delay in seconds; original member name unknown.
+    CV_FIELD unknown14;                     // Inferred role: voice; original member name unknown.
+    int unknown18;                          // Inferred role: play state; original member name unknown.
+    CV_PRIO unknown1c;                      // Inferred role: priority; original member name unknown.
+    GAME_VOICE_HANDLE *m_GAME_VOICE_HANDLE; // Inferred role: voice handle; original member name unknown.
   };
 
   SCOM_FIELD_VOICE(GF_SCOM_HANDLE *handle, bool isStopOnEvent) : SCOM(handle, SCOM_TYPE_UNKNOWN_63, SCOM_EXEC_UNKNOWN_0, 1), unknownd0(false), unknownd1(false), unknownd2(isStopOnEvent) {}
@@ -435,55 +435,55 @@ public:
 
 class SCOM_MAXIMUM_HEAL : public SCOM {
 public:
-  SCOM_MAXIMUM_HEAL(GF_SCOM_HANDLE *handle, GF_OBJ_HANDLE *target) : SCOM(handle, SCOM_TYPE_UNKNOWN_8, SCOM_EXEC_UNKNOWN_0, 1), unknown20(target) {}
+  SCOM_MAXIMUM_HEAL(GF_SCOM_HANDLE *handle, GF_OBJ_HANDLE *target) : SCOM(handle, SCOM_TYPE_UNKNOWN_8, SCOM_EXEC_UNKNOWN_0, 1), m_GF_OBJ_HANDLE(target) {}
   bool exec(const fw::UpdateInfo &info) override;
   static void create(GF_OBJ_HANDLE *handle);
 
   u8 _1c[0x20 - 0x1c];
-  GF_OBJ_HANDLE *unknown20; // Inferred role: target; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: target; original member name unknown.
 };
 
-static_assert(offsetof(SCOM_MAXIMUM_HEAL, unknown20) == 0x20, "");
+static_assert(offsetof(SCOM_MAXIMUM_HEAL, m_GF_OBJ_HANDLE) == 0x20, "");
 static_assert(sizeof(SCOM_MAXIMUM_HEAL) == 0x28, "");
 
 class SCOM_ADD_IDEA : public SCOM {
 public:
   SCOM_ADD_IDEA(GF_SCOM_HANDLE *handle, int point, u32 driver, u32 idea, GF_OBJ_HANDLE *target)
-      : SCOM(handle, SCOM_TYPE_UNKNOWN_9, SCOM_EXEC_UNKNOWN_0, 1), unknown1c(point), unknown20(driver), unknown24(idea), unknown28(target) {}
+      : SCOM(handle, SCOM_TYPE_UNKNOWN_9, SCOM_EXEC_UNKNOWN_0, 1), unknown1c(point), unknown20(driver), unknown24(idea), m_GF_OBJ_HANDLE(target) {}
   bool exec(const fw::UpdateInfo &info) override;
   static GF_SCOM_HANDLE *create(GF_OBJ_HANDLE *handle, u32 idea, int point);
   static GF_SCOM_HANDLE *create(u32 driver, u32 idea, int point);
 
-  int unknown1c;            // Inferred role: idea point; original member name unknown.
-  u32 unknown20;            // Inferred role: driver; original member name unknown.
-  u32 unknown24;            // Inferred role: idea; original member name unknown.
-  GF_OBJ_HANDLE *unknown28; // Inferred role: driver object; original member name unknown.
+  int unknown1c;                  // Inferred role: idea point; original member name unknown.
+  u32 unknown20;                  // Inferred role: driver; original member name unknown.
+  u32 unknown24;                  // Inferred role: idea; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: driver object; original member name unknown.
 };
 
 static_assert(offsetof(SCOM_ADD_IDEA, unknown1c) == 0x1c, "");
 static_assert(offsetof(SCOM_ADD_IDEA, unknown20) == 0x20, "");
 static_assert(offsetof(SCOM_ADD_IDEA, unknown24) == 0x24, "");
-static_assert(offsetof(SCOM_ADD_IDEA, unknown28) == 0x28, "");
+static_assert(offsetof(SCOM_ADD_IDEA, m_GF_OBJ_HANDLE) == 0x28, "");
 static_assert(sizeof(SCOM_ADD_IDEA) == 0x30, "");
 
 class SCOM_EXEC_DRIVER_ARTS_LVUP : public SCOM {
 public:
   SCOM_EXEC_DRIVER_ARTS_LVUP(GF_SCOM_HANDLE *handle, u32 level, u32 driver, u32 arts, GF_OBJ_HANDLE *target)
-      : SCOM(handle, SCOM_TYPE_UNKNOWN_54, SCOM_EXEC_UNKNOWN_0, 1), unknown1c(level), unknown20(driver), unknown24(arts), unknown28(target) {}
+      : SCOM(handle, SCOM_TYPE_UNKNOWN_54, SCOM_EXEC_UNKNOWN_0, 1), unknown1c(level), unknown20(driver), unknown24(arts), m_GF_OBJ_HANDLE(target) {}
   bool exec(const fw::UpdateInfo &info) override;
   static GF_SCOM_HANDLE *create(u32 level, u32 arts, GF_OBJ_HANDLE *handle);
   static GF_SCOM_HANDLE *create(u32 level, u32 arts, u32 driver);
 
-  u32 unknown1c;            // Inferred role: level; original member name unknown.
-  u32 unknown20;            // Inferred role: driver; original member name unknown.
-  u32 unknown24;            // Inferred role: arts; original member name unknown.
-  GF_OBJ_HANDLE *unknown28; // Inferred role: driver object; original member name unknown.
+  u32 unknown1c;                  // Inferred role: level; original member name unknown.
+  u32 unknown20;                  // Inferred role: driver; original member name unknown.
+  u32 unknown24;                  // Inferred role: arts; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: driver object; original member name unknown.
 };
 
 static_assert(offsetof(SCOM_EXEC_DRIVER_ARTS_LVUP, unknown1c) == 0x1c, "");
 static_assert(offsetof(SCOM_EXEC_DRIVER_ARTS_LVUP, unknown20) == 0x20, "");
 static_assert(offsetof(SCOM_EXEC_DRIVER_ARTS_LVUP, unknown24) == 0x24, "");
-static_assert(offsetof(SCOM_EXEC_DRIVER_ARTS_LVUP, unknown28) == 0x28, "");
+static_assert(offsetof(SCOM_EXEC_DRIVER_ARTS_LVUP, m_GF_OBJ_HANDLE) == 0x28, "");
 static_assert(sizeof(SCOM_EXEC_DRIVER_ARTS_LVUP) == 0x30, "");
 
 class SCOM_OBJ_ALPHA : public SCOM {
@@ -494,14 +494,14 @@ public:
   static void createWeapon(GF_OBJ_HANDLE *handle, f32 time, f32 alpha);
 
   u8 _1c[0x20 - 0x1c];
-  GF_OBJ_HANDLE *unknown20; // Inferred role: target; original member name unknown.
-  f32 unknown28;            // Inferred role: fade time; original member name unknown.
-  f32 unknown2c;            // Inferred role: elapsed time; original member name unknown.
-  f32 unknown30;            // Inferred role: target alpha; original member name unknown.
-  f32 unknown34;            // Inferred role: start alpha; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: target; original member name unknown.
+  f32 unknown28;                  // Inferred role: fade time; original member name unknown.
+  f32 unknown2c;                  // Inferred role: elapsed time; original member name unknown.
+  f32 unknown30;                  // Inferred role: target alpha; original member name unknown.
+  f32 unknown34;                  // Inferred role: start alpha; original member name unknown.
 };
 
-static_assert(offsetof(SCOM_OBJ_ALPHA, unknown20) == 0x20, "");
+static_assert(offsetof(SCOM_OBJ_ALPHA, m_GF_OBJ_HANDLE) == 0x20, "");
 static_assert(offsetof(SCOM_OBJ_ALPHA, unknown28) == 0x28, "");
 static_assert(offsetof(SCOM_OBJ_ALPHA, unknown2c) == 0x2c, "");
 static_assert(offsetof(SCOM_OBJ_ALPHA, unknown30) == 0x30, "");
@@ -515,14 +515,14 @@ public:
   static GF_SCOM_HANDLE *create(GF_OBJ_HANDLE *handle, f32 time);
 
   u8 _1c[0x20 - 0x1c];
-  GF_OBJ_HANDLE *unknown20; // Inferred role: target; original member name unknown.
-  int unknown28;            // Inferred role: state; original member name unknown.
-  u32 unknown2c;            // Inferred role: object attribute; original member name unknown.
-  f32 unknown30;            // Inferred role: remaining time; original member name unknown.
-  f32 unknown34;            // Inferred role: fade time; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: target; original member name unknown.
+  int unknown28;                  // Inferred role: state; original member name unknown.
+  u32 unknown2c;                  // Inferred role: object attribute; original member name unknown.
+  f32 unknown30;                  // Inferred role: remaining time; original member name unknown.
+  f32 unknown34;                  // Inferred role: fade time; original member name unknown.
 };
 
-static_assert(offsetof(SCOM_BC_PARTICLE, unknown20) == 0x20, "");
+static_assert(offsetof(SCOM_BC_PARTICLE, m_GF_OBJ_HANDLE) == 0x20, "");
 static_assert(offsetof(SCOM_BC_PARTICLE, unknown28) == 0x28, "");
 static_assert(offsetof(SCOM_BC_PARTICLE, unknown2c) == 0x2c, "");
 static_assert(offsetof(SCOM_BC_PARTICLE, unknown30) == 0x30, "");
@@ -536,14 +536,14 @@ public:
   static GF_SCOM_HANDLE *create(GF_OBJ_HANDLE *handle, u32 attribute, f32 time);
 
   u8 _1c[0x20 - 0x1c];
-  GF_OBJ_HANDLE *unknown20; // Inferred role: target; original member name unknown.
-  int unknown28;            // Inferred role: state; original member name unknown.
-  u32 unknown2c;            // Inferred role: object attribute; original member name unknown.
-  f32 unknown30;            // Inferred role: remaining time; original member name unknown.
-  f32 unknown34;            // Inferred role: fade time; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: target; original member name unknown.
+  int unknown28;                  // Inferred role: state; original member name unknown.
+  u32 unknown2c;                  // Inferred role: object attribute; original member name unknown.
+  f32 unknown30;                  // Inferred role: remaining time; original member name unknown.
+  f32 unknown34;                  // Inferred role: fade time; original member name unknown.
 };
 
-static_assert(offsetof(SCOM_DEAD_PARTICLE, unknown20) == 0x20, "");
+static_assert(offsetof(SCOM_DEAD_PARTICLE, m_GF_OBJ_HANDLE) == 0x20, "");
 static_assert(offsetof(SCOM_DEAD_PARTICLE, unknown28) == 0x28, "");
 static_assert(offsetof(SCOM_DEAD_PARTICLE, unknown2c) == 0x2c, "");
 static_assert(offsetof(SCOM_DEAD_PARTICLE, unknown30) == 0x30, "");
@@ -557,10 +557,10 @@ public:
   static GF_SCOM_HANDLE *create(GF_OBJ_HANDLE *handle);
 
   u8 _1c[0x20 - 0x1c];
-  GF_OBJ_HANDLE *unknown20; // Inferred role: target; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: target; original member name unknown.
 };
 
-static_assert(offsetof(SCOM_OBJ_VFADE_OFF, unknown20) == 0x20, "");
+static_assert(offsetof(SCOM_OBJ_VFADE_OFF, m_GF_OBJ_HANDLE) == 0x20, "");
 static_assert(sizeof(SCOM_OBJ_VFADE_OFF) == 0x28, "");
 
 class SCOM_OBJ_VFADE : public SCOM {
@@ -645,7 +645,7 @@ static_assert(sizeof(SCOM_ADD_WP) == 0x38, "");
 class SCOM_ADD_SP : public SCOM {
 public:
   SCOM_ADD_SP(GF_SCOM_HANDLE *handle, int skillPoint, u32 driver, GF_OBJ_HANDLE *target)
-      : SCOM(handle, SCOM_TYPE_UNKNOWN_8, SCOM_EXEC_UNKNOWN_0, 1), unknown1c(skillPoint), unknown20(driver), unknown28(target) {}
+      : SCOM(handle, SCOM_TYPE_UNKNOWN_8, SCOM_EXEC_UNKNOWN_0, 1), unknown1c(skillPoint), unknown20(driver), m_GF_OBJ_HANDLE(target) {}
   bool exec(const fw::UpdateInfo &info) override;
   static GF_SCOM_HANDLE *create(GF_OBJ_HANDLE *handle, int skillPoint);
   static GF_SCOM_HANDLE *create(u32 driver, int skillPoint);
@@ -653,18 +653,18 @@ public:
   int unknown1c; // Inferred role: skill point; original member name unknown.
   u32 unknown20; // Inferred role: driver; original member name unknown.
   u8 _24[0x28 - 0x24];
-  GF_OBJ_HANDLE *unknown28; // Inferred role: driver object; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: driver object; original member name unknown.
 };
 
 static_assert(offsetof(SCOM_ADD_SP, unknown1c) == 0x1c, "");
 static_assert(offsetof(SCOM_ADD_SP, unknown20) == 0x20, "");
-static_assert(offsetof(SCOM_ADD_SP, unknown28) == 0x28, "");
+static_assert(offsetof(SCOM_ADD_SP, m_GF_OBJ_HANDLE) == 0x28, "");
 static_assert(sizeof(SCOM_ADD_SP) == 0x30, "");
 
 class SCOM_EXEC_LVUP : public SCOM {
 public:
   SCOM_EXEC_LVUP(GF_SCOM_HANDLE *handle, u32 level, u32 driver, GF_OBJ_HANDLE *target)
-      : SCOM(handle, SCOM_TYPE_UNKNOWN_5, SCOM_EXEC_UNKNOWN_0, 1), unknown1c(level), unknown20(driver), unknown28(target) {}
+      : SCOM(handle, SCOM_TYPE_UNKNOWN_5, SCOM_EXEC_UNKNOWN_0, 1), unknown1c(level), unknown20(driver), m_GF_OBJ_HANDLE(target) {}
   bool exec(const fw::UpdateInfo &info) override;
   static GF_SCOM_HANDLE *create(u32 level, GF_OBJ_HANDLE *handle);
   static GF_SCOM_HANDLE *create(u32 level, u32 driver);
@@ -672,12 +672,12 @@ public:
   u32 unknown1c; // Inferred role: level; original member name unknown.
   u32 unknown20; // Inferred role: driver; original member name unknown.
   u8 _24[0x28 - 0x24];
-  GF_OBJ_HANDLE *unknown28; // Inferred role: driver object; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: driver object; original member name unknown.
 };
 
 static_assert(offsetof(SCOM_EXEC_LVUP, unknown1c) == 0x1c, "");
 static_assert(offsetof(SCOM_EXEC_LVUP, unknown20) == 0x20, "");
-static_assert(offsetof(SCOM_EXEC_LVUP, unknown28) == 0x28, "");
+static_assert(offsetof(SCOM_EXEC_LVUP, m_GF_OBJ_HANDLE) == 0x28, "");
 static_assert(sizeof(SCOM_EXEC_LVUP) == 0x30, "");
 
 class SCOM_ADD_MONEY : public SCOM {
@@ -721,14 +721,14 @@ static_assert(sizeof(SCOM_ADD_DEVELOP) == 0x28, "");
 
 class SCOM_ACCESS_TARGET : public SCOM {
 public:
-  SCOM_ACCESS_TARGET(GF_SCOM_HANDLE *handle, GF_OBJ_HANDLE *target) : SCOM(handle, SCOM_TYPE_UNKNOWN_46, SCOM_EXEC_UNKNOWN_0, 1), unknown20(target) {}
+  SCOM_ACCESS_TARGET(GF_SCOM_HANDLE *handle, GF_OBJ_HANDLE *target) : SCOM(handle, SCOM_TYPE_UNKNOWN_46, SCOM_EXEC_UNKNOWN_0, 1), m_GF_OBJ_HANDLE(target) {}
   bool exec(const fw::UpdateInfo &info) override;
   static GF_SCOM_HANDLE *create(GF_OBJ_HANDLE *target);
 
-  GF_OBJ_HANDLE *unknown20; // Inferred role: target; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: target; original member name unknown.
 };
 
-static_assert(offsetof(SCOM_ACCESS_TARGET, unknown20) == 0x20, "");
+static_assert(offsetof(SCOM_ACCESS_TARGET, m_GF_OBJ_HANDLE) == 0x20, "");
 static_assert(sizeof(SCOM_ACCESS_TARGET) == 0x28, "");
 
 class SCOM_SET_FLAG : public SCOM {
@@ -753,12 +753,12 @@ public:
   bool exec(const fw::UpdateInfo &info) override;
   static GF_SCOM_HANDLE *create(GF_OBJ_HANDLE *target, const MsgObjectNotifyDead &message);
 
-  GF_OBJ_HANDLE *unknown20;      // Inferred role: dead object; original member name unknown.
-  MsgObjectNotifyDead unknown28; // Inferred role: dead message, without its damage; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE;            // Inferred role: dead object; original member name unknown.
+  MsgObjectNotifyDead m_msgObjectNotifyDead; // Inferred role: dead message, without its damage; original member name unknown.
 };
 
-static_assert(offsetof(SCOM_CHAR_DEAD, unknown20) == 0x20, "");
-static_assert(offsetof(SCOM_CHAR_DEAD, unknown28) == 0x28, "");
+static_assert(offsetof(SCOM_CHAR_DEAD, m_GF_OBJ_HANDLE) == 0x20, "");
+static_assert(offsetof(SCOM_CHAR_DEAD, m_msgObjectNotifyDead) == 0x28, "");
 static_assert(sizeof(SCOM_CHAR_DEAD) == 0x58, "");
 
 class SCOM_CHAR_DMG {
@@ -818,14 +818,14 @@ static_assert(sizeof(SCOM_QUEST_EVENT) == 0x20, "");
 
 class SCOM_QUEST_ORDER : public SCOM {
 public:
-  SCOM_QUEST_ORDER(GF_SCOM_HANDLE *handle, QuestID quest) : SCOM(handle, SCOM_TYPE_UNKNOWN_41, SCOM_EXEC_UNKNOWN_0, 1), unknown1c(quest) {}
+  SCOM_QUEST_ORDER(GF_SCOM_HANDLE *handle, QuestID quest) : SCOM(handle, SCOM_TYPE_UNKNOWN_41, SCOM_EXEC_UNKNOWN_0, 1), m_questID(quest) {}
   bool exec(const fw::UpdateInfo &info) override;
   static GF_SCOM_HANDLE *create(QuestID quest);
 
-  QuestID unknown1c; // Inferred role: quest; original member name unknown.
+  QuestID m_questID; // Inferred role: quest; original member name unknown.
 };
 
-static_assert(offsetof(SCOM_QUEST_ORDER, unknown1c) == 0x1c, "");
+static_assert(offsetof(SCOM_QUEST_ORDER, m_questID) == 0x1c, "");
 static_assert(sizeof(SCOM_QUEST_ORDER) == 0x20, "");
 
 class SCOM_ITEM_USE : public SCOM {
@@ -844,17 +844,17 @@ static_assert(sizeof(SCOM_ITEM_USE) == 0x28, "");
 
 class SCOM_DESTROY_PARTY_OBJ : public SCOM {
 public:
-  SCOM_DESTROY_PARTY_OBJ(GF_SCOM_HANDLE *handle, const RQ_SETUP_PARTY &info) : SCOM(handle, SCOM_TYPE_DESTROY_PARTY_OBJ, SCOM_EXEC_UNKNOWN_0, 1), unknown1c(false), unknown20(info) {}
+  SCOM_DESTROY_PARTY_OBJ(GF_SCOM_HANDLE *handle, const RQ_SETUP_PARTY &info) : SCOM(handle, SCOM_TYPE_DESTROY_PARTY_OBJ, SCOM_EXEC_UNKNOWN_0, 1), unknown1c(false), m_RQ_SETUP_PARTY(info) {}
   bool exec(const fw::UpdateInfo &info) override;
   static GF_SCOM_HANDLE *create(const RQ_SETUP_PARTY &info);
 
   bool unknown1c;                                       // Inferred role: destroy requested; original member name unknown.
-  RQ_SETUP_PARTY unknown20;                             // Inferred role: party; original member name unknown.
+  RQ_SETUP_PARTY m_RQ_SETUP_PARTY;                      // Inferred role: party; original member name unknown.
   mm::mtl::FixedVector<GF_OBJ_HANDLE *, 32> unknown1c0; // Inferred role: objects being destroyed; original member name unknown.
 };
 
 static_assert(offsetof(SCOM_DESTROY_PARTY_OBJ, unknown1c) == 0x1c, "");
-static_assert(offsetof(SCOM_DESTROY_PARTY_OBJ, unknown20) == 0x20, "");
+static_assert(offsetof(SCOM_DESTROY_PARTY_OBJ, m_RQ_SETUP_PARTY) == 0x20, "");
 static_assert(offsetof(SCOM_DESTROY_PARTY_OBJ, unknown1c0) == 0x1c0, "");
 static_assert(sizeof(SCOM_DESTROY_PARTY_OBJ) == 0x2d0, "");
 
@@ -910,15 +910,15 @@ static_assert(sizeof(SCOM_RELOAD_TEXT) == 0x20, "");
 
 class SCOM_STOP_LAYER : public SCOM {
 public:
-  SCOM_STOP_LAYER(GF_SCOM_HANDLE *handle, GF_OBJ_HANDLE *target, bool stop) : SCOM(handle, SCOM_TYPE_UNKNOWN_32, SCOM_EXEC_UNKNOWN_0, 1), unknown20(target), unknown28(stop) {}
+  SCOM_STOP_LAYER(GF_SCOM_HANDLE *handle, GF_OBJ_HANDLE *target, bool stop) : SCOM(handle, SCOM_TYPE_UNKNOWN_32, SCOM_EXEC_UNKNOWN_0, 1), m_GF_OBJ_HANDLE(target), unknown28(stop) {}
   bool exec(const fw::UpdateInfo &info) override;
   static GF_SCOM_HANDLE *create(GF_OBJ_HANDLE *target, bool stop);
 
-  GF_OBJ_HANDLE *unknown20; // Inferred role: target; original member name unknown.
-  bool unknown28;           // Inferred role: stop; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: target; original member name unknown.
+  bool unknown28;                 // Inferred role: stop; original member name unknown.
 };
 
-static_assert(offsetof(SCOM_STOP_LAYER, unknown20) == 0x20, "");
+static_assert(offsetof(SCOM_STOP_LAYER, m_GF_OBJ_HANDLE) == 0x20, "");
 static_assert(offsetof(SCOM_STOP_LAYER, unknown28) == 0x28, "");
 static_assert(sizeof(SCOM_STOP_LAYER) == 0x30, "");
 
@@ -953,15 +953,15 @@ static_assert(sizeof(SCOM_BATTLE_BGM) == 0x20, "");
 
 class SCOM_COLI_CHAR_VALID : public SCOM {
 public:
-  SCOM_COLI_CHAR_VALID(GF_SCOM_HANDLE *handle, GF_OBJ_HANDLE *target, bool isEnable) : SCOM(handle, SCOM_TYPE_UNKNOWN_33, SCOM_EXEC_UNKNOWN_0, 1), unknown20(target), unknown28(isEnable) {}
+  SCOM_COLI_CHAR_VALID(GF_SCOM_HANDLE *handle, GF_OBJ_HANDLE *target, bool isEnable) : SCOM(handle, SCOM_TYPE_UNKNOWN_33, SCOM_EXEC_UNKNOWN_0, 1), m_GF_OBJ_HANDLE(target), unknown28(isEnable) {}
   bool exec(const fw::UpdateInfo &info) override;
   static GF_SCOM_HANDLE *create(GF_OBJ_HANDLE *target, bool isEnable);
 
-  GF_OBJ_HANDLE *unknown20; // Inferred role: target; original member name unknown.
-  bool unknown28;           // Inferred role: enable; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: target; original member name unknown.
+  bool unknown28;                 // Inferred role: enable; original member name unknown.
 };
 
-static_assert(offsetof(SCOM_COLI_CHAR_VALID, unknown20) == 0x20, "");
+static_assert(offsetof(SCOM_COLI_CHAR_VALID, m_GF_OBJ_HANDLE) == 0x20, "");
 static_assert(offsetof(SCOM_COLI_CHAR_VALID, unknown28) == 0x28, "");
 static_assert(sizeof(SCOM_COLI_CHAR_VALID) == 0x30, "");
 
@@ -1006,27 +1006,27 @@ static_assert(sizeof(SCOM_FIELD_SKILL) == 0x28, "");
 
 class SCOM_REBUILD : public SCOM {
 public:
-  SCOM_REBUILD(GF_SCOM_HANDLE *handle, GF_OBJ_HANDLE *target) : SCOM(handle, SCOM_TYPE_UNKNOWN_58, SCOM_EXEC_UNKNOWN_0, 1), unknown20(target) {}
+  SCOM_REBUILD(GF_SCOM_HANDLE *handle, GF_OBJ_HANDLE *target) : SCOM(handle, SCOM_TYPE_UNKNOWN_58, SCOM_EXEC_UNKNOWN_0, 1), m_GF_OBJ_HANDLE(target) {}
   bool exec(const fw::UpdateInfo &info) override;
   static GF_SCOM_HANDLE *create(GF_OBJ_HANDLE *target);
 
-  GF_OBJ_HANDLE *unknown20; // Inferred role: target; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: target; original member name unknown.
 };
 
-static_assert(offsetof(SCOM_REBUILD, unknown20) == 0x20, "");
+static_assert(offsetof(SCOM_REBUILD, m_GF_OBJ_HANDLE) == 0x20, "");
 static_assert(sizeof(SCOM_REBUILD) == 0x28, "");
 
 class SCOM_CHANGE_RIDE : public SCOM {
 public:
-  SCOM_CHANGE_RIDE(GF_SCOM_HANDLE *handle, GF_OBJ_HANDLE *driver, bool isRide) : SCOM(handle, SCOM_TYPE_UNKNOWN_61, SCOM_EXEC_UNKNOWN_0, 1), unknown20(driver), unknown28(isRide) {}
+  SCOM_CHANGE_RIDE(GF_SCOM_HANDLE *handle, GF_OBJ_HANDLE *driver, bool isRide) : SCOM(handle, SCOM_TYPE_UNKNOWN_61, SCOM_EXEC_UNKNOWN_0, 1), m_GF_OBJ_HANDLE(driver), unknown28(isRide) {}
   bool exec(const fw::UpdateInfo &info) override;
   static GF_SCOM_HANDLE *create(GF_OBJ_HANDLE *driver, bool isRide);
 
-  GF_OBJ_HANDLE *unknown20; // Inferred role: driver; original member name unknown.
-  bool unknown28;           // Inferred role: ride flag; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: driver; original member name unknown.
+  bool unknown28;                 // Inferred role: ride flag; original member name unknown.
 };
 
-static_assert(offsetof(SCOM_CHANGE_RIDE, unknown20) == 0x20, "");
+static_assert(offsetof(SCOM_CHANGE_RIDE, m_GF_OBJ_HANDLE) == 0x20, "");
 static_assert(offsetof(SCOM_CHANGE_RIDE, unknown28) == 0x28, "");
 static_assert(sizeof(SCOM_CHANGE_RIDE) == 0x30, "");
 
@@ -1056,45 +1056,45 @@ static_assert(sizeof(SCOM_SET_MERCENARIES_LEVEL) == 0x20, "");
 
 class SCOM_EXEC_MOUNT : public SCOM {
 public:
-  SCOM_EXEC_MOUNT(GF_SCOM_HANDLE *handle, GF_OBJ_HANDLE *target, OPTMNT mountType) : SCOM(handle, SCOM_TYPE_UNKNOWN_35, SCOM_EXEC_UNKNOWN_0, 1), unknown20(target), unknown28(mountType) {}
+  SCOM_EXEC_MOUNT(GF_SCOM_HANDLE *handle, GF_OBJ_HANDLE *target, OPTMNT mountType) : SCOM(handle, SCOM_TYPE_UNKNOWN_35, SCOM_EXEC_UNKNOWN_0, 1), m_GF_OBJ_HANDLE(target), unknown28(mountType) {}
   bool exec(const fw::UpdateInfo &info) override;
   static GF_SCOM_HANDLE *create(GF_OBJ_HANDLE *target, OPTMNT mountType);
 
-  GF_OBJ_HANDLE *unknown20; // Inferred role: target; original member name unknown.
-  OPTMNT unknown28;         // Inferred role: mount type; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: target; original member name unknown.
+  OPTMNT unknown28;               // Inferred role: mount type; original member name unknown.
 };
 
-static_assert(offsetof(SCOM_EXEC_MOUNT, unknown20) == 0x20, "");
+static_assert(offsetof(SCOM_EXEC_MOUNT, m_GF_OBJ_HANDLE) == 0x20, "");
 static_assert(offsetof(SCOM_EXEC_MOUNT, unknown28) == 0x28, "");
 static_assert(sizeof(SCOM_EXEC_MOUNT) == 0x30, "");
 
 class SCOM_RESET_MOUNT : public SCOM {
 public:
-  SCOM_RESET_MOUNT(GF_SCOM_HANDLE *handle, GF_OBJ_HANDLE *target, OPTMNT mountType) : SCOM(handle, SCOM_TYPE_UNKNOWN_35, SCOM_EXEC_UNKNOWN_0, 1), unknown20(target), unknown28(mountType) {}
+  SCOM_RESET_MOUNT(GF_SCOM_HANDLE *handle, GF_OBJ_HANDLE *target, OPTMNT mountType) : SCOM(handle, SCOM_TYPE_UNKNOWN_35, SCOM_EXEC_UNKNOWN_0, 1), m_GF_OBJ_HANDLE(target), unknown28(mountType) {}
   bool exec(const fw::UpdateInfo &info) override;
   static GF_SCOM_HANDLE *create(GF_OBJ_HANDLE *target, OPTMNT mountType);
 
-  GF_OBJ_HANDLE *unknown20; // Inferred role: target; original member name unknown.
-  OPTMNT unknown28;         // Inferred role: mount type; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: target; original member name unknown.
+  OPTMNT unknown28;               // Inferred role: mount type; original member name unknown.
 };
 
-static_assert(offsetof(SCOM_RESET_MOUNT, unknown20) == 0x20, "");
+static_assert(offsetof(SCOM_RESET_MOUNT, m_GF_OBJ_HANDLE) == 0x20, "");
 static_assert(offsetof(SCOM_RESET_MOUNT, unknown28) == 0x28, "");
 static_assert(sizeof(SCOM_RESET_MOUNT) == 0x30, "");
 
 class SCOM_VALID_LOCAL_SPEED : public SCOM {
 public:
   SCOM_VALID_LOCAL_SPEED(GF_SCOM_HANDLE *handle, GF_OBJ_HANDLE *target, bool stop, f32 speed)
-      : SCOM(handle, SCOM_TYPE_UNKNOWN_37, SCOM_EXEC_UNKNOWN_0, 1), unknown20(target), unknown28(speed), unknown2c(stop) {}
+      : SCOM(handle, SCOM_TYPE_UNKNOWN_37, SCOM_EXEC_UNKNOWN_0, 1), m_GF_OBJ_HANDLE(target), unknown28(speed), unknown2c(stop) {}
   bool exec(const fw::UpdateInfo &info) override;
   static GF_SCOM_HANDLE *create(GF_OBJ_HANDLE *target, bool stop, f32 speed);
 
-  GF_OBJ_HANDLE *unknown20; // Inferred role: target; original member name unknown.
-  f32 unknown28;            // Inferred role: speed; original member name unknown.
-  bool unknown2c;           // Inferred role: stop; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: target; original member name unknown.
+  f32 unknown28;                  // Inferred role: speed; original member name unknown.
+  bool unknown2c;                 // Inferred role: stop; original member name unknown.
 };
 
-static_assert(offsetof(SCOM_VALID_LOCAL_SPEED, unknown20) == 0x20, "");
+static_assert(offsetof(SCOM_VALID_LOCAL_SPEED, m_GF_OBJ_HANDLE) == 0x20, "");
 static_assert(offsetof(SCOM_VALID_LOCAL_SPEED, unknown28) == 0x28, "");
 static_assert(offsetof(SCOM_VALID_LOCAL_SPEED, unknown2c) == 0x2c, "");
 static_assert(sizeof(SCOM_VALID_LOCAL_SPEED) == 0x30, "");
@@ -1132,6 +1132,7 @@ public:
   bool update(const fw::UpdateInfo &info, u16 priority);
   bool updateParallel(const fw::UpdateInfo &info);
   void update(const fw::UpdateInfo &info);
+  void debugCommandDisp();
   bool isValid(GF_SCOM_HANDLE *handle);
   static bool isExistCommand(SCOM_TYPE type);
   static bool isExistCommand();

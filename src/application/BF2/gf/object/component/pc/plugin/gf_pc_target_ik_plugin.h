@@ -57,7 +57,7 @@ public:
   bool isActiveRange(GfComPropertyPc &property, const mm::Vec3 &target);
   void procMsgGameChangeTarget(fw::MessageObject *object, MsgGameChangeTarget &message);
 
-  GF_OBJ_HANDLE *unknown10;                          // Inferred role: target; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE;                    // Inferred role: target; original member name unknown.
   mm::mtl::IntrusivePtr<fw::LookIkSolver> unknown18; // Inferred role: look ik solver; original member name unknown.
   const fw::ParamList::unknown005 *unknown20;        // Inferred role: param entry; original member name unknown.
   u8 _28[0x30 - 0x28];
@@ -66,7 +66,7 @@ public:
   f32 unknown44;      // Inferred role: target down ratio; original member name unknown.
 };
 
-static_assert(offsetof(TargetIKPlugin, unknown10) == 0x10, "");
+static_assert(offsetof(TargetIKPlugin, m_GF_OBJ_HANDLE) == 0x10, "");
 static_assert(offsetof(TargetIKPlugin, unknown18) == 0x18, "");
 static_assert(offsetof(TargetIKPlugin, unknown20) == 0x20, "");
 static_assert(offsetof(TargetIKPlugin, unknown30) == 0x30, "");

@@ -30,7 +30,7 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_KIZUNA_TALK; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
-  GmkKizunaTalk() : unknown48(gf::unknown020), unknown50(), unknown54(true) {}
+  GmkKizunaTalk() : unknown48(gf::unknown020), m_distCond(), unknown54(true) {}
   ~GmkKizunaTalk() override { dispose(); }
   GmkType getGmkType() const override { return GMK_TYPE; }
   int getGameFlagId() const;
@@ -43,15 +43,15 @@ public:
   void validateDisp() const;
   void onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) override;
 
-  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(m_createInfo.unknown10); }
 
   gf::GF_OBJ_HANDLE *unknown48; // Inferred role: handle; original member name unknown.
-  DistCond unknown50;           // Inferred role: dist cond; original member name unknown.
+  DistCond m_distCond;          // Inferred role: dist cond; original member name unknown.
   mutable bool unknown54;       // Inferred role: disp; original member name unknown.
 };
 
 static_assert(offsetof(GmkKizunaTalk, unknown48) == 0x48, "");
-static_assert(offsetof(GmkKizunaTalk, unknown50) == 0x50, "");
+static_assert(offsetof(GmkKizunaTalk, m_distCond) == 0x50, "");
 static_assert(offsetof(GmkKizunaTalk, unknown54) == 0x54, "");
 
 static_assert(sizeof(GmkKizunaTalk::BdatInfo) == 0x6, "");

@@ -113,21 +113,21 @@ public:
   int getStat(u32 mission, bool isOrderParty);
 
   mm::mtl::Delegate<bool()> unknown30; // Inferred role: updater; original member name unknown.
-  IConverter *unknown50;               // Inferred role: converter; original member name unknown.
+  IConverter *m_iConverter;            // Inferred role: converter; original member name unknown.
   u32 unknown58;                       // Inferred role: mission; original member name unknown.
   int unknown5c;                       // Inferred role: mission status; original member name unknown.
   u32 unknown60;                       // Role and original member name unknown.
   int unknown64;                       // Role and original member name unknown.
-  GfMenuBladeList *unknown68;          // Inferred role: blade list; original member name unknown.
+  GfMenuBladeList *m_menuBladeList;    // Inferred role: blade list; original member name unknown.
   int unknown70;                       // Inferred role: task; original member name unknown.
 };
 
 static_assert(offsetof(GfMenuMissionAdapter, unknown30) == 0x30, "");
-static_assert(offsetof(GfMenuMissionAdapter, unknown50) == 0x50, "");
+static_assert(offsetof(GfMenuMissionAdapter, m_iConverter) == 0x50, "");
 static_assert(offsetof(GfMenuMissionAdapter, unknown58) == 0x58, "");
 static_assert(offsetof(GfMenuMissionAdapter, unknown5c) == 0x5c, "");
 static_assert(offsetof(GfMenuMissionAdapter, unknown60) == 0x60, "");
-static_assert(offsetof(GfMenuMissionAdapter, unknown68) == 0x68, "");
+static_assert(offsetof(GfMenuMissionAdapter, m_menuBladeList) == 0x68, "");
 static_assert(offsetof(GfMenuMissionAdapter, unknown70) == 0x70, "");
 static_assert(sizeof(GfMenuMissionAdapter) == 0x78, "");
 

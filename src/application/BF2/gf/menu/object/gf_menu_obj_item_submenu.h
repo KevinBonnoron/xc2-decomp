@@ -15,22 +15,22 @@ class GfMenuObjItemSubmenu : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjItemSubmenu *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjItemSubmenu *owner) : _0c(), m_menuObjItemSubmenu(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
     u8 _1c[0x20 - 0x1c];
-    GfMenuObjItemSubmenu *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjItemSubmenu *m_menuObjItemSubmenu; // Inferred role: owner; original member name unknown.
   };
 
   class SubmenuListener : public ui::UIObjectListener {
   public:
-    SubmenuListener(GfMenuObjItemSubmenu *owner) : _0c(), unknown20(owner) {}
+    SubmenuListener(GfMenuObjItemSubmenu *owner) : _0c(), m_menuObjItemSubmenu(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
     u8 _1c[0x20 - 0x1c];
-    GfMenuObjItemSubmenu *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjItemSubmenu *m_menuObjItemSubmenu; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjItemSubmenu(u32 handle);
@@ -49,9 +49,9 @@ public:
   u32 unknown2c; // Role and original member name unknown, zeroed by the constructor.
 };
 
-static_assert(offsetof(GfMenuObjItemSubmenu::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjItemSubmenu::MainListener, m_menuObjItemSubmenu) == 0x20, "");
 static_assert(sizeof(GfMenuObjItemSubmenu::MainListener) == 0x28, "");
-static_assert(offsetof(GfMenuObjItemSubmenu::SubmenuListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjItemSubmenu::SubmenuListener, m_menuObjItemSubmenu) == 0x20, "");
 static_assert(sizeof(GfMenuObjItemSubmenu::SubmenuListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjItemSubmenu, unknown24) == 0x24, "");
 static_assert(offsetof(GfMenuObjItemSubmenu, unknown28) == 0x28, "");

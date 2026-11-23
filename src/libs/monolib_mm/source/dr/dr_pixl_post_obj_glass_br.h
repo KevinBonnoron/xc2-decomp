@@ -45,11 +45,11 @@ public:
   void renderCaputre();
   void renderGlass();
 
-  grlib::CGLibVtxVertex unknown18;        // Inferred role: vertex; original member name unknown.
-  grlib::CGLibVtxIndex unknown40;         // Inferred role: index; original member name unknown.
-  grlib::CGLibVtlMemPool unknown68;       // Inferred role: memory pool; original member name unknown.
-  grlib::CGLibRenderTarget unknown98;     // Inferred role: render target; original member name unknown.
-  grlib::CGLibDblUniformBlock unknown460; // Inferred role: uniform block; original member name unknown.
+  grlib::CGLibVtxVertex m_cGLibVtxVertex;             // Inferred role: vertex; original member name unknown.
+  grlib::CGLibVtxIndex m_cGLibVtxIndex;               // Inferred role: index; original member name unknown.
+  grlib::CGLibVtlMemPool m_cGLibVtlMemPool;           // Inferred role: memory pool; original member name unknown.
+  grlib::CGLibRenderTarget m_cGLibRenderTarget;       // Inferred role: render target; original member name unknown.
+  grlib::CGLibDblUniformBlock m_cGLibDblUniformBlock; // Inferred role: uniform block; original member name unknown.
   u8 _498[0x4a0 - 0x498];
   mm::Mat44 unknown4a0; // Inferred role: projection matrix, written by posInt and uploaded by update; original member name unknown.
   void *unknown4e0;     // Inferred role: unused data; original member name unknown.
@@ -63,11 +63,11 @@ public:
   f32 unknown50c;                   // Inferred role: elapsed time; original member name unknown.
 };
 
-static_assert(offsetof(DrPixlPostObjGlassBr, unknown18) == 0x18, "");
-static_assert(offsetof(DrPixlPostObjGlassBr, unknown40) == 0x40, "");
-static_assert(offsetof(DrPixlPostObjGlassBr, unknown68) == 0x68, "");
-static_assert(offsetof(DrPixlPostObjGlassBr, unknown98) == 0x98, "");
-static_assert(offsetof(DrPixlPostObjGlassBr, unknown460) == 0x460, "");
+static_assert(offsetof(DrPixlPostObjGlassBr, m_cGLibVtxVertex) == 0x18, "");
+static_assert(offsetof(DrPixlPostObjGlassBr, m_cGLibVtxIndex) == 0x40, "");
+static_assert(offsetof(DrPixlPostObjGlassBr, m_cGLibVtlMemPool) == 0x68, "");
+static_assert(offsetof(DrPixlPostObjGlassBr, m_cGLibRenderTarget) == 0x98, "");
+static_assert(offsetof(DrPixlPostObjGlassBr, m_cGLibDblUniformBlock) == 0x460, "");
 static_assert(offsetof(DrPixlPostObjGlassBr, unknown4a0) == 0x4a0, "");
 static_assert(offsetof(DrPixlPostObjGlassBr, unknown4e0) == 0x4e0, "");
 static_assert(offsetof(DrPixlPostObjGlassBr, unknown4f0) == 0x4f0, "");

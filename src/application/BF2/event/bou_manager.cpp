@@ -1,5 +1,7 @@
 #include "event/bou_manager.h"
 
+#include <stddef.h>
+
 #include "event/i_bou_callback.h"
 #include "event/manager.h"
 #include "ml/event_view.h"
@@ -37,7 +39,7 @@ void BouManager::render() {
     return;
   }
   if (unknown18.test(FLAG_UNKNOWN_2)) {
-    unknown20.render();
+    m_bouRect.render();
   }
   for (IBouCallback **it = unknown2040.begin(); it != unknown2040.end(); ++it) {
     (*it)->OnBouRender(IBouCallback::RenderParam(mm::Col4(1.0f, 1.0f, 0.8f, 0.5f)));
@@ -45,11 +47,38 @@ void BouManager::render() {
 }
 
 void BouManager::startActive(const mm::Pnt<int> &point) {
-  unknown20.x = point.x;
-  unknown20.y = point.y;
+  m_bouRect.x = point.x;
+  m_bouRect.y = point.y;
   unknown003(point);
   unknown2040.clear();
   unknown18.set(FLAG_UNKNOWN_2);
+}
+
+void BouManager::updateActive(const mm::Pnt<int> &point) {
+  unknown003(point);
+  for (u32 i = 0; i != unknown38.size(); i++) {
+    IBouCallback *callback = unknown38[i];
+    // A signed index: the game tests it with `tbnz w9, #31` (1.0.0: 0x7100105fb4) after the search loop over the size_t count.
+    int selectedIndex = -1;
+    for (size_t j = 0; j < unknown2040.size(); j++) {
+      if (unknown2040[j] == callback) {
+        selectedIndex = j;
+        break;
+      }
+    }
+    if (selectedIndex >= 0) {
+      if (!callback->OnBouRectSelect(IBouCallback::SelectParam(&m_bouRect))) {
+        for (IBouCallback **it = unknown2040.begin(); it != unknown2040.end(); ++it) {
+          if (*it == callback) {
+            unknown2040.erase(it);
+            break;
+          }
+        }
+      }
+    } else if (callback->OnBouRectSelect(IBouCallback::SelectParam(&m_bouRect))) {
+      unknown2040.push_back(callback);
+    }
+  }
 }
 
 bool BouManager::OnMouseButtonDown(ml::EventView *view) {

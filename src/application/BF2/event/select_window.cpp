@@ -50,8 +50,8 @@ void SelectWindow::open(SELECT_TYPE type, int textId, const int *selectIds, size
     gf::GfMenuObjBalloon::OpenSelectParam param;
     param.unknown00 = bdat;
     param.unknown08 = textId;
-    param.unknown20 = handle;
-    gf::GfMenuBdat::getMenuOffset(MENU_OFFSET_UNKNOWN_1, param.unknown30);
+    param.m_GF_OBJ_HANDLE = handle;
+    gf::GfMenuBdat::getMenuOffset(MENU_OFFSET_UNKNOWN_1, param.m_menuOffset);
     param.unknown50 = bdat;
     for (size_t i = 0; i < count && i < param.unknown58.capacity(); i++) {
       param.unknown58.push_back(selectIds[i]);

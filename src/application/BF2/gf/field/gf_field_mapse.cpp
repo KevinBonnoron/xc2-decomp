@@ -113,7 +113,7 @@ void GfFieldMapSe::createMapSe() {
 
 void GfFieldMapSe::destroySeObj(SEOBJ *seObj) {
   if (GfSound::get() != nullptr) {
-    GfSound::get()->stopSe(seObj->unknown00, 1.0f);
+    GfSound::get()->stopSe(seObj->m_soundHandle, 1.0f);
     unknown118.unknown004(seObj);
   }
 }
@@ -148,12 +148,12 @@ void GfFieldMapSe::updateSeObjDataForActivate(fw::UpdateInfo, SEDATA &data, ml::
     return;
   }
   for (SEOBJ *seObj : data.unknown10) {
-    seObj->unknown14 = getSeObjCond(seObj->unknown0c, data.unknown00, acc);
+    seObj->m_SECOND = getSeObjCond(seObj->unknown0c, data.unknown00, acc);
   }
   std::sort(data.unknown10.begin(), data.unknown10.end(), DistCompare());
   while (!data.unknown98.empty()) {
     if (data.unknown10.size() == data.unknown10.capacity()) {
-      f32 farthest = data.unknown10.back()->unknown14.unknown04;
+      f32 farthest = data.unknown10.back()->m_SECOND.unknown04;
       SECOND cond = getSeObjCond(data.unknown98.back().unknown00, data.unknown00, acc);
       if (farthest < cond.unknown04) {
         data.unknown98.pop_back();
@@ -169,17 +169,17 @@ void GfFieldMapSe::updateSeObjDataForActivate(fw::UpdateInfo, SEDATA &data, ml::
     data.unknown98.pop_back();
   }
   for (SEOBJ *&seObj : data.unknown10) {
-    if (sound->isPlaying(seObj->unknown00)) {
+    if (sound->isPlaying(seObj->m_soundHandle)) {
       seObj->unknown10 = getVolume(seObj);
       if (seObj->unknown10 > 0.0f) {
-        sound->setVolume(seObj->unknown00, seObj->unknown10, 0.0f);
+        sound->setVolume(seObj->m_soundHandle, seObj->unknown10, 0.0f);
       }
     } else {
-      seObj->unknown00.clear();
+      seObj->m_soundHandle.clear();
     }
   }
   for (SEOBJ **it = data.unknown10.begin(); it != data.unknown10.end();) {
-    if (!(*it)->unknown00.isValid() || (*it)->unknown10 <= 0.0f) {
+    if (!(*it)->m_soundHandle.isValid() || (*it)->unknown10 <= 0.0f) {
       destroySeObj(*it);
       it = data.unknown10.erase(it);
     } else {
@@ -217,7 +217,7 @@ GfFieldMapSe::SEOBJ *GfFieldMapSe::createSeObj(const SECOND &cond, const SEDATA 
   mm::Vec3 offset(rsc->getFLD_actorSEoffsetX(data.unknown08), rsc->getFLD_actorSEoffsetY(data.unknown08), rsc->getFLD_actorSEoffsetZ(data.unknown08));
   seObj->unknown08 = data.unknown00;
   seObj->unknown0c = cond.unknown00;
-  seObj->unknown14 = cond;
+  seObj->m_SECOND = cond;
   seObj->unknown1c = data.unknown08;
   seObj->unknown10 = getVolume(seObj);
   SoundParam param(rsc->getFLD_actorSEseName(data.unknown08));
@@ -225,7 +225,7 @@ GfFieldMapSe::SEOBJ *GfFieldMapSe::createSeObj(const SECOND &cond, const SEDATA 
   param.unknown40 = offset + parts.getMatrix(cond.unknown00)->unknown004();
   param.unknown28 = seObj->unknown10;
   param.unknown38 = 5;
-  seObj->unknown00 = sound->playSe(param);
+  seObj->m_soundHandle = sound->playSe(param);
   return seObj;
 }
 
@@ -235,7 +235,7 @@ f32 GfFieldMapSe::getVolume(const SEOBJ *seObj) {
   f32 minDistance = rsc->getFLD_actorSEmin_volume_Dist(seObj->unknown1c);
   f32 volumeMax = rsc->getFLD_actorSEvolumeMAX(seObj->unknown1c) * 0.01f;
   f32 volumeMin = rsc->getFLD_actorSEvolumeMIN(seObj->unknown1c) * 0.01f;
-  f32 distance = sqrtf(seObj->unknown14.unknown04);
+  f32 distance = sqrtf(seObj->m_SECOND.unknown04);
   f32 volume;
   if (distance <= maxDistance) {
     volume = volumeMax;
@@ -257,7 +257,7 @@ bool GfFieldMapSe::isActivateMatrix(int matrix, const SEDATA &data) const {
   return false;
 }
 
-bool GfFieldMapSe::DistCompare::operator()(const SEOBJ *a, const SEOBJ *b) const { return a->unknown14.unknown04 < b->unknown14.unknown04; }
+bool GfFieldMapSe::DistCompare::operator()(const SEOBJ *a, const SEOBJ *b) const { return a->m_SECOND.unknown04 < b->m_SECOND.unknown04; }
 
 } // namespace gf
 

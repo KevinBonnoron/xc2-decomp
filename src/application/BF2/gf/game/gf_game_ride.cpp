@@ -69,7 +69,7 @@ void GfGameRide::rideOn() {
   if (formation == nullptr) {
     return;
   }
-  GF_OBJ_HANDLE *leader = formation->unknown1a0[0].unknown08;
+  GF_OBJ_HANDLE *leader = formation->unknown1a0[0].m_playerHandle;
   u32 partyId = GfGameParty::getPartyId(leader);
   if (partyId == PARTY_UNKNOWN_4294967295) {
     return;
@@ -88,8 +88,8 @@ void GfGameRide::rideOn() {
       unknown070 *move = property != nullptr ? property->unknown18 : nullptr;
       if (move != nullptr) {
         MsgPcFieldWarp warp;
-        warp.unknown10.unknown00 = move->unknown10;
-        warp.unknown10.unknown10 = move->unknown20;
+        warp.m_transform.unknown00 = move->unknown10;
+        warp.m_transform.unknown10 = move->unknown20;
         warp.unknown30 = true;
         sendMessage(vehicleObj, warp);
       }
@@ -159,8 +159,8 @@ void GfGameRide::getDown(GF_OBJ_HANDLE *handle) {
       }
       u32 playerId = formation->findPlayer(unknown28);
       MsgPcFieldWarp warp;
-      warp.unknown10.unknown10 = formation->unknowne0[0].unknown10;
-      warp.unknown10.unknown00 = formation->unknown20[playerId];
+      warp.m_transform.unknown10 = formation->unknowne0[0].unknown10;
+      warp.m_transform.unknown00 = formation->unknown20[playerId];
       warp.unknown30 = true;
       sendMessage(vehicleObj, warp);
     }
@@ -175,14 +175,14 @@ void GfGameRide::getDown(GF_OBJ_HANDLE *handle) {
     if (obj != nullptr) {
       u32 playerId = formation->findPlayer(unknown30);
       MsgPcFieldWarp warp;
-      warp.unknown10.unknown10 = formation->unknowne0[playerId].unknown10;
-      warp.unknown10.unknown00 = formation->unknown20[playerId];
+      warp.m_transform.unknown10 = formation->unknowne0[playerId].unknown10;
+      warp.m_transform.unknown00 = formation->unknown20[playerId];
       if (isOnCloud) {
         f32 height = GfObjUtil::getProperty(unknown30)->unknown18->unknownb8;
         if (cloudLimit >= height) {
-          warp.unknown10.unknown00.y = cloudHeight - height;
+          warp.m_transform.unknown00.y = cloudHeight - height;
         } else {
-          warp.unknown10.unknown00.y = cloudHeight - cloudLimit;
+          warp.m_transform.unknown00.y = cloudHeight - cloudLimit;
         }
       }
       warp.unknown30 = true;

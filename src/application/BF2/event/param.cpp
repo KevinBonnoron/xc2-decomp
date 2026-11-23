@@ -8,19 +8,19 @@ Param::Param() {}
 
 void Param::clear() {
   for (u32 i = 0; i < VARIABLE_UNKNOWN_10; i++) {
-    unknown08[i].clear();
+    m_paramVariable[i].clear();
   }
 }
 
-ParamVariable &Param::val(u32 index) { return unknown08[index]; }
+ParamVariable &Param::val(u32 index) { return m_paramVariable[index]; }
 
-const ParamVariable &Param::val(u32 index) const { return unknown08[index]; }
+const ParamVariable &Param::val(u32 index) const { return m_paramVariable[index]; }
 
 void Param::createString(mm::mtl::FixStr<256> &string) {
   string = "";
   for (u32 i = 0; i < VARIABLE_UNKNOWN_10; i++) {
     mm::mtl::FixStr<256> variable;
-    unknown08[i].createString(variable);
+    m_paramVariable[i].createString(variable);
     string += variable.c_str();
     string += " ";
   }

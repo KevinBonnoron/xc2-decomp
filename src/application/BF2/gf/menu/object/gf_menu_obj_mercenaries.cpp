@@ -54,9 +54,9 @@ static void unknown003(u32 handle, const char *layer) {
 }
 
 GfMenuObjMercenaries::GfMenuObjMercenaries(u32 handle)
-    : GfMenuObject(handle), unknown28(nullptr), unknown38(nullptr), unknown40(nullptr), unknown48(nullptr), unknown50(nullptr), unknown58(nullptr), unknown60(nullptr), unknown68(nullptr),
-      unknown70(nullptr), unknown78(nullptr), unknown80(nullptr), unknown88(nullptr), unknown90(nullptr), unknown98(0), unknown9c(1), unknown9e(0), unknowna0(0), unknown0a8(nullptr),
-      unknown0b0(nullptr), unknown0b8(nullptr), unknown0e8(this), unknown388(0) {
+    : GfMenuObject(handle), m_menuCallContext(nullptr), unknown38(nullptr), unknown40(nullptr), unknown48(nullptr), unknown50(nullptr), unknown58(nullptr), unknown60(nullptr),
+      m_menuMissionList(nullptr), m_menuTeamList(nullptr), unknown78(nullptr), unknown80(nullptr), unknown88(nullptr), unknown90(nullptr), unknown98(0), unknown9c(1), unknown9e(0), unknowna0(0),
+      unknown0a8(nullptr), unknown0b0(nullptr), unknown0b8(nullptr), unknown0e8(this), unknown388(0) {
   unknown0c0 = nullptr;
   unknown0c8 = nullptr;
   unknown0d0 = 0;
@@ -72,15 +72,15 @@ GfMenuObjMercenaries::~GfMenuObjMercenaries() {
   mm::mtl::safeRelease(unknown50);
   mm::mtl::safeRelease(unknown60);
   mm::mtl::safeRelease(unknown58);
-  mm::mtl::safeRelease(unknown68);
-  mm::mtl::safeRelease(unknown70);
+  mm::mtl::safeRelease(m_menuMissionList);
+  mm::mtl::safeRelease(m_menuTeamList);
   mm::mtl::safeRelease(unknown78);
   mm::mtl::safeRelease(unknown80);
   mm::mtl::safeRelease(unknown88);
   mm::mtl::safeRelease(unknown90);
   mm::mtl::safeRelease(unknown0a8);
   mm::mtl::safeRelease(unknown0b0);
-  mm::mtl::safeRelease(unknown28);
+  mm::mtl::safeRelease(m_menuCallContext);
   mm::mtl::safeRelease(unknown0b8);
   mm::mtl::safeRelease(unknown0c0);
   mm::mtl::safeRelease(unknown0c8);
@@ -343,7 +343,7 @@ void GfMenuObjMercenaries::updateTeamList(GfMenuTeamList *list) {
 
 void GfMenuObjMercenaries::updateMissionList(GfMenuMissionList *list, u16 zone) {
   GfMenuMissionList::MissionSetup setup;
-  setup.unknown00.unknown08 = 6;
+  setup.m_setupParam.unknown08 = 6;
   setup.unknown14 = zone;
   list->clear();
   list->setupFromZone(setup);
@@ -352,14 +352,14 @@ void GfMenuObjMercenaries::updateMissionList(GfMenuMissionList *list, u16 zone) 
 void GfMenuObjMercenaries::updateBladeListReserver(GfMenuBladeList *list) {
   GfMenuBladeList::TeamSetup setup;
   setup.unknown14 = 3;
-  setup.unknown00.unknown08 = 3;
+  setup.m_setupParam.unknown08 = 3;
   list->clear();
   list->setupFromTeam(setup);
 }
 
 void GfMenuObjMercenaries::updateBladeList(GfMenuBladeList *list, u32 team) {
   GfMenuBladeList::TeamSetup setup;
-  setup.unknown00.unknown08 = 6;
+  setup.m_setupParam.unknown08 = 6;
   setup.unknown18 = team;
   if (list != nullptr) {
     list->clear();
@@ -539,16 +539,16 @@ void GfMenuObjMercenaries::MainListener::reciveEvent(const ui::EventData &event,
   case 1: {
     GfMenuTypes::Param param;
     u32 mission;
-    if (!GfMenuObject::getFSLayerParam(unknown20->unknown20, param)) {
-      unknown20->unknowna0 = 0;
+    if (!GfMenuObject::getFSLayerParam(m_menuObjMercenaries->unknown20, param)) {
+      m_menuObjMercenaries->unknowna0 = 0;
       GfMenuReference::setReferenceTeamID(1);
       mission = 0;
     } else {
       mission = param.get<u32>();
-      unknown20->unknowna0 = 1;
-      GfMenuObject::removeFSLayerParam(unknown20->unknown20);
+      m_menuObjMercenaries->unknowna0 = 1;
+      GfMenuObject::removeFSLayerParam(m_menuObjMercenaries->unknown20);
     }
-    if (unknown20->unknowna0 != 1) {
+    if (m_menuObjMercenaries->unknowna0 != 1) {
       ui::EventData update;
       update.unknown00 = GfMenuTypes::unknown003_260;
       ui::UIManager::get()->requestObjectEvent(handle, update, 0.0f);
@@ -578,14 +578,14 @@ void GfMenuObjMercenaries::MainListener::reciveEvent(const ui::EventData &event,
     u32 team = GfMenuReference::getReferenceTeamID();
     while (true) {
       if (team > GfDataMercenaries::getTeamNum()) {
-        updateTeamList(unknown20->unknown70);
-        unknown002(unknown20->unknown18, "LAY_location");
+        updateTeamList(m_menuObjMercenaries->m_menuTeamList);
+        unknown002(m_menuObjMercenaries->unknown18, "LAY_location");
         break;
       }
       if (GfDataMercenaries::isTeamStateReward(team)) {
         GfMenuReference::setReferenceMissionID(GfDataMercenaries::getTeamMission(team));
         GfMenuReference::setReferenceTeamID(team);
-        unknown002(unknown20->unknown18, "LAY_reward");
+        unknown002(m_menuObjMercenaries->unknown18, "LAY_reward");
         break;
       }
       team++;
@@ -611,11 +611,11 @@ void GfMenuObjMercenaries::LocationSelectListener::reciveEvent(const ui::EventDa
     ui::UIObjectListener::reciveEvent(event, handle);
     break;
   case 6:
-    unknown20->unknown40->setIndex(event.unknown08);
+    m_menuObjMercenaries->unknown40->setIndex(event.unknown08);
     GfMenuReference::setReferenceZoneID(event.unknown08 + 1);
     break;
   case GfMenuTypes::unknown003_33:
-    GfMenuObject::setupInputSelectionFromList(handle, *unknown20->unknown40);
+    GfMenuObject::setupInputSelectionFromList(handle, *m_menuObjMercenaries->unknown40);
     GfMenuObject::enableInput(handle);
     acc.setDisp(true);
     break;
@@ -630,7 +630,7 @@ void GfMenuObjMercenaries::MissionFieldSkillListener::reciveEvent(const ui::Even
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1:
-    setupMissionFieldSkill(acc, unknown20->unknown50);
+    setupMissionFieldSkill(acc, m_menuObjMercenaries->unknown50);
   case GfMenuTypes::unknown003_34:
     GfMenuObject::disableInput(handle);
     break;
@@ -666,17 +666,17 @@ void GfMenuObjMercenaries::MissionFieldSkillListener::reciveEvent(const ui::Even
   }
   case 8:
     if (event.unknown0c == 1) {
-      ui::UIObjectAcc owner(unknown20->unknown18);
+      ui::UIObjectAcc owner(m_menuObjMercenaries->unknown18);
       ui::UIObjectAcc mission(owner.searchChild("LAY_mission"));
       mission.setAlpha(0.0f);
-      unknown002(unknown20->unknown18, "LAY_form");
+      unknown002(m_menuObjMercenaries->unknown18, "LAY_form");
       int ctrl = GfMenuObjUtil::setCommonFadeOut(handle, 6, 0);
       GfMenuObject::hookCtrlEvent(handle, ctrl);
       GfMenuObject::disableInput(handle);
     }
     break;
   case GfMenuTypes::unknown003_33: {
-    updateBladeList(unknown20->unknown50, GfMenuReference::getReferenceTeamID());
+    updateBladeList(m_menuObjMercenaries->unknown50, GfMenuReference::getReferenceTeamID());
     GfMenuObject::enableInput(handle);
     acc.setDisp(true);
     for (u32 i = 1; i <= 3; i++) {
@@ -709,14 +709,14 @@ void GfMenuObjMercenaries::MissionListener::reciveEvent(const ui::EventData &eve
     break;
   case GfMenuTypes::unknown003_33: {
     acc.setDisp(true);
-    unknown002(unknown20->unknown18, "LAY_mis_list");
+    unknown002(m_menuObjMercenaries->unknown18, "LAY_mis_list");
     unknown163(acc.searchChild("LAY_mis_select"), GfMenuTypes::unknown003_33, 0);
     int ctrl = GfMenuObjUtil::setCommonFadeIn(handle, 5, 0);
     GfMenuObject::hookCtrlEvent(handle, ctrl);
     break;
   }
   case GfMenuTypes::unknown003_34: {
-    unknown003(unknown20->unknown18, "LAY_mis_list");
+    unknown003(m_menuObjMercenaries->unknown18, "LAY_mis_list");
     unknown163(acc.searchChild("LAY_mis_select"), GfMenuTypes::unknown003_34, 0);
     int ctrl = GfMenuObjUtil::setCommonFadeOut(handle, 6, 0);
     GfMenuObject::hookCtrlEvent(handle, ctrl);
@@ -732,7 +732,7 @@ void GfMenuObjMercenaries::MissionRewardListener::reciveEvent(const ui::EventDat
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1:
-    setupReward(acc, unknown20->unknown50);
+    setupReward(acc, m_menuObjMercenaries->unknown50);
     GfMenuObject::disableInput(handle);
     break;
   default:
@@ -741,7 +741,7 @@ void GfMenuObjMercenaries::MissionRewardListener::reciveEvent(const ui::EventDat
   case 3:
     if (event.unknown08 != 0) {
       if (event.unknown08 == 6) {
-        ui::UIObjectAcc main(unknown20->unknown18);
+        ui::UIObjectAcc main(m_menuObjMercenaries->unknown18);
         unknown164(main.searchChild("LAY_main"), GfMenuTypes::unknown003_260);
         u32 team = GfMenuReference::getReferenceTeamID();
         u32 mission = GfDataMercenaries::getTeamMission(team);
@@ -756,14 +756,14 @@ void GfMenuObjMercenaries::MissionRewardListener::reciveEvent(const ui::EventDat
     break;
   case 8:
     if (event.unknown0c == 1) {
-      if (unknown20->unknown9e == 0) {
-        unknown20->unknown9e = 1;
-        unknown20->unknown0e8.unknown005();
-        unknown20->unknown0e8.unknown002(&GfMenuObjMercenaries::seqRewardComp);
-        unknown20->unknown0e8.unknown002(&GfMenuObjMercenaries::seqRewardComp2);
-        unknown20->unknown0e8.unknown002(&GfMenuObjMercenaries::seqRewardComp3);
-        unknown20->unknown0e8.unknown002(&GfMenuObjMercenaries::seqRewardComp4);
-        unknown20->unknown0e8.unknown002(&GfMenuObjMercenaries::seqRewardComp5);
+      if (m_menuObjMercenaries->unknown9e == 0) {
+        m_menuObjMercenaries->unknown9e = 1;
+        m_menuObjMercenaries->unknown0e8.unknown005();
+        m_menuObjMercenaries->unknown0e8.unknown002(&GfMenuObjMercenaries::seqRewardComp);
+        m_menuObjMercenaries->unknown0e8.unknown002(&GfMenuObjMercenaries::seqRewardComp2);
+        m_menuObjMercenaries->unknown0e8.unknown002(&GfMenuObjMercenaries::seqRewardComp3);
+        m_menuObjMercenaries->unknown0e8.unknown002(&GfMenuObjMercenaries::seqRewardComp4);
+        m_menuObjMercenaries->unknown0e8.unknown002(&GfMenuObjMercenaries::seqRewardComp5);
       } else {
         int ctrl = GfMenuObjUtil::setCommonFadeOut(handle, 6, 0);
         GfMenuObject::hookCtrlEvent(handle, ctrl);
@@ -773,12 +773,12 @@ void GfMenuObjMercenaries::MissionRewardListener::reciveEvent(const ui::EventDat
     break;
   case GfMenuTypes::unknown003_33: {
     u32 team = GfMenuReference::getReferenceTeamID();
-    updateBladeList(unknown20->unknown50, team);
-    unknown20->unknown9e = 0;
-    unknown20->unknown0e8.unknown005();
-    unknown20->unknown0e8.unknown002(&GfMenuObjMercenaries::seqRewardStart);
-    unknown20->unknown0e8.unknown002(&GfMenuObjMercenaries::seqRewardStart2);
-    unknown20->unknown0e8.unknown002(&GfMenuObjMercenaries::seqRewardStart3);
+    updateBladeList(m_menuObjMercenaries->unknown50, team);
+    m_menuObjMercenaries->unknown9e = 0;
+    m_menuObjMercenaries->unknown0e8.unknown005();
+    m_menuObjMercenaries->unknown0e8.unknown002(&GfMenuObjMercenaries::seqRewardStart);
+    m_menuObjMercenaries->unknown0e8.unknown002(&GfMenuObjMercenaries::seqRewardStart2);
+    m_menuObjMercenaries->unknown0e8.unknown002(&GfMenuObjMercenaries::seqRewardStart3);
     break;
   }
   case GfMenuTypes::unknown003_34:
@@ -792,17 +792,17 @@ void GfMenuObjMercenaries::MissionListListener::reciveEvent(const ui::EventData 
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1: {
-    setupMissionList(acc, unknown20->unknown68);
+    setupMissionList(acc, m_menuObjMercenaries->m_menuMissionList);
     GfMenuObjUtil::CursorParam param;
     param.unknown00 = ui::UIObjectAcc(handle).getParentHandle();
     param.unknown04 = acc.searchSibiling("IMG_mis_list_cursor");
-    param.unknown20.unknown18 = 5;
+    param.m_cursorSetting.unknown18 = 5;
     param.unknown1a = 1;
     param.unknown08 = "LAY_mis@%02d";
-    unknown20->unknown90 = GfMenuObjUtil::createCursor(param);
-    ui::UIObjectAcc bar(unknown20->unknown18, "IMG_mis_scroll_bar");
+    m_menuObjMercenaries->unknown90 = GfMenuObjUtil::createCursor(param);
+    ui::UIObjectAcc bar(m_menuObjMercenaries->unknown18, "IMG_mis_scroll_bar");
     if (bar.isValid()) {
-      GfMenuObjUtil::createVScrollBarPlugin(bar.unknown10, unknown20->unknown68, "IMG_mis_scroll_base", true);
+      GfMenuObjUtil::createVScrollBarPlugin(bar.unknown10, m_menuObjMercenaries->m_menuMissionList, "IMG_mis_scroll_base", true);
       bar.setDisp(true);
       bar.setAddColor("gray");
     }
@@ -811,37 +811,37 @@ void GfMenuObjMercenaries::MissionListListener::reciveEvent(const ui::EventData 
   }
   case 6: {
     u32 index = event.unknown08;
-    unknown20->unknown68->setIndex(index);
-    u32 selected = unknown20->unknown68->getIndex(true);
-    unknown20->unknown90->inputChange(selected);
-    GfMenuReference::setReferenceMissionID(unknown20->unknown68->getContents(unknown20->unknown68->getIndex(false)).unknown00);
+    m_menuObjMercenaries->m_menuMissionList->setIndex(index);
+    u32 selected = m_menuObjMercenaries->m_menuMissionList->getIndex(true);
+    m_menuObjMercenaries->unknown90->inputChange(selected);
+    GfMenuReference::setReferenceMissionID(m_menuObjMercenaries->m_menuMissionList->getContents(m_menuObjMercenaries->m_menuMissionList->getIndex(false)).unknown00);
     ui::UIObjectListener::reciveEvent(event, handle);
     break;
   }
   case GfMenuTypes::unknown003_33: {
-    updateMissionList(unknown20->unknown68, GfMenuReference::getReferenceZoneID());
+    updateMissionList(m_menuObjMercenaries->m_menuMissionList, GfMenuReference::getReferenceZoneID());
     GfMenuReference::setReferenceMissionID(0);
-    unknown20->unknown90->open(0);
-    GfMenuObject::setupInputSelectionFromList(handle, *unknown20->unknown68);
+    m_menuObjMercenaries->unknown90->open(0);
+    GfMenuObject::setupInputSelectionFromList(handle, *m_menuObjMercenaries->m_menuMissionList);
     GfMenuObject::enableInput(handle);
     acc.setDisp(true);
-    ui::UIObjectAcc owner(unknown20->unknown18);
+    ui::UIObjectAcc owner(m_menuObjMercenaries->unknown18);
     GfMenuObjOperationInfo::open(handle, owner.searchChild("LAY_mis_select"), 0, 0);
     break;
   }
   case 8:
     switch (event.unknown0c) {
     case 1:
-      if (unknown20->unknown68->getSize() != 0) {
-        unknown002(unknown20->unknown18, "LAY_mis_detail");
+      if (m_menuObjMercenaries->m_menuMissionList->getSize() != 0) {
+        unknown002(m_menuObjMercenaries->unknown18, "LAY_mis_detail");
         GfDataMercenaries::clearNewMission(GfMenuReference::getReferenceMissionID());
         GfMenuObject::disableInput(handle);
       }
       break;
     case 2: {
-      unknown003(unknown20->unknown18, "LAY_mission");
+      unknown003(m_menuObjMercenaries->unknown18, "LAY_mission");
       {
-        ui::UIObjectAcc owner(unknown20->unknown18);
+        ui::UIObjectAcc owner(m_menuObjMercenaries->unknown18);
         unknown163(owner.searchChild("LAY_location"), GfMenuTypes::unknown003_33, 0);
       }
       GfMenuObject::disableInput(handle);
@@ -854,7 +854,7 @@ void GfMenuObjMercenaries::MissionListListener::reciveEvent(const ui::EventData 
     break;
   case GfMenuTypes::unknown003_257: {
     GfMenuObject::enableInput(handle);
-    ui::UIObjectAcc owner(unknown20->unknown18);
+    ui::UIObjectAcc owner(m_menuObjMercenaries->unknown18);
     GfMenuObjOperationInfo::open(handle, owner.searchChild("LAY_mis_select"), 0, 0);
   }
   default:
@@ -867,7 +867,7 @@ void GfMenuObjMercenaries::LaunchListener::reciveEvent(const ui::EventData &even
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1:
-    setupFormBladeSelect(acc, unknown20->unknown50);
+    setupFormBladeSelect(acc, m_menuObjMercenaries->unknown50);
     GfMenuObject::migrateInput(acc.searchChild("LAY_form_bl"), handle);
     GfMenuObject::disableInput(handle);
     break;
@@ -894,16 +894,16 @@ void GfMenuObjMercenaries::LaunchListener::reciveEvent(const ui::EventData &even
     return;
   case 8:
     if (event.unknown0c == 1) {
-      unknown20->unknown28->reset();
-      unknown20->unknown388 = 0x25;
-      GfMenuObjCommonText::open(unknown20->unknown28, unknown20->unknown388, 0);
-      GfMenuObject::setCallContextEventHandler(unknown20->unknown28, handle);
+      m_menuObjMercenaries->m_menuCallContext->reset();
+      m_menuObjMercenaries->unknown388 = 0x25;
+      GfMenuObjCommonText::open(m_menuObjMercenaries->m_menuCallContext, m_menuObjMercenaries->unknown388, 0);
+      GfMenuObject::setCallContextEventHandler(m_menuObjMercenaries->m_menuCallContext, handle);
       GfMenuObject::disableInput(handle);
     }
     return;
   case GfMenuTypes::unknown003_33: {
     u32 team = GfMenuReference::getReferenceTeamID();
-    updateBladeList(unknown20->unknown50, team);
+    updateBladeList(m_menuObjMercenaries->unknown50, team);
     ui::UIObjectAcc blades(acc.searchChild("LAY_form_bl"));
     blades.setDisp(true);
     for (u32 i = 0; i < 6; i++) {
@@ -916,7 +916,7 @@ void GfMenuObjMercenaries::LaunchListener::reciveEvent(const ui::EventData &even
       plate.setPos(pos);
       name.format("LAY_form_bl_name_def@%02d", i + 1);
       u32 nameHandle = acc.searchChild(name.c_str());
-      f32 alpha = unknown20->unknown50->getContents(i).unknown00 == 0 ? 0.0f : 1.0f;
+      f32 alpha = m_menuObjMercenaries->unknown50->getContents(i).unknown00 == 0 ? 0.0f : 1.0f;
       ui::UIObjectAcc(nameHandle).setAlpha(alpha);
     }
     int ctrl = GfMenuObjUtil::setCommonFadeIn(handle, 5, 0);
@@ -931,11 +931,11 @@ void GfMenuObjMercenaries::LaunchListener::reciveEvent(const ui::EventData &even
     GfMenuObject::disableInput(handle);
     return;
   case 0x41:
-    if (unknown20->unknown28 != nullptr && unknown20->unknown28->unknown0c == event.unknown08) {
+    if (m_menuObjMercenaries->m_menuCallContext != nullptr && m_menuObjMercenaries->m_menuCallContext->unknown0c == event.unknown08) {
       u16 result = event.unknown10_u16;
       GfMenuReference::getReferenceMissionID();
-      if (result == 0 && unknown20->unknown388 == 0x25) {
-        unknown002(unknown20->unknown18, "LAY_mission");
+      if (result == 0 && m_menuObjMercenaries->unknown388 == 0x25) {
+        unknown002(m_menuObjMercenaries->unknown18, "LAY_mission");
         int ctrl = GfMenuObjUtil::setCommonFadeOut(handle, 6, 0);
         GfMenuObject::hookCtrlEvent(handle, ctrl);
         GfMenuObject::disableInput(handle);

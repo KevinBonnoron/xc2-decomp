@@ -22,24 +22,24 @@ GmkCtrlVolSe::GmkCtrlVolSe() : unknown60(0), unknown64(0.0f), unknown68(false) {
 
 void GmkCtrlVolSe::create(const CreateInfo &info) {
   dispose();
-  unknown20 = info;
+  m_createInfo = info;
   unknown70 = info.unknown20;
   createInst();
 }
 
 void GmkCtrlVolSe::dispose() {
   disposeInst(true);
-  unknown20 = CreateInfo();
+  m_createInfo = CreateInfo();
 }
 
 void GmkCtrlVolSe::createInst() {
   disposeInst(true);
-  unknown60 = fw::SoundManager::get()->playSe(unknown20.unknown08, unknown20.unknown00, unknown20.unknown18 * 0.01f, unknown20.unknown0c);
+  unknown60 = fw::SoundManager::get()->playSe(m_createInfo.unknown08, m_createInfo.unknown00, m_createInfo.unknown18 * 0.01f, m_createInfo.unknown0c);
   if (unknown60 == 0) {
     dispose();
     return;
   }
-  fw::SoundManager::get()->setVolume(unknown60, unknown20.unknown18 * 0.01f, 1.0f);
+  fw::SoundManager::get()->setVolume(unknown60, m_createInfo.unknown18 * 0.01f, 1.0f);
   GmkCtrlVolSeManager *manager = GmkCtrlVolSeManager::get();
   if (manager->unknown08.end() == manager->unknown08.unknown002(manager->unknown08.begin(), manager->unknown08.end(), this)) {
     GmkCtrlVolSeManager::get()->unknown08.push_back(this);
@@ -60,32 +60,32 @@ void GmkCtrlVolSe::disposeInst(bool isFadeOut) {
 }
 
 void GmkCtrlVolSe::debugDraw() const {
-  if (unknown20.unknown00 == nullptr || unknown20.unknown08 == 0 || unknown60 == 0) {
+  if (m_createInfo.unknown00 == nullptr || m_createInfo.unknown08 == 0 || unknown60 == 0) {
     return;
   }
   mm::Vec3 position = unknown70;
   mm::Mat44 matrix;
   unknown001(matrix, position);
-  fw::debug::drawCircleLine(matrix, unknown20.unknown14, mm::Col4::blue);
-  fw::debug::drawCircleLine(matrix, unknown20.unknown10, mm::Col4::red);
+  fw::debug::drawCircleLine(matrix, m_createInfo.unknown14, mm::Col4::blue);
+  fw::debug::drawCircleLine(matrix, m_createInfo.unknown10, mm::Col4::red);
 }
 
 void GmkCtrlVolSe::validateMute() const {
   if (unknown60 == 0) {
     return;
   }
-  fw::SoundManager::get()->setVolume(unknown60, unknown68 ? 0.0f : static_cast<f32>(unknown20.unknown18) * 0.01f, 0.0f);
+  fw::SoundManager::get()->setVolume(unknown60, unknown68 ? 0.0f : static_cast<f32>(m_createInfo.unknown18) * 0.01f, 0.0f);
 }
 
 void GmkCtrlVolSe::update(f32 deltaTime) {
-  if (unknown20.unknown00 == nullptr || unknown20.unknown08 == 0 || unknown60 == 0 || unknown68) {
+  if (m_createInfo.unknown00 == nullptr || m_createInfo.unknown08 == 0 || unknown60 == 0 || unknown68) {
     return;
   }
   if (gf::GfGameManager::getControlMover() == gf::unknown020) {
     return;
   }
-  if (unknown20.unknown30 != gf::unknown020) {
-    gf::GfObjAcc acc(unknown20.unknown30);
+  if (m_createInfo.unknown30 != gf::unknown020) {
+    gf::GfObjAcc acc(m_createInfo.unknown30);
     if (acc.isValidTransform()) {
       unknown70 = mm::Vec3(acc.getWorldTransformNoSync().unknown00);
     }
@@ -96,22 +96,22 @@ void GmkCtrlVolSe::update(f32 deltaTime) {
   f32 z = unknown70.z - position.z;
   unknown64 = sqrtf(x * x + y * y + z * z);
   f32 volume = 1.0f;
-  if (unknown20.unknown10 > 0.0f) {
-    if (unknown20.unknown10 <= unknown64) {
-      volume = static_cast<f32>(unknown20.unknown18) * 0.01f;
-    } else if (unknown64 <= unknown20.unknown14) {
-      volume = static_cast<f32>(unknown20.unknown19) * 0.01f;
+  if (m_createInfo.unknown10 > 0.0f) {
+    if (m_createInfo.unknown10 <= unknown64) {
+      volume = static_cast<f32>(m_createInfo.unknown18) * 0.01f;
+    } else if (unknown64 <= m_createInfo.unknown14) {
+      volume = static_cast<f32>(m_createInfo.unknown19) * 0.01f;
     } else {
       f32 rate = 0.0f;
-      if (unknown20.unknown14 < unknown20.unknown10) {
-        rate = (unknown20.unknown10 - unknown64) / (unknown20.unknown10 - unknown20.unknown14);
+      if (m_createInfo.unknown14 < m_createInfo.unknown10) {
+        rate = (m_createInfo.unknown10 - unknown64) / (m_createInfo.unknown10 - m_createInfo.unknown14);
       }
-      f32 range = static_cast<f32>(unknown20.unknown19 - unknown20.unknown18) * 0.01f;
+      f32 range = static_cast<f32>(m_createInfo.unknown19 - m_createInfo.unknown18) * 0.01f;
       mm::clampRef(range, 0.0f, 1.0f);
-      volume = static_cast<f32>(unknown20.unknown18) * 0.01f + rate * range;
+      volume = static_cast<f32>(m_createInfo.unknown18) * 0.01f + rate * range;
     }
     if (gf::GfGameManager::isRoom()) {
-      volume *= static_cast<f32>(unknown20.unknown1a) * 0.01f;
+      volume *= static_cast<f32>(m_createInfo.unknown1a) * 0.01f;
     }
   }
   fw::SoundManager::get()->setVolume(unknown60, volume, 0.0f);

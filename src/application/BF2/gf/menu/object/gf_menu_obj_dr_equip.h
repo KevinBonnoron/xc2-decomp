@@ -23,20 +23,20 @@ class GfMenuObjDrEquip : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjDrEquip *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjDrEquip *owner) : _0c(), m_menuObjDrEquip(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjDrEquip *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjDrEquip *m_menuObjDrEquip; // Inferred role: owner; original member name unknown.
   };
 
   class ItemListener : public ui::UIObjectListener {
   public:
-    ItemListener(GfMenuObjDrEquip *owner) : _0c(), unknown20(owner) {}
+    ItemListener(GfMenuObjDrEquip *owner) : _0c(), m_menuObjDrEquip(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjDrEquip *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjDrEquip *m_menuObjDrEquip; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjDrEquip(u32 handle);
@@ -72,7 +72,7 @@ public:
   bool seqLeavePhase1();
 
   u32 unknown24;                                 // Inferred role: reference driver index; original member name unknown.
-  GfMenuItemList *unknown28;                     // Inferred role: equipment items; original member name unknown.
+  GfMenuItemList *m_menuItemList;                // Inferred role: equipment items; original member name unknown.
   ui::UISelectObjList *unknown30;                // Inferred role: item objects; original member name unknown.
   ui::UICtrlCursorSelect *unknown38;             // Inferred role: item cursor; original member name unknown.
   GfMenuCallContext *unknown40;                  // Inferred role: call context; original member name unknown.
@@ -84,7 +84,7 @@ public:
 };
 
 static_assert(offsetof(GfMenuObjDrEquip, unknown24) == 0x24, "");
-static_assert(offsetof(GfMenuObjDrEquip, unknown28) == 0x28, "");
+static_assert(offsetof(GfMenuObjDrEquip, m_menuItemList) == 0x28, "");
 static_assert(offsetof(GfMenuObjDrEquip, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjDrEquip, unknown38) == 0x38, "");
 static_assert(offsetof(GfMenuObjDrEquip, unknown40) == 0x40, "");
@@ -92,8 +92,8 @@ static_assert(offsetof(GfMenuObjDrEquip, unknown48) == 0x48, "");
 static_assert(offsetof(GfMenuObjDrEquip, unknown50) == 0x50, "");
 static_assert(offsetof(GfMenuObjDrEquip, unknown2e0) == 0x2e0, "");
 static_assert(offsetof(GfMenuObjDrEquip, unknown2e8) == 0x2e8, "");
-static_assert(offsetof(GfMenuObjDrEquip::MainListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjDrEquip::ItemListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjDrEquip::MainListener, m_menuObjDrEquip) == 0x20, "");
+static_assert(offsetof(GfMenuObjDrEquip::ItemListener, m_menuObjDrEquip) == 0x20, "");
 static_assert(sizeof(GfMenuObjDrEquip::MainListener) == 0x28, "");
 static_assert(sizeof(GfMenuObjDrEquip::ItemListener) == 0x28, "");
 

@@ -30,7 +30,7 @@ enum unknown001 {
   unknown001_66 = 0x42,
 };
 
-GfFieldCollect::GfFieldCollect(const GfSetupParam &param) : unknown19(false), unknown20(unknown020), unknown1c0(0.0f), unknown1c4(0.0f), unknown1c8(0) { create(param); }
+GfFieldCollect::GfFieldCollect(const GfSetupParam &param) : unknown19(false), m_GF_OBJ_HANDLE(unknown020), unknown1c0(0.0f), unknown1c4(0.0f), unknown1c8(0) { create(param); }
 
 void GfFieldCollect::seqEnd(f32) {}
 
@@ -59,7 +59,7 @@ void GfFieldCollect::gevMapjump(GEV event, const MapjumpCallbackInfo &) {
 
 void GfFieldCollect::end() {
   unknown30.clear();
-  unknown20 = unknown020;
+  m_GF_OBJ_HANDLE = unknown020;
   unknown08 = &GfFieldCollect::seqEnd;
 }
 
@@ -117,9 +117,9 @@ void GfFieldCollect::seqWaitUIEnd(f32) {
 void GfFieldCollect::seqDo(f32) {
   unknown08 = &GfFieldCollect::seqWaitDrop;
   GfDropitemEmitter::CreateInfo info;
-  gmk::GmkCollection *collection = static_cast<gmk::GmkCollection *>(gmk::getBindedGmkInst(unknown20));
+  gmk::GmkCollection *collection = static_cast<gmk::GmkCollection *>(gmk::getBindedGmkInst(m_GF_OBJ_HANDLE));
   if (collection != nullptr) {
-    GfObjAcc acc(get()->unknown20);
+    GfObjAcc acc(get()->m_GF_OBJ_HANDLE);
     info.unknown00 = acc.getObj()->getComponent<GfComTransform>()->getPosition();
     info.unknown00.y += collection->getData()->unknown04;
     const mm::Mat44 &matrix = acc.getObj()->getComponent<GfComTransform>()->unknown001()->getSyncedWorldMatrix();
@@ -131,7 +131,7 @@ void GfFieldCollect::seqDo(f32) {
     }
     u8 *collectionBdat = collection->getBindedBdatFp();
     info.unknown28 = collectionBdat;
-    info.unknown30 = collection->unknown20.unknown18;
+    info.unknown30 = collection->m_createInfo.unknown18;
     info.unknown20 = gmk::toBdatF32(Bdat::getValCheck(collectionBdat, "initWaitTime", info.unknown30, gmk::BDAT_TYPE_UNKNOWN_8));
     info.unknown24 = gmk::toBdatF32(Bdat::getValCheck(collectionBdat, "initWaitTimeRand", info.unknown30, gmk::BDAT_TYPE_UNKNOWN_8));
   }
@@ -150,7 +150,7 @@ void GfFieldCollect::seqWaitDrop(f32) {
   if (!isDropitemsEmitted()) {
     return;
   }
-  gmk::GmkCollection *collection = static_cast<gmk::GmkCollection *>(gmk::getBindedGmkInst(unknown20));
+  gmk::GmkCollection *collection = static_cast<gmk::GmkCollection *>(gmk::getBindedGmkInst(m_GF_OBJ_HANDLE));
   if (collection != nullptr) {
     collection->disposeIcon(true);
   }

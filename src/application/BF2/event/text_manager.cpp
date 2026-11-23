@@ -56,7 +56,7 @@ bool TextManager::isReplying() const {
     if ((unknown10 & FLAG_UNKNOWN_8) == 0) {
       return true;
     }
-    if (unknown128.isWriting()) {
+    if (m_textWindow.isWriting()) {
       return true;
     }
   }
@@ -76,8 +76,8 @@ bool TextManager::isCutChangeFrame() const { return (unknown10 & FLAG_UNKNOWN_5)
 TextManager::TextManager() : unknown10(0), unknown14(0), unknown378(nullptr), unknown5d0(nullptr) {}
 
 void TextManager::clear() {
-  unknown18.clear();
-  unknown128.clear();
+  m_textCaption.clear();
+  m_textWindow.clear();
   init();
 }
 
@@ -96,7 +96,7 @@ void TextManager::init() {
   unknown384 = "";
   unknown3c8 = "";
   unknown5d0 = nullptr;
-  unknown5d8 = nullptr;
+  m_defaultTalkerMode = nullptr;
   unknown5e0 = "";
 }
 
@@ -112,7 +112,7 @@ void TextManager::update() {
         unknown10 |= FLAG_UNKNOWN_8;
       }
     }
-    if ((unknown10 & FLAG_UNKNOWN_8) != 0 && (unknown10 & FLAG_UNKNOWN_6) != 0 && !unknown128.isWriting()) {
+    if ((unknown10 & FLAG_UNKNOWN_8) != 0 && (unknown10 & FLAG_UNKNOWN_6) != 0 && !m_textWindow.isWriting()) {
       mm::mtl::Singleton<FrameManager>::getPtr()->requestFrame(unknown374);
       mm::mtl::Singleton<FrameManager>::getPtr()->setLockFrame(false, 0.0f);
       mm::mtl::Singleton<VoiceManager>::getPtr()->unknown001().stop(10.0f);
@@ -127,9 +127,9 @@ void TextManager::update() {
     unknown364 -= info.unknown04;
     if ((unknown10 & FLAG_UNKNOWN_9) == 0 && unknown36c < 0.0f && unknown364 < -unknown36c) {
       if ((unknown10 & FLAG_UNKNOWN_0) != 0) {
-        unknown18.hide();
+        m_textCaption.hide();
       } else {
-        unknown128.hide();
+        m_textWindow.hide();
       }
       unknown10 |= FLAG_UNKNOWN_9;
     }
@@ -144,22 +144,22 @@ void TextManager::update() {
       stop();
     }
   }
-  unknown128.update();
+  m_textWindow.update();
 }
 
 void TextManager::write(const char *text, u8 *bdat, u32 textId, const char *name, gf::GF_OBJ_HANDLE *handle) {
   if ((unknown10 & FLAG_UNKNOWN_0) != 0) {
-    unknown18.write(text, bdat, textId, unknown370);
+    m_textCaption.write(text, bdat, textId, unknown370);
   } else {
-    unknown128.write(text, name, bdat, textId, handle);
+    m_textWindow.write(text, name, bdat, textId, handle);
   }
 }
 
 void TextManager::stop() {
   if ((unknown10 & FLAG_UNKNOWN_0) != 0) {
-    unknown18.hide();
+    m_textCaption.hide();
   } else {
-    unknown128.hide();
+    m_textWindow.hide();
   }
   unknown10 &= ~(FLAG_UNKNOWN_6 | FLAG_UNKNOWN_7 | FLAG_UNKNOWN_8 | FLAG_UNKNOWN_9);
 }
@@ -168,8 +168,8 @@ void TextManager::render() {
   if (!isDisp()) {
     return;
   }
-  unknown18.render();
-  unknown128.render();
+  m_textCaption.render();
+  m_textWindow.render();
   if ((unknown10 & FLAG_UNKNOWN_7) == 0) {
     return;
   }
@@ -200,13 +200,13 @@ void TextManager::render() {
 }
 
 void TextManager::setup(bool isCaption) {
-  unknown18.hide();
-  unknown128.hide();
+  m_textCaption.hide();
+  m_textWindow.hide();
   setFlag(FLAG_UNKNOWN_0, isCaption);
   update();
 }
 
-void TextManager::setDefaultTalkerMode(bool isDefault, CharaObj *chara) { unknown5d8 = isDefault ? chara : nullptr; }
+void TextManager::setDefaultTalkerMode(bool isDefault, CharaObj *chara) { m_defaultTalkerMode = isDefault ? chara : nullptr; }
 
 void TextManager::setAutoTalkMode(bool isAutoTalkMode) { setFlag(FLAG_UNKNOWN_1, isAutoTalkMode); }
 
@@ -273,7 +273,7 @@ void TextManager::play(const char *label, CharaObj *chara, f32 life, f32 delay, 
   unknown36c = delayBack;
   unknown370 = captionType;
   unknown374 = mm::mtl::Singleton<FrameManager>::getPtr()->getFrame() + life;
-  unknown5d0 = chara != nullptr ? chara : unknown5d8;
+  unknown5d0 = chara != nullptr ? chara : m_defaultTalkerMode;
   if ((unknown10 & FLAG_UNKNOWN_0) == 0) {
     if (life >= 1.0f) {
       mm::mtl::Singleton<FrameManager>::getPtr()->setLockFrame(true, mm::mtl::Singleton<FrameManager>::getPtr()->getFrame() + life - 1.0f);

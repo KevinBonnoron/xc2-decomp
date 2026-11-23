@@ -20,7 +20,7 @@ constexpr u32 PARAM_UNKNOWN_2 = 2;     // Inferred role: param warp for random t
 
 static void notifyChangePlayerID(GfGamePlayerFormation *formation, u32 playerId) {
   MsgPcFieldNotifyChangePlayerID message(playerId);
-  GfObj *obj = GfObjUtil::getObj(formation->unknown1a0[playerId].unknown08);
+  GfObj *obj = GfObjUtil::getObj(formation->unknown1a0[playerId].m_playerHandle);
   if (obj != nullptr) {
     formation->sendMessage(obj, message);
   }
@@ -92,7 +92,7 @@ void GfGamePlayerFormation::swapFormation(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *
 
 u32 GfGamePlayerFormation::findPlayer(GF_OBJ_HANDLE *handle) {
   for (u32 playerId = 0; playerId < PLAYER_UNKNOWN_6; playerId++) {
-    if (unknown1a0[playerId].unknown08 == handle) {
+    if (unknown1a0[playerId].m_playerHandle == handle) {
       return playerId;
     }
   }
@@ -105,9 +105,9 @@ void GfGamePlayerFormation::swapFormation(u32 playerId, u32 otherPlayerId) {
     return;
   }
 
-  GF_OBJ_HANDLE *handle = unknown1a0[playerId].unknown08;
-  unknown1a0[playerId].unknown08 = unknown1a0[otherPlayerId].unknown08;
-  unknown1a0[otherPlayerId].unknown08 = handle;
+  GF_OBJ_HANDLE *handle = unknown1a0[playerId].m_playerHandle;
+  unknown1a0[playerId].m_playerHandle = unknown1a0[otherPlayerId].m_playerHandle;
+  unknown1a0[otherPlayerId].m_playerHandle = handle;
 
   notifyChangePlayerID(this, playerId);
   notifyChangePlayerID(this, otherPlayerId);

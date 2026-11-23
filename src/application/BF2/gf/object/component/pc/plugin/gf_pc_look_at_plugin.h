@@ -51,8 +51,8 @@ public:
   // (0x710057a0fc), which copies the 0x28-byte MapPair (key at 0x00, value at 0x08); changeTarget (0x710057997c) reads
   // 0x08, 0x10 and 0x18 and sets 0x1c; getTargetTransform (0x7100579ca0) reads 0x00.
   struct TargetInfo {
-    GF_OBJ_HANDLE *unknown00;                  // Inferred role: target handle; original member name unknown.
-    const GfSearchInfo *unknown08;             // Inferred role: search result; original member name unknown.
+    GF_OBJ_HANDLE *m_GF_OBJ_HANDLE;            // Inferred role: target handle; original member name unknown.
+    const GfSearchInfo *m_searchInfo;          // Inferred role: search result; original member name unknown.
     const GfBdatLookAt::unknown001 *unknown10; // Inferred role: look info; original member name unknown.
     u32 unknown18;                             // Inferred role: chara type; original member name unknown.
     bool unknown1c;                            // Inferred role: already looked at; original member name unknown.
@@ -75,7 +75,7 @@ public:
 
   mm::mtl::IntrusivePtr<fw::LookIkSolver> unknown10;   // Inferred role: look solver; original member name unknown.
   mm::mtl::IntrusivePtr<fw::ParamList> unknown18;      // Inferred role: param list; original member name unknown.
-  GF_SEARCH_OBJ *unknown20;                            // Inferred role: search object; original member name unknown.
+  GF_SEARCH_OBJ *m_GF_SEARCH_OBJ;                      // Inferred role: search object; original member name unknown.
   mm::mtl::Map<GF_OBJ_HANDLE *, TargetInfo> unknown28; // Inferred role: candidates; original member name unknown.
   TargetInfo *unknown40;                               // Inferred role: current target, points to unknown48; original member name unknown.
   TargetInfo unknown48;                                // Inferred role: current target copy; original member name unknown.
@@ -84,14 +84,14 @@ public:
   f32 unknown70[5];                                    // Inferred role: look timers per chara type; original member name unknown.
 };
 
-static_assert(offsetof(LookAtPlugin::TargetInfo, unknown08) == 0x08, "");
+static_assert(offsetof(LookAtPlugin::TargetInfo, m_searchInfo) == 0x08, "");
 static_assert(offsetof(LookAtPlugin::TargetInfo, unknown10) == 0x10, "");
 static_assert(offsetof(LookAtPlugin::TargetInfo, unknown18) == 0x18, "");
 static_assert(offsetof(LookAtPlugin::TargetInfo, unknown1c) == 0x1c, "");
 static_assert(sizeof(LookAtPlugin::TargetInfo) == 0x20, "");
 static_assert(offsetof(LookAtPlugin, unknown10) == 0x10, "");
 static_assert(offsetof(LookAtPlugin, unknown18) == 0x18, "");
-static_assert(offsetof(LookAtPlugin, unknown20) == 0x20, "");
+static_assert(offsetof(LookAtPlugin, m_GF_SEARCH_OBJ) == 0x20, "");
 static_assert(offsetof(LookAtPlugin, unknown28) == 0x28, "");
 static_assert(offsetof(LookAtPlugin, unknown40) == 0x40, "");
 static_assert(offsetof(LookAtPlugin, unknown48) == 0x48, "");

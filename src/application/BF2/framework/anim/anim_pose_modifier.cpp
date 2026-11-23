@@ -23,7 +23,7 @@ class IAllocator;
 
 namespace fw {
 
-AnimPoseModifier::AnimPoseModifier() : unknown18(nullptr), unknown20(nullptr), unknown1058(nullptr) {}
+AnimPoseModifier::AnimPoseModifier() : unknown18(nullptr), m_modelObject(nullptr), unknown1058(nullptr) {}
 
 AnimPoseModifier::~AnimPoseModifier() { unbind(); }
 
@@ -31,10 +31,10 @@ void AnimPoseModifier::bind(anm::Pose *pose, ModelObject *modelObject, anm::Extr
   unbind();
   unknown18 = pose;
   pose->addRef();
-  unknown20 = modelObject;
+  m_modelObject = modelObject;
   modelObject->addRef();
   unknown28.setAllocator(allocator);
-  ml::ScnObjAccResNode nodes(unknown20->getInterface());
+  ml::ScnObjAccResNode nodes(m_modelObject->getInterface());
   int boneMax = nodes.getBoneMax();
   unknown28.resize(boneMax);
   const anm::Skeleton *skeleton = pose->unknown18;
@@ -50,7 +50,7 @@ void AnimPoseModifier::bind(anm::Pose *pose, ModelObject *modelObject, anm::Extr
     unknown1058 = extraTruckBuffer;
     extraTruckBuffer->addRef();
     unknown1060.setAllocator(allocator);
-    ml::ScnObjAccEtcParams params(unknown20->getInterface());
+    ml::ScnObjAccEtcParams params(m_modelObject->getInterface());
     u32 max = params.getMax();
     unknown1060.resize(max, -1);
     const anm::ExtraTruckSlot *slot = unknown1058->unknown20;
@@ -62,7 +62,7 @@ void AnimPoseModifier::bind(anm::Pose *pose, ModelObject *modelObject, anm::Extr
 
 void AnimPoseModifier::unbind() {
   anm::unknown001(unknown18);
-  mm::mtl::safeRelease(unknown20);
+  mm::mtl::safeRelease(m_modelObject);
   unknown28.clear();
   unknown50.clear();
   anm::unknown001(unknown1058);
@@ -92,7 +92,7 @@ void AnimPoseModifier::unbindReferenceFrame(mm::mtl::IntrusivePtr<ReferenceFrame
 
 void AnimPoseModifier::apply() {
   unknown18->syncModelSpace();
-  ml::ScnObjAccResNode nodes(unknown20->getInterface());
+  ml::ScnObjAccResNode nodes(m_modelObject->getInterface());
   mm::Mat44 *matrix = nodes.getBoneMatPtr(0);
   int boneMax = unknown28.size();
   for (int i = 0; i < boneMax; i++, matrix++) {
@@ -102,7 +102,7 @@ void AnimPoseModifier::apply() {
     }
   }
   if (unknown50.size() != 0) {
-    f32 scale = unknown20->unknown60;
+    f32 scale = m_modelObject->unknown60;
     for (u32 i = 0; i < unknown50.size(); i++) {
       ReferenceFrame *frame = unknown50[i].unknown00.get();
       Transform &local = frame->unknown002();
@@ -117,7 +117,7 @@ void AnimPoseModifier::apply() {
     }
   }
   if (unknown1058 != nullptr) {
-    ml::ScnObjAccEtcParams params(unknown20->getInterface());
+    ml::ScnObjAccEtcParams params(m_modelObject->getInterface());
     for (u32 i = 0; i < unknown1060.size(); i++) {
       s16 truck = unknown1060[i];
       if (truck != -1) {

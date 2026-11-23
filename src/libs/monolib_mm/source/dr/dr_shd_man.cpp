@@ -9,49 +9,49 @@
 
 namespace ml {
 
-DrShdMan::DrShdMan(DrMan *drMan) : unknown00(nullptr), unknown08(nullptr), unknown10(nullptr), unknown18(nullptr), unknown20(drMan) {
-  unknown00 = new (drMan->unknown0c) DrShdDataList(unknown20);
-  unknown08 = new (drMan->unknown0c) DrShdMdoMan();
-  unknown10 = new (drMan->unknown0c) DrShdFetchMan(unknown20);
-  unknown18 = new (drMan->unknown0c) DrShdLgtMan(unknown20);
+DrShdMan::DrShdMan(DrMan *drMan) : m_drShdDataList(nullptr), m_drShdMdoMan(nullptr), m_drShdFetchMan(nullptr), m_drShdLgtMan(nullptr), m_drMan(drMan) {
+  m_drShdDataList = new (drMan->unknown0c) DrShdDataList(m_drMan);
+  m_drShdMdoMan = new (drMan->unknown0c) DrShdMdoMan();
+  m_drShdFetchMan = new (drMan->unknown0c) DrShdFetchMan(m_drMan);
+  m_drShdLgtMan = new (drMan->unknown0c) DrShdLgtMan(m_drMan);
 }
 
 DrShdMan::~DrShdMan() {
-  if (unknown00 != nullptr) {
-    delete unknown00;
-    unknown00 = nullptr;
+  if (m_drShdDataList != nullptr) {
+    delete m_drShdDataList;
+    m_drShdDataList = nullptr;
   }
-  if (unknown08 != nullptr) {
-    delete unknown08;
-    unknown08 = nullptr;
+  if (m_drShdMdoMan != nullptr) {
+    delete m_drShdMdoMan;
+    m_drShdMdoMan = nullptr;
   }
-  if (unknown10 != nullptr) {
-    delete unknown10;
-    unknown10 = nullptr;
+  if (m_drShdFetchMan != nullptr) {
+    delete m_drShdFetchMan;
+    m_drShdFetchMan = nullptr;
   }
-  if (unknown18 != nullptr) {
-    delete unknown18;
-    unknown18 = nullptr;
+  if (m_drShdLgtMan != nullptr) {
+    delete m_drShdLgtMan;
+    m_drShdLgtMan = nullptr;
   }
 }
 
-void DrShdMan::beginUpdate() { unknown08->update(); }
+void DrShdMan::beginUpdate() { m_drShdMdoMan->update(); }
 
 void DrShdMan::debugRender() {}
 
-void DrShdMan::beforeUpdateCate(int cate) { unknown18->beforeUpdateCate(cate); }
+void DrShdMan::beforeUpdateCate(int cate) { m_drShdLgtMan->beforeUpdateCate(cate); }
 
-void DrShdMan::setupCate(int cate) { unknown18->setupCate(cate); }
+void DrShdMan::setupCate(int cate) { m_drShdLgtMan->setupCate(cate); }
 
-void DrShdMan::updateCate(int cate) { unknown18->updateCate(cate); }
+void DrShdMan::updateCate(int cate) { m_drShdLgtMan->updateCate(cate); }
 
-void DrShdMan::addViewInfo(int cate) { unknown18->addViewInfo(cate); }
+void DrShdMan::addViewInfo(int cate) { m_drShdLgtMan->addViewInfo(cate); }
 
-void DrShdMan::delViewInfo(int cate) { unknown18->delViewInfo(cate); }
+void DrShdMan::delViewInfo(int cate) { m_drShdLgtMan->delViewInfo(cate); }
 
 void DrShdMan::resetColorBuff(int index) {
-  if (unknown18 != nullptr) {
-    unknown18->resetColorBuff(index);
+  if (m_drShdLgtMan != nullptr) {
+    m_drShdLgtMan->resetColorBuff(index);
   }
 }
 

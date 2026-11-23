@@ -7,11 +7,11 @@
 namespace layer {
 
 LayerFontIconObj::LayerFontIconObj(LayerFontManager *manager, const void *data, LAYER_TYPE type) {
-  unknown20 = manager;
+  m_layerFontManager = manager;
   unknown28 = 0;
   unknown18 = type;
   unknown30 = static_cast<const unknown004 *>(data);
-  unknown40 = nullptr;
+  m_layerTextureObj = nullptr;
   unknown50 = 0.0f;
   unknown48 = 0;
   unknown4c = 0.0f;
@@ -19,9 +19,9 @@ LayerFontIconObj::LayerFontIconObj(LayerFontManager *manager, const void *data, 
 }
 
 LayerFontIconObj::~LayerFontIconObj() {
-  if (unknown40 != nullptr) {
-    unknown40->release();
-    unknown40 = nullptr;
+  if (m_layerTextureObj != nullptr) {
+    m_layerTextureObj->release();
+    m_layerTextureObj = nullptr;
   }
 }
 
@@ -32,7 +32,7 @@ void LayerFontIconObj::createIconRes() {
   unknown50 = static_cast<f32>(size->unknown04);
   unknown4c = static_cast<f32>(size->unknown0c);
   if (header->unknown24 != 0) {
-    unknown40 = LayerManager::get()->unknown58->unknown40->createTextureObj(data + header->unknown24);
+    m_layerTextureObj = LayerManager::get()->m_layerShdManager->m_layerTextureMan->createTextureObj(data + header->unknown24);
   }
   if (header->unknown08 & 2) {
     u32 offset = header->unknown2c;
@@ -94,8 +94,8 @@ void LayerFontIconObj::getFontUvOnlyParms(f32 *uv, u16 index) const {
 }
 
 void LayerFontIconObj::setupResource() {
-  if (unknown40 != nullptr) {
-    unknown40->setupResource();
+  if (m_layerTextureObj != nullptr) {
+    m_layerTextureObj->setupResource();
   }
 }
 

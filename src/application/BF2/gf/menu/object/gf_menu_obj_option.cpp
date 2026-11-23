@@ -31,13 +31,13 @@ namespace gf {
 constexpr u32 unknown001 = 0x86;
 
 GfMenuObjOption::GfMenuObjOption(u32 handle)
-    : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr), unknown48(0), unknown4c(0), unknown120(nullptr), unknown128(this), unknown3b8(false),
+    : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr), unknown48(0), unknown4c(0), m_menuCallContext(nullptr), unknown128(this), unknown3b8(false),
       unknown3bc(-1), unknown3c0(false), unknown3c1(false), unknown3c2(-1) {
-  unknown120 = GfMenuCallContext::create();
+  m_menuCallContext = GfMenuCallContext::create();
 }
 
 GfMenuObjOption::~GfMenuObjOption() {
-  mm::mtl::safeRelease(unknown120);
+  mm::mtl::safeRelease(m_menuCallContext);
   mm::mtl::safeRelease(unknown38);
   mm::mtl::safeRelease(unknown30);
   mm::mtl::safeRelease(unknown28);
@@ -163,7 +163,7 @@ void GfMenuObjOption::initialize() {
       disSettingListener->release();
     }
   }
-  unknown98 = GfGameUtilSaveData::getValidOptionData();
+  m_option = GfGameUtilSaveData::getValidOptionData();
   unknown3c0 = GfManager::isExecModeAdvertize();
   if (!unknown3c0) {
     GfMenuObjMainMenu2::setSubIndexText(0x18);
@@ -279,7 +279,7 @@ void GfMenuObjOption::initOptionData(SDataOption &option) {
   getDefaultLevel(2, levels);
   u8 *disp = GfDataBdat::getFP(BDAT_MNU_OPTION_DISP);
   u32 index = 1 - Bdat::getIdTop(disp);
-  option.unknown4c._1a = getGammaValue(levels[index].unknown00, levels[index].unknown01);
+  option.m_sSoundUiOption._1a = getGammaValue(levels[index].unknown00, levels[index].unknown01);
 }
 
 void GfMenuObjOption::ItemSettingListener::reciveEvent(const ui::EventData &event, u32 handle) {
@@ -323,18 +323,18 @@ void GfMenuObjOption::convLevelListToOptionData(u32 type, const mm::mtl::FixedVe
   } else if (type == 1) {
     u8 *sound = GfDataBdat::getFP(BDAT_MNU_OPTION_SOUND);
     u32 top = Bdat::getIdTop(sound);
-    option.unknown4c._1c = levels[1 - top].unknown00 == 1;
-    option.unknown4c.unknown02 = getVolumeValue(levels[2 - top].unknown00, levels[2 - top].unknown01);
-    option.unknown4c.unknown04 = getVolumeValue(levels[3 - top].unknown00, levels[3 - top].unknown01);
-    option.unknown4c.unknown0e = getVolumeValue(levels[4 - top].unknown00, levels[4 - top].unknown01);
-    option.unknown4c.unknown10 = getVolumeValue(levels[5 - top].unknown00, levels[5 - top].unknown01);
-    option.unknown4c.unknown14 = getVolumeValue(levels[6 - top].unknown00, levels[6 - top].unknown01);
-    option.unknown4c.unknown0a = getVolumeValue(levels[7 - top].unknown00, levels[7 - top].unknown01);
-    option.unknown4c.unknown16 = getVolumeValue(levels[8 - top].unknown00, levels[8 - top].unknown01);
+    option.m_sSoundUiOption._1c = levels[1 - top].unknown00 == 1;
+    option.m_sSoundUiOption.unknown02 = getVolumeValue(levels[2 - top].unknown00, levels[2 - top].unknown01);
+    option.m_sSoundUiOption.unknown04 = getVolumeValue(levels[3 - top].unknown00, levels[3 - top].unknown01);
+    option.m_sSoundUiOption.unknown0e = getVolumeValue(levels[4 - top].unknown00, levels[4 - top].unknown01);
+    option.m_sSoundUiOption.unknown10 = getVolumeValue(levels[5 - top].unknown00, levels[5 - top].unknown01);
+    option.m_sSoundUiOption.unknown14 = getVolumeValue(levels[6 - top].unknown00, levels[6 - top].unknown01);
+    option.m_sSoundUiOption.unknown0a = getVolumeValue(levels[7 - top].unknown00, levels[7 - top].unknown01);
+    option.m_sSoundUiOption.unknown16 = getVolumeValue(levels[8 - top].unknown00, levels[8 - top].unknown01);
   } else if (type == 2) {
     u8 *disp = GfDataBdat::getFP(BDAT_MNU_OPTION_DISP);
     u32 index = 1 - Bdat::getIdTop(disp);
-    option.unknown4c._1a = getGammaValue(levels[index].unknown00, levels[index].unknown01);
+    option.m_sSoundUiOption._1a = getGammaValue(levels[index].unknown00, levels[index].unknown01);
   }
 }
 
@@ -354,18 +354,18 @@ void GfMenuObjOption::convOptionDataToLevelList(u32 type, const SDataOption &opt
   } else if (type == 1) {
     u8 *sound = GfDataBdat::getFP(BDAT_MNU_OPTION_SOUND);
     u32 top = Bdat::getIdTop(sound);
-    unknown50[1 - top].unknown00 = option.unknown4c._1c ? 1 : 2;
-    unknown50[2 - top].unknown00 = getVolumeLevel(option.unknown4c.unknown02, unknown50[2 - top].unknown01);
-    unknown50[3 - top].unknown00 = getVolumeLevel(option.unknown4c.unknown04, unknown50[3 - top].unknown01);
-    unknown50[4 - top].unknown00 = getVolumeLevel(option.unknown4c.unknown0e, unknown50[4 - top].unknown01);
-    unknown50[5 - top].unknown00 = getVolumeLevel(option.unknown4c.unknown10, unknown50[5 - top].unknown01);
-    unknown50[6 - top].unknown00 = getVolumeLevel(option.unknown4c.unknown14, unknown50[6 - top].unknown01);
-    unknown50[7 - top].unknown00 = getVolumeLevel(option.unknown4c.unknown0a, unknown50[7 - top].unknown01);
-    unknown50[8 - top].unknown00 = getVolumeLevel(option.unknown4c.unknown16, unknown50[8 - top].unknown01);
+    unknown50[1 - top].unknown00 = option.m_sSoundUiOption._1c ? 1 : 2;
+    unknown50[2 - top].unknown00 = getVolumeLevel(option.m_sSoundUiOption.unknown02, unknown50[2 - top].unknown01);
+    unknown50[3 - top].unknown00 = getVolumeLevel(option.m_sSoundUiOption.unknown04, unknown50[3 - top].unknown01);
+    unknown50[4 - top].unknown00 = getVolumeLevel(option.m_sSoundUiOption.unknown0e, unknown50[4 - top].unknown01);
+    unknown50[5 - top].unknown00 = getVolumeLevel(option.m_sSoundUiOption.unknown10, unknown50[5 - top].unknown01);
+    unknown50[6 - top].unknown00 = getVolumeLevel(option.m_sSoundUiOption.unknown14, unknown50[6 - top].unknown01);
+    unknown50[7 - top].unknown00 = getVolumeLevel(option.m_sSoundUiOption.unknown0a, unknown50[7 - top].unknown01);
+    unknown50[8 - top].unknown00 = getVolumeLevel(option.m_sSoundUiOption.unknown16, unknown50[8 - top].unknown01);
   } else if (type == 2) {
     u8 *disp = GfDataBdat::getFP(BDAT_MNU_OPTION_DISP);
     u32 top = Bdat::getIdTop(disp);
-    unknown50[1 - top].unknown00 = getGammaLevel(option.unknown4c._1a, unknown50[1 - top].unknown01);
+    unknown50[1 - top].unknown00 = getGammaLevel(option.m_sSoundUiOption._1a, unknown50[1 - top].unknown01);
   }
 }
 
@@ -412,31 +412,31 @@ void GfMenuObjOption::MainListener::reciveEvent(const ui::EventData &event, u32 
   switch (event.unknown00) {
   case 2: {
     SDataOption &saved = GfGameUtilSaveData::getValidOptionData();
-    if (unknown20->unknown3c2 != -1) {
-      convLevelListToOptionData(unknown20->unknown3c2, unknown20->unknown50, unknown20->unknown98);
+    if (m_menuObjOption->unknown3c2 != -1) {
+      convLevelListToOptionData(m_menuObjOption->unknown3c2, m_menuObjOption->unknown50, m_menuObjOption->m_option);
     }
-    unknown20->unknown98.unknown4c.unknown00 = static_cast<int>(unknown20->unknown98.unknown4c.unknown02 * 0.875f);
-    unknown20->unknown98.unknown4c.unknown06 = unknown20->unknown98.unknown4c.unknown00;
-    unknown20->unknown98.unknown4c.unknown08 = unknown20->unknown98.unknown4c.unknown04;
-    unknown20->unknown98.unknown4c.unknown12 = unknown20->unknown98.unknown4c.unknown10;
-    unknown20->unknown98.unknown4c.unknown0c = unknown20->unknown98.unknown4c.unknown0a;
-    unknown20->unknown98.unknown4c.unknown18 = unknown20->unknown98.unknown4c.unknown16;
+    m_menuObjOption->m_option.m_sSoundUiOption.unknown00 = static_cast<int>(m_menuObjOption->m_option.m_sSoundUiOption.unknown02 * 0.875f);
+    m_menuObjOption->m_option.m_sSoundUiOption.unknown06 = m_menuObjOption->m_option.m_sSoundUiOption.unknown00;
+    m_menuObjOption->m_option.m_sSoundUiOption.unknown08 = m_menuObjOption->m_option.m_sSoundUiOption.unknown04;
+    m_menuObjOption->m_option.m_sSoundUiOption.unknown12 = m_menuObjOption->m_option.m_sSoundUiOption.unknown10;
+    m_menuObjOption->m_option.m_sSoundUiOption.unknown0c = m_menuObjOption->m_option.m_sSoundUiOption.unknown0a;
+    m_menuObjOption->m_option.m_sSoundUiOption.unknown18 = m_menuObjOption->m_option.m_sSoundUiOption.unknown16;
     bool isSame = true;
     for (u32 i = 0; i < sizeof(saved.unknown04); i++) {
-      if (saved.unknown04[i] != unknown20->unknown98.unknown04[i]) {
+      if (saved.unknown04[i] != m_menuObjOption->m_option.unknown04[i]) {
         isSame = false;
         break;
       }
     }
     u32 fade;
-    if (isSame && !saved.unknown4c.isDirty(unknown20->unknown98.unknown4c)) {
+    if (isSame && !saved.m_sSoundUiOption.isDirty(m_menuObjOption->m_option.m_sSoundUiOption)) {
       fade = 2;
     } else {
-      saved = unknown20->unknown98;
+      saved = m_menuObjOption->m_option;
       GfGameUtilSaveData::flushOptionSaveData();
-      unknown20->unknown128.unknown005();
-      unknown20->unknown128.unknown002(&GfMenuObjOption::seqSave);
-      unknown20->unknown128.unknown002(&GfMenuObjOption::seqSaveWait);
+      m_menuObjOption->unknown128.unknown005();
+      m_menuObjOption->unknown128.unknown002(&GfMenuObjOption::seqSave);
+      m_menuObjOption->unknown128.unknown002(&GfMenuObjOption::seqSaveWait);
       fade = 0;
     }
     GfMenuObjUtil::setCommonFadeOut(acc.unknown10, fade, 0);
@@ -487,17 +487,17 @@ void GfMenuObjOption::SubMenuListener::reciveEvent(const ui::EventData &event, u
     }
     name.format("IMG_submenu_item_sel@%02d", index + 1);
     acc.setDispChild(true, name.c_str());
-    unknown20->unknown28->setIndex(index);
+    m_menuObjOption->unknown28->setIndex(index);
     {
       GfMenuObjUtil::CtrlParam param;
       param.unknown08 = 0x10000000;
       param.unknown50 = "cmn_fade_emotion";
       param.unknown58 = "fade_in_select";
       param.unknown11 = true;
-      GfMenuObjUtil::startCtrl(unknown20->unknown28->getSelectObject(), param, nullptr);
+      GfMenuObjUtil::startCtrl(m_menuObjOption->unknown28->getSelectObject(), param, nullptr);
     }
     {
-      ui::UIObjectAcc owner(unknown20->unknown18);
+      ui::UIObjectAcc owner(m_menuObjOption->unknown18);
       ui::UIObjectAcc indexText(acc.unknown10, "TXT_submenu_index");
       ui::UIObjectAcc infoText(acc.unknown10, "TXT_submenu_info");
       // The game reads `text` unset when the index is not 0 to 2 (0x71004a4264: the default path jumps to 0x71004a43d8, over the
@@ -541,7 +541,7 @@ void GfMenuObjOption::SubMenuListener::reciveEvent(const ui::EventData &event, u
     switch (event.unknown0c) {
     case 1: {
       int index = event.unknown08;
-      if (index >= 0 && index < static_cast<int>(unknown20->unknown28->getSize())) {
+      if (index >= 0 && index < static_cast<int>(m_menuObjOption->unknown28->getSize())) {
         u32 target;
         switch (index) {
         case 0:
@@ -567,8 +567,8 @@ void GfMenuObjOption::SubMenuListener::reciveEvent(const ui::EventData &event, u
       break;
     }
     case 2:
-      if (!unknown20->unknown3c0) {
-        GfMenuObject::returnFSSubLayer(unknown20);
+      if (!m_menuObjOption->unknown3c0) {
+        GfMenuObject::returnFSSubLayer(m_menuObjOption);
       } else {
         GfMenuObjOperationInfo::close();
         GfMenuObject::closeFSLayer(acc.unknown10, false, false);
@@ -586,9 +586,9 @@ void GfMenuObjOption::SubMenuListener::reciveEvent(const ui::EventData &event, u
       GfMenuObject::hookCtrlEvent(acc.unknown10, ctrl);
     }
     GfMenuObject::resetInputSelection(acc.unknown10);
-    GfMenuObject::setupInputSelectionFromList(acc.unknown10, *unknown20->unknown28);
+    GfMenuObject::setupInputSelectionFromList(acc.unknown10, *m_menuObjOption->unknown28);
     GfMenuObjOperationInfo::add(acc.unknown10, 0, 0, 0);
-    GfMenuObjOperationInfo::setGuideText(0x2b, unknown20->unknown3c1);
+    GfMenuObjOperationInfo::setGuideText(0x2b, m_menuObjOption->unknown3c1);
     acc.setDisp(true);
     break;
   case GfMenuTypes::unknown003_34:

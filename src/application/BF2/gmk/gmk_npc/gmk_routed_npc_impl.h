@@ -13,7 +13,7 @@ void GmkRoutedNpc::create(const CreateInfo &info) {
     GmkRouteNavi::CreateInfo naviInfo(this);
     naviInfo.unknown0c = ml::mtRandf1(-1.0f, 1.0f);
 #line 84
-    unknown70 = new (gf::getAllocator(gf::ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GmkRouteNavi(&naviInfo);
+    m_gmkRouteNavi = new (gf::getAllocator(gf::ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GmkRouteNavi(&naviInfo);
   }
   unknown78 = true;
 }

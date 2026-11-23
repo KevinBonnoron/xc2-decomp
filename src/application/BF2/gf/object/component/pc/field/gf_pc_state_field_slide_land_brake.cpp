@@ -26,7 +26,7 @@ void StateFieldSlideLandBrake::update(GfComBehaviorPc *behavior, const fw::Updat
   GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
   if (StateUtilField::isFallFromSlideState(*property) && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_FALL)) {
     reqState(STATE_ID_UNKNOWN_15);
-  } else if (property->unknown60.unknown08.test(INPUT_ID_UNKNOWN_2) && property->unknown310.unknown12_1 && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_JUMP)) {
+  } else if (property->unknown60.unknown08.test(INPUT_ID_UNKNOWN_2) && property->m_propertyField.unknown12_1 && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_JUMP)) {
     reqState(STATE_ID_UNKNOWN_12);
   } else if (StateUtilField::isStartSlidePosuture(*behavior) && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_SLOPE)) {
     reqState(STATE_ID_UNKNOWN_54);

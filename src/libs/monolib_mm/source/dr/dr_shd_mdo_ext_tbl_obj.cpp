@@ -1,10 +1,17 @@
 #include "dr/dr_shd_mdo_ext_tbl_obj.h"
 
+#include <new>
+
+#include "dr/dr_mdo_mat.h"
+#include "dr/dr_shd_mdo_dec_ext_tbl.h"
+#include "dr/dr_shd_mdo_dec_res.h"
+#include "dr/dr_shd_mdo_dec_shd_obj.h"
 #include "grlib/cglib_dec_shader.h"
+#include "grlib/cglib_shd_list.h"
 
 namespace ml {
 
-DrShdMdoExtTblObj::DrShdMdoExtTblObj() : unknown00(nullptr), unknown08(nullptr) {}
+DrShdMdoExtTblObj::DrShdMdoExtTblObj() : m_drShdMdoDecShdObj(nullptr), m_drShdMdoDecExtTbl(nullptr) {}
 
 int DrShdMdoExtTblObj::getDecWorkSize(int declarationNum, const u8 *data) {
   const unknown001 *header = reinterpret_cast<const unknown001 *>(data);
@@ -22,6 +29,28 @@ int DrShdMdoExtTblObj::getDecWorkSize(int declarationNum, const u8 *data) {
     padding = 4 - (size & 3);
   }
   return tblSize + declSize + size + padding;
+}
+
+int DrShdMdoExtTblObj::setDecObj(DrShdMdoDecShdObj *obj, u8 *work, const u8 *data, int declarationNum, const MdsMatTechnique *technique, const u8 *extData) {
+  m_drShdMdoDecShdObj = obj;
+  m_drShdMdoDecExtTbl = static_cast<DrShdMdoDecExtTbl *>(static_cast<void *>(work));
+  s32 count = obj->unknown28.unknown50;
+  size_t tableSize = count * sizeof(DrShdMdoDecExtTbl);
+  // The game keeps the end of the extension tables in x21 (0x71008a1198), apart from the declaration table pointer, which it forms from the same size (x8) plus declarationNum * 4 (0x71008a119c).
+  u8 *params = work + tableSize;
+  u8 *declarations = work + (tableSize + declarationNum * sizeof(u32));
+  for (s32 i = 0; i < count; i++) {
+    new (&m_drShdMdoDecExtTbl[i]) DrShdMdoDecExtTbl();
+    DrShdMdoDecRes *shader = unknown102(obj->unknown28, i);
+    m_drShdMdoDecExtTbl[i].setTbl(declarations);
+    m_drShdMdoDecExtTbl[i].setObj(shader);
+    int declarationMax = shader->getDeclarationMax();
+    m_drShdMdoDecExtTbl[i].setShaderParamAdd(static_cast<u32 *>(static_cast<void *>(params + technique[i].unknown2c * 4)),
+                                             static_cast<u32 *>(static_cast<void *>(params + technique[i].unknown2e * 4)));
+    m_drShdMdoDecExtTbl[i].setupShderInfo(shader, &technique[i], data);
+    declarations += declarationMax;
+  }
+  return getDecWorkSize(declarationNum, extData);
 }
 
 } // namespace ml

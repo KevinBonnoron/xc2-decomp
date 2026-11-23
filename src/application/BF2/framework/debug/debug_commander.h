@@ -65,7 +65,7 @@ public:
   s8 unknownab2;                                  // Role and original member name unknown.
   mm::mtl::FixStr<32> unknownab4;                 // Inferred role: server name; original member name unknown.
   mm::mtl::IAllocator *unknownad8;                // Inferred role: allocator; original member name unknown.
-  IDebugInput *unknownae0;                        // Inferred role: debug input; original member name unknown.
+  IDebugInput *m_iDebugInput;                     // Inferred role: debug input; original member name unknown.
   bool unknownae8;                                // Inferred role: debug input enabled; original member name unknown.
   skt::SERVER_OPTION m_serverOption;
 };
@@ -76,7 +76,7 @@ static_assert(offsetof(DebugCommander, unknownab0) == 0xab0, "");
 static_assert(offsetof(DebugCommander, unknownab2) == 0xab2, "");
 static_assert(offsetof(DebugCommander, unknownab4) == 0xab4, "");
 static_assert(offsetof(DebugCommander, unknownad8) == 0xad8, "");
-static_assert(offsetof(DebugCommander, unknownae0) == 0xae0, "");
+static_assert(offsetof(DebugCommander, m_iDebugInput) == 0xae0, "");
 static_assert(offsetof(DebugCommander, unknownae8) == 0xae8, "");
 static_assert(offsetof(DebugCommander, m_serverOption) == 0xaec, "");
 static_assert(sizeof(DebugCommander) == 0xaf0, "");

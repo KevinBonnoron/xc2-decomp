@@ -68,13 +68,13 @@ public:
   void update(const fw::UpdateInfo &info) override;
 
   mm::mtl::Delegate<bool(const MenuFieldSkill &)> unknown30; // Inferred role: updater; original member name unknown.
-  IConverter *unknown50;                                     // Inferred role: converter; original member name unknown.
-  MenuFieldSkill unknown58;                                  // Inferred role: field skill; original member name unknown.
+  IConverter *m_iConverter;                                  // Inferred role: converter; original member name unknown.
+  MenuFieldSkill m_menuFieldSkill;                           // Inferred role: field skill; original member name unknown.
 };
 
 static_assert(offsetof(GfMenuFieldSkillAdapter, unknown30) == 0x30, "");
-static_assert(offsetof(GfMenuFieldSkillAdapter, unknown50) == 0x50, "");
-static_assert(offsetof(GfMenuFieldSkillAdapter, unknown58) == 0x58, "");
+static_assert(offsetof(GfMenuFieldSkillAdapter, m_iConverter) == 0x50, "");
+static_assert(offsetof(GfMenuFieldSkillAdapter, m_menuFieldSkill) == 0x58, "");
 static_assert(sizeof(GfMenuFieldSkillAdapter) == 0x60, "");
 
 } // namespace gf

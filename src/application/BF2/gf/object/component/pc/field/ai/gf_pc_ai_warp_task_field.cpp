@@ -42,17 +42,17 @@ void TaskFieldCheckWarp::onChangeActivate(BlackBoardField &blackBoard, const ai:
 
 bool TaskFieldCheckWarp::testCondition(const BlackBoardField &blackBoard) {
   bool isBusy = blackBoard.unknown200.test(6) || blackBoard.unknown200.test(7) || blackBoard.unknown200.test(8) || blackBoard.unknown200.test(9);
-  if (blackBoard.unknown08->unknown310.unknown11_2) {
+  if (blackBoard.m_comPropertyPc->m_propertyField.unknown11_2) {
     isBusy = true;
   }
   if (isBusy) {
     return false;
   }
-  return !blackBoard.unknown08->unknown111_3;
+  return !blackBoard.m_comPropertyPc->unknown111_3;
 }
 
 void TaskFieldCheckWarp::update(BlackBoardField &blackBoard) {
-  GfComPropertyPc *property = blackBoard.unknown08;
+  GfComPropertyPc *property = blackBoard.m_comPropertyPc;
   const WarpParam *param = property->unknown006();
   if (blackBoard.unknown200.test(0)) {
     unknown38 += blackBoard.unknown18->unknown04;
@@ -62,7 +62,7 @@ void TaskFieldCheckWarp::update(BlackBoardField &blackBoard) {
 
   if (!blackBoard.unknown200.test(4)) {
     GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
-    GfObjProperty *mainProperty = GfObjUtil::getProperty(formation->unknown1a0[formation->unknown1a0[property->unknown38].unknown00].unknown08);
+    GfObjProperty *mainProperty = GfObjUtil::getProperty(formation->unknown1a0[formation->unknown1a0[property->unknown38].unknown00].m_playerHandle);
     if (mainProperty->unknown18 != nullptr) {
       if (mainProperty->unknown18->unknown00 == PROPERTY_MOVE_UNKNOWN_1 || mainProperty->unknown18->unknown00 == PROPERTY_MOVE_UNKNOWN_5) {
         return;
@@ -131,18 +131,18 @@ void TaskFieldCheckWarpBattleWaterDead::onChangeActivate(BlackBoardField &blackB
 void TaskFieldCheckWarpBattleWaterDead::onCreate(BlackBoardField &blackBoard, const ai::CreateEvent &event) {
   mm::mtl::IntrusivePtr<fw::ParamList> paramList = fw::ParamManager::get()->unknown408[10];
   if (paramList.get() != nullptr) {
-    unknown40.unknown00 = paramList->unknown0c > 0 ? &paramList->unknown10[0] : nullptr;
+    m_paramAdapter.unknown00 = paramList->unknown0c > 0 ? &paramList->unknown10[0] : nullptr;
   }
 }
 
-bool TaskFieldCheckWarpBattleWaterDead::testCondition(const BlackBoardField &blackBoard) { return blackBoard.unknown08->unknown310.unknown11_7 && blackBoard.unknown08->unknown111_3; }
+bool TaskFieldCheckWarpBattleWaterDead::testCondition(const BlackBoardField &blackBoard) { return blackBoard.m_comPropertyPc->m_propertyField.unknown11_7 && blackBoard.m_comPropertyPc->unknown111_3; }
 
-bool TaskFieldCheckWarpFallDead::testCondition(const BlackBoardField &blackBoard) { return blackBoard.unknown08->unknown111_3; }
+bool TaskFieldCheckWarpFallDead::testCondition(const BlackBoardField &blackBoard) { return blackBoard.m_comPropertyPc->unknown111_3; }
 
 void TaskFieldCheckWarpFallDead::update(BlackBoardField &blackBoard) {
-  GfComPropertyPc *property = blackBoard.unknown08;
+  GfComPropertyPc *property = blackBoard.m_comPropertyPc;
   GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
-  GfObjProperty *mainProperty = GfObjUtil::getProperty(formation->unknown1a0[formation->unknown1a0[property->unknown38].unknown00].unknown08);
+  GfObjProperty *mainProperty = GfObjUtil::getProperty(formation->unknown1a0[formation->unknown1a0[property->unknown38].unknown00].m_playerHandle);
   if (mainProperty->unknown18 == nullptr || mainProperty->unknown18->unknown00 == PROPERTY_MOVE_UNKNOWN_0) {
     fw::Transform transform = formation->getFollowTransform(property->unknown38);
     transform.unknown00 = formation->unknown80[property->unknown38];

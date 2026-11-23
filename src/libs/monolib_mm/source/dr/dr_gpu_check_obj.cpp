@@ -30,7 +30,7 @@ DrGpuCheckObj::DrGpuCheckObj(int type, bool isWorld) : unknown08(nullptr), unkno
   }
 }
 
-DrGpuCheckObj::~DrGpuCheckObj() { unknown20.release(); }
+DrGpuCheckObj::~DrGpuCheckObj() { m_cGLibOcclusionQuery.release(); }
 
 void DrGpuCheckObj::release() { unknown3c |= 0x100 << DrMan::s_nDblStockIdx; }
 
@@ -64,7 +64,7 @@ void DrGpuCheckObj::setWorldPos(const mm::Vec3 &position, f32 radius) {
   unknown60.unknown04 = pos.y;
   unknown60.unknown08 = pos.z;
   unknown60.unknown0c = radius;
-  if (DrMan::get()->unknown88->unknown048->unknown00->unknown9aa) {
+  if (DrMan::get()->m_drMdlMan->m_drGpuCheckRender->m_drCalcViewWork->unknown9aa) {
     unknown70 = 3;
     unknown3c |= FLAG_UNKNOWN_4;
   }
@@ -72,14 +72,14 @@ void DrGpuCheckObj::setWorldPos(const mm::Vec3 &position, f32 radius) {
 
 void DrGpuCheckObj::render() {
   if (unknown3c & FLAG_UNKNOWN_5) {
-    DrGpuCheckRender *checkRender = DrMan::get()->unknown88->unknown048;
-    unknown20.beginQuery();
+    DrGpuCheckRender *checkRender = DrMan::get()->m_drMdlMan->m_drGpuCheckRender;
+    m_cGLibOcclusionQuery.beginQuery();
     if (unknown3c & FLAG_UNKNOWN_6) {
       checkRender->render(unknown38, 2);
     } else {
       checkRender->render(unknown38, 1);
     }
-    unknown20.endQuery();
+    m_cGLibOcclusionQuery.endQuery();
     unknown3c |= 4 << DrMan::s_nDblIdx;
   }
 }

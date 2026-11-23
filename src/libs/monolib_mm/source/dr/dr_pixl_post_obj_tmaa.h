@@ -27,6 +27,7 @@ public:
   void renderSharpnessImpl(SHARPNESS_TYPE type);
   void update();
   void debugRender();
+  void resetColorBuff();
   void releaseColorBuff();
   DrPixlRenderTarget *getBloomTexture();
 

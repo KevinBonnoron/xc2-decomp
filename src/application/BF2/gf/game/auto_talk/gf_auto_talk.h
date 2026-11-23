@@ -58,20 +58,20 @@ public:
   bool canDispText() const;
   void createMenuObj();
 
-  CreateInfo unknown08;         // Inferred role: create info; original member name unknown.
-  BdatInfo unknown20;           // Inferred role: bdat info; original member name unknown.
-  gmk::DistHvCond unknown2c;    // Inferred role: talk range; original member name unknown.
-  gmk::GmkAcc unknown38;        // Inferred role: mob gimmick; original member name unknown.
-  GfMenuCallContext *unknown78; // Inferred role: balloon context; original member name unknown.
-  bool unknown80;               // Inferred role: text displayed; original member name unknown.
-  f32 unknown84;                // Inferred role: remaining display time; original member name unknown.
+  CreateInfo m_createInfo;              // Inferred role: create info; original member name unknown.
+  BdatInfo m_bdatInfo;                  // Inferred role: bdat info; original member name unknown.
+  gmk::DistHvCond m_distHvCond;         // Inferred role: talk range; original member name unknown.
+  gmk::GmkAcc m_gmkAcc;                 // Inferred role: mob gimmick; original member name unknown.
+  GfMenuCallContext *m_menuCallContext; // Inferred role: balloon context; original member name unknown.
+  bool unknown80;                       // Inferred role: text displayed; original member name unknown.
+  f32 unknown84;                        // Inferred role: remaining display time; original member name unknown.
 };
 
-static_assert(offsetof(GfAutoTalk, unknown08) == 0x08, "");
-static_assert(offsetof(GfAutoTalk, unknown20) == 0x20, "");
-static_assert(offsetof(GfAutoTalk, unknown2c) == 0x2c, "");
-static_assert(offsetof(GfAutoTalk, unknown38) == 0x38, "");
-static_assert(offsetof(GfAutoTalk, unknown78) == 0x78, "");
+static_assert(offsetof(GfAutoTalk, m_createInfo) == 0x08, "");
+static_assert(offsetof(GfAutoTalk, m_bdatInfo) == 0x20, "");
+static_assert(offsetof(GfAutoTalk, m_distHvCond) == 0x2c, "");
+static_assert(offsetof(GfAutoTalk, m_gmkAcc) == 0x38, "");
+static_assert(offsetof(GfAutoTalk, m_menuCallContext) == 0x78, "");
 static_assert(offsetof(GfAutoTalk, unknown80) == 0x80, "");
 static_assert(offsetof(GfAutoTalk, unknown84) == 0x84, "");
 static_assert(sizeof(GfAutoTalk) == 0x88, "");
@@ -92,11 +92,11 @@ public:
   void dispose();
   void update(f32 deltaTime);
 
-  CreateInfo unknown18;                  // Inferred role: create info; original member name unknown.
+  CreateInfo m_createInfo;               // Inferred role: create info; original member name unknown.
   mm::mtl::Vector<GfAutoTalk> unknown30; // Inferred role: auto talks; original member name unknown.
 };
 
-static_assert(offsetof(GfAutoTalkList, unknown18) == 0x18, "");
+static_assert(offsetof(GfAutoTalkList, m_createInfo) == 0x18, "");
 static_assert(offsetof(GfAutoTalkList, unknown30) == 0x30, "");
 static_assert(sizeof(GfAutoTalkList) == 0x58, "");
 

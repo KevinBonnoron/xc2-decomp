@@ -102,7 +102,7 @@ public:
   State unknown228;                // Inferred role: state; original member name unknown.
   u32 unknown22c;                  // Inferred role: flags; original member name unknown.
   mm::mtl::IAllocator *unknown230; // Inferred role: script memory allocator; original member name unknown.
-  ScriptManager *unknown238;       // Inferred role: manager; original member name unknown.
+  ScriptManager *m_scriptManager;  // Inferred role: manager; original member name unknown.
 };
 
 static_assert(offsetof(ScriptInfo, unknown14) == 0x14, "");
@@ -110,7 +110,7 @@ static_assert(offsetof(ScriptInfo, unknown118) == 0x118, "");
 static_assert(offsetof(ScriptInfo, unknown21c) == 0x21c, "");
 static_assert(offsetof(ScriptInfo, unknown228) == 0x228, "");
 static_assert(offsetof(ScriptInfo, unknown230) == 0x230, "");
-static_assert(offsetof(ScriptInfo, unknown238) == 0x238, "");
+static_assert(offsetof(ScriptInfo, m_scriptManager) == 0x238, "");
 
 class ScriptManager : public ManagerObject, public mm::mtl::PtrSingleton<ScriptManager>, public ml::IWorkEvent {
 public:

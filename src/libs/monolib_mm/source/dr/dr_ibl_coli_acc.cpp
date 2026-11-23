@@ -9,7 +9,7 @@ namespace ml {
 namespace {
 
 // Inferred role: collision sphere data; original type name unknown.
-struct unknown001 {
+struct unknown013 {
   f32 unknown00[3]; // Inferred role: center; original member name unknown.
   f32 unknown0c;    // Inferred role: radius; original member name unknown.
 };
@@ -22,14 +22,14 @@ struct unknown002 {
 };
 
 // Inferred role: collision data of a non rotated box; original type name unknown.
-struct unknown003 {
+struct unknown014 {
   f32 unknown00[3]; // Inferred role: center; original member name unknown.
   f32 unknown0c;    // Inferred role: radius; original member name unknown.
   f32 unknown10[3]; // Inferred role: half extents; original member name unknown.
 };
 
 // Inferred role: collision data of a rotated box or cylinder; original type name unknown.
-struct unknown004 {
+struct unknown015 {
   f32 unknown00[3][4]; // Inferred role: axes; original member name unknown.
   f32 unknown30[3];    // Inferred role: center; original member name unknown.
   f32 unknown3c;       // Inferred role: radius; original member name unknown.
@@ -61,7 +61,7 @@ DrIBLColiAcc::COLITEST DrIBLColiAcc::s_pColiTest[5] = {
 DrIBLColiAcc::DrIBLColiAcc(const void *data, mtl::ALLOC_HANDLE handle) {
   const unknown005 *header = static_cast<const unknown005 *>(data);
   unknown00 = static_cast<const u8 *>(data);
-  unknown08 = reinterpret_cast<const _IBLPrimHeader *>(unknown00 + header->unknown14);
+  m_iBLPrimHeader = reinterpret_cast<const _IBLPrimHeader *>(unknown00 + header->unknown14);
   if (header->unknown18 != 0) {
     unknown10 = reinterpret_cast<const _EnvColiListTreeData *>(unknown00 + header->unknown1c);
   }
@@ -105,7 +105,7 @@ void DrIBLColiAcc::testTreeInvalidColi(const _EnvColiListTreeData *tree, const m
     if (primCount != 0) {
       const u16 *primitives = reinterpret_cast<const u16 *>(unknown00 + tree->unknown1c);
       for (u32 i = 0; i < primCount; i++) {
-        const _IBLPrimHeader *base = unknown08;
+        const _IBLPrimHeader *base = m_iBLPrimHeader;
         const _IBLPrimHeader *primitive = base + primitives[i];
         if ((this->*s_pColiTest[primitive->unknown04])(unknown00 + primitive->unknown00, position, margin)) {
           unknown28.setLocal(primitive->unknown06, true);
@@ -136,7 +136,7 @@ bool DrIBLColiAcc::testTreeColi(const _EnvColiListTreeData *tree, const mm::Vec3
     if (primCount != 0) {
       const u16 *primitives = reinterpret_cast<const u16 *>(unknown00 + tree->unknown1c);
       for (u32 i = 0; i < primCount; i++) {
-        const _IBLPrimHeader *base = unknown08;
+        const _IBLPrimHeader *base = m_iBLPrimHeader;
         const _IBLPrimHeader *primitive = base + primitives[i];
         if (!unknown28.getLocal(primitive->unknown06) && unknown20 < primitive->unknown08) {
           if ((this->*s_pColiTest[primitive->unknown04])(unknown00 + primitive->unknown00, position, margin)) {
@@ -152,7 +152,7 @@ bool DrIBLColiAcc::testTreeColi(const _EnvColiListTreeData *tree, const mm::Vec3
 }
 
 bool DrIBLColiAcc::envcoli_box(const u8 *data, const mm::Vec3 &position, f32 margin) {
-  const unknown004 *box = reinterpret_cast<const unknown004 *>(data);
+  const unknown015 *box = reinterpret_cast<const unknown015 *>(data);
   const f32 *center = box->unknown30;
   f32 dx = position.x - center[0];
   f32 dy = position.y - center[1];
@@ -183,7 +183,7 @@ bool DrIBLColiAcc::envcoli_box(const u8 *data, const mm::Vec3 &position, f32 mar
 }
 
 bool DrIBLColiAcc::envcoli_sphere(const u8 *data, const mm::Vec3 &position, f32 margin) {
-  const unknown001 *sphere = reinterpret_cast<const unknown001 *>(data);
+  const unknown013 *sphere = reinterpret_cast<const unknown013 *>(data);
   f32 dx = position.x - sphere->unknown00[0];
   f32 dy = position.y - sphere->unknown00[1];
   f32 dz = position.z - sphere->unknown00[2];
@@ -191,7 +191,7 @@ bool DrIBLColiAcc::envcoli_sphere(const u8 *data, const mm::Vec3 &position, f32 
 }
 
 bool DrIBLColiAcc::envcoli_cylinder(const u8 *data, const mm::Vec3 &position, f32 margin) {
-  const unknown004 *cylinder = reinterpret_cast<const unknown004 *>(data);
+  const unknown015 *cylinder = reinterpret_cast<const unknown015 *>(data);
   const f32 *center = cylinder->unknown30;
   f32 dx = position.x - center[0];
   f32 dy = position.y - center[1];
@@ -214,7 +214,7 @@ bool DrIBLColiAcc::envcoli_cylinder(const u8 *data, const mm::Vec3 &position, f3
 }
 
 bool DrIBLColiAcc::envcoli_notrot_box(const u8 *data, const mm::Vec3 &position, f32 margin) {
-  const unknown003 *box = reinterpret_cast<const unknown003 *>(data);
+  const unknown014 *box = reinterpret_cast<const unknown014 *>(data);
   f32 dx = position.x - box->unknown00[0];
   f32 dy = position.y - box->unknown00[1];
   f32 dz = position.z - box->unknown00[2];

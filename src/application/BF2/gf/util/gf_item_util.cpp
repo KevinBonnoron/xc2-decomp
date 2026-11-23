@@ -196,14 +196,14 @@ void GfItemUtil::getInfo(mm::mtl::FixedVector<GfItem, 1024> &items, ItemType::Ty
     item_iterator it = GfItemBox::get()->begin(type);
     item_iterator last = GfItemBox::get()->end(type);
     while (it != last) {
-      if (it->unknown00_0 != 0) {
+      if (it->m_itemID != 0) {
         if (withoutEquip && it->unknown03_6) {
           continue;
         }
         GfItem item;
         item.unknown02 = it->unknown02_3;
         item.unknown00 = it->getItemID();
-        item.unknown08 = it->getHandle();
+        item.m_itemHandle = it->getHandle();
         item.unknown04 = it->unknown03_6 ? getEquipChar(it->getHandle()) : 0;
         items.push_back(item);
       }
@@ -214,11 +214,11 @@ void GfItemUtil::getInfo(mm::mtl::FixedVector<GfItem, 1024> &items, ItemType::Ty
   default: {
     for (item_iterator it = GfItemBox::get()->begin(type), last = GfItemBox::get()->end(type); it != last; ++it) {
       GfItemInfo &info = *it;
-      if (info.unknown00_0 != 0) {
+      if (info.m_itemID != 0) {
         GfItem item;
         item.unknown00 = info.getItemID();
         item.unknown02 = info.unknown02_3;
-        item.unknown08 = info.getHandle();
+        item.m_itemHandle = info.getHandle();
         items.push_back(item);
       }
     }
@@ -393,7 +393,7 @@ bool GfItemUtil::getProperty(ItemProperty &property, u32 item, u32 shop) {
   property.unknown14 = getItemTime(item);
   GfDataItem::getName(property.unknown20, property.unknown28, item);
   GfDataItem::getCaption(property.unknown20, property.unknown2c, item);
-  getPrice(property.unknown30, item, shop);
+  getPrice(property.m_itemPrice, item, shop);
   property.unknown44 = GfDataItem::getRarity(item);
   property.unknown00.set(ItemProperty::FLAG_UNKNOWN_2, !GfDataItem::isEnableSell(item));
 

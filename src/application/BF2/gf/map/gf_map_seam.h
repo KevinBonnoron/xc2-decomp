@@ -17,7 +17,7 @@ public:
   ml::ScnObjModel *getModel() const;
   ml::DrMdlObj *getDrModel() const;
 
-  GF_OBJ_HANDLE *unknown00; // Inferred role: object; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: object; original member name unknown.
 };
 
 } // namespace gf

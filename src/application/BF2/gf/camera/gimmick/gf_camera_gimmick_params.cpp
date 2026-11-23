@@ -15,9 +15,9 @@ const GimmickCameraParams::Param unknown002 = {};
 
 } // namespace
 
-GimmickCameraParams::GimmickCameraParams() : m_size(0), unknown10(NULL) {}
+GimmickCameraParams::GimmickCameraParams() : m_size(0), m_param(NULL) {}
 
-GimmickCameraParams::GimmickCameraParams(void *data, int version) : m_size(0), unknown10(NULL) { setup(data, version); }
+GimmickCameraParams::GimmickCameraParams(void *data, int version) : m_size(0), m_param(NULL) { setup(data, version); }
 
 GimmickCameraParams::~GimmickCameraParams() {}
 
@@ -25,7 +25,7 @@ void GimmickCameraParams::setup(void *data, int version) {
   unknown001 *header = static_cast<unknown001 *>(data);
   if (header->unknown00 == 0x504347 && header->unknown08 == version) {
     m_size = header->unknown04;
-    unknown10 = reinterpret_cast<const Param *>(header + 1);
+    m_param = reinterpret_cast<const Param *>(header + 1);
   }
 }
 
@@ -33,7 +33,7 @@ int GimmickCameraParams::getSize() const { return m_size; }
 
 const GimmickCameraParams::Param &GimmickCameraParams::getParam(int index) const {
   if (index < static_cast<int>(m_size)) {
-    return unknown10[index];
+    return m_param[index];
   }
   return unknown002;
 }

@@ -108,8 +108,8 @@ void EnvManager::setToneMap(bool isEnable, f32 toneMap) {
 }
 
 void EnvManager::login() {
-  unknown60.clear();
-  unknown60.save();
+  m_envTransferField.clear();
+  m_envTransferField.save();
 }
 
 void EnvManager::logout() {}
@@ -304,13 +304,13 @@ void EnvManager::stopVignette() {
   unknown38 = 0;
 }
 
-void EnvManager::saveTransferEnvironment(u32 fromEventID, u32 toEventID) { unknown40.save(fromEventID, toEventID); }
+void EnvManager::saveTransferEnvironment(u32 fromEventID, u32 toEventID) { m_envTransferEvent.save(fromEventID, toEventID); }
 
-bool EnvManager::hasTransferEnvironment(u32 eventID) const { return unknown40.has(eventID); }
+bool EnvManager::hasTransferEnvironment(u32 eventID) const { return m_envTransferEvent.has(eventID); }
 
-void EnvManager::loadTransferEnvironment(u32 eventID) { unknown40.load(eventID); }
+void EnvManager::loadTransferEnvironment(u32 eventID) { m_envTransferEvent.load(eventID); }
 
-void EnvManager::loadFieldEnvironment() { unknown60.load(); }
+void EnvManager::loadFieldEnvironment() { m_envTransferField.load(); }
 
 void EnvManager::setAutoResetSceneEnable(bool isEnable) {
   ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);

@@ -15,6 +15,7 @@ class DrPixlPostMan;
 
 class DrPixlPostObj3dLut {
 public:
+  DrPixlPostObj3dLut(DrMan *man, DrPixlMan *pixlMan, DrPixlPostMan *postMan);
   ~DrPixlPostObj3dLut();
   void update();
   void render(bool isFirst, bool isSecond);
@@ -23,10 +24,10 @@ public:
   void render_updateLUT();
   void debugRender();
 
-  DrMan *unknown00;         // Inferred role: driver manager; original member name unknown.
-  DrPixlMan *unknown08;     // Inferred role: pixel manager; original member name unknown.
-  DrPixlPostMan *unknown10; // Inferred role: post manager; original member name unknown.
-  bool unknown18;           // Inferred role: LUT updated flag; original member name unknown.
+  DrMan *m_drMan;                 // Inferred role: driver manager; original member name unknown.
+  DrPixlMan *m_drPixlMan;         // Inferred role: pixel manager; original member name unknown.
+  DrPixlPostMan *m_drPixlPostMan; // Inferred role: post manager; original member name unknown.
+  bool unknown18;                 // Inferred role: LUT updated flag; original member name unknown.
   u8 _19[0x20 - 0x19];
   grlib::CGLibRenderVolume *unknown20[2]; // Inferred role: LUT volume targets; original member name unknown.
 };

@@ -3,6 +3,7 @@
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "mm_math/mm_col3.h"
+#include "mm_math/mm_col4.h"
 #include "mm_math/mm_pnt.h"
 #include "mm_math/mm_vec2.h"
 #include "mm_mtl/fixstr.h"
@@ -105,7 +106,7 @@ void GfMenuObjFade::LoadingListener::reciveEvent(const ui::EventData &event, u32
     acc.setDisp(false);
     break;
   case GfMenuTypes::unknown003_33:
-    if (unknown20->unknown28++ <= 0) {
+    if (m_menuObjFade->unknown28++ <= 0) {
       f32 time = static_cast<int>(event.unknown08) * 0.033333335f;
       if (time == 0.0f) {
         acc.setDisp(true);
@@ -118,8 +119,8 @@ void GfMenuObjFade::LoadingListener::reciveEvent(const ui::EventData &event, u32
     }
     break;
   case GfMenuTypes::unknown003_34:
-    if (--unknown20->unknown28 <= 0) {
-      unknown20->unknown28 = 0;
+    if (--m_menuObjFade->unknown28 <= 0) {
+      m_menuObjFade->unknown28 = 0;
       f32 time = static_cast<int>(event.unknown08) * 0.033333335f;
       if (time == 0.0f) {
         acc.setDisp(false);
@@ -138,14 +139,16 @@ void GfMenuObjFade::LoadingListener::reciveEvent(const ui::EventData &event, u32
 }
 
 // Inferred role: finds the image of a fade layer, 0 when the index is out of range; original name unknown.
+// Measured (1.0.0: getFadeColor, 0x710046669c): the game keeps this range test after the caller's merged `type < 3 && !isTerm` test. With
+// `index < 3` GVN folds it (same `icmp ult 3` as the caller's test) and the frame is 144 bytes instead of 128; `index > 2` (or `index >= 3`,
+// the same comparison) keeps it and matches. start() matches either way.
 static u32 unknown001(u32 handle, u8 index) {
-  u32 result = 0;
-  if (index < 3) {
-    mm::mtl::FixStr<32> name;
-    name.format("IMG_fade%02d", index);
-    result = ui::UIObjectAcc(handle).searchChild(name.c_str());
+  if (index > 2) {
+    return 0;
   }
-  return result;
+  mm::mtl::FixStr<32> name;
+  name.format("IMG_fade%02d", index);
+  return ui::UIObjectAcc(handle).searchChild(name.c_str());
 }
 
 void GfMenuObjFade::start(const StartParam &param) {
@@ -162,6 +165,21 @@ void GfMenuObjFade::start(const StartParam &param) {
       event.unknown10_u16 = param.unknown10 * 255.0f;
       event.unknown12 = param.unknown00;
       ui::UIManager::get()->requestObjectEvent(fade.unknown10, event, 0.0f);
+    }
+  }
+}
+
+void GfMenuObjFade::getFadeColor(u8 type, mm::Col4 &color) {
+  ui::UIObjectAcc acc(GfMenuObject::getAttachedObject(0x3b));
+  if (acc.isValid() && !acc.isTerm() && type < 3) {
+    ui::UIObjectAcc fade(unknown001(acc.unknown10, type));
+    if (fade.isValid()) {
+      mm::Col3 add;
+      fade.getAddColor(add);
+      color.r = add.r;
+      color.g = add.g;
+      color.b = add.b;
+      fade.getAlpha(color.a);
     }
   }
 }

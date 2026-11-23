@@ -20,32 +20,32 @@ class GfMenuObjBlEquip : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjBlEquip *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjBlEquip *owner) : _0c(), m_menuObjBlEquip(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
     u8 _1c[0x20 - 0x1c];
-    GfMenuObjBlEquip *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBlEquip *m_menuObjBlEquip; // Inferred role: owner; original member name unknown.
   };
 
   class SlotListener : public ui::UIObjectListener {
   public:
-    SlotListener(GfMenuObjBlEquip *owner) : _0c(), unknown20(owner) {}
+    SlotListener(GfMenuObjBlEquip *owner) : _0c(), m_menuObjBlEquip(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
     u8 _1c[0x20 - 0x1c];
-    GfMenuObjBlEquip *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBlEquip *m_menuObjBlEquip; // Inferred role: owner; original member name unknown.
   };
 
   class ItemSelectListener : public ui::UIObjectListener {
   public:
-    ItemSelectListener(GfMenuObjBlEquip *owner) : _0c(), unknown20(owner) {}
+    ItemSelectListener(GfMenuObjBlEquip *owner) : _0c(), m_menuObjBlEquip(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
     u8 _1c[0x20 - 0x1c];
-    GfMenuObjBlEquip *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBlEquip *m_menuObjBlEquip; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjBlEquip(u32 handle);
@@ -76,9 +76,9 @@ public:
   u8 _64[0x68 - 0x64];
 };
 
-static_assert(offsetof(GfMenuObjBlEquip::MainListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjBlEquip::SlotListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjBlEquip::ItemSelectListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjBlEquip::MainListener, m_menuObjBlEquip) == 0x20, "");
+static_assert(offsetof(GfMenuObjBlEquip::SlotListener, m_menuObjBlEquip) == 0x20, "");
+static_assert(offsetof(GfMenuObjBlEquip::ItemSelectListener, m_menuObjBlEquip) == 0x20, "");
 static_assert(offsetof(GfMenuObjBlEquip, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjBlEquip, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjBlEquip, unknown38) == 0x38, "");

@@ -79,21 +79,21 @@ public:
   static void getTeamName(u32 teamId, ui::UIStr &name);
 
   mm::mtl::Delegate<bool()> unknown30; // Inferred role: updater; original member name unknown.
-  IConverter *unknown50;               // Inferred role: converter; original member name unknown.
+  IConverter *m_iConverter;            // Inferred role: converter; original member name unknown.
   u16 unknown58;                       // Inferred role: team id; original member name unknown.
   u16 unknown5a;                       // Inferred role: team mission; original member name unknown.
   u8 _5c[0x60 - 0x5c];
-  GfMenuBladeList *unknown60;      // Inferred role: blade list; original member name unknown.
-  GfMenuFieldSkillList *unknown68; // Inferred role: field skill list; original member name unknown.
-  u32 unknown70;                   // Inferred role: list index; original member name unknown.
+  GfMenuBladeList *m_menuBladeList;           // Inferred role: blade list; original member name unknown.
+  GfMenuFieldSkillList *m_menuFieldSkillList; // Inferred role: field skill list; original member name unknown.
+  u32 unknown70;                              // Inferred role: list index; original member name unknown.
 };
 
 static_assert(offsetof(GfMenuMercenariesAdapter, unknown30) == 0x30, "");
-static_assert(offsetof(GfMenuMercenariesAdapter, unknown50) == 0x50, "");
+static_assert(offsetof(GfMenuMercenariesAdapter, m_iConverter) == 0x50, "");
 static_assert(offsetof(GfMenuMercenariesAdapter, unknown58) == 0x58, "");
 static_assert(offsetof(GfMenuMercenariesAdapter, unknown5a) == 0x5a, "");
-static_assert(offsetof(GfMenuMercenariesAdapter, unknown60) == 0x60, "");
-static_assert(offsetof(GfMenuMercenariesAdapter, unknown68) == 0x68, "");
+static_assert(offsetof(GfMenuMercenariesAdapter, m_menuBladeList) == 0x60, "");
+static_assert(offsetof(GfMenuMercenariesAdapter, m_menuFieldSkillList) == 0x68, "");
 static_assert(offsetof(GfMenuMercenariesAdapter, unknown70) == 0x70, "");
 static_assert(sizeof(GfMenuMercenariesAdapter) == 0x78, "");
 

@@ -27,7 +27,9 @@
 
 namespace gf {
 
-GfComModel::GfComModel() : unknown10(-1), unknown18(nullptr), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), m_modelScale(1.0f), unknown11a8(nullptr) { unknown1198.unknown08 = this; }
+GfComModel::GfComModel() : unknown10(-1), unknown18(nullptr), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), m_modelScale(1.0f), unknown11a8(nullptr) {
+  m_viewerListener.m_comModel = this;
+}
 
 GfComModel::~GfComModel() { ; }
 
@@ -249,7 +251,7 @@ void GfComModel::destroyMountReferenceFrameImpl(mm::mtl::IntrusivePtr<fw::Refere
 
 // __LINE__ must be 618 as in the original source: it is the line argument of the assert.
 void GfComModel::bindReferenceFrameToBone(u16 bone, mm::mtl::IntrusivePtr<fw::ReferenceFrame> &frame) {
-  unknown40.bindReferenceFrameToBone(bone, frame);
+  m_animPoseModifier.bindReferenceFrameToBone(bone, frame);
   GfComTransform *com_trans = unknown08->getComponent<GfComTransform>();
 #line 618
   MM_ASSERT(com_trans != NULL);
@@ -266,14 +268,14 @@ void GfComModel::cleanup() {
     }
     unknown1140.destroy();
   }
-  if (unknown40.unknown18 != nullptr && unknown40.unknown20 != nullptr) {
-    unknown40.unbind();
-    fw::AnimationManager::get()->removePoseModifier(getLayer(), unknown40);
+  if (m_animPoseModifier.unknown18 != nullptr && m_animPoseModifier.m_modelObject != nullptr) {
+    m_animPoseModifier.unbind();
+    fw::AnimationManager::get()->removePoseModifier(getLayer(), m_animPoseModifier);
   }
-  if (unknown10c8.unknown18 != nullptr) {
-    unknown10c8.unknown50.clear();
-    unknown10c8.unbind();
-    fw::AnimationManager::get()->removeAfterModifier(getLayer(), unknown10c8);
+  if (m_animVolumeFadeModifier.m_modelObject != nullptr) {
+    m_animVolumeFadeModifier.unknown50.clear();
+    m_animVolumeFadeModifier.unbind();
+    fw::AnimationManager::get()->removeAfterModifier(getLayer(), m_animVolumeFadeModifier);
   }
   anm::unknown001(unknown38);
   anm::unknown001(unknown30);
@@ -284,7 +286,7 @@ void GfComModel::cleanup() {
 }
 
 void GfComModel::unbindReferenceFrameToBone(mm::mtl::IntrusivePtr<fw::ReferenceFrame> &frame) {
-  unknown40.unbindReferenceFrame(frame);
+  m_animPoseModifier.unbindReferenceFrame(frame);
   GfComTransform *com_trans = unknown08->getComponent<GfComTransform>();
   if (com_trans != nullptr) {
     com_trans->unknown001().get()->removeChild(*frame.get());
@@ -298,10 +300,10 @@ void GfComModel::changeLayer(u32 oldLayer, u32 newLayer) {
 
   fw::AnimationManager *manager = fw::AnimationManager::get();
   if (manager != nullptr && unknown18 != nullptr && unknown28 != nullptr) {
-    manager->removePoseModifier(getLayer(), unknown40);
-    manager->addPoseModifier(newLayer, unknown40);
-    manager->removeAfterModifier(getLayer(), unknown10c8);
-    manager->addAfterModifier(newLayer, unknown10c8);
+    manager->removePoseModifier(getLayer(), m_animPoseModifier);
+    manager->addPoseModifier(newLayer, m_animPoseModifier);
+    manager->removeAfterModifier(getLayer(), m_animVolumeFadeModifier);
+    manager->addAfterModifier(newLayer, m_animVolumeFadeModifier);
   }
   unknown18->changeLayer(newLayer);
 }

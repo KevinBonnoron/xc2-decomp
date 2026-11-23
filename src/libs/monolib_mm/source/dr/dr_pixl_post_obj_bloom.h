@@ -45,6 +45,7 @@ public:
   void bloomLensFlare();
   void debugRender();
   void calcCollectRender(bool isVolume);
+  void bloomRender();
 
   // Decision 2026-11-14 #35: the constructor allocates a DrPixlRenderTarget for every one of these members and debugRender inlines
   // DrPixlRenderTarget::debugRender (0x710083be9c, which calls DrPixlMan::debugRender), so they are typed DrPixlRenderTarget *; no downcast

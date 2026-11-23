@@ -28,10 +28,10 @@ class TitleStateDebugSaveContinue : public ai::State {
 
   // Inferred role: a save slot of the debug menu; original type name unknown.
   struct unknown001 {
-    unknown001() : unknown00() {}
+    unknown001() : m_realTime() {}
 
-    gf::RealTime unknown00; // Inferred role: time the slot was saved; original member name unknown.
-    bool unknown08;         // Inferred role: the slot exists; original member name unknown.
+    gf::RealTime m_realTime; // Inferred role: time the slot was saved; original member name unknown.
+    bool unknown08;          // Inferred role: the slot exists; original member name unknown.
   };
 
   void enter(TitleMain *main, ai::State *previous);

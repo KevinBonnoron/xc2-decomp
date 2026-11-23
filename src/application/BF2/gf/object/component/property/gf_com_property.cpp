@@ -29,7 +29,7 @@ void GfComProperty::flush() {
       character->unknown04 = status->unknown10;
     }
     if (unknown18) {
-      character->unknown28 = unknown18->handle;
+      character->m_GF_OBJ_HANDLE = unknown18->handle;
     }
   }
 
@@ -39,7 +39,7 @@ void GfComProperty::flush() {
 
 void GfComProperty::procMsgGameChangeTarget(fw::MessageObject *object, MsgGameChangeTarget &message) {
   if (unknown18) {
-    unknown18->handle = message.unknown08;
+    unknown18->handle = message.m_GF_OBJ_HANDLE;
     GfComBehavior *behavior = unknown08->getComponent<GfComBehavior>();
     if (behavior != nullptr) {
       behavior->recieveMessage(object, message);

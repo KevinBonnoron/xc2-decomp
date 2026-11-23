@@ -13,26 +13,26 @@
 
 namespace event {
 
-CharaEvaPlayerEff::CharaEvaPlayerEff() : unknown08(nullptr), unknown10(nullptr), unknown18(nullptr), unknown20(0.0f) {}
+CharaEvaPlayerEff::CharaEvaPlayerEff() : unknown08(nullptr), m_charaEffectPlayer(nullptr), m_rchaChrEff(nullptr), unknown20(0.0f) {}
 
 CharaEvaPlayerEff::~CharaEvaPlayerEff() { stop(); }
 
 void CharaEvaPlayerEff::stop() {
-  if (unknown18 != nullptr) {
-    delete unknown18;
-    unknown18 = nullptr;
+  if (m_rchaChrEff != nullptr) {
+    delete m_rchaChrEff;
+    m_rchaChrEff = nullptr;
   }
   unknown08 = nullptr;
-  unknown10 = nullptr;
+  m_charaEffectPlayer = nullptr;
 }
 
 void CharaEvaPlayerEff::update(f32 delta) {
-  if (unknown08 == nullptr || gf::GfObjUtil::getObj(unknown08->unknown20) == nullptr || unknown18 == nullptr || unknown10 == nullptr) {
+  if (unknown08 == nullptr || gf::GfObjUtil::getObj(unknown08->m_GF_OBJ_HANDLE) == nullptr || m_rchaChrEff == nullptr || m_charaEffectPlayer == nullptr) {
     return;
   }
   f32 speed = mm::mtl::Singleton<SkipManager>::getPtr()->isSkip() ? 1.0f : delta;
   do {
-    f32 frame = mm::min(this->unknown20, unknown18->getFrameCount() - 1.0f);
+    f32 frame = mm::min(this->unknown20, m_rchaChrEff->getFrameCount() - 1.0f);
     f32 rest = 0.0f;
     if (speed >= 1.0f) {
       rest = speed - 1.0f;
@@ -49,29 +49,29 @@ void CharaEvaPlayerEff::update(f32 delta) {
       f32 directivity = 0.0f;
       int mesh = 0;
       f32 ratio = 0.0f;
-      unknown18->getVolumeFade(volumeFade, frame);
-      unknown18->getVolumeFadeId(volumeFadeId, frame);
-      unknown18->getVolumeFadeUVWScale(scale, frame);
-      unknown18->getVolumeFadeCenterPos(center, frame);
-      unknown18->getVolumeFadeDistance(distance, frame);
-      unknown18->getVolumeFadeDirectivity(directivity, frame);
-      unknown18->getVolumeFadeMesh(mesh, frame);
-      unknown18->getVolumeFadeRatio(ratio, frame);
+      m_rchaChrEff->getVolumeFade(volumeFade, frame);
+      m_rchaChrEff->getVolumeFadeId(volumeFadeId, frame);
+      m_rchaChrEff->getVolumeFadeUVWScale(scale, frame);
+      m_rchaChrEff->getVolumeFadeCenterPos(center, frame);
+      m_rchaChrEff->getVolumeFadeDistance(distance, frame);
+      m_rchaChrEff->getVolumeFadeDirectivity(directivity, frame);
+      m_rchaChrEff->getVolumeFadeMesh(mesh, frame);
+      m_rchaChrEff->getVolumeFadeRatio(ratio, frame);
       if (volumeFade == 0) {
-        unknown10->stopVolumeFade(CharaEffectPlayer::VF_TYPE_UNKNOWN_0);
+        m_charaEffectPlayer->stopVolumeFade(CharaEffectPlayer::VF_TYPE_UNKNOWN_0);
       } else {
-        unknown10->playVolumeFade(CharaEffectPlayer::VF_TYPE_UNKNOWN_0, volumeFadeId, scale, center, distance, directivity, mesh, ratio);
+        m_charaEffectPlayer->playVolumeFade(CharaEffectPlayer::VF_TYPE_UNKNOWN_0, volumeFadeId, scale, center, distance, directivity, mesh, ratio);
       }
     }
     {
       int rimBloom = 0;
       int rimBloomId = 0;
-      unknown18->getRimBloom(rimBloom, frame);
-      unknown18->getRimBloomId(rimBloomId, frame);
+      m_rchaChrEff->getRimBloom(rimBloom, frame);
+      m_rchaChrEff->getRimBloomId(rimBloomId, frame);
       if (rimBloom == 1) {
-        unknown10->playRimBloom(rimBloomId);
+        m_charaEffectPlayer->playRimBloom(rimBloomId);
       } else if (rimBloom == 2) {
-        unknown10->stopRimBloom();
+        m_charaEffectPlayer->stopRimBloom();
       }
     }
     {
@@ -81,21 +81,21 @@ void CharaEvaPlayerEff::update(f32 delta) {
       f32 captureFrame = 30.0f;
       f32 existFrame = 15.0f;
       f32 fadeOutFrame = 0.7f;
-      unknown18->getAfterImage(afterImage, frame);
-      unknown18->getAfterImageId1(afterImageId1, frame);
-      unknown18->getAfterImageId2(afterImageId2, frame);
-      unknown18->getAfterImageCaptureFrame(captureFrame, frame);
-      unknown18->getAfterImageExistFrame(existFrame, frame);
-      unknown18->getAfterImageFadeOutFrame(fadeOutFrame, frame);
+      m_rchaChrEff->getAfterImage(afterImage, frame);
+      m_rchaChrEff->getAfterImageId1(afterImageId1, frame);
+      m_rchaChrEff->getAfterImageId2(afterImageId2, frame);
+      m_rchaChrEff->getAfterImageCaptureFrame(captureFrame, frame);
+      m_rchaChrEff->getAfterImageExistFrame(existFrame, frame);
+      m_rchaChrEff->getAfterImageFadeOutFrame(fadeOutFrame, frame);
       if (afterImage == 1) {
-        unknown10->playAfterImage(afterImageId1, afterImageId2, captureFrame, existFrame, fadeOutFrame);
+        m_charaEffectPlayer->playAfterImage(afterImageId1, afterImageId2, captureFrame, existFrame, fadeOutFrame);
       } else if (afterImage == 2) {
-        unknown10->stopAfterImage();
+        m_charaEffectPlayer->stopAfterImage();
       }
     }
     this->unknown20 += speed;
-    if (unknown18->getFrameCount() - 1.0f < this->unknown20) {
-      this->unknown20 = unknown18->getFrameCount() - 1.0f;
+    if (m_rchaChrEff->getFrameCount() - 1.0f < this->unknown20) {
+      this->unknown20 = m_rchaChrEff->getFrameCount() - 1.0f;
     }
     speed = rest;
   } while (speed > 0.0f);
@@ -104,9 +104,9 @@ void CharaEvaPlayerEff::update(f32 delta) {
 void CharaEvaPlayerEff::play(gf::GfEvtModel *model, CharaEffectPlayer *effectPlayer, void *data) {
   stop();
   this->unknown08 = model;
-  this->unknown10 = effectPlayer;
-  unknown18 = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) RchaChrEff;
-  unknown18->setup(mtl::ALLOC_HANDLE(), data);
+  this->m_charaEffectPlayer = effectPlayer;
+  m_rchaChrEff = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) RchaChrEff;
+  m_rchaChrEff->setup(mtl::ALLOC_HANDLE(), data);
   unknown20 = 0.0f;
 }
 

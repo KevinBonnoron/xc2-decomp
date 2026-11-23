@@ -55,9 +55,9 @@ void GfBdatUniqueMotion::Impl::build() {
     info.unknown04[5].unknown00 = Bdat::getValCheck(presetBdat, "Chara5", id, 2);
     info.unknown04[5].unknown02 = static_cast<u8>(Bdat::getValCheck(presetBdat, "Motion5", id, 1));
     info.unknown04[5].unknown04 = getValF32(presetBdat, "Delay5", id);
-    info.unknown34 =
+    info.m_presetKey =
         PresetKey(info.unknown04[0].unknown00, info.unknown04[1].unknown00, info.unknown04[2].unknown00, info.unknown04[3].unknown00, info.unknown04[4].unknown00, info.unknown04[5].unknown00);
-    std::sort(info.unknown34.ids, info.unknown34.ids + 6);
+    std::sort(info.m_presetKey.ids, info.m_presetKey.ids + 6);
     unknown00.push_back(info);
   }
   u8 *tableBdat = GfDataBdat::getFP(BDAT_FLD_UNIQUE_TABLE);
@@ -99,7 +99,7 @@ void GfBdatUniqueMotion::bdatRefresh() {
 
 void GfBdatUniqueMotion::Impl::queryPreset(mm::mtl::FixedQueue<const PresetInfo *, 32> *presets, const PresetKey &key) {
   for (u32 i = 0; i < unknown00.size(); i++) {
-    if (unknown00[i].unknown34.isContain(key)) {
+    if (unknown00[i].m_presetKey.isContain(key)) {
       presets->push(&unknown00[i]);
     }
   }

@@ -68,10 +68,10 @@ static_assert(offsetof(GfObj, unknown118) == 0x118, "");
 class GfObjLayerSpeed {
 public:
   struct Info {
-    Info() : unknown00(false), unknown04(1.0f) {}
+    Info() : m_request(false), m_speed(1.0f) {}
 
-    bool unknown00; // Inferred role: request; original member name unknown.
-    f32 unknown04;  // Inferred role: speed; original member name unknown.
+    bool m_request; // Inferred role: request; named after the game accessor gf::GfObjLayerSpeed::isRequest.
+    f32 m_speed;    // Inferred role: speed; named after the game accessor gf::GfObjLayerSpeed::getSpeed.
   };
 
   static void initialize();

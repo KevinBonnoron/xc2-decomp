@@ -65,7 +65,7 @@ private:
   bool unknown001(int &value, int slot, f32 frame) const {
     int index = unknown19a4[slot];
     if (index >= 0) {
-      value = unknown10[index].getValueInt(frame);
+      value = m_rchaAnm[index].getValueInt(frame);
       return true;
     }
     return false;
@@ -74,7 +74,7 @@ private:
   bool unknown002(f32 &value, int slot, f32 frame) const {
     int index = unknown19a4[slot];
     if (index >= 0) {
-      value = unknown10[index].getValue(frame);
+      value = m_rchaAnm[index].getValue(frame);
       return true;
     }
     return false;

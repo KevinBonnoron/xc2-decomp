@@ -10,14 +10,14 @@
 
 namespace ml {
 
-ScnPoolObj::ScnPoolObj(Scn *scn) : unknown60(scn), unknown228(0) {
-  unknown68.create(10, scn->unknown64);
-  unknowna8.create(0x200, scn->unknown64);
-  unknowne8.create(0x200, scn->unknown64);
-  unknown128.create(0x10, scn->unknown64);
-  unknown168.create(0x40, scn->unknown64);
-  unknown1a8.create(8, scn->unknown64);
-  unknown1e8.create(0x200, scn->unknown64);
+ScnPoolObj::ScnPoolObj(Scn *scn) : m_scn(scn), unknown228(0) {
+  unknown68.create(10, scn->m_ALLOC_HANDLE);
+  unknowna8.create(0x200, scn->m_ALLOC_HANDLE);
+  unknowne8.create(0x200, scn->m_ALLOC_HANDLE);
+  unknown128.create(0x10, scn->m_ALLOC_HANDLE);
+  unknown168.create(0x40, scn->m_ALLOC_HANDLE);
+  unknown1a8.create(8, scn->m_ALLOC_HANDLE);
+  unknown1e8.create(0x200, scn->m_ALLOC_HANDLE);
 }
 
 ScnPoolObj::~ScnPoolObj() {
@@ -242,7 +242,7 @@ ScnObjCam *ScnPoolObj::getCam(const WinView *view) {
   if (view != nullptr) {
     for (reslist<ScnObj *>::Node *node = unknown68.begin(); node != unknown68.end(); node = node->getNext()) {
       ScnObjCam *cam = static_cast<ScnObjCam *>(node->value);
-      if (unknown60->unknown28->getView(cam->m_info) == view) {
+      if (m_scn->m_scnCamMan->getView(cam->m_info) == view) {
         return cam;
       }
     }

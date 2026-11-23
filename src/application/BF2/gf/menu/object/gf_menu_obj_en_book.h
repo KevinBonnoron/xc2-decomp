@@ -36,21 +36,21 @@ public:
 
   class DetailListener : public ui::UIObjectListener {
   public:
-    DetailListener(GfMenuObjEnBook *owner) : _0c(), unknown20(owner) {}
+    DetailListener(GfMenuObjEnBook *owner) : _0c(), m_menuObjEnBook(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjEnBook *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjEnBook *m_menuObjEnBook; // Inferred role: owner; original member name unknown.
   };
 
   class EnListListener : public ui::UIObjectListener {
   public:
-    EnListListener(GfMenuObjEnBook *owner) : unknown0c(0), _10(), unknown20(owner) {}
+    EnListListener(GfMenuObjEnBook *owner) : unknown0c(0), _10(), m_menuObjEnBook(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u32 unknown0c; // Inferred role: layer of the focus input object to return to; original member name unknown.
     u8 _10[0x1c - 0x10];
-    GfMenuObjEnBook *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjEnBook *m_menuObjEnBook; // Inferred role: owner; original member name unknown.
   };
 
   class TopListener : public ui::UIObjectListener {
@@ -58,7 +58,7 @@ public:
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjEnBook *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjEnBook *m_menuObjEnBook; // Inferred role: owner; original member name unknown.
   };
 
   class FamilySelListener : public ui::UIObjectListener {
@@ -66,7 +66,7 @@ public:
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjEnBook *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjEnBook *m_menuObjEnBook; // Inferred role: owner; original member name unknown.
   };
 
   class GenusSelListener : public ui::UIObjectListener {
@@ -74,7 +74,7 @@ public:
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjEnBook *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjEnBook *m_menuObjEnBook; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjEnBook(u32 handle);
@@ -111,7 +111,7 @@ public:
   GfMenuIDList *unknown68;           // Inferred role: identifiers; original member name unknown.
   ui::UISelectObjList *unknown70;    // Inferred role: list objects; original member name unknown.
   ui::UISelectObjList *unknown78;    // Inferred role: list objects; original member name unknown.
-  GfMenuModelView *unknown80;        // Inferred role: model view; original member name unknown.
+  GfMenuModelView *m_menuModelView;  // Inferred role: model view; original member name unknown.
   u32 unknown88;                     // Role and original member name unknown, cleared by the constructor.
   u8 _8c[0x90 - 0x8c];
   GfMenuSequence<GfMenuObjEnBook, 8> unknown90; // Inferred role: queued steps; original member name unknown.
@@ -119,16 +119,16 @@ public:
   u8 _321[0x328 - 0x321];
 };
 
-static_assert(offsetof(GfMenuObjEnBook::DetailListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjEnBook::DetailListener, m_menuObjEnBook) == 0x20, "");
 static_assert(sizeof(GfMenuObjEnBook::DetailListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjEnBook::EnListListener, unknown0c) == 0x0c, "");
-static_assert(offsetof(GfMenuObjEnBook::EnListListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjEnBook::EnListListener, m_menuObjEnBook) == 0x20, "");
 static_assert(sizeof(GfMenuObjEnBook::EnListListener) == 0x28, "");
-static_assert(offsetof(GfMenuObjEnBook::TopListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjEnBook::TopListener, m_menuObjEnBook) == 0x20, "");
 static_assert(sizeof(GfMenuObjEnBook::TopListener) == 0x28, "");
-static_assert(offsetof(GfMenuObjEnBook::FamilySelListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjEnBook::FamilySelListener, m_menuObjEnBook) == 0x20, "");
 static_assert(sizeof(GfMenuObjEnBook::FamilySelListener) == 0x28, "");
-static_assert(offsetof(GfMenuObjEnBook::GenusSelListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjEnBook::GenusSelListener, m_menuObjEnBook) == 0x20, "");
 static_assert(sizeof(GfMenuObjEnBook::GenusSelListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjEnBook, unknown24) == 0x24, "");
 static_assert(offsetof(GfMenuObjEnBook, unknown28) == 0x28, "");
@@ -143,7 +143,7 @@ static_assert(offsetof(GfMenuObjEnBook, unknown60) == 0x60, "");
 static_assert(offsetof(GfMenuObjEnBook, unknown68) == 0x68, "");
 static_assert(offsetof(GfMenuObjEnBook, unknown70) == 0x70, "");
 static_assert(offsetof(GfMenuObjEnBook, unknown78) == 0x78, "");
-static_assert(offsetof(GfMenuObjEnBook, unknown80) == 0x80, "");
+static_assert(offsetof(GfMenuObjEnBook, m_menuModelView) == 0x80, "");
 static_assert(offsetof(GfMenuObjEnBook, unknown88) == 0x88, "");
 static_assert(offsetof(GfMenuObjEnBook, unknown90) == 0x90, "");
 static_assert(offsetof(GfMenuObjEnBook, unknown320) == 0x320, "");

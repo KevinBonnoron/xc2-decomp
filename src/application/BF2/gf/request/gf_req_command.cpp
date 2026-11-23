@@ -65,8 +65,8 @@ struct unknown004 : GfReqParam {
 
 // Inferred role: parameter of the wait event request; original type name unknown.
 struct unknown005 : GfReqParam {
-  f32 unknown00;            // Inferred role: time; original member name unknown.
-  GF_OBJ_HANDLE *unknown08; // Inferred role: handle; original member name unknown.
+  f32 unknown00;                  // Inferred role: time; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: handle; original member name unknown.
 };
 
 // Inferred role: parameter of the rebuild party weapon request; original type name unknown.
@@ -94,9 +94,9 @@ struct unknown008 : GfReqParam {
 
 // Inferred role: parameter of the load request; original type name unknown.
 struct unknown010 : GfReqParam {
-  SAVESLOT unknown00;     // Inferred role: save slot; original member name unknown.
-  SDataSave *unknown08;   // Inferred role: game data to load; original member name unknown.
-  SDataOption *unknown10; // Inferred role: option data to load; original member name unknown.
+  SAVESLOT unknown00;    // Inferred role: save slot; original member name unknown.
+  SDataSave *m_save;     // Inferred role: game data to load; original member name unknown.
+  SDataOption *m_option; // Inferred role: option data to load; original member name unknown.
 };
 
 // Inferred role: parameter of the change blade with blade set request; original type name unknown.
@@ -116,7 +116,7 @@ void GfMapjumpInfo::setupForSaveData(u32 mapjumpId, const mm::Vec3 &position, co
   unknown00 = mapjumpId;
   unknown100 = true;
   f32 rotY = rotation.y;
-  GfPartyPosInfo::unknown004 &pos = unknown40.unknown00[0];
+  GfPartyPosInfo::unknown004 &pos = m_partyPosInfo.unknown00[0];
   pos.unknown00.x = position.x;
   pos.unknown00.y = position.y;
   pos.unknown00.z = position.z;
@@ -202,17 +202,17 @@ void GfReqCommand::reqLoad(SAVESLOT slot, SDataSave *saveData, SDataOption *opti
 #line 85
   unknown010 *param = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) unknown010;
   param->unknown00 = slot;
-  param->unknown08 = saveData;
-  param->unknown10 = optionData;
+  param->m_save = saveData;
+  param->m_option = optionData;
   GfReqManager::addCommand(param, execLoad);
 }
 
 void GfReqCommand::execLoad(const GfReqParam *param) {
   const unknown010 *load = static_cast<const unknown010 *>(param);
   GfGameLoad gameLoad(load->unknown00);
-  gameLoad.execGameLoadWithMicroThread(*load->unknown08);
-  if (load->unknown10 != nullptr) {
-    gameLoad.execOptionLoadWithMicroThread(*load->unknown10);
+  gameLoad.execGameLoadWithMicroThread(*load->m_save);
+  if (load->m_option != nullptr) {
+    gameLoad.execOptionLoadWithMicroThread(*load->m_option);
   }
 }
 
@@ -288,7 +288,7 @@ u32 GfReqCommand::reqWaitEvent(f32 time, GF_OBJ_HANDLE *handle) {
 #line 125
   unknown005 *param = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) unknown005;
   param->unknown00 = time;
-  param->unknown08 = handle;
+  param->m_GF_OBJ_HANDLE = handle;
   return GfReqManager::addCommand(param, execWaitEvent);
 }
 
@@ -423,7 +423,7 @@ static void unknown013(u32 partyId, int bladeSet) {
   GfGameMount *mount = GfMountManager::getMount(GfObjUtil::getMountHandle(newBlade, GFATTACH_UNKNOWN_0));
   if (mount != nullptr) {
     for (u32 index = 0; index < HANDLE_UNKNOWN_10; index++) {
-      GF_OBJ_HANDLE *handle = mount->unknown18->getCurrentHandles()[index];
+      GF_OBJ_HANDLE *handle = mount->m_weapon->getCurrentHandles()[index];
       if (handle != unknown020) {
         GfObjSetupWeapon *weaponSetup = GfObjUtil::getObjSetup<GfObjSetupWeapon>(handle);
         if (weaponSetup != nullptr) {

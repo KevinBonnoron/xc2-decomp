@@ -33,24 +33,24 @@ f32 FrameManager::getFrame() const { return m_frame; }
 bool FrameManager::isPause(PAUSE_TYPE type) const { return (unknown18 & (type == PAUSE_TYPE_UNKNOWN_17_2 ? ~0u : 1u << type)) != 0; }
 
 const FrameInfo &FrameManager::frameInfo() {
-  unknown1170.unknown00 = m_frame;
-  unknown1170.unknown04 = unknown13c - m_frame;
+  m_frameInfo.unknown00 = m_frame;
+  m_frameInfo.unknown04 = unknown13c - m_frame;
   if (isPause(PAUSE_TYPE_UNKNOWN_17_2)) {
-    unknown1170.unknown04 = 0.0f;
+    m_frameInfo.unknown04 = 0.0f;
   }
-  unknown1170.unknown08 = unknown1170.unknown04;
-  if ((unknown18 & PAUSE_BITS_UNKNOWN_5108) != 0 && unknown1170.unknown04 <= 0.0f) {
-    unknown1170.unknown08 = __builtin_fmaxf(unknown160, 0.0f) + 1.0f;
+  m_frameInfo.unknown08 = m_frameInfo.unknown04;
+  if ((unknown18 & PAUSE_BITS_UNKNOWN_5108) != 0 && m_frameInfo.unknown04 <= 0.0f) {
+    m_frameInfo.unknown08 = __builtin_fmaxf(unknown160, 0.0f) + 1.0f;
   }
-  unknown1170.unknown0c = unknown1170.unknown04;
+  m_frameInfo.unknown0c = m_frameInfo.unknown04;
   if ((unknown10 & FLAG_UNKNOWN_0) == 0) {
-    unknown1170.unknown0c = __builtin_fmaxf(unknown160, 0.0f) + 1.0f;
+    m_frameInfo.unknown0c = __builtin_fmaxf(unknown160, 0.0f) + 1.0f;
   }
   if ((unknown18 & PAUSE_BITS_UNKNOWN_120842) != 0) {
-    unknown1170.unknown0c = 0.0f;
+    m_frameInfo.unknown0c = 0.0f;
   }
-  unknown1170.unknown10 = unknown160;
-  return unknown1170;
+  m_frameInfo.unknown10 = unknown160;
+  return m_frameInfo;
 }
 
 f32 FrameManager::getTotalFrame() const { return m_totalFrame; }
@@ -113,7 +113,7 @@ void FrameManager::setLockFrame(bool isLock, f32 frame) {
 }
 
 FrameManager::FrameManager()
-    : unknown10(0), unknown18(0), m_frame(0.0f), m_totalFrame(0.0f), unknown138(0.0f), unknown13c(0.0f), unknown144(0.0f), m_maxFrame(unknown003), m_accType(ACC_TYPE_UNKNOWN_1), unknown1170() {
+    : unknown10(0), unknown18(0), m_frame(0.0f), m_totalFrame(0.0f), unknown138(0.0f), unknown13c(0.0f), unknown144(0.0f), m_maxFrame(unknown003), m_accType(ACC_TYPE_UNKNOWN_1), m_frameInfo() {
   unknown14 = DISP_FLAG_UNKNOWN_1;
   for (u32 i = 0; i < PAUSE_TYPE_UNKNOWN_17; i++) {
     unknown20[i] = reinterpret_cast<gf::GF_PAUSE_HANDLE *>(-1);

@@ -73,7 +73,7 @@ private:
   u32 unknown10;                                               // Inferred role: flags; original member name unknown.
   u32 unknown14;                                               // Inferred role: disp flags; original member name unknown.
   mm::mtl::FixedVector<EffectRes *, RES_UNKNOWN_16> unknown18; // Inferred role: res list; original member name unknown.
-  EffectRes *unknowna0;                                        // Inferred role: current res; original member name unknown.
+  EffectRes *m_event;                                          // Inferred role: current res; named after the game accessor event::EffectManager::setEvent.
   u32 m_offscrID;
   u32 unknownac; // Inferred role: replace id; original member name unknown.
 };

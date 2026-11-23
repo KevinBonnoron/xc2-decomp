@@ -8,7 +8,7 @@
 namespace layer {
 
 LayerFontResObj::LayerFontResObj(LayerFontManager *manager) {
-  unknown20 = manager;
+  m_layerFontManager = manager;
   unknown28 = 0;
   unknown18 = LAYER_OBJ_TYPE_FONT_RES;
   unknown30 = nullptr;
@@ -44,7 +44,7 @@ const LyrFontInfoData *LayerFontResObj::getFontInfo(u16 &index, u16 code) const 
     do {
       s32 mid = (low + high) >> 1;
       u16 pos = indices[mid];
-      const LyrFontInfoData *info = &unknown50[pos];
+      const LyrFontInfoData *info = &m_lyrFontInfoData[pos];
       if (info->unknown00 == code) {
         index = pos;
         return info;
@@ -56,7 +56,7 @@ const LyrFontInfoData *LayerFontResObj::getFontInfo(u16 &index, u16 code) const 
       }
     } while (low <= high);
   }
-  return unknown50;
+  return m_lyrFontInfoData;
 }
 
 void LayerFontResObj::getFontUvParms(f32 &u, f32 &v, f32 &w, f32 &h, u16 index) const {
@@ -72,7 +72,7 @@ void LayerFontResObj::setFontData(const void *data) {
   const u8 *bytes = static_cast<const u8 *>(data);
   unknown30 = data;
   unknown38 = static_cast<const unknown001 *>(data);
-  unknown50 = reinterpret_cast<const LyrFontInfoData *>(bytes + unknown38->unknown0c);
+  m_lyrFontInfoData = reinterpret_cast<const LyrFontInfoData *>(bytes + unknown38->unknown0c);
   unknown48 = reinterpret_cast<const u16 *>(bytes + unknown38->unknown10);
   unknown40 = reinterpret_cast<const unknown003 *>(bytes + unknown38->unknown18);
   unknown58 = reinterpret_cast<const unknown002 *>(bytes + unknown38->unknown2c);

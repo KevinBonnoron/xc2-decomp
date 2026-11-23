@@ -119,7 +119,7 @@ public:
   void update(const fw::UpdateInfo &info);
 
   ml::fixed_size_alloc_inside<AssetPackInfo, 1024> unknown10; // Inferred role: asset pack info pool; original member name unknown.
-  mm::mtl::FixedList<GF_ASSET_HANDLE *, 1024> unknownce0b8;   // Inferred role: loading assets; original member name unknown.
+  mm::mtl::FixedList<GF_ASSET_HANDLE *, 1024> m_loadingAsset; // Inferred role: loading assets; named after the game accessor gf::GfAssetManager::getLoadingAsset.
   mm::mtl::FixedList<GF_ASSET_HANDLE *, 1024> unknownd28d8;   // Inferred role: destroying assets; original member name unknown.
   mm::mtl::FixedList<GF_ASSET_HANDLE *, 1024> unknownd70f8;   // Inferred role: reloading assets; original member name unknown.
   u32 unknowndb918;                                           // Inferred role: handle serial; original member name unknown.
@@ -132,7 +132,7 @@ public:
 };
 
 static_assert(offsetof(GfAssetManager, unknown10) == 0x10, "");
-static_assert(offsetof(GfAssetManager, unknownce0b8) == 0xce0b8, "");
+static_assert(offsetof(GfAssetManager, m_loadingAsset) == 0xce0b8, "");
 static_assert(offsetof(GfAssetManager, unknownd28d8) == 0xd28d8, "");
 static_assert(offsetof(GfAssetManager, unknownd70f8) == 0xd70f8, "");
 static_assert(offsetof(GfAssetManager, unknowndb918) == 0xdb918, "");

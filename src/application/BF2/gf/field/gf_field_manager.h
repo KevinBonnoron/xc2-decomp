@@ -58,12 +58,12 @@ public:
   void postUpdate(const fw::UpdateInfo &info);
   void update(const fw::UpdateInfo &info);
 
-  bool unknown18; // Inferred role: initialized; original member name unknown.
-  f32 unknown1c;  // Inferred role: enemy baloon radius; original member name unknown.
+  bool unknown18;          // Inferred role: initialized; original member name unknown.
+  f32 m_enemyBaloonRadius; // Inferred role: enemy baloon radius; named after the game accessor gf::GfFieldManager::getEnemyBaloonRadius.
 };
 
 static_assert(offsetof(GfFieldManager, unknown18) == 0x18, "");
-static_assert(offsetof(GfFieldManager, unknown1c) == 0x1c, "");
+static_assert(offsetof(GfFieldManager, m_enemyBaloonRadius) == 0x1c, "");
 static_assert(sizeof(GfFieldManager) == 0x20, "");
 
 } // namespace gf

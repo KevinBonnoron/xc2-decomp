@@ -22,7 +22,7 @@ void UpdatableGroup::update(const UpdateInfo &info, u32 layerMask) {
   for (mm::mtl::List<UpdatableObject *>::iterator it = unknown08.begin(); it != unknown08.end();) {
     UpdatableObject *object = *it;
     ++it;
-    if ((layerMask & (1 << object->unknown2c)) != 0 && !object->isTerminate()) {
+    if ((layerMask & (1 << object->m_layer)) != 0 && !object->isTerminate()) {
       object->update(info);
     }
   }
@@ -53,7 +53,7 @@ void UpdatableGroup::execEvent(const ObjectEvent &event, u32 layerMask) {
   for (mm::mtl::List<UpdatableObject *>::iterator it = unknown08.begin(); it != unknown08.end();) {
     UpdatableObject *object = *it;
     ++it;
-    if ((layerMask & (1 << object->unknown2c)) != 0 && !object->isTerminate()) {
+    if ((layerMask & (1 << object->m_layer)) != 0 && !object->isTerminate()) {
       object->onEvent(event);
     }
   }

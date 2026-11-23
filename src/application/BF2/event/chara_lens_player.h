@@ -34,9 +34,9 @@ public:
 private:
   mm::mtl::unknown027<FLAG_UNKNOWN_32> unknown08; // Inferred role: flags; original member name unknown.
   mm::Vec2 m_target;
-  mm::Vec2 unknown20;        // Inferred role: manual target; original member name unknown.
-  mm::Vec2 unknown30;        // Inferred role: auto target; original member name unknown.
-  CharaIKUpdater *unknown40; // Inferred role: ik; original member name unknown.
+  mm::Vec2 unknown20;               // Inferred role: manual target; original member name unknown.
+  mm::Vec2 unknown30;               // Inferred role: auto target; original member name unknown.
+  CharaIKUpdater *m_charaIKUpdater; // Inferred role: ik; original member name unknown.
 };
 
 static_assert(sizeof(CharaLensPlayer) == 0x50, "");

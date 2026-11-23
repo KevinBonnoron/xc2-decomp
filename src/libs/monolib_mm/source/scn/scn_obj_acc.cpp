@@ -43,25 +43,25 @@ void ScnObjAccResMdlInfo::setChangeViewNum(int viewNum) {
   DrMdlObj *drMdl = m_drMdl;
   if (drMdl->unknown1a != viewNum) {
     drMdl->unknown1d = viewNum;
-    drMdl->unknown20 |= 0x80 << DrMan::s_nDblStockIdx;
+    drMdl->m_disp |= 0x80 << DrMan::s_nDblStockIdx;
   }
 }
 
-void ScnObjAccResMdlInfo::setFrameSpd(f32 speed) { m_drMdl->unknowndc = speed; }
+void ScnObjAccResMdlInfo::setFrameSpd(f32 speed) { m_drMdl->m_frameSpd = speed; }
 
 void ScnObjAccResMdlInfo::setMatrix(const mm::Mat44 &matrix) { m_drMdl->setMatrix(matrix); }
 
-void ScnObjAccResMdlInfo::setGroups(int groups) { m_drMdl->unknown18 = groups; }
+void ScnObjAccResMdlInfo::setGroups(int groups) { m_drMdl->m_groups = groups; }
 
-int ScnObjAccResMdlInfo::getGroups() const { return m_drMdl->unknown18; }
+int ScnObjAccResMdlInfo::getGroups() const { return m_drMdl->m_groups; }
 
 const mm::Vec3 &ScnObjAccResMdlInfo::getAABBMax() const { return m_drMdl->getAABBMax(); }
 
 const mm::Vec3 &ScnObjAccResMdlInfo::getAABBMin() const { return m_drMdl->getAABBMin(); }
 
-const mm::Vec3 &ScnObjAccResMdlInfo::getCenter() const { return m_drMdl->unknown130; }
+const mm::Vec3 &ScnObjAccResMdlInfo::getCenter() const { return m_drMdl->m_center; }
 
-f32 ScnObjAccResMdlInfo::getLength() const { return m_drMdl->unknown160; }
+f32 ScnObjAccResMdlInfo::getLength() const { return m_drMdl->m_length; }
 
 void ScnObjAccResMdlInfo::getInitialVertexAABBMax(mm::Vec3 &max, bool isScaled) const { m_drMdl->getInitialVertexAABBMax(max, isScaled); }
 
@@ -71,7 +71,7 @@ int ScnObjAccResMdlInfo::isGpuRender() const { return m_drMdl->isGpuRender(); }
 
 void ScnObjAccResMdlInfo::getCamPosToNewPosScale(mm::Vec3 &position, f32 &scale, const mm::Vec3 &cameraPosition, const mm::Vec3 &targetPosition, f32 fovy) {
   DrMdlObj *drMdl = m_drMdl;
-  f32 length = drMdl->unknown160;
+  f32 length = drMdl->m_length;
   f32 angle = fovy * mm::DEG_TO_RAD * 0.5f;
   mm::Vec3 direction = cameraPosition - targetPosition;
   // Ruling 5 (P3): the game (0x71007b36cc) computes the length of the difference here and drops it: fsqrt and the NaN
@@ -82,21 +82,21 @@ void ScnObjAccResMdlInfo::getCamPosToNewPosScale(mm::Vec3 &position, f32 &scale,
   // The game re-reads m_drMdl for getMatrix (0x71007b36e4) while the other reads use the pointer loaded at entry.
   mm::Vec3 translation = m_drMdl->getMatrix().unknown004();
   direction.unknown001();
-  mm::Vec3 offset = drMdl->unknown130 - cameraPosition;
+  mm::Vec3 offset = drMdl->m_center - cameraPosition;
   f32 distance = sqrtf(offset.x * offset.x + offset.y * offset.y + offset.z * offset.z);
   scale = distance * sinf(angle) / length;
   position = cameraPosition;
   position -= direction * distance;
-  position += (translation - drMdl->unknown130) * scale;
+  position += (translation - drMdl->m_center) * scale;
 }
 
 void ScnObjAccResMdlInfo::setAlpha(f32 alpha) { m_drMdl->setAlpha(alpha); }
 
 f32 ScnObjAccResMdlInfo::getAlpha() const { return m_drMdl->getAlpha(); }
 
-void ScnObjAccResMdlInfo::setBloom(f32 bloom) { m_drMdl->unknownd8 = bloom; }
+void ScnObjAccResMdlInfo::setBloom(f32 bloom) { m_drMdl->m_bloom = bloom; }
 
-f32 ScnObjAccResMdlInfo::getBloom() const { return m_drMdl->unknownd8; }
+f32 ScnObjAccResMdlInfo::getBloom() const { return m_drMdl->m_bloom; }
 
 void ScnObjAccResMdlInfo::setWriteStencil(bool isEnable) { m_drMdl->setWriteStencil(isEnable); }
 
@@ -194,7 +194,7 @@ void ScnObjAccEtcParams::setDrMdl(ScnObjModel *model) {
   if (drMdl->unknown1c != unknown037_0) {
     m_etcPamObj = nullptr;
   } else {
-    m_etcPamObj = static_cast<DrMdoCtlNom *>(drMdl)->unknown200;
+    m_etcPamObj = static_cast<DrMdoCtlNom *>(drMdl)->m_drResEtcPamObj;
   }
 }
 
@@ -230,28 +230,28 @@ f32 ScnObjAccEtcParams::getParams(u32 index) const {
   if (m_etcPamObj == nullptr || index >= m_etcPamObj->unknown18) {
     return 0.0f;
   }
-  return m_etcPamObj->unknown10[index].getValParams();
+  return m_etcPamObj->m_drResEtcParams[index].getValParams();
 }
 
 void ScnObjAccEtcParams::setParams(u32 index, f32 value) {
   if (m_etcPamObj == nullptr || index >= m_etcPamObj->unknown18) {
     return;
   }
-  m_etcPamObj->unknown10[index].setParams(value);
+  m_etcPamObj->m_drResEtcParams[index].setParams(value);
 }
 
 void ScnObjAccEtcParams::setPreParams(u32 index, f32 value) {
   if (m_etcPamObj == nullptr || index >= m_etcPamObj->unknown18) {
     return;
   }
-  m_etcPamObj->unknown10[index].setPreParams(value);
+  m_etcPamObj->m_drResEtcParams[index].setPreParams(value);
 }
 
 void ScnObjAccEtcParams::setInitParams(u32 index, f32 value) {
   if (m_etcPamObj == nullptr || index >= m_etcPamObj->unknown18) {
     return;
   }
-  m_etcPamObj->unknown10[index].setInitParams(value);
+  m_etcPamObj->m_drResEtcParams[index].setInitParams(value);
 }
 
 void ScnObjAccEtcParams::setRimBloom(bool isEnable) {
@@ -268,7 +268,7 @@ void ScnObjAccResMaterial::setDrMdl(ScnObjModel *model) {
   MdoWrkMatRes *matRes = static_cast<ScnObjModelDrSys *>(model)->unknown3d8->unknown30;
   if (matRes != nullptr) {
     m_matCount = matRes->unknown30;
-    m_matEntries = matRes->unknownc0;
+    m_matEntries = matRes->m_materialRes;
     m_matData = matRes->unknown28;
   }
 }
@@ -288,7 +288,7 @@ void ScnObjAccResSubMesh::setDrMdl(ScnObjModel *model) {
   }
   MdoWrkMatRes *matRes = drMdl->unknown30;
   if (matRes != nullptr) {
-    m_meshObj = static_cast<DrMdoCtlNom *>(drMdl)->unknown1e8;
+    m_meshObj = static_cast<DrMdoCtlNom *>(drMdl)->m_drResMdoMeshObj;
     const unknown022 *header = matRes->unknown20;
     m_partsInfos = reinterpret_cast<const unknown020 *>(reinterpret_cast<const u8 *>(header) + header->unknown64);
   }
@@ -314,7 +314,7 @@ const char *ScnObjAccResSubMesh::getExtBoneName(int index) const { return m_mesh
 
 bool ScnObjAccResSubMesh::isPosRes(int index) const { return (m_partsInfos[index].unknown08 >> 1) & 1; }
 
-mm::Mat44 *ScnObjAccResSubMesh::getExtOfsMat(int index) const { return m_meshObj->getParts(index)->unknown20; }
+mm::Mat44 *ScnObjAccResSubMesh::getExtOfsMat(int index) const { return m_meshObj->getParts(index)->m_extOfsMat; }
 
 void ScnObjAccResSubMesh::setExtAlpha(int index, f32 alpha) { m_meshObj->getParts(index)->setDefAlpha(alpha); }
 
@@ -329,7 +329,7 @@ void ScnObjAccResSubMesh::setExtMatrix(int index, const mm::Mat44 &matrix) {
   }
 }
 
-u8 ScnObjAccResSubMesh::getExtVolumeFadeEffect(int index) const { return m_meshObj->getParts(index)->unknown3a; }
+u8 ScnObjAccResSubMesh::getExtVolumeFadeEffect(int index) const { return m_meshObj->getParts(index)->m_extVolumeFadeEffect; }
 
 ScnObjAccResDecShader::ScnObjAccResDecShader() : m_shdObj(nullptr) {}
 
@@ -338,7 +338,7 @@ ScnObjAccResDecShader::ScnObjAccResDecShader(ScnObjModel *model) : m_shdObj(null
 void ScnObjAccResDecShader::setDrMdl(ScnObjModel *model) {
   DrMdlObj *drMdl = static_cast<ScnObjModelDrSys *>(model)->unknown3d8;
   if (drMdl->unknown1c == unknown037_0) {
-    m_shdObj = static_cast<DrMdoCtlNom *>(drMdl)->unknown1d0;
+    m_shdObj = static_cast<DrMdoCtlNom *>(drMdl)->m_drResMdoShdObj;
   }
 }
 
@@ -429,16 +429,16 @@ bool ScnObjAccResAvatar::isAvatarEyeTex() const {
   return false;
 }
 
-bool ScnObjAccResAvatar::isAvatarMapMode() const { return m_drMdl->unknown40 != nullptr; }
+bool ScnObjAccResAvatar::isAvatarMapMode() const { return m_drMdl->m_avatarMapColor != nullptr; }
 
 void ScnObjAccResAvatar::setAvatarCharColor(int index, const mm::Col4 &color) { *reinterpret_cast<mm::Col4 *>(static_cast<f32 *>(m_avatar->unknown40->m_mapping) + index * 4) = color; }
 
 void ScnObjAccResAvatar::setAvatarDollColor(int index, const mm::Col4 &color) { *reinterpret_cast<mm::Col4 *>(static_cast<f32 *>(m_avatar->unknown48->m_mapping) + index * 4) = color; }
 
-void ScnObjAccResAvatar::setAvatarDollMat(bool isEnable) { m_avatar->unknown38 = isEnable; }
+void ScnObjAccResAvatar::setAvatarDollMat(bool isEnable) { m_avatar->m_avatarDollMat = isEnable; }
 
 void ScnObjAccResAvatar::setAvatarMapColor(int index, const mm::Col3 &color) {
-  mm::Col3 *colors = m_drMdl->unknown40;
+  mm::Col3 *colors = m_drMdl->m_avatarMapColor;
   if (colors != nullptr) {
     colors[index] = color;
   }
@@ -448,7 +448,7 @@ f32 *ScnObjAccResAvatar::getAvatarCharColor(int index) { return static_cast<f32 
 
 f32 *ScnObjAccResAvatar::getAvatarDollColor(int index) { return static_cast<f32 *>(m_avatar->unknown48->m_mapping) + index * 4; }
 
-mm::Col3 *ScnObjAccResAvatar::getAvatarMapColor(int index) const { return &m_drMdl->unknown40[index]; }
+mm::Col3 *ScnObjAccResAvatar::getAvatarMapColor(int index) const { return &m_drMdl->m_avatarMapColor[index]; }
 
 void ScnObjAccResAvatar::setAvatarTexture(ScnObjModelDrTexutre *texture, u32 index) {
   unknown023 *avatar = m_avatar;
@@ -458,7 +458,7 @@ void ScnObjAccResAvatar::setAvatarTexture(ScnObjModelDrTexutre *texture, u32 ind
 
 void ScnObjAccResAvatar::resetAvatarTexture(u32 index) {
   unknown023 *avatar = m_avatar;
-  avatar->unknown08[index] = DrMan::getIns()->unknown78->getDammyTexObj();
+  avatar->unknown08[index] = DrMan::getIns()->m_drPixlMan->getDammyTexObj();
   avatar->unknown00 &= ~(0x10000 << index);
   avatar->unknown18[index] = nullptr;
   m_drMdl->setCreateDisplayList();
@@ -472,7 +472,7 @@ void ScnObjAccResAvatar::setAvatarEyeTexture(ScnObjModelDrTexutre *texture) {
 
 void ScnObjAccResAvatar::resetAvatarEyeTexture() {
   unknown023 *avatar = m_avatar;
-  avatar->unknown28 = DrMan::getIns()->unknown78->getDammyTexObj();
+  avatar->unknown28 = DrMan::getIns()->m_drPixlMan->getDammyTexObj();
   avatar->unknown00 &= ~0x40000;
   avatar->unknown30 = nullptr;
   m_drMdl->setCreateDisplayList();
@@ -482,10 +482,10 @@ void ScnObjAccResAvatar::resetAvatarTexture() {
   unknown023 *avatar = m_avatar;
   for (u32 i = 0; i < 2; i++) {
     avatar->unknown00 &= ~(0x10000 << i);
-    avatar->unknown08[i] = DrMan::getIns()->unknown78->getDammyTexObj();
+    avatar->unknown08[i] = DrMan::getIns()->m_drPixlMan->getDammyTexObj();
     avatar->unknown18[i] = nullptr;
   }
-  avatar->unknown28 = DrMan::getIns()->unknown78->getDammyTexObj();
+  avatar->unknown28 = DrMan::getIns()->m_drPixlMan->getDammyTexObj();
   avatar->unknown00 &= ~0x40000;
   avatar->unknown30 = nullptr;
   m_drMdl->setCreateDisplayList();
@@ -719,7 +719,7 @@ ScnObjAccMdlParticle::ScnObjAccMdlParticle(ScnObjModel *model) {
   if (drMdl->unknown1c != unknown037_0) {
     m_vtxMeshObj = nullptr;
   } else {
-    m_vtxMeshObj = static_cast<DrMdoCtlNom *>(drMdl)->unknown1d8;
+    m_vtxMeshObj = static_cast<DrMdoCtlNom *>(drMdl)->m_drResMdoVtxMeshObj;
   }
 }
 
@@ -834,9 +834,9 @@ ScnObjAccSeamPos::ScnObjAccSeamPos(ScnObjModel *model) : m_instAnmObj(nullptr) {
 void ScnObjAccSeamPos::setDrMdl(ScnObjModel *model) {
   DrMdlObj *drMdl = static_cast<ScnObjModelDrSys *>(model)->unknown3d8;
   if (drMdl->unknown1c == unknown037_3) {
-    m_instAnmObj = &static_cast<DrMdoCtlSeam *>(drMdl)->unknown698;
+    m_instAnmObj = &static_cast<DrMdoCtlSeam *>(drMdl)->m_drResMdoInstAnmObj;
   } else if (drMdl->unknown1c == unknown037_1) {
-    m_instAnmObj = &static_cast<DrMdoCtlPos *>(drMdl)->unknown1e8;
+    m_instAnmObj = &static_cast<DrMdoCtlPos *>(drMdl)->m_drResMdoInstAnmObj;
   } else {
     m_instAnmObj = nullptr;
   }
@@ -876,27 +876,27 @@ void ScnObjAccPartsPos::setMatrix(const mm::Mat44 &matrix) { m_partsObj->setMatr
 
 void ScnObjAccPartsPos::getMatrix(mm::Mat44 &matrix) { m_partsObj->getMatrix(matrix); }
 
-const char *ScnObjAccPartsPos::getName() const { return m_partsObj->unknown10 + m_partsObj->unknown18->unknown00; }
+const char *ScnObjAccPartsPos::getName() const { return m_partsObj->unknown10 + m_partsObj->m_mdsInstObjPosData->unknown00; }
 
-u32 ScnObjAccPartsPos::getID() const { return m_partsObj->unknown18->unknown08; }
+u32 ScnObjAccPartsPos::getID() const { return m_partsObj->m_mdsInstObjPosData->m_iD; }
 
-bool ScnObjAccPartsPos::isPosAnm() const { return m_partsObj->unknown18->isPosAnm; }
+bool ScnObjAccPartsPos::isPosAnm() const { return m_partsObj->m_mdsInstObjPosData->isPosAnm; }
 
-bool ScnObjAccPartsPos::isNodeAnm() const { return m_partsObj->unknown18->isNodeAnm; }
+bool ScnObjAccPartsPos::isNodeAnm() const { return m_partsObj->m_mdsInstObjPosData->isNodeAnm; }
 
-bool ScnObjAccPartsPos::isPosMatrix() const { return m_partsObj->unknown18->isPosAnm || m_partsObj->unknown18->isPosMatrix; }
+bool ScnObjAccPartsPos::isPosMatrix() const { return m_partsObj->m_mdsInstObjPosData->isPosAnm || m_partsObj->m_mdsInstObjPosData->isPosMatrix; }
 
-bool ScnObjAccPartsPos::isRandomStart() const { return m_partsObj->unknown18->isRandomStart; }
+bool ScnObjAccPartsPos::isRandomStart() const { return m_partsObj->m_mdsInstObjPosData->isRandomStart; }
 
-u32 ScnObjAccPartsPos::isSwitch() const { return m_partsObj->unknown18->isSwitch; }
+u32 ScnObjAccPartsPos::isSwitch() const { return m_partsObj->m_mdsInstObjPosData->isSwitch; }
 
 bool ScnObjAccPartsPos::isColiOff() const { return m_partsObj->unknown08.isColiOff; }
 
 bool ScnObjAccPartsPos::isColiSkipData() const { return m_partsObj->unknown08.isColiSkipData; }
 
-f32 ScnObjAccPartsPos::getAlpha() const { return m_partsObj->unknown28; }
+f32 ScnObjAccPartsPos::getAlpha() const { return m_partsObj->m_alpha; }
 
-void ScnObjAccPartsPos::setAlpha(f32 alpha) { m_partsObj->unknown28 = alpha; }
+void ScnObjAccPartsPos::setAlpha(f32 alpha) { m_partsObj->m_alpha = alpha; }
 
 bool ScnObjAccPartsPos::isLoop() const { return m_partsObj->unknown08.isLoop; }
 
@@ -946,7 +946,7 @@ u32 ScnObjAccSeamEtcPos::getObjMax() const {
   return m_etcPosList->unknown08;
 }
 
-ScnObjAccPartsEtcPos ScnObjAccSeamEtcPos::getObj(u32 index) { return ScnObjAccPartsEtcPos(&m_etcPosList->unknown00[index]); }
+ScnObjAccPartsEtcPos ScnObjAccSeamEtcPos::getObj(u32 index) { return ScnObjAccPartsEtcPos(&m_etcPosList->m_obj[index]); }
 
 const char *ScnObjAccPartsEtcPos::getObjName() const {
   const unknown058 *data = m_etcPos->unknown00;
@@ -958,13 +958,13 @@ const char *ScnObjAccPartsEtcPos::getEffName() const {
   return reinterpret_cast<const char *>(data) + data->unknown04;
 }
 
-f32 ScnObjAccPartsEtcPos::getRange() const { return m_etcPos->unknown00->unknown08; }
+f32 ScnObjAccPartsEtcPos::getRange() const { return m_etcPos->unknown00->m_range; }
 
-f32 ScnObjAccPartsEtcPos::getNearClip(u32 index) const { return m_etcPos->unknown00->unknown14[index]; }
+f32 ScnObjAccPartsEtcPos::getNearClip(u32 index) const { return m_etcPos->unknown00->m_nearClip[index]; }
 
-f32 ScnObjAccPartsEtcPos::getFarClip(u32 index) const { return m_etcPos->unknown00->unknown1c[index]; }
+f32 ScnObjAccPartsEtcPos::getFarClip(u32 index) const { return m_etcPos->unknown00->m_farClip[index]; }
 
-u32 ScnObjAccPartsEtcPos::getMatrixMax() const { return m_etcPos->unknown00->unknown0c; }
+u32 ScnObjAccPartsEtcPos::getMatrixMax() const { return m_etcPos->unknown00->m_matrixMax; }
 
 const mm::Mat44 *ScnObjAccPartsEtcPos::getMatrix(u32 index) const {
   const unknown058 *data = m_etcPos->unknown00;

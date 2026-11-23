@@ -20,10 +20,10 @@ public:
 
   DrResMdoSampler *unknown00; // Inferred role: first sampler; original member name unknown.
   DrResMdoSampler *unknown08; // Inferred role: last sampler; original member name unknown.
-  DrMan *unknown10;           // Inferred role: dr man; original member name unknown.
+  DrMan *m_drMan;             // Inferred role: dr man; original member name unknown.
 };
 
 static_assert(offsetof(DrMdoSamplerMan, unknown08) == 0x08, "");
-static_assert(offsetof(DrMdoSamplerMan, unknown10) == 0x10, "");
+static_assert(offsetof(DrMdoSamplerMan, m_drMan) == 0x10, "");
 
 } // namespace ml

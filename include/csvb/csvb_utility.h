@@ -35,8 +35,8 @@ struct stCsvbInfo {
   };
 
   unknown001 unknown00;
-  const stCsvbRowInfo *unknown10;
-  const stCsvbDataInfo *unknown18;
+  const stCsvbRowInfo *m_stCsvbRowInfo;
+  const stCsvbDataInfo *m_stCsvbDataInfo;
   const u8 *unknown20; // Inferred role: byte data block; original member name unknown.
   const char *unknown28;
 };
@@ -49,8 +49,8 @@ static_assert(offsetof(stCsvbInfo::unknown001, unknown06) == 0x06, "");
 static_assert(offsetof(stCsvbInfo::unknown001, unknown08) == 0x08, "");
 static_assert(offsetof(stCsvbInfo::unknown001, unknown0c) == 0x0c, "");
 static_assert(offsetof(stCsvbInfo, unknown00) == 0x00, "");
-static_assert(offsetof(stCsvbInfo, unknown10) == 0x10, "");
-static_assert(offsetof(stCsvbInfo, unknown18) == 0x18, "");
+static_assert(offsetof(stCsvbInfo, m_stCsvbRowInfo) == 0x10, "");
+static_assert(offsetof(stCsvbInfo, m_stCsvbDataInfo) == 0x18, "");
 static_assert(offsetof(stCsvbInfo, unknown20) == 0x20, "");
 static_assert(offsetof(stCsvbInfo, unknown28) == 0x28, "");
 static_assert(sizeof(stCsvbInfo) == 0x30, "");

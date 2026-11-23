@@ -14,13 +14,13 @@ class GfMenuObjChapterTelop : public GfMenuObject {
 public:
   class ListListener : public ui::UIObjectListener {
   public:
-    ListListener(GfMenuObjChapterTelop *owner) : unknown0c(0), unknown10(0), _14(), unknown20(owner) {}
+    ListListener(GfMenuObjChapterTelop *owner) : unknown0c(0), unknown10(0), _14(), m_menuObjChapterTelop(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u32 unknown0c; // Inferred role: chapter or title number; original member name unknown.
     int unknown10; // Inferred role: telop type, 0 begin, 1 end and 2 avan title; original member name unknown.
     u8 _14[0x1c - 0x14];
-    GfMenuObjChapterTelop *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjChapterTelop *m_menuObjChapterTelop; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjChapterTelop(u32 handle);
@@ -43,7 +43,7 @@ public:
 
 static_assert(offsetof(GfMenuObjChapterTelop::ListListener, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfMenuObjChapterTelop::ListListener, unknown10) == 0x10, "");
-static_assert(offsetof(GfMenuObjChapterTelop::ListListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjChapterTelop::ListListener, m_menuObjChapterTelop) == 0x20, "");
 static_assert(sizeof(GfMenuObjChapterTelop::ListListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjChapterTelop, unknown28) == 0x28, "");
 static_assert(sizeof(GfMenuObjChapterTelop) == 0x188, "");

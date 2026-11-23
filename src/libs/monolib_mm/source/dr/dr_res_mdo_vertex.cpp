@@ -15,12 +15,14 @@
 
 namespace ml {
 
-static const GrlPrimitiveType unknown001[] = {GRL_PRIMITIVE_TRIANGLES, GRL_PRIMITIVE_QUADS, GRL_PRIMITIVE_TRIANGLE_STRIP}; // Inferred role: primitive types; original name unknown.
+static const GrlPrimitiveType unknown068[] = {GRL_PRIMITIVE_TRIANGLES, GRL_PRIMITIVE_QUADS, GRL_PRIMITIVE_TRIANGLE_STRIP}; // Inferred role: primitive types; original name unknown.
 static const GrlIndexFormat unknown066[] = {GRL_INDEX_FORMAT_U16, GRL_INDEX_FORMAT_U32};                                   // Inferred role: index formats; original name unknown.
 
 void DrResMdoVertex::beginVertexSetup() { unknown4e = -1; }
 
-DrResMdoVertex::DrResMdoVertex(const u8 *resource) : unknown00(nullptr), unknown08(nullptr), unknown10(resource), unknown18(1), m_buffer(nullptr), unknown78(nullptr) { setupVertex(resource); }
+DrResMdoVertex::DrResMdoVertex(const u8 *resource) : unknown00(nullptr), unknown08(nullptr), unknown10(resource), unknown18(1), m_buffer(nullptr), m_drCalcStmListObj(nullptr) {
+  setupVertex(resource);
+}
 
 void DrResMdoVertex::setupVertex(const u8 *resource) {
   vertexRelease();
@@ -75,9 +77,9 @@ void DrResMdoVertex::setupVertex(const u8 *resource) {
   } else {
     unknown70 = nullptr;
   }
-  unknown58 = reinterpret_cast<grlib::CGLibVtxIndex *>(m_buffer + offset);
+  m_resIndexObj = reinterpret_cast<grlib::CGLibVtxIndex *>(m_buffer + offset);
   for (int i = 0; i < unknown4a; i++) {
-    new (&unknown58[i]) grlib::CGLibVtxIndex;
+    new (&m_resIndexObj[i]) grlib::CGLibVtxIndex;
   }
   offset += unknown4a * sizeof(grlib::CGLibVtxIndex);
   unknown68 = reinterpret_cast<grlib::CGLibVtlMemPool *>(m_buffer + offset);
@@ -94,7 +96,7 @@ void DrResMdoVertex::setupVertex(const u8 *resource) {
   }
   const unknown047 *indexInfos = reinterpret_cast<const unknown047 *>(resource + indexOffset);
   for (int i = 0; i < unknown4a; i++) {
-    unknown58[i].createMemIndexBuff(unknown68, indexInfos[i].unknown00, indexInfos[i].unknown04, unknown001[indexInfos[i].unknown08], unknown066[indexInfos[i].unknown0a]);
+    m_resIndexObj[i].createMemIndexBuff(unknown68, indexInfos[i].unknown00, indexInfos[i].unknown04, unknown068[indexInfos[i].unknown08], unknown066[indexInfos[i].unknown0a]);
   }
   if (header->unknown38 != 0) {
     unknown40 = reinterpret_cast<const unknown053 *>(reinterpret_cast<const u8 *>(unknown28) + header->unknown38);
@@ -122,7 +124,7 @@ void DrResMdoVertex::vertexRelease() {
     unknown60[i].~CGLibVtxVertex();
   }
   for (int i = 0; i < unknown4a; i++) {
-    unknown58[i].~CGLibVtxIndex();
+    m_resIndexObj[i].~CGLibVtxIndex();
   }
   if (unknown70 != nullptr) {
     unknown70->unknown00->~CGLibVtxVertex();
@@ -137,8 +139,8 @@ void DrResMdoVertex::vertexRelease() {
 }
 
 void DrResMdoVertex::update() {
-  if (unknown78 != nullptr) {
-    unknown035 *res = unknown78->getResVertexObj();
+  if (m_drCalcStmListObj != nullptr) {
+    unknown035 *res = m_drCalcStmListObj->getResVertexObj();
     if (res->unknown10 & 1) {
       changeMemVertex(res->unknown00);
     }
@@ -202,7 +204,7 @@ void DrResMdoVertex::setMofBlendVertexBind(grlib::CGLibOneUniformArray *uniforms
 
 grlib::CGLibVtxVertex *DrResMdoVertex::getResVertexObj(int index) { return &unknown50[index]; }
 
-grlib::CGLibVtxIndex *DrResMdoVertex::getResIndexObj(int index) { return &unknown58[index]; }
+grlib::CGLibVtxIndex *DrResMdoVertex::getResIndexObj(int index) { return &m_resIndexObj[index]; }
 
 grlib::CGLibVtxVertex *DrResMdoVertex::getResEtcVertexObj(int index) {
   if (unknown30 == nullptr) {
@@ -225,8 +227,8 @@ bool DrResMdoVertex::getVertexInfo(int index, const MdsMdlVertexFmt **format, in
   return false;
 }
 
-void DrResMdoVertex::render(int index) { unknown58[index].drawIndex(); }
+void DrResMdoVertex::render(int index) { m_resIndexObj[index].drawIndex(); }
 
-void DrResMdoVertex::renderIns(int index, int instanceCount) { unknown58[index].drawInsIndex(instanceCount); }
+void DrResMdoVertex::renderIns(int index, int instanceCount) { m_resIndexObj[index].drawInsIndex(instanceCount); }
 
 } // namespace ml

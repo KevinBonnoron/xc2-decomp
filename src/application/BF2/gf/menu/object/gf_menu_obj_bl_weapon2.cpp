@@ -46,17 +46,18 @@ constexpr u32 unknown003 = 0x21;
 constexpr u32 unknown004 = 0x2d;
 
 GfMenuObjBlWeapon2::GfMenuObjBlWeapon2(u32 handle)
-    : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown40(nullptr), unknown58(this), unknown2e8(false), unknown2ec(0), unknown2f0(0), unknown2f8(nullptr), unknown300(false) {
+    : GfMenuObject(handle), m_menuItemList(nullptr), unknown30(nullptr), unknown40(nullptr), unknown58(this), unknown2e8(false), unknown2ec(0), unknown2f0(0), m_menuBladeList(nullptr),
+      unknown300(false) {
   unknown50 = GfMenuCallContext::create();
 }
 
 GfMenuObjBlWeapon2::~GfMenuObjBlWeapon2() {
   mm::mtl::safeRelease(unknown50);
-  mm::mtl::safeRelease(unknown28);
+  mm::mtl::safeRelease(m_menuItemList);
   mm::mtl::safeRelease(unknown30);
   unknown38 = nullptr;
   mm::mtl::safeRelease(unknown40);
-  mm::mtl::safeRelease(unknown2f8);
+  mm::mtl::safeRelease(m_menuBladeList);
 }
 
 void GfMenuObjBlWeapon2::initialize() {
@@ -111,11 +112,11 @@ void GfMenuObjBlWeapon2::initialize() {
   ui::UISelectObjList::CreateParam createParam;
   createParam.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
   unknown30 = ui::UISelectObjList::create(createParam);
-  unknown28 = GfMenuItemList::create();
+  m_menuItemList = GfMenuItemList::create();
   unknown38 = unknown160();
   unknown38->unknown162(0);
   unknown40 = GfMenuCallContext::create();
-  unknown2f8 = GfMenuBladeList::create();
+  m_menuBladeList = GfMenuBladeList::create();
   disableInput(acc.searchChild("LAY_chips"));
   disableInput(acc.searchChild("LAY_chr_change"));
   GfMenuObject::initialize();
@@ -242,16 +243,16 @@ bool GfMenuObjBlWeapon2::seqSrcAppear() {
   if (!unknown2e8) {
     GfEquipUtil::equipBladeChip(GfMenuReference::getReferenceBladeID(0), unknown38->unknown0c);
     GfMenuObjUtil::playSE(0x12);
-    MenuItemInfo info = unknown28->getContents(unknown28->getIndex(false));
+    MenuItemInfo info = m_menuItemList->getContents(m_menuItemList->getIndex(false));
     info.unknown08 = 1;
-    u32 index = unknown28->getIndex(false);
-    unknown28->decItem(info, false);
+    u32 index = m_menuItemList->getIndex(false);
+    m_menuItemList->decItem(info, false);
     if (unknown2f0 == 1) {
       GfMenuItemList::ItemShopSetup setup;
-      setup.unknown00.unknown08 = unknown30->getSize();
+      setup.m_setupParam.unknown08 = unknown30->getSize();
       setup.unknown14 = unknown2f4;
-      unknown28->setupFromShop(setup);
-      unknown28->setIndex(index);
+      m_menuItemList->setupFromShop(setup);
+      m_menuItemList->setIndex(index);
     }
     {
       ui::UIObjectAcc chips(unknown18, "LAY_chips");
@@ -261,7 +262,7 @@ bool GfMenuObjBlWeapon2::seqSrcAppear() {
         chips.setDispChild(false, name.c_str());
       }
       GfMenuObject::resetInputSelection(chips.unknown10);
-      GfMenuObject::setupInputSelectionFromList(chips.unknown10, *unknown28);
+      GfMenuObject::setupInputSelectionFromList(chips.unknown10, *m_menuItemList);
     }
     unknown38->unknown0c = 0;
     image.setDisp(true);
@@ -306,9 +307,9 @@ bool GfMenuObjBlWeapon2::seqSrcEffect() {
     {
       ui::UIObjectAcc weapon(unknown18, "LAY_bl_weapon@02");
       weapon.setDisp(true);
-      unknown38->unknown162(unknown28->getContents(unknown28->getIndex(false)).unknown04);
-      GfMenuReference::setBladeVirtualEquipWpnChip(unknown28->getContents(unknown28->getIndex(false)).unknown04);
-      if (unknown28->getSize() == 0) {
+      unknown38->unknown162(m_menuItemList->getContents(m_menuItemList->getIndex(false)).unknown04);
+      GfMenuReference::setBladeVirtualEquipWpnChip(m_menuItemList->getContents(m_menuItemList->getIndex(false)).unknown04);
+      if (m_menuItemList->getSize() == 0) {
         weapon.setDispChild(false, "LAY_wpn_img@02");
       }
     }
@@ -391,12 +392,12 @@ void GfMenuObjBlWeapon2::setupItemList(ui::UIObjectAcc &acc, GfMenuItemList *lis
     if (isShop == 0) {
       GfMenuItemList::ItemBoxSetup setup;
       setup.unknown14 = ItemType::ITEM_TYPE_UNKNOWN_1;
-      setup.unknown00.unknown08 = selectList->getSize();
-      setup.unknown00.unknown10 = true;
+      setup.m_setupParam.unknown08 = selectList->getSize();
+      setup.m_setupParam.unknown10 = true;
       list->setupFromBox(setup);
     } else {
       GfMenuItemList::ItemShopSetup setup;
-      setup.unknown00.unknown08 = selectList->getSize();
+      setup.m_setupParam.unknown08 = selectList->getSize();
       setup.unknown14 = shop;
       list->setupFromShop(setup);
     }
@@ -427,13 +428,13 @@ void GfMenuObjBlWeapon2::MainListener::reciveEvent(const ui::EventData &event, u
     GfMenuObject::sendOpenEvent(acc.searchChild("LAY_chips"), 0, 0.0f);
     GfMenuObject::sendOpenEvent(acc.searchChild("LAY_weapon"), 0, 0.0f);
     mm::mtl::FixStr<32> name;
-    if (unknown20->unknown2f0 == 1) {
+    if (m_menuObjBlWeapon2->unknown2f0 == 1) {
       GfMenuBladeList::DriverSetup setup;
       setup.unknown14 = 3;
-      setup.unknown00.unknown08 = 5;
+      setup.m_setupParam.unknown08 = 5;
       setup.unknown1c = false;
-      unknown20->unknown2f8->setupFromDriver(setup);
-      GfMenuReference::setReferenceBladeID(0, unknown20->unknown2f8->getContents(0).unknown00);
+      m_menuObjBlWeapon2->m_menuBladeList->setupFromDriver(setup);
+      GfMenuReference::setReferenceBladeID(0, m_menuObjBlWeapon2->m_menuBladeList->getContents(0).unknown00);
       for (u32 i = 1; i != 7; i++) {
         name.format("LAY_menu@%02d", i);
         ui::UIObjectAcc menu(acc.searchChild(name.c_str()));
@@ -459,9 +460,9 @@ void GfMenuObjBlWeapon2::MainListener::reciveEvent(const ui::EventData &event, u
     if (event.unknown08 == 2) {
       acc.setDisp(false);
       acc.setTerm();
-      if (unknown20->unknown2f0 == 0) {
+      if (m_menuObjBlWeapon2->unknown2f0 == 0) {
         GfMenuObjCharSelect::returnSubMenu();
-        GfMenuObject::returnFSSubLayer(unknown20);
+        GfMenuObject::returnFSSubLayer(m_menuObjBlWeapon2);
       } else {
         GfMenuObject::termCallContext(handle);
         ui::UIManager::get()->terminateLayer(unknown004, true);
@@ -476,7 +477,7 @@ void GfMenuObjBlWeapon2::MainListener::reciveEvent(const ui::EventData &event, u
     GfMenuObject::hookCtrlEvent(acc.unknown10, ctrl);
     GfMenuObject::sendCloseEvent(acc.searchChild("LAY_chips"), 0, 0.0f);
     GfMenuObject::sendCloseEvent(acc.searchChild("LAY_weapon"), 0, 0.0f);
-    if (unknown20->unknown2f0 == 1) {
+    if (m_menuObjBlWeapon2->unknown2f0 == 1) {
       GfMenuObjShop::dispBlade(false);
       GfMenuObjCmnStatus::closeBlStatus();
       unknown158(acc.searchChild("LAY_chr_change"), GfMenuTypes::unknown003_34, 0, 0.0f);
@@ -495,12 +496,12 @@ void GfMenuObjBlWeapon2::WeaponListener::reciveEvent(const ui::EventData &event,
   case 1: {
     GfMenuWeaponAdapter::ReferenceChip chip;
     chip.unknown00 = 0;
-    chip.unknown08 = unknown20->unknown38;
+    chip.unknown08 = m_menuObjBlWeapon2->unknown38;
     // setupWeapon never reads its list parameter, so the game never sets x1 for it (0x710041e344): the compiler
     // erased the argument (ruling 2026-11-13 #6). The original expression cannot be checked; the owner's chip
     // list, read just below, is the plausible one.
-    setupWeapon(acc, unknown20->unknown28, chip);
-    if (unknown20->unknown28->getSize() == 0) {
+    setupWeapon(acc, m_menuObjBlWeapon2->m_menuItemList, chip);
+    if (m_menuObjBlWeapon2->m_menuItemList->getSize() == 0) {
       acc.setDispChild(false, "LAY_wpn_img@02");
     }
     break;
@@ -520,21 +521,21 @@ void GfMenuObjBlWeapon2::WeaponListener::reciveEvent(const ui::EventData &event,
 }
 
 void GfMenuObjBlWeapon2::ItemSelectListener::reciveEvent(const ui::EventData &event, u32 handle) {
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjBlWeapon2->unknown18);
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1: {
-    setupItemList(acc, unknown20->unknown28, unknown20->unknown30, unknown20->unknown2f0, unknown20->unknown2f4);
+    setupItemList(acc, m_menuObjBlWeapon2->m_menuItemList, m_menuObjBlWeapon2->unknown30, m_menuObjBlWeapon2->unknown2f0, m_menuObjBlWeapon2->unknown2f4);
     bool isOpen = GfMenuObjCmnStatus::isOpenBlStatus();
     GfMenuObjOperationInfo::changeText(handle, 0x12, !isOpen);
     GfMenuObjOperationInfo::setGuideText(0x12, 0);
     GfMenuObjMainMenu2::setSubIndexText(9);
-    GfMenuObjUtil::createVScrollBarPlugin(acc.searchChild("IMG_ch_list_scroll_bar"), unknown20->unknown28, "IMG_ch_list_scroll_base", true);
-    GfMenuObject::setupInputSelectionFromList(handle, *unknown20->unknown28);
+    GfMenuObjUtil::createVScrollBarPlugin(acc.searchChild("IMG_ch_list_scroll_bar"), m_menuObjBlWeapon2->m_menuItemList, "IMG_ch_list_scroll_base", true);
+    GfMenuObject::setupInputSelectionFromList(handle, *m_menuObjBlWeapon2->m_menuItemList);
     ui::UIObjectAcc equip(acc.searchChild("LAY_index_equip"));
     ui::UIObjectAcc shop(acc.searchChild("LAY_index_shop"));
     ui::UIObjectAcc sort(acc.searchChild("LAY_item_sort"));
-    if (unknown20->unknown2f0 == 0) {
+    if (m_menuObjBlWeapon2->unknown2f0 == 0) {
       if (GfMenuObjMainMenu2::isOpenCharMenu()) {
         equip.setDisp(true);
         shop.setDisp(false);
@@ -545,12 +546,12 @@ void GfMenuObjBlWeapon2::ItemSelectListener::reciveEvent(const ui::EventData &ev
       shop.setDisp(true);
       sort.setDisp(false);
     }
-    unknown20->openCharChange();
-    if (unknown20->unknown2f0 == 0) {
+    m_menuObjBlWeapon2->openCharChange();
+    if (m_menuObjBlWeapon2->unknown2f0 == 0) {
       u16 sortId = GfMenuObjSort::getSortID(0x11, 0);
       GfMenuObjSort::setSortLabelText(sortId, owner.searchChild("TXT_item_sort_label"));
-      unknown20->unknown2ec = 0;
-      unknown20->unknown28->sort(sortId, false);
+      m_menuObjBlWeapon2->unknown2ec = 0;
+      m_menuObjBlWeapon2->m_menuItemList->sort(sortId, false);
     }
     break;
   }
@@ -558,7 +559,7 @@ void GfMenuObjBlWeapon2::ItemSelectListener::reciveEvent(const ui::EventData &ev
     if (event.unknown08 == 1) {
       GfMenuObject::enableInput(handle);
       GfMenuObjOperationInfo::add(handle, 0, 0, 0);
-      if (unknown20->unknown2f0 == 0) {
+      if (m_menuObjBlWeapon2->unknown2f0 == 0) {
         GfMenuObjOperationInfo::setActionEnable(handle, 0x11, true);
       } else {
         GfMenuObjOperationInfo::setActionEnable(handle, 0x11, false);
@@ -569,17 +570,17 @@ void GfMenuObjBlWeapon2::ItemSelectListener::reciveEvent(const ui::EventData &ev
   case 6: {
     u32 index = event.unknown08;
     u32 prev = event.unknown0c;
-    if (unknown20->unknown28->getSize() == 0) {
+    if (m_menuObjBlWeapon2->m_menuItemList->getSize() == 0) {
       mm::mtl::FixStr<32> name;
-      for (u32 i = 0; i < unknown20->unknown30->getSize(); i++) {
+      for (u32 i = 0; i < m_menuObjBlWeapon2->unknown30->getSize(); i++) {
         name.format("IMG_ch_listcrsor_@%02d", i + 1);
         acc.setDispChild(false, name.c_str());
       }
     } else {
-      int prevIndex = unknown20->unknown28->getIndex(true);
-      unknown20->unknown28->setIndex(index);
-      u32 curIndex = unknown20->unknown28->getIndex(true);
-      unknown20->unknown30->setIndex(curIndex);
+      int prevIndex = m_menuObjBlWeapon2->m_menuItemList->getIndex(true);
+      m_menuObjBlWeapon2->m_menuItemList->setIndex(index);
+      u32 curIndex = m_menuObjBlWeapon2->m_menuItemList->getIndex(true);
+      m_menuObjBlWeapon2->unknown30->setIndex(curIndex);
       mm::mtl::FixStr<32> name;
       if (prev != 0xffffffff) {
         name.format("IMG_ch_listcrsor_@%02d", prevIndex + 1);
@@ -587,10 +588,10 @@ void GfMenuObjBlWeapon2::ItemSelectListener::reciveEvent(const ui::EventData &ev
       }
       name.format("IMG_ch_listcrsor_@%02d", curIndex + 1);
       acc.setDispChild(true, name.c_str());
-      unknown20->unknown38->unknown162(unknown20->unknown28->getContents(unknown20->unknown28->getIndex(false)).unknown04);
-      GfMenuReference::setBladeVirtualEquipWpnChip(unknown20->unknown28->getContents(unknown20->unknown28->getIndex(false)).unknown04);
+      m_menuObjBlWeapon2->unknown38->unknown162(m_menuObjBlWeapon2->m_menuItemList->getContents(m_menuObjBlWeapon2->m_menuItemList->getIndex(false)).unknown04);
+      GfMenuReference::setBladeVirtualEquipWpnChip(m_menuObjBlWeapon2->m_menuItemList->getContents(m_menuObjBlWeapon2->m_menuItemList->getIndex(false)).unknown04);
       if (prev != 0xffffffff && index != prev) {
-        ui::UIObjectAcc image(unknown20->unknown18, "IMG_wpn_img@02");
+        ui::UIObjectAcc image(m_menuObjBlWeapon2->unknown18, "IMG_wpn_img@02");
         GfMenuObjUtil::CtrlParam param;
         param.unknown08 = 0x10000000;
         param.unknown50 = "mnu071_wep_select";
@@ -606,31 +607,31 @@ void GfMenuObjBlWeapon2::ItemSelectListener::reciveEvent(const ui::EventData &ev
   case 8:
     switch (event.unknown0c) {
     case 1: {
-      if (unknown20->unknown28->getSize() == 0) {
+      if (m_menuObjBlWeapon2->m_menuItemList->getSize() == 0) {
         break;
       }
-      MenuItemInfo &item = unknown20->unknown28->getContents(unknown20->unknown28->getIndex(false));
+      MenuItemInfo &item = m_menuObjBlWeapon2->m_menuItemList->getContents(m_menuObjBlWeapon2->m_menuItemList->getIndex(false));
       u32 blade = GfMenuReference::getReferenceBladeID(0);
-      unknown20->unknown40->reset();
-      if (unknown20->unknown2f0 == 0) {
+      m_menuObjBlWeapon2->unknown40->reset();
+      if (m_menuObjBlWeapon2->unknown2f0 == 0) {
         if (!GfMenuObjUtil::isBladeNoBuildWeapon(blade)) {
           if (isSameWeapon(blade, item.unknown04)) {
-            GfMenuObjCommonText::openError(unknown20->unknown40, 9, 0);
-            unknown20->unknown48 = 1;
+            GfMenuObjCommonText::openError(m_menuObjBlWeapon2->unknown40, 9, 0);
+            m_menuObjBlWeapon2->unknown48 = 1;
             GfMenuObjUtil::playSECommon(2);
           } else {
-            GfMenuObjCommonText::open(unknown20->unknown40, 0x35, 0);
-            unknown20->unknown48 = 0;
+            GfMenuObjCommonText::open(m_menuObjBlWeapon2->unknown40, 0x35, 0);
+            m_menuObjBlWeapon2->unknown48 = 0;
           }
         } else {
-          GfMenuObjCommonText::open(unknown20->unknown40, 0xd5, 0);
-          unknown20->unknown48 = 3;
+          GfMenuObjCommonText::open(m_menuObjBlWeapon2->unknown40, 0xd5, 0);
+          m_menuObjBlWeapon2->unknown48 = 3;
           GfMenuObjUtil::playSECommon(2);
         }
       } else {
         ItemPrice price;
         price.clear();
-        GfItemUtil::getPrice(price, item.unknown04, unknown20->unknown2f4);
+        GfItemUtil::getPrice(price, item.unknown04, m_menuObjBlWeapon2->unknown2f4);
         u32 count = GfItemUtil::getEnableStock(item.unknown04) - GfItemUtil::getItemBoxCount(item.unknown04);
         if (GfDataUtil::getMoney() < price.unknown04 * count) {
           count = GfDataUtil::getMoney() / price.unknown04;
@@ -638,13 +639,13 @@ void GfMenuObjBlWeapon2::ItemSelectListener::reciveEvent(const ui::EventData &ev
         GfMenuObjCommonText::OpenNumSelectParam param;
         param.unknown08 = count;
         param.unknown0c = price.unknown04;
-        GfMenuObjCommonText::openNumSelect(unknown20->unknown40, param);
-        unknown20->unknown48 = 4;
+        GfMenuObjCommonText::openNumSelect(m_menuObjBlWeapon2->unknown40, param);
+        m_menuObjBlWeapon2->unknown48 = 4;
       }
-      if (unknown20->unknown40->isActive()) {
-        unknown20->closeCharChange();
+      if (m_menuObjBlWeapon2->unknown40->isActive()) {
+        m_menuObjBlWeapon2->closeCharChange();
       }
-      GfMenuObject::setCallContextEventHandler(unknown20->unknown40, acc.unknown10);
+      GfMenuObject::setCallContextEventHandler(m_menuObjBlWeapon2->unknown40, acc.unknown10);
       break;
     }
     case 2: {
@@ -660,7 +661,7 @@ void GfMenuObjBlWeapon2::ItemSelectListener::reciveEvent(const ui::EventData &ev
       break;
     }
     case 0x11:
-      GfMenuObjSort::open(acc.unknown10, owner.searchChild("TXT_item_sort_label"), 0x11, unknown20->unknown2ec);
+      GfMenuObjSort::open(acc.unknown10, owner.searchChild("TXT_item_sort_label"), 0x11, m_menuObjBlWeapon2->unknown2ec);
       GfMenuObject::disableInput(handle);
       GfMenuObjOperationInfo::remove(handle, 0, 0, 0);
       break;
@@ -679,55 +680,55 @@ void GfMenuObjBlWeapon2::ItemSelectListener::reciveEvent(const ui::EventData &ev
     break;
   case 0x41: {
     GfMenuReference::getReferenceBladeID(0);
-    u32 chip = unknown20->unknown38->unknown0c;
+    u32 chip = m_menuObjBlWeapon2->unknown38->unknown0c;
     u32 count = event.unknown14;
     u32 call = event.unknown08;
-    if (unknown20->unknown40->unknown0c == call) {
+    if (m_menuObjBlWeapon2->unknown40->unknown0c == call) {
       if (event.unknown10 == 0) {
-        switch (unknown20->unknown48) {
+        switch (m_menuObjBlWeapon2->unknown48) {
         case 0:
         case 2:
           GfMenuObject::disableInput(acc.unknown10);
-          unknown20->unknown58.unknown002(&GfMenuObjBlWeapon2::seqStart);
-          unknown20->unknown58.unknown002(&GfMenuObjBlWeapon2::seqSrcLeave);
+          m_menuObjBlWeapon2->unknown58.unknown002(&GfMenuObjBlWeapon2::seqStart);
+          m_menuObjBlWeapon2->unknown58.unknown002(&GfMenuObjBlWeapon2::seqSrcLeave);
           break;
         case 4: {
           if (count != 0) {
-            GfShopUtil::execBuy(chip, count, unknown20->unknown2f4);
+            GfShopUtil::execBuy(chip, count, m_menuObjBlWeapon2->unknown2f4);
             MenuItemInfo info;
             info.unknown04 = chip;
             info.unknown00 = GfItemUtil::getType(chip);
             info.unknown08 = count;
-            unknown20->unknown28->addItem(info, false);
+            m_menuObjBlWeapon2->m_menuItemList->addItem(info, false);
             GfMenuObjUtil::playSE(0x18);
             ui::EventData endEvent;
             endEvent.unknown00 = GfMenuTypes::unknown003_259;
             ui::UIManager::get()->requestObjectEvent(handle, endEvent, 0.0f);
-            unknown20->unknown300 = true;
+            m_menuObjBlWeapon2->unknown300 = true;
           }
           break;
         }
         case 5: {
           u32 blade = GfMenuReference::getReferenceBladeID(0);
-          unknown20->unknown40->reset();
+          m_menuObjBlWeapon2->unknown40->reset();
           if (isSameWeapon(blade, chip)) {
-            GfMenuObjCommonText::openError(unknown20->unknown40, 9, 0);
-            unknown20->unknown48 = 1;
+            GfMenuObjCommonText::openError(m_menuObjBlWeapon2->unknown40, 9, 0);
+            m_menuObjBlWeapon2->unknown48 = 1;
           } else {
             GfMenuObject::disableInput(acc.unknown10);
-            unknown20->unknown58.unknown002(&GfMenuObjBlWeapon2::seqStart);
-            unknown20->unknown58.unknown002(&GfMenuObjBlWeapon2::seqSrcLeave);
+            m_menuObjBlWeapon2->unknown58.unknown002(&GfMenuObjBlWeapon2::seqStart);
+            m_menuObjBlWeapon2->unknown58.unknown002(&GfMenuObjBlWeapon2::seqSrcLeave);
           }
-          GfMenuObject::setCallContextEventHandler(unknown20->unknown40, acc.unknown10);
-          unknown20->unknown300 = false;
+          GfMenuObject::setCallContextEventHandler(m_menuObjBlWeapon2->unknown40, acc.unknown10);
+          m_menuObjBlWeapon2->unknown300 = false;
           break;
         }
         default:
-          unknown20->openCharChange();
+          m_menuObjBlWeapon2->openCharChange();
           break;
         }
       } else {
-        unknown20->openCharChange();
+        m_menuObjBlWeapon2->openCharChange();
       }
     }
     break;
@@ -738,9 +739,9 @@ void GfMenuObjBlWeapon2::ItemSelectListener::reciveEvent(const ui::EventData &ev
   case GfMenuTypes::unknown003_259: {
     u32 blade = GfMenuReference::getReferenceBladeID(0);
     if (!GfMenuObjUtil::isBladeNoBuildWeapon(blade)) {
-      GfMenuObjCommonText::open(unknown20->unknown40, 0xd1, 0);
-      unknown20->unknown48 = 5;
-      GfMenuObject::setCallContextEventHandler(unknown20->unknown40, acc.unknown10);
+      GfMenuObjCommonText::open(m_menuObjBlWeapon2->unknown40, 0xd1, 0);
+      m_menuObjBlWeapon2->unknown48 = 5;
+      GfMenuObject::setCallContextEventHandler(m_menuObjBlWeapon2->unknown40, acc.unknown10);
     }
     break;
   }
@@ -751,12 +752,12 @@ void GfMenuObjBlWeapon2::ItemSelectListener::reciveEvent(const ui::EventData &ev
   case 0x148:
     GfMenuObject::enableInput(handle);
     GfMenuObjOperationInfo::add(handle, 0, 0, 0);
-    if (unknown20->unknown2ec != event.unknown08) {
+    if (m_menuObjBlWeapon2->unknown2ec != event.unknown08) {
       u16 sortId = GfMenuObjSort::getSortID(0x11, event.unknown08);
-      unknown20->unknown28->sort(sortId, false);
-      unknown20->unknown2ec = event.unknown08;
+      m_menuObjBlWeapon2->m_menuItemList->sort(sortId, false);
+      m_menuObjBlWeapon2->unknown2ec = event.unknown08;
       GfMenuObject::resetInputSelection(handle);
-      GfMenuObject::setupInputSelectionFromList(handle, *unknown20->unknown28);
+      GfMenuObject::setupInputSelectionFromList(handle, *m_menuObjBlWeapon2->m_menuItemList);
     }
     break;
   default:

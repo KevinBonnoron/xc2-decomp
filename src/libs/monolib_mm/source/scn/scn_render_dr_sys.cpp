@@ -8,12 +8,12 @@
 
 namespace ml {
 
-ScnRenderDrSys::ScnRenderDrSys(Scn *scn) : ScnRender(scn) { unknown10 = new (scn->unknown64) DrMan(scn); }
+ScnRenderDrSys::ScnRenderDrSys(Scn *scn) : ScnRender(scn) { m_drMan = new (scn->m_ALLOC_HANDLE) DrMan(scn); }
 
 ScnRenderDrSys::~ScnRenderDrSys() {
-  if (unknown10 != nullptr) {
-    delete unknown10;
-    unknown10 = nullptr;
+  if (m_drMan != nullptr) {
+    delete m_drMan;
+    m_drMan = nullptr;
   }
 }
 
@@ -23,53 +23,53 @@ void ScnRenderDrSys::applyCamera(ScnObjCam *camera) {}
 
 void ScnRenderDrSys::update() {}
 
-void ScnRenderDrSys::applyBegin() { unknown10->begin(); }
+void ScnRenderDrSys::applyBegin() { m_drMan->begin(); }
 
-void ScnRenderDrSys::applyEnd() { unknown10->end(); }
+void ScnRenderDrSys::applyEnd() { m_drMan->end(); }
 
-int ScnRenderDrSys::applyLoopCnt() { return unknown10->loopCnt(); }
+int ScnRenderDrSys::applyLoopCnt() { return m_drMan->loopCnt(); }
 
-void ScnRenderDrSys::applyUpdate(int loop) { unknown10->apply(loop); }
+void ScnRenderDrSys::applyUpdate(int loop) { m_drMan->apply(loop); }
 
-void ScnRenderDrSys::applyRender(int loop) { unknown10->render(loop); }
+void ScnRenderDrSys::applyRender(int loop) { m_drMan->render(loop); }
 
-void ScnRenderDrSys::tail() { unknown10->tail(); }
+void ScnRenderDrSys::tail() { m_drMan->tail(); }
 
-void ScnRenderDrSys::setMdlDblPause(bool isPause) { unknown10->unknown1d7b = isPause; }
+void ScnRenderDrSys::setMdlDblPause(bool isPause) { m_drMan->m_mdlDblPause = isPause; }
 
-void ScnRenderDrSys::setGlbSpd(f32 speed) { unknown10->unknown1c84 = speed; }
+void ScnRenderDrSys::setGlbSpd(f32 speed) { m_drMan->m_glbSpd = speed; }
 
 void ScnRenderDrSys::setup(const ScnSetup *setup) {}
 
-void ScnRenderDrSys::setCallBack(IDrDrawCallback *callback) { unknown10->setCallBack(callback); }
+void ScnRenderDrSys::setCallBack(IDrDrawCallback *callback) { m_drMan->setCallBack(callback); }
 
-void ScnRenderDrSys::releaseCallBack(IDrDrawCallback *callback) { unknown10->releaseCallBack(callback); }
+void ScnRenderDrSys::releaseCallBack(IDrDrawCallback *callback) { m_drMan->releaseCallBack(callback); }
 
-void ScnRenderDrSys::setReduction(bool isReduction, f32 scaleX, f32 scaleY) { unknown10->setReduction(isReduction, scaleX, scaleY); }
+void ScnRenderDrSys::setReduction(bool isReduction, f32 scaleX, f32 scaleY) { m_drMan->setReduction(isReduction, scaleX, scaleY); }
 
-void ScnRenderDrSys::setAA(bool isAA) { unknown10->setAA(isAA); }
+void ScnRenderDrSys::setAA(bool isAA) { m_drMan->setAA(isAA); }
 
-void ScnRenderDrSys::setColorFilter(bool isColorFilter) { unknown10->setColorFilter(isColorFilter); }
+void ScnRenderDrSys::setColorFilter(bool isColorFilter) { m_drMan->setColorFilter(isColorFilter); }
 
-void ScnRenderDrSys::setSSAO(bool isSSAO) { unknown10->setSSAO(isSSAO); }
+void ScnRenderDrSys::setSSAO(bool isSSAO) { m_drMan->setSSAO(isSSAO); }
 
-void ScnRenderDrSys::setBloom(bool isBloom, bool isLensFlare) { unknown10->setBloom(isBloom, false); }
+void ScnRenderDrSys::setBloom(bool isBloom, bool isLensFlare) { m_drMan->setBloom(isBloom, false); }
 
-void ScnRenderDrSys::setToneMap(bool isToneMap) { unknown10->setToneMap(isToneMap); }
+void ScnRenderDrSys::setToneMap(bool isToneMap) { m_drMan->setToneMap(isToneMap); }
 
-void ScnRenderDrSys::setMotionBlur(bool isMotionBlur) { unknown10->setMotionBlur(isMotionBlur); }
+void ScnRenderDrSys::setMotionBlur(bool isMotionBlur) { m_drMan->setMotionBlur(isMotionBlur); }
 
-void ScnRenderDrSys::setMotionBlur(f32 strength, f32 sub) { unknown10->setMotionBlur(strength, sub); }
+void ScnRenderDrSys::setMotionBlur(f32 strength, f32 sub) { m_drMan->setMotionBlur(strength, sub); }
 
-void ScnRenderDrSys::setDepthOfField(bool isDepthOfField) { unknown10->setDepthOfField(isDepthOfField); }
+void ScnRenderDrSys::setDepthOfField(bool isDepthOfField) { m_drMan->setDepthOfField(isDepthOfField); }
 
-void ScnRenderDrSys::setDepthOfFieldParm(f32 distance, f32 range, f32 strength, f32 blend) { unknown10->setDepthOfFieldParm(distance, range, strength, blend); }
+void ScnRenderDrSys::setDepthOfFieldParm(f32 distance, f32 range, f32 strength, f32 blend) { m_drMan->setDepthOfFieldParm(distance, range, strength, blend); }
 
-void ScnRenderDrSys::setTimeVal(f32 timeVal) { unknown10->setTimeVal(timeVal); }
+void ScnRenderDrSys::setTimeVal(f32 timeVal) { m_drMan->setTimeVal(timeVal); }
 
-void ScnRenderDrSys::openPixelDebugWindow(WinProc *window) { unknown10->openPixelDebugWindow(window); }
+void ScnRenderDrSys::openPixelDebugWindow(WinProc *window) { m_drMan->openPixelDebugWindow(window); }
 
-void ScnRenderDrSys::openHisgtramDebugWindow(WinProc *window) { unknown10->openHistgramDebugWindow(window); }
+void ScnRenderDrSys::openHisgtramDebugWindow(WinProc *window) { m_drMan->openHistgramDebugWindow(window); }
 
 ScnObjModel *ScnRenderDrSys::createMdl(Scn *scn, const void *data, const char *name, int screen) {
   if (data == nullptr) {
@@ -91,7 +91,7 @@ void ScnRenderDrSys::createDrRender(Scn *scn) { WorkCpu::runThread(WorkCpu::getR
 u32 ScnRenderDrSys::thDrSysInitialize(void *argument, void *userData) {
   Scn *scn = static_cast<Scn *>(argument);
   if (scn->unknown38 == nullptr) {
-    scn->unknown38 = new (scn->unknown64) ScnRenderDrSys(scn);
+    scn->unknown38 = new (scn->m_ALLOC_HANDLE) ScnRenderDrSys(scn);
   }
   return 0;
 }

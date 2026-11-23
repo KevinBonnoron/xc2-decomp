@@ -19,7 +19,7 @@ GfGameFallDeadCamera::~GfGameFallDeadCamera() {}
 void GfGameFallDeadCamera::onActivate() {
   PlayerCameraTarget *target = PlayerCameraTarget::get();
   if (target != nullptr) {
-    unknownb0 = GfInfo::m_camTgt - target->unknown20.unknown00;
+    unknownb0 = GfInfo::m_camTgt - target->m_transform.unknown00;
   }
   unknownd0 = GfInfo::m_camTgt;
   unknownc0 = GfInfo::m_camPos;
@@ -30,7 +30,7 @@ void GfGameFallDeadCamera::onActivate() {
 void GfGameFallDeadCamera::update(const fw::UpdateInfo &info) {
   PlayerCameraTarget *target = PlayerCameraTarget::get();
   if (target != nullptr) {
-    unknownd0 = target->unknown20.unknown00 + unknownb0;
+    unknownd0 = target->m_transform.unknown00 + unknownb0;
   }
   setLookAt(unknownc0, unknownd0, 0.0f);
 }

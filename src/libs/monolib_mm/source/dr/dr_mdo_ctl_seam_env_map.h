@@ -32,7 +32,7 @@ public:
   void unknown002(u32 envFlag, int renderType, u32 flags) {
     if (!m_drMan->unknown1d6c) {
       for (DrResMdoSeamWrkEnv *env = unknown370.unknown10.unknown00; env != nullptr; env = env->unknown08) {
-        unknown30 = env->unknown58;
+        unknown30 = env->m_mdoWrkMatRes;
         if (unknown30 != nullptr && (env->unknown68 & envFlag) != 0) {
           calcSeamMapRender(renderType, flags);
         }

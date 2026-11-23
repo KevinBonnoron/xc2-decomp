@@ -148,11 +148,11 @@ void GfMenuObjBladeName::MainListener::reciveEvent(const ui::EventData &event, u
     acc.setDisp(false);
     break;
   case GfMenuTypes::unknown003_33:
-    unknown20->unknown28.unknown005();
-    unknown20->unknown28.unknown002(&GfMenuObjBladeName::seqStart);
+    m_menuObjBladeName->unknown28.unknown005();
+    m_menuObjBladeName->unknown28.unknown002(&GfMenuObjBladeName::seqStart);
     break;
   case GfMenuTypes::unknown003_34: {
-    unknown20->unknown28.unknown005();
+    m_menuObjBladeName->unknown28.unknown005();
     {
       ui::UIObjectAcc base(acc.unknown10, "IMG_bl_name_base");
       base.stopAnimation();

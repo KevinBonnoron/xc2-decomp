@@ -15,7 +15,8 @@
 namespace gf {
 
 GfMenuObjTargetCursor::GfMenuObjTargetCursor(u32 handle)
-    : GfMenuObject(handle), unknown24(0), unknown28(unknown020), unknown30(0), unknown38(nullptr), unknown40(this), unknown2d0(this), unknown560(false), unknown564(0), unknown568(false) {}
+    : GfMenuObject(handle), unknown24(0), m_GF_OBJ_HANDLE(unknown020), unknown30(0), m_menuPosAdapter(nullptr), unknown40(this), unknown2d0(this), unknown560(false), unknown564(0), unknown568(false) {
+}
 
 GfMenuObjTargetCursor::~GfMenuObjTargetCursor() {}
 
@@ -35,10 +36,10 @@ void GfMenuObjTargetCursor::initialize() {
       listener->release();
     }
     unknown24 = main;
-    unknown38 = GfMenuPosAdapter::create(acc.searchChild("LAY_en_cursor"), unknown020, nullptr);
-    unknown38->setPosAdjustScreen(true);
-    unknown38->setPosOffsMode(1);
-    unknown38->unknown84 = mm::Pnt<s16>(0, -5);
+    m_menuPosAdapter = GfMenuPosAdapter::create(acc.searchChild("LAY_en_cursor"), unknown020, nullptr);
+    m_menuPosAdapter->setPosAdjustScreen(true);
+    m_menuPosAdapter->setPosOffsMode(1);
+    m_menuPosAdapter->unknown84 = mm::Pnt<s16>(0, -5);
     addPosEventCondition(main, "LAY_en_cursor", 0, 0);
     GfMenuObjUtil::createSyncPlugin(acc.searchChild("IMG_en_cursor_arrow"), acc.searchChild("IMG_en_cursor"), 0x20);
     GfMenuObjUtil::createSyncPlugin(acc.searchChild("IMG_en_cursor_btl_arrow"), acc.searchChild("IMG_en_cursor_btl"), 0x20);
@@ -249,13 +250,13 @@ void GfMenuObjTargetCursor::MainListener::reciveEvent(const ui::EventData &event
   case 0xd: {
     u64 param = event.unknown08_u64;
     if (param >> 32 == 0 && unknown0c == 1) {
-      unknown20->unknown40.unknown005();
+      m_menuObjTargetCursor->unknown40.unknown005();
       if (static_cast<int>(param) == 7) {
-        unknown20->unknown40.unknown002(&GfMenuObjTargetCursor::seqEnCursorOutScreen);
-        unknown20->unknown560 = false;
+        m_menuObjTargetCursor->unknown40.unknown002(&GfMenuObjTargetCursor::seqEnCursorOutScreen);
+        m_menuObjTargetCursor->unknown560 = false;
       } else {
-        unknown20->unknown40.unknown002(&GfMenuObjTargetCursor::seqEnCursorInScreen);
-        unknown20->unknown560 = false;
+        m_menuObjTargetCursor->unknown40.unknown002(&GfMenuObjTargetCursor::seqEnCursorInScreen);
+        m_menuObjTargetCursor->unknown560 = false;
       }
     }
     break;
@@ -273,10 +274,10 @@ void GfMenuObjTargetCursor::MainListener::reciveEvent(const ui::EventData &event
     acc.setDispChild(true, "LAY_en_cursor");
     acc.setDispChild(true, "IMG_en_cursor");
     acc.setDispChild(false, "IMG_en_cursor_sub");
-    unknown20->unknown40.unknown005();
-    unknown20->unknown40.unknown002(&GfMenuObjTargetCursor::seqEnCursorOpen);
-    unknown20->unknown560 = false;
-    unknown20->unknown38->setPosAdjustSize(0x20, 0x20);
+    m_menuObjTargetCursor->unknown40.unknown005();
+    m_menuObjTargetCursor->unknown40.unknown002(&GfMenuObjTargetCursor::seqEnCursorOpen);
+    m_menuObjTargetCursor->unknown560 = false;
+    m_menuObjTargetCursor->m_menuPosAdapter->setPosAdjustSize(0x20, 0x20);
     GfMenuObjUtil::playSE(0x1c);
     acc.setDisp(true);
     unknown0c = 1;
@@ -284,19 +285,19 @@ void GfMenuObjTargetCursor::MainListener::reciveEvent(const ui::EventData &event
   }
   case 0x101:
     if (unknown0c == 1) {
-      unknown20->unknown40.unknown005();
-      unknown20->unknown40.unknown002(&GfMenuObjTargetCursor::seqCursorClose);
-      unknown20->unknown560 = false;
+      m_menuObjTargetCursor->unknown40.unknown005();
+      m_menuObjTargetCursor->unknown40.unknown002(&GfMenuObjTargetCursor::seqCursorClose);
+      m_menuObjTargetCursor->unknown560 = false;
       unknown0c = 0;
     }
     break;
   case 0x102: {
     ui::UIObjectAcc sub(acc.unknown10, "IMG_en_cursor_sub");
     if (unknown0c == 1) {
-      if (unknown20->unknown30 == 1) {
-        unknown20->unknown2d0.unknown005();
-        unknown20->unknown2d0.unknown002(&GfMenuObjTargetCursor::seqEnCursorLock);
-        unknown20->unknown560 = false;
+      if (m_menuObjTargetCursor->unknown30 == 1) {
+        m_menuObjTargetCursor->unknown2d0.unknown005();
+        m_menuObjTargetCursor->unknown2d0.unknown002(&GfMenuObjTargetCursor::seqEnCursorLock);
+        m_menuObjTargetCursor->unknown560 = false;
       } else {
         sub.setDisp(false);
       }
@@ -306,13 +307,13 @@ void GfMenuObjTargetCursor::MainListener::reciveEvent(const ui::EventData &event
   case 0x120:
     if (unknown0c == 1) {
       int type = event.unknown08;
-      unknown20->unknown40.unknown005();
+      m_menuObjTargetCursor->unknown40.unknown005();
       if (type == 0) {
-        unknown20->unknown40.unknown002(&GfMenuObjTargetCursor::seqEnCursorInTarget);
-        unknown20->unknown560 = false;
+        m_menuObjTargetCursor->unknown40.unknown002(&GfMenuObjTargetCursor::seqEnCursorInTarget);
+        m_menuObjTargetCursor->unknown560 = false;
       } else {
-        unknown20->unknown40.unknown002(&GfMenuObjTargetCursor::seqEnCursorInBattle);
-        unknown20->unknown560 = false;
+        m_menuObjTargetCursor->unknown40.unknown002(&GfMenuObjTargetCursor::seqEnCursorInBattle);
+        m_menuObjTargetCursor->unknown560 = false;
       }
     }
     break;

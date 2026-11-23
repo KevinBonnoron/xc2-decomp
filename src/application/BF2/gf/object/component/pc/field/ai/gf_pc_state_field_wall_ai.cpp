@@ -15,8 +15,8 @@ namespace gf {
 namespace pc {
 
 void StateFieldWallAiWait::update(WallAiContextField *context, const fw::UpdateInfo &info) {
-  BlackBoardField *blackBoard = context->unknown00;
-  GfComPropertyPc *property = blackBoard->unknown08;
+  BlackBoardField *blackBoard = context->m_blackBoardField;
+  GfComPropertyPc *property = blackBoard->m_comPropertyPc;
   mm::Vec3 preparePosition = StateUtilField::calcWallPreparePosition(*property, blackBoard->unknown60, blackBoard->unknown70);
   if (StateUtilField::isEnableWallAdsorptionStart(*property, blackBoard->unknown60, preparePosition)) {
     reqState(2);
@@ -30,8 +30,8 @@ void StateFieldWallAiWait::update(WallAiContextField *context, const fw::UpdateI
 void StateFieldWallAiPrepare::enter(WallAiContextField *context, ai::State *previous) { setNavi(context); }
 
 void StateFieldWallAiPrepare::setNavi(WallAiContextField *context) {
-  BlackBoardField *blackBoard = context->unknown00;
-  GfComPropertyPc *property = blackBoard->unknown08;
+  BlackBoardField *blackBoard = context->m_blackBoardField;
+  GfComPropertyPc *property = blackBoard->m_comPropertyPc;
   navi::NvmshAcObj *naviObject = blackBoard->unknown10;
   naviObject->setBeginPos(property->unknown160.unknown00);
   mm::Vec3 preparePosition = StateUtilField::calcWallPreparePosition(*property, blackBoard->unknown60, blackBoard->unknown70);
@@ -39,8 +39,8 @@ void StateFieldWallAiPrepare::setNavi(WallAiContextField *context) {
 }
 
 void StateFieldWallAiPrepare::update(WallAiContextField *context, const fw::UpdateInfo &info) {
-  BlackBoardField *blackBoard = context->unknown00;
-  GfComPropertyPc *property = blackBoard->unknown08;
+  BlackBoardField *blackBoard = context->m_blackBoardField;
+  GfComPropertyPc *property = blackBoard->m_comPropertyPc;
   mm::Vec3 preparePosition = StateUtilField::calcWallPreparePosition(*property, blackBoard->unknown60, blackBoard->unknown70);
   if (StateUtilField::isEnableWallAdsorptionStart(*property, blackBoard->unknown60, preparePosition)) {
     reqState(2);
@@ -59,22 +59,22 @@ void StateFieldWallAiPrepare::update(WallAiContextField *context, const fw::Upda
 
 void StateFieldWallAiAdsorption::enter(WallAiContextField *context, ai::State *previous) {
   setNavi(context);
-  context->unknown00->unknown08->unknown310.unknown10_3 = true;
+  context->m_blackBoardField->m_comPropertyPc->m_propertyField.unknown10_3 = true;
 }
 
 void StateFieldWallAiAdsorption::setNavi(WallAiContextField *context) {
-  BlackBoardField *blackBoard = context->unknown00;
-  const mm::Vec3 &position = blackBoard->unknown08->unknown160.unknown00;
+  BlackBoardField *blackBoard = context->m_blackBoardField;
+  const mm::Vec3 &position = blackBoard->m_comPropertyPc->unknown160.unknown00;
   navi::NvmshAcObj *naviObject = blackBoard->unknown10;
   naviObject->setBeginPos(position);
   naviObject->setEndPos(blackBoard->unknown60);
 }
 
-void StateFieldWallAiAdsorption::leave(WallAiContextField *context, ai::State *next) { context->unknown00->unknown08->unknown310.unknown10_3 = false; }
+void StateFieldWallAiAdsorption::leave(WallAiContextField *context, ai::State *next) { context->m_blackBoardField->m_comPropertyPc->m_propertyField.unknown10_3 = false; }
 
 void StateFieldWallAiAdsorption::update(WallAiContextField *context, const fw::UpdateInfo &info) {
-  BlackBoardField *blackBoard = context->unknown00;
-  GfComPropertyPc *property = blackBoard->unknown08;
+  BlackBoardField *blackBoard = context->m_blackBoardField;
+  GfComPropertyPc *property = blackBoard->m_comPropertyPc;
   navi::NvmshAcObj *naviObject = blackBoard->unknown10;
   mm::Vec3 diff(blackBoard->unknown60.x - property->unknown160.unknown00.x, 0.0f, blackBoard->unknown60.z - property->unknown160.unknown00.z);
   AgentUtilField::setFollowInput(sqrtf(diff.x * diff.x + diff.y * diff.y + diff.z * diff.z), naviObject, *property);

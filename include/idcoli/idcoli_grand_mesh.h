@@ -37,34 +37,34 @@ public:
 
   // Inferred helper: stores the material data of a front hit and notifies the vector callback; original name unknown.
   void unknown015(const IDColiCallArg &arg, const IDCmfPoliData *poli) {
-    unknown08->unknown10.unknown30 = arg.unknown30;
-    unknown08->unknownb0 = true;
-    unknown08->unknown98 = unknown08->unknownf0;
-    (this->*unknown70)(unknown08->unknown10, poli);
+    m_iDColiResult->unknown10.unknown30 = arg.unknown30;
+    m_iDColiResult->unknownb0 = true;
+    m_iDColiResult->unknown98 = m_iDColiResult->unknownf0;
+    (this->*unknown70)(m_iDColiResult->unknown10, poli);
   }
 
   // Inferred helper: stores a front hit; original name unknown.
   void unknown016(const IDColiCallArg &arg, const IDCmfPoliData *poli, f32 distance) {
-    unknown08->unknown10.unknown00 = arg.unknown00;
-    unknown08->unknown10.unknown10 = arg.unknown10;
-    unknown08->unknown90 = distance;
+    m_iDColiResult->unknown10.unknown00 = arg.unknown00;
+    m_iDColiResult->unknown10.unknown10 = arg.unknown10;
+    m_iDColiResult->unknown90 = distance;
     unknown015(arg, poli);
   }
 
   // Inferred helper: stores the material data of a front hit and notifies the vector callback; original name unknown.
   void unknown011(const IDColiCallArg &arg, const IDCmfPoliData *poli) {
-    unknown08->unknown10.unknown30 = arg.unknown30;
-    unknown08->unknownb0 = true;
-    unknown08->unknown98 = unknown08->unknownf0;
-    (this->*unknown70)(unknown08->unknown10, poli);
+    m_iDColiResult->unknown10.unknown30 = arg.unknown30;
+    m_iDColiResult->unknownb0 = true;
+    m_iDColiResult->unknown98 = m_iDColiResult->unknownf0;
+    (this->*unknown70)(m_iDColiResult->unknown10, poli);
   }
 
   // Inferred helper: stores the material data of a back hit and notifies the vector callback; original name unknown.
   void unknown012(const IDColiCallArg &arg, const IDCmfPoliData *poli) {
-    unknown08->unknown50.unknown30 = arg.unknown30;
-    unknown08->unknownb1 = true;
-    unknown08->unknowna8 = unknown08->unknownf0;
-    (this->*unknown70)(unknown08->unknown50, poli);
+    m_iDColiResult->unknown50.unknown30 = arg.unknown30;
+    m_iDColiResult->unknownb1 = true;
+    m_iDColiResult->unknowna8 = m_iDColiResult->unknownf0;
+    (this->*unknown70)(m_iDColiResult->unknown50, poli);
   }
 
   // Inferred helper: distance scaled by the matrix of the moved instance; original name unknown.
@@ -73,10 +73,10 @@ public:
   // Inferred helper: stores the position and the normal of a hit of a moved instance in world space as the front hit; original name unknown.
   void unknown091(const IDColiCallArg &arg);
 
-  wrkIDCmfWork *unknown00;                                                         // Inferred role: work; original member name unknown.
-  IDColiResult *unknown08;                                                         // Inferred role: result; original member name unknown.
-  const IDColiInput *unknown10;                                                    // Inferred role: input; original member name unknown.
-  const IDCmfPosData *unknown18;                                                   // Inferred role: position data; original member name unknown.
+  wrkIDCmfWork *m_wrkIDCmfWork;                                                    // Inferred role: work; original member name unknown.
+  IDColiResult *m_iDColiResult;                                                    // Inferred role: result; original member name unknown.
+  const IDColiInput *m_iDColiInput;                                                // Inferred role: input; original member name unknown.
+  const IDCmfPosData *m_iDCmfPosData;                                              // Inferred role: position data; original member name unknown.
   bool (IDColiGrandMesh::*unknown20)(u32);                                         // Inferred role: mesh test; original member name unknown.
   void (IDColiGrandMesh::*unknown30)(IDColiCallArg &, const IDCmfPoliData *, f32); // Inferred role: stock; original member name unknown.
   void (IDColiGrandMesh::*unknown40)(IDColiCallArg &, const IDCmfPoliData *, f32); // Inferred role: stock for a moved instance; original member name unknown.
@@ -86,8 +86,8 @@ public:
   void (IDColiGrandMesh::*unknown80)(IDColiCallArg &, const IDCmfPoliData *);      // Inferred role: vector for a moved instance; original member name unknown.
 };
 
-static_assert(offsetof(IDColiGrandMesh, unknown10) == 0x10, "");
-static_assert(offsetof(IDColiGrandMesh, unknown18) == 0x18, "");
+static_assert(offsetof(IDColiGrandMesh, m_iDColiInput) == 0x10, "");
+static_assert(offsetof(IDColiGrandMesh, m_iDCmfPosData) == 0x18, "");
 static_assert(offsetof(IDColiGrandMesh, unknown20) == 0x20, "");
 static_assert(offsetof(IDColiGrandMesh, unknown30) == 0x30, "");
 static_assert(offsetof(IDColiGrandMesh, unknown40) == 0x40, "");

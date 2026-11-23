@@ -51,7 +51,7 @@ bool (DrCalcClipObj::*DrCalcClipObj::s_pColiCheck[5])(const u8 *data, const mm::
 void DrCalcClipObj::update(DrCalcViewWork *viewWork, u32 *flags) {
   unknown60 = flags;
   unknown3c &= ~0xc;
-  seachTree(unknown20, viewWork->unknown400);
+  seachTree(m_mdsClipListTreeData, viewWork->unknown400);
 }
 
 DrCalcClipObj::DrCalcClipObj(const void *data, DrMan *man)
@@ -63,7 +63,7 @@ void DrCalcClipObj::setupClip(const u8 *data, DrMan *man) {
   const unknown008 *header = reinterpret_cast<const unknown008 *>(data);
   unknown10 = header;
   unknown18 = reinterpret_cast<const unknown005 *>(data + header->unknown0c);
-  unknown20 = reinterpret_cast<const MdsClipListTreeData *>(data + header->unknown3c);
+  m_mdsClipListTreeData = reinterpret_cast<const MdsClipListTreeData *>(data + header->unknown3c);
   unknown38 = header->unknown40;
   unknown30 = reinterpret_cast<const unknown007 *>(data + header->unknown48);
   if (unknown58 != nullptr) {
@@ -98,7 +98,7 @@ void DrCalcClipObj::seachTree(const MdsClipListTreeData *node, const mm::Vec3 &p
   if (count != 0) {
     const u16 *children = reinterpret_cast<const u16 *>(reinterpret_cast<const u8 *>(unknown10) + node->unknown18);
     for (u32 i = 0; i < count; i++) {
-      seachTree(unknown20 + children[i], position);
+      seachTree(m_mdsClipListTreeData + children[i], position);
     }
   }
   count = node->unknown22;
@@ -137,7 +137,7 @@ void DrCalcClipObj::seachCheckTree(const MdsClipListTreeData *node, const mm::Ve
   if (count != 0) {
     const u16 *children = reinterpret_cast<const u16 *>(reinterpret_cast<const u8 *>(unknown10) + node->unknown18);
     for (u32 i = 0; i < count; i++) {
-      seachCheckTree(unknown20 + children[i], position, radius);
+      seachCheckTree(m_mdsClipListTreeData + children[i], position, radius);
     }
   }
   count = node->unknown22;
@@ -188,7 +188,7 @@ void DrCalcClipObj::seachOffTree(const MdsClipListTreeData *node, const mm::Vec3
   if (count != 0) {
     const u16 *children = reinterpret_cast<const u16 *>(reinterpret_cast<const u8 *>(unknown10) + node->unknown18);
     for (u32 i = 0; i < count; i++) {
-      seachOffTree(unknown20 + children[i], position, radius);
+      seachOffTree(m_mdsClipListTreeData + children[i], position, radius);
     }
   }
   count = node->unknown22;

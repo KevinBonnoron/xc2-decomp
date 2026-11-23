@@ -43,7 +43,7 @@ public:
   void leave(const LeaveInfo &info) override;
   const mm::mtl::RTTI *getRTTI() const override;
 
-  CreateInfo unknown10;      // Inferred role: create info; original member name unknown.
+  CreateInfo m_createInfo;   // Inferred role: create info; original member name unknown.
   const char *unknown50;     // Inferred role: name; original member name unknown.
   fw::ColiObject *unknown58; // Inferred role: collision object; original member name unknown.
   bool unknown60;            // Role and original member name unknown.
@@ -56,7 +56,7 @@ static_assert(offsetof(GmkCollision::CreateInfo, unknown20) == 0x20, "");
 static_assert(offsetof(GmkCollision::CreateInfo, unknown30) == 0x30, "");
 static_assert(offsetof(GmkCollision::CreateInfo, unknown34) == 0x34, "");
 static_assert(sizeof(GmkCollision::CreateInfo) == 0x40, "");
-static_assert(offsetof(GmkCollision, unknown10) == 0x10, "");
+static_assert(offsetof(GmkCollision, m_createInfo) == 0x10, "");
 static_assert(offsetof(GmkCollision, unknown50) == 0x50, "");
 static_assert(offsetof(GmkCollision, unknown58) == 0x58, "");
 static_assert(offsetof(GmkCollision, unknown60) == 0x60, "");

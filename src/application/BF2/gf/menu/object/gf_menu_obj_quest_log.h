@@ -21,38 +21,38 @@ class GfMenuObjQuestLog : public GfMenuObject {
 public:
   class TitleListener : public ui::UIObjectListener {
   public:
-    TitleListener(GfMenuObjQuestLog *owner) : _0c(), unknown20(owner) {}
+    TitleListener(GfMenuObjQuestLog *owner) : _0c(), m_menuObjQuestLog(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjQuestLog *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjQuestLog *m_menuObjQuestLog; // Inferred role: owner; original member name unknown.
   };
 
   class LogListener : public ui::UIObjectListener {
   public:
-    LogListener(GfMenuObjQuestLog *owner) : _0c(), unknown20(owner) {}
+    LogListener(GfMenuObjQuestLog *owner) : _0c(), m_menuObjQuestLog(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjQuestLog *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjQuestLog *m_menuObjQuestLog; // Inferred role: owner; original member name unknown.
   };
 
   class OrderListener : public ui::UIObjectListener {
   public:
-    OrderListener(GfMenuObjQuestLog *owner) : _0c(), unknown20(owner) {}
+    OrderListener(GfMenuObjQuestLog *owner) : _0c(), m_menuObjQuestLog(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjQuestLog *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjQuestLog *m_menuObjQuestLog; // Inferred role: owner; original member name unknown.
   };
 
   class CompleteListener : public ui::UIObjectListener {
   public:
-    CompleteListener(GfMenuObjQuestLog *owner) : _0c(), unknown20(owner) {}
+    CompleteListener(GfMenuObjQuestLog *owner) : _0c(), m_menuObjQuestLog(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjQuestLog *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjQuestLog *m_menuObjQuestLog; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjQuestLog(u32 handle);
@@ -139,9 +139,9 @@ public:
   int unknown814;  // Inferred role: control id of the log info; original member name unknown.
   bool unknown818; // Inferred role: order activation request flag; original member name unknown.
   u8 _819[0x820 - 0x819];
-  GfMenuCallContext *unknown820; // Inferred role: call context of the reward; original member name unknown.
-  u32 unknown828;                // Inferred role: task count of the quest; original member name unknown.
-  u32 unknown82c;                // Role and original member name unknown, cleared by the constructor.
+  GfMenuCallContext *m_menuCallContext; // Inferred role: call context of the reward; original member name unknown.
+  u32 unknown828;                       // Inferred role: task count of the quest; original member name unknown.
+  u32 unknown82c;                       // Role and original member name unknown, cleared by the constructor.
 };
 
 static_assert(offsetof(GfMenuObjQuestLog, unknown28) == 0x28, "");
@@ -154,17 +154,17 @@ static_assert(offsetof(GfMenuObjQuestLog, unknown58) == 0x58, "");
 static_assert(offsetof(GfMenuObjQuestLog, unknown59) == 0x59, "");
 static_assert(offsetof(GfMenuObjQuestLog, unknown5b) == 0x5b, "");
 static_assert(offsetof(GfMenuObjQuestLog, unknown60) == 0x60, "");
-static_assert(offsetof(GfMenuObjQuestLog::TitleListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjQuestLog::LogListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjQuestLog::OrderListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjQuestLog::CompleteListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjQuestLog::TitleListener, m_menuObjQuestLog) == 0x20, "");
+static_assert(offsetof(GfMenuObjQuestLog::LogListener, m_menuObjQuestLog) == 0x20, "");
+static_assert(offsetof(GfMenuObjQuestLog::OrderListener, m_menuObjQuestLog) == 0x20, "");
+static_assert(offsetof(GfMenuObjQuestLog::CompleteListener, m_menuObjQuestLog) == 0x20, "");
 static_assert(offsetof(GfMenuObjQuestLog, unknown2f0) == 0x2f0, "");
 static_assert(offsetof(GfMenuObjQuestLog, unknown580) == 0x580, "");
 static_assert(offsetof(GfMenuObjQuestLog, unknown580.unknown278) == 0x7f8, "");
 static_assert(offsetof(GfMenuObjQuestLog, unknown810) == 0x810, "");
 static_assert(offsetof(GfMenuObjQuestLog, unknown814) == 0x814, "");
 static_assert(offsetof(GfMenuObjQuestLog, unknown818) == 0x818, "");
-static_assert(offsetof(GfMenuObjQuestLog, unknown820) == 0x820, "");
+static_assert(offsetof(GfMenuObjQuestLog, m_menuCallContext) == 0x820, "");
 static_assert(offsetof(GfMenuObjQuestLog, unknown828) == 0x828, "");
 static_assert(offsetof(GfMenuObjQuestLog, unknown82c) == 0x82c, "");
 static_assert(sizeof(GfMenuObjQuestLog) == 0x830, "");

@@ -34,20 +34,20 @@ class GfGameObjEnemy;
 
 // Name from the game symbol mm::mtl::FixedList<gf::ObjMsg, 256>::erase, called by GfGameObj::update and GfGameObj::removeGameObj.
 struct ObjMsg {
-  GF_OBJ_HANDLE *unknown00; // Inferred role: object handle; original member name unknown.
-  u32 unknown08;            // Inferred role: attribute; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: object handle; original member name unknown.
+  u32 unknown08;                  // Inferred role: attribute; original member name unknown.
 };
 
 class GfGameObj : public mm::mtl::PtrSingleton<GfGameObj>, public IGfObjListener {
 public:
   struct INOUT {
-    GF_OBJ_HANDLE *unknown00; // Inferred role: object handle; original member name unknown.
-    f32 unknown08;            // Inferred role: fade time elapsed; original member name unknown.
-    f32 unknown0c;            // Inferred role: fade time; original member name unknown.
-    f32 unknown10;            // Inferred role: alpha of the object when the fade started; original member name unknown.
-    bool unknown14;           // Role and original member name unknown.
-    bool unknown15;           // Inferred role: entering the game; original member name unknown.
-    bool unknown16;           // Inferred role: effect fade enabled; original member name unknown.
+    GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: object handle; original member name unknown.
+    f32 unknown08;                  // Inferred role: fade time elapsed; original member name unknown.
+    f32 unknown0c;                  // Inferred role: fade time; original member name unknown.
+    f32 unknown10;                  // Inferred role: alpha of the object when the fade started; original member name unknown.
+    bool unknown14;                 // Role and original member name unknown.
+    bool unknown15;                 // Inferred role: entering the game; original member name unknown.
+    bool unknown16;                 // Inferred role: effect fade enabled; original member name unknown.
     u8 _17[0x18 - 0x17];
   };
 
@@ -78,7 +78,8 @@ public:
   bool isEffectFadeEnd(const INOUT &inout, const GfObjAcc &acc) const;
   bool fadeinGameObj(INOUT &inout, GfObjAcc &acc, const fw::UpdateInfo &info);
   void removeGameObjCommon(GfObjAcc &acc);
-  void addGameObj(GF_OBJ_HANDLE *handle);
+  bool addGameObj(GF_OBJ_HANDLE *handle);
+  void removeGameObj(GF_OBJ_HANDLE *handle);
   bool isBattle(const mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> &list) const;
   void calcCameraFade(const mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> &list, const mm::Vec3 &cameraPosition);
   void enableGameObj(GfObjAcc &acc, bool isEnable);
@@ -110,27 +111,27 @@ public:
   static void enterStayObjectWithVolumeFade(GF_MOUNT_HANDLE *mountHandle);
   static void enterStayObjectMountWithVolumeFade(GF_OBJ_HANDLE *handle, GFATTACH attach);
 
-  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknown10;      // Inferred role: object list; original member name unknown.
-  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknown4830;    // Inferred role: object list; original member name unknown.
-  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknown9050;    // Inferred role: object list; original member name unknown.
-  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknownd870;    // Inferred role: enemy blades; original member name unknown.
-  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknown12090;   // Inferred role: object list; original member name unknown.
-  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknown168b0;   // Inferred role: object list; original member name unknown.
-  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknown1b0d0;   // Inferred role: object list; original member name unknown.
-  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknown1f8f0;   // Inferred role: object list; original member name unknown.
-  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknown24110;   // Inferred role: object list; original member name unknown.
-  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknown28930;   // Inferred role: object list; original member name unknown.
-  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknown2d150;   // Inferred role: object list; original member name unknown.
-  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknown31970;   // Inferred role: object list; original member name unknown.
-  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknown36190;   // Inferred role: object list; original member name unknown.
-  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknown3a9b0;   // Inferred role: object list; original member name unknown.
-  mm::mtl::FixedList<INOUT, GAME_UNKNOWN_1024> unknown3f1d0;             // Inferred role: objects entering the game; original member name unknown.
-  mm::mtl::FixedList<INOUT, GAME_UNKNOWN_1024> unknown47a00;             // Inferred role: objects leaving the game; original member name unknown.
-  mm::mtl::FixedVector<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknown50230; // Inferred role: entered objects of the frame; original member name unknown.
-  mm::mtl::FixedVector<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknown52238; // Inferred role: left objects of the frame; original member name unknown.
-  mm::mtl::FixedList<ObjMsg, 256> unknown54240;                          // Inferred role: objects destroyed with an attribute; original member name unknown.
-  GfGameObjEnemy *unknown55c68;                                          // Inferred role: enemy manager; original member name unknown.
-  bool unknown55c70;                                                     // Inferred role: initialized; original member name unknown.
+  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknown10;        // Inferred role: object list; original member name unknown.
+  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknown4830;      // Inferred role: object list; original member name unknown.
+  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknown9050;      // Inferred role: object list; original member name unknown.
+  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> m_listEnemyBlade; // Inferred role: enemy blades; named after the game accessor gf::GfGameObj::getListEnemyBlade.
+  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknown12090;     // Inferred role: object list; original member name unknown.
+  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknown168b0;     // Inferred role: object list; original member name unknown.
+  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknown1b0d0;     // Inferred role: object list; original member name unknown.
+  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknown1f8f0;     // Inferred role: object list; original member name unknown.
+  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknown24110;     // Inferred role: object list; original member name unknown.
+  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknown28930;     // Inferred role: object list; original member name unknown.
+  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknown2d150;     // Inferred role: object list; original member name unknown.
+  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknown31970;     // Inferred role: object list; original member name unknown.
+  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknown36190;     // Inferred role: object list; original member name unknown.
+  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknown3a9b0;     // Inferred role: object list; original member name unknown.
+  mm::mtl::FixedList<INOUT, GAME_UNKNOWN_1024> unknown3f1d0;               // Inferred role: objects entering the game; original member name unknown.
+  mm::mtl::FixedList<INOUT, GAME_UNKNOWN_1024> unknown47a00;               // Inferred role: objects leaving the game; original member name unknown.
+  mm::mtl::FixedVector<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknown50230;   // Inferred role: entered objects of the frame; original member name unknown.
+  mm::mtl::FixedVector<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024> unknown52238;   // Inferred role: left objects of the frame; original member name unknown.
+  mm::mtl::FixedList<ObjMsg, 256> unknown54240;                            // Inferred role: objects destroyed with an attribute; original member name unknown.
+  GfGameObjEnemy *m_gameObjEnemy;                                          // Inferred role: enemy manager; original member name unknown.
+  bool unknown55c70;                                                       // Inferred role: initialized; original member name unknown.
 };
 
 static_assert(sizeof(mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_UNKNOWN_1024>) == 0x4820, "");
@@ -149,13 +150,13 @@ static_assert(offsetof(GfGameObj, unknown31970) == 0x31970, "");
 static_assert(offsetof(GfGameObj, unknown36190) == 0x36190, "");
 static_assert(offsetof(GfGameObj, unknown3a9b0) == 0x3a9b0, "");
 static_assert(offsetof(GfGameObj, unknown47a00) == 0x47a00, "");
-static_assert(offsetof(GfGameObj, unknownd870) == 0xd870, "");
+static_assert(offsetof(GfGameObj, m_listEnemyBlade) == 0xd870, "");
 static_assert(sizeof(GfGameObj::INOUT) == 0x18, "");
 static_assert(offsetof(GfGameObj, unknown3f1d0) == 0x3f1d0, "");
 static_assert(offsetof(GfGameObj, unknown50230) == 0x50230, "");
 static_assert(offsetof(GfGameObj, unknown52238) == 0x52238, "");
 static_assert(offsetof(GfGameObj, unknown54240) == 0x54240, "");
-static_assert(offsetof(GfGameObj, unknown55c68) == 0x55c68, "");
+static_assert(offsetof(GfGameObj, m_gameObjEnemy) == 0x55c68, "");
 static_assert(offsetof(GfGameObj, unknown55c70) == 0x55c70, "");
 
 } // namespace gf

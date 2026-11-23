@@ -44,7 +44,7 @@ public:
   static void setDispOfParty(bool isDisp, bool isExceptMover);
   void seqWaitToEnd(f32 deltaTime);
 
-  CreateInfo unknown10;                         // Inferred role: create info; original member name unknown.
+  CreateInfo m_createInfo;                      // Inferred role: create info; original member name unknown.
   mm::mtl::IntrusivePtr<fw::Camera> unknown140; // Inferred role: gimmick camera; original member name unknown.
   void (GmkCamera::*unknown148)(f32);           // Inferred role: sequence; original member name unknown.
 };
@@ -54,7 +54,7 @@ static_assert(offsetof(GmkCamera::CreateInfo, unknown104) == 0x104, "");
 static_assert(offsetof(GmkCamera::CreateInfo, unknown107) == 0x107, "");
 static_assert(offsetof(GmkCamera::CreateInfo, unknown110) == 0x110, "");
 static_assert(offsetof(GmkCamera::CreateInfo, unknown120) == 0x120, "");
-static_assert(offsetof(GmkCamera, unknown10) == 0x10, "");
+static_assert(offsetof(GmkCamera, m_createInfo) == 0x10, "");
 static_assert(offsetof(GmkCamera, unknown140) == 0x140, "");
 static_assert(offsetof(GmkCamera, unknown148) == 0x148, "");
 static_assert(sizeof(GmkCamera) == 0x160, "");

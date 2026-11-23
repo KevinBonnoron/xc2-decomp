@@ -10,6 +10,7 @@ class CGLibTextureBuffer;
 namespace ml {
 
 class DrMan;
+class DrShdMan;
 class DrPixlMan;
 class DrPixlRenderTarget;
 
@@ -38,18 +39,19 @@ public:
   DrPixlRenderTarget *getTemporalOutputShadowMap() const;
   DrPixlRenderTarget *getTemporalHistoryShadowMap();
 
-  u8 _00[0x08 - 0x00];
-  DrMan *unknown08; // Inferred role: driver manager; original member name unknown.
-  u8 _10[0x18 - 0x10];
-  DrPixlMan *unknown18; // Inferred role: pixl man; original member name unknown.
+  void *unknown00;        // Inferred role: cleared by the constructor; original member name unknown.
+  DrMan *m_drMan;         // Inferred role: driver manager; original member name unknown.
+  DrShdMan *m_drShdMan;   // Inferred role: shd man, copied from the driver manager by the constructor; original member name unknown.
+  DrPixlMan *m_drPixlMan; // Inferred role: pixl man; original member name unknown.
   DrPixlRenderTarget *m_temporalInputShadowMap;
   DrPixlRenderTarget *unknown28[2]; // Inferred role: temporal shadow buffers; original member name unknown.
   s16 unknown38;                    // Inferred role: temporal shadow buffer width; original member name unknown.
   s16 unknown3a;                    // Inferred role: temporal shadow buffer height; original member name unknown.
 };
 
-static_assert(offsetof(DrPixlDeferred, unknown08) == 0x08, "");
-static_assert(offsetof(DrPixlDeferred, unknown18) == 0x18, "");
+static_assert(offsetof(DrPixlDeferred, m_drMan) == 0x08, "");
+static_assert(offsetof(DrPixlDeferred, m_drShdMan) == 0x10, "");
+static_assert(offsetof(DrPixlDeferred, m_drPixlMan) == 0x18, "");
 static_assert(offsetof(DrPixlDeferred, m_temporalInputShadowMap) == 0x20, "");
 static_assert(offsetof(DrPixlDeferred, unknown28) == 0x28, "");
 static_assert(offsetof(DrPixlDeferred, unknown38) == 0x38, "");

@@ -31,10 +31,10 @@ namespace {
 // Inferred role: updater and UI plugin setup for each adapter type; original type name unknown.
 struct unknown007 {
   bool (GfMenuGfObjAdapter::*unknown00)(GF_OBJ_HANDLE *handle); // Inferred role: updater; original member name unknown.
-  GfMenuAdapter::PluginSetup unknown10;                         // Inferred role: plugin setup; original member name unknown.
+  GfMenuAdapter::PluginSetup m_pluginSetup;                     // Inferred role: plugin setup; original member name unknown.
 };
 
-static_assert(offsetof(unknown007, unknown10) == 0x10, "");
+static_assert(offsetof(unknown007, m_pluginSetup) == 0x10, "");
 static_assert(sizeof(unknown007) == 0x20, "");
 
 // Inferred role: adapter type table; original name unknown.
@@ -113,18 +113,18 @@ static inline bool unknown006(GfObjPropertyEnemy *enemy, u32 index, u32 &attribu
 }
 
 GfMenuGfObjAdapter::GfMenuGfObjAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways, bool isUpdateAfter)
-    : GfMenuAdapter(plugin, isUpdateAfter, isUpdateAlways), unknown48(unknown020), unknown70(0), unknown78(nullptr) {}
+    : GfMenuAdapter(plugin, isUpdateAfter, isUpdateAlways), m_GF_OBJ_HANDLE(unknown020), unknown70(0), m_iConverter(nullptr) {}
 
 GfMenuGfObjAdapter::~GfMenuGfObjAdapter() {
-  if (unknown78 != nullptr) {
-    delete unknown78;
-    unknown78 = nullptr;
+  if (m_iConverter != nullptr) {
+    delete m_iConverter;
+    m_iConverter = nullptr;
   }
 }
 
 GfMenuGfObjAdapter *GfMenuGfObjAdapter::create(u32 handle, u32 type, GF_OBJ_HANDLE *objHandle, bool isUpdateAlways) {
   unknown007 &info = unknown008[type];
-  ui::UIObjectPlugin *plugin = createPlugin(handle, info.unknown10);
+  ui::UIObjectPlugin *plugin = createPlugin(handle, info.m_pluginSetup);
   if (plugin != nullptr) {
     bool isUpdateAfter = !(type == 2 || type == 3);
     // __LINE__ must be 261 as in the original source: it is the line argument of operator new.
@@ -132,7 +132,7 @@ GfMenuGfObjAdapter *GfMenuGfObjAdapter::create(u32 handle, u32 type, GF_OBJ_HAND
     GfMenuGfObjAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuGfObjAdapter(plugin, isUpdateAlways, isUpdateAfter);
     if (adapter != nullptr) {
       adapter->unknown50.bind(adapter, info.unknown00);
-      adapter->unknown48 = objHandle;
+      adapter->m_GF_OBJ_HANDLE = objHandle;
       plugin->release();
       return adapter;
     }
@@ -714,7 +714,7 @@ bool GfMenuGfObjAdapter::update_BL_DispCurrent(GF_OBJ_HANDLE *handle) {
 GfMenuGfObjAdapter *GfMenuGfObjAdapter::createFromCoverter(u32 handle, u32 type, IConverter *converter, bool isUpdateAlways) {
   GfMenuGfObjAdapter *adapter = create(handle, type, converter->getGfObjHandle(), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown78 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -748,33 +748,33 @@ GfMenuGfObjAdapter *GfMenuGfObjAdapter::createFromReference(u32 handle, u32 type
 }
 
 void GfMenuGfObjAdapter::update(const fw::UpdateInfo &info) {
-  if (unknown78 != nullptr) {
-    changeGfObj(unknown78->getGfObjHandle());
+  if (m_iConverter != nullptr) {
+    changeGfObj(m_iConverter->getGfObjHandle());
   }
 
   if ((unknown20 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) != 0 && unknown50.isValid()) {
-    setDisp(unknown48 != unknown020 ? unknown50(unknown48) : false);
+    setDisp(m_GF_OBJ_HANDLE != unknown020 ? unknown50(m_GF_OBJ_HANDLE) : false);
     unknown20 &= ~FLAG_UNKNOWN_0;
   }
 }
 
 void GfMenuGfObjAdapter::changeGfObj(GF_OBJ_HANDLE *handle) {
-  if (unknown48 != handle) {
-    unknown48 = handle;
+  if (m_GF_OBJ_HANDLE != handle) {
+    m_GF_OBJ_HANDLE = handle;
     setChange();
   }
 }
 
 void GfMenuGfObjAdapter::changePartyDriver(u8 partyId) {
-  if (unknown78 != nullptr && unknown78->fromPartyDriver() != nullptr) {
-    PartyDriverConverter *converter = unknown78->fromPartyDriver();
+  if (m_iConverter != nullptr && m_iConverter->fromPartyDriver() != nullptr) {
+    PartyDriverConverter *converter = m_iConverter->fromPartyDriver();
     converter->unknown08 = partyId;
   }
 }
 
 void GfMenuGfObjAdapter::changePartyBlade(u8 partyId, u8 slot) {
-  if (unknown78 != nullptr && unknown78->fromPartyBlade() != nullptr) {
-    PartyBladeConverter *converter = unknown78->fromPartyBlade();
+  if (m_iConverter != nullptr && m_iConverter->fromPartyBlade() != nullptr) {
+    PartyBladeConverter *converter = m_iConverter->fromPartyBlade();
     converter->unknown08 = partyId;
     converter->unknown0c = slot;
   }

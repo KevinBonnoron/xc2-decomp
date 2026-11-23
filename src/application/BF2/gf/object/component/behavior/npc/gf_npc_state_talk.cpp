@@ -50,8 +50,8 @@ void StateTalk::seqWaitTalkEnd(GfComBehaviorNpc &behavior, const fw::UpdateInfo 
     return;
   }
 
-  if (behavior.unknown98.isIconTalkBonus()) {
-    behavior.unknown98.setTalkBonusFlag();
+  if (behavior.m_bdatInfo.isIconTalkBonus()) {
+    behavior.m_bdatInfo.setTalkBonusFlag();
     u32 zone = GfGameManager::getMapZoneID();
     int row = unknown002[GfDataDevelop::getLevel(zone)];
     u32 point = Bdat::getValCheck(GfDataBdat::getFP(BDAT_FLD_WILDCARD_DATA), 1, row, gmk::BDAT_TYPE_UNKNOWN_2).valueU16;

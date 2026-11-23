@@ -32,25 +32,25 @@ void DrPixlPostObjUnbranchToDepth::update() {}
 
 void DrPixlPostObjUnbranchToDepth::render() {
   renderFull();
-  if (unknown00->unknown1e10) {
+  if (m_drMan->unknown1e10) {
     renderQuater();
   }
 }
 
 void DrPixlPostObjUnbranchToDepth::renderFull() {
-  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
   DrShdDataObj *shader = shdList->getPostShdObj(0x3e);
   shader->setupShader(0u);
-  unknown00->unknown78->unknown7f0->unknown1b8->setRenderTarget();
-  DrAPCache *apCache = unknown00->unknown5c0;
-  DrPixlRenderTarget *etc = unknown00->unknown78->getPixlObj(1);
-  DrPixlRenderTarget *color = unknown00->unknown78->getPixlObj(0);
+  m_drMan->m_drPixlMan->unknown7f0->unknown1b8->setRenderTarget();
+  DrAPCache *apCache = m_drMan->m_drAPCache;
+  DrPixlRenderTarget *etc = m_drMan->m_drPixlMan->getPixlObj(1);
+  DrPixlRenderTarget *color = m_drMan->m_drPixlMan->getPixlObj(0);
   int etcLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("gTEtc");
   int stencilLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("gTStencil");
   int colorLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("gTCol");
   apCache->setTexture(*etc->unknown70, etcLocation);
   apCache->setTexture(*color->unknown70, colorLocation);
-  apCache->setTexture(*unknown00->unknown78->getDepthObj()->unknown130, stencilLocation);
+  apCache->setTexture(*m_drMan->m_drPixlMan->getDepthObj()->unknown130, stencilLocation);
   DrAPGxType::setupDepthContl(true, true, 7);
   shdList->bindTriangle();
   grlib::CGLibColorCtl::setColorBufferOff();
@@ -59,13 +59,13 @@ void DrPixlPostObjUnbranchToDepth::renderFull() {
 }
 
 void DrPixlPostObjUnbranchToDepth::renderQuater() {
-  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
   DrShdDataObj *shader = shdList->getPostShdObj(0x45);
   shader->setupShader(0u);
-  unknown00->unknown78->unknown7f0->unknown1c0->setRenderTarget();
-  DrAPCache *apCache = unknown00->unknown5c0;
-  DrPixlRenderTarget *etc = unknown00->unknown78->getPixlObj(1);
-  DrPixlRenderTarget *color = unknown00->unknown78->getPixlObj(0);
+  m_drMan->m_drPixlMan->unknown7f0->unknown1c0->setRenderTarget();
+  DrAPCache *apCache = m_drMan->m_drAPCache;
+  DrPixlRenderTarget *etc = m_drMan->m_drPixlMan->getPixlObj(1);
+  DrPixlRenderTarget *color = m_drMan->m_drPixlMan->getPixlObj(0);
   int etcLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("gTEtc");
   int stencilLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("gTStencil");
   int colorLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("gTCol");
@@ -73,13 +73,13 @@ void DrPixlPostObjUnbranchToDepth::renderQuater() {
   apCache->beginTexSampling(2, 0);
   apCache->setTexture(*etc->unknown70, etcLocation);
   apCache->setTexture(*color->unknown70, colorLocation);
-  apCache->setTexture(*unknown00->unknown78->getDepthObj()->unknown130, stencilLocation);
-  apCache->setTexture(*unknown00->unknown78->unknown7f0->unknown180->getDownDepth()->unknown70, downDepthLocation);
+  apCache->setTexture(*m_drMan->m_drPixlMan->getDepthObj()->unknown130, stencilLocation);
+  apCache->setTexture(*m_drMan->m_drPixlMan->unknown7f0->m_drPixlPostMan->getDownDepth()->unknown70, downDepthLocation);
   grlib::CGLibUniformEtcUtility uniform(shader);
   uniform.setUseUniformBlock("U_POST");
   u32 scaleOffset = uniform.unknown001("gScal");
   u32 paramOffset = uniform.unknown001("gParam");
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   mm::Vec4 value;
   value.x = 1.0f;
   value.y = 1.0f;

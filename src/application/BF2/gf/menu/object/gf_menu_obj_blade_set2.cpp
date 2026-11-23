@@ -51,8 +51,8 @@ static inline void unknown003(u32 handle, u16 type, u32 param0, u32 param1) {
 }
 
 GfMenuObjBladeSet2::GfMenuObjBladeSet2(u32 handle)
-    : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr), unknown48(nullptr), unknown50(nullptr), unknown58(0), unknown60(nullptr), unknown68(0),
-      unknown78(false), unknown80(nullptr), unknown88(false), unknown8c(0), unknown90(0), unknown94(0), unknown98(0), unknowna0(this), unknown338(this) {}
+    : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr), m_menuDriverList(nullptr), unknown50(nullptr), unknown58(0), unknown60(nullptr),
+      unknown68(0), unknown78(false), unknown80(nullptr), unknown88(false), unknown8c(0), unknown90(0), unknown94(0), unknown98(0), unknowna0(this), unknown338(this) {}
 
 GfMenuObjBladeSet2::~GfMenuObjBladeSet2() {
   mm::mtl::safeRelease(unknown80);
@@ -60,7 +60,7 @@ GfMenuObjBladeSet2::~GfMenuObjBladeSet2() {
   mm::mtl::safeRelease(unknown30);
   mm::mtl::safeRelease(unknown38);
   mm::mtl::safeRelease(unknown40);
-  mm::mtl::safeRelease(unknown48);
+  mm::mtl::safeRelease(m_menuDriverList);
   mm::mtl::safeRelease(unknown50);
   mm::mtl::safeRelease(unknown60);
 }
@@ -97,7 +97,7 @@ void GfMenuObjBladeSet2::initialize() {
   }
   unknown28 = GfMenuBladeList::create();
   unknown38 = GfMenuBladeList::create();
-  unknown48 = GfMenuDriverList::create();
+  m_menuDriverList = GfMenuDriverList::create();
   unknown60 = GfMenuCallContext::create();
   unknown80 = GfMenuCallContext::create();
   unknown98 = 0;
@@ -163,7 +163,7 @@ void GfMenuObjBladeSet2::MainListener::reciveEvent(const ui::EventData &event, u
     if (event.unknown08 == 2) {
       acc.setDisp(false);
       acc.setTerm();
-      switch (unknown20->unknown98) {
+      switch (m_menuObjBladeSet2->unknown98) {
       case 1:
         GfMenuObjMainMenu2::closeCharChange();
         break;
@@ -174,7 +174,7 @@ void GfMenuObjBladeSet2::MainListener::reciveEvent(const ui::EventData &event, u
         GfMenuObject::closeFSLayer(acc.unknown10, true, true);
         return;
       }
-      GfMenuObject::returnFSSubLayer(unknown20);
+      GfMenuObject::returnFSSubLayer(m_menuObjBladeSet2);
     }
     break;
   case GfMenuTypes::unknown003_33:
@@ -401,7 +401,7 @@ void GfMenuObjBladeSet2::createDriverList(u32, GfMenuDriverList *list) {
   GfMenuDriverList::PartySetup setup;
   setup.unknown18 = false;
   setup.unknown14 = GfPartySelect::LIST_TYPE_UNKNOWN_0;
-  setup.unknown00.unknown08 = 5;
+  setup.m_setupParam.unknown08 = 5;
   list->setupFromParty(setup);
 }
 
@@ -422,7 +422,7 @@ void GfMenuObjBladeSet2::refreshBladeSlot(GfMenuBladeList *list) {
   setup.unknown1e = false;
   setup.unknown14 = 1;
   setup.unknown18 = driver;
-  setup.unknown00.unknown08 = GfMenuObjUtil::getBladeSlotMax();
+  setup.m_setupParam.unknown08 = GfMenuObjUtil::getBladeSlotMax();
   list->setupFromDriver(setup);
   while (list->getSize() < 3) {
     MenuBladeInfo info = {};
@@ -437,8 +437,8 @@ void GfMenuObjBladeSet2::createBladeList(u32 driver, GfMenuBladeList *list) {
   setup.unknown14 = 0;
   setup.unknown18 = driver;
   setup.unknown1d = true;
-  setup.unknown00.unknown08 = 3;
-  setup.unknown00.unknown0c = 5;
+  setup.m_setupParam.unknown08 = 3;
+  setup.m_setupParam.unknown0c = 5;
   list->setupFromDriver(setup);
   u32 sortId = GfMenuObjSort::getSortID(1, unknown90);
   if (sortId == 4 || sortId == 5) {
@@ -469,7 +469,7 @@ void GfMenuObjBladeSet2::refreshBladeList() {
   }
 }
 
-bool GfMenuObjBladeSet2::seqWaitCommand() { return !GfReqSmallCom::get()->isValid(unknown330); }
+bool GfMenuObjBladeSet2::seqWaitCommand() { return !GfReqSmallCom::get()->isValid(m_GF_SCOM_HANDLE); }
 
 bool GfMenuObjBladeSet2::seqReturnBlSlot() {
   ui::UIObjectAcc acc(unknown18, "LAY_dr_team");

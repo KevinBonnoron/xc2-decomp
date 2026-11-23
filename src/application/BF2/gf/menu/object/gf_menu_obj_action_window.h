@@ -13,11 +13,11 @@ class GfMenuObjActionWindow : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjActionWindow *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjActionWindow *owner) : _0c(), m_menuObjActionWindow(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjActionWindow *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjActionWindow *m_menuObjActionWindow; // Inferred role: owner; original member name unknown.
   };
 
   struct OpenParam {
@@ -38,7 +38,7 @@ public:
   void eventHudSceneChange(u32 scene) override;
 };
 
-static_assert(offsetof(GfMenuObjActionWindow::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjActionWindow::MainListener, m_menuObjActionWindow) == 0x20, "");
 static_assert(sizeof(GfMenuObjActionWindow::MainListener) == 0x28, "");
 
 } // namespace gf

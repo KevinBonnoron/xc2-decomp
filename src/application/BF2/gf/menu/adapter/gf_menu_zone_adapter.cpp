@@ -33,12 +33,12 @@ static GfMenuZoneAdapter::TypeInfo TYPE_INFOS[] = {
     {&GfMenuZoneAdapter::update_ZoneNotice, {GfMenuAdapter::unknown004_2, 0, 0}},
 };
 
-GfMenuZoneAdapter::GfMenuZoneAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(nullptr), unknown58(0), unknown5c(0) {}
+GfMenuZoneAdapter::GfMenuZoneAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), m_iConverter(nullptr), unknown58(0), unknown5c(0) {}
 
 GfMenuZoneAdapter::~GfMenuZoneAdapter() {
-  if (unknown50 != nullptr) {
-    delete unknown50;
-    unknown50 = nullptr;
+  if (m_iConverter != nullptr) {
+    delete m_iConverter;
+    m_iConverter = nullptr;
   }
 }
 
@@ -167,7 +167,7 @@ bool GfMenuZoneAdapter::update_ZoneNotice() {
 GfMenuZoneAdapter *GfMenuZoneAdapter::createFromCoverter(u32 handle, u32 type, IConverter *converter, bool isUpdateAlways) {
   GfMenuZoneAdapter *adapter = create(handle, type, converter->getZoneId(), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -187,8 +187,8 @@ GfMenuZoneAdapter *GfMenuZoneAdapter::createFromReference(u32 handle, u32 type, 
 }
 
 void GfMenuZoneAdapter::update(const fw::UpdateInfo &info) {
-  if (unknown50 != nullptr) {
-    u32 newZone = unknown50->getZoneId();
+  if (m_iConverter != nullptr) {
+    u32 newZone = m_iConverter->getZoneId();
     if (unknown58 != newZone) {
       unknown58 = newZone;
       setChange();

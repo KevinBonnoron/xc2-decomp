@@ -55,7 +55,7 @@ public:
   u8 _51[0x70 - 0x51];
   u16 unknown70; // Inferred role: bone index; original member name unknown.
   bool m_enable;
-  ParamAdapter unknown78; // Inferred role: limit param; original member name unknown.
+  ParamAdapter m_paramAdapter; // Inferred role: limit param; original member name unknown.
 };
 
 static_assert(offsetof(SphericalCoordinatesIkSolver, unknown20) == 0x20, "");
@@ -64,7 +64,7 @@ static_assert(offsetof(SphericalCoordinatesIkSolver, unknown40) == 0x40, "");
 static_assert(offsetof(SphericalCoordinatesIkSolver, unknown50) == 0x50, "");
 static_assert(offsetof(SphericalCoordinatesIkSolver, unknown70) == 0x70, "");
 static_assert(offsetof(SphericalCoordinatesIkSolver, m_enable) == 0x72, "");
-static_assert(offsetof(SphericalCoordinatesIkSolver, unknown78) == 0x78, "");
+static_assert(offsetof(SphericalCoordinatesIkSolver, m_paramAdapter) == 0x78, "");
 static_assert(sizeof(SphericalCoordinatesIkSolver) == 0x80, "");
 
 } // namespace fw

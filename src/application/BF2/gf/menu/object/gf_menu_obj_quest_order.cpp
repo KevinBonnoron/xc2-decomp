@@ -144,9 +144,9 @@ void GfMenuObjQuestOrder::ListListener::reciveEvent(const ui::EventData &event, 
   case 8:
     if (event.unknown0c == 1 && unknown0c == 0) {
       GfMenuObjUtil::setChildDisp(handle, "IMG_chkbtn02", true);
-      unknown30 = GfMenuCallContext::create();
-      GfMenuObjCommonText::open(unknown30, 1, 0);
-      GfMenuObject::setCallContextEventHandler(unknown30, handle);
+      m_menuCallContext = GfMenuCallContext::create();
+      GfMenuObjCommonText::open(m_menuCallContext, 1, 0);
+      GfMenuObject::setCallContextEventHandler(m_menuCallContext, handle);
       unknown0c = 1;
       GfMenuObjUtil::playSECommonFromInput(event.unknown0c);
     }
@@ -173,7 +173,7 @@ void GfMenuObjQuestOrder::ListListener::reciveEvent(const ui::EventData &event, 
     if (event.unknown14 == 0 && result == 0) {
       GfQuestManager::setCurrentQuest(toQuestID(unknown10));
     }
-    mm::mtl::safeRelease(unknown30);
+    mm::mtl::safeRelease(m_menuCallContext);
     GfMenuObject::addResultCallContext(handle, result, 0);
     close();
     break;

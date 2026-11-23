@@ -35,11 +35,11 @@ public:
   void calcForce(f32 deltaTime, const skd::DynamicsSolver &solver, mm::mtl::Vector<mm::Vec3> *forces) override;
   const mm::mtl::RTTI *getRTTI() const override;
 
-  WindProbe *unknown18; // Inferred role: bound probe; original member name unknown.
-  f32 unknown20;        // Inferred role: power ratio; original member name unknown.
+  WindProbe *m_windProbe; // Inferred role: bound probe; original member name unknown.
+  f32 unknown20;          // Inferred role: power ratio; original member name unknown.
 };
 
-static_assert(offsetof(WindForceCalculator, unknown18) == 0x18, "");
+static_assert(offsetof(WindForceCalculator, m_windProbe) == 0x18, "");
 static_assert(offsetof(WindForceCalculator, unknown20) == 0x20, "");
 static_assert(sizeof(WindForceCalculator) == 0x28, "");
 

@@ -18,110 +18,110 @@ class GfMenuObjBladeSet : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjBladeSet *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjBladeSet *owner) : _0c(), m_menuObjBladeSet(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjBladeSet *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBladeSet *m_menuObjBladeSet; // Inferred role: owner; original member name unknown.
   };
 
   class BladeSelectListener : public ui::UIObjectListener {
   public:
-    BladeSelectListener(GfMenuObjBladeSet *owner) : _0c(), unknown20(owner) {}
+    BladeSelectListener(GfMenuObjBladeSet *owner) : _0c(), m_menuObjBladeSet(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjBladeSet *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBladeSet *m_menuObjBladeSet; // Inferred role: owner; original member name unknown.
   };
 
   class FormListener : public ui::UIObjectListener {
   public:
-    FormListener(GfMenuObjBladeSet *owner) : _0c(), unknown20(owner) {}
+    FormListener(GfMenuObjBladeSet *owner) : _0c(), m_menuObjBladeSet(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjBladeSet *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBladeSet *m_menuObjBladeSet; // Inferred role: owner; original member name unknown.
   };
 
   class FormSlotListener : public ui::UIObjectListener {
   public:
-    FormSlotListener(GfMenuObjBladeSet *owner) : _0c(), unknown20(owner) {}
+    FormSlotListener(GfMenuObjBladeSet *owner) : _0c(), m_menuObjBladeSet(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjBladeSet *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBladeSet *m_menuObjBladeSet; // Inferred role: owner; original member name unknown.
   };
 
   class PreviewListener : public ui::UIObjectListener {
   public:
-    PreviewListener(GfMenuObjBladeSet *owner) : _0c(), unknown20(owner) {}
+    PreviewListener(GfMenuObjBladeSet *owner) : _0c(), m_menuObjBladeSet(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjBladeSet *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBladeSet *m_menuObjBladeSet; // Inferred role: owner; original member name unknown.
   };
 
   class ReleaseListener : public ui::UIObjectListener {
   public:
-    ReleaseListener(GfMenuObjBladeSet *owner) : _0c(), unknown20(owner) {}
+    ReleaseListener(GfMenuObjBladeSet *owner) : _0c(), m_menuObjBladeSet(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjBladeSet *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBladeSet *m_menuObjBladeSet; // Inferred role: owner; original member name unknown.
   };
 
   class ReleaseSlotListener : public ui::UIObjectListener {
   public:
-    ReleaseSlotListener(GfMenuObjBladeSet *owner) : _0c(), unknown20(owner) {}
+    ReleaseSlotListener(GfMenuObjBladeSet *owner) : _0c(), m_menuObjBladeSet(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjBladeSet *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBladeSet *m_menuObjBladeSet; // Inferred role: owner; original member name unknown.
   };
 
   class MercenariesListener : public ui::UIObjectListener {
   public:
-    MercenariesListener(GfMenuObjBladeSet *owner) : _0c(), unknown20(owner) {}
+    MercenariesListener(GfMenuObjBladeSet *owner) : _0c(), m_menuObjBladeSet(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjBladeSet *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBladeSet *m_menuObjBladeSet; // Inferred role: owner; original member name unknown.
   };
 
   class MercenariesSlotListener : public ui::UIObjectListener {
   public:
-    MercenariesSlotListener(GfMenuObjBladeSet *owner) : _0c(), unknown20(owner) {}
+    MercenariesSlotListener(GfMenuObjBladeSet *owner) : _0c(), m_menuObjBladeSet(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjBladeSet *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBladeSet *m_menuObjBladeSet; // Inferred role: owner; original member name unknown.
   };
 
   class MercenariesSlotBlListener : public ui::UIObjectListener {
   public:
-    MercenariesSlotBlListener(GfMenuObjBladeSet *owner) : _0c(), unknown20(owner) {}
+    MercenariesSlotBlListener(GfMenuObjBladeSet *owner) : _0c(), m_menuObjBladeSet(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjBladeSet *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBladeSet *m_menuObjBladeSet; // Inferred role: owner; original member name unknown.
   };
 
   class MercenariesSlotMenuListener : public ui::UIObjectListener {
   public:
-    MercenariesSlotMenuListener(GfMenuObjBladeSet *owner) : _0c(), unknown20(owner) {}
+    MercenariesSlotMenuListener(GfMenuObjBladeSet *owner) : _0c(), m_menuObjBladeSet(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjBladeSet *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBladeSet *m_menuObjBladeSet; // Inferred role: owner; original member name unknown.
   };
 
   class MercenariesPreviewListener : public ui::UIObjectListener {
   public:
-    MercenariesPreviewListener(GfMenuObjBladeSet *owner) : _0c(), unknown20(owner) {}
+    MercenariesPreviewListener(GfMenuObjBladeSet *owner) : _0c(), m_menuObjBladeSet(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjBladeSet *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBladeSet *m_menuObjBladeSet; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjBladeSet(u32 handle);
@@ -185,15 +185,15 @@ public:
   ui::UICtrlCursorSelect *unknown88; // Inferred role: blade cursor; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuObjBladeSet::MainListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjBladeSet::MercenariesPreviewListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjBladeSet::ReleaseListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjBladeSet::FormListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjBladeSet::BladeSelectListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjBladeSet::FormSlotListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjBladeSet::PreviewListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjBladeSet::ReleaseSlotListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjBladeSet::MercenariesSlotBlListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjBladeSet::MainListener, m_menuObjBladeSet) == 0x20, "");
+static_assert(offsetof(GfMenuObjBladeSet::MercenariesPreviewListener, m_menuObjBladeSet) == 0x20, "");
+static_assert(offsetof(GfMenuObjBladeSet::ReleaseListener, m_menuObjBladeSet) == 0x20, "");
+static_assert(offsetof(GfMenuObjBladeSet::FormListener, m_menuObjBladeSet) == 0x20, "");
+static_assert(offsetof(GfMenuObjBladeSet::BladeSelectListener, m_menuObjBladeSet) == 0x20, "");
+static_assert(offsetof(GfMenuObjBladeSet::FormSlotListener, m_menuObjBladeSet) == 0x20, "");
+static_assert(offsetof(GfMenuObjBladeSet::PreviewListener, m_menuObjBladeSet) == 0x20, "");
+static_assert(offsetof(GfMenuObjBladeSet::ReleaseSlotListener, m_menuObjBladeSet) == 0x20, "");
+static_assert(offsetof(GfMenuObjBladeSet::MercenariesSlotBlListener, m_menuObjBladeSet) == 0x20, "");
 static_assert(sizeof(GfMenuObjBladeSet::MainListener) == 0x28, "");
 static_assert(sizeof(GfMenuObjBladeSet::PreviewListener) == 0x28, "");
 static_assert(sizeof(GfMenuObjBladeSet::BladeSelectListener) == 0x28, "");
@@ -206,9 +206,9 @@ static_assert(sizeof(GfMenuObjBladeSet::MercenariesSlotListener) == 0x28, "");
 static_assert(sizeof(GfMenuObjBladeSet::MercenariesSlotBlListener) == 0x28, "");
 static_assert(sizeof(GfMenuObjBladeSet::MercenariesSlotMenuListener) == 0x28, "");
 static_assert(sizeof(GfMenuObjBladeSet::MercenariesPreviewListener) == 0x28, "");
-static_assert(offsetof(GfMenuObjBladeSet::MercenariesSlotListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjBladeSet::MercenariesListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjBladeSet::MercenariesSlotMenuListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjBladeSet::MercenariesSlotListener, m_menuObjBladeSet) == 0x20, "");
+static_assert(offsetof(GfMenuObjBladeSet::MercenariesListener, m_menuObjBladeSet) == 0x20, "");
+static_assert(offsetof(GfMenuObjBladeSet::MercenariesSlotMenuListener, m_menuObjBladeSet) == 0x20, "");
 static_assert(offsetof(GfMenuObjBladeSet::OpenParam, unknown04) == 0x04, "");
 static_assert(offsetof(GfMenuObjBladeSet, unknown24) == 0x24, "");
 static_assert(offsetof(GfMenuObjBladeSet, unknown28) == 0x28, "");

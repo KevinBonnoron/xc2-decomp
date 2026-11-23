@@ -9,21 +9,21 @@ namespace gf {
 constexpr size_t SIZE_UNKNOWN_32768 = 0x8000; // Inferred role: base block size; original name unknown.
 
 GfSlotBase::GfSlotBase(const char *name, GfSlotAllocator *parent, u32 slotSize, bool useDebugMemory)
-    : m_slotHandle(unknown006), m_slotSize(slotSize), m_parentSlot(nullptr), m_multiSlot(1), unknown314(0), unknown318(useDebugMemory) {
-  unknown18.setup(name, parent, slotSize, SLOT_UNKNOWN_8192, useDebugMemory);
+    : m_slotHandle(unknown006), m_slotSize(slotSize), m_parentSlot(nullptr), m_multiSlot(1), unknown314(0), m_memoryDebug(useDebugMemory) {
+  m_slotAllocator.setup(name, parent, slotSize, SLOT_UNKNOWN_8192, useDebugMemory);
 }
 
-GfSlotBase::~GfSlotBase() { unknown18.destroy(); }
+GfSlotBase::~GfSlotBase() { m_slotAllocator.destroy(); }
 
-void GfSlotBase::destroy() { unknown18.destroy(); }
+void GfSlotBase::destroy() { m_slotAllocator.destroy(); }
 
-void *GfSlotBase::allocate(size_t size, size_t alignment) { return unknown18.allocate(size, alignment); }
+void *GfSlotBase::allocate(size_t size, size_t alignment) { return m_slotAllocator.allocate(size, alignment); }
 
-void GfSlotBase::deallocate(void *pointer) { unknown18.deallocate(pointer); }
+void GfSlotBase::deallocate(void *pointer) { m_slotAllocator.deallocate(pointer); }
 
-const char *GfSlotBase::getName() const { return unknown18.m_name.c_str(); }
+const char *GfSlotBase::getName() const { return m_slotAllocator.m_name.c_str(); }
 
-size_t GfSlotBase::getBlockSize() const { return unknown18.getBlockSize(); }
+size_t GfSlotBase::getBlockSize() const { return m_slotAllocator.getBlockSize(); }
 
 bool GfSlotBase::empty() const { return m_parentSlot == nullptr && m_slotHandle == unknown006; }
 
@@ -42,27 +42,27 @@ void GfSlotBase::releaseSlot() {
   m_slotHandle = unknown006;
   m_parentSlot = nullptr;
   m_multiSlot = 1;
-  unknown18.resize(m_slotSize);
+  m_slotAllocator.resize(m_slotSize);
 }
 
-void *GfSlotBase::getBuffer() { return unknown18.getBuffer(); }
+void *GfSlotBase::getBuffer() { return m_slotAllocator.getBuffer(); }
 
-size_t GfSlotBase::getBufferSize() const { return unknown18.getBufferSize(); }
+size_t GfSlotBase::getBufferSize() const { return m_slotAllocator.getBufferSize(); }
 
 void GfSlotBase::setParentSlot(GfSlotBase *parent) { this->m_parentSlot = parent; }
 
 void GfSlotBase::setMultiSlot(u32 multiSlot) {
-  if (unknown18.getAllocs() != 0) {
+  if (m_slotAllocator.getAllocs() != 0) {
     return;
   }
 
   this->m_multiSlot = multiSlot;
-  unknown18.resize(m_slotSize * multiSlot);
+  m_slotAllocator.resize(m_slotSize * multiSlot);
 }
 
 u32 GfSlotBase::getMultiSlot() const { return m_multiSlot; }
 
-bool GfSlotBase::isExistAsset() const { return unknown18.getAllocs() != 0; }
+bool GfSlotBase::isExistAsset() const { return m_slotAllocator.getAllocs() != 0; }
 
 static u64 getHandleType(GF_SLOT_HANDLE *handle) { return (reinterpret_cast<u64>(handle) >> 16) & 0xffff; }
 
@@ -279,7 +279,7 @@ bool GfSlotAll::isEnableDelete(const SlotList &list, u32 start, u32 num, u32 ind
   return true;
 }
 
-bool GfSlotAll::isMemoryDebug(GfAssetType type) const { return unknown08[type - ASSET_TYPE_UNKNOWN_3][0]->unknown318; }
+bool GfSlotAll::isMemoryDebug(GfAssetType type) const { return unknown08[type - ASSET_TYPE_UNKNOWN_3][0]->m_memoryDebug; }
 
 bool GfSlotAll::getSlotInfo(mm::mtl::IAllocator *&allocator, void *&buffer, size_t &size, GF_SLOT_HANDLE *handle) {
   if (handle == unknown006) {

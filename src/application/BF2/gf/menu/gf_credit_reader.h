@@ -31,7 +31,7 @@ public:
   bool getRow(int index, Row &row);
 
   void *unknown08;       // Inferred role: bound data; original member name unknown.
-  int unknown10;         // Inferred role: row count; original member name unknown.
+  int m_rowCount;        // Inferred role: row count; named after the game accessor gf::CreditReader::getRowCount.
   const void *unknown18; // Inferred role: row table; original member name unknown.
   const char *unknown20; // Inferred role: string table; original member name unknown.
 };
@@ -43,7 +43,7 @@ static_assert(offsetof(CreditReader::Row, unknown28) == 0x28, "");
 static_assert(offsetof(CreditReader::Row, unknown40) == 0x40, "");
 static_assert(sizeof(CreditReader::Row) == 0x58, "");
 static_assert(offsetof(CreditReader, unknown08) == 0x08, "");
-static_assert(offsetof(CreditReader, unknown10) == 0x10, "");
+static_assert(offsetof(CreditReader, m_rowCount) == 0x10, "");
 static_assert(offsetof(CreditReader, unknown18) == 0x18, "");
 static_assert(offsetof(CreditReader, unknown20) == 0x20, "");
 static_assert(sizeof(CreditReader) == 0x28, "");

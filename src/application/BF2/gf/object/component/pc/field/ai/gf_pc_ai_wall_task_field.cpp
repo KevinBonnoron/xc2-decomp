@@ -39,9 +39,9 @@ void TaskFieldWallPrepare::onEvent(ai::BlackBoard &blackBoard, const ai::Event &
 
 void TaskFieldWallPrepare::onChangeActivate(BlackBoardField &blackBoard, const ai::ActivateEvent &event) {
   if (!event.unknown04) {
-    unknown40.unknown00 = &blackBoard;
+    m_wallAiContextField.m_blackBoardField = &blackBoard;
     unknown38->setState(0);
-    unknown40.unknown00 = nullptr;
+    m_wallAiContextField.m_blackBoardField = nullptr;
   }
 }
 
@@ -49,40 +49,40 @@ void TaskFieldWallPrepare::onCreate(BlackBoardField &blackBoard, const ai::Creat
   // __LINE__ must be 83 as in the original file: it is the line argument of the allocation.
 #line 83
   unknown38.reset(new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ai::Fsm(getAllocator(ALLOCATOR_UNKNOWN_0)));
-  unknown38->beginSetup(&unknown40, 3);
+  unknown38->beginSetup(&m_wallAiContextField, 3);
   unknown38->registerState<StateFieldWallAiWait>(0);
   unknown38->registerState<StateFieldWallAiPrepare>(1);
   unknown38->registerState<StateFieldWallAiAdsorption>(2);
   unknown38->endSetup();
-  unknown40.unknown00 = &blackBoard;
+  m_wallAiContextField.m_blackBoardField = &blackBoard;
   unknown38->setState(0);
-  unknown40.unknown00 = nullptr;
+  m_wallAiContextField.m_blackBoardField = nullptr;
 }
 
 void TaskFieldWallPrepare::onDestroy(BlackBoardField &blackBoard, const ai::DestroyEvent &event) {
-  unknown40.unknown00 = &blackBoard;
+  m_wallAiContextField.m_blackBoardField = &blackBoard;
   if (unknown38) {
     unknown38->cleanup();
   }
-  unknown40.unknown00 = nullptr;
+  m_wallAiContextField.m_blackBoardField = nullptr;
   unknown38.reset();
 }
 
 bool TaskFieldWallPrepare::testCondition(const BlackBoardField &blackBoard) {
   bool isRequest = blackBoard.unknown200.test(4);
-  return !blackBoard.unknown08->unknown310.unknown10_4 && isRequest;
+  return !blackBoard.m_comPropertyPc->m_propertyField.unknown10_4 && isRequest;
 }
 
 void TaskFieldWallPrepare::update(BlackBoardField &blackBoard) {
-  unknown40.unknown00 = &blackBoard;
+  m_wallAiContextField.m_blackBoardField = &blackBoard;
   unknown38->update(blackBoard.unknown18);
-  unknown40.unknown00 = nullptr;
+  m_wallAiContextField.m_blackBoardField = nullptr;
 }
 
-bool TaskFieldWallFollow::testCondition(const BlackBoardField &blackBoard) { return blackBoard.unknown08->unknown310.unknown10_5; }
+bool TaskFieldWallFollow::testCondition(const BlackBoardField &blackBoard) { return blackBoard.m_comPropertyPc->m_propertyField.unknown10_5; }
 
 void TaskFieldWallFollow::update(BlackBoardField &blackBoard) {
-  GfComPropertyPc *property = blackBoard.unknown08;
+  GfComPropertyPc *property = blackBoard.m_comPropertyPc;
   fw::Transform transform;
   if (AgentUtilField::getWallFollowTransform(blackBoard, &transform)) {
     mm::Vec2 input = AgentUtilField::calcFollowWallInput(transform.unknown00, *property);
@@ -122,11 +122,11 @@ void TaskFieldWallFall::onChangeActivate(BlackBoardField &blackBoard, const ai::
 
 void TaskFieldWallFall::onCreate(BlackBoardField &blackBoard, const ai::CreateEvent &event) { unknown38 = 0.0f; }
 
-bool TaskFieldWallFall::testCondition(const BlackBoardField &blackBoard) { return blackBoard.unknown200.test(5) && blackBoard.unknown08->unknown310.unknown10_4; }
+bool TaskFieldWallFall::testCondition(const BlackBoardField &blackBoard) { return blackBoard.unknown200.test(5) && blackBoard.m_comPropertyPc->m_propertyField.unknown10_4; }
 
 void TaskFieldWallFall::update(BlackBoardField &blackBoard) {
   unknown38 += blackBoard.unknown18->unknown04;
-  GfComPropertyPc *property = blackBoard.unknown08;
+  GfComPropertyPc *property = blackBoard.m_comPropertyPc;
   const WallAiParam *param = AgentUtilField::getAIParamAdapter(*property, PARAM_ID_FIELD_AI_UNKNOWN_5).get<WallAiParam>();
   if (unknown38 >= param->fallDelay) {
     property->unknown60.unknown08.set(3);
@@ -134,9 +134,9 @@ void TaskFieldWallFall::update(BlackBoardField &blackBoard) {
 }
 
 bool TaskFieldWallEscape::testCondition(const BlackBoardField &blackBoard) {
-  GfComPropertyPc *property = blackBoard.unknown08;
+  GfComPropertyPc *property = blackBoard.m_comPropertyPc;
   const WallAiParam *param = AgentUtilField::getAIParamAdapter(*property, PARAM_ID_FIELD_AI_UNKNOWN_5).get<WallAiParam>();
-  if (!property->unknown310.unknown10_4) {
+  if (!property->m_propertyField.unknown10_4) {
     return false;
   }
 
@@ -144,7 +144,7 @@ bool TaskFieldWallEscape::testCondition(const BlackBoardField &blackBoard) {
 }
 
 void TaskFieldWallEscape::update(BlackBoardField &blackBoard) {
-  GfComPropertyPc *property = blackBoard.unknown08;
+  GfComPropertyPc *property = blackBoard.m_comPropertyPc;
   property->unknown60.unknown04 = property->unknown290.x * unknown40.x + property->unknown290.y * unknown40.y + property->unknown290.z * unknown40.z >= 0.0f ? 1.0f : -1.0f;
   property->unknown60.unknown00 = property->unknown2d0.x * unknown40.x + property->unknown2d0.y * unknown40.y + property->unknown2d0.z * unknown40.z >= 0.0f ? 1.0f : -1.0f;
 }
@@ -152,8 +152,8 @@ void TaskFieldWallEscape::update(BlackBoardField &blackBoard) {
 bool TaskFieldWallJumpWait::testCondition(const BlackBoardField &blackBoard) { return blackBoard.unknown200.test(8); }
 
 void TaskFieldWallJumpWait::update(BlackBoardField &blackBoard) {
-  GfComPropertyPc *property = blackBoard.unknown08;
-  if (!AgentUtilField::existNearChimbPlayer(*property, property->unknown310.getWallJumpInfo()->unknown10) && !AgentUtilField::isWallJumpAnyPlayer()) {
+  GfComPropertyPc *property = blackBoard.m_comPropertyPc;
+  if (!AgentUtilField::existNearChimbPlayer(*property, property->m_propertyField.getWallJumpInfo()->unknown10) && !AgentUtilField::isWallJumpAnyPlayer()) {
     MsgPcFieldWallJump message;
     GfObj *obj = static_cast<GfObj *>(property->unknown08);
     obj->sendMessage(obj, message);

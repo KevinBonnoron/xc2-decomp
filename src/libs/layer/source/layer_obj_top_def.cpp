@@ -39,16 +39,16 @@ const u32 unknown019[] = {0, 1};
 
 } // namespace
 
-LayerObjTopDef::LayerObjTopDef(const char *name) : unknown308(this) {
-  unknownb8 = nullptr;
+LayerObjTopDef::LayerObjTopDef(const char *name) : m_layerObjSortDef(this) {
+  m_resData = nullptr;
   unknown18 = LAYER_OBJ_TYPE_OBJ;
   unknown258 = name;
   unknown290 = nullptr;
   unknowna8 |= 0x60000;
 }
 
-LayerObjTopDef::LayerObjTopDef(const void *data) : unknown308(this) {
-  unknownb8 = data;
+LayerObjTopDef::LayerObjTopDef(const void *data) : m_layerObjSortDef(this) {
+  m_resData = data;
   unknown18 = LAYER_OBJ_TYPE_OBJ;
   unknowna8 |= 0x20000;
   unknown290 = nullptr;
@@ -56,8 +56,8 @@ LayerObjTopDef::LayerObjTopDef(const void *data) : unknown308(this) {
 }
 
 void LayerObjTopDef::workIconCreate() {
-  const unknown013 *header = static_cast<const unknown013 *>(unknownb8);
-  const u8 *base = static_cast<const u8 *>(unknownb8);
+  const unknown013 *header = static_cast<const unknown013 *>(m_resData);
+  const u8 *base = static_cast<const u8 *>(m_resData);
   const unknown014 *drawData = reinterpret_cast<const unknown014 *>(base + header->unknown14);
   const unknown016 *drawList = reinterpret_cast<const unknown016 *>(base + header->unknown1c);
   const unknown016 *iconList = reinterpret_cast<const unknown016 *>(base + header->unknown20);
@@ -67,16 +67,16 @@ void LayerObjTopDef::workIconCreate() {
   const unknown017 *icons = reinterpret_cast<const unknown017 *>(reinterpret_cast<const u8 *>(iconList) + iconList->unknown00);
   const LyrMeshData *meshes = reinterpret_cast<const LyrMeshData *>(reinterpret_cast<const u8 *>(drawData) + drawData->unknown00);
   if (header->unknown24 != 0) {
-    unknown278 = LayerManager::get()->unknown58->unknown40->createTextureObj(base + header->unknown24);
-    unknown288 = unknown278->unknown2c;
+    m_layerTextureObj = LayerManager::get()->m_layerShdManager->m_layerTextureMan->createTextureObj(base + header->unknown24);
+    m_textureMax = m_layerTextureObj->unknown2c;
   } else {
-    unknown288 = 0;
+    m_textureMax = 0;
   }
   u32 size =
-      sizeof(unknown002) + header->unknown28 * sizeof(unknown003) + iconList->unknown04 * sizeof(u32) + drawList->unknown04 * sizeof(unknown009) + unknown288 * sizeof(grlib::CGLibTextureBuffer *);
+      sizeof(unknown002) + header->unknown28 * sizeof(unknown003) + iconList->unknown04 * sizeof(u32) + drawList->unknown04 * sizeof(unknown009) + m_textureMax * sizeof(grlib::CGLibTextureBuffer *);
   u32 actionSize = 0;
   if (header->unknown08 & 0x20) {
-    actionSize = calcActionWorkSize(static_cast<const u8 *>(unknownb8) + header->unknown34);
+    actionSize = calcActionWorkSize(static_cast<const u8 *>(m_resData) + header->unknown34);
     size += actionSize;
   }
   if (header->unknown08 & 0x4) {
@@ -98,7 +98,7 @@ void LayerObjTopDef::workIconCreate() {
   unknown009 *drawWorks = reinterpret_cast<unknown009 *>(static_cast<u8 *>(unknown290) + offset);
   offset += drawList->unknown04 * sizeof(unknown009);
   unknown2ac = header->unknown38;
-  unknown298->unknown00 = reinterpret_cast<const unknown001 *>(static_cast<const u8 *>(unknownb8) + header->unknown0c);
+  unknown298->unknown00 = reinterpret_cast<const unknown001 *>(static_cast<const u8 *>(m_resData) + header->unknown0c);
   unknown298->unknown08 = reinterpret_cast<const u8 *>(drawData) + drawData->unknown10;
   unknown298->unknown10 = reinterpret_cast<const u8 *>(drawData) + drawData->unknown08;
   unknown298->unknown18 = reinterpret_cast<const u8 *>(drawData) + drawData->unknown00;
@@ -110,10 +110,10 @@ void LayerObjTopDef::workIconCreate() {
   unknown298->unknown38 = drawEntries;
   unknown298->unknown48 = reinterpret_cast<const u8 *>(icons);
   unknown298->unknown60 = iconStates;
-  unknown298->unknown70 = reinterpret_cast<LayerResNode *>(drawWorks);
+  unknown298->m_layerResNode = reinterpret_cast<LayerResNode *>(drawWorks);
   u16 iconMax = 0;
   if (header->unknown08 & 0x2) {
-    iconMax = reinterpret_cast<const unknown018 *>(static_cast<const u8 *>(unknownb8) + header->unknown2c)->unknown00;
+    iconMax = reinterpret_cast<const unknown018 *>(static_cast<const u8 *>(m_resData) + header->unknown2c)->unknown00;
   }
   unknown2a6 = iconMax;
   for (s32 i = 0; i < iconList->unknown04; i++) {
@@ -128,13 +128,13 @@ void LayerObjTopDef::workIconCreate() {
     drawWorks[i].unknown28 = mm::Pnt<f32>(0.0f, 0.0f);
     drawWorks[i].unknown30 = mm::Pnt<f32>(0.0f, 0.0f);
   }
-  if (unknown288 != 0) {
+  if (m_textureMax != 0) {
     unknown280 = reinterpret_cast<grlib::CGLibTextureBuffer **>(static_cast<u8 *>(unknown290) + offset);
     setupDefTexList();
-    offset += unknown288 * sizeof(grlib::CGLibTextureBuffer *);
+    offset += m_textureMax * sizeof(grlib::CGLibTextureBuffer *);
   }
   if (header->unknown08 & 0x20) {
-    setupAction(static_cast<u8 *>(unknown290) + offset, static_cast<const u8 *>(unknownb8) + header->unknown34);
+    setupAction(static_cast<u8 *>(unknown290) + offset, static_cast<const u8 *>(m_resData) + header->unknown34);
     offset += actionSize;
   }
   if (header->unknown08 & 0x4) {
@@ -148,7 +148,7 @@ void LayerObjTopDef::workIconCreate() {
   } else {
     unknown298->unknown78 = nullptr;
   }
-  unknown298->unknown58 = nullptr;
+  unknown298->m_layerResViewPortInfo = nullptr;
   grlib::CGLibUniformArray<grlib::CGLibDblUniformBlock> *uniforms = new (static_cast<u8 *>(unknown290) + offset) grlib::CGLibUniformArray<grlib::CGLibDblUniformBlock>();
   uniforms->setupArray(iconList->unknown04);
   uniforms->unknown0c = 0;
@@ -164,16 +164,16 @@ void LayerObjTopDef::workIconCreate() {
   unknown298->unknown68 = uniforms;
   calcFrmParm(header->unknown28);
   unknowna8 |= 0x1;
-  unknown180.unknown00 = unknown298->unknown00->unknown10;
-  unknown180.unknown04 = unknown298->unknown00->unknown14;
-  unknown180.unknown08 = 1.0f;
-  unknown180.unknown0c = static_cast<f32>(unknown298->unknown00->unknown0c) / static_cast<f32>(unknown298->unknown00->unknown04);
-  unknown180.unknown10 = 0;
-  unknown180.unknown12 = 0;
-  unknown180.unknown14 = unknown298->unknown00->unknown04;
-  unknown180.unknown16 = unknown298->unknown00->unknown0c;
+  m_layerResRenderInfo.unknown00 = unknown298->unknown00->unknown10;
+  m_layerResRenderInfo.unknown04 = unknown298->unknown00->unknown14;
+  m_layerResRenderInfo.unknown08 = 1.0f;
+  m_layerResRenderInfo.unknown0c = static_cast<f32>(unknown298->unknown00->unknown0c) / static_cast<f32>(unknown298->unknown00->unknown04);
+  m_layerResRenderInfo.m_pixelX = 0;
+  m_layerResRenderInfo.m_pixelY = 0;
+  m_layerResRenderInfo.m_pixelWidth = unknown298->unknown00->unknown04;
+  m_layerResRenderInfo.m_pixelHeight = unknown298->unknown00->unknown0c;
   if (unknown2ac == 5) {
-    unknownc6 = LAYER_TEX_FILTER_TYPE_LINEAR;
+    m_texFilterType = LAYER_TEX_FILTER_TYPE_LINEAR;
   }
 }
 
@@ -189,14 +189,14 @@ void LayerObjTopDef::resourceInit() {
   if (!(unknowna8 & 0x1)) {
     return;
   }
-  const unknown013 *header = static_cast<const unknown013 *>(unknownb8);
+  const unknown013 *header = static_cast<const unknown013 *>(m_resData);
   if (header->unknown10 != 0) {
-    unknown270 = LayerManager::get()->unknown58->unknown38->createVertexObj(static_cast<const u8 *>(unknownb8) + header->unknown10);
+    m_layerVertexObj = LayerManager::get()->m_layerShdManager->m_layerVertexMan->createVertexObj(static_cast<const u8 *>(m_resData) + header->unknown10);
   }
-  if (unknown278 != nullptr) {
-    unknown278->setupResource();
-    if (unknown278->unknown2c != 0) {
-      GrlSurfaceFormat format = unknown278->getTexture(0)->getFormat();
+  if (m_layerTextureObj != nullptr) {
+    m_layerTextureObj->setupResource();
+    if (m_layerTextureObj->unknown2c != 0) {
+      GrlSurfaceFormat format = m_layerTextureObj->getTexture(0)->getFormat();
       if (format == GRL_SURFACE_FORMAT_BPTC_UNORM || format == GRL_SURFACE_FORMAT_BPTC_SIGNED_FLOAT || format == GRL_SURFACE_FORMAT_BPTC_UNSIGNED_FLOAT) {
         unknowna8 |= 0x400000;
       }
@@ -207,26 +207,26 @@ void LayerObjTopDef::resourceInit() {
 
 void LayerObjTopDef::apply(LayerSortMan *sortMan, const LayerRenderView *view) {
   updateFast();
-  if (unknownb8 == nullptr || (unknowna8 & 0x10000)) {
+  if (m_resData == nullptr || (unknowna8 & 0x10000)) {
     unknowna8 |= 0x10000;
     return;
   }
   updatePlace();
-  updateDefSpace(unknown238, static_cast<LAYER_SPACE_TYPE>(unknownc3), unknown20[unknownc2]);
+  updateDefSpace(unknown238, static_cast<LAYER_SPACE_TYPE>(m_space), unknown20[unknownc2]);
   LayerResMatrix matrix;
   if (unknowna8 & 0x800) {
-    LayerObjUtil::calcLayer3DSpaceTransRotScaleMatrix(matrix, unknownc8[2].unknown00, unknown180);
+    LayerObjUtil::calcLayer3DSpaceTransRotScaleMatrix(matrix, m_layerResParmInfo[2].m_layerBasePos, m_layerResRenderInfo);
   } else if (unknown2ac == 5) {
-    LayerObjUtil::calcLayerTransRotScaleSWFMatrix(matrix, unknownc8[2].unknown00, unknown180);
+    LayerObjUtil::calcLayerTransRotScaleSWFMatrix(matrix, m_layerResParmInfo[2].m_layerBasePos, m_layerResRenderInfo);
   } else {
-    LayerObjUtil::calcLayerTransRotScaleMatrix(matrix, unknownc8[2].unknown00, unknown180);
+    LayerObjUtil::calcLayerTransRotScaleMatrix(matrix, m_layerResParmInfo[2].m_layerBasePos, m_layerResRenderInfo);
   }
-  unknownc5 = unknownc4;
+  unknownc5 = m_blendType;
   LayerArgMdlRenInf info;
-  info.unknown18 = &matrix;
-  info.unknown20 = &unknownc8[2].unknown1c;
+  info.m_layerResMatrix = &matrix;
+  info.m_layerResColor = &m_layerResParmInfo[2].m_layerResColor;
   updateParams(info, view);
-  unknown248 = static_cast<const LayerObjTopMaskObj *>(unknown240);
+  m_layerObjTopMaskObj = static_cast<const LayerObjTopMaskObj *>(m_maskObj);
   setDrawList(sortMan, true);
 }
 
@@ -239,17 +239,17 @@ void LayerObjTopDef::updateFast() {
 }
 
 void LayerObjTopDef::updateParams(LayerArgMdlRenInf &info, const LayerRenderView *view) {
-  unknown298->unknown58 = view->unknown08;
-  unknown170.unknown001();
-  LayerObjUtil::calcDispInfo(unknown170, *info.unknown18, unknown180);
+  unknown298->m_layerResViewPortInfo = view->m_layerResViewPortInfo;
+  m_layerResDispInfo.unknown001();
+  LayerObjUtil::calcDispInfo(m_layerResDispInfo, *info.m_layerResMatrix, m_layerResRenderInfo);
   if (unknowna8 & 0x90000) {
     return;
   }
   info.unknown00 = unknown298->unknown60;
   const unknown017 *icon = reinterpret_cast<const unknown017 *>(unknown298->unknown48);
   for (s32 i = 0; i < unknown298->unknown50; i++) {
-    info.unknown10 = &unknown298->unknown70[icon->unknown02];
-    info.unknown28 = &reinterpret_cast<const LyrMeshData *>(unknown298->unknown18)[icon->unknown00];
+    info.m_layerResNode = &unknown298->m_layerResNode[icon->unknown02];
+    info.m_lyrMeshData = &reinterpret_cast<const LyrMeshData *>(unknown298->unknown18)[icon->unknown00];
     info.unknown08 = &(*unknown298->unknown68)[i];
     updateMeshUniformBlock(info);
     info.unknown00++;
@@ -260,31 +260,31 @@ void LayerObjTopDef::updateParams(LayerArgMdlRenInf &info, const LayerRenderView
 
 void LayerObjTopDef::applyBegin(LayerResUpdateInfo &info, const LayerRenderView *view) {
   updateFast();
-  if (unknownb8 == nullptr || !info.unknown50 || (unknowna8 & 0x10000)) {
+  if (m_resData == nullptr || !info.unknown50 || (unknowna8 & 0x10000)) {
     unknowna8 |= 0x10000;
     return;
   }
   updatePlace();
   if (info.unknown54 == LAYER_SPACE_TYPE_UNKNOWN_0) {
-    updateDefSpace(unknown238, static_cast<LAYER_SPACE_TYPE>(unknownc3), unknown20[unknownc2]);
+    updateDefSpace(unknown238, static_cast<LAYER_SPACE_TYPE>(m_space), unknown20[unknownc2]);
   } else {
     mm::Mat44 matrix;
     matrix.unknown009(unknown20[unknownc2], info.unknown00);
     updateDefSpace(unknown238, info.unknown54, matrix);
   }
-  if (unknownc4 != 5) {
-    unknownc5 = unknownc4;
+  if (m_blendType != 5) {
+    unknownc5 = m_blendType;
   } else {
     unknownc5 = info.unknown58;
   }
   if (unknowna8 & 0x800) {
-    LayerObjUtil::calcLayer3DSpaceTransRotScaleMatrix(unknown1dc, unknownc8[2].unknown00, unknown180);
+    LayerObjUtil::calcLayer3DSpaceTransRotScaleMatrix(m_layerResMatrix, m_layerResParmInfo[2].m_layerBasePos, m_layerResRenderInfo);
   } else if (unknown2ac == 5) {
-    LayerObjUtil::calcLayerTransRotScaleSWFMatrix(unknown1dc, unknownc8[2].unknown00, unknown180);
+    LayerObjUtil::calcLayerTransRotScaleSWFMatrix(m_layerResMatrix, m_layerResParmInfo[2].m_layerBasePos, m_layerResRenderInfo);
   } else {
-    LayerObjUtil::calcLayerTransRotScaleMatrix(unknown1dc, unknownc8[2].unknown00, unknown180);
+    LayerObjUtil::calcLayerTransRotScaleMatrix(m_layerResMatrix, m_layerResParmInfo[2].m_layerBasePos, m_layerResRenderInfo);
   }
-  LayerObjUtil::calcDispInfo(info.unknown5c, unknown1dc, unknown180);
+  LayerObjUtil::calcDispInfo(info.m_layerResDispInfo, m_layerResMatrix, m_layerResRenderInfo);
 }
 
 void LayerObjTopDef::applyEnd(LayerResUpdateInfo &info, const LayerRenderView *view) {
@@ -292,18 +292,18 @@ void LayerObjTopDef::applyEnd(LayerResUpdateInfo &info, const LayerRenderView *v
     return;
   }
   LayerResMatrix matrix;
-  LayerObjUtil::calcLayerMatrix(matrix, unknown1dc, *info.unknown40);
+  LayerObjUtil::calcLayerMatrix(matrix, m_layerResMatrix, *info.m_layerResMatrix);
   LayerResColor color;
-  LayerObjUtil::calcLayerColor(color, unknownc8[2].unknown1c, *info.unknown48);
+  LayerObjUtil::calcLayerColor(color, m_layerResParmInfo[2].m_layerResColor, *info.m_layerResColor);
   LayerArgMdlRenInf arg;
-  arg.unknown18 = &matrix;
-  arg.unknown20 = &color;
+  arg.m_layerResMatrix = &matrix;
+  arg.m_layerResColor = &color;
   updateParams(arg, view);
-  const LayerObjTopMaskObj *mask = static_cast<const LayerObjTopMaskObj *>(unknown240);
+  const LayerObjTopMaskObj *mask = static_cast<const LayerObjTopMaskObj *>(m_maskObj);
   if (mask == nullptr) {
-    mask = info.unknown70;
+    mask = info.m_layerObjTopMaskObj;
   }
-  unknown248 = mask;
+  m_layerObjTopMaskObj = mask;
 }
 
 void LayerObjTopDef::setDrawList(LayerSortMan *sortMan, bool is3D) {
@@ -312,17 +312,17 @@ void LayerObjTopDef::setDrawList(LayerSortMan *sortMan, bool is3D) {
   }
   if (is3D) {
     if (unknowna8 & 0x400) {
-      LayerManager::get()->unknown60->unknown10->set3DSpace(&unknown308, unknown200);
+      LayerManager::get()->m_layerObjManager->m_layerSortMan->set3DSpace(&m_layerObjSortDef, unknown200);
     } else if (!isClip()) {
-      sortMan->set2DSpace(&unknown308, unknownc0);
+      sortMan->set2DSpace(&m_layerObjSortDef, m_priority);
     }
   } else if (!isClip()) {
-    sortMan->set2DSpace(&unknown308, unknownc0);
+    sortMan->set2DSpace(&m_layerObjSortDef, m_priority);
   }
 }
 
 void LayerObjTopDef::updateResCheck() {
-  if (unknown2c0.updateTexutre(unknown280, unknown278)) {
+  if (m_layerObjResTex.updateTexutre(unknown280, m_layerTextureObj)) {
     unknowna8 &= ~0x400000;
     GrlSurfaceFormat format = unknown280[0]->getFormat();
     if (format == GRL_SURFACE_FORMAT_BPTC_UNORM || format == GRL_SURFACE_FORMAT_BPTC_SIGNED_FLOAT || format == GRL_SURFACE_FORMAT_BPTC_UNSIGNED_FLOAT) {
@@ -336,17 +336,17 @@ void LayerObjTopDef::alphaRender() {}
 void LayerObjTopDef::lastRender() {}
 
 void LayerObjTopDef::finalRender() {
-  if (unknown270 != nullptr) {
-    unknown270->begin();
+  if (m_layerVertexObj != nullptr) {
+    m_layerVertexObj->begin();
   }
-  LayerShdManager *shader = LayerManager::get()->unknown58;
-  const LayerObjTopMaskObj *mask = unknown248;
+  LayerShdManager *shader = LayerManager::get()->m_layerShdManager;
+  const LayerObjTopMaskObj *mask = m_layerObjTopMaskObj;
   if (mask == nullptr || (mask->unknowna8 & 0x90000) != 0) {
-    if (unknown298->unknown58 == nullptr) {
+    if (unknown298->m_layerResViewPortInfo == nullptr) {
       shader->setShaderMaskOff();
       shader->resetViewPort();
     } else {
-      shader->setViewPort(unknown298->unknown58);
+      shader->setViewPort(unknown298->m_layerResViewPortInfo);
     }
   } else {
     if (mask->isClip()) {
@@ -372,7 +372,7 @@ void LayerObjTopDef::finalRender() {
   if (unknown2ac == 5) {
     for (s32 i = 0; i < unknown298->unknown50; i++, state++, icon++) {
       if (*state & 0x1) {
-        const LayerResNode &node = unknown298->unknown70[icon->unknown02];
+        const LayerResNode &node = unknown298->m_layerResNode[icon->unknown02];
         if (node.unknown36 & 0x2) {
           shader->unknown003(LayerShdManager::s_resSwfBlend[unknown019[node.unknown37]]);
         } else {

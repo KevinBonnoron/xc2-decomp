@@ -19,17 +19,17 @@
 namespace ml {
 
 WorkCpuThread::WorkCpuThread(const char *name, WorkObj *parent)
-    : WorkObj(name, parent, 0), m_CPUID(CPUID_UNKNOWN_1), m_threadID(0), unknown1b8(nullptr), unknown1c0(0), unknown1c4(0), m_aboutJobNumC(0), unknown1d0(0), unknown1d8(0), unknown1e0(0.0f),
-      unknown1e4(0.0f), unknown1e8(nullptr), unknown650(nullptr), unknown658(WorkCpu::unknown001(mm::Col3::yellow)), unknown660(0), unknown668(0), m_background(false), unknown671(false),
+    : WorkObj(name, parent, 0), m_CPUID(CPUID_UNKNOWN_1), m_threadID(0), m_thread(nullptr), unknown1c0(0), unknown1c4(0), m_aboutJobNumC(0), unknown1d0(0), unknown1d8(0), unknown1e0(0.0f),
+      unknown1e4(0.0f), m_criticalSection(nullptr), m_TJOB(nullptr), unknown658(WorkCpu::unknown001(mm::Col3::yellow)), unknown660(0), unknown668(0), m_background(false), unknown671(false),
       m_beginTerm(false) {
-  unknown1e8 = new (WorkRootState::getWorkMem()) CriticalSection();
-  unknown1e8->setCostIgnore(true);
+  m_criticalSection = new (WorkRootState::getWorkMem()) CriticalSection();
+  m_criticalSection->setCostIgnore(true);
 }
 
 WorkCpuThread::~WorkCpuThread() {
-  if (unknown1e8 != nullptr) {
-    delete unknown1e8;
-    unknown1e8 = nullptr;
+  if (m_criticalSection != nullptr) {
+    delete m_criticalSection;
+    m_criticalSection = nullptr;
   }
 }
 
@@ -42,28 +42,28 @@ bool WorkCpuThread::create(WorkCpuThread **thread, CPUID cpuId, WorkObj *parent)
   if (cpuId == CPUID_UNKNOWN_1) {
     work->m_threadID = ThreadUtil::getCurrentID();
   } else {
-    Thread::create(&work->unknown1b8, work->unknown08.c_str(), false, threadFunc, work, 0x40000, cpuId, 0);
-    work->m_threadID = work->unknown1b8->getID();
-    work->unknown1b8->resume();
+    Thread::create(&work->m_thread, work->unknown08.c_str(), false, threadFunc, work, 0x40000, cpuId, 0);
+    work->m_threadID = work->m_thread->getID();
+    work->m_thread->resume();
   }
   return true;
 }
 
 bool WorkCpuThread::isSuspendThread() const {
-  if (unknown1b8 == nullptr) {
+  if (m_thread == nullptr) {
     return true;
   }
-  return unknown1b8->isSuspended();
+  return m_thread->isSuspended();
 }
 
 bool WorkCpuThread::isWaitEvent() const {
-  if (unknown1b8 != nullptr) {
-    return unknown1b8->isWaitingEvent();
+  if (m_thread != nullptr) {
+    return m_thread->isWaitingEvent();
   }
   return false;
 }
 
-MLTHREAD *WorkCpuThread::getHandle() const { return unknown1b8->getHandle(); }
+MLTHREAD *WorkCpuThread::getHandle() const { return m_thread->getHandle(); }
 
 CPUID WorkCpuThread::getCPUID() const { return m_CPUID; }
 
@@ -77,12 +77,12 @@ u64 WorkCpuThread::getThreadID() const { return m_threadID; }
 f32 WorkCpuThread::getJobCost() const { return unknown1e4 / DevGraph::getFrameSyncSec() * 100.0f; }
 
 int WorkCpuThread::getJobNum() const {
-  CS cs(*unknown1e8);
+  CS cs(*m_criticalSection);
   return unknown1f0.size();
 }
 
 bool WorkCpuThread::addJobThreadList(reslist<TJOB *> *list, u32 mode) {
-  CS cs(*unknown1e8);
+  CS cs(*m_criticalSection);
   bool isAdded = false;
   if (mode == 2) {
     for (reslist<TJOB *>::Node *node = list->begin(); node != list->end(); node = node->getNext()) {
@@ -120,8 +120,8 @@ bool WorkCpuThread::addJobThreadList(reslist<TJOB *> *list, u32 mode) {
 }
 
 void WorkCpuThread::setEvent(bool isSignal) {
-  if (unknown1b8 != nullptr) {
-    unknown1b8->setSignalEvent(isSignal);
+  if (m_thread != nullptr) {
+    m_thread->setSignalEvent(isSignal);
   }
 }
 
@@ -133,13 +133,13 @@ u32 WorkCpuThread::updateDirect(bool isDirect) {
 }
 
 bool WorkCpuThread::hasWorkingJob() const {
-  CS cs(*unknown1e8);
-  return unknown650 != nullptr;
+  CS cs(*m_criticalSection);
+  return m_TJOB != nullptr;
 }
 
 bool WorkCpuThread::isBusyJob(int handle) const {
-  CS cs(*unknown1e8);
-  if (unknown650 != nullptr && unknown650->unknown24 == handle) {
+  CS cs(*m_criticalSection);
+  if (m_TJOB != nullptr && m_TJOB->unknown24 == handle) {
     return true;
   }
   for (mm::mtl::FixedList<TJOB *, 64>::const_iterator it = unknown1f0.begin(); it != unknown1f0.end(); ++it) {
@@ -151,7 +151,7 @@ bool WorkCpuThread::isBusyJob(int handle) const {
 }
 
 bool WorkCpuThread::addJobThread(TJOB *job) {
-  CS cs(*unknown1e8);
+  CS cs(*m_criticalSection);
   unknown1c4++;
   if (job->unknown30 == 0) {
     m_aboutJobNumC++;
@@ -161,7 +161,7 @@ bool WorkCpuThread::addJobThread(TJOB *job) {
 }
 
 TJOB *WorkCpuThread::transferJob(WorkCpuThread *destination) {
-  CS cs(*unknown1e8);
+  CS cs(*m_criticalSection);
   if (unknown1f0.size() != 0) {
     for (mm::mtl::FixedList<TJOB *, 64>::iterator it = unknown1f0.begin(); it != unknown1f0.end(); ++it) {
       TJOB *job = *it;
@@ -182,14 +182,14 @@ bool WorkCpuThread::getJobThread(TJOB *&job, bool isBackground) {
   if (unknown1c4 == 0) {
     return false;
   }
-  CS cs(*unknown1e8);
+  CS cs(*m_criticalSection);
   if (unknown1f0.size() == 0) {
     return false;
   }
   if (isBackground) {
     for (mm::mtl::FixedList<TJOB *, 64>::iterator it = unknown1f0.begin(); it != unknown1f0.end(); ++it) {
       if ((*it)->unknown3c) {
-        unknown650 = *it;
+        m_TJOB = *it;
         job = *it;
         unknown1f0.erase(it);
         break;
@@ -199,7 +199,7 @@ bool WorkCpuThread::getJobThread(TJOB *&job, bool isBackground) {
       return false;
     }
   } else {
-    unknown650 = unknown1f0.front();
+    m_TJOB = unknown1f0.front();
     job = unknown1f0.front();
     unknown1f0.pop_front();
   }
@@ -289,19 +289,19 @@ void WorkCpuThread::addJobClock(f32 clock) {
 }
 
 void WorkCpuThread::terminateWorkingJob(const TJOB *job) {
-  CS cs(*unknown1e8);
-  unknown650 = nullptr;
+  CS cs(*m_criticalSection);
+  m_TJOB = nullptr;
 }
 
 void WorkCpuThread::waitEvent() {
-  if (unknown1b8 != nullptr) {
-    unknown1b8->waitSignalEvent();
+  if (m_thread != nullptr) {
+    m_thread->waitSignalEvent();
   }
 }
 
 void WorkCpuThread::setWorkingJob(TJOB *job) {
-  CS cs(*unknown1e8);
-  unknown650 = job;
+  CS cs(*m_criticalSection);
+  m_TJOB = job;
 }
 
 void WorkCpuThread::setup(CPUID cpuId) {
@@ -310,9 +310,9 @@ void WorkCpuThread::setup(CPUID cpuId) {
     m_threadID = ThreadUtil::getCurrentID();
     return;
   }
-  Thread::create(&unknown1b8, unknown08.c_str(), false, threadFunc, this, 0x40000, cpuId, 0);
-  m_threadID = unknown1b8->getID();
-  unknown1b8->resume();
+  Thread::create(&m_thread, unknown08.c_str(), false, threadFunc, this, 0x40000, cpuId, 0);
+  m_threadID = m_thread->getID();
+  m_thread->resume();
 }
 
 void WorkCpuThread::setBackground(bool isBackground) { m_background = isBackground; }
@@ -325,14 +325,14 @@ void WorkCpuThread::setStackInfo(unsigned long address, unsigned long size, void
 }
 
 void WorkCpuThread::suspendThread() {
-  if (unknown1b8 != nullptr) {
-    unknown1b8->suspend();
+  if (m_thread != nullptr) {
+    m_thread->suspend();
   }
 }
 
 void WorkCpuThread::resumeThread() {
-  if (unknown1b8 != nullptr) {
-    unknown1b8->resume();
+  if (m_thread != nullptr) {
+    m_thread->resume();
   }
 }
 
@@ -351,11 +351,11 @@ bool WorkCpuThread::wkStandbyLogout() {
   } else if (unknown1c0 != 1) {
     return false;
   }
-  if (unknown1b8 != nullptr) {
-    if (!unknown1b8->isTerminated()) {
+  if (m_thread != nullptr) {
+    if (!m_thread->isTerminated()) {
       return false;
     }
-    mm::mtl::safeRelease(unknown1b8);
+    mm::mtl::safeRelease(m_thread);
   }
   unknown1c0++;
   WorkCpu::removeCpu(m_CPUID, this);
@@ -365,15 +365,15 @@ bool WorkCpuThread::wkStandbyLogout() {
 void WorkCpuThread::termThread() { m_beginTerm = true; }
 
 bool WorkCpuThread::isTermThread() {
-  if (unknown1b8 == nullptr) {
+  if (m_thread == nullptr) {
     return true;
   }
-  return unknown1b8->isTerminated();
+  return m_thread->isTerminated();
 }
 
 void WorkCpuThread::exitThread() {
-  if (unknown1b8 != nullptr) {
-    unknown1b8->exitThread();
+  if (m_thread != nullptr) {
+    m_thread->exitThread();
   }
 }
 

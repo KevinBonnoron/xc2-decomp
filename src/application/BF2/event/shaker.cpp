@@ -11,7 +11,7 @@ static constexpr f32 unknown026 = 99999.0f; // Inferred role: play frame max; or
 Shaker::Shaker() : unknown08(0), unknown310(1), unknown318(nullptr) {}
 
 void Shaker::create() {
-  unknown338.clear();
+  m_shakerUpdater.clear();
   unknown08 = 0;
   unknown318 = nullptr;
 }
@@ -51,7 +51,7 @@ void Shaker::exec(f32 delta, f32 streamDelta) {
     rcha->getPos(&pos, unknown320);
     rcha->getRot(&rot, unknown320);
     rot *= mm::DEG_TO_RAD;
-    unknown338.reserve(mm::Vec3(alpha * pos.x, alpha * pos.y, alpha * pos.z), mm::Vec3(alpha * rot.x, alpha * rot.y, alpha * rot.z));
+    m_shakerUpdater.reserve(mm::Vec3(alpha * pos.x, alpha * pos.y, alpha * pos.z), mm::Vec3(alpha * rot.x, alpha * rot.y, alpha * rot.z));
   }
   unknown324 += streamDelta;
   if (unknown324 > unknown026) {
@@ -71,7 +71,7 @@ f32 Shaker::getAlpha() const {
   return 1.0f;
 }
 
-void Shaker::tail() { unknown338.update(); }
+void Shaker::tail() { m_shakerUpdater.update(); }
 
 u32 Shaker::registerShake(const char *name) {
   u32 index = search(name);

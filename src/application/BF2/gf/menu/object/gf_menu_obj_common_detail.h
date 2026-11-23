@@ -31,13 +31,13 @@ public:
   public:
     DetailListener() {
       unknown0c = unknown142();
-      unknown20 = nullptr;
+      m_menuObjCommonDetail = nullptr;
     }
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    unknown142 unknown0c;             // Inferred role: work values; original member name unknown.
-    GfMenuObjCommonDetail *unknown20; // Inferred role: owner, always null; original member name unknown.
-    OpenParam unknown28;              // Inferred role: param of the opened detail; original member name unknown.
+    unknown142 unknown0c;                         // Inferred role: work values; original member name unknown.
+    GfMenuObjCommonDetail *m_menuObjCommonDetail; // Inferred role: owner, always null; original member name unknown.
+    OpenParam m_openParam;                        // Inferred role: param of the opened detail; original member name unknown.
     u8 _60[0xa0 - 0x60];
   };
 
@@ -54,8 +54,8 @@ static_assert(offsetof(GfMenuObjCommonDetail::OpenParam, unknown18) == 0x18, "")
 static_assert(offsetof(GfMenuObjCommonDetail::OpenParam, unknown20) == 0x20, "");
 static_assert(offsetof(GfMenuObjCommonDetail::OpenParam, unknown30) == 0x30, "");
 static_assert(sizeof(GfMenuObjCommonDetail::OpenParam) == 0x38, "");
-static_assert(offsetof(GfMenuObjCommonDetail::DetailListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjCommonDetail::DetailListener, unknown28) == 0x28, "");
+static_assert(offsetof(GfMenuObjCommonDetail::DetailListener, m_menuObjCommonDetail) == 0x20, "");
+static_assert(offsetof(GfMenuObjCommonDetail::DetailListener, m_openParam) == 0x28, "");
 static_assert(sizeof(GfMenuObjCommonDetail::DetailListener) == 0xa0, "");
 
 } // namespace gf

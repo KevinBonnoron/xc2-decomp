@@ -37,22 +37,22 @@ GmkCollection::GmkCollection() : unknown48(gf::unknown020), unknown50(0), unknow
 constexpr int WILDCARD_UNKNOWN_1 = 1; // Inferred role: wildcard collection pop dist row; original name unknown.
 
 void GmkCollection::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
-  unknown08.unknown08 = bdat.getValCheck("POP_TIME", id, BDAT_TYPE_UNKNOWN_3);
-  unknown18.unknown08 = bdat.getValCheck("popWeather", id, BDAT_TYPE_UNKNOWN_1);
+  m_timeCond.unknown08 = bdat.getValCheck("POP_TIME", id, BDAT_TYPE_UNKNOWN_3);
+  m_weatherCond.unknown08 = bdat.getValCheck("popWeather", id, BDAT_TYPE_UNKNOWN_1);
   unknown00 = bdat.getValCheck("nameRadius", id, BDAT_TYPE_UNKNOWN_2);
   unknown02 = bdat.getValCheck("Condition", id, BDAT_TYPE_UNKNOWN_2);
   f32 popDist = Bdat::getValCheck(gf::GfDataBdat::getFP(gf::BDAT_FLD_WILDCARD_DATA), 0, WILDCARD_UNKNOWN_1, BDAT_TYPE_UNKNOWN_8).valueF32;
-  unknown28.unknown00 = popDist * popDist;
+  m_distCond.unknown00 = popDist * popDist;
 }
 
 bool GmkCollection::BdatInfo::isPopCondMatchedExceptDist() const {
   if (unknown02 != 0 && !gf::GfGameCond::isGameCond(unknown02)) {
     return false;
   }
-  if (unknown08.isEnable() && !unknown08.isMatch()) {
+  if (m_timeCond.isEnable() && !m_timeCond.isMatch()) {
     return false;
   }
-  if (unknown18.isEnable() && !unknown18.isMatch()) {
+  if (m_weatherCond.isEnable() && !m_weatherCond.isMatch()) {
     return false;
   }
   return true;
@@ -78,7 +78,7 @@ bool GmkCollectionList::BdatInfo::create() {
 GmkCollectionList::GmkCollectionList(u32 updateGmkNumPerFrame) : TGmkList(updateGmkNumPerFrame) {}
 
 void GmkCollectionList::create(const CreateInfo &info) {
-  if (!unknown228.create()) {
+  if (!m_bdatInfo.create()) {
     dispose();
     return;
   }
@@ -103,7 +103,7 @@ void GmkCollection::seqUpdatePopDepop(f32 deltaTime) {
     } else if (canDepopGobInst()) {
       disposeGfObjHandle();
     }
-    if (unknown48 != gf::unknown020 && DistCond::isMatch(unknown54, unknown08.unknown08->unknown00)) {
+    if (unknown48 != gf::unknown020 && DistCond::isMatch(unknown54, m_createBaseInfo.m_xform->unknown00)) {
       if (unknown50 == 0) {
         createIcon();
       }
@@ -142,11 +142,11 @@ void GmkCollection::createGfObjHandle() {
   }
   disposeGfObjHandle();
   CBdatWrapper bdat = {getBindedBdatFp()};
-  unknown48 = gf::GfObjFactory::createGmkCollection(bdat, unknown20.unknown18);
+  unknown48 = gf::GfObjFactory::createGmkCollection(bdat, m_createInfo.unknown18);
   bindToGameObj(unknown48);
   validateDisp();
   gf::GfObjSetupGimmick *setup = mm::mtl::dynamicCast<gf::GfObjSetupGimmick>(gf::GfObjManager::getObjInfo(unknown48)->unknown30);
-  unknown003(setup, unknown08.unknown08);
+  unknown003(setup, m_createBaseInfo.m_xform);
   setTargetable(gf::GfGameFlag::getLocal(1, getGameFlagId()) == 0);
 }
 
@@ -154,7 +154,7 @@ void GmkCollection::debugDraw() const {
   AGmkBase::debugDraw();
   if (isValid() && unknown68 > 0.0f) {
     mm::Vec2 screen;
-    if (toScreenPos(screen, AGmkBase::unknown08.unknown08->unknown00)) {
+    if (toScreenPos(screen, AGmkBase::m_createBaseInfo.m_xform->unknown00)) {
       mm::mtl::FixStr<128> text;
       text.format("repop-time=%.1f", unknown68);
       fw::debug::drawFont(static_cast<int>(screen.x), static_cast<int>(screen.y) + 24, mm::Col4::green, text.c_str());
@@ -205,7 +205,7 @@ void GmkCollection::create(const CreateInfo &info) {
   unknown54 = popDist * popDist;
 }
 
-int GmkCollection::getGameFlagId() const { return unknown20.unknown18 + 0x715c; }
+int GmkCollection::getGameFlagId() const { return m_createInfo.unknown18 + 0x715c; }
 
 bool GmkCollection::isWaitRepop() const { return gf::GfGameFlag::getLocal(1, getGameFlagId()) != 0; }
 
@@ -227,7 +227,7 @@ bool GmkCollection::canPopGobInst() const {
   if (!info->isPopCondMatchedExceptDist()) {
     return false;
   }
-  return DistCond::isMatch(info->unknown28.unknown00, unknown08.unknown08->unknown00);
+  return DistCond::isMatch(info->m_distCond.unknown00, m_createBaseInfo.m_xform->unknown00);
 }
 
 bool GmkCollection::canDepopGobInst() const {
@@ -235,7 +235,7 @@ bool GmkCollection::canDepopGobInst() const {
     return false;
   }
   const BdatInfo *info = getBdatInfo();
-  if (info->isPopCondMatchedExceptDist() && DistCond::isMatch(info->unknown28.unknown00, unknown08.unknown08->unknown00)) {
+  if (info->isPopCondMatchedExceptDist() && DistCond::isMatch(info->m_distCond.unknown00, m_createBaseInfo.m_xform->unknown00)) {
     return false;
   }
   return true;
@@ -259,7 +259,7 @@ void GmkCollection::setTargetable(bool isTargetable) {
     unknown58 = &GmkCollection::seqUpdatePopDepop;
   } else {
     if (unknown68 == 0.0f) {
-      unknown68 = static_cast<GmkCollectionList *>(unknown08.unknown00)->unknown228.unknown04 * 60.0f;
+      unknown68 = static_cast<GmkCollectionList *>(m_createBaseInfo.m_ownerGmkEnemyList)->m_bdatInfo.unknown04 * 60.0f;
     }
     unknown58 = &GmkCollection::seqUpdateRepopCounter;
   }

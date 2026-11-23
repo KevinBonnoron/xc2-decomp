@@ -45,31 +45,31 @@ public:
   };
 
   struct OpenParam {
-    OpenParam() : unknown00(0), unknown02(0), unknown04(0), unknown50{false, true, false, 0.25f} {}
+    OpenParam() : unknown00(0), unknown02(0), unknown04(0), m_optionParam{false, true, false, 0.25f} {}
 
     u16 unknown00;                                 // Role and original member name unknown.
     u16 unknown02;                                 // Role and original member name unknown.
     u8 unknown04;                                  // Role and original member name unknown.
     mm::mtl::FixedVector<unknown002, 3> unknown08; // Inferred role: challenges; original member name unknown.
-    OptionParam unknown50;                         // Inferred role: display options; original member name unknown.
+    OptionParam m_optionParam;                     // Inferred role: display options; original member name unknown.
   };
 
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjButtonChallenge2 *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjButtonChallenge2 *owner) : _0c(), m_menuObjButtonChallenge2(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjButtonChallenge2 *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjButtonChallenge2 *m_menuObjButtonChallenge2; // Inferred role: owner; original member name unknown.
   };
 
   class RingListener : public ui::UIObjectListener {
   public:
-    RingListener(GfMenuObjButtonChallenge2 *owner) : _0c(), unknown20(owner) {}
+    RingListener(GfMenuObjButtonChallenge2 *owner) : _0c(), m_menuObjButtonChallenge2(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjButtonChallenge2 *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjButtonChallenge2 *m_menuObjButtonChallenge2; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjButtonChallenge2(u32 handle);
@@ -118,7 +118,7 @@ public:
   bool isSeqCtrlBusy();
 
   u8 _24[0x28 - 0x24];
-  OpenParam unknown28;                                     // Inferred role: parameter of the running challenge; original member name unknown.
+  OpenParam m_openParam;                                   // Inferred role: parameter of the running challenge; original member name unknown.
   u32 unknown80;                                           // Inferred role: current challenge; original member name unknown.
   u32 unknown84;                                           // Role and original member name unknown, cleared by the constructor.
   int unknown88;                                           // Role and original member name unknown, cleared by the constructor.
@@ -155,13 +155,13 @@ static_assert(offsetof(GfMenuObjButtonChallenge2::OptionParam, unknown04) == 0x4
 static_assert(sizeof(GfMenuObjButtonChallenge2::OptionParam) == 0x8, "");
 static_assert(sizeof(GfMenuObjButtonChallenge2::unknown002) == 0x14, "");
 static_assert(offsetof(GfMenuObjButtonChallenge2::OpenParam, unknown08) == 0x8, "");
-static_assert(offsetof(GfMenuObjButtonChallenge2::OpenParam, unknown50) == 0x50, "");
+static_assert(offsetof(GfMenuObjButtonChallenge2::OpenParam, m_optionParam) == 0x50, "");
 static_assert(sizeof(GfMenuObjButtonChallenge2::OpenParam) == 0x58, "");
-static_assert(offsetof(GfMenuObjButtonChallenge2::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjButtonChallenge2::MainListener, m_menuObjButtonChallenge2) == 0x20, "");
 static_assert(sizeof(GfMenuObjButtonChallenge2::MainListener) == 0x28, "");
-static_assert(offsetof(GfMenuObjButtonChallenge2::RingListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjButtonChallenge2::RingListener, m_menuObjButtonChallenge2) == 0x20, "");
 static_assert(sizeof(GfMenuObjButtonChallenge2::RingListener) == 0x28, "");
-static_assert(offsetof(GfMenuObjButtonChallenge2, unknown28) == 0x28, "");
+static_assert(offsetof(GfMenuObjButtonChallenge2, m_openParam) == 0x28, "");
 static_assert(offsetof(GfMenuObjButtonChallenge2, unknown80) == 0x80, "");
 static_assert(offsetof(GfMenuObjButtonChallenge2, unknown90) == 0x90, "");
 static_assert(offsetof(GfMenuObjButtonChallenge2, unknown94) == 0x94, "");

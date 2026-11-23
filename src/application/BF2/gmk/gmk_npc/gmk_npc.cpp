@@ -24,7 +24,7 @@ GmkNpcList::GmkNpcList(u32 updateGmkNumPerFrame) : TGmkList(0) {}
 
 void GmkNpcList::createGmk(void *data) {
   TGmkList::createGmk(data);
-  GmkNpcManager *manager = &getCreateInfo().unknown08->unknown178;
+  GmkNpcManager *manager = &getCreateInfo().m_gmkSet->m_gmkNpcManager;
   u32 num = getInstNum();
   for (u32 i = 0; i < num; i++) {
     manager->addGmkNpc(&gmkInsts[i]);
@@ -32,9 +32,9 @@ void GmkNpcList::createGmk(void *data) {
 }
 
 void GmkNpcList::disposeGmk() {
-  GmkSet *set = getCreateInfo().unknown08;
+  GmkSet *set = getCreateInfo().m_gmkSet;
   if (set != nullptr) {
-    GmkNpcManager *manager = &set->unknown178;
+    GmkNpcManager *manager = &set->m_gmkNpcManager;
     u32 num = getInstNum();
     for (u32 i = 0; i < num; i++) {
       manager->removeGmkNpc(&gmkInsts[i]);
@@ -46,10 +46,10 @@ void GmkNpcList::disposeGmk() {
 GmkType GmkNpc::getGmkType() const { return GMK_TYPE; }
 
 gf::GF_OBJ_HANDLE *GmkNpc::getGobInst() const {
-  if (AGmkNpc::unknown18 == nullptr) {
+  if (AGmkNpc::m_gmkNpcIdInfo == nullptr) {
     return gf::unknown020;
   }
-  gf::GF_OBJ_HANDLE *handle = AGmkNpc::unknown18->unknown30;
+  gf::GF_OBJ_HANDLE *handle = AGmkNpc::m_gmkNpcIdInfo->unknown30;
   if (this != getBindedGmkInst(handle)) {
     return gf::unknown020;
   }
@@ -68,8 +68,8 @@ void GmkNpc::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *han
   AGmkBase::onGobEvent(event, handle);
   if (event == gf::IGfObjListener::OBJEVT_UNKNOWN_3) {
     unbindToGameObj(handle);
-    if (AGmkNpc::unknown18->unknown30 == handle) {
-      AGmkNpc::unknown18->disposeGobInst(false);
+    if (AGmkNpc::m_gmkNpcIdInfo->unknown30 == handle) {
+      AGmkNpc::m_gmkNpcIdInfo->disposeGobInst(false);
     }
   }
 }
@@ -86,11 +86,11 @@ void GmkNpc::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   unknown02 = bdat.getValCheck("Group", id, BDAT_TYPE_UNKNOWN_2);
   unknown04 = bdat.getValCheck("BattleReaction", id, BDAT_TYPE_UNKNOWN_2);
   if (unknown02 == 0) {
-    unknown06 = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_UNKNOWN_2));
-    unknown0a =
+    m_scenarioFlagCond = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_UNKNOWN_2));
+    m_questFlagCond =
         QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_UNKNOWN_1), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_UNKNOWN_1));
     u16 timeRange = bdat.getValCheck("TimeRange", id, BDAT_TYPE_UNKNOWN_2);
-    unknown10.unknown08 = timeRange;
+    m_timeCond.unknown08 = timeRange;
     unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_UNKNOWN_2);
   }
   u16 visibleXZ = bdat.getValCheck("Visible_XZ", id, BDAT_TYPE_UNKNOWN_2);
@@ -117,8 +117,8 @@ void GmkNpc::bindToGameObj(gf::GF_OBJ_HANDLE *handle) const {
 }
 
 bool GmkNpc::findPopPosRot(mm::Vec3 &position, mm::Vec3 &rotation) const {
-  position = AGmkBase::unknown08.unknown08->unknown00;
-  rotation = AGmkBase::unknown08.unknown08->unknown10;
+  position = AGmkBase::m_createBaseInfo.m_xform->unknown00;
+  rotation = AGmkBase::m_createBaseInfo.m_xform->unknown10;
   return true;
 }
 
@@ -126,18 +126,18 @@ bool GmkNpc::isPopDistCondMatched() const {
   if (!isValid()) {
     return false;
   }
-  return getBdatInfo()->unknown20.isMatch(AGmkBase::unknown08.unknown08->unknown00);
+  return getBdatInfo()->unknown20.isMatch(AGmkBase::m_createBaseInfo.m_xform->unknown00);
 }
 
 bool GmkNpc::isDepopDistCondMatched() const {
   if (!isValid()) {
     return false;
   }
-  return !getBdatInfo()->unknown28.isMatch(AGmkBase::unknown08.unknown08->unknown00);
+  return !getBdatInfo()->unknown28.isMatch(AGmkBase::m_createBaseInfo.m_xform->unknown00);
 }
 
 bool GmkNpc::isPopCondMatchedExceptDist() const {
-  if (AGmkNpc::unknown18 != nullptr && AGmkNpc::unknown18->unknown18 == this) {
+  if (AGmkNpc::m_gmkNpcIdInfo != nullptr && AGmkNpc::m_gmkNpcIdInfo->m_aGmkNpc == this) {
     return isPopCondMatched();
   }
   return false;

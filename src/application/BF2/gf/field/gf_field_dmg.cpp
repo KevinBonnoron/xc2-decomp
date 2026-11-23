@@ -93,7 +93,7 @@ void GfFieldDmgManager::destroy() {
   }
 }
 
-GfFieldDmg::GfFieldDmg(const CreateInfo *info) : unknown08(true), unknown09(false), unknown10(nullptr), unknown18(0xffffffff), unknown1c(0.0f), unknown20(false) {
+GfFieldDmg::GfFieldDmg(const CreateInfo *info) : unknown08(true), unknown09(false), m_bdatInfo(nullptr), unknown18(0xffffffff), unknown1c(0.0f), unknown20(false) {
   if (info != nullptr) {
     create(*info);
   }
@@ -109,7 +109,7 @@ void GfFieldDmg::dispose() {
   unknown20 = false;
   unknown18 = fw::COLI_INVALID_DAMAGE_ID;
   unknown1c = 0.0f;
-  unknown10 = nullptr;
+  m_bdatInfo = nullptr;
   unknown08 = true;
   unknown09 = false;
 }
@@ -121,23 +121,23 @@ void GfFieldDmg::update(const UpdateInfo &info) {
   }
   if (info.unknown08 != unknown18) {
     if (info.unknown08 < 0) {
-      unknown10 = nullptr;
+      m_bdatInfo = nullptr;
     } else {
-      unknown10 = GfFieldDmgManager::get()->findBdatInfo(info.unknown08);
+      m_bdatInfo = GfFieldDmgManager::get()->findBdatInfo(info.unknown08);
     }
     unknown18 = info.unknown08;
     unknown1c = 0.0f;
   }
-  if (unknown10 == nullptr) {
+  if (m_bdatInfo == nullptr) {
     return;
   }
-  GfGameUtil::requestFieldDamage(info.unknown00);
+  GfGameUtil::requestFieldDamage(info.m_GF_OBJ_HANDLE);
   unknown1c += info.unknown0c;
-  if (unknown10->unknown04 <= unknown1c) {
+  if (m_bdatInfo->unknown04 <= unknown1c) {
     unknown20 = true;
     unknown1c = 0.0f;
     if (unknown08) {
-      applyDamage(info.unknown00, unknown10->unknown09);
+      applyDamage(info.m_GF_OBJ_HANDLE, m_bdatInfo->unknown09);
     }
   }
 }

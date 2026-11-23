@@ -38,11 +38,11 @@ public:
   bool isLoading() const { return unknown98 ? true : false; }
 
 private:
-  mtl::ALLOC_HANDLE unknown08;    // Inferred role: handle; original member name unknown.
-  mm::mtl::FixStr<128> unknown0c; // Inferred role: path; original member name unknown.
-  IResPackEvent *unknown90;       // Inferred role: event; original member name unknown.
-  void (ResPack::*unknown98)();   // Inferred role: func; original member name unknown.
-  fw::RenderResource *unknowna8;  // Inferred role: resource; original member name unknown.
+  mtl::ALLOC_HANDLE m_ALLOC_HANDLE; // Inferred role: handle; original member name unknown.
+  mm::mtl::FixStr<128> unknown0c;   // Inferred role: path; original member name unknown.
+  IResPackEvent *m_iResPackEvent;   // Inferred role: event; original member name unknown.
+  void (ResPack::*unknown98)();     // Inferred role: func; original member name unknown.
+  fw::RenderResource *unknowna8;    // Inferred role: resource; original member name unknown.
 };
 
 static_assert(sizeof(ResPack) == 0xb0, "");

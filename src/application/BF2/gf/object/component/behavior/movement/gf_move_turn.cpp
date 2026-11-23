@@ -21,7 +21,7 @@ void GfMoveTurnControler::createReflection(fw::Reflection *reflection, const cha
 }
 
 void GfMoveTurnControler::update(const fw::UpdateInfo &info, Packet &packet) {
-  const Param *param = packet.unknown08.get<Param>();
+  const Param *param = packet.m_paramAdapter.get<Param>();
   const mm::Vec3 &target = packet.unknown10;
   const mm::Vec3 &current = packet.unknown20;
   f32 cosine = mm::clamp(current.x * target.x + current.y * target.y + current.z * target.z, -1.0f, 1.0f);

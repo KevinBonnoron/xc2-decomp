@@ -44,21 +44,28 @@ public:
   // Queued by GfMenuManyObjects; the game gives it its own vtable, inheriting the dispose of the base. The Queue::erase and push_back
   // instances copy the open parameter in one 16-byte move at 0xc, in the tail padding of the base.
   struct PopupInfo : GfMenuManyObjects::InfoType {
-    OpenParam unknown0c; // Inferred role: open parameter of the queued popup; original member name unknown.
+    // GfMenuObjPopup::open (0x71004b3434) zeroes the open parameter of the pop destination (two 8-byte stores at 0xc and 0x14) before the pop; without the
+    // member initialiser the stores disappear.
+    PopupInfo() : m_openParam() {}
+
+    OpenParam m_openParam; // Inferred role: open parameter of the queued popup; original member name unknown.
   };
 
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjPopup *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjPopup *owner) : _0c(), m_menuObjPopup(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjPopup *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjPopup *m_menuObjPopup; // Inferred role: owner; original member name unknown.
   };
+
+  // Game symbol _ZN2gf14GfMenuObjPopup6s_dispE (0x71014a12cc, bss); read by open, which skips the open event while it is set. Role otherwise unknown.
+  static bool s_disp;
 
   GfMenuObjPopup(u32 handle);
   ~GfMenuObjPopup() override;
-  static void open(const OpenParam &param);
+  static u32 open(const OpenParam &param);
   static void pausePickup();
   static void continuePickup(u32 type);
   static void sendEvent(u32 handle, u32 type, u32 param);
@@ -90,9 +97,9 @@ static_assert(offsetof(GfMenuObjPopup::OpenParam, unknown04) == 0x04, "");
 static_assert(offsetof(GfMenuObjPopup::OpenParam, unknown08) == 0x08, "");
 static_assert(offsetof(GfMenuObjPopup::OpenParam, unknown0c) == 0x0c, "");
 static_assert(sizeof(GfMenuObjPopup::OpenParam) == 0x10, "");
-static_assert(offsetof(GfMenuObjPopup::PopupInfo, unknown0c) == 0x0c, "");
+static_assert(offsetof(GfMenuObjPopup::PopupInfo, m_openParam) == 0x0c, "");
 static_assert(sizeof(GfMenuObjPopup::PopupInfo) == 0x20, "");
-static_assert(offsetof(GfMenuObjPopup::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjPopup::MainListener, m_menuObjPopup) == 0x20, "");
 static_assert(sizeof(GfMenuObjPopup::MainListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjPopup, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjPopup, unknown60) == 0x60, "");

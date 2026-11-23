@@ -75,7 +75,7 @@ public:
     return mm::mtl::dynamicCast<T>(blackBoard);
   }
 
-  RootNode unknown00;                       // Inferred role: root node; original member name unknown.
+  RootNode m_rootNode;                      // Inferred role: root node; original member name unknown.
   mm::mtl::UniquePtr<BlackBoard> unknown40; // Inferred role: black board; original member name unknown.
   mm::mtl::Vector<mm::mtl::IntrusivePtr<BehaviorNode>> m_pNodes;
   mm::mtl::IAllocator *m_pAllocator;

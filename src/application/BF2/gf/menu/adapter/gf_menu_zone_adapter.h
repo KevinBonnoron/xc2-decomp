@@ -57,13 +57,13 @@ public:
   void update(const fw::UpdateInfo &info) override;
 
   mm::mtl::Delegate<bool()> unknown30; // Inferred role: updater; original member name unknown.
-  IConverter *unknown50;               // Inferred role: converter; original member name unknown.
+  IConverter *m_iConverter;            // Inferred role: converter; original member name unknown.
   u16 unknown58;                       // Inferred role: zone; original member name unknown.
   u32 unknown5c;                       // Inferred role: team; original member name unknown.
 };
 
 static_assert(offsetof(GfMenuZoneAdapter, unknown30) == 0x30, "");
-static_assert(offsetof(GfMenuZoneAdapter, unknown50) == 0x50, "");
+static_assert(offsetof(GfMenuZoneAdapter, m_iConverter) == 0x50, "");
 static_assert(offsetof(GfMenuZoneAdapter, unknown58) == 0x58, "");
 static_assert(offsetof(GfMenuZoneAdapter, unknown5c) == 0x5c, "");
 static_assert(sizeof(GfMenuZoneAdapter) == 0x60, "");

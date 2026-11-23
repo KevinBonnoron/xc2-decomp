@@ -15,12 +15,12 @@ DrPixlShadowCacheMan::~DrPixlShadowCacheMan() {
   m_shadowDirUniform.unknown001();
   if (unknown00 & 2) {
     for (int i = 0; i < 4; i++) {
-      unknown0010[i].unknown5940.release();
+      m_SHCACHE_WORK_TBL[i].m_cGLibDepthTarget.release();
     }
   }
   for (int i = 0; i < 4; i++) {
     for (int j = 0; j < unknown187a4; j++) {
-      unknown0010[i].unknown0000[j].release();
+      m_SHCACHE_WORK_TBL[i].m_drPixlShadowCacheObj[j].release();
     }
   }
 }
@@ -29,24 +29,24 @@ void DrPixlShadowCacheMan::createCacheBuff() {
   m_shadowDirUniform.unknown001();
   for (int i = 0; i < 4; i++) {
     for (int j = 0; j < unknown187a4; j++) {
-      unknown0010[i].unknown0000[j].release();
-      unknown0010[i].unknown0000[j].unknown8f0 = i;
+      m_SHCACHE_WORK_TBL[i].m_drPixlShadowCacheObj[j].release();
+      m_SHCACHE_WORK_TBL[i].m_drPixlShadowCacheObj[j].unknown8f0 = i;
     }
   }
   DrPixlMemMan *memMan = DrPixlMemMan::get();
   u32 resArea = memMan->unknown010[DrMan::getIns()->unknown1c98].unknown1e8;
   for (int i = 0; i < 3; i++) {
     for (int j = 0; j < unknown187a4; j++) {
-      unknown0010[i].unknown0000[j].createShadow(unknown0010[i].unknown5854, resArea);
-      unknown0010[i].unknown0000[j].setID(j + i * unknown187a4);
+      m_SHCACHE_WORK_TBL[i].m_drPixlShadowCacheObj[j].createShadow(m_SHCACHE_WORK_TBL[i].unknown5854, resArea);
+      m_SHCACHE_WORK_TBL[i].m_drPixlShadowCacheObj[j].setID(j + i * unknown187a4);
       resArea += memMan->unknown010[DrMan::getIns()->unknown1c98].unknown1f0;
     }
   }
   resArea = memMan->unknown010[DrMan::getIns()->unknown1c98].unknown1f4;
   for (int j = 0; j < unknown187a4; j++) {
-    unknown0010[3].unknown0000[j].createShadow(unknown0010[3].unknown5854, resArea);
-    unknown0010[3].unknown0000[j].setID(j + 3 * unknown187a4);
-    unknown0010[3].unknown0000[j].unknown808 |= 0x10;
+    m_SHCACHE_WORK_TBL[3].m_drPixlShadowCacheObj[j].createShadow(m_SHCACHE_WORK_TBL[3].unknown5854, resArea);
+    m_SHCACHE_WORK_TBL[3].m_drPixlShadowCacheObj[j].setID(j + 3 * unknown187a4);
+    m_SHCACHE_WORK_TBL[3].m_drPixlShadowCacheObj[j].unknown808 |= 0x10;
     resArea += memMan->unknown010[DrMan::getIns()->unknown1c98].unknown1fc;
   }
   m_shadowDirUniform.setupArray(4);
@@ -62,7 +62,7 @@ void DrPixlShadowCacheMan::createShadowTemp() {
   DrMan::get();
   if (unknown00 & 2) {
     for (int i = 0; i < 4; i++) {
-      unknown0010[i].unknown5940.release();
+      m_SHCACHE_WORK_TBL[i].m_cGLibDepthTarget.release();
     }
     unknown00 &= ~2;
   }
@@ -73,14 +73,14 @@ void DrPixlShadowCacheMan::createShadowTemp() {
 void DrPixlShadowCacheMan::resetColorBuff() {
   DrPixlMemMan *memMan = DrPixlMemMan::get();
   u32 resArea = memMan->unknown010[DrMan::getIns()->unknown1c98].unknown1ec;
-  unknown0010[0].unknown5940.setTextureInfo(unknown0010[0].unknown5854, unknown0010[0].unknown5854, DrPixlFormat::s_ShadowFormat, true, resArea);
+  m_SHCACHE_WORK_TBL[0].m_cGLibDepthTarget.setTextureInfo(m_SHCACHE_WORK_TBL[0].unknown5854, m_SHCACHE_WORK_TBL[0].unknown5854, DrPixlFormat::s_ShadowFormat, true, resArea);
   resArea += memMan->unknown010[DrMan::getIns()->unknown1c98].unknown1f0;
-  unknown0010[1].unknown5940.setTextureInfo(unknown0010[1].unknown5854, unknown0010[1].unknown5854, DrPixlFormat::s_ShadowFormat, true, resArea);
+  m_SHCACHE_WORK_TBL[1].m_cGLibDepthTarget.setTextureInfo(m_SHCACHE_WORK_TBL[1].unknown5854, m_SHCACHE_WORK_TBL[1].unknown5854, DrPixlFormat::s_ShadowFormat, true, resArea);
   resArea += memMan->unknown010[DrMan::getIns()->unknown1c98].unknown1f0;
-  unknown0010[2].unknown5940.setTextureInfo(unknown0010[2].unknown5854, unknown0010[2].unknown5854, DrPixlFormat::s_ShadowFormat, true, resArea);
+  m_SHCACHE_WORK_TBL[2].m_cGLibDepthTarget.setTextureInfo(m_SHCACHE_WORK_TBL[2].unknown5854, m_SHCACHE_WORK_TBL[2].unknown5854, DrPixlFormat::s_ShadowFormat, true, resArea);
   DrMan::getIns();
   resArea = memMan->unknown010[DrMan::getIns()->unknown1c98].unknown1f8;
-  unknown0010[3].unknown5940.setTextureInfo(unknown0010[3].unknown5854, unknown0010[3].unknown5854, DrPixlFormat::s_ShadowFormat, true, resArea);
+  m_SHCACHE_WORK_TBL[3].m_cGLibDepthTarget.setTextureInfo(m_SHCACHE_WORK_TBL[3].unknown5854, m_SHCACHE_WORK_TBL[3].unknown5854, DrPixlFormat::s_ShadowFormat, true, resArea);
   DrMan::getIns();
 }
 
@@ -125,7 +125,7 @@ void DrPixlShadowCacheMan::debugShadowCacheRender() {
   int y = 0;
   int column = 0;
   for (int i = 0; i < unknown187a4; i++) {
-    DrMan::get()->unknown78->debugRender(*unknown0010[index].unknown0000[i].unknown128, x, y, size, size, false, false, 1.0f, true);
+    DrMan::get()->m_drPixlMan->debugRender(*m_SHCACHE_WORK_TBL[index].m_drPixlShadowCacheObj[i].unknown128, x, y, size, size, false, false, 1.0f, true);
     column++;
     if (column >= unknown187a0) {
       x = 0;
@@ -135,31 +135,31 @@ void DrPixlShadowCacheMan::debugShadowCacheRender() {
       x += size;
     }
   }
-  unknown08->debugRender(*unknown0010[index].unknown5940.unknown128, x, y, size, size, false, false, 1.0f, true);
+  m_drPixlMan->debugRender(*m_SHCACHE_WORK_TBL[index].m_cGLibDepthTarget.unknown128, x, y, size, size, false, false, 1.0f, true);
 }
 
 void DrPixlShadowCacheMan::endMode() { unknown00 |= 0x40; }
 
 void DrPixlShadowCacheMan::debugInfoRender() {}
 
-void DrPixlShadowCacheMan::setShadowDirRenderTarget(int index) { unknown0010[index].unknown5940.setRenderTarget(); }
+void DrPixlShadowCacheMan::setShadowDirRenderTarget(int index) { m_SHCACHE_WORK_TBL[index].m_cGLibDepthTarget.setRenderTarget(); }
 
-void DrPixlShadowCacheMan::setupDirRenderTarget(int index) { unknown0010[index].unknown5940.setRenderTarget(); }
+void DrPixlShadowCacheMan::setupDirRenderTarget(int index) { m_SHCACHE_WORK_TBL[index].m_cGLibDepthTarget.setRenderTarget(); }
 
 void *DrPixlShadowCacheMan::getShadowDirUniform(int index) { return &m_shadowDirUniform[index]; }
 
 void DrPixlShadowCacheMan::clearShadowMap() {
-  unknown0010[0].unknown5940.clearDepth(false);
-  unknown0010[1].unknown5940.clearDepth(false);
-  unknown0010[2].unknown5940.clearDepth(false);
-  unknown0010[3].unknown5940.clearDepth(false);
+  m_SHCACHE_WORK_TBL[0].m_cGLibDepthTarget.clearDepth(false);
+  m_SHCACHE_WORK_TBL[1].m_cGLibDepthTarget.clearDepth(false);
+  m_SHCACHE_WORK_TBL[2].m_cGLibDepthTarget.clearDepth(false);
+  m_SHCACHE_WORK_TBL[3].m_cGLibDepthTarget.clearDepth(false);
 }
 
 void DrPixlShadowCacheMan::clearZeroShadowMap() {
-  unknown0010[0].unknown5940.clearValDepth(0.0f, false);
-  unknown0010[1].unknown5940.clearValDepth(0.0f, false);
-  unknown0010[2].unknown5940.clearValDepth(0.0f, false);
-  unknown0010[3].unknown5940.clearValDepth(0.0f, false);
+  m_SHCACHE_WORK_TBL[0].m_cGLibDepthTarget.clearValDepth(0.0f, false);
+  m_SHCACHE_WORK_TBL[1].m_cGLibDepthTarget.clearValDepth(0.0f, false);
+  m_SHCACHE_WORK_TBL[2].m_cGLibDepthTarget.clearValDepth(0.0f, false);
+  m_SHCACHE_WORK_TBL[3].m_cGLibDepthTarget.clearValDepth(0.0f, false);
 }
 
 void DrPixlShadowCacheMan::addShadowCacheUpdate(bool) {

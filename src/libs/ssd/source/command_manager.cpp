@@ -4,7 +4,7 @@
 
 namespace ssd {
 
-void HandlePlay::Exec() { unknown08->Play(unknown10, unknown18, unknown20, unknown24); }
+void HandlePlay::Exec() { unknown08->Play(m_soundEntry, m_soundActor, unknown20, unknown24); }
 
 void CommandManager::CommandBuffer::Init(int size) {
   Allocator::Block *block = SoundMemory::allocator_->NewInstanceImpl(sizeof(unknown002), size, 16);

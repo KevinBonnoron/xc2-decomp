@@ -125,12 +125,53 @@ void GfMenuObjBlEquip::setupSlot(ui::UIObjectAcc &acc, GfMenuItemList *list) {
   }
 }
 
+// Game 0x7100415174: the copy loops take the destination index before the bounds test (the first loop steps its counter right after reading
+// the element, the second zero-extends offset + i once); written that way the 293 instructions match, the plain for loops give other registers.
+void GfMenuObjBlEquip::sortOrb(GfMenuItemList *list, u16 sort) {
+  GfMenuItemList *equipOrbs = GfMenuItemList::create();
+  GfMenuItemList *emptyOrbs = GfMenuItemList::create();
+  ui::UIListInfoBase::SetupParam param;
+  equipOrbs->setup(getAllocator(ALLOCATOR_UNKNOWN_0), param);
+  emptyOrbs->setup(getAllocator(ALLOCATOR_UNKNOWN_0), param);
+  for (u32 i = 0; i < list->getSize(); i++) {
+    MenuItemInfo &info = list->getContents(i);
+    if (info.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_3) {
+      equipOrbs->addContents(info);
+    }
+  }
+  equipOrbs->sort(sort, false);
+  for (u32 i = 0; i < list->getSize(); i++) {
+    MenuItemInfo &info = list->getContents(i);
+    if (info.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_9) {
+      emptyOrbs->addContents(info);
+    }
+  }
+  emptyOrbs->sort(sort, false);
+  u32 offset = 0;
+  while (offset < equipOrbs->getSize()) {
+    MenuItemInfo &info = equipOrbs->getContents(offset);
+    u32 index = offset++;
+    if (index < list->contents.size()) {
+      list->contents[index] = info;
+    }
+  }
+  for (u32 i = 0; i < emptyOrbs->getSize(); i++) {
+    u32 index = offset + i;
+    MenuItemInfo &info = emptyOrbs->getContents(i);
+    if (index < list->contents.size()) {
+      list->contents[index] = info;
+    }
+  }
+  mm::mtl::safeRelease(equipOrbs);
+  mm::mtl::safeRelease(emptyOrbs);
+}
+
 void GfMenuObjBlEquip::refreshItemList(ui::UIObjectAcc &acc, GfMenuItemList *list, ui::UISelectObjList *selectList, u32 slot) {
   u32 blade = GfMenuReference::getReferenceBladeID(0);
   for (u32 i = 0; i < selectList->getSize(); i++) {
     MenuItemInfo &info = list->getContents(list->getPageIndex(i));
     mm::mtl::FixStr<32> name;
-    u32 user = GfMenuItemUtil::searchEquipOrb(info.unknown04, info.unknown0c, nullptr);
+    u32 user = GfMenuItemUtil::searchEquipOrb(info.unknown04, info.m_itemHandle, nullptr);
     bool isUsed = user != 0;
     name.format("TXT_list_use@%02d", i + 1);
     ui::UIObjectAcc use(acc.searchChild(name.c_str()));
@@ -147,7 +188,7 @@ void GfMenuObjBlEquip::refreshItemList(ui::UIObjectAcc &acc, GfMenuItemList *lis
     ui::UIObjectAcc(acc.searchChild(name.c_str())).setDisp(type != ItemType::ITEM_TYPE_UNKNOWN_3);
     name.format("TXT_aslist_name@%02d", i + 1);
     ui::UIObjectAcc orbName(acc.searchChild(name.c_str()));
-    u32 result = GfMenuItemUtil::canEquipOrb(info.unknown04, info.unknown0c, blade, slot);
+    u32 result = GfMenuItemUtil::canEquipOrb(info.unknown04, info.m_itemHandle, blade, slot);
     if (result == 1 || result == 3 || result == 4) {
       GfMenuObjUtil::setColMulandAdd(orbName.unknown10, "txt_disable");
     } else {
@@ -162,11 +203,11 @@ void GfMenuObjBlEquip::setupItemList(ui::UIObjectAcc &acc, GfMenuItemList *list,
     GfMenuItemList::ItemBoxSetup setup;
     setup.unknown14 = ItemType::ITEM_TYPE_UNKNOWN_3;
     setup.unknown28 = false;
-    setup.unknown00.unknown08 = selectList->getSize();
-    setup.unknown00.unknown10 = true;
+    setup.m_setupParam.unknown08 = selectList->getSize();
+    setup.m_setupParam.unknown10 = true;
     list->setupFromBox(setup);
     if (list->getSize() == 0) {
-      ui::UIListInfoBase::SetupParam param = setup.unknown00;
+      ui::UIListInfoBase::SetupParam param = setup.m_setupParam;
       list->setup(getAllocator(ALLOCATOR_UNKNOWN_0), param);
     }
     mm::mtl::FixedVector<GfItem, 1024> items;
@@ -175,7 +216,7 @@ void GfMenuObjBlEquip::setupItemList(ui::UIObjectAcc &acc, GfMenuItemList *list,
       MenuItemInfo info;
       info.unknown00 = ItemType::ITEM_TYPE_UNKNOWN_9;
       info.unknown04 = it->unknown00;
-      info.unknown0c = it->unknown08;
+      info.m_itemHandle = it->m_itemHandle;
       info.unknown08 = it->unknown02;
       list->addContents(info);
     }
@@ -230,7 +271,7 @@ bool GfMenuObjBlEquip::removeItem(ui::UIObjectAcc &acc, GfMenuItemList *equipLis
     info.unknown00 = ItemType::ITEM_TYPE_UNKNOWN_3;
     info.unknown04 = 0;
     info.unknown08 = 0;
-    info.unknown0c = GfItemHandle(0);
+    info.m_itemHandle = GfItemHandle(0);
   }
   refreshItemList(acc, list, selectList, slot);
   return true;
@@ -248,7 +289,7 @@ void GfMenuObjBlEquip::MainListener::reciveEvent(const ui::EventData &event, u32
       acc.setDisp(false);
       acc.setTerm();
       GfMenuObjCharSelect::returnSubMenu();
-      GfMenuObject::returnFSSubLayer(unknown20);
+      GfMenuObject::returnFSSubLayer(m_menuObjBlEquip);
     } else if (event.unknown08 == 1) {
       unknown163(acc.searchChild("LAY_eqpac_slot"), GfMenuTypes::unknown003_257, 0);
     }

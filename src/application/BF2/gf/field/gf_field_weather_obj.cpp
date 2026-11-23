@@ -96,7 +96,7 @@ void WeatherEff::setPause(bool) {}
 
 WeatherSnd::WeatherSnd() : unknown10(WEATYPE_UNKNOWN_0), unknown14(false), unknown18(1.0f) {}
 
-bool WeatherSnd::isPlay() const { return unknown08.isValid(); }
+bool WeatherSnd::isPlay() const { return m_soundHandle.isValid(); }
 
 void WeatherSnd::create(WEATYPE type) {
   GfSound *sound = GfSound::get();
@@ -124,8 +124,8 @@ void WeatherSnd::create(WEATYPE type) {
 
   SoundParam param(0, name);
   param.unknown38 = CATEGORY_WEATHER;
-  unknown08 = sound->playSe(param);
-  if (!unknown08.isValid()) {
+  m_soundHandle = sound->playSe(param);
+  if (!m_soundHandle.isValid()) {
     unknown14 = true;
   }
   const char *beginName = GfDataMap::getWeatherSndBeginName(type);
@@ -137,7 +137,7 @@ void WeatherSnd::create(WEATYPE type) {
 }
 
 void WeatherSnd::destroy() {
-  SoundHandle &handle = unknown08;
+  SoundHandle &handle = m_soundHandle;
   if (handle.isValid()) {
     if (GfSound::get() != nullptr) {
       GfSound::get()->stopSe(handle, unknown052);
@@ -148,7 +148,7 @@ void WeatherSnd::destroy() {
 
 void WeatherSnd::fadeout() {
   GfSound *sound = GfSound::get();
-  SoundHandle &handle = unknown08;
+  SoundHandle &handle = m_soundHandle;
   if (sound != nullptr && handle.isValid()) {
     sound->stopSe(handle, unknown052);
     handle.clear();
@@ -177,7 +177,7 @@ void WeatherSnd::update(const fw::UpdateInfo &info, f32 rate, bool isFadeout) {
     unknown18 = 1.0f;
   }
 
-  SoundHandle &handle = unknown08;
+  SoundHandle &handle = m_soundHandle;
   if (handle.isValid() && !sound->isPlaying(handle)) {
     handle.clear();
   }
@@ -205,7 +205,7 @@ bool WeatherSnd::isEraseSe() const {
 }
 
 bool WeatherSnd::isCreateSe(f32 rate) const {
-  if (unknown08.isValid()) {
+  if (m_soundHandle.isValid()) {
     return false;
   }
 
@@ -217,8 +217,8 @@ bool WeatherSnd::isCreateSe(f32 rate) const {
 }
 
 void WeatherSnd::applyVolume(const fw::UpdateInfo &, f32 rate) {
-  if (unknown08.isValid() && GfSound::get() != nullptr) {
-    GfSound::get()->setVolume(unknown08, unknown18 * rate, 0.0f);
+  if (m_soundHandle.isValid() && GfSound::get() != nullptr) {
+    GfSound::get()->setVolume(m_soundHandle, unknown18 * rate, 0.0f);
   }
 }
 

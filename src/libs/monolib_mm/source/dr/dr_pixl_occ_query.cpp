@@ -9,10 +9,10 @@ namespace ml {
 
 void DrPixlOccQuery::begin() {
   DrAPGxType::beginOccQuery();
-  unknown10->bindShdBoxVertex();
+  m_drShdDataList->bindShdBoxVertex();
   unknown28 = 0;
-  unknown18->setupShader(0u);
-  unknown24 = (unknown18->unknown38 + unknown18->unknown58)->getUniformBlockOfs("U_POST");
+  m_drShdDataObj->setupShader(0u);
+  unknown24 = (m_drShdDataObj->unknown38 + m_drShdDataObj->unknown58)->getUniformBlockOfs("U_POST");
 }
 
 DrResQueryObj *DrPixlOccQuery::createObj() {
@@ -39,7 +39,7 @@ DrResQueryObj *DrPixlOccQuery::createObj() {
     unknown74--;
     unknown70++;
     obj->unknown38 = 0;
-    obj->unknown28 = nullptr;
+    obj->m_drResUseQueryObj = nullptr;
     obj->unknown30 = nullptr;
   }
   return obj;

@@ -15,9 +15,9 @@ public:
   void *allocate(size_t size, size_t alignment) override;
   void deallocate(void *pointer) override;
 
-  mtl::ALLOC_HANDLE unknown08; // Inferred role: handle; original member name unknown.
+  mtl::ALLOC_HANDLE m_memHandle; // Inferred role: handle; named after the game accessor layer::LayerHandleAllocator::getMemHandle.
 };
 
-static_assert(offsetof(LayerHandleAllocator, unknown08) == 0x08, "");
+static_assert(offsetof(LayerHandleAllocator, m_memHandle) == 0x08, "");
 
 } // namespace layer

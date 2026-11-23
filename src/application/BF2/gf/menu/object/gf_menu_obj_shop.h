@@ -38,111 +38,111 @@ public:
 
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjShop *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjShop *owner) : _0c(), m_menuObjShop(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjShop *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjShop *m_menuObjShop; // Inferred role: owner; original member name unknown.
   };
 
   class CommonListener : public ui::UIObjectListener {
   public:
-    CommonListener(GfMenuObjShop *owner) : unknown0c(0), _10(), unknown20(owner) {}
+    CommonListener(GfMenuObjShop *owner) : unknown0c(0), _10(), m_menuObjShop(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     int unknown0c; // Inferred role: control of the open and close fade; original member name unknown.
     u8 _10[0x1c - 0x10];
-    GfMenuObjShop *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjShop *m_menuObjShop; // Inferred role: owner; original member name unknown.
   };
 
   class OrbListListener : public ui::UIObjectListener {
   public:
-    OrbListListener(GfMenuObjShop *owner) : _0c(), unknown20(owner) {}
+    OrbListListener(GfMenuObjShop *owner) : _0c(), m_menuObjShop(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjShop *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjShop *m_menuObjShop; // Inferred role: owner; original member name unknown.
   };
 
   class SubListener : public ui::UIObjectListener {
   public:
-    SubListener(GfMenuObjShop *owner) : _0c(), unknown20(owner) {}
+    SubListener(GfMenuObjShop *owner) : _0c(), m_menuObjShop(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjShop *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjShop *m_menuObjShop; // Inferred role: owner; original member name unknown.
   };
 
   class StoreActListener : public ui::UIObjectListener {
   public:
-    StoreActListener(GfMenuObjShop *owner) : _0c(), unknown20(owner) {}
+    StoreActListener(GfMenuObjShop *owner) : _0c(), m_menuObjShop(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjShop *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjShop *m_menuObjShop; // Inferred role: owner; original member name unknown.
   };
 
   class StoreListListener : public ui::UIObjectListener {
   public:
-    StoreListListener(GfMenuObjShop *owner) : _0c(), unknown20(owner) {}
+    StoreListListener(GfMenuObjShop *owner) : _0c(), m_menuObjShop(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjShop *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjShop *m_menuObjShop; // Inferred role: owner; original member name unknown.
   };
 
   class SellListListener : public ui::UIObjectListener {
   public:
-    SellListListener(GfMenuObjShop *owner) : _0c(), unknown20(owner) {}
+    SellListListener(GfMenuObjShop *owner) : _0c(), m_menuObjShop(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjShop *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjShop *m_menuObjShop; // Inferred role: owner; original member name unknown.
   };
 
   class SellFilterListener : public ui::UIObjectListener {
   public:
-    SellFilterListener(GfMenuObjShop *owner) : _0c(), unknown20(owner) {}
+    SellFilterListener(GfMenuObjShop *owner) : _0c(), m_menuObjShop(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjShop *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjShop *m_menuObjShop; // Inferred role: owner; original member name unknown.
   };
 
   class InnActListener : public ui::UIObjectListener {
   public:
-    InnActListener(GfMenuObjShop *owner) : _0c(), unknown20(owner) {}
+    InnActListener(GfMenuObjShop *owner) : _0c(), m_menuObjShop(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjShop *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjShop *m_menuObjShop; // Inferred role: owner; original member name unknown.
   };
 
   class OrbRecipeListener : public ui::UIObjectListener {
   public:
-    OrbRecipeListener(GfMenuObjShop *owner) : _0c(), unknown20(owner) {}
+    OrbRecipeListener(GfMenuObjShop *owner) : _0c(), m_menuObjShop(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjShop *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjShop *m_menuObjShop; // Inferred role: owner; original member name unknown.
   };
 
   class ExcTaskListListener : public ui::UIObjectListener {
   public:
-    ExcTaskListListener(GfMenuObjShop *owner) : _0c(), unknown20(owner) {}
+    ExcTaskListListener(GfMenuObjShop *owner) : _0c(), m_menuObjShop(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjShop *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjShop *m_menuObjShop; // Inferred role: owner; original member name unknown.
   };
 
   class NumSelectListener : public ui::UIObjectListener {
   public:
-    NumSelectListener(GfMenuObjShop *owner) : _0c(), unknown20(owner) {}
+    NumSelectListener(GfMenuObjShop *owner) : _0c(), m_menuObjShop(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjShop *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjShop *m_menuObjShop; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjShop(u32 handle);
@@ -216,11 +216,11 @@ public:
   mm::mtl::ReferenceObject *unknowne0;                         // Inferred role: reference-counted object; type and original member name unknown.
   GfMenuItemList *unknowne8;                                   // Inferred role: orb items; original member name unknown.
   GfMenuItemList *unknownf0;                                   // Inferred role: orb recipe items; original member name unknown.
-  RecipeInfo unknownf8;                                        // Inferred role: recipe of the orb item selected in the orb list; original member name unknown.
+  RecipeInfo m_recipeInfo;                                     // Inferred role: recipe of the orb item selected in the orb list; original member name unknown.
   mm::mtl::Array<u32> unknown130;                              // Inferred role: owned count of each page of the orb recipe items; original member name unknown.
   u32 unknown148;                                              // Inferred role: orb item to hand over; original member name unknown.
   u32 unknown14c;                                              // Inferred role: orb item sort index; original member name unknown.
-  GfMenuIDList *unknown150;                                    // Inferred role: exchange task list; original member name unknown.
+  GfMenuIDList *m_menuIDList;                                  // Inferred role: exchange task list; original member name unknown.
   GfMenuItemList *unknown158;                                  // Inferred role: exchange items; original member name unknown.
   GfMenuItemList *unknown160;                                  // Inferred role: items received; original member name unknown.
   mm::mtl::IntrusivePtr<GfMenuReferenceNumber> unknown168[26]; // Inferred role: reference numbers shown by the texts; original member name unknown.
@@ -240,38 +240,38 @@ public:
   int unknown500;                          // Inferred role: result of the last exchange, 1 done and 2 refused; original member name unknown.
   int unknown504;                          // Inferred role: unused, -1 after the constructor; original member name unknown.
   mm::mtl::ReferenceObject *unknown508[8]; // Inferred role: reference-counted objects; type and original member name unknown.
-  QuestTaskParam unknown548;               // Inferred role: linked exchange quest task; original member name unknown.
+  QuestTaskParam m_questTaskParam;         // Inferred role: linked exchange quest task; original member name unknown.
   int unknown568;                          // Inferred role: exchange task index type; original member name unknown.
   u8 _56c[0x570 - 0x56c];
   GfMenuCallContext *unknown570; // Inferred role: blade weapon call context; original member name unknown.
   GfMenuCallContext *unknown578; // Inferred role: item get call context; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuObjShop::SubListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjShop::SubListener, m_menuObjShop) == 0x20, "");
 static_assert(sizeof(GfMenuObjShop::SubListener) == 0x28, "");
-static_assert(offsetof(GfMenuObjShop::StoreActListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjShop::StoreActListener, m_menuObjShop) == 0x20, "");
 static_assert(sizeof(GfMenuObjShop::StoreActListener) == 0x28, "");
-static_assert(offsetof(GfMenuObjShop::StoreListListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjShop::StoreListListener, m_menuObjShop) == 0x20, "");
 static_assert(sizeof(GfMenuObjShop::StoreListListener) == 0x28, "");
-static_assert(offsetof(GfMenuObjShop::SellListListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjShop::SellListListener, m_menuObjShop) == 0x20, "");
 static_assert(sizeof(GfMenuObjShop::SellListListener) == 0x28, "");
-static_assert(offsetof(GfMenuObjShop::SellFilterListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjShop::SellFilterListener, m_menuObjShop) == 0x20, "");
 static_assert(sizeof(GfMenuObjShop::SellFilterListener) == 0x28, "");
-static_assert(offsetof(GfMenuObjShop::InnActListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjShop::InnActListener, m_menuObjShop) == 0x20, "");
 static_assert(sizeof(GfMenuObjShop::InnActListener) == 0x28, "");
-static_assert(offsetof(GfMenuObjShop::OrbRecipeListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjShop::OrbRecipeListener, m_menuObjShop) == 0x20, "");
 static_assert(sizeof(GfMenuObjShop::OrbRecipeListener) == 0x28, "");
-static_assert(offsetof(GfMenuObjShop::ExcTaskListListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjShop::ExcTaskListListener, m_menuObjShop) == 0x20, "");
 static_assert(sizeof(GfMenuObjShop::ExcTaskListListener) == 0x28, "");
-static_assert(offsetof(GfMenuObjShop::NumSelectListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjShop::NumSelectListener, m_menuObjShop) == 0x20, "");
 static_assert(sizeof(GfMenuObjShop::NumSelectListener) == 0x28, "");
 
-static_assert(offsetof(GfMenuObjShop::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjShop::MainListener, m_menuObjShop) == 0x20, "");
 static_assert(sizeof(GfMenuObjShop::MainListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjShop::CommonListener, unknown0c) == 0x0c, "");
-static_assert(offsetof(GfMenuObjShop::CommonListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjShop::CommonListener, m_menuObjShop) == 0x20, "");
 static_assert(sizeof(GfMenuObjShop::CommonListener) == 0x28, "");
-static_assert(offsetof(GfMenuObjShop::OrbListListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjShop::OrbListListener, m_menuObjShop) == 0x20, "");
 static_assert(sizeof(GfMenuObjShop::OrbListListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjShop, unknown24) == 0x24, "");
 static_assert(offsetof(GfMenuObjShop, unknown2c) == 0x2c, "");
@@ -279,9 +279,9 @@ static_assert(offsetof(GfMenuObjShop, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjShop, unknown34) == 0x34, "");
 static_assert(offsetof(GfMenuObjShop, unknown38) == 0x38, "");
 static_assert(offsetof(GfMenuObjShop, unknown14c) == 0x14c, "");
-static_assert(offsetof(GfMenuObjShop, unknown150) == 0x150, "");
+static_assert(offsetof(GfMenuObjShop, m_menuIDList) == 0x150, "");
 static_assert(offsetof(GfMenuObjShop, unknown168) == 0x168, "");
-static_assert(offsetof(GfMenuObjShop, unknown548) == 0x548, "");
+static_assert(offsetof(GfMenuObjShop, m_questTaskParam) == 0x548, "");
 static_assert(offsetof(GfMenuObjShop, unknown568) == 0x568, "");
 static_assert(offsetof(GfMenuObjShop, unknown59) == 0x59, "");
 static_assert(offsetof(GfMenuObjShop, unknown60) == 0x60, "");
@@ -298,7 +298,7 @@ static_assert(offsetof(GfMenuObjShop, unknownd8) == 0xd8, "");
 static_assert(offsetof(GfMenuObjShop, unknown48) == 0x48, "");
 static_assert(offsetof(GfMenuObjShop, unknown50) == 0x50, "");
 static_assert(offsetof(GfMenuObjShop, unknown58) == 0x58, "");
-static_assert(offsetof(GfMenuObjShop, unknownf8) == 0xf8, "");
+static_assert(offsetof(GfMenuObjShop, m_recipeInfo) == 0xf8, "");
 static_assert(offsetof(GfMenuObjShop, unknown240) == 0x240, "");
 static_assert(offsetof(GfMenuObjShop, unknown4dc) == 0x4dc, "");
 static_assert(offsetof(GfMenuObjShop, unknown4e0) == 0x4e0, "");

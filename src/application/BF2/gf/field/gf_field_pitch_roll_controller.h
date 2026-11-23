@@ -28,9 +28,9 @@ public:
   };
 
   struct CreateInfo {
-    GF_OBJ_HANDLE *unknown00; // Inferred role: object; original member name unknown.
-    unknown001 unknown08;     // Role and original member name unknown.
-    bool unknown0a;           // Role and original member name unknown.
+    GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: object; original member name unknown.
+    unknown001 unknown08;           // Role and original member name unknown.
+    bool unknown0a;                 // Role and original member name unknown.
   };
 
   GfFieldPitchRollController(const CreateInfo *info = nullptr);
@@ -41,7 +41,7 @@ public:
   void seqInit(const gmk::GmkRouteNavi &navi);
   void seqUpdate(const gmk::GmkRouteNavi &navi);
 
-  GF_OBJ_HANDLE *unknown00;                                                     // Inferred role: object; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE;                                               // Inferred role: object; original member name unknown.
   unknown001 unknown08;                                                         // Role and original member name unknown.
   bool unknown0a;                                                               // Role and original member name unknown.
   fw::IkFadeSolver *unknown10;                                                  // Inferred role: solver; original member name unknown.

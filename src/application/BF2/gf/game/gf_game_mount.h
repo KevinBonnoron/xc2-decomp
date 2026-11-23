@@ -61,7 +61,7 @@ static_assert(sizeof(GfWeapon) == 0xb0, "");
 class GfGameMount : public mm::mtl::ReferenceObject {
 public:
   GfGameMount(GF_OBJ_HANDLE *owner, GfWeapon *weapon, OPTMNT type, GFATTACH attach)
-      : unknown10(owner), unknown18(weapon), unknown20(OPTMNT_UNKNOWN_FFFFFFFF), unknown24(type), unknown28(true), unknown2c(attach) {}
+      : unknown10(owner), m_weapon(weapon), unknown20(OPTMNT_UNKNOWN_FFFFFFFF), unknown24(type), unknown28(true), unknown2c(attach) {}
 
   virtual bool execMount(OPTMNT type);
   virtual bool setWeaponOwner(OPTMNT type);
@@ -76,7 +76,7 @@ public:
   void detach();
 
   GF_OBJ_HANDLE *unknown10; // Inferred role: owner handle; original member name unknown.
-  GfWeapon *unknown18;      // Inferred role: mounted handles; original member name unknown.
+  GfWeapon *m_weapon;       // Inferred role: mounted handles; original member name unknown.
   OPTMNT unknown20;         // Inferred role: current mount type; original member name unknown.
   OPTMNT unknown24;         // Inferred role: pending mount type; original member name unknown.
   bool unknown28;           // Inferred role: mount type reset; original member name unknown.
@@ -84,7 +84,7 @@ public:
 };
 
 static_assert(offsetof(GfGameMount, unknown10) == 0x10, "");
-static_assert(offsetof(GfGameMount, unknown18) == 0x18, "");
+static_assert(offsetof(GfGameMount, m_weapon) == 0x18, "");
 static_assert(offsetof(GfGameMount, unknown20) == 0x20, "");
 static_assert(offsetof(GfGameMount, unknown24) == 0x24, "");
 static_assert(offsetof(GfGameMount, unknown28) == 0x28, "");
@@ -109,8 +109,8 @@ static_assert(sizeof(GfGameMountBlade) == 0x38, "");
 class GfMountManager : public mm::mtl::PtrSingleton<GfMountManager>, public IGfObjListener {
 public:
   struct MINFO {
-    GfGameMount *unknown00;     // Inferred role: mount; original member name unknown.
-    GF_MOUNT_HANDLE *unknown08; // Inferred role: mount handle; original member name unknown.
+    GfGameMount *m_gameMount;           // Inferred role: mount; original member name unknown.
+    GF_MOUNT_HANDLE *m_GF_MOUNT_HANDLE; // Inferred role: mount handle; original member name unknown.
   };
 
   GfMountManager(const GfSetupParam &param);

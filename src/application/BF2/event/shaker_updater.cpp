@@ -20,7 +20,7 @@ void ShakerUpdater::reserve(const mm::Vec3 &pos, const mm::Vec3 &rot) {
   param.val(3).setF32(rot.x);
   param.val(4).setF32(rot.y);
   param.val(5).setF32(rot.z);
-  unknown08.push_back(&unknown00, param);
+  unknown08.push_back(&m_update, param);
 }
 
 } // namespace event

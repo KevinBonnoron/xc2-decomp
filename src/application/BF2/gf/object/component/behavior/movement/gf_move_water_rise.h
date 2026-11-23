@@ -22,11 +22,11 @@ public:
   };
 
   struct Packet {
-    Packet() : unknown08(), unknown10(false) {}
+    Packet() : m_paramAdapter(), unknown10(false) {}
 
-    f32 unknown00;              // Inferred role: vertical speed; original member name unknown.
-    fw::ParamAdapter unknown08; // Inferred role: water rise param; original member name unknown.
-    bool unknown10;             // Inferred role: braking (within the rise brake height); original member name unknown.
+    f32 unknown00;                   // Inferred role: vertical speed; original member name unknown.
+    fw::ParamAdapter m_paramAdapter; // Inferred role: water rise param; original member name unknown.
+    bool unknown10;                  // Inferred role: braking (within the rise brake height); original member name unknown.
   };
 
   static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
@@ -37,7 +37,7 @@ static_assert(offsetof(GfMoveWaterRiseControler::Param, speedMax) == 0x04, "");
 static_assert(offsetof(GfMoveWaterRiseControler::Param, brake) == 0x08, "");
 static_assert(offsetof(GfMoveWaterRiseControler::Param, speedMin) == 0x0c, "");
 static_assert(sizeof(GfMoveWaterRiseControler::Param) == 0x10, "");
-static_assert(offsetof(GfMoveWaterRiseControler::Packet, unknown08) == 0x08, "");
+static_assert(offsetof(GfMoveWaterRiseControler::Packet, m_paramAdapter) == 0x08, "");
 static_assert(offsetof(GfMoveWaterRiseControler::Packet, unknown10) == 0x10, "");
 static_assert(sizeof(GfMoveWaterRiseControler::Packet) == 0x18, "");
 

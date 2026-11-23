@@ -51,20 +51,20 @@ struct SDataOption {
     unknown04[3] = 0;
     unknown04[7] = true;
     memset(_0c, 0, sizeof(_0c));
-    unknown4c.clear();
+    m_sSoundUiOption.clear();
   }
 
   u32 unknown00;   // Inferred role: version; original member name unknown.
   u8 unknown04[8]; // Eight option bytes from 0x04, compared byte by byte by GfMenuObjOption::MainListener::reciveEvent and written at fixed indices by the option conversions; original member name
                    // unknown.
   u8 _0c[0x4c - 0x0c];
-  SSoundUiOption unknown4c; // Inferred role: sound and screen options; original member name unknown.
+  SSoundUiOption m_sSoundUiOption; // Inferred role: sound and screen options; original member name unknown.
   u8 _6a[0x88 - 0x6a];
 };
 
 static_assert(offsetof(SDataOption, unknown04) == 0x04, "");
 static_assert(offsetof(SDataOption, _0c) == 0x0c, "");
-static_assert(offsetof(SDataOption, unknown4c) == 0x4c, "");
+static_assert(offsetof(SDataOption, m_sSoundUiOption) == 0x4c, "");
 static_assert(offsetof(SDataOption, _6a) == 0x6a, "");
 static_assert(sizeof(SDataOption) == 0x88, "");
 

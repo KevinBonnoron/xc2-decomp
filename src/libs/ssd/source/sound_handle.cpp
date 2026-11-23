@@ -24,11 +24,11 @@ class SoundSsdDriver;
 namespace ssd {
 
 SoundHandle::SoundHandle()
-    : Object(ObjectType::SOUND_HANDLE), unknown30(nullptr), unknown38(nullptr), unknown40(0), unknown48(0, 0.0f), unknown58(false), unknown59(false), unknown5a(false), unknownf8(0) {
-  unknownc0[0].unknown00 = false;
-  unknownc0[0].unknown04.Reset(1.0f);
-  unknownc0[1].unknown00 = false;
-  unknownc0[1].unknown04.Reset(1.0f);
+    : Object(ObjectType::SOUND_HANDLE), m_soundEntry(nullptr), m_soundActor(nullptr), unknown40(0), m_soundCategory(0, 0.0f), unknown58(false), unknown59(false), unknown5a(false), unknownf8(0) {
+  m_effect[0].unknown00 = false;
+  m_effect[0].unknown04.Reset(1.0f);
+  m_effect[1].unknown00 = false;
+  m_effect[1].unknown04.Reset(1.0f);
 }
 
 SoundHandle::~SoundHandle() {
@@ -45,10 +45,10 @@ void SoundHandle::Init() {
   unknownb8 = 1.0f;
   unknownbc = 0.0f;
   unknown60 = 0;
-  unknownc0[0].unknown00 = false;
-  unknownc0[0].unknown04.Reset(1.0f);
-  unknownc0[1].unknown00 = false;
-  unknownc0[1].unknown04.Reset(1.0f);
+  m_effect[0].unknown00 = false;
+  m_effect[0].unknown04.Reset(1.0f);
+  m_effect[1].unknown00 = false;
+  m_effect[1].unknown04.Reset(1.0f);
   ClearDelegate();
   unknown58 = true;
 }
@@ -60,9 +60,9 @@ void SoundHandle::Quit() {
     VoiceHandle *voice = core->GetVoiceHandle(unknownf8);
     if (voice != nullptr) {
       Stop(0.0f);
-      voice->unknown58 = nullptr;
+      voice->m_soundHandle = nullptr;
     }
-    unknown30 = nullptr;
+    m_soundEntry = nullptr;
     ClearDelegate();
     unknown128.unknown001();
   }
@@ -75,7 +75,7 @@ void SoundHandle::Delete() {
 }
 
 void SoundHandle::ClearDelegateImpl() {
-  unknown100.Clear();
+  m_multiCast.Clear();
   for (int i = 0; i < unknown128.unknown08; i++) {
     Delegate::Handle *handle = unknown128.unknown10[i];
     SoundMemory::allocator_->unknown001(handle);
@@ -95,7 +95,7 @@ void SoundHandle::ClearDelegate() {
 void SoundHandle::AddDelegate(Delegate::Handle *handle) {
   SystemCore *core = static_cast<SystemCore *>(SoundCore::instance_);
   core->unknown708.Lock();
-  Result result = unknown100.AddDelegate(handle);
+  Result result = m_multiCast.AddDelegate(handle);
   core->unknown708.Unlock();
   set_result(result);
 }
@@ -106,7 +106,7 @@ long SoundHandle::RemoveDelegate(Delegate::Handle *handle) {
     return -1;
   }
   core->unknown708.Lock();
-  Result result = unknown100.RemoveDelegate(handle);
+  Result result = m_multiCast.RemoveDelegate(handle);
   core->unknown708.Unlock();
   return result;
 }
@@ -121,7 +121,7 @@ void SoundHandle::AddDelegateInternal(Delegate::Handle *handle) {
   }
   unknown128.unknown10[count] = handle;
   unknown128.unknown08++;
-  Result result = unknown100.AddDelegate(handle);
+  Result result = m_multiCast.AddDelegate(handle);
   core->unknown708.Unlock();
   set_result(result);
 }
@@ -138,10 +138,10 @@ bool SoundHandle::IsValidHandle() const {
 }
 
 long SoundHandle::PlayCommand(const SoundEntry *entry, SoundActor *actor, f32 volume, f32 fadeTime) {
-  HandlePlay *command = static_cast<SystemCore *>(SoundCore::instance_)->unknown2c8.unknown003<HandlePlay>();
+  HandlePlay *command = static_cast<SystemCore *>(SoundCore::instance_)->m_commandManager.unknown003<HandlePlay>();
   command->unknown08 = this;
-  command->unknown10 = entry;
-  command->unknown18 = actor;
+  command->m_soundEntry = entry;
+  command->m_soundActor = actor;
   command->unknown20 = volume;
   command->unknown24 = fadeTime;
   return 0;
@@ -150,7 +150,7 @@ long SoundHandle::PlayCommand(const SoundEntry *entry, SoundActor *actor, f32 vo
 long SoundHandle::Play(const SoundEntry *entry, SoundActor *actor, f32 volume, f32 fadeTime) {
   if (!unknown58) {
     Init();
-  } else if (unknown30 != nullptr) {
+  } else if (m_soundEntry != nullptr) {
     return -33;
   }
   SystemCore *core = static_cast<SystemCore *>(SoundCore::instance_);
@@ -171,7 +171,7 @@ long SoundHandle::Play(const SoundEntry *entry, SoundActor *actor, f32 volume, f
 long SoundHandle::Prepare(const SoundEntry *entry) {
   if (!unknown58) {
     Init();
-  } else if (unknown30 != nullptr) {
+  } else if (m_soundEntry != nullptr) {
     return -33;
   }
   if (SoundCore::instance_ == nullptr) {
@@ -182,7 +182,7 @@ long SoundHandle::Prepare(const SoundEntry *entry) {
   if (voice == nullptr) {
     return -50;
   }
-  unknown30 = entry;
+  m_soundEntry = entry;
   long result = voice->Prepare(entry, this, &unknownf8);
   if (result < 0) {
     static_cast<SystemCore *>(SoundCore::instance_)->FreeVoiceHandle(voice);
@@ -195,7 +195,7 @@ long SoundHandle::Start(SoundActor *actor, f32 volume, f32 fadeTime) {
   if (core == nullptr) {
     return -12;
   }
-  if (unknown30 == nullptr) {
+  if (m_soundEntry == nullptr) {
     return -20;
   }
   VoiceHandle *voice = core->GetVoiceHandle(unknownf8);
@@ -203,15 +203,15 @@ long SoundHandle::Start(SoundActor *actor, f32 volume, f32 fadeTime) {
     return -29;
   }
   if (actor == nullptr) {
-    actor = core->unknown4a0;
+    actor = core->m_soundActor;
   }
-  unknown38 = actor;
-  SoundGroup *group = unknown30->GetSoundGroup();
+  m_soundActor = actor;
+  SoundGroup *group = m_soundEntry->GetSoundGroup();
   if (group == nullptr) {
-    group = &core->unknown480;
+    group = &core->m_soundGroup;
   }
   unknown40 = group->unknown18;
-  unknown48.unknown08 = core->GetCategory(unknown30->unknown30.unknown4c.unknown02)->unknown08;
+  m_soundCategory.unknown08 = core->GetCategory(m_soundEntry->m_soundParam.m_base.unknown02)->unknown08;
   unknown6c.Reset(1.0f);
   unknown9c.Reset(0.0f);
   unknown84.Reset(volume);
@@ -220,7 +220,7 @@ long SoundHandle::Start(SoundActor *actor, f32 volume, f32 fadeTime) {
 }
 
 long SoundHandle::Pause(bool isPause, f32 fadeTime) {
-  if (!unknown58 || unknown30 == nullptr) {
+  if (!unknown58 || m_soundEntry == nullptr) {
     return -5;
   }
   SystemCore *core = static_cast<SystemCore *>(SoundCore::instance_);
@@ -291,7 +291,7 @@ bool SoundHandle::IsPlay() const {
 
 void SoundHandle::SetCategoryId(int category) {
   if (SoundCore::instance_ != nullptr) {
-    unknown48.unknown08 = static_cast<SystemCore *>(SoundCore::instance_)->GetCategory(category)->unknown08;
+    m_soundCategory.unknown08 = static_cast<SystemCore *>(SoundCore::instance_)->GetCategory(category)->unknown08;
   }
 }
 
@@ -310,7 +310,7 @@ long SoundHandle::SetEnableEffect(int index, bool isEnable) {
   if (index > 1) {
     return -6;
   }
-  unknownc0[index].unknown00 = isEnable;
+  m_effect[index].unknown00 = isEnable;
   return 0;
 }
 
@@ -318,7 +318,7 @@ long SoundHandle::SetEffectVolume(int index, f32 volume, f32 fadeTime) {
   if (index > 1) {
     return -6;
   }
-  unknownc0[index].unknown04.Reset(volume);
+  m_effect[index].unknown04.Reset(volume);
   return 0;
 }
 
@@ -472,7 +472,7 @@ long SoundHandle::GetRemainLoopCount(int *count) const {
   if (voice == nullptr) {
     return -29;
   }
-  if (voice->unknown70 == nullptr) {
+  if (voice->m_streamController == nullptr) {
     return -44;
   }
   return set_result(voice->GetRemainLoopCount(count));
@@ -487,10 +487,10 @@ long SoundHandle::SetRemainLoopCount(int count) {
   if (voice == nullptr) {
     return -29;
   }
-  if (voice->unknown70 == nullptr) {
+  if (voice->m_streamController == nullptr) {
     return -44;
   }
-  if (!voice->unknown70->unknown18.unknown50) {
+  if (!voice->m_streamController->m_waveSource.unknown50) {
     return -1;
   }
   return set_result(voice->SetRemainLoopCount(count));
@@ -506,7 +506,7 @@ long SoundHandle::GetVoiceQueueCount(int *count) const {
   if (voice == nullptr) {
     return -29;
   }
-  if (voice->unknown70 == nullptr) {
+  if (voice->m_streamController == nullptr) {
     return -44;
   }
   return set_result(voice->GetVoiceQueueCount(count));
@@ -534,7 +534,7 @@ long SoundHandle::IsEmptyStreamBuffer(bool *isEmpty) {
   if (voice == nullptr) {
     return -29;
   }
-  if (voice->unknown70 == nullptr) {
+  if (voice->m_streamController == nullptr) {
     return -44;
   }
   voice->IsEmptyStreamBuffer(isEmpty);
@@ -564,10 +564,10 @@ long SoundHandle::GetStreamBuffer(StreamBufferBase **buffer) const {
   if (voice == nullptr) {
     return -29;
   }
-  if (voice->unknown70 == nullptr) {
+  if (voice->m_streamController == nullptr) {
     return -44;
   }
-  *buffer = &voice->unknown70->unknown158;
+  *buffer = &voice->m_streamController->m_streamBuffer;
   return 0;
 }
 
@@ -580,7 +580,7 @@ long SoundHandle::GetStreamDecodeInfo(DecodeInfo *info) const {
   if (voice == nullptr) {
     return -29;
   }
-  StreamController *stream = voice->unknown70;
+  StreamController *stream = voice->m_streamController;
   if (stream == nullptr) {
     return -44;
   }
@@ -599,10 +599,10 @@ long SoundHandle::KeepStreamOpen(bool isKeep) {
   if (voice == nullptr) {
     return -29;
   }
-  if (voice->unknown70 == nullptr) {
+  if (voice->m_streamController == nullptr) {
     return -44;
   }
-  voice->unknown70->unknownf5 = isKeep;
+  voice->m_streamController->unknownf5 = isKeep;
   return set_result(static_cast<Result>(0));
 }
 

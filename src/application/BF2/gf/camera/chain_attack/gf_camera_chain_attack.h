@@ -42,17 +42,17 @@ public:
   const mm::mtl::RTTI *getRTTI() const override;
   const char *getName() const override;
 
-  mm::Vec3 unknownb0;             // Inferred role: start position; original member name unknown.
-  mm::Vec3 unknownc0;             // Inferred role: start target; original member name unknown.
-  mm::Vec3 unknownd0;             // Inferred role: end position; original member name unknown.
-  mm::Vec3 unknowne0;             // Inferred role: end target; original member name unknown.
-  mm::Vec3 unknownf0;             // Inferred role: current position; original member name unknown.
-  mm::Vec3 unknown100;            // Inferred role: current target; original member name unknown.
-  f32 unknown110;                 // Inferred role: play time rate; original member name unknown.
-  f32 unknown114;                 // Inferred role: play time duration; original member name unknown.
-  s32 unknown118;                 // Inferred role: move type; original member name unknown.
-  f32 unknown11c;                 // Inferred role: elapsed play time; original member name unknown.
-  fw::ColiCheckConfig unknown120; // Inferred role: collision check; original member name unknown.
+  mm::Vec3 unknownb0;                    // Inferred role: start position; original member name unknown.
+  mm::Vec3 unknownc0;                    // Inferred role: start target; original member name unknown.
+  mm::Vec3 unknownd0;                    // Inferred role: end position; original member name unknown.
+  mm::Vec3 unknowne0;                    // Inferred role: end target; original member name unknown.
+  mm::Vec3 unknownf0;                    // Inferred role: current position; original member name unknown.
+  mm::Vec3 unknown100;                   // Inferred role: current target; original member name unknown.
+  f32 unknown110;                        // Inferred role: play time rate; original member name unknown.
+  f32 unknown114;                        // Inferred role: play time duration; original member name unknown.
+  s32 m_moveType;                        // Inferred role: move type; named after the game accessor gf::ChainAttackCameraEntity::setMoveType.
+  f32 unknown11c;                        // Inferred role: elapsed play time; original member name unknown.
+  fw::ColiCheckConfig m_coliCheckConfig; // Inferred role: collision check; original member name unknown.
   u8 _138[0x140 - 0x138];
 };
 
@@ -64,9 +64,9 @@ static_assert(offsetof(ChainAttackCameraEntity, unknownf0) == 0xf0, "");
 static_assert(offsetof(ChainAttackCameraEntity, unknown100) == 0x100, "");
 static_assert(offsetof(ChainAttackCameraEntity, unknown110) == 0x110, "");
 static_assert(offsetof(ChainAttackCameraEntity, unknown114) == 0x114, "");
-static_assert(offsetof(ChainAttackCameraEntity, unknown118) == 0x118, "");
+static_assert(offsetof(ChainAttackCameraEntity, m_moveType) == 0x118, "");
 static_assert(offsetof(ChainAttackCameraEntity, unknown11c) == 0x11c, "");
-static_assert(offsetof(ChainAttackCameraEntity, unknown120) == 0x120, "");
+static_assert(offsetof(ChainAttackCameraEntity, m_coliCheckConfig) == 0x120, "");
 static_assert(sizeof(ChainAttackCameraEntity) == 0x140, "");
 
 class ChainAttackCamera {
@@ -96,10 +96,10 @@ public:
   u32 lottery(u8 camType);
 
   mm::mtl::IntrusivePtr<fw::Camera> unknown08; // Inferred role: camera; original member name unknown.
-  Param unknown10;                             // Inferred role: current parameters; original member name unknown.
+  Param m_param;                               // Inferred role: current parameters; original member name unknown.
   s8 unknown70;                                // Inferred role: enemy size mask; original member name unknown.
-  GF_OBJ_HANDLE *unknown78;                    // Inferred role: target object; original member name unknown.
-  fw::ColiCheckConfig unknown80;               // Inferred role: collision check; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE;              // Inferred role: target object; original member name unknown.
+  fw::ColiCheckConfig m_coliCheckConfig;       // Inferred role: collision check; original member name unknown.
 };
 
 static_assert(offsetof(ChainAttackCamera::Param, unknown04) == 0x04, "");
@@ -108,9 +108,9 @@ static_assert(offsetof(ChainAttackCamera::Param, unknown30) == 0x30, "");
 static_assert(offsetof(ChainAttackCamera::Param, unknown50) == 0x50, "");
 static_assert(sizeof(ChainAttackCamera::Param) == 0x60, "");
 static_assert(offsetof(ChainAttackCamera, unknown08) == 0x08, "");
-static_assert(offsetof(ChainAttackCamera, unknown10) == 0x10, "");
+static_assert(offsetof(ChainAttackCamera, m_param) == 0x10, "");
 static_assert(offsetof(ChainAttackCamera, unknown70) == 0x70, "");
-static_assert(offsetof(ChainAttackCamera, unknown78) == 0x78, "");
-static_assert(offsetof(ChainAttackCamera, unknown80) == 0x80, "");
+static_assert(offsetof(ChainAttackCamera, m_GF_OBJ_HANDLE) == 0x78, "");
+static_assert(offsetof(ChainAttackCamera, m_coliCheckConfig) == 0x80, "");
 
 } // namespace gf

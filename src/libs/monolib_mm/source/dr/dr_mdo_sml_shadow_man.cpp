@@ -40,12 +40,12 @@ DrMdoSmlShadowObj::~DrMdoSmlShadowObj() {
 }
 
 DrMdoSmlShadowObj *DrMdoSmlShadowMan::createObj(int viewNum, const u8 *data) {
-  DrMdoSmlShadowObj *shadow = new (unknown08->unknown10) DrMdoSmlShadowObj(viewNum, data, unknown08);
+  DrMdoSmlShadowObj *shadow = new (m_drMan->unknown10) DrMdoSmlShadowObj(viewNum, data, m_drMan);
   unknown101(unknown50[DrMan::s_nDblStockIdx][0], unknown50[DrMan::s_nDblStockIdx][1], shadow);
   return shadow;
 }
 
-DrMdoSmlShadowMan::DrMdoSmlShadowMan(DrMan *man) : unknown00(0), unknown04(0), unknown08(man) {
+DrMdoSmlShadowMan::DrMdoSmlShadowMan(DrMan *man) : unknown00(0), unknown04(0), m_drMan(man) {
   for (int i = 0; i < 4; i++) {
     unknown10[i][0] = nullptr;
     unknown10[i][1] = nullptr;
@@ -101,11 +101,11 @@ bool DrMdoSmlShadowMan::checkDisp() {
 // (DrPixlPostObjFxAA, DrPixlPostObjDepthofField, DrPixlPostObjMotionBlur...). The game writes it out in each function (0x7100830334: four
 // getUniformBlockValOfs calls at 0x7100830434 to 0x71008304a0, each on the shader's uniform block; no call to a shared helper).
 void DrMdoSmlShadowMan::shadowRender() {
-  if (unknown08->unknown1d73) {
+  if (m_drMan->unknown1d73) {
     return;
   }
-  DrPixlPostMan *postMan = unknown08->unknown78->unknown7f0->unknown180;
-  if (postMan->unknown78 == nullptr) {
+  DrPixlPostMan *postMan = m_drMan->m_drPixlMan->unknown7f0->m_drPixlPostMan;
+  if (postMan->m_drPixlPostObjTSSAO == nullptr) {
     return;
   }
   DrMdoSmlShadowObj *shadow = unknown10[unknown04][0];
@@ -117,16 +117,16 @@ void DrMdoSmlShadowMan::shadowRender() {
   DrAPGxType::setupCullingBack();
   // P2: the single-use local places the getPixlObj call (0x71008303a8) before the view work load (0x71008303ac to 0x71008303b4), which the game takes
   // between it and setRenderTarget (0x71008303bc); `getPixlObj(2)->setRenderTarget()` after the view work load gives 144 instructions against 145.
-  DrPixlRenderTarget *target = unknown08->unknown78->getPixlObj(2);
-  DrCalcViewWork *viewWork = unknown08->unknown580->unknown10;
+  DrPixlRenderTarget *target = m_drMan->m_drPixlMan->getPixlObj(2);
+  DrCalcViewWork *viewWork = m_drMan->m_drCalcMan->m_drCalcViewWork;
   target->setRenderTarget();
-  DrShdDataList *shdList = unknown08->unknown80->unknown00;
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
   DrShdDataObj *shader = shdList->getPostShdObj(0x18);
   shdList->bindShdBoxVertex();
   shader->setupShader(0u);
   grlib::CGLibUniformEtcUtility uniform(shader);
   uniform.setUseUniformBlock("U_POST");
-  DrAPCache *apCache = unknown08->unknown5c0;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   u32 modelOfs = uniform.unknown001("gMdl");
   u32 projOfs = uniform.unknown001("gProj");
   u32 invOfs = uniform.unknown001("gInv");

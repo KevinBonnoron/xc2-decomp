@@ -5,6 +5,7 @@
 #include "mm_math/mm_obb.h"
 #include "mm_math/mm_plane.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/fixed_array.h"
 
 namespace mm {
 
@@ -65,6 +66,22 @@ void Cube::getOBB(Obb &obb) const {
   size.y = halfLength * scale.y;
   size.z = halfLength * scale.z;
   obb.setMat(matrix, size);
+}
+
+void Cube::getVertices(mtl::FixedArray<Vec3, 8> &vertices) const {
+  Mat44 matrix;
+  getMat(matrix);
+  for (u32 i = 0; i < 8; i++) {
+    const Vec3 &base = unknown006[i];
+    // The three sums are computed in the order x, y, z (0x71009adbc4..0x71009adc18) and stored as z, y, x (stp y, z at 0x71009adc1c, then x at 0x71009adc20): the first store, z, puts the
+    // induction pointer on the z element (add x9, x19, #8 at 0x71009adba8); stored in the order x, y, z (or built as a Vec3) it sits on x or y and the pair is x, y.
+    f32 x = base.x * matrix.rows[0][0] + base.y * matrix.rows[1][0] + base.z * matrix.rows[2][0] + matrix.rows[3][0];
+    f32 y = base.x * matrix.rows[0][1] + base.y * matrix.rows[1][1] + base.z * matrix.rows[2][1] + matrix.rows[3][1];
+    f32 z = base.x * matrix.rows[0][2] + base.y * matrix.rows[1][2] + base.z * matrix.rows[2][2] + matrix.rows[3][2];
+    vertices[i].z = z;
+    vertices[i].y = y;
+    vertices[i].x = x;
+  }
 }
 
 bool Cube::isCollide(const PrimBase &prim) const {

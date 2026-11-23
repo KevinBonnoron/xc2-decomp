@@ -29,7 +29,7 @@ static bool unknown064(const IDColiObjCharCheck *object, const unknown004 *table
 }
 
 bool IDColiObjCharCheck::testResultLine(IDColiResult &result, const IDColiInput &input) {
-  if ((result.unknowne8 & unknown2c) || !(unknown18 & 2) || (unknown1c & 3)) {
+  if ((result.unknowne8 & m_materialBit) || !(unknown18 & 2) || (unknown1c & 3)) {
     return false;
   }
   if (!(unknown1c & 0x100)) {
@@ -43,7 +43,7 @@ bool IDColiObjCharCheck::testResultLine(IDColiResult &result, const IDColiInput 
 }
 
 bool IDColiObjCharCheck::testResultRay(IDColiResult &result, const IDColiInput &input) {
-  if ((result.unknowne8 & unknown2c) || !(unknown18 & 2) || (unknown1c & 3)) {
+  if ((result.unknowne8 & m_materialBit) || !(unknown18 & 2) || (unknown1c & 3)) {
     return false;
   }
   if (!(unknown1c & 0x100)) {
@@ -57,7 +57,7 @@ bool IDColiObjCharCheck::testResultRay(IDColiResult &result, const IDColiInput &
 }
 
 bool IDColiObjCharCheck::testResultSphere(IDColiResult &result, const IDColiInput &input) {
-  if ((result.unknowne8 & unknown2c) || !(unknown18 & 2) || (unknown1c & 3)) {
+  if ((result.unknowne8 & m_materialBit) || !(unknown18 & 2) || (unknown1c & 3)) {
     return false;
   }
   if (!(unknown1c & 0x100)) {
@@ -71,7 +71,7 @@ bool IDColiObjCharCheck::testResultSphere(IDColiResult &result, const IDColiInpu
 }
 
 bool IDColiObjCharCheck::testResultCapsule(IDColiResult &result, const IDColiInput &input) {
-  if ((result.unknowne8 & unknown2c) || !(unknown18 & 2) || (unknown1c & 3)) {
+  if ((result.unknowne8 & m_materialBit) || !(unknown18 & 2) || (unknown1c & 3)) {
     return false;
   }
   if (!(unknown1c & 0x100)) {
@@ -86,7 +86,7 @@ bool IDColiObjCharCheck::testResultCapsule(IDColiResult &result, const IDColiInp
 
 // The parts of a binary are tested through the result tables, not the simple ones (original bug, reproduced).
 bool IDColiObjCharCheck::testCheckLine(IDColiResult &result, const IDColiInput &input) {
-  if (!(result.unknowne8 & unknown2c) && (unknown18 & 2) && !(unknown1c & 3)) {
+  if (!(result.unknowne8 & m_materialBit) && (unknown18 & 2) && !(unknown1c & 3)) {
     if (unknown1c & 0x100) {
       return unknown064(this, IDColiUtilColiResult::s_CallLine, result, input);
     } else {
@@ -99,7 +99,7 @@ bool IDColiObjCharCheck::testCheckLine(IDColiResult &result, const IDColiInput &
 }
 
 bool IDColiObjCharCheck::testCheckRay(IDColiResult &result, const IDColiInput &input) {
-  if (!(result.unknowne8 & unknown2c) && (unknown18 & 2) && !(unknown1c & 3)) {
+  if (!(result.unknowne8 & m_materialBit) && (unknown18 & 2) && !(unknown1c & 3)) {
     if (unknown1c & 0x100) {
       return unknown064(this, IDColiUtilColiResult::s_CallRay, result, input);
     } else {
@@ -112,7 +112,7 @@ bool IDColiObjCharCheck::testCheckRay(IDColiResult &result, const IDColiInput &i
 }
 
 bool IDColiObjCharCheck::testCheckSphere(IDColiResult &result, const IDColiInput &input) {
-  if (!(result.unknowne8 & unknown2c) && (unknown18 & 2) && !(unknown1c & 3)) {
+  if (!(result.unknowne8 & m_materialBit) && (unknown18 & 2) && !(unknown1c & 3)) {
     if (unknown1c & 0x100) {
       return unknown064(this, IDColiUtilColiResult::s_CallSphere, result, input);
     } else {
@@ -125,7 +125,7 @@ bool IDColiObjCharCheck::testCheckSphere(IDColiResult &result, const IDColiInput
 }
 
 bool IDColiObjCharCheck::testCheckCapsule(IDColiResult &result, const IDColiInput &input) {
-  if (!(result.unknowne8 & unknown2c) && (unknown18 & 2) && !(unknown1c & 3)) {
+  if (!(result.unknowne8 & m_materialBit) && (unknown18 & 2) && !(unknown1c & 3)) {
     if (unknown1c & 0x100) {
       return unknown064(this, IDColiUtilColiResult::s_CallCapsule, result, input);
     } else {
@@ -138,7 +138,7 @@ bool IDColiObjCharCheck::testCheckCapsule(IDColiResult &result, const IDColiInpu
 }
 
 bool IDColiObjCharCheck::testCheckBox(IDColiResult &result, const IDColiInput &input) {
-  if (!(result.unknowne8 & unknown2c) && (unknown18 & 2) && !(unknown1c & 3)) {
+  if (!(result.unknowne8 & m_materialBit) && (unknown18 & 2) && !(unknown1c & 3)) {
     const void *data = unknownd0;
     return IDColiUtilColiSimple::s_CallBox[unknownc4](result, input, data);
   }
@@ -147,7 +147,7 @@ bool IDColiObjCharCheck::testCheckBox(IDColiResult &result, const IDColiInput &i
 }
 
 bool IDColiObjCharCheck::testTypeLine(IDColiResult &result, const IDColiInput &input, ColiCheckType type) {
-  if ((result.unknowne8 & unknown2c) || !(unknown18 & 2) || (unknown1c & 3)) {
+  if ((result.unknowne8 & m_materialBit) || !(unknown18 & 2) || (unknown1c & 3)) {
     return false;
   }
   if (!(unknown1c & 0x100)) {
@@ -190,7 +190,7 @@ bool IDColiObjCharCheck::testTypeLine(IDColiResult &result, const IDColiInput &i
 }
 
 bool IDColiObjCharCheck::testTypeSphere(IDColiResult &result, const IDColiInput &input, ColiCheckType type) {
-  if ((result.unknowne8 & unknown2c) || !(unknown18 & 2) || (unknown1c & 3)) {
+  if ((result.unknowne8 & m_materialBit) || !(unknown18 & 2) || (unknown1c & 3)) {
     return false;
   }
   if (!(unknown1c & 0x100)) {
@@ -234,7 +234,7 @@ bool IDColiObjCharCheck::testTypeSphere(IDColiResult &result, const IDColiInput 
 }
 
 bool IDColiObjCharCheck::testTypeCapsule(IDColiResult &result, const IDColiInput &input, ColiCheckType type) {
-  if ((result.unknowne8 & unknown2c) || !(unknown18 & 2) || (unknown1c & 3)) {
+  if ((result.unknowne8 & m_materialBit) || !(unknown18 & 2) || (unknown1c & 3)) {
     return false;
   }
   if (!(unknown1c & 0x100)) {

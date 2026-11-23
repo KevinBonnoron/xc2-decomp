@@ -31,7 +31,7 @@ void DrIBLObj::initialize(DrMan *man) {
   }
   unknown08 = reinterpret_cast<const unknown002 *>(reinterpret_cast<const u8 *>(unknown00) + unknown00->unknown0c);
   unknown10 = reinterpret_cast<const _IBLPrimHeader *>(reinterpret_cast<const u8 *>(unknown00) + unknown00->unknown14);
-  unknown18 = reinterpret_cast<const _EnvColiListTreeData *>(reinterpret_cast<const u8 *>(unknown00) + unknown00->unknown1c);
+  m_envColiListTreeData = reinterpret_cast<const _EnvColiListTreeData *>(reinterpret_cast<const u8 *>(unknown00) + unknown00->unknown1c);
   unknown40 = unknown00->unknown08;
   unknown48 = new (man->unknown10) grlib::CGLibTextureBuffer[unknown40];
   unknown50 = new (man->unknown10) grlib::CGLibTextureBuffer[unknown40];
@@ -40,7 +40,7 @@ void DrIBLObj::initialize(DrMan *man) {
     grlib::CGLibTexture::createTextureImagePtrs(unknown48[i], reinterpret_cast<const u8 *>(unknown00) + entry->unknown10, entry->unknown14, true, nullptr, true);
     grlib::CGLibTexture::createTextureImagePtrs(unknown50[i], reinterpret_cast<const u8 *>(unknown00) + entry->unknown18, entry->unknown1c, false, nullptr, true);
   }
-  unknown60 = new (man->unknown10) DrIBLColiAcc(unknown00, man->unknown10);
+  m_drIBLColiAcc = new (man->unknown10) DrIBLColiAcc(unknown00, man->unknown10);
   unknown58 |= 1;
 }
 
@@ -48,20 +48,20 @@ void DrIBLObj::update() {
   unknown38 = nullptr;
   if ((unknown58 & 3) == 1 && unknown5c != 0) {
     const _IBLPrimHeader *primitive;
-    if (unknown60->testColi(unknown20, 2.0f, primitive)) {
+    if (m_drIBLColiAcc->testColi(unknown20, 2.0f, primitive)) {
       unknown38 = primitive;
     }
   }
 }
 
 DrIBLObj::DrIBLObj(const void *data)
-    : unknown00(static_cast<const unknown001 *>(data)), unknown08(nullptr), unknown10(nullptr), unknown18(nullptr), unknown20(0.0f, 0.0f, 0.0f), unknown38(nullptr), unknown40(0), unknown48(nullptr),
-      unknown50(nullptr), unknown58(0), unknown5c(1), unknown60(nullptr) {}
+    : unknown00(static_cast<const unknown001 *>(data)), unknown08(nullptr), unknown10(nullptr), m_envColiListTreeData(nullptr), unknown20(0.0f, 0.0f, 0.0f), unknown38(nullptr), unknown40(0),
+      unknown48(nullptr), unknown50(nullptr), unknown58(0), unknown5c(1), m_drIBLColiAcc(nullptr) {}
 
 DrIBLObj::~DrIBLObj() {
-  if (unknown60 != nullptr) {
-    delete unknown60;
-    unknown60 = nullptr;
+  if (m_drIBLColiAcc != nullptr) {
+    delete m_drIBLColiAcc;
+    m_drIBLColiAcc = nullptr;
   }
   for (u32 i = 0; i < unknown40; i++) {
     unknown48[i].release();
@@ -167,6 +167,21 @@ void DrIBLObj::render_sphere(const u8 *data) {
   CacheDraw *cacheDraw = DebDraw::getCacheDraw();
   const unknown003 *sphere = reinterpret_cast<const unknown003 *>(data);
   cacheDraw->renderSphere(mm::Vec3(sphere->unknown00, sphere->unknown04, sphere->unknown08), sphere->unknown0c, 8);
+}
+
+// The game builds the matrix as the identity copy times a scale matrix, then adds the center to the translation row: the center comes first in a Vec3
+// sum read from the product's row components (1.0.0: 0x71007f0778, 122 instructions). Adding to the rows one by one, or reading the row through
+// Mat44::unknown004 (a memory round trip), gives the same count or more but no `stp` of the translation and another frame.
+void DrIBLObj::render_notrot_cylinder(const u8 *data) {
+  CacheDraw *cacheDraw = DebDraw::getCacheDraw();
+  const unknown004 *cylinder = reinterpret_cast<const unknown004 *>(data);
+  mm::Mat44 matrix = mm::Mat44::identity;
+  mm::Mat44 scale;
+  scale.unknown010(cylinder->unknown0c, cylinder->unknown10, cylinder->unknown0c);
+  matrix.unknown009(matrix, scale);
+  matrix.setTrans(mm::Vec3(cylinder->unknown00, cylinder->unknown04, cylinder->unknown08) + mm::Vec3(matrix.rows[3][0], matrix.rows[3][1], matrix.rows[3][2]));
+  cacheDraw->setMatrix(matrix);
+  cacheDraw->renderCylinder(2.0f, 1.0f, 8);
 }
 
 } // namespace ml

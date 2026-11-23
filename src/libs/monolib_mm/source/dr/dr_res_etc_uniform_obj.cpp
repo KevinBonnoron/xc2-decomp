@@ -13,11 +13,11 @@ DrResEtcUniformObj::DrResEtcUniformObj(DrMan *drMan, int max, int size, int buff
   unknown20 = buffer;
   unknown28 = static_cast<unknown001 *>(buffer);
   unknown00 = size;
-  unknown30.setup(size);
+  m_cGLibDblUniformBlock.setup(size);
 }
 
 DrResEtcUniformObj::~DrResEtcUniformObj() {
-  unknown30.release();
+  m_cGLibDblUniformBlock.release();
   if (unknown20 != nullptr) {
     mtl::MemManager::deallocate(unknown20, 0, false);
     unknown20 = nullptr;
@@ -31,17 +31,19 @@ void DrResEtcUniformObj::begin() {
 
 void DrResEtcUniformObj::end() {
   if (unknown0c != 0) {
-    unknown30.updateData(0, unknown0c);
+    m_cGLibDblUniformBlock.updateData(0, unknown0c);
   }
 }
 
-void DrResEtcUniformObj::setUniformBlock(s16 index, u32 binding) { unknown30.setUniformBlock(binding, unknown28[index].unknown00, unknown28[index].unknown04); }
+void DrResEtcUniformObj::setUniformBlock(s16 index, u32 binding) { m_cGLibDblUniformBlock.setUniformBlock(binding, unknown28[index].unknown00, unknown28[index].unknown04); }
 
-void DrResEtcUniformObj::setStorageBuffer(s16 index, u32 binding, u32 offset) { unknown30.setStorageBuffer(binding, unknown28[index].unknown00 + offset, unknown28[index].unknown04 - offset); }
+void DrResEtcUniformObj::setStorageBuffer(s16 index, u32 binding, u32 offset) {
+  m_cGLibDblUniformBlock.setStorageBuffer(binding, unknown28[index].unknown00 + offset, unknown28[index].unknown04 - offset);
+}
 
 void *DrResEtcUniformObj::createUniformBuff(int size) {
   int alignedSize = size + (0x100 - size % 0x100) % 0x100;
-  u8 *buffer = static_cast<u8 *>(unknown30.getBuff()) + unknown0c;
+  u8 *buffer = static_cast<u8 *>(m_cGLibDblUniformBlock.getBuff()) + unknown0c;
   unknown28[unknown08].unknown00 = unknown0c;
   unknown28[unknown08].unknown04 = size;
   unknown0c += alignedSize;

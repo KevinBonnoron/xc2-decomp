@@ -27,36 +27,36 @@ const f32 LayerFontStyleObj::RUBY_SCALE = 0.4f;
 void LayerFontStyleObj::setStyleData(const void *data) {
   const unknown005 *header = static_cast<const unknown005 *>(data);
   unknown20 = data;
-  unknown28 = header->unknown0c;
-  unknown30 = reinterpret_cast<const LyrFontStyleData *>(static_cast<const u8 *>(data) + header->unknown08);
+  m_styleDataMax = header->unknown0c;
+  m_lyrFontStyleData = reinterpret_cast<const LyrFontStyleData *>(static_cast<const u8 *>(data) + header->unknown08);
 }
 
 const LyrFontStyleData *LayerFontStyleObj::getStyleData(u32 index) const {
-  if (index < unknown28) {
-    return unknown30 + index;
+  if (index < m_styleDataMax) {
+    return m_lyrFontStyleData + index;
   }
-  return unknown30;
+  return m_lyrFontStyleData;
 }
 
 s32 LayerFontStyleObj::getStyleIndex(const char *name) const {
-  for (u32 i = 0; i < unknown28; i++) {
-    if (strcmp(static_cast<const char *>(unknown20) + unknown30[i].unknown04, name) == 0) {
+  for (u32 i = 0; i < m_styleDataMax; i++) {
+    if (strcmp(static_cast<const char *>(unknown20) + m_lyrFontStyleData[i].unknown04, name) == 0) {
       return i;
     }
   }
   return -1;
 }
 
-const char *LayerFontStyleObj::getStyleName(u32 index) const { return static_cast<const char *>(unknown20) + unknown30[index].unknown04; }
+const char *LayerFontStyleObj::getStyleName(u32 index) const { return static_cast<const char *>(unknown20) + m_lyrFontStyleData[index].unknown04; }
 
-const char *LayerFontStyleObj::getFontName(u32 index) const { return static_cast<const char *>(unknown20) + unknown30[index].unknown08; }
+const char *LayerFontStyleObj::getFontName(u32 index) const { return static_cast<const char *>(unknown20) + m_lyrFontStyleData[index].unknown08; }
 
 LayerFontStyleObj::LayerFontStyleObj(LayerFontManager *manager) {
-  unknown38 = manager;
+  m_layerFontManager = manager;
   unknown18 = LAYER_OBJ_TYPE_FONT_STYLE;
-  unknown40 = RUBY_SCALE;
-  unknown48 = nullptr;
-  unknown50 = nullptr;
+  m_rubyScale = RUBY_SCALE;
+  m_colorInfo = nullptr;
+  m_iconInfo = nullptr;
 }
 
 LayerFontStyleObj::~LayerFontStyleObj() {
@@ -65,16 +65,16 @@ LayerFontStyleObj::~LayerFontStyleObj() {
 }
 
 void LayerFontStyleObj::releaseColorInfo() {
-  if (unknown48 != nullptr) {
-    delete unknown48;
-    unknown48 = nullptr;
+  if (m_colorInfo != nullptr) {
+    delete m_colorInfo;
+    m_colorInfo = nullptr;
   }
 }
 
 void LayerFontStyleObj::releaseIconInfo() {
-  if (unknown50 != nullptr) {
-    delete unknown50;
-    unknown50 = nullptr;
+  if (m_iconInfo != nullptr) {
+    delete m_iconInfo;
+    m_iconInfo = nullptr;
   }
 }
 
@@ -82,7 +82,7 @@ void LayerFontStyleObj::release() {
   unknown1c = 0x22;
   releaseColorInfo();
   releaseIconInfo();
-  unknown38->releaseStyleObj(this);
+  m_layerFontManager->releaseStyleObj(this);
 }
 
 } // namespace layer

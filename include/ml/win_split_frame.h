@@ -49,15 +49,15 @@ public:
     return mm::Rect<int>(0, 0, 0, 0);
   }
 
-  WinView *unknown00; // Inferred role: frame view; original member name unknown.
-  bool unknown08;     // Inferred role: split horizontal; original member name unknown.
-  s32 unknown0c;      // Inferred role: split line when vertical; original member name unknown.
-  s32 unknown10;      // Inferred role: split line when horizontal; original member name unknown.
-  u32 unknown14;      // Inferred role: first view wid; original member name unknown.
-  u32 unknown18;      // Inferred role: second view wid; original member name unknown.
+  WinView *m_winView;  // Inferred role: frame view; original member name unknown.
+  bool m_splitHolizon; // Inferred role: split horizontal; named after the game accessor ml::WinView::isSplitHolizon.
+  s32 unknown0c;       // Inferred role: split line when vertical; original member name unknown.
+  s32 unknown10;       // Inferred role: split line when horizontal; original member name unknown.
+  u32 unknown14;       // Inferred role: first view wid; original member name unknown.
+  u32 unknown18;       // Inferred role: second view wid; original member name unknown.
 };
 
-static_assert(offsetof(WinSplitFrame, unknown08) == 0x08, "");
+static_assert(offsetof(WinSplitFrame, m_splitHolizon) == 0x08, "");
 static_assert(offsetof(WinSplitFrame, unknown0c) == 0x0c, "");
 static_assert(offsetof(WinSplitFrame, unknown10) == 0x10, "");
 static_assert(offsetof(WinSplitFrame, unknown14) == 0x14, "");

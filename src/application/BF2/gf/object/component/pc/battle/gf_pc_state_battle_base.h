@@ -59,12 +59,12 @@ public:
   virtual void AfterUpdate(btl::BattleCharacter *character, GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {}
   virtual bool IsBattleActionState() const { return false; }
 
-  GfComBehaviorPc *unknown18; // Inferred role: behavior; original member name unknown.
-  bool unknown20;             // Inferred role: entered; original member name unknown.
-  bool unknown21;             // Inferred role: state changed; original member name unknown.
+  GfComBehaviorPc *m_comBehaviorPc; // Inferred role: behavior; original member name unknown.
+  bool unknown20;                   // Inferred role: entered; original member name unknown.
+  bool unknown21;                   // Inferred role: state changed; original member name unknown.
 };
 
-static_assert(offsetof(StateBattleBase, unknown18) == 0x18, "");
+static_assert(offsetof(StateBattleBase, m_comBehaviorPc) == 0x18, "");
 static_assert(offsetof(StateBattleBase, unknown20) == 0x20, "");
 static_assert(offsetof(StateBattleBase, unknown21) == 0x21, "");
 

@@ -20,7 +20,7 @@ constexpr u32 MEMBER_UNKNOWN_5 = 5; // Inferred role: salvage member count; orig
 
 static bool hasSalvageSkill(const SDataBlade &dataBlade) {
   for (u32 index = 0; index < 3; index++) {
-    if (dataBlade.unknownae[index].unknown00 == FIELD_UNKNOWN_9 && dataBlade.unknownae[index].unknown03 != 0) {
+    if (dataBlade.unknownae[index].m_fieldSkill == FIELD_UNKNOWN_9 && dataBlade.unknownae[index].m_fieldSkillLevel != 0) {
       return true;
     }
   }
@@ -31,7 +31,7 @@ static bool hasSalvageSkill(const SDataBlade &dataBlade) {
 bool GfDataSalvage::getSalvageSkillBlade(mm::mtl::FixedVector<u16, 422> &blades) {
   blades.clear();
   for (u32 member = 0; member < MEMBER_UNKNOWN_5; member++) {
-    DataParamAcc dataParamAcc(OBJECT_TYPE_PC, GfDataManager::getDataGame()->unknowne9884.unknown00[member].unknown00, static_cast<GimmickType>(0));
+    DataParamAcc dataParamAcc(OBJECT_TYPE_PC, GfDataManager::getDataGame()->m_sDataParty.m_partyMember[member].m_driver, static_cast<GimmickType>(0));
     if (dataParamAcc.isValid() && dataParamAcc.isValid() && dataParamAcc.getObjType() == OBJECT_TYPE_PC) {
       int setBladeNum = GfDataDriver::getMaxSetBladeNum(dataParamAcc.getBdatId());
       for (int slot = 0; slot < setBladeNum; slot++) {
@@ -51,8 +51,8 @@ u8 GfDataSalvage::getSalvageSkillLevel(u32 blade) {
   if (blade != 0) {
     SDataBlade &dataBlade = GfDataBlade::getSDataBlade(blade);
     for (u32 index = 0; index < 3; index++) {
-      if (dataBlade.unknownae[index].unknown00 == FIELD_UNKNOWN_9 && level < dataBlade.unknownae[index].unknown03) {
-        level = dataBlade.unknownae[index].unknown03;
+      if (dataBlade.unknownae[index].m_fieldSkill == FIELD_UNKNOWN_9 && level < dataBlade.unknownae[index].m_fieldSkillLevel) {
+        level = dataBlade.unknownae[index].m_fieldSkillLevel;
       }
     }
   }

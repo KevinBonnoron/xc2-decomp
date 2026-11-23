@@ -30,20 +30,20 @@ f32 LayerObjMesh::getWinSclW(const LayerResMatrix &matrix) const { return sqrtf(
 f32 LayerObjMesh::getWinSclH(const LayerResMatrix &matrix) const { return sqrtf(matrix.unknown0c * matrix.unknown0c + matrix.unknown14 * matrix.unknown14); }
 
 void LayerObjMesh::call_uniform_def(LayerArgMdlRenInf &info) {
-  LayerObjUtil::updatePosMatrixUniformBlock(info.unknown30, reinterpret_cast<const LayerResMatrix *>(info.unknown10), *info.unknown18, unknown1fc, (unknowna8 >> 11) & 0x1);
+  LayerObjUtil::updatePosMatrixUniformBlock(info.unknown30, reinterpret_cast<const LayerResMatrix *>(info.m_layerResNode), *info.m_layerResMatrix, unknown1fc, (unknowna8 >> 11) & 0x1);
   info.unknown30 += 8;
-  LayerObjUtil::updateUvCalcUniformBlock(info.unknown30, unknown19c, unknowna8);
+  LayerObjUtil::updateUvCalcUniformBlock(info.unknown30, m_layerResUvParam, unknowna8);
   info.unknown30 += 8;
 }
 
 void LayerObjMesh::call_uniform_icon(LayerArgMdlRenInf &info) {
-  LayerObjUtil::updatePosMatrixUniformBlock(info.unknown30, reinterpret_cast<const LayerResMatrix *>(info.unknown10), *info.unknown18, unknown1fc, (unknowna8 >> 11) & 0x1);
+  LayerObjUtil::updatePosMatrixUniformBlock(info.unknown30, reinterpret_cast<const LayerResMatrix *>(info.m_layerResNode), *info.m_layerResMatrix, unknown1fc, (unknowna8 >> 11) & 0x1);
   info.unknown30 += 8;
   if (unknown2a4 >= unknown2a6) {
     unknown2a4 = unknown2a6 - 1;
   }
   f32 *uniform = info.unknown30;
-  const unknown018 *icon = reinterpret_cast<const unknown018 *>(static_cast<const u8 *>(unknownb8) + static_cast<const unknown013 *>(unknownb8)->unknown2c);
+  const unknown018 *icon = reinterpret_cast<const unknown018 *>(static_cast<const u8 *>(m_resData) + static_cast<const unknown013 *>(m_resData)->unknown2c);
   const unknown021 *uv = reinterpret_cast<const unknown021 *>(reinterpret_cast<const u8 *>(icon) + icon->unknown18) + unknown2a4;
   uniform[0] = uv->unknown00[0];
   uniform[1] = uv->unknown00[1];
@@ -57,10 +57,10 @@ void LayerObjMesh::call_uniform_icon(LayerArgMdlRenInf &info) {
 }
 
 void LayerObjMesh::call_uniform_number(LayerArgMdlRenInf &info) {
-  LayerObjUtil::updatePosMatrixUniformBlock(info.unknown30, reinterpret_cast<const LayerResMatrix *>(info.unknown10), *info.unknown18, unknown1fc, (unknowna8 >> 11) & 0x1);
+  LayerObjUtil::updatePosMatrixUniformBlock(info.unknown30, reinterpret_cast<const LayerResMatrix *>(info.m_layerResNode), *info.m_layerResMatrix, unknown1fc, (unknowna8 >> 11) & 0x1);
   info.unknown30 += 8;
   unknown298->unknown78->unknown08 = 0;
-  const unknown018 *icon = reinterpret_cast<const unknown018 *>(static_cast<const u8 *>(unknownb8) + static_cast<const unknown013 *>(unknownb8)->unknown2c);
+  const unknown018 *icon = reinterpret_cast<const unknown018 *>(static_cast<const u8 *>(m_resData) + static_cast<const unknown013 *>(m_resData)->unknown2c);
   const unknown021 *uvs = reinterpret_cast<const unknown021 *>(reinterpret_cast<const u8 *>(icon) + icon->unknown18);
   char text[32];
   snprintf(text, sizeof(text), "%.2f", unknown2a0);
@@ -101,15 +101,15 @@ void LayerObjMesh::call_uniform_number(LayerArgMdlRenInf &info) {
 }
 
 void LayerObjMesh::call_uniform_uvscl(LayerArgMdlRenInf &info) {
-  LayerObjUtil::updatePosMatrixUniformBlock(info.unknown30, reinterpret_cast<const LayerResMatrix *>(info.unknown10), *info.unknown18, unknown1fc, (unknowna8 >> 11) & 0x1);
+  LayerObjUtil::updatePosMatrixUniformBlock(info.unknown30, reinterpret_cast<const LayerResMatrix *>(info.m_layerResNode), *info.m_layerResMatrix, unknown1fc, (unknowna8 >> 11) & 0x1);
   info.unknown30 += 8;
-  LayerObjUtil::updateUvCalcUniformBlock(info.unknown30, unknown19c, unknowna8);
+  LayerObjUtil::updateUvCalcUniformBlock(info.unknown30, m_layerResUvParam, unknowna8);
   info.unknown30 += 8;
 }
 
 void LayerObjMesh::call_uniform_noImage(LayerArgMdlRenInf &info) {
   // The game passes the mesh node itself where updatePosMatrixUniformBlock expects a matrix.
-  LayerObjUtil::updatePosMatrixUniformBlock(info.unknown30, reinterpret_cast<const LayerResMatrix *>(info.unknown10), *info.unknown18, unknown1fc, (unknowna8 >> 11) & 0x1);
+  LayerObjUtil::updatePosMatrixUniformBlock(info.unknown30, reinterpret_cast<const LayerResMatrix *>(info.m_layerResNode), *info.m_layerResMatrix, unknown1fc, (unknowna8 >> 11) & 0x1);
   info.unknown30 += 8;
 }
 
@@ -126,17 +126,17 @@ void LayerObjMesh::call_uniform_win_sclga_Y(LayerArgMdlRenInf &info) { setUnifor
 void LayerObjMesh::call_uniform_win_sclheight(LayerArgMdlRenInf &info) { setUniformWinHeight(info, true); }
 
 void LayerObjMesh::call_uniform_hdr(LayerArgMdlRenInf &info) {
-  LayerObjUtil::updatePosMatrixUniformBlock(info.unknown30, reinterpret_cast<const LayerResMatrix *>(info.unknown10), *info.unknown18, unknown1fc, (unknowna8 >> 11) & 0x1);
+  LayerObjUtil::updatePosMatrixUniformBlock(info.unknown30, reinterpret_cast<const LayerResMatrix *>(info.m_layerResNode), *info.m_layerResMatrix, unknown1fc, (unknowna8 >> 11) & 0x1);
   info.unknown30 += 8;
-  LayerObjUtil::updateUvCalcUniformBlock(info.unknown30, unknown19c, unknowna8);
+  LayerObjUtil::updateUvCalcUniformBlock(info.unknown30, m_layerResUvParam, unknowna8);
   info.unknown30 += 8;
-  LayerShdManager *shader = LayerManager::get()->unknown58;
+  LayerShdManager *shader = LayerManager::get()->m_layerShdManager;
   f32 width = shader->unknown368.getWidth();
   f32 *uniform = info.unknown30;
   uniform[0] = (width - 1.0f) / width;
   uniform[1] = 1.0f / (width + width);
   uniform[2] = 0.0f;
-  uniform[3] = 1.0f / shader->unknown578;
+  uniform[3] = 1.0f / shader->m_gamma;
   info.unknown30 += 4;
 }
 

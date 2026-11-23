@@ -4,7 +4,10 @@
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_item.h"
+#include "gf/gf_allocator.h"
 #include "gf/menu/adapter/gf_menu_adapter_manager.h"
+#include "gf/menu/adapter/gf_menu_char_data_adapter.h"
+#include "gf/menu/adapter/gf_menu_item_adapter.h"
 #include "gf/menu/adapter/gf_menu_reference_adapter.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_common_window_param.h"
@@ -12,15 +15,19 @@
 #include "gf/menu/gf_menu_reference.h"
 #include "gf/menu/gf_menu_reference_number.h"
 #include "gf/menu/gf_menu_types.h"
+#include "gf/menu/list/gf_menu_blade_list.h"
 #include "gf/menu/list/gf_menu_driver_list.h"
 #include "gf/menu/list/gf_menu_id_list.h"
 #include "gf/menu/list/gf_menu_item_list.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "mm_math/mm_pnt.h"
 #include "mm_math/mm_rect.h"
+#include "mm_mtl/fixstr.h"
+#include "mm_mtl/reference_object.h"
 #include "types.h"
 #include "ui/ctrl/ui_ctrl_cursor_select.h"
 #include "ui/event/ui_event_data.h"
+#include "ui/event/ui_event_manager.h"
 #include "ui/input/ui_input_manager.h"
 #include "ui/list/ui_list_info.h"
 #include "ui/list/ui_select_obj_list.h"
@@ -34,9 +41,222 @@ namespace gf {
 // Inferred role: attached call id; original name unknown.
 constexpr u32 unknown001 = 0x64;
 
-ui::UIListInfo<MenuItemInfo> *GfMenuObjCommonText::s_pItemList;
-ui::UIListInfo<MenuID> *GfMenuObjCommonText::s_pSubMenuIDList;
-ui::UIListInfo<MenuDriverInfo> *GfMenuObjCommonText::s_pChangeDrList;
+GfMenuItemList *GfMenuObjCommonText::s_pItemList;
+GfMenuIDList *GfMenuObjCommonText::s_pSubMenuIDList;
+GfMenuDriverList *GfMenuObjCommonText::s_pChangeDrList;
+
+// The game's constructor (0x710043bb30) does not store the member at 0x60, which the destructor releases.
+GfMenuObjCommonText::GfMenuObjCommonText(u32 handle)
+    : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), m_menuBladeList(nullptr), unknown58(nullptr), unknown68(nullptr), unknown70(nullptr), unknown88(0) {
+  unknown40 = unknown160();
+  unknown40->unknown162(0);
+  unknown48 = unknown160();
+  unknown48->unknown162(0);
+  m_menuBladeList = GfMenuBladeList::create();
+  unknown58 = GfMenuDriverList::create();
+  s_pItemList = GfMenuItemList::create();
+  s_pSubMenuIDList = GfMenuIDList::create();
+  ui::UIListInfoBase::SetupParam subMenuSetup;
+  subMenuSetup.unknown08 = 3;
+  s_pSubMenuIDList->setup(getAllocator(ALLOCATOR_UNKNOWN_0), subMenuSetup);
+  s_pChangeDrList = GfMenuDriverList::create();
+  unknown78 = unknown160();
+  unknown78->unknown162(0);
+  unknown80 = unknown160();
+  unknown80->unknown162(0);
+}
+
+GfMenuObjCommonText::~GfMenuObjCommonText() {
+  unknown40 = nullptr;
+  unknown48 = nullptr;
+  mm::mtl::safeRelease(unknown70);
+  mm::mtl::safeRelease(unknown68);
+  mm::mtl::safeRelease(s_pChangeDrList);
+  mm::mtl::safeRelease(s_pSubMenuIDList);
+  mm::mtl::safeRelease(s_pItemList);
+  mm::mtl::safeRelease(unknown30);
+  mm::mtl::safeRelease(unknown38);
+  mm::mtl::safeRelease(unknown60);
+  mm::mtl::safeRelease(m_menuBladeList);
+  mm::mtl::safeRelease(unknown58);
+  mm::mtl::safeRelease(unknown28);
+  unknown78 = nullptr;
+  unknown80 = nullptr;
+}
+
+void GfMenuObjCommonText::initialize() {
+  ui::UIObjectAcc acc(unknown18);
+  u32 main = acc.searchChild("LAY_main");
+// __LINE__ must be 219 as in the original file: it is the line argument of operator new.
+#line 219
+  MainListener *mainListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) MainListener(this);
+  mainListener->addRef();
+  ui::UIEventManager::get()->registObjectListener(main, mainListener);
+  if (mainListener != nullptr) {
+    mainListener->release();
+  }
+  attachExternalCall(unknown001, main);
+  u32 dialog = acc.searchChild("LAY_dialog");
+// __LINE__ must be 225 as in the original file: it is the line argument of operator new.
+#line 225
+  DialogListener *dialogListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) DialogListener(this);
+  dialogListener->addRef();
+  ui::UIEventManager::get()->registObjectListener(dialog, dialogListener);
+  if (dialogListener != nullptr) {
+    dialogListener->release();
+  }
+  u32 error = acc.searchChild("LAY_error");
+// __LINE__ must be 229 as in the original file: it is the line argument of operator new.
+#line 229
+  ErrorListener *errorListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ErrorListener(this);
+  errorListener->addRef();
+  ui::UIEventManager::get()->registObjectListener(error, errorListener);
+  if (errorListener != nullptr) {
+    errorListener->release();
+  }
+  u32 mer = acc.searchChild("LAY_dialog_mer");
+// __LINE__ must be 233 as in the original file: it is the line argument of operator new.
+#line 233
+  MerListener *merListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) MerListener(this);
+  merListener->addRef();
+  ui::UIEventManager::get()->registObjectListener(mer, merListener);
+  if (merListener != nullptr) {
+    merListener->release();
+  }
+  u32 kizuna = acc.searchChild("LAY_dialog_kizuna");
+// __LINE__ must be 237 as in the original file: it is the line argument of operator new.
+#line 237
+  KizunaListener *kizunaListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) KizunaListener(this);
+  kizunaListener->addRef();
+  ui::UIEventManager::get()->registObjectListener(kizuna, kizunaListener);
+  if (kizunaListener != nullptr) {
+    kizunaListener->release();
+  }
+  GfMenuAdapterManager::beginCategory(3);
+  {
+    ui::UIObjectAcc getItem(acc.unknown10, "LAY_get_item");
+    u32 count = getItem.countChild("LAY_get_item@%02d", 1);
+    mm::mtl::FixStr<32> name;
+    for (u32 i = 0; i < count; i++) {
+      name.format("TXT_get_item_name@%02d", i + 1);
+      GfMenuItemAdapter *adapter = GfMenuItemAdapter::createFromList(getItem.searchChild(name.c_str()), 0, s_pItemList, i, false);
+      if (adapter != nullptr) {
+        name.format("LAY_get_item@%02d", i + 1);
+        adapter->unknown24 = getItem.searchChild(name.c_str());
+      }
+      name.format("TXT_get_item_num@%02d", i + 1);
+      GfMenuItemAdapter::createFromList(getItem.searchChild(name.c_str()), 3, s_pItemList, i, false);
+      name.format("IMG_get_item_icon@%02d", i + 1);
+      GfMenuItemAdapter *icon = GfMenuItemAdapter::createFromList(getItem.searchChild(name.c_str()), 2, s_pItemList, i, false);
+      if (icon != nullptr) {
+        icon->setDispAlphaMode(true);
+      }
+    }
+    ui::UIListInfoBase::SetupParam itemSetup;
+    itemSetup.unknown08 = count;
+    s_pItemList->setup(getAllocator(ALLOCATOR_UNKNOWN_0), itemSetup);
+// __LINE__ must be 277 as in the original file: it is the line argument of operator new.
+#line 277
+    GetItemListener *getItemListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GetItemListener(this);
+    getItemListener->addRef();
+    ui::UIEventManager::get()->registObjectListener(getItem.unknown10, getItemListener);
+    if (getItemListener != nullptr) {
+      getItemListener->release();
+    }
+  }
+  {
+    ui::UIObjectAcc select(acc.unknown10, "LAY_select");
+    // The scopes of this section and of the driver change one follow the game's stack layout (frame of 224 bytes, the fit option and the dock offset of 0x710043cccc share the slot at sp). Each is
+    // needed: without the first scope of this section the frame is 240 bytes, without the create parameter's 240, without the cursor setting's 256 (and without the fit option's the option moves to
+    // sp + 80).
+    {
+      mm::mtl::FixStr<32> name;
+      u32 count = select.countChild("LAY_sel_item@%02d", 1);
+      ui::UIListInfoBase::SetupParam subMenuSetup;
+      subMenuSetup.unknown08 = count;
+      s_pSubMenuIDList->setup(getAllocator(ALLOCATOR_UNKNOWN_0), subMenuSetup);
+      for (u32 i = 0; i < count; i++) {
+        name.format("TXT_sel_item_name@%02d", i + 1);
+        GfMenuItemAdapter::createFromList(select.searchChild(name.c_str()), 0, s_pItemList, i, false);
+        name.format("TXT_sel_item_num@%02d", i + 1);
+        GfMenuItemAdapter::createFromList(select.searchChild(name.c_str()), 3, s_pItemList, i, false);
+      }
+    }
+    {
+      GfMenuObjUtil::FitOption option;
+      option.unknown01 = true;
+      GfMenuObjUtil::createFitPlugin(select.searchChild("IMG_select_item_bg"), select.searchChild("LAY_sel_item"), 0, 0x1c, option);
+    }
+    GfMenuObjUtil::createDockPlugin(select.searchChild("IMG_select_item_line_down"), select.searchChild("IMG_select_item_bg"), 3, mm::Pnt<s16>(0, -0x17), 0);
+// __LINE__ must be 323 as in the original file: it is the line argument of operator new.
+#line 323
+    SelectListener *selectListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) SelectListener(this);
+    selectListener->addRef();
+    ui::UIEventManager::get()->registObjectListener(select.unknown10, selectListener);
+    if (selectListener != nullptr) {
+      selectListener->release();
+    }
+  }
+  {
+    ui::UIObjectAcc drChange(acc.unknown10, "LAY_dr_change");
+    mm::mtl::FixStr<32> name;
+    {
+      ui::UISelectObjList::CreateParam createParam;
+      createParam.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
+      unknown68 = ui::UISelectObjList::create(createParam);
+    }
+    unknown68->pickupObject(drChange.unknown10, "LAY_dr_change@%02d", 1);
+    {
+      ui::UICtrlCursorSelect::CursorSetting setting;
+      setting.setType(0);
+      setting.unknown18 = 0;
+      unknown70 = ui::UICtrlCursorSelect::create(drChange.searchChild("IMG_dr_change_cursor"), setting, unknown68);
+    }
+    ui::UIListInfoBase::SetupParam driverSetup;
+    driverSetup.unknown08 = unknown68->getSize();
+    s_pChangeDrList->setup(getAllocator(ALLOCATOR_UNKNOWN_0), driverSetup);
+    for (u32 i = 0; i < unknown68->getSize(); i++) {
+      name.format("IMG_dr_change_face@%02d", i + 1);
+      GfMenuCharDataAdapter *adapter = GfMenuCharDataAdapter::createFromDriverList(drChange.searchChild(name.c_str()), 3, s_pChangeDrList, i, false);
+      if (adapter != nullptr) {
+        name.format("LAY_dr_change@%02d", i + 1);
+        adapter->unknown24 = drChange.searchChild(name.c_str());
+      }
+    }
+// __LINE__ must be 373 as in the original file: it is the line argument of operator new.
+#line 373
+    DrChangeListener *drChangeListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) DrChangeListener(this);
+    drChangeListener->addRef();
+    ui::UIEventManager::get()->registObjectListener(drChange.unknown10, drChangeListener);
+    if (drChangeListener != nullptr) {
+      drChangeListener->release();
+    }
+  }
+  {
+    ui::UIObjectAcc ownerChange(acc.unknown10, "LAY_owner_change");
+    GfMenuCharDataAdapter::createFromReferenceDriver(ownerChange.searchChild("IMG_owner_ch_before_face"), 3, 4, false);
+    GfMenuCharDataAdapter::createFromReferenceDriver(ownerChange.searchChild("IMG_owner_ch_after_face"), 3, 5, false);
+// __LINE__ must be 387 as in the original file: it is the line argument of operator new.
+#line 387
+    OwnerChangeListener *ownerChangeListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) OwnerChangeListener(this);
+    ownerChangeListener->addRef();
+    ui::UIEventManager::get()->registObjectListener(ownerChange.unknown10, ownerChangeListener);
+    if (ownerChangeListener != nullptr) {
+      ownerChangeListener->release();
+    }
+  }
+  GfMenuAdapterManager::endCategory();
+  u32 numSelect = acc.searchChild("LAY_num_select");
+// __LINE__ must be 394 as in the original file: it is the line argument of operator new.
+#line 394
+  NumSelectListener *numSelectListener = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) NumSelectListener(this);
+  numSelectListener->addRef();
+  ui::UIEventManager::get()->registObjectListener(numSelect, numSelectListener);
+  if (numSelectListener != nullptr) {
+    numSelectListener->release();
+  }
+  GfMenuObject::initialize();
+}
 
 void GfMenuObjCommonText::finalize() { GfMenuObject::finalize(); }
 
@@ -466,7 +686,7 @@ void GfMenuObjCommonText::openNumSelect(GfMenuCallContext *context, const OpenNu
 }
 
 void GfMenuObjCommonText::ErrorListener::reciveEvent(const ui::EventData &event, u32 handle) {
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjCommonText->unknown18);
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1:
@@ -658,7 +878,7 @@ void GfMenuObjCommonText::DrChangeListener::reciveEvent(const ui::EventData &eve
   case 3:
     if (event.unknown08 == 1) {
       GfMenuObject::enableInput(acc.unknown10);
-      unknown20->unknown70->setDisp(true);
+      m_menuObjCommonText->unknown70->setDisp(true);
     } else if (event.unknown08 == 2) {
       if (unknown18 == 0) {
         acc.setSuspend(true);
@@ -669,7 +889,7 @@ void GfMenuObjCommonText::DrChangeListener::reciveEvent(const ui::EventData &eve
     u32 index = event.unknown08;
     u32 previous = event.unknown0c;
     s_pChangeDrList->setIndex(index);
-    unknown20->unknown68->setIndex(index);
+    m_menuObjCommonText->unknown68->setIndex(index);
     if (previous != 0xffffffff && index != previous) {
       GfMenuObjUtil::playSECommonCursor();
     }
@@ -686,7 +906,7 @@ void GfMenuObjCommonText::DrChangeListener::reciveEvent(const ui::EventData &eve
       break;
     }
     close();
-    unknown20->unknown70->setDisp(true);
+    m_menuObjCommonText->unknown70->setDisp(true);
     break;
   case GfMenuTypes::unknown003_33: {
     acc.setAlpha(1.0f);
@@ -702,7 +922,7 @@ void GfMenuObjCommonText::DrChangeListener::reciveEvent(const ui::EventData &eve
     mm::Rect<s16> next;
     acc.getLayoutRect("dr_select_next", next);
     GfMenuObjUtil::placeObjectH(acc.unknown10, "LAY_dr_change@%02d", s_pChangeDrList->getSize(), mm::Pnt<s16>(rect.x + rect.width / 2, rect.y + rect.height / 2), next.x - rect.x);
-    unknown20->unknown70->setDisp(false);
+    m_menuObjCommonText->unknown70->setDisp(false);
     GfMenuObject::resetInputSelection(acc.unknown10);
     GfMenuObject::setupInputSelectionFromList(acc.unknown10, *s_pChangeDrList);
     unknown18 = 1;
@@ -725,13 +945,13 @@ void GfMenuObjCommonText::DrChangeListener::reciveEvent(const ui::EventData &eve
 }
 
 void GfMenuObjCommonText::NumSelectListener::reciveEvent(const ui::EventData &event, u32 handle) {
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjCommonText->unknown18);
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1:
     GfMenuAdapterManager::beginCategory(3);
-    GfMenuReferenceAdapter::create(acc.searchChild("TXT_num_select_value"), unknown20->unknown78, true);
-    GfMenuReferenceAdapter::create(acc.searchChild("TXT_num_select_total_price"), unknown20->unknown80, true);
+    GfMenuReferenceAdapter::create(acc.searchChild("TXT_num_select_value"), m_menuObjCommonText->unknown78, true);
+    GfMenuReferenceAdapter::create(acc.searchChild("TXT_num_select_total_price"), m_menuObjCommonText->unknown80, true);
     GfMenuAdapterManager::endCategory();
     GfMenuObject::disableInput(acc.unknown10);
     acc.setDisp(false);
@@ -751,8 +971,8 @@ void GfMenuObjCommonText::NumSelectListener::reciveEvent(const ui::EventData &ev
   case 6: {
     int index = event.unknown08;
     int previous = event.unknown0c;
-    unknown20->unknown78->unknown162(index);
-    unknown20->unknown80->unknown162(unknown20->unknown88 * index);
+    m_menuObjCommonText->unknown78->unknown162(index);
+    m_menuObjCommonText->unknown80->unknown162(m_menuObjCommonText->unknown88 * index);
     if (previous != -1 && index != previous) {
       GfMenuObjUtil::playSE(0x19);
     }
@@ -760,10 +980,10 @@ void GfMenuObjCommonText::NumSelectListener::reciveEvent(const ui::EventData &ev
   }
   case 8:
     if (event.unknown0c == 1) {
-      if (unknown20->unknown78->unknown0c == 0) {
+      if (m_menuObjCommonText->unknown78->unknown0c == 0) {
         break;
       }
-      GfMenuObject::addResultCallContext(owner.searchChild("LAY_main"), 0, unknown20->unknown78->unknown0c);
+      GfMenuObject::addResultCallContext(owner.searchChild("LAY_main"), 0, m_menuObjCommonText->unknown78->unknown0c);
       unknown164(owner.searchChild("LAY_main"), GfMenuTypes::unknown003_34);
     } else if (event.unknown0c == 2) {
       GfMenuObject::addResultCallContext(owner.searchChild("LAY_main"), 1, 0);
@@ -777,13 +997,13 @@ void GfMenuObjCommonText::NumSelectListener::reciveEvent(const ui::EventData &ev
     first.setDisp(isSingle == 0);
     ui::UIObjectAcc second(acc.searchChild("TXT_num_select_index@02"));
     second.setDisp(isSingle != 0);
-    unknown20->unknown78->unknown162(0);
-    unknown20->unknown78->unknown165(event.unknown0a);
-    unknown20->unknown78->unknown166(event.unknown0c_u16);
-    unknown20->unknown80->unknown162(0);
-    unknown20->unknown80->unknown165(0);
-    unknown20->unknown80->unknown166(999999999);
-    unknown20->unknown88 = event.unknown10;
+    m_menuObjCommonText->unknown78->unknown162(0);
+    m_menuObjCommonText->unknown78->unknown165(event.unknown0a);
+    m_menuObjCommonText->unknown78->unknown166(event.unknown0c_u16);
+    m_menuObjCommonText->unknown80->unknown162(0);
+    m_menuObjCommonText->unknown80->unknown165(0);
+    m_menuObjCommonText->unknown80->unknown166(999999999);
+    m_menuObjCommonText->unknown88 = event.unknown10;
     GfMenuObject::resetInputSelection(handle);
     GfMenuObject::setupInputSelection(handle, 0, event.unknown0c_u16 + 1);
     setFadeIn(handle);

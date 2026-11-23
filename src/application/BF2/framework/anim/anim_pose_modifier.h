@@ -39,7 +39,7 @@ public:
   void apply() override;
 
   anm::Pose *unknown18;                              // Inferred role: pose; original member name unknown.
-  ModelObject *unknown20;                            // Inferred role: model object; original member name unknown.
+  ModelObject *m_modelObject;                        // Inferred role: model object; original member name unknown.
   mm::mtl::Vector<s16> unknown28;                    // Inferred role: bones; original member name unknown.
   mm::mtl::FixedVector<BoneBindInfo, 256> unknown50; // Inferred role: bound reference frames; original member name unknown.
   anm::ExtraTruckBuffer *unknown1058;                // Inferred role: extra truck buffer; original member name unknown.
@@ -48,7 +48,7 @@ public:
 
 static_assert(sizeof(AnimPoseModifier::BoneBindInfo) == 0x10, "");
 static_assert(offsetof(AnimPoseModifier, unknown18) == 0x18, "");
-static_assert(offsetof(AnimPoseModifier, unknown20) == 0x20, "");
+static_assert(offsetof(AnimPoseModifier, m_modelObject) == 0x20, "");
 static_assert(offsetof(AnimPoseModifier, unknown28) == 0x28, "");
 static_assert(offsetof(AnimPoseModifier, unknown50) == 0x50, "");
 static_assert(offsetof(AnimPoseModifier, unknown1058) == 0x1058, "");

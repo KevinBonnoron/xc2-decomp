@@ -139,12 +139,12 @@ void GfMenuObjBattleTelop::MainListener::reciveEvent(const ui::EventData &event,
       break;
     }
     unknown10.unknown00 = 1;
-    if (unknown20->unknown24 != 0) {
-      ui::UIObjectAcc(unknown20->unknown24).setDisp(false);
+    if (m_menuObjBattleTelop->unknown24 != 0) {
+      ui::UIObjectAcc(m_menuObjBattleTelop->unknown24).setDisp(false);
     }
-    unknown20->unknown24 = acc.searchChild(unknown005[message]);
+    m_menuObjBattleTelop->unknown24 = acc.searchChild(unknown005[message]);
     {
-      ui::UIObjectAcc telop(unknown20->unknown24);
+      ui::UIObjectAcc telop(m_menuObjBattleTelop->unknown24);
       if (!telop.isValid()) {
         break;
       }

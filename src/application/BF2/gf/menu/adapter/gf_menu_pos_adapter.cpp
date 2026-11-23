@@ -9,12 +9,12 @@
 namespace gf {
 
 GfMenuPosAdapter::GfMenuPosAdapter(ui::UIObjectPlugin *plugin)
-    : GfMenuAdapter(plugin, false, true), unknown30(unknown020), unknown80(false), unknown81(false), unknown82(false), unknown84(0, 0), unknown88(nullptr) {}
+    : GfMenuAdapter(plugin, false, true), m_GF_OBJ_HANDLE(unknown020), unknown80(false), unknown81(false), unknown82(false), unknown84(0, 0), m_partyDriverConverter(nullptr) {}
 
 GfMenuPosAdapter::~GfMenuPosAdapter() {
-  if (unknown88 != nullptr) {
-    delete unknown88;
-    unknown88 = nullptr;
+  if (m_partyDriverConverter != nullptr) {
+    delete m_partyDriverConverter;
+    m_partyDriverConverter = nullptr;
   }
 }
 
@@ -37,7 +37,7 @@ GfMenuPosAdapter *GfMenuPosAdapter::create(u32 handle, GF_OBJ_HANDLE *objHandle,
 }
 
 void GfMenuPosAdapter::setup(GF_OBJ_HANDLE *objHandle, const MenuOffset *menuOffset) {
-  this->unknown30 = objHandle;
+  this->m_GF_OBJ_HANDLE = objHandle;
   unknown40 = mm::Vec3(0.0f, 0.0f, 0.0f);
   unknown50 = "";
   if (menuOffset != nullptr) {
@@ -78,7 +78,7 @@ GfMenuPosAdapter *GfMenuPosAdapter::createFromPartyDriver(u32 handle, u8 partyIn
 #line 153
   PartyDriverConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) PartyDriverConverter(partyIndex);
   GfMenuPosAdapter *adapter = create(handle, converter->getGfObjHandle(), menuOffset);
-  adapter->unknown88 = converter;
+  adapter->m_partyDriverConverter = converter;
   return adapter;
 }
 

@@ -78,17 +78,17 @@ public:
     const u8 *unknown48; // Inferred role: icon entry table; original member name unknown.
     s32 unknown50;       // Inferred role: icon entry count; original member name unknown.
     u8 _54[0x58 - 0x54];
-    LayerResViewPortInfo *unknown58;                                  // Inferred role: view port; original member name unknown.
+    LayerResViewPortInfo *m_layerResViewPortInfo;                     // Inferred role: view port; original member name unknown.
     u32 *unknown60;                                                   // Inferred role: icon entry states; original member name unknown.
     grlib::CGLibUniformArray<grlib::CGLibDblUniformBlock> *unknown68; // Inferred role: icon uniforms; original member name unknown.
-    LayerResNode *unknown70;                                          // Inferred role: draw entry nodes; original member name unknown.
+    LayerResNode *m_layerResNode;                                     // Inferred role: draw entry nodes; original member name unknown.
     unknown008 *unknown78;                                            // Inferred role: instance vertex info; original member name unknown.
     f32 unknown80;                                                    // Inferred role: frame count; original member name unknown.
     f32 unknown84;                                                    // Inferred role: start frame; original member name unknown.
   };
 
   struct unknown003 {
-    f32 unknown00; // Inferred role: second; original member name unknown.
+    f32 m_second;  // Inferred role: second; named after the game accessor layer::LayerObjWork::setSecond.
     s32 unknown04; // Inferred role: whole frame, cleared by calcFrmParm; original member name unknown.
   };
 
@@ -154,11 +154,11 @@ public:
   // Evidence: LayerObjTopDef(const char *) inlines FixStr::operator= on it (fixstr.h asserts at lines 219 and 221).
   mm::mtl::FixStr<16> unknown258; // Inferred role: name; original member name unknown.
   u8 _26c[0x270 - 0x26c];
-  LayerVertexObj *unknown270;             // Inferred role: vertex object; original member name unknown.
-  LayerTextureObj *unknown278;            // Inferred role: texture object; original member name unknown.
+  LayerVertexObj *m_layerVertexObj;       // Inferred role: vertex object; original member name unknown.
+  LayerTextureObj *m_layerTextureObj;     // Inferred role: texture object; original member name unknown.
   grlib::CGLibTextureBuffer **unknown280; // Inferred role: default texture list; original member name unknown.
 
-  u32 unknown288; // Inferred role: texture max; original member name unknown.
+  u32 m_textureMax; // Inferred role: texture max; named after the game accessor layer::LayerAccDefTexture::getTextureMax.
   u8 _28c[0x290 - 0x28c];
   void *unknown290;       // Inferred role: allocated memory; original member name unknown.
   unknown002 *unknown298; // Inferred role: animation work; original member name unknown.
@@ -172,14 +172,14 @@ public:
   unknown003 *unknown2b0; // Inferred role: frame params; original member name unknown.
   f32 unknown2b8;         // Inferred role: previous frame, cleared by calcFrmParm; original member name unknown.
   u8 _2bc[0x2c0 - 0x2bc];
-  LayerObjResTex unknown2c0; // Inferred role: additional textures; original member name unknown.
+  LayerObjResTex m_layerObjResTex; // Inferred role: additional textures; original member name unknown.
 };
 
 static_assert(offsetof(LayerObjWork, unknown258) == 0x258, "");
-static_assert(offsetof(LayerObjWork, unknown270) == 0x270, "");
-static_assert(offsetof(LayerObjWork, unknown278) == 0x278, "");
+static_assert(offsetof(LayerObjWork, m_layerVertexObj) == 0x270, "");
+static_assert(offsetof(LayerObjWork, m_layerTextureObj) == 0x278, "");
 static_assert(offsetof(LayerObjWork, unknown280) == 0x280, "");
-static_assert(offsetof(LayerObjWork, unknown288) == 0x288, "");
+static_assert(offsetof(LayerObjWork, m_textureMax) == 0x288, "");
 static_assert(offsetof(LayerObjWork, unknown290) == 0x290, "");
 static_assert(offsetof(LayerObjWork, unknown2a0) == 0x2a0, "");
 static_assert(offsetof(LayerObjWork, unknown2a8) == 0x2a8, "");
@@ -187,14 +187,14 @@ static_assert(offsetof(LayerObjWork, unknown298) == 0x298, "");
 static_assert(offsetof(LayerObjWork, unknown2ac) == 0x2ac, "");
 static_assert(offsetof(LayerObjWork, unknown2b0) == 0x2b0, "");
 static_assert(offsetof(LayerObjWork, unknown2b8) == 0x2b8, "");
-static_assert(offsetof(LayerObjWork, unknown2c0) == 0x2c0, "");
+static_assert(offsetof(LayerObjWork, m_layerObjResTex) == 0x2c0, "");
 static_assert(offsetof(LayerObjWork::unknown001, unknown04) == 0x04, "");
 static_assert(offsetof(LayerObjWork::unknown001, unknown0c) == 0x0c, "");
 static_assert(offsetof(LayerObjWork::unknown001, unknown18) == 0x18, "");
 static_assert(sizeof(LayerObjWork::unknown009) == 0x38, "");
 static_assert(offsetof(LayerObjWork::unknown002, unknown40) == 0x40, "");
 static_assert(offsetof(LayerObjWork::unknown002, unknown48) == 0x48, "");
-static_assert(offsetof(LayerObjWork::unknown002, unknown58) == 0x58, "");
+static_assert(offsetof(LayerObjWork::unknown002, m_layerResViewPortInfo) == 0x58, "");
 static_assert(offsetof(LayerObjWork::unknown002, unknown68) == 0x68, "");
 static_assert(offsetof(LayerObjWork::unknown002, unknown78) == 0x78, "");
 static_assert(sizeof(LayerObjWork::unknown002) == 0x88, "");

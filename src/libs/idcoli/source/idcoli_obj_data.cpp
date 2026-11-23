@@ -20,7 +20,7 @@ bool IDColiObjData::createBinary(const void *binary) {
 
   unknown1d0 = header;
   const unknown022 *info = reinterpret_cast<const unknown022 *>(static_cast<const u8 *>(binary) + header->unknown0c);
-  unknown1f8 = info->unknown0c;
+  m_boneMax = info->unknown0c;
   unknown1fc = info->unknown04;
   u32 size = info->unknown0c * 0x40;
   if (!(header->unknown08 & 1)) {
@@ -36,7 +36,7 @@ bool IDColiObjData::createBinary(const void *binary) {
   }
 
   if (size != 0) {
-    unknown1e0 = mtl::MemManager::allocate(IDColiManager::get()->unknownf4, size, 0x10, false, "no name", 0);
+    unknown1e0 = mtl::MemManager::allocate(IDColiManager::get()->m_ALLOC_HANDLE, size, 0x10, false, "no name", 0);
   }
   u32 offset = 0;
   if (info->unknown0c != 0) {
@@ -49,7 +49,7 @@ bool IDColiObjData::createBinary(const void *binary) {
 
   const unknown001 *bone = reinterpret_cast<const unknown001 *>(reinterpret_cast<const u8 *>(unknown1d0) + info->unknown08);
   unknown1d8 = bone;
-  for (int i = 0; i < unknown1f8; i++, bone++) {
+  for (int i = 0; i < m_boneMax; i++, bone++) {
     mm::Mat44 &matrix = unknown1f0[i];
     for (int row = 0; row < 4; row++) {
       for (int column = 0; column < 4; column++) {
@@ -64,14 +64,14 @@ bool IDColiObjData::createBinary(const void *binary) {
   }
 
   if (header->unknown08 & 2) {
-    unknown200 = static_cast<IDColiObjGrdChar *>(IDColiManager::get()->createColiGrdChar());
-    unknown200->createWorkBuffer(reinterpret_cast<const u8 *>(unknown1d0), this);
+    m_iDColiObjGrdChar = static_cast<IDColiObjGrdChar *>(IDColiManager::get()->createColiGrdChar());
+    m_iDColiObjGrdChar->createWorkBuffer(reinterpret_cast<const u8 *>(unknown1d0), this);
     if (info->unknown04 > 0) {
       const CHCLBaseInfo *primInfo = reinterpret_cast<const CHCLBaseInfo *>(reinterpret_cast<const u8 *>(unknown1d0) + info->unknown00 + info->unknown04 * sizeof(CHCLBaseData));
       u32 index = 0;
       for (int i = 0; i < info->unknown04; i++) {
         if (primInfo[i].unknown00 == 5) {
-          unknown1e8[i].unknown00 = &unknown200->unknown80[index];
+          unknown1e8[i].unknown00 = &m_iDColiObjGrdChar->unknown80[index];
           index++;
         }
       }
@@ -95,7 +95,7 @@ bool IDColiObjData::nodeUpdate() {
 const char *IDColiObjData::getBoneName(int index) const { return reinterpret_cast<const char *>(unknown1d0) + unknown1d8[index].unknown40; }
 
 int IDColiObjData::getBoneIdx(const char *name) const {
-  for (int i = 0; i < unknown1f8; i++) {
+  for (int i = 0; i < m_boneMax; i++) {
     if (strcmp(name, getBoneName(i)) == 0) {
       return i;
     }
@@ -108,11 +108,11 @@ void IDColiObjData::setBoneMatrix(int index, const mm::Mat44 &matrix) { unknown1
 
 mm::Mat44 &IDColiObjData::getBoneMatrix(int index) { return unknown1f0[index]; }
 
-void IDColiObjData::calcLinkNodeMatrix(mm::Mat44 &result, const CHCLBaseInfo *info) { result.unknown009(unknown1f0[info->unknown06], unknown70); }
+void IDColiObjData::calcLinkNodeMatrix(mm::Mat44 &result, const CHCLBaseInfo *info) { result.unknown009(unknown1f0[info->unknown06], m_matrix); }
 
 void IDColiObjData::primset_sphere(void *work, IDColiBaseType &type, const CHCLBaseData *data, const CHCLBaseInfo *info) {
   mm::Mat44 matrix;
-  calcNodeMatrix(matrix, unknown70, data, info);
+  calcNodeMatrix(matrix, m_matrix, data, info);
   CLSphereWork *sphere = static_cast<CLSphereWork *>(work);
   f32 radius = unknown123(matrix) * IDColiObj::OBJ_CALC_RADIUS;
   sphere->unknown10 = data->unknown00.x * radius;
@@ -122,19 +122,19 @@ void IDColiObjData::primset_sphere(void *work, IDColiBaseType &type, const CHCLB
 
 void IDColiObjData::primset_base(void *work, IDColiBaseType &type, const CHCLBaseData *data, const CHCLBaseInfo *info) {
   mm::Mat44 matrix;
-  calcNodeMatrix(matrix, unknown70, data, info);
+  calcNodeMatrix(matrix, m_matrix, data, info);
   IDColiPrimitive::createBaseCharacter(work, type, matrix, data->unknown00);
 }
 
 void IDColiObjData::primset_capsule(void *work, IDColiBaseType &type, const CHCLBaseData *data, const CHCLBaseInfo *info) {
   mm::Mat44 matrix;
-  calcNodeMatrix(matrix, unknown70, data, info);
+  calcNodeMatrix(matrix, m_matrix, data, info);
   IDColiPrimitive::createBaseCapsule(work, type, matrix, data->unknown00);
 }
 
 void IDColiObjData::primset_bone_capsule(void *work, IDColiBaseType &type, const CHCLBaseData *data, const CHCLBaseInfo *info) {
   mm::Mat44 matrix;
-  calcNodeMatrix(matrix, unknown70, data, info);
+  calcNodeMatrix(matrix, m_matrix, data, info);
   mm::Mat44 link;
   calcLinkNodeMatrix(link, info);
   CLCapsuleWork *capsule = static_cast<CLCapsuleWork *>(work);
@@ -156,19 +156,19 @@ void IDColiObjData::primset_bone_capsule(void *work, IDColiBaseType &type, const
 
 void IDColiObjData::primset_box(void *work, IDColiBaseType &type, const CHCLBaseData *data, const CHCLBaseInfo *info) {
   mm::Mat44 matrix;
-  calcNodeMatrix(matrix, unknown70, data, info);
+  calcNodeMatrix(matrix, m_matrix, data, info);
   IDColiPrimitive::createBaseBox(work, type, matrix, data->unknown00);
 }
 
 void IDColiObjData::primset_poli(void *work, IDColiBaseType &type, const CHCLBaseData *data, const CHCLBaseInfo *info) {
   mm::Mat44 matrix;
-  calcNodeMatrix(matrix, unknown70, data, info);
+  calcNodeMatrix(matrix, m_matrix, data, info);
   IDColiPrimitive::createBasePoli(work, type, matrix, data->unknown00);
 }
 
 void IDColiObjData::primset_subbase(void *work, IDColiBaseType &type, const CHCLBaseData *data, const CHCLBaseInfo *info) {
   mm::Mat44 matrix;
-  calcNodeMatrix(matrix, unknown70, data, info);
+  calcNodeMatrix(matrix, m_matrix, data, info);
   IDColiPrimitive::createSubBaseCharacter(work, type, matrix, data->unknown00, (unknown1c & (1 << 11)) == 0);
 }
 

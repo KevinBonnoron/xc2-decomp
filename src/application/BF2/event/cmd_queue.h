@@ -19,14 +19,14 @@ public:
   void push_back(ICmd *cmd, const CmdParam &param);
   void eraseAll() {
     while (mItems.size() != 0) {
-      erase(mItems.front().unknown08);
+      erase(mItems.front().m_iCmd);
     }
   }
   // Inferred role: the command at the head of the queue; original name unknown.
-  ICmd *unknown001() { return mItems.front().unknown08; }
+  ICmd *unknown001() { return mItems.front().m_iCmd; }
   bool isExist(const ICmd *cmd) const {
     for (u32 i = 0; i < mItems.size(); i++) {
-      if (mItems.at(i)->unknown08 == cmd) {
+      if (mItems.at(i)->m_iCmd == cmd) {
         return true;
       }
     }
@@ -53,7 +53,7 @@ template <size_t N, int Type> void CmdQueue<N, Type>::update() {
     if (it == mItems.end() || it->unknown124 > 0) {
       break;
     }
-    ICmd::RESULT result = it->unknown08->update(ICmd::Param(it->unknown10, it->unknown120));
+    ICmd::RESULT result = it->m_iCmd->update(ICmd::Param(it->m_cmdParam, it->unknown120));
     if (it->unknown120 != 0x7fffffff) {
       it->unknown120++;
     }
@@ -61,7 +61,7 @@ template <size_t N, int Type> void CmdQueue<N, Type>::update() {
       break;
     }
     if (result == ICmd::RESULT_UNKNOWN_1) {
-      it->unknown08->term();
+      it->m_iCmd->term();
       mItems.erase(it);
       it = mItems.begin();
       index = 0;
@@ -80,8 +80,8 @@ template <size_t N, int Type> void CmdQueue<N, Type>::update() {
 
 template <size_t N, int Type> void CmdQueue<N, Type>::erase(const ICmd *cmd) {
   for (CmdItem *it = mItems.begin(); it != mItems.end(); ++it) {
-    if (it->unknown08 == cmd) {
-      it->unknown08->term();
+    if (it->m_iCmd == cmd) {
+      it->m_iCmd->term();
       mItems.erase(it);
       return;
     }

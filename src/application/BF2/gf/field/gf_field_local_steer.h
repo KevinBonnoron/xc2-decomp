@@ -37,12 +37,12 @@ public:
 class GfFieldLocalSteer {
 public:
   struct CreateInfo {
-    GF_OBJ_HANDLE *unknown00 = unknown020; // Inferred role: object; original member name unknown.
-    f32 unknown08 = 2.0f;                  // Inferred role: ray length; original member name unknown.
-    f32 unknown0c = 1.0f;                  // Inferred role: ray height; original member name unknown.
-    f32 unknown10 = 0.5f;                  // Inferred role: turn duration; original member name unknown.
-    bool unknown14 = true;                 // Role and original member name unknown.
-    unknown001 *unknown18 = nullptr;       // Inferred role: predicate selecting the targets; original member name unknown.
+    GF_OBJ_HANDLE *m_GF_OBJ_HANDLE = unknown020; // Inferred role: object; original member name unknown.
+    f32 unknown08 = 2.0f;                        // Inferred role: ray length; original member name unknown.
+    f32 unknown0c = 1.0f;                        // Inferred role: ray height; original member name unknown.
+    f32 unknown10 = 0.5f;                        // Inferred role: turn duration; original member name unknown.
+    bool unknown14 = true;                       // Role and original member name unknown.
+    unknown001 *unknown18 = nullptr;             // Inferred role: predicate selecting the targets; original member name unknown.
   };
 
   template <typename T> class TIsTargetNotSameSquad : public unknown001 {
@@ -67,7 +67,7 @@ public:
   static bool isUseLocalSteer(GF_OBJ_HANDLE *handle);
   void castRay(const mm::Vec3 &position);
 
-  CreateInfo unknown00;                // Inferred role: create parameters; original member name unknown.
+  CreateInfo m_createInfo;             // Inferred role: create parameters; original member name unknown.
   bool unknown20;                      // Inferred role: avoiding; original member name unknown.
   f32 unknown24;                       // Inferred role: collide time; original member name unknown.
   TGfTween<f32> unknown28;             // Inferred role: steer angle; original member name unknown.
