@@ -36,8 +36,7 @@ void Dispatcher::dispatchAll(mm::mtl::IntrusiveList<WindProbe> &probes, const Up
     OverlappingCache *pCache = probe->m_pOverlappingCache;
 #line 76
     MM_ASSERT(pCache);
-    // Capacity 64 matches the FixedQueue<WindObject *, 64>; and x8, x23, #0x3f masks the ring index, and the
-    // 0x840-byte frame accounts for the 0x40-byte header and 64 HitCache entries of 0x20 bytes each.
+    // 64 is the capacity of OverlappingCache::unknown10, a FixedQueue<WindObject *, 64> (and x8, x23, #0x3f); the 0x840-byte frame is 0x40 plus 64 HitCache entries of 0x20 bytes.
     HitCache hits[64];
     u32 count = 0;
     for (WindObject *pWind : pCache->unknown10) {
@@ -62,7 +61,8 @@ void Dispatcher::dispatchAll(mm::mtl::IntrusiveList<WindProbe> &probes, const Up
             LocalWindHitCache local;
             local.m_localWind = static_cast<const LocalWind *>(wind);
             // Stores wind, vector, distance at 0x7100988508-0x710098853c; first differs from declaration order at
-            // 0x710098851c. Aggregate initialization in declaration order would put distance before vector.
+            // 0x710098851c. Declaration order and aggregate initialization both give 144 instructions, and both put
+            // the distance before the vector.
             local.unknown10 = hits[i].unknown10;
             local.unknown08 = hits[i].unknown08;
             probe->unknown190.push_back(local);
